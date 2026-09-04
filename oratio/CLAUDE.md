@@ -95,9 +95,20 @@ only when nothing found), lemma v1 from the inflection table;
 Latin fixtures 95.1 %, ~8 µs a word). FINDING pinned: `sum` is absent
 from the vendored DICTLINE.GEN (compounds only) — supplement in T9.
 T8b (data-counted): tackons with a base part, prefixes, suffixes, full
-dictionary form. NEXT: **T9** `oratio/glossarium.stml` + canon + loader
-(house entries incl. `sum`; allowed technical terms), then T10
-`vocabula.sh` + `silva.vocabula()`.
+dictionary form. **T9 DONE**: `oratio/glossarium.stml` (hand-owned;
+`sum` 77 forms, `Vergilius`, sixteen `ignotum-permissum` technical
+terms) judged by `oratio/grammatica/glossarium.canon` (registered
+`<glossarium>`; the stage-three class and accident vocabulary lives
+there now); `oratio_glossarium` reads it and hashes forms by the same
+fold as the table; `oratio_vocabularium_la_glossarium_ponere` makes it
+the FIRST source of `quaerere` (`ORATIO_ANALYSIS_GLOSSARIUM`);
+`quaere.sh` attaches it; gate `probatio_oratio_glossarium` (84; corpus
+95.1 → 96.3 %). NEXT: **T10** `oratio/vocabula.sh [-symbola | -commenta
+| -omnia]` + `silva.vocabula()` — identifiers from `build/nexus.tsv`
+split at `_`, comments through silva's tree, each word looked up
+(glossary first, WORDS second); report known / ambiguous / UNKNOWN with
+file:line; counts published; the report feeds the glossary and sizes
+T8b.
 
 ## Laws to keep (spec §2–3)
 

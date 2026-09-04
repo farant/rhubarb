@@ -342,3 +342,52 @@ the 0 0 wildcard removed — `amavit` loses its PERF row. Deviations from
 the spec, both deliberate: tackons are tried last (WORDS' order; the
 merge bias), and prefixes/suffixes with the tackons that carry a base
 part (est, cumque, pte, met…) are T8b, data-counted.
+
+## 2026-09-04 — T9: the house glossary, first source of the lookup
+
+`oratio/glossarium.stml` is hand-owned STML judged by
+`oratio/grammatica/glossarium.canon` (registered under `<glossarium>` in
+`canones.registrum`, so `bin/canon_examen oratio/glossarium.stml` works
+from the shell): `<vocabulum lemma lingua classis nota>` with an
+optional `<sensus>` and `<forma textus …>` children carrying the
+UNIVERSAL accidents of the stage-three spec — casus, numerus, genus,
+persona, tempus, modus, vox, forma-verbi, gradus — each an enumerated
+attribute, so the seventeen UD classes in Latin and every accident
+value are pinned by the canon from birth, before the analysis genera
+of T11 exist. The canon is real: an unknown class, a missing lemma and
+a fourth person are each refused with the line. The first entries are
+`sum` (the whole finite paradigm, 77 forms, plus esse/fuisse/fore —
+the T8 finding), `Vergilius` (a proper name with a V and a capital,
+there to prove folding on BOTH sides of the hash), and sixteen
+technical terms of class `ignotum-permissum` seeded from the symbol
+table (offset, index, token, byte, bit, hash, cache, buffer, json,
+utf8, html, stml, xml, url, api, ascii), each with the count of its
+sites in `build/nexus.tsv` in its note; the list grows from T10's
+report.
+
+`oratio_glossarium.{h,c}` reads the file through the house STML
+parser, keeps entries and forms in arrays, and hashes every form by the
+SAME folding function the WORDS table uses, so one lookup serves both
+sources; the lemma itself is a form unless a listed form already
+spells it (offset with offsets; sum once). `oratio_vocabularium_la`
+takes the glossary as an optional first source: its hits come before
+uniques and stems, carry `genus = GLOSSARIUM` and the form index, and
+count as found, so the enclitic phase is not tried (estque still
+splits, because the whole word is not in the glossary). `./oratio/
+quaere.sh` attaches the glossary when the file exists. Gate
+`probatio_oratio_glossarium` (84): canon judgement of the live file
+and three mutations, the loader with three malformed sources refused
+by line, lookups with folding both ways (VERGILIVS, uergilius), the
+integration order (est → sum first, edo second; erat, sit, fuit found;
+offset permitted; amat untouched), and the corpus re-measure: the three
+Latin fixtures go from 95.1 % to 96.3 % known (+245 words, Cicero
+95.8 → 97.0), all of it the verb to be. The T8 pin stays as it was
+(erat and fuit unknown in the table alone) with its comment pointing
+here.
+
+Two lessons. A field named `casus` is `case` after latina.h — the
+struct field is `casus_grammaticus`. And the first planted fault was
+invisible: dropping the fold on the index side changed nothing because
+every glossary form was already lower-case ASCII without v or j; the
+gate is only as real as its data, so the Vergilius entry exists to
+make that fault visible, and it did.

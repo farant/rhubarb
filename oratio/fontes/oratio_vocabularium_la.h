@@ -47,7 +47,8 @@
 nomen enumeratio {
     ORATIO_ANALYSIS_STIRPS = 0,   /* stirps dictionarii + flexio */
     ORATIO_ANALYSIS_UNICUM,       /* forma unica (UNIQUES.LAT) */
-    ORATIO_ANALYSIS_TACKON        /* tackon ipse (que, ne, ve) */
+    ORATIO_ANALYSIS_TACKON,       /* tackon ipse (que, ne, ve) */
+    ORATIO_ANALYSIS_GLOSSARIUM    /* forma glossarii domus (T9): fons primus */
 } OratioAnalysisGenus;
 
 nomen structura {
@@ -56,11 +57,28 @@ nomen structura {
     s32 flexio;            /* index flexionis (STIRPS) aut -I */
     s32 unicum;            /* index unici (UNICUM) aut -I */
     s32 tackon;            /* index additamenti: TACKON ipse, aut hospitis tackon; -I */
+    s32 glossarium;        /* index formae glossarii (GLOSSARIUM) aut -I */
     i32 clavis;            /* clavis stirpis congruens (I-IV) */
     i32 mensura_stirpis;   /* scissio in forma plicata (octeti stirpis) */
 } OratioAnalysis;
 
 nomen structura OratioVocabulariumLa OratioVocabulariumLa;
+structura OratioGlossarium;   /* incompleta: oratio_glossarium.h eam definit */
+
+
+/* Glossarium domus appendere (T9, oratio_glossarium.h - tag structurae
+ * hic, ne typedef bis definiatur): quaesitio eius formas PRIMAS reddit
+ * (fons primus), inventae numerantur (tackons non tentantur). NIHIL =
+ * detrahere. */
+vacuum
+oratio_vocabularium_la_glossarium_ponere (
+    OratioVocabulariumLa* voc,
+    constans structura OratioGlossarium* glossarium);
+
+constans structura OratioGlossarium*
+oratio_vocabularium_la_glossarium (
+    constans OratioVocabulariumLa* voc);
+
 
 /* Tabulam onerare (octeti la.bin, in memoria manent - recorda eos
  * referunt). NIHIL = vitium (recensio) aut memoria. */

@@ -11,6 +11,8 @@
 #include "latina.h"
 #include "oratio_vocabularium.h"
 #include "oratio_vocabularium_la.h"
+#include "oratio_glossarium.h"
+
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
@@ -91,12 +93,34 @@ OratioVocabulariumVitium vitium;
         fprintf(stderr, "quaere: tabula absens: %s\n", via);
         redde II;
     }
-    voc = oratio_vocabularium_la_onerare(piscina, tabula, &vitium);
+        voc = oratio_vocabularium_la_onerare(piscina, tabula, &vitium);
     si (voc == NIHIL)
     {
         fprintf(stderr, "quaere: onus fractum: %s\n", vitium.causa);
         redde II;
     }
+    /* glossarium domus, si adest: fons primus */
+    sprintf(via, "%s/oratio/glossarium.stml", radix);
+    {
+        chorda fons_glossarii;
+
+        si (_plagulam_legere(piscina, via, &fons_glossarii))
+        {
+            OratioGlossarium* gl = oratio_glossarium_legere(piscina,
+                fons_glossarii, &vitium);
+
+            si (gl == NIHIL)
+            {
+                fprintf(stderr,
+                    "quaere: glossarium non legitur: %s:%d %s\n",
+                    vitium.plagula, (integer)vitium.linea,
+                    vitium.causa);
+                redde II;
+            }
+            oratio_vocabularium_la_glossarium_ponere(voc, gl);
+        }
+    }
+
     per (i = I; i < argc; i++)
     {
         constans character* arg = argv[i];
@@ -204,11 +228,61 @@ OratioVocabulariumVitium vitium;
                     putchar('\n');
                 }
             }
+                        alioquin si (an->genus
+                                     == ORATIO_ANALYSIS_GLOSSARIUM)
+            {
+                constans OratioGlossarium* gl =
+                    oratio_vocabularium_la_glossarium(voc);
+                constans OratioGlossariumForma* fg =
+                    oratio_glossarium_forma(gl,
+                    an->glossarium);
+                constans OratioGlossariumEntrium* eg =
+                    oratio_glossarium_entrium(
+                    gl, fg->entrium);
+
+                si (machina)
+                {
+                    imprimere("%s\tglossarium\t", arg);
+                    _chordam(fg->textus, (i32)32);
+                    imprimere("\t\t");
+                    _chordam(eg->classis, (i32)32);
+                    imprimere("\t\t\t");
+                    _chordam(fg->persona, (i32)8); putchar(' ');
+                    _chordam(fg->numerus, (i32)16); putchar(' ');
+                    _chordam(fg->tempus, (i32)24); putchar(' ');
+                    _chordam(fg->modus, (i32)16); putchar(' ');
+                    _chordam(fg->vox, (i32)8);
+                    putchar('\t');
+                    _chordam(eg->lemma, (i32)32);
+                    imprimere("\t\t%d\t", (integer)fg->linea);
+                    _chordam(eg->sensus, (i32)200);
+                    putchar('\n');
+                }
+                alioquin
+                {
+                    imprimere("  ");
+                    _chordam(fg->textus, (i32)32);
+                    imprimere("  GLOSSARIUM ");
+                    _chordam(eg->classis, (i32)32);
+                    putchar(' ');
+                    _chordam(fg->persona, (i32)8); putchar(' ');
+                    _chordam(fg->numerus, (i32)16); putchar(' ');
+                    _chordam(fg->tempus, (i32)24); putchar(' ');
+                    _chordam(fg->modus, (i32)16); putchar(' ');
+                    _chordam(fg->vox, (i32)8);
+                    imprimere("  [");
+                    _chordam(eg->lemma, (i32)32);
+                    imprimere("]  ");
+                    _chordam(eg->sensus, (i32)60);
+                    putchar('\n');
+                }
+            }
             alioquin si (an->genus == ORATIO_ANALYSIS_UNICUM)
             {
                 constans OratioUnicum* u =
                     oratio_vocabularium_la_unicum(voc,
                     an->unicum);
+
 
                 si (machina)
                 {

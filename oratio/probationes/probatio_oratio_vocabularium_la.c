@@ -514,12 +514,14 @@ principale (vacuum)
                 ->tackon, (s32)-I);   /* nihil tentatum: directae adsunt */
         }
 
-                        /* INVENTUM (T8): 'sum' in DICTLINE.GEN venditae DEEST - V 5 1 lineae
+                                /* INVENTUM (T8): 'sum' in DICTLINE.GEN venditae DEEST - V 5 1 lineae
          * omnes composita (absum adsum ...), INFLECTS V 5 1 XIX formae
-         * solae (essem forem es este esto esse sunto). 'erat' 'sit' 'fuit'
-         * IGNOTA, 'est' = edo solum. Pinna inventi: cum supplementum (T9
-         * glossarium aut SUPPLEMENTUM.GEN fonte nominato) adveniat, haec
-         * rubet et movetur. Stirpes vacuae internae (Bdl WORDS) paratae. */
+         * solae (essem forem es este esto esse sunto). In TABULA SOLA
+         * 'erat' 'fuit' IGNOTA manent (pinna huius plagulae); glossarium
+         * domus (T9, oratio/glossarium.stml) paradigma fert - porta
+         * probatio_oratio_glossarium ea cum glossario appenso probat.
+         * Stirpes vacuae internae (Bdl WORDS) paratae. */
+
         x = oratio_vocabularium_la_quaerere(piscina, voc, _l("erat"));
         CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
         x = oratio_vocabularium_la_quaerere(piscina, voc, _l("fuit"));

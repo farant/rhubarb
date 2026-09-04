@@ -1,0 +1,122 @@
+<!--
+  glossarium.canon
+  MANU SCRIPTUM (ut oratio.canon). Canon glossarii domus
+  oratio/glossarium.stml (oratio-spec par. IV, T9).
+
+  MODELLUM: <glossarium> radix; <vocabulum> entrium cum lemma, lingua,
+  classis (classes universales spec par. V + ignotum-permissum pro
+  terminis technicis), nota; <sensus> textus; <forma> cum textus et
+  accidentibus universalibus (electiones spec par. V). Vocabula sine
+  forma: forma = lemma ipsum. Canon SENSUM non iudicat (paradigma
+  rectum an non) - formam solam; porta probatio_oratio_glossarium
+  iudicat plagulam vivam hoc canone et lectorem probat.
+
+  Iudicium: bin/canon_examen oratio/glossarium.stml (registrum
+  canones.registrum: <glossarium>).
+-->
+<canon dialectus="glossarium" versio="1">
+
+  <elementum nomen="glossarium" radix="verum">
+    <attributum nomen="versio" genus="numerus" necessarium="verum"/>
+    <attributum nomen="nota"   genus="textus"/>
+    <liberum nomen="vocabulum"/>
+  </elementum>
+
+  <elementum nomen="vocabulum">
+    <attributum nomen="lemma"  genus="textus" necessarium="verum"/>
+    <attributum nomen="lingua" genus="electio" necessarium="verum">
+      <optio>latina</optio>
+      <optio>anglica</optio>
+    </attributum>
+    <attributum nomen="classis" genus="electio" necessarium="verum"
+      nota="classes universales (UD XVII, spec par. V) + ignotum-permissum">
+      <optio>substantivum</optio>
+      <optio>nomen-proprium</optio>
+      <optio>verbum</optio>
+      <optio>auxiliare</optio>
+      <optio>adiectivum</optio>
+      <optio>adverbium</optio>
+      <optio>pronomen</optio>
+      <optio>determinans</optio>
+      <optio>adpositio</optio>
+      <optio>numerale</optio>
+      <optio>coniunctio-coordinans</optio>
+      <optio>coniunctio-subordinans</optio>
+      <optio>particula</optio>
+      <optio>interiectio</optio>
+      <optio>symbolum</optio>
+      <optio>interpunctio</optio>
+      <optio>ignotum</optio>
+      <optio>ignotum-permissum</optio>
+    </attributum>
+    <attributum nomen="nota" genus="textus"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="forma"/>
+  </elementum>
+
+  <elementum nomen="sensus" textus="verum"/>
+
+  <elementum nomen="forma">
+    <attributum nomen="textus" genus="textus" necessarium="verum"/>
+    <attributum nomen="nota"   genus="textus"/>
+    <attributum nomen="casus" genus="electio">
+      <optio>nominativus</optio>
+      <optio>genitivus</optio>
+      <optio>dativus</optio>
+      <optio>accusativus</optio>
+      <optio>ablativus</optio>
+      <optio>locativus</optio>
+      <optio>vocativus</optio>
+    </attributum>
+    <attributum nomen="numerus" genus="electio">
+      <optio>singularis</optio>
+      <optio>pluralis</optio>
+      <optio>dualis</optio>
+    </attributum>
+    <attributum nomen="genus" genus="electio">
+      <optio>masculinum</optio>
+      <optio>femininum</optio>
+      <optio>neutrum</optio>
+      <optio>commune</optio>
+    </attributum>
+    <attributum nomen="persona" genus="electio">
+      <optio>I</optio>
+      <optio>II</optio>
+      <optio>III</optio>
+    </attributum>
+    <attributum nomen="tempus" genus="electio">
+      <optio>praesens</optio>
+      <optio>imperfectum</optio>
+      <optio>futurum</optio>
+      <optio>perfectum</optio>
+      <optio>plusquamperfectum</optio>
+      <optio>futurum-exactum</optio>
+      <optio>praeteritum</optio>
+    </attributum>
+    <attributum nomen="modus" genus="electio">
+      <optio>indicativus</optio>
+      <optio>subiunctivus</optio>
+      <optio>imperativus</optio>
+      <optio>infinitivus</optio>
+    </attributum>
+    <attributum nomen="vox" genus="electio">
+      <optio>activa</optio>
+      <optio>passiva</optio>
+      <optio>deponens</optio>
+    </attributum>
+    <attributum nomen="forma-verbi" genus="electio">
+      <optio>finitum</optio>
+      <optio>infinitivum</optio>
+      <optio>participium</optio>
+      <optio>gerundium</optio>
+      <optio>gerundivum</optio>
+      <optio>supinum</optio>
+    </attributum>
+    <attributum nomen="gradus" genus="electio">
+      <optio>positivus</optio>
+      <optio>comparativus</optio>
+      <optio>superlativus</optio>
+    </attributum>
+  </elementum>
+
+</canon>

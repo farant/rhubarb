@@ -321,6 +321,21 @@ list (`offset`, `index`, `token`, `byte`, …) as entries of class
 `ignotum-permissum`. Highest-priority source; a glossary hit is an
 analysis like any other, marked `fons="glossarium"`.
 
+**As built (T9, 2026-09-04).** `oratio/glossarium.stml` +
+`oratio/grammatica/glossarium.canon` (registered `<glossarium>`;
+`bin/canon_examen` judges it): `<vocabulum lemma lingua classis nota>`,
+`<sensus>`, `<forma textus + universal accidents>` — the stage-three
+class and accident vocabulary is enumerated in the canon now. Entries:
+`sum` (77 forms, the T8 finding), `Vergilius` (folding proof), sixteen
+`ignotum-permissum` terms with their nexus.tsv counts.
+`oratio_glossarium.{h,c}`: STML reader, forms hashed by the SAME fold as
+the WORDS table, lemma is a form unless listed. `oratio_vocabularium_la`
+takes the glossary as optional first source (`glossarium_ponere`);
+hits are `ORATIO_ANALYSIS_GLOSSARIUM` and count as found. Gate 84
+(canon real by three mutations, loader refusals by line, folding both
+ways, integration order, corpus 95.1 → 96.3 %). The technical-terms
+list grows from the T10 report.
+
 **Consumer: the vocabulary lint.** `oratio/vocabula.sh [-symbola |
 -commenta | -omnia]`: symbols from `build/nexus.tsv` definitions split
 at `_` (9,867 distinct words today), and comments from every `lib/`

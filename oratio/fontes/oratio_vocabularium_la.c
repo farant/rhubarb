@@ -1,9 +1,11 @@
 /* oratio_vocabularium_la.c - Vide oratio_vocabularium_la.h. */
 
 #include "oratio_vocabularium_la.h"
+#include "oratio_glossarium.h"
 #include "nuntium.h"
 #include "tabula_dispersa.h"
 #include <string.h>
+
 
 #define STIRPS_MAXIMA   18
 #define FINIS_MAXIMUS   7
@@ -32,8 +34,9 @@ structura OratioVocabulariumLa {
         Xar* flexiones_vacuae;           /* s32: flexiones fine vacuo */
     Xar* stirpes_vacuae;             /* Nodus: stirpes vacuae (sum: '' + 'essem'; Bdl WORDS) */
 
-    Xar* tackones;                   /* s32: additamenta TACKON basi X */
+        Xar* tackones;                   /* s32: additamenta TACKON basi X */
     OratioVocabulariumCensus census;
+    constans OratioGlossarium* glossarium;   /* T9: fons primus, NIHIL = nullum */
 };
 
 
@@ -683,13 +686,51 @@ _addere (
     {
         redde FALSUM;
     }
-    a->genus            = genus;
+        a->genus        = genus;
     a->stirps           = stirps;
     a->flexio           = flexio;
     a->unicum           = unicum;
     a->tackon           = tackon;
+    a->glossarium       = (s32)-I;
     a->clavis           = clavis;
     a->mensura_stirpis  = mensura_stirpis;
+    redde VERUM;
+}
+
+/* glossarium domus: fons primus - formae eius ante omnia */
+interior b32
+_glossarium_quaerere (
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc,
+                           chorda  f,
+                              Xar* exitus)
+{
+    Xar* formae;
+    i32  i;
+
+    si (voc->glossarium == NIHIL)
+    {
+        redde VERUM;
+    }
+    formae = oratio_glossarium_quaerere(piscina, voc->glossarium, f);
+    si (formae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(formae); i++)
+    {
+        OratioAnalysis* a;
+
+        si (!_addere(exitus, ORATIO_ANALYSIS_GLOSSARIUM, (s32)-I,
+            (s32)-I,
+                (s32)-I, (s32)-I, ZEPHYRUM, f.mensura))
+        {
+            redde FALSUM;
+        }
+        a = (OratioAnalysis*)xar_obtinere(exitus, xar_numerus(exitus)
+            - I);
+        a->glossarium = *(s32*)xar_obtinere(formae, i);
+    }
     redde VERUM;
 }
 
@@ -912,18 +953,20 @@ oratio_vocabularium_la_quaerere (
     {
         redde NIHIL;
     }
-    f = oratio_vocabularium_la_plicare(piscina, forma);
+        f = oratio_vocabularium_la_plicare(piscina, forma);
     si (f.mensura == ZEPHYRUM)
     {
         redde exitus;
     }
-    si (   !_unica_quaerere(voc, f, exitus, (s32)-I)
+    si (   !_glossarium_quaerere(piscina, voc, f, exitus)
+        || !_unica_quaerere(voc, f, exitus, (s32)-I)
         || !_flexa_quaerere(voc, f, exitus, (s32)-I))
     {
         redde NIHIL;
     }
     directae = xar_numerus(exitus);
     _ordinare(voc, exitus, ZEPHYRUM, directae);
+
     si (directae == ZEPHYRUM)
     {
         i32 t;
@@ -1021,6 +1064,21 @@ oratio_vocabularium_la_tackones (
     constans OratioVocabulariumLa* voc)
 {
     redde xar_numerus(voc->tackones);
+}
+
+vacuum
+oratio_vocabularium_la_glossarium_ponere (
+         OratioVocabulariumLa* voc,
+    constans OratioGlossarium* glossarium)
+{
+    voc->glossarium = glossarium;
+}
+
+constans OratioGlossarium*
+oratio_vocabularium_la_glossarium (
+    constans OratioVocabulariumLa* voc)
+{
+    redde voc->glossarium;
 }
 
 

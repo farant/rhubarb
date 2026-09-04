@@ -1,0 +1,132 @@
+<glossarium versio="1" nota="glossarium domus: fons primus quaesitionis (oratio-spec par. IV); canon oratio/grammatica/glossarium.canon; iudicium bin/canon_examen oratio/glossarium.stml">
+
+  <!-- ================= LATINA =================
+       Formae explicitae cum accidentibus universalibus (spec par. V):
+       persona I II III, numerus singularis/pluralis, tempus, modus, vox.
+       Formae plicatae ut in tabula WORDS (minusculae, u/v, i/j) quaeruntur. -->
+
+  <vocabulum lemma="sum" lingua="latina" classis="verbum"
+    nota="verbum esse: in DICTLINE.GEN mk270@1f2f0fb0 DEEST (T8 inventum) - paradigma manu; participium futurum = futurus ADJ in WORDS (linea 21269)">
+    <sensus>be; exist; (copula)</sensus>
+    <forma textus="sum" persona="I" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="es" persona="II" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="est" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="sumus" persona="I" numerus="pluralis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="estis" persona="II" numerus="pluralis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="sunt" persona="III" numerus="pluralis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="eram" persona="I" numerus="singularis" tempus="imperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="eras" persona="II" numerus="singularis" tempus="imperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="erat" persona="III" numerus="singularis" tempus="imperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="eramus" persona="I" numerus="pluralis" tempus="imperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="eratis" persona="II" numerus="pluralis" tempus="imperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="erant" persona="III" numerus="pluralis" tempus="imperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="ero" persona="I" numerus="singularis" tempus="futurum" modus="indicativus" vox="activa"/>
+    <forma textus="eris" persona="II" numerus="singularis" tempus="futurum" modus="indicativus" vox="activa"/>
+    <forma textus="erit" persona="III" numerus="singularis" tempus="futurum" modus="indicativus" vox="activa"/>
+    <forma textus="erimus" persona="I" numerus="pluralis" tempus="futurum" modus="indicativus" vox="activa"/>
+    <forma textus="eritis" persona="II" numerus="pluralis" tempus="futurum" modus="indicativus" vox="activa"/>
+    <forma textus="erunt" persona="III" numerus="pluralis" tempus="futurum" modus="indicativus" vox="activa"/>
+    <forma textus="fui" persona="I" numerus="singularis" tempus="perfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fuisti" persona="II" numerus="singularis" tempus="perfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fuit" persona="III" numerus="singularis" tempus="perfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fuimus" persona="I" numerus="pluralis" tempus="perfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fuistis" persona="II" numerus="pluralis" tempus="perfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fuerunt" persona="III" numerus="pluralis" tempus="perfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fueram" persona="I" numerus="singularis" tempus="plusquamperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fueras" persona="II" numerus="singularis" tempus="plusquamperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fuerat" persona="III" numerus="singularis" tempus="plusquamperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fueramus" persona="I" numerus="pluralis" tempus="plusquamperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fueratis" persona="II" numerus="pluralis" tempus="plusquamperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fuerant" persona="III" numerus="pluralis" tempus="plusquamperfectum" modus="indicativus" vox="activa"/>
+    <forma textus="fuero" persona="I" numerus="singularis" tempus="futurum-exactum" modus="indicativus" vox="activa"/>
+    <forma textus="fueris" persona="II" numerus="singularis" tempus="futurum-exactum" modus="indicativus" vox="activa"/>
+    <forma textus="fuerit" persona="III" numerus="singularis" tempus="futurum-exactum" modus="indicativus" vox="activa"/>
+    <forma textus="fuerimus" persona="I" numerus="pluralis" tempus="futurum-exactum" modus="indicativus" vox="activa"/>
+    <forma textus="fueritis" persona="II" numerus="pluralis" tempus="futurum-exactum" modus="indicativus" vox="activa"/>
+    <forma textus="fuerint" persona="III" numerus="pluralis" tempus="futurum-exactum" modus="indicativus" vox="activa"/>
+    <forma textus="fuere" persona="III" numerus="pluralis" tempus="perfectum" modus="indicativus" vox="activa" nota="-ere pro -erunt"/>
+    <forma textus="sim" persona="I" numerus="singularis" tempus="praesens" modus="subiunctivus" vox="activa"/>
+    <forma textus="sis" persona="II" numerus="singularis" tempus="praesens" modus="subiunctivus" vox="activa"/>
+    <forma textus="sit" persona="III" numerus="singularis" tempus="praesens" modus="subiunctivus" vox="activa"/>
+    <forma textus="simus" persona="I" numerus="pluralis" tempus="praesens" modus="subiunctivus" vox="activa"/>
+    <forma textus="sitis" persona="II" numerus="pluralis" tempus="praesens" modus="subiunctivus" vox="activa"/>
+    <forma textus="sint" persona="III" numerus="pluralis" tempus="praesens" modus="subiunctivus" vox="activa"/>
+    <forma textus="essem" persona="I" numerus="singularis" tempus="imperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="esses" persona="II" numerus="singularis" tempus="imperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="esset" persona="III" numerus="singularis" tempus="imperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="essemus" persona="I" numerus="pluralis" tempus="imperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="essetis" persona="II" numerus="pluralis" tempus="imperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="essent" persona="III" numerus="pluralis" tempus="imperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuerim" persona="I" numerus="singularis" tempus="perfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fueris" persona="II" numerus="singularis" tempus="perfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuerit" persona="III" numerus="singularis" tempus="perfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuerimus" persona="I" numerus="pluralis" tempus="perfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fueritis" persona="II" numerus="pluralis" tempus="perfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuerint" persona="III" numerus="pluralis" tempus="perfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuissem" persona="I" numerus="singularis" tempus="plusquamperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuisses" persona="II" numerus="singularis" tempus="plusquamperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuisset" persona="III" numerus="singularis" tempus="plusquamperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuissemus" persona="I" numerus="pluralis" tempus="plusquamperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuissetis" persona="II" numerus="pluralis" tempus="plusquamperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="fuissent" persona="III" numerus="pluralis" tempus="plusquamperfectum" modus="subiunctivus" vox="activa"/>
+    <forma textus="forem" persona="I" numerus="singularis" tempus="imperfectum" modus="subiunctivus" vox="activa" nota="forem pro essem"/>
+    <forma textus="fores" persona="II" numerus="singularis" tempus="imperfectum" modus="subiunctivus" vox="activa" nota="forem pro essem"/>
+    <forma textus="foret" persona="III" numerus="singularis" tempus="imperfectum" modus="subiunctivus" vox="activa" nota="forem pro essem"/>
+    <forma textus="foremus" persona="I" numerus="pluralis" tempus="imperfectum" modus="subiunctivus" vox="activa" nota="forem pro essem"/>
+    <forma textus="foretis" persona="II" numerus="pluralis" tempus="imperfectum" modus="subiunctivus" vox="activa" nota="forem pro essem"/>
+    <forma textus="forent" persona="III" numerus="pluralis" tempus="imperfectum" modus="subiunctivus" vox="activa" nota="forem pro essem"/>
+    <forma textus="es" persona="II" numerus="singularis" tempus="praesens" modus="imperativus" vox="activa"/>
+    <forma textus="este" persona="II" numerus="pluralis" tempus="praesens" modus="imperativus" vox="activa"/>
+    <forma textus="esto" persona="II" numerus="singularis" tempus="futurum" modus="imperativus" vox="activa"/>
+    <forma textus="esto" persona="III" numerus="singularis" tempus="futurum" modus="imperativus" vox="activa"/>
+    <forma textus="estote" persona="II" numerus="pluralis" tempus="futurum" modus="imperativus" vox="activa"/>
+    <forma textus="sunto" persona="III" numerus="pluralis" tempus="futurum" modus="imperativus" vox="activa"/>
+    <forma textus="esse" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="fuisse" tempus="perfectum" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="fore" tempus="futurum" modus="infinitivus" vox="activa" forma-verbi="infinitivum" nota="= futurum esse"/>
+  </vocabulum>
+
+  <vocabulum lemma="Vergilius" lingua="latina" classis="nomen-proprium"
+    nota="nomen proprium: WORDS nomina propria pauca fert (Troia deest, T8); forma cum V et capitali plicationem utrimque probat">
+    <sensus>Publius Vergilius Maro, poeta</sensus>
+    <forma textus="Vergilius" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="Vergilii" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="Vergilio" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="Vergilium" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="Vergilio" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="Vergili" casus="vocativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+
+  <!-- ================= TERMINI TECHNICI PERMISSI =================
+       classis ignotum-permissum: verba non vertenda in identificatoribus et
+       commentariis (Fran: offset etc.); numeri = sedes in build/nexus.tsv
+       2026-09-04; lista crescit e relatione vocabula.sh (T10). -->
+
+  <vocabulum lemma="offset" lingua="anglica" classis="ignotum-permissum" nota="sedes 604">
+    <forma textus="offsets"/>
+  </vocabulum>
+  <vocabulum lemma="index" lingua="anglica" classis="ignotum-permissum" nota="sedes 3854"/>
+  <vocabulum lemma="token" lingua="anglica" classis="ignotum-permissum" nota="sedes 3729">
+    <forma textus="tokens"/>
+  </vocabulum>
+  <vocabulum lemma="byte" lingua="anglica" classis="ignotum-permissum" nota="sedes 132">
+    <forma textus="bytes"/>
+  </vocabulum>
+  <vocabulum lemma="bit" lingua="anglica" classis="ignotum-permissum" nota="sedes 506">
+    <forma textus="bits"/>
+  </vocabulum>
+  <vocabulum lemma="hash" lingua="anglica" classis="ignotum-permissum" nota="sedes 594"/>
+  <vocabulum lemma="cache" lingua="anglica" classis="ignotum-permissum" nota="sedes 96"/>
+  <vocabulum lemma="buffer" lingua="anglica" classis="ignotum-permissum" nota="sedes 2316">
+    <forma textus="buffers"/>
+  </vocabulum>
+  <vocabulum lemma="json" lingua="anglica" classis="ignotum-permissum" nota="sedes 3327"/>
+  <vocabulum lemma="utf8" lingua="anglica" classis="ignotum-permissum" nota="sedes 167"/>
+  <vocabulum lemma="html" lingua="anglica" classis="ignotum-permissum" nota="sedes 860"/>
+  <vocabulum lemma="stml" lingua="anglica" classis="ignotum-permissum" nota="sedes 10918"/>
+  <vocabulum lemma="xml" lingua="anglica" classis="ignotum-permissum" nota="sedes 187"/>
+  <vocabulum lemma="url" lingua="anglica" classis="ignotum-permissum" nota="sedes 187"/>
+  <vocabulum lemma="api" lingua="anglica" classis="ignotum-permissum" nota="sedes 138"/>
+  <vocabulum lemma="ascii" lingua="anglica" classis="ignotum-permissum" nota="sedes 46"/>
+
+</glossarium>
