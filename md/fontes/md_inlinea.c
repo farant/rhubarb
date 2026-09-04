@@ -1238,7 +1238,8 @@ _angulus (
                        _lexema(in, (s32)MD_LEX_NEXUS_CAUDA, k, k + I))
                 || !materia_nodus_ponere(nx, (i32)MD_NEXUS_URL,
                        materia_valor_token(_derivatum(in,
-                       _chorda_copiae(in, j, k), j)),
+                       md_url_codificare(in->c->piscina,
+                       _chorda_copiae(in, j, k)), j)),
                        MATERIA_LOCUS_TOKEN)
                 || _nodus_item(in, nx) == NIHIL)
             {
@@ -1306,8 +1307,9 @@ _angulus (
                 || !_appendere_lexema(in, nx, (i32)MD_NEXUS_CAUDA,
                        _lexema(in, (s32)MD_LEX_NEXUS_CAUDA, k, k + I))
                 || !materia_nodus_ponere(nx, (i32)MD_NEXUS_URL,
-                       materia_valor_token(_derivatum(in, url, j)),
-                       MATERIA_LOCUS_TOKEN)
+                materia_valor_token(_derivatum(in,
+                md_url_codificare(in->c->piscina, url), j)),
+                MATERIA_LOCUS_TOKEN)
                 || _nodus_item(in, nx) == NIHIL)
             {
                 redde (s32)-II;
@@ -1650,8 +1652,9 @@ _autonexus_nudus (
                    _lexema(in, (s32)MD_LEX_AUTONEXUS, i, k))
             || !_appendere_nodum(in, nx, (i32)MD_NEXUS_LIBERI, t)
             || !materia_nodus_ponere(nx, (i32)MD_NEXUS_URL,
-                   materia_valor_token(_derivatum(in, url, i)),
-                   MATERIA_LOCUS_TOKEN)
+            materia_valor_token(_derivatum(in,
+            md_url_codificare(in->c->piscina, url), i)),
+            MATERIA_LOCUS_TOKEN)
             || _nodus_item(in, nx) == NIHIL)
         {
             redde (s32)-II;
@@ -1986,8 +1989,9 @@ _uncum_claudere (
                 &mutatus);
 
             si (!materia_nodus_ponere(nx, (i32)MD_NEXUS_URL,
-                    materia_valor_token(_derivatum(in, url, da)),
-                    MATERIA_LOCUS_TOKEN))
+                materia_valor_token(_derivatum(in,
+                md_url_codificare(in->c->piscina, url), da)),
+                MATERIA_LOCUS_TOKEN))
             {
                 redde (s32)-II;
             }

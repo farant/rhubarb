@@ -81,10 +81,16 @@ stml_html_vertere (
  * SINE doctype - pro transformationibus quae fragmentum reddunt
  * (md -> html, B2.2: CommonMark exitum sine involucro documenti
  * comparat). Leges eaedem ac stml_html_vertere. */
+/* litteralis (B3.3): arbor a PARSATORE genita, non ex fonte STML -
+ * octetus quisque litteralis: '&' in textu semper evaditur (nulla
+ * recusatio entis ambigui - ambiguitas lectoris STML est, non arboris
+ * genitae), attributa inscripta EVADUNTUR ('&' '"') ut decocta.
+ * FALSUM = leges eaedem ac stml_html_vertere. */
 StmlHtmlResultus
 stml_html_vertere_liberos (
-    StmlNodus* parens,
-      Piscina* piscina);
+     StmlNodus* parens,
+       Piscina* piscina,
+           b32  litteralis);
 
 /* Titulus vitii (pro nuntiis et probationibus) */
 constans character*

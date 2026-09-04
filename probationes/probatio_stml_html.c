@@ -444,14 +444,15 @@ principale (
             "<radix><p>a <b>x</b></p><br/><pre><code>y\nz\n</code></pre></radix>",
             piscina, intern);
         CREDO_VERUM (lectum.successus);
-        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina);
+        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina,
+            FALSUM);
         CREDO_VERUM (r.successus);
         si (r.successus)
         {
             CREDO_CHORDA_AEQUALIS_LITERIS (r.html,
                 "<p>a <b>x</b></p><br><pre><code>y\nz\n</code></pre>");
         }
-        r = stml_html_vertere_liberos(NIHIL, piscina);
+        r = stml_html_vertere_liberos(NIHIL, piscina, FALSUM);
         CREDO_VERUM (r.successus && r.html.mensura == ZEPHYRUM);
     }
 
@@ -466,7 +467,8 @@ principale (
             "<radix><p>a</p><crudum!><div class=\"x\">&amp; < b</div>\n</crudum><p>c</p></radix>",
             piscina, intern);
         CREDO_VERUM (lectum.successus);
-        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina);
+        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina,
+            FALSUM);
         CREDO_VERUM (r.successus);
         si (r.successus)
         {
@@ -477,9 +479,35 @@ principale (
             stml_legere_ex_literis("<radix><crudum>x</crudum></radix>",
                                         piscina, intern);
         CREDO_VERUM (lectum.successus);
-        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina);
+        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina,
+            FALSUM);
         CREDO_VERUM (!r.successus
             && r.vitium == STML_HTML_CRUDUS_DEEST);
+    }
+
+    /* --- litteralis (B3.3 md): arbor genita - '&x;' in textu evaditur
+     * (nulla ambiguitas), attributa inscripta evaduntur --- */
+    {
+            StmlResultus lectum;
+        StmlHtmlResultus r;
+
+        imprimere("\n--- vertere_liberos litteralis ---\n");
+        lectum = stml_legere_ex_literis(
+            "<radix><p title=\"a &amp; &quot;b&quot;\">x &nbsp; y</p></radix>",
+            piscina, intern);
+        CREDO_VERUM (lectum.successus);
+        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina,
+            FALSUM);
+        CREDO_VERUM (!r.successus
+            && r.vitium == STML_HTML_ENS_AMBIGUUM);
+        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina,
+            VERUM);
+        CREDO_VERUM (r.successus);
+        si (r.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (r.html,
+                "<p title=\"a &amp;amp; &amp;quot;b&amp;quot;\">x &amp;nbsp; y</p>");
+        }
     }
 
     credo_imprimere_compendium();

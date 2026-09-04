@@ -76,6 +76,18 @@ principale (vacuum)
     CREDO_VERUM (_aequalis(c, "&amp;"));
 
     imprimere("\n");
+    imprimere("\n--- url codificare (B3.3) ---\n");
+    {
+        chorda u = md_url_codificare(piscina,
+            chorda_ex_literis("/my uri\\[x]%20b\xc3\xa4\"", piscina));
+
+        CREDO_CHORDA_AEQUALIS_LITERIS (u,
+            "/my%20uri%5C%5Bx%5D%20b%C3%A4%22");
+        u = md_url_codificare(piscina, chorda_ex_literis("/a?b=1&c=2#f",
+            piscina));
+        CREDO_CHORDA_AEQUALIS_LITERIS (u, "/a?b=1&c=2#f");
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

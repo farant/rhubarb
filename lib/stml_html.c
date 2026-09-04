@@ -45,6 +45,7 @@ nomen structura {
               Piscina* piscina;
        StmlHtmlVitium  vitium;
                chorda  detail;
+                  b32  litteralis;  /* arbor genita: octeti litterales */
 } VersioContextus;
 
 interior vacuum
@@ -287,10 +288,16 @@ _attributa_emittere (
             {
                 chorda_aedificator_appendere_literis(ctx->aed,
                                                      "=\"");
-                chorda_aedificator_appendere_chorda(ctx->aed,
-                                                    *attr->valor);
-                chorda_aedificator_appendere_character(ctx->aed,
-                                                       '"');
+                si (ctx->litteralis)
+                {
+                    _attributum_evadere(ctx, *attr->valor);
+                }
+                alioquin
+                {
+                    chorda_aedificator_appendere_chorda(ctx->aed,
+                                                        *attr->valor);
+                }
+                chorda_aedificator_appendere_character(ctx->aed, '"');
             }
         }
     }
@@ -552,7 +559,8 @@ _nodum_emittere (
             {
                 redde;
             }
-            ens = _ens_ambiguum(*nodus->valor);
+            ens =
+                ctx->litteralis ? _vacua_chorda() : _ens_ambiguum(*nodus->valor);
             si (ens.mensura > ZEPHYRUM)
             {
                 /* '&nbsp;' et '&amp;nbsp;' indiscernibiles -
@@ -611,10 +619,11 @@ stml_html_vertere (
     resultus.vitium     = STML_HTML_BENE;
     resultus.detail     = _vacua_chorda();
 
-    ctx.aed      = chorda_aedificator_creare(piscina, 4096);
-    ctx.piscina  = piscina;
-    ctx.vitium   = STML_HTML_BENE;
-    ctx.detail   = _vacua_chorda();
+    ctx.aed         = chorda_aedificator_creare(piscina, 4096);
+    ctx.piscina     = piscina;
+    ctx.vitium      = STML_HTML_BENE;
+    ctx.detail      = _vacua_chorda();
+    ctx.litteralis  = FALSUM;
     si (ctx.aed == NIHIL)
     {
         resultus.vitium = STML_HTML_MEMORIA;
@@ -640,8 +649,9 @@ stml_html_vertere (
 
 StmlHtmlResultus
 stml_html_vertere_liberos (
-    StmlNodus* parens,
-      Piscina* piscina)
+     StmlNodus* parens,
+       Piscina* piscina,
+           b32  litteralis)
 {
     StmlHtmlResultus resultus;
      VersioContextus ctx;
@@ -653,10 +663,11 @@ stml_html_vertere_liberos (
     resultus.vitium     = STML_HTML_BENE;
     resultus.detail     = _vacua_chorda();
 
-    ctx.aed      = chorda_aedificator_creare(piscina, 4096);
-    ctx.piscina  = piscina;
-    ctx.vitium   = STML_HTML_BENE;
-    ctx.detail   = _vacua_chorda();
+    ctx.aed         = chorda_aedificator_creare(piscina, 4096);
+    ctx.piscina     = piscina;
+    ctx.vitium      = STML_HTML_BENE;
+    ctx.detail      = _vacua_chorda();
+    ctx.litteralis  = litteralis;
     si (ctx.aed == NIHIL)
     {
         resultus.vitium = STML_HTML_MEMORIA;

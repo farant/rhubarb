@@ -48,4 +48,14 @@ md_clavem_normalizare (
                    s32  ab,
                    s32  ad);
 
+/* URL codificare (CommonMark: href in html - cmark houdini_escape_href):
+ * octeti non tuti in '%XX' (spatium, '"', '<', '>', '\\', '`', '[', ']',
+ * '{', '}', '|', '^', imperia, octeti >= 0x80); '%' servatur (numquam
+ * bis codificatur), '&' servatur (effugium attributi est, non URL).
+ * Chorda eadem redditur si nihil codificandum. */
+chorda
+md_url_codificare (
+    Piscina* piscina,
+     chorda  url);
+
 #endif /* MD_DECOCTUM_H */

@@ -32,7 +32,7 @@
 #include <string.h>
 
 /* pinna: praeterita minima (B3.2 nativitas: valor post cursum primum) */
-#define PINNA_PRAETERITA 1168
+#define PINNA_PRAETERITA 1248
 
 hic_manens constans character* TAGI_BLOCORUM[] = {
     "p", "div", "ul", "ol", "li", "blockquote", "pre", "h1", "h2", "h3",
@@ -612,7 +612,8 @@ principale (
                 s->praeterita++;
                 praeterita++;
             }
-            alioquin si (fractae_impressae < XL)
+            alioquin si (   fractae_impressae < XL
+                         || getenv("ORACULUM_OMNIA") != NIHIL)
             {
                 fractae_impressae++;
                 imprimere("  #%d [%.*s]", (integer)ex->numerus,

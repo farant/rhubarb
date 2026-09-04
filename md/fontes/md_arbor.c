@@ -156,6 +156,9 @@ _nodus (
     MdParsura* p,
       MdGenus  genus)
 {
+    /* loci LISTA vacui NON praescribuntur: locus semel a domino
+     * scribitur (materia 'dominus duplex') - lista absens = vacua
+     * est; programma html absentiam per bracchia exemplaria legit */
     redde materia_nodus_creare(p->piscina, (s32)genus,
         MD_REGISTRUM.genera[genus].loci_numerus);
 }
@@ -845,6 +848,30 @@ _derivatum_ponere (
         (s32)MD_LEX_DERIVATUM, valor, origo));
 }
 
+/* URL definitionis: decocta ET codificata (B3.3, cmark href) */
+interior b32
+_url_ponere (
+                MdParsura* p,
+             MateriaNodus* nodus,
+                      i32  locus,
+                      s32  ab,
+                      s32  ad,
+    constans MateriaToken* origo)
+{
+       b32 mutatus;
+    chorda valor = md_decoquere(p->piscina, p->fons + ab, (i32)(ad
+        - ab),
+        &mutatus);
+
+    si (valor.datum == NIHIL && ad > ab)
+    {
+        redde FALSUM;
+    }
+    redde _ponere_lexema(nodus, locus, md_lexema_derivatum(&p->fabrica,
+        (s32)MD_LEX_DERIVATUM, md_url_codificare(p->piscina, valor),
+        origo));
+}
+
 /* Definitiones a fronte paragraphi aperti extrahere: nodi
  * definitio-nexus in continens; reliquum paragraphus NOVUS (lineae
  * migrant) aut nihil. */
@@ -971,9 +998,8 @@ _definitiones_extrahere (
                 md_lexema_derivatum(&p->fabrica, (s32)MD_LEX_DERIVATUM,
                 clavis,
                     lineae[consumptae]))
-            || !_derivatum_ponere(p, def, (i32)MD_DEFINITIO_URL, d.da,
-            d.db,
-                   lineae[consumptae])
+            || !_url_ponere(p, def, (i32)MD_DEFINITIO_URL, d.da, d.db,
+            lineae[consumptae])
             || (d.descriptio_adest
                 && !_derivatum_ponere(p, def,
                 (i32)MD_DEFINITIO_DESCRIPTIO,
@@ -2434,18 +2460,38 @@ _lexemata_appendere (
         ChordaAedificator* aed,
     constans MateriaValor* v,
                       i32* sublatio,
-                      b32  tabus_sumit)
+                      b32  tabus_sumit,
+                      b32  ultimum_solum)
 {
     MateriaToken* primum = NIHIL;
              i32  n;
              i32  j;
+             i32  ab = ZEPHYRUM;
 
     si (v->genus != MATERIA_VALOR_LISTA)
     {
         redde NIHIL;
     }
     n = materia_valor_lista_numerus(*v);
-    per (j = ZEPHYRUM; j < n; j++)
+    /* praefixa: lexema unum per continens (marca, indentatio
+     * continuationis) + ULTIMUM = indentatio propria blocci - sola
+     * contentum est (B3.3: codex intra elementum listae marcam ferebat) */
+    si (ultimum_solum)
+    {
+        ab = n;
+        si (n > ZEPHYRUM)
+        {
+            constans MateriaValor* e = materia_valor_lista_obtinere(*v,
+                n - I);
+
+            si (   e != NIHIL && e->genus == MATERIA_VALOR_TOKEN
+                && e->datum.token->genus == (s32)MD_LEX_INDENTATIO)
+            {
+                ab = n - I;
+            }
+        }
+    }
+    per (j = ab; j < n; j++)
     {
         constans MateriaValor* e = materia_valor_lista_obtinere(*v, j);
                           i32  k;
@@ -2520,13 +2566,16 @@ _saeptum_derivare (
             i32 m = materia_valor_lista_numerus(*pv);
             i32 j;
 
-            per (j = ZEPHYRUM; j < m; j++)
+            /* indentatio propria saepti = lexema praefixi ULTIMUM solum
+             * (priora = continentes) */
+            per (j = m > ZEPHYRUM ? m - I : ZEPHYRUM; j < m; j++)
             {
                 constans MateriaValor* e =
                     materia_valor_lista_obtinere(*pv, j);
                                   i32 k;
 
-                si (e == NIHIL || e->genus != MATERIA_VALOR_TOKEN)
+                si (   e == NIHIL || e->genus != MATERIA_VALOR_TOKEN
+                    || e->datum.token->genus != (s32)MD_LEX_INDENTATIO)
                 {
                     perge;
                 }
@@ -2563,14 +2612,14 @@ _saeptum_derivare (
         si (ln->genus == (s32)MD_GENUS_LINEA)
         {
             t = _lexemata_appendere(aed, &ln->loci[MD_LINEA_PRAEFIXA],
-                &sublatio, indentatus);
+                &sublatio, indentatus, VERUM);
             si (origo == NIHIL)
             {
                 origo = t;
             }
             sublatio = ZEPHYRUM;
             t = _lexemata_appendere(aed, &ln->loci[MD_LINEA_CONTENTUM],
-                &sublatio, FALSUM);
+                &sublatio, FALSUM, FALSUM);
             si (origo == NIHIL)
             {
                 origo = t;
@@ -2579,7 +2628,7 @@ _saeptum_derivare (
         alioquin si (ln->genus == (s32)MD_GENUS_LINEA_VACUA)
         {
             t = _lexemata_appendere(aed, &ln->loci[MD_VACUA_PRAEFIXA],
-                &sublatio, indentatus);
+                &sublatio, indentatus, VERUM);
             si (origo == NIHIL)
             {
                 origo = t;
@@ -2633,7 +2682,7 @@ _html_derivare (
         si (ln->genus == (s32)MD_GENUS_LINEA)
         {
             t = _lexemata_appendere(aed, &ln->loci[MD_LINEA_CONTENTUM],
-                &nulla, FALSUM);
+                &nulla, FALSUM, FALSUM);
             si (origo == NIHIL)
             {
                 origo = t;

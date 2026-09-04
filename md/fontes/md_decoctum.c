@@ -365,3 +365,80 @@ md_clavem_normalizare (
     c.mensura  = n;
     redde c;
 }
+
+interior b32
+_octetus_tutus (
+    i8 c)
+{
+    si (   (c >= (i8)'a' && c <= (i8)'z')
+        || (c >= (i8)'A' && c <= (i8)'Z')
+        || (c >= (i8)'0' && c <= (i8)'9'))
+    {
+        redde VERUM;
+    }
+    commutatio (c)
+    {
+        casus (i8)'-': casus (i8)'_': casus (i8)'.': casus (i8)'~':
+        casus (i8)'!': casus (i8)'*': casus (i8)'\'': casus (i8)'(':
+        casus (i8)')': casus (i8)';': casus (i8)':': casus (i8)'@':
+        casus (i8)'&': casus (i8)'=': casus (i8)'+': casus (i8)'$':
+        casus (i8)',': casus (i8)'/': casus (i8)'?': casus (i8)'#':
+        casus (i8)'%':
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+chorda
+md_url_codificare (
+    Piscina* piscina,
+     chorda  url)
+{
+    hic_manens constans character  HEX[] = "0123456789ABCDEF";
+                              i32  i;
+                              i32  codificandi = ZEPHYRUM;
+                           chorda  exitus;
+                               i8* d;
+                              i32  o = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < url.mensura; i++)
+    {
+        si (!_octetus_tutus(url.datum[i]))
+        {
+            codificandi++;
+        }
+    }
+    si (codificandi == ZEPHYRUM)
+    {
+        redde url;
+    }
+    exitus.mensura = url.mensura + codificandi * II;
+    d = (i8*)piscina_allocare(piscina, (memoriae_index)exitus.mensura
+        + I);
+    si (d == NIHIL)
+    {
+        exitus.datum    = NIHIL;
+        exitus.mensura  = ZEPHYRUM;
+        redde exitus;
+    }
+    per (i = ZEPHYRUM; i < url.mensura; i++)
+    {
+        i8 c = url.datum[i];
+
+        si (_octetus_tutus(c))
+        {
+            d[o++] = c;
+        }
+        alioquin
+        {
+            insignatus character u = (insignatus character)c;
+
+            d[o++] = (i8)'%';
+            d[o++] = (i8)HEX[u >> IV];
+            d[o++] = (i8)HEX[u & XV];
+        }
+    }
+    exitus.datum = d;
+    redde exitus;
+}

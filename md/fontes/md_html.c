@@ -202,7 +202,7 @@ md_html_reddere (
         redde _fractum(r, _causa(piscina, "fragmentum html absens",
             _vacua(), (s32)-I));
     }
-    h = stml_html_vertere_liberos(fragmentum, piscina);
+    h = stml_html_vertere_liberos(fragmentum, piscina, VERUM);
     si (!h.successus)
     {
         redde _fractum(r, _causa(piscina, "versio html:",

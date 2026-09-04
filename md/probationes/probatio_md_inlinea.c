@@ -319,7 +319,7 @@ principale (vacuum)
     CREDO_VERUM (_lexema_aequalis(n, (i32)MD_NEXUS_DESCRIPTIO, "t"));
     d = P("[a](<b c>) [d]()\n"); CREDO_VERUM (sani); in = _inl(d);
     CREDO_VERUM (_lexema_aequalis(_liber(in, ZEPHYRUM),
-        (i32)MD_NEXUS_URL, "b c"));
+        (i32)MD_NEXUS_URL, "b%20c"));   /* codificata (B3.3) */
     CREDO_VERUM (_lexema_aequalis(_liber(in, II), (i32)MD_NEXUS_URL,
         ""));
     CREDO_FALSUM (_adest(_liber(in, II), (i32)MD_NEXUS_DESCRIPTIO));

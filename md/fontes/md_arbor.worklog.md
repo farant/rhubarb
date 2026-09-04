@@ -666,3 +666,43 @@ indentation into the code (`<pre><code>1. indented code`) — the fence
 valor takes every prefix token as indentation; only the block's own
 indentation is. Planted fault (emphasis arm `<em>` → `<i>`) red — the
 count fell below the pin — green on revert.
+
+## 2026-09-03 — B3.3 (i): 1,168 → 1,248 — three fixes and a law relearned
+
+**Indented code inside list items** (+28): a code block's own
+indentation is only the LAST prefix token of a line; the earlier ones
+are container markers and continuation indentation, never content.
+Also the fence's own indent is its last prefix token only.
+
+**Absent list wrappers** (+8 examples, and empty documents): the
+projection omits a list slot that was never filled (an empty quote,
+an empty item, `#` alone, `[](/u)`, a table without body rows), and
+the program's `<PER de="@n.bloci">` refused it as PROIECTIO_ABSENS. I
+first pre-filled every list slot at node creation so the wrapper would
+always exist — and nine gates went red with materia's "locus iam
+scriptus (dominus duplex)": a slot is written ONCE by its owner, and
+the parser sets list slots wholesale later. The pre-fill was wrong by
+materia's own law; an unwritten slot holds nothing, and for a list
+nothing is empty. Reverted. The program now carries an arm pair per
+container that may be empty (documentum, citatio, elementum, inlinea,
+nexus, tabula): `<EST><EXEMPLAR><citatio><bloci/></citatio>` iterates,
+the plain tag arm emits the empty element. Six pairs is the honest
+cost of B1's "absence is loud" decree (finding 16); the alternative,
+PER over an absent path = zero rows, would have made a typo silent.
+
+**The serializer's literal mode** (+~20): a tree that comes from a
+parser has no entity ambiguity and holds decoded data in attributes,
+so `stml_html_vertere_liberos(…, litteralis)` escapes `&` in text
+always (no ENS_AMBIGUUM) and escapes `&` and `"` in inscribed
+attributes — the strict mode stays for hand-written STML, where the
+raw-attribute regime and the ambiguity refusal protect the author.
+A `"` inside a link title used to produce a broken attribute.
+
+**URL percent-encoding** (+~20): `md_url_codificare` after decoding, at
+all five sites that mint a url (inline, reference through the
+definition, angle autolink, email autolink, bare autolink): cmark's
+safe set, `%` never re-encoded, `&` left to the attribute escape.
+Pin 1,168 → 1,248. Remaining classes: emphasis (the rule of three),
+inline html across lines, tabs after markers, list edge rules,
+definitions with multi-line titles, Unicode case folding of labels,
+bare-URL autolinks in core examples (a GFM choice, expected).

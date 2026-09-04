@@ -19,7 +19,11 @@
 
 <#@md-nodus n="@n">
   <COMMUTATIO de="&@n;">
-    <CASUS tag="documentum"><PER de="@n.bloci" voca="#@md-nodus"/></CASUS>
+    <!-- involucra listarum ABSUNT cum vacua (materia: locus semel scriptus, lista
+         absens = vacua) - bracchia bina per continens: praesens iterat, absens nihil
+         (quid STML voluit XVI) -->
+    <CASUS><EST><EXEMPLAR><documentum><bloci/></documentum></EXEMPLAR></EST><PER de="@n.bloci" voca="#@md-nodus"/></CASUS>
+    <CASUS tag="documentum"></CASUS>
 
     <!-- capitula: elementum titulo valoris nominari nequit (spica IV) -
          gradus per bracchia exemplaria, sex lineae -->
@@ -33,7 +37,8 @@
     <!-- paragraphi: nudus (lista arta, lex demissionis) = inlinea sola -->
     <CASUS><EST><EXEMPLAR><paragraphus><nudus>1</nudus></paragraphus></EXEMPLAR></EST><PER de="@n.inlinea" voca="#@md-nodus"/></CASUS>
     <CASUS tag="paragraphus"><p><PER de="@n.inlinea" voca="#@md-nodus"/></p></CASUS>
-    <CASUS tag="citatio"><blockquote><PER de="@n.bloci" voca="#@md-nodus"/></blockquote></CASUS>
+    <CASUS><EST><EXEMPLAR><citatio><bloci/></citatio></EXEMPLAR></EST><blockquote><PER de="@n.bloci" voca="#@md-nodus"/></blockquote></CASUS>
+    <CASUS tag="citatio"><blockquote></blockquote></CASUS>
 
     <!-- listae: numerata ab I sine start, aliter start=; punctata -->
     <CASUS><EST><EXEMPLAR><lista><genus>1</genus><initium>1</initium></lista></EXEMPLAR></EST><ol><PER de="@n.elementa" voca="#@md-nodus"/></ol></CASUS>
@@ -43,7 +48,8 @@
     <!-- elementa: officium (GFM) - input ante bloca -->
     <CASUS><EST><EXEMPLAR><elementum><officium>1</officium></elementum></EXEMPLAR></EST><li><input type="checkbox" disabled/><PER de="@n.bloci" voca="#@md-nodus"/></li></CASUS>
     <CASUS><EST><EXEMPLAR><elementum><officium>2</officium></elementum></EXEMPLAR></EST><li><input type="checkbox" checked disabled/><PER de="@n.bloci" voca="#@md-nodus"/></li></CASUS>
-    <CASUS tag="elementum"><li><PER de="@n.bloci" voca="#@md-nodus"/></li></CASUS>
+    <CASUS><EST><EXEMPLAR><elementum><bloci/></elementum></EXEMPLAR></EST><li><PER de="@n.bloci" voca="#@md-nodus"/></li></CASUS>
+    <CASUS tag="elementum"><li></li></CASUS>
 
     <!-- saepta: valor derivatus (contentum + novae lineae), lingua si adest -->
     <CASUS><EST><EXEMPLAR><saeptum><lingua/></saeptum></EXEMPLAR></EST><pre><code class="language-&@n.lingua!;">&@n.valor!;</code></pre></CASUS>
@@ -52,7 +58,8 @@
 
     <!-- tabulae: caput per formam corporis (th) - contextus 'in capite'
          demissus non est; ut= eum in loco fert (quid STML voluit XIV) -->
-    <CASUS tag="tabula"><table><thead><PER de="@n.caput" ut="o"><tr><PER de="@o.cellae" ut="c"><COMMUTATIO de="&@c;"><CASUS><EST><EXEMPLAR><cella><ordinatio>1</ordinatio></cella></EXEMPLAR></EST><th align="left"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><CASUS><EST><EXEMPLAR><cella><ordinatio>2</ordinatio></cella></EXEMPLAR></EST><th align="center"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><CASUS><EST><EXEMPLAR><cella><ordinatio>3</ordinatio></cella></EXEMPLAR></EST><th align="right"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><ORDINARIUS><th><PER de="@c.inlinea" voca="#@md-nodus"/></th></ORDINARIUS></COMMUTATIO></PER></tr></PER></thead><tbody><PER de="@n.ordines" voca="#@md-nodus"/></tbody></table></CASUS>
+    <CASUS><EST><EXEMPLAR><tabula><ordines/></tabula></EXEMPLAR></EST><table><thead><PER de="@n.caput" ut="o"><tr><PER de="@o.cellae" ut="c"><COMMUTATIO de="&@c;"><CASUS><EST><EXEMPLAR><cella><ordinatio>1</ordinatio></cella></EXEMPLAR></EST><th align="left"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><CASUS><EST><EXEMPLAR><cella><ordinatio>2</ordinatio></cella></EXEMPLAR></EST><th align="center"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><CASUS><EST><EXEMPLAR><cella><ordinatio>3</ordinatio></cella></EXEMPLAR></EST><th align="right"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><ORDINARIUS><th><PER de="@c.inlinea" voca="#@md-nodus"/></th></ORDINARIUS></COMMUTATIO></PER></tr></PER></thead><tbody><PER de="@n.ordines" voca="#@md-nodus"/></tbody></table></CASUS>
+    <CASUS tag="tabula"><table><thead><PER de="@n.caput" ut="o"><tr><PER de="@o.cellae" ut="c"><COMMUTATIO de="&@c;"><CASUS><EST><EXEMPLAR><cella><ordinatio>1</ordinatio></cella></EXEMPLAR></EST><th align="left"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><CASUS><EST><EXEMPLAR><cella><ordinatio>2</ordinatio></cella></EXEMPLAR></EST><th align="center"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><CASUS><EST><EXEMPLAR><cella><ordinatio>3</ordinatio></cella></EXEMPLAR></EST><th align="right"><PER de="@c.inlinea" voca="#@md-nodus"/></th></CASUS><ORDINARIUS><th><PER de="@c.inlinea" voca="#@md-nodus"/></th></ORDINARIUS></COMMUTATIO></PER></tr></PER></thead></table></CASUS>
     <CASUS tag="ordo"><tr><PER de="@n.cellae" voca="#@md-nodus"/></tr></CASUS>
     <CASUS><EST><EXEMPLAR><cella><ordinatio>1</ordinatio></cella></EXEMPLAR></EST><td align="left"><PER de="@n.inlinea" voca="#@md-nodus"/></td></CASUS>
     <CASUS><EST><EXEMPLAR><cella><ordinatio>2</ordinatio></cella></EXEMPLAR></EST><td align="center"><PER de="@n.inlinea" voca="#@md-nodus"/></td></CASUS>
@@ -60,7 +67,8 @@
     <CASUS tag="cella"><td><PER de="@n.inlinea" voca="#@md-nodus"/></td></CASUS>
 
     <!-- inlinea -->
-    <CASUS tag="inlinea"><PER de="@n.liberi" voca="#@md-nodus"/></CASUS>
+    <CASUS><EST><EXEMPLAR><inlinea><liberi/></inlinea></EXEMPLAR></EST><PER de="@n.liberi" voca="#@md-nodus"/></CASUS>
+    <CASUS tag="inlinea"></CASUS>
     <CASUS><EST><EXEMPLAR><textus><valor/></textus></EXEMPLAR></EST>&@n.valor!;</CASUS>
     <CASUS tag="textus">&@n.crudum!;</CASUS>
     <CASUS tag="emphasis"><em><PER de="@n.liberi" voca="#@md-nodus"/></em></CASUS>
@@ -68,8 +76,10 @@
     <CASUS tag="deletio"><del><PER de="@n.liberi" voca="#@md-nodus"/></del></CASUS>
     <CASUS><EST><EXEMPLAR><verbatim><valor/></verbatim></EXEMPLAR></EST><code>&@n.valor!;</code></CASUS>
     <CASUS tag="verbatim"><code>&@n.crudum!;</code></CASUS>
-    <CASUS><EST><EXEMPLAR><nexus><descriptio/></nexus></EXEMPLAR></EST><a href="&@n.url!;" title="&@n.descriptio!;"><PER de="@n.liberi" voca="#@md-nodus"/></a></CASUS>
-    <CASUS tag="nexus"><a href="&@n.url!;"><PER de="@n.liberi" voca="#@md-nodus"/></a></CASUS>
+    <CASUS><EST><EXEMPLAR><nexus><liberi/><descriptio/></nexus></EXEMPLAR></EST><a href="&@n.url!;" title="&@n.descriptio!;"><PER de="@n.liberi" voca="#@md-nodus"/></a></CASUS>
+    <CASUS><EST><EXEMPLAR><nexus><descriptio/></nexus></EXEMPLAR></EST><a href="&@n.url!;" title="&@n.descriptio!;"></a></CASUS>
+    <CASUS><EST><EXEMPLAR><nexus><liberi/></nexus></EXEMPLAR></EST><a href="&@n.url!;"><PER de="@n.liberi" voca="#@md-nodus"/></a></CASUS>
+    <CASUS tag="nexus"><a href="&@n.url!;"></a></CASUS>
     <CASUS><EST><EXEMPLAR><imago><descriptio/></imago></EXEMPLAR></EST><img src="&@n.url!;" alt="&@n.alt!;" title="&@n.descriptio!;"/></CASUS>
     <CASUS tag="imago"><img src="&@n.url!;" alt="&@n.alt!;"/></CASUS>
     <CASUS tag="fractura-mollis">&@n.valor!;</CASUS>
