@@ -254,3 +254,27 @@ and asserts the clone shows 2020 and README's ns-mtime equals live.
 Doctrine reminder that this confirms: "compare OUTPUT, never
 timestamps" is the rule for artifacts; binary-staleness guards are
 the allowed exception, and they need the clone to be mtime-faithful.
+
+## 2026-09-03 — post B1: five additions from the session review
+
+Fran asked how pythonica had worked over the B1 arc. It carried every C
+edit and every landing; the rough edges were all at the seams, and two
+of my six complaints were wrong once I read the code: `commissio_umbra`
+returns exactly what its docstring says (I had printed the internal
+tuple), and `umbrae_purgare` purges only orphans by design — a failed
+gate keeps clone and receipt for inspection, `receptum_delere` clears
+both. Built: (1) `Editio._extentum_praesens` — when a name is missing
+AND the present text yields fewer extents than the original, the parse
+died; the error now carries clang's first `error:` line (the
+`structura` = `struct` trap cost an hour under the old "non inventum
+in hac plagula" message). (2) `Editio.commentum` to replace a leading
+comment by name — `substituere` keeps comments by design, so there was
+no way to update one. (3) `inserere_ante_vocationem` + `probatio_addere`
+for the "test case before the compendium" pattern, hand-anchored four
+times in B1. (4) `syntaxis(via, textus)` and a `planta` pre-flight: a
+plant that does not compile is refused before the gate runs (the first
+B1 plant removed a parameter, -Werror, a full gate cycle wasted). (5)
+`expandere(text|path)` around the stml CLI returning the vitium NAME,
+slot, fragment, line — I wrote three C probes in B1 for information the
+CLI already printed. Test cases for each in probatio_silva.py; the
+pythonica gate is the commit gate.

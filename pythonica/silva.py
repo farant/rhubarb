@@ -34,6 +34,7 @@ Contractus:
 """
 import difflib
 import os
+import glob
 import re
 import subprocess
 import sys
@@ -87,6 +88,106 @@ def _tsv(effusum):
 
 
 # ---------------------------------------------------------------- extenta
+
+_VEXILLA = None
+
+
+def _vexilla():
+    """vexilla domus (tools/vexilla.sh VEXILLA_C89) - semel lecta"""
+    global _VEXILLA
+    if _VEXILLA is None:
+        r = _curre(['zsh', '-c',
+                    'source tools/vexilla.sh && print -rl -- ${=VEXILLA_C89}'])
+        _VEXILLA = [l for l in r.stdout.splitlines() if l.strip()]
+        if not _VEXILLA:
+            raise SilvaError('tools/vexilla.sh: VEXILLA_C89 vacua')
+    return list(_VEXILLA)
+
+
+def _inclusiones_clang(via):
+    """-I pro probatione syntaxis: include/, directorium plagulae, et
+    fontes/ suitae cuiusque (md fontes materiae includit)"""
+    dirs = [os.path.join(RADIX, 'include'), os.path.dirname(_absoluta(via))]
+    dirs += sorted(glob.glob(os.path.join(RADIX, '*', 'fontes')))
+    return ['-I' + d for d in dirs]
+
+
+def syntaxis(via, textus=None):
+    """clang -fsyntax-only vexillis domus: None = sana, aliter linea prima
+    'error:' (chorda). textus non-None = copia temporaria iuxta plagulam
+    iudicatur (plagula viva intacta)."""
+    if textus is None:
+        via_t = _absoluta(via)
+    else:
+        d = os.path.dirname(_absoluta(via))
+        fd, via_t = tempfile.mkstemp(prefix='.syntaxis_', suffix='.c', dir=d)
+        with os.fdopen(fd, 'w') as f:
+            f.write(textus)
+    try:
+        r = _curre(['clang', '-fsyntax-only'] + _vexilla()
+                   + _inclusiones_clang(via_t) + [via_t])
+        if r.returncode == 0:
+            return None
+        for l in (r.stderr or '').splitlines():
+            if 'error:' in l:
+                return l.replace(via_t, via)
+        cauda = (r.stderr or '').strip().splitlines()
+        return cauda[-1] if cauda else 'clang rc %d' % r.returncode
+    finally:
+        if textus is not None:
+            os.unlink(via_t)
+
+
+def probatio_addere(via, novus, ante='credo_imprimere_compendium',
+                    **applicare):
+    """casum probationis ante vocationem 'ante(' inserere et applicare
+    (Fructus redditur; **applicare -> Editio.applicare, e.g. iudica=False)"""
+    e = Editio(via)
+    e.inserere_ante_vocationem(ante, novus)
+    return e.applicare(**applicare)
+
+
+Expansio = namedtuple('Expansio',
+                      'successus vitium linea fragmentum loculus textus')
+
+
+def expandere(fons):
+    """stml expandere (bin/stml, aliter ~/.bin/stml) super viam aut TEXTUM
+    STML (copia temporaria in build/pythonica): Expansio(successus,
+    vitium (titulus, e.g. LOCULUS_IGNOTUS), linea, fragmentum, loculus,
+    textus expansus pulcher). Sondae C pro numero vitii non iam
+    necessariae (B1: tres scriptae, instrumento iam adstante)."""
+    binarium = os.path.join(RADIX, 'bin', 'stml')
+    if not os.path.exists(binarium):
+        binarium = os.path.expanduser('~/.bin/stml')
+    if not os.path.exists(binarium):
+        raise SilvaError('stml absens - strue: ./tools/stml_struere.sh')
+    temporaria = None
+    if '<' in fons or '\n' in fons or not os.path.exists(_absoluta(fons)):
+        d = os.path.join(RADIX, 'build', 'pythonica')
+        os.makedirs(d, exist_ok=True)
+        fd, temporaria = tempfile.mkstemp(prefix='expandere_', suffix='.stml',
+                                          dir=d)
+        with os.fdopen(fd, 'w') as f:
+            f.write(fons)
+        via = temporaria
+    else:
+        via = _absoluta(fons)
+    try:
+        r = _curre([binarium, 'expandere', via])
+    finally:
+        if temporaria:
+            os.unlink(temporaria)
+    if r.returncode == 0:
+        return Expansio(True, None, 0, None, None, r.stdout)
+    m = re.search(r":(\d+): ([A-Z_]+)(?: \(fragmentum '([^']*)'\))?"
+                  r"(?: \(loculus '([^']*)'\))?", r.stderr or '')
+    if not m:
+        raise SilvaError('stml expandere rc %d sine vitio nominato: %s'
+                         % (r.returncode, (r.stderr or '').strip()[-300:]))
+    return Expansio(False, m.group(2), int(m.group(1)), m.group(3),
+                    m.group(4), '')
+
 
 def extenta(via):
     """Extenta functionum radicis (definitiones + prototypa) ordine fontis.
@@ -234,6 +335,7 @@ class Editio(object):
         self.originalis = open(_absoluta(via)).read()
         self.textus = self.originalis
         self.acta = []
+        self._extenta_originalia = None
 
     # -- ancorae textuales --
     def replace(self, vetus, novus, tolerans=True, numerus=1):
@@ -312,6 +414,44 @@ class Editio(object):
         finally:
             os.unlink(via_t)
 
+    def _extentum_praesens(self, nomen, definitio=True, genus=None):
+        """extentum nominis in textu praesenti; nomine absente
+        PARSATIONEM interrogat: textus praesens pauciora extenta quam
+        originalis reddens = parsatio mortua (verbum latinum ut
+        identificator - 'structura' = struct - lexema ineptum ...), et
+        causa nominatur (clang -fsyntax-only linea prima, aliter examen),
+        ne 'non inventum' de functione quaque posteriore mentiatur
+        (2026-09-03, B1.1: hora perdita)."""
+        ext = self._extenta_praesentia()
+        try:
+            return _extentum_nominis(ext, nomen, definitio, genus)
+        except SilvaError as ex:
+            if self._extenta_originalia is None:
+                self._extenta_originalia = extenta(self.via)
+            if len(ext) < len(self._extenta_originalia):
+                raise SilvaError(
+                    'parsatio textus praesentis MORTUA (%d extenta pro %d):'
+                    ' %s\n  (%s)' % (len(ext), len(self._extenta_originalia),
+                                     syntaxis(self.via, self.textus)
+                                     or self._causa_examinis(), ex))
+            raise
+
+    def _causa_examinis(self):
+        """violatio examinis prima super copiam temporariam (cum clang
+        tacet); './silva/censor.sh <via>' pro macro in declaratore."""
+        d = os.path.dirname(_absoluta(self.via))
+        fd, via_t = tempfile.mkstemp(prefix='.editio_', suffix='.c', dir=d)
+        try:
+            with os.fdopen(fd, 'w') as f:
+                f.write(self.textus)
+            r = _curre(['./silva/examen.sh', via_t, '-machina'])
+            for o in _tsv(r.stdout):
+                if o and o[0] != 'VERDICTUM' and len(o) >= 7:
+                    return 'examen: %s (linea %s)' % (o[6], o[1])
+            return 'causa ignota - ./silva/censor.sh %s' % self.via
+        finally:
+            os.unlink(via_t)
+
     def _lineae(self):
         return self.textus.splitlines(True)
 
@@ -319,8 +459,7 @@ class Editio(object):
         """corpus nodi nomine substituere (commentarium ducens manet);
         genus='typus' pro structura/unione/enumeratione (aut genus
         exactum: 'structura' ...) - sine genere functiones solae."""
-        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio,
-                              genus)
+        x = self._extentum_praesens(nomen, definitio, genus)
         if not novus.endswith('\n'):
             novus += '\n'
         lineae = self._lineae()
@@ -330,8 +469,7 @@ class Editio(object):
         return self
 
     def inserere_post(self, nomen, novus, definitio=True, genus=None):
-        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio,
-                              genus)
+        x = self._extentum_praesens(nomen, definitio, genus)
         if not novus.endswith('\n'):
             novus += '\n'
         lineae = self._lineae()
@@ -341,8 +479,7 @@ class Editio(object):
         return self
 
     def inserere_ante(self, nomen, novus, definitio=True, genus=None):
-        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio,
-                              genus)
+        x = self._extentum_praesens(nomen, definitio, genus)
         if not novus.endswith('\n'):
             novus += '\n'
         lineae = self._lineae()
@@ -353,13 +490,50 @@ class Editio(object):
         self.acta.append('inserere_ante %s' % nomen)
         return self
 
+    def commentum(self, nomen, novus, definitio=True, genus=None):
+        """commentarium DUCENS nodi nominati substituere (substituere
+        corpus solum tangit et commentarium servat - hic via ad ipsum):
+        lineae a '/*' primo intra [linea_a, linea_nodi) usque ad lineam
+        ante nodum; sine commentario novus ante nodum inseritur."""
+        x = self._extentum_praesens(nomen, definitio, genus)
+        if not novus.endswith('\n'):
+            novus += '\n'
+        lineae = self._lineae()
+        initium = None
+        for i in range(x.linea_a - 1, x.linea_nodi - 1):
+            if lineae[i].lstrip().startswith('/*'):
+                initium = i
+                break
+        if initium is None:
+            initium = x.linea_nodi - 1
+        self.textus = ''.join(lineae[:initium]) + novus \
+            + ''.join(lineae[x.linea_nodi - 1:])
+        self.acta.append('commentum %s' % nomen)
+        return self
+
+    def inserere_ante_vocationem(self, functio, novus):
+        """novus ante lineam UNICAM quae 'functio(' vocat (e.g. casus
+        probationis ante 'credo_imprimere_compendium();' - forma quater
+        manu ancorata in B1); vocatio nulla aut plures = SilvaError."""
+        if not novus.endswith('\n'):
+            novus += '\n'
+        lineae = self._lineae()
+        exemplar = re.compile(r'^\s*' + re.escape(functio) + r'\s*\(')
+        sedes = [i for i, l in enumerate(lineae) if exemplar.match(l)]
+        if len(sedes) != 1:
+            raise SilvaError("vocatio '%s(' %d vicibus inventa (exspectata 1)"
+                             % (functio, len(sedes)))
+        i = sedes[0]
+        self.textus = ''.join(lineae[:i]) + novus + ''.join(lineae[i:])
+        self.acta.append('inserere_ante_vocationem %s' % functio)
+        return self
+
     def membrum_addere(self, typus, textus, post=None):
         """membrum structurae/unionis/enumerationis nomine typi addere:
         ante lineam claudentem ('} Titulus;'), aut post membrum cuius
         linea 'post' (ancora tolerans intra typum) continet. Forma
         (applicare) columnas ordinat."""
-        x = _extentum_nominis(self._extenta_praesentia(), typus,
-                              genus='typus')
+        x = self._extentum_praesens(typus, genus='typus')
         if not textus.endswith('\n'):
             textus += '\n'
         lineae = self._lineae()
@@ -1382,8 +1556,10 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         recepta.append((via, nomen, r, tot))
         if not r.sana:
             rel = relatio_fracturarum(r.fracturae) or '\n' + acta[-800:]
-            raise SilvaError('porta umbrae %s non sana: %s%s\n(acta: %s.acta)'
-                             % (nomen, r.compendium, rel, via))
+            raise SilvaError('porta umbrae %s non sana: %s%s\n(acta: %s.acta;'
+                             ' receptum et clone servata - post inspectionem'
+                             ' silva.receptum_delere(%r))'
+                             % (nomen, r.compendium, rel, via, via))
     h = None
     if not siccum:
         h = commissio(nuntius, viae, portae=[v for v, _, _, _ in recepta],
@@ -1405,6 +1581,14 @@ def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
     e.replace(vetus, novus, tolerans=tolerans)
     ante = e.originalis
     plantata = e.textus
+    # praevolatus: planta compilans quaeritur - clang -fsyntax-only super
+    # copiam (plagula viva intacta, porta non cursa) ante ritum; planta
+    # aedificationem frangens (parametrum inutile sub -Werror, B1.1)
+    # cursum totum portae olim perdebat
+    causa = syntaxis(via, plantata)
+    if causa:
+        raise SilvaError('planta non compilat (praevolatus, nihil cursum):'
+                         ' %s' % causa)
 
     def currere():
         if callable(porta_nomen):

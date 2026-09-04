@@ -114,3 +114,23 @@ plica pendet — veritas in C manet.
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 
 Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
+
+## 2026-09-03 — additiones post B1 (recensio Franis)
+
+- **`Editio` parsationem mortuam nominat**: nomine absente, textus praesens
+  pauciora extenta quam originalis reddens = parsatio mortua -> SilvaError
+  'parsatio textus praesentis MORTUA (n pro m): <clang error: linea prima>'
+  (aliter violatio examinis) - numquam iam 'non inventum' de functione
+  quaque posteriore. `Editio.commentum(nomen, novus)` = commentarium ducens
+  substituere (substituere corpus solum tangit).
+  `Editio.inserere_ante_vocationem(functio, novus)` + `probatio_addere(via,
+  novus, ante='credo_imprimere_compendium', **applicare)` = casus
+  probationis ante compendium.
+- **`syntaxis(via[, textus])`** = clang -fsyntax-only vexillis domus
+  (None sana | linea 'error:'); **`planta` praevolatus**: planta non
+  compilans ante ritum refutatur (nihil cursum, plagula intacta).
+- **`expandere(via | textus)`** = stml expandere -> Expansio(successus,
+  vitium titulus, linea, fragmentum, loculus, textus) - sondae C pro
+  numero vitii non iam.
+- `commissio_umbra` fracta: nuntius `receptum_delere(via)` nominat (receptum
+  et clone servata sunt consulto - `umbrae_purgare` orphanos solos tollit).

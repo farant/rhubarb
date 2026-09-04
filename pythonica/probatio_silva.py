@@ -41,6 +41,7 @@ FONS = ('#include "latina.h"\n'
         '    i32  x;\n'
         '\n'
         '    x  = I;\n'
+        '    (vacuum)x;\n'
         '    redde;\n'
         '}\n')
 via = os.path.join(T, 'duo.c')
@@ -51,8 +52,8 @@ x = silva.extenta(via)
 credo(len(x) == 4, 'quattuor extenta')
 credo([e.titulus for e in x] == ['a', 'b', 'a', 'b'], 'ordo fontis')
 d_b = [e for e in x if e.titulus == 'b' and e.definitio][0]
-credo((d_b.linea_a, d_b.linea_nodi, d_b.linea_b) == (12, 14, 21),
-      'b: extentum 12, nodus 14, finis 21')
+credo((d_b.linea_a, d_b.linea_nodi, d_b.linea_b) == (12, 14, 22),
+      'b: extentum 12, nodus 14, finis 22')
 
 print('--- corpus ---')
 c = silva.corpus(via, 'b')
@@ -843,6 +844,70 @@ r = silva.differre(FONS, doc, gradus='documentaria')
 credo(r.cosmetica_solum, 'documentaria gradu documentario admittitur')
 credo(any(p.status == 'MUTATA' and p.titulus == 'b' for p in r.paria),
       'par b MUTATA')
+
+print('--- Editio: parsatio mortua nominata; commentum; inserere_ante_vocationem ---')
+via_m = os.path.join(T, 'mortua.c')
+open(via_m, 'w').write('#include "latina.h"\n\n/* f ducens */\nvacuum\nf (\n    vacuum)\n{\n}\n\n'
+                       'vacuum\ng (\n    vacuum)\n{\n}\n')
+e_m = silva.Editio(via_m)
+e_m.replace('vacuum\ng (', 'vacuum\ng (\n    i32 structura)', tolerans=False)   # 'structura' = struct: parsatio moritur
+try:
+    e_m.substituere('f', 'vacuum\nf (\n    vacuum)\n{\n    redde;\n}\n')
+    credo(False, 'Editio: parsatio mortua clamat')
+except silva.SilvaError as ex:
+    credo('MORTUA' in str(ex) and ('keyword' in str(ex) or 'error:' in str(ex)),
+          'Editio: parsatio mortua nominata cum causa clang (%s)' % str(ex).splitlines()[0][:70])
+e_c = silva.Editio(via_m)
+e_c.commentum('f', '/* f novum */')
+credo('/* f novum */\nvacuum\nf (' in e_c.textus and '/* f ducens */' not in e_c.textus,
+      'commentum: commentarium ducens substitutum')
+e_c.commentum('g', '/* g natum */')
+credo('/* g natum */\nvacuum\ng (' in e_c.textus, 'commentum: sine commentario inseritur')
+via_v = os.path.join(T, 'vocatio.c')
+open(via_v, 'w').write('#include "latina.h"\n\ns32\nprincipale (\n    vacuum)\n{\n    imprimere("a");\n'
+                       '    credo_imprimere_compendium();\n    redde ZEPHYRUM;\n}\n')
+e_v = silva.Editio(via_v)
+e_v.inserere_ante_vocationem('credo_imprimere_compendium', '    imprimere("b");')
+credo(e_v.textus.index('imprimere("a")') < e_v.textus.index('imprimere("b")') < e_v.textus.index('credo_imprimere_compendium();'),
+      'inserere_ante_vocationem: ante vocationem unicam')
+try:
+    e_v.inserere_ante_vocationem('imprimere', 'x')
+    credo(False, 'inserere_ante_vocationem: vocatio plures refutata')
+except silva.SilvaError as ex:
+    credo('vicibus' in str(ex), 'inserere_ante_vocationem: vocatio plures refutata')
+f_pa = silva.probatio_addere(via_v, '    imprimere("c");', forma=False, iudica=False)
+_t = open(via_v).read()
+credo(f_pa.sana and _t.index('imprimere("a")') < _t.index('imprimere("c")') < _t.index('credo_imprimere')
+      and 'imprimere("b")' not in _t,
+      'probatio_addere: casus ante compendium scriptus (editio memoriae prior non scripta)')
+
+print('--- syntaxis; planta praevolatus ---')
+credo(silva.syntaxis('lib/piscina.c') is None, 'syntaxis: plagula viva sana')
+causa = silva.syntaxis(via_m, open(via_m).read())
+credo(causa is not None and 'error:' in causa and '.syntaxis_' not in causa and 'mortua.c' in causa,
+      'syntaxis: copia temporaria iudicata, via data ostensa (%s)' % (causa or '')[-60:])
+via_p = os.path.join(T, 'planta_prae.c')
+open(via_p, 'w').write('#include "latina.h"\n\nvacuum\nh (\n    i32 a)\n{\n    (vacuum)a;\n}\n')
+cursus = []
+def porta_numquam(v):
+    cursus.append(v)
+    raise AssertionError('porta cursa')
+try:
+    silva.planta(via_p, '(vacuum)a;', '', porta_numquam)     # parametrum inutile sub -Werror
+    credo(False, 'planta: praevolatus non compilantem refutat')
+except silva.SilvaError as ex:
+    credo('non compilat' in str(ex) and 'praevolatus' in str(ex), 'planta: praevolatus non compilantem refutat')
+credo(cursus == [] and '(vacuum)a;' in open(via_p).read(), 'planta: porta non cursa, plagula intacta')
+
+print('--- expandere (stml) ---')
+ex_b = silva.expandere('<radix><a/></radix>')
+credo(ex_b.successus and '<a/>' in ex_b.textus, 'expandere: textus bonus expansus')
+ex_m = silva.expandere('<radix><#@f p="@p"><a x="&@ignotum;"/></#></radix>')
+credo(not ex_m.successus and ex_m.vitium == 'LOCULUS_IGNOTUS' and ex_m.loculus == 'ignotum'
+      and ex_m.fragmentum == '@f' and ex_m.linea == 1, 'expandere: vitium nominatum cum loculo et fragmento')
+credo(silva.expandere('project-specs/exhibita/md-html-b1.stml').successus, 'expandere: via')
+for _f in (via_m, via_v, via_p):
+    os.unlink(_f)
 
 print()
 if fracta:
