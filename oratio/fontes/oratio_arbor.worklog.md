@@ -233,3 +233,51 @@ editorial punctuation. Recorded as data (count 4 in 14); a rule
 measured over the corpus before it is added. Gate born red by a plant
 in the percentage helper (hundredths → tenths, every threshold
 unreachable). 171 assertions, 0.5 s.
+
+## 2026-09-04 — T7: Whitaker's WORDS vendored and compiled to a sealed table
+
+Stage 2 opens. The four data files of `mk270/whitakers-words` (commit
+1f2f0fb0, 2026-08-26) are vendored verbatim, CRLF and all, under
+`oratio/vocabularium/la/` with `LICENTIA.txt` (the README's Licensing
+section) and `FONTES.md` (URL, commit, byte and record counts, the
+column law). `oratio_vocabularium.c` reads them and emits ONE nuntium
+stream: a header record (version, source, counts) then 39,335 stem
+records, 1,797 inflection records, 343 addon records and 79 uniques,
+each a nested message with numbered fields; empty strings are simply
+absent; the five one-letter codes ride as varints. The stream is
+3,816,483 bytes — 0.62 × the sources — sealed by SHA-256 (first 16
+hex: f598155c06f52682) and committed as `oratio/vocabularium/la.bin`.
+Coction takes 24 ms, the full read-back (recensio) 3 ms.
+`./oratio/vocabularium.sh [-coquere] [-scribere]` is the instrument;
+the gate `probatio_oratio_vocabularium` (77) pins source bytes, record
+counts, table bytes and seal, proves coction(sources) == committed
+table byte for byte, decodes sample records against the sources, and
+shows that a truncated table is refused and a flipped byte moves the
+seal. Born red by moving the translation column (DL_TRAN_AB 100 → 101):
+the first record no longer fits and coction stops at line 1.
+
+What the sources taught. DICTLINE.GEN is fixed-width exactly as the Ada
+declares it: four stems of eighteen columns each followed by a space
+(76), the part record from column 77 (24 wide), the five codes from
+101 separated by spaces, a space at 110, the meaning from 111 to the
+end of line (padded to 80 in most records, hence lines of 187–191
+bytes). The compiler asserts every one of those positions on every
+record, so the byte pin guards the file and the assertion guards the
+reading. INFLECTS.LAT is whitespace-separated with trailing `--`
+comments on some records; the tail is regular once they are stripped
+— stem key, ending length, the ending only when the length is not 0,
+age, frequency — and declension/variant are present only for N V VPAR
+ADJ PRON NUM SUPINE. The first record in file order is an ADV (line
+27), not the noun `a` ending my first test assumed: pin records by
+SEARCH, not by position. ADDONS.LAT obeys a three-line law by POSITION
+(head, record, meaning): twelve meaning lines begin with the text
+"TACKON …" and eleven with "PACKON …", so a grep for heads counts 355
+and lies; the positional loader counts 343. UNIQUES.LAT is 79 clean
+triples.
+
+Substrate lessons: the xar reset is `xar_vacare` (examen's implicit-call
+warning named it before the compiler did); a `const char*` into a
+chorda needs the union laundering again; a record ordinal passed to an
+`s32` parameter must itself be `s32`. Next: T8 — load the stream into a
+`tabula_dispersa` by the folded key (u/v, i/j, case), then lookup as
+stem + ending with tackons and addons.

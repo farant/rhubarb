@@ -263,6 +263,26 @@ table byte-for-byte (`probatio_oratio_vocabularium`). The house
 serialization (`nuntium`) is the candidate carrier; the v2 pass
 decides.
 
+**As built (T7, 2026-09-04).** Sources vendored verbatim (CRLF) under
+`oratio/vocabularium/la/` from `mk270/whitakers-words@1f2f0fb0` with
+`LICENTIA.txt` and `FONTES.md`; column law transcribed from the Ada
+(`Stem_Type` 18 + space × 4, part record 24 wide from column 77, five
+codes from 101, meaning from 111) and ASSERTED on every record.
+`oratio_vocabularium.{h,c}`: `coquere` → one nuntium stream (header
+with version, source and counts; nested records tagged 2 stems, 3
+inflections, 4 addons, 5 uniques; empty strings absent; codes as
+varints), `recensere` (full read-back against the header),
+per-record decoders, `sigillum` (SHA-256, 16 hex). Table 3,816,483
+bytes (0.62 × sources), seal `f598155c06f52682`, coction 24 ms,
+recensio 3 ms, committed as `la.bin`; `./oratio/vocabularium.sh
+[-coquere] [-scribere]`. Gate `probatio_oratio_vocabularium` (77):
+source bytes, record counts (39,335 / 1,797 / 343 / 79), table bytes
+and seal, coction == committed, decoded samples, truncation refused,
+mutation moves the seal, four mutated sources stop coction with file
+and line. Findings: ADDONS is three lines by POSITION (twelve meaning
+lines begin "TACKON …", eleven "PACKON …"); INFLECTS records carry
+trailing `--` comments; the first INFLECTS record is an ADV.
+
 **Lookup (`vocabularium_la_quaerere(forma) → analyses`).** Fold the
 form; for every split into stem + ending, an ending row must exist
 whose part/declension/variant match a stem row; enclitics (`-que`,

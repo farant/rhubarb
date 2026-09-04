@@ -75,9 +75,19 @@ tabula 17; `ORATIO_FORMA_SPECIMINA=1` prints the non-prose ones).
 Fissio re-run: 93.0% / 95.7%, Propertius now covers 97% of fissio's
 starts. Open DATA: two spaces after `?`/`.` before a lowercase word is
 an editorial boundary in Gutenberg (Cicero, 4 of 14) — candidate rule,
-measure first. NEXT: stage 2 **T7** (vendor Whitaker's WORDS + FONTES.md
-+ compile to a sealed table), then T8 lookup, T9 glossary, T10
-`vocabula.sh`.
+measure first. **T7 DONE — stage 2 opened**: Whitaker's WORDS vendored
+verbatim under `oratio/vocabularium/la/` (`FONTES.md`, `LICENTIA.txt`;
+commit 1f2f0fb0), `oratio_vocabularium` compiles the four files into
+ONE nuntium stream (header + 39,335 stems, 1,797 inflections, 343
+addons, 79 uniques; column law from the Ada asserted on every record)
+committed as `oratio/vocabularium/la.bin` (3,816,483 bytes, seal
+`f598155c06f52682`, coction 24 ms, read-back 3 ms);
+`./oratio/vocabularium.sh [-coquere] [-scribere]`; gate
+`probatio_oratio_vocabularium` (77: pins, coction == committed,
+decoded samples, mutations stop with file and line). NEXT: **T8**
+`vocabularium_la` lookup (load the stream into a `tabula_dispersa` by
+the folded key u/v i/j case; stem + ending with tackons and addons;
+WORDS' own order), then T9 glossary, T10 `vocabula.sh`.
 
 ## Laws to keep (spec §2–3)
 
@@ -94,3 +104,6 @@ measure first. NEXT: stage 2 **T7** (vendor Whitaker's WORDS + FONTES.md
   never code paths; no rule holding = prosa (ambiguity → merging).
 - A hand-built node takes its slot count from the registry
   (`loci_numerus`), never a literal.
+- Vendored sources are VERBATIM (CRLF kept); the compiled table is
+  committed and proven equal to the coction; its seal moves only with
+  a named cause (`-scribere` prints the warning).
