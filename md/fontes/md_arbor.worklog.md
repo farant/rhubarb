@@ -641,3 +641,28 @@ bytes in the projection) — rare, recorded, not fixed. Gate: one block
 CRUDUS_DEEST, green on revert. Fran's ruling on output formatting:
 pretty html waits for the html autoformatter after the html parser;
 the program stays dense.
+
+## 2026-09-03 — B3.2: the oracle is alive — 1,168 of 1,324 on the first run
+
+`probatio_md_oraculum`: every CommonMark 0.31.2 and GFM example
+through `md_html_reddere`, both sides through one normalizer over
+`html_lexare` (an oracle of a different kind than the stml writer),
+compared byte for byte. The normalizer forgives by NAME and COUNTS
+each: whitespace-only text beside a block tag (2,862 — that is our
+missing newlines between blocks), marginal whitespace beside a block
+tag (265), whitespace runs collapsed (454), attribute order (123),
+void spelling (148), boolean attributes (47); entities are decoded on
+both sides; inside `pre`/`code` text is exact. 0.41 s for 1,324
+examples with a fresh arena each. Pin = 1,168, only rising.
+
+Per-section misses name the work of B3.3, biggest first: List items
+24, Links 28, Link reference definitions 14, Entities 14, Emphasis
+12, Lists 10, Tabs 8, Block quotes 8, Autolinks 6 + 5 (extension),
+Tables 4, Backslash escapes 4, Raw HTML 4, Hard breaks 4, Setext 4,
+ATX 2, Fenced 2, Code spans 2, Disallowed raw html 1 (extension not
+implemented, expected). The listing shows the first class: indented
+code INSIDE list items carries the item's marker and continuation
+indentation into the code (`<pre><code>1. indented code`) — the fence
+valor takes every prefix token as indentation; only the block's own
+indentation is. Planted fault (emphasis arm `<em>` → `<i>`) red — the
+count fell below the pin — green on revert.

@@ -127,9 +127,13 @@ Finding 14 ruled: output formatting waits for the html autoformatter,
 program stays dense. **B3 IN PROGRESS. B3.1 DONE**: raw html passes
 through — `<crudum!>` decree in `lib/stml_html.c` (bare bytes, refused
 without `!`), `html.valor` derived (registry 93, seal `24df7f78`), two
-program arms. **NEXT = B3.2**: the normalizer over `html_lexare` + the
-CommonMark/GFM spec loop in `probatio_md_html` (pass count pinned, only
-rising; failures listed by section).
+program arms. **B3.2 DONE**: `probatio_md_oraculum` — every CommonMark + GFM example
+through the program, both sides normalized over `html_lexare`
+(forgivenesses named and counted), pass count PINNED and only rising:
+1,168/1,324 at birth, 0.4 s. Section misses in the worklog. **NEXT =
+B3.3**: the failure classes biggest first (indented code inside list
+items leaks the marker; links; reference definitions; entities;
+emphasis; tabs), each commit raising the pin.
 
 ## Laws to keep (spec §3)
 
