@@ -736,6 +736,14 @@ oratio_arbor_parsare (
             }
             i = spatii_finis;
         }
+        /* forma (T6b): prosa donec classificator adveniat */
+        si (!materia_nodus_ponere(paragraphus,
+                (i32)ORATIO_PARAGRAPHUS_FORMA,
+                materia_valor_index((s32)ORATIO_FORMA_PROSA),
+                MATERIA_LOCUS_INDEX))
+        {
+            redde NIHIL;
+        }
         si (   !_sententias_distribuere(&p, paragraphus, elementa)
             || !_appendere_nodum(&p, documentum,
             (i32)ORATIO_DOCUMENTUM_PARAGRAPHI,

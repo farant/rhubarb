@@ -58,8 +58,25 @@ nomen enumeratio {
 nomen enumeratio {
     ORATIO_PARAGRAPHUS_PRAEFIXA = 0,  /* LISTA_TOKEN: indentatio */
     ORATIO_PARAGRAPHUS_SENTENTIAE,    /* LISTA_NODUS sententia */
-    ORATIO_PARAGRAPHUS_CAUDA          /* LISTA_TOKEN: lineae vacuae post */
+    ORATIO_PARAGRAPHUS_CAUDA,         /* LISTA_TOKEN: lineae vacuae post */
+    ORATIO_PARAGRAPHUS_FORMA          /* INDEX: OratioForma (T6b, lex deprimendi) */
 } OratioLocusParagraphi;
+
+/* FORMA textus paragraphi (spec decisio XXIII): a classificatore ex
+ * indiciis arboris ante lectorem sententiarum decisa et ut INDEX in
+ * paragrapho deposita; lector eam consulit (versus/tabula/index:
+ * linea unitas; titulus: unitas una; prosa: regula sententiarum).
+ * Ambiguitas ad PROSAM vergit (decisio XXIV: iunctio, non scissio).
+ * APPENDUNTUR, numquam permutantur - valor in proiectione numerus est. */
+nomen enumeratio {
+    ORATIO_FORMA_PROSA = 0,
+    ORATIO_FORMA_VERSUS,
+    ORATIO_FORMA_TITULUS,
+    ORATIO_FORMA_TABULA,
+    ORATIO_FORMA_INDEX,
+
+    ORATIO_FORMA_NUMERUS_FORMARUM
+} OratioForma;
 
 nomen enumeratio {
     ORATIO_SENTENTIA_ELEMENTA = 0     /* LISTA_NODUS vocabulum | interpunctio | numerus */

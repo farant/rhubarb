@@ -56,10 +56,11 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T1: VI genera,
-            XVI loci). Tabula mutata sine hac optione mutata rubet in
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T6b: VI genera,
+            XVII loci - forma paragraphi appensa; T1 erat b27fe13a, XVI
+            loci). Tabula mutata sine hac optione mutata rubet in
             iudicio ET in custode derivae.">
-      <optio>b27fe13a</optio>
+      <optio>93c1c9cf</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -98,6 +99,7 @@
     <liberum nomen="praefixa"   maximum="1"/>
     <liberum nomen="sententiae" maximum="1"/>
     <liberum nomen="cauda"      maximum="1"/>
+    <liberum nomen="forma"      maximum="1"/>
   </elementum>
   <elementum nomen="praefixa" intra="paragraphus"
     nota="indentatio (spatia post lineam ultimam caudae praecedentis)">
@@ -110,6 +112,8 @@
     nota="lineae vacuae post elementum ultimum, usque ad lineam ultimam">
     <<#spatia>>
   </elementum>
+  <elementum nomen="forma" intra="paragraphus" textus="verum"
+    nota="T6b: OratioForma ut numerus (0 prosa, 1 versus, 2 titulus, 3 tabula, 4 index) - classificator ante lectorem, lex deprimendi"/>
 
   <elementum nomen="sententia">
     <liberum nomen="elementa" maximum="1"/>

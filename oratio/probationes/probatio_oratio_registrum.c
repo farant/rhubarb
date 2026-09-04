@@ -176,6 +176,19 @@ MateriaLexiconRatum  ratum;
             ORATIO_REGISTRUM.genera[ORATIO_GENUS_NUMERUS].loci_offset
             + (i32)ORATIO_NUMERUS_CRUDUM].titulus, "crudum")
             == ZEPHYRUM);
+        /* T6b: forma APPENSA post caudam, INDEX (lex deprimendi) */
+        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+            ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_offset
+            + (i32)ORATIO_PARAGRAPHUS_FORMA].titulus, "forma")
+            == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+            ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_offset
+            + (i32)ORATIO_PARAGRAPHUS_FORMA].species,
+            (s32)MATERIA_LOCUS_INDEX);
+        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+            ORATIO_GENUS_PARAGRAPHUS].loci_numerus, (i32)IV);
+        CREDO_MINOR_S32 ((s32)ORATIO_FORMA_INDEX,
+            (s32)ORATIO_FORMA_NUMERUS_FORMARUM);
         CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
             ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
             + (i32)ORATIO_VOCABULUM_PARTES].species,
@@ -225,7 +238,8 @@ MateriaLexiconRatum  ratum;
             materia_valor_nodus(vocabulum),
             MATERIA_LOCUS_LISTA_NODUS));
         paragraphus = materia_nodus_creare(piscina,
-            (s32)ORATIO_GENUS_PARAGRAPHUS, (i32)III);
+            (s32)ORATIO_GENUS_PARAGRAPHUS,
+            ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_numerus);
         CREDO_VERUM (materia_nodus_appendere(piscina, paragraphus,
             (i32)ORATIO_PARAGRAPHUS_SENTENTIAE,
             materia_valor_nodus(sententia),

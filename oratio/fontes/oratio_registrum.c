@@ -15,26 +15,27 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "paragraphi",  (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "finis",       (s32)MATERIA_LOCUS_TOKEN },
 
-    /* paragraphus (3..5) */
+    /* paragraphus (3..6) */
     { "praefixa",    (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "sententiae",  (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "cauda",       (s32)MATERIA_LOCUS_LISTA_TOKEN },
+    { "forma",       (s32)MATERIA_LOCUS_INDEX },      /* OratioForma (T6b) */
 
-    /* sententia (6) */
+    /* sententia (7) */
     { "elementa",    (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* vocabulum (7..11) */
+    /* vocabulum (8..12) */
     { "partes",      (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "cauda",       (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "analyses",    (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "classes",     (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM */
     { "linguae",     (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM */
 
-    /* interpunctio (12..13) */
+    /* interpunctio (13..14) */
     { "signum",      (s32)MATERIA_LOCUS_TOKEN },
     { "cauda",       (s32)MATERIA_LOCUS_LISTA_TOKEN },
 
-    /* numerus (14..15) */
+    /* numerus (15..16) */
     { "crudum",      (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "cauda",       (s32)MATERIA_LOCUS_LISTA_TOKEN }
 };
@@ -42,11 +43,11 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
 hic_manens constans MateriaTabGenus GENERA_ORATIONIS[] = {
     /* titulus              offset   numerus */
     { "documentum",        (i32)0,  (i32)3 },
-    { "paragraphus",       (i32)3,  (i32)3 },
-    { "sententia",         (i32)6,  (i32)1 },
-    { "vocabulum",         (i32)7,  (i32)5 },
-    { "interpunctio",      (i32)12, (i32)2 },
-    { "numerus",           (i32)14, (i32)2 }
+    { "paragraphus",       (i32)3,  (i32)4 },
+    { "sententia",         (i32)7,  (i32)1 },
+    { "vocabulum",         (i32)8,  (i32)5 },
+    { "interpunctio",      (i32)13, (i32)2 },
+    { "numerus",           (i32)15, (i32)2 }
 };
 
 constans MateriaRegistrumCoctum ORATIO_REGISTRUM = {
