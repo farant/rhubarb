@@ -2813,6 +2813,28 @@ principale (
                             STML_EXPANSIO_FRAGMENTUM_POSTERIUS);
     }
 
+    /* --- '!' super folium vacuum: octeti nulli (terminator materiae
+     * intra lexemata cruda - B3.1 md); folium vacuum sine '!' silva
+     * manet --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- proiectio: '!' folium vacuum ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n.crudum!;</r><s>&@n.crudum;</s></#>"
+            "<x><crudum><t!>a</t><nl/><t!>b</t></crudum></x>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><x $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><x><crudum><t!>a</t><nl/><t!>b</t></crudum></x>"
+                "<r>ab</r><s><t!>a</t><nl/><t!>b</t></s></radix>");
+        }
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

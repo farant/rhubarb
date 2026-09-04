@@ -169,7 +169,9 @@ nomen enumeratio {
 } MdLocusCellae;
 
 nomen enumeratio {
-    MD_HTML_LINEAE = 0             /* LISTA_NODUS linea */
+    MD_HTML_LINEAE = 0,            /* LISTA_NODUS linea (HTML) */
+    MD_HTML_VALOR                  /* TOKEN DERIVATUM: lineae verbatim + '\n'
+                                    * (B3.1: html crudum transit ut est) */
 } MdLocusHtml;
 
 nomen enumeratio {

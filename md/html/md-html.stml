@@ -75,7 +75,11 @@
     <CASUS tag="fractura-mollis">&@n.valor!;</CASUS>
     <CASUS tag="fractura-dura"><br/>&@n.valor!;</CASUS>
 
-    <!-- praefatio, linea-vacua, definitio-nexus: nihil; html, html-inlineum: B3 -->
+    <!-- html crudum transit ut est (decretum B3.1: '<crudum!>' = splex sine tags) -->
+    <CASUS tag="html"><crudum!>&@n.valor!;</crudum></CASUS>
+    <CASUS tag="html-inlineum"><crudum!>&@n.crudum!;</crudum></CASUS>
+
+    <!-- praefatio, linea-vacua, definitio-nexus: nihil -->
     <ORDINARIUS/>
   </COMMUTATIO>
 </#>

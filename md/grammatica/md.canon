@@ -135,7 +135,7 @@
             mutata rubet in iudicio ET in custode derivae
             (probatio_md_canon optionem contra materia_arbor_sigillum
             vivum confert).">
-      <optio>81c120c4</optio>
+      <optio>24df7f78</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -415,6 +415,11 @@
 
   <elementum nomen="html">
     <liberum nomen="lineae" maximum="1"/>
+    <liberum nomen="valor"  maximum="1"/>
+  </elementum>
+  <elementum nomen="valor" intra="html"
+    nota="B3.1: lineae verbatim + nova linea (derivatum) - html crudum transit">
+    <liberum nomen="md-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="lineae" intra="html">
     <<#lineae>>

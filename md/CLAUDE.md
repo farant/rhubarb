@@ -123,9 +123,13 @@ html as trivia), `md_html_reddere` (`md/fontes/md_html.c`: parse →
 project → compose → expand → distribute → `stml_html_vertere_liberos`,
 the new doctype-less entry in `lib/stml_html.c`), `./md/html.sh <x.md>
 [-stml]`, gate `probatio_md_html` (twelve inputs byte-exact, our bytes).
-Open for Fran: should fills drop layout trivia (finding 14)? **NEXT =
-B3** the CommonMark/GFM oracle with the C normalizer (`probatio_md_html`
-grows the spec loop; raw html passthrough decided there).
+Finding 14 ruled: output formatting waits for the html autoformatter,
+program stays dense. **B3 IN PROGRESS. B3.1 DONE**: raw html passes
+through — `<crudum!>` decree in `lib/stml_html.c` (bare bytes, refused
+without `!`), `html.valor` derived (registry 93, seal `24df7f78`), two
+program arms. **NEXT = B3.2**: the normalizer over `html_lexare` + the
+CommonMark/GFM spec loop in `probatio_md_html` (pass count pinned, only
+rising; failures listed by section).
 
 ## Laws to keep (spec §3)
 

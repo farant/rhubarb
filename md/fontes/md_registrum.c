@@ -90,44 +90,45 @@ hic_manens constans MateriaTabLocus LOCI_MD[] = {
     { "apertum",     (s32)MATERIA_LOCUS_TOKEN },
     { "inlinea",     (s32)MATERIA_LOCUS_NODUS },
 
-    /* html (50) */
+    /* html (50..51) */
     { "lineae",      (s32)MATERIA_LOCUS_LISTA_NODUS },
+    { "valor",       (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM: lineae verbatim + '\n' (B3.1) */
 
-    /* definitio-nexus (51..54) */
+    /* definitio-nexus (52..55) */
     { "lineae",      (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "titulus",     (s32)MATERIA_LOCUS_TOKEN },
     { "url",         (s32)MATERIA_LOCUS_TOKEN },
     { "descriptio",  (s32)MATERIA_LOCUS_TOKEN },
 
-    /* inlinea (55) */
+    /* inlinea (56) */
     { "liberi",      (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* textus (56..57) */
+    /* textus (57..58) */
     { "crudum",      (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "valor",       (s32)MATERIA_LOCUS_TOKEN },
 
-    /* emphasis (58..60) */
+    /* emphasis (59..61) */
     { "apertum",     (s32)MATERIA_LOCUS_TOKEN },
     { "liberi",      (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "clausum",     (s32)MATERIA_LOCUS_TOKEN },
 
-    /* fortis (61..63) */
+    /* fortis (62..64) */
     { "apertum",     (s32)MATERIA_LOCUS_TOKEN },
     { "liberi",      (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "clausum",     (s32)MATERIA_LOCUS_TOKEN },
 
-    /* deletio (64..66) */
+    /* deletio (65..67) */
     { "apertum",     (s32)MATERIA_LOCUS_TOKEN },
     { "liberi",      (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "clausum",     (s32)MATERIA_LOCUS_TOKEN },
 
-    /* verbatim (67..70) */
+    /* verbatim (68..71) */
     { "apertum",     (s32)MATERIA_LOCUS_TOKEN },
     { "crudum",      (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "valor",       (s32)MATERIA_LOCUS_TOKEN },
     { "clausum",     (s32)MATERIA_LOCUS_TOKEN },
 
-    /* nexus (71..76) */
+    /* nexus (72..77) */
     { "forma",       (s32)MATERIA_LOCUS_INDEX },
     { "apertum",     (s32)MATERIA_LOCUS_TOKEN },
     { "liberi",      (s32)MATERIA_LOCUS_LISTA_NODUS },
@@ -135,7 +136,7 @@ hic_manens constans MateriaTabLocus LOCI_MD[] = {
     { "url",         (s32)MATERIA_LOCUS_TOKEN },
     { "descriptio",  (s32)MATERIA_LOCUS_TOKEN },
 
-    /* imago (77..83) */
+    /* imago (78..84) */
     { "forma",       (s32)MATERIA_LOCUS_INDEX },
     { "apertum",     (s32)MATERIA_LOCUS_TOKEN },
     { "liberi",      (s32)MATERIA_LOCUS_LISTA_NODUS },
@@ -144,18 +145,18 @@ hic_manens constans MateriaTabLocus LOCI_MD[] = {
     { "descriptio",  (s32)MATERIA_LOCUS_TOKEN },
     { "alt",         (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM: textus planus liberorum */
 
-    /* fractura-mollis (84..86) */
+    /* fractura-mollis (85..87) */
     { "finis",       (s32)MATERIA_LOCUS_TOKEN },
     { "praefixa",    (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "valor",       (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM: '\n' redditum (terminator octetos in proiectione non fert) */
 
-    /* fractura-dura (87..90) */
+    /* fractura-dura (88..91) */
     { "signum",      (s32)MATERIA_LOCUS_TOKEN },
     { "finis",       (s32)MATERIA_LOCUS_TOKEN },
     { "praefixa",    (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "valor",       (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM: '\n' post <br/> */
 
-    /* html-inlineum (91) */
+    /* html-inlineum (92) */
     { "crudum",      (s32)MATERIA_LOCUS_LISTA_TOKEN }
 };
 
@@ -176,19 +177,19 @@ hic_manens constans MateriaTabGenus GENERA_MD_NODI[] = {
     { "tabula",            (i32)40, (i32)3 },
     { "ordo",              (i32)43, (i32)4 },
     { "cella",             (i32)47, (i32)3 },
-    { "html",              (i32)50, (i32)1 },
-    { "definitio-nexus",   (i32)51, (i32)4 },
-    { "inlinea",           (i32)55, (i32)1 },
-    { "textus",            (i32)56, (i32)2 },
-    { "emphasis",          (i32)58, (i32)3 },
-    { "fortis",            (i32)61, (i32)3 },
-    { "deletio",           (i32)64, (i32)3 },
-    { "verbatim",          (i32)67, (i32)4 },
-    { "nexus",             (i32)71, (i32)6 },
-    { "imago",             (i32)77, (i32)7 },
-    { "fractura-mollis",   (i32)84, (i32)3 },
-    { "fractura-dura",     (i32)87, (i32)4 },
-    { "html-inlineum",     (i32)91, (i32)1 }
+    { "html",              (i32)50, (i32)2 },
+    { "definitio-nexus",   (i32)52, (i32)4 },
+    { "inlinea",           (i32)56, (i32)1 },
+    { "textus",            (i32)57, (i32)2 },
+    { "emphasis",          (i32)59, (i32)3 },
+    { "fortis",            (i32)62, (i32)3 },
+    { "deletio",           (i32)65, (i32)3 },
+    { "verbatim",          (i32)68, (i32)4 },
+    { "nexus",             (i32)72, (i32)6 },
+    { "imago",             (i32)78, (i32)7 },
+    { "fractura-mollis",   (i32)85, (i32)3 },
+    { "fractura-dura",     (i32)88, (i32)4 },
+    { "html-inlineum",     (i32)92, (i32)1 }
 };
 
 constans MateriaRegistrumCoctum MD_REGISTRUM = {

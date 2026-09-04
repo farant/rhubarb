@@ -622,3 +622,22 @@ for B3. Planted fault (h2 arm → h3) red on the spike heading, green on
 revert. Boolean attributes come out bare (`checked disabled`), where
 GFM writes `checked="" disabled=""` — an "attribute spelling"
 forgiveness for B3's list.
+
+## 2026-09-03 — B3.1: raw html passes through; the `crudum` decree
+
+Spec §13 f left raw html for B3, and the serializer had no tag-less
+splice. Decided and built: ONE decreed element name, `crudum`, that
+`stml_html_vertere` emits as bare bytes when it carries the raw flag
+(`<crudum!>…</crudum>`) and refuses as CRUDUS_DEEST without it — the
+same family as script/style, so a tag-less splice is visible by name
+and never silent. The parser side is `html.valor` (registry 93 slots,
+seal 24df7f78): the block's lines verbatim from the cursor after the
+container prefixes, each + `\n`, the same shape as `saeptum.valor`
+without any stripping. Inline html reads its `crudum` tokens with `!`.
+The program gained two one-line arms. Known gap: an inline html tag
+spanning two lines loses its newline (the terminator token has no
+bytes in the projection) — rare, recorded, not fixed. Gate: one block
++ one inline pinned; planted fault (`<crudum>` without `!`) red as
+CRUDUS_DEEST, green on revert. Fran's ruling on output formatting:
+pretty html waits for the html autoformatter after the html parser;
+the program stays dense.

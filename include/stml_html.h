@@ -28,6 +28,10 @@
  *  - singularia HTML ('<body>' geminum etc.) EMITTUNTUR UT
  *    SCRIPTA (decretum Franis 2026-09-01): emissor validitatem
  *    HTML numquam iudicat - nusquam
+ *  - '<crudum!>octeti</crudum>' = SPLEX octetorum SINE tags (decretum
+ *    2026-09-03, B3.1 md: html crudum markdown transit ut est) -
+ *    nomen unum decretum, semper cum '!' (sine eo CRUDUS_DEEST) -
+ *    splex tag-less per nomen unum visibilis manet, numquam tacitus
  *
  * Recusationes (omnes CLAMOSAE, primus vincit): processio,
  * transclusio non resoluta, augmentatio, titulus punctatus,

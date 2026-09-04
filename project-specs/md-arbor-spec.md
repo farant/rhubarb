@@ -535,8 +535,10 @@ DEFAULT; each is one line to overturn.
 - **e.** CommonMark + GFM vendored as two `spec.txt` files with one C
   reader; no JSON. — default: keep.
 - **f.** Raw html passthrough: `<!crudum>` in `vertere`, or html-block
-  sections known-red. — decided at B3 with the first failing example in
-  hand.
+  sections known-red. — **DECIDED B3.1 (2026-09-03): `<crudum!>…</crudum>`**
+  — one decreed element name the html serializer emits as bare bytes
+  when raw, refused (CRUDUS_DEEST) when not; `html.valor` derived on
+  the parser side; `<!crudum>` is not a valid STML form.
 - **g.** Front matter: `praefatio` + `lineae`; no key/value projection.
   — Fran's answer.
 - **h.** Parent context pushed down at parse time (`nudus`, `laxa`,

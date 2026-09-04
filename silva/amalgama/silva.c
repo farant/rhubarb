@@ -19732,6 +19732,18 @@ _silvam_ad_octetos (
             }
             perge;
         }
+                si (   cruda_admissa
+                    && n->genus == STML_NODUS_ELEMENTUM
+                    && !n->crudus
+                    && (n->liberi == NIHIL
+                    || silva_xar_numerus(n->liberi) == ZEPHYRUM))
+                {
+            /* folium VACUUM (terminator materiae '<md-linea/>' intra
+             * lexemata cruda, B3.1): octetos nullos fert - structura
+             * non est. Octeti eius species implicat, non proiectio:
+             * lacuna nominata (md html inlineum lineas duas tenens). */
+            perge;
+                }
         si (   cruda_admissa
             && n->genus == STML_NODUS_ELEMENTUM
             && n->crudus)

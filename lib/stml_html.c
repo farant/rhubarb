@@ -420,11 +420,37 @@ _elementum_emittere (
     crudus_requisitus =    chorda_aequalis_literis(*nodus->titulus,
                                                    "script")
                         || chorda_aequalis_literis(*nodus->titulus,
-                                                   "style");
+                                                   "style")
+                        || chorda_aequalis_literis(*nodus->titulus,
+                                                   "crudum");
     si (crudus_requisitus && !nodus->crudus)
     {
         _vitium_ponere(ctx, STML_HTML_CRUDUS_DEEST,
                        *nodus->titulus);
+        redde;
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "crudum"))
+    {
+        /* SPLEX octetorum sine tags (decretum 2026-09-03, B3.1 md):
+         * liberi textus VERBATIM, nulla evasio, nulla tagi -
+         * nomen unum decretum, semper crudum ('!') */
+        i32 i;
+        i32 num;
+
+        num = nodus->liberi != NIHIL ? xar_numerus(nodus->liberi)
+                                     : ZEPHYRUM;
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlNodus* l = *(StmlNodus**)xar_obtinere(nodus->liberi, i);
+
+            si (   l        != NIHIL
+                && l->genus == STML_NODUS_TEXTUS
+                && l->valor != NIHIL)
+            {
+                chorda_aedificator_appendere_chorda(ctx->aed,
+                                                    *l->valor);
+            }
+        }
         redde;
     }
 

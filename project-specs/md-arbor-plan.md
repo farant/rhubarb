@@ -135,6 +135,8 @@ whitespace outside `<pre>`, attribute order, void-element spelling,
 entity spelling — each COUNTED and reported) → compare. Raw html
 passthrough decided here (spec §13 f). Exit: pass count pinned and only
 rising; failures listed by section; planted fault in B2 red.
+**STATUS 2026-09-03: B3.1 raw passthrough DONE (`crudum` decree +
+`html.valor`); B3.2 normalizer + spec loop next.**
 
 ## Arc C — the consumer
 

@@ -2596,6 +2596,60 @@ _saeptum_derivare (
             chorda_aedificator_finire(aed), origo));
 }
 
+/* Valor blocci html (B3.1 md): lineae VERBATIM (contentum a cursore
+ * post praefixa continentium - indentatio propria manet) + '\n'
+ * quaeque; ancora = lexema primum. Html crudum ita per '<crudum!>'
+ * transit ut est (spec par. 13 f). */
+interior b32
+_html_derivare (
+    MdInlineaContextus* c,
+          MateriaNodus* h)
+{
+    ChordaAedificator* aed;
+         MateriaToken* origo = NIHIL;
+                  i32  n;
+                  i32  i;
+
+    aed = chorda_aedificator_creare(c->piscina, LXIV);
+    si (aed == NIHIL)
+    {
+        redde FALSUM;
+    }
+    n = h->loci[MD_HTML_LINEAE].genus == MATERIA_VALOR_LISTA
+        ? materia_valor_lista_numerus(h->loci[MD_HTML_LINEAE]) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(
+            h->loci[MD_HTML_LINEAE], i);
+        constans MateriaNodus* ln;
+                 MateriaToken* t;
+                          i32  nulla = ZEPHYRUM;
+
+        si (e == NIHIL || e->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        ln = e->datum.nodus;
+        si (ln->genus == (s32)MD_GENUS_LINEA)
+        {
+            t = _lexemata_appendere(aed, &ln->loci[MD_LINEA_CONTENTUM],
+                &nulla, FALSUM);
+            si (origo == NIHIL)
+            {
+                origo = t;
+            }
+        }
+        chorda_aedificator_appendere_character(aed, '\n');
+    }
+    si (origo == NIHIL)
+    {
+        redde VERUM;
+    }
+    redde _ponere_lexema(h, (i32)MD_HTML_VALOR,
+        md_lexema_derivatum(c->fabrica, (s32)MD_LEX_DERIVATUM,
+            chorda_aedificator_finire(aed), origo));
+}
+
 /* Omnes nodos 'inlinea' arboris visitare (paragraphus, capitulum, cella) */
 interior b32
 _inlineas_construere (
@@ -2612,8 +2666,13 @@ _inlineas_construere (
     {
         redde md_inlinea_construere(c, nodus);
     }
-    si (   nodus->genus == (s32)MD_GENUS_SAEPTUM
-        && !_saeptum_derivare(c, nodus))
+        si (   nodus->genus == (s32)MD_GENUS_SAEPTUM
+            && !_saeptum_derivare(c, nodus))
+        {
+        redde FALSUM;
+        }
+    si (   nodus->genus == (s32)MD_GENUS_HTML
+        && !_html_derivare(c, nodus))
     {
         redde FALSUM;
     }

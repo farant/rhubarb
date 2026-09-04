@@ -455,6 +455,33 @@ principale (
         CREDO_VERUM (r.successus && r.html.mensura == ZEPHYRUM);
     }
 
+    /* --- crudum: splex octetorum sine tags (decretum B3.1 md); sine
+     * '!' CRUDUS_DEEST --- */
+    {
+            StmlResultus lectum;
+        StmlHtmlResultus r;
+
+        imprimere("\n--- crudum: splex sine tags ---\n");
+        lectum = stml_legere_ex_literis(
+            "<radix><p>a</p><crudum!><div class=\"x\">&amp; < b</div>\n</crudum><p>c</p></radix>",
+            piscina, intern);
+        CREDO_VERUM (lectum.successus);
+        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina);
+        CREDO_VERUM (r.successus);
+        si (r.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (r.html,
+                "<p>a</p><div class=\"x\">&amp; < b</div>\n<p>c</p>");
+        }
+        lectum =
+            stml_legere_ex_literis("<radix><crudum>x</crudum></radix>",
+                                        piscina, intern);
+        CREDO_VERUM (lectum.successus);
+        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina);
+        CREDO_VERUM (!r.successus
+            && r.vitium == STML_HTML_CRUDUS_DEEST);
+    }
+
     credo_imprimere_compendium();
 
     si (credo_omnia_praeterierunt())

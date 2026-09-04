@@ -50,6 +50,7 @@ declare -a RADIX_FONTES=(
     "stml"
     "stml_macros"
     "stml_html"
+    "html_lexema"
     "similitudo"
     "canon"
     "credo"

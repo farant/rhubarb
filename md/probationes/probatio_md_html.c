@@ -185,8 +185,13 @@ principale (
         "# H1\n###### H6\n**b** ~~d~~ [l](/u) ![i](/p)\n",
         "<h1>H1</h1><h6>H6</h6><p><strong>b</strong> <del>d</del>"
         " <a href=\"/u\">l</a> <img src=\"/p\" alt=\"i\"></p>");
-    _ostende(piscina, intern, programma,
-        "<div>\nraw\n</div>\n\nx <b>y</b>\n");
+    _pinna(piscina, intern, programma,
+        "<div>\nraw\n</div>\n\nx <b>y</b>\n",
+        "<div>\nraw\n</div>\n<p>x <b>y</b></p>");
+    /* lacuna nota: html inlineum duas lineas tenens lineam novam perdit
+     * (terminator octetos in proiectione non fert) - impressum, non
+     * pinnatum */
+    _ostende(piscina, intern, programma, "a <b\nclass=\"c\">d</b>\n");
 
     credo_imprimere_compendium();
     {
