@@ -36,6 +36,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$ORATIO_DIR/fontes"
     "-I$ORATIO_DIR/probationes"
     "-I$RADIX_DIR/md/fontes"
+    "-I$RADIX_DIR/silva/fontes"
 )
 
 # Fontes radicis quibus materia in evolutione nititur.
@@ -139,6 +140,20 @@ for m in materia_lexicon materia_token materia_nodus materia_scribere \
     obj_files="$obj_files $obj"
 done
 
+# silva sub-fontes: lexator totalis pro commentariis (T10 vocabula) - lexema
+# et token solum, non arbor
+for m in silva_token silva_lexema; do
+    src="$RADIX_DIR/silva/fontes/$m.c"
+    obj="$BUILD_DIR/$m.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(find "$RADIX_DIR/silva/fontes" -name '*.h' -newer "$obj" 2>/dev/null | head -1)" ]; then
+        echo "  [silva] $m.c"
+        clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || {
+            echo "FRACTA: $m.c" ; exit 1
+        }
+    fi
+    obj_files="$obj_files $obj"
+done
+
 # md sub-fontes: porta corporis paragraphos markdown per arborem md legit (T3)
 for src in "$RADIX_DIR"/md/fontes/*.c; do
     base="$(basename "$src" .c)"
@@ -185,6 +200,10 @@ done
 # corporis eam legit et absentem CLAMAT (numquam tacite praeterit)
 git -C "$RADIX_DIR" ls-files '*.md' > "$BUILD_DIR/corpus_md.txt" || {
     echo "CAUTIO: corpus_md.txt scribi non potuit - porta corporis rubebit" >&2
+}
+# corpus C commentariorum (T10 vocabula): lib/*.c et silva/fontes/*.c tracti
+git -C "$RADIX_DIR" ls-files 'lib/*.c' 'silva/fontes/*.c' > "$BUILD_DIR/corpus_c.txt" || {
+    echo "CAUTIO: corpus_c.txt scribi non potuit - porta vocabulorum rubebit" >&2
 }
 
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum

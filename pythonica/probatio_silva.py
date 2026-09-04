@@ -1058,6 +1058,17 @@ credo(ct.nuda[0].textus == 'chorda.c' and 'lib/chorda.c' in ct.nuda[0].sedes, 'c
 credo(ct.numeri['symbola_adsunt'] == 1 and 'ABSUNT 1' in silva.citata_textus(ct), 'citata: symbolum in nexus.tsv; textus compendii')
 os.unlink(via_c)
 
+print('--- vocabula: recensio identificatorum (T10) ---')
+vb = silva.vocabula('symbola')
+credo(vb.numeri['verba'] > 5000 and vb.numeri['sedes'] > 100000, 'vocabula: symbola corporis (verba > V milia, sedes > C milia)')
+per_verbum = dict((v.verbum, v) for v in vb.verba)
+credo(per_verbum['offset'].status == 'permissum' and per_verbum['piscina'].status == 'notum' and per_verbum['piscina'].lemma == 'piscina' and per_verbum['piscina'].classis == 'N', 'vocabula: permissum (glossarium) et notum (WORDS) cum lemma et classe')
+credo(vb.verba[0].sedes >= vb.verba[-1].sedes and len(vb.ignota) == vb.numeri['ignotum'] and vb.ignota[0].via and vb.ignota[0].linea > 0, 'vocabula: ordo sedium descendens, ignota cum sede prima')
+try:
+    silva.vocabula('alia'); credo(False, 'vocabula: fons ignotus recusatur')
+except silva.SilvaError:
+    credo(True, 'vocabula: fons ignotus recusatur')
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))

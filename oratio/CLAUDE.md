@@ -103,12 +103,23 @@ there now); `oratio_glossarium` reads it and hashes forms by the same
 fold as the table; `oratio_vocabularium_la_glossarium_ponere` makes it
 the FIRST source of `quaerere` (`ORATIO_ANALYSIS_GLOSSARIUM`);
 `quaere.sh` attaches it; gate `probatio_oratio_glossarium` (84; corpus
-95.1 → 96.3 %). NEXT: **T10** `oratio/vocabula.sh [-symbola | -commenta
-| -omnia]` + `silva.vocabula()` — identifiers from `build/nexus.tsv`
-split at `_`, comments through silva's tree, each word looked up
-(glossary first, WORDS second); report known / ambiguous / UNKNOWN with
-file:line; counts published; the report feeds the glossary and sizes
-T8b.
+95.1 → 96.3 %). **T10 DONE — STAGE 2 COMPLETE**: `oratio_vocabula`
+(identifiers from `build/nexus.tsv` split at `_` and case boundaries;
+comments of `lib/*.c` + `silva/fontes/*.c` through silva's total lexer
+and oratio's tree; one lookup per word, glossary first; status notum /
+ambiguum / permissum / ignotum with sites and first site);
+`./oratio/vocabula.sh [-symbola | -commenta | -omnia] [-machina]
+[-omnes]`, `silva.vocabula(fons)`; gate `probatio_oratio_vocabula` (69,
+corpus floors only). DAY ONE: identifiers 10,060 words, 5,515 unknown;
+comments 14,205 / 5,736; unknowns = abbreviations, English, quoted C
+keywords in generated grammar comments, vendor, house coinages WORDS
+lacks (transponere, lexema, lista, xar). The runner compiles
+`silva_token`/`silva_lexema` and writes `oratio/build/corpus_c.txt`.
+NEXT: grow the glossary from the report (house coinages, permitted
+abbreviations), then pin the identifier unknown count "only falling";
+T8b stays parked (no addon cases at the top); stage 3 **T11**
+`partes_registrum` (17 classes as analysis genera appended to the
+registry, canon rules) follows.
 
 ## Laws to keep (spec §2–3)
 

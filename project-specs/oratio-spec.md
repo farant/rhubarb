@@ -346,6 +346,24 @@ per directory. Python: `silva.vocabula()` on the shape of `citata`.
 Report first; a gate that pins the unknown count "only falling"
 comes when the report is read.
 
+**As built (T10, 2026-09-04).** `oratio_vocabula.{h,c}`: identifiers
+from the definition rows of `build/nexus.tsv` split at `_` and at the
+lower→upper boundary, parts with fewer than two letters dropped;
+comments from tracked `lib/*.c` + `silva/fontes/*.c` through
+`silva_lexare_cruda` (comment tokens) and oratio's tree; one lookup per
+distinct word, glossary first; status notum / ambiguum / permissum /
+ignotum; sites per source, first site kept. `./oratio/vocabula.sh
+[-symbola | -commenta | -omnia] [-machina] [-omnes]`,
+`silva.vocabula(fons)`. Gate 69 (rules on inline fixtures, corpus
+floors, no pin yet). Day one: identifiers 10,060 words / 5,515 unknown
+(55 %); comments 14,205 / 5,736; together 19,371 words, 346,418 sites,
+49 % unknown, 559 ms. Unknowns are abbreviations, English, C keywords
+quoted in generated grammar comments, vendor names, and house coinages
+WORDS lacks (transponere, lexema, lista, xar). Consequences: the
+glossary grows from this list; T8b stays parked (no addon cases at the
+top); the "only falling" pin goes on the identifier corpus after the
+first glossary pass.
+
 ## 5. Stage 3 — annotated words (`partes`)
 
 **Universal classes** (registry `partes_registrum`, one genus per

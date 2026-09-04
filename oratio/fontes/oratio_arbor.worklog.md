@@ -391,3 +391,59 @@ invisible: dropping the fold on the index side changed nothing because
 every glossary form was already lower-case ASCII without v or j; the
 gate is only as real as its data, so the Vergilius entry exists to
 make that fault visible, and it did.
+
+## 2026-09-04 — T10: the vocabulary report over the house's own Latin
+
+`oratio_vocabula.{h,c}` collects words from two corpora and looks each
+up once. Identifiers come from the definition rows of `build/nexus.tsv`
+(149,471 rows), split at underscores and at the lower-to-upper case
+boundary (piscina_allocare → piscina, allocare; MateriaNodus → materia,
+nodus; STMLNodus → stml, nodus), lower-cased, parts with fewer than two
+letters dropped (s32, b32, x). Comments come from every tracked
+`lib/*.c` and `silva/fontes/*.c` through silva's TOTAL lexer
+(`silva_lexare_cruda`, comment tokens only), each comment body then
+read by oratio's tree so its words are the tree's vocabula and the
+`*` margins are punctuation; the line of each word is the comment's
+line plus the newlines before it. Every distinct word is looked up
+glossary first, WORDS second, and gets a status: notum (one lemma),
+ambiguum (several lemmata — status: sisto/status; genus: genu/genus;
+est: sum/edo), permissum (a glossary term of class ignotum-permissum),
+ignotum (nothing — a finding). Sites are counted per source and the
+first site kept. `./oratio/vocabula.sh [-symbola | -commenta | -omnia]
+[-machina] [-omnes]` prints the summary, the unknown words by
+top-level directory of first use, the unknown list by site count, and
+the twenty most ambiguous; `silva.vocabula(fons)` returns the same as
+records. Gate `probatio_oratio_vocabula` (69): the splitting rule on
+an inline symbol table, comment lines on an inline C source, the
+status rules with the real table and glossary, ordering, and the
+corpus run with sanity floors (no pin yet — the "only falling" pin
+comes after this report is read). Born red by removing the case
+boundary. The runner now compiles silva's lexer and token files into
+the oratio build and lists the C corpus as `oratio/build/corpus_c.txt`.
+
+The report, day one. Identifiers: 10,060 distinct words over 192,239
+sites — 3,109 known, 1,416 ambiguous, 20 permitted, 5,515 UNKNOWN
+(55 %), in 144 ms. Comments: 14,205 words over 154,179 sites in 179
+files — 6,174 known, 2,275 ambiguous, 5,736 unknown, in 467 ms.
+Together 19,371 words, 346,418 sites, 49 % unknown, 559 ms. What the
+unknown list is made of, from the top: abbreviations (tok 1,251, idx,
+ctx, aed, sem, ptr, len, val, elem, neg, exp, cx, tt), English (max,
+goto, main, out, count, result, total, cell, slot, part, best, tag,
+after 2,104, expects, states, list), C keywords quoted inside the
+generated grammar comments of the arbor2 and lapifex generation (int
+1,722, long, const, unsigned, signed, short, sizeof, struct, char, enum,
+typedef, void — one archived generation supplies most of them), vendor
+(sqlite 508), and HOUSE COINAGES that WORDS does not know: transponere
+(2,153 sites — real Latin, not in this dictionary), lexema and
+lexemata (838 + 302: Greek loan, medieval), xar, lista (medieval),
+arbor2, md. The per-directory line says where the English lives:
+knotapel's demos and the archived generations, not lib/ and silva/.
+Two consequences for the plan. The glossary grows from this list, not
+from guesses — the house coinages first (lexema, lista, transponere,
+xar as a name), then the abbreviations the house actually uses (tok,
+idx, ctx, ptr, len) as permitted terms or as findings to rename. And
+T8b stays parked: none of the top unknowns is a prefix or suffix case;
+they are English, abbreviations, and quoted keywords, which addons
+would not touch. The "only falling" pin should be set after the first
+glossary pass, on the identifier corpus alone, which is the one the
+house controls.

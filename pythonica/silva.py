@@ -3195,3 +3195,47 @@ if __name__ == '__main__':
         sys.stderr.write('usus: silva.py -umbra <porta> <filtrum|""> '
                          '<receptum.json> [<clone> <arbor> <basis>]\n')
         sys.exit(2)
+
+
+# ---------------------------------------------------------------- vocabula (oratio)
+Verbum = namedtuple('Verbum', 'verbum status sedes symbola commenta classis lemma '
+                    'analyses lemmata via linea')
+Vocabula = namedtuple('Vocabula', 'numeri verba ignota ambigua permissa')
+
+
+def vocabula(fons='omnia'):
+    """RECENSIO VOCABULORUM (./oratio/vocabula.sh -machina; T10):
+    identificatores (build/nexus.tsv, sedes; scissi ad '_' et ad limitem
+    minuscula->CAPITALIS) et/aut commentaria (lib/*.c, silva/fontes/*.c
+    per lexatorem silvae et arborem orationis), verbum quodque SEMEL
+    quaesitum - glossarium oratio/glossarium.stml primum, tabula WORDS
+    deinde: status 'notum' | 'ambiguum' (lemmata plura) | 'permissum'
+    (glossarium classis ignotum-permissum: offset, index ...) | 'ignotum'
+    (INVENTUM, non vitium: Anglica gradus IV, nomina propria,
+    abbreviationes, vocabula domus nondum in glossario). fons = 'symbola'
+    | 'commenta' | 'omnia'. Reddit Vocabula(numeri {verba sedes notum
+    ambiguum permissum ignotum}, verba [Verbum ordine sedium
+    descendentium: verbum status sedes symbola commenta classis lemma
+    analyses lemmata via linea (sedes prima)], ignota, ambigua,
+    permissa). Relatio glossarium alit (termini technici) et T8b metitur."""
+    if fons not in ('symbola', 'commenta', 'omnia'):
+        raise SilvaError("fons: 'symbola' | 'commenta' | 'omnia'")
+    r = _curre(['./oratio/vocabula.sh', '-' + fons, '-machina'])
+    if r.returncode != 0:
+        raise SilvaError('vocabula.sh fractus: %s' % r.stderr.strip()[-200:])
+    verba = []
+    for linea in r.stdout.splitlines():
+        if not linea or linea.startswith('#'):
+            continue
+        p = linea.split('\t')
+        if len(p) < 11:
+            continue
+        verba.append(Verbum(p[0], p[1], int(p[2]), int(p[3]), int(p[4]), p[5], p[6],
+                            int(p[7]), int(p[8]), p[9], int(p[10])))
+    numeri = {'verba': len(verba), 'sedes': sum(v.sedes for v in verba)}
+    for st in ('notum', 'ambiguum', 'permissum', 'ignotum'):
+        numeri[st] = sum(1 for v in verba if v.status == st)
+    return Vocabula(numeri, verba,
+                    [v for v in verba if v.status == 'ignotum'],
+                    [v for v in verba if v.status == 'ambiguum'],
+                    [v for v in verba if v.status == 'permissum'])
