@@ -538,3 +538,39 @@ vitia/limits (same argument, fresh block, scalars only, PER self-
 delegation descending, mutual recursion still POSTERIUS) — 348
 assertions. Planted fault (self-call never recognized) red on the
 explicit self-call fixture, green on revert.
+
+## 2026-09-03 — B2.1: the semantic channel carries what templates cannot
+
+Before writing the html program I ran three probes, and the first one
+is the finding of the day for "quid STML voluit":
+
+**(13) A template cannot manufacture whitespace text.** `&#10;` stays
+literal bytes (the STML reader decodes only the five XML entities, the
+writer then escapes the `&`, and vertere refuses it as ENS_AMBIGUUM),
+and a whitespace-only text node between tags is trivia by the layout
+law, so it never reaches the tree. There is no spelling for "emit a
+newline here" in a template body. Newlines in the output therefore
+have to come from the DATA — the parser's semantic channel — which is
+what §3's derived tokens were for. Four derived tokens land in B2.1:
+`saeptum.valor` (fence content decoded: up to the fence's indentation
+removed per line, four columns for indented code, every line + `\n`),
+`saeptum.lingua` (the first word of the decoded info string — the
+registry had the slot since A2, nothing filled it), `imago.alt` (plain
+text of the description: decoded text, code spans, link text, nested
+images by their own alt, breaks as newlines, inline html dropped), and
+`fractura-mollis.valor` / `fractura-dura.valor` = `\n`, always present.
+The last pair bends the "present only when it differs" law on purpose:
+a terminator has no bytes in the projection at all (its species implies
+them), so the rendered newline is not derivable from what the
+transform can see. A named door for later: if the STML reader ever
+decodes numeric character references (and the writer re-encodes them
+for fidelity), templates could spell `&#10;` and this pair goes away.
+
+Registry 88 → 92 slots (offsets recomputed, comments renumbered), seal
+de590d67 → 81c120c4 (canon repinned, cause: B2.1), computus golden
+regenerated (spica.md +40 lexemata: the derived tokens). Tests: fence
+indentation stripping at three depths, entity in the info string, an
+empty fence (valor present and empty), indented code with an interior
+blank line, image alt across five inline kinds, both break kinds. All
+green first run; planted fault (indented code stripping three columns)
+red on the indented-code case, green on revert.

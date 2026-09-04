@@ -116,7 +116,10 @@ nomen enumeratio {
     MD_SAEPTUM_APERTUM,            /* NODUS? limes */
     MD_SAEPTUM_LINGUA,             /* TOKEN? DERIVATUM */
     MD_SAEPTUM_LINEAE,             /* LISTA_NODUS linea */
-    MD_SAEPTUM_CLAUSUM             /* NODUS? limes */
+    MD_SAEPTUM_CLAUSUM,            /* NODUS? limes */
+    MD_SAEPTUM_VALOR               /* TOKEN? DERIVATUM: contentum decoctum
+                                    * (indentatio saepti/IV columnae
+                                    * sublata), quaeque linea + '\n' */
 } MdLocusSaepti;
 
 nomen enumeratio {
@@ -206,18 +209,25 @@ nomen enumeratio {
     MD_NEXUS_LIBERI,               /* LISTA_NODUS */
     MD_NEXUS_CAUDA,                /* LISTA_TOKEN: '](..)' '][ref]' '>' */
     MD_NEXUS_URL,                  /* TOKEN? DERIVATUM */
-    MD_NEXUS_DESCRIPTIO            /* TOKEN? DERIVATUM */
+    MD_NEXUS_DESCRIPTIO,           /* TOKEN? DERIVATUM */
+    MD_NEXUS_ALT                   /* TOKEN? DERIVATUM - IMAGO SOLUM: textus
+                                    * planus liberorum (alt="") */
 } MdLocusNexus;
 
 nomen enumeratio {
     MD_MOLLIS_FINIS = 0,           /* TOKEN LINEA */
-    MD_MOLLIS_PRAEFIXA             /* LISTA_TOKEN: praefixa lineae sequentis */
+    MD_MOLLIS_PRAEFIXA,            /* LISTA_TOKEN: praefixa lineae sequentis */
+    MD_MOLLIS_VALOR                /* TOKEN DERIVATUM: '\n' redditum - terminator
+                                    * octetos in proiectione non fert (species
+                                    * eos implicat), templum spatium album
+                                    * fingere nequit (lex triviorum) */
 } MdLocusMollis;
 
 nomen enumeratio {
     MD_DURA_SIGNUM = 0,            /* TOKEN SPATIA_FINALIA | EFFUGIUM */
     MD_DURA_FINIS,                 /* TOKEN LINEA */
-    MD_DURA_PRAEFIXA               /* LISTA_TOKEN */
+    MD_DURA_PRAEFIXA,              /* LISTA_TOKEN */
+    MD_DURA_VALOR                  /* TOKEN DERIVATUM: '\n' (post <br/>) */
 } MdLocusDurae;
 
 nomen enumeratio {

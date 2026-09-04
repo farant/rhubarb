@@ -274,6 +274,14 @@ pushed down by the parser — §3's law). The saeptum arm above stands in
 for that decision; if slot projection of a `lineae` list of `linea`
 nodes cannot become text without an expression, the parser gives fences
 a derived `valor` token (the semantic channel again).
+**Decided by measurement (B2.1, 2026-09-03):** it cannot, and neither can
+anything else that needs a NEWLINE: a template body has no spelling for
+whitespace text (`&#10;` is literal and refused by vertere; a
+whitespace-only text node is trivia). So the parser carries the
+rendered bytes as derived tokens: `saeptum.valor` + `saeptum.lingua`,
+`imago.alt` (plain text of the description), and `valor` = `\n` on both
+break kinds — the last always present, since a terminator has no bytes
+in the projection to differ from.
 
 ## 6. Engine increment B1 — five pieces in `lib/stml_macros.c`, all from existing reservations
 

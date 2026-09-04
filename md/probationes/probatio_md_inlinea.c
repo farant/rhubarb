@@ -443,6 +443,26 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_genus(in, ZEPHYRUM), (s32)MD_GENUS_EMPHASIS);
 
     imprimere("\n");
+    imprimere("\n--- Probans derivata B2.1: alt imaginis, fractura dura ---\n");
+    d =
+                                                                                        P("![alt *t* `c` [l](/u) ![in](/x)](/i.png \"ti\")\n"); CREDO_VERUM (sani); in =
+                                                                                                                                                                        _inl(d);
+    n = _liber(in, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_IMAGO);
+    CREDO_VERUM (_lexema_aequalis(n, (i32)MD_NEXUS_ALT,
+        "alt t c l in"));
+    CREDO_VERUM (_lexema_aequalis(n, (i32)MD_NEXUS_DESCRIPTIO, "ti"));
+    d = P("a&amp;b  \nc\\\nd\n"); CREDO_VERUM (sani); in = _inl(d);
+    n = _liber(in, I);
+    CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_FRACTURA_DURA);
+    CREDO_VERUM (_lexema_aequalis(n, (i32)MD_DURA_VALOR, "\n"));
+    n = _liber(in, III);
+    CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_FRACTURA_DURA);
+    CREDO_VERUM (_lexema_aequalis(n, (i32)MD_DURA_VALOR, "\n"));
+    d = P("![x &amp; y](/i)\n"); CREDO_VERUM (sani); in = _inl(d);
+    CREDO_VERUM (_lexema_aequalis(_liber(in, ZEPHYRUM),
+        (i32)MD_NEXUS_ALT, "x & y"));
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

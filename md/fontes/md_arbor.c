@@ -47,6 +47,7 @@
 #include "materia_token.h"
 #include "xar.h"
 #include <string.h>
+#include "chorda_aedificator.h"
 
 #define MD_PROFUNDITAS_MAXIMA  ((i32)64)
 #define MD_PRAEFIXA_MAXIMA     ((i32)160)
@@ -498,6 +499,22 @@ _paragraphum_aperire (
     p->paragraphus_ultima  = linea;
     redde VERUM;
 }
+/* Octetus novae lineae pro lexematis derivatis fracturarum ('\n'
+ * redditum): terminator octetos in proiectione non fert (species eos
+ * implicat) et templum spatium album fingere nequit (lex triviorum,
+ * B2.1 md), ergo canalis semanticus eos fert. */
+hic_manens i8 OCTETUS_NOVAE_LINEAE[I] = { (i8)'\n' };
+
+interior chorda
+_nova_linea (
+    vacuum)
+{
+    chorda c;
+
+    c.datum    = OCTETUS_NOVAE_LINEAE;
+    c.mensura  = I;
+    redde c;
+}
 
 interior b32
 _paragraphum_continuare (
@@ -515,6 +532,13 @@ _paragraphum_continuare (
     }
     si (!_ponere_lexema(fr, (i32)MD_MOLLIS_FINIS,
             md_lexema_terminator(&p->fabrica, p->paragraphus_ultima)))
+    {
+        redde FALSUM;
+    }
+    /* valor redditus '\n' (B2.1 md): terminator octetos non fert */
+    si (!_ponere_lexema(fr, (i32)MD_MOLLIS_VALOR,
+            md_lexema_derivatum(&p->fabrica, (s32)MD_LEX_DERIVATUM,
+                _nova_linea(), fr->loci[MD_MOLLIS_FINIS].datum.token)))
     {
         redde FALSUM;
     }
@@ -1236,6 +1260,51 @@ _limes (
     redde l;
 }
 
+/* Lingua saepti (B2.1 md): verbum primum chordae info decoctae
+ * (CommonMark par. 4.5: 'class="language-<verbum primum>"'; effugia et
+ * entia in info procedunt ante scissionem). Info trim vacua = nihil. */
+interior b32
+_lingua_derivare (
+             MdParsura* p,
+          MateriaNodus* sa,
+    constans MdSaeptum* s,
+          MateriaToken* origo)
+{
+       s32 a = s->info_ab;
+       s32 b = s->info_ad;
+       b32 mutatus;
+    chorda d;
+       i32 w;
+
+    dum (a < b && (p->fons[a] == ' ' || p->fons[a] == '\t'))
+    {
+        a++;
+    }
+    dum (b > a && (p->fons[b - I] == ' ' || p->fons[b - I] == '\t'))
+    {
+        b--;
+    }
+    si (a >= b)
+    {
+        redde VERUM;
+    }
+    d = md_decoquere(p->piscina, p->fons + a, (i32)(b - a), &mutatus);
+    si (d.datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    w = ZEPHYRUM;
+    dum (   w < d.mensura && d.datum[w] != (i8)' '
+         && d.datum[w] != (i8)'\t')
+    {
+        w++;
+    }
+    d.mensura = w;
+    redde _ponere_lexema(sa, (i32)MD_SAEPTUM_LINGUA,
+        md_lexema_derivatum(&p->fabrica, (s32)MD_LEX_DERIVATUM, d,
+        origo));
+}
+
 interior b32
 _saeptum_aperire (
                MdParsura* p,
@@ -1246,12 +1315,22 @@ _saeptum_aperire (
                      s32  ad)
 {
     MateriaNodus* sa = _nodus(p, MD_GENUS_SAEPTUM);
+    MateriaNodus* limes;
 
     si (   sa == NIHIL
         || !_ponere_indicem(sa, (i32)MD_SAEPTUM_FORMA,
-        (i32)MD_SAEPTUM_SAEPTUS)
-        || !_ponere_nodum(sa, (i32)MD_SAEPTUM_APERTUM,
-               _limes(p, linea, pf, post, s->signum_ad, ad)))
+        (i32)MD_SAEPTUM_SAEPTUS))
+    {
+        redde FALSUM;
+    }
+    limes = _limes(p, linea, pf, post, s->signum_ad, ad);
+    si (!_ponere_nodum(sa, (i32)MD_SAEPTUM_APERTUM, limes))
+    {
+        redde FALSUM;
+    }
+    si (   s->info_adest
+        && !_lingua_derivare(p, sa, s,
+               limes->loci[MD_LIMES_SIGNUM].datum.token))
     {
         redde FALSUM;
     }
@@ -2348,6 +2427,175 @@ _definitio_quaerere (
     redde NIHIL;
 }
 
+/* Lexemata loci LISTA_TOKEN in aedificatorem appendere; lexema
+ * primum redditur (ancora derivati) */
+interior MateriaToken*
+_lexemata_appendere (
+        ChordaAedificator* aed,
+    constans MateriaValor* v,
+                      i32* sublatio,
+                      b32  tabus_sumit)
+{
+    MateriaToken* primum = NIHIL;
+             i32  n;
+             i32  j;
+
+    si (v->genus != MATERIA_VALOR_LISTA)
+    {
+        redde NIHIL;
+    }
+    n = materia_valor_lista_numerus(*v);
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(*v, j);
+                          i32  k;
+
+        si (e == NIHIL || e->genus != MATERIA_VALOR_TOKEN)
+        {
+            perge;
+        }
+        si (primum == NIHIL)
+        {
+            primum = e->datum.token;
+        }
+        per (k = ZEPHYRUM; k < e->datum.token->valor.mensura; k++)
+        {
+            i8 c = e->datum.token->valor.datum[k];
+
+            /* indentatio auferenda (spatia; tabus in codice indentato
+             * columnas reliquas sumit - CommonMark par. 4.4/4.5) */
+            si (*sublatio > ZEPHYRUM && c == (i8)' ')
+            {
+                (*sublatio)--;
+                perge;
+            }
+            si (*sublatio > ZEPHYRUM && c == (i8)'\t' && tabus_sumit)
+            {
+                *sublatio = ZEPHYRUM;
+                perge;
+            }
+            chorda_aedificator_appendere_character(aed, (character)c);
+        }
+    }
+    redde primum;
+}
+
+/* Valor saepti (B2.1 md, spec par. 5 'derived valor'): contentum
+ * decoctum - quaeque linea (praefixa cum indentatione saepti aut IV
+ * columnis sublata, contentum) + '\n'. Lexema derivatum ancoram in
+ * lexemate primo lineae primae aut signo saepti habet. */
+interior b32
+_saeptum_derivare (
+    MdInlineaContextus* c,
+          MateriaNodus* sa)
+{
+    ChordaAedificator* aed;
+         MateriaToken* origo       = NIHIL;
+                  i32  indentatio  = ZEPHYRUM;
+                  b32  indentatus;
+                  i32  n;
+                  i32  i;
+
+    indentatus = (b32)(sa->loci[MD_SAEPTUM_FORMA].datum.index
+                       == (s32)MD_SAEPTUM_INDENTATUS);
+    aed = chorda_aedificator_creare(c->piscina, LXIV);
+    si (aed == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (indentatus)
+    {
+        indentatio = IV;
+    }
+    alioquin si (sa->loci[MD_SAEPTUM_APERTUM].genus
+                 == MATERIA_VALOR_NODUS)
+    {
+        /* indentatio saepti aperientis = spatia praefixorum eius */
+        constans MateriaNodus* limes =
+            sa->loci[MD_SAEPTUM_APERTUM].datum.nodus;
+        constans MateriaValor* pv = &limes->loci[MD_LIMES_PRAEFIXA];
+
+        si (pv->genus == MATERIA_VALOR_LISTA)
+        {
+            i32 m = materia_valor_lista_numerus(*pv);
+            i32 j;
+
+            per (j = ZEPHYRUM; j < m; j++)
+            {
+                constans MateriaValor* e =
+                    materia_valor_lista_obtinere(*pv, j);
+                                  i32 k;
+
+                si (e == NIHIL || e->genus != MATERIA_VALOR_TOKEN)
+                {
+                    perge;
+                }
+                per (k = ZEPHYRUM; k
+                    < e->datum.token->valor.mensura; k++)
+                {
+                    si (e->datum.token->valor.datum[k] == (i8)' ')
+                    {
+                        indentatio++;
+                    }
+                }
+            }
+        }
+        si (limes->loci[MD_LIMES_SIGNUM].genus == MATERIA_VALOR_TOKEN)
+        {
+            origo = limes->loci[MD_LIMES_SIGNUM].datum.token;
+        }
+    }
+    n = sa->loci[MD_SAEPTUM_LINEAE].genus == MATERIA_VALOR_LISTA
+        ? materia_valor_lista_numerus(sa->loci[MD_SAEPTUM_LINEAE]) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(
+            sa->loci[MD_SAEPTUM_LINEAE], i);
+        constans MateriaNodus* ln;
+                 MateriaToken* t;
+                          i32  sublatio = indentatio;
+
+        si (e == NIHIL || e->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        ln = e->datum.nodus;
+        si (ln->genus == (s32)MD_GENUS_LINEA)
+        {
+            t = _lexemata_appendere(aed, &ln->loci[MD_LINEA_PRAEFIXA],
+                &sublatio, indentatus);
+            si (origo == NIHIL)
+            {
+                origo = t;
+            }
+            sublatio = ZEPHYRUM;
+            t = _lexemata_appendere(aed, &ln->loci[MD_LINEA_CONTENTUM],
+                &sublatio, FALSUM);
+            si (origo == NIHIL)
+            {
+                origo = t;
+            }
+        }
+        alioquin si (ln->genus == (s32)MD_GENUS_LINEA_VACUA)
+        {
+            t = _lexemata_appendere(aed, &ln->loci[MD_VACUA_PRAEFIXA],
+                &sublatio, indentatus);
+            si (origo == NIHIL)
+            {
+                origo = t;
+            }
+        }
+        chorda_aedificator_appendere_character(aed, '\n');
+    }
+    si (origo == NIHIL)
+    {
+        redde VERUM;   /* nihil ancorandum (saeptum sine lineis nec signo) */
+    }
+    redde _ponere_lexema(sa, (i32)MD_SAEPTUM_VALOR,
+        md_lexema_derivatum(c->fabrica, (s32)MD_LEX_DERIVATUM,
+            chorda_aedificator_finire(aed), origo));
+}
+
 /* Omnes nodos 'inlinea' arboris visitare (paragraphus, capitulum, cella) */
 interior b32
 _inlineas_construere (
@@ -2363,6 +2611,11 @@ _inlineas_construere (
     si (nodus->genus == (s32)MD_GENUS_INLINEA)
     {
         redde md_inlinea_construere(c, nodus);
+    }
+    si (   nodus->genus == (s32)MD_GENUS_SAEPTUM
+        && !_saeptum_derivare(c, nodus))
+    {
+        redde FALSUM;
     }
     per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
     {

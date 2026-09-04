@@ -135,7 +135,7 @@
             mutata rubet in iudicio ET in custode derivae
             (probatio_md_canon optionem contra materia_arbor_sigillum
             vivum confert).">
-      <optio>de590d67</optio>
+      <optio>81c120c4</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -291,8 +291,13 @@
     <liberum nomen="lingua"  maximum="1"/>
     <liberum nomen="lineae"  maximum="1"/>
     <liberum nomen="clausum" maximum="1"/>
+    <liberum nomen="valor"   maximum="1"/>
   </elementum>
   <elementum nomen="forma" intra="saeptum" textus="verum"/>
+  <elementum nomen="valor" intra="saeptum"
+    nota="B2.1: contentum decoctum (derivatum) - lineae + nova linea">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
   <elementum nomen="apertum" intra="saeptum">
     <liberum nomen="limes" maximum="1"/>
   </elementum>
@@ -561,8 +566,13 @@
     <liberum nomen="cauda"      maximum="1"/>
     <liberum nomen="url"        maximum="1"/>
     <liberum nomen="descriptio" maximum="1"/>
+    <liberum nomen="alt"        maximum="1"/>
   </elementum>
   <elementum nomen="forma" intra="imago" textus="verum"/>
+  <elementum nomen="alt" intra="imago"
+    nota="B2.1: textus planus liberorum (derivatum)">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
   <elementum nomen="apertum" intra="imago">
     <liberum nomen="md-nexus-apertum" maximum="1"/>
   </elementum>
@@ -583,6 +593,11 @@
   <elementum nomen="fractura-mollis">
     <liberum nomen="finis"    maximum="1"/>
     <liberum nomen="praefixa" maximum="1"/>
+    <liberum nomen="valor"    maximum="1"/>
+  </elementum>
+  <elementum nomen="valor" intra="fractura-mollis"
+    nota="B2.1: nova linea reddita (derivatum) - terminator octetos non fert">
+    <liberum nomen="md-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="finis" intra="fractura-mollis">
     <<#terminator>>
@@ -596,6 +611,11 @@
     <liberum nomen="signum"   maximum="1"/>
     <liberum nomen="finis"    maximum="1"/>
     <liberum nomen="praefixa" maximum="1"/>
+    <liberum nomen="valor"    maximum="1"/>
+  </elementum>
+  <elementum nomen="valor" intra="fractura-dura"
+    nota="B2.1: nova linea reddita post br (derivatum)">
+    <liberum nomen="md-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="signum" intra="fractura-dura">
     <liberum nomen="md-spatia-finalia" maximum="1"/>

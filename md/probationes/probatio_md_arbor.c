@@ -1209,6 +1209,65 @@ principale (vacuum)
 
 
     imprimere("\n");
+
+
+    /* ========================================================
+     * PROBARE: lexemata derivata B2.1 - saeptum.valor / lingua,
+     * fractura-mollis.valor (canalis semanticus pro html: templum
+     * spatium album fingere nequit, terminator octetos non fert)
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* s;
+        MateriaNodus* p;
+        MateriaNodus* fr;
+
+        imprimere("\n--- Probans derivata saepti et fracturae ---\n");
+        d = PARSA("```c title\nint x;\n  y\n```\n");
+        CREDO_VERUM (sani);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_VERUM (_valor_aequalis(s, (i32)MD_SAEPTUM_LINGUA, "c"));
+        CREDO_VERUM (_valor_aequalis(s, (i32)MD_SAEPTUM_VALOR,
+            "int x;\n  y\n"));
+        CREDO_AEQUALIS_S32 (
+            s->loci[MD_SAEPTUM_VALOR].datum.token->fons_index,
+            (s32)MD_FONS_DERIVATUS);
+        /* saeptum indentatum III: indentatio saepti (usque ad III
+         * spatia) e lineis sublata (par. 4.5) */
+        d = PARSA("   ```\n   a\n     b\n  c\n   ```\n");
+        CREDO_VERUM (sani);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_VERUM (_valor_aequalis(s, (i32)MD_SAEPTUM_VALOR,
+            "a\n  b\nc\n"));
+        CREDO_VERUM (!_adest(s, (i32)MD_SAEPTUM_LINGUA));
+        /* info cum entitate: verbum primum DECOCTUM */
+        d = PARSA("~~~ c&#43; rest\nz\n~~~\n");
+        CREDO_VERUM (sani);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_VERUM (_valor_aequalis(s, (i32)MD_SAEPTUM_LINGUA, "c+"));
+        /* codex indentatus: IV columnae sublatae, vacua interior
+         * servata */
+        d = PARSA("    a\n\n      b\n");
+        CREDO_VERUM (sani);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (s->genus, (s32)MD_GENUS_SAEPTUM);
+        CREDO_VERUM (_valor_aequalis(s, (i32)MD_SAEPTUM_VALOR,
+            "a\n\n  b\n"));
+        /* saeptum vacuum: valor vacuus PRAESENS */
+        d = PARSA("```\n```\n");
+        CREDO_VERUM (sani);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_VERUM (_valor_aequalis(s, (i32)MD_SAEPTUM_VALOR, ""));
+        /* fractura mollis: valor '\n' */
+        d = PARSA("a\nb\n");
+        CREDO_VERUM (sani);
+        p  = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        fr = _elementum(p->loci[MD_PARAGRAPHUS_INLINEA].datum.nodus,
+            (i32)MD_INLINEA_LIBERI, I);
+        CREDO_AEQUALIS_S32 (fr->genus, (s32)MD_GENUS_FRACTURA_MOLLIS);
+        CREDO_VERUM (_valor_aequalis(fr, (i32)MD_MOLLIS_VALOR, "\n"));
+    }
     credo_imprimere_compendium();
 
     praeteritus = credo_omnia_praeterierunt();

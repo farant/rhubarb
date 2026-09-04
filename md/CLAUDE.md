@@ -11,7 +11,7 @@ interview + census: `project-specs/md-arbor-interview.md`; spike:
 
 ## Praesens status (2026-09-03)
 
-**A2 DONE**: `md_registrum` (28 genera, 87 slots, named slot enums),
+**A2 DONE**: `md_registrum` (28 genera, 92 slots since B2.1, named slot enums),
 `md_lexicon` (26 token genera, prefix `md-`, LINEA is a TERMINATOR
 with munus LINEA — the FIDELIS comparator can run here, unlike css),
 `md_lexema` (line table + scanners + token factory + the crude
@@ -109,8 +109,18 @@ nested list through a four-arm dispatcher yields `<ul><li>one<ul>…`.
 B1.2 (`de="@n"` on EXEMPLAR inside bodies) NOT BUILT — no md consumer,
 needs fill-scoped relations; parked pending Fran (spec §6.2 note).
 Exhibit: `project-specs/exhibita/md-html-b1.stml` through `stml
-expandere`. **NEXT = B2** the md→html program (`md/html/md-html.stml`,
-`md/html.sh`, worklog "quid STML voluit").
+expandere`.
+
+**B2 IN PROGRESS.** **B2.1 DONE**: four derived tokens for the html
+program — `saeptum.valor` (decoded fence content, indentation stripped,
+lines + `\n`), `saeptum.lingua` (first word of the decoded info),
+`imago.alt` (plain text of the description), `fractura-mollis.valor` /
+`fractura-dura.valor` = `\n` (always present: the terminator has no
+bytes in the projection, and a template cannot manufacture whitespace —
+finding 13). Registry 92 slots, seal `81c120c4`. **NEXT = B2.2**: html
+fragment entry in `lib/stml_html.c`, the driver `md/instrumenta/html.c`
++ `md/html.sh`, the program `md/html/md-html.stml`, gate
+`probatio_md_html` (spike examples pinned).
 
 ## Laws to keep (spec §3)
 

@@ -13,6 +13,7 @@
 #include "materia_token.h"
 #include "xar.h"
 #include <string.h>
+#include "chorda_aedificator.h"
 
 
 /* ==================================================
@@ -518,6 +519,127 @@ _textus_ex (
     }
     redde t;
 }
+hic_manens i8 OCTETUS_NOVAE_LINEAE[I] = { (i8)'\n' };
+
+/* Lexemata loci LISTA_TOKEN (crudum) appendere */
+interior vacuum
+_lexemata_plana (
+        ChordaAedificator* aed,
+    constans MateriaValor* v)
+{
+    i32 m;
+    i32 j;
+
+    si (v->genus != MATERIA_VALOR_LISTA)
+    {
+        redde;
+    }
+    m = materia_valor_lista_numerus(*v);
+    per (j = ZEPHYRUM; j < m; j++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(*v, j);
+
+        si (e != NIHIL && e->genus == MATERIA_VALOR_TOKEN)
+        {
+            chorda_aedificator_appendere_chorda(aed,
+                e->datum.token->valor);
+        }
+    }
+}
+
+interior vacuum
+_textum_planum_appendere (
+        ChordaAedificator* aed,
+    constans MateriaNodus* n);
+
+interior vacuum
+_liberos_planos (
+        ChordaAedificator* aed,
+    constans MateriaValor* v)
+{
+    i32 m;
+    i32 j;
+
+    si (v->genus != MATERIA_VALOR_LISTA)
+    {
+        redde;
+    }
+    m = materia_valor_lista_numerus(*v);
+    per (j = ZEPHYRUM; j < m; j++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(*v, j);
+
+        si (e != NIHIL && e->genus == MATERIA_VALOR_NODUS)
+        {
+            _textum_planum_appendere(aed, e->datum.nodus);
+        }
+    }
+}
+
+/* Textus planus subarboris inlineae (alt imaginis, CommonMark par.
+ * 6.4: descriptio ut textus nudus - ornamenta sublata, nexus per
+ * liberos, imago nidificata per alt suum, fracturae '\n', html
+ * inlineum nihil). Valor decoctus praefertur crudo. */
+interior vacuum
+_textum_planum_appendere (
+        ChordaAedificator* aed,
+    constans MateriaNodus* n)
+{
+    si (n == NIHIL)
+    {
+        redde;
+    }
+    commutatio (n->genus)
+    {
+        casus (s32)MD_GENUS_TEXTUS:
+            si (n->loci[MD_TEXTUS_VALOR].genus == MATERIA_VALOR_TOKEN)
+            {
+                chorda_aedificator_appendere_chorda(aed,
+                    n->loci[MD_TEXTUS_VALOR].datum.token->valor);
+            }
+            alioquin
+            {
+                _lexemata_plana(aed, &n->loci[MD_TEXTUS_CRUDUM]);
+            }
+            frange;
+        casus (s32)MD_GENUS_VERBATIM:
+            si (n->loci[MD_VERBATIM_VALOR].genus == MATERIA_VALOR_TOKEN)
+            {
+                chorda_aedificator_appendere_chorda(aed,
+                    n->loci[MD_VERBATIM_VALOR].datum.token->valor);
+            }
+            alioquin
+            {
+                _lexemata_plana(aed, &n->loci[MD_VERBATIM_CRUDUM]);
+            }
+            frange;
+        casus (s32)MD_GENUS_EMPHASIS:
+        casus (s32)MD_GENUS_FORTIS:
+        casus (s32)MD_GENUS_DELETIO:
+            _liberos_planos(aed, &n->loci[MD_ORNATUS_LIBERI]);
+            frange;
+        casus (s32)MD_GENUS_NEXUS:
+            _liberos_planos(aed, &n->loci[MD_NEXUS_LIBERI]);
+            frange;
+        casus (s32)MD_GENUS_IMAGO:
+            si (n->loci[MD_NEXUS_ALT].genus == MATERIA_VALOR_TOKEN)
+            {
+                chorda_aedificator_appendere_chorda(aed,
+                    n->loci[MD_NEXUS_ALT].datum.token->valor);
+            }
+            alioquin
+            {
+                _liberos_planos(aed, &n->loci[MD_NEXUS_LIBERI]);
+            }
+            frange;
+        casus (s32)MD_GENUS_FRACTURA_MOLLIS:
+        casus (s32)MD_GENUS_FRACTURA_DURA:
+            chorda_aedificator_appendere_character(aed, '\n');
+            frange;
+        ordinarius:
+            frange;
+    }
+}
 
 interior MateriaNodus*
 _fractura_ex (
@@ -526,6 +648,7 @@ _fractura_ex (
 {
     MateriaNodus* vetus = in->segmenta[it->segmentum].fractura;
     MateriaNodus* fr;
+          chorda  nl;
 
     si (vetus == NIHIL)
     {
@@ -559,6 +682,15 @@ _fractura_ex (
         && !materia_nodus_ponere(fr, (i32)MD_DURA_PRAEFIXA,
                vetus->loci[MD_MOLLIS_PRAEFIXA],
                MATERIA_LOCUS_LISTA_TOKEN))
+    {
+        redde NIHIL;
+    }
+    /* valor redditus '\n' post <br/> (B2.1 md) */
+    nl.datum    = OCTETUS_NOVAE_LINEAE;
+    nl.mensura  = I;
+    si (!materia_nodus_ponere(fr, (i32)MD_DURA_VALOR,
+            materia_valor_token(_derivatum(in, nl, it->signum_ab)),
+            MATERIA_LOCUS_TOKEN))
     {
         redde NIHIL;
     }
@@ -1816,10 +1948,30 @@ _uncum_claudere (
         {
             redde (s32)-II;
         }
-        si (   a != NIHIL && b != apertum
-            && !_liberos_construere(in, nx, (i32)MD_NEXUS_LIBERI, a, b))
-        {
+                si (   a != NIHIL && b != apertum
+                    && !_liberos_construere(in, nx,
+                    (i32)MD_NEXUS_LIBERI, a, b))
+                {
             redde (s32)-II;
+                }
+        si (u->imago)
+        {
+            /* alt = textus planus liberorum (B2.1 md, derivatum) */
+            ChordaAedificator* aed = chorda_aedificator_creare(
+                in->c->piscina, LXIV);
+
+            si (aed == NIHIL)
+            {
+                redde (s32)-II;
+            }
+            _liberos_planos(aed, &nx->loci[MD_NEXUS_LIBERI]);
+            si (!materia_nodus_ponere(nx, (i32)MD_NEXUS_ALT,
+                    materia_valor_token(_derivatum(in,
+                        chorda_aedificator_finire(aed), apertum->ab)),
+                    MATERIA_LOCUS_TOKEN))
+            {
+                redde (s32)-II;
+            }
         }
         si (!_lexemata_inter(in, nx, (i32)MD_NEXUS_CAUDA,
             (s32)MD_LEX_NEXUS_CAUDA, i, fin))
