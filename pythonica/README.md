@@ -173,3 +173,21 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
 - **Reparatio formae**: sedes contorta et sedes recta eandem seriem
   lexematum habent ('} m_ad = ...' bis) — ancora tolerans ambigua est;
   octeti exacti (`tolerans=False`) sedem contortam solam nominant.
+
+## 2026-09-04 — Prosa (C1): markdown per ancoras structurales
+
+- **`silva.Prosa(via)`** = Textus + extenta per `./md/extenta.sh <x.md>
+  '<selector>'` (selectio super proiectionem md; TSV octetim). OCTETI:
+  plagula ut bytes, textus utf-8 pro lectione. `.selecta(selector)` →
+  [ProsaExtentum(tag, initium, finis, linea, columna, linea_finis,
+  versio)]; sugar `.capitulum(titulus[, gradus])` (linea capituli, textus
+  sine marcis), `.sectio(titulus[, gradus])` (capitulum cum corpore usque
+  ad capitulum gradus <=, vacuae caudales exclusae), `.elementum(n,
+  intra=)`, `.saeptum(lingua=, n=, intra=)`; `.corpus(x)`,
+  `.substituere(x, novus)`, `.inserere_post/ante(x, novus)`, `.replace`
+  (exacta), `.appendere`; `.applicare()` = custos lectionis rancidae,
+  scriptura semel, IUDEX (parsura + extentum 'documentum' == plagula
+  tota), ancorae RELATAE (ProsaFructus.ancorae). Extenta post editionem
+  RANCESCUNT (versio) — reselige. Refusiones: capitulum absens nominat
+  capitula praesentia; n extra numerum; selector malus.
+- `silva.prosa_extenta(via, selector)` = involucrum crudum extenta.sh.

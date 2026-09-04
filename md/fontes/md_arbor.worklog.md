@@ -745,3 +745,29 @@ and label case folding (5), definitions with multi-line labels or
 titles (3), the full HTML5 entity table (1), a raw-html comment edge
 (1), bare-URL autolinks in core examples (2 — a GFM choice, expected),
 plus the GFM file's 0.29-era emphasis expectations (10, spec version).
+
+## 2026-09-04 — C1 extenta: bytes by correspondence, not by positions
+
+The projection carries no per-token byte offsets on purpose (the reader
+reconstructs positions with a byte cursor; derived tokens carry a
+"portata" line/column only). So `md_extenta_quaerere` never reads a
+position from STML: it selects over the STML tree with `selectio.h`
+(the same engine as `silva/selecta.sh`), then maps each matched element
+to source bytes through a pre-order CORRESPONDENCE — the k-th token
+element in the projection is the k-th token in the materia tree's
+pre-order (the writer walks loci in registry order, lists in order).
+The correspondence is self-checked on every run: counts must agree and
+every pair's tag must equal `materia_arbor_lexema_tag` of the materia
+token's genus (the writer's own spelling — lowercase, `_` → `-`; my
+first version spelled it by hand and failed on `md-marca-atx`). A
+failed check refuses the whole query; it never returns a guessed
+extent. Extent = first source token's offset to the last source
+token's end within the subtree; derived tokens (fons 1) are skipped.
+
+Finding pinned in the gate: in the line model a paragraph inside a
+tight list item OWNS the marker bytes of its line (praefixa of the
+leaf), so `paragraphus` on `- a` yields `- a\n`, not `a\n`. That is the
+byte law working as designed; consumers that want the item use
+`elementum`. Setext headings span both lines; nested items are
+contained in their parent's extent; a definition's derived tokens do
+not move its extent. Instrument 0.09 s on the plan document.

@@ -965,6 +965,309 @@ class Textus(object):
         return Fructus(self.via, d, None, False, None)
 
 
+# ---------------------------------------------------------------- prosa (md)
+
+ProsaExtentum = namedtuple('ProsaExtentum',
+                           'tag initium finis linea columna linea_finis versio')
+
+
+def prosa_extenta(via, selector, versio=0):
+    """[ProsaExtentum] per md/extenta.sh (selectio super proiectionem md):
+    OCTETI [initium, finis) in plagula, lineae/columnae I-basatae. rc 1 =
+    nulla congruentia (lista vacua); rc 2 = fractura (selector, parsura)"""
+    r = _curre(['./md/extenta.sh', _absoluta(via), selector])
+    if r.returncode == 2:
+        raise SilvaError('extenta fractus: %s' % r.stderr.strip()[-300:])
+    exitus = []
+    for linea in r.stdout.splitlines():
+        if linea.startswith('#') or not linea.strip():
+            continue
+        p = linea.split('\t')
+        exitus.append(ProsaExtentum(p[2], int(p[3]), int(p[4]), int(p[5]),
+                                    int(p[6]), int(p[7]), versio))
+    return exitus
+
+
+class ProsaFructus(object):
+    """fructus Prosa.applicare: diff, sana (parsura plagulae scriptae +
+    extentum 'documentum' == plagula tota), ancorae {ancora: numerus post
+    scripturam} - RELATAE, non assertae"""
+
+    def __init__(self, via, diff, sana, ancorae, causa=''):
+        self.via = via
+        self.diff = diff
+        self.sana = sana
+        self.ancorae = ancorae
+        self.causa = causa
+
+    def __str__(self):
+        lineae = ['applicare %s: %s' % (self.via, 'sana' if self.sana
+                                        else 'NON SANA - ' + self.causa)]
+        for k in sorted(self.ancorae):
+            lineae.append('  ancora %s -> %d' % (k, self.ancorae[k]))
+        return '\n'.join(lineae) + ('\n' + self.diff if self.diff else '')
+
+
+class Prosa(object):
+    """Editio markdown per ANCORAS STRUCTURALES (C1, spec md par. IX):
+    Textus (custos lectionis rancidae, omnia aut nihil, scriptura semel,
+    sine formatore) + extenta per md/extenta.sh. OCTETI, non characteres:
+    plagula ut bytes tenetur (extenta octetim sunt), textus utf-8
+    decodificatur. Extenta post editionem RANCESCUNT (offsets labuntur):
+    quodque versionem editionis fert, methodus editionis extentum vetus
+    refutat - reselige post editionem. sectio(titulus) = capitulum cum
+    corpore usque ad capitulum proximum gradus aequalis aut superioris
+    (lineae vacuae caudales exclusae, ut separatio post substitutionem
+    maneat). applicare() scribit semel et IUDICAT: parsura super plagulam
+    scriptam + extentum 'documentum' == plagula tota (lex octetorum); ancorae
+    adhibitae iterum numerantur et REFERUNTUR (substitutio quae capitulum
+    ipsum renominat licita est - relatio, non refusio)."""
+
+    def __init__(self, via):
+        self.via = via
+        self.originalis = open(_absoluta(via), 'rb').read()
+        self.octeti = self.originalis
+        self.acta = []
+        self.versio = 0
+        self.ancorae = []
+
+    # -- textus --
+    @property
+    def textus(self):
+        return self.octeti.decode('utf-8', errors='replace')
+
+    def corpus(self, x):
+        """textus extenti (decodificatus)"""
+        self._recens(x)
+        return self.octeti[x.initium:x.finis].decode('utf-8',
+                                                     errors='replace')
+
+    # -- extenta --
+    def _plagula_praesens(self):
+        d = os.path.join(RADIX, 'build', 'pythonica')
+        os.makedirs(d, exist_ok=True)
+        fd, via_t = tempfile.mkstemp(prefix='.prosa_', suffix='.md', dir=d)
+        with os.fdopen(fd, 'wb') as f:
+            f.write(self.octeti)
+        return via_t
+
+    def selecta(self, selector):
+        """[ProsaExtentum] per selectorem in textu PRAESENTI"""
+        via_t = self._plagula_praesens()
+        try:
+            return prosa_extenta(via_t, selector, self.versio)
+        finally:
+            os.unlink(via_t)
+
+    def _capitula(self):
+        """[(extentum, gradus, titulus)] - titulus sine marcis (ATX: '#'
+        ducentes et clausura; setext: subductio ablata)"""
+        exitus = []
+        for x in self.selecta('capitulum'):
+            crudum = self.octeti[x.initium:x.finis]
+            lineae = crudum.split(b'\n')
+            prima = lineae[0].lstrip(b' ')
+            if prima.startswith(b'#'):
+                gradus = len(prima) - len(prima.lstrip(b'#'))
+                t = prima[gradus:].strip()
+                t = re.sub(rb'(^|\s)#+\s*$', b'', t).rstrip()
+            else:
+                plenae = [l for l in lineae if l.strip()]
+                gradus = 1 if plenae[-1].strip().startswith(b'=') else 2
+                t = b' '.join(l.strip() for l in plenae[:-1])
+            exitus.append((x, gradus, t.decode('utf-8', errors='replace')))
+        return exitus
+
+    def _capitulum_index(self, titulus, gradus):
+        c = self._capitula()
+        hits = [i for i, (x, g, t) in enumerate(c)
+                if t == titulus and (gradus is None or g == gradus)]
+        self.ancorae.append(('capitulum', titulus))
+        if len(hits) != 1:
+            praesentia = ', '.join('%r (h%d, linea %d)' % (t, g, x.linea)
+                                   for x, g, t in c[:40])
+            raise SilvaError('capitulum %r %d vicibus inventum (exspectatum'
+                             ' semel)%s; praesentia: %s'
+                             % (titulus, len(hits),
+                                ' - lineae %s' % [c[i][0].linea for i in hits]
+                                if hits else '', praesentia or '(nulla)'))
+        return hits[0], c
+
+    def capitulum(self, titulus, gradus=None):
+        """extentum LINEAE capituli cuius textus (sine marcis) == titulus;
+        gradus filtrat (1..6); absens/ambiguum refutatur, capitula
+        praesentia nominata"""
+        i, c = self._capitulum_index(titulus, gradus)
+        return c[i][0]
+
+    def sectio(self, titulus, gradus=None):
+        """capitulum CUM corpore: usque ad capitulum proximum gradus <=
+        suo (ultimum: usque ad finem); lineae vacuae caudales exclusae"""
+        i, c = self._capitulum_index(titulus, gradus)
+        x, g, _ = c[i]
+        finis = len(self.octeti)
+        for xj, gj, _ in c[i + 1:]:
+            if gj <= g:
+                finis = xj.initium
+                break
+        corpus = self.octeti[x.initium:finis]
+        nudum = corpus.rstrip(b' \t\n')
+        finis = x.initium + len(nudum) + (1 if corpus[len(nudum):]
+                                          .startswith(b'\n') else 0)
+        linea_finis = x.linea + self.octeti[x.initium:finis].count(b'\n') \
+            - (1 if self.octeti[finis - 1:finis] == b'\n' else 0)
+        return ProsaExtentum('sectio', x.initium, finis, x.linea, x.columna,
+                             linea_finis, self.versio)
+
+    def _intra(self, xs, intra):
+        if intra is None:
+            return xs
+        self._recens(intra)
+        return [x for x in xs
+                if x.initium >= intra.initium and x.finis <= intra.finis]
+
+    def _n(self, quid, xs, n):
+        if n < 0 or n >= len(xs):
+            raise SilvaError('%s: %d praesentia, n=%d petitum'
+                             % (quid, len(xs), n))
+        return xs[n]
+
+    def elementum(self, n=0, intra=None):
+        """elementum listae n-tum (ordine documenti, nidificata inclusa);
+        intra = extentum (sectio ...) quod ea continet"""
+        self.ancorae.append(('elementum', n))
+        return self._n('elementum', self._intra(self.selecta('elementum'),
+                                                intra), n)
+
+    def _lingua(self, x):
+        prima = self.octeti[x.initium:x.finis].split(b'\n', 1)[0]
+        info = prima.strip().lstrip(b'`~').strip()
+        return info.split()[0].decode('utf-8', errors='replace') \
+            if info else ''
+
+    def saeptum(self, lingua=None, n=0, intra=None):
+        """saeptum codicis n-tum (lingua = verbum primum info)"""
+        self.ancorae.append(('saeptum', lingua))
+        xs = self._intra(self.selecta('saeptum'), intra)
+        if lingua is not None:
+            xs = [x for x in xs if self._lingua(x) == lingua]
+        return self._n('saeptum %r' % lingua, xs, n)
+
+    # -- editiones --
+    def _recens(self, x):
+        if x.versio != self.versio:
+            raise SilvaError('extentum rancidum (selectum in versione %d,'
+                             ' praesens %d) - reselige post editionem'
+                             % (x.versio, self.versio))
+
+    def _octeti_novi(self, novus):
+        return novus if isinstance(novus, bytes) else novus.encode('utf-8')
+
+    def substituere(self, x, novus):
+        """extentum substituere (octeti [initium, finis) -> novus)"""
+        self._recens(x)
+        self.octeti = self.octeti[:x.initium] + self._octeti_novi(novus) \
+            + self.octeti[x.finis:]
+        self.versio += 1
+        self.acta.append('substituere %s@%d' % (x.tag, x.linea))
+        return self
+
+    def inserere_post(self, x, novus):
+        self._recens(x)
+        self.octeti = self.octeti[:x.finis] + self._octeti_novi(novus) \
+            + self.octeti[x.finis:]
+        self.versio += 1
+        self.acta.append('inserere_post %s@%d' % (x.tag, x.linea))
+        return self
+
+    def inserere_ante(self, x, novus):
+        self._recens(x)
+        self.octeti = self.octeti[:x.initium] + self._octeti_novi(novus) \
+            + self.octeti[x.initium:]
+        self.versio += 1
+        self.acta.append('inserere_ante %s@%d' % (x.tag, x.linea))
+        return self
+
+    def replace(self, vetus, novus, numerus=1):
+        """ancora textualis EXACTA (ut Textus), numero asserto"""
+        v = self._octeti_novi(vetus)
+        sedes = []
+        i = self.octeti.find(v)
+        while i >= 0:
+            sedes.append((i, i + len(v)))
+            i = self.octeti.find(v, i + 1)
+        if len(sedes) != numerus:
+            raise SilvaError("ancora %d vicibus inventa (exspectatae %d)%s:"
+                             " %r" % (len(sedes), numerus,
+                                      _lineae_sedium(self.textus, [
+                                          (len(self.octeti[:a].decode(
+                                              'utf-8', errors='replace')), 0)
+                                          for a, _ in sedes]),
+                                      vetus[:60]))
+        n = self._octeti_novi(novus)
+        for a, b in reversed(sedes):
+            self.octeti = self.octeti[:a] + n + self.octeti[b:]
+        self.versio += 1
+        self.acta.append('replace %r' % vetus[:40])
+        return self
+
+    def appendere(self, novus):
+        self.octeti += self._octeti_novi(novus)
+        self.versio += 1
+        self.acta.append('appendere')
+        return self
+
+    # -- exitus --
+    def diff(self):
+        a = self.originalis.decode('utf-8', errors='replace')
+        b = self.textus
+        return ''.join(difflib.unified_diff(
+            a.splitlines(True), b.splitlines(True),
+            'a/' + self.via, 'b/' + self.via))
+
+    def mutata(self):
+        return self.octeti != self.originalis
+
+    def _ancorae_numerare(self):
+        numeri = {}
+        capitula = None
+        for genus, clavis in self.ancorae:
+            if genus == 'capitulum':
+                if capitula is None:
+                    capitula = self._capitula()
+                numeri['capitulum %r' % clavis] = sum(
+                    1 for _, _, t in capitula if t == clavis)
+            else:
+                numeri[genus] = len(self.selecta(genus))
+        return numeri
+
+    def applicare(self):
+        """custos lectionis rancidae, scriptura semel, iudex: parsura +
+        extentum documenti == plagula tota; ancorae relatae"""
+        if open(_absoluta(self.via), 'rb').read() != self.originalis:
+            raise SilvaError('plagula in disco mutata post lectionem'
+                             ' (%s) - relege ante editionem' % self.via)
+        if not self.mutata():
+            return ProsaFructus(self.via, '', True, {})
+        d = self.diff()
+        with open(_absoluta(self.via), 'wb') as f:
+            f.write(self.octeti)
+        self.originalis = self.octeti
+        sana, causa = True, ''
+        if self.octeti:
+            try:
+                doc = prosa_extenta(self.via, 'documentum')
+                if len(doc) != 1 or doc[0].initium != 0 \
+                        or doc[0].finis != len(self.octeti):
+                    sana, causa = False, ('extentum documenti != plagula:'
+                                          ' %r pro %d octetis'
+                                          % (doc, len(self.octeti)))
+            except SilvaError as ex:
+                sana, causa = False, str(ex)
+        return ProsaFructus(self.via, d, sana, self._ancorae_numerare(),
+                            causa)
+
+
 # ---------------------------------------------------------------- portae
 
 Porta = namedtuple('Porta', 'nomen cucurrit sana compendium rc acta fracturae',

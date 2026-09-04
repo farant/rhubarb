@@ -324,3 +324,22 @@ with `tolerans=False` are unique. `differre` judged every repaired unit
 cosmetic — that is the proof nothing else moved. A formatter rule
 "sententia in linea sua" (family of parametra-singula) would have
 repaired flat text by itself; filed as a desideratum.
+
+## 2026-09-04 — Prosa (C1): markdown edited by structure
+
+`silva.Prosa(via)` is Textus plus structural anchors from
+`md/extenta.sh`. Three decisions worth recording. (1) BYTES: extents are
+byte offsets and the corpus is full of `→`/`§`/em dashes, so Prosa keeps
+the file as bytes and decodes only for display; the first probe on the
+plan document (heading "Arc C — the consumer") would have been off by
+two under str offsets. (2) Extents carry the edit version and any edit
+method refuses a stale one — the Editio lesson ("lineae labuntur,
+nomina manent") applied to offsets: re-select after each edit. (3) The
+judge in `applicare` is the parse of the written file plus the
+`documentum` extent covering every byte; anchors used are re-counted
+and REPORTED rather than asserted, because replacing a section usually
+rewrites its heading and a refusal there would fight the common edit.
+`sectio` excludes trailing blank lines so the separator survives a
+substitution. Examen's "vocatio implicita" suspecta were right twice
+today (`credo_initium`, `chorda_ad_literas` do not exist) — read the
+suspecta line before compiling.

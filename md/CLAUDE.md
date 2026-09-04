@@ -139,6 +139,19 @@ setext rules). Remaining core misses are tabs, Unicode classes,
 multi-line labels and titles, the full entity table, and expected
 GFM-vs-core differences — see the worklog.
 
+**C1 DONE** (2026-09-04): `md_extenta_quaerere` (`md/fontes/md_extenta.c`:
+parse → project → `stml_legere` → selectio; matched element → source
+BYTES by pre-order token correspondence between the materia tree and
+the projection's token elements, self-checked every run by count and
+tag — the projection carries no per-token offsets, the reader's cursor
+does), instrument `./md/extenta.sh <x.md> '<selector>'` (TSV: via index
+tag b-initium b-finis linea columna linea-finis; rc 0 matches / 1 none /
+2 fracture), gate `probatio_md_extenta` (57 assertions; planted `finis -
+I` red). Consumer `silva.Prosa(via)` in pythonica: bytes, version-stamped
+extents, `capitulum`/`sectio`/`elementum`/`saeptum` sugar, judge = parse
++ `documentum` extent == file. Line-model consequence pinned: a paragraph
+inside a list item owns its line's marker bytes. NEXT = C2 closure.
+
 ## Laws to keep (spec §3)
 
 - **Line model, zero trivia**: every byte is a token in ONE slot;

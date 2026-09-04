@@ -974,6 +974,54 @@ credo(len(o.exempla) == 2 and {e.plagula.split('/')[-2] for e in o.exempla} == {
       'oraculum: exemplum 25 ex plagula utraque, cruda')
 credo(o.ignoscentiae.get('inter', 0) > 0 and silva.oraculum().exempla == [], 'oraculum: ignoscentiae; sine exemplo nulla')
 
+print('--- Prosa: editio markdown per ancoras structurales (C1) ---')
+import shutil
+via_p = os.path.join(T, 'prosa.md'); shutil.copy(os.path.join(RADIX, 'project-specs/md-arbor-plan.md'), via_p)
+p = silva.Prosa(via_p)
+credo(len(p.selecta('capitulum')) == 17, 'Prosa.selecta: capitula XVII')
+x = p.capitulum('C1 pythonica `Prosa`'); credo(x.linea == 143 and p.corpus(x).startswith('### C1 pythonica `Prosa`'), 'Prosa.capitulum: linea + corpus')
+credo(p.capitulum('Arc C — the consumer', gradus=2).linea == 141, 'Prosa.capitulum: gradus, titulus non-ASCII (octeti)')
+s = p.sectio('C1 pythonica `Prosa`'); cs = p.corpus(s)
+credo(cs.startswith('### C1') and not cs.endswith('\n\n') and 'C2' not in cs.split('\n')[0] and s.finis < p.capitulum('C2 Wire-up, closure, debrief (the B10 shape)').initium, 'Prosa.sectio: usque ad capitulum proximum, vacuae caudales exclusae')
+credo(p.corpus(p.sectio('Order and size')).startswith('## Order'), 'Prosa.sectio ultima usque ad finem')
+credo(p.corpus(p.sectio('Arc C — the consumer')).count('### C') == 2, 'Prosa.sectio h2 continet h3 filias')
+try:
+    p.capitulum('nemo'); credo(False, 'absens')
+except silva.SilvaError as ex:
+    credo('praesentia' in str(ex) and 'C1 pythonica' in str(ex), 'Prosa.capitulum absens: praesentia nominata')
+p.substituere(s, '### C1 pythonica `Prosa`\nDONE.\n')
+try:
+    p.corpus(s); credo(False, 'rancidum')
+except silva.SilvaError as ex:
+    credo('rancidum' in str(ex), 'Prosa: extentum rancidum post editionem refutatur')
+f = p.applicare(); t_novus = open(via_p, 'rb').read()
+credo(f.sana and f.ancorae.get("capitulum 'C1 pythonica `Prosa`'") == 1 and t_novus.count(b'DONE.') == 1 and b'DONE.\n\n### C2' in t_novus, 'Prosa.applicare: scriptum, iudex sanus, ancorae relatae, separatio manet')
+p2 = silva.Prosa(via_p); open(via_p, 'ab').write(b'x\n')
+try:
+    p2.appendere('y\n'); p2.applicare(); credo(False, 'rancida')
+except silva.SilvaError:
+    credo(True, 'Prosa: lectio rancida refutatur')
+via_q = os.path.join(T, 'prosa2.md')
+open(via_q, 'w').write('# Doc\n\n## Ideas\n\n- one\n- two\n  - nested\n\n## Code\n\n```c\nx;\n```\n\n```sh\nls\n```\n')
+q = silva.Prosa(via_q); sec = q.sectio('Ideas')
+credo(q.corpus(q.elementum(1, intra=sec)) == '- two\n  - nested\n', 'Prosa.elementum intra sectionem, nidificatum inclusum')
+credo(q.corpus(q.elementum(2, intra=sec)) == '  - nested\n', 'Prosa.elementum nidificatum n=2')
+try:
+    q.elementum(3, intra=sec); credo(False, 'numerus')
+except silva.SilvaError as ex:
+    credo('3 praesentia' in str(ex), 'Prosa.elementum extra numerum refutatur')
+credo(q.corpus(q.saeptum(lingua='sh')) == '```sh\nls\n```\n', 'Prosa.saeptum per linguam')
+q.inserere_post(q.elementum(2, intra=sec), '- three\n')
+credo(len(q.selecta('elementum')) == 4, 'Prosa.inserere_post elementum')
+q.replace('x;', 'y;'); f2 = q.applicare()
+credo(f2.sana and open(via_q).read().count('- three') == 1 and 'y;' in open(via_q).read() and f2.ancorae.get('elementum') == 4, 'Prosa.replace exacta + applicare + ancorae numeratae')
+try:
+    q.selecta('['); credo(False, 'selector')
+except silva.SilvaError as ex:
+    credo('selector' in str(ex), 'Prosa: selector malus refutatur')
+for _f in (via_p, via_q):
+    os.unlink(_f)
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))

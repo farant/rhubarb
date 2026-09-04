@@ -491,6 +491,25 @@ formatter/examen) + structural anchors:
 Registered gate: the pythonica suite edits a copy of a real spec by
 heading and by list item.
 
+**As built (2026-09-04, C1).** Extents are BYTES: `md/extenta.sh` prints
+byte offsets and `Prosa` holds the file as bytes, decoding only for
+display, because the corpus is full of non-ASCII (`→`, `§`, em dashes).
+Extents are stamped with the edit version and refused once stale
+(offsets shift after any edit — re-select, as Editio re-resolves names).
+`sectio(titulus)` is the heading with its body up to the next heading of
+equal or higher level, trailing blank lines excluded, so a substitution
+keeps the separator. The judge in `applicare()` is the parse of the
+written file plus the `documentum` extent covering every byte; anchors
+used are re-counted and REPORTED, not asserted (renaming the heading you
+anchored on is a legitimate edit). `elementum` counts nested items in
+document order; `intra=` filters by containment. The element→bytes
+mapping is a pre-order token CORRESPONDENCE between the materia tree and
+the projection's token elements, self-checked on every run (count and
+tag via `materia_arbor_lexema_tag`): the projection carries no per-token
+offsets by design (the reader's byte cursor reconstructs them), so the
+instrument never reads positions from STML. Line-model consequence: a
+paragraph inside a list item owns its line's marker bytes.
+
 ## 10. Order and dependencies
 
 A2 (registry, lexicon, line lexer, runner) → A3 (leaf blocks) → A4

@@ -141,12 +141,27 @@ rising; failures listed by section; planted fault in B2 red.
 ## Arc C — the consumer
 
 ### C1 pythonica `Prosa`
-`md/extenta.sh` (selectio over the projection → TSV extents);
-`silva.Prosa(via)` per spec §9 (`selecta`, `capitulum`, `elementum`,
-`saeptum`, `substituere`, `inserere_*`, `corpus`, `applicare` with the
-re-parse judge); pythonica gate edits a copy of a real spec by heading
-and by list item; refusals name lines. Exit: gate green; stale read
-refused; a wrong-count anchor refused with line numbers.
+DONE 2026-09-04. As built: `md/fontes/md_extenta.{h,c}`
+(`md_extenta_quaerere`: parse → project → `stml_legere` → selectio;
+matched element → source BYTES by pre-order token correspondence
+between the materia tree and the projection's token elements,
+self-checked every run by count and by tag through
+`materia_arbor_lexema_tag`; derived tokens skipped), instrument
+`md/instrumenta/extenta.c` + `./md/extenta.sh <x.md> '<selector>'`
+(TSV: via index tag b-initium b-finis linea columna linea-finis; rc 0
+matches / 1 none / 2 fracture), gate `probatio_md_extenta` (57
+assertions; planted `finis - I` red, green on revert). `silva.Prosa(via)`:
+bytes not characters; `selecta`, `capitulum`, `sectio` (heading + body to
+the next heading of equal or higher level, trailing blank lines
+excluded), `elementum(n, intra=)`, `saeptum(lingua=, n=, intra=)`,
+`corpus`, `substituere`, `inserere_post/ante`, `replace` (exact),
+`appendere`, `applicare` (stale-read guard, one write, judge = parse +
+`documentum` extent == whole file; anchors re-counted and REPORTED, not
+asserted — renaming the heading you anchored on is a legitimate edit).
+Extents carry the edit version and are refused once stale. Line-model
+consequence pinned: a paragraph inside a list item owns its line's
+marker bytes. pythonica gate: 17 assertions over a copy of this plan
+and a synthetic list/fence file. This section was written by Prosa.
 
 ### C2 Wire-up, closure, debrief (the B10 shape)
 Spec as-built notes, `md/CLAUDE.md`, worklog, ledger RELATIO +
