@@ -97,6 +97,252 @@
     <forma textus="Vergili" casus="vocativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
 
+  <!-- ================= CURSUS GLOSSARII I (relatio T10, 2026-09-04) =================
+       Vocabula domus et Latina sera quae WORDS caret (lexema, lista, octetus,
+       parsare, transponere ...), nomina propria domus, termini C/API/formatorum.
+       Verba Anglica communia (count, found, name, text ...) CONSULTO manent
+       ignota: ea lint nominat. Abbreviationes (tok idx ctx ptr aed sem) quoque
+       ignota: decisio Frani (permittere aut renominare). -->
+
+  <vocabulum lemma="lexema" lingua="latina" classis="substantivum" nota="Gk. lexema n. (lexematis): vox domus pro tokeno">
+    <forma textus="lexema" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="lexematis" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="lexemati" casus="dativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="lexemate" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="lexemata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="lexematum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="lexematibus" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="lista" lingua="latina" classis="substantivum" nota="Latina media (lista, -ae): index, series">
+    <forma textus="lista" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="listae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="listam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="listas" casus="accusativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="listarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="listis" casus="ablativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="machinula" lingua="latina" classis="substantivum" nota="deminutivum machinae: machina parva (domus)">
+    <forma textus="machinula" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="machinulae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="machinulam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="machinulas" casus="accusativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="resultus" lingua="latina" classis="substantivum" nota="vox domus (IV decl.): fructus computationis">
+    <forma textus="resultus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="resultum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="resultu" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="resultuum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="registrum" lingua="latina" classis="substantivum" nota="Latina media: index, tabula (macro latina.h quoque)">
+    <forma textus="registrum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="registri" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="registro" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="registra" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="registrorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="parsura" lingua="latina" classis="substantivum" nota="vox domus: fructus parsationis">
+    <forma textus="parsura" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="parsurae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="parsuram" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="parsuras" casus="accusativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="parsator" lingua="latina" classis="substantivum" nota="vox domus: qui parsat">
+    <forma textus="parsator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="parsatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="parsatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="parsatores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="octetus" lingua="latina" classis="substantivum" nota="vox domus: byte (octo biti)">
+    <forma textus="octetus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="octeti" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="octeto" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="octetum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="octetos" casus="accusativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="octetorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="octetis" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="sceletum" lingua="latina" classis="substantivum" nota="Gk. sceletum n.: ossa structurae">
+    <forma textus="sceletum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="sceleti" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="sceleto" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="sceleta" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="instructio" lingua="latina" classis="substantivum" nota="Latina: WORDS caret">
+    <forma textus="instructio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="instructionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="instructionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="instructiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="instructionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="pixelum" lingua="latina" classis="substantivum" nota="vox domus: pixel">
+    <forma textus="pixelum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pixeli" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pixela" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="pixelorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="pixelis" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="coloratio" lingua="latina" classis="substantivum" nota="Latina sera: WORDS caret">
+    <forma textus="coloratio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="colorationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="colorationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="colorationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="specificator" lingua="latina" classis="substantivum" nota="vox domus (C: specifier)">
+    <forma textus="specificator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="specificatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="specificatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="specificatores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="specificatorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="importatio" lingua="latina" classis="substantivum" nota="Latina media">
+    <forma textus="importatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="importationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="importationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="ordinatio" lingua="latina" classis="substantivum" nota="Latina: WORDS caret">
+    <forma textus="ordinatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="ordinationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="ordinationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="ordinationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="syntaxis" lingua="latina" classis="substantivum" nota="Gk. syntaxis f.">
+    <forma textus="syntaxis" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="syntaxeos" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="syntaxin" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="syntaxi" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="bloccus" lingua="latina" classis="substantivum" nota="vox domus: block">
+    <forma textus="bloccus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="blocci" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="bloccum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="blocco" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="blocci" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="bloccorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="bloccos" casus="accusativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="subscriptio" lingua="latina" classis="substantivum" nota="Latina: WORDS caret">
+    <forma textus="subscriptio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="subscriptionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="subscriptionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="subscriptiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="indentatio" lingua="latina" classis="substantivum" nota="vox domus: indentation">
+    <forma textus="indentatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="indentationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="indentationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="scopus" lingua="latina" classis="substantivum" nota="Latina sera: meta, ambitus (scope)">
+    <forma textus="scopus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="scopi" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="scopum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="scopo" casus="ablativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="selector" lingua="latina" classis="substantivum" nota="Latina sera: qui seligit (CSS)">
+    <forma textus="selector" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="selectoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="selectorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="selectores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="selectorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="imparilis" lingua="latina" classis="adiectivum" nota="Latina sera: inaequalis, impar (odd)">
+    <forma textus="imparilis" casus="nominativus" numerus="singularis" genus="masculinum" gradus="positivus"/>
+    <forma textus="imparile" casus="nominativus" numerus="singularis" genus="neutrum" gradus="positivus"/>
+    <forma textus="imparilem" casus="accusativus" numerus="singularis" genus="masculinum" gradus="positivus"/>
+    <forma textus="impariles" casus="nominativus" numerus="pluralis" genus="masculinum" gradus="positivus"/>
+  </vocabulum>
+  <vocabulum lemma="parso" lingua="latina" classis="verbum" nota="vox domus: parse">
+    <forma textus="parsare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="parsat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="parsatur" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="passiva"/>
+    <forma textus="parsant" persona="III" numerus="pluralis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="parsata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="parsatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="parsatus" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="parsans" tempus="praesens" vox="activa" forma-verbi="participium"/>
+  </vocabulum>
+  <vocabulum lemma="evaluo" lingua="latina" classis="verbum" nota="Latina media: aestimare">
+    <forma textus="evaluare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="evaluat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="evaluatur" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="passiva"/>
+    <forma textus="evaluata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="evaluatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="evaluatio" nota="nomen actionis"/>
+  </vocabulum>
+  <vocabulum lemma="processo" lingua="latina" classis="verbum" nota="vox domus: process">
+    <forma textus="processare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="processat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="processatur" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="passiva"/>
+    <forma textus="processata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="processatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+  </vocabulum>
+  <vocabulum lemma="registro" lingua="latina" classis="verbum" nota="Latina media: in registrum referre">
+    <forma textus="registrare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="registrat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="registratur" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="passiva"/>
+    <forma textus="registrata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="registratum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="registratio" nota="nomen actionis"/>
+  </vocabulum>
+  <vocabulum lemma="transpono" lingua="latina" classis="verbum" nota="Latina: WORDS caret (trans + pono)">
+    <forma textus="transponere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="transponit" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="transponitur" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="passiva"/>
+    <forma textus="transposita" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="transpositum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="transpositus" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="transpositio" nota="nomen actionis"/>
+  </vocabulum>
+  <vocabulum lemma="lapifex" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="saltuarius" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="sputnik" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="arbor2" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="xar" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="silva" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="materia" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="oratio" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="natura" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="gesta" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="villa" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="vitrea" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="atrium" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="tessera" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="officina" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="goto" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="main" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="int" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="char" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="long" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="union" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="enum" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="typedef" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="argc" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="argv" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="cstr" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="fd" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="eof" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="fcntl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="posix" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="http" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="tcp" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="uuid" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="toml" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="css" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="md" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="sha" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="sha1" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="sha256" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="stbi" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="macho" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="sqlite" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="sqlite3" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="glr" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="xor" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="hex" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="utf16" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="crc32" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="fnv1a" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="djb2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+
   <!-- ================= TERMINI TECHNICI PERMISSI =================
        classis ignotum-permissum: verba non vertenda in identificatoribus et
        commentariis (Fran: offset etc.); numeri = sedes in build/nexus.tsv

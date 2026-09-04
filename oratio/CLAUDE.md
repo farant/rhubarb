@@ -115,11 +115,13 @@ comments 14,205 / 5,736; unknowns = abbreviations, English, quoted C
 keywords in generated grammar comments, vendor, house coinages WORDS
 lacks (transponere, lexema, lista, xar). The runner compiles
 `silva_token`/`silva_lexema` and writes `oratio/build/corpus_c.txt`.
-NEXT: grow the glossary from the report (house coinages, permitted
-abbreviations), then pin the identifier unknown count "only falling";
-T8b stays parked (no addon cases at the top); stage 3 **T11**
-`partes_registrum` (17 classes as analysis genera appended to the
-registry, canon rules) follows.
+Glossary pass I done from the report (77 entries: house coinages and
+late Latin, house proper names, C/API/format names; common English and
+abbreviations left unknown on purpose); identifier unknowns 5,515 →
+5,409, PINNED only falling in `probatio_oratio_vocabula` (a red = a new
+unknown identifier word: glossary entry or rename, pin moved for a
+named cause). T8b stays parked. NEXT: stage 3 **T11** `partes_registrum`
+(17 classes as analysis genera appended to the registry, canon rules).
 
 ## Laws to keep (spec §2–3)
 

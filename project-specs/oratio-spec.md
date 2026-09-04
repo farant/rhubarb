@@ -362,7 +362,12 @@ quoted in generated grammar comments, vendor names, and house coinages
 WORDS lacks (transponere, lexema, lista, xar). Consequences: the
 glossary grows from this list; T8b stays parked (no addon cases at the
 top); the "only falling" pin goes on the identifier corpus after the
-first glossary pass.
+first glossary pass. **Glossary pass I (same day):** 77 entries from
+the report — house coinages and late Latin (lexema, lista, octetus,
+parso, transpono …), house proper names, C/API/format names as
+permitted; common English words and abbreviations left unknown on
+purpose. Identifier unknowns 5,515 → 5,409, PINNED only falling in
+`probatio_oratio_vocabula`; comments not pinned.
 
 ## 5. Stage 3 — annotated words (`partes`)
 

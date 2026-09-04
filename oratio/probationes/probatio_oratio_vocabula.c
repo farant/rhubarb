@@ -31,6 +31,8 @@
 #include <string.h>
 #include <time.h>
 
+#define IGNOTA_SYMBOLORUM_PINNA 5409
+
 interior b32
 _plagulam_legere (
                Piscina* piscina,
@@ -339,11 +341,36 @@ principale (vacuum)
         {
             CREDO_CULPA ("build/nexus.tsv absens - ./silva/nexus.sh -renovare");
         }
-        alioquin
+                alioquin
         {
+            OratioVocabula* symbola_sola =
+                oratio_vocabula_creare(piscina, voc);
+                       i32 ignota_symbolorum;
+
             CREDO_VERUM (oratio_vocabula_symbola(corpus, nexus));
+            /* PINNA 'solum cadens' super identificatores solos (cursus
+             * glossarii I, 2026-09-04: MMMMMDXV -> MMMMMCDIX; knotapel
+             * ~MMCDXXV, include DCCCXXXII, lib DIX, silva CDLXIV). Rubra =
+             * verba nova ignota: glossarium (vox domus, terminus permissus)
+             * aut renominatio; pinna movetur causa nominata. */
+            CREDO_NON_NIHIL (symbola_sola);
+            CREDO_VERUM (oratio_vocabula_symbola(symbola_sola, nexus));
+            CREDO_VERUM (oratio_vocabula_iudicare(symbola_sola));
+            ignota_symbolorum = oratio_vocabula_numerus(symbola_sola,
+                ORATIO_VERBUM_IGNOTUM);
+            imprimere("  identificatores: verba %d  ignota %d  (pinna %d, solum cadens)\n",
+                (integer)xar_numerus(oratio_vocabula_verba(symbola_sola)),
+                (integer)ignota_symbolorum,
+                (integer)IGNOTA_SYMBOLORUM_PINNA);
+            si (ignota_symbolorum > (i32)IGNOTA_SYMBOLORUM_PINNA)
+            {
+                imprimere("  IGNOTA CREVERUNT: glossarium (oratio/glossarium.stml) aut renominatio; ./oratio/vocabula.sh -symbola\n");
+            }
+            CREDO_VERUM (ignota_symbolorum
+                <= (i32)IGNOTA_SYMBOLORUM_PINNA);
         }
         sprintf(via, "%s/oratio/build/corpus_c.txt", radix);
+
         lista = fopen(via, "r");
         si (lista == NIHIL)
         {

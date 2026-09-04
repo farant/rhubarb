@@ -447,3 +447,38 @@ they are English, abbreviations, and quoted keywords, which addons
 would not touch. The "only falling" pin should be set after the first
 glossary pass, on the identifier corpus alone, which is the one the
 house controls.
+
+## 2026-09-04 — Glossary pass I from the T10 report, and the first pin
+
+Seventy-seven entries added to `oratio/glossarium.stml`, all taken from
+the top of the identifier report: house coinages and post-classical
+Latin that WORDS lacks (lexema, lista, machinula, resultus, registrum,
+parsura, parsator, octetus, sceletum, instructio, pixelum, coloratio,
+specificator, importatio, ordinatio, syntaxis, bloccus, subscriptio,
+indentatio, scopus, selector; the adjective imparilis; the verbs
+parso, evaluo, processo, registro, transpono with their infinitives,
+third persons and participles), fifteen house proper names (lapifex,
+saltuarius, sputnik, arbor2, xar, silva, materia, oratio, natura,
+gesta, villa, vitrea, atrium, tessera, officina) as nomen-proprium, and
+thirty-six C, API and format names as permitted terms (goto, main, int,
+char, long, union, enum, typedef, argc, argv, cstr, fd, eof, fcntl,
+posix, http, tcp, uuid, toml, css, md, sha, sha1, sha256, stbi, macho,
+sqlite, sqlite3, glr, xor, hex, utf16, crc32, fnv1a, djb2). Two kinds
+were left unknown ON PURPOSE. Common English words in identifiers
+(count, found, first, name, text, file, open, end, list, entry, result,
+test, cell, slot, tag …) are exactly what the lint exists to name, so
+permitting them would blind it. Abbreviations (tok, idx, ctx, ptr, aed,
+sem, cx, tt, nt, pn …) are Fran's call — permit or rename — and stay
+findings until then.
+
+Identifier unknowns went from 5,515 to 5,409 over 10,062 words: the
+glossary reaches the house's own Latin quickly, and the remainder is
+English and abbreviation, most of it in knotapel's demos (2,425), the
+headers (832), lib (509) and silva (464) by directory of first use. The
+gate now PINS the identifier unknown count at 5,409, only falling: a
+red means a new identifier introduced an unknown word, and the remedy
+is a glossary entry (a house coinage or a permitted term) or a rename,
+with the pin moved for a named cause. The comment corpus is not pinned:
+its unknowns are dominated by the archived generation's generated
+grammar comments and by English prose, neither of which the house
+writes today.
