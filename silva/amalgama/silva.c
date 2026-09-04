@@ -4283,7 +4283,18 @@ nomen enumeratio {
     /* impletione: silva currens radices elementares PLURES habet aut
      * segmentum plures liberos eodem titulo nominat (involucra
      * materiae unica sunt; in STML libero electio exemplaris est) */
-    STML_EXPANSIO_PROIECTIO_AMBIGUA        = XXVIII
+    STML_EXPANSIO_PROIECTIO_AMBIGUA        = XXVIII,
+    /* PER super silvam argumenti in corpore templi (md-arbor-spec
+     * par. 6.3, ratificatio 2026-09-03): '<PER de="@n.bloci"
+     * voca="#@f"/>' - ordo quisque = elementum silvae proiectae
+     * (textus et commenta ordines non sunt) in loculum REQUISITUM
+     * UNICUM templi delegati; templum cum loculis requisitis
+     * ZEPHYRUM aut pluribus = delegatio ambigua (ordo loculum nullum
+     * nominat). Forma corporis '<PER de="@n.x" ut="e">…&@e;…</PER>'
+     * eiusdem impletionis est (scopus exterior visibilis, 'e' loculum
+     * declaratum obumbrans = XIII). Malformationes ceterae (de sine
+     * silva, voca + corpus, ut sine corpore, '!' in de) = XIII. */
+    STML_EXPANSIO_PER_DELEGATIO_AMBIGUA    = XXIX
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi
@@ -18608,6 +18619,51 @@ _loculos_declaratos_legere (
     redde VERUM;
 }
 
+/* Referentiam UNAM (titulus inter '&@' et ';', proiectio licita)
+ * contra loculos declaratos iudicare: forma (XXVI), radix declarata
+ * (LOCULUS_IGNOTUS radicem nominat), angustatio optionalis
+ * (NON_ANGUSTATUS). Communis textui, attributis, et 'de="@…"' PER
+ * super silvam (par. 6.3 md). */
+interior b32
+_referentiam_perscrutari (
+       constans SilvaChorda* titulus,
+             SilvaStmlNodus* nodus,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx,
+                   SilvaXar* angustati)
+{
+              SilvaChorda  radix;
+              SilvaChorda  via;
+                 b32  crudum;
+              SilvaChorda* radix_internata;
+    StmlMacroLoculus* loc;
+
+    si (!_proiectionem_legere(titulus, &radix, &via, &crudum))
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_PROIECTIO_MALFORMATA,
+                       nodus, def->id,
+                       silva_chorda_internare(ctx->intern, *titulus));
+        redde FALSUM;
+    }
+    radix_internata  = silva_chorda_internare(ctx->intern, radix);
+    loc              = _loculus_declaratus(def, radix_internata);
+    si (loc == NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_LOCULUS_IGNOTUS,
+                       nodus, def->id, radix_internata);
+        redde FALSUM;
+    }
+    si (   loc->optionalis
+        && !_in_angustatis(angustati, loc->titulus))
+    {
+        _vitium_ponere(ctx,
+                       STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS,
+                       nodus, def->id, radix_internata);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* Chordam contra loculos declaratos perscrutari (collectione:
  * referentia non declarata = LOCULUS_IGNOTUS in loco definitionis,
  * ante vocationem ullam; referentia loculi OPTIONALIS extra
@@ -18629,35 +18685,9 @@ _chordam_perscrutari (
     ab = ZEPHYRUM;
     dum (_loculum_invenire(textus, ab, &initium, &post, &titulus))
     {
-                  SilvaChorda  radix;
-                  SilvaChorda  via;
-                     b32  crudum;
-                  SilvaChorda* radix_internata;
-        StmlMacroLoculus* loc;
-
-        /* proiectio (par. 6.1 md): forma hic, radix contra loculos
-         * declaratos; via impletione contra arborem iudicatur */
-        si (!_proiectionem_legere(&titulus, &radix, &via, &crudum))
+        si (!_referentiam_perscrutari(&titulus, nodus, def, ctx,
+                                      angustati))
         {
-            _vitium_ponere(ctx, STML_EXPANSIO_PROIECTIO_MALFORMATA,
-                           nodus, def->id,
-                           silva_chorda_internare(ctx->intern, titulus));
-            redde FALSUM;
-        }
-        radix_internata  = silva_chorda_internare(ctx->intern, radix);
-        loc              = _loculus_declaratus(def, radix_internata);
-        si (loc == NIHIL)
-        {
-            _vitium_ponere(ctx, STML_EXPANSIO_LOCULUS_IGNOTUS,
-                           nodus, def->id, radix_internata);
-            redde FALSUM;
-        }
-        si (   loc->optionalis
-            && !_in_angustatis(angustati, loc->titulus))
-        {
-            _vitium_ponere(ctx,
-                           STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS,
-                           nodus, def->id, radix_internata);
             redde FALSUM;
         }
         ab = post;
@@ -18702,6 +18732,125 @@ _corpus_perscrutari (
     StmlMacroDefinitio* def,
     StmlMacroContextus* ctx,
                    SilvaXar* angustati);
+
+/* Estne PER super silvam argumenti? ('de="@n.via"' - '@' ducens;
+ * 'de="$rel"' relatio documenti manet). de_exitus = titulus post '@'
+ * (forma referentiae sine '&@'/';'). */
+interior b32
+_per_silvae_est (
+    SilvaStmlNodus* nodus,
+       SilvaChorda* de_exitus)
+{
+    SilvaChorda* de;
+
+    de = silva_stml_attributum_capere(nodus, "de");
+    si (   de                  == NIHIL
+        || de->mensura < II
+        || de->datum[ZEPHYRUM] != (i8)'@')
+    {
+        redde FALSUM;
+    }
+    de_exitus->datum    = de->datum + I;
+    de_exitus->mensura  = de->mensura - I;
+    redde VERUM;
+}
+
+/* Liberi non-commenta numerare (corpus PER praesens?) */
+interior i32
+_liberi_contenti_numerus (
+    constans SilvaStmlNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    i32 numerus;
+
+    numerus = ZEPHYRUM;
+    num = nodus->liberi
+        != NIHIL ? silva_xar_numerus(nodus->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlNodus* l = *(SilvaStmlNodus**)silva_xar_obtinere(nodus->liberi, i);
+
+        si (l != NIHIL && l->genus != STML_NODUS_COMMENTUM)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
+/* PER super silvam perscrutari (collectione, par. 6.3 md): de = referentia
+ * proiectionis (radix declarata, angustatio, forma; '!' vetitum - fons
+ * silva est, non octeti); forma UNA ex duabus: voca="#@f" sine corpore,
+ * aut ut="e" cum corpore; ut nomen NOVUM (loculum declaratum obumbrans =
+ * XIII); corpus cum loculo ordinis 'e' temporario declarato scanditur
+ * (referentia extra corpus = LOCULUS_IGNOTUS: ordo localis est). */
+interior b32
+_per_silvae_perscrutari (
+             SilvaStmlNodus* nodus,
+                SilvaChorda  de_titulus,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx,
+                   SilvaXar* angustati)
+{
+    SilvaChorda* voca;
+    SilvaChorda* ut;
+       i32  contenti;
+
+    si (   de_titulus.mensura > ZEPHYRUM
+        && de_titulus.datum[de_titulus.mensura - I] == (i8)'!')
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM, nodus,
+                       def->id, silva_chorda_internare(ctx->intern,
+                       de_titulus));
+        redde FALSUM;
+    }
+    si (!_referentiam_perscrutari(&de_titulus, nodus, def, ctx,
+                                  angustati))
+    {
+        redde FALSUM;
+    }
+    voca      = silva_stml_attributum_capere(nodus, "voca");
+    ut        = silva_stml_attributum_capere(nodus, "ut");
+    contenti  = _liberi_contenti_numerus(nodus);
+    si (   (voca != NIHIL)                              == (ut != NIHIL)
+        || (voca != NIHIL && contenti > ZEPHYRUM)
+        || (ut != NIHIL && contenti == ZEPHYRUM)
+        || silva_stml_attributum_capere(nodus, "congruentia") != NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM, nodus,
+                       def->id, NIHIL);
+        redde FALSUM;
+    }
+    si (voca != NIHIL)
+    {
+        redde VERUM;  /* templum impletione resolvitur (tectum) */
+    }
+    {
+        StmlMacroLoculus* loc;
+                  SilvaChorda* ut_internatum;
+                     b32  bene;
+
+        ut_internatum = silva_chorda_internare(ctx->intern, *ut);
+        si (   ut_internatum                           == NIHIL
+            || _loculus_declaratus(def, ut_internatum) != NIHIL)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                           nodus, def->id, ut_internatum);
+            redde FALSUM;
+        }
+        loc = (StmlMacroLoculus*)silva_xar_addere(def->loculi);
+        si (loc == NIHIL)
+        {
+            redde FALSUM;
+        }
+        loc->titulus = ut_internatum;
+        loc->optionalis = FALSUM;
+        bene = _corpus_perscrutari(nodus, def, ctx, angustati);
+        silva_xar_removere_ultimum(def->loculi);
+        redde bene;
+    }
+}
 
 /* COMMUTATIONEM perscrutari (par. 6.2, collectione - planum
  * statice iudicabile): de totus-ref '&@x;' declaratus (referentia
@@ -18890,9 +19039,10 @@ _corpus_perscrutari (
     num = silva_xar_numerus(nodus->liberi);
     per (i = ZEPHYRUM; i < num; i++)
     {
-         SilvaStmlNodus* liberum;
-               i32  j;
-               i32  num_attr;
+          SilvaStmlNodus* liberum;
+             SilvaChorda  de_titulus;
+                i32  j;
+                i32  num_attr;
 
         liberum = *(SilvaStmlNodus**)silva_xar_obtinere(nodus->liberi, i);
         si (liberum == NIHIL)
@@ -18913,6 +19063,18 @@ _corpus_perscrutari (
              * referentia scrutans est, ab angustatione exempta */
             si (!_commutationem_perscrutari(liberum, def, ctx,
                                             angustati))
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
+        si (   _est_titulo(liberum, "PER")
+            && _per_silvae_est(liberum, &de_titulus))
+        {
+            /* PER super silvam argumenti (par. 6.3 md): de + forma
+             * + corpus cum loculo ordinis temporario */
+            si (!_per_silvae_perscrutari(liberum, de_titulus, def,
+                                         ctx, angustati))
             {
                 redde FALSUM;
             }
@@ -19602,6 +19764,16 @@ _per_implere (
     StmlMacroContextus* ctx,
                    i32  stratum,
                    i32  tectum);
+
+interior b32
+_per_silvae_implere (
+             SilvaStmlNodus* parens_novus,
+             SilvaStmlNodus* nodus,
+                SilvaChorda  de_titulus,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   SilvaXar* argumenta);
 
 interior b32
 _catena_implere (
@@ -20504,6 +20676,19 @@ _liberum_expandere (
         {
             si (argumenta != NIHIL)
             {
+                SilvaChorda de_titulus;
+
+                /* PER super silvam argumenti (par. 6.3 md - ianua V
+                 * pro PER aperta); ceterae formae intra corpora XIII
+                 * manent donec B1.2 'de=@n' EXEMPLARI aperiat */
+                si (   _est_titulo(liberum, "PER")
+                    && _per_silvae_est(liberum, &de_titulus))
+                {
+                    redde _per_silvae_implere(parens_novus, liberum,
+                                              de_titulus, ctx,
+                                              stratum, tectum,
+                                              argumenta);
+                }
                 _vitium_ponere(ctx,
                                STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
                                liberum, NIHIL, NIHIL);
@@ -23454,6 +23639,234 @@ _per_implere (
     }
     _indago_literis(ctx, ": ordines ");
     _indago_numerum(ctx, num);
+    redde VERUM;
+}
+
+/* PER super silvam argumenti implere (par. 6.3 md, ratificatio
+ * 2026-09-03): fons = proiectio 'de="@n.via"' (silva; scalaris =
+ * XIII), ordo quisque = ELEMENTUM silvae (textus, commenta non
+ * ordines). Delegatio 'voca="#@f"': templum resolvitur ut vocatio
+ * (IGNOTUM/POSTERIUS per tectum - vocatio sui B1.5), loculus
+ * requisitus UNICUS eius elementum accipit (aliter XXIX), tabula
+ * argumentorum NOVA (vocatio vera - scopus vocantis non transit),
+ * nota per ordinem, corpus definitionis sub tecto def->ordo.
+ * Forma corporis 'ut="e"': tabula = argumenta currentia + 'e'
+ * (scopus exterior visibilis), corpus PER in parentem splicatur
+ * sub tecto eodem (impletio eadem, non nova). Ansa liberorum in
+ * una linea - recursio structuralis programmatis md. */
+interior b32
+_per_silvae_implere (
+             SilvaStmlNodus* parens_novus,
+             SilvaStmlNodus* nodus,
+                SilvaChorda  de_titulus,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   SilvaXar* argumenta)
+{
+    StmlMacroArgumentum  proiectio;
+                    b32  praesens;
+                 SilvaChorda* voca;
+                 SilvaChorda* ut;
+     StmlMacroDefinitio* def;
+                 SilvaChorda* loculus_ordinis;
+                    i32  i;
+                    i32  num;
+                    i32  ordines;
+
+    si (!_proiectionem_resolvere(ctx, argumenta, &de_titulus, nodus,
+                                 &proiectio, &praesens))
+    {
+        redde FALSUM;
+    }
+        si (   !praesens
+            || (   proiectio.arbores == NIHIL
+            && (   proiectio.valor == NIHIL
+                || proiectio.valor->mensura > ZEPHYRUM)))
+        {
+        /* absens (defensivum - angustatio collectione) aut scalaris
+         * cum textu: fons silva esse debet. Scalaris VACUUS = involucrum
+         * vacuum (par. 6.1: textus solus, vacuus inclusus) = silva sine
+         * ordinibus - '<elementa/>' ordines nullos parit, clare */
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM, nodus,
+                       NIHIL, silva_chorda_internare(ctx->intern,
+                       de_titulus));
+        redde FALSUM;
+        }
+    voca             = silva_stml_attributum_capere(nodus, "voca");
+    ut               = silva_stml_attributum_capere(nodus, "ut");
+    def              = NIHIL;
+    loculus_ordinis  = NIHIL;
+    si (voca != NIHIL)
+    {
+        SilvaChorda  id_pars;
+        SilvaChorda* id;
+           i32  requisiti;
+
+        si (   voca->mensura < III
+            || voca->datum[ZEPHYRUM] != (i8)'#'
+            || voca->datum[I]        != (i8)'@')
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                           nodus, NIHIL, voca);
+            redde FALSUM;
+        }
+        id_pars.datum = voca->datum + I;
+        id_pars.mensura = voca->mensura - I;
+        id = silva_chorda_internare(ctx->intern, id_pars);
+        def = id != NIHIL ? _definitionem_invenire(ctx, id) : NIHIL;
+        si (def == NIHIL)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_IGNOTUM,
+                           nodus, id, NIHIL);
+            redde FALSUM;
+        }
+        si (def->ordo >= tectum || !def->praeterita)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_POSTERIUS,
+                           nodus, id, NIHIL);
+            redde FALSUM;
+        }
+        requisiti  = ZEPHYRUM;
+        num        = silva_xar_numerus(def->loculi);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlMacroLoculus* loc =
+                (StmlMacroLoculus*)silva_xar_obtinere(def->loculi, i);
+
+            si (loc != NIHIL && !loc->optionalis)
+            {
+                requisiti++;
+                loculus_ordinis = loc->titulus;
+            }
+        }
+        si (requisiti != I)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_PER_DELEGATIO_AMBIGUA,
+                           nodus, def->id, NIHIL);
+            redde FALSUM;
+        }
+    }
+    alioquin si (ut != NIHIL)
+    {
+        loculus_ordinis = silva_chorda_internare(ctx->intern, *ut);
+    }
+    si (loculus_ordinis == NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM, nodus,
+                       NIHIL, NIHIL);
+        redde FALSUM;
+    }
+
+        ordines = ZEPHYRUM;
+    num = proiectio.arbores != NIHIL
+        ? silva_xar_numerus(proiectio.arbores) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+                   SilvaStmlNodus*  elementum;
+                         SilvaXar*  tabula;
+         StmlMacroArgumentum*  arg;
+                   SilvaStmlNodus** cella;
+
+        elementum = *(SilvaStmlNodus**)silva_xar_obtinere(proiectio.arbores, i);
+        si (   elementum        == NIHIL
+            || elementum->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        ordines++;
+        tabula = silva_xar_creare(ctx->piscina,
+            magnitudo(StmlMacroArgumentum));
+        si (tabula == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (def == NIHIL)
+        {
+            /* forma corporis: scopus exterior transit */
+            i32 j;
+            i32 num_arg = silva_xar_numerus(argumenta);
+
+            per (j = ZEPHYRUM; j < num_arg; j++)
+            {
+                StmlMacroArgumentum* fons =
+                    (StmlMacroArgumentum*)silva_xar_obtinere(argumenta, j);
+                StmlMacroArgumentum* copia;
+
+                si (fons == NIHIL)
+                {
+                    perge;
+                }
+                copia = (StmlMacroArgumentum*)silva_xar_addere(tabula);
+                si (copia == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                *copia = *fons;
+            }
+        }
+        arg = (StmlMacroArgumentum*)silva_xar_addere(tabula);
+        si (arg == NIHIL)
+        {
+            redde FALSUM;
+        }
+        arg->titulus  = loculus_ordinis;
+        arg->valor    = NIHIL;
+        arg->arbores  = silva_xar_creare(ctx->piscina, magnitudo(SilvaStmlNodus*));
+        cella = arg->arbores != NIHIL
+              ? (SilvaStmlNodus**)silva_xar_addere(arg->arbores) : NIHIL;
+        si (cella == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *cella = elementum;
+
+        si (def != NIHIL)
+        {
+            StmlExpansioNota* nota;
+                         i32  ante_numerus;
+
+            nota = (StmlExpansioNota*)silva_xar_addere(
+                ctx->resultus->tabula_expansionum);
+            si (nota == NIHIL)
+            {
+                redde FALSUM;
+            }
+            nota->nodus          = NIHIL;
+            nota->fragmentum_id  = def->id;
+            nota->vocatio        = nodus;
+            nota->stratum        = stratum + I;
+            ante_numerus = parens_novus->liberi != NIHIL
+                ? silva_xar_numerus(parens_novus->liberi) : ZEPHYRUM;
+            si (!_liberos_expandere(parens_novus,
+                    def->definitio->liberi, ctx, stratum + I,
+                    def->ordo, tabula))
+            {
+                redde FALSUM;
+            }
+            si (   parens_novus->liberi != NIHIL
+                && silva_xar_numerus(parens_novus->liberi) > ante_numerus)
+            {
+                nota->nodus = silva_stml_liberum_ad_indicem(parens_novus,
+                                                      ante_numerus);
+            }
+        }
+        alioquin si (!_liberos_expandere(parens_novus, nodus->liberi,
+                                         ctx, stratum, tectum, tabula))
+        {
+            redde FALSUM;
+        }
+    }
+    _indago_literis(ctx, "PER @");
+    _indago_chordam(ctx, &de_titulus);
+    si (def != NIHIL)
+    {
+        _indago_literis(ctx, " (voca ");
+        _indago_chordam(ctx, def->id);
+        _indago_literis(ctx, ")");
+    }
+    _indago_literis(ctx, ": ordines ");
+    _indago_numerum(ctx, ordines);
     redde VERUM;
 }
 

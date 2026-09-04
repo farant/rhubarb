@@ -2291,6 +2291,202 @@ principale (
         }
     }
 
+
+    /* ==================================================
+     * B1.3 (md-arbor-spec par. 6.3) - PER SUPER SILVAM ARGUMENTI in
+     * corpore templi: '<PER de="@n.elementa" voca="#@item"/>' (ordo =
+     * elementum -> loculus requisitus unicus templi delegati) et
+     * '<PER de="@n.elementa" ut="e">…&@e.t;…</PER>' (corpus, scopus
+     * exterior visibilis). Vitium XXIX; malformationes XIII.
+     * ================================================== */
+
+    /* --- delegatio: ansa liberorum in una linea --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- PER silvae: delegatio voca= ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@item n=\"@n\"><li>&@n.t;</li></#>"
+            "<#@list n=\"@n\"><ul><PER de=\"@n.elementa\" voca=\"#@item\"/>"
+            "</ul></#>"
+            "<lista><elementa><e><t>a</t></e><e><t>b</t></e></elementa>"
+            "</lista>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><lista $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@list>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix>"
+                "<lista><elementa><e><t>a</t></e><e><t>b</t></e></elementa>"
+                "</lista>"
+                "<ul><li>a</li><li>b</li></ul></radix>");
+        }
+    }
+
+    /* --- forma corporis ut=: scopus exterior visibilis; textus et
+     * commenta silvae ordines non sunt --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- PER silvae: corpus ut= ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@list n=\"@n\"><ul><PER de=\"@n.elementa\" ut=\"e\">"
+            "<li>&@e.t;/&@n.titulus;</li></PER></ul></#>"
+            "<lista><titulus>L</titulus><elementa>tx<e><t>a</t></e>"
+            "<!--c--><e><t>b</t></e></elementa></lista>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><lista $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@list>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix>"
+                "<lista><titulus>L</titulus><elementa>tx<e><t>a</t></e>"
+                "<!--c--><e><t>b</t></e></elementa></lista>"
+                "<ul><li>a/L</li><li>b/L</li></ul></radix>");
+        }
+    }
+
+    /* --- silva vacua = ordines nulli; PER nidificata (ansa duplex) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- PER silvae: vacua + nidificata ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@list n=\"@n\"><ul>[<PER de=\"@n.elementa\" ut=\"e\"><li/>"
+            "</PER>]</ul></#>"
+            "<lista><elementa/></lista>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><lista $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@list>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><lista><elementa/></lista><ul>[]</ul></radix>");
+        }
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@leaf n=\"@n\"><i>&@n.t;</i></#>"
+            "<#@item n=\"@n\"><li><PER de=\"@n.sub\" voca=\"#@leaf\"/></li></#>"
+            "<#@list n=\"@n\"><ul><PER de=\"@n.elementa\" voca=\"#@item\"/>"
+            "</ul></#>"
+            "<lista><elementa><e><sub><s><t>a</t></s><s><t>b</t></s></sub>"
+            "</e></elementa></lista>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><lista $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@list>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix>"
+                "<lista><elementa><e><sub><s><t>a</t></s><s><t>b</t></s></sub>"
+                "</e></elementa></lista>"
+                "<ul><li><i>a</i><i>b</i></li></ul></radix>");
+        }
+    }
+
+    /* --- vitia: XXIX delegatio ambigua; XIII formae malae; collectio
+     * (radix ignota, ordo localis, ut obumbrans, via mala) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- PER silvae: vitia ---\n");
+        /* XXIX: templum cum loculis requisitis duobus */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@two a=\"@a\" b=\"@b\"><x/></#>"
+            "<#@list n=\"@n\"><PER de=\"@n.elementa\" voca=\"#@two\"/></#>"
+            "<lista><elementa><e/></elementa></lista>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><lista $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@list>><@n=>&@c;</></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_PER_DELEGATIO_AMBIGUA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.fragmentum, "@two");
+
+        /* XIII: voca + corpus */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@item n=\"@n\"><x/></#>"
+            "<#@list n=\"@n\"><PER de=\"@n.elementa\" voca=\"#@item\"><y/>"
+            "</PER></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+
+        /* XIII: ut sine corpore */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@list n=\"@n\"><PER de=\"@n.elementa\" ut=\"e\"/>"
+            "</#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+
+        /* XIII: '!' in de (fons silva, non octeti) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@list n=\"@n\"><PER de=\"@n.elementa!\" ut=\"e\"><x/>"
+            "</PER></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+
+        /* XIII: fons scalaris (impletione) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@list n=\"@n\"><PER de=\"@n.titulus\" ut=\"e\"><x/>"
+            "</PER></#>"
+            "<lista><titulus>L</titulus></lista>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><lista $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@list>><@n=>&@c;</></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "n.titulus");
+
+        /* collectio: radix de ignota */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@list n=\"@n\"><PER de=\"@nusquam.x\" ut=\"e\"><x/>"
+            "</PER></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_LOCULUS_IGNOTUS);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "nusquam");
+
+        /* collectio: ordo localis - '&@e;' extra corpus PER */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@list n=\"@n\"><PER de=\"@n.elementa\" ut=\"e\"><x/>"
+            "</PER><z>&@e;</z></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_LOCULUS_IGNOTUS);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "e");
+
+        /* collectio: ut loculum declaratum obumbrans */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@list n=\"@n\"><PER de=\"@n.elementa\" ut=\"n\"><x/>"
+            "</PER></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "n");
+
+        /* collectio: via mala in de */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@list n=\"@n\"><PER de=\"@n..x\" ut=\"e\"><x/>"
+            "</PER></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_PROIECTIO_MALFORMATA);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

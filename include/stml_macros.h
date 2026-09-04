@@ -166,7 +166,18 @@ nomen enumeratio {
     /* impletione: silva currens radices elementares PLURES habet aut
      * segmentum plures liberos eodem titulo nominat (involucra
      * materiae unica sunt; in STML libero electio exemplaris est) */
-    STML_EXPANSIO_PROIECTIO_AMBIGUA        = XXVIII
+    STML_EXPANSIO_PROIECTIO_AMBIGUA        = XXVIII,
+    /* PER super silvam argumenti in corpore templi (md-arbor-spec
+     * par. 6.3, ratificatio 2026-09-03): '<PER de="@n.bloci"
+     * voca="#@f"/>' - ordo quisque = elementum silvae proiectae
+     * (textus et commenta ordines non sunt) in loculum REQUISITUM
+     * UNICUM templi delegati; templum cum loculis requisitis
+     * ZEPHYRUM aut pluribus = delegatio ambigua (ordo loculum nullum
+     * nominat). Forma corporis '<PER de="@n.x" ut="e">…&@e;…</PER>'
+     * eiusdem impletionis est (scopus exterior visibilis, 'e' loculum
+     * declaratum obumbrans = XIII). Malformationes ceterae (de sine
+     * silva, voca + corpus, ut sine corpore, '!' in de) = XIII. */
+    STML_EXPANSIO_PER_DELEGATIO_AMBIGUA    = XXIX
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

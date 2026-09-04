@@ -324,6 +324,17 @@ output pinned, a vitium, and INDAGO coverage; the existing L1 / lint II
    slot, or none, refuses: `PER_DELEGATIO_AMBIGUA`). Inline body form
    also allowed (`<PER de="@n.bloci" ut="x">…&@x;…</PER>`) when no
    delegation is wanted. This is the child loop in one line.
+   **As built (2026-09-03, B1.3):** rows are the ELEMENTS of the
+   projected forest (text and comments are not rows); the delegated
+   template's row slot is its sole REQUIRED slot (optional slots stay
+   unfilled), and delegation is a true call — a fresh argument table,
+   the caller's scope does not leak. The `ut=` form fills within the
+   same instantiation: the outer scope stays visible, the row name is
+   local to the PER body (a reference outside it is LOCULUS_IGNOTUS),
+   and a row name that shadows a declared slot is refused (XIII). An
+   EMPTY wrapper (`<elementa/>`, the empty scalar of §6.1) is a source
+   with zero rows, never a fault. `!` in `de=` is refused: the source
+   is a forest, not bytes.
 4. **Pattern cases in COMMUTATIO (door 7, fill plane) + `tag=` sugar.**
    `<CASUS><EST><EXEMPLAR>…</EXEMPLAR></EST>arm</CASUS>` with a SUBTREE
    scrutinee: the pattern is petitioned `ancorata` at the scrutinee's

@@ -83,9 +83,23 @@ twin (`./md/computus.sh <x.md> [-machina] [-iter N]`, golden
 `fixa/computus/basis.tsv` over `fixa/md/` snapshots; `COMPUTUS_SCRIBERE=1`
 + a named cause). Arc A COMPLETE: 9 gates.
 
-**NEXT = B1** (engine: `&@n.slot;` projections, `de="@arg.slot"`, PER
-over a forest with `voca=`, pattern CASUS + `tag=`, self-call as a
-check) — see `project-specs/md-arbor-spec.md` §6.
+**B1 IN PROGRESS** (engine, `lib/stml_macros.c`, spec §6; fixtures in
+`probationes/probatio_stml_exemplaria.c`; gates root + silva in shadow
+clones). **B1.1 DONE** (d50ade07): `&@n.slot.slot;` = CONTENT of the
+named child wrapper by literal child steps (text = scalar, else forest,
+never the wrapper itself); `&@n.slot!;` = bytes of text + raw leaves
+(explicit — no implicit element→text rule; structure = vitium VII);
+vitia XXVI–XXVIII. Findings so far in the worklog's "quid STML voluit"
+entries: token slots need `!`; NODUS slots are double-wrapped; `est=""`
+is a tombstone in the base grammar (empty wrapper = PRESENT empty
+scalar; absence = missing wrapper, XXVII, discriminated by B1.4's
+pattern arm). **B1.3 DONE**: `<PER de="@n.bloci" voca="#@f"/>` (rows =
+ELEMENTS of the projected forest into the delegated template's sole
+required slot, a true call) and `<PER de="@n.x" ut="e">…</PER>` (same
+fill, outer scope visible, row name local and non-shadowing); empty
+wrapper = zero rows; vitium XXIX. **NEXT = B1.4** pattern CASUS +
+`tag=` in COMMUTATIO, then B1.5 self-call check, B1.2 `de="@n"` on
+EXEMPLAR/CATENA.
 
 ## Laws to keep (spec §3)
 

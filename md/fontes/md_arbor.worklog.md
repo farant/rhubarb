@@ -429,3 +429,38 @@ on the dumped text named it in one line.
 Vitia XXVI–XXVIII; fixtures in `probatio_stml_exemplaria.c` (274
 assertions); planted fault = the implicit raw rule (raw leaves read as
 bytes without `!`): the `<q>` expectation goes red.
+
+## 2026-09-03 — B1.3 built: PER over a projected forest
+
+`<PER de="@n.elementa" voca="#@item"/>` and the `ut="e"` body form
+both work inside template bodies; the nested case (a PER inside the
+delegated template's body over the row's own forest) produces
+`<ul><li><i>a</i><i>b</i></li></ul>` in one pass, which is the shape
+the md dispatcher needs minus the self-call. Decisions taken while
+building, all recorded in spec §6.3 "as built":
+
+**(4) An empty wrapper is a source with zero rows.** Piece one made an
+empty wrapper an empty scalar; the first PER fixture over
+`<elementa/>` therefore died as "source is a scalar" (XIII). The two
+rules meet honestly: an empty scalar as a PER source = no rows;
+a scalar WITH text is still refused. Every empty list slot in the
+projection (`<praefixa/>`, empty `elementa`) needs this.
+
+**(5) The row variable is local and cannot shadow.** Collection scans
+the PER body with a temporary declared slot for `ut="e"`, so `&@e;`
+outside the body is LOCULUS_IGNOTUS as any undeclared slot, and
+`ut="n"` over a declared `n` is refused instead of silently winning
+or losing against the outer argument (argument lookup is first-match).
+
+**(6) Delegation is a real call.** The delegated template gets a fresh
+table holding only the row in its sole required slot — the caller's
+other arguments do not leak in, the same as `<<#@f>>` — and optional
+slots may exist unfilled. A template with zero or several required
+slots refuses as XXIX PER_DELEGATIO_AMBIGUA, naming the template.
+Text and comment nodes in the forest are not rows (the md projection
+never has them in list slots; hand-written STML may).
+
+Gate: five fixtures + nine vitia (305 assertions); planted fault
+(break after the first row) red on the delegation fixture, green on
+revert. Still refused inside bodies: EXEMPLAR/CATENA/DIRIBITIO with
+`de="@n"` — that is B1.2; the dispatcher's self-call is B1.5.
