@@ -151,6 +151,16 @@ genera / 16 slots; `vocabulum` carries `analyses`, `classes`, `linguae`
 from birth (absent until stage 3). Gate `probatio_oratio_registrum`
 (130 assertions, round trip of "a\n").
 
+**As built (T2, 2026-09-04).** `oratio_lexare` is a whole-stream lexer
+(prose needs no container context). Unicode floor as built: bytes at or
+above 0x80 join letter runs unvalidated, with two exceptions found on
+first contact with real text — NBSP is SPATIUM, and the General
+Punctuation block U+2000–U+206F is INTERPUNCTIO (thin spaces SPATIUM,
+U+2019 between letters APOSTROPHUS). Joiners by neighbouring bytes;
+PUNCTUM only for a lone period; other punctuation one token per byte
+except same-byte runs. Corpus: every tracked markdown file byte-exact
+(1,134 files, 6.7M tokens, 0.7 s).
+
 ## 4. Stage 2 — the Latin dictionary (`vocabularium`)
 
 **Sources vendored under `oratio/vocabularium/`** with `FONTES.md`

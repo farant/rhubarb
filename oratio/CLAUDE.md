@@ -18,8 +18,14 @@ paragraphus, sententia, vocabulum, interpunctio, numerus; whitespace as
 terminator), runner `./oratio/compile_probationes.sh [filter]` (exit 2 =
 NOTHING RAN), pythonica gate tables (`PORTAE['oratio']`), gate
 `probatio_oratio_registrum` (titles, contiguity, materia round trip;
-planted fault red). NEXT: T2 `oratio_lexema` (scanners, positions,
-UTF-8 runs, CRLF).
+planted fault red). **T2 DONE**: `oratio_lexema` — whole-stream lexer
+(`oratio_lexare`: letters incl. bytes >= 0x80 except NBSP and the
+General Punctuation block, digits, hyphen/apostrophe between letters,
+PUNCTUM vs dot runs, one punctuation token per byte except same-byte
+runs, CRLF/CR, positions), derived-token factory; gate
+`probatio_oratio_lexema` (75 assertions + the md corpus byte-exact:
+1,134 files, 6.7M tokens, 0.7 s). NEXT: T3 `oratio_arbor` (paragraphs,
+sentences, vocabula with parts, corpus gate over md paragraph extents).
 
 ## Laws to keep (spec §2–3)
 
