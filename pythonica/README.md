@@ -210,3 +210,10 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
   Corpus 2026-09-04: viae MMDCCXXXVI (absunt CCCL, motae CCCLXX), symbola
   MMDCXXXI (absunt CXXXII), 0.6 s. Strepitus notus: nomina PHP/JS in
   worklogs, exempla ('x.worklog.md'), functiones staticae olim deletae.
+- **Prosa, additiones post usum primum (2026-09-04)**: `capitulum` /
+  `sectio` clavem unam accipiunt ex `titulus` (aequalis), `incipit=`
+  (praefixum: `sectio(incipit='9.')`), `continet=` (pars); ambiguitas
+  congruentia nominat, absentia praesentia. `paragraphum_addere(sectio,
+  textus, ubi='finis'|'initium')` = paragraphus cum separatione recta
+  (linea vacua una; ad initium post lineam capituli, setext post
+  subductionem: `ProsaExtentum.caput_finis`) - non iam '\n' manu praefixum.

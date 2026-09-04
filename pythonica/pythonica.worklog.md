@@ -361,3 +361,20 @@ function citations 132 name nothing defined. project-specs holds 330 of
 the absent paths — specs cite files before they exist, and some never
 came to exist. The report reports; a gate that pins the count "only
 falling" is the next step if Fran wants it.
+
+## 2026-09-04 — Prosa after its first six uses
+
+Two edges from writing the closure documents with Prosa, both small:
+`inserere_post` on a section lands right after the last content line
+(the section excludes trailing blank lines by design), so every note
+began with a hand-typed newline; and heading titles had to be typed
+exactly, long ones included. Added `paragraphum_addere(x, text,
+ubi='finis'|'initium')` — one blank line of separation, the separator
+before the next heading untouched, and at the head of a section the
+insertion goes after the heading line (after the underline for
+setext, carried as `caput_finis` on the section extent) with a blank
+line added only if the body follows immediately — and `incipit=` /
+`continet=` on `capitulum`/`sectio`, with ambiguity reported as the
+list of matching headings. Test lesson: my own ambiguity fixture had
+one match, not two — an empty prefix matches everything and makes the
+refusal deterministic.

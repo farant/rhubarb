@@ -968,7 +968,8 @@ class Textus(object):
 # ---------------------------------------------------------------- prosa (md)
 
 ProsaExtentum = namedtuple('ProsaExtentum',
-                           'tag initium finis linea columna linea_finis versio')
+                           'tag initium finis linea columna linea_finis versio'
+                           ' caput_finis', defaults=(0,))
 
 
 def prosa_extenta(via, selector, versio=0):
@@ -1078,32 +1079,48 @@ class Prosa(object):
             exitus.append((x, gradus, t.decode('utf-8', errors='replace')))
         return exitus
 
-    def _capitulum_index(self, titulus, gradus):
+    def _capitulum_index(self, titulus, gradus, incipit, continet):
+        modi = [(k, v) for k, v in (('titulus', titulus), ('incipit', incipit),
+                                    ('continet', continet)) if v is not None]
+        if len(modi) != 1:
+            raise SilvaError('capitulum: unum ex titulus / incipit / continet'
+                             ' da (%d data)' % len(modi))
+        modus, clavis = modi[0]
+        congruit = {'titulus': lambda t: t == clavis,
+                    'incipit': lambda t: t.startswith(clavis),
+                    'continet': lambda t: clavis in t}[modus]
         c = self._capitula()
         hits = [i for i, (x, g, t) in enumerate(c)
-                if t == titulus and (gradus is None or g == gradus)]
-        self.ancorae.append(('capitulum', titulus))
+                if congruit(t) and (gradus is None or g == gradus)]
+        self.ancorae.append(('capitulum', clavis))
         if len(hits) != 1:
-            praesentia = ', '.join('%r (h%d, linea %d)' % (t, g, x.linea)
-                                   for x, g, t in c[:40])
-            raise SilvaError('capitulum %r %d vicibus inventum (exspectatum'
-                             ' semel)%s; praesentia: %s'
-                             % (titulus, len(hits),
-                                ' - lineae %s' % [c[i][0].linea for i in hits]
-                                if hits else '', praesentia or '(nulla)'))
+            if hits:
+                praesentia = ', '.join('%r (h%d, linea %d)' % (c[i][2], c[i][1],
+                                                              c[i][0].linea)
+                                       for i in hits[:20])
+            else:
+                praesentia = ', '.join('%r (h%d, linea %d)' % (t, g, x.linea)
+                                       for x, g, t in c[:40]) or '(nulla)'
+            raise SilvaError('capitulum %s=%r %d vicibus inventum (exspectatum'
+                             ' semel); %s: %s'
+                             % (modus, clavis, len(hits),
+                                'congruentia' if hits else 'praesentia',
+                                praesentia))
         return hits[0], c
 
-    def capitulum(self, titulus, gradus=None):
-        """extentum LINEAE capituli cuius textus (sine marcis) == titulus;
-        gradus filtrat (1..6); absens/ambiguum refutatur, capitula
-        praesentia nominata"""
-        i, c = self._capitulum_index(titulus, gradus)
+    def capitulum(self, titulus=None, gradus=None, incipit=None, continet=None):
+        """extentum LINEAE capituli: titulus (textus sine marcis ==) aut
+        incipit (praefixum) aut continet (pars); gradus filtrat (1..6);
+        absens/ambiguum refutatur, capitula praesentia aut congruentia
+        nominata"""
+        i, c = self._capitulum_index(titulus, gradus, incipit, continet)
         return c[i][0]
 
-    def sectio(self, titulus, gradus=None):
+    def sectio(self, titulus=None, gradus=None, incipit=None, continet=None):
         """capitulum CUM corpore: usque ad capitulum proximum gradus <=
-        suo (ultimum: usque ad finem); lineae vacuae caudales exclusae"""
-        i, c = self._capitulum_index(titulus, gradus)
+        suo (ultimum: usque ad finem); lineae vacuae caudales exclusae;
+        caput_finis = post lineam capituli (setext: post subductionem)"""
+        i, c = self._capitulum_index(titulus, gradus, incipit, continet)
         x, g, _ = c[i]
         finis = len(self.octeti)
         for xj, gj, _ in c[i + 1:]:
@@ -1117,7 +1134,32 @@ class Prosa(object):
         linea_finis = x.linea + self.octeti[x.initium:finis].count(b'\n') \
             - (1 if self.octeti[finis - 1:finis] == b'\n' else 0)
         return ProsaExtentum('sectio', x.initium, finis, x.linea, x.columna,
-                             linea_finis, self.versio)
+                             linea_finis, self.versio, x.finis)
+
+    def paragraphum_addere(self, x, novus, ubi='finis'):
+        """paragraphum sectioni (aut extento) addere cum separatione recta:
+        ubi='finis' = post lineam contenti ultimam (linea vacua una inter,
+        separatio ad capitulum proximum manet); ubi='initium' = post
+        lineam capituli (setext: post subductionem), linea vacua ante et,
+        si corpus statim sequitur, post"""
+        self._recens(x)
+        n = self._octeti_novi(novus)
+        if not n.endswith(b'\n'):
+            n += b'\n'
+        if ubi == 'finis':
+            sedes = x.finis
+            n = b'\n' + n
+        elif ubi == 'initium':
+            sedes = x.caput_finis if x.caput_finis > x.initium \
+                else self.octeti.find(b'\n', x.initium) + 1
+            proxima = self.octeti[sedes:sedes + 1]
+            n = b'\n' + n + (b'\n' if proxima not in (b'\n', b'') else b'')
+        else:
+            raise SilvaError("paragraphum_addere: ubi = 'finis' | 'initium'")
+        self.octeti = self.octeti[:sedes] + n + self.octeti[sedes:]
+        self.versio += 1
+        self.acta.append('paragraphum_addere %s@%d %s' % (x.tag, x.linea, ubi))
+        return self
 
     def _intra(self, xs, intra):
         if intra is None:

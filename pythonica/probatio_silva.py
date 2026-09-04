@@ -1022,6 +1022,30 @@ except silva.SilvaError as ex:
 for _f in (via_p, via_q):
     os.unlink(_f)
 
+print('--- Prosa: incipit/continet + paragraphum_addere ---')
+via_r = os.path.join(T, 'prosa3.md')
+open(via_r, 'w').write('# Doc\n\n## 9. Arc C — `Prosa` in `pythonica/silva.py`\n\nbody one\n\n## 10. Order\nbody ten\n\nSetext\n------\n\nbody s\n')
+r3 = silva.Prosa(via_r)
+credo(r3.sectio(incipit='9.').linea == 3 and r3.capitulum(continet='Order').linea == 7, 'Prosa: incipit + continet')
+try:
+    r3.capitulum(incipit=''); credo(False, 'ambiguum')
+except silva.SilvaError as ex:
+    credo('4 vicibus' in str(ex) and 'congruentia' in str(ex) and '10. Order' in str(ex), 'Prosa: incipit ambiguum congruentia nominat')
+try:
+    r3.capitulum(); credo(False, 'nihil')
+except silva.SilvaError as ex:
+    credo('unum ex' in str(ex), 'Prosa: sine clave refutatur')
+s9 = r3.sectio(incipit='9.'); credo(s9.caput_finis == r3.octeti.find(b'\n', s9.initium) + 1, 'Prosa: sectio caput_finis (ATX)')
+r3.paragraphum_addere(s9, 'added at end')
+credo(b'body one\n\nadded at end\n\n## 10.' in r3.octeti, 'paragraphum_addere finis: linea vacua una, separatio ad capitulum manet')
+s10 = r3.sectio(incipit='10.'); r3.paragraphum_addere(s10, 'status line', ubi='initium')
+credo(b'## 10. Order\n\nstatus line\n\nbody ten\n' in r3.octeti, 'paragraphum_addere initium: corpus statim sequens separatum')
+ss = r3.sectio('Setext'); credo(r3.corpus(ss).startswith('Setext\n------\n') and ss.caput_finis == ss.initium + len(b'Setext\n------\n'), 'Prosa: caput_finis setext post subductionem')
+r3.paragraphum_addere(ss, 'under setext', ubi='initium')
+credo(b'Setext\n------\n\nunder setext\n\nbody s\n' in r3.octeti, 'paragraphum_addere initium sub setext (linea vacua exsistens non duplicata)')
+f3 = r3.applicare(); credo(f3.sana, 'Prosa: applicare post paragrapha')
+os.unlink(via_r)
+
 print('--- citata: putredo documentorum (C2) ---')
 via_c = os.path.join(T, 'citata.md')
 open(via_c, 'w').write('See `lib/chorda.c`, `chorda.c`, `lib/nemo_hic.c`, `../../include/latina.h`,\n'
