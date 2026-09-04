@@ -80,8 +80,8 @@ print('--- Editio: ancora tolerans spatiis ---')
 open(via, 'w').write(FONS)
 e = silva.Editio(via)
 e.replace('x = I;', 'x = II;')            # fons habet 'x  = I;' (duo spatia)
-credo('x  = II;' not in e.textus and 'x = II;' in e.textus,
-      'ancora uno spatio congruit duobus; novus exacte scriptus')
+credo('x  = II;' in e.textus and 'x = II;' not in e.textus,
+      'ancora uno spatio congruit duobus; lexemata sola mutata (spatia plagulae manent)')
 try:
     e.replace('redde;', 'frange;')        # bis in plagula
     credo(False, 'ancora ambigua levat')
@@ -333,7 +333,7 @@ e.replace('a(vacuum)\n{', 'a (vacuum)\n{')                     # plagula: 'a (va
 credo(e.textus.count('a (vacuum)') == 1, 'lexemata: spatium ablatum in ancora congruit')
 e = silva.Editio(via)
 e.replace('x  =  I ;', 'x = II;')                               # plagula: 'x  = I;'
-credo('x = II;' in e.textus, 'lexemata: spatia ubique indifferentia')
+credo('x  = II;' in e.textus, 'lexemata: spatia ubique indifferentia (forma plagulae manet)')
 try:
     silva.Editio(via).replace('"/* b */"', 'x')
     credo(False, 'littera exacta')
@@ -346,6 +346,53 @@ except silva.SilvaError:
     credo(True, 'lexemata: ambigua (2) levat')
 e = silva.Editio(via); e.replace('x  = I;', 'x = II;', tolerans='spatia')
 credo('x = II;' in e.textus, "tolerans='spatia' forma vetus manet")
+
+print('--- lex formae ancorarum tolerantium (md_arbor.c contortum, 2026-09-03) ---')
+via_f = os.path.join(T, 'forma.c')
+FONS_F = ('#include "latina.h"\n\nvacuum f(i32 a, i32 b);\n\n'
+          '/* f - explicatio longa\n * quae lineas duas tenet */\n'
+          'vacuum\nf (i32 a, i32 b)\n{\n    i32  x;\n\n    x  = I;\n'
+          '    g(&x, ALPHA, a,\n        b);\n    redde h(x, a, b);\n}\n')
+open(via_f, 'w').write(FONS_F)
+e = silva.Editio(via_f)
+e.replace('g(&x, ALPHA, a, b); redde h(x, a, b);', 'g(&x, BETA, a, b); redde h(x, a, b);')
+credo('g(&x, BETA, a,\n        b);\n    redde h(x, a, b);' in e.textus,
+      'novus planus lexematibus paribus: substitutio in situ, lineae plagulae servatae')
+try:
+    silva.Editio(via_f).replace('g(&x, ALPHA, a, b); redde h(x, a, b);',
+                                'g(&x, ALPHA, a, b, c); redde h(x, a, b);')
+    credo(False, 'refusio novi plani')
+except silva.SilvaError as ex:
+    credo('forma perderetur' in str(ex) and 'lineae [13]' in str(ex),
+          'novus planus lexematibus imparibus super lineas plures REFUSATUR, lineae nominatae')
+e = silva.Editio(via_f)
+e.replace('g(&x, ALPHA, a, b); redde h(x, a, b);', 'g(&x, ALPHA, a, b, c);\n    redde h(x, a, b);')
+credo('g(&x, ALPHA, a, b, c);\n    redde h(x, a, b);' in e.textus, 'novus cum lineis novis: forma auctoris verbatim')
+e = silva.Editio(via_f); e.replace('g(&x, ALPHA, a, b);', '')
+credo('g(' not in e.textus and 'redde h' in e.textus, 'novus vacuus delet extentum plurium linearum')
+try:
+    silva.Editio(via_f).replace('g(&x, ALPHA, a, b); frange;', 'x')
+    credo(False, 'proxima')
+except silva.SilvaError as ex:
+    credo('proxima: lexemata 12/14' in str(ex) and "exspectatum 'frange', inventum 'redde' (linea 15" in str(ex),
+          'ancora absens: sedes proxima, lexema divergens, linea nominata')
+try:
+    silva.Editio(via_f).replace('g(&x, ALPHA, a, b);', 'x', tolerans=False)
+    credo(False, 'exacta')
+except silva.SilvaError as ex:
+    credo('lineae [13] (tolerans=True)' in str(ex), 'ancora exacta absens: series lexematum inventa nominatur')
+try:
+    silva.Editio(via_f).replace('nemo_hic(x);', 'x')
+    credo(False, 'absens')
+except silva.SilvaError as ex:
+    credo("lexema primum ancorae 'nemo_hic' in plagula absens" in str(ex), 'ancora absens: lexema primum absens nominatur')
+e = silva.Editio(via_f); e.replace('/* f - explicatio longa quae lineas duas tenet */', '/* f */')
+credo('/* f */\nvacuum\nf (' in e.textus, "commentum reflexum: margines ' * ' in ancora indifferentes")
+e = silva.Editio(via_f); e.replace('explicatio longa quae lineas', 'explicatio brevis quae lineas', tolerans='verba')
+credo('/* f - explicatio brevis quae lineas duas tenet */' in e.textus, "tolerans='verba': prosa trans marginem commenti")
+f = e.applicare(iudica=False)
+credo(f.formata is not None and 'explicatio brevis' in open(via_f).read(), 'verba: scriptum')
+os.unlink(via_f)
 
 print('--- Textus: textus planus ---')
 via_t2 = os.path.join(T, 'planus.md')
@@ -915,6 +962,17 @@ credo(not ex_m.successus and ex_m.vitium == 'LOCULUS_IGNOTUS' and ex_m.loculus =
 credo(silva.expandere('project-specs/exhibita/md-html-b1.stml').successus, 'expandere: via')
 for _f in (via_m, via_v, via_p):
     os.unlink(_f)
+
+print('--- oraculum md (ambitus ORACULUM_* involutus) ---')
+o = silva.oraculum(exemplum=25)
+credo(o.totalis == 1324 and o.praeterita >= o.pinna >= 1270, 'oraculum: summa cum pinna')
+credo(o.sectiones.get('Tabs', (0, 0))[1] == 22 and len(o.sectiones) >= 30, 'oraculum: sectiones (Tabs 22, XXXI tituli)')
+credo(any(f.numerus == 5 and f.sectio == 'Tabs' and f.causa is None and f.sperata and f.nostra
+          for f in o.fracturae), 'oraculum: fracturae omnes cum sperata/nostra normatis')
+credo(len(o.exempla) == 2 and {e.plagula.split('/')[-2] for e in o.exempla} == {'commonmark', 'gfm'}
+      and o.exempla[0].md.startswith('&nbsp;') and o.exempla[0].nostra.endswith('</p>'),
+      'oraculum: exemplum 25 ex plagula utraque, cruda')
+credo(o.ignoscentiae.get('inter', 0) > 0 and silva.oraculum().exempla == [], 'oraculum: ignoscentiae; sine exemplo nulla')
 
 print()
 if fracta:

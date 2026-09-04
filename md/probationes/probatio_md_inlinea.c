@@ -323,8 +323,8 @@ principale (vacuum)
     CREDO_VERUM (_lexema_aequalis(_liber(in, II), (i32)MD_NEXUS_URL,
         ""));
     CREDO_FALSUM (_adest(_liber(in, II), (i32)MD_NEXUS_DESCRIPTIO));
-    d = P("[a](/u\\)x) [b](/u \"t\\\"q\")\n"); CREDO_VERUM (sani); in =
-                                                                       _inl(d);   /* effugia in url/descriptione */
+    d = P("[a](/u\\)x) [b](/u \"t\\\"q\")\n");
+    CREDO_VERUM (sani); in = _inl(d);   /* effugia in url/descriptione */
     CREDO_VERUM (_lexema_aequalis(_liber(in, ZEPHYRUM),
         (i32)MD_NEXUS_URL, "/u)x"));
     CREDO_VERUM (_lexema_aequalis(_liber(in, II),
@@ -350,10 +350,9 @@ principale (vacuum)
     CREDO_VERUM (_lexema_aequalis(n, (i32)MD_NEXUS_URL, "/p.png"));
 
     imprimere("\n--- Probans nexus referentes ---\n");
-    d =
-                                                                                             P("[foo] [Foo][] [bar][foo] [nope]\n\n[FOO]: /url \"t\"\n"); CREDO_VERUM (sani); in =
-                                                                                                                                                                                  _inl(d);
-    n = _liber(in, ZEPHYRUM);
+    d = P("[foo] [Foo][] [bar][foo] [nope]\n\n[FOO]: /url \"t\"\n");
+    CREDO_VERUM (sani); in  = _inl(d);
+    n                       = _liber(in, ZEPHYRUM);
     CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_NEXUS);
     CREDO_AEQUALIS_S32 (_index(n, (i32)MD_NEXUS_FORMA),
         (s32)MD_NEXUS_REFERENS);
@@ -374,10 +373,9 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (_numerus(in, (i32)MD_INLINEA_LIBERI), VI);
 
     imprimere("\n--- Probans autonexus ---\n");
-    d =
-                                                                                               P("<http://x.y/z> <a@b.co> www.x.com/p. http://q.r/s) ftp\n"); CREDO_VERUM (sani); in =
-                                                                                                                                                                                      _inl(d);
-    n = _liber(in, ZEPHYRUM);
+    d = P("<http://x.y/z> <a@b.co> www.x.com/p. http://q.r/s) ftp\n");
+    CREDO_VERUM (sani); in  = _inl(d);
+    n                       = _liber(in, ZEPHYRUM);
     CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_NEXUS);
     CREDO_AEQUALIS_S32 (_index(n, (i32)MD_NEXUS_FORMA),
         (s32)MD_NEXUS_AUTO);
@@ -419,9 +417,8 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (_numerus(n, (i32)MD_DURA_PRAEFIXA), I);
 
     imprimere("\n--- Probans html inlineum (par. 6.6) ---\n");
-    d =
-                                                                                  P("<b class=\"x\">y</b> <!-- c --> <?p?> a<b\n"); CREDO_VERUM (sani); in =
-                                                                                                                                                            _inl(d);
+    d = P("<b class=\"x\">y</b> <!-- c --> <?p?> a<b\n");
+    CREDO_VERUM (sani); in = _inl(d);
     CREDO_AEQUALIS_S32 (_genus(in, ZEPHYRUM),
         (s32)MD_GENUS_HTML_INLINEUM);
     CREDO_VERUM (_cruda_aequalia(_liber(in, ZEPHYRUM),
@@ -444,10 +441,9 @@ principale (vacuum)
 
     imprimere("\n");
     imprimere("\n--- Probans derivata B2.1: alt imaginis, fractura dura ---\n");
-    d =
-                                                                                        P("![alt *t* `c` [l](/u) ![in](/x)](/i.png \"ti\")\n"); CREDO_VERUM (sani); in =
-                                                                                                                                                                        _inl(d);
-    n = _liber(in, ZEPHYRUM);
+    d = P("![alt *t* `c` [l](/u) ![in](/x)](/i.png \"ti\")\n");
+    CREDO_VERUM (sani); in  = _inl(d);
+    n                       = _liber(in, ZEPHYRUM);
     CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_IMAGO);
     CREDO_VERUM (_lexema_aequalis(n, (i32)MD_NEXUS_ALT,
         "alt t c l in"));

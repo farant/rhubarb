@@ -25,9 +25,13 @@ Contractus:
   - applicare() = punctum scripturae unicum, ergo sedes portarum: custos
     lectionis rancidae, scriptura, forma (plagula tota), examen, differre
     contra textum ante editionem. Fructus refert; strictum revertit.
-  - Ancorae tolerantes: spatia inter verba ancorae quaelibet spatia
-    congruunt (reordinatio formatoris ancoram non frangit); ubi ancora
-    spatium non habet, nullum admittitur.
+  - Ancorae tolerantes = SERIES LEXEMATUM (spatia ubique indifferentia:
+    reordinatio formatoris ancoram non frangit). LEX FORMAE: novus PLANUS
+    lexematibus paribus lexemata sola mutat - forma plagulae manet, etiam
+    trans lineas; novus planus super extentum plurium linearum
+    lexematibus imparibus REFUSATUR (lineae perderentur); novus cum
+    lineis novis = forma auctoris verbatim. Ancora absens sedem PROXIMAM
+    nominat (lexema divergens, linea).
   - Nomina (substituere/inserere) per formator -extenta resolvuntur in
     textu PRAESENTI (post editiones priores) - lineae labuntur, nomina
     manent.
@@ -59,13 +63,14 @@ Differentia = namedtuple('Differentia',
                          'paria verdictum cosmetica_solum rc')
 
 
-def _curre(args, stdin=None, cwd=None):
+def _curre(args, stdin=None, cwd=None, env=None):
     # errors='replace': effusum portae octetos non-UTF-8 ferre potest
     # (probatio octetos crudos imprimens) - decodificatio stricta
     # operarium umbrae 2026-09-02 tacite necavit, signum pendens mansit.
-    # cwd: radix altera (clone photographiae) - ordinarius RADIX
+    # cwd: radix altera (clone photographiae) - ordinarius RADIX.
+    # env: ambitus totus alter (oraculum: ORACULUM_OMNIA) - None = hereditas
     return subprocess.run(args, cwd=cwd or RADIX, capture_output=True,
-                          text=True, errors='replace', input=stdin)
+                          text=True, errors='replace', input=stdin, env=env)
 
 
 def _absoluta(via):
@@ -189,6 +194,69 @@ def expandere(fons):
                     m.group(4), '')
 
 
+# ---------------------------------------------------------------- oraculum md
+
+FracturaOraculi = namedtuple('FracturaOraculi',
+                             'numerus plagula sectio causa sperata nostra')
+ExemplumOraculi = namedtuple('ExemplumOraculi',
+                             'numerus plagula md sperata nostra')
+Oraculum = namedtuple('Oraculum', 'praeterita totalis pinna sectiones '
+                      'fracturae exempla ignoscentiae acta')
+_ORACULI_FINIS = r'\n(?=  #\d|\n===|\n---|=== CREDO)'
+
+
+def oraculum(exemplum=None):
+    """probatio_md_oraculum uno vocamine (ambitus ORACULUM_OMNIA +
+    ORACULUM_EXEMPLUM, grep non iam): Oraculum(praeterita, totalis,
+    pinna, sectiones {titulus: (praeterita, totalis)} ordine, fracturae
+    [FracturaOraculi] OMNES - causa = vitium programmatis aut None cum
+    sperata/nostra NORMATAE (truncatae CXX) -, exempla [ExemplumOraculi]
+    pro numero dato: md, sperata cruda, nostra cruda (linea nova finali
+    dempta; plagula quaeque numerum suum habet - GFM post sectiones
+    extensionum aliter numerat, ergo bina), ignoscentiae {titulus: n},
+    acta. Suita md filtro 'oraculum' curritur (secunda pauca)."""
+    ambitus = dict(os.environ)
+    ambitus['ORACULUM_OMNIA'] = '1'
+    if exemplum is not None:
+        ambitus['ORACULUM_EXEMPLUM'] = str(int(exemplum))
+    r = _curre(['./md/compile_probationes.sh', 'oraculum'], env=ambitus)
+    acta = _ANSI.sub('', r.stdout + r.stderr)
+    m = re.search(r'--- ORACULUM: (\d+)/(\d+) praeterita \(pinna (\d+)\) ---',
+                  acta)
+    if r.returncode == 2 or not m:
+        raise SilvaError('oraculum non cucurrit (rc=%d): %s'
+                         % (r.returncode, acta.strip()[-300:]))
+    praeterita, totalis, pinna = (int(x) for x in m.groups())
+    sectiones = {}
+    ms = re.search(r'--- sectiones.*?---\n(.*?)\n--- ignoscentiae', acta, re.S)
+    for o in re.finditer(r'(?m)^ +(\d+)/(\d+) +(.+?)\s*$', ms.group(1) if ms
+                         else ''):
+        sectiones[o.group(3)] = (int(o.group(1)), int(o.group(2)))
+    ignoscentiae = {}
+    mi = re.search(r'--- ignoscentiae: (.*?) ---', acta, re.S)
+    for o in re.finditer(r"([\w' /<>]+?) (\d+)(?:,|$)", mi.group(1) if mi
+                         else ''):
+        ignoscentiae[o.group(1).strip()] = int(o.group(2))
+    fracturae = []
+    exempla = []
+    partes = re.split(r'\n--- (\S+): \d+ exempla ---\n', acta)
+    for k in range(1, len(partes) - 1, 2):
+        plagula, textus = partes[k], partes[k + 1]
+        for o in re.finditer(
+                r'^  #(\d+) \[([^\]]*)\](?: FRACTA: ([^\n]*)|\n    sperata: (.*?)'
+                r'\n    nostra:  (.*?))' + _ORACULI_FINIS, textus, re.S | re.M):
+            fracturae.append(FracturaOraculi(
+                int(o.group(1)), plagula, o.group(2), o.group(3),
+                o.group(4), o.group(5)))
+        for o in re.finditer(
+                r'=== EXEMPLUM (\d+) \((\S+)\) ===\nmd: (.*?)\nsperata cruda: '
+                r'(.*?)\nnostra cruda:  (.*?)' + _ORACULI_FINIS, textus, re.S):
+            exempla.append(ExemplumOraculi(
+                int(o.group(1)), o.group(2), o.group(3), o.group(4), o.group(5)))
+    return Oraculum(praeterita, totalis, pinna, sectiones, fracturae, exempla,
+                    ignoscentiae, acta)
+
+
 def extenta(via):
     """Extenta functionum radicis (definitiones + prototypa) ordine fontis.
     Extentum = a linea post nodum priorem (commentarium ducens inclusum)
@@ -253,6 +321,21 @@ def _exemplar_tolerans(vetus):
     return re.compile(r'\s+'.join(re.escape(v) for v in verba))
 
 
+def _exemplar_verborum(vetus):
+    """tolerans='verba': verba ancorae spatiis quibuslibet ET marginibus
+    ' * ' commentorum reflexorum separata - prosa in commentis (formator
+    lineas commenti refringit: ancora exacta bis in B3 mortua)"""
+    verba = vetus.split()
+    if not verba:
+        raise SilvaError('ancora vacua')
+    return re.compile(r'(?:\s+(?:\*(?!/)[ \t]*)?)+'.join(
+        re.escape(v) for v in verba))
+
+
+# margo commenti: '*' ducens linearum sequentium (non '*/')
+_MARGO = re.compile(r'(?m)^[ \t]*\*(?!/)')
+
+
 # lexator C rudis pro ANCORIS (non pro veritate): litterae chordae et
 # characteris, commenta, identificatores, numeri, interpunctiones
 # longissimae primum. Ancora et plagula ambae lexantur; series
@@ -277,27 +360,68 @@ def _lexemata(textus):
 
 
 def _lexema_norma(t):
-    """commentum = lexema unum: spatia INTRA collapsa (tabulae, lineae
-    refractae, indentatio commenti ancoram non frangunt - 2026-09-02);
-    cetera exacta"""
+    """commentum = lexema unum: margines '*' linearum sequentium ablati
+    (reflexio formatoris, 2026-09-03) et spatia INTRA collapsa (tabulae,
+    lineae refractae, indentatio commenti ancoram non frangunt -
+    2026-09-02); cetera exacta"""
     if t.startswith('/*'):
-        return ' '.join(t.split())
+        return ' '.join(_MARGO.sub('', t).split())
     return t
 
 
-def _sedes_lexematum(textus, vetus):
-    """spatia [initium, finis) ubi series lexematum ancorae in textu
-    apparet"""
+def _series_lexematum(textus, vetus):
+    """[[(a, b) lexematis cuiusque], ...] - sedes serierum lexematum
+    ancorae in textu, lexema quodque cum spatio suo (substitutio in situ)"""
     anc = [_lexema_norma(t) for t, _, _ in _lexemata(vetus)]
     if not anc:
         raise SilvaError('ancora sine lexematis')
     lex = [(_lexema_norma(t), a, b) for t, a, b in _lexemata(textus)]
     n = len(anc)
-    sedes = []
+    series = []
     for i in range(len(lex) - n + 1):
         if all(lex[i + k][0] == anc[k] for k in range(n)):
-            sedes.append((lex[i][1], lex[i + n - 1][2]))
-    return sedes
+            series.append([(lex[i + k][1], lex[i + k][2]) for k in range(n)])
+    return series
+
+
+def _sedes_lexematum(textus, vetus):
+    """spatia [initium, finis) ubi series lexematum ancorae in textu
+    apparet"""
+    return [(s[0][0], s[-1][1]) for s in _series_lexematum(textus, vetus)]
+
+
+def _proxima_ancorae(textus, vetus):
+    """ancora absente: ubi series lexematum LONGISSIME congruit - lexema
+    divergens exspectatum/inventum cum linea eius et textu lineae (grep
+    post refusionem non iam: quinquies in B3, 2026-09-03)"""
+    anc = [_lexema_norma(t) for t, _, _ in _lexemata(vetus)]
+    if not anc:
+        return ''
+    lex = [(_lexema_norma(t), a, b) for t, a, b in _lexemata(textus)]
+    optimum, sedes = 0, -1
+    for i in range(len(lex)):
+        if lex[i][0] != anc[0]:
+            continue
+        k = 1
+        while k < len(anc) and i + k < len(lex) and lex[i + k][0] == anc[k]:
+            k += 1
+        if k > optimum:
+            optimum, sedes = k, i
+    if sedes < 0:
+        return " - lexema primum ancorae %r in plagula absens" % anc[0]
+    linea = textus.count('\n', 0, lex[sedes][1]) + 1
+    j = sedes + optimum
+    if optimum == len(anc) or j >= len(lex):
+        return (" - proxima: lexemata %d/%d congruunt a linea %d, plagula"
+                " finit" % (optimum, len(anc), linea))
+    linea_div = textus.count('\n', 0, lex[j][1]) + 1
+    lineae = textus.splitlines()
+    textus_lineae = lineae[linea_div - 1].strip() if linea_div <= len(lineae) \
+        else ''
+    return (" - proxima: lexemata %d/%d congruunt a linea %d; lexema %d"
+            " exspectatum %r, inventum %r (linea %d: %s)"
+            % (optimum, len(anc), linea, optimum + 1, anc[optimum],
+               lex[j][0], linea_div, textus_lineae[:80]))
 
 
 def _nomen_planum(nomen, quid='nomen'):
@@ -342,13 +466,26 @@ class Editio(object):
         """tolerans=True (ordinarius): ancora ut SERIES LEXEMATUM - spatia
         ubique indifferentia, etiam addita/ablata ('a(vacuum)' congruit
         'a (vacuum)', parametra in lineas fissa congruunt); litterae
-        chordae exacte. 'spatia': cursus spatiorum solum (forma vetus).
-        False: octeti exacti."""
+        chordae exacte. LEX FORMAE (2026-09-03): novus PLANUS (sine linea
+        nova) lexematibus paribus = substitutio lexematum IN SITU, forma
+        plagulae servata (etiam trans lineas); novus planus lexematibus
+        imparibus super extentum plurium linearum = REFUSIO (lineae
+        perderentur - quattuor sedes in md_arbor.c ita contortae, quas
+        formator sine regula 'sententia in linea sua' accepit); novus
+        vacuus delet; novus cum lineis novis = forma auctoris verbatim.
+        'spatia': cursus spatiorum solum, scriptura verbatim (forma
+        vetus). 'verba': verba prosae trans margines ' * ' commentorum,
+        verbatim. False: octeti exacti. Ancora absens: sedes proxima."""
+        series = None
         if tolerans is True:
-            sedes = _sedes_lexematum(self.textus, vetus)
+            series = _series_lexematum(self.textus, vetus)
+            sedes = [(s[0][0], s[-1][1]) for s in series]
         elif tolerans == 'spatia':
             sedes = [m.span() for m in
                      _exemplar_tolerans(vetus).finditer(self.textus)]
+        elif tolerans == 'verba':
+            sedes = [m.span() for m in
+                     _exemplar_verborum(vetus).finditer(self.textus)]
         else:
             sedes = []
             i = self.textus.find(vetus)
@@ -358,12 +495,52 @@ class Editio(object):
         if len(sedes) != numerus:
             raise SilvaError("ancora %d vicibus inventa (exspectatae %d)%s:"
                              " %r" % (len(sedes), numerus,
-                                      _lineae_sedium(self.textus, sedes),
+                                      _lineae_sedium(self.textus, sedes)
+                                      or self._proxima(vetus, tolerans),
                                       vetus[:60]))
-        for a, b in reversed(sedes):
-            self.textus = self.textus[:a] + novus + self.textus[b:]
+        if series is not None:
+            self._substituere_lexemata(series, sedes, vetus, novus)
+        else:
+            for a, b in reversed(sedes):
+                self.textus = self.textus[:a] + novus + self.textus[b:]
         self.acta.append('replace %r' % vetus[:40])
         return self
+
+    def _proxima(self, vetus, tolerans):
+        """refusio ancorae absentis: series lexematum proxima (tolerans)
+        aut, ancora exacta absente, series lexematum inventa"""
+        if tolerans is True:
+            return _proxima_ancorae(self.textus, vetus)
+        try:
+            s = _sedes_lexematum(self.textus, vetus)
+        except SilvaError:
+            return ''
+        if s:
+            return (' - series lexematum congruit%s (tolerans=True)'
+                    % _lineae_sedium(self.textus, s))
+        return _proxima_ancorae(self.textus, vetus)
+
+    def _substituere_lexemata(self, series, sedes, vetus, novus):
+        """lex formae ancorarum tolerantium (vide replace)"""
+        nova = [t for t, _, _ in _lexemata(novus)]
+        planus = '\n' not in novus
+        if planus and nova and len(nova) == len(series[0]):
+            for s in reversed(series):
+                for (a, b), t in reversed(list(zip(s, nova))):
+                    self.textus = self.textus[:a] + t + self.textus[b:]
+            return
+        if planus and nova:
+            multae = [(a, b) for a, b in sedes if '\n' in self.textus[a:b]]
+            if multae:
+                raise SilvaError(
+                    "ancora lineas plures tenet%s, novus planus lexematibus"
+                    " imparibus (%d pro %d): forma perderetur - novus cum"
+                    " lineis novis scribatur (aut tolerans='spatia' pro"
+                    " scriptura verbatim): %r"
+                    % (_lineae_sedium(self.textus, multae), len(nova),
+                       len(series[0]), vetus[:60]))
+        for a, b in reversed(sedes):
+            self.textus = self.textus[:a] + novus + self.textus[b:]
 
     def replace_inter(self, initium, finis, novus, tolerans=True,
                       inclusae=False):
@@ -381,7 +558,8 @@ class Editio(object):
                   if self.textus.startswith(initium, j)]]
         if len(a) != 1:
             raise SilvaError("ancora initii %d vicibus inventa%s: %r"
-                             % (len(a), _lineae_sedium(self.textus, a),
+                             % (len(a), _lineae_sedium(self.textus, a)
+                                or self._proxima(initium, tolerans),
                                 initium[:60]))
         a0, a1 = a[0]
         cauda = self.textus[a1:]
@@ -391,8 +569,9 @@ class Editio(object):
             b = [(i, i + len(finis)) for i in
                  [j for j in range(len(cauda)) if cauda.startswith(finis, j)]]
         if len(b) < 1:
-            raise SilvaError("ancora finis post initium non inventa: %r"
-                             % finis[:60])
+            raise SilvaError("ancora finis post initium non inventa%s: %r"
+                             % (_proxima_ancorae(cauda, finis)
+                                if tolerans is True else '', finis[:60]))
         b0, b1 = a1 + b[0][0], a1 + b[0][1]
         if inclusae:
             self.textus = self.textus[:a0] + novus + self.textus[b1:]

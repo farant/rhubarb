@@ -278,3 +278,49 @@ B1 plant removed a parameter, -Werror, a full gate cycle wasted). (5)
 slot, fragment, line — I wrote three C probes in B1 for information the
 CLI already printed. Test cases for each in probatio_silva.py; the
 pythonica gate is the commit gate.
+
+## 2026-09-03 — the formatter was innocent: flat text through tolerant anchors
+
+After B3 I reported a "formatting oddity" in md_arbor.c (an `if` body
+collapsed beside its brace). Looking properly: the file carried FIFTEEN
+damaged sites (giant continuation columns, `{ redde FALSUM;`, `} m_ad =`,
+three declarations after a brace, four `_praefixum(...); redde ...` on one
+line) and probatio_md_inlinea.c five ugly wraps. Three experiments cleared
+the formatter: (1) formatting the committed file again changes nothing —
+it is idempotent and simply ACCEPTS the shape (it has no
+one-statement-per-line rule; long-line wrapping then breaks the joined
+line by column heuristics, which is where the 85-column `post);` came
+from); (2) re-applying the same identifier change well-formed to the
+pre-commit version formats cleanly at every site; (3) a minimal probe
+with a 73-column call wraps cleanly. The transcript then showed the cause:
+my edit scripts passed tolerant anchors as ONE-LINE token series that
+matched across three source lines, with the replacement written as the
+same flat line. `replace` spliced the replacement over the whole matched
+extent, newlines included. The property that made anchors survive the
+formatter (whitespace is nothing) is exactly what made flat replacements
+destructive.
+
+Law now in `Editio.replace` (tolerant): a flat novus with the same token
+count substitutes tokens IN PLACE and keeps the file's whitespace, even
+across lines; a flat novus with a different count over a multi-line
+extent is REFUSED with the lines named; an empty novus deletes; a novus
+carrying newlines is written verbatim (the author's shape). Two suite
+expectations changed on purpose (`x = I;` → `x = II;` now keeps the
+file's two spaces — the formatter owns spacing, not the anchor).
+
+Also built: the near-miss report (a refused anchor names the longest
+matching prefix, the divergent token and its line text — five grep round
+trips in B3 were exactly this), comment margins `*` ignored inside a
+comment token plus `tolerans='verba'` for prose across a re-flowed
+comment, and `silva.oraculum(n)` wrapping the two ORACULUM_* switches
+(1 s, structured). `Refactio` already was the all-or-nothing multi-file
+transaction I had asked for; the half-applied scripts were my not using
+it — a bench line, not code.
+
+Repair lesson: a damaged site and a properly laid-out site have the SAME
+token series (`} m_ad = md_scan_citatio(...)` matched at 1937 and 2085),
+so the tolerant anchor is ambiguous for layout repair; the damaged bytes
+with `tolerans=False` are unique. `differre` judged every repaired unit
+cosmetic — that is the proof nothing else moved. A formatter rule
+"sententia in linea sua" (family of parametra-singula) would have
+repaired flat text by itself; filed as a desideratum.

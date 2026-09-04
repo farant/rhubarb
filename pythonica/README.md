@@ -134,3 +134,42 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
   numero vitii non iam.
 - `commissio_umbra` fracta: nuntius `receptum_delere(via)` nominat (receptum
   et clone servata sunt consulto - `umbrae_purgare` orphanos solos tollit).
+
+## 2026-09-03 — lex formae ancorarum (post B3)
+
+- **Lex formae `Editio.replace` tolerantis**: ancora = series lexematum
+  (ut olim), sed scriptura novi iam formam plagulae respicit. Novus
+  PLANUS (sine linea nova) lexematibus PARIBUS = lexemata sola in situ
+  mutantur, spatia et lineae plagulae manent (etiam trans lineas); novus
+  planus lexematibus imparibus super extentum plurium linearum = REFUSIO
+  nominata ('forma perderetur' + lineae) — novus cum lineis novis
+  scribatur; novus vacuus delet; novus cum lineis novis = forma auctoris
+  verbatim. Causa: quindecim sedes in md_arbor.c (A8c, B3) et quinque
+  in probatio_md_inlinea.c per ancoras tolerantes trans lineas cum novo
+  plano contortae — formator (sine regula 'sententia in linea sua')
+  lineam iunctam per columnas fregit et fructum ACCEPIT. Formator ter
+  innocens probatus (idem plagulae; mutatio bene formata in versionem
+  priorem; sonda minima). Reparatio per `differre` = cosmetica omnibus
+  unitatibus.
+- **Ancora absens sedem PROXIMAM nominat**: series lexematum longissime
+  congruens (a linea N), lexema divergens exspectatum/inventum cum linea
+  et textu eius; ancora exacta absens seriem lexematum inventam nominat
+  ('tolerans=True'); lexema primum absens nominatur. Grep post
+  refusionem non iam.
+- **Commenta reflexa**: margines ' * ' linearum sequentium in lexemate
+  commenti indifferentes (ancora commenti toti sine marginibus scribi
+  potest); **`tolerans='verba'`** = verba prosae trans margines
+  commenti, scriptura verbatim (sententia in commento capitis mutanda).
+- **`silva.oraculum(exemplum=None)`** → Oraculum(praeterita, totalis,
+  pinna, sectiones {titulus: (praeterita, totalis)}, fracturae
+  [FracturaOraculi numerus/plagula/sectio/causa/sperata/nostra] OMNES,
+  exempla [ExemplumOraculi md/sperata/nostra cruda] pro numero (plagula
+  utraque), ignoscentiae, acta) — ambitus ORACULUM_OMNIA/EXEMPLUM et
+  grep non iam (I s).
+- **Refactio pro scriptis plurium plagularum** (monitum, non additio):
+  `applicare` per plagulam in scripto uno statum dimidium relinquit cum
+  ancora quinta fallit; `silva.Refactio()` ancoras omnes ante scripturam
+  ullam resolvit — ea utere, non Editio seriatim.
+- **Reparatio formae**: sedes contorta et sedes recta eandem seriem
+  lexematum habent ('} m_ad = ...' bis) — ancora tolerans ambigua est;
+  octeti exacti (`tolerans=False`) sedem contortam solam nominant.
