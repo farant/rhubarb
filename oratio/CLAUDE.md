@@ -84,10 +84,20 @@ committed as `oratio/vocabularium/la.bin` (3,816,483 bytes, seal
 `f598155c06f52682`, coction 24 ms, read-back 3 ms);
 `./oratio/vocabularium.sh [-coquere] [-scribere]`; gate
 `probatio_oratio_vocabularium` (77: pins, coction == committed,
-decoded samples, mutations stop with file and line). NEXT: **T8**
-`vocabularium_la` lookup (load the stream into a `tabula_dispersa` by
-the folded key u/v i/j case; stem + ending with tackons and addons;
-WORDS' own order), then T9 glossary, T10 `vocabula.sh`.
+decoded samples, mutations stop with file and line). **T8 DONE**:
+`oratio_vocabularium_la` — load once (22–25 ms) into hashes by FOLDED
+key (v→u, j→i, ligatures, macrons), `quaerere(forma)` → analyses in
+WORDS' order with the matching law transcribed from
+`words_engine-word_package.adb` (uniques → stem+ending → -que/-ne/-ve
+only when nothing found), lemma v1 from the inflection table;
+`./oratio/quaere.sh forma…`; gate `probatio_oratio_vocabularium_la`
+(94: WORDS-behaviour forms, unknowns as findings, corpus coverage of the
+Latin fixtures 95.1 %, ~8 µs a word). FINDING pinned: `sum` is absent
+from the vendored DICTLINE.GEN (compounds only) — supplement in T9.
+T8b (data-counted): tackons with a base part, prefixes, suffixes, full
+dictionary form. NEXT: **T9** `oratio/glossarium.stml` + canon + loader
+(house entries incl. `sum`; allowed technical terms), then T10
+`vocabula.sh` + `silva.vocabula()`.
 
 ## Laws to keep (spec §2–3)
 

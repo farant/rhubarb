@@ -283,6 +283,27 @@ and line. Findings: ADDONS is three lines by POSITION (twelve meaning
 lines begin "TACKON …", eleven "PACKON …"); INFLECTS records carry
 trailing `--` comments; the first INFLECTS record is an ADV.
 
+**As built (T8, 2026-09-04).** `oratio_vocabularium_la.{h,c}`: `onerare`
+(record arrays + hashes by folded key: stems with stem key, endings,
+uniques; lists of blank endings, INTERNAL blank stems — WORDS' Bdl — and
+base-X tackons; 22–25 ms), `plicare` (decision 3, one function for
+keys and queries), `quaerere` → ordered `OratioAnalysis` list (genus
+STIRPS/UNICUM/TACKON, stem and inflection indices, matched key, split
+point, carried tackon); the matching law transcribed from WORDS'
+Reduce_Stem_List (part with VPAR/SUPINE→V and PACK≤PRON; key; declension
+wildcards 0 0 / d 0; noun gender X and C; ADJ/ADV degree with X entries
+deriving the degree from the stem key; NUM exact key; PREP case);
+search order uniques → stem+ending → tackons only when nothing was
+found (deviation from "tackons first": WORDS' order and the merge bias);
+ordering by dictionary line, longer ending, inflection line. `lemma`
+v1 = first form from the inflection table. `./oratio/quaere.sh`. Gate
+94: folding, WORDS-behaviour forms, ordering, unknowns as findings,
+lemmas, corpus coverage of the Latin fixtures 95.1 % (Cicero 95.8 %).
+FINDING: `sum` is absent from this commit's DICTLINE.GEN (compounds
+only; 19 esse forms in INFLECTS) — pinned; supplement in T9. Deferred to
+T8b with counts: tackons with a base part, prefixes, suffixes, the full
+dictionary form.
+
 **Lookup (`vocabularium_la_quaerere(forma) → analyses`).** Fold the
 form; for every split into stem + ending, an ending row must exist
 whose part/declension/variant match a stem row; enclitics (`-que`,

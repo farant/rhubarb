@@ -4,9 +4,10 @@ Fons: `https://github.com/mk270/whitakers-words` (portus curatus
 programmatis WORDS Gulielmi Whitaker, 1936–2010), ramus `master`,
 commissio `1f2f0fb0867a896d7b9284a03d615ed635d6f992` (2026-08-26),
 plagulae per `raw.githubusercontent.com` 2026-09-04. Octeti VERBATIM
-(CRLF servatum). Licentia: `LICENTIA.txt` (sectio "Licensing" ex
-README.md verbatim) — auctoris verbis, "Permission is hereby freely
-given for any and all use of program and data."
+(CRLF servatum). Licentia: `LICENCE.txt` (plagula radicis repositorii
+verbatim, T8) et `LICENTIA.txt` (sectio "Licensing" ex README.md
+verbatim) — auctoris verbis, "Permission is hereby freely given for any
+and all use of program and data."
 
 | plagula | octeti | recorda | forma |
 |---|---|---|---|
@@ -32,3 +33,10 @@ commissa octetim. Re-venditio = mutatio nominata portae.
 | tabula | octeti | sigillum | coctio / recensio |
 |---|---|---|---|
 | `../la.bin` (T7, 2026-09-04) | 3,816,483 | `f598155c06f52682` | 24 ms / 3 ms |
+
+INVENTUM (T8): `sum` (esse) in DICTLINE.GEN huius commissionis DEEST —
+lineae V 5 1 omnes composita sunt (absum adsum desum ...), INFLECTS.LAT
+formas XIX solas verbi esse fert (essem forem es este esto esse sunto);
+`est` ad `edo` solum cadit, `erat` `sit` `fuit` ignota. Porta
+`probatio_oratio_vocabularium_la` inventum pinnat; supplementum fonte
+nominato (glossarium T9) eam movebit.

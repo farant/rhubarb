@@ -281,3 +281,64 @@ chorda needs the union laundering again; a record ordinal passed to an
 `s32` parameter must itself be `s32`. Next: T8 — load the stream into a
 `tabula_dispersa` by the folded key (u/v, i/j, case), then lookup as
 stem + ending with tackons and addons.
+
+## 2026-09-04 — T8: Latin lookup on the sealed table
+
+`oratio_vocabularium_la` loads `la.bin` once (22–25 ms: the stream is
+read back into record arrays, then three hashes by FOLDED key — stems
+with their stem key, non-blank endings, unique forms — plus lists of
+blank endings, internal blank stems and enclitic tackons) and answers
+`quaerere(forma)` with an ordered list of analyses. Folding is
+decision 3: ASCII lower-case, v→u, j→i, the ligatures æ/œ opened,
+macrons and breves dropped, anything else left as it is — both the
+table's keys and the query pass through the same function, so the
+match is WORDS' `Equ` exactly. The matching law is transcribed from
+`words_engine-word_package.adb` (Reduce_Stem_List): part of speech with
+VPAR and SUPINE resolving to V and PACK entries accepting PRON
+inflections; stem key equal unless the inflection says 0 (numerals
+exact); declension/variant with the inflection's 0 0 meaning any
+declension but 9 and d 0 meaning declension d; noun gender with X any
+and C either M or F; adjective and adverb degree with the entry's X
+meaning "derive the degree from the stem key" (1–2 positive, 3
+comparative, 4 superlative; adverbs 1/2/3) — without that rule `amare`
+came back four times (X, POS, COMP, SUPER all on key 1); prepositions by
+governed case. Search order is WORDS' too: unique forms, then every
+stem+ending split (ending 0–7 bytes, stem 1–18), and enclitic tackons
+(-que -ne -ve, the three with base X) ONLY when the whole word found
+nothing — `sine` is never si+ne, `virumque` yields the tackon record
+first and eight hosts that carry it. Results are ordered by dictionary
+line (WORDS' own order), longer ending first, then inflection order.
+The lemma is a first form derived from the inflection table itself
+(stem 1 + the first key-1 inflection that is NOM S, or NOM S M, or PRES
+ACTIVE IND 1 S — PASSIVE for deponents, 3 S for impersonals; the stem
+alone for indeclinables): vir amo puella bonus rex ago loquor licet
+amare et. The full dictionary form with principal parts is later work.
+
+`./oratio/quaere.sh forma…` prints what WORDS would: stem.ending, part,
+declension, accidents, lemma, the five codes, the sense. Gate
+`probatio_oratio_vocabularium_la` (94): folding, load, twenty-odd forms
+against WORDS' behaviour (vir virum puellam rex regis amat amavit amatus
+amare bonus melior optime amariter et in a virumque sine agantur),
+ordering, unknowns as findings (xyzzy, Troiae — WORDS has Trojanus but
+not Troia — the empty form, a forty-letter form, an em dash), lemmas,
+and a CORPUS MEASURE: every vocabulum of the three Latin fixtures looked
+up — Hilarius 93.4 %, Propertius 93.6 %, Cicero 95.8 %, 18,362 of
+19,315 known (95.1 %), about 8 µs a word. The first unknowns printed
+are proper names (Cynthia, Catilina, Milanion), an OCR slip
+(perditissiis), a syncopated perfect (norit), and — the finding of the
+day — `sit`, `erat`, `fuit`: the verb `sum` is NOT in this commit's
+DICTLINE.GEN. Every V 5 1 line is a compound (absum, adsum, desum…), and
+INFLECTS.LAT carries nineteen forms of esse only (essem, forem, es,
+este, esto, esse, sunto); `est` resolves to `edo` alone. WORDS keeps a
+"blank dictionary list" for exactly this entry (stem 2 of to_be is
+blank — `'' + essem`); the loader indexes INTERNAL blank stems the same
+way, ready for the entry. Recorded in FONTES.md and pinned in the gate
+as a finding (erat and fuit unknown today), so the supplement — a
+glossary entry in T9 or a SUPPLEMENTUM file with a named source — turns
+the pin red and moves it. A first attempt that indexed every blank stem
+made `a` match 716 entries (nouns' empty third and fourth stems);
+trailing blanks are nothing, internal blanks are stems. Planted fault:
+the 0 0 wildcard removed — `amavit` loses its PERF row. Deviations from
+the spec, both deliberate: tackons are tried last (WORDS' order; the
+merge bias), and prefixes/suffixes with the tackons that carry a base
+part (est, cumque, pte, met…) are T8b, data-counted.
