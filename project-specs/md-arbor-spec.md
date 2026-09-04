@@ -317,6 +317,22 @@ output pinned, a vitium, and INDAGO coverage; the existing L1 / lint II
    argument, or a slot projection of one, as scope. The argument map is
    threaded into the exemplaria path (today `_exemplar_implere` cannot
    see it). Scalar or absent = loud.
+   **Not built (2026-09-03, B1 closure) — recommendation: PARK.** The
+   md program uses PER-over-a-forest (6.3) and pattern arms (6.4) and
+   never an EXEMPLAR inside a body, so this piece has no consumer here.
+   Building it coherently is not the "smallest piece" I estimated: (a)
+   a relation named by `output=` inside a fill must be LOCAL to that
+   instantiation (the fill runs once per row — a global name would
+   collide with itself), so relations need fill-scoped push/pop and
+   the XVIII end-guard must run at fill end; (b) the body's `<PER
+   congruentia="$m">` references `&@captures;` that collection can only
+   accept by statically typing `$m` from the body's own EXEMPLAR (and
+   through CATENA links, accumulating); (c) the source is a synthesized
+   relation, one row per element of the projected forest — the same
+   row rule as 6.3, and the easy part. Pull condition: the first
+   template that needs a relation inside its body (the exemplaria
+   interview's dialect-dispatch scenario or a lint schema). Until
+   then the form stays vitium XIII inside bodies.
 3. **PER over a forest with delegation — `<PER de="@n.bloci"
    voca="#@md-nodus"/>`** (ratified 2026-09-03). Each element of the
    forest becomes ONE row whose single capture is the delegated

@@ -1615,3 +1615,37 @@ lints = the sweet spot; ordering lints come FREE (sibling
 subsequences are ordered — codex 85 include-order is writable);
 blocked classes = counting (M4) and value predicates (decreed dead).
 `stml expandere` is the shell harness for all of it.
+
+
+## B1 (md) BUILT 2026-09-03 — the composition/dispatch increment, as it landed
+
+Four of the five engine pieces of `md-arbor-spec.md` §6 are in
+(d50ade07, 20f192e2, 8fbf71d7, f33d953a); the fifth (`de="@n"` on
+EXEMPLAR inside bodies, door 5 proper) is parked with its reasons in
+that spec's §6.2. What the doors look like now that they are open:
+
+- **Slot projections `&@n.slot.slot;`** — literal child steps into a
+  subtree argument, yielding the wrapper's CONTENT (text = scalar,
+  else forest, never the wrapper); `!` suffix reads raw token leaves
+  as bytes, explicitly. Vitia XXVI–XXVIII.
+- **PER over a forest** — `<PER de="@n.x" voca="#@f"/>` (rows =
+  elements → the delegated template's sole required slot, a true
+  call) and the `ut="e"` body form (same fill, row name local).
+  Empty wrapper = zero rows. Vitium XXIX.
+- **Pattern arms in COMMUTATIO** (door 7) — `<CASUS tag="x">` and
+  `<CASUS><EST><EXEMPLAR>…</EXEMPLAR></EST>arm</CASUS>`: the pattern
+  is FILLED with the current arguments (parameterized patterns for
+  free), anchored at the scrutinee's root, captures join the arm's
+  table. Vitium XXX (scalar in tree position, mirror of VII).
+- **Self-call as a check** — admitted iff every subtree argument
+  descends strictly from the current fill's arguments. Vitium XXXI.
+  No depth cap (none existed; strict descent is the proof).
+
+The wall of 2026-09-01 (`&@` shared by both planes) did not bite:
+captures enter the fill plane as ARGUMENTS, so a template body never
+needs a relational reference. Findings 1–12 with their reasons live in
+`md/fontes/md_arbor.worklog.md` ("quid STML voluit"); the ones that
+change how programs are written: token slots need `!`; NODUS slots are
+double-wrapped and the program never chains through one; `est=""` is
+a tombstone (absence = missing wrapper, read by a pattern arm); the
+empty wrapper is the termination form of a recursion.

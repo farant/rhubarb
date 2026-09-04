@@ -1,0 +1,60 @@
+<!-- md -> html by COMPOSITION over the B1 engine (2026-09-03): the
+     projection shape of md_arbor (wrappers = slots; NODUS slots hold the
+     genus element; TOKEN slots hold raw token elements - bytes VERBATIM,
+     so the derived valor of "a &amp;lt; b" is the byte "<" and the STML
+     writer escapes it on the way into html text), one self-calling
+     dispatcher, no walk verb. Run: stml expandere md-html-b1.stml -->
+<radix>
+  <#@md-nodus n="@n">
+    <COMMUTATIO de="&@n;">
+      <CASUS tag="documentum"><PER de="@n.bloci" voca="#@md-nodus"/></CASUS>
+      <CASUS><EST><EXEMPLAR><capitulum><gradus>2</gradus></capitulum></EXEMPLAR></EST>
+        <h2><PER de="@n.inlinea" voca="#@md-nodus"/></h2></CASUS>
+      <CASUS tag="capitulum"><h1><PER de="@n.inlinea" voca="#@md-nodus"/></h1></CASUS>
+      <CASUS><EST><EXEMPLAR><paragraphus><nudus>1</nudus></paragraphus></EXEMPLAR></EST>
+        <PER de="@n.inlinea" voca="#@md-nodus"/></CASUS>
+      <CASUS tag="paragraphus"><p><PER de="@n.inlinea" voca="#@md-nodus"/></p></CASUS>
+      <CASUS tag="lista"><ul><PER de="@n.elementa" voca="#@md-nodus"/></ul></CASUS>
+      <CASUS tag="elementum"><li><PER de="@n.bloci" voca="#@md-nodus"/></li></CASUS>
+      <CASUS tag="inlinea"><PER de="@n.liberi" voca="#@md-nodus"/></CASUS>
+      <CASUS tag="emphasis"><em><PER de="@n.liberi" voca="#@md-nodus"/></em></CASUS>
+      <CASUS><EST><EXEMPLAR><textus><valor/></textus></EXEMPLAR></EST>&@n.valor!;</CASUS>
+      <CASUS tag="textus">&@n.crudum!;</CASUS>
+      <ORDINARIUS/>
+    </COMMUTATIO>
+  </#>
+
+  <documentum><bloci>
+    <capitulum><gradus>2</gradus><marca><md-marca-atx!>## </md-marca-atx></marca>
+      <inlinea><inlinea><liberi>
+        <textus><crudum><md-textus!>Hello </md-textus></crudum></textus>
+        <emphasis><apertum><md-delimitator!>*</md-delimitator></apertum>
+          <liberi><textus><crudum><md-textus!>w</md-textus></crudum></textus></liberi>
+          <clausum><md-delimitator!>*</md-delimitator></clausum></emphasis>
+      </liberi></inlinea></inlinea>
+      <finis><md-linea/></finis></capitulum>
+    <linea-vacua><finis><md-linea/></finis></linea-vacua>
+    <lista><genus>0</genus><initium>0</initium><laxa>0</laxa><elementa>
+      <elementum><officium>0</officium><bloci>
+        <paragraphus><praefixa><md-marca-puncti!>- </md-marca-puncti></praefixa><nudus>1</nudus>
+          <inlinea><inlinea><liberi><textus><crudum><md-textus!>one</md-textus></crudum></textus></liberi></inlinea></inlinea>
+          <finis><md-linea/></finis></paragraphus>
+        <lista><genus>0</genus><initium>0</initium><laxa>0</laxa><elementa>
+          <elementum><officium>0</officium><bloci>
+            <paragraphus><praefixa><md-indentatio!>  </md-indentatio><md-marca-puncti!>- </md-marca-puncti></praefixa><nudus>1</nudus>
+              <inlinea><inlinea><liberi><textus><crudum><md-textus!>a &amp;lt; b</md-textus></crudum><valor><md-derivatum!>a < b</md-derivatum></valor></textus></liberi></inlinea></inlinea>
+              <finis><md-linea/></finis></paragraphus>
+          </bloci></elementum>
+        </elementa></lista>
+      </bloci></elementum>
+      <elementum><officium>0</officium><bloci>
+        <paragraphus><praefixa><md-marca-puncti!>- </md-marca-puncti></praefixa><nudus>1</nudus>
+          <inlinea><inlinea><liberi><textus><crudum><md-textus!>two</md-textus></crudum></textus></liberi></inlinea></inlinea>
+          <finis><md-linea/></finis></paragraphus>
+      </bloci></elementum>
+    </elementa></lista>
+  </bloci><finis><md-finis/></finis></documentum>
+
+  <EXEMPLAR modus="unum" output="$doc"><documentum $d/></EXEMPLAR>
+  <html><PER congruentia="$doc"><<#@md-nodus>><@n=>&@d;</></PER></html>
+</radix>

@@ -106,6 +106,12 @@ expected output pinned); vitia named; INDAGO traces; canon CAPS rows.
 Exit: the spike's nested list produces one `<ul>` with a nested `<ul>`
 inside its `<li>`; L1 / lint II / codex-69 byte-identical; `stml`
 CLI rebuilt (`./tools/stml_struere.sh`).
+**STATUS 2026-09-03: B1.1 d50ade07 · B1.3 20f192e2 · B1.4 8fbf71d7 ·
+B1.5 f33d953a — exit met (`exhibita/md-html-b1.stml` through `stml
+expandere`), gates root + silva green at every landing, fixtures in
+`probationes/probatio_stml_exemplaria.c` (348 assertions), vitia
+XXVI–XXXI. B1.2 (`de="@n"` on EXEMPLAR/CATENA/DIRIBITIO inside bodies)
+NOT BUILT — no md consumer; see spec §6.2 as-built note; Fran's call.**
 
 ### B2 The md→html program
 `md/html/md-html.stml` per spec §5 (helpers, the one dispatcher, table

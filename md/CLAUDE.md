@@ -106,8 +106,11 @@ template being filled is admitted iff every subtree argument descends
 STRICTLY from the current fill's arguments (parent pointers), else
 XXXI RECURSIO_NON_DESCENDENS; no depth cap (none existed); the spike's
 nested list through a four-arm dispatcher yields `<ul><li>one<ul>…`.
-**NEXT = B1.2** `de="@n"` on EXEMPLAR/CATENA/DIRIBITIO inside bodies,
-then B1 closure (CLI rebuilt, spec as-built, plan tick) and B2.
+B1.2 (`de="@n"` on EXEMPLAR inside bodies) NOT BUILT — no md consumer,
+needs fill-scoped relations; parked pending Fran (spec §6.2 note).
+Exhibit: `project-specs/exhibita/md-html-b1.stml` through `stml
+expandere`. **NEXT = B2** the md→html program (`md/html/md-html.stml`,
+`md/html.sh`, worklog "quid STML voluit").
 
 ## Laws to keep (spec §3)
 
