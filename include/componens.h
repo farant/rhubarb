@@ -10,7 +10,8 @@
  * vocator literas quaslibet dat, nodus copiam canonicam tenet.
  *
  * USUS:
- *   Componens* r = componens_creare(piscina, intern, "radix", PARTES_NULLUM);
+ *   Componens* r =
+ *       componens_creare(piscina, intern, "radix", PARTES_NULLUM);
  *   componens_ponere_fines(r, fines);
  *   componens_addere_liberum(r, liberum);
  *   chorda s = componens_scribere_stml(r, piscina, intern, VERUM);
@@ -29,9 +30,9 @@
 #include "mandatum.h"   /* Punctum, Fines */
 
 
-/* ====================================================================
+/* ==================================================
  * TYPI
- * ================================================================== */
+ * ================================================== */
 
 nomen enumeratio {
     PARTES_NULLUM = ZEPHYRUM,
@@ -58,27 +59,32 @@ nomen enumeratio {
 } Praedicatum;
 
 nomen structura Componens {
-                  chorda  id;                 /* internata; vacua = anonymus */
-                  chorda  actio;              /* nomen actionis; vacua = nulla */
-                  chorda  titulus;              /* titulus accessibilis (label) */
+                  /* internata; vacua = anonymus */
+                  chorda id;
+                  /* nomen actionis; vacua = nulla */
+                  chorda actio;
+                  /* titulus accessibilis (label) */
+                  chorda  titulus;
                   Partes  partes;
                    Fines  fines;              /* in spatio PARENTIS */
              Praedicatum  praedicatum;
                  Punctum* puncta;             /* polygonum */
                      i32  numerus_punctorum;
                      b32  focusabilis;
-                     b32  sectio;             /* praecidere liberos ad fines */
+                     /* praecidere liberos ad fines */
+                     b32  sectio;
                  Punctum  translatio;         /* liberis applicata */
                      i32  scala;              /* >= I */
                      Xar* liberi;             /* Xar de Componens* */
     structura Componens*  parens;
-    InternamentumChorda* intern;             /* pro actio/titulus internandis */
+    /* pro actio/titulus internandis */
+    InternamentumChorda* intern;
 } Componens;
 
 
-/* ====================================================================
+/* ==================================================
  * AEDIFICATIO
- * ================================================================== */
+ * ================================================== */
 
 Componens*
 componens_creare (
@@ -139,9 +145,9 @@ componens_invenire_per_id (
         chorda  id);
 
 
-/* ====================================================================
+/* ==================================================
  * SERIALIZATIO ET COMPARATIO
- * ================================================================== */
+ * ================================================== */
 
 chorda
 componens_scribere_stml (

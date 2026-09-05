@@ -29,9 +29,9 @@
 #include "internamentum.h"
 
 
-/* ========================================================================
+/* ==================================================
  * GEOMETRIA COMMUNIS (componens.h quoque utitur)
- * ======================================================================== */
+ * ================================================== */
 
 nomen structura { i32 x; i32 y; } Punctum;
 
@@ -43,9 +43,9 @@ fines_continet (
     Punctum p);
 
 
-/* ========================================================================
+/* ==================================================
  * TYPI
- * ======================================================================== */
+ * ================================================== */
 
 nomen enumeratio {
     MANDATUM_COETUS = ZEPHYRUM,
@@ -78,13 +78,15 @@ nomen structura {
               i32  crassitudo;          /* linea */
           Punctum* puncta;              /* linea (II) / polygonum (n) */
               i32  numerus_punctorum;
-           chorda  textus;              /* textus: contentum; imago: fons */
-              i32  fons;                /* textus: index fontis */
+           /* textus: contentum; imago: fons */
+           chorda textus;
+              i32 fons;                /* textus: index fontis */
     /* coetus */
               b32 sectio;              /* praecidere ad fines */
           Punctum translatio;
               i32 scala;               /* >= I, integer */
-           chorda provenientia;        /* id componentis; INSPECTORI SOLI */
+           /* id componentis; INSPECTORI SOLI */
+           chorda provenientia;
               i32 magnitudo_arboris;   /* coetus: mandata in subarbore
                                            se incluso; alia: I */
 } Mandatum;
@@ -96,9 +98,9 @@ nomen structura {
 } Mandata;
 
 
-/* ========================================================================
+/* ==================================================
  * INDEX
- * ======================================================================== */
+ * ================================================== */
 
 Mandata*
 mandata_creare (
@@ -119,9 +121,9 @@ mandata_obtinere (
                  i32  index);
 
 
-/* ========================================================================
+/* ==================================================
  * EMISSIO
- * ======================================================================== */
+ * ================================================== */
 
 vacuum
 mandata_rectangulum (
@@ -178,9 +180,9 @@ mandata_coetus_finire (
          i32  index);
 
 
-/* ========================================================================
+/* ==================================================
  * SERIALIZATIO ET COMPARATIO
- * ======================================================================== */
+ * ================================================== */
 
 chorda
 mandata_scribere_stml (
