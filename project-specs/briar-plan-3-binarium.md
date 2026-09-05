@@ -10,6 +10,29 @@
 
 **Spec:** `project-specs/briar-spec.md` v1.2 — §4.1 (build home and cache), §4.5 (run), §5 (binary, flags, shebang form, struere, fumus), §8 P4. This plan amends §4.1 (disk-corpus stamp), §5 (hand-parsed flags, why not `argumenta`), §8 (P4 done) — Task 5 writes them.
 
+## Executed 2026-09-05 — deviations from the text below
+
+All five tasks done on branch `rhubarb-briar` (9cb3bb50 corpus block,
+39a03a8a binary = T2+T3 in one commit, T4 fumus, T5 seal). Where the
+code differs from the plan, the code is right:
+
+- Tasks 2 and 3 landed as one commit: `tools/briar.c` was written once,
+  complete, because splitting it meant writing the file twice.
+- The `-arbor` projection lives in a new unit `briar_proiectio`
+  (`briar_proiectionem_scribere`): `tools/briar.c` holds silva AND
+  would have needed `materia_arbor.h` (stml) — the plan-2 lesson again.
+- `-versio` no longer returns from the flag loop early; `-f` after it
+  is honored (`briar -versio -f /nonexistent` now refuses, exit 1).
+- The silex warnings go through a variadic `_monere` helper guarded by
+  the switch, not three `si` wrappers.
+- `silex_struere.sh` also gained a filter: `build/*.o` minus
+  `probatio_*.o` — fourteen leftover test objects (pre-d55b9096) broke
+  the link on main too (`capsula_speculi_hospes`).
+- The fumus runs `briar -versio` from the area to prove the embedded
+  corpus; the plant fixture is `adversa/probatio_rubra.thistle`.
+- `-agere` (window + `bin/manus`) was NOT run in this session (GUI,
+  by Fran's hand); stages 0–VI are the gate.
+
 ## Global Constraints
 
 - **Worktree:** all work in `/Users/francisarant/Documents/projects/rhubarb-briar`. `./silva/scribe.sh` for new C files. Commit via `silva.commissio_umbra(msg, viae, portae)`; goldens/fixtures listed as individual files. Formator `-scribere` then `-vitia` = CONFORMIS before each commit.

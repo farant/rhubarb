@@ -1,4 +1,4 @@
-# briar — spec v1.2 (literate C89 programs; `.thistle`)
+# briar — spec v1.3 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -303,12 +303,15 @@ include/ lib/ vendor/ probationes/ build/ bin/` — exactly the silex
 `-vitrea` scaffold, so a briar project dir is a silex project a human
 can `cd` into and read.
 
-**Stamp for a disk corpus (plan 2):** the fabrica takes the stamp as
-an option; the test passes a literal, the tool passes the corpus
-title. For the EMBEDDED corpus that is `corpus.versio`; for a disk
-source (a rhubarb tree) it is the tree's path — content changes in
-the tree do not move the key, so dev-mode runs rely on `-struere
--iterum`. Plan 3 decides whether a disk source hashes its file list.
+**Stamp, as built (plan 3, 2026-09-05):** with the EMBEDDED corpus
+the stamp is `corpus.versio` and the key is computed from bytes
+before any parse (a hit execs in ~9 ms). With a DISK corpus (briar run
+inside a rhubarb tree, or `-f`) the fabrica runs first and the stamp
+is `clausura:<SHA-256 of every closure file's bytes, in closure
+order>` — the key moves exactly when a file that goes into the project
+changes; the house `filum` has no mtime accessor, and a content hash
+is both cheaper and more honest than an mtime walk. `briar -versio`
+marks a disk corpus `(discus)`.
 
 **Flags, direction (Fran, 2026-09-04): DERIVE from the sources.** In
 v1 the base flag set is the string silex's generators carry
@@ -418,10 +421,15 @@ the verdict.
 ## 5. The binary and its build
 
 - **Flags, not verbs (DECISUS, Fran 2026-09-04: thistle files are
-  scripts).** `briar [-flag] x.thistle [args…]`; house single-dash
-  form (`argumenta`, declared-options parser, exists — argumenta.h;
-  register every flag or the invocation is refused). One code path:
-  the bare form is the run.
+  scripts).** `briar [-flag] [-f <radix>] x.thistle [args…]`; house
+  single-dash form. **As built (plan 3):** the flags are hand-parsed
+  in `briar_imperium` (gated, 53 assertions), not by `argumenta.h`:
+  that parser refuses undeclared flags and cannot stop at the file,
+  so a program's own `-foo` after the file would be refused. The
+  declared-options spirit is kept — exactly `-probatio -struere
+  [-iterum] -arbor -partes -versio -auxilium/-h -f <radix>` are
+  recognized before the file; any other `-x` there is a refusal
+  (exit 2) naming the six. One code path: the bare form is the run.
 
   | flag | does |
   |---|---|
@@ -528,7 +536,7 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
   `main` unit, generated `_regiones.h` prototypes, method signature
   check, the probatio unit, the key; goldens for both program shapes
   byte-compared; gate fabrica. No clang is run in the suite.
-- **P4 the binary — plan 3 (`briar-plan-3-binarium.md`).** `tools/briar.c` with the flags of §5,
+- **P4 the binary — DONE (plan 3, 2026-09-05; commits 9cb3bb50 corpus block, 39a03a8a binary, T4 fumus). First-run numbers (HOME redirected): `salve.thistle` cold 0.42 s inside the tree (disk corpus) / 0.68 s from outside via the shebang (embedded corpus), cache hit 9 ms; `salve_vitreum.thistle -struere` cold 1.97 s from outside; `bin/briar` 10.5 MB (silex 19.4 MB); `tools/briar_fumus.sh` 5.2 s for six stages. The first `./salve.thistle` from a directory outside the repository printed `salve, munde` — a GUI app as easy as a bash script is one `-struere` away (its window is the by-hand `-agere` stage).** `tools/briar.c` with the flags of §5,
   `corpus_infixum.sh` extraction, `briar_struere.sh`, cache dir, run,
   `-probatio`; `briar_fumus.sh` from outside the repo; the first real
   file runs from its shebang. **Record the first-bake numbers here**
@@ -572,8 +580,9 @@ references are the ludus session's to add.
   has 71 files and no vendor at all (no `volumen`), cold build 2.1 s,
   binary 364 KB. The question returns only with the `status` region
   (§9); not built until then.
-- **Two corpus-bearing binaries** (`silex`, `briar`, ~20 MB each plus
-  silva's objects in briar; measure at P4) with two freshness
+- **Two corpus-bearing binaries** (`silex` 19.4 MB, `briar` 10.5 MB
+  — measured 2026-09-05; briar carries the silva amalgam but no GUI
+  frameworks) with two freshness
   rituals; the shared `corpus_infixum.sh` keeps the generated object
   single. `briar -versio` names the stamp and the flag hash, as silex
   names its stamp.

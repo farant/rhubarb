@@ -127,3 +127,46 @@ keeping, in the order they bit:
   named future.
 - **zsh does not word-split `$F`** in the Bash tool (memory
   `zsh-no-word-split`): `formator.sh $F` saw one argument.
+
+## 2026-09-05 — plan 3 (binarium): the first shebang run
+
+Five tasks (9cb3bb50, 39a03a8a, T4, T5). `./salve.thistle` from a
+directory outside the repository printed `salve, munde`. Findings:
+
+- **`build/probatio_*.o` leftovers broke `silex_struere.sh`'s link**
+  (`capsula_speculi_hospes` undefined — a per-app capsula only the
+  probatio links). Fourteen of them sit in main's `build/` too, from
+  before d55b9096 moved test objects to `build/probationes/`; silex's
+  build script had not been run since. The link now skips
+  `probatio_*.o`; the worktree's leftovers were deleted.
+- **Verifying a script that installs into `~/.bin`** from a worktree:
+  `HOME=<scratch> ./tools/silex_struere.sh` — the corpus block, the
+  link and the install all ran, and the real `~/.bin/silex` kept its
+  mtime.
+- **`tools/briar.c` cannot include both `briar_silva.h` and
+  `materia_arbor.h`** (the amalgam/stml enum collision of plan 2): the
+  STML projection moved into `briar_proiectio.c`, whose header is
+  stml-free.
+- **`-versio -f X` bug**: the flag loop returned at `-versio` before
+  reading `-f`; found by hand (`bin/briar -versio -f /nonexistent`
+  printed the disk corpus, exit 0). Now the loop runs to the file or
+  the end, and `-versio` needs no file.
+- **examen sees `va_start`/`va_end` as implicit calls** (suspecta, not
+  a refusal) — stdarg macros are outside its lexicon; the variadic
+  `_monere` helper passed with 5 suspecta / 0 violations.
+- **Disk-corpus stamp = closure-content hash**: `filum` has no mtime
+  accessor; hashing the bytes of the ~10–71 closure files after the
+  fabrica costs less than a stat walk and moves the key exactly when a
+  file that goes into the project changes. Inside the tree a cache hit
+  therefore still parses (0.42 s cold → ~30 ms hit measured loosely);
+  from outside (embedded) a hit is 9 ms.
+- **Numbers**: salve cold 0.42 s (disk) / 0.68 s (embedded, shebang);
+  hit 9 ms; salve_vitreum `-struere` cold 1.97 s (embedded); bin/briar
+  10,461,832 bytes (silex 19,445,544); fumus 5.2 s for six stages; the
+  scratch `~/.rhubarb/briar/` after four projects: 2.6 MB.
+- **Corpus stamp says `SORDIDUM`** when lib/ or include/ carry
+  uncommitted edits at bake time — it did during this session (the
+  quiet-switch edit); the stamp is honest, rebake after committing.
+- **The fumus prints `-versio` from the AREA**, not the repo root: from
+  the root it says `(discus)` and looks like the wrong corpus.
+- `-agere` (window + `bin/manus`) not run this session — Fran's hand.

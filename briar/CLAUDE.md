@@ -6,10 +6,34 @@ briar reads `.thistle` files (literate C89 scripts: markdown prose,
 STML config tags, raw `<c!>` regions, a `#!` line). Plan 1 built the
 PARSER as a materia client; plan 2 the silva inner kind and the
 headless FABRICA (thistle → silex project directory, no clang in the
-suite); plan 3 builds the binary. Spec: `project-specs/briar-spec.md`
-(v1.2); plans `briar-plan-1-parsator.md` (done),
-`briar-plan-2-fabrica.md` (done), `briar-plan-3-binarium.md` (next).
+suite); plan 3 the BINARY: `~/.bin/briar`, `#!/usr/bin/env briar`,
+`./x.thistle [args]` builds once under `~/.rhubarb/briar/<t>-<key>/`
+and becomes the program. Spec: `project-specs/briar-spec.md` (v1.3);
+plans 1–3 done (`briar-plan-{1-parsator,2-fabrica,3-binarium}.md`).
 Findings: `fontes/briar.worklog.md`.
+
+## The binary
+- Build: `./briar/compile_probationes.sh registrum` (objects) then
+  `./tools/briar_struere.sh` → `bin/briar` + `~/.bin/briar`. The corpus
+  object is SHARED with silex (`tools/corpus_infixum.sh`); a stale
+  binary lies green — rebuild after touching lib/ or briar/.
+- Flags (hand-parsed, `briar_imperium`, gated): `briar [-probatio |
+  -struere [-iterum] | -arbor | -partes | -versio | -h] [-f <radix>]
+  x.thistle [args…]`; shebang form recognizes ONE reserved first
+  argument after the file (`./x.thistle -probatio`), `--` ends flags.
+- Corpus: `-f` > ascent from cwd (disk, `-versio` says `(discus)`) >
+  embedded. Key: embedded = corpus stamp + flags + bytes (before any
+  parse); disk = closure-content hash + flags + bytes (after fabrica).
+- Run = fabricate → write project if `bin/<t>` absent → `/bin/sh
+  aedificare.sh` via `processus_exsequi` (10 min deadline; clang output
+  to stderr on failure) → `processus_transformare` into `bin/<t>`.
+  `-probatio` execs `bin/probatio_<t>` or `probare.sh` (compiles+execs).
+- Gate: `./tools/briar_fumus.sh` (pythonica `briar-fumus`) — installed
+  binary, from outside the repo, fake HOME, six stages incl. the plant
+  `adversa/probatio_rubra.thistle` (must fail) and a refusal; `-agere`
+  opens the vitrea window and drives it with `bin/manus` (by hand).
+- Numbers 2026-09-05: salve cold 0.42 s (disk) / 0.68 s (embedded,
+  shebang), hit 9 ms; vitrea cold 1.97 s; briar 10.5 MB.
 
 ## Map
 - `briar_registrum` (5 genera, 14 loci) · `briar_lexicon` (8 token

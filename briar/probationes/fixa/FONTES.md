@@ -8,6 +8,7 @@
 | `thistle/punctum.thistle` | partitio (typedef + #define + globale + adiutor + principale + probatio) | vide probatio_briar_fabrica.c | plan 2, Task 3 |
 | `thistle/adversa/c_fractum.thistle` | regio C fracta (`@@@` linea XI) | linea erroris silvae -> .thistle | plan 2, Task 1 |
 | `thistle/adversa/{duo_principalia,nihil,fenestra_et_principale,methodus_absens,methodus_prava,html_duplex,fenestra_prava}.thistle` | recusationes fabricae cum linea | vide probatio_briar_fabrica.c | plan 2, Task 5 |
+| `thistle/adversa/probatio_rubra.thistle` | PLANTA portae fumi: probatio quae cadere DEBET (`CREDO_FALSUM(VERUM)`) | tools/briar_fumus.sh gradus V | plan 3, Task 4 |
 
 Snapshots manu scripti 2026-09-04 (plan 1). Mutatio = mutatio pinnarum
 in probationibus arbor/stml/nexus/computus - causa nominanda.
