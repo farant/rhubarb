@@ -570,6 +570,23 @@ analyses), `oratio/arbor.sh` shows the analyses inline.
 `.vocabula(classis=None, lingua=None, ignota=False)`, `.analyses(vocabulum)`,
 `.ignota()`; `Prosa.sententia(n, intra=)` delegates.
 
+*As-built (T14, 2026-09-05).* `verba.sh` takes several files (the via
+column is meaningful), prints paragraph and sentence ordinals beside
+the byte extent (sentence ordinals agree with `sententiae.sh`), and
+has an `-analyses` mode: one row per analysis node with class, lemma,
+lingua, fons, nativum, sensus and the twelve accidents as the
+registry's option titles, read from the tree by slot title (never
+re-derived). `silva.Oratio` accepts a path, a text or bytes (a text is
+written to build/pythonica for one call), caches each query, and
+`vocabula(classis=)` matches ANY candidate class (the primary is stage
+5's); `vocabula(sententia=)` added; `analyses()` takes a word or its
+index and returns `accidentia` as a dict with absences omitted.
+`Prosa.sententia` concatenates the markdown paragraphs inside the
+extent (headings, fences, html never), parses once, maps the extents
+back with line and column; usable as an edit anchor. Gate = the
+pythonica suite, 20 assertions, planted fault (word end shortened)
+red.
+
 ## 6. Stage 4 — English (`vocabularium_en`)
 
 Moby Part-of-Speech (`mobypos.txt`, public domain): one line per
@@ -826,8 +843,9 @@ Was: `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
 `linguae`) + projection attributes (substrate check above). T13
 CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT
 (COVERAGE pinned, PRIMARY reported, per class); `oratio/oraculum.sh
--petere` for NC treebanks. T14 `oratio/verba.sh`, `silva.Oratio`,
-`Prosa.sententia`.
+-petere` for NC treebanks. T14 DONE 2026-09-05 (`oratio/verba.sh`
+with `-analyses`, `silva.Oratio`, `Prosa.sententia` by delegation; gate
+= pythonica).
 
 **Stage 4 (English).** T15a DONE 2026-09-04 (vendor Moby verbatim,
 loader without coction, the prose lint `-prosa`). T15b DONE 2026-09-04

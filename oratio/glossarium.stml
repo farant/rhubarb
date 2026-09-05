@@ -737,4 +737,26 @@
   <vocabulum lemma="api" lingua="anglica" classis="ignotum-permissum" nota="sedes 138"/>
   <vocabulum lemma="ascii" lingua="anglica" classis="ignotum-permissum" nota="sedes 46"/>
 
+  <!-- ================= TERMINI T13/T14 (oraculum UD; nexus renovatus 2026-09-05) =================
+       verba plagularum T13 quae tabula symbolorum post commissionem T13
+       demum indexavit (excubitor post successum renovat): pinna
+       identificatorum ea primum in T14 vidit. -->
+
+  <vocabulum lemma="ranga" lingua="latina" classis="substantivum" nota="vox domus: extentum lexematis multiplicis CoNLL-U (a-b), ex Anglico range">
+    <forma textus="ranga" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="rangae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="rangam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="rangas" casus="accusativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="rangarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="rangis" casus="ablativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="permille" lingua="latina" classis="adverbium" nota="pro mille (coverage pinnata permille, T13)">
+    <forma textus="permille"/>
+  </vocabulum>
+  <vocabulum lemma="conllu" lingua="anglica" classis="ignotum-permissum" nota="forma CoNLL-U (Universal Dependencies)"/>
+  <vocabulum lemma="upos" lingua="anglica" classis="ignotum-permissum" nota="columna UPOS CoNLL-U (classis universalis)"/>
+  <vocabulum lemma="misc" lingua="anglica" classis="ignotum-permissum" nota="columna MISC CoNLL-U (SpaceAfter=No)"/>
+  <vocabulum lemma="circse" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_Latin-CIRCSE (Seneca), thesaurus arborum venditus"/>
+  <vocabulum lemma="llct" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_Latin-LLCT (chartae mediaevales), thesaurus arborum venditus"/>
+
 </glossarium>

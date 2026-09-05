@@ -161,7 +161,7 @@ _tabulam_imprimere (
 
 /* treebank venditum: legere, iudicare, tabula, pinnae */
 interior vacuum
-_treebank (
+_thesaurus_arborum (
                        Piscina* piscina,
     constans OratioVocabulariumLa* voc,
                 constans character* radix,
@@ -426,11 +426,14 @@ principale (vacuum)
     }
 
     imprimere("\n--- III. Treebanks venditae (CC BY-SA) ---\n");
-    _treebank(piscina, voc, radix, "la_circse-ud-test.conllu", (i32)893,
+    _thesaurus_arborum(piscina, voc, radix, "la_circse-ud-test.conllu",
+        (i32)893,
         (i32)CIRCSE_TECTA_PINNA);
-    _treebank(piscina, voc, radix, "la_llct-ud-dev.conllu", (i32)850,
+    _thesaurus_arborum(piscina, voc, radix, "la_llct-ud-dev.conllu",
+        (i32)850,
         (i32)LLCT_DEV_TECTA_PINNA);
-    _treebank(piscina, voc, radix, "la_llct-ud-test.conllu", (i32)884,
+    _thesaurus_arborum(piscina, voc, radix, "la_llct-ud-test.conllu",
+        (i32)884,
         (i32)LLCT_TEST_TECTA_PINNA);
 
     imprimere("\n");

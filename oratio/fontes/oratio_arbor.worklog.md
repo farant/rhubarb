@@ -975,3 +975,97 @@ the capital rule; its annotated fixture had to keep its capital
 `Xyzzy`, because a lowercase unknown after a period does not start a
 sentence — which briefly made the gate dereference a sentence that was
 not there.
+
+## 2026-09-05 — T14: verba.sh and the Python face of stage 3
+
+The instruments and the query surface, thin by design: everything they
+need existed in C already.
+
+`oratio/instrumenta/verba.c` + `./oratio/verba.sh <x.txt>... [-machina]
+[-analyses]`: each file is parsed and annotated exactly as `arbor.sh
+-partes` does (la.bin + glossary from RHUBARB_RADIX; the wrapper now
+exports it as the repo root when unset, so the instrument works from
+any directory), then one row per word in document order: via, index,
+byte extent, line, paragraph and sentence ordinals, form, classes,
+linguae, the first analysis's lemma, the count of analyses.
+`-analyses` prints one row per analysis node instead: class, lemma,
+lingua, fons, nativum, sensus, then the twelve accidents as the
+registry's option titles (declinatio and coniugatio as numbers, absent
+ones empty). The accidents are read from the tree by SLOT TITLE through
+`oratio_partes_locus`, the same way the annotator wrote them, so the
+instrument reports what the tree holds and never re-derives. Several
+files are accepted so that the via column means something (a corpus
+query across the five fixtures is one invocation). Sentence ordinals
+skip element-less sentences exactly as `sententiae.sh` does, so the two
+instruments' ordinals agree.
+
+`silva.Oratio(via | text | bytes)`: `sententiae()`, `vocabula(classis,
+lingua, ignota, sententia)`, `ignota()`, `analyses(vocabulum | index)`;
+a text is written to build/pythonica for the duration of one call; each
+query's rows are cached. `classis=` matches ANY candidate class, not the
+first — `vocabula(classis='verbum')` returns rosam (participle of rodo)
+as well as amat — because ambiguity is a list at every layer and the
+primary is stage 5's business. `Prosa.sententia(n, intra=)` delegates:
+the markdown paragraphs inside the extent are concatenated with blank
+lines, parsed once, and the sentence extents mapped back to file bytes
+with line and column; the anchor counter got a `sententia` branch (its
+fallback was the markdown selector, which has no such genus).
+
+Measured: Cicero 13,214 word rows in 1.0 s, 131,161 analysis rows in
+1.24 s (T12 counted 114,876 analyses before the pass II secondaries);
+Hilarius 1,678 words, as T12.
+
+Findings while writing the tests:
+- Two short punctuated, capitalised lines are VERSE to the form layer,
+  so the sentences follow the lines: the first fixture had two sentences
+  where I expected three. Correct (T6b's rule); a fixture lesson: prose
+  fixtures are one line, or blank-line separated.
+- `Oratio('')` resolved to the repo root: `os.path.exists` accepts a
+  directory. `isfile` plus a non-empty check.
+- Markdown paragraphs of list items start at the marker, so the item's
+  first sentence begins with `-`; and `- item one. item two.` is ONE
+  sentence because a lowercase word after a period does not start one.
+- `virum` gets lemma `virus` first: WORDS' order. Stage 5.
+
+Gate: the pythonica suite (20 assertions: three sentences of a one-line
+prose text, byte extents equal the forms, classes/lemma/linguae/
+ordinals, class and sentence filters, the unknown, the capital rule,
+accidents by title with absences omitted, Hilarius by path, a missing
+path refused, bytes and empty text; Prosa.sententia inside a section
+with line and column, list item, code fence and headings never, out of
+range, stale extent, edit + applicare with the anchor counted). Planted
+fault: the word end shortened by one byte in verba.c → red on "extenta
+octetim == forma".
+
+One hardening from the plant. The wrapper scripts exit 1 both when the
+instrument finds nothing and when clang fails (`clang … || exit 1`), so
+a Python face that reads "rc 1 = empty list" turns a broken build into
+"no words" — the lying-green shape. `Oratio._machina` now demands the
+`#` header line in `-machina` mode as proof the instrument ran; rc 1
+without it is a fracture with stderr attached.
+
+And a lesson about the ritual itself. The first `silva.planta` run
+ended with "signum absens": the gate emitted no verdict at all. I was
+writing this worklog, the orientation file and the spec while it ran,
+and the pythonica suite lints the house prose (`vocabula -prosa` reads
+every markdown file). Run alone, the same plant was red and the
+reversion green, 283 s. A gate that reads the tree is not to be run
+while the tree is being written — the same law as the shadow gates'
+snapshot, applied to the live one.
+
+The commit was then refused by the identifier pin: 2,973 unknown words
+against 2,958. Attribution through nexus.tsv (which files hold each
+unknown word's symbols): NONE is unique to verba.c — every unknown
+word it uses already sits in older files — and nine are unique to
+T13's files: circse, conllu, llct, misc, permille, rangae, rangam,
+treebank, upos. The symbol table is renovated by the excubitor AFTER
+a successful gate, so T13's own gate ran on the pre-T13 table and
+never saw its words; T14 is the first gate to see them. Glossary
+section for the house terms (ranga as a first-declension coinage,
+permille as an adverb, conllu/upos/misc permitted, CIRCSE/LLCT proper
+names); `treebank` renamed `thesaurus arborum` in the oraculum gate
+(the English word in an identifier is a finding by design). Pin 2,958
+→ 2,964 with the cause in the gate; the residual six are words of old
+files newly indexed, the same coverage growth T12 saw. Lesson for the
+lint: a pin over a build artifact that is renovated post-success
+lags one commit; the next task pays for the last one's words.

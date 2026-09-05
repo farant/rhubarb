@@ -9,7 +9,7 @@ per stage); interview `oratio-interview.md`; ledger parcum 01M1NH3F46.
 Stance: moderate realism — classes earned by function, edge cases by
 analogy, ambiguity as LISTS at every layer, unknown word = FINDING.
 
-## Status (2026-09-04)
+## Status (2026-09-05)
 
 **T1 DONE**: `oratio_registrum` (6 genera / 16 slots: documentum,
 paragraphus, sententia, vocabulum, interpunctio, numerus; whitespace as
@@ -194,9 +194,20 @@ cause: `sum` + auxiliare, `ORATIO_DETERMINANTIA` + determinans,
 coniunctio-subordinans, ordinals + adiectivum, WORDS kind N + substantivum,
 capitalized unknown → nomen-proprium (source `regula`). Coverage
 CIRCSE 84 → 93.7 %, LLCT 72 → 88.9 / 88.2 %; primary ≈ 68 % (stage 5's
-job). Gate `probatio_oratio_oraculum` (104). NEXT: **T14** `verba.sh`,
-`silva.Oratio`, `Prosa.sententia` — the instruments and the Python
-face of stage 3.
+job). Gate `probatio_oratio_oraculum` (104). **T14 DONE**: the
+instruments and the Python face of stage 3. `./oratio/verba.sh
+<x.txt>... [-machina] [-analyses]` (one row per word: via, index, byte
+extent, line, paragraph/sentence ordinals, form, classes, linguae,
+first lemma, count; `-analyses` = one row per analysis with the
+accidents as option TITLES read from the tree by slot title);
+`silva.Oratio(via | text)` (`sententiae()`, `vocabula(classis=,
+lingua=, ignota=, sententia=)` — a class filter matches ANY candidate
+—, `ignota()`, `analyses(vocabulum)` with `accidentia` dict) and
+`Prosa.sententia(n, intra=)` (markdown paragraphs → one parse →
+extents mapped back to file bytes; an edit anchor). Gate = the
+pythonica suite (20 assertions; planted fault red). NEXT: **T16**
+`partes_en` + the EWT oracle, or stage 5 ordering (the lever for
+PRIMARY ≈ 68 %).
 
 ## Laws to keep (spec §2–3)
 
