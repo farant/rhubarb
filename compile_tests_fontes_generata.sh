@@ -92,6 +92,7 @@ declare -a SOURCE_FILES=(
     "lib/macho.c"
     "lib/mandatum.c"
     "lib/manus.c"
+    "lib/manus_ludus.c"
     "lib/mensa.c"
     "lib/mensura.c"
     "lib/mimen.c"
