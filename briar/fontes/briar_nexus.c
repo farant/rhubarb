@@ -6,6 +6,7 @@
 #include "chorda_aedificator.h"
 #include "materia_token.h"
 #include "md_arbor.h"
+#include "stml.h"
 #include <string.h>
 
 interior chorda
@@ -89,15 +90,19 @@ _res_incipere (
     constans MateriaNodus* pars,
           BriarNexusGenus  genus)
 {
-    r->pars           = pars;
-    r->genus          = genus;
-    r->arbor_md       = NIHIL;
-    r->elementum      = NIHIL;
-    r->titulus        = _vacua();
-    r->contentum      = _vacua();
-    r->linea_initium  = ZEPHYRUM;
-    r->linea_erroris  = ZEPHYRUM;
-    r->causa          = _vacua();
+    r->pars               = pars;
+    r->genus              = genus;
+    r->arbor_md           = NIHIL;
+    r->elementum          = NIHIL;
+    r->titulus            = _vacua();
+    r->contentum          = _vacua();
+    r->linea_initium      = ZEPHYRUM;
+    r->linea_erroris      = ZEPHYRUM;
+    r->causa              = _vacua();
+    r->silva              = NIHIL;
+    r->textus_silvae      = _vacua();
+    r->praeludium         = ZEPHYRUM;
+    r->praeludium_octeti  = ZEPHYRUM;
 }
 
 interior vacuum
@@ -190,7 +195,7 @@ briar_nexus_texere (
             _stml_legere_in(piscina, intern, r,
                 _tagum_rescribere(piscina, apertum, titulus),
                 apertum->linea);
-            /* regio 'md' = prosa explicita: arbor markdown super contentum */
+            /* regio 'md' = prosa explicita: arbor md super contentum */
             si (_titulus_est(titulus, "md"))
             {
                 r->genus     = BRIAR_NEXUS_MD;
@@ -237,4 +242,16 @@ briar_nexus_titulus_est (
 {
     redde (b32)(res != NIHIL && res->titulus.mensura > ZEPHYRUM
         && _titulus_est(res->titulus, literae));
+}
+
+i32
+briar_nexus_linea_silvae (
+    constans BriarNexusRes* res,
+                       i32  linea_silvae)
+{
+    si (res == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde res->linea_initium + linea_silvae - res->praeludium - I;
 }

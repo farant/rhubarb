@@ -1,0 +1,12 @@
+#!/usr/bin/env briar
+# Fractum
+
+<c!>
+s32
+principale (vacuum)
+{
+    redde ZEPHYRUM;
+}
+
+@@@ fractum @@@
+</c>

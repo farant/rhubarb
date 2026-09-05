@@ -37,6 +37,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$MD_DIR/fontes"
     "-I$BRIAR_DIR/fontes"
     "-I$BRIAR_DIR/probationes"
+    "-I$RADIX_DIR/silva/amalgama"
 )
 
 # Fontes radicis quibus materia in evolutione nititur.
@@ -56,6 +57,22 @@ declare -a RADIX_FONTES=(
     "similitudo"
     "canon"
     "credo"
+    # clausura silicis (bin/aedilis lib/silex.c --partes, 2026-09-05):
+    # nexus regiones C per silvam parsat capitibus e FONTE silicis
+    "filum"
+    "via"
+    "processus_posix"
+    "iter_directoria"
+    "sigillum"
+    "json"
+    "capsula"
+    "differentia"
+    "scrinium"
+    "flatura"
+    "moneta"
+    "fasti"
+    "volumen"
+    "silex"
 )
 
 FILTER="${1:-}"
@@ -91,7 +108,7 @@ while IFS= read -r caput_via; do
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi
-done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" "$MD_DIR/fontes" "$BRIAR_DIR/fontes" "$BRIAR_DIR/probationes" \
+done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" "$MD_DIR/fontes" "$BRIAR_DIR/fontes" "$BRIAR_DIR/probationes" "$RADIX_DIR/silva/amalgama" \
              -name "*.h" 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
@@ -121,6 +138,32 @@ for f in "${RADIX_FONTES[@]}"; do
     fi
     obj_files="$obj_files $obj"
 done
+
+# venditorius: sqlite3 (volumen -> silex); vexilla compile_tests.sh
+declare -a VENDOR_FLAGS=("-O2" "-DSQLITE_ENABLE_FTS5" "-DSQLITE_THREADSAFE=0"
+    "-DSQLITE_DQS=0" "-DSQLITE_DEFAULT_MEMSTATUS=0" "-DSQLITE_OMIT_LOAD_EXTENSION"
+    "-DSQLITE_OMIT_DEPRECATED" "-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1")
+src="$RADIX_DIR/vendor/sqlite3.c"
+obj="$BUILD_DIR/sqlite3.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
+    echo "  [vendor] sqlite3.c"
+    if ! clang "${VENDOR_FLAGS[@]}" -c "$src" -o "$obj"; then
+        echo "FRACTA: sqlite3.c" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# silva: amalgama ut obiectum UNUM (officina exemplar) - fontes silvae
+# absunt de industria; regiones C thistle per silvam parsantur
+src="$RADIX_DIR/silva/amalgama/silva.c"
+obj="$BUILD_DIR/amalgama_silva.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
+    echo "  [amalgama] silva.c"
+    if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
+        echo "FRACTA: amalgama silva" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
 
 shopt -s nullglob
 # materia sub-fontes: md eam CONSUMIT, non continet

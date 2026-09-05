@@ -8,8 +8,18 @@
  * apertus ut '<nomen attrs/>' parsatus (attributa sine grammatica
  * secunda). Positiones: linea_initium = linea .thistle primi octeti
  * (prosa/elementum: pars; regio: contentum); vitia STML in lineas
- * .thistle translata (linea_erroris). Regiones C per silvam = planum
- * II (fabrica).
+ * .thistle translata (linea_erroris).
+ *
+ * Genus quartum (plan 2): regio 'c' per silvam cum expansione -
+ * praeludium '#include "latina.h"' (+ 'internuntius.h' +
+ * 'hic_manens InternuntiusTractator briar_tractator_exemplar;' si
+ * methodus=) textui praepositum; capita clausurae e fonte silicis
+ * praebita (numquam discus); arbor + semantica in BriarSilva
+ * (briar_silva.h, unitas propria: caput amalgamae silvae enumerationes
+ * stml suas fert - stml.h et silva.h in eadem unitate non coeunt, ergo
+ * hoc caput NEC stml.h NEC silva.h includit, tags solum praenuntiat).
+ * Lineae silvae per briar_nexus_linea_silvae in .thistle:
+ * linea_initium + linea_silvae - praeludium - I.
  */
 
 #ifndef BRIAR_NEXUS_H
@@ -21,7 +31,9 @@
 #include "xar.h"
 #include "internamentum.h"
 #include "materia_nodus.h"
-#include "stml.h"
+
+structura StmlNodus;     /* stml.h - consumptor includat */
+structura BriarSilva;    /* briar_silva.h */
 
 nomen enumeratio {
     BRIAR_NEXUS_MD = 0,      /* prosa aut <md!>: arbor_md */
@@ -30,15 +42,19 @@ nomen enumeratio {
 } BriarNexusGenus;
 
 nomen structura {
-    constans MateriaNodus* pars;
+     constans MateriaNodus* pars;
            BriarNexusGenus  genus;
-             MateriaNodus* arbor_md;        /* MD; NIHIL alias */
-                StmlNodus* elementum;       /* STML/REGIO; NIHIL si vitium */
-                   chorda  titulus;         /* STML/REGIO: nomen; MD: vacua */
-                   chorda  contentum;       /* REGIO: octeti contenti (vacua licet) */
-                      i32  linea_initium;   /* linea .thistle (I-basata) */
-                      i32  linea_erroris;   /* ZEPHYRUM = sanum */
-                   chorda  causa;           /* nuntius parsatoris; vacua = sanum */
+              MateriaNodus* arbor_md;        /* MD; NIHIL alias */
+      structura StmlNodus* elementum;       /* STML/REGIO */
+                   chorda titulus;         /* nomen; MD vacua */
+                   chorda contentum;       /* REGIO: octeti */
+                      i32 linea_initium;   /* .thistle, I-basata */
+                      i32 linea_erroris;   /* ZEPHYRUM = sanum */
+                   chorda causa;           /* nuntius; vacua = sanum */
+     structura BriarSilva* silva;           /* C: arbor + semantica */
+                   chorda textus_silvae;   /* C: cum praeludio */
+                      i32 praeludium;      /* lineae praepositae */
+                      i32 praeludium_octeti;
 } BriarNexusRes;
 
 /* Xar de BriarNexusRes, ordine partium; NIHIL = memoria */
@@ -63,5 +79,11 @@ b32
 briar_nexus_titulus_est (
     constans BriarNexusRes* res,
         constans character* literae);
+
+/* linea .thistle ex linea fontis silvae (praeludio dempto) */
+i32
+briar_nexus_linea_silvae (
+    constans BriarNexusRes* res,
+                       i32  linea_silvae);
 
 #endif /* BRIAR_NEXUS_H */
