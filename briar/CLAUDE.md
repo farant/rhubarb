@@ -95,8 +95,8 @@ Findings: `fontes/briar.worklog.md`.
 
 ## Gates (`./briar/compile_probationes.sh [filter]`; exit 2 = NOTHING RAN)
 registrum · lexema · arbor · stml · canon · totalitas · computus · nexus
-· silva · fabrica · amalgama (eleven files; every one born red by a
-planted fault — see the worklog). Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
+· silva · fabrica · imperium · amalgama (twelve files; every one born
+red by a planted fault — see the worklog). Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
 inventory in `fixa/FONTES.md`; computus golden `fixa/computus/basis.tsv`
 (`COMPUTUS_SCRIBERE=1` + a named cause); fabrica goldens
 `fixa/fabrica/<t>/` = the generated files byte for byte
