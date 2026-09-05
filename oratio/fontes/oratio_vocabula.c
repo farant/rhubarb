@@ -832,10 +832,12 @@ _iudicare_anglice (
                 }
             }
         }
-        /* II. Moby: forma exacta */
+                /* II. Moby: forma exacta primum, deinde regulae morphologicae
+         * (T15b, ORATIO_REGULAE_EN) - analysis prima classem, lemma
+         * (basis) et regulam dat; lemmata = bases distinctae */
         si (v->analyses == ZEPHYRUM && vc->en != NIHIL)
         {
-            x = oratio_vocabularium_en_quaerere(scratch, vc->en,
+            x = oratio_vocabularium_en_analysare(scratch, vc->en,
                 v->verbum);
             si (x == NIHIL)
             {
@@ -844,19 +846,46 @@ _iudicare_anglice (
             }
             si (xar_numerus(x) > ZEPHYRUM)
             {
-                constans OratioVocabulumEn* r =
-                    oratio_vocabularium_en_recordum(vc->en,
-                    *(s32*)xar_obtinere(x, ZEPHYRUM));
-                constans character* classis =
-                    oratio_vocabularium_en_classis(
-                    r->codices.datum[ZEPHYRUM]);
+                constans OratioAnalysisEn* a =
+                    (constans OratioAnalysisEn*)xar_obtinere(x,
+                    ZEPHYRUM);
+                chorda bases[16];
+                   i32 distinctae = ZEPHYRUM;
 
+                per (k = ZEPHYRUM; k < xar_numerus(x); k++)
+                {
+                    constans OratioAnalysisEn* b =
+                        (constans OratioAnalysisEn*)xar_obtinere(x, k);
+                    i32 j;
+                    b32 nova = VERUM;
+
+                    per (j = ZEPHYRUM; j < distinctae; j++)
+                    {
+                        si (   bases[j].mensura == b->basis.mensura
+                            && memcmp(bases[j].datum, b->basis.datum,
+                                (size_t)b->basis.mensura) == ZEPHYRUM)
+                        {
+                            nova = FALSUM;
+                            frange;
+                        }
+                    }
+                    si (nova && distinctae < (i32)16)
+                    {
+                        bases[distinctae]  = b->basis;
+                        distinctae         = distinctae + I;
+                    }
+                }
                 v->analyses  = xar_numerus(x);
-                v->lemmata   = I;
-                v->classis   = _copia_literarum(vc->piscina,
-                    classis != NIHIL ? classis : "ignotum");
-                v->lemma   = _copia(vc->piscina, v->verbum);
+                v->lemmata   = distinctae;
+                v->classis = _copia_literarum(vc->piscina,
+                    a->classis);
+                v->lemma   = _copia(vc->piscina, a->basis);
                 v->status  = ORATIO_VERBUM_NOTUM;
+                si (a->regula >= ZEPHYRUM)
+                {
+                    v->regula = _copia_literarum(vc->piscina,
+                        ORATIO_REGULAE_EN[a->regula].titulus);
+                }
             }
         }
         /* III. tabula Latina (glossarium totum inclusum): LATINUM */

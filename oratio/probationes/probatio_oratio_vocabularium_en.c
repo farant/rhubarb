@@ -131,6 +131,66 @@ _forma (
         *(s32*)xar_obtinere(x, k))->forma;
 }
 
+interior constans OratioAnalysisEn*
+_analysis (
+    Xar* x,
+    i32  k)
+{
+    redde (constans OratioAnalysisEn*)xar_obtinere(x, k);
+}
+
+/* an analysis k-ta regulam tituli dati ferat */
+interior b32
+_regula_est (
+                   Xar* x,
+                   i32  k,
+    constans character* titulus)
+{
+    constans OratioAnalysisEn* a;
+
+    si (x == NIHIL || k >= xar_numerus(x))
+    {
+        redde FALSUM;
+    }
+    a = _analysis(x, k);
+    redde (b32)(a->regula >= ZEPHYRUM
+        && strcmp(ORATIO_REGULAE_EN[a->regula].titulus, titulus)
+            == ZEPHYRUM);
+}
+
+/* index analysis primae regulae tituli dati, -I si nulla */
+interior s32
+_regula_ubi (
+                   Xar* x,
+    constans character* titulus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; x != NIHIL && k < xar_numerus(x); k++)
+    {
+        si (_regula_est(x, k, titulus))
+        {
+            redde (s32)k;
+        }
+    }
+    redde (s32)-I;
+}
+
+/* basis analysis primae regulae tituli dati ("" si nulla) */
+interior chorda
+_basis_regulae (
+                   Xar* x,
+    constans character* titulus)
+{
+    s32 k = _regula_ubi(x, titulus);
+
+    si (k < ZEPHYRUM)
+    {
+        redde _l("");
+    }
+    redde _analysis(x, (i32)k)->basis;
+}
+
 /* fons malus inlinearis: onus NIHIL cum linea et causa datis */
 interior vacuum
 _malus (
@@ -348,6 +408,241 @@ principale (vacuum)
         _malus(piscina, "\r\n", I, "signum '\\' deest");
         _malus(piscina, "the\\Dv\r\n\r\nx\\N\r\n", (i32)II,
             "signum '\\' deest");
+    }
+
+        imprimere("\n--- VI. Regulae morphologicae (T15b) ---\n");
+    {
+        i32  r;
+        Xar* x;
+
+        CREDO_VERUM (ORATIO_REGULAE_EN_NUMERUS >= (i32)XV);
+        per (r = ZEPHYRUM; r < ORATIO_REGULAE_EN_NUMERUS; r++)
+        {
+            constans OratioRegulaEn* rg = &ORATIO_REGULAE_EN[r];
+                                i32  q;
+
+            CREDO_VERUM (rg->titulus != NIHIL && rg->suffixum != NIHIL
+                && rg->substitutio != NIHIL && rg->causa != NIHIL
+                && strlen(rg->suffixum) > ZEPHYRUM
+                && strlen(rg->causa) > ZEPHYRUM
+                && rg->basis_minima >= I);
+            per (q = ZEPHYRUM; q < r; q++)
+            {
+                si (strcmp(ORATIO_REGULAE_EN[q].titulus, rg->titulus)
+                    == ZEPHYRUM)
+                {
+                    CREDO_CULPA ("titulus regulae duplex");
+                }
+            }
+        }
+        /* forma exacta semper prior, deinde regulae */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("running"));
+        CREDO_NON_NIHIL (x);
+        CREDO_VERUM (xar_numerus(x) >= (i32)II);
+        CREDO_VERUM (_analysis(x, ZEPHYRUM)->regula == (s32)-I);
+        CREDO_VERUM (_aequalis(_analysis(x, ZEPHYRUM)->basis,
+            "running"));
+        CREDO_VERUM (strcmp(_analysis(x, ZEPHYRUM)->classis,
+            "adiectivum")
+            == ZEPHYRUM);
+        CREDO_VERUM (_regula_est(x, I, "participium-ing-geminatum"));
+        CREDO_VERUM (_aequalis(_analysis(x, I)->basis, "run"));
+        CREDO_VERUM (strcmp(_analysis(x, I)->classis, "verbum")
+            == ZEPHYRUM);
+        /* pluralia: classis ex basi */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("values"));
+        CREDO_VERUM (xar_numerus(x) >= I);
+        CREDO_VERUM (_regula_est(x, ZEPHYRUM, "pluralis-s"));
+        CREDO_VERUM (_aequalis(_analysis(x, ZEPHYRUM)->basis, "value"));
+        CREDO_VERUM (strcmp(_analysis(x, ZEPHYRUM)->classis,
+            "substantivum")
+            == ZEPHYRUM);
+                x = oratio_vocabularium_en_analysare(piscina, voc,
+                    _l("ids"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "pluralis-s"), "id"));   /* basis II litterarum */
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l("gets"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && strcmp(_analysis(x, ZEPHYRUM)->classis, "verbum")
+                == ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l("Boxes"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "pluralis-es")
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "box"));
+                /* entries: Moby eam ut 'p' fert - forma exacta prima, regula post */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("entries"));
+        CREDO_VERUM (xar_numerus(x) >= (i32)II
+            && _analysis(x, ZEPHYRUM)->regula == (s32)-I
+            && _regula_ubi(x, "pluralis-ies") >= I
+            && _aequalis(_basis_regulae(x, "pluralis-ies"), "entry"));
+        /* praeterita */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("tested"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "praeteritum-ed")
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "test")
+            && strcmp(_analysis(x, ZEPHYRUM)->classis, "verbum")
+                == ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("shared"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "praeteritum-ed-e")
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "share"));
+                x = oratio_vocabularium_en_analysare(piscina, voc,
+                    _l("tried"));
+        CREDO_VERUM (_regula_ubi(x, "praeteritum-ied") >= I
+            && _aequalis(_basis_regulae(x, "praeteritum-ied"), "try"));
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("planned"));
+        CREDO_VERUM (_regula_ubi(x, "praeteritum-ed-geminatum") >= I
+            && _aequalis(_basis_regulae(x, "praeteritum-ed-geminatum"),
+                "plan"));
+        CREDO_VERUM (_regula_ubi(x, "praeteritum-ed") < ZEPHYRUM);   /* 'plann' nulla */
+        /* participia */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("testing"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "participium-ing")
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "test"));
+                x = oratio_vocabularium_en_analysare(piscina, voc,
+                    _l("making"));
+        CREDO_VERUM (_regula_ubi(x, "participium-ing-e") >= I
+            && _aequalis(_basis_regulae(x, "participium-ing-e"),
+            "make"));
+        /* possessivum, adverbia, gradus */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("engineer's"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "possessivum")
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "engineer")
+            && strcmp(_analysis(x, ZEPHYRUM)->classis, "substantivum")
+                == ZEPHYRUM);
+                /* adverbia Moby ipsa fert (v): regulae post formam exactam */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("structurally"));
+        CREDO_VERUM (_regula_ubi(x, "adverbium-ly") >= I
+            && _aequalis(_basis_regulae(x, "adverbium-ly"),
+            "structural")
+            && strcmp(_analysis(x, (i32)_regula_ubi(x, "adverbium-ly"))
+                ->classis, "adverbium") == ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("simply"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "adverbium-ly-le"),
+            "simple"));
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("happily"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "adverbium-ily"),
+            "happy"));
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("higher"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "comparativus-er")
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "high")
+            && strcmp(_analysis(x, ZEPHYRUM)->classis, "adiectivum")
+                == ZEPHYRUM);
+                x = oratio_vocabularium_en_analysare(piscina, voc,
+                    _l("larger"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "comparativus-er-e"),
+            "large"));
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("highest"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "superlativus-est")
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "high"));
+                x = oratio_vocabularium_en_analysare(piscina, voc,
+                    _l("largest"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "superlativus-est-e"),
+            "large"));
+        /* compositum: partes omnes exactae (self, test; byte, exact);
+         * 'non' Moby non fert - non-null compositum NON est (inventum) */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("self-test"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "compositum")
+            && _analysis(x, ZEPHYRUM)->recordum == (s32)-I
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "self-test")
+            && strcmp(_analysis(x, ZEPHYRUM)->classis, "substantivum")
+                == ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("Byte-Exact"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "compositum")
+            && _aequalis(_analysis(x, ZEPHYRUM)->basis, "byte-exact"));
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("a-plot"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "compositum"));
+                /* praefixa (ORATIO_PRAEFIXA_EN): non-null compositum, classis
+         * partis ultimae (null A); praefixa sola nihil; pars per regulam */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("non-null"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "compositum")
+            && strcmp(_analysis(x, ZEPHYRUM)->classis, "adiectivum")
+                == ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("multi-strand"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "compositum"));
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("non-multi"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("consists-in"));
+        CREDO_VERUM (xar_numerus(x) >= I
+            && _regula_est(x, ZEPHYRUM, "compositum"));
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("non-xyzzy"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+        /* contractiones; apostrophus typographica plicata */
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l("we're"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "contractio-'re"),
+            "we")
+            && strcmp(_analysis(x, (i32)_regula_ubi(x,
+            "contractio-'re"))
+                ->classis, "pronomen") == ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("I\xe2\x80\x99m"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "contractio-'m"),
+            "i"));
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l("don't"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "contractio-n't"),
+            "do")
+            && strcmp(_analysis(x, (i32)_regula_ubi(x,
+            "contractio-n't"))
+                ->classis, "verbum") == ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l("can't"));
+        CREDO_VERUM (_regula_ubi(x, "contractio-n't") < ZEPHYRUM);   /* 'ca' N */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("dkc\xe2\x80\x99s"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);   /* dkc ignotum */
+        /* gradus ex adverbio (near v) */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("nearest"));
+        CREDO_VERUM (_aequalis(_basis_regulae(x, "superlativus-est"),
+            "near"));
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l("-null"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("self--test"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+        /* limina: basis nimis brevis ('k' < III), suffixum solum, ignotum */
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l("ks"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+                x = oratio_vocabularium_en_analysare(piscina, voc,
+                    _l("xys"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);   /* basis 'xy' ignota */
+        x = oratio_vocabularium_en_analysare(piscina, voc,
+            _l("xyzzyed"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l(""));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+        /* forma exacta sine regula: 'the' unam analysin exactam */
+        x = oratio_vocabularium_en_analysare(piscina, voc, _l("the"));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), I);
+        CREDO_VERUM (_analysis(x, ZEPHYRUM)->regula == (s32)-I);
     }
 
     imprimere("\n");

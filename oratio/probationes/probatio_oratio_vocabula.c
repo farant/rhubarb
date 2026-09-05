@@ -46,7 +46,7 @@
 #include <string.h>
 #include <time.h>
 
-#define IGNOTA_SYMBOLORUM_PINNA 2986
+#define IGNOTA_SYMBOLORUM_PINNA 2950
 
 interior b32
 _plagulam_legere (
@@ -584,8 +584,9 @@ principale (vacuum)
 
         CREDO_NON_NIHIL (an);
         CREDO_VERUM (oratio_vocabula_prosa(an, _l(
-            "The parser is running quickly; a worklog notes offset tok\n"
-            "xyzzy puella lexema est silva piscina.\n"), "docs/a.md"));
+                        "The parser is running quickly; a worklog notes offset tok\n"
+            "xyzzy puella lexema est silva piscina; values tested.\n"),
+            "docs/a.md"));
         CREDO_VERUM (oratio_vocabula_iudicare(an));
         v = _verbum(an, "the");
         CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_NOTUM);
@@ -629,8 +630,22 @@ principale (vacuum)
         v = _verbum(an, "est");       /* glossarium primum: sum, non edo */
         CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_LATINUM);
         CREDO_VERUM (v != NIHIL && _aequalis(v->lemma, "sum"));
-        v = _verbum(an, "silva");     /* nomen proprium domus, Latinum */
+                v = _verbum(an, "silva");     /* nomen proprium domus, Latinum */
         CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_LATINUM);
+        v = _verbum(an, "values");    /* regula morphologica (T15b) */
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_NOTUM);
+        CREDO_VERUM (v != NIHIL && _aequalis(v->lemma, "value"));
+        CREDO_VERUM (v != NIHIL && _aequalis(v->regula, "pluralis-s"));
+        CREDO_VERUM (v != NIHIL
+            && _aequalis(v->classis, "substantivum"));
+        v = _verbum(an, "tested");
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_NOTUM);
+        CREDO_VERUM (v != NIHIL && _aequalis(v->lemma, "test"));
+        CREDO_VERUM (v != NIHIL
+            && _aequalis(v->regula, "praeteritum-ed"));
+        CREDO_VERUM (v != NIHIL && _aequalis(v->classis, "verbum"));
+        v = _verbum(an, "the");
+        CREDO_VERUM (v != NIHIL && v->regula.mensura == ZEPHYRUM);
         CREDO_AEQUALIS_I32 (oratio_vocabula_numerus(an,
             ORATIO_VERBUM_AMBIGUUM), ZEPHYRUM);
         imprimere("  nota %d permissa %d latina %d ignota %d\n",
@@ -751,10 +766,16 @@ principale (vacuum)
         CREDO_VERUM (n > (i32)5000);
         CREDO_AEQUALIS_I32 (oratio_vocabula_numerus(corpus,
             ORATIO_VERBUM_AMBIGUUM), ZEPHYRUM);
-                /* limen: tertia pars nota (relatio diei primi: 42 % - Moby formas
-         * flexas -s -ed -ing raro fert; morphologia ex relatione ut DATA
-         * limen tollet) */
-        CREDO_VERUM ((nota + permissa + latina) * (i32)III > n);
+                        /* limina prosae (T15b, 2026-09-04): nota 73.8 % post regulas
+         * morphologicas (58 % -> 26.2 % ignota) et cursum glossarii II;
+         * pavimentum LXX % nota, TECTUM XXIX % ignota - tectum pinna
+         * prosae est (numerus 'solum cadens' identificatorum hic nimis
+         * fragilis: prosa cotidie verba nova fert); rubrum = regula aut
+         * glossarium fractum, non verbum novum unum. Causa nominata
+         * movet. */
+        CREDO_VERUM ((nota + permissa + latina) * (i32)X
+            > n * (i32)VII);
+        CREDO_VERUM (ignota * (i32)C <= n * (i32)XXIX);
     }
 
     imprimere("\n");

@@ -402,6 +402,26 @@ English terms; morphology lands next as DATA rows with those counts
 letters; now UTF-8 lead bytes count), and the site-count ordering was
 quadratic (now a counting sort).
 
+**As built — T15b (same day):** the morphology is DATA —
+`ORATIO_REGULAE_EN` (25 rows: plural ×3, past ×4, participle ×3,
+possessive, contractions ×6, adverb ×3, comparative ×2, superlative ×2,
+`compositum`; each row = suffix, base substitution, gemination, minimum
+base, required Moby codes of the base, class, cause with the measured
+tally) plus `ORATIO_PRAEFIXA_EN` for hyphen compounds (non, multi, semi
+…); `oratio_vocabularium_en_analysare` = exact records first, then
+rules in table order, each analysis carrying rule, base and class; the
+judge takes the first analysis (lemma = base, `OratioVerbum.regula`);
+the English fold maps U+2019 to `'`. Glossary pass II (117 entries,
+ANGLICA PROSA section: proper names, computing English with explicit
+plurals — rules reduce to Moby bases only —, abbreviations, `struct`
+and `sizeof`, Roman numerals ii–xxx as `numerale` for both contexts,
+house Latin internamentum/diagnostica/friatio/amalgama). Prose
+unknowns 58 % → 30 % (rules) → 26.2 % (pass II); known 73.8 %. PROSE
+PIN = a ceiling on the unknown SHARE (29 %) plus a floor on the known
+share (70 %), not a count only falling — prose gains words daily; a red
+means a rule or a glossary section broke. Identifier pin 2,986 → 2,950
+on the `ambo` entries.
+
 ## 5. Stage 3 — annotated words (`partes`)
 
 **Universal classes** (registry `partes_registrum`, one genus per
@@ -489,10 +509,16 @@ legend (one: `cowardic\Ne`); words hashed by lower-cased form (197,387),
 phrases counted not indexed (35,969); `quaerere` → records in file
 order; `oratio_vocabularium_en_classis` maps a code letter to the
 universal class. Findings pinned in `probatio_oratio_vocabularium_en`
-(81; seal `cc81458b820a3625`, 27 ms): the legend's `I` and `o` never
-occur; 1,231 CP437 records (fold v1 = ASCII lower case only, accents
-stay as they are); 4,437 case-duplicate forms. Morphology and the
-irregular table = T15b, as data from the prose report.
+(seal `cc81458b820a3625`, 27 ms): the legend's `I` and `o` never
+occur; 1,231 CP437 records (fold = ASCII lower case + U+2019 → `'`;
+accents stay as they are); 4,437 case-duplicate forms. **T15b (same
+day):** the light morphology is the DATA table `ORATIO_REGULAE_EN`
+(§4 as-built) with `oratio_vocabularium_en_analysare`; Moby lists more
+inflected forms than its legend admits (`entries` p, `tried` V,
+`making` N, `simply` v, `I'm`), so exact forms always precede rule
+analyses and two contraction rows explain nothing in this corpus. The
+irregular-forms table is not needed yet (no irregular at the top of
+the unknown list); gate section VI (160 assertions).
 
 ## 7. Stage 5 — resolution by context
 
@@ -714,8 +740,10 @@ CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT
 `Prosa.sententia`.
 
 **Stage 4 (English).** T15a DONE 2026-09-04 (vendor Moby verbatim,
-loader without coction, the prose lint `-prosa`). T15b morphology rules
-+ irregulars as DATA from the report. T16 `partes_en.c` + EWT oracle.
+loader without coction, the prose lint `-prosa`). T15b DONE 2026-09-04
+(morphology as DATA rows with measured counts, prefixes, compounds,
+glossary pass II, the prose pin as a share ceiling). T16 `partes_en.c`
++ EWT oracle (irregulars if the oracle asks for them).
 
 **Stage 5.** T17 `oratio/partes/resolutio.stml` + runner through the
 command layer + per-rule oracle deltas. T18 primary pin.

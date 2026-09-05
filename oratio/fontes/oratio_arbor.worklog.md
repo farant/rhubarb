@@ -608,3 +608,84 @@ noun, forms listed); unknowns 2,986, pin moved down with this cause.
 Note for the next reader of that pin: the machine output gained a
 column, so a query by first site must read field 11, not 10 — half an
 hour went to a wrong column.
+
+## 2026-09-04 — T15b: English morphology as data, glossary pass II, the prose pin
+
+Straight after T15a, with the day-one report in hand. The suffix rules
+the spec names are a DATA table now, `ORATIO_REGULAE_EN` in
+`oratio_vocabularium_en.c`: one row per suffix with its base
+substitution (ed→"", ed→e, ies→y …), a gemination flag (planned →
+plan), a minimum base length, the Moby codes the base must carry (a
+plural needs a noun or verb base; a comparative an adjective or adverb
+— `near` is `PvVN`, so `nearest` needs the `v`), the analysis class
+(or "from the base" for plurals), and a cause that cites the report's
+words and now the measured tally. Twenty-five rows: three plural, four
+past, three participle, possessive, six contractions, three adverb,
+two comparative, two superlative, and `compositum`. A new function
+`oratio_vocabularium_en_analysare` returns analyses in order — exact
+records first, always, then the rules in table order — each carrying
+its rule index, its base, and its class; the judge takes the first
+analysis for class and lemma (so `values` gets lemma `value` and
+`regula` `pluralis-s`), counts distinct bases as `lemmata`, and
+`OratioVerbum.regula` names the rule; the machine output gained a last
+column and the instrument a per-rule tally.
+
+Three things learned from the corpus while the rules went in. (1)
+Moby lists more than the legend admits: `entries` is there as `p`,
+`tried` and `planned` as `V`, `making` as `N`, `simply` and `happily`
+as `v`, `larger` and `largest` as `A`, `I'm` and `don't` as entries —
+so the gate asserts "exact first, rule present after", not "rule
+first", and two contraction rows explain nothing in this corpus; they
+stay as rows with a zero. (2) Compounds are the biggest single rule:
+`compositum` (every hyphen part a known word, or a prefix from
+`ORATIO_PRAEFIXA_EN` — non, multi, semi, pseudo … — with at least one
+real word among the parts, and parts themselves may go through the
+suffix rules, so `consists-in` and `discovered-while` resolve) explains
+13,508 distinct words and 45,304 sites; plurals 3,327 / 135,056;
+possessives 1,129 / 8,957; `-ed` 644 / 16,372; `-ing` 570 / 12,097.
+(3) The typographic apostrophe: `i’m` and `dkc’s` carried U+2019, so
+the English fold maps E2 80 99 to `'` before anything else.
+
+The pass II glossary followed the post-rule report: 117 entries under
+an ANGLICA PROSA section — proper names (Voronoi, Fibonacci, Hopf,
+Galois, Seifert, Temperley-Lieb, Methos, Teal'c …) with possessive
+forms where the corpus has them; the computing English Moby's 1990s
+list lacks (whitespace, roundtrip, lookup, lexer, runtime, subtree,
+codebase, newline, fallback, database, callback, tuple, typedef,
+stdout, metadata, timestamp, workflow, monorepo …) as real classes with
+explicit plurals, because the rules reduce to MOBY bases only, not to
+glossary lemmata; abbreviations (dkc, vs, xor with its numbered forms,
+npn, sqrt, mcp, mvn, e.g, i.e, tsv, utf …) as permitted; `struct` and
+`sizeof` joining the C names for both contexts; three house Latin
+coinages the identifier lint had also been missing (internamentum,
+diagnostica, friatio; amalgama as medieval Latin); and the Roman
+numerals ii–xxx as `numerale`, both contexts, since the house writes
+them in prose and in comments (`iii` alone had 262 prose sites). The
+plural rule's minimum base went from three letters to two for `ids`.
+
+Numbers. Prose unknowns 36,115 → 18,949 after the rules (58 % → 30 %)
+→ 16,416 after pass II (26.2 %); known share 73.8 %. The identifier pin
+fell 2,986 → 2,950 on the `ambo` entries and moved with that cause.
+The gate: `probatio_oratio_vocabularium_en` section VI (160; every row
+on a listed base, prefixes, contractions, the fold, limits; planted
+fault = the plural rule's base codes replaced by `A` → red at
+`values`); `probatio_oratio_vocabula` (165) now judges `values` and
+`tested` through the rules. The prose pin: not a count "only falling"
+like the identifiers' — prose gains new words every day and a count
+pin would go red on the next worklog — but a CEILING on the unknown
+SHARE (29 %, three points above measured) beside a floor on the known
+share (70 %); a red there means a rule or a glossary section broke, not
+that one new word appeared. That is a deviation from what I said
+before building; the reason is above.
+
+What is left at the top of the unknown list is now genuinely
+interesting: Unicode math from knotapel (s², ζ₈, ζ₁₂), FILE NAMES
+written in prose without backticks (silva.h 298, latina.h 234,
+claude.md, stml.c — a style finding the lint was built for), knotapel's
+own codes (m0b, m2c, xor7, xnor3, rkhs, gptq, bitnet), hyphen compounds
+with one unknown part (nazer-gastpar, pseudo-anosov,
+delta-parameterized), `won't` (base `wo`), and a thin tail of English
+Moby lacks (uniqueness, bitwise, whiteboard, resize, lifecycle). A
+compositum that consults the glossary for parts would take the
+compounds; a numeral-like filter would take the math; the file names
+should stay findings.

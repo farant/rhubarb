@@ -43,6 +43,41 @@ nomen structura {
 
 nomen structura OratioVocabulariumEn OratioVocabulariumEn;
 
+/* Regula morphologica (T15b, DATA): forma quae suffixo finitur ->
+ * basis = forma sine suffixo + substitutio (geminatio: consonans duplex
+ * finalis simplificatur, planned -> plan); basis in tabula quaeritur et
+ * codicem unum ex 'codices' ferre debet (NIHIL = quilibet); analysis
+ * classem 'classis' accipit (NIHIL = ex codice basis congruente: N p h
+ * substantivum, V t i verbum). Suffixum "-" = COMPOSITUM: partes ad
+ * hyphen scissae omnes formae exactae esse debent (non-null, a-plot).
+ * Ordo tabulae = ordo analysium; forma exacta semper prior. Causa =
+ * verba relationis diei primi cum numeris sedium. */
+nomen structura {
+    constans character* titulus;
+    constans character* suffixum;
+    constans character* substitutio;
+                   b32  geminatio;
+                   i32  basis_minima;   /* litterae basis minimae */
+    constans character* codices;        /* NIHIL = quilibet */
+    constans character* classis;        /* NIHIL = ex basi */
+    constans character* causa;
+} OratioRegulaEn;
+
+externus constans OratioRegulaEn ORATIO_REGULAE_EN[];
+externus constans i32 ORATIO_REGULAE_EN_NUMERUS;
+
+/* Praefixa compositorum (non, multi, semi ...): pars ante hyphen quae
+ * verbum non est; NIHIL terminata. */
+externus constans character* constans ORATIO_PRAEFIXA_EN[];
+
+/* analysis formae: recordum Moby (basis aut forma ipsa) cum regula */
+nomen structura {
+                   s32  recordum;   /* index recordi; -I = compositum (nullum recordum unum) */
+                   s32  regula;     /* -I = forma exacta; alioquin index in ORATIO_REGULAE_EN */
+                chorda  basis;      /* forma plicata aut basis derivata (copia in piscina) */
+    constans character* classis;    /* classis universalis (NIHIL numquam: 'ignotum' si codex extra legendam) */
+} OratioAnalysisEn;
+
 /* Legenda codicum Moby (casus significans): N p h V t i A v C P ! r D I o */
 externus constans character* constans ORATIO_VOCABULARIUM_EN_CODICES;
 
@@ -73,6 +108,15 @@ constans OratioVocabulumEn*
 oratio_vocabularium_en_recordum (
     constans OratioVocabulariumEn* voc,
                               s32  i);
+
+/* Analyses formae (Xar de OratioAnalysisEn): recorda exacta primum
+ * (regula -I), deinde regulae tabulae ordine; vacuus = ignotum. NIHIL =
+ * memoria. */
+Xar*
+oratio_vocabularium_en_analysare (
+                          Piscina* piscina,
+    constans OratioVocabulariumEn* voc,
+                           chorda  forma);
 
 OratioVocabulariumEnCensus
 oratio_vocabularium_en_census (

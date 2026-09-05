@@ -3200,7 +3200,7 @@ if __name__ == '__main__':
 
 # ---------------------------------------------------------------- vocabula (oratio)
 Verbum = namedtuple('Verbum', 'verbum status sedes symbola commenta prosa classis '
-                    'lemma analyses lemmata via linea')
+                    'lemma analyses lemmata via linea regula')
 Vocabula = namedtuple('Vocabula', 'numeri verba ignota ambigua permissa')
 
 
@@ -3226,7 +3226,10 @@ def vocabula(fons='omnia', omnes_viae=False):
     deinde, tabula Latina tertia -> status 'latinum' (Latine notum, NON
     inventum); 'ambiguum' numquam; viae vendor/ archivum/ et plagulae
     generatae (gesta/annales/tabula.md, md/CENSUS.md) exclusae, knotapel/
-    INCLUSUM. Verbum.prosa = sedes in prosa."""
+    INCLUSUM. Verbum.prosa = sedes in prosa; Verbum.regula = regula
+    morphologica (T15b: pluralis-s, praeteritum-ed, participium-ing,
+    possessivum, adverbium-ly, comparativus-er, compositum ...) qua forma
+    non listata ad basin (lemma) redacta est, vacua = forma exacta."""
     if fons not in ('symbola', 'commenta', 'omnia', 'prosa'):
         raise SilvaError("fons: 'symbola' | 'commenta' | 'omnia' | 'prosa'")
     r = _curre(['./oratio/vocabula.sh', '-' + fons, '-machina']
@@ -3238,10 +3241,10 @@ def vocabula(fons='omnia', omnes_viae=False):
         if not linea or linea.startswith('#'):
             continue
         p = linea.split('\t')
-        if len(p) < 12:
+        if len(p) < 13:
             continue
         verba.append(Verbum(p[0], p[1], int(p[2]), int(p[3]), int(p[4]), int(p[5]),
-                            p[6], p[7], int(p[8]), int(p[9]), p[10], int(p[11])))
+                            p[6], p[7], int(p[8]), int(p[9]), p[10], int(p[11]), p[12]))
     numeri = {'verba': len(verba), 'sedes': sum(v.sedes for v in verba)}
     for st in ('notum', 'ambiguum', 'permissum', 'ignotum', 'latinum'):
         numeri[st] = sum(1 for v in verba if v.status == st)

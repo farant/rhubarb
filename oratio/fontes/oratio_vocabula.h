@@ -65,8 +65,9 @@ nomen structura {
     i32 lemmata;               /* lemmata distincta */
     chorda via_prima;          /* sedes prima (copia) */
     i32 linea_prima;
-        b32 ex_commento_prima;
+            b32 ex_commento_prima;
     b32 ex_prosa_prima;
+    chorda regula;             /* contextus Anglicus: regula morphologica analysis primae (vacua = forma exacta aut nulla) */
 } OratioVerbum;
 
 nomen structura OratioVocabula OratioVocabula;

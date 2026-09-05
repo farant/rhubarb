@@ -139,10 +139,19 @@ Latin in prose is never a finding); corpus = house + knotapel minus
 vendor/ archivum/ generated (`ORATIO_PROSA_EXCLUSA`);
 `./oratio/vocabula.sh -prosa`, `silva.vocabula('prosa')`. Day one:
 62,524 words, 58 % unknown = regular inflections (-s -ed -ing 's) +
-house English terms → T15b morphology as DATA rows with those counts,
-then glossary pass II (`contextus="anglicus"`). NEXT: stage 3 **T11**
-`partes_registrum` (17 classes as analysis genera appended to the
-registry, canon rules), or T15b first — Fran's call.
+house English terms. **T15b DONE (same day)**: `ORATIO_REGULAE_EN` —
+25 DATA rows (suffix, base substitution, gemination, minimum base,
+required Moby codes, class, cause with the measured tally) +
+`ORATIO_PRAEFIXA_EN` for hyphen compounds; `oratio_vocabularium_en_analysare`
+= exact first, then rules in order, each analysis with rule, base,
+class; `OratioVerbum.regula`; the fold maps U+2019 to `'`. Glossary
+pass II (117 entries, ANGLICA PROSA section; Roman numerals ii–xxx
+`numerale` both contexts; house Latin internamentum, diagnostica,
+friatio, amalgama). Prose unknowns 58 % → 26.2 %; PROSE PIN = ceiling
+on the unknown share (29 %) + floor on the known share (70 %), not a
+count; identifier pin 2,950. Instrument prints a per-rule tally.
+NEXT: stage 3 **T11** `partes_registrum` (17 classes as analysis
+genera appended to the registry, canon rules).
 
 ## Laws to keep (spec §2–3)
 
@@ -167,3 +176,7 @@ registry, canon rules), or T15b first — Fran's call.
   = `latinum`, never a finding; `ambiguum` never; the identifier pin
   is the Latin context's and a new house coinage in an API name moves
   it (glossary entry, pin moved for the cause).
+- English morphology is DATA (`ORATIO_REGULAE_EN`): a row has a cause
+  and a measured count, exact forms always precede rule analyses, rules
+  reduce to MOBY bases only (glossary entries list their own plurals),
+  and the prose pin is a SHARE ceiling, never a word count.

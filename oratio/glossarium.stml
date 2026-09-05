@@ -104,6 +104,11 @@
        ignota: ea lint nominat. Abbreviationes (tok idx ctx ptr aed sem) quoque
        ignota: decisio Frani (permittere aut renominare). -->
 
+  <vocabulum lemma="analysis" lingua="latina" classis="substantivum"
+    nota="WORDS analysis N 3 3 fert sine accusativo Graeco -in (analysin, ut basin): forma addita pro _analysin_addere (T15b)">
+    <forma textus="analysin" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+
   <vocabulum lemma="recordum" lingua="latina" classis="substantivum"
     nota="vox domus (T7 census.recorda, T15a oratio_vocabularium_en_recordum): recordum n. = 'record'; WORDS 'recorda' ut formam verbi recordor solum novit - pinna identificatorum ideo rubra 2026-09-04">
     <sensus>record (of a table); entry, row</sensus>
@@ -395,6 +400,283 @@
   <vocabulum lemma="seq" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="ms" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
   <vocabulum lemma="worklog" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="prosa Anglica solum (worklogs, md) - exemplum contextus anglici"/>
+
+  <!-- ================= ANGLICA: PROSA (cursus glossarii II, T15b 2026-09-04) =================
+       Ex relatione lintus prosae post regulas morphologicas (18.949 ignota
+       ex 62.566): nomina propria, Anglicum computatorium quod Moby (editio
+       1990s) non fert cum pluralibus explicitis (regulae bases Moby solas
+       quaerunt), abbreviationes. contextus anglicus = prosa sola; nomina
+       domus ambo. -->
+
+  <vocabulum lemma="voronoi" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Georgy Voronoi (tessellatio)"/>
+  <vocabulum lemma="fibonacci" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Leonardo Fibonacci"/>
+  <vocabulum lemma="hopf" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Heinz Hopf (algebra Hopf)"/>
+  <vocabulum lemma="gilfoyle" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="persona (Silicon Valley)"/>
+  <vocabulum lemma="markov" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Andrey Markov"/>
+  <vocabulum lemma="galois" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Evariste Galois"/>
+  <vocabulum lemma="aizenberg" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="auctor (knotapel)">
+    <forma textus="aizenberg's"/>
+  </vocabulum>
+  <vocabulum lemma="seifert" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Herbert Seifert (superficies)"/>
+  <vocabulum lemma="habiro" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Kazuo Habiro"/>
+  <vocabulum lemma="temperley-lieb" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="algebra Temperley-Lieb"/>
+  <vocabulum lemma="raqiya" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="persona (Novum Fundamentum)"/>
+  <vocabulum lemma="methos" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="persona (Highlander; Novum Fundamentum)">
+    <forma textus="methos's"/>
+  </vocabulum>
+  <vocabulum lemma="teal'c" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="persona (SG-1)">
+    <forma textus="teal'c's"/>
+  </vocabulum>
+  <vocabulum lemma="eigenflower" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="nomen proprium domus (knotapel)"/>
+  <vocabulum lemma="knotapel" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="nomen proprium domus (laboratorium mathematicum)"/>
+  <vocabulum lemma="whitespace" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="roundtrip" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="roundtrips"/>
+  </vocabulum>
+  <vocabulum lemma="lookup" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="lookups"/>
+  </vocabulum>
+  <vocabulum lemma="lexer" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="lexers"/>
+  </vocabulum>
+  <vocabulum lemma="runtime" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="runtimes"/>
+  </vocabulum>
+  <vocabulum lemma="subtree" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="subtrees"/>
+  </vocabulum>
+  <vocabulum lemma="codebase" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="codebases"/>
+  </vocabulum>
+  <vocabulum lemma="newline" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="newlines"/>
+  </vocabulum>
+  <vocabulum lemma="fallback" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="fallbacks"/>
+  </vocabulum>
+  <vocabulum lemma="database" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="databases"/>
+  </vocabulum>
+  <vocabulum lemma="preprocessor" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="preprocessors"/>
+  </vocabulum>
+  <vocabulum lemma="callback" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="callbacks"/>
+  </vocabulum>
+  <vocabulum lemma="internet" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="tuple" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="tuples"/>
+  </vocabulum>
+  <vocabulum lemma="typedef" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="typedefs"/>
+  </vocabulum>
+  <vocabulum lemma="param" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="params"/>
+  </vocabulum>
+  <vocabulum lemma="cli" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="lsp" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="stdout" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="stderr" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="stdin" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="matroid" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="matroids"/>
+  </vocabulum>
+  <vocabulum lemma="neglecton" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="neglectons"/>
+  </vocabulum>
+  <vocabulum lemma="normalization" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="normalizations"/>
+  </vocabulum>
+  <vocabulum lemma="verification" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="verifications"/>
+  </vocabulum>
+  <vocabulum lemma="reachability" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="solvability" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="semisimplicity" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum mathematicum quod Moby non fert">
+    <forma textus="non-semisimplicity"/>
+  </vocabulum>
+  <vocabulum lemma="tqft" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="tqfts"/>
+  </vocabulum>
+  <vocabulum lemma="lcft" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="nand" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="standalone" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="semisimple" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum mathematicum quod Moby non fert; compositum cum praefixo explicitum (partes compositi in Moby solo quaeruntur)">
+    <forma textus="non-semisimple"/>
+  </vocabulum>
+  <vocabulum lemma="nilpotent" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="quaternionic" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="dynamical" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="analytical" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="pairwise" lingua="anglica" classis="adverbium" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="specifically" lingua="anglica" classis="adverbium" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="grep" lingua="anglica" classis="verbum" contextus="anglicus" nota="verbum computatorium">
+    <forma textus="greps"/>
+    <forma textus="grepped"/>
+    <forma textus="grepping"/>
+  </vocabulum>
+  <vocabulum lemma="dkc" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio knotapel">
+    <forma textus="dkc's"/>
+  </vocabulum>
+  <vocabulum lemma="vs" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="versus"/>
+  <vocabulum lemma="xor" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="operatio cum numero (knotapel)">
+    <forma textus="xor5"/>
+    <forma textus="xor6"/>
+    <forma textus="xor8"/>
+    <forma textus="xor10"/>
+    <forma textus="xor12"/>
+    <forma textus="xor14"/>
+  </vocabulum>
+  <vocabulum lemma="npn" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio knotapel"/>
+  <vocabulum lemma="sqrt" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="radix quadrata"/>
+  <vocabulum lemma="mcp" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="Model Context Protocol"/>
+  <vocabulum lemma="mvn" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio knotapel"/>
+  <vocabulum lemma="tt" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio"/>
+  <vocabulum lemma="ts" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio"/>
+  <vocabulum lemma="cyc8" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio knotapel"/>
+  <vocabulum lemma="e.g" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="exempli gratia (abbreviatio Anglica cum puncto interno)"/>
+  <vocabulum lemma="i.e" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="id est (abbreviatio Anglica cum puncto interno)"/>
+  <vocabulum lemma="arxiv" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="archivum praeimpressionum"/>
+  <vocabulum lemma="struct" lingua="anglica" classis="ignotum-permissum" contextus="ambo" nota="verbum clausum C (ut int char ... cursus I)">
+    <forma textus="structs"/>
+  </vocabulum>
+  <vocabulum lemma="sizeof" lingua="anglica" classis="ignotum-permissum" contextus="ambo" nota="operator C"/>
+  <vocabulum lemma="internamentum" lingua="latina" classis="substantivum" contextus="ambo" nota="vox domus (internamentum.h): internment of strings">
+    <forma textus="internamenti"/>
+    <forma textus="internamento"/>
+    <forma textus="internamenta"/>
+    <forma textus="internamentorum"/>
+    <forma textus="internamentis"/>
+  </vocabulum>
+  <vocabulum lemma="amalgama" lingua="latina" classis="substantivum" contextus="ambo" nota="Latinum mediaevale: amalgam (vox domus pro plagula amalgamata)">
+    <forma textus="amalgamatis"/>
+    <forma textus="amalgamati"/>
+    <forma textus="amalgamata"/>
+    <forma textus="amalgamatum"/>
+    <forma textus="amalgamatorum"/>
+  </vocabulum>
+
+  <!-- addendum cursus II: cauda relationis post cursum primum (16.561 ignota) -->
+  <vocabulum lemma="readout" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="readouts"/>
+  </vocabulum>
+  <vocabulum lemma="transclusion" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="transclusions"/>
+  </vocabulum>
+  <vocabulum lemma="metadata" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="formatter" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="formatters"/>
+  </vocabulum>
+  <vocabulum lemma="timestamp" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="timestamps"/>
+  </vocabulum>
+  <vocabulum lemma="workflow" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="workflows"/>
+  </vocabulum>
+  <vocabulum lemma="timeline" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="timelines"/>
+  </vocabulum>
+  <vocabulum lemma="filesystem" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="filesystems"/>
+  </vocabulum>
+  <vocabulum lemma="monorepo" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="monorepos"/>
+  </vocabulum>
+  <vocabulum lemma="initializer" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="initializers"/>
+  </vocabulum>
+  <vocabulum lemma="fixpoint" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="fixpoints"/>
+  </vocabulum>
+  <vocabulum lemma="simplification" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="simplifications"/>
+  </vocabulum>
+  <vocabulum lemma="invariance" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="arity" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="arities"/>
+  </vocabulum>
+  <vocabulum lemma="corank" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="nilpotency" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="indecomposability" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="trivialization" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="dedup" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="repl" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="malloc" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="stdio" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="mtime" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="mtimes"/>
+  </vocabulum>
+  <vocabulum lemma="anyon" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="anyons"/>
+  </vocabulum>
+  <vocabulum lemma="macrame" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="matching" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert">
+    <forma textus="matchings"/>
+  </vocabulum>
+  <vocabulum lemma="null" lingua="anglica" classis="substantivum" contextus="anglicus" nota="Anglicum computatorium: Moby null A solum fert, plurale nulls">
+    <forma textus="nulls"/>
+  </vocabulum>
+  <vocabulum lemma="hardcoded" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="builtin" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="malformed" lingua="anglica" classis="adiectivum" contextus="anglicus" nota="Anglicum computatorium quod Moby (1990s) non fert"/>
+  <vocabulum lemma="vm" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="virtual machine">
+    <forma textus="vms"/>
+  </vocabulum>
+  <vocabulum lemma="tls" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="transport layer security"/>
+  <vocabulum lemma="ibm" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="nomen societatis"/>
+  <vocabulum lemma="iso" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio"/>
+  <vocabulum lemma="fts" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="full-text search (SQLite)"/>
+  <vocabulum lemma="tsv" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="tab-separated values"/>
+  <vocabulum lemma="utf" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="unicode transformation format"/>
+  <vocabulum lemma="dof" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="degrees of freedom"/>
+  <vocabulum lemma="trm" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio knotapel"/>
+  <vocabulum lemma="chebyshev" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Pafnuty Chebyshev"/>
+  <vocabulum lemma="abramsky" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Samson Abramsky"/>
+  <vocabulum lemma="smaragda" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="nomen proprium domus (MCP)"/>
+  <vocabulum lemma="ii" lingua="latina" classis="numerale" contextus="ambo" nota="numeralia Romana II-XXX ut verba prosae et commentariorum (iii CCLXII, vii CV, viii XCVI in relatione); litterae singulae filtro omittuntur">
+    <forma textus="iii"/>
+    <forma textus="iv"/>
+    <forma textus="vi"/>
+    <forma textus="vii"/>
+    <forma textus="viii"/>
+    <forma textus="ix"/>
+    <forma textus="xi"/>
+    <forma textus="xii"/>
+    <forma textus="xiii"/>
+    <forma textus="xiv"/>
+    <forma textus="xv"/>
+    <forma textus="xvi"/>
+    <forma textus="xvii"/>
+    <forma textus="xviii"/>
+    <forma textus="xix"/>
+    <forma textus="xx"/>
+    <forma textus="xxi"/>
+    <forma textus="xxii"/>
+    <forma textus="xxiii"/>
+    <forma textus="xxiv"/>
+    <forma textus="xxv"/>
+    <forma textus="xxvi"/>
+    <forma textus="xxvii"/>
+    <forma textus="xxviii"/>
+    <forma textus="xxix"/>
+    <forma textus="xxx"/>
+  </vocabulum>
+  <vocabulum lemma="diagnostica" lingua="latina" classis="substantivum" contextus="ambo" nota="vox domus (legati diagnostica): diagnosticum n., pl. diagnostica">
+    <forma textus="diagnosticum"/>
+    <forma textus="diagnostici"/>
+    <forma textus="diagnostico"/>
+    <forma textus="diagnosticorum"/>
+    <forma textus="diagnosticis"/>
+  </vocabulum>
+  <vocabulum lemma="friatio" lingua="latina" classis="substantivum" contextus="ambo" nota="vox domus (tabula_friare): friatio f. = hashing">
+    <forma textus="friationis"/>
+    <forma textus="friationi"/>
+    <forma textus="friationem"/>
+    <forma textus="friatione"/>
+    <forma textus="friationes"/>
+    <forma textus="friationum"/>
+    <forma textus="friationibus"/>
+  </vocabulum>
 
   <!-- ================= TERMINI TECHNICI PERMISSI =================
        classis ignotum-permissum: verba non vertenda in identificatoribus et
