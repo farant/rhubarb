@@ -8,6 +8,8 @@
 
 **Tech Stack:** C89 (clang, house flags), rhubarb `lib/` — `piscina`, `chorda`, `xar`, `internamentum`, `stml`, `canon`, `credo`, `fenestra`. No new dependencies.
 
+> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **Next: T6 `insula`, T7 `motus` (P1).** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
+
 **Spec:** `project-specs/pictor-spec.md` (sections 2, 3, 6.1–6.3, 7, 8 P0–P2). Rationale: `project-specs/ludus-brainstorm.md` §X–XV.
 
 **Scope of THIS plan:** spec §8 phases P0, P1, P2 only. P3–P6 (pictor's document, componentia, figurae, rasterizer, bake) are subsequent plans. The examen CODICES (spec §6.4) are a separate silva/examen plan; this plan writes the annotation comments (`<componens/>`, `<purus/>`, `<quies/>`, `<tractator/>`) so the codices have anchors when they land.
