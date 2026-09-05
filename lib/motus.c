@@ -97,13 +97,19 @@ motus_effundere (
                  Motus* motus,
     InsulaRepositorium* repo)
 {
-    b32 ok;
+        b32 ok;
+     chorda nulla;
 
     si (!motus || !repo)
     {
         redde FALSUM;
     }
+        nulla.mensura  = ZEPHYRUM;
+    nulla.datum        = NIHIL;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("motus",
+        motus->piscina));
     ok = mutare_ephemera(repo, effusio_mutator, motus);
+    insula_scriptorem_ponere(repo, nulla);
     si (ok)
     {
         motus->sordida = FALSUM;

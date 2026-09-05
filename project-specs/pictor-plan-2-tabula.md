@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). Next: T6 real canons + owners. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). Next: T7 `pictor_componentia`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -2582,7 +2582,7 @@ The canons (spec §4; the FLOW idiom from §XVI §1 is RESERVED here as `cursus`
 </domini>
 ```
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `probationes/probatio_insula.c` before `--- Probans scribere ---`:
 ```c
@@ -2737,11 +2737,11 @@ s32 principale (vacuum)
 ```
 (`zoom.ponere` is in the spec's action list but the domini table gives `zoom` to `motus` — the quiet seat writes it; `zoom.ponere` will go THROUGH motus in P4. The probatio pins the table as written; change both together if the decision changes.)
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh insula` — Expected: FAIL to compile (`insula_dominum_ponere` undeclared). `./compile_tests.sh pictor_canones` — Expected: FAIL (canon files absent → `CREDO_NON_NIHIL(durabilis)` red, and the same undeclared symbols).
 
-- [ ] **Step 3: Write the canons, the owner table, the refusal**
+- [x] **Step 3: Write the canons, the owner table, the refusal**
 
 Write the three files under `apps/pictor/canones/` exactly as above (`mkdir -p apps/pictor/canones`). Validate them standalone first: `bin/canon_examen -canon apps/pictor/canones/ephemera.canon <(printf '<ephemera zoom="1"/>')` if the tool supports stdin, else a temp file — exit 0.
 
@@ -2911,11 +2911,11 @@ dominos_iudicare (
 
 `lib/dispensator.c` `mittere`: around `fn(...)`: `insula_scriptorem_ponere(d->repo, c->actio); consumptus = fn(...); insula_scriptorem_ponere(d->repo, chorda_nulla());` and in `attr_scribere` (the focus writes): set `"dispensator"` before `mutare_ephemera`, restore empty after. `lib/motus.c` `motus_effundere`: set `"motus"` before, empty after (it has no memory of the previous scriptor; the dispensator calls it outside any handler, so empty is right — the worklog says so).
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh insula && ./compile_tests.sh pictor_canones && ./compile_tests.sh dispensator && ./compile_tests.sh motus && ./compile_tests.sh pictor_toy` — all PASS. (The toy declares no owners, so nothing changes for it.)
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plant (RED): in `dominos_iudicare`, `si (chorda_aequalis(d->dominus, repo->scriptor)) { perge; }` → compare against `d->attributum` instead — the owner is refused too: red at `CREDO_VERUM(mutare_ephemera(repo, ponere_focum, focus_b1))`. Green on revert.
 

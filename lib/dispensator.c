@@ -89,7 +89,11 @@ attr_scribere (
 
     a.titulus  = titulus;
     a.valor    = valor;
+        insula_scriptorem_ponere(d->repo,
+                             chorda_ex_literis("dispensator",
+                             d->piscina));
     mutare_ephemera(d->repo, attr_ponere, &a);
+    insula_scriptorem_ponere(d->repo, chorda_nulla());
 }
 
 chorda
@@ -291,6 +295,7 @@ mittere (
         vacuum* ctx;
            i32  i;
            i32  n;
+           b32  consumptus;
 
     si (!des->ascensus)
     {
@@ -308,7 +313,10 @@ mittere (
         {
             perge;
         }
-        si (fn(d->repo, &d->motus, des, c, e, ctx))
+        insula_scriptorem_ponere(d->repo, c->actio);
+        consumptus = fn(d->repo, &d->motus, des, c, e, ctx);
+        insula_scriptorem_ponere(d->repo, chorda_nulla());
+        si (consumptus)
         {
             redde VERUM;
         }

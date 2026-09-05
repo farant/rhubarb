@@ -1,0 +1,26 @@
+<canon dialectus="pictor-ephemera" versio="1">
+  <elementum nomen="ephemera" radix="verum">
+    <attributum nomen="instrumentum"    genus="nomen"/>
+    <attributum nomen="color_primus"    genus="numerus"/>
+    <attributum nomen="color_secundus"  genus="numerus"/>
+    <attributum nomen="magnitudo"       genus="numerus"/>
+    <attributum nomen="stratum_activum" genus="numerus"/>
+    <attributum nomen="zoom"            genus="numerus"/>
+    <attributum nomen="pan_x"           genus="numerus"/>
+    <attributum nomen="pan_y"           genus="numerus"/>
+    <attributum nomen="focus"           genus="textus"/>
+    <attributum nomen="focus_acervus"   genus="textus"/>
+    <attributum nomen="selectio_x"      genus="numerus"/>
+    <attributum nomen="selectio_y"      genus="numerus"/>
+    <attributum nomen="selectio_latitudo" genus="numerus"/>
+    <attributum nomen="selectio_altitudo" genus="numerus"/>
+    <attributum nomen="cursus"          genus="nomen"
+      nota="fluxus (brainstorm XVI §1) - P5"/>
+    <attributum nomen="gradus"          genus="nomen"
+      nota="gradus fluxus - P5"/>
+    <attributum nomen="fuga"            genus="textus"
+      nota="probationes solae"/>
+    <attributum nomen="numerus"         genus="numerus"
+      nota="probationes solae"/>
+  </elementum>
+</canon>

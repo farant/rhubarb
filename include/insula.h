@@ -29,6 +29,7 @@
 #include "internamentum.h"
 #include "stml.h"
 #include "canon.h"
+#include "xar.h"
 
 
 /* ==================================================
@@ -57,6 +58,11 @@ nomen vacuum (*InsulaActarius)(
         vacuum*  ctx);
 
 nomen structura {
+    chorda attributum;
+    chorda dominus;     /* scriptor solus qui attributum mutat */
+} InsulaDominus;
+
+nomen structura {
                 Piscina* piscina;      /* repositorii ipsius */
     InternamentumChorda* intern;
                          /* ping-pong per genus */
@@ -70,6 +76,8 @@ nomen structura {
                  vacuum* actarius_ctx;
                     b32  mendacium;
                  chorda  causa;
+                    Xar* domini[INSULA_GENUS_NUMERUS];
+                 chorda  scriptor;      /* currens; vacuus = anonymus */
 } InsulaRepositorium;
 
 
@@ -167,5 +175,40 @@ insula_ponere_actarium (
     InsulaRepositorium* repo,
         InsulaActarius  fn,
                 vacuum* ctx);
+
+
+/* ==================================================
+ * Domini (brainstorm XVI §2: lectio globalis, scriptura possessa)
+ * ================================================== */
+
+/* Scriptor currens (nomen actionis, 'dispensator', 'motus', ...);
+ * vacuus = anonymus. Dispensator eum circa tractatorem ponit. */
+vacuum
+insula_scriptorem_ponere (
+    InsulaRepositorium* repo,
+                chorda  scriptor);
+
+/* Attributum radicis generis dato uni scriptori addicere. FALSUM si
+ * attributum vacuum. */
+b32
+insula_dominum_ponere (
+    InsulaRepositorium* repo,
+           InsulaGenus  genus,
+    constans character* attributum,
+    constans character* dominus);
+
+/* <domini><dominus genus attributum scriptor/>...</domini>: lineae
+ * generis dati leguntur; redde numerum lectarum. */
+i32
+insula_dominos_legere (
+    InsulaRepositorium* repo,
+           InsulaGenus  genus,
+             StmlNodus* domini);
+
+/* Attributum radicis tollere (par insula_attributum_ponere). */
+b32
+insula_attributum_tollere (
+              StmlNodus* nodus,
+     constans character* titulus);
 
 #endif /* INSULA_H */
