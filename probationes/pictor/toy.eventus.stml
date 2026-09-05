@@ -1,0 +1,12 @@
+<eventus_index>
+  <eventus genus="mus_depressus" tempus="1000" x="35" y="20" botton="0" modificantes="0"/>
+  <eventus genus="mus_liberatus" tempus="1050" x="35" y="20" botton="0" modificantes="0"/>
+  <eventus genus="mus_motus" tempus="1100" x="120" y="50" botton="0" modificantes="0"/>
+  <eventus genus="mus_depressus" tempus="1200" x="120" y="50" botton="0" modificantes="0"/>
+  <eventus genus="mus_motus" tempus="1220" x="125" y="55" botton="0" modificantes="0"/>
+  <eventus genus="mus_motus" tempus="1240" x="130" y="60" botton="0" modificantes="0"/>
+  <eventus genus="mus_liberatus" tempus="1300" x="130" y="60" botton="0" modificantes="0"/>
+  <eventus genus="clavis_depressus" tempus="1400" clavis="0" typus="27" modificantes="0"/>
+  <eventus genus="clavis_liberatus" tempus="1420" clavis="0" typus="27" modificantes="0"/>
+  <eventus genus="nihil" tempus="2000"/>
+</eventus_index>

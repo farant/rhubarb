@@ -1,0 +1,19 @@
+<canon dialectus="pictor-durabilis" versio="1">
+  <elementum nomen="documentum" radix="verum">
+    <attributum nomen="latitudo" genus="numerus" necessarium="verum"/>
+    <attributum nomen="altitudo" genus="numerus" necessarium="verum"/>
+    <attributum nomen="paletta"  genus="textus"
+      nota="XVI indices coloris, commate separati"/>
+    <attributum nomen="sigillum" genus="textus"
+      nota="checkpoint currens (hex)"/>
+    <attributum nomen="titulus"  genus="textus"/>
+    <attributum nomen="puncta"        genus="numerus" nota="probationes"/>
+    <attributum nomen="ictus_numerus" genus="numerus" nota="probationes"/>
+    <liberum nomen="stratum"/>
+  </elementum>
+  <elementum nomen="stratum">
+    <attributum nomen="titulus"   genus="textus"  necessarium="verum"/>
+    <attributum nomen="visibilis" genus="veritas"/>
+    <attributum nomen="ordo"      genus="numerus"/>
+  </elementum>
+</canon>
