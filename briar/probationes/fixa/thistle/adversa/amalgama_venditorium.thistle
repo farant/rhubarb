@@ -1,0 +1,16 @@
+#!/usr/bin/env briar
+# Amalgama venditorium
+
+`volumen.h` pulls `vendor/sqlite3.c` into the closure: the project
+builds, but `-amalgama` refuses (vendor under the strict flags).
+
+<c!>
+#include "volumen.h"
+
+s32
+principale (vacuum)
+{
+    imprimere("volumen\n");
+    redde ZEPHYRUM;
+}
+</c>

@@ -73,6 +73,16 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_PROBATIO);
     CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, ZEPHYRUM);
 
+    /* briar -amalgama x.thistle; shebang ./x.thistle -amalgama */
+    CREDO_VERUM (_legere(piscina, &imp, II, "-amalgama", "x.thistle",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_AMALGAMA);
+    CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, ZEPHYRUM);
+    CREDO_VERUM (_legere(piscina, &imp, II, "./x.thistle", "-amalgama",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_AMALGAMA);
+    CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, ZEPHYRUM);
+
     /* briar x.thistle -- -probatio : '--' abscisum, vexillum
      * programmatis */
     CREDO_VERUM (_legere(piscina, &imp, III, "x.thistle", "--",

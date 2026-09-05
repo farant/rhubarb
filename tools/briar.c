@@ -8,8 +8,10 @@
  * currere (aedificare si abest, deinde programma FIERI); -probatio =
  * probationem regionis munus="probatio" currere (exitus = iudicium);
  * -struere [-iterum] = aedificare solum, directorium proiecti
- * imprimere; -arbor = proiectio STML; -partes = clausura; -versio =
- * stampa corporis + sigilla vexillorum. Forma shebang vexilla ut
+ * imprimere; -arbor = proiectio STML; -partes = clausura; -amalgama =
+ * plagula una <t>.c (+ probatio_<t>.c) iuxta thistle, clang sola
+ * compilanda (briar_amalgama); -versio = stampa corporis + sigilla
+ * vexillorum. Forma shebang vexilla ut
  * argumentum PRIMUM post plagulam agnoscit ('./x.thistle -probatio');
  * '--' ea programmati relinquit. Regulae in briar_imperium (porta).
  *
@@ -35,6 +37,7 @@
 #include "silex.h"
 #include "via.h"
 #include "xar.h"
+#include "briar_amalgama.h"
 #include "briar_arbor.h"
 #include "briar_fabrica.h"
 #include "briar_imperium.h"
@@ -126,7 +129,9 @@ _auxilium (vacuum)
         " currere\n"
         "  -struere    aedificare solum; -iterum = clavem neglegere\n"
         "  -arbor      proiectionem STML imprimere\n"
-        "  -partes     clausuram imprimere (via, origo)\n"
+                "  -partes     clausuram imprimere (via, origo)\n"
+        "  -amalgama   plagulam UNAM <t>.c iuxta thistle scribere"
+        " (effugium: clang sola)\n"
         "  -versio     stampam corporis et sigilla vexillorum\n"
         "  -f <radix>  arbor rhubarb (alioquin ascensus, alioquin"
         " corpus infixum)\n"
@@ -351,6 +356,45 @@ principale (
         }
         redde ZEPHYRUM;
     }
+
+        si (imp.actio == BRIAR_ACTIO_AMALGAMA)
+        {
+        BriarAmalgamaFructus am = briar_amalgamare(piscina, &fructus,
+            fons, optiones.via_thistle);
+                      chorda  causa;
+                      chorda  directorium;
+          constans character* dir_amalgamae;
+                         i32  k;
+
+        si (!am.successus)
+        {
+            fprintf(stderr, "briar: %s: %.*s\n", imp.via,
+                (integer)am.causa.mensura,
+                (constans character*)am.causa.datum);
+            redde I;
+        }
+        directorium = via_directorium(chorda_ex_literis(
+            optiones.via_thistle, piscina), piscina);
+        dir_amalgamae = directorium.mensura > ZEPHYRUM
+            ? chorda_ut_cstr(directorium, piscina) : ".";
+        si (!briar_amalgama_scribere(piscina, &am, dir_amalgamae,
+            &causa))
+        {
+            fprintf(stderr, "briar: %.*s\n", (integer)causa.mensura,
+                (constans character*)causa.datum);
+            redde I;
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(am.plagulae); k++)
+        {
+            constans BriarPlagula* p =
+                (constans BriarPlagula*)xar_obtinere(am.plagulae, k);
+
+            imprimere("%s/%.*s\n", dir_amalgamae,
+                (integer)p->via.mensura,
+                (constans character*)p->via.datum);
+        }
+        redde ZEPHYRUM;
+        }
 
     /* clavis: infixum = stampa corporis; discus = contenta clausurae */
     stampa = e_disco ? briar_stampa_clausurae(piscina, fructus.clausura)

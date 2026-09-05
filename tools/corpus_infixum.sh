@@ -11,22 +11,37 @@
 #
 # Usus (e radice): source tools/corpus_infixum.sh; corpus_infixum_regenerare
 
-# tabula symbolum -> caput domus (include/*.h): symbolum, genus
-# (functio|macro|typedef|constans|variabile), caput - e nexu silvae
-# (build/nexus.tsv, sedes solae). briar inclusiones e USU symbolorum
-# derivat: silva symbola implicita et typos ignotos novit, haec tabula
-# caput cuiusque dicit. Regenerata cum caput quodvis recentior.
+# tabula symbolum -> plagula domus: symbolum, genus
+# (functio|macro|typedef|constans|variabile|parametrum), plagula - e
+# nexu silvae (build/nexus.tsv, sedes solae). Ordines DUO generum:
+#   include/*.h - briar inclusiones e USU symbolorum derivat (silva
+#     symbola implicita et typos ignotos novit, haec tabula caput dicit);
+#   lib/*.c - STATICA scopi plagulae (functio variabile typedef constans
+#     macro profunditate 0 quorum nomen in NULLO capite sedet): briar
+#     -amalgama ea per plagulam renominat (#define/#undef) ne fontes in
+#     plagula una collidant. Nexus linkage non novit: 'sine sede in
+#     capite' = staticum (functio publica sine prototypo capitis sub
+#     -Wmissing-prototypes non compilat).
+# Regenerata cum caput aut fons quivis recentior.
 corpus_symbola_generare () {
     local TABULA=corpus.symbola.tsv
-    if [ -f "$TABULA" ] && [ -z "$(find include -name '*.h' -newer "$TABULA" -print -quit 2>/dev/null)" ]; then
+    if [ -f "$TABULA" ] && [ -z "$(find include -name '*.h' -newer "$TABULA" -print -quit 2>/dev/null)" ] \
+        && [ -z "$(find lib -name '*.c' -newer "$TABULA" -print -quit 2>/dev/null)" ]; then
         return 0
     fi
     echo "  [symbola] corpus.symbola.tsv (nexus incrementalis)"
     ./silva/nexus.sh -renovare > /dev/null 2>&1 || return 1
     [ -f build/nexus.tsv ] || return 1
     {
-        echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h e build/nexus.tsv) - NE MANU EDITES"
-        awk -F'\t' '$2=="sedes" && $4 ~ /^include\// {print $1"\t"$3"\t"$4}' build/nexus.tsv | sort -u
+        echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h = capita; sedes lib/*.c profunditate 0 sine capite = statica) e build/nexus.tsv - NE MANU EDITES"
+        awk -F'\t' '
+            $2=="sedes" && $4 ~ /^include\// { publica[$1]=1; print $1"\t"$3"\t"$4 }
+            $2=="sedes" && $4 ~ /^lib\/[^\/]*\.c$/ && $7=="0" \
+                && ($3=="functio" || $3=="variabile" || $3=="typedef" || $3=="constans" || $3=="macro") {
+                n=n+1; statica[n]=$1"\t"$3"\t"$4; nomina[n]=$1
+            }
+            END { for (k=1; k<=n; k++) if (!(nomina[k] in publica)) print statica[k] }
+        ' build/nexus.tsv | sort -u
     } > "$TABULA" || return 1
     return 0
 }

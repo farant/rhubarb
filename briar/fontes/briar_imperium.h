@@ -2,10 +2,10 @@
  * primum reservatum, domus proiecti, stampae, sigillum vexillorum.
  *
  * Forma: briar [-vexillum] [-f <radix>] <x.thistle> [argumenta...]
- * Ante plagulam: -probatio -struere [-iterum] -arbor -partes -versio
- * -auxilium/-h, -f <radix>; aliud '-...' = recusatio (spiritus
+ * Ante plagulam: -probatio -struere [-iterum] -arbor -partes -amalgama
+ * -versio -auxilium/-h, -f <radix>; aliud '-...' = recusatio (spiritus
  * optionum declaratarum). Post plagulam argumentum PRIMUM solum
- * inspicitur: unum e quinque vexillis actionis = actio (forma shebang
+ * inspicitur: unum e sex vexillis actionis = actio (forma shebang
  * './x.thistle -probatio'); '--' = finis vexillorum (abscisum);
  * cetera reliqua programmatis, intacta. Cur non argumenta.h: vexilla
  * ignota recusat nec in positionali sistit - '-foo' programmatis
@@ -31,6 +31,7 @@ nomen enumeratio {
     BRIAR_ACTIO_STRUERE,       /* -struere [-iterum] */
     BRIAR_ACTIO_ARBOR,         /* -arbor */
     BRIAR_ACTIO_PARTES,        /* -partes */
+    BRIAR_ACTIO_AMALGAMA,      /* -amalgama: plagula una (effugium) */
     BRIAR_ACTIO_VERSIO,        /* -versio (sine plagula) */
     BRIAR_ACTIO_AUXILIUM       /* -auxilium / -h (sine plagula) */
 } BriarActio;

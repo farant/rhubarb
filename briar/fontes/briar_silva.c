@@ -162,18 +162,20 @@ _symbola_legere (
             chorda* cella;
             vacuum* prior = NIHIL;
 
-            si (   symbolum.mensura == ZEPHYRUM
-                || caput.mensura    == ZEPHYRUM)
+                        si (   symbolum.mensura == ZEPHYRUM
+                            || caput.mensura    == ZEPHYRUM)
+                        {
+                perge;
+                        }
+            /* ordines capitum soli: 'include/x.h' -> 'x.h'; ordines
+             * fontium lib (statica, pro -amalgama) hic praetereuntur */
+            si (   caput.mensura <= VIII
+                || memcmp(caput.datum, "include/", (size_t)VIII)
+                    != ZEPHYRUM)
             {
                 perge;
             }
-            /* 'include/x.h' -> 'x.h' */
-            si (   caput.mensura > VIII
-                && memcmp(caput.datum, "include/", (size_t)VIII)
-                    == ZEPHYRUM)
-            {
-                caput = chorda_sectio(caput, VIII, caput.mensura);
-            }
+            caput = chorda_sectio(caput, VIII, caput.mensura);
             si (tabula_dispersa_invenire(t.capita, symbolum, &prior))
             {
                 si (!chorda_aequalis(*(chorda*)prior, caput))
@@ -258,7 +260,8 @@ _caput_addere (
      BriarNexusRes* r,
             chorda  symbolum,
                Xar* capita,
-    TabulaDispersa* visa)
+    TabulaDispersa* visa,
+    TabulaDispersa* definita)
 {
     vacuum* caput    = NIHIL;
     vacuum* alterum  = NIHIL;
@@ -266,6 +269,15 @@ _caput_addere (
     si (!tabula_dispersa_invenire(t->capita, symbolum, &caput))
     {
         redde VERUM;   /* ignotum tabulae: clang nominabit */
+    }
+    /* symbolum quod regio ULLA plagulae declarat (aut caput quod ipsa
+     * includit) per <t>_regiones.h omnibus praesto est: numquam
+     * derivatur - 'Punctum' regionis punctum.thistle ET mandatum.h
+     * (inventum 2026-09-05, post fusionem ludi) */
+    si (   definita != NIHIL
+        && tabula_dispersa_continet(definita, symbolum))
+    {
+        redde VERUM;
     }
     /* caput quod regio ipsa includit numquam derivatur (redundantia
      * in capite genito; vide worklog 2026-09-05 de parsura prima) */
@@ -340,32 +352,38 @@ _capita_derivare (
           Piscina* piscina,
      BriarSymbola* t,
     BriarNexusRes* r,
-       BriarSilva* bs,
-              Xar* capita)
+       BriarSilva* arbor_silvae,
+              Xar* capita,
+   TabulaDispersa* definita)
 {
         TabulaDispersa* visa;
     insignatus integer  k;
-               integer  fons_index = bs->parsura->fons_princeps;
+               integer  fons_index =
+                   arbor_silvae->parsura->fons_princeps;
 
     visa = tabula_dispersa_creare_chorda(piscina, 32);
     per (k = ZEPHYRUM; k
-        < silva_c89_symbola_numerus(bs->semantica); k++)
+        < silva_c89_symbola_numerus(arbor_silvae->semantica); k++)
     {
         constans SemanticaSymbolum* s = silva_c89_symbolum_per_indicem(
-            bs->semantica, k);
+            arbor_silvae->semantica, k);
 
-        si (   s->est_implicitum && !_caput_addere(piscina, t, r,
-            _silva_chorda_ut_chorda(piscina, s->titulus), capita, visa))
-        {
+                si (   s->est_implicitum
+                    && !_caput_addere(piscina, t, r,
+                    _silva_chorda_ut_chorda(piscina, s->titulus),
+                    capita, visa,
+                    definita))
+                {
             redde FALSUM;
-        }
+                }
     }
-    per (k = ZEPHYRUM; k < silva_c89_diagnostica_numerus(bs->semantica);
+    per (k = ZEPHYRUM; k
+        < silva_c89_diagnostica_numerus(arbor_silvae->semantica);
         k++)
     {
         constans SemanticaDiagnosticum* d =
             silva_c89_diagnosticum_per_indicem(
-            bs->semantica, k);
+            arbor_silvae->semantica, k);
         integer minimum = -I;
         integer maximum = ZEPHYRUM;
 
@@ -380,12 +398,14 @@ _capita_derivare (
         {
             perge;
         }
-        si (!_caput_addere(piscina, t, r, _detondere(chorda_sectio(
-            r->textus_silvae, (i32)minimum, (i32)maximum)), capita,
-            visa))
-        {
+                si (!_caput_addere(piscina, t, r,
+                    _detondere(chorda_sectio(
+                    r->textus_silvae, (i32)minimum, (i32)maximum)),
+                    capita,
+                    visa, definita))
+                {
             redde FALSUM;
-        }
+                }
     }
     _capita_ordinare(capita);
     redde VERUM;
@@ -403,7 +423,7 @@ _parsare (
     ChordaAedificator* aed;
                   Xar* clausura;
         SilvaExpansio* exp;
-           BriarSilva* bs;
+           BriarSilva* arbor_silvae;
                   i32  k;
 
     aed = chorda_aedificator_creare(piscina,
@@ -450,23 +470,24 @@ _parsare (
         r->linea_erroris = r->linea_initium;
         redde VERUM;
     }
-    bs = (BriarSilva*)piscina_allocare(piscina,
+    arbor_silvae = (BriarSilva*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(BriarSilva));
-    si (bs == NIHIL)
+    si (arbor_silvae == NIHIL)
     {
         redde FALSUM;
     }
-    bs->parsura          = NIHIL;
-    bs->semantica        = NIHIL;
-    bs->capita_derivata  = NIHIL;
-    bs->piscina   = silva_piscina_generare_dynamicum("briar_silva",
+    arbor_silvae->parsura          = NIHIL;
+    arbor_silvae->semantica        = NIHIL;
+    arbor_silvae->capita_derivata  = NIHIL;
+    arbor_silvae->piscina   =
+        silva_piscina_generare_dynamicum("briar_silva",
         (size_t)8388608);
-    si (bs->piscina == NIHIL)
+    si (arbor_silvae->piscina == NIHIL)
     {
         redde FALSUM;
     }
-    r->silva  = bs;
-    exp       = silva_expansio_creare(bs->piscina);
+    r->silva  = arbor_silvae;
+    exp       = silva_expansio_creare(arbor_silvae->piscina);
     per (k = ZEPHYRUM; k < xar_numerus(clausura); k++)
     {
         constans SilexRes* res = (constans SilexRes*)xar_obtinere(
@@ -481,50 +502,95 @@ _parsare (
             (constans character*)res->contentum.datum,
             (insignatus integer)res->contentum.mensura);
     }
-    bs->parsura = silva_parsare_cum_expansione(bs->piscina, exp,
+    arbor_silvae->parsura =
+        silva_parsare_cum_expansione(arbor_silvae->piscina, exp,
         "regio.c", (constans character*)r->textus_silvae.datum,
         (insignatus integer)r->textus_silvae.mensura,
         &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
-    si (bs->parsura == NIHIL || bs->parsura->commissio == NIHIL)
+    si (   arbor_silvae->parsura            == NIHIL
+        || arbor_silvae->parsura->commissio == NIHIL)
     {
-        bs->parsura = NIHIL;
+        arbor_silvae->parsura = NIHIL;
         r->causa = chorda_ex_literis("silva: parsura fracta",
             piscina);
         r->linea_erroris = r->linea_initium;
         redde VERUM;
     }
-    si (bs->parsura->numerus_errorum > ZEPHYRUM)
+    si (arbor_silvae->parsura->numerus_errorum > ZEPHYRUM)
     {
-        i32 linea = _errorem_quaerere(bs->parsura->commissio->radix,
-            bs->parsura->fons_princeps);
+        i32 linea =
+            _errorem_quaerere(arbor_silvae->parsura->commissio->radix,
+            arbor_silvae->parsura->fons_princeps);
         character b[96];
 
         r->linea_erroris = (linea > ZEPHYRUM)
             ? briar_nexus_linea_silvae(r, linea) : r->linea_initium;
         sprintf(b, "regio C: parsura fracta (%u errores)",
-            bs->parsura->numerus_errorum);
+            arbor_silvae->parsura->numerus_errorum);
         r->causa = chorda_ex_literis(b, piscina);
     }
-    bs->semantica = silva_c89_semantica_analysare(bs->piscina,
-        bs->parsura);
+    arbor_silvae->semantica =
+        silva_c89_semantica_analysare(arbor_silvae->piscina,
+        arbor_silvae->parsura);
     redde VERUM;
 }
 
-/* regio: parsura prima, capita derivata (tabula adsit), parsura
- * secunda */
+/* nomina scopi plagulae in ULLA regione C declarata post parsuram
+ * primam (regio ipsa aut capita quae ipsa includit; implicita
+ * exclusa) - vide _caput_addere */
+interior TabulaDispersa*
+_definita_colligere (
+    Piscina* piscina,
+        Xar* nexus)
+{
+    TabulaDispersa* t = tabula_dispersa_creare_chorda(piscina, 512);
+               i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
+    {
+             BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
+        insignatus integer  k;
+
+        si (   r->genus != BRIAR_NEXUS_REGIO
+            || !briar_nexus_titulus_est(r, "c")
+            || r->silva == NIHIL || r->silva->semantica == NIHIL)
+        {
+            perge;
+        }
+        per (k = ZEPHYRUM; k
+            < silva_c89_symbola_numerus(r->silva->semantica); k++)
+        {
+            constans SemanticaSymbolum* s =
+                silva_c89_symbolum_per_indicem(r->silva->semantica, k);
+            chorda titulus;
+
+            si (   s->est_implicitum
+                || s->profunditas != (insignatus integer)ZEPHYRUM)
+            {
+                perge;
+            }
+            titulus = _silva_chorda_ut_chorda(piscina, s->titulus);
+            si (!tabula_dispersa_continet(t, titulus))
+            {
+                tabula_dispersa_inserere(t, titulus, (vacuum*)r);
+            }
+        }
+    }
+    redde t;
+}
+
+/* regio post parsuram primam: capita derivata (tabula adsit),
+ * parsura secunda */
 interior b32
-_regionem_parsare (
+_regionem_derivare (
                Piscina* piscina,
          BriarNexusRes* r,
     constans SilexFons* fons,
-          BriarSymbola* symbola)
+          BriarSymbola* symbola,
+        TabulaDispersa* definita)
 {
     Xar* capita = xar_creare(piscina, (i32)magnitudo(chorda));
 
-    si (!_parsare(piscina, r, fons, NIHIL))
-    {
-        redde FALSUM;
-    }
     si (   r->silva            == NIHIL || r->silva->parsura == NIHIL
         || r->silva->semantica == NIHIL || !symbola->adest)
     {
@@ -534,7 +600,8 @@ _regionem_parsare (
         }
         redde VERUM;
     }
-    si (!_capita_derivare(piscina, symbola, r, r->silva, capita))
+    si (!_capita_derivare(piscina, symbola, r, r->silva, capita,
+        definita))
     {
         r->silva->capita_derivata = capita;
         redde VERUM;   /* ambiguum: causa + linea posita, arbor manet */
@@ -560,15 +627,18 @@ briar_silvam_texere (
                     Xar* nexus,
      constans SilexFons* fons)
 {
-             i32 i;
-             s32 numerus = ZEPHYRUM;
-    BriarSymbola symbola;
+                          i32  i;
+                          s32  numerus = ZEPHYRUM;
+                 BriarSymbola  symbola;
+               TabulaDispersa* definita;
 
     si (piscina == NIHIL || nexus == NIHIL || fons == NIHIL)
     {
         redde -I;
     }
     symbola = _symbola_legere(piscina, fons);
+    /* parsura prima omnium regionum, deinde derivatio: symbola quae
+     * regio ulla declarat nulli derivantur */
     per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
     {
         BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
@@ -578,11 +648,26 @@ briar_silvam_texere (
         {
             perge;
         }
-        si (!_regionem_parsare(piscina, r, fons, &symbola))
+        si (!_parsare(piscina, r, fons, NIHIL))
         {
             redde -I;
         }
         numerus = numerus + I;
+    }
+    definita = _definita_colligere(piscina, nexus);
+    per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
+    {
+        BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
+
+        si (   r->genus != BRIAR_NEXUS_REGIO
+            || !briar_nexus_titulus_est(r, "c"))
+        {
+            perge;
+        }
+        si (!_regionem_derivare(piscina, r, fons, &symbola, definita))
+        {
+            redde -I;
+        }
     }
     redde numerus;
 }

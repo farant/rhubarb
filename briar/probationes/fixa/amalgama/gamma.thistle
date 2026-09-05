@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# Gamma
+
+Fixture for `-amalgama` over the synthetic fabrica beside it: no
+`#include` (beta.h is derived), two libraries whose statics collide.
+
+<c!>
+s32
+principale (vacuum)
+{
+    imprimere("%d\n", (integer)beta_duplicare("ab cd"));
+    redde ZEPHYRUM;
+}
+</c>

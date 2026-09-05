@@ -1,0 +1,8 @@
+# corpus.symbola.tsv - FIXUM amalgamae, MANU scriptum (forma tabulae genitae a tools/corpus_infixum.sh)
+ALPHA_MAXIMUM	macro	lib/alpha.c
+Cella	typedef	lib/beta.c
+_cella	variabile	lib/beta.c
+_est_spatium	functio	lib/alpha.c
+_est_spatium	functio	lib/beta.c
+alpha_numerare	functio	include/alpha.h
+beta_duplicare	functio	include/beta.h

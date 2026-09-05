@@ -27,6 +27,8 @@ hic_manens constans character* FRACTUM =
     "briar/probationes/fixa/thistle/adversa/c_fractum.thistle";
 hic_manens constans character* DERIVATUM =
     "briar/probationes/fixa/thistle/derivatum.thistle";
+hic_manens constans character* PUNCTUM =
+    "briar/probationes/fixa/thistle/punctum.thistle";
 
 interior character*
 _plagulam_legere (
@@ -343,10 +345,45 @@ principale (vacuum)
         CREDO_VERUM (chorda_aequalis_literis(
             *(chorda*)xar_obtinere(r->silva->capita_derivata, I),
             "piscina.h"));
-        CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
-            ZEPHYRUM);
+                CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
+                    ZEPHYRUM);
         briar_silvam_solvere(nexus);
     }
+
+    imprimere("\n--- Probans punctum: typus regionis alterius numquam"
+        " derivatur ---\n");
+    {
+            character* textus;
+                  i32  mensura;
+                  Xar* nexus;
+        BriarNexusRes* r;
+                  i32  k;
+
+        /* 'Punctum' in regione app definitur ET in include/mandatum.h
+         * (ludus, 2026-09-05) sedet: probatio eum per
+         * <t>_regiones.h videt - mandatum.h derivatum caput genitum
+         * duplicaret (typedef bis) */
+        nexus = _texere_omnia(piscina, intern, fons, PUNCTUM, &textus,
+            &mensura);
+        CREDO_NON_NIHIL (nexus);
+        r = _regio_c(nexus, I);
+        CREDO_NON_NIHIL (r);
+        CREDO_NON_NIHIL (r->silva);
+        CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
+            ZEPHYRUM);
+        per (k = ZEPHYRUM; k < xar_numerus(r->silva->capita_derivata);
+            k++)
+        {
+            chorda c = *(chorda*)xar_obtinere(r->silva->capita_derivata,
+                k);
+
+            imprimere("  derivatum: %.*s\n", (integer)c.mensura,
+                (constans character*)c.datum);
+            CREDO_FALSUM (chorda_aequalis_literis(c, "mandatum.h"));
+        }
+        briar_silvam_solvere(nexus);
+    }
+
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

@@ -18,9 +18,19 @@ Findings: `fontes/briar.worklog.md`.
   object is SHARED with silex (`tools/corpus_infixum.sh`); a stale
   binary lies green — rebuild after touching lib/ or briar/.
 - Flags (hand-parsed, `briar_imperium`, gated): `briar [-probatio |
-  -struere [-iterum] | -arbor | -partes | -versio | -h] [-f <radix>]
-  x.thistle [args…]`; shebang form recognizes ONE reserved first
-  argument after the file (`./x.thistle -probatio`), `--` ends flags.
+  -struere [-iterum] | -arbor | -partes | -amalgama | -versio | -h]
+  [-f <radix>] x.thistle [args…]`; shebang form recognizes ONE reserved
+  first argument after the file (`./x.thistle -probatio`), `--` ends
+  flags.
+- **`-amalgama`** = the escape hatch: ONE file `<t>.c` beside the
+  thistle (+ `probatio_<t>.c` if a probatio region exists) that clang
+  compiles ALONE — line 2 of the file's banner is the exact compile
+  line. Headers in dependency order (`postulata_posix.h` first), the
+  regions header, lib sources with EVERY static renamed per file
+  (`#define x x_<stem>` / `#undef`, lists = the `lib/` rows of
+  `corpus.symbola.tsv`), regions, main; local includes blanked, `#line
+  1 "<via>"` per file. v1 refuses vitrea, `vendor/`, `.m` (spec §9).
+  Never overwrites a file it did not write (banner check).
 - Corpus: `-f` > ascent from cwd (disk, `-versio` says `(discus)`) >
   embedded. Key: embedded = corpus stamp + flags + bytes (before any
   parse); disk = closure-content hash + flags + bytes (after fabrica).
@@ -29,9 +39,11 @@ Findings: `fontes/briar.worklog.md`.
   to stderr on failure) → `processus_transformare` into `bin/<t>`.
   `-probatio` execs `bin/probatio_<t>` or `probare.sh` (compiles+execs).
 - Gate: `./tools/briar_fumus.sh` (pythonica `briar-fumus`) — installed
-  binary, from outside the repo, fake HOME, six stages incl. the plant
-  `adversa/probatio_rubra.thistle` (must fail) and a refusal; `-agere`
-  opens the vitrea window and drives it with `bin/manus` (by hand).
+  binary, from outside the repo, fake HOME, seven stages incl. the plant
+  `adversa/probatio_rubra.thistle` (must fail), a refusal, and the
+  amalgams of salve + derivatum compiled by their own banner line and
+  run; `-agere` opens the vitrea window and drives it with `bin/manus`
+  (by hand).
 - Numbers 2026-09-05: salve cold 0.42 s (disk) / 0.68 s (embedded,
   shebang), hit 9 ms; vitrea cold 1.97 s; briar 10.5 MB.
 
@@ -62,6 +74,11 @@ Findings: `fontes/briar.worklog.md`.
   regenerates it) maps them to headers, pass two parses with them;
   `res->silva->capita_derivata`, written first into the generated
   header and the probatio unit; `-partes` lists them as `derivatum`
+- `briar_amalgama`: fabrica fructus → `<t>.c` [+ `probatio_<t>.c`]
+  (`briar_amalgamare`), `briar_amalgama_scribere` (banner-guarded
+  overwrite), `briar_amalgama_inclusio_localis` (silex's include-line
+  rule, public for the gate). No parsing: static lists come from the
+  table, header order from the closure texts
 - `briar_fabrica`: inventory → main rule → unit partition through
   silva's tree + symbol table → generated files → closure → silex
   scripts → SHA-256 key; `briar_fabricam_scribere` puts a project on
@@ -78,14 +95,17 @@ Findings: `fontes/briar.worklog.md`.
 
 ## Gates (`./briar/compile_probationes.sh [filter]`; exit 2 = NOTHING RAN)
 registrum · lexema · arbor · stml · canon · totalitas · computus · nexus
-· silva · fabrica (ten files; every one born red by a planted fault —
-see the worklog). Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
+· silva · fabrica · amalgama (eleven files; every one born red by a
+planted fault — see the worklog). Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
 inventory in `fixa/FONTES.md`; computus golden `fixa/computus/basis.tsv`
 (`COMPUTUS_SCRIBERE=1` + a named cause); fabrica goldens
 `fixa/fabrica/<t>/` = the generated files byte for byte
 (`BRIAR_FABRICA_SCRIBERE=1` + a named cause, inspect before committing;
 the vitrea build scripts are asserted structurally, their lists come
-from the corpus). The runner links silex's closure, `vendor/sqlite3.c`
+from the corpus); amalgam golden `fixa/amalgama/gamma.c` over the
+SYNTHETIC fabrica `fixa/amalgama/fabrica/` (`BRIAR_AMALGAMA_SCRIBERE=1`
++ a named cause; real-corpus amalgams are asserted structurally, they
+would churn with every lib edit). The runner links silex's closure, `vendor/sqlite3.c`
 and the silva amalgam as one object (cold ~21 s once; warm suite ~9 s).
 
 ## Laws
@@ -108,6 +128,8 @@ and the silva amalgam as one object (cold ~21 s once; warm suite ~9 s).
 - A script needs NO `#include` for house headers (see `derivatum.thistle`);
   a bare object-like macro or enum constant with no function from its
   header nearby is the one thing derivation misses — include it yourself.
+  A name ANY region declares is never derived (pass one runs for all
+  regions first): a house header may reuse a script's type name.
 - Worktree rules (until merged): `./silva/scribe.sh` not `~/.bin/scribe`;
   no ledger residents; commit with `silva.commissio_umbra(..., ['briar'])`;
   run the oratio suite once before a commit that touches pythonica.

@@ -32,9 +32,13 @@ _actio_vexilli (
     {
         redde (s32)BRIAR_ACTIO_ARBOR;
     }
-    si (_est(a, "-partes"))
-    {
+        si (_est(a, "-partes"))
+        {
         redde (s32)BRIAR_ACTIO_PARTES;
+        }
+    si (_est(a, "-amalgama"))
+    {
+        redde (s32)BRIAR_ACTIO_AMALGAMA;
     }
     si (_est(a, "-versio"))
     {
@@ -110,8 +114,8 @@ briar_imperium_legere (
                 "vexillum ignotum: ");
             chorda_aedificator_appendere_literis(aed, a);
             chorda_aedificator_appendere_literis(aed,
-                " (nota: -probatio -struere [-iterum] -arbor -partes"
-                " -versio -f <radix>)");
+                " (nota: -probatio -struere [-iterum] -arbor"
+                " -partes -amalgama -versio -f <radix>)");
             imp->causa = chorda_aedificator_finire(aed);
             redde FALSUM;
         }

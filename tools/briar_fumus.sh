@@ -23,7 +23,12 @@
 #   V.   PLANTA: ./probatio_rubra.thistle -probatio exitum non-zerum
 #        dare DEBET - porta quae rubrum videre nequit mortua est
 #   VI.  recusatio: ./duo_principalia.thistle exitu 1 cum 'duo principalia'
-#   VII. (-agere) app vitrea per bin/manus agitur: affordantiae >= I
+#   VII. -amalgama: ./salve.thistle -amalgama et ./derivatum.thistle
+#        -amalgama plagulas unas scribunt; ordo compilationis in linea
+#        II cuiusque (contractus tituli) per clang SOLAM cucurrit,
+#        programma 'salve, munde' / 'longitudo 12' imprimit, probatio
+#        amalgamae viridis - effugium vere sine include/ nec lib/
+#   VIII. (-agere) app vitrea per bin/manus agitur: affordantiae >= I
 #        (bulla), premere, textus corporis 'salve, munde' continet.
 #        FENESTRA VERA apparet - manu currendum, non in suite.
 #
@@ -62,7 +67,7 @@ if [ "$AGERE" = 1 ] && [ ! -x bin/manus ]; then
     exit 2
 fi
 FIXA="$RADIX/briar/probationes/fixa/thistle"
-for f in salve punctum salve_vitreum adversa/probatio_rubra adversa/duo_principalia; do
+for f in salve punctum derivatum salve_vitreum adversa/probatio_rubra adversa/duo_principalia; do
     [ -f "$FIXA/$f.thistle" ] || { echo "FUMUS: fixum abest: $f.thistle" >&2; exit 2; }
 done
 
@@ -94,7 +99,8 @@ deficere () {
     exit 1
 }
 
-cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/salve_vitreum.thistle" \
+cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
+   "$FIXA/salve_vitreum.thistle" \
    "$FIXA/adversa/probatio_rubra.thistle" "$FIXA/adversa/duo_principalia.thistle" \
    "$AREA/" || exit 2
 chmod +x "$AREA"/*.thistle
@@ -152,16 +158,43 @@ fi
 grep -q 'duo principalia' "$AREA/duo.log" \
     || deficere "recusatio sine causa 'duo principalia'" "$AREA/duo.log"
 
+# ---- VII. -amalgama: plagula una, clang SOLA (linea II = ordo) ----
+echo "FUMUS: VII. ./salve.thistle -amalgama, ./derivatum.thistle -amalgama (clang sola)"
+for t in salve derivatum; do
+    ( cd "$AREA" && "./$t.thistle" -amalgama ) > "$AREA/${t}_amalgama.log" 2>&1 \
+        || deficere "$t -amalgama defecit" "$AREA/${t}_amalgama.log"
+    [ -f "$AREA/$t.c" ] && [ -f "$AREA/probatio_$t.c" ] \
+        || deficere "amalgama $t.c / probatio_$t.c abest" "$AREA/${t}_amalgama.log"
+    for p in "$t" "probatio_$t"; do
+        ORDO="$(sed -n '2s/^ \* //p' "$AREA/$p.c")"
+        case "$ORDO" in
+            clang\ *) ;;
+            *) deficere "linea II amalgamae $p.c non ordo clang: [$ORDO]" ;;
+        esac
+        ( cd "$AREA" && eval "$ORDO" ) > "$AREA/${p}_clang.log" 2>&1 \
+            || deficere "amalgama $p.c clang sola non compilat" "$AREA/${p}_clang.log"
+    done
+    ( cd "$AREA" && "./probatio_$t" ) > "$AREA/${t}_amalgama_probatio.log" 2>&1 \
+        || deficere "probatio amalgamae $t rubra" "$AREA/${t}_amalgama_probatio.log"
+done
+( cd "$AREA" && ./salve ) > "$AREA/salve_amalgama_cursus.log" 2>&1
+grep -q 'salve, munde' "$AREA/salve_amalgama_cursus.log" \
+    || deficere "amalgama salve: 'salve, munde' non impressum" "$AREA/salve_amalgama_cursus.log"
+( cd "$AREA" && ./derivatum ) > "$AREA/derivatum_amalgama_cursus.log" 2>&1
+grep -q 'longitudo 12' "$AREA/derivatum_amalgama_cursus.log" \
+    || deficere "amalgama derivatum: 'longitudo 12' non impressum" "$AREA/derivatum_amalgama_cursus.log"
+echo "FUMUS:    amalgamae: $(wc -l < "$AREA/salve.c" | tr -d ' ') lineae salve.c, $(wc -l < "$AREA/derivatum.c" | tr -d ' ') derivatum.c"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum; planta rubra)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"
     exit 0
 fi
 
-# ---- VII. agere: app vitrea per manus ----
-echo "FUMUS: VII. bin/manus incipere $VITREUM_DIR/bin/salve_vitreum -vivum"
+# ---- VIII. agere: app vitrea per manus ----
+echo "FUMUS: VIII. bin/manus incipere $VITREUM_DIR/bin/salve_vitreum -vivum"
 SESSIO="$( cd "$AREA" && "$RADIX/bin/manus" incipere "$VITREUM_DIR/bin/salve_vitreum" -vivum \
     2>"$AREA/manus.err" )" \
     || deficere "manus incipere defecit" "$AREA/manus.err"
@@ -184,7 +217,7 @@ case "$CORPUS" in
     *) deficere "corpus paginae 'salve, munde' non continet: [$CORPUS] - pons 'salve' tacuit" "$AREA/textus.err" ;;
 esac
 
-echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, actum)"
+echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, actum)"
 purgare
 echo "fumus briar: sanum"
 exit 0

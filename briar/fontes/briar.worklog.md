@@ -216,3 +216,63 @@ directory outside the repository printed `salve, munde`. Findings:
   the generated header stays clean. Repro: scratch thistle with
   `#include "piscina.h"` + the two calls, `briar -partes` shows
   `piscina.h derivatum`.
+
+## 2026-09-05 — `-amalgama`: one file, clang alone
+
+`./salve.thistle -amalgama` writes `salve.c` + `probatio_salve.c`
+beside the thistle; line 2 of each is its compile line, and the fumus
+runs exactly that line (stage VII). Module `briar_amalgama`, gate
+`probatio_briar_amalgama` (born red by dropping the `#undef` emission:
+golden + three named asserts + the pair check all red). Findings:
+
+- **Three deviations from the banked design, each measured first.**
+  System includes are NOT hoisted: `lib/filum.c` has `<io.h>` under
+  `_WIN32` and `lib/machina_posix.c` `<uuid/uuid.h>` under a
+  condition — hoisting would include them unconditionally. In place
+  is harmless (guards) and only `postulata_posix.h` has an order
+  constraint (codex 85), so it is forced first. Every static is
+  renamed, not only colliders — a user region can collide with a lib
+  static too, and the identifier index gives the whole list for free.
+  The vitrea form is refused in v1: the design assumed `capsula_<t>.c`
+  text exists, but `tools/capsula_generare.c` is a tool with everything
+  in `main` (763 lines: toml, glob, flatura), nothing in-process;
+  named in spec §9 with the four ingredients.
+- **The index does not record linkage.** "Static" = a depth-0
+  `lib/*.c` sedes row (functio, variabile, typedef, constans, macro)
+  whose name has no `include/*.h` row; sound because a public function
+  needs a header prototype under `-Wmissing-prototypes`. 4,614 rows;
+  the member-name risk (a static renamed while a header struct member
+  shares the name) measured 0. Private struct TAGS in `.c` files are
+  not indexed — none collided in the fixtures. Objective-C files have
+  no index rows at all (nexus parses C89), another reason the vitrea
+  amalgam waits.
+- **`corpus.symbola.tsv` now has two row kinds** in one file; the
+  derivation reader (`_symbola_legere`) had to learn to skip the
+  `lib/` rows — without that, every public function (rows in both
+  `include/x.h` and `lib/x.c`) became AMBIGUOUS and the derivatum
+  golden went red. The fabrica gate is the guard.
+- **The ludus merge exposed a derivation bug** (fabrica golden red on
+  `punctum`): `include/mandatum.h` now defines `Punctum`, and
+  `punctum.thistle` defines its own; the probatio region's unknown
+  type `Punctum` looked up to `mandatum.h` → `#include "mandatum.h"`
+  → duplicate typedef at compile time. Fix: pass one for ALL regions
+  first, then derivation skips any depth-0 non-implicit symbol of any
+  region (its own declarations + the headers it includes itself — all
+  reach every unit through `<t>_regiones.h`). Assertion added to the
+  silva gate. Lesson: a fixture's type name can be shadowed by a house
+  header written LATER; the golden is what noticed.
+- **Closure order is BFS from the seeds**, so `beta.c` preceded
+  `alpha.c` (gamma derives only `beta.h`). Sources now follow their
+  header's dependency position — low-level libs first, readable.
+- **`re.sub(r'\bundef\b', …)` renamed inside string literals and
+  comments** (`"#undef "` → `"#sublatio "`): the gate had been run
+  BEFORE the rename and stayed "green" in my head. Renaming by regex
+  is the training-prior trap the memory names; `silva.Editio` or
+  `renominare.sh` next time. Caught by rerunning the gate.
+- **`git checkout <untracked file>` restores nothing** — the planted
+  fault would have stayed in the new module; the `|| true` hid the
+  error. Check the plant is GONE (`grep -c PLANTA` = 0), never assume.
+- **Numbers**: salve.c 5,974 lines / derivatum.c 5,988 (closure of
+  10 files); gamma.c 172 lines; 23 static wrappers in salve's closure;
+  amalgama gate 0.3 s; fumus 7 stages green; `bin/briar` rebuilt from
+  the branch (corpus stamp 177eab66).

@@ -1,4 +1,4 @@
-# briar — spec v1.4 (literate C89 programs; `.thistle`)
+# briar — spec v1.5 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -459,35 +459,59 @@ the verdict.
   | `-partes` | print the closure, ADEST/ABEST as `silex partes` |
   | `-versio` | corpus stamp and the flag-string hash of §4.1 |
 
-- **`-amalgama` (banked design, 2026-09-05, not built):** writes ONE
-  file beside the thistle — `<t>.c`, or `<t>.m` when the closure holds
-  an Objective-C file (Fran: single `.m` if feasible) — that compiles
-  with clang alone: `clang <flags> <t>.c [-framework …] -o <t>`. It is
-  the escape hatch, not the normal path. Content, in order: (1) the
-  union of every `#include <…>` system line found in the closure and
-  the generated files, deduplicated, hoisted to the top; (2) the
-  closure's headers in DEPENDENCY order (depth-first over each
-  header's own `#include "…"` lines, post-order — a header follows
-  everything it includes), each with its local `#include "…"` lines
-  stripped (guards stay, harmless); (3) the generated regions header;
-  (4) every library source, then `<t>_regiones.c`, then `<t>.c`, each
-  with local includes stripped. **File-scope statics collide** across
-  sources (measured: 44 static function names defined in more than
-  one `lib/*.c`; `_est_spatium` in ten) — so each source is wrapped:
-  before its text, `#define <name> <name>_<file stem>` for every
-  file-scope function or object it defines that another closure file
-  also defines; after it, `#undef` of those, plus `#undef` of every
-  macro the file itself defines (the identifier index's `lib/*.c`
-  `sedes` rows, added to `corpus.symbola.tsv`, supply both lists — no
-  parsing at amalgam time). The probatio is NOT part of the amalgam
-  (`-amalgama -probatio` = a second file `probatio_<t>.c` by the same
-  rule with the probatio unit as its main). Gate: the fixtures'
-  amalgams compile and run by hand once at birth; in the suite the
-  amalgam is byte-compared to a golden and checked structurally
-  (every closure file present exactly once, no local include left,
-  every colliding name wrapped). Assets for the vitrea shape stay a
-  separate generated `capsula_<t>.c` — the amalgam includes its text
-  too, so the `.m` is still one file.
+- **`-amalgama` (BUILT 2026-09-05, `briar_amalgama`; design banked
+  the same day, three deviations measured below):** writes beside the
+  thistle ONE file `<t>.c` that compiles with clang alone — line 2 of
+  its banner IS the compile line (`clang <flags> <t>.c -o <t>`; the
+  fumus runs exactly that line) — plus `probatio_<t>.c` by the same
+  rule when a probatio region exists (two programs cannot share a
+  file; "single .c" holds per program, and the escape hatch dumps
+  everything, no second flag). Not the normal path. Content, in
+  order: (1) the closure's headers in DEPENDENCY order (depth-first
+  over each header's `#include "…"` lines, post-order — a header
+  follows everything it includes; `postulata_posix.h` FIRST when
+  present, codex 85); (2) the generated regions header; (3) the
+  library sources, each right after its own header's position
+  (`lib/<stem>.c` follows `include/<stem>.h`; sources without a header
+  twin in closure order), then `<t>_regiones.c`, then `<t>.c`. Every
+  file opens with `#line 1 "<via>"` so a clang error names the
+  original file; local `#include "…"` lines become EMPTY lines (line
+  numbers kept; the scanner is silex's rule — first non-blank `#`,
+  `include`, a quoted name ending `.h`). **Deviations from the banked
+  design:** (a) system includes stay IN PLACE, never hoisted —
+  `lib/filum.c` and `lib/machina_posix.c` carry platform-conditional
+  ones (`<io.h>` under `_WIN32`, `<uuid/uuid.h>`); hoisting would pull
+  them on every platform; guards make in-place harmless and
+  `postulata_posix.h` first is the only order that matters. (b) EVERY
+  file-scope static of every library source is renamed, not only the
+  colliders — `#define name name_<stem>` before the file's text,
+  `#undef` after, plus `#undef` of every macro the file defines —
+  because a user region can collide with a library static too, and
+  the collision analysis buys nothing. The lists are the identifier
+  index's `lib/*.c` depth-0 rows (functio, variabile, typedef,
+  constans, macro) whose name has NO `include/*.h` row: the index does
+  not record linkage, and "no header row" = static, since a public
+  function without a header prototype does not compile under
+  `-Wmissing-prototypes`. 4,614 such rows sit in `corpus.symbola.tsv`
+  (third column `lib/…`; `tools/corpus_infixum.sh`; the derivation
+  reader skips them). Struct tags private to a `.c` are the one thing
+  the index does not list — none collided in the fixtures. (c) v1
+  REFUSES, naming the file: the vitrea form (§9), `vendor/` in the
+  closure (sqlite does not compile under the strict flags), `.m` in
+  the closure. **Gate `probatio_briar_amalgama`:** a SYNTHETIC fabrica
+  (`fixa/amalgama/fabrica`: alpha/beta with a colliding static, a
+  local typedef, a file-scope variable, a macro, `postulata_posix.h`,
+  a trimmed `latina.h`; hand-written `corpus.symbola.tsv`) whose
+  amalgam is the byte golden `fixa/amalgama/gamma.c` (compiled by hand
+  at birth with its own line 2: prints `8`); the real fixtures salve,
+  derivatum, punctum checked STRUCTURALLY (every closure file exactly
+  once by `#line 1`, no local include left, every `#define A A_…`
+  paired with as many `#undef A`, `postulata_posix.h` the first
+  `#line`, probatio in its own file with `lib/credo.c`); both
+  refusals; the writer overwrites only files that begin with its own
+  banner. Fumus stage VII compiles salve's and derivatum's amalgams
+  (both programs and both probationes) with the banner line and runs
+  them: `salve.c` 5,974 lines, `derivatum.c` 5,988 (2026-09-05).
 - **The shebang form** `./x.thistle …` reaches briar as `briar
   ./x.thistle …`, so briar also recognizes its own flags as the FIRST
   argument after the file: `./x.thistle -probatio` runs the probatio.
@@ -537,6 +561,7 @@ guard, per-test logs), registered in pythonica's four tables
 | `nexus` | prose → md tree; element → StmlNodus; raw open tag → attributes (`methodus`, `munus`); line offsets correct (a planted error on a known `.thistle` line) |
 | `fabrica` | headless: tree → project inventory + generated main + generated `probationes/probatio_<t>.c` byte-compared to goldens; `#line` lines present; main rule's three arms with the probatio unit excluded; refusal texts named |
 | `computus` | bench twin, golden `fixa/computus/basis.tsv` (`COMPUTUS_SCRIBERE=1` + a named cause) |
+| `amalgama` | synthetic fabrica → byte golden `fixa/amalgama/gamma.c` (`BRIAR_AMALGAMA_SCRIBERE=1` + a named cause); real fixtures structurally (once per file, no local include, `#define`/`#undef` pairs, posix first, probatio separate); vitrea + vendor refusals; writer guard |
 | `probatio_silex` | UNCHANGED after §4.4 — the promotion is behavior-preserving |
 
 Plus the end-to-end `tools/briar_fumus.sh` (§5), the only gate that
@@ -617,7 +642,16 @@ assets by `via=` · app state (`status` region → the scaffold's `Pipa`
 + volumen) · Linux · sealed distribution (`-struere -ad`) · `-html`
 (literate rendering) · `-formare` · an LSP over `.thistle` · the ludus
 islands vocabulary in STML regions once pictor's componens layer
-exists · `.m` regions.
+exists · `.m` regions · **the VITREA amalgam** (2026-09-05: the banked
+design assumed the capsula text was at hand; it is not —
+`tools/capsula_generare.c` is a tool with everything in `main`, briar
+has no in-process generator; it needs: the capsula `.c` text generated
+in-process (uncompressed entries suffice, `_compress = false`), `.m`
+static rows (the identifier index does not parse `.m`; three `.m`
+files carry six statics each), the `-framework` triple on the banner
+line, and sqlite as text under `#pragma clang diagnostic ignored
+"-Weverything"` with its `-D` defines as `#define` lines — a plain
+program pulling `volumen` meets the same vendor wall).
 
 Cross-references: ludus-brainstorm.md §XII (codex L5 and the
 `<tractator/>` vocabulary briar deliberately does not reuse);
@@ -648,11 +682,21 @@ references are the ludus session's to add.
   element; the STML parser or the canon refuses loudly. Acceptable in
   v1; the alternative (a closed registry of region names) is one table
   away if it bites.
+- **Derivation never derives a name any region declares** (found
+  2026-09-05 when the ludus merge added `Punctum` to
+  `include/mandatum.h` while `punctum.thistle` defines its own: the
+  probatio region, which sees the app's typedef only through
+  `<t>_regiones.h`, derived the header — duplicate typedef at
+  compile time; the fabrica golden caught it). Pass one now runs for
+  ALL regions first; derivation then skips every depth-0 non-implicit
+  symbol of every region's pass-one table (its own declarations and
+  the headers it includes itself). A house header may freely reuse a
+  name a script defines.
 - **Derived includes rely on `corpus.symbola.tsv` being fresh**: the
   shared corpus block regenerates it from the identifier index when
-  any `include/*.h` is newer; the briar runner does the same before
-  its gates. A disk-corpus run reads the tree's copy.
-- **Reserved first argument** after the file (§5): five words a
+  any `include/*.h` or `lib/*.c` is newer; the briar runner does the
+  same before its gates. A disk-corpus run reads the tree's copy.
+- **Reserved first argument** after the file (§5): six words a
   program cannot take as its own first argument without `--`. The
   price of `./x.thistle -probatio`; documented, not hidden.
 - **`~/.bin/scribe`** is a symlink into the main tree and refuses paths

@@ -341,6 +341,13 @@
   <vocabulum lemma="xar" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="silva" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="briar" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (instrumentum: programmata litterata .thistle)"/>
+  <vocabulum lemma="thistle" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (forma plagulae litteratae briaris: x.thistle)"/>
+  <vocabulum lemma="gamma" lingua="latina" classis="substantivum" nota="littera Graeca tertia (Latine gamma, -ae f.; fixum briaris post alpha/beta)"/>
+  <vocabulum lemma="amalgamo" lingua="latina" classis="verbum" nota="Latina media (alchemica): in amalgama redigere - briar_amalgamare">
+    <forma textus="amalgamare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="amalgamat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="amalgamatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+  </vocabulum>
   <vocabulum lemma="materia" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="oratio" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="natura" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
