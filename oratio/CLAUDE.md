@@ -120,10 +120,13 @@ late Latin, house proper names, C/API/format names; common English and
 abbreviations left unknown on purpose). The lint's corpus is the
 HOUSE: `knotapel/` (English by decision), `vendor/`, `archivum/` are
 excluded in one place (`ORATIO_VOCABULA_EXCLUSA`; `-omnes-viae` scans
-all) — identifier unknowns 3,022 of 7,469 words, PINNED only falling in
-`probatio_oratio_vocabula` (a red = a new unknown identifier word:
-glossary entry or rename, pin moved for a named cause). T8b stays
-parked. NEXT: stage 3 **T11** `partes_registrum`
+all). Glossary entries carry `contextus="latinus | anglicus | ambo"`
+(decision 26): the identifier/comment lint is the Latin context and
+ignores English-only entries; abbreviations are KEPT (36 permitted,
+contextus latinus). Identifier unknowns 2,987 of 7,469 words, PINNED
+only falling in `probatio_oratio_vocabula` (a red = a new unknown
+identifier word: glossary entry or rename, pin moved for a named
+cause). T8b stays parked. NEXT: stage 3 **T11** `partes_registrum`
 (17 classes as analysis genera appended to the registry, canon rules).
 
 ## Laws to keep (spec §2–3)

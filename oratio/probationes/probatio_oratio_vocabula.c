@@ -31,7 +31,7 @@
 #include <string.h>
 #include <time.h>
 
-#define IGNOTA_SYMBOLORUM_PINNA 3022
+#define IGNOTA_SYMBOLORUM_PINNA 2987
 
 interior b32
 _plagulam_legere (
@@ -251,9 +251,16 @@ principale (vacuum)
     CREDO_VERUM (oratio_vocabula_verbum_addere(vc, _l("xyzzy"),
         "lib/x.c", I,
         FALSUM));
-    CREDO_VERUM (oratio_vocabula_verbum_addere(vc, _l("Index"),
-        "lib/x.c", (i32)II,
-        FALSUM));
+        CREDO_VERUM (oratio_vocabula_verbum_addere(vc, _l("Index"),
+            "lib/x.c", (i32)II,
+            FALSUM));
+    CREDO_VERUM (oratio_vocabula_verbum_addere(vc, _l("worklog"),
+        "lib/x.c", (i32)III,
+        FALSUM));   /* contextus anglicus solum: in identificatore IGNOTUM */
+    CREDO_VERUM (oratio_vocabula_verbum_addere(vc, _l("tok"), "lib/x.c",
+        (i32)IV,
+        FALSUM));   /* abbreviatio permissa (latinus) */
+
     CREDO_VERUM (oratio_vocabula_iudicare(vc));
     {
         constans OratioVerbum* v;
@@ -283,8 +290,14 @@ principale (vacuum)
         v = _verbum(vc, "the");
         CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_IGNOTUM);
         CREDO_VERUM (v != NIHIL && v->analyses == ZEPHYRUM);
-        v = _verbum(vc, "xyzzy");
+                v = _verbum(vc, "xyzzy");
         CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_IGNOTUM);
+        v = _verbum(vc, "worklog");
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_IGNOTUM);
+        v = _verbum(vc, "tok");
+        CREDO_VERUM (v != NIHIL
+            && v->status == ORATIO_VERBUM_PERMISSUM);
+
         imprimere("  nota %d ambigua %d permissa %d ignota %d\n",
             (integer)oratio_vocabula_numerus(vc, ORATIO_VERBUM_NOTUM),
             (integer)oratio_vocabula_numerus(vc,
@@ -293,9 +306,10 @@ principale (vacuum)
             ORATIO_VERBUM_PERMISSUM),
             (integer)oratio_vocabula_numerus(vc,
             ORATIO_VERBUM_IGNOTUM));
-                CREDO_AEQUALIS_I32 (oratio_vocabula_numerus(vc,
-                    ORATIO_VERBUM_PERMISSUM),
-                    (i32)V);   /* offset buffer index utf8 stml */
+                        CREDO_AEQUALIS_I32 (oratio_vocabula_numerus(vc,
+                            ORATIO_VERBUM_PERMISSUM),
+                            (i32)VI);   /* offset buffer index utf8 stml tok */
+
 
         /* ordo: sedes descendentes */
         {

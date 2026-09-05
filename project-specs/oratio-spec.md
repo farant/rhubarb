@@ -370,7 +370,13 @@ purpose. Lint corpus = the house: `knotapel/` (English by decision,
 Fran 2026-09-04), `vendor/`, `archivum/` excluded via
 `ORATIO_VOCABULA_EXCLUSA` (`-omnes-viae` scans all). Identifier
 unknowns 3,022 of 7,469, PINNED only falling in
-`probatio_oratio_vocabula`; comments not pinned.
+`probatio_oratio_vocabula`; comments not pinned. **Decided (Fran,
+2026-09-04, decision 26):** abbreviations are kept (36 permitted), and
+every glossary entry carries a CONTEXT — `contextus="latinus |
+anglicus | ambo"` — where the word is allowed: identifiers and
+comments are the Latin context, English prose (worklogs, markdown) the
+English one; the Latin lint ignores English-only entries. Unknowns
+2,987 after; pin moved.
 
 ## 5. Stage 3 — annotated words (`partes`)
 

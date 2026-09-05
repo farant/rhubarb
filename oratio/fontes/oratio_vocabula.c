@@ -608,34 +608,44 @@ oratio_vocabula_iudicare (
             piscina_destruere(scratch);
             redde FALSUM;
         }
-        v->analyses = xar_numerus(x);
+                v->analyses = ZEPHYRUM;
         per (k = ZEPHYRUM; k < xar_numerus(x); k++)
         {
             constans OratioAnalysis* a =
                 (constans OratioAnalysis*)xar_obtinere(x, k);
             chorda classis;
-            chorda lemma = _lemma_analysis(scratch, vc->voc, a,
-                &classis);
+            chorda lemma;
                i32 j;
                b32 nova = VERUM;
 
-            si (k == ZEPHYRUM)
-            {
-                v->classis  = _copia(vc->piscina, classis);
-                v->lemma    = _copia(vc->piscina, lemma);
-            }
             si (a->genus == ORATIO_ANALYSIS_GLOSSARIUM)
             {
                 constans OratioGlossarium* gl =
                     oratio_vocabularium_la_glossarium(vc->voc);
+                constans OratioGlossariumEntrium* en =
+                    oratio_glossarium_entrium(
+                    gl, oratio_glossarium_forma(gl,
+                    a->glossarium)->entrium);
 
-                si (oratio_glossarium_entrium(gl,
-                    oratio_glossarium_forma(gl,
-                        a->glossarium)->entrium)->permissum)
+                /* contextus LATINUS (identificatores, commentaria): entria
+                 * contextus anglici hic non valent - nec permissa nec nota */
+                si (!en->latine)
+                {
+                    perge;
+                }
+                si (en->permissum)
                 {
                     permissum = VERUM;
                 }
             }
+            lemma = _lemma_analysis(scratch, vc->voc, a, &classis);
+            v->analyses = v->analyses + I;
+            si (v->analyses == I)
+            {
+                v->classis  = _copia(vc->piscina, classis);
+                v->lemma    = _copia(vc->piscina, lemma);
+            }
+
             si (a->genus == ORATIO_ANALYSIS_TACKON)
             {
                 perge;   /* tackon lemma non est */

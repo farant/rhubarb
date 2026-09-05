@@ -343,6 +343,49 @@
   <vocabulum lemma="fnv1a" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="djb2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
 
+  <!-- ================= ABBREVIATIONES PERMISSAE (decisio Frani 2026-09-04) =================
+       contextus latinus: in identificatoribus et commentariis licent (tok = token,
+       idx = index, ctx = contextus, aed = aedificator ...); verba Anglica integra
+       (count found name ...) NON permittuntur - lint ea nominat. -->
+
+  <vocabulum lemma="tok" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="idx" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="ctx" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="ptr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="len" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="arg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="args" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="attr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="elem" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="decl" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="def" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="sym" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="tmp" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="buf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="cfg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="fn" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="err" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="val" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="msg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="op" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="aed" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="intern" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="expr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="param" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="cnt" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="min" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="max" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="pos" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="dir" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="ref" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="mod" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="info" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="opt" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="lit" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="seq" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="ms" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio"/>
+  <vocabulum lemma="worklog" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="prosa Anglica solum (worklogs, md) - exemplum contextus anglici"/>
+
   <!-- ================= TERMINI TECHNICI PERMISSI =================
        classis ignotum-permissum: verba non vertenda in identificatoribus et
        commentariis (Fran: offset etc.); numeri = sedes in build/nexus.tsv

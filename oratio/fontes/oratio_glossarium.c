@@ -236,8 +236,16 @@ oratio_glossarium_legere (
                 "vocabulum sine lemma/lingua/classis");
             redde NIHIL;
         }
-        e->permissum = _aequalis_literis(e->classis,
-            "ignotum-permissum");
+                e->permissum = _aequalis_literis(e->classis,
+                    "ignotum-permissum");
+        e->contextus = _attributum(v, "contextus");
+        e->latine  = (b32)(e->contextus.mensura == ZEPHYRUM
+            || _aequalis_literis(e->contextus, "latinus")
+            || _aequalis_literis(e->contextus, "ambo"));
+        e->anglice = (b32)(e->contextus.mensura == ZEPHYRUM
+            || _aequalis_literis(e->contextus, "anglicus")
+            || _aequalis_literis(e->contextus, "ambo"));
+
         e->formae_ab = xar_numerus(gl->formae);
         si (v->liberi != NIHIL)
         {
@@ -359,8 +367,10 @@ b32
 oratio_glossarium_permissum (
                       Piscina* piscina,
     constans OratioGlossarium* gl,
-                       chorda  forma)
+                       chorda  forma,
+                          b32  latine)
 {
+
     Xar* x = oratio_glossarium_quaerere(piscina, gl, forma);
     i32  i;
 
@@ -372,11 +382,15 @@ oratio_glossarium_permissum (
     {
         s32 f = *(s32*)xar_obtinere(x, i);
 
-        si (oratio_glossarium_entrium(gl,
-                oratio_glossarium_forma(gl, f)->entrium)->permissum)
+                constans OratioGlossariumEntrium* en =
+                    oratio_glossarium_entrium(gl,
+                    oratio_glossarium_forma(gl, f)->entrium);
+
+        si (en->permissum && (latine ? en->latine : en->anglice))
         {
             redde VERUM;
         }
+
     }
     redde FALSUM;
 }

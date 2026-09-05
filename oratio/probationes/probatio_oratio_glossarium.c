@@ -414,17 +414,28 @@ principale (vacuum)
         CREDO_VERUM (_aequalis(f->forma_verbi, "infinitivum"));
         /* lemma ipsum forma: offset (cum forma offsets), index (sine forma) */
         CREDO_VERUM (oratio_glossarium_permissum(piscina, gl,
-            _l("offset")));
+            _l("offset"), VERUM));
         CREDO_VERUM (oratio_glossarium_permissum(piscina, gl,
-            _l("offsets")));
+            _l("offsets"), VERUM));
         CREDO_VERUM (oratio_glossarium_permissum(piscina, gl,
-            _l("index")));
+            _l("index"), VERUM));
         CREDO_VERUM (oratio_glossarium_permissum(piscina, gl,
-            _l("STML")));
+            _l("STML"), VERUM));
         CREDO_FALSUM (oratio_glossarium_permissum(piscina, gl,
-            _l("sum")));
+            _l("sum"), VERUM));
         CREDO_FALSUM (oratio_glossarium_permissum(piscina, gl,
-            _l("amat")));
+            _l("amat"), VERUM));
+        /* contextus: tok latinus, worklog anglicus solum, offset ambo */
+        CREDO_VERUM (oratio_glossarium_permissum(piscina, gl, _l("tok"),
+            VERUM));
+        CREDO_FALSUM (oratio_glossarium_permissum(piscina, gl,
+            _l("tok"), FALSUM));
+        CREDO_FALSUM (oratio_glossarium_permissum(piscina, gl,
+            _l("worklog"), VERUM));
+        CREDO_VERUM (oratio_glossarium_permissum(piscina, gl,
+            _l("worklog"), FALSUM));
+        CREDO_VERUM (oratio_glossarium_permissum(piscina, gl,
+            _l("offset"), FALSUM));
         CREDO_AEQUALIS_I32 (xar_numerus(oratio_glossarium_quaerere(piscina,
             gl,
             _l("amat"))), ZEPHYRUM);

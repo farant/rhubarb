@@ -494,3 +494,22 @@ house alone: 7,469 identifier words, 3,022 unknown (40 %), top of the
 list unchanged in kind — tok, ctx, intern, aed, op, sem, out, slot,
 ptr, tag, idx, elem — abbreviations and English, which is what Fran
 decides next. Pin moved 5,409 → 3,022 with this cause.
+
+## 2026-09-04 — Abbreviations kept; glossary entries get a CONTEXT
+
+Fran's two calls on the report: the abbreviations stay (tok, idx, ctx,
+ptr, len, arg, attr, elem, decl, def, sym, tmp, buf, cfg, fn, err, val,
+msg, op, aed, intern, expr, param, cnt, min, max, pos, dir, ref, mod,
+info, opt, lit, seq, ms — 36 entries, class ignotum-permissum), and the
+glossary should know WHERE a word is allowed. So `<vocabulum>` carries
+`contextus="latinus | anglicus | ambo"` (absent = ambo, enumerated in
+the canon): latinus = identifiers and comments, anglicus = English
+prose (worklogs, markdown — the lint over that corpus is future work),
+ambo = both. The loader exposes `latine`/`anglice`; `permissum(…,
+latine)` takes the context; the identifier and comment lint is a Latin
+context and IGNORES English-only entries entirely — neither permitted
+nor known — so `worklog` (the one anglicus example) stays a finding in
+an identifier while it will pass in prose. House identifier unknowns
+3,022 → 2,987 of 7,469; pin moved with this cause. Whole English words
+in identifiers (count, found, name, text, result …) remain findings by
+design.

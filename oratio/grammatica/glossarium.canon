@@ -49,6 +49,12 @@
       <optio>ignotum</optio>
       <optio>ignotum-permissum</optio>
     </attributum>
+    <attributum nomen="contextus" genus="electio"
+      nota="ubi vocabulum licet (decisio Frani 2026-09-04): latinus (identificatores, commentaria), anglicus (prosa Anglica: worklogs, md), ambo (ordinarium si absens)">
+      <optio>latinus</optio>
+      <optio>anglicus</optio>
+      <optio>ambo</optio>
+    </attributum>
     <attributum nomen="nota" genus="textus"/>
     <liberum nomen="sensus" maximum="1"/>
     <liberum nomen="forma"/>

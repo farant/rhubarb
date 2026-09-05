@@ -36,8 +36,12 @@ nomen structura {
        i32 linea;          /* plagulae STML */
        i32 formae_ab;      /* index formae primae */
        i32 formae_numerus;
-       b32 permissum;      /* classis == ignotum-permissum */
+           b32    permissum;      /* classis == ignotum-permissum */
+    chorda contextus;      /* latinus | anglicus | ambo (vacua = ambo) */
+    b32    latine;         /* licet in contextu Latino (identificatores, commentaria) */
+    b32    anglice;        /* licet in prosa Anglica */
 } OratioGlossariumEntrium;
+
 
 nomen structura {
        s32 entrium;
@@ -73,12 +77,15 @@ oratio_glossarium_quaerere (
     constans OratioGlossarium* gl,
                        chorda  forma);
 
-/* An forma terminus technicus permissus sit (classis ignotum-permissum). */
+/* An forma terminus technicus permissus sit (classis ignotum-permissum)
+ * in contextu Latino (latine=VERUM) aut Anglico (FALSUM). */
 b32
 oratio_glossarium_permissum (
                       Piscina* piscina,
     constans OratioGlossarium* gl,
-                       chorda  forma);
+                       chorda  forma,
+                          b32  latine);
+
 
 constans OratioGlossariumEntrium*
 oratio_glossarium_entrium (
