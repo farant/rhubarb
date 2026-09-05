@@ -422,6 +422,40 @@ share (70 %), not a count only falling — prose gains words daily; a red
 means a rule or a glossary section broke. Identifier pin 2,986 → 2,950
 on the `ambo` entries.
 
+**As built — T12 (2026-09-04), the annotated word.** `oratio_partes_la`
+describes one source analysis universally (class, twelve accidents as
+enumeration indices, −1 = not given; lemma; `nativum` = the source's
+code verbatim; sense; source; language) by the mapping above, with
+these corpus-decided details: noun kind N/L → nomen-proprium; noun
+gender from the STEM when M/F/N, else from the ending; stem kind
+DEP/SEMIDEP → vox deponens; INF ending → modus infinitivus + forma
+infinitivum; PPL → participium, FUT PASSIVE PPL → gerundivum; SUPINE →
+supinum; PREP case from the ending else the stem; CONJ subordinating
+by the data list `ORATIO_CONIUNCTIONES_SUBORDINANTES`; enclitic
+`-que`/`-ve` → coniunctio-coordinans, `-ne` → particula; glossary
+class by name, accidents through the title arrays, `ignotum-permissum`
+→ ignotum. Enumeration titles were RECONCILED with the glossary canon
+(genitivus; locative before vocative; persons I II III) and the
+registry gate now proves the canon's option lists equal the title
+arrays in order. `oratio_partes_annotare` (the pass after the tree):
+one lookup per word, one node per description with accidents placed
+by SLOT TITLE through the registry, `classes`/`linguae` derived tokens
+(distinct, in order; `ignotum` alone for a word without analyses),
+write-once, `patres_figere` at the end. SUBSTRATE CHANGE (the second):
+`MateriaArborFrons.nodum_ornare`, a node-level attribute hook the
+writer calls after creating a node's element and the reader ignores;
+oratio's frons mirrors `classes`/`linguae` onto `<vocabulum>` so
+`vocabulum[classes~=verbum]` works in selectio — which exposed an
+unsigned underflow in selectio's `~=` when the value is longer than
+the attribute (fixed in `lib/selectio.c`). `./oratio/arbor.sh -partes`
+annotates before projecting. Gate `probatio_oratio_partes` (171;
+planted fault = stem gender dropped). Day one: Hilarius 1,678 words /
+10,352 analyses / 5.2 % unknown; Propertius 4,423 / 27,819 / 4.6 %;
+Cicero 13,214 / 114,876 / 2.9 %, 858 ms — six to nine analyses a word,
+dominated by WORDS' pronoun packings (`quis` = 215): faithful to the
+source, to be ordered in stage 5 or deduplicated by (class, accidents,
+lemma) before the oracle.
+
 ## 5. Stage 3 — annotated words (`partes`)
 
 **Universal classes** (registry `partes_registrum`, one genus per
@@ -754,7 +788,8 @@ and comments (silva tokens) reports; counts published.
 
 **Stage 3 (partes).** T11 DONE 2026-09-04 (`partes_registrum`: 17
 analysis genera with accidents appended, canon rules, seal moved).
-T12 `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
+T12 DONE 2026-09-04 (`oratio_partes_la` mapping, `oratio_partes`
+annotation pass, node-attribute hook, `-partes`). Was: `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
 `linguae`) + projection attributes (substrate check above). T13
 CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT
 (COVERAGE pinned, PRIMARY reported, per class); `oratio/oraculum.sh

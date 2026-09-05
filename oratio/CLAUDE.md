@@ -123,7 +123,7 @@ excluded in one place (`ORATIO_VOCABULA_EXCLUSA`; `-omnes-viae` scans
 all). Glossary entries carry `contextus="latinus | anglicus | ambo"`
 (decision 26): the identifier/comment lint is the Latin context and
 ignores English-only entries; abbreviations are KEPT (36 permitted,
-contextus latinus). Identifier unknowns 2,986 of 7,477 words, PINNED
+contextus latinus). Identifier unknowns 2,958 of 7,553 words, PINNED
 only falling in `probatio_oratio_vocabula` (a red = a new unknown
 identifier word: glossary entry or rename, pin moved for a named
 cause). T8b stays parked. **T15a DONE (warmup, decision 27)**: the
@@ -162,11 +162,26 @@ Existing STML bytes unchanged (the word's slots were reserved since
 T1; absent lists are not written). Canon: 17 genus rules + 129 slot
 rules intra their genus (generated once, kept by hand; ceiling 512).
 Gates registrum (860) and canon (219, a hand-built analysis judged and
-two mutations refused). NEXT: **T12** `partes_la.c` — WORDS part codes
-→ class + accidents (one code may yield several analyses), the
-annotation pass filling `analyses`/`classes`/`linguae` after the tree,
-glossary forms with their explicit accidents, `vocabulum[classes~=…]`
-in selectio.
+two mutations refused). **T12 DONE**: `oratio_partes_la` (one source
+analysis → universal description: class, accidents as enum indices with
+−1 = not given, lemma, `nativum` verbatim, sense, source, language; noun
+kind N/L = proper, stem gender wins, DEP = deponens, FUT PASSIVE PPL =
+gerundivum, subordinating conjunctions by data list, enclitics, glossary
+by class name) and `oratio_partes` (`oratio_partes_annotare` after the
+tree: one lookup per word, one `analysis-<classis>` node per
+description with accidents placed by SLOT TITLE, `classes`/`linguae`
+derived tokens, `ignotum` alone when nothing, write-once,
+`patres_figere` last). Enum titles reconciled with the glossary canon
+(genitivus, locativus before vocativus, I II III) and gate-guarded in
+order. SUBSTRATE: `MateriaArborFrons.nodum_ornare` (node attributes on
+write, ignored on read) mirrors `classes`/`linguae` onto `<vocabulum>`
+so `vocabulum[classes~=verbum]` selects; selectio's `~=` underflow
+fixed. `./oratio/arbor.sh <x.txt> -partes`. Gate `probatio_oratio_partes`
+(171). Day one: Cicero 13,214 words, 114,876 analyses, 2.9 % unknown,
+858 ms — pronoun packings dominate (`quis` 215). NEXT: **T13** CoNLL-U
+reader + `probatio_oratio_oraculum` over CIRCSE + LLCT (COVERAGE
+pinned, PRIMARY reported, per class); then T14 `verba.sh`,
+`silva.Oratio`.
 
 ## Laws to keep (spec §2–3)
 
@@ -201,3 +216,10 @@ in selectio.
   number); a slot-count enumerator is `_NUMERUS_LOCORUM` (the `numerus`
   accident owns `_NUMERUS`); every slot has ONE canon rule intra its
   genus; the registry seal moves only with the task as its cause.
+- Enumeration titles = the glossary canon's options, in order (gate);
+  the parser never annotates — `oratio_partes_annotare` is a separate
+  pass with the dictionary supplied by the caller; accidents are placed
+  by slot TITLE, never by a hand index table; the `classes`/`linguae`
+  ATTRIBUTES are mirrors of the slots (reader ignores them); `casus`
+  and `nomen` are latina macros — fields are `casus_grammaticus`, a
+  parameter is never `nomen`.

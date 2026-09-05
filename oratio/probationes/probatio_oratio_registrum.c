@@ -91,6 +91,70 @@ _plagulam_legere (
     redde VERUM;
 }
 
+/* optiones attributi 'nomen' in canone glossarii (textus crudus)
+ * ORDINE == tituli[0..n): elementum attributi nominatum quaeritur, deinde
+ * optiones eius usque ad clausuram; falsum si numerus aut ordo differt */
+interior b32
+_optiones_congruunt (
+                          chorda  canon,
+              constans character* attributum,
+    constans character* constans* tituli,
+                             i32  n)
+{
+             character  clavis[96];
+    constans character* p;
+    constans character* finis;
+                   i32  k = ZEPHYRUM;
+
+    sprintf(clavis, "<attributum nomen=\"%s\"", attributum);
+    p = strstr((constans character*)canon.datum, clavis);
+    si (p == NIHIL)
+    {
+                imprimere("    attributum '%s' in canone glossarii DEEST\n",
+                    attributum);
+        redde FALSUM;
+    }
+    finis = strstr(p, "</attributum>");
+    si (finis == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (;;)
+    {
+        constans character* o = strstr(p, "<optio>");
+        constans character* c;
+
+        si (o == NIHIL || o > finis)
+        {
+            frange;
+        }
+        o = o + (i32)VII;
+        c = strstr(o, "</optio>");
+        si (c == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (   k                                     >= n
+            || (i32)strlen(tituli[k])                != (i32)(c - o)
+            || memcmp(tituli[k], o, (size_t)(c - o)) != ZEPHYRUM)
+        {
+                        imprimere("    '%s': optio %d '%.*s' != titulus '%s'\n",
+                            attributum, (integer)k, (integer)(c - o), o,
+                            k < n ? tituli[k] : "-");
+            redde FALSUM;
+        }
+        k = k + I;
+        p = c;
+    }
+    si (k != n)
+    {
+                imprimere("    '%s': optiones %d, tituli %d\n",
+                    attributum,
+                    (integer)k, (integer)n);
+    }
+    redde (b32)(k == n);
+}
+
 /* titulus loci j-ti generis g */
 interior constans character*
 _locus (
@@ -406,9 +470,11 @@ MateriaLexiconRatum  ratum;
         /* enumerationes: primus et ultimus titulus */
         CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_NOMINATIVUS],
             "nominativus") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_NUMERUS
-            - I],
-            "locativus") == ZEPHYRUM);
+                CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_NUMERUS
+                    - I],
+                    "vocativus") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_GENITIVUS],
+            "genitivus") == ZEPHYRUM);
         CREDO_AEQUALIS_I32 ((i32)ORATIO_CASUS_NUMERUS, (i32)VII);
         CREDO_VERUM (strcmp(ORATIO_TITULI_NUMERORUM[
             ORATIO_NUMERUS_GRAMMATICUS_NUMERUS - I], "dualis")
@@ -416,8 +482,8 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (strcmp(ORATIO_TITULI_GENERUM_GRAMMATICORUM[
             ORATIO_GENUS_GRAMMATICUM_NUMERUS - I], "commune")
                 == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_PERSONARUM[
-            ORATIO_PERSONA_TERTIA], "tertia") == ZEPHYRUM);
+                CREDO_VERUM (strcmp(ORATIO_TITULI_PERSONARUM[
+                    ORATIO_PERSONA_TERTIA], "III") == ZEPHYRUM);
         CREDO_VERUM (strcmp(ORATIO_TITULI_TEMPORUM[
             ORATIO_TEMPUS_NUMERUS - I], "praeteritum") == ZEPHYRUM);
         CREDO_AEQUALIS_I32 ((i32)ORATIO_TEMPUS_NUMERUS, (i32)VII);
@@ -465,9 +531,34 @@ MateriaLexiconRatum  ratum;
                         imprimere("    classis '%s' in canone glossarii DEEST\n",
                             oratio_classis_titulus((OratioClassis)i));
                     }
-                    CREDO_NON_NIHIL (strstr((character*)canon.datum,
-                        optio));
+                                        CREDO_NON_NIHIL (strstr((character*)canon.datum,
+                                            optio));
                 }
+                /* accidentia: optiones attributi ORDINE == tituli
+                 * enumerationis (una fons, duae domus) */
+                CREDO_VERUM (_optiones_congruunt(canon, "casus",
+                    ORATIO_TITULI_CASUUM, (i32)ORATIO_CASUS_NUMERUS));
+                CREDO_VERUM (_optiones_congruunt(canon, "numerus",
+                    ORATIO_TITULI_NUMERORUM,
+                    (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
+                CREDO_VERUM (_optiones_congruunt(canon, "genus",
+                    ORATIO_TITULI_GENERUM_GRAMMATICORUM,
+                    (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS));
+                CREDO_VERUM (_optiones_congruunt(canon, "persona",
+                    ORATIO_TITULI_PERSONARUM,
+                        (i32)ORATIO_PERSONA_NUMERUS));
+                CREDO_VERUM (_optiones_congruunt(canon, "tempus",
+                    ORATIO_TITULI_TEMPORUM,
+                        (i32)ORATIO_TEMPUS_NUMERUS));
+                CREDO_VERUM (_optiones_congruunt(canon, "modus",
+                    ORATIO_TITULI_MODORUM, (i32)ORATIO_MODUS_NUMERUS));
+                CREDO_VERUM (_optiones_congruunt(canon, "vox",
+                    ORATIO_TITULI_VOCUM, (i32)ORATIO_VOX_NUMERUS));
+                CREDO_VERUM (_optiones_congruunt(canon, "forma-verbi",
+                    ORATIO_TITULI_FORMARUM_VERBI,
+                    (i32)ORATIO_FORMA_VERBI_NUMERUS));
+                CREDO_VERUM (_optiones_congruunt(canon, "gradus",
+                    ORATIO_TITULI_GRADUUM, (i32)ORATIO_GRADUS_NUMERUS));
             }
         }
     }

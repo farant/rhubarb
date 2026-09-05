@@ -109,6 +109,33 @@
     <forma textus="analysin" casus="accusativus" numerus="singularis"/>
   </vocabulum>
 
+  <vocabulum lemma="glossarium" lingua="latina" classis="substantivum"
+    nota="Latinum mediaevale (Gk. glossarion): glossary - vox domus (oratio/glossarium.stml, oratio_glossarium); WORDS caret">
+    <sensus>glossary; word-list with glosses</sensus>
+    <forma textus="glossarii" casus="genitivus" numerus="singularis"/>
+    <forma textus="glossario" casus="dativus" numerus="singularis"/>
+    <forma textus="glossaria" casus="nominativus" numerus="pluralis"/>
+    <forma textus="glossariorum" casus="genitivus" numerus="pluralis"/>
+    <forma textus="glossariis" casus="dativus" numerus="pluralis"/>
+  </vocabulum>
+
+  <vocabulum lemma="genitivus" lingua="latina" classis="adiectivum"
+    nota="orthographia mediaevalis (WORDS genetivus solum novit): casus genitivus - titulus enumerationis OratioCasus et optio canonis glossarii (T12 concordia)">
+    <sensus>genitive (case)</sensus>
+    <forma textus="genitivi" casus="genitivus" numerus="singularis"/>
+    <forma textus="genitivo" casus="dativus" numerus="singularis"/>
+    <forma textus="genitivum" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="subordinans" lingua="latina" classis="adiectivum"
+    nota="participium praesens verbi mediaevalis subordinare (WORDS caret): coniunctio subordinans (classis UD SCONJ), coordinans WORDS novit">
+    <sensus>subordinating</sensus>
+    <forma textus="subordinantis" casus="genitivus" numerus="singularis"/>
+    <forma textus="subordinantes" casus="nominativus" numerus="pluralis"/>
+    <forma textus="subordinantia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="subordinantem" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+
   <vocabulum lemma="recordum" lingua="latina" classis="substantivum"
     nota="vox domus (T7 census.recorda, T15a oratio_vocabularium_en_recordum): recordum n. = 'record'; WORDS 'recorda' ut formam verbi recordor solum novit - pinna identificatorum ideo rubra 2026-09-04">
     <sensus>record (of a table); entry, row</sensus>

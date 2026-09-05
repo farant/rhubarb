@@ -46,7 +46,7 @@
 #include <string.h>
 #include <time.h>
 
-#define IGNOTA_SYMBOLORUM_PINNA 2950
+#define IGNOTA_SYMBOLORUM_PINNA 2958
 
 interior b32
 _plagulam_legere (

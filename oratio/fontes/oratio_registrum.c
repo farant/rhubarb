@@ -255,8 +255,8 @@ constans character* constans ORATIO_TITULI_CLASSIUM[] = {
                     "symbolum", "interpunctio", "ignotum"
 };
 constans character* constans ORATIO_TITULI_CASUUM[] = {
-    "nominativus", "genetivus", "dativus", "accusativus", "ablativus",
-        "vocativus", "locativus"
+    "nominativus", "genitivus", "dativus", "accusativus", "ablativus",
+        "locativus", "vocativus"
 };
 constans character* constans ORATIO_TITULI_NUMERORUM[] = {
     "singularis", "pluralis", "dualis"
@@ -265,7 +265,7 @@ constans character* constans ORATIO_TITULI_GENERUM_GRAMMATICORUM[] = {
     "masculinum", "femininum", "neutrum", "commune"
 };
 constans character* constans ORATIO_TITULI_PERSONARUM[] = {
-    "prima", "secunda", "tertia"
+    "I", "II", "III"
 };
 constans character* constans ORATIO_TITULI_TEMPORUM[] = {
     "praesens", "imperfectum", "futurum", "perfectum",
