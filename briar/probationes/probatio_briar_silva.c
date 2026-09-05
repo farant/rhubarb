@@ -413,8 +413,8 @@ principale (vacuum)
         briar_silvam_solvere(nexus);
     }
 
-        imprimere("\n--- Probans fragmenta_derivata: derivatio per texturam"
-            " ---\n");
+    imprimere("\n--- Probans fragmenta_derivata: derivatio per"
+        " texturam ---\n");
     {
             character* textus;
                   i32  mensura;

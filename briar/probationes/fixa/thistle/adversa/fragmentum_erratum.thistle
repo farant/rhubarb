@@ -1,0 +1,25 @@
+#!/usr/bin/env briar
+# Fragmentum erratum
+
+A fragment with a type error: clang must name THIS file and the
+fragment's own line, never the generated file (the fumus proves it).
+One house include keeps the closure non-empty (a script with no house
+library at all cannot build today: `lib/*.c` matches nothing).
+
+<c! id="erratum">
+i32 x = "non numerus";
+</c>
+
+<c!>
+#include "chorda.h"
+
+s32
+principale (vacuum)
+{
+    chorda c = chorda_ex_literis("salve", NIHIL);
+    <<#erratum>>
+
+    imprimere("%d %d\n", (integer)x, (integer)c.mensura);
+    redde ZEPHYRUM;
+}
+</c>

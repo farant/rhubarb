@@ -39,11 +39,16 @@ Findings: `fontes/briar.worklog.md`.
   to stderr on failure) → `processus_transformare` into `bin/<t>`.
   `-probatio` execs `bin/probatio_<t>` or `probare.sh` (compiles+execs).
 - Gate: `./tools/briar_fumus.sh` (pythonica `briar-fumus`) — installed
-  binary, from outside the repo, fake HOME, seven stages incl. the plant
-  `adversa/probatio_rubra.thistle` (must fail), a refusal, and the
-  amalgams of salve + derivatum compiled by their own banner line and
-  run; `-agere` opens the vitrea window and drives it with `bin/manus`
-  (by hand).
+  binary, from outside the repo, fake HOME, nine stages incl. the plant
+  `adversa/probatio_rubra.thistle` (must fail), a refusal, the amalgams
+  of salve + derivatum + fragmenta compiled by their own banner line
+  and run, fragmenta with `-probatio` and `-partes`, and the `#line`
+  truth (a broken fragment line must be named by clang); `-agere`
+  opens the vitrea window and drives it with `bin/manus` (by hand).
+- KNOWN DEFECT (ledger, 2026-09-05): a script whose closure holds NO
+  house library gets an `aedificare.sh` with a `lib/*.c` glob that
+  matches nothing — pure-libc scripts do not build until the plain
+  ordo lists its files explicitly like the vitrea one.
 - Numbers 2026-09-05: salve cold 0.42 s (disk) / 0.68 s (embedded,
   shebang), hit 9 ms; vitrea cold 1.97 s; briar 10.5 MB.
 
@@ -79,6 +84,18 @@ Findings: `fontes/briar.worklog.md`.
   overwrite), `briar_amalgama_inclusio_localis` (silex's include-line
   rule, public for the gate). No parsing: static lists come from the
   table, header order from the closure texts
+- `briar_contextus` (v1.6): fragments and transclusion. `<c! id="x">`
+  is a FRAGMENT (never a root, never compiled alone); a line reading
+  `<<#x>>` inside any C region (probatio too) weaves it in, its lines
+  prefixed with the reference line's indentation, depth-first. Runs
+  BETWEEN nexus and silva (`briar_contexere`): a root with `<<#x>>` is
+  not C. Result on the record: `contextus` (woven text), `lineae`
+  (thistle line per woven line), `est_fragmentum`. Refusals with the
+  thistle line: undefined id, cycle (`#a -> #b -> #a`), duplicate id,
+  `methodus=`/`munus=` on a fragment, invalid id, a malformed `<<#`
+  line. Unused fragment = no error, `-partes` says `non adhibitum`.
+  Reserved: mid-line references, template fragments `<#@x>`,
+  continuation `pars=`, html/js/css fragments, tree-level tokens
 - `briar_fabrica`: inventory → main rule → unit partition through
   silva's tree + symbol table → generated files → closure → silex
   scripts → SHA-256 key; `briar_fabricam_scribere` puts a project on
@@ -87,7 +104,10 @@ Findings: `fontes/briar.worklog.md`.
   stdio/stdlib/string + every region directive + type units +
   prototypes; `fontes/<t>_regiones.c` = objects + definitions; the
   `principale` unit alone in `fontes/<t>.c`; the probatio region
-  verbatim in `probationes/probatio_<t>.c`; all `#line`-mapped
+  (woven) in `probationes/probatio_<t>.c`; all `#line`-mapped PER RUN
+  of the line table — a fragment inside a function body opens its own
+  `#line`, so clang names the fragment's thistle line (fumus stage IX
+  proves it with `adversa/fragmentum_erratum.thistle`)
 - `briar_computus`: bench twin; instruments `./briar/arbor.sh`,
   `./briar/computus.sh`, **`./briar/fabrica.sh <x.thistle> <dir>`**
   (then `cd <dir> && ./aedificare.sh && ./probare.sh` — the only clang
@@ -95,8 +115,10 @@ Findings: `fontes/briar.worklog.md`.
 
 ## Gates (`./briar/compile_probationes.sh [filter]`; exit 2 = NOTHING RAN)
 registrum · lexema · arbor · stml · canon · totalitas · computus · nexus
-· silva · fabrica · imperium · amalgama (twelve files; every one born
-red by a planted fault — see the worklog). Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
+· silva · fabrica · imperium · amalgama · contextus (thirteen files;
+every one born red by a planted fault — see the worklog). Goldens:
+`fixa/contextus/fragmenta.contextus` (`BRIAR_CONTEXTUS_SCRIBERE=1`),
+`fixa/fabrica/fragmenta/`. Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
 inventory in `fixa/FONTES.md`; computus golden `fixa/computus/basis.tsv`
 (`COMPUTUS_SCRIBERE=1` + a named cause); fabrica goldens
 `fixa/fabrica/<t>/` = the generated files byte for byte
@@ -125,6 +147,12 @@ and the silva amalgam as one object (cold ~21 s once; warm suite ~9 s).
   line and write nothing.
 - Silva's commit root is a LIST of units for a clean parse — walk
   values, never `silva_nodus_liberi` on `radix.datum.nodus`.
+- **Fragments** (`fragmenta.thistle` is the model): `<c! id="summa">`
+  defines, a line `<<#summa>>` transcludes; the reference stands alone
+  on its line and carries its indentation; a fragment used twice
+  appears twice; fragments may reference fragments; the probatio may
+  reference any fragment. A fragment's `#include` lines reach the
+  generated header through the roots that weave it.
 - A script needs NO `#include` for house headers (see `derivatum.thistle`);
   a bare object-like macro or enum constant with no function from its
   header nearby is the one thing derivation misses — include it yourself.

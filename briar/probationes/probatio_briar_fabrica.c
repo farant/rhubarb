@@ -630,7 +630,8 @@ principale (vacuum)
              * incrementum (9), summa (16), radix (41) */
             CREDO_VERUM (_continet(piscina, corpus->contentum,
                 "#line 13 \"briar/probationes/fixa/thistle/"
-                "fragmenta.thistle\"\n    per (i = ZEPHYRUM; i < n; i++)\n"
+                "fragmenta.thistle\"\n"
+                "    per (i = ZEPHYRUM; i < n; i++)\n"
                 "    {\n"
                 "#line 9 \"briar/probationes/fixa/thistle/"
                 "fragmenta.thistle\"\n"
@@ -668,7 +669,8 @@ principale (vacuum)
         briar_silvam_solvere(nexus);
     }
 
-    imprimere("\n--- Probans recusationes contextus: causa + linea ---\n");
+    imprimere("\n--- Probans recusationes contextus: causa + linea"
+        " ---\n");
     _recusationem_probare(piscina, intern, fons,
         "fragmentum_absens.thistle",
         "transclusio '#nusquam' (linea 8): fragmentum non definitum",

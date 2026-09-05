@@ -39,6 +39,7 @@
 #include "xar.h"
 #include "briar_amalgama.h"
 #include "briar_arbor.h"
+#include "briar_contextus.h"
 #include "briar_fabrica.h"
 #include "briar_imperium.h"
 #include "briar_nexus.h"
@@ -222,8 +223,9 @@ principale (
                character* textus;
                      i32  mensura = ZEPHYRUM;
            MateriaNodus* doc;
-    InternamentumChorda* intern;
+        InternamentumChorda* intern;
                     Xar* nexus;
+                    Xar* fragmenta = NIHIL;
     BriarFabricaOptiones optiones;
      BriarFabricaFructus fructus;
                   chorda octeti;
@@ -290,10 +292,13 @@ principale (
     {
         redde _arborem_imprimere(piscina, doc);
     }
-    intern  = internamentum_creare(piscina);
-    nexus   = briar_nexus_texere(piscina, doc, intern);
-    si (   nexus == NIHIL || briar_silvam_texere(piscina, nexus, fons)
-        < ZEPHYRUM)
+        intern  = internamentum_creare(piscina);
+    nexus       = briar_nexus_texere(piscina, doc, intern);
+    /* contextus (fragmenta contexta) ANTE silvam: radix cum '<<#x>>'
+     * C non est */
+    si (   nexus == NIHIL
+        || briar_contexere(piscina, nexus, &fragmenta) < ZEPHYRUM
+        || briar_silvam_texere(piscina, nexus, fons) < ZEPHYRUM)
     {
         fprintf(stderr, "briar: nexus fractus\n");
         redde I;
@@ -316,11 +321,37 @@ principale (
             (constans character*)fructus.causa.datum);
         redde I;
     }
-    si (imp.actio == BRIAR_ACTIO_PARTES)
-    {
+        si (imp.actio == BRIAR_ACTIO_PARTES)
+        {
         i32 i;
 
-                /* capita DERIVATA (per regionem), ante clausuram */
+        /* fragmenta: id, linea tagi, lineae transclusionum */
+        per (i = ZEPHYRUM; fragmenta != NIHIL
+            && i < xar_numerus(fragmenta);
+            i++)
+        {
+            constans BriarFragmentum* fr =
+                (constans BriarFragmentum*)xar_obtinere(fragmenta, i);
+            i32 k;
+
+            imprimere("#%.*s\tfragmentum:linea %d\t",
+                (integer)fr->id.mensura,
+                (constans character*)fr->id.datum,
+                (integer)(fr->regio->linea_initium - I));
+            si (xar_numerus(fr->usus) == ZEPHYRUM)
+            {
+                imprimere("non adhibitum\n");
+                perge;
+            }
+            imprimere("adhibitum:lineae ");
+            per (k = ZEPHYRUM; k < xar_numerus(fr->usus); k++)
+            {
+                imprimere("%s%d", k ? ", " : "",
+                    (integer)*(i32*)xar_obtinere(fr->usus, k));
+            }
+            imprimere("\n");
+        }
+        /* capita DERIVATA (per regionem), ante clausuram */
         per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
         {
             constans BriarNexusRes* r =
@@ -355,7 +386,7 @@ principale (
                 (constans character*)r->via.datum, r->origo);
         }
         redde ZEPHYRUM;
-    }
+        }
 
         si (imp.actio == BRIAR_ACTIO_AMALGAMA)
         {

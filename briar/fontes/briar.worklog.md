@@ -276,3 +276,57 @@ golden + three named asserts + the pair check all red). Findings:
   10 files); gamma.c 172 lines; 23 static wrappers in salve's closure;
   amalgama gate 0.3 s; fumus 7 stages green; `bin/briar` rebuilt from
   the branch (corpus stamp 177eab66).
+
+## 2026-09-05 — plan 4: contextus (fragments and transclusion)
+
+`<c! id="summa">` defines a chunk, a line `<<#summa>>` weaves it in;
+the compiler still names the chunk's own thistle line. Unit
+`briar_contextus` between nexus and silva; spec §3.4 (v1.6). Findings:
+
+- **Every sigil already existed.** `<#id>` fragment, `<<#id>>`
+  transclusion = alias (the 2026-08-26 decree), `#` = document space.
+  briar is the first C consumer resolving `<<#id>>` to text; the
+  registry row in stml-visio.md says so. No new syntax was minted.
+- **The weave must precede silva** — a root with `<<#x>>` is not C —
+  and silva must not see `#line` (it refuses them), so the woven text
+  carries a side table (thistle line per woven line) and the fabrica
+  emits `#line` at every run break, inside function bodies too. The
+  `-partes`-visible proof: `fragmenta_regiones.c` has four runs inside
+  `summare` (13, 9, 16, 41).
+- **The plan's line numbers were guesses; the file's are law.** The
+  fixture was written first, `grep -n` gave the truth (capita at 20,
+  not 19), and the gate pins those. A reflow of `fragmenta.thistle`
+  reds the gate rather than lying.
+- **First plant was a compile error, not a red gate**: removing the
+  prefix prepend left `_lineam_habet_signum` unused → `-Werror`. A
+  plant that does not compile proves nothing; the second plant
+  (prefix → empty string) went red on four assertions.
+- **Fixture facts beat plan facts twice more.** `fragmenta.thistle`
+  cannot show derivation through a fragment: both roots pull
+  `piscina.h` through their own includes (chorda.h and credo.h both
+  include it). A second fixture with no includes at all
+  (`fragmenta_derivata.thistle`) does.
+- **A latent derivation asymmetry** from the morning's fix: the
+  "declared by any region" exclusion counted the probatio's includes,
+  which never reach the generated header. Only app regions' directives
+  flow to every unit; the probatio is now excluded from the set. No
+  older fixture had a probatio including a header the app needed.
+- **A contextus refusal on a root was overwritten** by silva parsing
+  the unwoven text ("parsura fracta"): roots that carry a refusal are
+  no longer parsed; the fabrica checks `linea_erroris` before anything
+  else and skips fragments before the "non parsata" check.
+- **The hand tool is a fourth pipeline** (`briar/instrumenta/fabrica.c`)
+  and needed the weave too; the grep for call sites had not covered
+  `briar/instrumenta/`. Pipelines that must weave: tools/briar.c, the
+  hand tool, three test helpers.
+- **Pure-libc scripts do not build** — found by the `#line`-truth
+  stage: `fragmentum_erratum.thistle` without any house include has an
+  empty closure, no `lib/`, and the plain `aedificare.sh` dies on the
+  literal `lib/*.c` before the type error. Ledger quaestio; fix =
+  explicit lists in the plain ordo (silex's projects never hit it).
+  The fixture includes chorda.h meanwhile.
+- **By hand**: `./bin/fragmenta` → `salve, fragmenta: 6`, probatio
+  green; a copy with line 9 broken made clang say
+  `fragmenta_fractum.thistle:9:15` — and `:35` for the unused
+  parameter that followed, both true. Numbers: contextus gate 100
+  assertions 0.2 s; fragmenta amalgam 6,006 lines; fumus nine stages.

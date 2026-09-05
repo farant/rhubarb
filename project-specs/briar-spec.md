@@ -411,6 +411,24 @@ lines or `non adhibitum`; `-arbor` needs nothing (the open tag shows
 fragment holds a deliberate type error must make clang name the
 fragment's thistle line. Nothing automated checked that before v1.6.
 
+**As built (plan 4, 2026-09-05).** Unit `briar_contextus`
+(`briar_contexere(piscina, nexus, &fragmenta)`,
+`briar_contextus_lineam_legere`), gate `probatio_briar_contextus`
+(100 assertions, golden `fixa/contextus/fragmenta.contextus`); the
+fabrica emits every unit, the main and the probatio through one
+mapped emitter; fumus stages VIII (run, probatio, `-partes`) and IX
+(`#line` truth) green. Two findings on the way: (1) the derivation
+exclusion set of 2026-09-05 (a name any region declares is never
+derived) wrongly counted the PROBATIO's own includes — they never
+reach the generated header — so a root could miss `piscina.h` when
+the probatio included `credo.h`; the probatio is now excluded from
+that set. (2) A script whose closure holds NO house library gets a
+plain `aedificare.sh` whose `lib/*.c` glob matches nothing (silex's
+own projects always have libraries); pure-libc scripts do not build —
+ledger quaestio, fix = explicit file lists in the plain ordo as the
+vitrea ordo already does. Numbers: the fragmenta amalgam is 6,006
+lines; the contextus gate runs in 0.2 s.
+
 ## 4. The fabrica — tree to binary
 
 ### 4.1 Build home and cache
@@ -718,7 +736,7 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
   `main` unit, generated `_regiones.h` prototypes, method signature
   check, the probatio unit, the key; goldens for both program shapes
   byte-compared; gate fabrica. No clang is run in the suite.
-- **P5 contextus — plan 4 (`briar-plan-4-contextus.md`), 2026-09-05, not started:** unit `briar_contextus` + gate; nexus fields + table lookup; fabrica `#line` per run + `fragmenta` goldens; `-partes`; fumus stages incl. the `#line`-truth stage; spec §3.4 as built.
+- **P5 contextus — DONE (plan 4, 2026-09-05; T1 1031da7a, T2 467acd76, T3 0bef09a1, T4).** Unit `briar_contextus` + gate (thirteenth); nexus fields + table lookup; fabrica `#line` per run + `fragmenta` goldens; `-partes` lists fragments; fumus stages VIII/IX; spec §3.4 as built.
 - **P4 the binary — DONE (plan 3, 2026-09-05; commits 9cb3bb50 corpus block, 39a03a8a binary, T4 fumus). First-run numbers (HOME redirected): `salve.thistle` cold 0.42 s inside the tree (disk corpus) / 0.68 s from outside via the shebang (embedded corpus), cache hit 9 ms; `salve_vitreum.thistle -struere` cold 1.97 s from outside; `bin/briar` 10.5 MB (silex 19.4 MB); `tools/briar_fumus.sh` 5.2 s for six stages. The first `./salve.thistle` from a directory outside the repository printed `salve, munde` — a GUI app as easy as a bash script is one `-struere` away (its window is the by-hand `-agere` stage).** `tools/briar.c` with the flags of §5,
   `corpus_infixum.sh` extraction, `briar_struere.sh`, cache dir, run,
   `-probatio`; `briar_fumus.sh` from outside the repo; the first real

@@ -13,6 +13,10 @@
 | `amalgama/fabrica/` | FABRICA FICTA (include/latina.h DECURTATUM, postulata_posix.h, alpha.h/.c, beta.h/.c, corpus.symbola.tsv MANU): statica `_est_spatium` in utraque bibliotheca, typedef `Cella` + variabile `_cella` + macro `ALPHA_MAXIMUM` localia, beta alpham includit | probatio_briar_amalgama.c (aurum amalgama/gamma.c) | -amalgama, 2026-09-05 |
 | `amalgama/gamma.thistle` | sine #include (beta.h derivatum), principale solum: `beta_duplicare("ab cd")` = 8 | probatio_briar_amalgama.c; manu: clang linea II auri -> 8 | -amalgama, 2026-09-05 |
 | `thistle/adversa/amalgama_venditorium.thistle` | `#include "volumen.h"` -> vendor/sqlite3.c in clausura: fabrica sana, -amalgama RECUSAT | probatio_briar_amalgama.c | -amalgama, 2026-09-05 |
+| `thistle/fragmenta.thistle` | FRAGMENTA (spec par. 3.4), LINEIS PINNATIS (ne reflue!): incrementum 9, summa 13-16 (`<<#incrementum>>` 15), capita 20 (`#include`), salutatio 24, otiosum 28 (non adhibitum); radix app 32 (`<<#capita>>` 32, `<<#summa>>` 40, `<<#salutatio>>` 49), probatio 63 (`<<#salutatio>>` 70) | probatio_briar_contextus.c (aurum contextus/fragmenta.contextus), probatio_briar_silva.c, probatio_briar_fabrica.c (aurum fabrica/fragmenta), fumus VII/VIII | consilium IV, 2026-09-05 |
+| `thistle/fragmenta_derivata.thistle` | NULLUM #include, `chorda_ex_literis` in fragmento SOLO: chorda.h + piscina.h radici derivata per texturam | probatio_briar_silva.c | consilium IV T2 |
+| `thistle/adversa/fragmentum_{absens,circulus,iteratum,munus,sine_id}.thistle`, `adversa/transclusio_malformata.thistle` | recusationes VI contextus cum linea | probatio_briar_contextus.c, probatio_briar_fabrica.c | consilium IV T1/T3 |
+| `thistle/adversa/fragmentum_erratum.thistle` | error typi INTRA fragmentum: clang lineam fragmenti in .thistle nominet (veritas tabulae linearum); chorda.h inclusa ne clausura vacua sit (defectus 'lib/*.c' in acta) | tools/briar_fumus.sh gradus IX | consilium IV T4 |
 
 Snapshots manu scripti 2026-09-04 (plan 1). Mutatio = mutatio pinnarum
 in probationibus arbor/stml/nexus/computus - causa nominanda.
@@ -34,6 +38,16 @@ nativitas portae). Ordines VITREI non aurum: listae fontium e corpore
 computatae mutarentur cum omni bibliotheca — assertiones structurales.
 Regeneratio `BRIAR_FABRICA_SCRIBERE=1 ./briar/compile_probationes.sh
 fabrica` cum causa nominata in commissione; inspectio manu ante.
+
+## Aurum contextus
+
+`contextus/fragmenta.contextus` — textus contextus cuiusque radicis
+(`=== radix linea N ===`, textus, `=== lineae ===`, tabula) super
+`fragmenta.thistle`; natum 2026-09-05 (causa: nativitas portae),
+inspectum: C validum, suturae 32->20, 40->13 14 9 16, 49->24.
+Regeneratio `BRIAR_CONTEXTUS_SCRIBERE=1 ./briar/compile_probationes.sh
+contextus` cum causa nominata. Aurum fabricae `fabrica/fragmenta/`
+cursus IV `#line` intra `summare` pinnat.
 
 ## Aurum amalgamae
 
