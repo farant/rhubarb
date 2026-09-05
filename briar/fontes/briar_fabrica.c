@@ -556,8 +556,8 @@ _regionem_partiri (
                 r->silva->semantica, u);
             SilvaValor corpus =
                 silva_c89_definitio_functionis_corpus(u);
-               integer cmin = -I;
-               integer cmax = ZEPHYRUM;
+               integer initium_corporis  = -I;
+               integer finis_corporis    = ZEPHYRUM;
 
             si (s != NIHIL && _silva_chorda_est(s->titulus, "main"))
             {
@@ -576,9 +576,9 @@ _regionem_partiri (
             si (corpus.genus == SILVA_VALOR_NODUS)
             {
                 silva_nodus_extensionem(corpus.datum.nodus, fons_index,
-                    &cmin, &cmax);
+                    &initium_corporis, &finis_corporis);
             }
-            si (cmin > minimum)
+            si (initium_corporis > minimum)
             {
                 ChordaAedificator* a =
                     chorda_aedificator_creare(piscina,
@@ -586,7 +586,7 @@ _regionem_partiri (
 
                 chorda_aedificator_appendere_chorda(a, _detondere(
                     chorda_sectio(r->textus_silvae, (i32)minimum,
-                        (i32)cmin)));
+                        (i32)initium_corporis)));
                 chorda_aedificator_appendere_literis(a, ";");
                 _unitatem_addere(part->prototypi, linea,
                     chorda_aedificator_finire(a));
@@ -868,7 +868,7 @@ _principem_vitreum_fingere (
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)4096);
-    chorda fen_titulus = briar_nexus_attributum(inv->fenestra,
+    chorda fenestrae_titulus = briar_nexus_attributum(inv->fenestra,
         "titulus");
     chorda latitudo = briar_nexus_attributum(inv->fenestra,
         "latitudo");
@@ -919,9 +919,9 @@ _principem_vitreum_fingere (
         "    }\n"
         "    memset(&figura, 0, magnitudo(figura));\n"
         "    figura.titulus  = \"");
-    si (fen_titulus.mensura > ZEPHYRUM)
+    si (fenestrae_titulus.mensura > ZEPHYRUM)
     {
-        chorda_aedificator_appendere_chorda(a, fen_titulus);
+        chorda_aedificator_appendere_chorda(a, fenestrae_titulus);
     }
     alioquin
     {

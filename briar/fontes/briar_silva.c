@@ -185,7 +185,7 @@ briar_silvam_texere (
      constans SilexFons* fons)
 {
     i32 i;
-    s32 parsatae = ZEPHYRUM;
+    s32 numerus = ZEPHYRUM;
 
     si (piscina == NIHIL || nexus == NIHIL || fons == NIHIL)
     {
@@ -204,9 +204,9 @@ briar_silvam_texere (
         {
             redde -I;
         }
-        parsatae = parsatae + I;
+        numerus = numerus + I;
     }
-    redde parsatae;
+    redde numerus;
 }
 
 vacuum
