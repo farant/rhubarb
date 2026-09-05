@@ -329,21 +329,32 @@ _inclusiones_scrutari (
                     {
                         p = p + 1;
                     }
-                    si (   p < contentum.mensura
-                        && contentum.datum[p]     == '"'
-                        && p - initium            >= 2
-                        && contentum.datum[p - 2] == '.'
-                        && contentum.datum[p - 1] == 'h')
-                    {
+                                        si (   p < contentum.mensura
+                                            && contentum.datum[p] == '"'
+                                            && p - initium        >= 2
+                                            && contentum.datum[p - 2]
+                                                == '.'
+                                            && contentum.datum[p - 1]
+                                                == 'h')
+                                        {
                         chorda* cellula = (chorda*)xar_addere(opus);
 
+                        /* '../include/x.h' (lib/fons.c olim) = 'x.h':
+                         * via 'include/../include/x.h' proiectionem
+                         * frangebat (2026-09-05) */
+                        si (   p - initium > 11
+                            && memcmp(contentum.datum + initium,
+                                "../include/", (size_t)11) == 0)
+                        {
+                            initium = initium + 11;
+                        }
                         si (cellula != NIHIL)
                         {
                             *cellula = chorda_ex_buffer(
                                 contentum.datum + initium,
                                 p - initium);
                         }
-                    }
+                                        }
                 }
             }
         }
@@ -455,6 +466,108 @@ _plagulam_e_fonte_colligere (
     redde VERUM;
 }
 
+/* fructus viam iam fert? (implementatores annotati semel) */
+interior b32
+_fructus_viam_habet (
+       Xar* fructus,
+    chorda  via);
+
+interior b32
+_fructus_viam_habet (
+       Xar* fructus,
+    chorda  via)
+{
+    i32 k;
+
+    per (k = 0; k < xar_numerus(fructus); k = k + 1)
+    {
+        SilexRes* e = (SilexRes*)xar_obtinere(fructus, k);
+
+        si (e != NIHIL && chorda_aequalis(e->via, via))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* implementatores ANNOTATI capitis: '<aedilis corpus="lib/x.c"/>' in
+ * commento capitis (annotatio domus quam aedilis legit et cum
+ * conventione X.h -> X.c componit; fenestra.h -> fenestra_textus.c,
+ * persistentia.h -> memoria + nuntium). Quisque semel; inclusiones
+ * eius scrutantur (fenestra_textus fons.h utf8.h trahit). Absens =
+ * monitio, ut caput sine implementatione. */
+interior i32
+_corpora_annotata_colligere (
+               Piscina* piscina,
+    constans SilexFons* fons,
+                chorda  caput_textus,
+                   Xar* fructus,
+                   Xar* opus);
+
+interior i32
+_corpora_annotata_colligere (
+               Piscina* piscina,
+    constans SilexFons* fons,
+                chorda  caput_textus,
+                   Xar* fructus,
+                   Xar* opus)
+{
+    constans character* signum    = "<aedilis corpus=\"";
+                   i32  m         = (i32)strlen(signum);
+                   i32  i         = 0;
+                   i32  collecta  = 0;
+
+
+    dum (i + m <= caput_textus.mensura)
+    {
+        i32 initium;
+        i32 f;
+
+        si (memcmp(caput_textus.datum + i, signum, (size_t)m) != 0)
+        {
+            i = i + 1;
+            perge;
+        }
+        initium  = i + m;
+        f        = initium;
+        dum (   f < caput_textus.mensura && caput_textus.datum[f] != '"'
+             && caput_textus.datum[f] != '\n')
+        {
+            f = f + 1;
+        }
+        i = f;
+        si (   f >= caput_textus.mensura || caput_textus.datum[f] != '"'
+            || f - initium <= IV
+            || memcmp(caput_textus.datum + initium, "lib/", (size_t)IV)
+                != 0)
+        {
+            perge;
+        }
+        {
+            chorda via = chorda_sectio(caput_textus, initium, f);
+
+                        si (_fructus_viam_habet(fructus, via))
+                        {
+                collecta = collecta + 1;   /* iam adest: geminus */
+                perge;
+                        }
+            si (_plagulam_e_fonte_colligere(piscina, fons, "lib/",
+                    chorda_sectio(via, IV, via.mensura), fructus, opus))
+            {
+                collecta = collecta + 1;
+            }
+            alioquin
+            {
+                _monere("silex: monitio - corpus annotatum in fonte"
+                    " deest: %.*s\n", (integer)via.mensura,
+                    (constans character*)via.datum);
+            }
+        }
+    }
+    redde collecta;
+}
+
 Xar*
 silex_clausuram_colligere (
     Piscina* piscina,
@@ -467,6 +580,7 @@ silex_clausuram_colligere (
     TabulaDispersa* visa;
                i32  s;
                i32  index;
+
 
     si (fons == NIHIL)
     {
@@ -555,11 +669,26 @@ silex_clausuram_colligere (
             perge;
         }
 
-        /* geminus lib: conventione aedilis include/X.h -> lib/X.c */
+        /* geminus lib: conventione aedilis include/X.h -> lib/X.c;
+         * deinde implementatores ANNOTATI (aedilis corpus=), dedup
+         * per viam - motus.h geminum suum quoque annotat */
         si (caput.mensura >= 2)
         {
-            chorda radix_capitis;
-            chorda titulus_c;
+                        chorda radix_capitis;
+                        chorda titulus_c;
+                        chorda caput_textus;
+            {
+                SilexRes* caput_res = (SilexRes*)xar_obtinere(fructus,
+                    xar_numerus(fructus) - 1);
+
+                caput_textus.datum    = NIHIL;
+                caput_textus.mensura  = 0;
+                si (caput_res != NIHIL)
+                {
+                    caput_textus = caput_res->contentum;
+                }
+            }
+
 
             radix_capitis = chorda_ex_buffer(caput.datum,
                 caput.mensura - 2);
@@ -613,6 +742,11 @@ silex_clausuram_colligere (
                         fructus, opus);
                 }
 
+                si (_corpora_annotata_colligere(piscina, fons,
+                        caput_textus, fructus, opus) > 0)
+                {
+                    inventum = VERUM;   /* implementatores annotati */
+                }
                 si (!inventum)
                 {
                     /* CLAMOR, non silentium. Falsum positivum hic
@@ -766,12 +900,80 @@ _probationem_fingere (
     redde chorda_aedificator_finire(a);
 }
 
+interior vacuum
+_ordinem_fontium_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura,
+                  b32  cum_obiectivis);
+
+interior b32
+_praefixum_habet (
+                chorda  via,
+    constans character* praefixum);
+
+interior b32
+_suffixum_habet (
+                chorda  via,
+    constans character* suffixum);
+
+/* clausura ullum fontem Objective-C in lib fert? (frameworks tunc) */
+interior b32
+_clausura_obiectiva_habet (
+    Xar* clausura);
+
+interior b32
+_clausura_obiectiva_habet (
+    Xar* clausura)
+{
+    i32 k;
+
+    per (k = 0; k < xar_numerus(clausura); k = k + 1)
+    {
+        SilexRes* e = (SilexRes*)xar_obtinere(clausura, k);
+
+        si (   e != NIHIL && _praefixum_habet(e->via, "lib/")
+            && _suffixum_habet(e->via, ".m"))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* bibliothecae ordinis plani: clausura NIHIL = globus bibliothecarum
+ * (textus pristinus); aliter fontes expliciti (.c et .m) et
+ * frameworks si Objective-C adest */
+interior vacuum
+_ordinem_bibliothecas_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura);
+
+interior vacuum
+_ordinem_bibliothecas_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura)
+{
+    si (clausura == NIHIL)
+    {
+        chorda_aedificator_appendere_literis(a, " lib/*.c");
+        redde;
+    }
+    _ordinem_fontium_appendere(a, clausura, VERUM);
+    si (_clausura_obiectiva_habet(clausura))
+    {
+        chorda_aedificator_appendere_literis(a,
+            " \\\n    -framework Cocoa -framework Security"
+            " -framework WebKit");
+    }
+}
+
 chorda
 silex_ordinem_fingere (
                        Piscina* piscina,
             constans character* titulus,
     constans character* constans* fontes,
-                           i32  numerus_fontium)
+                           i32  numerus_fontium,
+                           Xar* clausura)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)512);
@@ -794,7 +996,8 @@ silex_ordinem_fingere (
         chorda_aedificator_appendere_literis(a, fontes[i]);
         chorda_aedificator_appendere_literis(a, "\"");
     }
-    chorda_aedificator_appendere_literis(a, " lib/*.c -o \"bin/");
+        _ordinem_bibliothecas_appendere(a, clausura);
+    chorda_aedificator_appendere_literis(a, " -o \"bin/");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         "\"\n"
@@ -809,7 +1012,8 @@ silex_ordinem_probandi_fingere (
                        Piscina* piscina,
             constans character* titulus,
     constans character* constans* fontes,
-                           i32  numerus_fontium)
+                           i32  numerus_fontium,
+                           Xar* clausura)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)512);
@@ -832,8 +1036,8 @@ silex_ordinem_probandi_fingere (
         chorda_aedificator_appendere_literis(a, fontes[i]);
         chorda_aedificator_appendere_literis(a, "\"");
     }
-    chorda_aedificator_appendere_literis(a,
-        " lib/*.c -o \"bin/probatio_");
+        _ordinem_bibliothecas_appendere(a, clausura);
+    chorda_aedificator_appendere_literis(a, " -o \"bin/probatio_");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         "\"\n"
@@ -2231,10 +2435,10 @@ silex_novum (
                 optiones->titulus, ".c");
             _rem_genitam_addere(piscina, res_omnes, "aedificare.sh",
                 silex_ordinem_fingere(piscina, optiones->titulus,
-                    fontes_app, I));
+                    fontes_app, I, NIHIL));
             _rem_genitam_addere(piscina, res_omnes, "probare.sh",
                 silex_ordinem_probandi_fingere(piscina,
-                    optiones->titulus, fontes_prob, I));
+                    optiones->titulus, fontes_prob, I, NIHIL));
         }
         _rem_genitam_addere(piscina, res_omnes, "README.md",
             _readme_fingere(piscina, optiones->titulus));

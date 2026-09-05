@@ -1,0 +1,21 @@
+#!/usr/bin/env briar
+# Fenestra nativa
+
+A plain program that touches the native window library: the closure
+carries `lib/fenestra_macos.m`, so the build script must list it and
+link the frameworks. A `lib/*.c` glob missed it (salutatio.thistle,
+2026-09-05).
+
+<c!>
+#include "fenestra.h"
+
+s32
+principale (vacuum)
+{
+    Fenestra* f = NIHIL;
+
+    (vacuum)f;
+    imprimere("fenestra nativa\n");
+    redde ZEPHYRUM;
+}
+</c>

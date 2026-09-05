@@ -254,9 +254,50 @@ s32 principale (vacuum)
         CREDO_VERUM(_manifestum_continet(res_omnes,
             "lib/piscina.c"));
 
-        primus = (SilexRes*)xar_obtinere(res_omnes, 0);
+                primus = (SilexRes*)xar_obtinere(res_omnes, 0);
         CREDO_VERUM(primus->contentum.mensura > ZEPHYRUM);
         CREDO_VERUM(primus->origo[0] == 'v');   /* "vendicata:..." */
+    }
+
+
+    /* ========================================================
+     * PROBARE: clausura - implementatores ANNOTATI ('<aedilis
+     * corpus="lib/fenestra_textus.c"/>' in fenestra.h) + geminus
+     * suffixi (.m) + transitiva eorum; quisque SEMEL
+     * ======================================================== */
+
+    {
+        Xar* res_omnes;
+        i32  k;
+        i32  textus_vices = ZEPHYRUM;
+        interior constans character* constans SEMINA_FENESTRA[] = {
+            "fenestra.h"
+        };
+
+        imprimere("\n--- Probans clausuram (fenestra: corpus annotatum)"
+            " ---\n");
+
+        res_omnes = silex_clausuram_colligere(piscina,
+            silex_fons_disci(piscina, "."), SEMINA_FENESTRA, 1);
+        CREDO_NON_NIHIL(res_omnes);
+        CREDO_VERUM(_manifestum_continet(res_omnes,
+            "lib/fenestra_macos.m"));
+        CREDO_VERUM(_manifestum_continet(res_omnes,
+            "lib/fenestra_textus.c"));
+        /* fenestra_textus fons.h + utf8.h includit: gemini eorum */
+        CREDO_VERUM(_manifestum_continet(res_omnes, "lib/fons.c"));
+        CREDO_VERUM(_manifestum_continet(res_omnes, "lib/utf8.c"));
+        per (k = 0; k < xar_numerus(res_omnes); k = k + 1)
+        {
+            SilexRes* e = (SilexRes*)xar_obtinere(res_omnes, k);
+
+            si (chorda_aequalis_literis(e->via,
+                "lib/fenestra_textus.c"))
+            {
+                textus_vices = textus_vices + I;
+            }
+        }
+        CREDO_AEQUALIS_I32(textus_vices, I);
     }
 
 

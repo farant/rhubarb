@@ -16,7 +16,8 @@
 | `thistle/fragmenta.thistle` | FRAGMENTA (spec par. 3.4), LINEIS PINNATIS (ne reflue!): incrementum 9, summa 13-16 (`<<#incrementum>>` 15), capita 20 (`#include`), salutatio 24, otiosum 28 (non adhibitum); radix app 32 (`<<#capita>>` 32, `<<#summa>>` 40, `<<#salutatio>>` 49), probatio 63 (`<<#salutatio>>` 70) | probatio_briar_contextus.c (aurum contextus/fragmenta.contextus), probatio_briar_silva.c, probatio_briar_fabrica.c (aurum fabrica/fragmenta), fumus VII/VIII | consilium IV, 2026-09-05 |
 | `thistle/fragmenta_derivata.thistle` | NULLUM #include, `chorda_ex_literis` in fragmento SOLO: chorda.h + piscina.h radici derivata per texturam | probatio_briar_silva.c | consilium IV T2 |
 | `thistle/adversa/fragmentum_{absens,circulus,iteratum,munus,sine_id}.thistle`, `adversa/transclusio_malformata.thistle` | recusationes VI contextus cum linea | probatio_briar_contextus.c, probatio_briar_fabrica.c | consilium IV T1/T3 |
-| `thistle/adversa/fragmentum_erratum.thistle` | error typi INTRA fragmentum: clang lineam fragmenti in .thistle nominet (veritas tabulae linearum); chorda.h inclusa ne clausura vacua sit (defectus 'lib/*.c' in acta) | tools/briar_fumus.sh gradus IX | consilium IV T4 |
+| `thistle/adversa/fragmentum_erratum.thistle` | error typi INTRA fragmentum: clang lineam fragmenti in .thistle nominet (veritas tabulae linearum); NULLUM #include - clausura VACUA, ordo planus sine bibliothecis | tools/briar_fumus.sh gradus IX; probatio_briar_fabrica.c | consilium IV T4 |
+| `thistle/fenestra_nativa.thistle` | programma planum cum `fenestra.h`: lib/fenestra_macos.m in clausura -> ordo planus fontes explicitos + frameworks (globus 'lib/*.c' .m omittebat: salutatio.thistle) | probatio_briar_fabrica.c; fumus gradus X (salutatio -struere) | 2026-09-05 |
 
 Snapshots manu scripti 2026-09-04 (plan 1). Mutatio = mutatio pinnarum
 in probationibus arbor/stml/nexus/computus - causa nominanda.
@@ -32,10 +33,13 @@ nominata in commissione.
 ## Aurum fabricae
 
 `fabrica/<t>/…` — plagulae genitae (fontes/, include/, probationes/,
-assets/, ordines plani) pro `salve`, `punctum`, `salve_vitreum`,
-octetim comparatae (`CREDO_CHORDA_AEQUALIS`); natae 2026-09-05 (causa:
-nativitas portae). Ordines VITREI non aurum: listae fontium e corpore
-computatae mutarentur cum omni bibliotheca — assertiones structurales.
+assets/) pro `salve`, `punctum`, `salve_vitreum`, `derivatum`,
+`fragmenta`, octetim comparatae (`CREDO_CHORDA_AEQUALIS`); natae
+2026-09-05 (causa: nativitas portae). Ordines (aedificare.sh,
+probare.sh) VITREI ET PLANI non aurum: listae fontium e clausura
+computatae mutarentur cum omni bibliotheca — assertiones structurales
+(fons lib quisque semel, nullus globus, frameworks si et solum si .m
+in clausura; aura scriptorum planorum salve sublata 2026-09-05).
 Regeneratio `BRIAR_FABRICA_SCRIBERE=1 ./briar/compile_probationes.sh
 fabrica` cum causa nominata in commissione; inspectio manu ante.
 

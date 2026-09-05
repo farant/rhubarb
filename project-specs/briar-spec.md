@@ -427,7 +427,33 @@ plain `aedificare.sh` whose `lib/*.c` glob matches nothing (silex's
 own projects always have libraries); pure-libc scripts do not build —
 ledger quaestio, fix = explicit file lists in the plain ordo as the
 vitrea ordo already does. Numbers: the fragmenta amalgam is 6,006
-lines; the contextus gate runs in 0.2 s.
+lines; the contextus gate runs in 0.2 s. **(2) fixed the same day,
+together with its twin:** `salutatio.thistle` (a plain program over
+the native window library) failed to link because the plain script's
+`lib/*.c` glob never picked up `lib/fenestra_macos.m`. silex's two
+plain generators now take a closure (§4.4): NIHIL keeps silex's own
+text byte for byte; briar's closure yields explicit `lib/*.c` and
+`lib/*.m` entries and the Cocoa/Security/WebKit triple whenever a
+`.m` is present (over-linking is harmless; deriving the exact
+frameworks stays Fabrica's reservation, 01KZYN4VPZ). briar's plain
+script goldens became structural as the vitrea ones already were;
+fixture `fenestra_nativa.thistle`; fumus stage X builds salutatio
+without opening it, and stage IX's fixture is pure libc again. Two
+more holes fell on the way to that link: (a) silex's closure knew one
+implementation file per header (`X.c`, else the `_macos.m` /
+`_posix.c` / `_impl.c` suffixes, FIRST match) while `fenestra.h` is
+implemented by `fenestra_macos.m` AND `fenestra_textus.c` — the
+header declares the second with the house annotation `/* <aedilis
+corpus="lib/fenestra_textus.c"/> */`, which aedilis reads and silex
+now reads too (after the conventional twin, deduplicated by path:
+`motus.h` annotates its own twin); (b) `lib/fons.c` and `lib/utf8.c`
+included their headers as `"../include/x.h"`, which the scanner turned
+into `include/../include/x.h` and the scaffold could not write — the
+two sources now include `"x.h"` and the scanner strips the prefix. The
+ludus session had named (a) and the `.m` hole in its commit 8d5c85a9;
+its third, "a function used as a VALUE is not derived", stays open
+(silva raises no implicit-symbol mark for a name that is not called;
+§9 with the bare-macro case).
 
 ## 4. The fabrica — tree to binary
 

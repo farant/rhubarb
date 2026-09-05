@@ -330,3 +330,52 @@ the compiler still names the chunk's own thistle line. Unit
   `fragmenta_fractum.thistle:9:15` — and `:35` for the unused
   parameter that followed, both true. Numbers: contextus gate 100
   assertions 0.2 s; fragmenta amalgam 6,006 lines; fumus nine stages.
+
+## 2026-09-05 — plain scripts list the closure (salutatio.thistle)
+
+Fran ran `project-specs/exempla/salutatio.thistle` (the ludus
+session's native-window example) and it failed at link time: every
+`fenestra_*` and `tabula_pixelorum_*` symbol undefined. Cause: a
+plain program's `aedificare.sh` compiled `lib/*.c` and linked no
+frameworks, so `lib/fenestra_macos.m`, present in the closure, was
+never compiled. The same glob had bitten the other way an hour
+earlier (empty closure → literal `lib/*.c` → clang dies). One fix for
+both: `silex_ordinem_fingere` / `_probandi_fingere` take a closure;
+NIHIL = silex's old text (silex's goldens untouched, `probatio_silex`
+green), a closure = explicit `.c` and `.m` list through the vitrea
+ordo's own `_ordinem_fontium_appendere` plus the framework triple when
+a `.m` is present. Notes:
+
+- **Two failures, one hole.** A glob stands in for a list the tool
+  already has. The vitrea ordo had learned this in plan 2 ("numquam
+  globus"); the plain ordo had not, because silex's own projects never
+  meet an empty or Objective-C closure.
+- **briar's plain script goldens went structural** (each closure lib
+  file exactly once, no glob, frameworks iff `.m`), as the vitrea ones
+  already were: explicit lists churn with the include graph.
+- **The fumus builds salutatio (`-struere`) without opening it** —
+  stage X; the window stays Fran's `-agere` territory. Stage IX's
+  fixture is pure libc again, so the empty-closure path is proven by
+  the same run.
+- Over-linking three frameworks for any `.m` is harmless; exact
+  derivation is Fabrica's reservation (01KZYN4VPZ).
+- **Two more holes under the same link.** `fenestra.h` has two
+  implementation files; silex's closure stopped at the first suffix
+  twin. The header already declares the second for aedilis
+  (`<aedilis corpus="lib/fenestra_textus.c"/>` in a comment), so silex
+  now reads that annotation after the conventional twin, deduplicated
+  by path (`motus.h` annotates its own twin — a first draft collected
+  it twice and the link reported 94 duplicate symbols). Then
+  `fenestra_textus.c` pulled `fons.c` and `utf8.c`, whose own header
+  includes read `"../include/x.h"`: the scanner produced
+  `include/../include/fons.h` and silex's `novum -vitrea` scaffold
+  could not write it. The two sources now include `"x.h"` and the
+  scanner strips the prefix. silex's closure test gained the fenestra
+  case (both implementors, both transitive libs, each once).
+- **The ludus session's commit had named three briar defects**
+  (8d5c85a9): the `.m` + frameworks hole, the second implementation
+  file, and "a function used as a value is not derived". Two are
+  closed here; the third is real — silva marks only CALLS as implicit,
+  a bare function name passed as a value raises nothing — and joins
+  the bare-macro case in spec §9. Reading other sessions' commit
+  messages before debugging would have saved the first hour.

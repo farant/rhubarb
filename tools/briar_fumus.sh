@@ -34,7 +34,11 @@
 #   IX.  VERITAS '#line': ./fragmentum_erratum.thistle aedificari non
 #        potest et error clang lineam FRAGMENTI in .thistle nominat -
 #        tabula linearum contextus vera; nihil aliud id probat
-#   X.   (-agere) app vitrea per bin/manus agitur: affordantiae >= I
+#   X.   fenestra NATIVA: project-specs/exempla/salutatio.thistle -struere
+#        (ludus, lib/fenestra_macos.m in clausura) aedificatur et
+#        nectitur - ordo planus fontes explicitos et frameworks fert;
+#        fenestra NON aperitur (-struere solum)
+#   XI.  (-agere) app vitrea per bin/manus agitur: affordantiae >= I
 #        (bulla), premere, textus corporis 'salve, munde' continet.
 #        FENESTRA VERA apparet - manu currendum, non in suite.
 #
@@ -76,6 +80,8 @@ FIXA="$RADIX/briar/probationes/fixa/thistle"
 for f in salve punctum derivatum fragmenta salve_vitreum adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
     [ -f "$FIXA/$f.thistle" ] || { echo "FUMUS: fixum abest: $f.thistle" >&2; exit 2; }
 done
+[ -f "$RADIX/project-specs/exempla/salutatio.thistle" ] \
+    || { echo "FUMUS: exemplum abest: project-specs/exempla/salutatio.thistle" >&2; exit 2; }
 
 AREA="$(mktemp -d /tmp/briar_fumus.XXXXXX)" || exit 2
 # HOME PROPRIUM (exportatum): briar ~/.rhubarb/briar/<t>-<clavis>/ scribit,
@@ -109,6 +115,7 @@ cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
    "$FIXA/fragmenta.thistle" "$FIXA/salve_vitreum.thistle" \
    "$FIXA/adversa/probatio_rubra.thistle" "$FIXA/adversa/duo_principalia.thistle" \
    "$FIXA/adversa/fragmentum_erratum.thistle" \
+   "$RADIX/project-specs/exempla/salutatio.thistle" \
    "$AREA/" || exit 2
 chmod +x "$AREA"/*.thistle
 echo "FUMUS: area $AREA"
@@ -219,16 +226,28 @@ fi
 grep -q "fragmentum_erratum.thistle:${LINEA_ERRATI}:" "$AREA/erratum.log" \
     || deficere "error clang lineam fragmenti ($LINEA_ERRATI) non nominat - tabula linearum mentitur" "$AREA/erratum.log"
 
+# ---- X. fenestra NATIVA (Objective-C in clausura): -struere solum ----
+echo "FUMUS: X. ./salutatio.thistle -struere (fenestra nativa, .m + frameworks; non aperitur)"
+SALUTATIO_DIR="$( cd "$AREA" && ./salutatio.thistle -struere 2>"$AREA/salutatio.err" | tail -1 )" \
+    || deficere "salutatio -struere defecit" "$AREA/salutatio.err"
+[ -x "$SALUTATIO_DIR/bin/salutatio" ] \
+    || deficere "binarium nativum abest: $SALUTATIO_DIR/bin/salutatio" "$AREA/salutatio.err"
+grep -q 'lib/fenestra_macos.m' "$SALUTATIO_DIR/aedificare.sh" \
+    || deficere "aedificare.sh salutationis fenestra_macos.m non nominat" "$SALUTATIO_DIR/aedificare.sh"
+if grep -q 'lib/\*\.c' "$SALUTATIO_DIR/aedificare.sh"; then
+    deficere "aedificare.sh salutationis globum 'lib/*.c' adhuc fert" "$SALUTATIO_DIR/aedificare.sh"
+fi
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"
     exit 0
 fi
 
-# ---- X. agere: app vitrea per manus ----
-echo "FUMUS: X. bin/manus incipere $VITREUM_DIR/bin/salve_vitreum -vivum"
+# ---- XI. agere: app vitrea per manus ----
+echo "FUMUS: XI. bin/manus incipere $VITREUM_DIR/bin/salve_vitreum -vivum"
 SESSIO="$( cd "$AREA" && "$RADIX/bin/manus" incipere "$VITREUM_DIR/bin/salve_vitreum" -vivum \
     2>"$AREA/manus.err" )" \
     || deficere "manus incipere defecit" "$AREA/manus.err"
@@ -251,7 +270,7 @@ case "$CORPUS" in
     *) deficere "corpus paginae 'salve, munde' non continet: [$CORPUS] - pons 'salve' tacuit" "$AREA/textus.err" ;;
 esac
 
-echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, actum)"
+echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, actum)"
 purgare
 echo "fumus briar: sanum"
 exit 0

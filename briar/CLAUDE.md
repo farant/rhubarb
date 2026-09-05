@@ -45,10 +45,13 @@ Findings: `fontes/briar.worklog.md`.
   and run, fragmenta with `-probatio` and `-partes`, and the `#line`
   truth (a broken fragment line must be named by clang); `-agere`
   opens the vitrea window and drives it with `bin/manus` (by hand).
-- KNOWN DEFECT (ledger, 2026-09-05): a script whose closure holds NO
-  house library gets an `aedificare.sh` with a `lib/*.c` glob that
-  matches nothing — pure-libc scripts do not build until the plain
-  ordo lists its files explicitly like the vitrea one.
+- Plain build scripts list the closure's `lib/*.c` AND `lib/*.m`
+  explicitly and add the Cocoa/Security/WebKit frameworks when a `.m`
+  is present (silex's plain generators take briar's closure; passed
+  NIHIL they still emit silex's own glob text). Fixed 2026-09-05 after
+  `salutatio.thistle` (native window, `fenestra_macos.m`) failed to
+  link and a pure-libc script (empty closure) failed on the glob;
+  fumus stage X builds salutatio without opening it.
 - Numbers 2026-09-05: salve cold 0.42 s (disk) / 0.68 s (embedded,
   shebang), hit 9 ms; vitrea cold 1.97 s; briar 10.5 MB.
 

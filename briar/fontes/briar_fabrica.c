@@ -361,7 +361,7 @@ nomen structura {
                        i32  linea;    /* .thistle (lineae primae) */
                     chorda  textus;
     constans BriarNexusRes* regio;    /* tabula linearum (contextus) */
-                       i32  index;    /* index contextus lineae primae */
+                       i32  index;    /* index contextus, linea prima */
 } BriarUnitas;
 
 /* linea .thistle lineae k contextus regionis (tabula briar_contextus;
@@ -1364,9 +1364,9 @@ briar_fabricare (
             _principem_fingere(piscina, f.titulus, via,
             &part.princeps));
         /* clausura: regiones omnes (probatio inclusa - credo.h) */
-                contenta = (chorda*)piscina_allocare(piscina,
-                    (memoriae_index)((inv.numerus_app + III)
-                    * (i32)magnitudo(chorda)));
+                        contenta = (chorda*)piscina_allocare(piscina,
+                            (memoriae_index)((inv.numerus_app + IV)
+                            * (i32)magnitudo(chorda)));
                 per (i = ZEPHYRUM; i < inv.numerus_app; i++)
                 {
             contenta[n]  = inv.app[i]->contextus;
@@ -1377,9 +1377,13 @@ briar_fabricare (
             contenta[n]  = inv.probatio->contextus;
             n            = n + I;
         }
-        contenta[n]      = inclusiones_derivatae;
-        contenta[n + I]  = inclusiones_probationis;
-        n                = n + II;
+                contenta[n]  = inclusiones_derivatae;
+        contenta[n + I]      = inclusiones_probationis;
+        /* latina.h SEMPER: plagulae genitae eam includunt; clausura
+         * vacua (scriptum libc solum) eam aliter non ferret */
+        contenta[n + II] = _literae(piscina,
+            "#include \"latina.h\"\n");
+        n = n + III;
         f.clausura = silex_clausuram_e_contentis(piscina, fons,
             contenta, n);
         si (f.clausura == NIHIL)
@@ -1388,13 +1392,17 @@ briar_fabricare (
                 ZEPHYRUM);
             redde f;
         }
+        /* clausura data: fontes lib expliciti (.c et .m) + frameworks
+         * si Objective-C - globus bibliothecarum clausuram vacuam et
+         * fenestram nativam fallebat (2026-09-05) */
         _genitam_addere(piscina, f.genitae, "aedificare.sh",
-            silex_ordinem_fingere(piscina, f.titulus, fontes_app, II));
+            silex_ordinem_fingere(piscina, f.titulus, fontes_app, II,
+                f.clausura));
         si (inv.probatio != NIHIL)
         {
             _genitam_addere(piscina, f.genitae, "probare.sh",
                 silex_ordinem_probandi_fingere(piscina, f.titulus,
-                    fontes_prob, II));
+                    fontes_prob, II, f.clausura));
         }
     }
     alioquin

@@ -8,7 +8,7 @@
  * 4. Cetera -> TOFU
  */
 
-#include "../include/fons.h"
+#include "fons.h"
 
 i8
 fons_codepoint_ad_glypham (

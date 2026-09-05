@@ -140,20 +140,29 @@ silex_clausuram_e_contentis (
  * [+ fontes/<t>_pipa.c]; briar fontes/<t>.c fontes/<t>_regiones.c.
  * Plani: fontes citati + globus bibliothecarum; vitrei: fontes +
  * assets/capsula_<t>.c + clausura explicata (numquam globus) +
- * frameworks. */
+ * frameworks.
+ *
+ * Ordines PLANI: clausura NIHIL = globus bibliothecarum (silex novum:
+ * bibliothecae semper adsunt, textus immotus); clausura data
+ * (briar, 2026-09-05) = fontes lib EXPLICITI, .c et .m, et frameworks
+ * Cocoa/Security/WebKit si .m ullum adest - globus clausuram vacuam
+ * (scriptum libc solum) et Objective-C (fenestra nativa,
+ * salutatio.thistle) fallebat. */
 chorda
 silex_ordinem_fingere (
                        Piscina* piscina,
             constans character* titulus,
     constans character* constans* fontes,
-                           i32  numerus_fontium);
+                           i32  numerus_fontium,
+                           Xar* clausura);
 
 chorda
 silex_ordinem_probandi_fingere (
                        Piscina* piscina,
             constans character* titulus,
     constans character* constans* fontes,
-                           i32  numerus_fontium);
+                           i32  numerus_fontium,
+                           Xar* clausura);
 
 chorda
 silex_ordinem_vitreum_fingere (

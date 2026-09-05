@@ -8,7 +8,7 @@
  *   11110xxx 10xxxxxx 10xxxxxx 10xxxxxx = U+10000-10FFFF (4 bytes)
  */
 
-#include "../include/utf8.h"
+#include "utf8.h"
 
 /* Mascherae pro decodendo */
 #define MASCA_ASCII       0x80u  /* 10000000 */
@@ -155,7 +155,8 @@ utf8_decodere (
                 redde -1;
             }
             /* Verifica non-surrogatum */
-            si (codepoint >= SURROGATUM_INITIUM && codepoint <= SURROGATUM_FINIS)
+            si (   codepoint >= SURROGATUM_INITIUM
+                && codepoint <= SURROGATUM_FINIS)
             {
                 (*ptr) += 3;
                 redde -1;

@@ -209,6 +209,60 @@ _recusationem_probare (
     briar_silvam_solvere(nexus);
 }
 
+/* ordo planus: fons lib quisque clausurae SEMEL, nullus globus
+ * bibliothecarum, frameworks si et solum si cum_obiectivis */
+interior vacuum
+_ordinem_probare (
+                        Piscina* piscina,
+    constans BriarFabricaFructus* f,
+             constans character* via,
+                            b32  cum_obiectivis)
+{
+    constans BriarPlagula* p = _genita(f, via);
+                      i32  i;
+                      i32  bibliothecae = ZEPHYRUM;
+
+    CREDO_NON_NIHIL (p);
+    si (p == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(f->clausura); i++)
+    {
+        constans SilexRes* r = (constans SilexRes*)xar_obtinere(
+            f->clausura, i);
+        constans character* via_lib;
+        constans character* fenum;
+        constans character* sedes;
+                       i32  n = ZEPHYRUM;
+
+        si (   r->via.mensura < IV
+            || memcmp(r->via.datum, "lib/", (size_t)IV) != ZEPHYRUM)
+        {
+            perge;
+        }
+        bibliothecae  = bibliothecae + I;
+        via_lib       = chorda_ut_cstr(r->via, piscina);
+        fenum         = chorda_ut_cstr(p->contentum, piscina);
+        sedes         = fenum;
+        dum ((sedes = strstr(sedes, via_lib)) != NIHIL)
+        {
+            n      = n + I;
+            sedes  = sedes + strlen(via_lib);
+        }
+        si (n != I)
+        {
+            imprimere("  %s: '%s' %d vicibus\n", via, via_lib,
+                (integer)n);
+        }
+        CREDO_AEQUALIS_I32 (n, I);
+    }
+    imprimere("  %s: bibliothecae %d\n", via, (integer)bibliothecae);
+    CREDO_FALSUM (_continet(piscina, p->contentum, "lib/*.c"));
+    CREDO_AEQUALIS_S32 ((s32)_continet(piscina, p->contentum,
+        "-framework Cocoa"), (s32)cum_obiectivis);
+}
+
 /* genita contra aurum; BRIAR_FABRICA_SCRIBERE=1 aurum scribit */
 interior vacuum
 _aurum_conferre (
@@ -335,9 +389,17 @@ principale (vacuum)
         _aurum_conferre(piscina, &f, "fontes/salve.c");
         _aurum_conferre(piscina, &f, "fontes/salve_regiones.c");
         _aurum_conferre(piscina, &f, "include/salve_regiones.h");
-        _aurum_conferre(piscina, &f, "probationes/probatio_salve.c");
-        _aurum_conferre(piscina, &f, "aedificare.sh");
-        _aurum_conferre(piscina, &f, "probare.sh");
+                _aurum_conferre(piscina, &f,
+                    "probationes/probatio_salve.c");
+        /* ordines plani STRUCTURALITER (listae e clausura mutantur):
+         * fons lib quisque semel, nullus globus, nulla framework */
+        _ordinem_probare(piscina, &f, "aedificare.sh", FALSUM);
+        _ordinem_probare(piscina, &f, "probare.sh", FALSUM);
+        CREDO_VERUM (_continet(piscina, _genita(&f, "aedificare.sh")
+            ->contentum,
+            "\"fontes/salve.c\" \"fontes/salve_regiones.c\""));
+        CREDO_VERUM (_continet(piscina, _genita(&f, "probare.sh")
+            ->contentum, "exec \"bin/probatio_salve\""));
         CREDO_AEQUALIS_I32 (xar_numerus(f.genitae), (i32)6);
         /* clausura: chorda (regio) + credo (probatio) + latina */
         CREDO_VERUM (_clausura_habet(&f, "include/latina.h"));
@@ -666,6 +728,67 @@ principale (vacuum)
             CREDO_FALSUM (_continet(piscina, corpus->contentum, "<<#"));
         }
         CREDO_VERUM (_clausura_habet(&f, "lib/chorda.c"));
+        briar_silvam_solvere(nexus);
+    }
+
+    imprimere("\n--- Probans fenestra_nativa: Objective-C in clausura"
+        " -> .m + frameworks ---\n");
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/fenestra_nativa.thistle",
+            &nexus);
+
+        si (!f.successus)
+        {
+            imprimere("  fabrica: %.*s (linea %d)\n",
+                (integer)f.causa.mensura,
+                (constans character*)f.causa.datum,
+                (integer)f.linea_causae);
+        }
+        CREDO_VERUM (f.successus);
+        CREDO_AEQUALIS_S32 ((s32)f.forma, (s32)BRIAR_FORMA_PLANA);
+                CREDO_VERUM (_clausura_habet(&f,
+                    "lib/fenestra_macos.m"));
+        /* implementator annotatus capitis (aedilis corpus=) */
+        CREDO_VERUM (_clausura_habet(&f, "lib/fenestra_textus.c"));
+        CREDO_VERUM (_clausura_habet(&f, "lib/fons.c"));
+        _ordinem_probare(piscina, &f, "aedificare.sh", VERUM);
+        CREDO_VERUM (_continet(piscina, _genita(&f, "aedificare.sh")
+            ->contentum, "lib/fenestra_macos.m"));
+        briar_silvam_solvere(nexus);
+    }
+
+    imprimere("\n--- Probans fragmentum_erratum: clausura VACUA ->"
+        " ordo sine bibliothecis ---\n");
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/adversa/"
+            "fragmentum_erratum.thistle", &nexus);
+        i32 lib = ZEPHYRUM;
+        i32 i;
+
+        /* error typi clang est, non fabricae: fabrica sana */
+        CREDO_VERUM (f.successus);
+        per (i = ZEPHYRUM; f.successus && i < xar_numerus(f.clausura);
+            i++)
+        {
+            constans SilexRes* r = (constans SilexRes*)xar_obtinere(
+                f.clausura, i);
+
+            si (   r->via.mensura                           >= IV
+                && memcmp(r->via.datum, "lib/", (size_t)IV) == ZEPHYRUM)
+            {
+                lib = lib + I;
+            }
+        }
+                CREDO_AEQUALIS_I32 (lib, ZEPHYRUM);
+        /* latina.h tamen adest: plagulae genitae eam includunt */
+        CREDO_VERUM (_clausura_habet(&f, "include/latina.h"));
+        _ordinem_probare(piscina, &f, "aedificare.sh", FALSUM);
+        CREDO_FALSUM (_continet(piscina, _genita(&f, "aedificare.sh")
+            ->contentum, "lib/"));
         briar_silvam_solvere(nexus);
     }
 
