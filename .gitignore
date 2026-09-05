@@ -53,6 +53,7 @@ probationes/fixa/stml_aurea/internus.novum
 probationes/pictor/*.novum
 probationes/pictor/specimina/*.novum.png
 probationes/pictor/specimina/*.differentia.png
+/pictor.volumen
 
 # Python dev-time (pythonica)
 __pycache__/
