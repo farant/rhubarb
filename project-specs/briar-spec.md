@@ -1,4 +1,4 @@
-# briar — spec v1.5 (literate C89 programs; `.thistle`)
+# briar — spec v1.6 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -105,6 +105,14 @@ exists — canon.h). Three region kinds plus prose:
   md-arbor-spec.md).
 - **The `\` dedent form** (`<c!\>`, STML's kind ladder) is ACCEPTED by
   the lexer and recorded; applying the dedent is deferred (§9).
+- **The transclusion line (v1.6).** Inside a `<c!>` region a line
+  that reads, after leading whitespace, exactly `<<#x>>` (trailing
+  whitespace allowed) is a transclusion of fragment `#x` and yields no
+  line of its own. It is STML's own sigil (`<<selector>>`, stml-visio
+  §2) resolved by briar as its first C consumer, aliasing by the
+  2026-08-26 decree: one object, many windows. `<<#x>>` anywhere else
+  in a line stays bytes (mid-line references reserved, §9); a line
+  that begins `<<#` and is not that shape is a named refusal.
 
 **v1 vocabulary.** Raw: `c`, `html`, `js`, `css`, and `md` (prose
 written explicitly, the escape for prose that must start at column 0
@@ -126,7 +134,7 @@ stays available if ever needed):
 |---|---|
 | `methodus="nomen"` | a bridge method: the region defines a function `nomen` with the `InternuntiusTractator` signature (exists — internuntius.h:61), registered as internuntius method `nomen`. Named after the parameter of `internuntius_praebere`; deliberately NOT `tractator`, which ludus reserves for UI event handlers under its no-I/O lint L5 (ludus-brainstorm.md §XII) — a bridge method reads files and talks to the network, that is what it is for |
 | `munus="probatio"` | the region is the file's PROBATIO: a separate translation unit and binary using credo, exactly as every `probationes/probatio_<x>.c` does |
-| `nomen=` | RESERVED for named chunks (§9) |
+| `id="x"` | the region is the FRAGMENT `#x` (§3.4, v1.6): it is never a root, it compiles nowhere on its own, and its lines are woven into any root at a line reading `<<#x>>`. `#` is document-space (decretum 01KZPEXT74), so the id lives in `id=` as CSS and the TS resolver expect, not in the `nomen=` once reserved here |
 
 **The first file** (fixture `briar/probationes/fixa/salve_vitreum.thistle`):
 
@@ -304,6 +312,105 @@ construction, so the comparator's reconstruction policy holds.
   clang names the line; the C library beyond the trio stays explicit
   (`math.h`, `time.h` are the first candidates for a hand map, §9).
 
+### 3.4 Contextus — fragments and transclusion (v1.6, 2026-09-05)
+
+The literate tangle: prose between pieces of one function, the pieces
+named and assembled by reference. Decided with Fran 2026-09-05, each
+alternative reserved rather than dropped:
+
+| decision | chosen | reserved |
+|---|---|---|
+| D1 how a chunk is named | `<c! id="x">` on the region tag (no grammar change; the tag is already the annotation) | `<#x>…</#>` wrapping several parts at column 0, if a chunk ever needs its own prose (a nesting tree: arbor, canon, projection, nexus, fabrica) |
+| D2 where a reference may stand | alone on its line, indentation carried (noweb's rule) | mid-line `<<#x>>`, decided together with the template call `<<#@x p="v">>` (§9) |
+| D3 a second definition of the same id | refusal naming both lines | continuation with an explicit spelling, e.g. `pars="2"` |
+| D4 which regions take part | C only: chunks are `<c!>` regions, references live in `<c!>` regions, the probatio included | html/js/css chunks (the resolver takes a region, not a language; widening is a fabrica table entry) |
+| D5 where the weave runs | a stage between nexus and silva (below) | references as tokens of the outer tree, when the `briar-c89` dialect puts tags inside C generally (§9); the resolver and the line table survive that move |
+
+**Words.** A region with `id=` is a *fragmentum*; one without is a
+*radix* (app root or probatio root); a `<<#x>>` line is a
+*transclusio*; the woven text of a root is its *contextus*; the
+thistle line of each woven line lives in its *tabula linearum*.
+
+**Pipeline.** arbor → nexus → **contextus** → silva → fabrica. One
+call, `briar_contexere(piscina, nexus)`, after `briar_nexus_texere`
+and before `briar_silvam_texere`: it classifies every `<c!>` region,
+weaves every root, and records a refusal on the region record as
+silva does (`causa` + `linea_erroris`), so the fabrica's inventory
+refuses with the thistle line unchanged. Why not the fabrica: a root
+holding `<<#x>>` lines is not C, silva refuses it, and derivation,
+partition and prototypes all read silva's tree — the weave must run
+before silva sees the text.
+
+**Classification.** `id="x"`: non-empty, no whitespace. A fragment
+carrying `methodus=` or `munus=` is refused (a chunk is never a
+root). Fragments are document-global: any root may reference any
+fragment; fragments may reference fragments.
+
+**Weaving.** Depth-first over reference lines. A reference line
+yields no line; in its place come the fragment's lines, each prefixed
+with the reference line's leading whitespace bytes (blank lines left
+blank). A fragment used twice appears twice — the alias has two
+windows, and the tangled text is what the compiler sees. Every woven
+line records its thistle line, root line or fragment line. The nexus
+record gains `contextus` (chorda) and `lineae` (Xar of i32, one per
+woven line); a root without references gets the identity table, so
+every consumer reads one shape. The smallest example:
+
+    <c! id="summa">
+    summa = summa + numeri[i];
+    </c>
+
+    The loop body is the fragment above; the loop itself:
+
+    <c!>
+    i32
+    summare (constans i32* numeri, i32 n)
+    {
+        i32 summa = ZEPHYRUM;
+        i32 i;
+
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            <<#summa>>
+        }
+        redde summa;
+    }
+    </c>
+
+The root's contextus is the loop with `        summa = summa +
+numeri[i];` in place of the reference line (eight spaces carried);
+that woven line maps to the fragment's thistle line, every other line
+to its own, and the generated `_regiones.c` shows two `#line` runs
+inside `summare`.
+
+**Refusals**, each with its thistle line:
+`transclusio '#x' (linea N): fragmentum non definitum` ·
+`transclusio '#x' (linea N): circulus #a -> #b -> #a` ·
+`fragmentum '#x' iteratum (prima linea M)` at the second definition ·
+`fragmentum '#x' (linea N): methodus/munus in fragmento - fragmentum
+radix non est` ·
+`transclusio malformata (linea N): '<<#x>>' sola in linea sua
+exspectata` ·
+`fragmentum sine id valido (linea N)`.
+An unused fragment is no error; `-partes` lists it `non adhibitum`.
+
+**Downstream.** silva parses the contextus (prelude + woven text);
+`briar_nexus_linea_silvae` becomes a table lookup. In the fabrica,
+directive collection walks the woven text through the table; unit
+emission goes line by line with a `#line` at every run break — inside
+function bodies too (silva never sees a `#line`: the fabrica adds them
+after the parse); the probatio unit is emitted the same way. The closure reads woven texts,
+so a fragment's `#include` lines reach the closure through the roots
+that use it, and an unused fragment contributes nothing. Derived
+includes (pass one/two over the woven text) and `-amalgama` need no
+change. `-partes` prints every fragment: id, definition line, use
+lines or `non adhibitum`; `-arbor` needs nothing (the open tag shows
+`id`); cross-reference rendering belongs to `-html` (§9).
+
+**The truth of `#line` is a fumus stage** (§5): a fixture whose
+fragment holds a deliberate type error must make clang name the
+fragment's thistle line. Nothing automated checked that before v1.6.
+
 ## 4. The fabrica — tree to binary
 
 ### 4.1 Build home and cache
@@ -353,7 +460,7 @@ in §9; v1 does not wait for them.
 | output | from | note |
 |---|---|---|
 | `fontes/<t>.c` | generated main (§4.3) or, for a plain program, the unit that defines `principale`, cut at its silva extent, with `#include "latina.h"` and `#include "<t>_regiones.h"` prepended | every unit is preceded by `#line <n> "<via>"`; clang then reports `x.thistle:15:11` (measured 2026-09-04) |
-| `fontes/<t>_regiones.c`, `include/<t>_regiones.h` | **Partition, as built (plan 2):** the header = include guard, `latina.h`, the implicit standard trio (`stdio.h`, `stdlib.h`, `string.h` — thistle files are scripts), every directive line of every non-probatio C region (`#include`, `#define`, `\` continuations) in document order, every top-level unit that declares no file-scope object (typedefs, struct/union/enum tags, prototypes), and one prototype per function definition (the definition's head up to its body + `;`); the `.c` = `latina.h`, the header, every file-scope object and every function definition except `principale`. Every unit and directive is preceded by `#line <thistle line> "<via>"`. The header lives in `include/` so the probatio unit sees it through `-Iinclude`. Comments BETWEEN top-level units are dropped (extents cover tokens); comments inside units stay. A file-scope object is private to `_regiones.c` (share through functions). Probatio helpers must be `interior` (`-Wmissing-prototypes`). | one object shared by the program and the probatio |
+| `fontes/<t>_regiones.c`, `include/<t>_regiones.h` | **Partition, as built (plan 2):** the header = include guard, `latina.h`, the implicit standard trio (`stdio.h`, `stdlib.h`, `string.h` — thistle files are scripts), every directive line of every non-probatio C region (`#include`, `#define`, `\` continuations) in document order, every top-level unit that declares no file-scope object (typedefs, struct/union/enum tags, prototypes), and one prototype per function definition (the definition's head up to its body + `;`); the `.c` = `latina.h`, the header, every file-scope object and every function definition except `principale`. Every unit and directive is preceded by `#line <thistle line> "<via>"`; since v1.6 (§3.4) a unit is emitted line by line and a further `#line` opens every run break the tabula linearum shows, so a woven fragment inside a function body maps to its own thistle lines. The header lives in `include/` so the probatio unit sees it through `-Iinclude`. Comments BETWEEN top-level units are dropped (extents cover tokens); comments inside units stay. A file-scope object is private to `_regiones.c` (share through functions). Probatio helpers must be `interior` (`-Wmissing-prototypes`). | one object shared by the program and the probatio |
 | `probationes/probatio_<t>.c` | `#include "latina.h"` + `#include "<t>_regiones.h"` + the `munus="probatio"` region, `#line`-mapped | a SEPARATE translation unit linked against the library objects and `_regiones.o`; the file's helpers are visible through the generated header; no second `main`. Built to `bin/probatio_<t>` only by `-probatio` |
 | `assets/index.html`, `assets/<t>.js`, `assets/<t>.css`, `assets/<t>.toml` | the html/js/css regions | v1: at most one region of each kind; more = refusal naming the second. A `<script src="<t>.js">` line is NOT injected — the html region is verbatim; the fixture references its assets itself |
 | `instrumenta/capsula_generare.c` | corpus | as silex `-vitrea` |
@@ -562,6 +669,7 @@ guard, per-test logs), registered in pythonica's four tables
 | `fabrica` | headless: tree → project inventory + generated main + generated `probationes/probatio_<t>.c` byte-compared to goldens; `#line` lines present; main rule's three arms with the probatio unit excluded; refusal texts named |
 | `computus` | bench twin, golden `fixa/computus/basis.tsv` (`COMPUTUS_SCRIBERE=1` + a named cause) |
 | `amalgama` | synthetic fabrica → byte golden `fixa/amalgama/gamma.c` (`BRIAR_AMALGAMA_SCRIBERE=1` + a named cause); real fixtures structurally (once per file, no local include, `#define`/`#undef` pairs, posix first, probatio separate); vitrea + vendor refusals; writer guard |
+| `contextus` | `fragmenta.thistle` (nested fragments, indentation, one used twice, one used by the probatio, one carrying an `#include`): the woven text of each root byte-compared to a golden under `fixa/contextus/`, the line table pinned at the splices, the identity table for a root without references; five adversa fixtures, one per refusal, with lines; unused fragment listed; born red by dropping the indentation prefix. Fabrica gate adds the `fragmenta` golden directory (`#line` runs inside a function body and in the probatio unit); silva gate adds derivation of a symbol that lives in a fragment; fumus adds the run, the probatio, the amalgam, and the `#line`-truth stage of §3.4 |
 | `probatio_silex` | UNCHANGED after §4.4 — the promotion is behavior-preserving |
 
 Plus the end-to-end `tools/briar_fumus.sh` (§5), the only gate that
@@ -581,6 +689,7 @@ New in `briar/`, each with a probatio and a `.worklog.md`:
 | `briar_nexus` | md_arbor, stml, silva (expansion parse fed from the capsula), briar_arbor | inner trees by identity — md, STML, and silva for C; offsets; attributes |
 | `briar_fabrica` | silex (promoted API), silva (extents, `main` unit, type renderer), sigillum, filum, briar_nexus | tree → project dir; main rule; unit partition; prototypes; `#line`; assets; toml; probatio unit; method signature check; the key |
 | `briar_computus` | briar_arbor | bench twin |
+| `briar_contextus` (v1.6) | briar_nexus | fragments and transclusion: classification, the weave, the line table, refusals; between nexus and silva |
 | `tools/briar.c` | all above, argumenta, processus, capsula | the binary |
 | `tools/briar_struere.sh`, `tools/corpus_infixum.sh`, `tools/briar_fumus.sh` | — | build, shared corpus block, freshness gate |
 
@@ -609,6 +718,7 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
   `main` unit, generated `_regiones.h` prototypes, method signature
   check, the probatio unit, the key; goldens for both program shapes
   byte-compared; gate fabrica. No clang is run in the suite.
+- **P5 contextus — plan 4 (`briar-plan-4-contextus.md`), 2026-09-05, not started:** unit `briar_contextus` + gate; nexus fields + table lookup; fabrica `#line` per run + `fragmenta` goldens; `-partes`; fumus stages incl. the `#line`-truth stage; spec §3.4 as built.
 - **P4 the binary — DONE (plan 3, 2026-09-05; commits 9cb3bb50 corpus block, 39a03a8a binary, T4 fumus). First-run numbers (HOME redirected): `salve.thistle` cold 0.42 s inside the tree (disk corpus) / 0.68 s from outside via the shebang (embedded corpus), cache hit 9 ms; `salve_vitreum.thistle -struere` cold 1.97 s from outside; `bin/briar` 10.5 MB (silex 19.4 MB); `tools/briar_fumus.sh` 5.2 s for six stages. The first `./salve.thistle` from a directory outside the repository printed `salve, munde` — a GUI app as easy as a bash script is one `-struere` away (its window is the by-hand `-agere` stage).** `tools/briar.c` with the flags of §5,
   `corpus_infixum.sh` extraction, `briar_struere.sh`, cache dir, run,
   `-probatio`; `briar_fumus.sh` from outside the repo; the first real
@@ -628,7 +738,16 @@ generated files) · handler discovery by COMMENT annotation
 never a second parser) — only if a thistle ever needs marks the region
 tag cannot carry · **a `briar-c89` dialect** (Fran, 2026-09-04): STML
 tags directly inside the C, JSX-like, for richer literate programming
-and transpilation — a materia client of its own when pulled · includes derived for the C library beyond the implicit trio (a hand
+and transpilation — a materia client of its own when pulled; its first
+step is decided (D5, §3.4): the `<<#x>>` reference moves from the
+contextus line scan into the outer lexer as a token, the resolver and
+the line table stay ·
+**template fragments** `<#@x p="@p">` + `<<#@x p="v">>` over raw C
+bodies through the existing macro engine (instantiation, not alias —
+the decree of stml-visio §2); wants mid-line references and slot refs
+`&@p;` inside C text, "different considerations" (Fran 2026-09-05) ·
+mid-line `<<#x>>` (D2) · continuation `pars=` (D3) · html/js/css
+fragments (D4) · a `<#x>` wrapper element holding prose + parts (D1) · includes derived for the C library beyond the implicit trio (a hand
 map `sqrt → math.h`, `time → time.h`; silva's system tables know the
 symbols, not their headers) · bare object-like macros / enum constants
 as derivation seeds (needs an unknown-identifier diagnostic from silva)
@@ -637,7 +756,7 @@ DERIVED by aedilis over the capsula (bundle `aedilis.stml`; extractor
 over the corpus; vexilla as data — 01KZP0WDN9, trigger fired;
 frameworks from `#import` — 01KZYN4VPZ) · an effects-at-the-edge lint
 for bridge methods, if wanted, as a NEW codex — never ludus's L5 ·
-named chunks (`nomen=` reserved) · `!\` dedent applied · multiple
+`!\` dedent applied · multiple
 assets by `via=` · app state (`status` region → the scaffold's `Pipa`
 + volumen) · Linux · sealed distribution (`-struere -ad`) · `-html`
 (literate rendering) · `-formare` · an LSP over `.thistle` · the ludus
