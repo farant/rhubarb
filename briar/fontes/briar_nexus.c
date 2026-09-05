@@ -90,19 +90,22 @@ _res_incipere (
     constans MateriaNodus* pars,
           BriarNexusGenus  genus)
 {
-    r->pars               = pars;
-    r->genus              = genus;
-    r->arbor_md           = NIHIL;
-    r->elementum          = NIHIL;
-    r->titulus            = _vacua();
-    r->contentum          = _vacua();
-    r->linea_initium      = ZEPHYRUM;
-    r->linea_erroris      = ZEPHYRUM;
-    r->causa              = _vacua();
-    r->silva              = NIHIL;
-    r->textus_silvae      = _vacua();
-    r->praeludium         = ZEPHYRUM;
-    r->praeludium_octeti  = ZEPHYRUM;
+    r->pars                   = pars;
+    r->genus                  = genus;
+    r->arbor_md               = NIHIL;
+    r->elementum              = NIHIL;
+    r->titulus                = _vacua();
+    r->contentum              = _vacua();
+    r->linea_initium          = ZEPHYRUM;
+    r->linea_erroris          = ZEPHYRUM;
+    r->causa                  = _vacua();
+    r->silva                  = NIHIL;
+    r->textus_silvae          = _vacua();
+    r->praeludium             = ZEPHYRUM;
+        r->praeludium_octeti  = ZEPHYRUM;
+    r->contextus              = r->contentum;
+    r->lineae                 = NIHIL;
+    r->est_fragmentum         = FALSUM;
 }
 
 interior vacuum

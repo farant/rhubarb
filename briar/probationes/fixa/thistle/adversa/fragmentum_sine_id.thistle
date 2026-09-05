@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# Fragmentum sine id
+
+<c! id="a b">
+i32 x = I;
+</c>
+
+<c!>
+s32
+principale (vacuum)
+{
+    redde ZEPHYRUM;
+}
+</c>

@@ -1,0 +1,15 @@
+#!/usr/bin/env briar
+# Transclusio malformata
+
+<c! id="x">
+i32 x = I;
+</c>
+
+<c!>
+s32
+principale (vacuum)
+{
+    <<#x>> extra
+    redde ZEPHYRUM;
+}
+</c>

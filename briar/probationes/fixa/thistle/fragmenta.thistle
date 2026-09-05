@@ -1,0 +1,81 @@
+#!/usr/bin/env briar
+# Fragmenta
+
+The loop body lives apart from the loop, the loop apart from the
+function; one greeting fragment is used by the program and by its
+probatio; one fragment carries an include; one is never used.
+
+<c! id="incrementum">
+summa = summa + numeri[i];
+</c>
+
+<c! id="summa">
+per (i = ZEPHYRUM; i < n; i++)
+{
+    <<#incrementum>>
+}
+</c>
+
+<c! id="capita">
+#include "chorda.h"
+</c>
+
+<c! id="salutatio">
+chorda salutatio = chorda_ex_literis("salve, fragmenta", piscina);
+</c>
+
+<c! id="otiosum">
+/* numquam adhibitum */
+</c>
+
+<c!>
+<<#capita>>
+
+i32
+summare (constans i32* numeri, i32 n)
+{
+    i32 summa = ZEPHYRUM;
+    i32 i;
+
+    <<#summa>>
+    redde summa;
+}
+
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("fragmenta", 65536);
+    i32 numeri[3];
+    <<#salutatio>>
+
+    numeri[0] = I;
+    numeri[1] = II;
+    numeri[2] = III;
+    imprimere("%.*s: %d\n", (integer)salutatio.mensura,
+        (constans character*)salutatio.datum,
+        (integer)summare(numeri, III));
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
+}
+</c>
+
+<c! munus="probatio">
+#include "credo.h"
+
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("probatio", 65536);
+    i32 numeri[3];
+    <<#salutatio>>
+
+    numeri[0] = I;
+    numeri[1] = II;
+    numeri[2] = III;
+    credo_aperire(piscina);
+    CREDO_AEQUALIS_I32(summare(numeri, III), VI);
+    CREDO_AEQUALIS_I32(salutatio.mensura, XVI);
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

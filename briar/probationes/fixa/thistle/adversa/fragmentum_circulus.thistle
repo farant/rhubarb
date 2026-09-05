@@ -1,0 +1,19 @@
+#!/usr/bin/env briar
+# Fragmentum circulus
+
+<c! id="a">
+<<#b>>
+</c>
+
+<c! id="b">
+<<#a>>
+</c>
+
+<c!>
+s32
+principale (vacuum)
+{
+    <<#a>>
+    redde ZEPHYRUM;
+}
+</c>

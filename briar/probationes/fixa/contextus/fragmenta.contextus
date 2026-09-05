@@ -1,0 +1,55 @@
+=== radix linea 32 ===
+#include "chorda.h"
+
+i32
+summare (constans i32* numeri, i32 n)
+{
+    i32 summa = ZEPHYRUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        summa = summa + numeri[i];
+    }
+    redde summa;
+}
+
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("fragmenta", 65536);
+    i32 numeri[3];
+    chorda salutatio = chorda_ex_literis("salve, fragmenta", piscina);
+
+    numeri[0] = I;
+    numeri[1] = II;
+    numeri[2] = III;
+    imprimere("%.*s: %d\n", (integer)salutatio.mensura,
+        (constans character*)salutatio.datum,
+        (integer)summare(numeri, III));
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
+}
+=== lineae ===
+20 33 34 35 36 37 38 39 13 14 9 16 41 42 43 44 45 46 47 48 24 50 51 52 53 54 55 56 57 58 59
+=== radix linea 63 ===
+#include "credo.h"
+
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("probatio", 65536);
+    i32 numeri[3];
+    chorda salutatio = chorda_ex_literis("salve, fragmenta", piscina);
+
+    numeri[0] = I;
+    numeri[1] = II;
+    numeri[2] = III;
+    credo_aperire(piscina);
+    CREDO_AEQUALIS_I32(summare(numeri, III), VI);
+    CREDO_AEQUALIS_I32(salutatio.mensura, XVI);
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+=== lineae ===
+63 64 65 66 67 68 69 24 71 72 73 74 75 76 77 78 79 80

@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# Fragmentum munus
+
+<c! id="x" munus="probatio">
+i32 x = I;
+</c>
+
+<c!>
+s32
+principale (vacuum)
+{
+    redde ZEPHYRUM;
+}
+</c>

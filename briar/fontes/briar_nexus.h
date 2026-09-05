@@ -19,6 +19,7 @@
  * stml suas fert - stml.h et silva.h in eadem unitate non coeunt, ergo
  * hoc caput NEC stml.h NEC silva.h includit, tags solum praenuntiat).
  * Lineae silvae per briar_nexus_linea_silvae in .thistle:
+ * tabula linearum contextus (v1.6, briar_contextus) si adest, alias
  * linea_initium + linea_silvae - praeludium - I.
  */
 
@@ -55,6 +56,14 @@ nomen structura {
                    chorda textus_silvae;   /* C: cum praeludio */
                       i32 praeludium;      /* lineae praepositae */
                       i32 praeludium_octeti;
+                   chorda contextus;       /* C radix: textus contextus
+                                            * (briar_contextus); alias
+                                            * contentum */
+                      Xar* lineae;         /* i32 per lineam contextus:
+                                            * linea .thistle; NIHIL =
+                                            * formula linearis */
+                      b32 est_fragmentum;  /* <c! id=...>: numquam
+                                            * radix */
 } BriarNexusRes;
 
 /* Xar de BriarNexusRes, ordine partium; NIHIL = memoria */

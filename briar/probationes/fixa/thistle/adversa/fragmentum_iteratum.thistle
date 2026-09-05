@@ -1,0 +1,19 @@
+#!/usr/bin/env briar
+# Fragmentum iteratum
+
+<c! id="bis">
+i32 x = I;
+</c>
+
+<c! id="bis">
+i32 y = II;
+</c>
+
+<c!>
+s32
+principale (vacuum)
+{
+    <<#bis>>
+    redde ZEPHYRUM;
+}
+</c>
