@@ -112,6 +112,7 @@ declare -a SOURCE_FILES=(
     "lib/paginatio.c"
     "lib/persistentia_memoria.c"
     "lib/persistentia_nuntium.c"
+    "lib/pictor_actiones.c"
     "lib/pictor_componentia.c"
     "lib/pictor_documentum.c"
     "lib/pinacotheca_visus.c"

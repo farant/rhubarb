@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). T7 `pictor_componentia` DONE (40 assertions; `pictor.arbor.stml` exemplar shows the stroke in flight). Next: T8 `pictor_actiones`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). T7 `pictor_componentia` DONE (40 assertions; `pictor.arbor.stml` exemplar shows the stroke in flight). T8 `pictor_actiones` DONE (35 assertions through the real loop; stroke counts via `numerus_vivorum`). Next: T9 pictor figurae. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -3367,7 +3367,7 @@ Commit with `portae=[('radix','pictor_componentia')]`.
 - **`penicillus.ictus`** (spec §5.2 "The stroke", one handler, phase by genus): `MUS_DEPRESSUS` → capture on the tabula, clear the pending points, add `punctum_locale`, consumed; `MUS_MOTUS` → if captured add the point, consumed (else FALSUM); `MUS_LIBERATUS` → if captured build ONE `<ictus instrumentum="penicillus" color="C" magnitudo="M"><punctum x y/>…</ictus>` from `motus->ictus_pendens` with `C` = `ephemera.color_primus` (default `0`) and `M` = `ephemera.magnitudo` (default `1`), append it via `pictor_documentum_actum`, clear the points, `sordida = FALSUM` (a finished stroke never touches the ephemera island), release capture, consumed; `CLAVIS_DEPRESSUS` with `typus == 27` while captured → clear, release, consumed, NO actum (Escape mid-stroke); anything else → FALSUM.
 - **`instrumentum.eligere`**: `CLAVIS_DEPRESSUS` with `typus == 'p'` → `instrumentum="penicillus"` through `mutare_ephemera`, consumed; else FALSUM. (The owner table gives `instrumentum` to `instrumentum.eligere`; the dispensator sets the scriptor to the action's name around the call — T6.)
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_pictor_actiones.c`:
 ```c
@@ -3574,11 +3574,11 @@ s32 principale (vacuum)
 ```
 Tidy when typing: the `'p'` section's scratch block (`ignotum`, the manual `insula_scriptorem_ponere`) is unnecessary once T6's dispensator sets the scriptor — delete it and keep only the `clavem('p')` + the attribute read; to make the assertion non-vacuous, first set `instrumentum` to something else through a mutator under scriptor `instrumentum.eligere` (or start the ephemera island with `instrumentum="nihil"` and assert the tabula has NO action before the keypress and `penicillus.ictus` after a recompose). `#include <string.h>` for `memset`. `manus_ludus_premere_ad(m, XL, XL)` on the tabula is a one-point stroke: cursor goes to II — that is intended (a click paints a dot, as MacPaint).
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh pictor_actiones` — Expected: FAIL, header not found.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/pictor_actiones.h`:
 ```c
@@ -3835,11 +3835,11 @@ pictor_actiones_registrare (
 ```
 `hic_manens character litterae_penicillus[]` is a file-scope static that is WRITTEN never (only read as a `constans character*` through the ctx cast) — L7 forbids file-scope MUTABLE statics; make it `hic_manens constans character litterae_penicillus[]` and cast it as `(vacuum*)(uintptr)`? No — `-Wcast-qual` refuses that. Keep it non-const and never write it; the worklog names this as the accepted pattern (same as `ludus_toy.h`), and T12's L7 codex treats a `character[]` initialised from a literal and never assigned as immutable-by-use. `pa->doc->piscina` is the document's arena, where the actum text belongs.
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh pictor_actiones` — Expected: PASS.
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plants (RED): (a) in `ictum_scribere`, `per (i = ZEPHYRUM; i < n; i++)` → `i < ZEPHYRUM` — red at `numerare_puncta == III`; (b) in the `LIBERATUS` arm, drop `motus_captura_tollere` — red at `chorda_vacua(captura)`. Green on revert.
 
