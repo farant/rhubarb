@@ -139,11 +139,13 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XXX, X),
         color_ad_pixelum(color_ex_rgb((i8)ZEPHYRUM, (i8)ZEPHYRUM,
         (i8)ZEPHYRUM)));
-    /* sectio: flavum (60..80) praecisum ad 50: nihil flavum */
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XLV, XXV),
+        /* sectio: flavum schirmo (60..80, 40..60) praecisum ad (50,30):
+     * INTRA rectangulum flavum nihil flavum manet */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, LXII, XLII),
         color_ad_pixelum(color_ex_rgb((i8)ZEPHYRUM, (i8)ZEPHYRUM,
         (i8)ZEPHYRUM)));
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, LV, XXXV),
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, LXIII,
+        XLVII),
         color_ad_pixelum(color_ex_rgb((i8)ZEPHYRUM, (i8)ZEPHYRUM,
         (i8)ZEPHYRUM)));
     /* textus: aliquid album in linea 30..37 */
