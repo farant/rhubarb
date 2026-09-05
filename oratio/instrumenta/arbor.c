@@ -16,6 +16,8 @@
 #include "oratio_lexicon.h"
 #include "oratio_partes.h"
 #include "oratio_vocabularia.h"
+#include "oratio_resolutio.h"
+#include "internamentum.h"
 #include <stdlib.h>
 #include "materia_arbor.h"
 #include "materia_lexicon.h"
@@ -77,8 +79,9 @@ principale (
        MateriaLexIudicium iudicium;
     MateriaArborConsilium consilium;
     MateriaArborScriptura s;
-                                          b32  tacitus = FALSUM;
+                                          b32 tacitus = FALSUM;
                      b32  partes  = FALSUM;
+                     b32  crudus  = FALSUM;
                   integer i;
       constans character* via = NIHIL;
 
@@ -92,6 +95,10 @@ principale (
         {
             partes = VERUM;   /* T12: analyses (tabula Latina + glossarium) */
         }
+        alioquin si (strcmp(argv[i], "-crudus") == ZEPHYRUM)
+        {
+            crudus = VERUM;   /* T17: ordo fontis, sine resolutione */
+        }
         alioquin
         {
             via = argv[i];
@@ -100,7 +107,8 @@ principale (
     si (via == NIHIL)
     {
         fprintf(stderr,
-            "usus: arbor <plagula.txt> [-tacitus] [-partes]\n");
+            "usus: arbor <plagula.txt> [-tacitus] [-partes]"
+            " [-crudus]\n");
         redde II;
     }
     piscina = piscina_generare_dynamicum("oratio_arbor_instrumentum",
@@ -148,6 +156,35 @@ principale (
         {
             fprintf(stderr, "arbor: annotatio fracta\n");
             redde I;
+        }
+        /* T17: resolutio (programma absens = nihil) */
+        si (!crudus)
+        {
+            InternamentumChorda* intern = internamentum_creare(piscina);
+                OratioProgramma* programma = intern == NIHIL ? NIHIL
+                    : oratio_resolutio_programma_onerare(piscina,
+                    intern,
+                    getenv("RHUBARB_RADIX"), &vitium);
+
+            si (   programma == NIHIL && vitium.causa != NIHIL
+                && strcmp(vitium.causa, "plagula absens") != ZEPHYRUM)
+            {
+                fprintf(stderr,
+                    "arbor: programma resolutionis: %s:%d %s\n",
+                    vitium.plagula ? vitium.plagula : "?",
+                    (integer)vitium.linea, vitium.causa);
+                redde II;
+            }
+            si (   programma != NIHIL
+                && !oratio_resolutio_applicare(piscina, intern, &ratum,
+                    programma, (s32)-I,
+                    oratio_resolutio_lingua_censu(census.linguae),
+                    radix,
+                    NIHIL))
+            {
+                fprintf(stderr, "arbor: resolutio fracta\n");
+                redde I;
+            }
         }
         si (tacitus)
         {

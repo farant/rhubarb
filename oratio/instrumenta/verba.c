@@ -26,6 +26,10 @@
 #include "oratio_registrum.h"
 #include "oratio_partes.h"
 #include "oratio_vocabularia.h"
+#include "oratio_resolutio.h"
+#include "oratio_lexicon.h"
+#include "materia_lexicon.h"
+#include "internamentum.h"
 #include "materia_nodus.h"
 #include "materia_token.h"
 #include "piscina.h"
@@ -449,6 +453,12 @@ principale (
                 OratioVocabularia  vocabularia;
                               b32  machina         = FALSUM;
                               b32  analyses_modus  = FALSUM;
+                              b32  crudus          = FALSUM;
+              InternamentumChorda* intern;
+              MateriaLexiconRatum  ratum;
+               MateriaLexIudicium  iudicium;
+                  OratioProgramma* programma = NIHIL;
+         OratioVocabulariumVitium  vitium;
                           integer  i;
                               i32  viae   = ZEPHYRUM;
                               i32  summa  = ZEPHYRUM;
@@ -463,6 +473,10 @@ principale (
         {
             analyses_modus = VERUM;
         }
+        alioquin si (strcmp(argv[i], "-crudus") == ZEPHYRUM)
+        {
+            crudus = VERUM;   /* T17: ordo fontis, sine resolutione */
+        }
         alioquin
         {
             viae = viae + I;
@@ -471,13 +485,35 @@ principale (
     si (viae == ZEPHYRUM)
     {
         fprintf(stderr,
-            "usus: verba <plagula.txt>... [-machina] [-analyses]\n");
+            "usus: verba <plagula.txt>... [-machina] [-analyses]"
+            " [-crudus]\n");
         redde II;
     }
     piscina_tabulae = piscina_generare_dynamicum("oratio_verba_tabula",
         8388608);
     si (!_vocabularia_onerare(piscina_tabulae, &vocabularia))
     {
+        redde II;
+    }
+    /* T17: programma resolutionis (absens = sine resolutione) */
+    intern = internamentum_creare(piscina_tabulae);
+    si (   intern == NIHIL
+        || !materia_lexicon_ratum_facere(&ratum, &ORATIO_LEXICON,
+        &iudicium))
+    {
+        fprintf(stderr, "verba: lexicon recusatum\n");
+        redde II;
+    }
+    programma = oratio_resolutio_programma_onerare(piscina_tabulae,
+        intern,
+        getenv("RHUBARB_RADIX"), &vitium);
+    si (   programma == NIHIL && vitium.causa != NIHIL
+        && strcmp(vitium.causa, "plagula absens") != ZEPHYRUM)
+    {
+        fprintf(stderr, "verba: programma resolutionis: %s:%d %s\n",
+            vitium.plagula ? vitium.plagula : "?",
+            (integer)vitium.linea,
+            vitium.causa);
         redde II;
     }
     si (machina)
@@ -497,9 +533,11 @@ principale (
            character* textus;
                  i32  mensura = ZEPHYRUM;
         MateriaNodus* radix;
+  OratioPartesCensus  census;
 
         si (   strcmp(argv[i], "-machina")  == ZEPHYRUM
-            || strcmp(argv[i], "-analyses") == ZEPHYRUM)
+            || strcmp(argv[i], "-analyses") == ZEPHYRUM
+            || strcmp(argv[i], "-crudus")   == ZEPHYRUM)
         {
             perge;
         }
@@ -519,9 +557,19 @@ principale (
             redde II;
         }
         si (!oratio_partes_annotare(piscina, &vocabularia, radix,
-            NIHIL))
+            &census))
         {
             fprintf(stderr, "verba: annotatio fracta: %s\n", argv[i]);
+            redde II;
+        }
+        si (   programma != NIHIL && !crudus
+            && !oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma,
+                (s32)-I, oratio_resolutio_lingua_censu(census.linguae),
+                radix,
+                NIHIL))
+        {
+            fprintf(stderr, "verba: resolutio fracta: %s\n", argv[i]);
             redde II;
         }
         summa = summa + _arborem_imprimere(argv[i], radix,

@@ -3337,10 +3337,14 @@ class Oratio(object):
     optio} - casus numerus genus persona tempus modus vox forma-verbi
     gradus species declinatio coniugatio, absentia OMISSA, declinatio/
     coniugatio numeri ut chordae. Instrumentum semel per quaestionem
-    cursum, memoriter."""
+    cursum, memoriter. RESOLUTIO (T17, gradus V): ordo analysium =
+    ordo RESOLUTUS per oratio/partes/resolutio.stml (regulae: adpositio
+    casum regit ...) si programma adest - prima = primaria; crudus=True
+    = ordo fontis (WORDS/Moby, lectiones Latinae ante Anglicas)."""
 
-    def __init__(self, via_aut_textus):
+    def __init__(self, via_aut_textus, crudus=False):
         t = via_aut_textus
+        self.crudus = crudus   # T17: ordo fontis, sine resolutione
         if isinstance(t, bytes):
             self.via, self.octeti = None, t
         elif t and '\n' not in t and os.path.isfile(_absoluta(t)):
@@ -3377,7 +3381,9 @@ class Oratio(object):
         """lineae TSV instrumenti (-machina): rc 1 = nihil (lista vacua),
         rc 2 = fractura"""
         def f(via):
-            r = _curre([imperium, via, '-machina'] + list(optiones))
+            r = _curre([imperium, via, '-machina'] + list(optiones)
+                       + (['-crudus'] if self.crudus and 'verba' in imperium
+                          else []))
             lineae = r.stdout.splitlines()
             # caput '#' = instrumentum cucurrit; rc 1 sine capite =
             # involucrum fractum (compilatio), non 'nihil inventum'

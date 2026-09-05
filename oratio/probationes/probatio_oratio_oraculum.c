@@ -20,6 +20,8 @@
 #include "latina.h"
 #include "credo.h"
 #include "oratio_conllu.h"
+#include "oratio_resolutio.h"
+#include "internamentum.h"
 #include "oratio_oraculum.h"
 #include "oratio_registrum.h"
 #include "oratio_vocabularium.h"
@@ -48,6 +50,15 @@
 #define LLCT_TEST_TECTA_PINNA  887
 #define EWT_DEV_TECTA_PINNA    913
 #define EWT_TEST_TECTA_PINNA   918
+/* PRIMARIUM permille, solum crescens ab regula prima (T17, decisio
+ * XXXIV): programma oratio/partes/resolutio.stml regulis II (adpositio
+ * accusativum / ablativum regit) - crudum CIRCSE 674, LLCT 678 / 677,
+ * EWT 566 / 569. */
+#define CIRCSE_PRIMARIA_PINNA    678
+#define LLCT_DEV_PRIMARIA_PINNA  679
+#define LLCT_TEST_PRIMARIA_PINNA 679
+#define EWT_DEV_PRIMARIA_PINNA   566
+#define EWT_TEST_PRIMARIA_PINNA  569
 
 interior b32
 _plagulam_legere (
@@ -174,10 +185,12 @@ interior vacuum
 _thesaurus_arborum (
                        Piscina* piscina,
     constans OratioVocabularia* vocabularia,
-                constans character* radix,
-                constans character* plagula,
-                               i32  sententiae_exspectatae,
-                               i32  pinna_permille)
+      constans OratioProgramma* programma,
+            constans character* radix,
+            constans character* plagula,
+                           i32  sententiae_exspectatae,
+                           i32  pinna_permille,
+                           i32  pinna_primaria)
 {
     Piscina* p = piscina_generare_dynamicum("oraculum_treebank",
         268435456);
@@ -211,14 +224,33 @@ _thesaurus_arborum (
         sententiae_exspectatae);
     oratio_oraculum_census_vacare(&census);
     ante = clock();
+    /* T17: ordo crudus relatus, ordo resolutus pinnatus (primarium) */
+    oratio_oraculum_census_vacare(&census);
     CREDO_VERUM (oratio_oraculum_iudicare(p, vocabularia, sententiae,
         &census));
+    imprimere("  primaria cruda %.1f%%\n", census.verba > ZEPHYRUM
+        ? 100.0 * (duplex)census.primaria / (duplex)census.verba : 0.0);
+    oratio_oraculum_census_vacare(&census);
+    CREDO_VERUM (oratio_oraculum_iudicare_resolutum(p, vocabularia,
+        programma,
+        (s32)-I, sententiae, &census));
     _tabulam_imprimere(&census, plagula);
     imprimere("    %.0f ms\n", 1000.0 * (duplex)(clock() - ante)
         / (duplex)CLOCKS_PER_SEC);
     tecta_permille = _permille(census.tecta, census.verba);
     imprimere("    coverage %d permille (pinna %d, solum crescens)\n",
         (integer)tecta_permille, (integer)pinna_permille);
+    {
+        i32 primaria_permille = census.verba > ZEPHYRUM
+            ? (i32)((longus)census.primaria * 1000L
+                / (longus)census.verba)
+            : ZEPHYRUM;
+
+        imprimere("    primarium %d permille (pinna %d, solum"
+            " crescens)\n",
+            (integer)primaria_permille, (integer)pinna_primaria);
+        CREDO_VERUM (primaria_permille >= pinna_primaria);
+    }
     CREDO_AEQUALIS_I32 (census.sententiae_fractae, ZEPHYRUM);
     CREDO_VERUM (census.inalignata * (i32)L < census.verba);   /* < II % */
     CREDO_VERUM (census.verba > (i32)10000);
@@ -233,6 +265,8 @@ principale (vacuum)
        constans character* radix;
         OratioVocabularia  vocabularia;
  OratioVocabulariumVitium  vitium;
+      InternamentumChorda* intern;
+         OratioProgramma* programma;
 
     piscina = piscina_generare_dynamicum("probatio_oratio_oraculum",
         536870912);
@@ -247,6 +281,22 @@ principale (vacuum)
         &vitium));
     si (vocabularia.la == NIHIL || vocabularia.en == NIHIL)
     {
+        credo_imprimere_compendium();
+        redde I;
+    }
+    /* T17: programma resolutionis necessarium (pinnae primarii) */
+    intern = internamentum_creare(piscina);
+    CREDO_NON_NIHIL (intern);
+    programma = intern == NIHIL ? NIHIL
+        : oratio_resolutio_programma_onerare(piscina, intern, radix,
+        &vitium);
+    CREDO_NON_NIHIL (programma);
+    si (programma == NIHIL)
+    {
+        imprimere("  programma: %s:%d %s\n",
+            vitium.plagula ? vitium.plagula
+            : "?", (integer)vitium.linea,
+            vitium.causa ? vitium.causa : "-");
         credo_imprimere_compendium();
         redde I;
     }
@@ -426,26 +476,31 @@ principale (vacuum)
     }
 
     imprimere("\n--- III. Treebanks venditae (CC BY-SA) ---\n");
-    _thesaurus_arborum(piscina, &vocabularia, radix,
+    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_circse-ud-test.conllu",
         (i32)893,
-        (i32)CIRCSE_TECTA_PINNA);
-    _thesaurus_arborum(piscina, &vocabularia, radix,
+        (i32)CIRCSE_TECTA_PINNA,
+        (i32)CIRCSE_PRIMARIA_PINNA);
+    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_llct-ud-dev.conllu",
         (i32)850,
-        (i32)LLCT_DEV_TECTA_PINNA);
-    _thesaurus_arborum(piscina, &vocabularia, radix,
+        (i32)LLCT_DEV_TECTA_PINNA,
+        (i32)LLCT_DEV_PRIMARIA_PINNA);
+    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_llct-ud-test.conllu",
         (i32)884,
-        (i32)LLCT_TEST_TECTA_PINNA);
-    _thesaurus_arborum(piscina, &vocabularia, radix,
+        (i32)LLCT_TEST_TECTA_PINNA,
+        (i32)LLCT_TEST_PRIMARIA_PINNA);
+    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "en_ewt-ud-dev.conllu",
         (i32)2001,
-        (i32)EWT_DEV_TECTA_PINNA);
-    _thesaurus_arborum(piscina, &vocabularia, radix,
+        (i32)EWT_DEV_TECTA_PINNA,
+        (i32)EWT_DEV_PRIMARIA_PINNA);
+    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "en_ewt-ud-test.conllu",
         (i32)2077,
-        (i32)EWT_TEST_TECTA_PINNA);
+        (i32)EWT_TEST_TECTA_PINNA,
+        (i32)EWT_TEST_PRIMARIA_PINNA);
 
     imprimere("\n");
     credo_imprimere_compendium();

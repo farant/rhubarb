@@ -1,6 +1,10 @@
 /* oraculum.c - Instrumentum oraculi treebank (T13, oratio/oraculum.sh)
  *
- * Usus: oraculum [-machina] [-exempla] <plagula.conllu>...
+ * Usus: oraculum [-machina] [-exempla] [-regulae] [-crudus]
+ *              [plagula.conllu ...]
+ *   -regulae   tabula CUMULATIVA: primarium per thesaurum post regulas
+ *              0, 1, ... N programmatis resolutionis (T17)
+ *   -crudus    sine resolutione (ordo fontis)
  *   sine plagulis: fixturae venditae oratio/probationes/fixa/ud
  *   -machina   TSV (plagula, classis, verba, tecta, primaria, lemmata,
  *              ignota, inalignata)
@@ -14,6 +18,8 @@
 #include "oratio_oraculum.h"
 #include "oratio_registrum.h"
 #include "oratio_vocabularia.h"
+#include "oratio_resolutio.h"
+#include "internamentum.h"
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
@@ -157,8 +163,11 @@ principale (
                               character  via[1024];
                       OratioVocabularia  vocabularia;
                OratioVocabulariumVitium  vitium;
-                                    b32  machina = FALSUM;
-                                    b32  exempla = FALSUM;
+                                    b32  machina    = FALSUM;
+                                    b32  exempla    = FALSUM;
+                                    b32  regulae    = FALSUM;
+                                    b32  crudus     = FALSUM;
+                        OratioProgramma* programma  = NIHIL;
                                 integer  i;
                                     i32  plagulae = ZEPHYRUM;
     hic_manens constans character* constans venditae[] = {
@@ -184,6 +193,24 @@ principale (
             vitium.causa ? vitium.causa : "-");
         redde II;
     }
+    /* T17: programma resolutionis (absens = sine resolutione) */
+    si (!crudus)
+    {
+        InternamentumChorda* intern = internamentum_creare(piscina);
+
+        programma = intern == NIHIL ? NIHIL
+            : oratio_resolutio_programma_onerare(piscina, intern, radix,
+                &vitium);
+        si (   programma == NIHIL && vitium.causa != NIHIL
+            && strcmp(vitium.causa, "plagula absens") != ZEPHYRUM)
+        {
+            fprintf(stderr,
+                "oraculum: programma resolutionis: %s:%d %s\n",
+                vitium.plagula ? vitium.plagula : "?",
+                (integer)vitium.linea, vitium.causa);
+            redde II;
+        }
+    }
     per (i = I; i < argc; i++)
     {
         si (strcmp(argv[i], "-machina") == ZEPHYRUM)
@@ -193,6 +220,14 @@ principale (
         alioquin si (strcmp(argv[i], "-exempla") == ZEPHYRUM)
         {
             exempla = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-regulae") == ZEPHYRUM)
+        {
+            regulae = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-crudus") == ZEPHYRUM)
+        {
+            crudus = VERUM;
         }
     }
     si (machina)
@@ -265,10 +300,49 @@ principale (
                     vitium.causa ? vitium.causa : "?");
                 redde II;
             }
+            /* T17: cum programmate primarium ante (0 regulae) et post
+             * (omnes);
+             * cum -regulae tabula cumulativa post quamque regulam */
+            si (programma != NIHIL)
+            {
+                i32 summa = xar_numerus(programma->regulae);
+                i32 r;
+
+                per (r = ZEPHYRUM; r < summa; r++)
+                {
+                    si (!regulae && r != ZEPHYRUM)
+                    {
+                        perge;
+                    }
+                    oratio_oraculum_census_vacare(&census);
+                    si (!oratio_oraculum_iudicare_resolutum(p,
+                        &vocabularia,
+                            programma, (s32)r, sententiae, &census))
+                    {
+                        fprintf(stderr,
+                            "oraculum: iudicium fractum: %s\n",
+                            plagula);
+                        redde II;
+                    }
+                    imprimere("%s  regulae %d%s: primaria %.1f%%"
+                        "  tecta %.1f%%\n",
+                        machina ? "#" : "",
+                        (integer)r, r == ZEPHYRUM ? " (crudus)" : "",
+                        census.verba > ZEPHYRUM ? 100.0
+                        * (duplex)census.primaria / (duplex)census.verba
+                        : 0.0,
+                        census.verba > ZEPHYRUM ? 100.0
+                        * (duplex)census.tecta
+                            / (duplex)census.verba : 0.0);
+                }
+                imprimere("%s  regulae %d (omnes):\n",
+                    machina ? "#" : "",
+                    (integer)summa);
+            }
             oratio_oraculum_census_vacare(&census);
             ante = clock();
-            si (!oratio_oraculum_iudicare(p, &vocabularia, sententiae,
-                    &census))
+            si (!oratio_oraculum_iudicare_resolutum(p, &vocabularia,
+                    programma, (s32)-I, sententiae, &census))
             {
                 fprintf(stderr, "oraculum: iudicium fractum: %s\n",
                     plagula);

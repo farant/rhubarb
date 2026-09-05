@@ -731,6 +731,15 @@ principale (vacuum)
     /* trivia NULLA: ante/post consulto NON declarantur */
     CREDO_AEQUALIS_I32 (_regulam_numerare(regulae, numerus_regularum,
         "ante", NIHIL), ZEPHYRUM);
+    /* (d2) vocabularium plani resolutionis (gradus V, T17): regula
+     * (radix altera), consilium intra regulam, praelatio intra consilium
+     * - una quaeque; congruentes notantur ne custos reversus rubeat */
+    CREDO_AEQUALIS_I32 (_regulam_numerare(regulae, numerus_regularum,
+        "regula", NIHIL), I);
+    CREDO_AEQUALIS_I32 (_regulam_numerare(regulae, numerus_regularum,
+        "consilium", "regula"), I);
+    CREDO_AEQUALIS_I32 (_regulam_numerare(regulae, numerus_regularum,
+        "praelatio", "consilium"), I);
 
     /* (e) REVERSUM: regula omnis alicui tabulae congruit */
     {

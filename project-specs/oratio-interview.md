@@ -175,3 +175,43 @@ sententiae / nothing more.
 **A.** The C89 comments corpus is a second Latin corpus: every comment
 in lib/ and silva/ is Latin prose; oratio should read them through
 silva's tree and report unknown words there too.
+
+## Round 5 — stage 5, resolution (2026-09-05, after T16)
+
+**Q24. How does a plan row address the word and analysis it reorders,
+given the engine zeroes byte positions on expanded clones?** (a)
+ordinals stamped by the projection (`n=` on sententia, vocabulum,
+analysis-*) and a C executor walking the materia tree by them; (b)
+build the extent-provenance rule in the engine first; (c) mutate the
+STML tree and re-read it. **A.** (a).
+
+**Q25. How does the executor receive the plan?** (a) PER emits
+`<consilium><praelatio .../></consilium>` rows into the expanded
+document, canon-judged before execution; (b) C reads the in-memory
+relation through a new engine entry point. **A.** (a).
+
+**Q26. Several rules prefer different analyses for one word?** (a)
+rule order = priority, first wins; (b) last wins; (c) weighted votes
+(refused: an expression language). **A.** (a).
+
+**Q27. Adjacency, which loose matching lacks?** (a) accept gaps in v1,
+measure, pull the strict-run door with data; (b) pull the door now;
+(c) make adjacency structural in the projection. **A.** (a).
+
+**Q28. The walking skeleton's rule?** (a) adposition governs the
+following case; (b) adjective–noun agreement; (c) document language.
+**A.** (a).
+
+**Q29. The language lever, an aggregate the vocabulary refuses?** (a)
+C stamps the census as `lingua=` on the projection, the rule matches
+it; (b) C pre-orders by language before patterns; (c) wait for the
+aggregation door. **A.** (a).
+
+**Q30. Measurement and pin?** (a) cumulative per-rule PRIMARY table,
+pin per treebank only rising from the first rule; (b) pin the final
+primary only; (c) report only. **A.** (a).
+
+**Q31. Resolution by default?** (a) on wherever words are annotated
+when the program exists, `-crudus` for the source order, oracle prints
+both; (b) opt-in flag. **A.** (a).
+

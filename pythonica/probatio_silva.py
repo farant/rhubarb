@@ -1109,6 +1109,9 @@ ae = [x for x in oe.analyses(ve[1]) if x.classis == 'substantivum'][0]
 credo(ae.lingua == 'anglica' and ae.fons == 'vocabularium-en' and ae.nativum == 'N pluralis-s' and ae.accidentia == {'numerus': 'pluralis'} and ae.sensus == '', 'Oratio.analyses Anglica: nativum codices + regula, accidentia pluralis, sensus absens')
 credo([x.classis for x in oe.analyses(ve[4])][-1] == 'nomen-proprium' and oe.analyses(ve[4])[-1].fons == 'regula' and len(oe.vocabula(lingua='anglica')) == 6, 'Oratio Anglica: nomen proprium regula ultimum, filtrum linguae')
 
+orr = silva.Oratio('Cum puella ambulat.\n'); orc = silva.Oratio('Cum puella ambulat.\n', crudus=True)
+credo([x.accidentia['casus'] for x in orr.analyses(1)] == ['ablativus', 'nominativus', 'vocativus'] and [x.accidentia['casus'] for x in orc.analyses(1)] == ['nominativus', 'vocativus', 'ablativus'] and orr.vocabula()[1].classes == ('substantivum',), 'Oratio resolutio (T17): cum puella - ablativus primus; crudus = ordo fontis')
+
 print('--- Prosa.sententia: delegatio Orationi (T14) ---')
 via_s = os.path.join(T, 'prosa3.md')
 open(via_s, 'w').write('# Doc\n\n## Ideas\n\nOne sentence here. Second one\nwraps here.\n\n- item one. item two.\n\n## Code\n\n```c\nx. y;\n```\n\nLast one.\n')

@@ -218,9 +218,25 @@ source `regula`; the capital rule widened to words no LATIN source
 knows (Moby knows Hercules); a sign element carries interpunctio AND
 symbolum in the oracle. EWT dev/test vendored (CC BY-SA): 77 → 91.3 /
 91.8 %, primary 57 %; Latin pins rose to 940 / 895 / 887. Gates partes
-275, oraculum 115. NEXT: **stage 5** ordering (T17 `resolutio.stml`
-through the command layer; the lever for PRIMARY: 57 % English, 68 %
-Latin) — a design conversation first.
+275, oraculum 115. **T17 DONE — STAGE 5 OPENED** (decisions 28–35):
+the projection stamps ORDINALS (`n=` on sententia/elements/analyses)
+and `lingua=` (census) through the node hook; `oratio/partes/
+resolutio.stml` = `<regula titulus=>` elements, each an EXEMPLAR over
+the sentence projection + a `<consilium>` of PER-made `<praelatio
+vocabulum= analysis= regula=/>` rows (canon declares them: the plan is
+judged); `oratio_resolutio_applicare` composes sentence + program, one
+legere + expandere, reads the rows in program order, FIRST WINS per
+word, permutes the analyses list (materia verbs `lista_permutare` +
+`reponere`, substrate change #3, contracts checked) and rebuilds the
+classes/linguae summaries. Two literal rules (adposition governs
+accusative / ablative; a captured case never retries, a sentence root
+matches one greedy pair — findings for the pattern spec's doors).
+Primary +0.5 CIRCSE; pins 678/679/679/566/569 permille only rising;
+`oraculum.sh -regulae` = cumulative table; `-crudus` everywhere;
+`silva.Oratio(crudus=)`. Gates resolutio 87, oraculum 127, materia
+nodus 92. NEXT: **T18** the language rule (`<sententia
+lingua="anglica">` prefers English readings), then agreement rules;
+pull the sibling-run door when the oracle shows the loss.
 
 ## Laws to keep (spec §2–3)
 

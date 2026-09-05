@@ -21,4 +21,24 @@ oratio_stml_consilium (
            MateriaArborConsilium* consilium,
     constans MateriaLexiconRatum* ratum);
 
+/* ORNATUS proiectionis (T17, gradus V): frons cum dato. Ordinales 'n'
+ * SEMPER scribuntur (sententia intra paragraphum, elementa intra
+ * sententiam, analyses intra vocabulum) ut planum resolutionis
+ * vocabula et analyses nominet sine extentis octetorum; 'lingua'
+ * (census annotatoris: latina | anglica) in documento et sententia
+ * cum ornatus eam fert. Lector attributa nodi ignorat. */
+nomen structura {
+      MateriaArborFrons  frons;
+     constans character* lingua;   /* NIHIL = non scribitur */
+} OratioStmlOrnatus;
+
+/* Consilium cum ornatu: ut oratio_stml_consilium, frons copiata in
+ * ornatum cum lingua (ornatus vivat dum consilium adhibetur). */
+vacuum
+oratio_stml_consilium_ornatum (
+           MateriaArborConsilium* consilium,
+    constans MateriaLexiconRatum* ratum,
+               OratioStmlOrnatus* ornatus,
+              constans character* lingua);
+
 #endif /* ORATIO_STML_H */

@@ -313,6 +313,114 @@ materia_nodus_ponere (
 }
 
 b32
+materia_nodus_lista_permutare (
+              Piscina* piscina,
+         MateriaNodus* nodus,
+                  i32  locus,
+         constans i32* ordo,
+                  i32  n)
+{
+    constans MateriaValor* vetus;
+             MateriaValor  nova;
+                      b32* visum;
+                      i32  k;
+
+    si (   nodus == NIHIL || locus >= nodus->numerus_locorum
+        || ordo  == NIHIL)
+    {
+        fprintf(stderr,
+            "materia_nodus: permutare - locus %d extra fines\n",
+            (int)locus);
+        redde FALSUM;
+    }
+    vetus = &nodus->loci[locus];
+    si (   vetus->genus                        != MATERIA_VALOR_LISTA
+        || materia_valor_lista_numerus(*vetus) != n)
+    {
+        fprintf(stderr,
+            "materia_nodus: permutare - locus %d non lista"
+            " mensurae %d\n",
+            (int)locus, (int)n);
+        redde FALSUM;
+    }
+    visum = (b32*)piscina_allocare(piscina, (memoriae_index)(n
+        > ZEPHYRUM
+        ? n : I) * (memoriae_index)magnitudo(b32));
+    si (visum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        visum[k] = FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (ordo[k] >= n || visum[ordo[k]])
+        {
+            fprintf(stderr,
+                "materia_nodus: permutare - ordo non permutatio"
+                " (index %d)\n",
+                (int)ordo[k]);
+            redde FALSUM;
+        }
+        visum[ordo[k]] = VERUM;
+    }
+    nova = materia_valor_lista_nova(piscina);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(*vetus,
+            ordo[k]);
+
+        si (e == NIHIL)
+        {
+            redde FALSUM;
+        }
+        nova = materia_valor_lista_appendere(piscina, nova, *e);
+        si (nova.genus != MATERIA_VALOR_LISTA)
+        {
+            redde FALSUM;
+        }
+    }
+    nodus->loci[locus] = nova;
+    redde VERUM;
+}
+
+b32
+materia_nodus_reponere (
+         MateriaNodus* nodus,
+                  i32  locus,
+         MateriaValor  valor,
+  MateriaLocusSpecies  species)
+{
+    si (nodus == NIHIL || locus >= nodus->numerus_locorum)
+    {
+        fprintf(stderr,
+            "materia_nodus: reponere - locus %d extra fines\n",
+            (int)locus);
+        redde FALSUM;
+    }
+    si (!materia_valor_congruit(valor, species))
+    {
+        fprintf(stderr,
+            "materia_nodus: reponere - signum valoris (%d)"
+            " speciei loci (%d) non congruit\n",
+            (int)valor.genus, (int)species);
+        redde FALSUM;
+    }
+    si (nodus->loci[locus].genus == MATERIA_VALOR_NIHIL)
+    {
+        fprintf(stderr,
+            "materia_nodus: reponere - locus %d nondum scriptus"
+            " (ponere)\n",
+            (int)locus);
+        redde FALSUM;
+    }
+    nodus->loci[locus] = valor;
+    redde VERUM;
+}
+
+b32
 materia_nodus_appendere (
               Piscina* piscina,
          MateriaNodus* nodus,

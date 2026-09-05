@@ -1170,3 +1170,100 @@ literal, and the symptom (a run that silently judged three of five
 files) looked exactly like success. A dictionary that knows names as
 common nouns changes what "unknown" means: every rule keyed on
 "nothing known" must be re-read when a source is added.
+
+## 2026-09-05 — T17: the walking skeleton of stage 5 — resolution as pattern arms
+
+Eight decisions from the interview (spec §7, 28–35), then one rule
+end to end. The shape: the annotated SENTENCE is written to STML with
+ORDINALS (`n=` on the sentence, every element and every analysis,
+stamped by the projection hook from the node's index in its parent's
+list; `lingua=` from the annotator's census) and concatenated with
+the program `oratio/partes/resolutio.stml`; one `stml_legere`, one
+`stml_expandere`; each `<regula>` element's EXEMPLAR fills a PER that
+instantiates `<praelatio vocabulum= analysis= regula=/>` rows inside
+`<consilium>`; the C executor (`oratio_resolutio`) reads the rows in
+program order, first rule wins per word, and permutes the word's
+analyses list — preferred analysis first, the rest in their order —
+through a new materia verb. The plan is a judged document: the
+oratio canon declares `regula`/`consilium`/`praelatio`, and the
+resolutio gate judges the expanded sentence-plus-plan with 0 vitia.
+
+Two materia verbs (substrate change #3): `materia_nodus_lista_permutare`
+(the new order must be a permutation — each index exactly once — else
+refused loudly; new repository, old prospectus intact, so forks are
+not harmed) and `materia_nodus_reponere` (replace a slot already
+written, species-checked; the mirror of `ponere`'s once-only law).
+The write-once law still guards construction; mutation enters only
+through decreed verbs with checkable contracts, which is the
+mutatio-visio's thesis in its first consumer. The `classes`/`linguae`
+summaries are rebuilt after a permutation
+(`oratio_partes_compendia_reponere`), because the oracle's PRIMARY
+reads the first class of that summary — without the rebuild a
+permutation would have been invisible to the very measure it serves.
+
+The probe came before the C, run with the `stml` CLI over a projection
+with hand-stamped ordinals, and it settled the rule's formulation:
+
+- A captured case (`<casus>$c</casus>` on the preposition, `$c` again
+  on the noun) binds to the preposition's FIRST adposition analysis
+  and is never retried: `in urbem` yields nothing, because WORDS lists
+  `in` with the ablative first. Per-case LITERAL rules find it — the
+  matcher scans forward for a literal but not for a capture.
+- A pattern rooted at `<sententia>` gives ONE greedy match per
+  sentence: `Ad urbem et in silvam it` preferred `urbem` and never saw
+  `silvam`. Floating on `<vocabulum>` enumerates every word, but the
+  preposition is a sibling, and sibling-run matching is a reserved
+  door of the pattern spec. So: two literal rules (accusative,
+  ablative), one pair per sentence each, accepted and measured per
+  decision 31; the door is the finding.
+
+Measured with the cumulative table (`oraculum.sh -regulae`):
+
+| treebank | primary crude | rule 1 | rules 1–2 |
+|---|---|---|---|
+| CIRCSE | 67.4 % | 67.7 % | 67.9 % |
+| LLCT dev | 67.8 % | 67.8 % | 68.0 % |
+| LLCT test | 67.7 % | 67.7 % | 67.9 % |
+| EWT dev | 56.6 % | 56.6 % | 56.7 % |
+| EWT test | 56.9 % | 56.9 % | 57.0 % |
+
+Half a point on Seneca from two rules that touch one pair per
+sentence: the skeleton walks. The primary pins start (678 / 679 / 679
+/ 566 / 569 permille, only rising); coverage is unchanged, as it must
+be — nothing is deleted. The projection grew 4.2 % (ordinals:
+Hilarius 436,678 → 454,849 bytes), the computus golden regenerated
+with that cause. Instruments: `verba.sh` and `arbor.sh -partes` apply
+the program by default when the file exists, `-crudus` shows the
+source order; `silva.Oratio(…, crudus=True)`; the oracle prints the
+crude primary beside the resolved one.
+
+Gates: `probatio_oratio_resolutio` (87: program loads with two
+titled rules, bad programs refused with a line, missing root named,
+language from the census; `Cum puella ambulat` — ablative first
+after, nominative and vocative in their order, three analyses still,
+summaries unchanged, census per rule, idempotent second run, zero
+rules do nothing, the accusative rule alone leaves `cum puella`
+alone, `In urbem venit` already first so nothing permuted, a sentence
+without a preposition untouched, an empty program harmless; the
+expanded plan judged by the canon; a malformed plan's three bad rows
+refused and the good one applied; the verb refusing a
+non-permutation), oraculum 115 → 127 (primary pins), materia nodus 92
+(both verbs, refusals, fork safety, reponere on an unwritten slot
+refused), canon (drift guard knows the plan vocabulary; a second
+`radix="verum"` made the judge demand `regula` as THE root — a canon
+declares one root, further roots ride as declared elements).
+
+Lessons. The canon's root declaration is singular: two `radix`
+elements and the last wins, silently changing what every document is
+judged against. A doc-comment anchor in an edit script rots faster
+than a code anchor. A skeleton rule that gains half a point is
+exactly the right size for a skeleton: the mechanism is proven on
+five treebanks before a single agreement rule exists.
+A full-suite run must be read at its SUMMARY line: I grepped the
+first twenty lines of a red run, saw only the computus golden, and
+called it "only computus" — the partes gate's five exact-text
+assertions on the projection (now carrying `n=`) were red beneath the
+cut, and the commit's gate found them for me. And a regex
+replacement's string processes `\\n` into a real newline: twice it
+put a line break inside a C string literal; plain `str.replace` for
+any replacement carrying escapes.

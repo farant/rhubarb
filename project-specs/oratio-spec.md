@@ -659,6 +659,77 @@ oracle's PRIMARY count; a rule that cannot be expressed in the
 vocabulary is a finding for the STML exploratory design. The primary
 pin starts here.
 
+**Decided 2026-09-05 (interview round 5, decisions 28–35):**
+
+- **28 Addressing.** Plan rows point at words and analyses by
+  ORDINALS the projection stamps (`n=` on `sententia`, `vocabulum`,
+  every `analysis-*`, through the `nodum_ornare` hook; attributes are
+  mirrors, the reader ignores them). No byte extents: the pattern
+  engine's extent-provenance obligation stays unpulled.
+- **29 Plan surface.** The arms emit `<consilium><praelatio
+  sententia= vocabulum= analysis= regula=/>…</consilium>` rows through
+  PER into the expanded document; the oratio canon declares them, so
+  the plan is judged before execution; the C executor walks the rows.
+- **30 Conflicts.** Rule order is priority, FIRST WINS per word; rules
+  are appended, never reordered without a named cause. No weights (an
+  expression language in the data plane is refused).
+- **31 Adjacency.** Loose matching's ordered-subsequence-with-gaps is
+  accepted in v1 and measured; a measured loss pulls the strict-run
+  door of the pattern spec with data behind it.
+- **32 First rule.** Walking skeleton = *adpositio casum regit*: the
+  preposition's `casus` captured, the next word's analysis with the
+  equal `casus` preferred. One pure pattern exercising captures,
+  iterated-capture equality, sibling order, executor, oracle delta.
+- **33 Language.** The annotator's per-language census is stamped as
+  `lingua=` on the projection root (a decreed shallow projection); the
+  language rule is then an ordinary pattern that prefers each word's
+  first analysis of the document's language.
+- **34 Measurement.** The oracle applies the program's rules
+  CUMULATIVELY in order and prints PRIMARY per treebank after each
+  rule; the gate pins PRIMARY per treebank only rising from the first
+  rule on.
+- **35 Default.** Resolution is ON wherever words are annotated when
+  the program file exists (`verba.sh`, `arbor.sh -partes`,
+  `silva.Oratio`); `-crudus` shows the source order; the oracle prints
+  before and after.
+
+**Execution model (v2 pass, same day).** Per SENTENCE: the annotated
+sentence subtree is written to STML with ordinals and the document's
+`lingua`, concatenated with the program (the lint harness's
+composition: one `stml_legere`, one `stml_expandere`), the
+`<consilium>` rows are read, and a materia verb permutes the word's
+analyses list: `materia_nodus_lista_permutare` (substrate change #3),
+contract-checked — the new order is a permutation of the old, nothing
+dropped or doubled, refused loudly otherwise. Sentence-local rules
+need nothing more; the language rule reads the stamped attribute.
+Per-sentence keeps memory bounded (Cicero's whole projection is 107
+MB) and matches the oracle's unit.
+
+**As built — T17 (2026-09-05, stage 5 opened):** exactly the execution
+model above. Ordinals and `lingua` through `OratioStmlOrnatus` /
+`oratio_stml_consilium_ornatum` (plain `oratio_stml_consilium` still
+stamps ordinals, never the language); canon: `n` on sententia,
+vocabulum, interpunctio, numerus and all seventeen analysis genera,
+`lingua` on documentum and sententia, elements `regula` (with
+`titulus`), `consilium`, `praelatio` — a canon declares ONE root, so
+`regula` rides as a declared second root, and the drift guard names
+the three. Materia verbs `materia_nodus_lista_permutare` (permutation
+contract) and `materia_nodus_reponere` (written-slot contract).
+`oratio_resolutio`: `programma_legere/onerare` (rules = `<regula>`
+roots, text by byte extent), `applicare(piscina, intern, ratum,
+programma, regulae_numerus, lingua, radix, census)` per sentence with
+a scratch piscina, census per rule, first wins, `compendia_reponere`
+after each permutation. Two probes decided the rule form: a captured
+case binds to the preposition's first analysis and never retries
+(`in urbem` empty), and a sentence-rooted pattern matches one greedy
+pair per sentence — two LITERAL rules (accusative, ablative), one
+pair each, measured; the sibling-run door is the finding. Cumulative
+primary: CIRCSE 67.4 → 67.9, LLCT 67.8 → 68.0 / 67.7 → 67.9, EWT 56.6
+→ 56.7 / 56.9 → 57.0; pins 678 / 679 / 679 / 566 / 569 permille.
+Projection +4.2 % (computus golden regenerated). Gates resolutio 87,
+oraculum 127, materia nodus 92; `-crudus` on the instruments,
+`oraculum.sh -regulae`, `silva.Oratio(crudus=)`.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the
@@ -880,8 +951,11 @@ glossary pass II, the prose pin as a share ceiling). T16 DONE
 in the annotator, EWT oracle 91.3 / 91.8 %, English pass II; no
 irregulars table needed).
 
-**Stage 5.** T17 `oratio/partes/resolutio.stml` + runner through the
-command layer + per-rule oracle deltas. T18 primary pin.
+**Stage 5.** T17 DONE 2026-09-05 (the walking skeleton: two adposition
+rules, executor, verbs, canon, pins). T18 the language rule
+(`<sententia lingua="anglica">` prefers English readings), then
+agreement rules; the sibling-run door pulled when the oracle shows the
+loss.
 
 **Stage 6.** T19 `lemmata` column in gesta FTS + tabularium write path.
 T20 recall measurement on a fixed query set.

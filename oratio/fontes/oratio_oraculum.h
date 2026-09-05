@@ -30,6 +30,7 @@
 #include "oratio_registrum.h"
 #include "oratio_conllu.h"
 #include "oratio_vocabularia.h"
+#include "oratio_resolutio.h"
 
 #define ORATIO_ORACULUM_EXEMPLA 5
 
@@ -79,6 +80,19 @@ b32
 oratio_oraculum_iudicare (
                           Piscina* piscina,
        constans OratioVocabularia* vocabularia,
+                              Xar* sententiae,
+             OratioOraculumCensus* census);
+
+/* Idem cum RESOLUTIONE (T17): sententia quaeque post annotationem
+ * programmate resolvitur (regulae primae N; -I omnes; programma NIHIL
+ * = sine resolutione), PRIMARIUM tunc ordinem resolutum metitur;
+ * lingua sententiae ex censu annotationis eius. */
+b32
+oratio_oraculum_iudicare_resolutum (
+                          Piscina* piscina,
+       constans OratioVocabularia* vocabularia,
+         constans OratioProgramma* programma,
+                              s32  regulae_numerus,
                               Xar* sententiae,
              OratioOraculumCensus* census);
 

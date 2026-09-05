@@ -1,6 +1,10 @@
 /* oratio_oraculum.c - Vide oratio_oraculum.h. */
 
 #include "oratio_oraculum.h"
+#include "oratio_lexicon.h"
+#include "oratio_stml.h"
+#include "materia_lexicon.h"
+#include "internamentum.h"
 #include "oratio_arbor.h"
 #include "oratio_partes.h"
 #include "materia_nodus.h"
@@ -478,12 +482,21 @@ _verbum_iudicare (
     }
 }
 
+/* resolutio optionalis (T17): programma + regulae + intern + ratum */
+nomen structura {
+       constans OratioProgramma* programma;
+                            s32  regulae_numerus;
+            InternamentumChorda* intern;
+   constans MateriaLexiconRatum* ratum;
+} Resolutio;
+
 interior b32
 _sententiam_iudicare (
                            Piscina* piscina,
         constans OratioVocabularia* vocabularia,
     constans OratioConlluSententia* s,
-              OratioOraculumCensus* census)
+              OratioOraculumCensus* census,
+                constans Resolutio* resolutio)
 {
     Piscina* scratch = piscina_generare_dynamicum("oraculum_sententia",
         16777216);
@@ -494,6 +507,7 @@ _sententiam_iudicare (
     i32 k;
     i32 n;
     i32 e_proximum = ZEPHYRUM;
+    OratioPartesCensus census_partium;
 
     si (scratch == NIHIL)
     {
@@ -508,7 +522,15 @@ _sententiam_iudicare (
         : NIHIL;
     elementa = xar_creare(scratch, (i32)magnitudo(Elementum));
     si (   doc == NIHIL || elementa == NIHIL
-        || !oratio_partes_annotare(scratch, vocabularia, doc, NIHIL)
+        || !oratio_partes_annotare(scratch, vocabularia, doc,
+            &census_partium)
+        || (   resolutio != NIHIL && resolutio->programma != NIHIL
+            && !oratio_resolutio_applicare(scratch, resolutio->intern,
+                resolutio->ratum, resolutio->programma,
+                resolutio->regulae_numerus,
+                oratio_resolutio_lingua_censu(census_partium.linguae),
+                doc,
+                NIHIL))
         || !_elementa_colligere(scratch, vocabularia->la, doc,
         elementa))
     {
@@ -613,14 +635,46 @@ oratio_oraculum_iudicare (
                               Xar* sententiae,
              OratioOraculumCensus* census)
 {
-    i32 i;
+    redde oratio_oraculum_iudicare_resolutum(piscina, vocabularia,
+        NIHIL,
+        (s32)-I, sententiae, census);
+}
 
+b32
+oratio_oraculum_iudicare_resolutum (
+                          Piscina* piscina,
+       constans OratioVocabularia* vocabularia,
+         constans OratioProgramma* programma,
+                              s32  regulae_numerus,
+                              Xar* sententiae,
+             OratioOraculumCensus* census)
+{
+              Resolutio resolutio;
+    MateriaLexiconRatum ratum;
+     MateriaLexIudicium iudicium;
+                    i32 i;
+
+    resolutio.programma        = programma;
+    resolutio.regulae_numerus  = regulae_numerus;
+    resolutio.intern           = NIHIL;
+    resolutio.ratum            = NIHIL;
+    si (programma != NIHIL)
+    {
+        resolutio.intern = internamentum_creare(piscina);
+        si (   resolutio.intern == NIHIL
+            || !materia_lexicon_ratum_facere(&ratum, &ORATIO_LEXICON,
+                &iudicium))
+        {
+            redde FALSUM;
+        }
+        resolutio.ratum = &ratum;
+    }
     per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
     {
         si (!_sententiam_iudicare(piscina, vocabularia,
                 (constans OratioConlluSententia*)xar_obtinere(sententiae,
                 i),
-                census))
+                census, programma != NIHIL ? &resolutio : NIHIL))
         {
             redde FALSUM;
         }

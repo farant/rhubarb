@@ -837,15 +837,15 @@ principale (vacuum)
             si (s.successus)
             {
                 CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
-                    "<vocabulum classes=\"substantivum\" linguae=\"latina\">"));
+                    "<vocabulum n=\"0\" classes=\"substantivum\" linguae=\"latina\">"));
                                 CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
-                                    "<vocabulum classes=\"nomen-proprium\""));
+                                    "classes=\"nomen-proprium\""));
                 CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
-                    "<analysis-substantivi>"));
+                    "<analysis-substantivi n=\"0\">"));
                 CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
-                    "<analysis-verbi>"));
+                    "<analysis-verbi n=\"0\">"));
                 CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
-                    "<analysis-coniunctionis-coordinantis>"));
+                    "<analysis-coniunctionis-coordinantis n=\"0\">"));
                 CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
                     "<casus(> 0"));   /* INDEX ut textus: nominativus */
                 CREDO_NON_NIHIL (strstr((character*)s.textus.datum,

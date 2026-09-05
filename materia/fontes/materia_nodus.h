@@ -223,6 +223,34 @@ materia_nodus_appendere (
          MateriaValor  valor,
   MateriaLocusSpecies  species);
 
+/* VERBA MUTATIONIS (gradus V orationis, mutatio substrati tertia,
+ * 2026-09-05) - lex semel-scribendi CONSTRUCTIONEM custodit; verba
+ * decreta cum contractu probato arborem constructam mutant, contractus
+ * ante quemque octetum probatus, refusio loquax.
+ *
+ * permutare: lista loci ORDINE NOVO - ordo = indices veteres ordine
+ * novo, n = mensura listae; quisque index semel exacte (permutatio),
+ * aliter FALSUM et nihil mutatur. Repositorium novum in piscina;
+ * prospectus vetus intactus (furcae aliae non laeduntur); elementa
+ * eadem, ordo solus mutatur. */
+b32
+materia_nodus_lista_permutare (
+       Piscina* piscina,
+  MateriaNodus* nodus,
+           i32  locus,
+  constans i32* ordo,
+           i32  n);
+
+/* reponere: valorem loci IAM SCRIPTI substituere (speculum ponere:
+ * ponere locum vacuum poscit, reponere scriptum); signum valoris
+ * speciei congruat. FALSUM in violatione, nihil mutatum. */
+b32
+materia_nodus_reponere (
+         MateriaNodus* nodus,
+                  i32  locus,
+         MateriaValor  valor,
+  MateriaLocusSpecies  species);
+
 b32
 materia_valor_congruit (
          MateriaValor valor,

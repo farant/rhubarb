@@ -1,0 +1,60 @@
+<!-- resolutio.stml - Programma resolutionis ambiguitatis per contextum
+     (oratio gradus V, T17, 2026-09-05; spec par. VII, decisiones XXVIII-XXXV)
+
+     Regulae ordine PRIORITATIS: prima quae in vocabulo valet vincit;
+     regula appenditur, numquam permutatur sine causa nominata. Regula
+     quaeque = bracchium EXEMPLAR super proiectionem sententiae annotatae
+     (ordinales n in elementis et analysibus) et consilium: praelatio
+     una per vocabulum = analysis quae PRIMA fiat (ordo ceterarum manet;
+     nihil deletur). Machina laxa: liberi = subsequentia ordinata cum
+     LACUNIS (decisio XXXI: accepta et mensurata), congruentia UNA
+     avida per radicem - ergo par unum per sententiam per regulam;
+     captura casus in praepositione ad analysin primam ligatur nec
+     retro tentatur (in urbem: 'in' ablativum primum fert), ergo regulae
+     casus LITTERIS scribuntur, una per casum rectum. Inventa T17 pro
+     designo exploratorio STML: cursus fratrum flotans (par per radicem)
+     et retentatio capturae = ianuae.
+
+     Oraculum regulas CUMULATIM applicat (./oratio/oraculum.sh -regulae);
+     primarium per thesaurum pinnatum solum crescens. -->
+
+<regula titulus="adpositio-accusativum-regit">
+  <!-- praepositio cum lectione accusativa (casus 3) - vocabulum sequens
+       cuius analysis substantiva accusativa prima fiat: in urbem, ad
+       urbem, per silvam -->
+  <EXEMPLAR output="$accusativum">
+    <sententia><elementa>
+      <vocabulum><analyses>
+        <analysis-adpositionis><casus>3</casus></analysis-adpositionis>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <analysis-substantivi n="$a"><casus>3</casus></analysis-substantivi>
+      </analyses></vocabulum>
+    </elementa></sententia>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$accusativum">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="adpositio-accusativum-regit"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="adpositio-ablativum-regit">
+  <!-- praepositio cum lectione ablativa (casus 4): cum puella, in urbe,
+       ab urbe, de silva -->
+  <EXEMPLAR output="$ablativum">
+    <sententia><elementa>
+      <vocabulum><analyses>
+        <analysis-adpositionis><casus>4</casus></analysis-adpositionis>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <analysis-substantivi n="$a"><casus>4</casus></analysis-substantivi>
+      </analyses></vocabulum>
+    </elementa></sententia>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$ablativum">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="adpositio-ablativum-regit"/>
+    </PER>
+  </consilium>
+</regula>

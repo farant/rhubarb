@@ -72,6 +72,15 @@ oratio_partes_vocabulum_annotare (
                      MateriaNodus* vocabulum,
                OratioPartesCensus* census);
 
+/* Compendia CLASSES/LINGUAE vocabuli ex ordine analysium PRAESENTI
+ * reponere (post permutationem resolutionis, gradus V; verbum
+ * materia_nodus_reponere); vocabulum sine compendiis (non annotatum
+ * aut sine analysi) intactum. FALSUM = memoria. */
+b32
+oratio_partes_compendia_reponere (
+         Piscina* piscina,
+    MateriaNodus* vocabulum);
+
 /* Arborem totam (documentum aut subarborem quamlibet) annotare;
  * census NIHIL licet. FALSUM = memoria. */
 b32

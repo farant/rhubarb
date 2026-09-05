@@ -315,6 +315,85 @@ principale (vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: verba mutationis - permutare, reponere (gradus V)
+     * ======================================================== */
+
+    {
+        MateriaNodus* pater;
+        MateriaNodus* filii[III];
+        MateriaValor  vetus;
+                 i32  ordo[III];
+                 i32  k;
+
+        imprimere("\n--- Probans verba mutationis (permutare, reponere) ---\n");
+
+        pater = materia_nodus_creare(piscina, (s32)7, (i32)II);
+        CREDO_NON_NIHIL (pater);
+        per (k = ZEPHYRUM; k < (i32)III; k++)
+        {
+            filii[k] = materia_nodus_creare(piscina, (s32)(10 + k), I);
+            CREDO_NON_NIHIL (filii[k]);
+            CREDO_VERUM (materia_nodus_appendere(piscina, pater,
+                ZEPHYRUM,
+                materia_valor_nodus(filii[k]),
+                MATERIA_LOCUS_LISTA_NODUS));
+        }
+        vetus = pater->loci[ZEPHYRUM];
+        /* permutatio recta: [2, 0, 1] */
+        ordo[ZEPHYRUM]  = (i32)II;
+        ordo[I]         = ZEPHYRUM;
+        ordo[II]        = I;
+        CREDO_VERUM (materia_nodus_lista_permutare(piscina, pater,
+            ZEPHYRUM,
+            ordo, (i32)III));
+        CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
+            pater->loci[ZEPHYRUM], ZEPHYRUM)->datum.nodus->genus,
+            (s32)12);
+        CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
+            pater->loci[ZEPHYRUM], I)->datum.nodus->genus, (s32)10);
+        CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
+            pater->loci[ZEPHYRUM], (i32)II)->datum.nodus->genus,
+            (s32)11);
+        /* prospectus vetus intactus (repositorium novum) */
+        CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(vetus,
+            ZEPHYRUM)->datum.nodus->genus, (s32)10);
+        CREDO_INAEQUALITAS_PTR (vetus.datum.lista.xar,
+                                pater->loci[ZEPHYRUM].datum.lista.xar);
+        /* refusiones: index duplex, extra fines, mensura falsa, locus
+         * non lista - nihil mutatum */
+        ordo[I] = (i32)II;
+        CREDO_FALSUM (materia_nodus_lista_permutare(piscina, pater,
+            ZEPHYRUM,
+            ordo, (i32)III));
+        ordo[I] = (i32)III;
+        CREDO_FALSUM (materia_nodus_lista_permutare(piscina, pater,
+            ZEPHYRUM,
+            ordo, (i32)III));
+        ordo[I] = ZEPHYRUM;
+        CREDO_FALSUM (materia_nodus_lista_permutare(piscina, pater,
+            ZEPHYRUM,
+            ordo, (i32)II));
+        CREDO_FALSUM (materia_nodus_lista_permutare(piscina, pater, I,
+            ordo,
+            (i32)III));
+        CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
+            pater->loci[ZEPHYRUM], ZEPHYRUM)->datum.nodus->genus,
+            (s32)12);
+        /* reponere: locus scriptus tantum, species congruens */
+        CREDO_VERUM (materia_nodus_ponere(pater, I, materia_valor_index(
+            (s32)5), MATERIA_LOCUS_INDEX));
+        CREDO_VERUM (materia_nodus_reponere(pater, I,
+            materia_valor_index(
+            (s32)6), MATERIA_LOCUS_INDEX));
+        CREDO_AEQUALIS_S32 (pater->loci[I].datum.index, (s32)6);
+        CREDO_FALSUM (materia_nodus_reponere(pater, I,
+            materia_valor_nodus(filii[ZEPHYRUM]), MATERIA_LOCUS_INDEX));
+        CREDO_FALSUM (materia_nodus_reponere(filii[ZEPHYRUM], ZEPHYRUM,
+            materia_valor_index((s32)1), MATERIA_LOCUS_INDEX));
+        CREDO_AEQUALIS_S32 (pater->loci[I].datum.index, (s32)6);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

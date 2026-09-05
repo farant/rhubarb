@@ -92,12 +92,41 @@
     <liberum nomen="analysis-ignoti" maximum="1"/>
   </elementum>
 
+  <!-- =============== PLANUM RESOLUTIONIS (gradus V, T17) ===============
+       Programma oratio/partes/resolutio.stml = regulae: bracchia
+       exemplarium (CAPS machinae, canoni invisibilia) quae in documento
+       expanso (proiectio sententiae + programma) consilium pariunt -
+       praelatio una per vocabulum praeferendum (ordinales n). Planum
+       ANTE executionem iudicatur (lex plani controlantis, stml-visio 9.2);
+       exsecutor C ordines ambulat, prima regula vincit. -->
+
+  <elementum nomen="regula"
+    nota="regula resolutionis (radix ALTERA documenti expansi post arbor - canon radicem unam solam declarat): titulus = nomen regulae (causa in plano et in censu); liberi = bracchia CAPS machinae + consilium">
+    <attributum nomen="titulus" genus="textus" necessarium="verum"/>
+    <liberum nomen="consilium" maximum="1"/>
+  </elementum>
+  <elementum nomen="consilium" intra="regula"
+    nota="planum regulae: praelationes ex PER instantiatae">
+    <liberum nomen="praelatio"/>
+  </elementum>
+  <elementum nomen="praelatio" intra="consilium"
+    nota="ordo plani: vocabulum (n intra elementa sententiae) cuius analysis (n intra analyses) prima fiat; sententia optionalis; regula = titulus">
+    <attributum nomen="vocabulum" genus="numerus" necessarium="verum"/>
+    <attributum nomen="analysis"  genus="numerus" necessarium="verum"/>
+    <attributum nomen="sententia" genus="numerus"/>
+    <attributum nomen="regula"    genus="textus"/>
+  </elementum>
+
   <!-- =============== GENERA ET LOCI ===============
        Ordo registri (oratio_registrum.c). Locus quisque SEMEL aut
        nusquam: lista absens = vacua (non scribitur).
        -->
 
   <elementum nomen="documentum">
+    <attributum nomen="lingua" genus="electio">
+      <optio>latina</optio>
+      <optio>anglica</optio>
+    </attributum>
     <liberum nomen="praefixa"   maximum="1"/>
     <liberum nomen="paragraphi" maximum="1"/>
     <liberum nomen="finis"      maximum="1"/>
@@ -133,7 +162,13 @@
   <elementum nomen="forma" intra="paragraphus" textus="verum"
     nota="T6b: OratioForma ut numerus (0 prosa, 1 versus, 2 titulus, 3 tabula, 4 index) - classificator ante lectorem, lex deprimendi"/>
 
-  <elementum nomen="sententia">
+  <elementum nomen="sententia"
+    nota="attributa n (ordinalis intra paragraphum) et lingua (census documenti) = ornatus T17, lector ea ignorat">
+    <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="lingua" genus="electio">
+      <optio>latina</optio>
+      <optio>anglica</optio>
+    </attributum>
     <liberum nomen="elementa" maximum="1"/>
   </elementum>
   <elementum nomen="elementa" intra="sententia">
@@ -144,6 +179,7 @@
     nota="verbum superficiei cum partibus; analyses/classes/linguae gradus III; attributa classes/linguae = compendia DERIVATA per uncum nodi (T12) ut selectio '[classes~=verbum]' congruat - lector ea ignorat, loci veritas sunt">
     <attributum nomen="classes" genus="textus"/>
     <attributum nomen="linguae" genus="textus"/>
+    <attributum nomen="n"       genus="numerus"/>
     <liberum nomen="partes"   maximum="1"/>
     <liberum nomen="cauda"    maximum="1"/>
     <liberum nomen="analyses" maximum="1"/>
@@ -186,6 +222,7 @@
   </elementum>
 
   <elementum nomen="interpunctio">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="signum" maximum="1"/>
     <liberum nomen="cauda"  maximum="1"/>
   </elementum>
@@ -202,6 +239,7 @@
   </elementum>
 
   <elementum nomen="numerus">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="crudum" maximum="1"/>
     <liberum nomen="cauda"  maximum="1"/>
   </elementum>
@@ -229,6 +267,7 @@
 
   <elementum nomen="analysis-substantivi"
     nota="classis substantivum">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -263,6 +302,7 @@
 
   <elementum nomen="analysis-nominis-proprii"
     nota="classis nomen-proprium">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -297,6 +337,7 @@
 
   <elementum nomen="analysis-verbi"
     nota="classis verbum">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -346,6 +387,7 @@
 
   <elementum nomen="analysis-auxiliaris"
     nota="classis auxiliare">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -395,6 +437,7 @@
 
   <elementum nomen="analysis-adiectivi"
     nota="classis adiectivum">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -432,6 +475,7 @@
 
   <elementum nomen="analysis-adverbii"
     nota="classis adverbium">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -457,6 +501,7 @@
 
   <elementum nomen="analysis-pronominis"
     nota="classis pronomen">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -491,6 +536,7 @@
 
   <elementum nomen="analysis-determinantis"
     nota="classis determinans">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -522,6 +568,7 @@
 
   <elementum nomen="analysis-adpositionis"
     nota="classis adpositio">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -547,6 +594,7 @@
 
   <elementum nomen="analysis-numeralis"
     nota="classis numerale">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -581,6 +629,7 @@
 
   <elementum nomen="analysis-coniunctionis-coordinantis"
     nota="classis coniunctio-coordinans">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -603,6 +652,7 @@
 
   <elementum nomen="analysis-coniunctionis-subordinantis"
     nota="classis coniunctio-subordinans">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -625,6 +675,7 @@
 
   <elementum nomen="analysis-particulae"
     nota="classis particula">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -647,6 +698,7 @@
 
   <elementum nomen="analysis-interiectionis"
     nota="classis interiectio">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -669,6 +721,7 @@
 
   <elementum nomen="analysis-symboli"
     nota="classis symbolum">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -691,6 +744,7 @@
 
   <elementum nomen="analysis-interpunctionis"
     nota="classis interpunctio">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -713,6 +767,7 @@
 
   <elementum nomen="analysis-ignoti"
     nota="classis ignotum">
+    <attributum nomen="n" genus="numerus"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>

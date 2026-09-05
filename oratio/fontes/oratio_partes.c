@@ -557,3 +557,121 @@ oratio_partes_annotare (
     }
     redde sanum;
 }
+
+b32
+oratio_partes_compendia_reponere (
+         Piscina* piscina,
+    MateriaNodus* vocabulum)
+{
+    constans MateriaValor* analyses =
+        &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    constans MateriaValor* partes =
+        &vocabulum->loci[ORATIO_VOCABULUM_PARTES];
+    constans MateriaToken* origo;
+                character  buffer[512];
+                      i32  n;
+                      i32  k;
+                      i32  m;
+                      b32  classis_visa[ORATIO_CLASSIS_NUMERUS_CLASSIUM];
+                      b32  lingua_visa[ORATIO_LINGUA_NUMERUS];
+                    unio {
+        character* c;
+               i8* m;
+    } u;
+
+    si (   vocabulum->loci[ORATIO_VOCABULUM_CLASSES].genus
+            != MATERIA_VALOR_TOKEN
+        || analyses->genus                      != MATERIA_VALOR_LISTA
+        || partes->genus                        != MATERIA_VALOR_LISTA
+        || materia_valor_lista_numerus(*partes) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    m = materia_valor_lista_numerus(*analyses);
+    si (m == ZEPHYRUM)
+    {
+        redde VERUM;   /* 'ignotum' manet */
+    }
+    origo = materia_valor_lista_obtinere(*partes,
+        ZEPHYRUM)->datum.token;
+    memset(classis_visa, ZEPHYRUM, magnitudo(classis_visa));
+    memset(lingua_visa, ZEPHYRUM, magnitudo(lingua_visa));
+    n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        constans MateriaNodus* a =
+            materia_valor_lista_obtinere(*analyses, k)->datum.nodus;
+                OratioClassis c =
+                    oratio_genus_classis((OratioGenus)a->genus);
+           constans character* t;
+
+        si (c >= ORATIO_CLASSIS_NUMERUS_CLASSIUM || classis_visa[c])
+        {
+            perge;
+        }
+        t = oratio_classis_titulus(c);
+        si (n + (i32)strlen(t) + (i32)II >= (i32)512)
+        {
+            frange;
+        }
+        n = n + (i32)sprintf(buffer + n, "%s%s", n
+            > ZEPHYRUM ? " " : "", t);
+        classis_visa[c] = VERUM;
+    }
+    u.c = buffer;
+    {
+        MateriaToken* t = oratio_lexema_derivatum(piscina,
+            (s32)ORATIO_LEX_DERIVATUM, _copia(piscina, _chorda(u.m, n)),
+            origo);
+
+        si (   t == NIHIL
+            || !materia_nodus_reponere(vocabulum,
+                (i32)ORATIO_VOCABULUM_CLASSES, materia_valor_token(t),
+                MATERIA_LOCUS_TOKEN))
+        {
+            redde FALSUM;
+        }
+    }
+    n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        constans MateriaNodus* a =
+            materia_valor_lista_obtinere(*analyses, k)->datum.nodus;
+        constans MateriaValor* l = &a->loci[ORATIO_ANALYSIS_LINGUA];
+                          s32  lingua = l->genus == MATERIA_VALOR_INDEX
+                              ? l->datum.index : (s32)-I;
+
+        si (   lingua < ZEPHYRUM || lingua >= (s32)ORATIO_LINGUA_NUMERUS
+            || lingua_visa[lingua])
+        {
+            perge;
+        }
+        n = n + (i32)sprintf(buffer + n, "%s%s", n
+            > ZEPHYRUM ? " " : "",
+            ORATIO_TITULI_LINGUARUM[lingua]);
+        lingua_visa[lingua] = VERUM;
+    }
+    si (n > ZEPHYRUM)
+    {
+        MateriaToken* t = oratio_lexema_derivatum(piscina,
+            (s32)ORATIO_LEX_DERIVATUM, _copia(piscina, _chorda(u.m, n)),
+            origo);
+        b32 scriptum = vocabulum->loci[ORATIO_VOCABULUM_LINGUAE].genus
+            != MATERIA_VALOR_NIHIL;
+
+        si (   t == NIHIL
+            || !(scriptum
+                ? materia_nodus_reponere(vocabulum,
+                    (i32)ORATIO_VOCABULUM_LINGUAE,
+                    materia_valor_token(t),
+                    MATERIA_LOCUS_TOKEN)
+                : materia_nodus_ponere(vocabulum,
+                    (i32)ORATIO_VOCABULUM_LINGUAE,
+                    materia_valor_token(t),
+                    MATERIA_LOCUS_TOKEN)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
