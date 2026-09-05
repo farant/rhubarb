@@ -11,6 +11,7 @@
 #include "sigillum.h"
 #include "json.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -18,6 +19,34 @@
 /* ==================================================
  * Auxilia
  * ================================================== */
+
+/* monitiones stderr (venditorium/caput citatum deest, nulla
+ * implementatio pro caput solum): silex loquax ordinarie; briar
+ * (instrumentum scripti) eas tacet - silex_monitiones_tacere */
+hic_manens b32 _monitiones_tacitae = FALSUM;
+
+vacuum
+silex_monitiones_tacere (
+    b32 tacere)
+{
+    _monitiones_tacitae = tacere;
+}
+
+interior vacuum
+_monere (
+    constans character* forma,
+    ...)
+{
+    va_list argumenta;
+
+    si (_monitiones_tacitae)
+    {
+        redde;
+    }
+    va_start(argumenta, forma);
+    vfprintf(stderr, forma, argumenta);
+    va_end(argumenta);
+}
 
 interior constans character*
 _texere (
@@ -485,7 +514,7 @@ silex_clausuram_colligere (
             si (!_plagulam_e_fonte_colligere(piscina, fons,
                 "vendor/", basis_vendoris, fructus, NIHIL))
             {
-                fprintf(stderr, "silex: monitio - venditorium"
+                _monere("silex: monitio - venditorium"
                     " citatum in fonte deest: %.*s\n",
                     (integer)basis_vendoris.mensura,
                     (constans character*)basis_vendoris.datum);
@@ -519,7 +548,7 @@ silex_clausuram_colligere (
             /* citata sine fonte: monitio, non mors (commentaria
              * falso positiva possunt; dependentiae verae in
              * fabrica semper exsistunt) */
-            fprintf(stderr,
+            _monere(
                 "silex: monitio - caput citatum in fabrica deest:"
                 " %.*s\n", (integer)caput.mensura,
                 (constans character*)caput.datum);
@@ -592,7 +621,7 @@ silex_clausuram_colligere (
                      * quam lector semel legit et neglegit; caput cum
                      * implementatione non inventa aliter DEBITUM
                      * INVISIBILE pareret quod nemo umquam nuntiat. */
-                    fprintf(stderr,
+                    _monere(
                         "silex: monitio - nulla implementatio pro"
                         " %.*s (temptata: lib/%.*s.c, _macos.m,"
                         " _posix.c, _impl.c).\n"

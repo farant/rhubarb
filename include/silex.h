@@ -189,6 +189,13 @@ silex_fabricam_invenire (
                Piscina* piscina,
     constans character* initium);
 
+/* monitiones stderr (venditorium/caput citatum deest, implementatio
+ * nulla pro caput solum) tacere; ordinarium FALSUM (silex loquax ut
+ * hodie). Instrumentum scripti (briar) VERUM ponit. */
+vacuum
+silex_monitiones_tacere (
+    b32 tacere);
+
 
 /* ==================================================
  * VCS: status / condere / historia
