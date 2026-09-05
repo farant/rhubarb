@@ -808,3 +808,168 @@ by including it like any other source. The periodical's one-file
 binary therefore waits on `-amalgama`, not on a new ligator; the
 decision left is whether pictor ships as a thistle (the third shape
 above) or as `apps/pictor` amalgamated by the same rule.
+
+**Measured (2026-09-05): the third shape, by hand.** The script below
+(`project-specs/exempla/salutatio.thistle`) is a plain-shape thistle
+that opens a native window and draws "salve, munde" through
+`componere` → a ten-line figura → `pingere` → the rasterizer → the
+frame loop, with a probatio region that composes the tree headless.
+`briar -partes` derived every header from the symbols used. The
+generated project needed THREE hand fixes to link, and then ran 600
+frames in 0.5 s (rasterize 22 ms total) and its probatio passed:
+
+1. The plain shape's `aedificare.sh` is one clang line over
+   `lib/*.c`: the `.m` unit the closure correctly listed is never
+   compiled and no framework is linked. Fix: `lib/*.m` in the glob and
+   `-framework Cocoa` when the closure holds `fenestra_macos.m` — the
+   rule `aedilis.stml` already carries for aedilis.
+2. The closure oracle maps headers to sources one-to-one, so
+   `lib/fenestra_textus.c` (the pixel-table text functions of
+   `fenestra.h`), and through it `lib/fons.c` and `lib/utf8.c` with
+   `fons_6x8.h`, `fons.h`, `utf8.h`, are missing. aedilis finds them;
+   briar's silex closure does not. A second implementation file for a
+   header is the case to add.
+3. A function used as a VALUE (`figura_tituli` passed to
+   `figura_registrare`) is not a call, so derivation never sees its
+   header — the same class as briar's documented bare-macro gap. The
+   script avoids it by defining its own figura; a script that reuses a
+   library figura includes the header itself.
+
+With those three, "a native GUI app as easy as a bash script" is
+true today. This is the concrete pull for briar's ludus shape.
+
+```thistle
+#!/usr/bin/env briar
+# Salutatio
+
+A window that says hello, drawn through ludus: `componere` builds a
+two-node logical tree, a ten-line figura lowers the title node to
+mandata, the CPU rasterizer paints it, and
+the frame loop presents it. No `#include` anywhere — briar derives
+the headers from the symbols used. The window closes itself after
+six hundred frames, or when you close it.
+
+<c!>
+/* Figura propria: titulus componentis in mandata (textus). Nihil
+ * ex pictore trahitur - clausura sine volumine, sine sqlite. */
+vacuum
+figura_salutationis (
+    constans Componens* c,
+              Mandata* m,
+                  i32  thema,
+              vacuum* ctx)
+{
+    ColorMandati color;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    color.genus = COLOR_MANDATI_THEMA;
+    color.valor = (i32)COLOR_TEXT;
+    mandata_textus(m, II, II, c->titulus, ZEPHYRUM, color);
+}
+
+Componens*
+componere_salutationis (
+     InsulaRepositorium* repo,
+        constans Motus* motus,
+               Piscina* p,
+    InternamentumChorda* in,
+                vacuum* ctx)
+{
+    Componens* radix;
+    Componens* titulus;
+         Fines f;
+
+    (vacuum)repo;
+    (vacuum)motus;
+    (vacuum)ctx;
+    radix = componens_creare(p, in, "radix", PARTES_NULLUM);
+    f.x        = ZEPHYRUM;
+    f.y        = ZEPHYRUM;
+    f.latitudo = CCCXX;
+    f.altitudo = CXX;
+    componens_ponere_fines(radix, f);
+    titulus = componens_creare(p, in, "salutatio", PARTES_TITULUS);
+    f.x        = X;
+    f.y        = L;
+    f.latitudo = CCC;
+    f.altitudo = XX;
+    componens_ponere_fines(titulus, f);
+    componens_ponere_titulum(titulus, "salve, munde");
+    componens_addere_liberum(radix, titulus);
+    redde radix;
+}
+
+s32
+principale (vacuum)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+         ActioRegistrum* actiones;
+        FiguraRegistrum* figurae;
+            Dispensator* d;
+               Fenestra* fenestra;
+        TabulaPixelorum* tabula;
+          LudusFenestra* lf;
+   FenestraConfiguratio  cfg;
+                    s32  exitus;
+
+    piscina = piscina_generare_dynamicum("salutatio", IV * M * M);
+    intern  = internamentum_creare(piscina);
+    thema_initiare();
+    repo = insula_repositorium_creare(piscina, intern,
+        "<documentum/>", "<ephemera/>");
+    actiones = actio_registrum_creare(piscina, intern);
+    figurae  = figura_registrum_creare(piscina);
+    figura_registrare(figurae, PARTES_TITULUS, ZEPHYRUM,
+                      figura_salutationis, NIHIL);
+    d = dispensator_creare(piscina, intern, repo, actiones,
+                           componere_salutationis, NIHIL, CCC);
+    memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
+    cfg.titulus  = "salutatio";
+    cfg.x        = C;
+    cfg.y        = C;
+    cfg.latitudo = CCCXX;
+    cfg.altitudo = CXX;
+    cfg.vexilla  = FENESTRA_ORDINARIA;
+    fenestra = fenestra_creare(piscina, &cfg);
+    si (!fenestra)
+    {
+        redde I;
+    }
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CXX);
+    lf = ludus_fenestra_creare(piscina, d, figurae, ZEPHYRUM, NIHIL, NIHIL,
+                               tabula);
+    exitus = ludus_fenestra_currere(lf, fenestra, DC);
+    fenestra_destruere(fenestra);
+    redde exitus;
+}
+</c>
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+              Componens* arbor;
+              Componens* c;
+
+    piscina = piscina_generare_dynamicum("probatio", LXIV * M);
+    credo_aperire(piscina);
+    intern = internamentum_creare(piscina);
+    repo = insula_repositorium_creare(piscina, intern,
+        "<documentum/>", "<ephemera/>");
+    arbor = componere_salutationis(repo, NIHIL, piscina, intern, NIHIL);
+    CREDO_NON_NIHIL(arbor);
+    c = componens_invenire_per_id(arbor,
+                                  chorda_ex_literis("salutatio", piscina));
+    CREDO_NON_NIHIL(c);
+    CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "salve, munde");
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>
+```
