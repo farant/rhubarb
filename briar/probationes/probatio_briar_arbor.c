@@ -245,6 +245,114 @@ principale (vacuum)
         CREDO_VERUM (_emissio_idem(piscina, doc, "<c!/>\nx\n", (i32)8));
     }
 
+    imprimere("\n--- Probans adversa ---\n");
+    {
+        character* textus;
+              i32  mensura;
+        MateriaNodus* doc;
+        MateriaNodus* r;
+
+        /* regio non clausa: contentum usque ad finem, clausum absens */
+        textus  = _plagulam_legere(piscina, FIXA[2], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "r") == ZEPHYRUM);
+        r = briar_pars(doc, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (briar_vitium(r),
+            (s32)BRIAR_VITIUM_REGIO_NON_CLAUSA);
+        CREDO_NIHIL (briar_lexema(r, (i32)BRIAR_REGIO_CLAUSUM));
+        CREDO_VERUM (_valor_est(briar_lexema(r,
+            (i32)BRIAR_REGIO_CONTENTUM),
+            "int x;\n"));
+
+        /* clausura vaga = prosa una */
+        textus  = _plagulam_legere(piscina, FIXA[3], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "p") == ZEPHYRUM);
+
+        /* '<' sine nomine, indentatum, digitus: prosa una */
+        textus  = _plagulam_legere(piscina, FIXA[4], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "p") == ZEPHYRUM);
+
+        /* regiones vacuae: regio sine contento, elementum, regio auto */
+        textus  = _plagulam_legere(piscina, FIXA[5], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "rer") == ZEPHYRUM);
+        CREDO_NIHIL (briar_lexema(briar_pars(doc, ZEPHYRUM),
+            (i32)BRIAR_REGIO_CONTENTUM));
+        CREDO_NON_NIHIL (briar_lexema(briar_pars(doc, ZEPHYRUM),
+            (i32)BRIAR_REGIO_CLAUSUM));
+        CREDO_VERUM (_titulus_est(briar_titulus(briar_pars(doc, I)),
+            "x"));
+        CREDO_NIHIL (briar_lexema(briar_pars(doc, II),
+            (i32)BRIAR_REGIO_CLAUSUM));
+        CREDO_AEQUALIS_S32 (briar_vitium(briar_pars(doc, II)),
+            (s32)BRIAR_VITIUM_NULLUM);
+
+        /* sine interprete */
+        textus  = _plagulam_legere(piscina, FIXA[6], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        CREDO_AEQUALIS_S32 ((s32)doc->loci[BRIAR_DOCUMENTUM_INTERPRES].genus,
+            (s32)MATERIA_VALOR_NIHIL);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "pr") == ZEPHYRUM);
+
+        /* saeptum cum tag: prosa, deinde regio vera */
+        textus  = _plagulam_legere(piscina, FIXA[7], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "pr") == ZEPHYRUM);
+        CREDO_VERUM (_titulus_est(briar_titulus(briar_pars(doc, I)),
+            "html"));
+
+        /* saeptum apertum in fine: vitium documenti */
+        textus  = _plagulam_legere(piscina, FIXA[8], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "p") == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (briar_vitium(doc),
+            (s32)BRIAR_VITIUM_SAEPTUM_NON_CLAUSUM);
+
+        /* sine linea finali: clausum sine terminatore */
+        textus  = _plagulam_legere(piscina, FIXA[10], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        CREDO_VERUM (_valor_est(briar_lexema(briar_pars(doc, ZEPHYRUM),
+            (i32)BRIAR_REGIO_CLAUSUM), "</c>"));
+
+        /* CRLF: terminatores in lexematibus, positio recta */
+        textus  = _plagulam_legere(piscina, FIXA[11], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "r") == ZEPHYRUM);
+        CREDO_VERUM (_valor_est(briar_lexema(briar_pars(doc, ZEPHYRUM),
+            (i32)BRIAR_REGIO_CONTENTUM), "x\r\n"));
+        CREDO_AEQUALIS_I32 (briar_lexema(briar_pars(doc, ZEPHYRUM),
+            (i32)BRIAR_REGIO_CONTENTUM)->linea, III);
+
+        /* elementum non clausum */
+        textus  = _plagulam_legere(piscina, FIXA[12], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "e") == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (briar_vitium(briar_pars(doc, ZEPHYRUM)),
+            (s32)BRIAR_VITIUM_ELEMENTUM_NON_CLAUSUM);
+
+        /* elementum multilineare, deinde prosa */
+        textus  = _plagulam_legere(piscina, FIXA[13], &mensura);
+        doc     = briar_arbor_parsare(piscina, textus, mensura);
+        _forma(doc, forma);
+        CREDO_VERUM (strcmp(forma, "ep") == ZEPHYRUM);
+        CREDO_VERUM (_valor_est(briar_lexema(briar_pars(doc, ZEPHYRUM),
+            (i32)BRIAR_ELEMENTUM_TOK),
+            "<fenestra>\n  <a/>\n</fenestra>\n"));
+        CREDO_VERUM (_valor_est(briar_lexema(briar_pars(doc, I),
+            (i32)BRIAR_PROSA_TOK), "post\n"));
+    }
+
     imprimere("\n--- Probans corpus fixturarum (emissio octetim) ---\n");
     {
         i32 i;
