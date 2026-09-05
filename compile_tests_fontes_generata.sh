@@ -3,6 +3,7 @@
 # regeneratio: ./tools/compile_tests_fontes_generare.sh
 declare -a SOURCE_FILES=(
     "book_assets/capsula_libri.c"
+    "lib/actio.c"
     "lib/actor.c"
     "lib/aedilis.c"
     "lib/arbor.c"

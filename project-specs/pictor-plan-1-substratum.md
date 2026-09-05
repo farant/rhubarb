@@ -8,7 +8,7 @@
 
 **Tech Stack:** C89 (clang, house flags), rhubarb `lib/` — `piscina`, `chorda`, `xar`, `internamentum`, `stml`, `canon`, `credo`, `fenestra`. No new dependencies.
 
-> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **P1 COMPLETE 2026-09-04:** T6 `insula` `9ea08d8f` (49 assertions; `insula_attributum_ponere` added because stml `addere` appends and `capere` returns the first — see `lib/insula.worklog.md`) · T7 `motus` (35 assertions; effusio through `insula_attributum_ponere`; `Punctum` is unsigned so pan is positive-only until P3 — see `lib/motus.worklog.md`). **P2 in progress:** T8 `destinatio` DONE 2026-09-05 (40 assertions incl. an overlapping-siblings z-order case the draft lacked; wheel events route to focus because `Eventus` carries no position for them; child-space math in `s32` with a negative guard; the draft's "outside everything" point was inside the pannus — see `lib/destinatio.worklog.md`). **Next: T9 `actio`, T10 `dispensator`, T11 `manus_ludus`, T12 replay harness.** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
+> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **P1 COMPLETE 2026-09-04:** T6 `insula` `9ea08d8f` (49 assertions; `insula_attributum_ponere` added because stml `addere` appends and `capere` returns the first — see `lib/insula.worklog.md`) · T7 `motus` (35 assertions; effusio through `insula_attributum_ponere`; `Punctum` is unsigned so pan is positive-only until P3 — see `lib/motus.worklog.md`). **P2 in progress:** T8 `destinatio` DONE 2026-09-05 (40 assertions incl. an overlapping-siblings z-order case the draft lacked; wheel events route to focus because `Eventus` carries no position for them; child-space math in `s32` with a negative guard; the draft's "outside everything" point was inside the pannus — see `lib/destinatio.worklog.md`). T9 `actio` DONE 2026-09-05 (22 assertions; empty titles and NIHIL handlers refused — see `lib/actio.worklog.md`). **Next: T10 `dispensator`, T11 `manus_ludus`, T12 replay harness.** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
 
 **Spec:** `project-specs/pictor-spec.md` (sections 2, 3, 6.1–6.3, 7, 8 P0–P2). Rationale: `project-specs/ludus-brainstorm.md` §X–XV.
 
@@ -3327,7 +3327,7 @@ git commit -m "ludus: T8 - destinatio: strategia geometrica ordinaria, ascensus,
 - Consumes: `InsulaRepositorium` (T6), `Motus` (T7), `Destinatio` (T8), `Componens` (T3), `Eventus`.
 - Produces: `ActioFn`, `ActioRegistrum`; `actio_registrum_creare(piscina, intern)`, `actio_registrare(reg, titulus_cstr, fn, ctx) → b32`, `actio_invenire(reg, titulus_chorda, &fn, &ctx) → b32`, `actio_non_registratae(reg, arbor, piscina) → Xar*` (of `chorda`: names in the tree with no handler), `actio_non_relatae(reg, arbor, piscina) → Xar*` (registered names no componens references).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_actio.c`:
 ```c
@@ -3398,11 +3398,11 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh actio` — Expected: FAIL, header not found.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/actio.h`:
 ```c
@@ -3629,11 +3629,11 @@ actio_non_relatae (
 }
 ```
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh actio` — Expected: PASS.
 
-- [ ] **Step 5: Worklog + commit**
+- [x] **Step 5: Worklog + commit**
 
 `lib/actio.worklog.md`: `## 2026-09-04 — natus` + "Name → (fn, ctx) registry; duplicate names refused; L10 both-ways resolution over a componens tree."
 ```bash
