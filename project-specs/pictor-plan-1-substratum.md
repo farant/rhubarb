@@ -8,7 +8,7 @@
 
 **Tech Stack:** C89 (clang, house flags), rhubarb `lib/` — `piscina`, `chorda`, `xar`, `internamentum`, `stml`, `canon`, `credo`, `fenestra`. No new dependencies.
 
-> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **P1 COMPLETE 2026-09-04:** T6 `insula` `9ea08d8f` (49 assertions; `insula_attributum_ponere` added because stml `addere` appends and `capere` returns the first — see `lib/insula.worklog.md`) · T7 `motus` (35 assertions; effusio through `insula_attributum_ponere`; `Punctum` is unsigned so pan is positive-only until P3 — see `lib/motus.worklog.md`). **P2 in progress:** T8 `destinatio` DONE 2026-09-05 (40 assertions incl. an overlapping-siblings z-order case the draft lacked; wheel events route to focus because `Eventus` carries no position for them; child-space math in `s32` with a negative guard; the draft's "outside everything" point was inside the pannus — see `lib/destinatio.worklog.md`). T9 `actio` DONE 2026-09-05 (22 assertions; empty titles and NIHIL handlers refused — see `lib/actio.worklog.md`). T10 `dispensator` DONE 2026-09-05 (41 assertions; five derived genera in `fenestra.h`; focus writes through `insula_attributum_ponere`; empty ids never looked up; toy header requires both entry points under `-Wall` — see `lib/dispensator.worklog.md`). T11 `manus_ludus` DONE 2026-09-05 (malformed selectors name their cause; nested-transform screen mapping pinned — see `lib/manus_ludus.worklog.md`). **Next: T12 replay harness (last of P2).** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
+> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **P1 COMPLETE 2026-09-04:** T6 `insula` `9ea08d8f` (49 assertions; `insula_attributum_ponere` added because stml `addere` appends and `capere` returns the first — see `lib/insula.worklog.md`) · T7 `motus` (35 assertions; effusio through `insula_attributum_ponere`; `Punctum` is unsigned so pan is positive-only until P3 — see `lib/motus.worklog.md`). **P2 in progress:** T8 `destinatio` DONE 2026-09-05 (40 assertions incl. an overlapping-siblings z-order case the draft lacked; wheel events route to focus because `Eventus` carries no position for them; child-space math in `s32` with a negative guard; the draft's "outside everything" point was inside the pannus — see `lib/destinatio.worklog.md`). T9 `actio` DONE 2026-09-05 (22 assertions; empty titles and NIHIL handlers refused — see `lib/actio.worklog.md`). T10 `dispensator` DONE 2026-09-05 (41 assertions; five derived genera in `fenestra.h`; focus writes through `insula_attributum_ponere`; empty ids never looked up; toy header requires both entry points under `-Wall` — see `lib/dispensator.worklog.md`). T11 `manus_ludus` DONE 2026-09-05 (malformed selectors name their cause; nested-transform screen mapping pinned — see `lib/manus_ludus.worklog.md`). T12 replay harness DONE 2026-09-05 (25 assertions; exemplars `probationes/pictor/toy.arbor.stml` + `toy.insulae.stml` born on first run and promoted by hand; `.novum` candidates gitignored; islands joined with newlines so `diff -u` is line-based; the final tick does NOT flush pan because the toy clears `sordida` when a stroke ends). **P2 COMPLETE — this plan is done; twelve probationes green. Next plan: pictor P3 (document, componentia, figurae).** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
 
 **Spec:** `project-specs/pictor-spec.md` (sections 2, 3, 6.1–6.3, 7, 8 P0–P2). Rationale: `project-specs/ludus-brainstorm.md` §X–XV.
 
@@ -4706,7 +4706,7 @@ git commit -m "ludus: T11 - manus_ludus: manus in processu, selectores super arb
 - Consumes: `eventus_legere_stml` (T5), `Dispensator` (T10), `componens_scribere_stml` (T3), `insula_scribere`/`insula_restituere` (T6), `filum.h` (exists: read/write a file into/from a chorda — verify the two signatures at `include/filum.h` and adjust the two call sites in `pictor_commune.h` if they differ from `filum_legere(via, piscina) → chorda` and `filum_scribere(via, contentum) → b32`).
 - Produces: `exemplar_conferre(piscina, via_exemplar, candidatus) → b32` (the exemplar / candidatus / differentia convention on text).
 
-- [ ] **Step 1: Write the exemplar helper and the event log**
+- [x] **Step 1: Write the exemplar helper and the event log**
 
 `probationes/pictor_commune.h`:
 ```c
@@ -4765,7 +4765,7 @@ exemplar_conferre (Piscina* piscina, constans character* via_exemplar, chorda ca
 </eventus_index>
 ```
 
-- [ ] **Step 2: Write the failing probatio**
+- [x] **Step 2: Write the failing probatio**
 
 `probationes/probatio_pictor_toy.c`:
 ```c
@@ -4849,7 +4849,7 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 3: First run — exemplars are born**
+- [x] **Step 3: First run — exemplars are born**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh pictor_toy`
 Expected: the semantic assertions PASS; the two `exemplar_conferre` calls FAIL with `EXEMPLAR DEEST`, writing `probationes/pictor/toy.arbor.stml.novum` and `toy.insulae.stml.novum`. Open both, confirm they read as expected (three componentia, focus=tabula, numerus=1, ictus_numerus=1, puncta=3, fuga=verum, pan/zoom flushed by the final tick), then promote:
@@ -4858,12 +4858,12 @@ mv probationes/pictor/toy.arbor.stml.novum   probationes/pictor/toy.arbor.stml
 mv probationes/pictor/toy.insulae.stml.novum probationes/pictor/toy.insulae.stml
 ```
 
-- [ ] **Step 4: Second run — green**
+- [x] **Step 4: Second run — green**
 
 Run: `./compile_tests.sh pictor_toy` — Expected: PASS, all tiers.
 Then the full substrate: `./compile_tests.sh mandatum && ./compile_tests.sh componens && ./compile_tests.sh derivare && ./compile_tests.sh eventus_stml && ./compile_tests.sh insula && ./compile_tests.sh motus && ./compile_tests.sh destinatio && ./compile_tests.sh actio && ./compile_tests.sh dispensator && ./compile_tests.sh manus_ludus` — all PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add probationes/pictor_commune.h probationes/pictor/toy.eventus.stml probationes/pictor/toy.arbor.stml probationes/pictor/toy.insulae.stml probationes/probatio_pictor_toy.c compile_tests_fontes_generata.sh
