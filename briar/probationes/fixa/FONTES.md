@@ -8,3 +8,11 @@
 
 Snapshots manu scripti 2026-09-04 (plan 1). Mutatio = mutatio pinnarum
 in probationibus arbor/stml/nexus/computus - causa nominanda.
+
+## Aurum computi
+
+`computus/basis.tsv` — columnae XI (octeti, lexemata, nodi, octeti_stml,
+usus, commissa, otiosa, apex, alvei, allocationes, allocationes_arboris)
+super `salve.thistle` et `salve_vitreum.thistle`; natum 2026-09-04
+(causa: nativitas portae). Regeneratio `COMPUTUS_SCRIBERE=1` cum causa
+nominata in commissione.

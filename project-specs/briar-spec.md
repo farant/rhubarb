@@ -69,7 +69,7 @@ exists — canon.h). Three region kinds plus prose:
 |---|---|---|---|
 | interpres | line 1 starting `#!` | end of line 1 | the interpreter line; kept in the tree, dropped from every build |
 | regio (raw) | a column-0 line `<name! attrs>` — `!` glued to the name, attributes in STML syntax (the lexer form at lib/stml.c:905–1030, exists) | the first later column-0 line `</name>` | bytes VERBATIM: C, html, js, css, md |
-| elementum (STML) | a column-0 line `<name attrs>` or `<name attrs/>` | the balanced close found by the STML lexeme stream (`stml_lexemata_colligere`, exists — stml.h:345), or the `/>` | STML, handed whole to `stml_legere` (exists) |
+| elementum (STML) | a column-0 line `<name attrs>` or `<name attrs/>` | the first later column-0 line `</name>`, or the `/>` when the opening line itself is self-closing (plan 1 amendment: the column-0 law governs every boundary; a multi-line self-closing element is a named vitium, `elementum-non-clausum`) | STML, handed whole to `stml_legere` (exists) |
 | prosa | any other line | the next region or interpres | markdown, handed whole to `md_arbor_parsare` (exists — md/fontes/md_arbor.h) |
 
 **Laws.**
@@ -204,7 +204,7 @@ Genera (unsealed names) and their loci, in the css/md table form
 | `documentum` | `interpres` NODUS? · `partes` LISTA_NODUS |
 | `interpres` | `tok` TOKEN (the whole line incl. newline) |
 | `prosa` | `tok` TOKEN (the whole run) |
-| `regio` | `tok_apertum` TOKEN (open-tag line) · `titulus` TOKEN† · `tok_contentum` TOKEN (bytes, may be empty) · `tok_clausum` TOKEN? (absent = unterminated) · `vitium` INDEX |
+| `regio` | `apertum` TOKEN (open-tag line) · `titulus` TOKEN† · `contentum` TOKEN? (absent = empty) · `clausum` TOKEN? (absent = unterminated) · `vitium` INDEX — plan 1 amendment: no `tok_` prefixes, the loci double as canon element names |
 | `elementum` | `tok` TOKEN (balanced STML bytes) · `titulus` TOKEN† |
 
 † = DERIVED token (`fons_index` 1, md's semantic channel): the name
@@ -483,16 +483,16 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 
 ## 8. Phase plan (test-first; each phase ends green)
 
-- **P0 format + parser core.** Registry, lexicon, lexema (with fence
+- **P0 format + parser core — DONE (plan 1, 2026-09-04).** Registry, lexicon, lexema (with fence
   state), arbor; fixtures (the two of §2 plus adversarial:
   unterminated, stray close, `<` in prose, empty regions, no
   interpres, **a fenced `<html>` example in prose followed by a real
   `<html!>` region**, a fence left open); gates registrum / lexema /
   arbor; the runner and its pythonica rows.
-- **P1 projection.** `briar_stml`, `briar.canon` + registration, gates
+- **P1 projection — DONE (plan 1, 2026-09-04).** `briar_stml`, `briar.canon` (loaded by path, not registered: the `<arbor>` root is shared by every materia dialect), gates
   stml / canon / totalitas / computus. `briar -arbor` exists first as
   a shell script over the probatio objects (md's `arbor.sh` pattern).
-- **P2 nexus.** Inner trees for prose, STML elements, raw attributes
+- **P2 nexus — DONE for md and STML (plan 1, 2026-09-04); the silva inner kind moves to plan 2 with its consumer.** Inner trees for prose, STML elements, raw attributes
   (`methodus`, `munus`), and C regions through silva with the capsula
   as include provider (latina.h synthetic first; a bare parse is a
   planted fault here — it must be seen to misparse); offsets; gate
