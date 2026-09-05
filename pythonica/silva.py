@@ -1522,6 +1522,8 @@ PORTAE = {
                    r'amalgamata: \d+ compilata, \d+ fracta'),
     'aedilis': (['./tools/aedilis_porta.sh'],
                 r'PORTA AEDILIS: \d+ probationes'),
+    'briar-fumus': (['./tools/briar_fumus.sh'],
+                    r'fumus briar: (sanum|FRACTUM)'),
     'materia-shim': (['./materia/shim_probare.sh'],
                      r'probatae \d+, fractae \d+'),
 }
