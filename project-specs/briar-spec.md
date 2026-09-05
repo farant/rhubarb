@@ -459,6 +459,35 @@ the verdict.
   | `-partes` | print the closure, ADEST/ABEST as `silex partes` |
   | `-versio` | corpus stamp and the flag-string hash of §4.1 |
 
+- **`-amalgama` (banked design, 2026-09-05, not built):** writes ONE
+  file beside the thistle — `<t>.c`, or `<t>.m` when the closure holds
+  an Objective-C file (Fran: single `.m` if feasible) — that compiles
+  with clang alone: `clang <flags> <t>.c [-framework …] -o <t>`. It is
+  the escape hatch, not the normal path. Content, in order: (1) the
+  union of every `#include <…>` system line found in the closure and
+  the generated files, deduplicated, hoisted to the top; (2) the
+  closure's headers in DEPENDENCY order (depth-first over each
+  header's own `#include "…"` lines, post-order — a header follows
+  everything it includes), each with its local `#include "…"` lines
+  stripped (guards stay, harmless); (3) the generated regions header;
+  (4) every library source, then `<t>_regiones.c`, then `<t>.c`, each
+  with local includes stripped. **File-scope statics collide** across
+  sources (measured: 44 static function names defined in more than
+  one `lib/*.c`; `_est_spatium` in ten) — so each source is wrapped:
+  before its text, `#define <name> <name>_<file stem>` for every
+  file-scope function or object it defines that another closure file
+  also defines; after it, `#undef` of those, plus `#undef` of every
+  macro the file itself defines (the identifier index's `lib/*.c`
+  `sedes` rows, added to `corpus.symbola.tsv`, supply both lists — no
+  parsing at amalgam time). The probatio is NOT part of the amalgam
+  (`-amalgama -probatio` = a second file `probatio_<t>.c` by the same
+  rule with the probatio unit as its main). Gate: the fixtures'
+  amalgams compile and run by hand once at birth; in the suite the
+  amalgam is byte-compared to a golden and checked structurally
+  (every closure file present exactly once, no local include left,
+  every colliding name wrapped). Assets for the vitrea shape stay a
+  separate generated `capsula_<t>.c` — the amalgam includes its text
+  too, so the `.m` is still one file.
 - **The shebang form** `./x.thistle …` reaches briar as `briar
   ./x.thistle …`, so briar also recognizes its own flags as the FIRST
   argument after the file: `./x.thistle -probatio` runs the probatio.
