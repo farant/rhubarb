@@ -8,7 +8,7 @@
 
 **Tech Stack:** C89 (clang, house flags), rhubarb `lib/` — `piscina`, `chorda`, `xar`, `internamentum`, `stml`, `canon`, `credo`, `fenestra`. No new dependencies.
 
-> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **T6 `insula` DONE 2026-09-04** (49 assertions; `insula_attributum_ponere` added — see `lib/insula.worklog.md`). **Next: T7 `motus` (P1).** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
+> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **P1 COMPLETE 2026-09-04:** T6 `insula` `9ea08d8f` (49 assertions; `insula_attributum_ponere` added because stml `addere` appends and `capere` returns the first — see `lib/insula.worklog.md`) · T7 `motus` (35 assertions; effusio through `insula_attributum_ponere`; `Punctum` is unsigned so pan is positive-only until P3 — see `lib/motus.worklog.md`). **Next: P2 — T8 `destinatio`, T9 `actio`, T10 `dispensator`, T11 `manus_ludus`, T12 replay harness.** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
 
 **Spec:** `project-specs/pictor-spec.md` (sections 2, 3, 6.1–6.3, 7, 8 P0–P2). Rationale: `project-specs/ludus-brainstorm.md` §X–XV.
 
@@ -2701,7 +2701,7 @@ git commit -m "ludus: T6 - insula: repositorium trium generum, portae unicae, re
 - Consumes: `Punctum` (Task 2), `InsulaRepositorium`, `mutare_ephemera` (Task 6).
 - Produces: `Motus`, `MotusMutator`; `motus_initiare(motus, piscina)`, `mutare_motum(motus, fn, ctx, tempus)`, `motus_quies(motus, nunc, quies_ms) → b32`, `motus_effundere(motus, repo) → b32` (`<quies/>`), `motus_captura_ponere(motus, id)`, `motus_captura_tollere(motus)`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_motus.c`:
 ```c
@@ -2781,11 +2781,11 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh motus` — Expected: FAIL, header not found.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/motus.h`:
 ```c
@@ -2923,11 +2923,11 @@ vacuum motus_captura_tollere (Motus* motus)            { motus->captura = chorda
 ```
 `pan.x` is `i32` (unsigned) — the test's `-X` wraps; if `-Wsign-conversion` rejects it, use `motus->pan.y = ZEPHYRUM` in `pan_ponere` and assert only `pan_x`. Signed screen coordinates are a P3 decision (spec §10 names are unsealed; so are widths).
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh motus` — Expected: PASS.
 
-- [ ] **Step 5: Worklog + commit**
+- [x] **Step 5: Worklog + commit**
 
 `lib/motus.worklog.md`: `## 2026-09-04 — natus` + "In-memory kinetic tier; quiet judged from event time; effundere is the single `<quies/>` seat writing pan/zoom to the ephemera island."
 ```bash
