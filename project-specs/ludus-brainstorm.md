@@ -654,3 +654,110 @@ through `vim.h`. Figurae v1: figura_optionis, _indicis, _tabulae (one
 imago + marquee + pending-stroke overlay + cursor), _bottonis,
 _campi, _dialogi (veil + panel), _status. Tool icons: bespoke by
 sigillum in capsula, or fons_6x8 glyphs to start.
+
+
+## XVI. DECISUS / PROPOSITA — flows, ownership, buffering (round 4, 2026-09-05)
+
+Recorded after Plan 1 (P0–P2) sealed at f84e06b3, from three
+questions Fran raised in one sitting: widgets controlling widgets
+(the redux-saga shape), actors with owned state versus Sketchpad's
+global database (Muratori, "The Big OOPs"), and double-buffered
+frame state (Steenberg at the same conference; the Dreams
+attribution is unverified — the idea is taken on its own merits).
+
+**§1 Flows, not widget-to-widget control — DECISUS.** A componens is
+not an object: it is recomposed from the islands every event, holds
+no state, and cannot reach another componens. Widget A influences B
+only through STATE (A's handler writes an island attribute; B's part
+of `componere` reads it). Anything that spans several events and
+several widgets (a save dialog, drag from palette to canvas, undo, a
+tooltip after a long hover) is a FLOW, and a flow manages several
+widgets; no widget manages another. The house form of a saga:
+
+- A flow is a state machine whose program counter is DATA in the
+  ephemera island (root attributes naming the flow and its step);
+  handlers advance it; `componere` composes the dialog and the
+  disabled state from it; the canon declares the legal states
+  (canon's citation scope for state-machine transitions already
+  exists). A flow mid-flight SURVIVES A RESTORE — redux-saga cannot.
+- Entry/exit handlers per step live in the action registry under
+  dotted names, so L10's both-ways resolution still reports a
+  declared step with no handler. Opening a step pushes the focus
+  stack; leaving pops it (T10's `focus_acervus`).
+- ONE addressed-event seat: a handler that must reach another widget
+  enqueues a derived event addressed to an id; the dispensator drains
+  the queue with the staleness rule between. The payload is never in
+  the event, only in state. Derived events are deterministic from the
+  raw log and therefore never recorded in it. `focus_petitus` is the
+  existing instance, generalized.
+- The actarius (T6's post-write hook) OBSERVES, never writes: it runs
+  inside the gate and a write to the same island would vacate the
+  arena it stands in. It may enqueue or log — undo and autosave
+  marking hang here.
+- NOT: custom messages bubbling through the ascent; handlers holding
+  pointers to componentia. Both break "one action per intent" and
+  "handlers touch state only through gates".
+- Trigger: P5's modals (open, Escape cancels, focus returns, proven by
+  a replay log). The idiom is designed in Plan 2's canon work; nothing
+  is built before the first consumer.
+
+**§2 Reads global, writes owned — DECISUS.** The Sketchpad lesson is
+not "global state is good" but "every system traverses one store
+along its own axis": `componere`, `pingere`, `destinatio`, restore
+and replay all depend on reads being universal, and the STML dump
+being the whole application. Universal reads STAY. What the actor
+model contributes is the other half: every piece of state has
+exactly one writer. Much of it already holds without being a rule —
+`pictor_documentum` owns acta, the dispensator owns `focus` (others
+send `focus_petitus`), `instrumentum.eligere` owns `instrumentum`
+(a palette click and a hotkey both invoke the action), a flow owns
+its step. Messages are named actions plus addressed derived events;
+delivery is the single deterministic queue. An actor system with the
+concurrency removed — HyperTalk's message path (button → card →
+background → stack) is our ascent, and its fields were readable from
+anywhere. Enforcement is cheap and needs no static analysis: the
+gate already serializes before and after a write; diff the
+attributes, and with the owner DECLARED IN THE CANON per attribute
+the gate refuses a write from anyone else, the offender named in
+`causa`. Lands with the real island canons in Plan 2 as a small
+`insula` addition; it is L3's neighbour. Real actors (mailboxes,
+supervision) earn their place only across process boundaries: the
+ledger daemon, the periodical's binaries, briar scripts owning a
+card's subtree and speaking only in events.
+
+**§3 Frame-level double-buffered state — PROPOSITUM, named option.**
+Read frame N, write frame N+1: order among systems stops mattering,
+systems can run in parallel, conflicts are visible. Ludus already
+does it at three granularities — targeting resolves a click against
+the LAST logical tree (you click what you see); a gated write mutates
+a COPY in the other piscina; composition ping-pongs so the old tree
+stays valid until the new one is complete. It does NOT batch
+visibility to a frame boundary: a write is readable by the next
+handler in the same event, deliberately, because some chains are
+same-event (focus lost → written → gained → handler). Full frame
+buffering would buy (1) PIPELINING: rasterize frame N while
+dispatching N+1 — the trigger, measured in Plan 2's window glue; and
+(2) write conflicts detectable within a frame, reinforcing §2. It
+would not buy determinism: the loop is single-threaded and the
+replay harness already proves same log, same islands, same tree.
+Trigger: the rasterizer dominating the frame.
+
+**§4 Derived and addressed events deliver at the NEXT event boundary
+— DECISUS.** Adopted from §3 as the one piece that costs nothing:
+`mittere_ad` in dispensator.c is synchronous today; it becomes an
+enqueue drained after the current event's dispatch and recompose.
+Scheduled as an early task of Plan 2 rather than a drive-by, because
+it changes T10's `focus_petitus` chain and deserves its own red.
+
+**§5 Roles are data, never types — PROPOSITUM (the Muratori
+constraint for `pictor_componentia`).** The named mistake is a
+compile-time hierarchy of encapsulation matching the domain model.
+Ludus sides against it: one uniform `Componens` record, parent/child
+as runtime containment, behaviour attached by NAME through a
+registry, drawing by (partes, thema) lookup, systems walking the whole
+tree along their own axis. Plan 2's watch point: `prospectus`,
+`tabula`, `instrumentarium` and the rest are roles — a `partes` tag
+plus fields plus registry entries — never C structs with function
+tables. If roles ever need sub-roles, the role itself moves into
+data. `Partes` as an enum with a switch in every system is a small
+closed hierarchy; watch it.
