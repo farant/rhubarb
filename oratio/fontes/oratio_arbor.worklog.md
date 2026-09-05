@@ -868,3 +868,110 @@ difference over the diff and the new files, and the three coinages
 got entries), the regenerated symbol table simply indexes seventy more
 identifier words of the existing tree — the cause is coverage, and it
 is named here.
+
+## 2026-09-04 — T13: the oracle — treebanks grade the parser, and the mapping learns from them
+
+Two Latin treebanks from Universal Dependencies are vendored under
+`oratio/probationes/fixa/ud/`, both CC BY-SA 4.0 with their licence
+and README verbatim: CIRCSE (Seneca, Hercules Furens, 893 sentences,
+11,503 tokens, no punctuation, `u` for `v`, 316 enclitic ranges) and
+the LLCT charter treebank's dev and test splits (Fran's call — train
+is a quarter million tokens and UD scores on dev/test anyway; 850 and
+884 sentences, 24k tokens each, medieval spelling, punctuation). The
+non-commercial ones (ITTB, PROIEL, Perseus, UDante) are never
+vendored: `./oratio/oraculum.sh -petere` fetches their test files into
+the build directory and reports. FONTES.md carries upstream commits,
+byte counts and seals.
+
+`oratio_conllu` reads the format: ten tab-separated fields or the
+reader stops with the line, `# sent_id` and `# text` kept, ranges
+`a-b` marked and their words following, empty nodes `a.b` skipped, a
+blank line closes a sentence, CRLF tolerated, `SpaceAfter=No` read
+from MISC, and the sentence text taken from `# text` or reconstructed
+from the forms when absent (ranges give the surface, their words are
+skipped). Chords reference the file, nothing is copied.
+
+`oratio_oraculum` judges a sentence: its text is parsed and annotated
+exactly as a document would be, the elements (word, punctuation,
+number) get byte extents from their tokens, each gold token's form is
+located in the same text in order, and the element containing the
+gold start — or every element the gold extent touches — lends its
+class set. A range is one surface token judged for each of its words,
+so `pronumque` meets one element whose classes are the enclitic's and
+the adjective's. Three measures per gold word: TECTUM, the gold class
+among ours, which is coverage and gets pinned only rising in permille
+per file; PRIMARIUM, our first class equals gold, reported; LEMMA, the
+gold lemma folded among our folded lemmata, reported; plus our
+`ignotum` and unaligned counts, and the first five uncovered examples
+per class, which the instrument prints with `-exempla`. Alignment was
+perfect from the first run: zero unaligned tokens across 60k, zero
+broken sentences.
+
+Day one, before touching the mapping:
+
+| treebank | coverage | primary | lemma | ours unknown |
+|---|---|---|---|---|
+| CIRCSE | 84.2 % | 66.0 % | 87.7 % | 4.1 % |
+| LLCT dev | 71.9 % | 61.7 % | 64.0 % | 13.4 % |
+| LLCT test | 72.5 % | 62.3 % | 63.7 % | 13.2 % |
+
+The per-class table said exactly what T12 predicted and more. Three
+classes at ZERO because WORDS does not carve them: `auxiliare` (every
+one of them lemma `sum`, lemma agreement 100 %), `determinans` (hic,
+ille, meus, noster, omnis, solus, uterque, suprascriptus — WORDS says
+pronoun or adjective), `particula` (non, haud — WORDS says adverb).
+Subordinating conjunctions at 74–84 % because `cum`, `unde`, `qualiter`,
+`quam` reach us as adverb or preposition and the CONJ rule never
+fired. Proper nouns at 13–23 %: the names of Seneca's myth and of the
+charters' witnesses are simply not in WORDS, so they were `ignotum`.
+Ordinals (tertiae, octavo) are ADJ in UD and numerale in WORDS. And
+WORDS marks `deus`, `chaos`, `Manes` as kind N (name), which T12 had
+turned into proper nouns while UD calls them nouns.
+
+So the mapping pass II, every rule a data list with the oracle's
+counts as its cause (`oratio_partes_la.h` records them): SECONDARY
+descriptions appended after the primary one, never replacing it —
+`sum` gets an `auxiliare` reading beside the verb; pronouns,
+adjectives and numerals whose lemma is in `ORATIO_DETERMINANTIA` get a
+`determinans` reading; adverbs in `ORATIO_PARTICULAE` a `particula`
+reading; adverbs and prepositions in the subordinating list a
+`coniunctio-subordinans` reading (and the list grew: qualiter, unde,
+quam, quatenus, quomodo …); ordinals an `adiectivum` reading; kind N
+names a `substantivum` reading — kind L places like Roma stay proper
+only, which is where the CIRCSE pin lost one permille and was moved
+with that cause. And the one rule without a dictionary: a word nothing
+knows whose first letter is a capital becomes a `nomen-proprium`
+candidate with source `regula` (a fourth value appended to the source
+enumeration) and nativum `capitalis`. The primary reading is
+unchanged everywhere, so PRIMARY moved only where a class went from
+nothing to something.
+
+After the pass:
+
+| treebank | coverage | primary | lemma | ours unknown |
+|---|---|---|---|---|
+| CIRCSE | 93.7 % | 67.8 % | 88.7 % | 0.8 % |
+| LLCT dev | 88.9 % | 68.1 % | 65.0 % | 7.0 % |
+| LLCT test | 88.2 % | 68.2 % | 64.6 % | 7.1 % |
+
+Per class: auxiliare 0 → 99–100, determinans 0 → 78–84, particula 7 →
+65–87, nomen-proprium 13–23 → 79–90, subordinating 74–84 → 94–100,
+adjective on the charters 61–65 → 74–75. The pins are 937, 889, 882
+permille, only rising. What is left is honest: the charters' medieval
+spellings (`ecclesie` for ecclesiae, `episcupatui`), participles UD
+tags as adjectives (furens, tonantem), and PRIMARY at two thirds,
+which is the unordered list and stage 5's job.
+
+Gate `probatio_oratio_oraculum` (104): the reader on an inline
+two-sentence source with every feature and three refused sources with
+their line; the judge on `Puella rosam amat.` (4/4 covered, primary 3
+because WORDS lists rosam as a participle first, lemma 3 because
+punctuation has none), on a range, an unknown, an unaligned token and
+an out-of-table UPOS; and the three treebanks with sentence counts
+pinned, the table printed, coverage pinned, unaligned under 2 %,
+broken sentences zero. Planted fault: PROPN removed from the UPOS
+table → red. The partes gate grew to 203 with the secondary rules and
+the capital rule; its annotated fixture had to keep its capital
+`Xyzzy`, because a lowercase unknown after a period does not start a
+sentence — which briefly made the gate dereference a sentence that was
+not there.

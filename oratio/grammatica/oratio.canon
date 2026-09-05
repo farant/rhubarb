@@ -245,7 +245,7 @@
   <elementum nomen="lingua" intra="analysis-substantivi" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-substantivi" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-substantivi" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -279,7 +279,7 @@
   <elementum nomen="lingua" intra="analysis-nominis-proprii" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-nominis-proprii" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-nominis-proprii" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -318,7 +318,7 @@
   <elementum nomen="lingua" intra="analysis-verbi" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-verbi" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-verbi" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -367,7 +367,7 @@
   <elementum nomen="lingua" intra="analysis-auxiliaris" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-auxiliaris" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-auxiliaris" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -412,7 +412,7 @@
   <elementum nomen="lingua" intra="analysis-adiectivi" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-adiectivi" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-adiectivi" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -445,7 +445,7 @@
   <elementum nomen="lingua" intra="analysis-adverbii" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-adverbii" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-adverbii" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -473,7 +473,7 @@
   <elementum nomen="lingua" intra="analysis-pronominis" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-pronominis" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-pronominis" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -506,7 +506,7 @@
   <elementum nomen="lingua" intra="analysis-determinantis" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-determinantis" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-determinantis" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -535,7 +535,7 @@
   <elementum nomen="lingua" intra="analysis-adpositionis" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-adpositionis" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-adpositionis" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -563,7 +563,7 @@
   <elementum nomen="lingua" intra="analysis-numeralis" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-numeralis" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-numeralis" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -593,7 +593,7 @@
   <elementum nomen="lingua" intra="analysis-coniunctionis-coordinantis" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-coniunctionis-coordinantis" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-coniunctionis-coordinantis" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -615,7 +615,7 @@
   <elementum nomen="lingua" intra="analysis-coniunctionis-subordinantis" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-coniunctionis-subordinantis" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-coniunctionis-subordinantis" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -637,7 +637,7 @@
   <elementum nomen="lingua" intra="analysis-particulae" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-particulae" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-particulae" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -659,7 +659,7 @@
   <elementum nomen="lingua" intra="analysis-interiectionis" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-interiectionis" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-interiectionis" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -681,7 +681,7 @@
   <elementum nomen="lingua" intra="analysis-symboli" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-symboli" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-symboli" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -703,7 +703,7 @@
   <elementum nomen="lingua" intra="analysis-interpunctionis" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-interpunctionis" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-interpunctionis" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
@@ -725,7 +725,7 @@
   <elementum nomen="lingua" intra="analysis-ignoti" textus="verum"
     nota="OratioLingua: 0 latina 1 anglica"/>
   <elementum nomen="fons" intra="analysis-ignoti" textus="verum"
-    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium 3 regula"/>
   <elementum nomen="nativum" intra="analysis-ignoti" nota="derivatum: codex fontis verbatim (lexema unum)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>

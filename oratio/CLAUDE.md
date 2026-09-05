@@ -178,10 +178,25 @@ write, ignored on read) mirrors `classes`/`linguae` onto `<vocabulum>`
 so `vocabulum[classes~=verbum]` selects; selectio's `~=` underflow
 fixed. `./oratio/arbor.sh <x.txt> -partes`. Gate `probatio_oratio_partes`
 (171). Day one: Cicero 13,214 words, 114,876 analyses, 2.9 % unknown,
-858 ms — pronoun packings dominate (`quis` 215). NEXT: **T13** CoNLL-U
-reader + `probatio_oratio_oraculum` over CIRCSE + LLCT (COVERAGE
-pinned, PRIMARY reported, per class); then T14 `verba.sh`,
-`silva.Oratio`.
+858 ms — pronoun packings dominate (`quis` 215). **T13 DONE**: the
+oracle. `oratio/probationes/fixa/ud/` = CIRCSE test + LLCT dev/test
+(CC BY-SA, licences + READMEs + FONTES.md; NC treebanks via
+`./oratio/oraculum.sh -petere`, reported only, never vendored).
+`oratio_conllu` (reader: ranges, empty nodes skipped, `# text` or
+reconstruction) and `oratio_oraculum` (sentence parsed + annotated,
+elements by byte extent, gold forms located in the text, ranges judged
+per word; TECTUM = coverage PINNED only rising in permille per file,
+PRIMARIUM + LEMMA reported, `-exempla` prints the uncovered). Mapping
+pass II from the per-class table — SECONDARY readings appended after
+the primary, data lists in `oratio_partes_la.h` with the counts as
+cause: `sum` + auxiliare, `ORATIO_DETERMINANTIA` + determinans,
+`ORATIO_PARTICULAE` + particula, subordinating adverbs/prepositions +
+coniunctio-subordinans, ordinals + adiectivum, WORDS kind N + substantivum,
+capitalized unknown → nomen-proprium (source `regula`). Coverage
+CIRCSE 84 → 93.7 %, LLCT 72 → 88.9 / 88.2 %; primary ≈ 68 % (stage 5's
+job). Gate `probatio_oratio_oraculum` (104). NEXT: **T14** `verba.sh`,
+`silva.Oratio`, `Prosa.sententia` — the instruments and the Python
+face of stage 3.
 
 ## Laws to keep (spec §2–3)
 
@@ -216,6 +231,10 @@ pinned, PRIMARY reported, per class); then T14 `verba.sh`,
   number); a slot-count enumerator is `_NUMERUS_LOCORUM` (the `numerus`
   accident owns `_NUMERUS`); every slot has ONE canon rule intra its
   genus; the registry seal moves only with the task as its cause.
+- The oracle never feeds the code: coverage pins move only with a
+  named mapping change; secondary readings are APPENDED (primary
+  untouched, ordering is stage 5); nothing derived from a treebank is
+  shipped, NC treebanks live in build/ only.
 - Enumeration titles = the glossary canon's options, in order (gate);
   the parser never annotates — `oratio_partes_annotare` is a separate
   pass with the dictionary supplied by the caller; accidents are placed
