@@ -380,15 +380,15 @@ principale (vacuum)
         CREDO_NON_NIHIL (frag);
         si (app != NIHIL && prob != NIHIL && frag != NIHIL)
         {
-                        /* radix app: chorda.h per fragmentum #capita CONTEXTA (et
+            /* radix app: chorda.h per fragmentum #capita CONTEXTA (et
              * chorda.h piscina.h trahit) - nihil derivatur: parsura
              * contextum videt, non octetos crudos cum '<<#capita>>' */
             CREDO_NON_NIHIL (app->silva);
             CREDO_AEQUALIS_I32 (app->linea_erroris, ZEPHYRUM);
             CREDO_AEQUALIS_I32 (app->silva->parsura->numerus_errorum,
                 ZEPHYRUM);
-            CREDO_AEQUALIS_I32 (xar_numerus(app->silva->capita_derivata),
-                ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (
+                xar_numerus(app->silva->capita_derivata), ZEPHYRUM);
             /* lineae silvae per tabulam: index contextus 0 -> 20
              * (capita), 10 -> 9 (incrementum), 12 -> 41 (reditus) */
             CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(app,
@@ -397,7 +397,7 @@ principale (vacuum)
                 app->praeludium + X + I), IX);
             CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(app,
                 app->praeludium + XII + I), XLI);
-                        /* probatio: credo.h ipsa (chorda.h + piscina.h trahit) -
+            /* probatio: credo.h ipsa (chorda.h + piscina.h trahit) -
              * nihil derivatur; contextus parsatus sine erroribus */
             CREDO_NON_NIHIL (prob->silva);
             CREDO_AEQUALIS_I32 (prob->silva->parsura->numerus_errorum,

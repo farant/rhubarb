@@ -587,6 +587,105 @@ principale (vacuum)
         briar_silvam_solvere(nexus);
     }
 
+        imprimere("\n--- Probans fragmenta: #line per cursum, fragmenta"
+            " extra inventarium ---\n");
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/fragmenta.thistle", &nexus);
+      constans BriarPlagula* corpus;
+      constans BriarPlagula* caput;
+      constans BriarPlagula* prob;
+      constans BriarPlagula* princeps;
+
+        si (!f.successus)
+        {
+            imprimere("  fabrica: %.*s (linea %d)\n",
+                (integer)f.causa.mensura,
+                (constans character*)f.causa.datum,
+                (integer)f.linea_causae);
+        }
+        CREDO_VERUM (f.successus);
+        CREDO_AEQUALIS_S32 ((s32)f.forma, (s32)BRIAR_FORMA_PLANA);
+        /* fragmenta V non sunt regiones app: radix una */
+        CREDO_AEQUALIS_I32 (f.regiones_c, I);
+        CREDO_VERUM (f.probatio_adest);
+        _aurum_conferre(piscina, &f, "fontes/fragmenta.c");
+        _aurum_conferre(piscina, &f, "fontes/fragmenta_regiones.c");
+        _aurum_conferre(piscina, &f, "include/fragmenta_regiones.h");
+        _aurum_conferre(piscina, &f,
+            "probationes/probatio_fragmenta.c");
+        corpus    = _genita(&f, "fontes/fragmenta_regiones.c");
+        caput     = _genita(&f, "include/fragmenta_regiones.h");
+        prob      = _genita(&f, "probationes/probatio_fragmenta.c");
+        princeps  = _genita(&f, "fontes/fragmenta.c");
+        CREDO_NON_NIHIL (corpus);
+        CREDO_NON_NIHIL (caput);
+        CREDO_NON_NIHIL (prob);
+        CREDO_NON_NIHIL (princeps);
+        si (   corpus   != NIHIL && caput != NIHIL && prob != NIHIL
+            && princeps != NIHIL)
+        {
+            /* summare: cursus IV intra corpus functionis - summa (13),
+             * incrementum (9), summa (16), radix (41) */
+            CREDO_VERUM (_continet(piscina, corpus->contentum,
+                "#line 13 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n    per (i = ZEPHYRUM; i < n; i++)\n"
+                "    {\n"
+                "#line 9 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n"
+                "        summa = summa + numeri[i];\n"
+                "#line 16 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n"
+                "    }\n"
+                "#line 41 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n"
+                "    redde summa;\n"));
+            /* directiva ex fragmento #capita: linea fragmenti (20) */
+            CREDO_VERUM (_continet(piscina, caput->contentum,
+                "#line 20 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n#include \"chorda.h\"\n"));
+            /* principale: salutatio (24) deinde reditus (50) */
+            CREDO_VERUM (_continet(piscina, princeps->contentum,
+                "#line 24 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n"
+                "    chorda salutatio = chorda_ex_literis(\"salve,"
+                " fragmenta\", piscina);\n"
+                "#line 50 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n"));
+            /* probatio: unitas contexta, salutatio (24) */
+            CREDO_VERUM (_continet(piscina, prob->contentum,
+                "#line 24 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n"
+                "    chorda salutatio = chorda_ex_literis(\"salve,"
+                " fragmenta\", piscina);\n"
+                "#line 71 \"briar/probationes/fixa/thistle/"
+                "fragmenta.thistle\"\n"));
+            CREDO_FALSUM (_continet(piscina, prob->contentum, "<<#"));
+            CREDO_FALSUM (_continet(piscina, corpus->contentum, "<<#"));
+        }
+        CREDO_VERUM (_clausura_habet(&f, "lib/chorda.c"));
+        briar_silvam_solvere(nexus);
+    }
+
+    imprimere("\n--- Probans recusationes contextus: causa + linea ---\n");
+    _recusationem_probare(piscina, intern, fons,
+        "fragmentum_absens.thistle",
+        "transclusio '#nusquam' (linea 8): fragmentum non definitum",
+        VIII);
+    _recusationem_probare(piscina, intern, fons,
+        "fragmentum_circulus.thistle", "circulus #a -> #b -> #a", IX);
+    _recusationem_probare(piscina, intern, fons,
+        "fragmentum_iteratum.thistle",
+        "fragmentum '#bis' iteratum (prima linea 4)", VIII);
+    _recusationem_probare(piscina, intern, fons,
+        "fragmentum_munus.thistle", "fragmentum radix non est", IV);
+    _recusationem_probare(piscina, intern, fons,
+        "fragmentum_sine_id.thistle", "fragmentum sine id valido", IV);
+    _recusationem_probare(piscina, intern, fons,
+        "transclusio_malformata.thistle", "transclusio malformata",
+        XII);
+
     imprimere("\n--- Probans recusationes: causa + linea ---\n");
     _recusationem_probare(piscina, intern, fons,
         "duo_principalia.thistle",

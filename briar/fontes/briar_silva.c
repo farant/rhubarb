@@ -652,12 +652,14 @@ briar_silvam_texere (
     {
         BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
 
-                si (   r->genus != BRIAR_NEXUS_REGIO
-                    || !briar_nexus_titulus_est(r, "c")
-                    || r->est_fragmentum)
-                {
-            perge;   /* fragmenta numquam parsantur: in radicibus */
-                }
+                        si (   r->genus != BRIAR_NEXUS_REGIO
+                            || !briar_nexus_titulus_est(r, "c")
+                            || r->est_fragmentum
+                            || r->linea_erroris > ZEPHYRUM)
+                        {
+            perge;   /* fragmenta numquam parsantur (in radicibus);
+                      * radix a contextu recusata recusata manet */
+                        }
         si (!_parsare(piscina, r, fons, NIHIL))
         {
             redde -I;
@@ -669,12 +671,13 @@ briar_silvam_texere (
     {
         BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
 
-                si (   r->genus != BRIAR_NEXUS_REGIO
-                    || !briar_nexus_titulus_est(r, "c")
-                    || r->est_fragmentum)
-                {
+                        si (   r->genus != BRIAR_NEXUS_REGIO
+                            || !briar_nexus_titulus_est(r, "c")
+                            || r->est_fragmentum
+                            || r->silva == NIHIL)
+                        {
             perge;
-                }
+                        }
         si (!_regionem_derivare(piscina, r, fons, &symbola, definita))
         {
             redde -I;

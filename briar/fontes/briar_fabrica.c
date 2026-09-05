@@ -279,9 +279,19 @@ _inventarium_colligere (
     {
         BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
 
-        si (   r->genus == BRIAR_NEXUS_REGIO
-            && briar_nexus_titulus_est(r, "c"))
-        {
+                si (   r->genus == BRIAR_NEXUS_REGIO
+                    && briar_nexus_titulus_est(r, "c"))
+                {
+            si (r->linea_erroris > ZEPHYRUM)
+            {
+                _recusare(f, piscina, chorda_ut_cstr(r->causa, piscina),
+                    r->linea_erroris);
+                redde FALSUM;
+            }
+            si (r->est_fragmentum)
+            {
+                perge;   /* in radicibus contextum (briar_contextus) */
+            }
             si (r->silva == NIHIL || r->silva->parsura == NIHIL)
             {
                 _recusare(f, piscina, r->causa.mensura > ZEPHYRUM
@@ -289,12 +299,6 @@ _inventarium_colligere (
                     : "regio C non parsata (briar_silvam_texere ante)",
                     r->linea_erroris > ZEPHYRUM ? r->linea_erroris
                     : r->linea_initium);
-                redde FALSUM;
-            }
-            si (r->linea_erroris > ZEPHYRUM)
-            {
-                _recusare(f, piscina, chorda_ut_cstr(r->causa, piscina),
-                    r->linea_erroris);
                 redde FALSUM;
             }
             si (chorda_aequalis_literis(briar_nexus_attributum(r,
@@ -315,14 +319,14 @@ _inventarium_colligere (
                 inv->app[inv->numerus_app]  = r;
                 inv->numerus_app            = inv->numerus_app + I;
             }
-        }
+                }
         alioquin si (   r->genus == BRIAR_NEXUS_STML
                      && briar_nexus_titulus_est(r, "fenestra"))
-        {
+                {
             inv->fenestra = r;
-        }
+                }
         alioquin si (r->genus == BRIAR_NEXUS_REGIO)
-        {
+                {
             BriarNexusRes** sedes = briar_nexus_titulus_est(r, "html")
                 ? &inv->html : briar_nexus_titulus_est(r,
                 "js") ? &inv->js
@@ -343,7 +347,7 @@ _inventarium_colligere (
                 }
                 *sedes = r;
             }
-        }
+                }
     }
     redde VERUM;
 }
@@ -354,9 +358,25 @@ _inventarium_colligere (
  * ================================================== */
 
 nomen structura {
-       i32 linea;    /* .thistle */
-    chorda textus;
+                       i32  linea;    /* .thistle (lineae primae) */
+                    chorda  textus;
+    constans BriarNexusRes* regio;    /* tabula linearum (contextus) */
+                       i32  index;    /* index contextus lineae primae */
 } BriarUnitas;
+
+/* linea .thistle lineae k contextus regionis (tabula briar_contextus;
+ * formula linearis si abest) */
+interior i32
+_linea_tabulae (
+    constans BriarNexusRes* r,
+                       i32  k)
+{
+    si (r->lineae != NIHIL && k < xar_numerus(r->lineae))
+    {
+        redde *(i32*)xar_obtinere(r->lineae, k);
+    }
+    redde r->linea_initium + k;
+}
 
 nomen structura {
                 Xar* directivae;   /* lineae '#...' */
@@ -372,16 +392,19 @@ nomen structura {
 
 interior vacuum
 _unitatem_addere (
-       Xar* xar,
-       i32  linea,
-    chorda  textus)
+                       Xar* xar,
+    constans BriarNexusRes* regio,
+                       i32  index,
+                    chorda  textus)
 {
     BriarUnitas* u = (BriarUnitas*)xar_addere(xar);
 
     si (u != NIHIL)
     {
-        u->linea   = linea;
+        u->linea   = _linea_tabulae(regio, index);
         u->textus  = textus;
+        u->regio   = regio;
+        u->index   = index;
     }
 }
 
@@ -392,9 +415,9 @@ _directivas_colligere (
     constans BriarNexusRes* r,
                        Xar* directivae)
 {
-    chorda c      = r->contentum;
-       i32 i      = ZEPHYRUM;
-       i32 linea  = r->linea_initium;
+    chorda c = r->contextus;   /* contextus: fragmenta contexta */
+       i32 i = ZEPHYRUM;
+       i32 k = ZEPHYRUM;       /* index lineae contextus */
 
     dum (i < c.mensura)
     {
@@ -427,13 +450,13 @@ _directivas_colligere (
                 }
                 lineae = lineae + I;
             }
-            _unitatem_addere(directivae, linea, chorda_sectio(c,
-                initium, f));
-            finis = f;
-            linea = linea + lineae - I;
+            _unitatem_addere(directivae, r, k, chorda_sectio(c, initium,
+                f));
+            finis  = f;
+            k      = k + lineae - I;
         }
-        i      = (finis < c.mensura) ? finis + I : finis;
-        linea  = linea + I;
+        i = (finis < c.mensura) ? finis + I : finis;
+        k = k + I;
     }
 }
 
@@ -580,11 +603,12 @@ _regionem_partiri (
     }
     per (k = ZEPHYRUM; k < numerus; k++)
     {
-        constans SilvaNodus* u;
-                    integer  minimum = -I;
-                    integer  maximum = ZEPHYRUM;
-                     chorda  textus;
-                        i32  linea;
+                constans SilvaNodus* u;
+                            integer  minimum = -I;
+                            integer  maximum = ZEPHYRUM;
+                             chorda  textus;
+                                i32  linea;
+                                i32  index;
 
         si (liberi != NIHIL)
         {
@@ -606,10 +630,11 @@ _regionem_partiri (
         {
             perge;   /* syntheticum aut praeludium (exemplar) */
         }
-        textus = chorda_sectio(r->textus_silvae, (i32)minimum,
-            (i32)maximum);
-        linea  = briar_nexus_linea_silvae(r,
-            _linea_octeti(r->textus_silvae, (i32)minimum));
+                textus = chorda_sectio(r->textus_silvae, (i32)minimum,
+                    (i32)maximum);
+        index  = _linea_octeti(r->textus_silvae, (i32)minimum)
+            - r->praeludium - I;
+        linea  = _linea_tabulae(r, index);
         si (u->genus == (integer)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
         {
             constans SemanticaSymbolum* s = _symbolum_definitionis(
@@ -622,15 +647,17 @@ _regionem_partiri (
             si (s != NIHIL && _silva_chorda_est(s->titulus, "main"))
             {
                 part->principalia = part->principalia + I;
-                si (part->principalia == I)
-                {
+                                si (part->principalia == I)
+                                {
                     part->princeps.linea   = linea;
                     part->princeps.textus  = textus;
-                }
+                    part->princeps.regio   = r;
+                    part->princeps.index   = index;
+                                }
                 alioquin
-                {
+                                {
                     part->linea_principalis_secundi = linea;
-                }
+                                }
                 perge;
             }
             si (corpus.genus == SILVA_VALOR_NODUS)
@@ -647,20 +674,21 @@ _regionem_partiri (
                 chorda_aedificator_appendere_chorda(a, _detondere(
                     chorda_sectio(r->textus_silvae, (i32)minimum,
                         (i32)initium_corporis)));
-                chorda_aedificator_appendere_literis(a, ";");
-                _unitatem_addere(part->prototypi, linea,
+                                chorda_aedificator_appendere_literis(a,
+                                    ";");
+                _unitatem_addere(part->prototypi, r, index,
                     chorda_aedificator_finire(a));
             }
-            _unitatem_addere(part->corpora, linea, textus);
+            _unitatem_addere(part->corpora, r, index, textus);
         }
         alioquin si (_unitas_obiectum_declarat(r->silva->semantica,
                      fons_index, minimum, maximum))
         {
-            _unitatem_addere(part->corpora, linea, textus);
+            _unitatem_addere(part->corpora, r, index, textus);
         }
         alioquin
         {
-            _unitatem_addere(part->typi, linea, textus);
+            _unitatem_addere(part->typi, r, index, textus);
         }
     }
     redde VERUM;
@@ -670,6 +698,44 @@ _regionem_partiri (
 /* ==================================================
  * Textus geniti
  * ================================================== */
+
+/* textus lineatim cum '#line' ad omnem fracturam cursus tabulae
+ * linearum (fragmentum contextum intra corpus functionis lineas suas
+ * .thistle nominat); linea prima semper '#line' fert; linea ultima
+ * '\n' terminata */
+interior vacuum
+_textum_mappatum_appendere (
+         ChordaAedificator* a,
+                    chorda  textus,
+    constans BriarNexusRes* regio,
+                       i32  index,
+        constans character* via)
+{
+    i32 i      = ZEPHYRUM;
+    i32 k      = ZEPHYRUM;
+    i32 prior  = ZEPHYRUM;
+
+    dum (i < textus.mensura)
+    {
+        i32 f = i;
+        i32 t = _linea_tabulae(regio, index + k);
+
+        dum (f < textus.mensura && (character)textus.datum[f] != '\n')
+        {
+            f = f + I;
+        }
+        si (k == ZEPHYRUM || t != prior + I)
+        {
+            _lineam_appendere(a, t, via);
+        }
+        chorda_aedificator_appendere_chorda(a, chorda_sectio(textus, i,
+            f));
+        chorda_aedificator_appendere_literis(a, "\n");
+        prior  = t;
+        i      = f + I;
+        k      = k + I;
+    }
+}
 
 interior vacuum
 _unitates_appendere (
@@ -684,9 +750,8 @@ _unitates_appendere (
         constans BriarUnitas* u = (constans BriarUnitas*)xar_obtinere(
             unitates, i);
 
-        _lineam_appendere(a, u->linea, via);
-        chorda_aedificator_appendere_chorda(a, u->textus);
-        chorda_aedificator_appendere_literis(a, "\n");
+        _textum_mappatum_appendere(a, u->textus, u->regio, u->index,
+            via);
     }
 }
 
@@ -792,11 +857,10 @@ _principem_fingere (
     chorda_aedificator_appendere_literis(a, via);
     chorda_aedificator_appendere_literis(a,
         ": principale */\n#include \"latina.h\"\n#include \"");
-    chorda_aedificator_appendere_literis(a, titulus);
+        chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a, "_regiones.h\"\n");
-    _lineam_appendere(a, princeps->linea, via);
-    chorda_aedificator_appendere_chorda(a, princeps->textus);
-    chorda_aedificator_appendere_literis(a, "\n");
+    _textum_mappatum_appendere(a, princeps->textus, princeps->regio,
+        princeps->index, via);
     redde chorda_aedificator_finire(a);
 }
 
@@ -808,8 +872,8 @@ _probationem_fingere (
     constans BriarNexusRes* probatio,
                        Xar* derivata)
 {
-    ChordaAedificator* a = chorda_aedificator_creare(piscina,
-        (memoriae_index)(probatio->contentum.mensura + 256));
+        ChordaAedificator* a = chorda_aedificator_creare(piscina,
+            (memoriae_index)(probatio->contextus.mensura + 256));
 
     chorda_aedificator_appendere_literis(a, "/* probatio_");
     chorda_aedificator_appendere_literis(a, titulus);
@@ -820,10 +884,11 @@ _probationem_fingere (
         "#include \"");
     chorda_aedificator_appendere_literis(a, titulus);
         chorda_aedificator_appendere_literis(a, "_regiones.h\"\n");
-    chorda_aedificator_appendere_chorda(a,
-        _inclusiones_derivatae(piscina, derivata));
-    _lineam_appendere(a, probatio->linea_initium, via);
-    chorda_aedificator_appendere_chorda(a, probatio->contentum);
+        chorda_aedificator_appendere_chorda(a,
+            _inclusiones_derivatae(piscina, derivata));
+    /* contextus lineatim: fragmenta in probatione contexta */
+    _textum_mappatum_appendere(a, probatio->contextus, probatio,
+        ZEPHYRUM, via);
     redde chorda_aedificator_finire(a);
 }
 
@@ -1302,16 +1367,16 @@ briar_fabricare (
                 contenta = (chorda*)piscina_allocare(piscina,
                     (memoriae_index)((inv.numerus_app + III)
                     * (i32)magnitudo(chorda)));
-        per (i = ZEPHYRUM; i < inv.numerus_app; i++)
-        {
-            contenta[n]  = inv.app[i]->contentum;
-            n            = n + I;
-        }
-                si (inv.probatio != NIHIL)
+                per (i = ZEPHYRUM; i < inv.numerus_app; i++)
                 {
-            contenta[n]  = inv.probatio->contentum;
+            contenta[n]  = inv.app[i]->contextus;
             n            = n + I;
                 }
+        si (inv.probatio != NIHIL)
+        {
+            contenta[n]  = inv.probatio->contextus;
+            n            = n + I;
+        }
         contenta[n]      = inclusiones_derivatae;
         contenta[n + I]  = inclusiones_probationis;
         n                = n + II;
@@ -1395,11 +1460,11 @@ briar_fabricare (
         contenta_prob = (chorda*)piscina_allocare(piscina,
             (memoriae_index)((inv.numerus_app + IV)
                 * (i32)magnitudo(chorda)));
-        per (i = ZEPHYRUM; i < inv.numerus_app; i++)
-        {
-            contenta_app[i]   = inv.app[i]->contentum;
-            contenta_prob[i]  = inv.app[i]->contentum;
-        }
+                per (i = ZEPHYRUM; i < inv.numerus_app; i++)
+                {
+            contenta_app[i]   = inv.app[i]->contextus;
+            contenta_prob[i]  = inv.app[i]->contextus;
+                }
                 contenta_app[inv.numerus_app]  = princeps;
         contenta_app[inv.numerus_app + I]      = inclusiones_derivatae;
         clausura_app = silex_clausuram_e_contentis(piscina, fons,
@@ -1410,7 +1475,7 @@ briar_fabricare (
         n = inv.numerus_app;
         si (inv.probatio != NIHIL)
         {
-                        contenta_prob[n]  = inv.probatio->contentum;
+                        contenta_prob[n]  = inv.probatio->contextus;
             contenta_prob[n + I]          = inclusiones_derivatae;
             contenta_prob[n + II]         = inclusiones_probationis;
             n                             = n + III;

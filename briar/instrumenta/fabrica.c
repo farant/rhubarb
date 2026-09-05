@@ -7,6 +7,7 @@
 
 #include "latina.h"
 #include "briar_arbor.h"
+#include "briar_contextus.h"
 #include "briar_fabrica.h"
 #include "briar_nexus.h"
 #include "briar_silva.h"
@@ -126,10 +127,11 @@ principale (
         fprintf(stderr, "fabrica: plagula non lecta: %s\n", via);
         redde I;
     }
-    doc    = briar_arbor_parsare(piscina, textus, mensura);
-    nexus  = briar_nexus_texere(piscina, doc, intern);
-    si (   nexus == NIHIL || briar_silvam_texere(piscina, nexus, fons)
-        < ZEPHYRUM)
+        doc  = briar_arbor_parsare(piscina, textus, mensura);
+    nexus    = briar_nexus_texere(piscina, doc, intern);
+    si (   nexus == NIHIL
+        || briar_contexere(piscina, nexus, NIHIL) < ZEPHYRUM
+        || briar_silvam_texere(piscina, nexus, fons) < ZEPHYRUM)
     {
         fprintf(stderr, "fabrica: nexus fractus\n");
         redde I;
