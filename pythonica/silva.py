@@ -1450,6 +1450,8 @@ PORTAE = {
     'materia': (['./materia/compile_probationes.sh'],
                 r'MATERIA PROBATIONES: \d+/\d+'),
     'md': (['./md/compile_probationes.sh'], r'MD PROBATIONES: \d+/\d+'),
+    'briar': (['./briar/compile_probationes.sh'],
+              r'BRIAR PROBATIONES: \d+/\d+'),
     'oratio': (['./oratio/compile_probationes.sh'],
                r'ORATIO PROBATIONES: \d+/\d+'),
     'officina': (['./officina/compile_probationes.sh'],
@@ -1488,6 +1490,7 @@ _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 # aliter 'generica' (porta tota = fractura una)
 FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
           'materia': 'suita', 'md': 'suita', 'oratio': 'suita',
+          'briar': 'suita',
           'officina': 'suita', 'gesta': 'suita',
           'tessera': 'suita', 'saltuarius': 'suita', 'aedilis': 'suita'}
 _RELATIO_RE = re.compile(r'FRACTA|FRACTUM|FATALE|Speratus|Receptus|Totalis|'
@@ -2196,6 +2199,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         if tot is None:
             praef = {'radix': '', 'silva': 'silva.', 'css': 'css.',
                      'materia': 'materia.', 'md': 'md.',
+                     'briar': 'briar.',
                      'oratio': 'oratio.'}.get(nomen)
             if praef is not None:
                 ss = mensurae(praef, 1, plenae=False)
@@ -2287,6 +2291,7 @@ SUITAE = {
     'css': ('css/probationes', 'css/build/%s'),
     'materia': ('materia/probationes', 'materia/build/%s'),
     'md': ('md/probationes', 'md/build/%s'),
+    'briar': ('briar/probationes', 'briar/build/%s'),
     'oratio': ('oratio/probationes', 'oratio/build/%s'),
     'officina': ('officina/probationes', 'officina/build/%s'),
     'gesta': ('gesta/probationes', 'gesta/build/%s'),
