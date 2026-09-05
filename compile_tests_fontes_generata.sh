@@ -59,6 +59,7 @@ declare -a SOURCE_FILES=(
     "lib/exemplar.c"
     "lib/fasti.c"
     "lib/fenestra_textus.c"
+    "lib/figura.c"
     "lib/filum.c"
     "lib/flatura.c"
     "lib/fons.c"

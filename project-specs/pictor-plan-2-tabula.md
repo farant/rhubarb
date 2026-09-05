@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). Next: T2 `figura` + `pingere`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). Next: T3 `delineare_mandata`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -256,7 +256,7 @@ Commit: `silva.commissio("ludus P3: T1 - coordinatae signatae: Punctum/Fines s32
 - Produces: `FiguraFn` = `vacuum (*)(constans Componens* c, Mandata* m, i32 thema, vacuum* ctx)` — emits primitives in the componens's OWN space (origin = its fines' corner; `pingere` opens the coetus); `FiguraRegistrum`; `figura_registrum_creare(piscina)`; `figura_registrare(reg, Partes, i32 thema, FiguraFn, ctx) → b32` (duplicate (partes, thema) refused); `figura_invenire(reg, Partes, i32 thema, FiguraFn*, vacuum**) → b32`; `pingere(constans Componens* radix, constans FiguraRegistrum* reg, i32 thema, Mandata* m)` — DFS, one `coetus` per componens (fines, sectio, translatio, scala, provenientia = id), figura (if any) BEFORE children, `<purus/>`; `figura_finium(c, m, thema, ctx)` — the trivial built-in figura (outline of the fines in `COLOR_BORDER`) used by the probatio and as the fallback nobody registers.
 - Thema is an `i32` id chosen by the caller (v1: `ZEPHYRUM` only); the house `thema.h` palette is consulted by the RASTERIZER, not here — a figura names colors as `ColorMandati` (`COLOR_MANDATI_THEMA` + `ColorThema` value, or `INDEX`, or `RGBA`).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_figura.c` (via `./silva/scribe.sh`):
 ```c
@@ -436,11 +436,11 @@ s32 principale (vacuum)
 ```
 The exact `mandata_*` emitter signatures are in `include/mandatum.h` (landed in Plan 1 T2); if `mandata_textus` takes its arguments in another order, follow the header — the plan's intent is (fines, textus, fons, color).
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh figura` — Expected: FAIL, `'figura.h' file not found`.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/figura.h`:
 ```c
@@ -717,11 +717,11 @@ figura_finium (
 ```
 `mandata_coetus_incipere` / `mandata_coetus_finire` are Plan 1 T2's; if `componens_liberum` takes a `constans Componens*` (it does) the recursion compiles as written. `pingere_nodum` recursing on children AFTER the figura is the z-order contract: a parent paints under its children.
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh figura` — Expected: PASS.
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plant (RED on `figura`): in `pingere_nodum`, move the figura call after the children loop (children painted under the parent) — `silva.planta` with the multi-line anchor from `si (figura_invenire(` through the `per` loop, `novus` with the two blocks swapped. Red at the `mandata_obtinere(m, III)` genus assertion (index III becomes the coetus of b1's sibling order… the rectangle moves). Green on revert.
 
