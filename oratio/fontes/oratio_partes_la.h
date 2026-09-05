@@ -50,7 +50,8 @@ nomen structura {
               s32 species;       /* OratioSpeciesNumeralis aut -I */
               s32 declinatio;    /* I-V aut -I */
               s32 coniugatio;    /* I-IV aut -I */
-           chorda lemma;         /* copia in piscina */
+                      chorda lemma;         /* copia in piscina */
+           chorda natura;        /* species stirpis WORDS verbatim ("F L", "DEP"; referens) */
            chorda nativum;       /* codex fontis verbatim (copia) */
            chorda sensus;        /* fontem referens (non copiatur) */
     OratioFonsAnalysis fons;
@@ -61,6 +62,35 @@ nomen structura {
  * quoniam dum quamquam etsi quamvis ubi postquam antequam priusquam
  * donec quin nisi ... NIHIL terminata (DATA). */
 externus constans character* constans ORATIO_CONIUNCTIONES_SUBORDINANTES[];
+
+/* Regulae SECUNDARIAE ex oraculo UD (T13, 2026-09-04; numeri = verba
+ * aurea CIRCSE test / LLCT dev / LLCT test quae WORDS sic non
+ * distinguit): descriptio prima manet PRIMARIA, copia classis alterius
+ * post eam appenditur (lista candidatorum, ordo gradus V):
+ *   AUXILIARIA (sum: AUX CLXVIII / DX / CDXLII): verbum -> + auxiliare
+ *   DETERMINANTIA (hic ille meus omnis ...: DET DCLXXXV / MMXCVI /
+ *     MCMXIV): pronomen | adiectivum | numerale -> + determinans
+ *   PARTICULAE (non haud: PART CXCV / LXXXVI / LXXI): adverbium ->
+ *     + particula
+ *   SUBORDINANTES (cum qualiter unde quam: SCONJ CCXXII / CDXIV /
+ *     CCCLXXXV): adverbium | adpositio cum lemmate listae ->
+ *     + coniunctio-subordinans
+ *   ordinale (tertius octavus: ADJ): numerale species ordinale ->
+ *     + adiectivum
+ *   natura N nominis (deus, Manes): nomen-proprium -> + substantivum
+ *   CAPITALIS ignotum (Karolus Taenari: PROPN 55 % / 76 % ignota):
+ *     nomen-proprium fonte 'regula', nativum "capitalis" */
+externus constans character* constans ORATIO_AUXILIARIA[];
+externus constans character* constans ORATIO_DETERMINANTIA[];
+externus constans character* constans ORATIO_PARTICULAE[];
+
+/* Descriptio vocabuli capitalis ignoti: nomen proprium fonte regula
+ * (lemma = forma plicata). */
+vacuum
+oratio_partes_la_capitalis (
+             Piscina* piscina,
+              chorda  forma,
+    OratioDescriptio* d);
 
 /* Descriptionem vacuam ponere (classis ignotum, accidentia -I). */
 vacuum

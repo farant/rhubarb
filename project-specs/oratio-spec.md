@@ -456,6 +456,36 @@ dominated by WORDS' pronoun packings (`quis` = 215): faithful to the
 source, to be ordered in stage 5 or deduplicated by (class, accidents,
 lemma) before the oracle.
 
+**As built — T13 (2026-09-04), the oracle.** Vendored under
+`oratio/probationes/fixa/ud/` (CC BY-SA 4.0, licence + README
+verbatim, FONTES.md with commits/seals): CIRCSE test (Seneca, 893
+sentences, 11,503 tokens) and LLCT dev + test (850 + 884 sentences,
+24k tokens each; train NOT vendored — Fran's call, UD scores on
+dev/test); NC treebanks fetched by `./oratio/oraculum.sh -petere`
+into `oratio/build/ud/`, reported only. `oratio_conllu` (ten fields
+or stop with the line; ranges `a-b`; empty nodes skipped; `# text`
+or reconstruction from forms and SpaceAfter). `oratio_oraculum`:
+sentence text parsed and annotated, elements located by byte
+extents, gold forms located in the same text in order, a range
+judged per word against the one element's class set; per gold word
+TECTUM (coverage, PINNED only rising, permille per file), PRIMARIUM
+and LEMMA reported, ignotum and unaligned counted, five uncovered
+examples per class (`-exempla`). Alignment: 0 unaligned of 60k,
+0 broken sentences. Day one CIRCSE 84.2 % / LLCT 71.9 % / 72.5 %
+coverage; zero on auxiliare, determinans, particula. MAPPING PASS II
+from the table (data lists with the counts as cause, secondary
+descriptions APPENDED after the primary): `sum` + auxiliare;
+`ORATIO_DETERMINANTIA` + determinans; `ORATIO_PARTICULAE` +
+particula; adverb/preposition in the subordinating list +
+coniunctio-subordinans (list grown: qualiter unde quam quatenus
+quomodo …); ordinal + adiectivum; WORDS kind N (deus) + substantivum
+(kind L stays proper); capitalized unknown → nomen-proprium with
+source `regula` (fourth value appended to `OratioFonsAnalysis`),
+nativum `capitalis`. After: CIRCSE 93.7 %, LLCT 88.9 % / 88.2 %
+(pins 937/889/882); primary ≈ 68 % everywhere (the unordered list,
+stage 5); lemma 89 / 65 / 65 %. Gate `probatio_oratio_oraculum`
+(104); partes gate 203.
+
 ## 5. Stage 3 — annotated words (`partes`)
 
 **Universal classes** (registry `partes_registrum`, one genus per
@@ -539,6 +569,23 @@ analyses), `oratio/arbor.sh` shows the analyses inline.
 **Python.** `silva.Oratio(via_or_text)`: `.sententiae()` (extents),
 `.vocabula(classis=None, lingua=None, ignota=False)`, `.analyses(vocabulum)`,
 `.ignota()`; `Prosa.sententia(n, intra=)` delegates.
+
+*As-built (T14, 2026-09-05).* `verba.sh` takes several files (the via
+column is meaningful), prints paragraph and sentence ordinals beside
+the byte extent (sentence ordinals agree with `sententiae.sh`), and
+has an `-analyses` mode: one row per analysis node with class, lemma,
+lingua, fons, nativum, sensus and the twelve accidents as the
+registry's option titles, read from the tree by slot title (never
+re-derived). `silva.Oratio` accepts a path, a text or bytes (a text is
+written to build/pythonica for one call), caches each query, and
+`vocabula(classis=)` matches ANY candidate class (the primary is stage
+5's); `vocabula(sententia=)` added; `analyses()` takes a word or its
+index and returns `accidentia` as a dict with absences omitted.
+`Prosa.sententia` concatenates the markdown paragraphs inside the
+extent (headings, fences, html never), parses once, maps the extents
+back with line and column; usable as an edit anchor. Gate = the
+pythonica suite, 20 assertions, planted fault (word end shortened)
+red.
 
 ## 6. Stage 4 — English (`vocabularium_en`)
 
@@ -789,12 +836,16 @@ and comments (silva tokens) reports; counts published.
 **Stage 3 (partes).** T11 DONE 2026-09-04 (`partes_registrum`: 17
 analysis genera with accidents appended, canon rules, seal moved).
 T12 DONE 2026-09-04 (`oratio_partes_la` mapping, `oratio_partes`
-annotation pass, node-attribute hook, `-partes`). Was: `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
+annotation pass, node-attribute hook, `-partes`). T13 DONE 2026-09-04
+(`oratio_conllu`, `oratio_oraculum`, CIRCSE + LLCT dev/test vendored,
+coverage pinned 937/889/882 permille, mapping pass II from the table).
+Was: `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
 `linguae`) + projection attributes (substrate check above). T13
 CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT
 (COVERAGE pinned, PRIMARY reported, per class); `oratio/oraculum.sh
--petere` for NC treebanks. T14 `oratio/verba.sh`, `silva.Oratio`,
-`Prosa.sententia`.
+-petere` for NC treebanks. T14 DONE 2026-09-05 (`oratio/verba.sh`
+with `-analyses`, `silva.Oratio`, `Prosa.sententia` by delegation; gate
+= pythonica).
 
 **Stage 4 (English).** T15a DONE 2026-09-04 (vendor Moby verbatim,
 loader without coction, the prose lint `-prosa`). T15b DONE 2026-09-04

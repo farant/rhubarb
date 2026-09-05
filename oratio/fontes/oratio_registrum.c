@@ -291,7 +291,7 @@ constans character* constans ORATIO_TITULI_LINGUARUM[] = {
     "latina", "anglica"
 };
 constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[] = {
-    "vocabularium-la", "vocabularium-en", "glossarium"
+    "vocabularium-la", "vocabularium-en", "glossarium", "regula"
 };
 
 constans character*

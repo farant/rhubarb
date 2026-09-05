@@ -868,3 +868,204 @@ difference over the diff and the new files, and the three coinages
 got entries), the regenerated symbol table simply indexes seventy more
 identifier words of the existing tree — the cause is coverage, and it
 is named here.
+
+## 2026-09-04 — T13: the oracle — treebanks grade the parser, and the mapping learns from them
+
+Two Latin treebanks from Universal Dependencies are vendored under
+`oratio/probationes/fixa/ud/`, both CC BY-SA 4.0 with their licence
+and README verbatim: CIRCSE (Seneca, Hercules Furens, 893 sentences,
+11,503 tokens, no punctuation, `u` for `v`, 316 enclitic ranges) and
+the LLCT charter treebank's dev and test splits (Fran's call — train
+is a quarter million tokens and UD scores on dev/test anyway; 850 and
+884 sentences, 24k tokens each, medieval spelling, punctuation). The
+non-commercial ones (ITTB, PROIEL, Perseus, UDante) are never
+vendored: `./oratio/oraculum.sh -petere` fetches their test files into
+the build directory and reports. FONTES.md carries upstream commits,
+byte counts and seals.
+
+`oratio_conllu` reads the format: ten tab-separated fields or the
+reader stops with the line, `# sent_id` and `# text` kept, ranges
+`a-b` marked and their words following, empty nodes `a.b` skipped, a
+blank line closes a sentence, CRLF tolerated, `SpaceAfter=No` read
+from MISC, and the sentence text taken from `# text` or reconstructed
+from the forms when absent (ranges give the surface, their words are
+skipped). Chords reference the file, nothing is copied.
+
+`oratio_oraculum` judges a sentence: its text is parsed and annotated
+exactly as a document would be, the elements (word, punctuation,
+number) get byte extents from their tokens, each gold token's form is
+located in the same text in order, and the element containing the
+gold start — or every element the gold extent touches — lends its
+class set. A range is one surface token judged for each of its words,
+so `pronumque` meets one element whose classes are the enclitic's and
+the adjective's. Three measures per gold word: TECTUM, the gold class
+among ours, which is coverage and gets pinned only rising in permille
+per file; PRIMARIUM, our first class equals gold, reported; LEMMA, the
+gold lemma folded among our folded lemmata, reported; plus our
+`ignotum` and unaligned counts, and the first five uncovered examples
+per class, which the instrument prints with `-exempla`. Alignment was
+perfect from the first run: zero unaligned tokens across 60k, zero
+broken sentences.
+
+Day one, before touching the mapping:
+
+| treebank | coverage | primary | lemma | ours unknown |
+|---|---|---|---|---|
+| CIRCSE | 84.2 % | 66.0 % | 87.7 % | 4.1 % |
+| LLCT dev | 71.9 % | 61.7 % | 64.0 % | 13.4 % |
+| LLCT test | 72.5 % | 62.3 % | 63.7 % | 13.2 % |
+
+The per-class table said exactly what T12 predicted and more. Three
+classes at ZERO because WORDS does not carve them: `auxiliare` (every
+one of them lemma `sum`, lemma agreement 100 %), `determinans` (hic,
+ille, meus, noster, omnis, solus, uterque, suprascriptus — WORDS says
+pronoun or adjective), `particula` (non, haud — WORDS says adverb).
+Subordinating conjunctions at 74–84 % because `cum`, `unde`, `qualiter`,
+`quam` reach us as adverb or preposition and the CONJ rule never
+fired. Proper nouns at 13–23 %: the names of Seneca's myth and of the
+charters' witnesses are simply not in WORDS, so they were `ignotum`.
+Ordinals (tertiae, octavo) are ADJ in UD and numerale in WORDS. And
+WORDS marks `deus`, `chaos`, `Manes` as kind N (name), which T12 had
+turned into proper nouns while UD calls them nouns.
+
+So the mapping pass II, every rule a data list with the oracle's
+counts as its cause (`oratio_partes_la.h` records them): SECONDARY
+descriptions appended after the primary one, never replacing it —
+`sum` gets an `auxiliare` reading beside the verb; pronouns,
+adjectives and numerals whose lemma is in `ORATIO_DETERMINANTIA` get a
+`determinans` reading; adverbs in `ORATIO_PARTICULAE` a `particula`
+reading; adverbs and prepositions in the subordinating list a
+`coniunctio-subordinans` reading (and the list grew: qualiter, unde,
+quam, quatenus, quomodo …); ordinals an `adiectivum` reading; kind N
+names a `substantivum` reading — kind L places like Roma stay proper
+only, which is where the CIRCSE pin lost one permille and was moved
+with that cause. And the one rule without a dictionary: a word nothing
+knows whose first letter is a capital becomes a `nomen-proprium`
+candidate with source `regula` (a fourth value appended to the source
+enumeration) and nativum `capitalis`. The primary reading is
+unchanged everywhere, so PRIMARY moved only where a class went from
+nothing to something.
+
+After the pass:
+
+| treebank | coverage | primary | lemma | ours unknown |
+|---|---|---|---|---|
+| CIRCSE | 93.7 % | 67.8 % | 88.7 % | 0.8 % |
+| LLCT dev | 88.9 % | 68.1 % | 65.0 % | 7.0 % |
+| LLCT test | 88.2 % | 68.2 % | 64.6 % | 7.1 % |
+
+Per class: auxiliare 0 → 99–100, determinans 0 → 78–84, particula 7 →
+65–87, nomen-proprium 13–23 → 79–90, subordinating 74–84 → 94–100,
+adjective on the charters 61–65 → 74–75. The pins are 937, 889, 882
+permille, only rising. What is left is honest: the charters' medieval
+spellings (`ecclesie` for ecclesiae, `episcupatui`), participles UD
+tags as adjectives (furens, tonantem), and PRIMARY at two thirds,
+which is the unordered list and stage 5's job.
+
+Gate `probatio_oratio_oraculum` (104): the reader on an inline
+two-sentence source with every feature and three refused sources with
+their line; the judge on `Puella rosam amat.` (4/4 covered, primary 3
+because WORDS lists rosam as a participle first, lemma 3 because
+punctuation has none), on a range, an unknown, an unaligned token and
+an out-of-table UPOS; and the three treebanks with sentence counts
+pinned, the table printed, coverage pinned, unaligned under 2 %,
+broken sentences zero. Planted fault: PROPN removed from the UPOS
+table → red. The partes gate grew to 203 with the secondary rules and
+the capital rule; its annotated fixture had to keep its capital
+`Xyzzy`, because a lowercase unknown after a period does not start a
+sentence — which briefly made the gate dereference a sentence that was
+not there.
+
+## 2026-09-05 — T14: verba.sh and the Python face of stage 3
+
+The instruments and the query surface, thin by design: everything they
+need existed in C already.
+
+`oratio/instrumenta/verba.c` + `./oratio/verba.sh <x.txt>... [-machina]
+[-analyses]`: each file is parsed and annotated exactly as `arbor.sh
+-partes` does (la.bin + glossary from RHUBARB_RADIX; the wrapper now
+exports it as the repo root when unset, so the instrument works from
+any directory), then one row per word in document order: via, index,
+byte extent, line, paragraph and sentence ordinals, form, classes,
+linguae, the first analysis's lemma, the count of analyses.
+`-analyses` prints one row per analysis node instead: class, lemma,
+lingua, fons, nativum, sensus, then the twelve accidents as the
+registry's option titles (declinatio and coniugatio as numbers, absent
+ones empty). The accidents are read from the tree by SLOT TITLE through
+`oratio_partes_locus`, the same way the annotator wrote them, so the
+instrument reports what the tree holds and never re-derives. Several
+files are accepted so that the via column means something (a corpus
+query across the five fixtures is one invocation). Sentence ordinals
+skip element-less sentences exactly as `sententiae.sh` does, so the two
+instruments' ordinals agree.
+
+`silva.Oratio(via | text | bytes)`: `sententiae()`, `vocabula(classis,
+lingua, ignota, sententia)`, `ignota()`, `analyses(vocabulum | index)`;
+a text is written to build/pythonica for the duration of one call; each
+query's rows are cached. `classis=` matches ANY candidate class, not the
+first — `vocabula(classis='verbum')` returns rosam (participle of rodo)
+as well as amat — because ambiguity is a list at every layer and the
+primary is stage 5's business. `Prosa.sententia(n, intra=)` delegates:
+the markdown paragraphs inside the extent are concatenated with blank
+lines, parsed once, and the sentence extents mapped back to file bytes
+with line and column; the anchor counter got a `sententia` branch (its
+fallback was the markdown selector, which has no such genus).
+
+Measured: Cicero 13,214 word rows in 1.0 s, 131,161 analysis rows in
+1.24 s (T12 counted 114,876 analyses before the pass II secondaries);
+Hilarius 1,678 words, as T12.
+
+Findings while writing the tests:
+- Two short punctuated, capitalised lines are VERSE to the form layer,
+  so the sentences follow the lines: the first fixture had two sentences
+  where I expected three. Correct (T6b's rule); a fixture lesson: prose
+  fixtures are one line, or blank-line separated.
+- `Oratio('')` resolved to the repo root: `os.path.exists` accepts a
+  directory. `isfile` plus a non-empty check.
+- Markdown paragraphs of list items start at the marker, so the item's
+  first sentence begins with `-`; and `- item one. item two.` is ONE
+  sentence because a lowercase word after a period does not start one.
+- `virum` gets lemma `virus` first: WORDS' order. Stage 5.
+
+Gate: the pythonica suite (20 assertions: three sentences of a one-line
+prose text, byte extents equal the forms, classes/lemma/linguae/
+ordinals, class and sentence filters, the unknown, the capital rule,
+accidents by title with absences omitted, Hilarius by path, a missing
+path refused, bytes and empty text; Prosa.sententia inside a section
+with line and column, list item, code fence and headings never, out of
+range, stale extent, edit + applicare with the anchor counted). Planted
+fault: the word end shortened by one byte in verba.c → red on "extenta
+octetim == forma".
+
+One hardening from the plant. The wrapper scripts exit 1 both when the
+instrument finds nothing and when clang fails (`clang … || exit 1`), so
+a Python face that reads "rc 1 = empty list" turns a broken build into
+"no words" — the lying-green shape. `Oratio._machina` now demands the
+`#` header line in `-machina` mode as proof the instrument ran; rc 1
+without it is a fracture with stderr attached.
+
+And a lesson about the ritual itself. The first `silva.planta` run
+ended with "signum absens": the gate emitted no verdict at all. I was
+writing this worklog, the orientation file and the spec while it ran,
+and the pythonica suite lints the house prose (`vocabula -prosa` reads
+every markdown file). Run alone, the same plant was red and the
+reversion green, 283 s. A gate that reads the tree is not to be run
+while the tree is being written — the same law as the shadow gates'
+snapshot, applied to the live one.
+
+The commit was then refused by the identifier pin: 2,973 unknown words
+against 2,958. Attribution through nexus.tsv (which files hold each
+unknown word's symbols): NONE is unique to verba.c — every unknown
+word it uses already sits in older files — and nine are unique to
+T13's files: circse, conllu, llct, misc, permille, rangae, rangam,
+treebank, upos. The symbol table is renovated by the excubitor AFTER
+a successful gate, so T13's own gate ran on the pre-T13 table and
+never saw its words; T14 is the first gate to see them. Glossary
+section for the house terms (ranga as a first-declension coinage,
+permille as an adverb, conllu/upos/misc permitted, CIRCSE/LLCT proper
+names); `treebank` renamed `thesaurus arborum` in the oraculum gate
+(the English word in an identifier is a finding by design). Pin 2,958
+→ 2,964 with the cause in the gate; the residual six are words of old
+files newly indexed, the same coverage growth T12 saw. Lesson for the
+lint: a pin over a build artifact that is renovated post-success
+lags one commit; the next task pays for the last one's words.

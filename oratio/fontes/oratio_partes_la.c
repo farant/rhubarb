@@ -13,6 +13,33 @@ constans character* constans ORATIO_CONIUNCTIONES_SUBORDINANTES[] = {
         "donec",
     "quin", "nisi", "quando", "quotiens", "sicut", "tamquam", "quasi",
     "licet", "quum", "uti",
+    /* T13 ex oraculo: adverbia/praepositiones WORDS quae UD subordinant */
+    "qualiter", "unde", "quam", "quatenus", "quomodo", "quare",
+        "quapropter",
+    "quoad", "sicuti", "ceu", "velut", "veluti", "quamdiu", "ubicumque",
+    "quandoque", "quotienscumque",
+    NIHIL
+};
+
+constans character* constans ORATIO_AUXILIARIA[] = {
+    "sum", NIHIL
+};
+
+constans character* constans ORATIO_DETERMINANTIA[] = {
+    "meus", "tuus", "suus", "noster", "vester", "hic", "ille", "iste",
+        "is",
+    "ipse", "idem", "qui", "quis", "quicumque", "quisquam", "quidam",
+    "aliquis", "aliqui", "omnis", "nullus", "ullus", "solus", "totus",
+    "uterque", "alter", "alius", "neuter", "tantus", "talis", "quantus",
+    "qualis", "quot", "tot", "cunctus", "unus", "ambo", "plerusque",
+    "suprascriptus", "praedictus", "supradictus", "ceterus", "reliquus",
+    NIHIL
+};
+
+constans character* constans ORATIO_PARTICULAE[] = {
+    "non", "haud", "haut", "ne", "num", "nonne", "an", "utrum",
+        "quidem",
+    "equidem", "nec", "neque", "vero",
     NIHIL
 };
 
@@ -508,6 +535,115 @@ _descriptionem_addere (
     redde VERUM;
 }
 
+interior b32
+_in_lista (
+    constans character* constans* lista,
+                           chorda  lemma)
+{
+    redde (b32)(_ex_tabula(lista, lemma) >= ZEPHYRUM);
+}
+
+/* copia descriptionis cum classe altera appendere */
+interior b32
+_copiam_addere (
+                          Xar* exitus,
+    constans OratioDescriptio* d,
+                OratioClassis  classis)
+{
+    OratioDescriptio c = *d;
+
+    c.classis = classis;
+    redde _descriptionem_addere(exitus, &c);
+}
+
+/* regulae secundariae (vide caput): descriptio prima iam addita */
+interior b32
+_secundariae (
+                          Xar* exitus,
+    constans OratioDescriptio* d)
+{
+    commutatio (d->classis)
+    {
+        casus ORATIO_CLASSIS_VERBUM:
+            si (   _in_lista(ORATIO_AUXILIARIA, d->lemma)
+                && !_copiam_addere(exitus, d, ORATIO_CLASSIS_AUXILIARE))
+            {
+                redde FALSUM;
+            }
+            frange;
+        casus ORATIO_CLASSIS_PRONOMEN:
+        casus ORATIO_CLASSIS_ADIECTIVUM:
+            si (   _in_lista(ORATIO_DETERMINANTIA, d->lemma)
+                && !_copiam_addere(exitus, d,
+                ORATIO_CLASSIS_DETERMINANS))
+            {
+                redde FALSUM;
+            }
+            frange;
+        casus ORATIO_CLASSIS_NUMERALE:
+            si (   _in_lista(ORATIO_DETERMINANTIA, d->lemma)
+                && !_copiam_addere(exitus, d,
+                ORATIO_CLASSIS_DETERMINANS))
+            {
+                redde FALSUM;
+            }
+            si (   d->species == (s32)ORATIO_SPECIES_NUMERALIS_ORDINALE
+                && !_copiam_addere(exitus, d,
+                ORATIO_CLASSIS_ADIECTIVUM))
+            {
+                redde FALSUM;
+            }
+            frange;
+        casus ORATIO_CLASSIS_ADVERBIUM:
+            si (   _in_lista(ORATIO_PARTICULAE, d->lemma)
+                && !_copiam_addere(exitus, d, ORATIO_CLASSIS_PARTICULA))
+            {
+                redde FALSUM;
+            }
+            si (   _subordinans(d->lemma)
+                && !_copiam_addere(exitus, d,
+                    ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS))
+            {
+                redde FALSUM;
+            }
+            frange;
+        casus ORATIO_CLASSIS_ADPOSITIO:
+            si (   _subordinans(d->lemma)
+                && !_copiam_addere(exitus, d,
+                    ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS))
+            {
+                redde FALSUM;
+            }
+            frange;
+                casus ORATIO_CLASSIS_NOMEN_PROPRIUM:
+            /* natura N (nomen) WORDS: deus, Manes, chaos UD substantiva;
+             * natura L (locus: Roma) manet nomen proprium solum */
+            si (   _aequalis(_lexema(d->natura, I), "N")
+                && !_copiam_addere(exitus, d,
+                ORATIO_CLASSIS_SUBSTANTIVUM))
+            {
+                redde FALSUM;
+            }
+            frange;
+        ordinarius:
+            frange;
+    }
+    redde VERUM;
+}
+
+vacuum
+oratio_partes_la_capitalis (
+             Piscina* piscina,
+              chorda  forma,
+    OratioDescriptio* d)
+{
+    oratio_descriptio_vacare(d);
+    d->classis  = ORATIO_CLASSIS_NOMEN_PROPRIUM;
+    d->lemma    = oratio_vocabularium_la_plicare(piscina, forma);
+    d->nativum  = _copia(piscina, _ex_literis("capitalis"));
+    d->fons     = ORATIO_FONS_ANALYSIS_REGULA;
+}
+
 b32
 oratio_partes_la_describere (
                           Piscina* piscina,
@@ -529,9 +665,11 @@ oratio_partes_la_describere (
                 oratio_vocabularium_la_flexio(voc,
                 a->flexio);
 
-            d.lemma = oratio_vocabularium_la_lemma(piscina, voc,
-                a->stirps);
+                        d.lemma =
+                            oratio_vocabularium_la_lemma(piscina, voc,
+                            a->stirps);
             d.sensus = stirps->sensus;
+            d.natura = stirps->species;
             d.nativum = _nativum(piscina, flexio->pars,
                 stirps->declinatio,
                 stirps->varians, flexio->accidentia,
@@ -675,8 +813,12 @@ oratio_partes_la_describere (
             }
             frange;
         }
-        ordinarius:
+                ordinarius:
             frange;
     }
-    redde _descriptionem_addere(exitus, &d);
+    si (!_descriptionem_addere(exitus, &d))
+    {
+        redde FALSUM;
+    }
+    redde _secundariae(exitus, &d);
 }

@@ -271,14 +271,29 @@ oratio_partes_vocabulum_annotare (
     {
         redde FALSUM;
     }
-    per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
-    {
+        per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
+        {
         si (!oratio_partes_la_describere(piscina, voc,
                 (constans OratioAnalysis*)xar_obtinere(analyses, k),
                 descriptiones))
         {
             redde FALSUM;
         }
+        }
+    /* regula (T13): vocabulum ignotum littera capitali = nomen proprium
+     * candidatum (Karolus, Taenari), fonte 'regula' */
+    si (   xar_numerus(descriptiones) == ZEPHYRUM
+        && textus.datum[ZEPHYRUM]     >= 'A'
+        && textus.datum[ZEPHYRUM]     <= 'Z')
+    {
+        OratioDescriptio* d =
+            (OratioDescriptio*)xar_addere(descriptiones);
+
+        si (d == NIHIL)
+        {
+            redde FALSUM;
+        }
+        oratio_partes_la_capitalis(piscina, textus, d);
     }
     per (k = ZEPHYRUM; k < xar_numerus(descriptiones); k++)
     {

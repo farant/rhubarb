@@ -46,7 +46,14 @@
 #include <string.h>
 #include <time.h>
 
-#define IGNOTA_SYMBOLORUM_PINNA 2958
+/* 2958 -> 2964 (T14, 2026-09-05): tabula symbolorum (nexus) post
+ * commissionem T13 renovata plagulas T13 demum indexavit - porta T13
+ * ea numquam vidit (excubitor post successum renovat). Verba T13
+ * novem in glossarium (ranga, permille, conllu, upos, misc, circse,
+ * llct) aut renominata (treebank -> thesaurus arborum); residuum VI =
+ * verba plagularum VETERUM nunc primum indexata (verba.c T14 nullum
+ * verbum ignotum novum fert: quodque eius ignotum alibi iam sedet). */
+#define IGNOTA_SYMBOLORUM_PINNA 2964
 
 interior b32
 _plagulam_legere (

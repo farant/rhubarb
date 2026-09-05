@@ -1075,6 +1075,54 @@ credo(per_verbum['the'].status == 'notum' and per_verbum['the'].classis == 'dete
 credo(per_verbum['lexema'].status == 'latinum' and per_verbum['piscina'].status == 'notum' and per_verbum['worklog'].status == 'permissum', 'vocabula: prosa - lexema latinum (glossarium Latinum), piscina notum (Moby eam novit), worklog permissum (contextus anglicus)')
 credo(per_verbum['values'].status == 'notum' and per_verbum['values'].lemma == 'value' and per_verbum['values'].regula == 'pluralis-s' and per_verbum['the'].regula == '', 'vocabula: prosa - values per regulam pluralis-s ad value, the sine regula')
 
+print('--- Oratio: quaestiones super orationem (T14) ---')
+o = silva.Oratio('Puella rosam amat. Xyzzy virum videt. Puella xyzzy amat.\n')
+ss = o.sententiae()
+credo(len(ss) == 3 and ss[0].textus == 'Puella rosam amat.' and ss[0].forma == 'prosa' and ss[2].initium == 38 and ss[2].finis == 56 and ss[2].index == 2, 'Oratio.sententiae: III extenta cum forma et indice')
+vv = o.vocabula()
+credo(len(vv) == 9 and [v.forma for v in vv[:3]] == ['Puella', 'rosam', 'amat'] and all(o.textus[v.initium:v.finis] == v.forma for v in vv) and [v.index for v in vv] == list(range(9)), 'Oratio.vocabula: IX vocabula, extenta octetim == forma, indices ordine')
+credo(vv[0].classes == ('substantivum',) and vv[0].lemma == 'puella' and vv[0].linguae == ('latina',) and vv[0].analyses == 3 and vv[0].sententia == 0 and vv[3].sententia == 1 and vv[8].sententia == 2 and vv[0].linea == 1 and vv[8].paragraphus == 0, 'Oratio.vocabula: classes, lemma, linguae, numerus analysium, sententia, paragraphus')
+credo(vv[1].classes == ('verbum', 'substantivum') and vv[1].lemma == 'rodo', 'Oratio.vocabula: rosam - classes ordine fontis (participium rodo ante rosam), lemma primae')
+vb = o.vocabula(classis='verbum')
+credo([v.forma for v in vb] == ['rosam', 'amat', 'videt', 'amat'] and all('verbum' in v.classes for v in vb), 'Oratio.vocabula(classis): candidatum quodque, non primum solum')
+credo([v.forma for v in o.vocabula(sententia=2)] == ['Puella', 'xyzzy', 'amat'] and len(o.vocabula(lingua='latina')) == 8, 'Oratio.vocabula(sententia, lingua)')
+ig = o.ignota()
+credo(len(ig) == 1 and ig[0].forma == 'xyzzy' and ig[0].classes == ('ignotum',) and ig[0].linguae == () and ig[0].analyses == 0 and ig[0].lemma == '', 'Oratio.ignota: xyzzy solum (inventum)')
+credo(vv[3].classes == ('nomen-proprium',) and o.analyses(vv[3])[0].fons == 'regula' and o.analyses(vv[3])[0].nativum == 'capitalis' and o.analyses(vv[3])[0].accidentia == {}, 'Oratio: Xyzzy capitale = nomen proprium regula (T13), sine accidentibus')
+aa = o.analyses(vv[0]); a = aa[0]
+credo(len(aa) == 3 and a.classis == 'substantivum' and a.lemma == 'puella' and a.lingua == 'latina' and a.fons == 'vocabularium-la' and a.nativum == 'N 1 1 NOM S C' and a.sensus.startswith('girl') and a.index == 0, 'Oratio.analyses: classis, lemma, lingua, fons, nativum, sensus')
+credo(a.accidentia == {'casus': 'nominativus', 'numerus': 'singularis', 'genus': 'femininum', 'declinatio': '1'} and [x.accidentia['casus'] for x in aa] == ['nominativus', 'vocativus', 'ablativus'], 'Oratio.analyses: accidentia titulis, absentia omissa, declinatio numero')
+am = o.analyses(2)[0]
+credo(am.classis == 'verbum' and am.accidentia['persona'] == 'III' and am.accidentia['tempus'] == 'praesens' and am.accidentia['modus'] == 'indicativus' and am.accidentia['vox'] == 'activa' and am.accidentia['forma-verbi'] == 'finitum' and am.accidentia['coniugatio'] == '1' and 'casus' not in am.accidentia and o.analyses(ig[0]) == [], 'Oratio.analyses(index): verbum amat - persona tempus modus vox forma coniugatio; ignotum = []')
+h = silva.Oratio('oratio/probationes/fixa/txt/hilarius.txt')
+credo(h.via.endswith('hilarius.txt') and len(h.vocabula()) == 1678 and len(h.sententiae()) > 50 and 0 < len(h.ignota()) < 120, 'Oratio(via): Hilarius MDCLXXVIII vocabula (T12)')
+try:
+    silva.Oratio('oratio/nemo.txt'); credo(False, 'Oratio: plagula absens refutatur')
+except silva.SilvaError as ex:
+    credo('absens' in str(ex), 'Oratio: plagula absens refutatur')
+credo(len(silva.Oratio(b'Puella amat.\n').vocabula()) == 2 and silva.Oratio('').vocabula() == [], 'Oratio(bytes); textus vacuus = nihil')
+
+print('--- Prosa.sententia: delegatio Orationi (T14) ---')
+via_s = os.path.join(T, 'prosa3.md')
+open(via_s, 'w').write('# Doc\n\n## Ideas\n\nOne sentence here. Second one\nwraps here.\n\n- item one. item two.\n\n## Code\n\n```c\nx. y;\n```\n\nLast one.\n')
+r = silva.Prosa(via_s); sec = r.sectio('Ideas')
+s1 = r.sententia(1, intra=sec)
+credo(r.corpus(s1) == 'Second one\nwraps here.' and s1.tag == 'sententia' and s1.linea == 5 and s1.columna == 20 and s1.linea_finis == 6, 'Prosa.sententia intra sectionem: extentum in octetos plagulae remissum, linea + columna')
+credo(r.corpus(r.sententia(2, intra=sec)) == '- item one. item two.' and r.corpus(r.sententia(3)) == 'Last one.' and r.sententia(0).linea == 5, 'Prosa.sententia: elementum listae paragraphus (nota intra), saeptum et capitula numquam, ultima totius plagulae')
+try:
+    r.sententia(4); credo(False, 'Prosa.sententia extra numerum refutatur')
+except silva.SilvaError as ex:
+    credo('4 praesentia' in str(ex), 'Prosa.sententia extra numerum refutatur')
+r.substituere(s1, 'Second one here.')
+try:
+    r.sententia(0, intra=sec); credo(False, 'Prosa.sententia: intra rancidum refutatur')
+except silva.SilvaError as ex:
+    credo('rancidum' in str(ex), 'Prosa.sententia: intra rancidum refutatur')
+credo(r.corpus(r.sententia(1)) == 'Second one here.', 'Prosa.sententia post editionem: reselectum in versione praesenti')
+f4 = r.applicare()
+credo(f4.sana and 'One sentence here. Second one here.\n\n- item' in open(via_s).read() and f4.ancorae.get('sententia') == 4, 'Prosa.sententia + substituere + applicare: sanum, ancorae numeratae')
+
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))
