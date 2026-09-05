@@ -83,6 +83,7 @@ declare -a SOURCE_FILES=(
     "lib/libro_paginarum.c"
     "lib/machina_posix.c"
     "lib/macho.c"
+    "lib/mandatum.c"
     "lib/manus.c"
     "lib/mensa.c"
     "lib/mensura.c"

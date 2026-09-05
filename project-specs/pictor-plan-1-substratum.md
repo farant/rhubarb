@@ -191,7 +191,7 @@ git commit -m "ludus: T1 - Eventus.tempus (s64 ms) et fenestra_tempus_ms; tempus
 **Interfaces:**
 - Produces: `Punctum {x,y}`, `Fines {x,y,latitudo,altitudo}`, `MandatumGenus`, `ColorMandati`, `Mandatum`, `Mandata`; `mandata_creare(piscina, intern)`, `mandata_vacare(m)`, `mandata_numerus(m)`, `mandata_obtinere(m, i)`, emitters `mandata_rectangulum/linea/polygonum/imago/textus`, `mandata_coetus_incipere(...) → i32`, `mandata_coetus_finire(m, index)`, `mandata_scribere_stml(m, piscina, pulchrum) → chorda`, `mandata_legere_stml(cstr, piscina, intern) → Mandata*`, `mandata_aequalia(a, b) → b32`, `fines_continet(f, p) → b32`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_mandatum.c`:
 ```c
@@ -284,12 +284,12 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh mandatum`
 Expected: FAIL — `'mandatum.h' file not found`.
 
-- [ ] **Step 3: Write the header**
+- [x] **Step 3: Write the header**
 
 `include/mandatum.h`:
 ```c
@@ -498,7 +498,7 @@ mandata_aequalia (
 #endif /* MANDATUM_H */
 ```
 
-- [ ] **Step 4: Write the implementation**
+- [x] **Step 4: Write the implementation**
 
 `lib/mandatum.c`:
 ```c
@@ -1061,12 +1061,12 @@ mandata_aequalia (
 ```
 `STML_NODUS_ELEMENTUM` is the element genus (`include/stml.h`, `StmlNodusGenus`).
 
-- [ ] **Step 5: Run to verify it passes**
+- [x] **Step 5: Run to verify it passes**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh mandatum`
 Expected: PASS. If `-Wconversion` flags a cast, cast explicitly at the site — never relax the flags.
 
-- [ ] **Step 6: Worklog + commit**
+- [x] **Step 6: Worklog + commit**
 
 `lib/mandatum.worklog.md`:
 ```
