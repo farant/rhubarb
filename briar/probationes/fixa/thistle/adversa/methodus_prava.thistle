@@ -1,0 +1,18 @@
+#!/usr/bin/env briar
+# Methodus prava
+
+<fenestra titulus="prava"/>
+
+<html!>
+<p>prava</p>
+</html>
+
+<c! methodus="salve">
+#include "json.h"
+
+s32
+salve (vacuum)
+{
+    redde ZEPHYRUM;
+}
+</c>

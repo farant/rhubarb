@@ -1,0 +1,53 @@
+#!/usr/bin/env briar
+# Punctum
+
+A typedef, a macro, a global, a helper, a main — the partition has
+to put each in the right file.
+
+<c!>
+#include "chorda.h"
+#define PUNCTUM_MAXIMUM 3
+
+nomen structura {
+    i32 x;
+    i32 y;
+} Punctum;
+
+hic_manens i32 numerus_vocationum = ZEPHYRUM;
+
+i32
+punctum_summa (constans Punctum* p)
+{
+    numerus_vocationum = numerus_vocationum + I;
+    redde p->x + p->y;
+}
+
+s32
+principale (vacuum)
+{
+    Punctum p;
+
+    p.x = I;
+    p.y = II;
+    imprimere("summa %d\n", (integer)punctum_summa(&p));
+    redde (punctum_summa(&p) <= PUNCTUM_MAXIMUM) ? ZEPHYRUM : I;
+}
+</c>
+
+<c! munus="probatio">
+#include "credo.h"
+
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("probatio", 65536);
+    Punctum  p;
+
+    p.x = II;
+    p.y = II;
+    credo_aperire(piscina);
+    CREDO_AEQUALIS_I32(punctum_summa(&p), IV);
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

@@ -1,0 +1,3 @@
+#!/usr/bin/env briar
+<c!>
+int x;

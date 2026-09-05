@@ -109,6 +109,71 @@ silex_clausuram_colligere (
     constans character* constans* semina,
     i32                           numerus_seminum);
 
+/* Vexilla quae ordines generati ferunt. PUBLICA (plan 2 briar): clavis
+ * fabricae briar chordam vexillorum ipsam friat - vexilla in proiecto
+ * cocta in clave eius sint. */
+#define SILEX_VEXILLA_COMPILATIONIS \
+    "-std=c89 -pedantic -Wall -Wextra -Werror -Wconversion" \
+    " -Wsign-conversion -Wcast-qual -Wstrict-prototypes" \
+    " -Wmissing-prototypes -Wwrite-strings -Wno-long-long"
+#define SILEX_VEXILLA_VITREA SILEX_VEXILLA_COMPILATIONIS \
+    " -Wno-overlength-strings -fbracket-depth=512"
+#define SILEX_VEXILLA_VENDITORIA \
+    "-O2 -DSQLITE_ENABLE_FTS5 -DSQLITE_THREADSAFE=0" \
+    " -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0" \
+    " -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_OMIT_DEPRECATED" \
+    " -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1"
+
+/* clausura e TEXTIBUS fontium: semina = lineae '#include "x.h"'
+ * contentorum (dedup; <t>_pipa.h et capsula_* omissa - capita
+ * templi propria); NIHIL si fracta. Consumptor secundus: briar
+ * (regiones C + principale genitum). */
+Xar*
+silex_clausuram_e_contentis (
+               Piscina* piscina,
+    constans SilexFons* fons,
+       constans chorda* contenta,
+                   i32  numerus);
+
+/* Ordines generati (PROIECTIO: mutare licet). 'fontes' = viae
+ * fontium proiecto relativae, ordine scripto: silex fontes/<t>.c
+ * [+ fontes/<t>_pipa.c]; briar fontes/<t>.c fontes/<t>_regiones.c.
+ * Plani: fontes citati + globus bibliothecarum; vitrei: fontes +
+ * assets/capsula_<t>.c + clausura explicata (numquam globus) +
+ * frameworks. */
+chorda
+silex_ordinem_fingere (
+                       Piscina* piscina,
+            constans character* titulus,
+    constans character* constans* fontes,
+                           i32  numerus_fontium);
+
+chorda
+silex_ordinem_probandi_fingere (
+                       Piscina* piscina,
+            constans character* titulus,
+    constans character* constans* fontes,
+                           i32  numerus_fontium);
+
+chorda
+silex_ordinem_vitreum_fingere (
+                       Piscina* piscina,
+            constans character* titulus,
+    constans character* constans* fontes,
+                           i32  numerus_fontium,
+                           Xar* clausura_app,
+                           Xar* clausura_instrumenti,
+            constans character* fons_titulus);
+
+chorda
+silex_ordinem_probandi_vitreum_fingere (
+                       Piscina* piscina,
+            constans character* titulus,
+    constans character* constans* fontes,
+                           i32  numerus_fontium,
+                           Xar* clausura_probationis,
+            constans character* fons_titulus);
+
 /* proiectum novum excudere; vide silex.h caput pro forma */
 SilexNovumFructus
 silex_novum (
@@ -123,6 +188,13 @@ constans character*
 silex_fabricam_invenire (
                Piscina* piscina,
     constans character* initium);
+
+/* monitiones stderr (venditorium/caput citatum deest, implementatio
+ * nulla pro caput solum) tacere; ordinarium FALSUM (silex loquax ut
+ * hodie). Instrumentum scripti (briar) VERUM ponit. */
+vacuum
+silex_monitiones_tacere (
+    b32 tacere);
 
 
 /* ==================================================

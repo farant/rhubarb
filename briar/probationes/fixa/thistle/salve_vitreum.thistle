@@ -1,0 +1,54 @@
+#!/usr/bin/env briar
+# Salve vitreum
+
+Include `<chorda.h>` and the window opens with one method bound
+to a button. Prose is markdown; it never needs escaping. A
+documentation example may show a tag at column 0 inside a fence:
+
+```html
+<button onclick="internuntius.vocare('salve', {})">tange</button>
+```
+
+<fenestra titulus="salve" latitudo="640" altitudo="400"/>
+
+<html!>
+<h1>salve</h1>
+<button onclick="internuntius.vocare('salve', {}).then(
+    function (r) { document.body.append(r.nuntius); })">tange</button>
+</html>
+
+<c! methodus="salve">
+#include "chorda.h"
+#include "json.h"
+
+JsonValor*
+salve (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
+    chorda* culpa)
+{
+    JsonValor* fructus = json_objectum_creare(piscina);
+
+    (vacuum)argumenta; (vacuum)datum; (vacuum)culpa;
+    json_objectum_ponere(fructus, "nuntius",
+        json_chorda_creare_literis(piscina, "salve, munde"));
+    redde fructus;
+}
+</c>
+
+<c! munus="probatio">
+#include "credo.h"
+#include "json.h"
+
+s32
+principale (vacuum)
+{
+    Piscina*   piscina = piscina_generare_dynamicum("probatio", 65536);
+    JsonValor* r;
+    chorda     culpa;
+
+    credo_aperire(piscina);
+    r = salve(NIHIL, piscina, NIHIL, &culpa);
+    CREDO_NON_NIHIL(r);
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

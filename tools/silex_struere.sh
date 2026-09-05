@@ -59,47 +59,10 @@ if [ tools/silex_assets/index.html -nt \
     ./bin/capsula_generare tools/silex_assets/silex.toml || exit 1
 fi
 
-# corpus bibliothecarum: capsula infixa. Regeneratum SOLUM cum
-# fontes mutantur - stampa commit eius temporis fixatur (semantica
-# recta: stampa = ultima mutatio corporis, non ultima aedificatio)
-CORPUS_C=build/capsula_corpus_silicis.c
-regen=0
-if [ ! -f "$CORPUS_C" ]; then
-    regen=1
-elif [ -n "$(find lib include vendor tools/capsula_generare.c \
-        natura/cocta canones.registrum natura/natura.canon \
-        aedilis.canon canon.canon silva/grammatica/grammatica.canon \
-        silva/quaestiones.canon \
-        -newer "$CORPUS_C" -print -quit 2>/dev/null)" ]; then
-    regen=1
-fi
-if [ "$regen" = 1 ]; then
-    echo "  [corpus] stampa + capsula (tardum semel)"
-    STAMPA="commit=$(git rev-parse --short HEAD 2>/dev/null \
-        || echo ignotum)"
-    # sorditia SCOPATA ad contenta corporis - plagulae aliae (FAQ,
-    # gesta) semper mutatae sunt nec in capsulam eunt
-    if [ -n "$(git status --porcelain -- lib include vendor \
-            tools/capsula_generare.c natura/cocta canones.registrum \
-            natura/natura.canon aedilis.canon canon.canon \
-            silva/grammatica/grammatica.canon \
-            silva/quaestiones.canon 2>/dev/null)" ]; then
-        STAMPA="$STAMPA SORDIDUM"
-    fi
-    STAMPA="$STAMPA dies=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    printf '%s\n' "$STAMPA" > corpus.versio
-    cat > corpus_silicis.toml <<'TOML'
-# GENERATUM a silex_struere.sh - NE MANU EDITES (gitignoratum)
-corpus_silicis_files = ["lib/*.c", "lib/*.m", "include/*.h", "vendor/*", "tools/capsula_generare.c", "corpus.versio", "natura/cocta/*.canon", "natura/cocta/semina.census", "canones.registrum", "natura/natura.canon", "aedilis.canon", "canon.canon", "silva/grammatica/*.canon", "silva/quaestiones.canon"]
-corpus_silicis_compress = true
-TOML
-    if [ ! -x bin/capsula_generare ]; then
-        ./compile_tools.sh capsula_generare >/dev/null || exit 1
-    fi
-    ./bin/capsula_generare corpus_silicis.toml || exit 1
-    mv capsula_corpus_silicis.h capsula_corpus_silicis.c build/ \
-        || exit 1
-fi
+# corpus bibliothecarum: capsula infixa - bloccus COMMUNIS cum
+# tools/briar_struere.sh (tools/corpus_infixum.sh)
+source "$SCRIPT_DIR/corpus_infixum.sh"
+corpus_infixum_regenerare || exit 1
 
 # obiecta silvae (machina differentiae unitatum --unitates) -
 # lacus idem quo differre.sh (silva/build), vexillae eaedem
@@ -136,13 +99,23 @@ for base in silva_unitates silva_differre; do
     silva_obiecta="$silva_obiecta $obj"
 done
 
+# obiecta bibliothecarum: build/*.o SINE obiectis probationum
+# (probatio_*.o - reliquiae cursoris radicis ante 2026-09-04, cum
+# obiecta probationum in build/ cadebant; unum eorum symbolum capsulae
+# speculi poscit quod sola probatio nectit - globus nudus nexum frangit)
+bibliothecae_obiecta=""
+for o in build/*.o; do
+    case "$(basename "$o")" in probatio_*) continue ;; esac
+    bibliothecae_obiecta="$bibliothecae_obiecta $o"
+done
+
 mkdir -p bin
 echo "  [silex] tools/silex.c + capsula_silex_frons.c + corpus"
 clang "${GCC_FLAGS[@]}" -Iinclude -Isilva/fontes \
     -Isilva/instrumenta \
     tools/silex.c tools/silex_assets/capsula_silex_frons.c \
     build/capsula_corpus_silicis.c \
-    build/*.o \
+    $bibliothecae_obiecta \
     $silva_obiecta \
     -framework Cocoa -framework Security -framework WebKit \
     -o bin/silex || exit 1

@@ -340,6 +340,7 @@
   <vocabulum lemma="arbor2" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="xar" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="silva" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
+  <vocabulum lemma="briar" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (instrumentum: programmata litterata .thistle)"/>
   <vocabulum lemma="materia" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="oratio" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="natura" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
