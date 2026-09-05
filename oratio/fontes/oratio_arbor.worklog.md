@@ -1267,3 +1267,19 @@ cut, and the commit's gate found them for me. And a regex
 replacement's string processes `\\n` into a real newline: twice it
 put a line break inside a C string literal; plain `str.replace` for
 any replacement carrying escapes.
+
+## 2026-09-05 — Glossary: the pictor merge's twenty-eight words
+
+The rhubarb-pictor merge (177eab66) put 2,987 unknown identifier words
+against the pin of 2,964, and the attribution through nexus.tsv named
+28 words that live only in the merged files. Same mechanism as T14's
+nine: a branch's new words meet oratio's lint one merge later. Glossary
+section TERMINI PICTOR: seventeen coinages as Latin entries with the
+forms the code uses (addressare, centrare, incrementare, maximizare,
+recomponere, registrare, exeo's syncopated `exiit`, claudibilis,
+durabilis, focusabilis, maximizabilis, minuibilis, numericus, defocus,
+ephemera, rotula, schirmum, strategia), six permitted with a "rename if
+you like" note for the pictor session (dctx, toy, botton, index2,
+radix2, repo2). Count 2,987 → 2,958; pin lowered to 2,958. The words
+were Fran's to permit or rename; permitting with a note keeps main
+green without editing another session's identifiers.

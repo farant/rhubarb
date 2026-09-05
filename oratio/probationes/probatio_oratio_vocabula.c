@@ -52,8 +52,12 @@
  * novem in glossarium (ranga, permille, conllu, upos, misc, circse,
  * llct) aut renominata (treebank -> thesaurus arborum); residuum VI =
  * verba plagularum VETERUM nunc primum indexata (verba.c T14 nullum
- * verbum ignotum novum fert: quodque eius ignotum alibi iam sedet). */
-#define IGNOTA_SYMBOLORUM_PINNA 2964
+ * verbum ignotum novum fert: quodque eius ignotum alibi iam sedet).
+ * 2964 -> 2958 (2026-09-05): fusio rhubarb-pictor verba XXVIII nova
+ * attulit (2987) - sectio glossarii TERMINI PICTOR (coinages Latina,
+ * abbreviationes permissae, quaestio 01M1S6W8HF); pinna ad numerum
+ * novum DEMISSA (solum cadens). */
+#define IGNOTA_SYMBOLORUM_PINNA 2958
 
 interior b32
 _plagulam_legere (

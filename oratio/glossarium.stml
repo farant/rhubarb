@@ -768,4 +768,36 @@
   <vocabulum lemma="llct" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_Latin-LLCT (chartae mediaevales), thesaurus arborum venditus"/>
   <vocabulum lemma="ewt" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_English-EWT (English Web Treebank), thesaurus arborum venditus (T16)"/>
 
+  <!-- ================= TERMINI PICTOR (fusio rhubarb-pictor 177eab66, 2026-09-05) =================
+       verba identificatorum XXVIII quae lint orationis post fusionem primum
+       vidit (quaestio 01M1S6W8HF): coinages domus ut entria Latina cum
+       formis adhibitis (verba, adiectiva, substantiva), abbreviationes et
+       nomina numerata PERMISSA cum nota - sessio pictor renominet si
+       placet. -->
+
+  <vocabulum lemma="addressare" lingua="latina" classis="verbum" nota="coinage domus (pictor): address (dispensator)"><forma textus="addressare"/></vocabulum>
+  <vocabulum lemma="centrare" lingua="latina" classis="verbum" nota="coinage domus (pictor): in centrum ponere (fenestra)"><forma textus="centrare"/></vocabulum>
+  <vocabulum lemma="incrementare" lingua="latina" classis="verbum" nota="coinage domus (pictor): augere gradatim"><forma textus="incrementare"/></vocabulum>
+  <vocabulum lemma="maximizare" lingua="latina" classis="verbum" nota="coinage domus (pictor): fenestram maximam facere"><forma textus="maximizare"/></vocabulum>
+  <vocabulum lemma="recomponere" lingua="latina" classis="verbum" nota="coinage domus (pictor): iterum componere (dispensator)"><forma textus="recomponere"/></vocabulum>
+  <vocabulum lemma="registrare" lingua="latina" classis="verbum" nota="Latina media: in registrum referre (actio)"><forma textus="registratae"/><forma textus="registrare"/><forma textus="registrata"/></vocabulum>
+  <vocabulum lemma="exeo" lingua="latina" classis="verbum" nota="forma syncopata exiit (= exivit) quam WORDS non generat (fenestra)"><forma textus="exiit"/></vocabulum>
+  <vocabulum lemma="claudibilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui claudi potest (fenestra)"><forma textus="claudibilis"/><forma textus="claudibile"/></vocabulum>
+  <vocabulum lemma="durabilis" lingua="latina" classis="adiectivum" nota="Latina sera: qui durat (insula: durabile contra ephemera)"><forma textus="durabilis"/><forma textus="durabile"/></vocabulum>
+  <vocabulum lemma="focusabilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui focum accipere potest (componens)"><forma textus="focusabilis"/><forma textus="focusabile"/><forma textus="focusabiles"/></vocabulum>
+  <vocabulum lemma="maximizabilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui maximizari potest (fenestra)"><forma textus="maximizabilis"/><forma textus="maximizabile"/></vocabulum>
+  <vocabulum lemma="minuibilis" lingua="latina" classis="adiectivum" nota="coinage domus (pictor): qui minui potest (fenestra)"><forma textus="minuibilis"/><forma textus="minuibile"/></vocabulum>
+  <vocabulum lemma="numericus" lingua="latina" classis="adiectivum" nota="Latina sera: ad numeros pertinens (componens, mandatum)"><forma textus="numericum"/><forma textus="numericus"/><forma textus="numerica"/></vocabulum>
+  <vocabulum lemma="defocus" lingua="latina" classis="substantivum" nota="coinage domus (pictor): amissio foci (fenestra)"><forma textus="defocus"/></vocabulum>
+  <vocabulum lemma="ephemera" lingua="latina" classis="substantivum" nota="Graeca: res diei unius (insula: contra durabile)"><forma textus="ephemera"/></vocabulum>
+  <vocabulum lemma="rotula" lingua="latina" classis="substantivum" nota="Latina: rota parva (fenestra: rotula muris)"><forma textus="rotula"/><forma textus="rotulae"/><forma textus="rotulam"/></vocabulum>
+  <vocabulum lemma="schirmum" lingua="latina" classis="substantivum" nota="coinage domus (pictor, ex Germanico Schirm): screen (manus_ludus)"><forma textus="schirmum"/><forma textus="schirmi"/></vocabulum>
+  <vocabulum lemma="strategia" lingua="latina" classis="substantivum" nota="Graeca: ratio ducis (destinatio, dispensator)"><forma textus="strategia"/><forma textus="strategiam"/><forma textus="strategiae"/></vocabulum>
+  <vocabulum lemma="dctx" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio pictor (delineare_mandata: contextus delineandi) - renominanda si placet"/>
+  <vocabulum lemma="toy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: ludus_toy.h fixtura - renominanda si placet"/>
+  <vocabulum lemma="botton" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor (fenestra): button? - renominandum si placet"><forma textus="bottonis"/></vocabulum>
+  <vocabulum lemma="index2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
+  <vocabulum lemma="radix2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
+  <vocabulum lemma="repo2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
+
 </glossarium>
