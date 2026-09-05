@@ -180,6 +180,33 @@ _continet (
     redde (b32)(strstr(chorda_ut_cstr(fenum, piscina), acus) != NIHIL);
 }
 
+/* recusatio: causa fragmentum continet, linea .thistle nominata,
+ * nihil genitum */
+interior vacuum
+_recusationem_probare (
+               Piscina* piscina,
+   InternamentumChorda* intern,
+    constans SilexFons* fons,
+    constans character* fixum,
+    constans character* fragmentum,
+                   i32  linea)
+{
+                    Xar* nexus;
+    BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+        _texere(piscina, "briar/probationes/fixa/thistle/adversa/",
+        fixum,
+            NIHIL), &nexus);
+
+    imprimere("  %s: %.*s (linea %d)\n", fixum,
+        (integer)f.causa.mensura,
+        (constans character*)f.causa.datum, (integer)f.linea_causae);
+    CREDO_FALSUM (f.successus);
+    CREDO_VERUM (_continet(piscina, f.causa, fragmentum));
+    CREDO_AEQUALIS_I32 (f.linea_causae, linea);
+    CREDO_VERUM (f.genitae == NIHIL);
+    briar_silvam_solvere(nexus);
+}
+
 /* genita contra aurum; BRIAR_FABRICA_SCRIBERE=1 aurum scribit */
 interior vacuum
 _aurum_conferre (
@@ -512,6 +539,28 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(f.genitae), (i32)9);
         briar_silvam_solvere(nexus);
     }
+
+    imprimere("\n--- Probans recusationes: causa + linea ---\n");
+    _recusationem_probare(piscina, intern, fons,
+        "duo_principalia.thistle",
+        "duo principalia: lineae 5 et 13", (i32)13);
+    _recusationem_probare(piscina, intern, fons, "nihil.thistle",
+        "nec principale", ZEPHYRUM);
+    _recusationem_probare(piscina, intern, fons,
+        "fenestra_et_principale.thistle", "unum elige", (i32)4);
+    _recusationem_probare(piscina, intern, fons,
+        "methodus_absens.thistle",
+        "functio non definita", (i32)10);
+    _recusationem_probare(piscina, intern, fons,
+        "methodus_prava.thistle",
+        "signatura aliena", (i32)10);
+    _recusationem_probare(piscina, intern, fons, "html_duplex.thistle",
+        "regio html iterata (prima linea 6)", (i32)10);
+    _recusationem_probare(piscina, intern, fons,
+        "fenestra_prava.thistle",
+        "latitudo non numerus", (i32)4);
+    _recusationem_probare(piscina, intern, fons, "c_fractum.thistle",
+        "parsura fracta", (i32)11);
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

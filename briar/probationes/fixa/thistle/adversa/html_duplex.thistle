@@ -1,0 +1,24 @@
+#!/usr/bin/env briar
+# Html duplex
+
+<fenestra titulus="duplex"/>
+
+<html!>
+<p>unum</p>
+</html>
+
+<html!>
+<p>alterum</p>
+</html>
+
+<c! methodus="salve">
+#include "json.h"
+
+JsonValor*
+salve (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
+    chorda* culpa)
+{
+    (vacuum)argumenta; (vacuum)datum; (vacuum)culpa;
+    redde json_objectum_creare(piscina);
+}
+</c>
