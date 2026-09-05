@@ -1,0 +1,22 @@
+#!/usr/bin/env briar
+# Fragmenta derivata
+
+No `#include` anywhere; the only use of `chorda_ex_literis` sits inside
+a fragment. Derivation must see through the weave.
+
+<c! id="salutatio">
+chorda salutatio = chorda_ex_literis("salve", piscina);
+</c>
+
+<c!>
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("derivata", 65536);
+    <<#salutatio>>
+
+    imprimere("%d\n", (integer)salutatio.mensura);
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
+}
+</c>

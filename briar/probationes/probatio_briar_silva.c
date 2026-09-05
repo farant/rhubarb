@@ -9,6 +9,7 @@
 #include "latina.h"
 #include "credo.h"
 #include "briar_arbor.h"
+#include "briar_contextus.h"
 #include "briar_nexus.h"
 #include "briar_silva.h"
 #include "internamentum.h"
@@ -29,6 +30,10 @@ hic_manens constans character* DERIVATUM =
     "briar/probationes/fixa/thistle/derivatum.thistle";
 hic_manens constans character* PUNCTUM =
     "briar/probationes/fixa/thistle/punctum.thistle";
+hic_manens constans character* FRAGMENTA =
+    "briar/probationes/fixa/thistle/fragmenta.thistle";
+hic_manens constans character* FRAGMENTA_DERIVATA =
+    "briar/probationes/fixa/thistle/fragmenta_derivata.thistle";
 
 interior character*
 _plagulam_legere (
@@ -154,9 +159,13 @@ _texere_omnia (
     {
         redde NIHIL;
     }
-    doc    = briar_arbor_parsare(piscina, textus, mensura);
-    nexus  = briar_nexus_texere(piscina, doc, intern);
+        doc  = briar_arbor_parsare(piscina, textus, mensura);
+    nexus    = briar_nexus_texere(piscina, doc, intern);
     si (nexus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (briar_contexere(piscina, nexus, NIHIL) < ZEPHYRUM)
     {
         redde NIHIL;
     }
@@ -347,6 +356,101 @@ principale (vacuum)
             "piscina.h"));
                 CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
                     ZEPHYRUM);
+        briar_silvam_solvere(nexus);
+    }
+
+        imprimere("\n--- Probans fragmenta: contextus parsatur, tabula"
+            " linearum, fragmenta non parsantur ---\n");
+    {
+            character* textus;
+                  i32  mensura;
+                  Xar* nexus;
+        BriarNexusRes* app;
+        BriarNexusRes* prob;
+        BriarNexusRes* frag;
+
+        nexus = _texere_omnia(piscina, intern, fons, FRAGMENTA, &textus,
+            &mensura);
+        CREDO_NON_NIHIL (nexus);
+        app   = _regio_c(nexus, V);
+        prob  = _regio_c(nexus, VI);
+        frag  = _regio_c(nexus, I);
+        CREDO_NON_NIHIL (app);
+        CREDO_NON_NIHIL (prob);
+        CREDO_NON_NIHIL (frag);
+        si (app != NIHIL && prob != NIHIL && frag != NIHIL)
+        {
+                        /* radix app: chorda.h per fragmentum #capita CONTEXTA (et
+             * chorda.h piscina.h trahit) - nihil derivatur: parsura
+             * contextum videt, non octetos crudos cum '<<#capita>>' */
+            CREDO_NON_NIHIL (app->silva);
+            CREDO_AEQUALIS_I32 (app->linea_erroris, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (app->silva->parsura->numerus_errorum,
+                ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(app->silva->capita_derivata),
+                ZEPHYRUM);
+            /* lineae silvae per tabulam: index contextus 0 -> 20
+             * (capita), 10 -> 9 (incrementum), 12 -> 41 (reditus) */
+            CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(app,
+                app->praeludium + ZEPHYRUM + I), XX);
+            CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(app,
+                app->praeludium + X + I), IX);
+            CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(app,
+                app->praeludium + XII + I), XLI);
+                        /* probatio: credo.h ipsa (chorda.h + piscina.h trahit) -
+             * nihil derivatur; contextus parsatus sine erroribus */
+            CREDO_NON_NIHIL (prob->silva);
+            CREDO_AEQUALIS_I32 (prob->silva->parsura->numerus_errorum,
+                ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                prob->silva->capita_derivata), ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(prob,
+                prob->praeludium + VII + I), XXIV);
+            /* fragmentum: numquam parsatum */
+            CREDO_VERUM (frag->est_fragmentum);
+            CREDO_VERUM (frag->silva == NIHIL);
+        }
+        briar_silvam_solvere(nexus);
+    }
+
+        imprimere("\n--- Probans fragmenta_derivata: derivatio per texturam"
+            " ---\n");
+    {
+            character* textus;
+                  i32  mensura;
+                  Xar* nexus;
+        BriarNexusRes* r;
+        SemanticaSymbolum* s;
+
+        /* nullum #include: chorda_ex_literis in fragmento SOLO -
+         * chorda.h et piscina.h derivata radici */
+        nexus = _texere_omnia(piscina, intern, fons, FRAGMENTA_DERIVATA,
+            &textus, &mensura);
+        CREDO_NON_NIHIL (nexus);
+        r = _regio_c(nexus, I);
+        CREDO_NON_NIHIL (r);
+        si (r != NIHIL)
+        {
+            CREDO_FALSUM (r->est_fragmentum);
+            CREDO_NON_NIHIL (r->silva);
+            CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
+                ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(r->silva->capita_derivata),
+                II);
+            CREDO_VERUM (chorda_aequalis_literis(
+                *(chorda*)xar_obtinere(r->silva->capita_derivata,
+                ZEPHYRUM), "chorda.h"));
+            CREDO_VERUM (chorda_aequalis_literis(
+                *(chorda*)xar_obtinere(r->silva->capita_derivata, I),
+                "piscina.h"));
+            s = silva_c89_symbolum_invenire(r->silva->semantica,
+                _silva_chorda(piscina, "chorda_ex_literis"));
+            CREDO_NON_NIHIL (s);
+            CREDO_FALSUM (s != NIHIL && s->est_implicitum);
+            /* linea fragmenti (8) per tabulam: index contextus IV */
+            CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(r,
+                r->praeludium + IV + I), VIII);
+        }
         briar_silvam_solvere(nexus);
     }
 

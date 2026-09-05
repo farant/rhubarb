@@ -252,9 +252,20 @@ briar_nexus_linea_silvae (
     constans BriarNexusRes* res,
                        i32  linea_silvae)
 {
-    si (res == NIHIL)
-    {
+        si (res == NIHIL)
+        {
         redde ZEPHYRUM;
+        }
+    /* tabula linearum contextus (briar_contextus): index contextus
+     * 0-basatus = linea_silvae - praeludium - I */
+    si (res->lineae != NIHIL)
+    {
+        s32 k = (s32)linea_silvae - (s32)res->praeludium - I;
+
+        si (k >= ZEPHYRUM && k < (s32)xar_numerus(res->lineae))
+        {
+            redde *(i32*)xar_obtinere(res->lineae, (i32)k);
+        }
     }
     redde res->linea_initium + linea_silvae - res->praeludium - I;
 }

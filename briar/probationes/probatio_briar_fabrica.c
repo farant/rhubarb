@@ -8,6 +8,7 @@
 #include "latina.h"
 #include "credo.h"
 #include "briar_arbor.h"
+#include "briar_contextus.h"
 #include "briar_fabrica.h"
 #include "briar_nexus.h"
 #include "briar_silva.h"
@@ -109,8 +110,9 @@ _fabricare (
         fructus.causa = chorda_ex_literis("plagula non lecta", piscina);
         redde fructus;
     }
-    doc    = briar_arbor_parsare(piscina, textus, mensura);
-    nexus  = briar_nexus_texere(piscina, doc, intern);
+        doc  = briar_arbor_parsare(piscina, textus, mensura);
+    nexus    = briar_nexus_texere(piscina, doc, intern);
+    (vacuum)briar_contexere(piscina, nexus, NIHIL);
     (vacuum)briar_silvam_texere(piscina, nexus, fons);
     optiones.via_thistle   = via;
     optiones.stampa        = "probatio";

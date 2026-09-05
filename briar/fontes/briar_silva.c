@@ -247,8 +247,9 @@ _regio_includit (
     chorda_aedificator_appendere_literis(aed, "#include \"");
     chorda_aedificator_appendere_chorda(aed, caput);
     chorda_aedificator_appendere_literis(aed, "\"");
-    acus   = chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
-    fenum  = chorda_ut_cstr(r->contentum, piscina);
+        acus  = chorda_ut_cstr(chorda_aedificator_finire(aed),
+            piscina);
+    fenum     = chorda_ut_cstr(r->contextus, piscina);
     redde (b32)(strstr(fenum, acus) != NIHIL);
 }
 
@@ -426,8 +427,8 @@ _parsare (
            BriarSilva* arbor_silvae;
                   i32  k;
 
-    aed = chorda_aedificator_creare(piscina,
-        (memoriae_index)(r->contentum.mensura + 256));
+        aed = chorda_aedificator_creare(piscina,
+            (memoriae_index)(r->contextus.mensura + 256));
     si (aed == NIHIL)
     {
         redde FALSUM;
@@ -457,8 +458,9 @@ _parsare (
             " briar_tractator_exemplar;\n");
         r->praeludium = r->praeludium + II;
     }
-    r->praeludium_octeti = (i32)chorda_aedificator_longitudo(aed);
-    chorda_aedificator_appendere_chorda(aed, r->contentum);
+        r->praeludium_octeti = (i32)chorda_aedificator_longitudo(aed);
+    /* contextus (briar_contextus: fragmenta contexta), non contentum */
+    chorda_aedificator_appendere_chorda(aed, r->contextus);
     r->textus_silvae = chorda_aedificator_finire(aed);
 
     clausura = silex_clausuram_e_contentis(piscina, fons,
@@ -551,8 +553,15 @@ _definita_colligere (
              BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
         insignatus integer  k;
 
+                        /* probatio exclusa: eius inclusiones in caput genitum NON
+         * fluunt (directivae regionum app solae), ergo symbola per
+         * eas declarata radicibus app ignota manent - credo.h
+         * piscina.h trahit, app piscina.h derivare debet (inventum
+         * fragmenta.thistle 2026-09-05) */
         si (   r->genus != BRIAR_NEXUS_REGIO
-            || !briar_nexus_titulus_est(r, "c")
+            || !briar_nexus_titulus_est(r, "c") || r->est_fragmentum
+            || chorda_aequalis_literis(briar_nexus_attributum(r,
+                "munus"), "probatio")
             || r->silva == NIHIL || r->silva->semantica == NIHIL)
         {
             perge;
@@ -643,11 +652,12 @@ briar_silvam_texere (
     {
         BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
 
-        si (   r->genus != BRIAR_NEXUS_REGIO
-            || !briar_nexus_titulus_est(r, "c"))
-        {
-            perge;
-        }
+                si (   r->genus != BRIAR_NEXUS_REGIO
+                    || !briar_nexus_titulus_est(r, "c")
+                    || r->est_fragmentum)
+                {
+            perge;   /* fragmenta numquam parsantur: in radicibus */
+                }
         si (!_parsare(piscina, r, fons, NIHIL))
         {
             redde -I;
@@ -659,11 +669,12 @@ briar_silvam_texere (
     {
         BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
 
-        si (   r->genus != BRIAR_NEXUS_REGIO
-            || !briar_nexus_titulus_est(r, "c"))
-        {
+                si (   r->genus != BRIAR_NEXUS_REGIO
+                    || !briar_nexus_titulus_est(r, "c")
+                    || r->est_fragmentum)
+                {
             perge;
-        }
+                }
         si (!_regionem_derivare(piscina, r, fons, &symbola, definita))
         {
             redde -I;
