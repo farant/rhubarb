@@ -25,6 +25,8 @@ hic_manens constans character* VITREUM =
     "briar/probationes/fixa/thistle/salve_vitreum.thistle";
 hic_manens constans character* FRACTUM =
     "briar/probationes/fixa/thistle/adversa/c_fractum.thistle";
+hic_manens constans character* DERIVATUM =
+    "briar/probationes/fixa/thistle/derivatum.thistle";
 
 interior character*
 _plagulam_legere (
@@ -209,7 +211,9 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
             ZEPHYRUM);
         CREDO_AEQUALIS_I32 (r->linea_erroris, ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (r->praeludium, I);
+        CREDO_AEQUALIS_I32 (r->praeludium, IV);   /* latina + trias */
+        CREDO_AEQUALIS_I32 (xar_numerus(r->silva->capita_derivata),
+            ZEPHYRUM);
         /* expansio: 'principale' est macro -> symbolum 'main' */
         s = silva_c89_symbolum_invenire(r->silva->semantica,
             _silva_chorda(piscina, "main"));
@@ -217,8 +221,8 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 ((s32)s->genus, (s32)SYMBOLUM_FUNCTIO);
         CREDO_VERUM (silva_c89_symbolum_invenire(r->silva->semantica,
             _silva_chorda(piscina, "principale")) == NIHIL);
-        /* linea silvae II (post praeludium) = linea prima contenti */
-        CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(r, II),
+        /* linea silvae V (post praeludium IV) = linea prima contenti */
+        CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(r, V),
             r->linea_initium);
 
         /* regio probationis etiam parsata (credo.h e fonte) */
@@ -251,7 +255,8 @@ principale (vacuum)
         r = _regio_c(nexus, ZEPHYRUM);
         CREDO_NON_NIHIL (r);
         CREDO_VERUM (briar_nexus_attributum_habet(r, "methodus"));
-        CREDO_AEQUALIS_I32 (r->praeludium, III);
+                /* + internuntius + exemplar */
+        CREDO_AEQUALIS_I32 (r->praeludium, VI);
         CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
             ZEPHYRUM);
         s = silva_c89_symbolum_invenire(r->silva->semantica,
@@ -268,7 +273,7 @@ principale (vacuum)
             (s32)TYPUS_C89_FUNCTIO);
         CREDO_VERUM (silva_c89_typi_compatibiles(
             exemplar->typus->datum.monstrator.internum, s->typus));
-        CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(r, IV),
+        CREDO_AEQUALIS_I32 (briar_nexus_linea_silvae(r, VII),
             r->linea_initium);
         briar_silvam_solvere(nexus);
     }
@@ -293,6 +298,53 @@ principale (vacuum)
         CREDO_VERUM (linea > ZEPHYRUM);
         CREDO_AEQUALIS_I32 (r->linea_erroris, linea);
         CREDO_VERUM (r->causa.mensura > ZEPHYRUM);
+        briar_silvam_solvere(nexus);
+    }
+
+    imprimere("\n--- Probans derivatum: capita ex usu ---\n");
+    {
+            character* textus;
+                  i32  mensura;
+                  Xar* nexus;
+        BriarNexusRes* r;
+        SemanticaSymbolum* s;
+
+        nexus = _texere_omnia(piscina, intern, fons, DERIVATUM, &textus,
+            &mensura);
+        CREDO_NON_NIHIL (nexus);
+        r = _regio_c(nexus, ZEPHYRUM);
+        CREDO_NON_NIHIL (r);
+        CREDO_NON_NIHIL (r->silva);
+        CREDO_AEQUALIS_I32 (r->linea_erroris, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
+            ZEPHYRUM);
+        /* chorda.h (typus chorda + chorda_ex_literis), piscina.h
+         * (typus Piscina + functiones): alphabetice */
+        CREDO_AEQUALIS_I32 (xar_numerus(r->silva->capita_derivata), II);
+        CREDO_VERUM (chorda_aequalis_literis(
+            *(chorda*)xar_obtinere(r->silva->capita_derivata, ZEPHYRUM),
+            "chorda.h"));
+        CREDO_VERUM (chorda_aequalis_literis(
+            *(chorda*)xar_obtinere(r->silva->capita_derivata, I),
+            "piscina.h"));
+        CREDO_AEQUALIS_I32 (r->praeludium, VI);   /* IV + capita II */
+        /* post parsuram secundam symbolum resolutum, non implicitum */
+        s = silva_c89_symbolum_invenire(r->silva->semantica,
+            _silva_chorda(piscina, "chorda_ex_literis"));
+        CREDO_NON_NIHIL (s);
+        CREDO_FALSUM (s != NIHIL && s->est_implicitum);
+        /* probatio: credo.h (credo_aperire + macro) + piscina.h */
+        r = _regio_c(nexus, I);
+        CREDO_NON_NIHIL (r);
+        CREDO_AEQUALIS_I32 (xar_numerus(r->silva->capita_derivata), II);
+        CREDO_VERUM (chorda_aequalis_literis(
+            *(chorda*)xar_obtinere(r->silva->capita_derivata, ZEPHYRUM),
+            "credo.h"));
+        CREDO_VERUM (chorda_aequalis_literis(
+            *(chorda*)xar_obtinere(r->silva->capita_derivata, I),
+            "piscina.h"));
+        CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
+            ZEPHYRUM);
         briar_silvam_solvere(nexus);
     }
 

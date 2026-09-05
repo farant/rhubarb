@@ -540,6 +540,51 @@ principale (vacuum)
         briar_silvam_solvere(nexus);
     }
 
+    imprimere("\n--- Probans derivatum: capita in caput genitum ---\n");
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/derivatum.thistle", &nexus);
+        constans BriarPlagula* caput;
+        constans BriarPlagula* prob;
+
+        si (!f.successus)
+        {
+            imprimere("  RECUSATIO: %.*s\n", (integer)f.causa.mensura,
+                (constans character*)f.causa.datum);
+        }
+        CREDO_VERUM (f.successus);
+        _aurum_conferre(piscina, &f, "fontes/derivatum.c");
+        _aurum_conferre(piscina, &f, "fontes/derivatum_regiones.c");
+        _aurum_conferre(piscina, &f, "include/derivatum_regiones.h");
+        _aurum_conferre(piscina, &f,
+            "probationes/probatio_derivatum.c");
+        caput  = _genita(&f, "include/derivatum_regiones.h");
+        prob   = _genita(&f, "probationes/probatio_derivatum.c");
+        CREDO_NON_NIHIL (caput);
+        CREDO_NON_NIHIL (prob);
+        si (caput != NIHIL && prob != NIHIL)
+        {
+            /* caput: chorda.h + piscina.h derivata, sine #line; nulla
+             * directiva scripta */
+            CREDO_VERUM (_continet(piscina, caput->contentum,
+                "#include <string.h>\n#include \"chorda.h\"\n"
+                "#include \"piscina.h\"\n"));
+            CREDO_FALSUM (_continet(piscina, caput->contentum,
+                "credo.h"));
+                        /* probatio: derivata post caput regionum */
+            CREDO_VERUM (_continet(piscina, prob->contentum,
+                                "#include \"derivatum_regiones.h\"\n"
+                "#include \"credo.h\"\n"
+                "#include \"piscina.h\"\n#line "));
+        }
+        /* clausura: capita derivata trahunt bibliothecas suas */
+        CREDO_VERUM (_clausura_habet(&f, "lib/chorda.c"));
+        CREDO_VERUM (_clausura_habet(&f, "lib/piscina.c"));
+        CREDO_VERUM (_clausura_habet(&f, "lib/credo.c"));
+        briar_silvam_solvere(nexus);
+    }
+
     imprimere("\n--- Probans recusationes: causa + linea ---\n");
     _recusationem_probare(piscina, intern, fons,
         "duo_principalia.thistle",

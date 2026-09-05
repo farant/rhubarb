@@ -359,13 +359,15 @@ nomen structura {
 } BriarUnitas;
 
 nomen structura {
-            Xar* directivae;   /* BriarUnitas: lineae '#...' regionum */
-            Xar* typi;         /* BriarUnitas: unitates sine obiecto */
-            Xar* prototypi;    /* BriarUnitas: 'caput;' definitionum */
-            Xar* corpora;      /* BriarUnitas: obiecta + definitiones */
-    BriarUnitas  princeps;
-            i32  principalia;  /* numerus unitatum 'main' */
-            i32  linea_principalis_secundi;
+                Xar* directivae;   /* lineae '#...' */
+                Xar* typi;         /* unitates sine obiecto */
+                Xar* prototypi;    /* 'caput;' definitionum */
+                Xar* corpora;      /* obiecta + definitiones */
+                Xar* derivata;     /* chorda: capita derivata */
+
+    BriarUnitas princeps;
+            i32 principalia;  /* numerus unitatum 'main' */
+            i32 linea_principalis_secundi;
 } BriarPartitio;
 
 interior vacuum
@@ -485,6 +487,62 @@ _unitas_obiectum_declarat (
     redde FALSUM;
 }
 
+/* capita derivata regionis in xar (dedup, ordo primae visionis) */
+interior vacuum
+_derivata_addere (
+                       Xar* derivata,
+    constans BriarNexusRes* r)
+{
+    i32 k;
+
+    si (r->silva == NIHIL || r->silva->capita_derivata == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(r->silva->capita_derivata); k++)
+    {
+        chorda c = *(chorda*)xar_obtinere(r->silva->capita_derivata, k);
+           i32 i;
+           b32 visa = FALSUM;
+
+        per (i = ZEPHYRUM; i < xar_numerus(derivata); i++)
+        {
+            si (chorda_aequalis(*(chorda*)xar_obtinere(derivata, i), c))
+            {
+                visa = VERUM;
+            }
+        }
+        si (!visa)
+        {
+            chorda* cella = (chorda*)xar_addere(derivata);
+
+            *cella = c;
+        }
+    }
+}
+
+/* lineae '#include "x.h"' capitum derivatorum (pro capite genito,
+ * unitate probationis, clausura) */
+interior chorda
+_inclusiones_derivatae (
+    Piscina* piscina,
+        Xar* derivata)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)256);
+    i32 i;
+
+    per (i = ZEPHYRUM; derivata != NIHIL
+        && i < xar_numerus(derivata); i++)
+    {
+        chorda_aedificator_appendere_literis(a, "#include \"");
+        chorda_aedificator_appendere_chorda(a,
+            *(chorda*)xar_obtinere(derivata, i));
+        chorda_aedificator_appendere_literis(a, "\"\n");
+    }
+    redde chorda_aedificator_finire(a);
+}
+
 interior b32
 _regionem_partiri (
                    Piscina* piscina,
@@ -498,7 +556,9 @@ _regionem_partiri (
       insignatus integer  k;
                  integer  fons_index = r->silva->parsura->fons_princeps;
 
-    _directivas_colligere(r, part->directivae);
+        _directivas_colligere(r, part->directivae);
+    _derivata_addere(part->derivata, r);
+
     /* radix commissionis: LISTA unitatum (parsura sana) aut NODUS -
      * utraque forma ambulatur */
     si (radix.genus == SILVA_VALOR_LISTA)
@@ -679,7 +739,10 @@ _caput_fingere (
         "\n#include \"latina.h\"\n"
         "#include <stdio.h>\n"
         "#include <stdlib.h>\n"
-        "#include <string.h>\n");
+                "#include <string.h>\n");
+    /* capita DERIVATA ex usu symbolorum (briar_silva) - sine #line */
+    chorda_aedificator_appendere_chorda(a,
+        _inclusiones_derivatae(piscina, part->derivata));
     _unitates_appendere(a, part->directivae, via);
     _unitates_appendere(a, part->typi, via);
     _unitates_appendere(a, part->prototypi, via);
@@ -742,7 +805,8 @@ _probationem_fingere (
                    Piscina* piscina,
         constans character* titulus,
         constans character* via,
-    constans BriarNexusRes* probatio)
+    constans BriarNexusRes* probatio,
+                       Xar* derivata)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)(probatio->contentum.mensura + 256));
@@ -755,7 +819,9 @@ _probationem_fingere (
         ": regio munus=\"probatio\" */\n#include \"latina.h\"\n"
         "#include \"");
     chorda_aedificator_appendere_literis(a, titulus);
-    chorda_aedificator_appendere_literis(a, "_regiones.h\"\n");
+        chorda_aedificator_appendere_literis(a, "_regiones.h\"\n");
+    chorda_aedificator_appendere_chorda(a,
+        _inclusiones_derivatae(piscina, derivata));
     _lineam_appendere(a, probatio->linea_initium, via);
     chorda_aedificator_appendere_chorda(a, probatio->contentum);
     redde chorda_aedificator_finire(a);
@@ -1111,13 +1177,17 @@ briar_fabricare (
     constans BriarFabricaOptiones* optiones,
                            chorda  octeti)
 {
-    BriarFabricaFructus  f;
-       BriarInventarium  inv;
-          BriarPartitio  part;
-                    i32  i;
-     constans character* via;
-     constans character* fontes_app[2];
-     constans character* fontes_prob[2];
+        BriarFabricaFructus  f;
+           BriarInventarium  inv;
+              BriarPartitio  part;
+                        i32  i;
+         constans character* via;
+         constans character* fontes_app[2];
+         constans character* fontes_prob[2];
+                        Xar* derivata_probationis;
+                     chorda  inclusiones_derivatae;
+                     chorda  inclusiones_probationis;
+
 
     memset(&f, 0, magnitudo(f));
     si (   piscina == NIHIL || documentum == NIHIL || nexus == NIHIL
@@ -1136,10 +1206,12 @@ briar_fabricare (
     f.probatio_adest  = (b32)(inv.probatio != NIHIL);
 
     memset(&part, 0, magnitudo(part));
-    part.directivae  = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
-    part.typi        = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
-    part.prototypi   = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
-    part.corpora     = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part.directivae = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part.typi = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part.prototypi = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+        part.corpora = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part.derivata = xar_creare(piscina, (i32)magnitudo(chorda));
+
     per (i = ZEPHYRUM; i < inv.numerus_app; i++)
     {
         si (!_regionem_partiri(piscina, inv.app[i], &part, &f))
@@ -1182,6 +1254,16 @@ briar_fabricare (
     f.forma = (part.principalia
         == I) ? BRIAR_FORMA_PLANA : BRIAR_FORMA_VITREA;
 
+        /* capita derivata probationis: unitas sua ea includit */
+    derivata_probationis = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (inv.probatio != NIHIL)
+    {
+        _derivata_addere(derivata_probationis, inv.probatio);
+    }
+    inclusiones_derivatae = _inclusiones_derivatae(piscina,
+        part.derivata);
+    inclusiones_probationis = _inclusiones_derivatae(piscina,
+        derivata_probationis);
     f.genitae = xar_creare(piscina, (i32)magnitudo(BriarPlagula));
     /* caput in include/: -Iinclude ordinum id omnibus unitatibus
      * praebet (probationes/ quoque), fontes/ soli non */
@@ -1195,8 +1277,9 @@ briar_fabricare (
     {
         _genitam_addere(piscina, f.genitae,
             _texere(piscina, "probationes/probatio_", f.titulus, ".c"),
-            _probationem_fingere(piscina, f.titulus, via,
-            inv.probatio));
+                        _probationem_fingere(piscina, f.titulus, via,
+                        inv.probatio,
+                derivata_probationis));
     }
 
     fontes_app[0] = _texere(piscina, "fontes/", f.titulus, ".c");
@@ -1216,19 +1299,22 @@ briar_fabricare (
             _principem_fingere(piscina, f.titulus, via,
             &part.princeps));
         /* clausura: regiones omnes (probatio inclusa - credo.h) */
-        contenta = (chorda*)piscina_allocare(piscina,
-            (memoriae_index)((inv.numerus_app + I)
-                * (i32)magnitudo(chorda)));
+                contenta = (chorda*)piscina_allocare(piscina,
+                    (memoriae_index)((inv.numerus_app + III)
+                    * (i32)magnitudo(chorda)));
         per (i = ZEPHYRUM; i < inv.numerus_app; i++)
         {
             contenta[n]  = inv.app[i]->contentum;
             n            = n + I;
         }
-        si (inv.probatio != NIHIL)
-        {
+                si (inv.probatio != NIHIL)
+                {
             contenta[n]  = inv.probatio->contentum;
             n            = n + I;
-        }
+                }
+        contenta[n]      = inclusiones_derivatae;
+        contenta[n + I]  = inclusiones_probationis;
+        n                = n + II;
         f.clausura = silex_clausuram_e_contentis(piscina, fons,
             contenta, n);
         si (f.clausura == NIHIL)
@@ -1303,28 +1389,31 @@ briar_fabricare (
             "instrumenta/capsula_generare.c",
             instrumentum);
 
-        contenta_app = (chorda*)piscina_allocare(piscina,
-            (memoriae_index)((inv.numerus_app + II)
-                * (i32)magnitudo(chorda)));
+                contenta_app = (chorda*)piscina_allocare(piscina,
+                    (memoriae_index)((inv.numerus_app + III)
+                    * (i32)magnitudo(chorda)));
         contenta_prob = (chorda*)piscina_allocare(piscina,
-            (memoriae_index)((inv.numerus_app + II)
+            (memoriae_index)((inv.numerus_app + IV)
                 * (i32)magnitudo(chorda)));
         per (i = ZEPHYRUM; i < inv.numerus_app; i++)
         {
             contenta_app[i]   = inv.app[i]->contentum;
             contenta_prob[i]  = inv.app[i]->contentum;
         }
-        contenta_app[inv.numerus_app] = princeps;
+                contenta_app[inv.numerus_app]  = princeps;
+        contenta_app[inv.numerus_app + I]      = inclusiones_derivatae;
         clausura_app = silex_clausuram_e_contentis(piscina, fons,
-            contenta_app, inv.numerus_app + I);
+            contenta_app, inv.numerus_app + II);
         clausura_instrumenti = silex_clausuram_e_contentis(piscina,
             fons,
             &instrumentum, I);
         n = inv.numerus_app;
         si (inv.probatio != NIHIL)
         {
-            contenta_prob[n]  = inv.probatio->contentum;
-            n                 = n + I;
+                        contenta_prob[n]  = inv.probatio->contentum;
+            contenta_prob[n + I]          = inclusiones_derivatae;
+            contenta_prob[n + II]         = inclusiones_probationis;
+            n                             = n + III;
             clausura_prob = silex_clausuram_e_contentis(piscina, fons,
                 contenta_prob, n);
         }

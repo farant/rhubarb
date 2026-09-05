@@ -27,6 +27,11 @@ RADIX_DIR="$(cd "$BRIAR_DIR/.." && pwd)"
 BUILD_DIR="$BRIAR_DIR/build"
 mkdir -p "$BUILD_DIR"
 
+# tabula symbolum -> caput (corpus.symbola.tsv): nexus derivationis
+# inclusionum eam e fonte disci legit - hic genita si vetus
+source "$RADIX_DIR/tools/corpus_infixum.sh"
+( cd "$RADIX_DIR" && corpus_symbola_generare ) || { echo "FRACTA: corpus.symbola.tsv" ; exit 1; }
+
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")

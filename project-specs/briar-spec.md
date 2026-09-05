@@ -1,4 +1,4 @@
-# briar — spec v1.3 (literate C89 programs; `.thistle`)
+# briar — spec v1.4 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -284,6 +284,25 @@ construction, so the comparator's reconstruction policy holds.
   prelude+region text. The first ERROR node's line (found by walking
   VALUES — a broken parse's commit root is a LIST, not a node) becomes
   `linea_erroris`; the fabrica refuses such a region.
+  **Derived includes (v1.4, 2026-09-05, house headers only — Fran):**
+  the nexus parses each region TWICE. Pass one with the prelude alone
+  (`latina.h` + the implicit `stdio/stdlib/string` trio); silva's
+  symbol table then names every function or function-like macro
+  called without a declaration (`est_implicitum`) and every unknown
+  named type (diagnostic `TYPUS_NOMINATUS_IGNOTUS`); each name is
+  looked up in `corpus.symbola.tsv` (symbol, kind, header — the
+  `include/*.h` rows of silva's identifier index, baked into the
+  corpus by `tools/corpus_infixum.sh`); the headers found, sorted,
+  are prepended to the prelude and pass two runs. The fabrica writes
+  them as the first `#include` lines of the generated header (no
+  `#line`: they are briar's) and of the probatio unit, and feeds them
+  to the closure. A symbol declared in two headers (two exist:
+  `Capitulum`, `Liber`) is a refusal naming both, unless the script
+  includes one itself. An object-like macro or enum constant used as
+  a bare value with no function from its header nearby is NOT
+  derived (silva raises no unknown-identifier diagnostic for it) —
+  clang names the line; the C library beyond the trio stays explicit
+  (`math.h`, `time.h` are the first candidates for a hand map, §9).
 
 ## 4. The fabrica — tree to binary
 
@@ -555,7 +574,11 @@ generated files) · handler discovery by COMMENT annotation
 never a second parser) — only if a thistle ever needs marks the region
 tag cannot carry · **a `briar-c89` dialect** (Fran, 2026-09-04): STML
 tags directly inside the C, JSX-like, for richer literate programming
-and transpilation — a materia client of its own when pulled · flags
+and transpilation — a materia client of its own when pulled · includes derived for the C library beyond the implicit trio (a hand
+map `sqrt → math.h`, `time → time.h`; silva's system tables know the
+symbols, not their headers) · bare object-like macros / enum constants
+as derivation seeds (needs an unknown-identifier diagnostic from silva)
+· flags
 DERIVED by aedilis over the capsula (bundle `aedilis.stml`; extractor
 over the corpus; vexilla as data — 01KZP0WDN9, trigger fired;
 frameworks from `#import` — 01KZYN4VPZ) · an effects-at-the-edge lint
@@ -596,6 +619,10 @@ references are the ludus session's to add.
   element; the STML parser or the canon refuses loudly. Acceptable in
   v1; the alternative (a closed registry of region names) is one table
   away if it bites.
+- **Derived includes rely on `corpus.symbola.tsv` being fresh**: the
+  shared corpus block regenerates it from the identifier index when
+  any `include/*.h` is newer; the briar runner does the same before
+  its gates. A disk-corpus run reads the tree's copy.
 - **Reserved first argument** after the file (§5): five words a
   program cannot take as its own first argument without `--`. The
   price of `./x.thistle -probatio`; documented, not hidden.

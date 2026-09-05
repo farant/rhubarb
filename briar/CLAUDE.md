@@ -55,7 +55,13 @@ Findings: `fontes/briar.worklog.md`.
   `internuntius.h` + `briar_tractator_exemplar` for `methodus=`),
   headers by TEXT from the silex corpus, never disk; result in
   `res->silva` (`BriarSilva {piscina, parsura, semantica}`,
-  `briar_silvam_solvere` frees); `briar_nexus_linea_silvae` maps lines
+  `briar_silvam_solvere` frees); `briar_nexus_linea_silvae` maps lines.
+  **Includes are DERIVED** (house headers only): pass one collects
+  implicit symbols + unknown types, `corpus.symbola.tsv` (baked from
+  the identifier index by `tools/corpus_infixum.sh`; the runner
+  regenerates it) maps them to headers, pass two parses with them;
+  `res->silva->capita_derivata`, written first into the generated
+  header and the probatio unit; `-partes` lists them as `derivatum`
 - `briar_fabrica`: inventory → main rule → unit partition through
   silva's tree + symbol table → generated files → closure → silex
   scripts → SHA-256 key; `briar_fabricam_scribere` puts a project on
@@ -99,6 +105,9 @@ and the silva amalgam as one object (cold ~21 s once; warm suite ~9 s).
   line and write nothing.
 - Silva's commit root is a LIST of units for a clean parse — walk
   values, never `silva_nodus_liberi` on `radix.datum.nodus`.
+- A script needs NO `#include` for house headers (see `derivatum.thistle`);
+  a bare object-like macro or enum constant with no function from its
+  header nearby is the one thing derivation misses — include it yourself.
 - Worktree rules (until merged): `./silva/scribe.sh` not `~/.bin/scribe`;
   no ledger residents; commit with `silva.commissio_umbra(..., ['briar'])`;
   run the oratio suite once before a commit that touches pythonica.

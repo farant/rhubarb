@@ -315,6 +315,32 @@ principale (
     {
         i32 i;
 
+                /* capita DERIVATA (per regionem), ante clausuram */
+        per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
+        {
+            constans BriarNexusRes* r =
+                (constans BriarNexusRes*)xar_obtinere(
+                nexus, i);
+            i32 k;
+
+            si (r->silva == NIHIL || r->silva->capita_derivata == NIHIL)
+            {
+                perge;
+            }
+            per (k = ZEPHYRUM; k
+                < xar_numerus(r->silva->capita_derivata);
+                k++)
+            {
+                chorda c =
+                    *(chorda*)xar_obtinere(r->silva->capita_derivata,
+                    k);
+
+                imprimere("%.*s\tderivatum:linea %d\n",
+                    (integer)c.mensura,
+                    (constans character*)c.datum,
+                    (integer)(r->linea_initium - I));
+            }
+        }
         per (i = ZEPHYRUM; i < xar_numerus(fructus.clausura); i++)
         {
             constans SilexRes* r = (constans SilexRes*)xar_obtinere(

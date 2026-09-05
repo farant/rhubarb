@@ -11,7 +11,28 @@
 #
 # Usus (e radice): source tools/corpus_infixum.sh; corpus_infixum_regenerare
 
+# tabula symbolum -> caput domus (include/*.h): symbolum, genus
+# (functio|macro|typedef|constans|variabile), caput - e nexu silvae
+# (build/nexus.tsv, sedes solae). briar inclusiones e USU symbolorum
+# derivat: silva symbola implicita et typos ignotos novit, haec tabula
+# caput cuiusque dicit. Regenerata cum caput quodvis recentior.
+corpus_symbola_generare () {
+    local TABULA=corpus.symbola.tsv
+    if [ -f "$TABULA" ] && [ -z "$(find include -name '*.h' -newer "$TABULA" -print -quit 2>/dev/null)" ]; then
+        return 0
+    fi
+    echo "  [symbola] corpus.symbola.tsv (nexus incrementalis)"
+    ./silva/nexus.sh -renovare > /dev/null 2>&1 || return 1
+    [ -f build/nexus.tsv ] || return 1
+    {
+        echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h e build/nexus.tsv) - NE MANU EDITES"
+        awk -F'\t' '$2=="sedes" && $4 ~ /^include\// {print $1"\t"$3"\t"$4}' build/nexus.tsv | sort -u
+    } > "$TABULA" || return 1
+    return 0
+}
+
 corpus_infixum_regenerare () {
+    corpus_symbola_generare || return 1
     local CORPUS_C=build/capsula_corpus_silicis.c
     local regen=0
     if [ ! -f "$CORPUS_C" ]; then
@@ -19,7 +40,7 @@ corpus_infixum_regenerare () {
     elif [ -n "$(find lib include vendor tools/capsula_generare.c \
             natura/cocta canones.registrum natura/natura.canon \
             aedilis.canon canon.canon silva/grammatica/grammatica.canon \
-            silva/quaestiones.canon \
+            silva/quaestiones.canon corpus.symbola.tsv \
             -newer "$CORPUS_C" -print -quit 2>/dev/null)" ]; then
         regen=1
     fi
@@ -40,7 +61,7 @@ corpus_infixum_regenerare () {
         printf '%s\n' "$STAMPA" > corpus.versio
         cat > corpus_silicis.toml <<'TOML'
 # GENERATUM a tools/corpus_infixum.sh - NE MANU EDITES (gitignoratum)
-corpus_silicis_files = ["lib/*.c", "lib/*.m", "include/*.h", "vendor/*", "tools/capsula_generare.c", "corpus.versio", "natura/cocta/*.canon", "natura/cocta/semina.census", "canones.registrum", "natura/natura.canon", "aedilis.canon", "canon.canon", "silva/grammatica/*.canon", "silva/quaestiones.canon"]
+corpus_silicis_files = ["lib/*.c", "lib/*.m", "include/*.h", "vendor/*", "tools/capsula_generare.c", "corpus.versio", "corpus.symbola.tsv", "natura/cocta/*.canon", "natura/cocta/semina.census", "canones.registrum", "natura/natura.canon", "aedilis.canon", "canon.canon", "silva/grammatica/*.canon", "silva/quaestiones.canon"]
 corpus_silicis_compress = true
 TOML
         if [ ! -x bin/capsula_generare ]; then

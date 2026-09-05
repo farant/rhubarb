@@ -170,3 +170,49 @@ directory outside the repository printed `salve, munde`. Findings:
 - **The fumus prints `-versio` from the AREA**, not the repo root: from
   the root it says `(discus)` and looks like the wrong corpus.
 - `-agere` (window + `bin/manus`) not run this session — Fran's hand.
+
+## 2026-09-05 — derived includes (house headers only)
+
+`derivatum.thistle` has no `#include` at all and builds. Notes:
+
+- **Two passes, not a fixed point**: pass one with the prelude alone,
+  collect `est_implicitum` symbols and `TYPUS_NOMINATUS_IGNOTUS`
+  diagnostics (the diagnostic's node extent IS the type name), look
+  them up, pass two with the headers. Headers pull their own
+  dependencies through the closure, so a third pass never found
+  anything in the fixtures.
+- **The table is the identifier index's `include/*.h` rows**
+  (`build/nexus.tsv`, `sedes` only): 1,854 functions, 914 macros, 716
+  typedefs, 1,501 enum constants, 11 variables; two ambiguous symbols
+  (`Capitulum`, `Liber`). `./silva/nexus.sh -renovare` is incremental
+  (~1 s), so regenerating on every stale header is cheap.
+- **Function-like macros derive for free**: an unexpanded
+  `CREDO_AEQUALIS_I32(...)` parses as a call to an undeclared function
+  and lands in the implicit set. Object-like macros do not.
+- **The parse prelude now carries the stdio/stdlib/string trio**, as
+  the generated header does; `praeludium` is 4 (+ derived headers, + 2
+  for a `methodus=` region). Tests that pinned 1 and 3 moved.
+- **The sort's indices were `i32`**: examen's domesticum caught
+  `j >= ZEPHYRUM` always true on the unsigned type (third time this
+  project); `s32` indices with casts at the xar calls.
+- **`silva.Editio` for the fabrica edit** (Fran's suggestion): the
+  token-anchored replace matched every site the formatter had
+  re-aligned, in one pass; examen + differre reported in the same
+  call. One rough edge: its own reformat left a few statements with
+  odd indentation (the pre-commit formatter fixes them, `-vitia` shows
+  them) — cosmetic.
+- **Open silva question found on the way (filed on the ledger):** in
+  pass one, when a header arrives through the REGION'S OWN `#include`
+  (not the prelude), the call in the first statement of a function
+  body is marked implicit while calls in initializers and later
+  statements resolve — e.g. `piscina_destruere` (piscina.h:37) after
+  `Piscina* p = piscina_generare_dynamicum(...)` (piscina.h:22);
+  `credo_aperire` in every probatio fixture. Pass two, with the same
+  header additionally in the prelude, resolves everything with an
+  IDENTICAL token count (285 for the probe), so the declaration was in
+  the stream both times. `chorda.h` in an app region did not show it.
+  Not chased: the derivation is correct either way, and a header the
+  region includes itself is now never derived (`_regio_includit`), so
+  the generated header stays clean. Repro: scratch thistle with
+  `#include "piscina.h"` + the two calls, `briar -partes` shows
+  `piscina.h derivatum`.
