@@ -553,7 +553,7 @@ _definita_colligere (
              BriarNexusRes* r = (BriarNexusRes*)xar_obtinere(nexus, i);
         insignatus integer  k;
 
-                        /* probatio exclusa: eius inclusiones in caput genitum NON
+        /* probatio exclusa: eius inclusiones in caput genitum NON
          * fluunt (directivae regionum app solae), ergo symbola per
          * eas declarata radicibus app ignota manent - credo.h
          * piscina.h trahit, app piscina.h derivare debet (inventum
