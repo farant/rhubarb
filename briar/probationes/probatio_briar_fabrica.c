@@ -441,6 +441,78 @@ principale (vacuum)
         briar_silvam_solvere(nexus);
     }
 
+    imprimere("\n--- Probans salve_vitreum: principale genitum ---\n");
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/salve_vitreum.thistle",
+            &nexus);
+        constans BriarPlagula* aed;
+        constans BriarPlagula* prob;
+        constans BriarPlagula* princeps;
+
+        si (!f.successus)
+        {
+            imprimere("  RECUSATIO: %.*s\n", (integer)f.causa.mensura,
+                (constans character*)f.causa.datum);
+        }
+        CREDO_VERUM (f.successus);
+        CREDO_AEQUALIS_S32 ((s32)f.forma, (s32)BRIAR_FORMA_VITREA);
+        _aurum_conferre(piscina, &f, "fontes/salve_vitreum.c");
+        _aurum_conferre(piscina, &f, "fontes/salve_vitreum_regiones.c");
+        _aurum_conferre(piscina, &f,
+            "include/salve_vitreum_regiones.h");
+        _aurum_conferre(piscina, &f,
+            "probationes/probatio_salve_vitreum.c");
+        _aurum_conferre(piscina, &f, "assets/index.html");
+        _aurum_conferre(piscina, &f, "assets/salve_vitreum.toml");
+        princeps  = _genita(&f, "fontes/salve_vitreum.c");
+        aed       = _genita(&f, "aedificare.sh");
+        prob      = _genita(&f, "probare.sh");
+        CREDO_NON_NIHIL (princeps);
+        CREDO_NON_NIHIL (aed);
+        CREDO_NON_NIHIL (prob);
+        si (princeps == NIHIL || aed == NIHIL || prob == NIHIL)
+        {
+            CREDO_CULPA ("plagulae vitreae absunt");
+        }
+        alioquin
+        {
+            CREDO_VERUM (_continet(piscina, princeps->contentum,
+                "figura.titulus  = \"salve\";"));
+            CREDO_VERUM (_continet(piscina, princeps->contentum,
+                "figura.latitudo = 640;"));
+            CREDO_VERUM (_continet(piscina, princeps->contentum,
+                "internuntius_praebere(atrium_internuntius(atrium),\n"
+                "        \"salve\", salve, NIHIL);"));
+            CREDO_VERUM (_continet(piscina, princeps->contentum,
+                "atrium_vexilla_legere(&figura, argc, argv);"));
+            /* ordines vitrei: listae computatae (corpus-dependentes -
+             * non aurum) */
+            CREDO_VERUM (_continet(piscina, aed->contentum,
+                "fontes/salve_vitreum.c fontes/salve_vitreum_regiones.c"
+                " \\\n    assets/capsula_salve_vitreum.c"));
+            CREDO_VERUM (_continet(piscina, aed->contentum,
+                "-framework Cocoa"));
+            CREDO_VERUM (_continet(piscina, aed->contentum,
+                "(novum -vitrea, probatio)"));
+            CREDO_VERUM (_continet(piscina, prob->contentum,
+                "probationes/probatio_salve_vitreum.c"
+                " fontes/salve_vitreum_regiones.c"));
+        }
+        CREDO_NON_NIHIL (_genita(&f, "instrumenta/capsula_generare.c"));
+        CREDO_VERUM (_clausura_habet(&f, "include/atrium.h"));
+        CREDO_VERUM (_clausura_habet(&f, "include/json.h"));
+        CREDO_VERUM (_clausura_habet(&f, "lib/credo.c"));
+        /* sine statu nullum volumen, ergo nullus sqlite: clausura app
+         * vitreae LXXI plagulae, vendor/ vacuum (mensuratum
+         * 2026-09-05) */
+        CREDO_FALSUM (_clausura_habet(&f, "vendor/sqlite3.c"));
+        CREDO_VERUM (_clausura_habet(&f, "lib/internuntius.c"));
+        CREDO_AEQUALIS_I32 (xar_numerus(f.genitae), (i32)9);
+        briar_silvam_solvere(nexus);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
