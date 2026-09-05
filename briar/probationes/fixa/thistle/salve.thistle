@@ -1,0 +1,30 @@
+#!/usr/bin/env briar
+# Salve
+
+A plain program: one region defines `principale`, one is its probatio.
+
+<c!>
+#include "chorda.h"
+
+s32
+principale (vacuum)
+{
+    imprimere("salve, munde\n");
+    redde ZEPHYRUM;
+}
+</c>
+
+<c! munus="probatio">
+#include "credo.h"
+
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("probatio", 65536);
+
+    credo_aperire(piscina);
+    CREDO_VERUM(I + I == II);
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>
