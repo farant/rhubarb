@@ -1,4 +1,4 @@
-# briar — spec v1.1 (literate C89 programs; `.thistle`)
+# briar — spec v1.2 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -270,6 +270,20 @@ construction, so the comparator's reconstruction policy holds.
   md fence hook's door, opened here: outer raw token, inner silva
   tree, linked by identity. Semantic diagnostics from silva are
   reported at `.thistle` positions through the same offset.
+  **As built (plan 2, 2026-09-05):** the silva kind lives in its own
+  unit `briar_silva` — the amalgam header carries stml's own enums,
+  so `stml.h` and `silva.h` cannot meet in one translation unit;
+  `briar_nexus.h` forward-declares the tags and includes neither. The
+  region text is parsed with a PRELUDE prepended: `#include
+  "latina.h"`, and for `methodus=` regions also `#include
+  "internuntius.h"` + `hic_manens InternuntiusTractator
+  briar_tractator_exemplar;` — the exemplar against which the fabrica
+  checks a handler's type. Thistle line = `linea_initium +
+  linea_silvae − praeludium − 1` (`briar_nexus_linea_silvae`). Headers
+  reach silva by text through `silex_clausuram_e_contentis` over the
+  prelude+region text. The first ERROR node's line (found by walking
+  VALUES — a broken parse's commit root is a LIST, not a node) becomes
+  `linea_erroris`; the fabrica refuses such a region.
 
 ## 4. The fabrica — tree to binary
 
@@ -288,6 +302,13 @@ means NO rebuild — content decides, never timestamps. `briar -struere
 include/ lib/ vendor/ probationes/ build/ bin/` — exactly the silex
 `-vitrea` scaffold, so a briar project dir is a silex project a human
 can `cd` into and read.
+
+**Stamp for a disk corpus (plan 2):** the fabrica takes the stamp as
+an option; the test passes a literal, the tool passes the corpus
+title. For the EMBEDDED corpus that is `corpus.versio`; for a disk
+source (a rhubarb tree) it is the tree's path — content changes in
+the tree do not move the key, so dev-mode runs rely on `-struere
+-iterum`. Plan 3 decides whether a disk source hashes its file list.
 
 **Flags, direction (Fran, 2026-09-04): DERIVE from the sources.** In
 v1 the base flag set is the string silex's generators carry
@@ -310,7 +331,7 @@ in §9; v1 does not wait for them.
 | output | from | note |
 |---|---|---|
 | `fontes/<t>.c` | generated main (§4.3) or, for a plain program, the unit that defines `principale`, cut at its silva extent, with `#include "latina.h"` and `#include "<t>_regiones.h"` prepended | every unit is preceded by `#line <n> "<via>"`; clang then reports `x.thistle:15:11` (measured 2026-09-04) |
-| `fontes/<t>_regiones.c/.h` | every top-level unit of every non-probatio C region except the `principale` unit, in document order, `#line`-mapped; the header = generated prototypes of every function defined there (rendered by silva), plus the file's own `#include` lines | one object shared by the program and the probatio |
+| `fontes/<t>_regiones.c`, `include/<t>_regiones.h` | **Partition, as built (plan 2):** the header = include guard, `latina.h`, the implicit standard trio (`stdio.h`, `stdlib.h`, `string.h` — thistle files are scripts), every directive line of every non-probatio C region (`#include`, `#define`, `\` continuations) in document order, every top-level unit that declares no file-scope object (typedefs, struct/union/enum tags, prototypes), and one prototype per function definition (the definition's head up to its body + `;`); the `.c` = `latina.h`, the header, every file-scope object and every function definition except `principale`. Every unit and directive is preceded by `#line <thistle line> "<via>"`. The header lives in `include/` so the probatio unit sees it through `-Iinclude`. Comments BETWEEN top-level units are dropped (extents cover tokens); comments inside units stay. A file-scope object is private to `_regiones.c` (share through functions). Probatio helpers must be `interior` (`-Wmissing-prototypes`). | one object shared by the program and the probatio |
 | `probationes/probatio_<t>.c` | `#include "latina.h"` + `#include "<t>_regiones.h"` + the `munus="probatio"` region, `#line`-mapped | a SEPARATE translation unit linked against the library objects and `_regiones.o`; the file's helpers are visible through the generated header; no second `main`. Built to `bin/probatio_<t>` only by `-probatio` |
 | `assets/index.html`, `assets/<t>.js`, `assets/<t>.css`, `assets/<t>.toml` | the html/js/css regions | v1: at most one region of each kind; more = refusal naming the second. A `<script src="<t>.js">` line is NOT injected — the html region is verbatim; the fixture references its assets itself |
 | `instrumenta/capsula_generare.c` | corpus | as silex `-vitrea` |
@@ -333,10 +354,11 @@ expansion. Comments, strings, and prototypes do not count. Two such
 units = the two-mains refusal, naming both `.thistle` lines.
 
 **Method signatures are checked, not trusted.** A `methodus="nomen"`
-region must define a function `nomen`; briar renders its type
-(`silva_c89_typum_scribere`) and compares it with the
-`InternuntiusTractator` signature; a mismatch is a refusal naming the
-region line and the expected signature, before clang ever runs.
+region must define a function `nomen`; its type is compared with the
+pointee type of the prelude's `briar_tractator_exemplar` through
+`silva_c89_typi_compatibiles` (structural, never a rendered string);
+a missing definition or a mismatch is a refusal naming the tag line
+and the expected signature, before clang ever runs.
 
 1. A non-probatio C region defines `principale` → plain program.
    briar adds only latina.h and the derived closure; `<fenestra>`
@@ -355,18 +377,22 @@ region line and the expected signature, before clang ever runs.
 
 ### 4.4 silex changes (the one library touch)
 
-Promote five static generators in `lib/silex.c` to public API in
-`silex.h`, bodies unchanged: `_clausuram_e_contentis` (closure seeded
-from source TEXTS — lib/silex.c:1702), `_aedificare_vitreum_fingere`
-(the four-tier script — :1916), `_probare_vitreum_fingere` (:2004),
-`_aedificare_sh_fingere` / `_probare_sh_fingere` (plain-program
-scripts — :751/:786), `_toml_fingere` (:1218). Proposed names:
-`silex_clausuram_e_contentis`, `silex_ordinem_vitreum_fingere`,
-`silex_ordinem_probandi_vitreum_fingere`, `silex_ordinem_fingere`,
-`silex_ordinem_probandi_fingere`, `silex_toml_fingere`. `lib/silex.c`
-stays silva-free (decree 01M098M3G6's route); `probatio_silex`
-unchanged. The rule of two applies: the second consumer promotes,
-nothing is copied.
+**As built (plan 2, 2026-09-05, commit 4cc10d97):** five statics of
+`lib/silex.c` are public in `silex.h`: `silex_clausuram_e_contentis`
+(closure seeded from source TEXTS, signature unchanged) and the four
+script generators `silex_ordinem_fingere`,
+`silex_ordinem_probandi_fingere`, `silex_ordinem_vitreum_fingere`,
+`silex_ordinem_probandi_vitreum_fingere`, each gaining a SOURCE-LIST
+parameter (`constans character* constans* fontes, i32 numerus`) —
+silex passes `fontes/<t>.c [+ <t>_pipa.c]`, briar `fontes/<t>.c
+fontes/<t>_regiones.c`. Output for silex's own calls is byte-identical
+(the four scripts of the silex gate's area compared with `cmp` before
+and after). `_toml_fingere` STAYS static: briar's asset list is data
+(which of html/js/css exist), so briar writes its own six-line toml.
+The three flag macros `SILEX_VEXILLA_COMPILATIONIS` / `_VITREA` /
+`_VENDITORIA` moved to `silex.h` (the cache key hashes them).
+`lib/silex.c` stays silva-free (decree 01M098M3G6's route);
+`probatio_silex` unchanged. The rule of two applied.
 
 **Where silva enters briar:** `briar/fontes/` is a subsystem, not
 `lib/`, so `briar_nexus` and `briar_fabrica` may depend on silva
@@ -492,17 +518,17 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 - **P1 projection — DONE (plan 1, 2026-09-04).** `briar_stml`, `briar.canon` (loaded by path, not registered: the `<arbor>` root is shared by every materia dialect), gates
   stml / canon / totalitas / computus. `briar -arbor` exists first as
   a shell script over the probatio objects (md's `arbor.sh` pattern).
-- **P2 nexus — DONE for md and STML (plan 1, 2026-09-04); the silva inner kind moves to plan 2 with its consumer.** Inner trees for prose, STML elements, raw attributes
+- **P2 nexus — DONE (md and STML plan 1, 2026-09-04; silva inner kind plan 2, 2026-09-05, unit `briar_silva`, gate `silva`).** Inner trees for prose, STML elements, raw attributes
   (`methodus`, `munus`), and C regions through silva with the capsula
   as include provider (latina.h synthetic first; a bare parse is a
   planted fault here — it must be seen to misparse); offsets; gate
   nexus.
-- **P3 fabrica, headless.** §4.4 promotion with `probatio_silex`
+- **P3 fabrica, headless — DONE (plan 2, 2026-09-05, gate `fabrica` 149 assertions; goldens `fixa/fabrica/<t>/`; hand tool `./briar/fabrica.sh`; both shapes compiled, run and tested by hand under clang: `salve, munde`, `summa 3`, vitrea app linked in 2.1 s with a 364 KB binary and NO sqlite — a stateless app pulls no volumen).** §4.4 promotion with `probatio_silex`
   unchanged; `briar_fabrica`: unit partition at silva extents, the
   `main` unit, generated `_regiones.h` prototypes, method signature
   check, the probatio unit, the key; goldens for both program shapes
   byte-compared; gate fabrica. No clang is run in the suite.
-- **P4 the binary.** `tools/briar.c` with the flags of §5,
+- **P4 the binary — plan 3 (`briar-plan-3-binarium.md`).** `tools/briar.c` with the flags of §5,
   `corpus_infixum.sh` extraction, `briar_struere.sh`, cache dir, run,
   `-probatio`; `briar_fumus.sh` from outside the repo; the first real
   file runs from its shebang. **Record the first-bake numbers here**
@@ -541,9 +567,11 @@ references are the ludus session's to add.
 ## 10. Risks, notes, AUDIENDA
 
 - **sqlite per project.** The four-tier script compiles `vendor/
-  sqlite3.c` at `-O2` in every project dir. If P4's numbers say tens
-  of seconds, share `build/sqlite3.o` under `~/.rhubarb/briar/vendor/
-  <stamp>/` and copy it in. Not built until measured.
+  sqlite3.c` at `-O2` in every project dir — IF the closure pulls it.
+  Measured 2026-09-05 (plan 2): the stateless vitrea fixture's closure
+  has 71 files and no vendor at all (no `volumen`), cold build 2.1 s,
+  binary 364 KB. The question returns only with the `status` region
+  (§9); not built until then.
 - **Two corpus-bearing binaries** (`silex`, `briar`, ~20 MB each plus
   silva's objects in briar; measure at P4) with two freshness
   rituals; the shared `corpus_infixum.sh` keeps the generated object

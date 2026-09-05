@@ -10,6 +10,31 @@
 
 **Spec:** `project-specs/briar-spec.md` v1.1 — §3.3 (silva inner kind), §4 (fabrica), §4.4 (silex changes), §6 (gates), §8 (P2 remainder + P3). This plan amends §4.2 (partition rule), §4.4 (source-list parameter; toml generator stays static), and §3.3 (prelude + reference handler) — Task 6 writes the amendments.
 
+## Executed 2026-09-05 — deviations from the text below
+
+All six tasks done on branch `rhubarb-briar` (4cc10d97, 62849d86,
+2814f660, 6c65f7c3, eee9c809, + docs). Where the code differs from the
+plan, the code is right and the reason is in `briar/fontes/briar.worklog.md`:
+
+- The silva fields are NOT on `BriarNexusRes`; they live in
+  `res->silva` (`BriarSilva {piscina, parsura, semantica}`) in a new
+  unit `briar_silva.c/.h`, because the silva amalgam header and
+  `stml.h` cannot share a translation unit. `briar_nexus.h` includes
+  neither. Functions: `briar_silvam_texere` (returns `s32`),
+  `briar_silvam_solvere`; `briar_nexus_linea_silvae` stays in the nexus.
+- The commit root is walked as a LIST of units (or a node); the
+  error search walks values, not `silva_nodus_liberi`.
+- The generated header is `include/<t>_regiones.h` (not `fontes/`)
+  and includes `stdio.h`, `stdlib.h`, `string.h` after `latina.h`.
+- `briar_directoria_creare` (recursive mkdir) is public; the test
+  area is `briar/build/fabrica_area/` (the tool binary owns
+  `briar/build/fabrica`).
+- The vitrea closure assertion is `CREDO_FALSUM` on `vendor/sqlite3.c`
+  (a stateless app pulls no volumen); the measured first-bake numbers
+  are in the spec §8/§10.
+- Goldens were committed as individual files (the commit gate refuses
+  a directory path).
+
 ## Global Constraints
 
 - **Worktree:** all work in `/Users/francisarant/Documents/projects/rhubarb-briar` (branch `rhubarb-briar`). Never run a tabularii/fori resident there; never `silva.umbrae_purgare()` there.

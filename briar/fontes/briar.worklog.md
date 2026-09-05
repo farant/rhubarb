@@ -56,3 +56,74 @@ Findings, as measured:
   reports `signum absens` with a traceback in its acta.
 - `silva.arbor(via)` dispatch for `.thistle` is not wired in pythonica
   (no consumer yet); `./briar/arbor.sh` is the instrument.
+
+## 2026-09-05 — plan 2 (fabrica): silva in the nexus, silex promotion, headless fabrica
+
+Six tasks, executed inline in the worktree (commits 4cc10d97 → T6).
+Gates 10/10 (`silva` 39 assertions, `fabrica` 149). Findings worth
+keeping, in the order they bit:
+
+- **The silva amalgam header and `stml.h` cannot share a translation
+  unit**: `silva/amalgama/silva.h` carries its own copy of stml's
+  enums (`STML_NODUS_*`, `STML_ERROR_*`) for the arbor projection, and
+  they are not guarded. So the silva inner kind lives in its own unit
+  `briar_silva.c/.h`, and `briar_nexus.h` includes NEITHER — it
+  forward-declares `structura StmlNodus;` / `structura BriarSilva;`
+  (stml.h names its struct tag, so a tag reference is enough) and
+  consumers include what they dereference. The plan had put the silva
+  fields on `BriarNexusRes` directly; they now sit in `res->silva`
+  (`BriarSilva {piscina, parsura, semantica}`).
+- **A broken parse's commit root is a LIST value, and a clean one's
+  too**: `parsura->commissio->radix` for `regio.c` is
+  `SILVA_VALOR_LISTA` of units. `silva_nodus_liberi` on
+  `radix.datum.nodus` read the list as a node → SIGSEGV in the error
+  walk. Both walkers (error search, unit partition) now accept LISTA
+  or NODUS.
+- **Extent end is exclusive**: `silva_nodus_extensionem` maximum =
+  byte after the last token; the gate's "main unit ends with `}`"
+  assertion confirmed it on the first run.
+- **Prelude byte count** = `chorda_aedificator_longitudo` after the
+  prelude appends; units with `minimum < praeludium_octeti` (the
+  exemplar declaration) are skipped.
+- **`c_fractum`**: a line of `@@@` as the first line of a unit gives an
+  ERROR node whose `silva_nodus_extensionem_lineis` start IS that line
+  — the thistle mapping asserted exactly.
+- **Sentinel in an unsigned again**: `briar_silvam_texere` returned
+  `i32` with `-I`; examen's domesticum flagged `< ZEPHYRUM` as always
+  false in the test. It returns `s32`. Second time this session (plan
+  1 had it in `_clausuram_quaerere`).
+- **`lib/*.c` inside a block comment** ends the comment (`-Wcomment`,
+  the memory's warning made real in `silex.h`). Written in words.
+- **Generated header goes to `include/`**, not `fontes/`: the probatio
+  unit compiles with `-Iinclude` only; `fontes/salve_regiones.h` was
+  unreachable from `probationes/`. The spec's §4.2 row is amended.
+- **Implicit standard trio** in the generated header (`stdio.h`,
+  `stdlib.h`, `string.h` after `latina.h`): the plain fixture calls
+  `imprimere` without including stdio, and a thistle file is a
+  script. Decision recorded in the spec.
+- **Name collision on disk**: the hand tool's binary is
+  `briar/build/fabrica` (as `build/arbor`), and the gate's write area
+  was `briar/build/fabrica/` — `stat` says "not a directory". Area
+  renamed `fabrica_area/`.
+- **`filum_directorium_creare_si_necesse` creates ONE level**;
+  `briar_directoria_creare` walks the path. Public, since the test's
+  golden writer needs it too.
+- **First-bake numbers (spec §10)**: the stateless vitrea app pulls
+  NO `volumen`, hence no sqlite, no `vendor/`: closure 71 files (34
+  `lib/*.c`), `./aedificare.sh` cold 2.1 s (capsula_generare + app +
+  three frameworks), binary 364,176 bytes, `probare.sh` green. The
+  plain fixtures: `salve, munde`, `summa 3`, probationes green. The
+  `#line` maps compile — a clang error names the `.thistle` line.
+- **Golden format**: directories of generated files under
+  `fixa/fabrica/<t>/` compared byte for byte; the vitrea build SCRIPTS
+  are asserted structurally instead (their file lists are computed
+  from the corpus and would churn on every lib change).
+- **`commissio_umbra` refuses a directory as a via** ("plagulae post
+  photographiam mutatae aut extra eam") — list the golden files.
+- **Runner cold cost**: sqlite (`-O2`) + the 3.5 MB amalgam compile in
+  ~21 s once; warm suite 8.7 s for 10 gates. `silex_clausuram_*`
+  prints "monitio - nulla implementatio pro latina.h" to stderr per
+  header-only file — noise in every log; a silex quiet flag is a
+  named future.
+- **zsh does not word-split `$F`** in the Bash tool (memory
+  `zsh-no-word-split`): `formator.sh $F` saw one argument.
