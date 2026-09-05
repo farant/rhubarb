@@ -68,13 +68,13 @@ s32 principale (vacuum)
     p.y = ZEPHYRUM;
     p = manus_ludus_ad_schirmum(m, manus_ludus_invenire(m, "#tabula"),
         p);
-    CREDO_AEQUALIS_I32(p.x, LXX);
-    CREDO_AEQUALIS_I32(p.y, X);
+    CREDO_AEQUALIS_S32(p.x, LXX);
+    CREDO_AEQUALIS_S32(p.y, X);
     p.x = V;
     p.y = VI;
     p = manus_ludus_ad_schirmum(m, manus_ludus_invenire(m, "#b1"), p);
-    CREDO_AEQUALIS_I32(p.x, XV);
-    CREDO_AEQUALIS_I32(p.y, XVI);
+    CREDO_AEQUALIS_S32(p.x, XV);
+    CREDO_AEQUALIS_S32(p.y, XVI);
     /* transformatio nidificata sine dispensatore: pannus (70,0)
      * translatio (0,50) scala II; filius (5,5) -> schirmo (80,60) */
     pannus = componens_creare(piscina, intern, "pannus", PARTES_NULLUM);
@@ -94,8 +94,8 @@ s32 principale (vacuum)
     p.x  = ZEPHYRUM;
     p.y  = ZEPHYRUM;
     p    = manus_ludus_ad_schirmum(m, filius, p);
-    CREDO_AEQUALIS_I32(p.x, LXXX);
-    CREDO_AEQUALIS_I32(p.y, LX);
+    CREDO_AEQUALIS_S32(p.x, LXXX);
+    CREDO_AEQUALIS_S32(p.y, LX);
 
     imprimere("\n--- premere ---\n");
     CREDO_VERUM(manus_ludus_premere(m, "[titulus=Numerare]"));

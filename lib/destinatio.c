@@ -38,6 +38,10 @@ chorda_nulla (vacuum)
 /* p in spatio PARENTIS c. Redde destinatum intimum, punctum locale
  * scriptum in *locale; NIHIL si nihil tactum. Liberi ultimo-primi
  * (summus pictus = summus tactus). */
+/* p in spatio PARENTIS c. Redde destinatum intimum, punctum locale
+ * scriptum in *locale; NIHIL si nihil tactum. Liberi ultimo-primi
+ * (summus pictus = summus tactus). Spatium signatum: liberi cum
+ * finibus negativis legitimi (P3 T1). */
 interior Componens*
 invenire (
      Componens* c,
@@ -46,8 +50,6 @@ invenire (
 {
      Componens* tactum;
        Punctum  q;
-           s32  qx;
-           s32  qy;
            s32  scala;
            i32  i;
            b32  intra;
@@ -57,30 +59,22 @@ invenire (
     {
         redde NIHIL;
     }
-
-    /* in spatium liberorum: origo c, translatio, scala */
     scala = (s32)c->scala;
     si (scala <= ZEPHYRUM)
     {
         scala = I;
     }
-    qx = ((s32)p.x - (s32)c->fines.x - (s32)c->translatio.x) / scala;
-    qy = ((s32)p.y - (s32)c->fines.y - (s32)c->translatio.y) / scala;
-
-    /* negativum = supra/sinistra omnium liberorum (fines insignati) */
-    si (qx >= ZEPHYRUM && qy >= ZEPHYRUM)
+    /* in spatium liberorum: origo c, translatio, scala */
+    q.x  = (p.x - c->fines.x - c->translatio.x) / scala;
+    q.y  = (p.y - c->fines.y - c->translatio.y) / scala;
+    i    = componens_numerus_liberorum(c);
+    dum (i > ZEPHYRUM)
     {
-        q.x  = (i32)qx;
-        q.y  = (i32)qy;
-        i    = componens_numerus_liberorum(c);
-        dum (i > ZEPHYRUM)
+        i--;
+        tactum = invenire(componens_liberum(c, i), q, locale);
+        si (tactum)
         {
-            i--;
-            tactum = invenire(componens_liberum(c, i), q, locale);
-            si (tactum)
-            {
-                redde tactum;
-            }
+            redde tactum;
         }
     }
     si (intra)
@@ -141,9 +135,9 @@ destinatio_geometrica (
 
     si (est_muris_positus(ev->genus))
     {
-        p.x = ev->datum.mus.x;
-        p.y = ev->datum.mus.y;
-        geo = invenire(arbor, p, &d.punctum_locale);
+                p.x  = (s32)ev->datum.mus.x;
+        p.y          = (s32)ev->datum.mus.y;
+        geo          = invenire(arbor, p, &d.punctum_locale);
         si (geo)
         {
             d.id_geometricum  = geo->id;

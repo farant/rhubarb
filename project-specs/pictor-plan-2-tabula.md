@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — DRAFT, no task started.** Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). Next: T2 `figura` + `pingere`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -61,7 +61,7 @@ Copied from Plan 1 and the spec; every task's requirements include these.
 - Consumes: Plan 1 as landed.
 - Produces: `nomen structura { s32 x; s32 y; } Punctum;` `nomen structura { s32 x; s32 y; s32 latitudo; s32 altitudo; } Fines;` `b32 fines_continet(Fines, Punctum)` signed; `vacuum componens_ponere_transformatio(Componens*, s32 tx, s32 ty, i32 scala)`; `i32 mandata_coetus_incipere(Mandata*, Fines, b32 sectio, s32 tx, s32 ty, i32 scala, chorda provenientia)`. `Eventus.datum.mus.x/y` stay `i32` (fenestra's); the strategy casts at its boundary. `scala`, `crassitudo`, counts stay `i32`.
 
-- [ ] **Step 1: Write the failing tests (negative space)**
+- [x] **Step 1: Write the failing tests (negative space)**
 
 Append to `probationes/probatio_motus.c` before the `--- Captura ---` section (use `silva.Editio.replace` on the `imprimere("\n--- Captura ---\n");` anchor, novus with newlines):
 ```c
@@ -122,11 +122,11 @@ for via in ('probationes/probatio_mandatum.c', 'probationes/probatio_componens.c
 fr = r.applicare(); assert fr.sana
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./compile_tests.sh motus` — Expected: FAIL to compile (`-XL` into `i32`: "implicit conversion changes signedness" under `-Wsign-conversion -Werror`). `./compile_tests.sh destinatio` — Expected: FAIL the same way on `-XX`.
 
-- [ ] **Step 3: The type change, by name**
+- [x] **Step 3: The type change, by name**
 
 ```python
 import sys; sys.path.insert(0, 'pythonica'); import silva
@@ -231,11 +231,11 @@ manus_ludus_ad_schirmum (
 
 Run `./tools/latina_custos.sh` on every touched file, then `./silva/formator.sh <f> -scribere` + `-vitia` on each.
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run, in this order (each must PASS): `./compile_tests.sh mandatum && ./compile_tests.sh componens && ./compile_tests.sh motus && ./compile_tests.sh destinatio && ./compile_tests.sh manus_ludus && ./compile_tests.sh dispensator && ./compile_tests.sh pictor_toy && ./compile_tests.sh eventus_stml`. The `pictor_toy` exemplar `toy.arbor.stml` must NOT change (coordinates were non-negative; the serializer prints the same digits) — if it does, read the diff before promoting anything.
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plant (must go RED on `motus`): in `lib/mandatum.c` `fines_continet`, `p.x >= f.x` → `p.x > f.x` — no; that is an off-by-one that the toy's corner cases may not catch. Plant instead in `lib/destinatio.c` `invenire`: `q.x = (p.x - c->fines.x - c->translatio.x) / scala;` → `q.x = (p.x - c->fines.x) / scala;` (translation dropped) — red at the `umbra` assertion and the tabula-through-pannus assertion. `silva.planta('lib/destinatio.c', vetus, novus, 'radix', 'destinatio')`.
 

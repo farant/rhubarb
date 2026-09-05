@@ -161,8 +161,8 @@ componens_ponere_titulum (
 vacuum
 componens_ponere_transformatio (
      Componens* c,
-           i32  translatio_x,
-           i32  translatio_y,
+           s32  translatio_x,
+           s32  translatio_y,
            i32  scala)
 {
     c->translatio.x  = translatio_x;
@@ -228,6 +228,18 @@ attributum_numericum (
 }
 
 interior vacuum
+attributum_signatum (
+              StmlNodus* nodus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* titulus,
+                    s32  valor)
+{
+    stml_attributum_addere(nodus, piscina, intern, titulus,
+        chorda_ut_cstr(chorda_ex_s32(valor, piscina), piscina));
+}
+
+interior vacuum
 attributum_chordae (
               StmlNodus* nodus,
                 Piscina* piscina,
@@ -262,11 +274,11 @@ componens_ad_nodum (
     si (c->titulus.mensura > ZEPHYRUM)
     { attributum_chordae(nodus, piscina, intern, "titulus", c->titulus);
     }
-    attributum_numericum(nodus, piscina, intern, "x", c->fines.x);
-    attributum_numericum(nodus, piscina, intern, "y", c->fines.y);
-    attributum_numericum(nodus, piscina, intern, "latitudo",
+    attributum_signatum(nodus, piscina, intern, "x", c->fines.x);
+    attributum_signatum(nodus, piscina, intern, "y", c->fines.y);
+    attributum_signatum(nodus, piscina, intern, "latitudo",
         c->fines.latitudo);
-    attributum_numericum(nodus, piscina, intern, "altitudo",
+    attributum_signatum(nodus, piscina, intern, "altitudo",
         c->fines.altitudo);
     stml_attributum_addere(nodus, piscina, intern, "praedicatum",
         tituli_praedicatorum[c->praedicatum]);
@@ -274,9 +286,9 @@ componens_ad_nodum (
         c->focusabilis ? "verum" : "falsum");
     stml_attributum_addere(nodus, piscina, intern, "sectio",
         c->sectio ? "verum" : "falsum");
-    attributum_numericum(nodus, piscina, intern, "translatio_x",
+    attributum_signatum(nodus, piscina, intern, "translatio_x",
         c->translatio.x);
-    attributum_numericum(nodus, piscina, intern, "translatio_y",
+    attributum_signatum(nodus, piscina, intern, "translatio_y",
         c->translatio.y);
     attributum_numericum(nodus, piscina, intern, "scala", c->scala);
 
@@ -336,6 +348,22 @@ attributum_i32 (
     redde v;
 }
 
+interior s32
+attributum_s32 (
+             StmlNodus* nodus,
+    constans character* titulus)
+{
+    chorda* c;
+       s32  v;
+
+    c = stml_attributum_capere(nodus, titulus);
+    v = ZEPHYRUM;
+    si (c)
+    { chorda_ut_s32(*c, &v);
+    }
+    redde v;
+}
+
 interior b32
 attributum_b32 (
              StmlNodus* nodus,
@@ -359,7 +387,7 @@ nodus_ad_componens (
     chorda_fissio_fructus  paria;
     chorda_fissio_fructus  xy;
                       i32  i;
-                      i32  v;
+                      s32  v;
                       i32  p;
 
     a = stml_attributum_capere(nodus, "id");
@@ -377,10 +405,10 @@ nodus_ad_componens (
     si (a)
     { componens_ponere_titulum(c, chorda_ut_cstr(*a, piscina));
     }
-    c->fines.x         = attributum_i32(nodus, "x");
-    c->fines.y         = attributum_i32(nodus, "y");
-    c->fines.latitudo  = attributum_i32(nodus, "latitudo");
-    c->fines.altitudo  = attributum_i32(nodus, "altitudo");
+    c->fines.x         = attributum_s32(nodus, "x");
+    c->fines.y         = attributum_s32(nodus, "y");
+    c->fines.latitudo  = attributum_s32(nodus, "latitudo");
+    c->fines.altitudo  = attributum_s32(nodus, "altitudo");
     a                  = stml_attributum_capere(nodus, "praedicatum");
     c->praedicatum     = PRAEDICATUM_RECTANGULUM;
     si (a)
@@ -394,8 +422,8 @@ nodus_ad_componens (
     }
     c->focusabilis   = attributum_b32(nodus, "focusabilis");
     c->sectio        = attributum_b32(nodus, "sectio");
-    c->translatio.x  = attributum_i32(nodus, "translatio_x");
-    c->translatio.y  = attributum_i32(nodus, "translatio_y");
+    c->translatio.x  = attributum_s32(nodus, "translatio_x");
+    c->translatio.y  = attributum_s32(nodus, "translatio_y");
     c->scala         = attributum_i32(nodus, "scala");
     si (c->scala < I)
     { c->scala = I;
@@ -412,11 +440,11 @@ nodus_ad_componens (
         {
             xy  = chorda_fissio(paria.elementa[i], ',', piscina);
             v   = ZEPHYRUM; si (xy.numerus > ZEPHYRUM)
-                            { chorda_ut_i32(xy.elementa[0], &v);
+                            { chorda_ut_s32(xy.elementa[0], &v);
                             }
             c->puncta[i].x  = v;
             v               = ZEPHYRUM; si (xy.numerus > I)
-                                        { chorda_ut_i32(xy.elementa[1],
+                                        { chorda_ut_s32(xy.elementa[1],
                                               &v);
                                         }
             c->puncta[i].y = v;

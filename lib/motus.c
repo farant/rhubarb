@@ -65,10 +65,10 @@ motus_quies (
 
 interior constans character*
 numerus_ut_cstr (
-        i32  valor,
+        s32  valor,
     Piscina* piscina)
 {
-    redde chorda_ut_cstr(chorda_ex_s32((s32)valor, piscina), piscina);
+    redde chorda_ut_cstr(chorda_ex_s32(valor, piscina), piscina);
 }
 
 /* Mutator effusionis: campi persistendi soli (pan, zoom). Ponere,
@@ -88,7 +88,7 @@ effusio_mutator (
     insula_attributum_ponere(radix, p, in, "pan_y",
                              numerus_ut_cstr(motus->pan.y, p));
     insula_attributum_ponere(radix, p, in, "zoom",
-                             numerus_ut_cstr(motus->zoom, p));
+                             numerus_ut_cstr((s32)motus->zoom, p));
 }
 
 /* <quies/> */

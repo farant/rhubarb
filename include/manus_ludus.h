@@ -73,14 +73,14 @@ manus_ludus_premere (
 b32
 manus_ludus_premere_ad (
      ManusLudus* m,
-            i32  x,
-            i32  y);
+            s32  x,
+            s32  y);
 
 b32
 manus_ludus_movere (
      ManusLudus* m,
-            i32  x,
-            i32  y);
+            s32  x,
+            s32  y);
 
 /* Ictus: depressus in puncta[0], motus per cetera, liberatus in
  * ultimo - omnia in spatio locali componentis. n >= I. */

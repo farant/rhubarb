@@ -33,9 +33,9 @@
  * GEOMETRIA COMMUNIS (componens.h quoque utitur)
  * ================================================== */
 
-nomen structura { i32 x; i32 y; } Punctum;
+nomen structura { s32 x; s32 y; } Punctum;
 
-nomen structura { i32 x; i32 y; i32 latitudo; i32 altitudo; } Fines;
+nomen structura { s32 x; s32 y; s32 latitudo; s32 altitudo; } Fines;
 
 b32
 fines_continet (
@@ -157,8 +157,8 @@ mandata_imago (
 vacuum
 mandata_textus (
          Mandata* m,
-             i32  x,
-             i32  y,
+             s32  x,
+             s32  y,
           chorda  textus,
              i32  fons,
     ColorMandati  color);
@@ -169,8 +169,8 @@ mandata_coetus_incipere (
      Mandata* m,
        Fines  fines,
          b32  sectio,
-         i32  translatio_x,
-         i32  translatio_y,
+         s32  translatio_x,
+         s32  translatio_y,
          i32  scala,
       chorda  provenientia);
 

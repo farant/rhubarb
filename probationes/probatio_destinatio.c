@@ -19,10 +19,10 @@ nodus (
     InternamentumChorda* in,
      constans character* id,
                  Partes  partes,
-                    i32  x,
-                    i32  y,
-                    i32  w,
-                    i32  h,
+                    s32  x,
+                    s32  y,
+                    s32  w,
+                    s32  h,
                     b32  focusabilis)
 {
      Componens* c;
@@ -75,6 +75,7 @@ s32 principale (vacuum)
               Componens* b1;
               Componens* b2;
               Componens* b3;
+              Componens* umbra;
               Componens* tabula;
                   Motus  motus;
                 Eventus  e;
@@ -130,15 +131,15 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(d.id_captum));
     CREDO_AEQUALIS_I32(xar_numerus(d.ascensus), II);  /* b1, radix */
     CREDO_VERUM(destinatio_componens(&d) == b1);
-    CREDO_AEQUALIS_I32(d.punctum_locale.x, V);
-    CREDO_AEQUALIS_I32(d.punctum_locale.y, V);
+    CREDO_AEQUALIS_S32(d.punctum_locale.x, V);
+    CREDO_AEQUALIS_S32(d.punctum_locale.y, V);
 
     imprimere("\n--- Frater posterior SUPRA priorem (ordo z) ---\n");
     e = mus(EVENTUS_MUS_DEPRESSUS, XL, XV);   /* in b1 ET b3 */
     d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
     CREDO_CHORDA_AEQUALIS_LITERIS(d.id_geometricum, "b3");
-    CREDO_AEQUALIS_I32(d.punctum_locale.x, X);
-    CREDO_AEQUALIS_I32(d.punctum_locale.y, V);
+    CREDO_AEQUALIS_S32(d.punctum_locale.x, X);
+    CREDO_AEQUALIS_S32(d.punctum_locale.y, V);
 
     imprimere("\n--- Ictus in tabula per translationem panni ---\n");
     /* schirmo (125,60) -> pannus (55,10) -> tabula locale (5,10) */
@@ -147,16 +148,16 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(d.id_geometricum, "tabula");
     CREDO_AEQUALIS_I32(xar_numerus(d.ascensus), III);
     CREDO_VERUM(destinatio_componens(&d) == tabula);
-    CREDO_AEQUALIS_I32(d.punctum_locale.x, V);
-    CREDO_AEQUALIS_I32(d.punctum_locale.y, X);
+    CREDO_AEQUALIS_S32(d.punctum_locale.x, V);
+    CREDO_AEQUALIS_S32(d.punctum_locale.y, X);
 
     imprimere("\n--- Punctum in panno SUPRA liberos translatos ---\n");
     /* (80,10): in panno, sed liberi a y=50 incipiunt -> pannus ipse */
     e = mus(EVENTUS_MUS_DEPRESSUS, LXXX, X);
     d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
     CREDO_CHORDA_AEQUALIS_LITERIS(d.id_geometricum, "pannus");
-    CREDO_AEQUALIS_I32(d.punctum_locale.x, X);
-    CREDO_AEQUALIS_I32(d.punctum_locale.y, X);
+    CREDO_AEQUALIS_S32(d.punctum_locale.x, X);
+    CREDO_AEQUALIS_S32(d.punctum_locale.y, X);
 
     imprimere("\n--- Sectio praecidit liberum extra pannum ---\n");
     /* (125,80): in tabula non praecisa, sed infra pannum (70) */
@@ -167,6 +168,18 @@ s32 principale (vacuum)
     d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
     CREDO_CHORDA_AEQUALIS_LITERIS(d.id_geometricum, "tabula");
     componens_ponere_sectio(pannus, VERUM);
+
+    imprimere("\n--- Liberum cum finibus NEGATIVIS (signatum) ---\n");
+    /* umbra (-20,-20,40,40) in panno: schirmo 50..90, 30..70 -
+     * ante translationem panni (0,50) et originem (70,0) */
+    umbra = nodus(piscina, intern, "umbra", PARTES_NULLUM,
+                  -XX, -XX, XL, XL, FALSUM);
+    componens_addere_liberum(pannus, umbra);
+    e = mus(EVENTUS_MUS_DEPRESSUS, LXXV, XXXV);
+    d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(d.id_geometricum, "umbra");
+    CREDO_AEQUALIS_S32(d.punctum_locale.x, XXV);
+    CREDO_AEQUALIS_S32(d.punctum_locale.y, V);
 
     imprimere("\n--- Extra omnia -> radix ---\n");
     e = mus(EVENTUS_MUS_DEPRESSUS, LXV, XC);

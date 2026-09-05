@@ -181,8 +181,8 @@ mandata_imago (
 vacuum
 mandata_textus (
          Mandata* m,
-             i32  x,
-             i32  y,
+             s32  x,
+             s32  y,
           chorda  textus,
              i32  fons,
     ColorMandati  color)
@@ -202,8 +202,8 @@ mandata_coetus_incipere (
      Mandata* m,
        Fines  fines,
          b32  sectio,
-         i32  translatio_x,
-         i32  translatio_y,
+         s32  translatio_x,
+         s32  translatio_y,
          i32  scala,
       chorda  provenientia)
 {
@@ -257,6 +257,17 @@ attributum_numericum (
 }
 
 interior vacuum
+attributum_signatum (
+              StmlNodus* nodus,
+       constans Mandata* m,
+     constans character* titulus,
+                    s32  valor)
+{
+    stml_attributum_addere(nodus, m->piscina, m->intern, titulus,
+        chorda_ut_cstr(chorda_ex_s32(valor, m->piscina), m->piscina));
+}
+
+interior vacuum
 puncta_scribere (
             StmlNodus* nodus,
      constans Mandata* m,
@@ -305,15 +316,15 @@ mandatum_scribere (
     si (   md->genus != MANDATUM_TEXTUS && md->genus != MANDATUM_LINEA
         && md->genus != MANDATUM_POLYGONUM)
     {
-        attributum_numericum(nodus, m, "x", md->fines.x);
-        attributum_numericum(nodus, m, "y", md->fines.y);
-        attributum_numericum(nodus, m, "latitudo", md->fines.latitudo);
-        attributum_numericum(nodus, m, "altitudo", md->fines.altitudo);
+        attributum_signatum(nodus, m, "x", md->fines.x);
+        attributum_signatum(nodus, m, "y", md->fines.y);
+        attributum_signatum(nodus, m, "latitudo", md->fines.latitudo);
+        attributum_signatum(nodus, m, "altitudo", md->fines.altitudo);
     }
     si (md->genus == MANDATUM_TEXTUS)
     {
-        attributum_numericum(nodus, m, "x", md->fines.x);
-        attributum_numericum(nodus, m, "y", md->fines.y);
+        attributum_signatum(nodus, m, "x", md->fines.x);
+        attributum_signatum(nodus, m, "y", md->fines.y);
         attributum_numericum(nodus, m, "fons", md->fons);
     }
     si (md->genus != MANDATUM_COETUS && md->genus != MANDATUM_IMAGO)
@@ -349,9 +360,9 @@ mandatum_scribere (
     {
         stml_attributum_addere(nodus, m->piscina, m->intern, "sectio",
                                md->sectio ? "verum" : "falsum");
-        attributum_numericum(nodus, m, "translatio_x",
+        attributum_signatum(nodus, m, "translatio_x",
             md->translatio.x);
-        attributum_numericum(nodus, m, "translatio_y",
+        attributum_signatum(nodus, m, "translatio_y",
             md->translatio.y);
         attributum_numericum(nodus, m, "scala", md->scala);
         si (md->provenientia.mensura > ZEPHYRUM)
@@ -412,6 +423,22 @@ attributum_i32 (
     redde v;
 }
 
+interior s32
+attributum_s32 (
+             StmlNodus* nodus,
+    constans character* titulus)
+{
+    chorda* c;
+       s32  v;
+
+    c = stml_attributum_capere(nodus, titulus);
+    v = ZEPHYRUM;
+    si (c)
+    { chorda_ut_s32(*c, &v);
+    }
+    redde v;
+}
+
 interior b32
 attributum_b32 (
              StmlNodus* nodus,
@@ -448,7 +475,7 @@ puncta_legere (
     chorda_fissio_fructus paria;
     chorda_fissio_fructus xy;
                       i32 i;
-                      i32 v;
+                      s32 v;
 
     textus                 = stml_textus_valor(nodus, piscina);
     paria                  = chorda_fissio(textus, ' ', piscina);
@@ -459,11 +486,11 @@ puncta_legere (
     {
         xy  = chorda_fissio(paria.elementa[i], ',', piscina);
         v   = ZEPHYRUM; si (xy.numerus > ZEPHYRUM)
-                        { chorda_ut_i32(xy.elementa[0], &v);
+                        { chorda_ut_s32(xy.elementa[0], &v);
                         }
         md->puncta[i].x  = v;
         v                = ZEPHYRUM; si (xy.numerus > I)
-                                     { chorda_ut_i32(xy.elementa[1],
+                                     { chorda_ut_s32(xy.elementa[1],
                                            &v);
                                      }
         md->puncta[i].y = v;
@@ -493,10 +520,10 @@ mandatum_legere (
     }
 
     md                  = mandatum_novum(m, (MandatumGenus)g);
-    md->fines.x         = attributum_i32(nodus, "x");
-    md->fines.y         = attributum_i32(nodus, "y");
-    md->fines.latitudo  = attributum_i32(nodus, "latitudo");
-    md->fines.altitudo  = attributum_i32(nodus, "altitudo");
+    md->fines.x         = attributum_s32(nodus, "x");
+    md->fines.y         = attributum_s32(nodus, "y");
+    md->fines.latitudo  = attributum_s32(nodus, "latitudo");
+    md->fines.altitudo  = attributum_s32(nodus, "altitudo");
     cg                  = stml_attributum_capere(nodus, "color_genus");
     md->color.genus     = COLOR_MANDATI_THEMA;
     si (cg && chorda_aequalis_literis(*cg, "index"))
@@ -510,8 +537,8 @@ mandatum_legere (
     md->crassitudo    = attributum_i32(nodus, "crassitudo");
     md->fons          = attributum_i32(nodus, "fons");
     md->sectio        = attributum_b32(nodus, "sectio");
-    md->translatio.x  = attributum_i32(nodus, "translatio_x");
-    md->translatio.y  = attributum_i32(nodus, "translatio_y");
+    md->translatio.x  = attributum_s32(nodus, "translatio_x");
+    md->translatio.y  = attributum_s32(nodus, "translatio_y");
     md->scala         = attributum_i32(nodus, "scala");
     si (md->scala < I)
     { md->scala = I;

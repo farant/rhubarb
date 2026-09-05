@@ -203,8 +203,6 @@ manus_ludus_ad_schirmum (
 {
        Punctum  p;
      Componens* a;
-           s32  x;
-           s32  y;
 
     (vacuum)m;
     p = locale;
@@ -212,15 +210,13 @@ manus_ludus_ad_schirmum (
     {
         redde p;
     }
-    x = (s32)c->fines.x + (s32)locale.x;
-    y = (s32)c->fines.y + (s32)locale.y;
+    p.x = c->fines.x + locale.x;
+    p.y = c->fines.y + locale.y;
     per (a = c->parens; a; a = a->parens)
     {
-        x = x * (s32)a->scala + (s32)a->fines.x + (s32)a->translatio.x;
-        y = y * (s32)a->scala + (s32)a->fines.y + (s32)a->translatio.y;
+        p.x = p.x * (s32)a->scala + a->fines.x + a->translatio.x;
+        p.y = p.y * (s32)a->scala + a->fines.y + a->translatio.y;
     }
-    p.x = (i32)x;
-    p.y = (i32)y;
     redde p;
 }
 
@@ -233,16 +229,16 @@ interior vacuum
 mus (
          ManusLudus* m,
     eventus_genus_t  genus,
-                i32  x,
-                i32  y)
+                s32  x,
+                s32  y)
 {
     Eventus e;
 
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus        = genus;
-    e.tempus       = m->tempus;
-    e.datum.mus.x  = x;
-    e.datum.mus.y  = y;
+    e.genus            = genus;
+    e.tempus           = m->tempus;
+        e.datum.mus.x  = (i32)x;
+    e.datum.mus.y      = (i32)y;
     dispensator_tractare(m->d, &e);
     m->tempus += m->gradus_ms;
 }
@@ -250,8 +246,8 @@ mus (
 b32
 manus_ludus_premere_ad (
      ManusLudus* m,
-            i32  x,
-            i32  y)
+            s32  x,
+            s32  y)
 {
     si (!m)
     {
@@ -288,8 +284,8 @@ manus_ludus_premere (
 b32
 manus_ludus_movere (
      ManusLudus* m,
-            i32  x,
-            i32  y)
+            s32  x,
+            s32  y)
 {
     si (!m)
     {

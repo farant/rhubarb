@@ -126,8 +126,8 @@ componens_ponere_sectio (
 vacuum
 componens_ponere_transformatio (
      Componens* c,
-           i32  translatio_x,
-           i32  translatio_y,
+           s32  translatio_x,
+           s32  translatio_y,
            i32  scala);
 
 i32

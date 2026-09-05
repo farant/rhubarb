@@ -30,6 +30,17 @@ pan_movere (
     motus->pan.x = L;
 }
 
+/* Mutator: pan negativum (spatium signatum) */
+interior vacuum
+pan_negare (
+     Motus* motus,
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+    motus->pan.x = -XL;
+    motus->pan.y = -X;
+}
+
 /* Mutator: punctum ictui pendenti addere (ctx = Punctum*) */
 interior vacuum
 punctum_addere (
@@ -67,8 +78,8 @@ s32 principale (vacuum)
 
     imprimere("\n--- Mutatio motus NON tangit insulam ---\n");
     mutare_motum(&motus, pan_ponere, NIHIL, M);
-    CREDO_AEQUALIS_I32(motus.pan.x, XL);
-    CREDO_AEQUALIS_I32(motus.pan.y, XX);
+    CREDO_AEQUALIS_S32(motus.pan.x, XL);
+    CREDO_AEQUALIS_S32(motus.pan.y, XX);
     CREDO_VERUM(motus.sordida);
     CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), ZEPHYRUM);
     CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
@@ -115,6 +126,18 @@ s32 principale (vacuum)
         III);
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
+
+    imprimere("\n--- Pan negativum: coordinatae signatae ---\n");
+    mutare_motum(&motus, pan_negare, NIHIL, IV * M);
+    CREDO_AEQUALIS_S32(motus.pan.x, -XL);
+    CREDO_VERUM(motus_quies(&motus, V * M, CCC));
+    CREDO_VERUM(motus_effundere(&motus, repo));
+    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
+    CREDO_NON_NIHIL(a);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*a, "-40");
+    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_y");
+    CREDO_NON_NIHIL(a);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*a, "-10");
 
     imprimere("\n--- Captura ---\n");
     motus_captura_ponere(&motus, chorda_ex_literis("tabula", piscina));

@@ -57,9 +57,9 @@ derivare (
     }
     alioquin
     {
-        d->tempus_ultimi  = ev->tempus;
-        d->ultimus.x      = ev->datum.mus.x;
-        d->ultimus.y      = ev->datum.mus.y;
-        d->habet_ultimum  = VERUM;
+        d->tempus_ultimi      = ev->tempus;
+                d->ultimus.x  = (s32)ev->datum.mus.x;
+        d->ultimus.y          = (s32)ev->datum.mus.y;
+        d->habet_ultimum      = VERUM;
     }
 }
