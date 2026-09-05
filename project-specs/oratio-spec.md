@@ -378,6 +378,30 @@ comments are the Latin context, English prose (worklogs, markdown) the
 English one; the Latin lint ignores English-only entries. Unknowns
 2,987 after; pin moved.
 
+**As built — T15a, the English context (warmup, 2026-09-04; decision
+27, four calls by Fran):** an English lint needs a word list, so stage
+4's dictionary came forward. Moby Part-of-Speech II vendored VERBATIM
+under `oratio/vocabularium/en/` (§6 as-built); `oratio_vocabula_prosa`
+walks md's tree and harvests TEXTUS nodes only — code spans, fences,
+link destinations, html blocks and front matter never reach the lookup;
+`oratio_vocabula_creare_anglice` judges in the ENGLISH context:
+glossary entries allowed in English first (a Latin entry → LATINUM,
+`ignotum-permissum` → PERMISSUM, else NOTUM), Moby second, the Latin
+table third → the new status **LATINUM** (known Latin in English prose
+is counted, never a finding — decision 27.1); `ambiguum` never. Corpus
+= the house INCLUDING `knotapel/` (English), minus `vendor/`,
+`archivum/` and the generated files (`gesta/annales/tabula.md`,
+`md/CENSUS.md`) — `ORATIO_PROSA_EXCLUSA` (27.2). `./oratio/vocabula.sh
+-prosa`, `silva.vocabula('prosa')` (a `prosa` column, a `latinum`
+count). Gate sections V–VII (inline md with every exclusion proved;
+English judgement; corpus floors, no pin). Day one: 1,139 files, 62,524
+distinct words, 1.89M sites, 58 % unknown — the top of the list is
+regular inflection Moby does not list (-s, -ed, -ing, 's), then house
+English terms; morphology lands next as DATA rows with those counts
+(27.4). Two corpus lessons: a lone `→` was a "word" (bytes ≥ 0x80 were
+letters; now UTF-8 lead bytes count), and the site-count ordering was
+quadratic (now a counting sort).
+
 ## 5. Stage 3 — annotated words (`partes`)
 
 **Universal classes** (registry `partes_registrum`, one genus per
@@ -443,7 +467,8 @@ analyses), `oratio/arbor.sh` shows the analyses inline.
 ## 6. Stage 4 — English (`vocabularium_en`)
 
 Moby Part-of-Speech (`mobypos.txt`, public domain): one line per
-entry, form × codes (N noun, p plural, h noun phrase, V verb
+entry, form `\` codes (the Gutenberg copy uses a backslash; `×` is the
+CD-ROM edition) (N noun, p plural, h noun phrase, V verb
 participle, t transitive, i intransitive, A adjective, v adverb, C
 conjunction, P preposition, ! interjection, r pronoun, D definite
 article, I indefinite article, o nominative) in preference order.
@@ -452,6 +477,22 @@ C: regular plurals, `-ed`, `-ing`, `-s` third person, `-er`/`-est`,
 an irregular-forms table (vendored from a PD list or hand-written);
 each rule yields analyses marked with the rule as `nativum`. Mapping
 Moby codes → classes. Oracle: UD English EWT (COVERAGE pinned).
+
+**As built — T15a (2026-09-04):** `oratio/vocabularium/en/mobypos.txt`
+verbatim from the Gutenberg mirror (3,237,558 bytes, 233,356 records,
+CRLF; `LICENTIA.txt` = the ebook's documentation note, grant + legend;
+`FONTES.md`). NO coction (decision 27.3): the source is one table, the
+loader `oratio_vocabularium_en_onerare` reads it directly, asserting
+the record law on every line (CRLF, one backslash, non-empty form and
+codes — stops with the line) and COUNTING code letters outside the
+legend (one: `cowardic\Ne`); words hashed by lower-cased form (197,387),
+phrases counted not indexed (35,969); `quaerere` → records in file
+order; `oratio_vocabularium_en_classis` maps a code letter to the
+universal class. Findings pinned in `probatio_oratio_vocabularium_en`
+(81; seal `cc81458b820a3625`, 27 ms): the legend's `I` and `o` never
+occur; 1,231 CP437 records (fold v1 = ASCII lower case only, accents
+stay as they are); 4,437 case-duplicate forms. Morphology and the
+irregular table = T15b, as data from the prose report.
 
 ## 7. Stage 5 — resolution by context
 
@@ -672,8 +713,9 @@ CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT
 -petere` for NC treebanks. T14 `oratio/verba.sh`, `silva.Oratio`,
 `Prosa.sententia`.
 
-**Stage 4 (English).** T15 vendor Moby + compile + `vocabularium_en`
-+ morphology rules + irregulars. T16 `partes_en.c` + EWT oracle.
+**Stage 4 (English).** T15a DONE 2026-09-04 (vendor Moby verbatim,
+loader without coction, the prose lint `-prosa`). T15b morphology rules
++ irregulars as DATA from the report. T16 `partes_en.c` + EWT oracle.
 
 **Stage 5.** T17 `oratio/partes/resolutio.stml` + runner through the
 command layer + per-rule oracle deltas. T18 primary pin.

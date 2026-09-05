@@ -123,11 +123,26 @@ excluded in one place (`ORATIO_VOCABULA_EXCLUSA`; `-omnes-viae` scans
 all). Glossary entries carry `contextus="latinus | anglicus | ambo"`
 (decision 26): the identifier/comment lint is the Latin context and
 ignores English-only entries; abbreviations are KEPT (36 permitted,
-contextus latinus). Identifier unknowns 2,987 of 7,469 words, PINNED
+contextus latinus). Identifier unknowns 2,986 of 7,477 words, PINNED
 only falling in `probatio_oratio_vocabula` (a red = a new unknown
 identifier word: glossary entry or rename, pin moved for a named
-cause). T8b stays parked. NEXT: stage 3 **T11** `partes_registrum`
-(17 classes as analysis genera appended to the registry, canon rules).
+cause). T8b stays parked. **T15a DONE (warmup, decision 27)**: the
+ENGLISH context. Moby Part-of-Speech vendored VERBATIM under
+`oratio/vocabularium/en/` (no coction — the source is one table; seal
+pinned), `oratio_vocabularium_en` (record law asserted per line,
+unknown code letters counted: `cowardic\Ne`), gate
+`probatio_oratio_vocabularium_en` (81). `oratio_vocabula_prosa` = md's
+TEXTUS nodes only (code spans, fences, link targets, html, front matter
+never reach the lookup); `oratio_vocabula_creare_anglice` judges
+glossary-English → Moby → Latin table = status **LATINUM** (known
+Latin in prose is never a finding); corpus = house + knotapel minus
+vendor/ archivum/ generated (`ORATIO_PROSA_EXCLUSA`);
+`./oratio/vocabula.sh -prosa`, `silva.vocabula('prosa')`. Day one:
+62,524 words, 58 % unknown = regular inflections (-s -ed -ing 's) +
+house English terms → T15b morphology as DATA rows with those counts,
+then glossary pass II (`contextus="anglicus"`). NEXT: stage 3 **T11**
+`partes_registrum` (17 classes as analysis genera appended to the
+registry, canon rules), or T15b first — Fran's call.
 
 ## Laws to keep (spec §2–3)
 
@@ -146,4 +161,9 @@ cause). T8b stays parked. NEXT: stage 3 **T11** `partes_registrum`
   (`loci_numerus`), never a literal.
 - Vendored sources are VERBATIM (CRLF kept); the compiled table is
   committed and proven equal to the coction; its seal moves only with
-  a named cause (`-scribere` prints the warning).
+  a named cause (`-scribere` prints the warning). A one-table source
+  (Moby) is read directly and its own seal is pinned.
+- The prose lint is the ENGLISH context: TEXTUS nodes only; known Latin
+  = `latinum`, never a finding; `ambiguum` never; the identifier pin
+  is the Latin context's and a new house coinage in an API name moves
+  it (glossary entry, pin moved for the cause).

@@ -104,6 +104,16 @@
        ignota: ea lint nominat. Abbreviationes (tok idx ctx ptr aed sem) quoque
        ignota: decisio Frani (permittere aut renominare). -->
 
+  <vocabulum lemma="recordum" lingua="latina" classis="substantivum"
+    nota="vox domus (T7 census.recorda, T15a oratio_vocabularium_en_recordum): recordum n. = 'record'; WORDS 'recorda' ut formam verbi recordor solum novit - pinna identificatorum ideo rubra 2026-09-04">
+    <sensus>record (of a table); entry, row</sensus>
+    <forma textus="recorda" numerus="pluralis"/>
+    <forma textus="recordi" numerus="singularis"/>
+    <forma textus="recordo" numerus="singularis"/>
+    <forma textus="recordorum" numerus="pluralis"/>
+    <forma textus="recordis" numerus="pluralis"/>
+  </vocabulum>
+
   <vocabulum lemma="lexema" lingua="latina" classis="substantivum" nota="Gk. lexema n. (lexematis): vox domus pro tokeno">
     <forma textus="lexema" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="lexematis" casus="genitivus" numerus="singularis" genus="neutrum"/>

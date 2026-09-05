@@ -9,12 +9,26 @@
  * III. IUDICIUM cum tabula et glossario: notum (piscina), notum per
  *      glossarium (est -> sum verbum), permissum (offset buffer index),
  *      ambiguum (virum: lemmata III), ignotum (the xyzzy).
- * IV.  CORPUS: nexus.tsv symbola + commentaria corporis C (corpus_c.txt):
+  * IV.  CORPUS: nexus.tsv symbola + commentaria corporis C (corpus_c.txt):
  *      numeri publicati, ignota prima XV, limina sanitatis (verba > V
  *      milia, nota + permissa + ambigua > tertia pars) - relatio, non
  *      pinna: numerus ignotorum 'solum cadens' post relationem lectam.
+ * V.   PROSA markdown inlinearis (T15a): nodi TEXTUS soli - verba
+ *      capituli, paragraphi, nexus (textus), cellarum, elementorum
+ *      adsunt cum linea; verbatim, saeptum, destinatio nexus, html,
+ *      praefatio ABSUNT; sagitta sola verbum non est; numeri exacti.
+ * VI.  IUDICIUM ANGLICE: the determinans, parser substantivum, running
+ *      adiectivum, quickly adverbium (Moby); worklog et offset permissa
+ *      (glossarium anglice); tok LATINUM (contextus latinus solum);
+ *      puella LATINUM (WORDS), piscina NOTUM (Moby eam novit); lexema,
+ *      est (sum), silva LATINA (glossarium Latinum); xyzzy ignotum;
+ *      ambiguum nullum.
+ * VII. CORPUS prosae: plagulae md tractae sine vendor/ archivum/
+ *      generatis (ORATIO_PROSA_EXCLUSA), limina (plagulae > CCC, verba >
+ *      V milia, nota + permissa + latina > tertia pars) - relatio diei
+ *      primi in worklog; pinna post morphologiam.
  * Culpa plantata: limes CAPITALIS in scissione sublatus (MateriaNodus
- * integer manet).
+ * integer manet); secunda: contextus glossarii inversus (e->anglice).
  */
 
 #include "latina.h"
@@ -22,6 +36,7 @@
 #include "oratio_vocabula.h"
 #include "oratio_vocabularium.h"
 #include "oratio_vocabularium_la.h"
+#include "oratio_vocabularium_en.h"
 #include "oratio_glossarium.h"
 #include "chorda.h"
 #include "piscina.h"
@@ -31,7 +46,7 @@
 #include <string.h>
 #include <time.h>
 
-#define IGNOTA_SYMBOLORUM_PINNA 2987
+#define IGNOTA_SYMBOLORUM_PINNA 2986
 
 interior b32
 _plagulam_legere (
@@ -128,7 +143,9 @@ principale (vacuum)
                 character  via[1024];
                    chorda  tabula;
                    chorda  fons_glossarii;
-     OratioVocabulariumLa* voc;
+          OratioVocabulariumLa* voc;
+     OratioVocabulariumEn* en = NIHIL;
+                   chorda  fons_en;
  OratioVocabulariumVitium vitium;
            OratioVocabula* vc;
                       i32  i;
@@ -474,6 +491,270 @@ principale (vacuum)
         CREDO_VERUM (plagulae > (i32)100);
         CREDO_VERUM (n > (i32)5000);
         CREDO_VERUM ((nota + ambigua + permissa) * (i32)III > n);
+    }
+
+        imprimere("\n--- V. Prosa markdown: nodi TEXTUS soli ---\n");
+    {
+        OratioVocabula* pr = oratio_vocabula_creare(piscina, voc);
+        constans OratioVerbum* v;
+
+        CREDO_NON_NIHIL (pr);
+        CREDO_VERUM (oratio_vocabula_prosa(pr, _l(
+            "---\n"
+            "title: frontmatter\n"
+            "---\n"
+            "# Heading words\n"
+            "\n"
+            "Prose alpha with `verbatim beta` and [linktext gamma](http://urlword.example/delta) here \xe2\x86\x92 also.\n"
+            "Second epsilon line.\n"
+            "\n"
+            "```c\n"
+            "int fenced_zeta;\n"
+            "```\n"
+            "\n"
+            "| cell eta | cell theta |\n"
+            "|---|---|\n"
+            "| iota | kappa |\n"
+            "\n"
+            "<div>htmlword lambda</div>\n"
+            "\n"
+            "- item mu\n"
+            "- item nu\n"), "docs/probatio.md"));
+        imprimere("  verba %d sedes %d\n",
+            (integer)xar_numerus(oratio_vocabula_verba(pr)),
+            (integer)oratio_vocabula_sedes(pr));
+        v = _verbum(pr, "alpha");
+        CREDO_NON_NIHIL (v);
+        CREDO_VERUM (v != NIHIL && v->linea_prima == (i32)VI);
+        CREDO_VERUM (v != NIHIL && v->sedes_prosae == I
+            && v->sedes_symbolorum == ZEPHYRUM
+            && v->sedes_commentorum == ZEPHYRUM);
+        CREDO_VERUM (v != NIHIL && v->ex_prosa_prima
+            && !v->ex_commento_prima);
+        CREDO_VERUM (v != NIHIL && _aequalis(v->via_prima,
+            "docs/probatio.md"));
+        v = _verbum(pr, "heading");
+        CREDO_VERUM (v != NIHIL && v->linea_prima == (i32)IV);
+        CREDO_NON_NIHIL (_verbum(pr, "words"));
+        CREDO_NIHIL (_verbum(pr, "verbatim"));   /* code span */
+        CREDO_NIHIL (_verbum(pr, "beta"));
+        CREDO_NON_NIHIL (_verbum(pr, "linktext"));
+        CREDO_NON_NIHIL (_verbum(pr, "gamma"));
+        CREDO_NIHIL (_verbum(pr, "urlword"));    /* destinatio nexus */
+        CREDO_NIHIL (_verbum(pr, "delta"));
+        CREDO_NIHIL (_verbum(pr, "http"));
+        CREDO_NON_NIHIL (_verbum(pr, "here"));
+        v = _verbum(pr, "epsilon");
+        CREDO_VERUM (v != NIHIL && v->linea_prima == (i32)VII);
+        CREDO_NIHIL (_verbum(pr, "fenced"));     /* saeptum */
+        CREDO_NIHIL (_verbum(pr, "zeta"));
+        CREDO_NIHIL (_verbum(pr, "int"));
+        v = _verbum(pr, "cell");
+        CREDO_VERUM (v != NIHIL && v->sedes == (i32)II);   /* tabula */
+        CREDO_NON_NIHIL (_verbum(pr, "eta"));
+        CREDO_NON_NIHIL (_verbum(pr, "theta"));
+        CREDO_NON_NIHIL (_verbum(pr, "iota"));
+        CREDO_NON_NIHIL (_verbum(pr, "kappa"));
+        CREDO_NIHIL (_verbum(pr, "htmlword"));   /* blocus html */
+        CREDO_NIHIL (_verbum(pr, "lambda"));
+        CREDO_NIHIL (_verbum(pr, "div"));
+        v = _verbum(pr, "item");
+        CREDO_VERUM (v != NIHIL && v->sedes == (i32)II);   /* lista */
+        CREDO_NON_NIHIL (_verbum(pr, "mu"));
+        CREDO_NON_NIHIL (_verbum(pr, "nu"));
+        CREDO_NIHIL (_verbum(pr, "frontmatter"));   /* praefatio */
+                CREDO_NIHIL (_verbum(pr, "title"));
+        CREDO_NON_NIHIL (_verbum(pr, "also"));
+        CREDO_NIHIL (_verbum(pr, "\xe2\x86\x92"));   /* sagitta: signum, non verbum */
+        CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabula_verba(pr)),
+            (i32)XXI);
+        CREDO_AEQUALIS_I32 (oratio_vocabula_sedes(pr), (i32)XXIII);
+    }
+
+    imprimere("\n--- VI. Iudicium Anglice ---\n");
+    sprintf(via, "%s/oratio/vocabularium/en/mobypos.txt", radix);
+    CREDO_VERUM (_plagulam_legere(piscina, via, &fons_en));
+    en = oratio_vocabularium_en_onerare(piscina, fons_en, &vitium);
+    CREDO_NON_NIHIL (en);
+    {
+        OratioVocabula* an = oratio_vocabula_creare_anglice(piscina,
+            voc,
+            en);
+        constans OratioVerbum* v;
+
+        CREDO_NON_NIHIL (an);
+        CREDO_VERUM (oratio_vocabula_prosa(an, _l(
+            "The parser is running quickly; a worklog notes offset tok\n"
+            "xyzzy puella lexema est silva piscina.\n"), "docs/a.md"));
+        CREDO_VERUM (oratio_vocabula_iudicare(an));
+        v = _verbum(an, "the");
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_NOTUM);
+        CREDO_VERUM (v != NIHIL
+            && _aequalis(v->classis, "determinans"));
+        CREDO_VERUM (v != NIHIL && _aequalis(v->lemma, "the"));
+        CREDO_VERUM (v != NIHIL && v->analyses == I && v->lemmata == I);
+        v = _verbum(an, "parser");
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_NOTUM);
+        CREDO_VERUM (v != NIHIL
+            && _aequalis(v->classis, "substantivum"));
+        v = _verbum(an, "running");
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_NOTUM);
+        CREDO_VERUM (v != NIHIL && _aequalis(v->classis, "adiectivum"));
+        v = _verbum(an, "quickly");
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_NOTUM);
+        CREDO_VERUM (v != NIHIL && _aequalis(v->classis, "adverbium"));
+        v = _verbum(an, "worklog");   /* contextus anglicus */
+        CREDO_VERUM (v != NIHIL
+            && v->status == ORATIO_VERBUM_PERMISSUM);
+        v = _verbum(an, "offset");    /* ambo */
+        CREDO_VERUM (v != NIHIL
+            && v->status == ORATIO_VERBUM_PERMISSUM);
+        v = _verbum(an, "tok");       /* contextus latinus solum -> Latine notum */
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_LATINUM);
+        v = _verbum(an, "xyzzy");
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_IGNOTUM);
+        CREDO_VERUM (v != NIHIL && v->analyses == ZEPHYRUM);
+                v = _verbum(an, "puella");    /* WORDS solum */
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_LATINUM);
+        CREDO_VERUM (v != NIHIL && _aequalis(v->classis, "N"));
+        CREDO_VERUM (v != NIHIL && _aequalis(v->lemma, "puella"));
+        v = _verbum(an, "piscina");   /* Moby eam novit (Anglice): notum */
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_NOTUM);
+        CREDO_VERUM (v != NIHIL
+            && _aequalis(v->classis, "substantivum"));
+        v = _verbum(an, "lexema");    /* glossarium, lingua latina */
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_LATINUM);
+        CREDO_VERUM (v != NIHIL
+            && _aequalis(v->classis, "substantivum"));
+        v = _verbum(an, "est");       /* glossarium primum: sum, non edo */
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_LATINUM);
+        CREDO_VERUM (v != NIHIL && _aequalis(v->lemma, "sum"));
+        v = _verbum(an, "silva");     /* nomen proprium domus, Latinum */
+        CREDO_VERUM (v != NIHIL && v->status == ORATIO_VERBUM_LATINUM);
+        CREDO_AEQUALIS_I32 (oratio_vocabula_numerus(an,
+            ORATIO_VERBUM_AMBIGUUM), ZEPHYRUM);
+        imprimere("  nota %d permissa %d latina %d ignota %d\n",
+            (integer)oratio_vocabula_numerus(an, ORATIO_VERBUM_NOTUM),
+            (integer)oratio_vocabula_numerus(an,
+            ORATIO_VERBUM_PERMISSUM),
+            (integer)oratio_vocabula_numerus(an,
+            ORATIO_VERBUM_LATINUM),
+            (integer)oratio_vocabula_numerus(an,
+            ORATIO_VERBUM_IGNOTUM));
+        CREDO_VERUM (strcmp(oratio_verbum_status_titulus(
+            ORATIO_VERBUM_LATINUM), "latinum") == ZEPHYRUM);
+    }
+
+    imprimere("\n--- VII. Corpus: prosa markdown domus ---\n");
+    si (en != NIHIL)
+    {
+        OratioVocabula* corpus = oratio_vocabula_creare_anglice(piscina,
+            voc, en);
+        FILE* lista;
+        character linea[512];
+        i32 plagulae = ZEPHYRUM;
+        i32 exclusae = ZEPHYRUM;
+        clock_t ante = clock();
+        i32 n;
+        i32 nota;
+        i32 permissa;
+        i32 latina;
+        i32 ignota;
+
+        CREDO_NON_NIHIL (corpus);
+        sprintf(via, "%s/oratio/build/corpus_md.txt", radix);
+        lista = fopen(via, "r");
+        si (lista == NIHIL)
+        {
+            CREDO_CULPA ("oratio/build/corpus_md.txt absens - e radice per cursorem curre");
+        }
+        alioquin
+        {
+            dum (fgets(linea, (integer)magnitudo(linea), lista)
+                != NIHIL)
+            {
+                 size_t  l = strlen(linea);
+                Piscina* p;
+                 chorda  fons;
+
+                dum (   l > ZEPHYRUM
+                     && (linea[l - I] == '\n' || linea[l - I] == '\r'))
+                {
+                    linea[--l] = '\0';
+                }
+                si (l == ZEPHYRUM)
+                {
+                    perge;
+                }
+                si (oratio_vocabula_via_exclusa(_l(linea),
+                        ORATIO_PROSA_EXCLUSA))
+                {
+                    exclusae = exclusae + I;
+                    perge;
+                }
+                p = piscina_generare_dynamicum("vocabula_plagula",
+                    33554432);
+                sprintf(via, "%s/%s", radix, linea);
+                si (_plagulam_legere(p, via, &fons))
+                {
+                    plagulae = plagulae + I;
+                    si (!oratio_vocabula_prosa(corpus, fons, linea))
+                    {
+                        CREDO_CULPA ("prosa fracta");
+                    }
+                }
+                piscina_destruere(p);
+            }
+            fclose(lista);
+        }
+        CREDO_VERUM (oratio_vocabula_iudicare(corpus));
+        n     = xar_numerus(oratio_vocabula_verba(corpus));
+        nota  = oratio_vocabula_numerus(corpus,
+            ORATIO_VERBUM_NOTUM);
+        permissa  = oratio_vocabula_numerus(corpus,
+            ORATIO_VERBUM_PERMISSUM);
+        latina    = oratio_vocabula_numerus(corpus,
+            ORATIO_VERBUM_LATINUM);
+        ignota    = oratio_vocabula_numerus(corpus,
+            ORATIO_VERBUM_IGNOTUM);
+        imprimere("  plagulae md %d (exclusae %d)  verba distincta %d  sedes %d  %.0f ms\n",
+            (integer)plagulae, (integer)exclusae, (integer)n,
+            (integer)oratio_vocabula_sedes(corpus),
+            1000.0 * (duplex)(clock() - ante) / (duplex)CLOCKS_PER_SEC);
+        imprimere("  nota %d  permissa %d  latina %d  IGNOTA %d (%.1f%%)\n",
+            (integer)nota, (integer)permissa, (integer)latina,
+            (integer)ignota,
+            n > ZEPHYRUM ? 100.0 * (duplex)ignota / (duplex)n : 0.0);
+        {
+            Xar* ordo = oratio_vocabula_ordinata(piscina, corpus,
+                (s32)ORATIO_VERBUM_IGNOTUM);
+
+            per (i = ZEPHYRUM; i < xar_numerus(ordo)
+                && i < (i32)XV; i++)
+            {
+                constans OratioVerbum* w =
+                    (constans OratioVerbum*)xar_obtinere(
+                    oratio_vocabula_verba(corpus),
+                    (i32)*(s32*)xar_obtinere(ordo, i));
+
+                imprimere("    %-20.*s %6d  %.*s:%d\n",
+                    (integer)w->verbum.mensura,
+                    (constans character*)w->verbum.datum,
+                    (integer)w->sedes,
+                    (integer)w->via_prima.mensura,
+                    (constans character*)w->via_prima.datum,
+                    (integer)w->linea_prima);
+            }
+        }
+        CREDO_VERUM (plagulae > (i32)300);
+        CREDO_VERUM (exclusae > ZEPHYRUM);
+        CREDO_VERUM (n > (i32)5000);
+        CREDO_AEQUALIS_I32 (oratio_vocabula_numerus(corpus,
+            ORATIO_VERBUM_AMBIGUUM), ZEPHYRUM);
+                /* limen: tertia pars nota (relatio diei primi: 42 % - Moby formas
+         * flexas -s -ed -ing raro fert; morphologia ex relatione ut DATA
+         * limen tollet) */
+        CREDO_VERUM ((nota + permissa + latina) * (i32)III > n);
     }
 
     imprimere("\n");

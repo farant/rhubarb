@@ -3199,8 +3199,8 @@ if __name__ == '__main__':
 
 
 # ---------------------------------------------------------------- vocabula (oratio)
-Verbum = namedtuple('Verbum', 'verbum status sedes symbola commenta classis lemma '
-                    'analyses lemmata via linea')
+Verbum = namedtuple('Verbum', 'verbum status sedes symbola commenta prosa classis '
+                    'lemma analyses lemmata via linea')
 Vocabula = namedtuple('Vocabula', 'numeri verba ignota ambigua permissa')
 
 
@@ -3220,9 +3220,15 @@ def vocabula(fons='omnia', omnes_viae=False):
     analyses lemmata via linea (sedes prima)], ignota, ambigua,
     permissa). Relatio glossarium alit (termini technici) et T8b metitur.
     Viae knotapel/ vendor/ archivum/ EXCLUSAE (lint Latinus domus, decisio
-    Frani 2026-09-04) nisi omnes_viae=True."""
-    if fons not in ('symbola', 'commenta', 'omnia'):
-        raise SilvaError("fons: 'symbola' | 'commenta' | 'omnia'")
+    Frani 2026-09-04) nisi omnes_viae=True. fons='prosa' (T15a) = CONTEXTUS
+    ANGLICUS: nodi TEXTUS plagularum markdown tractarum (saepta, verbatim,
+    nexus, html numquam), glossarium (entria anglice licita) primum, Moby
+    deinde, tabula Latina tertia -> status 'latinum' (Latine notum, NON
+    inventum); 'ambiguum' numquam; viae vendor/ archivum/ et plagulae
+    generatae (gesta/annales/tabula.md, md/CENSUS.md) exclusae, knotapel/
+    INCLUSUM. Verbum.prosa = sedes in prosa."""
+    if fons not in ('symbola', 'commenta', 'omnia', 'prosa'):
+        raise SilvaError("fons: 'symbola' | 'commenta' | 'omnia' | 'prosa'")
     r = _curre(['./oratio/vocabula.sh', '-' + fons, '-machina']
                + (['-omnes-viae'] if omnes_viae else []))
     if r.returncode != 0:
@@ -3232,12 +3238,12 @@ def vocabula(fons='omnia', omnes_viae=False):
         if not linea or linea.startswith('#'):
             continue
         p = linea.split('\t')
-        if len(p) < 11:
+        if len(p) < 12:
             continue
-        verba.append(Verbum(p[0], p[1], int(p[2]), int(p[3]), int(p[4]), p[5], p[6],
-                            int(p[7]), int(p[8]), p[9], int(p[10])))
+        verba.append(Verbum(p[0], p[1], int(p[2]), int(p[3]), int(p[4]), int(p[5]),
+                            p[6], p[7], int(p[8]), int(p[9]), p[10], int(p[11])))
     numeri = {'verba': len(verba), 'sedes': sum(v.sedes for v in verba)}
-    for st in ('notum', 'ambiguum', 'permissum', 'ignotum'):
+    for st in ('notum', 'ambiguum', 'permissum', 'ignotum', 'latinum'):
         numeri[st] = sum(1 for v in verba if v.status == st)
     return Vocabula(numeri, verba,
                     [v for v in verba if v.status == 'ignotum'],

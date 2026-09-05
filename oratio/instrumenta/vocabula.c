@@ -16,6 +16,7 @@
 #include "oratio_vocabula.h"
 #include "oratio_vocabularium.h"
 #include "oratio_vocabularium_la.h"
+#include "oratio_vocabularium_en.h"
 #include "oratio_glossarium.h"
 #include "chorda.h"
 #include "piscina.h"
@@ -100,7 +101,9 @@ principale (
                  chorda  tabula;
    OratioVocabulariumLa* voc;
 OratioVocabulariumVitium vitium;
-         OratioVocabula* vc;
+                  OratioVocabula* vc;
+   OratioVocabulariumEn* en       = NIHIL;
+                    b32  prosa    = FALSUM;
                     b32  symbola  = VERUM;
                     b32  commenta = VERUM;
                                         b32  machina  = FALSUM;
@@ -128,6 +131,12 @@ OratioVocabulariumVitium vitium;
             symbola   = VERUM;
             commenta  = VERUM;
         }
+                alioquin si (strcmp(argv[i], "-prosa") == ZEPHYRUM)
+        {
+            prosa     = VERUM;   /* contextus Anglicus: markdown */
+            symbola   = FALSUM;
+            commenta  = FALSUM;
+        }
         alioquin si (strcmp(argv[i], "-machina") == ZEPHYRUM)
         {
             machina = VERUM;
@@ -150,7 +159,7 @@ OratioVocabulariumVitium vitium;
         alioquin
         {
                         fprintf(stderr,
-                            "usus: vocabula [-symbola | -commenta | -omnia] [-machina] [-omnes] [-omnes-viae] [-tectum N]\n");
+                            "usus: vocabula [-symbola | -commenta | -omnia | -prosa] [-machina] [-omnes] [-omnes-viae] [-tectum N]\n");
 
             redde II;
         }
@@ -193,7 +202,29 @@ OratioVocabulariumVitium vitium;
             oratio_vocabularium_la_glossarium_ponere(voc, gl);
         }
     }
-    vc = oratio_vocabula_creare(piscina, voc);
+        si (prosa)
+        {
+        chorda fons_en;
+
+        sprintf(via, "%s/oratio/vocabularium/en/mobypos.txt", radix);
+        si (!_plagulam_legere(piscina, via, &fons_en))
+        {
+            fprintf(stderr, "vocabula: Moby absens: %s\n", via);
+            redde II;
+        }
+        en = oratio_vocabularium_en_onerare(piscina, fons_en, &vitium);
+        si (en == NIHIL)
+        {
+            fprintf(stderr, "vocabula: onus Moby fractum: %s:%d %s\n",
+                vitium.plagula, (integer)vitium.linea, vitium.causa);
+            redde II;
+        }
+        vc = oratio_vocabula_creare_anglice(piscina, voc, en);
+        }
+    alioquin
+        {
+        vc = oratio_vocabula_creare(piscina, voc);
+        }
     si (vc == NIHIL)
     {
         redde II;
@@ -265,6 +296,60 @@ OratioVocabulariumVitium vitium;
         }
         fclose(lista);
     }
+        si (prosa)
+        {
+        FILE* lista;
+        character linea[512];
+
+        sprintf(via, "%s/oratio/build/corpus_md.txt", radix);
+        lista = fopen(via, "r");
+        si (lista == NIHIL)
+        {
+            fprintf(stderr,
+                "vocabula: corpus_md.txt absens: %s (cursor eam scribit)\n",
+                via);
+            redde II;
+        }
+        dum (fgets(linea, (integer)magnitudo(linea), lista) != NIHIL)
+        {
+             size_t  l = strlen(linea);
+            Piscina* p;
+             chorda  fons;
+             chorda  v;
+
+            dum (   l > ZEPHYRUM
+                 && (linea[l - I] == '\n' || linea[l - I] == '\r'))
+            {
+                linea[--l] = '\0';
+            }
+            si (l == ZEPHYRUM)
+            {
+                perge;
+            }
+            v.datum    = (i8*)linea;
+            v.mensura  = (i32)l;
+            si (   !omnes_viae
+                && oratio_vocabula_via_exclusa(v, ORATIO_PROSA_EXCLUSA))
+            {
+                perge;
+            }
+            p = piscina_generare_dynamicum("vocabula_plagula",
+                33554432);
+            sprintf(via, "%s/%s", radix, linea);
+            si (_plagulam_legere(p, via, &fons))
+            {
+                plagulae = plagulae + I;
+                si (!oratio_vocabula_prosa(vc, fons, linea))
+                {
+                    fprintf(stderr, "vocabula: prosa fracta: %s\n",
+                        linea);
+                    redde II;
+                }
+            }
+            piscina_destruere(p);
+        }
+        fclose(lista);
+        }
     si (!oratio_vocabula_iudicare(vc))
     {
         fprintf(stderr, "vocabula: iudicium fractum\n");
@@ -280,7 +365,7 @@ OratioVocabulariumVitium vitium;
         {
             Xar* ordo = oratio_vocabula_ordinata(piscina, vc, (s32)-I);
 
-            imprimere("# verbum\tstatus\tsedes\tsymbola\tcommenta\tclassis\tlemma\tanalyses\tlemmata\tvia\tlinea\n");
+            imprimere("# verbum\tstatus\tsedes\tsymbola\tcommenta\tprosa\tclassis\tlemma\tanalyses\tlemmata\tvia\tlinea\n");
             per (i = ZEPHYRUM; i < (integer)xar_numerus(ordo); i++)
             {
                 constans OratioVerbum* v =
@@ -288,10 +373,12 @@ OratioVocabulariumVitium vitium;
                     verba, (i32)*(s32*)xar_obtinere(ordo, (i32)i));
 
                 _c(v->verbum);
-                imprimere("\t%s\t%d\t%d\t%d\t",
-                    oratio_verbum_status_titulus(v->status),
-                    (integer)v->sedes, (integer)v->sedes_symbolorum,
-                    (integer)v->sedes_commentorum);
+                                imprimere("\t%s\t%d\t%d\t%d\t%d\t",
+                                    oratio_verbum_status_titulus(v->status),
+                                    (integer)v->sedes,
+                                    (integer)v->sedes_symbolorum,
+                                    (integer)v->sedes_commentorum,
+                                    (integer)v->sedes_prosae);
                 _c(v->classis);
                 putchar('\t');
                 _c(v->lemma);
@@ -302,6 +389,14 @@ OratioVocabulariumVitium vitium;
             }
             redde ZEPHYRUM;
         }
+                        si (prosa)
+                        {
+            imprimere("--- vocabula: prosa markdown (contextus Anglicus%s) ---\n",
+                omnes_viae ? ""
+                : "; sine vendor/ archivum/ generatis");
+                        }
+        alioquin
+                        {
                 imprimere("--- vocabula: %s%s%s%s ---\n",
                     symbola ? "symbola" : "",
                     symbola
@@ -309,18 +404,22 @@ OratioVocabulariumVitium vitium;
                     commenta ? "commenta" : "",
                     symbola
                     && !omnes_viae ? " (sine knotapel/ vendor/ archivum/)" : "");
+                        }
 
-        imprimere("  verba distincta %d  sedes %d  plagulae C %d  %.0f ms\n",
+        imprimere("  verba distincta %d  sedes %d  plagulae %d  %.0f ms\n",
             (integer)n, (integer)oratio_vocabula_sedes(vc),
             (integer)plagulae, ms);
-        imprimere("  nota %d  ambigua %d  permissa %d  IGNOTA %d\n",
-            (integer)oratio_vocabula_numerus(vc, ORATIO_VERBUM_NOTUM),
-            (integer)oratio_vocabula_numerus(vc,
-            ORATIO_VERBUM_AMBIGUUM),
-            (integer)oratio_vocabula_numerus(vc,
-            ORATIO_VERBUM_PERMISSUM),
-            (integer)oratio_vocabula_numerus(vc,
-            ORATIO_VERBUM_IGNOTUM));
+                imprimere("  nota %d  ambigua %d  permissa %d  latina %d  IGNOTA %d\n",
+                    (integer)oratio_vocabula_numerus(vc,
+                    ORATIO_VERBUM_NOTUM),
+                    (integer)oratio_vocabula_numerus(vc,
+                    ORATIO_VERBUM_AMBIGUUM),
+                    (integer)oratio_vocabula_numerus(vc,
+                    ORATIO_VERBUM_PERMISSUM),
+                    (integer)oratio_vocabula_numerus(vc,
+                    ORATIO_VERBUM_LATINUM),
+                    (integer)oratio_vocabula_numerus(vc,
+                    ORATIO_VERBUM_IGNOTUM));
         /* ignota per directorium sedis primae */
         {
             Xar* ordo = oratio_vocabula_ordinata(piscina, vc,
@@ -404,7 +503,8 @@ OratioVocabulariumVitium vitium;
                     v->ex_commento_prima ? " (commentum)" : "");
             }
         }
-        {
+                si (!prosa)
+                {
             Xar* ordo = oratio_vocabula_ordinata(piscina, vc,
                 (s32)ORATIO_VERBUM_AMBIGUUM);
             i32 k;
@@ -427,7 +527,7 @@ OratioVocabulariumVitium vitium;
                 _c(v->lemma);
                 putchar('\n');
             }
-        }
+                }
     }
     piscina_destruere(piscina);
     redde ZEPHYRUM;

@@ -513,3 +513,98 @@ an identifier while it will pass in prose. House identifier unknowns
 3,022 → 2,987 of 7,469; pin moved with this cause. Whole English words
 in identifiers (count, found, name, text, result …) remain findings by
 design.
+
+## 2026-09-04 — T15a: the English context — Moby vendored, the prose lint
+
+Fran's warmup after decision 26: the English-context lint over worklogs
+and markdown. An English lint needs an English word list, so stage 4's
+dictionary came forward: Moby Part-of-Speech II (Gutenberg #3203,
+public domain by grant, January 2001) was already in the Gutenberg
+mirror. Measured before a line was written: 3,237,558 bytes, 233,356
+records, CRLF throughout; the separator is a BACKSLASH in the Gutenberg
+copy (the spec said `×`, which is the CD-ROM edition); codes present
+A N h v P p t V i ! C D r — the legend's I (indefinite article) and o
+(nominative) never occur; one record `cowardic\Ne` carries a code
+outside the legend (a typo for N); 35,969 records are phrases with
+spaces; 1,231 carry CP437 accent bytes (é = 0x8E, the legend's "ASCII
+142"); 4,437 case-duplicate forms (AA/aa, OF/of, BE/Be/be). The legend
+warns that -ed/-ing/-ly forms are often not listed — and it is right.
+
+Four calls by Fran, all the recommended ones (decision 27): (1) a Latin
+word in English prose gets its own status LATINUM — known and counted,
+never a finding; (2) the prose corpus is the house INCLUDING knotapel
+(it is English), minus vendor/, archivum/ and the generated files
+(gesta/annales/tabula.md, md/CENSUS.md) — `ORATIO_PROSA_EXCLUSA`; (3)
+Moby is vendored verbatim and loaded DIRECTLY — no coction, the source
+is already one table; the gate pins bytes and the SHA seal of the
+source (`cc81458b820a3625`); (4) morphology comes AFTER the report, as
+data rows with counts.
+
+Built. `oratio/vocabularium/en/` (mobypos.txt; LICENTIA.txt = the
+Gutenberg documentation note verbatim, grant and legend; FONTES.md with
+the record law and the findings). `oratio_vocabularium_en`: the loader
+asserts the record law on every line — CRLF, one backslash, non-empty
+form and codes — and stops with the line; a code letter outside the
+legend is COUNTED, not a stop, the first named; words are hashed by
+lower-cased form, phrases counted and not indexed; `quaerere` returns
+records in file order (the chain is newest-first, reversed on the way
+out); code letter → universal class. Gate
+`probatio_oratio_vocabularium_en` (81: pins, samples, classes, eight
+bad inline sources stop with the right line; load 27 ms); planted fault
+= '!' removed from the legend → 434 unknown codes → red.
+`oratio_vocabula_prosa`: md's tree, TEXTUS nodes only — code spans,
+fences, link destinations, html blocks and front matter never reach the
+lookup BY CONSTRUCTION, and the gate's inline md proves each absence;
+each text node's byte extent goes through oratio's tree; line = the
+first token's. `oratio_vocabula_creare_anglice` + `_iudicare_anglice`:
+glossary entries allowed in English first (lingua latina → LATINUM,
+permissum → PERMISSUM, else NOTUM), Moby second (class of the first
+code, lemma = the form itself), Latin table third → LATINUM; ambiguum
+never (Moby carries no lemmata). `OratioSedesGenus` (symbolum /
+commentum / prosa) replaces the b32 on `verbum_addere` (kept as a
+wrapper); `sedes_prosae`, `ex_prosa_prima`. Instrument
+`./oratio/vocabula.sh -prosa` (machina output gains a `prosa` column
+and a `latina` count), `silva.vocabula('prosa')`. Second planted fault
+on the vocabula gate: the glossary context inverted (`e->anglice`) →
+tok permitted, worklog unknown → red.
+
+Two things the corpus taught while building. A lone arrow `→` (E2 86
+92) was counted as a three-letter word because every byte ≥ 0x80 was a
+letter — the word filter now counts UTF-8 LEAD bytes (≥ 0xC0) as
+letters, so a lone symbol is not a word (6,885 sites of `→` gone; `s²`
+and `ζ₈` stay, two characters each). And `oratio_vocabula_ordinata` was
+quadratic — one scan of all words per site count, invisible at 200
+sites, 20 s at 100k sites × 62k words — now a counting sort (the gate
+went from 21 s to 3 s).
+
+The report, day one (English prose, house + knotapel): 1,139 files,
+62,524 distinct words, 1,894,264 sites, 1.6 s. notum 15,098, permissum
+57, latinum 11,254, IGNOTUM 36,115 (58 %). What the unknown list is
+made of, from the top: REGULAR INFLECTIONS Moby does not list —
+plural/third-person -s (values 2,076, functions, tests, cells,
+solutions, types, weights, results, returns … gets, sets), -ed (added,
+needed, tested, shared, recorded, expected), -ing (existing, matching,
+tracking, nesting, testing, interning), possessive 's (pliny's,
+casey's, fran's), -ally (computationally); hyphenated compounds whose
+parts are known (a-plot, non-semisimple, non-null); house English terms
+(dkc 2,842, vs 2,461, xor6, methos, voronoi, npn, sqrt, mcp, mvn,
+fibonacci, braids); Unicode math (s², ζ₈, ζ₁₂); `struct` (691 — the C
+keyword in prose; int, char, long … were permitted in pass I, struct
+was not). By directory of first use: project-specs 9,130, knotapel
+6,906, silva 3,455, episodes 3,337, lib 2,512. Consequences: the
+morphology rules the spec names are exactly the top of this list and
+land next as DATA rows with these counts as their cause (-s/-es, -ed,
+-ing, 's, -ly); a glossary pass II with `contextus="anglicus"` entries
+follows (vs, dkc, xor6, methos, voronoi, npn, sqrt, mcp, mvn, struct
+…); the gate's corpus floor is a third known (42 % measured), to rise
+with the morphology; no prose pin yet.
+
+Identifier-pin note. The new code introduced `recordum` (the house
+coinage for "record", used since T7 as `recorda`) — WORDS knows
+`recorda` only as a form of the verb `recordor`, so
+`oratio_vocabularium_en_recordum` turned the identifier pin red (2,988
+> 2,987): exactly what the pin is for. Glossary entry added (neuter
+noun, forms listed); unknowns 2,986, pin moved down with this cause.
+Note for the next reader of that pin: the machine output gained a
+column, so a query by first site must read field 11, not 10 — half an
+hour went to a wrong column.
