@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). T7 `pictor_componentia` DONE (40 assertions; `pictor.arbor.stml` exemplar shows the stroke in flight). T8 `pictor_actiones` DONE (35 assertions through the real loop; stroke counts via `numerus_vivorum`). T9 pictor figurae DONE (13 assertions; `pictor_prima.png` promoted after inspection; the rasterizer's translation path is now covered). Next: T10 `ludus_fenestra`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). T7 `pictor_componentia` DONE (40 assertions; `pictor.arbor.stml` exemplar shows the stroke in flight). T8 `pictor_actiones` DONE (35 assertions through the real loop; stroke counts via `numerus_vivorum`). T9 pictor figurae DONE (13 assertions; `pictor_prima.png` promoted after inspection; the rasterizer's translation path is now covered). T10 `ludus_fenestra` DONE (10 assertions headless; the frame prints its timings; wheel remains the named P4 pull). Next: T11 `apps/pictor` + the bake. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -4239,7 +4239,7 @@ Commit with `portae=[('radix','pictor_figurae'), ('radix','pictor_componentia'),
 - **Not in this task (named pull):** wheel events. `lib/fenestra_macos.m`'s `scrollWheel:` is EMPTY today (verified 2026-09-05) — no `EVENTUS_MUS_ROTULA` is ever emitted, and `Eventus.datum.rotula` carries no position. Zoom-at-cursor (P4, `zoom.ponere`) pulls: `x`/`y` members on `datum.rotula` (Editio on `fenestra.h`), emission in the `.m` with the location, and `destinatio` treating a positioned wheel geometrically. Record the pull in the worklog; do not start it here.
 - Window pixel table: `fenestra_creare_tabulam_pixelorum(piscina, fenestra, altitudo_fixa)` with `altitudo_fixa` = the window's content height, so `scala` is 1 and mouse coordinates and table coordinates coincide (a scaled table would need the mouse divided by `scala` before dispatch — noted in the worklog as the retina question).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_ludus_fenestra.c`:
 ```c
@@ -4330,11 +4330,11 @@ s32 principale (vacuum)
 ```
 `ludus_fenestra_tractare(lf, ev, nunc)` is the event seat: stamps `tempus` if zero, then `dispensator_tractare`.
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh ludus_fenestra` — Expected: FAIL, header not found.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/ludus_fenestra.h`:
 ```c
@@ -4569,11 +4569,11 @@ ludus_fenestra_currere (
 ```
 `Dispensator` exposes `intern` (Plan 1 T10 struct). The per-frame piscina is vacated at the top of every frame: mandata never accumulate. `imprimere` = `printf` in the house; the numbers line is what T11's smoke greps.
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh ludus_fenestra` — Expected: PASS.
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plant (RED): in `ludus_quadrum`, skip `piscina_vacare` and reuse `lf->mandata` without recreating — the second frame's count doubles: red at `< X`. Green on revert.
 
