@@ -15,9 +15,7 @@
 #include "oratio_stml.h"
 #include "oratio_lexicon.h"
 #include "oratio_partes.h"
-#include "oratio_vocabularium.h"
-#include "oratio_vocabularium_la.h"
-#include "oratio_glossarium.h"
+#include "oratio_vocabularia.h"
 #include <stdlib.h>
 #include "materia_arbor.h"
 #include "materia_lexicon.h"
@@ -128,71 +126,37 @@ principale (
     }
     si (partes)
     {
-        /* T12: tabula Latina (la.bin) + glossarium ex radice, annotatio */
-        constans character* radix_viae = getenv("RHUBARB_RADIX");
-                 character  via_tabulae[1024];
-                 character* octeti;
-                       i32  mensura_tabulae = ZEPHYRUM;
-                    chorda  tabula;
-    OratioVocabulariumLa* voc;
- OratioVocabulariumVitium vitium;
-       OratioPartesCensus census;
+        /* T12/T16: vocabularia (la.bin + glossarium + Moby) ex radice,
+         * annotatio */
+               OratioVocabularia vocabularia;
+        OratioVocabulariumVitium vitium;
+              OratioPartesCensus census;
 
-        si (radix_viae == NIHIL)
+        si (!oratio_vocabularia_onerare(piscina,
+            getenv("RHUBARB_RADIX"),
+                &vocabularia, &vitium))
         {
-            radix_viae = ".";
-        }
-        sprintf(via_tabulae, "%s/oratio/vocabularium/la.bin",
-            radix_viae);
-        octeti = _plagulam_legere(piscina, via_tabulae,
-            &mensura_tabulae);
-        si (octeti == NIHIL)
-        {
-            fprintf(stderr, "arbor: tabula absens: %s\n", via_tabulae);
-            redde II;
-        }
-        tabula.datum = (i8*)octeti;
-        tabula.mensura = mensura_tabulae;
-        voc = oratio_vocabularium_la_onerare(piscina, tabula, &vitium);
-        si (voc == NIHIL)
-        {
-            fprintf(stderr, "arbor: onus tabulae fractum: %s\n",
+            fprintf(stderr,
+                "arbor: vocabularia non onerata: %s:%d %s\n",
+                vitium.plagula ? vitium.plagula : "?",
+                (integer)vitium.linea,
                 vitium.causa ? vitium.causa : "-");
             redde II;
         }
-        sprintf(via_tabulae, "%s/oratio/glossarium.stml", radix_viae);
-        octeti = _plagulam_legere(piscina, via_tabulae,
-            &mensura_tabulae);
-        si (octeti != NIHIL)
-        {
-            chorda fons_glossarii;
-            OratioGlossarium* gl;
-
-            fons_glossarii.datum    = (i8*)octeti;
-            fons_glossarii.mensura  = mensura_tabulae;
-            gl = oratio_glossarium_legere(piscina, fons_glossarii,
-                &vitium);
-            si (gl == NIHIL)
-            {
-                fprintf(stderr,
-                    "arbor: glossarium non legitur: %s:%d %s\n",
-                    vitium.plagula ? vitium.plagula : "?",
-                    (integer)vitium.linea,
-                    vitium.causa ? vitium.causa : "-");
-                redde II;
-            }
-            oratio_vocabularium_la_glossarium_ponere(voc, gl);
-        }
-        si (!oratio_partes_annotare(piscina, voc, radix, &census))
+        si (!oratio_partes_annotare(piscina, &vocabularia, radix,
+            &census))
         {
             fprintf(stderr, "arbor: annotatio fracta\n");
             redde I;
         }
         si (tacitus)
         {
-            imprimere("vocabula %d  analyses %d  ignota %d\n",
+            imprimere("vocabula %d  analyses %d  ignota %d"
+                "  latina %d  anglica %d\n",
                 (integer)census.vocabula, (integer)census.analyses,
-                (integer)census.ignota);
+                (integer)census.ignota,
+                (integer)census.linguae[ORATIO_LINGUA_LATINA],
+                (integer)census.linguae[ORATIO_LINGUA_ANGLICA]);
         }
     }
     s = materia_arbor_scribere_nodum(piscina, radix, &consilium);

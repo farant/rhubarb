@@ -5,17 +5,15 @@
  *   -machina   TSV (plagula, classis, verba, tecta, primaria, lemmata,
  *              ignota, inalignata)
  *   -exempla   verba non tecta prima V per classem
- * Tabula Latina la.bin + glossarium ex RHUBARB_RADIX. Exitus: 0 relatio
- * scripta | 2 usus/tabula/plagula absens
+ * Vocabularia (la.bin + glossarium + Moby) ex RHUBARB_RADIX. Exitus:
+ * 0 relatio scripta | 2 usus/tabula/plagula absens
  */
 
 #include "latina.h"
 #include "oratio_conllu.h"
 #include "oratio_oraculum.h"
 #include "oratio_registrum.h"
-#include "oratio_vocabularium.h"
-#include "oratio_vocabularium_la.h"
-#include "oratio_glossarium.h"
+#include "oratio_vocabularia.h"
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
@@ -154,20 +152,21 @@ principale (
       integer   argc,
     character** argv)
 {
-                Piscina* piscina;
-     constans character* radix;
-              character  via[1024];
-                 chorda  tabula;
-   OratioVocabulariumLa* voc;
-OratioVocabulariumVitium vitium;
-                    b32  machina  = FALSUM;
-                    b32  exempla  = FALSUM;
-                integer  i;
-                    i32  plagulae = ZEPHYRUM;
+                                Piscina* piscina;
+                     constans character* radix;
+                              character  via[1024];
+                      OratioVocabularia  vocabularia;
+               OratioVocabulariumVitium  vitium;
+                                    b32  machina = FALSUM;
+                                    b32  exempla = FALSUM;
+                                integer  i;
+                                    i32  plagulae = ZEPHYRUM;
     hic_manens constans character* constans venditae[] = {
         "oratio/probationes/fixa/ud/la_circse-ud-test.conllu",
         "oratio/probationes/fixa/ud/la_llct-ud-dev.conllu",
-        "oratio/probationes/fixa/ud/la_llct-ud-test.conllu"
+        "oratio/probationes/fixa/ud/la_llct-ud-test.conllu",
+        "oratio/probationes/fixa/ud/en_ewt-ud-dev.conllu",
+        "oratio/probationes/fixa/ud/en_ewt-ud-test.conllu"
     };
 
     radix = getenv("RHUBARB_RADIX");
@@ -176,37 +175,14 @@ OratioVocabulariumVitium vitium;
         radix = ".";
     }
     piscina = piscina_generare_dynamicum("oratio_oraculum", 536870912);
-    sprintf(via, "%s/oratio/vocabularium/la.bin", radix);
-    si (!_plagulam_legere(piscina, via, &tabula))
+    si (!oratio_vocabularia_onerare(piscina, radix, &vocabularia,
+        &vitium))
     {
-        fprintf(stderr, "oraculum: tabula absens: %s\n", via);
+        fprintf(stderr, "oraculum: vocabularia non onerata: %s:%d %s\n",
+            vitium.plagula ? vitium.plagula : "?",
+            (integer)vitium.linea,
+            vitium.causa ? vitium.causa : "-");
         redde II;
-    }
-    voc = oratio_vocabularium_la_onerare(piscina, tabula, &vitium);
-    si (voc == NIHIL)
-    {
-        fprintf(stderr, "oraculum: onus fractum: %s\n", vitium.causa);
-        redde II;
-    }
-    sprintf(via, "%s/oratio/glossarium.stml", radix);
-    {
-        chorda fons_glossarii;
-
-        si (_plagulam_legere(piscina, via, &fons_glossarii))
-        {
-            OratioGlossarium* gl = oratio_glossarium_legere(piscina,
-                fons_glossarii, &vitium);
-
-            si (gl == NIHIL)
-            {
-                fprintf(stderr,
-                    "oraculum: glossarium non legitur: %s:%d %s\n",
-                    vitium.plagula, (integer)vitium.linea,
-                    vitium.causa);
-                redde II;
-            }
-            oratio_vocabularium_la_glossarium_ponere(voc, gl);
-        }
     }
     per (i = I; i < argc; i++)
     {
@@ -236,7 +212,10 @@ OratioVocabulariumVitium vitium;
         }
         per (k = ZEPHYRUM;
              k < (numerus_argumentorum
-                 > ZEPHYRUM ? (i32)argc : (i32)IV);
+                 > ZEPHYRUM ? (i32)argc
+                 : (i32)(magnitudo(venditae)
+                     / magnitudo(venditae[ZEPHYRUM]))
+                     + I);
              k++)
         {
               constans character* plagula;
@@ -288,7 +267,8 @@ OratioVocabulariumVitium vitium;
             }
             oratio_oraculum_census_vacare(&census);
             ante = clock();
-            si (!oratio_oraculum_iudicare(p, voc, sententiae, &census))
+            si (!oratio_oraculum_iudicare(p, &vocabularia, sententiae,
+                    &census))
             {
                 fprintf(stderr, "oraculum: iudicium fractum: %s\n",
                     plagula);

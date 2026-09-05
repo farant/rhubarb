@@ -1102,6 +1102,13 @@ except silva.SilvaError as ex:
     credo('absens' in str(ex), 'Oratio: plagula absens refutatur')
 credo(len(silva.Oratio(b'Puella amat.\n').vocabula()) == 2 and silva.Oratio('').vocabula() == [], 'Oratio(bytes); textus vacuus = nihil')
 
+oe = silva.Oratio("The cats ran quickly. Bush won.\n")
+ve = oe.vocabula()
+credo([v.forma for v in ve] == ['The', 'cats', 'ran', 'quickly', 'Bush', 'won'] and ve[1].classes == ('substantivum', 'verbum') and ve[1].lemma == 'cat' and all('anglica' in v.linguae for v in ve) and 'nomen-proprium' in ve[4].classes, 'Oratio Anglica (T16): cats substantivum + verbum, lemma cat, Bush nomen proprium (regula capitalis)')
+ae = [x for x in oe.analyses(ve[1]) if x.classis == 'substantivum'][0]
+credo(ae.lingua == 'anglica' and ae.fons == 'vocabularium-en' and ae.nativum == 'N pluralis-s' and ae.accidentia == {'numerus': 'pluralis'} and ae.sensus == '', 'Oratio.analyses Anglica: nativum codices + regula, accidentia pluralis, sensus absens')
+credo([x.classis for x in oe.analyses(ve[4])][-1] == 'nomen-proprium' and oe.analyses(ve[4])[-1].fons == 'regula' and len(oe.vocabula(lingua='anglica')) == 6, 'Oratio Anglica: nomen proprium regula ultimum, filtrum linguae')
+
 print('--- Prosa.sententia: delegatio Orationi (T14) ---')
 via_s = os.path.join(T, 'prosa3.md')
 open(via_s, 'w').write('# Doc\n\n## Ideas\n\nOne sentence here. Second one\nwraps here.\n\n- item one. item two.\n\n## Code\n\n```c\nx. y;\n```\n\nLast one.\n')

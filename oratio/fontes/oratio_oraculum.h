@@ -29,7 +29,7 @@
 #include "xar.h"
 #include "oratio_registrum.h"
 #include "oratio_conllu.h"
-#include "oratio_vocabularium_la.h"
+#include "oratio_vocabularia.h"
 
 #define ORATIO_ORACULUM_EXEMPLA 5
 
@@ -72,12 +72,13 @@ vacuum
 oratio_oraculum_census_vacare (
     OratioOraculumCensus* census);
 
-/* Sententias iudicare, censum CUMULARE (vacare prius si novus). voc =
- * tabula Latina cum glossario. FALSUM = memoria. */
+/* Sententias iudicare, censum CUMULARE (vacare prius si novus).
+ * vocabularia = tabula Latina cum glossario et Moby (T16: lectiones
+ * Anglicae quoque inter classes). FALSUM = memoria. */
 b32
 oratio_oraculum_iudicare (
                           Piscina* piscina,
-    constans OratioVocabulariumLa* voc,
+       constans OratioVocabularia* vocabularia,
                               Xar* sententiae,
              OratioOraculumCensus* census);
 

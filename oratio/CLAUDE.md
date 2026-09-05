@@ -205,9 +205,22 @@ lingua=, ignota=, sententia=)` — a class filter matches ANY candidate
 —, `ignota()`, `analyses(vocabulum)` with `accidentia` dict) and
 `Prosa.sententia(n, intra=)` (markdown paragraphs → one parse →
 extents mapped back to file bytes; an edit anchor). Gate = the
-pythonica suite (20 assertions; planted fault red). NEXT: **T16**
-`partes_en` + the EWT oracle, or stage 5 ordering (the lever for
-PRIMARY ≈ 68 %).
+pythonica suite (20 assertions; planted fault red). **T16 DONE —
+STAGE 4 COMPLETE**: `OratioVocabularia {la, en}` + one loader
+(`oratio_vocabularia_onerare`: la.bin, glossary, Moby from the root;
+instruments and gates share it); the annotator consults BOTH
+dictionaries, English readings after Latin (`oratio_partes_en`: exact
+record → one description per code-letter class in Moby's order,
+rules → accidents from the rule title, possessive/contraction parts,
+`nativum` = codes + rule); pass II data lists (auxiliaria,
+subordinantes, particulae, numeralia, interiectiones) once per word,
+source `regula`; the capital rule widened to words no LATIN source
+knows (Moby knows Hercules); a sign element carries interpunctio AND
+symbolum in the oracle. EWT dev/test vendored (CC BY-SA): 77 → 91.3 /
+91.8 %, primary 57 %; Latin pins rose to 940 / 895 / 887. Gates partes
+275, oraculum 115. NEXT: **stage 5** ordering (T17 `resolutio.stml`
+through the command layer; the lever for PRIMARY: 57 % English, 68 %
+Latin) — a design conversation first.
 
 ## Laws to keep (spec §2–3)
 

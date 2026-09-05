@@ -623,6 +623,31 @@ analyses and two contraction rows explain nothing in this corpus. The
 irregular-forms table is not needed yet (no irregular at the top of
 the unknown list); gate section VI (160 assertions).
 
+**As built — T16 (2026-09-05, stage 4 complete):** `oratio_vocabularia`
+(`OratioVocabularia {la, en}` + `oratio_vocabularia_onerare` from the
+repo root — the one loader every instrument and gate uses); the
+annotator queries BOTH dictionaries for every word and appends the
+English readings after the Latin ones (ambiguity as a list; `in` is
+an ablative preposition and an English one). `oratio_partes_en`: an
+exact Moby record → one description per class among its code letters
+in Moby's order (`p` = plural), a rule analysis → accidents from the
+rule's title (pluralis per BASE class: `cats` noun plural and verb
+third person; praeteritum finite + participle; possessivum genitive of
+the base's class + particula + auxiliare; contractions base + particula
+or auxiliare; comparativus/superlativus), `nativum` = codes + rule,
+no sense. Pass II from the EWT day-one table as DATA lists
+(`ORATIO_AUXILIARIA_EN` … `ORATIO_INTERIECTIONES_EN`) applied once
+per word with source `regula`; the capital rule now fires for a
+capitalised word no Latin source knows that is a noun or nothing
+(Moby knows Hercules as a noun — CIRCSE had dropped); sign elements
+carry interpunctio AND symbolum in the oracle. Oracle: EWT dev + test
+vendored (commit 4a4d77f5, CC BY-SA; contractions are ranges); day one
+77.1 / 77.0 %, after pass II 91.3 / 91.8 % coverage (pins 913 / 918),
+primary 57 %, lemma 75 %; Latin pins rose to 940 / 895 / 887. The
+irregular-forms table is still not needed (lost/grown are adjectives
+in Moby, a class question, not a form one). Gates: partes 275 (planted
+fault: plural made singular), oraculum 115.
+
 ## 7. Stage 5 — resolution by context
 
 An STML program `oratio/partes/resolutio.stml` run through the
@@ -850,8 +875,10 @@ with `-analyses`, `silva.Oratio`, `Prosa.sententia` by delegation; gate
 **Stage 4 (English).** T15a DONE 2026-09-04 (vendor Moby verbatim,
 loader without coction, the prose lint `-prosa`). T15b DONE 2026-09-04
 (morphology as DATA rows with measured counts, prefixes, compounds,
-glossary pass II, the prose pin as a share ceiling). T16 `partes_en.c`
-+ EWT oracle (irregulars if the oracle asks for them).
+glossary pass II, the prose pin as a share ceiling). T16 DONE
+2026-09-05 (`oratio_vocabularia`, `oratio_partes_en`, both dictionaries
+in the annotator, EWT oracle 91.3 / 91.8 %, English pass II; no
+irregulars table needed).
 
 **Stage 5.** T17 `oratio/partes/resolutio.stml` + runner through the
 command layer + per-rule oracle deltas. T18 primary pin.

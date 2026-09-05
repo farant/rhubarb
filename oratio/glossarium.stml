@@ -758,5 +758,6 @@
   <vocabulum lemma="misc" lingua="anglica" classis="ignotum-permissum" nota="columna MISC CoNLL-U (SpaceAfter=No)"/>
   <vocabulum lemma="circse" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_Latin-CIRCSE (Seneca), thesaurus arborum venditus"/>
   <vocabulum lemma="llct" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_Latin-LLCT (chartae mediaevales), thesaurus arborum venditus"/>
+  <vocabulum lemma="ewt" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_English-EWT (English Web Treebank), thesaurus arborum venditus (T16)"/>
 
 </glossarium>

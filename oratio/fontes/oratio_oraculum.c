@@ -254,12 +254,19 @@ _elementum_addere (
     }
     si (n->genus == (s32)ORATIO_GENUS_INTERPUNCTIO)
     {
+        /* signum = interpunctio aut symbolum (UD PUNCT / SYM: '-'
+         * utrumque, '$' '/' ':-)' SYM): candidata ambo, interpunctio
+         * prima (T16) */
+        hic_manens character signa[] = "interpunctio symbolum";
+
         _extentum_listae(&n->loci[ORATIO_INTERPUNCTIO_SIGNUM], &e->a,
             &e->b);
+
         e->classis[ZEPHYRUM]  = ORATIO_CLASSIS_INTERPUNCTIO;
-        e->numerus_classium   = I;
-        e->classes = _copia(piscina, _chorda(NIHIL,
-            ZEPHYRUM));
+        e->classis[I]         = ORATIO_CLASSIS_SYMBOLUM;
+        e->numerus_classium   = II;
+        e->classes = _copia(piscina, _chorda((i8*)signa,
+            (i32)(magnitudo(signa) - I)));
         redde VERUM;
     }
     si (n->genus == (s32)ORATIO_GENUS_NUMERUS)
@@ -390,16 +397,17 @@ _verbum_iudicare (
     constans OratioConlluLexema* verbum,
                             b32  primum)
 {
-    OratioClassis aurea = oratio_oraculum_classis_ex_upos(verbum->upos);
+            OratioClassis  aurea;
     OratioOraculumClassis* c;
-    b32 tectum    = FALSUM;
-    b32 primaria  = FALSUM;
-    b32 lemma     = FALSUM;
-    b32 ignotum   = VERUM;
-    chorda classes;
-    chorda lemma_plicatum;
-    i32 k;
+                      b32  tectum    = FALSUM;
+                      b32  primaria  = FALSUM;
+                      b32  lemma     = FALSUM;
+                      b32  ignotum   = VERUM;
+                   chorda  classes;
+                   chorda  lemma_plicatum;
+                      i32  k;
 
+    aurea            = oratio_oraculum_classis_ex_upos(verbum->upos);
     c                = &census->classes[aurea];
     census->verba    = census->verba + I;
     c->verba         = c->verba + I;
@@ -473,7 +481,7 @@ _verbum_iudicare (
 interior b32
 _sententiam_iudicare (
                            Piscina* piscina,
-     constans OratioVocabulariumLa* voc,
+        constans OratioVocabularia* vocabularia,
     constans OratioConlluSententia* s,
               OratioOraculumCensus* census)
 {
@@ -500,8 +508,9 @@ _sententiam_iudicare (
         : NIHIL;
     elementa = xar_creare(scratch, (i32)magnitudo(Elementum));
     si (   doc == NIHIL || elementa == NIHIL
-        || !oratio_partes_annotare(scratch, voc, doc, NIHIL)
-        || !_elementa_colligere(scratch, voc, doc, elementa))
+        || !oratio_partes_annotare(scratch, vocabularia, doc, NIHIL)
+        || !_elementa_colligere(scratch, vocabularia->la, doc,
+        elementa))
     {
         census->sententiae_fractae = census->sententiae_fractae + I;
         piscina_destruere(scratch);
@@ -600,7 +609,7 @@ _sententiam_iudicare (
 b32
 oratio_oraculum_iudicare (
                           Piscina* piscina,
-    constans OratioVocabulariumLa* voc,
+       constans OratioVocabularia* vocabularia,
                               Xar* sententiae,
              OratioOraculumCensus* census)
 {
@@ -608,7 +617,7 @@ oratio_oraculum_iudicare (
 
     per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
     {
-        si (!_sententiam_iudicare(piscina, voc,
+        si (!_sententiam_iudicare(piscina, vocabularia,
                 (constans OratioConlluSententia*)xar_obtinere(sententiae,
                 i),
                 census))

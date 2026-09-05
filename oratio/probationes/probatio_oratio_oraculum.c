@@ -35,9 +35,19 @@
 
 /* PINNAE coverage (permille verborum aureorum tectorum), solum crescentes;
  * 0 = nondum mensuratum (nativitas) */
-#define CIRCSE_TECTA_PINNA     937   /* 2026-09-04 post regulas secundarias (nativitas 842; 938 ante restrictionem copiae substantivi ad naturam N) */
-#define LLCT_DEV_TECTA_PINNA   889   /* nativitas 719 */
-#define LLCT_TEST_TECTA_PINNA  882   /* nativitas 725 */
+/* Pinnae coverage permille, solum crescentes; causa cuiusque motus:
+ * T13 regulae secundariae Latinae (CIRCSE 842 -> 937, LLCT 719 -> 889,
+ * 725 -> 882); T16 2026-09-05 vocabularia ambo + regula capitalis
+ * amplior (vocabulum capitale quod nullus fons Latinus novit: nomina
+ * Senecae Moby nota) + signum = interpunctio ET symbolum: CIRCSE 940,
+ * LLCT 895 / 887; EWT nativitas 771 / 770, post cursum II Anglicum
+ * (auxiliaria, subordinantes, particulae, numeralia, interiectiones,
+ * possessivum et contractiones, nomen proprium capitale) 913 / 918. */
+#define CIRCSE_TECTA_PINNA     940
+#define LLCT_DEV_TECTA_PINNA   895
+#define LLCT_TEST_TECTA_PINNA  887
+#define EWT_DEV_TECTA_PINNA    913
+#define EWT_TEST_TECTA_PINNA   918
 
 interior b32
 _plagulam_legere (
@@ -163,7 +173,7 @@ _tabulam_imprimere (
 interior vacuum
 _thesaurus_arborum (
                        Piscina* piscina,
-    constans OratioVocabulariumLa* voc,
+    constans OratioVocabularia* vocabularia,
                 constans character* radix,
                 constans character* plagula,
                                i32  sententiae_exspectatae,
@@ -201,7 +211,8 @@ _thesaurus_arborum (
         sententiae_exspectatae);
     oratio_oraculum_census_vacare(&census);
     ante = clock();
-    CREDO_VERUM (oratio_oraculum_iudicare(p, voc, sententiae, &census));
+    CREDO_VERUM (oratio_oraculum_iudicare(p, vocabularia, sententiae,
+        &census));
     _tabulam_imprimere(&census, plagula);
     imprimere("    %.0f ms\n", 1000.0 * (duplex)(clock() - ante)
         / (duplex)CLOCKS_PER_SEC);
@@ -220,10 +231,7 @@ principale (vacuum)
 {
                   Piscina* piscina;
        constans character* radix;
-                character  via[1024];
-                   chorda  tabula;
-                   chorda  fons_glossarii;
-     OratioVocabulariumLa* voc;
+        OratioVocabularia  vocabularia;
  OratioVocabulariumVitium  vitium;
 
     piscina = piscina_generare_dynamicum("probatio_oratio_oraculum",
@@ -234,23 +242,13 @@ principale (vacuum)
     {
         radix = ".";
     }
-    sprintf(via, "%s/oratio/vocabularium/la.bin", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &tabula));
-    voc = oratio_vocabularium_la_onerare(piscina, tabula, &vitium);
-    CREDO_NON_NIHIL (voc);
-    sprintf(via, "%s/oratio/glossarium.stml", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &fons_glossarii));
-    si (voc == NIHIL || fons_glossarii.datum == NIHIL)
+    CREDO_VERUM (oratio_vocabularia_onerare(piscina, radix,
+        &vocabularia,
+        &vitium));
+    si (vocabularia.la == NIHIL || vocabularia.en == NIHIL)
     {
         credo_imprimere_compendium();
         redde I;
-    }
-    {
-        OratioGlossarium* gl = oratio_glossarium_legere(piscina,
-            fons_glossarii, &vitium);
-
-        CREDO_NON_NIHIL (gl);
-        oratio_vocabularium_la_glossarium_ponere(voc, gl);
     }
 
     imprimere("\n--- I. Lector CoNLL-U ---\n");
@@ -349,7 +347,8 @@ principale (vacuum)
 
         CREDO_NON_NIHIL (s);
         oratio_oraculum_census_vacare(&c);
-        CREDO_VERUM (oratio_oraculum_iudicare(piscina, voc, s, &c));
+        CREDO_VERUM (oratio_oraculum_iudicare(piscina, &vocabularia, s,
+            &c));
         _tabulam_imprimere(&c, "Puella rosam amat.");
         CREDO_AEQUALIS_I32 (c.sententiae, I);
         CREDO_AEQUALIS_I32 (c.sententiae_fractae, ZEPHYRUM);
@@ -387,7 +386,8 @@ principale (vacuum)
             "6\tabstulit\taufero\tFOO\t_\t_\t3\tdep\t_\t_\n"), &vitium);
         CREDO_NON_NIHIL (s);
         oratio_oraculum_census_vacare(&c);
-        CREDO_VERUM (oratio_oraculum_iudicare(piscina, voc, s, &c));
+        CREDO_VERUM (oratio_oraculum_iudicare(piscina, &vocabularia, s,
+            &c));
         _tabulam_imprimere(&c, "pronumque abstulit xyzzy");
         CREDO_AEQUALIS_I32 (c.rangae, I);
         CREDO_AEQUALIS_I32 (c.verba, (i32)VI);   /* pronum que abstulit xyzzy zzz abstulit */
@@ -426,15 +426,26 @@ principale (vacuum)
     }
 
     imprimere("\n--- III. Treebanks venditae (CC BY-SA) ---\n");
-    _thesaurus_arborum(piscina, voc, radix, "la_circse-ud-test.conllu",
+    _thesaurus_arborum(piscina, &vocabularia, radix,
+        "la_circse-ud-test.conllu",
         (i32)893,
         (i32)CIRCSE_TECTA_PINNA);
-    _thesaurus_arborum(piscina, voc, radix, "la_llct-ud-dev.conllu",
+    _thesaurus_arborum(piscina, &vocabularia, radix,
+        "la_llct-ud-dev.conllu",
         (i32)850,
         (i32)LLCT_DEV_TECTA_PINNA);
-    _thesaurus_arborum(piscina, voc, radix, "la_llct-ud-test.conllu",
+    _thesaurus_arborum(piscina, &vocabularia, radix,
+        "la_llct-ud-test.conllu",
         (i32)884,
         (i32)LLCT_TEST_TECTA_PINNA);
+    _thesaurus_arborum(piscina, &vocabularia, radix,
+        "en_ewt-ud-dev.conllu",
+        (i32)2001,
+        (i32)EWT_DEV_TECTA_PINNA);
+    _thesaurus_arborum(piscina, &vocabularia, radix,
+        "en_ewt-ud-test.conllu",
+        (i32)2077,
+        (i32)EWT_TEST_TECTA_PINNA);
 
     imprimere("\n");
     credo_imprimere_compendium();

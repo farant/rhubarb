@@ -1,7 +1,9 @@
 /* oratio_partes.h - Annotatio vocabulorum: analyses, classes, linguae (T12)
  *
  * Cursus post arborem (oratio_arbor_parsare octetos numquam tangit):
- * vocabulum quodque semel quaeritur (tabula Latina cum glossario, T8/T9),
+ * vocabulum quodque semel quaeritur in UTROQUE vocabulario (tabula
+ * Latina cum glossario T8/T9, Moby T15/T16: lectiones Anglicae post
+ * Latinas appensae - ambiguitas lista, ordo gradus V),
  * analysis quaeque per oratio_partes_la in descriptionem universalem
  * vertitur, descriptio quaeque NODUS analysis-<classis> fit (genus =
  * classis, loci communes lemma/lingua/fons/nativum/sensus lexemata
@@ -28,6 +30,7 @@
 #include "oratio_registrum.h"
 #include "oratio_partes_la.h"
 #include "oratio_vocabularium_la.h"
+#include "oratio_vocabularia.h"
 
 nomen structura {
     i32 vocabula;     /* vocabula visa */
@@ -35,6 +38,8 @@ nomen structura {
     i32 analyses;     /* nodi analysis structi */
     i32 ignota;       /* vocabula sine analysi */
     i32 classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM];   /* analyses per classem */
+    /* analyses per linguam (T16) */
+    i32 linguae[ORATIO_LINGUA_NUMERUS];
 } OratioPartesCensus;
 
 /* Locus accidentis (titulo) intra genus analysis classis; -I si genus
@@ -63,7 +68,7 @@ b32
 oratio_partes_vocabulum_annotare (
                           Piscina* piscina,
                           Piscina* scratch,
-    constans OratioVocabulariumLa* voc,
+       constans OratioVocabularia* vocabularia,
                      MateriaNodus* vocabulum,
                OratioPartesCensus* census);
 
@@ -72,7 +77,7 @@ oratio_partes_vocabulum_annotare (
 b32
 oratio_partes_annotare (
                           Piscina* piscina,
-    constans OratioVocabulariumLa* voc,
+       constans OratioVocabularia* vocabularia,
                      MateriaNodus* radix,
                OratioPartesCensus* census);
 

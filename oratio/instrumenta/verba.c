@@ -2,8 +2,9 @@
  *
  * Usus: verba <plagula.txt>... [-machina] [-analyses]
  * Plagula quaeque parsatur (oratio_arbor) et annotatur (oratio_partes:
- * tabula Latina la.bin + glossarium ex RHUBARB_RADIX, ut arbor.sh
- * -partes), deinde una linea per VOCABULUM ordine documenti:
+ * vocabularia la.bin + glossarium + Moby ex RHUBARB_RADIX, ut arbor.sh
+ * -partes; lectiones Latinae et Anglicae, T16), deinde una linea per
+ * VOCABULUM ordine documenti:
  *   via index initium finis linea paragraphus sententia forma classes
  *   linguae lemma analyses
  * (index = ordinalis vocabuli in plagula; paragraphus et sententia =
@@ -24,9 +25,7 @@
 #include "oratio_arbor.h"
 #include "oratio_registrum.h"
 #include "oratio_partes.h"
-#include "oratio_vocabularium.h"
-#include "oratio_vocabularium_la.h"
-#include "oratio_glossarium.h"
+#include "oratio_vocabularia.h"
 #include "materia_nodus.h"
 #include "materia_token.h"
 #include "piscina.h"
@@ -109,61 +108,25 @@ _plagulam_legere (
     redde memoria;
 }
 
-/* tabula Latina (la.bin) + glossarium ex RHUBARB_RADIX (ordinarius
- * '.'); NIHIL cum nuntio in stderr */
-interior constans OratioVocabulariumLa*
-_tabulam_onerare (
-    Piscina* piscina)
+/* vocabularia (la.bin + glossarium + Moby) ex RHUBARB_RADIX; FALSUM
+ * cum nuntio in stderr */
+interior b32
+_vocabularia_onerare (
+              Piscina* piscina,
+    OratioVocabularia* exitus)
 {
-         constans character* radix_viae = getenv("RHUBARB_RADIX");
-                  character  via_tabulae[1024];
-                  character* octeti;
-                        i32  mensura = ZEPHYRUM;
-                     chorda  tabula;
-       OratioVocabulariumLa* voc;
     OratioVocabulariumVitium vitium;
 
-    si (radix_viae == NIHIL)
+    si (!oratio_vocabularia_onerare(piscina, getenv("RHUBARB_RADIX"),
+            exitus, &vitium))
     {
-        radix_viae = ".";
-    }
-    sprintf(via_tabulae, "%s/oratio/vocabularium/la.bin", radix_viae);
-    octeti = _plagulam_legere(piscina, via_tabulae, &mensura);
-    si (octeti == NIHIL)
-    {
-        fprintf(stderr, "verba: tabula absens: %s\n", via_tabulae);
-        redde NIHIL;
-    }
-    tabula.datum = (i8*)octeti;
-    tabula.mensura = mensura;
-    voc = oratio_vocabularium_la_onerare(piscina, tabula, &vitium);
-    si (voc == NIHIL)
-    {
-        fprintf(stderr, "verba: onus tabulae fractum: %s\n",
+        fprintf(stderr, "verba: vocabularia non onerata: %s:%d %s\n",
+            vitium.plagula ? vitium.plagula : "?",
+            (integer)vitium.linea,
             vitium.causa ? vitium.causa : "-");
-        redde NIHIL;
+        redde FALSUM;
     }
-    sprintf(via_tabulae, "%s/oratio/glossarium.stml", radix_viae);
-    octeti = _plagulam_legere(piscina, via_tabulae, &mensura);
-    si (octeti != NIHIL)
-    {
-                  chorda fons_glossarii;
-        OratioGlossarium* gl;
-
-        fons_glossarii.datum = (i8*)octeti;
-        fons_glossarii.mensura = mensura;
-        gl = oratio_glossarium_legere(piscina, fons_glossarii, &vitium);
-        si (gl == NIHIL)
-        {
-            fprintf(stderr, "verba: glossarium non legitur: %s:%d %s\n",
-                vitium.plagula ? vitium.plagula : "?",
-                (integer)vitium.linea,
-                vitium.causa ? vitium.causa : "-");
-            redde NIHIL;
-        }
-        oratio_vocabularium_la_glossarium_ponere(voc, gl);
-    }
-    redde voc;
+    redde VERUM;
 }
 
 /* chorda in stdout, tabulis et lineis novis in spatia versis */
@@ -483,7 +446,7 @@ principale (
     character** argv)
 {
                           Piscina* piscina_tabulae;
-    constans OratioVocabulariumLa* voc;
+                OratioVocabularia  vocabularia;
                               b32  machina         = FALSUM;
                               b32  analyses_modus  = FALSUM;
                           integer  i;
@@ -513,8 +476,7 @@ principale (
     }
     piscina_tabulae = piscina_generare_dynamicum("oratio_verba_tabula",
         8388608);
-    voc = _tabulam_onerare(piscina_tabulae);
-    si (voc == NIHIL)
+    si (!_vocabularia_onerare(piscina_tabulae, &vocabularia))
     {
         redde II;
     }
@@ -556,7 +518,8 @@ principale (
             fprintf(stderr, "verba: parsura fracta: %s\n", argv[i]);
             redde II;
         }
-        si (!oratio_partes_annotare(piscina, voc, radix, NIHIL))
+        si (!oratio_partes_annotare(piscina, &vocabularia, radix,
+            NIHIL))
         {
             fprintf(stderr, "verba: annotatio fracta: %s\n", argv[i]);
             redde II;

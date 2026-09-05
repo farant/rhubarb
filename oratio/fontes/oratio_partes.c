@@ -1,6 +1,7 @@
 /* oratio_partes.c - Vide oratio_partes.h. */
 
 #include "oratio_partes.h"
+#include "oratio_partes_en.h"
 #include "oratio_lexicon.h"
 #include "oratio_lexema.h"
 #include "materia_arbor.h"
@@ -226,7 +227,7 @@ b32
 oratio_partes_vocabulum_annotare (
                           Piscina* piscina,
                           Piscina* scratch,
-    constans OratioVocabulariumLa* voc,
+       constans OratioVocabularia* vocabularia,
                      MateriaNodus* vocabulum,
                OratioPartesCensus* census)
 {
@@ -264,7 +265,8 @@ oratio_partes_vocabulum_annotare (
     }
     memset(classis_visa, ZEPHYRUM, magnitudo(classis_visa));
     memset(lingua_visa, ZEPHYRUM, magnitudo(lingua_visa));
-    analyses = oratio_vocabularium_la_quaerere(scratch, voc, textus);
+    analyses = oratio_vocabularium_la_quaerere(scratch, vocabularia->la,
+        textus);
     descriptiones = xar_creare(scratch,
         (i32)magnitudo(OratioDescriptio));
     si (analyses == NIHIL || descriptiones == NIHIL)
@@ -273,27 +275,94 @@ oratio_partes_vocabulum_annotare (
     }
         per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
         {
-        si (!oratio_partes_la_describere(piscina, voc,
+        si (!oratio_partes_la_describere(piscina, vocabularia->la,
                 (constans OratioAnalysis*)xar_obtinere(analyses, k),
                 descriptiones))
         {
             redde FALSUM;
         }
         }
-    /* regula (T13): vocabulum ignotum littera capitali = nomen proprium
-     * candidatum (Karolus, Taenari), fonte 'regula' */
-    si (   xar_numerus(descriptiones) == ZEPHYRUM
-        && textus.datum[ZEPHYRUM]     >= 'A'
-        && textus.datum[ZEPHYRUM]     <= 'Z')
+    /* T16: lectiones Anglicae (Moby + regulae) post Latinas appensae */
+    si (vocabularia->en != NIHIL)
     {
-        OratioDescriptio* d =
-            (OratioDescriptio*)xar_addere(descriptiones);
+        Xar* analyses_en = oratio_vocabularium_en_analysare(scratch,
+            vocabularia->en, textus);
 
-        si (d == NIHIL)
+        si (analyses_en == NIHIL)
         {
             redde FALSUM;
         }
-        oratio_partes_la_capitalis(piscina, textus, d);
+        per (k = ZEPHYRUM; k < xar_numerus(analyses_en); k++)
+        {
+            constans OratioAnalysisEn* a =
+                (constans OratioAnalysisEn*)xar_obtinere(analyses_en,
+                k);
+
+            si (!oratio_partes_en_describere(piscina, vocabularia->en,
+                a,
+                    descriptiones))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    si (   vocabularia->en != NIHIL
+        && !oratio_partes_en_secundariae(piscina, textus,
+        descriptiones))
+    {
+        redde FALSUM;
+    }
+    /* regula (T13/T16): vocabulum capitale quod nullus fons Latinus
+     * novit - ignotum (Karolus, Taenari) aut Moby soli notum ut
+     * substantivum (Bush, Hercules) - nomen proprium candidatum fonte
+     * 'regula'; lingua anglica si lectiones Anglicae adsunt */
+    si (   textus.datum[ZEPHYRUM] >= 'A'
+        && textus.datum[ZEPHYRUM] <= 'Z')
+    {
+        b32 fons_latinus  = FALSUM;
+        b32 proprium      = FALSUM;
+        b32 substantivum  = FALSUM;
+        b32 anglicum      = FALSUM;
+
+        per (k = ZEPHYRUM; k < xar_numerus(descriptiones); k++)
+        {
+            constans OratioDescriptio* d =
+                (constans OratioDescriptio*)xar_obtinere(descriptiones,
+                k);
+
+            si (d->fons != ORATIO_FONS_ANALYSIS_VOCABULARIUM_EN)
+            {
+                fons_latinus = VERUM;
+            }
+            si (d->classis == ORATIO_CLASSIS_NOMEN_PROPRIUM)
+            {
+                proprium = VERUM;
+            }
+            si (d->classis == ORATIO_CLASSIS_SUBSTANTIVUM)
+            {
+                substantivum = VERUM;
+            }
+            si (d->lingua == ORATIO_LINGUA_ANGLICA)
+            {
+                anglicum = VERUM;
+            }
+        }
+        si (   !fons_latinus && !proprium
+            && (xar_numerus(descriptiones) == ZEPHYRUM || substantivum))
+        {
+            OratioDescriptio* d =
+                (OratioDescriptio*)xar_addere(descriptiones);
+
+            si (d == NIHIL)
+            {
+                redde FALSUM;
+            }
+            oratio_partes_la_capitalis(piscina, textus, d);
+            si (anglicum)
+            {
+                d->lingua = ORATIO_LINGUA_ANGLICA;
+            }
+        }
     }
     per (k = ZEPHYRUM; k < xar_numerus(descriptiones); k++)
     {
@@ -327,6 +396,7 @@ oratio_partes_vocabulum_annotare (
             census->analyses = census->analyses + I;
             census->classes[d->classis] = census->classes[d->classis]
                 + I;
+            census->linguae[d->lingua] = census->linguae[d->lingua] + I;
         }
     }
     /* compendia: classes (semper), linguae (si analyses) */
@@ -409,7 +479,7 @@ interior b32
 _annotare (
                           Piscina* piscina,
                           Piscina* scratch,
-    constans OratioVocabulariumLa* voc,
+       constans OratioVocabularia* vocabularia,
                      MateriaNodus* n,
                OratioPartesCensus* census)
 {
@@ -421,8 +491,9 @@ _annotare (
     }
     si (n->genus == (s32)ORATIO_GENUS_VOCABULUM)
     {
-        redde oratio_partes_vocabulum_annotare(piscina, scratch, voc, n,
-            census);
+        redde oratio_partes_vocabulum_annotare(piscina, scratch,
+            vocabularia,
+            n, census);
     }
     per (i = ZEPHYRUM; i < n->numerus_locorum; i++)
     {
@@ -430,7 +501,8 @@ _annotare (
 
         si (v->genus == MATERIA_VALOR_NODUS)
         {
-            si (!_annotare(piscina, scratch, voc, v->datum.nodus,
+            si (!_annotare(piscina, scratch, vocabularia,
+                v->datum.nodus,
                 census))
             {
                 redde FALSUM;
@@ -446,8 +518,8 @@ _annotare (
                 MateriaValor* e = materia_valor_lista_obtinere(*v, j);
 
                 si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
-                    && !_annotare(piscina, scratch, voc, e->datum.nodus,
-                        census))
+                    && !_annotare(piscina, scratch, vocabularia,
+                        e->datum.nodus, census))
                 {
                     redde FALSUM;
                 }
@@ -460,7 +532,7 @@ _annotare (
 b32
 oratio_partes_annotare (
                           Piscina* piscina,
-    constans OratioVocabulariumLa* voc,
+       constans OratioVocabularia* vocabularia,
                      MateriaNodus* radix,
                OratioPartesCensus* census)
 {
@@ -476,7 +548,7 @@ oratio_partes_annotare (
     {
         memset(census, ZEPHYRUM, magnitudo(*census));
     }
-        sanum = _annotare(piscina, scratch, voc, radix, census);
+        sanum = _annotare(piscina, scratch, vocabularia, radix, census);
     piscina_destruere(scratch);
     /* nodi novi patres accipiunt (lex materiae: comparator patres confert) */
     si (sanum)

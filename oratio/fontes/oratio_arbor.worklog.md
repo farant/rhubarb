@@ -1069,3 +1069,104 @@ names); `treebank` renamed `thesaurus arborum` in the oraculum gate
 files newly indexed, the same coverage growth T12 saw. Lesson for the
 lint: a pin over a build artifact that is renovated post-success
 lags one commit; the next task pays for the last one's words.
+
+## 2026-09-05 — T16: the English mapping, both dictionaries, and the EWT oracle
+
+Stage 4 closes. The annotator now consults BOTH dictionaries for every
+word — `OratioVocabularia {la, en}`, one struct, one loader
+(`oratio_vocabularia_onerare` reads la.bin, the glossary and Moby from
+the repo root; the three instruments and two gates dropped their
+copies of that loading code) — and appends the English readings after
+the Latin ones. `oratio_partes_en` maps a Moby analysis to
+descriptions: an exact record yields one description per class among
+its code letters in Moby's preference order (`p` adds numerus
+pluralis, letters of one class coalesce, `nativum` = the code letters
+verbatim); a rule analysis takes its accidents from the rule's title
+(pluralis → one description per class of the BASE, so `cats` is a
+plural noun AND a third-person verb; praeteritum → a finite past and a
+participle; participium; possessivum → genitive of the base's class,
+plus particula and auxiliare for the clitic; contractions →
+base + particula for `n't` or + auxiliare for `'re 'm 'll 've 'd`;
+adverbium; comparativus/superlativus; compositum takes the last
+part's class). Lemma = the folded base, source `vocabularium-en`,
+language `anglica`, no sense (Moby has none). `nativum` reads
+"NV pluralis-s": the base's codes and the rule.
+
+EWT dev and test (2,001 / 2,077 sentences, 25k tokens each, CC BY-SA,
+commit 4a4d77f5) vendored beside CIRCSE and LLCT; the oracle takes
+the pair of dictionaries; the instrument's default list now iterates
+the array instead of a literal four (the fourth entry was the bug that
+hid EWT from the default run). Day one, before any English pass II:
+
+| treebank | coverage | primary | lemma |
+|---|---|---|---|
+| EWT dev | 77.1 % | 56.6 % | 75.2 % |
+| EWT test | 77.0 % | 56.9 % | 74.7 % |
+
+The per-class table had the same shape as Latin's day one: auxiliare
+0 (has, been, is: Moby says verb), coniunctio-subordinans 0 (that,
+because, since: Moby says C = coordinating), particula 0 (to, not,
+n't, 's), nomen-proprium 22.6 % (President, Bush, Washington: Moby
+lists them as nouns, so the capital rule never fired), symbolum 0
+($, /, :-)), interiectio 16.5 %, numerale 79.6 % (one, two).
+
+And CIRCSE had DROPPED, 93.7 → 93.5 %: Moby knows Hercules, Juno,
+Thebes and Cerberus as English nouns, so those names no longer
+counted as "unknown" and the T13 capital rule stopped making them
+proper-noun candidates. The rule is now: a capitalised word that NO
+LATIN SOURCE knows (unknown, or known to Moby alone) and that is a
+noun or nothing gets the proper-noun candidate, with lingua anglica
+when its other readings are English. That recovers Seneca's names and
+covers the treebank's presidents.
+
+Pass II for English, data lists in `oratio_partes_en.h` with the
+day-one counts as cause, applied once per word after the Moby
+readings, source `regula`, nativum = the list's name: AUXILIARIA
+(be … ought), SUBORDINANTES (that … like), PARTICULAE (to not),
+NUMERALIA (zero … trillion), INTERIECTIONES (yes no please …); the
+rule-based ones above for `'s` and `n't`; and in the oracle a sign
+element carries BOTH interpunctio and symbolum (UD's PUNCT/SYM split
+runs through the same characters: `-` is either). After:
+
+| treebank | coverage | primary | lemma | ours unknown |
+|---|---|---|---|---|
+| EWT dev | 91.3 % | 56.6 % | 75.2 % | 1.3 % |
+| EWT test | 91.8 % | 56.9 % | 74.7 % | 1.3 % |
+| CIRCSE | 94.0 % | 67.3 % | 89.2 % | 0.7 % |
+| LLCT dev | 89.5 % | 67.7 % | 66.7 % | 6.7 % |
+| LLCT test | 88.7 % | 67.6 % | 66.2 % | 6.9 % |
+
+Per class on EWT dev: auxiliare 0 → 90.7, subordinans 0 → 75.8,
+particula 0 → 89.6, nomen-proprium 22.6 → 77.5, symbolum 0 → 93.8,
+interiectio 16.5 → 71.3, numerale 79.6 → 98.4. The Latin pins rose
+too (940 / 895 / 887 permille): Latin words that are also English
+(in, a, is) gained classes, and the wider capital rule gave the
+charters' names back. What is left on EWT: proper nouns that Moby
+knows as common nouns AND that are not capitalised in the text
+(usernames, product names), adjectives that are participles, the
+primary rate at 57 % — Latin readings come first, so `in` is an
+ablative preposition before it is an English one; stage 5's ordering
+by document language is the lever.
+
+Measured on the fixtures: Lincoln 3,699 words, 0 unknown, 11,144
+analyses (2,302 Latin, 8,842 English); Cicero 13,214 words, unknowns
+383 → 178 (names Moby knows), 141,446 analyses (10,303 English).
+Nothing slowed noticeably: EWT dev judges in 250 ms.
+
+Gates: partes 203 → 275 (section VI: the, cats, planned, quickly,
+higher, Fran's, it's, don't, we're, the five lists, Moby-unknown;
+section VII: an English sentence annotated with the census by
+language, `Bush` ending in a proper-noun node with lingua anglica and
+source regula, `The` without one, Latin-only annotation with `en`
+NIHIL, the loader refusing a missing root and naming la.bin); oraculum
+104 → 115 with five pins; planted fault = plural noun made singular in
+`_pluralis` → red on `cats`. Python: `silva.Oratio` gained no code —
+the English readings simply appear — and three assertions.
+
+Lessons. A declaration after a statement is still the first thing I
+write when adding a local mid-block; examen catches it before clang
+does. The oracle instrument's default file list was bounded by a
+literal, and the symptom (a run that silently judged three of five
+files) looked exactly like success. A dictionary that knows names as
+common nouns changes what "unknown" means: every rule keyed on
+"nothing known" must be re-read when a source is added.
