@@ -1,7 +1,7 @@
 #!/bin/bash
-# oratio/vocabula.sh - recensio vocabulorum: identificatores et commentaria contra vocabularium (T10)
+# oratio/vocabula.sh - recensio vocabulorum: identificatores et commentaria (Latine, T10) aut prosa markdown (Anglice, T15a) contra vocabularia
 #
-# Usage:  ./oratio/vocabula.sh [-symbola | -commenta | -omnia] [-machina] [-omnes]
+# Usage:  ./oratio/vocabula.sh [-symbola | -commenta | -omnia | -prosa] [-machina] [-omnes] [-omnes-viae] [-tectum N]
 # Exit:   0 sanum | 1 fractum | 2 usus/plagula absens
 # Obiecta oratio/build/*.o poscit (cursor oratio/compile_probationes.sh ea
 # struit); instrumentum in oratio/build/vocabula.
@@ -29,4 +29,5 @@ if [ ! -f "$BIN" ] || [ "$SRC" -nt "$BIN" ] || [ -n "$(find "$BUILD_DIR" -name '
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SRC" $OBJ -o "$BIN" || exit 1
 fi
 git -C "$RADIX_DIR" ls-files "lib/*.c" "silva/fontes/*.c" > "$BUILD_DIR/corpus_c.txt"
+git -C "$RADIX_DIR" ls-files "*.md" > "$BUILD_DIR/corpus_md.txt"
 RHUBARB_RADIX="$RADIX_DIR" exec "$BIN" "$@"

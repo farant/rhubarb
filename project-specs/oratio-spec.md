@@ -378,6 +378,50 @@ comments are the Latin context, English prose (worklogs, markdown) the
 English one; the Latin lint ignores English-only entries. Unknowns
 2,987 after; pin moved.
 
+**As built — T15a, the English context (warmup, 2026-09-04; decision
+27, four calls by Fran):** an English lint needs a word list, so stage
+4's dictionary came forward. Moby Part-of-Speech II vendored VERBATIM
+under `oratio/vocabularium/en/` (§6 as-built); `oratio_vocabula_prosa`
+walks md's tree and harvests TEXTUS nodes only — code spans, fences,
+link destinations, html blocks and front matter never reach the lookup;
+`oratio_vocabula_creare_anglice` judges in the ENGLISH context:
+glossary entries allowed in English first (a Latin entry → LATINUM,
+`ignotum-permissum` → PERMISSUM, else NOTUM), Moby second, the Latin
+table third → the new status **LATINUM** (known Latin in English prose
+is counted, never a finding — decision 27.1); `ambiguum` never. Corpus
+= the house INCLUDING `knotapel/` (English), minus `vendor/`,
+`archivum/` and the generated files (`gesta/annales/tabula.md`,
+`md/CENSUS.md`) — `ORATIO_PROSA_EXCLUSA` (27.2). `./oratio/vocabula.sh
+-prosa`, `silva.vocabula('prosa')` (a `prosa` column, a `latinum`
+count). Gate sections V–VII (inline md with every exclusion proved;
+English judgement; corpus floors, no pin). Day one: 1,139 files, 62,524
+distinct words, 1.89M sites, 58 % unknown — the top of the list is
+regular inflection Moby does not list (-s, -ed, -ing, 's), then house
+English terms; morphology lands next as DATA rows with those counts
+(27.4). Two corpus lessons: a lone `→` was a "word" (bytes ≥ 0x80 were
+letters; now UTF-8 lead bytes count), and the site-count ordering was
+quadratic (now a counting sort).
+
+**As built — T15b (same day):** the morphology is DATA —
+`ORATIO_REGULAE_EN` (25 rows: plural ×3, past ×4, participle ×3,
+possessive, contractions ×6, adverb ×3, comparative ×2, superlative ×2,
+`compositum`; each row = suffix, base substitution, gemination, minimum
+base, required Moby codes of the base, class, cause with the measured
+tally) plus `ORATIO_PRAEFIXA_EN` for hyphen compounds (non, multi, semi
+…); `oratio_vocabularium_en_analysare` = exact records first, then
+rules in table order, each analysis carrying rule, base and class; the
+judge takes the first analysis (lemma = base, `OratioVerbum.regula`);
+the English fold maps U+2019 to `'`. Glossary pass II (117 entries,
+ANGLICA PROSA section: proper names, computing English with explicit
+plurals — rules reduce to Moby bases only —, abbreviations, `struct`
+and `sizeof`, Roman numerals ii–xxx as `numerale` for both contexts,
+house Latin internamentum/diagnostica/friatio/amalgama). Prose
+unknowns 58 % → 30 % (rules) → 26.2 % (pass II); known 73.8 %. PROSE
+PIN = a ceiling on the unknown SHARE (29 %) plus a floor on the known
+share (70 %), not a count only falling — prose gains words daily; a red
+means a rule or a glossary section broke. Identifier pin 2,986 → 2,950
+on the `ambo` entries.
+
 ## 5. Stage 3 — annotated words (`partes`)
 
 **Universal classes** (registry `partes_registrum`, one genus per
@@ -405,6 +449,28 @@ imperativus, infinitivus), `vox` (activa, passiva, deponens), `forma-verbi`
 `lingua` (INDEX: latina, anglica, …), `fons` (INDEX: vocabularium-la,
 vocabularium-en, glossarium), `nativum` (TOKEN, derived: the source's
 own code verbatim), `sensus` (TOKEN, derived, optional).
+
+**As built — T11 (2026-09-04):** seventeen genera `analysis-<classis
+genitive>` appended after `numerus` (registry 23 genera, 146 slots;
+genus = `ORATIO_GENUS_ANALYSIS_PRIMUM` + `OratioClassis`; class titles
+in `ORATIO_TITULI_CLASSIUM` = the glossary canon's `classis` options,
+gate-guarded). Common five first on every genus, then accidents as
+INDEX (decision, Fran approving the lists): substantivum and nomen
+proprium casus/numerus/genus/declinatio; verbum and auxiliare
+persona/numerus/tempus/modus/vox/forma-verbi/coniugatio/casus/genus;
+adiectivum casus/numerus/genus/gradus/declinatio; adverbium gradus;
+pronomen casus/numerus/genus/persona; determinans casus/numerus/genus;
+adpositio casus; numerale casus/numerus/genus/species (cardinale,
+ordinale, distributivum, adverbiale); the rest common only. `nativum`
+is ONE derived token (Fran). Enumerations appended-only with title
+arrays (`ORATIO_TITULI_CASUUM` …; casus has locativus and vocativus,
+numerus dualis, vox deponens, tempus the English praeteritum). The
+word's three slots were reserved since T1, so existing STML bytes are
+unchanged; seal 93c1c9cf → 87b35173; the canon carries 17 genus rules
++ 129 slot rules intra their genus (generated once, hand-kept; ceiling
+512, 182 rules). Gates: registrum (860; helpers, layouts, glossary
+drift, materia round trip with an analysis), canon (219; a hand-built
+analysis judged, two mutations refused).
 
 **Mapping tables per source** (`partes_la.c`, `partes_en.c`): WORDS
 part codes → class + accidents (N→substantivum with declension/gender;
@@ -443,7 +509,8 @@ analyses), `oratio/arbor.sh` shows the analyses inline.
 ## 6. Stage 4 — English (`vocabularium_en`)
 
 Moby Part-of-Speech (`mobypos.txt`, public domain): one line per
-entry, form × codes (N noun, p plural, h noun phrase, V verb
+entry, form `\` codes (the Gutenberg copy uses a backslash; `×` is the
+CD-ROM edition) (N noun, p plural, h noun phrase, V verb
 participle, t transitive, i intransitive, A adjective, v adverb, C
 conjunction, P preposition, ! interjection, r pronoun, D definite
 article, I indefinite article, o nominative) in preference order.
@@ -452,6 +519,28 @@ C: regular plurals, `-ed`, `-ing`, `-s` third person, `-er`/`-est`,
 an irregular-forms table (vendored from a PD list or hand-written);
 each rule yields analyses marked with the rule as `nativum`. Mapping
 Moby codes → classes. Oracle: UD English EWT (COVERAGE pinned).
+
+**As built — T15a (2026-09-04):** `oratio/vocabularium/en/mobypos.txt`
+verbatim from the Gutenberg mirror (3,237,558 bytes, 233,356 records,
+CRLF; `LICENTIA.txt` = the ebook's documentation note, grant + legend;
+`FONTES.md`). NO coction (decision 27.3): the source is one table, the
+loader `oratio_vocabularium_en_onerare` reads it directly, asserting
+the record law on every line (CRLF, one backslash, non-empty form and
+codes — stops with the line) and COUNTING code letters outside the
+legend (one: `cowardic\Ne`); words hashed by lower-cased form (197,387),
+phrases counted not indexed (35,969); `quaerere` → records in file
+order; `oratio_vocabularium_en_classis` maps a code letter to the
+universal class. Findings pinned in `probatio_oratio_vocabularium_en`
+(seal `cc81458b820a3625`, 27 ms): the legend's `I` and `o` never
+occur; 1,231 CP437 records (fold = ASCII lower case + U+2019 → `'`;
+accents stay as they are); 4,437 case-duplicate forms. **T15b (same
+day):** the light morphology is the DATA table `ORATIO_REGULAE_EN`
+(§4 as-built) with `oratio_vocabularium_en_analysare`; Moby lists more
+inflected forms than its legend admits (`entries` p, `tried` V,
+`making` N, `simply` v, `I'm`), so exact forms always precede rule
+analyses and two contraction rows explain nothing in this corpus. The
+irregular-forms table is not needed yet (no irregular at the top of
+the unknown list); gate section VI (160 assertions).
 
 ## 7. Stage 5 — resolution by context
 
@@ -663,8 +752,8 @@ T9 `oratio/glossarium.stml` + canon + loader; allowed technical terms.
 T10 `oratio/vocabula.sh` + `silva.vocabula()`: identifiers (nexus.tsv)
 and comments (silva tokens) reports; counts published.
 
-**Stage 3 (partes).** T11 `partes_registrum` (17 classes, analysis
-genera with accidents), appended to the oratio registry; canon rules.
+**Stage 3 (partes).** T11 DONE 2026-09-04 (`partes_registrum`: 17
+analysis genera with accidents appended, canon rules, seal moved).
 T12 `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
 `linguae`) + projection attributes (substrate check above). T13
 CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT
@@ -672,8 +761,11 @@ CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT
 -petere` for NC treebanks. T14 `oratio/verba.sh`, `silva.Oratio`,
 `Prosa.sententia`.
 
-**Stage 4 (English).** T15 vendor Moby + compile + `vocabularium_en`
-+ morphology rules + irregulars. T16 `partes_en.c` + EWT oracle.
+**Stage 4 (English).** T15a DONE 2026-09-04 (vendor Moby verbatim,
+loader without coction, the prose lint `-prosa`). T15b DONE 2026-09-04
+(morphology as DATA rows with measured counts, prefixes, compounds,
+glossary pass II, the prose pin as a share ceiling). T16 `partes_en.c`
++ EWT oracle (irregulars if the oracle asks for them).
 
 **Stage 5.** T17 `oratio/partes/resolutio.stml` + runner through the
 command layer + per-rule oracle deltas. T18 primary pin.

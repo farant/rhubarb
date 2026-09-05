@@ -1068,6 +1068,12 @@ try:
     silva.vocabula('alia'); credo(False, 'vocabula: fons ignotus recusatur')
 except silva.SilvaError:
     credo(True, 'vocabula: fons ignotus recusatur')
+vp = silva.vocabula('prosa')
+per_verbum = dict((v.verbum, v) for v in vp.verba)
+credo(vp.numeri['verba'] > 5000 and vp.numeri['ambiguum'] == 0 and vp.numeri['latinum'] > 100, 'vocabula: prosa corporis (verba > V milia, ambiguum nullum, latina > C)')
+credo(per_verbum['the'].status == 'notum' and per_verbum['the'].classis == 'determinans' and per_verbum['the'].prosa == per_verbum['the'].sedes and per_verbum['the'].symbola == 0, 'vocabula: prosa - the notum determinans, sedes prosae solae')
+credo(per_verbum['lexema'].status == 'latinum' and per_verbum['piscina'].status == 'notum' and per_verbum['worklog'].status == 'permissum', 'vocabula: prosa - lexema latinum (glossarium Latinum), piscina notum (Moby eam novit), worklog permissum (contextus anglicus)')
+credo(per_verbum['values'].status == 'notum' and per_verbum['values'].lemma == 'value' and per_verbum['values'].regula == 'pluralis-s' and per_verbum['the'].regula == '', 'vocabula: prosa - values per regulam pluralis-s ad value, the sine regula')
 
 print()
 if fracta:

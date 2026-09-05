@@ -123,11 +123,50 @@ excluded in one place (`ORATIO_VOCABULA_EXCLUSA`; `-omnes-viae` scans
 all). Glossary entries carry `contextus="latinus | anglicus | ambo"`
 (decision 26): the identifier/comment lint is the Latin context and
 ignores English-only entries; abbreviations are KEPT (36 permitted,
-contextus latinus). Identifier unknowns 2,987 of 7,469 words, PINNED
+contextus latinus). Identifier unknowns 2,986 of 7,477 words, PINNED
 only falling in `probatio_oratio_vocabula` (a red = a new unknown
 identifier word: glossary entry or rename, pin moved for a named
-cause). T8b stays parked. NEXT: stage 3 **T11** `partes_registrum`
-(17 classes as analysis genera appended to the registry, canon rules).
+cause). T8b stays parked. **T15a DONE (warmup, decision 27)**: the
+ENGLISH context. Moby Part-of-Speech vendored VERBATIM under
+`oratio/vocabularium/en/` (no coction — the source is one table; seal
+pinned), `oratio_vocabularium_en` (record law asserted per line,
+unknown code letters counted: `cowardic\Ne`), gate
+`probatio_oratio_vocabularium_en` (81). `oratio_vocabula_prosa` = md's
+TEXTUS nodes only (code spans, fences, link targets, html, front matter
+never reach the lookup); `oratio_vocabula_creare_anglice` judges
+glossary-English → Moby → Latin table = status **LATINUM** (known
+Latin in prose is never a finding); corpus = house + knotapel minus
+vendor/ archivum/ generated (`ORATIO_PROSA_EXCLUSA`);
+`./oratio/vocabula.sh -prosa`, `silva.vocabula('prosa')`. Day one:
+62,524 words, 58 % unknown = regular inflections (-s -ed -ing 's) +
+house English terms. **T15b DONE (same day)**: `ORATIO_REGULAE_EN` —
+25 DATA rows (suffix, base substitution, gemination, minimum base,
+required Moby codes, class, cause with the measured tally) +
+`ORATIO_PRAEFIXA_EN` for hyphen compounds; `oratio_vocabularium_en_analysare`
+= exact first, then rules in order, each analysis with rule, base,
+class; `OratioVerbum.regula`; the fold maps U+2019 to `'`. Glossary
+pass II (117 entries, ANGLICA PROSA section; Roman numerals ii–xxx
+`numerale` both contexts; house Latin internamentum, diagnostica,
+friatio, amalgama). Prose unknowns 58 % → 26.2 %; PROSE PIN = ceiling
+on the unknown share (29 %) + floor on the known share (70 %), not a
+count; identifier pin 2,950. Instrument prints a per-rule tally.
+**T11 DONE — STAGE 3 OPENED**: seventeen `analysis-<classis>` genera
+appended after `numerus` (registry 23 genera / 146 slots, seal
+`87b35173`): common five slots first (lemma, lingua, fons, nativum =
+ONE derived token, sensus), then the class's accidents as INDEX slots
+into appended-only enumerations with title arrays (`OratioCasus` …,
+`ORATIO_TITULI_CASUUM` …); `OratioClassis` in UD order with
+`oratio_classis_genus`/`oratio_genus_classis`/`_titulus`/`_ex_titulo`;
+class titles = the glossary canon's `classis` options (gate-guarded).
+Existing STML bytes unchanged (the word's slots were reserved since
+T1; absent lists are not written). Canon: 17 genus rules + 129 slot
+rules intra their genus (generated once, kept by hand; ceiling 512).
+Gates registrum (860) and canon (219, a hand-built analysis judged and
+two mutations refused). NEXT: **T12** `partes_la.c` — WORDS part codes
+→ class + accidents (one code may yield several analyses), the
+annotation pass filling `analyses`/`classes`/`linguae` after the tree,
+glossary forms with their explicit accidents, `vocabulum[classes~=…]`
+in selectio.
 
 ## Laws to keep (spec §2–3)
 
@@ -146,4 +185,19 @@ cause). T8b stays parked. NEXT: stage 3 **T11** `partes_registrum`
   (`loci_numerus`), never a literal.
 - Vendored sources are VERBATIM (CRLF kept); the compiled table is
   committed and proven equal to the coction; its seal moves only with
-  a named cause (`-scribere` prints the warning).
+  a named cause (`-scribere` prints the warning). A one-table source
+  (Moby) is read directly and its own seal is pinned.
+- The prose lint is the ENGLISH context: TEXTUS nodes only; known Latin
+  = `latinum`, never a finding; `ambiguum` never; the identifier pin
+  is the Latin context's and a new house coinage in an API name moves
+  it (glossary entry, pin moved for the cause).
+- English morphology is DATA (`ORATIO_REGULAE_EN`): a row has a cause
+  and a measured count, exact forms always precede rule analyses, rules
+  reduce to MOBY bases only (glossary entries list their own plurals),
+  and the prose pin is a SHARE ceiling, never a word count.
+- Analysis genera: genus = PRIMUM + classis, never reordered; the five
+  common slots come first on every genus; accidents are INDEX into
+  enumerations that are APPENDED only (a value in the projection is a
+  number); a slot-count enumerator is `_NUMERUS_LOCORUM` (the `numerus`
+  accident owns `_NUMERUS`); every slot has ONE canon rule intra its
+  genus; the registry seal moves only with the task as its cause.

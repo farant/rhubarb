@@ -513,3 +513,239 @@ an identifier while it will pass in prose. House identifier unknowns
 3,022 → 2,987 of 7,469; pin moved with this cause. Whole English words
 in identifiers (count, found, name, text, result …) remain findings by
 design.
+
+## 2026-09-04 — T15a: the English context — Moby vendored, the prose lint
+
+Fran's warmup after decision 26: the English-context lint over worklogs
+and markdown. An English lint needs an English word list, so stage 4's
+dictionary came forward: Moby Part-of-Speech II (Gutenberg #3203,
+public domain by grant, January 2001) was already in the Gutenberg
+mirror. Measured before a line was written: 3,237,558 bytes, 233,356
+records, CRLF throughout; the separator is a BACKSLASH in the Gutenberg
+copy (the spec said `×`, which is the CD-ROM edition); codes present
+A N h v P p t V i ! C D r — the legend's I (indefinite article) and o
+(nominative) never occur; one record `cowardic\Ne` carries a code
+outside the legend (a typo for N); 35,969 records are phrases with
+spaces; 1,231 carry CP437 accent bytes (é = 0x8E, the legend's "ASCII
+142"); 4,437 case-duplicate forms (AA/aa, OF/of, BE/Be/be). The legend
+warns that -ed/-ing/-ly forms are often not listed — and it is right.
+
+Four calls by Fran, all the recommended ones (decision 27): (1) a Latin
+word in English prose gets its own status LATINUM — known and counted,
+never a finding; (2) the prose corpus is the house INCLUDING knotapel
+(it is English), minus vendor/, archivum/ and the generated files
+(gesta/annales/tabula.md, md/CENSUS.md) — `ORATIO_PROSA_EXCLUSA`; (3)
+Moby is vendored verbatim and loaded DIRECTLY — no coction, the source
+is already one table; the gate pins bytes and the SHA seal of the
+source (`cc81458b820a3625`); (4) morphology comes AFTER the report, as
+data rows with counts.
+
+Built. `oratio/vocabularium/en/` (mobypos.txt; LICENTIA.txt = the
+Gutenberg documentation note verbatim, grant and legend; FONTES.md with
+the record law and the findings). `oratio_vocabularium_en`: the loader
+asserts the record law on every line — CRLF, one backslash, non-empty
+form and codes — and stops with the line; a code letter outside the
+legend is COUNTED, not a stop, the first named; words are hashed by
+lower-cased form, phrases counted and not indexed; `quaerere` returns
+records in file order (the chain is newest-first, reversed on the way
+out); code letter → universal class. Gate
+`probatio_oratio_vocabularium_en` (81: pins, samples, classes, eight
+bad inline sources stop with the right line; load 27 ms); planted fault
+= '!' removed from the legend → 434 unknown codes → red.
+`oratio_vocabula_prosa`: md's tree, TEXTUS nodes only — code spans,
+fences, link destinations, html blocks and front matter never reach the
+lookup BY CONSTRUCTION, and the gate's inline md proves each absence;
+each text node's byte extent goes through oratio's tree; line = the
+first token's. `oratio_vocabula_creare_anglice` + `_iudicare_anglice`:
+glossary entries allowed in English first (lingua latina → LATINUM,
+permissum → PERMISSUM, else NOTUM), Moby second (class of the first
+code, lemma = the form itself), Latin table third → LATINUM; ambiguum
+never (Moby carries no lemmata). `OratioSedesGenus` (symbolum /
+commentum / prosa) replaces the b32 on `verbum_addere` (kept as a
+wrapper); `sedes_prosae`, `ex_prosa_prima`. Instrument
+`./oratio/vocabula.sh -prosa` (machina output gains a `prosa` column
+and a `latina` count), `silva.vocabula('prosa')`. Second planted fault
+on the vocabula gate: the glossary context inverted (`e->anglice`) →
+tok permitted, worklog unknown → red.
+
+Two things the corpus taught while building. A lone arrow `→` (E2 86
+92) was counted as a three-letter word because every byte ≥ 0x80 was a
+letter — the word filter now counts UTF-8 LEAD bytes (≥ 0xC0) as
+letters, so a lone symbol is not a word (6,885 sites of `→` gone; `s²`
+and `ζ₈` stay, two characters each). And `oratio_vocabula_ordinata` was
+quadratic — one scan of all words per site count, invisible at 200
+sites, 20 s at 100k sites × 62k words — now a counting sort (the gate
+went from 21 s to 3 s).
+
+The report, day one (English prose, house + knotapel): 1,139 files,
+62,524 distinct words, 1,894,264 sites, 1.6 s. notum 15,098, permissum
+57, latinum 11,254, IGNOTUM 36,115 (58 %). What the unknown list is
+made of, from the top: REGULAR INFLECTIONS Moby does not list —
+plural/third-person -s (values 2,076, functions, tests, cells,
+solutions, types, weights, results, returns … gets, sets), -ed (added,
+needed, tested, shared, recorded, expected), -ing (existing, matching,
+tracking, nesting, testing, interning), possessive 's (pliny's,
+casey's, fran's), -ally (computationally); hyphenated compounds whose
+parts are known (a-plot, non-semisimple, non-null); house English terms
+(dkc 2,842, vs 2,461, xor6, methos, voronoi, npn, sqrt, mcp, mvn,
+fibonacci, braids); Unicode math (s², ζ₈, ζ₁₂); `struct` (691 — the C
+keyword in prose; int, char, long … were permitted in pass I, struct
+was not). By directory of first use: project-specs 9,130, knotapel
+6,906, silva 3,455, episodes 3,337, lib 2,512. Consequences: the
+morphology rules the spec names are exactly the top of this list and
+land next as DATA rows with these counts as their cause (-s/-es, -ed,
+-ing, 's, -ly); a glossary pass II with `contextus="anglicus"` entries
+follows (vs, dkc, xor6, methos, voronoi, npn, sqrt, mcp, mvn, struct
+…); the gate's corpus floor is a third known (42 % measured), to rise
+with the morphology; no prose pin yet.
+
+Identifier-pin note. The new code introduced `recordum` (the house
+coinage for "record", used since T7 as `recorda`) — WORDS knows
+`recorda` only as a form of the verb `recordor`, so
+`oratio_vocabularium_en_recordum` turned the identifier pin red (2,988
+> 2,987): exactly what the pin is for. Glossary entry added (neuter
+noun, forms listed); unknowns 2,986, pin moved down with this cause.
+Note for the next reader of that pin: the machine output gained a
+column, so a query by first site must read field 11, not 10 — half an
+hour went to a wrong column.
+
+## 2026-09-04 — T15b: English morphology as data, glossary pass II, the prose pin
+
+Straight after T15a, with the day-one report in hand. The suffix rules
+the spec names are a DATA table now, `ORATIO_REGULAE_EN` in
+`oratio_vocabularium_en.c`: one row per suffix with its base
+substitution (ed→"", ed→e, ies→y …), a gemination flag (planned →
+plan), a minimum base length, the Moby codes the base must carry (a
+plural needs a noun or verb base; a comparative an adjective or adverb
+— `near` is `PvVN`, so `nearest` needs the `v`), the analysis class
+(or "from the base" for plurals), and a cause that cites the report's
+words and now the measured tally. Twenty-five rows: three plural, four
+past, three participle, possessive, six contractions, three adverb,
+two comparative, two superlative, and `compositum`. A new function
+`oratio_vocabularium_en_analysare` returns analyses in order — exact
+records first, always, then the rules in table order — each carrying
+its rule index, its base, and its class; the judge takes the first
+analysis for class and lemma (so `values` gets lemma `value` and
+`regula` `pluralis-s`), counts distinct bases as `lemmata`, and
+`OratioVerbum.regula` names the rule; the machine output gained a last
+column and the instrument a per-rule tally.
+
+Three things learned from the corpus while the rules went in. (1)
+Moby lists more than the legend admits: `entries` is there as `p`,
+`tried` and `planned` as `V`, `making` as `N`, `simply` and `happily`
+as `v`, `larger` and `largest` as `A`, `I'm` and `don't` as entries —
+so the gate asserts "exact first, rule present after", not "rule
+first", and two contraction rows explain nothing in this corpus; they
+stay as rows with a zero. (2) Compounds are the biggest single rule:
+`compositum` (every hyphen part a known word, or a prefix from
+`ORATIO_PRAEFIXA_EN` — non, multi, semi, pseudo … — with at least one
+real word among the parts, and parts themselves may go through the
+suffix rules, so `consists-in` and `discovered-while` resolve) explains
+13,508 distinct words and 45,304 sites; plurals 3,327 / 135,056;
+possessives 1,129 / 8,957; `-ed` 644 / 16,372; `-ing` 570 / 12,097.
+(3) The typographic apostrophe: `i’m` and `dkc’s` carried U+2019, so
+the English fold maps E2 80 99 to `'` before anything else.
+
+The pass II glossary followed the post-rule report: 117 entries under
+an ANGLICA PROSA section — proper names (Voronoi, Fibonacci, Hopf,
+Galois, Seifert, Temperley-Lieb, Methos, Teal'c …) with possessive
+forms where the corpus has them; the computing English Moby's 1990s
+list lacks (whitespace, roundtrip, lookup, lexer, runtime, subtree,
+codebase, newline, fallback, database, callback, tuple, typedef,
+stdout, metadata, timestamp, workflow, monorepo …) as real classes with
+explicit plurals, because the rules reduce to MOBY bases only, not to
+glossary lemmata; abbreviations (dkc, vs, xor with its numbered forms,
+npn, sqrt, mcp, mvn, e.g, i.e, tsv, utf …) as permitted; `struct` and
+`sizeof` joining the C names for both contexts; three house Latin
+coinages the identifier lint had also been missing (internamentum,
+diagnostica, friatio; amalgama as medieval Latin); and the Roman
+numerals ii–xxx as `numerale`, both contexts, since the house writes
+them in prose and in comments (`iii` alone had 262 prose sites). The
+plural rule's minimum base went from three letters to two for `ids`.
+
+Numbers. Prose unknowns 36,115 → 18,949 after the rules (58 % → 30 %)
+→ 16,416 after pass II (26.2 %); known share 73.8 %. The identifier pin
+fell 2,986 → 2,950 on the `ambo` entries and moved with that cause.
+The gate: `probatio_oratio_vocabularium_en` section VI (160; every row
+on a listed base, prefixes, contractions, the fold, limits; planted
+fault = the plural rule's base codes replaced by `A` → red at
+`values`); `probatio_oratio_vocabula` (165) now judges `values` and
+`tested` through the rules. The prose pin: not a count "only falling"
+like the identifiers' — prose gains new words every day and a count
+pin would go red on the next worklog — but a CEILING on the unknown
+SHARE (29 %, three points above measured) beside a floor on the known
+share (70 %); a red there means a rule or a glossary section broke, not
+that one new word appeared. That is a deviation from what I said
+before building; the reason is above.
+
+What is left at the top of the unknown list is now genuinely
+interesting: Unicode math from knotapel (s², ζ₈, ζ₁₂), FILE NAMES
+written in prose without backticks (silva.h 298, latina.h 234,
+claude.md, stml.c — a style finding the lint was built for), knotapel's
+own codes (m0b, m2c, xor7, xnor3, rkhs, gptq, bitnet), hyphen compounds
+with one unknown part (nazer-gastpar, pseudo-anosov,
+delta-parameterized), `won't` (base `wo`), and a thin tail of English
+Moby lacks (uniqueness, bitwise, whiteboard, resize, lifecycle). A
+compositum that consults the glossary for parts would take the
+compounds; a numeral-like filter would take the math; the file names
+should stay findings.
+
+## 2026-09-04 — T11: partes_registrum — the seventeen analysis genera
+
+Stage 3 opened with its smallest task: the vocabulary of grammar into
+the registry, nothing annotated. Seventeen genera appended after
+`numerus`, one per universal class in UD order, `analysis-substantivi`
+… `analysis-ignoti`, with the invariant genus = PRIMUM + classis and an
+`OratioClassis` enum whose titles are exactly the `classis` options
+the glossary canon already had (the registry gate reads that canon and
+proves each title is an option — one vocabulary, two homes). Every
+analysis genus has the same five slots first: `lemma` (derived token),
+`lingua` and `fons` (INDEX), `nativum` (derived token — ONE token
+holding the source's own code verbatim, Fran's call; WORDS gives a
+line, Moby a code string plus a rule name, one string covers both),
+`sensus` (derived, optional). Then the accidents as INDEX slots into
+small enumerations that are appended and never permuted, with title
+arrays for each: nouns and proper nouns carry case, number, gender,
+declension; verbs and auxiliaries person, number, tense, mood, voice,
+verb form, conjugation, plus case and gender because participles
+agree; adjectives case, number, gender, degree, declension; adverbs
+degree; pronouns case, number, gender, person; determiners case,
+number, gender; adpositions the governed case; numerals case, number,
+gender and a kind (cardinal, ordinal, distributive, adverbial);
+conjunctions, particles, interjections, symbols, punctuation and the
+unknown class carry the common five only. Case has locative and
+vocative, number has dual, voice has deponent, verb form has gerund,
+gerundive and supine, tense has the English simple past beside the
+Latin six — the lists are permanent from here. 146 slots in all.
+
+The word's own slots (`analyses`, `classes`, `linguae`) had been
+reserved since T1, so the STML of every existing parse is byte-for-byte
+what it was: an absent list is not written, and the seal attribute
+changed value but not length. The computus golden and the STML
+round-trip gate did not move; only the registry seal (93c1c9cf →
+87b35173) and the canon did. The canon gained the seventeen genus
+rules, the seventeen liberi under `analyses` and under `arbor`, and
+129 slot rules, one per slot INSIDE its genus, because the drift guard
+demands exactly one rule per slot intra its genus and a global
+fallback would not satisfy it. Those rules were generated from the
+table by a script once and are kept by hand from now on, like the rest
+of the file; the rule ceiling went 256 → 512 (182 now).
+
+Gates. `probatio_oratio_registrum` (860): contiguity over 23 genera,
+the class helpers round-tripped for all seventeen, the five common
+slots by title and species on every analysis genus, every accident an
+INDEX, the per-class slot counts of the decision above, auxiliaries
+laid out exactly as verbs, the enumeration ends by title, the glossary
+canon drift, and the materia round trip of a word carrying an
+`analysis-substantivi` with lemma, lingua and case — green first run.
+`probatio_oratio_canon` (219) now also judges a hand-built analysis
+document (0 vitia) and two mutations of it: `gradus` under a noun
+analysis and `casus` under an adverb analysis, each refused with a
+named vitium. Planted fault: the verb genus's slot count 14 → 13 →
+red at contiguity, green on revert.
+
+One naming slip worth remembering: the slot-count enumerator
+`ORATIO_ANALYSIS_SUBSTANTIVI_NUMERUS` collided with the `numerus`
+accident's enumerator of the same name — counts are
+`_NUMERUS_LOCORUM` now. Next is T12: the WORDS mapping table and the
+annotation pass that fills what T11 reserved.

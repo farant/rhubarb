@@ -8,6 +8,9 @@
 #include "silva_token.h"
 #include "materia_nodus.h"
 #include "materia_token.h"
+#include "md_arbor.h"
+#include "md_registrum.h"
+#include "md_lexicon.h"
 #include "tabula_dispersa.h"
 #include <string.h>
 
@@ -18,6 +21,8 @@ nomen structura {
 structura OratioVocabula {
                  Piscina* piscina;
     OratioVocabulariumLa* voc;
+    OratioVocabulariumEn* en;          /* contextus Anglicus: Moby (NIHIL Latine) */
+                     b32  anglice;     /* VERUM = iudicium contextus Anglici */
                      Xar* verba;                  /* OratioVerbum */
           TabulaDispersa* per_verbum;  /* verbum minusculum -> Sedes */
                      i32  sedes;
@@ -25,15 +30,20 @@ structura OratioVocabula {
 };
 
 hic_manens constans character* TITULI_STATUUM[] = {
-    "notum", "ambiguum", "permissum", "ignotum"
+    "notum", "ambiguum", "permissum", "ignotum", "latinum"
 };
 
 constans character* constans ORATIO_VOCABULA_EXCLUSA[] = {
     "knotapel/", "vendor/", "archivum/", NIHIL
 };
 
-interior b32
-_via_exclusa (
+constans character* constans ORATIO_PROSA_EXCLUSA[] = {
+    "vendor/", "archivum/", "gesta/annales/tabula.md", "md/CENSUS.md",
+    NIHIL
+};
+
+b32
+oratio_vocabula_via_exclusa (
                           chorda  via,
     constans character* constans* exclusa)
 {
@@ -140,6 +150,23 @@ _digitus_est (
 }
 
 OratioVocabula*
+oratio_vocabula_creare_anglice (
+                 Piscina* piscina,
+    OratioVocabulariumLa* voc,
+    OratioVocabulariumEn* en)
+{
+    OratioVocabula* vc = oratio_vocabula_creare(piscina, voc);
+
+    si (vc == NIHIL)
+    {
+        redde NIHIL;
+    }
+    vc->en       = en;
+    vc->anglice  = VERUM;
+    redde vc;
+}
+
+OratioVocabula*
 oratio_vocabula_creare (
                  Piscina* piscina,
     OratioVocabulariumLa* voc)
@@ -171,6 +198,18 @@ oratio_vocabula_verbum_addere (
                    i32  linea,
                    b32  ex_commento)
 {
+    redde oratio_vocabula_verbum_addere_sede(vc, verbum, via, linea,
+        ex_commento ? ORATIO_SEDES_COMMENTUM : ORATIO_SEDES_SYMBOLUM);
+}
+
+b32
+oratio_vocabula_verbum_addere_sede (
+        OratioVocabula* vc,
+                chorda  verbum,
+    constans character* via,
+                   i32  linea,
+      OratioSedesGenus  genus)
+{
               i8  minusculum[64];
           chorda  clavis;
           vacuum* valor = NIHIL;
@@ -190,7 +229,10 @@ oratio_vocabula_verbum_addere (
         {
             c = (i8)(c - 'A' + 'a');
         }
-        si (_littera_est(c))
+                /* littera = ASCII aut octetus DUCENS UTF-8 (>= 0xC0): sequentia
+         * multi-octeta una littera est, ergo sagitta sola (E2 86 92) aut
+         * littera Graeca sola verbum non facit */
+        si (_littera_est(c) && (c < 0x80 || c >= 0xC0))
         {
             litterae = litterae + I;
         }
@@ -222,21 +264,26 @@ oratio_vocabula_verbum_addere (
         v->status             = ORATIO_VERBUM_IGNOTUM;
         v->via_prima          = _copia_literarum(vc->piscina, via);
         v->linea_prima        = linea;
-        v->ex_commento_prima  = ex_commento;
+        v->ex_commento_prima  = (b32)(genus == ORATIO_SEDES_COMMENTUM);
+        v->ex_prosa_prima     = (b32)(genus == ORATIO_SEDES_PROSA);
         s->index              = (s32)xar_numerus(vc->verba) - I;
         si (!tabula_dispersa_inserere(vc->per_verbum, v->verbum, s))
         {
             redde FALSUM;
         }
     }
-    v->sedes = v->sedes + I;
-    si (ex_commento)
+        v->sedes = v->sedes + I;
+    commutatio (genus)
     {
-        v->sedes_commentorum = v->sedes_commentorum + I;
-    }
-    alioquin
-    {
-        v->sedes_symbolorum = v->sedes_symbolorum + I;
+        casus ORATIO_SEDES_COMMENTUM:
+            v->sedes_commentorum = v->sedes_commentorum + I;
+            frange;
+        casus ORATIO_SEDES_PROSA:
+            v->sedes_prosae = v->sedes_prosae + I;
+            frange;
+        ordinarius:
+            v->sedes_symbolorum = v->sedes_symbolorum + I;
+            frange;
     }
     redde VERUM;
 }
@@ -378,7 +425,7 @@ oratio_vocabula_symbola (
             chorda v = _campus(linea, (i32)III);
                i32 m = v.mensura < (i32)511 ? v.mensura : (i32)511;
 
-            si (_via_exclusa(v, exclusa))
+            si (oratio_vocabula_via_exclusa(v, exclusa))
             {
                 perge;
             }
@@ -399,11 +446,12 @@ oratio_vocabula_symbola (
  * lineae novae ante vocabulum intra commentarium */
 interior b32
 _vocabula_arboris (
-           OratioVocabula* vc,
-    constans MateriaNodus* doc,
-                   chorda  fons,
-       constans character* via,
-                      i32  linea_basis)
+               OratioVocabula* vc,
+        constans MateriaNodus* doc,
+                       chorda  fons,
+           constans character* via,
+                          i32  linea_basis,
+             OratioSedesGenus  genus)
 {
     constans MateriaValor* paragraphi =
         &doc->loci[ORATIO_DOCUMENTUM_PARAGRAPHI];
@@ -480,11 +528,11 @@ _vocabula_arboris (
                     }
                     cursor = cursor + I;
                 }
-                si (!oratio_vocabula_verbum_addere(vc,
+                si (!oratio_vocabula_verbum_addere_sede(vc,
                         _chorda(fons.datum + ab,
                             (i32)(b->byte_offset
                                 + (s32)b->valor.mensura) - ab),
-                        via, linea, VERUM))
+                        via, linea, genus))
                 {
                     redde FALSUM;
                 }
@@ -536,8 +584,143 @@ oratio_vocabula_commenta (
             sanum = FALSUM;
             frange;
         }
-        sanum = _vocabula_arboris(vc, doc, t->valor, via, t->linea);
+        sanum = _vocabula_arboris(vc, doc, t->valor, via, t->linea,
+            ORATIO_SEDES_COMMENTUM);
     }
+        piscina_destruere(scratch);
+    redde sanum;
+}
+
+/* nodos TEXTUS arboris md ambulare: extentum lexematum crudorum
+ * (plagulae, non syntheticorum) per arborem orationis legitur, linea =
+ * lexematis primi; saepta, verbatim, destinationes nexuum, html,
+ * praefatio genera ALIA sunt et numquam tanguntur */
+interior b32
+_prosa_arboris (
+           OratioVocabula* vc,
+                  Piscina* scratch,
+    constans MateriaNodus* n,
+                   chorda  fons,
+       constans character* via)
+{
+    i32 i;
+
+    si (n == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (n->genus == (s32)MD_GENUS_TEXTUS)
+    {
+        constans MateriaValor* crudum  = &n->loci[MD_TEXTUS_CRUDUM];
+                          s32  a       = (s32)-I;
+                          s32  b       = ZEPHYRUM;
+                          i32  linea   = I;
+                          i32  m;
+                          i32  k;
+
+        si (crudum->genus != MATERIA_VALOR_LISTA)
+        {
+            redde VERUM;
+        }
+        m = materia_valor_lista_numerus(*crudum);
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            constans MateriaValor* e =
+                materia_valor_lista_obtinere(*crudum, k);
+            constans MateriaToken* t;
+
+            si (e == NIHIL || e->genus != MATERIA_VALOR_TOKEN)
+            {
+                perge;
+            }
+            t = e->datum.token;
+            si (   t->fons_index != MD_FONS_PLAGULAE
+                || t->byte_offset < ZEPHYRUM)
+            {
+                perge;
+            }
+            si (a < ZEPHYRUM || t->byte_offset < a)
+            {
+                a      = t->byte_offset;
+                linea  = t->linea;
+            }
+            si (t->byte_offset + (s32)t->valor.mensura > b)
+            {
+                b = t->byte_offset + (s32)t->valor.mensura;
+            }
+        }
+        si (a >= ZEPHYRUM && b > a && b <= (s32)fons.mensura)
+        {
+            MateriaNodus* doc = oratio_arbor_parsare(scratch,
+                (constans character*)fons.datum + a, (i32)(b - a));
+
+            si (doc == NIHIL)
+            {
+                redde FALSUM;
+            }
+            redde _vocabula_arboris(vc, doc,
+                _chorda(fons.datum + a, (i32)(b - a)), via, linea,
+                ORATIO_SEDES_PROSA);
+        }
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < n->numerus_locorum; i++)
+    {
+        constans MateriaValor* v = &n->loci[i];
+
+        si (v->genus == MATERIA_VALOR_NODUS)
+        {
+            si (!_prosa_arboris(vc, scratch, v->datum.nodus, fons, via))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (v->genus == MATERIA_VALOR_LISTA)
+        {
+            i32 nl = materia_valor_lista_numerus(*v);
+            i32 j;
+
+            per (j = ZEPHYRUM; j < nl; j++)
+            {
+                constans MateriaValor* e =
+                    materia_valor_lista_obtinere(*v, j);
+
+                si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
+                    && !_prosa_arboris(vc, scratch, e->datum.nodus,
+                    fons,
+                        via))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
+b32
+oratio_vocabula_prosa (
+        OratioVocabula* vc,
+                chorda  fons,
+    constans character* via)
+{
+    Piscina* scratch = piscina_generare_dynamicum("vocabula_prosa",
+        67108864);
+    MateriaNodus* doc;
+    b32 sanum;
+
+    si (scratch == NIHIL)
+    {
+        redde FALSUM;
+    }
+    doc = md_arbor_parsare(scratch, (constans character*)fons.datum,
+        fons.mensura);
+    si (doc == NIHIL)
+    {
+        piscina_destruere(scratch);
+        redde FALSUM;
+    }
+    sanum = _prosa_arboris(vc, scratch, doc, fons, via);
     piscina_destruere(scratch);
     redde sanum;
 }
@@ -581,6 +764,170 @@ _lemma_analysis (
     }
 }
 
+/* contextus ANGLICUS (prosa): glossarium (entria anglice licita)
+ * primum, Moby deinde (forma exacta - morphologia gradus IV), tabula
+ * Latina tertia -> LATINUM (notum Latine, non inventum: nomina rerum
+ * domus in prosa aperte scripta); ambiguum numquam (Moby lemmata non
+ * fert) */
+interior b32
+_iudicare_anglice (
+    OratioVocabula* vc)
+{
+    Piscina* scratch =
+        piscina_generare_dynamicum("vocabula_iudicium_en",
+        67108864);
+    constans OratioGlossarium* gl;
+                          i32  i;
+
+    si (scratch == NIHIL)
+    {
+        redde FALSUM;
+    }
+    gl = oratio_vocabularium_la_glossarium(vc->voc);
+    per (i = ZEPHYRUM; i < xar_numerus(vc->verba); i++)
+    {
+        OratioVerbum* v = (OratioVerbum*)xar_obtinere(vc->verba, i);
+                 Xar* x;
+                 i32  k;
+
+        v->analyses  = ZEPHYRUM;
+        v->lemmata   = ZEPHYRUM;
+        v->status    = ORATIO_VERBUM_IGNOTUM;
+        /* I. glossarium: entria in prosa Anglica licita (anglicus, ambo) */
+        si (gl != NIHIL)
+        {
+            Xar* formae = oratio_glossarium_quaerere(scratch, gl,
+                v->verbum);
+
+            si (formae == NIHIL)
+            {
+                piscina_destruere(scratch);
+                redde FALSUM;
+            }
+            per (k = ZEPHYRUM; k < xar_numerus(formae); k++)
+            {
+                constans OratioGlossariumEntrium* e =
+                    oratio_glossarium_entrium(gl,
+                    oratio_glossarium_forma(gl,
+                        *(s32*)xar_obtinere(formae, k))->entrium);
+
+                si (!e->anglice)
+                {
+                    perge;
+                }
+                                v->analyses = v->analyses + I;
+                si (v->analyses == I)
+                {
+                    v->classis  = _copia(vc->piscina, e->classis);
+                    v->lemma    = _copia(vc->piscina, e->lemma);
+                    v->lemmata  = I;
+                    /* entrium Latinum (lexema, silva, sum) in prosa
+                     * Anglica = LATINUM, non notum: status linguam refert */
+                    v->status   = e->permissum ? ORATIO_VERBUM_PERMISSUM
+                        : (e->lingua.mensura == (i32)VI
+                            && memcmp(e->lingua.datum, "latina",
+                                (size_t)VI) == ZEPHYRUM)
+                            ? ORATIO_VERBUM_LATINUM
+                            : ORATIO_VERBUM_NOTUM;
+                }
+            }
+        }
+                /* II. Moby: forma exacta primum, deinde regulae morphologicae
+         * (T15b, ORATIO_REGULAE_EN) - analysis prima classem, lemma
+         * (basis) et regulam dat; lemmata = bases distinctae */
+        si (v->analyses == ZEPHYRUM && vc->en != NIHIL)
+        {
+            x = oratio_vocabularium_en_analysare(scratch, vc->en,
+                v->verbum);
+            si (x == NIHIL)
+            {
+                piscina_destruere(scratch);
+                redde FALSUM;
+            }
+            si (xar_numerus(x) > ZEPHYRUM)
+            {
+                constans OratioAnalysisEn* a =
+                    (constans OratioAnalysisEn*)xar_obtinere(x,
+                    ZEPHYRUM);
+                chorda bases[16];
+                   i32 distinctae = ZEPHYRUM;
+
+                per (k = ZEPHYRUM; k < xar_numerus(x); k++)
+                {
+                    constans OratioAnalysisEn* b =
+                        (constans OratioAnalysisEn*)xar_obtinere(x, k);
+                    i32 j;
+                    b32 nova = VERUM;
+
+                    per (j = ZEPHYRUM; j < distinctae; j++)
+                    {
+                        si (   bases[j].mensura == b->basis.mensura
+                            && memcmp(bases[j].datum, b->basis.datum,
+                                (size_t)b->basis.mensura) == ZEPHYRUM)
+                        {
+                            nova = FALSUM;
+                            frange;
+                        }
+                    }
+                    si (nova && distinctae < (i32)16)
+                    {
+                        bases[distinctae]  = b->basis;
+                        distinctae         = distinctae + I;
+                    }
+                }
+                v->analyses  = xar_numerus(x);
+                v->lemmata   = distinctae;
+                v->classis = _copia_literarum(vc->piscina,
+                    a->classis);
+                v->lemma   = _copia(vc->piscina, a->basis);
+                v->status  = ORATIO_VERBUM_NOTUM;
+                si (a->regula >= ZEPHYRUM)
+                {
+                    v->regula = _copia_literarum(vc->piscina,
+                        ORATIO_REGULAE_EN[a->regula].titulus);
+                }
+            }
+        }
+        /* III. tabula Latina (glossarium totum inclusum): LATINUM */
+        si (v->analyses == ZEPHYRUM)
+        {
+            x = oratio_vocabularium_la_quaerere(scratch, vc->voc,
+                v->verbum);
+            si (x == NIHIL)
+            {
+                piscina_destruere(scratch);
+                redde FALSUM;
+            }
+            si (xar_numerus(x) > ZEPHYRUM)
+            {
+                chorda classis;
+                chorda lemma = _lemma_analysis(scratch, vc->voc,
+                    (constans OratioAnalysis*)xar_obtinere(x, ZEPHYRUM),
+                    &classis);
+
+                v->analyses  = xar_numerus(x);
+                v->lemmata   = I;
+                v->classis   = _copia(vc->piscina, classis);
+                v->lemma     = _copia(vc->piscina, lemma);
+                v->status    = ORATIO_VERBUM_LATINUM;
+            }
+        }
+        si ((i & 0x3FF) == 0x3FF)
+        {
+            piscina_destruere(scratch);
+            scratch = piscina_generare_dynamicum("vocabula_iudicium_en",
+                67108864);
+            si (scratch == NIHIL)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    piscina_destruere(scratch);
+    vc->iudicata = VERUM;
+    redde VERUM;
+}
+
 b32
 oratio_vocabula_iudicare (
     OratioVocabula* vc)
@@ -589,9 +936,14 @@ oratio_vocabula_iudicare (
         67108864);
     i32 i;
 
-    si (scratch == NIHIL)
-    {
+        si (scratch == NIHIL)
+        {
         redde FALSUM;
+        }
+    si (vc->anglice)
+    {
+        piscina_destruere(scratch);
+        redde _iudicare_anglice(vc);
     }
     per (i = ZEPHYRUM; i < xar_numerus(vc->verba); i++)
     {
@@ -735,8 +1087,11 @@ oratio_vocabula_ordinata (
             maxima = v->sedes;
         }
     }
-    /* ordinatio per numerationem: sedes descendentes, intra sedes ordo
-     * primi adventus */
+        /* ordinatio per numerationem (O(n + maxima), non per cursus n x
+     * maxima - super prosam 62 milia verborum x 100 milia sedium XX s
+     * erant): numerus verborum cuiusque sedis, deinde initia descendentia
+     * (sedes maiores primae), deinde verba ordine primi adventus in
+     * loca sua */
     numeri = (i32*)piscina_allocare(piscina,
         (memoriae_index)(maxima + I) * (memoriae_index)magnitudo(i32));
     si (numeri == NIHIL)
@@ -744,28 +1099,48 @@ oratio_vocabula_ordinata (
         redde NIHIL;
     }
     memset(numeri, ZEPHYRUM, (size_t)(maxima + I) * magnitudo(i32));
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans OratioVerbum* v =
+            (constans OratioVerbum*)xar_obtinere(vc->verba, i);
+
+        si (status < ZEPHYRUM || (s32)v->status == status)
+        {
+            numeri[v->sedes] = numeri[v->sedes] + I;
+        }
+    }
+    {
+        i32 initium = ZEPHYRUM;
+
         per (s = (s32)maxima; s >= ZEPHYRUM; s--)
         {
-        per (i = ZEPHYRUM; i < n; i++)
+            i32 t = numeri[s];
+
+            numeri[s]  = initium;
+            initium    = initium + t;
+        }
+        per (i = ZEPHYRUM; i < initium; i++)
         {
-            constans OratioVerbum* v =
-                (constans OratioVerbum*)xar_obtinere(
-                vc->verba, i);
+            s32* locus = (s32*)xar_addere(exitus);
 
-            si (   v->sedes == (i32)s
-                && (status < ZEPHYRUM || (s32)v->status == status))
-
+            si (locus == NIHIL)
             {
-                s32* locus = (s32*)xar_addere(exitus);
-
-                si (locus == NIHIL)
-                {
-                    redde NIHIL;
-                }
-                *locus = (s32)i;
+                redde NIHIL;
             }
+            *locus = (s32)-I;
         }
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans OratioVerbum* v =
+            (constans OratioVerbum*)xar_obtinere(vc->verba, i);
+
+        si (status < ZEPHYRUM || (s32)v->status == status)
+        {
+            *(s32*)xar_obtinere(exitus, numeri[v->sedes]) = (s32)i;
+            numeri[v->sedes] = numeri[v->sedes] + I;
         }
+    }
     redde exitus;
 }
 

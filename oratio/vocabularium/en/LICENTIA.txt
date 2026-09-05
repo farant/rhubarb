@@ -1,0 +1,117 @@
+*** START OF THE PROJECT GUTENBERG EBOOK 3203 ***
+
+
+
+
+Moby (tm) Part-of-Speech II Documentation Notes
+
+This documentation, the software and/or database are:
+
+Public Domain material by grant from the author, January, 2001.
+
+
+Moby (tm) Part-of-Speech II for MSDOS operating systems is compressed
+and distributed as a single zip file.  After decompression the
+part-of-speech file included with this product is in ordinary ASCII
+format with CRLF (ASCII 13/10) delimiters.
+
+
+
+
+
+MOBY Part-of-Speech II CONTENTS
+
+Part-of-Speech (https://www.gutenberg.org/files/3203/files/mobypos.txt)
+
+
+
+
+Quick Start
+
+1) Insure you have at least 3Mb of free disk space to hold the contents
+   of this zip file.
+2) Create a directory to hold these files listed above.
+3) Extract the contents of this zip file into the destination directory
+   using any compatible zip file extraction utility.
+4) Delete the original zip file from your disk to save space.  (optional)
+
+
+This second edition is a particularly thorough revision of the
+original Moby Part-of-Speech.  Beyond the fifteen thousand new
+entries, many thousand more entries have been scrutinized for
+correctness and modernity.  This is unquestionably the largest P-O-S
+list in the world.  Note that the many included phrases means that
+parsing algorithms can now tokenize in units larger than a single
+word, increasing both speed *and* accuracy.
+
+
+Database Legend:
+
+Each part-of-speech vocabulary entry consists of a word or phrase
+field followed by a field delimiter of the backslash (\) and the
+part-of-speech field that is coded using the following ASCII symbols
+(case is significant):
+
+
+Noun 		  	        N
+
+Plural			        p
+
+Noun Phrase		        h
+
+Verb (usu participle)	V
+
+Verb (transitive)	    t
+
+Verb (intransitive)  	i
+
+Adjective		        A
+
+Adverb			        v
+
+Conjunction		        C
+
+Preposition		        P
+
+Interjection		    !
+
+Pronoun			        r
+
+Definite Article	    D
+
+Indefinite Article	    I
+
+Nominative		        o
+
+
+
+This two-part vocabulary record is delimited from others with CRLF
+(ASCII 13/10).  For example, engineer\Nt means that the word engineer
+has two main uses in English; the principal part-of-speech is as a
+noun "That engineer could write in microcode with one hand and in ADA
+with the other" and its secondary part-of-speech is as a transitive
+verb: "We sure engineered that software to death."
+
+In many cases, the -ed, -ing, -ly, and -ic forms of words are not
+explicitly listed; the participle forms of verbs will be usually
+marked simply with the V sign rather than the more specific t or i
+symbols.  Words such as "be," which often have more than one head
+entry in a dictionary, have one listing with all the parts-of-speech
+for all senses concatenated.  Foreign words commonly used in English
+usually include their diacritical marks, for example, the acute
+accent e is denoted by ASCII 142.
+
+
+Quick Start
+
+
+1) Create a destination directory to hold the file listed above.
+
+2) On the PG Catalog page click on the selection "More Files". You will
+see a "files.zip" folder in the list. Move this zipped folder to your
+computer. On your computer open "files.zip", double click on its "files"
+subdirectory and copy the contents into the  destination directory on
+your computer.
+
+
+*** END OF THE PROJECT GUTENBERG EBOOK 3203 ***
