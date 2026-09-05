@@ -1,0 +1,133 @@
+#!/usr/bin/env briar
+# Salutatio
+
+A window that says hello, drawn through ludus: `componere` builds a
+two-node logical tree, a ten-line figura lowers the title node to
+mandata, the CPU rasterizer paints it, and
+the frame loop presents it. No `#include` anywhere — briar derives
+the headers from the symbols used. The window closes itself after
+six hundred frames, or when you close it.
+
+<c!>
+/* Figura propria: titulus componentis in mandata (textus). Nihil
+ * ex pictore trahitur - clausura sine volumine, sine sqlite. */
+vacuum
+figura_salutationis (
+    constans Componens* c,
+              Mandata* m,
+                  i32  thema,
+              vacuum* ctx)
+{
+    ColorMandati color;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    color.genus = COLOR_MANDATI_THEMA;
+    color.valor = (i32)COLOR_TEXT;
+    mandata_textus(m, II, II, c->titulus, ZEPHYRUM, color);
+}
+
+Componens*
+componere_salutationis (
+     InsulaRepositorium* repo,
+        constans Motus* motus,
+               Piscina* p,
+    InternamentumChorda* in,
+                vacuum* ctx)
+{
+    Componens* radix;
+    Componens* titulus;
+         Fines f;
+
+    (vacuum)repo;
+    (vacuum)motus;
+    (vacuum)ctx;
+    radix = componens_creare(p, in, "radix", PARTES_NULLUM);
+    f.x        = ZEPHYRUM;
+    f.y        = ZEPHYRUM;
+    f.latitudo = CCCXX;
+    f.altitudo = CXX;
+    componens_ponere_fines(radix, f);
+    titulus = componens_creare(p, in, "salutatio", PARTES_TITULUS);
+    f.x        = X;
+    f.y        = L;
+    f.latitudo = CCC;
+    f.altitudo = XX;
+    componens_ponere_fines(titulus, f);
+    componens_ponere_titulum(titulus, "salve, munde");
+    componens_addere_liberum(radix, titulus);
+    redde radix;
+}
+
+s32
+principale (vacuum)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+         ActioRegistrum* actiones;
+        FiguraRegistrum* figurae;
+            Dispensator* d;
+               Fenestra* fenestra;
+        TabulaPixelorum* tabula;
+          LudusFenestra* lf;
+   FenestraConfiguratio  cfg;
+                    s32  exitus;
+
+    piscina = piscina_generare_dynamicum("salutatio", IV * M * M);
+    intern  = internamentum_creare(piscina);
+    thema_initiare();
+    repo = insula_repositorium_creare(piscina, intern,
+        "<documentum/>", "<ephemera/>");
+    actiones = actio_registrum_creare(piscina, intern);
+    figurae  = figura_registrum_creare(piscina);
+    figura_registrare(figurae, PARTES_TITULUS, ZEPHYRUM,
+                      figura_salutationis, NIHIL);
+    d = dispensator_creare(piscina, intern, repo, actiones,
+                           componere_salutationis, NIHIL, CCC);
+    memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
+    cfg.titulus  = "salutatio";
+    cfg.x        = C;
+    cfg.y        = C;
+    cfg.latitudo = CCCXX;
+    cfg.altitudo = CXX;
+    cfg.vexilla  = FENESTRA_ORDINARIA;
+    fenestra = fenestra_creare(piscina, &cfg);
+    si (!fenestra)
+    {
+        redde I;
+    }
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CXX);
+    lf = ludus_fenestra_creare(piscina, d, figurae, ZEPHYRUM, NIHIL, NIHIL,
+                               tabula);
+    exitus = ludus_fenestra_currere(lf, fenestra, DC);
+    fenestra_destruere(fenestra);
+    redde exitus;
+}
+</c>
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+              Componens* arbor;
+              Componens* c;
+
+    piscina = piscina_generare_dynamicum("probatio", LXIV * M);
+    credo_aperire(piscina);
+    intern = internamentum_creare(piscina);
+    repo = insula_repositorium_creare(piscina, intern,
+        "<documentum/>", "<ephemera/>");
+    arbor = componere_salutationis(repo, NIHIL, piscina, intern, NIHIL);
+    CREDO_NON_NIHIL(arbor);
+    c = componens_invenire_per_id(arbor,
+                                  chorda_ex_literis("salutatio", piscina));
+    CREDO_NON_NIHIL(c);
+    CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "salve, munde");
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>
