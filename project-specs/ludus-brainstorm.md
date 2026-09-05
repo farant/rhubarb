@@ -761,3 +761,50 @@ plus fields plus registry entries — never C structs with function
 tables. If roles ever need sub-roles, the role itself moves into
 data. `Partes` as an enum with a switch in every system is a small
 closed hierarchy; watch it.
+
+
+## XVII. PROPOSITUM — briar and the third shape (2026-09-05)
+
+Recorded after merging main (`c51dbd7f`) into the pictor branch:
+briar plans 1–3 are in the tree (`briar/CLAUDE.md`,
+`project-specs/briar-spec.md` v1.4). A `.thistle` file is a literate
+C89 script — markdown prose, STML config tags, raw `<c!>` regions,
+a `#!/usr/bin/env briar` line — and `bin/briar` parses it, DERIVES
+its includes from the symbols it uses, fabricates a silex project
+from the corpus embedded in its own binary, builds once, caches by
+content hash, and execs. Two shapes exist: PLANA (a program with a
+`principale` region and a `munus="probatio"` region) and VITREA (a
+`<fenestra/>` tag, an `<html!>` region, `methodus=` bridge
+functions — the WebKit path). `salve.thistle` runs from its shebang
+in 0.3 s warm; a vitrea app links in 2.1 s at 364 KB with NO sqlite,
+because a stateless app pulls no volumen. This section is the
+reverse reference briar-spec §9 asks the ludus session to add.
+
+**The third shape.** Ludus is the NATIVE GUI path — `fenestra`, a
+CPU raster, the dispensator — where vitrea is the webview path. A
+thistle whose regions define `componere`, a handful of `actio`
+handlers, and figurae, with `<fenestra/>` plus the islands' initial
+STML in config tags, would make "a GUI app as easy as a bash script"
+true for pixel-native programs. What it needs from ludus is exactly
+what P3 landed: `apps/pictor/pictor.c` is the template the fabrica
+would generate (about two hundred lines of wiring), and the
+`Componere`/`ActioFn`/`FiguraFn` signatures are the region contracts.
+What it needs from briar: a `ludus` shape beside plana and vitrea,
+the islands vocabulary in STML regions (briar-spec §9 names it), and
+the `<tractator/>`/`<purus/>`/`<componens/>` anchors on the region
+tags rather than in comments. This is pictor-spec §9's "shebang
+authoring mode" seen from the other side; pull it after P4, when
+pictor has palettes and the region contracts have stopped moving.
+
+**The amalgam, again.** briar-spec §5 banks `-amalgama`: ONE `.c` (or
+`.m`) beside the thistle that compiles with clang alone — system
+includes hoisted, closure headers in dependency order, every source
+with local includes stripped and file-scope statics WRAPPED (44
+static function names collide across `lib/*.c`; `_est_spatium` in
+ten). That is the answer to pictor's first-bake finding
+(`tools/amalgama_ligare.sh` refuses `vendor/sqlite3.c`): a stateful
+program's amalgam must carry sqlite's text, and briar's design does,
+by including it like any other source. The periodical's one-file
+binary therefore waits on `-amalgama`, not on a new ligator; the
+decision left is whether pictor ships as a thistle (the third shape
+above) or as `apps/pictor` amalgamated by the same rule.
