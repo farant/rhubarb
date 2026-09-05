@@ -141,7 +141,9 @@
   </elementum>
 
   <elementum nomen="vocabulum"
-    nota="verbum superficiei cum partibus; analyses/classes/linguae gradus III">
+    nota="verbum superficiei cum partibus; analyses/classes/linguae gradus III; attributa classes/linguae = compendia DERIVATA per uncum nodi (T12) ut selectio '[classes~=verbum]' congruat - lector ea ignorat, loci veritas sunt">
+    <attributum nomen="classes" genus="textus"/>
+    <attributum nomen="linguae" genus="textus"/>
     <liberum nomen="partes"   maximum="1"/>
     <liberum nomen="cauda"    maximum="1"/>
     <liberum nomen="analyses" maximum="1"/>
@@ -251,7 +253,7 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="casus" intra="analysis-substantivi" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
   <elementum nomen="numerus" intra="analysis-substantivi" textus="verum"
     nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
   <elementum nomen="genus" intra="analysis-substantivi" textus="verum"
@@ -285,7 +287,7 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="casus" intra="analysis-nominis-proprii" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
   <elementum nomen="numerus" intra="analysis-nominis-proprii" textus="verum"
     nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
   <elementum nomen="genus" intra="analysis-nominis-proprii" textus="verum"
@@ -324,7 +326,7 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="persona" intra="analysis-verbi" textus="verum"
-    nota="OratioPersona: 0 prima 1 secunda 2 tertia"/>
+    nota="OratioPersona: 0 I 1 II 2 III"/>
   <elementum nomen="numerus" intra="analysis-verbi" textus="verum"
     nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
   <elementum nomen="tempus" intra="analysis-verbi" textus="verum"
@@ -338,7 +340,7 @@
   <elementum nomen="coniugatio" intra="analysis-verbi" textus="verum"
     nota="coniugatio I-IV (WORDS), 0 = nulla"/>
   <elementum nomen="casus" intra="analysis-verbi" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
   <elementum nomen="genus" intra="analysis-verbi" textus="verum"
     nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
 
@@ -373,7 +375,7 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="persona" intra="analysis-auxiliaris" textus="verum"
-    nota="OratioPersona: 0 prima 1 secunda 2 tertia"/>
+    nota="OratioPersona: 0 I 1 II 2 III"/>
   <elementum nomen="numerus" intra="analysis-auxiliaris" textus="verum"
     nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
   <elementum nomen="tempus" intra="analysis-auxiliaris" textus="verum"
@@ -387,7 +389,7 @@
   <elementum nomen="coniugatio" intra="analysis-auxiliaris" textus="verum"
     nota="coniugatio I-IV (WORDS), 0 = nulla"/>
   <elementum nomen="casus" intra="analysis-auxiliaris" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
   <elementum nomen="genus" intra="analysis-auxiliaris" textus="verum"
     nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
 
@@ -418,7 +420,7 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="casus" intra="analysis-adiectivi" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
   <elementum nomen="numerus" intra="analysis-adiectivi" textus="verum"
     nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
   <elementum nomen="genus" intra="analysis-adiectivi" textus="verum"
@@ -479,13 +481,13 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="casus" intra="analysis-pronominis" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
   <elementum nomen="numerus" intra="analysis-pronominis" textus="verum"
     nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
   <elementum nomen="genus" intra="analysis-pronominis" textus="verum"
     nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
   <elementum nomen="persona" intra="analysis-pronominis" textus="verum"
-    nota="OratioPersona: 0 prima 1 secunda 2 tertia"/>
+    nota="OratioPersona: 0 I 1 II 2 III"/>
 
   <elementum nomen="analysis-determinantis"
     nota="classis determinans">
@@ -512,7 +514,7 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="casus" intra="analysis-determinantis" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
   <elementum nomen="numerus" intra="analysis-determinantis" textus="verum"
     nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
   <elementum nomen="genus" intra="analysis-determinantis" textus="verum"
@@ -541,7 +543,7 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="casus" intra="analysis-adpositionis" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
 
   <elementum nomen="analysis-numeralis"
     nota="classis numerale">
@@ -569,7 +571,7 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="casus" intra="analysis-numeralis" textus="verum"
-    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+    nota="OratioCasus: 0 nominativus 1 genitivus 2 dativus 3 accusativus 4 ablativus 5 locativus 6 vocativus"/>
   <elementum nomen="numerus" intra="analysis-numeralis" textus="verum"
     nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
   <elementum nomen="genus" intra="analysis-numeralis" textus="verum"

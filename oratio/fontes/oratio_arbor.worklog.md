@@ -749,3 +749,122 @@ One naming slip worth remembering: the slot-count enumerator
 accident's enumerator of the same name — counts are
 `_NUMERUS_LOCORUM` now. Next is T12: the WORDS mapping table and the
 annotation pass that fills what T11 reserved.
+
+## 2026-09-04 — T12: partes_la — the first parsed word that carries analyses
+
+The mapping and the annotation pass, and with them the second substrate
+change materia has ever needed.
+
+`oratio_partes_la` turns one source analysis into a universal
+DESCRIPTION: class, twelve accidents as enumeration indices (−1 = not
+given: WORDS' `X`, person `0`), lemma, `nativum` (the source's own
+code verbatim: `N 1 1 ACC S C`, `V 3 1 PRES PASSIVE SUB 3 P IMPERS …`
+for a unique form, `TACKON que`, `glossarium verbum`), sense, source,
+language. The table is the spec's, with the corpus deciding the
+details: a noun is `nomen-proprium` when WORDS' kind is N (name) or L
+(locale), so Roma and Caesar are proper and vir is not; a noun's gender
+comes from the STEM when it is M/F/N and from the inflection when the
+stem says common — so `puellam` is feminine although its ending record
+says `C`; a verb whose stem kind is DEP or SEMIDEP is voice `deponens`
+regardless of the passive ending; an infinitive ending sets both mood
+`infinitivus` and form `infinitivum`; a participle is form
+`participium` unless it is FUT PASSIVE, which is the gerundive; supine
+is its own form; a preposition's governed case is read from the ending
+record and, failing that, from the stem; conjunctions are coordinating
+unless the lemma is in `ORATIO_CONIUNCTIONES_SUBORDINANTES` (ut, cum,
+si, ne, quod, quia …, a data list); the enclitic analysis WORDS adds
+for `-que`/`-ve` is a coordinating conjunction, `-ne` a particle; a
+glossary form maps its class name straight to `OratioClassis` and its
+accident strings through the enumeration title arrays, and an
+`ignotum-permissum` entry lands in class `ignotum`.
+
+Which is why the enumeration titles had to be reconciled first: T11
+had spelled the genitive `genetivus` (WORDS' classical spelling) with
+vocative before locative and persons `prima/secunda/tertia`, while the
+glossary canon written in T9 says `genitivus`, locative before
+vocative, and `I II III`. One vocabulary, two homes, and the registry
+gate now proves the accident option lists of the glossary canon equal
+the title arrays IN ORDER, the way it already proved the class names.
+That reconciliation put `genitivus` into an identifier, and the
+identifier pin caught it at once, because WORDS only knows
+`genetivus`: a medieval-spelling glossary entry now, beside
+`glossarium` (Greek loan, WORDS lacks it; its genitive had just entered
+the tree instrument) and `subordinans`.
+
+`oratio_partes` is the pass: after the tree exists, every `vocabulum`
+is looked up once (Latin table with the glossary first, as T8/T9 left
+it), each analysis described, each description built as a node of the
+class's genus — genus = PRIMUM + classis — with the five common slots
+as derived tokens and INDEX values, and the accidents placed BY SLOT
+TITLE through the registry (`oratio_partes_locus` looks the accident's
+name up in the genus's slot list, so the C never carries a hand table
+of slot indices and a genus that lacks an accident silently omits
+it). Then `classes` and `linguae`: distinct class titles in order of
+the analyses, space-separated; a word with nothing gets no analyses,
+`classes` = `ignotum` and no `linguae`. Write-once is respected: a
+word whose `classes` slot is filled is skipped, so a second pass
+annotates nothing. And `materia_arbor_patres_figere` runs at the end
+— the round trip went red on `pater-nullitas` without it, the same
+lesson every materia parser has learned once.
+
+The substrate change. Selection wants `vocabulum[classes~=verbum]`,
+and selectio matches attributes, not child text. The frons hooks
+materia offers decorate TOKEN elements only, so `MateriaArborFrons`
+gained a ninth, last field, `nodum_ornare`, called by the writer right
+after a node's element is created, and the reader keeps ignoring
+attributes on node elements — the slots stay the truth, the attribute
+is a mirror. oratio's consilium now carries a frons whose only hook
+copies the `classes` and `linguae` token values onto the `<vocabulum>`
+element; the canon declares the two attributes; the round trip is
+unaffected because the reader never looks at them. Existing parses do
+not change: no annotation, no slot, no attribute.
+
+Then selectio lied. `vocabulum[classes~=substantivum]` matched all four
+words of the fixture. The word-match operator computed `len - val_len`
+in unsigned arithmetic and, when the attribute was SHORTER than the
+value (`verbum` against `substantivum`), the loop bound underflowed
+and the scan walked off the attribute into neighbouring memory, where
+it found the word. A guard (`val_len == 0 || val_len > len` → no
+match) fixed it; the root selectio tests were green before and after
+because none of them tried a value longer than the attribute. Found by
+the first real consumer of `~=`, which is what consumers are for.
+
+The gate (`probatio_oratio_partes`, 171): the code tables; twenty
+forms against the decision above (puellam, Roma, Caesar, vir, amat,
+amavit, amatus, amandi, amare, loquitur, bonus, melior, optime, in ×2,
+et, ut, tres, ego, hic, virumque, agantur, est, offset, xyzzy); the
+annotated fixture "Puella amat. Xyzzy virumque." node by node — three
+analyses for Puella with lemma, nativum, sense, language, source, case
+NOM, gender F, declension I, the derived token positioned at its
+origin; amat a verb; Xyzzy `ignotum` with no `linguae`; virumque
+`coniunctio-coordinans substantivum` with nine analyses; a second pass
+a no-op — the projection (`<vocabulum classes="…" linguae="…">`, the
+analysis elements, `<casus(> 0` because INDEX projects as text), the
+full round trip STRUCTURAL and FIDELIS, the canon judging the annotated
+document at zero vitia, selectio counting one verb, two nouns, three
+Latin words, one unknown, one coordinating conjunction, no adjective;
+and the corpus. Planted fault: the stem-gender rule dropped → puellam
+loses its F → red.
+
+Day one over the Latin fixtures:
+
+| text | words | analyses | unknown | ms |
+|---|---|---|---|---|
+| Hilarius | 1,678 | 10,352 | 5.2 % | 81 |
+| Propertius | 4,423 | 27,819 | 4.6 % | 176 |
+| Cicero | 13,214 | 114,876 | 2.9 % | 858 |
+
+Six to nine analyses per word, and the class census says where they
+come from: Cicero's 114,876 analyses hold 72,965 PRONOUN analyses,
+because WORDS lists every `qu-`/`-cumque`/`-dam`/`-libet` packing as
+its own entry and `quis` alone brings 215. That is faithful to the
+source and useless as a candidate list; stage 5's ordering, or a
+dedup by (class, accidents, lemma) before it, is where it gets fixed,
+and the oracle in T13 will say whether the noise costs coverage. The
+instrument: `./oratio/arbor.sh <x.txt> -partes` annotates before
+projecting (`-tacitus` prints the census). Identifier pin 2,950 →
+2,958: no unknown word is new relative to HEAD's sources (word-set
+difference over the diff and the new files, and the three coinages
+got entries), the regenerated symbol table simply indexes seventy more
+identifier words of the existing tree — the cause is coverage, and it
+is named here.

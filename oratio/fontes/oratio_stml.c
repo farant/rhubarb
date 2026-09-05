@@ -3,8 +3,10 @@
 #include "oratio_stml.h"
 #include "oratio_registrum.h"
 #include "oratio_lexicon.h"
+#include "materia_arbor.h"
 #include "materia_nodus.h"
 #include "materia_token.h"
+#include "stml.h"
 
 hic_manens MateriaToken RADIX_DERIVATORUM;
 hic_manens b32          RADIX_PARATA = FALSUM;
@@ -57,6 +59,58 @@ hic_manens constans MateriaOrigoUncus ORIGO_ORATIONIS = {
     NIHIL
 };
 
+/* Uncus nodi (T12, uncus substrati secundus): compendia derivata
+ * CLASSES et LINGUAE vocabuli etiam ut ATTRIBUTA elementi <vocabulum>
+ * scribuntur, ut selectio '[classes~=verbum]' congruat. Lector attributa
+ * nodi ignorat: loci veritas sunt, attributum speculum. */
+interior b32
+_nodum_ornare (
+                   vacuum* datum,
+     MateriaArborScriptor* scriptor,
+                StmlNodus* elementum,
+    constans MateriaNodus* nodus)
+{
+    hic_manens constans i32 loci[II] = {
+        (i32)ORATIO_VOCABULUM_CLASSES, (i32)ORATIO_VOCABULUM_LINGUAE
+    };
+    hic_manens constans character* constans tituli[II] = {
+        "classes", "linguae"
+    };
+    i32 k;
+
+    (vacuum)datum;
+    si (nodus->genus != (s32)ORATIO_GENUS_VOCABULUM)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < (i32)II; k++)
+    {
+        constans MateriaValor* v = &nodus->loci[loci[k]];
+
+        si (   v->genus                      != MATERIA_VALOR_TOKEN
+            || v->datum.token                == NIHIL
+            || v->datum.token->valor.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (!stml_attributum_addere_chorda(elementum,
+                materia_arbor_scriptor_piscina(scriptor),
+                materia_arbor_scriptor_intern(scriptor), tituli[k],
+                v->datum.token->valor))
+        {
+            materia_arbor_scriptor_recusare(scriptor,
+                "attributum classium scribi non potuit");
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+hic_manens constans MateriaArborFrons FRONS_ORATIONIS = {
+    NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL,
+    _nodum_ornare
+};
+
 vacuum
 oratio_stml_consilium (
            MateriaArborConsilium* consilium,
@@ -65,4 +119,5 @@ oratio_stml_consilium (
     materia_arbor_consilium_nudum(consilium, &ORATIO_REGISTRUM, ratum,
         "oratio");
     consilium->origo = &ORIGO_ORATIONIS;
+    consilium->frons = &FRONS_ORATIONIS;
 }
