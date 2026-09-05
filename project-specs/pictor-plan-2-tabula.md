@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). Next: T3 `delineare_mandata`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). Next: T4 `pictor_documentum`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -742,7 +742,7 @@ Commit: `silva.commissio(msg, [include/figura.h, lib/figura.c, lib/figura.worklo
 - Produces: `TabulaPixelorum* tabula_pixelorum_creare_nuda(Piscina*, i32 latitudo, i32 altitudo)` (no window; `scala` 1; `fenestra_*` = dims); `Imago imago_ex_tabula(constans TabulaPixelorum*)` (same memory, no copy — the packed `i32` is R,G,B,A in memory on little-endian, exactly `Imago`'s layout); `Color color_ex_mandato(ColorMandati)`; `ImagoFons` = `constans Imago* (*)(chorda provenientia, vacuum* ctx)`; `vacuum delineare_mandata(constans Mandata*, TabulaPixelorum*, ImagoFons fons, vacuum* ctx)`.
 - Semantics: a stack of frames; a `coetus` pushes (origin += fines.xy + translatio, scala *= coetus.scala, clip ∩= fines if sectio) and pops after `magnitudo_arboris - 1` following elements; primitives are transformed `screen = origin + local * scala`; `RECTANGULUM` (outline or plenum), `LINEA` (crassitudo I in v1 — thicker lines are a P4 pull), `POLYGONUM`, `TEXTUS` (house 6×8 font; not clipped in v1), `IMAGO` (resolved by `fons` from the mandatum's `textus` field — `mandata_imago(m, fons_chorda, fines)` stores its source there; blitted with integer `scala` by nearest pixel into `fines`; alpha 0 skipped — that is the marquee/overlay convention; a NIHIL resolver or unknown provenientia paints nothing).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `mkdir -p probationes/pictor/specimina` first. `probationes/probatio_delineare_mandata.c`:
 ```c
@@ -922,11 +922,11 @@ s32 principale (vacuum)
 ```
 The yellow-rectangle clip arithmetic: local (15,15,10,10) at origin (30,10) with scala II → screen (60,40)–(80,60); the clip is the coetus fines (30,10,20,20) → screen (30,10)–(50,30); the two do not intersect, so nothing yellow is painted anywhere: the two black assertions at (45,25) and (55,35) pin that. (Change the numbers if you want a partial clip; keep at least one pixel that would be yellow WITHOUT sectio.)
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh delineare_mandata` — Expected: FAIL, `'delineare_mandata.h' file not found`.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/delineare_mandata.h`:
 ```c
@@ -1378,11 +1378,11 @@ delineare_mandata (
 ```
 Read this against `include/mandatum.h` once more before typing it: `magnitudo_arboris` counts the coetus INCLUDING itself (Plan 1 T2 — "coetus: mandata in subarbore se incluso"), so a coetus with N descendants has `magnitudo_arboris = N + 1` and its scaena must survive exactly N following elements: `reliqua = magnitudo_arboris - 1`, decremented once per element consumed at that depth, popped when it reaches zero; a coetus that is itself an element consumed under its parent decrements the parent's count when IT is pushed — the `dum` loop after the push handles that because the freshly pushed scaena has `reliqua > 0` (or equals 0 for an empty coetus, which pops immediately). Nested empties chain-pop. If `magnitudo_arboris` turns out to EXCLUDE self, use `reliqua = magnitudo_arboris` — the probatio's index assertions decide. `ContextusDelineandi` exposes `piscina` (delineare.h:61) — used for the polygon scratch.
 
-- [ ] **Step 4: First run — the specimen is born, then promote**
+- [x] **Step 4: First run — the specimen is born, then promote**
 
 Run: `./compile_tests.sh delineare_mandata` — Expected: the pixel assertions PASS; the specimen FAILS with `SPECIMEN_EXEMPLAR_ABEST` and `sf.causa` names the candidate it wrote under `probationes/pictor/specimina/`. Open the PNG (or `python3 -c` a dump of a few pixels). Confirm: green box, blue line, a red 8×8 block with a black 2×2 hole at its top-left, "Ok" in white at the bottom, NO yellow. Promote by `mv` to `probationes/pictor/specimina/mandata_prima.png` (the exact name `specimen_iudicare` looks for — read `lib/specimen.c`'s naming if the candidate name differs from `<titulus>.png`). Second run: PASS.
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plant (RED): in `scaenam_impellere`, drop the translation term from `s.origo_x` — the red image shifts and both the pixel assertion at (33,13) and the specimen go red. Second plant: `s.praecisa = VERUM;` → `FALSUM` — the yellow appears at (55,35): red. Both green on revert.
 
