@@ -1957,7 +1957,7 @@ git commit -m "ludus: T4 - derivare: duplex ex tempore eventuum, purum"
 - Consumes: `Eventus` (Task 1).
 - Produces: `eventus_scribere_stml(eventus_xar, piscina, intern, pulchrum) → chorda`, `eventus_legere_stml(cstr, piscina, intern) → Xar*` (of `Eventus`), `eventus_genus_titulus(genus) → cstr`, `eventus_genus_ex_titulo(cstr) → eventus_genus_t`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_eventus_stml.c`:
 ```c
@@ -2021,12 +2021,12 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh eventus_stml`
 Expected: FAIL — `'eventus_stml.h' file not found`.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/eventus_stml.h`:
 ```c
@@ -2254,11 +2254,11 @@ eventus_legere_stml (
 ```
 The five trailing titles (`mus_intravit` … `focus_petitus`) name derived genera that Task 10 adds to `eventus_genus_t`; until Task 10 lands they are unused entries and `TITULI_NUMERUS` guards the lookup.
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh eventus_stml` — Expected: PASS.
 
-- [ ] **Step 5: Worklog + commit**
+- [x] **Step 5: Worklog + commit**
 
 `lib/eventus_stml.worklog.md`: `## 2026-09-04 — natus` + "Eventus[] ⇄ STML for replay logs; title table must be extended with the enum (Task 10 adds five derived genera)."
 ```bash
