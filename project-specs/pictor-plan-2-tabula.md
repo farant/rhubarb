@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). Next: T4 `pictor_documentum`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). Next: T5 dispensator boundary. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -1403,7 +1403,7 @@ Commit: `silva.commissio(msg, [include/delineare_mandata.h, lib/delineare_mandat
 - Produces: `PictorDocumentum {volumen, piscina, intern, latitudo, altitudo, tabula (TabulaPixelorum*), proiectio (Imago, same memory), cursor (s64), finis (s64), intervallum (i32), sigillum (Sigillum)}`; `pictor_documentum_creare(piscina, intern, Volumen*, i32 lat, i32 alt, i32 intervallum)`; `pictor_documentum_aperire(piscina, intern, Volumen*)` (dimensions from the `documentum` plagula; projection rebuilt); `pictor_documentum_actum(doc, chorda actum_stml) → s64` (appends — after a `<ramus>` if the cursor is behind the end — applies, checkpoints every `intervallum`); `pictor_documentum_revocare(doc) → b32` / `_reficere(doc) → b32` (cursor moves; projection rebuilt from the nearest checkpoint at or below the target); `pictor_documentum_proiectio(doc) → constans Imago*`; `pictor_documentum_sigillum_hex(doc, piscina) → chorda`; `pictor_documentum_verificare(doc) → b32` (tier 8: reproject from zero, compare sigilla); `pictor_documentum_cursor/finis(doc) → s64`.
 - **The acta vocabulary v1** (spec §4): `<ictus instrumentum="penicillus" color="N" magnitudo="M"><punctum x="" y=""/>…</ictus>` — the brush paints a filled square of side M centred on every point and a line of thickness I between consecutive points; `color` is a palette index (0–15, `thema_color_ex_indice_colorationis`); `<ramus ab="SEQ"/>` — the acta after SEQ up to this ramus are dead (undo followed by a new stroke); `<impletio>`, `<figura>`, `<insertio>`, `<stratum>`, `<paletta>`, `<selectio_commissa>` are P5 pulls and are IGNORED by v1 with a note in the worklog when first seen. Checkpoints: massa = the raw RGBA bytes of the projection (binary-safe: the probatio pins a zero byte inside), plagula `checkpoint/<seq>` = the massa's sigillum hex; plagula `documentum` = `<documentum latitudo="" altitudo="" intervallum=""/>`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_pictor_documentum.c`:
 ```c
@@ -1604,11 +1604,11 @@ s32 principale (vacuum)
 ```
 `fenestra_tempus_ms` is Plan 1 T1's; it links without a window (it is in `fenestra_macos.m`, which the root suite already links with its three frameworks — the same as `probatio_fenestra_tempus`). `CREDO_AEQUALIS_S64` exists (credo.h). If `volumen_temporarium` needs a suffix convention, follow `lib/volumen.c`'s comment.
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh pictor_documentum` — Expected: FAIL, header not found.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/pictor_documentum.h`:
 ```c
@@ -1759,7 +1759,7 @@ interior s32
 attributum_s32 (
     StmlNodus* n,
     constans character* titulus,
-    s32 ordinarius)
+    s32 praestitutum)
 {
     chorda* a;
        s32  v;
@@ -1769,7 +1769,7 @@ attributum_s32 (
     {
         redde v;
     }
-    redde ordinarius;
+    redde praestitutum;
 }
 
 interior vacuum
@@ -2283,11 +2283,11 @@ pictor_documentum_finis (
 ```
 Verified 2026-09-05: there is no `chorda_ex_s64` — `seq_chorda` above goes through `chorda_ex_f64(v, ZEPHYRUM, p)` exactly as `eventus_stml` writes `tempus`; `xar_truncare(Xar*, i32 numerus_novus)` exists (xar.h:316); `volumen_actum_appendere` returns the new seq (volumen.h says `s64`); `stml_liberum_ad_indicem` (canon.c uses it). The `proicere_ad` checkpoint search walks DOWN from the largest multiple of `intervallum` ≤ `ad` — a checkpoint whose seq was later made dead by a ramus is still a correct image of the acta at that seq (the ramus only kills acta AFTER `ab`), but a checkpoint at a seq GREATER than the ramus's `ab` and ≤ `ad` can only exist if it was written before the ramus — and `ad` is a live seq, so any checkpoint ≤ ad at a multiple of intervallum that is dead would give a wrong base. Guard: after choosing `basis`, confirm `basis` is live (in `acta_viva(doc, 0, ad)` there is an actum with `seq == basis`, or `basis` is 0); otherwise continue the walk. Add that check in Step 3 as written above becomes: replace `basis = s; frange;` with a live-check helper `seq_vivum(doc, s, ad)` — the probatio's ramus section (undo to 2, new stroke at seq 5 after ramus at 4; checkpoint/2 is live, fine; a checkpoint at 4 would be the ramus itself — never written because ramus appends do not checkpoint) pins the simple case; write a second ramus case in the worklog as a known hole if the check is deferred.
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh pictor_documentum` — Expected: PASS. Record the two printed measurements.
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plants (RED): (a) in `acta_viva`, skip the ramus handling (`perge` before the truncation) — red at the `mortuus` assertion; (b) in `pictor_documentum_actum`, drop `checkpoint_condere` — red at `checkpoint/2`. Green on revert.
 
@@ -3187,7 +3187,7 @@ attributum_s32 (
     InsulaRepositorium* repo,
            InsulaGenus  genus,
     constans character* titulus,
-                   s32  ordinarius)
+                   s32  praestitutum)
 {
     chorda* a;
        s32  v;
@@ -3197,7 +3197,7 @@ attributum_s32 (
     {
         redde v;
     }
-    redde ordinarius;
+    redde praestitutum;
 }
 
 interior chorda
@@ -3686,7 +3686,7 @@ interior s32
 attributum_s32 (
     InsulaRepositorium* repo,
     constans character* titulus,
-                   s32  ordinarius)
+                   s32  praestitutum)
 {
     chorda* a;
        s32  v;
@@ -3696,7 +3696,7 @@ attributum_s32 (
     {
         redde v;
     }
-    redde ordinarius;
+    redde praestitutum;
 }
 
 interior chorda
