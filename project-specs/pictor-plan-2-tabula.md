@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). T7 `pictor_componentia` DONE (40 assertions; `pictor.arbor.stml` exemplar shows the stroke in flight). T8 `pictor_actiones` DONE (35 assertions through the real loop; stroke counts via `numerus_vivorum`). T9 pictor figurae DONE (13 assertions; `pictor_prima.png` promoted after inspection; the rasterizer's translation path is now covered). T10 `ludus_fenestra` DONE (10 assertions headless; the frame prints its timings; wheel remains the named P4 pull). Next: T11 `apps/pictor` + the bake. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). T7 `pictor_componentia` DONE (40 assertions; `pictor.arbor.stml` exemplar shows the stroke in flight). T8 `pictor_actiones` DONE (35 assertions through the real loop; stroke counts via `numerus_vivorum`). T9 pictor figurae DONE (13 assertions; `pictor_prima.png` promoted after inspection; the rasterizer's translation path is now covered). T10 `ludus_fenestra` DONE (10 assertions headless; the frame prints its timings; wheel remains the named P4 pull). T11 `apps/pictor` DONE except step 4 (names put to Fran): the binary runs its smoke; bake numbers in spec §10; the amalgam is refused because sqlite is in the closure via volumen. Next: T12 codices batch 1 in the MAIN tree. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -4594,7 +4594,7 @@ Commit with `portae=[('radix','ludus_fenestra'), ('radix','dispensator')]`.
 - Produces: `bin/pictor`; `./apps/pictor/pictor.sh [-fumus] [-volumen <via>]` (the app convention: `bin/aedilis apps/pictor/pictor.c` derives the closure and emits `build/aedilis/pictor/struere.sh`, which is run, then the binary is copied with `rm -f` first — the macOS SIGKILL rule); `-fumus` runs 30 frames in a real window with a temporary volumen and exits 0 printing the `ludus:` numbers line; `./apps/pictor/fumus.sh` asserts the line and the exit code.
 - **The first bake's numbers** (spec §8 P3, §10): closure size = `bin/aedilis apps/pictor/pictor.c --partes | wc -l` (translation units) and `wc -c` of the concatenated closure; build time = `time bash build/aedilis/pictor/struere.sh` cold; binary size = `wc -c bin/pictor`; and the single-file amalgam via `./tools/amalgama_ligare.sh pictor apps/pictor/pictor.c` → `build/amalgamata/pictor/pictor.{h,c}` sizes and whether it compiles standalone under the house flags (its own gate does that). All five go into spec §10 (via `silva.Prosa` on the `## 10.` section) and the worklog.
 
-- [ ] **Step 1: Write the smoke (the failing test)**
+- [x] **Step 1: Write the smoke (the failing test)**
 
 `apps/pictor/fumus.sh`:
 ```bash
@@ -4631,7 +4631,7 @@ exec bin/pictor "$@"
 ```
 Run `./apps/pictor/fumus.sh` — Expected: FAIL (`pictor.c` absent; aedilis refuses).
 
-- [ ] **Step 2: Write the binary**
+- [x] **Step 2: Write the binary**
 
 `apps/pictor/pictor.c`:
 ```c
@@ -4859,7 +4859,7 @@ s32 principale (
 ```
 The default volumen path `pictor.volumen` in the cwd is a P3 placeholder; P5's `documentum.aperire/servare` own paths. `FenestraConfiguratio.titulus` is `constans character*` (fenestra.h:232). `principale` is `#define principale main` (latina.h:43); copy the argument form from `apps/forum/forum.c:2011`.
 
-- [ ] **Step 3: Build, smoke, bake, record**
+- [x] **Step 3: Build, smoke, bake, record**
 
 Run `./apps/pictor/fumus.sh` — Expected: a window opens for 30 frames and closes; output contains `ludus: quadra=30 …`; `FUMUS PLENUS`. Then the bake numbers:
 ```bash
@@ -4875,7 +4875,7 @@ wc -c bin/pictor
 
 Names introduced by this plan: `pictor_documentum`, `pictor_componentia`, `pictor_actiones`, `pictor_figurae`, `figura_tabulae`, `figura_tituli`, `prospectus`, `ludus_fenestra`, `tabula_pixelorum_creare_nuda`, `ludus_quadrum`, `ramus` (the undo branch actum), `domini`/`dominus`/`scriptor` (ownership), `limen` (the delivery boundary). Put the list to Fran; record the verdict in spec §10's sealed-names bullet and brainstorm §VIII.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 `silva.commissio(msg, ['apps/pictor/pictor.c', 'apps/pictor/pictor.sh', 'apps/pictor/fumus.sh', 'apps/pictor/pictor.worklog.md', 'project-specs/pictor-spec.md', plan], portae=[('radix','ludus_fenestra'), ('radix','pictor_figurae'), ('radix','pictor_actiones')])` — the smoke is not a `portae` gate (it opens a window; `apps/` is outside every runner); run it by hand before the commit and say so in the message.
 
