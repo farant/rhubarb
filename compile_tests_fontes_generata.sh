@@ -44,6 +44,7 @@ declare -a SOURCE_FILES=(
     "lib/cursor.c"
     "lib/cursus.c"
     "lib/delineare.c"
+    "lib/derivare.c"
     "lib/dialogus.c"
     "lib/dialogus_importatio.c"
     "lib/differentia.c"

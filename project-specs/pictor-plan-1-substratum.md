@@ -1735,7 +1735,7 @@ git commit -m "ludus: T3 - componens: nodus logicus, arbor, circuitus STML, aequ
 - Consumes: `Eventus` with `tempus` (Task 1), `Punctum` (Task 2).
 - Produces: `Derivator`; `derivator_initiare(d, intervallum_ms, distantia)`; `derivare(d, ev, effusio)` appending to a `Xar` of `Eventus`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_derivare.c`:
 ```c
@@ -1813,12 +1813,12 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh derivare`
 Expected: FAIL — `'derivare.h' file not found`.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/derivare.h`:
 ```c
@@ -1924,12 +1924,12 @@ derivare (
 }
 ```
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh derivare`
 Expected: PASS.
 
-- [ ] **Step 5: Worklog + commit**
+- [x] **Step 5: Worklog + commit**
 
 `lib/derivare.worklog.md`:
 ```
