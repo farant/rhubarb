@@ -62,8 +62,10 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
         "<documentum/>", "<ephemera/>");
-    reg                = actio_registrum_creare(piscina, intern);
-    toy.compositiones  = ZEPHYRUM;
+    reg = actio_registrum_creare(piscina, intern);
+    toy.compositiones = ZEPHYRUM;
+    toy.derivata = ZEPHYRUM;
+    toy.compositiones_in_traditione = ZEPHYRUM;
     toy_registrare(reg, &toy);
     d = dispensator_creare(piscina, intern, repo, reg, toy_componere,
                            &toy, CCC);
@@ -76,9 +78,13 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(dispensator_super(d)));
 
     imprimere("\n--- Ictus in b1: actio, focus, recompositio ---\n");
-    n0  = toy.compositiones;
-    e   = mus(EVENTUS_MUS_DEPRESSUS, M, XXXV, XX);
+    n0     = toy.compositiones;
+        e  = mus(EVENTUS_MUS_DEPRESSUS, M, XXXV, XX);
     dispensator_tractare(d, &e);
+    /* focus_captus ad b1 TRADITUS post recompositionem, contra
+     * arborem novam: compositiones in traditione > ante (T5) */
+    CREDO_AEQUALIS_I32(toy.derivata, I);
+    CREDO_VERUM(toy.compositiones_in_traditione > n0);
     a = insula_attributum(repo, INSULA_EPHEMERA, "numerus");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "1");
@@ -98,11 +104,13 @@ s32 principale (vacuum)
 
     imprimere("\n--- Motus super tabulam: super derivatur ---\n");
     e = mus(EVENTUS_MUS_MOTUS, M + DCC, CXX, L);
-    dispensator_tractare(d, &e);
+        dispensator_tractare(d, &e);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(d), "tabula");
+    CREDO_AEQUALIS_I32(toy.derivata, II);        /* intravit tabula */
     e = mus(EVENTUS_MUS_MOTUS, M + DCC + X, V, XC);
-    dispensator_tractare(d, &e);
+        dispensator_tractare(d, &e);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(d), "radix");
+    CREDO_AEQUALIS_I32(toy.derivata, IV);        /* exiit, intravit */
 
     imprimere("\n--- Ictus in tabula: captura, motus, UNA scriptura"
               " durabilis ---\n");

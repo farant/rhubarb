@@ -39,8 +39,10 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
         "<documentum/>", "<ephemera/>");
-    reg                = actio_registrum_creare(piscina, intern);
-    toy.compositiones  = ZEPHYRUM;
+    reg = actio_registrum_creare(piscina, intern);
+    toy.compositiones = ZEPHYRUM;
+    toy.derivata = ZEPHYRUM;
+    toy.compositiones_in_traditione = ZEPHYRUM;
     toy_registrare(reg, &toy);
     d = dispensator_creare(piscina, intern, repo, reg, toy_componere,
                            &toy, CCC);
@@ -79,8 +81,9 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(d), "tabula");
     /* ictus finitus insulam ephemerarum non tetigit: pan absens */
     CREDO_NIHIL(insula_attributum(repo, INSULA_EPHEMERA, "pan_x"));
-    /* quadrum 0 + unum per eventum */
-    CREDO_AEQUALIS_I32(dispensator_numerus_compositionum(d), n + I);
+    /* quadrum 0 + unum per eventum SALTEM (limen T5: eventus cum
+     * derivatis semel amplius componit) */
+    CREDO_VERUM(dispensator_numerus_compositionum(d) >= n + I);
 
     imprimere("\n--- Gradus III: imago arboris logicae ---\n");
     arbor_textus = componens_scribere_stml(dispensator_arbor(d),

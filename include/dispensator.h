@@ -60,6 +60,7 @@ nomen structura {
                  chorda  super;
                     s64  quies_ms;
                     Xar* effusio;                /* Xar de Eventus */
+                    Xar* differenda;             /* ad limen */
                     i32  compositiones;
 } Dispensator;
 
@@ -102,6 +103,17 @@ dispensator_pulsare (
 vacuum
 dispensator_recomponere (
     Dispensator* d);
+
+
+/* Sedes 'put' (brainstorm XVI §1): eventus derivatus ad id
+ * directus, traditus post eventum currentem et recompositionem,
+ * contra arborem NOVAM. In traditione directus: limen proximum. */
+vacuum
+dispensator_addressare (
+     Dispensator* d,
+          chorda  id,
+ eventus_genus_t  genus,
+             s64  tempus);
 
 
 /* ==================================================

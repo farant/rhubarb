@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). Next: T5 dispensator boundary. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). Next: T6 real canons + owners. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -2307,7 +2307,7 @@ Commit: `silva.commissio(msg, [...], portae=[('radix','pictor_documentum')])`.
 - Consumes: Plan 1 T10 as landed.
 - Produces: `vacuum dispensator_addressare(Dispensator* d, chorda id, eventus_genus_t genus, s64 tempus)` — the public `put` seat (brainstorm §XVI §1): enqueue a derived event addressed to a componens id; delivered after the CURRENT event's dispatch and recompose, against the NEW tree; events enqueued during delivery wait for the next boundary. `mittere_ad` becomes a private wrapper over it. `focus_petitus` follows the same path; the "still absent → clear focus" check runs after the boundary drain.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Add to `probationes/ludus_toy.h` a counting handler for the derived genera, registered under a new root-level action so the toy can observe deliveries. Insert after `toy_fugere` (`e.inserere_post('toy_fugere', …)`):
 ```c
@@ -2353,11 +2353,11 @@ and extend `ToyStatus` to `{ i32 compositiones; i32 derivata; i32 compositiones_
 ```
 and in the `--- Motus super tabulam` section after the first move: `CREDO_AEQUALIS_I32(toy.derivata, II);` (intravit tabula; no exiit because super was empty) and after the second move: `CREDO_AEQUALIS_I32(toy.derivata, IV);` (exiit tabula, intravit radix). Initialise `toy.derivata = ZEPHYRUM; toy.compositiones_in_traditione = ZEPHYRUM;` where `toy.compositiones` is. `n0` is captured before the click already.
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./compile_tests.sh dispensator` — Expected: FAIL at `toy.compositiones_in_traditione > n0` (today the derived event is delivered BEFORE the recompose, so the count equals `n0`).
 
-- [ ] **Step 3: The change**
+- [x] **Step 3: The change**
 
 In `include/dispensator.h`, add to the struct (`Editio.membrum_addere('Dispensator', '                    Xar* differenda;             /* Xar de Differendum */', post='Xar* effusio;')`) and the prototype (`inserere_post('dispensator_recomponere', …, definitio=False)`):
 ```c
@@ -2484,11 +2484,11 @@ and in `tractare_unum`, replace the tail from `/* regula staleness */` to the `p
 ```
 (`praesentia` lives in `d->scratch`, which `tractare_unum` resets at its end — the copy is what makes re-entrant `addressare` during delivery safe.)
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh dispensator && ./compile_tests.sh manus_ludus && ./compile_tests.sh pictor_toy` — Expected: PASS ×3 (the toy exemplar is unchanged: derived events are never in the log).
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plant (RED): in `mittere_ad`, deliver synchronously again (`des = destinatio_ex_componente(c, d->scratch); … mittere(d, &des, &e);` instead of `dispensator_addressare`) — red at `compositiones_in_traditione > n0`. Green on revert.
 

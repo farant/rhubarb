@@ -19,6 +19,14 @@ chorda_nulla (vacuum)
     redde c;
 }
 
+
+/* Eventus derivatus differendus ad limen (T5) */
+nomen structura {
+             chorda id;
+    eventus_genus_t genus;
+                s64 tempus;
+} Differendum;
+
 /* Id vacuum numquam quaeritur (radix anonyma congrueret) */
 interior Componens*
 invenire_id (
@@ -238,14 +246,15 @@ dispensator_creare (
     {
         redde NIHIL;
     }
-    d->repo           = repo;
-    d->actiones       = actiones;
-    d->strategia      = destinatio_geometrica;
-    d->componere      = componere;
-    d->componere_ctx  = componere_ctx;
-    d->super          = chorda_nulla();
-    d->quies_ms       = quies_ms;
-    d->effusio        = xar_creare(piscina, (i32)magnitudo(Eventus));
+    d->repo = repo;
+    d->actiones = actiones;
+    d->strategia = destinatio_geometrica;
+    d->componere = componere;
+    d->componere_ctx = componere_ctx;
+    d->super = chorda_nulla();
+    d->quies_ms = quies_ms;
+    d->effusio = xar_creare(piscina, (i32)magnitudo(Eventus));
+    d->differenda = xar_creare(piscina, (i32)magnitudo(Differendum));
     motus_initiare(&d->motus, piscina);
     derivator_initiare(&d->derivator, CCC, IV);
     d->arbor_activa = I;          /* recomponere permutat ad 0 */
@@ -308,6 +317,7 @@ mittere (
 }
 
 /* Eventus derivatus ad nodum certum */
+/* Eventus derivatus: numquam statim - differtur ad limen */
 interior vacuum
 mittere_ad (
         Dispensator* d,
@@ -315,18 +325,74 @@ mittere_ad (
     eventus_genus_t  genus,
                 s64  tempus)
 {
-    Destinatio des;
-       Eventus e;
-
     si (!c)
     {
         redde;
     }
-    memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus   = genus;
-    e.tempus  = tempus;
-    des       = destinatio_ex_componente(c, d->scratch);
-    mittere(d, &des, &e);
+    dispensator_addressare(d, c->id, genus, tempus);
+}
+
+vacuum
+dispensator_addressare (
+     Dispensator* d,
+          chorda  id,
+ eventus_genus_t  genus,
+             s64  tempus)
+{
+    Differendum* x;
+
+    si (!d || chorda_vacua(id))
+    {
+        redde;
+    }
+    x          = (Differendum*)xar_addere(d->differenda);
+    x->id      = id;
+    x->genus   = genus;
+    x->tempus  = tempus;
+}
+
+/* Limen: differenda TUNC praesentia traduntur contra arborem novam;
+ * quae in traditione nascuntur, ad limen proximum manent. Copia in
+ * scratch: addressare in traditione tutum. */
+interior vacuum
+limen_transire (
+    Dispensator* d)
+{
+    Differendum* x;
+     Destinatio  des;
+        Eventus  e;
+      Componens* c;
+            i32  i;
+            i32  n;
+            Xar* praesentia;
+
+    n = xar_numerus(d->differenda);
+    si (n == ZEPHYRUM)
+    {
+        redde;
+    }
+    praesentia = xar_creare(d->scratch, (i32)magnitudo(Differendum));
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        x   = (Differendum*)xar_addere(praesentia);
+        *x  = *(Differendum*)xar_obtinere(d->differenda, i);
+    }
+    xar_vacare(d->differenda);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        x = (Differendum*)xar_obtinere(praesentia, i);
+        c = invenire_id(d, x->id);
+        si (!c)
+        {
+            perge;
+        }
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus   = x->genus;
+        e.tempus  = x->tempus;
+        des       = destinatio_ex_componente(c, d->scratch);
+        mittere(d, &des, &e);
+    }
+    dispensator_recomponere(d);
 }
 
 interior vacuum
@@ -391,13 +457,16 @@ tractare_unum (
     /* regula staleness */
     dispensator_recomponere(d);
 
-    /* focus ut petitio: id ex arbore nova absens -> radici; si
-     * arbor altera id non reddit, focus tollitur */
+    /* limen: derivata contra arborem novam */
+    limen_transire(d);
+
+    /* focus ut petitio: id ex arbore nova absens -> radici (ad limen
+     * proximum); si post id arbor id non reddit, focus tollitur */
     focus = dispensator_focus(d);
     si (!chorda_vacua(focus) && !invenire_id(d, focus))
     {
         mittere_ad(d, d->arbor, EVENTUS_FOCUS_PETITUS, e->tempus);
-        dispensator_recomponere(d);
+        limen_transire(d);
         si (!invenire_id(d, focus))
         {
             dispensator_focus_ponere(d, chorda_nulla());

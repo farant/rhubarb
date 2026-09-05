@@ -23,7 +23,11 @@
 #include "actio.h"
 #include "destinatio.h"
 
-nomen structura { i32 compositiones; } ToyStatus;
+nomen structura {
+    i32 compositiones;
+    i32 derivata;                    /* T5: eventus derivati traditi */
+    i32 compositiones_in_traditione; /* T5: numerus in traditione */
+} ToyStatus;
 
 nomen structura {
     constans character* titulus;
@@ -242,17 +246,33 @@ toy_fugere (
       constans Eventus* e,
                 vacuum* ctx)
 {
+    ToyStatus* toy;
+
     (vacuum)motus;
     (vacuum)destinatio;
     (vacuum)c;
-    (vacuum)ctx;
-    si (   e->genus              == EVENTUS_CLAVIS_DEPRESSUS
-        && e->datum.clavis.typus == (character)XXVII)
+    toy = (ToyStatus*)ctx;
+    commutatio (e->genus)
     {
-        mutare_ephemera(r, toy_ponere_verum, toy_attr_fuga);
-        redde VERUM;
+        /* observatio eventuum derivatorum (probatio T5): quot traditi,
+         * et quot compositiones dispensator tunc numeraverit */
+        casus EVENTUS_FOCUS_CAPTUS:
+        casus EVENTUS_FOCUS_AMISSUS:
+        casus EVENTUS_MUS_INTRAVIT:
+        casus EVENTUS_MUS_EXIIT:
+            toy->derivata++;
+            toy->compositiones_in_traditione = toy->compositiones;
+            redde VERUM;
+        casus EVENTUS_CLAVIS_DEPRESSUS:
+            si (e->datum.clavis.typus == (character)XXVII)
+            {
+                mutare_ephemera(r, toy_ponere_verum, toy_attr_fuga);
+                redde VERUM;
+            }
+            redde FALSUM;
+        ordinarius:
+            redde FALSUM;
     }
-    redde FALSUM;
 }
 
 interior vacuum

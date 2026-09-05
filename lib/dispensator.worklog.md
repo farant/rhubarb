@@ -47,3 +47,30 @@ after the second pulse; the staleness recompose removed — red at
 the enum change: destinatio, eventus_stml, derivare,
 fenestra_tempus all green; fenestra.h keeps its pre-existing six
 long-line divergences (delta 0). Examen ACCIPE on all seven files.
+
+
+## 2026-09-05 — limen (ludus P3 T5)
+
+Derived and addressed events no longer deliver mid-dispatch. Every
+`mittere_ad` (hover enter/exit, focus captured/lost, focus-petitus)
+enqueues a `Differendum` (id, genus, tempus) through the public
+`dispensator_addressare`, the `put` seat of brainstorm §XVI §1. The
+queue is drained at the LIMEN: after the current event's dispatch
+and the staleness recompose, against the NEW tree, and the drain
+recomposes once more. Events addressed during delivery wait for the
+next boundary — the drain works on a copy taken in the per-event
+scratch arena, so `addressare` from inside a handler is safe.
+Focus-petitus is two boundaries: the request goes to the root at
+the first, and the "still absent, clear it" check runs after that
+drain.
+
+Why: brainstorm §XVI §3–4 — a derived event should see the world
+its cause produced, not the world before it; that is the one piece
+of frame-level double buffering worth having now. The toy's root
+handler counts deliveries and records the composition count at
+delivery time; the probatio asserts it exceeds the count before the
+click. The plant that restored synchronous delivery went red there.
+
+Cost: an event that produces derived events composes twice. The toy
+replay's "one composition per event" assertion became "at least
+one". Measure in T10 with the rest of the frame.
