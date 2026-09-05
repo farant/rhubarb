@@ -115,6 +115,7 @@ declare -a SOURCE_FILES=(
     "lib/pictor_actiones.c"
     "lib/pictor_componentia.c"
     "lib/pictor_documentum.c"
+    "lib/pictor_figurae.c"
     "lib/pinacotheca_visus.c"
     "lib/piscina.c"
     "lib/planta_lectio.c"

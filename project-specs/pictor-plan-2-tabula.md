@@ -10,7 +10,7 @@
 
 **Spec:** `project-specs/pictor-spec.md` (§2.1, §3.3, §4, §5.1–5.3, §6.1 tiers 6–8, §6.4 codices 1, §7, §8 P3, §10). Rationale: `project-specs/ludus-brainstorm.md` §XIV–XVI (round 4 decisions: flows, ownership, buffering, roles-as-data). Predecessor: `project-specs/pictor-plan-1-substratum.md` (its STATUS block lists the twelve landed modules and their deviations).
 
-> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). T7 `pictor_componentia` DONE (40 assertions; `pictor.arbor.stml` exemplar shows the stroke in flight). T8 `pictor_actiones` DONE (35 assertions through the real loop; stroke counts via `numerus_vivorum`). Next: T9 pictor figurae. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
+> **STATUS 2026-09-05 — T1 signed coordinates DONE** (eight suites green, exemplar unchanged; serializers gained `attributum_s32`/`attributum_signatum` twins; the negative guard in `invenire` is gone — see `lib/mandatum.worklog.md`). T2 `figura` + `pingere` DONE (38 assertions; probatio's pannus translates on both axes). T3 `delineare_mandata` DONE (13 assertions; the draft's frame-pop loop decremented only the pushed frame — fixed before the first build; `mandata_prima.png` promoted after inspection; the translation plant was mute, T9's pan covers that path). T4 `pictor_documentum` DONE (46 assertions; volumen interleaves its own acta so live acta are `ictus` only, checkpoints cadence on live strokes and are found by enumeration; 200 strokes in 26 ms, undo 1 ms). T5 dispensator boundary DONE (derived events deliver after the recompose; the toy replay's exact composition count became a lower bound). T6 real canons + owners DONE (apps/pictor/canones/*; attribute diff at the gate refuses a non-owner; scriptor set by the dispensator and the flush). T7 `pictor_componentia` DONE (40 assertions; `pictor.arbor.stml` exemplar shows the stroke in flight). T8 `pictor_actiones` DONE (35 assertions through the real loop; stroke counts via `numerus_vivorum`). T9 pictor figurae DONE (13 assertions; `pictor_prima.png` promoted after inspection; the rasterizer's translation path is now covered). Next: T10 `ludus_fenestra`. Plan 1 sealed at `f84e06b3`; brainstorm §XVI at `1d9b726b`. Decisions taken for this plan (Fran, 2026-09-05, "those all make sense"): signed coordinates go FIRST (T1); `pingere` reads the tree only — `componere` copies the pending stroke into the tabula componens (T7/T9); codices batch 1 is the LAST task and runs in the MAIN tree (`../rhubarb`), rebased onto this branch (T12); the flow idiom is designed in the canon task but built at P5 (T6); wheel position is a NAMED P4 PULL — `fenestra_macos.m`'s `scrollWheel:` is empty today (T10 records it, does not build it).
 
 ## Global Constraints
 
@@ -3861,7 +3861,7 @@ Commit with `portae=[('radix','pictor_actiones'), ('radix','pictor_documentum')]
 - **`figura_tabulae`** (`<purus/>`, spec §5.3): `mandata_imago(m, sigillum_hex, (0,0,w,h))` — the canvas is one image whose IDENTITY is the projection's sigillum (content-addressed: the same acta always name the same picture); the pending stroke as `LINEA` between consecutive `c->puncta` in `COLOR_ACCENT_PRIMARY` (the preview colour; the committed stroke's colour comes from the document — the figura cannot read the islands, and that is the point); a 3×3 `RECTANGULUM` cursor at the last point. The marquee overlay is P5.
 - **`figura_tituli`**: `mandata_rectangulum` plenum `COLOR_BACKGROUND` over the fines, then `mandata_textus(m, II, II, c->titulus, ZEPHYRUM, COLOR_TEXT)`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_pictor_figurae.c`:
 ```c
@@ -4039,11 +4039,11 @@ s32 principale (vacuum)
 ```
 Arithmetic to hold in mind: the document is 40×30 at prospectus origin (0,0) with pan (-5,3) and scala 1, so document pixel (x,y) lands on screen (x-5, y+3); the black line at y=2 is at screen y=5 for x from -5 to 34, so (20,5) is black and (20,6) white; screen x=40 is beyond the document (34) → the theme background. The prospectus clips at (0,0,64,36).
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh pictor_figurae` — Expected: FAIL, header not found.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/pictor_figurae.h`:
 ```c
@@ -4213,11 +4213,11 @@ pictor_figurae_registrare (
 ```
 `Mandata` exposes `piscina` (Plan 1 T2 struct) — the sigillum chorda is allocated in the mandata's arena, which lives as long as the frame. `pictor_imago_fons` formats the hex on every call: 64 bytes per image mandatum per frame — fine; the worklog notes a cached hex on the document as the obvious later saving.
 
-- [ ] **Step 4: First run — the specimen is born**
+- [x] **Step 4: First run — the specimen is born**
 
 Run: `./compile_tests.sh pictor_figurae` — Expected: tier 6 and pixel assertions PASS; specimen `EXEMPLAR_ABEST` names `probationes/pictor/specimina/pictor_prima.novum.png`. Look at it: a white 40×30 sheet shifted (-5,+3) on the theme background with a black line near its top, an accent-coloured diagonal from (5,13) to (15,18) with a small cursor box, "penicillus" in the status strip. Promote by `mv` to `pictor_prima.png`. Second run: PASS.
 
-- [ ] **Step 5: Plant, worklog, commit**
+- [x] **Step 5: Plant, worklog, commit**
 
 Plants (RED): (a) `figura_tabulae` emits no image (comment out `mandata_imago`) — red at `imagines == I` and at the black-pixel assertion; (b) `pictor_imago_fons` compares against `"x"` — red at the fons assertion and the pixel. Green on revert.
 
