@@ -1,0 +1,570 @@
+# briar — spec v1.1 (literate C89 programs; `.thistle`)
+
+*2026-09-04. v1 consolidated the design conversation of the same day
+(research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
+review from the ludus/pictor session (five items) with Fran's
+decisions on each. Fran's decisions are marked DECISUS; everything
+else is PROPOSITUM and was agreed in conversation unless marked OPEN.
+Names marked (unsealed) are working names — Fran names. Every
+"exists" claim cites the header it rests on. English prose, Latin
+identifiers, as in pictor-spec.md.*
+
+## 1. Purpose and scope
+
+**briar** is a command-line tool. Given a `.thistle` file — a literate
+program: prose, configuration, and C89 in one text file with a
+`#!/usr/bin/env briar` first line — it parses the file, derives a
+compilable project from the library corpus bundled inside its own
+binary, builds it with the installed clang, caches the result, and
+execs it. Only clang is external. The shape is silex's: one binary
+carries the whole library tree (`capsula`, exists — capsula.h) and
+scaffolds projects whose dependencies are DERIVED from includes, never
+declared.
+
+**What a thistle file is for (DECISUS 2026-09-04):** a SCRIPT. The
+aim is a GUI app as easy to write as a bash script. Thistle files are
+not the place for load-bearing modules or infrastructure, and they
+need not live inside rhubarb at all — briar must work on a file
+anywhere on disk, with no repository around it (the embedded corpus
+is the fallback of silex's resolution order, §5).
+
+**DECISUS (2026-09-04):** briar is its own parser, a materia client
+that delegates the inside of each region to the markdown and STML
+parsers; briar is a SEPARATE binary, not a silex verb, sharing silex's
+generated corpus object; the file format uses STML-shaped tags as
+region delimiters; the extension is `.thistle` (format) read by
+`briar` (tool) — two names because a second reader will exist.
+
+**In scope (v1):** the format of §2; the parser of §3 with the house
+gates; the fabrica of §4 for two program shapes — a plain program (a C
+region defines `principale`) and an atrium app (a `<fenestra>` region,
+no `principale`) — plus an optional PROBATIO region per file, built
+and run on request; the binary of §5, flag-driven; a freshness gate at
+birth; a first real file that opens a vitrea window with one bridge
+method, run from its shebang.
+
+**Silva is IN v1 (Fran, 2026-09-04).** briar links silva the way
+silex does (decree 01M098M3G6's route) and parses every C region
+with macro expansion, serving latina.h and the closure's headers to
+the parser from the capsula. The fabrica therefore knows which unit
+defines `principale`, renders real prototypes for the file's helpers,
+partitions translation units at unit extents, and checks a method's
+signature — no textual heuristics, no double compilation.
+
+**Out of scope (v1), all named in §9:** the interpreted mode (officina
+`machinula`), named chunks and any tangling beyond document order,
+regions nested inside markdown constructs, examen judgment of the
+regions (one call away now, but a decree about what a script must
+obey comes first), flags derived by aedilis, Linux, a sealed
+distribution flag, an LSP over `.thistle`, the ludus islands
+vocabulary, a `briar-c89` dialect with STML tags inside C.
+
+## 2. The format
+
+A `.thistle` file is a SEQUENCE of parts. No root element is
+required; the document is judged whole (canon's multi-root rule,
+exists — canon.h). Three region kinds plus prose:
+
+| part | begins | ends | inside |
+|---|---|---|---|
+| interpres | line 1 starting `#!` | end of line 1 | the interpreter line; kept in the tree, dropped from every build |
+| regio (raw) | a column-0 line `<name! attrs>` — `!` glued to the name, attributes in STML syntax (the lexer form at lib/stml.c:905–1030, exists) | the first later column-0 line `</name>` | bytes VERBATIM: C, html, js, css, md |
+| elementum (STML) | a column-0 line `<name attrs>` or `<name attrs/>` | the balanced close found by the STML lexeme stream (`stml_lexemata_colligere`, exists — stml.h:345), or the `/>` | STML, handed whole to `stml_legere` (exists) |
+| prosa | any other line | the next region or interpres | markdown, handed whole to `md_arbor_parsare` (exists — md/fontes/md_arbor.h) |
+
+**Laws.**
+
+- **Column 0 is the only place briar looks.** `<` at column 0 followed
+  by a name-start byte opens a region; anything else is prose. Prose
+  therefore needs no escaping: `<chorda.h>` inside a sentence is text.
+  Measured 2026-09-04: the same prose as a bare STML text node is
+  refused by the STML parser at the first `<`, and CommonMark shreds a
+  `<c!>` block at its first blank line — both reasons this grammar is
+  briar's own.
+- **Markdown fences are tracked, and inside a fence every line is
+  prose.** A column-0 line (up to three spaces of indentation, as
+  CommonMark allows) of three or more backticks or tildes opens a
+  fence; the fence closes at a line of the same character at least as
+  long. While a fence is open, a column-0 `<html>` in a documentation
+  example is prose, never a region. One boolean in the lexer, no
+  lookahead; the inner markdown parse sees the same fence and agrees.
+  Fences do not interact with raw regions (inside `<c!>` nothing
+  changes); a fence still open at end of file is a named vitium.
+  Fences are for DOCUMENTATION code; executable code is always
+  bounded by a tag briar knows (Fran, 2026-09-04).
+- **A raw region ends only at column 0.** STML's own raw scan stops at
+  `</c` anywhere (`_tok_legere_contentus_crudus`, lib/stml.c:1489); a C
+  string literal containing `</c>` would end the block early there.
+  Briar is stricter by design.
+- **An unterminated raw region runs to end of file** with a named
+  vitium; a column-0 `</name>` with no open region is prose. The parse
+  is therefore ALWAYS a tree (materia's "always a tree" is per-parser;
+  briar's outer grammar is total by construction).
+- **Every byte belongs to exactly one token**; emission of the tree is
+  byte-identical to the source (md's line model, spec §3 of
+  md-arbor-spec.md).
+- **The `\` dedent form** (`<c!\>`, STML's kind ladder) is ACCEPTED by
+  the lexer and recorded; applying the dedent is deferred (§9).
+
+**v1 vocabulary.** Raw: `c`, `html`, `js`, `css`, and `md` (prose
+written explicitly, the escape for prose that must start at column 0
+with a `<` outside a fence; the nexus parses it as markdown like bare
+prose, the fabrica produces nothing from it). STML: `fenestra`
+(window: `titulus`, `latitudo`, `altitudo`; defaults = file stem, 640,
+400) and the optional `briar` (`titulus` = project name = the C symbol
+of the capsula, so it must be an identifier; default = file stem with
+non-identifier bytes replaced by `_`). The parser accepts ANY name in
+either position; `briar.canon` judges the STML vocabulary, the fabrica
+refuses an unknown raw kind by name.
+
+**Attributes on `<c!>` (v1, names unsealed).** The region tag IS the
+annotation — no comment-annotation is needed while the tag wraps the
+code (Fran, 2026-09-04; the comment gate of annotationes-stml-spec.md
+stays available if ever needed):
+
+| attribute | meaning |
+|---|---|
+| `methodus="nomen"` | a bridge method: the region defines a function `nomen` with the `InternuntiusTractator` signature (exists — internuntius.h:61), registered as internuntius method `nomen`. Named after the parameter of `internuntius_praebere`; deliberately NOT `tractator`, which ludus reserves for UI event handlers under its no-I/O lint L5 (ludus-brainstorm.md §XII) — a bridge method reads files and talks to the network, that is what it is for |
+| `munus="probatio"` | the region is the file's PROBATIO: a separate translation unit and binary using credo, exactly as every `probationes/probatio_<x>.c` does |
+| `nomen=` | RESERVED for named chunks (§9) |
+
+**The first file** (fixture `briar/probationes/fixa/salve_vitreum.thistle`):
+
+    #!/usr/bin/env briar
+    # Salve vitreum
+
+    Include `<chorda.h>` and the window opens with one method bound
+    to a button. Prose is markdown; it never needs escaping. A
+    documentation example may show a tag at column 0 inside a fence:
+
+    ```html
+    <button onclick="internuntius.vocare('salve', {})">tange</button>
+    ```
+
+    <fenestra titulus="salve" latitudo="640" altitudo="400"/>
+
+    <html!>
+    <h1>salve</h1>
+    <button onclick="internuntius.vocare('salve', {}).then(
+        function (r) { document.body.append(r.nuntius); })">tange</button>
+    </html>
+
+    <c! methodus="salve">
+    #include "chorda.h"
+    #include "json.h"
+
+    JsonValor*
+    salve (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
+        chorda* culpa)
+    {
+        JsonValor* fructus = json_objectum_creare(piscina);
+
+        (vacuum)argumenta; (vacuum)datum; (vacuum)culpa;
+        json_objectum_ponere(fructus, "nuntius",
+            json_chorda_creare_literis(piscina, "salve, munde"));
+        redde fructus;
+    }
+    </c>
+
+    <c! munus="probatio">
+    #include "credo.h"
+    #include "json.h"
+
+    s32
+    principale (vacuum)
+    {
+        Piscina*   piscina = piscina_generare_dynamicum("probatio", 65536);
+        JsonValor* r;
+        chorda     culpa;
+
+        credo_aperire(piscina);
+        r = salve(NIHIL, piscina, NIHIL, &culpa);
+        CREDO_NON_NIHIL(r);
+        credo_imprimere_compendium();
+        redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    }
+    </c>
+
+The plain-program twin (`salve.thistle`) is prose plus one `<c!>`
+defining `principale` and printing `salve, munde`, plus a probatio
+region asserting on a helper.
+
+## 3. The parser — a materia client
+
+Lives in `briar/fontes/`, beside css and md; materia stays thin (M8):
+nothing briar-specific enters `materia/`.
+
+### 3.1 Registry and lexicon (tables, never programs — M7)
+
+Genera (unsealed names) and their loci, in the css/md table form
+(`MateriaRegistrumCoctum`, exists — materia/fontes/materia_registrum.h):
+
+| genus | loci |
+|---|---|
+| `documentum` | `interpres` NODUS? · `partes` LISTA_NODUS |
+| `interpres` | `tok` TOKEN (the whole line incl. newline) |
+| `prosa` | `tok` TOKEN (the whole run) |
+| `regio` | `tok_apertum` TOKEN (open-tag line) · `titulus` TOKEN† · `tok_contentum` TOKEN (bytes, may be empty) · `tok_clausum` TOKEN? (absent = unterminated) · `vitium` INDEX |
+| `elementum` | `tok` TOKEN (balanced STML bytes) · `titulus` TOKEN† |
+
+† = DERIVED token (`fons_index` 1, md's semantic channel): the name
+without `<`, `!`, `\`; the emitter omits it. Attributes are NOT parsed
+by briar: §3.3 parses the open-tag line with the STML parser, so there
+is never a second attribute grammar.
+
+Token genera (`MateriaLexiconCoctum`, prefix `briar-`): `FINIS`,
+`INTERPRES`, `TAG_APERTUM`, `TAG_CLAUSUM`, `CRUDUM`, `PROSA`, `STML`,
+`DERIVATUM`. All VERBATIM except `FINIS`; no trivia genus — like md,
+trivia do not exist in the line model. The probatio asserts both
+tables by TITLE so a permutation is caught, never absorbed.
+
+### 3.2 Lexer and arbor
+
+Line table first (md_lexema's shape). Classification per line: `#!` on
+line 1 → INTERPRES; a fence line toggles the fence state (§2); while
+the fence is open every line is prose; otherwise column-0 `<` +
+name-start → TAG_APERTUM candidate (the `!` decides raw); column-0
+`</name>` → TAG_CLAUSUM candidate; otherwise prose. The arbor walks
+lines with a one-deep state: outside a region, a TAG_APERTUM opens
+`regio` (raw) or `elementum`; inside a raw region only the matching
+column-0 TAG_CLAUSUM closes it, every other line joins
+`tok_contentum`; for an STML element the extent comes from
+`stml_lexemata_colligere` over the remainder, tracking depth to zero
+(self-closing = depth zero at once). Prose lines coalesce into one
+PROSA token per run. `materia_arbor_patres_figere` (exists) after
+construction, so the comparator's reconstruction policy holds.
+
+### 3.3 Projection, canon, inner trees
+
+- **Projection**: `briar_stml_consilium` = `materia_arbor_consilium_nudum`
+  + the origo hook, copied from `md_stml.c` (70 lines). `briar -arbor
+  x.thistle` prints it. FIDELIS and STRUCTURALIS round trips both
+  gated.
+- **Canon**: `briar/grammatica/briar.canon`, hand-written, seal pinned
+  with a drift guard both ways (css's B7 pattern). It judges the OUTER
+  projection and, through the nexus, the STML regions' vocabulary
+  (`fenestra`, `briar`; the ludus vocabulary joins later).
+- **Nexus** (`briar_nexus`, beside materia): the inner trees keyed by
+  region node identity — the materia design-reach pattern "outer tree
+  holds bytes as ONE raw token, inner tree separate, linked by
+  identity". Three inner kinds in v1: prose and `<md!>` regions →
+  `md_arbor_parsare` over the token bytes; STML element →
+  `stml_legere` over the STML token bytes; raw open-tag →
+  `stml_legere` over the open-tag line rewritten as `<name attrs/>`
+  (the `!`/`\` stripped), which yields the attributes as a normal
+  `StmlNodus`. Positions: every inner line number is offset by the
+  region's first line so diagnostics name the `.thistle` line.
+- **C regions → silva (the fourth inner kind, IN v1).** Each C
+  region is parsed by `silva_parsare_cum_expansione` (exists —
+  silva/amalgama/silva.h:791) over a `SilvaExpansio` (exists — :629)
+  into which briar has fed latina.h as a synthetic first source and
+  the closure's headers by TEXT through `silva_includendum_praebere`
+  (exists — :639: `(exp, via, textus, mensura)`), read from the
+  capsula — silva never touches disk. A bare parse expands nothing
+  and misparses house C (measured, MEMORY); expansion is mandatory.
+  The tree gives the fabrica: top-level unit extents
+  (`silva_nodus_extensionem`, exists — :377), the unit whose
+  declarator is `main` after expansion (`principale` is a latina
+  macro), and rendered signatures (`silva_c89_typum_scribere`,
+  exists — :1953, the renderer behind legati's `caput`). This is the
+  md fence hook's door, opened here: outer raw token, inner silva
+  tree, linked by identity. Semantic diagnostics from silva are
+  reported at `.thistle` positions through the same offset.
+
+## 4. The fabrica — tree to binary
+
+### 4.1 Build home and cache
+
+`~/.rhubarb/briar/<titulus>-<sigillum>/`, following the
+`~/.rhubarb/<app>.volumen` convention. `sigillum` = the first sixteen
+hex of SHA-256 (`sigillum_computare`, exists — sigillum.h) over three
+inputs, in order: the corpus stamp (`corpus.versio`), the EXACT flag
+string the fabrica will write into the build script (review item 3:
+flags baked into a project must be in its key; the corpus stamp
+covers them only through the binary that carries them), and the file
+bytes. Presence of `bin/<titulus>` under a directory with that key
+means NO rebuild — content decides, never timestamps. `briar -struere
+-iterum` forces. Subdirectories: `fontes/ assets/ instrumenta/
+include/ lib/ vendor/ probationes/ build/ bin/` — exactly the silex
+`-vitrea` scaffold, so a briar project dir is a silex project a human
+can `cd` into and read.
+
+**Flags, direction (Fran, 2026-09-04): DERIVE from the sources.** In
+v1 the base flag set is the string silex's generators carry
+(`lib/silex.c:741`, a literal). The structural fix is named twice on
+the ledger and briar is its trigger: desideratum 01KZP0WDN9
+("vexilla as data" — its stated trigger is a FOURTH consumer of the
+flag set; compile_tests, aedilis, silex's generators were three,
+briar's fabrica is the fourth), and the fabrica thread 01KZYN4VPZ
+(frameworks derived from `#import` in the closure's `.m` files).
+The engine for the derived half exists — `aedilis_derivare` +
+`aedilis_scriptum_scribere` behind the `AedilisExtractor` seam
+(exists — aedilis.h:38/143/178), whose rule file `aedilis.stml` already
+carries per-header `-framework` rules and vendor rules — but that
+rule file is NOT in the corpus bundle today (only `aedilis.canon` is),
+and the extractor would have to read from the capsula. Both are named
+in §9; v1 does not wait for them.
+
+### 4.2 What is written
+
+| output | from | note |
+|---|---|---|
+| `fontes/<t>.c` | generated main (§4.3) or, for a plain program, the unit that defines `principale`, cut at its silva extent, with `#include "latina.h"` and `#include "<t>_regiones.h"` prepended | every unit is preceded by `#line <n> "<via>"`; clang then reports `x.thistle:15:11` (measured 2026-09-04) |
+| `fontes/<t>_regiones.c/.h` | every top-level unit of every non-probatio C region except the `principale` unit, in document order, `#line`-mapped; the header = generated prototypes of every function defined there (rendered by silva), plus the file's own `#include` lines | one object shared by the program and the probatio |
+| `probationes/probatio_<t>.c` | `#include "latina.h"` + `#include "<t>_regiones.h"` + the `munus="probatio"` region, `#line`-mapped | a SEPARATE translation unit linked against the library objects and `_regiones.o`; the file's helpers are visible through the generated header; no second `main`. Built to `bin/probatio_<t>` only by `-probatio` |
+| `assets/index.html`, `assets/<t>.js`, `assets/<t>.css`, `assets/<t>.toml` | the html/js/css regions | v1: at most one region of each kind; more = refusal naming the second. A `<script src="<t>.js">` line is NOT injected — the html region is verbatim; the fixture references its assets itself |
+| `instrumenta/capsula_generare.c` | corpus | as silex `-vitrea` |
+| `include/ lib/ vendor/` | `silex_clausuram_colligere` (exists — silex.h:105) | seeds = the `#include "x.h"` lines of ALL C regions (probatio included — it pulls `credo.h`) ∪ the generated main's includes; `.m` twins and vendor pairs come with the closure |
+| `aedificare.sh`, `probare.sh` | silex's generators (§4.4) | four-tier build script; probare = second link target with its own closure, as the scaffold's |
+
+Prose regions produce nothing in v1; `briar -html` (the literate
+rendering through `md_html_reddere`, exists) is a named pull, not a
+flag.
+
+### 4.3 The main rule (mirrors officina's `#!` rule)
+
+The probatio region is its own translation unit and takes no part in
+this rule: it may define its own `principale`, and the "two mains"
+refusal counts only non-probatio C regions.
+
+**How briar sees `principale`:** through the silva tree of §3.3 — a
+top-level function definition whose declarator name is `main` after
+expansion. Comments, strings, and prototypes do not count. Two such
+units = the two-mains refusal, naming both `.thistle` lines.
+
+**Method signatures are checked, not trusted.** A `methodus="nomen"`
+region must define a function `nomen`; briar renders its type
+(`silva_c89_typum_scribere`) and compares it with the
+`InternuntiusTractator` signature; a mismatch is a refusal naming the
+region line and the expected signature, before clang ever runs.
+
+1. A non-probatio C region defines `principale` → plain program.
+   briar adds only latina.h and the derived closure; `<fenestra>`
+   present alongside is a refusal (two mains).
+2. No `principale` and a `<fenestra>` element → atrium app. briar
+   generates the main from the silex `-vitrea` template
+   (`_fontem_vitreum_fingere`, lib/silex.c:1025, exists): piscina,
+   `AtriumConfiguratio` from `<fenestra>` (titulus, latitudo,
+   altitudo, capsula), `atrium_vexilla_legere` so `-vivum` and
+   `bin/manus` work at birth, one `internuntius_praebere(inx,
+   "<nomen>", <nomen>, NIHIL)` per `<c! methodus="nomen">`, the
+   atrium loop. briar generates the method's prototype. User datum is
+   NIHIL in v1; the volumen-bearing `Pipa` of the scaffold is deferred
+   (§9, `status`).
+3. Neither → refusal naming both absences.
+
+### 4.4 silex changes (the one library touch)
+
+Promote five static generators in `lib/silex.c` to public API in
+`silex.h`, bodies unchanged: `_clausuram_e_contentis` (closure seeded
+from source TEXTS — lib/silex.c:1702), `_aedificare_vitreum_fingere`
+(the four-tier script — :1916), `_probare_vitreum_fingere` (:2004),
+`_aedificare_sh_fingere` / `_probare_sh_fingere` (plain-program
+scripts — :751/:786), `_toml_fingere` (:1218). Proposed names:
+`silex_clausuram_e_contentis`, `silex_ordinem_vitreum_fingere`,
+`silex_ordinem_probandi_vitreum_fingere`, `silex_ordinem_fingere`,
+`silex_ordinem_probandi_fingere`, `silex_toml_fingere`. `lib/silex.c`
+stays silva-free (decree 01M098M3G6's route); `probatio_silex`
+unchanged. The rule of two applies: the second consumer promotes,
+nothing is copied.
+
+**Where silva enters briar:** `briar/fontes/` is a subsystem, not
+`lib/`, so `briar_nexus` and `briar_fabrica` may depend on silva
+directly, as officina's instrumenta do. The binary links silva's
+objects from the same pool `silex_struere.sh` and `differre.sh`
+share (`silva/build/`, flags + `-Wno-overlength-strings`), or the
+verified amalgam `silva/amalgama/silva.c` — P3 picks by build time;
+either is the decree's route.
+
+### 4.5 Run
+
+`briar x.thistle a b` = parse → key → build if absent
+(`processus_exsequi` on `./aedificare.sh` with a deadline, exists —
+processus.h:92; clang's output passes through) →
+`processus_transformare` (exists — :113) into `bin/<t> a b`. The
+script BECOMES the program: same PID, stdio inherited, working
+directory unchanged, so relative paths resolve from where the user
+ran it. A build failure prints the script's output and exits 1
+without exec. `-probatio` builds `bin/probatio_<t>` (running
+`probare.sh`) if absent and execs it the same way; its exit code is
+the verdict.
+
+## 5. The binary and its build
+
+- **Flags, not verbs (DECISUS, Fran 2026-09-04: thistle files are
+  scripts).** `briar [-flag] x.thistle [args…]`; house single-dash
+  form (`argumenta`, declared-options parser, exists — argumenta.h;
+  register every flag or the invocation is refused). One code path:
+  the bare form is the run.
+
+  | flag | does |
+  |---|---|
+  | (none) | run: build if absent, exec |
+  | `-probatio` | build the probatio if absent, exec it (exit code = verdict) |
+  | `-struere [-iterum]` | build only, print the project dir; `-iterum` ignores the cache |
+  | `-arbor` | print the STML projection |
+  | `-partes` | print the closure, ADEST/ABEST as `silex partes` |
+  | `-versio` | corpus stamp and the flag-string hash of §4.1 |
+
+- **The shebang form** `./x.thistle …` reaches briar as `briar
+  ./x.thistle …`, so briar also recognizes its own flags as the FIRST
+  argument after the file: `./x.thistle -probatio` runs the probatio.
+  That reserves those five words as a program's first argument; a
+  program that needs one of them as its own first argument is called
+  through `briar x.thistle -- -probatio`. Everything after is passed
+  through untouched.
+- `tools/briar.c`: corpus = `silex_fons_corporis(piscina,
+  &capsula_corpus_silicis)` (exists — silex.h:60), with silex's
+  resolution order (`-f` fabrica > ascent > embedded), so inside a
+  rhubarb tree it reads the DISK, like `silex iudicare`, and anywhere
+  else — the normal case for a script — it reads the embedded corpus.
+- `tools/briar_struere.sh`, mirroring `silex_struere.sh`: the corpus
+  regeneration block is EXTRACTED into `tools/corpus_infixum.sh` and
+  sourced by both, so `build/capsula_corpus_silicis.c` is generated
+  once and shared; links `build/*.o` + materia + md + briar objects +
+  the corpus + Cocoa/WebKit/Security; installs `~/.bin/briar`. ORDER,
+  as with silex: `./compile_tests.sh` first (it builds `build/*.o`),
+  then struere.
+- **Freshness gate at birth** (tool-reliability doctrine):
+  `tools/briar_fumus.sh` — fake `HOME` (exported), the two fixtures of
+  §2 through the INSTALLED corpus-infixum path, from a directory
+  OUTSIDE the repository (the script case): the plain one built AND
+  run (stdout must contain `salve, munde`), its probatio run green
+  via `-probatio`; the vitrea one built and linked, its probatio run
+  green (`-agere` additionally launches it with `-vivum` and drives
+  `bin/manus`, as `silex_semen_fumus.sh -agere`). Planted fault at
+  birth: a fixture whose probatio contains `CREDO_FALSUM(VERUM)` must
+  turn the gate red. Exit 2 = nothing ran. Prerequisite noted in its
+  header: a stale corpus lies green.
+
+## 6. Probationes and gates
+
+`briar/compile_probationes.sh` (exemplar: md's; exit 0/1/2, header
+guard, per-test logs), registered in pythonica's four tables
+(`PORTAE`, `FORMAE`, mensurae prefix, build-dir map — pythonica/silva.py
+1449/1489/2197/2286). Every gate is born red by a planted fault.
+
+| gate | proves |
+|---|---|
+| `registrum` | genera and loci by title; lexicon by title; seal pinned |
+| `lexema` | every fixture byte-exact through the line table; the column-0 law; `<` not followed by a name-start is prose; **a column-0 `<name>` inside a markdown fence is prose**; fence open at EOF = vitium |
+| `arbor` | regions found and bounded; unterminated raw → EOF + vitium; stray `</x>` is prose; STML element extent balanced; self-closing |
+| `stml` | STRUCTURALIS + FIDELIS round trips of the projection over all fixtures |
+| `canon` | drift guard both ways, seal, every fixture projection judged |
+| `totalitas` | random bytes, mutations, truncations, deep nesting → never crashes (`CREDO_NON_RUIT`), always a tree, emission == source |
+| `nexus` | prose → md tree; element → StmlNodus; raw open tag → attributes (`methodus`, `munus`); line offsets correct (a planted error on a known `.thistle` line) |
+| `fabrica` | headless: tree → project inventory + generated main + generated `probationes/probatio_<t>.c` byte-compared to goldens; `#line` lines present; main rule's three arms with the probatio unit excluded; refusal texts named |
+| `computus` | bench twin, golden `fixa/computus/basis.tsv` (`COMPUTUS_SCRIBERE=1` + a named cause) |
+| `probatio_silex` | UNCHANGED after §4.4 — the promotion is behavior-preserving |
+
+Plus the end-to-end `tools/briar_fumus.sh` (§5), the only gate that
+compiles and runs a generated project and its probatio.
+
+## 7. Work inventory — modules (unsealed names)
+
+New in `briar/`, each with a probatio and a `.worklog.md`:
+
+| module | depends on | content |
+|---|---|---|
+| `briar_registrum` | materia_registrum | genera + loci tables |
+| `briar_lexicon` | materia_lexicon | token table, `briar-` prefix |
+| `briar_lexema` | materia_token, piscina | line table; column-0 classification; fence state |
+| `briar_arbor` | briar_lexema, materia_nodus, stml (lexeme stream) | regions → tree; byte-exact emission |
+| `briar_stml` | materia_arbor | consilium + origo hook; `briar.canon` beside it |
+| `briar_nexus` | md_arbor, stml, silva (expansion parse fed from the capsula), briar_arbor | inner trees by identity — md, STML, and silva for C; offsets; attributes |
+| `briar_fabrica` | silex (promoted API), silva (extents, `main` unit, type renderer), sigillum, filum, briar_nexus | tree → project dir; main rule; unit partition; prototypes; `#line`; assets; toml; probatio unit; method signature check; the key |
+| `briar_computus` | briar_arbor | bench twin |
+| `tools/briar.c` | all above, argumenta, processus, capsula | the binary |
+| `tools/briar_struere.sh`, `tools/corpus_infixum.sh`, `tools/briar_fumus.sh` | — | build, shared corpus block, freshness gate |
+
+Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
+`tools/silex_struere.sh` (sources the extracted corpus block);
+`pythonica/silva.py` (four table rows); `canones.registrum` (briar.canon).
+
+## 8. Phase plan (test-first; each phase ends green)
+
+- **P0 format + parser core.** Registry, lexicon, lexema (with fence
+  state), arbor; fixtures (the two of §2 plus adversarial:
+  unterminated, stray close, `<` in prose, empty regions, no
+  interpres, **a fenced `<html>` example in prose followed by a real
+  `<html!>` region**, a fence left open); gates registrum / lexema /
+  arbor; the runner and its pythonica rows.
+- **P1 projection.** `briar_stml`, `briar.canon` + registration, gates
+  stml / canon / totalitas / computus. `briar -arbor` exists first as
+  a shell script over the probatio objects (md's `arbor.sh` pattern).
+- **P2 nexus.** Inner trees for prose, STML elements, raw attributes
+  (`methodus`, `munus`), and C regions through silva with the capsula
+  as include provider (latina.h synthetic first; a bare parse is a
+  planted fault here — it must be seen to misparse); offsets; gate
+  nexus.
+- **P3 fabrica, headless.** §4.4 promotion with `probatio_silex`
+  unchanged; `briar_fabrica`: unit partition at silva extents, the
+  `main` unit, generated `_regiones.h` prototypes, method signature
+  check, the probatio unit, the key; goldens for both program shapes
+  byte-compared; gate fabrica. No clang is run in the suite.
+- **P4 the binary.** `tools/briar.c` with the flags of §5,
+  `corpus_infixum.sh` extraction, `briar_struere.sh`, cache dir, run,
+  `-probatio`; `briar_fumus.sh` from outside the repo; the first real
+  file runs from its shebang. **Record the first-bake numbers here**
+  (closure size, cold build time, sqlite compile time, binary size) —
+  they decide the vendor-object sharing question of §10.
+
+## 9. Named deferrals
+
+Interpreted mode (waits on machinula piscina support, desideratum
+01KYB9JMDX, and on Tier-2 `.m` scope) · examen over the regions'
+silva trees (the trees exist in v1; what a SCRIPT must obey — house
+codices, or a lighter set — is a decree, then one call; note silva
+rejects `#line`, so judgment runs on the regions, never on the
+generated files) · handler discovery by COMMENT annotation
+(`/* <methodus/> */` through the annotationes-stml-spec.md collector,
+never a second parser) — only if a thistle ever needs marks the region
+tag cannot carry · **a `briar-c89` dialect** (Fran, 2026-09-04): STML
+tags directly inside the C, JSX-like, for richer literate programming
+and transpilation — a materia client of its own when pulled · flags
+DERIVED by aedilis over the capsula (bundle `aedilis.stml`; extractor
+over the corpus; vexilla as data — 01KZP0WDN9, trigger fired;
+frameworks from `#import` — 01KZYN4VPZ) · an effects-at-the-edge lint
+for bridge methods, if wanted, as a NEW codex — never ludus's L5 ·
+named chunks (`nomen=` reserved) · `!\` dedent applied · multiple
+assets by `via=` · app state (`status` region → the scaffold's `Pipa`
++ volumen) · Linux · sealed distribution (`-struere -ad`) · `-html`
+(literate rendering) · `-formare` · an LSP over `.thistle` · the ludus
+islands vocabulary in STML regions once pictor's componens layer
+exists · `.m` regions.
+
+Cross-references: ludus-brainstorm.md §XII (codex L5 and the
+`<tractator/>` vocabulary briar deliberately does not reuse);
+pictor-spec.md §6.4 (the annotation landing order). The reverse
+references are the ludus session's to add.
+
+## 10. Risks, notes, AUDIENDA
+
+- **sqlite per project.** The four-tier script compiles `vendor/
+  sqlite3.c` at `-O2` in every project dir. If P4's numbers say tens
+  of seconds, share `build/sqlite3.o` under `~/.rhubarb/briar/vendor/
+  <stamp>/` and copy it in. Not built until measured.
+- **Two corpus-bearing binaries** (`silex`, `briar`, ~20 MB each plus
+  silva's objects in briar; measure at P4) with two freshness
+  rituals; the shared `corpus_infixum.sh` keeps the generated object
+  single. `briar -versio` names the stamp and the flag hash, as silex
+  names its stamp.
+- **Parse cost per run** is paid only on a cache miss (the key is
+  computed from bytes before any parse); a hit execs at once.
+- **Flags are policy carried by the binary** until §4.1's derivation
+  lands; the key covers them explicitly so a rebuilt briar never
+  reuses a project dir built under old flags.
+- **Open vocabulary at column 0.** A markdown html block someone
+  writes at column 0 in prose, OUTSIDE a fence, becomes an STML
+  element; the STML parser or the canon refuses loudly. Acceptable in
+  v1; the alternative (a closed registry of region names) is one table
+  away if it bites.
+- **Reserved first argument** after the file (§5): five words a
+  program cannot take as its own first argument without `--`. The
+  price of `./x.thistle -probatio`; documented, not hidden.
+- **`~/.bin/scribe`** is a symlink into the main tree and refuses paths
+  outside it (exit 4); in the worktree use `./silva/scribe.sh`.
+- **Names are unsealed.** briar and thistle (Fran's, English by
+  choice), regio / prosa / interpres / elementum / nexus / fabrica,
+  `methodus` and `munus`, the flag names, the promoted silex names —
+  Fran names before P0 commits to `briar/`.
