@@ -37,6 +37,7 @@ declare -a SOURCE_FILES=(
     "lib/cliens_tabularii.c"
     "lib/color.c"
     "lib/coloratio.c"
+    "lib/componens.c"
     "lib/concha.c"
     "lib/credo.c"
     "lib/css_lexema.c"

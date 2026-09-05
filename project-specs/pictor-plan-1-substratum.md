@@ -1092,9 +1092,9 @@ git commit -m "ludus: T2 - mandatum: sex primitiva, spatia coetuum, circuitus ST
 
 **Interfaces:**
 - Consumes: `Punctum`, `Fines`, `fines_continet` (Task 2).
-- Produces: `Partes`, `Praedicatum`, `Componens`; `componens_creare(piscina, intern, id_cstr, partes)`, `componens_addere_liberum(parens, liberum)`, `componens_ponere_fines/actio/nomen/praedicatum/focusabilis/sectio/transformatio`, `componens_numerus_liberorum`, `componens_liberum`, `componens_invenire_per_id(radix, id) → Componens*`, `componens_scribere_stml(radix, piscina, intern, pulchrum) → chorda`, `componens_legere_stml(cstr, piscina, intern) → Componens*`, `componens_aequalis(a, b) → b32`, `partes_titulus(p) → cstr`, `partes_ex_titulo(cstr) → Partes`.
+- Produces: `Partes`, `Praedicatum`, `Componens`; `componens_creare(piscina, intern, id_cstr, partes)`, `componens_addere_liberum(parens, liberum)`, `componens_ponere_fines/actio/titulus/praedicatum/focusabilis/sectio/transformatio`, `componens_numerus_liberorum`, `componens_liberum`, `componens_invenire_per_id(radix, id) → Componens*`, `componens_scribere_stml(radix, piscina, intern, pulchrum) → chorda`, `componens_legere_stml(cstr, piscina, intern) → Componens*`, `componens_aequalis(a, b) → b32`, `partes_titulus(p) → cstr`, `partes_ex_titulo(cstr) → Partes`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_componens.c`:
 ```c
@@ -1133,7 +1133,7 @@ s32 principale (vacuum)
     f.x = X; f.y = X; f.latitudo = L; f.altitudo = XX;
     componens_ponere_fines(bottone, f);
     componens_ponere_actio(bottone, "documentum.servare");
-    componens_ponere_nomen(bottone, "Servare");
+    componens_ponere_titulum(bottone, "Servare");
     componens_ponere_focusabilis(bottone, VERUM);
     componens_addere_liberum(radix, bottone);
 
@@ -1181,12 +1181,12 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh componens`
 Expected: FAIL — `'componens.h' file not found`.
 
-- [ ] **Step 3: Write the header**
+- [x] **Step 3: Write the header**
 
 `include/componens.h`:
 ```c
@@ -1247,7 +1247,7 @@ nomen enumeratio {
 nomen structura Componens {
                   chorda  id;                 /* internata; vacua = anonymus */
                   chorda  actio;              /* nomen actionis; vacua = nulla */
-                  chorda  nomen;              /* titulus accessibilis (label) */
+                  chorda  titulus;              /* titulus accessibilis (label) */
                   Partes  partes;
                    Fines  fines;              /* in spatio PARENTIS */
              Praedicatum  praedicatum;
@@ -1276,7 +1276,7 @@ componens_creare (
 vacuum componens_addere_liberum     (Componens* parens, Componens* liberum);
 vacuum componens_ponere_fines       (Componens* c, Fines fines);
 vacuum componens_ponere_actio       (Componens* c, constans character* actio);
-vacuum componens_ponere_nomen       (Componens* c, constans character* nomen);
+vacuum componens_ponere_titulum       (Componens* c, constans character* titulus);
 vacuum componens_ponere_praedicatum (Componens* c, Praedicatum p);
 vacuum componens_ponere_focusabilis (Componens* c, b32 focusabilis);
 vacuum componens_ponere_sectio      (Componens* c, b32 sectio);
@@ -1331,7 +1331,7 @@ partes_ex_titulo (
 #endif /* COMPONENS_H */
 ```
 
-- [ ] **Step 4: Write the implementation**
+- [x] **Step 4: Write the implementation**
 
 `lib/componens.c`:
 ```c
@@ -1393,7 +1393,7 @@ componens_creare (
     memset(c, ZEPHYRUM, magnitudo(Componens));
     c->id     = *chorda_internare_ex_literis(intern, id);
     c->actio  = *chorda_internare_ex_literis(intern, "");
-    c->nomen  = *chorda_internare_ex_literis(intern, "");
+    c->titulus  = *chorda_internare_ex_literis(intern, "");
     c->partes = partes;
     c->scala  = I;
     c->liberi = xar_creare(piscina, (i32)magnitudo(Componens*));
@@ -1429,7 +1429,7 @@ componens_ponere_transformatio (
     c->scala        = scala < I ? I : scala;
 }
 
-/* actio/nomen: chordae internatae absunt hic (intern non in nodo);
+/* actio/titulus: chordae internatae absunt hic (intern non in nodo);
  * duplicamus ex literis in piscinam nodi non habemus - ergo
  * consumptor literas STATICAS aut vivas praebeat. Pro ludus: nomina
  * actionum sunt literae constantes registri (actio.h). */
@@ -1438,17 +1438,15 @@ componens_ponere_actio (
     Componens* c,
     constans character* actio)
 {
-    c->actio.datum   = (i8*)actio;
-    c->actio.mensura = (i32)strlen(actio);
+    c->actio = *chorda_internare_ex_literis(c->intern, actio);
 }
 
 vacuum
-componens_ponere_nomen (
+componens_ponere_titulum (
     Componens* c,
-    constans character* nomen)
+    constans character* titulus)
 {
-    c->nomen.datum   = (i8*)nomen;
-    c->nomen.mensura = (i32)strlen(nomen);
+    c->titulus = *chorda_internare_ex_literis(c->intern, titulus);
 }
 
 i32
@@ -1519,7 +1517,7 @@ componens_ad_nodum (
     stml_attributum_addere(nodus, piscina, intern, "id", chorda_ut_cstr(c->id, piscina));
     stml_attributum_addere(nodus, piscina, intern, "partes", partes_titulus(c->partes));
     si (c->actio.mensura > ZEPHYRUM) { stml_attributum_addere(nodus, piscina, intern, "actio", chorda_ut_cstr(c->actio, piscina)); }
-    si (c->nomen.mensura > ZEPHYRUM) { stml_attributum_addere(nodus, piscina, intern, "nomen", chorda_ut_cstr(c->nomen, piscina)); }
+    si (c->titulus.mensura > ZEPHYRUM) { stml_attributum_addere(nodus, piscina, intern, "titulus", chorda_ut_cstr(c->titulus, piscina)); }
     attributum_numericum(nodus, piscina, intern, "x", c->fines.x);
     attributum_numericum(nodus, piscina, intern, "y", c->fines.y);
     attributum_numericum(nodus, piscina, intern, "latitudo", c->fines.latitudo);
@@ -1603,8 +1601,8 @@ nodus_ad_componens (
     si (a) { c->partes = partes_ex_titulo(chorda_ut_cstr(*a, piscina)); }
     a = stml_attributum_capere(nodus, "actio");
     si (a) { componens_ponere_actio(c, chorda_ut_cstr(*a, piscina)); }
-    a = stml_attributum_capere(nodus, "nomen");
-    si (a) { componens_ponere_nomen(c, chorda_ut_cstr(*a, piscina)); }
+    a = stml_attributum_capere(nodus, "titulus");
+    si (a) { componens_ponere_titulum(c, chorda_ut_cstr(*a, piscina)); }
     c->fines.x        = attributum_i32(nodus, "x");
     c->fines.y        = attributum_i32(nodus, "y");
     c->fines.latitudo = attributum_i32(nodus, "latitudo");
@@ -1681,7 +1679,7 @@ componens_aequalis (
 
     si (!chorda_aequalis(a->id, b->id))       { redde FALSUM; }
     si (!chorda_aequalis(a->actio, b->actio)) { redde FALSUM; }
-    si (!chorda_aequalis(a->nomen, b->nomen)) { redde FALSUM; }
+    si (!chorda_aequalis(a->titulus, b->titulus)) { redde FALSUM; }
     si (a->partes != b->partes)               { redde FALSUM; }
     si (memcmp(&a->fines, &b->fines, magnitudo(Fines))) { redde FALSUM; }
     si (a->praedicatum != b->praedicatum)     { redde FALSUM; }
@@ -1703,21 +1701,21 @@ componens_aequalis (
 ```
 Note on `componens_ponere_actio`/`_nomen`: they alias the caller's C string (no copy) because action names are registry literals and labels come from interned or piscina-owned text. If a caller passes a temporary, intern it first with `chorda_internare_ex_literis` and pass `chorda_ut_cstr` of that. This is documented in the header comment; keep it.
 
-- [ ] **Step 5: Run to verify it passes**
+- [x] **Step 5: Run to verify it passes**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh componens`
 Expected: PASS.
 
-- [ ] **Step 6: Worklog + commit**
+- [x] **Step 6: Worklog + commit**
 
 `lib/componens.worklog.md`:
 ```
 ## 2026-09-04 — natus
 
-Logical node: id/actio/nomen/partes/fines/praedicatum/focusabilis +
+Logical node: id/actio/titulus/partes/fines/praedicatum/focusabilis +
 clip/translate/scale (targeting needs them; pingere copies them onto
 the coetus). STML round-trip, equality, find-by-id. Design:
-pictor-spec.md §3.1. actio/nomen alias caller strings (registry
+pictor-spec.md §3.1. actio/titulus alias caller strings (registry
 literals) — documented in the header.
 ```
 ```bash
@@ -3734,7 +3732,7 @@ toy_componere (InsulaRepositorium* repo, constans Motus* motus, Piscina* p, Inte
     f.x = X; f.y = X; f.latitudo = L; f.altitudo = XX;
     componens_ponere_fines(b1, f);
     componens_ponere_actio(b1, "numerare");
-    componens_ponere_nomen(b1, "Numerare");
+    componens_ponere_titulum(b1, "Numerare");
     componens_ponere_focusabilis(b1, VERUM);
     componens_addere_liberum(radix, b1);
     tabula = componens_creare(p, in, "tabula", PARTES_TABULA);
@@ -4351,7 +4349,7 @@ git commit -m "ludus: T10 - dispensator: ansa, regula staleness, focus in insula
 
 **Interfaces:**
 - Consumes: `Dispensator` (T10), `ludus_toy.h`.
-- Produces: `ManusLudus`; `manus_ludus_creare(piscina, d)`, `manus_ludus_invenire(m, selector) → Componens*`, `manus_ludus_ad_schirmum(m, c, locale) → Punctum`, `manus_ludus_premere(m, selector) → b32`, `manus_ludus_premere_ad(m, x, y)`, `manus_ludus_movere(m, x, y)`, `manus_ludus_trahere(m, selector, puncta, n)`, `manus_ludus_clavem(m, typus, modificantes)`, `manus_ludus_exspectare(m, ms)`, `manus_ludus_existit(m, selector)`, `manus_ludus_focus(m) → chorda`, `manus_ludus_causa(m)`; macros `CREDO_MANUS_LUDUS_EXISTIT/ABEST/FOCUS`. Selectors: `#id`, `[partes=…]`, `[actio=…]`, `[nomen=…]`.
+- Produces: `ManusLudus`; `manus_ludus_creare(piscina, d)`, `manus_ludus_invenire(m, selector) → Componens*`, `manus_ludus_ad_schirmum(m, c, locale) → Punctum`, `manus_ludus_premere(m, selector) → b32`, `manus_ludus_premere_ad(m, x, y)`, `manus_ludus_movere(m, x, y)`, `manus_ludus_trahere(m, selector, puncta, n)`, `manus_ludus_clavem(m, typus, modificantes)`, `manus_ludus_exspectare(m, ms)`, `manus_ludus_existit(m, selector)`, `manus_ludus_focus(m) → chorda`, `manus_ludus_causa(m)`; macros `CREDO_MANUS_LUDUS_EXISTIT/ABEST/FOCUS`. Selectors: `#id`, `[partes=…]`, `[actio=…]`, `[titulus=…]`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -4395,7 +4393,7 @@ s32 principale (vacuum)
     CREDO_MANUS_LUDUS_EXISTIT (m, "#b1");
     CREDO_MANUS_LUDUS_EXISTIT (m, "[partes=tabula]");
     CREDO_MANUS_LUDUS_EXISTIT (m, "[actio=numerare]");
-    CREDO_MANUS_LUDUS_EXISTIT (m, "[nomen=Numerare]");
+    CREDO_MANUS_LUDUS_EXISTIT (m, "[titulus=Numerare]");
     CREDO_MANUS_LUDUS_ABEST   (m, "#nemo");
     CREDO_MANUS_LUDUS_ABEST   (m, "[partes=dialogus]");
 
@@ -4406,7 +4404,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32 (p.y, X);
 
     imprimere("\n--- premere ---\n");
-    CREDO_VERUM (manus_ludus_premere(m, "[nomen=Numerare]"));
+    CREDO_VERUM (manus_ludus_premere(m, "[titulus=Numerare]"));
     a = insula_attributum(repo, INSULA_EPHEMERA, "numerus");
     CREDO_NON_NIHIL (a);
     CREDO_CHORDA_AEQUALIS_LITERIS (*a, "1");
@@ -4458,7 +4456,7 @@ Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh manus_ludus
 /* manus_ludus.h - manus IN PROCESSU super dispensatorem (transportus
  * nativus). Eadem verba ac manus.h (premere, clavem, existit, focus),
  * SYNCHRONA: nulla asynchronia, ergo nulla mora. Selectores super
- * arborem LOGICAM: '#id', '[partes=x]', '[actio=x]', '[nomen=x]'.
+ * arborem LOGICAM: '#id', '[partes=x]', '[actio=x]', '[titulus=x]'.
  * Tempus manus per exspectare solum procedit - horologium nullum.
  * Unificatio sub manus.h ut transportus alter: dilatio nominata. */
 
@@ -4525,7 +4523,7 @@ manus_ludus_creare (Piscina* piscina, Dispensator* d)
 
 /* ---- selectores ---- */
 
-nomen enumeratio { SEL_ID, SEL_PARTES, SEL_ACTIO, SEL_NOMEN, SEL_MALUS } SelGenus;
+nomen enumeratio { SEL_ID, SEL_PARTES, SEL_ACTIO, SEL_TITULUS, SEL_MALUS } SelGenus;
 
 interior SelGenus
 selector_legere (constans character* sel, chorda* valor, Piscina* p)
@@ -4545,7 +4543,7 @@ selector_legere (constans character* sel, chorda* valor, Piscina* p)
     memcpy(valor->datum, aeq + I, n);
     si (strncmp(sel + I, "partes=", VII) == ZEPHYRUM) { redde SEL_PARTES; }
     si (strncmp(sel + I, "actio=",  VI)  == ZEPHYRUM) { redde SEL_ACTIO; }
-    si (strncmp(sel + I, "nomen=",  VI)  == ZEPHYRUM) { redde SEL_NOMEN; }
+    si (strncmp(sel + I, "titulus=", VIII)  == ZEPHYRUM) { redde SEL_TITULUS; }
     redde SEL_MALUS;
 }
 
@@ -4562,7 +4560,7 @@ quaerere (Componens* c, SelGenus g, chorda v, Piscina* p)
         casus SEL_ID:     congruit = chorda_aequalis(c->id, v); frange;
         casus SEL_PARTES: congruit = chorda_aequalis_literis(v, partes_titulus(c->partes)); frange;
         casus SEL_ACTIO:  congruit = chorda_aequalis(c->actio, v); frange;
-        casus SEL_NOMEN:  congruit = chorda_aequalis(c->nomen, v); frange;
+        casus SEL_TITULUS:  congruit = chorda_aequalis(c->titulus, v); frange;
         ordinarius:       congruit = FALSUM; frange;
     }
     si (congruit) { redde c; }
