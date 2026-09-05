@@ -127,8 +127,8 @@ s32 principale (vacuum)
     m = mandata_creare(piscina, intern);
     pingere(radix, reg, ZEPHYRUM, m);
     CREDO_AEQUALIS_I32(vocationes, I);
-        /* coetus radix, coetus pannus, RECT panni (figura ANTE liberos),
-     * coetus b1, rect b1, textus = VI */
+        /* coetus radix, coetus pannus, RECT panni (figura ANTE
+         * liberos), coetus b1, rect b1, textus = VI */
     CREDO_AEQUALIS_I32(mandata_numerus(m), VI);
     x = mandata_obtinere(m, ZEPHYRUM);
     CREDO_VERUM(x->genus == MANDATUM_COETUS);
