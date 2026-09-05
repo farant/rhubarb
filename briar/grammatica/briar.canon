@@ -1,0 +1,159 @@
+<!--
+  briar.canon
+  MANU SCRIPTUM (ut css.canon et md.canon). Registrum briar_registrum.c
+  et lexicon briar_lexicon.c manu scripta sunt, ergo canon quoque.
+  Custos derivae (probatio_briar_canon) regulas huius plagulae contra
+  registrum generum, loci, lexicon et involucrum UTRIMQUE retiret;
+  sigillum registri infra PINNATUM contra vivum conferitur.
+
+  MODELLUM: trivia NULLA (involucra <ante>/<post> non declarantur).
+  Locus INDEX = involucrum cum TEXTU solo (textus="verum"); locus
+  TOKEN = involucrum continens elementum lexematis briar-*; locus
+  NODUS = involucrum continens elementum generis; LISTA_NODUS =
+  involucrum continens elementa generum. Lexema DERIVATUM (fons I)
+  f="1" + linea/columna fert, b numquam. 'cr' in lexematibus verbatim
+  (offsets '\r'), 'crlf' nusquam (nullum genus TERMINATOR).
+
+  Iudicium manuale:
+    bin/canon_examen -canon briar/grammatica/briar.canon <doc.stml>
+-->
+<canon dialectus="briar" versio="1">
+
+  <!-- =============== FRAGMENTA =============== -->
+
+  <!-- partes documenti (locus LISTA_NODUS) -->
+  <#partes>
+    <liberum nomen="prosa"/>
+    <liberum nomen="regio"/>
+    <liberum nomen="elementum"/>
+  </#>
+
+  <!-- lexema verbatim: attributa quae materia scribit -->
+  <#attributa-lexematis>
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </#>
+
+  <!-- =============== INVOLUCRUM =============== -->
+
+  <elementum nomen="arbor" radix="verum"
+    nota="documentum subarboris (arbor M1): liberum unum, genus
+          quodlibet">
+    <attributum nomen="grammatica" genus="electio"
+      necessarium="verum">
+      <optio>briar</optio>
+    </attributum>
+    <attributum nomen="registrum-sigillum" genus="electio"
+      necessarium="verum"
+      nota="PINNA: sigillum tabularum briar_registrum.c (V genera, XIV
+            loci). Tabula mutata sine hac optione mutata rubet in iudicio
+            ET in custode derivae.">
+      <optio>9a77c465</optio>
+    </attributum>
+    <attributum nomen="fons"    genus="numerus"/>
+    <attributum nomen="b"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+    <liberum nomen="documentum" maximum="1"/>
+    <liberum nomen="interpres"  maximum="1"/>
+    <liberum nomen="prosa"      maximum="1"/>
+    <liberum nomen="regio"      maximum="1"/>
+    <liberum nomen="elementum"  maximum="1"/>
+  </elementum>
+
+  <!-- =============== GENERA =============== -->
+
+  <elementum nomen="documentum">
+    <liberum nomen="interpres" maximum="1"/>
+    <liberum nomen="partes"    maximum="1"/>
+    <liberum nomen="finis"     maximum="1"/>
+    <liberum nomen="vitium"    maximum="1"/>
+  </elementum>
+  <elementum nomen="interpres" intra="documentum">
+    <liberum nomen="interpres" maximum="1"/>
+  </elementum>
+  <elementum nomen="partes" intra="documentum">
+    <<#partes>>
+  </elementum>
+  <elementum nomen="finis" intra="documentum">
+    <liberum nomen="briar-finis" maximum="1"/>
+  </elementum>
+  <elementum nomen="vitium" intra="documentum" textus="verum"/>
+
+  <elementum nomen="interpres">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+  <elementum nomen="tok" intra="interpres">
+    <liberum nomen="briar-interpres" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="prosa">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+  <elementum nomen="tok" intra="prosa">
+    <liberum nomen="briar-prosa" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="regio">
+    <liberum nomen="apertum"   maximum="1"/>
+    <liberum nomen="titulus"   maximum="1"/>
+    <liberum nomen="contentum" maximum="1"/>
+    <liberum nomen="clausum"   maximum="1"/>
+    <liberum nomen="vitium"    maximum="1"/>
+  </elementum>
+  <elementum nomen="apertum" intra="regio">
+    <liberum nomen="briar-tag-apertum" maximum="1"/>
+  </elementum>
+  <elementum nomen="titulus" intra="regio">
+    <liberum nomen="briar-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="contentum" intra="regio">
+    <liberum nomen="briar-crudum" maximum="1"/>
+  </elementum>
+  <elementum nomen="clausum" intra="regio">
+    <liberum nomen="briar-tag-clausum" maximum="1"/>
+  </elementum>
+  <elementum nomen="vitium" intra="regio" textus="verum"/>
+
+  <elementum nomen="elementum">
+    <liberum nomen="tok"     maximum="1"/>
+    <liberum nomen="titulus" maximum="1"/>
+    <liberum nomen="vitium"  maximum="1"/>
+  </elementum>
+  <elementum nomen="tok" intra="elementum">
+    <liberum nomen="briar-stml" maximum="1"/>
+  </elementum>
+  <elementum nomen="titulus" intra="elementum">
+    <liberum nomen="briar-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="vitium" intra="elementum" textus="verum"/>
+
+  <!-- =============== LEXEMATA =============== -->
+
+  <elementum nomen="briar-finis"/>
+  <elementum nomen="briar-interpres" textus="verum">
+    <<#attributa-lexematis>>
+  </elementum>
+  <elementum nomen="briar-tag-apertum" textus="verum">
+    <<#attributa-lexematis>>
+  </elementum>
+  <elementum nomen="briar-tag-clausum" textus="verum">
+    <<#attributa-lexematis>>
+  </elementum>
+  <elementum nomen="briar-crudum" textus="verum">
+    <<#attributa-lexematis>>
+  </elementum>
+  <elementum nomen="briar-prosa" textus="verum">
+    <<#attributa-lexematis>>
+  </elementum>
+  <elementum nomen="briar-stml" textus="verum">
+    <<#attributa-lexematis>>
+  </elementum>
+  <elementum nomen="briar-derivatum" textus="verum"
+    nota="fons I: nomen tagi; f=1, linea/columna portatae, b numquam">
+    <<#attributa-lexematis>>
+  </elementum>
+
+</canon>
