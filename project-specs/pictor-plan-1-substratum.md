@@ -31,7 +31,7 @@
 
 | file | responsibility |
 |---|---|
-| `include/fenestra.h` (modify :193–222), `lib/fenestra_macos.m` (modify :484, :671, :681, immittere) | add `Eventus.tempus`; `fenestra_tempus_ms()` |
+| `include/fenestra.h` (modify :194, :939), `lib/fenestra_macos.m` (modify :256 `impellere_eventum`, add helper near :1502) | add `Eventus.tempus`; `fenestra_tempus_ms()`; stamp once at enqueue |
 | `include/mandatum.h`, `lib/mandatum.c`, `probationes/probatio_mandatum.c` | six draw primitives, `Mandata` list, coetus spans, STML round-trip, equality |
 | `include/componens.h`, `lib/componens.c`, `probationes/probatio_componens.c` | logical node, tree building, STML round-trip, equality, find-by-id |
 | `include/derivare.h`, `lib/derivare.c`, `probationes/probatio_derivare.c` | double-click derivation by timestamp |
@@ -52,7 +52,7 @@ Shared geometry types (`Punctum`, `Fines`) live in `mandatum.h`; `componens.h` i
 
 **Files:**
 - Modify: `include/fenestra.h:193-222` (the `Eventus` struct) and add one prototype near `fenestra_tempus_obtinere_pulsus` (`:930`)
-- Modify: `lib/fenestra_macos.m:484`, `:671`, `:681` (event construction sites) and the two `immittere` functions (`:258`, `:273`)
+- Modify: `lib/fenestra_macos.m:256-267` (`impellere_eventum`, the single enqueue path) + add `fenestra_tempus_ms` beside `fenestra_tempus_obtinere_pulsus` (`:1502`)
 - Test: `probationes/probatio_fenestra_tempus.c`
 
 **Interfaces:**
@@ -126,25 +126,37 @@ s64
 fenestra_tempus_ms (
     vacuum)
 {
-    i64 pulsus;
-    i64 frequentia;
+    f64 pulsus;
+    f64 frequentia;   /* pulsus per secundum (f64 - fenestra.h:939) */
 
-    pulsus     = fenestra_tempus_obtinere_pulsus();
+    pulsus     = (f64)fenestra_tempus_obtinere_pulsus();
     frequentia = fenestra_tempus_obtinere_frequentiam();
-    si (frequentia <= ZEPHYRUM) { redde ZEPHYRUM; }
-    redde (s64)((pulsus * M) / frequentia);
+    si (frequentia <= 0.0) { redde ZEPHYRUM; }
+    redde (s64)((pulsus * 1000.0) / frequentia);
 }
 ```
-At `lib/fenestra_macos.m:484`, after `Eventus eventus = {ZEPHYRUM};` add:
+**One stamp site.** Every event — the NSEvent construction sites at `:484`, `:671`, `:681` AND both `immittere` functions — reaches the queue through the static `impellere_eventum` (`lib/fenestra_macos.m:256-267`). Stamp there, once, only when the caller left `tempus` at ZEPHYRUM (so a replayed or injected event keeps its own time):
 ```c
-            eventus.tempus = fenestra_tempus_ms();
+interior vacuum
+impellere_eventum (
+    Fenestra* fenestra,
+    constans Eventus* eventus)
+{
+    Eventus* sedes;
+
+    si (fenestra->eventus_numerus >= MAXIMUS_EVENTUUM)
+    {
+        redde; /* Cauda eventuum plena */
+    }
+
+    sedes  = &fenestra->eventus[fenestra->eventus_cauda];
+    *sedes = *eventus;
+    si (sedes->tempus == ZEPHYRUM) { sedes->tempus = fenestra_tempus_ms(); }
+    fenestra->eventus_cauda = (fenestra->eventus_cauda + I) % MAXIMUS_EVENTUUM;
+    fenestra->eventus_numerus++;
+}
 ```
-At `:671` after `Eventus eventus_claudendi = {ZEPHYRUM};` add `eventus_claudendi.tempus = fenestra_tempus_ms();` and at `:681` after `Eventus eventus_mutationis = {ZEPHYRUM};` add `eventus_mutationis.tempus = fenestra_tempus_ms();`.
-In `fenestra_clavem_immittere` (`:258`) and `fenestra_murem_immittere` (`:273`), immediately after the statement that copies the caller's event into the queue slot (the `eventus[...] = *eventus;` or equivalent assignment), add:
-```c
-    si (<slot>.tempus == ZEPHYRUM) { <slot>.tempus = fenestra_tempus_ms(); }
-```
-where `<slot>` is the queue element just written.
+(Refinement for later, not v1: the `:484` site could use the NSEvent's own `timestamp` — seconds since boot, the same clock family as `mach_absolute_time` — for sub-millisecond fidelity. Enqueue time is within a millisecond of it and keeps the change to one function.)
 
 - [ ] **Step 4: Run to verify it passes**
 
@@ -157,9 +169,9 @@ Append to `lib/fenestra.worklog.md` (create if absent):
 ```
 ## 2026-09-04 — Eventus.tempus
 
-Added s64 tempus (ms) to Eventus and fenestra_tempus_ms(). Stamped at
-the three construction sites in fenestra_macos.m and in both
-immittere paths when the caller left it ZEPHYRUM. Reason: ludus
+Added s64 tempus (ms) to Eventus and fenestra_tempus_ms(). Stamped ONCE in
+impellere_eventum (the single enqueue path) when the caller left it
+ZEPHYRUM — construction sites and immittere alike. Reason: ludus
 dispatch must be replayable — time is data in the event, never a
 clock call below fenestra (ludus-brainstorm.md §XIV).
 ```
