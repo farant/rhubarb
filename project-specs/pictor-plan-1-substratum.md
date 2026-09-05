@@ -8,7 +8,7 @@
 
 **Tech Stack:** C89 (clang, house flags), rhubarb `lib/` — `piscina`, `chorda`, `xar`, `internamentum`, `stml`, `canon`, `credo`, `fenestra`. No new dependencies.
 
-> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **Next: T6 `insula`, T7 `motus` (P1).** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
+> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **T6 `insula` DONE 2026-09-04** (49 assertions; `insula_attributum_ponere` added — see `lib/insula.worklog.md`). **Next: T7 `motus` (P1).** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
 
 **Spec:** `project-specs/pictor-spec.md` (sections 2, 3, 6.1–6.3, 7, 8 P0–P2). Rationale: `project-specs/ludus-brainstorm.md` §X–XV.
 
@@ -2280,7 +2280,7 @@ git commit -m "ludus: T5 - eventus_stml: plagulae replay, circuitus Eventus[] <-
 - Consumes: `stml`, `canon` (exist).
 - Produces: `InsulaGenus {INSULA_DURABILIS, INSULA_EPHEMERA}`, `InsulaMutator`, `InsulaActarius`, `InsulaRepositorium`; `insula_repositorium_creare(piscina, intern, durabilis_cstr, ephemera_cstr)`, `insula_radix(repo, genus) → StmlNodus*` (READ ONLY), `insula_attributum(repo, genus, titulus) → chorda*` (root attribute; NIHIL if absent), `mutare_durabile(repo, fn, ctx) → b32`, `mutare_ephemera(repo, fn, ctx) → b32`, `insula_versio(repo, genus)`, `insula_scribere(repo, genus, piscina) → chorda`, `insula_restituere(repo) → b32` (VERUM = honest), `insula_mendacium(repo)`, `insula_ponere_canonem(repo, genus, Canon*)`, `insula_ponere_actarium(repo, fn, ctx)`, `insula_causa(repo) → chorda`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_insula.c`:
 ```c
@@ -2395,12 +2395,12 @@ s32 principale (vacuum)
 ```
 The canon assertion relies on `canon_iudicare` reporting an undeclared child element as a vitium (the `<liberum>` declarations in `aedilis.canon` are the precedent). If the engine treats undeclared children as permitted, change `addere_ignotum` to add an undeclared ATTRIBUTE and declare `instrumentum` via `<attributum nomen="instrumentum"/>` inside `<elementum>`, matching whichever rule `canon.canon` (the canon of canons, repo root) documents.
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh insula`
 Expected: FAIL — `'insula.h' file not found`.
 
-- [ ] **Step 3: Write header and implementation**
+- [x] **Step 3: Write header and implementation**
 
 `include/insula.h`:
 ```c
@@ -2677,11 +2677,11 @@ vacuum insula_ponere_actarium (InsulaRepositorium* repo, InsulaActarius fn, vacu
 ```
 `piscina_vacare(Piscina*)` is the reset-to-empty call (`piscina.h:78`). If its name differs, use the function at that line.
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh insula` — Expected: PASS (see the canon note under Step 1 if the last block fails on rule semantics).
 
-- [ ] **Step 5: Worklog + commit**
+- [x] **Step 5: Worklog + commit**
 
 `lib/insula.worklog.md`: `## 2026-09-04 — natus` + "Ping-pong piscinas per genus: a gated write round-trips the tree through text into the other piscina (that IS the rehydration discipline), mutates, canon-judges, swaps. Restore compares in-memory serialization with the last honest text; mismatch = mendacium, then rebuilds from honest text. `insula_attributum` pointers are valid until the next gated write of that genus."
 ```bash
