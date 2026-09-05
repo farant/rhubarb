@@ -257,12 +257,18 @@ impellere_eventum (
     Fenestra* fenestra,
     constans Eventus* eventus)
 {
+    Eventus* sedes;
+
     si (fenestra->eventus_numerus >= MAXIMUS_EVENTUUM)
     {
         redde; /* Cauda eventuum plena */
     }
 
-    fenestra->eventus[fenestra->eventus_cauda] = *eventus;
+    sedes  = &fenestra->eventus[fenestra->eventus_cauda];
+    *sedes = *eventus;
+    /* Stampa UNICA: caudae omnes (NSEvent, immittere) hic transeunt.
+     * Tempus a vocatore datum (replay, immittere) servatur. */
+    si (sedes->tempus == ZEPHYRUM) { sedes->tempus = fenestra_tempus_ms(); }
     fenestra->eventus_cauda = (fenestra->eventus_cauda + I) % MAXIMUS_EVENTUUM;
     fenestra->eventus_numerus++;
 }
@@ -1503,6 +1509,19 @@ fenestra_tempus_obtinere_pulsus (
     vacuum)
 {
     redde (i64)mach_absolute_time();
+}
+
+s64
+fenestra_tempus_ms (
+    vacuum)
+{
+    f64 pulsus;
+    f64 frequentia;   /* pulsus per secundum (f64) */
+
+    pulsus     = (f64)fenestra_tempus_obtinere_pulsus();
+    frequentia = fenestra_tempus_obtinere_frequentiam();
+    si (frequentia <= 0.0) { redde ZEPHYRUM; }
+    redde (s64)((pulsus * 1000.0) / frequentia);
 }
 
 f64

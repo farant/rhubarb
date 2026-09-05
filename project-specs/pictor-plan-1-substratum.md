@@ -58,7 +58,7 @@ Shared geometry types (`Punctum`, `Fines`) live in `mandatum.h`; `componens.h` i
 **Interfaces:**
 - Produces: `Eventus.tempus` (`s64`, ms); `s64 fenestra_tempus_ms(vacuum)`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `probationes/probatio_fenestra_tempus.c`:
 ```c
@@ -97,12 +97,12 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 2: Regenerate the source list and run to verify it fails**
+- [x] **Step 2: Regenerate the source list and run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh fenestra_tempus`
 Expected: FAIL — `no member named 'tempus'` / `implicit declaration of fenestra_tempus_ms`.
 
-- [ ] **Step 3: Add the field and the helper**
+- [x] **Step 3: Add the field and the helper**
 
 In `include/fenestra.h` at `:194`, directly after `eventus_genus_t genus;`:
 ```c
@@ -158,12 +158,12 @@ impellere_eventum (
 ```
 (Refinement for later, not v1: the `:484` site could use the NSEvent's own `timestamp` — seconds since boot, the same clock family as `mach_absolute_time` — for sub-millisecond fidelity. Enqueue time is within a millisecond of it and keeps the change to one function.)
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./compile_tests.sh fenestra_tempus`
 Expected: PASS, compendium all green. Also run `./compile_tests.sh fenestra` to confirm the existing fenestra probatio still passes.
 
-- [ ] **Step 5: Worklog + commit**
+- [x] **Step 5: Worklog + commit**
 
 Append to `lib/fenestra.worklog.md` (create if absent):
 ```

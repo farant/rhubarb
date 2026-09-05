@@ -76,7 +76,8 @@ nomen enumeratio {
      * immissae adhuc perveniunt - MENSURATUM fumo laboratorii. */
     FENESTRA_RETRO         = I << VI,
     FENESTRA_ORDINARIA     = FENESTRA_MUTABILIS | FENESTRA_CLAUDIBILIS |
-                             FENESTRA_MINUIBILIS | FENESTRA_MAXIMIZABILIS
+                             FENESTRA_MINUIBILIS
+                                 | FENESTRA_MAXIMIZABILIS
 } fenestra_vexilla_t;
 
 
@@ -192,6 +193,12 @@ nomen enumeratio {
 /* Structura eventi fenestrae */
 nomen structura {
     eventus_genus_t genus;
+
+    /* Tempus eventus in MILLISECUNDIS (s64). A fenestra stampatum in
+     * productione, a plagula in replay. TEMPUS EST DATUM IN EVENTU -
+     * nihil infra fenestram horologium vocat. ZEPHYRUM = nondum
+     * stampatum: impellere_eventum id implet. */
+    s64 tempus;
     unio {
         structura {
             i32 latitudo;
@@ -937,6 +944,15 @@ fenestra_tempus_obtinere_pulsus (
  */
 f64
 fenestra_tempus_obtinere_frequentiam (
+    vacuum);
+
+/* Tempus currens in millisecundis - pulsus * M / frequentia. Sedes
+ * UNICA horologii pro eventibus (ludus: tempus est datum in eventu).
+ *
+ * Reddit: millisecundae ex tempore arbitrario (eodem ac pulsus)
+ */
+s64
+fenestra_tempus_ms (
     vacuum);
 
 /* Dormire pro microsecundis datis
