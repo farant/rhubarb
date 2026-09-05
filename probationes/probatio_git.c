@@ -16,6 +16,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "chorda_aedificator.h"
 #include "xar.h"
 #include "filum.h"
 #include "git.h"
@@ -86,12 +87,43 @@ s32 principale (vacuum)
         CREDO_VERUM(strcmp(caput, idem_sha) == 0);
     }
 
-    /* ramus principalis == CAPUT (suite in main currit) */
+    /* CAPUT ramo alligatum, et ramus ille == CAPUT. Olim 'main' hic
+     * pinnatum erat: suite in ramo quovis (arbores operis fratres) et
+     * in clone umbrae rubra erat, ubi 'main' ne ref localis quidem
+     * est (2026-09-04, 01M17PG01E). Ramus ex <via_git>/HEAD legitur
+     * ('ref: refs/heads/X'); CAPUT solutum (sine ramo) assertionem
+     * praefixi clare frangit - nulla porta tacita. */
     {
-        character ramus[GIT_SHA_HEX_MENSURA];
+                 character  ramus[GIT_SHA_HEX_MENSURA];
+         ChordaAedificator* aed;
+                    chorda  caput_textus;
+                    chorda  praefixum;
+                    chorda  nomen_rami;
+                       i32  finis;
 
-        CREDO_VERUM(git_ref_resolvere(repositorium, "main",
-            ramus));
+        aed = chorda_aedificator_creare(piscina, (memoriae_index)256);
+        chorda_aedificator_appendere_literis(aed,
+            repositorium->via_git);
+        chorda_aedificator_appendere_literis(aed, "/HEAD");
+        caput_textus = filum_legere_totum(
+            chorda_ut_cstr(chorda_aedificator_finire(aed), piscina),
+            piscina);
+        praefixum = chorda_ex_literis("ref: refs/heads/", piscina);
+        CREDO_VERUM(caput_textus.mensura > praefixum.mensura);
+        CREDO_VERUM(chorda_incipit(caput_textus, praefixum));
+
+        /* 'ref: ' abscisum, lineae novae finales abscisae */
+        finis = caput_textus.mensura;
+        dum (   finis > ZEPHYRUM
+             && (caput_textus.datum[finis - I] == '\n'
+                || caput_textus.datum[finis - I] == '\r'))
+        {
+            finis = finis - I;
+        }
+        nomen_rami = chorda_sectio(caput_textus,
+            (i32)strlen("ref: "), finis);
+        CREDO_VERUM(git_ref_resolvere(repositorium,
+            chorda_ut_cstr(nomen_rami, piscina), ramus));
         CREDO_VERUM(strcmp(caput, ramus) == 0);
     }
 

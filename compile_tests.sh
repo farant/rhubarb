@@ -387,7 +387,10 @@ compile_gui_app() {
 compile_and_run_test() {
     local test_file="$1"
     local test_name=$(basename "$test_file" .c)
-    local output_binary="/tmp/$test_name"
+    # build/probationes/ per arborem (et per clonem umbrae) - olim /tmp/
+    # <nomen> FIXUM per usorem: arbores duae aut arbor + clone umbrae
+    # eadem binaria superscribebant (01M1JEEZEM, 2026-09-04)
+    local output_binary="build/probationes/$test_name"
     local obj_files
     local test_start_time
     local test_end_time
@@ -414,6 +417,7 @@ compile_and_run_test() {
     # pars maxima suitae - omnino invisibile manet.
     local compilatio_initium
     local compilatio_finis
+    mkdir -p build/probationes
     compilatio_initium=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
     # COMPILATIO ET NEXUS SEORSUM (2026-09-02): fons + nexus uno
     # vocamine cum -g = clang dsymutil post nexum currit (~0.2 s per
@@ -649,7 +653,7 @@ run_speculum() {
 probatio_una() {
     local test_file="$1"
     local name; name=$(basename "$test_file" .c)
-    local output_binary="/tmp/$name"
+    local output_binary="build/probationes/$name"
     local obj_files t0 t1 tc tr rc
     local -a INC
     source "$(dirname "$0")/tools/vexilla.sh" 2>/dev/null || source tools/vexilla.sh
@@ -659,6 +663,7 @@ probatio_una() {
         probatio_speculum_fontium|probatio_speculum)
             obj_files="$obj_files build/speculum/hospes/capsula_speculi_hospes.o" ;;
     esac
+    mkdir -p build/probationes
     t0=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
     if ! clang "${VEXILLA_C89[@]}" "${INC[@]}" -c "$test_file" -o "$output_binary.o" > "$SINGULAE/$name.log" 2>&1 \
        || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then

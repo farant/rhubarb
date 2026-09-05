@@ -10,7 +10,7 @@
 set -e
 cd "$(dirname "$0")/.."
 
-BIN=/tmp/probatio_stml_aurea
+BIN=build/probationes/probatio_stml_aurea
 if [ ! -x "$BIN" ]; then
     echo "probatio_stml_aurea non aedificata - curre:" >&2
     echo "  ./compile_tests.sh stml_aurea" >&2

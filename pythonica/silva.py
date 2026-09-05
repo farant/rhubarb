@@ -2279,9 +2279,10 @@ def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
 # omnes probationem e RADICE incipiunt; sub-suitae radicem per
 # RHUBARB_RADIX praebent (defaltum in probationibus '..' = cursus manualis
 # ex silva/ - e radice sine ambitu 'corpus non apertum' fallit, 2026-09-02);
-# radix binaria in /tmp/<nomen> aedificat.
+# radix binaria in build/probationes/<nomen> aedificat (olim /tmp/<nomen>
+# fixum - collisio inter arbores et clones umbrae, 2026-09-04).
 SUITAE = {
-    'radix': ('probationes', '/tmp/%s'),
+    'radix': ('probationes', 'build/probationes/%s'),
     'silva': ('silva/probationes', 'silva/build/%s'),
     'css': ('css/probationes', 'css/build/%s'),
     'materia': ('materia/probationes', 'materia/build/%s'),
