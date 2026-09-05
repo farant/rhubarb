@@ -1,0 +1,16 @@
+#!/usr/bin/env briar
+# Ambo
+
+<fenestra titulus="ambo"/>
+
+<html!>
+<p>ambo</p>
+</html>
+
+<c!>
+s32
+principale (vacuum)
+{
+    redde ZEPHYRUM;
+}
+</c>

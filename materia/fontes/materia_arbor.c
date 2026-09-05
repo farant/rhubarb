@@ -1479,8 +1479,8 @@ _scribere_nodum_internum (
         st->sedes = nodus;
         redde NIHIL;
     }
-    si (st->paria != NIHIL)
-    {
+        si (st->paria != NIHIL)
+        {
         ArborPar* par = (ArborPar*)xar_addere(st->paria);
 
         si (par != NIHIL)
@@ -1489,6 +1489,20 @@ _scribere_nodum_internum (
             par->est_lexema  = FALSUM;
             par->elementum   = elementum;
         }
+        }
+
+    /* ATTRIBUTA FRONTIS in nodo (derivata; lector ea ignorat) */
+    si (   st->consilium->frons               != NIHIL
+        && st->consilium->frons->nodum_ornare != NIHIL
+        && !st->consilium->frons->nodum_ornare(
+            st->consilium->frons->datum, st, elementum, nodus))
+    {
+        si (st->causa == NIHIL)
+        {
+            st->causa = "frons nodum ornare recusavit";
+        }
+        st->sedes = nodus;
+        redde NIHIL;
     }
 
     per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)

@@ -402,6 +402,90 @@ English terms; morphology lands next as DATA rows with those counts
 letters; now UTF-8 lead bytes count), and the site-count ordering was
 quadratic (now a counting sort).
 
+**As built — T15b (same day):** the morphology is DATA —
+`ORATIO_REGULAE_EN` (25 rows: plural ×3, past ×4, participle ×3,
+possessive, contractions ×6, adverb ×3, comparative ×2, superlative ×2,
+`compositum`; each row = suffix, base substitution, gemination, minimum
+base, required Moby codes of the base, class, cause with the measured
+tally) plus `ORATIO_PRAEFIXA_EN` for hyphen compounds (non, multi, semi
+…); `oratio_vocabularium_en_analysare` = exact records first, then
+rules in table order, each analysis carrying rule, base and class; the
+judge takes the first analysis (lemma = base, `OratioVerbum.regula`);
+the English fold maps U+2019 to `'`. Glossary pass II (117 entries,
+ANGLICA PROSA section: proper names, computing English with explicit
+plurals — rules reduce to Moby bases only —, abbreviations, `struct`
+and `sizeof`, Roman numerals ii–xxx as `numerale` for both contexts,
+house Latin internamentum/diagnostica/friatio/amalgama). Prose
+unknowns 58 % → 30 % (rules) → 26.2 % (pass II); known 73.8 %. PROSE
+PIN = a ceiling on the unknown SHARE (29 %) plus a floor on the known
+share (70 %), not a count only falling — prose gains words daily; a red
+means a rule or a glossary section broke. Identifier pin 2,986 → 2,950
+on the `ambo` entries.
+
+**As built — T12 (2026-09-04), the annotated word.** `oratio_partes_la`
+describes one source analysis universally (class, twelve accidents as
+enumeration indices, −1 = not given; lemma; `nativum` = the source's
+code verbatim; sense; source; language) by the mapping above, with
+these corpus-decided details: noun kind N/L → nomen-proprium; noun
+gender from the STEM when M/F/N, else from the ending; stem kind
+DEP/SEMIDEP → vox deponens; INF ending → modus infinitivus + forma
+infinitivum; PPL → participium, FUT PASSIVE PPL → gerundivum; SUPINE →
+supinum; PREP case from the ending else the stem; CONJ subordinating
+by the data list `ORATIO_CONIUNCTIONES_SUBORDINANTES`; enclitic
+`-que`/`-ve` → coniunctio-coordinans, `-ne` → particula; glossary
+class by name, accidents through the title arrays, `ignotum-permissum`
+→ ignotum. Enumeration titles were RECONCILED with the glossary canon
+(genitivus; locative before vocative; persons I II III) and the
+registry gate now proves the canon's option lists equal the title
+arrays in order. `oratio_partes_annotare` (the pass after the tree):
+one lookup per word, one node per description with accidents placed
+by SLOT TITLE through the registry, `classes`/`linguae` derived tokens
+(distinct, in order; `ignotum` alone for a word without analyses),
+write-once, `patres_figere` at the end. SUBSTRATE CHANGE (the second):
+`MateriaArborFrons.nodum_ornare`, a node-level attribute hook the
+writer calls after creating a node's element and the reader ignores;
+oratio's frons mirrors `classes`/`linguae` onto `<vocabulum>` so
+`vocabulum[classes~=verbum]` works in selectio — which exposed an
+unsigned underflow in selectio's `~=` when the value is longer than
+the attribute (fixed in `lib/selectio.c`). `./oratio/arbor.sh -partes`
+annotates before projecting. Gate `probatio_oratio_partes` (171;
+planted fault = stem gender dropped). Day one: Hilarius 1,678 words /
+10,352 analyses / 5.2 % unknown; Propertius 4,423 / 27,819 / 4.6 %;
+Cicero 13,214 / 114,876 / 2.9 %, 858 ms — six to nine analyses a word,
+dominated by WORDS' pronoun packings (`quis` = 215): faithful to the
+source, to be ordered in stage 5 or deduplicated by (class, accidents,
+lemma) before the oracle.
+
+**As built — T13 (2026-09-04), the oracle.** Vendored under
+`oratio/probationes/fixa/ud/` (CC BY-SA 4.0, licence + README
+verbatim, FONTES.md with commits/seals): CIRCSE test (Seneca, 893
+sentences, 11,503 tokens) and LLCT dev + test (850 + 884 sentences,
+24k tokens each; train NOT vendored — Fran's call, UD scores on
+dev/test); NC treebanks fetched by `./oratio/oraculum.sh -petere`
+into `oratio/build/ud/`, reported only. `oratio_conllu` (ten fields
+or stop with the line; ranges `a-b`; empty nodes skipped; `# text`
+or reconstruction from forms and SpaceAfter). `oratio_oraculum`:
+sentence text parsed and annotated, elements located by byte
+extents, gold forms located in the same text in order, a range
+judged per word against the one element's class set; per gold word
+TECTUM (coverage, PINNED only rising, permille per file), PRIMARIUM
+and LEMMA reported, ignotum and unaligned counted, five uncovered
+examples per class (`-exempla`). Alignment: 0 unaligned of 60k,
+0 broken sentences. Day one CIRCSE 84.2 % / LLCT 71.9 % / 72.5 %
+coverage; zero on auxiliare, determinans, particula. MAPPING PASS II
+from the table (data lists with the counts as cause, secondary
+descriptions APPENDED after the primary): `sum` + auxiliare;
+`ORATIO_DETERMINANTIA` + determinans; `ORATIO_PARTICULAE` +
+particula; adverb/preposition in the subordinating list +
+coniunctio-subordinans (list grown: qualiter unde quam quatenus
+quomodo …); ordinal + adiectivum; WORDS kind N (deus) + substantivum
+(kind L stays proper); capitalized unknown → nomen-proprium with
+source `regula` (fourth value appended to `OratioFonsAnalysis`),
+nativum `capitalis`. After: CIRCSE 93.7 %, LLCT 88.9 % / 88.2 %
+(pins 937/889/882); primary ≈ 68 % everywhere (the unordered list,
+stage 5); lemma 89 / 65 / 65 %. Gate `probatio_oratio_oraculum`
+(104); partes gate 203.
+
 ## 5. Stage 3 — annotated words (`partes`)
 
 **Universal classes** (registry `partes_registrum`, one genus per
@@ -429,6 +513,28 @@ imperativus, infinitivus), `vox` (activa, passiva, deponens), `forma-verbi`
 `lingua` (INDEX: latina, anglica, …), `fons` (INDEX: vocabularium-la,
 vocabularium-en, glossarium), `nativum` (TOKEN, derived: the source's
 own code verbatim), `sensus` (TOKEN, derived, optional).
+
+**As built — T11 (2026-09-04):** seventeen genera `analysis-<classis
+genitive>` appended after `numerus` (registry 23 genera, 146 slots;
+genus = `ORATIO_GENUS_ANALYSIS_PRIMUM` + `OratioClassis`; class titles
+in `ORATIO_TITULI_CLASSIUM` = the glossary canon's `classis` options,
+gate-guarded). Common five first on every genus, then accidents as
+INDEX (decision, Fran approving the lists): substantivum and nomen
+proprium casus/numerus/genus/declinatio; verbum and auxiliare
+persona/numerus/tempus/modus/vox/forma-verbi/coniugatio/casus/genus;
+adiectivum casus/numerus/genus/gradus/declinatio; adverbium gradus;
+pronomen casus/numerus/genus/persona; determinans casus/numerus/genus;
+adpositio casus; numerale casus/numerus/genus/species (cardinale,
+ordinale, distributivum, adverbiale); the rest common only. `nativum`
+is ONE derived token (Fran). Enumerations appended-only with title
+arrays (`ORATIO_TITULI_CASUUM` …; casus has locativus and vocativus,
+numerus dualis, vox deponens, tempus the English praeteritum). The
+word's three slots were reserved since T1, so existing STML bytes are
+unchanged; seal 93c1c9cf → 87b35173; the canon carries 17 genus rules
++ 129 slot rules intra their genus (generated once, hand-kept; ceiling
+512, 182 rules). Gates: registrum (860; helpers, layouts, glossary
+drift, materia round trip with an analysis), canon (219; a hand-built
+analysis judged, two mutations refused).
 
 **Mapping tables per source** (`partes_la.c`, `partes_en.c`): WORDS
 part codes → class + accidents (N→substantivum with declension/gender;
@@ -464,6 +570,23 @@ analyses), `oratio/arbor.sh` shows the analyses inline.
 `.vocabula(classis=None, lingua=None, ignota=False)`, `.analyses(vocabulum)`,
 `.ignota()`; `Prosa.sententia(n, intra=)` delegates.
 
+*As-built (T14, 2026-09-05).* `verba.sh` takes several files (the via
+column is meaningful), prints paragraph and sentence ordinals beside
+the byte extent (sentence ordinals agree with `sententiae.sh`), and
+has an `-analyses` mode: one row per analysis node with class, lemma,
+lingua, fons, nativum, sensus and the twelve accidents as the
+registry's option titles, read from the tree by slot title (never
+re-derived). `silva.Oratio` accepts a path, a text or bytes (a text is
+written to build/pythonica for one call), caches each query, and
+`vocabula(classis=)` matches ANY candidate class (the primary is stage
+5's); `vocabula(sententia=)` added; `analyses()` takes a word or its
+index and returns `accidentia` as a dict with absences omitted.
+`Prosa.sententia` concatenates the markdown paragraphs inside the
+extent (headings, fences, html never), parses once, maps the extents
+back with line and column; usable as an edit anchor. Gate = the
+pythonica suite, 20 assertions, planted fault (word end shortened)
+red.
+
 ## 6. Stage 4 — English (`vocabularium_en`)
 
 Moby Part-of-Speech (`mobypos.txt`, public domain): one line per
@@ -489,10 +612,41 @@ legend (one: `cowardic\Ne`); words hashed by lower-cased form (197,387),
 phrases counted not indexed (35,969); `quaerere` → records in file
 order; `oratio_vocabularium_en_classis` maps a code letter to the
 universal class. Findings pinned in `probatio_oratio_vocabularium_en`
-(81; seal `cc81458b820a3625`, 27 ms): the legend's `I` and `o` never
-occur; 1,231 CP437 records (fold v1 = ASCII lower case only, accents
-stay as they are); 4,437 case-duplicate forms. Morphology and the
-irregular table = T15b, as data from the prose report.
+(seal `cc81458b820a3625`, 27 ms): the legend's `I` and `o` never
+occur; 1,231 CP437 records (fold = ASCII lower case + U+2019 → `'`;
+accents stay as they are); 4,437 case-duplicate forms. **T15b (same
+day):** the light morphology is the DATA table `ORATIO_REGULAE_EN`
+(§4 as-built) with `oratio_vocabularium_en_analysare`; Moby lists more
+inflected forms than its legend admits (`entries` p, `tried` V,
+`making` N, `simply` v, `I'm`), so exact forms always precede rule
+analyses and two contraction rows explain nothing in this corpus. The
+irregular-forms table is not needed yet (no irregular at the top of
+the unknown list); gate section VI (160 assertions).
+
+**As built — T16 (2026-09-05, stage 4 complete):** `oratio_vocabularia`
+(`OratioVocabularia {la, en}` + `oratio_vocabularia_onerare` from the
+repo root — the one loader every instrument and gate uses); the
+annotator queries BOTH dictionaries for every word and appends the
+English readings after the Latin ones (ambiguity as a list; `in` is
+an ablative preposition and an English one). `oratio_partes_en`: an
+exact Moby record → one description per class among its code letters
+in Moby's order (`p` = plural), a rule analysis → accidents from the
+rule's title (pluralis per BASE class: `cats` noun plural and verb
+third person; praeteritum finite + participle; possessivum genitive of
+the base's class + particula + auxiliare; contractions base + particula
+or auxiliare; comparativus/superlativus), `nativum` = codes + rule,
+no sense. Pass II from the EWT day-one table as DATA lists
+(`ORATIO_AUXILIARIA_EN` … `ORATIO_INTERIECTIONES_EN`) applied once
+per word with source `regula`; the capital rule now fires for a
+capitalised word no Latin source knows that is a noun or nothing
+(Moby knows Hercules as a noun — CIRCSE had dropped); sign elements
+carry interpunctio AND symbolum in the oracle. Oracle: EWT dev + test
+vendored (commit 4a4d77f5, CC BY-SA; contractions are ranges); day one
+77.1 / 77.0 %, after pass II 91.3 / 91.8 % coverage (pins 913 / 918),
+primary 57 %, lemma 75 %; Latin pins rose to 940 / 895 / 887. The
+irregular-forms table is still not needed (lost/grown are adjectives
+in Moby, a class question, not a form one). Gates: partes 275 (planted
+fault: plural made singular), oraculum 115.
 
 ## 7. Stage 5 — resolution by context
 
@@ -704,18 +858,27 @@ T9 `oratio/glossarium.stml` + canon + loader; allowed technical terms.
 T10 `oratio/vocabula.sh` + `silva.vocabula()`: identifiers (nexus.tsv)
 and comments (silva tokens) reports; counts published.
 
-**Stage 3 (partes).** T11 `partes_registrum` (17 classes, analysis
-genera with accidents), appended to the oratio registry; canon rules.
-T12 `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
+**Stage 3 (partes).** T11 DONE 2026-09-04 (`partes_registrum`: 17
+analysis genera with accidents appended, canon rules, seal moved).
+T12 DONE 2026-09-04 (`oratio_partes_la` mapping, `oratio_partes`
+annotation pass, node-attribute hook, `-partes`). T13 DONE 2026-09-04
+(`oratio_conllu`, `oratio_oraculum`, CIRCSE + LLCT dev/test vendored,
+coverage pinned 937/889/882 permille, mapping pass II from the table).
+Was: `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
 `linguae`) + projection attributes (substrate check above). T13
 CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT
 (COVERAGE pinned, PRIMARY reported, per class); `oratio/oraculum.sh
--petere` for NC treebanks. T14 `oratio/verba.sh`, `silva.Oratio`,
-`Prosa.sententia`.
+-petere` for NC treebanks. T14 DONE 2026-09-05 (`oratio/verba.sh`
+with `-analyses`, `silva.Oratio`, `Prosa.sententia` by delegation; gate
+= pythonica).
 
 **Stage 4 (English).** T15a DONE 2026-09-04 (vendor Moby verbatim,
-loader without coction, the prose lint `-prosa`). T15b morphology rules
-+ irregulars as DATA from the report. T16 `partes_en.c` + EWT oracle.
+loader without coction, the prose lint `-prosa`). T15b DONE 2026-09-04
+(morphology as DATA rows with measured counts, prefixes, compounds,
+glossary pass II, the prose pin as a share ceiling). T16 DONE
+2026-09-05 (`oratio_vocabularia`, `oratio_partes_en`, both dictionaries
+in the annotator, EWT oracle 91.3 / 91.8 %, English pass II; no
+irregulars table needed).
 
 **Stage 5.** T17 `oratio/partes/resolutio.stml` + runner through the
 command layer + per-rule oracle deltas. T18 primary pin.

@@ -45,6 +45,7 @@ forum.db-shm
 probationes/fixa/villa/cruda/
 privata/
 corpus.versio
+corpus.symbola.tsv
 corpus_silicis.toml
 capsula_corpus_silicis.h
 capsula_corpus_silicis.c

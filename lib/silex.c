@@ -11,6 +11,7 @@
 #include "sigillum.h"
 #include "json.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -18,6 +19,34 @@
 /* ==================================================
  * Auxilia
  * ================================================== */
+
+/* monitiones stderr (venditorium/caput citatum deest, nulla
+ * implementatio pro caput solum): silex loquax ordinarie; briar
+ * (instrumentum scripti) eas tacet - silex_monitiones_tacere */
+hic_manens b32 _monitiones_tacitae = FALSUM;
+
+vacuum
+silex_monitiones_tacere (
+    b32 tacere)
+{
+    _monitiones_tacitae = tacere;
+}
+
+interior vacuum
+_monere (
+    constans character* forma,
+    ...)
+{
+    va_list argumenta;
+
+    si (_monitiones_tacitae)
+    {
+        redde;
+    }
+    va_start(argumenta, forma);
+    vfprintf(stderr, forma, argumenta);
+    va_end(argumenta);
+}
 
 interior constans character*
 _texere (
@@ -485,7 +514,7 @@ silex_clausuram_colligere (
             si (!_plagulam_e_fonte_colligere(piscina, fons,
                 "vendor/", basis_vendoris, fructus, NIHIL))
             {
-                fprintf(stderr, "silex: monitio - venditorium"
+                _monere("silex: monitio - venditorium"
                     " citatum in fonte deest: %.*s\n",
                     (integer)basis_vendoris.mensura,
                     (constans character*)basis_vendoris.datum);
@@ -519,7 +548,7 @@ silex_clausuram_colligere (
             /* citata sine fonte: monitio, non mors (commentaria
              * falso positiva possunt; dependentiae verae in
              * fabrica semper exsistunt) */
-            fprintf(stderr,
+            _monere(
                 "silex: monitio - caput citatum in fabrica deest:"
                 " %.*s\n", (integer)caput.mensura,
                 (constans character*)caput.datum);
@@ -592,7 +621,7 @@ silex_clausuram_colligere (
                      * quam lector semel legit et neglegit; caput cum
                      * implementatione non inventa aliter DEBITUM
                      * INVISIBILE pareret quod nemo umquam nuntiat. */
-                    fprintf(stderr,
+                    _monere(
                         "silex: monitio - nulla implementatio pro"
                         " %.*s (temptata: lib/%.*s.c, _macos.m,"
                         " _posix.c, _impl.c).\n"
@@ -737,23 +766,16 @@ _probationem_fingere (
     redde chorda_aedificator_finire(a);
 }
 
-#define SILEX_VEXILLA_COMPILATIONIS \
-    "-std=c89 -pedantic -Wall -Wextra -Werror -Wconversion" \
-    " -Wsign-conversion -Wcast-qual -Wstrict-prototypes" \
-    " -Wmissing-prototypes -Wwrite-strings -Wno-long-long"
-
-interior chorda
-_aedificare_sh_fingere (
-               Piscina* piscina,
-    constans character* titulus);
-
-interior chorda
-_aedificare_sh_fingere (
-               Piscina* piscina,
-    constans character* titulus)
+chorda
+silex_ordinem_fingere (
+                       Piscina* piscina,
+            constans character* titulus,
+    constans character* constans* fontes,
+                           i32  numerus_fontium)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)512);
+    i32 i;
 
     chorda_aedificator_appendere_literis(a,
         "#!/bin/sh\n"
@@ -765,9 +787,14 @@ _aedificare_sh_fingere (
         "cd \"$(dirname \"$0\")\"\n"
         "mkdir -p bin\n"
         "clang " SILEX_VEXILLA_COMPILATIONIS
-        " -Iinclude \"fontes/");
-    chorda_aedificator_appendere_literis(a, titulus);
-    chorda_aedificator_appendere_literis(a, ".c\" lib/*.c -o \"bin/");
+        " -Iinclude");
+    per (i = ZEPHYRUM; i < numerus_fontium; i++)
+    {
+        chorda_aedificator_appendere_literis(a, " \"");
+        chorda_aedificator_appendere_literis(a, fontes[i]);
+        chorda_aedificator_appendere_literis(a, "\"");
+    }
+    chorda_aedificator_appendere_literis(a, " lib/*.c -o \"bin/");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         "\"\n"
@@ -777,18 +804,16 @@ _aedificare_sh_fingere (
     redde chorda_aedificator_finire(a);
 }
 
-interior chorda
-_probare_sh_fingere (
-               Piscina* piscina,
-    constans character* titulus);
-
-interior chorda
-_probare_sh_fingere (
-               Piscina* piscina,
-    constans character* titulus)
+chorda
+silex_ordinem_probandi_fingere (
+                       Piscina* piscina,
+            constans character* titulus,
+    constans character* constans* fontes,
+                           i32  numerus_fontium)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)512);
+    i32 i;
 
     chorda_aedificator_appendere_literis(a,
         "#!/bin/sh\n"
@@ -800,10 +825,15 @@ _probare_sh_fingere (
         "cd \"$(dirname \"$0\")\"\n"
         "mkdir -p bin\n"
         "clang " SILEX_VEXILLA_COMPILATIONIS
-        " -Iinclude \"probationes/probatio_");
-    chorda_aedificator_appendere_literis(a, titulus);
+        " -Iinclude");
+    per (i = ZEPHYRUM; i < numerus_fontium; i++)
+    {
+        chorda_aedificator_appendere_literis(a, " \"");
+        chorda_aedificator_appendere_literis(a, fontes[i]);
+        chorda_aedificator_appendere_literis(a, "\"");
+    }
     chorda_aedificator_appendere_literis(a,
-        ".c\" lib/*.c -o \"bin/probatio_");
+        " lib/*.c -o \"bin/probatio_");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         "\"\n"
@@ -1691,15 +1721,8 @@ _basis_viae (
 /* semina = inclusiones contentorum datorum (dedup); NIHIL si
  * clausura fracta. Capita propria templi (<t>_pipa.h,
  * capsula_<t>.h) non quaeruntur in fonte. */
-interior Xar*
-_clausuram_e_contentis (
-               Piscina* piscina,
-    constans SilexFons* fons,
-       constans chorda* contenta,
-                   i32  numerus);
-
-interior Xar*
-_clausuram_e_contentis (
+Xar*
+silex_clausuram_e_contentis (
                Piscina* piscina,
     constans SilexFons* fons,
        constans chorda* contenta,
@@ -1768,15 +1791,6 @@ _clausuram_e_contentis (
  * Ordines generati (-vitrea): PROIECTIONES - listae fontium per
  * scopum e clausuris computatae, numquam globus.
  * ================================================== */
-
-#define SILEX_VEXILLA_VITREA SILEX_VEXILLA_COMPILATIONIS \
-    " -Wno-overlength-strings -fbracket-depth=512"
-
-#define SILEX_VEXILLA_VENDITORIA \
-    "-O2 -DSQLITE_ENABLE_FTS5 -DSQLITE_THREADSAFE=0" \
-    " -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0" \
-    " -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_OMIT_DEPRECATED" \
-    " -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1"
 
 /* ' \<nl>    lib/x.c' pro quaque bibliotheca clausurae; .m solum
  * si cum_obiectivis */
@@ -1904,24 +1918,19 @@ _stampam_ordinis_appendere (
         ") - PROIECTIO: mutare licet\n");
 }
 
-interior chorda
-_aedificare_vitreum_fingere (
-               Piscina* piscina,
-    constans character* titulus,
-                   Xar* clausura_app,
-                   Xar* clausura_instrumenti,
-    constans character* fons_titulus);
-
-interior chorda
-_aedificare_vitreum_fingere (
-               Piscina* piscina,
-    constans character* titulus,
-                   Xar* clausura_app,
-                   Xar* clausura_instrumenti,
-    constans character* fons_titulus)
+chorda
+silex_ordinem_vitreum_fingere (
+                       Piscina* piscina,
+            constans character* titulus,
+    constans character* constans* fontes,
+                           i32  numerus_fontium,
+                           Xar* clausura_app,
+                           Xar* clausura_instrumenti,
+            constans character* fons_titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)4096);
+    i32 i;
 
     _stampam_ordinis_appendere(a, fons_titulus);
     chorda_aedificator_appendere_literis(a,
@@ -1954,12 +1963,17 @@ _aedificare_vitreum_fingere (
         "\n"
         "# III+IV. app (fontes explicati - numquam globus)\n"
         "clang $VEXILLA -Iinclude -Iassets \\\n"
-        "    fontes/");
-    chorda_aedificator_appendere_literis(a, titulus);
-    chorda_aedificator_appendere_literis(a, ".c fontes/");
-    chorda_aedificator_appendere_literis(a, titulus);
+        "    ");
+    per (i = ZEPHYRUM; i < numerus_fontium; i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(a, " ");
+        }
+        chorda_aedificator_appendere_literis(a, fontes[i]);
+    }
     chorda_aedificator_appendere_literis(a,
-        "_pipa.c \\\n    assets/capsula_");
+        " \\\n    assets/capsula_");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a, ".c");
     _ordinem_fontium_appendere(a, clausura_app, VERUM);
@@ -1993,22 +2007,18 @@ _aedificare_vitreum_fingere (
     redde chorda_aedificator_finire(a);
 }
 
-interior chorda
-_probare_vitreum_fingere (
-               Piscina* piscina,
-    constans character* titulus,
-                   Xar* clausura_probationis,
-    constans character* fons_titulus);
-
-interior chorda
-_probare_vitreum_fingere (
-               Piscina* piscina,
-    constans character* titulus,
-                   Xar* clausura_probationis,
-    constans character* fons_titulus)
+chorda
+silex_ordinem_probandi_vitreum_fingere (
+                       Piscina* piscina,
+            constans character* titulus,
+    constans character* constans* fontes,
+                           i32  numerus_fontium,
+                           Xar* clausura_probationis,
+            constans character* fons_titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)2048);
+    i32 i;
 
     _stampam_ordinis_appendere(a, fons_titulus);
     chorda_aedificator_appendere_literis(a,
@@ -2020,11 +2030,15 @@ _probare_vitreum_fingere (
     _regulas_venditorias_appendere(a, clausura_probationis);
     chorda_aedificator_appendere_literis(a,
         "clang $VEXILLA -Iinclude \\\n"
-        "    probationes/probatio_");
-    chorda_aedificator_appendere_literis(a, titulus);
-    chorda_aedificator_appendere_literis(a, ".c fontes/");
-    chorda_aedificator_appendere_literis(a, titulus);
-    chorda_aedificator_appendere_literis(a, "_pipa.c");
+        "    ");
+    per (i = ZEPHYRUM; i < numerus_fontium; i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(a, " ");
+        }
+        chorda_aedificator_appendere_literis(a, fontes[i]);
+    }
     _ordinem_fontium_appendere(a, clausura_probationis, FALSUM);
     _obiecta_venditoria_appendere(a, clausura_probationis);
     chorda_aedificator_appendere_literis(a,
@@ -2207,10 +2221,21 @@ silex_novum (
             _texere(piscina, "probationes/probatio_",
                 optiones->titulus, ".c"),
             _probationem_fingere(piscina, optiones->titulus));
-        _rem_genitam_addere(piscina, res_omnes, "aedificare.sh",
-            _aedificare_sh_fingere(piscina, optiones->titulus));
-        _rem_genitam_addere(piscina, res_omnes, "probare.sh",
-            _probare_sh_fingere(piscina, optiones->titulus));
+        {
+            constans character* fontes_app[1];
+            constans character* fontes_prob[1];
+
+            fontes_app[0]  = _texere(piscina, "fontes/",
+                optiones->titulus, ".c");
+            fontes_prob[0] = _texere(piscina, "probationes/probatio_",
+                optiones->titulus, ".c");
+            _rem_genitam_addere(piscina, res_omnes, "aedificare.sh",
+                silex_ordinem_fingere(piscina, optiones->titulus,
+                    fontes_app, I));
+            _rem_genitam_addere(piscina, res_omnes, "probare.sh",
+                silex_ordinem_probandi_fingere(piscina,
+                    optiones->titulus, fontes_prob, I));
+        }
         _rem_genitam_addere(piscina, res_omnes, "README.md",
             _readme_fingere(piscina, optiones->titulus));
     }
@@ -2228,16 +2253,18 @@ silex_novum (
             optiones->titulus);
         chorda fumus_c = _fumus_manus_fingere(piscina,
             optiones->titulus);
-        chorda  contenta_app[3];
-        chorda  contenta_probationis[3];
-        chorda  contentum_instrumenti;
-        chorda  ordo_aedificandi;
-        chorda  ordo_probandi;
-        chorda  ordo_fumi;
-           Xar* clausura_instrumenti;
-           Xar* clausura_probationis;
-           Xar* clausura_fumi;
-           b32  inventum = FALSUM;
+                chorda  contenta_app[3];
+                chorda  contenta_probationis[3];
+                chorda  contentum_instrumenti;
+                chorda  ordo_aedificandi;
+                chorda  ordo_probandi;
+                chorda  ordo_fumi;
+                   Xar* clausura_instrumenti;
+                   Xar* clausura_probationis;
+                   Xar* clausura_fumi;
+                   b32  inventum = FALSUM;
+    constans character* fontes_app[2];
+    constans character* fontes_prob[2];
 
         contenta_app[0]          = fons_c;
         contenta_app[1]          = pipa_c;
@@ -2245,7 +2272,7 @@ silex_novum (
         contenta_probationis[0]  = probatio_c;
         contenta_probationis[1]  = pipa_c;
         contenta_probationis[2]  = pipa_h;
-        res_omnes = _clausuram_e_contentis(piscina,
+        res_omnes = silex_clausuram_e_contentis(piscina,
             optiones->fons, contenta_app, 3);
         si (res_omnes == NIHIL)
         {
@@ -2261,14 +2288,14 @@ silex_novum (
                 " deest (tools/capsula_generare.c)";
             redde fructus;
         }
-        clausura_instrumenti = _clausuram_e_contentis(piscina,
+        clausura_instrumenti = silex_clausuram_e_contentis(piscina,
             optiones->fons, &contentum_instrumenti, 1);
         si (clausura_instrumenti == NIHIL)
         {
             fructus.erratum = "clausura instrumenti fracta";
             redde fructus;
         }
-        clausura_probationis = _clausuram_e_contentis(piscina,
+        clausura_probationis = silex_clausuram_e_contentis(piscina,
             optiones->fons, contenta_probationis, 3);
         si (clausura_probationis == NIHIL)
         {
@@ -2278,7 +2305,7 @@ silex_novum (
         /* CLAUSURA QUARTA (fumus): manum trahit quam nec app nec
          * probatio trahit. Semina e templo IPSO leguntur, sicut
          * ceterae tres - nullus index manu servatus. */
-        clausura_fumi = _clausuram_e_contentis(piscina,
+        clausura_fumi = silex_clausuram_e_contentis(piscina,
             optiones->fons, &fumus_c, 1);
         si (clausura_fumi == NIHIL)
         {
@@ -2287,11 +2314,18 @@ silex_novum (
         }
         /* ordines HIC finguntur - res_omnes adhuc clausura app
          * PURA est (ante mixturam instrumenti) */
-        ordo_aedificandi = _aedificare_vitreum_fingere(piscina,
-            optiones->titulus, res_omnes, clausura_instrumenti,
-            optiones->fons->titulus);
-        ordo_probandi = _probare_vitreum_fingere(piscina,
-            optiones->titulus, clausura_probationis,
+        fontes_app[0]  = _texere(piscina, "fontes/", optiones->titulus,
+            ".c");
+        fontes_app[1]  = _texere(piscina, "fontes/", optiones->titulus,
+            "_pipa.c");
+        fontes_prob[0] = _texere(piscina, "probationes/probatio_",
+            optiones->titulus, ".c");
+        fontes_prob[1] = fontes_app[1];
+        ordo_aedificandi = silex_ordinem_vitreum_fingere(piscina,
+            optiones->titulus, fontes_app, II, res_omnes,
+            clausura_instrumenti, optiones->fons->titulus);
+        ordo_probandi = silex_ordinem_probandi_vitreum_fingere(piscina,
+            optiones->titulus, fontes_prob, II, clausura_probationis,
             optiones->fons->titulus);
         ordo_fumi = _fumus_sh_fingere(piscina, optiones->titulus,
             clausura_fumi, optiones->fons->titulus);
@@ -3490,7 +3524,8 @@ _differentia_communis (
     {
         DirectoriumFiltrum filtrum;
                     chorda radix_absoluta = via_absoluta(
-                        chorda_ex_literis(proiectum_dir, piscina), piscina);
+                        chorda_ex_literis(proiectum_dir, piscina),
+                        piscina);
 
         ctx.radix_mensura           = radix_absoluta.mensura + 1;
         filtrum                     = directorium_filtrum_omnia();
@@ -4314,7 +4349,8 @@ silex_renovare (
     per (index = 0; index < xar_numerus(clausura);
         index = index + 1)
     {
-                  SilexRes* e = (SilexRes*)xar_obtinere(clausura, index);
+                  SilexRes* e = (SilexRes*)xar_obtinere(clausura,
+                      index);
         constans character* via_plena = _texere(piscina,
             chorda_ut_cstr(radix_absoluta, piscina), "/",
             chorda_ut_cstr(e->via, piscina));

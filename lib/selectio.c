@@ -53,7 +53,8 @@ _selectio_cache_invenire_literis (
         redde NIHIL;
     }
 
-    si (tabula_dispersa_invenire_literis(_selectio_cache, selector, &valor))
+    si (tabula_dispersa_invenire_literis(_selectio_cache, selector,
+        &valor))
     {
         redde (SelectioSequentia*)valor;
     }
@@ -75,10 +76,12 @@ _selectio_cache_inserere_literis (
     }
 
     /* Copiare selector in cache piscina */
-    selector_copia = chorda_ex_literis(selector, _selectio_cache_piscina);
+    selector_copia = chorda_ex_literis(selector,
+        _selectio_cache_piscina);
     si (selector_copia.datum != NIHIL)
     {
-        tabula_dispersa_inserere(_selectio_cache, selector_copia, selectio);
+        tabula_dispersa_inserere(_selectio_cache, selector_copia,
+            selectio);
     }
 }
 
@@ -250,7 +253,8 @@ _parser_legere_titulum (
         redde NIHIL;
     }
 
-    simplex = piscina_allocare(parser->piscina, magnitudo(SelectioSimplex));
+    simplex = piscina_allocare(parser->piscina,
+        magnitudo(SelectioSimplex));
     si (simplex == NIHIL)
     {
         redde NIHIL;
@@ -289,7 +293,8 @@ _parser_legere_id (
         redde NIHIL;
     }
 
-    simplex = piscina_allocare(parser->piscina, magnitudo(SelectioSimplex));
+    simplex = piscina_allocare(parser->piscina,
+        magnitudo(SelectioSimplex));
     si (simplex == NIHIL)
     {
         redde NIHIL;
@@ -328,7 +333,8 @@ _parser_legere_classis (
         redde NIHIL;
     }
 
-    simplex = piscina_allocare(parser->piscina, magnitudo(SelectioSimplex));
+    simplex = piscina_allocare(parser->piscina,
+        magnitudo(SelectioSimplex));
     si (simplex == NIHIL)
     {
         redde NIHIL;
@@ -426,7 +432,8 @@ _parser_legere_attributum (
             quote = c;
             _parser_praeterire(parser);
             valor_initium = parser->positus;
-            dum (_parser_currens(parser) != quote && !_parser_ad_finem(parser))
+            dum (   _parser_currens(parser) != quote
+                 && !_parser_ad_finem(parser))
             {
                 _parser_praeterire(parser);
             }
@@ -460,7 +467,8 @@ _parser_legere_attributum (
         _parser_praeterire(parser);
     }
 
-    simplex = piscina_allocare(parser->piscina, magnitudo(SelectioSimplex));
+    simplex = piscina_allocare(parser->piscina,
+        magnitudo(SelectioSimplex));
     si (simplex == NIHIL)
     {
         redde NIHIL;
@@ -508,7 +516,8 @@ _parser_legere_pseudo (
         redde NIHIL;  /* Pseudo-classis ignota */
     }
 
-    simplex = piscina_allocare(parser->piscina, magnitudo(SelectioSimplex));
+    simplex = piscina_allocare(parser->piscina,
+        magnitudo(SelectioSimplex));
     si (simplex == NIHIL)
     {
         redde NIHIL;
@@ -539,13 +548,15 @@ _parser_legere_composita (
       SelectioSimplex* simplex;
             character  c;
 
-    composita = piscina_allocare(parser->piscina, magnitudo(SelectioComposita));
+    composita = piscina_allocare(parser->piscina,
+        magnitudo(SelectioComposita));
     si (composita == NIHIL)
     {
         redde NIHIL;
     }
 
-    composita->partes = xar_creare(parser->piscina, magnitudo(SelectioSimplex*));
+    composita->partes = xar_creare(parser->piscina,
+        magnitudo(SelectioSimplex*));
     si (composita->partes == NIHIL)
     {
         redde NIHIL;
@@ -627,7 +638,8 @@ _parser_legere_sequentia (
         redde NIHIL;
     }
 
-    prima = piscina_allocare(parser->piscina, magnitudo(SelectioSequentia));
+    prima = piscina_allocare(parser->piscina,
+        magnitudo(SelectioSequentia));
     si (prima == NIHIL)
     {
         redde NIHIL;
@@ -643,7 +655,8 @@ _parser_legere_sequentia (
     dum (!_parser_ad_finem(parser))
     {
         /* Verificare spatium (potentialis combinator descendens) */
-        habuit_spatium = _est_spatium_selectoris(_parser_currens(parser));
+        habuit_spatium =
+            _est_spatium_selectoris(_parser_currens(parser));
         _parser_praeterire_spatium(parser);
 
         si (_parser_ad_finem(parser))
@@ -686,7 +699,8 @@ _parser_legere_sequentia (
             frange;
         }
 
-        nova = piscina_allocare(parser->piscina, magnitudo(SelectioSequentia));
+        nova = piscina_allocare(parser->piscina,
+            magnitudo(SelectioSequentia));
         si (nova == NIHIL)
         {
             redde NIHIL;
@@ -740,7 +754,8 @@ selectio_legere (
     si (selectio == NIHIL)
     {
         resultus.error_positus = parser.positus;
-        resultus.error = chorda_ex_literis("Syntaxis selectoris invalida", piscina);
+        resultus.error =
+            chorda_ex_literis("Syntaxis selectoris invalida", piscina);
         redde resultus;
     }
 
@@ -1018,7 +1033,8 @@ _simplex_congruit (
                 {
                     class_len = 255;
                 }
-                memcpy(class_buf, simplex->valor->datum, (magnitudo(character)) * class_len);
+                memcpy(class_buf, simplex->valor->datum,
+                    (magnitudo(character)) * class_len);
                 class_buf[class_len] = '\0';
 
                 redde stml_titulum_habet(nodus, class_buf);
@@ -1035,7 +1051,8 @@ _simplex_congruit (
                 {
                     attr_len = 255;
                 }
-                memcpy(attr_buf, simplex->valor->datum, (magnitudo(character)) * attr_len);
+                memcpy(attr_buf, simplex->valor->datum,
+                    (magnitudo(character)) * attr_len);
                 attr_buf[attr_len] = '\0';
 
                 attr_valor = stml_attributum_capere(nodus, attr_buf);
@@ -1051,19 +1068,23 @@ _simplex_congruit (
                     /* Velociter: comparatio indicis */
                     si (attr_valor == simplex->attr_valor) redde VERUM;
                     /* Lente: comparatio chordae */
-                    redde chorda_aequalis(*attr_valor, *simplex->attr_valor);
+                    redde chorda_aequalis(*attr_valor,
+                        *simplex->attr_valor);
 
                 casus ATTR_OP_INCIPIT:
                     si (attr_valor == NIHIL) redde FALSUM;
-                    redde chorda_incipit(*attr_valor, *simplex->attr_valor);
+                    redde chorda_incipit(*attr_valor,
+                        *simplex->attr_valor);
 
                 casus ATTR_OP_TERMINAT:
                     si (attr_valor == NIHIL) redde FALSUM;
-                    redde chorda_terminatur(*attr_valor, *simplex->attr_valor);
+                    redde chorda_terminatur(*attr_valor,
+                        *simplex->attr_valor);
 
                 casus ATTR_OP_CONTINET:
                     si (attr_valor == NIHIL) redde FALSUM;
-                    redde chorda_continet(*attr_valor, *simplex->attr_valor);
+                    redde chorda_continet(*attr_valor,
+                        *simplex->attr_valor);
 
                 casus ATTR_OP_VERBUM: {
                     /* Congruentia verbi - verificare si valor apparet ut verbum integrum */
@@ -1074,10 +1095,18 @@ _simplex_congruit (
                     character c_after;
                           s32 inventum;
 
-                    si (attr_valor == NIHIL) redde FALSUM;
+                                        si (attr_valor
+                                                                     == NIHIL) redde FALSUM;
 
                     len      = attr_valor->mensura;
                     val_len  = simplex->attr_valor->mensura;
+                    /* i32 insignatus: 'len - val_len' cum valore longiore
+                     * quam attributum SUBTER fluebat et cursus memoriam
+                     * alienam legebat ('[classes~=substantivum]' omnia
+                     * vocabula congruebat, oratio T12 2026-09-04) */
+                    si (   val_len == ZEPHYRUM
+                        || val_len
+                                                                                        > len) redde FALSUM;
 
                     /* Quaerere congruentiam verbi */
                     per (i = 0; i <= len - val_len; i++)
@@ -1086,17 +1115,23 @@ _simplex_congruit (
                         /* Verificare si subchorda congruit */
                         si (memcmp(attr_valor->datum + i,
                                    simplex->attr_valor->datum,
-                                   (magnitudo(character)) * (i32)val_len) != 0)
+                                   (magnitudo(character)) * (i32)val_len)
+                                       != 0)
                         {
                             inventum = 0;
                         }
                         si (inventum)
                         {
                             /* Verificare limites verbi */
-                            c_before = (i == 0) ? ' ' : (character)attr_valor->datum[i - 1];
-                            c_after = (i + val_len >= len) ? ' ' : (character)attr_valor->datum[i + val_len];
+                            c_before = (i
+                                == 0) ? ' ' : (character)attr_valor->datum[i
+                                    - 1];
+                            c_after = (i + val_len
+                                >= len) ? ' ' : (character)attr_valor->datum[i
+                                    + val_len];
                             si (   (c_before == ' ' || c_before == '\t')
-                                && (c_after == ' ' || c_after == '\t' || c_after == '\0'))
+                                && (c_after == ' ' || c_after == '\t'
+                                || c_after == '\0'))
                             {
                                 redde VERUM;
                             }
@@ -1147,7 +1182,8 @@ _composita_congruit (
     num = xar_numerus(composita->partes);
     per (i = 0; i < num; i++)
     {
-        simplex = *(SelectioSimplex**)xar_obtinere(composita->partes, i);
+        simplex = *(SelectioSimplex**)xar_obtinere(composita->partes,
+            i);
         si (!_simplex_congruit(simplex, nodus))
         {
             redde FALSUM;
@@ -1475,7 +1511,8 @@ stml_quaerere (
     si (selectio == NIHIL)
     {
         /* Non in cache - parsare */
-        resultus = selectio_legere_ex_literis(selector, _selectio_cache_piscina, intern);
+        resultus = selectio_legere_ex_literis(selector,
+            _selectio_cache_piscina, intern);
         si (!resultus.successus)
         {
             redde NIHIL;
@@ -1508,7 +1545,8 @@ stml_quaerere_omnes (
     si (selectio == NIHIL)
     {
         /* Non in cache - parsare */
-        resultus = selectio_legere_ex_literis(selector, _selectio_cache_piscina, intern);
+        resultus = selectio_legere_ex_literis(selector,
+            _selectio_cache_piscina, intern);
         si (!resultus.successus)
         {
             redde NIHIL;

@@ -1195,6 +1195,46 @@ class Prosa(object):
             xs = [x for x in xs if self._lingua(x) == lingua]
         return self._n('saeptum %r' % lingua, xs, n)
 
+    def _sententiae(self, intra=None):
+        """[ProsaExtentum 'sententia'] paragraphorum md intra extentum (aut
+        omnium): paragraphi Orationi ut textus unus traditi (lineis vacuis
+        separati), extenta in octetos plagulae remissa"""
+        paragraphi = self._intra(self.selecta('paragraphus'), intra)
+        partes, sedes, cursor = [], [], 0
+        for x in paragraphi:
+            corpus = self.octeti[x.initium:x.finis]
+            if not corpus.endswith(b'\n'):
+                corpus += b'\n'
+            partes.append(corpus + b'\n')
+            sedes.append((cursor, cursor + len(corpus), x))
+            cursor += len(corpus) + 1
+        xs = []
+        if partes:
+            for s in Oratio(b''.join(partes)).sententiae():
+                for a, b, x in sedes:
+                    if a <= s.initium and s.finis <= b:
+                        initium = x.initium + (s.initium - a)
+                        finis = x.initium + (s.finis - a)
+                        linea = x.linea + self.octeti.count(b'\n', x.initium,
+                                                            initium)
+                        xs.append(ProsaExtentum(
+                            'sententia', initium, finis, linea,
+                            initium - self.octeti.rfind(b'\n', 0, initium),
+                            linea + self.octeti.count(b'\n', initium, finis),
+                            self.versio))
+                        break
+        return xs
+
+    def sententia(self, n=0, intra=None):
+        """sententia n-ta (ordine documenti) paragraphorum markdown intra
+        extentum (sectio ...) aut totius plagulae - delegatio Orationi
+        (T14): capitula, saepta, html numquam; elementum listae
+        paragraphus est (nota '- ' intra sententiam primam); lineae novae
+        intra sententiam manent; caudae exclusae - ancora pro
+        substituere / inserere_post"""
+        self.ancorae.append(('sententia', n))
+        return self._n('sententia', self._sententiae(intra), n)
+
     # -- editiones --
     def _recens(self, x):
         if x.versio != self.versio:
@@ -1279,6 +1319,8 @@ class Prosa(object):
                     capitula = self._capitula()
                 numeri['capitulum %r' % clavis] = sum(
                     1 for _, _, t in capitula if t == clavis)
+            elif genus == 'sententia':
+                numeri[genus] = len(self._sententiae())
             else:
                 numeri[genus] = len(self.selecta(genus))
         return numeri
@@ -1450,6 +1492,8 @@ PORTAE = {
     'materia': (['./materia/compile_probationes.sh'],
                 r'MATERIA PROBATIONES: \d+/\d+'),
     'md': (['./md/compile_probationes.sh'], r'MD PROBATIONES: \d+/\d+'),
+    'briar': (['./briar/compile_probationes.sh'],
+              r'BRIAR PROBATIONES: \d+/\d+'),
     'oratio': (['./oratio/compile_probationes.sh'],
                r'ORATIO PROBATIONES: \d+/\d+'),
     'officina': (['./officina/compile_probationes.sh'],
@@ -1478,6 +1522,8 @@ PORTAE = {
                    r'amalgamata: \d+ compilata, \d+ fracta'),
     'aedilis': (['./tools/aedilis_porta.sh'],
                 r'PORTA AEDILIS: \d+ probationes'),
+    'briar-fumus': (['./tools/briar_fumus.sh'],
+                    r'fumus briar: (sanum|FRACTUM)'),
     'materia-shim': (['./materia/shim_probare.sh'],
                      r'probatae \d+, fractae \d+'),
 }
@@ -1488,6 +1534,7 @@ _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 # aliter 'generica' (porta tota = fractura una)
 FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
           'materia': 'suita', 'md': 'suita', 'oratio': 'suita',
+          'briar': 'suita',
           'officina': 'suita', 'gesta': 'suita',
           'tessera': 'suita', 'saltuarius': 'suita', 'aedilis': 'suita'}
 _RELATIO_RE = re.compile(r'FRACTA|FRACTUM|FATALE|Speratus|Receptus|Totalis|'
@@ -2196,6 +2243,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         if tot is None:
             praef = {'radix': '', 'silva': 'silva.', 'css': 'css.',
                      'materia': 'materia.', 'md': 'md.',
+                     'briar': 'briar.',
                      'oratio': 'oratio.'}.get(nomen)
             if praef is not None:
                 ss = mensurae(praef, 1, plenae=False)
@@ -2287,6 +2335,7 @@ SUITAE = {
     'css': ('css/probationes', 'css/build/%s'),
     'materia': ('materia/probationes', 'materia/build/%s'),
     'md': ('md/probationes', 'md/build/%s'),
+    'briar': ('briar/probationes', 'briar/build/%s'),
     'oratio': ('oratio/probationes', 'oratio/build/%s'),
     'officina': ('officina/probationes', 'officina/build/%s'),
     'gesta': ('gesta/probationes', 'gesta/build/%s'),
@@ -3200,7 +3249,7 @@ if __name__ == '__main__':
 
 # ---------------------------------------------------------------- vocabula (oratio)
 Verbum = namedtuple('Verbum', 'verbum status sedes symbola commenta prosa classis '
-                    'lemma analyses lemmata via linea')
+                    'lemma analyses lemmata via linea regula')
 Vocabula = namedtuple('Vocabula', 'numeri verba ignota ambigua permissa')
 
 
@@ -3226,7 +3275,10 @@ def vocabula(fons='omnia', omnes_viae=False):
     deinde, tabula Latina tertia -> status 'latinum' (Latine notum, NON
     inventum); 'ambiguum' numquam; viae vendor/ archivum/ et plagulae
     generatae (gesta/annales/tabula.md, md/CENSUS.md) exclusae, knotapel/
-    INCLUSUM. Verbum.prosa = sedes in prosa."""
+    INCLUSUM. Verbum.prosa = sedes in prosa; Verbum.regula = regula
+    morphologica (T15b: pluralis-s, praeteritum-ed, participium-ing,
+    possessivum, adverbium-ly, comparativus-er, compositum ...) qua forma
+    non listata ad basin (lemma) redacta est, vacua = forma exacta."""
     if fons not in ('symbola', 'commenta', 'omnia', 'prosa'):
         raise SilvaError("fons: 'symbola' | 'commenta' | 'omnia' | 'prosa'")
     r = _curre(['./oratio/vocabula.sh', '-' + fons, '-machina']
@@ -3238,10 +3290,10 @@ def vocabula(fons='omnia', omnes_viae=False):
         if not linea or linea.startswith('#'):
             continue
         p = linea.split('\t')
-        if len(p) < 12:
+        if len(p) < 13:
             continue
         verba.append(Verbum(p[0], p[1], int(p[2]), int(p[3]), int(p[4]), int(p[5]),
-                            p[6], p[7], int(p[8]), int(p[9]), p[10], int(p[11])))
+                            p[6], p[7], int(p[8]), int(p[9]), p[10], int(p[11]), p[12]))
     numeri = {'verba': len(verba), 'sedes': sum(v.sedes for v in verba)}
     for st in ('notum', 'ambiguum', 'permissum', 'ignotum', 'latinum'):
         numeri[st] = sum(1 for v in verba if v.status == st)
@@ -3249,3 +3301,140 @@ def vocabula(fons='omnia', omnes_viae=False):
                     [v for v in verba if v.status == 'ignotum'],
                     [v for v in verba if v.status == 'ambiguum'],
                     [v for v in verba if v.status == 'permissum'])
+
+
+# ---------------------------------------------------------------- oratio (T14)
+OratioSententia = namedtuple('OratioSententia',
+                             'index initium finis linea forma textus')
+OratioVocabulum = namedtuple('OratioVocabulum',
+                             'index initium finis linea paragraphus sententia'
+                             ' forma classes linguae lemma analyses')
+OratioAnalysis = namedtuple('OratioAnalysis',
+                            'index classis lemma lingua fons nativum sensus'
+                            ' accidentia')
+ORATIO_ACCIDENTIA = ('casus', 'numerus', 'genus', 'persona', 'tempus', 'modus',
+                     'vox', 'forma-verbi', 'gradus', 'species', 'declinatio',
+                     'coniugatio')
+
+
+class Oratio(object):
+    """QUAESTIONES super orationem (textum planum; T14): sententiae
+    (./oratio/sententiae.sh), vocabula annotata et analyses
+    (./oratio/verba.sh - arbor orationis + tabula Latina WORDS + glossarium
+    oratio/glossarium.stml, gradus III). Argumentum: via plagulae
+    exsistentis aut TEXTUS ipse (str aut bytes; in build/pythonica per
+    vocamen scriptus et deletus). LECTIO SOLA - nihil hic editur (Prosa
+    editiones markdown fert et Prosa.sententia huc delegat). Extenta
+    OCTETIM [initium, finis) in fonte, caudae exclusae; index =
+    ordinalis vocabuli in documento (clavis analysium); sententia =
+    ordinalis sententiae ut in sententiae(); classes/linguae = tuplae
+    ordine analysium (loci compendiarii vocabuli), ('ignotum',) sine
+    analysi (INVENTUM, non vitium); lemma = analysis primae (ordo FONTIS,
+    non gradus V: 'virum' -> virus, 'rosam' -> rodo). Analysis: classis
+    (substantivum verbum ... ignotum), lemma, lingua (latina anglica),
+    fons (vocabularium-la glossarium regula ...), nativum (codex fontis
+    verbatim 'N 1 1 NOM S C' | 'capitalis'), sensus, accidentia {titulus:
+    optio} - casus numerus genus persona tempus modus vox forma-verbi
+    gradus species declinatio coniugatio, absentia OMISSA, declinatio/
+    coniugatio numeri ut chordae. Instrumentum semel per quaestionem
+    cursum, memoriter."""
+
+    def __init__(self, via_aut_textus):
+        t = via_aut_textus
+        if isinstance(t, bytes):
+            self.via, self.octeti = None, t
+        elif t and '\n' not in t and os.path.isfile(_absoluta(t)):
+            self.via, self.octeti = _absoluta(t), None
+        elif t.endswith('.txt') and ' ' not in t and '\n' not in t:
+            raise SilvaError('Oratio: plagula absens: %s' % t)
+        else:
+            self.via, self.octeti = None, t.encode('utf-8')
+        self._sententiae = None
+        self._vocabula = None
+        self._analyses = None
+
+    @property
+    def textus(self):
+        """fons decodificatus (utf-8)"""
+        if self.octeti is None:
+            self.octeti = open(self.via, 'rb').read()
+        return self.octeti.decode('utf-8', errors='replace')
+
+    def _cum_plagula(self, f):
+        if self.via:
+            return f(self.via)
+        d = os.path.join(RADIX, 'build', 'pythonica')
+        os.makedirs(d, exist_ok=True)
+        fd, via_t = tempfile.mkstemp(prefix='.oratio_', suffix='.txt', dir=d)
+        with os.fdopen(fd, 'wb') as h:
+            h.write(self.octeti)
+        try:
+            return f(via_t)
+        finally:
+            os.unlink(via_t)
+
+    def _machina(self, imperium, optiones=()):
+        """lineae TSV instrumenti (-machina): rc 1 = nihil (lista vacua),
+        rc 2 = fractura"""
+        def f(via):
+            r = _curre([imperium, via, '-machina'] + list(optiones))
+            lineae = r.stdout.splitlines()
+            # caput '#' = instrumentum cucurrit; rc 1 sine capite =
+            # involucrum fractum (compilatio), non 'nihil inventum'
+            if r.returncode == 2 or not any(l.startswith('#') for l in lineae):
+                raise SilvaError('%s fractus (rc %d): %s'
+                                 % (imperium, r.returncode,
+                                    r.stderr.strip()[-300:]))
+            return [l.split('\t') for l in lineae
+                    if l and not l.startswith('#')]
+        return self._cum_plagula(f)
+
+    def sententiae(self):
+        """[OratioSententia] ordine documenti (forma paragraphi: prosa
+        versus titulus tabula index; textus lineis novis in spatia versis)"""
+        if self._sententiae is None:
+            self._sententiae = [
+                OratioSententia(i, int(p[0]), int(p[1]), int(p[2]), p[3], p[4])
+                for i, p in enumerate(self._machina('./oratio/sententiae.sh'))]
+        return list(self._sententiae)
+
+    def vocabula(self, classis=None, lingua=None, ignota=False, sententia=None):
+        """[OratioVocabulum] ordine documenti; classis = quae eam inter
+        classes ferunt (candidatum quodque, non primum solum); lingua item;
+        ignota = sine analysi; sententia = ordinalis sententiae"""
+        if self._vocabula is None:
+            self._vocabula = [
+                OratioVocabulum(int(p[1]), int(p[2]), int(p[3]), int(p[4]),
+                                int(p[5]), int(p[6]), p[7],
+                                tuple(p[8].split()), tuple(p[9].split()),
+                                p[10], int(p[11]))
+                for p in self._machina('./oratio/verba.sh')]
+        xs = self._vocabula
+        if classis is not None:
+            xs = [v for v in xs if classis in v.classes]
+        if lingua is not None:
+            xs = [v for v in xs if lingua in v.linguae]
+        if ignota:
+            xs = [v for v in xs if 'ignotum' in v.classes]
+        if sententia is not None:
+            xs = [v for v in xs if v.sententia == sententia]
+        return list(xs)
+
+    def ignota(self):
+        """vocabula sine analysi (inventa)"""
+        return self.vocabula(ignota=True)
+
+    def analyses(self, vocabulum):
+        """[OratioAnalysis] vocabuli (OratioVocabulum aut index) ordine
+        fontis; [] sine analysi"""
+        if self._analyses is None:
+            self._analyses = {}
+            for p in self._machina('./oratio/verba.sh', ['-analyses']):
+                i = int(p[1])
+                acc = dict((k, v) for k, v in zip(ORATIO_ACCIDENTIA, p[9:])
+                           if v)
+                self._analyses.setdefault(i, []).append(
+                    OratioAnalysis(i, p[3], p[4], p[5], p[6], p[7], p[8], acc))
+        i = vocabulum.index if isinstance(vocabulum, OratioVocabulum) \
+            else int(vocabulum)
+        return list(self._analyses.get(i, []))

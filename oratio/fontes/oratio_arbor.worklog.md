@@ -608,3 +608,565 @@ noun, forms listed); unknowns 2,986, pin moved down with this cause.
 Note for the next reader of that pin: the machine output gained a
 column, so a query by first site must read field 11, not 10 — half an
 hour went to a wrong column.
+
+## 2026-09-04 — T15b: English morphology as data, glossary pass II, the prose pin
+
+Straight after T15a, with the day-one report in hand. The suffix rules
+the spec names are a DATA table now, `ORATIO_REGULAE_EN` in
+`oratio_vocabularium_en.c`: one row per suffix with its base
+substitution (ed→"", ed→e, ies→y …), a gemination flag (planned →
+plan), a minimum base length, the Moby codes the base must carry (a
+plural needs a noun or verb base; a comparative an adjective or adverb
+— `near` is `PvVN`, so `nearest` needs the `v`), the analysis class
+(or "from the base" for plurals), and a cause that cites the report's
+words and now the measured tally. Twenty-five rows: three plural, four
+past, three participle, possessive, six contractions, three adverb,
+two comparative, two superlative, and `compositum`. A new function
+`oratio_vocabularium_en_analysare` returns analyses in order — exact
+records first, always, then the rules in table order — each carrying
+its rule index, its base, and its class; the judge takes the first
+analysis for class and lemma (so `values` gets lemma `value` and
+`regula` `pluralis-s`), counts distinct bases as `lemmata`, and
+`OratioVerbum.regula` names the rule; the machine output gained a last
+column and the instrument a per-rule tally.
+
+Three things learned from the corpus while the rules went in. (1)
+Moby lists more than the legend admits: `entries` is there as `p`,
+`tried` and `planned` as `V`, `making` as `N`, `simply` and `happily`
+as `v`, `larger` and `largest` as `A`, `I'm` and `don't` as entries —
+so the gate asserts "exact first, rule present after", not "rule
+first", and two contraction rows explain nothing in this corpus; they
+stay as rows with a zero. (2) Compounds are the biggest single rule:
+`compositum` (every hyphen part a known word, or a prefix from
+`ORATIO_PRAEFIXA_EN` — non, multi, semi, pseudo … — with at least one
+real word among the parts, and parts themselves may go through the
+suffix rules, so `consists-in` and `discovered-while` resolve) explains
+13,508 distinct words and 45,304 sites; plurals 3,327 / 135,056;
+possessives 1,129 / 8,957; `-ed` 644 / 16,372; `-ing` 570 / 12,097.
+(3) The typographic apostrophe: `i’m` and `dkc’s` carried U+2019, so
+the English fold maps E2 80 99 to `'` before anything else.
+
+The pass II glossary followed the post-rule report: 117 entries under
+an ANGLICA PROSA section — proper names (Voronoi, Fibonacci, Hopf,
+Galois, Seifert, Temperley-Lieb, Methos, Teal'c …) with possessive
+forms where the corpus has them; the computing English Moby's 1990s
+list lacks (whitespace, roundtrip, lookup, lexer, runtime, subtree,
+codebase, newline, fallback, database, callback, tuple, typedef,
+stdout, metadata, timestamp, workflow, monorepo …) as real classes with
+explicit plurals, because the rules reduce to MOBY bases only, not to
+glossary lemmata; abbreviations (dkc, vs, xor with its numbered forms,
+npn, sqrt, mcp, mvn, e.g, i.e, tsv, utf …) as permitted; `struct` and
+`sizeof` joining the C names for both contexts; three house Latin
+coinages the identifier lint had also been missing (internamentum,
+diagnostica, friatio; amalgama as medieval Latin); and the Roman
+numerals ii–xxx as `numerale`, both contexts, since the house writes
+them in prose and in comments (`iii` alone had 262 prose sites). The
+plural rule's minimum base went from three letters to two for `ids`.
+
+Numbers. Prose unknowns 36,115 → 18,949 after the rules (58 % → 30 %)
+→ 16,416 after pass II (26.2 %); known share 73.8 %. The identifier pin
+fell 2,986 → 2,950 on the `ambo` entries and moved with that cause.
+The gate: `probatio_oratio_vocabularium_en` section VI (160; every row
+on a listed base, prefixes, contractions, the fold, limits; planted
+fault = the plural rule's base codes replaced by `A` → red at
+`values`); `probatio_oratio_vocabula` (165) now judges `values` and
+`tested` through the rules. The prose pin: not a count "only falling"
+like the identifiers' — prose gains new words every day and a count
+pin would go red on the next worklog — but a CEILING on the unknown
+SHARE (29 %, three points above measured) beside a floor on the known
+share (70 %); a red there means a rule or a glossary section broke, not
+that one new word appeared. That is a deviation from what I said
+before building; the reason is above.
+
+What is left at the top of the unknown list is now genuinely
+interesting: Unicode math from knotapel (s², ζ₈, ζ₁₂), FILE NAMES
+written in prose without backticks (silva.h 298, latina.h 234,
+claude.md, stml.c — a style finding the lint was built for), knotapel's
+own codes (m0b, m2c, xor7, xnor3, rkhs, gptq, bitnet), hyphen compounds
+with one unknown part (nazer-gastpar, pseudo-anosov,
+delta-parameterized), `won't` (base `wo`), and a thin tail of English
+Moby lacks (uniqueness, bitwise, whiteboard, resize, lifecycle). A
+compositum that consults the glossary for parts would take the
+compounds; a numeral-like filter would take the math; the file names
+should stay findings.
+
+## 2026-09-04 — T11: partes_registrum — the seventeen analysis genera
+
+Stage 3 opened with its smallest task: the vocabulary of grammar into
+the registry, nothing annotated. Seventeen genera appended after
+`numerus`, one per universal class in UD order, `analysis-substantivi`
+… `analysis-ignoti`, with the invariant genus = PRIMUM + classis and an
+`OratioClassis` enum whose titles are exactly the `classis` options
+the glossary canon already had (the registry gate reads that canon and
+proves each title is an option — one vocabulary, two homes). Every
+analysis genus has the same five slots first: `lemma` (derived token),
+`lingua` and `fons` (INDEX), `nativum` (derived token — ONE token
+holding the source's own code verbatim, Fran's call; WORDS gives a
+line, Moby a code string plus a rule name, one string covers both),
+`sensus` (derived, optional). Then the accidents as INDEX slots into
+small enumerations that are appended and never permuted, with title
+arrays for each: nouns and proper nouns carry case, number, gender,
+declension; verbs and auxiliaries person, number, tense, mood, voice,
+verb form, conjugation, plus case and gender because participles
+agree; adjectives case, number, gender, degree, declension; adverbs
+degree; pronouns case, number, gender, person; determiners case,
+number, gender; adpositions the governed case; numerals case, number,
+gender and a kind (cardinal, ordinal, distributive, adverbial);
+conjunctions, particles, interjections, symbols, punctuation and the
+unknown class carry the common five only. Case has locative and
+vocative, number has dual, voice has deponent, verb form has gerund,
+gerundive and supine, tense has the English simple past beside the
+Latin six — the lists are permanent from here. 146 slots in all.
+
+The word's own slots (`analyses`, `classes`, `linguae`) had been
+reserved since T1, so the STML of every existing parse is byte-for-byte
+what it was: an absent list is not written, and the seal attribute
+changed value but not length. The computus golden and the STML
+round-trip gate did not move; only the registry seal (93c1c9cf →
+87b35173) and the canon did. The canon gained the seventeen genus
+rules, the seventeen liberi under `analyses` and under `arbor`, and
+129 slot rules, one per slot INSIDE its genus, because the drift guard
+demands exactly one rule per slot intra its genus and a global
+fallback would not satisfy it. Those rules were generated from the
+table by a script once and are kept by hand from now on, like the rest
+of the file; the rule ceiling went 256 → 512 (182 now).
+
+Gates. `probatio_oratio_registrum` (860): contiguity over 23 genera,
+the class helpers round-tripped for all seventeen, the five common
+slots by title and species on every analysis genus, every accident an
+INDEX, the per-class slot counts of the decision above, auxiliaries
+laid out exactly as verbs, the enumeration ends by title, the glossary
+canon drift, and the materia round trip of a word carrying an
+`analysis-substantivi` with lemma, lingua and case — green first run.
+`probatio_oratio_canon` (219) now also judges a hand-built analysis
+document (0 vitia) and two mutations of it: `gradus` under a noun
+analysis and `casus` under an adverb analysis, each refused with a
+named vitium. Planted fault: the verb genus's slot count 14 → 13 →
+red at contiguity, green on revert.
+
+One naming slip worth remembering: the slot-count enumerator
+`ORATIO_ANALYSIS_SUBSTANTIVI_NUMERUS` collided with the `numerus`
+accident's enumerator of the same name — counts are
+`_NUMERUS_LOCORUM` now. Next is T12: the WORDS mapping table and the
+annotation pass that fills what T11 reserved.
+
+## 2026-09-04 — T12: partes_la — the first parsed word that carries analyses
+
+The mapping and the annotation pass, and with them the second substrate
+change materia has ever needed.
+
+`oratio_partes_la` turns one source analysis into a universal
+DESCRIPTION: class, twelve accidents as enumeration indices (−1 = not
+given: WORDS' `X`, person `0`), lemma, `nativum` (the source's own
+code verbatim: `N 1 1 ACC S C`, `V 3 1 PRES PASSIVE SUB 3 P IMPERS …`
+for a unique form, `TACKON que`, `glossarium verbum`), sense, source,
+language. The table is the spec's, with the corpus deciding the
+details: a noun is `nomen-proprium` when WORDS' kind is N (name) or L
+(locale), so Roma and Caesar are proper and vir is not; a noun's gender
+comes from the STEM when it is M/F/N and from the inflection when the
+stem says common — so `puellam` is feminine although its ending record
+says `C`; a verb whose stem kind is DEP or SEMIDEP is voice `deponens`
+regardless of the passive ending; an infinitive ending sets both mood
+`infinitivus` and form `infinitivum`; a participle is form
+`participium` unless it is FUT PASSIVE, which is the gerundive; supine
+is its own form; a preposition's governed case is read from the ending
+record and, failing that, from the stem; conjunctions are coordinating
+unless the lemma is in `ORATIO_CONIUNCTIONES_SUBORDINANTES` (ut, cum,
+si, ne, quod, quia …, a data list); the enclitic analysis WORDS adds
+for `-que`/`-ve` is a coordinating conjunction, `-ne` a particle; a
+glossary form maps its class name straight to `OratioClassis` and its
+accident strings through the enumeration title arrays, and an
+`ignotum-permissum` entry lands in class `ignotum`.
+
+Which is why the enumeration titles had to be reconciled first: T11
+had spelled the genitive `genetivus` (WORDS' classical spelling) with
+vocative before locative and persons `prima/secunda/tertia`, while the
+glossary canon written in T9 says `genitivus`, locative before
+vocative, and `I II III`. One vocabulary, two homes, and the registry
+gate now proves the accident option lists of the glossary canon equal
+the title arrays IN ORDER, the way it already proved the class names.
+That reconciliation put `genitivus` into an identifier, and the
+identifier pin caught it at once, because WORDS only knows
+`genetivus`: a medieval-spelling glossary entry now, beside
+`glossarium` (Greek loan, WORDS lacks it; its genitive had just entered
+the tree instrument) and `subordinans`.
+
+`oratio_partes` is the pass: after the tree exists, every `vocabulum`
+is looked up once (Latin table with the glossary first, as T8/T9 left
+it), each analysis described, each description built as a node of the
+class's genus — genus = PRIMUM + classis — with the five common slots
+as derived tokens and INDEX values, and the accidents placed BY SLOT
+TITLE through the registry (`oratio_partes_locus` looks the accident's
+name up in the genus's slot list, so the C never carries a hand table
+of slot indices and a genus that lacks an accident silently omits
+it). Then `classes` and `linguae`: distinct class titles in order of
+the analyses, space-separated; a word with nothing gets no analyses,
+`classes` = `ignotum` and no `linguae`. Write-once is respected: a
+word whose `classes` slot is filled is skipped, so a second pass
+annotates nothing. And `materia_arbor_patres_figere` runs at the end
+— the round trip went red on `pater-nullitas` without it, the same
+lesson every materia parser has learned once.
+
+The substrate change. Selection wants `vocabulum[classes~=verbum]`,
+and selectio matches attributes, not child text. The frons hooks
+materia offers decorate TOKEN elements only, so `MateriaArborFrons`
+gained a ninth, last field, `nodum_ornare`, called by the writer right
+after a node's element is created, and the reader keeps ignoring
+attributes on node elements — the slots stay the truth, the attribute
+is a mirror. oratio's consilium now carries a frons whose only hook
+copies the `classes` and `linguae` token values onto the `<vocabulum>`
+element; the canon declares the two attributes; the round trip is
+unaffected because the reader never looks at them. Existing parses do
+not change: no annotation, no slot, no attribute.
+
+Then selectio lied. `vocabulum[classes~=substantivum]` matched all four
+words of the fixture. The word-match operator computed `len - val_len`
+in unsigned arithmetic and, when the attribute was SHORTER than the
+value (`verbum` against `substantivum`), the loop bound underflowed
+and the scan walked off the attribute into neighbouring memory, where
+it found the word. A guard (`val_len == 0 || val_len > len` → no
+match) fixed it; the root selectio tests were green before and after
+because none of them tried a value longer than the attribute. Found by
+the first real consumer of `~=`, which is what consumers are for.
+
+The gate (`probatio_oratio_partes`, 171): the code tables; twenty
+forms against the decision above (puellam, Roma, Caesar, vir, amat,
+amavit, amatus, amandi, amare, loquitur, bonus, melior, optime, in ×2,
+et, ut, tres, ego, hic, virumque, agantur, est, offset, xyzzy); the
+annotated fixture "Puella amat. Xyzzy virumque." node by node — three
+analyses for Puella with lemma, nativum, sense, language, source, case
+NOM, gender F, declension I, the derived token positioned at its
+origin; amat a verb; Xyzzy `ignotum` with no `linguae`; virumque
+`coniunctio-coordinans substantivum` with nine analyses; a second pass
+a no-op — the projection (`<vocabulum classes="…" linguae="…">`, the
+analysis elements, `<casus(> 0` because INDEX projects as text), the
+full round trip STRUCTURAL and FIDELIS, the canon judging the annotated
+document at zero vitia, selectio counting one verb, two nouns, three
+Latin words, one unknown, one coordinating conjunction, no adjective;
+and the corpus. Planted fault: the stem-gender rule dropped → puellam
+loses its F → red.
+
+Day one over the Latin fixtures:
+
+| text | words | analyses | unknown | ms |
+|---|---|---|---|---|
+| Hilarius | 1,678 | 10,352 | 5.2 % | 81 |
+| Propertius | 4,423 | 27,819 | 4.6 % | 176 |
+| Cicero | 13,214 | 114,876 | 2.9 % | 858 |
+
+Six to nine analyses per word, and the class census says where they
+come from: Cicero's 114,876 analyses hold 72,965 PRONOUN analyses,
+because WORDS lists every `qu-`/`-cumque`/`-dam`/`-libet` packing as
+its own entry and `quis` alone brings 215. That is faithful to the
+source and useless as a candidate list; stage 5's ordering, or a
+dedup by (class, accidents, lemma) before it, is where it gets fixed,
+and the oracle in T13 will say whether the noise costs coverage. The
+instrument: `./oratio/arbor.sh <x.txt> -partes` annotates before
+projecting (`-tacitus` prints the census). Identifier pin 2,950 →
+2,958: no unknown word is new relative to HEAD's sources (word-set
+difference over the diff and the new files, and the three coinages
+got entries), the regenerated symbol table simply indexes seventy more
+identifier words of the existing tree — the cause is coverage, and it
+is named here.
+
+## 2026-09-04 — T13: the oracle — treebanks grade the parser, and the mapping learns from them
+
+Two Latin treebanks from Universal Dependencies are vendored under
+`oratio/probationes/fixa/ud/`, both CC BY-SA 4.0 with their licence
+and README verbatim: CIRCSE (Seneca, Hercules Furens, 893 sentences,
+11,503 tokens, no punctuation, `u` for `v`, 316 enclitic ranges) and
+the LLCT charter treebank's dev and test splits (Fran's call — train
+is a quarter million tokens and UD scores on dev/test anyway; 850 and
+884 sentences, 24k tokens each, medieval spelling, punctuation). The
+non-commercial ones (ITTB, PROIEL, Perseus, UDante) are never
+vendored: `./oratio/oraculum.sh -petere` fetches their test files into
+the build directory and reports. FONTES.md carries upstream commits,
+byte counts and seals.
+
+`oratio_conllu` reads the format: ten tab-separated fields or the
+reader stops with the line, `# sent_id` and `# text` kept, ranges
+`a-b` marked and their words following, empty nodes `a.b` skipped, a
+blank line closes a sentence, CRLF tolerated, `SpaceAfter=No` read
+from MISC, and the sentence text taken from `# text` or reconstructed
+from the forms when absent (ranges give the surface, their words are
+skipped). Chords reference the file, nothing is copied.
+
+`oratio_oraculum` judges a sentence: its text is parsed and annotated
+exactly as a document would be, the elements (word, punctuation,
+number) get byte extents from their tokens, each gold token's form is
+located in the same text in order, and the element containing the
+gold start — or every element the gold extent touches — lends its
+class set. A range is one surface token judged for each of its words,
+so `pronumque` meets one element whose classes are the enclitic's and
+the adjective's. Three measures per gold word: TECTUM, the gold class
+among ours, which is coverage and gets pinned only rising in permille
+per file; PRIMARIUM, our first class equals gold, reported; LEMMA, the
+gold lemma folded among our folded lemmata, reported; plus our
+`ignotum` and unaligned counts, and the first five uncovered examples
+per class, which the instrument prints with `-exempla`. Alignment was
+perfect from the first run: zero unaligned tokens across 60k, zero
+broken sentences.
+
+Day one, before touching the mapping:
+
+| treebank | coverage | primary | lemma | ours unknown |
+|---|---|---|---|---|
+| CIRCSE | 84.2 % | 66.0 % | 87.7 % | 4.1 % |
+| LLCT dev | 71.9 % | 61.7 % | 64.0 % | 13.4 % |
+| LLCT test | 72.5 % | 62.3 % | 63.7 % | 13.2 % |
+
+The per-class table said exactly what T12 predicted and more. Three
+classes at ZERO because WORDS does not carve them: `auxiliare` (every
+one of them lemma `sum`, lemma agreement 100 %), `determinans` (hic,
+ille, meus, noster, omnis, solus, uterque, suprascriptus — WORDS says
+pronoun or adjective), `particula` (non, haud — WORDS says adverb).
+Subordinating conjunctions at 74–84 % because `cum`, `unde`, `qualiter`,
+`quam` reach us as adverb or preposition and the CONJ rule never
+fired. Proper nouns at 13–23 %: the names of Seneca's myth and of the
+charters' witnesses are simply not in WORDS, so they were `ignotum`.
+Ordinals (tertiae, octavo) are ADJ in UD and numerale in WORDS. And
+WORDS marks `deus`, `chaos`, `Manes` as kind N (name), which T12 had
+turned into proper nouns while UD calls them nouns.
+
+So the mapping pass II, every rule a data list with the oracle's
+counts as its cause (`oratio_partes_la.h` records them): SECONDARY
+descriptions appended after the primary one, never replacing it —
+`sum` gets an `auxiliare` reading beside the verb; pronouns,
+adjectives and numerals whose lemma is in `ORATIO_DETERMINANTIA` get a
+`determinans` reading; adverbs in `ORATIO_PARTICULAE` a `particula`
+reading; adverbs and prepositions in the subordinating list a
+`coniunctio-subordinans` reading (and the list grew: qualiter, unde,
+quam, quatenus, quomodo …); ordinals an `adiectivum` reading; kind N
+names a `substantivum` reading — kind L places like Roma stay proper
+only, which is where the CIRCSE pin lost one permille and was moved
+with that cause. And the one rule without a dictionary: a word nothing
+knows whose first letter is a capital becomes a `nomen-proprium`
+candidate with source `regula` (a fourth value appended to the source
+enumeration) and nativum `capitalis`. The primary reading is
+unchanged everywhere, so PRIMARY moved only where a class went from
+nothing to something.
+
+After the pass:
+
+| treebank | coverage | primary | lemma | ours unknown |
+|---|---|---|---|---|
+| CIRCSE | 93.7 % | 67.8 % | 88.7 % | 0.8 % |
+| LLCT dev | 88.9 % | 68.1 % | 65.0 % | 7.0 % |
+| LLCT test | 88.2 % | 68.2 % | 64.6 % | 7.1 % |
+
+Per class: auxiliare 0 → 99–100, determinans 0 → 78–84, particula 7 →
+65–87, nomen-proprium 13–23 → 79–90, subordinating 74–84 → 94–100,
+adjective on the charters 61–65 → 74–75. The pins are 937, 889, 882
+permille, only rising. What is left is honest: the charters' medieval
+spellings (`ecclesie` for ecclesiae, `episcupatui`), participles UD
+tags as adjectives (furens, tonantem), and PRIMARY at two thirds,
+which is the unordered list and stage 5's job.
+
+Gate `probatio_oratio_oraculum` (104): the reader on an inline
+two-sentence source with every feature and three refused sources with
+their line; the judge on `Puella rosam amat.` (4/4 covered, primary 3
+because WORDS lists rosam as a participle first, lemma 3 because
+punctuation has none), on a range, an unknown, an unaligned token and
+an out-of-table UPOS; and the three treebanks with sentence counts
+pinned, the table printed, coverage pinned, unaligned under 2 %,
+broken sentences zero. Planted fault: PROPN removed from the UPOS
+table → red. The partes gate grew to 203 with the secondary rules and
+the capital rule; its annotated fixture had to keep its capital
+`Xyzzy`, because a lowercase unknown after a period does not start a
+sentence — which briefly made the gate dereference a sentence that was
+not there.
+
+## 2026-09-05 — T14: verba.sh and the Python face of stage 3
+
+The instruments and the query surface, thin by design: everything they
+need existed in C already.
+
+`oratio/instrumenta/verba.c` + `./oratio/verba.sh <x.txt>... [-machina]
+[-analyses]`: each file is parsed and annotated exactly as `arbor.sh
+-partes` does (la.bin + glossary from RHUBARB_RADIX; the wrapper now
+exports it as the repo root when unset, so the instrument works from
+any directory), then one row per word in document order: via, index,
+byte extent, line, paragraph and sentence ordinals, form, classes,
+linguae, the first analysis's lemma, the count of analyses.
+`-analyses` prints one row per analysis node instead: class, lemma,
+lingua, fons, nativum, sensus, then the twelve accidents as the
+registry's option titles (declinatio and coniugatio as numbers, absent
+ones empty). The accidents are read from the tree by SLOT TITLE through
+`oratio_partes_locus`, the same way the annotator wrote them, so the
+instrument reports what the tree holds and never re-derives. Several
+files are accepted so that the via column means something (a corpus
+query across the five fixtures is one invocation). Sentence ordinals
+skip element-less sentences exactly as `sententiae.sh` does, so the two
+instruments' ordinals agree.
+
+`silva.Oratio(via | text | bytes)`: `sententiae()`, `vocabula(classis,
+lingua, ignota, sententia)`, `ignota()`, `analyses(vocabulum | index)`;
+a text is written to build/pythonica for the duration of one call; each
+query's rows are cached. `classis=` matches ANY candidate class, not the
+first — `vocabula(classis='verbum')` returns rosam (participle of rodo)
+as well as amat — because ambiguity is a list at every layer and the
+primary is stage 5's business. `Prosa.sententia(n, intra=)` delegates:
+the markdown paragraphs inside the extent are concatenated with blank
+lines, parsed once, and the sentence extents mapped back to file bytes
+with line and column; the anchor counter got a `sententia` branch (its
+fallback was the markdown selector, which has no such genus).
+
+Measured: Cicero 13,214 word rows in 1.0 s, 131,161 analysis rows in
+1.24 s (T12 counted 114,876 analyses before the pass II secondaries);
+Hilarius 1,678 words, as T12.
+
+Findings while writing the tests:
+- Two short punctuated, capitalised lines are VERSE to the form layer,
+  so the sentences follow the lines: the first fixture had two sentences
+  where I expected three. Correct (T6b's rule); a fixture lesson: prose
+  fixtures are one line, or blank-line separated.
+- `Oratio('')` resolved to the repo root: `os.path.exists` accepts a
+  directory. `isfile` plus a non-empty check.
+- Markdown paragraphs of list items start at the marker, so the item's
+  first sentence begins with `-`; and `- item one. item two.` is ONE
+  sentence because a lowercase word after a period does not start one.
+- `virum` gets lemma `virus` first: WORDS' order. Stage 5.
+
+Gate: the pythonica suite (20 assertions: three sentences of a one-line
+prose text, byte extents equal the forms, classes/lemma/linguae/
+ordinals, class and sentence filters, the unknown, the capital rule,
+accidents by title with absences omitted, Hilarius by path, a missing
+path refused, bytes and empty text; Prosa.sententia inside a section
+with line and column, list item, code fence and headings never, out of
+range, stale extent, edit + applicare with the anchor counted). Planted
+fault: the word end shortened by one byte in verba.c → red on "extenta
+octetim == forma".
+
+One hardening from the plant. The wrapper scripts exit 1 both when the
+instrument finds nothing and when clang fails (`clang … || exit 1`), so
+a Python face that reads "rc 1 = empty list" turns a broken build into
+"no words" — the lying-green shape. `Oratio._machina` now demands the
+`#` header line in `-machina` mode as proof the instrument ran; rc 1
+without it is a fracture with stderr attached.
+
+And a lesson about the ritual itself. The first `silva.planta` run
+ended with "signum absens": the gate emitted no verdict at all. I was
+writing this worklog, the orientation file and the spec while it ran,
+and the pythonica suite lints the house prose (`vocabula -prosa` reads
+every markdown file). Run alone, the same plant was red and the
+reversion green, 283 s. A gate that reads the tree is not to be run
+while the tree is being written — the same law as the shadow gates'
+snapshot, applied to the live one.
+
+The commit was then refused by the identifier pin: 2,973 unknown words
+against 2,958. Attribution through nexus.tsv (which files hold each
+unknown word's symbols): NONE is unique to verba.c — every unknown
+word it uses already sits in older files — and nine are unique to
+T13's files: circse, conllu, llct, misc, permille, rangae, rangam,
+treebank, upos. The symbol table is renovated by the excubitor AFTER
+a successful gate, so T13's own gate ran on the pre-T13 table and
+never saw its words; T14 is the first gate to see them. Glossary
+section for the house terms (ranga as a first-declension coinage,
+permille as an adverb, conllu/upos/misc permitted, CIRCSE/LLCT proper
+names); `treebank` renamed `thesaurus arborum` in the oraculum gate
+(the English word in an identifier is a finding by design). Pin 2,958
+→ 2,964 with the cause in the gate; the residual six are words of old
+files newly indexed, the same coverage growth T12 saw. Lesson for the
+lint: a pin over a build artifact that is renovated post-success
+lags one commit; the next task pays for the last one's words.
+
+## 2026-09-05 — T16: the English mapping, both dictionaries, and the EWT oracle
+
+Stage 4 closes. The annotator now consults BOTH dictionaries for every
+word — `OratioVocabularia {la, en}`, one struct, one loader
+(`oratio_vocabularia_onerare` reads la.bin, the glossary and Moby from
+the repo root; the three instruments and two gates dropped their
+copies of that loading code) — and appends the English readings after
+the Latin ones. `oratio_partes_en` maps a Moby analysis to
+descriptions: an exact record yields one description per class among
+its code letters in Moby's preference order (`p` adds numerus
+pluralis, letters of one class coalesce, `nativum` = the code letters
+verbatim); a rule analysis takes its accidents from the rule's title
+(pluralis → one description per class of the BASE, so `cats` is a
+plural noun AND a third-person verb; praeteritum → a finite past and a
+participle; participium; possessivum → genitive of the base's class,
+plus particula and auxiliare for the clitic; contractions →
+base + particula for `n't` or + auxiliare for `'re 'm 'll 've 'd`;
+adverbium; comparativus/superlativus; compositum takes the last
+part's class). Lemma = the folded base, source `vocabularium-en`,
+language `anglica`, no sense (Moby has none). `nativum` reads
+"NV pluralis-s": the base's codes and the rule.
+
+EWT dev and test (2,001 / 2,077 sentences, 25k tokens each, CC BY-SA,
+commit 4a4d77f5) vendored beside CIRCSE and LLCT; the oracle takes
+the pair of dictionaries; the instrument's default list now iterates
+the array instead of a literal four (the fourth entry was the bug that
+hid EWT from the default run). Day one, before any English pass II:
+
+| treebank | coverage | primary | lemma |
+|---|---|---|---|
+| EWT dev | 77.1 % | 56.6 % | 75.2 % |
+| EWT test | 77.0 % | 56.9 % | 74.7 % |
+
+The per-class table had the same shape as Latin's day one: auxiliare
+0 (has, been, is: Moby says verb), coniunctio-subordinans 0 (that,
+because, since: Moby says C = coordinating), particula 0 (to, not,
+n't, 's), nomen-proprium 22.6 % (President, Bush, Washington: Moby
+lists them as nouns, so the capital rule never fired), symbolum 0
+($, /, :-)), interiectio 16.5 %, numerale 79.6 % (one, two).
+
+And CIRCSE had DROPPED, 93.7 → 93.5 %: Moby knows Hercules, Juno,
+Thebes and Cerberus as English nouns, so those names no longer
+counted as "unknown" and the T13 capital rule stopped making them
+proper-noun candidates. The rule is now: a capitalised word that NO
+LATIN SOURCE knows (unknown, or known to Moby alone) and that is a
+noun or nothing gets the proper-noun candidate, with lingua anglica
+when its other readings are English. That recovers Seneca's names and
+covers the treebank's presidents.
+
+Pass II for English, data lists in `oratio_partes_en.h` with the
+day-one counts as cause, applied once per word after the Moby
+readings, source `regula`, nativum = the list's name: AUXILIARIA
+(be … ought), SUBORDINANTES (that … like), PARTICULAE (to not),
+NUMERALIA (zero … trillion), INTERIECTIONES (yes no please …); the
+rule-based ones above for `'s` and `n't`; and in the oracle a sign
+element carries BOTH interpunctio and symbolum (UD's PUNCT/SYM split
+runs through the same characters: `-` is either). After:
+
+| treebank | coverage | primary | lemma | ours unknown |
+|---|---|---|---|---|
+| EWT dev | 91.3 % | 56.6 % | 75.2 % | 1.3 % |
+| EWT test | 91.8 % | 56.9 % | 74.7 % | 1.3 % |
+| CIRCSE | 94.0 % | 67.3 % | 89.2 % | 0.7 % |
+| LLCT dev | 89.5 % | 67.7 % | 66.7 % | 6.7 % |
+| LLCT test | 88.7 % | 67.6 % | 66.2 % | 6.9 % |
+
+Per class on EWT dev: auxiliare 0 → 90.7, subordinans 0 → 75.8,
+particula 0 → 89.6, nomen-proprium 22.6 → 77.5, symbolum 0 → 93.8,
+interiectio 16.5 → 71.3, numerale 79.6 → 98.4. The Latin pins rose
+too (940 / 895 / 887 permille): Latin words that are also English
+(in, a, is) gained classes, and the wider capital rule gave the
+charters' names back. What is left on EWT: proper nouns that Moby
+knows as common nouns AND that are not capitalised in the text
+(usernames, product names), adjectives that are participles, the
+primary rate at 57 % — Latin readings come first, so `in` is an
+ablative preposition before it is an English one; stage 5's ordering
+by document language is the lever.
+
+Measured on the fixtures: Lincoln 3,699 words, 0 unknown, 11,144
+analyses (2,302 Latin, 8,842 English); Cicero 13,214 words, unknowns
+383 → 178 (names Moby knows), 141,446 analyses (10,303 English).
+Nothing slowed noticeably: EWT dev judges in 250 ms.
+
+Gates: partes 203 → 275 (section VI: the, cats, planned, quickly,
+higher, Fran's, it's, don't, we're, the five lists, Moby-unknown;
+section VII: an English sentence annotated with the census by
+language, `Bush` ending in a proper-noun node with lingua anglica and
+source regula, `The` without one, Latin-only annotation with `en`
+NIHIL, the loader refusing a missing root and naming la.bin); oraculum
+104 → 115 with five pins; planted fault = plural noun made singular in
+`_pluralis` → red on `cats`. Python: `silva.Oratio` gained no code —
+the English readings simply appear — and three assertions.
+
+Lessons. A declaration after a statement is still the first thing I
+write when adding a local mid-block; examen catches it before clang
+does. The oracle instrument's default file list was bounded by a
+literal, and the symptom (a run that silently judged three of five
+files) looked exactly like success. A dictionary that knows names as
+common nouns changes what "unknown" means: every rule keyed on
+"nothing known" must be re-read when a source is added.

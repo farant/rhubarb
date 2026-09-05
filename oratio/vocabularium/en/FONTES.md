@@ -51,4 +51,10 @@ INVENTA (2026-09-04, mensura Pythonica ante lectorem):
 - nota ipsa: formae `-ed -ing -ly -ic` saepe DESUNT (`running` A N et
   `parsed` t adsunt; `bytes` `linting` `tokenizer` desunt) — relatio
   lintus diei primi id confirmat (flexiones regulares summa listae
-  ignotorum): morphologia levis (T15b) ex ea ut DATA sequitur.
+  ignotorum): morphologia levis (T15b) ex ea ut DATA facta est
+  (`ORATIO_REGULAE_EN` in `oratio_vocabularium_en.c`, XXV ordines cum
+  numeris relationis; `ORATIO_PRAEFIXA_EN` compositorum). Moby tamen
+  plura fert quam legenda dicit (`entries` p, `tried` V, `making` N,
+  `simply` v, `I'm`, `don't`): forma exacta semper prior.
+- plicatio: apostrophus typographica U+2019 (E2 80 99) in `'` vertitur
+  (i’m, dkc’s in prosa).

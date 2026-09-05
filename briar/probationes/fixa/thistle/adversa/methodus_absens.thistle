@@ -1,0 +1,18 @@
+#!/usr/bin/env briar
+# Methodus absens
+
+<fenestra titulus="absens"/>
+
+<html!>
+<p>absens</p>
+</html>
+
+<c! methodus="salve">
+#include "json.h"
+
+i32
+alia (vacuum)
+{
+    redde I;
+}
+</c>

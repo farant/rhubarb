@@ -241,11 +241,24 @@ nomen structura {
         MateriaArborCursor* cursor,
         constans MateriaToken* lexema);
 
-    /* Post arborem lectam et positiones derivatas. NIHIL licet. */
+        /* Post arborem lectam et positiones derivatas. NIHIL licet. */
     b32 (*perficere)(
         vacuum* datum,
         MateriaArborLector* lector,
         MateriaNodus* radix);
+
+    /* SCRIPTURA NODI: attributa frontis in elemento NODI (non
+     * lexematis), post creationem elementi, ante locos. Lector
+     * attributa nodi IGNORAT - derivata sunt, arbor ex locis
+     * reconstruitur (oratio: classes/linguae vocabuli ut selectio
+     * '[classes~=verbum]' congruat). Uncus substrati secundus post
+     * md (oratio gradus III, 2026-09-04). NIHIL = nihil addendum;
+     * campus ULTIMUS ut initiatores positionales vetusti maneant. */
+    b32 (*nodum_ornare)(
+        vacuum* datum,
+        MateriaArborScriptor* scriptor,
+        StmlNodus* elementum,
+        constans MateriaNodus* nodus);
 } MateriaArborFrons;
 
 

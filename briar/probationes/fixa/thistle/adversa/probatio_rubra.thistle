@@ -1,0 +1,27 @@
+#!/usr/bin/env briar
+# Probatio rubra
+
+The planted fault of the fumus gate: a probatio that must fail.
+
+<c!>
+s32
+principale (vacuum)
+{
+    redde ZEPHYRUM;
+}
+</c>
+
+<c! munus="probatio">
+#include "credo.h"
+
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("probatio", 65536);
+
+    credo_aperire(piscina);
+    CREDO_FALSUM(VERUM);
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

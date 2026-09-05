@@ -1,0 +1,38 @@
+#!/usr/bin/env briar
+# Derivatum
+
+No `#include` at all: the headers are derived from what the code uses
+(a type, two functions, a macro).
+
+<c!>
+i32
+longitudo_salutationis (Piscina* piscina)
+{
+    chorda c = chorda_ex_literis("salve, munde", piscina);
+
+    redde c.mensura;
+}
+
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("derivatum", 65536);
+
+    imprimere("longitudo %d\n", (integer)longitudo_salutationis(piscina));
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
+}
+</c>
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("probatio", 65536);
+
+    credo_aperire(piscina);
+    CREDO_AEQUALIS_I32(longitudo_salutationis(piscina), XII);
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

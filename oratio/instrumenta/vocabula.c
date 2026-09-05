@@ -365,7 +365,7 @@ OratioVocabulariumVitium vitium;
         {
             Xar* ordo = oratio_vocabula_ordinata(piscina, vc, (s32)-I);
 
-            imprimere("# verbum\tstatus\tsedes\tsymbola\tcommenta\tprosa\tclassis\tlemma\tanalyses\tlemmata\tvia\tlinea\n");
+            imprimere("# verbum\tstatus\tsedes\tsymbola\tcommenta\tprosa\tclassis\tlemma\tanalyses\tlemmata\tvia\tlinea\tregula\n");
             per (i = ZEPHYRUM; i < (integer)xar_numerus(ordo); i++)
             {
                 constans OratioVerbum* v =
@@ -384,8 +384,10 @@ OratioVocabulariumVitium vitium;
                 _c(v->lemma);
                 imprimere("\t%d\t%d\t", (integer)v->analyses,
                     (integer)v->lemmata);
-                _c(v->via_prima);
-                imprimere("\t%d\n", (integer)v->linea_prima);
+                                _c(v->via_prima);
+                imprimere("\t%d\t", (integer)v->linea_prima);
+                _c(v->regula);
+                putchar('\n');
             }
             redde ZEPHYRUM;
         }
@@ -503,8 +505,53 @@ OratioVocabulariumVitium vitium;
                     v->ex_commento_prima ? " (commentum)" : "");
             }
         }
-                si (!prosa)
+                        si (prosa)
+                        {
+            /* verba per regulam morphologicam explicata (T15b): verba
+             * distincta et sedes per titulum regulae, ordine tabulae */
+            i32 verba_regulae[64];
+            i32 sedes_regulae[64];
+            i32 r;
+
+            memset(verba_regulae, ZEPHYRUM, magnitudo(verba_regulae));
+            memset(sedes_regulae, ZEPHYRUM, magnitudo(sedes_regulae));
+            per (i = ZEPHYRUM; i < (integer)n; i++)
+            {
+                constans OratioVerbum* v =
+                    (constans OratioVerbum*)xar_obtinere(verba, (i32)i);
+
+                si (v->regula.mensura == ZEPHYRUM)
                 {
+                    perge;
+                }
+                per (r = ZEPHYRUM; r < ORATIO_REGULAE_EN_NUMERUS
+                    && r < (i32)64; r++)
+                {
+                    constans character* t =
+                        ORATIO_REGULAE_EN[r].titulus;
+
+                    si (   (i32)strlen(t) == v->regula.mensura
+                        && memcmp(t, v->regula.datum,
+                            (size_t)v->regula.mensura) == ZEPHYRUM)
+                    {
+                        verba_regulae[r] = verba_regulae[r] + I;
+                        sedes_regulae[r] = sedes_regulae[r] + v->sedes;
+                        frange;
+                    }
+                }
+            }
+            imprimere("\n--- REGULAE (verba explicata; sedes) ---\n");
+            per (r = ZEPHYRUM; r < ORATIO_REGULAE_EN_NUMERUS
+                && r < (i32)64; r++)
+            {
+                imprimere("  %-28s %6d  %8d\n",
+                    ORATIO_REGULAE_EN[r].titulus,
+                    (integer)verba_regulae[r],
+                    (integer)sedes_regulae[r]);
+            }
+                        }
+        alioquin
+                        {
             Xar* ordo = oratio_vocabula_ordinata(piscina, vc,
                 (s32)ORATIO_VERBUM_AMBIGUUM);
             i32 k;
@@ -527,7 +574,7 @@ OratioVocabulariumVitium vitium;
                 _c(v->lemma);
                 putchar('\n');
             }
-                }
+                        }
     }
     piscina_destruere(piscina);
     redde ZEPHYRUM;
