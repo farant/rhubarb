@@ -50,6 +50,7 @@ declare -a SOURCE_FILES=(
     "lib/dialogus.c"
     "lib/dialogus_importatio.c"
     "lib/differentia.c"
+    "lib/dispensator.c"
     "lib/dithering.c"
     "lib/elementa.c"
     "lib/entitas.c"

@@ -8,7 +8,7 @@
 
 **Tech Stack:** C89 (clang, house flags), rhubarb `lib/` — `piscina`, `chorda`, `xar`, `internamentum`, `stml`, `canon`, `credo`, `fenestra`. No new dependencies.
 
-> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **P1 COMPLETE 2026-09-04:** T6 `insula` `9ea08d8f` (49 assertions; `insula_attributum_ponere` added because stml `addere` appends and `capere` returns the first — see `lib/insula.worklog.md`) · T7 `motus` (35 assertions; effusio through `insula_attributum_ponere`; `Punctum` is unsigned so pan is positive-only until P3 — see `lib/motus.worklog.md`). **P2 in progress:** T8 `destinatio` DONE 2026-09-05 (40 assertions incl. an overlapping-siblings z-order case the draft lacked; wheel events route to focus because `Eventus` carries no position for them; child-space math in `s32` with a negative guard; the draft's "outside everything" point was inside the pannus — see `lib/destinatio.worklog.md`). T9 `actio` DONE 2026-09-05 (22 assertions; empty titles and NIHIL handlers refused — see `lib/actio.worklog.md`). **Next: T10 `dispensator`, T11 `manus_ludus`, T12 replay harness.** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
+> **STATUS 2026-09-04 — P0 COMPLETE.** T1 `9b312fd3` · T2 `03832271` · T3 `1c7f0b1d` · T4 `9bf77790` · T5 `52f64d00` (+ formatting `35c9302b`). Five probationes green, 59 assertions. **P1 COMPLETE 2026-09-04:** T6 `insula` `9ea08d8f` (49 assertions; `insula_attributum_ponere` added because stml `addere` appends and `capere` returns the first — see `lib/insula.worklog.md`) · T7 `motus` (35 assertions; effusio through `insula_attributum_ponere`; `Punctum` is unsigned so pan is positive-only until P3 — see `lib/motus.worklog.md`). **P2 in progress:** T8 `destinatio` DONE 2026-09-05 (40 assertions incl. an overlapping-siblings z-order case the draft lacked; wheel events route to focus because `Eventus` carries no position for them; child-space math in `s32` with a negative guard; the draft's "outside everything" point was inside the pannus — see `lib/destinatio.worklog.md`). T9 `actio` DONE 2026-09-05 (22 assertions; empty titles and NIHIL handlers refused — see `lib/actio.worklog.md`). T10 `dispensator` DONE 2026-09-05 (41 assertions; five derived genera in `fenestra.h`; focus writes through `insula_attributum_ponere`; empty ids never looked up; toy header requires both entry points under `-Wall` — see `lib/dispensator.worklog.md`). **Next: T11 `manus_ludus`, T12 replay harness.** Deviations from the draft are recorded in each module's `.worklog.md` (componens interns instead of aliasing; `titulus` not `nomen`; `tempus` via f64). Method from T6 on: new files by heredoc + `tools/latina_custos.sh` + `silva.formare`/`silva.lint`; edits to existing C ONLY via `silva.Editio`/`Refactio`; the red via `silva.planta`; run via `silva.probatio_currere`; commit via `silva.commissio(msg, viae, portae=[('radix', '<filtrum>')])`. Verified for T6: `piscina_vacare` is the reset (piscina.h:78); canon flags an undeclared child as `LIBERUM_ILLICITUM` (canon.c:3234).
 
 **Spec:** `project-specs/pictor-spec.md` (sections 2, 3, 6.1–6.3, 7, 8 P0–P2). Rationale: `project-specs/ludus-brainstorm.md` §X–XV.
 
@@ -3656,7 +3656,7 @@ git commit -m "ludus: T9 - actio: registrum nominatum, resolutio utrimque (L10)"
 - Consumes: everything from T1–T9.
 - Produces: `Componere` fn type; `Dispensator`; `dispensator_creare(piscina, intern, repo, actiones, componere, ctx, quies_ms)`, `dispensator_ponere_strategiam(d, strategia)`, `dispensator_tractare(d, ev)`, `dispensator_pulsare(d, tempus)`, `dispensator_recomponere(d)`, `dispensator_arbor(d) → Componens*`, `dispensator_focus(d) → chorda`, `dispensator_focus_ponere(d, id)`, `dispensator_focus_impellere(d, id)`, `dispensator_focus_extrahere(d)`, `dispensator_super(d) → chorda`, `dispensator_motus(d) → Motus*`, `dispensator_numerus_compositionum(d) → i32`. New event genera: `EVENTUS_MUS_INTRAVIT`, `EVENTUS_MUS_EXIIT`, `EVENTUS_FOCUS_CAPTUS`, `EVENTUS_FOCUS_AMISSUS`, `EVENTUS_FOCUS_PETITUS`. `Destinatio destinatio_ex_componente(Componens* c, Piscina* piscina)`. Toy: `toy_componere`, `toy_registrare(reg, toy)`, `ToyStatus`.
 
-- [ ] **Step 1: Add the derived genera and `destinatio_ex_componente`**
+- [x] **Step 1: Add the derived genera and `destinatio_ex_componente`**
 
 In `include/fenestra.h` replace lines `:42-43`:
 ```c
@@ -3695,7 +3695,7 @@ destinatio_ex_componente (
 ```
 Run `./compile_tests.sh destinatio && ./compile_tests.sh eventus_stml` — both must still PASS (the eventus_stml title table already lists the five new names in enum order).
 
-- [ ] **Step 2: Write the toy app header**
+- [x] **Step 2: Write the toy app header**
 
 `probationes/ludus_toy.h`:
 ```c
@@ -3846,7 +3846,7 @@ toy_registrare (ActioRegistrum* reg, ToyStatus* toy)
 ```
 (`interior` = static; every probatio that includes this header gets its own copy — acceptable for a test fixture. `-Wunused-function` is not in the flag set; if it ever is, mark the functions `(vacuum)` at use.)
 
-- [ ] **Step 3: Write the failing test**
+- [x] **Step 3: Write the failing test**
 
 `probationes/probatio_dispensator.c`:
 ```c
@@ -3967,11 +3967,11 @@ s32 principale (vacuum)
 }
 ```
 
-- [ ] **Step 4: Run to verify it fails**
+- [x] **Step 4: Run to verify it fails**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh dispensator` — Expected: FAIL, `dispensator.h` not found.
 
-- [ ] **Step 5: Write header and implementation**
+- [x] **Step 5: Write header and implementation**
 
 `include/dispensator.h`:
 ```c
@@ -4329,11 +4329,11 @@ i32        dispensator_numerus_compositionum (constans Dispensator* d) { redde d
 ```
 Note `tractare_unum` passes `d->scratch` events through `xar_obtinere` on `d->effusio` while `derivare` may append during iteration — it does not (derivation happens before the loop), so the pointer is stable.
 
-- [ ] **Step 6: Run to verify it passes**
+- [x] **Step 6: Run to verify it passes**
 
 Run: `./tools/compile_tests_fontes_generare.sh && ./compile_tests.sh dispensator` — Expected: PASS. Then `./compile_tests.sh destinatio && ./compile_tests.sh eventus_stml` still PASS.
 
-- [ ] **Step 7: Worklog + commit**
+- [x] **Step 7: Worklog + commit**
 
 `lib/dispensator.worklog.md`: `## 2026-09-04 — natus` + "The loop. Focus and its stack live in the ephemera island (`focus`, `focus_acervus`) so restore restores them. Hover, focus-captus/amissus, and focus-petitus are derived here (need the targeting result). Staleness: recompose after every dispatched event via ping-pong piscinas. Quiet seat runs before each event. Focus-petitus P2: delivered to root; the owner-adjusts refinement is P3."
 ```bash

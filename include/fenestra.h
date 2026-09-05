@@ -99,7 +99,14 @@ nomen enumeratio {
     EVENTUS_MUS_LIBERATUS,
     EVENTUS_MUS_MOTUS,
     EVENTUS_MUS_ROTULA,
-    EVENTUS_MUS_DUPLEX          /* Double-click */
+    EVENTUS_MUS_DUPLEX,         /* Double-click (derivatum) */
+    /* Derivata a dispensatore (ludus): numquam a fenestra
+     * emissa. Ordo = tabula titulorum eventus_stml.c. */
+    EVENTUS_MUS_INTRAVIT,
+    EVENTUS_MUS_EXIIT,
+    EVENTUS_FOCUS_CAPTUS,
+    EVENTUS_FOCUS_AMISSUS,
+    EVENTUS_FOCUS_PETITUS
 } eventus_genus_t;
 
 

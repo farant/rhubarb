@@ -67,6 +67,15 @@ destinatio_componens (
     constans Destinatio* d);
 
 
+/* Destinatio artificialis: ascensus ex componente dato - pro
+ * eventibus derivatis (intravit/exiit/focus) ad nodum certum
+ * missis. id_geometricum = id nodi; nulla captura. */
+Destinatio
+destinatio_ex_componente (
+    Componens* c,
+      Piscina* piscina);
+
+
 /* ==================================================
  * Ordo foci
  * ================================================== */

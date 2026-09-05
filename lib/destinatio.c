@@ -183,6 +183,21 @@ destinatio_componens (
     redde *(Componens**)xar_obtinere(d->ascensus, ZEPHYRUM);
 }
 
+Destinatio
+destinatio_ex_componente (
+    Componens* c,
+      Piscina* piscina)
+{
+    Destinatio d;
+
+    d.id_captum = chorda_nulla();
+    d.id_geometricum = c ? c->id : chorda_nulla();
+    d.punctum_locale.x = ZEPHYRUM;
+    d.punctum_locale.y = ZEPHYRUM;
+    d.ascensus = c && piscina ? ascensus_ex(c, piscina) : NIHIL;
+    redde d;
+}
+
 
 /* ==================================================
  * Ordo foci
