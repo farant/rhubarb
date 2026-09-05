@@ -12,8 +12,9 @@
   lineae novae CONTENTUM in caudis/praefixis; involucra <ante>/<post>
   hic NON declarantur. Locus TOKEN derivatus (classes, linguae) f="1"
   + linea/columna fert, b numquam. 'crlf' in or-linea, 'cr' in generibus
-  VERBATIM. Locus analyses (gradus III) hic VACUUS declaratur: genera
-  analysis-* appenduntur cum nascuntur.
+  VERBATIM. Locus analyses (gradus III) genera analysis-* XVII fert
+  (T11, 2026-09-04): unum per classem universalem, loci communes V et
+  accidentia INDEX - vide sectionem GRADUS III infra.
 
   INVOLUCRUM: <arbor> (documentum subarboris). Iudicium:
     bin/canon_examen -canon oratio/grammatica/oratio.canon <doc.stml>
@@ -56,11 +57,11 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T6b: VI genera,
-            XVII loci - forma paragraphi appensa; T1 erat b27fe13a, XVI
-            loci). Tabula mutata sine hac optione mutata rubet in
-            iudicio ET in custode derivae.">
-      <optio>93c1c9cf</optio>
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T11: XXIII genera,
+            CXLVI loci - genera analysis-* XVII appensa; T6b erat 93c1c9cf,
+            VI genera XVII loci; T1 b27fe13a, XVI loci). Tabula mutata sine
+            hac optione mutata rubet in iudicio ET in custode derivae.">
+      <optio>87b35173</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -72,6 +73,23 @@
     <liberum nomen="vocabulum"    maximum="1"/>
     <liberum nomen="interpunctio" maximum="1"/>
     <liberum nomen="numerus"      maximum="1"/>
+    <liberum nomen="analysis-substantivi" maximum="1"/>
+    <liberum nomen="analysis-nominis-proprii" maximum="1"/>
+    <liberum nomen="analysis-verbi" maximum="1"/>
+    <liberum nomen="analysis-auxiliaris" maximum="1"/>
+    <liberum nomen="analysis-adiectivi" maximum="1"/>
+    <liberum nomen="analysis-adverbii" maximum="1"/>
+    <liberum nomen="analysis-pronominis" maximum="1"/>
+    <liberum nomen="analysis-determinantis" maximum="1"/>
+    <liberum nomen="analysis-adpositionis" maximum="1"/>
+    <liberum nomen="analysis-numeralis" maximum="1"/>
+    <liberum nomen="analysis-coniunctionis-coordinantis" maximum="1"/>
+    <liberum nomen="analysis-coniunctionis-subordinantis" maximum="1"/>
+    <liberum nomen="analysis-particulae" maximum="1"/>
+    <liberum nomen="analysis-interiectionis" maximum="1"/>
+    <liberum nomen="analysis-symboli" maximum="1"/>
+    <liberum nomen="analysis-interpunctionis" maximum="1"/>
+    <liberum nomen="analysis-ignoti" maximum="1"/>
   </elementum>
 
   <!-- =============== GENERA ET LOCI ===============
@@ -137,7 +155,25 @@
     <<#spatia>>
   </elementum>
   <elementum nomen="analyses" intra="vocabulum"
-    nota="gradus III: genera analysis-* appendenda; nunc vacuum"/>
+    nota="gradus III (T11): analyses ordine fontis, prima = primaria; genus = classis">
+    <liberum nomen="analysis-substantivi"/>
+    <liberum nomen="analysis-nominis-proprii"/>
+    <liberum nomen="analysis-verbi"/>
+    <liberum nomen="analysis-auxiliaris"/>
+    <liberum nomen="analysis-adiectivi"/>
+    <liberum nomen="analysis-adverbii"/>
+    <liberum nomen="analysis-pronominis"/>
+    <liberum nomen="analysis-determinantis"/>
+    <liberum nomen="analysis-adpositionis"/>
+    <liberum nomen="analysis-numeralis"/>
+    <liberum nomen="analysis-coniunctionis-coordinantis"/>
+    <liberum nomen="analysis-coniunctionis-subordinantis"/>
+    <liberum nomen="analysis-particulae"/>
+    <liberum nomen="analysis-interiectionis"/>
+    <liberum nomen="analysis-symboli"/>
+    <liberum nomen="analysis-interpunctionis"/>
+    <liberum nomen="analysis-ignoti"/>
+  </elementum>
   <elementum nomen="classes" intra="vocabulum"
     nota="derivatum: classes universales ordine">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -176,6 +212,523 @@
   </elementum>
   <elementum nomen="cauda" intra="numerus">
     <<#spatia>>
+  </elementum>
+
+
+  <!-- =============== GRADUS III (T11): ANALYSES ===============
+       Unum genus per classem universalem (UD XVII, ordine registri).
+       Loci COMMUNES V (lemma, lingua, fons, nativum, sensus) deinde
+       accidentia classis ut INDEX (numerus in proiectione; ordo
+       enumerationum oratio_registrum.h, appendendarum numquam
+       permutandarum). Regulae locorum intra= genus suum (custos
+       derivae unam quamque poscit); textus generatus 2026-09-04 ex
+       tabula, manu servatus.
+       -->
+
+  <elementum nomen="analysis-substantivi"
+    nota="classis substantivum">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="declinatio" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-substantivi" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-substantivi" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-substantivi" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-substantivi" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-substantivi" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="casus" intra="analysis-substantivi" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+  <elementum nomen="numerus" intra="analysis-substantivi" textus="verum"
+    nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
+  <elementum nomen="genus" intra="analysis-substantivi" textus="verum"
+    nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
+  <elementum nomen="declinatio" intra="analysis-substantivi" textus="verum"
+    nota="declinatio I-V (WORDS), 0 = nulla"/>
+
+  <elementum nomen="analysis-nominis-proprii"
+    nota="classis nomen-proprium">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="declinatio" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-nominis-proprii" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-nominis-proprii" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-nominis-proprii" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-nominis-proprii" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-nominis-proprii" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="casus" intra="analysis-nominis-proprii" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+  <elementum nomen="numerus" intra="analysis-nominis-proprii" textus="verum"
+    nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
+  <elementum nomen="genus" intra="analysis-nominis-proprii" textus="verum"
+    nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
+  <elementum nomen="declinatio" intra="analysis-nominis-proprii" textus="verum"
+    nota="declinatio I-V (WORDS), 0 = nulla"/>
+
+  <elementum nomen="analysis-verbi"
+    nota="classis verbum">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="persona" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="tempus" maximum="1"/>
+    <liberum nomen="modus" maximum="1"/>
+    <liberum nomen="vox" maximum="1"/>
+    <liberum nomen="forma-verbi" maximum="1"/>
+    <liberum nomen="coniugatio" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-verbi" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-verbi" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-verbi" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-verbi" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-verbi" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="persona" intra="analysis-verbi" textus="verum"
+    nota="OratioPersona: 0 prima 1 secunda 2 tertia"/>
+  <elementum nomen="numerus" intra="analysis-verbi" textus="verum"
+    nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
+  <elementum nomen="tempus" intra="analysis-verbi" textus="verum"
+    nota="OratioTempus: 0 praesens 1 imperfectum 2 futurum 3 perfectum 4 plusquamperfectum 5 futurum-exactum 6 praeteritum"/>
+  <elementum nomen="modus" intra="analysis-verbi" textus="verum"
+    nota="OratioModus: 0 indicativus 1 subiunctivus 2 imperativus 3 infinitivus"/>
+  <elementum nomen="vox" intra="analysis-verbi" textus="verum"
+    nota="OratioVox: 0 activa 1 passiva 2 deponens"/>
+  <elementum nomen="forma-verbi" intra="analysis-verbi" textus="verum"
+    nota="OratioFormaVerbi: 0 finitum 1 infinitivum 2 participium 3 gerundium 4 gerundivum 5 supinum"/>
+  <elementum nomen="coniugatio" intra="analysis-verbi" textus="verum"
+    nota="coniugatio I-IV (WORDS), 0 = nulla"/>
+  <elementum nomen="casus" intra="analysis-verbi" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+  <elementum nomen="genus" intra="analysis-verbi" textus="verum"
+    nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
+
+  <elementum nomen="analysis-auxiliaris"
+    nota="classis auxiliare">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="persona" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="tempus" maximum="1"/>
+    <liberum nomen="modus" maximum="1"/>
+    <liberum nomen="vox" maximum="1"/>
+    <liberum nomen="forma-verbi" maximum="1"/>
+    <liberum nomen="coniugatio" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-auxiliaris" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-auxiliaris" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-auxiliaris" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="persona" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioPersona: 0 prima 1 secunda 2 tertia"/>
+  <elementum nomen="numerus" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
+  <elementum nomen="tempus" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioTempus: 0 praesens 1 imperfectum 2 futurum 3 perfectum 4 plusquamperfectum 5 futurum-exactum 6 praeteritum"/>
+  <elementum nomen="modus" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioModus: 0 indicativus 1 subiunctivus 2 imperativus 3 infinitivus"/>
+  <elementum nomen="vox" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioVox: 0 activa 1 passiva 2 deponens"/>
+  <elementum nomen="forma-verbi" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioFormaVerbi: 0 finitum 1 infinitivum 2 participium 3 gerundium 4 gerundivum 5 supinum"/>
+  <elementum nomen="coniugatio" intra="analysis-auxiliaris" textus="verum"
+    nota="coniugatio I-IV (WORDS), 0 = nulla"/>
+  <elementum nomen="casus" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+  <elementum nomen="genus" intra="analysis-auxiliaris" textus="verum"
+    nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
+
+  <elementum nomen="analysis-adiectivi"
+    nota="classis adiectivum">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="gradus" maximum="1"/>
+    <liberum nomen="declinatio" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-adiectivi" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-adiectivi" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-adiectivi" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-adiectivi" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-adiectivi" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="casus" intra="analysis-adiectivi" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+  <elementum nomen="numerus" intra="analysis-adiectivi" textus="verum"
+    nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
+  <elementum nomen="genus" intra="analysis-adiectivi" textus="verum"
+    nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
+  <elementum nomen="gradus" intra="analysis-adiectivi" textus="verum"
+    nota="OratioGradus: 0 positivus 1 comparativus 2 superlativus"/>
+  <elementum nomen="declinatio" intra="analysis-adiectivi" textus="verum"
+    nota="declinatio I-V (WORDS), 0 = nulla"/>
+
+  <elementum nomen="analysis-adverbii"
+    nota="classis adverbium">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="gradus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-adverbii" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-adverbii" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-adverbii" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-adverbii" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-adverbii" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="gradus" intra="analysis-adverbii" textus="verum"
+    nota="OratioGradus: 0 positivus 1 comparativus 2 superlativus"/>
+
+  <elementum nomen="analysis-pronominis"
+    nota="classis pronomen">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="persona" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-pronominis" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-pronominis" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-pronominis" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-pronominis" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-pronominis" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="casus" intra="analysis-pronominis" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+  <elementum nomen="numerus" intra="analysis-pronominis" textus="verum"
+    nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
+  <elementum nomen="genus" intra="analysis-pronominis" textus="verum"
+    nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
+  <elementum nomen="persona" intra="analysis-pronominis" textus="verum"
+    nota="OratioPersona: 0 prima 1 secunda 2 tertia"/>
+
+  <elementum nomen="analysis-determinantis"
+    nota="classis determinans">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-determinantis" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-determinantis" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-determinantis" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-determinantis" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-determinantis" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="casus" intra="analysis-determinantis" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+  <elementum nomen="numerus" intra="analysis-determinantis" textus="verum"
+    nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
+  <elementum nomen="genus" intra="analysis-determinantis" textus="verum"
+    nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
+
+  <elementum nomen="analysis-adpositionis"
+    nota="classis adpositio">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-adpositionis" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-adpositionis" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-adpositionis" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-adpositionis" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-adpositionis" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="casus" intra="analysis-adpositionis" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+
+  <elementum nomen="analysis-numeralis"
+    nota="classis numerale">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="species" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-numeralis" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-numeralis" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-numeralis" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-numeralis" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-numeralis" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="casus" intra="analysis-numeralis" textus="verum"
+    nota="OratioCasus: 0 nominativus 1 genetivus 2 dativus 3 accusativus 4 ablativus 5 vocativus 6 locativus"/>
+  <elementum nomen="numerus" intra="analysis-numeralis" textus="verum"
+    nota="OratioNumerusGrammaticus: 0 singularis 1 pluralis 2 dualis"/>
+  <elementum nomen="genus" intra="analysis-numeralis" textus="verum"
+    nota="OratioGenusGrammaticum: 0 masculinum 1 femininum 2 neutrum 3 commune"/>
+  <elementum nomen="species" intra="analysis-numeralis" textus="verum"
+    nota="OratioSpeciesNumeralis: 0 cardinale 1 ordinale 2 distributivum 3 adverbiale"/>
+
+  <elementum nomen="analysis-coniunctionis-coordinantis"
+    nota="classis coniunctio-coordinans">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-coniunctionis-coordinantis" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-coniunctionis-coordinantis" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-coniunctionis-coordinantis" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-coniunctionis-coordinantis" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-coniunctionis-coordinantis" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="analysis-coniunctionis-subordinantis"
+    nota="classis coniunctio-subordinans">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-coniunctionis-subordinantis" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-coniunctionis-subordinantis" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-coniunctionis-subordinantis" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-coniunctionis-subordinantis" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-coniunctionis-subordinantis" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="analysis-particulae"
+    nota="classis particula">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-particulae" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-particulae" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-particulae" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-particulae" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-particulae" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="analysis-interiectionis"
+    nota="classis interiectio">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-interiectionis" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-interiectionis" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-interiectionis" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-interiectionis" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-interiectionis" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="analysis-symboli"
+    nota="classis symbolum">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-symboli" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-symboli" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-symboli" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-symboli" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-symboli" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="analysis-interpunctionis"
+    nota="classis interpunctio">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-interpunctionis" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-interpunctionis" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-interpunctionis" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-interpunctionis" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-interpunctionis" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="analysis-ignoti"
+    nota="classis ignotum">
+    <liberum nomen="lemma" maximum="1"/>
+    <liberum nomen="lingua" maximum="1"/>
+    <liberum nomen="fons" maximum="1"/>
+    <liberum nomen="nativum" maximum="1"/>
+    <liberum nomen="sensus" maximum="1"/>
+  </elementum>
+  <elementum nomen="lemma" intra="analysis-ignoti" nota="derivatum: lemma fontis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="analysis-ignoti" textus="verum"
+    nota="OratioLingua: 0 latina 1 anglica"/>
+  <elementum nomen="fons" intra="analysis-ignoti" textus="verum"
+    nota="OratioFonsAnalysis: 0 vocabularium-la 1 vocabularium-en 2 glossarium"/>
+  <elementum nomen="nativum" intra="analysis-ignoti" nota="derivatum: codex fontis verbatim (lexema unum)">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="sensus" intra="analysis-ignoti" nota="derivatum: sensus fontis (optionale)">
+    <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
 
   <!-- =============== LEXEMATA (or-) =============== -->

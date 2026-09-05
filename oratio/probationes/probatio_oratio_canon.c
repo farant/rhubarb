@@ -40,7 +40,9 @@
 #include "oratio_arbor.h"
 #include "oratio_stml.h"
 #include "oratio_lexicon.h"
+#include "oratio_lexema.h"
 #include "oratio_registrum.h"
+#include "materia_token.h"
 #include "internamentum.h"
 #include "materia_arbor.h"
 #include "materia_lexicon.h"
@@ -71,7 +73,7 @@ hic_manens constans character* INLINEARES[] = {
     "\n\n \t\n"
 };
 
-#define REGULAE_MAXIMAE 256
+#define REGULAE_MAXIMAE 512
 
 
 /* Chorda contra literas C - sine cast, sine allocatione */
@@ -320,6 +322,189 @@ _tag_lexematis (
         j          = j + I;
     }
     buffer[j] = '\0';
+}
+
+/* STML datum legere et iudicare (pars posterior _documentum_iudicare);
+ * -I = fractura */
+interior s32
+_stml_iudicare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                  Canon* canon,
+                 chorda  textus,
+     constans character* titulus)
+{
+    StmlResultus  res;
+             Xar* vitia;
+             i32  n;
+             i32  i;
+
+    res = stml_legere(textus, piscina, intern);
+    si (!res.successus || res.elementum_radix == NIHIL)
+    {
+        imprimere("  %s: stml_legere fractum\n", titulus);
+        redde (s32)-I;
+    }
+    vitia = canon_iudicare(canon, res.elementum_radix, piscina);
+    si (vitia == NIHIL)
+    {
+        imprimere("  %s: canon_iudicare NIHIL (fractura)\n", titulus);
+        redde (s32)-I;
+    }
+    n = xar_numerus(vitia);
+    per (i = ZEPHYRUM; i < n && i < X; i++)
+    {
+        CanonVitium* v = (CanonVitium*)xar_obtinere(vitia, i);
+
+        imprimere("  %s: VITIUM %s", titulus, canon_nuntius(v->genus));
+        si (v->elementum != NIHIL)
+        {
+            imprimere(" <%.*s>", (integer)v->elementum->mensura,
+                (constans character*)v->elementum->datum);
+        }
+        imprimere("\n");
+    }
+    redde (s32)n;
+}
+
+hic_manens constans MateriaTokenForma FORMA_T11 = { ZEPHYRUM };
+
+/* T11: documentum manu structum cum analysi (analysis-substantivi:
+ * lemma derivatum, lingua, casus) in vocabulo 'a' - proiectum et
+ * iudicatum; deinde MUTATUM (casus -> gradus, quod substantivo non
+ * licet) iudicium vitium ferre debet. Redde textum scriptum. */
+interior chorda
+_documentum_analysis_struere (
+                           Piscina* piscina,
+    constans MateriaArborConsilium* consilium)
+{
+    MateriaNodus* documentum;
+    MateriaNodus* paragraphus;
+    MateriaNodus* sententia;
+    MateriaNodus* vocabulum;
+    MateriaNodus* analysis;
+    MateriaToken* litterae;
+    MateriaArborScriptura s;
+    chorda nihil;
+
+    nihil.datum    = NIHIL;
+    nihil.mensura  = ZEPHYRUM;
+    litterae = materia_token_creare(piscina, &FORMA_T11,
+        (s32)ORATIO_LEX_LITTERAE, chorda_ex_literis("a", piscina),
+        ZEPHYRUM, (i32)I, (i32)I, ORATIO_FONS_PLAGULAE);
+    vocabulum = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_VOCABULUM,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
+    analysis = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_ANALYSIS_SUBSTANTIVI]
+            .loci_numerus);
+    si (   litterae == NIHIL || vocabulum == NIHIL || analysis == NIHIL
+        || !materia_nodus_appendere(piscina, vocabulum,
+            (i32)ORATIO_VOCABULUM_PARTES, materia_valor_token(litterae),
+            MATERIA_LOCUS_LISTA_TOKEN)
+        || !materia_nodus_appendere(piscina, vocabulum,
+            (i32)ORATIO_VOCABULUM_CAUDA,
+            materia_valor_token(materia_token_creare(piscina,
+            &FORMA_T11,
+                (s32)ORATIO_LEX_LINEA, chorda_ex_literis("\n", piscina),
+                (s32)I, (i32)I, (i32)II, ORATIO_FONS_PLAGULAE)),
+            MATERIA_LOCUS_LISTA_TOKEN)
+        || !materia_nodus_ponere(analysis, (i32)ORATIO_ANALYSIS_LEMMA,
+            materia_valor_token(oratio_lexema_derivatum(piscina,
+                (s32)ORATIO_LEX_DERIVATUM, chorda_ex_literis("a",
+                piscina),
+                litterae)), MATERIA_LOCUS_TOKEN)
+        || !materia_nodus_ponere(analysis, (i32)ORATIO_ANALYSIS_LINGUA,
+            materia_valor_index((s32)ORATIO_LINGUA_LATINA),
+            MATERIA_LOCUS_INDEX)
+        || !materia_nodus_ponere(analysis,
+            (i32)ORATIO_ANALYSIS_SUBSTANTIVI_CASUS,
+            materia_valor_index((s32)ORATIO_CASUS_ABLATIVUS),
+            MATERIA_LOCUS_INDEX)
+        || !materia_nodus_appendere(piscina, vocabulum,
+            (i32)ORATIO_VOCABULUM_ANALYSES,
+            materia_valor_nodus(analysis),
+            MATERIA_LOCUS_LISTA_NODUS))
+    {
+        redde nihil;
+    }
+    sententia = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_SENTENTIA,
+        (i32)I);
+    paragraphus = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_PARAGRAPHUS,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_numerus);
+    documentum = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_DOCUMENTUM,
+        (i32)III);
+    si (   sententia  == NIHIL || paragraphus == NIHIL
+        || documentum == NIHIL
+        || !materia_nodus_appendere(piscina, sententia,
+            (i32)ORATIO_SENTENTIA_ELEMENTA,
+            materia_valor_nodus(vocabulum),
+            MATERIA_LOCUS_LISTA_NODUS)
+        || !materia_nodus_appendere(piscina, paragraphus,
+            (i32)ORATIO_PARAGRAPHUS_SENTENTIAE,
+            materia_valor_nodus(sententia), MATERIA_LOCUS_LISTA_NODUS)
+        || !materia_nodus_appendere(piscina, documentum,
+            (i32)ORATIO_DOCUMENTUM_PARAGRAPHI,
+            materia_valor_nodus(paragraphus), MATERIA_LOCUS_LISTA_NODUS)
+        || !materia_nodus_ponere(documentum,
+        (i32)ORATIO_DOCUMENTUM_FINIS,
+            materia_valor_token(materia_token_creare(piscina,
+            &FORMA_T11,
+                (s32)ORATIO_LEX_FINIS, chorda_ex_literis("", piscina),
+                (s32)II, (i32)II, (i32)I, ORATIO_FONS_PLAGULAE)),
+            MATERIA_LOCUS_TOKEN))
+    {
+        redde nihil;
+    }
+    s = materia_arbor_scribere_nodum(piscina, documentum, consilium);
+    si (!s.successus)
+    {
+        imprimere("  analysis: scriptura STML recusata: %s\n",
+            s.causa ? s.causa : "?");
+        redde nihil;
+    }
+    redde s.textus;
+}
+
+/* copia textus cum 'vetus' -> 'novus' ubique (mensurae aequales non
+ * necessariae) */
+interior chorda
+_substituere (
+               Piscina* piscina,
+                chorda  textus,
+    constans character* vetus,
+    constans character* novus)
+{
+       i32 lv  = (i32)strlen(vetus);
+       i32 ln  = (i32)strlen(novus);
+       i32 i   = ZEPHYRUM;
+       i32 o   = ZEPHYRUM;
+    chorda c;
+
+    c.datum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(textus.mensura * (i32)II) + I);
+    dum (i < textus.mensura)
+    {
+        si (   i + lv <= textus.mensura
+            && memcmp(textus.datum + i, vetus, (size_t)lv) == ZEPHYRUM)
+        {
+            memcpy(c.datum + o, novus, (size_t)ln);
+            o = o + ln;
+            i = i + lv;
+        }
+        alioquin
+        {
+            c.datum[o]  = textus.datum[i];
+            o           = o + I;
+            i           = i + I;
+        }
+    }
+    c.mensura = o;
+    redde c;
 }
 
 /* parsare -> STML -> legere -> iudicare. Redde numerum vitiorum;
@@ -637,6 +822,41 @@ principale (vacuum)
                 &consilium, INLINEARES[i], (i32)strlen(INLINEARES[i]),
                 titulus);
             CREDO_AEQUALIS_S32 (vitia, (s32)ZEPHYRUM);
+            documenta_iudicata = documenta_iudicata + I;
+        }
+    }
+
+        imprimere("\n--- Iudicans analysin manu structam (T11) ---\n");
+    {
+        chorda textus = _documentum_analysis_struere(piscina,
+            &consilium);
+
+        CREDO_NON_NIHIL (textus.datum);
+        si (textus.datum != NIHIL)
+        {
+            chorda mutatus;
+
+            CREDO_NON_NIHIL (strstr((character*)textus.datum,
+                "<analysis-substantivi"));
+            CREDO_NON_NIHIL (strstr((character*)textus.datum,
+                "<casus"));
+            CREDO_NON_NIHIL (strstr((character*)textus.datum,
+                "<lemma"));
+            CREDO_NON_NIHIL (strstr((character*)textus.datum,
+                "<lingua"));
+            CREDO_AEQUALIS_S32 (_stml_iudicare(piscina, intern, canon,
+                textus, "analysis"), (s32)ZEPHYRUM);
+            /* gradus substantivo non licet: casus -> gradus rubet */
+            mutatus = _substituere(piscina, textus, "casus", "gradus");
+            CREDO_VERUM (_stml_iudicare(piscina, intern, canon, mutatus,
+                "analysis mutata") > ZEPHYRUM);
+            /* genus analysis alienum in analyses: analysis-adverbii cum
+             * casu (adverbium casum non habet) */
+            mutatus = _substituere(piscina, textus,
+                "analysis-substantivi",
+                "analysis-adverbii");
+            CREDO_VERUM (_stml_iudicare(piscina, intern, canon, mutatus,
+                "analysis aliena") > ZEPHYRUM);
             documenta_iudicata = documenta_iudicata + I;
         }
     }

@@ -450,6 +450,28 @@ imperativus, infinitivus), `vox` (activa, passiva, deponens), `forma-verbi`
 vocabularium-en, glossarium), `nativum` (TOKEN, derived: the source's
 own code verbatim), `sensus` (TOKEN, derived, optional).
 
+**As built — T11 (2026-09-04):** seventeen genera `analysis-<classis
+genitive>` appended after `numerus` (registry 23 genera, 146 slots;
+genus = `ORATIO_GENUS_ANALYSIS_PRIMUM` + `OratioClassis`; class titles
+in `ORATIO_TITULI_CLASSIUM` = the glossary canon's `classis` options,
+gate-guarded). Common five first on every genus, then accidents as
+INDEX (decision, Fran approving the lists): substantivum and nomen
+proprium casus/numerus/genus/declinatio; verbum and auxiliare
+persona/numerus/tempus/modus/vox/forma-verbi/coniugatio/casus/genus;
+adiectivum casus/numerus/genus/gradus/declinatio; adverbium gradus;
+pronomen casus/numerus/genus/persona; determinans casus/numerus/genus;
+adpositio casus; numerale casus/numerus/genus/species (cardinale,
+ordinale, distributivum, adverbiale); the rest common only. `nativum`
+is ONE derived token (Fran). Enumerations appended-only with title
+arrays (`ORATIO_TITULI_CASUUM` …; casus has locativus and vocativus,
+numerus dualis, vox deponens, tempus the English praeteritum). The
+word's three slots were reserved since T1, so existing STML bytes are
+unchanged; seal 93c1c9cf → 87b35173; the canon carries 17 genus rules
++ 129 slot rules intra their genus (generated once, hand-kept; ceiling
+512, 182 rules). Gates: registrum (860; helpers, layouts, glossary
+drift, materia round trip with an analysis), canon (219; a hand-built
+analysis judged, two mutations refused).
+
 **Mapping tables per source** (`partes_la.c`, `partes_en.c`): WORDS
 part codes → class + accidents (N→substantivum with declension/gender;
 V→verbum with conjugation; VPAR→verbum forma-verbi=participium;
@@ -730,8 +752,8 @@ T9 `oratio/glossarium.stml` + canon + loader; allowed technical terms.
 T10 `oratio/vocabula.sh` + `silva.vocabula()`: identifiers (nexus.tsv)
 and comments (silva tokens) reports; counts published.
 
-**Stage 3 (partes).** T11 `partes_registrum` (17 classes, analysis
-genera with accidents), appended to the oratio registry; canon rules.
+**Stage 3 (partes).** T11 DONE 2026-09-04 (`partes_registrum`: 17
+analysis genera with accidents appended, canon rules, seal moved).
 T12 `partes_la.c` mapping + annotation pass (`analyses`, `classes`,
 `linguae`) + projection attributes (substrate check above). T13
 CoNLL-U reader + `probatio_oratio_oraculum` over CIRCSE + LLCT

@@ -689,3 +689,63 @@ Moby lacks (uniqueness, bitwise, whiteboard, resize, lifecycle). A
 compositum that consults the glossary for parts would take the
 compounds; a numeral-like filter would take the math; the file names
 should stay findings.
+
+## 2026-09-04 — T11: partes_registrum — the seventeen analysis genera
+
+Stage 3 opened with its smallest task: the vocabulary of grammar into
+the registry, nothing annotated. Seventeen genera appended after
+`numerus`, one per universal class in UD order, `analysis-substantivi`
+… `analysis-ignoti`, with the invariant genus = PRIMUM + classis and an
+`OratioClassis` enum whose titles are exactly the `classis` options
+the glossary canon already had (the registry gate reads that canon and
+proves each title is an option — one vocabulary, two homes). Every
+analysis genus has the same five slots first: `lemma` (derived token),
+`lingua` and `fons` (INDEX), `nativum` (derived token — ONE token
+holding the source's own code verbatim, Fran's call; WORDS gives a
+line, Moby a code string plus a rule name, one string covers both),
+`sensus` (derived, optional). Then the accidents as INDEX slots into
+small enumerations that are appended and never permuted, with title
+arrays for each: nouns and proper nouns carry case, number, gender,
+declension; verbs and auxiliaries person, number, tense, mood, voice,
+verb form, conjugation, plus case and gender because participles
+agree; adjectives case, number, gender, degree, declension; adverbs
+degree; pronouns case, number, gender, person; determiners case,
+number, gender; adpositions the governed case; numerals case, number,
+gender and a kind (cardinal, ordinal, distributive, adverbial);
+conjunctions, particles, interjections, symbols, punctuation and the
+unknown class carry the common five only. Case has locative and
+vocative, number has dual, voice has deponent, verb form has gerund,
+gerundive and supine, tense has the English simple past beside the
+Latin six — the lists are permanent from here. 146 slots in all.
+
+The word's own slots (`analyses`, `classes`, `linguae`) had been
+reserved since T1, so the STML of every existing parse is byte-for-byte
+what it was: an absent list is not written, and the seal attribute
+changed value but not length. The computus golden and the STML
+round-trip gate did not move; only the registry seal (93c1c9cf →
+87b35173) and the canon did. The canon gained the seventeen genus
+rules, the seventeen liberi under `analyses` and under `arbor`, and
+129 slot rules, one per slot INSIDE its genus, because the drift guard
+demands exactly one rule per slot intra its genus and a global
+fallback would not satisfy it. Those rules were generated from the
+table by a script once and are kept by hand from now on, like the rest
+of the file; the rule ceiling went 256 → 512 (182 now).
+
+Gates. `probatio_oratio_registrum` (860): contiguity over 23 genera,
+the class helpers round-tripped for all seventeen, the five common
+slots by title and species on every analysis genus, every accident an
+INDEX, the per-class slot counts of the decision above, auxiliaries
+laid out exactly as verbs, the enumeration ends by title, the glossary
+canon drift, and the materia round trip of a word carrying an
+`analysis-substantivi` with lemma, lingua and case — green first run.
+`probatio_oratio_canon` (219) now also judges a hand-built analysis
+document (0 vitia) and two mutations of it: `gradus` under a noun
+analysis and `casus` under an adverb analysis, each refused with a
+named vitium. Planted fault: the verb genus's slot count 14 → 13 →
+red at contiguity, green on revert.
+
+One naming slip worth remembering: the slot-count enumerator
+`ORATIO_ANALYSIS_SUBSTANTIVI_NUMERUS` collided with the `numerus`
+accident's enumerator of the same name — counts are
+`_NUMERUS_LOCORUM` now. Next is T12: the WORDS mapping table and the
+annotation pass that fills what T11 reserved.

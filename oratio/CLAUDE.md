@@ -150,8 +150,23 @@ pass II (117 entries, ANGLICA PROSA section; Roman numerals ii–xxx
 friatio, amalgama). Prose unknowns 58 % → 26.2 %; PROSE PIN = ceiling
 on the unknown share (29 %) + floor on the known share (70 %), not a
 count; identifier pin 2,950. Instrument prints a per-rule tally.
-NEXT: stage 3 **T11** `partes_registrum` (17 classes as analysis
-genera appended to the registry, canon rules).
+**T11 DONE — STAGE 3 OPENED**: seventeen `analysis-<classis>` genera
+appended after `numerus` (registry 23 genera / 146 slots, seal
+`87b35173`): common five slots first (lemma, lingua, fons, nativum =
+ONE derived token, sensus), then the class's accidents as INDEX slots
+into appended-only enumerations with title arrays (`OratioCasus` …,
+`ORATIO_TITULI_CASUUM` …); `OratioClassis` in UD order with
+`oratio_classis_genus`/`oratio_genus_classis`/`_titulus`/`_ex_titulo`;
+class titles = the glossary canon's `classis` options (gate-guarded).
+Existing STML bytes unchanged (the word's slots were reserved since
+T1; absent lists are not written). Canon: 17 genus rules + 129 slot
+rules intra their genus (generated once, kept by hand; ceiling 512).
+Gates registrum (860) and canon (219, a hand-built analysis judged and
+two mutations refused). NEXT: **T12** `partes_la.c` — WORDS part codes
+→ class + accidents (one code may yield several analyses), the
+annotation pass filling `analyses`/`classes`/`linguae` after the tree,
+glossary forms with their explicit accidents, `vocabulum[classes~=…]`
+in selectio.
 
 ## Laws to keep (spec §2–3)
 
@@ -180,3 +195,9 @@ genera appended to the registry, canon rules).
   and a measured count, exact forms always precede rule analyses, rules
   reduce to MOBY bases only (glossary entries list their own plurals),
   and the prose pin is a SHARE ceiling, never a word count.
+- Analysis genera: genus = PRIMUM + classis, never reordered; the five
+  common slots come first on every genus; accidents are INDEX into
+  enumerations that are APPENDED only (a value in the projection is a
+  number); a slot-count enumerator is `_NUMERUS_LOCORUM` (the `numerus`
+  accident owns `_NUMERUS`); every slot has ONE canon rule intra its
+  genus; the registry seal moves only with the task as its cause.
