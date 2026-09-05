@@ -366,7 +366,10 @@ first glossary pass. **Glossary pass I (same day):** 77 entries from
 the report — house coinages and late Latin (lexema, lista, octetus,
 parso, transpono …), house proper names, C/API/format names as
 permitted; common English words and abbreviations left unknown on
-purpose. Identifier unknowns 5,515 → 5,409, PINNED only falling in
+purpose. Lint corpus = the house: `knotapel/` (English by decision,
+Fran 2026-09-04), `vendor/`, `archivum/` excluded via
+`ORATIO_VOCABULA_EXCLUSA` (`-omnes-viae` scans all). Identifier
+unknowns 3,022 of 7,469, PINNED only falling in
 `probatio_oratio_vocabula`; comments not pinned.
 
 ## 5. Stage 3 — annotated words (`partes`)

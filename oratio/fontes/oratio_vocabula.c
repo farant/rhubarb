@@ -28,6 +28,34 @@ hic_manens constans character* TITULI_STATUUM[] = {
     "notum", "ambiguum", "permissum", "ignotum"
 };
 
+constans character* constans ORATIO_VOCABULA_EXCLUSA[] = {
+    "knotapel/", "vendor/", "archivum/", NIHIL
+};
+
+interior b32
+_via_exclusa (
+                          chorda  via,
+    constans character* constans* exclusa)
+{
+    i32 i;
+
+    si (exclusa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; exclusa[i] != NIHIL; i++)
+    {
+        i32 l = (i32)strlen(exclusa[i]);
+
+        si (   via.mensura                              >= l
+            && memcmp(via.datum, exclusa[i], (size_t)l) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 constans character*
 oratio_verbum_status_titulus (
     OratioVerbumStatus status)
@@ -314,9 +342,11 @@ _numerus_ex (
 
 b32
 oratio_vocabula_symbola (
-    OratioVocabula* vc,
-            chorda  nexus_tsv)
+                  OratioVocabula* vc,
+                          chorda  nexus_tsv,
+    constans character* constans* exclusa)
 {
+
           i32 cursor = ZEPHYRUM;
     character via[512];
 
@@ -344,13 +374,18 @@ oratio_vocabula_symbola (
         {
             perge;
         }
-        {
+                {
             chorda v = _campus(linea, (i32)III);
                i32 m = v.mensura < (i32)511 ? v.mensura : (i32)511;
 
+            si (_via_exclusa(v, exclusa))
+            {
+                perge;
+            }
             memcpy(via, v.datum, (size_t)m);
             via[m] = '\0';
         }
+
         si (!oratio_vocabula_identificatorem_addere(vc, _campus(linea,
                 ZEPHYRUM), via, _numerus_ex(_campus(linea, (i32)IV))))
         {

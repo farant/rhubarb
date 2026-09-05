@@ -103,8 +103,10 @@ OratioVocabulariumVitium vitium;
          OratioVocabula* vc;
                     b32  symbola  = VERUM;
                     b32  commenta = VERUM;
-                    b32  machina  = FALSUM;
+                                        b32  machina  = FALSUM;
+                    b32  omnes_viae = FALSUM;
                     i32  tectum   = (i32)60;
+
                 integer  i;
                 clock_t  ante;
                     i32  plagulae = ZEPHYRUM;
@@ -130,10 +132,15 @@ OratioVocabulariumVitium vitium;
         {
             machina = VERUM;
         }
-        alioquin si (strcmp(argv[i], "-omnes") == ZEPHYRUM)
+                alioquin si (strcmp(argv[i], "-omnes") == ZEPHYRUM)
         {
             tectum = (i32)1000000;
         }
+        alioquin si (strcmp(argv[i], "-omnes-viae") == ZEPHYRUM)
+        {
+            omnes_viae = VERUM;   /* etiam knotapel/ vendor/ archivum/ */
+        }
+
         alioquin si (   strcmp(argv[i], "-tectum") == ZEPHYRUM
                      && i + I < argc)
         {
@@ -142,8 +149,9 @@ OratioVocabulariumVitium vitium;
         }
         alioquin
         {
-            fprintf(stderr,
-                "usus: vocabula [-symbola | -commenta | -omnia] [-machina] [-omnes] [-tectum N]\n");
+                        fprintf(stderr,
+                            "usus: vocabula [-symbola | -commenta | -omnia] [-machina] [-omnes] [-omnes-viae] [-tectum N]\n");
+
             redde II;
         }
     }
@@ -203,11 +211,13 @@ OratioVocabulariumVitium vitium;
                 via);
             redde II;
         }
-        si (!oratio_vocabula_symbola(vc, nexus))
-        {
+                si (!oratio_vocabula_symbola(vc, nexus,
+                    omnes_viae ? NIHIL : ORATIO_VOCABULA_EXCLUSA))
+                {
+
             fprintf(stderr, "vocabula: symbola fracta\n");
             redde II;
-        }
+                }
     }
     si (commenta)
     {
@@ -292,10 +302,14 @@ OratioVocabulariumVitium vitium;
             }
             redde ZEPHYRUM;
         }
-        imprimere("--- vocabula: %s%s%s ---\n",
-            symbola ? "symbola" : "",
-            symbola
-                && commenta ? " + " : "", commenta ? "commenta" : "");
+                imprimere("--- vocabula: %s%s%s%s ---\n",
+                    symbola ? "symbola" : "",
+                    symbola
+                    && commenta ? " + " : "",
+                    commenta ? "commenta" : "",
+                    symbola
+                    && !omnes_viae ? " (sine knotapel/ vendor/ archivum/)" : "");
+
         imprimere("  verba distincta %d  sedes %d  plagulae C %d  %.0f ms\n",
             (integer)n, (integer)oratio_vocabula_sedes(vc),
             (integer)plagulae, ms);

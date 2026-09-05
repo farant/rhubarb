@@ -3203,7 +3203,7 @@ Verbum = namedtuple('Verbum', 'verbum status sedes symbola commenta classis lemm
 Vocabula = namedtuple('Vocabula', 'numeri verba ignota ambigua permissa')
 
 
-def vocabula(fons='omnia'):
+def vocabula(fons='omnia', omnes_viae=False):
     """RECENSIO VOCABULORUM (./oratio/vocabula.sh -machina; T10):
     identificatores (build/nexus.tsv, sedes; scissi ad '_' et ad limitem
     minuscula->CAPITALIS) et/aut commentaria (lib/*.c, silva/fontes/*.c
@@ -3217,10 +3217,13 @@ def vocabula(fons='omnia'):
     ambiguum permissum ignotum}, verba [Verbum ordine sedium
     descendentium: verbum status sedes symbola commenta classis lemma
     analyses lemmata via linea (sedes prima)], ignota, ambigua,
-    permissa). Relatio glossarium alit (termini technici) et T8b metitur."""
+    permissa). Relatio glossarium alit (termini technici) et T8b metitur.
+    Viae knotapel/ vendor/ archivum/ EXCLUSAE (lint Latinus domus, decisio
+    Frani 2026-09-04) nisi omnes_viae=True."""
     if fons not in ('symbola', 'commenta', 'omnia'):
         raise SilvaError("fons: 'symbola' | 'commenta' | 'omnia'")
-    r = _curre(['./oratio/vocabula.sh', '-' + fons, '-machina'])
+    r = _curre(['./oratio/vocabula.sh', '-' + fons, '-machina']
+               + (['-omnes-viae'] if omnes_viae else []))
     if r.returncode != 0:
         raise SilvaError('vocabula.sh fractus: %s' % r.stderr.strip()[-200:])
     verba = []

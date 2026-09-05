@@ -78,11 +78,20 @@ oratio_vocabula_identificatorem_addere (
     constans character* via,
                    i32  linea);
 
-/* Sedes tabulae nexus.tsv (lineae 'sedes'): identificatores omnes. */
+/* Viae EXCLUSAE lintus Latini (decisio Frani 2026-09-04): knotapel/
+ * (Anglicum consulto, laboratorium mathematicum), vendor/ (alienum),
+ * archivum/ (generationes praecedentes). Series praefixorum NIHIL
+ * terminata; instrumentum -omnes-viae eam praeterit. */
+externus constans character* constans ORATIO_VOCABULA_EXCLUSA[];
+
+/* Sedes tabulae nexus.tsv (lineae 'sedes'): identificatores, viis
+ * praefixis in 'exclusa' (NIHIL terminata; NIHIL = nullae) omissis. */
 b32
 oratio_vocabula_symbola (
-    OratioVocabula* vc,
-            chorda  nexus_tsv);
+                  OratioVocabula* vc,
+                          chorda  nexus_tsv,
+    constans character* constans* exclusa);
+
 
 /* Commentaria plagulae C: silva lexat, oratio legit, vocabula addit. */
 b32

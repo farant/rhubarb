@@ -31,7 +31,7 @@
 #include <string.h>
 #include <time.h>
 
-#define IGNOTA_SYMBOLORUM_PINNA 5409
+#define IGNOTA_SYMBOLORUM_PINNA 3022
 
 interior b32
 _plagulam_legere (
@@ -164,18 +164,22 @@ principale (vacuum)
     imprimere("\n--- I. Scissio identificatorum ---\n");
     vc = oratio_vocabula_creare(piscina, voc);
     CREDO_NON_NIHIL (vc);
-    CREDO_VERUM (oratio_vocabula_symbola(vc, _l(
-        "# caput\n"
-        "piscina_allocare\tsedes\tfunctio\tlib/piscina.c\t12\t1\t0\n"
-        "MateriaNodus\tsedes\ttypedef\tmateria/fontes/materia_nodus.h\t40\t1\t0\n"
-        "STMLNodus\tsedes\ttypedef\tinclude/stml.h\t9\t1\t0\n"
-        "ORATIO_PARS_N\tsedes\tconstans\toratio/fontes/oratio_vocabularium.h\t50\t5\t0\n"
-        "_capsula_forum_data\tsedes\tvariabile\tapps/forum/capsula.c\t5\t24\t0\n"
-        "utf8_legere\tsedes\tfunctio\tlib/utf8.c\t30\t1\t0\n"
-        "s32\tsedes\ttypedef\tinclude/latina.h\t3\t1\t0\n"
-        "x\tsedes\tvariabile\tlib/piscina.c\t99\t1\t0\n"
-        "piscina\tvocatio\tfunctio\tlib/alia.c\t1\t1\t0\n"
-        "piscina_destruere\tsedes\tfunctio\tlib/piscina.c\t80\t1\t0\n")));
+        CREDO_VERUM (oratio_vocabula_symbola(vc, _l(
+            "# caput\n"
+            "knotapel_res\tsedes\tfunctio\tknotapel/demo_01/main.c\t1\t1\t0\n"
+
+            "piscina_allocare\tsedes\tfunctio\tlib/piscina.c\t12\t1\t0\n"
+            "MateriaNodus\tsedes\ttypedef\tmateria/fontes/materia_nodus.h\t40\t1\t0\n"
+            "STMLNodus\tsedes\ttypedef\tinclude/stml.h\t9\t1\t0\n"
+            "ORATIO_PARS_N\tsedes\tconstans\toratio/fontes/oratio_vocabularium.h\t50\t5\t0\n"
+            "_capsula_forum_data\tsedes\tvariabile\tapps/forum/capsula.c\t5\t24\t0\n"
+            "utf8_legere\tsedes\tfunctio\tlib/utf8.c\t30\t1\t0\n"
+            "s32\tsedes\ttypedef\tinclude/latina.h\t3\t1\t0\n"
+            "x\tsedes\tvariabile\tlib/piscina.c\t99\t1\t0\n"
+            "piscina\tvocatio\tfunctio\tlib/alia.c\t1\t1\t0\n"
+                "piscina_destruere\tsedes\tfunctio\tlib/piscina.c\t80\t1\t0\n"),
+            ORATIO_VOCABULA_EXCLUSA));
+
     {
                           Xar* verba = oratio_vocabula_verba(vc);
         constans OratioVerbum* v;
@@ -205,7 +209,9 @@ principale (vacuum)
         CREDO_NON_NIHIL (_verbum(vc, "utf8"));
         CREDO_NIHIL (_verbum(vc, "s32"));
         CREDO_NIHIL (_verbum(vc, "x"));
-        CREDO_NIHIL (_verbum(vc, "vocatio"));
+                CREDO_NIHIL (_verbum(vc, "vocatio"));
+        CREDO_NIHIL (_verbum(vc, "knotapel"));   /* via exclusa */
+
         v = _verbum(vc, "nodus");
         CREDO_VERUM (v != NIHIL && _aequalis(v->via_prima,
             "materia/fontes/materia_nodus.h")
@@ -347,14 +353,18 @@ principale (vacuum)
                 oratio_vocabula_creare(piscina, voc);
                        i32 ignota_symbolorum;
 
-            CREDO_VERUM (oratio_vocabula_symbola(corpus, nexus));
-            /* PINNA 'solum cadens' super identificatores solos (cursus
-             * glossarii I, 2026-09-04: MMMMMDXV -> MMMMMCDIX; knotapel
-             * ~MMCDXXV, include DCCCXXXII, lib DIX, silva CDLXIV). Rubra =
-             * verba nova ignota: glossarium (vox domus, terminus permissus)
-             * aut renominatio; pinna movetur causa nominata. */
+                        CREDO_VERUM (oratio_vocabula_symbola(corpus,
+                            nexus,
+                            ORATIO_VOCABULA_EXCLUSA));
+            /* PINNA 'solum cadens' super identificatores DOMUS (knotapel/
+             * vendor/ archivum/ exclusa, decisio Frani 2026-09-04; cursus
+             * glossarii I: MMMMMDXV -> MMMMMCDIX omnibus viis). Rubra = verba
+             * nova ignota: glossarium (vox domus, terminus permissus) aut
+             * renominatio; pinna movetur causa nominata. */
             CREDO_NON_NIHIL (symbola_sola);
-            CREDO_VERUM (oratio_vocabula_symbola(symbola_sola, nexus));
+            CREDO_VERUM (oratio_vocabula_symbola(symbola_sola, nexus,
+                ORATIO_VOCABULA_EXCLUSA));
+
             CREDO_VERUM (oratio_vocabula_iudicare(symbola_sola));
             ignota_symbolorum = oratio_vocabula_numerus(symbola_sola,
                 ORATIO_VERBUM_IGNOTUM);

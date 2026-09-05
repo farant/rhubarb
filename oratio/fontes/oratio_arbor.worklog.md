@@ -482,3 +482,15 @@ with the pin moved for a named cause. The comment corpus is not pinned:
 its unknowns are dominated by the archived generation's generated
 grammar comments and by English prose, neither of which the house
 writes today.
+
+## 2026-09-04 — The lint's corpus is the house
+
+Fran's call on reading the report: knotapel stays English for now, so
+it is out of the Latin lint. `ORATIO_VOCABULA_EXCLUSA` is the one place
+that says so — `knotapel/`, `vendor/` (third-party) and `archivum/`
+(the archived generations) — used by the instrument (`-omnes-viae`
+puts them back), the gate, and `silva.vocabula(omnes_viae=)`. Over the
+house alone: 7,469 identifier words, 3,022 unknown (40 %), top of the
+list unchanged in kind — tok, ctx, intern, aed, op, sem, out, slot,
+ptr, tag, idx, elem — abbreviations and English, which is what Fran
+decides next. Pin moved 5,409 → 3,022 with this cause.
