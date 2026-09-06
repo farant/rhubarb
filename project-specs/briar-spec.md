@@ -1,4 +1,4 @@
-# briar — spec v1.6 (literate C89 programs; `.thistle`)
+# briar — spec v1.7 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -8,6 +8,12 @@ else is PROPOSITUM and was agreed in conversation unless marked OPEN.
 Names marked (unsealed) are working names — Fran names. Every
 "exists" claim cites the header it rests on. English prose, Latin
 identifiers, as in pictor-spec.md.*
+
+*v1.7 (2026-09-05) adds §4.6, the facies — `-html`, the literate
+rendering, designed with Fran the same day and struck from the §9
+deferrals. It sits under §4 rather than in a section of its own
+because it consumes the fabrica's fructus: it is the fabrica's twin,
+turned toward the reader instead of the compiler.*
 
 ## 1. Purpose and scope
 
@@ -588,6 +594,182 @@ without exec. `-probatio` builds `bin/probatio_<t>` (running
 `probare.sh`) if absent and execs it the same way; its exit code is
 the verdict.
 
+### 4.6 Facies — the literate rendering (`-html`, v1.7, 2026-09-05)
+
+The fabrica's twin, turned the other way. `-amalgama` flattens a
+thistle into one `.c` for the compiler; `-html` unfolds it into one
+page for the reader. Both consume the same `BriarFabricaFructus` in
+memory, neither writes a project or runs clang.
+
+The design rests on an observation about what briar already holds
+after a normal run. Every feature below is a projection of computed
+data, not new analysis: the fragment graph and its use sites are
+`BriarFragmentum` (`briar_contextus.h`); the woven text and the
+thistle line of each of its lines are `contextus` and `lineae`
+(`briar_nexus.h`); the classification of every C token is
+`silva_lexare_cruda` (silva.h), which briar already links; and the
+declaration of every library symbol a region calls is already in that
+region's `SilvaSemantica`, because the closure's header text is
+parsed to type-check the region — the same table `_methodum_probare`
+walks in `briar_fabrica.c` to find `briar_tractator_exemplar`, a
+symbol that exists only because `internuntius.h` was parsed. The
+scope discipline follows from this: **v1 renders what briar already
+knows and adds no new analysis.**
+
+Decided with Fran 2026-09-05, each alternative reserved rather than
+dropped:
+
+| decision | chosen | reserved |
+|---|---|---|
+| F1 artifact or display | a self-contained `x.html` first; the vitrea viewer as a second step over the same three chrome files | briar linking vitrea in-process (taxes every headless run of a build tool with Cocoa and WebKit) |
+| F2 the page's spine | the document is the spine: one column in file order, detail arrives beside the text and is dismissed | two fixed panes; a tabbed workspace (both invite the reader out of a document whose argument arrives in sequence) |
+| F3 where the markup lives | three chrome files embedded verbatim (`briar/facies/facies.{html,css,js}`), a generated body, a JSON island | an STML template program (md_html's shape — macro expansion to move a div); HTML built in C string literals (speculum's scar: "JS-in-C-strings… Latin leaks in") |
+| F4 a file that does not build | always render; each refusal pinned at its thistle line | render only what fabricates; a vitia strip as the primary way to read briar's diagnostics (arrives on its own if wanted) |
+| F5 symbol depth | the file's own symbols, plus the declaration of every library symbol it uses | library **definitions** — no `lib/*.c` is parsed today, and eagerly parsing a closure to answer clicks nobody makes is the wrong trade; this is what step 2 is for (§9) |
+
+**Words.** The rendered page is the *facies* — the word house prose
+already uses for a front end (the laboratorium's experiment
+commentary). `pagina` was rejected (taken: `lib/pagina.c`) and
+`visio` was rejected (in this repository it names a vision document,
+not a view). `lectio` was the runner-up and shares a root with
+`legere`, which means parsing everywhere else in the tree.
+
+**Pipeline.** arbor → nexus → contextus → silva → fabrica → **facies**.
+One call:
+
+    nomen structura {
+        chorda involucrum;  /* facies.html, with its markers */
+        chorda styli;       /* facies.css */
+        chorda scriptum;    /* facies.js */
+        chorda exemplar;    /* md/html/md-html.stml */
+    } BriarVestis;
+
+    chorda
+    briar_faciem_fingere (
+                              Piscina* piscina,
+                  InternamentumChorda* intern,
+                                 Xar*  nexus,      /* BriarNexusRes */
+                                 Xar*  fragmenta,  /* BriarFragmentum */
+        constans BriarFabricaFructus*  fructus,
+                               chorda  fons,
+                  constans character*  via,
+                 constans BriarVestis* vestis,
+                               chorda* causa);
+
+Structures in, one string out: no I/O, no globals, so the whole
+module is testable against goldens without a filesystem. The chrome
+arrives as a parameter rather than being read inside, which is what
+lets the gate feed fixed test chrome: editing the real CSS then
+cannot move a byte golden.
+
+**The chrome.** `briar/facies/facies.html`, `.css` and `.js` are real
+files in the repository, embedded by `bin/capsula_generare` through
+`tools/briar_facies_capsula.sh` into `build/capsula_facies_briar.c`
+(uncompressed; a few KB), linked by `briar_struere.sh` beside the
+corpus object. The consumer declares `externus constans CapsulaEmbed
+capsula_facies_briar;` directly and never includes the generated
+header — speculum's recorded rule, because silva cannot resolve a
+quoted include containing `..` (board nota 01KY0T6T64). briar's C
+therefore contains no CSS and no JavaScript; it splices files it
+carries with a body it generates.
+
+**The law of the page: it reads with JavaScript disabled.** Every
+structural affordance is markup and anchors. This is what makes the
+artifact publishable, greppable and archivable, and it holds the
+hand-written JavaScript down to one feature.
+
+- **Every line is addressable.** Prose paragraphs and code lines
+  carry `id="l<N>"`, N the thistle line. `x.html#l117` is an address,
+  so briar's diagnostics — which always name a line — become links.
+- **A fragment definition** carries its use sites as markup, straight
+  from `BriarFragmentum.usus`: `#fundamentum · adhibitum: 117`, each
+  a link. An unused fragment says `non adhibitum`, the same judgement
+  `-partes` prints.
+- **A transclusion line** is a link to the definition. Both
+  directions of the fragment graph are therefore plain anchors.
+- **The composed view is a `<details>`.** Each root emits its
+  as-written text, then its `contextus` collapsed behind a
+  `<summary>`. Native disclosure: no toggle to write, no JavaScript.
+  The woven view's gutter shows **thistle** line numbers, not
+  composed ones, each linking home — `lineae` makes this exact. That
+  gutter is the view's purpose: the code the compiler sees, every
+  line naming the paragraph it came from.
+- **Highlighting** is `silva_lexare_cruda` per region, one `<span>`
+  per classified token. The policy — which lexeme kind takes which
+  class, and the three tables that make `si`/`redde`/`per` keywords
+  and `i32`/`chorda` types although the lexer sees identifiers — is
+  carried from laboratorium experiment 0023 (`_classis`,
+  `_claves_latinae`, `_genera_nota`, `_constantia_nota`), with its
+  six themeable classes. Its principle stands: *lexare mechanica,
+  colorare consilium*; TextMate-style regular-expression grammars are
+  deliberately not used, because there is a real lexer. Its
+  provenance warning stands too: this is vendored from silva, so a
+  new lexeme kind wants a look at the table. The **transport** is not
+  borrowed — 0023 emits per-line byte-range covers over a bridge for
+  JavaScript to paint; the static page emits the spans itself. The
+  cover model returns in step 2.
+- **Symbols.** A use of a name the file defines is an `<a>` to its
+  definition line — no JavaScript. A library symbol carries
+  `data-s="…"`, and one JSON island holds only what this file uses:
+  header and declaration, from the region's own symbol table.
+- **The only JavaScript is the declaration panel** — click a
+  `[data-s]`, look it up, show it beside the text, dismiss. That is
+  the whole dynamic surface of v1.
+- **Refusals** are `<aside>` annotations in the margin at their line,
+  with the line itself marked. A region that failed to weave shows
+  its as-written text and, where the `<details>` would stand, the
+  reason.
+- **Head matter** carries provenance: source path, briar version,
+  corpus stamp, generation time — so a page found later says what
+  made it.
+- **The foot** carries the `-partes` inventory: fragments, derived
+  includes, closure.
+
+**Escaping is a gated concern, not an assumption.** Prose contains
+`<script>` (a fenced example in `salve_vitreum.thistle` does), C
+contains `<`, `&` and `"` constantly, and the island must escape
+`</script`. Byte-exact slicing keeps UTF-8 intact: experiment 0023's
+fixture carries a deliberate `/* æ */` for exactly this reason
+(decree 01M0ATF1E1 — C emits byte columns).
+
+**The flag.** `-html` writes `x.html` beside the thistle and prints
+the path, as `-amalgama` writes `x.c`. It opens nothing: the fumus
+gate must run it without a window appearing, and the shebang form
+reads only the first flag after the file (`briar_imperium.h`), so
+`./x.thistle -html -aperire` could not work. Opening is `open
+x.html`; in step 2 a second verb, `-visio`, writes and shows.
+
+**Gates**, in two layers that fail for different reasons.
+*Structural invariants*, checked over a real lex of the page with
+`html_lexema` (already linked), robust against restyling: every
+`id="l<N>"` unique; every `href="#frag-x"` resolving to an emitted
+`id="frag-x"`; every `data-s` key present in the island; the count of
+`<details>` equal to the number of roots. *Byte goldens* under
+`fixa/facies/`, regenerated only with `BRIAR_FACIES_SCRIBERE=1` and a
+named cause, over `salve.thistle` and `fragmenta.thistle` — the
+second is line-pinned, so its use sites are law. The six `adversa/`
+fixtures each get a page whose cause is anchored at the right line
+(F4 made testable). Two new adversarial fixtures: escaping (`<script>`,
+`&`, `"`, a literal `</script` in prose and in code) and UTF-8 (a
+non-ASCII character inside a C region, asserting its bytes land
+inside one span). **The assertion of record: the page and `-partes`
+agree** — same fragments, same use sites, same derived includes; one
+truth rendered twice, and a divergence names which is lying. Born red
+by a planted fault in the line table or the escaping.
+
+**Fumus stage XI:** `-html` over `project-specs/exempla/salutatio2.thistle`
+— the file written, `id="frag-principale"` present, and
+`#repositorium` reporting **both** use sites, since that fragment is
+deliberately shared between the program and its probatio. Then
+`-html` over a refusing fixture: the page still written, the cause
+named. Counts asserted, never absences.
+
+**Risk.** Goldens over generated markup are brittle, and a red golden
+invites regeneration. The house rule holds — never without an audit
+and a named cause — and the two-layer split is the mitigation: a
+class rename may redden the byte goldens and must never redden the
+invariants.
+
 ## 5. The binary and its build
 
 - **Flags, not verbs (DECISUS, Fran 2026-09-04: thistle files are
@@ -597,9 +779,9 @@ the verdict.
   that parser refuses undeclared flags and cannot stop at the file,
   so a program's own `-foo` after the file would be refused. The
   declared-options spirit is kept — exactly `-probatio -struere
-  [-iterum] -arbor -partes -versio -auxilium/-h -f <radix>` are
-  recognized before the file; any other `-x` there is a refusal
-  (exit 2) naming the six. One code path: the bare form is the run.
+  [-iterum] -arbor -partes -amalgama -html -versio -auxilium/-h -f
+  <radix>` are recognized before the file; any other `-x` there is a
+  refusal (exit 2) naming them. One code path: the bare form is the run.
 
   | flag | does |
   |---|---|
@@ -608,6 +790,8 @@ the verdict.
   | `-struere [-iterum]` | build only, print the project dir; `-iterum` ignores the cache |
   | `-arbor` | print the STML projection |
   | `-partes` | print the closure, ADEST/ABEST as `silex partes` |
+  | `-amalgama` | write `<t>.c` (+ `probatio_<t>.c`) beside the thistle |
+  | `-html` | write `<t>.html` beside the thistle (§4.6); opens nothing |
   | `-versio` | corpus stamp and the flag-string hash of §4.1 |
 
 - **`-amalgama` (BUILT 2026-09-05, `briar_amalgama`; design banked
@@ -714,6 +898,7 @@ guard, per-test logs), registered in pythonica's four tables
 | `computus` | bench twin, golden `fixa/computus/basis.tsv` (`COMPUTUS_SCRIBERE=1` + a named cause) |
 | `amalgama` | synthetic fabrica → byte golden `fixa/amalgama/gamma.c` (`BRIAR_AMALGAMA_SCRIBERE=1` + a named cause); real fixtures structurally (once per file, no local include, `#define`/`#undef` pairs, posix first, probatio separate); vitrea + vendor refusals; writer guard |
 | `contextus` | `fragmenta.thistle` (nested fragments, indentation, one used twice, one used by the probatio, one carrying an `#include`): the woven text of each root byte-compared to a golden under `fixa/contextus/`, the line table pinned at the splices, the identity table for a root without references; five adversa fixtures, one per refusal, with lines; unused fragment listed; born red by dropping the indentation prefix. Fabrica gate adds the `fragmenta` golden directory (`#line` runs inside a function body and in the probatio unit); silva gate adds derivation of a symbol that lives in a fragment; fumus adds the run, the probatio, the amalgam, and the `#line`-truth stage of §3.4 |
+| `facies` | §4.6, two layers: structural invariants over a real `html_lexema` lex (unique line ids, no dangling `#frag-` link, every `data-s` in the island, `<details>` count == roots); byte goldens `fixa/facies/` (`BRIAR_FACIES_SCRIBERE=1` + a named cause) over `salve.thistle` and the line-pinned `fragmenta.thistle`; the six `adversa/` fixtures each rendering with the cause at its line; new escaping and UTF-8 fixtures; **the page and `-partes` asserted to agree**. Born red by a planted fault in the line table or the escaping. Fumus adds stage XI over `salutatio2.thistle` |
 | `probatio_silex` | UNCHANGED after §4.4 — the promotion is behavior-preserving |
 
 Plus the end-to-end `tools/briar_fumus.sh` (§5), the only gate that
@@ -734,8 +919,12 @@ New in `briar/`, each with a probatio and a `.worklog.md`:
 | `briar_fabrica` | silex (promoted API), silva (extents, `main` unit, type renderer), sigillum, filum, briar_nexus | tree → project dir; main rule; unit partition; prototypes; `#line`; assets; toml; probatio unit; method signature check; the key |
 | `briar_computus` | briar_arbor | bench twin |
 | `briar_contextus` (v1.6) | briar_nexus | fragments and transclusion: classification, the weave, the line table, refusals; between nexus and silva |
+| `briar_facies` (v1.7) | briar_contextus, briar_fabrica, silva (`silva_lexare_cruda`), capsula | fructus → one self-contained HTML page; chrome from an embedded capsula; after the fabrica, a sibling of `briar_amalgama` |
 | `tools/briar.c` | all above, argumenta, processus, capsula | the binary |
 | `tools/briar_struere.sh`, `tools/corpus_infixum.sh`, `tools/briar_fumus.sh` | — | build, shared corpus block, freshness gate |
+
+New in v1.7: `briar/facies/facies.{html,css,js}` (the chrome, embedded
+verbatim) and `tools/briar_facies_capsula.sh`.
 
 Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 `tools/silex_struere.sh` (sources the extracted corpus block);
@@ -770,6 +959,12 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
   (closure size, cold build time, sqlite compile time, binary size) —
   they decide the vendor-object sharing question of §10.
 
+- **P6 facies (§4.6) — PLANNED (plan 5).** `briar_facies` + gate
+  (fourteenth); the three chrome files and their capsula; `-html` in
+  `briar_imperium` and `tools/briar.c`; escaping and UTF-8 fixtures;
+  fumus stage XI. No clang, no window, no network — the page is a
+  string the suite can compare.
+
 ## 9. Named deferrals
 
 Interpreted mode (waits on machinula piscina support, desideratum
@@ -802,8 +997,7 @@ frameworks from `#import` — 01KZYN4VPZ) · an effects-at-the-edge lint
 for bridge methods, if wanted, as a NEW codex — never ludus's L5 ·
 `!\` dedent applied · multiple
 assets by `via=` · app state (`status` region → the scaffold's `Pipa`
-+ volumen) · Linux · sealed distribution (`-struere -ad`) · `-html`
-(literate rendering) · `-formare` · an LSP over `.thistle` · the ludus
++ volumen) · Linux · sealed distribution (`-struere -ad`) · `-formare` · an LSP over `.thistle` · the ludus
 islands vocabulary in STML regions once pictor's componens layer
 exists · `.m` regions · **the VITREA amalgam** (2026-09-05: the banked
 design assumed the capsula text was at hand; it is not —
@@ -815,6 +1009,15 @@ files carry six statics each), the `-framework` triple on the banner
 line, and sqlite as text under `#pragma clang diagnostic ignored
 "-Weverything"` with its `-D` defines as `#define` lines — a plain
 program pulling `volumen` meets the same vendor wall).
+ · **the facies viewer (step 2 of §4.6, F1)**: `-visio` — the same
+three chrome files served from a vitrea capsula, the JSON island
+become a bridge response, and with it F5's reserved half, a library
+symbol's **definition** parsed on demand (the viewer holds the corpus
+and silva in-process, so it parses the one file clicked, when it is
+clicked); whether the viewer is itself a `.thistle` carried in the
+corpus — briar building its reader with briar — is a step-2 decision
+· the facies alternatives reserved at F2 (two panes, tabs), F3 (an
+STML template program), F4 (a vitia strip as the diagnostic reader)
 
 Cross-references: ludus-brainstorm.md §XII (codex L5 and the
 `<tractator/>` vocabulary briar deliberately does not reuse);
