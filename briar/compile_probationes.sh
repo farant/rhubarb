@@ -185,7 +185,7 @@ for m in materia_lexicon materia_token materia_nodus materia_scribere \
     obj_files="$obj_files $obj"
 done
 
-for base in md_registrum md_lexicon md_lexema md_arbor md_inlinea md_decoctum md_stml; do
+for base in md_registrum md_lexicon md_lexema md_arbor md_inlinea md_decoctum md_stml md_html; do
     src="$MD_DIR/fontes/$base.c"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then

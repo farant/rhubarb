@@ -121,7 +121,7 @@ island), `<!--@scriptum-->`.
 the six markers and nothing else — so the goldens hold the *body*, and
 Task 4's real CSS cannot move them.
 
-- [ ] **Step 1: register the gate.** `briar/compile_probationes.sh`: add `md_html.c` to the md source list (briar already links `md_stml`, `stml_macros`, `stml_html` — `md_html` is the composer over them) and `probatio_briar_facies` to the gate list. `pythonica/silva.py`: the four tables (`PORTAE`, `FORMAE`, mensurae prefix, build-dir map — the rows plan 4 added for `contextus` are the model). Run `./briar/compile_probationes.sh` and confirm the runner *sees* a missing test rather than silently skipping (exit 2 = nothing ran).
+- [ ] **Step 1: register the gate.** `briar/compile_probationes.sh`: add `md_html` to the md source list (briar already links `md_stml`, `stml_macros`, `stml_html` — `md_html` is the composer over them). **Nothing else:** the runner globs `probationes/probatio_*.c` and `fontes/*.c`, and pythonica's four tables register the *suite* `briar`, not its gates (silva.py 1495/1537/2246/2338) — corrected while executing; the spec §6 sentence about the four tables belongs to plan 1's suite registration. Confirm with `./briar/compile_probationes.sh facies` that an absent test gives exit 2 (NULLA PROBATIO CURSA), not a silent pass.
 
 - [ ] **Step 2: write the failing gate** `probatio_briar_facies.c`. Helpers copied from `probatio_briar_fabrica.c`: `_plagulam_legere(via)`, and `_fabricare(via)` which parses, `briar_nexus_texere`, `briar_contexere`, `briar_silvam_texere`, `briar_fabricare` and hands back all four pieces. Plus two of this gate's own:
 
