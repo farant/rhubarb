@@ -15,8 +15,10 @@
 #include "briar_nexus.h"
 #include "briar_registrum.h"
 #include "chorda_aedificator.h"
+#include "briar_contextus.h"
 #include "md_html.h"
 #include "silex.h"
+#include "silva.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -93,16 +95,362 @@ _linea_indicis (
     redde linea_prima + k;
 }
 
-/* lineas textus emittere: una quaeque cum id sua .thistle linea et
- * data-n (numerus in CSS per ::before - textus purus manet, ergo
- * quod lector copiat codex est, non numeri) */
+
+/* ==================================================
+ * Color: consilium ex experimento laboratorii 0023
+ *
+ * 'lexare mechanica, colorare consilium': lexator silvae verus
+ * genera lexematum dat, tabulae infra Latina eligunt. Verba clausa
+ * ANGLICA lexator ipse novit; Latina (si redde per) per latina.h
+ * expanduntur, ergo lexatori identificatores sunt et HIC clavis
+ * fiunt. Via TextMate (grammaticae regularium) consulto omissa:
+ * lexatorem verum habemus.
+ *
+ * Venditum e silva: si genera lexematum crescunt, tabula relegenda.
+ * ================================================== */
+
+#define CL_COMMENTARIUM  "ca-sy-commentarium"
+#define CL_CHORDA        "ca-sy-chorda"
+#define CL_NUMERUS       "ca-sy-numerus"
+#define CL_CLAVIS        "ca-sy-clavis"
+#define CL_GENUS         "ca-sy-genus"
+/* classis CSS ex experimento 0023 servatur (pinacotheca
+ * eadem); identificator domus DIRECTIVA est - id quod re vera
+ * coloratur linea directivae est, non praeprocessor ipse */
+#define CL_DIRECTIVA     "ca-sy-praeprocessor"
+
+interior constans character* constans _claves_latinae[] = {
+    "si", "alioquin", "commutatio", "casus", "ordinarius",
+    "per", "dum", "fac", "frange", "perge", "salta", "redde",
+    "structura", "unio", "enumeratio", "nomen", "magnitudo",
+    "constans", "volatilis", "sponte", "registrum", "staticus",
+    "externus", "interior", "hic_manens", "universalis",
+    "principale", "signatus", "insignatus", NIHIL };
+
+interior constans character* constans _genera_nota[] = {
+    "vacuum", "character", "brevis", "integer", "longus",
+    "fluitans", "duplex", "i8", "i16", "i32", "i64",
+    "s8", "s16", "s32", "s64", "b32", "f32", "f64",
+    "memoriae_index", "chorda", NIHIL };
+
+interior constans character* constans _constantia_nota[] = {
+    "NIHIL", "VERUM", "FALSUM", "ZEPHYRUM", NIHIL };
+
+nomen structura {
+                    i32  ab;   /* columna octetorum in linea */
+                    i32  ad;
+     constans character* cl;
+} BriarTectum;
+
+interior b32
+_in_tabula (
+                 SilvaChorda  valor,
+    constans character* constans* tabula)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; tabula[k] != NIHIL; k++)
+    {
+        size_t mensura = strlen(tabula[k]);
+
+        si (   (size_t)valor.mensura                   == mensura
+            && memcmp(valor.datum, tabula[k], mensura) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* classis lexematis; NIHIL = sine colore (interpunctio, trivia) */
+interior constans character*
+_classis (
+    constans SilvaToken* t)
+{
+    si (   t->genus == SILVA_LEX_COMMENTUM_CLAUSUM
+        || t->genus == SILVA_LEX_COMMENTUM_LINEA)
+    {
+        redde CL_COMMENTARIUM;
+    }
+    si (   t->genus == SILVA_LEX_STRING_LIT
+        || t->genus == SILVA_LEX_STRING_IMPERFECTUM
+        || t->genus == SILVA_LEX_CHARACTER_LIT
+        || t->genus == SILVA_LEX_CHARACTER_IMPERFECTUM)
+    {
+        redde CL_CHORDA;
+    }
+    si (t->genus == SILVA_LEX_INTEGER || t->genus == SILVA_LEX_FLOAT)
+    {
+        redde CL_NUMERUS;
+    }
+    si (t->genus >= SILVA_LEX_AUTO && t->genus <= SILVA_LEX_WHILE)
+    {
+        redde CL_CLAVIS;
+    }
+    si (t->genus == SILVA_LEX_IDENTIFICATOR)
+    {
+        si (_in_tabula(t->valor, _claves_latinae))
+        {
+            redde CL_CLAVIS;
+        }
+        si (_in_tabula(t->valor, _genera_nota))
+        {
+            redde CL_GENUS;
+        }
+        si (_in_tabula(t->valor, _constantia_nota))
+        {
+            redde CL_NUMERUS;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_tectum_addere (
+                   Xar* tecta_lineae,
+                   i32  ab,
+                   i32  ad,
+    constans character* cl)
+{
+    BriarTectum* t;
+
+    si (ad <= ab || tecta_lineae == NIHIL)
+    {
+        redde;
+    }
+    t = (BriarTectum*)xar_addere(tecta_lineae);
+    si (t == NIHIL)
+    {
+        redde;
+    }
+    t->ab = ab;
+    t->ad = ad;
+    t->cl = cl;
+}
+
+/* extensionem [off, fin) octetorum trans lineas SECARE: commentarium
+ * bilineum tectum in utraque linea habet, numquam demittitur */
+interior vacuum
+_extensionem_addere (
+                   Xar* tecta,
+          constans i32* initia,
+                   i32  numerus_linearum,
+                   i32  linea,
+                   i32  off,
+                   i32  fin,
+    constans character* cl)
+{
+    i32 cursor = off;
+
+    dum (cursor < fin && linea <= numerus_linearum)
+    {
+        i32 finis_contenti = initia[linea] - I;
+
+        si (finis_contenti > fin)
+        {
+            finis_contenti = fin;
+        }
+        _tectum_addere(*(Xar**)xar_obtinere(tecta, linea - I),
+            cursor - initia[linea - I],
+            finis_contenti - initia[linea - I], cl);
+        cursor  = initia[linea];
+        linea   = linea + I;
+    }
+}
+
+/* tecta per lineam: Xar de (Xar* de BriarTectum) */
+interior Xar*
+_tecta_computare (
+          Piscina* piscina,
+     SilvaPiscina* silva_piscina,
+           chorda  textus)
+{
+          Xar* tecta;
+          Xar* cruda;
+          i32* initia;
+          i32  numerus_linearum = I;
+          i32  k;
+          i32  n;
+          i32  linea_directivi = ZEPHYRUM;
+
+    per (k = ZEPHYRUM; k < textus.mensura; k++)
+    {
+        si (textus.datum[k] == (i8)'\n')
+        {
+            numerus_linearum = numerus_linearum + I;
+        }
+    }
+    initia = (i32*)piscina_allocare(piscina,
+        (memoriae_index)((numerus_linearum + I) * (i32)magnitudo(i32)));
+    si (initia == NIHIL)
+    {
+        redde NIHIL;
+    }
+    initia[0]  = ZEPHYRUM;
+    n          = I;
+    per (k = ZEPHYRUM; k < textus.mensura; k++)
+    {
+        si (textus.datum[k] == (i8)'\n')
+        {
+            initia[n]  = k + I;
+            n          = n + I;
+        }
+    }
+    initia[numerus_linearum] = textus.mensura + I;
+
+    tecta = xar_creare(piscina, magnitudo(Xar*));
+    si (tecta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < numerus_linearum; k++)
+    {
+        *(Xar**)xar_addere(tecta) = xar_creare(piscina,
+            magnitudo(BriarTectum));
+    }
+    cruda = (Xar*)silva_lexare_cruda(silva_piscina,
+        (constans character*)textus.datum,
+        (insignatus integer)textus.mensura, ZEPHYRUM);
+    si (cruda == NIHIL)
+    {
+        redde tecta;
+    }
+    per (k = ZEPHYRUM;
+        k < (i32)silva_xar_numerus((SilvaXar*)cruda); k++)
+    {
+        constans SilvaToken* t = *(constans SilvaToken**)
+            silva_xar_obtinere((SilvaXar*)cruda,
+            (insignatus integer)k);
+        constans character* cl;
+
+        si (   t == NIHIL || t->genus == SILVA_LEX_EOF
+            || t->byte_offset < 0)
+        {
+            perge;
+        }
+        /* CANCELLUM initio lineae: linea TOTA praeprocessor,
+         * cetera lexemata eius lineae tacent */
+        si (t->genus == SILVA_LEX_CANCELLUM && t->initium_lineae)
+        {
+            linea_directivi = (i32)t->linea;
+            _tectum_addere(*(Xar**)xar_obtinere(tecta,
+                (i32)t->linea - I),
+                (i32)t->byte_offset - initia[t->linea - I],
+                initia[t->linea] - I - initia[t->linea - I],
+                CL_DIRECTIVA);
+            perge;
+        }
+        si (   linea_directivi != ZEPHYRUM
+            && (i32)t->linea   == linea_directivi)
+        {
+            perge;
+        }
+        cl = _classis(t);
+        si (cl == NIHIL)
+        {
+            perge;
+        }
+        _extensionem_addere(tecta, initia, numerus_linearum,
+            (i32)t->linea, (i32)t->byte_offset,
+            (i32)t->byte_offset + (i32)t->longitudo, cl);
+    }
+    redde tecta;
+}
+
+interior vacuum
+_lineam_coloratam_emittere (
+    ChordaAedificator* a,
+               chorda  linea,
+         constans Xar* tecta_lineae)
+{
+    i32 cursor = ZEPHYRUM;
+    i32 i;
+
+    si (tecta_lineae == NIHIL)
+    {
+        _evadere(a, linea);
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(tecta_lineae); i++)
+    {
+        constans BriarTectum* t = (constans BriarTectum*)xar_obtinere(
+            tecta_lineae, i);
+        chorda pars;
+
+        si (t->ab > cursor)
+        {
+            pars.datum    = linea.datum + cursor;
+            pars.mensura  = t->ab - cursor;
+            _evadere(a, pars);
+        }
+        pars.datum    = linea.datum + t->ab;
+        pars.mensura  = ((t->ad
+            < linea.mensura) ? t->ad : linea.mensura)
+            - t->ab;
+        si (pars.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(a, "<span class=\"");
+            chorda_aedificator_appendere_literis(a, t->cl);
+            chorda_aedificator_appendere_literis(a, "\">");
+            _evadere(a, pars);
+            chorda_aedificator_appendere_literis(a, "</span>");
+        }
+        cursor = t->ad;
+    }
+    si (cursor < linea.mensura)
+    {
+        chorda pars;
+
+        pars.datum    = linea.datum + cursor;
+        pars.mensura  = linea.mensura - cursor;
+        _evadere(a, pars);
+    }
+}
+
+interior b32
+_fragmentum_habet (
+    constans Xar* fragmenta,
+          chorda  id)
+{
+    i32 i;
+
+    si (fragmenta == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(fragmenta); i++)
+    {
+        constans BriarFragmentum* f = (constans BriarFragmentum*)
+            xar_obtinere(fragmenta, i);
+
+        si (chorda_aequalis(f->id, id))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* lineas textus emittere.
+ *
+ * Forma SICUT SCRIPTA (praefixum_id datum): id="lN" cum N linea
+ * .thistle, data-n idem (numerus in CSS per ::before - textus purus
+ * manet, ergo quod lector copiat CODEX est, non numeri); linea
+ * transclusionis fit NEXUS ad definitionem.
+ *
+ * Forma CONTEXTA (praefixum_id NIHIL): ids absunt (aliter geminae
+ * essent - eaedem lineae bis in pagina stant), et numerus fit ancora
+ * VACUA ad lineam fontis: nexus sine textu, ergo copia adhuc munda.
+ */
 interior vacuum
 _lineas_emittere (
       ChordaAedificator* a,
                  chorda  textus,
            constans Xar* tabula,
                     i32  linea_prima,
-     constans character* praefixum_id)
+     constans character* praefixum_id,
+           constans Xar* tecta,
+           constans Xar* fragmenta)
 {
     i32 cursor  = ZEPHYRUM;
     i32 k       = ZEPHYRUM;
@@ -112,6 +460,8 @@ _lineas_emittere (
            i32 finis = cursor;
            i32 linea;
         chorda pars;
+        chorda id;
+        chorda praefixum;
 
         dum (finis < textus.mensura && textus.datum[finis] != (i8)'\n')
         {
@@ -120,14 +470,45 @@ _lineas_emittere (
         linea         = _linea_indicis(tabula, linea_prima, k);
         pars.datum    = textus.datum + cursor;
         pars.mensura  = finis - cursor;
-        chorda_aedificator_appendere_literis(a,
-            "<span class=\"fr-linea\" id=\"");
-        chorda_aedificator_appendere_literis(a, praefixum_id);
-        chorda_aedificator_appendere_i32(a, (i32)linea);
-        chorda_aedificator_appendere_literis(a, "\" data-n=\"");
-        chorda_aedificator_appendere_i32(a, (i32)linea);
-        chorda_aedificator_appendere_literis(a, "\">");
-        _evadere(a, pars);
+        si (praefixum_id != NIHIL)
+        {
+            chorda_aedificator_appendere_literis(a,
+                "<span class=\"fr-linea\" id=\"");
+            chorda_aedificator_appendere_literis(a, praefixum_id);
+            chorda_aedificator_appendere_i32(a, (i32)linea);
+            chorda_aedificator_appendere_literis(a, "\" data-n=\"");
+            chorda_aedificator_appendere_i32(a, (i32)linea);
+            chorda_aedificator_appendere_literis(a, "\">");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(a,
+                "<span class=\"fr-linea\"><a class=\"fr-numerus\""
+                " href=\"#l");
+            chorda_aedificator_appendere_i32(a, (i32)linea);
+            chorda_aedificator_appendere_literis(a, "\" data-n=\"");
+            chorda_aedificator_appendere_i32(a, (i32)linea);
+            chorda_aedificator_appendere_literis(a, "\"></a>");
+        }
+        si (   praefixum_id != NIHIL
+            && briar_contextus_lineam_legere(pars, &id, &praefixum) == I
+            && _fragmentum_habet(fragmenta, id))
+        {
+            _evadere(a, praefixum);
+            chorda_aedificator_appendere_literis(a,
+                "<a class=\"fr-transclusio\" href=\"#frag-");
+            _evadere(a, id);
+            chorda_aedificator_appendere_literis(a, "\">&lt;&lt;#");
+            _evadere(a, id);
+            chorda_aedificator_appendere_literis(a, "&gt;&gt;</a>");
+        }
+        alioquin
+        {
+            _lineam_coloratam_emittere(a, pars,
+                (tecta != NIHIL && k < xar_numerus(tecta))
+                ? *(constans Xar* constans*)xar_obtinere(tecta, k)
+                : NIHIL);
+        }
         chorda_aedificator_appendere_literis(a, "</span>\n");
         cursor  = (finis < textus.mensura) ? finis + I : finis;
         k       = k + I;
@@ -189,19 +570,125 @@ _prosam_emittere (
     chorda_aedificator_appendere_literis(a, "</section>\n");
 }
 
+/* fragmentum huius regionis aut NIHIL (radix) */
+interior constans BriarFragmentum*
+_fragmentum_regionis (
+              constans Xar* fragmenta,
+    constans BriarNexusRes* r)
+{
+    i32 i;
+
+    si (fragmenta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(fragmenta); i++)
+    {
+        constans BriarFragmentum* f = (constans BriarFragmentum*)
+            xar_obtinere(fragmenta, i);
+
+        si (f->regio == r)
+        {
+            redde f;
+        }
+    }
+    redde NIHIL;
+}
+
+/* usus fragmenti ut nexus; vacui = 'non adhibitum' (vitium non est,
+ * sed iudicium quod '-partes' idem imprimit) */
+interior vacuum
+_usus_emittere (
+           ChordaAedificator* a,
+    constans BriarFragmentum* f)
+{
+    i32 i;
+    i32 n = (f->usus != NIHIL) ? xar_numerus(f->usus) : ZEPHYRUM;
+
+    si (n == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "<span class=\"fr-otiosum\">non adhibitum</span>");
+        redde;
+    }
+    chorda_aedificator_appendere_literis(a,
+        "<span class=\"fr-usus\">adhibitum: ");
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        i32 linea = *(constans i32*)xar_obtinere(f->usus, i);
+
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(a, ", ");
+        }
+        chorda_aedificator_appendere_literis(a, "<a href=\"#l");
+        chorda_aedificator_appendere_i32(a, (i32)linea);
+        chorda_aedificator_appendere_literis(a, "\">");
+        chorda_aedificator_appendere_i32(a, (i32)linea);
+        chorda_aedificator_appendere_literis(a, "</a>");
+    }
+    chorda_aedificator_appendere_literis(a, "</span>");
+}
+
 interior vacuum
 _regionem_emittere (
+                Piscina* piscina,
+           SilvaPiscina* silva_piscina,
       ChordaAedificator* a,
- constans BriarNexusRes* r)
+ constans BriarNexusRes* r,
+           constans Xar* fragmenta)
 {
+    constans BriarFragmentum* f = _fragmentum_regionis(fragmenta, r);
+                         Xar* tecta = _tecta_computare(piscina,
+                             silva_piscina, r->contentum);
+
+    si (f != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "<section class=\"fr-fragmentum\" id=\"frag-");
+        _evadere(a, f->id);
+        chorda_aedificator_appendere_literis(a,
+            "\">\n<header class=\"fr-titulus\"><span"
+            " class=\"fr-id\">#");
+        _evadere(a, f->id);
+        chorda_aedificator_appendere_literis(a, "</span> ");
+        _usus_emittere(a, f);
+        chorda_aedificator_appendere_literis(a, "</header>\n");
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(a,
+            "<section class=\"fr-regio\" id=\"regio-");
+        chorda_aedificator_appendere_i32(a, (i32)r->linea_initium);
+        chorda_aedificator_appendere_literis(a, "\">\n");
+    }
     chorda_aedificator_appendere_literis(a,
-        "<section class=\"fr-regio\" id=\"regio-");
-    chorda_aedificator_appendere_i32(a, (i32)r->linea_initium);
-    chorda_aedificator_appendere_literis(a, "\">\n<pre class=\"fr-c\">"
-        "<code>");
-    _lineas_emittere(a, r->contentum, NIHIL, r->linea_initium, "l");
-    chorda_aedificator_appendere_literis(a,
-        "</code></pre>\n</section>\n");
+        "<pre class=\"fr-c\"><code>");
+    _lineas_emittere(a, r->contentum, NIHIL, r->linea_initium, "l",
+        tecta, fragmenta);
+    chorda_aedificator_appendere_literis(a, "</code></pre>\n");
+    /* radix texta: forma quam compilator videt, cum numeris
+     * .thistle in margine - unaquaeque ancora ad fontem suum */
+    si (   f                  == NIHIL
+        && r->lineae          != NIHIL
+        && r->contextus.datum != NIHIL
+        && !chorda_aequalis(r->contextus, r->contentum))
+    {
+        Xar* tecta_contexta = _tecta_computare(piscina, silva_piscina,
+            r->contextus);
+
+        chorda_aedificator_appendere_literis(a,
+            "<details class=\"fr-contextum\">\n<summary>contextum (");
+        chorda_aedificator_appendere_i32(a,
+            (i32)xar_numerus(r->lineae));
+        chorda_aedificator_appendere_literis(a,
+            " lineae)</summary>\n<pre class=\"fr-c\"><code>");
+        _lineas_emittere(a, r->contextus, r->lineae, r->linea_initium,
+            NIHIL, tecta_contexta, NIHIL);
+        chorda_aedificator_appendere_literis(a,
+            "</code></pre>\n</details>\n");
+    }
+    chorda_aedificator_appendere_literis(a, "</section>\n");
 }
 
 interior vacuum
@@ -220,7 +707,8 @@ _elementum_emittere (
         "<code>");
     si (t != NIHIL)
     {
-        _lineas_emittere(a, t->valor, NIHIL, r->linea_initium, "l");
+        _lineas_emittere(a, t->valor, NIHIL, r->linea_initium, "l",
+            NIHIL, NIHIL);
     }
     chorda_aedificator_appendere_literis(a,
         "</code></pre>\n</section>\n");
@@ -415,13 +903,23 @@ briar_faciem_fingere (
              BriarNota  notae[6];
                    i32  i;
                 chorda  vacua;
+          SilvaPiscina* silva_piscina;
 
     vacua.datum     = NIHIL;
     vacua.mensura   = ZEPHYRUM;
     causa->datum    = NIHIL;
     causa->mensura  = ZEPHYRUM;
-    (vacuum)fragmenta;
     (vacuum)fons;
+    /* piscina silvae PROPRIA: color etiam pro regionibus quibus
+     * arbor deest (fragmenta, regiones fractae) - lex par. 4.6 F4
+     * poscit ut pagina semper reddatur */
+    silva_piscina = silva_piscina_generare_dynamicum("briar_facies",
+        (insignatus longus)16777216);
+    si (silva_piscina == NIHIL)
+    {
+        *causa = chorda_ex_literis("piscina silvae deest", piscina);
+        redde vacua;
+    }
     corpus = chorda_aedificator_creare(piscina,
         (memoriae_index)65536);
     chorda_aedificator_appendere_literis(corpus,
@@ -442,7 +940,8 @@ briar_faciem_fingere (
         }
         alioquin
         {
-            _regionem_emittere(corpus, r);
+            _regionem_emittere(piscina, silva_piscina, corpus, r,
+                fragmenta);
         }
     }
     chorda_aedificator_appendere_literis(corpus, "</main>\n");
@@ -466,6 +965,11 @@ briar_faciem_fingere (
     {
         notae[i].visa = FALSUM;
     }
-    redde _involucrum_implere(piscina, vestis->involucrum, notae,
-        (i32)6, causa);
+    {
+        chorda pagina = _involucrum_implere(piscina,
+            vestis->involucrum, notae, (i32)6, causa);
+
+        silva_piscina_destruere(silva_piscina);
+        redde pagina;
+    }
 }

@@ -1,0 +1,16 @@
+#!/usr/bin/env briar
+# Facies utf8
+
+A fixture for the facies gate: a C region carrying a comment that
+spans two lines and holds a non-ASCII character.
+
+<c!>
+/* commentarium per lineas duas currens
+   cum charactere non-ASCII: æ */
+s32
+principale (vacuum)
+{
+    imprimere("salve\n");
+    redde ZEPHYRUM;
+}
+</c>

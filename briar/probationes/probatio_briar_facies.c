@@ -101,6 +101,24 @@ _texere (
         chorda_ex_literis(b, piscina), piscina), piscina);
 }
 
+interior s32
+_numerare (
+               Piscina* piscina,
+                chorda  fenum,
+    constans character* acus)
+{
+     constans character* c        = chorda_ut_cstr(fenum, piscina);
+                    s32  n        = ZEPHYRUM;
+                 size_t  mensura  = strlen(acus);
+
+    dum ((c = strstr(c, acus)) != NIHIL)
+    {
+        n = n + I;
+        c = c + mensura;
+    }
+    redde n;
+}
+
 interior b32
 _continet (
                Piscina* piscina,
@@ -439,6 +457,130 @@ principale (vacuum)
         c = _censere(piscina, pagina);
         CREDO_MAIOR_S32 ((s32)c.ids, (s32)30);
         CREDO_AEQUALIS_S32 ((s32)c.ids_gemini, (s32)0);
+    }
+
+    imprimere("\n--- Probans colorem (salve) ---\n");
+    {
+         Xar* nexus;
+         Xar* fragmenta;
+      chorda  causa;
+      chorda  pagina = _paginam_fingere(piscina, intern, fons,
+          _texere(piscina, FIXA, "salve.thistle"), &nexus,
+          &fragmenta, &causa);
+
+        CREDO_CHORDA_VACUA (causa);
+        /* linea directivi tota praeprocessor est */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "ca-sy-praeprocessor"));
+        /* literale chordae, clavis Latina, genus domus */
+        CREDO_VERUM (_continet(piscina, pagina, "ca-sy-chorda"));
+        CREDO_VERUM (_continet(piscina, pagina, "ca-sy-clavis"));
+        CREDO_VERUM (_continet(piscina, pagina, "ca-sy-genus"));
+        /* 'redde' clavis, non identificator nudus */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "<span class=\"ca-sy-clavis\">redde</span>"));
+        /* 's32' genus */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "<span class=\"ca-sy-genus\">s32</span>"));
+    }
+
+    imprimere("\n--- Probans commentarium bilineum et utf8 ---\n");
+    {
+         Xar* nexus;
+         Xar* fragmenta;
+      chorda  causa;
+      chorda  pagina = _paginam_fingere(piscina, intern, fons,
+          _texere(piscina, FIXA, "facies_utf8.thistle"), &nexus,
+          &fragmenta, &causa);
+
+        CREDO_CHORDA_VACUA (causa);
+        /* tectum per lineas SECTUM, non demissum: utraque linea
+         * commentarii classem suam fert */
+        CREDO_AEQUALIS_S32 (_numerare(piscina, pagina,
+            "ca-sy-commentarium"), (s32)2);
+        /* octeti 'ae' ligati adiacentes manent - nullum tag inter
+         * eos (sectio media characteris utf8 eos separaret) */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "non-ASCII: \303\246 */"));
+    }
+
+    imprimere("\n--- Probans grafum fragmentorum ---\n");
+    {
+         Xar* nexus;
+         Xar* fragmenta;
+      chorda  causa;
+      chorda  pagina = _paginam_fingere(piscina, intern, fons,
+          _texere(piscina, FIXA, "fragmenta.thistle"), &nexus,
+          &fragmenta, &causa);
+      FaciesCensus c;
+
+        CREDO_CHORDA_VACUA (causa);
+        /* sedes definitionum quinque */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "id=\"frag-incrementum\""));
+        CREDO_VERUM (_continet(piscina, pagina, "id=\"frag-summa\""));
+        CREDO_VERUM (_continet(piscina, pagina, "id=\"frag-capita\""));
+        CREDO_VERUM (_continet(piscina, pagina,
+            "id=\"frag-salutatio\""));
+        CREDO_VERUM (_continet(piscina, pagina,
+            "id=\"frag-otiosum\""));
+        /* transclusiones nexus sunt: linea XV ad #incrementum */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "href=\"#frag-incrementum\""));
+        /* fragmentum non adhibitum ita dicitur */
+        CREDO_VERUM (_continet(piscina, pagina, "non adhibitum"));
+        /* radices duae, ergo duo textus contexti */
+        c = _censere(piscina, pagina);
+        CREDO_AEQUALIS_S32 ((s32)c.contexta, (s32)2);
+        CREDO_AEQUALIS_S32 ((s32)c.ids_gemini, (s32)0);
+        CREDO_AEQUALIS_S32 ((s32)c.nexus_pendentes, (s32)0);
+        /* nexus quinque: capita summa incrementum salutatio bis */
+        CREDO_AEQUALIS_S32 ((s32)c.nexus_fragmentorum, (s32)5);
+        CREDO_AEQUALIS_S32 ((s32)c.sedes_fragmentorum, (s32)5);
+
+        /* MARGO TEXTI: linea contexta 'summa = summa + numeri[i];'
+         * lineam FRAGMENTI (IX) nominat, non indicem compositum -
+         * hoc est totum consilium visus contexti */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "<a class=\"fr-numerus\" href=\"#l9\" data-n=\"9\">"));
+        /* et praefixum octo spatiorum (regula noweb) servatur */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "data-n=\"9\"></a>        summa = summa"));
+
+        _aurum_conferre(piscina, pagina, "fragmenta.html");
+
+        /* CONSENSUS: pagina et '-partes' idem dicunt. Una veritas
+         * (grex fragmentorum), duae redditiones; discordia nominat
+         * utra mentiatur. */
+        {
+            i32 j;
+
+            CREDO_AEQUALIS_S32 ((s32)c.sedes_fragmentorum,
+                (s32)xar_numerus(fragmenta));
+            per (j = ZEPHYRUM; j < xar_numerus(fragmenta); j++)
+            {
+                constans BriarFragmentum* f =
+                    (constans BriarFragmentum*)xar_obtinere(
+                    fragmenta, j);
+                character b[160];
+                      i32 u;
+
+                sprintf(b, "id=\"frag-%.*s\"", (integer)f->id.mensura,
+                    (constans character*)f->id.datum);
+                CREDO_VERUM (_continet(piscina, pagina, b));
+                per (u = ZEPHYRUM;
+                    u < ((f->usus != NIHIL)
+                        ? xar_numerus(f->usus) : ZEPHYRUM); u++)
+                {
+                    sprintf(b, "<a href=\"#l%d\">%d</a>",
+                        (integer)*(constans i32*)xar_obtinere(f->usus,
+                        u),
+                        (integer)*(constans i32*)xar_obtinere(f->usus,
+                        u));
+                    CREDO_VERUM (_continet(piscina, pagina, b));
+                }
+            }
+        }
     }
 
     credo_imprimere_compendium();

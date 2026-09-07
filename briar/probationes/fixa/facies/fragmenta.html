@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<title>fragmenta</title>
+<style></style>
+<header class="fr-caput">
+<h1>fragmenta</h1>
+<dl class="fr-provenientia">
+<dt>fons</dt><dd>briar/probationes/fixa/thistle/fragmenta.thistle</dd>
+<dt>clavis</dt><dd>826496af1c8e2e8f</dd>
+</dl>
+</header>
+
+<main class="fr-documentum">
+<section class="fr-prosa" id="pars-2">
+<h1>Fragmenta</h1><p>The loop body lives apart from the loop, the loop apart from the
+function; one greeting fragment is used by the program and by its
+probatio; one fragment carries an include; one is never used.</p></section>
+<section class="fr-fragmentum" id="frag-incrementum">
+<header class="fr-titulus"><span class="fr-id">#incrementum</span> <span class="fr-usus">adhibitum: <a href="#l15">15</a></span></header>
+<pre class="fr-c"><code><span class="fr-linea" id="l9" data-n="9">summa = summa + numeri[i];</span>
+</code></pre>
+</section>
+<section class="fr-fragmentum" id="frag-summa">
+<header class="fr-titulus"><span class="fr-id">#summa</span> <span class="fr-usus">adhibitum: <a href="#l40">40</a></span></header>
+<pre class="fr-c"><code><span class="fr-linea" id="l13" data-n="13"><span class="ca-sy-clavis">per</span> (i = <span class="ca-sy-numerus">ZEPHYRUM</span>; i &lt; n; i++)</span>
+<span class="fr-linea" id="l14" data-n="14">{</span>
+<span class="fr-linea" id="l15" data-n="15">    <a class="fr-transclusio" href="#frag-incrementum">&lt;&lt;#incrementum&gt;&gt;</a></span>
+<span class="fr-linea" id="l16" data-n="16">}</span>
+</code></pre>
+</section>
+<section class="fr-fragmentum" id="frag-capita">
+<header class="fr-titulus"><span class="fr-id">#capita</span> <span class="fr-usus">adhibitum: <a href="#l32">32</a></span></header>
+<pre class="fr-c"><code><span class="fr-linea" id="l20" data-n="20"><span class="ca-sy-praeprocessor">#include &quot;chorda.h&quot;</span></span>
+</code></pre>
+</section>
+<section class="fr-fragmentum" id="frag-salutatio">
+<header class="fr-titulus"><span class="fr-id">#salutatio</span> <span class="fr-usus">adhibitum: <a href="#l49">49</a>, <a href="#l70">70</a></span></header>
+<pre class="fr-c"><code><span class="fr-linea" id="l24" data-n="24"><span class="ca-sy-genus">chorda</span> salutatio = chorda_ex_literis(<span class="ca-sy-chorda">&quot;salve, fragmenta&quot;</span>, piscina);</span>
+</code></pre>
+</section>
+<section class="fr-fragmentum" id="frag-otiosum">
+<header class="fr-titulus"><span class="fr-id">#otiosum</span> <span class="fr-otiosum">non adhibitum</span></header>
+<pre class="fr-c"><code><span class="fr-linea" id="l28" data-n="28"><span class="ca-sy-commentarium">/* numquam adhibitum */</span></span>
+</code></pre>
+</section>
+<section class="fr-regio" id="regio-32">
+<pre class="fr-c"><code><span class="fr-linea" id="l32" data-n="32"><a class="fr-transclusio" href="#frag-capita">&lt;&lt;#capita&gt;&gt;</a></span>
+<span class="fr-linea" id="l33" data-n="33"></span>
+<span class="fr-linea" id="l34" data-n="34"><span class="ca-sy-genus">i32</span></span>
+<span class="fr-linea" id="l35" data-n="35">summare (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">i32</span>* numeri, <span class="ca-sy-genus">i32</span> n)</span>
+<span class="fr-linea" id="l36" data-n="36">{</span>
+<span class="fr-linea" id="l37" data-n="37">    <span class="ca-sy-genus">i32</span> summa = <span class="ca-sy-numerus">ZEPHYRUM</span>;</span>
+<span class="fr-linea" id="l38" data-n="38">    <span class="ca-sy-genus">i32</span> i;</span>
+<span class="fr-linea" id="l39" data-n="39"></span>
+<span class="fr-linea" id="l40" data-n="40">    <a class="fr-transclusio" href="#frag-summa">&lt;&lt;#summa&gt;&gt;</a></span>
+<span class="fr-linea" id="l41" data-n="41">    <span class="ca-sy-clavis">redde</span> summa;</span>
+<span class="fr-linea" id="l42" data-n="42">}</span>
+<span class="fr-linea" id="l43" data-n="43"></span>
+<span class="fr-linea" id="l44" data-n="44"><span class="ca-sy-genus">s32</span></span>
+<span class="fr-linea" id="l45" data-n="45"><span class="ca-sy-clavis">principale</span> (<span class="ca-sy-genus">vacuum</span>)</span>
+<span class="fr-linea" id="l46" data-n="46">{</span>
+<span class="fr-linea" id="l47" data-n="47">    Piscina* piscina = piscina_generare_dynamicum(<span class="ca-sy-chorda">&quot;fragmenta&quot;</span>, <span class="ca-sy-numerus">65536</span>);</span>
+<span class="fr-linea" id="l48" data-n="48">    <span class="ca-sy-genus">i32</span> numeri[<span class="ca-sy-numerus">3</span>];</span>
+<span class="fr-linea" id="l49" data-n="49">    <a class="fr-transclusio" href="#frag-salutatio">&lt;&lt;#salutatio&gt;&gt;</a></span>
+<span class="fr-linea" id="l50" data-n="50"></span>
+<span class="fr-linea" id="l51" data-n="51">    numeri[<span class="ca-sy-numerus">0</span>] = I;</span>
+<span class="fr-linea" id="l52" data-n="52">    numeri[<span class="ca-sy-numerus">1</span>] = II;</span>
+<span class="fr-linea" id="l53" data-n="53">    numeri[<span class="ca-sy-numerus">2</span>] = III;</span>
+<span class="fr-linea" id="l54" data-n="54">    imprimere(<span class="ca-sy-chorda">&quot;%.*s: %d\n&quot;</span>, (<span class="ca-sy-genus">integer</span>)salutatio.mensura,</span>
+<span class="fr-linea" id="l55" data-n="55">        (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">character</span>*)salutatio.datum,</span>
+<span class="fr-linea" id="l56" data-n="56">        (<span class="ca-sy-genus">integer</span>)summare(numeri, III));</span>
+<span class="fr-linea" id="l57" data-n="57">    piscina_destruere(piscina);</span>
+<span class="fr-linea" id="l58" data-n="58">    <span class="ca-sy-clavis">redde</span> <span class="ca-sy-numerus">ZEPHYRUM</span>;</span>
+<span class="fr-linea" id="l59" data-n="59">}</span>
+</code></pre>
+<details class="fr-contextum">
+<summary>contextum (31 lineae)</summary>
+<pre class="fr-c"><code><span class="fr-linea"><a class="fr-numerus" href="#l20" data-n="20"></a><span class="ca-sy-praeprocessor">#include &quot;chorda.h&quot;</span></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l33" data-n="33"></a></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l34" data-n="34"></a><span class="ca-sy-genus">i32</span></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l35" data-n="35"></a>summare (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">i32</span>* numeri, <span class="ca-sy-genus">i32</span> n)</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l36" data-n="36"></a>{</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l37" data-n="37"></a>    <span class="ca-sy-genus">i32</span> summa = <span class="ca-sy-numerus">ZEPHYRUM</span>;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l38" data-n="38"></a>    <span class="ca-sy-genus">i32</span> i;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l39" data-n="39"></a></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l13" data-n="13"></a>    <span class="ca-sy-clavis">per</span> (i = <span class="ca-sy-numerus">ZEPHYRUM</span>; i &lt; n; i++)</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l14" data-n="14"></a>    {</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l9" data-n="9"></a>        summa = summa + numeri[i];</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l16" data-n="16"></a>    }</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l41" data-n="41"></a>    <span class="ca-sy-clavis">redde</span> summa;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l42" data-n="42"></a>}</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l43" data-n="43"></a></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l44" data-n="44"></a><span class="ca-sy-genus">s32</span></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l45" data-n="45"></a><span class="ca-sy-clavis">principale</span> (<span class="ca-sy-genus">vacuum</span>)</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l46" data-n="46"></a>{</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l47" data-n="47"></a>    Piscina* piscina = piscina_generare_dynamicum(<span class="ca-sy-chorda">&quot;fragmenta&quot;</span>, <span class="ca-sy-numerus">65536</span>);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l48" data-n="48"></a>    <span class="ca-sy-genus">i32</span> numeri[<span class="ca-sy-numerus">3</span>];</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l24" data-n="24"></a>    <span class="ca-sy-genus">chorda</span> salutatio = chorda_ex_literis(<span class="ca-sy-chorda">&quot;salve, fragmenta&quot;</span>, piscina);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l50" data-n="50"></a></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l51" data-n="51"></a>    numeri[<span class="ca-sy-numerus">0</span>] = I;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l52" data-n="52"></a>    numeri[<span class="ca-sy-numerus">1</span>] = II;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l53" data-n="53"></a>    numeri[<span class="ca-sy-numerus">2</span>] = III;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l54" data-n="54"></a>    imprimere(<span class="ca-sy-chorda">&quot;%.*s: %d\n&quot;</span>, (<span class="ca-sy-genus">integer</span>)salutatio.mensura,</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l55" data-n="55"></a>        (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">character</span>*)salutatio.datum,</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l56" data-n="56"></a>        (<span class="ca-sy-genus">integer</span>)summare(numeri, III));</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l57" data-n="57"></a>    piscina_destruere(piscina);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l58" data-n="58"></a>    <span class="ca-sy-clavis">redde</span> <span class="ca-sy-numerus">ZEPHYRUM</span>;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l59" data-n="59"></a>}</span>
+</code></pre>
+</details>
+</section>
+<section class="fr-regio" id="regio-63">
+<pre class="fr-c"><code><span class="fr-linea" id="l63" data-n="63"><span class="ca-sy-praeprocessor">#include &quot;credo.h&quot;</span></span>
+<span class="fr-linea" id="l64" data-n="64"></span>
+<span class="fr-linea" id="l65" data-n="65"><span class="ca-sy-genus">s32</span></span>
+<span class="fr-linea" id="l66" data-n="66"><span class="ca-sy-clavis">principale</span> (<span class="ca-sy-genus">vacuum</span>)</span>
+<span class="fr-linea" id="l67" data-n="67">{</span>
+<span class="fr-linea" id="l68" data-n="68">    Piscina* piscina = piscina_generare_dynamicum(<span class="ca-sy-chorda">&quot;probatio&quot;</span>, <span class="ca-sy-numerus">65536</span>);</span>
+<span class="fr-linea" id="l69" data-n="69">    <span class="ca-sy-genus">i32</span> numeri[<span class="ca-sy-numerus">3</span>];</span>
+<span class="fr-linea" id="l70" data-n="70">    <a class="fr-transclusio" href="#frag-salutatio">&lt;&lt;#salutatio&gt;&gt;</a></span>
+<span class="fr-linea" id="l71" data-n="71"></span>
+<span class="fr-linea" id="l72" data-n="72">    numeri[<span class="ca-sy-numerus">0</span>] = I;</span>
+<span class="fr-linea" id="l73" data-n="73">    numeri[<span class="ca-sy-numerus">1</span>] = II;</span>
+<span class="fr-linea" id="l74" data-n="74">    numeri[<span class="ca-sy-numerus">2</span>] = III;</span>
+<span class="fr-linea" id="l75" data-n="75">    credo_aperire(piscina);</span>
+<span class="fr-linea" id="l76" data-n="76">    CREDO_AEQUALIS_I32(summare(numeri, III), VI);</span>
+<span class="fr-linea" id="l77" data-n="77">    CREDO_AEQUALIS_I32(salutatio.mensura, XVI);</span>
+<span class="fr-linea" id="l78" data-n="78">    credo_imprimere_compendium();</span>
+<span class="fr-linea" id="l79" data-n="79">    <span class="ca-sy-clavis">redde</span> credo_omnia_praeterierunt() ? <span class="ca-sy-numerus">ZEPHYRUM</span> : I;</span>
+<span class="fr-linea" id="l80" data-n="80">}</span>
+</code></pre>
+<details class="fr-contextum">
+<summary>contextum (18 lineae)</summary>
+<pre class="fr-c"><code><span class="fr-linea"><a class="fr-numerus" href="#l63" data-n="63"></a><span class="ca-sy-praeprocessor">#include &quot;credo.h&quot;</span></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l64" data-n="64"></a></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l65" data-n="65"></a><span class="ca-sy-genus">s32</span></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l66" data-n="66"></a><span class="ca-sy-clavis">principale</span> (<span class="ca-sy-genus">vacuum</span>)</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l67" data-n="67"></a>{</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l68" data-n="68"></a>    Piscina* piscina = piscina_generare_dynamicum(<span class="ca-sy-chorda">&quot;probatio&quot;</span>, <span class="ca-sy-numerus">65536</span>);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l69" data-n="69"></a>    <span class="ca-sy-genus">i32</span> numeri[<span class="ca-sy-numerus">3</span>];</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l24" data-n="24"></a>    <span class="ca-sy-genus">chorda</span> salutatio = chorda_ex_literis(<span class="ca-sy-chorda">&quot;salve, fragmenta&quot;</span>, piscina);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l71" data-n="71"></a></span>
+<span class="fr-linea"><a class="fr-numerus" href="#l72" data-n="72"></a>    numeri[<span class="ca-sy-numerus">0</span>] = I;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l73" data-n="73"></a>    numeri[<span class="ca-sy-numerus">1</span>] = II;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l74" data-n="74"></a>    numeri[<span class="ca-sy-numerus">2</span>] = III;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l75" data-n="75"></a>    credo_aperire(piscina);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l76" data-n="76"></a>    CREDO_AEQUALIS_I32(summare(numeri, III), VI);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l77" data-n="77"></a>    CREDO_AEQUALIS_I32(salutatio.mensura, XVI);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l78" data-n="78"></a>    credo_imprimere_compendium();</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l79" data-n="79"></a>    <span class="ca-sy-clavis">redde</span> credo_omnia_praeterierunt() ? <span class="ca-sy-numerus">ZEPHYRUM</span> : I;</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l80" data-n="80"></a>}</span>
+</code></pre>
+</details>
+</section>
+</main>
+<footer class="fr-pes">
+<h2>partes</h2>
+<ul class="fr-clausura">
+<li>include/chorda.h</li>
+<li>lib/chorda.c</li>
+<li>include/credo.h</li>
+<li>lib/credo.c</li>
+<li>include/latina.h</li>
+<li>include/piscina.h</li>
+<li>lib/piscina.c</li>
+<li>include/postulata_posix.h</li>
+<li>include/chorda_aedificator.h</li>
+<li>lib/chorda_aedificator.c</li>
+</ul>
+</footer>
+
+
+<script></script>
