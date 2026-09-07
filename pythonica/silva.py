@@ -2638,11 +2638,21 @@ def _profilum(pid, secunda, via_effusus):
     """sample <pid> <secunda> -> [(numerus, functio, bibliotheca)] ex tabula
     'Sort by top of stack' (folia: ubi tempus consumitur), ordine ponderis;
     effusus crudus in via_effusus (arbor vocationum tota)"""
-    r = _curre(['sample', str(pid), str(secunda), '-mayDie', '-file',
-                via_effusus])
-    if r.returncode != 0 or not os.path.exists(via_effusus):
-        raise SilvaError('sample fractum (rc=%d): %s'
-                         % (r.returncode, (r.stdout + r.stderr).strip()[-300:]))
+    # sample rc 255 sine nuntio = attachio fracta (processus in exec, onus
+    # machinae: porta pythonica sub commissione T19b semel, 2026-09-07) -
+    # iterum dum processus vivit, ter; mortuus = error verus
+    conatus = 0
+    while True:
+        r = _curre(['sample', str(pid), str(secunda), '-mayDie', '-file',
+                    via_effusus])
+        if r.returncode == 0 and os.path.exists(via_effusus):
+            break
+        conatus += 1
+        if conatus >= 3 or not _pid_vivus(pid):
+            raise SilvaError('sample fractum (rc=%d, conatus %d): %s'
+                             % (r.returncode, conatus,
+                                (r.stdout + r.stderr).strip()[-300:]))
+        time.sleep(0.2)
     folia = []
     f = False
     for l in open(via_effusus, errors='replace'):

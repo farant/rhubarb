@@ -444,3 +444,15 @@ Also: `planta` now keeps the red run's full output in
 pythonica gate's planted fault named an inner fixture line ("planta
 rubra: ficta ... probatio_x"), not the failing assertion, and the green
 run had already overwritten the live receipt's acta.
+
+## 2026-09-07 — sample attach flake, and the receipts paying off
+
+The pythonica gate died once under the T19b commit: `sample <pid> 1
+-mayDie` returned 255 with no message on the three-second sleeper
+probe, right after the oratio suite and while the post-commit index
+sweep was running. Alone, green. `_profilum` now retries the attach
+up to three times while the pid is alive; a dead pid is still the
+real error. The retry with the receipts made the recovery cheap: the
+oratio run from the failed attempt and the standalone pythonica run
+were both live receipts on an unchanged tree, and the second
+commissio ran no gate at all.
