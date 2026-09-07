@@ -656,6 +656,27 @@ decision:
     the filter spelled ONCE. INDAGO writes 'bracchium
     angustatum'. The guard-narrows-arm door is CLOSED.
 
+20. **CURSUS FRATRUM — BUILT 2026-09-07** (`cursus="fratrum"` on
+    EXEMPLAR and chain stages; the sibling-run increment §2.4
+    reserved). Where the body's root matches, the children are
+    matched as the ordered subsequence from EVERY start position
+    among the candidate's effective children: the first written
+    child must match the start child itself, later children skip
+    as before, and each start that succeeds is its own row (rows
+    share the root; head captures are kept per row; `<**>`
+    children stay hoisted per row). Without it a parent yields one
+    greedy match — oratio's T17 finding (`Ad urbem et in silvam it`
+    saw one pair per sentence). `strictus` (no gaps) stays
+    reserved, refused as XIII; a root without an ordinary child is
+    XIII; canon mirrors the value check in both judges. Engine:
+    `_laxa_liberos_congruere_ab(initium, primum_fixum)` under the
+    classic wrapper, `_laxa_caput_congruere` split from
+    `_laxa_congruere`, `_exemplar_petere` loops starts. Gate: nine
+    fixtures in probatio_stml_exemplaria (contrast without/with,
+    fixed first child, gaps after the start, head captures + modus
+    primum, ancorata, `<**>`, both vitia). First consumer: oratio's
+    adposition rules rooted at `<elementa>`.
+
 ---
 
 ## §9 Build order

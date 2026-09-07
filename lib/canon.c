@@ -2300,7 +2300,8 @@ _catena_nexus_iudicare (
                               ZEPHYRUM);
                 perge;
             }
-            radix_regula = stml_attributum_capere(l, "radix");
+                        radix_regula = stml_attributum_capere(l,
+                            "radix");
             si (   radix_regula != NIHIL
                 && !chorda_aequalis_literis(*radix_regula,
                                             "fontis"))
@@ -2310,6 +2311,21 @@ _catena_nexus_iudicare (
                               ZEPHYRUM, ZEPHYRUM);
                 perge;
             }
+            {
+                chorda* cursus_regula = stml_attributum_capere(l,
+                    "cursus");
+
+                si (   cursus_regula != NIHIL
+                    && !chorda_aequalis_literis(*cursus_regula,
+                                                "fratrum"))
+                {
+                    vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                                  l, l->titulus, cursus_regula,
+                                  ZEPHYRUM, ZEPHYRUM);
+                    perge;
+                }
+            }
+
             forma  = NIHIL;
             m      = stml_numerus_liberorum(l);
             per (j = ZEPHYRUM; j < m; j++)
@@ -2752,10 +2768,25 @@ _caps_iudicare (
                           n->titulus, modus, ZEPHYRUM, ZEPHYRUM);
             redde;
         }
-        de = stml_attributum_capere(n, "de");
+                de = stml_attributum_capere(n, "de");
+        /* cursus fratrum (incrementum XX): 'fratrum' solus - machina
+         * idem, 'strictus' reservatus */
+        {
+            chorda* cursus_regula = stml_attributum_capere(n, "cursus");
+
+            si (   cursus_regula != NIHIL
+                && !chorda_aequalis_literis(*cursus_regula, "fratrum"))
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                              n->titulus, cursus_regula, ZEPHYRUM,
+                              ZEPHYRUM);
+                redde;
+            }
+        }
         /* retentio radicis: valor 'fontis' solus; sine de= nihil
          * retinendum est (iudicium staticum - machina idem) */
         radix_regula = stml_attributum_capere(n, "radix");
+
         si (   radix_regula != NIHIL
             && (   de == NIHIL
                 || !chorda_aequalis_literis(*radix_regula,

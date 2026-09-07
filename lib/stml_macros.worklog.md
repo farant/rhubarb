@@ -749,3 +749,36 @@ Comment trap for the record: `<*/>` inside a BLOCK COMMENT
 terminates it (the -Wcomment cousin, caught by examen REICE).
 
 235/235; canon both judges; three byte gates intact.
+
+## 2026-09-07 — Increment 20: cursus fratrum (the sibling-run door)
+
+Pulled by oratio's T17 finding with a measured loss behind it: a
+pattern rooted at the sentence matched one greedy pair per sentence
+(`Ad urbem et in silvam it` preferred `urbem` and never saw `silvam`),
+and the class-prior rules of T19b showed the same ceiling wherever a
+rule needs a neighbour. Shape chosen against the alternatives: no
+positional vocabulary (rejected in the exemplaria interview, decision
+4b), no new verb, one attribute on EXEMPLAR and chain stages —
+`cursus="fratrum"`. Where the body's root matches, the children are
+matched as the usual ordered subsequence but from every start among
+the candidate's effective children, the first written child fixed to
+the start child, and each start that succeeds is its own row. Rows
+share the root; head captures (`<s r="$r">`) are preserved per row by
+truncating the work bindings back to the head's count before each
+start. `<**>` children stay hoisted and are re-checked per row.
+`strictus` (no gaps) is reserved and refused as XIII, as is a root
+with no ordinary child; canon mirrors both value checks.
+
+Engine: `_laxa_liberos_congruere_ab(initium, primum_fixum)` carries
+the law, the classic function is its `(0, FALSUM)` wrapper;
+`_laxa_congruere` split into `_laxa_caput_congruere` (tag, attributes,
+captures, leaves) plus children, so the start loop can match the head
+once and try the children many times; `_congruentiam_addere` factored
+out of the walker. Planted fault: inverting `primum_fixum` turned the
+fixed-first fixture red at exactly its line and left the classic
+matcher broken too; restored green. Root suite 162, silva 54, amalgam
+rebaked and verified through the host file.
+
+Editing lesson, twice in one hour: a block comment is ONE token to
+the editor's anchors, so an anchor that starts or ends inside a
+comment never matches; anchor on the code line beside it instead.

@@ -210,6 +210,134 @@ principale (
         }
     }
 
+    /* --- cursus fratrum (incrementum XX, 2026-09-07): congruentia
+     * una per initium liberorum, primus fixus, saltus post --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- cursus fratrum ---\n");
+        /* sine cursu: par UNUM avidum per parentem (inventum T17) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/></s>"
+            "<EXEMPLAR output=\"$m\">"
+            "<s><w a=\"$x\"/><w a=\"$y\"/></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@x;&@y;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/></s>"
+                "<p>12</p></radix>");
+        }
+        /* cum cursu: par per initium (12, 23); initium 2 sine
+         * secundo */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/></s>"
+            "<EXEMPLAR cursus=\"fratrum\" output=\"$m\">"
+            "<s><w a=\"$x\"/><w a=\"$y\"/></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@x;&@y;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/></s>"
+                "<p>12</p><p>23</p></radix>");
+        }
+        /* primus FIXUS: littera in primo libero initium eligit
+         * (unum) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/></s>"
+            "<EXEMPLAR cursus=\"fratrum\" output=\"$m\">"
+            "<s><w a=\"2\"/><w a=\"$y\"/></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@y;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/></s>"
+                "<p>3</p></radix>");
+        }
+        /* saltus POST initium manent; initium in liberum alienum
+         * cadit */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w a=\"1\"/><x/><w a=\"2\"/><w a=\"3\"/></s>"
+            "<EXEMPLAR cursus=\"fratrum\" output=\"$m\">"
+            "<s><w a=\"$x\"/><w a=\"$y\"/></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@x;&@y;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w a=\"1\"/><x/><w a=\"2\"/><w a=\"3\"/>"
+                "</s><p>12</p><p>23</p></radix>");
+        }
+        /* capturae capitis per initia servatae; modus primum = initium
+         * primum solum */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s r=\"k\"><w a=\"1\"/><w a=\"2\"/></s>"
+            "<EXEMPLAR cursus=\"fratrum\" output=\"$m\">"
+            "<s r=\"$r\"><w a=\"$x\"/></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@r;&@x;</p></PER>"
+            "<EXEMPLAR cursus=\"fratrum\" modus=\"primum\""
+            " output=\"$n\">"
+            "<s><w a=\"$z\"/></s></EXEMPLAR>"
+            "<PER congruentia=\"$n\"><q>&@z;</q></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s r=\"k\"><w a=\"1\"/><w a=\"2\"/></s>"
+                "<p>k1</p><p>k2</p><q>1</q></radix>");
+        }
+        /* ancorata + cursus: liberi radicis scopi */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><w a=\"1\"/><w a=\"2\"/>"
+            "<EXEMPLAR ancorata cursus=\"fratrum\" output=\"$m\">"
+            "<radix><w a=\"$x\"/></radix></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><n>&@x;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><w a=\"1\"/><w a=\"2\"/><n>1</n><n>2</n>"
+                "</radix>");
+        }
+        /* '<**>' intra cursum: existentiale hoistatum per initium */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w a=\"1\"/><w a=\"2\"><t/></w></s>"
+            "<EXEMPLAR cursus=\"fratrum\" output=\"$m\">"
+            "<s><w a=\"$x\"/><**><t/></**></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@x;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w a=\"1\"/><w a=\"2\"><t/></w></s>"
+                "<p>1</p><p>2</p></radix>");
+        }
+        /* vitia XIII: valor reservatus; forma sine libero ordinario */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w/></s>"
+            "<EXEMPLAR cursus=\"strictus\" output=\"$m\">"
+            "<s><w/></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><n/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><EXEMPLAR cursus=\"fratrum\" output=\"$m\">"
+            "<s/></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><n/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+    }
+
     /* --- modus: unum / optional / primum --- */
     {
         StmlExpansioResultus e;

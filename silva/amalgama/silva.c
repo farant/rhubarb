@@ -4199,7 +4199,10 @@ nomen enumeratio {
      * radicis 'radix=' valore ignoto aut sine ordine intrante;
      * pons '&@n;' in forma sine ordinibus (uniformitas pontis,
      * decretum 2026-09-01: referentia ipsa = electio impletionis
-     * per ordinem) */
+     * per ordinem); cursus= valore alio quam 'fratrum' ('strictus'
+     * reservatus) aut forma sine libero ordinario (incrementum XX,
+     * 2026-09-07: cursus fratrum = congruentia una per initium
+     * liberorum candidati, primus fixus) */
     STML_EXPANSIO_EXEMPLAR_MALFORMATUM     = XIII,
     /* de= aut congruentia= relationem nullam priorem nominans */
     STML_EXPANSIO_SCOPUS_IGNOTUS           = XIV,
@@ -20094,7 +20097,8 @@ _exemplar_petere (
              SilvaStmlNodus* nodus,
                    b32  ancorata,
                    SilvaXar* congruentiae,
-                   SilvaXar* opus_ligamina);
+                   SilvaXar* opus_ligamina,
+                   b32  cursus_fratrum);
 
 interior SilvaXar*
 _ligamina_ad_argumenta (
@@ -20824,7 +20828,7 @@ _commutationem_implere (
                         }
                         si (!_exemplar_petere(ctx, forma_impleta, radix,
                                               VERUM, congruentiae,
-                                              opus))
+                                              opus, FALSUM))
                         {
                             redde FALSUM;
                         }
@@ -22046,13 +22050,21 @@ _alicubi_congruere (
  * PRIMUM consumit; saltus liberi. Liberi '<**>' e subsequentia
  * SUBLATI (existentiales - vide caput descensus supra).
  * Temptationes cadentes ligamina
- * sua truncant (matcher numquam retro tollit - vocans truncat). */
+ * sua truncant (matcher numquam retro tollit - vocans truncat).
+ * CURSUS FRATRUM (2026-09-07, incrementum XX): initium = index
+ * liberi candidati unde cursor incipit; primum_fixum = liberum
+ * formae ordinarium PRIMUM candidatum 'initium' ipsum congruere
+ * debet (nullus saltus ante initium) - cetera saltibus ut semper.
+ * Vocans (_exemplar_petere sub cursus="fratrum") initium quodque
+ * temptat: congruentia una per initium. */
 interior b32
-_laxa_liberos_congruere (
+_laxa_liberos_congruere_ab (
     StmlMacroContextus* ctx,
              SilvaStmlNodus* forma,
              SilvaStmlNodus* candidatus,
-                   SilvaXar* ligamina)
+                   SilvaXar* ligamina,
+                   i32  initium,
+                   b32  primum_fixum)
 {
     SilvaXar* effectivi;
     SilvaXar* effectivi_formae;
@@ -22060,6 +22072,7 @@ _laxa_liberos_congruere (
     i32  ci;
     i32  pnum;
     i32  cnum;
+    b32  primum = primum_fixum;
 
     si (   forma->liberi              == NIHIL
         || silva_xar_numerus(forma->liberi) == ZEPHYRUM)
@@ -22084,7 +22097,7 @@ _laxa_liberos_congruere (
      * congruentia numquam possibilis, silentio */
     pnum  = silva_xar_numerus(effectivi_formae);
     cnum  = silva_xar_numerus(effectivi);
-    ci    = ZEPHYRUM;
+    ci    = initium;
     per (pi = ZEPHYRUM; pi < pnum; pi++)
     {
         SilvaStmlNodus* pf =
@@ -22142,7 +22155,12 @@ _laxa_liberos_congruere (
                 frange;
             }
             silva_xar_truncare(ligamina, ante);
+            si (primum)
+            {
+                frange;  /* initium fixum: candidatus unus temptatur */
+            }
         }
+        primum = FALSUM;
         si (!congruit)
         {
             redde FALSUM;
@@ -22151,9 +22169,24 @@ _laxa_liberos_congruere (
     redde VERUM;
 }
 
-/* Congruentia laxa nodi unius (vide caput sectionis) */
+/* forma classica: initium 0, saltus ab initio */
 interior b32
-_laxa_congruere (
+_laxa_liberos_congruere (
+    StmlMacroContextus* ctx,
+             SilvaStmlNodus* forma,
+             SilvaStmlNodus* candidatus,
+                   SilvaXar* ligamina)
+{
+    redde _laxa_liberos_congruere_ab(ctx, forma, candidatus, ligamina,
+                                     ZEPHYRUM, FALSUM);
+}
+
+/* Congruentia laxa CAPITIS nodi unius (vide caput sectionis):
+ * textus/transclusio tota (folia), elementum = tag + attributa cum
+ * capturis, liberi NON tanguntur (cursus fratrum liberos per initium
+ * temptat - _exemplar_petere) */
+interior b32
+_laxa_caput_congruere (
     StmlMacroContextus* ctx,
              SilvaStmlNodus* forma,
              SilvaStmlNodus* candidatus,
@@ -22295,13 +22328,96 @@ _laxa_congruere (
             }
         }
     }
-    redde _laxa_liberos_congruere(ctx, forma, candidatus, ligamina);
+    redde VERUM;
+}
+
+/* Congruentia laxa nodi unius: caput, deinde liberi (subsequentia
+ * ordinata a liberis primis) */
+interior b32
+_laxa_congruere (
+    StmlMacroContextus* ctx,
+             SilvaStmlNodus* forma,
+             SilvaStmlNodus* candidatus,
+                   SilvaXar* ligamina)
+{
+    redde _laxa_caput_congruere(ctx, forma, candidatus, ligamina)
+        && _laxa_liberos_congruere(ctx, forma, candidatus, ligamina);
+}
+
+/* congruentiam registrare: ligamina laboris in copiam novam, radix =
+ * nodus. FALSUM = memoria. */
+interior b32
+_congruentiam_addere (
+    StmlMacroContextus* ctx,
+                   SilvaXar* congruentiae,
+             SilvaStmlNodus* nodus,
+                   SilvaXar* opus_ligamina)
+{
+     StmlExemplarCongruentia* con;
+                         SilvaXar* ligamina;
+                         i32  i;
+                         i32  num;
+
+    ligamina = silva_xar_creare(ctx->piscina,
+                          magnitudo(StmlExemplarLigamen));
+    si (ligamina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    num = silva_xar_numerus(opus_ligamina);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlExemplarLigamen* cella =
+            (StmlExemplarLigamen*)silva_xar_addere(ligamina);
+
+        si (cella == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *cella = *(StmlExemplarLigamen*)silva_xar_obtinere(opus_ligamina, i);
+    }
+    con = (StmlExemplarCongruentia*)silva_xar_addere(congruentiae);
+    si (con == NIHIL)
+    {
+        redde FALSUM;
+    }
+    con->radix     = nodus;
+    con->ligamina  = ligamina;
+    redde VERUM;
+}
+
+/* liberum ordinarium formae: non commentum, non '<**>' (cursus
+ * fratrum sine eo nihil percurrit - vitium clarum) */
+interior b32
+_liberum_ordinarium_habere (
+    constans SilvaStmlNodus* forma)
+{
+    i32 i;
+    i32 num = forma->liberi != NIHIL ? silva_xar_numerus(forma->liberi)
+        : ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlNodus* l = *(SilvaStmlNodus**)silva_xar_obtinere(forma->liberi, i);
+
+        si (   l != NIHIL && l->genus != STML_NODUS_COMMENTUM
+            && !_est_descensus(l))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 /* Applicatio: temptatio ad hunc nodum, deinde (fluitans) descensus
  * in subarbores contenti. opus_ligamina = Xar laboris (truncatur
  * ante quamque temptationem); successu ligamina in copiam NOVAM
- * copiantur. FALSUM = defectus memoriae solum. */
+ * copiantur. cursus_fratrum (incrementum XX, 2026-09-07): capite
+ * congruente liberi formae ab INITIO QUOQUE liberorum candidati
+ * temptantur (primus fixus, ceteri saltibus) - congruentia UNA PER
+ * INITIUM, radix communis (nodus), capturae capitis servatae. Sine
+ * eo: congruentia una avida per nodum (par unum per parentem -
+ * inventum orationis T17). FALSUM = defectus memoriae solum. */
 interior b32
 _exemplar_petere (
     StmlMacroContextus* ctx,
@@ -22309,7 +22425,8 @@ _exemplar_petere (
              SilvaStmlNodus* nodus,
                    b32  ancorata,
                    SilvaXar* congruentiae,
-                   SilvaXar* opus_ligamina)
+                   SilvaXar* opus_ligamina,
+                   b32  cursus_fratrum)
 {
     i32 i;
     i32 num;
@@ -22324,38 +22441,42 @@ _exemplar_petere (
         && !_est_perspicuum(ctx, nodus->titulus))
     {
         silva_xar_truncare(opus_ligamina, ZEPHYRUM);
-        si (_laxa_congruere(ctx, forma, nodus, opus_ligamina))
+        si (cursus_fratrum)
         {
-            StmlExemplarCongruentia* con;
-                                SilvaXar* ligamina;
-
-            ligamina = silva_xar_creare(ctx->piscina,
-                                  magnitudo(StmlExemplarLigamen));
-            si (ligamina == NIHIL)
+            si (_laxa_caput_congruere(ctx, forma, nodus, opus_ligamina))
             {
-                redde FALSUM;
-            }
-            num = silva_xar_numerus(opus_ligamina);
-            per (i = ZEPHYRUM; i < num; i++)
-            {
-                StmlExemplarLigamen* cella =
-                    (StmlExemplarLigamen*)silva_xar_addere(ligamina);
+                SilvaXar* effectivi = silva_xar_creare(ctx->piscina,
+                                            magnitudo(SilvaStmlNodus*));
+                i32 ante       = silva_xar_numerus(opus_ligamina);
+                i32 cnum;
+                i32 initium;
 
-                si (cella == NIHIL)
+                si (   effectivi == NIHIL
+                    || !_liberi_effectivi(ctx, nodus, effectivi,
+                                          ZEPHYRUM))
                 {
                     redde FALSUM;
                 }
-                *cella = *(StmlExemplarLigamen*)silva_xar_obtinere(
-                    opus_ligamina, i);
+                cnum = silva_xar_numerus(effectivi);
+                per (initium = ZEPHYRUM; initium < cnum; initium++)
+                {
+                    silva_xar_truncare(opus_ligamina, ante);
+                    si (   _laxa_liberos_congruere_ab(ctx, forma, nodus,
+                               opus_ligamina, initium, VERUM)
+                        && !_congruentiam_addere(ctx, congruentiae,
+                               nodus, opus_ligamina))
+                    {
+                        redde FALSUM;
+                    }
+                }
             }
-            con = (StmlExemplarCongruentia*)silva_xar_addere(
-                congruentiae);
-            si (con == NIHIL)
-            {
-                redde FALSUM;
-            }
-            con->radix     = nodus;
-            con->ligamina  = ligamina;
+        }
+        alioquin si (   _laxa_congruere(ctx, forma, nodus,
+                                        opus_ligamina)
+                     && !_congruentiam_addere(ctx, congruentiae, nodus,
+                                              opus_ligamina))
+        {
+            redde FALSUM;
         }
     }
     /* ancorata: radix scopi sola - descensus solum dum nodus
@@ -22399,7 +22520,7 @@ _exemplar_petere (
             }
         }
         si (!_exemplar_petere(ctx, forma, l, ancorata, congruentiae,
-                              opus_ligamina))
+                              opus_ligamina, cursus_fratrum))
         {
             redde FALSUM;
         }
@@ -22539,6 +22660,8 @@ _exemplar_nucleus (
                        b32  ancorata;
                        b32  retinens;
                        b32  pons;
+                    SilvaChorda* cursus_regula;
+                       b32  cursus_fratrum;
                        i32  i;
                        i32  num;
 
@@ -22576,6 +22699,20 @@ _exemplar_nucleus (
         redde FALSUM;
     }
     ancorata = silva_stml_attributum_capere(nodus, "ancorata") != NIHIL;
+    /* cursus fratrum (incrementum XX, 2026-09-07): 'fratrum' solum -
+     * liberi formae ab initio quoque liberorum candidati, congruentia
+     * una per initium (par quodque per parentem, non unum avidum);
+     * 'strictus' (sine saltibus) RESERVATUS - valor alius vitium
+     * clarum */
+    cursus_regula = silva_stml_attributum_capere(nodus, "cursus");
+    si (   cursus_regula != NIHIL
+        && !silva_chorda_aequalis_literis(*cursus_regula, "fratrum"))
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                       nodus, NIHIL, cursus_regula);
+        redde FALSUM;
+    }
+    cursus_fratrum = cursus_regula != NIHIL;
 
     /* corpus: elementum UNUM (spec par. 2.4 - corpus silvestre sub
      * applicatione fluitanti clarum, alternativis nominatis) */
@@ -22611,6 +22748,13 @@ _exemplar_nucleus (
     /* uniformitas pontis: referentia in forma = impletio per
      * ordinem (gradus positivus correlatus); sine ordinibus
      * implendum nihil est - vitium clarum */
+    /* cursus sine liberis ordinariis: nihil percurrendum - clarum */
+    si (cursus_fratrum && !_liberum_ordinarium_habere(forma))
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                       nodus, NIHIL, cursus_regula);
+        redde FALSUM;
+    }
     pons = _formam_pontem_habere(forma);
     si (pons && fons == NIHIL)
     {
@@ -22657,7 +22801,8 @@ _exemplar_nucleus (
                     }
                 }
                 si (!_exemplar_petere(ctx, forma_ordinis,
-                        ordo->radix, ancorata, congruentiae, opus))
+                        ordo->radix, ancorata, congruentiae, opus,
+                        cursus_fratrum))
                 {
                     redde FALSUM;
                 }
@@ -22700,7 +22845,8 @@ _exemplar_nucleus (
         /* scopus defaltus: arbor expansa PARTIALIS = contentum
          * supra (lex stratorum per constructionem) */
         si (!_exemplar_petere(ctx, forma, ctx->radix_expansa,
-                              ancorata, congruentiae, opus))
+                              ancorata, congruentiae, opus,
+                              cursus_fratrum))
         {
             redde FALSUM;
         }
