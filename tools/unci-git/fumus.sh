@@ -7,6 +7,9 @@
 #   I   viae explicitae (UNCUS_VIAE): sanum -> 0, malum -> 1
 #   II  via INDICIS (GIT_INDEX_FILE temporarius): malum additum ->
 #       uncus obstat (1); index sine .c -> 0 cum 'nihil iudicatum'
+#   IX-XI lint Latinus identificatorum (2026-09-07): verbum ignotum
+#       in plagula nova tracta -> obstat cum exitibus; Latina sola -> 0;
+#       pre-merge-commit item obstat
 #   VI-VIII scriptura automatica formae: functio appensa formatur et
 #       index reponitur; commissio partialis intacta + monitum; plagula
 #       nova tota formata (fixum tractum fumus_formae.c, checkout)
@@ -89,6 +92,29 @@ else
     echo "  VI-VIII OMISSI: $FIX in arbore mutata"; fracta=1
 fi
 
+# IX-XI - LINT LATINUS (2026-09-07): plagula NOVA tracta in indice
+# temporario cum verbo ignoto 'xyzzyquux' -> uncus obstat (1) cum
+# 'IGNOTA NOVA' et exitibus; plagula Latina sola -> 0 'nihil novi';
+# pre-merge-commit idem obstat. Per indicem VERUM symbolorum (nexus
+# incrementalis: plagula in tools/unci-git/ ambulatur - nomen sine
+# puncto initiali, quod percursus praeterit) et vias tractatas (git
+# ls-files indicis temporarii).
+LINTF="tools/unci-git/fumus_verba_ignota.c"
+export GIT_INDEX_FILE="$T/index3"
+rm -f "$GIT_INDEX_FILE"
+git read-tree HEAD
+printf '#include "latina.h"\n\ninterior integer\nxyzzyquux_fumus (vacuum)\n{\n    redde ZEPHYRUM;\n}\n' > "$LINTF"
+git add -f -- "$LINTF"
+"$UNCUS" > "$T/lint_malum.out" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q 'IGNOTA NOVA' "$T/lint_malum.out" && grep -q 'xyzzyquux' "$T/lint_malum.out" && grep -q 'EXITUS' "$T/lint_malum.out"; then echo "  IX  lint: verbum ignotum obstat + exitus  OK"; else echo "  IX  FRACTUM (rc=$rc)"; tail -20 "$T/lint_malum.out"; fracta=1; fi
+tools/unci-git/pre-merge-commit > "$T/lint_fusio.out" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q 'IGNOTA NOVA' "$T/lint_fusio.out"; then echo "  X   lint ad fusionem: obstat            OK"; else echo "  X   FRACTUM (rc=$rc)"; tail -12 "$T/lint_fusio.out"; fracta=1; fi
+printf '#include "latina.h"\n\ninterior integer\nfumus_latinus (vacuum)\n{\n    redde ZEPHYRUM;\n}\n' > "$LINTF"
+git add -f -- "$LINTF"
+"$UNCUS" > "$T/lint_sanum.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -q 'nihil novi' "$T/lint_sanum.out"; then echo "  XI  lint: plagula Latina -> 0            OK"; else echo "  XI  FRACTUM (rc=$rc)"; tail -12 "$T/lint_sanum.out"; fracta=1; fi
+rm -f "$LINTF" "$T/index3"
+unset GIT_INDEX_FILE
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (VIII/VIII)"
+echo "fumus unci: sanum (XI/XI)"
 exit 0

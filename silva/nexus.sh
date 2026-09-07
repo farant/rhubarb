@@ -150,9 +150,29 @@ renovatio () {
         echo "  [instrumentum novum -> plenus]" >&2
     fi
     mkdir -p "$RADIX_DIR/build"
+    # SERA (2026-09-07): percursus duo simul (unci commissionis
+    # sessionum duarum, excubitor, sanatio quaestionis) .nova eandem
+    # scriberent et se invicem truncarent. mkdir atomicum; exspectatio
+    # ad CXX s; sera vetus (> XV min, processus occisus) derelicta.
+    local sera="$RADIX_DIR/build/nexus.sera" exspectatum=0 rc
+    while ! mkdir "$sera" 2>/dev/null; do
+        if [ -n "$(find "$sera" -maxdepth 0 -mmin +15 2>/dev/null)" ]; then
+            rmdir "$sera" 2>/dev/null
+            continue
+        fi
+        sleep 1
+        exspectatum=$((exspectatum + 1))
+        if [ "$exspectatum" -ge 120 ]; then
+            echo "nexus: sera $sera tenetur > CXX s (percursus alienus pendet?) - renovatio omissa" >&2
+            return 1
+        fi
+    done
     # $plenus_vis SINE virgulis consulto (vacuum evanescit - bash
     # scissio verborum; tabula vacua sub set -u in bash 3.2 fallit)
     "$SWEEP_BIN" $plenus_vis "$@"
+    rc=$?
+    rmdir "$sera" 2>/dev/null
+    return $rc
 }
 
 if [ "${1:-}" = "-renovare" ]; then

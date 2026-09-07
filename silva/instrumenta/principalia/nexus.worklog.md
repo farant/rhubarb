@@ -193,3 +193,13 @@ order, first-wins. Immune today only because latina reaches them
 through the lexicon; a fixture twin of any OTHER house header would
 bite them. The class wants a shared walker, not twelve edits, and
 silva is frozen.
+
+## 2026-09-07 — A lock around the sweep
+
+Renovation now runs under `build/nexus.sera` (mkdir, atomic; wait up
+to 120 s; a lock older than 15 minutes is treated as abandoned). The
+commit hook renovates on every commit, the watchdog renovates after
+suites, the query path self-heals, and the post-commit hook renovates
+in the background: two of those at once wrote the same `.nova` and
+could truncate each other. The post-commit's own debounce lock
+stays; this one is inside `renovatio`, so every caller shares it.

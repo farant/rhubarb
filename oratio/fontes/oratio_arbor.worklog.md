@@ -1375,3 +1375,23 @@ Found on the way: the report function returned −1 through an
 unsigned `i32`, the exact vanity the house law names; it is `s32`
 now. And a library file without `<stdio.h>` compiled for a day
 because nothing in it printed until today.
+
+## 2026-09-07 — The Latin lint blocks at commit (Fran's decision)
+
+`tools/unci-git/lint_latinus.sh`, one function used by `pre-commit`
+(before examen) and by a new `pre-merge-commit`: an automatic merge
+never runs pre-commit, which is exactly how the branch words arrived.
+Staged `.c/.h/.m` outside fixtures and vendor → the index heals
+(`nexus.sh -renovare`, incremental in about a second; a full sweep is
+announced when the tool changed or the table is absent) →
+`./oratio/vocabula.sh -nova`: 0 is one quiet line, 1 is the full
+report with the exits and the commit is refused, 2 means the
+apparatus is broken and the commit is refused loudly. Bypass with
+`--no-verify` and the cause in the message, as for examen. The
+wrapper builds oratio's objects itself now, so a fresh worktree's
+first commit pays once instead of failing. The nexus sweep took a
+directory lock: two sessions committing at once, or a hook and the
+watchdog, no longer race on the same `.nova`. Birth gate stages
+IX–XI: a staged new file with `xyzzyquux` is refused with the
+report, the merge hook refuses the same, a Latin-only file passes —
+eleven of eleven in sixteen seconds, through the real index.

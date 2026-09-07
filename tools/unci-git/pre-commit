@@ -25,6 +25,9 @@
 # SCRIPTURA AUTOMATICA formae (2026-09-01): functiones mutatae per
 # formator -lineae formantur et index reponitur - vide sectionem infra.
 #
+# LINT LATINUS (2026-09-07): ante examen, verba identificatorum ignota
+# NOVA contra copiam toleratam OBSTANT (lint_latinus.sh; etiam in
+# pre-merge-commit pro fusionibus automaticis; porta natalis IX-XI).
 # Evasio: git commit --no-verify (causam in nuntio commissionis nota).
 # Porta natalis: ./tools/unci-git/fumus.sh (plantat REICE, exspectat
 # obstare - via explicita ET via indicis).
@@ -35,6 +38,16 @@
 
 RADIX="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 cd "$RADIX" || exit 0
+
+# ---- LINT LATINUS identificatorum (2026-09-07, decisio Frani: OBSTAT) ----
+# Ante examen: verba ignota nova contra copiam toleratam orationis
+# (tools/unci-git/lint_latinus.sh: sanatio indicis + vocabula.sh -nova,
+# relatio cum exitibus). Modus UNCUS_VIAE (probatio examinis viarum
+# explicitarum) eum praeterit; porta natalis fumus.sh gradus IX-XI.
+if [ -z "${UNCUS_VIAE:-}" ]; then
+    . tools/unci-git/lint_latinus.sh
+    lint_latinus || exit 1
+fi
 
 if [ -n "${UNCUS_VIAE:-}" ]; then
     VIAE="$UNCUS_VIAE"

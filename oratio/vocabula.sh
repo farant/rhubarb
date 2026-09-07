@@ -17,8 +17,15 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$MATERIA_DIR/fontes" "-I$ORATIO_DIR/fontes")
 SRC="$ORATIO_DIR/instrumenta/vocabula.c"
 if [ ! -d "$BUILD_DIR" ] || [ -z "$(ls "$BUILD_DIR"/oratio_*.o 2>/dev/null)" ]; then
-    echo "arbor: obiecta absunt - ./oratio/compile_probationes.sh registrum primum" >&2
-    exit 2
+    # SE STRUENS (2026-09-07, uncus commissionis in arbore recenti):
+    # obiecta per cursorem (porta minima 'registrum') struuntur, non
+    # recusantur - uncus qui iudicem struere non potest porta muta est
+    echo "vocabula: obiecta absunt - struuntur per cursorem (registrum), semel" >&2
+    mkdir -p "$RADIX_DIR/build"
+    if ! "$ORATIO_DIR/compile_probationes.sh" registrum > "$RADIX_DIR/build/vocabula_structura.log" 2>&1; then
+        echo "vocabula: obiecta strui non potuerunt (build/vocabula_structura.log)" >&2
+        exit 2
+    fi
 fi
 OBJ=""
 for o in "$BUILD_DIR"/*.o; do

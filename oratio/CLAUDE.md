@@ -257,8 +257,9 @@ words are seen in the same run; glossary section TERMINI GRAMMATICI
 new word with its first whole identifier, site count and first site,
 the three exits with the decision rule, and ready-to-paste glossary
 skeletons; the assertion message itself lists the words, so the commit
-helper's summary shows them. The pre-commit does NOT run this lint yet
-(Fran's call pending).
+helper's summary shows them. The pre-commit AND pre-merge-commit hooks run
+this lint and BLOCK (Fran, 2026-09-07; `tools/unci-git/lint_latinus.sh`,
+birth gate stages IX–XI; bypass `--no-verify` with the cause).
 
 ## Laws to keep (spec §2–3)
 

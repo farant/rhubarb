@@ -1,0 +1,14 @@
+#!/bin/bash
+# pre-merge-commit - LINT LATINUS identificatorum ad FUSIONEM
+# automaticam (git merge sine conflictu commissionem ipse creat -
+# pre-commit ibi NON currit; fusio celeris nullam commissionem creat,
+# commissiones rami iam iudicatae). Ita verba rami alieni (pictor
+# XXVIII, fixtura briar, 2026-09-05) hic iudicantur, non una fusione
+# post. Decisio Frani 2026-09-07: OBSTAT. Functio communis:
+# tools/unci-git/lint_latinus.sh. Evasio: git merge --no-verify.
+# Installatio: git config core.hooksPath tools/unci-git (iam facta).
+RADIX="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+cd "$RADIX" || exit 0
+. tools/unci-git/lint_latinus.sh
+lint_latinus || exit 1
+exit 0
