@@ -1449,3 +1449,43 @@ What remains for the English primary: readings the pass II lists
 APPEND (auxiliare, particula, subordinans, symbolum at 0 %), and
 Moby's first code where it is not the frequent use. Those are
 class-prior rules, T19's territory with the agreement rules.
+
+## 2026-09-07 — T19a: the oracle names its primary misses
+
+Before writing a class-prior rule I wanted the data, not a guess:
+which forms sit under which gold class with which of our classes
+first, and how often. `_verbum_iudicare` now tallies every gold word
+that is COVERED but not FIRST as (gold class, folded form, our first
+class) in a hash keyed on two class bytes plus the form, with stable
+Xar cells so the table can hold the cell pointers. `oraculum.sh
+-discrepantiae` prints the twelve most frequent per class with a
+remainder line; `-machina` adds `DISCREPANTIA` rows. The gate holds
+the law that makes the listing trustworthy: per class the tally sums
+to tecta − primaria, sorted non-increasing, and on CIRCSE's crude
+order `est` gold auxiliare with verbum first appears at least fifty
+times (105). Planted fault: counting hits instead of misses breaks
+the sum law on the first treebank.
+
+Two lessons on the way. The first stack-buffered key capped forms at
+about 240 bytes and the law failed by exactly two words on EWT test:
+two URL tokens tagged PROPN, 473 and 295 bytes long. Web text has no
+maximum word. The key is allocated per form now. And the tally must
+not use `sprintf` in the library: the key is binary, two class bytes
+and the form, which a length-carrying chorda holds without a
+terminator.
+
+What the listing says, for T19b (read from the report, not from
+memory): Latin `sum` forms are always verbum first (168/510/442 gold
+auxiliare, none primary); `ad`, `a`, `cum`, `post`, `ante` have the
+adverb or the abbreviation first (LLCT 374 `ad`); `non` is first the
+abbreviation `Non.` (84/63); demonstratives and possessives are
+pronoun or adjective first where the charters want determinans
+(2096 gold, 0 primary); `qui` is DET 161 times in LLCT. English:
+`is/be/are/was/will/would/have/can` verbum first (1543 gold
+auxiliare), `to` adposition first 371 times against particula, `not`
+adverb first (98), `if` coordinans first (86), `that` determinans
+first (80 SCONJ + 91 PRON), `I` substantivum first 155 times, `just`
+adjective first 57, `please` verb first 33, `$ % # +` interpunctio.
+Ranges (enclitic `-que` 248 in CIRCSE, English `'s`/`n't`) can never
+be primary under the current one-element-per-range judgment: a
+measurement ceiling of about 2 % on Seneca, noted, not fixed.

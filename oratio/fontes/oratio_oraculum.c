@@ -96,6 +96,159 @@ oratio_oraculum_census_vacare (
     census->lingua_documenti = (s32)-I;
 }
 
+/* discrepantiam notare (T19a): clavis 'aurea/nostra/forma plicata' in
+ * indice; cella nova in Xar (cellae xar numquam moventur - monstrator
+ * in indice stabilis) aut numerus cellae inventae auctus. Forma
+ * monstrosa (> CC octeti) non tabulatur - numquam ruit. */
+interior vacuum
+_discrepantiam_notare (
+                 Piscina* piscina,
+    OratioOraculumCensus* census,
+           OratioClassis  aurea,
+                  chorda  forma,
+           OratioClassis  nostra)
+{
+                     character*  clavis_datum;
+                        chorda   plicata;
+                        chorda   clavis;
+                        vacuum*  valor;
+    OratioOraculumDiscrepantia*  d;
+    OratioOraculumDiscrepantia** cella;
+                           i32   praefixum;
+
+    si (census->discrepantiae == NIHIL)
+    {
+        census->discrepantiae = xar_creare(piscina,
+            (i32)magnitudo(OratioOraculumDiscrepantia*));
+        census->discrepantiae_index = tabula_dispersa_creare_chorda(
+            piscina, (i32)1024);
+        si (   census->discrepantiae       == NIHIL
+            || census->discrepantiae_index == NIHIL)
+        {
+            census->discrepantiae = NIHIL;
+            redde;
+        }
+    }
+    plicata = oratio_vocabularium_la_plicare(piscina, forma);
+    /* clavis binaria in piscina (forma quaelibet - URL aurea PROPN
+     * CCXL octetorum lex summae bis fregit sub tabula stationaria):
+     * octetus classis aureae, octetus nostrae, forma; chorda mensuram
+     * fert, octeti nulli licent; sine stdio */
+    praefixum    = (i32)II;
+    clavis_datum = (character*)piscina_allocare(piscina,
+        (memoriae_index)(plicata.mensura + praefixum));
+    si (plicata.datum == NIHIL || clavis_datum == NIHIL)
+    {
+        redde;
+    }
+    clavis_datum[ZEPHYRUM]  = (character)(i32)aurea;
+    clavis_datum[I]         = (character)(i32)nostra;
+    memcpy(clavis_datum + praefixum, plicata.datum,
+        (size_t)plicata.mensura);
+    clavis.datum    = (i8*)clavis_datum;
+    clavis.mensura  = (i32)praefixum + plicata.mensura;
+    si (tabula_dispersa_invenire(census->discrepantiae_index, clavis,
+            &valor))
+    {
+        d           = (OratioOraculumDiscrepantia*)valor;
+        d->numerus  = d->numerus + I;
+        redde;
+    }
+    d = (OratioOraculumDiscrepantia*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(*d));
+    cella = (OratioOraculumDiscrepantia**)xar_addere(
+        census->discrepantiae);
+    si (d == NIHIL || cella == NIHIL)
+    {
+        redde;
+    }
+    d->aurea    = aurea;
+    d->nostra   = nostra;
+    d->forma    = plicata;
+    d->numerus  = I;
+    *cella      = d;
+    (vacuum)tabula_dispersa_inserere(census->discrepantiae_index,
+        clavis, d);
+}
+
+/* ordo: numerus maior prior, deinde forma octetim, deinde classis */
+interior s32
+_discrepantias_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans OratioOraculumDiscrepantia* x =
+        *(OratioOraculumDiscrepantia* constans*)a;
+    constans OratioOraculumDiscrepantia* y =
+        *(OratioOraculumDiscrepantia* constans*)b;
+    i32 minima;
+    s32 c;
+
+    si (x->numerus != y->numerus)
+    {
+        redde x->numerus > y->numerus ? (s32)-I : (s32)I;
+    }
+    minima = x->forma.mensura < y->forma.mensura ? x->forma.mensura
+        : y->forma.mensura;
+    c = (s32)memcmp(x->forma.datum, y->forma.datum, (size_t)minima);
+    si (c != ZEPHYRUM)
+    {
+        redde c < ZEPHYRUM ? (s32)-I : (s32)I;
+    }
+    si (x->forma.mensura != y->forma.mensura)
+    {
+        redde x->forma.mensura < y->forma.mensura ? (s32)-I : (s32)I;
+    }
+    si ((i32)x->nostra != (i32)y->nostra)
+    {
+        redde (i32)x->nostra < (i32)y->nostra ? (s32)-I : (s32)I;
+    }
+    redde ZEPHYRUM;
+}
+
+Xar*
+oratio_oraculum_discrepantiae (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census,
+                    OratioClassis  aurea)
+{
+    Xar* exitus;
+    i32  i;
+    i32  n;
+
+    exitus = xar_creare(piscina,
+        (i32)magnitudo(OratioOraculumDiscrepantia*));
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (census->discrepantiae == NIHIL)
+    {
+        redde exitus;
+    }
+    n = xar_numerus(census->discrepantiae);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        OratioOraculumDiscrepantia* d =
+            *(OratioOraculumDiscrepantia**)xar_obtinere(
+                census->discrepantiae, i);
+        OratioOraculumDiscrepantia** cella;
+
+        si (d == NIHIL || d->aurea != aurea)
+        {
+            perge;
+        }
+        cella = (OratioOraculumDiscrepantia**)xar_addere(exitus);
+        si (cella == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *cella = d;
+    }
+    xar_ordinare(exitus, _discrepantias_comparare);
+    redde exitus;
+}
+
 
 /* ==================================================
  * Elementa arboris cum extentibus et classibus
@@ -470,6 +623,18 @@ _verbum_iudicare (
     {
         census->primaria  = census->primaria + I;
         c->primaria       = c->primaria + I;
+    }
+    /* T19a: tectum sed non primum = discrepantia (classis nostra prima
+     * elementi primi); lex summae: tecta - primaria per classem */
+    si (tectum && !primaria && e1 > e0)
+    {
+        constans Elementum* primum_elementum =
+            (constans Elementum*)xar_obtinere(elementa, e0);
+
+        _discrepantiam_notare(piscina, census, aurea, verbum->forma,
+            primum_elementum->numerus_classium > ZEPHYRUM
+                ? primum_elementum->classis[ZEPHYRUM]
+                : ORATIO_CLASSIS_NUMERUS_CLASSIUM);
     }
     si (lemma)
     {

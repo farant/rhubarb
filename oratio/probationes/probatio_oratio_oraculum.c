@@ -234,6 +234,69 @@ _thesaurus_arborum (
         &census));
     imprimere("  primaria cruda %.1f%%\n", census.verba > ZEPHYRUM
         ? 100.0 * (duplex)census.primaria / (duplex)census.verba : 0.0);
+    /* T19a: discrepantiae primarii in ordine CRUDO - lex summae per
+     * classem (numeri == tecta - primaria), ordo numeri non crescens,
+     * classis sine discrepantia lista vacua; CIRCSE: 'est' aurea
+     * auxiliare cum nostra prima verbum (WORDS/glossarium verbum ante
+     * auxiliare ponit - data regulae T19b) */
+    {
+        i32 violationes  = ZEPHYRUM;
+        i32 est_numerus  = ZEPHYRUM;
+        i32 ultima       = (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM;
+        i32 i;
+
+        per (i = ZEPHYRUM; i <= ultima; i++)
+        {
+            constans OratioOraculumClassis* k = &census.classes[i];
+            Xar* ds = oratio_oraculum_discrepantiae(p, &census,
+                (OratioClassis)i);
+            i32 summa = ZEPHYRUM;
+            i32 prior = (i32)0x7fffffff;
+            i32 j;
+
+            CREDO_NON_NIHIL (ds);
+            si (ds == NIHIL)
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; j < xar_numerus(ds); j++)
+            {
+                constans OratioOraculumDiscrepantia* d =
+                    *(OratioOraculumDiscrepantia**)xar_obtinere(ds, j);
+
+                summa = summa + d->numerus;
+                si (d->numerus > prior || d->aurea != (OratioClassis)i)
+                {
+                    violationes = violationes + I;
+                }
+                prior = d->numerus;
+                si (   i         == (i32)ORATIO_CLASSIS_AUXILIARE
+                    && d->nostra == ORATIO_CLASSIS_VERBUM
+                    && _aequalis(d->forma, "est"))
+                {
+                    est_numerus = d->numerus;
+                }
+            }
+            si (summa != k->tecta - k->primaria)
+            {
+                imprimere("    discrepantiae %s: summa %d != tecta %d"
+                    " - primaria %d\n",
+                    i < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                        ? oratio_classis_titulus((OratioClassis)i)
+                        : "(extra)",
+                    (integer)summa, (integer)k->tecta,
+                    (integer)k->primaria);
+                violationes = violationes + I;
+            }
+        }
+        CREDO_AEQUALIS_I32 (violationes, ZEPHYRUM);
+        si (strstr(plagula, "circse") != NIHIL)
+        {
+            imprimere("    discrepantia cruda: est auxiliare/verbum %d\n",
+                (integer)est_numerus);
+            CREDO_VERUM (est_numerus >= (i32)L);
+        }
+    }
     oratio_oraculum_census_vacare(&census);
     CREDO_VERUM (oratio_oraculum_iudicare_resolutum(p, vocabularia,
         programma,

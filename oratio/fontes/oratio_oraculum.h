@@ -31,6 +31,7 @@
 #include "oratio_conllu.h"
 #include "oratio_vocabularia.h"
 #include "oratio_resolutio.h"
+#include "tabula_dispersa.h"
 
 #define ORATIO_ORACULUM_EXEMPLA 5
 
@@ -51,6 +52,20 @@ nomen structura {
     OratioOraculumExemplum exempla[ORATIO_ORACULUM_EXEMPLA];   /* non tecta prima */
 } OratioOraculumClassis;
 
+/* DISCREPANTIA PRIMARII (T19a, 2026-09-07): verbum aureum TECTUM
+ * (classis aurea inter nostras) sed non PRIMUM - classis nostra prima
+ * alia. Tabulata per (classis aurea, forma plicata, classis nostra
+ * prima) cum numero. Ex hac tabula regulae priorum classium gradus V
+ * scribuntur: quae formae quam classem primam falso ferunt, quoties.
+ * LEX: summa numerorum classis aureae == tecta - primaria eius. */
+nomen structura {
+    OratioClassis aurea;
+    OratioClassis nostra;    /* classis nostra PRIMA (NUMERUS_CLASSIUM = nulla) */
+           chorda forma;     /* plicata (copia in piscina iudicii) */
+              i32 numerus;
+} OratioOraculumDiscrepantia;
+
+
 nomen structura {
     i32 sententiae;
     i32 sententiae_fractae;   /* parsura aut annotatio fracta */
@@ -70,8 +85,14 @@ nomen structura {
      * unum, 'I have.', linea sine verbis) suffragiis paribus Latina
      * caderet; suffragia = vocabula quae linguam ferunt, summata
      * per thesaurum; -I = non censa (sine programmate) */
-                      s32 lingua_documenti;
-                      i32 suffragia_linguarum[ORATIO_LINGUA_NUMERUS];
+                                            s32 lingua_documenti;
+                                            i32 suffragia_linguarum[ORATIO_LINGUA_NUMERUS];
+    /* discrepantiae primarii (T19a): Xar de OratioOraculumDiscrepantia*
+     * (cellae stabiles in piscina iudicii) + index clavis
+     * 'aurea/nostra/forma'; pigre creata in iudicio, NIHIL ante */
+                     Xar* discrepantiae;
+          TabulaDispersa* discrepantiae_index;
+
     OratioOraculumClassis classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM + I];   /* [NUMERUS] = UPOS extra tabulam */
 } OratioOraculumCensus;
 
@@ -83,6 +104,17 @@ oratio_oraculum_classis_ex_upos (
 vacuum
 oratio_oraculum_census_vacare (
     OratioOraculumCensus* census);
+
+/* Discrepantiae classis aureae ordine NUMERI (maior prior, deinde
+ * forma octetim, deinde classis nostra): Xar de
+ * OratioOraculumDiscrepantia* in piscina data; vacuus si nullae
+ * (census sine iudicio quoque). NIHIL = memoria. */
+Xar*
+oratio_oraculum_discrepantiae (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census,
+                    OratioClassis  aurea);
+
 
 /* Sententias iudicare, censum CUMULARE (vacare prius si novus).
  * vocabularia = tabula Latina cum glossario et Moby (T16: lectiones
