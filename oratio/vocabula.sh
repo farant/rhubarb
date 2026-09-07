@@ -1,7 +1,8 @@
 #!/bin/bash
 # oratio/vocabula.sh - recensio vocabulorum: identificatores et commentaria (Latine, T10) aut prosa markdown (Anglice, T15a) contra vocabularia
 #
-# Usage:  ./oratio/vocabula.sh [-symbola | -commenta | -omnia | -prosa] [-machina] [-omnes] [-omnes-viae] [-tectum N]
+# Usage:  ./oratio/vocabula.sh [-symbola | -commenta | -omnia | -prosa | -nova] [-machina] [-omnes] [-omnes-viae] [-tectum N]
+#         -nova = verba ignota NOVA contra copiam toleratam cum exitibus (ante commissionem; exitus 1 si adsunt)
 # Exit:   0 sanum | 1 fractum | 2 usus/plagula absens
 # Obiecta oratio/build/*.o poscit (cursor oratio/compile_probationes.sh ea
 # struit); instrumentum in oratio/build/vocabula.

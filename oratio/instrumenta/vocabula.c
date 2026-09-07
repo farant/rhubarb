@@ -1,6 +1,7 @@
 /* vocabula.c - Instrumentum recensionis vocabulorum (T10)
- *
- * Usus: vocabula [-symbola | -commenta | -omnia] [-machina] [-omnes]
+  * Usus: vocabula [-symbola | -commenta | -omnia | -prosa | -nova] [-machina] [-omnes]
+ *   -nova      verba ignota NOVA contra copiam toleratam (id quod porta
+ *              iudicat) cum exitibus nominatis; exitus I si adsunt
  *                [-tectum N]
  *   -symbola   identificatores ex build/nexus.tsv (sedes)
  *   -commenta  commentaria plagularum C in oratio/build/corpus_c.txt
@@ -107,7 +108,8 @@ OratioVocabulariumVitium vitium;
                     b32  symbola  = VERUM;
                     b32  commenta = VERUM;
                                         b32  machina  = FALSUM;
-                    b32  omnes_viae = FALSUM;
+                                        b32  omnes_viae = FALSUM;
+                    b32  nova_modus = FALSUM;
                     i32  tectum   = (i32)60;
 
                 integer  i;
@@ -145,9 +147,19 @@ OratioVocabulariumVitium vitium;
         {
             tectum = (i32)1000000;
         }
-        alioquin si (strcmp(argv[i], "-omnes-viae") == ZEPHYRUM)
+                alioquin si (strcmp(argv[i], "-omnes-viae") == ZEPHYRUM)
         {
             omnes_viae = VERUM;   /* etiam knotapel/ vendor/ archivum/ */
+        }
+        alioquin si (strcmp(argv[i], "-nova") == ZEPHYRUM)
+        {
+            /* verba ignota NOVA contra copiam toleratam (id quod porta
+             * iudicat) cum exitibus - ante commissionem; exitus I si
+             * nova adsunt */
+            nova_modus  = VERUM;
+            symbola     = VERUM;
+            commenta    = FALSUM;
+            prosa       = FALSUM;
         }
 
         alioquin si (   strcmp(argv[i], "-tectum") == ZEPHYRUM
@@ -159,7 +171,7 @@ OratioVocabulariumVitium vitium;
         alioquin
         {
                         fprintf(stderr,
-                            "usus: vocabula [-symbola | -commenta | -omnia | -prosa] [-machina] [-omnes] [-omnes-viae] [-tectum N]\n");
+                            "usus: vocabula [-symbola | -commenta | -omnia | -prosa | -nova] [-machina] [-omnes] [-omnes-viae] [-tectum N]\n");
 
             redde II;
         }
@@ -363,10 +375,44 @@ OratioVocabulariumVitium vitium;
         }
         fclose(lista);
         }
-    si (!oratio_vocabula_iudicare(vc))
-    {
+        si (!oratio_vocabula_iudicare(vc))
+        {
         fprintf(stderr, "vocabula: iudicium fractum\n");
         redde II;
+        }
+    si (nova_modus)
+    {
+                                    chorda copia;
+                                       i32 tolerata_n  =
+                                           ZEPHYRUM;
+                                       i32 evanida_n   =
+                                           ZEPHYRUM;
+                        constans character* nuntius     = NIHIL;
+                                       s32  nova;
+
+        sprintf(via,
+            "%s/oratio/probationes/fixa/vocabula/ignota_symbolorum.txt",
+            radix);
+        si (!_plagulam_legere(piscina, via, &copia))
+        {
+            fprintf(stderr, "vocabula: copia tolerata absens: %s\n",
+                via);
+            redde II;
+        }
+        nova = oratio_vocabula_nova(piscina, vc, copia, VERUM,
+            &tolerata_n, &evanida_n, &nuntius);
+        si (nova < ZEPHYRUM)
+        {
+            fprintf(stderr, "vocabula: relatio novorum fracta\n");
+            redde II;
+        }
+        imprimere("  identificatores: verba %d  ignota %d  tolerata %d"
+            "  NOVA %d  evanida %d%s\n",
+            (integer)xar_numerus(oratio_vocabula_verba(vc)),
+            (integer)oratio_vocabula_numerus(vc, ORATIO_VERBUM_IGNOTUM),
+            (integer)tolerata_n, (integer)nova, (integer)evanida_n,
+            nova == ZEPHYRUM ? "  - nihil novi" : "");
+        redde nova > ZEPHYRUM ? I : ZEPHYRUM;
     }
     {
            Xar* verba  = oratio_vocabula_verba(vc);
@@ -378,7 +424,7 @@ OratioVocabulariumVitium vitium;
         {
             Xar* ordo = oratio_vocabula_ordinata(piscina, vc, (s32)-I);
 
-            imprimere("# verbum\tstatus\tsedes\tsymbola\tcommenta\tprosa\tclassis\tlemma\tanalyses\tlemmata\tvia\tlinea\tregula\n");
+            imprimere("# verbum\tstatus\tsedes\tsymbola\tcommenta\tprosa\tclassis\tlemma\tanalyses\tlemmata\tvia\tlinea\tregula\tidentificator\n");
             per (i = ZEPHYRUM; i < (integer)xar_numerus(ordo); i++)
             {
                 constans OratioVerbum* v =
@@ -397,9 +443,11 @@ OratioVocabulariumVitium vitium;
                 _c(v->lemma);
                 imprimere("\t%d\t%d\t", (integer)v->analyses,
                     (integer)v->lemmata);
-                                _c(v->via_prima);
+                                                _c(v->via_prima);
                 imprimere("\t%d\t", (integer)v->linea_prima);
                 _c(v->regula);
+                putchar('\t');
+                _c(v->identificator_primus);
                 putchar('\n');
             }
             redde ZEPHYRUM;

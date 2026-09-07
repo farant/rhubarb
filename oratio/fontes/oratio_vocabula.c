@@ -12,6 +12,7 @@
 #include "md_registrum.h"
 #include "md_lexicon.h"
 #include "tabula_dispersa.h"
+#include <stdio.h>
 #include <string.h>
 
 nomen structura {
@@ -202,13 +203,17 @@ oratio_vocabula_verbum_addere (
         ex_commento ? ORATIO_SEDES_COMMENTUM : ORATIO_SEDES_SYMBOLUM);
 }
 
-b32
-oratio_vocabula_verbum_addere_sede (
+/* corpus commune: identificator = identificator integer sedis (symbola;
+ * vacuus alibi) - in recordo NOVO servatur ut relatio novorum 'sem in
+ * sem_regionis' dicere possit */
+interior b32
+_verbum_addere_sede (
         OratioVocabula* vc,
                 chorda  verbum,
     constans character* via,
                    i32  linea,
-      OratioSedesGenus  genus)
+      OratioSedesGenus  genus,
+                chorda  identificator)
 {
               i8  minusculum[64];
           chorda  clavis;
@@ -260,12 +265,19 @@ oratio_vocabula_verbum_addere_sede (
             redde FALSUM;
         }
         memset(v, ZEPHYRUM, magnitudo(*v));
-        v->verbum             = _copia(vc->piscina, clavis);
-        v->status             = ORATIO_VERBUM_IGNOTUM;
-        v->via_prima          = _copia_literarum(vc->piscina, via);
-        v->linea_prima        = linea;
-        v->ex_commento_prima  = (b32)(genus == ORATIO_SEDES_COMMENTUM);
-        v->ex_prosa_prima     = (b32)(genus == ORATIO_SEDES_PROSA);
+        v->verbum       = _copia(vc->piscina, clavis);
+        v->status       = ORATIO_VERBUM_IGNOTUM;
+        v->via_prima    = _copia_literarum(vc->piscina, via);
+        v->linea_prima  = linea;
+                v->ex_commento_prima = (b32)(genus
+                    == ORATIO_SEDES_COMMENTUM);
+        v->ex_prosa_prima = (b32)(genus == ORATIO_SEDES_PROSA);
+        si (   identificator.datum != NIHIL
+            && identificator.mensura > ZEPHYRUM)
+        {
+            v->identificator_primus = _copia(vc->piscina,
+                identificator);
+        }
         s->index              = (s32)xar_numerus(vc->verba) - I;
         si (!tabula_dispersa_inserere(vc->per_verbum, v->verbum, s))
         {
@@ -286,6 +298,21 @@ oratio_vocabula_verbum_addere_sede (
             frange;
     }
     redde VERUM;
+}
+
+b32
+oratio_vocabula_verbum_addere_sede (
+        OratioVocabula* vc,
+                chorda  verbum,
+    constans character* via,
+                   i32  linea,
+      OratioSedesGenus  genus)
+{
+    chorda nulla;
+
+    nulla.datum    = NIHIL;
+    nulla.mensura  = ZEPHYRUM;
+    redde _verbum_addere_sede(vc, verbum, via, linea, genus, nulla);
 }
 
 b32
@@ -335,12 +362,12 @@ oratio_vocabula_identificatorem_addere (
             }
             j = j + I;
         }
-        si (!oratio_vocabula_verbum_addere(vc,
-                _chorda(identificator.datum + a, j - a), via, linea,
-                FALSUM))
-        {
+                si (!_verbum_addere_sede(vc,
+                    _chorda(identificator.datum + a, j - a), via, linea,
+                    ORATIO_SEDES_SYMBOLUM, identificator))
+                {
             redde FALSUM;
-        }
+                }
         i = j;
     }
     redde VERUM;
@@ -1201,6 +1228,242 @@ oratio_vocabula_numerus (
         }
     }
     redde n;
+}
+
+
+/* ==================================================
+ * Verba nova contra copiam toleratam (2026-09-07)
+ * ================================================== */
+
+interior vacuum
+_lineas_in_tabulam (
+    TabulaDispersa* tabula,
+            chorda  textus,
+               i32* numerus)
+{
+    i32 k = ZEPHYRUM;
+
+    dum (k < textus.mensura)
+    {
+        i32 b = k;
+
+        dum (b < textus.mensura && textus.datum[b] != '\n')
+        {
+            b = b + I;
+        }
+        si (b > k && textus.datum[k] != '#')
+        {
+            (vacuum)tabula_dispersa_inserere(tabula,
+                _chorda(textus.datum + k, b - k), NIHIL);
+            *numerus = *numerus + I;
+        }
+        k = b + I;
+    }
+}
+
+/* exemplaria glossarii parabilia pro verbo uno */
+interior vacuum
+_exemplaria_imprimere (
+    chorda verbum)
+{
+    imprimere("       (a) <vocabulum lemma=\"%.*s\" lingua=\"latina\""
+        " classis=\"substantivum\" nota=\"...\">"
+        "<forma textus=\"%.*s\"/></vocabulum>\n",
+        (integer)verbum.mensura, (constans character*)verbum.datum,
+        (integer)verbum.mensura, (constans character*)verbum.datum);
+    imprimere("       (b) <vocabulum lemma=\"%.*s\" lingua=\"anglica\""
+        " classis=\"ignotum-permissum\" contextus=\"latinus\""
+        " nota=\"...\"/>\n",
+        (integer)verbum.mensura, (constans character*)verbum.datum);
+}
+
+s32
+oratio_vocabula_nova (
+                    Piscina*  piscina,
+    constans OratioVocabula*  vc,
+                     chorda   copia,
+                        b32   relatio,
+                        i32*  tolerata_exitus,
+                        i32*  evanida_exitus,
+         constans character** nuntius_exitus)
+{
+    TabulaDispersa* tolerata     =
+        tabula_dispersa_creare_chorda(piscina,
+        (i32)4096);
+    TabulaDispersa* ignota_nunc  =
+        tabula_dispersa_creare_chorda(piscina,
+        (i32)4096);
+               Xar* ordo         = oratio_vocabula_ordinata(piscina, vc,
+                                       (s32)ORATIO_VERBUM_IGNOTUM);
+               Xar* nova = xar_creare(piscina,
+                   (i32)magnitudo(s32));
+               i32 tolerata_n  = ZEPHYRUM;
+               i32 evanida     = ZEPHYRUM;
+               i32 k;
+         character nuntius[1024];
+               i32 scriptum;
+
+    si (   tolerata == NIHIL || ignota_nunc == NIHIL || ordo == NIHIL
+        || nova     == NIHIL)
+    {
+        redde -I;
+    }
+    _lineas_in_tabulam(tolerata, copia, &tolerata_n);
+    per (k = ZEPHYRUM; k < xar_numerus(ordo); k++)
+    {
+                          s32  index = *(s32*)xar_obtinere(ordo, k);
+        constans OratioVerbum* w = (constans OratioVerbum*)xar_obtinere(
+            vc->verba, (i32)index);
+
+        (vacuum)tabula_dispersa_inserere(ignota_nunc, w->verbum, NIHIL);
+        si (!tabula_dispersa_continet(tolerata, w->verbum))
+        {
+            s32* s = (s32*)xar_addere(nova);
+
+            si (s != NIHIL)
+            {
+                *s = index;
+            }
+        }
+    }
+    /* evanida: in copia, non iam ignota (glossarium/renominatio - aut
+     * plagula deleta) */
+    {
+        i32 a = ZEPHYRUM;
+
+        dum (a < copia.mensura)
+        {
+            i32 b = a;
+
+            dum (b < copia.mensura && copia.datum[b] != '\n')
+            {
+                b = b + I;
+            }
+            si (   b > a && copia.datum[a] != '#'
+                && !tabula_dispersa_continet(ignota_nunc,
+                       _chorda(copia.datum + a, b - a)))
+            {
+                evanida = evanida + I;
+                si (relatio && evanida <= (i32)X)
+                {
+                    imprimere("  evanidum %.*s (in copia, non iam"
+                        " ignotum - copia minuenda)\n",
+                        (integer)(b - a),
+                        (constans character*)(copia.datum + a));
+                }
+            }
+            a = b + I;
+        }
+    }
+    /* nuntius unus pro assertione: fractura ipsa verba ferat */
+        scriptum = (i32)sprintf(nuntius, "IGNOTA NOVA %d:",
+            (integer)xar_numerus(nova));
+    per (k = ZEPHYRUM; k < xar_numerus(nova); k++)
+    {
+        constans OratioVerbum* w = (constans OratioVerbum*)xar_obtinere(
+            vc->verba, (i32)*(s32*)xar_obtinere(nova, k));
+
+        si (scriptum + w->verbum.mensura + w->via_prima.mensura + LXIV
+            > (i32)magnitudo(nuntius) - LXIV)
+        {
+                        scriptum = scriptum + (i32)sprintf(nuntius
+                            + scriptum,
+                            " +%d", (integer)(xar_numerus(nova) - k));
+            frange;
+        }
+                scriptum = scriptum + (i32)sprintf(nuntius + scriptum,
+                    "%s %.*s (%d sedes, %.*s:%d)",
+                    k > ZEPHYRUM ? "," : "",
+                    (integer)w->verbum.mensura,
+                    (constans character*)w->verbum.datum,
+                    (integer)w->sedes,
+                    (integer)w->via_prima.mensura,
+                    (constans character*)w->via_prima.datum,
+                    (integer)w->linea_prima);
+    }
+    (vacuum)sprintf(nuntius + scriptum,
+        " - exitus: glossarium (entrium aut ignotum-permissum) aut"
+        " renominatio; relatio plena: ./oratio/vocabula.sh -nova");
+    si (relatio && xar_numerus(nova) > ZEPHYRUM)
+    {
+        i32 n = xar_numerus(nova);
+
+        imprimere("  IGNOTA NOVA %d (extra copiam toleratam"
+            " oratio/probationes/fixa/vocabula/ignota_symbolorum.txt):\n",
+            (integer)n);
+        per (k = ZEPHYRUM; k < n && k < (i32)XL; k++)
+        {
+            constans OratioVerbum* w =
+                (constans OratioVerbum*)xar_obtinere(
+                vc->verba, (i32)*(s32*)xar_obtinere(nova, k));
+            chorda id = w->identificator_primus.datum != NIHIL
+                ? w->identificator_primus : w->verbum;
+
+            imprimere("    NOVUM %-16.*s in '%.*s'  %d sedes  %.*s:%d\n",
+                (integer)w->verbum.mensura,
+                (constans character*)w->verbum.datum,
+                (integer)id.mensura, (constans character*)id.datum,
+                (integer)w->sedes,
+                (integer)w->via_prima.mensura,
+                (constans character*)w->via_prima.datum,
+                (integer)w->linea_prima);
+        }
+        si (n > (i32)XL)
+        {
+            imprimere("    +%d nova reliqua (./oratio/vocabula.sh -symbola"
+                " -machina: status ignotum)\n", (integer)(n - (i32)XL));
+        }
+        imprimere("  EXITUS (unus per verbum; deinde"
+            " ./oratio/compile_probationes.sh vocabula):\n");
+        imprimere("   (a) vox domus aut Latina media -> entrium in"
+            " oratio/glossarium.stml (sectio propria; porta"
+            " glossarium iudicat)\n");
+        imprimere("   (b) abbreviatio aut nomen alienum TOLERANDUM ->"
+            " ignotum-permissum ibidem (contextus latinus)\n");
+        imprimere("   (c) verbum Anglicum in identificatore ->"
+            " renominatio: ./silva/renominare.sh <verbum> <novum>"
+            " [-scribere]\n");
+        imprimere("   regula: sedes multae -> (a) aut (b); sedes paucae"
+            " -> (c). Verba plagularum VETERUM nunc primum indexata"
+            " (index restitutus, non codex novus) -> copia regeneranda"
+            " CAUSA nominata: ORATIO_VOCABULA_SCRIBERE=1"
+            " ./oratio/compile_probationes.sh vocabula\n");
+        imprimere("  exemplaria parabilia:\n");
+        per (k = ZEPHYRUM; k < n && k < (i32)V; k++)
+        {
+            constans OratioVerbum* w =
+                (constans OratioVerbum*)xar_obtinere(
+                vc->verba, (i32)*(s32*)xar_obtinere(nova, k));
+
+            _exemplaria_imprimere(w->verbum);
+        }
+        si (n > (i32)V)
+        {
+            imprimere("       (cetera eodem exemplari)\n");
+        }
+    }
+    si (tolerata_exitus != NIHIL)
+    {
+        *tolerata_exitus = tolerata_n;
+    }
+    si (evanida_exitus != NIHIL)
+    {
+        *evanida_exitus = evanida;
+    }
+        si (nuntius_exitus != NIHIL)
+        {
+        memoriae_index  m = strlen(nuntius) + I;
+             character* copia_nuntii = (character*)piscina_allocare(
+                 piscina, m);
+
+        si (copia_nuntii != NIHIL)
+        {
+            memcpy(copia_nuntii, nuntius, m);
+        }
+        *nuntius_exitus = copia_nuntii != NIHIL ? copia_nuntii
+            : "IGNOTA NOVA";
+        }
+        redde (s32)xar_numerus(nova);
 }
 
 i32

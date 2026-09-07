@@ -251,8 +251,14 @@ session's uncommitted work never counts); the total word count (7,703)
 is pinned only rising so a shrinking index goes red where its number
 is read; the runner renovates the nexus index before the gates, so new
 words are seen in the same run; glossary section TERMINI GRAMMATICI
-(eight accident titles WORDS lacks). The pre-commit does NOT run this
-lint yet (Fran's call pending).
+(eight accident titles WORDS lacks). The failure CARRIES ITS REMEDY:
+`oratio_vocabula_nova` (shared by the gate's block IV b and
+`./oratio/vocabula.sh -nova`, exit 1 when new words exist) prints each
+new word with its first whole identifier, site count and first site,
+the three exits with the decision rule, and ready-to-paste glossary
+skeletons; the assertion message itself lists the words, so the commit
+helper's summary shows them. The pre-commit does NOT run this lint yet
+(Fran's call pending).
 
 ## Laws to keep (spec §2–3)
 

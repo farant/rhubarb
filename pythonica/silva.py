@@ -3253,7 +3253,7 @@ if __name__ == '__main__':
 
 # ---------------------------------------------------------------- vocabula (oratio)
 Verbum = namedtuple('Verbum', 'verbum status sedes symbola commenta prosa classis '
-                    'lemma analyses lemmata via linea regula')
+                    'lemma analyses lemmata via linea regula identificator')
 Vocabula = namedtuple('Vocabula', 'numeri verba ignota ambigua permissa')
 
 
@@ -3297,7 +3297,8 @@ def vocabula(fons='omnia', omnes_viae=False):
         if len(p) < 13:
             continue
         verba.append(Verbum(p[0], p[1], int(p[2]), int(p[3]), int(p[4]), int(p[5]),
-                            p[6], p[7], int(p[8]), int(p[9]), p[10], int(p[11]), p[12]))
+                            p[6], p[7], int(p[8]), int(p[9]), p[10], int(p[11]), p[12],
+                            p[13] if len(p) > 13 else ''))
     numeri = {'verba': len(verba), 'sedes': sum(v.sedes for v in verba)}
     for st in ('notum', 'ambiguum', 'permissum', 'ignotum', 'latinum'):
         numeri[st] = sum(1 for v in verba if v.status == st)

@@ -9,6 +9,10 @@ nominatum (via:linea). Exitus tres: entrium glossarii (vox domus,
 Latina media), `ignotum-permissum` (abbreviatio, nomen alienum),
 renominatio (`./silva/renominare.sh`).
 
+Ante commissionem: `./oratio/vocabula.sh -nova` (eadem relatio, exitus 1
+si verba nova adsunt; sectio IV b portae eandem imprimit et fractura ipsa
+verba fert).
+
 Copia SOLUM MINUITUR (glossarium aut renominatio verba tollunt; verba
 EVANIDA relata, numquam rubra). Regeneratio deliberata, causa in
 commissione nominata (ut aurum computus):

@@ -67,7 +67,11 @@ nomen structura {
     i32 linea_prima;
             b32 ex_commento_prima;
     b32 ex_prosa_prima;
-    chorda regula;             /* contextus Anglicus: regula morphologica analysis primae (vacua = forma exacta aut nulla) */
+        chorda regula;             /* contextus Anglicus: regula morphologica analysis primae (vacua = forma exacta aut nulla) */
+    chorda identificator_primus; /* identificator INTEGER sedis primae
+                                  * (symbola): 'sem' in 'sem_regionis' -
+                                  * relatio novorum (2026-09-07); vacua
+                                  * si verbum e commento/prosa primum */
 } OratioVerbum;
 
 nomen structura OratioVocabula OratioVocabula;
@@ -182,6 +186,27 @@ i32
 oratio_vocabula_numerus (
     constans OratioVocabula* vc,
          OratioVerbumStatus  status);
+
+/* Verba ignota NOVA contra COPIAM toleratam (textus
+ * fixa/vocabula/ignota_symbolorum.txt: '#' commentaria, verbum per
+ * lineam; 2026-09-07). Reddit numerum novorum (-1 = memoria). Cum
+ * 'relatio' relationem in stdout scribit: verbum quodque cum
+ * identificatore primo, sedibus, sede prima, deinde EXITUS nominati
+ * (glossarium: entrium aut ignotum-permissum cum exemplaribus
+ * parabilibus; renominatio; copia regeneranda causa nominata) - lex
+ * lintus: nuntius numquam sine via ad remedium. tolerata/evanida per
+ * exitus (NIHIL licet); nuntius = linea UNA (copia in piscinam) pro
+ * assertione portae, ut fractura ipsa verba ferat: 'IGNOTA NOVA II:
+ * sem (443 sedes, via:465), slot (...)'. Contextus Latinus solus. */
+s32
+oratio_vocabula_nova (
+                    Piscina*  piscina,
+    constans OratioVocabula*  vc,
+                     chorda   copia,
+                        b32   relatio,
+                        i32*  tolerata_exitus,
+                        i32*  evanida_exitus,
+         constans character** nuntius_exitus);
 
 i32
 oratio_vocabula_sedes (

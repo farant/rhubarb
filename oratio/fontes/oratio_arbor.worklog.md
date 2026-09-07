@@ -1345,3 +1345,33 @@ their original form, which was already the conservative one.
 Still open, Fran's call: the pre-commit hook does not run this lint,
 so a session that never lists the oratio gate still lands words on
 main; with the set the report would be exact and three seconds.
+
+## 2026-09-07 — The lint's failure carries its own remedy
+
+Fran's question — "what does the message say and how is it
+actionable?" — answered by demonstration: the direct gate output
+named the word and one site; the commit helper's summary showed only
+`nova == ZEPHYRUM at …:651`, because the words were printed before
+the assertion and the summary copies the assertion. Four changes,
+all in `oratio_vocabula_nova`, one function shared by the gate and
+the instrument (`./oratio/vocabula.sh -nova`, exit 1 when new words
+exist): (1) the failure is a `CREDO_CULPA` whose message IS the
+payload — `IGNOTA NOVA 2: sem (443 sedes, briar/…:465), slot (…) -
+exitus: …` — so every consumer of the FRACTA line sees the words;
+(2) each word carries its first whole identifier (`adjacentiam in
+_adjacentiam_aedificare`; new `OratioVerbum.identificator_primus`,
+last TSV column `identificator`, Python `Verbum.identificator`);
+(3) the report prints the three exits with the decision rule (many
+sites → glossary entry or ignotum-permissum, few → rename; index
+restored → regenerate the set with a cause) and ready-to-paste
+glossary skeletons for the first five words; (4) the identifier
+verdict moved to its own block IV b after the comments report, whose
+unknown list (`after`, `const`) is a report and was sitting right
+under the failure. The denominator failure carries its two causes
+the same way. Planted fault (membership inverted) red with the
+payload listing nineteen words and "+2930", restored green.
+
+Found on the way: the report function returned −1 through an
+unsigned `i32`, the exact vanity the house law names; it is `s32`
+now. And a library file without `<stdio.h>` compiled for a day
+because nothing in it printed until today.
