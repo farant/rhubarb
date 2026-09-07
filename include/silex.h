@@ -190,7 +190,9 @@ silex_novum (
     constans SilexNovumOptiones* optiones);
 
 /* fabricam sponte invenire: ascensus ex initio (directorium),
- * signum quaerens (include/latina.h + lib/). Reddit radicem
+ * signum quaerens (include/latina.h + lib/ + fabrica.stml, signum
+ * DECLARATUM - proiecta scaffoldata id numquam ferunt; olim volumen
+ * radicis absens discriminabat, 2026-09-07). Reddit radicem
  * absolutam aut NIHIL si nusquam. Superscriptiones (-f /
  * SILEX_FABRICA) vocatori manent - hoc gradus TERTIUS est. */
 constans character*

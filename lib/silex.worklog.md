@@ -532,3 +532,32 @@ substantive changes riding renovations — the newest (+5, seq 257)
 is visibly the -retro flag arriving. Also: probing a WRONG name
 (atrium_incipere) answered "symbolum non exsistit - ambulatio
 pergit" and 0 events — honest, not silent.
+
+## 2026-09-07 — The fabrica declares itself (fabrica.stml)
+
+`silex_fabricam_invenire` accepted a directory with the structural
+sign (include/latina.h + lib/) unless it carried a root volumen,
+because scaffolded projects vendor the same sign and once found
+themselves as the fabrica (2026-08-10). That negative test rode on
+state nobody owns: apps/pictor creates `pictor.volumen` in cwd by
+default, one landed at the repo root on 2026-09-05, rule II of
+`silex_volumen_viam_invenire` (a solitary *.volumen wins) made the
+root a "project", the ascent reached "/" and returned NIHIL, and the
+root suite's silex gate was red for every session (question
+01M1YBVSHB, found by an oratio commit gating on radix).
+
+Fran's call: a particular filename. The fabrica now declares itself
+with `fabrica.stml` at the root (`<fabrica titulus="rhubarb"/>`,
+canon `fabrica.canon`, `<fabrica>` registered in canones.registrum,
+judged 0 vitia). The sign is latina.h + lib/ + fabrica.stml; the
+volumen test left the finder. Rule II stays for opening projects,
+where it belongs. Gate: a fake fabrica with a stray `alius.volumen`
+is found; a scaffold-shaped directory without the marker is skipped
+and the ascent reaches the real root; planted fault (marker check
+removed) red at the scaffold case (line 495), restored green.
+Callers unchanged: tools/silex.c, tools/briar.c and
+briar/instrumenta/fabrica.c all pass "." and get the root.
+
+Lesson, the same as the morning's index defect: identity inferred
+from the ABSENCE of a file is a negative test on state nobody owns.
+Declare it.

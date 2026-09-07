@@ -1,0 +1,11 @@
+<!-- fabrica.stml - signum FABRICAE: directorium hoc est officina
+     bibliothecarum (include/ + lib/) unde silex proiecta vendicant et
+     briar corpus quaerit. silex_fabricam_invenire (lib/silex.c) hanc
+     plagulam in ascensu e cwd quaerit - identitas DECLARATA (2026-09-07),
+     non ex absentia voluminis inferta: olim signum = include/latina.h +
+     lib/ SINE volumine radicis, sed volumen documenti cuiusvis in radice
+     (pictor.volumen ab apps/pictor in cwd creatum) radicem repositorii
+     in proiectum silicis vertebat et suitam radicis rubram faciebat
+     (quaestio 01M1YBVSHB). Proiecta scaffoldata (latina.h + lib/
+     vendicata) hanc plagulam numquam ferunt. Canon: fabrica.canon. -->
+<fabrica titulus="rhubarb"/>

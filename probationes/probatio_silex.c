@@ -451,9 +451,48 @@ s32 principale (vacuum)
         radix = silex_fabricam_invenire(piscina, ".");
         CREDO_VERUM(radix != NIHIL);
 
-        /* extra arborem: NIHIL (ascensus ad "/" sine signo) */
+                /* extra arborem: NIHIL (ascensus ad "/" sine signo) */
         CREDO_VERUM(silex_fabricam_invenire(piscina, "/tmp")
             == NIHIL);
+
+        /* fabrica cum volumine documenti ALIENI in radice
+         * (pictor.volumen ab apps/pictor in cwd creatum,
+         * 2026-09-05): signum + fabrica.stml vincunt, documentum
+         * nihil dicit (2026-09-07, quaestio 01M1YBVSHB) */
+        filum_directorium_creare_si_necesse("build");
+        filum_directorium_creare_si_necesse(AREA);
+        filum_directorium_creare_si_necesse(AREA "/fabrica_ficta");
+        filum_directorium_creare_si_necesse(
+            AREA "/fabrica_ficta/include");
+        filum_directorium_creare_si_necesse(AREA "/fabrica_ficta/lib");
+        filum_scribere_literis(AREA "/fabrica_ficta/include/latina.h",
+            "#define LATINA_H\n");
+        filum_scribere_literis(AREA "/fabrica_ficta/fabrica.stml",
+            "<fabrica titulus=\"ficta\"/>\n");
+        filum_scribere_literis(AREA "/fabrica_ficta/alius.volumen",
+            "documentum alienum\n");
+        CREDO_VERUM(filum_existit(AREA "/fabrica_ficta/alius.volumen"));
+        radix = silex_fabricam_invenire(piscina, AREA "/fabrica_ficta");
+        CREDO_VERUM(radix != NIHIL);
+        expectata = via_absoluta(
+            chorda_ex_literis(AREA "/fabrica_ficta", piscina), piscina);
+        CREDO_CHORDAE_AEQUALES(radix,
+            chorda_ut_cstr(expectata, piscina));
+
+        /* signum structurale SINE declaratione (scaffoldum: latina.h
+         * + lib/ vendicata, sine fabrica.stml) = non fabrica; ascensus
+         * radicem repositorii veram invenit */
+        filum_directorium_creare_si_necesse(AREA "/scaffoldum");
+        filum_directorium_creare_si_necesse(AREA "/scaffoldum/include");
+        filum_directorium_creare_si_necesse(AREA "/scaffoldum/lib");
+        filum_scribere_literis(AREA "/scaffoldum/include/latina.h",
+            "#define LATINA_H\n");
+        radix = silex_fabricam_invenire(piscina, AREA "/scaffoldum");
+        CREDO_VERUM(radix != NIHIL);
+        expectata = via_absoluta(chorda_ex_literis(".", piscina),
+            piscina);
+        CREDO_CHORDAE_AEQUALES(radix,
+            chorda_ut_cstr(expectata, piscina));
     }
 
 

@@ -30,6 +30,7 @@
 
 .genera	natura/natura.canon
 <aedilis>	aedilis.canon
+<fabrica>	fabrica.canon
 <canon>	canon.canon
 .canon	canon.canon
 <grammatica>	silva/grammatica/grammatica.canon

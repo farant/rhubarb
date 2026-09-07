@@ -98,8 +98,9 @@ _praefigere (
 }
 
 /* ascensus ex initio: signum fabricae = include/latina.h (plagula)
- * + lib/ (directorium). via_directorium("/") = "/" - mensura
- * immota terminat; custodia graduum contra vias pathologicas. */
+ * + lib/ (directorium) + fabrica.stml (signum DECLARATUM, 2026-09-07).
+ * via_directorium("/") = "/" - mensura immota terminat; custodia
+ * graduum contra vias pathologicas. */
 constans character*
 silex_fabricam_invenire (
                Piscina* piscina,
@@ -119,21 +120,27 @@ silex_fabricam_invenire (
         constans character* radix = chorda_ut_cstr(via, piscina);
                     chorda  parens;
 
-        si (   filum_existit(_texere(piscina, radix,
-                "/include/latina.h", NIHIL))
-            && filum_directorium_existit(_texere(piscina, radix,
-                "/lib", NIHIL))
-            /* proiectum silicis (volumen radicis) fabrica sui
-             * ipsius NUMQUAM est - scaffolda signum fabricae
-             * ferunt (latina.h + lib/ vendicata)! Mensuratum in
-             * ambulatione acceptionis 2026-08-10: partes intra
-             * proiectum se ipsum invenit, corpus numquam
-             * attactum. */
-            && silex_volumen_viam_invenire(piscina, radix)
-                == NIHIL)
-        {
+                si (   filum_existit(_texere(piscina, radix,
+                    "/include/latina.h", NIHIL))
+                    && filum_directorium_existit(_texere(piscina, radix,
+                    "/lib", NIHIL))
+            /* proiectum silicis fabrica sui ipsius NUMQUAM est -
+             * scaffolda signum structurale ferunt (latina.h + lib/
+             * vendicata)! Mensuratum in ambulatione acceptionis
+             * 2026-08-10: partes intra proiectum se ipsum invenit,
+             * corpus numquam attactum. Olim discrimen = volumen
+             * radicis ABSENS (silex_volumen_viam_invenire), sed
+             * volumen documenti cuiusvis (pictor.volumen ab
+             * apps/pictor in cwd creatum, 2026-09-05) radicem
+             * repositorii in proiectum vertebat: suita radicis
+             * rubra (quaestio 01M1YBVSHB). Identitas nunc
+             * DECLARATUR: fabrica.stml (canon fabrica.canon) quam
+             * scaffolda numquam ferunt. */
+                    && filum_existit(_texere(piscina, radix,
+                    "/fabrica.stml", NIHIL)))
+                {
             redde radix;
-        }
+                }
         parens = via_directorium(via, piscina);
         si (parens.mensura == via.mensura)
         {

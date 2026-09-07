@@ -1,0 +1,16 @@
+<!--
+  fabrica.canon
+  Canon dialecti FABRICA (fabrica.stml, radix repositorii) - signum
+  declaratum officinae bibliothecarum quod silex_fabricam_invenire
+  in ascensu quaerit (2026-09-07). Elementum unum, attributum unum:
+  titulus = nomen fabricae (rhubarb). Nihil aliud - signum est, non
+  configuratio; optiones fabricae (viae include/lib) hic NON vivunt
+  donec consumptor eas postulet.
+-->
+<canon dialectus="fabrica" versio="1">
+
+  <elementum nomen="fabrica" radix="verum">
+    <attributum nomen="titulus" genus="textus" necessarium="verum"/>
+  </elementum>
+
+</canon>
