@@ -47,7 +47,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -66,10 +66,10 @@ for nom in "tessera" "silva" "officina"; do
     fi
     if [ "$nom" = "officina" ]; then
         extra="-I$RADIX_DIR/silva/amalgama"
-        [ "$RADIX_DIR/silva/amalgama/silva.h" -nt "$obj" ] 2>/dev/null \
+        ! [ "$obj" -nt "$RADIX_DIR/silva/amalgama/silva.h" ] 2>/dev/null \
             && silva_h_recentior="1"
     fi
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$silva_h_recentior" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$silva_h_recentior" ]; then
         echo "  [amalgama] $nom.c"
         clang "${GCC_FLAGS[@]}" $extra -c "$src" -o "$obj" || exit 1
     fi
@@ -79,7 +79,7 @@ done
 # silva_lexicon (compositio systematis - praeparator eam vocat)
 src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
 obj="$BUILD_DIR/silva_lexicon.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [lexicon] silva_lexicon.c"
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" -c "$src" -o "$obj" || exit 1
@@ -89,7 +89,7 @@ obj_files="$obj_files $obj"
 for f in "praeparator" "vindex_onerator" "vindex_visum"; do
     src="$OFF_DIR/instrumenta/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
         || [ -n "$(newest_header "$obj")" ]; then
         echo "  [vindex] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
@@ -99,7 +99,7 @@ done
 
 src="$OFF_DIR/instrumenta/principalia/vindex.c"
 bin="$BUILD_DIR/vindex"
-if [ ! -f "$bin" ] || [ "$src" -nt "$bin" ] || [ -n "$(find $obj_files -newer "$bin" 2>/dev/null | head -1)" ]; then
+if [ ! -f "$bin" ] || ! [ "$bin" -nt "$src" ] || [ -n "$(find $obj_files -newer "$bin" 2>/dev/null | head -1)" ]; then
     echo "  [vindex] vindex.c (principale)"
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$src" $obj_files -o "$bin" || exit 1
 fi

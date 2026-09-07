@@ -145,7 +145,7 @@ done
 for m in silva_token silva_lexema; do
     src="$RADIX_DIR/silva/fontes/$m.c"
     obj="$BUILD_DIR/$m.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(find "$RADIX_DIR/silva/fontes" -name '*.h' -newer "$obj" 2>/dev/null | head -1)" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(find "$RADIX_DIR/silva/fontes" -name '*.h' -newer "$obj" 2>/dev/null | head -1)" ]; then
         echo "  [silva] $m.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || {
             echo "FRACTA: $m.c" ; exit 1
@@ -194,12 +194,25 @@ for src in "$ORATIO_DIR"/probationes/*.c; do
     obj_files="$obj_files $obj"
 done
 
+# INDEX SYMBOLORUM (build/nexus.tsv) SANATUS ante portas (2026-09-07):
+# percursus incrementalis ~1 s nulla mutatione, plenus (~70 s) instrumento
+# novo. Olim cursor orationis numquam renovabat (excubitor solum post
+# suitas silvae/officinae/radicis) - verba plagularum novarum pinnam UNA
+# COMMISSIONE POST feriebant, saepe in sessione aliena.
+if ! "$RADIX_DIR/silva/nexus.sh" -renovare > "$BUILD_DIR/nexus_renovatio.log" 2>&1; then
+    echo "CAUTIO: index nexus non renovatus (oratio/build/nexus_renovatio.log) - porta vocabulorum contra tabulam veterem currit" >&2
+fi
 # corpus markdown (paragraphi eius = corpus orationis, T3) = plagulae a
 # git TRACTATAE ('git ls-files' - ambulatio
 # directoriorum MMMCX invenit, plerasque scripta .superpowers); porta
 # corporis eam legit et absentem CLAMAT (numquam tacite praeterit)
 git -C "$RADIX_DIR" ls-files '*.md' > "$BUILD_DIR/corpus_md.txt" || {
     echo "CAUTIO: corpus_md.txt scribi non potuit - porta corporis rubebit" >&2
+}
+# viae TRACTATAE (.c/.h) pro lintu identificatorum (2026-09-07): index
+# nexus arborem totam ambulat, porta vias git-tractatas solas numerat
+git -C "$RADIX_DIR" ls-files '*.c' '*.h' > "$BUILD_DIR/corpus_tractatae.txt" || {
+    echo "CAUTIO: corpus_tractatae.txt scribi non potuit - porta vocabulorum rubebit" >&2
 }
 # corpus C commentariorum (T10 vocabula): lib/*.c et silva/fontes/*.c tracti
 git -C "$RADIX_DIR" ls-files 'lib/*.c' 'silva/fontes/*.c' > "$BUILD_DIR/corpus_c.txt" || {

@@ -817,7 +817,11 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_planum.catena_divergentes, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planum.invariata_violata, ZEPHYRUM);
 
-    CREDO_AEQUALIS_I32 (census_latinum.plagulae, 156);
+    /* 156 -> 173 (2026-09-07): plagulae lib XVII sessionis ludus/pictor
+     * (2026-09-04/05, mandatum .. ludus_fenestra) - omnes latinizatae,
+     * purae, exactae; suita silvae ab ea sessione non cursa, pinna a
+     * commissione orationis inventa. */
+    CREDO_AEQUALIS_I32 (census_latinum.plagulae, 173);
     CREDO_AEQUALIS_I32 (census_latinum.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.divergentes, ZEPHYRUM);

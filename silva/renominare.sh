@@ -39,7 +39,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 2
     fi
@@ -49,7 +49,7 @@ done
 for src in "$SILVA_DIR"/fontes/*.c; do
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/fons_$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [silva] $base.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 2
     fi
@@ -58,7 +58,7 @@ done
 
 RENOMINARE_SRC="$SILVA_DIR/instrumenta/principalia/renominare.c"
 RENOMINARE_BIN="$BUILD_DIR/renominare"
-if [ ! -f "$RENOMINARE_BIN" ] || [ "$RENOMINARE_SRC" -nt "$RENOMINARE_BIN" ] \
+if [ ! -f "$RENOMINARE_BIN" ] || ! [ "$RENOMINARE_BIN" -nt "$RENOMINARE_SRC" ] \
    || [ -n "$(newest_header "$RENOMINARE_BIN")" ]; then
     echo "  [renominare] renominare.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \

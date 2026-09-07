@@ -26,7 +26,7 @@ fi
 # pars C aedificanda si stala (analysta stml, non grep)
 fons_c="tools/census_recensere.c"
 binarium="bin/census_recensere"
-if [ ! -x "$binarium" ] || [ "$fons_c" -nt "$binarium" ]; then
+if [ ! -x "$binarium" ] || ! [ "$binarium" -nt "$fons_c" ]; then
     echo "census_recensere: binarium struitur..." >&2
     clausura="$(bin/aedilis "$fons_c" --partes 2>/dev/null |
         awk '$1=="O"{print $2}')"

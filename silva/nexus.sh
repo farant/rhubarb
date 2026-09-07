@@ -49,7 +49,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -62,17 +62,17 @@ SILVA_H="$SILVA_DIR/amalgama/silva.h"
 
 src="$SILVA_DIR/amalgama/silva.c"
 obj="$BUILD_DIR/nexus_amalgama_silva.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$SILVA_H" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || ! [ "$obj" -nt "$SILVA_H" ]; then
     echo "  [amalgama] silva.c" >&2
     clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
 
 src="$SILVA_DIR/instrumenta/nexus_ordines.c"
 obj="$BUILD_DIR/nexus_ordines.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$SILVA_DIR/instrumenta/nexus_ordines.h" -nt "$obj" ] \
-    || [ "$SILVA_H" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || ! [ "$obj" -nt "$SILVA_DIR/instrumenta/nexus_ordines.h" ] \
+    || ! [ "$obj" -nt "$SILVA_H" ]; then
     echo "  [ordines] nexus_ordines.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -105,7 +105,7 @@ renovatio () {
     for f in "${RADIX_FONTES[@]}"; do
         src="$RADIX_DIR/lib/$f.c"
         obj="$CELER_DIR/$f.o"
-        if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+        if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
             || [ -n "$(newest_header "$obj")" ]; then
             echo "  [celer dep] $f.c" >&2
             clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
@@ -116,8 +116,8 @@ renovatio () {
     done
     src="$SILVA_DIR/amalgama/silva.c"
     obj="$CELER_DIR/amalgama_silva.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-        || [ "$SILVA_H" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+        || ! [ "$obj" -nt "$SILVA_H" ]; then
         echo "  [celer amalgama] silva.c" >&2
         clang "${CELER_FLAGS[@]}" -c "$src" -o "$obj" || return 1
         celer_novum=1
@@ -125,9 +125,9 @@ renovatio () {
     celer_objs="$celer_objs $obj"
     src="$SILVA_DIR/instrumenta/nexus_ordines.c"
     obj="$CELER_DIR/nexus_ordines.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-        || [ "$SILVA_DIR/instrumenta/nexus_ordines.h" -nt "$obj" ] \
-        || [ "$SILVA_H" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+        || ! [ "$obj" -nt "$SILVA_DIR/instrumenta/nexus_ordines.h" ] \
+        || ! [ "$obj" -nt "$SILVA_H" ]; then
         echo "  [celer ordines] nexus_ordines.c" >&2
         clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
             -c "$src" -o "$obj" || return 1
@@ -138,9 +138,9 @@ renovatio () {
     SWEEP_BIN="$CELER_DIR/nexus_percursus"
     plenus_vis=""
     if [ "$celer_novum" = "1" ] || [ ! -f "$SWEEP_BIN" ] \
-        || [ "$SWEEP_SRC" -nt "$SWEEP_BIN" ] \
+        || ! [ "$SWEEP_BIN" -nt "$SWEEP_SRC" ] \
         || [ -n "$(newest_header "$SWEEP_BIN")" ] \
-        || [ "$SILVA_H" -nt "$SWEEP_BIN" ]; then
+        || ! [ "$SWEEP_BIN" -nt "$SILVA_H" ]; then
         echo "  [celer percursus] nexus_percursus.c" >&2
         clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SWEEP_SRC" \
             $celer_objs -o "$SWEEP_BIN" || return 1

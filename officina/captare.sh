@@ -164,7 +164,7 @@ while IFS= read -r via; do
     fi
 
     # nectere (si fons OPPURE obiectum quodvis binario novius)
-    if [ ! -x "$bin" ] || [ "$via" -nt "$bin" ] \
+    if [ ! -x "$bin" ] || ! [ "$bin" -nt "$via" ] \
         || [ -n "$NOVISSIMUM_OBIECTUM" -a \
              "$NOVISSIMUM_OBIECTUM" -nt "$bin" ]; then
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$via" \

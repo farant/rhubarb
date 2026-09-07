@@ -24,7 +24,7 @@ for o in "$BUILD_DIR"/*.o; do
     case "$(basename "$o")" in probatio_*) continue ;; esac
     OBJ="$OBJ $o"
 done
-if [ ! -f "$BIN" ] || [ "$SRC" -nt "$BIN" ] || [ -n "$(find "$BUILD_DIR" -name 'md_*.o' -newer "$BIN" 2>/dev/null)" ]; then
+if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$(find "$BUILD_DIR" -name 'md_*.o' -newer "$BIN" 2>/dev/null)" ]; then
     rm -f "$BIN"
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SRC" $OBJ -o "$BIN" || exit 1
 fi

@@ -35,7 +35,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
         echo "  [dep] $f.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -44,7 +44,7 @@ done
 
 src="$RADIX_DIR/silva/amalgama/silva.c"
 obj="$BUILD_DIR/amalgama_silva.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
     echo "  [amalgama] silva.c" >&2
     clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -54,9 +54,9 @@ SILVA_H="$RADIX_DIR/silva/amalgama/silva.h"
 
 src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
 obj="$BUILD_DIR/nexus_ordines.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ] \
-    || [ "$SILVA_H" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || ! [ "$obj" -nt "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" ] \
+    || ! [ "$obj" -nt "$SILVA_H" ]; then
     echo "  [ordines] nexus_ordines.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -65,8 +65,8 @@ obj_files="$obj_files $obj"
 # silva_lexicon (compositio systematis - praeparator eam vocat)
 src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
 obj="$BUILD_DIR/silva_lexicon.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || ! [ "$obj" -nt "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" ]; then
     echo "  [lexicon] silva_lexicon.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" -c "$src" -o "$obj" || exit 1
 fi
@@ -75,9 +75,9 @@ obj_files="$obj_files $obj"
 for unit in praeparator legatus; do
     src="$OFF_DIR/instrumenta/$unit.c"
     obj="$BUILD_DIR/$unit.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-        || [ "$OFF_DIR/instrumenta/$unit.h" -nt "$obj" ] \
-        || [ "$SILVA_H" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+        || ! [ "$obj" -nt "$OFF_DIR/instrumenta/$unit.h" ] \
+        || ! [ "$obj" -nt "$SILVA_H" ]; then
         echo "  [$unit] $unit.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -86,7 +86,7 @@ done
 
 BIN="$BUILD_DIR/sonda"
 src="$OFF_DIR/instrumenta/principalia/sonda.c"
-if [ ! -f "$BIN" ] || [ "$src" -nt "$BIN" ] || [ -n "$obj_files" ]; then
+if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$src" ] || [ -n "$obj_files" ]; then
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$src" $obj_files -o "$BIN" || exit 1
 fi
 

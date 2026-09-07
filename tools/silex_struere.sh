@@ -38,7 +38,7 @@ MENSA_FONTES=(
 )
 MENSA_EXITUS=tools/silex_assets/mensa.js
 for fons in "${MENSA_FONTES[@]}"; do
-    if [ ! -f "$MENSA_EXITUS" ] || [ "$fons" -nt "$MENSA_EXITUS" ]; then
+    if [ ! -f "$MENSA_EXITUS" ] || ! [ "$MENSA_EXITUS" -nt "$fons" ]; then
         ./tools/glomerare.sh "$MENSA_EXITUS" "${MENSA_FONTES[@]}" \
             || exit 1
         break
@@ -79,7 +79,7 @@ silva_obiecta=""
 for src in silva/fontes/*.c; do
     base="$(basename "$src" .c)"
     obj="silva/build/fons_$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || \
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || \
        [ -n "$(silva_recentior "$obj")" ]; then
         echo "  [silva] $base.c"
         clang "${SILVA_FLAGS[@]}" "${SILVA_INCLUDA[@]}" -c "$src" \
@@ -90,7 +90,7 @@ done
 for base in silva_unitates silva_differre; do
     src="silva/instrumenta/$base.c"
     obj="silva/build/instr_$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || \
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || \
        [ -n "$(silva_recentior "$obj")" ]; then
         echo "  [instr] $base.c"
         clang "${SILVA_FLAGS[@]}" "${SILVA_INCLUDA[@]}" -c "$src" \

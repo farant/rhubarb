@@ -35,7 +35,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
         echo "  [dep] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -66,7 +66,7 @@ for base in "${GENERATOR_FONTES[@]}"; do
         echo "  [silva] FONS ABEST: $src" >&2
         exit 1
     fi
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
         echo "  [silva] $base.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -80,7 +80,7 @@ done
 for base in "silva_token"; do
     src="$SILVA_DIR/fontes/$base.c"
     obj="$BUILD_DIR/fons_$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
         echo "  [silva] fontes/$base.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi

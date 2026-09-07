@@ -230,9 +230,10 @@ OratioVocabulariumVitium vitium;
         redde II;
     }
     ante = clock();
-    si (symbola)
-    {
+        si (symbola)
+        {
         chorda nexus;
+        chorda tractatae;
 
         sprintf(via, "%s/build/nexus.tsv", radix);
         si (!_plagulam_legere(piscina, via, &nexus))
@@ -242,14 +243,26 @@ OratioVocabulariumVitium vitium;
                 via);
             redde II;
         }
-                si (!oratio_vocabula_symbola(vc, nexus,
-                    omnes_viae ? NIHIL : ORATIO_VOCABULA_EXCLUSA))
-                {
-
+        /* viae tractatae (involucrum eas scribit); -omnes-viae = sine
+         * filtro, ut exclusiones */
+        tractatae.datum    = NIHIL;
+        tractatae.mensura  = ZEPHYRUM;
+        sprintf(via, "%s/oratio/build/corpus_tractatae.txt", radix);
+        si (   !omnes_viae
+            && !_plagulam_legere(piscina, via, &tractatae))
+        {
+            fprintf(stderr,
+                "vocabula: CAUTIO corpus_tractatae.txt absens (%s) -"
+                " omnes viae indicis numerantur\n", via);
+        }
+        si (!oratio_vocabula_symbola(vc, nexus,
+                omnes_viae ? NIHIL : ORATIO_VOCABULA_EXCLUSA,
+                tractatae))
+        {
             fprintf(stderr, "vocabula: symbola fracta\n");
             redde II;
-                }
-    }
+        }
+        }
     si (commenta)
     {
         FILE* lista;

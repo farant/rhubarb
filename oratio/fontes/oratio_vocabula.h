@@ -139,7 +139,8 @@ b32
 oratio_vocabula_symbola (
                   OratioVocabula* vc,
                           chorda  nexus_tsv,
-    constans character* constans* exclusa);
+    constans character* constans* exclusa,
+                          chorda  tractatae);
 
 
 /* Commentaria plagulae C: silva lexat, oratio legit, vocabula addit. */

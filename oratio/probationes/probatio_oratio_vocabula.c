@@ -41,6 +41,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
+#include "tabula_dispersa.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -65,9 +66,19 @@
  * restituta = constantes enumerorum et localia functionum quas caput
  * decurtatum fregerat. Octo tituli accidentium orationis (locativus,
  * superlativus, infinitivus, imperativus, plusquamperfectum, dualis,
-  * numerale, pronomen; formae X cum infinitivum, pronominis) in
- * glossarium (TERMINI GRAMMATICI); pinna ad numerum novum DEMISSA. */
-#define IGNOTA_SYMBOLORUM_PINNA 2949
+   * numerale, pronomen; formae X cum infinitivum, pronominis) in
+ * glossarium (TERMINI GRAMMATICI); pinna ad numerum novum DEMISSA.
+ * 2949 -> COPIA (2026-09-07, decisio Frani): numerus 'solum cadens'
+ * duas res non distinguebat - codicem meliorem et indicem
+ * degradantem (fixtura latina.h: 2990 -> 2958 -> 2732 VIRIDIS) - et
+ * attributionem manualem poscebat. Pinna nunc = COPIA COMMISSA
+ * verborum ignotorum toleratorum (fixa/vocabula/ignota_symbolorum.txt)
+ * quae solum minuitur; verbum novum rubrum cum sede prima; regeneratio
+ * ORATIO_VOCABULA_SCRIBERE=1 causa nominata. Denominator (verba
+ * identificatorum distincta) PINNATUS solum crescens - index degradans
+ * ibi rubet ubi numerus legitur. Viae TRACTATAE solae (git ls-files):
+ * opus alienae sessionis non commissum pinnam non ferit. */
+#define VERBA_SYMBOLORUM_PINNA 7703
 
 interior b32
 _plagulam_legere (
@@ -106,6 +117,94 @@ _plagulam_legere (
     exitus->datum       = memoria;
     exitus->mensura     = (i32)longitudo;
     redde VERUM;
+}
+
+interior chorda
+_l_n (
+    constans i8* datum,
+            i32  mensura)
+{
+    unio {
+        constans i8* c;
+                 i8* m;
+    } u;
+    chorda c;
+
+    u.c        = datum;
+    c.datum    = u.m;
+    c.mensura  = mensura;
+    redde c;
+}
+
+/* ordo octetorum (copia deterministica, diff legibilis) */
+interior s32
+_chordae_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans chorda* ca = (constans chorda*)a;
+    constans chorda* cb = (constans chorda*)b;
+                i32  m  = ca->mensura < cb->mensura
+                    ? ca->mensura : cb->mensura;
+                int d  = memcmp(ca->datum, cb->datum, (size_t)m);
+
+    si (d != ZEPHYRUM)
+    {
+        redde d < ZEPHYRUM ? -I : I;
+    }
+    redde ca->mensura < cb->mensura ? -I
+        : (ca->mensura > cb->mensura ? I : ZEPHYRUM);
+}
+
+/* copiam ignotorum scribere: caput '#' + verba ordine octetorum */
+interior vacuum
+_copiam_scribere (
+                    Piscina* piscina,
+         constans character* via,
+    constans OratioVocabula* vc,
+                        Xar* ordo)
+{
+     Xar* verba = xar_creare(piscina, (i32)magnitudo(chorda));
+    FILE* f;
+     i32  k;
+
+    si (verba == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(ordo); k++)
+    {
+        constans OratioVerbum* w = (constans OratioVerbum*)xar_obtinere(
+            oratio_vocabula_verba(vc), (i32)*(s32*)xar_obtinere(ordo,
+            k));
+        chorda* s = (chorda*)xar_addere(verba);
+
+        si (s != NIHIL)
+        {
+            *s = w->verbum;
+        }
+    }
+    xar_ordinare(verba, _chordae_comparare);
+    f = fopen(via, "w");
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    fprintf(f, "# ignota_symbolorum.txt - verba identificatorum IGNOTA"
+        " TOLERATA (pinna ut COPIA, 2026-09-07)\n"
+        "# solum minuitur: glossarium (entrium aut ignotum-permissum)"
+        " aut renominatio; verbum extra copiam = rubrum\n"
+        "# regeneratio deliberata: ORATIO_VOCABULA_SCRIBERE=1"
+        " ./oratio/compile_probationes.sh vocabula - causa in"
+        " commissione nominanda\n");
+    per (k = ZEPHYRUM; k < xar_numerus(verba); k++)
+    {
+        constans chorda* s = (constans chorda*)xar_obtinere(verba, k);
+
+        fprintf(f, "%.*s\n", (integer)s->mensura,
+            (constans character*)s->datum);
+    }
+    fclose(f);
 }
 
 interior chorda
@@ -215,8 +314,8 @@ principale (vacuum)
             "s32\tsedes\ttypedef\tinclude/latina.h\t3\t1\t0\n"
             "x\tsedes\tvariabile\tlib/piscina.c\t99\t1\t0\n"
             "piscina\tvocatio\tfunctio\tlib/alia.c\t1\t1\t0\n"
-                "piscina_destruere\tsedes\tfunctio\tlib/piscina.c\t80\t1\t0\n"),
-            ORATIO_VOCABULA_EXCLUSA));
+                                "piscina_destruere\tsedes\tfunctio\tlib/piscina.c\t80\t1\t0\n"),
+            ORATIO_VOCABULA_EXCLUSA, _l("")));
 
     {
                           Xar* verba = oratio_vocabula_verba(vc);
@@ -381,8 +480,10 @@ principale (vacuum)
 
     imprimere("\n--- IV. Corpus: symbola + commentaria ---\n");
     {
-        OratioVocabula* corpus = oratio_vocabula_creare(piscina, voc);
-                chorda  nexus;
+                OratioVocabula* corpus = oratio_vocabula_creare(piscina,
+                    voc);
+                        chorda nexus;
+                        chorda tractatae;
         FILE* lista;
         character linea[512];
         i32 plagulae = ZEPHYRUM;
@@ -393,43 +494,169 @@ principale (vacuum)
         i32 permissa;
         i32 ignota;
 
-        CREDO_NON_NIHIL (corpus);
+                CREDO_NON_NIHIL (corpus);
         sprintf(via, "%s/build/nexus.tsv", radix);
+        tractatae.datum    = NIHIL;
+        tractatae.mensura  = ZEPHYRUM;
         si (!_plagulam_legere(piscina, via, &nexus))
         {
             CREDO_CULPA ("build/nexus.tsv absens - ./silva/nexus.sh -renovare");
         }
-                alioquin
+        alioquin
         {
             OratioVocabula* symbola_sola =
                 oratio_vocabula_creare(piscina, voc);
                        i32 ignota_symbolorum;
+                       i32 verba_symbolorum;
 
-                        CREDO_VERUM (oratio_vocabula_symbola(corpus,
-                            nexus,
-                            ORATIO_VOCABULA_EXCLUSA));
-            /* PINNA 'solum cadens' super identificatores DOMUS (knotapel/
-             * vendor/ archivum/ exclusa, decisio Frani 2026-09-04; cursus
-             * glossarii I: MMMMMDXV -> MMMMMCDIX omnibus viis). Rubra = verba
-             * nova ignota: glossarium (vox domus, terminus permissus) aut
-             * renominatio; pinna movetur causa nominata. */
+            /* viae tractatae (cursor scribit): sine ea porta rubet,
+             * numquam tacite omnes vias numerat */
+            sprintf(via, "%s/oratio/build/corpus_tractatae.txt", radix);
+            si (!_plagulam_legere(piscina, via, &tractatae))
+            {
+                CREDO_CULPA ("oratio/build/corpus_tractatae.txt absens - e radice per cursorem curre");
+            }
+            CREDO_VERUM (oratio_vocabula_symbola(corpus, nexus,
+                ORATIO_VOCABULA_EXCLUSA, tractatae));
+            /* PINNA = COPIA COMMISSA super identificatores DOMUS (knotapel/
+             * vendor/ archivum/ exclusa, decisio Frani 2026-09-04; viae
+             * tractatae solae 2026-09-07). Verbum ignotum extra copiam =
+             * NOVUM = rubrum cum sede prima; exitus tres: entrium
+             * glossarii, ignotum-permissum, renominatio. Copia solum
+             * minuitur; regeneratio deliberata ORATIO_VOCABULA_SCRIBERE=1
+             * (ut aurum computus) causa in commissione nominata. Verba
+             * EVANIDA (in copia, non iam ignota) relata, numquam rubra.
+             * Denominator pinnatus solum crescens: index degradans
+             * (2026-09-05: 7706 -> 7598 verba) hic rubet, non tacet. */
             CREDO_NON_NIHIL (symbola_sola);
             CREDO_VERUM (oratio_vocabula_symbola(symbola_sola, nexus,
-                ORATIO_VOCABULA_EXCLUSA));
+                ORATIO_VOCABULA_EXCLUSA, tractatae));
 
             CREDO_VERUM (oratio_vocabula_iudicare(symbola_sola));
             ignota_symbolorum = oratio_vocabula_numerus(symbola_sola,
                 ORATIO_VERBUM_IGNOTUM);
-            imprimere("  identificatores: verba %d  ignota %d  (pinna %d, solum cadens)\n",
-                (integer)xar_numerus(oratio_vocabula_verba(symbola_sola)),
-                (integer)ignota_symbolorum,
-                (integer)IGNOTA_SYMBOLORUM_PINNA);
-            si (ignota_symbolorum > (i32)IGNOTA_SYMBOLORUM_PINNA)
+            verba_symbolorum  = xar_numerus(
+                oratio_vocabula_verba(symbola_sola));
             {
-                imprimere("  IGNOTA CREVERUNT: glossarium (oratio/glossarium.stml) aut renominatio; ./oratio/vocabula.sh -symbola\n");
+                         chorda  copia;
+                 TabulaDispersa* tolerata     =
+                     tabula_dispersa_creare_chorda(
+                     piscina, (i32)4096);
+                 TabulaDispersa* ignota_nunc  =
+                     tabula_dispersa_creare_chorda(
+                     piscina, (i32)4096);
+                            Xar* ordo         =
+                                oratio_vocabula_ordinata(
+                                piscina, symbola_sola,
+                                (s32)ORATIO_VERBUM_IGNOTUM);
+                            i32 nova        = ZEPHYRUM;
+                            i32 evanida     = ZEPHYRUM;
+                            i32 tolerata_n  = ZEPHYRUM;
+                            i32 k;
+
+                CREDO_NON_NIHIL (tolerata);
+                CREDO_NON_NIHIL (ignota_nunc);
+                CREDO_NON_NIHIL (ordo);
+                sprintf(via,
+                    "%s/oratio/probationes/fixa/vocabula/ignota_symbolorum.txt",
+                    radix);
+                si (   !_plagulam_legere(piscina, via, &copia)
+                    && getenv("ORATIO_VOCABULA_SCRIBERE") == NIHIL)
+                {
+                    CREDO_CULPA ("copia ignotorum absens - ORATIO_VOCABULA_SCRIBERE=1 eam genera, causa nominata");
+                }
+                per (k = ZEPHYRUM; k < copia.mensura;)
+                {
+                    i32 b = k;
+
+                    dum (b < copia.mensura && copia.datum[b] != '\n')
+                    {
+                        b = b + I;
+                    }
+                    si (b > k && copia.datum[k] != '#')
+                    {
+                        (vacuum)tabula_dispersa_inserere(tolerata,
+                            _l_n(copia.datum + k, b - k), NIHIL);
+                        tolerata_n = tolerata_n + I;
+                    }
+                    k = b + I;
+                }
+                per (k = ZEPHYRUM; k < xar_numerus(ordo); k++)
+                {
+                    constans OratioVerbum* w =
+                        (constans OratioVerbum*)xar_obtinere(
+                        oratio_vocabula_verba(symbola_sola),
+                        (i32)*(s32*)xar_obtinere(ordo, k));
+
+                    (vacuum)tabula_dispersa_inserere(ignota_nunc,
+                        w->verbum, NIHIL);
+                    si (!tabula_dispersa_continet(tolerata, w->verbum))
+                    {
+                        nova = nova + I;
+                        si (nova <= (i32)XL)
+                        {
+                            imprimere("    NOVUM %-24.*s %.*s:%d\n",
+                                (integer)w->verbum.mensura,
+                                (constans character*)w->verbum.datum,
+                                (integer)w->via_prima.mensura,
+                                (constans character*)w->via_prima.datum,
+                                (integer)w->linea_prima);
+                        }
+                    }
+                }
+                si (nova > (i32)XL)
+                {
+                    imprimere("    +%d nova reliqua (./oratio/vocabula.sh -symbola -machina)\n",
+                        (integer)(nova - (i32)XL));
+                }
+                per (k = ZEPHYRUM; k < copia.mensura;)
+                {
+                    i32 b = k;
+
+                    dum (b < copia.mensura && copia.datum[b] != '\n')
+                    {
+                        b = b + I;
+                    }
+                    si (   b > k && copia.datum[k] != '#'
+                        && !tabula_dispersa_continet(ignota_nunc,
+                               _l_n(copia.datum + k, b - k)))
+                    {
+                        evanida = evanida + I;
+                        si (evanida <= (i32)X)
+                        {
+                            imprimere("    evanidum %.*s\n",
+                                (integer)(b - k),
+                                (constans character*)(copia.datum + k));
+                        }
+                    }
+                    k = b + I;
+                }
+                imprimere("  identificatores: verba %d (pinna %d, solum crescens)  ignota %d  tolerata %d  NOVA %d  evanida %d\n",
+                    (integer)verba_symbolorum,
+                    (integer)VERBA_SYMBOLORUM_PINNA,
+                    (integer)ignota_symbolorum, (integer)tolerata_n,
+                    (integer)nova, (integer)evanida);
+                si (getenv("ORATIO_VOCABULA_SCRIBERE") != NIHIL)
+                {
+                    _copiam_scribere(piscina, via, symbola_sola, ordo);
+                    imprimere("  COPIA SCRIPTA: %s (%d verba) - CAUSA in commissione nominanda\n",
+                        via, (integer)ignota_symbolorum);
+                }
+                alioquin
+                {
+                    si (nova > ZEPHYRUM)
+                    {
+                        imprimere("  IGNOTA NOVA: glossarium (oratio/glossarium.stml: entrium aut ignotum-permissum) aut renominatio (./silva/renominare.sh); copia solum minuitur\n");
+                    }
+                    CREDO_VERUM (nova == ZEPHYRUM);
+                }
+                si (verba_symbolorum < (i32)VERBA_SYMBOLORUM_PINNA)
+                {
+                    imprimere("  VERBA DECREVERUNT: index (build/nexus.tsv) degradatus? ./silva/nexus.sh -renovare -plenus; plagulae deletae = causa nominanda\n");
+                }
+                CREDO_VERUM (verba_symbolorum
+                    >= (i32)VERBA_SYMBOLORUM_PINNA);
             }
-            CREDO_VERUM (ignota_symbolorum
-                <= (i32)IGNOTA_SYMBOLORUM_PINNA);
         }
         sprintf(via, "%s/oratio/build/corpus_c.txt", radix);
 

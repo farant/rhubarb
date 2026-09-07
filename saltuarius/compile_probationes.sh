@@ -89,7 +89,7 @@ if [ -z "$CAPUT_RECENS" ]; then
 fi
 
 newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && [ "$CAPUT_RECENS" -nt "$1" ]; then
+    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
         echo "$CAPUT_RECENS"
     fi
 }
@@ -99,7 +99,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $f.c" ; exit 1
@@ -112,7 +112,7 @@ done
 for amalgama in "tessera" "silva"; do
     src="$RADIX_DIR/$amalgama/amalgama/$amalgama.c"
     obj="$BUILD_DIR/amalgama_$amalgama.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
         echo "  [amalgama] $amalgama.c"
         if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: amalgama $amalgama" ; exit 1
@@ -127,7 +127,7 @@ for src in "$SALT_DIR"/fontes/*.c "$SALT_DIR"/probationes/saltuarius_proba.c; do
     [ -f "$src" ] || continue
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [saltuarius] $base.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1

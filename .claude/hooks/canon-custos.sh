@@ -47,7 +47,7 @@ fi
 
 # porta stala = iudicium vetus se recens fingens (lex -o /dev/null)
 for f in lib/canon.c include/canon.h tools/canon_examen.c lib/stml.c; do
-    if [ "$RADIX/$f" -nt "$PORTA" ]; then
+    if ! [ "$PORTA" -nt "$RADIX/$f" ]; then
         jq -n '{hookSpecificOutput:{hookEventName:"PostToolUse",additionalContext:"CANON: bin/canon_examen STALUS (fontes recentiores binario) - iudicium non currit. Strue: ./tools/canon_struere.sh"}}'
         exit 0
     fi

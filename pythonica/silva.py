@@ -114,6 +114,10 @@ def _inclusiones_clang(via):
     fontes/ suitae cuiusque (md fontes materiae includit)"""
     dirs = [os.path.join(RADIX, 'include'), os.path.dirname(_absoluta(via))]
     dirs += sorted(glob.glob(os.path.join(RADIX, '*', 'fontes')))
+    # mundus amalgamatis ULTIMUS (2026-09-07): nexus_ordines.c, praeparator
+    # (silva.h + silva/instrumenta) - praevolatus plantae eas olim recusabat
+    dirs += [os.path.join(RADIX, 'silva', 'amalgama'),
+             os.path.join(RADIX, 'silva', 'instrumenta')]
     return ['-I' + d for d in dirs]
 
 

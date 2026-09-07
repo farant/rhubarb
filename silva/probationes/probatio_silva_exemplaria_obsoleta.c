@@ -13,7 +13,7 @@
  * scriptori arboris - latus lint documentum eiusdem arboris legit
  * quam analysator iudicat.
  *
- * CORPUS: plagulae .c in lib (156 - latitudo consensus zephyri:
+ * CORPUS: plagulae .c in lib (173 - latitudo consensus zephyri:
  * unus situs vivus, tcp_posix.c) + sex probationes nominatae (XXIV
  * situs vivi - lex praesentiae; index fixus CLARE rumpitur si
  * plagula migrat). Gradus roundtrip OMISSUS consulto: situs
@@ -844,7 +844,11 @@ principale (vacuum)
      * PORTA: aequalitas per plagulam + praesentia
      * ================================================== */
 
-    CREDO_AEQUALIS_I32 (census_bibliothecae.plagulae, 156);
+    /* 156 -> 173 (2026-09-07): plagulae lib XVII sessionis ludus/pictor
+     * (2026-09-04/05, mandatum .. ludus_fenestra) - omnes latinizatae,
+     * purae, exactae; suita silvae ab ea sessione non cursa, pinna a
+     * commissione orationis inventa. */
+    CREDO_AEQUALIS_I32 (census_bibliothecae.plagulae, 173);
     CREDO_AEQUALIS_I32 (census_bibliothecae.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.recusae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.divergentes, ZEPHYRUM);

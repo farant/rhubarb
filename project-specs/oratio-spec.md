@@ -370,7 +370,14 @@ purpose. Lint corpus = the house: `knotapel/` (English by decision,
 Fran 2026-09-04), `vendor/`, `archivum/` excluded via
 `ORATIO_VOCABULA_EXCLUSA` (`-omnes-viae` scans all). Identifier
 unknowns 3,022 of 7,469, PINNED only falling in
-`probatio_oratio_vocabula`; comments not pinned. **Decided (Fran,
+`probatio_oratio_vocabula`; comments not pinned. **As built 2026-09-07 (after the index defect, question
+01M1TD1FMFT3):** the count pin became a committed SET of tolerated
+unknown words (`fixa/vocabula/ignota_symbolorum.txt`, only shrinking;
+a new unknown word is red with its first site; regeneration
+`ORATIO_VOCABULA_SCRIBERE=1` with a named cause), the corpus is
+git-tracked `.c/.h` only, the total identifier word count is pinned
+only rising as the instrument's health check, and the runner
+renovates the nexus index before the gates. **Decided (Fran,
 2026-09-04, decision 26):** abbreviations are kept (36 permitted), and
 every glossary entry carries a CONTEXT — `contextus="latinus |
 anglicus | ambo"` — where the word is allowed: identifiers and

@@ -177,7 +177,7 @@ compile_libraries() {
     done
 
     newest_header () {
-        if [ -n "$CAPUT_RECENS" ] && [ "$CAPUT_RECENS" -nt "$1" ]; then
+        if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
             echo "$CAPUT_RECENS"
         fi
     }
@@ -188,7 +188,7 @@ compile_libraries() {
         obj_name="${src_file##*/}"
         obj_file="$BUILD_DIR/${obj_name%.c}.o"
 
-        if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ]; then
+        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$src_file" ]; then
             needs_compile=1
             break
         fi
@@ -198,7 +198,7 @@ compile_libraries() {
     for objc_file in "${OBJC_SOURCES[@]}"; do
         obj_name="${objc_file##*/}"
         obj_file="$BUILD_DIR/${obj_name%.m}.o"
-        if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ]; then
+        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$objc_file" ]; then
             needs_compile=1
             break
         fi
@@ -210,7 +210,7 @@ compile_libraries() {
         for src_file in "${SOURCE_FILES[@]}"; do
             obj_name="${src_file##*/}"
             obj_file="$BUILD_DIR/${obj_name%.c}.o"
-            if [ -f "$obj_file" ] && [ "$CAPUT_RECENS" -nt "$obj_file" ]; then
+            if [ -f "$obj_file" ] && ! [ "$obj_file" -nt "$CAPUT_RECENS" ]; then
                 needs_compile=1
                 break
             fi
@@ -232,7 +232,7 @@ compile_libraries() {
         obj_file="$BUILD_DIR/${obj_name%.c}.o"
 
         # Recompile if source OR any header is newer than object
-        if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
+        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$src_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
             echo -e "  Compiling: $src_file"
             if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$src_file" -o "$obj_file" 2>&1; then
                 echo -e "${RED}✗ FAILED: $src_file${RESET}"
@@ -246,7 +246,7 @@ compile_libraries() {
         obj_name="${objc_file##*/}"
         obj_file="$BUILD_DIR/${obj_name%.m}.o"
 
-        if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
+        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$objc_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
             echo -e "  Compiling: $objc_file"
             if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$objc_file" -o "$obj_file" 2>&1; then
                 echo -e "${RED}✗ FAILED: $objc_file${RESET}"
@@ -261,7 +261,7 @@ compile_libraries() {
         obj_name="${vend_file##*/}"
         obj_file="$BUILD_DIR/${obj_name%.c}.o"
 
-        if [ ! -f "$obj_file" ] || [ "$vend_file" -nt "$obj_file" ]; then
+        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$vend_file" ]; then
             echo -e "  Compiling (vendor): $vend_file"
             if ! clang -c ${VENDOR_FLAGS[@]} "$vend_file" -o "$obj_file" 2>&1; then
                 echo -e "${RED}✗ FAILED: $vend_file${RESET}"
@@ -565,7 +565,7 @@ run_speculum() {
         stage="build/speculum/$titulus"
         gen_c="$stage/capsula_speculi_${titulus}.c"
         gen_o="$stage/capsula_speculi_${titulus}.o"
-        if [ ! -f "$gen_o" ] || [ "$gen_c" -nt "$gen_o" ]; then
+        if [ ! -f "$gen_o" ] || ! [ "$gen_o" -nt "$gen_c" ]; then
             echo -e "  Compiling (speculum): $gen_c"
             if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$gen_c" -o "$gen_o" 2>&1; then
                 echo -e "${RED}✗ FAILED: $gen_c${RESET}"

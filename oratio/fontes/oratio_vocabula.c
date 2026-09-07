@@ -391,11 +391,46 @@ b32
 oratio_vocabula_symbola (
                   OratioVocabula* vc,
                           chorda  nexus_tsv,
-    constans character* constans* exclusa)
+    constans character* constans* exclusa,
+                          chorda  tractatae)
 {
+               i32  cursor       = ZEPHYRUM;
+    TabulaDispersa* tractatarum  = NIHIL;
+         character  via[512];
 
-          i32 cursor = ZEPHYRUM;
-    character via[512];
+    /* viae TRACTATAE (git ls-files '*.c' '*.h', una per lineam) in
+     * tabulam: ordo cuius via abest omittitur (decisio Frani
+     * 2026-09-07: index (nexus) arborem TOTAM ambulat, etiam opus
+     * alienae sessionis non commissum - id pinnam non ferit; plagula
+     * nova numeratur ubi per viam in indicem git ponitur, ut corpora
+     * commentorum et prosae). datum NIHIL aut mensura 0 = sine
+     * filtro (-omnes-viae). */
+    si (tractatae.datum != NIHIL && tractatae.mensura > ZEPHYRUM)
+    {
+        i32 a = ZEPHYRUM;
+
+        tractatarum = tabula_dispersa_creare_chorda(vc->piscina,
+            (i32)4096);
+        si (tractatarum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        dum (a < tractatae.mensura)
+        {
+            i32 b = a;
+
+            dum (b < tractatae.mensura && tractatae.datum[b] != '\n')
+            {
+                b = b + I;
+            }
+            si (b > a)
+            {
+                (vacuum)tabula_dispersa_inserere(tractatarum,
+                    _chorda(tractatae.datum + a, b - a), NIHIL);
+            }
+            a = b + I;
+        }
+    }
 
     dum (cursor < nexus_tsv.mensura)
     {
@@ -425,7 +460,12 @@ oratio_vocabula_symbola (
             chorda v = _campus(linea, (i32)III);
                i32 m = v.mensura < (i32)511 ? v.mensura : (i32)511;
 
-            si (oratio_vocabula_via_exclusa(v, exclusa))
+                        si (oratio_vocabula_via_exclusa(v, exclusa))
+                        {
+                perge;
+                        }
+            si (   tractatarum != NIHIL
+                && !tabula_dispersa_continet(tractatarum, v))
             {
                 perge;
             }

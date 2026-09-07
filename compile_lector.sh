@@ -51,7 +51,7 @@ for src_file in "${SOURCE_FILES[@]}"; do
     obj_name=$(basename "$src_file" .c).o
     obj_file="$BUILD_DIR/$obj_name"
 
-    if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ]; then
+    if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$src_file" ]; then
         echo "  Compiling: $src_file"
         if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$src_file" -o "$obj_file" 2>&1; then
             echo -e "${RED}✗ FAILED: $src_file${RESET}"

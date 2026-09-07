@@ -25,7 +25,7 @@ recens=""
 if [ -f "$BIN" ]; then
     recens="$(find "$BUILD" -name '*.o' -newer "$BIN" 2>/dev/null | head -1)"
 fi
-if [ ! -f "$BIN" ] || [ "$SRC" -nt "$BIN" ] || [ -n "$recens" ]; then
+if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$recens" ]; then
     echo "  [computus] md" >&2
     clang "${VEXILLA_C89[@]}" -I"$RADIX_DIR/include" -I"$MATERIA_DIR/fontes" \
         -I"$MD_DIR/fontes" -I"$MD_DIR/probationes" \

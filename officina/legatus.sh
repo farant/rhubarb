@@ -90,7 +90,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus "$f" "$obj"; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || fons_stalus "$f" "$obj"; then
         echo "  [dep] $f.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -103,7 +103,7 @@ done
 # consumptorum est, fons_stalus eos recompilat
 src="$RADIX_DIR/silva/amalgama/silva.c"
 obj="$BUILD_DIR/amalgama_silva.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus silva "$obj"; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || fons_stalus silva "$obj"; then
     echo "  [amalgama] silva.c" >&2
     clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -111,7 +111,7 @@ obj_files="$obj_files $obj"
 
 src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
 obj="$BUILD_DIR/nexus_ordines.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus nexus_ordines "$obj"; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || fons_stalus nexus_ordines "$obj"; then
     echo "  [ordines] nexus_ordines.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -120,7 +120,7 @@ obj_files="$obj_files $obj"
 # silva_lexicon (compositio systematis - praeparator et legatus)
 src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
 obj="$BUILD_DIR/silva_lexicon.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus silva_lexicon "$obj"; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || fons_stalus silva_lexicon "$obj"; then
     echo "  [lexicon] silva_lexicon.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" -c "$src" -o "$obj" || exit 1
 fi
@@ -129,7 +129,7 @@ obj_files="$obj_files $obj"
 for unit in praeparator legatus; do
     src="$OFF_DIR/instrumenta/$unit.c"
     obj="$BUILD_DIR/$unit.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus "$unit" "$obj"; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || fons_stalus "$unit" "$obj"; then
         echo "  [$unit] $unit.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -143,9 +143,9 @@ src="$OFF_DIR/instrumenta/principalia/legatus.c"
 # principalis (exemplar tabularium.sh)
 obj_recentius=""
 for o in $obj_files; do
-    if [ "$o" -nt "$BIN" ]; then obj_recentius="$o"; break; fi
+    if ! [ "$BIN" -nt "$o" ]; then obj_recentius="$o"; break; fi
 done
-if [ ! -f "$BIN" ] || [ "$src" -nt "$BIN" ] || [ -n "$obj_recentius" ] || fons_stalus legatus "$BIN"; then
+if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$src" ] || [ -n "$obj_recentius" ] || fons_stalus legatus "$BIN"; then
     echo "  [nexus] legatus" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$src" $obj_files -o "$BIN" || exit 1
 fi

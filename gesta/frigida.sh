@@ -29,9 +29,9 @@ done
 
 obj_recentius=""
 for o in $obj_files; do
-    if [ "$o" -nt "$BIN" ]; then obj_recentius="$o"; break; fi
+    if ! [ "$BIN" -nt "$o" ]; then obj_recentius="$o"; break; fi
 done
-if [ ! -f "$BIN" ] || [ "$main_src" -nt "$BIN" ] || [ -n "$obj_recentius" ]; then
+if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$main_src" ] || [ -n "$obj_recentius" ]; then
     echo "  [nexus] nota_frigida" >&2
     clang "${GCC_FLAGS[@]}" -I"$RADIX_DIR/include" -I"$GESTA_DIR/fontes" "$main_src" $obj_files -o "$BIN" >&2 || exit 1
 fi

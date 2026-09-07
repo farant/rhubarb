@@ -123,10 +123,9 @@ excluded in one place (`ORATIO_VOCABULA_EXCLUSA`; `-omnes-viae` scans
 all). Glossary entries carry `contextus="latinus | anglicus | ambo"`
 (decision 26): the identifier/comment lint is the Latin context and
 ignores English-only entries; abbreviations are KEPT (36 permitted,
-contextus latinus). Identifier unknowns 2,958 of 7,553 words, PINNED
-only falling in `probatio_oratio_vocabula` (a red = a new unknown
-identifier word: glossary entry or rename, pin moved for a named
-cause). T8b stays parked. **T15a DONE (warmup, decision 27)**: the
+contextus latinus). Identifier unknowns were PINNED as a count only
+falling until 2026-09-07; the pin is now a committed SET (see the
+2026-09-07 note below). T8b stays parked. **T15a DONE (warmup, decision 27)**: the
 ENGLISH context. Moby Part-of-Speech vendored VERBATIM under
 `oratio/vocabularium/en/` (no coction — the source is one table; seal
 pinned), `oratio_vocabularium_en` (record law asserted per line,
@@ -238,6 +237,23 @@ nodus 92. NEXT: **T18** the language rule (`<sententia
 lingua="anglica">` prefers English readings), then agreement rules;
 pull the sibling-run door when the oracle shows the loss.
 
+**Index defect and lint hardening (2026-09-07).** The pythonica
+gate's red `usus: sedes definitionis` was a briar fixture's truncated
+`latina.h` shadowing `include/latina.h` in the nexus sweep (first-wins
+by basename in strcmp order, 'b' < 'i'; question 01M1TD1FMFT3, fixed in
+`nexus_ordines_capitis_gradus`, gate `probatio_officina_capita`). The
+identifier pin had been measured on the degraded table. Since then:
+the pin is a committed SET (`fixa/vocabula/ignota_symbolorum.txt`,
+2,949 words, only shrinking, a new word red with its first site,
+regeneration `ORATIO_VOCABULA_SCRIBERE=1` with a cause); the corpus is
+git-tracked `.c/.h` only (`oratio/build/corpus_tractatae.txt`, another
+session's uncommitted work never counts); the total word count (7,703)
+is pinned only rising so a shrinking index goes red where its number
+is read; the runner renovates the nexus index before the gates, so new
+words are seen in the same run; glossary section TERMINI GRAMMATICI
+(eight accident titles WORDS lacks). The pre-commit does NOT run this
+lint yet (Fran's call pending).
+
 ## Laws to keep (spec §2–3)
 
 - Every byte is a token in ONE slot; spaces and newlines are CONTENT in
@@ -259,8 +275,13 @@ pull the sibling-run door when the oracle shows the loss.
   (Moby) is read directly and its own seal is pinned.
 - The prose lint is the ENGLISH context: TEXTUS nodes only; known Latin
   = `latinum`, never a finding; `ambiguum` never; the identifier pin
-  is the Latin context's and a new house coinage in an API name moves
-  it (glossary entry, pin moved for the cause).
+  is the Latin context's and is a committed SET of tolerated unknown
+  words (`fixa/vocabula/ignota_symbolorum.txt`) that only shrinks: a
+  new house coinage in an API name is red with its first site until
+  it has a glossary entry, an `ignotum-permissum` line, or a rename;
+  regeneration (`ORATIO_VOCABULA_SCRIBERE=1`) needs a named cause;
+  the total identifier word count is pinned only rising as the
+  instrument's own health check; only git-tracked `.c/.h` count.
 - English morphology is DATA (`ORATIO_REGULAE_EN`): a row has a cause
   and a measured count, exact forms always precede rule analyses, rules
   reduce to MOBY bases only (glossary entries list their own plurals),

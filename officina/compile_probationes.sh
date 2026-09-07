@@ -95,7 +95,7 @@ if [ -z "$CAPUT_RECENS" ]; then
 fi
 
 newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && [ "$CAPUT_RECENS" -nt "$1" ]; then
+    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
         echo "$CAPUT_RECENS"
     fi
 }
@@ -144,7 +144,7 @@ obj_files="$obj_files $obj"
 src="$OFF_DIR/instrumenta/vindex_visum.c"
 obj="$BUILD_DIR/vindex_visum.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || [ "$OFF_DIR/instrumenta/vindex_visum.h" -nt "$obj" ]; then
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/vindex_visum.h" ]; then
     echo "  [vindex] vindex_visum.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
         -I"$RADIX_DIR/tessera/amalgama" -I"$OFF_DIR/instrumenta" \
@@ -160,7 +160,7 @@ obj="$BUILD_DIR/nexus_ordines.o"
 # newest_header: silva.h mutatio formae (SilvaMacroVista v0.2!) sine
 # ea obiectum vetus + amalgama recens = corruptio ABI in acervo
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ] \
+    || ! [ "$obj" -nt "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [ordines] nexus_ordines.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
@@ -174,7 +174,7 @@ obj_files="$obj_files $obj"
 src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
 obj="$BUILD_DIR/silva_lexicon.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || [ "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" -nt "$obj" ] \
+    || ! [ "$obj" -nt "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [lexicon] silva_lexicon.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" \
@@ -188,7 +188,7 @@ obj_files="$obj_files $obj"
 src="$OFF_DIR/instrumenta/praeparator.c"
 obj="$BUILD_DIR/praeparator.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/praeparator.h" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [praeparator] praeparator.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
@@ -201,8 +201,8 @@ obj_files="$obj_files $obj"
 src="$OFF_DIR/instrumenta/sessio.c"
 obj="$BUILD_DIR/sessio.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || [ "$OFF_DIR/instrumenta/sessio.h" -nt "$obj" ] \
-    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/sessio.h" ] \
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/praeparator.h" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [sessio] sessio.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
@@ -215,8 +215,8 @@ obj_files="$obj_files $obj"
 src="$OFF_DIR/instrumenta/legatus.c"
 obj="$BUILD_DIR/legatus.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || [ "$OFF_DIR/instrumenta/legatus.h" -nt "$obj" ] \
-    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/legatus.h" ] \
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/praeparator.h" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [legatus] legatus.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \

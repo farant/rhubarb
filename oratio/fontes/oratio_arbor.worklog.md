@@ -1305,3 +1305,43 @@ a count that FALLS without a glossary or rename commit is the
 instrument degrading, not the code improving — the slide the briar
 session measured in its worktree (2,990 → 2,958 → 2,732) was the
 alarm, misread as a worktree quirk.
+
+## 2026-09-07 — The pin becomes a set, the corpus becomes the tracked tree, the runner heals the index
+
+Three rough edges from the index incident, all decided with Fran
+today. (1) A count pinned only falling could not tell "the code got
+better" from "the instrument shrank" — the degraded table went 2,990
+→ 2,958 → 2,732 green. The pin is now a committed SET,
+`fixa/vocabula/ignota_symbolorum.txt` (2,949 words, byte order, `#`
+comments): the gate prints every unknown word not on it with its
+first site, and the three exits (glossary entry, ignotum-permissum,
+rename). The set only shrinks; `ORATIO_VOCABULA_SCRIBERE=1`
+regenerates it deliberately, like the computus golden. Vanished
+words are reported, never red. The denominator — distinct
+identifier words, 7,703 — is pinned only rising, so a shrinking
+index goes red at the place its number is read. (2) The index walks
+the filesystem, the other two corpora used `git ls-files`; another
+session's uncommitted file counted against my gate. The identifier
+corpus is now the git-tracked `.c/.h` set (`corpus_tractatae.txt`,
+written by the runner and the wrapper; `-omnes-viae` lifts it with
+the exclusions). Three words left with the untracked briar file.
+(3) The oratio runner never renovated the index — only the silva,
+officina and root suites' watchdog did, and the pythonica gate as a
+side effect — which is the whole "one commit later" law. The runner
+now runs `nexus.sh -renovare` before writing the corpora: under two
+seconds when nothing changed, a full sweep only when the tool itself
+changed. Planted fault: membership test inverted → red on `nova ==
+0`, restored green.
+
+Also today: the planting helper's pre-flight compiles with the house
+include set, which lacked the amalgam world — `silva/amalgama` and
+`silva/instrumenta` appended last, so nexus_ordines.c and the
+praeparator can be planted. And the bash 3.2 same-second `-nt` trap
+(a source restored in the second its object was compiled is never
+rebuilt) inverted in 193 conditions across 73 scripts, `src -nt obj`
+→ `! obj -nt src`; three "artifact strictly newer = fresh" tests kept
+their original form, which was already the conservative one.
+
+Still open, Fran's call: the pre-commit hook does not run this lint,
+so a session that never lists the oratio gate still lands words on
+main; with the set the report would be exact and three seconds.
