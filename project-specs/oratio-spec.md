@@ -966,8 +966,10 @@ document; EWT primary 56.6/56.9 → 67.8/68.0). T19 class-prior rules
 (pass II readings) and agreement rules; the sibling-run door pulled
 when the oracle shows the loss.
 
-**Stage 6.** T19 `lemmata` column in gesta FTS + tabularium write path.
-T20 recall measurement on a fixed query set.
+**Stage 6.** T20 `lemmata` column in gesta FTS + tabularium write path.
+T21 recall measurement on a fixed query set. (Renumbered 2026-09-07:
+the stage-6 rungs were labelled T19/T20 before T6b, T15a/b and T18
+were inserted; T19 is the stage-5 class-prior and agreement task.)
 
 About 20 tasks; T3 (sentences) and T8 (Latin lookup) are the hard
 ones. Re-entry: this file, `oratio-interview.md`, the ledger parcum
