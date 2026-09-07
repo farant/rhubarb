@@ -281,7 +281,22 @@ a parent's children) in `lib/stml_macros.c`, gated in the exemplaria
 suite; then **T19d** agreement rules (adjective/determiner ↔ noun by
 case, number, gender — Latin determinans is 0 % primary on 2,096 LLCT
 words), `to` + verb, `have` + participle, non-initial capitalized
-word → nomen-proprium.
+word → nomen-proprium. **T19c DONE** (2026-09-07): the sibling-run
+door is built (`cursus="fratrum"` on EXEMPLAR, increment 20 of the
+pattern spec, commit b29ce72f: one row per start position among a
+parent's children, first written child fixed to the start, gaps
+after) and the two adposition rules are re-rooted on it at
+`<elementa>`: every preposition now governs its own noun (`Cum puella
+et cum femina` → both ablative first; before, only the first pair).
+MEASURED: the treebank primaries did not move (728/770/771/753/755),
+so the one-pair ceiling was almost never binding for these two rules;
+the door's value is the rules that need a neighbour (T19d). Fran's
+direction (2026-09-07, desideratum 01M1YYN00E): agreement goes in as
+UMBRA nodes, not as hand rules — a reading carries the dependent it
+expects (relation, conditions from the dictionary's own codes, an
+empty binding); a generic rule per relation fills it from siblings;
+a bound umbra is a dependency edge, an unfilled one a finding. First
+umbra = the adposition's object (the existing rule as the comparison).
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

@@ -1546,3 +1546,31 @@ rule's title says; the title only names the census entry. The gate
 stayed green and planta refused it as "porta muta". The real mute is
 the language index in the pattern (`<lingua>1</lingua>` → `0`): the
 rule then selects nothing English and the EWT pin goes red.
+
+## 2026-09-07 — T19c: the door, and what it did not buy
+
+`cursus="fratrum"` landed in the pattern engine (increment 20,
+b29ce72f) and the two adposition rules moved from a sentence root to
+an `<elementa>` root under it. At the seam it does what T17 asked
+for: `Cum puella et cum femina ambulat` gives both nouns the ablative
+first, where the greedy match served only `puella`. On the treebanks
+the cumulative table is byte-identical to the run before the door.
+Sentences with two prepositions governing the same case, whose
+second noun did not already have that case first, are simply too
+rare in Seneca and the charters to move a permille. The right
+reading of that: the door was pulled for the rules that need a
+neighbour and do not exist yet, not for these two, and building it
+before them was the correct order because the umbra design needs
+it. Also learned, cheaply: `Ad urbem et in silvam it` is not a
+diagnostic sentence, both nouns have one reading.
+
+Fran's direction the same afternoon reshapes T19d. Agreement and
+government are not to be written as a dozen hand rules but as UMBRA
+nodes in the tree: a reading carries the dependent it expects, with
+its conditions drawn from the dictionary's own codes and an empty
+binding; one generic pattern per relation fills them from siblings
+using the door and the existential; a bound umbra is a dependency
+edge and an unfilled one a finding, and a reading whose umbrae fill
+outranks one whose do not. The first umbra will be the adposition's
+object, because the hand rule for it exists and gives an exact
+comparison on the same numbers.

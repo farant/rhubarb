@@ -8,12 +8,15 @@
      una per vocabulum = analysis quae PRIMA fiat (ordo ceterarum manet;
      nihil deletur). Machina laxa: liberi = subsequentia ordinata cum
      LACUNIS (decisio XXXI: accepta et mensurata), congruentia UNA
-     avida per radicem - ergo par unum per sententiam per regulam;
-     captura casus in praepositione ad analysin primam ligatur nec
-     retro tentatur (in urbem: 'in' ablativum primum fert), ergo regulae
-     casus LITTERIS scribuntur, una per casum rectum. Inventa T17 pro
-     designo exploratorio STML: cursus fratrum flotans (par per radicem)
-     et retentatio capturae = ianuae.
+     avida per radicem - ergo par unum per sententiam per regulam
+     OLIM; T19c (2026-09-07): ianua CURSUS FRATRUM tracta (incrementum
+     XX exemplarium) - EXEMPLAR cursus="fratrum" radice <elementa>:
+     initium quodque liberorum ordo suus, ergo par QUODQUE per
+     sententiam (praepositio quaeque suum substantivum). Captura casus
+     in praepositione ad analysin primam ligatur nec retro tentatur (in
+     urbem: 'in' ablativum primum fert), ergo regulae casus LITTERIS
+     scribuntur, una per casum rectum; retentatio capturae = ianua
+     manens (clausa donec damnum mensuretur).
 
      Oraculum regulas CUMULATIM applicat (./oratio/oraculum.sh -regulae);
      primarium per thesaurum pinnatum solum crescens. -->
@@ -282,15 +285,15 @@
   <!-- praepositio cum lectione accusativa (casus 3) - vocabulum sequens
        cuius analysis substantiva accusativa prima fiat: in urbem, ad
        urbem, per silvam -->
-  <EXEMPLAR output="$accusativum">
-    <sententia><elementa>
+  <EXEMPLAR cursus="fratrum" output="$accusativum">
+    <elementa>
       <vocabulum><analyses>
         <analysis-adpositionis><casus>3</casus></analysis-adpositionis>
       </analyses></vocabulum>
       <vocabulum n="$v"><analyses>
         <analysis-substantivi n="$a"><casus>3</casus></analysis-substantivi>
       </analyses></vocabulum>
-    </elementa></sententia>
+    </elementa>
   </EXEMPLAR>
   <consilium>
     <PER congruentia="$accusativum">
@@ -302,15 +305,15 @@
 <regula titulus="adpositio-ablativum-regit">
   <!-- praepositio cum lectione ablativa (casus 4): cum puella, in urbe,
        ab urbe, de silva -->
-  <EXEMPLAR output="$ablativum">
-    <sententia><elementa>
+  <EXEMPLAR cursus="fratrum" output="$ablativum">
+    <elementa>
       <vocabulum><analyses>
         <analysis-adpositionis><casus>4</casus></analysis-adpositionis>
       </analyses></vocabulum>
       <vocabulum n="$v"><analyses>
         <analysis-substantivi n="$a"><casus>4</casus></analysis-substantivi>
       </analyses></vocabulum>
-    </elementa></sententia>
+    </elementa>
   </EXEMPLAR>
   <consilium>
     <PER congruentia="$ablativum">

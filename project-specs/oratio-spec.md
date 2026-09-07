@@ -760,6 +760,24 @@ SUBSEQUENCE of the candidate's children, so a rule must write
 LLCT 68.0/67.9 → 77.0/77.1, EWT 67.8/68.0 → 75.3/75.5; pins moved.
 Remaining for T19c/d: the sibling-run door and agreement.
 
+**As built — T19c (2026-09-07).** The door: `cursus="fratrum"`
+(exemplaria increment 20). The adposition rules are rooted at
+`<elementa>` under it and fire once per preposition. Measured on the
+five treebanks the primaries did not change: the greedy one-pair
+match of T17 was almost never the binding limit for these two rules.
+Direction decided with Fran the same day (desideratum 01M1YYN00E):
+agreement and government are to be UMBRA NODES in the tree — a
+reading carries the dependent it expects (relation, conditions drawn
+from the dictionary's own codes: WORDS TRANS = accusative object,
+PREP ACC = object in that case, ADJ = agreeing head; candidates as a
+list; binding by ordinal, empty = finding), generic patterns per
+relation fill them from siblings (the constraint lives in the tree,
+the rule stays one per relation), `reponere` binds. A bound umbra is
+a dependency edge; a reading whose umbrae cannot be filled yields to
+one whose can. First umbra: the adposition's object, against the
+existing rule as the comparison. Long term the same node carries
+frame expectations at the sense level (natura genera as the types).
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the
