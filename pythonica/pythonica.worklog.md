@@ -378,3 +378,69 @@ line added only if the body follows immediately — and `incipit=` /
 list of matching headings. Test lesson: my own ambiguity fixture had
 one match, not two — an empty prefix matches everything and makes the
 refusal deterministic.
+
+## 2026-09-07 — Live receipts and the runner lock
+
+Two costs from the T18 session, both about gates, both fixed in the
+tool rather than in my habits.
+
+**Live receipts.** `commissio` ran its gates in order and a red gate
+late in the list (radix after oratio and pythonica, then silva after
+both again) discarded the green runs before it: three attempts, about
+fifteen minutes of repeated suites. The shadow path already had
+receipts bound to a photograph; the live path now has the same shape.
+`porta()` in the live tree writes `build/portae/<nomen>.viva.json`
+with `sigillum_arboris()` taken BEFORE the run, one per gate key, and
+`commissio` consults it: same sigillum now and the receipt is sana →
+the gate is not rerun and a line says so. The design question was the
+key. A per-gate scope ("oratio reads oratio/ and lib/") would have
+saved the second retry today, but it would be a lie: the identifier
+lint reads every tracked .c/.h and the corpus gates read every .md, so
+an edit to silva's pins can change oratio's verdict. Whole-tree
+sigillum, VETITAE excluded (the ledger changes on every note). The
+honest consequence is a habit: write the worklog and README first,
+run the gates last, commit. The receipt from `planta`'s green run
+counts too, since the restored tree has the original sigillum.
+
+Rancid runs: `porta()` compares the sigillum after the run as the
+umbra worker does. A rancid gate's verdict still stands for the
+current commissio unless one of the files being committed changed
+during the run (hashed before the gates, `git hash-object
+--stdin-paths`) — that is refused by name; other files changing is
+reported and accepted, the photographic law ("quod committitur est
+quod probatum est, cetera libera") transposed to the live tree. A
+rancid receipt is never reused.
+
+**The lock.** "Oratio runners never concurrently" lived in MEMORY and
+in my head. `tools/sera.sh` is one law for every runner: mkdir the
+`<build>/cursor.sera` directory, write `radix` then `pid`, wait up to
+`SERA_TECTUM` (600 s) with one stderr line, then exit 2 naming the
+holder. Stale = holder dead (`ps -p`), or radix differs (a lock copied
+into an umbra clone by `cp -c -R build/`: the holder runs in another
+tree), or older than an hour. Reentrancy through `SERA_TENTA` in the
+environment so `vocabula.sh` calling `compile_probationes.sh registrum`
+does not deadlock on itself, and so `probatio_currere` holding the
+Python mirror can call the runner. nexus.sh's lock from this morning
+became a call into the shared law (120 s, then renovation skipped, as
+before). Measured before trusting: bash 3.2 fires an EXIT trap once,
+in the main shell, not in `$(...)`, `( )` or `( ) &` — the runners are
+full of all three — and stage XI of the fumus pins that. Twenty-one
+scripts edited by one regex-anchored Textus loop; `bash -n` on all.
+
+Found by the gate, same afternoon: after the runner sweep a
+`oratio/build/cursor.sera` remained with a dead pid. Eight oratio
+wrappers ended with `exec "$BIN"`, and exec replaces the shell, so the
+EXIT trap that releases the lock never runs. Self-healing in practice
+(the next taker sees a dead holder and takes over) but wrong, and the
+fumus's live-integration stage found it by failing to mkdir. The
+wrappers now run the binary and `exit $?`; stage XII greps for any
+`exec "$BIN"` in oratio/*.sh and runs verba.sh to prove the lock is
+gone afterwards. Two greps of mine had missed the three wrappers with
+an env prefix before the exec; the gate's grep is anchored on the
+string, not on the line start.
+
+Also: `planta` now keeps the red run's full output in
+`build/portae/<porta>.planta_rubra.acta`. The one-line summary for the
+pythonica gate's planted fault named an inner fixture line ("planta
+rubra: ficta ... probatio_x"), not the failing assertion, and the green
+run had already overwritten the live receipt's acta.

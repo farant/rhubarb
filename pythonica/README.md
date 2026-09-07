@@ -217,3 +217,34 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
   textus, ubi='finis'|'initium')` = paragraphus cum separatione recta
   (linea vacua una; ad initium post lineam capituli, setext post
   subductionem: `ProsaExtentum.caput_finis`) - non iam '\n' manu praefixum.
+
+## 2026-09-07 — receptum vivum + sera cursorum (post T18)
+
+- **RECEPTUM VIVUM**: `silva.porta(nomen[, filtrum])` in arbore viva
+  receptum scribit (`build/portae/<nomen>[.<filtrum>].viva.json` + `.acta`,
+  sigillum arboris ANTE cursum, unum per clavem — cursus proximus obruit);
+  `Porta.rancida` = arbor mutata DUM currebat, `Porta.receptum` = via.
+  `silva.commissio(..., portae=[...])` portam nominatam cum recepto vivo
+  SANO (sigillum idem nunc) **non iterum currit** — linea 'porta X: ...
+  [receptum vivum, ante N min] - non iterum cursa' impressa; `recepta=False`
+  omnes currit. Ergo: porta viridis per `porta()`/`planta()`/commissionem
+  fractam commissioni proximae sufficit dum arbor immota — **documenta
+  ANTE portam ultimam scribe** (worklog/README mutatio sigillum mutat).
+  Sigillum = arbor tota (VETITAE exclusae; MEMORY extra arborem): lex
+  honesta consulto. Porta rancida: plagula commissionis mutata dum
+  currebat = refusio nominata; aliter monitum 'cetera libera'. Post
+  commissionem recepta viva omnia deleta. `silva.receptum_vivum(nomen[,
+  filtrum])` → Porta | None; `silva.recepta_viva()` → [(via, Porta)].
+- **SERA cursorum** (`tools/sera.sh`, porta `tools/sera_fumus.sh` = porta
+  'sera'): cursor quisque (compile_tests.sh, */compile_probationes.sh,
+  oratio/*.sh, silva/nexus.sh) `<build>/cursor.sera` mkdir-atomice capit;
+  tenta → exspectatio ad `SERA_TECTUM` (DC s) cum nuntio, deinde **exitus
+  2 = NIHIL cucurrit** tenentem nominans; vetus (tenens mortuus, radix
+  aliena = sera in clonem umbrae copiata, aetas > LX min) derelicta;
+  reentrantia per `SERA_TENTA` (involucrum → cursor; pythonica → cursor).
+  Speculum: `with silva.sera(via)`, `silva.sera_suitae(suita)`;
+  `probatio_currere` sub sera suitae currit. Regula 'cursores numquam
+  simul' iam in instrumento, non in capite.
+- **`planta` acta rubra servat**: `build/portae/<porta>.planta_rubra.acta`
+  (cursus viridis receptum et acta obterit; compendium lineae unius
+  assertionem fractam non semper nominat) - via in linea 'planta rubra:'.

@@ -679,6 +679,143 @@ finally:
     del os.environ['PYTHONICA_PORTAE_FICTAE']
     os.unlink(scriptum)
 
+print('--- receptum vivum: porta() sigillo ligata, commissio non iterum currit ---')
+import contextlib
+import io
+via_rv = silva._receptum_vivum_via('formator-intra')
+silva.receptum_delere(via_rv)
+pv = silva.porta('formator-intra')
+credo(pv.sana and not pv.rancida and pv.receptum == via_rv and os.path.exists(via_rv)
+      and os.path.exists(via_rv + '.acta'), 'porta viva: receptum vivum scriptum, non rancida')
+rv = silva.receptum_vivum('formator-intra')
+credo(rv is not None and rv.sana and 'receptum vivum' in rv.compendium and rv.receptum == via_rv,
+      'receptum_vivum: sanum, sigillum idem (%s)' % (rv.compendium if rv else None))
+open(novum, 'w').write('x')
+try:
+    rv2 = silva.receptum_vivum('formator-intra')
+    credo(rv2 is not None and not rv2.sana and 'POST cursum' in rv2.compendium,
+          'receptum_vivum: arbor mutata post cursum = rancidum')
+finally:
+    os.unlink(novum)
+credo(silva.receptum_vivum('formator-intra').sana, 'receptum_vivum: arbor restituta = sanum iterum (sigillum contentus, non temporis)')
+credo(silva.receptum_vivum('formator-intra', 'x') is None and silva.receptum_vivum('nemo') is None,
+      'receptum_vivum: clavis alia / absens = None')
+credo(any(v == via_rv and p.sana for v, p in silva.recepta_viva()), 'recepta_viva: enumerat cum valore')
+# portae fictae: numerans (cursus numerat EXTRA arborem - build/ ignoratum),
+# rancida (plagulam novam in arbore creat dum currit), mutans (plagulam
+# COMMISSIONIS mutat dum currit), rubra
+numerator = os.path.join(T, 'numerator.txt')
+open(numerator, 'w').write('')
+sc_n = os.path.join(T, 'numerans.sh')
+open(sc_n, 'w').write("#!/bin/sh\necho x >> '%s'\necho 'fictum: sanum'\n" % numerator)
+rancidum = os.path.join(silva.RADIX, 'pythonica', '.rancida_probatio.tmp')
+sc_r = os.path.join(T, 'rancida.sh')
+open(sc_r, 'w').write("#!/bin/sh\necho x > '%s'\necho 'fictum: sanum'\n" % rancidum)
+mutandum = os.path.join(silva.RADIX, 'pythonica', '.mutans_probatio.tmp')
+sc_m = os.path.join(T, 'mutans.sh')
+open(sc_m, 'w').write("#!/bin/sh\necho y >> '%s'\necho 'fictum: sanum'\n" % mutandum)
+sc_x = os.path.join(T, 'rubra.sh')
+open(sc_x, 'w').write("#!/bin/sh\necho 'fictum: FRACTUM'\nexit 1\n")
+for _s in (sc_n, sc_r, sc_m, sc_x):
+    os.chmod(_s, 0o755)
+os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps({
+    'ficta-numerans': [[sc_n], 'fictum: (sanum|FRACTUM)'],
+    'ficta-rancida': [[sc_r], 'fictum: (sanum|FRACTUM)'],
+    'ficta-mutans': [[sc_m], 'fictum: (sanum|FRACTUM)'],
+    'ficta-rubra2': [[sc_x], 'fictum: (sanum|FRACTUM)']})
+silva._portae_fictae()
+cursus_n = lambda: open(numerator).read().count('x')
+try:
+    p1 = silva.porta('ficta-numerans')
+    credo(p1.sana and cursus_n() == 1 and silva.receptum_vivum('ficta-numerans').sana,
+          'porta numerans: cursa semel, receptum sanum')
+    effusus = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(effusus):
+            silva.commissio('nihil', ['pythonica/README.md'], portae=['ficta-numerans', 'ficta-rubra2'])
+        credo(False, 'commissio cum rubra levat')
+    except silva.SilvaError as ex:
+        credo('ficta-rubra2' in str(ex) and cursus_n() == 1 and 'non iterum cursa' in effusus.getvalue(),
+              'commissio: receptum vivum sanum consumptum (porta non iterum cursa, linea impressa); rubra sequens levat')
+    try:
+        silva.commissio('nihil', ['pythonica/README.md'], portae=['ficta-numerans', 'ficta-rubra2'], recepta=False)
+    except silva.SilvaError:
+        pass
+    credo(cursus_n() == 2, 'commissio recepta=False: porta iterum cursa')
+    open(novum, 'w').write('x')
+    try:
+        try:
+            silva.commissio('nihil', ['pythonica/README.md'], portae=['ficta-numerans', 'ficta-rubra2'])
+        except silva.SilvaError:
+            pass
+        credo(cursus_n() == 3, 'commissio: arbor mutata post receptum = porta iterum cursa')
+    finally:
+        os.unlink(novum)
+    pr = silva.porta('ficta-rancida')
+    credo(pr.sana and pr.rancida and os.path.exists(rancidum),
+          'porta: arbor mutata DUM currebat = rancida (verdictum manet)')
+    rvr = silva.receptum_vivum('ficta-rancida')
+    credo(rvr is not None and not rvr.sana and 'DUM currebat' in rvr.compendium,
+          'receptum_vivum: rancidum numquam valet')
+    os.unlink(rancidum)
+    effusus = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(effusus):
+            silva.commissio('nihil', ['pythonica/README.md'], portae=['ficta-rancida', 'ficta-rubra2'])
+        credo(False, 'commissio cum rubra levat')
+    except silva.SilvaError as ex:
+        credo('ficta-rubra2' in str(ex) and 'DUM' not in str(ex) and 'cetera libera' in effusus.getvalue(),
+              'commissio: porta rancida cum plagulis commissionis intactis accepta cum monito')
+    os.unlink(rancidum)
+    open(mutandum, 'w').write('a\n')
+    try:
+        silva.commissio('nihil', ['pythonica/.mutans_probatio.tmp'], portae=['ficta-mutans'])
+        credo(False, 'commissio: plagula commissionis mutata dum porta currebat levat')
+    except silva.SilvaError as ex:
+        credo('DUM porta currebat' in str(ex) and '.mutans_probatio.tmp' in str(ex),
+              'commissio: plagula commissionis mutata DUM porta currebat = refusio nominata')
+    credo('.mutans_probatio.tmp' not in subprocess.run(['git', 'diff', '--cached', '--name-only'], cwd=RADIX,
+                                                        capture_output=True, text=True).stdout,
+          'commissio refutata: nihil in indice')
+finally:
+    del os.environ['PYTHONICA_PORTAE_FICTAE']
+    for _f in (mutandum, rancidum):
+        try:
+            os.unlink(_f)
+        except OSError:
+            pass
+    for _n in ('ficta-numerans', 'ficta-rancida', 'ficta-mutans', 'ficta-rubra2'):
+        silva.receptum_delere(silva._receptum_vivum_via(_n))
+
+print('--- sera: speculum Pythonicum tools/sera.sh ---')
+import shutil
+via_se = os.path.join(T, 'probatio.sera')
+with silva.sera(via_se, tectum=1) as se:
+    credo(os.path.isdir(via_se) and open(via_se + '/pid').read().strip() == str(os.getpid())
+          and open(via_se + '/radix').read().strip() == silva.RADIX and os.environ.get('SERA_TENTA') == via_se,
+          'sera: capta cum pid et radice, SERA_TENTA exportata')
+    with silva.sera(via_se, tectum=1):
+        credo(os.path.isdir(via_se), 'sera: reentrantia intra processum')
+    credo(os.path.isdir(via_se), 'sera: exitus interior seram avi non tollit')
+credo(not os.path.exists(via_se) and 'SERA_TENTA' not in os.environ, 'sera: post with abiit, SERA_TENTA abiit')
+os.mkdir(via_se); open(via_se + '/radix', 'w').write(silva.RADIX + '\n'); open(via_se + '/pid', 'w').write('999999\n')
+with silva.sera(via_se, tectum=1):
+    credo(open(via_se + '/pid').read().strip() == str(os.getpid()), 'sera: vetus (pid mortuus) derelicta et capta')
+os.mkdir(via_se); open(via_se + '/radix', 'w').write(silva.RADIX + '\n'); open(via_se + '/pid', 'w').write('%d\n' % os.getpid())
+try:
+    with silva.sera(via_se, tectum=1):
+        credo(False, 'sera tenta (pid vivus, radix eadem) levat')
+except silva.SilvaError as ex:
+    credo('tenetur' in str(ex) and str(os.getpid()) in str(ex), 'sera tenta: SilvaError post tectum, tenens nominatus')
+shutil.rmtree(via_se)
+try:
+    silva.sera(os.path.join(T, 'nonsera'))
+    credo(False, 'sera sine suffixo levat')
+except silva.SilvaError:
+    credo(True, 'sera: via sine suffixo .sera refutata')
+credo(silva.sera_suitae('radix').via.endswith('/build/cursor.sera') and 'silva/build/cursor.sera' in silva.sera_suitae('silva').via,
+      'sera_suitae: viae cursorum')
+
 print('--- FructusOmnes: transactio .sana ---')
 r = silva.Refactio()
 r.editio(via).replace('x  = I;', 'x  = II;')

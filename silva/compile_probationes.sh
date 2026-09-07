@@ -25,6 +25,13 @@ set -u
 SILVA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$SILVA_DIR/.." && pwd)"
 BUILD_DIR="$SILVA_DIR/build"
+# SERA cursoris (tools/sera.sh, 2026-09-07): cursus duo eiusdem suitae
+# obiecta eadem scriberent, binarium currens obtererent (137);
+# exspectatio ad SERA_TECTUM (DC s), deinde exitus 2 = NIHIL cucurrit
+# (tenens nominatur). Involucra et pythonica reentrant (SERA_TENTA).
+mkdir -p "$BUILD_DIR"
+source "$RADIX_DIR/tools/sera.sh"
+sera_capere "$BUILD_DIR/cursor.sera" || exit 2
 mkdir -p "$BUILD_DIR"
 
 # METRA SUITAE (tools/mensor_suitae.sh, 2026-09-02): forma eadem ac

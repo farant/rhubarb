@@ -11,6 +11,12 @@ ORATIO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$ORATIO_DIR/.." && pwd)"
 MATERIA_DIR="$RADIX_DIR/materia"
 BUILD="$ORATIO_DIR/build"
+# SERA suitae orationis (tools/sera.sh, 2026-09-07): obiecta et
+# binaria in oratio/build sub cursore currenti non tanguntur; cursor
+# ab hoc vocatus reentrat; exitus 2 si tenta post SERA_TECTUM.
+mkdir -p "$BUILD"
+source "$RADIX_DIR/tools/sera.sh"
+sera_capere "$BUILD/cursor.sera" || exit 2
 cd "$RADIX_DIR"
 source "$RADIX_DIR/tools/vexilla.sh"
 
@@ -31,4 +37,8 @@ if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$recens" ]; then
         -I"$ORATIO_DIR/fontes" -I"$ORATIO_DIR/probationes" -I"$RADIX_DIR/md/fontes" \
         "$SRC" $OBIECTA -o "$BIN" || exit 1
 fi
-exec "$BIN" "$@"
+# non exec: crusta manet ut sera suitae usque ad finem instrumenti
+# teneatur et in exitu dimittatur (exec trap EXIT praeterit -
+# sera cum pid mortuo relicta, 2026-09-07)
+"$BIN" "$@"
+exit $?

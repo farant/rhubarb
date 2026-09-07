@@ -203,3 +203,13 @@ suites, the query path self-heals, and the post-commit hook renovates
 in the background: two of those at once wrote the same `.nova` and
 could truncate each other. The post-commit's own debounce lock
 stays; this one is inside `renovatio`, so every caller shares it.
+
+## 2026-09-07 (later) — The sweep lock joins the shared law
+
+The inline mkdir lock from this morning is now `sera_capere
+"$RADIX_DIR/build/nexus.sera" 120` from `tools/sera.sh`, the runner
+lock every suite took today. Same behavior on contention (wait 120 s,
+then renovation skipped with return 1), better staleness: the holder's
+pid is checked with `ps -p` and a lock copied into an umbra clone is
+recognized by its foreign `radix` line, instead of the 15-minute age
+guess. Gate: `tools/sera_fumus.sh`.

@@ -32,6 +32,13 @@ set -u
 OFF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$OFF_DIR/.." && pwd)"
 BUILD_DIR="$OFF_DIR/build"
+# SERA cursoris (tools/sera.sh, 2026-09-07): cursus duo eiusdem suitae
+# obiecta eadem scriberent, binarium currens obtererent (137);
+# exspectatio ad SERA_TECTUM (DC s), deinde exitus 2 = NIHIL cucurrit
+# (tenens nominatur). Involucra et pythonica reentrant (SERA_TENTA).
+mkdir -p "$BUILD_DIR"
+source "$RADIX_DIR/tools/sera.sh"
+sera_capere "$BUILD_DIR/cursor.sera" || exit 2
 mkdir -p "$BUILD_DIR"
 
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)

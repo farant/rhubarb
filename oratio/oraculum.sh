@@ -10,6 +10,12 @@ ORATIO_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 RADIX_DIR="$(cd "$ORATIO_DIR/.." && pwd)"
 MATERIA_DIR="$RADIX_DIR/materia"
 BUILD_DIR="$ORATIO_DIR/build"
+# SERA suitae orationis (tools/sera.sh, 2026-09-07): obiecta et
+# binaria in oratio/build sub cursore currenti non tanguntur; cursor
+# ab hoc vocatus reentrat; exitus 2 si tenta post SERA_TECTUM.
+mkdir -p "$BUILD_DIR"
+source "$RADIX_DIR/tools/sera.sh"
+sera_capere "$BUILD_DIR/cursor.sera" || exit 2
 BIN="$BUILD_DIR/oraculum"
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
@@ -42,4 +48,8 @@ for a in "$@"; do
         ARGS+=("$a")
     fi
 done
-RHUBARB_RADIX="$RADIX_DIR" exec "$BIN" "${ARGS[@]}"
+# non exec: crusta manet ut sera suitae usque ad finem instrumenti
+# teneatur et in exitu dimittatur (exec trap EXIT praeterit -
+# sera cum pid mortuo relicta, 2026-09-07)
+RHUBARB_RADIX="$RADIX_DIR" "$BIN" "${ARGS[@]}"
+exit $?

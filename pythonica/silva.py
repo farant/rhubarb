@@ -1478,8 +1478,10 @@ def citata_textus(c, tectum=40):
 
 # ---------------------------------------------------------------- portae
 
-Porta = namedtuple('Porta', 'nomen cucurrit sana compendium rc acta fracturae',
-                   defaults=(None,))
+# rancida: arbor mutata DUM porta viva currebat (sigillum ante != post);
+# receptum: via recepti (vivi aut umbrae) quo porta legitur, None si nullum
+Porta = namedtuple('Porta', 'nomen cucurrit sana compendium rc acta fracturae'
+                   ' rancida receptum', defaults=(None, False, None))
 # fractura = probatio una fracta intra portam: nomen + lineae diagnosticae
 # effusus SUI (FRACTA/Speratus/Receptus/compendium/error), non cauda actorum
 Fractura = namedtuple('Fractura', 'nomen relatio')
@@ -1530,6 +1532,7 @@ PORTAE = {
                     r'fumus briar: (sanum|FRACTUM)'),
     'materia-shim': (['./materia/shim_probare.sh'],
                      r'probatae \d+, fractae \d+'),
+    'sera': (['./tools/sera_fumus.sh'], r'fumus sera: (sanum|FRACTUM)'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
@@ -1656,17 +1659,25 @@ def porta_viae(via):
     raise SilvaError('porta viae ignota: %s' % via)
 
 
-def porta(nomen, filtrum=None, radix=None):
+def porta(nomen, filtrum=None, radix=None, receptum=True):
     """portam currere: Porta(nomen, cucurrit, sana, compendium, rc,
-    acta). sana SOLUM si cucurrit ET rc == 0 ET signum non fractum.
-    radix: directorium operis alterum (clone photographiae umbrae).
-    NB: suites totae (radix, silva) minuta capiunt - in vocamine
-    instrumenti tectum X minutorum: filtrum da aut in umbra curre."""
+    acta, fracturae, rancida, receptum). sana SOLUM si cucurrit ET
+    rc == 0 ET signum non fractum. radix: directorium operis alterum
+    (clone photographiae umbrae). In arbore viva (radix None) cursus
+    RECEPTUM VIVUM scribit (build/portae/<nomen>[.<filtrum>].viva.json,
+    sigillum arboris ANTE cursum): commissio idem sigillum inveniens
+    portam sanam non iterum currit (receptum_vivum). rancida = arbor
+    mutata DUM currebat (sigillum post != ante): verdictum manet,
+    receptum numquam valet. receptum=False = nihil scriptum (operarius
+    umbrae). NB: suites totae (radix, silva) minuta capiunt - in
+    vocamine instrumenti tectum X minutorum: filtrum da aut in umbra
+    curre."""
     if nomen not in PORTAE:
         raise SilvaError('porta ignota: %s (nota: %s)'
                          % (nomen, ', '.join(sorted(PORTAE))))
     imperium, signum = PORTAE[nomen]
     args = list(imperium) + ([filtrum] if filtrum else [])
+    sig = sigillum_arboris() if (radix is None and receptum) else None
     r = _curre(args, cwd=radix)
     acta = _ANSI.sub('', r.stdout + r.stderr)
     m = re.search(signum, acta)
@@ -1676,7 +1687,12 @@ def porta(nomen, filtrum=None, radix=None):
         and not re.search(r'FRACT|Fracti:\s*[1-9]|Failed:\s*[1-9]',
                           compendium)
     fr = [] if sana else fracturae(acta, nomen)
-    return Porta(nomen, cucurrit, sana, compendium, r.returncode, acta, fr)
+    rancida = sig is not None and sig != sigillum_arboris()
+    p = Porta(nomen, cucurrit, sana, compendium, r.returncode, acta, fr,
+              rancida)
+    if sig is not None:
+        p = p._replace(receptum=_receptum_vivum_scribere(p, filtrum, sig))
+    return p
 
 
 VETITAE = ('FAQ.md', 'gesta/annales/tabula.md',
@@ -1693,23 +1709,61 @@ def _trailer():
     return 'Co-Authored-By: Claude <noreply@anthropic.com>'
 
 
-def commissio(nuntius, viae, portae=(), verificare=True):
+def _sigilla_viarum(viae):
+    """{via: hash blob praesentis (None si absens)} - plagulae
+    commissionis ante et post portam rancidam conferuntur"""
+    exitus = dict((v, None) for v in viae)
+    praesentes = [v for v in viae if os.path.exists(_absoluta(v))]
+    if praesentes:
+        r = _curre(['git', 'hash-object', '--stdin-paths'],
+                   stdin='\n'.join(praesentes) + '\n')
+        for v, h in zip(praesentes, r.stdout.split()):
+            exitus[v] = h
+    return exitus
+
+
+def commissio(nuntius, viae, portae=(), verificare=True, recepta=True):
     """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
     non honorat; pipestatus fallit). portae: nomina aut (nomen,
-    filtrum); OMNES sanae esse debent (cucurrit ET rc 0) aliter
-    SilvaError et nihil commissum. Viae explicitae solae (numquam -A);
-    VETITAE (plagulae Frani in cursu) refutantur. verificare=False =
-    --no-verify (commissiones formae solae). Reddit hash brevem."""
+    filtrum) aut via recepti umbrae (.json); OMNES sanae esse debent
+    (cucurrit ET rc 0) aliter SilvaError et nihil commissum. Porta
+    nominata cum RECEPTO VIVO sano (sigillum arboris idem ac in cursu
+    priore per porta()/planta()/commissionem fractam) NON iterum
+    currit - linea 'non iterum cursa' imprimitur; recepta=False =
+    omnes currunt. Porta rancida (arbor mutata dum currebat): plagula
+    commissionis ulla mutata = refusio nominata; aliter monitum et
+    verdictum accipitur (cetera libera, ut in umbra photographica).
+    Viae explicitae solae (numquam -A); VETITAE (plagulae Frani in
+    cursu) refutantur. verificare=False = --no-verify (commissiones
+    formae solae). Reddit hash brevem; recepta viva omnia post
+    commissionem deleta (HEAD mutatum = sigilla rancida)."""
     for v in viae:
         if v in VETITAE:
             raise SilvaError('via vetita commissioni: %s' % v)
+    ante = _sigilla_viarum(viae)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):
             f = receptum_validum(p, viae)      # porta ex umbra
             nomen = f.nomen + ' (receptum)'
         else:
             nomen, filtrum = (p, None) if isinstance(p, str) else p
-            f = porta(nomen, filtrum)
+            f = receptum_vivum(nomen, filtrum) if recepta else None
+            if f is not None and f.sana:
+                print('porta %s: %s - non iterum cursa' % (nomen, f.compendium))
+            else:
+                f = porta(nomen, filtrum)
+                if f.rancida:
+                    post = _sigilla_viarum(viae)
+                    mutatae = [v for v in viae if post[v] != ante[v]]
+                    if mutatae:
+                        raise SilvaError(
+                            'porta %s: plagulae commissionis mutatae DUM'
+                            ' porta currebat (%s) - verdictum de alia'
+                            ' versione; nihil commissum'
+                            % (nomen, ', '.join(mutatae[:5])))
+                    print('porta %s: arbor mutata dum currebat (plagulae'
+                          ' commissionis intactae - cetera libera);'
+                          ' receptum non valet' % nomen)
         if not f.sana:
             # acta portae foris currentis nusquam servata erant: fractura
             # sine causa visibili (2026-09-03, porta pythonica sub md)
@@ -1744,7 +1798,9 @@ def commissio(nuntius, viae, portae=(), verificare=True):
     if r.returncode != 0:
         raise SilvaError('git commit rc=%d: %s'
                          % (r.returncode, (r.stdout + r.stderr).strip()[-600:]))
-    return _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
+    h = _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
+    recepta_viva_delere()
+    return h
 
 
 # ---------------------------------------------------------------- umbra
@@ -2017,7 +2073,7 @@ def _umbra_currere(nomen, filtrum, via, via_operis=None, arbor=None,
     sig = '?'
     try:
         sig = arbor if photo else sigillum_arboris()
-        p = porta(nomen, filtrum or None, radix=via_operis)
+        p = porta(nomen, filtrum or None, radix=via_operis, receptum=False)
         acta = p.acta
         d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': p.sana,
              'cucurrit': p.cucurrit, 'compendium': p.compendium,
@@ -2084,7 +2140,8 @@ def receptum_validum(via, viae=None):
         elif not recens:
             causa += ' [arbor mutata POST cursum - receptum rancidum]'
     sana = r.sana and r.cucurrit and not r.rancida and recens
-    return Porta(r.nomen, r.cucurrit, sana, causa, r.rc, '', r.fracturae)
+    return Porta(r.nomen, r.cucurrit, sana, causa, r.rc, '', r.fracturae,
+                 r.rancida, via)
 
 
 def receptum_relatio(via):
@@ -2111,6 +2168,100 @@ def receptum_delere(via):
             os.unlink(via + suffixum)
         except OSError:
             pass
+
+
+# ---------------------------------------------------------------- receptum vivum
+
+# RECEPTUM VIVUM (2026-09-07): porta in arbore viva cursa (porta(),
+# planta(), commissio) receptum scribit sigillo arboris ANTE cursum
+# ligatum, unum per clavem (nomen[.filtrum]) - cursus proximus obruit.
+# commissio idem sigillum inveniens portam sanam NON iterum currit:
+# porta rubra sera in indice (radix post oratio + pythonica) cursus
+# virides priores perdebat (ter 2026-09-07, ~XV min), et porta viridis
+# ante commissionem cursa (planta, porta manu) commissioni sufficit
+# dum arbor immota manet - ergo scripta ante portam ultimam. Sigillum
+# = arbor TOTA (HEAD + differentia tractarum + novae, VETITAE
+# exclusae): mutatio ulla rancidum facit. Lex honesta consulto: lint
+# orationis plagulas .c/.h omnes et corpora md legit, scopus per
+# portam declaratus mentiretur. Post commissionem HEAD mutatum est -
+# recepta viva omnia deleta.
+
+
+def _receptum_vivum_via(nomen, filtrum=None):
+    clavis = re.sub(r'[^A-Za-z0-9_.-]+', '_',
+                    nomen + ('.' + filtrum if filtrum else ''))
+    return os.path.join(PORTAE_DIR, clavis + '.viva.json')
+
+
+def _receptum_vivum_scribere(p, filtrum, sig):
+    """receptum vivum portae p (cursae in arbore viva); reddit viam"""
+    via = _receptum_vivum_via(p.nomen, filtrum)
+    os.makedirs(PORTAE_DIR, exist_ok=True)
+    d = {'nomen': p.nomen, 'filtrum': filtrum or None, 'sana': p.sana,
+         'cucurrit': p.cucurrit, 'compendium': p.compendium, 'rc': p.rc,
+         'sigillum': sig, 'rancida': p.rancida, 'finis': time.time(),
+         'fracturae': [list(f) for f in (p.fracturae or [])],
+         'photographia': None}
+    with open(via + '.acta', 'w') as f:
+        f.write(p.acta or '')
+    with open(via + '.tmp', 'w') as f:
+        json.dump(d, f)
+    os.rename(via + '.tmp', via)
+    return via
+
+
+def _aetas(secunda):
+    if secunda < 90:
+        return '%d s' % secunda
+    if secunda < 5400:
+        return '%d min' % (secunda / 60)
+    return '%.1f h' % (secunda / 3600.0)
+
+
+def receptum_vivum(nomen, filtrum=None):
+    """Porta ex recepto vivo (cursus proximus portae in arbore viva):
+    sana si receptum sanum, non rancidum, sigillum arboris IDEM nunc;
+    compendium causam fert ('[receptum vivum, ante N min]' aut
+    '[arbor mutata POST cursum - receptum rancidum]' aut '[arbor
+    mutata DUM currebat]'). None si receptum absens (aut clavis aliena
+    sub nomine sanato)."""
+    via = _receptum_vivum_via(nomen, filtrum)
+    if not os.path.exists(via):
+        return None
+    r = receptum_legere(via)
+    if r.nomen != nomen or (r.filtrum or None) != (filtrum or None):
+        return None
+    p = receptum_validum(via)
+    if p.sana:
+        p = p._replace(compendium='%s [receptum vivum, ante %s]'
+                       % (p.compendium, _aetas(time.time() - r.finis)))
+    return p
+
+
+def recepta_viva():
+    """[(via, Porta)] recepta viva praesentia (lectio; Porta.sana =
+    valet nunc, compendium causam fert)"""
+    if not os.path.isdir(PORTAE_DIR):
+        return []
+    exitus = []
+    for f in sorted(os.listdir(PORTAE_DIR)):
+        if f.endswith('.viva.json'):
+            via = os.path.join(PORTAE_DIR, f)
+            try:
+                r = receptum_legere(via)
+                p = receptum_vivum(r.nomen, r.filtrum)
+            except (SilvaError, ValueError, KeyError):
+                continue
+            if p is not None:
+                exitus.append((via, p))
+    return exitus
+
+
+def recepta_viva_delere():
+    """recepta viva omnia delere (post commissionem: HEAD mutatum,
+    sigilla omnia rancida)"""
+    for via, _ in recepta_viva():
+        receptum_delere(via)
 
 
 def exspectare(via, tectum=1800, intervallum=2.0):
@@ -2315,14 +2466,138 @@ def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
     if not viridis.sana:
         raise SilvaError('porta post reversionem non viridis: %s'
                          % viridis.compendium)
-    # testimonium rubrum servatur (acta rubra a cursu viridi obteruntur):
-    # compendium + quae probationes ruberint et qua linea
+    # testimonium rubrum servatur (acta rubra a cursu viridi obteruntur -
+    # receptum vivum quoque): compendium + quae probationes ruberint et
+    # qua linea, ET acta rubra INTEGRA in build/portae/<porta>.planta_rubra
+    # .acta - compendium unius lineae assertionem fractam non semper
+    # nominat (2026-09-07: linea fixturae interioris 'planta rubra: ficta'
+    # pro assertione vera portae pythonicae)
+    titulus = porta_nomen if isinstance(porta_nomen, str) \
+        else getattr(porta_nomen, '__name__', 'functio')
+    os.makedirs(PORTAE_DIR, exist_ok=True)
+    via_rubra = os.path.join(PORTAE_DIR, re.sub(r'[^A-Za-z0-9_.-]+', '_', titulus)
+                             + '.planta_rubra.acta')
+    with open(via_rubra, 'w') as f:
+        f.write(rubra.acta or '')
     rubrum = rubra.compendium
     if rubra.fracturae:
         rubrum += ' | fractae: ' + ', '.join(
             '%s (%s)' % (f.nomen, _summa_fracturae(f)) for f in rubra.fracturae)
-    print('planta rubra: ' + rubrum)
+    print('planta rubra: %s (acta: %s)' % (rubrum, via_rubra))
     return rubrum, viridis.compendium
+
+
+# ---------------------------------------------------------------- sera
+
+# SERA cursorum (tools/sera.sh, 2026-09-07) in Pythone: lex eadem
+# (directorium mkdir atomicum cum 'radix' et 'pid'; vetus = tenens
+# mortuus / radix aliena (sera in clonem umbrae copiata) / aetas > LX
+# min / sine pid > I min; reentrantia per SERA_TENTA in ambitu).
+# Pythonica eam tenet ubi ipsa in directorium aedificationis suitae
+# legit aut scribit (probatio_currere: binarium suitae currit - cursor
+# alienus id recompilans binarium currens obtereret, 137); cursores
+# quos intra 'with' vocat reentrant. Porta: tools/sera_fumus.sh
+# gradus X (utrumque contra alterum).
+import contextlib
+
+
+class Sera(object):
+    def __init__(self, via, tectum=None):
+        if not via.endswith('.sera'):
+            raise SilvaError('sera: via sine suffixo .sera refutata: %s'
+                             % via)
+        self.via = _absoluta(via)
+        self.tectum = int(os.environ.get('SERA_TECTUM', 600)) \
+            if tectum is None else tectum
+        self.capta = False
+        self._prior = None
+
+    def _tenens(self):
+        try:
+            return open(os.path.join(self.via, 'pid')).read().strip()
+        except (IOError, OSError):
+            return ''
+
+    def _vetus(self):
+        pid = self._tenens()
+        try:
+            aetas = time.time() - os.stat(self.via).st_mtime
+        except OSError:
+            return False
+        if not pid:
+            return aetas > 60
+        try:
+            radix = open(os.path.join(self.via, 'radix')).read().strip()
+        except (IOError, OSError):
+            radix = ''
+        if radix != RADIX:
+            return True
+        if not _pid_vivus(pid):
+            return True
+        return aetas > 3600
+
+    def __enter__(self):
+        import shutil
+        if os.environ.get('SERA_TENTA') == self.via:
+            return self                          # avus tenet
+        os.makedirs(os.path.dirname(self.via), exist_ok=True)
+        t0 = time.time()
+        nuntiatum = False
+        while True:
+            try:
+                os.mkdir(self.via)
+                break
+            except FileExistsError:
+                if self._vetus():
+                    shutil.rmtree(self.via, ignore_errors=True)
+                    continue
+                if not nuntiatum:
+                    print('sera: %s tenetur (pid %s) - exspecto usque ad %ds'
+                          % (self.via, self._tenens() or '?', self.tectum),
+                          file=sys.stderr)
+                    nuntiatum = True
+                if time.time() - t0 >= self.tectum:
+                    raise SilvaError('sera %s tenetur post %ds (pid %s) -'
+                                     ' nihil cursum' % (self.via, self.tectum,
+                                                        self._tenens() or '?'))
+                time.sleep(1)
+        with open(os.path.join(self.via, 'radix'), 'w') as f:
+            f.write(RADIX + '\n')
+        with open(os.path.join(self.via, 'pid'), 'w') as f:
+            f.write('%d\n' % os.getpid())
+        self.capta = True
+        self._prior = os.environ.get('SERA_TENTA')
+        os.environ['SERA_TENTA'] = self.via
+        return self
+
+    def __exit__(self, *ignota):
+        import shutil
+        if self.capta:
+            if self._tenens() == str(os.getpid()):
+                shutil.rmtree(self.via, ignore_errors=True)
+            if self._prior is None:
+                os.environ.pop('SERA_TENTA', None)
+            else:
+                os.environ['SERA_TENTA'] = self._prior
+            self.capta = False
+        return False
+
+
+def sera(via, tectum=None):
+    """with silva.sera('oratio/build/cursor.sera'): ... - sera cursorum
+    (tools/sera.sh), tectum secunda (SERA_TECTUM, DC)"""
+    return Sera(via, tectum)
+
+
+def sera_suitae(suita, tectum=None):
+    """sera cursoris suitae (eadem quam cursor eius capit): radix
+    build/cursor.sera, ceterae <suita>/build/cursor.sera"""
+    if suita not in SUITAE:
+        raise SilvaError('suita ignota: %s (notae: %s)'
+                         % (suita, ', '.join(sorted(SUITAE))))
+    d = os.path.dirname(SUITAE[suita][0])       # '' radix, 'silva' ...
+    return Sera(os.path.join(d, 'build', 'cursor.sera') if d
+                else os.path.join('build', 'cursor.sera'), tectum)
 
 
 # ---------------------------------------------------------------- probatio una
@@ -2393,7 +2668,8 @@ def profilum_textus(profilum, tectum=15):
 
 def probatio_currere(nomen, aedificare=False, secunda=0, mora=2.0,
                      tectum=1800):
-    """probationem UNAM currere sicut cursor eius: e radice, RHUBARB_RADIX
+    """probationem UNAM currere sicut cursor eius (sub SERA suitae: cursor
+    alienus binarium currens non recompilat): e radice, RHUBARB_RADIX
     praebita, binarium suitae. nomen = nomen probationis (suita ex fonte
     invenitur) aut via binarii exsecutabilis. aedificare: cursorem suitae
     cum filtro primum currere (aedificat ET currit semel - pretium
@@ -2402,6 +2678,13 @@ def probatio_currere(nomen, aedificare=False, secunda=0, mora=2.0,
     Cursus.profilum = folia [(numerus, functio, bibliotheca)], effusus
     crudus build/sample/<nomen>.probatio.txt. Reddit Cursus(nomen, suita,
     rc, secunda cursus, acta, fracturae (generica, si rc != 0), profilum)."""
+    suita = None if ('/' in nomen and os.path.exists(nomen)) \
+        else probatio_suita(nomen)
+    with (sera_suitae(suita) if suita else contextlib.nullcontext()):
+        return _probatio_currere(nomen, aedificare, secunda, mora, tectum)
+
+
+def _probatio_currere(nomen, aedificare, secunda, mora, tectum):
     if '/' in nomen and os.path.exists(nomen):
         suita, binarium = '?', os.path.abspath(nomen)
         titulus = os.path.basename(nomen)

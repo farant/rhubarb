@@ -64,6 +64,11 @@ declare -a SPECULUM_APPS=(
 
 # Build directory for object files
 BUILD_DIR="build"
+# SERA cursoris (tools/sera.sh, 2026-09-07): vide sub-cursores; via
+# absoluta ut involucra et pythonica (SERA_TENTA) eandem videant.
+mkdir -p "$BUILD_DIR"
+source "$(dirname "$0")/tools/sera.sh"
+sera_capere "$(pwd)/$BUILD_DIR/cursor.sera" || exit 2
 
 # Color codes
 RED="\033[31m"
