@@ -959,10 +959,12 @@ in the annotator, EWT oracle 91.3 / 91.8 %, English pass II; no
 irregulars table needed).
 
 **Stage 5.** T17 DONE 2026-09-05 (the walking skeleton: two adposition
-rules, executor, verbs, canon, pins). T18 the language rule
-(`<sententia lingua="anglica">` prefers English readings), then
-agreement rules; the sibling-run door pulled when the oracle shows the
-loss.
+rules, executor, verbs, canon, pins). T18 DONE 2026-09-07 (the
+language rule as a two-stage chain, first in the program; lex casus of
+Moby records; word-vote census; oracle censuses the treebank as one
+document; EWT primary 56.6/56.9 → 67.8/68.0). T19 class-prior rules
+(pass II readings) and agreement rules; the sibling-run door pulled
+when the oracle shows the loss.
 
 **Stage 6.** T19 `lemmata` column in gesta FTS + tabularium write path.
 T20 recall measurement on a fixed query set.

@@ -93,6 +93,7 @@ oratio_oraculum_census_vacare (
     OratioOraculumCensus* census)
 {
     memset(census, ZEPHYRUM, magnitudo(*census));
+    census->lingua_documenti = (s32)-I;
 }
 
 
@@ -488,6 +489,8 @@ nomen structura {
                             s32  regulae_numerus;
             InternamentumChorda* intern;
    constans MateriaLexiconRatum* ratum;
+             constans character* lingua_documenti;   /* NIHIL = census
+                                                  * sententiae solius */
 } Resolutio;
 
 interior b32
@@ -506,7 +509,8 @@ _sententiam_iudicare (
     i32 cursor = ZEPHYRUM;
     i32 k;
     i32 n;
-    i32 e_proximum = ZEPHYRUM;
+        i32 e_proximum = ZEPHYRUM;
+    i32 lingua_index;
     OratioPartesCensus census_partium;
 
     si (scratch == NIHIL)
@@ -521,23 +525,35 @@ _sententiam_iudicare (
             textus.mensura)
         : NIHIL;
     elementa = xar_creare(scratch, (i32)magnitudo(Elementum));
-    si (   doc == NIHIL || elementa == NIHIL
-        || !oratio_partes_annotare(scratch, vocabularia, doc,
-            &census_partium)
-        || (   resolutio != NIHIL && resolutio->programma != NIHIL
-            && !oratio_resolutio_applicare(scratch, resolutio->intern,
-                resolutio->ratum, resolutio->programma,
-                resolutio->regulae_numerus,
-                oratio_resolutio_lingua_censu(census_partium.linguae),
-                doc,
-                NIHIL))
-        || !_elementa_colligere(scratch, vocabularia->la, doc,
-        elementa))
-    {
+        si (   doc == NIHIL || elementa == NIHIL
+            || !oratio_partes_annotare(scratch, vocabularia, doc,
+            &census_partium))
+        {
         census->sententiae_fractae = census->sententiae_fractae + I;
         piscina_destruere(scratch);
         redde VERUM;
-    }
+        }
+    /* census linguae sententiae (T18): relatus per thesaurum - regula
+     * linguae solum sententias Anglicas iudicatas tangit */
+        lingua_index = oratio_resolutio_lingua_censu_index(
+            census_partium.vocabula_linguarum);
+                census->sententiae_linguae[lingua_index] =
+                    census->sententiae_linguae[lingua_index] + I;
+        si (   (   resolutio != NIHIL && resolutio->programma != NIHIL
+            && !oratio_resolutio_applicare(scratch, resolutio->intern,
+                resolutio->ratum, resolutio->programma,
+                resolutio->regulae_numerus,
+                resolutio->lingua_documenti != NIHIL
+                    ? resolutio->lingua_documenti
+                    : ORATIO_TITULI_LINGUARUM[lingua_index], doc,
+                NIHIL))
+            || !_elementa_colligere(scratch, vocabularia->la, doc,
+            elementa))
+        {
+        census->sententiae_fractae = census->sententiae_fractae + I;
+        piscina_destruere(scratch);
+        redde VERUM;
+        }
     n = xar_numerus(s->lexemata);
     per (k = ZEPHYRUM; k < n; k++)
     {
@@ -640,6 +656,60 @@ oratio_oraculum_iudicare (
         (s32)-I, sententiae, census);
 }
 
+/* census linguae DOCUMENTI (T18): thesaurus totus annotatur semel ante
+ * iudicium, suffragia vocabulorum summantur, lingua = plurima (Latina
+ * in aequalitate). Sententia sola fallit (EWT: CXXXIV sententiae 'I
+ * have.', nomina sola, lineae sine verbis Latinae iudicatae); documentum
+ * totum non fallit - et ita instrumenta (arbor, verba) censent. Pretium:
+ * parsura + annotatio bis per sententiam (~I s per thesaurum). */
+interior i32
+_linguam_documenti_censere (
+                       Piscina* piscina,
+    constans OratioVocabularia* vocabularia,
+                           Xar* sententiae,
+          OratioOraculumCensus* census)
+{
+    i32 i;
+    i32 k;
+
+    (vacuum)piscina;
+    per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
+    {
+        constans OratioConlluSententia* s =
+            (constans OratioConlluSententia*)xar_obtinere(sententiae,
+            i);
+        Piscina* scratch = piscina_generare_dynamicum(
+            "oraculum_census_linguae", 16777216);
+        chorda textus;
+        MateriaNodus* doc;
+        OratioPartesCensus census_partium;
+
+        si (scratch == NIHIL)
+        {
+            redde ZEPHYRUM;
+        }
+        textus = oratio_conllu_textus(scratch, s);
+        doc = textus.datum != NIHIL
+            ? oratio_arbor_parsare(scratch,
+            (constans character*)textus.datum, textus.mensura)
+            : NIHIL;
+        si (   doc != NIHIL
+            && oratio_partes_annotare(scratch, vocabularia, doc,
+                &census_partium))
+        {
+            per (k = ZEPHYRUM; k < (i32)ORATIO_LINGUA_NUMERUS; k++)
+            {
+                census->suffragia_linguarum[k] =
+                    census->suffragia_linguarum[k]
+                    + census_partium.vocabula_linguarum[k];
+            }
+        }
+        piscina_destruere(scratch);
+    }
+    redde oratio_resolutio_lingua_censu_index(
+        census->suffragia_linguarum);
+}
+
 b32
 oratio_oraculum_iudicare_resolutum (
                           Piscina* piscina,
@@ -654,10 +724,11 @@ oratio_oraculum_iudicare_resolutum (
      MateriaLexIudicium iudicium;
                     i32 i;
 
-    resolutio.programma        = programma;
-    resolutio.regulae_numerus  = regulae_numerus;
-    resolutio.intern           = NIHIL;
-    resolutio.ratum            = NIHIL;
+    resolutio.programma         = programma;
+    resolutio.regulae_numerus   = regulae_numerus;
+    resolutio.intern            = NIHIL;
+    resolutio.ratum             = NIHIL;
+    resolutio.lingua_documenti  = NIHIL;
     si (programma != NIHIL)
     {
         resolutio.intern = internamentum_creare(piscina);
@@ -668,6 +739,10 @@ oratio_oraculum_iudicare_resolutum (
             redde FALSUM;
         }
         resolutio.ratum = &ratum;
+        census->lingua_documenti = (s32)_linguam_documenti_censere(
+            piscina, vocabularia, sententiae, census);
+        resolutio.lingua_documenti =
+            ORATIO_TITULI_LINGUARUM[(i32)census->lingua_documenti];
     }
     per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
     {

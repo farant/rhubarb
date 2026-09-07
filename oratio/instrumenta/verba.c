@@ -565,7 +565,8 @@ principale (
         si (   programma != NIHIL && !crudus
             && !oratio_resolutio_applicare(piscina, intern, &ratum,
             programma,
-                (s32)-I, oratio_resolutio_lingua_censu(census.linguae),
+                (s32)-I,
+                oratio_resolutio_lingua_censu(census.vocabula_linguarum),
                 radix,
                 NIHIL))
         {

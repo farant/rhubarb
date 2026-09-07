@@ -233,9 +233,24 @@ matches one greedy pair — findings for the pattern spec's doors).
 Primary +0.5 CIRCSE; pins 678/679/679/566/569 permille only rising;
 `oraculum.sh -regulae` = cumulative table; `-crudus` everywhere;
 `silva.Oratio(crudus=)`. Gates resolutio 87, oraculum 127, materia
-nodus 92. NEXT: **T18** the language rule (`<sententia
-lingua="anglica">` prefers English readings), then agreement rules;
-pull the sibling-run door when the oracle shows the loss.
+nodus 92. **T18 DONE — the language rule** (2026-09-07): rule
+`lingua-documenti-anglica` FIRST in `resolutio.stml` — a two-stage
+chain (floating `<sententia lingua="anglica"/>` narrows, a floating
+`<vocabulum>` stage under `de=` enumerates its words, `<* n="$a">`
+with a `<lingua>1</lingua>` child = the first English reading);
+no executor change. Exposed and fixed on the way: Moby's case
+variants precede the lowercase record (`In\N` before `in\PvAN`) —
+LEX CASUS in the English analyser (lowercase token → lowercase
+record; Capitalized → lowercase then exact; else exact first);
+the census counted analyses, now WORD VOTES
+(`OratioPartesCensus.vocabula_linguarum`); the oracle censuses the
+whole treebank as one document (instruments already did) and
+prints `sententiae censae` + `lingua documenti`. EWT primary
+56.6/56.9 → 67.8/68.0 (pins 677/679), Latin unchanged. NEXT:
+**T19** class-prior and agreement rules (the appended pass II
+readings — auxiliare, particula, subordinans — sit at 0 % primary;
+adjective–noun agreement needs the sibling-run door in the pattern
+engine).
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

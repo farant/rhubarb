@@ -385,12 +385,17 @@ oratio_partes_vocabulum_annotare (
             ordo_classium[numerus_classium]  = d->classis;
             numerus_classium                 = numerus_classium + I;
         }
-        si (!lingua_visa[d->lingua])
-        {
+                si (!lingua_visa[d->lingua])
+                {
             lingua_visa[d->lingua]             = VERUM;
             ordo_linguarum[numerus_linguarum]  = d->lingua;
             numerus_linguarum                  = numerus_linguarum + I;
-        }
+            si (census != NIHIL)
+            {
+                census->vocabula_linguarum[d->lingua] =
+                    census->vocabula_linguarum[d->lingua] + I;
+            }
+                }
         si (census != NIHIL)
         {
             census->analyses = census->analyses + I;

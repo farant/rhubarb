@@ -86,10 +86,20 @@ _tabulam_imprimere (
     imprimere("--- %s: sententiae %d (fractae %d)  verba %d  rangae %d ---\n",
         titulus, (integer)c->sententiae, (integer)c->sententiae_fractae,
         (integer)c->verba, (integer)c->rangae);
-    imprimere("  TECTA %.1f%%  primaria %.1f%%  lemmata %.1f%%  ignota %.1f%%  inalignata %d\n",
-        _pars(c->tecta, c->verba), _pars(c->primaria, c->verba),
-        _pars(c->lemmata, c->verba), _pars(c->ignota, c->verba),
-        (integer)c->inalignata);
+        imprimere("  TECTA %.1f%%  primaria %.1f%%  lemmata %.1f%%  ignota %.1f%%  inalignata %d\n",
+            _pars(c->tecta, c->verba), _pars(c->primaria, c->verba),
+            _pars(c->lemmata, c->verba), _pars(c->ignota, c->verba),
+            (integer)c->inalignata);
+        imprimere("  sententiae censae: latina %d  anglica %d\n",
+            (integer)c->sententiae_linguae[ORATIO_LINGUA_LATINA],
+            (integer)c->sententiae_linguae[ORATIO_LINGUA_ANGLICA]);
+    si (c->lingua_documenti >= ZEPHYRUM)
+    {
+        imprimere("  lingua documenti: %s (suffragia latina %d  anglica %d)\n",
+            ORATIO_TITULI_LINGUARUM[(i32)c->lingua_documenti],
+            (integer)c->suffragia_linguarum[ORATIO_LINGUA_LATINA],
+            (integer)c->suffragia_linguarum[ORATIO_LINGUA_ANGLICA]);
+    }
     imprimere("  %-24s %6s %7s %8s %8s %7s\n", "classis aurea", "verba",
         "tecta", "primaria", "lemmata", "ignota");
     per (i = ZEPHYRUM; i <= (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)

@@ -57,8 +57,12 @@
 #define CIRCSE_PRIMARIA_PINNA    678
 #define LLCT_DEV_PRIMARIA_PINNA  679
 #define LLCT_TEST_PRIMARIA_PINNA 679
-#define EWT_DEV_PRIMARIA_PINNA   566
-#define EWT_TEST_PRIMARIA_PINNA  569
+/* T18 (2026-09-07): regula linguae documenti + lex casus recordorum
+ * Moby (in\PvAN ante In\N) + census suffragiis vocabulorum per
+ * DOCUMENTUM: EWT 566/569 -> 677/679 (crudum 566 -> 600 lege casus,
+ * regula +78); Latinae immotae (678/679/679). */
+#define EWT_DEV_PRIMARIA_PINNA   677
+#define EWT_TEST_PRIMARIA_PINNA  679
 
 interior b32
 _plagulam_legere (
@@ -250,6 +254,16 @@ _thesaurus_arborum (
             " crescens)\n",
             (integer)primaria_permille, (integer)pinna_primaria);
         CREDO_VERUM (primaria_permille >= pinna_primaria);
+    }
+        /* T18: lingua documenti censa = lingua thesauri (en_ ewt Anglica,
+     * cetera Latina); census sententiarum: Latinae nullae Anglicae */
+    CREDO_AEQUALIS_S32 (census.lingua_documenti,
+        strstr(plagula, "en_") != NIHIL ? (s32)ORATIO_LINGUA_ANGLICA
+        : (s32)ORATIO_LINGUA_LATINA);
+    si (strstr(plagula, "en_") == NIHIL)
+    {
+        CREDO_AEQUALIS_I32 (census.sententiae_linguae[ORATIO_LINGUA_ANGLICA],
+            ZEPHYRUM);
     }
     CREDO_AEQUALIS_I32 (census.sententiae_fractae, ZEPHYRUM);
     CREDO_VERUM (census.inalignata * (i32)L < census.verba);   /* < II % */

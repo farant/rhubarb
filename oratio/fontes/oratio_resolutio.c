@@ -254,8 +254,8 @@ oratio_resolutio_census_vacare (
     memset(census, ZEPHYRUM, magnitudo(*census));
 }
 
-constans character*
-oratio_resolutio_lingua_censu (
+i32
+oratio_resolutio_lingua_censu_index (
     constans i32* linguae)
 {
     i32 k;
@@ -268,7 +268,15 @@ oratio_resolutio_lingua_censu (
             optima = k;
         }
     }
-    redde ORATIO_TITULI_LINGUARUM[optima];
+    redde optima;
+}
+
+constans character*
+oratio_resolutio_lingua_censu (
+    constans i32* linguae)
+{
+    redde ORATIO_TITULI_LINGUARUM[
+        oratio_resolutio_lingua_censu_index(linguae)];
 }
 
 /* regulae numerum in censu augere (titulus copiatur in piscina) */

@@ -60,7 +60,18 @@ nomen structura {
     i32 primaria;
     i32 lemmata;
     i32 ignota;
-    i32 inalignata;
+        i32 inalignata;
+        i32 sententiae_linguae[ORATIO_LINGUA_NUMERUS];   /* census linguae per
+                                                      * sententiam (T18):
+                                                      * quot Latinae, quot
+                                                      * Anglicae iudicatae */
+    /* LINGUA DOCUMENTI (T18): thesaurus totus = documentum unum, ut
+     * instrumenta documentum totum censent - sententia sola (nomen
+     * unum, 'I have.', linea sine verbis) suffragiis paribus Latina
+     * caderet; suffragia = vocabula quae linguam ferunt, summata
+     * per thesaurum; -I = non censa (sine programmate) */
+                      s32 lingua_documenti;
+                      i32 suffragia_linguarum[ORATIO_LINGUA_NUMERUS];
     OratioOraculumClassis classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM + I];   /* [NUMERUS] = UPOS extra tabulam */
 } OratioOraculumCensus;
 

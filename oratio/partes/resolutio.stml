@@ -18,6 +18,31 @@
      Oraculum regulas CUMULATIM applicat (./oratio/oraculum.sh -regulae);
      primarium per thesaurum pinnatum solum crescens. -->
 
+<regula titulus="lingua-documenti-anglica">
+  <!-- T18 (2026-09-07): documentum Anglicum (census sententiae stampat
+       lingua="anglica") - lectio Anglica PRIMA cuiusque vocabuli quod
+       eam fert. Annotator Latinas ante Anglicas ponit ('in' adpositio
+       ablativa ante praepositionem Anglicam), ergo primaria Anglica
+       57 % erat (T16). Gradus DUO: sententia Anglica (flotans - una),
+       deinde vocabula EIUS omnia (flotans intra ordinem: sententia ut
+       radix par unum avidum daret, inventum T17); elementum analysis
+       quodlibet (tag *) cum lingua 1 = anglica, prima quae congruit.
+       Regula PRIMA ordine (prioritas): lingua documenti ante casus. -->
+  <EXEMPLAR output="$anglica">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$anglica" output="$lectio">
+    <vocabulum n="$v"><analyses>
+      <* n="$a"><lingua>1</lingua></>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lectio">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="lingua-documenti-anglica"/>
+    </PER>
+  </consilium>
+</regula>
+
 <regula titulus="adpositio-accusativum-regit">
   <!-- praepositio cum lectione accusativa (casus 3) - vocabulum sequens
        cuius analysis substantiva accusativa prima fiat: in urbem, ad

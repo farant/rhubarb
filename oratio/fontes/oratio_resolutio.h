@@ -107,9 +107,16 @@ oratio_resolutio_applicare (
          OratioResolutioCensus* census);
 
 /* Lingua documenti ex censu annotationis: titulus linguae cuius
- * analyses plures ("latina" in aequalitate aut sine analysi). */
+ * SUFFRAGIA plura (OratioPartesCensus.vocabula_linguarum - vocabula
+ * quae linguam ferunt, non analyses: T18 2026-09-07); "latina" in
+ * aequalitate aut sine analysi. */
 constans character*
 oratio_resolutio_lingua_censu (
+    constans i32* linguae);
+
+/* Idem, index in OratioLingua (oraculo: sententiae per linguam censae) */
+i32
+oratio_resolutio_lingua_censu_index (
     constans i32* linguae);
 
 #endif /* ORATIO_RESOLUTIO_H */

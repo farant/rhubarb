@@ -1395,3 +1395,57 @@ watchdog, no longer race on the same `.nova`. Birth gate stages
 IX–XI: a staged new file with `xyzzyquux` is refused with the
 report, the merge hook refuses the same, a Latin-only file passes —
 eleven of eleven in sixteen seconds, through the real index.
+
+## 2026-09-07 — T18: the language rule, and what it exposed
+
+Probe at the real seam instead of a hand-composed document: the rule
+went into `resolutio.stml` and a real English sentence went through
+`verba.sh`. Two answers in one run: the wildcard element takes
+attributes and children (`<* n="$a"><lingua>1</lingua></>`, anonymous
+closer), and a two-stage chain works inside a `<regula>` — a floating
+`<sententia lingua="anglica"/>` narrows to the sentence, a floating
+`<vocabulum>` stage under `de=` enumerates its words. No C in the
+executor changed. The reference documents only `<*/>` and `<**>`; the
+engine's tag test is a plain wildcard.
+
+Then the measurement said 56.9 → 60.0 on EWT test, far below the
+expectation, and the cause was not the rule. Moby lists case
+variants before the lowercase record — `In\N` (indium), `Can\N`,
+`Is\N`, `i\N`, `Me\N`, `US\N` before `in\PvAN`, `can\VN`, `is\V`,
+`I\r`, `me\rN`, `us\r` — and the analyser returned records in file
+order, so the first English reading of `in` was a noun and EWT's
+adposition primary sat at 35 %. Lex casus in
+`oratio_vocabularium_en_analysare`: a lowercase token prefers its
+lowercase record; a Capitalized token (sentence start or name)
+prefers the lowercase record, then the exact one; anything else
+(`I`, `US`, `iPhone`) prefers the exact record; file order within a
+rank. Crude EWT rose 56.9 → 60.1 from this alone.
+
+Then the census: it counted ANALYSES per language, and `a` alone
+carries twenty Latin analyses. Word votes instead
+(`vocabula_linguarum`, one per word per language): the Latin
+treebanks went from 5 / 4 / 12 sentences judged English to zero, so
+the rule stopped costing Seneca a tenth. The remaining 134 / 197
+English sentences judged Latin were ties (`I have.`), name-only
+lines and lines without words — an artifact of judging sentences in
+isolation, which real documents never do. The oracle now censuses
+the whole treebank once, as the instruments census a whole document,
+and passes that language to every sentence; the per-sentence census
+stays as a diagnostic line.
+
+Result: EWT dev 56.6 → 67.7 → 67.8, test 56.9 → 67.9 → 68.0 (pins
+566/569 → 677/679); CIRCSE and LLCT exactly where T17 left them
+(678/679/679), the adposition rules still adding their half point
+after the language rule. The rule is FIRST in the program: document
+language before case. Gates: resolutio section V (English sentence:
+`in` from Latin ablative first to English adposition first, seven
+analyses kept, six rows, two permutations, idempotent; Latin
+sentence: zero rows), partes (case law on in / I / Me / US / can;
+votes), oraculum (document language asserted per treebank, no Latin
+sentence judged English). Planted fault (`<lingua>0</lingua>`) red,
+restored green.
+
+What remains for the English primary: readings the pass II lists
+APPEND (auxiliare, particula, subordinans, symbolum at 0 %), and
+Moby's first code where it is not the frequent use. Those are
+class-prior rules, T19's territory with the agreement rules.

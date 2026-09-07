@@ -1052,7 +1052,33 @@ principale (vacuum)
             (s32)ORATIO_FONS_ANALYSIS_VOCABULARIUM_EN);
         CREDO_AEQUALIS_S32 (d->numerus, (s32)-I);
         CREDO_AEQUALIS_I32 (d->sensus.mensura, ZEPHYRUM);
-        CREDO_NON_NIHIL (_descriptio_en(x, ORATIO_CLASSIS_ADVERBIUM));
+                CREDO_NON_NIHIL (_descriptio_en(x,
+                    ORATIO_CLASSIS_ADVERBIUM));
+        /* LEX CASUS recordorum (T18): Moby variantia casus ante
+         * minusculum ponit - 'in' -> in\PvAN ante In\N (indium): prima
+         * ADPOSITIO; 'I' -> I\r ante i\N; 'Me' (initium sententiae) ->
+         * me\rN ante Me\N; 'US' (maiusculum) -> US\N ante us\r;
+         * 'can' -> can\VN ante Can\N */
+        x = _describere_en(piscina, vocabularia.en, "in");
+        CREDO_NON_NIHIL (x);
+        CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
+            x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_ADPOSITIO);
+        x = _describere_en(piscina, vocabularia.en, "I");
+        CREDO_NON_NIHIL (x);
+        CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
+            x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_PRONOMEN);
+        x = _describere_en(piscina, vocabularia.en, "Me");
+        CREDO_NON_NIHIL (x);
+        CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
+            x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_PRONOMEN);
+        x = _describere_en(piscina, vocabularia.en, "US");
+        CREDO_NON_NIHIL (x);
+        CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
+            x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
+        x = _describere_en(piscina, vocabularia.en, "can");
+        CREDO_NON_NIHIL (x);
+        CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
+            x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_VERBUM);
         /* cats: pluralis-s super basin cat (N, NV) - substantivum
          * pluralis ET verbum personae III */
         x = _describere_en(piscina, vocabularia.en, "cats");
@@ -1196,8 +1222,14 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (census.vocabula, (i32)VI);
         CREDO_AEQUALIS_I32 (census.ignota, ZEPHYRUM);
         CREDO_VERUM (census.linguae[ORATIO_LINGUA_ANGLICA] >= (i32)X);
-        CREDO_AEQUALIS_I32 (census.linguae[ORATIO_LINGUA_LATINA]
-            + census.linguae[ORATIO_LINGUA_ANGLICA], census.analyses);
+                CREDO_AEQUALIS_I32 (census.linguae[ORATIO_LINGUA_LATINA]
+                    + census.linguae[ORATIO_LINGUA_ANGLICA],
+                    census.analyses);
+        /* suffragia (T18): vocabula quae linguam ferunt - VI Anglica */
+        CREDO_AEQUALIS_I32 (
+            census.vocabula_linguarum[ORATIO_LINGUA_ANGLICA], (i32)VI);
+        CREDO_VERUM (census.vocabula_linguarum[ORATIO_LINGUA_LATINA]
+            < (i32)VI);
         /* The: determinans adverbium - sine nomine proprio (nullum
          * substantivum) */
         v = _vocabulum(doc, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);

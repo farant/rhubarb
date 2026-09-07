@@ -38,8 +38,14 @@ nomen structura {
     i32 analyses;     /* nodi analysis structi */
     i32 ignota;       /* vocabula sine analysi */
     i32 classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM];   /* analyses per classem */
-    /* analyses per linguam (T16) */
+        /* analyses per linguam (T16) */
     i32 linguae[ORATIO_LINGUA_NUMERUS];
+    /* SUFFRAGIA: vocabula quae linguam ferunt (semel per vocabulum et
+     * linguam; T18). Census linguae sententiae his fit, non analysibus:
+     * 'a' Latinum XX analyses fert, 'the cat sat' Anglica VI - analyses
+     * numeratae CCCXVI sententias EWT Latinas, XXI CIRCSE Anglicas
+     * iudicabant. */
+    i32 vocabula_linguarum[ORATIO_LINGUA_NUMERUS];
 } OratioPartesCensus;
 
 /* Locus accidentis (titulo) intra genus analysis classis; -I si genus

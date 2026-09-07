@@ -706,6 +706,108 @@ _analysare_simplex (
     redde VERUM;
 }
 
+/* ORDO RECORDORUM EXACTORUM - lex casus (T18, 2026-09-07). Moby
+ * recorda variantia casus ANTE minusculum ponit (In\N indium, Can\N,
+ * Is\N, i\N, Me\N, US\N ante in\PvAN, can\VN, is\V, I\r, me\rN,
+ * us\r), et quaerere ordinem plagulae reddit: lectio Anglica PRIMA
+ * vocabuli 'in' substantivum erat, adpositio EWT primaria 35 %
+ * (crudum 56.9 %; regula linguae T18 60.0 % solum). Gradus recordi:
+ *   vocabulum minusculum ('in')      -> minusculum (= exactum) 0
+ *   Capitalizatum ('In', 'Me': initium sententiae aut nomen; mensura
+ *     >= II)                          -> minusculum 0, exactum 1
+ *   aliud ('I', 'US', 'iPhone')      -> exactum 0, minusculum 1
+ *   cetera 2; intra gradum ordo plagulae manet (stabilis). */
+interior i32
+_gradus_recordi (
+    chorda forma,
+    chorda plicata,
+    chorda recordi)
+{
+    b32 exactum    = recordi.mensura == forma.mensura
+        && memcmp(recordi.datum, forma.datum, (size_t)forma.mensura)
+            == ZEPHYRUM;
+    b32 minusculum = recordi.mensura == plicata.mensura
+        && memcmp(recordi.datum, plicata.datum, (size_t)plicata.mensura)
+            == ZEPHYRUM;
+    b32 capitale = forma.mensura >= (i32)II
+        && forma.datum[ZEPHYRUM] >= 'A' && forma.datum[ZEPHYRUM] <= 'Z';
+    i32 i;
+
+    per (i = I; capitale && i < forma.mensura; i++)
+    {
+        si (forma.datum[i] >= 'A' && forma.datum[i] <= 'Z')
+        {
+            capitale = FALSUM;
+        }
+    }
+    si (minusculum && exactum)
+    {
+        redde ZEPHYRUM;
+    }
+    si (capitale)
+    {
+        redde minusculum ? ZEPHYRUM : (exactum ? I : II);
+    }
+    redde exactum ? ZEPHYRUM : (minusculum ? I : II);
+}
+
+/* praefixum exactum (regula -I) ordine graduum, stabiliter */
+interior b32
+_exacta_ordinare (
+                          Piscina* piscina,
+    constans OratioVocabulariumEn* voc,
+                           chorda  forma,
+                           chorda  plicata,
+                              Xar* exitus)
+{
+                 i32  n = ZEPHYRUM;
+                 i32  g;
+                 i32  k;
+                 i32  scriptum = ZEPHYRUM;
+    OratioAnalysisEn* copia;
+
+    dum (   n < xar_numerus(exitus)
+         && ((constans OratioAnalysisEn*)xar_obtinere(exitus,
+         n))->regula
+            == (s32)-I)
+    {
+        n = n + I;
+    }
+    si (n < (i32)II)
+    {
+        redde VERUM;
+    }
+    copia = (OratioAnalysisEn*)piscina_allocare(piscina,
+        (memoriae_index)n * (memoriae_index)magnitudo(OratioAnalysisEn));
+    si (copia == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        copia[k] = *(OratioAnalysisEn*)xar_obtinere(exitus, k);
+    }
+    per (g = ZEPHYRUM; g <= (i32)II; g++)
+    {
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            constans OratioVocabulumEn* recordum =
+                oratio_vocabularium_en_recordum(voc, copia[k].recordum);
+
+            si (   recordum
+                != NIHIL
+                && _gradus_recordi(forma, plicata, recordum->forma)
+                    == g)
+            {
+                *(OratioAnalysisEn*)xar_obtinere(exitus, scriptum) =
+                    copia[k];
+                scriptum = scriptum + I;
+            }
+        }
+    }
+    redde VERUM;
+}
+
 Xar*
 oratio_vocabularium_en_analysare (
                           Piscina* piscina,
@@ -726,7 +828,8 @@ oratio_vocabularium_en_analysare (
     {
         redde NIHIL;
     }
-    si (!_analysare_simplex(piscina, voc, plicata, exitus))
+    si (   !_analysare_simplex(piscina, voc, plicata, exitus)
+        || !_exacta_ordinare(piscina, voc, forma, plicata, exitus))
     {
         redde NIHIL;
     }
