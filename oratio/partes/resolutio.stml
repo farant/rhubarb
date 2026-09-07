@@ -18,6 +18,241 @@
      Oraculum regulas CUMULATIM applicat (./oratio/oraculum.sh -regulae);
      primarium per thesaurum pinnatum solum crescens. -->
 
+<!-- REGULAE PRIORUM CLASSIUM (T19b, 2026-09-07; data: ./oratio/oraculum.sh
+     -discrepantiae, T19a). Lectio classis nominatae PRIMA fiat ubi
+     adest, sine contextu - classis cuius lectiones cursus II
+     APPENDIT (auxiliare, particula, subordinans, interiectio,
+     numerale) aut quam fons post aliam ponit (adpositio Latina: ad/a/
+     cum adverbium aut abbreviatio prima, LLCT ad CCCLXXIV). ORDO:
+     ANTE regulam linguae, quia prima quae in vocabulo valet vincit et
+     regula linguae lectionem Anglicam primam quamque praefert; quaeque
+     lingua documenti CUSTODITA (sententia lingua= gradu primo, lingua
+     lectionis gradu secundo) ne documentum Latinum lectionem Anglicam
+     'is' auxiliaris ferat. Mensura cumulativa per regulam in
+     oraculum.sh -regulae; regula quae thesaurum ullum deprimit
+     removetur, non retinetur. LEX ORDINIS LIBERORUM: liberi formae
+     subsequentia ORDINATA liberorum analysis sunt (lemma, lingua, fons,
+     nativum, sensus, accidentia) - lemma ante linguam scribatur, aliter
+     forma tacite numquam congruit (supra/a primo mensurata 0). -->
+
+<regula titulus="auxiliare-primum-latinum">
+  <!-- sum: UD AUX (copula, passivum periphrasticum); CIRCSE CLXVIII / LLCT DX / CDXLII aurea, 0 prima ante -->
+  <EXEMPLAR output="$sent_auxiliare_primum_latinum">
+    <sententia lingua="latina"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_auxiliare_primum_latinum" output="$lect_auxiliare_primum_latinum">
+    <vocabulum n="$v"><analyses>
+      <analysis-auxiliaris n="$a"><lingua>0</lingua></analysis-auxiliaris>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_auxiliare_primum_latinum">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="auxiliare-primum-latinum"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="auxiliare-primum-anglicum">
+  <!-- be/have/do/modalia (lista auxiliaria): EWT MDXLIII aurea, 0 prima ante; verbum principale (have a car) pretium mensuratum -->
+  <EXEMPLAR output="$sent_auxiliare_primum_anglicum">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_auxiliare_primum_anglicum" output="$lect_auxiliare_primum_anglicum">
+    <vocabulum n="$v"><analyses>
+      <analysis-auxiliaris n="$a"><lingua>1</lingua></analysis-auxiliaris>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_auxiliare_primum_anglicum">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="auxiliare-primum-anglicum"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="particula-prima-latina">
+  <!-- non haud ne quidem: non = Non. abbreviatio prima (LXXXIV / LXIII) -->
+  <EXEMPLAR output="$sent_particula_prima_latina">
+    <sententia lingua="latina"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_particula_prima_latina" output="$lect_particula_prima_latina">
+    <vocabulum n="$v"><analyses>
+      <analysis-particulae n="$a"><lingua>0</lingua></analysis-particulae>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_particula_prima_latina">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="particula-prima-latina"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="particula-prima-anglica">
+  <!-- not (XCVIII adverbium prima), to (CCCLXXI adpositio prima - contra to adpositionem veram: mensuratum; ianua cursus fratrum to + verbum) -->
+  <EXEMPLAR output="$sent_particula_prima_anglica">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_particula_prima_anglica" output="$lect_particula_prima_anglica">
+    <vocabulum n="$v"><analyses>
+      <analysis-particulae n="$a"><lingua>1</lingua></analysis-particulae>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_particula_prima_anglica">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="particula-prima-anglica"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="supra-adverbium-latinum">
+  <!-- EXCEPTIO ante adpositionem: supra in chartis 'ut supra', 'supra
+       dicta' adverbium (LLCT ADV CCIX aurea, ADP paucae) - lectio
+       adverbii lemmatis supra prima, ut regula adpositionis (prima quae
+       valet vincit) eam non tangat -->
+  <EXEMPLAR output="$sent_supra">
+    <sententia lingua="latina"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_supra" output="$lect_supra">
+    <vocabulum n="$v"><analyses>
+      <analysis-adverbii n="$a"><lemma><or-derivatum>supra</or-derivatum></lemma><lingua>0</lingua></analysis-adverbii>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_supra">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="supra-adverbium-latinum"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="adpositio-prima-latina">
+  <!-- ad a ab cum post ante sine super usque: adverbium aut nomen proprium (A.) prima; cum subordinans (XX CIRCSE) ianuae cursus fratrum -->
+  <EXEMPLAR output="$sent_adpositio_prima_latina">
+    <sententia lingua="latina"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_adpositio_prima_latina" output="$lect_adpositio_prima_latina">
+    <vocabulum n="$v"><analyses>
+      <analysis-adpositionis n="$a"><lingua>0</lingua></analysis-adpositionis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_adpositio_prima_latina">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="adpositio-prima-latina"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="a-determinans-anglicum">
+  <!-- EXCEPTIO ante adpositionem: articulus 'a' apud Moby etiam
+       praepositio (twice a day) - EWT DET CDXCII sub regula adpositionis
+       perdita; lectio determinantis lemmatis a prima -->
+  <EXEMPLAR output="$sent_a">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_a" output="$lect_a">
+    <vocabulum n="$v"><analyses>
+      <analysis-determinantis n="$a"><lemma><or-derivatum>a</or-derivatum></lemma><lingua>1</lingua></analysis-determinantis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_a">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="a-determinans-anglicum"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="adpositio-prima-anglica">
+  <!-- up out like than as: substantivum/adverbium/adiectivum prima (EWT CXCIV) -->
+  <EXEMPLAR output="$sent_adpositio_prima_anglica">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_adpositio_prima_anglica" output="$lect_adpositio_prima_anglica">
+    <vocabulum n="$v"><analyses>
+      <analysis-adpositionis n="$a"><lingua>1</lingua></analysis-adpositionis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_adpositio_prima_anglica">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="adpositio-prima-anglica"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="subordinans-prima-latina">
+  <!-- sicut qualiter quam nisi licet (CERTAE solae, nativum 'subordinantes'):
+       adverbium/pronomen prima (LLCT CLII, CIRCSE C). Mensuratum prius
+       sine titulo: ubi/unde adverbia relativa (LLCT ADV LXVIII/XXV) et
+       quod pronomen (XL/XXX) perdita - lista certarum in partes_la -->
+  <EXEMPLAR output="$sent_subordinans_prima_latina">
+    <sententia lingua="latina"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_subordinans_prima_latina" output="$lect_subordinans_prima_latina">
+    <vocabulum n="$v"><analyses>
+      <analysis-coniunctionis-subordinantis n="$a"><lingua>0</lingua><nativum><or-derivatum>subordinantes</or-derivatum></nativum></analysis-coniunctionis-subordinantis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_subordinans_prima_latina">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="subordinans-prima-latina"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="subordinans-prima-anglica">
+  <!-- if because while whether that (lista subordinantium, nativum
+       'subordinantes' sola): coordinans/determinans prima (EWT CCXCIII).
+       so/when/where adverbia (lista ambigua) intacta; as/than/like/since
+       adpositionem ferunt - regula adpositionis prior vincit -->
+  <EXEMPLAR output="$sent_subordinans_prima_anglica">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_subordinans_prima_anglica" output="$lect_subordinans_prima_anglica">
+    <vocabulum n="$v"><analyses>
+      <analysis-coniunctionis-subordinantis n="$a"><lingua>1</lingua><nativum><or-derivatum>subordinantes</or-derivatum></nativum></analysis-coniunctionis-subordinantis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_subordinans_prima_anglica">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="subordinans-prima-anglica"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="interiectio-prima-anglica">
+  <!-- please yes yeah hello okay sorry (lista interiectionum, nativum
+       'interiectiones' SOLA): verbum/adverbium prima (EWT LX). Mensuratum
+       prius super lectionem quamlibet: codex Moby '!' good/thanks/there/
+       he/what interiectiones facit - I.II % perdita -->
+  <EXEMPLAR output="$sent_interiectio_prima_anglica">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_interiectio_prima_anglica" output="$lect_interiectio_prima_anglica">
+    <vocabulum n="$v"><analyses>
+      <analysis-interiectionis n="$a"><lingua>1</lingua><nativum><or-derivatum>interiectiones</or-derivatum></nativum></analysis-interiectionis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_interiectio_prima_anglica">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="interiectio-prima-anglica"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="numerale-primum-anglicum">
+  <!-- one two three four ten million: determinans/substantivum prima (EWT LXXV); one substantivum (the one) pretium mensuratum -->
+  <EXEMPLAR output="$sent_numerale_primum_anglicum">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_numerale_primum_anglicum" output="$lect_numerale_primum_anglicum">
+    <vocabulum n="$v"><analyses>
+      <analysis-numeralis n="$a"><lingua>1</lingua></analysis-numeralis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_numerale_primum_anglicum">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="numerale-primum-anglicum"/>
+    </PER>
+  </consilium>
+</regula>
+
 <regula titulus="lingua-documenti-anglica">
   <!-- T18 (2026-09-07): documentum Anglicum (census sententiae stampat
        lingua="anglica") - lectio Anglica PRIMA cuiusque vocabuli quod

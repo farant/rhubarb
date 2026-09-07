@@ -800,6 +800,143 @@
   <vocabulum lemma="radix2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
   <vocabulum lemma="repo2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
 
+  <!-- ================= CURSUS GLOSSARII III (T19b 2026-09-07: priores classium ex oraculo UD) =================
+       Glossarium fons PRIMUS quaerendi: lectio entrii prima fit in ordine
+       crudo, WORDS post. Hic: verba clausa quorum lectio prima WORDS
+       classem rariorem fert (iam = eo subiunctivum, vel/nec adverbium),
+       nomina quorum forma participium verbi alieni est (casa = cado,
+       parte = partio, sancti = sancio), nomina sanctorum chartarum
+       (Martini LXXXV). Numeri = verba aurea (CIRCSE test / LLCT dev)
+       quae lectionem primam falsam ferebant (oraculum.sh -discrepantiae,
+       T19a); regulae priorum classium (resolutio.stml) classes tangunt,
+       glossarium lemmata. -->
+  <vocabulum lemma="iam" lingua="latina" classis="adverbium" nota="WORDS eo subiunctivum primum: CIRCSE LIII, LLCT XII"/>
+  <vocabulum lemma="etiam" lingua="latina" classis="adverbium" nota="WORDS coniunctio prima: CIRCSE XIV"/>
+  <vocabulum lemma="ita" lingua="latina" classis="adverbium" nota="WORDS verbum primum: LLCT VII"/>
+  <vocabulum lemma="magis" lingua="latina" classis="adverbium" nota="WORDS substantivum primum: CIRCSE V, LLCT VII"/>
+  <vocabulum lemma="bis" lingua="latina" classis="adverbium" nota="WORDS numerale primum: CIRCSE V"/>
+  <vocabulum lemma="male" lingua="latina" classis="adverbium" nota="WORDS substantivum primum: CIRCSE VI"/>
+  <vocabulum lemma="nimium" lingua="latina" classis="adverbium" nota="WORDS adiectivum primum: CIRCSE V"/>
+  <vocabulum lemma="pariter" lingua="latina" classis="adverbium" nota="WORDS verbum primum: CIRCSE V"/>
+  <vocabulum lemma="tantum" lingua="latina" classis="adverbium" nota="WORDS adiectivum primum: CIRCSE VII, LLCT XLV (tantus adiectivum post manet)"/>
+  <vocabulum lemma="quantum" lingua="latina" classis="adverbium" nota="WORDS adiectivum primum: LLCT XXI"/>
+  <vocabulum lemma="vel" lingua="latina" classis="coniunctio-coordinans" nota="WORDS adverbium primum: LLCT CCII, CIRCSE X"/>
+  <vocabulum lemma="nec" lingua="latina" classis="coniunctio-coordinans" nota="WORDS adverbium primum: CIRCSE XXXVI (e lista particularum sublatum)"/>
+  <vocabulum lemma="neque" lingua="latina" classis="coniunctio-coordinans" nota="WORDS adverbium primum: CIRCSE III"/>
+  <vocabulum lemma="deus" lingua="latina" classis="substantivum" nota="WORDS natura N (nomen) -> nomen proprium primum; UD substantivum: CIRCSE deos IX deorum VI">
+    <forma textus="deus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="deus" casus="vocativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="dei" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="deo" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="deo" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="deum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="dei" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="di" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="deorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="deis" casus="dativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="dis" casus="dativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="deis" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="dis" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="deos" casus="accusativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="casa" lingua="latina" classis="substantivum" nota="WORDS cado participium primum: LLCT casa LXXXIII casis XXIX">
+    <forma textus="casa" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="casae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="casae" casus="dativus" numerus="singularis" genus="femininum"/>
+    <forma textus="casam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="casa" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="casae" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="casarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="casis" casus="dativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="casis" casus="ablativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="casas" casus="accusativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="pars" lingua="latina" classis="substantivum" nota="WORDS partio imperativum primum: LLCT parte XLI">
+    <forma textus="pars" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="partis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="parti" casus="dativus" numerus="singularis" genus="femininum"/>
+    <forma textus="partem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="parte" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="partes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="partium" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="partibus" casus="dativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="partibus" casus="ablativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="partes" casus="accusativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="sanctus" lingua="latina" classis="adiectivum" nota="WORDS sancio participium primum; chartae: sancti CCXXXVIII sancte LXVI diuina/sancta (LLCT dev ADJ)">
+    <forma textus="sanctus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="sancti" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="sancto" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="sanctum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="sancto" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="sancte" casus="vocativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="sancta" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sanctae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="sanctae" casus="dativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sanctam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sancta" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sanctum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="sancti" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="sanctorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="sanctis" casus="dativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="sanctis" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="sanctos" casus="accusativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="sanctae" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="sanctarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="sanctas" casus="accusativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="sancta" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="sancta" casus="accusativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="Martinus" lingua="latina" classis="nomen-proprium" nota="sanctus Martinus chartarum Lucensium: LLCT dev martini LXXXV (WORDS substantivum primum)">
+    <forma textus="martinus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="martini" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="martino" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="martinum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="martino" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="martine" casus="vocativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="Petrus" lingua="latina" classis="nomen-proprium" nota="LLCT petrum III, petri">
+    <forma textus="petrus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="petri" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="petro" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="petrum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="petro" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="petre" casus="vocativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="Geminianus" lingua="latina" classis="nomen-proprium" nota="sanctus Geminianus: LLCT geminiani VII">
+    <forma textus="geminianus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="geminiani" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="geminiano" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="geminianum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="geminiano" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="geminiane" casus="vocativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="Andreas" lingua="latina" classis="nomen-proprium" nota="sanctus Andreas: LLCT andree XIV andrea IV (orthographia chartarum -ee)">
+    <forma textus="andreas" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="andree" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="andreae" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="andree" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="andreae" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="andream" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="andrea" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="andrea" casus="vocativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <!-- ANGLICA (cursus III): lemmata quorum codex Moby primus classem
+       rariorem fert; contextus anglicus (lint identificatorum non
+       tangit). EWT test. -->
+  <vocabulum lemma="I" lingua="anglica" classis="pronomen" contextus="anglicus" nota="Moby i\N littera ante I\r; 'i' minusculum interretiale: EWT CLV"/>
+  <vocabulum lemma="us" lingua="anglica" classis="pronomen" contextus="anglicus" nota="EWT XV"/>
+  <vocabulum lemma="just" lingua="anglica" classis="adverbium" contextus="anglicus" nota="Moby adiectivum primum: EWT LVII"/>
+  <vocabulum lemma="even" lingua="anglica" classis="adverbium" contextus="anglicus" nota="Moby adiectivum primum: EWT XXIII"/>
+  <vocabulum lemma="only" lingua="anglica" classis="adverbium" contextus="anglicus" nota="Moby adiectivum primum: EWT XX"/>
+  <vocabulum lemma="still" lingua="anglica" classis="adverbium" contextus="anglicus" nota="Moby adiectivum primum: EWT XVII"/>
+  <vocabulum lemma="however" lingua="anglica" classis="adverbium" contextus="anglicus" nota="Moby coniunctio prima: EWT IX"/>
+  <vocabulum lemma="go" lingua="anglica" classis="verbum" contextus="anglicus" nota="Moby substantivum primum: EWT XLVI"/>
+  <vocabulum lemma="say" lingua="anglica" classis="verbum" contextus="anglicus" nota="said adiectivum primum (the said person): EWT XX">
+    <forma textus="said"/>
+  </vocabulum>
+  <vocabulum lemma="no" lingua="anglica" classis="determinans" contextus="anglicus" nota="Moby adverbium primum; EWT DET XXXVI, INTJ IX (e lista interiectionum sublatum)"/>
+
   <!-- ================= TERMINI GRAMMATICI (2026-09-07) =================
        tituli accidentium registri orationis (oratio_registrum.h) quos
        WORDS non fert - Latina grammaticorum (Priscianus, Donatus); tabula

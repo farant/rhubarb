@@ -39,9 +39,21 @@ constans character* constans ORATIO_DETERMINANTIA[] = {
 constans character* constans ORATIO_PARTICULAE[] = {
     "non", "haud", "haut", "ne", "num", "nonne", "an", "utrum",
         "quidem",
-    "equidem", "nec", "neque", "vero",
+    "equidem",
+    /* nec/neque/vero SUBLATA (T19b, 2026-09-07): CIRCSE CCONJ nec
+     * XXXVI neque III, LLCT ADV vero XVIII aurea, PART 0 in thesauris
+     * tribus - lectio particulae eas a coniunctione/adverbio abducebat
+     * sub regula priorum classium */
     NIHIL
 };
+constans character* constans ORATIO_SUBORDINANTES_CERTAE[] = {
+    "sicut", "sicuti", "qualiter", "quam", "nisi", "licet", "tamquam",
+    "quasi", "velut", "veluti", "ceu", "quia", "quoniam", "quamquam",
+    "etsi", "quamvis", "postquam", "antequam", "priusquam", "donec",
+    "quin", "dum",
+    NIHIL
+};
+
 
 interior chorda
 _chorda (
@@ -556,6 +568,27 @@ _copiam_addere (
     redde _descriptionem_addere(exitus, &c);
 }
 
+/* idem, nativum = titulus listae (littera statica) si lemma in lista
+ * certarum, aliter copiatum (T19b: regula subordinantium certas solas
+ * praefert) */
+interior b32
+_copiam_addere_titulo (
+                          Xar* exitus,
+    constans OratioDescriptio* d,
+                OratioClassis  classis,
+    constans character* constans lista[],
+           constans character* titulus)
+{
+    OratioDescriptio c = *d;
+
+    c.classis = classis;
+    si (_in_lista(lista, d->lemma))
+    {
+        c.nativum = _ex_literis(titulus);
+    }
+    redde _descriptionem_addere(exitus, &c);
+}
+
 /* regulae secundariae (vide caput): descriptio prima iam addita */
 interior b32
 _secundariae (
@@ -600,21 +633,25 @@ _secundariae (
             {
                 redde FALSUM;
             }
-            si (   _subordinans(d->lemma)
-                && !_copiam_addere(exitus, d,
-                    ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS))
-            {
+                        si (   _subordinans(d->lemma)
+                            && !_copiam_addere_titulo(exitus, d,
+                            ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS,
+                            ORATIO_SUBORDINANTES_CERTAE,
+                            "subordinantes"))
+                        {
                 redde FALSUM;
-            }
+                        }
             frange;
         casus ORATIO_CLASSIS_ADPOSITIO:
             si (   _subordinans(d->lemma)
-                && !_copiam_addere(exitus, d,
-                    ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS))
+                && !_copiam_addere_titulo(exitus, d,
+                    ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS,
+                    ORATIO_SUBORDINANTES_CERTAE, "subordinantes"))
             {
                 redde FALSUM;
             }
             frange;
+
                 casus ORATIO_CLASSIS_NOMEN_PROPRIUM:
             /* natura N (nomen) WORDS: deus, Manes, chaos UD substantiva;
              * natura L (locus: Roma) manet nomen proprium solum */

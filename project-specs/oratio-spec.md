@@ -737,6 +737,29 @@ Projection +4.2 % (computus golden regenerated). Gates resolutio 87,
 oraculum 127, materia nodus 92; `-crudus` on the instruments,
 `oraculum.sh -regulae`, `silva.Oratio(crudus=)`.
 
+**As built — T19a + T19b (2026-09-07, stage 5 continued).** The
+oracle names its primary misses first (`oraculum.sh -discrepantiae`:
+per gold class the covered-but-not-first forms with our first class
+and a count; gated sum law tecta − primaria), and the class-prior
+rules are written from that listing. Eleven rules precede the
+language rule, because first wins per word and the language rule
+would otherwise claim every English word with its dictionary-order
+reading; each is language-gated by the T18 chain and selects a
+reading by class, by pass II list TITLE in `<nativum>` where the
+class also comes from a dictionary code (Moby marks good, thanks,
+there as interjections and `a` as a preposition), or by lemma text
+for the two exceptions (`supra`, `a`) placed before their class rule.
+Ambiguous list members (so, when, where, no; Latin ubi, unde, quod)
+keep their secondary reading under an `*-ambigua` title the rules do
+not match — coverage untouched, primary untouched. Lemma priors that
+are not context (iam, vel, nec, the sanctus paradigm, the charters'
+saints, English I, just, no) went into the glossary, which is the
+first source. Engine law found: pattern children are an ORDERED
+SUBSEQUENCE of the candidate's children, so a rule must write
+`<lemma>` before `<lingua>`. Cumulative primary: CIRCSE 67.9 → 72.8,
+LLCT 68.0/67.9 → 77.0/77.1, EWT 67.8/68.0 → 75.3/75.5; pins moved.
+Remaining for T19c/d: the sibling-run door and agreement.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

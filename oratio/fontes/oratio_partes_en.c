@@ -15,9 +15,14 @@ constans character* constans ORATIO_AUXILIARIA_EN[] = {
 constans character* constans ORATIO_SUBORDINANTES_EN[] = {
     "that", "because", "since", "if", "although", "though", "while",
     "whereas", "unless", "until", "as", "than", "whether", "after",
-    "before", "when", "whenever", "where", "wherever", "once", "so",
-    "lest", "till", "like", NIHIL
+    "before", "lest", "till", "like", NIHIL
 };
+/* adverbia relativa/consecutiva: UD EWT ADV fere semper (so LVIII,
+ * when XXX, where XVI aurea) - lectio subordinans manet, titulus alius */
+constans character* constans ORATIO_SUBORDINANTES_AMBIGUA_EN[] = {
+    "when", "whenever", "where", "wherever", "once", "so", NIHIL
+};
+
 constans character* constans ORATIO_PARTICULAE_EN[] = {
     "to", "not", NIHIL
 };
@@ -29,11 +34,18 @@ constans character* constans ORATIO_NUMERALIA_EN[] = {
     "hundred", "thousand", "million", "billion", "trillion", NIHIL
 };
 constans character* constans ORATIO_INTERIECTIONES_EN[] = {
-    "yes", "no", "please", "welcome", "hello", "hi", "hey", "oh", "ah",
+    "yes", "please", "welcome", "hello", "hi", "hey", "oh", "ah",
     "wow", "thanks", "ok", "okay", "sorry", "yeah", "yep", "nope",
         "bye",
-    "goodbye", NIHIL
+        "goodbye", NIHIL
 };
+/* 'no' (T19b): EWT test DET XXXVI, INTJ IX - lectio interiectionis
+ * servata (tectum), glossarium determinans primum ponit, regula
+ * interiectionum titulum hunc non tangit */
+constans character* constans ORATIO_INTERIECTIONES_AMBIGUAE_EN[] = {
+    "no", NIHIL
+};
+
 
 interior chorda
 _chorda (
@@ -520,9 +532,22 @@ oratio_partes_en_secundariae (
     {
         redde FALSUM;
     }
-    si (   _in_lista(plicata, ORATIO_INTERIECTIONES_EN)
-        && !_secundaria(piscina, exitus, ORATIO_CLASSIS_INTERIECTIO,
+        si (   _in_lista(plicata, ORATIO_INTERIECTIONES_EN)
+            && !_secundaria(piscina, exitus, ORATIO_CLASSIS_INTERIECTIO,
             plicata, "interiectiones"))
+        {
+        redde FALSUM;
+        }
+    si (   _in_lista(plicata, ORATIO_SUBORDINANTES_AMBIGUA_EN)
+        && !_secundaria(piscina, exitus,
+            ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS, plicata,
+            "subordinantes-ambigua"))
+    {
+        redde FALSUM;
+    }
+    si (   _in_lista(plicata, ORATIO_INTERIECTIONES_AMBIGUAE_EN)
+        && !_secundaria(piscina, exitus, ORATIO_CLASSIS_INTERIECTIO,
+            plicata, "interiectiones-ambiguae"))
     {
         redde FALSUM;
     }

@@ -1489,3 +1489,60 @@ adjective first 57, `please` verb first 33, `$ % # +` interpunctio.
 Ranges (enclitic `-que` 248 in CIRCSE, English `'s`/`n't`) can never
 be primary under the current one-element-per-range judgment: a
 measurement ceiling of about 2 % on Seneca, noted, not fixed.
+
+## 2026-09-07 — T19b: class priors, written from the listing
+
+Eleven rules and a glossary pass, every one with a number from
+`-discrepantiae` as its cause, measured cumulatively after each
+edit. What the measurement corrected on the way, in order:
+
+1. **Order.** Appended after the language rule, no class-prior rule
+   fired at all: first wins per word, and the language rule claims
+   every English word. They sit before it now, each gated by the
+   document language through the T18 chain so a Latin document never
+   takes the English `is` auxiliary.
+2. **Blind class preference is wrong for dictionary codes.** "Any
+   interjection reading first" lost 1.2 points on EWT: Moby's `!`
+   code sits on good, thanks, there, he, what. The rule now matches
+   the pass II list's TITLE in `<nativum>` — the probe with a wrong
+   title proved derived-token text is compared. Same for the
+   subordinators, whose Latin list carries relative adverbs (ubi 68,
+   unde 25 gold ADV in the charters) and whose English list carries
+   so/when/where (58/30/16): the ambiguous members moved to
+   `*-ambigua` lists, reading kept (coverage), title different (rule
+   blind).
+3. **Two exceptions by lemma.** `supra` is an adverb 209 times in
+   the charters and the adposition rule flipped it; the article `a`
+   is a preposition in Moby ("twice a day") and the English
+   adposition rule flipped 492 of them. A one-lemma rule placed
+   before the class rule claims the word first. Both matched nothing
+   until I wrote `<lemma>` before `<lingua>`: forma children are an
+   ordered subsequence of the analysis children, and lemma comes
+   first. Silent, as the spec says loose matching is; now a law in
+   the program header.
+4. **Lists.** nec, neque, vero left the Latin particle list (gold
+   conjunction 36+3, adverb 18, particle 0); `no` left the English
+   interjection list for an ambiguous one (DET 36 > INTJ 9) with a
+   glossary determiner entry first in source order.
+5. **Glossary pass III** = priors that are not context: iam (WORDS
+   gives the subjunctive of eo first), vel and nec (adverb first),
+   the sanctus paradigm (304 charter words as participle of sancio),
+   deus, casa, pars (participles of cado and partio first), four
+   saints, English I (lowercase web `i` is the letter in Moby), just,
+   even, only, still, however, go, said, no. Crude primary +1.5 to
+   +3.4 per treebank from data alone.
+
+Result: CIRCSE 67.9 → 72.8, LLCT 68.0/67.9 → 77.0/77.1, EWT
+67.8/68.0 → 75.3/75.5, coverage unchanged. What the listing still
+shows and this stage cannot reach: Latin determiners (2,096 charter
+words at 0 %: pronoun vs determiner is adjacency to a noun), English
+proper nouns (1,056: capitalized but not sentence-initial), `to`
+before a verb, `that` as pronoun vs conjunction, ordinals as
+adjectives. All of it is T19c's door and T19d's rules.
+
+Planted-fault lesson: retitling a `<regula>` is NOT a fault. The
+executor applies `<praelatio>` rows in program order whatever the
+rule's title says; the title only names the census entry. The gate
+stayed green and planta refused it as "porta muta". The real mute is
+the language index in the pattern (`<lingua>1</lingua>` → `0`): the
+rule then selects nothing English and the EWT pin goes red.

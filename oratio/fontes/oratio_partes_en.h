@@ -79,6 +79,14 @@ externus constans character* constans ORATIO_SUBORDINANTES_EN[];
 externus constans character* constans ORATIO_PARTICULAE_EN[];
 externus constans character* constans ORATIO_NUMERALIA_EN[];
 externus constans character* constans ORATIO_INTERIECTIONES_EN[];
+/* listae AMBIGUAE (T19b, 2026-09-07): lectio secundaria servatur
+ * (tectum) sed nativum 'subordinantes-ambigua' / 'interiectiones-
+ * ambiguae' fert, ut regulae priorum classium (resolutio.stml, per
+ * nativum) eas non praeferant: so/when/where ADV aurea EWT LVIII/XXX/
+ * XVI, no DET XXXVI (INTJ IX) */
+externus constans character* constans ORATIO_SUBORDINANTES_AMBIGUA_EN[];
+externus constans character* constans ORATIO_INTERIECTIONES_AMBIGUAE_EN[];
+
 
 /* Lectiones secundariae ex listis pro forma (semel per vocabulum):
  * descriptiones appendit fonte 'regula', lingua anglica. FALSUM =

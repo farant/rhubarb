@@ -84,6 +84,16 @@ externus constans character* constans ORATIO_AUXILIARIA[];
 externus constans character* constans ORATIO_DETERMINANTIA[];
 externus constans character* constans ORATIO_PARTICULAE[];
 
+/* SUBORDINANTES CERTAE (T19b, 2026-09-07): pars listae subordinantium
+ * quae UD SCONJ fere semper est (sicut LXX, qualiter XLVI, quam,
+ * nisi, licet ...) - lectio secundaria earum nativum 'subordinantes'
+ * fert, ut regula priorum classium eam solam praeferat; adverbia
+ * relativa (ubi LXVIII, unde XXV ADV aurea in LLCT) et pronomina
+ * (quod XL PRON) lectionem subordinantem SERVANT (tectum) sed
+ * nativum copiatum, regula eas non tangit. */
+externus constans character* constans ORATIO_SUBORDINANTES_CERTAE[];
+
+
 /* Descriptio vocabuli capitalis ignoti: nomen proprium fonte regula
  * (lemma = forma plicata). */
 vacuum

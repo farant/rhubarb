@@ -272,6 +272,28 @@ _documentum (
     redde doc;
 }
 
+/* index regulae per titulum (-I si absens) */
+interior s32
+_index_regulae (
+    constans OratioProgramma* programma,
+          constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(programma->regulae); i++)
+    {
+        constans OratioRegula* r =
+            (constans OratioRegula*)xar_obtinere(programma->regulae, i);
+
+        si (_aequalis(r->titulus, titulus))
+        {
+            redde (s32)i;
+        }
+    }
+    redde (s32)-I;
+}
+
+
 s32
 principale (vacuum)
 {
@@ -319,18 +341,44 @@ principale (vacuum)
     }
         /* T18: regula linguae PRIMA (prioritas: lingua documenti ante
      * casus), deinde adpositiones */
-    CREDO_VERUM (xar_numerus(programma->regulae) >= (i32)III);
-    CREDO_VERUM (_aequalis(((constans OratioRegula*)xar_obtinere(
-        programma->regulae, ZEPHYRUM))->titulus,
-        "lingua-documenti-anglica"));
-    CREDO_VERUM (_aequalis(((constans OratioRegula*)xar_obtinere(
-        programma->regulae, I))->titulus,
-        "adpositio-accusativum-regit"));
-    CREDO_VERUM (_aequalis(((constans OratioRegula*)xar_obtinere(
-        programma->regulae, (i32)II))->titulus,
-        "adpositio-ablativum-regit"));
+        /* T19b: regulae priorum classium (XI, lingua custodita) ANTE
+     * regulam linguae (prima quae valet vincit), casus post; ordo per
+     * TITULOS iudicatur, non per indices literales */
+    CREDO_VERUM (xar_numerus(programma->regulae) >= (i32)XIV);
+    {
+                s32 auxiliare_la   = _index_regulae(programma,
+                    "auxiliare-primum-latinum");
+        s32 auxiliare_en   = _index_regulae(programma,
+            "auxiliare-primum-anglicum");
+        s32 supra          = _index_regulae(programma,
+            "supra-adverbium-latinum");
+        s32 adpositio_la   = _index_regulae(programma,
+            "adpositio-prima-latina");
+        s32 subordinans_la = _index_regulae(programma,
+            "subordinans-prima-latina");
+        s32 numerale_en    = _index_regulae(programma,
+            "numerale-primum-anglicum");
+        s32 lingua         = _index_regulae(programma,
+            "lingua-documenti-anglica");
+        s32 accusativum    = _index_regulae(programma,
+            "adpositio-accusativum-regit");
+        s32 ablativum      = _index_regulae(programma,
+            "adpositio-ablativum-regit");
+
+        CREDO_AEQUALIS_S32 (auxiliare_la, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (auxiliare_en, (s32)I);
+        CREDO_VERUM (supra >= ZEPHYRUM && adpositio_la > supra);
+        CREDO_VERUM (subordinans_la > adpositio_la
+            && numerale_en > subordinans_la);
+        CREDO_VERUM (lingua > numerale_en && accusativum > lingua
+            && ablativum > accusativum);
+        CREDO_AEQUALIS_S32 (ablativum,
+            (s32)xar_numerus(programma->regulae) - (s32)I);
+
+    }
     CREDO_VERUM (((constans OratioRegula*)xar_obtinere(
         programma->regulae, ZEPHYRUM))->textus.mensura > (i32)100);
+
     imprimere("  regulae %d\n",
         (integer)xar_numerus(programma->regulae));
     /* programma malum: sine titulo -> linea; textus non STML */
@@ -405,30 +453,41 @@ principale (vacuum)
             (i32)ORATIO_VOCABULUM_CLASSES), "substantivum"));
         CREDO_VERUM (_aequalis(_compendium(puella,
             (i32)ORATIO_VOCABULUM_LINGUAE), "latina"));
-        CREDO_AEQUALIS_I32 (census.sententiae, I);
+                CREDO_AEQUALIS_I32 (census.sententiae, I);
         CREDO_AEQUALIS_I32 (census.fractae, ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (census.ordines, I);
-        CREDO_AEQUALIS_I32 (census.applicatae, I);
+                /* T19b: ordines II, permutatae II - 'cum' a regula
+         * adpositio-prima-latina (WORDS adverbium primum, adpositio
+         * quinta: permutata), 'puella' ab ablativum-regit */
+        CREDO_AEQUALIS_I32 (census.ordines, (i32)II);
+        CREDO_AEQUALIS_I32 (census.applicatae, (i32)II);
+
         CREDO_AEQUALIS_I32 (census.recusatae, ZEPHYRUM);
         CREDO_NON_NIHIL (census.per_regulam);
         CREDO_AEQUALIS_I32 (census.per_regulam == NIHIL ? ZEPHYRUM
-            : xar_numerus(census.per_regulam), I);
-        si (census.per_regulam != NIHIL)
+            : xar_numerus(census.per_regulam), (i32)II);
+        si (   census.per_regulam              != NIHIL
+            && xar_numerus(census.per_regulam) == (i32)II)
         {
-            constans OratioResolutioRegulaCensus* r =
+            constans OratioResolutioRegulaCensus* r0 =
                 (constans OratioResolutioRegulaCensus*)xar_obtinere(
                 census.per_regulam, ZEPHYRUM);
+            constans OratioResolutioRegulaCensus* r1 =
+                (constans OratioResolutioRegulaCensus*)xar_obtinere(
+                census.per_regulam, I);
 
-            CREDO_VERUM (_aequalis(r->titulus,
+            CREDO_VERUM (_aequalis(r0->titulus,
+                "adpositio-prima-latina"));
+            CREDO_VERUM (_aequalis(r1->titulus,
                 "adpositio-ablativum-regit"));
-            CREDO_AEQUALIS_I32 (r->numerus, I);
+            CREDO_AEQUALIS_I32 (r1->numerus, I);
         }
         /* idempotens: cursus alter nihil mutat */
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, (s32)-I, "latina", doc, &census));
-        CREDO_AEQUALIS_I32 (census.ordines, I);
+        CREDO_AEQUALIS_I32 (census.ordines, (i32)II);
         CREDO_AEQUALIS_I32 (census.applicatae, ZEPHYRUM);
+
         CREDO_AEQUALIS_S32 (_casus(puella, ZEPHYRUM),
             (s32)ORATIO_CASUS_ABLATIVUS);
         /* regulae 0 = nihil */
@@ -442,25 +501,29 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_NOMINATIVUS);
         CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
-        /* regula prima sola (accusativum): cum puella intacta */
+                /* regula prima sola (T19b: auxiliare-primum-latinum - sine
+         * auxiliari nihil): cum puella intacta */
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_NOMINATIVUS);
         CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
+
         /* In urbem venit: accusativus iam primus - ordo lectus, nihil
          * permutatum */
         doc = _documentum(piscina, &vocabularia, "In urbem venit.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
-        CREDO_AEQUALIS_I32 (census.ordines, I);
+                CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
+                    &ratum,
+                    programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_I32 (census.ordines, (i32)II);   /* T19b: + In */
         CREDO_AEQUALIS_I32 (census.applicatae, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_ACCUSATIVUS);
+
         /* sine praepositione: nihil */
         doc = _documentum(piscina, &vocabularia, "Puella ambulat.\n",
             &census_partium);
@@ -517,17 +580,24 @@ principale (vacuum)
         CREDO_NON_NIHIL (canon);
         si (scriptura.successus && canon != NIHIL)
         {
-            /* proiectio (ordinales, lingua) + programma -> expansio ->
-             * documentum totum iudicatum: 0 vitia */
+                        /* proiectio (ordinales, lingua) + programma -> expansio ->
+             * documentum totum iudicatum: 0 vitia. Regulae TRES per
+             * titulum (T19b: indices 0-2 nunc priores classium sunt,
+             * quae in 'cum puella' nihil dant): lingua, accusativum,
+             * ablativum */
             constans OratioRegula* r0 =
                 (constans OratioRegula*)xar_obtinere(programma->regulae,
-                ZEPHYRUM);
-                        constans OratioRegula* r1 =
-                            (constans OratioRegula*)xar_obtinere(programma->regulae,
-                            I);
+                (i32)_index_regulae(programma,
+                "lingua-documenti-anglica"));
+            constans OratioRegula* r1 =
+                (constans OratioRegula*)xar_obtinere(programma->regulae,
+                (i32)_index_regulae(programma,
+                    "adpositio-accusativum-regit"));
             constans OratioRegula* r2 =
                 (constans OratioRegula*)xar_obtinere(programma->regulae,
-                (i32)II);
+                (i32)_index_regulae(programma,
+                    "adpositio-ablativum-regit"));
+
             i32 mensura = scriptura.textus.mensura + r0->textus.mensura
                 + r1->textus.mensura + r2->textus.mensura + (i32)IV;
             character* textus = (character*)piscina_allocare(piscina,
@@ -700,23 +770,31 @@ principale (vacuum)
             (i32)ORATIO_VOCABULUM_CLASSES), "adpositio"));
         CREDO_VERUM (_aequalis(_compendium(adpositio,
             (i32)ORATIO_VOCABULUM_LINGUAE), "anglica latina"));
-        /* ordo unus per vocabulum Anglicum (VI); permutatae II (sat,
-         * in), ceterae iam primae; regula linguae prima in censu */
-        CREDO_AEQUALIS_I32 (census.ordines, (i32)VI);
+                /* ordo unus per vocabulum Anglicum (VI) a regula linguae + I
+         * pro 'in' a regula adpositio-prima-anglica (T19b, prior: prima
+         * quae valet vincit); permutatae II (sat, in), ceterae iam
+         * primae; in censu regula adpositionis prima, linguae adest */
+        CREDO_AEQUALIS_I32 (census.ordines, (i32)VII);
         CREDO_AEQUALIS_I32 (census.recusatae, ZEPHYRUM);
         CREDO_VERUM (census.applicatae >= (i32)II
-            && census.applicatae <= (i32)VI);
+            && census.applicatae <= (i32)VII);
         CREDO_NON_NIHIL (census.per_regulam);
         si (   census.per_regulam != NIHIL
-            && xar_numerus(census.per_regulam) > ZEPHYRUM)
+            && xar_numerus(census.per_regulam) > I)
         {
             constans OratioResolutioRegulaCensus* rc =
                 (constans OratioResolutioRegulaCensus*)xar_obtinere(
                 census.per_regulam, ZEPHYRUM);
+            constans OratioResolutioRegulaCensus* rl =
+                (constans OratioResolutioRegulaCensus*)xar_obtinere(
+                census.per_regulam, I);
 
             CREDO_VERUM (_aequalis(rc->titulus,
+                "adpositio-prima-anglica"));
+            CREDO_VERUM (_aequalis(rl->titulus,
                 "lingua-documenti-anglica"));
         }
+
         /* idempotens */
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
@@ -726,8 +804,9 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (census.applicatae, ZEPHYRUM);
     }
     {
-        /* documentum Latinum: sententia sine lingua="anglica" - regula
-         * linguae (prima, sola) tacet, ordo fontis manet */
+                /* documentum Latinum: regula prima sola (auxiliare-primum-
+         * latinum, T19b) sine auxiliari tacet, ordo fontis manet */
+
            OratioPartesCensus  census_latinum;
         OratioResolutioCensus  census;
                  MateriaNodus* documentum_latinum = _documentum(piscina,

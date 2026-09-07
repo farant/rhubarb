@@ -246,11 +246,42 @@ the census counted analyses, now WORD VOTES
 (`OratioPartesCensus.vocabula_linguarum`); the oracle censuses the
 whole treebank as one document (instruments already did) and
 prints `sententiae censae` + `lingua documenti`. EWT primary
-56.6/56.9 → 67.8/68.0 (pins 677/679), Latin unchanged. NEXT:
-**T19** class-prior and agreement rules (the appended pass II
-readings — auxiliare, particula, subordinans — sit at 0 % primary;
-adjective–noun agreement needs the sibling-run door in the pattern
-engine).
+56.6/56.9 → 67.8/68.0 (pins 677/679), Latin unchanged. **T19a
+DONE** (2026-09-07): `./oratio/oraculum.sh -discrepantiae` lists per
+gold class the forms COVERED but not FIRST with our first class and
+a count (`-machina` rows `DISCREPANTIA`); law gated: per class the
+tally sums to tecta − primaria. Rules are written FROM this listing.
+**T19b DONE** (same day): eleven CLASS-PRIOR rules in
+`resolutio.stml` placed BEFORE the language rule (first wins per
+word), each language-gated by the T18 two-stage chain (`<sententia
+lingua=>` then the reading's `<lingua>` index): auxiliare, particula,
+adpositio, subordinans (both languages), interiectio and numerale
+(English); pass II readings selected by their list TITLE in
+`<nativum>` (`subordinantes`, `interiectiones`), the ambiguous
+members moved to `*-ambigua` lists whose reading stays (coverage) but
+carries another title (so/when/where, no; Latin `ORATIO_SUBORDINANTES_
+CERTAE` gives the title only to sicut/qualiter/quam/nisi/licet…);
+two lemma EXCEPTION rules placed before their class rule (`supra`
+adverb in the charters, 209 words; article `a`, which Moby also codes
+as a preposition, 492 words). Glossary pass III = lemma priors (iam,
+etiam, vel, nec, neque, tantum, quantum, deus, casa, pars, sanctus
+paradigm, four saints; English I, us, just, even, only, still,
+however, go, said, no). Removed from the Latin particle list: nec,
+neque, vero (conjunction/adverb in gold). Primary: CIRCSE 67.9 →
+72.8, LLCT 68.0/67.9 → 77.0/77.1, EWT 67.8/68.0 → 75.3/75.5 (pins
+728/770/771/753/755); coverage unchanged. LAWS LEARNED: forma
+children match as an ORDERED SUBSEQUENCE of the analysis children
+(lemma, lingua, fons, nativum, sensus, accidents) — `<lemma>` before
+`<lingua>` or the pattern silently never matches; derived-token text
+IS compared; never prefer a Moby class blindly (`!` and `P` sit on
+good/thanks/there/a). Ranges (`-que`, `'s`) can never be primary:
+≈ 2 % ceiling on Seneca. NEXT: **T19c** the sibling-run door
+(`cursus="fratrum"` on EXEMPLAR — one match per start position among
+a parent's children) in `lib/stml_macros.c`, gated in the exemplaria
+suite; then **T19d** agreement rules (adjective/determiner ↔ noun by
+case, number, gender — Latin determinans is 0 % primary on 2,096 LLCT
+words), `to` + verb, `have` + participle, non-initial capitalized
+word → nomen-proprium.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
