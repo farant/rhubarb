@@ -1283,3 +1283,25 @@ you like" note for the pictor session (dctx, toy, botton, index2,
 radix2, repo2). Count 2,987 → 2,958; pin lowered to 2,958. The words
 were Fran's to permit or rename; permitting with a note keeps main
 green without editing another session's identifiers.
+
+## 2026-09-07 — The identifier pin was measured on a broken instrument
+
+The pythonica gate's `usus: sedes definitionis`, red since
+2026-09-05, led to the index defect recorded in silva's
+nexus.worklog (01M1TD1FMFT3): a briar fixture's truncated latina.h
+shadowed the house header in the sweep, the table lost 13 % of its
+rows, and oratio's identifier lint counted on it. The pin of 2,958
+(pictor pass) was a snapshot of a partially degraded table: the old
+sweep on today's tree gives 2,732, the whole table 2,959 over 7,706
+words. The 227 words the degraded table hid are enum constants and
+locals inside functions the truncated header broke — Bible book
+names (biblia.h), lapifex/arbor2 internals, and oratio's own
+accident titles. Eight of those are grammarians' Latin WORDS lacks
+(locativus, superlativus, infinitivus, imperativus,
+plusquamperfectum, dualis, numerale, pronomen; ten forms with
+infinitivum and pronominis): glossary section TERMINI GRAMMATICI,
+count 2,949, pin 2,958 → 2,949 with the cause. Lesson for the lint:
+a count that FALLS without a glossary or rename commit is the
+instrument degrading, not the code improving — the slide the briar
+session measured in its worktree (2,990 → 2,958 → 2,732) was the
+alarm, misread as a worktree quirk.

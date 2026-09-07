@@ -12,6 +12,7 @@
 #include "xar.h"
 
 #include <stdio.h>
+#include <string.h>
 
 constans character*
 nexus_ordines_genus_titulus (
@@ -664,6 +665,74 @@ _retenta_fundere (
                     j), "ramus-omissus", receptor, datum);
         }
     }
+}
+
+
+/* ==================================================
+ * Gradus praebitionis capitum (2026-09-07, vide .h)
+ * ================================================== */
+
+/* membrum viae 'fixa' integrum: 'fixa/' in initio aut '/fixa/'
+ * intus ('prefixa/', 'fixatio/' non congruunt) */
+interior b32
+_membrum_fixa (
+    constans character* via)
+{
+    constans character* c = via;
+
+    dum (*c != '\0')
+    {
+        si (   (c == via || *(c - I) == '/')
+            && c[ZEPHYRUM] == 'f' && c[I] == 'i' && c[II] == 'x'
+            && c[III]      == 'a' && c[IV] == '/')
+        {
+            redde VERUM;
+        }
+        c++;
+    }
+    redde FALSUM;
+}
+
+insignatus integer
+nexus_ordines_capitis_gradus (
+    constans character* via)
+{
+    si (via == NIHIL)
+    {
+        redde I;
+    }
+    si (via[ZEPHYRUM] == '.' && via[I] == '/')
+    {
+        via += II;
+    }
+    si (strncmp(via, "include/", VIII) == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    si (_membrum_fixa(via))
+    {
+        redde II;
+    }
+    redde I;
+}
+
+s32
+nexus_ordines_capita_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans character* va = *(constans character* constans*)a;
+    constans character* vb = *(constans character* constans*)b;
+    insignatus integer  ga = nexus_ordines_capitis_gradus(va);
+    insignatus integer  gb = nexus_ordines_capitis_gradus(vb);
+               integer  d;
+
+    si (ga != gb)
+    {
+        redde (ga < gb) ? -I : I;
+    }
+    d = strcmp(va, vb);
+    redde (d < ZEPHYRUM) ? -I : (d > ZEPHYRUM ? I : ZEPHYRUM);
 }
 
 vacuum

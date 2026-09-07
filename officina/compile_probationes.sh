@@ -100,12 +100,17 @@ newest_header () {
     fi
 }
 
+# AEQUALITAS (2026-09-07, ut silva/compile_probationes.sh 2026-08-27):
+# mtimes secundo mensurantur - fons et obiectum EODEM SECUNDO scripta
+# '-nt' non satisfaciunt et recompilatio TACITE omittitur (ritus
+# plantae: culpa restituta, porta adhuc rubra contra .o plantatum).
+# Remedium ubique: in aequalitate RECOMPILA ('! obj -nt src').
 # ---- 1. dependency objects (incremental) ----
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $f.c" ; exit 1
@@ -117,7 +122,7 @@ done
 # ---- 2. the silva amalgam as object (demissio's substrate) ----
 src="$RADIX_DIR/silva/amalgama/silva.c"
 obj="$BUILD_DIR/amalgama_silva.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
     echo "  [amalgama] silva.c"
     if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
         echo "FRACTA: amalgama silva" ; exit 1
@@ -129,7 +134,7 @@ obj_files="$obj_files $obj"
 #          cellularum sine capite; obiecta inutilia innocua) ----
 src="$RADIX_DIR/tessera/amalgama/tessera.c"
 obj="$BUILD_DIR/amalgama_tessera.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
     echo "  [amalgama] tessera.c"
     if ! clang "${GCC_FLAGS[@]}" "-I$RADIX_DIR/include" -c "$src" -o "$obj"; then
         echo "FRACTA: amalgama tessera" ; exit 1
@@ -138,7 +143,7 @@ fi
 obj_files="$obj_files $obj"
 src="$OFF_DIR/instrumenta/vindex_visum.c"
 obj="$BUILD_DIR/vindex_visum.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || [ "$OFF_DIR/instrumenta/vindex_visum.h" -nt "$obj" ]; then
     echo "  [vindex] vindex_visum.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
@@ -154,7 +159,7 @@ src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
 obj="$BUILD_DIR/nexus_ordines.o"
 # newest_header: silva.h mutatio formae (SilvaMacroVista v0.2!) sine
 # ea obiectum vetus + amalgama recens = corruptio ABI in acervo
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [ordines] nexus_ordines.c"
@@ -168,7 +173,7 @@ obj_files="$obj_files $obj"
 # ---- 2c-0b. silva_lexicon (compositio systematis - praeparator) ----
 src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
 obj="$BUILD_DIR/silva_lexicon.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || [ "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" -nt "$obj" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [lexicon] silva_lexicon.c"
@@ -182,7 +187,7 @@ obj_files="$obj_files $obj"
 # ---- 2c. praeparator (unitas oneratorum communis) + sessio ----
 src="$OFF_DIR/instrumenta/praeparator.c"
 obj="$BUILD_DIR/praeparator.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [praeparator] praeparator.c"
@@ -195,7 +200,7 @@ obj_files="$obj_files $obj"
 
 src="$OFF_DIR/instrumenta/sessio.c"
 obj="$BUILD_DIR/sessio.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || [ "$OFF_DIR/instrumenta/sessio.h" -nt "$obj" ] \
     || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
     || [ -n "$(newest_header "$obj")" ]; then
@@ -209,7 +214,7 @@ obj_files="$obj_files $obj"
 
 src="$OFF_DIR/instrumenta/legatus.c"
 obj="$BUILD_DIR/legatus.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || [ "$OFF_DIR/instrumenta/legatus.h" -nt "$obj" ] \
     || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
     || [ -n "$(newest_header "$obj")" ]; then
@@ -227,7 +232,7 @@ for src in "$OFF_DIR"/fontes/*.c; do
     [ -f "$src" ] || continue
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [officina] $base.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1

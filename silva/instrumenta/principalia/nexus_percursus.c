@@ -1513,10 +1513,13 @@ principale (
      * durante cursu proximo cursui cadunt, numquam perduntur) */
     nunc_stampa = time(NIHIL);
 
-    /* rung 5 (1): collectio + ordinatio canonica ANTE praebitionem
-     * capitum et iudicia - primus-vincit basename duplicatorum nunc
-     * deterministicus (include/ ante probationes/, quinque paria
-     * fixturarum roundtrip) */
+        /* rung 5 (1): collectio + ordinatio canonica ANTE praebitionem
+     * capitum et iudicia - primus-vincit basename duplicatorum
+     * deterministicus. ORDO PRAEBITIONIS = GRADUS (2026-09-07,
+     * nexus_ordines_capita_comparare: include/ primum, fixturae
+     * ultimae, intra gradum canonice); olim strcmp solus - include/
+     * ante probationes/ fortuna litterarum, quam fixtura briar
+     * ('b' < 'i', latina.h DECURTATUM) fregit: 01M1TD1FMFT3 */
     viae_omnes = xar_creare(piscina_clavium,
         (i32)magnitudo(constans character*));
     si (viae_omnes == NIHIL)
@@ -1551,13 +1554,15 @@ principale (
         {
             redde I;
         }
-        {
+                {
             TabulaDispersa* visa = tabula_dispersa_creare_chorda(
                 piscina_clavium, DXII);
+            Xar* capita = xar_creare(piscina_clavium,
+                (i32)magnitudo(constans character*));
             i32 n = xar_numerus(viae_omnes);
             i32 j;
 
-            si (visa == NIHIL)
+            si (visa == NIHIL || capita == NIHIL)
             {
                 fprintf(stderr, "nexus_percursus: tabula deest\n");
                 redde I;
@@ -1571,11 +1576,27 @@ principale (
 
                 si (v[m - I] == 'h')
                 {
-                    constans character* basis = strrchr(v, '/');
+                    constans character** sedes =
+                        (constans character**)xar_addere(capita);
 
-                    _caput_praebere(ctx, visa, v,
-                        basis != NIHIL ? basis + I : v);
+                    si (sedes != NIHIL)
+                    {
+                        *sedes = v;
+                    }
                 }
+            }
+            /* gradus praebitionis (vide supra): include/ primum,
+             * fixturae ultimae - primus-vincit basename lex fit */
+            xar_ordinare(capita, nexus_ordines_capita_comparare);
+            n = xar_numerus(capita);
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                constans character* v =
+                    *(constans character**)xar_obtinere(capita, j);
+                constans character* basis = strrchr(v, '/');
+
+                _caput_praebere(ctx, visa, v,
+                    basis != NIHIL ? basis + I : v);
             }
         }
     }

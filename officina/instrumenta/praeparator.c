@@ -10,6 +10,8 @@
 #include "latina.h"
 #include "chorda.h"
 #include "tabula_dispersa.h"
+#include "xar.h"
+#include "nexus_ordines.h"
 #include "silva_lexicon.h"
 
 #include <stdio.h>
@@ -117,11 +119,21 @@ _praetermittendum (
         ? VERUM : FALSUM;
 }
 
+/* candidatus capitis: via plena (copia in piscinam capitum), clavis
+ * radici-relativa et basename in eandem copiam spectantes */
+nomen structura {
+             character* via_plena;
+    constans character* clavis;
+    constans character* basis;
+} PraeparatorCaputCandidatus;
+
+/* ambulatio: candidata colligere (directoria commemorata dum
+ * ambulatur - inventio capitum novorum per mtime parentis) */
 interior vacuum
-_capita_praeparare (
+_capita_colligere (
            Praeparatio* p,
                Piscina* piscina_capitum,
-        TabulaDispersa* visa,
+                   Xar* candidata,
     constans character* via,
         memoriae_index  radix_m)
 {
@@ -160,82 +172,147 @@ _capita_praeparare (
         sprintf(via_plena, "%s/%s", via, introitus->d_name);
         si (introitus->d_type == DT_DIR)
         {
-            _capita_praeparare(p, piscina_capitum, visa, via_plena,
-                radix_m);
+            _capita_colligere(p, piscina_capitum, candidata,
+                via_plena, radix_m);
+            perge;
         }
-        alioquin
+        m = strlen(introitus->d_name);
+        si (   m >= III && introitus->d_name[m - II] == '.'
+            && introitus->d_name[m - I] == 'h')
         {
-            m = strlen(introitus->d_name);
-            si (   m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
+            PraeparatorCaputCandidatus* c;
+                        memoriae_index  mv = strlen(via_plena);
+                             character* copia;
+
+            copia = (character*)piscina_allocare(piscina_capitum,
+                mv + I);
+            si (copia == NIHIL)
             {
-                /* clavis = via RADICI-RELATIVA (01KYJ6740K):
-                 * expansor canonicam + basename seponit; resolutio
-                 * includenti-relativa viam plenam petit. Spatium
-                 * viarum legati radici-relativum est (ordines,
-                 * extenta) - clavis absoluta ei aliena esset;
-                 * valores viae_capitum absoluti manent (URIs) */
-                constans character* via_clavis = via_plena;
-                            chorda  clavis;
-                         character* textus;
-                insignatus integer  mensura;
-
-                si (   radix_m > ZEPHYRUM
-                    && strlen(via_plena) > radix_m + I
-                    && via_plena[radix_m] == '/')
-                {
-                    via_clavis = via_plena + radix_m + I;
-                }
-                clavis = chorda_ex_literis(via_clavis,
-                    piscina_capitum);
-                si (tabula_dispersa_continet(visa, clavis))
-                {
-                    perge;
-                }
-                textus = praeparator_plagulam_legere(piscina_capitum,
-                    via_plena, &mensura);
-                si (textus == NIHIL)
-                {
-                    perge;
-                }
-                si (silva_contextus_praebere(p->ctx,
-                        via_clavis, textus, mensura))
-                {
-                    (vacuum)tabula_dispersa_inserere(visa, clavis,
-                        NIHIL);
-                    _tempus_commemorare(p, piscina_capitum,
-                        via_plena);
-                    /* basename -> via absoluta (saltus in capita:
-                     * legatus definitio URIs inde struit). Clavis
-                     * BASENAME manet quamvis praebitio via plena
-                     * clavetur (01KYJ6740K) - primus vincit, ut
-                     * ante */
-                    si (p->viae_capitum != NIHIL)
-                    {
-                        chorda basis = chorda_ex_literis(
-                            introitus->d_name, piscina_capitum);
-
-                        si (!tabula_dispersa_continet(
-                                p->viae_capitum, basis))
-                        {
-                            memoriae_index  mv = strlen(via_plena);
-                                 character* copia = (character*)
-                                     piscina_allocare(piscina_capitum,
-                                     mv + I);
-
-                            si (copia != NIHIL)
-                            {
-                                memcpy(copia, via_plena, mv + I);
-                                (vacuum)tabula_dispersa_inserere(
-                                    p->viae_capitum, basis, copia);
-                            }
-                        }
-                    }
-                }
+                perge;
             }
+            memcpy(copia, via_plena, mv + I);
+            c = (PraeparatorCaputCandidatus*)xar_addere(candidata);
+            si (c == NIHIL)
+            {
+                perge;
+            }
+            c->via_plena = copia;
+            /* clavis = via RADICI-RELATIVA (01KYJ6740K): expansor
+             * canonicam + basename seponit; resolutio
+             * includenti-relativa viam plenam petit. Spatium viarum
+             * legati radici-relativum est (ordines, extenta) -
+             * clavis absoluta ei aliena esset; valores viae_capitum
+             * absoluti manent (URIs) */
+            c->clavis = copia;
+            si (   radix_m > ZEPHYRUM && mv > radix_m + I
+                && copia[radix_m] == '/')
+            {
+                c->clavis = copia + radix_m + I;
+            }
+            c->basis = copia + mv - m;
         }
     }
     closedir(dir);
+}
+
+/* ordo praebitionis: gradus (nexus_ordines_capitis_gradus super
+ * clavi radici-relativa), deinde canonicus - eadem lex ac sweep */
+interior s32
+_candidata_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans PraeparatorCaputCandidatus* ca =
+        (constans PraeparatorCaputCandidatus*)a;
+    constans PraeparatorCaputCandidatus* cb =
+        (constans PraeparatorCaputCandidatus*)b;
+    insignatus integer ga = nexus_ordines_capitis_gradus(ca->clavis);
+    insignatus integer gb = nexus_ordines_capitis_gradus(cb->clavis);
+               integer d;
+
+    si (ga != gb)
+    {
+        redde (ga < gb) ? -I : I;
+    }
+    d = strcmp(ca->clavis, cb->clavis);
+    redde (d < ZEPHYRUM) ? -I : (d > ZEPHYRUM ? I : ZEPHYRUM);
+}
+
+/* caput unum praebere (clavis visa = praetermissum) */
+interior vacuum
+_caput_praebere (
+                            Praeparatio* p,
+                                Piscina* piscina_capitum,
+                         TabulaDispersa* visa,
+    constans PraeparatorCaputCandidatus* c)
+{
+                chorda  clavis;
+             character* textus;
+    insignatus integer  mensura;
+
+    clavis = chorda_ex_literis(c->clavis, piscina_capitum);
+    si (tabula_dispersa_continet(visa, clavis))
+    {
+        redde;
+    }
+    textus = praeparator_plagulam_legere(piscina_capitum,
+        c->via_plena, &mensura);
+    si (textus == NIHIL)
+    {
+        redde;
+    }
+    si (!silva_contextus_praebere(p->ctx, c->clavis, textus,
+            mensura))
+    {
+        redde;
+    }
+    (vacuum)tabula_dispersa_inserere(visa, clavis, NIHIL);
+    _tempus_commemorare(p, piscina_capitum, c->via_plena);
+    /* basename -> via absoluta (saltus in capita: legatus definitio
+     * URIs inde struit). Clavis BASENAME manet quamvis praebitio via
+     * plena clavetur (01KYJ6740K) - primus vincit, ut ante */
+    si (p->viae_capitum != NIHIL)
+    {
+        chorda basis = chorda_ex_literis(c->basis, piscina_capitum);
+
+        si (!tabula_dispersa_continet(p->viae_capitum, basis))
+        {
+            (vacuum)tabula_dispersa_inserere(p->viae_capitum, basis,
+                (vacuum*)c->via_plena);
+        }
+    }
+}
+
+/* capita praeparare: colligere, ordinare GRADU PRAEBITIONIS
+ * (2026-09-07, quaestio 01M1TD1FMFT3: ordine readdir fixtura briar
+ * latina.h DECURTATUM ante include/ praeberi poterat - eadem lex ac
+ * sweep, superpositio a sweep divergere non potest), praebere */
+interior vacuum
+_capita_praeparare (
+           Praeparatio* p,
+               Piscina* piscina_capitum,
+        TabulaDispersa* visa,
+    constans character* via,
+        memoriae_index  radix_m)
+{
+    Xar* candidata = xar_creare(piscina_capitum,
+        (i32)magnitudo(PraeparatorCaputCandidatus));
+    i32 n;
+    i32 k;
+
+    si (candidata == NIHIL)
+    {
+        redde;
+    }
+    _capita_colligere(p, piscina_capitum, candidata, via, radix_m);
+    xar_ordinare(candidata, _candidata_comparare);
+    n = xar_numerus(candidata);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        _caput_praebere(p, piscina_capitum, visa,
+            (constans PraeparatorCaputCandidatus*)xar_obtinere(
+                candidata, k));
+    }
 }
 
 

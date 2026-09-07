@@ -56,8 +56,18 @@
  * 2964 -> 2958 (2026-09-05): fusio rhubarb-pictor verba XXVIII nova
  * attulit (2987) - sectio glossarii TERMINI PICTOR (coinages Latina,
  * abbreviationes permissae, quaestio 01M1S6W8HF); pinna ad numerum
- * novum DEMISSA (solum cadens). */
-#define IGNOTA_SYMBOLORUM_PINNA 2958
+  * novum DEMISSA (solum cadens).
+  * 2958 -> 2949 (2026-09-07): tabula symbolorum RESTITUTA (quaestio
+ * 01M1TD1FMFT3 - fixtura briar latina.h decurtatum capita domus in
+ * percursu umbrabat; tabula 0.96M -> 1.10M ordinum, verba 7598 ->
+ * 7706): pinna 2958 super tabulam DEGRADATAM mensurata erat (percursus
+ * vetus in arbore hodierna 2732 dat, tabula plena 2959); verba CCXXVII
+ * restituta = constantes enumerorum et localia functionum quas caput
+ * decurtatum fregerat. Octo tituli accidentium orationis (locativus,
+ * superlativus, infinitivus, imperativus, plusquamperfectum, dualis,
+  * numerale, pronomen; formae X cum infinitivum, pronominis) in
+ * glossarium (TERMINI GRAMMATICI); pinna ad numerum novum DEMISSA. */
+#define IGNOTA_SYMBOLORUM_PINNA 2949
 
 interior b32
 _plagulam_legere (

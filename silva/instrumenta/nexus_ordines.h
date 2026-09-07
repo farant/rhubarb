@@ -70,4 +70,29 @@ const SilvaChorda*
 nexus_ordines_titulus_macronis (
     SilvaToken* tok);
 
+/* GRADUS PRAEBITIONIS CAPITUM (2026-09-07, quaestio 01M1TD1FMFT3):
+ * capita eiusdem basename in expansore PRIMUS-VINCIT sedent, ergo
+ * ordo praebitionis lex est, non fortuna. Gradus: 0 = include/
+ * (capita publica domus), 1 = cetera, 2 = fixturae (membrum viae
+ * 'fixa' integrum - corpora synthetica, saepe DECURTATA consulto).
+ * Intra gradum ordo canonicus (strcmp). Olim strcmp solus:
+ * 'include/' ante 'probationes/' fortuna litterarum, donec fixtura
+ * briar 'briar/probationes/fixa/amalgama/fabrica/include/latina.h'
+ * ante 'include/' cecidit et latina.h decurtatum (sine commutatio,
+ * casus, NIHIL, numeris) omni TU praebuit: silva_formator.c XIX
+ * errores, sedes definitionum VI perditae, tabula 1.10M -> 0.96M
+ * ordinum. Communis sweep (nexus_percursus) et legato
+ * (praeparator) - divergere non possunt. via radici-relativa
+ * ("./" tolerata); NULL = gradus 1. */
+unsigned int
+nexus_ordines_capitis_gradus (
+    const char* via);
+
+/* comparator pro xar_ordinare super elementis 'const char*' (viae
+ * radici-relativae): gradus, deinde strcmp */
+int
+nexus_ordines_capita_comparare (
+    const void* a,
+    const void* b);
+
 #endif /* NEXUS_ORDINES_H */

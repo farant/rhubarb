@@ -120,3 +120,76 @@ the lexicon channel, invisible to the include graph — M4b find).
 One .c edit: 0.5s. Header edit w/ 3-file closure: 0.7s. Rename:
 deleta+nova in one pass. Full sweep unchanged ~50s. Parity octetim
 incremental-vs-plenus on both tables at every bar, same tree.
+
+## 2026-09-07 — Header offering order is a law, not alphabetical luck (01M1TD1FMFT3)
+
+Symptom: after a full renovation the table lacked six definition
+sites in silva_formator.c (pythonica gate red at `usus: sedes
+definitionis`), and the ledger already held the cold table at 0.96M
+rows against the resident's 1.10M. Attribution across the tree:
+silva_c89_semantica.c 301 definitions / 218 sites, silva_arbor.c
+91 / 65, silva_expandere.c 71 / 53 — a class, not six symbols, and
+the six had nothing in common (`formator_extenta` and the healthy
+`formator_lint` beside it have identical signatures).
+
+Reproduction: a scratch probe (session scratchpad, not committed)
+that parses ONE file exactly as the sweep does — system lexicon,
+every header offered, oracle, recanonicalization — and dumps every
+symbol with the reason a sedes row would be skipped. silva_formator.c
+under the sweep's context: successus=1, errores=19; `_praecedentia`
+present only as an IMPLICIT symbol at depth 4 (its call site),
+`formator_extenta` only as the header prototype. With include/
+offered first: errores=0, both definitions emitted at their lines,
+implicit symbols 14 → 0, symbols 1467 → 1768. One variable, one run.
+
+Root cause: `_caput_praebere` offered every .h in the tree by
+basename, first-wins, in strcmp order — the "include/ ante
+probationes/" guarantee was an accident of the letters i < p. The
+briar -amalgama fixture (78518952, 2026-09-05) added
+`briar/probationes/fixa/amalgama/fabrica/include/latina.h`, a
+deliberately TRUNCATED latina.h (no commutatio / casus / frange /
+perge / ordinarius / magnitudo / unio / NIHIL / VERUM / FALSUM, no
+numeral above II); 'b' < 'i', so every TU including "latina.h" got
+the fixture. Any function with a switch, a NIHIL or a numeral above
+II parsed with tolerated errors and never registered its definition;
+its callers resolved to implicit symbols. The incremental sweep
+propagated the damage faithfully on the next run (a new header
+basename seeds the closure of every includer — designed behaviour),
+so the table degraded the moment the merge landed and kept degrading
+with each renovation (oratio's identifier unknowns 2,990 → 2,958 →
+2,732 on the same code). Instruments that feed latina through the
+LEXICON channel (praeparator cum_latina, examen, formator …) were
+immune to this instance: the lexicon defines LATINA_H and the real
+inclusion becomes a no-op. The sweep offers latina.h only through
+praebenda.
+
+Fix — one law, two producers: `nexus_ordines_capitis_gradus(via)`
+(0 = include/, 2 = any path with a whole `fixa` component, 1 = the
+rest) and `nexus_ordines_capita_comparare` (rank, then strcmp), in
+the module the sweep and the resident already share. The sweep
+collects the headers and offers them in that order; the praeparator
+now collects candidates during its walk, sorts with the same law,
+then offers (it offered inline in readdir order before —
+unsorted and nondeterministic). Gate `probatio_officina_capita`
+(27 assertions: the rank table incl. `prefixa/`, `fixatio/`, a `./`
+prefix, NULL; comparator order; and on the REAL tree the first
+latina.h and postulata_posix.h in comparator order must be
+include/'s). Planted fault (fixa ranked 1): red on six assertions,
+restored green. Full sweep after: 1,100,681 rows, 88 / 88 function
+definitions in silva_formator.c, the resident agrees after renovare.
+
+Found on the way: officina/compile_probationes.sh tested
+`src -nt obj` — bash 3.2 compares whole seconds, so a source restored
+in the same second its object was compiled never rebuilt, and the
+restored gate stayed red against the PLANTED object. Same defect
+silva's runner fixed on 2026-08-27; ten conditions inverted to
+`! obj -nt src`.
+
+Remaining exposure, filed not fixed: twelve silva instruments walk
+"." for headers with their own copy of the same loop (examen,
+renominare, censor, selecta, quaestio, origo, identitates, emitte,
+infidelis, percursus, census_ambigui, silva_iudicium) — readdir
+order, first-wins. Immune today only because latina reaches them
+through the lexicon; a fixture twin of any OTHER house header would
+bite them. The class wants a shared walker, not twelve edits, and
+silva is frozen.

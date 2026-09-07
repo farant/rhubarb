@@ -800,4 +800,19 @@
   <vocabulum lemma="radix2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
   <vocabulum lemma="repo2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
 
+  <!-- ================= TERMINI GRAMMATICI (2026-09-07) =================
+       tituli accidentium registri orationis (oratio_registrum.h) quos
+       WORDS non fert - Latina grammaticorum (Priscianus, Donatus); tabula
+       symbolorum RESTITUTA (quaestio 01M1TD1FMFT3: fixtura latina.h
+       decurtatum capita domus in percursu umbrabat) eos primum numeravit. -->
+
+  <vocabulum lemma="locativus" lingua="latina" classis="adiectivum" nota="grammaticorum: casus locativus"><forma textus="locativus"/></vocabulum>
+  <vocabulum lemma="superlativus" lingua="latina" classis="adiectivum" nota="grammaticorum: gradus superlativus"><forma textus="superlativus"/></vocabulum>
+  <vocabulum lemma="infinitivus" lingua="latina" classis="adiectivum" nota="grammaticorum: modus infinitivus"><forma textus="infinitivus"/><forma textus="infinitivum"/></vocabulum>
+  <vocabulum lemma="imperativus" lingua="latina" classis="adiectivum" nota="grammaticorum: modus imperativus"><forma textus="imperativus"/></vocabulum>
+  <vocabulum lemma="plusquamperfectum" lingua="latina" classis="adiectivum" nota="grammaticorum: tempus plusquamperfectum"><forma textus="plusquamperfectum"/></vocabulum>
+  <vocabulum lemma="dualis" lingua="latina" classis="adiectivum" nota="grammaticorum: numerus dualis"><forma textus="dualis"/></vocabulum>
+  <vocabulum lemma="numerale" lingua="latina" classis="adiectivum" nota="grammaticorum: nomen numerale (classis UD NUM)"><forma textus="numerale"/></vocabulum>
+  <vocabulum lemma="pronomen" lingua="latina" classis="substantivum" nota="grammaticorum: pars orationis (classis UD PRON)"><forma textus="pronomen"/><forma textus="pronominis"/></vocabulum>
+
 </glossarium>
