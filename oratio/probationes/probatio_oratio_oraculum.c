@@ -54,6 +54,10 @@
  * XXXIV): programma oratio/partes/resolutio.stml regulis II (adpositio
  * accusativum / ablativum regit) - crudum CIRCSE 674, LLCT 678 / 677,
  * EWT 566 / 569. */
+/* T19k 2026-09-08 DEFINITIO MUTATA: decisio in vocabulo lectionis UNIUS
+ * vana, non notata (cellula soluta) - coactae inflatae erant implentibus
+ * unius lectionis (rectis): 761/762/758/913/918 -> 765/710/711/913/913;
+ * primarium immotum (799/838/831/786/789) */
 /* T19i 2026-09-08 determinantia certa + lex classis explicitae: 769/796/792
  * -> 799/838/831; coactae 723/694/694 -> 761/762/758 */
 /* T19h 2026-09-08 ianua stricta capitum (gradus II strictus, III laxus):
@@ -83,11 +87,11 @@
  * 913/918 - Latine decisiones coactae tertium INFIMUM: priores 85-98,
  * apertae 80-92; lex umbrarum ipsa 51-57, regula dativi sequens 37-41
  * in chartis, contractio Anglica 0 = artificium rangae). */
-#define CIRCSE_COACTAE_PINNA     761
-#define LLCT_DEV_COACTAE_PINNA   762
-#define LLCT_TEST_COACTAE_PINNA  758
+#define CIRCSE_COACTAE_PINNA     765
+#define LLCT_DEV_COACTAE_PINNA   710
+#define LLCT_TEST_COACTAE_PINNA  711
 #define EWT_DEV_COACTAE_PINNA    913
-#define EWT_TEST_COACTAE_PINNA   918
+#define EWT_TEST_COACTAE_PINNA   913
 
 interior b32
 _plagulam_legere (

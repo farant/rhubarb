@@ -1143,17 +1143,20 @@ _verbum_iudicare (
             ? (constans Elementum*)xar_obtinere(elementa, e0) : NIHIL;
                        i32 p;
 
-        si (e == NIHIL)
-        {
+                si (e == NIHIL || e->ignotum)
+                {
+            /* T19k: lectio ignoti = cellula sine candidato noto (nulla),
+             * non 'una' */
             p = ORATIO_ORACULUM_PARTITIO_NULLA;
-        }
+                }
         alioquin si (!primum)
-        {
+
+                {
             p = ORATIO_ORACULUM_PARTITIO_RANGA;
-        }
+                }
         alioquin si (   e->decisio >= ZEPHYRUM
                      && e->decisio < (s32)ORATIO_DECISIO_NUMERUS)
-        {
+                {
                                     p = (i32)e->decisio;
             si (e->auctor.mensura > ZEPHYRUM)
             {
@@ -1182,19 +1185,19 @@ _verbum_iudicare (
             }
 
 
-        }
+                }
         alioquin si (e->numerus_analysium == I)
-        {
+                {
             p = ORATIO_ORACULUM_PARTITIO_UNA;
-        }
+                }
         alioquin si (e->numerus_analysium > I)
-        {
+                {
             p = ORATIO_ORACULUM_PARTITIO_APERTA;
-        }
+                }
         alioquin
-        {
+                {
             p = ORATIO_ORACULUM_PARTITIO_NULLA;
-        }
+                }
         census->partitio_verba[p] = census->partitio_verba[p] + I;
         si (primaria)
         {

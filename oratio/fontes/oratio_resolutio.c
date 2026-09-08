@@ -648,6 +648,25 @@ _lectio_classis_explicitae (
     redde (s32)-I;
 }
 
+/* numerus lectionum vocabuli v (0 si non vocabulum) */
+interior i32
+_numerus_lectionum (
+    MateriaValor elementa,
+             i32 v)
+{
+    constans MateriaNodus* vocabulum =
+        materia_valor_lista_obtinere(elementa, v)->datum.nodus;
+    constans MateriaValor* analyses;
+
+    si (vocabulum->genus != (s32)ORATIO_GENUS_VOCABULUM)
+    {
+        redde ZEPHYRUM;
+    }
+    analyses = &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    redde analyses->genus == MATERIA_VALOR_LISTA
+        ? materia_valor_lista_numerus(*analyses) : ZEPHYRUM;
+}
+
 /* umbra 'u' analysis 'a' vocabuli 'v' (locus 'umbrae' per titulum
  * classis analysis); NIHIL si absens */
 interior MateriaNodus*
@@ -925,10 +944,15 @@ _sententiam_resolvere_gradu (
                 }
                 perge;
                         }
-            praelata[v]   = (s32)a;
-            explicita[v]  = VERUM;   /* decisio regulae */
-            _decisionem_notare(cursus, &decisiones[v],
-                ORATIO_DECISIO_PRAELATIO, titulus);
+                        praelata[v]  = (s32)a;
+            explicita[v]             = VERUM;   /* decisio regulae */
+            /* T19k: decisio in vocabulo lectionis UNIUS vana est (cellula
+             * soluta, non decisa) - non notatur */
+            si (_numerus_lectionum(*elementa, v) > I)
+            {
+                _decisionem_notare(cursus, &decisiones[v],
+                    ORATIO_DECISIO_PRAELATIO, titulus);
+            }
 
             si (   titulus != NIHIL
                 && !_regulam_numerare(cursus, *titulus))
@@ -1089,24 +1113,30 @@ _sententiam_resolvere_gradu (
                 praelata[v] = (s32)a;
                 emendata[v] = VERUM;
                                     }
-            alioquin si (praelata[v] < ZEPHYRUM && !vindicata[v])
-
+                        alioquin si (   praelata[v] < ZEPHYRUM
+                                     && !vindicata[v])
                                     {
                 praelata[v] = (s32)a;
-                _decisionem_notare(cursus, &decisiones[v],
-                    ORATIO_DECISIO_IMPLETIO, titulus);
+                si (_numerus_lectionum(*elementa, v) > I)
+                {
+                    _decisionem_notare(cursus, &decisiones[v],
+                        ORATIO_DECISIO_IMPLETIO, titulus);
+                }
                                     }
                         si (emendare_w)
                         {
                 praelata[w] = (s32)b;
                 emendata[w] = VERUM;
                         }
-            alioquin si (praelata[w] < ZEPHYRUM && !vindicata[w])
-
+                        alioquin si (   praelata[w] < ZEPHYRUM
+                                     && !vindicata[w])
                         {
                 praelata[w] = (s32)b;
-                _decisionem_notare(cursus, &decisiones[w],
-                    ORATIO_DECISIO_IMPLETIO, titulus);
+                si (_numerus_lectionum(*elementa, w) > I)
+                {
+                    _decisionem_notare(cursus, &decisiones[w],
+                        ORATIO_DECISIO_IMPLETIO, titulus);
+                }
                         }
 
             si (   titulus != NIHIL

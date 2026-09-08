@@ -55,7 +55,8 @@ nomen structura {
            chorda nativum;       /* codex fontis verbatim (copia) */
            chorda sensus;        /* fontem referens (non copiatur) */
     OratioFonsAnalysis fons;
-        OratioLingua lingua;
+                OratioLingua lingua;
+                 b32 lingua_ignota;  /* T19k: locus linguae non scribitur (lectio ignoti) */
 } OratioDescriptio;
 
 /* Coniunctiones subordinantes (lemma plicatum): ut cum si ne quod quia
@@ -109,6 +110,17 @@ externus constans character* constans ORATIO_SUBORDINANTES_CERTAE[];
  * (lemma = forma plicata). */
 vacuum
 oratio_partes_la_capitalis (
+             Piscina* piscina,
+              chorda  forma,
+    OratioDescriptio* d);
+
+/* Descriptio vocabuli IGNOTI (T19k 2026-09-08, decretum SUDOKU
+ * decisio XXXVII: cellula cum candidatis omnibus, non absens): classis
+ * ignotum, lemma = forma plicata, nativum "ignotum", fons regula,
+ * lingua NON scripta (lingua_ignota) - umbras cuiusvis casus implet
+ * (regulae ignoti), summarium 'ignotum' immotum. */
+vacuum
+oratio_partes_la_ignotum (
              Piscina* piscina,
               chorda  forma,
     OratioDescriptio* d);

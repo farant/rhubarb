@@ -773,10 +773,24 @@ oratio_partes_la_capitalis (
     OratioDescriptio* d)
 {
     oratio_descriptio_vacare(d);
-    d->classis  = ORATIO_CLASSIS_NOMEN_PROPRIUM;
-    d->lemma    = oratio_vocabularium_la_plicare(piscina, forma);
-    d->nativum  = _copia(piscina, _ex_literis("capitalis"));
-    d->fons     = ORATIO_FONS_ANALYSIS_REGULA;
+    d->classis      = ORATIO_CLASSIS_NOMEN_PROPRIUM;
+    d->lemma        = oratio_vocabularium_la_plicare(piscina, forma);
+        d->nativum  = _copia(piscina, _ex_literis("capitalis"));
+    d->fons         = ORATIO_FONS_ANALYSIS_REGULA;
+}
+
+vacuum
+oratio_partes_la_ignotum (
+             Piscina* piscina,
+              chorda  forma,
+    OratioDescriptio* d)
+{
+    oratio_descriptio_vacare(d);
+    d->classis        = ORATIO_CLASSIS_IGNOTUM;
+    d->lemma          = oratio_vocabularium_la_plicare(piscina, forma);
+    d->nativum        = _copia(piscina, _ex_literis("ignotum"));
+    d->fons           = ORATIO_FONS_ANALYSIS_REGULA;
+    d->lingua_ignota  = VERUM;
 }
 
 b32

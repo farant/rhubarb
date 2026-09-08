@@ -427,8 +427,22 @@ reading (or its twin) of that class — carriers via head umbrae
 only, fillers via head umbrae or a settled-carrier object umbra,
 same lemma and language, once per stage. Seneca 80.0, charters
 83.9 / 83.2, English untouched; pins 799 / 838 / 831, forced 761 /
-762 / 758; 53 rules. NEXT: bind-without-prefer loose rules, the
-head-rule template, the ignoti reading.
+762 / 758; 53 rules. **T19j** (same day) measured the tail four
+ways and kept none: strong-class heads (Seneca +0.2, charters −0.1 /
+−0.3), weak heads binding without preferring (same), strong-twin
+substitution (−0.2 / −0.1), loose-stage noun-first carriers not
+preferred (Seneca −0.4): a distant adjective binding at 70 % still
+beats the crude order for those words, and the charters' heads are
+often unknown nouns. **T19k** (same day): THE IGNOTI READING — an
+unknown word carries one `analysis-ignoti` reading (lemma = folded
+form, nativum `ignotum`, fons regula, NO language: `lingua_ignota`),
+`classes` still `ignotum`; rule 21 `umbra-obiectum-ignoti` binds a
+Latin object umbra to it (unknown HEAD rules measured 33–57 % and
+dropped); a decision on a single-reading word is vacuous and no
+longer recorded (forced tier honestly 71 % on the charters, pins
+moved with the cause); primary unchanged; 54 rules. NEXT: demotion
+measured a fourth time (adposition prior off, objectless
+adposition readings demoted); the head-rule template; verb slots.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

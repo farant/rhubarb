@@ -300,8 +300,11 @@ oratio_partes_nodum_struere (
     si (   !_derivatum_ponere(piscina, nodus,
         (i32)ORATIO_ANALYSIS_LEMMA,
             d->lemma, origo)
-        || !materia_nodus_ponere(nodus, (i32)ORATIO_ANALYSIS_LINGUA,
-            materia_valor_index((s32)d->lingua), MATERIA_LOCUS_INDEX)
+        || (   !d->lingua_ignota
+            && !materia_nodus_ponere(nodus, (i32)ORATIO_ANALYSIS_LINGUA,
+                materia_valor_index((s32)d->lingua),
+                MATERIA_LOCUS_INDEX))
+
         || !materia_nodus_ponere(nodus, (i32)ORATIO_ANALYSIS_FONS,
             materia_valor_index((s32)d->fons), MATERIA_LOCUS_INDEX)
         || !_derivatum_ponere(piscina, nodus,
@@ -358,6 +361,7 @@ oratio_partes_vocabulum_annotare (
             OratioClassis  ordo_classium[ORATIO_CLASSIS_NUMERUS_CLASSIUM];
                       i32  numerus_classium = ZEPHYRUM;
                       b32  lingua_visa[ORATIO_LINGUA_NUMERUS];
+                      b32  ignotum_additum = FALSUM;   /* T19k */
              OratioLingua  ordo_linguarum[ORATIO_LINGUA_NUMERUS];
                       i32  numerus_linguarum = ZEPHYRUM;
 
@@ -483,13 +487,30 @@ oratio_partes_vocabulum_annotare (
             {
                 redde FALSUM;
             }
-            oratio_partes_la_capitalis(piscina, textus, d);
+                        oratio_partes_la_capitalis(piscina, textus, d);
             si (anglicum)
             {
                 d->lingua = ORATIO_LINGUA_ANGLICA;
             }
         }
     }
+    /* T19k: vocabulum quod nullus fons novit lectionem IGNOTI accipit
+     * (cellula in tabula cum candidatis omnibus, decretum SUDOKU
+     * XXXVII): ligari potest (umbrae casus cuiusvis), classis manet
+     * 'ignotum', lingua non scripta; census.ignota numerat */
+    si (xar_numerus(descriptiones) == ZEPHYRUM)
+    {
+        OratioDescriptio* d =
+            (OratioDescriptio*)xar_addere(descriptiones);
+
+        si (d == NIHIL)
+        {
+            redde FALSUM;
+        }
+        oratio_partes_la_ignotum(piscina, textus, d);
+        ignotum_additum = VERUM;
+    }
+
     per (k = ZEPHYRUM; k < xar_numerus(descriptiones); k++)
     {
         constans OratioDescriptio* d =
@@ -511,9 +532,11 @@ oratio_partes_vocabulum_annotare (
             ordo_classium[numerus_classium]  = d->classis;
             numerus_classium                 = numerus_classium + I;
         }
-                si (!lingua_visa[d->lingua])
-                {
+                                si (   !d->lingua_ignota
+                                    && !lingua_visa[d->lingua])
+                                {
             lingua_visa[d->lingua]             = VERUM;
+
             ordo_linguarum[numerus_linguarum]  = d->lingua;
             numerus_linguarum                  = numerus_linguarum + I;
             si (census != NIHIL)
@@ -521,13 +544,18 @@ oratio_partes_vocabulum_annotare (
                 census->vocabula_linguarum[d->lingua] =
                     census->vocabula_linguarum[d->lingua] + I;
             }
-                }
+                                }
         si (census != NIHIL)
         {
-            census->analyses = census->analyses + I;
+                        census->analyses = census->analyses + I;
             census->classes[d->classis] = census->classes[d->classis]
                 + I;
-            census->linguae[d->lingua] = census->linguae[d->lingua] + I;
+            si (!d->lingua_ignota)
+            {
+                census->linguae[d->lingua] =
+                    census->linguae[d->lingua] + I;
+            }
+
         }
     }
     /* compendia: classes (semper), linguae (si analyses) */
@@ -535,15 +563,16 @@ oratio_partes_vocabulum_annotare (
         character buffer[512];
               i32 n = ZEPHYRUM;
 
+                si (census != NIHIL && ignotum_additum)
+                {
+            census->ignota = census->ignota + I;
+                }
         si (numerus_classium == ZEPHYRUM)
         {
             n = (i32)sprintf(buffer, "%s",
                 oratio_classis_titulus(ORATIO_CLASSIS_IGNOTUM));
-            si (census != NIHIL)
-            {
-                census->ignota = census->ignota + I;
-            }
         }
+
         alioquin
         {
             per (k = ZEPHYRUM; k < numerus_classium; k++)

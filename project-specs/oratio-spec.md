@@ -1183,6 +1183,37 @@ object rules 18–20, strict heads 21–36, loose 37–52); pins 799 / 838 /
 preferring (Seneca's distant tail), the head-rule template, the
 ignoti reading.
 
+**As built — T19k, the ignoti reading (2026-09-08, same session;
+doctrine decision 37: an unknown word is a cell with all candidates,
+never a missing cell).** A word no source knows now carries ONE
+`analysis-ignoti` reading: lemma = the folded form, nativum
+`ignotum`, source `regula`, no accidents, and NO language (a
+`lingua_ignota` flag on the description keeps the slot unwritten, so
+the language census, the `linguae` summary and the language rule
+never see it); the `classes` summary stays `ignotum`, so every
+selector and `Oratio.ignota()` keep working; `census.ignota` counts
+the readings added. The reading fills any-case umbrae: rule 21
+`umbra-obiectum-ignoti` (after the exact and the proper-noun fillers)
+binds a Latin object umbra to the unknown neighbour. Two strict HEAD
+rules for unknown heads were measured and dropped: 53–57 % on the
+charters, 33–56 % on Seneca, and a tenth of primary lost everywhere
+(an adjective homograph beside an unknown word is not an adjective
+half the time). Executor: a decision on a word with a SINGLE reading
+is vacuous and is no longer recorded (the cell was solved, not
+decided), which is a definition change to the partition: the forced
+tier on the charters had been inflated by single-reading fillers that
+were trivially right, and stands honestly at 71 % (pins 765 / 710 /
+711 / 913 / 913, cause named); the oracle counts an unknown word's
+one reading as `nulla`, never `una`; the Python face agrees
+(`ignota()[i].analyses == 1`, `analyses()` returns the reading,
+`partitio()` puts it under `nulla`). Primary unchanged (80.0 / 83.9 /
+83.2 / 78.6 / 79.0), lemma coverage up a little (the folded form of
+an unknown word is sometimes the gold lemma). 54 rules; computus
+golden regenerated (one node per unknown word). NEXT: the demotion
+measured a fourth time (adposition prior removed, objectless
+adposition readings demoted, now that unknown objects bind); the
+head-rule template; verb slots.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

@@ -1920,3 +1920,52 @@ accusative. Agreement is evidence about the carrier; object case is
 not, so object carriers keep the preposition's decided reading and the
 object follows it. Both restrictions are in the code with their
 sentences.
+
+## 2026-09-08 — T19j: the tail, measured four ways and left alone
+
+Seneca's remaining forced errors are adjective homographs of nouns and
+participles bound far away, so the obvious laws were tried, each on
+all five treebanks: (A) a head must be a strong class — noun, proper
+noun, pronoun — and a weak one is refused (Seneca +0.2, charters
+−0.1 / −0.3); (B) a weak head binds but prefers nothing and the law of
+umbrae ignores it (identical numbers, so the preference on weak heads
+is not where the charters' value sits); (C) only the substitution of
+a strong twin with the same accidents (Seneca +0.1, charters −0.2 /
+−0.1: `sancta` the noun preferred over `sancta` the adjective); (D) a
+loose-stage carrier whose crude first reading is a noun or verb binds
+without preferring (Seneca −0.4, charters −0.2 / −0.4). The last one
+is the instructive one: a distant adjective binding at seventy percent
+still beats the crude order for exactly those words, on Seneca too.
+Before that the noun-only pattern had been measured as well (charters
+−0.6 / −1.2), which says the charters' heads are proper nouns and
+pronouns as often as nouns, and, when the noun is one of the eighteen
+percent the dictionary does not know, the agreeing adjective next to
+it. None of the four is kept; the executor is back at 1e2fdd9d. The
+tail waits for the ignoti reading, which puts those unknown heads on
+the board, and for a dimension beyond agreement — a verb's slots — for
+Seneca's long sentences.
+
+## 2026-09-08 — T19k: the unknown word gets a cell
+
+Decision 37 of the doctrine says an unknown word is a cell with every
+candidate, not a hole in the grid, and the executor had been saying
+the opposite for two days: `ignotum` was a summary token, there was
+no reading node, and nothing could bind to it. The reading is small —
+folded form as lemma, `ignotum` as nativum, source `regula`, and no
+language at all, which needed a flag on the description so the slot
+stays unwritten and the census and the language rule stay blind to
+it. The summary token does not change, so every selector and the
+Python face keep working; the projection grows one node per unknown
+word and the computus golden moved with a named cause.
+
+Two findings on the first run. Unknown HEADS are not evidence: an
+adjective homograph next to an unknown word is an adjective about
+half the time, on both treebanks, and the two strict head rules for
+unknown heads cost a tenth of primary each; they were measured and
+dropped, only the object rule stays. And the partition had been
+flattering the forced tier: a filler with a single reading was being
+labelled "decided by impletio" and was trivially right, so the
+charters' forced accuracy read 76 %; with vacuous decisions no longer
+recorded it reads 71 %, which is the true number and the pins moved
+down with the cause written beside them. Both are the doctrine doing
+its job: the honest number is lower and the useless rule is gone.

@@ -501,6 +501,29 @@
   </consilium>
 </regula>
 
+<regula titulus="umbra-obiectum-ignoti">
+  <!-- T19k (2026-09-08): implens IGNOTUS - vocabulum quod nullus fons novit
+       (lectio ignoti sine casu) umbram obiecti cuiusvis casus implet (in
+       Wlfrado); post regulas exactas et nomen proprium capitale. Capita
+       ignota (adiectivum + vocabulum ignotum vicinum) MENSURATA ET ABLATA:
+       53-57 % chartis, 33-56 % Senecae, primarium -0.1 ubique -->
+  <EXEMPLAR cursus="fratrum" output="$impl_umbra_obiectum_ignoti">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><lingua>0</lingua><umbrae><umbra n="$u"><relatio>0</relatio></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <analysis-ignoti n="$b"><nativum><or-derivatum>ignotum</or-derivatum></nativum></analysis-ignoti>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$impl_umbra_obiectum_ignoti">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-obiectum-ignoti"/>
+    </PER>
+  </consilium>
+</regula>
+
 <!-- IANUA STRICTA capitum (T19h 2026-09-08): regulae capitis XVI cursu STRICTO
      (caput VICINUM solum) gradu II, deinde eaedem cursu fratrum (saltus) gradu III:
      congruentia vicina cuiusvis casus congruentiam remotam casus prioris vincit

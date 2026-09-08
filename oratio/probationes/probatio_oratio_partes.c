@@ -1022,9 +1022,29 @@ principale (vacuum)
             CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
                 doc3,
                 &census3));
-            CREDO_AEQUALIS_I32 (census3.ignota, I);
+                        CREDO_AEQUALIS_I32 (census3.ignota, I);
             x3 = _vocabulum(doc3, ZEPHYRUM, ZEPHYRUM, I);
-            CREDO_AEQUALIS_I32 (_numerus_analysium(x3), ZEPHYRUM);
+            /* T19k: lectio IGNOTI una - genus analysis-ignoti, lemma forma
+             * plicata, nativum 'ignotum', fons regula, lingua NON scripta */
+            CREDO_AEQUALIS_I32 (_numerus_analysium(x3), I);
+            {
+                constans MateriaNodus* ig =
+                    materia_valor_lista_obtinere(
+                    x3->loci[ORATIO_VOCABULUM_ANALYSES],
+                    ZEPHYRUM)->datum.nodus;
+
+                CREDO_AEQUALIS_S32 (ig->genus,
+                    (s32)ORATIO_GENUS_ANALYSIS_IGNOTI);
+                CREDO_VERUM (_aequalis(_derivatum(ig,
+                    (i32)ORATIO_ANALYSIS_LEMMA), "xyzzy"));
+                CREDO_VERUM (_aequalis(_derivatum(ig,
+                    (i32)ORATIO_ANALYSIS_NATIVUM), "ignotum"));
+                CREDO_AEQUALIS_S32 (ig->loci[ORATIO_ANALYSIS_FONS].datum.index,
+                    (s32)ORATIO_FONS_ANALYSIS_REGULA);
+                CREDO_AEQUALIS_S32 ((s32)ig->loci[ORATIO_ANALYSIS_LINGUA].genus,
+                    (s32)MATERIA_VALOR_NIHIL);
+            }
+
             CREDO_VERUM (_aequalis(_derivatum(x3,
                 (i32)ORATIO_VOCABULUM_CLASSES),
                 "ignotum"));

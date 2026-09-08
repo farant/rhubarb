@@ -652,14 +652,18 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (ablativum, (s32)XIX);
         /* T19f: implentes casus ignoti (nomen proprium capitale) -
          * obiectum XX (gradus I), capita post (gradus II/III) */
+                CREDO_AEQUALIS_S32 (_index_regulae(programma,
+                    "umbra-obiectum-incerti-proprii"), (s32)XX);
+                /* T19k: implens ignotus XXI (gradus I); capita ignoti mensurata
+         * et ablata (53-57 % chartis) */
         CREDO_AEQUALIS_S32 (_index_regulae(programma,
-            "umbra-obiectum-incerti-proprii"), (s32)XX);
+            "umbra-obiectum-ignoti"), (s32)XXI);
                 /* T19h: IANUA STRICTA capitum - regulae capitis XVI cursu
          * stricto gradu II (XX..XXXV, titulo -proximo), eaedem cursu
                   * fratrum gradu III; regulae LIII (T19i: + prior determinantium
          * gradu I: strictae XXI..XXXVI, laxae XXXVII..LII) */
-        CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
-            (i32)LIII);
+                CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
+                                (i32)LIV);
         {
             i32 k;
 
@@ -669,18 +673,20 @@ principale (vacuum)
                     (constans OratioRegula*)xar_obtinere(
                     programma->regulae, k);
 
-                                CREDO_AEQUALIS_I32 (r->gradus, k
-                                    <= (i32)XX ? I
-                                    : (k
-                                        <= (i32)XXXVI ? (i32)II : (i32)III));
+                                                CREDO_AEQUALIS_I32 (r->gradus,
+                                                    k <= (i32)XXI ? I
+                                                                        : (k
+                                                                            <= (i32)XXXVII ? (i32)II : (i32)III));
             }
             {
                 constans OratioRegula* prima =
                     (constans OratioRegula*)xar_obtinere(
-                                        programma->regulae, (i32)XXI);
+                                                            programma->regulae,
+                                                            (i32)XXII);
                 constans OratioRegula* laxa =
                     (constans OratioRegula*)xar_obtinere(
-                    programma->regulae, (i32)XXXVII);
+                                        programma->regulae,
+                                        (i32)XXXVIII);
 
                 CREDO_VERUM (_aequalis(prima->titulus,
                     "umbra-caput-nominativus-sequente-proximo"));
@@ -1595,7 +1601,39 @@ principale (vacuum)
         CREDO_VERUM (census.impletae >= I);
     }
 
-        imprimere("\n--- X. Decisio in arbore (T19g, decretum SUDOKU) ---\n");
+            imprimere("\n--- XI. Lectio ignoti (T19k) ---\n");
+    {
+           OratioPartesCensus census_partium;
+        OratioResolutioCensus census;
+                 MateriaNodus* doc;
+        constans MateriaNodus* lectio;
+
+        /* In xyzzy est: vocabulum ignotum lectionem ignoti fert (una,
+         * classis ignotum, lingua non scripta) quam umbra obiecti 'in'
+         * implet (regula ignoti); decisio in xyzzy nulla (lectio una) */
+        doc = _documentum(piscina, &vocabularia, "In xyzzy est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        CREDO_AEQUALIS_I32 (_numerus_analysium(_vocabulum(doc, I)), I);
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
+            ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_IGNOTUM);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        lectio = _analysis(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM);
+        CREDO_NON_NIHIL (lectio);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
+            (s32)I);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_analysis(lectio, ZEPHYRUM),
+            ZEPHYRUM);
+        CREDO_VERUM (_aequalis(_compendium(_vocabulum(doc, I),
+            (i32)ORATIO_VOCABULUM_CLASSES), "ignotum"));
+        CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, I)), (s32)-I);
+        CREDO_VERUM (census.impletae >= I);
+    }
+
+    imprimere("\n--- X. Decisio in arbore (T19g, decretum SUDOKU) ---\n");
     {
            OratioPartesCensus census_partium;
         OratioResolutioCensus census;

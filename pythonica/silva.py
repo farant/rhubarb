@@ -4016,7 +4016,9 @@ class Oratio(object):
         lectione). coactae = impletio + umbra (testimonium)."""
         p = dict((k, 0) for k in ORATIO_PARTITIO)
         for v in self.vocabula():
-            if v.decisio:
+            if 'ignotum' in v.classes:
+                p['nulla'] += 1
+            elif v.decisio:
                 p[v.decisio] += 1
             elif v.analyses == 1:
                 p['una'] += 1
