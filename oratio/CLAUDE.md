@@ -452,8 +452,20 @@ seeded from certain subordinators, relatives, punctuation and
 coordinators between finite verbs, one clause where nothing decides;
 laws over it: one finite verb per clause, subject inside, `cum` +
 finite verb = conjunction, loose head rules inside the clause only;
-oracle = the gold verb subtrees already vendored. Design conversation
-first, then spec §7, then T20. Head-rule template still open.
+oracle = the gold verb subtrees already vendored. **DESIGNED
+2026-09-08** (spec §2 decisions 43–47, §7 "Design — T20", decretum
+01M20W7HH3): the clause is a NODE on the sentence (`clausulae` list;
+genus `clausula` after `umbra`: semen, species, pater, umbrae
+verbum-finitum + subiectum born from the schema), elements stay flat
+with `clausula` + `clausula-causa` INDEX (semen | extentum | clausura |
+catena | unica; unwritten = OPEN); stamp module `oratio_clausula`
+(`seminare` before resolution, `propagare` between stages), seeds are
+DATA measured through `-semina` first; oracle = purity per layer +
+coverage + count against gold finite-root subtrees, pinned only
+rising; NO phrase structure (decision 46: a phrase is the component
+of bindings). NEXT = T20a (structure + layers 1–3 + oracle + Python +
+gates, no laws), then T20b catena/discordia, T20c laws one at a time.
+Head-rule template still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

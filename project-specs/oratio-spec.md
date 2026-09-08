@@ -169,6 +169,42 @@ enforced by the gate rather than an order remembered in the file;
 coverage work (the ignoti reading, charter spelling) outranks
 ordering work.
 
+**The clause (Fran, 2026-09-08, design conversation after T19l;
+decisions 43–47).** The tail of Seneca and the demotion both asked for
+a dimension beyond adjacency, and the sudoku has one left between the
+row and the whole grid: the box.
+
+- **43 The clause is the box.** Between adjacency and the whole
+  sentence lies the clause, the structure a finite verb governs.
+  Membership is a per-element stamp with a REASON, written only when
+  a layer decided it; unwritten = OPEN. A law over the clause reads
+  only decided members, so elimination stays sound over a partial box
+  (decision 37). A candidate SET of clauses per word is the named
+  fallback if the single stamp proves too coarse.
+- **44 The clause is an umbra-bearing node** (decision 42 at sentence
+  scale). A `clausula` node on the sentence carries its seed, its
+  species, its parent and two umbrae from the schema of its genus,
+  the finite verb and the subject, filled by members through the ONE
+  executor law. Elements stay flat and point at it.
+- **45 Layers, each with its reason.** Seeds (data rows with a cause
+  and a count: certain subordinators, relatives, punctuation,
+  coordinators between finite-verb-capable words), the span, the
+  closure (the verb-final prior) and the chain (along bound umbrae,
+  the relative's own binding excepted). Each layer writes its reason
+  beside the placement so the oracle scores it alone; a word two
+  layers disagree on is a DISCORDIA, counted before either is trusted.
+- **46 No phrase structure.** A phrase is the connected component of
+  bound umbrae and is already there; a phrase SPAN would lie in Latin
+  (hyperbaton), and the one phrase-level notion the laws need, the
+  ROOT of a component, is a derived view when a law first asks for
+  it. Phrase-level evidence (a coordinator, a determiner) belongs to
+  a word's umbra, not to a structure.
+- **47 The clause has its own oracle.** Gold clause = the subtree of
+  a finite root (finite mood and not aux/cop, or the predicate of a
+  finite aux/cop) minus the finite subtrees below it. Purity per
+  layer, coverage and count agreement are pinned only rising per
+  treebank; the verb slot is scored against the gold root.
+
 ## 3. Stage 1 — the tree (`oratio_arbor`)
 
 **Registry (`oratio_registrum`, hand-written like md's).** Genera:
@@ -1240,6 +1276,117 @@ the next structure is the CLAUSE — a `clausula` INDEX slot stamped on
 elements, the sudoku box between adjacency and the whole sentence,
 with the finite verb's slots as its laws and the gold dependency
 subtrees as its oracle (ledger 01M1ZYZB67).
+
+**Design — T20, the clause (2026-09-08, the conversation after
+compaction; decisions 43–47).**
+
+STRUCTURE. Genus `clausula` appended after `umbra`. Slots: `semen`
+INDEX (ordinal of the seed element in the sentence; unwritten for the
+main clause), `species` INDEX (appended enumeration principalis |
+subordinata | relativa | coordinata | parenthetica — not `genus`,
+which the umbra uses for gender), `pater` INDEX (position of the
+enclosing clause in the sentence's list; unwritten at top level;
+coordinate clauses are siblings, never nested), `umbrae` LISTA_NODUS
+of umbra nodes written at BIRTH from the schema of the genus, not by
+a rule: relation `verbum-finitum` (class verbum | auxiliare, mood
+finite — the umbra genus gains an appended `modus` condition and the
+relation enumeration the two relations) and relation `subiectum`
+(nominative; number and person copied from the verb once it is
+filled). The sentence gains `clausulae` LISTA_NODUS after `elementa`.
+Every element genus (vocabulum, interpunctio, numerus) gains
+`clausula` INDEX into that list and `clausula-causa` INDEX (semen |
+extentum | clausura | catena | unica); unwritten = open. Punctuation
+is a member, assigned to the clause it closes, and excluded from the
+scores like range words. The registry seal moves with T20 as its
+cause; the canon grows the genus and the two element attributes; the
+projection shows `clausula="1" clausula-causa="extentum"` on elements
+and the clause nodes after the elements; the computus golden is
+regenerated; the Python face gets `Oratio.clausulae()` per sentence
+and `clausula` / `clausula_causa` on the word object, as `decisio`.
+
+STAMP. Module `oratio_clausula`, two entry points: `seminare`, called
+by the resolver at its start (readings exist, bindings do not), and
+`propagare`, called between resolution stages. Layer 1, SEEDS, data
+rows with a cause and a measured count: `ORATIO_SUBORDINANTES_CERTAE`
+(lemmas SCONJ without exception across the three Latin treebanks —
+`cum` and `quod` are not on it and seed only with a finite-verb-
+capable word between them and the next seed); relative forms (lemma
+`qui`, `quicumque`; a sentence-initial relative is the connecting
+relative and opens the MAIN clause); punctuation (comma, semicolon,
+colon, parentheses, quotes — measured per treebank through `-semina`
+before the list is fixed; the charters have almost none); coordinators
+only when a finite-verb-capable word stands on each side before the
+next seed (enclitic `-que` seeds at its host if the dictionary reports
+it). Layer 2, EXTENTUM: seeds walked with a stack — a subordinator or
+relative pushes (parent = top), a coordinator replaces the top with a
+sibling, opening punctuation pushes a parenthetical until its closer;
+every word between seeds joins the top; words before the first seed
+are clause 0, principalis; a sentence with no seed places every word
+with reason `unica`. Layer 3, CLAUSURA: a subordinate or relative
+clause pops at its closing punctuation or, failing that, at its first
+CERTAIN finite verb (all readings finite); the words after it and
+before the next seed return to the parent with reason `clausura` —
+the verb-final prior, expected to score lowest, carrying its own
+reason for that purpose. Layer 4, CATENA (after each resolution
+stage): an OPEN word bound by a head or object umbra to a placed word
+joins that word's clause; the relative pronoun's own binding to its
+antecedent is excepted by rule; bound to placed words of two clauses
+= stays open; a span-placed word whose binding points elsewhere is NOT
+moved in T20 but counted as a `discordia`. Finite-verb-capable = a
+Latin verbum or auxiliare reading in the indicative, subjunctive or
+imperative; English has no mood in Moby, so English sentences are
+`unica` throughout in T20 and English seeds are a later tranche with
+their own data.
+
+ORACLE. Gold clause root = a token in a finite mood whose relation is
+not aux/cop, or a predicate with a finite aux/cop child (UD hangs
+`amatus est`, `bonus est` under the participle and the adjective);
+coordinated finite verbs are each a root; no finite root = one clause
+under the sentence root; a word's gold clause = its nearest root
+ancestor, itself included (participial and infinitive constructions
+belong to the finite clause above them). Scores per treebank in
+permille, punctuation excluded: PURITY per layer (the majority gold
+clause of each stamped clause; a placed word is right when its gold
+clause is that majority; split by reason), COVERAGE (share of words
+placed), COUNT (share of sentences whose clause count equals the
+gold count), later VERB SLOT (the filled verb equals the gold root).
+Purity and coverage pinned only rising from the gate's printed
+number, down only with a named definition change; discordiae
+reported, not pinned. Instrument: `oraculum.sh -clausulae` (the
+table), `-errata -clausula` (misplaced word, its seed, its stamped
+clause, its gold root), `-semina` (per mark and per candidate lemma:
+how often on a gold boundary). Gate `probatio_oratio_clausula`:
+planted fault = a seed removed from the list turns the pin red; hand
+cases — nested subordinate closed by comma, closed by verb, coordinate
+siblings, connecting relative, parenthetical, seedless sentence.
+
+LAWS (T20c on; each measured on all five treebanks, kept only if no
+treebank drops, in this order). (1) The VERB HIDDEN SINGLE: the
+executor learns clauses as carriers with the clause's members as its
+rows; the verb umbra is filled when exactly one member is finite-verb-
+capable, that reading goes first, labelled `umbra` with the clause law
+as author; two certain finite verbs in one clause is a missed seed
+(asyndeton), a FINDING and a candidate fifth layer, never an
+elimination. (2) `cum` THE CONJUNCTION: a `cum` whose span holds a
+finite verb and which binds no ablative object gets its conjunction
+reading first — the reading the demotion could not reach four times.
+(3) LOOSE HEADS INSIDE THE BOX: a row cursor `cursus="clausulae"`
+(rows = the members of the anchor's clause) on the sixteen loose head
+rules; if it depresses a treebank the rules stay and the number is
+recorded. (4) The SUBJECT umbra: a nominative member agreeing in
+number with the filled verb, person from a pronoun or none; first use
+= the nominative head rule prefers the subject's component.
+
+TRANCHES. T20a: the genus and slots, canon and seal, layers 1–3 with
+their lists measured first through `-semina`, the oracle table and
+listing, the Python face, the gates with the planted fault, docs —
+numbers and no laws. T20b: the chain layer, the discordia count, and
+the override decision from the numbers. T20c: the clause carrier and
+law 1; then laws 2–4 one at a time, each its own commit with its
+measurement. LEFT OUT, named: candidate clause sets per word (returns
+if the stamp proves too coarse), English seeds (own data), participial
+and infinitive clauses as clauses of their own (return when a law
+needs them), any phrase structure (decision 46).
 
 ## 8. Stage 6 — search
 
