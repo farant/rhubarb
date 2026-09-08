@@ -468,16 +468,24 @@ _umbras_probare (
                         implens = _analysis(implens_vocabulum, (i32)b);
                         c = _umbra_index(lectio, u,
                             (i32)ORATIO_UMBRA_CASUS);
-                        si (   (c >= ZEPHYRUM
+                        /* T19f: implens casus IGNOTI (accidens non
+                         * scriptum, -I) umbrae cuivis congruit */
+                        si (   (   c >= ZEPHYRUM
+                                && _accidens(implens, "casus")
+                                    >= ZEPHYRUM
                                 && _accidens(implens, "casus") != c)
                             || (_umbra_index(lectio, u,
                                     (i32)ORATIO_UMBRA_NUMERUS)
                                         >= ZEPHYRUM
                                 && _accidens(implens, "numerus")
+                                    >= ZEPHYRUM
+                                && _accidens(implens, "numerus")
                                     != _umbra_index(lectio, u,
                                         (i32)ORATIO_UMBRA_NUMERUS))
                             || (_umbra_index(lectio, u,
                                     (i32)ORATIO_UMBRA_GENUS) >= ZEPHYRUM
+                                && _accidens(implens, "genus")
+                                    >= ZEPHYRUM
                                 && _accidens(implens, "genus")
                                     != _umbra_index(lectio, u,
                                         (i32)ORATIO_UMBRA_GENUS)))
@@ -626,8 +634,12 @@ principale (vacuum)
          * proprium capitale, umbrae verbi II) + prior contractionum:
          * gradus I = XIX regulae (0..XVIII) */
         CREDO_AEQUALIS_S32 (ablativum, (s32)XVIII);
+        /* T19f: implentes casus ignoti (nomen proprium capitale) -
+         * obiectum XIX (gradus I), capita XXXIV-XXXV (gradus II) */
+        CREDO_AEQUALIS_S32 (_index_regulae(programma,
+            "umbra-obiectum-incerti-proprii"), (s32)XIX);
         CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
-            (i32)XXXIII);
+            (i32)XXXVI);
         {
             i32 k;
 
@@ -637,13 +649,13 @@ principale (vacuum)
                     (constans OratioRegula*)xar_obtinere(
                     programma->regulae, k);
 
-                CREDO_AEQUALIS_I32 (r->gradus, k <= (i32)XVIII ? I
+                CREDO_AEQUALIS_I32 (r->gradus, k <= (i32)XIX ? I
                     : (i32)II);
             }
             {
                 constans OratioRegula* prima =
                     (constans OratioRegula*)xar_obtinere(
-                    programma->regulae, (i32)XIX);
+                    programma->regulae, (i32)XX);
 
                 CREDO_VERUM (_aequalis(prima->titulus,
                     "umbra-caput-nominativus-sequente"));
@@ -1497,6 +1509,35 @@ principale (vacuum)
             programma, (s32)-I, "anglica", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_AUXILIARE);
+    }
+
+    imprimere("\n--- IX. Implentes casus ignoti (T19f) ---\n");
+    {
+           OratioPartesCensus census_partium;
+        OratioResolutioCensus census;
+                 MateriaNodus* doc;
+        constans MateriaNodus* lectio;
+
+        /* In Lucca: nomen proprium regulae capitalis (sine casu)
+         * umbram ablativam 'in' implet - lectio ablativa prima, Lucca
+         * nomen proprium prima */
+        doc = _documentum(piscina, &vocabularia, "In Lucca est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_ADPOSITIO);
+        CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM),
+            (s32)ORATIO_CASUS_ABLATIVUS);
+        lectio = _analysis(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM);
+        CREDO_NON_NIHIL (lectio);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
+            (s32)I);
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_NOMEN_PROPRIUM);
+        CREDO_VERUM (census.impletae >= I);
     }
 
     imprimere("\n");

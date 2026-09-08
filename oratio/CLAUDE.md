@@ -376,9 +376,18 @@ codes `a` as a verb); structural same-stage decisions do not block
 (measured). Dropped after measuring: determiner head umbra (Moby's
 noun readings of `is`/`it's`), distant-verb variant for have/do.
 EWT 75.3 / 75.5 → 78.6 / 79.0 (pins 786 / 789), Latin and coverage
-unchanged; 33 rules. NEXT: unknown-case fillers (proper names,
-ignota) then the demotion re-measured; Latin determiners from the
-listing; sentence-initial proper nouns; `there is`; verb slots.
+unchanged; 33 rules. **T19f — FILLERS OF UNKNOWN CASE** (same
+night): three rules after the exact ones fill a Latin reading's
+object or head umbra of any case with the neighbouring capital-rule
+proper noun (no case): Seneca 76.8, charters 79.6 / 79.1 (pins 768 /
+795 / 790), English untouched; 36 rules; the corpus invariant accepts
+an unwritten filler accident. Demotion RE-MEASURED three ways on top
+and rejected again (charters −0.3 to −0.7): unknown words have no
+reading node to bind, so "no object" still mostly means "object
+unreadable". NEXT: an `analysis-ignoti` reading for unknown words
+(then demotion once more), a charter glossary / spelling
+normalisation, Latin determiners from the listing, sentence-initial
+proper nouns, `there is`, verb slots.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

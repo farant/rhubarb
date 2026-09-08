@@ -1750,3 +1750,26 @@ apostrophe", because possessive names (`Debra's`) must keep their
 capital reading — proper-noun coverage is pinned and went red the
 first way. EWT ends at 78.6 / 79.0 from 75.3 / 75.5; Latin did not
 move by a permille through any of it.
+
+## 2026-09-07 (night) — T19f: fillers without a case, and the demotion measured a third time
+
+The umbra says "object in the ablative"; a proper noun the capital
+rule invented has no case at all. Letting it fill anyway is a rule,
+not an executor change: three rules after the exact ones, filler = a
+reading whose nativum is `capitalis`, carrier = a Latin reading with
+an umbra of the relation, any case. Every Latin treebank rose, the
+corpus invariant learned that an unwritten accident is compatible,
+and the gate pins moved. Then I re-ran the experiment the fillers
+were meant to unblock, and it failed the same way as this afternoon:
+without the adposition prior the charters lose 0.4, with demotion
+they lose more. The reason was in the ignota column all along - an
+unknown word has no reading node, so a preposition before an unknown
+noun still looks objectless, and 18 % of charter nouns are unknown.
+So the next lever is not a rule but a registry-visible change: give
+unknown words an `analysis-ignoti` reading (the genus exists, unused)
+so they can be bound, then measure demotion a fourth time. I did not
+start it tonight: it moves the projection of every unknown word, the
+computus golden, and the Python face's `ignota()` contract, and that
+deserves a fresh session. Method note: three variants, one script,
+under a minute each; the numbers refused the idea faster than an
+argument could have.

@@ -458,6 +458,25 @@
      lectio prima); vocabulum non vindicatum lectione quavis implet
      (templum: GEN P crudum primum, NOM per caput 'hoc' invenitur). -->
 
+<regula titulus="umbra-obiectum-incerti-proprii">
+  <!-- T19f (2026-09-07): implens casus IGNOTI - nomen proprium regulae capitalis (sine casu) umbram obiecti cuiusvis casus implet (in Lucca); POST regulas exactas (prima vincit ubi lectio casu nota adest); lectio Latina sola (umbrae classis Anglicae relatio 0 quoque) -->
+  <EXEMPLAR cursus="fratrum" output="$impl_umbra_obiectum_incerti_proprii">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><lingua>0</lingua><umbrae><umbra n="$u"><relatio>0</relatio></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <analysis-nominis-proprii n="$b"><nativum><or-derivatum>capitalis</or-derivatum></nativum></analysis-nominis-proprii>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$impl_umbra_obiectum_incerti_proprii">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-obiectum-incerti-proprii"/>
+    </PER>
+  </consilium>
+</regula>
+
 <regula titulus="umbra-caput-nominativus-sequente" gradus="2">
   <EXEMPLAR cursus="fratrum" output="$caput_nominativus_sequente">
     <elementa>
@@ -709,4 +728,43 @@
     </PER>
   </consilium>
 </regula>
+
+<regula titulus="umbra-caput-incerti-proprii-sequente" gradus="2">
+  <!-- T19f: caput casus ignoti - nomen proprium capitale umbram capitis cuiusvis casus/numeri/generis implet (sancti Petri, ipsa Lucca); post regulas exactas -->
+  <EXEMPLAR cursus="fratrum" output="$impl_umbra_caput_incerti_proprii_sequente">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><lingua>0</lingua><umbrae><umbra n="$u"><relatio>1</relatio></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <analysis-nominis-proprii n="$b"><nativum><or-derivatum>capitalis</or-derivatum></nativum></analysis-nominis-proprii>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$impl_umbra_caput_incerti_proprii_sequente">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-incerti-proprii-sequente"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="umbra-caput-incerti-proprii-praecedente" gradus="2">
+  <!-- T19f: caput casus ignoti - nomen proprium capitale umbram capitis cuiusvis casus/numeri/generis implet (sancti Petri, ipsa Lucca); post regulas exactas (nomen ante) -->
+  <EXEMPLAR cursus="fratrum" output="$impl_umbra_caput_incerti_proprii_praecedente">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <analysis-nominis-proprii n="$b"><nativum><or-derivatum>capitalis</or-derivatum></nativum></analysis-nominis-proprii>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><lingua>0</lingua><umbrae><umbra n="$u"><relatio>1</relatio></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$impl_umbra_caput_incerti_proprii_praecedente">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-incerti-proprii-praecedente"/>
+    </PER>
+  </consilium>
+</regula>
+
 

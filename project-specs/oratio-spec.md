@@ -929,6 +929,29 @@ nouns at sentence start, `saw`-type noun-verb homographs after
 pronouns, `there is`, possessive determiners as PRON (EWT's
 convention), `like` as a verb, ranges.
 
+**As built — T19f, fillers of unknown case (2026-09-07, late).**
+Three rules after their exact counterparts: a Latin reading's object
+umbra of any case, or head umbra of any case, number and gender, is
+filled by the neighbouring capital-rule proper noun (`nativum`
+capitalis, which carries no case) — `in Lucca`, `sancti Petri`. The
+corpus invariant now treats an unwritten accident on the filler as
+compatible. Every Latin treebank rose: Seneca 76.5 → 76.8, charters
+79.2 / 78.9 → 79.6 / 79.1 (pins 768 / 795 / 790), English untouched;
+Hilarius 560 bound umbrae. Then the demotion half of the umbra law
+was re-measured on top, three ways, and every way lost on the
+charters: dropping the Latin adposition prior so objects alone decide
+adpositions cost 0.4 / 0.3 there; adding demotion of unfilled object
+umbrae cost 0.7 / 0.6; demoting any unfilled umbra 0.6 / 0.5. The
+cause is unchanged: 18 % of charter nouns are unknown to WORDS and an
+unknown word has NO reading at all (the `ignotum` class is a summary
+token, not a node), so nothing can be bound to it. "No object found"
+becomes usable evidence only when unknown words get an
+`analysis-ignoti` reading — a registry-visible change (projection
+size, the computus golden, `Oratio.ignota`) that is the next lever
+for Latin, together with a charter glossary or spelling
+normalisation. Until then the adposition prior stays and the law of
+umbrae stays promotion-only.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the
