@@ -1672,6 +1672,20 @@ on Seneca, 56.5 / 56.7 % on the charters; the nominative head rules
 choose the right case 52 % and 45 % of the time. The Latin problem
 is case. Law 4 (subject) is measured against this number.
 
+**As measured — T20c law 2, refuted by census (2026-09-08, same
+session).** Our seed decision for every `cum` against the gold class:
+Seneca 26 (seeded conjunction 17, seeded preposition 7, unseeded
+preposition 2); charters 106 and 124, all but four prepositions, 12
+and 29 of them seeded (`cum uno lato tenet`). The law (seeded →
+conjunction first) would gain 17 / lose 7 on Seneca and lose 11 and
+27 on the charters. The box-free control (a finite-capable word
+follows) is equal on Seneca and loses 103 / 116 on the charters. A
+seed refinement, `cum` before an ablative-only non-verb never seeds,
+cuts the false seeds to 3 / 15 but loses 312 concordance pairs on the
+dev charters (+157 Seneca, +1021 test): refused, switch kept at off
+with the numbers. NOT BUILT. Law 4 remains, measured against the
+case column.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

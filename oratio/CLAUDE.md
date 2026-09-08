@@ -604,7 +604,14 @@ appended to `SUMMA`/class/`AUCTOR` rows; pins 609/565/567 (Latin
 files), EWT reported. FINDING: Seneca class 83.5 % but CASE 60.9 %
 (nouns 58.6, adjectives 57.2); the nominative head rules pick the
 right case 52 % / 45 % of the time. THE LATIN PROBLEM IS CASE. Law 4
-is measured here. NEXT = law 2 (`cum`) census, then law 4 census.
+is measured here. **Law 2 (`cum`) REFUTED BY CENSUS (same day,
+`cum_census.py`)**: seed decision vs gold — Seneca 17 right / 7
+wrong seeds (law +17/−7), charters 12 and 29 false seeds among 230
+prepositions (law −11/−27); control (verb follows) −103/−116 on the
+charters. Seed refinement `CUM_ABLATIVO_SOLO` (ablative-only next
+word → preposition) cuts false seeds to 3/15 but loses 312 dev
+concordance pairs (+157/+1021 elsewhere) → refused, switch at off
+with numbers. NEXT = law 4 (subject) census against the case column.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

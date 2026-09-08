@@ -107,6 +107,20 @@ hic_manens constans b32 CUM_SUBIUNCTIVUM  = VERUM;
  * aliter (cum venit, cum ille ...) verbum capax quodvis corroborat ut
  * basis - Senecae XXXIX paria reddit. */
 hic_manens constans b32 CUM_ABLATIVO      = VERUM;
+/* CUM_ABLATIVO_SOLO (ex censu legis II clausulae, 2026-09-08): cum
+ * cuius verbum proximum lectionem ablativam fert et NULLAM nominativam
+ * nec ipsum verbum finitum capax est adpositio est et numquam seminat
+ * (cum uno lato tenet, cum eo legiones; cum ipse domnus seminat).
+ * Census seminum falsorum cum: chartae XII / XXIX, Seneca VII ->
+ * III / XV, III, sed SCONJ IV Senecae amissa. MENSURATUM paribus
+ * concordiae: Seneca +CLVII, chartae test +MXXI, chartae dev -CCCXII
+ * (439845 -> 439533) - thesaurum deprimit, ABLATUM (numeri manent).
+ * Lex II ipsa (cum seminans -> lectio coniunctionis prima) censu
+ * REFUTATA utraque stampa: Seneca +XVII/-VII (+XIII/-III), chartae
+ * -XI / -XXVII (-II / -XIV): decisio seminis chartis adpositionem
+ * seminat; custodia sine capsa (verbum capax sequitur) Senecae
+ * paene aequalis, chartis -CIII / -CXVI. */
+hic_manens constans b32 CUM_ABLATIVO_SOLO = FALSUM;
 
 /* STRATUM IV CATENA (T20b, 2026-09-08): MENSURATUM concordia parium
  * exacta (CIRCSE / LLCT dev / test, basis 102551 / 438519 / 444139):
@@ -326,7 +340,8 @@ nomen structura {
                                        b32  supra;          /* lectio lemmate 'supra' (qui supra) */
                           b32  id;             /* forma 'id' (id est) */
                           b32  cum;            /* lectio lemmate 'cum' */
-             b32  ablativus;      /* lectio Latina casu ablativo ulla */
+                          b32  ablativus;      /* lectio Latina casu ablativo ulla */
+             b32  nominativus;    /* lectio Latina casu nominativo ulla (T24) */
 
              b32 una_simul;      /* forma una | simul (una cum) */
 
@@ -382,7 +397,8 @@ _membrum_describere (
             m->supra  = FALSUM;
         m->id         = FALSUM;
         m->cum        = FALSUM;
-    m->ablativus      = FALSUM;
+        m->ablativus  = FALSUM;
+    m->nominativus    = FALSUM;
 
     m->una_simul      = FALSUM;
 
@@ -482,9 +498,14 @@ _membrum_describere (
                 {
             m->cum = VERUM;
                 }
-        si (_accidens(lectio, "casus") == (s32)ORATIO_CASUS_ABLATIVUS)
-        {
+                si (_accidens(lectio, "casus")
+                    == (s32)ORATIO_CASUS_ABLATIVUS)
+                {
             m->ablativus = VERUM;
+                }
+        si (_accidens(lectio, "casus") == (s32)ORATIO_CASUS_NOMINATIVUS)
+        {
+            m->nominativus = VERUM;
         }
 
 
@@ -602,6 +623,16 @@ _semina_iudicare (
             m->semen = (s32)SEMEN_NULLUM;   /* una cum: adpositio */
             perge;
                 }
+                        si (   CUM_ABLATIVO_SOLO
+                            && m->semen == (s32)SEMEN_CORROBORANDUM
+                            && m->cum && k + I < n
+                            && membra[k + I].ablativus
+                            && !membra[k + I].nominativus
+                            && !membra[k + I].finita_capax)
+                        {
+            m->semen = (s32)SEMEN_NULLUM;   /* cum + ablativo solo: adpositio */
+            perge;
+                        }
                 si (m->semen == (s32)SEMEN_CORROBORANDUM)
                 {
             b32 exigens = (b32)(m->cum && CUM_SUBIUNCTIVUM

@@ -2553,3 +2553,30 @@ is `case`), so the parameter is `casus_iudicatus`; and the examen
 refused an anonymous `struct` table inside a function, which is
 plain `si` chains now. The pythonica face reads the machine rows by
 position, and the new columns are appended, so nothing there moved.
+
+## 2026-09-08 — T20c law 2: `cum` the conjunction, refuted by census, and the seed rule it pointed at
+
+Law 2 promised to let the clause stamp's decision speak: a `cum` that
+seeded a clause gets its conjunction reading first. The census put
+our seed decision against the gold class for every `cum` on the
+three Latin files. Seneca: 26 aligned, seeded and conjunction 17,
+seeded and preposition 7, unseeded preposition 2 — the law would
+gain 17 and lose 7. The charters: 106 and 124 `cum`, all but four of
+them prepositions, and the stamper seeds 12 and 29 of those
+prepositions (`capo uno cum uno lato tenet`, `casa cum curticella et
+orto`): the law loses 11 and 27. The box-free control, a finite-
+capable word anywhere after `cum`, gains 17 and loses 8 on Seneca and
+loses 103 and 116 on the charters, so the seed decision is worth a
+great deal over the control on the charters and one word on Seneca —
+just not enough to be promoted into a reading.
+
+The census pointed at the seed rule instead: the false seeds have an
+ablative-only word after `cum`. A switch `CUM_ABLATIVO_SOLO` refuses
+the seed when the next word can be ablative, cannot be nominative and
+is not a finite verb. It cuts the false seeds to 3 / 15 and 3, at the
+cost of four Seneca conjunctions whose next word is such an ablative,
+and measured by exact concordance pairs it gains 157 on Seneca and
+1021 on the test charters but loses 312 on the dev charters. Under
+the rule it is refused; the code keeps the switch at off with the
+numbers. On that refined stamp law 2 would still lose on the
+charters (+10, −2, −14). Law 2 is not built. Scratch: `cum_census.py`.
