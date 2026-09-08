@@ -587,6 +587,12 @@ _thesaurus_arborum (
             CREDO_VERUM (census.clausulae_paria > ZEPHYRUM);
             CREDO_VERUM (census.clausulae_paria_concordia
                 >= pinna_concordiae);
+            /* T20b: catena relata - discordiae (ligationes trans clausulas)
+             * numeratae, nihil motum (mensuratum) */
+            imprimere("    catena: discordiae %d  catenatae %d\n",
+                (integer)census.catena_discordiae,
+                (integer)census.catena_catenatae);
+            CREDO_AEQUALIS_I32 (census.catena_catenatae, ZEPHYRUM);
         }
         /* errata clausularum: summa numerorum == positae - rectae */
         {

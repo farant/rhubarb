@@ -17,8 +17,10 @@
    *      SCISSIO verbi (stratum V, T20a bis): Puella cantat puer currit,
  *      Puer currit, puella cantat; subordinata non scissa.
 
- * III. LEGES SUMMAE: causae summa == elementa posita; species summa ==
- *      clausulae; censu resolutionis idem.
+  * III. LEGES SUMMAE: causae summa == elementa posita; species summa ==
+ *      clausulae; censu resolutionis idem; CATENA (T20b) discordiam
+ *      numerat, verbum non movet.
+
 
  * Culpa plantata: 'si' e ORATIO_SEMINA_CERTA sublatum - casus 'si quis'
  * clausulam unam dat, porta RUBRA.
@@ -743,12 +745,34 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (rc.clausulae.species[
             ORATIO_SPECIES_CLAUSULAE_SUBORDINATA], I);
         CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
-        /* cursus alter: stampa idempotens, census sententiarum nullus */
+                /* cursus alter: stampa idempotens, census sententiarum nullus */
         oratio_resolutio_census_vacare(&rc);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, (s32)-I, "latina", doc, &rc));
         CREDO_AEQUALIS_I32 (rc.clausulae.sententiae, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+        /* T20b CATENA: ligatio trans clausulas = discordia numerata,
+         * verbum NON motum (mensuratum: catena extentum non superat) -
+         * Cum puella venisset, bona cantat: caput bonae = puella in
+         * clausula cum, bona in principali (clausura) */
+        doc = _documentum(piscina, &vocabularia,
+            "Cum puella venisset, bona cantat.\n");
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&rc);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &rc));
+                CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+        /* cum initiale: subordinata clausula 0, principalis pigre 1 */
+        CREDO_AEQUALIS_S32 (_clausula(doc, (i32)IV), (s32)I);
+        CREDO_AEQUALIS_S32 (_clausula(doc, I), ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_species(doc, I),
+            (s32)ORATIO_SPECIES_CLAUSULAE_PRINCIPALIS);
+        CREDO_AEQUALIS_S32 (_causa(doc, (i32)IV),
+            (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA);
+        CREDO_VERUM (rc.clausulae.discordiae >= I);
+        CREDO_AEQUALIS_I32 (rc.clausulae.catenatae, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (rc.clausulae.causae[ORATIO_CLAUSULA_CAUSA_CATENA],
+            ZEPHYRUM);
     }
 
     imprimere("\n");

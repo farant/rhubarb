@@ -226,8 +226,13 @@ nomen structura {
      * (Rand): puritas sola segmentationem nimiam praemiat (clausula
      * unius verbi semper pura), numerus solus ordinem non videt -
      * concordia utrumque punit. Mensura decisionum variationum. */
-    i32 clausulae_paria;
-    i32 clausulae_paria_concordia;
+        i32 clausulae_paria;
+        i32 clausulae_paria_concordia;
+    /* T20b: ex censu resolutionis - discordiae (margines ligati trans
+     * clausulas) et catenatae (verba per catenam mota) */
+    i32 catena_discordiae;
+    i32 catena_catenatae;
+
         Xar* errata_clausularum;   /* OratioOraculumErratumClausulae* */
     TabulaDispersa* errata_clausularum_index;
     /* sententiae ostensae (T20a quater): quota (ponenda post vacare;

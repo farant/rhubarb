@@ -529,8 +529,20 @@ Clauses per sentence 2.51 / 2.38 vs 2.52 / 2.25. **T20a sexies
 treebank (102551 / 438519 / 444139 / 104973 / 107344), not truncated
 permille — no boundary luck; the measurement loop reads the machine
 rows (`CLAUSULAE` columns: paria, concordia) and the human line prints
-the gate's permille with the counts. NEXT = T20b catena (chain along
-bindings, discordia count). Head-rule template still open.
+the gate's permille with the counts. **T20b DONE (same day): the
+CHAIN measured and left as a COUNTER** — `oratio_clausulas_propagare`
+(resolver calls it after all stages): a binding whose ends sit in
+different clauses is a DISCORDIA (547 / 1016 / 956 on the Latin files);
+following it was measured four ways (adjacent / any distance × weak
+layers / any) — adjacent moves ~nothing and loses on Seneca, distant
+loses a full percent everywhere: the span is right more often than
+the distant binding, so the discordia is evidence AGAINST the binding
+(= T20c law 3, loose heads inside the box). `catena` places nothing;
+override switch at 0 with the numbers. NEXT = T20c (clause carrier in
+the executor: verb umbra hidden single, `cum` conjunction,
+`cursus="clausulae"` on loose heads — now with 547/1016/956 crossing
+bindings as the first thing to refuse, subject umbra). Head-rule
+template still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

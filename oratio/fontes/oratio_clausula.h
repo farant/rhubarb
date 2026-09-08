@@ -40,7 +40,15 @@
  *       verbum prius et hoc ad novam (ordo verbo finali: verba verbum
  *       suum praecedunt; variatio mensurata) et sequentia usque ad
  *       semen proximum causa VERBUM.
- *   IV  CATENA (T20b): per umbras ligatas, relativo excepto.
+  *   IV  CATENA (T20b, 2026-09-08): post gradus resolutionis, margo
+ *       umbrae ligatae (lectio prima v -> vocabulum w) cuius capita
+ *       clausulis diversis posita sunt DISCORDIA est (numerata);
+ *       verbum cuius stratum DEBILIUS (puritate mensurata: semen >
+ *       unica > extentum > verbum > clausura) ad clausulam socii
+ *       movetur causa CATENA - variationes distantiae et strati
+ *       mensuratae (vide oratio_clausula.c). Ligatio relativi ad
+ *       antecedens excepta (transit limitem iure).
+
  *
  * Verbum finitum CAPAX = lectio Latina verbi aut auxiliaris forma
  * finita (forma-verbi finitum, aut modus indicativus/subiunctivus/
@@ -70,7 +78,12 @@ nomen structura {
     i32 reiecta;         /* candidata corroboranda sine verbo (non semina) */
         i32 clausae_verbo;   /* clausurae per verbum finitum certum */
     i32 clausae_signo;   /* clausurae per interpunctionem */
-    i32 scissae;         /* scissiones verbi (stratum V, asyndeton) */
+        i32 scissae;         /* scissiones verbi (stratum V, asyndeton) */
+    /* stratum IV CATENA (T20b): margines umbrarum ligatarum quorum
+     * capita clausulis diversis posita sunt (discordiae), et verba per
+     * catenam ad clausulam socii mota (catenatae) */
+    i32 discordiae;
+    i32 catenatae;
 } OratioClausulaCensus;
 
 /* DATA seminum (lemmata WORDS, litteris v; NIHIL terminata) */
@@ -100,6 +113,18 @@ oratio_clausula_lectio_finita (
  * memoria sola. */
 b32
 oratio_clausulas_seminare (
+                 Piscina* piscina,
+            MateriaNodus* radix,
+      constans character* lingua,
+    OratioClausulaCensus* census);
+
+/* Stratum IV (T20b): per sententias radicis, margines umbrarum ligatarum
+ * lectionis PRIMAE cuiusque vocabuli legere; discordias numerare et,
+ * per variationem, verbum strati debilioris ad clausulam socii movere
+ * (causa CATENA). Post gradus resolutionis vocanda (ligationes adsunt).
+ * lingua ut supra. FALSUM = memoria sola. */
+b32
+oratio_clausulas_propagare (
                  Piscina* piscina,
             MateriaNodus* radix,
       constans character* lingua,

@@ -1667,9 +1667,14 @@ _sententiam_resolvere (
             redde FALSUM;
                 }
     }
-    /* lex umbrarum, deinde decisiones in arborem (T19g) */
+        /* lex umbrarum, deinde decisiones in arborem (T19g); T20b: catena
+     * clausularum post ligationes omnes (stratum IV) */
     redde _umbris_ordinare(cursus, sententia, explicita, decisiones)
-        && _decisiones_scribere(cursus, sententia, decisiones);
+        && _decisiones_scribere(cursus, sententia, decisiones)
+        && oratio_clausulas_propagare(cursus->piscina, sententia,
+            cursus->lingua,
+            cursus->census != NIHIL ? &cursus->census->clausulae
+                : NIHIL);
 }
 
 interior b32

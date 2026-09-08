@@ -2205,8 +2205,10 @@ _sententiam_iudicare (
     i32 n;
         i32 e_proximum = ZEPHYRUM;
     i32 lingua_index;
-        OratioPartesCensus census_partium;
+            OratioPartesCensus census_partium;
+ OratioResolutioCensus census_resolutionis;   /* T20b: catena */
                   Xar* paria;   /* T20a: ParClausulae */
+
                   s32* cl;
                   b32* fin;
 
@@ -2236,6 +2238,7 @@ _sententiam_iudicare (
             census_partium.vocabula_linguarum);
                 census->sententiae_linguae[lingua_index] =
                     census->sententiae_linguae[lingua_index] + I;
+                oratio_resolutio_census_vacare(&census_resolutionis);
         si (   (   resolutio != NIHIL && resolutio->programma != NIHIL
             && !oratio_resolutio_applicare(scratch, resolutio->intern,
                 resolutio->ratum, resolutio->programma,
@@ -2243,7 +2246,7 @@ _sententiam_iudicare (
                 resolutio->lingua_documenti != NIHIL
                     ? resolutio->lingua_documenti
                     : ORATIO_TITULI_LINGUARUM[lingua_index], doc,
-                NIHIL))
+                &census_resolutionis))
             || !_elementa_colligere(scratch, vocabularia->la, doc,
             elementa))
         {
@@ -2350,6 +2353,11 @@ _sententiam_iudicare (
                             t, VERUM, paria, cl[k]);
                 }
     }
+        /* T20b: discordiae et catenatae ex censu resolutionis */
+    census->catena_discordiae = census->catena_discordiae
+        + census_resolutionis.clausulae.discordiae;
+    census->catena_catenatae = census->catena_catenatae
+        + census_resolutionis.clausulae.catenatae;
     /* T20a: puritas clausularum sententiae (sententia = pater elementi
      * primi) */
     si (xar_numerus(elementa) > ZEPHYRUM)

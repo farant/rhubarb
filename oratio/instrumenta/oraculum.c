@@ -143,12 +143,14 @@ _clausulas_imprimere (
             _pars(c->clausulae_rectae[i], c->clausulae_verba[i]));
     }
             /* ut porta: permille truncatum et numeri exacti (T20a sexies) */
-    imprimere("    concordia parium %d permille - %d de %d paria\n",
-        (integer)(c->clausulae_paria > ZEPHYRUM
+        imprimere("    concordia parium %d permille - %d de %d paria\n",
+            (integer)(c->clausulae_paria > ZEPHYRUM
             ? (s64)c->clausulae_paria_concordia * (s64)1000
                 / (s64)c->clausulae_paria : (s64)ZEPHYRUM),
-        (integer)c->clausulae_paria_concordia,
-        (integer)c->clausulae_paria);
+            (integer)c->clausulae_paria_concordia,
+            (integer)c->clausulae_paria);
+    imprimere("    catena (T20b): discordiae %d  catenatae %d\n",
+        (integer)c->catena_discordiae, (integer)c->catena_catenatae);
     imprimere("    coactio %5.1f%% (%d/%d)  clausulae nostrae %d aureae %d"
         " (%.2f / %.2f per sententiam)  sententiae pares %5.1f%%\n",
         _pars(positae, c->clausulae_iudicata), (integer)positae,
@@ -618,12 +620,16 @@ _machinam_imprimere (
             (integer)c->clausulae_verba[i],
             (integer)c->clausulae_rectae[i]);
     }
-        imprimere("%s\tCLAUSULAE\t%d\t%d\t%d\t%d\t%d\t%d\n", titulus,
-            (integer)c->clausulae_sententiae,
-            (integer)c->clausulae_nostrae,
-            (integer)c->clausulae_aureae, (integer)c->clausulae_pares,
-            (integer)c->clausulae_paria,
-            (integer)c->clausulae_paria_concordia);
+            imprimere("%s\tCLAUSULAE\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+                titulus,
+                (integer)c->clausulae_sententiae,
+                (integer)c->clausulae_nostrae,
+                (integer)c->clausulae_aureae,
+                (integer)c->clausulae_pares,
+                (integer)c->clausulae_paria,
+                (integer)c->clausulae_paria_concordia,
+                (integer)c->catena_discordiae,
+                (integer)c->catena_catenatae);
     si (errata)
     {
         Xar* es = oratio_oraculum_errata_clausularum(piscina, c);

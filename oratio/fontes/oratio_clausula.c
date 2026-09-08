@@ -108,6 +108,35 @@ hic_manens constans b32 CUM_SUBIUNCTIVUM  = VERUM;
  * basis - Senecae XXXIX paria reddit. */
 hic_manens constans b32 CUM_ABLATIVO      = VERUM;
 
+/* STRATUM IV CATENA (T20b, 2026-09-08): MENSURATUM concordia parium
+ * exacta (CIRCSE / LLCT dev / test, basis 102551 / 438519 / 444139):
+ * vicini strata debilia -33 / +17 / -6 (mota V / I / II); vicini
+ * quodvis -39 / +17 / -6; quaevis distantia debilia -1142 / -7363 /
+ * -4926 (mota CCLXV / DCXVII / CDXCV); quaevis omnia -1203 / -7419 /
+ * -4980. Ligationes vicinae limitem fere numquam transeunt (extenta
+ * contigua), remotae saepe (discordiae DXLVII / MXVI / CMLVI) et eas
+ * sequi ubique nocet: catena extentum NON superat - discordia
+ * inventum de LIGATIONE est, non de clausula (lex III T20c: caput
+ * laxum intra capsam). Numeratio sola manet.
+ * CATENA_DISTANTIA: distantia maxima socii ut verbum moveatur (0 =
+ * numquam, discordiae solum numerantur; I = vicini soli; magna =
+ * quaevis). CATENA_DEBILES_SOLAE: verba stratorum clausura/verbum
+ * sola moventur (VERUM) aut quodvis debilius socio (FALSUM). */
+
+hic_manens constans i32 CATENA_DISTANTIA = ZEPHYRUM;
+hic_manens constans b32 CATENA_DEBILES_SOLAE = VERUM;
+/* robur strati per puritatem mensuratam (semen 943-967, unica
+ * 920-999, extentum 900-943, verbum 712-763, clausura 659-738);
+ * index = OratioClausulaCausa; catena numquam iterum movetur */
+hic_manens constans i32 ROBUR_CAUSAE[ORATIO_CLAUSULA_CAUSA_NUMERUS] = {
+    (i32)5,   /* semen */
+    (i32)3,   /* extentum */
+    (i32)1,   /* clausura */
+    ZEPHYRUM, /* catena */
+    (i32)4,   /* unica */
+    (i32)2    /* verbum */
+};
+
 
 /* formae relativae: lemma lectionis pronominis aut determinantis */
 constans character* constans ORATIO_SEMINA_RELATIVA[] = {
@@ -1212,6 +1241,336 @@ _sententiam_seminare (
     }
     piscina_destruere(scratch);
     redde bene;
+}
+
+/* umbrae lectionis PRIMAE vocabuli: ordinales impletionum (w) in
+ * exitus (usque ad maximum); numerus */
+interior i32
+_impletiones_lectionis_primae (
+    constans MateriaNodus* vocabulum,
+                      s32* exitus,
+                      i32  maximum)
+{
+    constans MateriaValor* analyses =
+        &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    constans MateriaValor* prima;
+    constans MateriaNodus* lectio;
+            OratioClassis  classis;
+                      s32  locus;
+    constans MateriaValor* umbrae;
+                      i32  n;
+                      i32  u;
+                      i32  numerus = ZEPHYRUM;
+
+    si (   analyses->genus                        != MATERIA_VALOR_LISTA
+        || materia_valor_lista_numerus(*analyses) == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    prima = materia_valor_lista_obtinere(*analyses, ZEPHYRUM);
+    si (prima == NIHIL || prima->genus != MATERIA_VALOR_NODUS)
+    {
+        redde ZEPHYRUM;
+    }
+    lectio   = prima->datum.nodus;
+    classis  = oratio_genus_classis((OratioGenus)lectio->genus);
+    si (classis >= ORATIO_CLASSIS_NUMERUS_CLASSIUM)
+    {
+        redde ZEPHYRUM;
+    }
+    locus = oratio_partes_locus(classis, "umbrae");
+    si (   locus < ZEPHYRUM || (i32)locus >= lectio->numerus_locorum
+        || lectio->loci[locus].genus != MATERIA_VALOR_LISTA)
+    {
+        redde ZEPHYRUM;
+    }
+    umbrae  = &lectio->loci[locus];
+    n       = materia_valor_lista_numerus(*umbrae);
+    per (u = ZEPHYRUM; u < n && numerus < maximum; u++)
+    {
+        constans MateriaValor* v = materia_valor_lista_obtinere(*umbrae,
+            u);
+        constans MateriaValor* w;
+
+        si (v == NIHIL || v->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        w = &v->datum.nodus->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
+        si (   w->genus       == MATERIA_VALOR_INDEX
+            && w->datum.index >= ZEPHYRUM)
+        {
+            exitus[numerus]  = w->datum.index;
+            numerus          = numerus + I;
+        }
+    }
+    redde numerus;
+}
+
+/* an elementum semen clausulae relativae sit (ligatio ad antecedens
+ * limitem iure transit) */
+interior b32
+_relativum_semen (
+    constans MateriaNodus* sententia,
+                      s32  clausula,
+                      s32  causa,
+                      i32  k)
+{
+    constans MateriaValor* clausulae =
+        &sententia->loci[ORATIO_SENTENTIA_CLAUSULAE];
+    constans MateriaValor* v;
+    constans MateriaNodus* nodus;
+
+    si (   causa            != (s32)ORATIO_CLAUSULA_CAUSA_SEMEN
+        || clausula < ZEPHYRUM
+        || clausulae->genus != MATERIA_VALOR_LISTA
+        || (i32)clausula    >= materia_valor_lista_numerus(*clausulae))
+    {
+        redde FALSUM;
+    }
+    v = materia_valor_lista_obtinere(*clausulae, (i32)clausula);
+    si (v == NIHIL || v->genus != MATERIA_VALOR_NODUS)
+    {
+        redde FALSUM;
+    }
+    nodus = v->datum.nodus;
+    redde (b32)(   nodus->loci[ORATIO_CLAUSULA_SPECIES].genus
+                    == MATERIA_VALOR_INDEX
+                && nodus->loci[ORATIO_CLAUSULA_SPECIES].datum.index
+                    == (s32)ORATIO_SPECIES_CLAUSULAE_RELATIVA
+                && nodus->loci[ORATIO_CLAUSULA_SEMEN].genus
+                    == MATERIA_VALOR_INDEX
+                && nodus->loci[ORATIO_CLAUSULA_SEMEN].datum.index
+                    == (s32)k);
+}
+
+#define IMPLETIONES_MAXIMAE 8
+
+interior b32
+_sententiam_propagare (
+                 Piscina* piscina,
+            MateriaNodus* sententia,
+    OratioClausulaCensus* census)
+{
+    constans MateriaValor* elementa =
+        &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
+                 Piscina* scratch;
+                     s32* clausula;
+                     s32* causa;
+            MateriaNodus** nodi;
+                     i32  n;
+                     i32  k;
+
+    si (   sententia->loci[ORATIO_SENTENTIA_CLAUSULAE].genus
+            == MATERIA_VALOR_NIHIL
+        || elementa->genus != MATERIA_VALOR_LISTA)
+    {
+        redde VERUM;   /* non stampata */
+    }
+    n = materia_valor_lista_numerus(*elementa);
+    si (n == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    scratch = piscina_generare_dynamicum("oratio_clausula_catena",
+        262144);
+    si (scratch == NIHIL)
+    {
+        redde FALSUM;
+    }
+    clausula = (s32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(s32));
+    causa    = (s32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(s32));
+    nodi     = (MateriaNodus**)piscina_allocare(scratch,
+        (memoriae_index)n * (memoriae_index)magnitudo(MateriaNodus*));
+    si (clausula == NIHIL || causa == NIHIL || nodi == NIHIL)
+    {
+        piscina_destruere(scratch);
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans MateriaValor* v =
+            materia_valor_lista_obtinere(*elementa,
+            k);
+        s32 locus;
+        s32 locus_causae;
+
+        clausula[k]  = (s32)-I;
+        causa[k]     = (s32)-I;
+        nodi[k]      = NIHIL;
+        si (v == NIHIL || v->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        nodi[k]       = v->datum.nodus;
+        locus         =
+            oratio_locus_clausulae((OratioGenus)nodi[k]->genus,
+            FALSUM);
+        locus_causae  =
+            oratio_locus_clausulae((OratioGenus)nodi[k]->genus,
+            VERUM);
+        si (   locus                      >= ZEPHYRUM
+            && nodi[k]->loci[locus].genus == MATERIA_VALOR_INDEX)
+        {
+            clausula[k] = nodi[k]->loci[locus].datum.index;
+        }
+        si (   locus_causae                      >= ZEPHYRUM
+            && nodi[k]->loci[locus_causae].genus == MATERIA_VALOR_INDEX)
+        {
+            causa[k] = nodi[k]->loci[locus_causae].datum.index;
+        }
+    }
+    /* margines: lectio prima v -> socius w */
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        s32 socii[IMPLETIONES_MAXIMAE];
+        i32 numerus;
+        i32 s;
+
+        si (   nodi[k]        == NIHIL
+            || nodi[k]->genus != (s32)ORATIO_GENUS_VOCABULUM
+            || clausula[k] < ZEPHYRUM)
+        {
+            perge;
+        }
+        numerus = _impletiones_lectionis_primae(nodi[k], socii,
+            (i32)IMPLETIONES_MAXIMAE);
+        per (s = ZEPHYRUM; s < numerus; s++)
+        {
+            i32 w = (i32)socii[s];
+            i32 distantia;
+            i32 debile;
+            i32 forte;
+
+            si (   w           >= n || clausula[w] < ZEPHYRUM
+                || clausula[w] == clausula[k])
+            {
+                perge;
+            }
+            /* relativum ad antecedens: limes iure */
+            si (   _relativum_semen(sententia, clausula[k], causa[k], k)
+                || _relativum_semen(sententia, clausula[w], causa[w],
+                w))
+            {
+                perge;
+            }
+            si (census != NIHIL)
+            {
+                census->discordiae = census->discordiae + I;
+            }
+            distantia = w > k ? w - k : k - w;
+            si (   CATENA_DISTANTIA == ZEPHYRUM
+                || distantia > (i32)CATENA_DISTANTIA)
+            {
+                perge;
+            }
+            /* debilius movetur ad fortius; paria non moventur */
+            {
+                i32 robur_k = causa[k] >= ZEPHYRUM
+                    && causa[k] < (s32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+                    ? ROBUR_CAUSAE[causa[k]] : ZEPHYRUM;
+                i32 robur_w = causa[w] >= ZEPHYRUM
+                    && causa[w] < (s32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+                    ? ROBUR_CAUSAE[causa[w]] : ZEPHYRUM;
+
+                si (   robur_k == robur_w || robur_k == ZEPHYRUM
+                    || robur_w == ZEPHYRUM)
+                {
+                    perge;
+                }
+                debile  = robur_k < robur_w ? k : w;
+                forte   = robur_k < robur_w ? w : k;
+            }
+            si (   CATENA_DEBILES_SOLAE
+                && causa[debile] != (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA
+                && causa[debile] != (s32)ORATIO_CLAUSULA_CAUSA_VERBUM)
+            {
+                perge;
+            }
+            {
+                s32 locus = oratio_locus_clausulae(
+                    (OratioGenus)nodi[debile]->genus, FALSUM);
+                s32 locus_causae = oratio_locus_clausulae(
+                    (OratioGenus)nodi[debile]->genus, VERUM);
+
+                si (   !materia_nodus_reponere(nodi[debile], (i32)locus,
+                        materia_valor_index(clausula[forte]),
+                        MATERIA_LOCUS_INDEX)
+                    || !materia_nodus_reponere(nodi[debile],
+                        (i32)locus_causae,
+                        materia_valor_index(
+                            (s32)ORATIO_CLAUSULA_CAUSA_CATENA),
+                        MATERIA_LOCUS_INDEX))
+                {
+                    piscina_destruere(scratch);
+                    redde FALSUM;
+                }
+                clausula[debile]  = clausula[forte];
+                causa[debile]     = (s32)ORATIO_CLAUSULA_CAUSA_CATENA;
+                si (census != NIHIL)
+                {
+                    census->catenatae = census->catenatae + I;
+                }
+            }
+        }
+    }
+    (vacuum)piscina;
+    piscina_destruere(scratch);
+    redde VERUM;
+}
+
+b32
+oratio_clausulas_propagare (
+                 Piscina* piscina,
+            MateriaNodus* radix,
+      constans character* lingua,
+    OratioClausulaCensus* census)
+{
+    constans MateriaValor* lista;
+                      i32  n;
+                      i32  k;
+
+    si (   radix == NIHIL
+        || (lingua != NIHIL && strcmp(lingua, "anglica") == ZEPHYRUM))
+    {
+        redde VERUM;   /* documentum Anglicum: sine catena (unicum) */
+    }
+    si (radix->genus == (s32)ORATIO_GENUS_SENTENTIA)
+    {
+        redde _sententiam_propagare(piscina, radix, census);
+    }
+    si (radix->genus == (s32)ORATIO_GENUS_DOCUMENTUM)
+    {
+        lista = &radix->loci[ORATIO_DOCUMENTUM_PARAGRAPHI];
+    }
+    alioquin si (radix->genus == (s32)ORATIO_GENUS_PARAGRAPHUS)
+    {
+        lista = &radix->loci[ORATIO_PARAGRAPHUS_SENTENTIAE];
+    }
+    alioquin
+    {
+        redde VERUM;
+    }
+    si (lista->genus != MATERIA_VALOR_LISTA)
+    {
+        redde VERUM;
+    }
+    n = materia_valor_lista_numerus(*lista);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(*lista,
+            k);
+
+        si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
+            && !oratio_clausulas_propagare(piscina, e->datum.nodus,
+                lingua, census))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 vacuum

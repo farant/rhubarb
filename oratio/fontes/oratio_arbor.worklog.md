@@ -2212,3 +2212,27 @@ a tolerance is ever needed, the right one is a sentence-level
 comparison (how many sentences improved against how many worsened),
 which distinguishes noise from a real minority class; it is not
 built.
+
+## 2026-09-08 — T20b: the chain layer, measured and left as a counter
+
+The design had the chain layer fill open words along bound umbrae.
+There are no open words: the span layers place everything, so the
+chain could only count discordiae, bindings whose two ends sit in
+different clauses, and the real question was the override: should
+the weaker placement follow the binding? The strength of a placement
+is its layer's measured purity, so semen, unica, extentum, verbum,
+clausura in that order, and the weaker end moves to the stronger's
+clause. Four variants against the count-only base, in exact pairs:
+adjacent bindings move almost nothing, five words on Seneca, one and
+two on the charters, and lose 33 pairs on Seneca; any-distance
+bindings move 265 to 624 words per file and lose a full percent
+everywhere. Adjacent bindings do not cross clauses because spans are
+contiguous; distant bindings cross them 547 / 1016 / 956 times and are
+wrong more often than the span is. The layer stays as a counter with
+the override at zero, the reason `catena` exists in the enumeration
+and places nothing, and the discordia count is now read the other
+way: a binding that crosses our box is evidence against the binding.
+That is law 3 of T20c, the loose head rules confined to the clause,
+which the T19g bis listing already wanted when it found distant head
+bindings at 33 to 70 percent. The oracle reports the counts; nothing
+is pinned on them.

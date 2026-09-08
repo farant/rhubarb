@@ -1524,7 +1524,27 @@ pinned decision measure. Gate: `una cum`, `quantum` hand cases.
 T20a sexies (Fran): the concordance pins are the EXACT concordant
 pair counts, not truncated permille (a 39-pair loss was visible or
 not depending on where the truncation boundary fell); the loop reads
-the machine rows. NEXT: T20b.
+the machine rows.
+
+**As built — T20b, the chain layer (2026-09-08, same session).** The
+span layers leave no open word, so the chain could only count and
+override. `oratio_clausulas_propagare`, called by the resolver after
+all stages, reads the bound umbrae of every word's first reading; an
+edge whose ends are placed in different clauses is a DISCORDIA (the
+relative's binding to its antecedent excepted); the override moves
+the end whose layer is weaker by measured purity (semen > unica >
+extentum > verbum > clausura) into the other's clause with reason
+`catena`. Measured in exact pairs against the count-only base
+(102551 / 438519 / 444139): adjacent bindings, weak layers only, −33
+/ +17 / −6 moving 5 / 1 / 2 words; adjacent any layer −39 / +17 / −6;
+any distance −1142 / −7363 / −4926 moving 265 / 617 / 495; any
+distance any layer −1203 / −7419 / −4980. Adjacent bindings do not
+cross clauses (spans are contiguous); distant ones cross 547 / 1016 /
+956 times and are wrong more often than the span. DECISION: the chain
+stays a counter (override at zero, numbers recorded), `catena` places
+nothing, and a crossing binding is read as evidence against the
+BINDING — law 3 of T20c. The oracle reports discordiae and catenatae;
+the gate asserts catenatae == 0. NEXT: T20c.
 
 ## 8. Stage 6 — search
 
