@@ -608,8 +608,12 @@ principale (vacuum)
             "umbra-obiectum-ablativi");
 
 
-        CREDO_AEQUALIS_S32 (auxiliare_la, ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (auxiliare_en, (s32)I);
+        /* T19e: regulae Anglicae testimonii IV in capite (exceptio a,
+         * nomen proprium capitale, umbrae verbi II) ANTE priores */
+        CREDO_AEQUALIS_S32 (_index_regulae(programma,
+            "a-determinans-anglicum"), ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (auxiliare_la, (s32)IV);
+        CREDO_AEQUALIS_S32 (auxiliare_en, (s32)V);
         CREDO_VERUM (supra >= ZEPHYRUM && adpositio_la > supra);
         CREDO_VERUM (subordinans_la > adpositio_la
             && numerale_en > subordinans_la);
@@ -618,8 +622,12 @@ principale (vacuum)
                     && ablativum > accusativum);
         /* T19d beta: regulae capitis XIV (gradus II) post umbras
          * obiecti (gradus I); gradus lectus ex attributo, absens = I */
-        CREDO_AEQUALIS_S32 (ablativum, (s32)XIV);
-        CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae), (i32)XXIX);
+        /* T19e: regulae Anglicae IV in capite (exceptio a, nomen
+         * proprium capitale, umbrae verbi II) + prior contractionum:
+         * gradus I = XIX regulae (0..XVIII) */
+        CREDO_AEQUALIS_S32 (ablativum, (s32)XVIII);
+        CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
+            (i32)XXXIII);
         {
             i32 k;
 
@@ -629,13 +637,13 @@ principale (vacuum)
                     (constans OratioRegula*)xar_obtinere(
                     programma->regulae, k);
 
-                CREDO_AEQUALIS_I32 (r->gradus, k <= (i32)XIV ? I
+                CREDO_AEQUALIS_I32 (r->gradus, k <= (i32)XVIII ? I
                     : (i32)II);
             }
             {
                 constans OratioRegula* prima =
                     (constans OratioRegula*)xar_obtinere(
-                    programma->regulae, (i32)XV);
+                    programma->regulae, (i32)XIX);
 
                 CREDO_VERUM (_aequalis(prima->titulus,
                     "umbra-caput-nominativus-sequente"));
@@ -1338,7 +1346,12 @@ principale (vacuum)
                     impletae = impletae + I;
                 }
             }
-            CREDO_AEQUALIS_I32 (impletae, I);
+            /* T19e: 'die' per regulam linguae EXPLICITE Anglicum
+             * decisum - lex implentis intra gradum umbram Latinam
+             * vacuam relinquit (ordo repetitus), 'a' determinans
+             * manet */
+            CREDO_AEQUALIS_I32 (impletae, ZEPHYRUM);
+            CREDO_VERUM (census.repetitae >= I);
         }
         /* remissio indicum: hoc templum - lectio determinantis
          * ACCUSATIVA secunda, umbra eius in lectionem templi
@@ -1393,6 +1406,97 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (discordes, ZEPHYRUM);
             CREDO_VERUM (census.umbris_ordinata >= I);
         }
+    }
+
+    imprimere("\n--- VIII. Anglica: nomen proprium capitale, umbrae "
+        "per classem (T19e) ---\n");
+    {
+           OratioPartesCensus census_partium;
+        OratioResolutioCensus census;
+                 MateriaNodus* doc;
+                 MateriaNodus* verbum;
+        constans MateriaNodus* lectio;
+                          i32  a;
+
+        /* Debra initiale substantivum manet (exclusum), Bush nomen
+         * proprium; 'to the' adpositio (umbra particulae vacua), 'to
+         * buy' particula umbra verbo proximo impleta, buy verbum */
+        doc = _documentum(piscina, &vocabularia,
+            "Debra saw Bush go to the store to buy food.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, (i32)II),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_NOMEN_PROPRIUM);
+        verbum = _vocabulum(doc, (i32)IV);
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_ADPOSITIO);
+        per (a = ZEPHYRUM; a < _numerus_analysium(verbum); a++)
+        {
+            si (_classis_analysis(verbum, a)
+                == (s32)ORATIO_CLASSIS_PARTICULA)
+            {
+                lectio = _analysis(verbum, a);
+                CREDO_AEQUALIS_S32 (_umbra_index(lectio, ZEPHYRUM,
+                    (i32)ORATIO_UMBRA_CLASSIS),
+                    (s32)ORATIO_CLASSIS_VERBUM);
+                CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio,
+                    ZEPHYRUM), (s32)-I);
+            }
+        }
+        verbum = _vocabulum(doc, (i32)VII);
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_PARTICULA);
+        lectio = _analysis(verbum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
+            (s32)VIII);
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc,
+            (i32)VIII),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_VERBUM);
+        CREDO_VERUM (census.impletae >= I);
+        /* have + been: auxiliare (implens auxiliare verum ante verbum:
+         * been auxiliare manet) */
+        doc = _documentum(piscina, &vocabularia,
+            "We have been there.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_AUXILIARE);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(_analysis(
+            _vocabulum(doc, I), ZEPHYRUM), ZEPHYRUM), (s32)II);
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, (i32)II),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_AUXILIARE);
+        /* have a car: 'a' determinans per exceptionem (explicita) -
+         * lectio verbi Moby 'a' umbram 'have' non implet (lex implentis
+         * intra gradum), have verbum per regulam linguae */
+        doc = _documentum(piscina, &vocabularia, "I have a car.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_VERBUM);
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, (i32)II),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_DETERMINANS);
+        CREDO_VERUM (census.repetitae >= I);
+        /* contractio: It's auxiliare per priorem contractionum, numquam
+         * nomen proprium (regula capitalis: lectio pronominis) */
+        doc = _documentum(piscina, &vocabularia, "It's done.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_AUXILIARE);
     }
 
     imprimere("\n");

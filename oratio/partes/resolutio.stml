@@ -51,6 +51,102 @@
      nativum, sensus, accidentia) - lemma ante linguam scribatur, aliter
      forma tacite numquam congruit (supra/a primo mensurata 0). -->
 
+<!-- T19e (2026-09-07): regulae ANGLICAE TESTIMONII ante regulas priorum
+     classium omnes (prima vincit: prior adpositionis 'to' adpositionem
+     decidebat antequam umbra particulae verbo proximo impleretur -
+     particulae LXX -> XV % mensuratum; testimonium ante defaltum). Lectio
+     Anglica casu caret: umbrae per CLASSEM (annotator: determinans caput
+     substantivum; 'to' particula et have/do auxiliaria - listae ambiguae,
+     titulis suis, regulae priorum caecae - obiectum verbum), cursus
+     STRICTUS (vicinus solus: 'to the store to buy' - to adpositio, to
+     particula). Nomen proprium capitale: vocabulum NON primum sententiae
+     cum lectione 'capitalis' (regula T16). -->
+<regula titulus="a-determinans-anglicum">
+  <!-- EXCEPTIO ante regulas umbrarum et adpositionem: articulus 'a' apud Moby
+       etiam praepositio et VERBUM (a DNVP: twice a day; have a car - umbra
+       verbi 'have' per lectionem verbi 'a' impleretur, T19e) - EWT DET CDXCII;
+       lectio determinantis lemmatis a prima; lex implentis intra gradum
+       (vocabulum iam decisum lectione alia non implet) umbram 'have' vacuam
+       relinquit -->
+  <EXEMPLAR output="$sent_a">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_a" output="$lect_a">
+    <vocabulum n="$v"><analyses>
+      <analysis-determinantis n="$a"><lemma><or-derivatum>a</or-derivatum></lemma><lingua>1</lingua></analysis-determinantis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_a">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="a-determinans-anglicum"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="nomen-proprium-capitale-anglicum">
+  <!-- EWT dev PROPN MDCCCLXVII aurea, XIX % primae ante (Moby Bush/Debra/Israel substantiva novit); initiale sententiae exclusum (Thanks, Store): elementum quodlibet ANTE -->
+  <EXEMPLAR output="$sent_proprium_anglicum">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_proprium_anglicum" cursus="strictus" output="$lect_proprium_anglicum">
+    <elementa>
+      <* n="$ante"/>
+      <vocabulum n="$v"><analyses>
+        <analysis-nominis-proprii n="$a"><nativum><or-derivatum>capitalis</or-derivatum></nativum></analysis-nominis-proprii>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_proprium_anglicum">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="nomen-proprium-capitale-anglicum"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="umbra-obiectum-auxiliaris-anglicum">
+  <!-- have been / had been: implens auxiliare verum (titulus 'auxiliaria') ANTE regulam implentis verbi, ne lectio verbi 'been' praeferatur (EWT dev been AUX XXXII) -->
+  <EXEMPLAR output="$sent_obiectum_auxiliaris">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_obiectum_auxiliaris" cursus="strictus" output="$impl_obiectum_auxiliaris">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><lingua>1</lingua><umbrae><umbra n="$u"><relatio>0</relatio><classis>2</classis></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <analysis-auxiliaris n="$b"><lingua>1</lingua><nativum><or-derivatum>auxiliaria</or-derivatum></nativum></analysis-auxiliaris>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$impl_obiectum_auxiliaris">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-obiectum-auxiliaris-anglicum"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="umbra-obiectum-verbi-anglicum">
+  <!-- carrier: lectio Anglica cum umbra obiecti classis verbum (to particula CXCVI adpositio aurea ante; have/do verbum CLXXXVIII aurea ante); implens: lectio verbi Anglica vocabuli PROXIMI -->
+  <EXEMPLAR output="$sent_obiectum_verbi">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_obiectum_verbi" cursus="strictus" output="$impl_obiectum_verbi">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><lingua>1</lingua><umbrae><umbra n="$u"><relatio>0</relatio><classis>2</classis></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <analysis-verbi n="$b"><lingua>1</lingua></analysis-verbi>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$impl_obiectum_verbi">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-obiectum-verbi-anglicum"/>
+    </PER>
+  </consilium>
+</regula>
+
 <regula titulus="auxiliare-primum-latinum">
   <!-- sum: UD AUX (copula, passivum periphrasticum); CIRCSE CLXVIII / LLCT DX / CDXLII aurea, 0 prima ante -->
   <EXEMPLAR output="$sent_auxiliare_primum_latinum">
@@ -75,12 +171,29 @@
   </EXEMPLAR>
   <EXEMPLAR de="$sent_auxiliare_primum_anglicum" output="$lect_auxiliare_primum_anglicum">
     <vocabulum n="$v"><analyses>
-      <analysis-auxiliaris n="$a"><lingua>1</lingua></analysis-auxiliaris>
+      <analysis-auxiliaris n="$a"><lingua>1</lingua><nativum><or-derivatum>auxiliaria</or-derivatum></nativum></analysis-auxiliaris>
     </analyses></vocabulum>
   </EXEMPLAR>
   <consilium>
     <PER congruentia="$lect_auxiliare_primum_anglicum">
       <praelatio vocabulum="&@v;" analysis="&@a;" regula="auxiliare-primum-anglicum"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="auxiliare-contractum-anglicum">
+  <!-- T19e: lectiones auxiliares CONTRACTIONUM ('s 'm 'll 're 've 'd: regulae Moby, fons vocabularium-en, nativum 'r contractio-...') - titulo 'auxiliaria' carent (lista), have/do ambigua fonte 'regula' sunt: fons I = vocabularium-en eas solas seligit -->
+  <EXEMPLAR output="$sent_auxiliare_contractum">
+    <sententia lingua="anglica"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_auxiliare_contractum" output="$lect_auxiliare_contractum">
+    <vocabulum n="$v"><analyses>
+      <analysis-auxiliaris n="$a"><lingua>1</lingua><fons>1</fons></analysis-auxiliaris>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_auxiliare_contractum">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="auxiliare-contractum-anglicum"/>
     </PER>
   </consilium>
 </regula>
@@ -109,7 +222,7 @@
   </EXEMPLAR>
   <EXEMPLAR de="$sent_particula_prima_anglica" output="$lect_particula_prima_anglica">
     <vocabulum n="$v"><analyses>
-      <analysis-particulae n="$a"><lingua>1</lingua></analysis-particulae>
+      <analysis-particulae n="$a"><lingua>1</lingua><nativum><or-derivatum>particulae</or-derivatum></nativum></analysis-particulae>
     </analyses></vocabulum>
   </EXEMPLAR>
   <consilium>
@@ -152,25 +265,6 @@
   <consilium>
     <PER congruentia="$lect_adpositio_prima_latina">
       <praelatio vocabulum="&@v;" analysis="&@a;" regula="adpositio-prima-latina"/>
-    </PER>
-  </consilium>
-</regula>
-
-<regula titulus="a-determinans-anglicum">
-  <!-- EXCEPTIO ante adpositionem: articulus 'a' apud Moby etiam
-       praepositio (twice a day) - EWT DET CDXCII sub regula adpositionis
-       perdita; lectio determinantis lemmatis a prima -->
-  <EXEMPLAR output="$sent_a">
-    <sententia lingua="anglica"/>
-  </EXEMPLAR>
-  <EXEMPLAR de="$sent_a" output="$lect_a">
-    <vocabulum n="$v"><analyses>
-      <analysis-determinantis n="$a"><lemma><or-derivatum>a</or-derivatum></lemma><lingua>1</lingua></analysis-determinantis>
-    </analyses></vocabulum>
-  </EXEMPLAR>
-  <consilium>
-    <PER congruentia="$lect_a">
-      <praelatio vocabulum="&@v;" analysis="&@a;" regula="a-determinans-anglicum"/>
     </PER>
   </consilium>
 </regula>

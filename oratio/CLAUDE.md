@@ -358,10 +358,27 @@ Instruments: `verba.sh -analyses` column `umbrae`
 `silva.Oratio.analyses()[i].umbrae`), `oraculum.sh -regulae -ab N`
 (table from rule N). FINDINGS: "no object" evidence needs
 unknown-case fillers first; "nearest" needs the `strictus` door;
-two filled readings still tie by rule order. NEXT: unknown-case
-fillers (proper names, ignota) as object fillers, then the
-demotion re-measured; English object umbrae (`to` + verb, `have` +
-participle); the `strictus`/nearest door.
+two filled readings still tie by rule order. **T19e — ENGLISH BY EVIDENCE** (same evening): the pattern
+engine's `cursus="strictus"` built (commit 0c7f133f; adjacency),
+then: `nomen-proprium-capitale-anglicum` (a capitalized word after
+any element, by the capital rule's reading; contractions excluded
+from the capital rule via their pronoun reading; EWT proper nouns
+19 → 64 %); class umbrae on English readings — `to`'s particle and
+have/do's auxiliary readings (moved to `*-ambigua` lists with their
+own title) carry an object umbra `classis` verbum filled strictly by
+the next word's verb (auxiliary filler first: `have been`), no fill
+→ the language rule's Moby-first (`to` adposition 89 → 99 %, have
+verb); a contraction prior by `fons` for `'s 'm 'll`; all evidence
+rules BEFORE the class priors (first wins: a prior had decided `to`
+before its umbra could fill). Executor: within a stage an
+EXPLICITLY decided filler word is not re-read (`have a car`: Moby
+codes `a` as a verb); structural same-stage decisions do not block
+(measured). Dropped after measuring: determiner head umbra (Moby's
+noun readings of `is`/`it's`), distant-verb variant for have/do.
+EWT 75.3 / 75.5 → 78.6 / 79.0 (pins 786 / 789), Latin and coverage
+unchanged; 33 rules. NEXT: unknown-case fillers (proper names,
+ignota) then the demotion re-measured; Latin determiners from the
+listing; sentence-initial proper nouns; `there is`; verb slots.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

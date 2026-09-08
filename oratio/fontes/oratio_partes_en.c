@@ -6,11 +6,17 @@
 #include <string.h>
 
 constans character* constans ORATIO_AUXILIARIA_EN[] = {
-    "be", "am", "is", "are", "was", "were", "been", "being",
-    "have", "has", "had", "having", "do", "does", "did", "done",
-        "doing",
+    "be", "am", "is", "are", "was", "were", "been", "being", "having",
     "will", "would", "shall", "should", "can", "could", "may", "might",
     "must", "ought", NIHIL
+};
+/* have/do (T19e, 2026-09-07): auxiliare cum participio (have been),
+ * verbum principale aliter (have a car, have to go - EWT dev VERBUM
+ * haue XCVI, do XXXV, had XXXII, has XXV aurea, auxiliare prima ante):
+ * lectio auxiliaris titulo 'auxiliaria-ambigua' cum umbra obiecti
+ * classis verbum - verbum proximum decidit */
+constans character* constans ORATIO_AUXILIARIA_AMBIGUA_EN[] = {
+    "have", "has", "had", "do", "does", "did", NIHIL
 };
 constans character* constans ORATIO_SUBORDINANTES_EN[] = {
     "that", "because", "since", "if", "although", "though", "while",
@@ -24,7 +30,12 @@ constans character* constans ORATIO_SUBORDINANTES_AMBIGUA_EN[] = {
 };
 
 constans character* constans ORATIO_PARTICULAE_EN[] = {
-    "to", "not", NIHIL
+    "not", NIHIL
+};
+/* to (T19e): particula ante verbum (to go), adpositio aliter (to the
+ * store - EWT dev ADP CXCVI aurea, particula prima ante) */
+constans character* constans ORATIO_PARTICULAE_AMBIGUAE_EN[] = {
+    "to", NIHIL
 };
 constans character* constans ORATIO_NUMERALIA_EN[] = {
     "zero", "one", "two", "three", "four", "five", "six", "seven",
@@ -548,6 +559,18 @@ oratio_partes_en_secundariae (
     si (   _in_lista(plicata, ORATIO_INTERIECTIONES_AMBIGUAE_EN)
         && !_secundaria(piscina, exitus, ORATIO_CLASSIS_INTERIECTIO,
             plicata, "interiectiones-ambiguae"))
+    {
+        redde FALSUM;
+    }
+    si (   _in_lista(plicata, ORATIO_AUXILIARIA_AMBIGUA_EN)
+        && !_secundaria(piscina, exitus, ORATIO_CLASSIS_AUXILIARE,
+            plicata, "auxiliaria-ambigua"))
+    {
+        redde FALSUM;
+    }
+    si (   _in_lista(plicata, ORATIO_PARTICULAE_AMBIGUAE_EN)
+        && !_secundaria(piscina, exitus, ORATIO_CLASSIS_PARTICULA,
+            plicata, "particulae-ambiguae"))
     {
         redde FALSUM;
     }

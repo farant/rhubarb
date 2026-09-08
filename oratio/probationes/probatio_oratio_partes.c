@@ -796,6 +796,93 @@ principale (vacuum)
             /* bona: NOM/ABL/VOC S F, NOM/ACC/VOC P N */
             CREDO_VERUM (capita >= (i32)VI);
         }
+        /* ANGLICA (T19e): umbrae per CLASSEM - 'to' particula (lista
+         * ambigua) umbram obiecti classis verbum fert, sine casu;
+         * adpositio Anglica sine umbra; regula capitalis: It's
+         * (contractio pronominis) sine lectione capitali, Bush cum */
+        {
+            constans character* fons_e = "It's time to go, Bush.\n";
+                  MateriaNodus* doc_e = oratio_arbor_parsare(piscina,
+                      fons_e, (i32)strlen(fons_e));
+            OratioPartesCensus census_e;
+            MateriaNodus* ad;
+            MateriaNodus* contractum;
+            MateriaNodus* capitale;
+            constans MateriaValor* analyses_e;
+                              i32  j;
+                              i32  particulae = ZEPHYRUM;
+                              i32  propria    = ZEPHYRUM;
+
+            CREDO_NON_NIHIL (doc_e);
+            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+                doc_e, &census_e));
+            ad = _vocabulum(doc_e, ZEPHYRUM, ZEPHYRUM, (i32)II);
+            contractum = _vocabulum(doc_e, ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM);
+            capitale = _vocabulum(doc_e, ZEPHYRUM, ZEPHYRUM, (i32)V);
+            CREDO_NON_NIHIL (ad);
+            analyses_e = &ad->loci[ORATIO_VOCABULUM_ANALYSES];
+            per (j = ZEPHYRUM;
+                 j < materia_valor_lista_numerus(*analyses_e); j++)
+            {
+                constans MateriaNodus* a = materia_valor_lista_obtinere(
+                    *analyses_e, j)->datum.nodus;
+                constans MateriaValor* umbrae;
+                constans MateriaNodus* umbra;
+                                  s32  locus;
+
+                si (a->loci[ORATIO_ANALYSIS_LINGUA].datum.index
+                    != (s32)ORATIO_LINGUA_ANGLICA)
+                {
+                    perge;
+                }
+                locus = oratio_partes_locus(oratio_genus_classis(
+                    (OratioGenus)a->genus), "umbrae");
+                si (a->genus != (s32)ORATIO_GENUS_ANALYSIS_PARTICULAE)
+                {
+                    CREDO_VERUM (locus < ZEPHYRUM
+                        || a->loci[locus].genus == MATERIA_VALOR_NIHIL);
+                    perge;
+                }
+                umbrae = &a->loci[locus];
+                CREDO_AEQUALIS_S32 ((s32)umbrae->genus,
+                    (s32)MATERIA_VALOR_LISTA);
+                umbra = materia_valor_lista_obtinere(*umbrae,
+                    ZEPHYRUM)->datum.nodus;
+                CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_RELATIO]
+                    .datum.index, (s32)ORATIO_RELATIO_OBIECTUM);
+                CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_CLASSIS]
+                    .datum.index, (s32)ORATIO_CLASSIS_VERBUM);
+                CREDO_AEQUALIS_S32 ((s32)umbra->loci[ORATIO_UMBRA_CASUS]
+                    .genus, (s32)MATERIA_VALOR_NIHIL);
+                particulae = particulae + I;
+            }
+            CREDO_AEQUALIS_I32 (particulae, I);
+            analyses_e = &contractum->loci[ORATIO_VOCABULUM_ANALYSES];
+            per (j = ZEPHYRUM;
+                 j < materia_valor_lista_numerus(*analyses_e); j++)
+            {
+                CREDO_VERUM (materia_valor_lista_obtinere(*analyses_e,
+                    j)->datum.nodus->genus
+                    != (s32)ORATIO_GENUS_ANALYSIS_NOMINIS_PROPRII);
+            }
+            analyses_e = &capitale->loci[ORATIO_VOCABULUM_ANALYSES];
+            per (j = ZEPHYRUM;
+                 j < materia_valor_lista_numerus(*analyses_e); j++)
+            {
+                constans MateriaNodus* a = materia_valor_lista_obtinere(
+                    *analyses_e, j)->datum.nodus;
+
+                si (   a->genus
+                    == (s32)ORATIO_GENUS_ANALYSIS_NOMINIS_PROPRII
+                    && a->loci[ORATIO_ANALYSIS_FONS].datum.index
+                        == (s32)ORATIO_FONS_ANALYSIS_REGULA)
+                {
+                    propria = propria + I;
+                }
+            }
+            CREDO_AEQUALIS_I32 (propria, I);
+        }
 
         /* substantivum: umbrae nullae (gradu hoc) */
         analyses = &urbem->loci[ORATIO_VOCABULUM_ANALYSES];

@@ -1712,3 +1712,41 @@ HEAD, line numbers stripped from both the position and the message
 (`l.NNN`), is the reliable check. An Editio REICE still writes the
 file. The oracle wrapper's `"${ARGS[@]}"` under `set -u` is an error
 in bash 3.2 when the array is empty — `${ARGS[@]+"${ARGS[@]}"}`.
+
+## 2026-09-07 (late) — T19e: English by evidence, and what the order of rules means
+
+The English tranche was supposed to be cheap and it was, once one
+thing was understood: an evidence rule must run before a default
+rule, because the executor's first-wins law makes the earlier row
+final. The first measurement had proper nouns up 46 points and
+particles down 55, and the probe showed `to buy` with its particle
+umbra bound and the adposition still first — the adposition prior at
+index 7 had spoken before the umbra rule at index 13. Moving the
+evidence rules to the head of the program fixed it in one run.
+
+The class umbra worked as designed without an executor change: an
+English reading has no case, so its umbra names a class (`classis`
+verbum) and the rule fills it from the next word's verb reading,
+`strictus` doing the adjacency. Two data traps cost a round each.
+Moby codes `a` as a verb (`a\DNVP`), so `have a car` bound `a` and
+made `have` an auxiliary; the fix was in the executor, not the data:
+within a stage a filler word an explicit rule already decided (the
+`a` exception) is not re-read as another reading — the same law the
+umbra ranking already respected across stages. I first wrote it for
+any earlier decision and the charters lost 0.2, because there the
+earlier decision is the accusative-before-ablative order of the
+object rules, which is no evidence at all; restricted to explicit
+rows it costs nothing. And Moby lists `is`, `it's`, `I'm` as nouns,
+which is why a determiner head umbra (`the` + noun) preferred the
+noun reading of `is` after that/this/it and cost more auxiliaries
+than it gained nouns — measured and dropped, umbra and rule both.
+
+Two smaller findings. The auxiliary prior selected by list title lost
+the contraction auxiliaries (`'s 'm 'll` carry Moby's rule text as
+their nativum), so a second prior selects them by source. And the
+capital rule fires on `I'm` because Moby knows it as a noun; the
+exclusion that works is "has a pronoun reading", not "has an
+apostrophe", because possessive names (`Debra's`) must keep their
+capital reading — proper-noun coverage is pinned and went red the
+first way. EWT ends at 78.6 / 79.0 from 75.3 / 75.5; Latin did not
+move by a permille through any of it.

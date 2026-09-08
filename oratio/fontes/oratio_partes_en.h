@@ -86,6 +86,13 @@ externus constans character* constans ORATIO_INTERIECTIONES_EN[];
  * XVI, no DET XXXVI (INTJ IX) */
 externus constans character* constans ORATIO_SUBORDINANTES_AMBIGUA_EN[];
 externus constans character* constans ORATIO_INTERIECTIONES_AMBIGUAE_EN[];
+/* T19e (2026-09-07): auxiliaria have/do et particula 'to' AMBIGUA -
+ * lectio secundaria titulo suo (regula prioris classis caeca), umbra
+ * obiecti classis verbum in annotatore (oratio_partes.c): verbum
+ * PROXIMUM implet (to go, have been), aliter regula linguae lectionem
+ * Moby primam praefert (to adpositio, have verbum) */
+externus constans character* constans ORATIO_AUXILIARIA_AMBIGUA_EN[];
+externus constans character* constans ORATIO_PARTICULAE_AMBIGUAE_EN[];
 
 
 /* Lectiones secundariae ex listis pro forma (semel per vocabulum):

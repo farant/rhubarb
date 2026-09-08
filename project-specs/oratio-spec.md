@@ -883,6 +883,52 @@ full table re-judges five treebanks per rule, nine minutes at 29
 rules). The wrapper's empty-argument expansion under `set -u` (bash
 3.2) was fixed on the way.
 
+**As built — T19e, English by evidence (2026-09-07, evening).** The
+pattern engine's reserved `cursus="strictus"` was built first
+(exemplaria increment 20: the sibling run without gaps, every later
+child must match the next candidate child) because English function
+words are adjacency facts. Then three kinds of evidence, all placed
+BEFORE the class priors in the program, because a prior at index 7
+had decided `to` before the umbra rule at index 13 could fill it
+(first wins; particles fell from 70 to 15 % before the move): (1)
+`nomen-proprium-capitale-anglicum` — any element, then a word with the
+capital rule's reading (`nativum` capitalis), strictly adjacent, so
+the sentence-initial word is excluded (Thanks, Store) — EWT proper
+nouns 19 → 64 %; the capital rule itself no longer fires on a word
+with a pronoun reading (I'm, You'll, It's: Moby lists them as nouns,
+the contraction gives the pronoun) but still on possessive names
+(Debra's, coverage pinned) and on Will/May; (2) class umbrae — an
+English reading has no case, so its umbra names a class: `to`'s
+particle reading and have/do's auxiliary reading (moved from the
+prior lists to `*-ambigua` lists with their own `nativum` title, so
+the class priors are blind to them) carry an object umbra `classis`
+verbum, filled strictly by the next word's verb reading, with an
+auxiliary-filler rule first so `have been` keeps `been` an
+auxiliary; no fill → the language rule takes Moby's first code (`to`
+adposition, `have` verb) — adpositions 89 → 99 %, verbs 67 → 73 %;
+(3) the contraction auxiliaries (`'s 'm 'll`) lost the auxiliary
+prior when it switched to the list title, so a second prior selects
+them by source (`fons` vocabularium-en). One executor law came out of
+`have a car`: Moby codes `a` as a verb too, and the umbra bound it;
+the filler law now also refuses, within a stage, a filler word an
+EXPLICIT rule decided as another reading (the `a` exception), while
+a structural decision of the same stage does not block (measured:
+the charters lost 0.2 when it did, the accusative-before-ablative
+order of the object rules being arbitrary evidence). Measured and
+dropped: a determiner head umbra (`the` + noun) — it preferred
+Moby's noun readings of `is` and `it's` after that/this/it
+(auxiliaries −9) and never reached store/care behind an adjective;
+a distant-verb variant for have/do (`do not like`, `have you seen`)
+that lost more on `have to go` than it gained. Numbers: EWT 75.3 /
+75.5 → 78.6 / 79.0 (pins 786 / 789), coverage unchanged, Latin
+exactly unchanged. Gates: resolutio I (33 rules, stage 1 = 19) and
+VIII (the four English probes), partes I b (class umbra on `to`'s
+particle reading, none on the adposition, no capital reading on
+It's, one on Bush), oraculum pins. Still open on English: proper
+nouns at sentence start, `saw`-type noun-verb homographs after
+pronouns, `there is`, possessive determiners as PRON (EWT's
+convention), `like` as a verb, ranges.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

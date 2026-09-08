@@ -711,8 +711,18 @@ _sententiam_resolvere_gradu (
              * lectionem aliam nominans repetita est (cum puella bona:
              * regula nominativi lectionem NOM 'puellae' iam ablativae
              * inveniret) */
-            si (vindicata[w] && b != ZEPHYRUM)
+            si (   (vindicata[w] && b != ZEPHYRUM)
+                || (   explicita[w] && praelata[w] >= ZEPHYRUM
+                    && praelata[w] != (s32)b))
             {
+                /* T19e: idem INTRA gradum pro decisione EXPLICITA -
+                 * vocabulum implens regula praelationis priore hoc
+                 * gradu lectione ALIA decisum (a determinans per
+                 * exceptionem;
+                 * lectio verbi Moby 'a' umbram verbi 'have' impleret:
+                 * have a car) non implet. Decisio STRUCTURALIS eiusdem
+                 * gradus (ordo regularum accusativi/ablativi) non
+                 * obstat: mensuratum, LLCT -0.2 cum obstaret */
                 si (cursus->census != NIHIL)
                 {
                     cursus->census->repetitae =

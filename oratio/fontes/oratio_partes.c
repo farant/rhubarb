@@ -179,6 +179,7 @@ _umbram_addere (
      MateriaNodus* analysis,
     OratioClassis  classis,
     OratioRelatio  relatio,
+              s32  classis_umbrae,
               s32  casus_umbrae,
               s32  numerus_umbrae,
               s32  genus_umbrae)
@@ -195,6 +196,12 @@ _umbram_addere (
     si (   umbra == NIHIL
         || !materia_nodus_ponere(umbra, (i32)ORATIO_UMBRA_RELATIO,
             materia_valor_index((s32)relatio), MATERIA_LOCUS_INDEX))
+    {
+        redde FALSUM;
+    }
+    si (   classis_umbrae >= ZEPHYRUM
+        && !materia_nodus_ponere(umbra, (i32)ORATIO_UMBRA_CLASSIS,
+            materia_valor_index(classis_umbrae), MATERIA_LOCUS_INDEX))
     {
         redde FALSUM;
     }
@@ -226,12 +233,35 @@ _umbras_ponere (
                  MateriaNodus* analysis,
     constans OratioDescriptio* d)
 {
+    /* ANGLICA (T19e, 2026-09-07): lectio Anglica casu caret - umbrae
+     * per CLASSEM: 'to' particula et have/do auxiliaria (listae
+     * ambiguae) obiectum verbum (to go, have been) */
+    si (d->lingua == ORATIO_LINGUA_ANGLICA)
+    {
+        /* determinans caput substantivum MENSURATUM et ablatum
+         * (2026-09-07): regula 'the + substantivum' lectiones nominales
+         * Moby 'is'/'it's' post that/this/it praeferebat (auxiliare
+         * -IX), substantiva store/care non attingebat (adiectivum
+         * interiacet) */
+        si (   (   d->classis == ORATIO_CLASSIS_PARTICULA
+                && chorda_aequalis_literis(d->nativum,
+                    "particulae-ambiguae"))
+            || (   d->classis == ORATIO_CLASSIS_AUXILIARE
+                && chorda_aequalis_literis(d->nativum,
+                    "auxiliaria-ambigua")))
+        {
+            redde _umbram_addere(piscina, analysis, d->classis,
+                ORATIO_RELATIO_OBIECTUM, (s32)ORATIO_CLASSIS_VERBUM,
+                (s32)-I, (s32)-I, (s32)-I);
+        }
+        redde VERUM;
+    }
         si (   d->classis           == ORATIO_CLASSIS_ADPOSITIO
             && d->casus_grammaticus >= ZEPHYRUM)
         {
         redde _umbram_addere(piscina, analysis, d->classis,
-            ORATIO_RELATIO_OBIECTUM, d->casus_grammaticus, (s32)-I,
-            (s32)-I);
+            ORATIO_RELATIO_OBIECTUM, (s32)-I, d->casus_grammaticus,
+            (s32)-I, (s32)-I);
         }
     /* CAPUT (T19d beta): adiectivum et determinans caput substantivum
      * exspectant quod casu numero genere concordat - condiciones ex
@@ -241,8 +271,8 @@ _umbras_ponere (
         && d->casus_grammaticus >= ZEPHYRUM)
     {
         redde _umbram_addere(piscina, analysis, d->classis,
-            ORATIO_RELATIO_CAPUT, d->casus_grammaticus, d->numerus,
-            d->genus);
+            ORATIO_RELATIO_CAPUT, (s32)-I, d->casus_grammaticus,
+            d->numerus, d->genus);
     }
     redde VERUM;
 }
@@ -409,6 +439,7 @@ oratio_partes_vocabulum_annotare (
         b32 proprium      = FALSUM;
         b32 substantivum  = FALSUM;
         b32 anglicum      = FALSUM;
+        b32 pronomen      = FALSUM;   /* T19e: lectio pronominis */
 
         per (k = ZEPHYRUM; k < xar_numerus(descriptiones); k++)
         {
@@ -432,9 +463,18 @@ oratio_partes_vocabulum_annotare (
             {
                 anglicum = VERUM;
             }
+            si (d->classis == ORATIO_CLASSIS_PRONOMEN)
+            {
+                pronomen = VERUM;   /* T19e: I'm, You'll, It's (Moby N +
+                                     * contractio pronominis) numquam
+                                     * nomen capitale; possessivum
+                                     * nominis (Debra's) et Will/May
+                                     * (auxiliare) manent */
+            }
         }
         si (   !fons_latinus && !proprium
-            && (xar_numerus(descriptiones) == ZEPHYRUM || substantivum))
+            && (   xar_numerus(descriptiones) == ZEPHYRUM
+                || (substantivum && !pronomen)))
         {
             OratioDescriptio* d =
                 (OratioDescriptio*)xar_addere(descriptiones);

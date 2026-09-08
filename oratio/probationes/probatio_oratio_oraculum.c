@@ -70,8 +70,8 @@
  * T19d (2026-09-07): regulae adpositionum in UMBRAS obiecti versae
  * (lectio et implens praelatae): CIRCSE 728, LLCT 771/771, EWT immota
  * (permille ex numeris truncata, non ex centesimis). */
-#define EWT_DEV_PRIMARIA_PINNA   753
-#define EWT_TEST_PRIMARIA_PINNA  754
+#define EWT_DEV_PRIMARIA_PINNA   786
+#define EWT_TEST_PRIMARIA_PINNA  789
 
 interior b32
 _plagulam_legere (
