@@ -1113,6 +1113,28 @@ rules only if they can bind without preferring, which needs a rule
 attribute; then a determinans-over-adjective law for the UD-DET
 lemmas (data); then the ignoti reading.
 
+**As built — T19h, the strict head tier (2026-09-08, same session).**
+Measured first: all sixteen head rules switched to `cursus="strictus"`
+LOSE primary everywhere (Seneca 76.8 → 75.2, charters 79.6 / 79.1 →
+78.5 / 78.5) although forced accuracy rises to 76 %: the forced count
+halves and the words left undecided fall to a worse default, so a
+distant binding at 70 % still beats no decision for those words. Kept
+instead: a TIER — the sixteen head rules duplicated with
+`cursus="strictus"` at stage 2 (titles `-proximo`), the loose
+originals moved to stage 3 — so an adjacent agreeing word of any case
+wins over a distant one of an earlier case (the loose nominative rule
+used to bind a carrier's nominative reading to a far nominative before
+the accusative rule could see the adjacent accusative). Program 52
+rules (stage 1 = 20, stage 2 = 16 strict, stage 3 = 16 loose). Seneca
+76.9, charters 79.7 / 79.3, English unchanged; forced accuracy 72.3 /
+69.4 / 69.4; pins 769 / 796 / 792 and 723 / 694 / 694. Small, positive
+everywhere, no treebank depressed. The gate's rule table asserts the
+three stages and both titles at XX and XXXVI. NEXT: the
+determinans-over-adjective law for the UD-DET lemmas (data; the
+charters' remaining adjacent errors), loose rules that bind without
+preferring (edges only; a rule attribute), the Latin order measured
+swapped, the ignoti reading.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

@@ -410,7 +410,14 @@ charters' nominative and dative head errors are UD's DET
 convention (possessives, alius, omnis, ipse, suprascriptus, qui)
 losing the tie to the adjective reading. NEXT: strict head tier
 (measure), determinans-over-adjective law for the UD-DET lemmas
-(data), the Latin rule order measured swapped, the ignoti reading.
+(data), the Latin rule order measured swapped, the ignoti reading. **T19h** (same day): the strict head
+TIER — sixteen `-proximo` copies of the head rules at stage 2
+(`cursus="strictus"`), the loose originals at stage 3; measured:
+strict alone loses everywhere (undecided words fall to a worse
+default), the tier gains a little everywhere (76.9 / 79.7 / 79.3;
+forced 72.3 / 69.4 / 69.4; pins 769 / 796 / 792, 723 / 694 / 694); 52
+rules. NEXT: DET-over-ADJ data law, bind-without-prefer loose
+rules, the Latin order swap measured, the ignoti reading.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

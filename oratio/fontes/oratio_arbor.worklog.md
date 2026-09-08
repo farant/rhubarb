@@ -1864,3 +1864,24 @@ And the sum law per rule (errata equal words minus primary) is what
 made me trust the partner search: it held before and after the
 rewrite, so the rewrite changed only what the rows say, not how many
 there are.
+
+## 2026-09-08 — T19h: the strict tier, measured both ways
+
+The listing said distance discriminates the head rules, so the first
+experiment was the obvious one: all sixteen head rules strict. It
+raised the forced accuracy to 76 % and lost primary on every Latin
+treebank, because half the forced decisions disappeared and the words
+they had decided fell back to the crude order, which for a noun with
+an adjective homograph is worse than a 70 % guess. That is the
+sudoku doctrine meeting its own numbers: a decision at 70 % is not a
+constraint, but removing it is not free either. The version that
+gains is the tier: strict copies of the sixteen rules in their own
+stage before the loose ones, so that an adjacent agreeing word of any
+case beats a distant one of an earlier case. The gain is small
+(Seneca +0.1, charters +0.1 / +0.2, forced +0.2 / +0.2 / +0.6) and
+it costs sixteen generated rules, which is now a real argument for
+the template the head rules should have been from the start. What
+remains in the listing is not distance: the charters' possessives
+and quantifiers that UD calls determiners, and Seneca's long tail of
+homographs. The first is data; the second needs the loose rules to
+bind without deciding.

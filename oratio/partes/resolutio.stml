@@ -477,7 +477,286 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-nominativus-sequente" gradus="2">
+<!-- IANUA STRICTA capitum (T19h 2026-09-08): regulae capitis XVI cursu STRICTO
+     (caput VICINUM solum) gradu II, deinde eaedem cursu fratrum (saltus) gradu III:
+     congruentia vicina cuiusvis casus congruentiam remotam casus prioris vincit
+     (mensura T19g bis: capita vicina 82-99 %, remota 33-70 %; strictae solae
+     primarium deprimunt - remotae 70 % melius quam nihil pro vocabulis suis). -->
+
+<regula titulus="umbra-caput-nominativus-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_nominativus_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>0</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>0</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_nominativus_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-nominativus-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-nominativus-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_nominativus_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>0</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>0</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_nominativus_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-nominativus-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-genitivus-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_genitivus_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>1</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>1</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_genitivus_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-genitivus-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-genitivus-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_genitivus_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>1</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>1</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_genitivus_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-genitivus-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-dativus-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_dativus_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>2</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>2</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_dativus_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-dativus-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-dativus-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_dativus_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>2</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>2</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_dativus_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-dativus-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-accusativus-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_accusativus_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>3</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>3</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_accusativus_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-accusativus-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-accusativus-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_accusativus_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>3</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>3</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_accusativus_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-accusativus-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-ablativus-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_ablativus_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>4</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>4</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_ablativus_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-ablativus-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-ablativus-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_ablativus_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>4</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>4</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_ablativus_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-ablativus-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-locativus-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_locativus_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>5</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>5</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_locativus_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-locativus-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-locativus-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_locativus_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>5</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>5</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_locativus_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-locativus-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-vocativus-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_vocativus_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>6</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>6</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_vocativus_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-vocativus-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-vocativus-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" output="$caput_vocativus_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>6</casus><numerus>$num</numerus><genus>$gen</genus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>1</relatio><casus>6</casus><numerus>$num</numerus><genus>$gen</genus></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$caput_vocativus_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-vocativus-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-incerti-proprii-sequente-proximo" gradus="2">
+    <EXEMPLAR cursus="strictus" output="$impl_umbra_caput_incerti_proprii_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><lingua>0</lingua><umbrae><umbra n="$u"><relatio>1</relatio></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <analysis-nominis-proprii n="$b"><nativum><or-derivatum>capitalis</or-derivatum></nativum></analysis-nominis-proprii>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$impl_umbra_caput_incerti_proprii_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-incerti-proprii-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-caput-incerti-proprii-praecedente-proximo" gradus="2">
+    <EXEMPLAR cursus="strictus" output="$impl_umbra_caput_incerti_proprii_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <analysis-nominis-proprii n="$b"><nativum><or-derivatum>capitalis</or-derivatum></nativum></analysis-nominis-proprii>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <* n="$a"><lingua>0</lingua><umbrae><umbra n="$u"><relatio>1</relatio></umbra></umbrae></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$impl_umbra_caput_incerti_proprii_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-caput-incerti-proprii-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+
+<regula titulus="umbra-caput-nominativus-sequente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_nominativus_sequente">
     <elementa>
       <vocabulum n="$v"><analyses>
@@ -495,7 +774,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-nominativus-praecedente" gradus="2">
+<regula titulus="umbra-caput-nominativus-praecedente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_nominativus_praecedente">
     <elementa>
       <vocabulum n="$w"><analyses>
@@ -513,7 +792,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-genitivus-sequente" gradus="2">
+<regula titulus="umbra-caput-genitivus-sequente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_genitivus_sequente">
     <elementa>
       <vocabulum n="$v"><analyses>
@@ -531,7 +810,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-genitivus-praecedente" gradus="2">
+<regula titulus="umbra-caput-genitivus-praecedente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_genitivus_praecedente">
     <elementa>
       <vocabulum n="$w"><analyses>
@@ -549,7 +828,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-dativus-sequente" gradus="2">
+<regula titulus="umbra-caput-dativus-sequente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_dativus_sequente">
     <elementa>
       <vocabulum n="$v"><analyses>
@@ -567,7 +846,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-dativus-praecedente" gradus="2">
+<regula titulus="umbra-caput-dativus-praecedente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_dativus_praecedente">
     <elementa>
       <vocabulum n="$w"><analyses>
@@ -585,7 +864,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-accusativus-sequente" gradus="2">
+<regula titulus="umbra-caput-accusativus-sequente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_accusativus_sequente">
     <elementa>
       <vocabulum n="$v"><analyses>
@@ -603,7 +882,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-accusativus-praecedente" gradus="2">
+<regula titulus="umbra-caput-accusativus-praecedente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_accusativus_praecedente">
     <elementa>
       <vocabulum n="$w"><analyses>
@@ -621,7 +900,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-ablativus-sequente" gradus="2">
+<regula titulus="umbra-caput-ablativus-sequente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_ablativus_sequente">
     <elementa>
       <vocabulum n="$v"><analyses>
@@ -639,7 +918,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-ablativus-praecedente" gradus="2">
+<regula titulus="umbra-caput-ablativus-praecedente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_ablativus_praecedente">
     <elementa>
       <vocabulum n="$w"><analyses>
@@ -657,7 +936,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-locativus-sequente" gradus="2">
+<regula titulus="umbra-caput-locativus-sequente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_locativus_sequente">
     <elementa>
       <vocabulum n="$v"><analyses>
@@ -675,7 +954,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-locativus-praecedente" gradus="2">
+<regula titulus="umbra-caput-locativus-praecedente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_locativus_praecedente">
     <elementa>
       <vocabulum n="$w"><analyses>
@@ -693,7 +972,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-vocativus-sequente" gradus="2">
+<regula titulus="umbra-caput-vocativus-sequente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_vocativus_sequente">
     <elementa>
       <vocabulum n="$v"><analyses>
@@ -711,7 +990,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-vocativus-praecedente" gradus="2">
+<regula titulus="umbra-caput-vocativus-praecedente" gradus="3">
   <EXEMPLAR cursus="fratrum" output="$caput_vocativus_praecedente">
     <elementa>
       <vocabulum n="$w"><analyses>
@@ -729,7 +1008,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-incerti-proprii-sequente" gradus="2">
+<regula titulus="umbra-caput-incerti-proprii-sequente" gradus="3">
   <!-- T19f: caput casus ignoti - nomen proprium capitale umbram capitis cuiusvis casus/numeri/generis implet (sancti Petri, ipsa Lucca); post regulas exactas -->
   <EXEMPLAR cursus="fratrum" output="$impl_umbra_caput_incerti_proprii_sequente">
     <elementa>
@@ -748,7 +1027,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-caput-incerti-proprii-praecedente" gradus="2">
+<regula titulus="umbra-caput-incerti-proprii-praecedente" gradus="3">
   <!-- T19f: caput casus ignoti - nomen proprium capitale umbram capitis cuiusvis casus/numeri/generis implet (sancti Petri, ipsa Lucca); post regulas exactas (nomen ante) -->
   <EXEMPLAR cursus="fratrum" output="$impl_umbra_caput_incerti_proprii_praecedente">
     <elementa>

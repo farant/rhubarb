@@ -1314,7 +1314,7 @@ hoc = ob.analyses(3)
 credo(hoc[0].classis == 'pronomen' and all(x.umbrae == ('caput:%s.singularis.%s=?' % (x.accidentia['casus'], x.accidentia['genus']),) for x in hoc if x.classis == 'determinans') and len([x for x in hoc if x.classis == 'determinans']) == 4, 'Oratio.analyses: umbrae determinantis hoc omnes vacuae (=?), pronomen primum')
 # T19g: decisio in arbore - genus decisionis et auctor per vocabulum, partitio documenti
 vd = ob.vocabula()
-credo([v.forma for v in vd] == ['Puella', 'bona', 'ambulat', 'Hoc', 'est'] and vd[1].decisio == 'impletio' and vd[1].auctor == 'umbra-caput-nominativus-praecedente' and vd[0].decisio == 'impletio' and vd[0].auctor == vd[1].auctor, 'Oratio.vocabula: decisio impletio bonae et Puellae, auctor regula capitis nominativi praecedens (T19g)')
+credo([v.forma for v in vd] == ['Puella', 'bona', 'ambulat', 'Hoc', 'est'] and vd[1].decisio == 'impletio' and vd[1].auctor == 'umbra-caput-nominativus-praecedente-proximo' and vd[0].decisio == 'impletio' and vd[0].auctor == vd[1].auctor, 'Oratio.vocabula: decisio impletio bonae et Puellae, auctor regula capitis nominativi praecedens STRICTA (T19g/T19h)')
 credo(vd[3].decisio == '' and vd[3].auctor == '' and vd[3].analyses > 1 and vd[4].decisio == 'praelatio' and vd[4].auctor == 'auxiliare-primum-latinum', 'Oratio.vocabula: Hoc a nemine decisum (cellula aperta), est per priorem auxiliaris (praelatio)')
 pf = ob.partitio()
 credo(pf['impletio'] == 2 and pf['praelatio'] == 1 and pf['umbra'] == 0 and pf['aperta'] >= 1 and pf['coactae'] == 2 and sum(pf[k] for k in silva.ORATIO_PARTITIO) == 5, 'Oratio.partitio: coactae II, praelata I, cetera aperta/una - summa vocabula V')

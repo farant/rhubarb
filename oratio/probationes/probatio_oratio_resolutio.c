@@ -649,8 +649,11 @@ principale (vacuum)
          * obiectum XIX (gradus I), capita XXXIV-XXXV (gradus II) */
         CREDO_AEQUALIS_S32 (_index_regulae(programma,
             "umbra-obiectum-incerti-proprii"), (s32)XIX);
+                /* T19h: IANUA STRICTA capitum - regulae capitis XVI cursu
+         * stricto gradu II (XX..XXXV, titulo -proximo), eaedem cursu
+         * fratrum gradu III (XXXVI..LI); regulae LII */
         CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
-            (i32)XXXVI);
+            (i32)LII);
         {
             i32 k;
 
@@ -661,14 +664,19 @@ principale (vacuum)
                     programma->regulae, k);
 
                 CREDO_AEQUALIS_I32 (r->gradus, k <= (i32)XIX ? I
-                    : (i32)II);
+                    : (k <= (i32)XXXV ? (i32)II : (i32)III));
             }
             {
                 constans OratioRegula* prima =
                     (constans OratioRegula*)xar_obtinere(
                     programma->regulae, (i32)XX);
+                constans OratioRegula* laxa =
+                    (constans OratioRegula*)xar_obtinere(
+                    programma->regulae, (i32)XXXVI);
 
                 CREDO_VERUM (_aequalis(prima->titulus,
+                    "umbra-caput-nominativus-sequente-proximo"));
+                CREDO_VERUM (_aequalis(laxa->titulus,
                     "umbra-caput-nominativus-sequente"));
             }
         }
@@ -1571,9 +1579,9 @@ principale (vacuum)
             programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_decisio(verbum),
             (s32)ORATIO_DECISIO_IMPLETIO);
-        CREDO_VERUM (_aequalis(_compendium(verbum,
-            (i32)ORATIO_VOCABULUM_AUCTOR),
-            "umbra-caput-nominativus-praecedente"));
+                CREDO_VERUM (_aequalis(_compendium(verbum,
+                    (i32)ORATIO_VOCABULUM_AUCTOR),
+                    "umbra-caput-nominativus-praecedente-proximo"));
         CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, ZEPHYRUM)),
             (s32)ORATIO_DECISIO_IMPLETIO);
         CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, (i32)II)),
