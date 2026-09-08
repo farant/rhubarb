@@ -446,8 +446,14 @@ rejected: prior off −0.1 / −0.3 / −0.2; any-class object fillers
 +0.1 charters / −0.1 Seneca; objectless explicit adposition
 demoted = no change (the alternative readings are junk: `A` as a
 name, `de` as a noun, `super` as a verb; `cum` the conjunction is
-two words). NEXT: verb slots (the dimension both the tail and
-`cum` need), the head-rule template.
+two words). NEXT (Fran, 2026-09-08): THE CLAUSE — a `clausula`
+INDEX slot stamped on elements (not a node; the sudoku "box"),
+seeded from certain subordinators, relatives, punctuation and
+coordinators between finite verbs, one clause where nothing decides;
+laws over it: one finite verb per clause, subject inside, `cum` +
+finite verb = conjunction, loose head rules inside the clause only;
+oracle = the gold verb subtrees already vendored. Design conversation
+first, then spec §7, then T20. Head-rule template still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
