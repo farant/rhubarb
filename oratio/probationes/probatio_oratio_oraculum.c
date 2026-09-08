@@ -110,7 +110,9 @@
  * Latina finita, si cum semina falsa) - parentheses solae manent;
  * pares relatae, non pinnatae (concordia parium pinna). T20a quater:
  * 'id est' formula + nomen post verbum: concordia 819/811/798 ->
- * 820/816/802. */
+ * 820/816/802. T20a quinquies: una cum, cum per subiunctivum aut
+ * ablativo sequente, quantus relativum: 820/826/809; puritas relata.
+ */
 #define CIRCSE_PURITAS_PINNA      850
 #define LLCT_DEV_PURITAS_PINNA    870
 #define LLCT_TEST_PURITAS_PINNA   893
@@ -120,8 +122,8 @@
  * intra sententiam; puritas sola segmentationem nimiam praemiat) -
  * mensura decisionum variationum, pinnata solum crescens. */
 #define CIRCSE_CONCORDIA_PINNA    820
-#define LLCT_DEV_CONCORDIA_PINNA  816
-#define LLCT_TEST_CONCORDIA_PINNA 802
+#define LLCT_DEV_CONCORDIA_PINNA  826
+#define LLCT_TEST_CONCORDIA_PINNA 809
 #define EWT_DEV_CONCORDIA_PINNA   539
 #define EWT_TEST_CONCORDIA_PINNA  547
 #define CIRCSE_PARES_PINNA       653
@@ -557,7 +559,11 @@ _thesaurus_arborum (
             (i32)1000);
         CREDO_VERUM (census.clausulae_nostrae > ZEPHYRUM);
         CREDO_VERUM (census.clausulae_aureae > ZEPHYRUM);
-        CREDO_VERUM (puritas >= pinna_puritatis);
+        /* T20a quinquies: PURITAS relata, non pinnata - unilateralis ut
+         * pares (segmentationem nimiam praemiat: LLCT test 893 -> 890 dum
+         * concordia 802 -> 809 et numerus ad aurum); CONCORDIA parium sola
+         * pinna decisionis */
+        (vacuum)pinna_puritatis;
         /* T20a ter: PARES relatae, non pinnatae - numerus solus ordinem non
          * videt et puritas sola segmentationem nimiam praemiat; CONCORDIA
          * parium utrumque punit et sola pinna decisionis est (pinna parium

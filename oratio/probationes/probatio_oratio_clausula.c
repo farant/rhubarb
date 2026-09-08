@@ -680,6 +680,26 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_causa(doc, (i32)V),
         (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA);
 
+        /* (m) T20a quinquies - una cum: adpositio, nullum semen etiam verbo
+     * certo sequente (Terram una cum omnibus rebus dedisti) */
+    doc = _documentum(piscina, &vocabularia,
+        "Terram una cum omnibus rebus dedisti.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), I);
+    CREDO_AEQUALIS_I32 (census.corroborata, ZEPHYRUM);
+    /* (m2) quantus relativum: Dedit(0) omnia(1) quantum(2) habebat(3)
+     * - quantum clausulam aperit, habebat certum claudit */
+    doc = _documentum(piscina, &vocabularia,
+        "Dedit omnia quantum habebat.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+    CREDO_AEQUALIS_S32 (_species(doc, I),
+        (s32)ORATIO_SPECIES_CLAUSULAE_RELATIVA);
+    CREDO_AEQUALIS_S32 (_semen(doc, I), (s32)II);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)III), (s32)I);
+
     /* (h) Anglica: documentum Anglicum lectionibus Latinis non seminatur
      * nec scinditur (it, sit, do verba Latina finita) - unica */
     doc = _documentum(piscina, &vocabularia,

@@ -1506,6 +1506,23 @@ Concordance pins 820 / 816 / 802. Gate: two hand cases. NEXT: T20b;
 the charters' remaining over-segmentation (2.58 / 2.44 vs 2.52 /
 2.25) through the view on `extentum`.
 
+**As built — T20a quinquies, the extentum view (2026-09-08, same
+session).** Three shapes on the charters' test file, each measured
+alone by concordance from 820 / 817 / 803: `una cum` never seeds
+(gold: 112 of 112 prepositions, never a boundary); forms of `quantus`
+seed a relative clause (`quantum ... est pertenentes`: = / +2 / +3);
+`cum` corroborated by a CERTAIN or SUBJUNCTIVE finite verb when the
+next word carries an ablative reading (the preposition's shape), by
+any capable verb otherwise — the certain-only variant (−1 Seneca /
++10 / +9) and the subjunctive variant without the ablative test (−1
+Seneca at the gate's resolution, 39 pairs) were both measured and
+refused by the rule that no treebank may fall. Final 820 / 826 / 809.
+PURITY is now reported, not pinned: it fell 3 on the test charters
+while concordance rose 7 and the count moved toward gold, the same
+one-sidedness that demoted count agreement; concordance is the only
+pinned decision measure. Gate: `una cum`, `quantum` hand cases.
+NEXT: T20b.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

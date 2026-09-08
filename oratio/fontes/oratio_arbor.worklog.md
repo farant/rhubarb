@@ -2161,3 +2161,35 @@ formulae. Concordance pinned 820 / 816 / 802; clause counts 2.58 and
 2.44 per sentence against 2.52 and 2.25 gold, so the charters still
 over-segment a little and the test file's excess is the next thing
 the view should be pointed at, with `-causa extentum` this time.
+
+## 2026-09-08 — T20a quinquies: the extentum view, `cum`, and the second measure demoted
+
+The view on the `extentum` layer of the charters' test file gave three
+shapes. `una cum` is "together with", a preposition in all 112 gold
+cases and never a boundary, and we were seeding a `cum` clause after
+it whenever any finite-capable word followed. `cum` itself is a
+preposition in 98 percent of charter occurrences, so corroboration by
+a merely capable verb, which in the charters is any homograph, seeds
+far too often. And `quantum ... est pertenentes` is a relative-style
+clause the gold sees, opened by a form of `quantus`.
+
+Measured alone by concordance from 82.0 / 81.7 / 80.3: `quantus`
+= / +0.2 / +0.3 and clean; `una cum` = / +0.3 / −0.1 alone but nothing
+lost beside `quantus`; `cum` requiring a certain verb −0.1 / +0.8 /
++0.3, the Seneca loss being the classic `cum` clause whose subjunctive
+verb is a homograph. The middle reading, certain or subjunctive,
+took the charters' gain and held Seneca at the loop's resolution,
+then lost one permille at the gate's: 39 pairs in 125 thousand. The
+rule is strict at the gate's resolution, so one more shape: the
+distinction Latin makes is the word after `cum`. If it can be
+ablative, the preposition is likely and a certain or subjunctive verb
+is required; if it cannot, any capable verb corroborates as before.
+That returned the 39 pairs and kept the charters: final 820 / 826 /
+809 against 820 / 816 / 802.
+
+The other thing the run taught: purity fell three permille on the
+test charters while concordance rose seven and the clause count moved
+toward gold, which is purity rewarding over-segmentation once more.
+It joins count agreement as a reported number; concordance is the
+only pinned decision measure now, which is what the ter entry
+already argued and I had left half done.

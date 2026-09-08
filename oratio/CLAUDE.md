@@ -516,9 +516,17 @@ closes) and a proper NOUN after the closing verb stays in the clause
 (`ubi vocitatur Iuveiano`) — and two measured and dropped (a clause
 without its verb not closing at a comma: +0.8 test / −0.6 dev in
 combination; the coordinator scan through commas: −0.9 test).
-Concordance pins 820/816/802; the charters still over-segment slightly
-(2.58 / 2.44 vs 2.52 / 2.25) — next view: `-causa extentum` on the
-test file. Head-rule template still open.
+Concordance pins 820/816/802. **T20a quinquies (same day)**: the
+`extentum` view on the charters gave three more: `una cum` never seeds
+(112/112 gold prepositions), `cum` is corroborated by a certain or
+SUBJUNCTIVE verb when the next word can be ablative (else any capable
+verb, as before — the certain-only variant cost Seneca 39 pairs and
+was dropped), forms of `quantus` seed a relative clause (`quantum ...
+est pertenentes`); concordance pins 820/826/809; PURITY now reported
+not pinned (fell 3 while concordance rose 7: one-sided like count).
+Clauses per sentence 2.51 / 2.38 vs 2.52 / 2.25. NEXT = T20b catena
+(chain along bindings, discordia count). Head-rule template still
+open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

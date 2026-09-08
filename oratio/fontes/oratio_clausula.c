@@ -88,10 +88,31 @@ hic_manens constans b32 CERTITUDO_LATINA       = VERUM;
 hic_manens constans b32 ID_EST             = VERUM;
 hic_manens constans b32 NOMEN_POST_VERBUM  = VERUM;
 
+/* VARIATIONES III (T20a quinquies, ex visu causae 'extentum'
+ * chartarum; basis concordiae 82.0 / 81.7 / 80.3):
+ * UNA_CUM: cum post una/simul (una cum omnibus rebus) adpositio -
+ * CXII casus aurei chartarum, limes numquam - non seminat (sola
+ * = / +0.3 / -0.1, cum ceteris nihil deprimit).
+ * CUM_SUBIUNCTIVUM: cum corroboratur verbo finito CERTO aut capaci
+ * cuius lectio finita subiunctiva est (cum venisset Senecae:
+ * homographum subiunctivum) - chartis cum adpositio XCVIII %, verbum
+ * capax quodvis homographum est. Mensurata et ABLATA: corroboratio
+ * verbo CERTO solo (-0.1 Senecae, +1.0 / +0.9 chartis).
+ * quantus in ORATIO_SEMINA_RELATIVA (quantum ... est pertenentes):
+ * = / +0.2 / +0.3. Omnes tres: = / +0.9 / +0.7. */
+hic_manens constans b32 UNA_CUM           = VERUM;
+hic_manens constans b32 CUM_SUBIUNCTIVUM  = VERUM;
+/* CUM_ABLATIVO: exigentia certi/subiunctivi solum cum verbum proximum
+ * post cum lectionem ablativam fert (cum patre, cum omnibus rebus);
+ * aliter (cum venit, cum ille ...) verbum capax quodvis corroborat ut
+ * basis - Senecae XXXIX paria reddit. */
+hic_manens constans b32 CUM_ABLATIVO      = VERUM;
+
 
 /* formae relativae: lemma lectionis pronominis aut determinantis */
 constans character* constans ORATIO_SEMINA_RELATIVA[] = {
     "qui", "quicumque", "quisquis",
+    "quantus",   /* T20a quinquies: quantum ... est pertenentes */
     NIHIL
 };
 
@@ -268,13 +289,20 @@ nomen structura {
     MateriaNodus* nodus;   /* mutabilis: loci clausulae scribuntur */
              s32  semen;          /* GenusSeminis candidatum */
                       b32  finita_capax;   /* lectio finita ulla */
-                      b32  finita_certa;   /* lectiones omnes finitae */
+                                   b32  finita_certa;   /* lectiones omnes finitae */
+             b32  subiunctivum;   /* lectio finita subiunctiva ulla */
+
                                    b32  seminat;        /* post corroborationem */
                           b32  copula_certa;   /* certum et lemmate 'sum' (copula) */
                                        b32  supra;          /* lectio lemmate 'supra' (qui supra) */
-             b32  id;             /* forma 'id' (id est) */
-             b32  nomen_proprium; /* lectio nominis proprii ulla */
-             b32  differtur;      /* clausura post hoc verbum differtur */
+                          b32  id;             /* forma 'id' (id est) */
+                          b32  cum;            /* lectio lemmate 'cum' */
+             b32  ablativus;      /* lectio Latina casu ablativo ulla */
+
+             b32 una_simul;      /* forma una | simul (una cum) */
+
+             b32 nomen_proprium; /* lectio nominis proprii ulla */
+             b32 differtur;      /* clausura post hoc verbum differtur */
 
 
              s32 clausula;       /* -I = aperta */
@@ -306,21 +334,31 @@ _membrum_describere (
                           i32  auxiliares  = ZEPHYRUM;
             hic_manens constans character* constans SUPRA[] = { "supra",
                 NIHIL };
-    hic_manens constans character* constans ESSE[]  = { "sum", NIHIL };
-                      i32 latinae                   = ZEPHYRUM;
-                      b32 copula                    = FALSUM;
+        hic_manens constans character* constans ESSE[] = { "sum",
+            NIHIL };
+    hic_manens constans character* constans CUM[] = { "cum", NIHIL };
+
+                      i32 latinae  = ZEPHYRUM;
+                      b32 copula   = FALSUM;
 
 
-    m->nodus             = nodus;
-    m->semen             = (s32)SEMEN_NULLUM;
-        m->finita_capax  = FALSUM;
-    m->finita_certa      = FALSUM;
-    m->seminat           = FALSUM;
-    m->copula_certa      = FALSUM;
-            m->supra     = FALSUM;
-    m->id                = FALSUM;
-    m->nomen_proprium    = FALSUM;
-    m->differtur         = FALSUM;
+    m->nodus                 = nodus;
+    m->semen                 = (s32)SEMEN_NULLUM;
+            m->finita_capax  = FALSUM;
+    m->finita_certa          = FALSUM;
+    m->subiunctivum          = FALSUM;
+    m->seminat               = FALSUM;
+
+    m->copula_certa   = FALSUM;
+            m->supra  = FALSUM;
+        m->id         = FALSUM;
+        m->cum        = FALSUM;
+    m->ablativus      = FALSUM;
+
+    m->una_simul      = FALSUM;
+
+    m->nomen_proprium  = FALSUM;
+    m->differtur       = FALSUM;
 
 
     m->clausula  = (s32)-I;
@@ -375,16 +413,22 @@ _membrum_describere (
             perge;
         }
                 lectio = v->datum.nodus;
-        si (oratio_clausula_lectio_finita(lectio))
-        {
+                si (oratio_clausula_lectio_finita(lectio))
+                {
             m->finita_capax  = VERUM;
             finitae          = finitae + I;
+            si (_accidens(lectio, "modus")
+                == (s32)ORATIO_MODUS_SUBIUNCTIVUS)
+            {
+                m->subiunctivum = VERUM;
+            }
+
             si (oratio_genus_classis((OratioGenus)lectio->genus)
                 == ORATIO_CLASSIS_AUXILIARE)
             {
                 auxiliares = auxiliares + I;
             }
-        }
+                }
         si (!_latina(lectio))
         {
             perge;
@@ -401,10 +445,20 @@ _membrum_describere (
         {
             perge;
         }
-        si (_in_lista(ESSE, lemma))
-        {
+                si (_in_lista(ESSE, lemma))
+                {
             copula = VERUM;
+                }
+                si (_in_lista(CUM, lemma))
+                {
+            m->cum = VERUM;
+                }
+        si (_accidens(lectio, "casus") == (s32)ORATIO_CASUS_ABLATIVUS)
+        {
+            m->ablativus = VERUM;
         }
+
+
                 si (_in_lista(SUPRA, lemma))
                 {
             m->supra = VERUM;
@@ -414,12 +468,15 @@ _membrum_describere (
         {
             m->semen = (s32)SEMEN_CERTUM;
         }
-                alioquin si (   (   classis == ORATIO_CLASSIS_PRONOMEN
-                             || classis == ORATIO_CLASSIS_DETERMINANS)
-                             && _in_lista(ORATIO_SEMINA_RELATIVA, lemma)
-                             && m->semen != (s32)SEMEN_CERTUM
-                             && !_forma_est(nodus, "quis")
-                             && !_forma_est(nodus, "quid"))
+                        alioquin si (   (   classis
+                                     == ORATIO_CLASSIS_PRONOMEN
+                                     || classis
+                                         == ORATIO_CLASSIS_DETERMINANS)
+                                     && _in_lista(ORATIO_SEMINA_RELATIVA,
+                                                          lemma)
+                                     && m->semen != (s32)SEMEN_CERTUM
+                                     && !_forma_est(nodus, "quis")
+                                     && !_forma_est(nodus, "quid"))
         {
             /* quis/quid: indefinitum post si/ne/num (si quis
              * chartarum), interrogativum - relativum nominativus
@@ -440,7 +497,10 @@ _membrum_describere (
             m->semen = (s32)SEMEN_COORDINANS;
         }
     }
-                m->id = _forma_est(nodus, "id");
+                    m->id         = _forma_est(nodus, "id");
+    m->una_simul  = (b32)(_forma_est(nodus, "una")
+        || _forma_est(nodus, "simul"));
+
     si (CERTITUDO_LATINA)
     {
         m->finita_certa = (b32)(latinae > ZEPHYRUM
@@ -506,13 +566,27 @@ _semina_iudicare (
             perge;
         }
 
-        si (m->semen == (s32)SEMEN_CORROBORANDUM)
-        {
+                si (   UNA_CUM && m->semen == (s32)SEMEN_CORROBORANDUM
+                    && m->cum
+                    && k > ZEPHYRUM && membra[k - I].una_simul)
+                {
+            m->semen = (s32)SEMEN_NULLUM;   /* una cum: adpositio */
+            perge;
+                }
+                si (m->semen == (s32)SEMEN_CORROBORANDUM)
+                {
+            b32 exigens = (b32)(m->cum && CUM_SUBIUNCTIVUM
+                && (   !CUM_ABLATIVO
+                    || (k + I < n && membra[k + I].ablativus)));
+
             per (j = k + I; j < n
                 && !_terminus_corroborationis(&membra[j]);
                  j++)
             {
-                si (membra[j].finita_capax)
+                si (   membra[j].finita_capax
+                    && (   !exigens
+                        || membra[j].finita_certa
+                        || membra[j].subiunctivum))
                 {
                     dextra = VERUM;
                     frange;
@@ -531,7 +605,7 @@ _semina_iudicare (
                 }
             }
             perge;
-        }
+                }
         si (m->semen == (s32)SEMEN_COORDINANS)
         {
                                                 per (h = (s32)k
