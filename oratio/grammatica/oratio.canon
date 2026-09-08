@@ -57,11 +57,13 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T11: XXIII genera,
-            CXLVI loci - genera analysis-* XVII appensa; T6b erat 93c1c9cf,
-            VI genera XVII loci; T1 b27fe13a, XVI loci). Tabula mutata sine
-            hac optione mutata rubet in iudicio ET in custode derivae.">
-      <optio>87b35173</optio>
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T19d 2026-09-07:
+            XXIV genera, CLXX loci - locus 'umbrae' in analysibus XVII et
+            genus 'umbra' VII locorum appensa; T11 erat 87b35173, XXIII
+            genera CXLVI loci; T6b 93c1c9cf, VI genera XVII loci; T1
+            b27fe13a, XVI loci). Tabula mutata sine hac optione mutata
+            rubet in iudicio ET in custode derivae.">
+      <optio>54a5e44f</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -106,8 +108,9 @@
     <liberum nomen="consilium" maximum="1"/>
   </elementum>
   <elementum nomen="consilium" intra="regula"
-    nota="planum regulae: praelationes ex PER instantiatae">
+    nota="planum regulae: praelationes et impletiones ex PER instantiatae">
     <liberum nomen="praelatio"/>
+    <liberum nomen="impletio"/>
   </elementum>
   <elementum nomen="praelatio" intra="consilium"
     nota="ordo plani: vocabulum (n intra elementa sententiae) cuius analysis (n intra analyses) prima fiat; sententia optionalis; regula = titulus">
@@ -115,6 +118,15 @@
     <attributum nomen="analysis"  genus="numerus" necessarium="verum"/>
     <attributum nomen="sententia" genus="numerus"/>
     <attributum nomen="regula"    genus="textus"/>
+  </elementum>
+  <elementum nomen="impletio" intra="consilium"
+    nota="ordo plani (T19d): umbra (vocabulum n, analysis n, umbra n) a vocabulo ad-vocabulum / analysi ad-analysis impletur; exsecutor ligat (reponere) et utramque lectionem praefert (prima regula vincit per vocabulum); regula = titulus">
+    <attributum nomen="vocabulum"    genus="numerus" necessarium="verum"/>
+    <attributum nomen="analysis"     genus="numerus" necessarium="verum"/>
+    <attributum nomen="umbra"        genus="numerus" necessarium="verum"/>
+    <attributum nomen="ad-vocabulum" genus="numerus" necessarium="verum"/>
+    <attributum nomen="ad-analysis"  genus="numerus" necessarium="verum"/>
+    <attributum nomen="regula"       genus="textus"/>
   </elementum>
 
   <!-- =============== GENERA ET LOCI ===============
@@ -277,6 +289,11 @@
     <liberum nomen="numerus" maximum="1"/>
     <liberum nomen="genus" maximum="1"/>
     <liberum nomen="declinatio" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-substantivi"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-substantivi" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -312,6 +329,11 @@
     <liberum nomen="numerus" maximum="1"/>
     <liberum nomen="genus" maximum="1"/>
     <liberum nomen="declinatio" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-nominis-proprii"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-nominis-proprii" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -352,6 +374,11 @@
     <liberum nomen="coniugatio" maximum="1"/>
     <liberum nomen="casus" maximum="1"/>
     <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-verbi"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-verbi" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -402,6 +429,11 @@
     <liberum nomen="coniugatio" maximum="1"/>
     <liberum nomen="casus" maximum="1"/>
     <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-auxiliaris"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-auxiliaris" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -448,6 +480,11 @@
     <liberum nomen="genus" maximum="1"/>
     <liberum nomen="gradus" maximum="1"/>
     <liberum nomen="declinatio" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-adiectivi"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-adiectivi" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -482,6 +519,11 @@
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
     <liberum nomen="gradus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-adverbii"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-adverbii" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -511,6 +553,11 @@
     <liberum nomen="numerus" maximum="1"/>
     <liberum nomen="genus" maximum="1"/>
     <liberum nomen="persona" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-pronominis"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-pronominis" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -545,6 +592,11 @@
     <liberum nomen="casus" maximum="1"/>
     <liberum nomen="numerus" maximum="1"/>
     <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-determinantis"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-determinantis" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -575,6 +627,11 @@
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
     <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-adpositionis"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-adpositionis" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -604,6 +661,11 @@
     <liberum nomen="numerus" maximum="1"/>
     <liberum nomen="genus" maximum="1"/>
     <liberum nomen="species" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-numeralis"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-numeralis" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -635,6 +697,11 @@
     <liberum nomen="fons" maximum="1"/>
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-coniunctionis-coordinantis"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-coniunctionis-coordinantis" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -658,6 +725,11 @@
     <liberum nomen="fons" maximum="1"/>
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-coniunctionis-subordinantis"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-coniunctionis-subordinantis" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -681,6 +753,11 @@
     <liberum nomen="fons" maximum="1"/>
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-particulae"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-particulae" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -704,6 +781,11 @@
     <liberum nomen="fons" maximum="1"/>
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-interiectionis"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-interiectionis" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -727,6 +809,11 @@
     <liberum nomen="fons" maximum="1"/>
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-symboli"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-symboli" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -750,6 +837,11 @@
     <liberum nomen="fons" maximum="1"/>
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="umbrae" intra="analysis-interpunctionis"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
   </elementum>
   <elementum nomen="lemma" intra="analysis-interpunctionis" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
@@ -773,7 +865,49 @@
     <liberum nomen="fons" maximum="1"/>
     <liberum nomen="nativum" maximum="1"/>
     <liberum nomen="sensus" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
   </elementum>
+  <elementum nomen="umbrae" intra="analysis-ignoti"
+    nota="T19d: umbrae lectionis - dependentes exspectati (nodi umbra ordine)">
+    <liberum nomen="umbra"/>
+  </elementum>
+
+  <!-- =============== UMBRA (T19d, 2026-09-07) ===============
+       Nodus umbrae = dependens quem lectio EXSPECTAT sed nondum
+       repperit (cogitatio Frani: 'ambiguus node for the ast'):
+       relatio (obiectum: adpositio casum regit, verbum transitivum
+       accusativum; caput: adiectivum/determinans concordat), classis
+       exspectata (absens = quaelibet), condiciones casus/numerus/genus
+       ex lectione ipsa, impletio = ordinales vocabuli et analysis
+       implentis intra sententiam (absens = INVENTUM). Impletur per
+       ordines <impletio> consilii (regulae genericae per relationem,
+       cursus fratrum), ligatur per reponere. Umbra impleta = margo
+       dependentiae. -->
+  <elementum nomen="umbra"
+    nota="genus umbra (T19d): dependens exspectatus lectionis - relatio + condiciones + impletio">
+    <attributum nomen="n" genus="numerus"/>
+    <liberum nomen="relatio" maximum="1"/>
+    <liberum nomen="classis" maximum="1"/>
+    <liberum nomen="casus" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="genus" maximum="1"/>
+    <liberum nomen="impletio-vocabulum" maximum="1"/>
+    <liberum nomen="impletio-analysis" maximum="1"/>
+  </elementum>
+  <elementum nomen="relatio" intra="umbra" textus="verum"
+    nota="OratioRelatio: 0 obiectum 1 caput"/>
+  <elementum nomen="classis" intra="umbra" textus="verum"
+    nota="OratioClassis exspectata (absens = quaelibet)"/>
+  <elementum nomen="casus" intra="umbra" textus="verum"
+    nota="OratioCasus exspectatus"/>
+  <elementum nomen="numerus" intra="umbra" textus="verum"
+    nota="OratioNumerusGrammaticus exspectatus"/>
+  <elementum nomen="genus" intra="umbra" textus="verum"
+    nota="OratioGenusGrammaticum exspectatum"/>
+  <elementum nomen="impletio-vocabulum" intra="umbra" textus="verum"
+    nota="ordinalis vocabuli implentis intra elementa sententiae (absens = inventum)"/>
+  <elementum nomen="impletio-analysis" intra="umbra" textus="verum"
+    nota="ordinalis analysis implentis intra analyses vocabuli implentis"/>
   <elementum nomen="lemma" intra="analysis-ignoti" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>

@@ -153,6 +153,23 @@ _vocabulum (
 }
 
 /* casus analysis k-tae vocabuli (INDEX), -I si absens */
+/* nodus analysis k vocabuli (T19d); NIHIL si absens */
+interior constans MateriaNodus*
+_analysis (
+    constans MateriaNodus* vocabulum,
+                      i32  k)
+{
+    constans MateriaValor* analyses =
+        &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+
+    si (   analyses->genus != MATERIA_VALOR_LISTA
+        || k               >= materia_valor_lista_numerus(*analyses))
+    {
+        redde NIHIL;
+    }
+    redde materia_valor_lista_obtinere(*analyses, k)->datum.nodus;
+}
+
 interior s32
 _casus (
     constans MateriaNodus* vocabulum,
@@ -360,10 +377,11 @@ principale (vacuum)
             "numerale-primum-anglicum");
         s32 lingua         = _index_regulae(programma,
             "lingua-documenti-anglica");
-        s32 accusativum    = _index_regulae(programma,
-            "adpositio-accusativum-regit");
+                s32 accusativum    = _index_regulae(programma,
+                    "umbra-obiectum-accusativi");
         s32 ablativum      = _index_regulae(programma,
-            "adpositio-ablativum-regit");
+            "umbra-obiectum-ablativi");
+
 
         CREDO_AEQUALIS_S32 (auxiliare_la, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (auxiliare_en, (s32)I);
@@ -477,10 +495,50 @@ principale (vacuum)
 
             CREDO_VERUM (_aequalis(r0->titulus,
                 "adpositio-prima-latina"));
-            CREDO_VERUM (_aequalis(r1->titulus,
-                "adpositio-ablativum-regit"));
+                        CREDO_VERUM (_aequalis(r1->titulus,
+                            "umbra-obiectum-ablativi"));
             CREDO_AEQUALIS_I32 (r1->numerus, I);
         }
+        /* T19d: umbra obiecti lectionis adpositionis 'cum' (nunc prima)
+         * LIGATA ad puella (vocabulum I) analysin ablativam (post
+         * permutationem primam: index 0 remissus); impletae I */
+        CREDO_AEQUALIS_I32 (census.impletae, I);
+        {
+            constans MateriaNodus* cum_vocabulum = _vocabulum(doc,
+                ZEPHYRUM);
+            constans MateriaNodus* adpositio_lectio;
+            constans MateriaValor* umbrae;
+            constans MateriaNodus* umbra;
+                              s32  locus;
+
+            adpositio_lectio = _analysis(cum_vocabulum, ZEPHYRUM);
+            CREDO_NON_NIHIL (adpositio_lectio);
+            CREDO_AEQUALIS_S32 (adpositio_lectio->genus,
+                (s32)ORATIO_GENUS_ANALYSIS_ADPOSITIONIS);
+            locus = oratio_partes_locus(ORATIO_CLASSIS_ADPOSITIO,
+                "umbrae");
+            CREDO_VERUM (locus >= ZEPHYRUM);
+            umbrae = &adpositio_lectio->loci[locus];
+            CREDO_AEQUALIS_S32 ((s32)umbrae->genus,
+                (s32)MATERIA_VALOR_LISTA);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(*umbrae),
+                I);
+            umbra = materia_valor_lista_obtinere(*umbrae,
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (umbra->genus, (s32)ORATIO_GENUS_UMBRA);
+            CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_RELATIO]
+                .datum.index, (s32)ORATIO_RELATIO_OBIECTUM);
+            CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_CASUS]
+                .datum.index, (s32)ORATIO_CASUS_ABLATIVUS);
+            CREDO_AEQUALIS_S32 ((s32)umbra->loci[
+                ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus,
+                (s32)MATERIA_VALOR_INDEX);
+            CREDO_AEQUALIS_S32 (umbra->loci[
+                ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index, (s32)I);
+            CREDO_AEQUALIS_S32 (umbra->loci[
+                ORATIO_UMBRA_IMPLETIO_ANALYSIS].datum.index, ZEPHYRUM);
+        }
+
         /* idempotens: cursus alter nihil mutat */
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
@@ -580,23 +638,26 @@ principale (vacuum)
         CREDO_NON_NIHIL (canon);
         si (scriptura.successus && canon != NIHIL)
         {
-                        /* proiectio (ordinales, lingua) + programma -> expansio ->
+                                    /* proiectio (ordinales, lingua) + programma -> expansio ->
              * documentum totum iudicatum: 0 vitia. Regulae TRES per
              * titulum (T19b: indices 0-2 nunc priores classium sunt,
-             * quae in 'cum puella' nihil dant): lingua, accusativum,
-             * ablativum */
+             * quae in 'cum puella' nihil dant): lingua, umbra obiecti
+             * accusativi, umbra obiecti ablativi (T19d) */
+
             constans OratioRegula* r0 =
                 (constans OratioRegula*)xar_obtinere(programma->regulae,
                 (i32)_index_regulae(programma,
                 "lingua-documenti-anglica"));
             constans OratioRegula* r1 =
                 (constans OratioRegula*)xar_obtinere(programma->regulae,
-                (i32)_index_regulae(programma,
-                    "adpositio-accusativum-regit"));
+                                (i32)_index_regulae(programma,
+                    "umbra-obiectum-accusativi"));
+
             constans OratioRegula* r2 =
                 (constans OratioRegula*)xar_obtinere(programma->regulae,
-                (i32)_index_regulae(programma,
-                    "adpositio-ablativum-regit"));
+                                (i32)_index_regulae(programma,
+                    "umbra-obiectum-ablativi"));
+
 
             i32 mensura = scriptura.textus.mensura + r0->textus.mensura
                 + r1->textus.mensura + r2->textus.mensura + (i32)IV;
@@ -629,9 +690,12 @@ principale (vacuum)
                 chorda expansa = stml_scribere(expansio.radix_expansa,
                     piscina, VERUM);
 
-                CREDO_VERUM (_continet(expansa, "<praelatio"));
+                /* T19d: regulae umbrarum ordines <impletio> pariunt,
+                 * linguae in sententia Latina nullum: <praelatio> abest */
+                CREDO_VERUM (!_continet(expansa, "<praelatio"));
+                CREDO_VERUM (_continet(expansa, "<impletio"));
                 CREDO_VERUM (_continet(expansa,
-                    "regula=\"adpositio-ablativum-regit\""));
+                    "regula=\"umbra-obiectum-ablativi\""));
                 vitia = canon_iudicare(canon, expansio.radix_expansa,
                     piscina);
                 CREDO_NON_NIHIL (vitia);

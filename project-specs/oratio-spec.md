@@ -778,6 +778,23 @@ one whose can. First umbra: the adposition's object, against the
 existing rule as the comparison. Long term the same node carries
 frame expectations at the sense level (natura genera as the types).
 
+**As built — T19d skeleton (2026-09-07).** Registry: slot `umbrae`
+(LISTA_NODUS) appended last on all seventeen analysis genera; genus
+`umbra` appended after them with seven INDEX slots (relatio, classis,
+casus, numerus, genus, impletio-vocabulum, impletio-analysis); 170
+slots, seal `54a5e44f`; `ORATIO_GENUS_ANALYSIS_ULTIMUM` closes the
+class range. Annotation: adposition readings with a case get one
+object umbra in that case. Program: the T17 adposition rules replaced
+by `umbra-obiectum-<casus>` rules (any carrier, filler noun in the
+case; cases literal because a capture on the umbra binds to the first
+reading). Plan rows `<impletio>`; executor prefers carrier and filler
+under first-wins, permutes, then binds with the filler's index remapped
+through the preferred-first law; repeated fills counted. Canon declares
+the three elements. Numbers: identical to the T17 rules plus one
+permille on each Latin treebank (729/771/772); the mechanism is proven
+on the same measure. Open: head umbrae (agreement), the outranking law,
+English object umbrae.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

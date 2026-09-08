@@ -166,12 +166,83 @@ _accidens_ponere (
         MATERIA_LOCUS_INDEX);
 }
 
+/* UMBRAE (T19d, 2026-09-07): dependens exspectatus lectionis, e
+ * codicibus fontis IPSIUS - adpositio cum casu: obiectum eo casu
+ * (verbum transitivum: obiectum accusativum; adiectivum/determinans:
+ * caput concordans - gradu proximo). Nodus generis umbra in lista
+ * 'umbrae' analysis (locus per titulum); condiciones INDEX scriptae
+ * solum si datae; impletio vacua nascitur (inventum donec impleta -
+ * resolutio gradus V per reponere). Lista absens non scribitur. */
+interior b32
+_umbram_addere (
+          Piscina* piscina,
+     MateriaNodus* analysis,
+    OratioClassis  classis,
+    OratioRelatio  relatio,
+              s32  casus_umbrae,
+              s32  numerus_umbrae,
+              s32  genus_umbrae)
+{
+    s32 locus = oratio_partes_locus(classis, "umbrae");
+    MateriaNodus* umbra;
+
+    si (locus < ZEPHYRUM)
+    {
+        redde VERUM;   /* genus umbras non fert */
+    }
+    umbra = materia_nodus_creare(piscina, (s32)ORATIO_GENUS_UMBRA,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_UMBRA].loci_numerus);
+    si (   umbra == NIHIL
+        || !materia_nodus_ponere(umbra, (i32)ORATIO_UMBRA_RELATIO,
+            materia_valor_index((s32)relatio), MATERIA_LOCUS_INDEX))
+    {
+        redde FALSUM;
+    }
+    si (   casus_umbrae >= ZEPHYRUM
+        && !materia_nodus_ponere(umbra, (i32)ORATIO_UMBRA_CASUS,
+            materia_valor_index(casus_umbrae), MATERIA_LOCUS_INDEX))
+    {
+        redde FALSUM;
+    }
+    si (   numerus_umbrae >= ZEPHYRUM
+        && !materia_nodus_ponere(umbra, (i32)ORATIO_UMBRA_NUMERUS,
+            materia_valor_index(numerus_umbrae), MATERIA_LOCUS_INDEX))
+    {
+        redde FALSUM;
+    }
+    si (   genus_umbrae >= ZEPHYRUM
+        && !materia_nodus_ponere(umbra, (i32)ORATIO_UMBRA_GENUS,
+            materia_valor_index(genus_umbrae), MATERIA_LOCUS_INDEX))
+    {
+        redde FALSUM;
+    }
+    redde materia_nodus_appendere(piscina, analysis, (i32)locus,
+        materia_valor_nodus(umbra), MATERIA_LOCUS_LISTA_NODUS);
+}
+
+interior b32
+_umbras_ponere (
+                      Piscina* piscina,
+                 MateriaNodus* analysis,
+    constans OratioDescriptio* d)
+{
+    si (   d->classis           == ORATIO_CLASSIS_ADPOSITIO
+        && d->casus_grammaticus >= ZEPHYRUM)
+    {
+        redde _umbram_addere(piscina, analysis, d->classis,
+            ORATIO_RELATIO_OBIECTUM, d->casus_grammaticus, (s32)-I,
+            (s32)-I);
+    }
+    redde VERUM;
+}
+
 MateriaNodus*
 oratio_partes_nodum_struere (
                       Piscina* piscina,
     constans OratioDescriptio* d,
         constans MateriaToken* origo)
 {
+
     OratioGenus genus = oratio_classis_genus(d->classis);
     MateriaNodus* nodus;
 
@@ -217,6 +288,10 @@ oratio_partes_nodum_struere (
             d->declinatio > ZEPHYRUM ? d->declinatio : (s32)-I)
         || !_accidens_ponere(nodus, d->classis, "coniugatio",
             d->coniugatio > ZEPHYRUM ? d->coniugatio : (s32)-I))
+    {
+        redde NIHIL;
+    }
+    si (!_umbras_ponere(piscina, nodus, d))
     {
         redde NIHIL;
     }

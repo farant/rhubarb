@@ -1574,3 +1574,43 @@ edge and an unfilled one a finding, and a reading whose umbrae fill
 outranks one whose do not. The first umbra will be the adposition's
 object, because the hand rule for it exists and gives an exact
 comparison on the same numbers.
+
+## 2026-09-07 — T19d skeleton: the first umbra
+
+The adposition's object, as a node in the tree. Registry first: one
+list slot appended to all seventeen analysis genera and a genus after
+them, which meant the class mapping needed an explicit upper bound
+because the old law "analyses run to the end of the table" was in
+three places (the mapping function, the registrum gate, the ornament
+hook's `>= PRIMUM` test, which now stamps ordinals on umbrae too, as
+wanted). The annotator gives every adposition reading with a case an
+object umbra in that case; nothing else changes shape, absent lists
+are not written, so every document without prepositions projects
+byte-identically to yesterday.
+
+The rules then shrank the right way: the two T17 rules said
+"adposition with case c, then noun with case c"; the two umbra rules
+say "any reading whose umbra wants case c, then noun with case c".
+Same numbers plus one permille on each Latin treebank, because the
+carrier reading is now preferred as well as the filler. The
+constraint moved from the rule into the tree, which is the whole
+point: a transitive verb's accusative umbra will match the same rule
+without a new rule.
+
+Two details worth recording. Binding must happen after the
+permutation, because the plan's ordinals describe the projection as
+it was before readings were reordered; the executor keeps the
+umbra's node pointer (stable across the list permutation) and remaps
+the filler's index through the same "preferred first, rest in order"
+law the permutation uses, so `puella`'s ablative, third in source
+order, is bound as reading 0. And the projection writes list-of-node
+slots in the compact layout form (`<umbrae(>`, `<umbra n="0" ((>`),
+which looked like a defect for a minute; it is the pretty printer's
+notation and the reader takes it back byte-exactly.
+
+The editing tools cost the usual: an all-or-nothing transaction
+refused twice on anchors I had already rewritten inside the same
+script (the editor applies replacements cumulatively, so a later
+anchor must name the text as it is after the earlier ones), and an
+Editio rejection still wrote the gate file, which then carried a call
+to a helper that did not exist until I added it.

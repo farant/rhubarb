@@ -61,9 +61,12 @@ nomen structura {
     i32  ordines;      /* praelationes lectae (sanae) */
     i32  recusatae;    /* praelationes malae */
     i32  repetitae;    /* in vocabulo iam fixo (prima vincit) */
-    i32  applicatae;   /* vocabula permutata (analysis > 0) */
+        i32  applicatae;   /* vocabula permutata (analysis > 0) */
     Xar* per_regulam;  /* OratioResolutioRegulaCensus; NIHIL licet */
+    i32  impletae;     /* umbrae ligatae (T19d: ordines impletio; umbra
+                        * iam ligata = repetita, prima vincit) */
 } OratioResolutioCensus;
+
 
 /* Programma ex textu legere (stml_legere); regulae = elementa 'regula'
  * radicis ordine. NIHIL cum vitio (plagula "resolutio.stml", linea,

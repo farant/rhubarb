@@ -60,9 +60,14 @@ nomen enumeratio {
     ORATIO_GENUS_ANALYSIS_SYMBOLI,
     ORATIO_GENUS_ANALYSIS_INTERPUNCTIONIS,
     ORATIO_GENUS_ANALYSIS_IGNOTI,
+    /* T19d (2026-09-07): UMBRA - dependens exspectatus lectionis
+     * (relatio, condiciones, impletio); APPENSA post analyses, ergo
+     * analyses [PRIMUM, ULTIMUM) contiguae manent */
+    ORATIO_GENUS_UMBRA,
 
     ORATIO_GENUS_NUMERUS_GENERUM,
-    ORATIO_GENUS_ANALYSIS_PRIMUM = ORATIO_GENUS_ANALYSIS_SUBSTANTIVI
+    ORATIO_GENUS_ANALYSIS_PRIMUM = ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
+    ORATIO_GENUS_ANALYSIS_ULTIMUM = ORATIO_GENUS_UMBRA   /* exclusivum */
 } OratioGenus;
 
 /* Classes universales (UD XVII, spec par. V) ordine generum analysis-*;
@@ -289,6 +294,32 @@ nomen enumeratio {
     ORATIO_FONS_ANALYSIS_NUMERUS
 } OratioFonsAnalysis;
 
+/* RELATIO umbrae (T19d): quid lectio a dependente exspectet.
+ * APPENSA solum. obiectum = rectum (adpositio casum, verbum
+ * transitivum accusativum); caput = quod concordat (adiectivum,
+ * determinans ad substantivum casu numero genere). */
+nomen enumeratio {
+    ORATIO_RELATIO_OBIECTUM = 0,
+    ORATIO_RELATIO_CAPUT,
+
+    ORATIO_RELATIO_NUMERUS
+} OratioRelatio;
+
+/* loci generis UMBRA (T19d): condiciones INDEX (non scriptae =
+ * liberae), impletio INDEX ordinalibus sententiae (non scripta =
+ * INVENTUM: dependens non repertus). Vide oratio-spec par. VII. */
+nomen enumeratio {
+    ORATIO_UMBRA_RELATIO = 0,        /* INDEX: OratioRelatio */
+    ORATIO_UMBRA_CLASSIS,            /* INDEX: OratioClassis exspectata (absens = quaelibet) */
+    ORATIO_UMBRA_CASUS,              /* INDEX: OratioCasus */
+    ORATIO_UMBRA_NUMERUS,            /* INDEX: OratioNumerusGrammaticus */
+    ORATIO_UMBRA_GENUS,              /* INDEX: OratioGenusGrammaticum */
+    ORATIO_UMBRA_IMPLETIO_VOCABULUM, /* INDEX: ordinalis vocabuli implentis intra elementa */
+    ORATIO_UMBRA_IMPLETIO_ANALYSIS,  /* INDEX: ordinalis analysis implentis intra analyses */
+
+    ORATIO_UMBRA_NUMERUS_LOCORUM
+} OratioUmbraLocus;
+
 /* loci COMMUNES omnis generis analysis-* (primi V, ordine hoc) */
 nomen enumeratio {
     ORATIO_ANALYSIS_LEMMA = 0,        /* TOKEN DERIVATUM: lemma fontis */
@@ -308,6 +339,8 @@ nomen enumeratio {
     ORATIO_ANALYSIS_SUBSTANTIVI_GENUS,
     ORATIO_ANALYSIS_SUBSTANTIVI_DECLINATIO,
 
+        ORATIO_ANALYSIS_SUBSTANTIVI_UMBRAE,   /* LISTA_NODUS: umbrae (T19d) */
+
         ORATIO_ANALYSIS_SUBSTANTIVI_NUMERUS_LOCORUM
 } OratioLocusAnalysisSubstantivi;
 
@@ -323,6 +356,8 @@ nomen enumeratio {
     ORATIO_ANALYSIS_VERBI_CASUS,
     ORATIO_ANALYSIS_VERBI_GENUS,
 
+        ORATIO_ANALYSIS_VERBI_UMBRAE,   /* LISTA_NODUS: umbrae (T19d) */
+
         ORATIO_ANALYSIS_VERBI_NUMERUS_LOCORUM
 } OratioLocusAnalysisVerbi;
 
@@ -334,12 +369,16 @@ nomen enumeratio {
     ORATIO_ANALYSIS_ADIECTIVI_GRADUS,
     ORATIO_ANALYSIS_ADIECTIVI_DECLINATIO,
 
+        ORATIO_ANALYSIS_ADIECTIVI_UMBRAE,   /* LISTA_NODUS: umbrae (T19d) */
+
         ORATIO_ANALYSIS_ADIECTIVI_NUMERUS_LOCORUM
 } OratioLocusAnalysisAdiectivi;
 
 /* accidentia analysis-adverbii (INDEX omnia) */
 nomen enumeratio {
     ORATIO_ANALYSIS_ADVERBII_GRADUS = ORATIO_ANALYSIS_COMMUNIA_NUMERUS,
+
+        ORATIO_ANALYSIS_ADVERBII_UMBRAE,   /* LISTA_NODUS: umbrae (T19d) */
 
         ORATIO_ANALYSIS_ADVERBII_NUMERUS_LOCORUM
 } OratioLocusAnalysisAdverbii;
@@ -351,6 +390,8 @@ nomen enumeratio {
     ORATIO_ANALYSIS_PRONOMINIS_GENUS,
     ORATIO_ANALYSIS_PRONOMINIS_PERSONA,
 
+        ORATIO_ANALYSIS_PRONOMINIS_UMBRAE,   /* LISTA_NODUS: umbrae (T19d) */
+
         ORATIO_ANALYSIS_PRONOMINIS_NUMERUS_LOCORUM
 } OratioLocusAnalysisPronominis;
 
@@ -361,6 +402,8 @@ nomen enumeratio {
     ORATIO_ANALYSIS_DETERMINANTIS_NUMERUS,
     ORATIO_ANALYSIS_DETERMINANTIS_GENUS,
 
+        ORATIO_ANALYSIS_DETERMINANTIS_UMBRAE,   /* LISTA_NODUS: umbrae (T19d) */
+
         ORATIO_ANALYSIS_DETERMINANTIS_NUMERUS_LOCORUM
 } OratioLocusAnalysisDeterminantis;
 
@@ -368,6 +411,8 @@ nomen enumeratio {
 nomen enumeratio {
     ORATIO_ANALYSIS_ADPOSITIONIS_CASUS =
         ORATIO_ANALYSIS_COMMUNIA_NUMERUS,
+
+        ORATIO_ANALYSIS_ADPOSITIONIS_UMBRAE,   /* LISTA_NODUS: umbrae (T19d) */
 
         ORATIO_ANALYSIS_ADPOSITIONIS_NUMERUS_LOCORUM
 } OratioLocusAnalysisAdpositionis;
@@ -378,6 +423,8 @@ nomen enumeratio {
     ORATIO_ANALYSIS_NUMERALIS_NUMERUS,
     ORATIO_ANALYSIS_NUMERALIS_GENUS,
     ORATIO_ANALYSIS_NUMERALIS_SPECIES,
+
+        ORATIO_ANALYSIS_NUMERALIS_UMBRAE,   /* LISTA_NODUS: umbrae (T19d) */
 
         ORATIO_ANALYSIS_NUMERALIS_NUMERUS_LOCORUM
 } OratioLocusAnalysisNumeralis;
@@ -395,6 +442,7 @@ externus constans character* constans ORATIO_TITULI_FORMARUM_VERBI[];
 externus constans character* constans ORATIO_TITULI_GRADUUM[];
 externus constans character* constans ORATIO_TITULI_SPECIERUM_NUMERALIS[];
 externus constans character* constans ORATIO_TITULI_LINGUARUM[];
+externus constans character* constans ORATIO_TITULI_RELATIONUM[];   /* T19d */
 externus constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[];
 
 /* Titulus classis ("substantivum" ...); NIHIL si extra. */

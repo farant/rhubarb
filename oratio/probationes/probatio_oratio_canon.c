@@ -740,6 +740,9 @@ principale (vacuum)
         "consilium", "regula"), I);
     CREDO_AEQUALIS_I32 (_regulam_numerare(regulae, numerus_regularum,
         "praelatio", "consilium"), I);
+    /* T19d: impletio (umbra impleta) ordo plani alter */
+    CREDO_AEQUALIS_I32 (_regulam_numerare(regulae, numerus_regularum,
+        "impletio", "consilium"), I);
 
     /* (e) REVERSUM: regula omnis alicui tabulae congruit */
     {

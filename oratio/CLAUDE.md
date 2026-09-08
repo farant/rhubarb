@@ -297,6 +297,35 @@ expects (relation, conditions from the dictionary's own codes, an
 empty binding); a generic rule per relation fills it from siblings;
 a bound umbra is a dependency edge, an unfilled one a finding. First
 umbra = the adposition's object (the existing rule as the comparison).
+**T19d SKELETON DONE** (2026-09-07): registry 24 genera / 170 slots
+(seal `54a5e44f`): every analysis genus gained a last slot `umbrae`
+(LISTA_NODUS) and a genus `umbra` (relatio, classis, casus, numerus,
+genus, impletio-vocabulum, impletio-analysis — all INDEX; unwritten =
+unconstrained / unfilled) is appended AFTER the analyses, so
+`ORATIO_GENUS_ANALYSIS_ULTIMUM` bounds the class mapping. The
+annotator (`_umbras_ponere`) gives every adposition reading with a
+case an object umbra in that case, from the dictionary's own code.
+The program's two adposition rules became two generic umbra rules
+(`umbra-obiectum-accusativi` / `-ablativi`: any reading carrying an
+object umbra in that case, filled by a following noun in that case —
+the constraint sits in the tree, the rule names only relation and
+case) whose rows are `<impletio vocabulum= analysis= umbra=
+ad-vocabulum= ad-analysis=/>`; the executor validates, prefers both
+readings under first-wins, permutes, then BINDS the umbra (`ponere`
+on the impletio slots, the filler's index remapped through the
+preferred-first law; a second fill is a repetita). Canon declares
+umbrae/umbra/impletio; drift guard knows impletio. Gates: registrum
+(998), canon, partes I b (umbrae born on `in`'s readings only, empty
+impletio, projection `<umbra n="0">`), resolutio (`Cum puella`: the
+adposition reading's umbra bound to word 1 reading 0; composed plan
+carries `<impletio>` and no `<praelatio>`), oraculum pins 729/771/772
+(+1 permille on each Latin treebank over the T17 rules; English
+unchanged). NEXT (T19d cont.): head umbrae on adjective/determiner
+readings (case, number, gender captured from the reading; filler =
+agreeing noun, before or after: two rules per relation) — the
+charters' 2,096 determiners at 0 %; then the executor law "filled
+umbrae outrank"; then `to` + verb and `have` + participle as object
+umbrae on English readings.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

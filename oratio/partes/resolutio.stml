@@ -19,7 +19,15 @@
      manens (clausa donec damnum mensuretur).
 
      Oraculum regulas CUMULATIM applicat (./oratio/oraculum.sh -regulae);
-     primarium per thesaurum pinnatum solum crescens. -->
+     primarium per thesaurum pinnatum solum crescens.
+
+     UMBRAE (T19d, 2026-09-07; desideratum Frani 01M1YYN00E): lectio
+     dependentem exspectatum ut NODUM UMBRAE fert (relatio, condiciones
+     e codicibus fontis, impletio vacua); regula generica per relationem
+     et casum umbram a fratre implet - ordo <impletio vocabulum= analysis=
+     umbra= ad-vocabulum= ad-analysis=/>: exsecutor ligat (post
+     permutationes, indicibus remissis) et utramque lectionem praefert.
+     Umbra ligata = margo dependentiae; non ligata = inventum. -->
 
 <!-- REGULAE PRIORUM CLASSIUM (T19b, 2026-09-07; data: ./oratio/oraculum.sh
      -discrepantiae, T19a). Lectio classis nominatae PRIMA fiat ubi
@@ -281,43 +289,49 @@
   </consilium>
 </regula>
 
-<regula titulus="adpositio-accusativum-regit">
-  <!-- praepositio cum lectione accusativa (casus 3) - vocabulum sequens
-       cuius analysis substantiva accusativa prima fiat: in urbem, ad
-       urbem, per silvam -->
-  <EXEMPLAR cursus="fratrum" output="$accusativum">
+<regula titulus="umbra-obiectum-accusativi">
+  <!-- T19d (2026-09-07, umbra prima - sceletum): UMBRA obiecti (relatio 0)
+       casu accusativo (3) in lectione QUALIBET (adpositio nunc: in ad
+       per ...; verbum transitivum gradu proximo) a substantivo
+       accusativo sequente impletur - exsecutor umbram ligat (impletio-
+       vocabulum/-analysis) et utramque lectionem praefert. Condicio
+       in ARBORE (umbra), regula per relationem et casum generica;
+       casus LITTERIS (captura in umbra ad lectionem primam ligaretur
+       nec retro tentaretur - T17). Substituit 'adpositio-accusativum-
+       regit' (T17) eadem mensura - comparatio. -->
+  <EXEMPLAR cursus="fratrum" output="$impletio_3">
     <elementa>
-      <vocabulum><analyses>
-        <analysis-adpositionis><casus>3</casus></analysis-adpositionis>
-      </analyses></vocabulum>
       <vocabulum n="$v"><analyses>
-        <analysis-substantivi n="$a"><casus>3</casus></analysis-substantivi>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>0</relatio><casus>3</casus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <analysis-substantivi n="$b"><casus>3</casus></analysis-substantivi>
       </analyses></vocabulum>
     </elementa>
   </EXEMPLAR>
   <consilium>
-    <PER congruentia="$accusativum">
-      <praelatio vocabulum="&@v;" analysis="&@a;" regula="adpositio-accusativum-regit"/>
+    <PER congruentia="$impletio_3">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-obiectum-accusativi"/>
     </PER>
   </consilium>
 </regula>
 
-<regula titulus="adpositio-ablativum-regit">
-  <!-- praepositio cum lectione ablativa (casus 4): cum puella, in urbe,
-       ab urbe, de silva -->
-  <EXEMPLAR cursus="fratrum" output="$ablativum">
+<regula titulus="umbra-obiectum-ablativi">
+  <!-- umbra obiecti casu ablativo (4): cum puella, in urbe, ab urbe, de
+       silva - substituit 'adpositio-ablativum-regit' (T17) -->
+  <EXEMPLAR cursus="fratrum" output="$impletio_4">
     <elementa>
-      <vocabulum><analyses>
-        <analysis-adpositionis><casus>4</casus></analysis-adpositionis>
-      </analyses></vocabulum>
       <vocabulum n="$v"><analyses>
-        <analysis-substantivi n="$a"><casus>4</casus></analysis-substantivi>
+        <* n="$a"><umbrae><umbra n="$u"><relatio>0</relatio><casus>4</casus></umbra></umbrae></>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <analysis-substantivi n="$b"><casus>4</casus></analysis-substantivi>
       </analyses></vocabulum>
     </elementa>
   </EXEMPLAR>
   <consilium>
-    <PER congruentia="$ablativum">
-      <praelatio vocabulum="&@v;" analysis="&@a;" regula="adpositio-ablativum-regit"/>
+    <PER congruentia="$impletio_4">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-obiectum-ablativi"/>
     </PER>
   </consilium>
 </regula>

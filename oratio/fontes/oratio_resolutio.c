@@ -340,6 +340,87 @@ _numerus_attributi (
     redde materia_arbor_numerus_ex_chorda(v, exitus);
 }
 
+/* IMPLETIO (T19d): umbra ligandum post permutationes - umbra nodus
+ * (stabilis per permutationem listae), vocabulum implens w, analysis
+ * implens b (index ANTE permutationem; remittitur) */
+nomen structura {
+    MateriaNodus* umbra;
+             i32  w;
+             i32  b;
+} Impletio;
+
+/* analysis 'a' vocabuli 'v' intra elementa adest? */
+interior b32
+_analysis_adest (
+    MateriaValor elementa,
+             i32 v,
+             i32 a)
+{
+    constans MateriaNodus* vocabulum =
+        materia_valor_lista_obtinere(elementa, v)->datum.nodus;
+    constans MateriaValor* analyses;
+
+    si (vocabulum->genus != (s32)ORATIO_GENUS_VOCABULUM)
+    {
+        redde FALSUM;
+    }
+    analyses = &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    redde analyses->genus == MATERIA_VALOR_LISTA
+        && a < materia_valor_lista_numerus(*analyses);
+}
+
+/* umbra 'u' analysis 'a' vocabuli 'v' (locus 'umbrae' per titulum
+ * classis analysis); NIHIL si absens */
+interior MateriaNodus*
+_umbram_invenire (
+    MateriaValor elementa,
+             i32 v,
+             i32 a,
+             i32 u)
+{
+    constans MateriaNodus* vocabulum;
+    constans MateriaValor* analyses;
+    constans MateriaValor* analysis_valor;
+             MateriaNodus* analysis;
+                      s32  locus;
+    constans MateriaValor* umbrae;
+    constans MateriaValor* umbra_valor;
+
+    si (!_analysis_adest(elementa, v, a))
+    {
+        redde NIHIL;
+    }
+    vocabulum = materia_valor_lista_obtinere(elementa,
+        v)->datum.nodus;
+    analyses        = &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    analysis_valor  = materia_valor_lista_obtinere(*analyses, a);
+    si (   analysis_valor        == NIHIL
+        || analysis_valor->genus != MATERIA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    analysis = analysis_valor->datum.nodus;
+    locus    = oratio_partes_locus(oratio_genus_classis(
+        (OratioGenus)analysis->genus), "umbrae");
+    si (locus < ZEPHYRUM || (i32)locus >= analysis->numerus_locorum)
+    {
+        redde NIHIL;
+    }
+    umbrae = &analysis->loci[locus];
+    si (   umbrae->genus != MATERIA_VALOR_LISTA
+        || u             >= materia_valor_lista_numerus(*umbrae))
+    {
+        redde NIHIL;
+    }
+    umbra_valor = materia_valor_lista_obtinere(*umbrae, u);
+    si (   umbra_valor        == NIHIL
+        || umbra_valor->genus != MATERIA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    redde umbra_valor->datum.nodus;
+}
+
 /* sententiam unam resolvere: proiectio + programma -> expansio ->
  * consilia -> permutationes. FALSUM = memoria sola. */
 interior b32
@@ -363,6 +444,7 @@ _sententiam_resolvere (
          StmlExpansioResultus  expansio;
                           Xar* regulae;
                           s32* praelata;
+                          Xar* impletiones;   /* Impletio (T19d) */
 
     si (cursus->census != NIHIL)
     {
@@ -460,7 +542,8 @@ _sententiam_resolvere (
     regulae = _liberi_titulo(scratch, expansio.radix_expansa, "regula");
     praelata = (s32*)piscina_allocare(scratch, (memoriae_index)ne
         * (memoriae_index)magnitudo(s32));
-    si (regulae == NIHIL || praelata == NIHIL)
+    impletiones = xar_creare(scratch, (i32)magnitudo(Impletio));
+    si (regulae == NIHIL || praelata == NIHIL || impletiones == NIHIL)
     {
         piscina_destruere(scratch);
         redde FALSUM;
@@ -545,6 +628,77 @@ _sententiam_resolvere (
                 redde FALSUM;
             }
         }
+        /* IMPLETIONES (T19d): umbra (vocabulum v, analysis a, umbra u)
+         * a lectione (ad-vocabulum w, ad-analysis b) impletur. Ordo
+         * validus notatur (ligatio POST permutationes, indicibus
+         * remissis) et utramque lectionem praefert - carrier v/a et
+         * implens w/b - prima regula per vocabulum vincente ut
+         * praelatio. Ordo malus recusatur. */
+        ordines = _liberi_titulo(scratch, consilium_nodus, "impletio");
+        si (ordines == NIHIL)
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
+        per (o = ZEPHYRUM; o < xar_numerus(ordines); o++)
+        {
+                        StmlNodus* ordo;
+                              i32  v;
+                              i32  a;
+                              i32  u;
+                              i32  w;
+                              i32  b;
+                     MateriaNodus* umbra;
+                         Impletio* cella;
+
+            ordo = *(StmlNodus**)xar_obtinere(ordines, o);
+            si (   !_numerus_attributi(ordo, "vocabulum", &v)
+                || !_numerus_attributi(ordo, "analysis", &a)
+                || !_numerus_attributi(ordo, "umbra", &u)
+                || !_numerus_attributi(ordo, "ad-vocabulum", &w)
+                || !_numerus_attributi(ordo, "ad-analysis", &b)
+                || v >= ne || w >= ne
+                || (umbra = _umbram_invenire(*elementa, v, a, u))
+                    == NIHIL
+                || !_analysis_adest(*elementa, w, b))
+            {
+                si (cursus->census != NIHIL)
+                {
+                    cursus->census->recusatae =
+                        cursus->census->recusatae + I;
+                }
+                perge;
+            }
+            si (cursus->census != NIHIL)
+            {
+                cursus->census->ordines = cursus->census->ordines + I;
+            }
+            cella = (Impletio*)xar_addere(impletiones);
+            si (cella == NIHIL)
+            {
+                piscina_destruere(scratch);
+                redde FALSUM;
+            }
+            cella->umbra  = umbra;
+            cella->w      = w;
+            cella->b      = b;
+            /* praelationes ambae sub lege 'prima vincit per
+             * vocabulum' */
+            si (praelata[v] < ZEPHYRUM)
+            {
+                praelata[v] = (s32)a;
+            }
+            si (praelata[w] < ZEPHYRUM)
+            {
+                praelata[w] = (s32)b;
+            }
+            si (   titulus != NIHIL
+                && !_regulam_numerare(cursus, *titulus))
+            {
+                piscina_destruere(scratch);
+                redde FALSUM;
+            }
+        }
     }
     /* permutationes: analysis praelata prima, ceterae ordine suo */
     per (k = ZEPHYRUM; k < ne; k++)
@@ -593,6 +747,53 @@ _sententiam_resolvere (
         si (cursus->census != NIHIL)
         {
             cursus->census->applicatae = cursus->census->applicatae + I;
+        }
+    }
+    /* LIGATIO umbrarum (T19d) post permutationes: index analysis
+     * implentis in ordinem NOVUM remittitur (praelata prima, ceterae
+     * ordine suo - lex permutationis supra); umbra iam ligata manet
+     * (prima vincit: repetita). Lex 'semel scribere' ligationem primam
+     * per ponere custodit. */
+    per (k = ZEPHYRUM; k < xar_numerus(impletiones); k++)
+    {
+        Impletio* imp = (Impletio*)xar_obtinere(impletiones, k);
+             i32  b_novus;
+
+        si (imp->umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
+            != MATERIA_VALOR_NIHIL)
+        {
+            si (cursus->census != NIHIL)
+            {
+                cursus->census->repetitae =
+                    cursus->census->repetitae + I;
+            }
+            perge;
+        }
+        b_novus = imp->b;
+        si (praelata[imp->w] >= ZEPHYRUM)
+        {
+            si (imp->b == (i32)praelata[imp->w])
+            {
+                b_novus = ZEPHYRUM;
+            }
+            alioquin si (imp->b < (i32)praelata[imp->w])
+            {
+                b_novus = imp->b + I;
+            }
+        }
+        si (   !materia_nodus_ponere(imp->umbra,
+                (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM,
+                materia_valor_index((s32)imp->w), MATERIA_LOCUS_INDEX)
+            || !materia_nodus_ponere(imp->umbra,
+                (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
+                materia_valor_index((s32)b_novus), MATERIA_LOCUS_INDEX))
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
+        si (cursus->census != NIHIL)
+        {
+            cursus->census->impletae = cursus->census->impletae + I;
         }
     }
     piscina_destruere(scratch);
