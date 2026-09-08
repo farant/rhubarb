@@ -491,12 +491,25 @@ reason `verbum`)** — a certain finite verb in a non-closable clause
 that already holds one opens a coordinate clause; the words between
 the two verbs go to the NEW clause (variant A, verb-final; B measured
 and worse on every Latin file); overall purity 738/829/864 →
-822/848/881 (pins), Seneca count agreement 52 → 65 %. NEXT = T20b
-(catena along bindings, discordia count, override decision from the
-numbers), then T20c (clause carrier in the executor, cum conjunction,
-`cursus="clausulae"`, subject umbra). Closure layer (`est` early in
-charter subordinates) is the next measured target. Head-rule template
-still open.
+822/848/881 (pins), Seneca count agreement 52 → 65 %. **T20a ter
+(same day): the CLOSURE variants**, each measured alone by PAIRWISE
+CONCORDANCE (Rand over word pairs; purity alone rewards
+over-segmentation, count alone sees no order — concordance is now the
+pinned decision floor, count agreement reported): `qui supra` (the
+charters' "aforesaid") no relative seed, a COPULA (lemma `sum`) does
+not close a clause without its verb, a non-seeding coordinator right
+before a seed joins the seeded clause, CERTAINTY counts LATIN readings
+only (`tenet` is a Moby noun); initial `unde/ubi` no-seed measured and
+dropped (−0.2 alone, nothing combined); the stamper now takes the
+DOCUMENT LANGUAGE from the resolver and an English document is not
+seeded by Latin readings at all (`it sit do` are finite Latin verbs).
+Concordance 799/769/781 → 819/811/798 (pins), purity 850/870/893
+(pins), EWT purity 724/737 (down 2 with the cause named). NEXT = T20b
+(catena along bindings, discordia count), then T20c (clause carrier
+in the executor, cum conjunction, `cursus="clausulae"`, subject
+umbra); the charters over-segment (2.65 / 2.51 vs 2.52 / 2.25 gold)
+— which extra clauses are the verb split inside formulae is the next
+listing to read. Head-rule template still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

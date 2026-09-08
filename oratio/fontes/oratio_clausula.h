@@ -90,13 +90,19 @@ oratio_clausula_lectio_finita (
     constans MateriaNodus* analysis);
 
 /* Sententias radicis (documentum | paragraphus | sententia annotata)
- * seminare: strata I-III, nodi clausulae in sententiam, loci
- * clausula/clausula-causa in elementa. Sententia iam stampata
- * praeteritur. census NIHIL licet. FALSUM = memoria sola. */
+ * seminare: strata I-III et V, nodi clausulae in sententiam, loci
+ * clausula/clausula-causa in elementa. lingua = titulus linguae
+ * documenti ("latina" | "anglica"; NIHIL = latina): documentum non
+ * Latinum lectionibus Latinis NON seminatur nec scinditur (it, sit,
+ * do verba Latina finita sunt - EWT CDXII clausulas falsas dabat) -
+ * sententiae eius UNICAE donec semina suae linguae data sint.
+ * Sententia iam stampata praeteritur. census NIHIL licet. FALSUM =
+ * memoria sola. */
 b32
 oratio_clausulas_seminare (
                  Piscina* piscina,
             MateriaNodus* radix,
+      constans character* lingua,
     OratioClausulaCensus* census);
 
 #endif /* ORATIO_CLAUSULA_H */

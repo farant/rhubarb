@@ -1451,9 +1451,42 @@ Seneca 518 → 65x, clauses per sentence 1.68 → 2.07 against 2.27 gold;
 the charters now over-segment slightly (2.46 vs 2.25). The layer
 scores 69 / 69 / 76 % on its own words and lifts `extentum` and
 `unica` by taking their worst words. Gate: three hand cases (asyndeton
-without seeds, `Veni, vidi, vici` with one uncertain verb, no split
-inside a subordinate). NEXT: T20b; the closure layer's early `est` on
-the charters is the next measured target.
+without seeds, `Puer currit, puella cantat` with a comma, no split
+inside a subordinate; `Veni, vidi, vici` does not split because `veni`
+carries a non-verb reading). NEXT: T20b; the closure layer's early
+`est` on the charters is the next measured target.
+
+**As built — T20a ter, the closure layer and the decision measure
+(2026-09-08, same session).** A scratch view of charter sentences
+with our clause beside the gold root showed four shapes behind the
+"early `est`": the formula `qui supra` (a verbless relative that UD
+keeps in the main clause), the copula closing before its predicate,
+sentence-initial `unde` as a connective, and a coordinator before a
+seed; a fifth came from `tenet`, uncertain only because Moby lists an
+English noun. MEASURE FIRST: purity rewards over-segmentation (a
+one-word clause is pure) and the sentence count sees no order, so the
+oracle gained PAIRWISE CONCORDANCE (Rand over word pairs within a
+sentence: do we and the gold agree that two words share a clause),
+which is now the pinned decision floor; count agreement stays
+reported. Each variant alone, from 799 / 769 / 781 (Seneca / charters
+dev / test): `qui supra` no seed = / +5 / +2 permille; a COPULA (lemma
+`sum`) does not close a closable clause that has no verb yet +2 / +10
+/ +2; a non-seeding coordinator directly before a seed joins the
+seeded clause = / +1 / +3; certainty over LATIN readings only +19 /
++10 / +5; all four +21 / +43 / +18 (superadditive on the charters);
+initial `unde/ubi` no seed −2 on dev alone and nothing in combination:
+removed. Latin-only certainty exposed that the stamper never knew the
+document language: `it`, `sit`, `do` are finite Latin verbs and split
+English sentences; the resolver now passes the language and an
+English document is not seeded by Latin readings at all (parentheses
+only), which moved the English purity pins down two permille with
+that cause named. Final pins: purity 850 / 870 / 893 / 724 / 737,
+concordance 819 / 811 / 798 / 539 / 547; clauses per sentence Seneca
+2.22 vs 2.27, charters 2.65 vs 2.52 and 2.51 vs 2.25 (over-segmented:
+the verb split inside formulae is the next listing to read); the
+closure layer itself 659 / 738 / 692, still the weakest. Gate: four
+hand cases (`qui supra`, copula not closing, coordinator before `si`,
+`tenet` certain) and the English document unseeded. NEXT: T20b.
 
 ## 8. Stage 6 — search
 

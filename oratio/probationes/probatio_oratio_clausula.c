@@ -265,8 +265,8 @@ _seminare (
     i32 summa_specierum  = ZEPHYRUM;
     i32 i;
 
-    oratio_clausula_census_vacare(census);
-    si (!oratio_clausulas_seminare(piscina, doc, census))
+        oratio_clausula_census_vacare(census);
+    si (!oratio_clausulas_seminare(piscina, doc, "latina", census))
     {
         redde FALSUM;
     }
@@ -390,8 +390,9 @@ principale (vacuum)
             (s32)ORATIO_UMBRA_CASUS),
             (s32)ORATIO_CASUS_NOMINATIVUS);
     }
-    /* idempotens: cursus alter nihil addit */
-    CREDO_VERUM (oratio_clausulas_seminare(piscina, doc, &census));
+        /* idempotens: cursus alter nihil addit */
+    CREDO_VERUM (oratio_clausulas_seminare(piscina, doc, "latina",
+        &census));
     CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
     CREDO_AEQUALIS_I32 (census.sententiae, I);
     /* proiectio: attributa clausula/clausula-causa et nodi clausula;
@@ -610,14 +611,64 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_causa(doc, (i32)III),
         (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA);
 
-    /* (h) Anglica: nulla lectio finita capax (Moby sine modo) - unica */
+        /* (k) VARIATIONES clausurae (T20a ter) - qui supra formula: nullum
+     * semen (Promitto ego qui supra Adalprando tibi: clausula una) */
     doc = _documentum(piscina, &vocabularia,
-        "The cat sat because it was tired.\n");
+        "Promitto ego qui supra Adalprando tibi.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
     CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), I);
+    CREDO_AEQUALIS_S32 (_causa(doc, (i32)II),
+        (s32)ORATIO_CLAUSULA_CAUSA_UNICA);
+    /* (k2) copula non claudit: Terra(0) qui(1) fuit(2) Filippi(3)
+     * presbiteri(4) ,(5) manet(6) - relativa ad comma clauditur, non
+     * ad fuit; praedicatum intra */
+    doc = _documentum(piscina, &vocabularia,
+        "Terra qui fuit Filippi presbiteri, manet.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)II), (s32)I);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)III), (s32)I);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)IV), (s32)I);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)VI), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census.clausae_verbo, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census.clausae_signo, I);
+    /* (k3) coordinans ante semen clausulae seminatae accedit: Puella(0)
+     * cantat(1) et(2) si(3) puer(4) venit(5) ,(6) ridet(7) */
+    doc = _documentum(piscina, &vocabularia,
+        "Puella cantat et si puer venit, ridet.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)II), _clausula(doc,
+        (i32)III));
+    CREDO_AEQUALIS_S32 (_species(doc, _clausula(doc, (i32)III)
+        >= ZEPHYRUM
+        ? (i32)_clausula(doc, (i32)III) : ZEPHYRUM),
+        (s32)ORATIO_SPECIES_CLAUSULAE_SUBORDINATA);
+    /* (k4) certitudo Latina: tenet substantivum Anglicum Moby - lectio
+     * Anglica non suffragatur, tenet certum, cantat scindit */
+    doc = _documentum(piscina, &vocabularia,
+        "Puer tenet terram puella cantat.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+    CREDO_AEQUALIS_I32 (census.scissae, I);
+
+        /* (h) Anglica: documentum Anglicum lectionibus Latinis non seminatur
+     * nec scinditur (it, sit, do verba Latina finita) - unica */
+    doc = _documentum(piscina, &vocabularia,
+        "The cat sat because it was tired. Do sit it.\n");
+    CREDO_NON_NIHIL (doc);
+    oratio_clausula_census_vacare(&census);
+    CREDO_VERUM (oratio_clausulas_seminare(piscina, doc, "anglica",
+        &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), I);
     CREDO_AEQUALIS_S32 (_causa(doc, (i32)III),
         (s32)ORATIO_CLAUSULA_CAUSA_UNICA);
+    CREDO_AEQUALIS_I32 (census.scissae, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census.causae[ORATIO_CLAUSULA_CAUSA_UNICA],
+        (i32)XII);
 
     imprimere("\n--- III. Per resolutionem (census) ---\n");
     {

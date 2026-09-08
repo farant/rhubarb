@@ -45,6 +45,32 @@ constans character* constans ORATIO_SEMINA_CORROBORANDA[] = {
  * alterum ipsum). Utraque mensurata 2026-09-08 (vide worklog). */
 hic_manens constans b32 SCISSIO_ANTE_VERBA_MEDIA = VERUM;
 
+/* VARIATIONES clausurae (T20a ter, 2026-09-08; ex indice erratorum
+ * chartarum cum contextu): quaeque sola mensurata CONCORDIA PARIUM
+ * (Rand; puritas sola segmentationem nimiam praemiat), deinde omnes.
+ * Basis CIRCSE / LLCT dev / test 79.9 / 76.9 / 78.1.
+ * QUI_SUPRA: 'qui supra' formula chartarum (= suprascriptus, sine
+ * verbo, UD in clausula principali) relativum non seminat: = / +0.5
+ * / +0.2.
+ * COPULA_NON_CLAUDIT: verbum certum lemmate 'sum' clausulam
+ * clausibilem sine verbo suo non claudit - praedicatum copulam
+ * sequitur (qui fuit quondam Filippi), radix UD praedicatum: +0.2 /
+ * +1.0 / +0.2.
+ * COORDINANS_ANTE_SEMEN: coordinans non seminans quem semen statim
+ * sequitur clausulae seminatae accedit (ut census limites definit):
+ * = / +0.1 / +0.3.
+ * CERTITUDO_LATINA: verbum CERTUM = lectiones LATINAE omnes finitae
+ * (lectio Anglica Moby - tenet substantivum Anglicum - in sententia
+ * Latina non suffragatur): +1.9 / +1.0 / +0.5.
+ * OMNES: +2.1 / +4.3 / +1.8 (superadditivae chartis). Mensurata et
+ * ABLATA: ubi/unde initio sententiae non seminans (unde conectivum,
+ * census initium XV/XXV): sola -0.2 dev, in combinatione nihil. */
+hic_manens constans b32 QUI_SUPRA_NON_SEMINAT  = VERUM;
+hic_manens constans b32 COPULA_NON_CLAUDIT     = VERUM;
+hic_manens constans b32 COORDINANS_ANTE_SEMEN  = VERUM;
+hic_manens constans b32 CERTITUDO_LATINA       = VERUM;
+
+
 /* formae relativae: lemma lectionis pronominis aut determinantis */
 constans character* constans ORATIO_SEMINA_RELATIVA[] = {
     "qui", "quicumque", "quisquis",
@@ -225,9 +251,12 @@ nomen structura {
              s32  semen;          /* GenusSeminis candidatum */
                       b32  finita_capax;   /* lectio finita ulla */
                       b32  finita_certa;   /* lectiones omnes finitae */
-                      b32  seminat;        /* post corroborationem */
-                      s32  clausula;       /* -I = aperta */
-                      s32  causa;
+                                   b32  seminat;        /* post corroborationem */
+                          b32  copula_certa;   /* certum et lemmate 'sum' (copula) */
+                          b32  supra;          /* lectio lemmate 'supra' (qui supra) */
+
+             s32 clausula;       /* -I = aperta */
+             s32 causa;
 } Membrum;
 
 nomen structura {
@@ -245,20 +274,31 @@ nomen structura {
 interior vacuum
 _membrum_describere (
     MateriaNodus* nodus,
-         Membrum* m)
+         Membrum* m,
+             b32  latina)
 {
-    constans MateriaValor* analyses;
-                      i32  n;
-                      i32  a;
-                      i32  finitae = ZEPHYRUM;
+        constans MateriaValor* analyses;
+                          i32  n;
+                          i32  a;
+                          i32  finitae     = ZEPHYRUM;
+                          i32  auxiliares  = ZEPHYRUM;
+            hic_manens constans character* constans SUPRA[] = { "supra",
+                NIHIL };
+    hic_manens constans character* constans ESSE[]  = { "sum", NIHIL };
+                      i32 latinae                   = ZEPHYRUM;
+                      b32 copula                    = FALSUM;
 
-    m->nodus         = nodus;
-    m->semen         = (s32)SEMEN_NULLUM;
-    m->finita_capax  = FALSUM;
-    m->finita_certa  = FALSUM;
-    m->seminat       = FALSUM;
-    m->clausula      = (s32)-I;
-    m->causa         = (s32)-I;
+
+    m->nodus             = nodus;
+    m->semen             = (s32)SEMEN_NULLUM;
+        m->finita_capax  = FALSUM;
+    m->finita_certa      = FALSUM;
+    m->seminat           = FALSUM;
+    m->copula_certa      = FALSUM;
+        m->supra         = FALSUM;
+
+    m->clausula  = (s32)-I;
+    m->causa     = (s32)-I;
     si (nodus->genus == (s32)ORATIO_GENUS_INTERPUNCTIO)
     {
         constans MateriaValor* signum =
@@ -285,16 +325,16 @@ _membrum_describere (
         }
         redde;
     }
-    si (nodus->genus != (s32)ORATIO_GENUS_VOCABULUM)
-    {
-        redde;
-    }
+        si (nodus->genus != (s32)ORATIO_GENUS_VOCABULUM || !latina)
+        {
+        redde;   /* documentum non Latinum: nec semen nec verbum */
+        }
     analyses = &nodus->loci[ORATIO_VOCABULUM_ANALYSES];
     si (analyses->genus != MATERIA_VALOR_LISTA)
     {
         redde;
     }
-    n = materia_valor_lista_numerus(*analyses);
+        n = materia_valor_lista_numerus(*analyses);
     per (a = ZEPHYRUM; a < n; a++)
     {
         constans MateriaValor* v =
@@ -308,22 +348,36 @@ _membrum_describere (
         {
             perge;
         }
-        lectio = v->datum.nodus;
+                lectio = v->datum.nodus;
         si (oratio_clausula_lectio_finita(lectio))
         {
             m->finita_capax  = VERUM;
             finitae          = finitae + I;
+            si (oratio_genus_classis((OratioGenus)lectio->genus)
+                == ORATIO_CLASSIS_AUXILIARE)
+            {
+                auxiliares = auxiliares + I;
+            }
         }
         si (!_latina(lectio))
         {
             perge;
         }
+        latinae  = latinae + I;
         classis  = oratio_genus_classis((OratioGenus)lectio->genus);
         lemma    = _lemma(lectio);
         si (lemma.mensura == ZEPHYRUM)
         {
             perge;
         }
+        si (_in_lista(ESSE, lemma))
+        {
+            copula = VERUM;
+        }
+                si (_in_lista(SUPRA, lemma))
+                {
+            m->supra = VERUM;
+                }
         /* prioritas: certum > relativum > corroborandum > coordinans */
         si (_in_lista(ORATIO_SEMINA_CERTA, lemma))
         {
@@ -355,7 +409,17 @@ _membrum_describere (
             m->semen = (s32)SEMEN_COORDINANS;
         }
     }
-    m->finita_certa = (b32)(n > ZEPHYRUM && finitae == n);
+            si (CERTITUDO_LATINA)
+            {
+        m->finita_certa = (b32)(latinae > ZEPHYRUM
+            && finitae == latinae);
+            }
+    alioquin
+            {
+        m->finita_certa = (b32)(n > ZEPHYRUM && finitae == n);
+            }
+    m->copula_certa  = (b32)(m->finita_certa && copula);
+    (vacuum)auxiliares;
 }
 
 /* stratum I: corroboratio - verbum finitum capax inter k et semen
@@ -388,12 +452,21 @@ _semina_iudicare (
                     b32  sinistra  = FALSUM;
                     b32  dextra    = FALSUM;
 
+                si (   QUI_SUPRA_NON_SEMINAT
+                    && m->semen == (s32)SEMEN_RELATIVUM
+                    && k + I < n && membra[k + I].supra)
+                {
+            /* 'qui supra': formula chartarum sine verbo */
+            m->semen = (s32)SEMEN_NULLUM;
+            perge;
+                }
         si (   m->semen == (s32)SEMEN_CERTUM
             || m->semen == (s32)SEMEN_RELATIVUM)
         {
             m->seminat = VERUM;
             perge;
         }
+
         si (m->semen == (s32)SEMEN_CORROBORANDUM)
         {
             per (j = k + I; j < n
@@ -497,8 +570,9 @@ _extentum_stampare (
     s32 summa               = (s32)-I;   /* clausula principalis; -I nondum */
         b32 post_clausuram  = FALSUM;
     b32 post_verbum         = FALSUM;   /* post scissionem verbi */
-    b32 semen_ullum         = FALSUM;
+        b32 semen_ullum     = FALSUM;
     b32 scissa              = FALSUM;
+    s32 pendens             = (s32)-I;   /* coordinans ante semen */
     i32 k;
 
 
@@ -588,11 +662,12 @@ _extentum_stampare (
             post_clausuram           = FALSUM;
             post_verbum              = FALSUM;
         }
-        alioquin si (m->seminat)
+                alioquin si (m->seminat)
         {
             s32 species = m->semen == (s32)SEMEN_RELATIVUM
                 ? (s32)ORATIO_SPECIES_CLAUSULAE_RELATIVA
                 : (s32)ORATIO_SPECIES_CLAUSULAE_SUBORDINATA;
+            s32 vetus_top = top;
 
             /* relativum initiale = relativum conectens: clausulam
              * principalem aperit (Qui cum venisset ...) */
@@ -610,12 +685,25 @@ _extentum_stampare (
             {
                 summa = nova;
             }
-                        acervus[altitudo] = nova;
+                                    acervus[altitudo] = nova;
             altitudo = altitudo + I;
             m->clausula = nova;
             m->causa = (s32)ORATIO_CLAUSULA_CAUSA_SEMEN;
             post_clausuram = FALSUM;
             post_verbum = FALSUM;
+            /* coordinans pendens ante hoc semen: clausulae seminatae */
+            si (   COORDINANS_ANTE_SEMEN && pendens == (s32)k - (s32)I
+                && vetus_top                >= ZEPHYRUM
+                && membra[pendens].clausula == vetus_top)
+            {
+                membra[pendens].clausula = nova;
+                ((Clausula*)xar_obtinere(clausulae, (i32)vetus_top))
+                    ->membra = ((Clausula*)xar_obtinere(clausulae,
+                        (i32)vetus_top))->membra - I;
+                ((Clausula*)xar_obtinere(clausulae, (i32)nova))->membra
+                    = ((Clausula*)xar_obtinere(clausulae,
+                        (i32)nova))->membra + I;
+            }
         }
         alioquin si (m->semen == (s32)SEMEN_APERIENS)
         {
@@ -682,7 +770,14 @@ _extentum_stampare (
                 : post_clausuram
                 ? (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA
                 : (s32)ORATIO_CLAUSULA_CAUSA_EXTENTUM;
-            si (m->finita_certa && cl->clausibilis)
+                        si (   m->semen == (s32)SEMEN_COORDINANS
+                            && !m->seminat)
+                        {
+                pendens = (s32)k;
+                        }
+            si (   m->finita_certa && cl->clausibilis
+                && !(COPULA_NON_CLAUDIT && m->copula_certa
+                     && cl->verbum < ZEPHYRUM))
             {
                 /* stratum III: verbum finitum certum clausulam
                  * clausibilem claudit (prior verbi finalis) */
@@ -922,6 +1017,7 @@ interior b32
 _sententiam_seminare (
                  Piscina* piscina,
             MateriaNodus* sententia,
+                     b32  latina,
     OratioClausulaCensus* census)
 {
     constans MateriaValor* elementa =
@@ -969,7 +1065,7 @@ _sententiam_seminare (
             piscina_destruere(scratch);
             redde VERUM;   /* sententia aliena: nihil */
         }
-        _membrum_describere(v->datum.nodus, &membra[k]);
+                _membrum_describere(v->datum.nodus, &membra[k], latina);
     }
     _semina_iudicare(membra, n, census);
     bene = _extentum_stampare(scratch, membra, n, clausulae, census)
@@ -994,11 +1090,14 @@ b32
 oratio_clausulas_seminare (
                  Piscina* piscina,
             MateriaNodus* radix,
+      constans character* lingua,
     OratioClausulaCensus* census)
 {
     constans MateriaValor* lista;
                       i32  n;
                       i32  k;
+                      b32  latina = (b32)(lingua == NIHIL
+                          || strcmp(lingua, "anglica") != ZEPHYRUM);
 
     si (radix == NIHIL)
     {
@@ -1006,7 +1105,7 @@ oratio_clausulas_seminare (
     }
     si (radix->genus == (s32)ORATIO_GENUS_SENTENTIA)
     {
-        redde _sententiam_seminare(piscina, radix, census);
+        redde _sententiam_seminare(piscina, radix, latina, census);
     }
     si (radix->genus == (s32)ORATIO_GENUS_DOCUMENTUM)
     {
@@ -1030,12 +1129,13 @@ oratio_clausulas_seminare (
         constans MateriaValor* e = materia_valor_lista_obtinere(*lista,
             k);
 
-        si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
-            && !oratio_clausulas_seminare(piscina, e->datum.nodus,
-                census))
-        {
+                si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
+                    && !oratio_clausulas_seminare(piscina,
+                    e->datum.nodus,
+                    lingua, census))
+                {
             redde FALSUM;
-        }
+                }
     }
     redde VERUM;
 }

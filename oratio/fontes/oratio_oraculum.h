@@ -195,13 +195,20 @@ nomen structura {
      * nostrae); [CAUSA_NUMERUS] = aperta (locus non scriptus).
      * Coactio = posita / iudicata. NUMERUS: sententiae iudicatae,
      * clausulae nostrae, aureae, sententiae paribus numeris. */
-    i32 clausulae_verba[ORATIO_CLAUSULA_CAUSA_NUMERUS + I];
-    i32 clausulae_rectae[ORATIO_CLAUSULA_CAUSA_NUMERUS + I];
-    i32 clausulae_iudicata;
-    i32 clausulae_sententiae;
-    i32 clausulae_nostrae;
-    i32 clausulae_aureae;
-    i32 clausulae_pares;
+        i32 clausulae_verba[ORATIO_CLAUSULA_CAUSA_NUMERUS + I];
+        i32 clausulae_rectae[ORATIO_CLAUSULA_CAUSA_NUMERUS + I];
+        i32 clausulae_iudicata;
+        i32 clausulae_sententiae;
+        i32 clausulae_nostrae;
+        i32 clausulae_aureae;
+        i32 clausulae_pares;
+    /* CONCORDIA PARIUM (T20a ter): paria verborum iudicatorum intra
+     * sententiam quorum 'eadem clausula' idem iudicat nostrum et aureum
+     * (Rand): puritas sola segmentationem nimiam praemiat (clausula
+     * unius verbi semper pura), numerus solus ordinem non videt -
+     * concordia utrumque punit. Mensura decisionum variationum. */
+    i32 clausulae_paria;
+    i32 clausulae_paria_concordia;
     Xar* errata_clausularum;   /* OratioOraculumErratumClausulae* */
     TabulaDispersa* errata_clausularum_index;
 

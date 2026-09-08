@@ -2074,3 +2074,58 @@ layer scores 69 / 69 / 76 percent on its own words and lifted
 `extentum` and `unica` by ten points on Seneca by taking their bad
 words away, which is the doctrine's picture of a layer: a reason
 that can be scored, added without touching the others.
+
+## 2026-09-08 — T20a ter: the closure layer, and the measure that had to change first
+
+The listing said `est` was the closure layer's top error on the
+charters, but the listing has no sentence context, so the first
+thing built was a scratch view that prints charter sentences with our
+clause and reason beside the gold root, word by word. It showed four
+shapes, and only one of them is about closure. `qui supra` is the
+charters' fixed phrase for "the aforesaid", a relative with no verb
+that UD keeps in the main clause; we opened a relative clause that
+never closed. A copula closes a clause too early, because the
+predicate follows it (`qui fuit quondam Filippi presbiteri`). A
+sentence-initial `unde` is a connective, not a subordinator, and the
+seed census had already said so. And a coordinator right before a seed
+belongs to the seeded clause, which is how the census defined a
+boundary in the first place. A fifth came from `tenet`, which never
+split a clause because Moby knows an English noun `tenet`: the
+certainty test counted every reading, and English readings should not
+vote in a Latin sentence.
+
+Each went behind a switch and was measured alone on the three Latin
+files, and the first measurement taught me something about the
+measure. Purity said `qui supra` lost half a point while the clause
+count moved toward gold, because a false relative clause of three
+words is three "pure" words, and merging them into the main clause
+makes them compete in its majority. Purity rewards over-segmentation;
+the count rewards nothing in particular. The doctrine asked for a
+profile, not a score, but a decision between variants needs one
+number that both directions can lose on, and that is pairwise
+concordance: for every pair of words in a sentence, do we and the
+gold agree on whether they share a clause. Under that measure, from a
+base of 79.9 / 76.9 / 78.1: `qui supra` = / +0.5 / +0.2, the copula
++0.2 / +1.0 / +0.2, the coordinator = / +0.1 / +0.3, Latin-only
+certainty +1.9 / +1.0 / +0.5, all four together +2.1 / +4.3 / +1.8,
+which is more than their sum on the charters. The initial-adverb rule
+lost 0.2 alone and added nothing in combination, so it is gone.
+Concordance is now the pinned floor; sentence-count agreement is
+reported, since it fell six permille on one charter file while both
+other measures rose, and it is as one-sided as purity.
+
+Latin-only certainty then broke English, in an instructive way: `it`,
+`sit` and `do` are finite Latin verbs, and once English readings
+stopped voting, English sentences split at every `it`. The stamper
+had never known the document language; it takes it from the resolver
+now, and an English document is not seeded by Latin readings at all,
+only by parentheses. That cost two permille of English purity, which
+the accidental Latin seeds had been buying, and the pins moved down
+with that cause named.
+
+Final: purity 850 / 870 / 893, concordance 819 / 811 / 798, clauses
+per sentence 2.22 against 2.27 on Seneca. The charters still
+over-segment (2.65 and 2.51 against 2.52 and 2.25), and the closure
+layer itself is still the weakest at 66 / 74 / 69; both point at the
+same next question, which of our extra clauses are the verb split
+firing inside formulae where the gold sees one clause.

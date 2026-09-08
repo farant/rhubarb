@@ -102,12 +102,26 @@
  * infimum ut praedictum -, unica 740/984/986; Anglica unica fere
  * tota 727/738; residuum = verbum finitum alterum SINE semine:
  * asyndeton, T20c). T20a bis (eodem die): SCISSIO verbi (stratum V)
- * 738/829/864 -> 821/847/881, pares 518/740/771 -> 653/762/788. */
-#define CIRCSE_PURITAS_PINNA     821
-#define LLCT_DEV_PURITAS_PINNA   847
-#define LLCT_TEST_PURITAS_PINNA  881
-#define EWT_DEV_PURITAS_PINNA    726
-#define EWT_TEST_PURITAS_PINNA   739
+ * 738/829/864 -> 821/847/881, pares 518/740/771 -> 653/762/788.
+ * T20a ter (eodem die): variationes clausurae IV (qui supra, copula,
+ * coordinans ante semen, certitudo Latina) 821/847/881 ->
+ * 850/870/893; EWT 726/739 -> 724/737 DEFINITIO MUTATA: documentum
+ * Anglicum lectionibus Latinis non amplius seminatur (it sit do verba
+ * Latina finita, si cum semina falsa) - parentheses solae manent;
+ * pares relatae, non pinnatae (concordia parium pinna). */
+#define CIRCSE_PURITAS_PINNA      850
+#define LLCT_DEV_PURITAS_PINNA    870
+#define LLCT_TEST_PURITAS_PINNA   893
+#define EWT_DEV_PURITAS_PINNA     724
+#define EWT_TEST_PURITAS_PINNA    737
+/* T20a ter (2026-09-08): CONCORDIA PARIUM (Rand super paria verborum
+ * intra sententiam; puritas sola segmentationem nimiam praemiat) -
+ * mensura decisionum variationum, pinnata solum crescens. */
+#define CIRCSE_CONCORDIA_PINNA    819
+#define LLCT_DEV_CONCORDIA_PINNA  811
+#define LLCT_TEST_CONCORDIA_PINNA 798
+#define EWT_DEV_CONCORDIA_PINNA   539
+#define EWT_TEST_CONCORDIA_PINNA  547
 #define CIRCSE_PARES_PINNA       653
 #define LLCT_DEV_PARES_PINNA     762
 #define LLCT_TEST_PARES_PINNA    788
@@ -248,7 +262,8 @@ _thesaurus_arborum (
                            i32  pinna_primaria,
                            i32  pinna_coactae,
                            i32  pinna_puritatis,
-                           i32  pinna_parium)
+                           i32  pinna_parium,
+                           i32  pinna_concordiae)
 {
     Piscina* p = piscina_generare_dynamicum("oraculum_treebank",
         268435456);
@@ -541,7 +556,22 @@ _thesaurus_arborum (
         CREDO_VERUM (census.clausulae_nostrae > ZEPHYRUM);
         CREDO_VERUM (census.clausulae_aureae > ZEPHYRUM);
         CREDO_VERUM (puritas >= pinna_puritatis);
-        CREDO_VERUM (pares >= pinna_parium);
+        /* T20a ter: PARES relatae, non pinnatae - numerus solus ordinem non
+         * videt et puritas sola segmentationem nimiam praemiat; CONCORDIA
+         * parium utrumque punit et sola pinna decisionis est (pinna parium
+         * servata ut relatio) */
+        (vacuum)pinna_parium;
+        {
+            i32 concordia = _permille(census.clausulae_paria_concordia,
+                census.clausulae_paria);
+
+            imprimere("    clausulae: concordia parium %d permille (pinna %d,"
+                " solum crescens; %d paria)\n", (integer)concordia,
+                (integer)pinna_concordiae,
+                (integer)census.clausulae_paria);
+            CREDO_VERUM (census.clausulae_paria > ZEPHYRUM);
+            CREDO_VERUM (concordia >= pinna_concordiae);
+        }
         /* errata clausularum: summa numerorum == positae - rectae */
         {
             Xar* es = oratio_oraculum_errata_clausularum(p, &census);
@@ -813,7 +843,8 @@ principale (vacuum)
         (i32)CIRCSE_PRIMARIA_PINNA,
                 (i32)CIRCSE_COACTAE_PINNA,
         (i32)CIRCSE_PURITAS_PINNA,
-        (i32)CIRCSE_PARES_PINNA);
+        (i32)CIRCSE_PARES_PINNA,
+        (i32)CIRCSE_CONCORDIA_PINNA);
 
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_llct-ud-dev.conllu",
@@ -822,7 +853,8 @@ principale (vacuum)
         (i32)LLCT_DEV_PRIMARIA_PINNA,
                 (i32)LLCT_DEV_COACTAE_PINNA,
         (i32)LLCT_DEV_PURITAS_PINNA,
-        (i32)LLCT_DEV_PARES_PINNA);
+        (i32)LLCT_DEV_PARES_PINNA,
+        (i32)LLCT_DEV_CONCORDIA_PINNA);
 
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_llct-ud-test.conllu",
@@ -831,7 +863,8 @@ principale (vacuum)
         (i32)LLCT_TEST_PRIMARIA_PINNA,
                 (i32)LLCT_TEST_COACTAE_PINNA,
         (i32)LLCT_TEST_PURITAS_PINNA,
-        (i32)LLCT_TEST_PARES_PINNA);
+        (i32)LLCT_TEST_PARES_PINNA,
+        (i32)LLCT_TEST_CONCORDIA_PINNA);
 
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "en_ewt-ud-dev.conllu",
@@ -840,7 +873,8 @@ principale (vacuum)
         (i32)EWT_DEV_PRIMARIA_PINNA,
                 (i32)EWT_DEV_COACTAE_PINNA,
         (i32)EWT_DEV_PURITAS_PINNA,
-        (i32)EWT_DEV_PARES_PINNA);
+        (i32)EWT_DEV_PARES_PINNA,
+        (i32)EWT_DEV_CONCORDIA_PINNA);
 
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "en_ewt-ud-test.conllu",
@@ -849,7 +883,8 @@ principale (vacuum)
         (i32)EWT_TEST_PRIMARIA_PINNA,
                 (i32)EWT_TEST_COACTAE_PINNA,
         (i32)EWT_TEST_PURITAS_PINNA,
-        (i32)EWT_TEST_PARES_PINNA);
+        (i32)EWT_TEST_PARES_PINNA,
+        (i32)EWT_TEST_CONCORDIA_PINNA);
 
 
     imprimere("\n");

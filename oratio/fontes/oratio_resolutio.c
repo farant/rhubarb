@@ -1615,12 +1615,13 @@ _sententiam_resolvere (
     }
     /* T20a: CLAUSULAE ante gradus omnes - stampa seminum (strata I-III:
      * lectiones adsunt, ligationes nondum); idempotens */
-    si (!oratio_clausulas_seminare(cursus->piscina, sententia,
+        si (!oratio_clausulas_seminare(cursus->piscina, sententia,
+            cursus->lingua,
             cursus->census != NIHIL ? &cursus->census->clausulae
                 : NIHIL))
-    {
+        {
         redde FALSUM;
-    }
+        }
     ne               = materia_valor_lista_numerus(*elementa);
     regulae_numerus  = xar_numerus(cursus->programma->regulae);
     si (   cursus->regulae_numerus >= ZEPHYRUM

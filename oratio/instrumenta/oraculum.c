@@ -136,6 +136,9 @@ _clausulas_imprimere (
             _pars(c->clausulae_verba[i], c->clausulae_iudicata),
             _pars(c->clausulae_rectae[i], c->clausulae_verba[i]));
     }
+        imprimere("    concordia parium %5.1f%% (%d paria)\n",
+            _pars(c->clausulae_paria_concordia, c->clausulae_paria),
+            (integer)c->clausulae_paria);
     imprimere("    coactio %5.1f%% (%d/%d)  clausulae nostrae %d aureae %d"
         " (%.2f / %.2f per sententiam)  sententiae pares %5.1f%%\n",
         _pars(positae, c->clausulae_iudicata), (integer)positae,
@@ -556,9 +559,12 @@ _machinam_imprimere (
             (integer)c->clausulae_verba[i],
             (integer)c->clausulae_rectae[i]);
     }
-    imprimere("%s\tCLAUSULAE\t%d\t%d\t%d\t%d\n", titulus,
-        (integer)c->clausulae_sententiae, (integer)c->clausulae_nostrae,
-        (integer)c->clausulae_aureae, (integer)c->clausulae_pares);
+        imprimere("%s\tCLAUSULAE\t%d\t%d\t%d\t%d\t%d\t%d\n", titulus,
+            (integer)c->clausulae_sententiae,
+            (integer)c->clausulae_nostrae,
+            (integer)c->clausulae_aureae, (integer)c->clausulae_pares,
+            (integer)c->clausulae_paria,
+            (integer)c->clausulae_paria_concordia);
     si (errata)
     {
         Xar* es = oratio_oraculum_errata_clausularum(piscina, c);

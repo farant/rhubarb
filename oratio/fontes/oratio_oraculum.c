@@ -2019,12 +2019,36 @@ _clausulas_iudicare (
             }
         }
     }
+        /* concordia parium: verba posita ambo, par idem iudicatum */
+    per (k = ZEPHYRUM; k < np; k++)
+    {
+        constans ParClausulae* p = (constans ParClausulae*)xar_obtinere(
+            paria, k);
+        i32 j;
+
+        per (j = k + I; j < np; j++)
+        {
+            constans ParClausulae* q =
+                (constans ParClausulae*)xar_obtinere(paria, j);
+            b32 nostrum = (b32)(p->nostra >= ZEPHYRUM
+                && p->nostra == q->nostra);
+            b32 aureum  = (b32)(p->aurea == q->aurea);
+
+            census->clausulae_paria = census->clausulae_paria + I;
+            si (nostrum == aureum)
+            {
+                census->clausulae_paria_concordia =
+                    census->clausulae_paria_concordia + I;
+            }
+        }
+    }
     per (k = ZEPHYRUM; k < np; k++)
     {
         constans ParClausulae* p = (constans ParClausulae*)xar_obtinere(
             paria, k);
         i32 causa = (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS;   /* aperta */
         b32 recta = FALSUM;
+
 
         census->clausulae_iudicata = census->clausulae_iudicata + I;
         si (   p->nostra >= ZEPHYRUM && (i32)p->nostra < nc
