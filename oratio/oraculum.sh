@@ -51,5 +51,6 @@ done
 # non exec: crusta manet ut sera suitae usque ad finem instrumenti
 # teneatur et in exitu dimittatur (exec trap EXIT praeterit -
 # sera cum pid mortuo relicta, 2026-09-07)
-RHUBARB_RADIX="$RADIX_DIR" "$BIN" "${ARGS[@]}"
+# ${ARGS[@]+...}: bash 3.2 sub set -u tabulam vacuam "non ligatam" vocat
+RHUBARB_RADIX="$RADIX_DIR" "$BIN" ${ARGS[@]+"${ARGS[@]}"}
 exit $?

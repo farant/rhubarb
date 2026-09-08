@@ -4,7 +4,8 @@
  *              [-crudus] [plagula.conllu ...]
  *   -regulae   tabula CUMULATIVA: primarium per thesaurum post regulas
  *              0, 1, ... N programmatis resolutionis (T17)
- *   -crudus    sine resolutione (ordo fontis)
+  *   -crudus    sine resolutione (ordo fontis)
+ *   -ab N      cum -regulae: ordines a regulis N solum (priores omissi)
  *   sine plagulis: fixturae venditae oratio/probationes/fixa/ud
  *   -machina   TSV (plagula, classis, verba, tecta, primaria, lemmata,
  *              ignota, inalignata); cum -discrepantiae ordines
@@ -265,10 +266,12 @@ principale (
                                     b32  exempla        = FALSUM;
                                     b32  discrepantiae  = FALSUM;
                                     b32  regulae        = FALSUM;
+                                    i32  regulae_ab     = ZEPHYRUM;
+                                integer  argumentum_ab  = -I;
                                     b32  crudus         = FALSUM;
                         OratioProgramma* programma      = NIHIL;
                                 integer  i;
-                                    i32  plagulae = ZEPHYRUM;
+                                    i32  plagulae       = ZEPHYRUM;
     hic_manens constans character* constans venditae[] = {
         "oratio/probationes/fixa/ud/la_circse-ud-test.conllu",
         "oratio/probationes/fixa/ud/la_llct-ud-dev.conllu",
@@ -324,10 +327,21 @@ principale (
         {
             discrepantiae = VERUM;
         }
-        alioquin si (strcmp(argv[i], "-regulae") == ZEPHYRUM)
+                alioquin si (strcmp(argv[i], "-regulae") == ZEPHYRUM)
         {
             regulae = VERUM;
         }
+        alioquin si (   strcmp(argv[i], "-ab") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            /* T19d gamma: tabula cumulativa a regulis N (ordines
+             * priores omissi - cursus quisque thesaurum totum
+             * iudicat, XXIX regulae x V thesauri = IX min) */
+            argumentum_ab  = i + I;
+            regulae_ab     = (i32)atoi(argv[argumentum_ab]);
+            i              = argumentum_ab;
+        }
+
         alioquin si (strcmp(argv[i], "-crudus") == ZEPHYRUM)
         {
             crudus = VERUM;
@@ -341,13 +355,14 @@ principale (
         i32 k;
         i32 numerus_argumentorum = ZEPHYRUM;
 
-        per (i = I; i < argc; i++)
-        {
-            si (argv[i][ZEPHYRUM] != '-')
+                per (i = I; i < argc; i++)
+                {
+            si (argv[i][ZEPHYRUM] != '-' && i != argumentum_ab)
             {
                 numerus_argumentorum = numerus_argumentorum + I;
             }
-        }
+                }
+
         per (k = ZEPHYRUM;
              k < (numerus_argumentorum
                  > ZEPHYRUM ? (i32)argc
@@ -365,10 +380,13 @@ principale (
 
             si (numerus_argumentorum > ZEPHYRUM)
             {
-                si (k == ZEPHYRUM || argv[k][ZEPHYRUM] == '-')
-                {
+                                si (   k == ZEPHYRUM
+                                    || argv[k][ZEPHYRUM] == '-'
+                                    || (integer)k == argumentum_ab)
+                                {
                     perge;
-                }
+                                }
+
                 plagula = argv[k];
                 si (plagula[ZEPHYRUM] == '/')
                 {
@@ -413,10 +431,14 @@ principale (
 
                 per (r = ZEPHYRUM; r < summa; r++)
                 {
-                    si (!regulae && r != ZEPHYRUM)
-                    {
+                                        si (   (!regulae
+                                            && r != ZEPHYRUM)
+                                            || (regulae
+                                                && r < regulae_ab))
+                                        {
                         perge;
-                    }
+                                        }
+
                     oratio_oraculum_census_vacare(&census);
                     si (!oratio_oraculum_iudicare_resolutum(p,
                         &vocabularia,

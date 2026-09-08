@@ -3609,7 +3609,7 @@ OratioVocabulum = namedtuple('OratioVocabulum',
                              ' forma classes linguae lemma analyses')
 OratioAnalysis = namedtuple('OratioAnalysis',
                             'index classis lemma lingua fons nativum sensus'
-                            ' accidentia')
+                            ' accidentia umbrae')
 ORATIO_ACCIDENTIA = ('casus', 'numerus', 'genus', 'persona', 'tempus', 'modus',
                      'vox', 'forma-verbi', 'gradus', 'species', 'declinatio',
                      'coniugatio')
@@ -3737,8 +3737,14 @@ class Oratio(object):
                 i = int(p[1])
                 acc = dict((k, v) for k, v in zip(ORATIO_ACCIDENTIA, p[9:])
                            if v)
+                # umbrae (T19d): columna post accidentia XII -
+                # 'relatio:casus.numerus.genus=vocabulum.analysis' ligata,
+                # '...=?' vacua (inventum), spatiis separatae
+                umbrae = tuple(p[21].split(' ')) if len(p) > 21 and p[21] \
+                    else ()
                 self._analyses.setdefault(i, []).append(
-                    OratioAnalysis(i, p[3], p[4], p[5], p[6], p[7], p[8], acc))
+                    OratioAnalysis(i, p[3], p[4], p[5], p[6], p[7], p[8], acc,
+                                   umbrae))
         i = vocabulum.index if isinstance(vocabulum, OratioVocabulum) \
             else int(vocabulum)
         return list(self._analyses.get(i, []))

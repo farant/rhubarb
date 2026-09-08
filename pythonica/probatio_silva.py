@@ -4,6 +4,7 @@ Plagulae fictae in build/pythonica/; nihil in arbore tangitur.
 Exitus 0 sanum | 1 fractum. Culpae plantatae: ancora fallens plagulam
 intactam relinquit; differre substantiva verdictum negat."""
 import os
+import re
 import subprocess
 import sys
 
@@ -1231,6 +1232,24 @@ credo(len(aa) == 3 and a.classis == 'substantivum' and a.lemma == 'puella' and a
 credo(a.accidentia == {'casus': 'nominativus', 'numerus': 'singularis', 'genus': 'femininum', 'declinatio': '1'} and [x.accidentia['casus'] for x in aa] == ['nominativus', 'vocativus', 'ablativus'], 'Oratio.analyses: accidentia titulis, absentia omissa, declinatio numero')
 am = o.analyses(2)[0]
 credo(am.classis == 'verbum' and am.accidentia['persona'] == 'III' and am.accidentia['tempus'] == 'praesens' and am.accidentia['modus'] == 'indicativus' and am.accidentia['vox'] == 'activa' and am.accidentia['forma-verbi'] == 'finitum' and am.accidentia['coniugatio'] == '1' and 'casus' not in am.accidentia and o.analyses(ig[0]) == [], 'Oratio.analyses(index): verbum amat - persona tempus modus vox forma coniugatio; ignotum = []')
+ob = silva.Oratio('Puella bona ambulat. Hoc est.\n')
+ab = ob.analyses(1)
+credo(ab[0].classis == 'adiectivum' and ab[0].umbrae == ('caput:nominativus.singularis.femininum=0.0',) and all(x.umbrae == () for x in ab if x.classis == 'substantivum') and any(u.endswith('=?') for x in ab for u in x.umbrae) and all(x.umbrae == () for x in ob.analyses(0)), 'Oratio.analyses: umbrae (T19d) - caput bonae ligata ad Puellam 0.0, substantiva sine umbris, umbra vacua =?')
+hoc = ob.analyses(3)
+credo(hoc[0].classis == 'pronomen' and all(x.umbrae == ('caput:%s.singularis.%s=?' % (x.accidentia['casus'], x.accidentia['genus']),) for x in hoc if x.classis == 'determinans') and len([x for x in hoc if x.classis == 'determinans']) == 4, 'Oratio.analyses: umbrae determinantis hoc omnes vacuae (=?), pronomen primum')
+# oraculum.sh -regulae -ab N (T19d gamma): ordines a regulis N solum - porta natalis
+# super thesaurum minimum (una sententia), ne cursus omnes thesauros iudicet
+via_ab = os.path.join(RADIX, 'build', 'pythonica', 'ab.conllu')
+os.makedirs(os.path.dirname(via_ab), exist_ok=True)
+open(via_ab, 'w').write('# sent_id = a-1\n# text = Puella rosam amat.\n1\tPuella\tpuella\tNOUN\t_\t_\t3\tnsubj\t_\t_\n2\trosam\trosa\tNOUN\t_\t_\t3\tobj\t_\t_\n3\tamat\tamo\tVERB\t_\t_\t0\troot\t_\tSpaceAfter=No\n4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n\n')
+def _ordines_ab(n):
+    r = subprocess.run(['./oratio/oraculum.sh', '-regulae', '-ab', str(n), '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
+    return r.returncode, [l for l in r.stdout.splitlines() if l.startswith('#  regulae ')]
+rc, omnes = _ordines_ab(100000)
+credo(rc == 0 and len(omnes) == 1 and omnes[0].endswith('(omnes):'), 'oraculum.sh -regulae -ab N: N supra summam = ordo (omnes) solus')
+summa = int(re.search(r'regulae (\d+) \(omnes\)', omnes[0]).group(1))
+rc, duo = _ordines_ab(summa - 1)
+credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa - 1)) and duo[1] == omnes[0] and 'crudus' not in duo[0], 'oraculum.sh -regulae -ab N: ordines a regulis N solum, crudus omissus')
 h = silva.Oratio('oratio/probationes/fixa/txt/hilarius.txt')
 credo(h.via.endswith('hilarius.txt') and len(h.vocabula()) == 1678 and len(h.sententiae()) > 50 and 0 < len(h.ignota()) < 120, 'Oratio(via): Hilarius MDCLXXVIII vocabula (T12)')
 try:

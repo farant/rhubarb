@@ -269,9 +269,234 @@ _compendium (
     redde vacua;
 }
 
+/* numerus analysium vocabuli */
+interior i32
+_numerus_analysium (
+    constans MateriaNodus* vocabulum)
+{
+    constans MateriaValor* analyses =
+        &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+
+    redde analyses->genus == MATERIA_VALOR_LISTA
+        ? materia_valor_lista_numerus(*analyses) : ZEPHYRUM;
+}
+
+/* umbra 'u' lectionis: nodus aut NIHIL */
+interior constans MateriaNodus*
+_umbra (
+    constans MateriaNodus* lectio,
+                      i32  u)
+{
+    OratioClassis classis =
+        oratio_genus_classis((OratioGenus)lectio->genus);
+                      s32  locus;
+    constans MateriaValor* umbrae;
+    constans MateriaValor* valor;
+
+    si (classis >= ORATIO_CLASSIS_NUMERUS_CLASSIUM)
+    {
+        redde NIHIL;
+    }
+    locus = oratio_partes_locus(classis, "umbrae");
+    si (locus < ZEPHYRUM || (i32)locus >= lectio->numerus_locorum)
+    {
+        redde NIHIL;
+    }
+    umbrae = &lectio->loci[locus];
+    si (   umbrae->genus != MATERIA_VALOR_LISTA
+        || u             >= materia_valor_lista_numerus(*umbrae))
+    {
+        redde NIHIL;
+    }
+    valor = materia_valor_lista_obtinere(*umbrae, u);
+    redde valor != NIHIL && valor->genus == MATERIA_VALOR_NODUS
+        ? valor->datum.nodus : NIHIL;
+}
+
+/* index INDEX loci umbrae 'u' lectionis; -I si absens aut non
+ * scriptus */
+interior s32
+_umbra_index (
+    constans MateriaNodus* lectio,
+                      i32  u,
+                      i32  locus)
+{
+    constans MateriaNodus* umbra = _umbra(lectio, u);
+
+    si (   umbra                    == NIHIL
+        || umbra->loci[locus].genus == MATERIA_VALOR_NIHIL)
+    {
+        redde (s32)-I;
+    }
+    redde umbra->loci[locus].datum.index;
+}
+
+interior s32
+_umbra_impletio_vocabulum (
+    constans MateriaNodus* lectio,
+                      i32  u)
+{
+    redde _umbra_index(lectio, u, (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM);
+}
+
+interior s32
+_umbra_impletio_analysis (
+    constans MateriaNodus* lectio,
+                      i32  u)
+{
+    redde _umbra_index(lectio, u, (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS);
+}
+
+/* accidens lectionis per titulum loci: -I si genus sine aut non
+ * scriptum */
+interior s32
+_accidens (
+    constans MateriaNodus* lectio,
+       constans character* titulus)
+{
+    OratioClassis classis =
+        oratio_genus_classis((OratioGenus)lectio->genus);
+              s32 locus;
+
+    si (classis >= ORATIO_CLASSIS_NUMERUS_CLASSIUM)
+    {
+        redde (s32)-I;
+    }
+    locus = oratio_partes_locus(classis, titulus);
+    si (   locus < ZEPHYRUM || (i32)locus >= lectio->numerus_locorum
+        || lectio->loci[locus].genus == MATERIA_VALOR_NIHIL)
+    {
+        redde (s32)-I;
+    }
+    redde lectio->loci[locus].datum.index;
+}
+
+/* CORPUS: umbrae ligatae documenti totius probare - implens exsistit
+ * et accidentia umbrae (casus, numerus, genus, ubi scripta) lectionis
+ * implentis sunt; ligatae/discordes numerantur */
+interior vacuum
+_umbras_probare (
+    constans MateriaNodus* doc,
+                      i32* ligatae,
+                      i32* discordes)
+{
+    constans MateriaValor* paragraphi =
+        &doc->loci[ORATIO_DOCUMENTUM_PARAGRAPHI];
+                      i32 p;
+
+    si (paragraphi->genus != MATERIA_VALOR_LISTA)
+    {
+        redde;
+    }
+    per (p = ZEPHYRUM; p
+        < materia_valor_lista_numerus(*paragraphi); p++)
+    {
+        constans MateriaNodus* paragraphus =
+            materia_valor_lista_obtinere(*paragraphi, p)->datum.nodus;
+        constans MateriaValor* sententiae =
+            &paragraphus->loci[ORATIO_PARAGRAPHUS_SENTENTIAE];
+                          i32 s;
+
+        si (sententiae->genus != MATERIA_VALOR_LISTA)
+        {
+            perge;
+        }
+        per (s = ZEPHYRUM; s < materia_valor_lista_numerus(*sententiae);
+             s++)
+        {
+            constans MateriaNodus* sententia =
+                materia_valor_lista_obtinere(*sententiae,
+                s)->datum.nodus;
+            constans MateriaValor* elementa =
+                &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
+                              i32 ne;
+                              i32 k;
+
+            si (elementa->genus != MATERIA_VALOR_LISTA)
+            {
+                perge;
+            }
+            ne = materia_valor_lista_numerus(*elementa);
+            per (k = ZEPHYRUM; k < ne; k++)
+            {
+                constans MateriaNodus* vocabulum =
+                    materia_valor_lista_obtinere(*elementa,
+                    k)->datum.nodus;
+                                  i32 a;
+
+                si (vocabulum->genus != (s32)ORATIO_GENUS_VOCABULUM)
+                {
+                    perge;
+                }
+                per (a = ZEPHYRUM; a
+                    < _numerus_analysium(vocabulum); a++)
+                {
+                    constans MateriaNodus* lectio = _analysis(vocabulum,
+                        a);
+                                      i32 u;
+
+                    per (u = ZEPHYRUM; _umbra(lectio, u) != NIHIL; u++)
+                    {
+                        constans MateriaNodus* implens_vocabulum;
+                        constans MateriaNodus* implens;
+                                          s32  w;
+                                          s32  b;
+                                          s32  c;
+
+                        w = _umbra_impletio_vocabulum(lectio, u);
+                        b = _umbra_impletio_analysis(lectio, u);
+                        si (w < ZEPHYRUM)
+                        {
+                            perge;   /* vacua */
+                        }
+                        si (   w >= (s32)ne || b < ZEPHYRUM)
+                        {
+                            *discordes = *discordes + I;
+                            perge;
+                        }
+                        implens_vocabulum =
+                            materia_valor_lista_obtinere(
+                            *elementa, (i32)w)->datum.nodus;
+                        si (   implens_vocabulum->genus
+                                != (s32)ORATIO_GENUS_VOCABULUM
+                            || b >= (s32)_numerus_analysium(
+                                implens_vocabulum))
+                        {
+                            *discordes = *discordes + I;
+                            perge;
+                        }
+                        implens = _analysis(implens_vocabulum, (i32)b);
+                        c = _umbra_index(lectio, u,
+                            (i32)ORATIO_UMBRA_CASUS);
+                        si (   (c >= ZEPHYRUM
+                                && _accidens(implens, "casus") != c)
+                            || (_umbra_index(lectio, u,
+                                    (i32)ORATIO_UMBRA_NUMERUS)
+                                        >= ZEPHYRUM
+                                && _accidens(implens, "numerus")
+                                    != _umbra_index(lectio, u,
+                                        (i32)ORATIO_UMBRA_NUMERUS))
+                            || (_umbra_index(lectio, u,
+                                    (i32)ORATIO_UMBRA_GENUS) >= ZEPHYRUM
+                                && _accidens(implens, "genus")
+                                    != _umbra_index(lectio, u,
+                                        (i32)ORATIO_UMBRA_GENUS)))
+                        {
+                            *discordes = *discordes + I;
+                            perge;
+                        }
+                        *ligatae = *ligatae + I;
+                    }
+                }
+            }
+        }
+    }
+}
+
 /* documentum parsatum et annotatum */
 interior MateriaNodus*
 _documentum (
+
                        Piscina* piscina,
     constans OratioVocabularia* vocabularia,
             constans character* fons,
@@ -997,8 +1222,182 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (census.impletae, ZEPHYRUM);
     }
 
+        imprimere("\n--- VII. Lex umbrarum (T19d gamma) ---\n");
+    {
+           OratioPartesCensus census_partium;
+        OratioResolutioCensus census;
+                 MateriaNodus* doc;
+                 MateriaNodus* verbum;
+        constans MateriaNodus* lectio;
+
+        /* promotio super decisionem STRUCTURALEM: gradu I 'in' bonam
+         * substantivam ablativam ut obiectum ligat (prima), gradu II
+         * caput terra (vicina) lectionem adiectivam implet - lex eam
+         * primam facit; ligatio obiecti in substantivum remissa
+         * manet */
+        doc = _documentum(piscina, &vocabularia, "In bona terra est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        verbum = _vocabulum(doc, I);
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_ADIECTIVUM);
+        CREDO_VERUM (census.umbris_ordinata >= I);
+        lectio = _analysis(verbum, ZEPHYRUM);
+        CREDO_NON_NIHIL (lectio);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
+            (s32)II);
+        /* obiectum 'in': umbra ablativa in lectionem bonae quae
+         * ABLATIVA est (index per legem remissus) */
+        lectio = _analysis(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM);
+        CREDO_NON_NIHIL (lectio);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
+            (s32)I);
+        CREDO_AEQUALIS_S32 (_casus(verbum,
+            (i32)_umbra_impletio_analysis(lectio, ZEPHYRUM)),
+            (s32)ORATIO_CASUS_ABLATIVUS);
+        CREDO_VERUM (_umbra_impletio_analysis(lectio, ZEPHYRUM)
+            > ZEPHYRUM);
+        /* decisio EXPLICITA manet: supra adverbium (exceptio T19b)
+         * quamvis umbra obiecti dicto accusativo vicino impleta */
+        doc = _documentum(piscina, &vocabularia, "Supra dictum est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        verbum = _vocabulum(doc, ZEPHYRUM);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_ADVERBIUM);
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, I),
+            (s32)ORATIO_CLASSIS_ADPOSITIO);
+        lectio = _analysis(verbum, I);
+        CREDO_NON_NIHIL (lectio);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
+            (s32)I);
+        /* implens REMOTUS non tollit: bona (obiectum 'in', substantivum
+         * prima) lectionem adiectivam ablativam a terra (distantia III)
+         * impletam habet, substantivum manet */
+        doc = _documentum(piscina, &vocabularia,
+            "In bona sunt et terra.\n", &census_partium);
+        CREDO_NON_NIHIL (doc);
+        verbum = _vocabulum(doc, I);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
+        CREDO_AEQUALIS_I32 (census.umbris_ordinata, ZEPHYRUM);
+        {
+            i32 a;
+            i32 remotae = ZEPHYRUM;
+
+            per (a = ZEPHYRUM; a < _numerus_analysium(verbum); a++)
+            {
+                lectio = _analysis(verbum, a);
+                si (   _classis_analysis(verbum, a)
+                        == (s32)ORATIO_CLASSIS_ADIECTIVUM
+                    && _umbra_impletio_vocabulum(lectio, ZEPHYRUM)
+                        == (s32)IV)
+                {
+                    remotae = remotae + I;
+                }
+            }
+            CREDO_VERUM (remotae >= I);
+        }
+        /* documentum Anglicum: 'a' determinans (exceptio + regula
+         * linguae) manet quamvis adpositio Latina ablativa 'die'
+         * ablativo Latino vicino impleta */
+        doc = _documentum(piscina, &vocabularia,
+            "I saw a die today. The rest is fine.\n", &census_partium);
+        CREDO_NON_NIHIL (doc);
+        verbum = _vocabulum(doc, (i32)II);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_DETERMINANS);
+        CREDO_AEQUALIS_S32 (_lingua(verbum, ZEPHYRUM),
+            (s32)ORATIO_LINGUA_ANGLICA);
+        {
+            i32 a;
+            i32 impletae = ZEPHYRUM;
+
+            per (a = ZEPHYRUM; a < _numerus_analysium(verbum); a++)
+            {
+                lectio = _analysis(verbum, a);
+                si (   _classis_analysis(verbum, a)
+                        == (s32)ORATIO_CLASSIS_ADPOSITIO
+                    && _umbra_impletio_vocabulum(lectio, ZEPHYRUM)
+                        == (s32)III)
+                {
+                    impletae = impletae + I;
+                }
+            }
+            CREDO_AEQUALIS_I32 (impletae, I);
+        }
+        /* remissio indicum: hoc templum - lectio determinantis
+         * ACCUSATIVA secunda, umbra eius in lectionem templi
+         * ACCUSATIVAM (index post permutationem) */
+        doc = _documentum(piscina, &vocabularia, "Hoc templum est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        verbum = _vocabulum(doc, ZEPHYRUM);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, I),
+            (s32)ORATIO_CLASSIS_DETERMINANS);
+        CREDO_AEQUALIS_S32 (_casus(verbum, I),
+            (s32)ORATIO_CASUS_ACCUSATIVUS);
+        lectio = _analysis(verbum, I);
+        CREDO_NON_NIHIL (lectio);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
+            (s32)I);
+        CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I),
+            (i32)_umbra_impletio_analysis(lectio, ZEPHYRUM)),
+            (s32)ORATIO_CASUS_ACCUSATIVUS);
+        /* CORPUS (Hilarius): umbra quaeque ligata in lectionem casus
+         * sui spectat (numero genere quoque ubi scripta) - lex
+         * remissionis super sententias veras; ligatae > C */
+        {
+               chorda  fons;
+            character* textus;
+            character  via_hilarii[1024];
+                  i32  ligatae    = ZEPHYRUM;
+                  i32  discordes  = ZEPHYRUM;
+
+            sprintf(via_hilarii,
+                "%s/oratio/probationes/fixa/txt/hilarius.txt", radix);
+            CREDO_VERUM (_plagulam_legere(piscina, via_hilarii, &fons));
+            textus = (character*)piscina_allocare(piscina,
+                (memoriae_index)fons.mensura + I);
+            CREDO_NON_NIHIL (textus);
+            memcpy(textus, fons.datum, (size_t)fons.mensura);
+            textus[fons.mensura] = '\0';
+            doc = _documentum(piscina, &vocabularia, textus,
+                &census_partium);
+            CREDO_NON_NIHIL (doc);
+            oratio_resolutio_census_vacare(&census);
+            CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
+                &ratum, programma, (s32)-I, "latina", doc, &census));
+            _umbras_probare(doc, &ligatae, &discordes);
+            imprimere("  hilarius: umbrae ligatae %d, discordes %d, "
+                "vocabula umbris ordinata %d\n", (integer)ligatae,
+                (integer)discordes, (integer)census.umbris_ordinata);
+            CREDO_VERUM (ligatae > (i32)C);
+            CREDO_AEQUALIS_I32 (discordes, ZEPHYRUM);
+            CREDO_VERUM (census.umbris_ordinata >= I);
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
+
 
     {
         b32 praeteritus = credo_omnia_praeterierunt();

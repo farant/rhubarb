@@ -70,6 +70,9 @@ nomen structura {
     Xar* per_regulam;  /* OratioResolutioRegulaCensus; NIHIL licet */
     i32  impletae;     /* umbrae ligatae (T19d: ordines impletio; umbra
                         * iam ligata = repetita, prima vincit) */
+    /* vocabula lege umbrarum permutata (T19d gamma: lectio umbris a
+     * vicinis impletis prima) */
+    i32 umbris_ordinata;
 } OratioResolutioCensus;
 
 

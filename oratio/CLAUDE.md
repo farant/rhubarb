@@ -337,9 +337,31 @@ ablative and bound `bona` to `puella`'s nominative). Probes: `Puella
 bona ambulat` (bona adjective nominative, crude first a noun), `Cum
 puella bona ambulat` (both ablative), `Hoc templum est` (determiner +
 nominative, crude first genitive plural), `Hoc est` (pronoun).
-CIRCSE primary 72.9 → 76.5 % (adjective 78.6 %, determiner 19.9 %), LLCT 77.1 / 77.2 → 78.8 / 78.6 % (determiner 0 → 18.7 / 18.1 % on 2,096 / 1,914 words), EWT unchanged 75.3 / 75.5 (English readings carry no case, so no head umbra is born); coverage unchanged; the vocative pair adds nothing on Seneca and one permille on the charters; pins 765 / 787 / 785 / 753 / 754. NEXT: the executor law "filled umbrae outrank" (C, never
-STML arithmetic); English object umbrae (`to` + verb, `have` +
-participle); nomen-proprium / pronoun fillers if the numbers ask.
+CIRCSE primary 72.9 → 76.5 % (adjective 78.6 %, determiner 19.9 %), LLCT 77.1 / 77.2 → 78.8 / 78.6 % (determiner 0 → 18.7 / 18.1 % on 2,096 / 1,914 words), EWT unchanged 75.3 / 75.5 (English readings carry no case, so no head umbra is born); coverage unchanged; the vocative pair adds nothing on Seneca and one permille on the charters; pins 765 / 787 / 785 / 753 / 754. **T19d GAMMA — THE LAW OF UMBRAE** (same day): after the last stage
+the executor puts a word's readings whose umbrae are all filled by
+a NEIGHBOUR first (rest in order), leaves words decided by a
+`<praelatio>` row alone, and remaps bindings into permuted words
+(`_umbris_ordinare`; census `umbris_ordinata`). Measured before
+kept: three-rank with demotion and without regard for explicit
+decisions lowered every treebank (chance bindings overrode the
+language rule and `supra`; unfilled prepositions sank when the
+object is a proper name without case); promotion at any distance
+cost Seneca 0.5 (the `praecedente` rule binds the FIRST agreeing
+earlier word, not the nearest). Neighbour-only promotion depresses
+nothing: Seneca 76.5, charters 79.2 / 78.9, English untouched; pins
+765 / 791 / 789 / 753 / 754; Hilarius 532 bound umbrae, 0 discordant.
+Gate resolutio VII (structural promotion `in bona terra`, explicit
+decisions kept for `supra` and English `a` + `die`, distant filler
+ignored, accusative remap on `hoc templum`, the corpus invariant).
+Instruments: `verba.sh -analyses` column `umbrae`
+(`relatio:casus.numerus.genus=word.reading`, `=?` unfilled;
+`silva.Oratio.analyses()[i].umbrae`), `oraculum.sh -regulae -ab N`
+(table from rule N). FINDINGS: "no object" evidence needs
+unknown-case fillers first; "nearest" needs the `strictus` door;
+two filled readings still tie by rule order. NEXT: unknown-case
+fillers (proper names, ignota) as object fillers, then the
+demotion re-measured; English object umbrae (`to` + verb, `have` +
+participle); the `strictus`/nearest door.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

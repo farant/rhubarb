@@ -835,6 +835,54 @@ Open: the outranking law ("a reading with filled umbrae outranks one
 without", executor-side), English object umbrae (`to` + verb, `have`
 + participle), nomen-proprium and pronoun fillers if the numbers ask.
 
+**As built — T19d gamma, the law of umbrae (2026-09-07).** After the
+last stage the executor orders each word's readings: readings whose
+umbrae are ALL filled by a NEIGHBOURING word (distance one) come
+first, the rest keep their order; words decided by a `<praelatio>`
+row (a class prior, an exception, the language rule) are left alone;
+bindings that point into a permuted word are remapped (the umbra's
+`impletio-analysis` rewritten through `reponere`). The law is C, in
+`_umbris_ordinare`, never arithmetic in the program. Three shapes
+were MEASURED before this one was kept, each on the five treebanks:
+(1) three ranks — filled, no umbrae, unfilled — with no regard for
+explicit decisions: every treebank fell (Seneca −0.5, charters
+−1.5/−0.9, EWT −0.2/−0.4) because a chance binding on a Latin reading
+overrode the language rule (`a` + a stray ablative `die`) or an
+exception rule (`supra` + any accusative), and the demotion of
+unfilled readings sank prepositions whose object is a proper name
+without case (adpositions −11 on the charters); (2) the same with
+explicit decisions respected: EWT back to par, charters +0.3/+0.5,
+Seneca still −0.5 with adjectives paying for the demotion (−4); (3)
+promotion only, any distance: charters +0.5/+0.5, Seneca −0.5 —
+nouns lost to adjective homographs bound to a distant word, because
+the `praecedente` rule binds a carrier to the FIRST agreeing earlier
+word, not the nearest. Neighbour-only promotion is the first shape
+that depresses no treebank: Seneca 76.5 (unchanged), charters
+79.2 / 78.9 (+0.4 / +0.3), English untouched (no case, no umbra);
+pins 765 / 791 / 789 / 753 / 754. On Hilarius: 532 bound umbrae, 0
+discordant (every binding points at a reading of the umbra's case,
+number and gender), 44 words reordered by the law. What the law buys
+is the word decided STRUCTURALLY in stage 1 by a weak choice — `in
+bona terra`: the object rule takes `bona`'s first ablative reading
+(the noun, by source order), stage 2 binds the adjective's head to
+`terra`, the law puts the adjective first. Findings recorded for the
+next steps: (a) "no object found" is real evidence against a
+preposition (`cum venit`, `ante venit`) but cannot be used until
+fillers of UNKNOWN case (the capital rule's proper names, unknown
+words) can fill a case umbra — the demotion must wait for them; (b)
+"nearest agreeing word" needs the pattern engine's reserved
+`strictus` door or a nearest-first sibling policy — adjacency is the
+stand-in; (c) rule order still decides between two filled readings
+(`in bona terra` ends nominative, the head rules run by case) — the
+decided case of a structurally chosen word could break that tie.
+Instruments: `verba.sh -analyses` gained an `umbrae` column
+(`relatio:casus.numerus.genus=word.reading`, `=?` unfilled),
+`silva.Oratio.analyses()` exposes it as `umbrae`; `oraculum.sh
+-regulae -ab N` prints the cumulative table from rule N only (the
+full table re-judges five treebanks per rule, nine minutes at 29
+rules). The wrapper's empty-argument expansion under `set -u` (bash
+3.2) was fixed on the way.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

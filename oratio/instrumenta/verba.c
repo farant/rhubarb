@@ -14,9 +14,11 @@
  * per ANALYSIN loco vocabuli:
  *   via index forma classis lemma lingua fons nativum sensus casus
  *   numerus genus persona tempus modus vox forma-verbi gradus species
- *   declinatio coniugatio
+  *   declinatio coniugatio umbrae
  * (accidentia titulis enumerationum registri, declinatio/coniugatio
- * numeris, vacua si non data aut si genus ea non fert). -machina
+ * numeris, vacua si non data aut si genus ea non fert; umbrae T19d:
+ * 'relatio:casus.numerus.genus=vocabulum.analysis' ligata, '=?' vacua,
+ * spatiis separatae). -machina
  * caput '#' addit. Exitus: 0 vocabula, 1 nulla, 2 usus/plagula/tabula/
  * parsura.
  */
@@ -285,9 +287,94 @@ _vocabulum_imprimere (
     imprimere("\t%d\n", (integer)n);
 }
 
+/* columna umbrarum (T19d): per umbram lectionis
+ * 'relatio:casus[.numerus][.genus]=vocabulum.analysis' (ligata) aut
+ * '...=?' (vacua = inventum), spatiis separatae; vacua sine umbris */
+interior vacuum
+_umbras_imprimere (
+    constans MateriaNodus* nodus,
+            OratioClassis  classis)
+{
+    constans MateriaValor* umbrae;
+                      s32  locus;
+                      i32  n;
+                      i32  u;
+
+    si (classis >= ORATIO_CLASSIS_NUMERUS_CLASSIUM)
+    {
+        redde;
+    }
+    locus = oratio_partes_locus(classis, "umbrae");
+    si (locus < ZEPHYRUM || (i32)locus >= nodus->numerus_locorum)
+    {
+        redde;
+    }
+    umbrae = &nodus->loci[locus];
+    si (umbrae->genus != MATERIA_VALOR_LISTA)
+    {
+        redde;
+    }
+    n = materia_valor_lista_numerus(*umbrae);
+    per (u = ZEPHYRUM; u < n; u++)
+    {
+        constans MateriaValor* valor =
+            materia_valor_lista_obtinere(*umbrae, u);
+        constans MateriaNodus* umbra;
+                          s32  index;
+
+        si (valor == NIHIL || valor->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        umbra = valor->datum.nodus;
+        si (u > ZEPHYRUM)
+        {
+            putchar(' ');
+        }
+        fputs(_titulus_indicis(ORATIO_TITULI_RELATIONUM,
+            (i32)ORATIO_RELATIO_NUMERUS,
+            _index_loci(umbra, (i32)ORATIO_UMBRA_RELATIO)), stdout);
+        putchar(':');
+        index = _index_loci(umbra, (i32)ORATIO_UMBRA_CASUS);
+        si (index >= ZEPHYRUM)
+        {
+            fputs(_titulus_indicis(ORATIO_TITULI_CASUUM,
+                (i32)ORATIO_CASUS_NUMERUS, index), stdout);
+        }
+        index = _index_loci(umbra, (i32)ORATIO_UMBRA_NUMERUS);
+        si (index >= ZEPHYRUM)
+        {
+            putchar('.');
+            fputs(_titulus_indicis(ORATIO_TITULI_NUMERORUM,
+                (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS, index),
+                stdout);
+        }
+        index = _index_loci(umbra, (i32)ORATIO_UMBRA_GENUS);
+        si (index >= ZEPHYRUM)
+        {
+            putchar('.');
+            fputs(_titulus_indicis(ORATIO_TITULI_GENERUM_GRAMMATICORUM,
+                (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS, index), stdout);
+        }
+        putchar('=');
+        index = _index_loci(umbra,
+            (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM);
+        si (index < ZEPHYRUM)
+        {
+            putchar('?');
+        }
+        alioquin
+        {
+            imprimere("%d.%d", (integer)index, (integer)_index_loci(
+                umbra, (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS));
+        }
+    }
+}
+
 /* lineae analysium vocabuli (-analyses): una per nodum analysis-* */
 interior vacuum
 _analyses_imprimere (
+
        constans character* via,
                       i32  index,
     constans MateriaNodus* vocabulum)
@@ -353,15 +440,18 @@ _analyses_imprimere (
             {
                 imprimere("%d", (integer)valor);
             }
-            alioquin
+                        alioquin
             {
                 fputs(_titulus_indicis(c->tituli, c->numerus, valor),
                     stdout);
             }
         }
+        putchar('\t');
+        _umbras_imprimere(nodus, classis);
         putchar('\n');
     }
 }
+
 
 /* arbor ambulata documentum > paragraphus > sententia > vocabulum;
  * numerus vocabulorum. Sententia sine elementis non numeratur (ut
@@ -522,7 +612,8 @@ principale (
             ? "# via\tindex\tforma\tclassis\tlemma\tlingua\tfons"
               "\tnativum\tsensus\tcasus\tnumerus\tgenus\tpersona"
               "\ttempus\tmodus\tvox\tforma-verbi\tgradus\tspecies"
-              "\tdeclinatio\tconiugatio\n"
+                            "\tdeclinatio\tconiugatio\tumbrae\n"
+
             : "# via\tindex\tinitium\tfinis\tlinea\tparagraphus"
               "\tsententia\tforma\tclasses\tlinguae\tlemma\tanalyses\n",
             stdout);

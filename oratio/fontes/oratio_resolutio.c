@@ -16,7 +16,6 @@ _numerus_attributi (
     constans character* titulus,
                    i32* exitus);
 
-
 nomen structura {
                        Piscina* piscina;
            InternamentumChorda* intern;
@@ -445,7 +444,8 @@ _sententiam_resolvere_gradu (
           Cursus* cursus,
     MateriaNodus* sententia,
              i32  gradus,
-             b32* vindicata)
+             b32* vindicata,
+             b32* explicita)
 {
 
                       Piscina* scratch;
@@ -651,7 +651,8 @@ _sententiam_resolvere_gradu (
                 }
                 perge;
                         }
-            praelata[v] = (s32)a;
+            praelata[v]   = (s32)a;
+            explicita[v]  = VERUM;   /* decisio regulae */
 
             si (   titulus != NIHIL
                 && !_regulam_numerare(cursus, *titulus))
@@ -853,15 +854,338 @@ _sententiam_resolvere_gradu (
             vindicata[k] = VERUM;
         }
     }
+        piscina_destruere(scratch);
+    redde VERUM;
+}
+
+/* locus 'umbrae' lectionis: valor LISTA aut NIHIL (genus sine umbris,
+ * locus non scriptus) */
+interior constans MateriaValor*
+_umbrae_lectionis (
+    constans MateriaNodus* analysis)
+{
+    OratioClassis classis =
+        oratio_genus_classis((OratioGenus)analysis->genus);
+              s32 locus;
+
+    si (classis >= ORATIO_CLASSIS_NUMERUS_CLASSIUM)
+    {
+        redde NIHIL;
+    }
+    locus = oratio_partes_locus(classis, "umbrae");
+    si (locus < ZEPHYRUM || (i32)locus >= analysis->numerus_locorum)
+    {
+        redde NIHIL;
+    }
+    si (analysis->loci[locus].genus != MATERIA_VALOR_LISTA)
+    {
+        redde NIHIL;
+    }
+    redde &analysis->loci[locus];
+}
+
+/* GRADUS umbrarum lectionis vocabuli k (lex umbrarum, T19d gamma):
+ * II = umbram fert et omnes a VICINO impletae (|w - k| = I), I =
+ * aliter (sine umbris - lectio Anglica semper -, umbra vacua, implens
+ * remotus). MENSURATUM 2026-09-07: depressio lectionum vacuarum sub
+ * lectiones sine umbris adiectiva deprimit (implens ignotus aut sine
+ * casu: LLCT -3, CIRCSE -4); impletio remota (regula praecedens ad
+ * vocabulum PRIMUM congruens ligat, non proximum) substantiva Senecae
+ * deprimit (-3) dum adiectiva chartarum tollit (+10): vicinitas sola
+ * thesaurum nullum deprimit - ianua 'strictus'/'proximus' in machina
+ * exemplarium legem laxaret. */
+interior i32
+_gradus_umbrarum (
+
+    constans MateriaNodus* analysis,
+                      i32  k)
+{
+    constans MateriaValor* umbrae = _umbrae_lectionis(analysis);
+                      i32  n;
+                      i32  u;
+
+    si (umbrae == NIHIL)
+    {
+        redde I;
+    }
+    n = materia_valor_lista_numerus(*umbrae);
+    si (n == ZEPHYRUM)
+    {
+        redde I;
+    }
+    per (u = ZEPHYRUM; u < n; u++)
+    {
+        constans MateriaValor* valor =
+            materia_valor_lista_obtinere(*umbrae, u);
+
+                s32 w;
+
+        si (   valor        == NIHIL
+            || valor->genus != MATERIA_VALOR_NODUS
+            || valor->datum.nodus->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                .genus == MATERIA_VALOR_NIHIL)
+        {
+            redde I;   /* vacua */
+        }
+        w = valor->datum.nodus->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+            .datum.index;
+        si (w < ZEPHYRUM || ((i32)w > k ? (i32)w - k : k - (i32)w) != I)
+        {
+            redde I;   /* implens remotus */
+        }
+
+    }
+    redde (i32)II;
+
+}
+
+/* LEX UMBRARUM (T19d gamma) post gradus omnes: in vocabulo quoque
+ * lectiones ordine graduum umbrarum (II: umbrae a vicinis impletae,
+ * I: ceterae), intra gradum ordine manente - lectio cuius umbrae
+ * impleri non potuerunt lectioni cuius impletae sunt cedit (in bona
+ * terra: adiectivum bonae, gradu I substantivo ut obiecto 'in'
+ * praelato, per caput terram tollitur). Vocabula per PRAELATIONEM
+ * decisa (regula classis, exceptio, regula linguae) intacta: ligatio
+ * fortuita decisionem explicitam non vertit. Permutatio per
+ * lista_permutare; ligationes quae in vocabulum permutatum spectant
+ * per ordinem novum remissae (impletio-analysis reponere). Lex in C,
+ * numquam arithmetica in STML (Fran). FALSUM = memoria sola. */
+interior b32
+_umbris_ordinare (
+          Cursus* cursus,
+    MateriaNodus* sententia,
+    constans b32* explicita)
+{
+    constans MateriaValor* elementa =
+        &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
+                 Piscina*  scratch;
+                     i32** inversa;   /* per vocabulum: vetus -> novus;
+                                      * NIHIL = immotum */
+                      i32* numeri;    /* analyses per vocabulum */
+                      i32  ne;
+                      i32  k;
+
+    ne       = materia_valor_lista_numerus(*elementa);
+    scratch  = piscina_generare_dynamicum("oratio_lex_umbrarum", 65536);
+    si (scratch == NIHIL)
+    {
+        redde FALSUM;
+    }
+    inversa = (i32**)piscina_allocare(scratch, (memoriae_index)ne
+        * (memoriae_index)magnitudo(i32*));
+    numeri  = (i32*)piscina_allocare(scratch, (memoriae_index)ne
+        * (memoriae_index)magnitudo(i32));
+    si (inversa == NIHIL || numeri == NIHIL)
+    {
+        piscina_destruere(scratch);
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        constans MateriaValor* elementum =
+            materia_valor_lista_obtinere(*elementa, k);
+                 MateriaNodus* vocabulum;
+        constans MateriaValor* analyses;
+                          i32* gradus_lectionum;
+                          i32* ordo;
+                          i32  n;
+                          i32  i;
+                          i32  j;
+                          s32  g;
+                          b32  immotum = VERUM;
+
+                inversa[k]  = NIHIL;
+        numeri[k]           = ZEPHYRUM;
+        si (   elementum        == NIHIL
+            || elementum->genus != MATERIA_VALOR_NODUS
+            || elementum->datum.nodus->genus
+                != (s32)ORATIO_GENUS_VOCABULUM
+            || explicita[k])
+        {
+            perge;   /* decisio regulae explicitae (praelatio) manet:
+                      * ligatio fortuita eam non vertit (EWT 'a' + die
+                      * ablativus, LLCT supra + accusativus) */
+        }
+        vocabulum = elementum->datum.nodus;
+
+        analyses   = &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+        si (analyses->genus != MATERIA_VALOR_LISTA)
+        {
+            perge;
+        }
+        n          = materia_valor_lista_numerus(*analyses);
+        numeri[k]  = n;
+        si (n < (i32)II)
+        {
+            perge;
+        }
+        gradus_lectionum = (i32*)piscina_allocare(scratch,
+            (memoriae_index)n * (memoriae_index)magnitudo(i32));
+        ordo             = (i32*)piscina_allocare(scratch,
+            (memoriae_index)n * (memoriae_index)magnitudo(i32));
+        si (gradus_lectionum == NIHIL || ordo == NIHIL)
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            constans MateriaValor* valor =
+                materia_valor_lista_obtinere(*analyses, i);
+
+                        gradus_lectionum[i] =
+                            valor != NIHIL
+                                && valor->genus == MATERIA_VALOR_NODUS
+                            ? _gradus_umbrarum(valor->datum.nodus,
+                            k) : I;
+
+        }
+        j = ZEPHYRUM;
+        per (g = (s32)II; g >= ZEPHYRUM; g--)
+        {
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                si (gradus_lectionum[i] == (i32)g)
+                {
+                    ordo[j]  = i;
+                    j        = j + I;
+                }
+            }
+        }
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            si (ordo[i] != i)
+            {
+                immotum = FALSUM;
+            }
+        }
+        si (immotum)
+        {
+            perge;
+        }
+        inversa[k] = (i32*)piscina_allocare(scratch,
+            (memoriae_index)n * (memoriae_index)magnitudo(i32));
+        si (inversa[k] == NIHIL)
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            inversa[k][ordo[i]] = i;
+        }
+        si (   !materia_nodus_lista_permutare(cursus->piscina,
+            vocabulum,
+                (i32)ORATIO_VOCABULUM_ANALYSES, ordo, n)
+            || !oratio_partes_compendia_reponere(cursus->piscina,
+                vocabulum))
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
+        si (cursus->census != NIHIL)
+        {
+            cursus->census->umbris_ordinata =
+                cursus->census->umbris_ordinata + I;
+        }
+    }
+    /* ligationes remittere: umbra quaeque in vocabulum permutatum
+     * spectans indicem novum analysis implentis accipit */
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        constans MateriaValor* elementum =
+            materia_valor_lista_obtinere(*elementa, k);
+        constans MateriaValor* analyses;
+                          i32  a;
+
+        si (   elementum        == NIHIL
+            || elementum->genus != MATERIA_VALOR_NODUS
+            || elementum->datum.nodus->genus
+                != (s32)ORATIO_GENUS_VOCABULUM)
+        {
+            perge;
+        }
+        analyses =
+            &elementum->datum.nodus->loci[ORATIO_VOCABULUM_ANALYSES];
+        si (analyses->genus != MATERIA_VALOR_LISTA)
+        {
+            perge;
+        }
+        per (a = ZEPHYRUM; a < materia_valor_lista_numerus(*analyses);
+             a++)
+        {
+            constans MateriaValor* valor =
+                materia_valor_lista_obtinere(*analyses, a);
+            constans MateriaValor* umbrae;
+                              i32  u;
+
+            si (valor == NIHIL || valor->genus != MATERIA_VALOR_NODUS)
+            {
+                perge;
+            }
+            umbrae = _umbrae_lectionis(valor->datum.nodus);
+            si (umbrae == NIHIL)
+            {
+                perge;
+            }
+            per (u = ZEPHYRUM; u < materia_valor_lista_numerus(*umbrae);
+                 u++)
+            {
+                                constans MateriaValor* valor_umbrae =
+                                    materia_valor_lista_obtinere(*umbrae,
+                                    u);
+
+                         MateriaNodus* umbra;
+                                  s32  w;
+                                  s32  b;
+
+                                si (   valor_umbrae == NIHIL
+                                    || valor_umbrae->genus
+                                        != MATERIA_VALOR_NODUS)
+                                {
+                    perge;
+                                }
+                umbra = valor_umbrae->datum.nodus;
+
+                si (   umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                        .genus == MATERIA_VALOR_NIHIL
+                    || umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
+                        .genus == MATERIA_VALOR_NIHIL)
+                {
+                    perge;
+                }
+                w = umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                    .datum.index;
+                b = umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
+                    .datum.index;
+                si (   w < ZEPHYRUM || (i32)w >= ne
+                    || inversa[w] == NIHIL
+                    || b < ZEPHYRUM || (i32)b >= numeri[w])
+                {
+                    perge;
+                }
+                si (!materia_nodus_reponere(umbra,
+                        (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
+                        materia_valor_index((s32)inversa[w][b]),
+                        MATERIA_LOCUS_INDEX))
+                {
+                    piscina_destruere(scratch);
+                    redde FALSUM;
+                }
+            }
+        }
+    }
     piscina_destruere(scratch);
     redde VERUM;
 }
 
 /* sententiam unam resolvere: gradus I .. maximus regularum primarum N,
  * quisque proiectione nova (permutationes gradus prioris visae),
- * vocabulis vindicatis trans gradus. FALSUM = memoria sola. */
+ * vocabulis vindicatis trans gradus; post gradus omnes lex umbrarum.
+ * FALSUM = memoria sola. */
 interior b32
 _sententiam_resolvere (
+
           Cursus* cursus,
     MateriaNodus* sententia)
 {
@@ -873,11 +1197,13 @@ _sententiam_resolvere (
                       i32  gradus;
                       i32  k;
                       b32* vindicata;
+                      b32* explicita;
 
     si (cursus->census != NIHIL)
     {
         cursus->census->sententiae = cursus->census->sententiae + I;
     }
+
     si (   elementa->genus                        != MATERIA_VALOR_LISTA
         || materia_valor_lista_numerus(*elementa) == ZEPHYRUM)
     {
@@ -901,25 +1227,28 @@ _sententiam_resolvere (
             gradus_maximus = r->gradus;
         }
     }
-    vindicata = (b32*)piscina_allocare(cursus->piscina,
+        vindicata = (b32*)piscina_allocare(cursus->piscina,
+            (memoriae_index)ne * (memoriae_index)magnitudo(b32));
+    explicita = (b32*)piscina_allocare(cursus->piscina,
         (memoriae_index)ne * (memoriae_index)magnitudo(b32));
-    si (vindicata == NIHIL)
+    si (vindicata == NIHIL || explicita == NIHIL)
     {
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < ne; k++)
     {
         vindicata[k] = FALSUM;
+        explicita[k] = FALSUM;
     }
     per (gradus = I; gradus <= gradus_maximus; gradus++)
     {
         si (!_sententiam_resolvere_gradu(cursus, sententia, gradus,
-                vindicata))
+                vindicata, explicita))
         {
             redde FALSUM;
         }
     }
-    redde VERUM;
+    redde _umbris_ordinare(cursus, sententia, explicita);
 }
 
 interior b32

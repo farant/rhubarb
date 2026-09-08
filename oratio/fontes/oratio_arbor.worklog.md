@@ -1660,3 +1660,55 @@ vindicated-filler law needs to refuse; and pins are taken from the
 gate's own permille (computed from counts), not from the instrument's
 percentages rounded — the two differ by one in the last place and
 the gate is the one that judges.
+
+## 2026-09-07 — T19d gamma: the law of umbrae, measured four ways
+
+The law Fran named — a reading whose umbrae cannot be filled yields
+to one whose can — went in as C after the stages, and the first
+shape I wrote was wrong in two instructive ways. I had generalised
+it to three ranks (filled, no umbrae, unfilled), applied to every
+word. Every treebank fell, English included, which was the tell:
+English readings carry no case and no umbra, so the only way English
+could move was a Latin reading jumping over an English one. That is
+what happened — `a` in "a die" has a Latin ablative-preposition
+reading whose object umbra the stage-1 rule bound to `die`'s Latin
+ablative, and the law promoted it over the determiner the language
+rule had chosen. The same on the charters: `supra`, decided adverb
+by its exception rule, bound to any accusative in the sentence and
+promoted to preposition. First lesson: a binding is weaker evidence
+than an explicit rule, and the executor must know which words a
+`<praelatio>` row decided. A second array beside `vindicata`
+(`explicita`) carries that, and the law skips those words.
+
+Second: the demotion. Prepositions whose object is a proper name
+lost 11 points on the charters, because the capital rule's
+nomen-proprium reading has no case and cannot fill a case umbra. The
+"no object" evidence is real (it is what would fix `cum venit`), but
+it cannot be used before unknown-case fillers exist. So the law is
+promotion only, which is in fact what Fran's sentence says.
+
+Third, and the one I did not predict: promotion at any distance cost
+Seneca half a point in nouns. The `praecedente` head rule takes the
+noun as the start and the carrier as a later sibling, so a carrier
+is bound to the FIRST agreeing earlier word in the sentence, not the
+nearest; in Seneca's long sentences a noun's adjective homograph
+finds an agreeing word somewhere often enough. Counting only fillers
+at distance one removed the loss and kept most of the charters'
+gain; it is a stand-in for "nearest agreeing word", which needs the
+pattern engine's reserved `strictus` door.
+
+The measurement discipline paid for itself: four variants, each on
+the five treebanks with per-class tables, about a minute each after
+the runner rebuilt. The corpus check in the gate (every bound umbra
+points at a reading of the umbra's case, number and gender, over all
+of Hilarius) is what makes the index remap trustworthy — permuting a
+word after bindings point into it is exactly the kind of defect that
+compounds silently.
+
+Tooling notes. Editio re-lays the declaration block around an
+insertion and can push a two-column glomus past 72 (the oracle's
+`principale`) or over-indent a single line; the `-vitia` diff against
+HEAD, line numbers stripped from both the position and the message
+(`l.NNN`), is the reliable check. An Editio REICE still writes the
+file. The oracle wrapper's `"${ARGS[@]}"` under `set -u` is an error
+in bash 3.2 when the array is empty — `${ARGS[@]+"${ARGS[@]}"}`.
