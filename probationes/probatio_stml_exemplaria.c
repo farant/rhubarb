@@ -322,10 +322,43 @@ principale (
                 "<radix><s><w a=\"1\"/><w a=\"2\"><t/></w></s>"
                 "<p>1</p><p>2</p></radix>");
         }
-        /* vitia XIII: valor reservatus; forma sine libero ordinario */
+        /* cursus STRICTUS (2026-09-07, ianua olim reservata): liberi
+         * sequentes candidatum PROXIMUM solum - par 12 per <x/>
+         * disiunctum cadit, 23 vicinum manet; initium quodque ut in
+         * fratrum */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w a=\"1\"/><x/><w a=\"2\"/><w a=\"3\"/></s>"
+            "<EXEMPLAR cursus=\"strictus\" output=\"$m\">"
+            "<s><w a=\"$x\"/><w a=\"$y\"/></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@x;&@y;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w a=\"1\"/><x/><w a=\"2\"/><w a=\"3\"/>"
+                "</s><p>23</p></radix>");
+        }
+        /* strictus: liber tertius quoque proximus (123 solum, non
+         * 1_23 saltu) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/><x/>"
+            "<w a=\"4\"/></s>"
+            "<EXEMPLAR cursus=\"strictus\" output=\"$m\">"
+            "<s><w a=\"$x\"/><w a=\"$y\"/><w a=\"$z\"/></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@x;&@y;&@z;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/><x/>"
+                "<w a=\"4\"/></s><p>123</p></radix>");
+        }
+        /* vitia XIII: valor ignotus; forma sine libero ordinario */
         e = _expandere_litteras(piscina, intern,
             "<radix><s><w/></s>"
-            "<EXEMPLAR cursus=\"strictus\" output=\"$m\">"
+            "<EXEMPLAR cursus=\"alius\" output=\"$m\">"
             "<s><w/></s></EXEMPLAR>"
             "<PER congruentia=\"$m\"><n/></PER></radix>");
         CREDO_VERUM (!e.successus);

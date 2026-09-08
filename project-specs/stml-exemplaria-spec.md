@@ -666,9 +666,17 @@ decision:
     share the root; head captures are kept per row; `<**>`
     children stay hoisted per row). Without it a parent yields one
     greedy match — oratio's T17 finding (`Ad urbem et in silvam it`
-    saw one pair per sentence). `strictus` (no gaps) stays
-    reserved, refused as XIII; a root without an ordinary child is
-    XIII; canon mirrors the value check in both judges. Engine:
+    saw one pair per sentence). **`cursus="strictus"` — BUILT
+    2026-09-07 evening**: the same run without gaps — after the
+    fixed first child every later child must match the NEXT
+    effective child of the candidate (adjacency: `to` + verb,
+    determiner + noun, the nearest agreeing head; oratio's T19d
+    finding that the head rule bound the first agreeing word, not
+    the nearest). Any other value, or a root without an ordinary
+    child, is XIII; canon mirrors the value check in both judges.
+    Engine: `_laxa_liberos_congruere_ab(initium, primum_fixum,
+    strictus)` — `strictus` keeps the one-candidate law for every
+    child, not just the first. Engine:
     `_laxa_liberos_congruere_ab(initium, primum_fixum)` under the
     classic wrapper, `_laxa_caput_congruere` split from
     `_laxa_congruere`, `_exemplar_petere` loops starts. Gate: nine

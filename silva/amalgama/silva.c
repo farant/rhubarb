@@ -20098,7 +20098,8 @@ _exemplar_petere (
                    b32  ancorata,
                    SilvaXar* congruentiae,
                    SilvaXar* opus_ligamina,
-                   b32  cursus_fratrum);
+                   b32  cursus_fratrum,
+                   b32  cursus_strictus);
 
 interior SilvaXar*
 _ligamina_ad_argumenta (
@@ -20828,7 +20829,7 @@ _commutationem_implere (
                         }
                         si (!_exemplar_petere(ctx, forma_impleta, radix,
                                               VERUM, congruentiae,
-                                              opus, FALSUM))
+                                              opus, FALSUM, FALSUM))
                         {
                             redde FALSUM;
                         }
@@ -22064,7 +22065,8 @@ _laxa_liberos_congruere_ab (
              SilvaStmlNodus* candidatus,
                    SilvaXar* ligamina,
                    i32  initium,
-                   b32  primum_fixum)
+                   b32  primum_fixum,
+                   b32  strictus)
 {
     SilvaXar* effectivi;
     SilvaXar* effectivi_formae;
@@ -22160,7 +22162,10 @@ _laxa_liberos_congruere_ab (
                 frange;  /* initium fixum: candidatus unus temptatur */
             }
         }
-        primum = FALSUM;
+        /* strictus (cursus="strictus", 2026-09-07): liberi sequentes
+         * quoque candidatum PROXIMUM solum temptant - nullus saltus
+         * (vicinitas: 'to' + verbum, determinans + substantivum) */
+        primum = strictus;
         si (!congruit)
         {
             redde FALSUM;
@@ -22178,7 +22183,7 @@ _laxa_liberos_congruere (
                    SilvaXar* ligamina)
 {
     redde _laxa_liberos_congruere_ab(ctx, forma, candidatus, ligamina,
-                                     ZEPHYRUM, FALSUM);
+                                     ZEPHYRUM, FALSUM, FALSUM);
 }
 
 /* Congruentia laxa CAPITIS nodi unius (vide caput sectionis):
@@ -22426,7 +22431,8 @@ _exemplar_petere (
                    b32  ancorata,
                    SilvaXar* congruentiae,
                    SilvaXar* opus_ligamina,
-                   b32  cursus_fratrum)
+                   b32  cursus_fratrum,
+                   b32  cursus_strictus)
 {
     i32 i;
     i32 num;
@@ -22462,7 +22468,8 @@ _exemplar_petere (
                 {
                     silva_xar_truncare(opus_ligamina, ante);
                     si (   _laxa_liberos_congruere_ab(ctx, forma, nodus,
-                               opus_ligamina, initium, VERUM)
+                               opus_ligamina, initium, VERUM,
+                               cursus_strictus)
                         && !_congruentiam_addere(ctx, congruentiae,
                                nodus, opus_ligamina))
                     {
@@ -22520,7 +22527,8 @@ _exemplar_petere (
             }
         }
         si (!_exemplar_petere(ctx, forma, l, ancorata, congruentiae,
-                              opus_ligamina, cursus_fratrum))
+                              opus_ligamina, cursus_fratrum,
+                              cursus_strictus))
         {
             redde FALSUM;
         }
@@ -22662,6 +22670,7 @@ _exemplar_nucleus (
                        b32  pons;
                     SilvaChorda* cursus_regula;
                        b32  cursus_fratrum;
+                       b32  cursus_strictus;
                        i32  i;
                        i32  num;
 
@@ -22706,13 +22715,16 @@ _exemplar_nucleus (
      * clarum */
     cursus_regula = silva_stml_attributum_capere(nodus, "cursus");
     si (   cursus_regula != NIHIL
-        && !silva_chorda_aequalis_literis(*cursus_regula, "fratrum"))
+        && !silva_chorda_aequalis_literis(*cursus_regula, "fratrum")
+        && !silva_chorda_aequalis_literis(*cursus_regula, "strictus"))
     {
         _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
                        nodus, NIHIL, cursus_regula);
         redde FALSUM;
     }
-    cursus_fratrum = cursus_regula != NIHIL;
+    cursus_fratrum  = cursus_regula != NIHIL;
+    cursus_strictus = cursus_regula != NIHIL
+        && silva_chorda_aequalis_literis(*cursus_regula, "strictus");
 
     /* corpus: elementum UNUM (spec par. 2.4 - corpus silvestre sub
      * applicatione fluitanti clarum, alternativis nominatis) */
@@ -22802,7 +22814,7 @@ _exemplar_nucleus (
                 }
                 si (!_exemplar_petere(ctx, forma_ordinis,
                         ordo->radix, ancorata, congruentiae, opus,
-                        cursus_fratrum))
+                        cursus_fratrum, cursus_strictus))
                 {
                     redde FALSUM;
                 }
@@ -22846,7 +22858,7 @@ _exemplar_nucleus (
          * supra (lex stratorum per constructionem) */
         si (!_exemplar_petere(ctx, forma, ctx->radix_expansa,
                               ancorata, congruentiae, opus,
-                              cursus_fratrum))
+                              cursus_fratrum, cursus_strictus))
         {
             redde FALSUM;
         }

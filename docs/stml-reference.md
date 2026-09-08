@@ -820,7 +820,7 @@ vitium (BENE/MIXTA/MEMORIA), linea, titulus}`; a new tree.
 ### 19.1 EXEMPLAR
 
 ```stml
-<EXEMPLAR [de="$prior"] [modus="omnia|unum|primum|optional"] output="$name" [ancorata] [radix="fontis"] [cursus="fratrum"]>
+<EXEMPLAR [de="$prior"] [modus="omnia|unum|primum|optional"] output="$name" [ancorata] [radix="fontis"] [cursus="fratrum|strictus"]>
   one element
 </EXEMPLAR>
 ```
@@ -841,7 +841,8 @@ adds its own.
 | `modus` | `omnia` (default, all matches), `unum` (exactly one, else XVI), `primum` (first; zero fine), `optional` (zero or one, else XVII) |
 | `ancorata` | try only at the scope's root; absent = floating, tried at every subtree root |
 | `radix="fontis"` | output rows keep the incoming row's root instead of narrowing to the match (needs `de=`; else XIII) |
-| `cursus="fratrum"` | sibling run: where the body's root matches, its children are tried from EVERY start position among the candidate's children — the first written child must match the start child itself, later ones may skip — and each start that succeeds is its own row (rows share the root; root captures repeat). Without it a parent yields ONE greedy match. `strictus` (no gaps) is reserved; any other value, or a root without an ordinary child, is XIII |
+| `cursus="fratrum"` | sibling run: where the body's root matches, its children are tried from EVERY start position among the candidate's children — the first written child must match the start child itself, later ones may skip — and each start that succeeds is its own row (rows share the root; root captures repeat). Without it a parent yields ONE greedy match. Any other value, or a root without an ordinary child, is XIII |
+| `cursus="strictus"` | the sibling run WITHOUT gaps: after the start child every later written child must match the next candidate child (adjacency). `<s><w a="1"/><x/><w a="2"/><w a="3"/></s>` with `<s><w a="$x"/><w a="$y"/></s>` yields only `23` |
 
 Floating bodies must be single-rooted (XV `CORPUS_SILVESTRE`).
 

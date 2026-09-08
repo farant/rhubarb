@@ -782,3 +782,24 @@ rebaked and verified through the host file.
 Editing lesson, twice in one hour: a block comment is ONE token to
 the editor's anchors, so an anchor that starts or ends inside a
 comment never matches; anchor on the code line beside it instead.
+
+## 2026-09-07 (evening) — cursus="strictus": the reserved door, opened
+
+Increment 20 reserved `strictus` and refused it as XIII. Oratio's
+executor work the same evening produced the finding that wants it:
+the head-agreement rule written with `praecedente` order binds a
+carrier to the FIRST agreeing earlier word in the sentence, never the
+nearest, and English function words (`to` + verb, determiner + noun,
+`have` + participle) are adjacency facts, not subsequence facts. The
+change is one line of law: in `_laxa_liberos_congruere_ab` the
+one-candidate rule that already governed the fixed first child now
+governs every later child when `strictus` is set (`primum =
+strictus` where it was `primum = FALSUM`), threaded from the `cursus`
+attribute through `_exemplar_petere` as a second flag beside
+`cursus_fratrum`. Existential `<**>` children still hoist; the classic
+matcher passes FALSUM. Two fixtures: a pair split by a stranger yields
+only the adjacent pair; a triple must be contiguous. The planted fault
+that compiled was the inversion (`!strictus`), which also makes the
+classic matcher strict - red at the first classic fixture, green on
+revert; the dropped-parameter plant was refused pre-flight as an
+unused parameter, as usual.
