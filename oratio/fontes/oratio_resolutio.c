@@ -1131,22 +1131,18 @@ _umbris_ordinare (
             per (u = ZEPHYRUM; u < materia_valor_lista_numerus(*umbrae);
                  u++)
             {
-                                constans MateriaValor* valor_umbrae =
-                                    materia_valor_lista_obtinere(*umbrae,
-                                    u);
-
+                constans MateriaValor* valor_umbrae =
+                    materia_valor_lista_obtinere(*umbrae, u);
                          MateriaNodus* umbra;
                                   s32  w;
                                   s32  b;
 
-                                si (   valor_umbrae == NIHIL
-                                    || valor_umbrae->genus
-                                        != MATERIA_VALOR_NODUS)
-                                {
+                si (   valor_umbrae        == NIHIL
+                    || valor_umbrae->genus != MATERIA_VALOR_NODUS)
+                {
                     perge;
-                                }
+                }
                 umbra = valor_umbrae->datum.nodus;
-
                 si (   umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
                         .genus == MATERIA_VALOR_NIHIL
                     || umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
