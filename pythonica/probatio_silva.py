@@ -439,6 +439,35 @@ except silva.SilvaError as ex:
     credo('commentum 0 vicibus inventum' in str(ex), 'Commentum absens levat')
 f = e.applicare(iudica=False)
 credo('nota datata. */\ninterior i32' in open(via_s).read() and '    i32 d;\n' in open(via_s).read(), 'Commentum: scriptum super plagulam iam editam')
+
+print('--- Commentum.sententia per orationem (gradus III) + refusiones (2026-09-07) ---')
+via_c = os.path.join(T, 'sententia.c')
+open(via_c, 'w').write('#include "latina.h"\n\n/* f - explicatio prima, e.g. cum abbreviatione. Sententia altera\n * hic stat. Tertia sequitur.\n *\n * Paragraphus alter manet intactus. */\ninterior i32\nf (\n    i32 a)\n{\n    redde a;\n}\n')
+e = silva.Editio(via_c); c = e.commentum('f')
+s = c.sententia(continet='altera hic')
+credo(s.textus == 'Sententia altera hic stat.' and s.paragraphus == 0 and c.sententia(0).textus == 'f - explicatio prima, e.g. cum abbreviatione.' and c.sententia(3).textus == 'Paragraphus alter manet intactus.',
+      'Commentum.sententia: per lectorem orationis (e.g. non findit), fragmento aut numero, paragraphus')
+s.substituere('Sententia altera nova est et longior ut refluxus paragraphi primi probetur.')
+lineae_c = e.textus[e.textus.index('/* f'):e.textus.index('interior')].splitlines()
+prosa_c = ' '.join(re.sub(r'^\s*(/\*|\*/?)\s?', '', l) for l in lineae_c)
+credo(lineae_c[0].startswith('/* f - explicatio prima, e.g. cum abbreviatione. Sententia altera') and all(len(l) <= 72 for l in lineae_c) and 'altera nova est et longior' in prosa_c and 'Tertia sequitur.' in prosa_c and 'hic stat' not in prosa_c and lineae_c[-2] == ' *' and lineae_c[-1] == ' * Paragraphus alter manet intactus. */',
+      'SententiaCommenti.substituere: sententia sola mutata, paragraphus refluxus, alter verbatim')
+for mala in (lambda: c.sententia(9), lambda: silva.Editio(via_c).commentum('f').sententia(continet='sequitur') and silva.Editio(via_c).commentum('f').sententia(continet='a')):
+    try:
+        mala(); credo(False, 'sententia mala levat')
+    except silva.SilvaError as ex:
+        credo('sententia' in str(ex), 'sententia absens / ambigua levat cum sententiis nominatis')
+e = silva.Editio(via_c); e.replace('redde a;', 'redde a + a;')
+try:
+    e.replace('a', 'b')
+    credo(False, 'ambigua')
+except silva.SilvaError as ex:
+    credo('in memoria post 1 editiones; in plagula - lineae' in str(ex), 'ancora ambigua post editionem: lineae in memoria ET in plagula nominatae')
+try:
+    silva.commissio('nihil', ['FAQ.md'], portae=[])
+    credo(False, 'vetita')
+except silva.SilvaError as ex:
+    credo('VETITA' in str(ex) and 'Frani' in str(ex) and 'remove' in str(ex), 'commissio: refusio vetitae causam nominat')
 os.unlink(via_f)
 
 print('--- Textus: textus planus ---')

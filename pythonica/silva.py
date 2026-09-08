@@ -497,11 +497,24 @@ class Editio(object):
                 sedes.append((i, i + len(vetus)))
                 i = self.textus.find(vetus, i + 1)
         if len(sedes) != numerus:
+            nota = _lineae_sedium(self.textus, sedes) \
+                or self._proxima(vetus, tolerans)
+            if sedes and self.acta:
+                # lineae textus IN MEMORIA post editiones priores; lineae
+                # plagulae in disco quoque (residuum 01M1YPXPF9 I)
+                try:
+                    disco = _sedes_lexematum(self.originalis, vetus) \
+                        if tolerans is True else \
+                        [(m.start(), m.end()) for m in
+                         _exemplar_tolerans(vetus).finditer(self.originalis)]
+                except SilvaError:
+                    disco = []
+                nota += (' (in memoria post %d editiones; in plagula%s)'
+                         % (len(self.acta),
+                            _lineae_sedium(self.originalis, disco)
+                            or ' absens'))
             raise SilvaError("ancora %d vicibus inventa (exspectatae %d)%s:"
-                             " %r" % (len(sedes), numerus,
-                                      _lineae_sedium(self.textus, sedes)
-                                      or self._proxima(vetus, tolerans),
-                                      vetus[:60]))
+                             " %r" % (len(sedes), numerus, nota, vetus[:60]))
         if series is not None:
             self._substituere_lexemata(series, sedes, vetus, novus)
         else:
@@ -1746,7 +1759,10 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True):
     commissionem deleta (HEAD mutatum = sigilla rancida)."""
     for v in viae:
         if v in VETITAE:
-            raise SilvaError('via vetita commissioni: %s' % v)
+            raise SilvaError('via VETITA commissioni: %s - plagula Frani in'
+                             ' cursu (FAQ, tabula, tabularium, c89-formatted,'
+                             ' legatus.worklog): Fran ipse eam committit,'
+                             ' numquam agens - e viis remove' % v)
     ante = _sigilla_viarum(viae)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):
@@ -3568,20 +3584,26 @@ class Commentum(object):
         self.crudus, self.a, self.b = sedes[0]
         self.indentatio = self.a - (textus.rfind('\n', 0, self.a) + 1)
         self.linea = textus.count('\n', 0, self.a) + 1
-        inner = self.crudus[2:-2].split('\n')
-        inner = [inner[0]] + [_MARGO.sub('', l) for l in inner[1:]]
-        paragraphi, cur = [], []
-        for l in inner:
-            s = l.strip()
+        crudae = self.crudus[2:-2].split('\n')
+        nudae = [crudae[0]] + [_MARGO.sub('', l) for l in crudae[1:]]
+        # grupi = lineae CRUDAE per paragraphum (rescriptura verbatim
+        # paragraphorum intactorum, gradus III); paragraphi = prosa
+        self._grupi, self.paragraphi = [], []
+        cur_cruda, cur = [], []
+        for cruda, nuda in zip(crudae, nudae):
+            s = nuda.strip()
             if s == '':
                 if cur:
-                    paragraphi.append(' '.join(cur))
-                    cur = []
+                    self._grupi.append(cur_cruda)
+                    self.paragraphi.append(' '.join(cur))
+                    cur_cruda, cur = [], []
             else:
+                cur_cruda.append(cruda)
                 cur.append(s)
         if cur:
-            paragraphi.append(' '.join(cur))
-        self.textus = '\n\n'.join(paragraphi)
+            self._grupi.append(cur_cruda)
+            self.paragraphi.append(' '.join(cur))
+        self.textus = '\n\n'.join(self.paragraphi)
 
     def _scribere(self, novus, actus):
         if self.a is None:
@@ -3599,6 +3621,61 @@ class Commentum(object):
         return self._scribere(_commentum_claudere(lineae, self.indentatio),
                               'substituere')
 
+    def _rescribere(self, k, prosa):
+        """commentum totum: paragraphus k ex prosa refluxus, ceteri
+        lineis crudis VERBATIM (separator ' *' unus)"""
+        n = len(self._grupi)
+        lineae = []
+        for i, g in enumerate(self._grupi):
+            if i:
+                lineae.append(' ' * self.indentatio + ' *')
+            if i == k:
+                novae = _commentum_refluere(prosa, self.indentatio,
+                                            primum=(i == 0))
+                if i == n - 1:
+                    novae = _commentum_claudere(novae, self.indentatio) \
+                        .split('\n')
+                lineae.extend(novae)
+            else:
+                crudae = list(g)
+                if i == 0:
+                    crudae[0] = '/*' + crudae[0]
+                if i == n - 1:
+                    crudae[-1] = crudae[-1] + '*/'
+                lineae.extend(crudae)
+        return '\n'.join(lineae)
+
+    def sententia(self, n=None, continet=None):
+        """SententiaCommenti (gradus III desiderati 01M1Z4B3FT,
+        2026-09-07): sententia n (ordine commenti toto) aut UNICA quae
+        'continet' tenet, per LECTOREM SENTENTIARUM orationis (silva.
+        Oratio: abbreviationes e.g./par./spec, nomina codicis cum
+        punctis) - .textus, .paragraphus, .substituere(prosa) =
+        paragraphus eius solus refluxus, ceteri verbatim."""
+        o = Oratio(self.textus + '\n')
+        ss = o.sententiae()
+        if continet is not None:
+            sedes = [s for s in ss if continet in s.textus]
+            if len(sedes) != 1:
+                raise SilvaError('sententia %d vicibus inventa (exspectata'
+                                 ' 1) - %s: %r'
+                                 % (len(sedes), [s.textus[:40] for s in ss],
+                                    continet))
+            s = sedes[0]
+        else:
+            if n is None or n < 0 or n >= len(ss):
+                raise SilvaError('sententia %r absens (sententiae %d): %s'
+                                 % (n, len(ss), [x.textus[:40] for x in ss]))
+            s = ss[n]
+        octeti = self.textus.encode('utf-8')
+        initia, pos = [], 0
+        for p in self.paragraphi:
+            initia.append(pos)
+            pos += len(p.encode('utf-8')) + 2
+        k = max(i for i, a in enumerate(initia) if a <= s.initium)
+        return SententiaCommenti(self, k, s.initium - initia[k],
+                                 s.finis - initia[k], s.textus)
+
     def paragraphum_addere(self, textus, ubi='finis'):
         """paragraphus refluxus post lineas priores (verbatim); ubi
         'finis' solum (nota datata in commento capitis)"""
@@ -3610,6 +3687,27 @@ class Commentum(object):
         lineae = priores + [' ' * self.indentatio + ' *'] + novae
         return self._scribere(_commentum_claudere(lineae, self.indentatio),
                               'paragraphum_addere')
+
+
+class SententiaCommenti(object):
+    """sententia una commenti: paragraphus (index), initium/finis
+    (octeti intra prosam paragraphi), textus; substituere(prosa) =
+    sententia sola mutata, paragraphus refluxus, commentum consumptum"""
+
+    def __init__(self, commentum, paragraphus, initium, finis, textus):
+        self.commentum = commentum
+        self.paragraphus = paragraphus
+        self.initium = initium
+        self.finis = finis
+        self.textus = textus
+
+    def substituere(self, prosa):
+        c = self.commentum
+        octeti = c.paragraphi[self.paragraphus].encode('utf-8')
+        nova = (octeti[:self.initium] + prosa.encode('utf-8')
+                + octeti[self.finis:]).decode('utf-8')
+        return c._scribere(c._rescribere(self.paragraphus, nova),
+                           'sententia')
 
 
 def formare(via, nomina=None):

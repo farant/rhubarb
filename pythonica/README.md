@@ -162,7 +162,20 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
   refluxus — nota datata in commento capitis sine commento reproducto.
   Nomen functionis primum (commentarium ducens), deinde fragmentum
   unicum spatiis collapsis; res post editionem consumpta (selige
-  iterum). Gradus III (sententia/paragraphus per orationem) apertus.
+  iterum).
+- **Gradus III — `c.sententia(n | continet='fragmentum')`** (eodem die,
+  serius): sententiae commenti per LECTOREM SENTENTIARUM orationis
+  (`silva.Oratio` super prosam: `e.g.` non findit, nomina codicis cum
+  punctis servat), `.textus`, `.paragraphus`; `.substituere(prosa)` =
+  sententia sola mutata, paragraphus eius solus refluxus, paragraphi
+  ceteri lineis crudis VERBATIM (separator ` *` unus). Inventum: tabula
+  abbreviationum orationis `par.` (par. III) caret — in oratione
+  emendandum, non hic.
+- **Refusiones** (residua 01M1YPXPF9 I, IV): ancora ambigua post
+  editiones priores lineas IN MEMORIA et IN PLAGULA nominat (`in memoria
+  post N editiones; in plagula - lineae [...]`); via VETITA commissioni
+  causam nominat (plagula Frani in cursu, Fran ipse committit, e viis
+  remove).
 
 ## 2026-09-03 — lex formae ancorarum (post B3)
 

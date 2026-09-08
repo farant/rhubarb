@@ -491,3 +491,21 @@ judges width but never reflows prose, so this is the only reflow in
 the house. Tier III (sentence and paragraph anchors through oratio)
 stays open; the plumbing for it is the comment corpus that the
 identifier lint already builds.
+
+## 2026-09-07 (night) — the sentence as an anchor
+
+Tier III of the comment-editing item turned out to be mostly
+bookkeeping once the comment object kept its raw lines per paragraph:
+`sententia(continet=...)` runs `silva.Oratio` over the comment's
+prose, which gives sentence extents in bytes of the joined
+paragraphs; the paragraph is found by offset, the sentence replaced
+inside that paragraph's prose, and only that paragraph is reflowed —
+the other paragraphs are re-emitted from their raw lines with the
+`/*` and `*/` markers put back, so they are byte-identical. The
+sentence reader earned its keep at once: `e.g.` did not split, which
+a regex would have. It also showed its gap: `par. III` split, because
+oratio's abbreviation table has no `par.`; that is oratio's to fix
+and is on the ledger. Two refusals got their missing half from the
+residual list: an ambiguous anchor after earlier edits now names the
+file's lines beside the in-memory ones, and the staging-file refusal
+says whose files they are and what to do.
