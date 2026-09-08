@@ -856,18 +856,23 @@ principale (vacuum)
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, ZEPHYRUM, "latina", doc, &census));
+                CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
+                    &ratum,
+                    programma, ZEPHYRUM, "latina", doc, &census));
+        /* T24: regula nulla (ordines 0), sed prior casuum verbum apertum
+         * ordinat - ablativus ante nominativum (abl nom voc) */
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
-            (s32)ORATIO_CASUS_NOMINATIVUS);
+            (s32)ORATIO_CASUS_ABLATIVUS);
         CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (census.prior_casuum, I);
                 /* regula prima sola (T19b: auxiliare-primum-latinum - sine
          * auxiliari nihil): cum puella intacta */
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, I, "latina", doc, &census));
+                CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
+                    &ratum,
+                    programma, I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
-            (s32)ORATIO_CASUS_NOMINATIVUS);
+            (s32)ORATIO_CASUS_ABLATIVUS);   /* T24: prior, non regula */
         CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
 
         /* In urbem venit: accusativus iam primus - ordo lectus, nihil
@@ -891,10 +896,11 @@ principale (vacuum)
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, (s32)-I, "latina", doc, &census));
-        CREDO_AEQUALIS_I32 (census.sententiae, I);
+                CREDO_AEQUALIS_I32 (census.sententiae, I);
         CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
+        /* T24: sine regula prior casuum solus - abl ante nom */
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM),
-            (s32)ORATIO_CASUS_NOMINATIVUS);
+            (s32)ORATIO_CASUS_ABLATIVUS);
         /* programma sine regulis: nihil, nulla fractura */
         {
             OratioProgramma* vacuum_programma =
@@ -907,6 +913,45 @@ principale (vacuum)
                 vacuum_programma, (s32)-I, "latina", doc, &census));
             CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
         }
+    }
+
+    /* T24 PRIOR CASUUM: verbum APERTUM (nulla regula loquitur) ordinem
+     * casuum mensuratum accipit post regulas omnes - puellae: ordo fontis
+     * GEN DAT NOM VOC LOC, post priorem GEN NOM DAT VOC LOC (gradus
+     * abl > acc > gen > nom > dat > voc > loc); nihil deletum, classis
+     * immota, census.prior_casuum numerat */
+    imprimere("\n--- II b. Prior casuum (T24) ---\n");
+    {
+           OratioPartesCensus  census_partium;
+        OratioResolutioCensus  census;
+                 MateriaNodus* doc = _documentum(piscina, &vocabularia,
+                     "Puellae rosam dat.\n", &census_partium);
+                 MateriaNodus* puellae;
+                          i32  n_ante;
+
+        CREDO_NON_NIHIL (doc);
+        puellae = _vocabulum(doc, ZEPHYRUM);
+        CREDO_NON_NIHIL (puellae);
+        n_ante = materia_valor_lista_numerus(
+            puellae->loci[ORATIO_VOCABULUM_ANALYSES]);
+        CREDO_VERUM (n_ante >= (i32)IV);
+                oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I,
+            oratio_resolutio_lingua_censu(census_partium.vocabula_linguarum),
+            doc,
+            &census));
+        CREDO_AEQUALIS_S32 (_casus(puellae, ZEPHYRUM),
+            (s32)ORATIO_CASUS_GENITIVUS);
+        CREDO_AEQUALIS_S32 (_casus(puellae, I),
+            (s32)ORATIO_CASUS_NOMINATIVUS);
+        CREDO_AEQUALIS_S32 (_casus(puellae, (i32)II),
+            (s32)ORATIO_CASUS_DATIVUS);
+        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+            puellae->loci[ORATIO_VOCABULUM_ANALYSES]), n_ante);
+        CREDO_VERUM (census.prior_casuum >= I);
+        CREDO_AEQUALIS_S32 ((s32)puellae->loci[ORATIO_VOCABULUM_DECISIO].genus,
+            (s32)MATERIA_VALOR_NIHIL);   /* ordo, non decisio */
     }
 
     imprimere("\n--- III. Planum iudicatum; ordo malus recusatus"
@@ -1188,9 +1233,9 @@ principale (vacuum)
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, (s32)I, "latina", documentum_latinum, &census));
-        CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
+                CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (_casus(puella, ZEPHYRUM),
-            (s32)ORATIO_CASUS_NOMINATIVUS);
+            (s32)ORATIO_CASUS_ABLATIVUS);   /* T24: prior casuum */
     }
 
         imprimere("\n--- VI. Umbrae capitis, gradus II ---\n");

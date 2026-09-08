@@ -1710,6 +1710,32 @@ ablative). NEXT: T24, a case prior that ORDERS readings within a
 class (never eliminates), global order plus per-set entries each
 measured alone on all five treebanks.
 
+**As built — T24, the case prior (2026-09-08, same session).** An
+executor law in the resolver, `_prior_casuum`, run LAST — after all
+stages, the law of umbrae, the written decisions and the chain — on
+words nothing touched: not decided, not carrying a filled umbra, not
+the target of one (binding indices point into the target's list).
+It reorders the readings of the word's FIRST class, each into the
+positions that class already held, by a measured case rank
+(`ORDO_CASUUM`: ablative, accusative, genitive, nominative, dative,
+vocative, locative) with per-candidate-set entries (`PRIOR_COPIAE`,
+switches, env `ORATIO_PRIOR_CASUUM_SOLA`); other readings stay put,
+no class moves, no decision is written (`census.prior_casuum` counts).
+MEASURED before the rules first and refused: primary Seneca 835 → 808,
+charters 863 / 856 → 822 / 811 — the loose head rules bind spurious
+ablative agreement and promote the wrong twin; a prior may not change
+what the evidence rules see. After the rules, primary and forced are
+identical to the base on every file and only case moves: base 609 /
+565 / 567; global order 636 / 617 / 630 (kept); entry abl/acc/nom/voc
+→ nominative 645 / 622 / 637 (kept); abl/nom/voc → nominative 640 /
+617 / 629 (test falls, refused); abl/acc → accusative 648 / 596 / 606
+(charters fall, refused). Pins 645 / 622 / 637. Two defects caught by
+house tools: an unsigned group index initialised to −1 (the examen's
+"comparatio vana") and class consolidation (`Cum`, caught by the
+gate's permutation count). The remaining distance to the census's
+73 % is the bound tier: the head rules' own case choice (52 / 45 %),
+a rule question, not a prior.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

@@ -624,7 +624,20 @@ abl>acc>gen>nom>dat>voc>loc 65.3/71.7/72.9 % vs today 61.1/56.7/56.9;
 sets agree except abl/acc/nom/voc, abl/nom/voc, abl/acc. NEXT = T24
 CASE PRIOR (orders readings within a class at resolution start; global
 order + per-set entries measured alone on all five; pins casus AND
-primary/forced must hold since bindings take the first agreeing pair).
+primary/forced must hold since bindings take the first agreeing pair). **T24 DONE (same day): CASE PRIOR** — `_prior_casuum` runs
+LAST in `_sententiam_resolvere`, on words nothing touched (not
+decided, no filled umbra, not a binding target), reordering the FIRST
+class's readings in their own positions by `ORDO_CASUUM`
+(abl>acc>gen>nom>dat>voc>loc) + `PRIOR_COPIAE` entries (kept:
+abl/acc/nom/voc → nom; refused: abl/nom/voc → nom, abl/acc → acc).
+Casus 609/565/567 → 645/622/637; primary/forced IDENTICAL. BEFORE the
+rules it wrecked primary (835 → 808, 863/856 → 822/811: spurious
+ablative agreement) — a prior may not change what evidence rules see.
+Gotchas: unsigned index initialised to −1 (examen "comparatio vana"),
+class consolidation (`Cum`). Older resolutio hand cases now expect
+the prior's ablative where no rule fired. NEXT candidates: head
+rules' case choice (52/45 %), T8b pronoun tackons, charter glossary,
+T21b.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

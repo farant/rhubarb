@@ -101,9 +101,11 @@
  * mensura proxima (T21b), machinae exemplarium res */
 /* T23 CASUS (2026-09-08): casus lectionis primae ubi classis recta et
  * aurum casum fert - mensura quam primarium non videt; EWT relata (0) */
-#define CIRCSE_CASUUM_PINNA      609
-#define LLCT_DEV_CASUUM_PINNA    565
-#define LLCT_TEST_CASUUM_PINNA   567
+/* T24 (prior casuum post regulas, verbis apertis): 609/565/567 ->
+ * 645/622/637; primarium et coactae immota */
+#define CIRCSE_CASUUM_PINNA      645
+#define LLCT_DEV_CASUUM_PINNA    622
+#define LLCT_TEST_CASUUM_PINNA   637
 #define EWT_DEV_CASUUM_PINNA     0
 #define EWT_TEST_CASUUM_PINNA    0
 #define CIRCSE_COACTAE_PINNA     764

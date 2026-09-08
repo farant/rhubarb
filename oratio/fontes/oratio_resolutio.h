@@ -85,7 +85,9 @@ nomen structura {
     /* T20c lex I: ordines impletionis recusati quia carrier et implens
      * clausulis DIVERSIS positi sunt (ambo stratis puris: semen,
      * extentum, unica; relativum ad antecedens exceptum) */
-    i32 recusatae_clausulis;
+        i32 recusatae_clausulis;
+    /* T24: vocabula quorum lectiones prior casuum permutavit */
+    i32 prior_casuum;
 } OratioResolutioCensus;
 
 

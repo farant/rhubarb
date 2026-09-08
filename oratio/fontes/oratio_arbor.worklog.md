@@ -2621,3 +2621,54 @@ ablative before dative, ablative before locative, accusative first
 in acc/gen/nom/voc); the one that disagrees is abl/acc/nom/voc. That
 is the next tranche, a prior that orders and never eliminates.
 Scratch: `subiectum_census.py`, `casus_confusio.py`, `casus_prior.py`.
+
+## 2026-09-08 — T24: the case prior, and where in the pipeline a prior may stand
+
+The case column's confusion matrix said two fifths of Seneca's wrong
+cases were words no rule touched, standing in the dictionary's
+inflection-table order: nominative before accusative, dative before
+ablative, the locative wherever the table lists it. The census of a
+CASE PRIOR (majority gold case per candidate set) promised 73 % from
+61. This is the prior, and the lesson is where it must stand.
+
+The first placement was the obvious one: before all rules, as the
+default order of every word's candidates, so the open tier gets it
+and the head rules walk it. Class accuracy collapsed: Seneca primary
+835 → 808, the charters 863 / 856 → 822 / 811, for a case gain of a
+few points. With ablative first on every nominal, the loose head
+rules find spurious ablative agreement between neighbours, bind the
+wrong pair, and the law of the explicit class promotes the wrong
+twin. A prior that changes what the evidence rules see is not a
+prior. So it runs LAST, after all stages, decisions and the chain,
+and only on words nothing touched: not decided, not carrying a
+filled umbra, not the target of one (binding indices point into the
+target's list, and a permutation would break them). Primary and
+forced are then identical to the base on every file, and only case
+moves — which is what a prior may do.
+
+Two defects on the way, both caught by house tools. The examen's
+note "comparatio vana: semper falsum" was my group index: an
+unsigned array initialised to minus one, so "not yet assigned" was
+never true, every reading fell into one group, and the sort ran
+across classes by case rank — nouns ahead of verbs, 207 Seneca
+words changing class, and, by accident, 70 of them for the better.
+And the first correct version consolidated a class's readings
+(`Cum`'s two preposition readings pulled together past its
+conjunction ones), which the gate's count exposed: the prior now
+reorders only the readings of the FIRST class, each into the
+positions that class already held, and everything else stays put.
+
+Measured after the rules (case permille, Seneca / dev / test; primary
+and forced unchanged in every row): base 609 / 565 / 567; global
+order abl > acc > gen > nom > dat > voc > loc 636 / 617 / 630, kept;
+entry abl/acc/nom/voc → nominative 645 / 622 / 637, kept; entry
+abl/nom/voc → nominative 640 / 617 / 629, the test charters fall by
+four words at the boundary, refused; entry abl/acc → accusative
+648 / 596 / 606, the charters fall hard, refused. The census's 73 %
+was the ceiling over ALL words; the prior reaches the open ones, and
+the bound ones keep the order their rule found — the rest of the
+distance is the head rules' 52 % / 45 % case choice, which is a
+rule question, not a prior. The gate's older hand cases that said
+"no rule fired, so the nominative stands" now say "no rule fired, so
+the prior's ablative stands", with the rule count still zero beside
+them. Scratch: `mensura_prior.sh`.

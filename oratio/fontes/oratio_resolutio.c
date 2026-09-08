@@ -10,6 +10,7 @@
 #include "stml.h"
 #include "stml_macros.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 interior b32
@@ -1804,6 +1805,347 @@ _umbris_ordinare (
  * quisque proiectione nova (permutationes gradus prioris visae),
  * vocabulis vindicatis trans gradus; post gradus omnes lex umbrarum.
  * FALSUM = memoria sola. */
+/* PRIOR CASUUM (T24, 2026-09-08; census casus_prior.py post columnam
+ * casuum T23): ordo dictionarii flexionum (WORDS: nominativus ante
+ * accusativum, dativus ante ablativum, locativus ubi tabula eum ponit)
+ * ordo lectionum est ubi nulla regula loquitur (DCCXCIX errata casuum
+ * Senecae strati aperti) et ordo quem regulae capitis percurrunt (par
+ * congruens PRIMUM ligant). Prior lectiones cuiusque vocabuli intra
+ * greges classis eiusdem (ordo gregum manet) ordine casuum MENSURATO
+ * permutat, ante regulas omnes; nihil eliminat, nihil decidit (decisio
+ * non scribitur). Ordo globalis abl > acc > gen > nom > dat > voc > loc
+ * (census: Seneca 61.1 -> 65.3, chartae 56.7/56.9 -> 71.7/72.9 %;
+ * optimum per copiam 73.4/73.8/76.4). MENSURATUM post regulas verbis
+ * apertis solis: 609/565/567 -> 636/617/630 (ordo globalis), 645/622/637
+ * cum entrio abl-acc-nom-voc; primarium et coactae immota. Ante regulas
+ * (mensuratum et ablatum) primarium cadebat: regulae capitis par
+ * congruens primum ligant. Entria per COPIAM candidatorum
+ * (casus lectionum Latinarum gregis): copiae discordes inter thesauros
+ * abl/acc/nom/voc, abl/nom/voc, abl/acc (Seneca nom/acc, chartae abl) -
+ * quodque solum mensuratum (ORATIO_PRIOR_CASUUM_SOLA=titulus). */
+hic_manens constans b32 PRIOR_CASUUM = VERUM;
+/* gradus casuum ordine ORATIO_CASUS: NOM GEN DAT ACC ABL LOC VOC */
+hic_manens constans s32 ORDO_CASUUM[ORATIO_CASUS_NUMERUS] = {
+    (s32)III, (s32)II, (s32)IV, I, ZEPHYRUM, (s32)VI, (s32)V
+};
+
+nomen structura {
+    constans character* titulus;
+    i32 copia;          /* bitmask casuum gregis (I << casus) */
+    s32 casus_primus;   /* casus primus pro copia */
+    b32 activa;
+} PriorCopiae;
+
+#define COPIA(a) (I << (i32)(a))
+hic_manens constans PriorCopiae PRIOR_COPIAE[] = {
+    /* MENSURATUM (casus permille Seneca / chartae dev / test; basis
+     * 609/565/567; ordo globalis solus 636/617/630; primarium et coactae
+     * immota semper): abl-acc-nom-voc -> nom 645/622/637 SERVATUM;
+     * abl-nom-voc -> nom 640/617/629 (test cadit) RECUSATUM; abl-acc ->
+     * acc 648/596/606 (chartae cadunt) RECUSATUM */
+    { "abl-acc-nom-voc-nom", COPIA(ORATIO_CASUS_ABLATIVUS)
+        | COPIA(ORATIO_CASUS_ACCUSATIVUS)
+            | COPIA(ORATIO_CASUS_NOMINATIVUS)
+                | COPIA(ORATIO_CASUS_VOCATIVUS),
+                    (s32)ORATIO_CASUS_NOMINATIVUS, VERUM },
+    { "abl-nom-voc-nom", COPIA(ORATIO_CASUS_ABLATIVUS)
+        | COPIA(ORATIO_CASUS_NOMINATIVUS)
+            | COPIA(ORATIO_CASUS_VOCATIVUS),
+                (s32)ORATIO_CASUS_NOMINATIVUS, FALSUM },
+    { "abl-acc-acc", COPIA(ORATIO_CASUS_ABLATIVUS)
+        | COPIA(ORATIO_CASUS_ACCUSATIVUS),
+            (s32)ORATIO_CASUS_ACCUSATIVUS, FALSUM }
+};
+hic_manens constans i32 PRIOR_COPIAE_NUMERUS =
+    (i32)(magnitudo(PRIOR_COPIAE) / magnitudo(PRIOR_COPIAE[0]));
+
+/* an entrium e activum sit (tabula, deinde ambitus mensurae SOLA) */
+interior b32
+_copia_activa (
+    i32 e)
+{
+                   hic_manens i32  lectum  = ZEPHYRUM;
+    hic_manens constans character* sola    = NIHIL;
+
+    si (!lectum)
+    {
+        sola    = getenv("ORATIO_PRIOR_CASUUM_SOLA");
+        lectum  = I;
+    }
+    si (sola != NIHIL)
+    {
+        redde (b32)(strcmp(sola, PRIOR_COPIAE[e].titulus) == ZEPHYRUM);
+    }
+    redde PRIOR_COPIAE[e].activa;
+}
+
+/* lectiones vocabuli ordine casuum intra greges classis permutare;
+ * FALSUM = memoria */
+interior b32
+_prior_casuum_vocabuli (
+          Cursus* cursus,
+         Piscina* scratch,
+    MateriaNodus* vocabulum)
+{
+    constans MateriaValor* analyses =
+        &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    i32  n;
+        i32* ordo;
+    s32* grex;      /* index gregis classis per lectionem (signatus: -I = nondum) */
+    s32* gradus;    /* gradus casuum per lectionem; NUMERUS sine casu */
+    i32  copiae[ORATIO_CLASSIS_NUMERUS_CLASSIUM];
+    s32  primus_gregis[ORATIO_CLASSIS_NUMERUS_CLASSIUM];
+    s32  greges = ZEPHYRUM;
+    i32  i;
+    i32  j;
+    b32  identitas = VERUM;
+
+    si (analyses->genus != MATERIA_VALOR_LISTA)
+    {
+        redde VERUM;
+    }
+    n = materia_valor_lista_numerus(*analyses);
+    si (n < (i32)II)
+    {
+        redde VERUM;
+    }
+    ordo   = (i32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(i32));
+        grex   = (s32*)piscina_allocare(scratch, (memoriae_index)n
+            * (memoriae_index)magnitudo(s32));
+    gradus = (s32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(s32));
+    si (ordo == NIHIL || grex == NIHIL || gradus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
+    {
+                copiae[i]  = ZEPHYRUM;
+        primus_gregis[i]   = (s32)-I;
+    }
+    /* greges (ordine apparitionis classis) et copiae casuum Latinae */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans MateriaNodus* lectio = materia_valor_lista_obtinere(
+            *analyses, i)->datum.nodus;
+        OratioClassis cl =
+            oratio_genus_classis((OratioGenus)lectio->genus);
+        s32 casus_lectionis = _accidens_lectionis(lectio, "casus");
+        b32 latina = (b32)(lectio->loci[ORATIO_ANALYSIS_LINGUA].genus
+                == MATERIA_VALOR_INDEX
+            && lectio->loci[ORATIO_ANALYSIS_LINGUA].datum.index
+                == (s32)ORATIO_LINGUA_LATINA);
+
+        si ((i32)cl >= (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM)
+        {
+            cl = ORATIO_CLASSIS_IGNOTUM;
+        }
+        si (primus_gregis[cl] < ZEPHYRUM)
+        {
+            primus_gregis[cl]  = greges;
+            greges             = greges + I;
+        }
+        grex[i]            = primus_gregis[cl];
+                gradus[i]  = (s32)ORATIO_CASUS_NUMERUS;   /* sine casu: post */
+        si (   latina && casus_lectionis >= ZEPHYRUM
+            && casus_lectionis < (s32)ORATIO_CASUS_NUMERUS)
+        {
+            gradus[i]   = ORDO_CASUUM[casus_lectionis];
+            copiae[cl]  = copiae[cl] | COPIA(casus_lectionis);
+        }
+    }
+    /* entria per copiam: casus primus gradum -I accipit */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans MateriaNodus* lectio = materia_valor_lista_obtinere(
+            *analyses, i)->datum.nodus;
+        OratioClassis cl =
+            oratio_genus_classis((OratioGenus)lectio->genus);
+        s32 casus_lectionis = _accidens_lectionis(lectio, "casus");
+        i32 e;
+
+        si (   (i32)cl   >= (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+            || gradus[i] >= (s32)ORATIO_CASUS_NUMERUS)
+        {
+            perge;
+        }
+        per (e = ZEPHYRUM; e < PRIOR_COPIAE_NUMERUS; e++)
+        {
+            si (   _copia_activa(e)
+                && PRIOR_COPIAE[e].copia        == copiae[cl]
+                && PRIOR_COPIAE[e].casus_primus == casus_lectionis)
+            {
+                                gradus[i] = (s32)-I;   /* entrium copiae: primus */
+            }
+        }
+    }
+        /* ordo: lectiones CLASSIS PRIMAE solae (grex 0) inter sedes suas
+     * ordine gradus (stabiliter) permutantur; ceterae immotae - nihil
+     * consolidatur (Cum: adpositio adverbium coniunctio ... manet) */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        ordo[i] = i;
+    }
+    {
+        i32 sedes[ORATIO_CLASSIS_NUMERUS_CLASSIUM * (i32)IV];
+        i32 m = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < n && m < (i32)(magnitudo(sedes)
+            / magnitudo(sedes[0])); i++)
+        {
+            si (grex[i] == ZEPHYRUM)
+            {
+                sedes[m]  = i;
+                m         = m + I;
+            }
+        }
+        /* insertio stabilis indicum classis primae per gradus */
+        per (i = I; i < m; i++)
+        {
+            i32 x = sedes[i];
+
+            j = i;
+            dum (j > ZEPHYRUM && gradus[x] < gradus[sedes[j - I]])
+            {
+                sedes[j]  = sedes[j - I];
+                j         = j - I;
+            }
+            sedes[j] = x;
+        }
+        /* sedes veteres classis primae ordine, lectiones ordinatae in eas */
+        j = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < n && j < m; i++)
+        {
+            si (grex[i] == ZEPHYRUM)
+            {
+                ordo[i]  = sedes[j];
+                j        = j + I;
+            }
+        }
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (ordo[i] != i)
+        {
+            identitas = FALSUM;
+        }
+    }
+    si (identitas)
+    {
+        redde VERUM;
+    }
+    si (   !materia_nodus_lista_permutare(cursus->piscina, vocabulum,
+            (i32)ORATIO_VOCABULUM_ANALYSES, ordo, n)
+        || !oratio_partes_compendia_reponere(cursus->piscina,
+        vocabulum))
+    {
+        redde FALSUM;
+    }
+    si (cursus->census != NIHIL)
+    {
+        cursus->census->prior_casuum = cursus->census->prior_casuum + I;
+    }
+    redde VERUM;
+}
+
+/* prior POST regulas omnes, verbis APERTIS solis: nec decisis, nec
+ * umbram impletam ferentibus, nec ab umbra impleta petitis (indices
+ * analysis implentis in listam petiti spectant - permutatio eos
+ * frangeret). MENSURATUM ante regulas (2026-09-08): primarium Senecae
+ * 835 -> 808, chartae 863/856 -> 822/811 - ablativo primo ubique
+ * regulae capitis laxae congruentiam ablativam spuriam inter vicinos
+ * inveniunt et gemellum falsum promovent. */
+interior b32
+_prior_casuum (
+            Cursus* cursus,
+      MateriaNodus* sententia,
+  constans Decisio* decisiones)
+{
+    constans MateriaValor* elementa =
+        &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
+    Piscina* scratch = piscina_generare_dynamicum("prior_casuum",
+        1048576);
+    i32  ne = materia_valor_lista_numerus(*elementa);
+    b32* tangitur;
+    i32  k;
+
+    si (scratch == NIHIL)
+    {
+        redde FALSUM;
+    }
+    tangitur = (b32*)piscina_allocare(scratch, (memoriae_index)ne
+        * (memoriae_index)magnitudo(b32));
+    si (tangitur == NIHIL)
+    {
+        piscina_destruere(scratch);
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        tangitur[k] = (b32)(decisiones[k].genus >= ZEPHYRUM);
+    }
+    /* umbrae impletae: carrier et petitum tanguntur */
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        constans MateriaNodus* e =
+            materia_valor_lista_obtinere(*elementa,
+            k)->datum.nodus;
+        constans MateriaValor* analyses;
+                          i32  i;
+
+        si (e->genus != (s32)ORATIO_GENUS_VOCABULUM)
+        {
+            perge;
+        }
+        analyses = &e->loci[ORATIO_VOCABULUM_ANALYSES];
+        si (analyses->genus != MATERIA_VALOR_LISTA)
+        {
+            perge;
+        }
+        per (i = ZEPHYRUM; i
+            < materia_valor_lista_numerus(*analyses); i++)
+        {
+            constans MateriaValor* umbrae = _umbrae_lectionis(
+                materia_valor_lista_obtinere(*analyses,
+                i)->datum.nodus);
+            i32 u;
+
+            per (u = ZEPHYRUM; umbrae != NIHIL
+                && u < materia_valor_lista_numerus(*umbrae); u++)
+            {
+                constans MateriaNodus* umbra =
+                    materia_valor_lista_obtinere(
+                    *umbrae, u)->datum.nodus;
+                constans MateriaValor* w =
+                    &umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
+
+                si (   w->genus       == MATERIA_VALOR_INDEX
+                    && w->datum.index >= ZEPHYRUM
+                    && w->datum.index < (s32)ne)
+                {
+                    tangitur[k]               = VERUM;
+                    tangitur[w->datum.index]  = VERUM;
+                }
+            }
+        }
+    }
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        MateriaNodus* e = materia_valor_lista_obtinere(*elementa, k)
+            ->datum.nodus;
+
+        si (   !tangitur[k] && e->genus == (s32)ORATIO_GENUS_VOCABULUM
+            && !_prior_casuum_vocabuli(cursus, scratch, e))
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
+    }
+    piscina_destruere(scratch);
+    redde VERUM;
+}
+
 interior b32
 _sententiam_resolvere (
 
@@ -1831,7 +2173,7 @@ _sententiam_resolvere (
     {
         redde VERUM;
     }
-    /* T20a: CLAUSULAE ante gradus omnes - stampa seminum (strata I-III:
+        /* T20a: CLAUSULAE ante gradus omnes - stampa seminum (strata I-III:
      * lectiones adsunt, ligationes nondum); idempotens */
         si (!oratio_clausulas_seminare(cursus->piscina, sententia,
             cursus->lingua,
@@ -1892,7 +2234,9 @@ _sententiam_resolvere (
         && oratio_clausulas_propagare(cursus->piscina, sententia,
             cursus->lingua,
             cursus->census != NIHIL ? &cursus->census->clausulae
-                : NIHIL);
+                : NIHIL)
+        && (!PRIOR_CASUUM
+        || _prior_casuum(cursus, sententia, decisiones));
 }
 
 interior b32
