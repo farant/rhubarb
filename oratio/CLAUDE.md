@@ -507,9 +507,18 @@ Concordance 799/769/781 → 819/811/798 (pins), purity 850/870/893
 (pins), EWT purity 724/737 (down 2 with the cause named). NEXT = T20b
 (catena along bindings, discordia count), then T20c (clause carrier
 in the executor, cum conjunction, `cursus="clausulae"`, subject
-umbra); the charters over-segment (2.65 / 2.51 vs 2.52 / 2.25 gold)
-— which extra clauses are the verb split inside formulae is the next
-listing to read. Head-rule template still open.
+umbra). **T20a quater (same day)**: the SENTENCE VIEW is in the
+instrument (`oraculum.sh -clausulae -sententiae N [-causa T]`: text +
+per word our clause, layer, gold root, `!` on the wrong ones); read on
+the charters' `verbum` layer it gave four shapes, two kept by
+concordance — the fixed phrase `id est` (its `est` neither splits nor
+closes) and a proper NOUN after the closing verb stays in the clause
+(`ubi vocitatur Iuveiano`) — and two measured and dropped (a clause
+without its verb not closing at a comma: +0.8 test / −0.6 dev in
+combination; the coordinator scan through commas: −0.9 test).
+Concordance pins 820/816/802; the charters still over-segment slightly
+(2.58 / 2.44 vs 2.52 / 2.25) — next view: `-causa extentum` on the
+test file. Head-rule template still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

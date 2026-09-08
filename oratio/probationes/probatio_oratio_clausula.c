@@ -655,7 +655,32 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
     CREDO_AEQUALIS_I32 (census.scissae, I);
 
-        /* (h) Anglica: documentum Anglicum lectionibus Latinis non seminatur
+            /* (l) T20a quater - 'id est' formula: est post id nec scindit nec
+     * claudit (Dedisti mihi id est terram: clausula una) */
+    doc = _documentum(piscina, &vocabularia,
+        "Dedisti mihi id est terram.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), I);
+    CREDO_AEQUALIS_I32 (census.scissae, ZEPHYRUM);
+    /* (l2) nomen proprium post verbum claudens intra manet: In(0)
+     * loco(1) ubi(2) dicitur(3) Creta(4) manet(5) - Creta in clausula
+     * ubi, manet clausura */
+    doc = _documentum(piscina, &vocabularia,
+        "In loco ubi dicitur Creta manet.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)III), _clausula(doc,
+        (i32)II));
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)IV), _clausula(doc,
+        (i32)II));
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)V), _clausula(doc,
+        ZEPHYRUM));
+    CREDO_AEQUALIS_S32 (_causa(doc, (i32)V),
+        (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA);
+
+    /* (h) Anglica: documentum Anglicum lectionibus Latinis non seminatur
      * nec scinditur (it, sit, do verba Latina finita) - unica */
     doc = _documentum(piscina, &vocabularia,
         "The cat sat because it was tired. Do sit it.\n");

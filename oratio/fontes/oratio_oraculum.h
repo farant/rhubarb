@@ -121,6 +121,25 @@ nomen structura {
        i32 ff_limes;
 } OratioOraculumSemen;
 
+/* SENTENTIA OSTENSA (T20a quater, 2026-09-08): sententia cum verbo
+ * male posito causae petitae - textus et verba aurea ordine, quodque
+ * cum clausula nostra, causa, forma radicis aureae et signo mali
+ * (clausula aurea != maior clausulae nostrae). Contextus quem index
+ * erratorum aggregatus celat: quota census->ostendendae, filtrum
+ * census->causa_ostendenda (-I = quaelibet). */
+nomen structura {
+    chorda forma;
+       s32 nostra;    /* -I aperta */
+       s32 causa;     /* -I */
+    chorda radix;     /* forma radicis clausulae aureae */
+       b32 malum;
+} OratioOraculumVerbumOstensum;
+
+nomen structura {
+    chorda  textus;
+       Xar* verba;    /* OratioOraculumVerbumOstensum */
+} OratioOraculumSententiaOstensa;
+
 nomen structura {
     chorda forma;      /* forma aurea (fontem referens) */
     chorda classes;    /* classes nostrae (copia) aut "ignotum" */
@@ -209,8 +228,14 @@ nomen structura {
      * concordia utrumque punit. Mensura decisionum variationum. */
     i32 clausulae_paria;
     i32 clausulae_paria_concordia;
-    Xar* errata_clausularum;   /* OratioOraculumErratumClausulae* */
+        Xar* errata_clausularum;   /* OratioOraculumErratumClausulae* */
     TabulaDispersa* errata_clausularum_index;
+    /* sententiae ostensae (T20a quater): quota (ponenda post vacare;
+     * 0 = nullae), filtrum causae, Xar de OratioOraculumSententiaOstensa
+     * (pigre) */
+    i32  ostendendae;
+    s32  causa_ostendenda;
+    Xar* ostensae;
 
 
     OratioOraculumClassis classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM + I];   /* [NUMERUS] = UPOS extra tabulam */

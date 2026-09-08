@@ -1,7 +1,7 @@
 #!/bin/bash
 # oratio/oraculum.sh - oraculum treebank UD: classes orationis contra CoNLL-U (T13)
 #
-# Usage:  ./oratio/oraculum.sh [-machina] [-exempla] [-discrepantiae] [-regulae [-ab N]] [-clausulae] [-semina]
+# Usage:  ./oratio/oraculum.sh [-machina] [-exempla] [-discrepantiae] [-regulae [-ab N]] [-clausulae [-sententiae N [-causa T]]] [-semina]
 #         [-errata [-auctor T]] [-crudus] [-petere] [plagula.conllu ...]
 # Exit:   0 sanum | 1 fractum | 2 usus/plagula absens
 # Obiecta oratio/build/*.o poscit (cursor oratio/compile_probationes.sh ea

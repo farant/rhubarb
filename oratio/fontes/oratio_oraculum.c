@@ -1945,6 +1945,96 @@ _numerus_clausularum (
 /* PURITAS (decisio XLVII): per clausulam nostram c clausula aurea
  * MAIOR inter paria; par rectum si aurea == maior; per causam. Numeri
  * clausularum: nostrae (nodi) contra aureae (radices). */
+/* sententiam ostendere (T20a quater): si quota manet et verbum causae
+ * petitae male positum adest, textus et verba in census->ostensae */
+interior vacuum
+_sententiam_ostendere (
+                           Piscina* piscina,
+              OratioOraculumCensus* census,
+    constans OratioConlluSententia* s,
+                            chorda  textus,
+                               Xar* paria,
+                      constans s32* maior,
+                               i32  nc)
+{
+                               i32 np = xar_numerus(paria);
+                               i32 nl =
+                                   xar_numerus(s->lexemata);
+                               b32  malum_petitum = FALSUM;
+    OratioOraculumSententiaOstensa* o;
+                               i32  k;
+
+    si (census->ostendendae <= ZEPHYRUM)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < np; k++)
+    {
+        constans ParClausulae* p = (constans ParClausulae*)xar_obtinere(
+            paria, k);
+        b32 malum = (b32)(p->nostra < ZEPHYRUM || (i32)p->nostra >= nc
+            || maior[p->nostra] != p->aurea);
+
+        si (   malum
+            && (   census->causa_ostendenda < ZEPHYRUM
+                || census->causa_ostendenda == p->causa))
+        {
+            malum_petitum = VERUM;
+        }
+    }
+    si (!malum_petitum)
+    {
+        redde;
+    }
+    si (census->ostensae == NIHIL)
+    {
+        census->ostensae = xar_creare(piscina,
+            (i32)magnitudo(OratioOraculumSententiaOstensa));
+        si (census->ostensae == NIHIL)
+        {
+            redde;
+        }
+    }
+    o = (OratioOraculumSententiaOstensa*)xar_addere(census->ostensae);
+    si (o == NIHIL)
+    {
+        redde;
+    }
+    o->textus  = _copia(piscina, textus);
+    o->verba   = xar_creare(piscina,
+        (i32)magnitudo(OratioOraculumVerbumOstensum));
+    si (o->verba == NIHIL)
+    {
+        xar_removere_ultimum(census->ostensae);
+        redde;
+    }
+    per (k = ZEPHYRUM; k < np; k++)
+    {
+        constans ParClausulae* p = (constans ParClausulae*)xar_obtinere(
+            paria, k);
+        OratioOraculumVerbumOstensum* v =
+            (OratioOraculumVerbumOstensum*)xar_addere(o->verba);
+
+        si (v == NIHIL)
+        {
+            redde;
+        }
+        v->forma   = _copia(piscina, p->forma);
+        v->nostra  = p->nostra;
+        v->causa   = p->causa;
+        v->malum   = (b32)(p->nostra < ZEPHYRUM || (i32)p->nostra >= nc
+            || maior[p->nostra] != p->aurea);
+        v->radix.datum    = NIHIL;
+        v->radix.mensura  = ZEPHYRUM;
+        si (p->aurea >= ZEPHYRUM && (i32)p->aurea < nl)
+        {
+            v->radix = _copia(piscina, ((constans OratioConlluLexema*)
+                xar_obtinere(s->lexemata, (i32)p->aurea))->forma);
+        }
+    }
+    census->ostendendae = census->ostendendae - I;
+}
+
 interior b32
 _clausulas_iudicare (
                            Piscina* scratch,
@@ -1952,6 +2042,7 @@ _clausulas_iudicare (
               OratioOraculumCensus* census,
     constans OratioConlluSententia* s,
              constans MateriaNodus* sententia,
+                            chorda  textus,
                                Xar* paria,
                       constans s32* cl)
 {
@@ -2005,8 +2096,8 @@ _clausulas_iudicare (
             tabula[cella] = tabula[cella] + I;
         }
     }
-    per (c = ZEPHYRUM; c < nc; c++)
-    {
+        per (c = ZEPHYRUM; c < nc; c++)
+        {
         i32 optimum = ZEPHYRUM;
 
         maior[c] = (s32)-I;
@@ -2018,7 +2109,9 @@ _clausulas_iudicare (
                 maior[c]  = (s32)k;
             }
         }
-    }
+        }
+    _sententiam_ostendere(piscina, census, s, textus, paria, maior, nc);
+
         /* concordia parium: verba posita ambo, par idem iudicatum */
     per (k = ZEPHYRUM; k < np; k++)
     {
@@ -2264,14 +2357,14 @@ _sententiam_iudicare (
         constans Elementum* e0_elementum =
             (constans Elementum*)xar_obtinere(elementa, ZEPHYRUM);
 
-        si (!_clausulas_iudicare(scratch, piscina, census, s,
-                e0_elementum->nodus != NIHIL
+                si (!_clausulas_iudicare(scratch, piscina, census, s,
+                    e0_elementum->nodus != NIHIL
                     ? e0_elementum->nodus->pater : NIHIL,
-                paria, cl))
-        {
+                    textus, paria, cl))
+                {
             piscina_destruere(scratch);
             redde FALSUM;
-        }
+                }
     }
     (vacuum)fin;
     piscina_destruere(scratch);

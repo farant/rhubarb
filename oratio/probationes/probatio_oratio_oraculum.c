@@ -108,7 +108,9 @@
  * 850/870/893; EWT 726/739 -> 724/737 DEFINITIO MUTATA: documentum
  * Anglicum lectionibus Latinis non amplius seminatur (it sit do verba
  * Latina finita, si cum semina falsa) - parentheses solae manent;
- * pares relatae, non pinnatae (concordia parium pinna). */
+ * pares relatae, non pinnatae (concordia parium pinna). T20a quater:
+ * 'id est' formula + nomen post verbum: concordia 819/811/798 ->
+ * 820/816/802. */
 #define CIRCSE_PURITAS_PINNA      850
 #define LLCT_DEV_PURITAS_PINNA    870
 #define LLCT_TEST_PURITAS_PINNA   893
@@ -117,9 +119,9 @@
 /* T20a ter (2026-09-08): CONCORDIA PARIUM (Rand super paria verborum
  * intra sententiam; puritas sola segmentationem nimiam praemiat) -
  * mensura decisionum variationum, pinnata solum crescens. */
-#define CIRCSE_CONCORDIA_PINNA    819
-#define LLCT_DEV_CONCORDIA_PINNA  811
-#define LLCT_TEST_CONCORDIA_PINNA 798
+#define CIRCSE_CONCORDIA_PINNA    820
+#define LLCT_DEV_CONCORDIA_PINNA  816
+#define LLCT_TEST_CONCORDIA_PINNA 802
 #define EWT_DEV_CONCORDIA_PINNA   539
 #define EWT_TEST_CONCORDIA_PINNA  547
 #define CIRCSE_PARES_PINNA       653

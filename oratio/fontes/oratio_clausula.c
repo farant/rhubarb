@@ -70,6 +70,24 @@ hic_manens constans b32 COPULA_NON_CLAUDIT     = VERUM;
 hic_manens constans b32 COORDINANS_ANTE_SEMEN  = VERUM;
 hic_manens constans b32 CERTITUDO_LATINA       = VERUM;
 
+/* VARIATIONES scissionis et clausurae II (T20a quater, 2026-09-08; ex
+ * sententiis ostensis causae 'verbum' chartarum, -sententiae): quaeque
+ * sola mensurata concordia (basis 82.0 / 81.2 / 79.9), deinde paria.
+ * ID_EST: 'id est' formula fixa - est post id nec scindit nec claudit
+ * (dedisti mihi id est res mea: obiectum post formulam pergit):
+ * = / +0.4 / +0.2.
+ * NOMEN_POST_VERBUM: clausura ad verbum differtur dum nomen proprium
+ * sequitur (ubi vocitatur Iuveiano, qui dicitur Creta): = / +0.1 /
+ * +0.1. Ambo: = / +0.5 / +0.4.
+ * Mensurata et ABLATA: comma clausulam clausibilem claudens solum cum
+ * verbo suo (comma appositivum: quia tu Gherardus, gratia Dei ...
+ * episcopus, ... dedisti) = / -0.1 / +0.8 sola, cum ambobus -0.6 dev;
+ * ambulatio coordinantis commata transiens (regitur per Urso, et
+ * ille secunda regitur) = / +0.2 / -0.9. Seneca ab omnibus immota
+ * (formulae chartarum). */
+hic_manens constans b32 ID_EST             = VERUM;
+hic_manens constans b32 NOMEN_POST_VERBUM  = VERUM;
+
 
 /* formae relativae: lemma lectionis pronominis aut determinantis */
 constans character* constans ORATIO_SEMINA_RELATIVA[] = {
@@ -253,7 +271,11 @@ nomen structura {
                       b32  finita_certa;   /* lectiones omnes finitae */
                                    b32  seminat;        /* post corroborationem */
                           b32  copula_certa;   /* certum et lemmate 'sum' (copula) */
-                          b32  supra;          /* lectio lemmate 'supra' (qui supra) */
+                                       b32  supra;          /* lectio lemmate 'supra' (qui supra) */
+             b32  id;             /* forma 'id' (id est) */
+             b32  nomen_proprium; /* lectio nominis proprii ulla */
+             b32  differtur;      /* clausura post hoc verbum differtur */
+
 
              s32 clausula;       /* -I = aperta */
              s32 causa;
@@ -295,7 +317,11 @@ _membrum_describere (
     m->finita_certa      = FALSUM;
     m->seminat           = FALSUM;
     m->copula_certa      = FALSUM;
-        m->supra         = FALSUM;
+            m->supra     = FALSUM;
+    m->id                = FALSUM;
+    m->nomen_proprium    = FALSUM;
+    m->differtur         = FALSUM;
+
 
     m->clausula  = (s32)-I;
     m->causa     = (s32)-I;
@@ -363,8 +389,13 @@ _membrum_describere (
         {
             perge;
         }
-        latinae  = latinae + I;
-        classis  = oratio_genus_classis((OratioGenus)lectio->genus);
+                latinae = latinae + I;
+        classis = oratio_genus_classis((OratioGenus)lectio->genus);
+        si (classis == ORATIO_CLASSIS_NOMEN_PROPRIUM)
+        {
+            m->nomen_proprium = VERUM;
+        }
+
         lemma    = _lemma(lectio);
         si (lemma.mensura == ZEPHYRUM)
         {
@@ -409,15 +440,16 @@ _membrum_describere (
             m->semen = (s32)SEMEN_COORDINANS;
         }
     }
-            si (CERTITUDO_LATINA)
-            {
+                m->id = _forma_est(nodus, "id");
+    si (CERTITUDO_LATINA)
+    {
         m->finita_certa = (b32)(latinae > ZEPHYRUM
             && finitae == latinae);
-            }
+    }
     alioquin
-            {
+    {
         m->finita_certa = (b32)(n > ZEPHYRUM && finitae == n);
-            }
+    }
     m->copula_certa  = (b32)(m->finita_certa && copula);
     (vacuum)auxiliares;
 }
@@ -444,22 +476,29 @@ _semina_iudicare (
 {
     i32 k;
 
-    per (k = ZEPHYRUM; k < n; k++)
-    {
+        per (k = ZEPHYRUM; k < n; k++)
+        {
                 Membrum* m = &membra[k];
                     i32  j;
                     s32  h;   /* signatus: ambulatio sinistrorsum */
                     b32  sinistra  = FALSUM;
                     b32  dextra    = FALSUM;
 
-                si (   QUI_SUPRA_NON_SEMINAT
-                    && m->semen == (s32)SEMEN_RELATIVUM
-                    && k + I < n && membra[k + I].supra)
-                {
+        /* 'id est': est post id formula fixa - nec certum nec capax */
+        si (   ID_EST && k > ZEPHYRUM && membra[k - I].id
+            && m->copula_certa)
+        {
+            m->finita_certa = FALSUM;
+            m->finita_capax = FALSUM;
+            m->copula_certa = FALSUM;
+        }
+        si (   QUI_SUPRA_NON_SEMINAT && m->semen == (s32)SEMEN_RELATIVUM
+            && k + I < n && membra[k + I].supra)
+        {
             /* 'qui supra': formula chartarum sine verbo */
             m->semen = (s32)SEMEN_NULLUM;
             perge;
-                }
+        }
         si (   m->semen == (s32)SEMEN_CERTUM
             || m->semen == (s32)SEMEN_RELATIVUM)
         {
@@ -495,25 +534,28 @@ _semina_iudicare (
         }
         si (m->semen == (s32)SEMEN_COORDINANS)
         {
-                        per (h = (s32)k - (s32)I; h >= ZEPHYRUM
-                            && membra[h].semen
-                                == (s32)SEMEN_NULLUM; h--)
-                        {
+                                                per (h = (s32)k
+                                                    - (s32)I; h
+                                                    >= ZEPHYRUM
+                                                    && membra[h].semen
+                                                        == (s32)SEMEN_NULLUM; h--)
+                                                {
                 si (membra[h].finita_capax)
                 {
                     sinistra = VERUM;
                     frange;
                 }
-                        }
-            per (j = k + I; j < n
-                && membra[j].semen == (s32)SEMEN_NULLUM; j++)
-            {
+                                                }
+                        per (j = k + I; j < n
+                            && membra[j].semen
+                                == (s32)SEMEN_NULLUM; j++)
+                        {
                 si (membra[j].finita_capax)
                 {
                     dextra = VERUM;
                     frange;
                 }
-            }
+                        }
             m->seminat = (b32)(sinistra && dextra);
             si (census != NIHIL)
             {
@@ -527,7 +569,7 @@ _semina_iudicare (
                 }
             }
         }
-    }
+        }
 }
 
 /* clausulam novam addere; index eius */
@@ -747,10 +789,10 @@ _extentum_stampare (
                 : post_clausuram
                 ? (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA
                 : (s32)ORATIO_CLAUSULA_CAUSA_EXTENTUM;
-            si (   altitudo > ZEPHYRUM
-                && ((Clausula*)xar_obtinere(clausulae,
-                (i32)top))->clausibilis)
-            {
+                                    si (   altitudo > ZEPHYRUM
+                                        && ((Clausula*)xar_obtinere(clausulae,
+                                        (i32)top))->clausibilis)
+                                    {
                 altitudo        = altitudo - I;
                 post_clausuram  = VERUM;
                 post_verbum     = FALSUM;
@@ -758,7 +800,7 @@ _extentum_stampare (
                 {
                     census->clausae_signo = census->clausae_signo + I;
                 }
-            }
+                                    }
         }
                 alioquin
         {
@@ -775,27 +817,46 @@ _extentum_stampare (
                         {
                 pendens = (s32)k;
                         }
-            si (   m->finita_certa && cl->clausibilis
-                && !(COPULA_NON_CLAUDIT && m->copula_certa
-                     && cl->verbum < ZEPHYRUM))
-            {
+                        si (   (   m->finita_certa && cl->clausibilis
+                            && !(COPULA_NON_CLAUDIT && m->copula_certa
+                            && cl->verbum < ZEPHYRUM))
+                            || (k > ZEPHYRUM
+                                && membra[k - I].differtur))
+                        {
                 /* stratum III: verbum finitum certum clausulam
-                 * clausibilem claudit (prior verbi finalis) */
-                cl->verbum      = (s32)k;
-                altitudo        = altitudo - I;
-                post_clausuram  = VERUM;
-                post_verbum     = FALSUM;
-                si (census != NIHIL)
+                 * clausibilem claudit (prior verbi finalis); nomen
+                 * proprium sequens clausuram differt (ubi vocitatur
+                 * Iuveiano) */
+                si (   m->finita_certa && !(k > ZEPHYRUM
+                        && membra[k - I].differtur))
                 {
-                    census->clausae_verbo = census->clausae_verbo + I;
+                    cl->verbum = (s32)k;
                 }
-            }
+                si (   NOMEN_POST_VERBUM && k + I < n
+                    && membra[k + I].nomen_proprium
+                    && membra[k + I].semen == (s32)SEMEN_NULLUM
+                    && !membra[k + I].finita_certa)
+                {
+                    m->differtur = VERUM;   /* claudetur post nomen */
+                }
+                alioquin
+                {
+                    altitudo        = altitudo - I;
+                    post_clausuram  = VERUM;
+                    post_verbum     = FALSUM;
+                    si (census != NIHIL)
+                    {
+                        census->clausae_verbo = census->clausae_verbo
+                            + I;
+                    }
+                }
+                        }
             alioquin si (m->finita_certa && cl->verbum < ZEPHYRUM)
-            {
+                        {
                 cl->verbum = (s32)k;   /* verbum suum */
-            }
+                        }
             alioquin si (m->finita_certa)
-            {
+                        {
                 /* stratum V: SCISSIO - verbum finitum certum alterum in
                  * clausula quae suum iam habet: semen absens
                  * (asyndeton); clausula coordinata nova sorore
@@ -846,7 +907,7 @@ _extentum_stampare (
                 {
                     census->scissae = census->scissae + I;
                 }
-            }
+                        }
         }
         si (m->clausula >= ZEPHYRUM)
         {

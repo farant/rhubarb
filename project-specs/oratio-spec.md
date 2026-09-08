@@ -1488,6 +1488,24 @@ closure layer itself 659 / 738 / 692, still the weakest. Gate: four
 hand cases (`qui supra`, copula not closing, coordinator before `si`,
 `tenet` certain) and the English document unseeded. NEXT: T20b.
 
+**As built — T20a quater, the sentence view and the split's extra
+clauses (2026-09-08, same session).** The instrument gained
+`-clausulae -sententiae N [-causa T]`: N sentences holding a misplaced
+word of layer T, with the text and, per gold word, our clause, the
+layer and the gold root (records collected by the oracle,
+`census->ostensae`). On the charters' `verbum` layer it showed four
+shapes; measured alone by concordance from 820 / 812 / 799: the fixed
+phrase `id est` (its `est` neither certain nor capable: = / +4 / +2
+permille) and a proper noun after the closing verb kept inside the
+clause (`ubi vocitatur Iuveiano`: = / +1 / +1), together = / +5 / +4,
+KEPT; a clause without its verb not closing at a comma (appositive
+commas: +8 on test, −1 on dev alone and −6 on dev beside the two)
+and the coordinator corroboration scanning through commas (−9 on
+test), REMOVED with the numbers recorded. Seneca unmoved by all four.
+Concordance pins 820 / 816 / 802. Gate: two hand cases. NEXT: T20b;
+the charters' remaining over-segmentation (2.58 / 2.44 vs 2.52 /
+2.25) through the view on `extentum`.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

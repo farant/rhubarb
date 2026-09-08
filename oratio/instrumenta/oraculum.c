@@ -29,7 +29,13 @@
  *              species nostra, radix aurea, numerus); -machina ordines
  *              CLAUSULA causa verba rectae, CLAUSULAE sententiae
  *              nostrae aureae pares, ERRATUM-CLAUSULAE ...
+  *   -sententiae N  cum -clausulae: N sententiae cum verbo male posito
+ *              (-causa T: causae T solius - semen extentum clausura
+ *              catena unica verbum), textus et verba aurea ordine
+ *              'forma/clausula:causa:radix' ('!' malum) - contextus
+ *              quem index aggregatus celat (T20a quater)
  *   -semina    census AUREUS candidatorum seminis (T20a; sine parsura):
+
  *              textus, upos, n, limes %, finita %, initia, ff, ff-limes
  *              - data listarum ORATIO_SEMINA_*; -machina ordines SEMEN
  *
@@ -187,6 +193,55 @@ _clausulas_imprimere (
         {
             imprimere("      ... alia %d verba\n", (integer)aliae);
         }
+    }
+}
+
+/* T20a quater: sententiae ostensae (verba male posita in contextu) */
+interior vacuum
+_sententias_imprimere (
+    constans OratioOraculumCensus* c)
+{
+    i32 i;
+
+    si (c->ostensae == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(c->ostensae); i++)
+    {
+        constans OratioOraculumSententiaOstensa* o =
+            (constans OratioOraculumSententiaOstensa*)xar_obtinere(
+            c->ostensae, i);
+        i32 k;
+
+        imprimere("  === %.*s\n", (integer)o->textus.mensura,
+            (constans character*)o->textus.datum);
+        imprimere("     ");
+        per (k = ZEPHYRUM; k < xar_numerus(o->verba); k++)
+        {
+            constans OratioOraculumVerbumOstensum* v =
+                (constans OratioOraculumVerbumOstensum*)xar_obtinere(
+                o->verba, k);
+
+            imprimere(" %s%.*s/", v->malum ? "!" : "",
+                (integer)v->forma.mensura,
+                (constans character*)v->forma.datum);
+            si (v->nostra >= ZEPHYRUM)
+            {
+                imprimere("%d", (integer)v->nostra);
+            }
+            alioquin
+            {
+                imprimere("-");
+            }
+            imprimere(":%.2s:%.*s",
+                v->causa >= ZEPHYRUM
+                    && v->causa < (s32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+                    ? ORATIO_TITULI_CAUSARUM_CLAUSULAE[v->causa] : "--",
+                (integer)v->radix.mensura,
+                (constans character*)v->radix.datum);
+        }
+        imprimere("\n");
     }
 }
 
@@ -672,8 +727,15 @@ principale (
                                                                             FALSUM;
                                                                         b32 errata =
                                                                             FALSUM;
-                                    b32 clausulae            = FALSUM;   /* T20a */
-                                    b32 semina               = FALSUM;   /* T20a */
+                                                                        b32 clausulae =
+                                                                            FALSUM;   /* T20a */
+                                    b32 semina = FALSUM;   /* T20a */
+                                    i32 sententiae_ostendendae =
+                                        ZEPHYRUM;   /* T20a quater */
+                                    s32 causa_ostendenda = (s32)-I;
+                                integer argumentum_sententiarum = -I;
+                                integer argumentum_causae = -I;
+
                                 integer argumentum_auctoris  = -I;
                                  chorda auctor_petitus;
 
@@ -765,9 +827,35 @@ principale (
         {
             clausulae = VERUM;
         }
-        alioquin si (strcmp(argv[i], "-semina") == ZEPHYRUM)
+                alioquin si (strcmp(argv[i], "-semina") == ZEPHYRUM)
         {
             semina = VERUM;
+        }
+        alioquin si (   strcmp(argv[i], "-sententiae") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            argumentum_sententiarum  = i + I;
+            sententiae_ostendendae   =
+                (i32)atoi(argv[argumentum_sententiarum]);
+            i                        = argumentum_sententiarum;
+        }
+        alioquin si (   strcmp(argv[i], "-causa") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            i32 t;
+
+            argumentum_causae = i + I;
+            per (t = ZEPHYRUM; t
+                < (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS; t++)
+            {
+                si (strcmp(argv[argumentum_causae],
+                        ORATIO_TITULI_CAUSARUM_CLAUSULAE[t])
+                            == ZEPHYRUM)
+                {
+                    causa_ostendenda = (s32)t;
+                }
+            }
+            i = argumentum_causae;
         }
         alioquin si (   strcmp(argv[i], "-auctor") == ZEPHYRUM
                      && i + I < argc)
@@ -790,12 +878,19 @@ principale (
 
                 per (i = I; i < argc; i++)
                 {
-                        si (   argv[i][ZEPHYRUM] != '-'
-                            && i                 != argumentum_ab
-                            && i                 != argumentum_auctoris)
-                        {
+                                                si (   argv[i][ZEPHYRUM]
+                                                    != '-'
+                                                    && i
+                                                        != argumentum_ab
+                                                    && i
+                                                        != argumentum_auctoris
+                                                    && i
+                                                    != argumentum_sententiarum
+                                                    && i
+                                                        != argumentum_causae)
+                                                {
                 numerus_argumentorum = numerus_argumentorum + I;
-                        }
+                                                }
                 }
 
         per (k = ZEPHYRUM;
@@ -815,12 +910,21 @@ principale (
 
             si (numerus_argumentorum > ZEPHYRUM)
             {
-                                si (   k == ZEPHYRUM
-                                    || argv[k][ZEPHYRUM] == '-'
-                                    || (integer)k == argumentum_ab)
-                                {
+                                                                si (   k
+                                                                    == ZEPHYRUM
+                                                                    || argv[k][ZEPHYRUM]
+                                                                        == '-'
+                                                                    || (integer)k
+                                                                        == argumentum_ab
+                                                                    || (integer)k
+                                                                        == argumentum_auctoris
+                                                                    || (integer)k
+                                                                    == argumentum_sententiarum
+                                                                    || (integer)k
+                                                                        == argumentum_causae)
+                                                                {
                     perge;
-                                }
+                                                                }
 
                 plagula = argv[k];
                 si (plagula[ZEPHYRUM] == '/')
@@ -908,8 +1012,10 @@ principale (
                     machina ? "#" : "",
                     (integer)summa);
             }
-            oratio_oraculum_census_vacare(&census);
-            ante = clock();
+                        oratio_oraculum_census_vacare(&census);
+            census.ostendendae       = sententiae_ostendendae;
+            census.causa_ostendenda  = causa_ostendenda;
+            ante                     = clock();
             si (!oratio_oraculum_iudicare_resolutum(p, &vocabularia,
                     programma, (s32)-I, sententiae, &census))
             {
@@ -925,14 +1031,15 @@ principale (
             }
             alioquin
             {
-                                                                _tabulam_imprimere(p,
-                                                                    &census,
-                                                                    plagula,
-                                                                    exempla,
-                                                                    discrepantiae,
-                                                                    errata,
-                                                                    auctor_petitus,
-                                                                    clausulae);
+                                                                                                _tabulam_imprimere(p,
+                                                                                                    &census,
+                                                                                                    plagula,
+                                                                                                    exempla,
+                                                                                                    discrepantiae,
+                                                                                                    errata,
+                                                                                                    auctor_petitus,
+                                                                                                    clausulae);
+                _sententias_imprimere(&census);
                 imprimere("  %.0f ms\n\n", 1000.0 * (duplex)(clock()
                     - ante)
                     / (duplex)CLOCKS_PER_SEC);

@@ -2129,3 +2129,35 @@ over-segment (2.65 and 2.51 against 2.52 and 2.25), and the closure
 layer itself is still the weakest at 66 / 74 / 69; both point at the
 same next question, which of our extra clauses are the verb split
 firing inside formulae where the gold sees one clause.
+
+## 2026-09-08 — T20a quater: the sentence view in the instrument, and the split's extra clauses
+
+The scratch view that found the four closure shapes is now
+`oraculum.sh -clausulae -sententiae N [-causa T]`: N sentences with a
+misplaced word of layer T, each with its text and, per gold word, our
+clause, the layer and the gold root, the wrong ones marked. The
+oracle collects the records and the instrument prints them, so a gate
+could assert on them later.
+
+Read for the `verbum` layer on the charters, it showed that the verb
+split's extra clauses are mostly not the split's fault. `id est`,
+"that is", is a fixed phrase whose `est` is a certain copula in a
+clause that already has its verb, so we split there and, cutting after
+the first verb, dragged the object of `dedisti` into a false clause.
+An appositive comma closed a subordinate clause before its verb had
+come, so the verb landed in the main clause and split it. A comma
+before `et` stopped the coordinator's corroboration scan, so the
+coordination was never seeded and split instead. And `ubi vocitatur
+Iuveiano` closed at the naming verb and dropped the name into the
+parent. Four switches, each measured alone by concordance from
+82.0 / 81.2 / 79.9: `id est` = / +0.4 / +0.2, the name after the verb
+= / +0.1 / +0.1, and those two together = / +0.5 / +0.4. The comma
+rule (a clause without its verb does not close at a comma) was +0.8
+on the test file and −0.1 on dev alone, and −0.6 on dev beside the
+other two, so it is out despite being the principled one; the
+coordinator scan through commas lost 0.9 on test and is out. Seneca
+did not move by a permille under any of the four: these are charter
+formulae. Concordance pinned 820 / 816 / 802; clause counts 2.58 and
+2.44 per sentence against 2.52 and 2.25 gold, so the charters still
+over-segment a little and the test file's excess is the next thing
+the view should be pointed at, with `-causa extentum` this time.
