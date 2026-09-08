@@ -82,6 +82,17 @@ externus constans character* constans ORATIO_CONIUNCTIONES_SUBORDINANTES[];
  *     nomen-proprium fonte 'regula', nativum "capitalis" */
 externus constans character* constans ORATIO_AUXILIARIA[];
 externus constans character* constans ORATIO_DETERMINANTIA[];
+/* DETERMINANTIA CERTA (T19i, 2026-09-08): pars listae quae in
+ * thesauris Latinis tribus DET fere semper est (CIRCSE + LLCT dev/test
+ * summa: ipse DCCVIII/DCCVIII, suprascriptus CDXV, omnis CCCXLIII,
+ * meus CCCVII, vester CCLXXXVII, ille CCLXXX, noster CCXLVI, tuus
+ * CCXXXII, suus CLXXXVI, alius CLVIII, iste LXIX ... hic CDLIII DET /
+ * LXXVII ADV) - lectio determinantis earum nativum 'determinantia'
+ * fert, ut regula prioris eam solam praeferat; AMBIGUA lectionem
+ * SERVANT (tectum) nativum copiatum: is (PRON CDXCVII), qui (PRON
+ * DCCLXXXIII / DET CCCV), quis, aliquis, quisquam (PRON), unus (NUM
+ * XV Senecae / DET CLXXXIX chartis - mos thesaurorum discors). */
+externus constans character* constans ORATIO_DETERMINANTIA_CERTA[];
 externus constans character* constans ORATIO_PARTICULAE[];
 
 /* SUBORDINANTES CERTAE (T19b, 2026-09-07): pars listae subordinantium

@@ -509,6 +509,145 @@ _analysis_adest (
         && a < materia_valor_lista_numerus(*analyses);
 }
 
+/* accidens INDEX lectionis per titulum loci classis suae; -I si absens */
+interior s32
+_accidens_lectionis (
+    constans MateriaNodus* analysis,
+       constans character* titulus)
+{
+    OratioClassis classis =
+        oratio_genus_classis((OratioGenus)analysis->genus);
+              s32 locus;
+
+    si (classis >= ORATIO_CLASSIS_NUMERUS_CLASSIUM)
+    {
+        redde (s32)-I;
+    }
+    locus = oratio_partes_locus(classis, titulus);
+    si (   locus < ZEPHYRUM
+        || analysis->loci[locus].genus != MATERIA_VALOR_INDEX)
+    {
+        redde (s32)-I;
+    }
+    redde analysis->loci[locus].datum.index;
+}
+
+/* lingua lectionis (INDEX communis); -I si absens */
+interior s32
+_lingua_lectionis (
+    constans MateriaNodus* analysis)
+{
+    constans MateriaValor* l = &analysis->loci[ORATIO_ANALYSIS_LINGUA];
+
+    redde l->genus == MATERIA_VALOR_INDEX ? l->datum.index : (s32)-I;
+}
+
+/* lemmata duarum lectionum aequalia (lexemata derivata scripta ambo) */
+interior b32
+_lemmata_aequalia (
+    constans MateriaNodus* x,
+    constans MateriaNodus* y)
+{
+    constans MateriaValor* lx = &x->loci[ORATIO_ANALYSIS_LEMMA];
+    constans MateriaValor* ly = &y->loci[ORATIO_ANALYSIS_LEMMA];
+
+    redde lx->genus == MATERIA_VALOR_TOKEN
+        && ly->genus == MATERIA_VALOR_TOKEN
+        && lx->datum.token != NIHIL && ly->datum.token != NIHIL
+        && chorda_aequalis(lx->datum.token->valor,
+            ly->datum.token->valor);
+}
+
+/* LEX CLASSIS EXPLICITAE (T19i, 2026-09-08): vocabulum regula
+ * praelationis decisum CLASSEM tenet, casum non - ordo impletionis
+ * lectionem 'a' nominans accipitur si classis eius == classis lectionis
+ * decisae 'e' (casus per testimonium inter lectiones classis
+ * decisae), aliter si GEMINA exstat: lectio classis decisae eodem
+ * lemmate iisdem casu numero genere (copia determinantis lectionis
+  * adiectivae: prior 'determinantia' classem dixit, regula capitis
+ * adiectivam ligavit) - pro 'a' substituitur. Utrimque LINGUA eadem
+ * et LEMMA idem (lectio Latina vocabuli Anglici 'die' substantivum
+ * Anglicum non emendat - regula linguae stat, mensuratum EWT -0.3).
+ * -I = neutrum: classis manet (prior classis ligationem fortuitam
+ * classis alterius vincit, lex 2026-09-07). */
+interior s32
+_lectio_classis_explicitae (
+    MateriaValor elementa,
+             i32 v,
+             i32 a,
+             i32 e)
+{
+    constans MateriaNodus* vocabulum =
+        materia_valor_lista_obtinere(elementa, v)->datum.nodus;
+    constans MateriaValor* analyses =
+        &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    constans MateriaNodus* lectio_a;
+    constans MateriaNodus* lectio_e;
+            OratioClassis  classis_e;
+    constans MateriaValor* lemma_a;
+                      s32  casus_a;
+                      s32  numerus_a;
+                      s32  genus_a;
+                      i32  n;
+                      i32  r;
+
+    si (   analyses->genus != MATERIA_VALOR_LISTA
+        || a               >= materia_valor_lista_numerus(*analyses)
+        || e               >= materia_valor_lista_numerus(*analyses))
+    {
+        redde (s32)-I;
+    }
+    lectio_a = materia_valor_lista_obtinere(*analyses,
+        a)->datum.nodus;
+    lectio_e = materia_valor_lista_obtinere(*analyses,
+        e)->datum.nodus;
+        classis_e  = oratio_genus_classis((OratioGenus)lectio_e->genus);
+    si (_lingua_lectionis(lectio_a) != _lingua_lectionis(lectio_e))
+    {
+        redde (s32)-I;
+    }
+    si (   oratio_genus_classis((OratioGenus)lectio_a->genus)
+        == classis_e
+        && _lemmata_aequalia(lectio_a, lectio_e))
+    {
+        redde (s32)a;
+    }
+
+    lemma_a    = &lectio_a->loci[ORATIO_ANALYSIS_LEMMA];
+    casus_a    = _accidens_lectionis(lectio_a, "casus");
+    numerus_a  = _accidens_lectionis(lectio_a, "numerus");
+    genus_a    = _accidens_lectionis(lectio_a, "genus");
+    n          = materia_valor_lista_numerus(*analyses);
+    per (r = ZEPHYRUM; r < n; r++)
+    {
+        constans MateriaNodus* lectio =
+            materia_valor_lista_obtinere(*analyses, r)->datum.nodus;
+        constans MateriaValor* lemma =
+            &lectio->loci[ORATIO_ANALYSIS_LEMMA];
+
+                si (   oratio_genus_classis((OratioGenus)lectio->genus)
+                    != classis_e
+                    || _lingua_lectionis(lectio)
+                        != _lingua_lectionis(lectio_a)
+                    || lemma->genus != MATERIA_VALOR_TOKEN
+                    || lemma_a->genus != MATERIA_VALOR_TOKEN
+                    || lemma->datum.token == NIHIL
+                    || lemma_a->datum.token == NIHIL
+                    || !chorda_aequalis(lemma->datum.token->valor,
+                    lemma_a->datum.token->valor)
+                    || _accidens_lectionis(lectio, "casus") != casus_a
+
+                    || _accidens_lectionis(lectio, "numerus")
+                        != numerus_a
+                    || _accidens_lectionis(lectio, "genus") != genus_a)
+                {
+            perge;
+                }
+        redde (s32)r;
+    }
+    redde (s32)-I;
+}
+
 /* umbra 'u' analysis 'a' vocabuli 'v' (locus 'umbrae' per titulum
  * classis analysis); NIHIL si absens */
 interior MateriaNodus*
@@ -590,9 +729,12 @@ _sententiam_resolvere_gradu (
                        chorda  fons;
                  StmlResultus  lectio;
          StmlExpansioResultus  expansio;
-                          Xar* regulae;
+                                                    Xar* regulae;
                           s32* praelata;
+                          b32* emendata;      /* T19i: casus per testimonium
+                                               * semel per gradum */
                           Xar* impletiones;   /* Impletio (T19d) */
+
 
         si (   elementa->genus != MATERIA_VALOR_LISTA
             || materia_valor_lista_numerus(*elementa) == ZEPHYRUM)
@@ -699,10 +841,13 @@ _sententiam_resolvere_gradu (
         redde VERUM;
     }
     regulae = _liberi_titulo(scratch, expansio.radix_expansa, "regula");
-    praelata = (s32*)piscina_allocare(scratch, (memoriae_index)ne
-        * (memoriae_index)magnitudo(s32));
+        praelata = (s32*)piscina_allocare(scratch, (memoriae_index)ne
+            * (memoriae_index)magnitudo(s32));
+    emendata = (b32*)piscina_allocare(scratch, (memoriae_index)ne
+        * (memoriae_index)magnitudo(b32));
     impletiones = xar_creare(scratch, (i32)magnitudo(Impletio));
-    si (regulae == NIHIL || praelata == NIHIL || impletiones == NIHIL)
+    si (   regulae == NIHIL || praelata == NIHIL || emendata == NIHIL
+        || impletiones == NIHIL)
     {
         piscina_destruere(scratch);
         redde FALSUM;
@@ -710,6 +855,7 @@ _sententiam_resolvere_gradu (
     per (k = ZEPHYRUM; k < ne; k++)
     {
         praelata[k] = (s32)-I;
+        emendata[k] = FALSUM;
     }
     /* ordines consilii cuiusque regulae ordine programmatis: prima
      * vincit */
@@ -811,8 +957,12 @@ _sententiam_resolvere_gradu (
                               i32  u;
                               i32  w;
                               i32  b;
-                     MateriaNodus* umbra;
+                                          MateriaNodus* umbra;
                          Impletio* cella;
+                              s32  relatio;
+                              b32  emendare_v;
+                              b32  emendare_w;
+
 
             ordo = *(StmlNodus**)xar_obtinere(ordines, o);
             si (   !_numerus_attributi(ordo, "vocabulum", &v)
@@ -841,9 +991,69 @@ _sententiam_resolvere_gradu (
              * lectionem aliam nominans repetita est (cum puella bona:
              * regula nominativi lectionem NOM 'puellae' iam ablativae
              * inveniret) */
-            si (   (vindicata[w] && b != ZEPHYRUM)
-                || (   explicita[w] && praelata[w] >= ZEPHYRUM
-                    && praelata[w] != (s32)b))
+                                    /* LEX CLASSIS EXPLICITAE (T19i): vocabulum regula praelationis
+             * decisum classem tenet; testimonium casum inter lectiones
+             * classis eius (ipsam aut geminam) emendare potest - carrier
+             * per umbram CAPITIS (concordantia: caput lectionem carrier
+             * eligit; hoc templum NOM, non ABL prioris), implens per umbram
+             * capitis aut per obiectum cuius carrier lectionem SUAM
+             * decisam fert (casus obiecti lectionem adpositionis sequitur,
+             * non ordinem regularum casuum: in bona terra ablativa
+             * manet, in urbem intacta - mensuratum); semel per gradum.
+             * Carrier sine lectione classis suae ligatur, non praefertur
+             * (ut ante: supra + accusativus); implens aliena = repetita. */
+            relatio = umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                == MATERIA_VALOR_INDEX
+                ? umbra->loci[ORATIO_UMBRA_RELATIO].datum.index : (s32)-I;
+            emendare_v = FALSUM;
+            emendare_w = FALSUM;
+            si (   explicita[v] && !emendata[v]
+                && relatio == (s32)ORATIO_RELATIO_CAPUT)
+            {
+                s32 r = _lectio_classis_explicitae(*elementa, v, a,
+                    praelata[v] >= ZEPHYRUM ? (i32)praelata[v]
+                        : ZEPHYRUM);
+
+                si (r >= ZEPHYRUM)
+                {
+                    MateriaNodus* umbra_r = r == (s32)a ? umbra
+                        : _umbram_invenire(*elementa, v, (i32)r, u);
+
+                    si (umbra_r != NIHIL)
+                    {
+                        a           = (i32)r;
+                        umbra       = umbra_r;
+                        emendare_v  = VERUM;
+                    }
+                }
+            }
+            si (explicita[w])
+            {
+                s32 decisa_v = praelata[v] >= ZEPHYRUM ? praelata[v]
+                    : ZEPHYRUM;
+                s32 decisa_w = praelata[w] >= ZEPHYRUM ? praelata[w]
+                    : ZEPHYRUM;
+                s32 r = _lectio_classis_explicitae(*elementa, w, b,
+                    (i32)decisa_w);
+                b32 licet = relatio == (s32)ORATIO_RELATIO_CAPUT
+                    || (s32)a == decisa_v;
+
+                si (r >= ZEPHYRUM && licet && !emendata[w])
+                {
+                    b           = (i32)r;
+                    emendare_w  = VERUM;
+                }
+                alioquin si ((s32)b != decisa_w)
+                {
+                    si (cursus->census != NIHIL)
+                    {
+                        cursus->census->repetitae =
+                            cursus->census->repetitae + I;
+                    }
+                    perge;
+                }
+            }
+            alioquin si (vindicata[w] && b != ZEPHYRUM)
             {
                 /* T19e: idem INTRA gradum pro decisione EXPLICITA -
                  * vocabulum implens regula praelationis priore hoc
@@ -872,18 +1082,32 @@ _sententiam_resolvere_gradu (
             cella->b      = b;
                         /* praelationes ambae sub lege 'prima vincit per
              * vocabulum' (trans gradus quoque: vindicata) */
-            si (praelata[v] < ZEPHYRUM && !vindicata[v])
-            {
+                                    si (emendare_v)
+                                    {
+                /* classis explicita, casus emendatus: decisio prioris
+                 * manet (auctor), lectio classis suae prima */
+                praelata[v] = (s32)a;
+                emendata[v] = VERUM;
+                                    }
+            alioquin si (praelata[v] < ZEPHYRUM && !vindicata[v])
+
+                                    {
                 praelata[v] = (s32)a;
                 _decisionem_notare(cursus, &decisiones[v],
                     ORATIO_DECISIO_IMPLETIO, titulus);
-            }
-            si (praelata[w] < ZEPHYRUM && !vindicata[w])
-            {
+                                    }
+                        si (emendare_w)
+                        {
+                praelata[w] = (s32)b;
+                emendata[w] = VERUM;
+                        }
+            alioquin si (praelata[w] < ZEPHYRUM && !vindicata[w])
+
+                        {
                 praelata[w] = (s32)b;
                 _decisionem_notare(cursus, &decisiones[w],
                     ORATIO_DECISIO_IMPLETIO, titulus);
-            }
+                        }
 
             si (   titulus != NIHIL
                 && !_regulam_numerare(cursus, *titulus))

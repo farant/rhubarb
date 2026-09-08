@@ -644,16 +644,22 @@ principale (vacuum)
         /* T19e: regulae Anglicae IV in capite (exceptio a, nomen
          * proprium capitale, umbrae verbi II) + prior contractionum:
          * gradus I = XIX regulae (0..XVIII) */
-        CREDO_AEQUALIS_S32 (ablativum, (s32)XVIII);
-        /* T19f: implentes casus ignoti (nomen proprium capitale) -
-         * obiectum XIX (gradus I), capita XXXIV-XXXV (gradus II) */
+                /* T19i: prior determinantium certorum XVII ante umbras obiecti
+         * (caput lectionis determinantis ligatur) */
         CREDO_AEQUALIS_S32 (_index_regulae(programma,
-            "umbra-obiectum-incerti-proprii"), (s32)XIX);
+            "determinans-primum-latinum"), (s32)XVII);
+        CREDO_AEQUALIS_S32 (accusativum, (s32)XVIII);
+        CREDO_AEQUALIS_S32 (ablativum, (s32)XIX);
+        /* T19f: implentes casus ignoti (nomen proprium capitale) -
+         * obiectum XX (gradus I), capita post (gradus II/III) */
+        CREDO_AEQUALIS_S32 (_index_regulae(programma,
+            "umbra-obiectum-incerti-proprii"), (s32)XX);
                 /* T19h: IANUA STRICTA capitum - regulae capitis XVI cursu
          * stricto gradu II (XX..XXXV, titulo -proximo), eaedem cursu
-         * fratrum gradu III (XXXVI..LI); regulae LII */
+                  * fratrum gradu III; regulae LIII (T19i: + prior determinantium
+         * gradu I: strictae XXI..XXXVI, laxae XXXVII..LII) */
         CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
-            (i32)LII);
+            (i32)LIII);
         {
             i32 k;
 
@@ -663,16 +669,18 @@ principale (vacuum)
                     (constans OratioRegula*)xar_obtinere(
                     programma->regulae, k);
 
-                CREDO_AEQUALIS_I32 (r->gradus, k <= (i32)XIX ? I
-                    : (k <= (i32)XXXV ? (i32)II : (i32)III));
+                                CREDO_AEQUALIS_I32 (r->gradus, k
+                                    <= (i32)XX ? I
+                                    : (k
+                                        <= (i32)XXXVI ? (i32)II : (i32)III));
             }
             {
                 constans OratioRegula* prima =
                     (constans OratioRegula*)xar_obtinere(
-                    programma->regulae, (i32)XX);
+                                        programma->regulae, (i32)XXI);
                 constans OratioRegula* laxa =
                     (constans OratioRegula*)xar_obtinere(
-                    programma->regulae, (i32)XXXVI);
+                    programma->regulae, (i32)XXXVII);
 
                 CREDO_VERUM (_aequalis(prima->titulus,
                     "umbra-caput-nominativus-sequente-proximo"));
@@ -1256,10 +1264,16 @@ principale (vacuum)
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, (s32)-I, "latina", doc, &census));
+                /* T19i: hic DET sine exceptione thesauris tribus (CIRCSE CI, LLCT
+         * CCCLII; PRON 0) - prior determinantium certorum; umbra vacua
+         * manet (inventum) */
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
-            ZEPHYRUM), (s32)ORATIO_CLASSIS_PRONOMEN);
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_DETERMINANS);
+        CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, ZEPHYRUM)),
+            (s32)ORATIO_DECISIO_PRAELATIO);
         CREDO_AEQUALIS_I32 (census.impletae, ZEPHYRUM);
     }
+
 
         imprimere("\n--- VII. Lex umbrarum (T19d gamma) ---\n");
     {
@@ -1394,17 +1408,39 @@ principale (vacuum)
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, (s32)-I, "latina", doc, &census));
-        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, I),
+                /* T19i: hoc prior explicitus (classis), casus per regulam
+         * nominativi strictam refinitus (lex classis explicitae) -
+         * lectio determinantis ACCUSATIVA quaeritur, non secunda */
+        CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_DETERMINANS);
-        CREDO_AEQUALIS_S32 (_casus(verbum, I),
-            (s32)ORATIO_CASUS_ACCUSATIVUS);
-        lectio = _analysis(verbum, I);
-        CREDO_NON_NIHIL (lectio);
-        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
-            (s32)I);
-        CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I),
-            (i32)_umbra_impletio_analysis(lectio, ZEPHYRUM)),
-            (s32)ORATIO_CASUS_ACCUSATIVUS);
+        CREDO_AEQUALIS_S32 (_casus(verbum, ZEPHYRUM),
+            (s32)ORATIO_CASUS_NOMINATIVUS);
+        {
+            i32 a;
+            i32 inventa = ZEPHYRUM;
+
+            per (a = ZEPHYRUM; a < _numerus_analysium(verbum); a++)
+            {
+                si (   _classis_analysis(verbum, a)
+                        != (s32)ORATIO_CLASSIS_DETERMINANS
+                    || _casus(verbum, a)
+                        != (s32)ORATIO_CASUS_ACCUSATIVUS)
+                {
+                    perge;
+                }
+                lectio = _analysis(verbum, a);
+                si (   lectio != NIHIL
+                    && _umbra_impletio_vocabulum(lectio, ZEPHYRUM)
+                        == (s32)I
+                    && _casus(_vocabulum(doc, I),
+                        (i32)_umbra_impletio_analysis(lectio, ZEPHYRUM))
+                        == (s32)ORATIO_CASUS_ACCUSATIVUS)
+                {
+                    inventa = inventa + I;
+                }
+            }
+            CREDO_VERUM (inventa >= I);
+        }
         /* CORPUS (Hilarius): umbra quaeque ligata in lectionem casus
          * sui spectat (numero genere quoque ubi scripta) - lex
          * remissionis super sententias veras; ligatae > C */

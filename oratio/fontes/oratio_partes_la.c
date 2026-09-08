@@ -32,7 +32,19 @@ constans character* constans ORATIO_DETERMINANTIA[] = {
     "aliquis", "aliqui", "omnis", "nullus", "ullus", "solus", "totus",
     "uterque", "alter", "alius", "neuter", "tantus", "talis", "quantus",
     "qualis", "quot", "tot", "cunctus", "unus", "ambo", "plerusque",
-    "suprascriptus", "praedictus", "supradictus", "ceterus", "reliquus",
+        "suprascriptus", "praedictus", "supradictus", "ceterus",
+            "reliquus",
+    NIHIL
+};
+
+/* T19i: certa (DET sine exceptione thesauris tribus) - vide caput */
+constans character* constans ORATIO_DETERMINANTIA_CERTA[] = {
+    "meus", "tuus", "suus", "noster", "vester", "hic", "ille", "iste",
+        "ipse", "idem", "quicumque", "quidam", "omnis", "nullus",
+    "ullus", "totus", "uterque", "alter", "alius", "tantus",
+
+    "talis", "quantus", "qualis", "quot", "tot", "cunctus", "ambo",
+    "suprascriptus", "praedictus", "ceterus", "reliquus",
     NIHIL
 };
 
@@ -568,6 +580,92 @@ _copiam_addere (
     redde _descriptionem_addere(exitus, &c);
 }
 
+/* FORMAE EXCEPTAE lemmatum certorum (T19i): forma sub lemmate certo
+ * quae in thesauris tribus ADV/NOUN/PROPN est - lectio determinantis
+ * SERVATA, titulus non datus (regula prioris caeca): tantum (ADV
+ * CXIII / DET II), quantum (ADV XXX), ceterum (ADV II) = neutrum
+ * singulare; hic NOM S M (ADV LXXVI / DET XIV; hoc hac DET); toto
+ * DAT/ABL S (PROPN XVI: nomen chartarum). solus et aliqui e lista
+ * certorum ablata (solum/solis/solo = solum/sol NOUN XVII contra DET
+ * X; aliquo PRON). Accidens -I = quodlibet. */
+nomen structura {
+    constans character* lemma;
+                   s32  casus_grammaticus;
+                   s32  numerus;
+                   s32  genus;
+} FormaExcepta;
+
+hic_manens constans FormaExcepta FORMAE_EXCEPTAE[] = {
+    { "tantus",  (s32)-I,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS,
+        (s32)ORATIO_GENUS_GRAMMATICUM_NEUTRUM },
+    { "quantus", (s32)-I,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS,
+        (s32)ORATIO_GENUS_GRAMMATICUM_NEUTRUM },
+        { "ceterus", (s32)-I,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS,
+        (s32)ORATIO_GENUS_GRAMMATICUM_NEUTRUM },
+    /* forma eadem = ACC S M (tantum virum) */
+    { "tantus",  (s32)ORATIO_CASUS_ACCUSATIVUS,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS,
+        (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM },
+    { "quantus", (s32)ORATIO_CASUS_ACCUSATIVUS,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS,
+        (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM },
+    { "ceterus", (s32)ORATIO_CASUS_ACCUSATIVUS,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS,
+        (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM },
+
+    { "hic",     (s32)ORATIO_CASUS_NOMINATIVUS,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS,
+        (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM },
+    { "totus",   (s32)ORATIO_CASUS_DATIVUS,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS, (s32)-I },
+    { "totus",   (s32)ORATIO_CASUS_ABLATIVUS,
+        (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS, (s32)-I },
+    { NIHIL, (s32)-I, (s32)-I, (s32)-I }
+};
+
+interior b32
+_forma_excepta (
+    constans OratioDescriptio* d)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; FORMAE_EXCEPTAE[i].lemma != NIHIL; i++)
+    {
+        constans FormaExcepta* f = &FORMAE_EXCEPTAE[i];
+
+        si (   _aequalis(d->lemma, f->lemma)
+            && (   f->casus_grammaticus < ZEPHYRUM
+                || f->casus_grammaticus == d->casus_grammaticus)
+            && (f->numerus < ZEPHYRUM || f->numerus == d->numerus)
+            && (f->genus < ZEPHYRUM || f->genus == d->genus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* lectio determinantis appendere (T19i): nativum 'determinantia' si
+ * lemma certum et forma non excepta, aliter copiatum */
+interior b32
+_determinans_addere (
+                          Xar* exitus,
+    constans OratioDescriptio* d)
+{
+    OratioDescriptio c = *d;
+
+    c.classis = ORATIO_CLASSIS_DETERMINANS;
+    si (   _in_lista(ORATIO_DETERMINANTIA_CERTA, d->lemma)
+        && !_forma_excepta(d))
+    {
+        c.nativum = _ex_literis("determinantia");
+    }
+    redde _descriptionem_addere(exitus, &c);
+}
+
 /* idem, nativum = titulus listae (littera statica) si lemma in lista
  * certarum, aliter copiatum (T19b: regula subordinantium certas solas
  * praefert) */
@@ -604,19 +702,19 @@ _secundariae (
                 redde FALSUM;
             }
             frange;
-        casus ORATIO_CLASSIS_PRONOMEN:
+                casus ORATIO_CLASSIS_PRONOMEN:
         casus ORATIO_CLASSIS_ADIECTIVUM:
-            si (   _in_lista(ORATIO_DETERMINANTIA, d->lemma)
-                && !_copiam_addere(exitus, d,
-                ORATIO_CLASSIS_DETERMINANS))
-            {
+            /* T19i: certa titulo 'determinantia' (regula prioris),
+             * ambigua nativum copiatum (lectio servata, regula caeca) */
+                        si (   _in_lista(ORATIO_DETERMINANTIA, d->lemma)
+                            && !_determinans_addere(exitus, d))
+                        {
                 redde FALSUM;
-            }
+                        }
             frange;
         casus ORATIO_CLASSIS_NUMERALE:
             si (   _in_lista(ORATIO_DETERMINANTIA, d->lemma)
-                && !_copiam_addere(exitus, d,
-                ORATIO_CLASSIS_DETERMINANS))
+                && !_determinans_addere(exitus, d))
             {
                 redde FALSUM;
             }

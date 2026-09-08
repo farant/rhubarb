@@ -416,8 +416,19 @@ TIER — sixteen `-proximo` copies of the head rules at stage 2
 strict alone loses everywhere (undecided words fall to a worse
 default), the tier gains a little everywhere (76.9 / 79.7 / 79.3;
 forced 72.3 / 69.4 / 69.4; pins 769 / 796 / 792, 723 / 694 / 694); 52
-rules. NEXT: DET-over-ADJ data law, bind-without-prefer loose
-rules, the Latin order swap measured, the ignoti reading.
+rules. **T19i** (same day): DETERMINERS BY DATA — the list split into
+certain lemmas (DET without exception in all three treebanks; title
+`determinantia`, form exclusions for the adverbial `tantum`/`hic`
+and the name `toto`) and ambiguous ones (is, qui, quis, aliquis;
+`unus` splits by treebank), prior `determinans-primum-latinum`
+before the object rules; and the LAW OF THE EXPLICIT CLASS in the
+executor: a prior fixes the class, agreement may still choose the
+reading (or its twin) of that class — carriers via head umbrae
+only, fillers via head umbrae or a settled-carrier object umbra,
+same lemma and language, once per stage. Seneca 80.0, charters
+83.9 / 83.2, English untouched; pins 799 / 838 / 831, forced 761 /
+762 / 758; 53 rules. NEXT: bind-without-prefer loose rules, the
+head-rule template, the ignoti reading.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

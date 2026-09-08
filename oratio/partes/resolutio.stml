@@ -388,6 +388,30 @@
   </consilium>
 </regula>
 
+<regula titulus="determinans-primum-latinum">
+  <!-- T19i (2026-09-08, ex indice erratorum T19g bis): lemmata quae UD
+       DET sine exceptione notat (CERTA solae, nativum 'determinantia':
+       ipse omnis meus noster vester ille suus alius iste suprascriptus ...
+       DET 100 % thesauris tribus; is/qui/quis/aliquis PRON, unus NUM
+       Senecae) - lectio determinantis prima. Ante umbras: caput
+       lectionis determinantis ligatur, non adiectivae (paritas
+       lectionum duarum impletarum ordine listae: adiectivum vincebat,
+       chartae nominativus capitis 61 % vicina, dativus 27 %). -->
+  <EXEMPLAR output="$sent_determinans_primum_latinum">
+    <sententia lingua="latina"/>
+  </EXEMPLAR>
+  <EXEMPLAR de="$sent_determinans_primum_latinum" output="$lect_determinans_primum_latinum">
+    <vocabulum n="$v"><analyses>
+      <analysis-determinantis n="$a"><lingua>0</lingua><nativum><or-derivatum>determinantia</or-derivatum></nativum></analysis-determinantis>
+    </analyses></vocabulum>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$lect_determinans_primum_latinum">
+      <praelatio vocabulum="&@v;" analysis="&@a;" regula="determinans-primum-latinum"/>
+    </PER>
+  </consilium>
+</regula>
+
 <regula titulus="umbra-obiectum-accusativi">
   <!-- T19d (2026-09-07, umbra prima - sceletum): UMBRA obiecti (relatio 0)
        casu accusativo (3) in lectione QUALIBET (adpositio nunc: in ad

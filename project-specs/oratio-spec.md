@@ -1135,6 +1135,54 @@ charters' remaining adjacent errors), loose rules that bind without
 preferring (edges only; a rule attribute), the Latin order measured
 swapped, the ignoti reading.
 
+**As built — T19i, determiners by data and the law of the explicit
+class (2026-09-08, same session).** From the listing: the determiner
+data list is split. `ORATIO_DETERMINANTIA_CERTA` (meus tuus suus
+noster vester hic ille iste ipse idem quicumque quidam omnis nullus
+ullus totus uterque alter alius tantus talis quantus qualis quot tot
+cunctus ambo suprascriptus praedictus ceterus reliquus: DET without
+exception across the three Latin treebanks, some 4,000 words; `is`,
+`qui`, `quis`, `aliquis`, `quisquam` are pronouns, and `unus` splits
+by treebank — numeral in Seneca, determiner in the charters — so they
+keep their reading without the title) gives its determiner reading the
+nativum title `determinantia`, except forms the treebanks tag
+otherwise by shape: `tantum`/`quantum`/`ceterum` singular neuter and
+masculine accusative are adverbs (113 to 2), `hic` nominative singular
+masculine is the adverb (76 to 14) while `hoc`/`hac` are determiners,
+`toto` is a charter name (16 to 2), and `solus` is dropped for the sun
+and the soil. Rule 17 `determinans-primum-latinum` prefers that
+reading, placed before the object umbra rules so the head rules bind
+the determiner reading. Measured: Seneca 76.9 → 80.0, charters 79.7 /
+79.3 → 83.9 / 83.2, English unchanged; the prior itself is right
+95 % (Seneca 25 wrong of 520, charters 71 of 1,552); forced accuracy
+76 %, since the adjective-versus-determiner confusion left the forced
+tier.
+
+EXECUTOR — THE LAW OF THE EXPLICIT CLASS. A `<praelatio>` decision
+fixes the CLASS, not the case: the prior's first determiner reading of
+`hoc` is the ablative, and first-wins would have frozen it there. An
+`<impletio>` row on an explicit word is now accepted when it names a
+reading of the decided class with the same lemma and language, or
+its TWIN (same lemma, case, number, gender — the determiner copy of
+the bound adjective reading), which then becomes first. Carriers
+refine only through HEAD umbrae (agreement chooses the carrier's
+reading: `hoc templum` nominative); fillers through head umbrae, or
+through an object umbra whose carrier reading is the carrier's own
+decided one (the object's case follows the preposition's decided
+reading, not the order of the case rules: `in bona terra` stays
+ablative, `in urbem` untouched); once per stage; a carrier with no
+reading of its class is still bound and not preferred (as before:
+`supra` + accusative), a filler is repetita. The first draft without
+the lemma-and-language condition cost English 0.3 (a Latin reading of
+`die` refined the English noun) and turned `in bona terra`
+accusative; both measured, both fixed. Probes: `Hoc est` is a
+determiner (the treebanks never tag `hic` PRON), `Hoc templum`
+nominative with the accusative twin bound. 53 rules (prior at 17,
+object rules 18–20, strict heads 21–36, loose 37–52); pins 799 / 838 /
+831, forced 761 / 762 / 758. NEXT: loose rules that bind without
+preferring (Seneca's distant tail), the head-rule template, the
+ignoti reading.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

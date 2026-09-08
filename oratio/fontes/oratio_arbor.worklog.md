@@ -1885,3 +1885,38 @@ remains in the listing is not distance: the charters' possessives
 and quantifiers that UD calls determiners, and Seneca's long tail of
 homographs. The first is data; the second needs the loose rules to
 bind without deciding.
+
+## 2026-09-08 — T19i: determiners by data, and what a prior may not freeze
+
+The listing's second family was a convention, and conventions are
+data. Counting the gold class per lemma over the three Latin
+treebanks gave a list with no exceptions at all — thirty lemmas that
+are DET every single time, four thousand words — and a short list of
+pronouns that never are, with `unus` split between the treebanks
+(numeral in Seneca, determiner in the charters) and therefore left
+alone. The prior on the certain list moved Seneca three points and
+the charters four, and its own errors turned out to be shapes, not
+lemmas: `tantum` and `quantum` are adverbs by form, `hic` the adverb
+is the nominative masculine while `hoc` and `hac` are determiners, and
+`toto` is somebody's name in Lucca. The exclusion is therefore by
+lemma plus accidents, and `solus` went out altogether because the sun
+and the soil share its forms.
+
+The prior exposed a flaw in first-wins that the class metric cannot
+see: a `<praelatio>` row decides a READING, and the first determiner
+reading of `hoc` in the list is the ablative, so "Hoc templum" kept
+`hoc` ablative while binding its nominative twin to `templum`. The
+executor now distinguishes what the prior decided (the class) from
+what agreement decides (the reading within that class): an impletio
+row on an explicit word is accepted when it names a reading of the
+decided class, or the twin of the bound reading in that class, and
+that reading goes first. The first draft of the law was too broad
+twice, and the treebanks said so within a minute each time: without
+requiring the same lemma and language, a Latin reading of the English
+word `die` refined the English noun and English lost 0.3; without
+restricting carriers to head umbrae, the accusative object rule
+refined `in` before the ablative one could, and "in bona terra" turned
+accusative. Agreement is evidence about the carrier; object case is
+not, so object carriers keep the preposition's decided reading and the
+object follows it. Both restrictions are in the code with their
+sentences.
