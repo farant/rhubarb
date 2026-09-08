@@ -176,6 +176,11 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
   post N editiones; in plagula - lineae [...]`); via VETITA commissioni
   causam nominat (plagula Frani in cursu, Fran ipse committit, e viis
   remove).
+- **Oratio, decisio (T19g, decretum SUDOKU)**: `vocabula()[i].decisio` =
+  `praelatio` | `impletio` | `umbra` | `''` (nemo decidit) et `.auctor` =
+  titulus regulae decidentis (`lex-umbrarum` pro lege); `Oratio.partitio()`
+  = dict praelatio/impletio/umbra/una/aperta/nulla (+ `coactae` = impletio +
+  umbra) - partitio cellularum documenti (coacta | ordinata | aperta).
 
 ## 2026-09-03 — lex formae ancorarum (post B3)
 

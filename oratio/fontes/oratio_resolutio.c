@@ -4,6 +4,8 @@
 #include "oratio_registrum.h"
 #include "oratio_stml.h"
 #include "oratio_partes.h"
+#include "oratio_lexema.h"
+#include "oratio_lexicon.h"
 #include "materia_arbor.h"
 #include "stml.h"
 #include "stml_macros.h"
@@ -362,6 +364,131 @@ nomen structura {
              i32  b;
 } Impletio;
 
+/* decisio vocabuli (T19g, decretum SUDOKU decisio XL): genus
+ * (OratioDecisio, -I = nemo decidit) + auctor (titulus regulae in
+ * piscina cursus copiatus; lex umbrarum auctorem suum nominat);
+ * post gradus omnes in arborem scripta (_decisiones_scribere) */
+nomen structura {
+       s32 genus;
+    chorda auctor;
+} Decisio;
+
+/* decisionem vocabuli notare: prima manet (vocantes sub lege
+ * 'prima vincit' vocant), lex umbrarum superscribit - actus
+ * decisivus ultimus est */
+interior vacuum
+_decisionem_notare (
+           Cursus* cursus,
+          Decisio* decisio,
+    OratioDecisio  genus,
+  constans chorda* titulus)
+{
+    hic_manens character lex[] = "lex-umbrarum";
+
+    decisio->genus = (s32)genus;
+    si (genus == ORATIO_DECISIO_UMBRA)
+    {
+        decisio->auctor = _chorda((i8*)lex,
+            (i32)(magnitudo(lex) - I));
+    }
+    alioquin si (titulus != NIHIL && titulus->mensura > ZEPHYRUM)
+    {
+        decisio->auctor = _copia(cursus->piscina, *titulus);
+    }
+    alioquin
+    {
+        decisio->auctor.datum    = NIHIL;
+        decisio->auctor.mensura  = ZEPHYRUM;
+    }
+}
+
+/* decisiones in arborem scribere (T19g): vocabulum decisum locum
+ * 'decisio' (INDEX OratioDecisio) et 'auctor' (lexema derivatum:
+ * titulus regulae, origo = pars prima) accipit - profilum cellulae
+ * (coacta | ordinata | aperta) ex arbore legitur, non ex plano
+ * abiecto; non decisum nihil scribit (octeti crudi immoti).
+ * Scriptum iam (cursus alter) reponitur. Census decisae[].
+ * FALSUM = memoria sola. */
+interior b32
+_decisiones_scribere (
+              Cursus* cursus,
+        MateriaNodus* sententia,
+    constans Decisio* decisiones)
+{
+    constans MateriaValor* elementa =
+        &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
+                      i32 ne = materia_valor_lista_numerus(*elementa);
+                      i32 k;
+
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        constans MateriaValor* elementum =
+            materia_valor_lista_obtinere(*elementa, k);
+                 MateriaNodus* vocabulum;
+        constans MateriaValor* partes;
+        constans MateriaToken* origo;
+                          b32  scriptum;
+
+        si (   decisiones[k].genus < ZEPHYRUM
+            || elementum        == NIHIL
+            || elementum->genus != MATERIA_VALOR_NODUS
+            || elementum->datum.nodus->genus
+                != (s32)ORATIO_GENUS_VOCABULUM)
+        {
+            perge;
+        }
+        vocabulum  = elementum->datum.nodus;
+        partes     = &vocabulum->loci[ORATIO_VOCABULUM_PARTES];
+        si (   partes->genus
+            != MATERIA_VALOR_LISTA
+            || materia_valor_lista_numerus(*partes) == ZEPHYRUM)
+        {
+            perge;
+        }
+        origo    = materia_valor_lista_obtinere(*partes,
+            ZEPHYRUM)->datum.token;
+        scriptum = vocabulum->loci[ORATIO_VOCABULUM_DECISIO].genus
+            != MATERIA_VALOR_NIHIL;
+        si (!(scriptum
+                ? materia_nodus_reponere(vocabulum,
+                    (i32)ORATIO_VOCABULUM_DECISIO,
+                    materia_valor_index(decisiones[k].genus),
+                    MATERIA_LOCUS_INDEX)
+                : materia_nodus_ponere(vocabulum,
+                    (i32)ORATIO_VOCABULUM_DECISIO,
+                    materia_valor_index(decisiones[k].genus),
+                    MATERIA_LOCUS_INDEX)))
+        {
+            redde FALSUM;
+        }
+        si (decisiones[k].auctor.mensura > ZEPHYRUM)
+        {
+            MateriaToken* t = oratio_lexema_derivatum(cursus->piscina,
+                (s32)ORATIO_LEX_DERIVATUM, decisiones[k].auctor, origo);
+
+            scriptum = vocabulum->loci[ORATIO_VOCABULUM_AUCTOR].genus
+                != MATERIA_VALOR_NIHIL;
+            si (   t == NIHIL
+                || !(scriptum
+                    ? materia_nodus_reponere(vocabulum,
+                        (i32)ORATIO_VOCABULUM_AUCTOR,
+                        materia_valor_token(t), MATERIA_LOCUS_TOKEN)
+                    : materia_nodus_ponere(vocabulum,
+                        (i32)ORATIO_VOCABULUM_AUCTOR,
+                        materia_valor_token(t), MATERIA_LOCUS_TOKEN)))
+            {
+                redde FALSUM;
+            }
+        }
+        si (cursus->census != NIHIL)
+        {
+            cursus->census->decisae[decisiones[k].genus] =
+                cursus->census->decisae[decisiones[k].genus] + I;
+        }
+    }
+    redde VERUM;
+}
+
 /* analysis 'a' vocabuli 'v' intra elementa adest? */
 interior b32
 _analysis_adest (
@@ -445,7 +572,8 @@ _sententiam_resolvere_gradu (
     MateriaNodus* sententia,
              i32  gradus,
              b32* vindicata,
-             b32* explicita)
+             b32* explicita,
+         Decisio* decisiones)
 {
 
                       Piscina* scratch;
@@ -653,6 +781,8 @@ _sententiam_resolvere_gradu (
                         }
             praelata[v]   = (s32)a;
             explicita[v]  = VERUM;   /* decisio regulae */
+            _decisionem_notare(cursus, &decisiones[v],
+                ORATIO_DECISIO_PRAELATIO, titulus);
 
             si (   titulus != NIHIL
                 && !_regulam_numerare(cursus, *titulus))
@@ -745,10 +875,14 @@ _sententiam_resolvere_gradu (
             si (praelata[v] < ZEPHYRUM && !vindicata[v])
             {
                 praelata[v] = (s32)a;
+                _decisionem_notare(cursus, &decisiones[v],
+                    ORATIO_DECISIO_IMPLETIO, titulus);
             }
             si (praelata[w] < ZEPHYRUM && !vindicata[w])
             {
                 praelata[w] = (s32)b;
+                _decisionem_notare(cursus, &decisiones[w],
+                    ORATIO_DECISIO_IMPLETIO, titulus);
             }
 
             si (   titulus != NIHIL
@@ -964,7 +1098,8 @@ interior b32
 _umbris_ordinare (
           Cursus* cursus,
     MateriaNodus* sententia,
-    constans b32* explicita)
+    constans b32* explicita,
+         Decisio* decisiones)
 {
     constans MateriaValor* elementa =
         &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
@@ -1098,6 +1233,14 @@ _umbris_ordinare (
             cursus->census->umbris_ordinata =
                 cursus->census->umbris_ordinata + I;
         }
+                /* decisio = actus qui lectionem PRIMAM fecit: lex auctor solum
+         * ubi primam mutavit; lectio inferior sublata (bona VOC post
+         * NOM) decisionem priorem non tollit */
+        si (ordo[ZEPHYRUM] != ZEPHYRUM)
+        {
+            _decisionem_notare(cursus, &decisiones[k],
+                ORATIO_DECISIO_UMBRA, NIHIL);
+        }
     }
     /* ligationes remittere: umbra quaeque in vocabulum permutatum
      * spectans indicem novum analysis implentis accipit */
@@ -1197,13 +1340,14 @@ _sententiam_resolvere (
 {
     constans MateriaValor* elementa =
         &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
-                      i32  ne;
-                      i32  regulae_numerus;
-                      i32  gradus_maximus = I;
-                      i32  gradus;
-                      i32  k;
-                      b32* vindicata;
-                      b32* explicita;
+                                            i32  ne;
+                                            i32  regulae_numerus;
+                                            i32  gradus_maximus = I;
+                                            i32  gradus;
+                                            i32  k;
+                                            b32* vindicata;
+                                            b32* explicita;
+                                        Decisio* decisiones;
 
     si (cursus->census != NIHIL)
     {
@@ -1237,24 +1381,32 @@ _sententiam_resolvere (
             (memoriae_index)ne * (memoriae_index)magnitudo(b32));
     explicita = (b32*)piscina_allocare(cursus->piscina,
         (memoriae_index)ne * (memoriae_index)magnitudo(b32));
-    si (vindicata == NIHIL || explicita == NIHIL)
+        decisiones = (Decisio*)piscina_allocare(cursus->piscina,
+            (memoriae_index)ne * (memoriae_index)magnitudo(Decisio));
+    si (vindicata == NIHIL || explicita == NIHIL || decisiones == NIHIL)
     {
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < ne; k++)
     {
-        vindicata[k] = FALSUM;
-        explicita[k] = FALSUM;
+        vindicata[k]                  = FALSUM;
+        explicita[k]                  = FALSUM;
+        decisiones[k].genus           = (s32)-I;
+        decisiones[k].auctor.datum    = NIHIL;
+        decisiones[k].auctor.mensura  = ZEPHYRUM;
     }
     per (gradus = I; gradus <= gradus_maximus; gradus++)
     {
-        si (!_sententiam_resolvere_gradu(cursus, sententia, gradus,
-                vindicata, explicita))
-        {
+                si (!_sententiam_resolvere_gradu(cursus, sententia,
+                    gradus,
+                    vindicata, explicita, decisiones))
+                {
             redde FALSUM;
-        }
+                }
     }
-    redde _umbris_ordinare(cursus, sententia, explicita);
+    /* lex umbrarum, deinde decisiones in arborem (T19g) */
+    redde _umbris_ordinare(cursus, sententia, explicita, decisiones)
+        && _decisiones_scribere(cursus, sententia, decisiones);
 }
 
 interior b32

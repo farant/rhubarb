@@ -281,6 +281,17 @@ _numerus_analysium (
         ? materia_valor_lista_numerus(*analyses) : ZEPHYRUM;
 }
 
+/* decisio vocabuli (T19g): INDEX aut -I */
+interior s32
+_decisio (
+    constans MateriaNodus* vocabulum)
+{
+    constans MateriaValor* v =
+        &vocabulum->loci[ORATIO_VOCABULUM_DECISIO];
+
+    redde v->genus == MATERIA_VALOR_INDEX ? v->datum.index : (s32)-I;
+}
+
 /* umbra 'u' lectionis: nodus aut NIHIL */
 interior constans MateriaNodus*
 _umbra (
@@ -999,7 +1010,7 @@ principale (vacuum)
          * mutatum */
         {
             OratioResolutioCensus census;
-            OratioProgramma* malum;
+                  OratioProgramma* malum;
 
             malum = oratio_resolutio_programma_legere(piscina, intern,
                 _l(
@@ -1538,6 +1549,109 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_NOMEN_PROPRIUM);
         CREDO_VERUM (census.impletae >= I);
+    }
+
+        imprimere("\n--- X. Decisio in arbore (T19g, decretum SUDOKU) ---\n");
+    {
+           OratioPartesCensus census_partium;
+        OratioResolutioCensus census;
+                 MateriaNodus* doc;
+                 MateriaNodus* verbum;
+
+        /* Puella bona ambulat: bona (carrier) et Puella (implens) per
+         * ordinem IMPLETIONIS decisae, auctor = titulus regulae capitis
+         * nominativi praecedentis; ambulat a nemine (loci non scripti) */
+        doc = _documentum(piscina, &vocabularia,
+            "Puella bona ambulat.\n", &census_partium);
+        CREDO_NON_NIHIL (doc);
+        verbum = _vocabulum(doc, I);
+        CREDO_AEQUALIS_S32 (_decisio(verbum), (s32)-I);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_decisio(verbum),
+            (s32)ORATIO_DECISIO_IMPLETIO);
+        CREDO_VERUM (_aequalis(_compendium(verbum,
+            (i32)ORATIO_VOCABULUM_AUCTOR),
+            "umbra-caput-nominativus-praecedente"));
+        CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, ZEPHYRUM)),
+            (s32)ORATIO_DECISIO_IMPLETIO);
+        CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, (i32)II)),
+            (s32)-I);
+        CREDO_AEQUALIS_S32 ((s32)_vocabulum(doc,
+            (i32)II)->loci[ORATIO_VOCABULUM_AUCTOR].genus,
+            (s32)MATERIA_VALOR_NIHIL);
+        CREDO_AEQUALIS_I32 (census.decisae[ORATIO_DECISIO_IMPLETIO],
+            (i32)II);
+        CREDO_AEQUALIS_I32 (census.decisae[ORATIO_DECISIO_PRAELATIO],
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (census.decisae[ORATIO_DECISIO_UMBRA],
+            ZEPHYRUM);
+        /* cursus alter idem reponit: decisio immota */
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_decisio(verbum),
+            (s32)ORATIO_DECISIO_IMPLETIO);
+        CREDO_AEQUALIS_I32 (census.decisae[ORATIO_DECISIO_IMPLETIO],
+            (i32)II);
+        /* proiectio: attributum decisio= per uncum nodi, locus auctor */
+        {
+                OratioStmlOrnatus ornatus;
+            MateriaArborConsilium consilium;
+            MateriaArborScriptura scriptura;
+
+            oratio_stml_consilium_ornatum(&consilium, &ratum, &ornatus,
+                "latina");
+            scriptura = materia_arbor_scribere_nodum(piscina, doc,
+                &consilium);
+            CREDO_VERUM (scriptura.successus);
+            CREDO_NON_NIHIL (strstr(
+                (constans character*)scriptura.textus.datum,
+                "decisio=\"impletio\""));
+            CREDO_NON_NIHIL (strstr(
+                (constans character*)scriptura.textus.datum,
+                "<auctor"));
+        }
+                /* In bona terra est: bona per LEGEM umbrarum (auctor
+         * lex-umbrarum, actus decisivus ultimus super impletionem
+         * gradus I), terra per impletionem capitis, est per
+         * praelationem (prior auxiliaris). INVENTUM T19g: in per
+         * PRAELATIONEM prioris adpositionis Latinae (index X), non per
+         * impletionem obiecti (XVIII) - prior Latinus ante testimonium
+         * loquitur (ordo Anglicus inversus est); mensurandum */
+        doc = _documentum(piscina, &vocabularia, "In bona terra est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, I)),
+            (s32)ORATIO_DECISIO_UMBRA);
+        CREDO_VERUM (_aequalis(_compendium(_vocabulum(doc, I),
+            (i32)ORATIO_VOCABULUM_AUCTOR), "lex-umbrarum"));
+                CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, ZEPHYRUM)),
+                    (s32)ORATIO_DECISIO_PRAELATIO);
+        CREDO_VERUM (_aequalis(_compendium(_vocabulum(doc, ZEPHYRUM),
+            (i32)ORATIO_VOCABULUM_AUCTOR), "adpositio-prima-latina"));
+        CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, (i32)II)),
+            (s32)ORATIO_DECISIO_IMPLETIO);
+        CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, (i32)III)),
+            (s32)ORATIO_DECISIO_PRAELATIO);
+        CREDO_VERUM (_aequalis(_compendium(_vocabulum(doc, (i32)III),
+            (i32)ORATIO_VOCABULUM_AUCTOR), "auxiliare-primum-latinum"));
+        CREDO_AEQUALIS_I32 (census.decisae[ORATIO_DECISIO_UMBRA], I);
+        /* Supra dictum est: exceptio = praelatio auctore suo */
+        doc = _documentum(piscina, &vocabularia, "Supra dictum est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, ZEPHYRUM)),
+            (s32)ORATIO_DECISIO_PRAELATIO);
+        CREDO_VERUM (_aequalis(_compendium(_vocabulum(doc, ZEPHYRUM),
+            (i32)ORATIO_VOCABULUM_AUCTOR), "supra-adverbium-latinum"));
     }
 
     imprimere("\n");

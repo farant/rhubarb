@@ -31,18 +31,23 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "analyses",    (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "classes",     (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM */
     { "linguae",     (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM */
+    /* T19g (2026-09-08, decretum SUDOKU): decisio vocabuli -
+     * quo genere lectio prima facta sit (INDEX OratioDecisio, non
+     * scripta = nemo decidit) et auctor eius (titulus regulae) */
+    { "decisio",     (s32)MATERIA_LOCUS_INDEX },      /* OratioDecisio */
+    { "auctor",      (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM */
 
-    /* interpunctio (13..14) */
+    /* interpunctio (15..16) */
     { "signum",      (s32)MATERIA_LOCUS_TOKEN },
     { "cauda",       (s32)MATERIA_LOCUS_LISTA_TOKEN },
 
-        /* numerus (15..16) */
+        /* numerus (17..18) */
     { "crudum",      (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "cauda",       (s32)MATERIA_LOCUS_LISTA_TOKEN },
 
     /* gradus III (T11): analysis-* APPENSA - loci communes V (lemma
      * lingua fons nativum sensus) deinde accidentia classis (INDEX) */
-    /* analysis-substantivi (17..26) */
+    /* analysis-substantivi (19..28) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -54,7 +59,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "declinatio",     (s32)MATERIA_LOCUS_INDEX },   /* declinatio I-V (WORDS) */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-nominis-proprii (27..36) */
+    /* analysis-nominis-proprii (29..38) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -66,7 +71,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "declinatio",     (s32)MATERIA_LOCUS_INDEX },   /* declinatio I-V (WORDS) */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-verbi (37..51) */
+    /* analysis-verbi (39..53) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -83,7 +88,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "genus",          (s32)MATERIA_LOCUS_INDEX },   /* OratioGenusGrammaticum */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-auxiliaris (52..66) */
+    /* analysis-auxiliaris (54..68) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -100,7 +105,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "genus",          (s32)MATERIA_LOCUS_INDEX },   /* OratioGenusGrammaticum */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-adiectivi (67..77) */
+    /* analysis-adiectivi (69..79) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -113,7 +118,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "declinatio",     (s32)MATERIA_LOCUS_INDEX },   /* declinatio I-V (WORDS) */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-adverbii (78..84) */
+    /* analysis-adverbii (80..86) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -122,7 +127,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "gradus",         (s32)MATERIA_LOCUS_INDEX },   /* OratioGradus */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-pronominis (85..94) */
+    /* analysis-pronominis (87..96) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -134,7 +139,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "persona",        (s32)MATERIA_LOCUS_INDEX },   /* OratioPersona */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-determinantis (95..103) */
+    /* analysis-determinantis (97..105) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -145,7 +150,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "genus",          (s32)MATERIA_LOCUS_INDEX },   /* OratioGenusGrammaticum */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-adpositionis (104..110) */
+    /* analysis-adpositionis (106..112) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -154,7 +159,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "casus",          (s32)MATERIA_LOCUS_INDEX },   /* OratioCasus */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-numeralis (111..120) */
+    /* analysis-numeralis (113..122) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -166,7 +171,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "species",        (s32)MATERIA_LOCUS_INDEX },   /* OratioSpeciesNumeralis */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-coniunctionis-coordinantis (121..126) */
+    /* analysis-coniunctionis-coordinantis (123..128) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -174,7 +179,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "sensus",         (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-coniunctionis-subordinantis (127..132) */
+    /* analysis-coniunctionis-subordinantis (129..134) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -182,7 +187,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "sensus",         (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-particulae (133..138) */
+    /* analysis-particulae (135..140) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -190,7 +195,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "sensus",         (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-interiectionis (139..144) */
+    /* analysis-interiectionis (141..146) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -198,7 +203,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "sensus",         (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-symboli (145..150) */
+    /* analysis-symboli (147..152) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -206,7 +211,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "sensus",         (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-interpunctionis (151..156) */
+    /* analysis-interpunctionis (153..158) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -214,7 +219,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "sensus",         (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* analysis-ignoti (157..162) */
+    /* analysis-ignoti (159..164) */
     { "lemma",          (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "lingua",         (s32)MATERIA_LOCUS_INDEX },   /* OratioLingua */
     { "fons",           (s32)MATERIA_LOCUS_INDEX },   /* OratioFonsAnalysis */
@@ -222,7 +227,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "sensus",         (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM */
     { "umbrae",         (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
-    /* umbra (163..169) - T19d: dependens exspectatus lectionis */
+    /* umbra (165..171) - T19d: dependens exspectatus lectionis */
     { "relatio",            (s32)MATERIA_LOCUS_INDEX },   /* OratioRelatio */
     { "classis",            (s32)MATERIA_LOCUS_INDEX },   /* OratioClassis exspectata */
     { "casus",              (s32)MATERIA_LOCUS_INDEX },   /* OratioCasus */
@@ -237,31 +242,31 @@ hic_manens constans MateriaTabGenus GENERA_ORATIONIS[] = {
     { "documentum",        (i32)0,  (i32)3 },
     { "paragraphus",       (i32)3,  (i32)4 },
     { "sententia",         (i32)7,  (i32)1 },
-    { "vocabulum",         (i32)8,  (i32)5 },
-        { "interpunctio",      (i32)13, (i32)2 },
-    { "numerus",           (i32)15, (i32)2 },
+    { "vocabulum",         (i32)8,  (i32)7 },
+        { "interpunctio",      (i32)15, (i32)2 },
+    { "numerus",           (i32)17, (i32)2 },
 
     /* gradus III (T11): unum per classem universalem, ordine UD */
-    { "analysis-substantivi",                     (i32)17, (i32)10 },
-    { "analysis-nominis-proprii",                 (i32)27, (i32)10 },
-    { "analysis-verbi",                           (i32)37, (i32)15 },
-    { "analysis-auxiliaris",                      (i32)52, (i32)15 },
-    { "analysis-adiectivi",                       (i32)67, (i32)11 },
-    { "analysis-adverbii",                        (i32)78, (i32)7 },
-    { "analysis-pronominis",                      (i32)85, (i32)10 },
-    { "analysis-determinantis",                   (i32)95, (i32)9 },
-    { "analysis-adpositionis",                    (i32)104, (i32)7 },
-    { "analysis-numeralis",                       (i32)111, (i32)10 },
-    { "analysis-coniunctionis-coordinantis",      (i32)121, (i32)6 },
-    { "analysis-coniunctionis-subordinantis",     (i32)127, (i32)6 },
-    { "analysis-particulae",                      (i32)133, (i32)6 },
-    { "analysis-interiectionis",                  (i32)139, (i32)6 },
-    { "analysis-symboli",                         (i32)145, (i32)6 },
-    { "analysis-interpunctionis",                 (i32)151, (i32)6 },
-    { "analysis-ignoti",                          (i32)157, (i32)6 },
+    { "analysis-substantivi",                     (i32)19, (i32)10 },
+    { "analysis-nominis-proprii",                 (i32)29, (i32)10 },
+    { "analysis-verbi",                           (i32)39, (i32)15 },
+    { "analysis-auxiliaris",                      (i32)54, (i32)15 },
+    { "analysis-adiectivi",                       (i32)69, (i32)11 },
+    { "analysis-adverbii",                        (i32)80, (i32)7 },
+    { "analysis-pronominis",                      (i32)87, (i32)10 },
+    { "analysis-determinantis",                   (i32)97, (i32)9 },
+    { "analysis-adpositionis",                    (i32)106, (i32)7 },
+    { "analysis-numeralis",                       (i32)113, (i32)10 },
+    { "analysis-coniunctionis-coordinantis",      (i32)123, (i32)6 },
+    { "analysis-coniunctionis-subordinantis",     (i32)129, (i32)6 },
+    { "analysis-particulae",                      (i32)135, (i32)6 },
+    { "analysis-interiectionis",                  (i32)141, (i32)6 },
+    { "analysis-symboli",                         (i32)147, (i32)6 },
+    { "analysis-interpunctionis",                 (i32)153, (i32)6 },
+    { "analysis-ignoti",                          (i32)159, (i32)6 },
 
     /* T19d (2026-09-07): UMBRA appensa post analyses */
-    { "umbra",                                   (i32)163, (i32)7 }
+    { "umbra",                                   (i32)165, (i32)7 }
 };
 
 constans MateriaRegistrumCoctum ORATIO_REGISTRUM = {
@@ -321,6 +326,9 @@ constans character* constans ORATIO_TITULI_LINGUARUM[] = {
 };
 constans character* constans ORATIO_TITULI_RELATIONUM[] = {
     "obiectum", "caput"
+};
+constans character* constans ORATIO_TITULI_DECISIONUM[] = {
+    "praelatio", "impletio", "umbra"
 };
 constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[] = {
     "vocabularium-la", "vocabularium-en", "glossarium", "regula"

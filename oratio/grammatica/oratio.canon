@@ -57,13 +57,15 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T19d 2026-09-07:
-            XXIV genera, CLXX loci - locus 'umbrae' in analysibus XVII et
-            genus 'umbra' VII locorum appensa; T11 erat 87b35173, XXIII
-            genera CXLVI loci; T6b 93c1c9cf, VI genera XVII loci; T1
-            b27fe13a, XVI loci). Tabula mutata sine hac optione mutata
-            rubet in iudicio ET in custode derivae.">
-      <optio>54a5e44f</optio>
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T19g 2026-09-08:
+            XXIV genera, CLXXII loci - loci 'decisio' INDEX et 'auctor'
+            derivatum vocabulo appensi, decretum SUDOKU; T19d 54a5e44f,
+            CLXX loci - locus 'umbrae' in analysibus XVII et genus
+            'umbra' VII locorum appensa; T11 erat 87b35173, XXIII genera
+            CXLVI loci; T6b 93c1c9cf, VI genera XVII loci; T1 b27fe13a,
+            XVI loci). Tabula mutata sine hac optione mutata rubet in
+            iudicio ET in custode derivae.">
+      <optio>6c5a6ab9</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -192,12 +194,16 @@
     nota="verbum superficiei cum partibus; analyses/classes/linguae gradus III; attributa classes/linguae = compendia DERIVATA per uncum nodi (T12) ut selectio '[classes~=verbum]' congruat - lector ea ignorat, loci veritas sunt">
     <attributum nomen="classes" genus="textus"/>
     <attributum nomen="linguae" genus="textus"/>
+    <attributum nomen="decisio" genus="textus"
+      nota="T19g: speculum loci decisio (titulus OratioDecisio) per uncum nodi, ut selectio '[decisio=impletio]' congruat"/>
     <attributum nomen="n"       genus="numerus"/>
     <liberum nomen="partes"   maximum="1"/>
     <liberum nomen="cauda"    maximum="1"/>
     <liberum nomen="analyses" maximum="1"/>
     <liberum nomen="classes"  maximum="1"/>
     <liberum nomen="linguae"  maximum="1"/>
+    <liberum nomen="decisio"  maximum="1"/>
+    <liberum nomen="auctor"   maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="vocabulum">
     <<#partes>>
@@ -231,6 +237,12 @@
   </elementum>
   <elementum nomen="linguae" intra="vocabulum"
     nota="derivatum: linguae ordine">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="decisio" intra="vocabulum" textus="verum"
+    nota="T19g (decretum SUDOKU decisio XL): OratioDecisio - 0 praelatio (ordo praelationis: prior classis, exceptio, regula linguae - decisio mollis) 1 impletio (lectio ligata praelata - testimonium) 2 umbra (lex umbrarum - testimonium); absens = nemo decidit (cellula aperta si lectiones plures, soluta si una)"/>
+  <elementum nomen="auctor" intra="vocabulum"
+    nota="T19g: derivatum - titulus regulae quae decidit (lex-umbrarum pro lege)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
 

@@ -6,11 +6,11 @@
  * -partes; lectiones Latinae et Anglicae, T16), deinde una linea per
  * VOCABULUM ordine documenti:
  *   via index initium finis linea paragraphus sententia forma classes
- *   linguae lemma analyses
+ *   linguae lemma analyses decisio auctor
  * (index = ordinalis vocabuli in plagula; paragraphus et sententia =
  * ordinales, sententia ut in sententiae.sh numerata; classes/linguae
  * = loci compendiarii vocabuli, spatiis separatae; lemma = analysis
- * primae, vacuum si nulla; analyses = numerus). -analyses: una linea
+ * primae, vacuum si nulla; analyses = numerus; decisio/auctor T19g = genus decisionis lectionis primae (praelatio | impletio | umbra, vacuum = nemo decidit) et titulus regulae). -analyses: una linea
  * per ANALYSIN loco vocabuli:
  *   via index forma classis lemma lingua fons nativum sensus casus
  *   numerus genus persona tempus modus vox forma-verbi gradus species
@@ -284,7 +284,20 @@ _vocabulum_imprimere (
             ZEPHYRUM)->datum.nodus,
             (i32)ORATIO_ANALYSIS_LEMMA));
     }
-    imprimere("\t%d\n", (integer)n);
+        imprimere("\t%d\t", (integer)n);
+    /* T19g: decisio (titulus) et auctor (titulus regulae) */
+    {
+        s32 d = _index_loci(vocabulum, (i32)ORATIO_VOCABULUM_DECISIO);
+
+        si (d >= ZEPHYRUM && d < (s32)ORATIO_DECISIO_NUMERUS)
+        {
+            fputs(ORATIO_TITULI_DECISIONUM[d], stdout);
+        }
+    }
+    putchar('\t');
+    _chordam_imprimere(_lexema_loci(vocabulum,
+        (i32)ORATIO_VOCABULUM_AUCTOR));
+    putchar('\n');
 }
 
 /* columna umbrarum (T19d): per umbram lectionis
@@ -615,7 +628,8 @@ principale (
                             "\tdeclinatio\tconiugatio\tumbrae\n"
 
             : "# via\tindex\tinitium\tfinis\tlinea\tparagraphus"
-              "\tsententia\tforma\tclasses\tlinguae\tlemma\tanalyses\n",
+              "\tsententia\tforma\tclasses\tlinguae\tlemma\tanalyses"
+              "\tdecisio\tauctor\n",
             stdout);
     }
     per (i = I; i < argc; i++)

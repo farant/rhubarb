@@ -940,17 +940,17 @@ c = silva.probatio_currere('probatio_piscina', aedificare=True)
 credo(c.rc == 0 and c.suita == 'radix' and 'Conditio: OMNIA PRAETERIERUNT' in c.acta
       and c.fracturae == [] and 'exitus 0' in silva.cursus_textus(c),
       'probatio_currere: probatio_piscina aedificata et viridis')
-# profilum: processus vivus per sample (dormiens: folium syscall)
+# partitio: processus vivus per sample (dormiens: folium syscall)
 scriptum = os.path.join(silva.RADIX, 'pythonica', '.cursus_dormiens.tmp.sh')
 open(scriptum, 'w').write("#!/bin/sh\nsleep 3\necho Totalis: 1\necho Conditio: OMNIA PRAETERIERUNT\n")
 os.chmod(scriptum, 0o755)
 try:
     c = silva.probatio_currere(scriptum, secunda=1, mora=0.2)
-    credo(c.rc == 0 and c.profilum and sum(n for n, _, _ in c.profilum) > 0
-          and 'profilum (folia' in silva.cursus_textus(c),
-          'probatio_currere: profilum sumptum (%s)' % (c.profilum[0][1] if c.profilum else '-'))
+    credo(c.rc == 0 and c.partitio and sum(n for n, _, _ in c.partitio) > 0
+          and 'partitio (folia' in silva.cursus_textus(c),
+          'probatio_currere: partitio sumptum (%s)' % (c.partitio[0][1] if c.partitio else '-'))
     credo(os.path.exists(os.path.join(silva.RADIX, 'build', 'sample', '.cursus_dormiens.tmp.sh.probatio.txt')),
-          'profilum: effusus crudus in build/sample')
+          'partitio: effusus crudus in build/sample')
 finally:
     os.unlink(scriptum)
     try:
@@ -973,16 +973,16 @@ try:
 except silva.SilvaError as ex:
     credo('lineae [1, 3]' in str(ex), 'Textus.replace: refusio lineas nominat (%s)' % str(ex)[:60])
 
-print('--- profilum: inclusivum recursione collapsa + viae ---')
+print('--- partitio: inclusivum recursione collapsa + viae ---')
 via_s = os.path.join(T, 'exemplum.sample.txt')
 open(via_s, 'w').write('Call graph:\n    100 Thread_1\n      100 start\n        100 main\n          60 f\n            40 g\n              30 g\n                20 g\n                  20 xar_obtinere\n          40 h\n            40 xar_obtinere\n\nTotal number in stack (recursive counted multiple, when >=5):\n')
-inc = dict((fn, n) for _, n, fn in silva.profilum_inclusivum(via_s))
+inc = dict((fn, n) for _, n, fn in silva.partitio_inclusivum(via_s))
 credo(inc.get('g') == 40 and inc.get('xar_obtinere') == 60 and inc.get('f') == 60 and 'main' not in inc,
-      'profilum_inclusivum: recursio collapsa (g 40, non 90), fila/main omissa')
-viae_x = silva.profilum_viae(via_s, 'xar_obtinere')
+      'partitio_inclusivum: recursio collapsa (g 40, non 90), fila/main omissa')
+viae_x = silva.partitio_viae(via_s, 'xar_obtinere')
 credo(viae_x == [(40, 'h > xar_obtinere'), (20, 'f > g×3 > xar_obtinere')],
-      'profilum_viae: semitae ordine ponderis, recursio compressa (%s)' % viae_x)
-credo(silva.profilum_viae(via_s, 'g') == [(40, 'f > g')], 'profilum_viae: functio recursiva semel, in summo')
+      'partitio_viae: semitae ordine ponderis, recursio compressa (%s)' % viae_x)
+credo(silva.partitio_viae(via_s, 'g') == [(40, 'f > g')], 'partitio_viae: functio recursiva semel, in summo')
 
 print('--- imagines: oraculum identitatis octetorum ---')
 import shutil
@@ -1312,6 +1312,15 @@ ab = ob.analyses(1)
 credo(ab[0].classis == 'adiectivum' and ab[0].umbrae == ('caput:nominativus.singularis.femininum=0.0',) and all(x.umbrae == () for x in ab if x.classis == 'substantivum') and any(u.endswith('=?') for x in ab for u in x.umbrae) and all(x.umbrae == () for x in ob.analyses(0)), 'Oratio.analyses: umbrae (T19d) - caput bonae ligata ad Puellam 0.0, substantiva sine umbris, umbra vacua =?')
 hoc = ob.analyses(3)
 credo(hoc[0].classis == 'pronomen' and all(x.umbrae == ('caput:%s.singularis.%s=?' % (x.accidentia['casus'], x.accidentia['genus']),) for x in hoc if x.classis == 'determinans') and len([x for x in hoc if x.classis == 'determinans']) == 4, 'Oratio.analyses: umbrae determinantis hoc omnes vacuae (=?), pronomen primum')
+# T19g: decisio in arbore - genus decisionis et auctor per vocabulum, partitio documenti
+vd = ob.vocabula()
+credo([v.forma for v in vd] == ['Puella', 'bona', 'ambulat', 'Hoc', 'est'] and vd[1].decisio == 'impletio' and vd[1].auctor == 'umbra-caput-nominativus-praecedente' and vd[0].decisio == 'impletio' and vd[0].auctor == vd[1].auctor, 'Oratio.vocabula: decisio impletio bonae et Puellae, auctor regula capitis nominativi praecedens (T19g)')
+credo(vd[3].decisio == '' and vd[3].auctor == '' and vd[3].analyses > 1 and vd[4].decisio == 'praelatio' and vd[4].auctor == 'auxiliare-primum-latinum', 'Oratio.vocabula: Hoc a nemine decisum (cellula aperta), est per priorem auxiliaris (praelatio)')
+pf = ob.partitio()
+credo(pf['impletio'] == 2 and pf['praelatio'] == 1 and pf['umbra'] == 0 and pf['aperta'] >= 1 and pf['coactae'] == 2 and sum(pf[k] for k in silva.ORATIO_PARTITIO) == 5, 'Oratio.partitio: coactae II, praelata I, cetera aperta/una - summa vocabula V')
+credo(all(v.decisio == '' and v.auctor == '' for v in silva.Oratio('Puella bona ambulat.\n', crudus=True).vocabula()), 'Oratio(crudus): nulla decisio scripta')
+ol = silva.Oratio('In bona terra est.\n')
+credo(ol.vocabula()[1].decisio == 'umbra' and ol.vocabula()[1].auctor == 'lex-umbrarum' and ol.vocabula()[0].decisio == 'praelatio' and ol.vocabula()[0].auctor == 'adpositio-prima-latina' and ol.partitio()['umbra'] == 1, 'Oratio.vocabula: bona per legem umbrarum (auctor lex-umbrarum), in per priorem adpositionis (praelatio - prior Latinus ante testimonium)')
 # oraculum.sh -regulae -ab N (T19d gamma): ordines a regulis N solum - porta natalis
 # super thesaurum minimum (una sententia), ne cursus omnes thesauros iudicet
 via_ab = os.path.join(RADIX, 'build', 'pythonica', 'ab.conllu')

@@ -944,9 +944,15 @@ principale (vacuum)
         CREDO_VERUM (_aequalis(_derivatum(v,
             (i32)ORATIO_VOCABULUM_CLASSES),
             "substantivum"));
-        CREDO_VERUM (_aequalis(_derivatum(v,
-            (i32)ORATIO_VOCABULUM_LINGUAE),
-            "latina"));
+                CREDO_VERUM (_aequalis(_derivatum(v,
+                    (i32)ORATIO_VOCABULUM_LINGUAE),
+                    "latina"));
+        /* T19g: annotatio decisionem nullam scribit - loci decisio et
+         * auctor vacui (octeti crudi immoti; exsecutor solus scribit) */
+        CREDO_AEQUALIS_S32 ((s32)v->loci[ORATIO_VOCABULUM_DECISIO].genus,
+            (s32)MATERIA_VALOR_NIHIL);
+        CREDO_AEQUALIS_S32 ((s32)v->loci[ORATIO_VOCABULUM_AUCTOR].genus,
+            (s32)MATERIA_VALOR_NIHIL);
         {
             constans MateriaNodus* a = materia_valor_lista_obtinere(
                 v->loci[ORATIO_VOCABULUM_ANALYSES],

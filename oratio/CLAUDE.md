@@ -387,7 +387,21 @@ reading node to bind, so "no object" still mostly means "object
 unreadable". NEXT: an `analysis-ignoti` reading for unknown words
 (then demotion once more), a charter glossary / spelling
 normalisation, Latin determiners from the listing, sentence-initial
-proper nouns, `there is`, verb slots.
+proper nouns, `there is`, verb slots. **T19g — THE DECISION IN THE TREE** (2026-09-08, decretum SUDOKU
+decision 40): `vocabulum` gained `decisio` (praelatio | impletio |
+umbra; unwritten = nobody decided) and `auctor` (the deciding rule's
+title), written by the executor after the last stage (the law only
+when it changed the first reading), mirrored as `decisio=` on the
+projection; `verba.sh` columns, `Oratio.partitio()`, the oracle's
+PARTITIO and AUCTOR tables with FORCED accuracy pinned (721 / 692 /
+688 / 913 / 918). FIRST FINDING: forced decisions are the least
+accurate Latin tier (69–72 %) against priors 85–98 % and untouched
+order 80–92 %; the law itself 51–57 %; the Latin adposition prior
+99 % on the charters and it speaks BEFORE the object rule; the
+dative head rule 37–41 %; the English contraction prior 0 % (ranges).
+NEXT: wrong-forced listing per auctor, then make the head rules and
+the law trustworthy; the Latin rule order measured swapped; the
+ignoti reading; the strict head tier.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

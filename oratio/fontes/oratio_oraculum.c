@@ -263,10 +263,121 @@ nomen structura {
     chorda classes;                    /* lexema derivatum (vocabulum) aut titulus */
     i32 numerus_classium;
     OratioClassis classis[CLASSES_MAXIMAE];
-    i32 numerus_lemmatum;
+        i32 numerus_lemmatum;
     chorda lemmata[LEMMATA_MAXIMA];    /* plicata */
     b32 ignotum;
+        s32 decisio;                       /* OratioDecisio; -I = nemo (T19g) */
+    i32 numerus_analysium;             /* lectiones (candidata) */
+    chorda auctor;                     /* titulus regulae decidentis (T19g) */
 } Elementum;
+
+constans character* constans ORATIO_ORACULUM_TITULI_PARTITIONIS[] = {
+    "praelatio", "impletio", "umbra", "una", "aperta", "nulla", "ranga"
+};
+
+/* auctorem notare (T19g): clavis = titulus (copia in piscina iudicii
+ * ut clavis stabilis sit - titulus elementi in piscina sententiae
+ * vivit); cella nova aut numeri aucti. Ut _discrepantiam_notare. */
+interior vacuum
+_auctorem_notare (
+                 Piscina* piscina,
+    OratioOraculumCensus* census,
+                  chorda  titulus,
+                     b32  primaria)
+{
+                   vacuum*  valor;
+     OratioOraculumAuctor*  a;
+     OratioOraculumAuctor** cella;
+                   chorda   clavis;
+
+    si (census->auctores == NIHIL)
+    {
+        census->auctores = xar_creare(piscina,
+            (i32)magnitudo(OratioOraculumAuctor*));
+        census->auctores_index = tabula_dispersa_creare_chorda(piscina,
+            (i32)256);
+        si (   census->auctores       == NIHIL
+            || census->auctores_index == NIHIL)
+        {
+            census->auctores = NIHIL;
+            redde;
+        }
+    }
+    si (tabula_dispersa_invenire(census->auctores_index, titulus,
+        &valor))
+    {
+        a         = (OratioOraculumAuctor*)valor;
+        a->verba  = a->verba + I;
+        si (primaria)
+        {
+            a->primaria = a->primaria + I;
+        }
+        redde;
+    }
+    clavis = _copia(piscina, titulus);
+    a      = (OratioOraculumAuctor*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(*a));
+    cella  = (OratioOraculumAuctor**)xar_addere(census->auctores);
+    si (clavis.datum == NIHIL || a == NIHIL || cella == NIHIL)
+    {
+        redde;
+    }
+    a->titulus   = clavis;
+    a->verba     = I;
+    a->primaria  = primaria ? I : ZEPHYRUM;
+    *cella       = a;
+    (vacuum)tabula_dispersa_inserere(census->auctores_index, clavis, a);
+}
+
+interior s32
+_auctores_comparare (
+    constans vacuum* p,
+    constans vacuum* q)
+{
+    constans OratioOraculumAuctor* x =
+        *(constans OratioOraculumAuctor* constans*)p;
+    constans OratioOraculumAuctor* y =
+        *(constans OratioOraculumAuctor* constans*)q;
+
+    si (x->verba != y->verba)
+    {
+        redde x->verba > y->verba ? (s32)-I : (s32)I;
+    }
+    redde chorda_comparare(x->titulus, y->titulus);
+}
+
+Xar*
+oratio_oraculum_auctores (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census)
+{
+    Xar* exitus = xar_creare(piscina,
+        (i32)magnitudo(OratioOraculumAuctor*));
+    i32 i;
+
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (census->auctores == NIHIL)
+    {
+        redde exitus;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(census->auctores); i++)
+    {
+        OratioOraculumAuctor** cella =
+            (OratioOraculumAuctor**)xar_addere(exitus);
+
+        si (cella == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *cella = *(OratioOraculumAuctor**)xar_obtinere(census->auctores,
+            i);
+    }
+    xar_ordinare(exitus, _auctores_comparare);
+    redde exitus;
+}
 
 /* extentum lexematum listae loci */
 interior vacuum
@@ -325,15 +436,39 @@ _elementum_addere (
     {
         redde FALSUM;
     }
-    memset(e, ZEPHYRUM, magnitudo(*e));
-    e->a = (s32)-I;
-    e->b = ZEPHYRUM;
+        memset(e, ZEPHYRUM, magnitudo(*e));
+    e->a        = (s32)-I;
+    e->b        = ZEPHYRUM;
+    e->decisio  = (s32)-I;
     si (n->genus == (s32)ORATIO_GENUS_VOCABULUM)
     {
         constans MateriaValor* classes =
             &n->loci[ORATIO_VOCABULUM_CLASSES];
         constans MateriaValor* analyses =
             &n->loci[ORATIO_VOCABULUM_ANALYSES];
+        constans MateriaValor* decisio =
+            &n->loci[ORATIO_VOCABULUM_DECISIO];
+
+                /* T19g: decisio, auctor et numerus lectionum pro partitione */
+        si (decisio->genus == MATERIA_VALOR_INDEX)
+        {
+            constans MateriaValor* auctor =
+                &n->loci[ORATIO_VOCABULUM_AUCTOR];
+
+            e->decisio = decisio->datum.index;
+            si (   auctor->genus       == MATERIA_VALOR_TOKEN
+                && auctor->datum.token != NIHIL)
+            {
+                e->auctor = auctor->datum.token->valor;
+            }
+        }
+
+        si (analyses->genus == MATERIA_VALOR_LISTA)
+        {
+            e->numerus_analysium =
+                materia_valor_lista_numerus(*analyses);
+        }
+
 
         _extentum_listae(&n->loci[ORATIO_VOCABULUM_PARTES], &e->a,
             &e->b);
@@ -420,9 +555,11 @@ _elementum_addere (
         _extentum_listae(&n->loci[ORATIO_INTERPUNCTIO_SIGNUM], &e->a,
             &e->b);
 
-        e->classis[ZEPHYRUM]  = ORATIO_CLASSIS_INTERPUNCTIO;
-        e->classis[I]         = ORATIO_CLASSIS_SYMBOLUM;
-        e->numerus_classium   = II;
+                e->classis[ZEPHYRUM]  = ORATIO_CLASSIS_INTERPUNCTIO;
+        e->classis[I]                 = ORATIO_CLASSIS_SYMBOLUM;
+        e->numerus_classium           = II;
+        e->numerus_analysium          = II;   /* candidata duo, nemo decidit */
+
         e->classes = _copia(piscina, _chorda((i8*)signa,
             (i32)(magnitudo(signa) - I)));
         redde VERUM;
@@ -430,8 +567,10 @@ _elementum_addere (
     si (n->genus == (s32)ORATIO_GENUS_NUMERUS)
     {
         _extentum_listae(&n->loci[ORATIO_NUMERUS_CRUDUM], &e->a, &e->b);
-        e->classis[ZEPHYRUM]  = ORATIO_CLASSIS_NUMERALE;
-        e->numerus_classium   = I;
+                e->classis[ZEPHYRUM]  = ORATIO_CLASSIS_NUMERALE;
+        e->numerus_classium           = I;
+        e->numerus_analysium          = I;
+
         redde VERUM;
     }
     xar_removere_ultimum(elementa);
@@ -619,11 +758,58 @@ _verbum_iudicare (
     {
         _exemplum(c, piscina, verbum->forma, classes, verbum->lemma);
     }
-    si (primaria)
-    {
+        si (primaria)
+        {
         census->primaria  = census->primaria + I;
         c->primaria       = c->primaria + I;
+        }
+        /* T19g: partitio decisionum - verbum aureum QUODQUE per genus
+     * decisionis elementi primi sui (nulla sine elemento, ranga = verbum
+     * rangae non primum); auctor per regulam. Lex summae in porta:
+     * partitio tota == verba - inalignata. */
+    {
+        constans Elementum* e = e1 > e0
+            ? (constans Elementum*)xar_obtinere(elementa, e0) : NIHIL;
+                       i32 p;
+
+        si (e == NIHIL)
+        {
+            p = ORATIO_ORACULUM_PARTITIO_NULLA;
+        }
+        alioquin si (!primum)
+        {
+            p = ORATIO_ORACULUM_PARTITIO_RANGA;
+        }
+        alioquin si (   e->decisio >= ZEPHYRUM
+                     && e->decisio < (s32)ORATIO_DECISIO_NUMERUS)
+        {
+            p = (i32)e->decisio;
+            si (e->auctor.mensura > ZEPHYRUM)
+            {
+                _auctorem_notare(piscina, census, e->auctor, primaria);
+            }
+        }
+        alioquin si (e->numerus_analysium == I)
+        {
+            p = ORATIO_ORACULUM_PARTITIO_UNA;
+        }
+        alioquin si (e->numerus_analysium > I)
+        {
+            p = ORATIO_ORACULUM_PARTITIO_APERTA;
+        }
+        alioquin
+        {
+            p = ORATIO_ORACULUM_PARTITIO_NULLA;
+        }
+        census->partitio_verba[p] = census->partitio_verba[p] + I;
+        si (primaria)
+        {
+            census->partitio_primaria[p] =
+                census->partitio_primaria[p] + I;
+        }
     }
+
+
     /* T19a: tectum sed non primum = discrepantia (classis nostra prima
      * elementi primi); lex summae: tecta - primaria per classem */
     si (tectum && !primaria && e1 > e0)

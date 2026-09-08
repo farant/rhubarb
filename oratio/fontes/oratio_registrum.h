@@ -137,7 +137,9 @@ nomen enumeratio {
     ORATIO_VOCABULUM_CAUDA,           /* LISTA_TOKEN: spatium post (lex possessoris) */
     ORATIO_VOCABULUM_ANALYSES,        /* LISTA_NODUS analysis-* (gradus III) */
     ORATIO_VOCABULUM_CLASSES,         /* TOKEN? DERIVATUM: classes ordine */
-    ORATIO_VOCABULUM_LINGUAE          /* TOKEN? DERIVATUM: linguae ordine */
+    ORATIO_VOCABULUM_LINGUAE,         /* TOKEN? DERIVATUM: linguae ordine */
+    ORATIO_VOCABULUM_DECISIO,         /* INDEX? OratioDecisio (T19g): non scripta = nemo decidit */
+    ORATIO_VOCABULUM_AUCTOR           /* TOKEN? DERIVATUM (T19g): titulus regulae decidentis */
 } OratioLocusVocabuli;
 
 nomen enumeratio {
@@ -305,6 +307,24 @@ nomen enumeratio {
     ORATIO_RELATIO_NUMERUS
 } OratioRelatio;
 
+/* DECISIO vocabuli (T19g 2026-09-08, decretum SUDOKU decisio XL):
+ * quo genere decisionis lectio prima vocabuli facta sit - ab
+ * exsecutore post gradus omnes in locum 'decisio' scripta cum
+ * auctore (titulus regulae). Non scripta = NEMO decidit: cellula
+ * APERTA si lectiones plures (ordo fontis manet), SOLUTA si una.
+ * praelatio = ordo <praelatio> (prior classis, exceptio, regula
+ * linguae: decisio MOLLIS, ordinat solum); impletio = ordo
+ * <impletio> (lectio ligata praelata, carrier aut implens:
+ * TESTIMONIUM); umbra = lex umbrarum (lectio umbris a vicino
+ * impletis prima: TESTIMONIUM). APPENSA solum. */
+nomen enumeratio {
+    ORATIO_DECISIO_PRAELATIO = 0,
+    ORATIO_DECISIO_IMPLETIO,
+    ORATIO_DECISIO_UMBRA,
+
+    ORATIO_DECISIO_NUMERUS
+} OratioDecisio;
+
 /* loci generis UMBRA (T19d): condiciones INDEX (non scriptae =
  * liberae), impletio INDEX ordinalibus sententiae (non scripta =
  * INVENTUM: dependens non repertus). Vide oratio-spec par. VII. */
@@ -443,6 +463,7 @@ externus constans character* constans ORATIO_TITULI_GRADUUM[];
 externus constans character* constans ORATIO_TITULI_SPECIERUM_NUMERALIS[];
 externus constans character* constans ORATIO_TITULI_LINGUARUM[];
 externus constans character* constans ORATIO_TITULI_RELATIONUM[];   /* T19d */
+externus constans character* constans ORATIO_TITULI_DECISIONUM[];   /* T19g */
 externus constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[];
 
 /* Titulus classis ("substantivum" ...); NIHIL si extra. */

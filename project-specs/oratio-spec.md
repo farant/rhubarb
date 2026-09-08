@@ -1019,6 +1019,65 @@ for Latin, together with a charter glossary or spelling
 normalisation. Until then the adposition prior stays and the law of
 umbrae stays promotion-only.
 
+**As built — T19g, the decision in the tree (2026-09-08; decretum
+SUDOKU decision 40, first build implication).** Registry: two slots
+appended to `vocabulum` (172 slots, seal `6c5a6ab9`): `decisio`, an
+INDEX into `OratioDecisio` — praelatio = a `<praelatio>` row decided
+the first reading (class prior, exception, language rule: a SOFT
+decision), impletio = an `<impletio>` row preferred it (carrier or
+filler: evidence), umbra = the law of umbrae put a neighbour-filled
+reading first (evidence) — and `auctor`, a derived token carrying
+the deciding rule's title (`lex-umbrarum` for the law). Unwritten =
+nobody decided: an OPEN cell when several readings remain, a SOLVED
+one when one. The executor records the decision at the row that
+first preferred the word (first-wins across stages), the law
+overwrites only when it changed the FIRST reading (a lower reading
+moving up leaves the earlier decision: `bona` after `Puella` keeps
+its impletio when the vocative rule lifts a second reading), and
+writes both slots after the last stage (`_decisiones_scribere`,
+reponere on a second run; census `decisae[]`). The projection mirrors
+`decisio="…"` as an attribute through the node hook, so
+`vocabulum[decisio=impletio]` selects and a later rule can read the
+kind; the canon declares both slots. Annotation alone writes nothing
+(crude bytes unchanged; partes gate). Instruments: `verba.sh` columns
+`decisio` and `auctor`; `silva.Oratio.vocabula()[i].decisio/.auctor`
+and `Oratio.partitio()` (praelatio | impletio | umbra | una | aperta
+| nulla, plus `coactae` = impletio + umbra); the oracle prints the
+PARTITIO per treebank — every aligned gold word by the decision kind
+of its first element, `ranga` = a range word after the first, never
+primary by construction, the 2 % ceiling made visible — and an
+AUCTOR table (words and primary per deciding rule); machine rows
+`PARTITIO` and `AUCTOR`; the gate pins the accuracy of FORCED
+decisions (impletio + umbra) per treebank only rising and asserts
+two sum laws (partition = verba − inalignata; auctores = decided
+words). Computus golden regenerated: the projection carries the two
+slots on decided words.
+
+FIRST MEASUREMENT — the finding the doctrine asked for. Forced
+decisions are the LEAST accurate tier on Latin: Seneca 72.1 % over
+4,462 words (39 % of the treebank), charters 69.2 / 68.8 % over
+8,166 / 8,123 (34 %) — against priors at 85 / 98 / 98 %, the
+untouched dictionary order at 80 / 92 / 92 % and single readings at
+95 / 96 %. English forced decisions are 91.3 / 91.8 % but only 4 % of
+words; the language rule alone decides 79 % of English words at
+78 %. Per rule: the Latin adposition prior is right 85 / 99 / 99 %
+and speaks BEFORE the object umbra rules (the Latin program is
+priors-then-evidence, the reverse of the English order — the swap is
+to be measured); the object umbra rules 84–86 % (ablative) and
+77–84 % (accusative); the unknown-case object filler 99 % on the
+charters and 57 % on Seneca; the head rules 59–76 % (nominative
+following, the largest at 1,452 / 1,454 words, 73 / 59 %), the
+dative following rule 37 / 41 % on the charters, the vocative rules
+25–55 %; the law of umbrae itself 54 / 57 / 51 %; the English
+contraction prior 0 %, because a contraction is a range the oracle
+judges by its first word (a measurement artifact, now visible). The
+primary pins did not move (768 / 795 / 790 / 786 / 789); forced pins
+721 / 692 / 688 / 913 / 918. NEXT: a wrong-forced listing per auctor
+(which forms a rule decides wrongly, as `-discrepantiae` does per
+class), then make the head rules and the law trustworthy before
+adding any rule; the Latin priors-then-evidence order measured
+swapped; the ignoti reading; the strict head tier.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

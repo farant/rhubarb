@@ -35,6 +35,7 @@
 #include "materia_nodus.h"
 #include "materia_lexicon.h"
 #include "oratio_vocabularium.h"
+#include "oratio_registrum.h"
 
 /* regula programmatis: titulus (attributum) et textus eius in
  * programmate (extentum elementi <regula>, referens) */
@@ -70,9 +71,12 @@ nomen structura {
     Xar* per_regulam;  /* OratioResolutioRegulaCensus; NIHIL licet */
     i32  impletae;     /* umbrae ligatae (T19d: ordines impletio; umbra
                         * iam ligata = repetita, prima vincit) */
-    /* vocabula lege umbrarum permutata (T19d gamma: lectio umbris a
+        /* vocabula lege umbrarum permutata (T19d gamma: lectio umbris a
      * vicinis impletis prima) */
     i32 umbris_ordinata;
+    /* vocabula decisa per genus decisionis (T19g: locus 'decisio'
+     * vocabuli scriptus - praelatio | impletio | umbra) */
+    i32 decisae[ORATIO_DECISIO_NUMERUS];
 } OratioResolutioCensus;
 
 

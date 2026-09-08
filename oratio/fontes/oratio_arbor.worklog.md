@@ -1773,3 +1773,56 @@ computus golden, and the Python face's `ignota()` contract, and that
 deserves a fresh session. Method note: three variants, one script,
 under a minute each; the numbers refused the idea faster than an
 argument could have.
+
+## 2026-09-08 — T19g: the decision in the tree, and the first honest profile
+
+Fran's sudoku doctrine (spec §2, decisions 36–42) asked for one
+instrument before anything else: say, per word, what kind of act put
+the first reading first, so that forced decisions can be measured
+apart from priors and from dictionary luck. The tree did not know:
+bindings were recorded on the reading, but a `<praelatio>` row lived
+only in the plan document and was discarded. Two slots on the word
+fix that — `decisio` (praelatio | impletio | umbra) and `auctor` (the
+rule's title) — written by the executor after the last stage, and the
+whole rest of the tranche is reading them back: verba columns, the
+Python face, the oracle's partition and per-rule table, and pins on
+the accuracy of forced decisions.
+
+Two things the first run taught about the label itself. The law of
+umbrae reorders a word whenever any neighbour-filled reading sits
+below an unfilled one, and in `Puella bona ambulat` the vocative head
+rule binds a second reading of `bona` in the same stage (the filler
+law only blocks vindicated words, and vindication happens after the
+stage), so the law lifted the vocative reading to second place and I
+had labelled the word `umbra` although the nominative rule had made
+it first. The decision is what made the FIRST reading first; the law
+is the author only when it changed that. And `in` before `bona`
+carries `praelatio` by the Latin adposition prior, not `impletio` by
+the object rule, because the Latin program still runs priors before
+evidence — the English order was inverted on 2026-09-07 for exactly
+this reason and the Latin one never was. The label surfaced it in the
+first probe.
+
+The numbers. On Seneca and the charters the forced decisions are the
+least trustworthy tier: 72 / 69 / 69 % against 85–98 % for the priors
+and 80–92 % for words nobody touched. The law of umbrae is the worst
+single decider (51–57 %); the dative following head rule is right
+37–41 % on the charters; the vocative rules under 55 %. The adposition
+prior is right 99 % on the charters, which says preposition homographs
+hardly exist there and the object umbra adds nothing to CLASS
+accuracy — its value is the edge. The unknown-case object filler is
+99 % on the charters and 57 % on Seneca: names after prepositions are
+what charters are made of; on Seneca the capital rule's readings are
+often not names at all. English is the other picture: 79 % of words
+decided by the language rule at 78 %, the class umbrae 92 % but rare,
+and the contraction prior 0 % because contractions are ranges judged
+by their first word (`it's` → `it`), which the new `ranga` bucket now
+shows as a ceiling instead of hiding.
+
+What this changes in the plan: no new rule until the head rules and
+the law are made trustworthy, and the instrument for that is the
+next one — the wrong-forced listing per rule, which the per-rule
+table already keys. Method notes: the sum law of the partition needs
+every judged word in exactly one bucket (range words after the first
+get their own), and the identifier lint refused `profilum`, which is
+not Latin; `partitio` is.

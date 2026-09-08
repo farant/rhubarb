@@ -154,6 +154,55 @@ _tabulam_imprimere (
             (integer)c->suffragia_linguarum[ORATIO_LINGUA_LATINA],
             (integer)c->suffragia_linguarum[ORATIO_LINGUA_ANGLICA]);
     }
+        /* T19g: partitio decisionum (decretum SUDOKU XL) */
+    imprimere("  partitio decisionum (elementum primum verbi aurei):\n");
+    per (i = ZEPHYRUM; i < ORATIO_ORACULUM_PARTITIO_NUMERUS; i++)
+    {
+        si (c->partitio_verba[i] == ZEPHYRUM)
+        {
+            perge;
+        }
+        imprimere("    %-12s %6d %5.1f%%  primaria %5.1f%%\n",
+            ORATIO_ORACULUM_TITULI_PARTITIONIS[i],
+            (integer)c->partitio_verba[i],
+            _pars(c->partitio_verba[i], c->verba),
+            _pars(c->partitio_primaria[i], c->partitio_verba[i]));
+    }
+    {
+        i32 coactae = c->partitio_verba[ORATIO_DECISIO_IMPLETIO]
+            + c->partitio_verba[ORATIO_DECISIO_UMBRA];
+        i32 rectae = c->partitio_primaria[ORATIO_DECISIO_IMPLETIO]
+            + c->partitio_primaria[ORATIO_DECISIO_UMBRA];
+
+                imprimere("    %-12s %6d %5.1f%%  primaria %5.1f%%\n",
+                    "coactae",
+                    (integer)coactae, _pars(coactae, c->verba),
+                    _pars(rectae, coactae));
+    }
+    /* T19g: accuratio per auctorem (regula decidens) */
+    {
+        Xar* auctores = oratio_oraculum_auctores(piscina, c);
+        i32  j;
+
+        si (auctores != NIHIL && xar_numerus(auctores) > ZEPHYRUM)
+        {
+            imprimere("  auctores (regula decidens: verba, primaria):\n");
+        }
+        per (j = ZEPHYRUM; auctores != NIHIL
+            && j < xar_numerus(auctores);
+             j++)
+        {
+            constans OratioOraculumAuctor* a =
+                *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
+
+            imprimere("    %-44.*s %6d  primaria %5.1f%%\n",
+                (integer)a->titulus.mensura,
+                (constans character*)a->titulus.datum,
+                (integer)a->verba,
+                _pars(a->primaria, a->verba));
+        }
+    }
+
     imprimere("  %-24s %6s %7s %8s %8s %7s\n", "classis aurea", "verba",
         "tecta", "primaria", "lemmata", "ignota");
     per (i = ZEPHYRUM; i <= (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
@@ -217,10 +266,37 @@ _machinam_imprimere (
             (integer)k->lemmata, (integer)k->ignota,
             (integer)k->inalignata);
     }
-    imprimere("%s\tSUMMA\t%d\t%d\t%d\t%d\t%d\t%d\n", titulus,
-        (integer)c->verba, (integer)c->tecta, (integer)c->primaria,
-        (integer)c->lemmata, (integer)c->ignota,
-        (integer)c->inalignata);
+        imprimere("%s\tSUMMA\t%d\t%d\t%d\t%d\t%d\t%d\n", titulus,
+            (integer)c->verba, (integer)c->tecta, (integer)c->primaria,
+            (integer)c->lemmata, (integer)c->ignota,
+            (integer)c->inalignata);
+        /* T19g: ordines PARTITIO genus verba primaria; AUCTOR titulus verba
+     * primaria */
+    per (i = ZEPHYRUM; i < ORATIO_ORACULUM_PARTITIO_NUMERUS; i++)
+    {
+        imprimere("%s\tPARTITIO\t%s\t%d\t%d\n", titulus,
+            ORATIO_ORACULUM_TITULI_PARTITIONIS[i],
+            (integer)c->partitio_verba[i],
+            (integer)c->partitio_primaria[i]);
+    }
+    {
+        Xar* auctores = oratio_oraculum_auctores(piscina, c);
+        i32  j;
+
+        per (j = ZEPHYRUM; auctores != NIHIL
+            && j < xar_numerus(auctores);
+             j++)
+        {
+            constans OratioOraculumAuctor* a =
+                *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
+
+            imprimere("%s\tAUCTOR\t%.*s\t%d\t%d\n", titulus,
+                (integer)a->titulus.mensura,
+                (constans character*)a->titulus.datum,
+                (integer)a->verba,
+                (integer)a->primaria);
+        }
+    }
     si (!discrepantiae)
     {
         redde;

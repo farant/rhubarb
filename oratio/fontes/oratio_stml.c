@@ -169,8 +169,28 @@ _nodum_ornare (
                 materia_arbor_scriptor_intern(scriptor), tituli[k],
                 v->datum.token->valor))
         {
+                        materia_arbor_scriptor_recusare(scriptor,
+                            "attributum classium scribi non potuit");
+            redde FALSUM;
+        }
+    }
+    /* T19g: decisio vocabuli (INDEX OratioDecisio) titulo suo ut
+     * attributum, ut selectio '[decisio=impletio]' congruat et
+     * exemplaria genus decisionis legant */
+    {
+        constans MateriaValor* d =
+            &nodus->loci[ORATIO_VOCABULUM_DECISIO];
+
+        si (   d->genus       == MATERIA_VALOR_INDEX
+            && d->datum.index >= ZEPHYRUM
+            && d->datum.index < (s32)ORATIO_DECISIO_NUMERUS
+            && !stml_attributum_addere(elementum,
+                materia_arbor_scriptor_piscina(scriptor),
+                materia_arbor_scriptor_intern(scriptor), "decisio",
+                ORATIO_TITULI_DECISIONUM[d->datum.index]))
+        {
             materia_arbor_scriptor_recusare(scriptor,
-                "attributum classium scribi non potuit");
+                "attributum decisionis scribi non potuit");
             redde FALSUM;
         }
     }

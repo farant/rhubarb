@@ -35,6 +35,34 @@
 
 #define ORATIO_ORACULUM_EXEMPLA 5
 
+/* PARTITIO decisionum (T19g 2026-09-08, decretum SUDOKU decisio XL):
+ * verbum aureum quodque per genus decisionis elementi PRIMI sui -
+ * praelatio | impletio | umbra (OratioDecisio, locus 'decisio'
+ * vocabuli scriptus) | una (lectio una, nemo decidit: soluta) |
+ * aperta (lectiones plures, nemo decidit: ordo fontis manet) |
+ * nulla (sine lectione). COACTAE = impletio + umbra (testimonium):
+ * accuratio earum pinnata solum crescens - decisio coacta falsa est
+ * corruptio strati, non error ordinis. Numerus primarii per genus
+ * dividit quid testimonium, quid prior, quid fortuna lexici sit. */
+#define ORATIO_ORACULUM_PARTITIO_UNA     ((i32)ORATIO_DECISIO_NUMERUS)
+#define ORATIO_ORACULUM_PARTITIO_APERTA  ((i32)ORATIO_DECISIO_NUMERUS + 1)
+#define ORATIO_ORACULUM_PARTITIO_NULLA   ((i32)ORATIO_DECISIO_NUMERUS + 2)
+/* verbum rangae non primum (-que, 's): numquam primarium per
+ * constructionem - tectum rangarum (~II % Senecae) visibile */
+#define ORATIO_ORACULUM_PARTITIO_RANGA   ((i32)ORATIO_DECISIO_NUMERUS + 3)
+#define ORATIO_ORACULUM_PARTITIO_NUMERUS ((i32)ORATIO_DECISIO_NUMERUS + 4)
+externus constans character* constans ORATIO_ORACULUM_TITULI_PARTITIONIS[];
+
+/* ACCURATIO per AUCTOREM (T19g): verba aurea quorum elementum primum
+ * hunc auctorem fert (titulus regulae decidentis, 'lex-umbrarum' pro
+ * lege) et primaria eorum - QUAE regula decisiones falsas facit.
+ * Lex summae: verba auctorum omnium == praelatio + impletio + umbra. */
+nomen structura {
+    chorda titulus;
+       i32 verba;
+       i32 primaria;
+} OratioOraculumAuctor;
+
 nomen structura {
     chorda forma;      /* forma aurea (fontem referens) */
     chorda classes;    /* classes nostrae (copia) aut "ignotum" */
@@ -90,8 +118,16 @@ nomen structura {
     /* discrepantiae primarii (T19a): Xar de OratioOraculumDiscrepantia*
      * (cellae stabiles in piscina iudicii) + index clavis
      * 'aurea/nostra/forma'; pigre creata in iudicio, NIHIL ante */
-                     Xar* discrepantiae;
-          TabulaDispersa* discrepantiae_index;
+                                          Xar* discrepantiae;
+                               TabulaDispersa* discrepantiae_index;
+    /* partitio decisionum (T19g): verba et primaria per genus */
+        i32 partitio_verba[ORATIO_ORACULUM_PARTITIO_NUMERUS];
+        i32 partitio_primaria[ORATIO_ORACULUM_PARTITIO_NUMERUS];
+    /* auctores (T19g): Xar de OratioOraculumAuctor* + index per
+     * titulum; pigre creati, NIHIL ante */
+                     Xar* auctores;
+          TabulaDispersa* auctores_index;
+
 
     OratioOraculumClassis classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM + I];   /* [NUMERUS] = UPOS extra tabulam */
 } OratioOraculumCensus;
@@ -114,6 +150,14 @@ oratio_oraculum_discrepantiae (
                           Piscina* piscina,
     constans OratioOraculumCensus* census,
                     OratioClassis  aurea);
+
+/* Auctores ordine verborum non crescente (T19g): Xar de
+ * OratioOraculumAuctor* in piscina; vacuus sine decisionibus. NIHIL =
+ * memoria. */
+Xar*
+oratio_oraculum_auctores (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census);
 
 
 /* Sententias iudicare, censum CUMULARE (vacare prius si novus).

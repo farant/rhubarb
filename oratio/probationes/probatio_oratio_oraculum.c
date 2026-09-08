@@ -72,6 +72,18 @@
  * (permille ex numeris truncata, non ex centesimis). */
 #define EWT_DEV_PRIMARIA_PINNA   786
 #define EWT_TEST_PRIMARIA_PINNA  789
+/* T19g (2026-09-08, decretum SUDOKU decisio XL): accuratio decisionum
+ * COACTARUM (impletio + umbra: testimonium) permille, solum crescens -
+ * decisio coacta falsa est corruptio strati. Pinnae ex permille
+ * impresso portae natali 2026-09-08 (CIRCSE 721, LLCT 692/688, EWT
+ * 913/918 - Latine decisiones coactae tertium INFIMUM: priores 85-98,
+ * apertae 80-92; lex umbrarum ipsa 51-57, regula dativi sequens 37-41
+ * in chartis, contractio Anglica 0 = artificium rangae). */
+#define CIRCSE_COACTAE_PINNA     721
+#define LLCT_DEV_COACTAE_PINNA   692
+#define LLCT_TEST_COACTAE_PINNA  688
+#define EWT_DEV_COACTAE_PINNA    913
+#define EWT_TEST_COACTAE_PINNA   918
 
 interior b32
 _plagulam_legere (
@@ -203,7 +215,8 @@ _thesaurus_arborum (
             constans character* plagula,
                            i32  sententiae_exspectatae,
                            i32  pinna_permille,
-                           i32  pinna_primaria)
+                           i32  pinna_primaria,
+                           i32  pinna_coactae)
 {
     Piscina* p = piscina_generare_dynamicum("oraculum_treebank",
         268435456);
@@ -327,6 +340,62 @@ _thesaurus_arborum (
             (integer)primaria_permille, (integer)pinna_primaria);
         CREDO_VERUM (primaria_permille >= pinna_primaria);
     }
+    /* T19g: partitio decisionum; accuratio COACTARUM pinnata solum
+     * crescens (decretum SUDOKU XL) */
+    {
+        i32 coactae = census.partitio_verba[ORATIO_DECISIO_IMPLETIO]
+            + census.partitio_verba[ORATIO_DECISIO_UMBRA];
+        i32 rectae = census.partitio_primaria[ORATIO_DECISIO_IMPLETIO]
+            + census.partitio_primaria[ORATIO_DECISIO_UMBRA];
+        i32 coactae_permille  = _permille(rectae, coactae);
+        i32 summa             = ZEPHYRUM;
+        i32 i;
+
+        per (i = ZEPHYRUM; i < ORATIO_ORACULUM_PARTITIO_NUMERUS; i++)
+        {
+            imprimere("    partitio %-10s %6d (%d permille)  primaria %d permille\n",
+                ORATIO_ORACULUM_TITULI_PARTITIONIS[i],
+                (integer)census.partitio_verba[i],
+                (integer)_permille(census.partitio_verba[i],
+                census.verba),
+                (integer)_permille(census.partitio_primaria[i],
+                    census.partitio_verba[i]));
+            summa = summa + census.partitio_verba[i];
+        }
+        imprimere("    coactae %d, accuratio %d permille (pinna %d, solum"
+            " crescens)\n", (integer)coactae, (integer)coactae_permille,
+            (integer)pinna_coactae);
+        /* lex summae: verbum aureum alignatum quodque genus unum */
+        CREDO_AEQUALIS_I32 (summa, census.verba - census.inalignata);
+        /* auctores: summa verborum == decisa (praelatio + impletio +
+         * umbra); tabula relata (quae regula decisiones falsas facit) */
+        {
+            Xar* auctores = oratio_oraculum_auctores(p, &census);
+            i32  decisa   =
+                census.partitio_verba[ORATIO_DECISIO_PRAELATIO]
+                + coactae;
+            i32 summa_auctorum = ZEPHYRUM;
+            i32 j;
+
+            CREDO_NON_NIHIL (auctores);
+            per (j = ZEPHYRUM; auctores != NIHIL
+                 && j < xar_numerus(auctores); j++)
+            {
+                constans OratioOraculumAuctor* a =
+                    *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
+
+                summa_auctorum = summa_auctorum + a->verba;
+                imprimere("    auctor %-44.*s %6d  primaria %d permille\n",
+                    (integer)a->titulus.mensura,
+                    (constans character*)a->titulus.datum,
+                    (integer)a->verba,
+                    (integer)_permille(a->primaria, a->verba));
+            }
+            CREDO_AEQUALIS_I32 (summa_auctorum, decisa);
+        }
+        CREDO_VERUM (coactae > ZEPHYRUM);
+        CREDO_VERUM (coactae_permille >= pinna_coactae);
+    }
         /* T18: lingua documenti censa = lingua thesauri (en_ ewt Anglica,
      * cetera Latina); census sententiarum: Latinae nullae Anglicae */
     CREDO_AEQUALIS_S32 (census.lingua_documenti,
@@ -352,7 +421,7 @@ principale (vacuum)
         OratioVocabularia  vocabularia;
  OratioVocabulariumVitium  vitium;
       InternamentumChorda* intern;
-         OratioProgramma* programma;
+          OratioProgramma* programma;
 
     piscina = piscina_generare_dynamicum("probatio_oratio_oraculum",
         536870912);
@@ -566,27 +635,32 @@ principale (vacuum)
         "la_circse-ud-test.conllu",
         (i32)893,
         (i32)CIRCSE_TECTA_PINNA,
-        (i32)CIRCSE_PRIMARIA_PINNA);
+        (i32)CIRCSE_PRIMARIA_PINNA,
+        (i32)CIRCSE_COACTAE_PINNA);
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_llct-ud-dev.conllu",
         (i32)850,
         (i32)LLCT_DEV_TECTA_PINNA,
-        (i32)LLCT_DEV_PRIMARIA_PINNA);
+        (i32)LLCT_DEV_PRIMARIA_PINNA,
+        (i32)LLCT_DEV_COACTAE_PINNA);
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_llct-ud-test.conllu",
         (i32)884,
         (i32)LLCT_TEST_TECTA_PINNA,
-        (i32)LLCT_TEST_PRIMARIA_PINNA);
+        (i32)LLCT_TEST_PRIMARIA_PINNA,
+        (i32)LLCT_TEST_COACTAE_PINNA);
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "en_ewt-ud-dev.conllu",
         (i32)2001,
         (i32)EWT_DEV_TECTA_PINNA,
-        (i32)EWT_DEV_PRIMARIA_PINNA);
+        (i32)EWT_DEV_PRIMARIA_PINNA,
+        (i32)EWT_DEV_COACTAE_PINNA);
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "en_ewt-ud-test.conllu",
         (i32)2077,
         (i32)EWT_TEST_TECTA_PINNA,
-        (i32)EWT_TEST_PRIMARIA_PINNA);
+        (i32)EWT_TEST_PRIMARIA_PINNA,
+        (i32)EWT_TEST_COACTAE_PINNA);
 
     imprimere("\n");
     credo_imprimere_compendium();

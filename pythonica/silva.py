@@ -2644,8 +2644,8 @@ SUITAE = {
     'tessera': ('tessera/probationes', 'tessera/build/%s'),
     'saltuarius': ('saltuarius/probationes', 'saltuarius/build/%s'),
 }
-Cursus = namedtuple('Cursus', 'nomen suita rc secunda acta fracturae profilum'
-                    ' via_profili', defaults=(None,))
+Cursus = namedtuple('Cursus', 'nomen suita rc secunda acta fracturae partitio'
+                    ' via_partitionis', defaults=(None,))
 
 
 def probatio_suita(nomen):
@@ -2657,7 +2657,7 @@ def probatio_suita(nomen):
                      % (nomen, ', '.join(sorted(SUITAE))))
 
 
-def _profilum(pid, secunda, via_effusus):
+def _partitio(pid, secunda, via_effusus):
     """sample <pid> <secunda> -> [(numerus, functio, bibliotheca)] ex tabula
     'Sort by top of stack' (folia: ubi tempus consumitur), ordine ponderis;
     effusus crudus in via_effusus (arbor vocationum tota)"""
@@ -2692,11 +2692,11 @@ def _profilum(pid, secunda, via_effusus):
     return folia
 
 
-def profilum_textus(profilum, tectum=15):
+def partitio_textus(partitio, tectum=15):
     """tabula foliorum: pars centesima, numerus, functio (bibliotheca)"""
-    summa = sum(n for n, _, _ in profilum) or 1
+    summa = sum(n for n, _, _ in partitio) or 1
     return '\n'.join('  %5.1f%%  %6d  %s  (%s)' % (100.0 * n / summa, n, fn, bib)
-                     for n, fn, bib in profilum[:tectum])
+                     for n, fn, bib in partitio[:tectum])
 
 
 def probatio_currere(nomen, aedificare=False, secunda=0, mora=2.0,
@@ -2708,9 +2708,9 @@ def probatio_currere(nomen, aedificare=False, secunda=0, mora=2.0,
     cum filtro primum currere (aedificat ET currit semel - pretium
     acceptum; error aedificationis SilvaError cum relatione). secunda > 0:
     post moram (s) processum vivum per 'sample' secunda profilare ->
-    Cursus.profilum = folia [(numerus, functio, bibliotheca)], effusus
+    Cursus.partitio = folia [(numerus, functio, bibliotheca)], effusus
     crudus build/sample/<nomen>.probatio.txt. Reddit Cursus(nomen, suita,
-    rc, secunda cursus, acta, fracturae (generica, si rc != 0), profilum)."""
+    rc, secunda cursus, acta, fracturae (generica, si rc != 0), partitio)."""
     suita = None if ('/' in nomen and os.path.exists(nomen)) \
         else probatio_suita(nomen)
     with (sera_suitae(suita) if suita else contextlib.nullcontext()):
@@ -2745,7 +2745,7 @@ def _probatio_currere(nomen, aedificare, secunda, mora, tectum):
         proc = subprocess.Popen([binarium], cwd=RADIX, env=ambitus,
                                 stdin=subprocess.DEVNULL, stdout=effusus,
                                 stderr=subprocess.STDOUT)
-        profilum = []
+        partitio = []
         via_p = None
         if secunda > 0:
             finis_morae = time.time() + mora
@@ -2756,7 +2756,7 @@ def _probatio_currere(nomen, aedificare, secunda, mora, tectum):
                             exist_ok=True)
                 via_p = os.path.join(RADIX, 'build', 'sample',
                                      titulus + '.probatio.txt')
-                profilum = _profilum(proc.pid, secunda, via_p)
+                partitio = _partitio(proc.pid, secunda, via_p)
         try:
             rc = proc.wait(timeout=tectum)
         except subprocess.TimeoutExpired:
@@ -2768,10 +2768,10 @@ def _probatio_currere(nomen, aedificare, secunda, mora, tectum):
     acta = _ANSI.sub('', open(via_acta.name, errors='replace').read())
     os.unlink(via_acta.name)
     fr = [] if rc == 0 else fracturae(acta, titulus, forma='generica')
-    return Cursus(titulus, suita, rc, t1 - t0, acta, fr, profilum, via_p)
+    return Cursus(titulus, suita, rc, t1 - t0, acta, fr, partitio, via_p)
 
 
-def _profilum_arbor(via):
+def _partitio_arbor(via):
     """arbor vocationum ex effusu 'sample' (sectio 'Call graph'):
     [(altitudo, numerus, functio)] ordine plagulae; numerus = exempla
     INCLUSIVA subarboris illius"""
@@ -2791,13 +2791,13 @@ def _profilum_arbor(via):
     return frusta
 
 
-def profilum_inclusivum(via, tectum=30):
+def partitio_inclusivum(via, tectum=30):
     """tempus INCLUSIVUM per functionem ex effusu sample - recursione
     COLLAPSA: occurrentia functionis sub se ipsa non numeratur (summa
     ingenua per gradus recursionis ambulatores recursivos septies
     inflabat, 2026-09-02). [(pars, numerus, functio)] ordine ponderis;
     fila/start/main omissa."""
-    frusta = _profilum_arbor(via)
+    frusta = _partitio_arbor(via)
     summae = {}
     acervus = []
     totum = frusta[0][1] if frusta else 1
@@ -2818,12 +2818,12 @@ def profilum_inclusivum(via, tectum=30):
     return exitus
 
 
-def profilum_viae(via, functio, minimum=0, tectum=12):
+def partitio_viae(via, functio, minimum=0, tectum=12):
     """semitae vocationum quae in 'functio' desinunt, a main deorsum:
     [(numerus, 'a > b×3 > functio')] ordine ponderis - cursus eiusdem
     functionis (recursio) in unum 'fn×k' comprimitur, occurrentia
     functionis sub se ipsa omissa (numeratur semel, in summo)."""
-    frusta = _profilum_arbor(via)
+    frusta = _partitio_arbor(via)
     acervus = []
     summae = {}
     for altitudo, n, fn in frusta:
@@ -2848,14 +2848,14 @@ def profilum_viae(via, functio, minimum=0, tectum=12):
     return [(n, s) for s, n in ordo if n >= minimum][:tectum]
 
 
-def profilum_inclusivum_textus(inclusivum, tectum=15):
+def partitio_inclusivum_textus(inclusivum, tectum=15):
     return '\n'.join('  %5.1f%%  %6d  %s' % (p, n, fn)
                      for p, n, fn in inclusivum[:tectum])
 
 
 def cursus_textus(c, tectum=15):
     """compendium cursus: verdictum, tempus, compendium credo, fracturae,
-    profilum (si sumptum)"""
+    partitio (si sumptum)"""
     m = re.search(r'Totalis:\s*(\d+).*?Fracti:\s*(\d+).*?Conditio: ([^\n]*)',
                   c.acta, re.S)
     credo_ = ('assertiones %s, fractae %s, %s' % m.groups()) if m \
@@ -2864,15 +2864,15 @@ def cursus_textus(c, tectum=15):
               % (c.nomen, c.suita, c.rc, c.secunda, credo_)]
     if c.fracturae:
         lineae.append(relatio_fracturarum(c.fracturae).lstrip('\n'))
-    if c.profilum:
-        lineae.append('profilum (folia, %d exempla):'
-                      % sum(n for n, _, _ in c.profilum))
-        lineae.append(profilum_textus(c.profilum, tectum))
-    if c.via_profili and os.path.exists(c.via_profili):
-        lineae.append('profilum (inclusivum, recursione collapsa):')
-        lineae.append(profilum_inclusivum_textus(
-            profilum_inclusivum(c.via_profili), tectum))
-        lineae.append('  (semitae: profilum_viae(%r, functio))' % c.via_profili)
+    if c.partitio:
+        lineae.append('partitio (folia, %d exempla):'
+                      % sum(n for n, _, _ in c.partitio))
+        lineae.append(partitio_textus(c.partitio, tectum))
+    if c.via_partitionis and os.path.exists(c.via_partitionis):
+        lineae.append('partitio (inclusivum, recursione collapsa):')
+        lineae.append(partitio_inclusivum_textus(
+            partitio_inclusivum(c.via_partitionis), tectum))
+        lineae.append('  (semitae: partitio_viae(%r, functio))' % c.via_partitionis)
     return '\n'.join(lineae)
 
 
@@ -3884,7 +3884,9 @@ OratioSententia = namedtuple('OratioSententia',
                              'index initium finis linea forma textus')
 OratioVocabulum = namedtuple('OratioVocabulum',
                              'index initium finis linea paragraphus sententia'
-                             ' forma classes linguae lemma analyses')
+                             ' forma classes linguae lemma analyses'
+                             ' decisio auctor')
+ORATIO_PARTITIO = ('praelatio', 'impletio', 'umbra', 'una', 'aperta', 'nulla')
 OratioAnalysis = namedtuple('OratioAnalysis',
                             'index classis lemma lingua fons nativum sensus'
                             ' accidentia umbrae')
@@ -3989,7 +3991,7 @@ class Oratio(object):
                 OratioVocabulum(int(p[1]), int(p[2]), int(p[3]), int(p[4]),
                                 int(p[5]), int(p[6]), p[7],
                                 tuple(p[8].split()), tuple(p[9].split()),
-                                p[10], int(p[11]))
+                                p[10], int(p[11]), p[12], p[13])
                 for p in self._machina('./oratio/verba.sh')]
         xs = self._vocabula
         if classis is not None:
@@ -4005,6 +4007,25 @@ class Oratio(object):
     def ignota(self):
         """vocabula sine analysi (inventa)"""
         return self.vocabula(ignota=True)
+
+    def partitio(self):
+        """dict genus -> vocabula (T19g, decretum SUDOKU decisio XL):
+        praelatio | impletio | umbra (decisio in arbore scripta, auctor =
+        titulus regulae) | una (lectio una, nemo decidit) | aperta
+        (lectiones plures, nemo decidit: ordo fontis) | nulla (sine
+        lectione). coactae = impletio + umbra (testimonium)."""
+        p = dict((k, 0) for k in ORATIO_PARTITIO)
+        for v in self.vocabula():
+            if v.decisio:
+                p[v.decisio] += 1
+            elif v.analyses == 1:
+                p['una'] += 1
+            elif v.analyses > 1:
+                p['aperta'] += 1
+            else:
+                p['nulla'] += 1
+        p['coactae'] = p['impletio'] + p['umbra']
+        return p
 
     def analyses(self, vocabulum):
         """[OratioAnalysis] vocabuli (OratioVocabulum aut index) ordine
