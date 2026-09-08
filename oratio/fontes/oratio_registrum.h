@@ -401,8 +401,13 @@ nomen enumeratio {
     ORATIO_CLAUSULA_CAUSA_SEMEN = 0,
     ORATIO_CLAUSULA_CAUSA_EXTENTUM,
     ORATIO_CLAUSULA_CAUSA_CLAUSURA,
-    ORATIO_CLAUSULA_CAUSA_CATENA,
+        ORATIO_CLAUSULA_CAUSA_CATENA,
     ORATIO_CLAUSULA_CAUSA_UNICA,
+    /* T20a bis: SCISSIO verbi - verbum finitum certum alterum in
+     * clausula quae suum iam habet clausulam coordinatam novam aperit
+     * (asyndeton = semen absens, inventum); verbum ipsum et verba
+     * sequentia usque ad semen proximum hanc causam ferunt */
+    ORATIO_CLAUSULA_CAUSA_VERBUM,
 
     ORATIO_CLAUSULA_CAUSA_NUMERUS
 } OratioClausulaCausa;

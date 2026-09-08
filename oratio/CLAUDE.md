@@ -486,10 +486,17 @@ RESIDUAL = a second finite verb with no seed (asyndeton, Seneca verse,
 charter formulae) → T20c law 1. Python `Oratio.clausulae()`,
 `vocabulum.clausula/clausula_causa`; `verba.sh -clausulae`; gate
 `probatio_oratio_clausula` (161, planted fault si). Primary/forced
-unchanged. NEXT = T20b (catena along bindings, discordia count,
-override decision from the numbers), then T20c (clause carrier in the
-executor, verb hidden single = asyndeton split, cum conjunction,
-`cursus="clausulae"`, subject umbra). Head-rule template still open.
+unchanged. **T20a bis (same day): the VERB SPLIT (layer V,
+reason `verbum`)** — a certain finite verb in a non-closable clause
+that already holds one opens a coordinate clause; the words between
+the two verbs go to the NEW clause (variant A, verb-final; B measured
+and worse on every Latin file); overall purity 738/829/864 →
+822/848/881 (pins), Seneca count agreement 52 → 65 %. NEXT = T20b
+(catena along bindings, discordia count, override decision from the
+numbers), then T20c (clause carrier in the executor, cum conjunction,
+`cursus="clausulae"`, subject umbra). Closure layer (`est` early in
+charter subordinates) is the next measured target. Head-rule template
+still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

@@ -262,7 +262,7 @@
   <elementum nomen="clausula" intra="vocabulum" textus="verum"
     nota="T20a (decisio XLIII): index clausulae intra clausulas sententiae; absens = APERTA (nemo posuit)"/>
   <elementum nomen="clausula-causa" intra="vocabulum" textus="verum"
-    nota="T20a (decisio XLV): OratioClausulaCausa - 0 semen 1 extentum 2 clausura 3 catena 4 unica (stratum quod posuit)"/>
+    nota="T20a (decisio XLV): OratioClausulaCausa - 0 semen 1 extentum 2 clausura 3 catena 4 unica 5 verbum (stratum quod posuit; verbum = scissio verbi finiti alterius, T20a bis)"/>
 
   <elementum nomen="interpunctio">
     <attributum nomen="n" genus="numerus"/>

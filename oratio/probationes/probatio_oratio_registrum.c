@@ -552,12 +552,14 @@ MateriaLexiconRatum  ratum;
             CREDO_VERUM (strcmp(ORATIO_TITULI_SPECIERUM_CLAUSULAE[
                 ORATIO_SPECIES_CLAUSULAE_PARENTHETICA], "parenthetica")
                 == ZEPHYRUM);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_CLAUSULA_CAUSA_NUMERUS,
-                (i32)V);
+                        CREDO_AEQUALIS_I32 ((i32)ORATIO_CLAUSULA_CAUSA_NUMERUS,
+                            (i32)VI);
             CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
                 ORATIO_CLAUSULA_CAUSA_SEMEN], "semen") == ZEPHYRUM);
             CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
                 ORATIO_CLAUSULA_CAUSA_UNICA], "unica") == ZEPHYRUM);
+            CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
+                ORATIO_CLAUSULA_CAUSA_VERBUM], "verbum") == ZEPHYRUM);
         }
         CREDO_AEQUALIS_I32 ((i32)oratio_classis_ex_titulo("xyzzy",
             (i32)V),

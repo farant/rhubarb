@@ -1436,6 +1436,25 @@ connecting relative, negated corroboration, parenthetical, English,
 idempotence, umbrae, projection round trip, resolver census; planted
 fault = si removed, red on `si quis`). NEXT: T20b.
 
+**As built — T20a bis, the verb split (2026-09-08, same session; law 1
+of the design brought forward as a fifth layer, Fran's choice on the
+birth listing).** A certain finite verb (all readings finite) in a
+clause that is not closable and already holds its verb opens a new
+COORDINATA clause with the verb as seed; the verb and the words after
+it up to the next seed carry the reason `verbum` (appended to the
+enumeration). The cut position was measured, not chosen: A = the
+words between the two verbs join the new clause (verb-final order),
+B = the cut falls right before the second verb. Same clause count in
+both; A better on every Latin file — overall purity Seneca 738 → 822
+(B 805), charters 829 → 848 (845) and 864 → 881 (875); count agreement
+Seneca 518 → 65x, clauses per sentence 1.68 → 2.07 against 2.27 gold;
+the charters now over-segment slightly (2.46 vs 2.25). The layer
+scores 69 / 69 / 76 % on its own words and lifts `extentum` and
+`unica` by taking their worst words. Gate: three hand cases (asyndeton
+without seeds, `Veni, vidi, vici` with one uncertain verb, no split
+inside a subordinate). NEXT: T20b; the closure layer's early `est` on
+the charters is the next measured target.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

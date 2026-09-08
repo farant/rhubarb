@@ -14,8 +14,12 @@
  *      idempotentia, umbrae clausulae (verbum-finitum forma finita,
  *      subiectum nominativus), proiectio (attributa clausula /
  *      clausula-causa, nodi clausula) et circuitus STML.
+   *      SCISSIO verbi (stratum V, T20a bis): Puella cantat puer currit,
+ *      Puer currit, puella cantat; subordinata non scissa.
+
  * III. LEGES SUMMAE: causae summa == elementa posita; species summa ==
  *      clausulae; censu resolutionis idem.
+
  * Culpa plantata: 'si' e ORATIO_SEMINA_CERTA sublatum - casus 'si quis'
  * clausulam unam dat, porta RUBRA.
  */
@@ -551,6 +555,60 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_clausula(doc, (i32)III), (s32)I);
     CREDO_AEQUALIS_S32 (_clausula(doc, (i32)IV), ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census.clausae_signo, I);
+
+        /* (i) SCISSIO verbi (stratum V, T20a bis): Puella(0) cantat(1)
+     * puer(2) currit(3) .(4) - sine semine, verbum certum alterum
+     * clausulam coordinatam aperit; verba media (puer) ad novam (ordo
+     * verbo finali, variatio A mensurata melior); non UNICA */
+    doc = _documentum(piscina, &vocabularia,
+        "Puella cantat puer currit.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+    CREDO_AEQUALIS_S32 (_species(doc, I),
+        (s32)ORATIO_SPECIES_CLAUSULAE_COORDINATA);
+    CREDO_AEQUALIS_S32 (_semen(doc, I), (s32)III);
+    CREDO_AEQUALIS_S32 (_clausula(doc, ZEPHYRUM), ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (_causa(doc, ZEPHYRUM),
+        (s32)ORATIO_CLAUSULA_CAUSA_EXTENTUM);
+    CREDO_AEQUALIS_S32 (_clausula(doc, I), ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)II), (s32)I);
+    CREDO_AEQUALIS_S32 (_causa(doc, (i32)II),
+        (s32)ORATIO_CLAUSULA_CAUSA_VERBUM);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)III), (s32)I);
+    CREDO_AEQUALIS_S32 (_causa(doc, (i32)III),
+        (s32)ORATIO_CLAUSULA_CAUSA_VERBUM);
+    CREDO_AEQUALIS_S32 (_causa(doc, (i32)IV),
+        (s32)ORATIO_CLAUSULA_CAUSA_VERBUM);
+    CREDO_AEQUALIS_I32 (census.scissae, I);
+    CREDO_AEQUALIS_I32 (census.causae[ORATIO_CLAUSULA_CAUSA_UNICA],
+        ZEPHYRUM);
+        /* (i2) Puer(0) currit(1) ,(2) puella(3) cantat(4) .(5): comma
+     * principalem non claudit; scissio ad cantat, verba media (comma,
+     * puella) ad novam. (Veni, vidi, vici non valet: forma 'veni'
+     * lectionem non verbalem fert - incertum, ergo nulla scissio) */
+    doc = _documentum(piscina, &vocabularia,
+        "Puer currit, puella cantat.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+    CREDO_AEQUALIS_S32 (_clausula(doc, ZEPHYRUM), ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (_clausula(doc, I), ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)II), (s32)I);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)III), (s32)I);
+    CREDO_AEQUALIS_S32 (_clausula(doc, (i32)IV), (s32)I);
+    CREDO_AEQUALIS_S32 (_causa(doc, (i32)III),
+        (s32)ORATIO_CLAUSULA_CAUSA_VERBUM);
+    CREDO_AEQUALIS_I32 (census.scissae, I);
+    /* (i3) verbum in clausula subordinata alterum non scindit:
+     * subordinata ad primum clauditur (Si venit, vidit.) */
+    doc = _documentum(piscina, &vocabularia, "Si venit, vidit.\n");
+    CREDO_NON_NIHIL (doc);
+    CREDO_VERUM (_seminare(piscina, doc, &census));
+    CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
+    CREDO_AEQUALIS_I32 (census.scissae, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (_causa(doc, (i32)III),
+        (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA);
 
     /* (h) Anglica: nulla lectio finita capax (Moby sine modo) - unica */
     doc = _documentum(piscina, &vocabularia,

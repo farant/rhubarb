@@ -2049,3 +2049,28 @@ accuracy did not move by a permille: no rule reads the clause yet.
 The computus golden moved with the cause named (two umbra nodes and a
 clause node per sentence). Planted fault (si removed from the certain
 list) red on the `si quis` case, green restored.
+
+## 2026-09-08 — T20a bis: the verb split, measured both ways
+
+The birth listing said the residual was a second finite verb with no
+seed, so the fifth layer came before the chain layer, as Fran chose.
+A certain finite verb in a non-closable clause that already holds its
+verb opens a new coordinate clause with the verb as its seed; the verb
+and the words after it up to the next seed carry the reason `verbum`.
+The one design choice was where the cut falls, and it was measured
+rather than guessed: A puts the words between the two verbs into the
+new clause (verb-final order: a clause's words precede its verb), B
+cuts right before the second verb. A wins on all three Latin files —
+overall purity 73.8 → 82.2 on Seneca (B 80.5), 82.9 → 84.8 and 86.4 →
+88.1 on the charters (B 84.5, 87.5) — and both variants create the
+same number of clauses, so the difference is purely the placement of
+the middle words. Verb-final holds for the charters too, which I had
+doubted after the `est` errata; those are the closure layer's
+problem, not this one's. Count agreement on Seneca rose from 52 to 65
+percent and the clause count from 1.68 to 2.07 per sentence against
+2.27 gold; the charters now over-segment slightly (2.46 against 2.25
+on the test file), which the listing will explain next. The new
+layer scores 69 / 69 / 76 percent on its own words and lifted
+`extentum` and `unica` by ten points on Seneca by taking their bad
+words away, which is the doctrine's picture of a layer: a reason
+that can be scored, added without touching the others.

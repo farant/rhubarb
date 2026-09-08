@@ -33,6 +33,13 @@
  *       (lectiones omnes finitae) aut ad comma/semicolon/colon clauditur
  *       (prior verbi finalis); verba sequentia usque ad semen proximum
  *       ad parentem redduntur causa CLAUSURA.
+ *   V   VERBUM (T20a bis, 2026-09-08): verbum finitum CERTUM alterum
+ *       in clausula non clausibili quae suum iam habet = semen absens
+ *       (asyndeton: Seneca imperativa et versus, formulae chartarum)
+ *       - clausula coordinata nova, verbum semen eius; verba inter
+ *       verbum prius et hoc ad novam (ordo verbo finali: verba verbum
+ *       suum praecedunt; variatio mensurata) et sequentia usque ad
+ *       semen proximum causa VERBUM.
  *   IV  CATENA (T20b): per umbras ligatas, relativo excepto.
  *
  * Verbum finitum CAPAX = lectio Latina verbi aut auxiliaris forma
@@ -61,8 +68,9 @@ nomen structura {
     i32 apertae;         /* elementa non posita */
     i32 corroborata;     /* semina corroboranda quae verbum invenerunt */
     i32 reiecta;         /* candidata corroboranda sine verbo (non semina) */
-    i32 clausae_verbo;   /* clausurae per verbum finitum certum */
+        i32 clausae_verbo;   /* clausurae per verbum finitum certum */
     i32 clausae_signo;   /* clausurae per interpunctionem */
+    i32 scissae;         /* scissiones verbi (stratum V, asyndeton) */
 } OratioClausulaCensus;
 
 /* DATA seminum (lemmata WORDS, litteris v; NIHIL terminata) */

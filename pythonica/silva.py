@@ -3893,7 +3893,8 @@ ORATIO_PARTITIO = ('praelatio', 'impletio', 'umbra', 'una', 'aperta', 'nulla')
 # continentis; None = summa), membra = indices vocabulorum documenti
 OratioClausula = namedtuple('OratioClausula',
                             'sententia index species semen pater membra')
-ORATIO_CAUSAE_CLAUSULAE = ('semen', 'extentum', 'clausura', 'catena', 'unica')
+ORATIO_CAUSAE_CLAUSULAE = ('semen', 'extentum', 'clausura', 'catena', 'unica',
+                           'verbum')
 OratioAnalysis = namedtuple('OratioAnalysis',
                             'index classis lemma lingua fons nativum sensus'
                             ' accidentia umbrae')

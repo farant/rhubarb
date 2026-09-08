@@ -101,15 +101,16 @@
  * semen 890/957/953, extentum 759/857/887, clausura 491/650/657 -
  * infimum ut praedictum -, unica 740/984/986; Anglica unica fere
  * tota 727/738; residuum = verbum finitum alterum SINE semine:
- * asyndeton, T20c). */
-#define CIRCSE_PURITAS_PINNA     738
-#define LLCT_DEV_PURITAS_PINNA   829
-#define LLCT_TEST_PURITAS_PINNA  864
+ * asyndeton, T20c). T20a bis (eodem die): SCISSIO verbi (stratum V)
+ * 738/829/864 -> 821/847/881, pares 518/740/771 -> 653/762/788. */
+#define CIRCSE_PURITAS_PINNA     821
+#define LLCT_DEV_PURITAS_PINNA   847
+#define LLCT_TEST_PURITAS_PINNA  881
 #define EWT_DEV_PURITAS_PINNA    726
 #define EWT_TEST_PURITAS_PINNA   739
-#define CIRCSE_PARES_PINNA       518
-#define LLCT_DEV_PARES_PINNA     740
-#define LLCT_TEST_PARES_PINNA    771
+#define CIRCSE_PARES_PINNA       653
+#define LLCT_DEV_PARES_PINNA     762
+#define LLCT_TEST_PARES_PINNA    788
 #define EWT_DEV_PARES_PINNA      638
 #define EWT_TEST_PARES_PINNA     659
 

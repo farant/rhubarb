@@ -39,6 +39,12 @@ constans character* constans ORATIO_SEMINA_CORROBORANDA[] = {
     NIHIL
 };
 
+/* SCISSIO verbi (stratum V): verba inter verbum finitum prius et
+ * alterum ad clausulam NOVAM (VERUM: ordo verbo finali - verba verbum
+ * suum praecedunt) aut ad priorem (FALSUM: scissio ante verbum
+ * alterum ipsum). Utraque mensurata 2026-09-08 (vide worklog). */
+hic_manens constans b32 SCISSIO_ANTE_VERBA_MEDIA = VERUM;
+
 /* formae relativae: lemma lectionis pronominis aut determinantis */
 constans character* constans ORATIO_SEMINA_RELATIVA[] = {
     "qui", "quicumque", "quisquis",
@@ -228,7 +234,8 @@ nomen structura {
     s32 species;
     s32 semen;    /* ordinalis elementi; -I */
     s32 pater;    /* -I = summa */
-    i32 membra;
+        i32 membra;
+    s32 verbum;        /* ordinalis verbi finiti certi sui; -I nondum */
     b32 clausibilis;   /* verbo finito certo aut signo clauditur
                         * (subordinata, relativa, soror earum);
                         * principalis numquam, parenthetica signo
@@ -467,7 +474,8 @@ _clausulam_addere (
         c->species  = species;
     c->semen        = semen;
     c->pater        = pater;
-    c->membra       = ZEPHYRUM;
+        c->membra   = ZEPHYRUM;
+    c->verbum       = (s32)-I;
     c->clausibilis  = (b32)(
            species == (s32)ORATIO_SPECIES_CLAUSULAE_SUBORDINATA
         || species == (s32)ORATIO_SPECIES_CLAUSULAE_RELATIVA);
@@ -485,11 +493,14 @@ _extentum_stampare (
 {
     s32* acervus = (s32*)piscina_allocare(scratch,
         (memoriae_index)(n + I) * (memoriae_index)magnitudo(s32));
-    i32 altitudo        = ZEPHYRUM;
-    s32 summa           = (s32)-I;   /* clausula principalis; -I nondum */
-    b32 post_clausuram  = FALSUM;
-    b32 semen_ullum     = FALSUM;
+    i32 altitudo            = ZEPHYRUM;
+    s32 summa               = (s32)-I;   /* clausula principalis; -I nondum */
+        b32 post_clausuram  = FALSUM;
+    b32 post_verbum         = FALSUM;   /* post scissionem verbi */
+    b32 semen_ullum         = FALSUM;
+    b32 scissa              = FALSUM;
     i32 k;
+
 
     si (acervus == NIHIL)
     {
@@ -503,29 +514,8 @@ _extentum_stampare (
             semen_ullum = VERUM;
         }
         }
-    si (!semen_ullum)
-    {
-        /* sententia sine semine: clausula una, causa UNICA */
-        summa = _clausulam_addere(clausulae,
-            (s32)ORATIO_SPECIES_CLAUSULAE_PRINCIPALIS, (s32)-I,
-            (s32)-I);
-        si (summa < ZEPHYRUM)
-        {
-            redde FALSUM;
-        }
         per (k = ZEPHYRUM; k < n; k++)
         {
-            membra[k].clausula  = summa;
-            membra[k].causa     = (s32)ORATIO_CLAUSULA_CAUSA_UNICA;
-            ((Clausula*)xar_obtinere(clausulae, (i32)summa))->membra
-                = ((Clausula*)xar_obtinere(clausulae,
-                (i32)summa))->membra
-                + I;
-        }
-        redde VERUM;
-    }
-    per (k = ZEPHYRUM; k < n; k++)
-    {
         Membrum* m   = &membra[k];
             s32  top = altitudo > ZEPHYRUM ? acervus[altitudo - I]
                 : (s32)-I;
@@ -593,9 +583,10 @@ _extentum_stampare (
             {
                 summa = nova;   /* coordinata principalis: summa nova */
             }
-            m->clausula     = nova;
-            m->causa        = (s32)ORATIO_CLAUSULA_CAUSA_SEMEN;
-            post_clausuram  = FALSUM;
+                        m->clausula  = nova;
+            m->causa                 = (s32)ORATIO_CLAUSULA_CAUSA_SEMEN;
+            post_clausuram           = FALSUM;
+            post_verbum              = FALSUM;
         }
         alioquin si (m->seminat)
         {
@@ -619,11 +610,12 @@ _extentum_stampare (
             {
                 summa = nova;
             }
-            acervus[altitudo]  = nova;
-            altitudo           = altitudo + I;
-            m->clausula        = nova;
-            m->causa           = (s32)ORATIO_CLAUSULA_CAUSA_SEMEN;
-            post_clausuram     = FALSUM;
+                        acervus[altitudo] = nova;
+            altitudo = altitudo + I;
+            m->clausula = nova;
+            m->causa = (s32)ORATIO_CLAUSULA_CAUSA_SEMEN;
+            post_clausuram = FALSUM;
+            post_verbum = FALSUM;
         }
         alioquin si (m->semen == (s32)SEMEN_APERIENS)
         {
@@ -634,11 +626,12 @@ _extentum_stampare (
             {
                 redde FALSUM;
             }
-            acervus[altitudo]  = nova;
-            altitudo           = altitudo + I;
-            m->clausula        = nova;
-            m->causa           = (s32)ORATIO_CLAUSULA_CAUSA_SEMEN;
-            post_clausuram     = FALSUM;
+                        acervus[altitudo] = nova;
+            altitudo = altitudo + I;
+            m->clausula = nova;
+            m->causa = (s32)ORATIO_CLAUSULA_CAUSA_SEMEN;
+            post_clausuram = FALSUM;
+            post_verbum = FALSUM;
         }
         alioquin si (m->semen == (s32)SEMEN_CLAUDENS)
         {
@@ -659,9 +652,11 @@ _extentum_stampare (
         }
         alioquin si (m->semen == (s32)SEMEN_SIGNUM)
         {
-            /* interpunctio membrum clausulae quam claudit */
-                        m->clausula  = top;
-            m->causa     = post_clausuram
+                        /* interpunctio membrum clausulae quam claudit */
+            m->clausula  = top;
+            m->causa     = post_verbum
+                ? (s32)ORATIO_CLAUSULA_CAUSA_VERBUM
+                : post_clausuram
                 ? (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA
                 : (s32)ORATIO_CLAUSULA_CAUSA_EXTENTUM;
             si (   altitudo > ZEPHYRUM
@@ -670,31 +665,93 @@ _extentum_stampare (
             {
                 altitudo        = altitudo - I;
                 post_clausuram  = VERUM;
+                post_verbum     = FALSUM;
                 si (census != NIHIL)
                 {
                     census->clausae_signo = census->clausae_signo + I;
                 }
             }
         }
-        alioquin
+                alioquin
         {
+            Clausula* cl = (Clausula*)xar_obtinere(clausulae, (i32)top);
+
             m->clausula  = top;
-            m->causa     = post_clausuram
+            m->causa     = post_verbum
+                ? (s32)ORATIO_CLAUSULA_CAUSA_VERBUM
+                : post_clausuram
                 ? (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA
                 : (s32)ORATIO_CLAUSULA_CAUSA_EXTENTUM;
-            /* stratum III: verbum finitum certum clausulam non basalem
-             * claudit (prior verbi finalis) */
-                        si (   m->finita_certa && altitudo > ZEPHYRUM
-                            && ((Clausula*)xar_obtinere(clausulae,
-                            (i32)top))->clausibilis)
-                        {
+            si (m->finita_certa && cl->clausibilis)
+            {
+                /* stratum III: verbum finitum certum clausulam
+                 * clausibilem claudit (prior verbi finalis) */
+                cl->verbum      = (s32)k;
                 altitudo        = altitudo - I;
                 post_clausuram  = VERUM;
+                post_verbum     = FALSUM;
                 si (census != NIHIL)
                 {
                     census->clausae_verbo = census->clausae_verbo + I;
                 }
+            }
+            alioquin si (m->finita_certa && cl->verbum < ZEPHYRUM)
+            {
+                cl->verbum = (s32)k;   /* verbum suum */
+            }
+            alioquin si (m->finita_certa)
+            {
+                /* stratum V: SCISSIO - verbum finitum certum alterum in
+                 * clausula quae suum iam habet: semen absens
+                 * (asyndeton); clausula coordinata nova sorore
+                 * substituente, verba media ad novam (variatio) */
+                s32 nova = _clausulam_addere(clausulae,
+                    (s32)ORATIO_SPECIES_CLAUSULAE_COORDINATA, (s32)k,
+                    cl->pater);
+                Clausula* cn;
+
+                si (nova < ZEPHYRUM)
+                {
+                    redde FALSUM;
+                }
+                cl = (Clausula*)xar_obtinere(clausulae, (i32)top);
+                cn = (Clausula*)xar_obtinere(clausulae, (i32)nova);
+                cn->clausibilis = cl->clausibilis;
+                cn->verbum = (s32)k;
+                si (altitudo > ZEPHYRUM)
+                {
+                    acervus[altitudo - I] = nova;
+                }
+                si (top == summa)
+                {
+                    summa = nova;
+                }
+                si (SCISSIO_ANTE_VERBA_MEDIA)
+                {
+                    i32 j;
+
+                    per (j = (i32)cl->verbum + I; j < k; j++)
+                    {
+                        si (membra[j].clausula == top)
+                        {
+                            membra[j].clausula  = nova;
+                            membra[j].causa     =
+                                (s32)ORATIO_CLAUSULA_CAUSA_VERBUM;
+                            cl->membra = cl->membra - I;
+                            cn->membra = cn->membra + I;
                         }
+                    }
+                }
+                m->clausula     = nova;
+                m->causa        = (s32)ORATIO_CLAUSULA_CAUSA_VERBUM;
+                post_verbum     = VERUM;
+                post_clausuram  = FALSUM;
+                scissa          = VERUM;
+                si (census != NIHIL)
+                {
+                    census->scissae = census->scissae + I;
+                }
+            }
         }
         si (m->clausula >= ZEPHYRUM)
         {
@@ -702,6 +759,18 @@ _extentum_stampare (
                 (i32)m->clausula);
 
             cl->membra = cl->membra + I;
+        }
+        }
+        /* sententia sine semine et sine scissione: clausula una, causa
+     * UNICA ubique (stratum suum in oraculo) */
+    si (!semen_ullum && !scissa)
+    {
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            si (membra[k].clausula >= ZEPHYRUM)
+            {
+                membra[k].causa = (s32)ORATIO_CLAUSULA_CAUSA_UNICA;
+            }
         }
     }
     /* summa nondum nata (sententia tota subordinata): patres absentes
