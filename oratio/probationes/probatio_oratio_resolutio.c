@@ -388,12 +388,36 @@ principale (vacuum)
         CREDO_VERUM (supra >= ZEPHYRUM && adpositio_la > supra);
         CREDO_VERUM (subordinans_la > adpositio_la
             && numerale_en > subordinans_la);
-        CREDO_VERUM (lingua > numerale_en && accusativum > lingua
-            && ablativum > accusativum);
-        CREDO_AEQUALIS_S32 (ablativum,
-            (s32)xar_numerus(programma->regulae) - (s32)I);
+                CREDO_VERUM (lingua > numerale_en
+                    && accusativum > lingua
+                    && ablativum > accusativum);
+        /* T19d beta: regulae capitis XIV (gradus II) post umbras
+         * obiecti (gradus I); gradus lectus ex attributo, absens = I */
+        CREDO_AEQUALIS_S32 (ablativum, (s32)XIV);
+        CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae), (i32)XXIX);
+        {
+            i32 k;
 
+            per (k = ZEPHYRUM; k < xar_numerus(programma->regulae); k++)
+            {
+                constans OratioRegula* r =
+                    (constans OratioRegula*)xar_obtinere(
+                    programma->regulae, k);
+
+                CREDO_AEQUALIS_I32 (r->gradus, k <= (i32)XIV ? I
+                    : (i32)II);
+            }
+            {
+                constans OratioRegula* prima =
+                    (constans OratioRegula*)xar_obtinere(
+                    programma->regulae, (i32)XV);
+
+                CREDO_VERUM (_aequalis(prima->titulus,
+                    "umbra-caput-nominativus-sequente"));
+            }
+        }
     }
+
     CREDO_VERUM (((constans OratioRegula*)xar_obtinere(
         programma->regulae, ZEPHYRUM))->textus.mensura > (i32)100);
 
@@ -891,8 +915,91 @@ principale (vacuum)
             (s32)ORATIO_CASUS_NOMINATIVUS);
     }
 
+        imprimere("\n--- VI. Umbrae capitis, gradus II ---\n");
+    {
+           OratioPartesCensus census_partium;
+        OratioResolutioCensus census;
+                 MateriaNodus* doc;
+                 MateriaNodus* bona;
+                 MateriaNodus* puella;
+
+        /* concordantia nominativa: bona (substantivum crudum primum) ->
+         * adiectivum NOM S F per caput Puella */
+        doc = _documentum(piscina, &vocabularia,
+            "Puella bona ambulat.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        bona = _vocabulum(doc, I);
+        CREDO_AEQUALIS_S32 (_classis_analysis(bona, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(bona, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_ADIECTIVUM);
+        CREDO_AEQUALIS_S32 (_casus(bona, ZEPHYRUM),
+            (s32)ORATIO_CASUS_NOMINATIVUS);
+        CREDO_VERUM (census.impletae >= I);
+        /* gradus I solus (regulae XV primae): umbrae capitis absunt -
+         * bona substantivum manet */
+        doc = _documentum(piscina, &vocabularia,
+            "Puella bona ambulat.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)XV, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
+        CREDO_AEQUALIS_I32 (census.impletae, ZEPHYRUM);
+        /* gradus II proiectionem NOVAM videt: cum puella (ablativa
+         * gradu I) bona -> ablativa per caput, NON nominativa (lex
+         * vocabuli vindicati: lectio prima sola implet) */
+        doc = _documentum(piscina, &vocabularia,
+            "Cum puella bona ambulat.\n", &census_partium);
+        CREDO_NON_NIHIL (doc);
+        puella  = _vocabulum(doc, I);
+        bona    = _vocabulum(doc, (i32)II);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_casus(puella, ZEPHYRUM),
+            (s32)ORATIO_CASUS_ABLATIVUS);
+        CREDO_AEQUALIS_S32 (_classis_analysis(bona, ZEPHYRUM),
+            (s32)ORATIO_CLASSIS_ADIECTIVUM);
+        CREDO_AEQUALIS_S32 (_casus(bona, ZEPHYRUM),
+            (s32)ORATIO_CASUS_ABLATIVUS);
+        CREDO_VERUM (census.repetitae >= I);   /* regula NOM recusata */
+        CREDO_AEQUALIS_I32 (census.impletae, (i32)II);   /* cum, bona */
+        /* determinans per caput: hoc templum (templum GEN P crudum
+         * primum - lectio NOM per caput inventa et praelata); hoc solum
+         * pronomen manet */
+        doc = _documentum(piscina, &vocabularia, "Hoc templum est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_DETERMINANS);
+        CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM),
+            (s32)ORATIO_CASUS_NOMINATIVUS);
+        CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
+            (s32)ORATIO_CASUS_NOMINATIVUS);
+        doc = _documentum(piscina, &vocabularia, "Hoc est.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
+            ZEPHYRUM), (s32)ORATIO_CLASSIS_PRONOMEN);
+        CREDO_AEQUALIS_I32 (census.impletae, ZEPHYRUM);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
+
     {
         b32 praeteritus = credo_omnia_praeterierunt();
 

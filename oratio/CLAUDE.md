@@ -320,12 +320,26 @@ impletio, projection `<umbra n="0">`), resolutio (`Cum puella`: the
 adposition reading's umbra bound to word 1 reading 0; composed plan
 carries `<impletio>` and no `<praelatio>`), oraculum pins 729/771/772
 (+1 permille on each Latin treebank over the T17 rules; English
-unchanged). NEXT (T19d cont.): head umbrae on adjective/determiner
-readings (case, number, gender captured from the reading; filler =
-agreeing noun, before or after: two rules per relation) — the
-charters' 2,096 determiners at 0 %; then the executor law "filled
-umbrae outrank"; then `to` + verb and `have` + participle as object
-umbrae on English readings.
+unchanged). **T19d HEAD UMBRA + STAGES DONE** (same day): every
+adjective and determiner reading with a case carries a CAPUT umbra
+(relatio 1) with the reading's own case, number, gender; fourteen
+generated rules `umbra-caput-<casus>-{sequente,praecedente}`
+(`gradus="2"`, `cursus="fratrum"` at `<elementa>`, case literal,
+number and gender captured at the umbra, filler = any reading of
+the neighbour with those accidents) emit `<impletio>` rows. The
+executor gained STAGES: `<regula gradus=>` (default 1, canon), the
+program runs stage by stage, each stage against a FRESH projection
+(stage 2 sees stage 1's reorderings), the vindicated set persists,
+and a filler row on a vindicated word whose filler reading is not
+that word's first is repetita — both forced by `Cum puella bona
+ambulat` (one stage: the nominative head rule fired before the
+ablative and bound `bona` to `puella`'s nominative). Probes: `Puella
+bona ambulat` (bona adjective nominative, crude first a noun), `Cum
+puella bona ambulat` (both ablative), `Hoc templum est` (determiner +
+nominative, crude first genitive plural), `Hoc est` (pronoun).
+CIRCSE primary 72.9 → 76.5 % (adjective 78.6 %, determiner 19.9 %), LLCT 77.1 / 77.2 → 78.8 / 78.6 % (determiner 0 → 18.7 / 18.1 % on 2,096 / 1,914 words), EWT unchanged 75.3 / 75.5 (English readings carry no case, so no head umbra is born); coverage unchanged; the vocative pair adds nothing on Seneca and one permille on the charters; pins 765 / 787 / 785 / 753 / 754. NEXT: the executor law "filled umbrae outrank" (C, never
+STML arithmetic); English object umbrae (`to` + verb, `have` +
+participle); nomen-proprium / pronoun fillers if the numbers ask.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

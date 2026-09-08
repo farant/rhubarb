@@ -54,9 +54,10 @@
  * XXXIV): programma oratio/partes/resolutio.stml regulis II (adpositio
  * accusativum / ablativum regit) - crudum CIRCSE 674, LLCT 678 / 677,
  * EWT 566 / 569. */
-#define CIRCSE_PRIMARIA_PINNA    728
-#define LLCT_DEV_PRIMARIA_PINNA  771
-#define LLCT_TEST_PRIMARIA_PINNA 771
+#define CIRCSE_PRIMARIA_PINNA    765
+#define LLCT_DEV_PRIMARIA_PINNA  787
+#define LLCT_TEST_PRIMARIA_PINNA 785
+
 /* T18 (2026-09-07): regula linguae documenti + lex casus recordorum
  * Moby (in\PvAN ante In\N) + census suffragiis vocabulorum per
  * DOCUMENTUM: EWT 566/569 -> 677/679 (crudum 566 -> 600 lege casus,

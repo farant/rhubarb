@@ -10,6 +10,13 @@
 #include <stdio.h>
 #include <string.h>
 
+interior b32
+_numerus_attributi (
+             StmlNodus* nodus,
+    constans character* titulus,
+                   i32* exitus);
+
+
 nomen structura {
                        Piscina* piscina;
            InternamentumChorda* intern;
@@ -214,9 +221,16 @@ oratio_resolutio_programma_legere (
             vitium->causa = "memoria";
             redde NIHIL;
         }
-        r->titulus  = _copia(piscina, *titulus);
+                r->titulus  = _copia(piscina, *titulus);
         r->textus   = _chorda(p->textus.datum + n->positus_initium,
             n->positus_finis - n->positus_initium);
+        /* gradus (T19d beta): attributum 'gradus' (>= I), absens = I */
+        {
+            i32 gradus;
+
+            r->gradus = _numerus_attributi(n, "gradus", &gradus)
+                && gradus > ZEPHYRUM ? gradus : I;
+        }
     }
     redde p;
 }
@@ -421,13 +435,19 @@ _umbram_invenire (
     redde umbra_valor->datum.nodus;
 }
 
-/* sententiam unam resolvere: proiectio + programma -> expansio ->
- * consilia -> permutationes. FALSUM = memoria sola. */
+/* sententiam unam resolvere GRADU uno: proiectio + regulae gradus ->
+ * expansio -> consilia -> permutationes -> ligationes. vindicata =
+ * vocabula gradibus prioribus vindicata (prima vincit TRANS gradus:
+ * ordines in ea repetitae); post gradum vocabula praelata vindicantur.
+ * FALSUM = memoria sola. */
 interior b32
-_sententiam_resolvere (
+_sententiam_resolvere_gradu (
           Cursus* cursus,
-    MateriaNodus* sententia)
+    MateriaNodus* sententia,
+             i32  gradus,
+             b32* vindicata)
 {
+
                       Piscina* scratch;
             OratioStmlOrnatus  ornatus;
         MateriaArborConsilium  consilium;
@@ -446,15 +466,12 @@ _sententiam_resolvere (
                           s32* praelata;
                           Xar* impletiones;   /* Impletio (T19d) */
 
-    si (cursus->census != NIHIL)
-    {
-        cursus->census->sententiae = cursus->census->sententiae + I;
-    }
-    si (   elementa->genus                        != MATERIA_VALOR_LISTA
-        || materia_valor_lista_numerus(*elementa) == ZEPHYRUM)
-    {
+        si (   elementa->genus != MATERIA_VALOR_LISTA
+            || materia_valor_lista_numerus(*elementa) == ZEPHYRUM)
+        {
         redde VERUM;
-    }
+        }
+
     ne               = materia_valor_lista_numerus(*elementa);
     regulae_numerus  = xar_numerus(cursus->programma->regulae);
     si (   cursus->regulae_numerus >= ZEPHYRUM
@@ -485,13 +502,22 @@ _sententiam_resolvere (
         piscina_destruere(scratch);
         redde VERUM;
     }
-    /* compositio: proiectio + regulae primae N, lineis novis divisae */
+        /* compositio: proiectio + regulae primae N HUIUS gradus, lineis
+     * novis divisae */
     mensura = scriptura.textus.mensura + I;
     per (k = ZEPHYRUM; k < regulae_numerus; k++)
     {
-        mensura = mensura + ((constans OratioRegula*)xar_obtinere(
-                cursus->programma->regulae, k))->textus.mensura + I;
+        constans OratioRegula* r =
+            (constans OratioRegula*)xar_obtinere(
+            cursus->programma->regulae, k);
+
+        si (r->gradus != gradus)
+        {
+            perge;
+        }
+        mensura = mensura + r->textus.mensura + I;
     }
+
     textus = (character*)piscina_allocare(scratch,
         (memoriae_index)mensura
         + I);
@@ -505,18 +531,23 @@ _sententiam_resolvere (
     mensura          = scriptura.textus.mensura;
     textus[mensura]  = '\n';
     mensura          = mensura + I;
-    per (k = ZEPHYRUM; k < regulae_numerus; k++)
-    {
+        per (k = ZEPHYRUM; k < regulae_numerus; k++)
+        {
         constans OratioRegula* r =
             (constans OratioRegula*)xar_obtinere(
             cursus->programma->regulae, k);
 
+        si (r->gradus != gradus)
+        {
+            perge;
+        }
         memcpy(textus + mensura, r->textus.datum,
             (size_t)r->textus.mensura);
+
         mensura          = mensura + r->textus.mensura;
         textus[mensura]  = '\n';
         mensura          = mensura + I;
-    }
+        }
     textus[mensura]  = ZEPHYRUM;
     fons             = _chorda((i8*)textus, mensura);
     lectio           = stml_legere(fons, scratch, cursus->intern);
@@ -611,16 +642,17 @@ _sententiam_resolvere (
             {
                 cursus->census->ordines = cursus->census->ordines + I;
             }
-            si (praelata[v] >= ZEPHYRUM)
-            {
+                        si (praelata[v] >= ZEPHYRUM || vindicata[v])
+                        {
                 si (cursus->census != NIHIL)
                 {
                     cursus->census->repetitae =
                         cursus->census->repetitae + I;
                 }
                 perge;
-            }
+                        }
             praelata[v] = (s32)a;
+
             si (   titulus != NIHIL
                 && !_regulam_numerare(cursus, *titulus))
             {
@@ -669,11 +701,26 @@ _sententiam_resolvere (
                 }
                 perge;
             }
-            si (cursus->census != NIHIL)
-            {
+                        si (cursus->census != NIHIL)
+                        {
                 cursus->census->ordines = cursus->census->ordines + I;
+                        }
+            /* vocabulum implens gradu priore vindicatum: veritas eius =
+             * lectio PRIMA (n = 0 in proiectione huius gradus); ordo
+             * lectionem aliam nominans repetita est (cum puella bona:
+             * regula nominativi lectionem NOM 'puellae' iam ablativae
+             * inveniret) */
+            si (vindicata[w] && b != ZEPHYRUM)
+            {
+                si (cursus->census != NIHIL)
+                {
+                    cursus->census->repetitae =
+                        cursus->census->repetitae + I;
+                }
+                perge;
             }
             cella = (Impletio*)xar_addere(impletiones);
+
             si (cella == NIHIL)
             {
                 piscina_destruere(scratch);
@@ -682,16 +729,17 @@ _sententiam_resolvere (
             cella->umbra  = umbra;
             cella->w      = w;
             cella->b      = b;
-            /* praelationes ambae sub lege 'prima vincit per
-             * vocabulum' */
-            si (praelata[v] < ZEPHYRUM)
+                        /* praelationes ambae sub lege 'prima vincit per
+             * vocabulum' (trans gradus quoque: vindicata) */
+            si (praelata[v] < ZEPHYRUM && !vindicata[v])
             {
                 praelata[v] = (s32)a;
             }
-            si (praelata[w] < ZEPHYRUM)
+            si (praelata[w] < ZEPHYRUM && !vindicata[w])
             {
                 praelata[w] = (s32)b;
             }
+
             si (   titulus != NIHIL
                 && !_regulam_numerare(cursus, *titulus))
             {
@@ -791,12 +839,86 @@ _sententiam_resolvere (
             piscina_destruere(scratch);
             redde FALSUM;
         }
-        si (cursus->census != NIHIL)
-        {
+                si (cursus->census != NIHIL)
+                {
             cursus->census->impletae = cursus->census->impletae + I;
+                }
+    }
+    /* vindicatio: vocabula hoc gradu praelata (etiam iam prima)
+     * gradibus sequentibus clausa */
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        si (praelata[k] >= ZEPHYRUM)
+        {
+            vindicata[k] = VERUM;
         }
     }
     piscina_destruere(scratch);
+    redde VERUM;
+}
+
+/* sententiam unam resolvere: gradus I .. maximus regularum primarum N,
+ * quisque proiectione nova (permutationes gradus prioris visae),
+ * vocabulis vindicatis trans gradus. FALSUM = memoria sola. */
+interior b32
+_sententiam_resolvere (
+          Cursus* cursus,
+    MateriaNodus* sententia)
+{
+    constans MateriaValor* elementa =
+        &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
+                      i32  ne;
+                      i32  regulae_numerus;
+                      i32  gradus_maximus = I;
+                      i32  gradus;
+                      i32  k;
+                      b32* vindicata;
+
+    si (cursus->census != NIHIL)
+    {
+        cursus->census->sententiae = cursus->census->sententiae + I;
+    }
+    si (   elementa->genus                        != MATERIA_VALOR_LISTA
+        || materia_valor_lista_numerus(*elementa) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    ne               = materia_valor_lista_numerus(*elementa);
+    regulae_numerus  = xar_numerus(cursus->programma->regulae);
+    si (   cursus->regulae_numerus >= ZEPHYRUM
+        && cursus->regulae_numerus < (s32)regulae_numerus)
+    {
+        regulae_numerus = (i32)cursus->regulae_numerus;
+    }
+    per (k = ZEPHYRUM; k < regulae_numerus; k++)
+    {
+        constans OratioRegula* r =
+            (constans OratioRegula*)xar_obtinere(
+            cursus->programma->regulae, k);
+
+        si (r->gradus > gradus_maximus)
+        {
+            gradus_maximus = r->gradus;
+        }
+    }
+    vindicata = (b32*)piscina_allocare(cursus->piscina,
+        (memoriae_index)ne * (memoriae_index)magnitudo(b32));
+    si (vindicata == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        vindicata[k] = FALSUM;
+    }
+    per (gradus = I; gradus <= gradus_maximus; gradus++)
+    {
+        si (!_sententiam_resolvere_gradu(cursus, sententia, gradus,
+                vindicata))
+        {
+            redde FALSUM;
+        }
+    }
     redde VERUM;
 }
 

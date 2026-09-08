@@ -41,7 +41,12 @@
 nomen structura {
     chorda titulus;
     chorda textus;
+       i32 gradus;    /* GRADUS applicationis (T19d beta): I ordinarius;
+                       * regulae gradus II post permutationes gradus I
+                       * proiectionem NOVAM vident (umbrae capitis
+                       * substantivum iam resolutum sequuntur) */
 } OratioRegula;
+
 
 nomen structura {
     chorda  textus;    /* programma totum (copia in piscina) */

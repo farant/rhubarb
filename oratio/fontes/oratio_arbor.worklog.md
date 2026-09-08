@@ -1614,3 +1614,49 @@ script (the editor applies replacements cumulatively, so a later
 anchor must name the text as it is after the earlier ones), and an
 Editio rejection still wrote the gate file, which then carried a call
 to a helper that did not exist until I added it.
+
+## 2026-09-07 — T19d head umbra: stages, and the vindicated filler
+
+The second umbra is the adjective's head. The annotator gives every
+adjective and determiner reading with a case a CAPUT umbra carrying
+the reading's own case, number and gender, so the rule has nothing
+to say about agreement except "same": fourteen generated rules (seven
+cases, head before or after) capture number and gender at the umbra
+and demand them of the filler. The case stays literal; a capture
+binds to the first reading it meets and never retries, and the umbra
+is the first place a capture on number or gender is read, which is
+why those two may be captured and the case may not.
+
+Single-stage this was wrong on the first sentence with a
+preposition. `Cum puella bona ambulat`: the rules are ordered by case,
+so the nominative head rule ran before the ablative one, found
+`puella`'s nominative reading (still in the list — the object umbra's
+row had preferred the ablative, but the nominative is a valid
+filler for a nominative `bona`) and bound `bona` nominative. Two
+things fix it and both are executor law, not rule cleverness. Stages:
+a rule carries `gradus`, the program runs stage by stage, and every
+stage composes against a fresh projection of the sentence, so the
+head rules see `puella` with its ablative first. And the vindicated
+filler: a word decided by an earlier row is spoken for, so a filler
+row that names one of its readings other than the first is repetita.
+With both, the nominative row on `puella` is refused (puella is
+vindicated, its nominative is now reading 2) and the ablative row
+binds. The ordering of the head rules by case is therefore harmless
+— any order would give the same answer once the object umbra has
+spoken — which is the property to keep: the evidence decides, not
+the rule index.
+
+`Hoc templum est` showed the other half. `templum`'s crude first
+reading was a genitive plural (WORDS lists `templum` under a stem
+whose first inflection is that); `hoc`'s determiner reading wants a
+nominative singular neuter head, the rule finds `templum`'s
+nominative reading further down the list, prefers both, binds. And
+`Hoc est` leaves `hoc` a pronoun because nothing fills the umbra: the
+unfilled umbra is the finding the design promised.
+
+Two gate notes. The filler is written `<* n="$b">` (any class) rather
+than pinned to reading 0, because pinning it hid the very rows the
+vindicated-filler law needs to refuse; and pins are taken from the
+gate's own permille (computed from counts), not from the instrument's
+percentages rounded — the two differ by one in the last place and
+the gate is the one that judges.

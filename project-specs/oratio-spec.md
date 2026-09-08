@@ -795,6 +795,46 @@ permille on each Latin treebank (729/771/772); the mechanism is proven
 on the same measure. Open: head umbrae (agreement), the outranking law,
 English object umbrae.
 
+**As built — T19d head umbra and stages (2026-09-07).** Annotation:
+every adjective and determiner reading with a case carries one CAPUT
+umbra (relatio 1) whose case, number and gender are the reading's
+own — the dictionary's codes are the constraint, no rule repeats
+them. Program: fourteen generated rules `umbra-caput-<casus>-
+{sequente,praecedente}` (the head after or before the carrier),
+each rooted at `<elementa>` under `cursus="fratrum"`: a carrier
+reading whose umbra wants the literal case, number `$num` and gender
+`$gen` captured AT THE UMBRA, then any reading `<* n="$b">` of the
+neighbouring word with that case and the captured number and gender.
+The case is literal for the known reason (a capture binds to the
+first reading it meets and never retries); number and gender may be
+captured because the umbra is the first place they are read. Rows
+are the same `<impletio>` as the object umbra. Executor: STAGES.
+`<regula gradus="2">` (attribute, default 1, declared in the canon);
+`oratio_resolutio_applicare` runs stage 1 to the highest stage
+present, each stage composing the program's rules of that stage
+against a FRESH projection of the sentence, so a stage-2 rule sees
+stage 1's reorderings; the vindicated-word set persists across
+stages and gains one law: an impletio row whose FILLER word is
+already vindicated and whose filler reading is not that word's first
+is repetita. Both were forced by `Cum puella bona ambulat`: in one
+stage the nominative head rule fired before the ablative one (rules
+are ordered by case, not by evidence) and bound `bona` to `puella`'s
+nominative; with stages the object umbra decides `puella` first and
+the law refuses the nominative filler because `puella` is spoken for
+and that reading is no longer its first. Probes: `Puella bona
+ambulat` → bona adiectivum nominativus (crude first: substantivum);
+`Cum puella bona ambulat` → puella ablativus, bona adiectivum
+ablativus; `Hoc templum est` → hoc determinans nominativus, templum
+nominativus (crude first: genitivus pluralis); `Hoc est` → hoc
+pronomen (no filler, the umbra stays a finding). Numbers:
+CIRCSE primary 72.9 → 76.5 % (adjective 78.6 %, determiner 19.9 %), LLCT 77.1 / 77.2 → 78.8 / 78.6 % (determiner 0 → 18.7 / 18.1 % on 2,096 / 1,914 words), EWT unchanged 75.3 / 75.5 (English readings carry no case, so no head umbra is born); coverage unchanged; the vocative pair adds nothing on Seneca and one permille on the charters; pins 765 / 787 / 785 / 753 / 754. Gates: resolutio (stage table, the four probes with
+their census, stage 1 alone leaves `bona` a noun), partes I b
+(caput umbrae on every cased reading of `bona`, six or more, each
+mirroring its reading's accidents), oraculum pins, canon (`gradus`).
+Open: the outranking law ("a reading with filled umbrae outranks one
+without", executor-side), English object umbrae (`to` + verb, `have`
++ participle), nomen-proprium and pronoun fillers if the numbers ask.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

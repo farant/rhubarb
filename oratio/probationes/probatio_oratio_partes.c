@@ -742,6 +742,61 @@ principale (vacuum)
             umbrae_adpositionum = umbrae_adpositionum + I;
         }
         CREDO_VERUM (umbrae_adpositionum >= (i32)II);   /* in: abl + acc */
+        /* CAPUT (T19d beta): lectio adiectivi cum casu umbram capitis
+         * fert casu numero genere suis; substantivum sine */
+        {
+            constans character* fons_b = "Puella bona ambulat.\n";
+                  MateriaNodus* doc_b = oratio_arbor_parsare(piscina,
+                      fons_b, (i32)strlen(fons_b));
+            OratioPartesCensus census_b;
+            MateriaNodus* bona;
+            constans MateriaValor* analyses_b;
+                              s32  locus_adi;
+                              i32  capita = ZEPHYRUM;
+
+            CREDO_NON_NIHIL (doc_b);
+            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+                doc_b, &census_b));
+            bona = _vocabulum(doc_b, ZEPHYRUM, ZEPHYRUM, I);
+            CREDO_NON_NIHIL (bona);
+            locus_adi = oratio_partes_locus(ORATIO_CLASSIS_ADIECTIVUM,
+                "umbrae");
+            CREDO_VERUM (locus_adi >= ZEPHYRUM);
+            analyses_b = &bona->loci[ORATIO_VOCABULUM_ANALYSES];
+            per (k = ZEPHYRUM;
+                 k < materia_valor_lista_numerus(*analyses_b); k++)
+            {
+                constans MateriaNodus* a = materia_valor_lista_obtinere(
+                    *analyses_b, k)->datum.nodus;
+                constans MateriaValor* umbrae;
+                constans MateriaNodus* umbra;
+
+                si (a->genus != (s32)ORATIO_GENUS_ANALYSIS_ADIECTIVI)
+                {
+                    perge;
+                }
+                umbrae = &a->loci[locus_adi];
+                CREDO_AEQUALIS_S32 ((s32)umbrae->genus,
+                    (s32)MATERIA_VALOR_LISTA);
+                umbra = materia_valor_lista_obtinere(*umbrae,
+                    ZEPHYRUM)->datum.nodus;
+                CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_RELATIO]
+                    .datum.index, (s32)ORATIO_RELATIO_CAPUT);
+                CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_CASUS]
+                    .datum.index, a->loci[oratio_partes_locus(
+                    ORATIO_CLASSIS_ADIECTIVUM, "casus")].datum.index);
+                CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_NUMERUS]
+                    .datum.index, a->loci[oratio_partes_locus(
+                    ORATIO_CLASSIS_ADIECTIVUM, "numerus")].datum.index);
+                CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_GENUS]
+                    .datum.index, a->loci[oratio_partes_locus(
+                    ORATIO_CLASSIS_ADIECTIVUM, "genus")].datum.index);
+                capita = capita + I;
+            }
+            /* bona: NOM/ABL/VOC S F, NOM/ACC/VOC P N */
+            CREDO_VERUM (capita >= (i32)VI);
+        }
+
         /* substantivum: umbrae nullae (gradu hoc) */
         analyses = &urbem->loci[ORATIO_VOCABULUM_ANALYSES];
         per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*analyses);

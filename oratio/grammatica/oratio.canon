@@ -105,6 +105,7 @@
   <elementum nomen="regula"
     nota="regula resolutionis (radix ALTERA documenti expansi post arbor - canon radicem unam solam declarat): titulus = nomen regulae (causa in plano et in censu); liberi = bracchia CAPS machinae + consilium">
     <attributum nomen="titulus" genus="textus" necessarium="verum"/>
+    <attributum nomen="gradus" genus="numerus"/>
     <liberum nomen="consilium" maximum="1"/>
   </elementum>
   <elementum nomen="consilium" intra="regula"

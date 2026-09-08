@@ -226,12 +226,23 @@ _umbras_ponere (
                  MateriaNodus* analysis,
     constans OratioDescriptio* d)
 {
-    si (   d->classis           == ORATIO_CLASSIS_ADPOSITIO
-        && d->casus_grammaticus >= ZEPHYRUM)
-    {
+        si (   d->classis           == ORATIO_CLASSIS_ADPOSITIO
+            && d->casus_grammaticus >= ZEPHYRUM)
+        {
         redde _umbram_addere(piscina, analysis, d->classis,
             ORATIO_RELATIO_OBIECTUM, d->casus_grammaticus, (s32)-I,
             (s32)-I);
+        }
+    /* CAPUT (T19d beta): adiectivum et determinans caput substantivum
+     * exspectant quod casu numero genere concordat - condiciones ex
+     * lectione IPSA (ADJ 1 1 NOM S F -> umbra capitis NOM S F) */
+    si (   (   d->classis == ORATIO_CLASSIS_ADIECTIVUM
+            || d->classis == ORATIO_CLASSIS_DETERMINANS)
+        && d->casus_grammaticus >= ZEPHYRUM)
+    {
+        redde _umbram_addere(piscina, analysis, d->classis,
+            ORATIO_RELATIO_CAPUT, d->casus_grammaticus, d->numerus,
+            d->genus);
     }
     redde VERUM;
 }
