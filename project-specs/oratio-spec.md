@@ -1546,6 +1546,37 @@ nothing, and a crossing binding is read as evidence against the
 BINDING — law 3 of T20c. The oracle reports discordiae and catenatae;
 the gate asserts catenatae == 0. NEXT: T20c.
 
+**As built — T20c I, the box against the loose heads (2026-09-08,
+same session).** Law 3 went first because T20b pointed at it. Two
+mechanisms: the executor predicate `_trans_clausulas` refuses an
+impletio row whose ends are stamped into different clauses (the
+relative's binding to its antecedent excepted; switch
+`RECUSATIO_TRANS_CLAUSULAS`, variants I–VI), and the pattern itself,
+`clausula="$c"` on both words of the sixteen loose head rules (a
+repeated capture is equality), in a hard form and a soft one (in-
+clause copies at stage 3, the unrestricted rules as a stage-4
+fallback). Primary / forced permille against the base 799/765,
+838/710, 831/711 (EWT never moves): executor, pure layers 798/769,
+838/711, 832/716; any layer 795/775, 839/718, 833/727; no coordinate
+clause 798/765, 838/711, 832/714; pattern hard 797/782, 841/723,
+834/729; pattern soft 799/764, 837/707, 830/707; and the CONTROL
+without the box — refuse whenever a certain seed word lies between
+the two words, stamps ignored — 797/772, 841/726, 834/731.
+FINDINGS: the soft form loses, so the loose rule's nearest candidate
+is already inside the box and refusal is the only lever; the refused
+bindings choose the right reading 71 % of the time, better than
+Seneca's default and worse than the charters' — an uncertain cell,
+decision 37 measured rather than argued; and the control equals the
+box, because the box's only information beyond the seeds is the
+closure layer at 66–74 %. DECISION: every variant depresses Seneca
+primary at the gate's resolution, so none is kept — the predicate
+and the control stay in the executor at zero with the numbers, the
+pattern file is unchanged, and the forced gain (up to +18 permille)
+is the price the Seneca pin holds. Law 3 as designed is not built;
+any later clause law must beat the seed-between control. Laws 1, 2
+and 4 use membership, which the control cannot express. NEXT: law 1,
+the verb hidden single.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

@@ -538,11 +538,25 @@ layers / any) — adjacent moves ~nothing and loses on Seneca, distant
 loses a full percent everywhere: the span is right more often than
 the distant binding, so the discordia is evidence AGAINST the binding
 (= T20c law 3, loose heads inside the box). `catena` places nothing;
-override switch at 0 with the numbers. NEXT = T20c (clause carrier in
-the executor: verb umbra hidden single, `cum` conjunction,
-`cursus="clausulae"` on loose heads — now with 547/1016/956 crossing
-bindings as the first thing to refuse, subject umbra). Head-rule
-template still open.
+override switch at 0 with the numbers. **T20c I (same day): LOOSE
+HEADS INSIDE THE BOX, measured seven ways and REFUSED** — executor
+predicate `_trans_clausulas` (an impletio row whose ends sit in
+different clauses is refused; switch `RECUSATIO_TRANS_CLAUSULAS`,
+variants I–VI with their numbers in the code) and the pattern form
+`clausula="$c"` on both words of the 16 loose head rules (hard, and
+soft = in-clause copies at stage 3 with the unrestricted rules as a
+stage-4 fallback). Primary/forced base 799/765, 838/710, 831/711;
+pattern hard 797/782, 841/723, 834/729 (forced +17/+13/+18, Seneca
+−26 words); soft LOSES everywhere (refusal is the only lever, the
+nearest candidate is already in the box); the CONTROL without the box
+(refuse across a certain seed word, stamps ignored) 797/772, 841/726,
+834/731 = the box. Every variant costs Seneca primary → none kept
+(rule: no treebank falls). Lesson: for boundary laws the box IS the
+seeds (closure is the weakest layer); any clause law must beat the
+seed-between control; the box has to prove itself on MEMBERSHIP laws.
+Gate: `recusatae_clausulis == 0`. NEXT = T20c law 1 (verb umbra
+hidden single: clauses as carriers), then `cum` conjunction, subject
+umbra. Head-rule template still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

@@ -79,9 +79,13 @@ nomen structura {
         /* vocabula decisa per genus decisionis (T19g: locus 'decisio'
      * vocabuli scriptus - praelatio | impletio | umbra) */
     i32 decisae[ORATIO_DECISIO_NUMERUS];
-    /* T20a: stampa clausularum (strata I-III) ante gradus - census
+        /* T20a: stampa clausularum (strata I-III) ante gradus - census
      * eius (semina, causae, clausulae per speciem) */
     OratioClausulaCensus clausulae;
+    /* T20c lex I: ordines impletionis recusati quia carrier et implens
+     * clausulis DIVERSIS positi sunt (ambo stratis puris: semen,
+     * extentum, unica; relativum ad antecedens exceptum) */
+    i32 recusatae_clausulis;
 } OratioResolutioCensus;
 
 

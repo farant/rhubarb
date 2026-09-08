@@ -355,6 +355,213 @@ _numerus_attributi (
     redde materia_arbor_numerus_ex_chorda(v, exitus);
 }
 
+/* LEX I CLAUSULAE (T20c, 2026-09-08): ligatio trans clausulas recusatur.
+ * T20b numeravit: ligationes remotae limitem clausulae DXLVII / MXVI /
+ * CMLVI transeunt et regulae capitis remotae XXXIII-LXX % rectae sunt
+ * (T19g bis) - capsa testimonium contra ligationem est. Decisio
+ * XXXVII: eliminatio sana solum super cellulis DECISIS - membrum
+ * decisum = positum strato puritatis > XC % (semen, extentum, unica),
+ * clausura/verbum aperta habentur. Variationes mensuratae (primarium
+  * + coactae thesauris V): 0 nulla; I capita sola, strata pura; II
+ * relationes omnes, strata pura; III capita sola, strata quaevis; IV
+ * ut I sed ligationes REMOTAE solae (distantia >= II: vicinae trans
+  * limitem semina ipsa faciunt); V ut I sed neutra clausula COORDINATA
+  * (scissio verbi: limes incertissimus); VI CUSTODIA sine capsa: semen
+ * certum inter v et w interiectum recusat, stampa neglecta.
+ * MENSURATUM (primarium / coactae permille; basis Seneca 799/765,
+ * chartae 838/710 + 831/711; EWT numquam movetur): I 798/769 838/711
+ * 832/716; II 798/769 839/711 832/716; III 795/775 839/718 833/727;
+ * IV ut I; V 798/765 838/711 832/714; VI 797/772 841/726 834/731;
+ * forma DURA in exemplari (clausula="$c" in regulis laxis XVI)
+ * 797/782 841/723 834/729; forma MOLLIS (exemplaria intra clausulam
+ * gradu III, laxa gradu IV) 799/764 837/707 830/707. Ligationes
+ * recusatae lectionem rectam LXXI % eligebant: cellula INCERTA.
+ * Omnis variatio primarium Senecae deprimit (X-XLVI vocabula): regula
+ * 'nullus thesaurus cadat' omnes recusat; custodia VI capsam paene
+ * aequat - lex haec semen legit, non capsam (informatio propria
+ * capsae = clausura, stratum debilissimum). Interruptor ZEPHYRUM cum
+ * numeris manet; lex clausulae quaevis custodiam VI vincere debet. */
+hic_manens constans i32 RECUSATIO_TRANS_CLAUSULAS = ZEPHYRUM;
+
+
+interior b32
+_stratum_purum (
+    s32 causa)
+{
+    redde (b32)(   causa == (s32)ORATIO_CLAUSULA_CAUSA_SEMEN
+                || causa == (s32)ORATIO_CLAUSULA_CAUSA_EXTENTUM
+                || causa == (s32)ORATIO_CLAUSULA_CAUSA_UNICA);
+}
+
+/* clausula et causa elementi k (loci per genus); -I non scripta */
+interior vacuum
+_clausula_elementi (
+    MateriaValor  elementa,
+             i32  k,
+             s32* clausula,
+             s32* causa)
+{
+    constans MateriaNodus* e = materia_valor_lista_obtinere(elementa,
+        k)->datum.nodus;
+                      s32 locus = oratio_locus_clausulae(
+                          (OratioGenus)e->genus, FALSUM);
+                      s32 locus_causae = oratio_locus_clausulae(
+                          (OratioGenus)e->genus, VERUM);
+
+    *clausula  = (s32)-I;
+    *causa     = (s32)-I;
+    si (   locus                >= ZEPHYRUM
+        && e->loci[locus].genus == MATERIA_VALOR_INDEX)
+    {
+        *clausula = e->loci[locus].datum.index;
+    }
+    si (   locus_causae                >= ZEPHYRUM
+        && e->loci[locus_causae].genus == MATERIA_VALOR_INDEX)
+    {
+        *causa = e->loci[locus_causae].datum.index;
+    }
+}
+
+/* nodus clausulae c sententiae; NIHIL si non scripta */
+interior constans MateriaNodus*
+_nodus_clausulae (
+    constans MateriaNodus* sententia,
+                      s32  c)
+{
+    constans MateriaValor* clausulae =
+        &sententia->loci[ORATIO_SENTENTIA_CLAUSULAE];
+    constans MateriaValor* v;
+
+    si (   c < ZEPHYRUM || clausulae->genus != MATERIA_VALOR_LISTA
+        || (i32)c >= materia_valor_lista_numerus(*clausulae))
+    {
+        redde NIHIL;
+    }
+    v = materia_valor_lista_obtinere(*clausulae, (i32)c);
+    si (v == NIHIL || v->genus != MATERIA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    redde v->datum.nodus;
+}
+
+/* species clausulae c; -I si non scripta */
+interior s32
+_species_clausulae (
+    constans MateriaNodus* sententia,
+                      s32  c)
+{
+    constans MateriaNodus* n = _nodus_clausulae(sententia, c);
+
+    si (   n == NIHIL || n->loci[ORATIO_CLAUSULA_SPECIES].genus
+        != MATERIA_VALOR_INDEX)
+    {
+        redde (s32)-I;
+    }
+    redde n->loci[ORATIO_CLAUSULA_SPECIES].datum.index;
+}
+
+/* an elementum k semen clausulae relativae c sit */
+interior b32
+_semen_relativum (
+    constans MateriaNodus* sententia,
+                      s32  c,
+                      i32  k)
+{
+    constans MateriaNodus* n = _nodus_clausulae(sententia, c);
+
+    redde (b32)(   n != NIHIL
+                && _species_clausulae(sententia, c)
+                    == (s32)ORATIO_SPECIES_CLAUSULAE_RELATIVA
+                && n->loci[ORATIO_CLAUSULA_SEMEN].genus
+                    == MATERIA_VALOR_INDEX
+                && n->loci[ORATIO_CLAUSULA_SEMEN].datum.index
+                    == (s32)k);
+}
+
+/* an semen (stampa 'semen') inter v et w stricte interiaceat */
+interior b32
+_semen_interiectum (
+    MateriaValor elementa,
+             i32 v,
+             i32 w)
+{
+    i32 a = v < w ? v : w;
+    i32 b = v < w ? w : v;
+    i32 k;
+    s32 clausula;
+    s32 causa;
+
+    per (k = a + I; k < b; k = k + I)
+    {
+        _clausula_elementi(elementa, k, &clausula, &causa);
+        si (causa == (s32)ORATIO_CLAUSULA_CAUSA_SEMEN)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ordo impletionis v -> w trans clausulas recusandus? */
+interior b32
+_trans_clausulas (
+    constans MateriaNodus* sententia,
+             MateriaValor  elementa,
+                      i32  v,
+                      i32  w,
+                      s32  relatio)
+{
+    s32 cv;
+    s32 causa_v;
+    s32 cw;
+    s32 causa_w;
+
+    si (RECUSATIO_TRANS_CLAUSULAS == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (   RECUSATIO_TRANS_CLAUSULAS != (i32)II
+        && relatio                   != (s32)ORATIO_RELATIO_CAPUT)
+    {
+        redde FALSUM;
+    }
+        si (RECUSATIO_TRANS_CLAUSULAS == (i32)VI)
+        {
+        redde _semen_interiectum(elementa, v, w);
+        }
+    _clausula_elementi(elementa, v, &cv, &causa_v);
+    _clausula_elementi(elementa, w, &cw, &causa_w);
+    si (cv < ZEPHYRUM || cw < ZEPHYRUM || cv == cw)
+    {
+        redde FALSUM;
+    }
+    si (   RECUSATIO_TRANS_CLAUSULAS == (i32)V
+        && (   _species_clausulae(sententia, cv)
+                == (s32)ORATIO_SPECIES_CLAUSULAE_COORDINATA
+            || _species_clausulae(sententia, cw)
+                == (s32)ORATIO_SPECIES_CLAUSULAE_COORDINATA))
+    {
+        redde FALSUM;   /* limes scissionis: incertissimus */
+    }
+    si (   RECUSATIO_TRANS_CLAUSULAS != (i32)III
+        && (!_stratum_purum(causa_v) || !_stratum_purum(causa_w)))
+    {
+        redde FALSUM;   /* cellula aperta: nihil eliminatur */
+    }
+    si (   _semen_relativum(sententia, cv, v)
+        || _semen_relativum(sententia, cw, w))
+    {
+                redde FALSUM;   /* relativum ad antecedens: limes iure */
+    }
+    si (   RECUSATIO_TRANS_CLAUSULAS == (i32)IV
+        && (v > w ? v - w : w - v) < (i32)II)
+    {
+        redde FALSUM;   /* vicina: limes seminis ipsius */
+    }
+    redde VERUM;
+}
+
 /* IMPLETIO (T19d): umbra ligandum post permutationes - umbra nodus
  * (stabilis per permutationem listae), vocabulum implens w, analysis
  * implens b (index ANTE permutationem; remittitur) */
@@ -1026,9 +1233,20 @@ _sententiam_resolvere_gradu (
              * manet, in urbem intacta - mensuratum); semel per gradum.
              * Carrier sine lectione classis suae ligatur, non praefertur
              * (ut ante: supra + accusativus); implens aliena = repetita. */
-            relatio = umbra->loci[ORATIO_UMBRA_RELATIO].genus
-                == MATERIA_VALOR_INDEX
-                ? umbra->loci[ORATIO_UMBRA_RELATIO].datum.index : (s32)-I;
+                        relatio =
+                            umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                            == MATERIA_VALOR_INDEX
+                            ? umbra->loci[ORATIO_UMBRA_RELATIO].datum.index : (s32)-I;
+            /* T20c lex I: ligatio trans clausulas recusata */
+            si (_trans_clausulas(sententia, *elementa, v, w, relatio))
+            {
+                si (cursus->census != NIHIL)
+                {
+                    cursus->census->recusatae_clausulis =
+                        cursus->census->recusatae_clausulis + I;
+                }
+                perge;
+            }
             emendare_v = FALSUM;
             emendare_w = FALSUM;
             si (   explicita[v] && !emendata[v]

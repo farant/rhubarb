@@ -2236,3 +2236,66 @@ That is law 3 of T20c, the loose head rules confined to the clause,
 which the T19g bis listing already wanted when it found distant head
 bindings at 33 to 70 percent. The oracle reports the counts; nothing
 is pinned on them.
+
+## 2026-09-08 — T20c I: the box as a constraint on the loose heads, measured seven ways
+
+The payoff direction T20b named: a head binding whose ends sit in
+different clauses is wrong more often than the box, so refuse it.
+Two mechanisms. The executor predicate `_trans_clausulas` refuses an
+impletio row whose ends are stamped into different clauses (the
+relative pronoun's binding to its antecedent excepted), switched by
+`RECUSATIO_TRANS_CLAUSULAS`; and the pattern itself, `clausula="$c"`
+on both words of the sixteen loose head rules, a repeated capture
+being equality in the pattern machine. The pattern cannot say "only
+where the stamp is pure", the executor can.
+
+The numbers, primary / forced permille per file, base Seneca 799 /
+765, dev 838 / 710, test 831 / 711, EWT untouched by every variant:
+
+- I executor, heads, pure layers (semen, extentum, unica):
+  798 / 769, 838 / 711, 832 / 716 — Seneca −12 words primary
+- II all relations, pure layers: 798 / 769, 839 / 711, 832 / 716
+- III heads, any layer: 795 / 775, 839 / 718, 833 / 727 — Seneca −46
+- IV as I, distant bindings only: as I
+- pattern, hard: 797 / 782, 841 / 723, 834 / 729 — Seneca −26 words,
+  forced +17 / +13 / +18, charter primary +58 / +55 words
+- pattern, soft (in-clause copies at stage 3, the unrestricted rules
+  as a stage 4 fallback): 799 / 764, 837 / 707, 830 / 707 — worse
+  than the base on the charters and on every forced number
+- V as I but neither clause a verb-split coordinate: 798 / 765,
+  838 / 711, 832 / 714 — Seneca −10, so the split boundary is not
+  where the wrong refusals come from
+- VI the CONTROL without the box: refuse a head binding whenever a
+  certain seed word lies between the two words, stamps ignored:
+  797 / 772, 841 / 726, 834 / 731
+
+What the soft variant says is the important thing: preferring the
+in-clause candidate gains nothing, because the loose rule's nearest
+candidate is already inside the box nearly always. The whole gain of
+the hard variant is the refusal — on Seneca it removes 787 forced
+decisions of which 558 were right (709 permille, below the forced
+average but far above zero), and that is exactly the 26-word primary
+loss: the removed bindings were less reliable than the kept ones and
+still better than the default reading. The box is a real signal and
+not a certain one; eliminating over an uncertain cell costs, which
+is decision 37 measured rather than argued. Every variant depresses
+Seneca primary at the gate's resolution, so under the rule that no
+treebank may fall none is kept: the predicate stays in the executor
+at zero with the numbers, the pattern file is unchanged, and the
+forced gains (up to +18 permille) are recorded as the price the
+Seneca pin is holding. The way to earn them is a purer stamp, not a
+softer rule.
+
+And the control is the finding of the day: refusing across a seed
+word, with no clause structure at all, reproduces the hard pattern
+law almost exactly — the charters' primary to the word (841 / 834),
+the forced numbers within a few permille, Seneca the same loss. The
+box's only information beyond the seeds is where a clause CLOSES,
+and closure is the weakest layer, so for this law the box is the
+seeds. Law 3 as designed (`cursus="clausulae"` on the loose heads)
+is not built; the predicate and the control stay in the executor at
+zero, and the bar for every later clause law is now explicit: it
+must beat the seed-between control, or the clause is not earning
+its machinery there. Laws 1, 2 and 4 use membership (which verb is
+inside the box with which nominative), which the control cannot
+express; that is where the box has to prove itself next.
