@@ -1214,6 +1214,33 @@ measured a fourth time (adposition prior removed, objectless
 adposition readings demoted, now that unknown objects bind); the
 head-rule template; verb slots.
 
+**Measured and rejected — T19j and T19l (2026-09-08, same session).**
+Head-class laws for Seneca's tail, each on all five treebanks: a head
+must be a strong class (noun, proper noun, pronoun; Seneca +0.2,
+charters −0.1 / −0.3); a weak head binds without preferring and the
+law of umbrae ignores it (identical); only the strong twin with the
+same accidents substituted (charters −0.2 / −0.1: `sancta` the noun
+over the adjective); a loose-stage carrier whose crude first reading
+is a noun or verb bound without preferring (Seneca −0.4, charters
+−0.2 / −0.4); and earlier the noun-only head in the pattern (charters
+−0.6 / −1.2). Lesson: a distant adjective binding at seventy percent
+beats the crude order for those words even on Seneca, and the
+charters' heads are proper nouns, pronouns and, for the eighteen
+percent of unknown nouns, the agreeing adjective beside them. The
+demotion a fourth time, on the complete grid: the adposition prior
+removed (−0.1 / −0.3 / −0.2: the object rules take noun fillers only);
+any case-bearing reading as object (+0.1 charters, −0.1 Seneca); an
+explicit adposition with no object anywhere demoted (no change: the
+alternative readings of an objectless preposition are junk — a
+capital-rule name for a sentence-initial `A`, `de` as a noun, `super`
+as a verb — and `cum` the conjunction is two words on Seneca). The
+contradiction is sound now and worth nothing, because the reading that
+should replace the preposition is not on the board. Decision (Fran):
+the next structure is the CLAUSE — a `clausula` INDEX slot stamped on
+elements, the sudoku box between adjacency and the whole sentence,
+with the finite verb's slots as its laws and the gold dependency
+subtrees as its oracle (ledger 01M1ZYZB67).
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the
