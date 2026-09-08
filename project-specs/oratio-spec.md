@@ -1521,7 +1521,10 @@ PURITY is now reported, not pinned: it fell 3 on the test charters
 while concordance rose 7 and the count moved toward gold, the same
 one-sidedness that demoted count agreement; concordance is the only
 pinned decision measure. Gate: `una cum`, `quantum` hand cases.
-NEXT: T20b.
+T20a sexies (Fran): the concordance pins are the EXACT concordant
+pair counts, not truncated permille (a 39-pair loss was visible or
+not depending on where the truncation boundary fell); the loop reads
+the machine rows. NEXT: T20b.
 
 ## 8. Stage 6 — search
 

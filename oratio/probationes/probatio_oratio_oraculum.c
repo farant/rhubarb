@@ -120,12 +120,17 @@
 #define EWT_TEST_PURITAS_PINNA    737
 /* T20a ter (2026-09-08): CONCORDIA PARIUM (Rand super paria verborum
  * intra sententiam; puritas sola segmentationem nimiam praemiat) -
- * mensura decisionum variationum, pinnata solum crescens. */
-#define CIRCSE_CONCORDIA_PINNA    820
-#define LLCT_DEV_CONCORDIA_PINNA  826
-#define LLCT_TEST_CONCORDIA_PINNA 809
-#define EWT_DEV_CONCORDIA_PINNA   539
-#define EWT_TEST_CONCORDIA_PINNA  547
+ * mensura decisionum variationum, pinnata solum crescens. T20a sexies
+ * (Fran): pinna = NUMERUS parium concordantium EXACTUS, non permille
+ * - permille truncatum XXXIX paria Senecae modo ostendebat modo
+ * celabat pro loco limitis (820.4 celat, 820.0 ostendit); numerus
+ * exactus fortunam tollit et regulam (thesaurus nullus cadat)
+ * strictissime legit. Paria tota per thesaurum relata. */
+#define CIRCSE_CONCORDIA_PINNA    102551
+#define LLCT_DEV_CONCORDIA_PINNA  438519
+#define LLCT_TEST_CONCORDIA_PINNA 444139
+#define EWT_DEV_CONCORDIA_PINNA   104973
+#define EWT_TEST_CONCORDIA_PINNA  107344
 #define CIRCSE_PARES_PINNA       653
 #define LLCT_DEV_PARES_PINNA     762
 #define LLCT_TEST_PARES_PINNA    788
@@ -573,12 +578,15 @@ _thesaurus_arborum (
             i32 concordia = _permille(census.clausulae_paria_concordia,
                 census.clausulae_paria);
 
-            imprimere("    clausulae: concordia parium %d permille (pinna %d,"
-                " solum crescens; %d paria)\n", (integer)concordia,
-                (integer)pinna_concordiae,
-                (integer)census.clausulae_paria);
+            imprimere("    clausulae: concordia parium %d permille - %d de %d paria"
+                " (pinna %d paria, solum crescens)\n",
+                (integer)concordia,
+                (integer)census.clausulae_paria_concordia,
+                (integer)census.clausulae_paria,
+                (integer)pinna_concordiae);
             CREDO_VERUM (census.clausulae_paria > ZEPHYRUM);
-            CREDO_VERUM (concordia >= pinna_concordiae);
+            CREDO_VERUM (census.clausulae_paria_concordia
+                >= pinna_concordiae);
         }
         /* errata clausularum: summa numerorum == positae - rectae */
         {

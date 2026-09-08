@@ -524,9 +524,13 @@ verb, as before — the certain-only variant cost Seneca 39 pairs and
 was dropped), forms of `quantus` seed a relative clause (`quantum ...
 est pertenentes`); concordance pins 820/826/809; PURITY now reported
 not pinned (fell 3 while concordance rose 7: one-sided like count).
-Clauses per sentence 2.51 / 2.38 vs 2.52 / 2.25. NEXT = T20b catena
-(chain along bindings, discordia count). Head-rule template still
-open.
+Clauses per sentence 2.51 / 2.38 vs 2.52 / 2.25. **T20a sexies
+(Fran)**: concordance pins are EXACT concordant-pair counts per
+treebank (102551 / 438519 / 444139 / 104973 / 107344), not truncated
+permille — no boundary luck; the measurement loop reads the machine
+rows (`CLAUSULAE` columns: paria, concordia) and the human line prints
+the gate's permille with the counts. NEXT = T20b catena (chain along
+bindings, discordia count). Head-rule template still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

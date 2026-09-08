@@ -142,9 +142,13 @@ _clausulas_imprimere (
             _pars(c->clausulae_verba[i], c->clausulae_iudicata),
             _pars(c->clausulae_rectae[i], c->clausulae_verba[i]));
     }
-        imprimere("    concordia parium %5.1f%% (%d paria)\n",
-            _pars(c->clausulae_paria_concordia, c->clausulae_paria),
-            (integer)c->clausulae_paria);
+            /* ut porta: permille truncatum et numeri exacti (T20a sexies) */
+    imprimere("    concordia parium %d permille - %d de %d paria\n",
+        (integer)(c->clausulae_paria > ZEPHYRUM
+            ? (s64)c->clausulae_paria_concordia * (s64)1000
+                / (s64)c->clausulae_paria : (s64)ZEPHYRUM),
+        (integer)c->clausulae_paria_concordia,
+        (integer)c->clausulae_paria);
     imprimere("    coactio %5.1f%% (%d/%d)  clausulae nostrae %d aureae %d"
         " (%.2f / %.2f per sententiam)  sententiae pares %5.1f%%\n",
         _pars(positae, c->clausulae_iudicata), (integer)positae,

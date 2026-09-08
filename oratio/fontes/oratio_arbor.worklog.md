@@ -2193,3 +2193,22 @@ toward gold, which is purity rewarding over-segmentation once more.
 It joins count agreement as a reported number; concordance is the
 only pinned decision measure now, which is what the ter entry
 already argued and I had left half done.
+
+## 2026-09-08 — T20a sexies: the concordance floor in exact pairs
+
+Fran asked whether the invisible pair loss could be addressed. It was
+two things. The measurement loop read the human table at a tenth of
+a percent while the gate compared truncated permille, so the loop
+could not see what the gate would judge; it reads the machine rows
+now, and the instrument's human line prints the permille exactly as
+the gate computes it, with the counts beside it. And truncation put
+the boundary where luck put it: a base of 820.4 hides a 39-pair loss
+that a base of 820.0 shows. The concordance pins are now the exact
+number of concordant pairs per treebank, only rising: no boundary, no
+luck, and the strictest reading of the rule that no treebank may
+fall, which is the reading that produced the ablative test for `cum`
+today instead of a tolerance that would have kept the worse rule. If
+a tolerance is ever needed, the right one is a sentence-level
+comparison (how many sentences improved against how many worsened),
+which distinguishes noise from a real minority class; it is not
+built.
