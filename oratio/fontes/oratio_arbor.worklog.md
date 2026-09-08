@@ -1826,3 +1826,41 @@ table already keys. Method notes: the sum law of the partition needs
 every judged word in exactly one bucket (range words after the first
 get their own), and the identifier lint refused `profilum`, which is
 not Latin; `partitio` is.
+
+## 2026-09-08 — T19g bis: the listing, and what distance says
+
+The per-rule accuracy table said which rules decide wrongly; the
+listing says on which forms and, more usefully, bound to what and
+how far away. The partner is found through the parent pointer: a
+carrier's first reading names its filler in the umbra; a filler has
+to be found by scanning the sentence for the nearest reading whose
+umbra points back at it, and the first version of that scan looked
+only at neighbours and came back empty for most fillers, because
+the `sequente` head rules run on `cursus="fratrum"` and bind past
+any gap. That emptiness was the finding. Splitting each rule's
+accuracy by partner distance made it a number: the genitive head
+rule on the charters is right 99 % adjacent and 33 % distant, the
+accusative 84 against 52, Seneca's nominative 82 against 70 with
+three quarters of its decisions distant. The law of umbrae was
+restricted to neighbours on 2026-09-07 after the same lesson, but
+the row's preference — the part that actually puts a reading first
+— never was. The object rules are the opposite and bind legitimately
+past a modifier, so the restriction belongs to the head rules alone.
+
+The charters have a second failure that distance does not explain:
+their nominative head rule is wrong 39 % of the time even adjacent,
+and the dative one 73 %. The listing shows why in three lines:
+`suprascripti`, `mea`, `alio`, `nostro`, `omnia` — all DET in UD's
+convention, all carrying both a determinans and an adjective reading
+with a head umbra, and the adjective wins the tie because it comes
+first in the list. That is the "two filled readings tie by rule
+order" finding from the law's first measurement, now with a name and
+a count, and it is data, not a rule.
+
+Method notes. Editio judges a file against the headers on disk, so
+an instrument that references a new struct field must be edited
+after the header, not before; I did it the wrong way round twice.
+And the sum law per rule (errata equal words minus primary) is what
+made me trust the partner search: it held before and after the
+rewrite, so the rewrite changed only what the rows say, not how many
+there are.

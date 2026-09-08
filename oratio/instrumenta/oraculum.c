@@ -11,6 +11,14 @@
  *              ignota, inalignata); cum -discrepantiae ordines
  *              'plagula DISCREPANTIA aurea forma nostra numerus'
  *   -exempla   verba non tecta prima V per classem
+ *   -errata    per auctorem (regula decidens, T19g bis): decisiones
+ *              FALSAE - forma, classis aurea, nostra prima, socius
+ *              ligationis, numerus (data emendationis regularum);
+   *              -machina ordines 'plagula ERRATUM auctor forma aurea
+ *              nostra socius distantia numerus'; ordines AUCTOR
+ *              'titulus verba primaria vicina vicina-primaria remota
+ *              remota-primaria' (socius ad distantiam I | ultra)
+ *   -auctor T  cum -errata: auctoris T solius
  *   -discrepantiae  per classem auream: formae TECTAE sed non primae
  *              cum classe nostra prima et numero, XII frequentissimae
  *              (T19a: data regularum priorum classium)
@@ -82,6 +90,7 @@ _pars (
 }
 
 #define DISCREPANTIAE_IMPRESSAE 12
+#define ERRATA_IMPRESSA         24
 
 interior vacuum
 _discrepantias_imprimere (
@@ -133,9 +142,12 @@ _tabulam_imprimere (
     constans OratioOraculumCensus* c,
                constans character* titulus,
                               b32  exempla,
-                              b32  discrepantiae)
+                              b32  discrepantiae,
+                              b32  errata,
+                           chorda  auctor_petitus)
 {
     i32 i;
+
 
     imprimere("--- %s: sententiae %d (fractae %d)  verba %d  rangae %d ---\n",
         titulus, (integer)c->sententiae, (integer)c->sententiae_fractae,
@@ -184,10 +196,13 @@ _tabulam_imprimere (
         Xar* auctores = oratio_oraculum_auctores(piscina, c);
         i32  j;
 
-        si (auctores != NIHIL && xar_numerus(auctores) > ZEPHYRUM)
-        {
-            imprimere("  auctores (regula decidens: verba, primaria):\n");
-        }
+                si (   auctores != NIHIL
+                    && xar_numerus(auctores) > ZEPHYRUM)
+                {
+            imprimere("  auctores (regula decidens: verba, primaria; socius"
+                " vicinus | remotus):\n");
+                }
+
         per (j = ZEPHYRUM; auctores != NIHIL
             && j < xar_numerus(auctores);
              j++)
@@ -195,13 +210,85 @@ _tabulam_imprimere (
             constans OratioOraculumAuctor* a =
                 *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
 
-            imprimere("    %-44.*s %6d  primaria %5.1f%%\n",
+                                    imprimere("    %-44.*s %6d  primaria %5.1f%%"
+                                        "  vicina %5d %5.1f%%  remota %5d %5.1f%%\n",
+                                        (integer)a->titulus.mensura,
+                                        (constans character*)a->titulus.datum,
+                                        (integer)a->verba,
+                                        _pars(a->primaria, a->verba),
+                                        (integer)a->vicina,
+                                        _pars(a->vicina_primaria,
+                                        a->vicina),
+                                        (integer)a->remota,
+                                        _pars(a->remota_primaria,
+                                        a->remota));
+        }
+        /* T19g bis: errata per auctorem - decisiones falsae cum
+         * socio ligationis, frequentissimae primae */
+        per (j = ZEPHYRUM; errata && auctores != NIHIL
+             && j < xar_numerus(auctores); j++)
+        {
+            constans OratioOraculumAuctor* a =
+                *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
+            Xar* es;
+            i32  m;
+            i32  aliae_formae  = ZEPHYRUM;
+            i32  aliae_verba   = ZEPHYRUM;
+
+            si (   auctor_petitus.mensura > ZEPHYRUM
+                && chorda_comparare(a->titulus, auctor_petitus)
+                    != ZEPHYRUM)
+            {
+                perge;
+            }
+            es = oratio_oraculum_errata(piscina, c, a->titulus);
+            si (es == NIHIL || xar_numerus(es) == ZEPHYRUM)
+            {
+                perge;
+            }
+            imprimere("  errata %.*s (%d verba, %d falsa):\n",
                 (integer)a->titulus.mensura,
                 (constans character*)a->titulus.datum,
-                (integer)a->verba,
-                _pars(a->primaria, a->verba));
+                (integer)a->verba, (integer)(a->verba - a->primaria));
+            per (m = ZEPHYRUM; m < xar_numerus(es); m++)
+            {
+                constans OratioOraculumErratum* d =
+                    *(OratioOraculumErratum**)xar_obtinere(es, m);
+
+                si (m < (i32)ERRATA_IMPRESSA)
+                {
+                                        imprimere("      %-18.*s aurea %-14s nostra %-14s"
+                                            " socius %-16.*s @%-2d %5d\n",
+                                            (integer)d->forma.mensura,
+                                            (constans character*)d->forma.datum,
+                                            oratio_classis_titulus(d->aurea)
+                                                != NIHIL
+                                            ? oratio_classis_titulus(d->aurea) : "(extra)",
+                                            (i32)d->nostra
+                                            < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                                            ? oratio_classis_titulus(d->nostra) : "(nulla)",
+                                            d->socius.mensura > ZEPHYRUM
+                                            ? (integer)d->socius.mensura : (integer)I,
+                                                d->socius.mensura
+                                                    > ZEPHYRUM
+                                            ? (constans character*)d->socius.datum : "-",
+                                            (integer)d->distantia,
+                                            (integer)d->numerus);
+                }
+                alioquin
+                {
+                    aliae_formae  = aliae_formae + I;
+                    aliae_verba   = aliae_verba + d->numerus;
+                }
+            }
+            si (aliae_formae > ZEPHYRUM)
+            {
+                imprimere("      ... aliae %d formae, %d verba\n",
+                    (integer)aliae_formae, (integer)aliae_verba);
+            }
         }
     }
+
 
     imprimere("  %-24s %6s %7s %8s %8s %7s\n", "classis aurea", "verba",
         "tecta", "primaria", "lemmata", "ignota");
@@ -247,9 +334,12 @@ _machinam_imprimere (
                           Piscina* piscina,
     constans OratioOraculumCensus* c,
                constans character* titulus,
-                              b32  discrepantiae)
+                              b32  discrepantiae,
+                              b32  errata,
+                           chorda  auctor_petitus)
 {
     i32 i;
+
 
     per (i = ZEPHYRUM; i <= (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
     {
@@ -290,13 +380,47 @@ _machinam_imprimere (
             constans OratioOraculumAuctor* a =
                 *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
 
-            imprimere("%s\tAUCTOR\t%.*s\t%d\t%d\n", titulus,
-                (integer)a->titulus.mensura,
-                (constans character*)a->titulus.datum,
-                (integer)a->verba,
-                (integer)a->primaria);
+                                    imprimere("%s\tAUCTOR\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\n",
+                                        titulus,
+                                        (integer)a->titulus.mensura,
+                                        (constans character*)a->titulus.datum,
+                                        (integer)a->verba,
+                                        (integer)a->primaria,
+                                        (integer)a->vicina,
+                                        (integer)a->vicina_primaria,
+                                        (integer)a->remota,
+                                        (integer)a->remota_primaria);
         }
     }
+    /* T19g bis: ordines ERRATUM auctor forma aurea nostra socius numerus */
+    si (errata)
+    {
+        Xar* es = oratio_oraculum_errata(piscina, c, auctor_petitus);
+        i32  m;
+
+        per (m = ZEPHYRUM; es != NIHIL && m < xar_numerus(es); m++)
+        {
+            constans OratioOraculumErratum* d =
+                *(OratioOraculumErratum**)xar_obtinere(es, m);
+
+                        imprimere("%s\tERRATUM\t%.*s\t%.*s\t%s\t%s\t%.*s\t%d\t%d\n",
+                            titulus, (integer)d->auctor.mensura,
+                            (constans character*)d->auctor.datum,
+                            (integer)d->forma.mensura,
+                            (constans character*)d->forma.datum,
+                            oratio_classis_titulus(d->aurea) != NIHIL
+                            ? oratio_classis_titulus(d->aurea) : "extra",
+                            (i32)d->nostra
+                                < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                            ? oratio_classis_titulus(d->nostra) : "nulla",
+                            (integer)d->socius.mensura,
+                                d->socius.mensura > ZEPHYRUM
+                            ? (constans character*)d->socius.datum : "",
+                            (integer)d->distantia, (integer)d->numerus);
+        }
+    }
+
+
     si (!discrepantiae)
     {
         redde;
@@ -344,7 +468,12 @@ principale (
                                     b32  regulae        = FALSUM;
                                     i32  regulae_ab     = ZEPHYRUM;
                                 integer  argumentum_ab  = -I;
-                                    b32  crudus         = FALSUM;
+                                                                        b32  crudus =
+                                                                            FALSUM;
+                                    b32 errata               = FALSUM;
+                                integer argumentum_auctoris  = -I;
+                                 chorda auctor_petitus;
+
                         OratioProgramma* programma      = NIHIL;
                                 integer  i;
                                     i32  plagulae       = ZEPHYRUM;
@@ -389,9 +518,12 @@ principale (
             redde II;
         }
     }
+        auctor_petitus.datum  = NIHIL;
+    auctor_petitus.mensura    = ZEPHYRUM;
     per (i = I; i < argc; i++)
     {
         si (strcmp(argv[i], "-machina") == ZEPHYRUM)
+
         {
             machina = VERUM;
         }
@@ -418,11 +550,25 @@ principale (
             i              = argumentum_ab;
         }
 
-        alioquin si (strcmp(argv[i], "-crudus") == ZEPHYRUM)
+                alioquin si (strcmp(argv[i], "-crudus") == ZEPHYRUM)
         {
             crudus = VERUM;
         }
+        alioquin si (strcmp(argv[i], "-errata") == ZEPHYRUM)
+        {
+            errata = VERUM;
+        }
+        alioquin si (   strcmp(argv[i], "-auctor") == ZEPHYRUM
+                     && i + I < argc)
+        {
+                        argumentum_auctoris = i + I;
+            auctor_petitus.datum = (i8*)argv[argumentum_auctoris];
+            auctor_petitus.mensura  =
+                (i32)strlen(argv[argumentum_auctoris]);
+            i                       = argumentum_auctoris;
+        }
     }
+
     si (machina)
     {
         imprimere("# plagula\tclassis\tverba\ttecta\tprimaria\tlemmata\tignota\tinalignata\n");
@@ -433,10 +579,12 @@ principale (
 
                 per (i = I; i < argc; i++)
                 {
-            si (argv[i][ZEPHYRUM] != '-' && i != argumentum_ab)
-            {
+                        si (   argv[i][ZEPHYRUM] != '-'
+                            && i                 != argumentum_ab
+                            && i                 != argumentum_auctoris)
+                        {
                 numerus_argumentorum = numerus_argumentorum + I;
-            }
+                        }
                 }
 
         per (k = ZEPHYRUM;
@@ -551,12 +699,16 @@ principale (
             }
             si (machina)
             {
-                _machinam_imprimere(p, &census, plagula, discrepantiae);
+                                _machinam_imprimere(p, &census, plagula,
+                                    discrepantiae,
+                                    errata, auctor_petitus);
             }
             alioquin
             {
-                _tabulam_imprimere(p, &census, plagula, exempla,
-                    discrepantiae);
+                                _tabulam_imprimere(p, &census, plagula,
+                                    exempla,
+                                    discrepantiae, errata,
+                                    auctor_petitus);
                 imprimere("  %.0f ms\n\n", 1000.0 * (duplex)(clock()
                     - ante)
                     / (duplex)CLOCKS_PER_SEC);

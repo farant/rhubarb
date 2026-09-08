@@ -1334,6 +1334,10 @@ credo(rc == 0 and len(omnes) == 1 and omnes[0].endswith('(omnes):'), 'oraculum.s
 summa = int(re.search(r'regulae (\d+) \(omnes\)', omnes[0]).group(1))
 rc, duo = _ordines_ab(summa - 1)
 credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa - 1)) and duo[1] == omnes[0] and 'crudus' not in duo[0], 'oraculum.sh -regulae -ab N: ordines a regulis N solum, crudus omissus')
+# T19g bis: -errata -machina - ordines PARTITIO (summa = verba aurea IV) et ERRATUM (nullum: nemo decidit in thesauro minimo)
+r_er = subprocess.run(['./oratio/oraculum.sh', '-errata', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
+part = [l.split('\t') for l in r_er.stdout.splitlines() if '\tPARTITIO\t' in l]
+credo(r_er.returncode == 0 and len(part) == 7 and sum(int(x[3]) for x in part) == 4 and not any('\tERRATUM\t' in l for l in r_er.stdout.splitlines()) and any('\tAUCTOR\t' in l for l in r_er.stdout.splitlines()) is False, 'oraculum.sh -errata -machina: PARTITIO VII genera summa IV verba, nullum AUCTOR/ERRATUM (nemo decidit)')
 h = silva.Oratio('oratio/probationes/fixa/txt/hilarius.txt')
 credo(h.via.endswith('hilarius.txt') and len(h.vocabula()) == 1678 and len(h.sententiae()) > 50 and 0 < len(h.ignota()) < 120, 'Oratio(via): Hilarius MDCLXXVIII vocabula (T12)')
 try:

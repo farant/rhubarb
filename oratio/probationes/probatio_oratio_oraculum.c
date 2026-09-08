@@ -385,13 +385,75 @@ _thesaurus_arborum (
                     *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
 
                 summa_auctorum = summa_auctorum + a->verba;
-                imprimere("    auctor %-44.*s %6d  primaria %d permille\n",
+                imprimere("    auctor %-44.*s %6d  primaria %d permille"
+                    "  vicina %d %d  remota %d %d\n",
                     (integer)a->titulus.mensura,
                     (constans character*)a->titulus.datum,
                     (integer)a->verba,
-                    (integer)_permille(a->primaria, a->verba));
+                    (integer)_permille(a->primaria, a->verba),
+                    (integer)a->vicina,
+                    (integer)_permille(a->vicina_primaria, a->vicina),
+                    (integer)a->remota,
+                    (integer)_permille(a->remota_primaria, a->remota));
             }
             CREDO_AEQUALIS_I32 (summa_auctorum, decisa);
+            /* T19g bis: errata auctoris - summa numerorum == verba -
+             * primaria eius; errata prima III auctorum II maximorum relata
+             * (forma, aurea, nostra, socius) */
+            {
+                i32 violationes_erratorum = ZEPHYRUM;
+
+                per (j = ZEPHYRUM; auctores != NIHIL
+                     && j < xar_numerus(auctores); j++)
+                {
+                    constans OratioOraculumAuctor* a =
+                        *(OratioOraculumAuctor**)xar_obtinere(auctores,
+                        j);
+                    Xar* es = oratio_oraculum_errata(p, &census,
+                        a->titulus);
+                    i32 summa_erratorum = ZEPHYRUM;
+                    i32 m;
+
+                    CREDO_NON_NIHIL (es);
+                    si (es == NIHIL)
+                    {
+                        perge;
+                    }
+                    per (m = ZEPHYRUM; m < xar_numerus(es); m++)
+                    {
+                        constans OratioOraculumErratum* d =
+                            *(OratioOraculumErratum**)xar_obtinere(es,
+                            m);
+
+                        summa_erratorum = summa_erratorum + d->numerus;
+                        si (j < (i32)II && m < (i32)III)
+                        {
+                            imprimere("      erratum %-.32s: %-14.*s aurea %s"
+                                " nostra %s socius %.*s @%d %d\n",
+                                (constans character*)a->titulus.datum,
+                                (integer)d->forma.mensura,
+                                (constans character*)d->forma.datum,
+                                oratio_classis_titulus(d->aurea),
+                                (i32)d->nostra
+                                    < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                                    ? oratio_classis_titulus(d->nostra)
+                                    : "(nulla)",
+                                (integer)d->socius.mensura,
+                                d->socius.mensura > ZEPHYRUM
+                                    ? (constans character*)d->socius.datum
+                                    : "",
+                                (integer)d->distantia,
+                                (integer)d->numerus);
+                        }
+                    }
+                    si (summa_erratorum != a->verba - a->primaria)
+                    {
+                        violationes_erratorum = violationes_erratorum
+                            + I;
+                    }
+                }
+                CREDO_AEQUALIS_I32 (violationes_erratorum, ZEPHYRUM);
+            }
         }
         CREDO_VERUM (coactae > ZEPHYRUM);
         CREDO_VERUM (coactae_permille >= pinna_coactae);

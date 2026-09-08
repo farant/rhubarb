@@ -399,9 +399,18 @@ accurate Latin tier (69–72 %) against priors 85–98 % and untouched
 order 80–92 %; the law itself 51–57 %; the Latin adposition prior
 99 % on the charters and it speaks BEFORE the object rule; the
 dative head rule 37–41 %; the English contraction prior 0 % (ranges).
-NEXT: wrong-forced listing per auctor, then make the head rules and
-the law trustworthy; the Latin rule order measured swapped; the
-ignoti reading; the strict head tier.
+**T19g bis** (same day): `oraculum.sh -errata [-auctor R]` lists
+the wrong decisions per rule with the binding partner and its
+distance; the rule table splits accuracy adjacent | distant.
+FINDINGS: head rules are reliable adjacent and unreliable distant
+(charters genitive 99 vs 33, accusative 84 vs 52; Seneca nominative
+82 vs 70 with three quarters distant) — the row's preference was
+never restricted to neighbours, only the law's promotion; the
+charters' nominative and dative head errors are UD's DET
+convention (possessives, alius, omnis, ipse, suprascriptus, qui)
+losing the tie to the adjective reading. NEXT: strict head tier
+(measure), determinans-over-adjective law for the UD-DET lemmas
+(data), the Latin rule order measured swapped, the ignoti reading.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

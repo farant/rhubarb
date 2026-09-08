@@ -1078,6 +1078,41 @@ class), then make the head rules and the law trustworthy before
 adding any rule; the Latin priors-then-evidence order measured
 swapped; the ignoti reading; the strict head tier.
 
+**As built — T19g bis, the wrong-forced listing (2026-09-08, same
+session).** The oracle tabulates every DECIDED gold word that is not
+primary by (deciding rule, folded form, gold class, our first class,
+binding partner, distance): the partner is the word the first
+reading's bound umbra points at (a carrier) or, failing that, the
+NEAREST word whose reading has an umbra pointing here (a filler),
+with the distance in elements. `oraculum.sh -errata [-auctor <rule>]`
+prints per rule the most frequent rows (machine rows `ERRATUM`), and
+the per-rule table splits each rule's words and primary by partner
+distance (`vicina` = 1, `remota` > 1; the machine `AUCTOR` rows
+gained the four columns); the gate asserts per rule that the errata
+sum to verba − primaria and prints the top three of the two largest
+rules. FINDINGS on the first reading: (1) distance is the
+discriminator for the HEAD rules — charters genitive following 99 %
+adjacent against 33 % distant (118 against 6 words), accusative
+following 84 against 52 (136 against 389), Seneca nominative
+following 82 against 70 with three quarters of its 1,452 decisions
+distant: `cursus="fratrum"` binds the first agreeing word at any gap,
+and while the law of umbrae promotes only neighbours the ROW's
+preference was never restricted; the object rules are the reverse
+(accusative object 64 adjacent against 84 distant on the charters,
+where the object legitimately sits past an intervening modifier);
+(2) the charters' nominative (61 % even adjacent) and dative (27 %
+adjacent) head rules fail on a CONVENTION: UD tags possessives and
+quantifiers (meus, noster, vester, suus, alius, omnis, ipse, iste,
+suprascriptus, qui) as DET, and our adjective reading wins the tie
+with the determinans reading by list order; (3) Seneca's remainder is
+a long tail of noun, participle and verb forms with an adjective
+homograph bound at distance 2–13 (`abstrusa`→`torta` @10,
+`arua`→`indica` @13). NEXT: the strict head tier — rewrite the
+fourteen head rules with `cursus="strictus"` and measure; keep loose
+rules only if they can bind without preferring, which needs a rule
+attribute; then a determinans-over-adjective law for the UD-DET
+lemmas (data); then the ignoti reading.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

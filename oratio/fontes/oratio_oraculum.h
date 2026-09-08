@@ -61,7 +61,33 @@ nomen structura {
     chorda titulus;
        i32 verba;
        i32 primaria;
+    /* per DISTANTIAM socii (T19g bis): vicina = socius ad distantiam
+     * I, remota = ultra (regulae cursu fratrum ultra vicinum ligant);
+     * sine socio (praelatio) in neutro. Mensura ianuae strictae. */
+       i32 vicina;
+       i32 vicina_primaria;
+       i32 remota;
+       i32 remota_primaria;
 } OratioOraculumAuctor;
+
+/* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
+ * elementum primum decisionem fert (praelatio | impletio | umbra) sed
+ * non PRIMARIUM est - tabulatum per (auctor, forma plicata, classis
+ * aurea, classis nostra prima, socius) cum numero. Socius = forma
+ * vocabuli quocum lectio prima ligata est (umbra impleta lectionis
+ * primae: carrier; aliter umbra vicini in hoc vocabulum spectans:
+ * implens), vacua pro praelatione. Ex hac tabula regulae emendantur:
+ * QUAS formas regula falso decidit, cum QUO ligatas. LEX: summa
+ * numerorum auctoris == verba - primaria eius (tabula AUCTOR). */
+nomen structura {
+           chorda auctor;
+           chorda forma;     /* plicata */
+    OratioClassis aurea;
+    OratioClassis nostra;    /* prima (NUMERUS_CLASSIUM = nulla) */
+                      chorda socius;    /* forma socii, vacua si nullus */
+              s32 distantia; /* |socius - verbum| in elementis; -I nullus */
+              i32 numerus;
+} OratioOraculumErratum;
 
 nomen structura {
     chorda forma;      /* forma aurea (fontem referens) */
@@ -125,8 +151,12 @@ nomen structura {
         i32 partitio_primaria[ORATIO_ORACULUM_PARTITIO_NUMERUS];
     /* auctores (T19g): Xar de OratioOraculumAuctor* + index per
      * titulum; pigre creati, NIHIL ante */
-                     Xar* auctores;
-          TabulaDispersa* auctores_index;
+                                          Xar* auctores;
+                               TabulaDispersa* auctores_index;
+    /* errata decisionum (T19g bis): Xar de OratioOraculumErratum* +
+     * index; pigre creata */
+                     Xar* errata;
+          TabulaDispersa* errata_index;
 
 
     OratioOraculumClassis classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM + I];   /* [NUMERUS] = UPOS extra tabulam */
@@ -158,6 +188,15 @@ Xar*
 oratio_oraculum_auctores (
                           Piscina* piscina,
     constans OratioOraculumCensus* census);
+
+/* Errata auctoris (auctor vacuus = omnium) ordine numeri non
+ * crescente, deinde auctoris et formae: Xar de OratioOraculumErratum*
+ * in piscina. NIHIL = memoria. */
+Xar*
+oratio_oraculum_errata (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census,
+                           chorda  auctor);
 
 
 /* Sententias iudicare, censum CUMULARE (vacare prius si novus).
