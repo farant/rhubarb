@@ -1993,3 +1993,59 @@ e6538dec. What the tail and the demotion both point at is the same
 missing dimension: a finite verb's slots, which would make `cum` a
 conjunction by the verb it governs rather than by the object it
 lacks.
+
+## 2026-09-08 — T20a: the clause, stamped and measured on day one
+
+The box between adjacency and the whole sentence now exists in the
+tree. A `clausula` genus (semen, species, pater, two umbrae born from
+the schema: the finite verb by `forma-verbi = finitum`, the subject by
+the nominative) sits in a `clausulae` list on the sentence, and every
+element points at its clause with `clausula` + `clausula-causa`, the
+causa being the layer that placed it. Registry 184 slots, seal
+62a7afd8. One definition refinement against the spec: the umbra's new
+condition slot is `forma-verbi`, not `modus`, because one value says
+"finite" where mood would need three.
+
+The seed lists were measured before they were written. A gold clause
+is the subtree of a finite root (finite mood and not aux/cop, or the
+predicate of a finite aux/cop), and a candidate is scored by how often
+its own clause differs from the previous non-punctuation
+non-coordinator word's. The Python census and the C instrument
+(`oraculum.sh -semina`) agree line for line. Certain: si, quia,
+qualiter, dum, quod, sicut (86–100 % on the charters, 73–100 % on
+Seneca). Corroborated (a finite-verb-capable word must follow before
+the next seed): ut (57 % on Seneca because of the comparative "ut
+leo"), cum, nisi, ubi, unde. Relatives by lemma `qui` except the forms
+quis/quid, because WORDS gives one lemma to the relative, the
+interrogative and the indefinite, and `si quis` is the charters'
+favourite opening. Coordinators only between finite-verb-capable words
+(76–78 % against 22–31 % otherwise); `-que` never (0–3 %: it stands
+after the boundary). The comma is not a seed (23–37 %) but closes a
+subordinate clause (53–59 %); Seneca's treebank has no punctuation at
+all.
+
+The stack layer had two bugs the hand cases caught: a parenthesis
+alone did not count as structure, so the sentence fell into the
+seedless branch, and a subordinate clause that opens the sentence
+could not close because closure assumed the base of the stack was the
+main clause. The fix is a per-clause closability flag; the main clause
+is born lazily after the first closure and adopts the orphans.
+
+The oracle scores purity per layer (majority gold clause of each of
+our clauses), coverage, and the share of sentences with the gold
+clause count, and lists the misplaced words with their layer, our
+species and the gold root. Birth: semen 89/96/95, extentum 76/86/89,
+clausura 49/65/66, unica 74/98/99 on Seneca and the two charter files;
+overall purity pinned 738/829/864 (English 726/739, all `unica`), count
+agreement 52/74/77 %. Two findings. The closure layer is the weakest,
+as the design predicted, and on the charters it carries 29 % of the
+words, so it is where the next point lives. And the residual on all
+three Latin files is one shape: a second finite verb with no seed in
+front of it — Seneca's imperatives and verse, the charters' formulae
+"alio lato tenet in terra", "ego ... filio ... manifestu sum" — which
+is exactly law 1 of T20c (a certain finite verb in a clause that has
+one already is a missed seed, a fifth layer). Primary and forced
+accuracy did not move by a permille: no rule reads the clause yet.
+The computus golden moved with the cause named (two umbra nodes and a
+clause node per sentence). Planted fault (si removed from the certain
+list) red on the `si quis` case, green restored.

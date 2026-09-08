@@ -1354,6 +1354,13 @@ credo(ae.lingua == 'anglica' and ae.fons == 'vocabularium-en' and ae.nativum == 
 credo([x.classis for x in oe.analyses(ve[4])][-1] == 'nomen-proprium' and oe.analyses(ve[4])[-1].fons == 'regula' and len(oe.vocabula(lingua='anglica')) == 6, 'Oratio Anglica: nomen proprium regula ultimum, filtrum linguae')
 
 orr = silva.Oratio('Cum puella ambulat.\n'); orc = silva.Oratio('Cum puella ambulat.\n', crudus=True)
+# T20a: CLAUSULAE - clausula/clausula_causa vocabuli, Oratio.clausulae()
+oc = silva.Oratio('Caesar, cum venisset, urbem cepit. Puella rosam amat.\n')
+vc = oc.vocabula()
+credo([v.forma for v in vc] == ['Caesar', 'cum', 'venisset', 'urbem', 'cepit', 'Puella', 'rosam', 'amat'] and [v.clausula for v in vc] == [0, 1, 1, 0, 0, 0, 0, 0] and [v.clausula_causa for v in vc] == ['extentum', 'semen', 'extentum', 'clausura', 'clausura', 'unica', 'unica', 'unica'], 'Oratio.vocabula: clausula et clausula_causa (T20a) - cum subordinata semen, venisset extentum, urbem cepit clausura, sententia sine semine unica')
+cc = oc.clausulae()
+credo(len(cc) == 3 and cc[0].sententia == 0 and cc[0].species == 'principalis' and cc[0].semen is None and cc[0].pater is None and cc[0].membra == (0, 3, 4) and cc[1].species == 'subordinata' and cc[1].semen == 2 and cc[1].pater == 0 and cc[1].membra == (1, 2) and cc[2].sententia == 1 and cc[2].membra == (5, 6, 7) and oc.clausulae(sententia=1) == [cc[2]], 'Oratio.clausulae: III nodi - principalis (Caesar urbem cepit), subordinata semen II pater 0 (cum venisset), sententia altera unica; filtrum sententiae')
+credo(silva.Oratio('Caesar, cum venisset, urbem cepit.\n', crudus=True).clausulae() == [] and all(v.clausula is None and v.clausula_causa == '' for v in silva.Oratio('Puella amat.\n', crudus=True).vocabula()), 'Oratio(crudus): sine stampa - clausulae() vacuae, clausula None')
 credo([x.accidentia['casus'] for x in orr.analyses(1)] == ['ablativus', 'nominativus', 'vocativus'] and [x.accidentia['casus'] for x in orc.analyses(1)] == ['nominativus', 'vocativus', 'ablativus'] and orr.vocabula()[1].classes == ('substantivum',), 'Oratio resolutio (T17): cum puella - ablativus primus; crudus = ordo fontis')
 
 print('--- Prosa.sententia: delegatio Orationi (T14) ---')

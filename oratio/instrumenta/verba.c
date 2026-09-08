@@ -1,12 +1,14 @@
 /* verba.c - vocabula annotata plagulae orationis (oratio/verba.sh)
  *
- * Usus: verba <plagula.txt>... [-machina] [-analyses]
+  * Usus: verba <plagula.txt>... [-machina] [-analyses] [-clausulae]
+
  * Plagula quaeque parsatur (oratio_arbor) et annotatur (oratio_partes:
  * vocabularia la.bin + glossarium + Moby ex RHUBARB_RADIX, ut arbor.sh
  * -partes; lectiones Latinae et Anglicae, T16), deinde una linea per
  * VOCABULUM ordine documenti:
- *   via index initium finis linea paragraphus sententia forma classes
- *   linguae lemma analyses decisio auctor
+  *   via index initium finis linea paragraphus sententia forma classes
+ *   linguae lemma analyses decisio auctor clausula clausula-causa
+
  * (index = ordinalis vocabuli in plagula; paragraphus et sententia =
  * ordinales, sententia ut in sententiae.sh numerata; classes/linguae
  * = loci compendiarii vocabuli, spatiis separatae; lemma = analysis
@@ -19,8 +21,13 @@
  * numeris, vacua si non data aut si genus ea non fert; umbrae T19d:
  * 'relatio:casus.numerus.genus=vocabulum.analysis' ligata, '=?' vacua,
  * spatiis separatae). -machina
- * caput '#' addit. Exitus: 0 vocabula, 1 nulla, 2 usus/plagula/tabula/
- * parsura.
+  * caput '#' addit. -clausulae (T20a): una linea per CLAUSULAM
+ * sententiae: via sententia clausula species semen pater membra
+ * (semen/pater ordinales, vacua si non scripta; membra = indices
+ * vocabulorum documenti spatiis separati); clausula/clausula-causa
+ * vocabuli = index clausulae intra sententiam et titulus causae
+ * (vacua = aperta). Exitus: 0 vocabula, 1 nulla, 2 usus/plagula/
+ * tabula/parsura.
  */
 
 #include "latina.h"
@@ -294,10 +301,109 @@ _vocabulum_imprimere (
             fputs(ORATIO_TITULI_DECISIONUM[d], stdout);
         }
     }
-    putchar('\t');
+        putchar('\t');
     _chordam_imprimere(_lexema_loci(vocabulum,
         (i32)ORATIO_VOCABULUM_AUCTOR));
+    /* T20a: clausula (index) et clausula-causa (titulus); vacua = aperta */
+    {
+        s32 c = _index_loci(vocabulum, (i32)ORATIO_VOCABULUM_CLAUSULA);
+        s32 causa = _index_loci(vocabulum,
+            (i32)ORATIO_VOCABULUM_CLAUSULA_CAUSA);
+
+        putchar('\t');
+        si (c >= ZEPHYRUM)
+        {
+            imprimere("%d", (integer)c);
+        }
+        putchar('\t');
+        si (   causa >= ZEPHYRUM
+            && causa < (s32)ORATIO_CLAUSULA_CAUSA_NUMERUS)
+        {
+            fputs(ORATIO_TITULI_CAUSARUM_CLAUSULAE[causa], stdout);
+        }
+    }
     putchar('\n');
+}
+
+/* T20a: lineae clausularum sententiae (-clausulae): una per nodum
+ * clausula - species, semen, pater, indices vocabulorum documenti
+ * membrorum (index_primum = index vocabuli primi sententiae) */
+interior vacuum
+_clausulas_imprimere (
+       constans character* via,
+                      i32  sententia,
+    constans MateriaNodus* sen,
+                      i32  index_primum)
+{
+    constans MateriaValor* clausulae =
+        &sen->loci[ORATIO_SENTENTIA_CLAUSULAE];
+    constans MateriaValor* elementa =
+        &sen->loci[ORATIO_SENTENTIA_ELEMENTA];
+                      i32 nc;
+                      i32 ne;
+                      i32 c;
+
+    si (   clausulae->genus != MATERIA_VALOR_LISTA
+        || elementa->genus  != MATERIA_VALOR_LISTA)
+    {
+        redde;
+    }
+    nc = materia_valor_lista_numerus(*clausulae);
+    ne = materia_valor_lista_numerus(*elementa);
+    per (c = ZEPHYRUM; c < nc; c++)
+    {
+        constans MateriaValor* v = materia_valor_lista_obtinere(
+            *clausulae, c);
+        constans MateriaNodus* cl;
+                          s32  species;
+                          s32  semen;
+                          s32  pater;
+                          i32  e;
+                          i32  index   = index_primum;
+                          b32  primum  = VERUM;
+
+        si (v == NIHIL || v->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        cl       = v->datum.nodus;
+        species  = _index_loci(cl, (i32)ORATIO_CLAUSULA_SPECIES);
+        semen    = _index_loci(cl, (i32)ORATIO_CLAUSULA_SEMEN);
+        pater    = _index_loci(cl, (i32)ORATIO_CLAUSULA_PATER);
+        imprimere("%s\t%d\t%d\t%s\t", via, (integer)sententia,
+            (integer)c,
+            species >= ZEPHYRUM
+                && species < (s32)ORATIO_SPECIES_CLAUSULAE_NUMERUS
+                ? ORATIO_TITULI_SPECIERUM_CLAUSULAE[species] : "");
+        si (semen >= ZEPHYRUM)
+        {
+            imprimere("%d", (integer)semen);
+        }
+        putchar('\t');
+        si (pater >= ZEPHYRUM)
+        {
+            imprimere("%d", (integer)pater);
+        }
+        putchar('\t');
+        per (e = ZEPHYRUM; e < ne; e++)
+        {
+            constans MateriaNodus* elementum =
+                materia_valor_lista_obtinere(*elementa, e)->datum.nodus;
+
+            si (elementum->genus != (s32)ORATIO_GENUS_VOCABULUM)
+            {
+                perge;
+            }
+            si (_index_loci(elementum, (i32)ORATIO_VOCABULUM_CLAUSULA)
+                == (s32)c)
+            {
+                imprimere("%s%d", primum ? "" : " ", (integer)index);
+                primum = FALSUM;
+            }
+            index = index + I;
+        }
+        putchar('\n');
+    }
 }
 
 /* columna umbrarum (T19d): per umbram lectionis
@@ -473,7 +579,8 @@ interior i32
 _arborem_imprimere (
        constans character* via,
     constans MateriaNodus* radix,
-                      b32  analyses_modus)
+                      b32  analyses_modus,
+                      b32  clausulae_modus)
 {
     constans MateriaValor* paragraphi =
         &radix->loci[ORATIO_DOCUMENTUM_PARAGRAPHI];
@@ -515,10 +622,14 @@ _arborem_imprimere (
             {
                 perge;
             }
-            ne = materia_valor_lista_numerus(*elementa);
+                        ne = materia_valor_lista_numerus(*elementa);
             si (ne == ZEPHYRUM)
             {
                 perge;
+            }
+            si (clausulae_modus)
+            {
+                _clausulas_imprimere(via, sententia, sen, index);
             }
             per (e = ZEPHYRUM; e < ne; e++)
             {
@@ -528,6 +639,11 @@ _arborem_imprimere (
 
                 si (elementum->genus != (s32)ORATIO_GENUS_VOCABULUM)
                 {
+                    perge;
+                }
+                si (clausulae_modus)
+                {
+                    index = index + I;
                     perge;
                 }
                 si (analyses_modus)
@@ -554,9 +670,11 @@ principale (
 {
                           Piscina* piscina_tabulae;
                 OratioVocabularia  vocabularia;
-                              b32  machina         = FALSUM;
-                              b32  analyses_modus  = FALSUM;
-                              b32  crudus          = FALSUM;
+                              b32  machina = FALSUM;
+                                                            b32  analyses_modus =
+                                                                FALSUM;
+                              b32  clausulae_modus  = FALSUM;   /* T20a */
+                              b32  crudus           = FALSUM;
               InternamentumChorda* intern;
               MateriaLexiconRatum  ratum;
                MateriaLexIudicium  iudicium;
@@ -572,9 +690,13 @@ principale (
         {
             machina = VERUM;
         }
-        alioquin si (strcmp(argv[i], "-analyses") == ZEPHYRUM)
+                alioquin si (strcmp(argv[i], "-analyses") == ZEPHYRUM)
         {
             analyses_modus = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-clausulae") == ZEPHYRUM)
+        {
+            clausulae_modus = VERUM;
         }
         alioquin si (strcmp(argv[i], "-crudus") == ZEPHYRUM)
         {
@@ -588,8 +710,8 @@ principale (
     si (viae == ZEPHYRUM)
     {
         fprintf(stderr,
-            "usus: verba <plagula.txt>... [-machina] [-analyses]"
-            " [-crudus]\n");
+                        "usus: verba <plagula.txt>... [-machina] [-analyses]"
+            " [-clausulae] [-crudus]\n");
         redde II;
     }
     piscina_tabulae = piscina_generare_dynamicum("oratio_verba_tabula",
@@ -619,9 +741,12 @@ principale (
             vitium.causa);
         redde II;
     }
-    si (machina)
-    {
-        fputs(analyses_modus
+        si (machina)
+        {
+        fputs(clausulae_modus
+            ? "# via\tsententia\tclausula\tspecies\tsemen\tpater"
+              "\tmembra\n"
+            : analyses_modus
             ? "# via\tindex\tforma\tclassis\tlemma\tlingua\tfons"
               "\tnativum\tsensus\tcasus\tnumerus\tgenus\tpersona"
               "\ttempus\tmodus\tvox\tforma-verbi\tgradus\tspecies"
@@ -629,9 +754,9 @@ principale (
 
             : "# via\tindex\tinitium\tfinis\tlinea\tparagraphus"
               "\tsententia\tforma\tclasses\tlinguae\tlemma\tanalyses"
-              "\tdecisio\tauctor\n",
+              "\tdecisio\tauctor\tclausula\tclausula-causa\n",
             stdout);
-    }
+        }
     per (i = I; i < argc; i++)
     {
              Piscina* piscina;
@@ -640,12 +765,13 @@ principale (
         MateriaNodus* radix;
   OratioPartesCensus  census;
 
-        si (   strcmp(argv[i], "-machina")  == ZEPHYRUM
-            || strcmp(argv[i], "-analyses") == ZEPHYRUM
-            || strcmp(argv[i], "-crudus")   == ZEPHYRUM)
-        {
+                si (   strcmp(argv[i], "-machina")   == ZEPHYRUM
+                    || strcmp(argv[i], "-analyses")  == ZEPHYRUM
+                    || strcmp(argv[i], "-clausulae") == ZEPHYRUM
+                    || strcmp(argv[i], "-crudus")    == ZEPHYRUM)
+                {
             perge;
-        }
+                }
         piscina =
             piscina_generare_dynamicum("oratio_verba_instrumentum",
             33554432);
@@ -678,8 +804,8 @@ principale (
             fprintf(stderr, "verba: resolutio fracta: %s\n", argv[i]);
             redde II;
         }
-        summa = summa + _arborem_imprimere(argv[i], radix,
-            analyses_modus);
+                summa = summa + _arborem_imprimere(argv[i], radix,
+                    analyses_modus, clausulae_modus);
         piscina_destruere(piscina);
     }
     piscina_destruere(piscina_tabulae);

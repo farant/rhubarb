@@ -9,7 +9,7 @@ per stage); interview `oratio-interview.md`; ledger parcum 01M1NH3F46.
 Stance: moderate realism — classes earned by function, edge cases by
 analogy, ambiguity as LISTS at every layer, unknown word = FINDING.
 
-## Status (2026-09-05)
+## Status (2026-09-08)
 
 **T1 DONE**: `oratio_registrum` (6 genera / 16 slots: documentum,
 paragraphus, sententia, vocabulum, interpunctio, numerus; whitespace as
@@ -463,9 +463,33 @@ catena | unica; unwritten = OPEN); stamp module `oratio_clausula`
 DATA measured through `-semina` first; oracle = purity per layer +
 coverage + count against gold finite-root subtrees, pinned only
 rising; NO phrase structure (decision 46: a phrase is the component
-of bindings). NEXT = T20a (structure + layers 1–3 + oracle + Python +
-gates, no laws), then T20b catena/discordia, T20c laws one at a time.
-Head-rule template still open.
+of bindings). **T20a DONE (2026-09-08)**: genus `clausula` (semen,
+species, pater, umbrae verbum-finitum by `forma-verbi`=finitum +
+subiectum nominativus) in the sentence's `clausulae` list, elements
+carry `clausula` + `clausula-causa` (registry 184 slots, seal
+62a7afd8); module `oratio_clausula` (`oratio_clausulas_seminare`,
+called by the resolver per sentence): seeds are DATA measured first
+(`oraculum.sh -semina`; C census == Python census) — certain si quia
+qualiter dum quod sicut donec quamquam quando..., corroborated ut cum
+nisi ubi unde (a finite-verb-capable word must follow), relatives by
+lemma qui except the forms quis/quid, coordinators et atque ac sed aut
+nec neque at only between finite-verb-capable words, `-que` never;
+comma/semicolon/colon CLOSE a subordinate (never seed), parentheses
+open a parenthetical; closure also at the first certain finite verb;
+main clause born lazily; sentence without seeds = `unica`. Oracle:
+gold clause = finite-root subtree; PURITY per layer, coverage, count
+agreement (`-clausulae`, `-errata` listing with layer/species/gold
+root); pins puritas 738/829/864/726/739, pares 518/740/771/638/659
+(birth: semen 89/96/95, extentum 76/86/89, clausura 49/65/66 = the
+weak layer as predicted, 29 % of charter words; unica 74/98/99);
+RESIDUAL = a second finite verb with no seed (asyndeton, Seneca verse,
+charter formulae) → T20c law 1. Python `Oratio.clausulae()`,
+`vocabulum.clausula/clausula_causa`; `verba.sh -clausulae`; gate
+`probatio_oratio_clausula` (161, planted fault si). Primary/forced
+unchanged. NEXT = T20b (catena along bindings, discordia count,
+override decision from the numbers), then T20c (clause carrier in the
+executor, verb hidden single = asyndeton split, cum conjunction,
+`cursus="clausulae"`, subject umbra). Head-rule template still open.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

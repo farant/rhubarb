@@ -89,6 +89,38 @@ nomen structura {
               i32 numerus;
 } OratioOraculumErratum;
 
+/* ERRATUM CLAUSULAE (T20a, 2026-09-08): verbum aureum positum (causa
+ * scripta) cuius clausula aurea non est clausula MAIOR clausulae
+ * nostrae (puritas) - tabulatum per (causa, forma plicata, species
+ * clausulae nostrae, forma radicis aureae) cum numero. Ex hac tabula
+ * strata et semina emendantur. */
+nomen structura {
+       s32 causa;      /* OratioClausulaCausa */
+    chorda forma;      /* plicata */
+       s32 species;    /* OratioSpeciesClausulae nostrae */
+    chorda radix;      /* forma radicis clausulae aureae (plicata) */
+       i32 numerus;
+} OratioOraculumErratumClausulae;
+
+/* SEMEN (T20a): census aureus candidati seminis - lemma (SCONJ CCONJ
+ * PRON DET ADV) aut forma (PUNCT): occurrentiae, quoties LIMEN
+ * clausulae (clausula aurea != clausula verbi praecedentis non
+ * interpunctionis non coordinantis; initium sententiae = limen;
+ * interpunctio: verba utrimque clausulis diversis), quoties in
+ * clausula FINITA, initia, et pro CCONJ: quoties verbum finitum
+ * aureum utrimque intra segmentum (ff) et limen tunc. Data listarum
+ * ORATIO_SEMINA_* - instrumentum -semina. */
+nomen structura {
+    chorda textus;     /* lemma aut forma (copia) */
+    chorda upos;       /* copia */
+       i32 n;
+       i32 limes;
+       i32 finita;
+       i32 initia;
+       i32 ff;
+       i32 ff_limes;
+} OratioOraculumSemen;
+
 nomen structura {
     chorda forma;      /* forma aurea (fontem referens) */
     chorda classes;    /* classes nostrae (copia) aut "ignotum" */
@@ -153,10 +185,25 @@ nomen structura {
      * titulum; pigre creati, NIHIL ante */
                                           Xar* auctores;
                                TabulaDispersa* auctores_index;
-    /* errata decisionum (T19g bis): Xar de OratioOraculumErratum* +
+        /* errata decisionum (T19g bis): Xar de OratioOraculumErratum* +
      * index; pigre creata */
                      Xar* errata;
           TabulaDispersa* errata_index;
+    /* CLAUSULAE (T20a, decisio XLVII): PURITAS per causam - verba
+     * aurea (non PUNCT, alignata) quorum elementum primum causam
+     * fert, et recta (clausula aurea == clausula aurea MAIOR clausulae
+     * nostrae); [CAUSA_NUMERUS] = aperta (locus non scriptus).
+     * Coactio = posita / iudicata. NUMERUS: sententiae iudicatae,
+     * clausulae nostrae, aureae, sententiae paribus numeris. */
+    i32 clausulae_verba[ORATIO_CLAUSULA_CAUSA_NUMERUS + I];
+    i32 clausulae_rectae[ORATIO_CLAUSULA_CAUSA_NUMERUS + I];
+    i32 clausulae_iudicata;
+    i32 clausulae_sententiae;
+    i32 clausulae_nostrae;
+    i32 clausulae_aureae;
+    i32 clausulae_pares;
+    Xar* errata_clausularum;   /* OratioOraculumErratumClausulae* */
+    TabulaDispersa* errata_clausularum_index;
 
 
     OratioOraculumClassis classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM + I];   /* [NUMERUS] = UPOS extra tabulam */
@@ -197,6 +244,36 @@ oratio_oraculum_errata (
                           Piscina* piscina,
     constans OratioOraculumCensus* census,
                            chorda  auctor);
+
+/* Errata clausularum (T20a) ordine numeri non crescente, deinde
+ * causae et formae: Xar de OratioOraculumErratumClausulae*. NIHIL =
+ * memoria. */
+Xar*
+oratio_oraculum_errata_clausularum (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census);
+
+/* Census seminum AUREUS (T20a): super sententias CoNLL-U solas (sine
+ * parsura): Xar de OratioOraculumSemen ordine n non crescente, tum
+ * textus; lemmata SCONJ CCONJ PRON DET ADV et formae PUNCT solae.
+ * NIHIL = memoria. */
+Xar*
+oratio_oraculum_semina (
+    Piscina* piscina,
+        Xar* sententiae);
+
+/* Clausula aurea (T20a, decisio XLVII) lexematis k sententiae:
+ * positio (in lexematibus, rangis inclusis) radicis clausulae -
+ * lexema modo finito (VerbForm=Fin) relatione non aux/cop, aut
+ * praedicatum cum aux/cop finito, aut radix sententiae; verbi
+ * clausula = maior proximus radix, ipsum inclusum. -I si k ranga
+ * aut extra. finita: an radix finita sit. */
+s32
+oratio_oraculum_clausula_aurea (
+                           Piscina* piscina,
+    constans OratioConlluSententia* sententia,
+                               i32  k,
+                               b32* finita);
 
 
 /* Sententias iudicare, censum CUMULARE (vacare prius si novus).

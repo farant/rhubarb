@@ -57,15 +57,18 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T19g 2026-09-08:
-            XXIV genera, CLXXII loci - loci 'decisio' INDEX et 'auctor'
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T20a 2026-09-08:
+            XXV genera, CLXXXIV loci - genus 'clausula' IV locorum post
+            umbram, locus 'clausulae' sententiae, loci 'clausula' +
+            'clausula-causa' elementorum, 'forma-verbi' umbrae; T19g
+            6c5a6ab9, XXIV genera, CLXXII loci - loci 'decisio' INDEX et 'auctor'
             derivatum vocabulo appensi, decretum SUDOKU; T19d 54a5e44f,
             CLXX loci - locus 'umbrae' in analysibus XVII et genus
             'umbra' VII locorum appensa; T11 erat 87b35173, XXIII genera
             CXLVI loci; T6b 93c1c9cf, VI genera XVII loci; T1 b27fe13a,
             XVI loci). Tabula mutata sine hac optione mutata rubet in
             iudicio ET in custode derivae.">
-      <optio>6c5a6ab9</optio>
+      <optio>62a7afd8</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -185,9 +188,14 @@
       <optio>anglica</optio>
     </attributum>
     <liberum nomen="elementa" maximum="1"/>
+    <liberum nomen="clausulae" maximum="1"/>
   </elementum>
   <elementum nomen="elementa" intra="sententia">
     <<#elementa>>
+  </elementum>
+  <elementum nomen="clausulae" intra="sententia"
+    nota="T20a: clausulae sententiae ordine (nodi clausula); absens = sententia non stampata">
+    <liberum nomen="clausula"/>
   </elementum>
 
   <elementum nomen="vocabulum"
@@ -196,6 +204,10 @@
     <attributum nomen="linguae" genus="textus"/>
     <attributum nomen="decisio" genus="textus"
       nota="T19g: speculum loci decisio (titulus OratioDecisio) per uncum nodi, ut selectio '[decisio=impletio]' congruat"/>
+    <attributum nomen="clausula" genus="numerus"
+      nota="T20a: speculum loci clausula (index in clausulas sententiae) per uncum nodi"/>
+    <attributum nomen="clausula-causa" genus="textus"
+      nota="T20a: speculum loci clausula-causa (titulus OratioClausulaCausa)"/>
     <attributum nomen="n"       genus="numerus"/>
     <liberum nomen="partes"   maximum="1"/>
     <liberum nomen="cauda"    maximum="1"/>
@@ -204,6 +216,8 @@
     <liberum nomen="linguae"  maximum="1"/>
     <liberum nomen="decisio"  maximum="1"/>
     <liberum nomen="auctor"   maximum="1"/>
+    <liberum nomen="clausula" maximum="1"/>
+    <liberum nomen="clausula-causa" maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="vocabulum">
     <<#partes>>
@@ -245,11 +259,19 @@
     nota="T19g: derivatum - titulus regulae quae decidit (lex-umbrarum pro lege)">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
+  <elementum nomen="clausula" intra="vocabulum" textus="verum"
+    nota="T20a (decisio XLIII): index clausulae intra clausulas sententiae; absens = APERTA (nemo posuit)"/>
+  <elementum nomen="clausula-causa" intra="vocabulum" textus="verum"
+    nota="T20a (decisio XLV): OratioClausulaCausa - 0 semen 1 extentum 2 clausura 3 catena 4 unica (stratum quod posuit)"/>
 
   <elementum nomen="interpunctio">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="clausula" genus="numerus"/>
+    <attributum nomen="clausula-causa" genus="textus"/>
     <liberum nomen="signum" maximum="1"/>
     <liberum nomen="cauda"  maximum="1"/>
+    <liberum nomen="clausula" maximum="1"/>
+    <liberum nomen="clausula-causa" maximum="1"/>
   </elementum>
   <elementum nomen="signum" intra="interpunctio"
     nota="hyphen/apostrophus solivagi: post suffixum litterarum numeri
@@ -262,11 +284,19 @@
   <elementum nomen="cauda" intra="interpunctio">
     <<#spatia>>
   </elementum>
+  <elementum nomen="clausula" intra="interpunctio" textus="verum"
+    nota="T20a: clausula quam signum claudit (membrum, extra mensuras)"/>
+  <elementum nomen="clausula-causa" intra="interpunctio" textus="verum"
+    nota="T20a: OratioClausulaCausa"/>
 
   <elementum nomen="numerus">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="clausula" genus="numerus"/>
+    <attributum nomen="clausula-causa" genus="textus"/>
     <liberum nomen="crudum" maximum="1"/>
     <liberum nomen="cauda"  maximum="1"/>
+    <liberum nomen="clausula" maximum="1"/>
+    <liberum nomen="clausula-causa" maximum="1"/>
   </elementum>
   <elementum nomen="crudum" intra="numerus"
     nota="digiti, separatores (punctum, comma), suffixum litterarum">
@@ -278,6 +308,10 @@
   <elementum nomen="cauda" intra="numerus">
     <<#spatia>>
   </elementum>
+  <elementum nomen="clausula" intra="numerus" textus="verum"
+    nota="T20a: clausula membri"/>
+  <elementum nomen="clausula-causa" intra="numerus" textus="verum"
+    nota="T20a: OratioClausulaCausa"/>
 
 
   <!-- =============== GRADUS III (T11): ANALYSES ===============
@@ -906,9 +940,10 @@
     <liberum nomen="genus" maximum="1"/>
     <liberum nomen="impletio-vocabulum" maximum="1"/>
     <liberum nomen="impletio-analysis" maximum="1"/>
+    <liberum nomen="forma-verbi" maximum="1"/>
   </elementum>
   <elementum nomen="relatio" intra="umbra" textus="verum"
-    nota="OratioRelatio: 0 obiectum 1 caput"/>
+    nota="OratioRelatio: 0 obiectum 1 caput 2 verbum-finitum 3 subiectum (T20a: relationes clausulae)"/>
   <elementum nomen="classis" intra="umbra" textus="verum"
     nota="OratioClassis exspectata (absens = quaelibet)"/>
   <elementum nomen="casus" intra="umbra" textus="verum"
@@ -921,6 +956,33 @@
     nota="ordinalis vocabuli implentis intra elementa sententiae (absens = inventum)"/>
   <elementum nomen="impletio-analysis" intra="umbra" textus="verum"
     nota="ordinalis analysis implentis intra analyses vocabuli implentis"/>
+  <elementum nomen="forma-verbi" intra="umbra" textus="verum"
+    nota="T20a: OratioFormaVerbi exspectata (0 finitum ...) - condicio umbrae verbi finiti clausulae; absens = quaelibet"/>
+
+  <!-- =============== CLAUSULA (T20a, 2026-09-08) ===============
+       Capsa sudoku inter vicinitatem et sententiam (decisiones
+       XLIII-XLVII): nodus in lista 'clausulae' sententiae, elementa
+       plana per attributum/locum 'clausula' eum monstrant. Umbrae e
+       SCHEMATE generis natae (verbum-finitum forma finita, subiectum
+       nominativus), impletio per legem exsecutoris unam (T20c). -->
+  <elementum nomen="clausula"
+    nota="genus clausula (T20a): semen (ordinalis elementi aperientis; absens = principalis sine semine), species, pater (clausula continens; absens = summa), umbrae">
+    <attributum nomen="n" genus="numerus"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="species" maximum="1"/>
+    <liberum nomen="pater" maximum="1"/>
+    <liberum nomen="umbrae" maximum="1"/>
+  </elementum>
+  <elementum nomen="semen" intra="clausula" textus="verum"
+    nota="ordinalis elementi seminis intra elementa sententiae"/>
+  <elementum nomen="species" intra="clausula" textus="verum"
+    nota="OratioSpeciesClausulae: 0 principalis 1 subordinata 2 relativa 3 coordinata 4 parenthetica"/>
+  <elementum nomen="pater" intra="clausula" textus="verum"
+    nota="index clausulae continentis intra clausulas sententiae (coordinatae sorores, numquam nidificatae)"/>
+  <elementum nomen="umbrae" intra="clausula"
+    nota="umbrae clausulae: verbum-finitum (forma-verbi finitum) et subiectum (casus nominativus), ordine">
+    <liberum nomen="umbra"/>
+  </elementum>
   <elementum nomen="lemma" intra="analysis-ignoti" nota="derivatum: lemma fontis">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>

@@ -944,6 +944,10 @@
        decurtatum capita domus in percursu umbrabat) eos primum numeravit. -->
 
   <vocabulum lemma="locativus" lingua="latina" classis="adiectivum" nota="grammaticorum: casus locativus"><forma textus="locativus"/></vocabulum>
+  <!-- T20a (2026-09-08): clausula - species et mensura oraculi -->
+  <vocabulum lemma="subordinatus" lingua="latina" classis="adiectivum" nota="Latina sera: subordinatus (clausula subordinata; WORDS subordinare ignorat)"><forma textus="subordinatus" casus="nominativus" numerus="singularis" genus="masculinum"/><forma textus="subordinata" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="subordinatae" casus="genitivus" numerus="singularis" genus="femininum"/></vocabulum>
+  <vocabulum lemma="corroboratio" lingua="latina" classis="substantivum" nota="Latina sera: corroboratio, -onis f. (semen corroborandum: verbum finitum capax ante semen proximum)"><forma textus="corroboratio" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="corroborationis" casus="genitivus" numerus="singularis" genus="femininum"/></vocabulum>
+  <vocabulum lemma="puritas" lingua="latina" classis="substantivum" nota="Latina sera: puritas, -atis f. (mensura oraculi clausularum: verba recte posita)"><forma textus="puritas" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="puritatis" casus="genitivus" numerus="singularis" genus="femininum"/><forma textus="puritatem" casus="accusativus" numerus="singularis" genus="femininum"/></vocabulum>
   <vocabulum lemma="superlativus" lingua="latina" classis="adiectivum" nota="grammaticorum: gradus superlativus"><forma textus="superlativus"/></vocabulum>
   <vocabulum lemma="infinitivus" lingua="latina" classis="adiectivum" nota="grammaticorum: modus infinitivus"><forma textus="infinitivus"/><forma textus="infinitivum"/></vocabulum>
   <vocabulum lemma="imperativus" lingua="latina" classis="adiectivum" nota="grammaticorum: modus imperativus"><forma textus="imperativus"/></vocabulum>

@@ -92,6 +92,27 @@
 #define LLCT_TEST_COACTAE_PINNA  711
 #define EWT_DEV_COACTAE_PINNA    913
 #define EWT_TEST_COACTAE_PINNA   913
+/* T20a (2026-09-08, decisio XLVII): CLAUSULAE - PURITAS verborum
+ * positorum (clausula aurea == maior clausulae nostrae; permille,
+ * solum crescens) et PARES (sententiae quarum numerus clausularum
+ * nostrarum == aurearum; permille). Coactio == M (strata I-III
+ * verbum quodque ponunt; minor = mutatio definitionis nominanda).
+ * Pinnae ex permille impresso portae natali 2026-09-08 (strata I-III:
+ * semen 890/957/953, extentum 759/857/887, clausura 491/650/657 -
+ * infimum ut praedictum -, unica 740/984/986; Anglica unica fere
+ * tota 727/738; residuum = verbum finitum alterum SINE semine:
+ * asyndeton, T20c). */
+#define CIRCSE_PURITAS_PINNA     738
+#define LLCT_DEV_PURITAS_PINNA   829
+#define LLCT_TEST_PURITAS_PINNA  864
+#define EWT_DEV_PURITAS_PINNA    726
+#define EWT_TEST_PURITAS_PINNA   739
+#define CIRCSE_PARES_PINNA       518
+#define LLCT_DEV_PARES_PINNA     740
+#define LLCT_TEST_PARES_PINNA    771
+#define EWT_DEV_PARES_PINNA      638
+#define EWT_TEST_PARES_PINNA     659
+
 
 interior b32
 _plagulam_legere (
@@ -222,9 +243,11 @@ _thesaurus_arborum (
             constans character* radix,
             constans character* plagula,
                            i32  sententiae_exspectatae,
-                           i32  pinna_permille,
+                                                      i32  pinna_permille,
                            i32  pinna_primaria,
-                           i32  pinna_coactae)
+                           i32  pinna_coactae,
+                           i32  pinna_puritatis,
+                           i32  pinna_parium)
 {
     Piscina* p = piscina_generare_dynamicum("oraculum_treebank",
         268435456);
@@ -463,8 +486,89 @@ _thesaurus_arborum (
                 CREDO_AEQUALIS_I32 (violationes_erratorum, ZEPHYRUM);
             }
         }
-        CREDO_VERUM (coactae > ZEPHYRUM);
+                CREDO_VERUM (coactae > ZEPHYRUM);
         CREDO_VERUM (coactae_permille >= pinna_coactae);
+    }
+    /* T20a: CLAUSULAE - puritas per causam relata, puritas positorum
+     * et pares pinnatae; leges: summa causarum + apertae == iudicata,
+     * iudicata <= verba - inalignata, coactio M, errata == verba -
+     * rectae positorum */
+    {
+        i32 positae  = ZEPHYRUM;
+        i32 rectae   = ZEPHYRUM;
+        i32 summa    = ZEPHYRUM;
+        i32 puritas;
+        i32 pares;
+        i32 i;
+
+        per (i = ZEPHYRUM; i <= (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS; i++)
+        {
+            summa = summa + census.clausulae_verba[i];
+            si (i < (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS)
+            {
+                positae  = positae + census.clausulae_verba[i];
+                rectae   = rectae + census.clausulae_rectae[i];
+            }
+            si (census.clausulae_verba[i] > ZEPHYRUM)
+            {
+                imprimere("    clausula %-9s %6d  puritas %d permille\n",
+                    i < (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+                        ? ORATIO_TITULI_CAUSARUM_CLAUSULAE[i] : "apertae",
+                    (integer)census.clausulae_verba[i],
+                    (integer)_permille(census.clausulae_rectae[i],
+                        census.clausulae_verba[i]));
+            }
+        }
+        puritas  = _permille(rectae, positae);
+        pares    = _permille(census.clausulae_pares,
+            census.clausulae_sententiae);
+        imprimere("    clausulae: puritas %d permille (pinna %d, solum"
+            " crescens)  coactio %d permille  nostrae %d aureae %d  pares"
+            " %d permille (pinna %d)\n", (integer)puritas,
+            (integer)pinna_puritatis,
+            (integer)_permille(positae, census.clausulae_iudicata),
+            (integer)census.clausulae_nostrae,
+            (integer)census.clausulae_aureae, (integer)pares,
+            (integer)pinna_parium);
+        CREDO_AEQUALIS_I32 (summa, census.clausulae_iudicata);
+        CREDO_VERUM (census.clausulae_iudicata > ZEPHYRUM);
+        CREDO_VERUM (census.clausulae_iudicata
+            <= census.verba - census.inalignata);
+        CREDO_AEQUALIS_I32 (_permille(positae,
+            census.clausulae_iudicata),
+            (i32)1000);
+        CREDO_VERUM (census.clausulae_nostrae > ZEPHYRUM);
+        CREDO_VERUM (census.clausulae_aureae > ZEPHYRUM);
+        CREDO_VERUM (puritas >= pinna_puritatis);
+        CREDO_VERUM (pares >= pinna_parium);
+        /* errata clausularum: summa numerorum == positae - rectae */
+        {
+            Xar* es = oratio_oraculum_errata_clausularum(p, &census);
+            i32  summa_erratorum = ZEPHYRUM;
+            i32  m;
+
+            CREDO_NON_NIHIL (es);
+            per (m = ZEPHYRUM; es != NIHIL && m < xar_numerus(es); m++)
+            {
+                constans OratioOraculumErratumClausulae* d =
+                    *(OratioOraculumErratumClausulae**)xar_obtinere(es,
+                    m);
+
+                summa_erratorum = summa_erratorum + d->numerus;
+                si (m < (i32)III)
+                {
+                    imprimere("      erratum clausulae %s %.*s species %d"
+                        " radix %.*s %d\n",
+                        ORATIO_TITULI_CAUSARUM_CLAUSULAE[d->causa],
+                        (integer)d->forma.mensura,
+                        (constans character*)d->forma.datum,
+                        (integer)d->species, (integer)d->radix.mensura,
+                        (constans character*)d->radix.datum,
+                        (integer)d->numerus);
+                }
+            }
+            CREDO_AEQUALIS_I32 (summa_erratorum, positae - rectae);
+        }
     }
         /* T18: lingua documenti censa = lingua thesauri (en_ ewt Anglica,
      * cetera Latina); census sententiarum: Latinae nullae Anglicae */
@@ -706,31 +810,46 @@ principale (vacuum)
         (i32)893,
         (i32)CIRCSE_TECTA_PINNA,
         (i32)CIRCSE_PRIMARIA_PINNA,
-        (i32)CIRCSE_COACTAE_PINNA);
+                (i32)CIRCSE_COACTAE_PINNA,
+        (i32)CIRCSE_PURITAS_PINNA,
+        (i32)CIRCSE_PARES_PINNA);
+
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_llct-ud-dev.conllu",
         (i32)850,
         (i32)LLCT_DEV_TECTA_PINNA,
         (i32)LLCT_DEV_PRIMARIA_PINNA,
-        (i32)LLCT_DEV_COACTAE_PINNA);
+                (i32)LLCT_DEV_COACTAE_PINNA,
+        (i32)LLCT_DEV_PURITAS_PINNA,
+        (i32)LLCT_DEV_PARES_PINNA);
+
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "la_llct-ud-test.conllu",
         (i32)884,
         (i32)LLCT_TEST_TECTA_PINNA,
         (i32)LLCT_TEST_PRIMARIA_PINNA,
-        (i32)LLCT_TEST_COACTAE_PINNA);
+                (i32)LLCT_TEST_COACTAE_PINNA,
+        (i32)LLCT_TEST_PURITAS_PINNA,
+        (i32)LLCT_TEST_PARES_PINNA);
+
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "en_ewt-ud-dev.conllu",
         (i32)2001,
         (i32)EWT_DEV_TECTA_PINNA,
         (i32)EWT_DEV_PRIMARIA_PINNA,
-        (i32)EWT_DEV_COACTAE_PINNA);
+                (i32)EWT_DEV_COACTAE_PINNA,
+        (i32)EWT_DEV_PURITAS_PINNA,
+        (i32)EWT_DEV_PARES_PINNA);
+
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,
         "en_ewt-ud-test.conllu",
         (i32)2077,
         (i32)EWT_TEST_TECTA_PINNA,
         (i32)EWT_TEST_PRIMARIA_PINNA,
-        (i32)EWT_TEST_COACTAE_PINNA);
+                (i32)EWT_TEST_COACTAE_PINNA,
+        (i32)EWT_TEST_PURITAS_PINNA,
+        (i32)EWT_TEST_PARES_PINNA);
+
 
     imprimere("\n");
     credo_imprimere_compendium();

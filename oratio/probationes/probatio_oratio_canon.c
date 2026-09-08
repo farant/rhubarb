@@ -429,15 +429,17 @@ _documentum_analysis_struere (
     {
         redde nihil;
     }
+        /* numeri locorum ex registro (lex: nodus manu structus numerum
+     * suum a registro sumit, numquam literalem - T20a sententia II) */
     sententia = materia_nodus_creare(piscina,
         (s32)ORATIO_GENUS_SENTENTIA,
-        (i32)I);
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_SENTENTIA].loci_numerus);
     paragraphus = materia_nodus_creare(piscina,
         (s32)ORATIO_GENUS_PARAGRAPHUS,
         ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_numerus);
     documentum = materia_nodus_creare(piscina,
         (s32)ORATIO_GENUS_DOCUMENTUM,
-        (i32)III);
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_DOCUMENTUM].loci_numerus);
     si (   sententia  == NIHIL || paragraphus == NIHIL
         || documentum == NIHIL
         || !materia_nodus_appendere(piscina, sententia,

@@ -19,9 +19,19 @@
  *              'titulus verba primaria vicina vicina-primaria remota
  *              remota-primaria' (socius ad distantiam I | ultra)
  *   -auctor T  cum -errata: auctoris T solius
- *   -discrepantiae  per classem auream: formae TECTAE sed non primae
+  *   -discrepantiae  per classem auream: formae TECTAE sed non primae
  *              cum classe nostra prima et numero, XII frequentissimae
  *              (T19a: data regularum priorum classium)
+ *   -clausulae tabula CLAUSULARUM (T20a): puritas per causam (semen
+ *              extentum clausura catena unica; apertae), coactio,
+ *              numerus clausularum nostrarum/aurearum, sententiae
+ *              paribus; cum -errata: verba male posita (causa, forma,
+ *              species nostra, radix aurea, numerus); -machina ordines
+ *              CLAUSULA causa verba rectae, CLAUSULAE sententiae
+ *              nostrae aureae pares, ERRATUM-CLAUSULAE ...
+ *   -semina    census AUREUS candidatorum seminis (T20a; sine parsura):
+ *              textus, upos, n, limes %, finita %, initia, ff, ff-limes
+ *              - data listarum ORATIO_SEMINA_*; -machina ordines SEMEN
  *
  * Vocabularia (la.bin + glossarium + Moby) ex RHUBARB_RADIX. Exitus:
  * 0 relatio scripta | 2 usus/tabula/plagula absens
@@ -91,6 +101,143 @@ _pars (
 
 #define DISCREPANTIAE_IMPRESSAE 12
 #define ERRATA_IMPRESSA         24
+#define SEMINA_IMPRESSA         48
+
+/* T20a: tabula clausularum (puritas per causam, numeri) */
+interior vacuum
+_clausulas_imprimere (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* c,
+                              b32  errata)
+{
+    i32 i;
+    i32 positae = ZEPHYRUM;
+
+    si (c->clausulae_iudicata == ZEPHYRUM)
+    {
+        redde;
+    }
+    imprimere("  clausulae (puritas per causam; verba aurea alignata"
+        " non interpunctio):\n");
+    per (i = ZEPHYRUM; i <= (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS; i++)
+    {
+        si (c->clausulae_verba[i] == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (i < (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS)
+        {
+            positae = positae + c->clausulae_verba[i];
+        }
+        imprimere("    %-10s %6d %5.1f%%  puritas %5.1f%%\n",
+            i < (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+                ? ORATIO_TITULI_CAUSARUM_CLAUSULAE[i] : "apertae",
+            (integer)c->clausulae_verba[i],
+            _pars(c->clausulae_verba[i], c->clausulae_iudicata),
+            _pars(c->clausulae_rectae[i], c->clausulae_verba[i]));
+    }
+    imprimere("    coactio %5.1f%% (%d/%d)  clausulae nostrae %d aureae %d"
+        " (%.2f / %.2f per sententiam)  sententiae pares %5.1f%%\n",
+        _pars(positae, c->clausulae_iudicata), (integer)positae,
+        (integer)c->clausulae_iudicata, (integer)c->clausulae_nostrae,
+        (integer)c->clausulae_aureae,
+        c->clausulae_sententiae > ZEPHYRUM
+            ? (duplex)c->clausulae_nostrae
+                / (duplex)c->clausulae_sententiae : 0.0,
+        c->clausulae_sententiae > ZEPHYRUM
+            ? (duplex)c->clausulae_aureae
+                / (duplex)c->clausulae_sententiae : 0.0,
+        _pars(c->clausulae_pares, c->clausulae_sententiae));
+    si (errata)
+    {
+        Xar* es = oratio_oraculum_errata_clausularum(piscina, c);
+        i32  m;
+        i32  aliae = ZEPHYRUM;
+
+        per (m = ZEPHYRUM; es != NIHIL && m < xar_numerus(es); m++)
+        {
+            constans OratioOraculumErratumClausulae* d =
+                *(OratioOraculumErratumClausulae**)xar_obtinere(es, m);
+
+            si (m >= (i32)ERRATA_IMPRESSA)
+            {
+                aliae = aliae + d->numerus;
+                perge;
+            }
+            imprimere("      %-9s %-16.*s species %-12s radix aurea %-16.*s"
+                " %5d\n",
+                d->causa >= ZEPHYRUM
+                    && d->causa < (s32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+                    ? ORATIO_TITULI_CAUSARUM_CLAUSULAE[d->causa] : "?",
+                (integer)d->forma.mensura,
+                (constans character*)d->forma.datum,
+                d->species >= ZEPHYRUM
+                    && d->species
+                        < (s32)ORATIO_SPECIES_CLAUSULAE_NUMERUS
+                    ? ORATIO_TITULI_SPECIERUM_CLAUSULAE[d->species]
+                    : "(nulla)",
+                (integer)d->radix.mensura,
+                (constans character*)d->radix.datum,
+                (integer)d->numerus);
+        }
+        si (aliae > ZEPHYRUM)
+        {
+            imprimere("      ... alia %d verba\n", (integer)aliae);
+        }
+    }
+}
+
+/* T20a: census aureus seminum (sine parsura) */
+interior vacuum
+_semina_imprimere (
+               Piscina* piscina,
+                   Xar* sententiae,
+                   b32  machina,
+    constans character* titulus)
+{
+    Xar* semina = oratio_oraculum_semina(piscina, sententiae);
+    i32  m;
+
+    si (semina == NIHIL)
+    {
+        redde;
+    }
+    si (!machina)
+    {
+        imprimere("  semina aurea (textus upos n limes%% finita%% initia"
+            " ff ff-limes%%):\n");
+    }
+    per (m = ZEPHYRUM; m < xar_numerus(semina); m++)
+    {
+        constans OratioOraculumSemen* s =
+            *(OratioOraculumSemen**)xar_obtinere(semina, m);
+
+        si (machina)
+        {
+            imprimere("%s\tSEMEN\t%.*s\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\n",
+                titulus, (integer)s->upos.mensura,
+                (constans character*)s->upos.datum,
+                (integer)s->textus.mensura,
+                (constans character*)s->textus.datum, (integer)s->n,
+                (integer)s->limes, (integer)s->finita,
+                (integer)s->initia, (integer)s->ff,
+                (integer)s->ff_limes);
+            perge;
+        }
+        si (m >= (i32)SEMINA_IMPRESSA || s->n < (i32)III)
+        {
+            perge;
+        }
+        imprimere("    %-14.*s %-6.*s %6d %5.1f%% %5.1f%% %4d %5d %5.1f%%\n",
+            (integer)s->textus.mensura,
+            (constans character*)s->textus.datum,
+            (integer)s->upos.mensura,
+            (constans character*)s->upos.datum, (integer)s->n,
+            _pars(s->limes, s->n), _pars(s->finita, s->n),
+            (integer)s->initia, (integer)s->ff,
+            _pars(s->ff_limes, s->ff));
+    }
+}
 
 interior vacuum
 _discrepantias_imprimere (
@@ -144,7 +291,8 @@ _tabulam_imprimere (
                               b32  exempla,
                               b32  discrepantiae,
                               b32  errata,
-                           chorda  auctor_petitus)
+                           chorda  auctor_petitus,
+                              b32  clausulae)
 {
     i32 i;
 
@@ -290,6 +438,11 @@ _tabulam_imprimere (
     }
 
 
+        /* T20a: clausulae */
+    si (clausulae)
+    {
+        _clausulas_imprimere(piscina, c, errata);
+    }
     imprimere("  %-24s %6s %7s %8s %8s %7s\n", "classis aurea", "verba",
         "tecta", "primaria", "lemmata", "ignota");
     per (i = ZEPHYRUM; i <= (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
@@ -392,6 +545,47 @@ _machinam_imprimere (
                                         (integer)a->remota_primaria);
         }
     }
+        /* T20a: ordines CLAUSULA causa verba rectae; CLAUSULAE sententiae
+     * nostrae aureae pares; ERRATUM-CLAUSULAE causa forma species radix
+     * numerus */
+    per (i = ZEPHYRUM; i <= (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS; i++)
+    {
+        imprimere("%s\tCLAUSULA\t%s\t%d\t%d\n", titulus,
+            i < (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+                ? ORATIO_TITULI_CAUSARUM_CLAUSULAE[i] : "apertae",
+            (integer)c->clausulae_verba[i],
+            (integer)c->clausulae_rectae[i]);
+    }
+    imprimere("%s\tCLAUSULAE\t%d\t%d\t%d\t%d\n", titulus,
+        (integer)c->clausulae_sententiae, (integer)c->clausulae_nostrae,
+        (integer)c->clausulae_aureae, (integer)c->clausulae_pares);
+    si (errata)
+    {
+        Xar* es = oratio_oraculum_errata_clausularum(piscina, c);
+        i32  m;
+
+        per (m = ZEPHYRUM; es != NIHIL && m < xar_numerus(es); m++)
+        {
+            constans OratioOraculumErratumClausulae* d =
+                *(OratioOraculumErratumClausulae**)xar_obtinere(es, m);
+
+            imprimere("%s\tERRATUM-CLAUSULAE\t%s\t%.*s\t%s\t%.*s\t%d\n",
+                titulus,
+                d->causa >= ZEPHYRUM
+                    && d->causa < (s32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+                    ? ORATIO_TITULI_CAUSARUM_CLAUSULAE[d->causa] : "?",
+                (integer)d->forma.mensura,
+                (constans character*)d->forma.datum,
+                d->species >= ZEPHYRUM
+                    && d->species
+                        < (s32)ORATIO_SPECIES_CLAUSULAE_NUMERUS
+                    ? ORATIO_TITULI_SPECIERUM_CLAUSULAE[d->species]
+                    : "nulla",
+                (integer)d->radix.mensura,
+                (constans character*)d->radix.datum,
+                (integer)d->numerus);
+        }
+    }
     /* T19g bis: ordines ERRATUM auctor forma aurea nostra socius numerus */
     si (errata)
     {
@@ -470,7 +664,10 @@ principale (
                                 integer  argumentum_ab  = -I;
                                                                         b32  crudus =
                                                                             FALSUM;
-                                    b32 errata               = FALSUM;
+                                                                        b32 errata =
+                                                                            FALSUM;
+                                    b32 clausulae            = FALSUM;   /* T20a */
+                                    b32 semina               = FALSUM;   /* T20a */
                                 integer argumentum_auctoris  = -I;
                                  chorda auctor_petitus;
 
@@ -554,9 +751,17 @@ principale (
         {
             crudus = VERUM;
         }
-        alioquin si (strcmp(argv[i], "-errata") == ZEPHYRUM)
+                alioquin si (strcmp(argv[i], "-errata") == ZEPHYRUM)
         {
             errata = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-clausulae") == ZEPHYRUM)
+        {
+            clausulae = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-semina") == ZEPHYRUM)
+        {
+            semina = VERUM;
         }
         alioquin si (   strcmp(argv[i], "-auctor") == ZEPHYRUM
                      && i + I < argc)
@@ -645,6 +850,15 @@ principale (
                     vitium.causa ? vitium.causa : "?");
                 redde II;
             }
+                        /* T20a: census aureus seminum - sine parsura, ante iudicium */
+            si (semina)
+            {
+                si (!machina)
+                {
+                    imprimere("--- %s: semina aurea ---\n", plagula);
+                }
+                _semina_imprimere(p, sententiae, machina, plagula);
+            }
             /* T17: cum programmate primarium ante (0 regulae) et post
              * (omnes);
              * cum -regulae tabula cumulativa post quamque regulam */
@@ -705,10 +919,14 @@ principale (
             }
             alioquin
             {
-                                _tabulam_imprimere(p, &census, plagula,
-                                    exempla,
-                                    discrepantiae, errata,
-                                    auctor_petitus);
+                                                                _tabulam_imprimere(p,
+                                                                    &census,
+                                                                    plagula,
+                                                                    exempla,
+                                                                    discrepantiae,
+                                                                    errata,
+                                                                    auctor_petitus,
+                                                                    clausulae);
                 imprimere("  %.0f ms\n\n", 1000.0 * (duplex)(clock()
                     - ante)
                     / (duplex)CLOCKS_PER_SEC);

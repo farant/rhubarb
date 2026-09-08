@@ -269,8 +269,10 @@ nomen structura {
     b32 ignotum;
         s32 decisio;                       /* OratioDecisio; -I = nemo (T19g) */
     i32 numerus_analysium;             /* lectiones (candidata) */
-        chorda auctor;                     /* titulus regulae decidentis (T19g) */
+                chorda auctor;                     /* titulus regulae decidentis (T19g) */
     constans MateriaNodus* nodus;      /* pro socio ligationis (T19g bis) */
+        s32 clausula;                      /* T20a: -I = aperta */
+        s32 clausula_causa;
 } Elementum;
 
 constans character* constans ORATIO_ORACULUM_TITULI_PARTITIONIS[] = {
@@ -804,11 +806,32 @@ _elementum_addere (
     {
         redde FALSUM;
     }
-            memset(e, ZEPHYRUM, magnitudo(*e));
+                        memset(e, ZEPHYRUM, magnitudo(*e));
     e->a        = (s32)-I;
     e->b        = ZEPHYRUM;
     e->decisio  = (s32)-I;
     e->nodus    = n;
+    /* T20a: clausula elementi (locus per genus) */
+    e->clausula        = (s32)-I;
+    e->clausula_causa  = (s32)-I;
+    {
+        s32 locus = oratio_locus_clausulae((OratioGenus)n->genus,
+            FALSUM);
+        s32 locus_causae = oratio_locus_clausulae(
+            (OratioGenus)n->genus, VERUM);
+
+        si (   locus                >= ZEPHYRUM
+            && n->loci[locus].genus == MATERIA_VALOR_INDEX)
+        {
+            e->clausula = n->loci[locus].datum.index;
+        }
+        si (   locus_causae                >= ZEPHYRUM
+            && n->loci[locus_causae].genus == MATERIA_VALOR_INDEX)
+        {
+            e->clausula_causa = n->loci[locus_causae].datum.index;
+        }
+    }
+
 
     si (n->genus == (s32)ORATIO_GENUS_VOCABULUM)
     {
@@ -1003,8 +1026,629 @@ _elementa_colligere (
 
 
 /* ==================================================
+ * Clausulae aureae (T20a)
+ * ================================================== */
+
+/* numerus decimalis chordae; -I si non numerus */
+interior s32
+_numerus_chordae (
+    chorda c)
+{
+    s32 v = ZEPHYRUM;
+    i32 i;
+
+    si (c.mensura == ZEPHYRUM)
+    {
+        redde (s32)-I;
+    }
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        si (c.datum[i] < '0' || c.datum[i] > '9')
+        {
+            redde (s32)-I;
+        }
+        v = v * (s32)X + (s32)(c.datum[i] - '0');
+    }
+    redde v;
+}
+
+interior b32
+_continet (
+                chorda  c,
+    constans character* literae)
+{
+    i32 l = (i32)strlen(literae);
+    i32 i;
+
+    per (i = ZEPHYRUM; i + l <= c.mensura; i++)
+    {
+        si (memcmp(c.datum + i, literae, (size_t)l) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* relatio UD auxiliaris aut copulae (aux | cop, praefixum ante ':') */
+interior b32
+_auxiliaris_aut_copula (
+    chorda relatio)
+{
+    redde (b32)(   (relatio.mensura >= (i32)III
+                    && memcmp(relatio.datum, "aux", (size_t)III)
+                        == ZEPHYRUM
+                    && (   relatio.mensura == (i32)III
+                        || relatio.datum[III] == ':'))
+                || (relatio.mensura >= (i32)III
+                    && memcmp(relatio.datum, "cop", (size_t)III)
+                        == ZEPHYRUM
+                    && (   relatio.mensura == (i32)III
+                        || relatio.datum[III] == ':')));
+}
+
+/* clausulae aureae sententiae totius: per positionem lexematis
+ * (rangae -I) positio radicis; finitae per positionem radicis.
+ * Tabulae in piscina. FALSUM = memoria. */
+interior b32
+_clausulas_aureas (
+                           Piscina*  piscina,
+    constans OratioConlluSententia*  s,
+                               s32** clausulae,
+                               b32** finitae)
+{
+    i32  n           = xar_numerus(s->lexemata);
+    s32  id_maximus  = ZEPHYRUM;
+    s32* positio;     /* id -> positio; -I */
+    s32* caput;       /* positio -> positio capitis; -I radix */
+    b32* radix;
+    b32* finita;
+    s32* cl;
+    i32  k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+
+        si (!t->ranga && (s32)t->a > id_maximus)
+        {
+            id_maximus = (s32)t->a;
+        }
+    }
+    positio = (s32*)piscina_allocare(piscina,
+        (memoriae_index)(id_maximus
+            + I) * (memoriae_index)magnitudo(s32));
+    caput   = (s32*)piscina_allocare(piscina, (memoriae_index)n
+        * (memoriae_index)magnitudo(s32));
+    radix   = (b32*)piscina_allocare(piscina, (memoriae_index)n
+        * (memoriae_index)magnitudo(b32));
+    finita  = (b32*)piscina_allocare(piscina, (memoriae_index)n
+        * (memoriae_index)magnitudo(b32));
+    cl      = (s32*)piscina_allocare(piscina, (memoriae_index)n
+        * (memoriae_index)magnitudo(s32));
+    si (   positio == NIHIL || caput == NIHIL || radix == NIHIL
+        || finita  == NIHIL || cl == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k <= (i32)id_maximus; k++)
+    {
+        positio[k] = (s32)-I;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+
+        caput[k]   = (s32)-I;
+        radix[k]   = FALSUM;
+        finita[k]  = FALSUM;
+        cl[k]      = (s32)-I;
+        si (!t->ranga)
+        {
+            positio[t->a] = (s32)k;
+        }
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        s32 h;
+
+        si (t->ranga)
+        {
+            perge;
+        }
+        h = _numerus_chordae(t->head);
+        si (h > ZEPHYRUM && h <= id_maximus && positio[h] >= ZEPHYRUM)
+        {
+            caput[k] = positio[h];
+        }
+        si (_literis(t->deprel, "root") || h == ZEPHYRUM)
+        {
+            radix[k] = VERUM;
+        }
+                si (   _continet(t->feats, "VerbForm=Fin")
+                    && !_auxiliaris_aut_copula(t->deprel))
+                {
+            radix[k]   = VERUM;
+            finita[k]  = VERUM;
+                }
+    }
+    /* praedicatum cum aux/cop finito: radix finita */
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+
+                si (   !t->ranga && caput[k] >= ZEPHYRUM
+                    && _auxiliaris_aut_copula(t->deprel)
+                    && _continet(t->feats, "VerbForm=Fin"))
+                {
+            radix[caput[k]]   = VERUM;
+            finita[caput[k]]  = VERUM;
+                }
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        s32 p       = (s32)k;
+        i32 gradus  = ZEPHYRUM;
+
+        si (t->ranga)
+        {
+            perge;
+        }
+        dum (   p >= ZEPHYRUM && !radix[p] && caput[p] >= ZEPHYRUM
+             && gradus < n)
+        {
+            p       = caput[p];
+            gradus  = gradus + I;
+        }
+        cl[k] = p;
+    }
+    *clausulae  = cl;
+    *finitae    = finita;
+    redde VERUM;
+}
+
+s32
+oratio_oraculum_clausula_aurea (
+                           Piscina* piscina,
+    constans OratioConlluSententia* sententia,
+                               i32  k,
+                               b32* finita)
+{
+    s32* cl;
+    b32* fin;
+
+    si (   k >= xar_numerus(sententia->lexemata)
+        || !_clausulas_aureas(piscina, sententia, &cl, &fin))
+    {
+        redde (s32)-I;
+    }
+    si (finita != NIHIL)
+    {
+        *finita = cl[k] >= ZEPHYRUM ? fin[cl[k]] : FALSUM;
+    }
+    redde cl[k];
+}
+
+/* erratum clausulae notare: clavis binaria [causa][species] forma
+ * 0x01 radix */
+interior vacuum
+_erratum_clausulae_notare (
+                 Piscina* piscina,
+    OratioOraculumCensus* census,
+                     s32  causa,
+                  chorda  forma,
+                     s32  species,
+                  chorda  radix)
+{
+                         character*  clavis_datum;
+                            chorda   plicata;
+                            chorda   radix_plicata;
+                            chorda   clavis;
+                            vacuum*  valor;
+    OratioOraculumErratumClausulae*  d;
+    OratioOraculumErratumClausulae** cella;
+                               i32   n;
+
+    si (census->errata_clausularum == NIHIL)
+    {
+        census->errata_clausularum = xar_creare(piscina,
+            (i32)magnitudo(OratioOraculumErratumClausulae*));
+        census->errata_clausularum_index =
+            tabula_dispersa_creare_chorda(piscina, (i32)1024);
+        si (   census->errata_clausularum       == NIHIL
+            || census->errata_clausularum_index == NIHIL)
+        {
+            census->errata_clausularum = NIHIL;
+            redde;
+        }
+    }
+    plicata = oratio_vocabularium_la_plicare(piscina, forma);
+    radix_plicata = oratio_vocabularium_la_plicare(piscina, radix);
+    n = (i32)II + plicata.mensura + I + radix_plicata.mensura;
+    clavis_datum = (character*)piscina_allocare(piscina,
+        (memoriae_index)n);
+    si (   plicata.datum == NIHIL || radix_plicata.datum == NIHIL
+        || clavis_datum  == NIHIL)
+    {
+        redde;
+    }
+    clavis_datum[ZEPHYRUM]  = (character)(causa + I);
+    clavis_datum[I]         = (character)(species + I);
+    n                       = (i32)II;
+    memcpy(clavis_datum + n, plicata.datum, (size_t)plicata.mensura);
+    n                = n + plicata.mensura;
+    clavis_datum[n]  = (character)I;
+    n                = n + I;
+    memcpy(clavis_datum + n, radix_plicata.datum,
+        (size_t)radix_plicata.mensura);
+    n               = n + radix_plicata.mensura;
+    clavis.datum    = (i8*)clavis_datum;
+    clavis.mensura  = n;
+    si (tabula_dispersa_invenire(census->errata_clausularum_index,
+            clavis, &valor))
+    {
+        d           = (OratioOraculumErratumClausulae*)valor;
+        d->numerus  = d->numerus + I;
+        redde;
+    }
+    d = (OratioOraculumErratumClausulae*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(*d));
+    cella = (OratioOraculumErratumClausulae**)xar_addere(
+        census->errata_clausularum);
+    si (d == NIHIL || cella == NIHIL)
+    {
+        redde;
+    }
+    d->causa    = causa;
+    d->forma    = plicata;
+    d->species  = species;
+    d->radix    = radix_plicata;
+    d->numerus  = I;
+    *cella      = d;
+    (vacuum)tabula_dispersa_inserere(census->errata_clausularum_index,
+        clavis, d);
+}
+
+interior s32
+_errata_clausularum_comparare (
+    constans vacuum* p,
+    constans vacuum* q)
+{
+    constans OratioOraculumErratumClausulae* x =
+        *(constans OratioOraculumErratumClausulae* constans*)p;
+    constans OratioOraculumErratumClausulae* y =
+        *(constans OratioOraculumErratumClausulae* constans*)q;
+    s32 c;
+
+    si (x->numerus != y->numerus)
+    {
+        redde x->numerus > y->numerus ? (s32)-I : (s32)I;
+    }
+    si (x->causa != y->causa)
+    {
+        redde x->causa < y->causa ? (s32)-I : (s32)I;
+    }
+    c = chorda_comparare(x->forma, y->forma);
+    si (c != ZEPHYRUM)
+    {
+        redde c;
+    }
+    redde chorda_comparare(x->radix, y->radix);
+}
+
+Xar*
+oratio_oraculum_errata_clausularum (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census)
+{
+    Xar* exitus = xar_creare(piscina,
+        (i32)magnitudo(OratioOraculumErratumClausulae*));
+    i32 i;
+
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (census->errata_clausularum == NIHIL)
+    {
+        redde exitus;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(census->errata_clausularum);
+         i++)
+    {
+        OratioOraculumErratumClausulae** cella =
+            (OratioOraculumErratumClausulae**)xar_addere(exitus);
+
+        si (cella == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *cella = *(OratioOraculumErratumClausulae**)xar_obtinere(
+            census->errata_clausularum, i);
+    }
+    xar_ordinare(exitus, _errata_clausularum_comparare);
+    redde exitus;
+}
+
+/* semen notare (census aureus): clavis upos 0x01 textus */
+interior OratioOraculumSemen*
+_semen_capere (
+           Piscina* piscina,
+               Xar* semina,
+    TabulaDispersa* index,
+            chorda  upos,
+            chorda  textus)
+{
+              character*  clavis_datum;
+                 chorda   clavis;
+                 chorda   plicata;
+                 vacuum*  valor;
+    OratioOraculumSemen*  s;
+    OratioOraculumSemen** cella;
+                    i32   n;
+
+    plicata  = oratio_vocabularium_la_plicare(piscina, textus);
+    n        = upos.mensura + I + plicata.mensura;
+    clavis_datum = (character*)piscina_allocare(piscina,
+        (memoriae_index)n);
+    si (plicata.datum == NIHIL || clavis_datum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memcpy(clavis_datum, upos.datum, (size_t)upos.mensura);
+    clavis_datum[upos.mensura] = (character)I;
+    memcpy(clavis_datum + upos.mensura + I, plicata.datum,
+        (size_t)plicata.mensura);
+    clavis.datum    = (i8*)clavis_datum;
+    clavis.mensura  = n;
+    si (tabula_dispersa_invenire(index, clavis, &valor))
+    {
+        redde (OratioOraculumSemen*)valor;
+    }
+    s = (OratioOraculumSemen*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(*s));
+    cella = (OratioOraculumSemen**)xar_addere(semina);
+    si (s == NIHIL || cella == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(s, ZEPHYRUM, magnitudo(*s));
+    s->textus  = plicata;
+    s->upos    = _copia(piscina, upos);
+    *cella     = s;
+    (vacuum)tabula_dispersa_inserere(index, clavis, s);
+    redde s;
+}
+
+interior s32
+_semina_comparare (
+    constans vacuum* p,
+    constans vacuum* q)
+{
+    constans OratioOraculumSemen* x =
+        *(constans OratioOraculumSemen* constans*)p;
+    constans OratioOraculumSemen* y =
+        *(constans OratioOraculumSemen* constans*)q;
+    s32 c;
+
+    si (x->n != y->n)
+    {
+        redde x->n > y->n ? (s32)-I : (s32)I;
+    }
+    c = chorda_comparare(x->textus, y->textus);
+    si (c != ZEPHYRUM)
+    {
+        redde c;
+    }
+    redde chorda_comparare(x->upos, y->upos);
+}
+
+interior b32
+_semen_candidatum (
+    chorda upos)
+{
+    redde (b32)(   _literis(upos, "SCONJ") || _literis(upos, "CCONJ")
+                || _literis(upos, "PRON") || _literis(upos, "DET")
+                || _literis(upos, "ADV") || _literis(upos, "PUNCT"));
+}
+
+Xar*
+oratio_oraculum_semina (
+    Piscina* piscina,
+        Xar* sententiae)
+{
+               Xar* semina = xar_creare(piscina,
+                   (i32)magnitudo(OratioOraculumSemen*));
+    TabulaDispersa* index  = tabula_dispersa_creare_chorda(piscina,
+        (i32)4096);
+                i32 i;
+
+    si (semina == NIHIL || index == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
+    {
+        constans OratioConlluSententia* s =
+            (constans OratioConlluSententia*)xar_obtinere(sententiae,
+            i);
+        Piscina* scratch = piscina_generare_dynamicum(
+            "oraculum_semina", 4194304);
+            s32* cl;
+            b32* fin;
+            i32  n;
+            i32  k;
+
+        si (scratch == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (!_clausulas_aureas(scratch, s, &cl, &fin))
+        {
+            piscina_destruere(scratch);
+            redde NIHIL;
+        }
+        n = xar_numerus(s->lexemata);
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            constans OratioConlluLexema* t =
+                (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+                k);
+                        s32 prior  = (s32)-I;   /* non PUNCT non CCONJ */
+            s32 praecedens         = (s32)-I;   /* non PUNCT */
+            s32 proximum           = (s32)-I;
+            s32 j;
+            b32 limes;
+            OratioOraculumSemen* sm;
+
+            si (t->ranga || !_semen_candidatum(t->upos))
+            {
+                perge;
+            }
+            per (j = (s32)k - (s32)I; j >= ZEPHYRUM; j--)
+            {
+                constans OratioConlluLexema* u =
+                    (constans OratioConlluLexema*)xar_obtinere(
+                    s->lexemata, (i32)j);
+
+                si (u->ranga || _literis(u->upos, "PUNCT"))
+                {
+                    perge;
+                }
+                                si (praecedens < ZEPHYRUM)
+                                {
+                    praecedens = j;
+                                }
+                si (!_literis(u->upos, "CCONJ"))
+                {
+                    prior = j;
+                    frange;
+                }
+            }
+            per (j = (s32)k + (s32)I; j < (s32)n; j++)
+            {
+                constans OratioConlluLexema* u =
+                    (constans OratioConlluLexema*)xar_obtinere(
+                    s->lexemata, (i32)j);
+
+                si (!u->ranga && !_literis(u->upos, "PUNCT"))
+                {
+                    proximum = j;
+                    frange;
+                }
+            }
+            si (_literis(t->upos, "PUNCT"))
+            {
+                                limes = (b32)(   praecedens >= ZEPHYRUM
+                                    && proximum >= ZEPHYRUM
+                                    && cl[praecedens] != cl[proximum]);
+                sm = _semen_capere(piscina, semina, index, t->upos,
+                    t->forma);
+            }
+            alioquin
+            {
+                limes = (b32)(prior < ZEPHYRUM || cl[prior] != cl[k]);
+                sm = _semen_capere(piscina, semina, index, t->upos,
+                    t->lemma);
+            }
+            si (sm == NIHIL)
+            {
+                piscina_destruere(scratch);
+                redde NIHIL;
+            }
+            sm->n = sm->n + I;
+            si (limes)
+            {
+                sm->limes = sm->limes + I;
+            }
+            si (prior < ZEPHYRUM && !_literis(t->upos, "PUNCT"))
+            {
+                sm->initia = sm->initia + I;
+            }
+            si (cl[k] >= ZEPHYRUM && fin[cl[k]])
+            {
+                sm->finita = sm->finita + I;
+            }
+            si (_literis(t->upos, "CCONJ"))
+            {
+                b32 sinistra  = FALSUM;
+                b32 dextra    = FALSUM;
+
+                per (j = (s32)k - (s32)I; j >= ZEPHYRUM; j--)
+                {
+                    constans OratioConlluLexema* u =
+                        (constans OratioConlluLexema*)xar_obtinere(
+                        s->lexemata, (i32)j);
+
+                    si (   _literis(u->upos, "SCONJ")
+                        || _literis(u->upos, "CCONJ")
+                        || _literis(u->forma, ",")
+                        || _literis(u->forma, ";"))
+                    {
+                        frange;
+                    }
+                    si (   !u->ranga && fin[j] && cl[j] == j)
+                    {
+                        sinistra = VERUM;
+                    }
+                }
+                per (j = (s32)k + (s32)I; j < (s32)n; j++)
+                {
+                    constans OratioConlluLexema* u =
+                        (constans OratioConlluLexema*)xar_obtinere(
+                        s->lexemata, (i32)j);
+
+                    si (   _literis(u->upos, "SCONJ")
+                        || _literis(u->upos, "CCONJ")
+                        || _literis(u->forma, ",")
+                        || _literis(u->forma, ";"))
+                    {
+                        frange;
+                    }
+                    si (   !u->ranga && fin[j] && cl[j] == j)
+                    {
+                        dextra = VERUM;
+                    }
+                }
+                si (sinistra && dextra)
+                {
+                    sm->ff = sm->ff + I;
+                    si (limes)
+                    {
+                        sm->ff_limes = sm->ff_limes + I;
+                    }
+                }
+            }
+        }
+        piscina_destruere(scratch);
+    }
+    xar_ordinare(semina, _semina_comparare);
+    redde semina;
+}
+
+
+/* ==================================================
  * Iudicium
  * ================================================== */
+
+/* PAR clausulae (T20a): verbum aureum alignatum (non PUNCT) - clausula
+ * nostra elementi primi (-I aperta), causa, clausula aurea (positio
+ * radicis), forma aurea; post sententiam totam iudicatur (maior
+ * clausulae nostrae cuiusque) */
+nomen structura {
+       s32 nostra;
+       s32 causa;
+       s32 aurea;
+    chorda forma;
+} ParClausulae;
+
 
 interior vacuum
 _exemplum (
@@ -1063,7 +1707,9 @@ _verbum_iudicare (
                             i32  e0,
                             i32  e1,
     constans OratioConlluLexema* verbum,
-                            b32  primum)
+                            b32  primum,
+                            Xar* paria,
+                            s32  clausula_aurea)
 {
             OratioClassis  aurea;
     OratioOraculumClassis* c;
@@ -1219,16 +1865,199 @@ _verbum_iudicare (
                 ? primum_elementum->classis[ZEPHYRUM]
                 : ORATIO_CLASSIS_NUMERUS_CLASSIUM);
     }
-    si (lemma)
-    {
+        si (lemma)
+        {
         census->lemmata  = census->lemmata + I;
         c->lemmata       = c->lemmata + I;
-    }
+        }
     si (ignotum)
     {
         census->ignota  = census->ignota + I;
         c->ignota       = c->ignota + I;
     }
+    /* T20a: par clausulae (verbum alignatum primum, non PUNCT,
+     * clausula aurea nota) */
+    si (   paria          != NIHIL && primum && e1 > e0
+        && clausula_aurea >= ZEPHYRUM
+        && aurea          != ORATIO_CLASSIS_INTERPUNCTIO)
+    {
+        constans Elementum* e =
+            (constans Elementum*)xar_obtinere(elementa, e0);
+        ParClausulae* p = (ParClausulae*)xar_addere(paria);
+
+        si (p != NIHIL)
+        {
+            p->nostra  = e->clausula;
+            p->causa   = e->clausula_causa;
+            p->aurea   = clausula_aurea;
+            p->forma   = verbum->forma;
+        }
+    }
+}
+
+/* species clausulae c sententiae (nodus); -I si absens */
+interior s32
+_species_clausulae (
+    constans MateriaNodus* sententia,
+                      s32  c)
+{
+    constans MateriaValor* clausulae;
+    constans MateriaValor* v;
+
+    si (   sententia        == NIHIL
+        || sententia->genus != (s32)ORATIO_GENUS_SENTENTIA)
+    {
+        redde (s32)-I;
+    }
+    clausulae = &sententia->loci[ORATIO_SENTENTIA_CLAUSULAE];
+    si (   clausulae->genus != MATERIA_VALOR_LISTA || c < ZEPHYRUM
+        || (i32)c           >= materia_valor_lista_numerus(*clausulae))
+    {
+        redde (s32)-I;
+    }
+    v = materia_valor_lista_obtinere(*clausulae, (i32)c);
+    si (   v == NIHIL || v->genus != MATERIA_VALOR_NODUS
+        || v->datum.nodus->loci[ORATIO_CLAUSULA_SPECIES].genus
+            != MATERIA_VALOR_INDEX)
+    {
+        redde (s32)-I;
+    }
+    redde v->datum.nodus->loci[ORATIO_CLAUSULA_SPECIES].datum.index;
+}
+
+/* numerus clausularum nostrarum sententiae (0 sine stampa) */
+interior i32
+_numerus_clausularum (
+    constans MateriaNodus* sententia)
+{
+    constans MateriaValor* clausulae;
+
+    si (   sententia        == NIHIL
+        || sententia->genus != (s32)ORATIO_GENUS_SENTENTIA)
+    {
+        redde ZEPHYRUM;
+    }
+    clausulae = &sententia->loci[ORATIO_SENTENTIA_CLAUSULAE];
+    redde clausulae->genus == MATERIA_VALOR_LISTA
+        ? materia_valor_lista_numerus(*clausulae) : ZEPHYRUM;
+}
+
+/* PURITAS (decisio XLVII): per clausulam nostram c clausula aurea
+ * MAIOR inter paria; par rectum si aurea == maior; per causam. Numeri
+ * clausularum: nostrae (nodi) contra aureae (radices). */
+interior b32
+_clausulas_iudicare (
+                           Piscina* scratch,
+                           Piscina* piscina,
+              OratioOraculumCensus* census,
+    constans OratioConlluSententia* s,
+             constans MateriaNodus* sententia,
+                               Xar* paria,
+                      constans s32* cl)
+{
+    i32  np = xar_numerus(paria);
+    i32  nc = _numerus_clausularum(sententia);
+    i32  nl = xar_numerus(s->lexemata);
+    s32* maior;
+    i32* tabula;   /* nc x nl */
+    i32  aureae = ZEPHYRUM;
+    i32  c;
+    i32  k;
+
+    si (np == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < nl; k++)
+    {
+        si (cl[k] == (s32)k)
+        {
+            aureae = aureae + I;
+        }
+    }
+    census->clausulae_sententiae  = census->clausulae_sententiae + I;
+    census->clausulae_nostrae     = census->clausulae_nostrae + nc;
+    census->clausulae_aureae      = census->clausulae_aureae + aureae;
+    si (nc == aureae)
+    {
+        census->clausulae_pares = census->clausulae_pares + I;
+    }
+    maior  = (s32*)piscina_allocare(scratch, (memoriae_index)(nc + I)
+        * (memoriae_index)magnitudo(s32));
+    tabula = (i32*)piscina_allocare(scratch, (memoriae_index)(nc + I)
+        * (memoriae_index)(nl + I) * (memoriae_index)magnitudo(i32));
+    si (maior == NIHIL || tabula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(tabula, ZEPHYRUM, (size_t)((nc + I) * (nl + I))
+        * magnitudo(i32));
+    per (k = ZEPHYRUM; k < np; k++)
+    {
+        constans ParClausulae* p = (constans ParClausulae*)xar_obtinere(
+            paria, k);
+
+        si (   p->nostra >= ZEPHYRUM && (i32)p->nostra < nc
+            && p->aurea  >= ZEPHYRUM && (i32)p->aurea < nl)
+        {
+            i32 cella = (i32)p->nostra * (nl + I) + (i32)p->aurea;
+
+            tabula[cella] = tabula[cella] + I;
+        }
+    }
+    per (c = ZEPHYRUM; c < nc; c++)
+    {
+        i32 optimum = ZEPHYRUM;
+
+        maior[c] = (s32)-I;
+        per (k = ZEPHYRUM; k < nl; k++)
+        {
+            si (tabula[c * (nl + I) + k] > optimum)
+            {
+                optimum   = tabula[c * (nl + I) + k];
+                maior[c]  = (s32)k;
+            }
+        }
+    }
+    per (k = ZEPHYRUM; k < np; k++)
+    {
+        constans ParClausulae* p = (constans ParClausulae*)xar_obtinere(
+            paria, k);
+        i32 causa = (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS;   /* aperta */
+        b32 recta = FALSUM;
+
+        census->clausulae_iudicata = census->clausulae_iudicata + I;
+        si (   p->nostra >= ZEPHYRUM && (i32)p->nostra < nc
+            && p->causa  >= ZEPHYRUM
+            && p->causa < (s32)ORATIO_CLAUSULA_CAUSA_NUMERUS)
+        {
+            causa = (i32)p->causa;
+            recta = (b32)(maior[p->nostra] == p->aurea);
+        }
+        census->clausulae_verba[causa] = census->clausulae_verba[causa]
+            + I;
+        si (recta)
+        {
+            census->clausulae_rectae[causa] =
+                census->clausulae_rectae[causa] + I;
+        }
+        alioquin si (causa < (i32)ORATIO_CLAUSULA_CAUSA_NUMERUS)
+        {
+            chorda radix;
+
+            radix.datum    = NIHIL;
+            radix.mensura  = ZEPHYRUM;
+            si (p->aurea >= ZEPHYRUM && (i32)p->aurea < nl)
+            {
+                radix = ((constans OratioConlluLexema*)xar_obtinere(
+                    s->lexemata, (i32)p->aurea))->forma;
+            }
+            _erratum_clausulae_notare(piscina, census, p->causa,
+                p->forma, _species_clausulae(sententia, p->nostra),
+                radix);
+        }
+    }
+    redde VERUM;
 }
 
 /* resolutio optionalis (T17): programma + regulae + intern + ratum */
@@ -1259,7 +2088,10 @@ _sententiam_iudicare (
     i32 n;
         i32 e_proximum = ZEPHYRUM;
     i32 lingua_index;
-    OratioPartesCensus census_partium;
+        OratioPartesCensus census_partium;
+                  Xar* paria;   /* T20a: ParClausulae */
+                  s32* cl;
+                  b32* fin;
 
     si (scratch == NIHIL)
     {
@@ -1302,6 +2134,14 @@ _sententiam_iudicare (
         piscina_destruere(scratch);
         redde VERUM;
         }
+        /* T20a: clausulae aureae (radices finitae) et paria pro puritate;
+     * resolutio absens (crudus) = paria sine clausula nostra (apertae) */
+    paria = xar_creare(scratch, (i32)magnitudo(ParClausulae));
+    si (paria == NIHIL || !_clausulas_aureas(scratch, s, &cl, &fin))
+    {
+        piscina_destruere(scratch);
+        redde FALSUM;
+    }
     n = xar_numerus(s->lexemata);
     per (k = ZEPHYRUM; k < n; k++)
     {
@@ -1313,6 +2153,7 @@ _sententiam_iudicare (
         i32 e1;
         i32 verba_rangae = t->ranga ? t->b - t->a + I : ZEPHYRUM;
         i32 w;
+
 
         si (t->ranga)
         {
@@ -1372,25 +2213,43 @@ _sententiam_iudicare (
         {
             e1 = e1 + I;
         }
-        si (t->ranga)
-        {
+                si (t->ranga)
+                {
             per (w = ZEPHYRUM; w < verba_rangae && k + I + w < n; w++)
             {
                                 _verbum_iudicare(piscina, census,
                                     textus, elementa, e0,
                                     e1,
                                     (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
-                                    k + I + w), (b32)(w == ZEPHYRUM));
+                                    k + I + w), (b32)(w == ZEPHYRUM),
+                                    paria, cl[k + I + w]);
             }
             k = k + verba_rangae;
-        }
+                }
         alioquin
-        {
+                {
                         _verbum_iudicare(piscina, census, textus,
                             elementa, e0, e1,
-                            t, VERUM);
+                            t, VERUM, paria, cl[k]);
+                }
+    }
+    /* T20a: puritas clausularum sententiae (sententia = pater elementi
+     * primi) */
+    si (xar_numerus(elementa) > ZEPHYRUM)
+    {
+        constans Elementum* e0_elementum =
+            (constans Elementum*)xar_obtinere(elementa, ZEPHYRUM);
+
+        si (!_clausulas_iudicare(scratch, piscina, census, s,
+                e0_elementum->nodus != NIHIL
+                    ? e0_elementum->nodus->pater : NIHIL,
+                paria, cl))
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
         }
     }
+    (vacuum)fin;
     piscina_destruere(scratch);
     redde VERUM;
 }

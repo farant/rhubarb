@@ -1388,6 +1388,54 @@ if the stamp proves too coarse), English seeds (own data), participial
 and infinitive clauses as clauses of their own (return when a law
 needs them), any phrase structure (decision 46).
 
+**As built — T20a (2026-09-08, same session).** STRUCTURE as designed:
+genus `clausula` after `umbra` (semen, species, pater, umbrae), the
+sentence's `clausulae` list, `clausula` + `clausula-causa` on the
+three element genera, one refinement — the umbra's new condition
+slot is `forma-verbi` (finitum) rather than `modus`, since one value
+expresses finiteness where mood would need three; registry 184 slots,
+25 genera, seal 62a7afd8; canon, projection attributes, computus
+golden (two umbrae and a clause node per sentence), Python face
+(`Oratio.clausulae()`, `clausula` / `clausula_causa` on the word),
+`verba.sh -clausulae`. STAMP `oratio_clausula` (`seminare`, called by
+the resolver per sentence before its stages; idempotent). Seeds fixed
+from the gold census (`oraculum.sh -semina`, agreeing line for line
+with the exploratory Python census): CERTAE si quia qualiter dum quod
+sicut sicuti donec quamquam quando quoniam antequam priusquam postquam
+etsi quamvis quatenus quomodo quotiens quin; CORROBORANDAE ut cum nisi
+ubi unde; RELATIVA qui quicumque quisquis on pronoun/determiner
+readings, the forms quis/quid excluded (WORDS lemma `qui` for the
+relative, the interrogative and the indefinite alike; `si quis`);
+COORDINANTIA et atque ac sed aut nec neque at, between finite-verb-
+capable words only; `-que` never (0–3 %). Punctuation never seeds
+(comma 23–37 % on the charters; Seneca's treebank has none) — comma,
+semicolon and colon CLOSE a closable clause, parentheses open and
+close a parenthetical. Layer 2 with a stack and a per-clause
+closability flag (subordinate, relative, and a coordinate sibling of
+one); the main clause is born lazily at the first top-level word and
+adopts earlier orphans (`Si quis ... , poenam dabit`); a sentence-
+initial relative opens the main clause. Layer 3 at the first certain
+finite verb (all readings finite) or a closer. ORACLE as designed:
+gold root = finite mood not aux/cop, or the predicate of a finite
+aux/cop, or the sentence root; purity per layer, coverage, count
+agreement, `-errata` listing (layer, form, our species, gold root).
+BIRTH NUMBERS (Seneca / charters dev / test): semen 890 / 957 / 953,
+extentum 759 / 857 / 887, clausura 491 / 650 / 657, unica 740 / 984 /
+986; overall purity PINNED 738 / 829 / 864 (English 726 / 739, all
+`unica` by design); coverage 1000; sentences with the gold count 518 /
+740 / 771; clauses per sentence 1.68 vs 2.27, 2.48 vs 2.52, 2.37 vs
+2.25. Primary and forced accuracy unchanged (no rule reads the clause
+yet). FINDINGS: the closure layer is the weakest as predicted and
+carries 29 % of the charters' words; the residual on every Latin file
+is a SECOND FINITE VERB WITH NO SEED before it (Seneca's imperatives
+and verse, the charters' formulae "alio lato tenet in terra", "ego
+... manifestu sum") — law 1 of T20c as a fifth layer. Gate
+`probatio_oratio_clausula` (161: data lists, ten hand cases including
+nested-closed-by-verb, coordinate siblings, `si quis`, seedless,
+connecting relative, negated corroboration, parenthetical, English,
+idempotence, umbrae, projection round trip, resolver census; planted
+fault = si removed, red on `si quis`). NEXT: T20b.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

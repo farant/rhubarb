@@ -3885,8 +3885,15 @@ OratioSententia = namedtuple('OratioSententia',
 OratioVocabulum = namedtuple('OratioVocabulum',
                              'index initium finis linea paragraphus sententia'
                              ' forma classes linguae lemma analyses'
-                             ' decisio auctor')
+                             ' decisio auctor clausula clausula_causa')
 ORATIO_PARTITIO = ('praelatio', 'impletio', 'umbra', 'una', 'aperta', 'nulla')
+# T20a: clausula sententiae - index intra sententiam, species (principalis
+# subordinata relativa coordinata parenthetica), semen (ordinalis elementi
+# aperientis; None = principalis sine semine), pater (index clausulae
+# continentis; None = summa), membra = indices vocabulorum documenti
+OratioClausula = namedtuple('OratioClausula',
+                            'sententia index species semen pater membra')
+ORATIO_CAUSAE_CLAUSULAE = ('semen', 'extentum', 'clausura', 'catena', 'unica')
 OratioAnalysis = namedtuple('OratioAnalysis',
                             'index classis lemma lingua fons nativum sensus'
                             ' accidentia umbrae')
@@ -3934,6 +3941,7 @@ class Oratio(object):
         self._sententiae = None
         self._vocabula = None
         self._analyses = None
+        self._clausulae = None
 
     @property
     def textus(self):
@@ -3991,7 +3999,9 @@ class Oratio(object):
                 OratioVocabulum(int(p[1]), int(p[2]), int(p[3]), int(p[4]),
                                 int(p[5]), int(p[6]), p[7],
                                 tuple(p[8].split()), tuple(p[9].split()),
-                                p[10], int(p[11]), p[12], p[13])
+                                p[10], int(p[11]), p[12], p[13],
+                                int(p[14]) if len(p) > 14 and p[14] else None,
+                                p[15] if len(p) > 15 else '')
                 for p in self._machina('./oratio/verba.sh')]
         xs = self._vocabula
         if classis is not None:
@@ -4008,12 +4018,37 @@ class Oratio(object):
         """vocabula sine analysi (inventa)"""
         return self.vocabula(ignota=True)
 
+    def clausulae(self, sententia=None):
+        """[OratioClausula] ordine documenti (T20a): nodi clausulae
+        sententiae cuiusque - species, semen, pater, membra (indices
+        vocabulorum); sententia = ordinalis sententiae. [] sine
+        resolutione (crudus) - stampa pars resolutionis est."""
+        if self.crudus:
+            return []
+        if self._clausulae is None:
+            self._clausulae = [
+                OratioClausula(int(p[1]), int(p[2]), p[3],
+                               int(p[4]) if p[4] else None,
+                               int(p[5]) if p[5] else None,
+                               tuple(int(x) for x in p[6].split())
+                               if len(p) > 6 and p[6] else ())
+                for p in self._machina('./oratio/verba.sh', ['-clausulae'])]
+        xs = self._clausulae
+        if sententia is not None:
+            xs = [c for c in xs if c.sententia == sententia]
+        return list(xs)
+
     def partitio(self):
         """dict genus -> vocabula (T19g, decretum SUDOKU decisio XL):
         praelatio | impletio | umbra (decisio in arbore scripta, auctor =
         titulus regulae) | una (lectio una, nemo decidit) | aperta
         (lectiones plures, nemo decidit: ordo fontis) | nulla (sine
-        lectione). coactae = impletio + umbra (testimonium)."""
+        lectione). coactae = impletio + umbra (testimonium). CLAUSULAE
+        (T20a, decisiones XLIII-XLVII): vocabulum.clausula = index
+        clausulae intra sententiam suam (None = APERTA: nemo posuit),
+        vocabulum.clausula_causa = stratum quod posuit (semen extentum
+        clausura catena unica; '' aperta); clausulae() = nodi clausulae
+        per sententiam (./oratio/verba.sh -clausulae)."""
         p = dict((k, 0) for k in ORATIO_PARTITIO)
         for v in self.vocabula():
             if 'ignotum' in v.classes:

@@ -1,7 +1,7 @@
 #!/bin/bash
 # oratio/verba.sh - vocabula annotata plagulae orationis: una linea per vocabulum
 #
-# Usage:  ./oratio/verba.sh <plagula.txt>... [-machina] [-analyses]
+# Usage:  ./oratio/verba.sh <plagula.txt>... [-machina] [-analyses] [-clausulae]
 # Exit:   0 vocabula | 1 nulla | 2 usus/plagula/tabula absens
 # Obiecta oratio/build/*.o poscit (cursor oratio/compile_probationes.sh ea
 # struit); instrumentum in oratio/build/verba. Tabula la.bin et glossarium

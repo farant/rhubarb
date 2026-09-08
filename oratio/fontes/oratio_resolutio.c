@@ -1603,15 +1603,23 @@ _sententiam_resolvere (
                                             b32* explicita;
                                         Decisio* decisiones;
 
-    si (cursus->census != NIHIL)
-    {
+        si (cursus->census != NIHIL)
+        {
         cursus->census->sententiae = cursus->census->sententiae + I;
-    }
+        }
 
     si (   elementa->genus                        != MATERIA_VALOR_LISTA
         || materia_valor_lista_numerus(*elementa) == ZEPHYRUM)
     {
         redde VERUM;
+    }
+    /* T20a: CLAUSULAE ante gradus omnes - stampa seminum (strata I-III:
+     * lectiones adsunt, ligationes nondum); idempotens */
+    si (!oratio_clausulas_seminare(cursus->piscina, sententia,
+            cursus->census != NIHIL ? &cursus->census->clausulae
+                : NIHIL))
+    {
+        redde FALSUM;
     }
     ne               = materia_valor_lista_numerus(*elementa);
     regulae_numerus  = xar_numerus(cursus->programma->regulae);

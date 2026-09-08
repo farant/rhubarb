@@ -36,6 +36,8 @@
 #include "materia_lexicon.h"
 #include "oratio_vocabularium.h"
 #include "oratio_registrum.h"
+#include "oratio_clausula.h"
+
 
 /* regula programmatis: titulus (attributum) et textus eius in
  * programmate (extentum elementi <regula>, referens) */
@@ -74,9 +76,12 @@ nomen structura {
         /* vocabula lege umbrarum permutata (T19d gamma: lectio umbris a
      * vicinis impletis prima) */
     i32 umbris_ordinata;
-    /* vocabula decisa per genus decisionis (T19g: locus 'decisio'
+        /* vocabula decisa per genus decisionis (T19g: locus 'decisio'
      * vocabuli scriptus - praelatio | impletio | umbra) */
     i32 decisae[ORATIO_DECISIO_NUMERUS];
+    /* T20a: stampa clausularum (strata I-III) ante gradus - census
+     * eius (semina, causae, clausulae per speciem) */
+    OratioClausulaCensus clausulae;
 } OratioResolutioCensus;
 
 

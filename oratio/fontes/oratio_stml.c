@@ -150,6 +150,40 @@ _nodum_ornare (
             "attributum linguae scribi non potuit");
         redde FALSUM;
     }
+        /* T20a: clausula (numerus) et clausula-causa (titulus) elementi
+     * ut attributa, ut selectio '[clausula="1"]' congruat et
+     * exemplaria membra clausulae legant; non scripta = aperta */
+    {
+        s32 locus = oratio_locus_clausulae((OratioGenus)nodus->genus,
+            FALSUM);
+        s32 locus_causae = oratio_locus_clausulae(
+            (OratioGenus)nodus->genus, VERUM);
+
+        si (   locus                    >= ZEPHYRUM
+            && nodus->loci[locus].genus == MATERIA_VALOR_INDEX
+            && !materia_arbor_attributum_numeri(scriptor, elementum,
+                "clausula", (i32)nodus->loci[locus].datum.index))
+        {
+            materia_arbor_scriptor_recusare(scriptor,
+                "attributum clausulae scribi non potuit");
+            redde FALSUM;
+        }
+        si (   locus_causae >= ZEPHYRUM
+            && nodus->loci[locus_causae].genus == MATERIA_VALOR_INDEX
+            && nodus->loci[locus_causae].datum.index >= ZEPHYRUM
+            && nodus->loci[locus_causae].datum.index
+                < (s32)ORATIO_CLAUSULA_CAUSA_NUMERUS
+            && !stml_attributum_addere(elementum,
+                materia_arbor_scriptor_piscina(scriptor),
+                materia_arbor_scriptor_intern(scriptor),
+                "clausula-causa", ORATIO_TITULI_CAUSARUM_CLAUSULAE[
+                    nodus->loci[locus_causae].datum.index]))
+        {
+            materia_arbor_scriptor_recusare(scriptor,
+                "attributum causae clausulae scribi non potuit");
+            redde FALSUM;
+        }
+    }
     si (nodus->genus != (s32)ORATIO_GENUS_VOCABULUM)
     {
         redde VERUM;

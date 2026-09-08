@@ -63,7 +63,13 @@ nomen enumeratio {
     /* T19d (2026-09-07): UMBRA - dependens exspectatus lectionis
      * (relatio, condiciones, impletio); APPENSA post analyses, ergo
      * analyses [PRIMUM, ULTIMUM) contiguae manent */
-    ORATIO_GENUS_UMBRA,
+        ORATIO_GENUS_UMBRA,
+    /* T20a (2026-09-08, decisiones XLIII-XLIV): CLAUSULA - capsa
+     * sudoku inter vicinitatem et sententiam; nodus in lista
+     * 'clausulae' sententiae, umbras e schemate ferens (verbum
+     * finitum, subiectum); elementa plana per INDEX eum monstrant.
+     * APPENSA post umbram (extra [PRIMUM, ULTIMUM) analysium) */
+    ORATIO_GENUS_CLAUSULA,
 
     ORATIO_GENUS_NUMERUS_GENERUM,
     ORATIO_GENUS_ANALYSIS_PRIMUM = ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
@@ -129,7 +135,8 @@ nomen enumeratio {
 } OratioForma;
 
 nomen enumeratio {
-    ORATIO_SENTENTIA_ELEMENTA = 0     /* LISTA_NODUS vocabulum | interpunctio | numerus */
+    ORATIO_SENTENTIA_ELEMENTA = 0,    /* LISTA_NODUS vocabulum | interpunctio | numerus */
+    ORATIO_SENTENTIA_CLAUSULAE        /* LISTA_NODUS clausula (T20a; absens = non stampata) */
 } OratioLocusSententiae;
 
 nomen enumeratio {
@@ -138,18 +145,24 @@ nomen enumeratio {
     ORATIO_VOCABULUM_ANALYSES,        /* LISTA_NODUS analysis-* (gradus III) */
     ORATIO_VOCABULUM_CLASSES,         /* TOKEN? DERIVATUM: classes ordine */
     ORATIO_VOCABULUM_LINGUAE,         /* TOKEN? DERIVATUM: linguae ordine */
-    ORATIO_VOCABULUM_DECISIO,         /* INDEX? OratioDecisio (T19g): non scripta = nemo decidit */
-    ORATIO_VOCABULUM_AUCTOR           /* TOKEN? DERIVATUM (T19g): titulus regulae decidentis */
+        ORATIO_VOCABULUM_DECISIO,         /* INDEX? OratioDecisio (T19g): non scripta = nemo decidit */
+    ORATIO_VOCABULUM_AUCTOR,          /* TOKEN? DERIVATUM (T19g): titulus regulae decidentis */
+    ORATIO_VOCABULUM_CLAUSULA,        /* INDEX? (T20a): clausula intra clausulas sententiae; non scripta = APERTA */
+    ORATIO_VOCABULUM_CLAUSULA_CAUSA   /* INDEX? OratioClausulaCausa (T20a): stratum quod posuit */
 } OratioLocusVocabuli;
 
 nomen enumeratio {
-    ORATIO_INTERPUNCTIO_SIGNUM = 0,   /* TOKEN: punctum | interpunctio | signum */
-    ORATIO_INTERPUNCTIO_CAUDA         /* LISTA_TOKEN */
+        ORATIO_INTERPUNCTIO_SIGNUM = 0,   /* TOKEN: punctum | interpunctio | signum */
+    ORATIO_INTERPUNCTIO_CAUDA,        /* LISTA_TOKEN */
+    ORATIO_INTERPUNCTIO_CLAUSULA,     /* INDEX? (T20a) */
+    ORATIO_INTERPUNCTIO_CLAUSULA_CAUSA /* INDEX? OratioClausulaCausa (T20a) */
 } OratioLocusInterpunctionis;
 
 nomen enumeratio {
-    ORATIO_NUMERUS_CRUDUM = 0,        /* LISTA_TOKEN: digiti et separatores */
-    ORATIO_NUMERUS_CAUDA              /* LISTA_TOKEN */
+        ORATIO_NUMERUS_CRUDUM = 0,        /* LISTA_TOKEN: digiti et separatores */
+    ORATIO_NUMERUS_CAUDA,             /* LISTA_TOKEN */
+    ORATIO_NUMERUS_CLAUSULA,          /* INDEX? (T20a) */
+    ORATIO_NUMERUS_CLAUSULA_CAUSA     /* INDEX? OratioClausulaCausa (T20a) */
 } OratioLocusNumeri;
 
 
@@ -303,6 +316,11 @@ nomen enumeratio {
 nomen enumeratio {
     ORATIO_RELATIO_OBIECTUM = 0,
     ORATIO_RELATIO_CAPUT,
+    /* T20a: relationes CLAUSULAE (umbrae e schemate generis):
+     * verbum-finitum = verbum quod clausulam regit (forma finita),
+     * subiectum = nominativus cum verbo concordans */
+    ORATIO_RELATIO_VERBUM_FINITUM,
+    ORATIO_RELATIO_SUBIECTUM,
 
     ORATIO_RELATIO_NUMERUS
 } OratioRelatio;
@@ -334,11 +352,60 @@ nomen enumeratio {
     ORATIO_UMBRA_CASUS,              /* INDEX: OratioCasus */
     ORATIO_UMBRA_NUMERUS,            /* INDEX: OratioNumerusGrammaticus */
     ORATIO_UMBRA_GENUS,              /* INDEX: OratioGenusGrammaticum */
-    ORATIO_UMBRA_IMPLETIO_VOCABULUM, /* INDEX: ordinalis vocabuli implentis intra elementa */
+        ORATIO_UMBRA_IMPLETIO_VOCABULUM, /* INDEX: ordinalis vocabuli implentis intra elementa */
     ORATIO_UMBRA_IMPLETIO_ANALYSIS,  /* INDEX: ordinalis analysis implentis intra analyses */
+    /* T20a: condicio FORMAE VERBI (finitum | infinitivum | ...) -
+     * valor unus finitatem dicit (modus tres valores poscerret);
+     * APPENSA post impletionem, non scripta = quaelibet */
+    ORATIO_UMBRA_FORMA_VERBI,        /* INDEX: OratioFormaVerbi exspectata */
 
     ORATIO_UMBRA_NUMERUS_LOCORUM
 } OratioUmbraLocus;
+
+/* loci generis CLAUSULA (T20a, 2026-09-08, decisiones XLIII-XLIV):
+ * semen = ordinalis elementi quod clausulam aperuit (non scriptum =
+ * principalis sine semine), species, pater = clausula continens
+ * intra listam sententiae (non scriptus = summa; coordinatae
+ * sorores, numquam nidificatae), umbrae = nodi umbra e SCHEMATE
+ * generis nati, non regula: verbum-finitum (forma finita) et
+ * subiectum (nominativus); impletio per legem exsecutoris unam
+ * (T20c), vacua = inventum. */
+nomen enumeratio {
+    ORATIO_CLAUSULA_SEMEN = 0,       /* INDEX?: ordinalis elementi seminis */
+    ORATIO_CLAUSULA_SPECIES,         /* INDEX: OratioSpeciesClausulae */
+    ORATIO_CLAUSULA_PATER,           /* INDEX?: clausula continens */
+    ORATIO_CLAUSULA_UMBRAE,          /* LISTA_NODUS umbra */
+
+    ORATIO_CLAUSULA_NUMERUS_LOCORUM
+} OratioClausulaLocus;
+
+/* species clausulae (T20a): APPENSAE solum */
+nomen enumeratio {
+    ORATIO_SPECIES_CLAUSULAE_PRINCIPALIS = 0,
+    ORATIO_SPECIES_CLAUSULAE_SUBORDINATA,
+    ORATIO_SPECIES_CLAUSULAE_RELATIVA,
+    ORATIO_SPECIES_CLAUSULAE_COORDINATA,
+    ORATIO_SPECIES_CLAUSULAE_PARENTHETICA,
+
+    ORATIO_SPECIES_CLAUSULAE_NUMERUS
+} OratioSpeciesClausulae;
+
+/* CAUSA positionis elementi in clausula (T20a, decisio XLV): stratum
+ * quod elementum posuit - semen (elementum ipsum clausulam aperuit),
+ * extentum (inter semina, acervo), clausura (post verbum finitum
+ * certum clausulae subordinatae ad parentem redditum - prior verbi
+ * finalis), catena (per umbram ligatam, T20b), unica (sententia sine
+ * semine ullo: clausula una). Non scripta = APERTA. Oraculum stratum
+ * quodque seorsum metitur. APPENSAE solum. */
+nomen enumeratio {
+    ORATIO_CLAUSULA_CAUSA_SEMEN = 0,
+    ORATIO_CLAUSULA_CAUSA_EXTENTUM,
+    ORATIO_CLAUSULA_CAUSA_CLAUSURA,
+    ORATIO_CLAUSULA_CAUSA_CATENA,
+    ORATIO_CLAUSULA_CAUSA_UNICA,
+
+    ORATIO_CLAUSULA_CAUSA_NUMERUS
+} OratioClausulaCausa;
 
 /* loci COMMUNES omnis generis analysis-* (primi V, ordine hoc) */
 nomen enumeratio {
@@ -464,7 +531,17 @@ externus constans character* constans ORATIO_TITULI_SPECIERUM_NUMERALIS[];
 externus constans character* constans ORATIO_TITULI_LINGUARUM[];
 externus constans character* constans ORATIO_TITULI_RELATIONUM[];   /* T19d */
 externus constans character* constans ORATIO_TITULI_DECISIONUM[];   /* T19g */
+externus constans character* constans ORATIO_TITULI_SPECIERUM_CLAUSULAE[];   /* T20a */
+externus constans character* constans ORATIO_TITULI_CAUSARUM_CLAUSULAE[];    /* T20a */
 externus constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[];
+
+/* T20a: locus 'clausula' (causa FALSUM) aut 'clausula-causa' (causa
+ * VERUM) generis elementi (vocabulum | interpunctio | numerus); -I si
+ * genus non elementum. Una sedes pro stampa, proiectione, oraculo. */
+s32
+oratio_locus_clausulae (
+    OratioGenus genus,
+            b32 causa);
 
 /* Titulus classis ("substantivum" ...); NIHIL si extra. */
 constans character*
