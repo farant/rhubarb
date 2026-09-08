@@ -635,13 +635,220 @@ oratio_partes_vocabulum_annotare (
     redde VERUM;
 }
 
+/* encliticum annotare (T21): lectio una (descriptio TACKON), compendia
+ * classis et linguae, census ut vocabulum annotatum */
+interior b32
+_encliticum_annotare (
+                      Piscina* piscina,
+                 MateriaNodus* vocabulum,
+    constans OratioDescriptio* d,
+        constans MateriaToken* origo,
+           OratioPartesCensus* census)
+{
+    MateriaNodus* nodus = oratio_partes_nodum_struere(piscina, d,
+        origo);
+    constans character* classis = oratio_classis_titulus(d->classis);
+    unio {
+        constans character* c;
+                        i8* m;
+    } u;
+    chorda valor;
+
+    si (   nodus == NIHIL || classis == NIHIL
+        || !materia_nodus_appendere(piscina, vocabulum,
+            (i32)ORATIO_VOCABULUM_ANALYSES, materia_valor_nodus(nodus),
+            MATERIA_LOCUS_LISTA_NODUS))
+    {
+        redde FALSUM;
+    }
+    u.c            = classis;
+    valor.datum    = u.m;
+    valor.mensura  = (i32)strlen(classis);
+    si (!_derivatum_ponere(piscina, vocabulum,
+            (i32)ORATIO_VOCABULUM_CLASSES, valor, origo))
+    {
+        redde FALSUM;
+    }
+    si (!d->lingua_ignota)
+    {
+        u.c            = ORATIO_TITULI_LINGUARUM[d->lingua];
+        valor.datum    = u.m;
+        valor.mensura  = (i32)strlen(u.c);
+        si (!_derivatum_ponere(piscina, vocabulum,
+                (i32)ORATIO_VOCABULUM_LINGUAE, valor, origo))
+        {
+            redde FALSUM;
+        }
+    }
+    si (census != NIHIL)
+    {
+        census->vocabula             = census->vocabula + I;
+        census->annotata             = census->annotata + I;
+        census->analyses             = census->analyses + I;
+        census->enclitica            = census->enclitica + I;
+        census->classes[d->classis]  = census->classes[d->classis] + I;
+        si (!d->lingua_ignota)
+        {
+            census->linguae[d->lingua] = census->linguae[d->lingua] + I;
+            census->vocabula_linguarum[d->lingua] =
+                census->vocabula_linguarum[d->lingua] + I;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+oratio_partes_encliticum_scindere (
+                          Piscina*  piscina,
+                          Piscina*  scratch,
+       constans OratioVocabularia*  vocabularia,
+                     MateriaNodus*  vocabulum,
+               OratioPartesCensus*  census,
+                     MateriaNodus** encliticum)
+{
+    constans MateriaValor* partes =
+        &vocabulum->loci[ORATIO_VOCABULUM_PARTES];
+          constans MateriaToken* origo;
+        constans OratioAnalysis* a;
+    constans OratioAdditamentum* t;
+                         chorda  textus;
+                            Xar* analyses;
+                            Xar* descriptiones;
+                            i32  scissio;
+             MateriaToken* hospes;
+             MateriaToken* lexema;
+             MateriaNodus* e;
+             MateriaValor  lista;
+
+    *encliticum = NIHIL;
+    si (   vocabulum->loci[ORATIO_VOCABULUM_CLASSES].genus
+            != MATERIA_VALOR_NIHIL
+        || partes->genus                        != MATERIA_VALOR_LISTA
+        || materia_valor_lista_numerus(*partes) != I)
+    {
+        redde VERUM;   /* iam annotatum aut partes plures */
+    }
+    origo = materia_valor_lista_obtinere(*partes,
+        ZEPHYRUM)->datum.token;
+    textus = oratio_partes_textus_vocabuli(scratch, vocabulum);
+    si (textus.datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    analyses = oratio_vocabularium_la_quaerere(scratch, vocabularia->la,
+        textus);
+    si (analyses == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (xar_numerus(analyses) < (i32)II)
+    {
+        redde VERUM;   /* TACKON sine hospite non fit (contractus III) */
+    }
+    a = (constans OratioAnalysis*)xar_obtinere(analyses, ZEPHYRUM);
+    si (a->genus != ORATIO_ANALYSIS_TACKON || a->tackon < ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    /* custodia Anglica: forma tota Moby nota (unique, mosque) manet */
+    si (vocabularia->en != NIHIL)
+    {
+                Xar* analyses_en =
+                    oratio_vocabularium_en_analysare(scratch,
+                    vocabularia->en, textus);
+
+        si (analyses_en == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (xar_numerus(analyses_en) > ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+        t = oratio_vocabularium_la_additamentum(vocabularia->la,
+            a->tackon);
+    si (   t                == NIHIL || t->forma.mensura == ZEPHYRUM
+        || t->forma.mensura >= origo->valor.mensura)
+    {
+        redde VERUM;
+    }
+        /* nulla custodia nominum: 'Lucane' chartarum (= Lucanae, LXVII
+     * scissiones falsas) lacuna DICTIONARII erat (lucanus adi. absens,
+     * ae > e medii aevi) et glossario suppleta est - custodia
+     * 'hospes nomen proprium solum' nihil mutabat (Luca bos = elephas:
+     * lectio communis adest) */
+    scissio  = origo->valor.mensura - t->forma.mensura;
+    hospes   = oratio_lexema_pars(piscina, origo, ZEPHYRUM, scissio);
+    lexema  = oratio_lexema_pars(piscina, origo, scissio,
+        t->forma.mensura);
+    si (hospes == NIHIL || lexema == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* hospes: partes = lexema partitum; cauda vacua (migrat) */
+    lista = materia_valor_lista_appendere(piscina,
+        materia_valor_lista_nova(piscina), materia_valor_token(hospes));
+    si (!materia_nodus_reponere(vocabulum, (i32)ORATIO_VOCABULUM_PARTES,
+            lista, MATERIA_LOCUS_LISTA_TOKEN))
+    {
+        redde FALSUM;
+    }
+    /* encliticum: nodus novus cum lexemate, cauda hospitis, lectione */
+    e = materia_nodus_creare(piscina, (s32)ORATIO_GENUS_VOCABULUM,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
+    lista = materia_valor_lista_appendere(piscina,
+        materia_valor_lista_nova(piscina), materia_valor_token(lexema));
+    si (   e == NIHIL
+        || !materia_nodus_ponere(e, (i32)ORATIO_VOCABULUM_PARTES, lista,
+            MATERIA_LOCUS_LISTA_TOKEN))
+    {
+        redde FALSUM;
+    }
+    si (vocabulum->loci[ORATIO_VOCABULUM_CAUDA].genus
+        == MATERIA_VALOR_LISTA)
+    {
+        si (   !materia_nodus_ponere(e, (i32)ORATIO_VOCABULUM_CAUDA,
+                vocabulum->loci[ORATIO_VOCABULUM_CAUDA],
+                MATERIA_LOCUS_LISTA_TOKEN)
+            || !materia_nodus_reponere(vocabulum,
+                (i32)ORATIO_VOCABULUM_CAUDA,
+                materia_valor_lista_nova(piscina),
+                MATERIA_LOCUS_LISTA_TOKEN))
+        {
+            redde FALSUM;
+        }
+    }
+    descriptiones = xar_creare(scratch,
+        (i32)magnitudo(OratioDescriptio));
+    si (   descriptiones              == NIHIL
+        || !oratio_partes_la_describere(piscina, vocabularia->la, a,
+            descriptiones)
+        || xar_numerus(descriptiones) != I
+        || !_encliticum_annotare(piscina, e,
+            (constans OratioDescriptio*)xar_obtinere(descriptiones,
+                ZEPHYRUM),
+            lexema, census))
+    {
+        redde FALSUM;
+    }
+    *encliticum = e;
+    redde VERUM;
+}
+
+/* insertio enclitici post elementum j listae (T21) */
+nomen structura {
+             i32  j;
+    MateriaNodus* nodus;
+} Insertio;
+
 interior b32
 _annotare (
-                          Piscina* piscina,
-                          Piscina* scratch,
-       constans OratioVocabularia* vocabularia,
-                     MateriaNodus* n,
-               OratioPartesCensus* census)
+                           Piscina* piscina,
+                           Piscina* scratch,
+        constans OratioVocabularia* vocabularia,
+                      MateriaNodus* n,
+                OratioPartesCensus* census)
 {
     i32 i;
 
@@ -668,18 +875,75 @@ _annotare (
                 redde FALSUM;
             }
         }
-        alioquin si (v->genus == MATERIA_VALOR_LISTA)
+                alioquin si (v->genus == MATERIA_VALOR_LISTA)
         {
-            i32 m = materia_valor_lista_numerus(*v);
-            i32 j;
+            i32  m = materia_valor_lista_numerus(*v);
+            i32  j;
+            Xar* insertiones = NIHIL;   /* T21: enclitica post hospites */
 
             per (j = ZEPHYRUM; j < m; j++)
             {
                 MateriaValor* e = materia_valor_lista_obtinere(*v, j);
+                MateriaNodus* encliticum = NIHIL;
 
-                si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
-                    && !_annotare(piscina, scratch, vocabularia,
+                si (e == NIHIL || e->genus != MATERIA_VALOR_NODUS)
+                {
+                    perge;
+                }
+                si (   e->datum.nodus->genus
+                        == (s32)ORATIO_GENUS_VOCABULUM
+                    && !oratio_partes_encliticum_scindere(piscina,
+                        scratch, vocabularia, e->datum.nodus, census,
+                        &encliticum))
+                {
+                    redde FALSUM;
+                }
+                si (!_annotare(piscina, scratch, vocabularia,
                         e->datum.nodus, census))
+                {
+                    redde FALSUM;
+                }
+                si (encliticum != NIHIL)
+                {
+                    Insertio* ins;
+
+                    si (insertiones == NIHIL)
+                    {
+                        insertiones = xar_creare(scratch,
+                            (i32)magnitudo(Insertio));
+                    }
+                    ins = insertiones != NIHIL
+                        ? (Insertio*)xar_addere(insertiones) : NIHIL;
+                    si (ins == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    ins->j      = j;
+                    ins->nodus  = encliticum;
+                }
+            }
+            si (insertiones != NIHIL)
+            {
+                MateriaValor nova  = materia_valor_lista_nova(piscina);
+                         i32 k     = ZEPHYRUM;
+
+                per (j = ZEPHYRUM; j < m; j++)
+                {
+                    nova = materia_valor_lista_appendere(piscina, nova,
+                        *materia_valor_lista_obtinere(*v, j));
+                    si (   k < xar_numerus(insertiones)
+                        && ((Insertio*)xar_obtinere(insertiones, k))->j
+                            == j)
+                    {
+                        nova = materia_valor_lista_appendere(piscina,
+                            nova, materia_valor_nodus(
+                                ((Insertio*)xar_obtinere(insertiones,
+                                    k))->nodus));
+                        k = k + I;
+                    }
+                }
+                si (!materia_nodus_reponere(n, i, nova,
+                        MATERIA_LOCUS_LISTA_NODUS))
                 {
                     redde FALSUM;
                 }

@@ -1697,6 +1697,40 @@ _formam_invenire (
     redde (s32)-I;
 }
 
+/* elementum unum inter [e0, e1) cuius textus formam octetim aequat;
+ * -I si nullum aut plura (T21) */
+interior s32
+_elementum_formae (
+    chorda  textus,
+       Xar* elementa,
+       i32  e0,
+       i32  e1,
+    chorda  forma)
+{
+    s32 inventum = (s32)-I;
+    i32 k;
+
+    per (k = e0; k < e1; k++)
+    {
+        constans Elementum* e =
+            (constans Elementum*)xar_obtinere(elementa, k);
+
+        si (   e->a                >= ZEPHYRUM && e->b > e->a
+            && (i32)(e->b - e->a)  == forma.mensura
+            && (s32)textus.mensura >= e->b
+            && memcmp(textus.datum + e->a, forma.datum,
+                (size_t)forma.mensura) == ZEPHYRUM)
+        {
+                        si (inventum >= ZEPHYRUM)
+                        {
+                redde (s32)-I;   /* plura: ambiguum */
+                        }
+            inventum = (s32)k;
+        }
+    }
+    redde inventum;
+}
+
 /* verbum aureum unum contra classes elementorum [e0, e1) iudicare */
 interior vacuum
 _verbum_iudicare (
@@ -2333,25 +2367,42 @@ _sententiam_iudicare (
         {
             e1 = e1 + I;
         }
-                si (t->ranga)
-                {
+                                si (t->ranga)
+                                {
+            /* T21: pars rangae cuius forma elementum unum inter
+             * [e0, e1) octetim aequat (encliticum scissum: arma + que)
+             * contra id solum ut verbum primum iudicatur; aliter ut
+             * ante (prima contra elementa omnia, ceterae 'ranga') */
             per (w = ZEPHYRUM; w < verba_rangae && k + I + w < n; w++)
             {
-                                _verbum_iudicare(piscina, census,
-                                    textus, elementa, e0,
-                                    e1,
-                                    (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
-                                    k + I + w), (b32)(w == ZEPHYRUM),
-                                    paria, cl[k + I + w]);
+                constans OratioConlluLexema* pars =
+                    (constans OratioConlluLexema*)xar_obtinere(
+                    s->lexemata, k + I + w);
+                                s32 ep = _elementum_formae(textus,
+                                    elementa, e0, e1,
+                                    pars->forma);
+
+                si (ep >= ZEPHYRUM)
+                {
+                    _verbum_iudicare(piscina, census, textus, elementa,
+                        (i32)ep, (i32)ep + I, pars, VERUM, paria,
+                        cl[k + I + w]);
+                }
+                alioquin
+                {
+                    _verbum_iudicare(piscina, census, textus, elementa,
+                        e0, e1, pars, (b32)(w == ZEPHYRUM), paria,
+                        cl[k + I + w]);
+                }
             }
             k = k + verba_rangae;
-                }
+                                }
         alioquin
-                {
+                                {
                         _verbum_iudicare(piscina, census, textus,
                             elementa, e0, e1,
                             t, VERUM, paria, cl[k]);
-                }
+                                }
     }
         /* T20b: discordiae et catenatae ex censu resolutionis */
     census->catena_discordiae = census->catena_discordiae

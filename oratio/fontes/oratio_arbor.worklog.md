@@ -2299,3 +2299,72 @@ must beat the seed-between control, or the clause is not earning
 its machinery there. Laws 1, 2 and 4 use membership (which verb is
 inside the box with which nominative), which the control cannot
 express; that is where the box has to prove itself next.
+
+## 2026-09-08 — T21: the enclitic split
+
+The residual census after T20c I put the largest single loss outside
+resolution altogether: 302 Seneca words sat in multiword ranges and
+counted as wrong by construction, and every one of them was the
+enclitic `-que` (265 tokens), `-ne` or `-ve`. The dictionary already
+knew: contract III of the Latin vocabularium takes the tackon path
+only when the whole form has no reading and the form minus the
+tackon has one, and puts the TACKON analysis first. The parser kept
+`armaque` as one element, so the cell held two words.
+
+The split is a pass inside `oratio_partes_annotare`, before the
+host is annotated: a vocabulum with one part whose first dictionary
+analysis is a TACKON, and which Moby does not know whole (`unique`,
+`mosque`), becomes two elements. `oratio_lexema_pars` slices the
+token with exact byte offset and column, so emission equals the
+source and the oracle's extents stay honest; the host's trailing
+space list moves to the enclitic and the host keeps an empty one;
+the enclitic gets its one TACKON reading (coordinator for `que` and
+`ve`, particle for `ne`) with class and language summaries; the
+host is annotated afterwards by its own form. The sentence's
+element list is rebuilt through `materia_nodus_reponere` with the
+enclitics inserted after their hosts, and the parent fix at the end
+of the pass covers the new nodes. `quoque`, `neque`, `itaque`,
+`usque` and every other whole-word entry never split, exactly as
+in WORDS.
+
+The oracle's one change is not forgiveness: a component of a
+multiword range whose form equals exactly one of our elements
+inside the range's span is judged against that element as a first
+word; otherwise the old path (first component against all touching
+elements, the rest as `ranga`) still runs, which is what EWT's
+contractions get. Each gold token is judged against one cell.
+
+Two things the numbers taught before the pins moved. First, my
+helper returned an unsigned index with a negative sentinel; the
+examen's house notes flagged the always-true comparison before the
+suite did, and the first run's oracle numbers were garbage until the
+return became `s32`. Second, the charters' forced accuracy fell by
+four permille with the split on, and the census of actual splits
+found the cause in one word: `Lucane`, the medieval spelling of
+`Lucanae` ("of Lucca"), split 67 times into the name `Luca` and a
+bogus particle. A guard against `-ne` on hosts with only proper-noun
+readings did nothing, because `luca` is also the common noun for an
+elephant. The honest fix was the dictionary: `lucanus` is a glossary
+entry now, with the ae > e forms, and `Lucane` reads as the
+adjective. `pleve` (`plebe`) still splits into `ple` + `ve` once;
+`utraque` splits into `utra` + `que` four times because PACK tackons
+are T8b; both named, neither worth a rule.
+
+Numbers on Seneca: primary 799 → 834 permille, ranges 302 → 31,
+single-reading words 2224 → 2549 (the `que` cells, 91 % right),
+concordance 102551 of 125027 pairs → 109193 of 132303 (the enclitic
+words now count). Charters primary 838 / 831 → 840 / 833
+once `Lucane` read as the adjective, forced 710 / 711 unchanged, EWT
+unchanged everywhere (one English word, `communique`, splits; Moby
+lacks it). Pythonica: Hilarius 1678 → 1682 words.
+
+The forced tier on Seneca lost five words, and the author table says
+exactly where: the strict adjacent head rules (`-proximo`) decided
+fewer words (338 → 319, 137 → 125) and the loose rules took them at
+their lower accuracy, because the enclitic element now stands
+between its host and the next word. `senatusque populus` was one
+adjacent pair and is now `senatus`, `que`, `populus`. The strict
+cursor is the pattern machine's, so making it transparent to an
+enclitic coordinator is a substrate question, named as the next
+thing to measure and not done here. The Seneca forced pin moves
+down by one with that cause; the charters' forced pins hold.

@@ -1339,7 +1339,7 @@ r_er = subprocess.run(['./oratio/oraculum.sh', '-errata', '-machina', via_ab], c
 part = [l.split('\t') for l in r_er.stdout.splitlines() if '\tPARTITIO\t' in l]
 credo(r_er.returncode == 0 and len(part) == 7 and sum(int(x[3]) for x in part) == 4 and not any('\tERRATUM\t' in l for l in r_er.stdout.splitlines()) and any('\tAUCTOR\t' in l for l in r_er.stdout.splitlines()) is False, 'oraculum.sh -errata -machina: PARTITIO VII genera summa IV verba, nullum AUCTOR/ERRATUM (nemo decidit)')
 h = silva.Oratio('oratio/probationes/fixa/txt/hilarius.txt')
-credo(h.via.endswith('hilarius.txt') and len(h.vocabula()) == 1678 and len(h.sententiae()) > 50 and 0 < len(h.ignota()) < 120, 'Oratio(via): Hilarius MDCLXXVIII vocabula (T12)')
+credo(h.via.endswith('hilarius.txt') and len(h.vocabula()) == 1682 and len(h.sententiae()) > 50 and 0 < len(h.ignota()) < 120, 'Oratio(via): Hilarius MDCLXXXII vocabula (T12; MDCLXXVIII ante T21 - enclitica IV scissa)')
 try:
     silva.Oratio('oratio/nemo.txt'); credo(False, 'Oratio: plagula absens refutatur')
 except silva.SilvaError as ex:

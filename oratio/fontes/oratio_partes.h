@@ -45,7 +45,9 @@ nomen structura {
      * 'a' Latinum XX analyses fert, 'the cat sat' Anglica VI - analyses
      * numeratae CCCXVI sententias EWT Latinas, XXI CIRCSE Anglicas
      * iudicabant. */
-    i32 vocabula_linguarum[ORATIO_LINGUA_NUMERUS];
+        i32 vocabula_linguarum[ORATIO_LINGUA_NUMERUS];
+    /* T21: vocabula scissa in hospitem et encliticum (-que -ne -ve) */
+    i32 enclitica;
 } OratioPartesCensus;
 
 /* Locus accidentis (titulo) intra genus analysis classis; -I si genus
@@ -67,6 +69,27 @@ oratio_partes_nodum_struere (
                       Piscina* piscina,
     constans OratioDescriptio* d,
         constans MateriaToken* origo);
+
+/* ENCLITICUM SCINDERE (T21): vocabulum cuius lectio prima ex
+ * vocabulario Latino TACKON est (forma tota ignota, forma minus
+ * -que/-ne/-ve nota - contractus III vocabularii, ut WORDS) et quod
+ * Moby totum nescit (unique, mosque: custodia Anglica) in HOSPITEM et
+ * ENCLITICUM dividitur: lexema partitum positione exacta (emissio ==
+ * fons manet), cauda hospitis ad encliticum migrat (hospes caudam
+ * vacuam tenet), encliticum lectionem UNAM (TACKON: que/ve coordinans,
+ * ne particula) cum compendiis accipit; hospes NON annotatus manet -
+ * annotatio sequens formam hospitis ipsam quaerit. Vocabulum partibus
+ * pluribus (hyphen) aut iam annotatum numquam scinditur. *encliticum =
+ * nodus novus (NIHIL = non scissum); vocans eum post vocabulum in
+ * listam elementorum inserit (_annotare id facit). FALSUM = memoria. */
+b32
+oratio_partes_encliticum_scindere (
+                          Piscina*  piscina,
+                          Piscina*  scratch,
+       constans OratioVocabularia*  vocabularia,
+                     MateriaNodus*  vocabulum,
+               OratioPartesCensus*  census,
+                     MateriaNodus** encliticum);
 
 /* Vocabulum unum annotare (scratch pro quaestione, piscina pro
  * arbore); census NIHIL licet. FALSUM = memoria. */

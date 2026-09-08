@@ -48,6 +48,7 @@
 #include "materia_lexicon.h"
 #include "materia_nodus.h"
 #include "materia_token.h"
+#include "materia_scribere.h"
 #include "selectio.h"
 #include "stml.h"
 #include "chorda.h"
@@ -930,8 +931,10 @@ principale (vacuum)
         imprimere("  vocabula %d annotata %d analyses %d ignota %d\n",
             (integer)census.vocabula, (integer)census.annotata,
             (integer)census.analyses, (integer)census.ignota);
-                CREDO_AEQUALIS_I32 (census.vocabula, (i32)IV);
-        CREDO_AEQUALIS_I32 (census.annotata, (i32)IV);
+                        /* T21: virumque scissum -> virum + que: vocabula V */
+        CREDO_AEQUALIS_I32 (census.vocabula, (i32)V);
+        CREDO_AEQUALIS_I32 (census.annotata, (i32)V);
+        CREDO_AEQUALIS_I32 (census.enclitica, I);
         CREDO_AEQUALIS_I32 (census.ignota, ZEPHYRUM);   /* Xyzzy capitale: regula */
         CREDO_VERUM (census.analyses >= (i32)XII);
         CREDO_VERUM (census.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
@@ -1051,12 +1054,111 @@ principale (vacuum)
             CREDO_AEQUALIS_S32 ((s32)x3->loci[ORATIO_VOCABULUM_LINGUAE].genus,
                 (s32)MATERIA_VALOR_NIHIL);
         }
-        /* virumque: tackon primus (WORDS ordo), substantiva post */
+                /* virumque (T21): SCISSUM in hospitem 'virum' (substantiva, forma
+         * hospitis ipsa quaesita) et encliticum 'que' (lectio UNA
+         * coordinans, lexema partitum: octeti XXIV-XXVII fontis) */
         v = _vocabulum(doc, ZEPHYRUM, I, I);
+        CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+            v),
+            "virum"));
         CREDO_VERUM (_aequalis(_derivatum(v,
             (i32)ORATIO_VOCABULUM_CLASSES),
-            "coniunctio-coordinans substantivum"));
-        CREDO_VERUM (_numerus_analysium(v) >= (i32)IX);
+            "substantivum"));
+        CREDO_VERUM (_numerus_analysium(v) >= (i32)VIII);
+        CREDO_AEQUALIS_I32 (
+            materia_valor_lista_obtinere(v->loci[ORATIO_VOCABULUM_PARTES],
+                ZEPHYRUM)->datum.token->valor.mensura, (i32)V);
+        v = _vocabulum(doc, ZEPHYRUM, I, (i32)II);
+        CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+            v),
+            "que"));
+        CREDO_VERUM (_aequalis(_derivatum(v,
+            (i32)ORATIO_VOCABULUM_CLASSES),
+            "coniunctio-coordinans"));
+        CREDO_VERUM (_aequalis(_derivatum(v,
+            (i32)ORATIO_VOCABULUM_LINGUAE), "latina"));
+        CREDO_AEQUALIS_I32 (_numerus_analysium(v), I);
+        CREDO_AEQUALIS_S32 (
+            materia_valor_lista_obtinere(v->loci[ORATIO_VOCABULUM_PARTES],
+                ZEPHYRUM)->datum.token->byte_offset, (s32)XXIV);
+        CREDO_VERUM (_aequalis(_derivatum(materia_valor_lista_obtinere(
+            v->loci[ORATIO_VOCABULUM_ANALYSES], ZEPHYRUM)->datum.nodus,
+            (i32)ORATIO_ANALYSIS_LEMMA), "que"));
+        /* interpunctio post encliticum manet elementum III */
+        CREDO_AEQUALIS_S32 (_vocabulum(doc, ZEPHYRUM, I,
+            (i32)III)->genus,
+            (s32)ORATIO_GENUS_INTERPUNCTIO);
+                        /* T21 ENCLITICA: scissio solum ubi vocabularium tackon primum
+         * ponit (forma tota ignota) et Moby formam totam nescit;
+         * quoque neque itaque (formae totae) et Unique mosque (Moby)
+         * manent; -ne particula, -ve coordinans; emissio == fons */
+        {
+            constans character* fons3 =
+                "Armaque virumque cano. Vides quoque neque videsne "
+                "senatusque itaque. Unique mosque hominesve.\n";
+            MateriaNodus* doc3 = oratio_arbor_parsare(piscina, fons3,
+                (i32)strlen(fons3));
+                   OratioPartesCensus census3;
+            MateriaScripturaConsilium consilium_emissionis;
+                     MateriaScriptura emissa;
+
+            CREDO_NON_NIHIL (doc3);
+            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+                doc3, &census3));
+            CREDO_AEQUALIS_I32 (census3.enclitica, (i32)V);
+            CREDO_AEQUALIS_I32 (census3.vocabula, (i32)XVII);
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM)),
+                "Arma"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, ZEPHYRUM, I)), "que"));
+            CREDO_VERUM (_aequalis(_derivatum(_vocabulum(doc3, ZEPHYRUM,
+                ZEPHYRUM, I), (i32)ORATIO_VOCABULUM_CLASSES),
+                "coniunctio-coordinans"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, I, I)), "quoque"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, I, (i32)II)), "neque"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, I, (i32)III)), "vides"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, I, (i32)IV)), "ne"));
+            CREDO_VERUM (_aequalis(_derivatum(_vocabulum(doc3, ZEPHYRUM,
+                I, (i32)IV), (i32)ORATIO_VOCABULUM_CLASSES),
+                "particula"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, I, (i32)VII)), "itaque"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, (i32)II, ZEPHYRUM)),
+                "Unique"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, (i32)II, I)), "mosque"));
+            CREDO_VERUM (_aequalis(oratio_partes_textus_vocabuli(piscina,
+                _vocabulum(doc3, ZEPHYRUM, (i32)II, (i32)III)), "ve"));
+            CREDO_VERUM (_aequalis(_derivatum(_vocabulum(doc3, ZEPHYRUM,
+                (i32)II, (i32)III), (i32)ORATIO_VOCABULUM_CLASSES),
+                "coniunctio-coordinans"));
+            /* cauda migrata: 'que ' post Armaque spatium fert, hospes non */
+            CREDO_AEQUALIS_S32 ((s32)_vocabulum(doc3, ZEPHYRUM,
+                ZEPHYRUM,
+                I)->loci[ORATIO_VOCABULUM_CAUDA].genus,
+                (s32)MATERIA_VALOR_LISTA);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(_vocabulum(doc3,
+                ZEPHYRUM, ZEPHYRUM,
+                ZEPHYRUM)->loci[ORATIO_VOCABULUM_CAUDA]),
+                ZEPHYRUM);
+            materia_scriptura_consilium_nudum(&consilium_emissionis,
+                &ORATIO_REGISTRUM);
+            consilium_emissionis.fons_index = ORATIO_FONS_PLAGULAE;
+            emissa = materia_scribere_nodum(piscina, doc3,
+                &consilium_emissionis);
+            CREDO_VERUM (emissa.successus);
+            CREDO_AEQUALIS_I32 (emissa.textus.mensura,
+                (i32)strlen(fons3));
+            CREDO_VERUM (emissa.textus.mensura == (i32)strlen(fons3)
+                && memcmp(emissa.textus.datum, fons3,
+                    (size_t)emissa.textus.mensura) == ZEPHYRUM);
+        }
                 /* regula capitalis (T13): ignotum capitale = nomen proprium */
         {
             constans character* fons2 = "Karolus rex.\n";
@@ -1094,10 +1196,12 @@ principale (vacuum)
             }
         }
         /* semel: cursus secundus nihil annotat */
-        CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia, doc,
-            &census));
-        CREDO_AEQUALIS_I32 (census.vocabula, (i32)IV);
+                CREDO_VERUM (oratio_partes_annotare(piscina,
+                    &vocabularia, doc,
+                    &census));
+        CREDO_AEQUALIS_I32 (census.vocabula, (i32)V);
         CREDO_AEQUALIS_I32 (census.annotata, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (census.enclitica, ZEPHYRUM);   /* semel scissum */
         CREDO_AEQUALIS_I32 (_numerus_analysium(
             _vocabulum(doc, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM)), (i32)III);
 
@@ -1197,13 +1301,13 @@ principale (vacuum)
                             (integer)(q ? xar_numerus(q) : ZEPHYRUM));
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
                             (i32)II);
-                                                q =
-                                                    stml_quaerere_omnes(res.elementum_radix,
-                                                    "vocabulum[linguae~=latina]",
-                                                    piscina,
-                                                    intern);
+                                                                                                q =
+                                                                                                    stml_quaerere_omnes(res.elementum_radix,
+                                                                                                    "vocabulum[linguae~=latina]",
+                                                                                                    piscina,
+                                                                                                    intern);
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
-                            (i32)IV);
+                            (i32)V);   /* T21: que Latinum */
                         q = stml_quaerere_omnes(res.elementum_radix,
                             "vocabulum[classes~=ignotum]", piscina,
                             intern);

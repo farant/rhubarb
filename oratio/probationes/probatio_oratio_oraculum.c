@@ -46,8 +46,8 @@
  * (auxiliaria, subordinantes, particulae, numeralia, interiectiones,
  * possessivum et contractiones, nomen proprium capitale) 913 / 918. */
 #define CIRCSE_TECTA_PINNA     940
-#define LLCT_DEV_TECTA_PINNA   895
-#define LLCT_TEST_TECTA_PINNA  887
+#define LLCT_DEV_TECTA_PINNA   897
+#define LLCT_TEST_TECTA_PINNA  888
 #define EWT_DEV_TECTA_PINNA    913
 #define EWT_TEST_TECTA_PINNA   918
 /* PRIMARIUM permille, solum crescens ab regula prima (T17, decisio
@@ -62,9 +62,12 @@
  * -> 799/838/831; coactae 723/694/694 -> 761/762/758 */
 /* T19h 2026-09-08 ianua stricta capitum (gradus II strictus, III laxus):
  * 768/795/790 -> 769/796/792; coactae 721/692/688 -> 723/694/694 */
-#define CIRCSE_PRIMARIA_PINNA    799
-#define LLCT_DEV_PRIMARIA_PINNA  838
-#define LLCT_TEST_PRIMARIA_PINNA 831
+/* T21 (enclitica scissa): Seneca 799 -> 834 (rangae CCCII -> XXXI:
+ * -que elementum proprium), chartae 838/831 -> 840/833 (lucanus
+ * glossario, utraque) */
+#define CIRCSE_PRIMARIA_PINNA    834
+#define LLCT_DEV_PRIMARIA_PINNA  840
+#define LLCT_TEST_PRIMARIA_PINNA 833
 
 
 /* T18 (2026-09-07): regula linguae documenti + lex casus recordorum
@@ -87,7 +90,12 @@
  * 913/918 - Latine decisiones coactae tertium INFIMUM: priores 85-98,
  * apertae 80-92; lex umbrarum ipsa 51-57, regula dativi sequens 37-41
  * in chartis, contractio Anglica 0 = artificium rangae). */
-#define CIRCSE_COACTAE_PINNA     765
+/* T21: Seneca 765 -> 764 CAUSA NOMINATA - encliticum elementum inter
+ * hospitem et vocabulum proximum stat (senatus que populus), regulae
+ * capitis strictae (-proximo) paria V pauciora vident, laxae ea
+ * minore accuratione capiunt; cursor strictus encliticis perspicuus =
+ * mensura proxima (T21b), machinae exemplarium res */
+#define CIRCSE_COACTAE_PINNA     764
 #define LLCT_DEV_COACTAE_PINNA   710
 #define LLCT_TEST_COACTAE_PINNA  711
 #define EWT_DEV_COACTAE_PINNA    913
@@ -126,11 +134,13 @@
  * celabat pro loco limitis (820.4 celat, 820.0 ostendit); numerus
  * exactus fortunam tollit et regulam (thesaurus nullus cadat)
  * strictissime legit. Paria tota per thesaurum relata. */
-#define CIRCSE_CONCORDIA_PINNA    102551
+/* T21: paria universa crescunt (enclitica alignata: Seneca CXXV.XXVII
+ * -> CXXXII.CCCIII), concordantia cum eis */
+#define CIRCSE_CONCORDIA_PINNA    109193
 #define LLCT_DEV_CONCORDIA_PINNA  438519
-#define LLCT_TEST_CONCORDIA_PINNA 444139
-#define EWT_DEV_CONCORDIA_PINNA   104973
-#define EWT_TEST_CONCORDIA_PINNA  107344
+#define LLCT_TEST_CONCORDIA_PINNA 444240
+#define EWT_DEV_CONCORDIA_PINNA   105006
+#define EWT_TEST_CONCORDIA_PINNA  107375
 #define CIRCSE_PARES_PINNA       653
 #define LLCT_DEV_PARES_PINNA     762
 #define LLCT_TEST_PARES_PINNA    788
@@ -825,8 +835,8 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (c.verba, (i32)VI);   /* pronum que abstulit xyzzy zzz abstulit */
         CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_ADIECTIVUM].tecta,
             I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_ADIECTIVUM].primaria,
-            ZEPHYRUM);   /* tackon prior */
+                CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_ADIECTIVUM].primaria,
+                    I);   /* T21: pronum scissum a que, contra elementum suum solum */
         CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_CONIUNCTIO_COORDINANS]
             .tecta, I);
         CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_VERBUM].tecta, I);

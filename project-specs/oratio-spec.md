@@ -1577,6 +1577,39 @@ any later clause law must beat the seed-between control. Laws 1, 2
 and 4 use membership, which the control cannot express. NEXT: law 1,
 the verb hidden single.
 
+**As built — T21, the enclitic split (2026-09-08, same session).**
+The residual census showed 302 Seneca words in multiword ranges,
+wrong by construction: the enclitics `-que` (265), `-ne`, `-ve`, which
+the dictionary already reads (contract III: tackon only when the
+whole form is unknown and the form minus the tackon is known, the
+TACKON analysis first) but the parser kept as one element. A pass in
+`oratio_partes_annotare` (`oratio_partes_encliticum_scindere`) splits
+such a word — one part, first dictionary analysis TACKON, whole form
+unknown to Moby (`unique`, `mosque`) — into a host and an enclitic
+element: `oratio_lexema_pars` slices the token with exact byte offset
+and column (emission == source), the host's trailing spaces move to
+the enclitic, the enclitic gets its one TACKON reading (coordinator
+for `que`/`ve`, particle for `ne`) with summaries, the host is
+annotated afterwards by its own form, the sentence's element list is
+rebuilt with the enclitics inserted (`materia_nodus_reponere`).
+Whole-word entries (`quoque`, `neque`, `itaque`) never split. The
+oracle judges a range component whose form equals exactly one of
+our elements in the range's span against that element as a first
+word; otherwise the old path (EWT's contractions). Registry and seal
+unchanged. NUMBERS: Seneca primary 799 → 834 permille, ranges
+302 → 31, concordance 102551/125027 → 109193/132303 pairs; charters
+838/831 → 840/833 (`Lucane` = medieval `Lucanae` split 67 times into
+`Luca` + `ne` until `lucanus` entered the glossary — a dictionary
+hole, not a rule); EWT unchanged. Seneca FORCED 765 → 764 with the
+cause named: the enclitic element stands between its host and the
+next word, so the strict adjacent head rules see five fewer pairs
+and the loose rules take them less accurately (`senatus`, `que`,
+`populus`). Named, not built: the strict cursor transparent to an
+enclitic coordinator (pattern-machine question, T21b); `utraque`
+splits into `utra` + `que` until PACK tackons (T8b); `pleve`. Gate:
+partes hand cases (split, unsplit, `-ne`, `-ve`, migrated tail,
+emission == source), oracle range case, pythonica Hilarius 1682.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

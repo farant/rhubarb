@@ -53,6 +53,17 @@ oratio_lexema_derivatum (
                    chorda  valor,
     constans MateriaToken* origo);
 
+/* PARS lexematis (T21, enclitica): lexema novum ex octetis
+ * [ab, ab + mensura) originis - valor visus in octetos originis (eadem
+ * piscina, eadem vita), genus originis, byte_offset et columna translata,
+ * linea et fons eadem. NIHIL = extra originem aut memoria. */
+MateriaToken*
+oratio_lexema_pars (
+                  Piscina* piscina,
+    constans MateriaToken* origo,
+                      i32  ab,
+                      i32  mensura);
+
 /* An octetus litterae sit (ASCII littera aut >= 0x80 extra exceptiones
  * supra); *longitudo = octeti sequentiae (I pro ASCII). */
 b32

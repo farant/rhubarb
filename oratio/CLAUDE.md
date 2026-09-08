@@ -556,7 +556,23 @@ seeds (closure is the weakest layer); any clause law must beat the
 seed-between control; the box has to prove itself on MEMBERSHIP laws.
 Gate: `recusatae_clausulis == 0`. NEXT = T20c law 1 (verb umbra
 hidden single: clauses as carriers), then `cum` conjunction, subject
-umbra. Head-rule template still open.
+umbra. Head-rule template still open. **T21 (same day): the ENCLITIC
+SPLIT** — `armaque` is two elements now: `oratio_partes_encliticum_scindere`
+(inside `oratio_partes_annotare`, before the host is annotated) splits
+a one-part word whose FIRST dictionary analysis is a TACKON and which
+Moby does not know whole; `oratio_lexema_pars` slices the token with
+exact positions (emission == source), the tail spaces migrate to the
+enclitic, the enclitic gets its one reading (que/ve coordinator, ne
+particle), the element list is rebuilt via `materia_nodus_reponere`.
+Whole-word entries (`quoque neque itaque`) never split. Oracle: a
+range component whose form equals one of our elements is judged
+against it. Seneca primary 799 → 834 (ranges 302 → 31), charters
+840/833, EWT unchanged; Seneca forced 765 → 764 with the cause (the
+enclitic element breaks strict adjacency with the NEXT word: five
+words) → T21b = strict cursor transparent to enclitics (pattern
+machine). `Lucane` (= Lucanae) was a DICTIONARY hole → `lucanus` in
+the glossary; a proper-noun guard did nothing (luca = elephant).
+Census field `enclitica`; Hilarius 1678 → 1682 words (pythonica).
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
