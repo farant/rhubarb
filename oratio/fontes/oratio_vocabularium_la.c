@@ -4,6 +4,7 @@
 #include "oratio_glossarium.h"
 #include "nuntium.h"
 #include "tabula_dispersa.h"
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -691,9 +692,10 @@ _addere (
     a->flexio           = flexio;
     a->unicum           = unicum;
     a->tackon           = tackon;
-    a->glossarium       = (s32)-I;
+        a->glossarium   = (s32)-I;
     a->clavis           = clavis;
     a->mensura_stirpis  = mensura_stirpis;
+    a->varians          = (s32)-I;
     redde VERUM;
 }
 
@@ -937,6 +939,230 @@ _ordinare (
         }
         *(OratioAnalysis*)xar_obtinere(exitus, j) = x;
     }
+}
+
+/* CORRESPONDENTIAE orthographiae mediae (T22, contractus IV) ordine
+ * praecisionis censae (scratch orthographia.py, chartae LLCT: formae
+ * ignotae MMMCXLV occurrentiae; per correspondentiam 'classis aurea
+ * inter lectiones recuperatas / recuperatae'). RECUSATAE ex censu: t > d
+ * V/CXL (petia non pedia), h sublata LXXXVI/CLIX, u > o CXIII/CXXII
+ * tectae sed XXXI primae, ci > ti IX/XIV, geminata simplex XXXI/XXXIV,
+ * h post c/p/t inserta XI/XVII classis et 0 lemmata (tecum -> thecum).
+ * Praecisio lemmatum (recuperatae/classis/lemma): e-ae DLXXXI/DLXIII/DI,
+ * e-i CDXXXII/CCCLXXI/CCXCVI, h-praefixa CCXII/CCVIII/CXCVIII, geminatio
+ * CLVII/CXXXV/CXXI, o-u CVIII/XCVII/XCIV, inp-imp XCVII/XCI/XCI, p-b
+ * XLVIII/XXXIX/XXXIX, i-e LIX/L/XXXV, d-t XXXVIII/XXXVII/V, b-p
+ * CIV/CIV/I (lemma 'desub' aliter scriptum). 'activa' = interruptor;
+ * mensura: ORATIO_ORTHOGRAPHIA_SOLA=titulus (una activa) aut
+ * ORATIO_ORTHOGRAPHIA_SINE=titulus (una inactiva), semel lectae. */
+constans OratioOrthographia ORATIO_ORTHOGRAPHIA[] = {
+    /* ordo = 'h-prima' censu lemmatum (orthographia2.py): lemmata recta
+     * MCCCVII de MDIV recuperatis contra MCCVII ordine praecisionis
+     * classium (abere -> abire ante habere). MENSURATUM thesauris V
+     * (primarium / coactae permille; basis Seneca 834/764, chartae
+     * 840/710 + 833/711, EWT 786/913 + 789/913), quaeque SOLA:
+     * h-praefixa 834/765 845/711 837/712; e-ae 834/764 852/714 845/715;
+     * inp-imp 834/764 842/711 835/712; b-p 834/764 842/710 835/712;
+     * e-i SOLA 834/764 847/703 840/704 (coactae cadunt) sed POST
+     * h-praefixa et e-ae (quae verba eius prius capiunt) 863/712
+     * 856/713 - servata; RECUSATAE (thesaurum deprimunt): geminatio
+     * 844/712 835/712 sed EWT dev coactae 912; d-t EWT 911/912; o-u
+     * chartae dev coactae 709; i-e 708; p-b EWT dev 912, chartae 709;
+     * inb-imb nihil mutat. Quinque simul (sine capitalibus): Seneca
+     * 835/764, chartae 863/712 + 856/713, EWT immotae. */
+    { "h-praefixa", ORATIO_ORTHOGRAPHIA_PRAEFIXUM, "", "h", VERUM },
+    { "e-ae", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "e", "ae", VERUM },
+    { "inp-imp", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "inp", "imp", VERUM },
+    { "b-p", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "b", "p", VERUM },
+    { "e-i", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "e", "i", VERUM },
+    { "geminatio", ORATIO_ORTHOGRAPHIA_GEMINATIO, "lmnrstcp", "",
+        FALSUM },
+    { "d-t", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "d", "t", FALSUM },
+    { "o-u", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "o", "u", FALSUM },
+    { "i-e", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "i", "e", FALSUM },
+    { "p-b", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "p", "b", FALSUM }
+};
+constans i32 ORATIO_ORTHOGRAPHIA_NUMERUS =
+    (i32)(magnitudo(ORATIO_ORTHOGRAPHIA)
+        / magnitudo(ORATIO_ORTHOGRAPHIA[0]));
+
+#define VARIANS_MAXIMA 160
+
+/* an correspondentia c activa sit: tabula, deinde ambitus mensurae
+ * (ORATIO_ORTHOGRAPHIA_SOLA / _SINE), semel lectus */
+interior b32
+_activa (
+    i32 c)
+{
+                   hic_manens i32  lectum  = ZEPHYRUM;
+    hic_manens constans character* sola    = NIHIL;
+    hic_manens constans character* sine    = NIHIL;
+
+    si (!lectum)
+    {
+        sola    = getenv("ORATIO_ORTHOGRAPHIA_SOLA");
+        sine    = getenv("ORATIO_ORTHOGRAPHIA_SINE");
+        lectum  = I;
+    }
+    si (!ORATIO_ORTHOGRAPHIA[c].activa)
+    {
+        redde FALSUM;
+    }
+    si (sola != NIHIL)
+    {
+        redde (b32)(strcmp(sola, ORATIO_ORTHOGRAPHIA[c].titulus)
+            == ZEPHYRUM);
+    }
+    si (sine != NIHIL)
+    {
+        redde (b32)(strcmp(sine, ORATIO_ORTHOGRAPHIA[c].titulus)
+            != ZEPHYRUM);
+    }
+    redde VERUM;
+}
+
+/* varians k-ta (sinistra prima) correspondentiae c formae plicatae f in
+ * buffer; FALSUM = k-ta nulla */
+interior b32
+_varians (
+    constans OratioOrthographia* c,
+                         chorda  f,
+                            i32  k,
+                             i8* buffer,
+                            i32* mensura)
+{
+    i32 la = (i32)strlen(c->a);
+    i32 lb = (i32)strlen(c->b);
+    i32 i;
+    i32 visae = ZEPHYRUM;
+
+    si (f.mensura + lb + I >= (i32)VARIANS_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    si (c->modus == ORATIO_ORTHOGRAPHIA_PRAEFIXUM)
+    {
+        si (k > ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        memcpy(buffer, c->b, (size_t)lb);
+        memcpy(buffer + lb, f.datum, (size_t)f.mensura);
+        *mensura = f.mensura + lb;
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < f.mensura; i++)
+    {
+        b32 hic = FALSUM;
+
+        si (c->modus == ORATIO_ORTHOGRAPHIA_SUBSTITUTIO)
+        {
+            hic = (b32)(   i + la <= f.mensura
+                        && memcmp(f.datum + i, c->a, (size_t)la)
+                            == ZEPHYRUM);
+        }
+        alioquin
+        {
+            hic = (b32)(strchr(c->a, (integer)(character)f.datum[i])
+                != NIHIL && f.datum[i] != ZEPHYRUM);
+        }
+        si (!hic)
+        {
+            perge;
+        }
+        si (visae < k)
+        {
+            visae = visae + I;
+            perge;
+        }
+        si (c->modus == ORATIO_ORTHOGRAPHIA_SUBSTITUTIO)
+        {
+            memcpy(buffer, f.datum, (size_t)i);
+            memcpy(buffer + i, c->b, (size_t)lb);
+            memcpy(buffer + i + lb, f.datum + i + la,
+                (size_t)(f.mensura - i - la));
+            *mensura = f.mensura - la + lb;
+        }
+        alioquin si (c->modus == ORATIO_ORTHOGRAPHIA_INSERTIO)
+        {
+            memcpy(buffer, f.datum, (size_t)(i + I));
+            memcpy(buffer + i + I, c->b, (size_t)lb);
+            memcpy(buffer + i + I + lb, f.datum + i + I,
+                (size_t)(f.mensura - i - I));
+            *mensura = f.mensura + lb;
+        }
+        alioquin   /* GEMINATIO */
+        {
+            memcpy(buffer, f.datum, (size_t)(i + I));
+            buffer[i + I] = f.datum[i];
+            memcpy(buffer + i + (i32)II, f.datum + i + I,
+                (size_t)(f.mensura - i - I));
+            *mensura = f.mensura + I;
+        }
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+Xar*
+oratio_vocabularium_la_quaerere_variantes (
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc,
+                           chorda  forma,
+                              s32* varians)
+{
+    Xar* exitus = xar_creare(piscina, (i32)magnitudo(OratioAnalysis));
+    chorda f;
+    i32 c;
+
+    *varians = (s32)-I;
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    f = oratio_vocabularium_la_plicare(piscina, forma);
+    si (   f.mensura < (i32)II
+        || f.mensura + (i32)IV >= (i32)VARIANS_MAXIMA)
+    {
+        redde exitus;
+    }
+    per (c = ZEPHYRUM; c < ORATIO_ORTHOGRAPHIA_NUMERUS; c++)
+    {
+         i8 buffer[VARIANS_MAXIMA];
+        i32 mensura;
+        i32 k;
+
+                si (!_activa(c))
+                {
+            perge;
+                }
+        per (k = ZEPHYRUM; _varians(&ORATIO_ORTHOGRAPHIA[c], f, k,
+            buffer,
+                &mensura); k++)
+        {
+            Xar* inventae = oratio_vocabularium_la_quaerere(piscina,
+                voc,
+                _chorda(buffer, mensura));
+            i32 j;
+
+            si (inventae == NIHIL)
+            {
+                redde NIHIL;
+            }
+            si (xar_numerus(inventae) == ZEPHYRUM)
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; j < xar_numerus(inventae); j++)
+            {
+                ((OratioAnalysis*)xar_obtinere(inventae, j))->varians =
+                    (s32)c;
+            }
+            *varians = (s32)c;
+            redde inventae;
+        }
+    }
+    redde exitus;
 }
 
 Xar*

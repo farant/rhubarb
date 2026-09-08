@@ -45,9 +45,10 @@
  * LLCT 895 / 887; EWT nativitas 771 / 770, post cursum II Anglicum
  * (auxiliaria, subordinantes, particulae, numeralia, interiectiones,
  * possessivum et contractiones, nomen proprium capitale) 913 / 918. */
-#define CIRCSE_TECTA_PINNA     940
-#define LLCT_DEV_TECTA_PINNA   897
-#define LLCT_TEST_TECTA_PINNA  888
+/* T22 (orthographia media): chartae tectae 897/888 -> 922/913 */
+#define CIRCSE_TECTA_PINNA     941
+#define LLCT_DEV_TECTA_PINNA   922
+#define LLCT_TEST_TECTA_PINNA  913
 #define EWT_DEV_TECTA_PINNA    913
 #define EWT_TEST_TECTA_PINNA   918
 /* PRIMARIUM permille, solum crescens ab regula prima (T17, decisio
@@ -65,9 +66,12 @@
 /* T21 (enclitica scissa): Seneca 799 -> 834 (rangae CCCII -> XXXI:
  * -que elementum proprium), chartae 838/831 -> 840/833 (lucanus
  * glossario, utraque) */
-#define CIRCSE_PRIMARIA_PINNA    834
-#define LLCT_DEV_PRIMARIA_PINNA  840
-#define LLCT_TEST_PRIMARIA_PINNA 833
+/* T22 (orthographia media, contractus IV): chartae 840/833 -> 863/856
+ * (formae ignotae MDCXXII -> MIX, MDCLXIV -> MLXI), Seneca 834 -> 835
+ * (mecum temet glossario) */
+#define CIRCSE_PRIMARIA_PINNA    835
+#define LLCT_DEV_PRIMARIA_PINNA  863
+#define LLCT_TEST_PRIMARIA_PINNA 856
 
 
 /* T18 (2026-09-07): regula linguae documenti + lex casus recordorum
@@ -96,8 +100,8 @@
  * minore accuratione capiunt; cursor strictus encliticis perspicuus =
  * mensura proxima (T21b), machinae exemplarium res */
 #define CIRCSE_COACTAE_PINNA     764
-#define LLCT_DEV_COACTAE_PINNA   710
-#define LLCT_TEST_COACTAE_PINNA  711
+#define LLCT_DEV_COACTAE_PINNA   712   /* T22: 710 -> 712 */
+#define LLCT_TEST_COACTAE_PINNA  713   /* T22: 711 -> 713 */
 #define EWT_DEV_COACTAE_PINNA    913
 #define EWT_TEST_COACTAE_PINNA   913
 /* T20a (2026-09-08, decisio XLVII): CLAUSULAE - PURITAS verborum
@@ -137,8 +141,8 @@
 /* T21: paria universa crescunt (enclitica alignata: Seneca CXXV.XXVII
  * -> CXXXII.CCCIII), concordantia cum eis */
 #define CIRCSE_CONCORDIA_PINNA    109193
-#define LLCT_DEV_CONCORDIA_PINNA  438519
-#define LLCT_TEST_CONCORDIA_PINNA 444240
+#define LLCT_DEV_CONCORDIA_PINNA  439845   /* T22: verba recuperata semina et verba certa mutant */
+#define LLCT_TEST_CONCORDIA_PINNA 445916
 #define EWT_DEV_CONCORDIA_PINNA   105006
 #define EWT_TEST_CONCORDIA_PINNA  107375
 #define CIRCSE_PARES_PINNA       653

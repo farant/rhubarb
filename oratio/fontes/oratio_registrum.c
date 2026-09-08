@@ -354,7 +354,8 @@ constans character* constans ORATIO_TITULI_CAUSARUM_CLAUSULAE[] = {
     "semen", "extentum", "clausura", "catena", "unica", "verbum"
 };
 constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[] = {
-    "vocabularium-la", "vocabularium-en", "glossarium", "regula"
+    "vocabularium-la", "vocabularium-en", "glossarium", "regula",
+    "orthographia"
 };
 
 s32

@@ -663,9 +663,12 @@ MateriaLexiconRatum  ratum;
             == ZEPHYRUM);
         CREDO_VERUM (strcmp(ORATIO_TITULI_LINGUARUM[ORATIO_LINGUA_ANGLICA],
             "anglica") == ZEPHYRUM);
+                CREDO_VERUM (strcmp(ORATIO_TITULI_FONTIUM_ANALYSIS[
+                    ORATIO_FONS_ANALYSIS_GLOSSARIUM], "glossarium")
+                    == ZEPHYRUM);
         CREDO_VERUM (strcmp(ORATIO_TITULI_FONTIUM_ANALYSIS[
-            ORATIO_FONS_ANALYSIS_GLOSSARIUM], "glossarium")
-                == ZEPHYRUM);
+            ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA], "orthographia")
+                == ZEPHYRUM);   /* T22 */
         /* CUSTOS: tituli classium == optiones 'classis' canonis glossarii
          * (oratio/grammatica/glossarium.canon) - una fons vocabularii */
         {

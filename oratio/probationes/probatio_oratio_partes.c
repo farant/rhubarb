@@ -1159,6 +1159,83 @@ principale (vacuum)
                 && memcmp(emissa.textus.datum, fons3,
                     (size_t)emissa.textus.mensura) == ZEPHYRUM);
         }
+                        /* T22 ORTHOGRAPHIA MEDIA (contractus IV): forma ignota utrique
+         * vocabulario per correspondentias mensuratas quaeritur - lectio
+         * fontem 'orthographia' fert, lemma formae rectae; petia manet
+         * ignota (t > d recusata); 'here' Moby notum numquam variatur */
+        {
+                                    constans character* fons_orthographiae =
+                                        "ecclesie abere adinpleta comutationem soledos petia "
+                                        "here. Erebo Ecclesie.\n";
+            MateriaNodus* doc_orthographiae =
+                oratio_arbor_parsare(piscina,
+                fons_orthographiae, (i32)strlen(fons_orthographiae));
+               OratioPartesCensus  census_orthographiae;
+            constans MateriaNodus* a4;
+
+            CREDO_NON_NIHIL (doc_orthographiae);
+            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+                doc_orthographiae, &census_orthographiae));
+            /* ecclesie abere adinpleta soledos recuperata; comutationem
+             * (geminatio RECUSATA mensura) et petia (t > d) ignota */
+            CREDO_AEQUALIS_I32 (census_orthographiae.orthographia,
+                (i32)IV);
+            CREDO_AEQUALIS_I32 (census_orthographiae.ignota, (i32)II);
+            /* capitalia ignota numquam variantur (Erebo non hereo):
+             * regula capitalis = nomen proprium */
+            CREDO_VERUM (_aequalis(_derivatum(_vocabulum(doc_orthographiae,
+                ZEPHYRUM,
+                I, ZEPHYRUM), (i32)ORATIO_VOCABULUM_CLASSES),
+                "nomen-proprium"));
+            CREDO_VERUM (_aequalis(_derivatum(_vocabulum(doc_orthographiae,
+                ZEPHYRUM,
+                I, I), (i32)ORATIO_VOCABULUM_CLASSES),
+                "nomen-proprium"));
+            a4 =
+                materia_valor_lista_obtinere(_vocabulum(doc_orthographiae,
+                ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM)->loci[ORATIO_VOCABULUM_ANALYSES],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_VERUM (_aequalis(_derivatum(a4,
+                (i32)ORATIO_ANALYSIS_LEMMA), "ecclesia"));
+            CREDO_AEQUALIS_S32 (_index(a4, (i32)ORATIO_ANALYSIS_FONS),
+                (s32)ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA);
+            CREDO_VERUM (_aequalis(_derivatum(_vocabulum(doc_orthographiae,
+                ZEPHYRUM,
+                ZEPHYRUM, ZEPHYRUM), (i32)ORATIO_VOCABULUM_CLASSES),
+                "substantivum"));
+            a4 =
+                materia_valor_lista_obtinere(_vocabulum(doc_orthographiae,
+                ZEPHYRUM,
+                ZEPHYRUM, I)->loci[ORATIO_VOCABULUM_ANALYSES],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_VERUM (_aequalis(_derivatum(a4,
+                (i32)ORATIO_ANALYSIS_LEMMA), "habeo"));
+                        CREDO_VERUM (_aequalis(_derivatum(_vocabulum(doc_orthographiae,
+                            ZEPHYRUM,
+                            ZEPHYRUM, (i32)III),
+                            (i32)ORATIO_VOCABULUM_CLASSES),
+                            "ignotum"));   /* comutationem */
+            a4 =
+                materia_valor_lista_obtinere(_vocabulum(doc_orthographiae,
+                ZEPHYRUM,
+                ZEPHYRUM, (i32)IV)->loci[ORATIO_VOCABULUM_ANALYSES],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_VERUM (_aequalis(_derivatum(a4,
+                (i32)ORATIO_ANALYSIS_LEMMA), "solidus"));   /* soledos: e-i */
+            CREDO_VERUM (_aequalis(_derivatum(_vocabulum(doc_orthographiae,
+                ZEPHYRUM,
+                ZEPHYRUM, (i32)V), (i32)ORATIO_VOCABULUM_CLASSES),
+                "ignotum"));   /* petia */
+            /* here: Moby notum - numquam variatum (fons non orthographia) */
+            a4 =
+                materia_valor_lista_obtinere(_vocabulum(doc_orthographiae,
+                ZEPHYRUM,
+                ZEPHYRUM, (i32)VI)->loci[ORATIO_VOCABULUM_ANALYSES],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_VERUM (_index(a4, (i32)ORATIO_ANALYSIS_FONS)
+                != (s32)ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA);
+        }
                 /* regula capitalis (T13): ignotum capitale = nomen proprium */
         {
             constans character* fons2 = "Karolus rex.\n";

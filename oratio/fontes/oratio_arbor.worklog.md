@@ -2368,3 +2368,148 @@ cursor is the pattern machine's, so making it transparent to an
 enclitic coordinator is a substrate question, named as the next
 thing to measure and not done here. The Seneca forced pin moves
 down by one with that cause; the charters' forced pins hold.
+
+## 2026-09-08 — T20c law 1: refuted by census before it was built
+
+The verb hidden single was measured as a census, not as code: for
+each Latin treebank, our words with their readings, finiteness and
+clause stamp, aligned to the gold. Three numbers settle it. The
+reachable population is 68 gold finite verbs on Seneca (of 1791) and
+25 and 24 on the charters — the finite verbs that carry a verb
+reading which is not first. The sentence-level single (a sentence
+with exactly one finite-capable word) gains 3 and loses 8 on Seneca,
+1 and 2 on the dev charters, 0 and 6 on the test charters: the one
+capable word in such a sentence is usually a noun with a verb
+homograph, and the real ambiguous verbs sit in sentences with two or
+more capable words (693 of 893). The clause-level single is worse,
+−49 / −53 / −74 net, and its losses are nouns, determiners,
+pronouns and non-finite verbs — the clause holds no finite verb, or
+its verb is already certain (791 clauses on Seneca, where the law
+is vacuous). The constraint "every clause has one finite verb" is not
+true of these texts as the treebanks annotate them, and where it is
+true the verb is already known. Law 1 is not built.
+
+The same census showed where the verb errors are: on Seneca, 253
+gold verbs read as something else, of which 152 are PARTICIPLES read
+as adjectives (107) or nouns (40), mostly by the head rules choosing
+the adjective twin that agrees; 82 finite, of which 48 open with the
+default order wrong; 18 infinitives. On the charter test file 597,
+of which 409 are UNKNOWN medieval forms (`pertenentes`, `pegiorata`,
+`adinpleta`), 162 participles. So the participle-first prior was
+measured next, as a census: participle twin before adjective and
+noun of the same form. It loses everywhere — Seneca +154 / −269, the
+charters +161 / −984 — and the losses are lexical: `sancti`, `casa`,
+`censum`, `mense`, `missus`, `suprascripta` all carry a spurious
+participle twin. A per-lemma exception list would be the treebank
+fitted back into the rule; not done.
+
+What the charter breakdown pointed at instead is the third census:
+of the charters' 3145 unknown word occurrences (449 forms, names and
+numbers excluded), a short list of medieval orthographic
+correspondences recovers 1869, with the gold class among the
+recovered readings in 1697 and first in about the same number:
+`ecclesie` → `ecclesiae` (340), `pertenentes` → `pertinentes` (118),
+`soledos` → `solidos`, `seo` → `seu`, `comutationem` →
+`commutationem`, `abere` → `habere`, `hec` → `haec`, `adinpleta` →
+`adimpleta`. Per correspondence, precision (gold class covered /
+recovered): e→ae 573/581, e→i 436/437, h added 220/229, single
+consonant doubled 146/149, b→p 104/104, inp→imp 97/97, o→u 99/108,
+d→t 37/38, i→e 52/59, p→b 40/48; poor: t→d 5/140 (`petia` is not
+`pedia`), h removed 86/159, u→o 113/122 covered but 31 first. That
+is the charters' enclitic: a lookup-time fallback in the dictionary,
+each correspondence measured alone on all five treebanks, kept only
+where no treebank falls. Scratch: `verbum_unicum.py`,
+`participium.py`, `orthographia.py`.
+
+## 2026-09-08 — T22: medieval orthography as the dictionary's fourth contract
+
+The residual census after T21 put the charters' largest loss in the
+dictionary again: 409 of their 597 misread verbs, and 3145 word
+occurrences in all, are medieval spellings WORDS does not know —
+`ecclesie` for `ecclesiae`, `abere` for `habere`, `pertenentes`,
+`adinpleta`, `comutationem`, `soledos`, `seo`. The correspondences
+behind them are few and known (e for ae, e for i, h dropped, single
+for double consonants, b for p, inp for imp, o for u), so the fix is
+a lookup-time fallback, and the census measured each correspondence
+before any code: how many unknown occurrences it recovers and
+whether the gold class is among the recovered readings.
+
+Contract IV of the Latin vocabularium
+(`oratio_vocabularium_la_quaerere_variantes`) generates variant forms
+of the folded form under a data table `ORATIO_ORTHOGRAPHIA` — one
+correspondence at a time in table order, one occurrence at a time
+left to right — runs the full lookup on each (tackons included), and
+the first variant with readings wins; its analyses carry `varians`,
+and the describer marks them with the new source `orthographia` so
+the oracle, the instruments and the lint see them. The dictionary
+never varies on its own: the annotator asks for variants only when
+the form itself is unknown and Moby does not know it whole (the T21
+guard), so the identifier lint, which judges forms as written, is
+untouched. `ORTHOGRAPHIA_CAPITALIA` lets capitalised forms vary too
+(`Ecclesie`), measured; `ORTHOGRAPHIA_ACTIVA` is the base switch, and
+`ORATIO_ORTHOGRAPHIA_SOLA` / `_SINE` in the environment isolate one
+correspondence for the loop.
+
+Two things the census decided before the loop. The order: by class
+precision `e-i` comes before the h-prefix and turns `abere` into
+`abire` (verb, class right, lemma wrong); a second census comparing
+lemmas put the h-prefix first and raised right lemmas among the
+recovered from 1207 to 1307 of 1504. And one correspondence died on
+lemmas alone: h inserted after c, p, t recovers 17 with 11 right
+classes and no right lemma (`tecum` → `thecum`, `cun` → `chun`).
+Refused from the first census: t→d (5 of 140, `petia` is not
+`pedia`), h removed (86 of 159), u→o (97 covered, 31 first), ci→ti,
+double→single. `ORTHOGRAPHIA_SOLA=nulla` reproduces the T21 base.
+
+The loop, each correspondence alone against the T21 base (primary /
+forced permille; Seneca 834 / 764, charters 840 / 710 and 833 / 711,
+EWT 786 / 913 and 789 / 913, never moved by any Latin rule except as
+noted):
+
+- h-prefix: 834 / 765, 845 / 711, 837 / 712 — kept
+- e→ae: 834 / 764, 852 / 714, 845 / 715 — kept, the big one
+- inp→imp: 842 / 711, 835 / 712 — kept
+- b→p: 842 / 710, 835 / 712 — kept
+- e→i alone: 847 / 703, 840 / 704 — the forced floor falls by seven:
+  its recovered readings enter bindings and are wrong three times in
+  four; but measured AFTER the h-prefix and e→ae, which take its
+  words first, the four plus e→i give 863 / 712 and 856 / 713 with
+  every floor held, and it is kept in that position
+- doubled consonant: 844 / 712, 835 / 712 but EWT dev forced 912 —
+  one English unknown gets a doubled Latin reading; refused
+- d→t: EWT forced 911 / 912 — refused; o→u: charter dev forced 709 —
+  refused; i→e: 708 — refused; p→b: EWT dev 912, charter dev 709 —
+  refused; inb→imb: changes nothing — removed
+- all eleven together: charters 868 / 859 but Seneca 833, EWT dev
+  785, forced 909 / 912 — the refused ones drag
+
+Two Seneca words fell with the five survivors and the truncation put
+834 at 833: `mecum` (five times, e→i to `micum` = mica) and `temet`
+(three times, to `timet`), pronouns with `-cum` and `-met` attached
+that WORDS reads only through pronoun-base tackons (T8b), plus three
+Greek names (`Erebo` → `hereo`, `Pelei` → `pileus`, `Polybo` →
+`polypus`). The pronouns are glossary entries now (lemma ego, tu,
+sui, nos, vos, qui with their attached forms; the gold splits `mecum`
+into `me` + `cum`, so the split is the real fix when T8b lands), and
+capitalised forms are excluded from variation: names stay names by
+the capital rule, and the charters lose three words for it. Final,
+five correspondences without capitals: Seneca 835 / 764, charters
+863 / 712 and 856 / 713, EWT unchanged; charter unknowns 1622 → 1009
+and 1664 → 1061.
+
+One more thing the gates taught: a glossary entry with `lemma="ego"`
+makes `ego` itself a first-source form, so `ego` lost its case; the
+attached forms are entries with lemma equal to form now, and the
+gold lemma sits in the note. Pins from the gate: tecta 941 / 922 /
+913, primary 835 / 863 / 856, forced 764 / 712 / 713, concordance
+109193 / 439845 / 445916 (recovered verbs change seeds and certain
+verbs), EWT all unchanged. Planted fault: e→ae switched off turns
+`ecclesie` unknown and the hand case red.
+
+Named, not done: `manifestu` and other truncations, `petia`
+(`pecia`) and the rest of the unrecovered residual (`presbitero`,
+`subcessoribus`, `livellario`, `pegiorata`: two changes at once, or
+words WORDS lacks outright), which a glossary of charter vocabulary
+would take; a lemma-spelling normalisation (`uester`/`vester`) that
+only the census noticed. Scratch: `orthographia.py`,
+`orthographia2.py`, `mensura_orthographiae.sh`.

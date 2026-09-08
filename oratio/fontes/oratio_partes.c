@@ -342,6 +342,14 @@ oratio_partes_nodum_struere (
     redde nodus;
 }
 
+/* T22: formae variantes formis CAPITALIBUS quoque? MENSURATUM (quinque
+ * correspondentiae activae): cum capitalibus Seneca 9607, chartae
+ * 20884/20617; sine 9610 (Erebo Pelei Polybo nomina manent),
+ * 20885/20620, EWT +II/+I - capitalia ignota regulae capitalis manent */
+hic_manens constans b32 ORTHOGRAPHIA_CAPITALIA = FALSUM;
+/* interruptor totius contractus IV (mensura: basis sine variantibus) */
+hic_manens constans b32 ORTHOGRAPHIA_ACTIVA = VERUM;
+
 b32
 oratio_partes_vocabulum_annotare (
                           Piscina* piscina,
@@ -385,14 +393,58 @@ oratio_partes_vocabulum_annotare (
     }
     memset(classis_visa, ZEPHYRUM, magnitudo(classis_visa));
     memset(lingua_visa, ZEPHYRUM, magnitudo(lingua_visa));
-    analyses = oratio_vocabularium_la_quaerere(scratch, vocabularia->la,
-        textus);
+        analyses = oratio_vocabularium_la_quaerere(scratch,
+            vocabularia->la,
+            textus);
     descriptiones = xar_creare(scratch,
         (i32)magnitudo(OratioDescriptio));
     si (analyses == NIHIL || descriptiones == NIHIL)
     {
         redde FALSUM;
     }
+    /* T22 CONTRACTUS IV: forma vocabulario Latino ignota et Moby ignota
+     * (custodia Anglica ut T21) per formas variantes orthographiae mediae
+     * quaeritur (e > ae, h addita ...); lectiones fontem 'orthographia'
+     * ferunt. ORTHOGRAPHIA_CAPITALIA: formae capitales quoque (nomina
+     * medii aevi: mensuratum) */
+        si (   ORTHOGRAPHIA_ACTIVA && xar_numerus(analyses) == ZEPHYRUM
+            && (   ORTHOGRAPHIA_CAPITALIA
+            || !(   textus.datum[ZEPHYRUM] >= 'A'
+                 && textus.datum[ZEPHYRUM] <= 'Z')))
+        {
+        b32 anglica_nota = FALSUM;
+
+        si (vocabularia->en != NIHIL)
+        {
+            Xar* nota_en = oratio_vocabularium_en_analysare(scratch,
+                vocabularia->en, textus);
+
+            si (nota_en == NIHIL)
+            {
+                redde FALSUM;
+            }
+            anglica_nota = (b32)(xar_numerus(nota_en) > ZEPHYRUM);
+        }
+        si (!anglica_nota)
+        {
+            s32  varians;
+            Xar* variantes = oratio_vocabularium_la_quaerere_variantes(
+                scratch, vocabularia->la, textus, &varians);
+
+            si (variantes == NIHIL)
+            {
+                redde FALSUM;
+            }
+            si (xar_numerus(variantes) > ZEPHYRUM)
+            {
+                analyses = variantes;
+                si (census != NIHIL)
+                {
+                    census->orthographia = census->orthographia + I;
+                }
+            }
+        }
+        }
         per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
         {
         si (!oratio_partes_la_describere(piscina, vocabularia->la,

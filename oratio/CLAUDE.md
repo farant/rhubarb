@@ -572,7 +572,31 @@ enclitic element breaks strict adjacency with the NEXT word: five
 words) → T21b = strict cursor transparent to enclitics (pattern
 machine). `Lucane` (= Lucanae) was a DICTIONARY hole → `lucanus` in
 the glossary; a proper-noun guard did nothing (luca = elephant).
-Census field `enclitica`; Hilarius 1678 → 1682 words (pythonica).
+Census field `enclitica`; Hilarius 1678 → 1682 words (pythonica). **T20c law 1 REFUTED BY CENSUS (same day, scratch
+`verbum_unicum.py`)**: reach 68/25/24 finite verbs; sentence single
++3/−8, +1/−2, 0/−6; clause single −49/−53/−74 net — the clause holds
+no finite verb or a certain one already. NOT BUILT. Verb errors are
+PARTICIPLES read as adjective/noun (Seneca 152/253; participle-first
+prior censused and REFUSED: +154/−269, charters +161/−984 — `sancti
+casa censum suprascripta`) and, on the charters, UNKNOWN MEDIEVAL
+FORMS (409/597): medieval orthography correspondences recover
+1869/3145 unknown occurrences (1697 with the gold class) → next
+dictionary tranche (`orthographia.py`). **T22 DONE (same day): MEDIEVAL
+ORTHOGRAPHY = contract IV of the Latin vocabularium**
+(`oratio_vocabularium_la_quaerere_variantes`, data table
+`ORATIO_ORTHOGRAPHIA` with `activa` switches and measured numbers;
+source value `orthographia`; annotator asks only for forms unknown to
+both dictionaries, capitals excluded). Kept after the loop: h-prefix,
+e→ae, inp→imp, b→p, e→i (last: alone it breaks the charter forced
+floors, behind the others it holds them). Refused: doubling, d→t
+(EWT forced), o→u, i→e, p→b (charter forced), inb→imb (nothing).
+Charters 840/833 → 863/856 primary, unknowns 1622 → 1009; Seneca 835
+after `mecum`/`temet` glossary entries (lemma = form: a `lemma="ego"`
+entry shadows `ego` itself); EWT flat. Env `ORATIO_ORTHOGRAPHIA_SOLA`
+/ `_SINE` for the loop. NEXT candidates: T8b pronoun tackons (mecum =
+me + cum in gold), a charter-vocabulary glossary for the 1009
+residual unknowns, T21b strict cursor, clause laws 2/4 (census
+first).
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

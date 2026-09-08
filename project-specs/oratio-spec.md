@@ -1610,6 +1610,51 @@ splits into `utra` + `que` until PACK tackons (T8b); `pleve`. Gate:
 partes hand cases (split, unsplit, `-ne`, `-ve`, migrated tail,
 emission == source), oracle range case, pythonica Hilarius 1682.
 
+**As measured — T20c law 1, refuted by census (2026-09-08, same
+session).** The verb hidden single was censused before being built
+(our readings, finiteness and clause stamp aligned to gold). Reach:
+68 / 25 / 24 gold finite verbs carry a verb reading that is not
+first. Sentence-level single (one finite-capable word in the
+sentence): +3 / −8, +1 / −2, +0 / −6. Clause-level single: net −49 /
+−53 / −74, the losses nouns, determiners, pronouns and non-finite
+verbs — the clause holds no finite verb, or holds a certain one
+already (791 Seneca clauses). NOT BUILT. The verb errors are
+participles read as adjectives or nouns (Seneca 152 of 253) and, on
+the charters, unknown medieval forms (409 of 597). The participle-
+first twin prior was censused too and refused (+154 / −269 Seneca,
++161 / −984 charters; `sancti`, `casa`, `censum`, `suprascripta`).
+The charters' unknown forms yield to medieval orthographic
+correspondences (1869 of 3145 recovered, 1697 with the gold class),
+the next dictionary-level tranche. Laws 2 and 4 remain unmeasured.
+
+**As built — T22, medieval orthography as contract IV (2026-09-08,
+same session).** `oratio_vocabularium_la_quaerere_variantes`: variant
+forms of the folded form under the data table `ORATIO_ORTHOGRAPHIA`
+(one correspondence at a time in table order, one occurrence at a
+time left to right; modes substitution, prefix, insertion,
+doubling), each run through the full lookup; the first variant with
+readings wins and its analyses carry `varians`; the describer marks
+them with the new source `orthographia` (registry value 4, canon
+note; seal unchanged). The dictionary never varies on its own: the
+annotator asks only when the form is unknown and Moby does not know
+it whole; capitalised forms are excluded (names stay names by the
+capital rule); the identifier lint is untouched. MEASURED alone on
+all five treebanks and kept only where no floor falls: h-prefix,
+e→ae, inp→imp, b→p, and e→i behind them (alone it dropped the charter
+forced floors by seven; after the h-prefix and e→ae take its words
+it holds them). Refused: doubled consonant and d→t (EWT forced
+falls), o→u, i→e, p→b (charter forced falls), inb→imb (no effect),
+h inserted after c/p/t and t→d, h removed, u→o (census). Order by a
+lemma census (h-prefix first: `abere` → `habere`, not `abire`).
+NUMBERS: charters primary 840/833 → 863/856, unknown words 1622 →
+1009 and 1664 → 1061, forced 710/711 → 712/713; Seneca 834 → 835
+after `mecum`, `temet` and kin became glossary entries (their
+variants were `mica` and `timet`; the gold splits `mecum` as
+`me` + `cum`, T8b pronoun tackons are the real fix); EWT unchanged.
+Environment switches `ORATIO_ORTHOGRAPHIA_SOLA` / `_SINE` isolate one
+correspondence for the loop. Named: `petia`, truncations, two-change
+forms (`presbitero`, `pegiorata`), a charter vocabulary glossary.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

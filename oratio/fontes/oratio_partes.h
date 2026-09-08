@@ -46,8 +46,10 @@ nomen structura {
      * numeratae CCCXVI sententias EWT Latinas, XXI CIRCSE Anglicas
      * iudicabant. */
         i32 vocabula_linguarum[ORATIO_LINGUA_NUMERUS];
-    /* T21: vocabula scissa in hospitem et encliticum (-que -ne -ve) */
+        /* T21: vocabula scissa in hospitem et encliticum (-que -ne -ve) */
     i32 enclitica;
+    /* T22: vocabula per formam variantem orthographiae mediae annotata */
+    i32 orthographia;
 } OratioPartesCensus;
 
 /* Locus accidentis (titulo) intra genus analysis classis; -I si genus

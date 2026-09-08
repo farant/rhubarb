@@ -947,6 +947,29 @@
   <!-- T20a (2026-09-08): clausula - species et mensura oraculi -->
   <vocabulum lemma="subordinatus" lingua="latina" classis="adiectivum" nota="Latina sera: subordinatus (clausula subordinata; WORDS subordinare ignorat)"><forma textus="subordinatus" casus="nominativus" numerus="singularis" genus="masculinum"/><forma textus="subordinata" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="subordinatae" casus="genitivus" numerus="singularis" genus="femininum"/></vocabulum>
   <vocabulum lemma="corroboratio" lingua="latina" classis="substantivum" nota="Latina sera: corroboratio, -onis f. (semen corroborandum: verbum finitum capax ante semen proximum)"><forma textus="corroboratio" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="corroborationis" casus="genitivus" numerus="singularis" genus="femininum"/></vocabulum>
+  <!-- T22 (2026-09-08): pronomina cum -cum / -met / -te adhaerentibus
+       (WORDS tackons basis PRON = T8b; sine his 'mecum' varians
+       orthographiae 'micum' = mica, 'temet' = timet fiebat). Lemma =
+       forma ipsa: lemma 'ego' entrii formam 'ego' ipsam praeiret
+       (glossarium fons primus). Aurum: mecum = me + cum (ranga), temet
+       PRON lemma tu -->
+  <vocabulum lemma="mecum" lingua="latina" classis="pronomen" nota="pronomen ego cum adhaerente (lemma aureum ego)"><forma textus="mecum" casus="ablativus"/></vocabulum>
+  <vocabulum lemma="memet" lingua="latina" classis="pronomen" nota="pronomen ego cum adhaerente (lemma aureum ego)"><forma textus="memet" casus="accusativus"/></vocabulum>
+  <vocabulum lemma="egomet" lingua="latina" classis="pronomen" nota="pronomen ego cum adhaerente (lemma aureum ego)"><forma textus="egomet" casus="nominativus"/></vocabulum>
+  <vocabulum lemma="tecum" lingua="latina" classis="pronomen" nota="pronomen tu cum adhaerente (lemma aureum tu)"><forma textus="tecum" casus="ablativus"/></vocabulum>
+  <vocabulum lemma="temet" lingua="latina" classis="pronomen" nota="pronomen tu cum adhaerente (lemma aureum tu)"><forma textus="temet" casus="accusativus"/></vocabulum>
+  <vocabulum lemma="tute" lingua="latina" classis="pronomen" nota="pronomen tu cum adhaerente (lemma aureum tu)"><forma textus="tute" casus="nominativus"/></vocabulum>
+  <vocabulum lemma="tibimet" lingua="latina" classis="pronomen" nota="pronomen tu cum adhaerente (lemma aureum tu)"><forma textus="tibimet" casus="dativus"/></vocabulum>
+  <vocabulum lemma="secum" lingua="latina" classis="pronomen" nota="pronomen sui cum adhaerente (lemma aureum sui)"><forma textus="secum" casus="ablativus"/></vocabulum>
+  <vocabulum lemma="semet" lingua="latina" classis="pronomen" nota="pronomen sui cum adhaerente (lemma aureum sui)"><forma textus="semet" casus="accusativus"/></vocabulum>
+  <vocabulum lemma="sibimet" lingua="latina" classis="pronomen" nota="pronomen sui cum adhaerente (lemma aureum sui)"><forma textus="sibimet" casus="dativus"/></vocabulum>
+  <vocabulum lemma="nobiscum" lingua="latina" classis="pronomen" nota="pronomen nos cum adhaerente (lemma aureum nos)"><forma textus="nobiscum" casus="ablativus"/></vocabulum>
+  <vocabulum lemma="nosmet" lingua="latina" classis="pronomen" nota="pronomen nos cum adhaerente (lemma aureum nos)"><forma textus="nosmet" casus="accusativus"/></vocabulum>
+  <vocabulum lemma="vobiscum" lingua="latina" classis="pronomen" nota="pronomen vos cum adhaerente (lemma aureum vos)"><forma textus="vobiscum" casus="ablativus"/></vocabulum>
+  <vocabulum lemma="vosmet" lingua="latina" classis="pronomen" nota="pronomen vos cum adhaerente (lemma aureum vos)"><forma textus="vosmet" casus="accusativus"/></vocabulum>
+  <vocabulum lemma="quocum" lingua="latina" classis="pronomen" nota="pronomen qui cum adhaerente (lemma aureum qui)"><forma textus="quocum" casus="ablativus"/></vocabulum>
+  <vocabulum lemma="quacum" lingua="latina" classis="pronomen" nota="pronomen qui cum adhaerente (lemma aureum qui)"><forma textus="quacum" casus="ablativus"/></vocabulum>
+  <vocabulum lemma="quibuscum" lingua="latina" classis="pronomen" nota="pronomen qui cum adhaerente (lemma aureum qui)"><forma textus="quibuscum" casus="ablativus"/></vocabulum>
   <!-- T21 (2026-09-08): enclitica scissa (-que -ne -ve) -->
   <vocabulum lemma="lucanus" lingua="latina" classis="adiectivum" nota="Latina media (chartae LLCT): lucanus, -a, -um - Lucensis, ad Lucam pertinens; formae ae > e (Lucane = Lucanae, Lucanem = Lucanam) - sine his 'Lucane' in Luca + ne scinditur (T21)"><forma textus="lucanus" casus="nominativus" numerus="singularis" genus="masculinum"/><forma textus="lucana" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="lucanum" casus="accusativus" numerus="singularis" genus="masculinum"/><forma textus="lucani" casus="genitivus" numerus="singularis" genus="masculinum"/><forma textus="lucanae" casus="genitivus" numerus="singularis" genus="femininum"/><forma textus="lucane" casus="genitivus" numerus="singularis" genus="femininum"/><forma textus="lucanam" casus="accusativus" numerus="singularis" genus="femininum"/><forma textus="lucanem" casus="accusativus" numerus="singularis" genus="femininum"/><forma textus="lucano" casus="ablativus" numerus="singularis" genus="masculinum"/><forma textus="lucanis" casus="ablativus" numerus="pluralis" genus="masculinum"/></vocabulum>
   <vocabulum lemma="encliticus" lingua="latina" classis="adiectivum" nota="grammaticorum (Prisciani): encliticus, -a, -um - vocabulum praecedenti adhaerens (-que -ne -ve); encliticum n. = vocabulum ipsum scissum"><forma textus="encliticus" casus="nominativus" numerus="singularis" genus="masculinum"/><forma textus="encliticum" casus="nominativus" numerus="singularis" genus="neutrum"/><forma textus="enclitica" casus="nominativus" numerus="pluralis" genus="neutrum"/><forma textus="enclitici" casus="genitivus" numerus="singularis" genus="neutrum"/></vocabulum>

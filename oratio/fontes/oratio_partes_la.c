@@ -962,8 +962,12 @@ oratio_partes_la_describere (
             }
             frange;
         }
-                ordinarius:
+                                ordinarius:
             frange;
+    }
+    si (a->varians >= ZEPHYRUM)
+    {
+        d.fons = ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA;   /* T22: forma varians */
     }
     si (!_descriptionem_addere(exitus, &d))
     {

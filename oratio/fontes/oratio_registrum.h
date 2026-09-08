@@ -304,7 +304,8 @@ nomen enumeratio {
     ORATIO_FONS_ANALYSIS_VOCABULARIUM_LA = 0,
     ORATIO_FONS_ANALYSIS_VOCABULARIUM_EN,
         ORATIO_FONS_ANALYSIS_GLOSSARIUM,
-    ORATIO_FONS_ANALYSIS_REGULA,     /* T13: regula sine fonte (vocabulum capitale ignotum = nomen proprium) */
+        ORATIO_FONS_ANALYSIS_REGULA,     /* T13: regula sine fonte (vocabulum capitale ignotum = nomen proprium) */
+    ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA,   /* T22: forma varians orthographiae mediae (e > ae, h addita ...) in vocabulario Latino inventa */
 
     ORATIO_FONS_ANALYSIS_NUMERUS
 } OratioFonsAnalysis;

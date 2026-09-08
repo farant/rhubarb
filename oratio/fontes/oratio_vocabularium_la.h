@@ -19,11 +19,15 @@
  *       (flexio X = quodlibet, C = M aut F), gradus adiectivi/adverbii
  *       (X utrimque = quilibet), numerale: clavis exacta, praepositio:
  *       casus rectus.
- *  III. tackons (-que -ne -ve: additamenta TACKON basi X) SOLUM si nihil
+  *  III. tackons (-que -ne -ve: additamenta TACKON basi X) SOLUM si nihil
  *       inventum est (ut WORDS - 'sine' numquam si + ne): forma minus
  *       tackon iterum quaeritur; analysis TACKON ante hospites ponitur,
  *       hospites tackon ferunt. Tackons cum basi (PRON/ADJ/PACK) et
  *       praefixa/suffixa: T8b (data numerata).
+ *  IV.  orthographia media (T22): quaesitio SEPARATA
+ *       (oratio_vocabularium_la_quaerere_variantes) formarum variantium
+ *       per correspondentias mensuratas (e > ae, e > i, h addita, ...),
+ *       ab annotatore sola poscita cum forma ipsa ignota est.
  *  Ordo: unica; deinde per stirpem dictionarii ORDINE PLAGULAE (ordo
  *  WORDS ipsius), fine longiore priore, flexione ordine plagulae.
  *  Lista vacua = IGNOTUM = inventum, numquam vitium.
@@ -57,10 +61,35 @@ nomen structura {
     s32 flexio;            /* index flexionis (STIRPS) aut -I */
     s32 unicum;            /* index unici (UNICUM) aut -I */
     s32 tackon;            /* index additamenti: TACKON ipse, aut hospitis tackon; -I */
-    s32 glossarium;        /* index formae glossarii (GLOSSARIUM) aut -I */
+        s32 glossarium;        /* index formae glossarii (GLOSSARIUM) aut -I */
     i32 clavis;            /* clavis stirpis congruens (I-IV) */
     i32 mensura_stirpis;   /* scissio in forma plicata (octeti stirpis) */
+    s32 varians;           /* T22: index correspondentiae orthographiae qua forma varians inventa est; -I = forma ipsa */
 } OratioAnalysis;
+
+/* CORRESPONDENTIA orthographiae mediae (T22, contractus IV): forma
+ * varians ex forma plicata generatur - modus SUBSTITUTIO: 'a' -> 'b'
+ * una occurrentia per vicem (sinistra prima); PRAEFIXUM: 'b' ante
+ * formam; INSERTIO: 'b' post quamlibet litteram de 'a'; GEMINATIO:
+ * littera quaelibet de 'a' duplicata. 'activa' = interruptor mensurae
+ * (quaeque sola thesauris V mensurata, numeri in tabula). */
+nomen enumeratio {
+    ORATIO_ORTHOGRAPHIA_SUBSTITUTIO = 0,
+    ORATIO_ORTHOGRAPHIA_PRAEFIXUM,
+    ORATIO_ORTHOGRAPHIA_INSERTIO,
+    ORATIO_ORTHOGRAPHIA_GEMINATIO
+} OratioOrthographiaModus;
+
+nomen structura {
+         constans character* titulus;
+    OratioOrthographiaModus  modus;
+         constans character* a;
+         constans character* b;
+                        b32  activa;
+} OratioOrthographia;
+
+externus constans OratioOrthographia ORATIO_ORTHOGRAPHIA[];
+externus constans i32 ORATIO_ORTHOGRAPHIA_NUMERUS;
 
 nomen structura OratioVocabulariumLa OratioVocabulariumLa;
 structura OratioGlossarium;   /* incompleta: oratio_glossarium.h eam definit */
@@ -102,6 +131,22 @@ oratio_vocabularium_la_quaerere (
                           Piscina* piscina,
     constans OratioVocabulariumLa* voc,
                            chorda  forma);
+
+/* CONTRACTUS IV (T22, orthographia media): formae VARIANTES formae
+ * ignotae ordine tabulae ORATIO_ORTHOGRAPHIA (correspondentiae activae
+ * solae) et positionis (sinistra prima) quaeruntur (quaesitio plena,
+ * tackons inclusis); varians prima quae analyses reddit vincit, eius
+ * analyses 'varians' = index correspondentiae ferunt. Vocans (annotator)
+ * eam solum poscit cum forma ipsa nihil reddidit et Moby formam totam
+ * nescit - vocabularium ipsum numquam sponte variat (recensio
+ * identificatorum formas ipsas iudicat). *varians = index inventae aut
+ * -I. Xar vacuus = nihil; NIHIL = memoria. */
+Xar*
+oratio_vocabularium_la_quaerere_variantes (
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc,
+                           chorda  forma,
+                              s32* varians);
 
 constans OratioStirps*
 oratio_vocabularium_la_stirps (
