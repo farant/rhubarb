@@ -456,3 +456,38 @@ real error. The retry with the receipts made the recovery cheap: the
 oratio run from the failed attempt and the standalone pythonica run
 were both live receipts on an unchanged tree, and the second
 commissio ran no gate at all.
+
+## 2026-09-07 — the placement law, and the comment as an object
+
+Five Editio replacements in one oratio step came back with doubled
+indentation or a spurious blank line, and each cost a repair round
+against the formatter's `-vitia` list. The formatter was innocent
+three times over: the same textual insertion run through `-scribere`
+alone changed nothing. The cause was the 2026-09-05 note nobody can
+keep in their head: a multi-line `novus` is written verbatim from the
+anchor's first token, so a `novus` that carries the context's
+indentation (the natural way to write one, since the anchor is written
+with it too) lands on top of the file's indentation, and the formatter
+then aligns the whole declaration block or `=` group to the overlong
+line. Same at the tail: an anchor ending in a newline stops at its last
+token, the `novus` ends in a newline, and the file's newline follows —
+one blank line too many, reported as `intervalla 13 pro 1`. The law
+now: first-line indentation dropped when the first token begins its
+line, one trailing newline dropped when the file continues with one.
+The tolerant mode stays the only one touched; verbatim modes are
+verbatim.
+
+The comment refusal (tier I of the ledger item) was cheaper than
+expected because `_exemplar_tolerans` already finds the anchor's text
+as bytes: if that occurrence starts, ends or lies inside a comment
+token, the refusal says so with the comment's line and the three exits.
+Tier II is a small object: `Editio.commentum(fragment)` selects one
+comment token, exposes its prose without margins, and can rewrite it
+reflowed or append a reflowed paragraph while every prior line stays
+byte-identical — the dated note in a file header, which today I typed
+by hand with a `Textus` anchor on the previous paragraph. Reflow is
+words to 72 columns with the `/*` column as the margin; the formatter
+judges width but never reflows prose, so this is the only reflow in
+the house. Tier III (sentence and paragraph anchors through oratio)
+stays open; the plumbing for it is the comment corpus that the
+identifier lint already builds.

@@ -514,7 +514,8 @@ class Editio(object):
         """refusio ancorae absentis: series lexematum proxima (tolerans)
         aut, ancora exacta absente, series lexematum inventa"""
         if tolerans is True:
-            return _proxima_ancorae(self.textus, vetus)
+            return (_intra_commentum(self.textus, vetus)
+                    or _proxima_ancorae(self.textus, vetus))
         try:
             s = _sedes_lexematum(self.textus, vetus)
         except SilvaError:
@@ -544,7 +545,8 @@ class Editio(object):
                     % (_lineae_sedium(self.textus, multae), len(nova),
                        len(series[0]), vetus[:60]))
         for a, b in reversed(sedes):
-            self.textus = self.textus[:a] + novus + self.textus[b:]
+            self.textus = self.textus[:a] \
+                + _novus_in_situ(self.textus, a, b, novus) + self.textus[b:]
 
     def replace_inter(self, initium, finis, novus, tolerans=True,
                       inclusae=False):
@@ -673,11 +675,16 @@ class Editio(object):
         self.acta.append('inserere_ante %s' % nomen)
         return self
 
-    def commentum(self, nomen, novus, definitio=True, genus=None):
+    def commentum(self, nomen, novus=None, definitio=True, genus=None):
         """commentarium DUCENS nodi nominati substituere (substituere
         corpus solum tangit et commentarium servat - hic via ad ipsum):
         lineae a '/*' primo intra [linea_a, linea_nodi) usque ad lineam
-        ante nodum; sine commentario novus ante nodum inseritur."""
+        ante nodum; sine commentario novus ante nodum inseritur.
+        NOVUS ABSENS (2026-09-07): res Commentum redditur - nomen =
+        fragmentum unicum commenti cuiuslibet aut nomen functionis
+        (.textus, .substituere(prosa), .paragraphum_addere(prosa))."""
+        if novus is None:
+            return Commentum(self, nomen)
         x = self._extentum_praesens(nomen, definitio, genus)
         if not novus.endswith('\n'):
             novus += '\n'
@@ -3430,6 +3437,179 @@ def forma_delta(via, ref='HEAD'):
             return int(o[2].lstrip('+')), int(o[3].lstrip('-'))
     raise SilvaError('formator -delta sine ordine DELTA (rc=%d)'
                      % r.returncode)
+
+
+def _novus_in_situ(textus, a, b, novus):
+    """LEX SITUS (2026-09-07): novus cum lineis novis ad lexema PRIMUM
+    ancorae scribitur (a) - indentatio lineae primae novi abicitur ubi
+    lexema primum lineam suam incipit (plagula indentationem tenet;
+    novus cum indentatione contextus scriptus eam duplicabat, quinquies
+    uno die, et formator vicinos ad lineam nimis indentatam ordinabat),
+    et linea nova finalis UNA abicitur ubi plagula post lexema ultimum
+    (b) ipsa linea nova pergit (linea vacua spuria post substitutionem:
+    'intervalla 13 pro 1'). Novus planus intactus."""
+    if '\n' not in novus:
+        return novus
+    initium_lineae = textus.rfind('\n', 0, a) + 1
+    if textus[initium_lineae:a].strip() == '':
+        novus = novus.lstrip(' \t')
+    if novus.endswith('\n') and textus[b:b + 1] == '\n':
+        novus = novus[:-1]
+    return novus
+
+
+def _intra_commentum(textus, vetus):
+    """refusio DIAGNOSTICA (2026-09-07, gradus I desiderati 01M1Z4B3FT):
+    ancora cuius textus in plagula adest sed intra lexema commenti
+    incipit aut finit (aut tota intra commentum iacet) numquam ut
+    series lexematum congruit - commentum lexema UNUM est. Linea
+    commenti et exitus nominantur; '' si non hic casus."""
+    try:
+        m = _exemplar_tolerans(vetus).search(textus)
+    except Exception:
+        return ''
+    if m is None:
+        return ''
+    a, b = m.span()
+    for t, ca, cb in _lexemata(textus):
+        if not t.startswith('/*'):
+            continue
+        if ca <= a and b <= cb and not (ca == a and b == cb):
+            linea = textus.count('\n', 0, ca) + 1
+            return (" - ancora tota intra lexema commenti (linea %d) iacet:"
+                    " commentum lexema UNUM est - tolerans='verba' pro prosa"
+                    " intra commentum, aut commentum totum ut ancora, aut"
+                    " Editio.commentum(fragmentum)" % linea)
+        incipit = ca < a < cb
+        finit = ca < b < cb
+        if incipit or finit:
+            linea = textus.count('\n', 0, ca) + 1
+            return (" - ancora intra lexema commenti (linea %d) %s: commentum"
+                    " lexema UNUM est - ancoram in commento toto aut in linea"
+                    " codicis vicina pone (aut tolerans=False pro octetis)"
+                    % (linea, 'incipit' if incipit else 'finit'))
+    return ''
+
+
+def _commentum_refluere(textus, indentatio, primum=True, latitudo=72):
+    """prosa -> lineae commenti: '/* ' (aut ' * ' cum primum=False) et
+    ' * ' sequentes ad columnam '/*' + I, paragraphi (linea vacua in
+    prosa) linea ' *' separati, verba ad LXXII columnas refluxa; sine
+    ' */' finali (vocans addit)"""
+    praefixum = ' ' * indentatio + ' * '
+    vacua = ' ' * indentatio + ' *'
+    lineae = []
+    paragraphi = [p for p in re.split(r'\n[ \t]*\n', textus.strip())
+                  if p.strip()]
+    for k, p in enumerate(paragraphi):
+        if k:
+            lineae.append(vacua)
+        cur = (' ' * indentatio + '/* ') if (k == 0 and primum) else praefixum
+        for verbum in p.split():
+            candidatus = cur + verbum
+            if len(candidatus) > latitudo and cur.strip() not in ('/*', '*'):
+                lineae.append(cur.rstrip())
+                cur = praefixum + verbum + ' '
+            else:
+                cur = candidatus + ' '
+        lineae.append(cur.rstrip())
+    return lineae
+
+
+def _commentum_claudere(lineae, indentatio, latitudo=72):
+    """' */' in linea ultima si capit, aliter linea sua"""
+    if len(lineae[-1]) + 3 <= latitudo:
+        lineae[-1] = lineae[-1] + ' */'
+    else:
+        lineae.append(' ' * indentatio + ' */')
+    return '\n'.join(lineae)
+
+
+class Commentum(object):
+    """commentum ut RES editionis (gradus II desiderati 01M1Z4B3FT,
+    2026-09-07): Editio.commentum(fragmentum) - lexema commenti unicum
+    quod fragmentum (spatiis collapsis) continet, aut commentarium
+    ducens functionis nominatae. .textus = prosa marginibus exuta
+    (paragraphi '\\n\\n' separati); .substituere(textus) = commentum
+    totum ex prosa refluxum (' * ' margines, LXXII columnae, ' */');
+    .paragraphum_addere(textus, ubi='finis') = lineae priores VERBATIM
+    (tabulae, ordines usus intacti) + linea ' *' + paragraphus
+    refluxus. Post editionem res consumpta: selige iterum."""
+
+    def __init__(self, editio, nomen):
+        self.editio = editio
+        textus = editio.textus
+        norma = ' '.join(nomen.split())
+        commenta = [(t, a, b) for t, a, b in _lexemata(textus)
+                    if t.startswith('/*')]
+        sedes = []
+        if re.fullmatch(r'[A-Za-z_]\w*', nomen):
+            # nomen functionis primum (identificator brevis in prosa
+            # cuiusvis commenti ut fragmentum lateret)
+            try:
+                x = editio._extentum_praesens(nomen)
+            except SilvaError:
+                x = None
+            if x is not None:
+                lineae = textus.splitlines(True)
+                initium = sum(len(l) for l in lineae[:x.linea_a - 1])
+                finis = sum(len(l) for l in lineae[:x.linea_nodi - 1])
+                sedes = [(t, a, b) for t, a, b in commenta
+                         if initium <= a and b <= finis]
+        if not sedes:
+            sedes = [(t, a, b) for t, a, b in commenta
+                     if norma in _lexema_norma(t)]
+        if len(sedes) != 1:
+            raise SilvaError('commentum %d vicibus inventum (exspectatum 1)'
+                             ' - lineae %s: %r'
+                             % (len(sedes),
+                                [textus.count('\n', 0, a) + 1
+                                 for _, a, _ in sedes], nomen[:60]))
+        self.crudus, self.a, self.b = sedes[0]
+        self.indentatio = self.a - (textus.rfind('\n', 0, self.a) + 1)
+        self.linea = textus.count('\n', 0, self.a) + 1
+        inner = self.crudus[2:-2].split('\n')
+        inner = [inner[0]] + [_MARGO.sub('', l) for l in inner[1:]]
+        paragraphi, cur = [], []
+        for l in inner:
+            s = l.strip()
+            if s == '':
+                if cur:
+                    paragraphi.append(' '.join(cur))
+                    cur = []
+            else:
+                cur.append(s)
+        if cur:
+            paragraphi.append(' '.join(cur))
+        self.textus = '\n\n'.join(paragraphi)
+
+    def _scribere(self, novus, actus):
+        if self.a is None:
+            raise SilvaError('commentum iam editum - selige iterum'
+                             ' (Editio.commentum)')
+        e = self.editio
+        e.textus = e.textus[:self.a] + novus + e.textus[self.b:]
+        e.acta.append('%s commentum l.%d' % (actus, self.linea))
+        self.a = self.b = None
+        return e
+
+    def substituere(self, textus):
+        """commentum totum ex prosa refluxum"""
+        lineae = _commentum_refluere(textus, self.indentatio)
+        return self._scribere(_commentum_claudere(lineae, self.indentatio),
+                              'substituere')
+
+    def paragraphum_addere(self, textus, ubi='finis'):
+        """paragraphus refluxus post lineas priores (verbatim); ubi
+        'finis' solum (nota datata in commento capitis)"""
+        if ubi != 'finis':
+            raise SilvaError("ubi %r: 'finis' solum" % (ubi,))
+        corpus = self.crudus[:-2].rstrip()
+        priores = corpus.split('\n')
+        novae = _commentum_refluere(textus, self.indentatio, primum=False)
+        lineae = priores + [' ' * self.indentatio + ' *'] + novae
+        return self._scribere(_commentum_claudere(lineae, self.indentatio),
+                              'paragraphum_addere')
 
 
 def formare(via, nomina=None):

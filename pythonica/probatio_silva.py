@@ -393,6 +393,52 @@ e = silva.Editio(via_f); e.replace('explicatio longa quae lineas', 'explicatio b
 credo('/* f - explicatio brevis quae lineas duas tenet */' in e.textus, "tolerans='verba': prosa trans marginem commenti")
 f = e.applicare(iudica=False)
 credo(f.formata is not None and 'explicatio brevis' in open(via_f).read(), 'verba: scriptum')
+
+print('--- lex situs novi + refusio commenti + Commentum (2026-09-07) ---')
+via_s = os.path.join(T, 'situs.c')
+FONS_S = ('#include "latina.h"\n\n'
+          '/* f - explicatio longa quae lineas duas tenet et de re quadam\n'
+          ' * loquitur */\n'
+          'interior i32\nf (\n    i32 a)\n{\n    i32 b;\n    i32 c;\n\n'
+          '    b = a;\n    c = b;\n    redde c;\n}\n')
+open(via_s, 'w').write(FONS_S)
+e = silva.Editio(via_s)
+e.replace('    i32 b;\n    i32 c;\n', '    i32 b;\n    i32 d;\n    i32 c;\n')
+credo('{\n    i32 b;\n    i32 d;\n    i32 c;\n\n    b = a;' in e.textus and '        i32 d;' not in e.textus,
+      'lex situs: novus indentatus ad lexema primum sine indentatione duplici, linea nova finalis sine linea vacua spuria')
+e.replace('b = a;\n    c = b;', 'b = a;\n    c = b + d;')
+credo('    b = a;\n    c = b + d;\n    redde c;' in e.textus, 'lex situs: lexema primum intra lineam - novus verbatim (spatium ante servatum)')
+f = e.applicare(iudica=False)
+credo('    i32 d;\n    i32 c;\n\n    b = a;\n    c = b + d;' in open(via_s).read(), 'lex situs: scriptum, forma plagulae servata')
+for anc, verbum in (('loquitur */\ninterior i32', 'incipit'), ('#include "latina.h"\n\n/* f - explicatio', 'finit'), ('explicatio longa quae', 'tota intra')):
+    try:
+        silva.Editio(via_s).replace(anc, 'x')
+        credo(False, 'ancora commenti %s' % verbum)
+    except silva.SilvaError as ex:
+        credo('lexema commenti (linea 3)' in str(ex) and verbum in str(ex), 'refusio diagnostica: ancora %s intra commentum, linea nominata' % verbum)
+c = silva.Editio(via_s).commentum('explicatio longa')
+credo(c.textus == 'f - explicatio longa quae lineas duas tenet et de re quadam loquitur' and c.indentatio == 0 and c.linea == 3,
+      'Commentum(fragmentum): textus marginibus exutus, indentatio, linea')
+e = silva.Editio(via_s); c = e.commentum('f')
+c.substituere('f - ' + ' '.join(['verbum'] * 20) + '.\n\nParagraphus alter.')
+lineae_c = e.textus[e.textus.index('/* f'):e.textus.index('interior')].splitlines()
+credo(all(len(l) <= 72 for l in lineae_c) and len(lineae_c) == 5 and lineae_c[0].startswith('/* f - verbum') and lineae_c[3] == ' *' and lineae_c[4] == ' * Paragraphus alter. */',
+      'Commentum(nomen).substituere: refluxus ad LXXII columnas, margines, paragraphi, clausura')
+c = e.commentum('f')
+c.paragraphum_addere('2026-09-07: nota datata.')
+credo(e.textus.count(' * Paragraphus alter.\n *\n * 2026-09-07: nota datata. */\ninterior i32') == 1, 'Commentum.paragraphum_addere: lineae priores verbatim, linea vacua, paragraphus, clausura')
+try:
+    c.substituere('iterum')
+    credo(False, 'commentum consumptum')
+except silva.SilvaError as ex:
+    credo('selige iterum' in str(ex), 'Commentum post editionem consumptum: selige iterum')
+try:
+    e.commentum('nemo hic')
+    credo(False, 'commentum absens')
+except silva.SilvaError as ex:
+    credo('commentum 0 vicibus inventum' in str(ex), 'Commentum absens levat')
+f = e.applicare(iudica=False)
+credo('nota datata. */\ninterior i32' in open(via_s).read() and '    i32 d;\n' in open(via_s).read(), 'Commentum: scriptum super plagulam iam editam')
 os.unlink(via_f)
 
 print('--- Textus: textus planus ---')

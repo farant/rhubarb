@@ -135,6 +135,35 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
 - `commissio_umbra` fracta: nuntius `receptum_delere(via)` nominat (receptum
   et clone servata sunt consulto - `umbrae_purgare` orphanos solos tollit).
 
+## 2026-09-07 — lex situs novi, refusio commenti, commentum ut res
+
+- **Lex situs `Editio.replace`** (post T19d: quinquies uno die): novus cum
+  lineis novis ad lexema PRIMUM ancorae scribitur — indentatio lineae
+  primae novi ABICITUR ubi lexema primum lineam suam incipit (plagula
+  indentationem tenet; novus cum indentatione contextus scriptus eam
+  duplicabat et formator vicinos ad lineam nimis indentatam ordinabat:
+  glomus declarationum ultra LXXII, `praelata[v]` bis indentatum), et
+  linea nova finalis UNA abicitur ubi plagula post lexema ultimum ipsa
+  linea nova pergit (linea vacua spuria: `intervalla 13 pro 1`). Novus
+  planus intactus; modi `spatia`/`verba`/`False` verbatim ut ante.
+  Formator ter innocens probatus (idem textus per `-scribere` solum
+  nihil mutat).
+- **Refusio diagnostica ancorae intra commentum** (gradus I desiderati
+  01M1Z4B3FT): ancora cuius textus adest sed intra lexema commenti
+  incipit, finit aut tota iacet nominatur cum linea commenti et exitibus
+  (commentum totum, linea codicis vicina, `tolerans='verba'`,
+  `Editio.commentum(fragmentum)`) — non iam 'lexema primum absens'.
+- **`Editio.commentum(fragmentum | nomen)` sine novo = res `Commentum`**
+  (gradus II): `.textus` (prosa marginibus exuta, paragraphi `\n\n`),
+  `.indentatio`, `.linea`; `.substituere(prosa)` = commentum totum
+  refluxum (`/* `, ` * `, ` *` inter paragraphos, LXXII columnae, ` */`
+  in linea ultima si capit); `.paragraphum_addere(prosa, ubi='finis')` =
+  lineae priores VERBATIM (tabulae usus, ordines) + ` *` + paragraphus
+  refluxus — nota datata in commento capitis sine commento reproducto.
+  Nomen functionis primum (commentarium ducens), deinde fragmentum
+  unicum spatiis collapsis; res post editionem consumpta (selige
+  iterum). Gradus III (sententia/paragraphus per orationem) apertus.
+
 ## 2026-09-03 — lex formae ancorarum (post B3)
 
 - **Lex formae `Editio.replace` tolerantis**: ancora = series lexematum
