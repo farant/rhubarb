@@ -415,6 +415,15 @@ birth gate stages IX–XI; bypass `--no-verify` with the cause).
 
 ## Laws to keep (spec §2–3)
 
+- **The SUDOKU model (Fran 2026-09-08, spec §2 decisions 36–42).** A
+  constraint solver over candidate lists, never a guess: eliminate
+  only over a COMPLETE grid (an unknown word is a cell with all
+  candidates, not a missing cell); hard constraints eliminate, soft
+  ones (priors) only order and never block; at a plateau add a
+  PERPENDICULAR dimension (clause counting, document consistency,
+  natura relations as umbrae, zoom level); report a forced | ordered |
+  open PROFILE; residual = unsolved | unsolvable; a surviving soft
+  violation is a FIGURE, not an error. Decretum 01M1ZNHQ3F.
 - Every byte is a token in ONE slot; spaces and newlines are CONTENT in
   `cauda`/`praefixa` slots, never trivia; LINEA has munus LINEA so the
   FIDELIS comparator runs.

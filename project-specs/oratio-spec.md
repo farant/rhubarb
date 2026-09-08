@@ -102,6 +102,73 @@ survives every layer is a fact about the text, reported as such.
 form the dictionary lacks — each is a row in a report (`citata`'s
 shape), never a refused parse.
 
+**The sudoku model (Fran, 2026-09-08; decisions 36–42).** Text
+interpretation has gone two ways that each paint into a corner: the
+STATISTICAL model (guess by a prior; no reasons, uniform noise,
+retrained forever) and the TOTAL model (every sentence fully
+decipherable in isolation; treebank conventions become law and
+category errors leak down into the classification layer). Oratio is a
+third thing: a constraint solver over candidate lists, the way a
+sudoku is solved — never a guess, only a narrowing, and when one
+direction stops moving, a perpendicular one.
+
+- **36 Solid layers.** A question at a layer is finite and yes/no
+  (has this form a verb reading?), never a fudge. The aim at every
+  layer is 100 % COVERAGE (the answer is among the candidates) with
+  ambiguity accepted; 100 % primary at one layer is overfitting and
+  corrupts the layer with category error.
+- **37 Elimination only over a complete grid.** A candidate is
+  demoted only when it contradicts a constraint, and a contradiction
+  is sound only when every cell it reads is on the board with all its
+  candidates. This is why demotion failed three times on 2026-09-07:
+  unknown words were not on the board. An unknown word is a cell with
+  ALL candidates (`analysis-ignoti`), never a missing cell.
+- **38 Hard and soft.** A hard constraint (case mismatch, genus
+  incompatibility) may eliminate; a soft one (class prior,
+  plausibility, a dictionary's code order) only ORDERS, in the last
+  tier, and may never block a constraint. Every forced decision
+  carries its reason.
+- **39 Plateau → perpendicular dimension.** When a direction stops
+  moving the number, add a dimension that narrows the same cells from
+  another side. Dimensions: morphology, language, agreement and
+  adjacency, clause counting (one finite verb per clause: a hidden
+  single), the text form, document consistency (one class per form
+  per document), the SEMANTIC layer (natura genera and their
+  relations as umbrae of their own), and the ZOOM level — a sentence
+  may need its paragraph, a paragraph its work: the contextualisation
+  a reader does. A sound constraint stays sound when a dimension is
+  added.
+- **40 A spectrum, reported as a profile.** Every cell at every scale
+  ends FORCED | ORDERED | OPEN; the profile across the tower is the
+  text's decipherability and names the next dimension. Reading 80 %
+  of a sentence well is the value: never throw it away, never guess
+  the rest. 100 % is not honestly possible (malformed text, poetry).
+- **41 The residual is a finding of two kinds.** UNSOLVED (a
+  constraint is missing) or UNSOLVABLE (genuine ambiguity — a poem is
+  a coordinate, given here as a discrete, inspectable lattice of
+  readings rather than a vector). A soft-constraint violation that
+  survives every narrowing is a FIGURE (metaphor), not an error.
+  Malformed text degrades by open cells; the totality gate guarantees
+  the tree beneath.
+- **42 Umbra is the recurring pattern.** At every layer a node
+  declares what it expects from the schema of its genus (a class, a
+  case; a genus relation), a neighbour fills it, a filled slot is
+  evidence, an unfilled one a finding — ONE executor law shared by
+  word class, syntax and meaning. A bound umbra is a dependency edge
+  (dependency syntax stays out of scope as a target and is welcome as
+  a by-product). Outer-scale cells are high-leverage: a work-level
+  class is forced only on lopsided evidence (the language census),
+  otherwise it stays a list at its own scale; every scale gets its
+  own oracle (hand-judged fixtures pinned only rising, as the form
+  layer's).
+
+Implications for the build, noted 2026-09-08 and not yet done: split
+the primary measure by decision kind (forced / prior / crude) and pin
+FORCED accuracy as a floor; make evidence and priors separate STAGES
+enforced by the gate rather than an order remembered in the file;
+coverage work (the ignoti reading, charter spelling) outranks
+ordering work.
+
 ## 3. Stage 1 — the tree (`oratio_arbor`)
 
 **Registry (`oratio_registrum`, hand-written like md's).** Genera:
