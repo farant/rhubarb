@@ -1969,3 +1969,27 @@ charters' forced accuracy read 76 %; with vacuous decisions no longer
 recorded it reads 71 %, which is the true number and the pins moved
 down with the cause written beside them. Both are the doctrine doing
 its job: the honest number is lower and the useless rule is gone.
+
+## 2026-09-08 — T19l: the demotion, measured a fourth time on a complete grid
+
+This was the experiment the ignoti reading was built for, and it
+fails cleanly. Three steps, each on the five treebanks: (E1) the
+Latin adposition prior removed so prepositions are decided by evidence
+alone — Seneca −0.1, charters −0.3 / −0.2, because the object rules
+accept only noun fillers and "cum eo", "in ipsa" have no evidence;
+(E3a) the prior kept and the object filler widened to any reading in
+the preposition's case — charters +0.1 / +0.1, Seneca −0.1; (E3b) on
+top of that, an explicit adposition reading with no object bound
+anywhere in the sentence demoted below the readings that carry no
+empty object — no change at all. The listing says why: when a
+preposition has no object, its other readings are mostly worse than
+the adposition — the capital rule's name for a sentence-initial `A`,
+`de` as a noun, `super` as a verb, `ad` as an adverb — and the one
+real target, `cum` the conjunction, is two words on Seneca. The
+contradiction is sound now that unknown objects bind; it is just not
+worth anything, because the candidate that would replace the
+preposition is not on the board either. The executor is back at
+e6538dec. What the tail and the demotion both point at is the same
+missing dimension: a finite verb's slots, which would make `cum` a
+conjunction by the verb it governs rather than by the object it
+lacks.

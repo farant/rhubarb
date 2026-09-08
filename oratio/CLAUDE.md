@@ -440,9 +440,14 @@ form, nativum `ignotum`, fons regula, NO language: `lingua_ignota`),
 Latin object umbra to it (unknown HEAD rules measured 33–57 % and
 dropped); a decision on a single-reading word is vacuous and no
 longer recorded (forced tier honestly 71 % on the charters, pins
-moved with the cause); primary unchanged; 54 rules. NEXT: demotion
-measured a fourth time (adposition prior off, objectless
-adposition readings demoted); the head-rule template; verb slots.
+moved with the cause); primary unchanged; 54 rules. **T19l** (same
+day): DEMOTION MEASURED A FOURTH TIME on the complete grid and
+rejected: prior off −0.1 / −0.3 / −0.2; any-class object fillers
++0.1 charters / −0.1 Seneca; objectless explicit adposition
+demoted = no change (the alternative readings are junk: `A` as a
+name, `de` as a noun, `super` as a verb; `cum` the conjunction is
+two words). NEXT: verb slots (the dimension both the tail and
+`cum` need), the head-rule template.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
