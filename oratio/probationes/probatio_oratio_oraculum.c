@@ -54,8 +54,8 @@
  * XXXIV): programma oratio/partes/resolutio.stml regulis II (adpositio
  * accusativum / ablativum regit) - crudum CIRCSE 674, LLCT 678 / 677,
  * EWT 566 / 569. */
-#define CIRCSE_PRIMARIA_PINNA    727
-#define LLCT_DEV_PRIMARIA_PINNA  770
+#define CIRCSE_PRIMARIA_PINNA    728
+#define LLCT_DEV_PRIMARIA_PINNA  771
 #define LLCT_TEST_PRIMARIA_PINNA 771
 /* T18 (2026-09-07): regula linguae documenti + lex casus recordorum
  * Moby (in\PvAN ante In\N) + census suffragiis vocabulorum per
@@ -64,7 +64,10 @@
 /* T19b (2026-09-07): regulae priorum classium XI + exceptiones II
  * (supra, a) ante regulam linguae + glossarium cursus III (priores
  * lemmatum) + listae ambiguae: CIRCSE 678 -> 727, LLCT 679/679 ->
- * 770/771, EWT 677/679 -> 753/754 (permille truncata); tecta immota. */
+ * 770/771, EWT 677/679 -> 753/754 (permille truncata); tecta immota.
+ * T19d (2026-09-07): regulae adpositionum in UMBRAS obiecti versae
+ * (lectio et implens praelatae): CIRCSE 728, LLCT 771/771, EWT immota
+ * (permille ex numeris truncata, non ex centesimis). */
 #define EWT_DEV_PRIMARIA_PINNA   753
 #define EWT_TEST_PRIMARIA_PINNA  754
 

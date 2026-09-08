@@ -667,6 +667,113 @@ principale (vacuum)
         CREDO_FALSUM (_habet(x, ORATIO_CLASSIS_NOMEN_PROPRIUM));
     }
 
+    imprimere("\n--- I b. Umbrae (T19d): dependens exspectatus e"
+        " codicibus fontis ---\n");
+    {
+        constans character* fons = "In urbem venit.\n";
+              MateriaNodus* doc = oratio_arbor_parsare(piscina, fons,
+                  (i32)strlen(fons));
+        OratioPartesCensus census;
+        MateriaNodus* in_vocabulum;
+        MateriaNodus* urbem;
+        constans MateriaValor* analyses;
+                          s32  locus_adpositionis;
+                          s32  locus_substantivi;
+                          s32  locus_casus;
+                          i32  k;
+                          i32  umbrae_adpositionum = ZEPHYRUM;
+
+        CREDO_NON_NIHIL (doc);
+        CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia, doc,
+            &census));
+        in_vocabulum  = _vocabulum(doc, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+        urbem         = _vocabulum(doc, ZEPHYRUM, ZEPHYRUM, I);
+        CREDO_NON_NIHIL (in_vocabulum);
+        CREDO_NON_NIHIL (urbem);
+        locus_adpositionis   =
+            oratio_partes_locus(ORATIO_CLASSIS_ADPOSITIO,
+            "umbrae");
+        locus_substantivi   =
+            oratio_partes_locus(ORATIO_CLASSIS_SUBSTANTIVUM,
+            "umbrae");
+        locus_casus = oratio_partes_locus(ORATIO_CLASSIS_ADPOSITIO,
+            "casus");
+        CREDO_VERUM (locus_adpositionis >= ZEPHYRUM
+            && locus_substantivi >= ZEPHYRUM
+            && locus_casus >= ZEPHYRUM);
+        /* lectio adpositionis quaeque cum casu: umbra UNA obiecti eo
+         * casu, impletio VACUA (inventum donec resolutio ligat) */
+        analyses = &in_vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+        per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*analyses);
+             k++)
+        {
+            constans MateriaNodus* a =
+                materia_valor_lista_obtinere(*analyses, k)->datum.nodus;
+            constans MateriaValor* umbrae;
+            constans MateriaNodus* umbra;
+
+            si (a->genus != (s32)ORATIO_GENUS_ANALYSIS_ADPOSITIONIS)
+            {
+                perge;
+            }
+            umbrae = &a->loci[locus_adpositionis];
+            si (a->loci[locus_casus].genus != MATERIA_VALOR_INDEX)
+            {
+                CREDO_AEQUALIS_S32 ((s32)umbrae->genus,
+                    (s32)MATERIA_VALOR_NIHIL);   /* sine casu: nulla */
+                perge;
+            }
+            CREDO_AEQUALIS_S32 ((s32)umbrae->genus,
+                (s32)MATERIA_VALOR_LISTA);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(*umbrae),
+                I);
+            umbra = materia_valor_lista_obtinere(*umbrae,
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (umbra->genus, (s32)ORATIO_GENUS_UMBRA);
+            CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_RELATIO]
+                .datum.index, (s32)ORATIO_RELATIO_OBIECTUM);
+            CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_CASUS]
+                .datum.index, a->loci[locus_casus].datum.index);
+            CREDO_AEQUALIS_S32 ((s32)umbra->loci[
+                ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus,
+                (s32)MATERIA_VALOR_NIHIL);
+            CREDO_AEQUALIS_S32 ((s32)umbra->loci[
+                ORATIO_UMBRA_CLASSIS].genus, (s32)MATERIA_VALOR_NIHIL);
+            umbrae_adpositionum = umbrae_adpositionum + I;
+        }
+        CREDO_VERUM (umbrae_adpositionum >= (i32)II);   /* in: abl + acc */
+        /* substantivum: umbrae nullae (gradu hoc) */
+        analyses = &urbem->loci[ORATIO_VOCABULUM_ANALYSES];
+        per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*analyses);
+             k++)
+        {
+            constans MateriaNodus* a =
+                materia_valor_lista_obtinere(*analyses, k)->datum.nodus;
+
+            si (a->genus == (s32)ORATIO_GENUS_ANALYSIS_SUBSTANTIVI)
+            {
+                CREDO_AEQUALIS_S32 ((s32)a->loci[locus_substantivi].genus,
+                    (s32)MATERIA_VALOR_NIHIL);
+            }
+        }
+        /* proiectio: umbrae scriptae cum ordinali */
+        {
+            MateriaArborScriptura s =
+                materia_arbor_scribere_nodum(piscina, doc, &consilium);
+
+            CREDO_VERUM (s.successus);
+            si (s.successus)
+            {
+                CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
+                    "<umbrae"));
+                CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
+                    "<umbra n=\"0\""));
+                CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
+                    "<relatio(> 0"));
+            }
+        }
+    }
+
     imprimere("\n--- II. Annotatio arboris ---\n");
     {
         constans character* fons = "Puella amat. Xyzzy virumque.\n";
