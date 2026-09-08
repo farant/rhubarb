@@ -447,7 +447,7 @@ rejected: prior off −0.1 / −0.3 / −0.2; any-class object fillers
 demoted = no change (the alternative readings are junk: `A` as a
 name, `de` as a noun, `super` as a verb; `cum` the conjunction is
 two words). NEXT (Fran, 2026-09-08): THE CLAUSE — a `clausula`
-INDEX slot stamped on elements (not a node; the sudoku "box"),
+INDEX slot stamped on elements (the sudoku "box"),
 seeded from certain subordinators, relatives, punctuation and
 coordinators between finite verbs, one clause where nothing decides;
 laws over it: one finite verb per clause, subject inside, `cum` +
