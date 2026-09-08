@@ -611,7 +611,20 @@ prepositions (law −11/−27); control (verb follows) −103/−116 on the
 charters. Seed refinement `CUM_ABLATIVO_SOLO` (ablative-only next
 word → preposition) cuts false seeds to 3/15 but loses 312 dev
 concordance pairs (+157/+1021 elsewhere) → refused, switch at off
-with numbers. NEXT = law 4 (subject) census against the case column.
+with numbers. **Law 4 (subject) REFUTED BY CENSUS (same day, `subiectum_census.py`)**:
+reach 165/44/54; sentence single +24/−11, −1, −3; clause single
++65/−64, −55, −56 (the agreeing candidate is the object as often).
+ALL FOUR CLAUSE LAWS CENSUSED AND REFUSED — the clause stays an
+instrument. CASE CONFUSION MATRIX (`casus_confusio.py`): acc→nom 574,
+abl→dat 367, abl→loc 134, gen→nom 160 on Seneca; charters gen→voc
+197; 799 Seneca errors are open-tier DICTIONARY ORDER; 1297 charter
+errors have no reading of the gold case. CASE PRIOR CENSUS
+(`casus_prior.py`): per-set majority 73.4/73.8/76.4 %, global order
+abl>acc>gen>nom>dat>voc>loc 65.3/71.7/72.9 % vs today 61.1/56.7/56.9;
+sets agree except abl/acc/nom/voc, abl/nom/voc, abl/acc. NEXT = T24
+CASE PRIOR (orders readings within a class at resolution start; global
+order + per-set entries measured alone on all five; pins casus AND
+primary/forced must hold since bindings take the first agreeing pair).
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

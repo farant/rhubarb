@@ -2580,3 +2580,44 @@ and measured by exact concordance pairs it gains 157 on Seneca and
 the rule it is refused; the code keeps the switch at off with the
 numbers. On that refined stamp law 2 would still lose on the
 charters (+10, −2, −14). Law 2 is not built. Scratch: `cum_census.py`.
+
+## 2026-09-08 — T20c law 4: the subject, refuted by census; and the case prior the matrix found
+
+Law 4 was censused as a hidden single: in a clause (or sentence)
+with exactly one certain finite verb, exactly one nominative-capable
+member agreeing with it in number becomes the subject and takes its
+nominative reading first. Reach first: gold nominative subjects
+number 882 on Seneca, 699 and 710 on the charters; 626 / 378 / 372
+already carry the right case, and only 165 / 44 / 54 have a
+nominative reading that is not first — the charters' subjects mostly
+lack the nominative reading altogether (medieval forms). The single
+itself: sentence level +24 / −11 on Seneca, −1 and −3 on the
+charters; clause level +65 / −64, −55, −56. Its losses are objects
+whose accusative was right: the one agreeing nominative-capable word
+is the object as often as the subject, because nominative and
+accusative are homographs for neuters and plurals. Not built.
+
+The case column's confusion matrix says where the wrong cases are.
+Seneca, 5002 words with class right and a gold case, 1945 wrong:
+accusative read as nominative 574, ablative as dative 367 and as
+locative 134, genitive as nominative 160, nominative as accusative
+121. Charters (test): accusative as nominative 857, ablative as
+dative 611 and as accusative 392, genitive as nominative 337 and as
+VOCATIVE 197. The gold has one locative on Seneca and a handful of
+vocatives on the charters; our first readings sit there 218 and 197
+times. Most of these are open-tier defaults (799 of 1945 on Seneca),
+the rest bindings that picked the first agreeing pair in dictionary
+order. A third of the charter errors (1297) are unreachable: no
+reading of the gold case exists (`casa` for `casam`).
+
+So the census of a CASE PRIOR BY DATA: for each candidate set (the
+cases the readings of the first class offer), the gold's majority.
+Today 61.1 / 56.7 / 56.9 %; the best fixed choice per set 73.4 /
+73.8 / 76.4 %; one global order 68.6 / 71.7 / 72.9 %. The gain is
+in both tiers, open and bound, since the head rules bind the first
+agreeing pair and the order decides which. The frequent sets agree
+across the three files (accusative before nominative in acc/nom/voc,
+ablative before dative, ablative before locative, accusative first
+in acc/gen/nom/voc); the one that disagrees is abl/acc/nom/voc. That
+is the next tranche, a prior that orders and never eliminates.
+Scratch: `subiectum_census.py`, `casus_confusio.py`, `casus_prior.py`.

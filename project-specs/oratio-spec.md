@@ -1686,6 +1686,30 @@ dev charters (+157 Seneca, +1021 test): refused, switch kept at off
 with the numbers. NOT BUILT. Law 4 remains, measured against the
 case column.
 
+**As measured — T20c law 4, refuted by census; the case prior found
+(2026-09-08, same session).** Subject as a hidden single (one certain
+finite verb, one nominative-capable member agreeing in number):
+reach 165 / 44 / 54 gold subjects with a nominative reading not
+first (882 / 699 / 710 subjects, 626 / 378 / 372 already right; the
+charters' subjects mostly lack the nominative reading); sentence
+level +24 / −11, −1, −3; clause level +65 / −64, −55, −56 — the one
+agreeing candidate is the object as often as the subject. NOT BUILT.
+All four clause laws are now censused: 1 and 4 fail on membership, 2
+and 3 on boundaries; the clause remains an instrument. The case
+CONFUSION MATRIX (Seneca 1945 wrong of 5002): accusative read as
+nominative 574, ablative as dative 367 and locative 134, genitive as
+nominative 160; charters add genitive as vocative 197; the gold has
+one locative and few vocatives. 799 of Seneca's are open-tier
+dictionary order; 1297 charter errors have no reading of the gold
+case at all. CASE PRIOR CENSUS: majority gold case per candidate set
+would give 73.4 / 73.8 / 76.4 % (today 61.1 / 56.7 / 56.9); one
+global order abl > acc > gen > nom > dat > voc > loc gives 65.3 /
+71.7 / 72.9; frequent sets agree across files except abl/acc/nom/voc,
+abl/nom/voc, abl/acc (Seneca nominative or accusative, charters
+ablative). NEXT: T24, a case prior that ORDERS readings within a
+class (never eliminates), global order plus per-set entries each
+measured alone on all five treebanks.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the
