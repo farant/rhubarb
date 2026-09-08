@@ -64,10 +64,15 @@ nomen structura {
     /* per DISTANTIAM socii (T19g bis): vicina = socius ad distantiam
      * I, remota = ultra (regulae cursu fratrum ultra vicinum ligant);
      * sine socio (praelatio) in neutro. Mensura ianuae strictae. */
-       i32 vicina;
-       i32 vicina_primaria;
-       i32 remota;
-       i32 remota_primaria;
+              i32 vicina;
+              i32 vicina_primaria;
+              i32 remota;
+              i32 remota_primaria;
+    /* T23 CASUS: verba aurea casum ferentia quorum classis prima recta
+     * est et lectio prima Latina casum fert; recti = casus lectionis
+     * primae == casus aureus (quae regula casum falsum eligit) */
+       i32 casus_verba;
+       i32 casus_recti;
 } OratioOraculumAuctor;
 
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
@@ -151,10 +156,13 @@ nomen structura {
                        i32 tecta;
                        i32 primaria;
                        i32 lemmata;
-                       i32 ignota;
+                                              i32 ignota;
                        i32 inalignata;
                        i32 numerus_exemplorum;
     OratioOraculumExemplum exempla[ORATIO_ORACULUM_EXEMPLA];   /* non tecta prima */
+    /* T23: casus (vide OratioOraculumCensus) */
+                       i32 casus_verba;
+                       i32 casus_recti;
 } OratioOraculumClassis;
 
 /* DISCREPANTIA PRIMARII (T19a, 2026-09-07): verbum aureum TECTUM
@@ -176,11 +184,19 @@ nomen structura {
     i32 sententiae_fractae;   /* parsura aut annotatio fracta */
     i32 verba;                /* verba aurea (verba rangarum inclusa, rangae ipsae non) */
     i32 rangae;
-    i32 tecta;
+        i32 tecta;
     i32 primaria;
     i32 lemmata;
     i32 ignota;
         i32 inalignata;
+    /* T23 CASUS (2026-09-08): mensura casuum, quam primarium non videt
+     * (substantivum casu falso lectum 'primarium' est). Populus = verba
+     * aurea 'Case=' ferentia quorum classis prima recta est ET lectio
+     * prima Latina locum casus fert; recti = casus lectionis primae ==
+     * aureus. Condicionalis classi: casuum disambiguationem sola metitur
+     * (lex subiecti T20c IV hic apparet); pinnata solum crescens. */
+        i32 casus_verba;
+        i32 casus_recti;
         i32 sententiae_linguae[ORATIO_LINGUA_NUMERUS];   /* census linguae per
                                                       * sententiam (T18):
                                                       * quot Latinae, quot

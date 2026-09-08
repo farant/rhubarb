@@ -1655,6 +1655,23 @@ Environment switches `ORATIO_ORTHOGRAPHIA_SOLA` / `_SINE` isolate one
 correspondence for the loop. Named: `petia`, truncations, two-change
 forms (`presbitero`, `pegiorata`), a charter vocabulary glossary.
 
+**As built — T23, the case measure (2026-09-08, same session).**
+Primary accuracy judges the first reading's CLASS only; a noun in
+the wrong case counts as right. The oracle now carries CASUS:
+population = gold words bearing `Case=` whose class is right and
+whose first reading is Latin with a case slot; right = the first
+reading's case equals the gold's. Conditional on class by design, so
+it measures case disambiguation alone. Counted globally, per class
+and per deciding rule; printed in the human tables (`CASUS`, the
+class table's `casus (n)` column, `casus N %` on the author lines);
+appended as two columns to the `SUMMA`, class and `AUCTOR` machine
+rows; pinned per Latin treebank, only rising: 609 / 565 / 567
+permille (Seneca 3312 of 5433, charters 5176 of 9156, 5324 of
+9387); EWT reported (0 of 0). FINDING: class 83.5 % but case 60.9 %
+on Seneca, 56.5 / 56.7 % on the charters; the nominative head rules
+choose the right case 52 % and 45 % of the time. The Latin problem
+is case. Law 4 (subject) is measured against this number.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

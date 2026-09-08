@@ -596,7 +596,15 @@ entry shadows `ego` itself); EWT flat. Env `ORATIO_ORTHOGRAPHIA_SOLA`
 / `_SINE` for the loop. NEXT candidates: T8b pronoun tackons (mecum =
 me + cum in gold), a charter-vocabulary glossary for the 1009
 residual unknowns, T21b strict cursor, clause laws 2/4 (census
-first).
+first). **T23 (same day): the CASE MEASURE** — oracle `casus`:
+gold words with `Case=`, class right, first reading Latin with a case
+slot; right = same case (conditional on class: case disambiguation
+alone). Global, per class, per author; human tables + machine columns
+appended to `SUMMA`/class/`AUCTOR` rows; pins 609/565/567 (Latin
+files), EWT reported. FINDING: Seneca class 83.5 % but CASE 60.9 %
+(nouns 58.6, adjectives 57.2); the nominative head rules pick the
+right case 52 % / 45 % of the time. THE LATIN PROBLEM IS CASE. Law 4
+is measured here. NEXT = law 2 (`cum`) census, then law 4 census.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

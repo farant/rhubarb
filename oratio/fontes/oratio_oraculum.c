@@ -271,8 +271,9 @@ nomen structura {
     i32 numerus_analysium;             /* lectiones (candidata) */
                 chorda auctor;                     /* titulus regulae decidentis (T19g) */
     constans MateriaNodus* nodus;      /* pro socio ligationis (T19g bis) */
-        s32 clausula;                      /* T20a: -I = aperta */
+                s32 clausula;                      /* T20a: -I = aperta */
         s32 clausula_causa;
+        s32 casus_primus;                  /* T23: casus lectionis primae Latinae; -I = nullus */
 } Elementum;
 
 constans character* constans ORATIO_ORACULUM_TITULI_PARTITIONIS[] = {
@@ -282,13 +283,15 @@ constans character* constans ORATIO_ORACULUM_TITULI_PARTITIONIS[] = {
 /* auctorem notare (T19g): clavis = titulus (copia in piscina iudicii
  * ut clavis stabilis sit - titulus elementi in piscina sententiae
  * vivit); cella nova aut numeri aucti. Ut _discrepantiam_notare. */
+/* casus_iudicatus (T23): -I extra populum, 0 falsus, I rectus */
 interior vacuum
 _auctorem_notare (
                  Piscina* piscina,
     OratioOraculumCensus* census,
                   chorda  titulus,
                      b32  primaria,
-                     s32  distantia)
+                     s32  distantia,
+                     s32  casus_iudicatus)
 {
                    vacuum*  valor;
      OratioOraculumAuctor*  a;
@@ -329,7 +332,13 @@ _auctorem_notare (
         (vacuum)tabula_dispersa_inserere(census->auctores_index, clavis,
             a);
         }
-    a->verba = a->verba + I;
+        a->verba = a->verba + I;
+    si (casus_iudicatus >= ZEPHYRUM)
+    {
+        a->casus_verba = a->casus_verba + I;
+        a->casus_recti = a->casus_recti
+            + (casus_iudicatus > ZEPHYRUM ? I : ZEPHYRUM);
+    }
     si (primaria)
     {
         a->primaria = a->primaria + I;
@@ -807,10 +816,11 @@ _elementum_addere (
         redde FALSUM;
     }
                         memset(e, ZEPHYRUM, magnitudo(*e));
-    e->a        = (s32)-I;
-    e->b        = ZEPHYRUM;
-    e->decisio  = (s32)-I;
-    e->nodus    = n;
+        e->a         = (s32)-I;
+    e->b             = ZEPHYRUM;
+    e->decisio       = (s32)-I;
+    e->nodus         = n;
+    e->casus_primus  = (s32)-I;
     /* T20a: clausula elementi (locus per genus) */
     e->clausula        = (s32)-I;
     e->clausula_causa  = (s32)-I;
@@ -856,11 +866,33 @@ _elementum_addere (
             }
         }
 
-        si (analyses->genus == MATERIA_VALOR_LISTA)
-        {
+                si (analyses->genus == MATERIA_VALOR_LISTA)
+                {
             e->numerus_analysium =
                 materia_valor_lista_numerus(*analyses);
-        }
+            /* T23: casus lectionis primae, Latinae solum */
+            si (e->numerus_analysium > ZEPHYRUM)
+            {
+                constans MateriaNodus* prima =
+                    materia_valor_lista_obtinere(
+                    *analyses, ZEPHYRUM)->datum.nodus;
+                OratioClassis cl = oratio_genus_classis(
+                    (OratioGenus)prima->genus);
+                s32 locus = (i32)cl
+                    < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                    ? oratio_partes_locus(cl, "casus") : (s32)-I;
+
+                si (   locus                    >= ZEPHYRUM
+                    && prima->loci[ORATIO_ANALYSIS_LINGUA].genus
+                        == MATERIA_VALOR_INDEX
+                    && prima->loci[ORATIO_ANALYSIS_LINGUA].datum.index
+                        == (s32)ORATIO_LINGUA_LATINA
+                    && prima->loci[locus].genus == MATERIA_VALOR_INDEX)
+                {
+                    e->casus_primus = prima->loci[locus].datum.index;
+                }
+            }
+                }
 
 
         _extentum_listae(&n->loci[ORATIO_VOCABULUM_PARTES], &e->a,
@@ -1697,6 +1729,42 @@ _formam_invenire (
     redde (s32)-I;
 }
 
+/* casus aureus ex 'Case=Nom|...' (UD): OratioCasus aut -I */
+interior s32
+_casus_aureus (
+    chorda notae)
+{
+    si (_continet(notae, "Case=Nom"))
+    {
+        redde (s32)ORATIO_CASUS_NOMINATIVUS;
+    }
+    si (_continet(notae, "Case=Gen"))
+    {
+        redde (s32)ORATIO_CASUS_GENITIVUS;
+    }
+    si (_continet(notae, "Case=Dat"))
+    {
+        redde (s32)ORATIO_CASUS_DATIVUS;
+    }
+    si (_continet(notae, "Case=Acc"))
+    {
+        redde (s32)ORATIO_CASUS_ACCUSATIVUS;
+    }
+    si (_continet(notae, "Case=Abl"))
+    {
+        redde (s32)ORATIO_CASUS_ABLATIVUS;
+    }
+    si (_continet(notae, "Case=Loc"))
+    {
+        redde (s32)ORATIO_CASUS_LOCATIVUS;
+    }
+    si (_continet(notae, "Case=Voc"))
+    {
+        redde (s32)ORATIO_CASUS_VOCATIVUS;
+    }
+    redde (s32)-I;
+}
+
 /* elementum unum inter [e0, e1) cuius textus formam octetim aequat;
  * -I si nullum aut plura (T21) */
 interior s32
@@ -1745,15 +1813,19 @@ _verbum_iudicare (
                             Xar* paria,
                             s32  clausula_aurea)
 {
-            OratioClassis  aurea;
-    OratioOraculumClassis* c;
-                      b32  tectum    = FALSUM;
-                      b32  primaria  = FALSUM;
-                      b32  lemma     = FALSUM;
-                      b32  ignotum   = VERUM;
-                   chorda  classes;
-                   chorda  lemma_plicatum;
-                      i32  k;
+                                  OratioClassis  aurea;
+                          OratioOraculumClassis* c;
+                                            b32  tectum    =
+                                                FALSUM;
+                                            b32 primaria  =
+                                                FALSUM;
+                                            b32 lemma     =
+                                                FALSUM;
+                                            b32 ignotum   = VERUM;
+                                         chorda classes;
+                                         chorda lemma_plicatum;
+                                            i32 k;
+                                            s32 casus_iudicatus;
 
     aurea            = oratio_oraculum_classis_ex_upos(verbum->upos);
     c                = &census->classes[aurea];
@@ -1809,11 +1881,34 @@ _verbum_iudicare (
     {
         _exemplum(c, piscina, verbum->forma, classes, verbum->lemma);
     }
-        si (primaria)
-        {
+                si (primaria)
+                {
         census->primaria  = census->primaria + I;
         c->primaria       = c->primaria + I;
+                }
+    /* T23 CASUS: classis recta, aurum casum fert, lectio prima Latina
+     * casum fert -> populus; rectus si aequales */
+    casus_iudicatus = (s32)-I;
+    si (primaria && e1 > e0)
+    {
+        constans Elementum* e_primum =
+            (constans Elementum*)xar_obtinere(elementa, e0);
+        s32 casus_aureus = _casus_aureus(verbum->feats);
+
+        si (   casus_aureus           >= ZEPHYRUM
+            && e_primum->casus_primus >= ZEPHYRUM)
+        {
+            casus_iudicatus = (s32)(e_primum->casus_primus
+                == casus_aureus);
+            census->casus_verba  = census->casus_verba + I;
+            c->casus_verba       = c->casus_verba + I;
+            si (casus_iudicatus > ZEPHYRUM)
+            {
+                census->casus_recti  = census->casus_recti + I;
+                c->casus_recti       = c->casus_recti + I;
+            }
         }
+    }
         /* T19g: partitio decisionum - verbum aureum QUODQUE per genus
      * decisionis elementi primi sui (nulla sine elemento, ranga = verbum
      * rangae non primum); auctor per regulam. Lex summae in porta:
@@ -1851,8 +1946,9 @@ _verbum_iudicare (
                 {
                     socius = _socius(textus, e->nodus, &distantia);
                 }
-                _auctorem_notare(piscina, census, e->auctor, primaria,
-                    distantia);
+                                _auctorem_notare(piscina, census,
+                                    e->auctor, primaria,
+                                    distantia, casus_iudicatus);
                 si (!primaria)
                 {
                     _erratum_notare(piscina, census, e->auctor,

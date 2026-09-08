@@ -364,10 +364,17 @@ _tabulam_imprimere (
     imprimere("--- %s: sententiae %d (fractae %d)  verba %d  rangae %d ---\n",
         titulus, (integer)c->sententiae, (integer)c->sententiae_fractae,
         (integer)c->verba, (integer)c->rangae);
-        imprimere("  TECTA %.1f%%  primaria %.1f%%  lemmata %.1f%%  ignota %.1f%%  inalignata %d\n",
-            _pars(c->tecta, c->verba), _pars(c->primaria, c->verba),
-            _pars(c->lemmata, c->verba), _pars(c->ignota, c->verba),
-            (integer)c->inalignata);
+                imprimere("  TECTA %.1f%%  primaria %.1f%%  lemmata %.1f%%  ignota %.1f%%  inalignata %d\n",
+                    _pars(c->tecta, c->verba), _pars(c->primaria,
+                    c->verba),
+                    _pars(c->lemmata, c->verba), _pars(c->ignota,
+                    c->verba),
+                    (integer)c->inalignata);
+        /* T23: casus - classis recta, aurum casum fert, lectio prima
+         * Latina casum fert */
+        imprimere("  CASUS %.1f%% (%d de %d: classis recta, casus aureus,"
+            " lectio Latina)\n", _pars(c->casus_recti, c->casus_verba),
+            (integer)c->casus_recti, (integer)c->casus_verba);
         imprimere("  sententiae censae: latina %d  anglica %d\n",
             (integer)c->sententiae_linguae[ORATIO_LINGUA_LATINA],
             (integer)c->sententiae_linguae[ORATIO_LINGUA_ANGLICA]);
@@ -422,18 +429,23 @@ _tabulam_imprimere (
             constans OratioOraculumAuctor* a =
                 *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
 
-                                    imprimere("    %-44.*s %6d  primaria %5.1f%%"
-                                        "  vicina %5d %5.1f%%  remota %5d %5.1f%%\n",
-                                        (integer)a->titulus.mensura,
-                                        (constans character*)a->titulus.datum,
-                                        (integer)a->verba,
-                                        _pars(a->primaria, a->verba),
-                                        (integer)a->vicina,
-                                        _pars(a->vicina_primaria,
-                                        a->vicina),
-                                        (integer)a->remota,
-                                        _pars(a->remota_primaria,
-                                        a->remota));
+                                                                        imprimere("    %-44.*s %6d  primaria %5.1f%%"
+                                                                            "  vicina %5d %5.1f%%  remota %5d %5.1f%%"
+                                                                            "  casus %5d %5.1f%%\n",
+                                                                            (integer)a->titulus.mensura,
+                                                                            (constans character*)a->titulus.datum,
+                                                                            (integer)a->verba,
+                                                                            _pars(a->primaria,
+                                                                            a->verba),
+                                                                            (integer)a->vicina,
+                                                                            _pars(a->vicina_primaria,
+                                                                            a->vicina),
+                                                                            (integer)a->remota,
+                                                                            _pars(a->remota_primaria,
+                                                                            a->remota),
+                                                                            (integer)a->casus_verba,
+                                                                            _pars(a->casus_recti,
+                                                                            a->casus_verba));
         }
         /* T19g bis: errata per auctorem - decisiones falsae cum
          * socio ligationis, frequentissimae primae */
@@ -507,8 +519,8 @@ _tabulam_imprimere (
     {
         _clausulas_imprimere(piscina, c, errata);
     }
-    imprimere("  %-24s %6s %7s %8s %8s %7s\n", "classis aurea", "verba",
-        "tecta", "primaria", "lemmata", "ignota");
+    imprimere("  %-24s %6s %7s %8s %8s %7s %14s\n", "classis aurea",
+        "verba", "tecta", "primaria", "lemmata", "ignota", "casus (n)");
     per (i = ZEPHYRUM; i <= (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
     {
         constans OratioOraculumClassis* k = &c->classes[i];
@@ -520,10 +532,12 @@ _tabulam_imprimere (
         {
             perge;
         }
-        imprimere("  %-24s %6d %6.1f%% %7.1f%% %7.1f%% %6.1f%%\n", t,
-            (integer)k->verba, _pars(k->tecta, k->verba),
+        imprimere("  %-24s %6d %6.1f%% %7.1f%% %7.1f%% %6.1f%% %6.1f%% (%d)\n",
+            t, (integer)k->verba, _pars(k->tecta, k->verba),
             _pars(k->primaria, k->verba), _pars(k->lemmata, k->verba),
-            _pars(k->ignota, k->verba));
+            _pars(k->ignota, k->verba),
+            _pars(k->casus_recti, k->casus_verba),
+            (integer)k->casus_verba);
         si (exempla)
         {
             per (j = ZEPHYRUM; j < k->numerus_exemplorum; j++)
@@ -566,17 +580,23 @@ _machinam_imprimere (
         {
             perge;
         }
-        imprimere("%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\n", titulus,
+        imprimere("%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+            titulus,
             i < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
                 ? oratio_classis_titulus((OratioClassis)i) : "extra",
             (integer)k->verba, (integer)k->tecta, (integer)k->primaria,
             (integer)k->lemmata, (integer)k->ignota,
-            (integer)k->inalignata);
+            (integer)k->inalignata, (integer)k->casus_verba,
+            (integer)k->casus_recti);
     }
-        imprimere("%s\tSUMMA\t%d\t%d\t%d\t%d\t%d\t%d\n", titulus,
-            (integer)c->verba, (integer)c->tecta, (integer)c->primaria,
-            (integer)c->lemmata, (integer)c->ignota,
-            (integer)c->inalignata);
+        /* T23: columnae casus_verba casus_recti appensae (ordines
+         * SUMMA et classium) */
+        imprimere("%s\tSUMMA\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+            titulus, (integer)c->verba, (integer)c->tecta,
+            (integer)c->primaria, (integer)c->lemmata,
+            (integer)c->ignota,
+            (integer)c->inalignata, (integer)c->casus_verba,
+            (integer)c->casus_recti);
         /* T19g: ordines PARTITIO genus verba primaria; AUCTOR titulus verba
      * primaria */
     per (i = ZEPHYRUM; i < ORATIO_ORACULUM_PARTITIO_NUMERUS; i++)
@@ -597,7 +617,7 @@ _machinam_imprimere (
             constans OratioOraculumAuctor* a =
                 *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
 
-                                    imprimere("%s\tAUCTOR\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\n",
+                                    imprimere("%s\tAUCTOR\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
                                         titulus,
                                         (integer)a->titulus.mensura,
                                         (constans character*)a->titulus.datum,
@@ -606,7 +626,9 @@ _machinam_imprimere (
                                         (integer)a->vicina,
                                         (integer)a->vicina_primaria,
                                         (integer)a->remota,
-                                        (integer)a->remota_primaria);
+                                        (integer)a->remota_primaria,
+                                        (integer)a->casus_verba,
+                                        (integer)a->casus_recti);
         }
     }
         /* T20a: ordines CLAUSULA causa verba rectae; CLAUSULAE sententiae

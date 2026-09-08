@@ -99,6 +99,13 @@
  * capitis strictae (-proximo) paria V pauciora vident, laxae ea
  * minore accuratione capiunt; cursor strictus encliticis perspicuus =
  * mensura proxima (T21b), machinae exemplarium res */
+/* T23 CASUS (2026-09-08): casus lectionis primae ubi classis recta et
+ * aurum casum fert - mensura quam primarium non videt; EWT relata (0) */
+#define CIRCSE_CASUUM_PINNA      609
+#define LLCT_DEV_CASUUM_PINNA    565
+#define LLCT_TEST_CASUUM_PINNA   567
+#define EWT_DEV_CASUUM_PINNA     0
+#define EWT_TEST_CASUUM_PINNA    0
 #define CIRCSE_COACTAE_PINNA     764
 #define LLCT_DEV_COACTAE_PINNA   712   /* T22: 710 -> 712 */
 #define LLCT_TEST_COACTAE_PINNA  713   /* T22: 711 -> 713 */
@@ -283,7 +290,8 @@ _thesaurus_arborum (
                            i32  sententiae_exspectatae,
                                                       i32  pinna_permille,
                            i32  pinna_primaria,
-                           i32  pinna_coactae,
+                                                      i32  pinna_coactae,
+                           i32  pinna_casuum,
                            i32  pinna_puritatis,
                            i32  pinna_parium,
                            i32  pinna_concordiae)
@@ -435,8 +443,24 @@ _thesaurus_arborum (
         imprimere("    coactae %d, accuratio %d permille (pinna %d, solum"
             " crescens)\n", (integer)coactae, (integer)coactae_permille,
             (integer)pinna_coactae);
-        /* lex summae: verbum aureum alignatum quodque genus unum */
+                /* lex summae: verbum aureum alignatum quodque genus unum */
         CREDO_AEQUALIS_I32 (summa, census.verba - census.inalignata);
+        /* T23 CASUS: pinnata solum crescens ubi populus adest (EWT:
+         * pronomina sola casum ferunt, lectiones Latinae rarae - relata) */
+        {
+            i32 casus_permille = _permille(census.casus_recti,
+                census.casus_verba);
+
+            imprimere("    casus %d/%d = %d permille (pinna %d, solum"
+                " crescens)\n", (integer)census.casus_recti,
+                (integer)census.casus_verba, (integer)casus_permille,
+                (integer)pinna_casuum);
+            si (pinna_casuum > ZEPHYRUM)
+            {
+                CREDO_VERUM (census.casus_verba > ZEPHYRUM);
+                CREDO_VERUM (casus_permille >= pinna_casuum);
+            }
+        }
         /* auctores: summa verborum == decisa (praelatio + impletio +
          * umbra); tabula relata (quae regula decisiones falsas facit) */
         {
@@ -878,6 +902,7 @@ principale (vacuum)
         (i32)CIRCSE_TECTA_PINNA,
         (i32)CIRCSE_PRIMARIA_PINNA,
                 (i32)CIRCSE_COACTAE_PINNA,
+        (i32)CIRCSE_CASUUM_PINNA,
         (i32)CIRCSE_PURITAS_PINNA,
         (i32)CIRCSE_PARES_PINNA,
         (i32)CIRCSE_CONCORDIA_PINNA);
@@ -888,6 +913,7 @@ principale (vacuum)
         (i32)LLCT_DEV_TECTA_PINNA,
         (i32)LLCT_DEV_PRIMARIA_PINNA,
                 (i32)LLCT_DEV_COACTAE_PINNA,
+        (i32)LLCT_DEV_CASUUM_PINNA,
         (i32)LLCT_DEV_PURITAS_PINNA,
         (i32)LLCT_DEV_PARES_PINNA,
         (i32)LLCT_DEV_CONCORDIA_PINNA);
@@ -898,6 +924,7 @@ principale (vacuum)
         (i32)LLCT_TEST_TECTA_PINNA,
         (i32)LLCT_TEST_PRIMARIA_PINNA,
                 (i32)LLCT_TEST_COACTAE_PINNA,
+        (i32)LLCT_TEST_CASUUM_PINNA,
         (i32)LLCT_TEST_PURITAS_PINNA,
         (i32)LLCT_TEST_PARES_PINNA,
         (i32)LLCT_TEST_CONCORDIA_PINNA);
@@ -908,6 +935,7 @@ principale (vacuum)
         (i32)EWT_DEV_TECTA_PINNA,
         (i32)EWT_DEV_PRIMARIA_PINNA,
                 (i32)EWT_DEV_COACTAE_PINNA,
+        (i32)EWT_DEV_CASUUM_PINNA,
         (i32)EWT_DEV_PURITAS_PINNA,
         (i32)EWT_DEV_PARES_PINNA,
         (i32)EWT_DEV_CONCORDIA_PINNA);
@@ -918,6 +946,7 @@ principale (vacuum)
         (i32)EWT_TEST_TECTA_PINNA,
         (i32)EWT_TEST_PRIMARIA_PINNA,
                 (i32)EWT_TEST_COACTAE_PINNA,
+        (i32)EWT_TEST_CASUUM_PINNA,
         (i32)EWT_TEST_PURITAS_PINNA,
         (i32)EWT_TEST_PARES_PINNA,
         (i32)EWT_TEST_CONCORDIA_PINNA);

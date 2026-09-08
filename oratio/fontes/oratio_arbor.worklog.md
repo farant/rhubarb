@@ -2513,3 +2513,43 @@ words WORDS lacks outright), which a glossary of charter vocabulary
 would take; a lemma-spelling normalisation (`uester`/`vester`) that
 only the census noticed. Scratch: `orthographia.py`,
 `orthographia2.py`, `mensura_orthographiae.sh`.
+
+## 2026-09-08 — T23: the case column, or what primary accuracy never saw
+
+Fran asked whether the task is choosing the right reading for an
+ambiguous word, and the honest answer exposed a gap in the measure:
+primary accuracy asks only whether the first reading's CLASS is the
+treebank's. A noun read as a noun in the wrong case counts as right,
+and for Latin the case is the hard half of the ambiguity. Law 4 (the
+subject) would change nothing but cases, so the measure had to exist
+before the law.
+
+The oracle now carries a CASUS measure. Population: gold words that
+bear a `Case=` feature, whose class we got right, and whose first
+reading is Latin and has a case slot. Right: the first reading's case
+equals the gold's. It is conditional on the class on purpose, so it
+measures case disambiguation alone and does not move when class
+accuracy moves. It is counted globally, per gold class, and per
+deciding rule (the author table), printed in the human tables and
+appended as two columns to the `SUMMA`, class and `AUCTOR` machine
+rows, and pinned per Latin treebank, only rising; EWT is reported
+only, since English case lives on a few pronouns and our first
+readings there are rarely Latin.
+
+The first reading of the number is the finding. Seneca: class right
+83.5 %, and among those words with a gold case the case is right
+60.9 % (3312 of 5433). The charters: 56.5 % and 56.7 % (5176 of 9156,
+5324 of 9387). Per class on Seneca, nouns 58.6 % of 2941, adjectives
+57.2 % of 1180, pronouns 69.3 %, determiners 69.0 %, participles
+72.2 %. Per rule, the two big nominative head rules choose the right
+case 52.0 % (604 words) and 45.0 % (353) of the time: agreement with
+a neighbouring noun picks the CLASS well and the CASE barely better
+than chance among the readings that agree. That is the number law 4
+has to move, and the number that says the Latin problem is case, not
+part of speech. Pins 609 / 565 / 567, EWT reported at 0 of 0.
+
+Two small things from writing it. `casus` is a latina.h macro (it
+is `case`), so the parameter is `casus_iudicatus`; and the examen
+refused an anonymous `struct` table inside a function, which is
+plain `si` chains now. The pythonica face reads the machine rows by
+position, and the new columns are appended, so nothing there moved.
