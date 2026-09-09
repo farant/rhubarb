@@ -19,6 +19,16 @@
  *              'titulus verba primaria vicina vicina-primaria remota
  *              remota-primaria' (socius ad distantiam I | ultra)
  *   -auctor T  cum -errata: auctoris T solius
+ *   -nota T    cum -errata (T30): errata accidentis T (numerus genus
+ *              persona modus vox forma-verbi tempus | omnes) - verba
+ *              classis rectae cuius lectio prima valorem falsum fert:
+ *              forma, classis, valor aureus, noster, decisio/auctor,
+ *              socius ligationis, attingibile (lectio classis valorem
+ *              aureum fert) | absens, numerus; -machina ordines
+ *              'plagula ERRATUM-NOTA accidens classis aurea nostra
+ *              decisio auctor forma socius distantia attingibile numerus';
+ *              ordo NOTA quartum 'conventione' fert (recti per alterum
+ *              solum: vox deponens, genus commune)
   *   -discrepantiae  per classem auream: formae TECTAE sed non primae
  *              cum classe nostra prima et numero, XII frequentissimae
  *              (T19a: data regularum priorum classium)
@@ -356,6 +366,7 @@ _tabulam_imprimere (
                               b32  discrepantiae,
                               b32  errata,
                            chorda  auctor_petitus,
+                              s32  nota_petita,
                               b32  clausulae)
 {
     i32 i;
@@ -384,11 +395,12 @@ _tabulam_imprimere (
             {
                 si (c->notae_verba[k] > ZEPHYRUM)
                 {
-                    imprimere("  NOTA %-12s %.1f%% (%d de %d)\n",
+                    imprimere("  NOTA %-12s %.1f%% (%d de %d; conventione %d)\n",
                         oratio_oraculum_nota_titulus(k),
                         _pars(c->notae_recti[k], c->notae_verba[k]),
                         (integer)c->notae_recti[k],
-                        (integer)c->notae_verba[k]);
+                        (integer)c->notae_verba[k],
+                        (integer)c->notae_conventione[k]);
                 }
             }
         }
@@ -544,6 +556,75 @@ _tabulam_imprimere (
 
 
         /* T20a: clausulae */
+    /* T30: errata notarum - accidens petitum (aut omnia), frequentissima
+     * prima, ERRATA_IMPRESSA quaeque */
+    si (errata && nota_petita >= ZEPHYRUM)
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
+        {
+            Xar* es;
+            i32  m;
+            i32  aliae = ZEPHYRUM;
+
+            si (   nota_petita < (s32)ORATIO_ORACULUM_NOTAE
+                && (s32)k != nota_petita)
+            {
+                perge;
+            }
+            es = oratio_oraculum_errata_notarum(piscina, c, (s32)k);
+            si (es == NIHIL || xar_numerus(es) == ZEPHYRUM)
+            {
+                perge;
+            }
+            imprimere("  errata notae %s (%d verba, %d falsa):\n",
+                oratio_oraculum_nota_titulus(k),
+                (integer)c->notae_verba[k],
+                (integer)(c->notae_verba[k] - c->notae_recti[k]));
+            per (m = ZEPHYRUM; m < xar_numerus(es); m++)
+            {
+                constans OratioOraculumErratumNotae* d =
+                    *(OratioOraculumErratumNotae**)xar_obtinere(es, m);
+                constans character* aurea =
+                    oratio_oraculum_nota_valor_titulus(k, d->aurea);
+                constans character* nostra =
+                    oratio_oraculum_nota_valor_titulus(k, d->nostra);
+
+                si (m >= (i32)ERRATA_IMPRESSA)
+                {
+                    aliae = aliae + d->numerus;
+                    perge;
+                }
+                imprimere("      %-16.*s %-12s aurea %-11s nostra %-11s"
+                    " %-9s %-30.*s socius %-14.*s @%-3d %-11s %5d\n",
+                    (integer)d->forma.mensura,
+                    (constans character*)d->forma.datum,
+                    (i32)d->classis
+                        < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                        ? oratio_classis_titulus(d->classis) : "?",
+                    aurea != NIHIL ? aurea : "?",
+                    nostra != NIHIL ? nostra : "?",
+                    d->decisio >= ZEPHYRUM
+                        && d->decisio < (s32)ORATIO_DECISIO_NUMERUS
+                        ? ORATIO_TITULI_DECISIONUM[d->decisio] : "nemo",
+                    (integer)d->auctor.mensura,
+                    d->auctor.mensura > ZEPHYRUM
+                        ? (constans character*)d->auctor.datum : "",
+                    (integer)d->socius.mensura,
+                    d->socius.mensura > ZEPHYRUM
+                        ? (constans character*)d->socius.datum : "",
+                    (integer)d->distantia,
+                    d->attingibile ? "attingibile" : "absens",
+                    (integer)d->numerus);
+            }
+            si (aliae > ZEPHYRUM)
+            {
+                imprimere("      ... aliae %d\n", (integer)aliae);
+            }
+        }
+    }
+    /* T20a: clausulae */
     si (clausulae)
     {
         _clausulas_imprimere(piscina, c, errata);
@@ -596,7 +677,8 @@ _machinam_imprimere (
                constans character* titulus,
                               b32  discrepantiae,
                               b32  errata,
-                           chorda  auctor_petitus)
+                           chorda  auctor_petitus,
+                              s32  nota_petita)
 {
     i32 i;
 
@@ -632,10 +714,11 @@ _machinam_imprimere (
 
             per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
             {
-                imprimere("%s\tNOTA\t%s\t%d\t%d\n", titulus,
+                imprimere("%s\tNOTA\t%s\t%d\t%d\t%d\n", titulus,
                     oratio_oraculum_nota_titulus(k),
                     (integer)c->notae_verba[k],
-                    (integer)c->notae_recti[k]);
+                    (integer)c->notae_recti[k],
+                    (integer)c->notae_conventione[k]);
             }
         }
                 /* T26: ordo LIGATIO nostrae rectae aurei capitis capitis-rectae
@@ -726,6 +809,47 @@ _machinam_imprimere (
                     : "nulla",
                 (integer)d->radix.mensura,
                 (constans character*)d->radix.datum,
+                (integer)d->numerus);
+        }
+    }
+    /* T30: ordines ERRATUM-NOTA accidens classis aurea nostra decisio
+     * auctor forma socius distantia attingibile numerus */
+    si (errata && nota_petita >= ZEPHYRUM)
+    {
+        Xar* es = oratio_oraculum_errata_notarum(piscina, c,
+            nota_petita < (s32)ORATIO_ORACULUM_NOTAE ? nota_petita
+            : (s32)-I);
+        i32 m;
+
+        per (m = ZEPHYRUM; es != NIHIL && m < xar_numerus(es); m++)
+        {
+            constans OratioOraculumErratumNotae* d =
+                *(OratioOraculumErratumNotae**)xar_obtinere(es, m);
+            constans character* aurea =
+                oratio_oraculum_nota_valor_titulus(d->nota, d->aurea);
+            constans character* nostra =
+                oratio_oraculum_nota_valor_titulus(d->nota, d->nostra);
+
+            imprimere("%s\tERRATUM-NOTA\t%s\t%s\t%s\t%s\t%s\t%.*s\t%.*s"
+                "\t%.*s\t%d\t%d\t%d\n",
+                titulus, oratio_oraculum_nota_titulus(d->nota),
+                (i32)d->classis < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                    ? oratio_classis_titulus(d->classis) : "?",
+                aurea != NIHIL ? aurea : "?",
+                nostra != NIHIL ? nostra : "?",
+                d->decisio >= ZEPHYRUM
+                    && d->decisio < (s32)ORATIO_DECISIO_NUMERUS
+                    ? ORATIO_TITULI_DECISIONUM[d->decisio] : "nemo",
+                (integer)d->auctor.mensura,
+                d->auctor.mensura > ZEPHYRUM
+                    ? (constans character*)d->auctor.datum : "",
+                (integer)d->forma.mensura,
+                (constans character*)d->forma.datum,
+                (integer)d->socius.mensura,
+                d->socius.mensura > ZEPHYRUM
+                    ? (constans character*)d->socius.datum : "",
+                (integer)d->distantia,
+                (integer)(d->attingibile ? I : ZEPHYRUM),
                 (integer)d->numerus);
         }
     }
@@ -820,6 +944,8 @@ principale (
 
                                 integer argumentum_auctoris  = -I;
                                  chorda auctor_petitus;
+                                integer argumentum_notae  = -I;   /* T30 */
+                                    s32 nota_petita       = (s32)-I;
 
                         OratioProgramma* programma      = NIHIL;
                                 integer  i;
@@ -942,11 +1068,36 @@ principale (
         alioquin si (   strcmp(argv[i], "-auctor") == ZEPHYRUM
                      && i + I < argc)
         {
-                        argumentum_auctoris = i + I;
-            auctor_petitus.datum = (i8*)argv[argumentum_auctoris];
+            argumentum_auctoris   = i + I;
+            auctor_petitus.datum  = (i8*)argv[argumentum_auctoris];
             auctor_petitus.mensura  =
                 (i32)strlen(argv[argumentum_auctoris]);
             i                       = argumentum_auctoris;
+        }
+        alioquin si (   strcmp(argv[i], "-nota") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            /* T30: accidens titulo aut 'omnes' */
+            i32 t;
+
+            argumentum_notae = i + I;
+            nota_petita = strcmp(argv[argumentum_notae], "omnes")
+                == ZEPHYRUM ? (s32)ORATIO_ORACULUM_NOTAE : (s32)-I;
+            per (t = ZEPHYRUM; t < ORATIO_ORACULUM_NOTAE; t++)
+            {
+                si (strcmp(argv[argumentum_notae],
+                        oratio_oraculum_nota_titulus(t)) == ZEPHYRUM)
+                {
+                    nota_petita = (s32)t;
+                }
+            }
+            si (nota_petita < ZEPHYRUM)
+            {
+                fprintf(stderr, "oraculum: -nota ignota: %s\n",
+                    argv[argumentum_notae]);
+                redde II;
+            }
+            i = argumentum_notae;
         }
     }
 
@@ -969,7 +1120,9 @@ principale (
                                                     && i
                                                     != argumentum_sententiarum
                                                     && i
-                                                        != argumentum_causae)
+                                                        != argumentum_causae
+                                                    && i
+                                                        != argumentum_notae)
                                                 {
                 numerus_argumentorum = numerus_argumentorum + I;
                                                 }
@@ -1003,7 +1156,9 @@ principale (
                                                                     || (integer)k
                                                                     == argumentum_sententiarum
                                                                     || (integer)k
-                                                                        == argumentum_causae)
+                                                                        == argumentum_causae
+                                                                    || (integer)k
+                                                                        == argumentum_notae)
                                                                 {
                     perge;
                                                                 }
@@ -1109,7 +1264,8 @@ principale (
             {
                                 _machinam_imprimere(p, &census, plagula,
                                     discrepantiae,
-                                    errata, auctor_petitus);
+                                    errata, auctor_petitus,
+                                    nota_petita);
             }
             alioquin
             {
@@ -1120,6 +1276,7 @@ principale (
                                                                                                     discrepantiae,
                                                                                                     errata,
                                                                                                     auctor_petitus,
+                                                                                                    nota_petita,
                                                                                                     clausulae);
                 _sententias_imprimere(&census);
                 imprimere("  %.0f ms\n\n", 1000.0 * (duplex)(clock()

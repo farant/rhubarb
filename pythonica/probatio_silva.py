@@ -1342,6 +1342,13 @@ credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa 
 r_er = subprocess.run(['./oratio/oraculum.sh', '-errata', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
 part = [l.split('\t') for l in r_er.stdout.splitlines() if '\tPARTITIO\t' in l]
 credo(r_er.returncode == 0 and len(part) == 7 and sum(int(x[3]) for x in part) == 4 and not any('\tERRATUM\t' in l for l in r_er.stdout.splitlines()) and any('\tAUCTOR\t' in l for l in r_er.stdout.splitlines()) is False, 'oraculum.sh -errata -machina: PARTITIO VII genera summa IV verba, nullum AUCTOR/ERRATUM (nemo decidit)')
+# T30: -errata -nota genus -machina - ordines NOTA sex columnis (plagula NOTA accidens verba recti conventione), ERRATUM-NOTA ordo columnis XIII si adest; -nota ignota exitus II
+r_no = subprocess.run(['./oratio/oraculum.sh', '-errata', '-nota', 'genus', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
+notae = [l.split('\t') for l in r_no.stdout.splitlines() if '\tNOTA\t' in l]
+errata_notae = [l.split('\t') for l in r_no.stdout.splitlines() if '\tERRATUM-NOTA\t' in l]
+credo(r_no.returncode == 0 and len(notae) == 7 and all(len(x) == 6 for x in notae) and all(len(x) == 13 and x[2] == 'genus' for x in errata_notae), 'oraculum.sh -errata -nota genus -machina: NOTA VII ordines columnis VI, ERRATUM-NOTA columnis XIII generis')
+r_ni = subprocess.run(['./oratio/oraculum.sh', '-errata', '-nota', 'color', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
+credo(r_ni.returncode == 2 and 'nota ignota' in r_ni.stderr, 'oraculum.sh -nota ignota: exitus II causa nominata')
 h = silva.Oratio('oratio/probationes/fixa/txt/hilarius.txt')
 credo(h.via.endswith('hilarius.txt') and len(h.vocabula()) == 1682 and len(h.sententiae()) > 50 and 0 < len(h.ignota()) < 120, 'Oratio(via): Hilarius MDCLXXXII vocabula (T12; MDCLXXVIII ante T21 - enclitica IV scissa)')
 try:

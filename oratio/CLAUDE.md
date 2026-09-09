@@ -703,8 +703,25 @@ COLUMNS** — oracle `NOTAE_ORACULI` table (Number, Gender, Person,
 Mood, Voice, VerbForm, Tense = Tense+Aspect) → `NOTA` lines/rows;
 pins number 914/928/933, gender 837/813/810; person/mood/tense > 93 %
 everywhere, GENDER 81–84 % is the next Latin problem, charter verb
-form and voice 83–87 %. NEXT = gender (spurious agreement on rarer
-gender readings), verb star with `omnes`, §8.5 template family.
+form and voice 83–87 %. **T30 a (2026-09-09): THE GENDER CENSUS** —
+`oraculum.sh -errata -nota <accidens|omnes>` lists feature errata
+with partner, decision and ATTINGIBILE (a reading of the class carries
+the gold value) | absens; rows `ERRATUM-NOTA`; gate law: an accident's
+errata sum to verba − recti. Two ORACLE CONVENTIONS, not laws: gold
+multi-values (`Gender=Fem,Masc`) any accepted (Seneca 837 → 847);
+`commune` accepted for Masc/Fem like deponent for voice (Fran's
+decision) with `conventione N` printed on every feature line so it
+cannot hide (gender 897/890/885 pinned, 248/584/588 by convention;
+shelf 856/901/923/866). CENSUS: commune 32/41 % of wrong (PROIEL
+60 %), other unreachable 16/24 % (dictionary holes; known medieval
+forms `sancte/bone` block the `-ae` variant — T22 asks only for
+unknown forms), homonym lemma order 20/5 % (`armus/arma`,
+`caelus/caelum`: WORDS frequency codes are in the dictionary, not on
+readings), gerundive-before-gerund 7/12 %, determiner prior with the
+partner's rarer reading 8/11 %, head rules 13/6 % (smallest — the pair
+policy is not where gender points are). NEXT = frequency prior for
+homonym lemmas, T22 b variants on known forms, gerund reading, verb
+star with `omnes`, §8.5 template family.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

@@ -111,6 +111,29 @@ nomen structura {
        i32 numerus;
 } OratioOraculumErratumClausulae;
 
+/* ERRATUM NOTAE (T30, 2026-09-09): verbum aureum classis rectae cuius
+ * lectio prima Latina accidens k fert sed valore FALSO (condicio
+ * columnae T29) - tabulatum per (accidens, classis, valor aureus primus,
+ * valor noster, decisio, auctor, forma plicata, socius, distantia,
+ * attingibile) cum numero. ATTINGIBILE = lectio aliqua eiusdem classis
+ * Latina valorem aureum fert (electio falsa: ordo lectionum aut
+ * concordantia spuria) an nulla (vocabularium aut conventio auri).
+ * Socius et distantia ut in ERRATO decisionis. LEX: summa numerorum
+ * accidentis k == notae_verba[k] - notae_recti[k]. */
+nomen structura {
+              i32 nota;        /* k tabulae NOTAE_ORACULI */
+    OratioClassis classis;     /* aurea == nostra prima */
+              s32 aurea;       /* valor aureus primus scriptus */
+              s32 nostra;      /* valor lectionis primae */
+              s32 decisio;     /* OratioDecisio; -I nemo */
+           chorda auctor;      /* vacua sine decisione */
+           chorda forma;       /* plicata */
+           chorda socius;      /* forma socii, vacua si nullus */
+              s32 distantia;   /* -I nullus */
+              b32 attingibile;
+              i32 numerus;
+} OratioOraculumErratumNotae;
+
 /* SEMEN (T20a): census aureus candidati seminis - lemma (SCONJ CCONJ
  * PRON DET ADV) aut forma (PUNCT): occurrentiae, quoties LIMEN
  * clausulae (clausula aurea != clausula verbi praecedentis non
@@ -208,6 +231,11 @@ nomen structura {
      * cetera relata. */
             i32 notae_verba[ORATIO_ORACULUM_NOTAE];
             i32 notae_recti[ORATIO_ORACULUM_NOTAE];
+    /* T30: recti per CONVENTIONEM solam - valor noster alter acceptus
+     * (vox deponens pro activa/passiva; genus commune pro masculino/
+     * feminino: WORDS 'C' = utrumque, aurum unum elegit), non aequalis
+     * aureo; pars rectorum relata ne conventio numerum celet */
+            i32 notae_conventione[ORATIO_ORACULUM_NOTAE];
     /* T26 LIGATIO (2026-09-08): ligationes nostrae (umbrae impletae
      * lectionis primae verbi alignati, socio alignato) contra capita
      * aurea - umbra capitis: socius == caput aureum carrier; umbra
@@ -249,6 +277,10 @@ nomen structura {
      * index; pigre creata */
                      Xar* errata;
           TabulaDispersa* errata_index;
+    /* errata notarum (T30): Xar de OratioOraculumErratumNotae* + index;
+     * pigre creata */
+                     Xar* errata_notarum;
+          TabulaDispersa* errata_notarum_index;
     /* CLAUSULAE (T20a, decisio XLVII): PURITAS per causam - verba
      * aurea (non PUNCT, alignata) quorum elementum primum causam
      * fert, et recta (clausula aurea == clausula aurea MAIOR clausulae
@@ -381,5 +413,20 @@ oratio_oraculum_iudicare_resolutum (
 constans character*
 oratio_oraculum_nota_titulus (
     i32 k);
+
+/* titulus valoris v accidentis k (T30); NIHIL extra tabulam */
+constans character*
+oratio_oraculum_nota_valor_titulus (
+    i32 k,
+    s32 v);
+
+/* Errata notarum (T30) accidentis k (k < 0 = omnium) ordine numeri non
+ * crescente, deinde accidentis, classis, formae et socii: Xar de
+ * OratioOraculumErratumNotae* in piscina. NIHIL = memoria. */
+Xar*
+oratio_oraculum_errata_notarum (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census,
+                              s32  nota);
 
 #endif /* ORATIO_ORACULUM_H */

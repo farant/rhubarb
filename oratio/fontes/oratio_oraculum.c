@@ -114,15 +114,22 @@ nomen structura {
      constans character* accidens;    /* titulus loci */
     constans ValorNotae* valores;
                     i32  numerus;
+    constans character* constans* tituli;   /* T30: tituli valorum nostrorum */
+                    i32 numerus_titulorum;
 } NotaOraculi;
 
 hic_manens constans ValorNotae VALORES_NUMERI[] = {
     { "Sing", (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS, (s32)-I },
     { "Plur", (s32)ORATIO_NUMERUS_GRAMMATICUS_PLURALIS, (s32)-I }
 };
+/* T30: commune (WORDS 'C': masculinum aut femininum - dies, trux,
+ * tu/vos, participia) utrique acceptum ut deponens voci - CONVENTIO
+ * (census: tertia pars ad duas partes falsorum generis erat) */
 hic_manens constans ValorNotae VALORES_GENERIS[] = {
-    { "Masc", (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM, (s32)-I },
-    { "Fem", (s32)ORATIO_GENUS_GRAMMATICUM_FEMININUM, (s32)-I },
+    { "Masc", (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM,
+      (s32)ORATIO_GENUS_GRAMMATICUM_COMMUNE },
+    { "Fem", (s32)ORATIO_GENUS_GRAMMATICUM_FEMININUM,
+      (s32)ORATIO_GENUS_GRAMMATICUM_COMMUNE },
     { "Neut", (s32)ORATIO_GENUS_GRAMMATICUM_NEUTRUM, (s32)-I },
     { "Com", (s32)ORATIO_GENUS_GRAMMATICUM_COMMUNE, (s32)-I }
 };
@@ -149,13 +156,22 @@ hic_manens constans ValorNotae VALORES_FORMAE_VERBI[] = {
     { "Sup", (s32)ORATIO_FORMA_VERBI_SUPINUM, (s32)-I }
 };
 hic_manens constans NotaOraculi NOTAE_ORACULI[ORATIO_ORACULUM_NOTAE] = {
-    { "Number", "numerus", VALORES_NUMERI, (i32)II },
-    { "Gender", "genus", VALORES_GENERIS, (i32)IV },
-    { "Person", "persona", VALORES_PERSONAE, (i32)III },
-    { "Mood", "modus", VALORES_MODI, (i32)III },
-    { "Voice", "vox", VALORES_VOCIS, (i32)II },
-    { "VerbForm", "forma-verbi", VALORES_FORMAE_VERBI, (i32)VI },
-    { "Tense", "tempus", NIHIL, ZEPHYRUM }
+    { "Number", "numerus", VALORES_NUMERI, (i32)II,
+      ORATIO_TITULI_NUMERORUM,
+          (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS },
+    { "Gender", "genus", VALORES_GENERIS, (i32)IV,
+      ORATIO_TITULI_GENERUM_GRAMMATICORUM,
+      (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS },
+    { "Person", "persona", VALORES_PERSONAE, (i32)III,
+      ORATIO_TITULI_PERSONARUM, (i32)ORATIO_PERSONA_NUMERUS },
+    { "Mood", "modus", VALORES_MODI, (i32)III,
+      ORATIO_TITULI_MODORUM, (i32)ORATIO_MODUS_NUMERUS },
+    { "Voice", "vox", VALORES_VOCIS, (i32)II,
+      ORATIO_TITULI_VOCUM, (i32)ORATIO_VOX_NUMERUS },
+    { "VerbForm", "forma-verbi", VALORES_FORMAE_VERBI, (i32)VI,
+      ORATIO_TITULI_FORMARUM_VERBI, (i32)ORATIO_FORMA_VERBI_NUMERUS },
+    { "Tense", "tempus", NIHIL, ZEPHYRUM,
+      ORATIO_TITULI_TEMPORUM, (i32)ORATIO_TEMPUS_NUMERUS }
 };
 
 constans character*
@@ -164,6 +180,16 @@ oratio_oraculum_nota_titulus (
 {
     redde k >= ZEPHYRUM && k < ORATIO_ORACULUM_NOTAE
         ? NOTAE_ORACULI[k].accidens : NIHIL;
+}
+
+constans character*
+oratio_oraculum_nota_valor_titulus (
+    i32 k,
+    s32 v)
+{
+    redde k >= ZEPHYRUM && k < ORATIO_ORACULUM_NOTAE && v >= ZEPHYRUM
+        && v < (s32)NOTAE_ORACULI[k].numerus_titulorum
+        ? NOTAE_ORACULI[k].tituli[v] : NIHIL;
 }
 
 /* discrepantiam notare (T19a): clavis 'aurea/nostra/forma plicata' in
@@ -344,6 +370,7 @@ nomen structura {
         s32 clausula_causa;
                 s32 casus_primus;                  /* T23: casus lectionis primae Latinae; -I = nullus */
                 s32 notae_primae[ORATIO_ORACULUM_NOTAE];   /* T29: accidentia lectionis primae Latinae; -I = nullum */
+        i32 notae_praesentes[ORATIO_ORACULUM_NOTAE];   /* T30: mascula bitium valorum quos lectiones Latinae classis primae ferunt */
         s32 lexema;                        /* T26: index lexematis aurei alignati; -I */
 } Elementum;
 
@@ -829,6 +856,190 @@ oratio_oraculum_errata (
     redde exitus;
 }
 
+/* erratum notae notare (T30): clavis binaria [k][classis][aurea][nostra]
+ * [distantia][attingibile][decisio + I] auctor 0x01 forma 0x01 socius in
+ * piscina iudicii; cella nova aut numerus auctus */
+interior vacuum
+_erratum_notae_notare (
+                                   Piscina* piscina,
+                      OratioOraculumCensus* census,
+                                       i32  nota,
+                             OratioClassis  classis,
+                                       s32  aurea,
+                                       s32  nostra,
+                                       s32  decisio,
+                                    chorda  auctor,
+                                    chorda  forma,
+                                    chorda  socius,
+                                       s32  distantia,
+                                       b32  attingibile)
+{
+                      character*  clavis_datum;
+                         chorda   plicata;
+                         chorda   clavis;
+                         vacuum*  valor;
+     OratioOraculumErratumNotae*  d;
+     OratioOraculumErratumNotae** cella;
+                            i32   n;
+
+    si (census->errata_notarum == NIHIL)
+    {
+        census->errata_notarum = xar_creare(piscina,
+            (i32)magnitudo(OratioOraculumErratumNotae*));
+        census->errata_notarum_index = tabula_dispersa_creare_chorda(
+            piscina, (i32)1024);
+        si (   census->errata_notarum       == NIHIL
+            || census->errata_notarum_index == NIHIL)
+        {
+            census->errata_notarum = NIHIL;
+            redde;
+        }
+    }
+    plicata = oratio_vocabularium_la_plicare(piscina, forma);
+    n = (i32)VII + auctor.mensura + I + plicata.mensura + I
+        + socius.mensura;
+    clavis_datum = (character*)piscina_allocare(piscina,
+        (memoriae_index)n);
+    si (plicata.datum == NIHIL || clavis_datum == NIHIL)
+    {
+        redde;
+    }
+    clavis_datum[ZEPHYRUM]  = (character)(i32)nota;
+    clavis_datum[I]         = (character)(i32)classis;
+    clavis_datum[II]       = (character)(aurea < ZEPHYRUM
+        ? (i32)255 : (i32)aurea);
+    clavis_datum[III]      = (character)(nostra < ZEPHYRUM
+        ? (i32)255 : (i32)nostra);
+    clavis_datum[IV]       = (character)(distantia < ZEPHYRUM
+        ? (i32)255 : (distantia
+            > (s32)254 ? (i32)254 : (i32)distantia));
+    clavis_datum[V]        =
+        (character)(attingibile ? (i32)I : ZEPHYRUM);
+    clavis_datum[VI]       = (character)(decisio < ZEPHYRUM
+        ? ZEPHYRUM : (i32)decisio + I);
+    n = (i32)VII;
+    memcpy(clavis_datum + n, auctor.datum, (size_t)auctor.mensura);
+    n                = n + auctor.mensura;
+    clavis_datum[n]  = (character)I;
+    n                = n + I;
+    memcpy(clavis_datum + n, plicata.datum, (size_t)plicata.mensura);
+    n                = n + plicata.mensura;
+    clavis_datum[n]  = (character)I;
+    n                = n + I;
+    si (socius.mensura > ZEPHYRUM)
+    {
+        memcpy(clavis_datum + n, socius.datum, (size_t)socius.mensura);
+        n = n + socius.mensura;
+    }
+    clavis.datum    = (i8*)clavis_datum;
+    clavis.mensura  = n;
+    si (tabula_dispersa_invenire(census->errata_notarum_index, clavis,
+            &valor))
+    {
+        d           = (OratioOraculumErratumNotae*)valor;
+        d->numerus  = d->numerus + I;
+        redde;
+    }
+    d = (OratioOraculumErratumNotae*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(*d));
+    cella = (OratioOraculumErratumNotae**)xar_addere(
+        census->errata_notarum);
+    si (d == NIHIL || cella == NIHIL)
+    {
+        redde;
+    }
+    d->nota     = nota;
+    d->classis  = classis;
+    d->aurea    = aurea;
+    d->nostra   = nostra;
+    d->decisio  = decisio;
+    d->auctor       = auctor.mensura > ZEPHYRUM ? _copia(piscina,
+        auctor)
+        : auctor;
+    d->forma        = plicata;
+    d->socius       = socius.mensura > ZEPHYRUM ? _copia(piscina,
+        socius)
+        : socius;
+    d->distantia    = distantia;
+    d->attingibile  = attingibile;
+    d->numerus      = I;
+    *cella          = d;
+    (vacuum)tabula_dispersa_inserere(census->errata_notarum_index,
+        clavis,
+        d);
+}
+
+interior s32
+_errata_notarum_comparare (
+    constans vacuum* p,
+    constans vacuum* q)
+{
+    constans OratioOraculumErratumNotae* x =
+        *(constans OratioOraculumErratumNotae* constans*)p;
+    constans OratioOraculumErratumNotae* y =
+        *(constans OratioOraculumErratumNotae* constans*)q;
+    s32 c;
+
+    si (x->numerus != y->numerus)
+    {
+        redde x->numerus > y->numerus ? (s32)-I : (s32)I;
+    }
+    si (x->nota != y->nota)
+    {
+        redde x->nota < y->nota ? (s32)-I : (s32)I;
+    }
+    si (x->classis != y->classis)
+    {
+        redde (i32)x->classis < (i32)y->classis ? (s32)-I : (s32)I;
+    }
+    c = chorda_comparare(x->forma, y->forma);
+    si (c != ZEPHYRUM)
+    {
+        redde c;
+    }
+    redde chorda_comparare(x->socius, y->socius);
+}
+
+Xar*
+oratio_oraculum_errata_notarum (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census,
+                              s32  nota)
+{
+    Xar* exitus = xar_creare(piscina,
+        (i32)magnitudo(OratioOraculumErratumNotae*));
+    i32 i;
+
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (census->errata_notarum == NIHIL)
+    {
+        redde exitus;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(census->errata_notarum); i++)
+    {
+        OratioOraculumErratumNotae* d =
+            *(OratioOraculumErratumNotae**)xar_obtinere(
+            census->errata_notarum, i);
+        OratioOraculumErratumNotae** cella;
+
+        si (nota >= ZEPHYRUM && (s32)d->nota != nota)
+        {
+            perge;
+        }
+        cella = (OratioOraculumErratumNotae**)xar_addere(exitus);
+        si (cella == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *cella = d;
+    }
+    xar_ordinare(exitus, _errata_notarum_comparare);
+    redde exitus;
+}
+
 /* extentum lexematum listae loci */
 interior vacuum
 _extentum_listae (
@@ -984,13 +1195,47 @@ _elementum_addere (
                     {
                         s32 locus_k = oratio_partes_locus(cl,
                             NOTAE_ORACULI[k].accidens);
+                        i32 j;
 
-                        si (   locus_k >= ZEPHYRUM
-                            && prima->loci[locus_k].genus
+                        si (locus_k < ZEPHYRUM)
+                        {
+                            perge;
+                        }
+                        si (prima->loci[locus_k].genus
                                 == MATERIA_VALOR_INDEX)
                         {
                             e->notae_primae[k] =
                                 prima->loci[locus_k].datum.index;
+                        }
+                        /* T30: valores attingibiles - lectiones Latinae
+                         * eiusdem classis ac prima, accidens ferentes */
+                        per (j = ZEPHYRUM; j
+                            < e->numerus_analysium; j++)
+                        {
+                            constans MateriaNodus* aj =
+                                materia_valor_lista_obtinere(*analyses,
+                                j)->datum.nodus;
+                            s32 v;
+
+                            si (   oratio_genus_classis(
+                                        (OratioGenus)aj->genus) != cl
+                                || aj->loci[ORATIO_ANALYSIS_LINGUA].genus
+                                    != MATERIA_VALOR_INDEX
+                                || aj->loci[ORATIO_ANALYSIS_LINGUA]
+                                    .datum.index
+                                    != (s32)ORATIO_LINGUA_LATINA
+                                || aj->loci[locus_k].genus
+                                    != MATERIA_VALOR_INDEX)
+                            {
+                                perge;
+                            }
+                            v = aj->loci[locus_k].datum.index;
+                            si (v >= ZEPHYRUM && v < (s32)31)
+                            {
+                                e->notae_praesentes[k] =
+                                    e->notae_praesentes[k]
+                                    | ((i32)I << (i32)v);
+                            }
                         }
                     }
                 }
@@ -1891,6 +2136,83 @@ _nota_aurea (
     redde (s32)-I;
 }
 
+/* T30: valores aurei accidentis k ut MASCULA bitium indicum nostrorum -
+ * campus 'Clavis=Valor,Valor' (initium aut post '|'), valor quisque
+ * per commata bitium suum, alter acceptus quoque (UD Latinum genus
+ * plures scribit: 'Gender=Fem,Masc' - substringa 'Gender=Masc' eum
+ * non invenit, T29 femininum solum accipiebat); ZEPHYRUM = absens aut
+ * extra tabulam */
+interior i32
+_nota_aurea_valores (
+    chorda notae,
+       i32 k,
+       b32 alteri)
+{
+    constans NotaOraculi* nota     = &NOTAE_ORACULI[k];
+                     i32  mascula  = ZEPHYRUM;
+                     i32  l        = (i32)strlen(nota->clavis);
+                     i32  i;
+
+    si (nota->valores == NIHIL)
+    {
+        s32 t = _tempus_aureum(notae);
+
+        redde t >= ZEPHYRUM ? (i32)I << (i32)t : ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i + l + I <= notae.mensura; i++)
+    {
+        i32 initium;
+        i32 j;
+
+        si (   (i != ZEPHYRUM && notae.datum[i - I] != '|')
+            || memcmp(notae.datum + i, nota->clavis, (size_t)l)
+                != ZEPHYRUM
+            || notae.datum[i + l] != '=')
+        {
+            perge;
+        }
+        initium  = i + l + I;
+        j        = initium;
+        dum (j <= notae.mensura)
+        {
+            si (   j == notae.mensura || notae.datum[j] == '|'
+                || notae.datum[j] == ',')
+            {
+                i32 v;
+
+                per (v = ZEPHYRUM; v < nota->numerus; v++)
+                {
+                    i32 lv = (i32)strlen(nota->valores[v].valor_aureus);
+
+                    si (   j - initium == lv
+                        && memcmp(notae.datum + initium,
+                            nota->valores[v].valor_aureus, (size_t)lv)
+                            == ZEPHYRUM)
+                    {
+                        mascula = mascula
+                            | ((i32)I << (i32)nota->valores[v].index);
+                        si (   alteri
+                            && nota->valores[v].alter >= ZEPHYRUM)
+                        {
+                            mascula = mascula
+                                | ((i32)I
+                                    << (i32)nota->valores[v].alter);
+                        }
+                    }
+                }
+                si (j == notae.mensura || notae.datum[j] == '|')
+                {
+                    frange;
+                }
+                initium = j + I;
+            }
+            j = j + I;
+        }
+        frange;
+    }
+    redde mascula;
+}
+
 /* casus aureus ex 'Case=Nom|...' (UD): OratioCasus aut -I */
 interior s32
 _casus_aureus (
@@ -2281,19 +2603,50 @@ _verbum_iudicare (
 
             per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
             {
-                s32 alter;
-                s32 aureus = _nota_aurea(verbum->feats, k, &alter);
+                /* T30: valores aurei plures quivis acceptus; falsum
+                 * tabulatum cum socio et attingibilitate */
+                i32 aurei = _nota_aurea_valores(verbum->feats, k,
+                    VERUM);
+                s32 nostra = e_primum->notae_primae[k];
 
-                si (   aureus                    >= ZEPHYRUM
-                    && e_primum->notae_primae[k] >= ZEPHYRUM)
+                si (aurei != ZEPHYRUM && nostra >= ZEPHYRUM)
                 {
                     census->notae_verba[k] = census->notae_verba[k] + I;
-                    si (   e_primum->notae_primae[k] == aureus
-                        || (   alter >= ZEPHYRUM
-                            && e_primum->notae_primae[k] == alter))
+                    si (((aurei >> (i32)nostra) & (i32)I) != ZEPHYRUM)
                     {
+                        i32 stricti = _nota_aurea_valores(verbum->feats,
+                            k, FALSUM);
+
                         census->notae_recti[k] =
                             census->notae_recti[k] + I;
+                        si (((stricti >> (i32)nostra) & (i32)I)
+                            == ZEPHYRUM)
+                        {
+                            census->notae_conventione[k] =
+                                census->notae_conventione[k] + I;
+                        }
+                    }
+                    alioquin
+                    {
+                           s32 distantia = (s32)-I;
+                           s32 alter;
+                        chorda socius;
+
+                        socius.datum    = NIHIL;
+                        socius.mensura  = ZEPHYRUM;
+                        si (e_primum->nodus != NIHIL)
+                        {
+                            socius = _socius(textus, e_primum->nodus,
+                                &distantia);
+                        }
+                        _erratum_notae_notare(piscina, census, k,
+                            e_primum->classis[ZEPHYRUM],
+                            _nota_aurea(verbum->feats, k, &alter),
+                            nostra,
+                            e_primum->decisio, e_primum->auctor,
+                            verbum->forma, socius, distantia,
+                            (b32)((e_primum->notae_praesentes[k] & aurei)
+                                != ZEPHYRUM));
                     }
                 }
             }

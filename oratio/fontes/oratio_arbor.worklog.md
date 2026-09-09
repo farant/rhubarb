@@ -3022,3 +3022,68 @@ with a neighbour); on the charters verb form and voice lose a sixth
 each, which is the participle-versus-finite and deponent question.
 Planted fault: swapping the singular mapping went red at the number
 pin. Pins 914/837, 928/813, 933/810, only rising.
+
+## 2026-09-09 — T30 a: the gender census, and two oracle conventions
+
+The gender column (T29) was 837 / 813 / 810 on Seneca and the two
+charter files, and the plan was the house one: census first, then a
+law. The census needed an instrument, so this tranche is mostly
+instrument, and the two things it found were oracle conventions rather
+than parser errors.
+
+**Feature errata.** `oraculum.sh -errata -nota genus` (or any accident
+title, or `omnes`) lists every class-right word whose first reading
+carries the wrong value: form, class, gold and our value, decision and
+rule, binding partner and distance, and ATTINGIBILE — whether any
+Latin reading of that class carries the gold value at all — or ABSENS.
+Machine rows `ERRATUM-NOTA`. The element now remembers a bitmask of
+the values its readings could reach. Law in the gate: the numbers of
+an accident's errata sum to verba − recti; the planted fault (refuse
+to record reachable errors) went red on that line.
+
+**Multi-value gold.** UD Latin writes `Gender=Fem,Masc` on ambiguous
+words (2–4 % of Seneca, 12 % of PROIEL's determiners). The substring
+reader saw only the alphabetically first value. `_nota_aurea_valores`
+parses the field and returns a bitmask, any listed value accepted.
+Seneca 837 → 847, the charters unchanged.
+
+**The census** (Seneca 755 wrong; charters dev 1415):
+- WORDS common gender `C` against gold Masc/Fem: 32 % / 41 %
+  (`dies`, `trux`, `tu`/`vobis`, participles); PROIEL 60 % because
+  it marks personal pronouns masculine.
+- other unreachable 16 % / 24 %: dictionary holes (`Luca` masculine),
+  and known medieval forms — `sancte`, `bone`, `suprascripte`, `ipse`
+  — where the vocative reading blocks the `-ae` variant, because T22
+  asks for variants only on UNKNOWN forms.
+- reachable, untouched nouns 20 % / 5 %: homonym lemma order —
+  `armus` before `arma`, `caelus` before `caelum`, `tela` before
+  `telum`, `census` before `censum`. The dictionary carries WORDS's
+  frequency codes; the readings do not.
+- reachable, untouched verbs 7 % / 12 %: gerundive masculine listed
+  before the neuter reading (`faciendum`), and UD calls it a gerund.
+- reachable, determiner prior 8 % / 11 %: `alio lato`, `uno capo` —
+  the partner's rarer masculine reading agrees; the gold has medieval
+  neuter nouns the dictionary lacks.
+- reachable, head rules 13 % / 6 %: spurious agreement in the loose
+  tier, the smallest bucket. The pair policy is not where the gender
+  points are.
+
+**The commune convention** (Fran's decision). `commune` is accepted
+for gold Masc and Fem, as deponent voice is for Act and Pass: WORDS
+says "either", the gold picked one, the parser is not wrong. So it
+cannot hide, every feature line now prints `conventione N` — the
+words right only by the alternate — in the gate, the instrument and
+the machine row (`NOTA` has six columns). Gender: Seneca 847 → 897
+(248 by convention), charters 813 → 890 (584), 810 → 885 (588);
+shelf 829 → 856, 850 → 901, 805 → 923, 819 → 866. Voice's deponent
+count is now visible too: 163 / 48 / 45. Pins 897 / 890 / 885.
+
+**Next, by the census's own ranking:** a frequency prior for homonym
+lemmas (needs the code on the reading), the medieval variant on known
+forms as a T22 extension, the gerund reading; and a "derived gender"
+count, resolving commune through the agreement partner, if we want
+the convention earned rather than granted.
+
+**Wart.** `silva.Editio` on a `.py` file runs the C formatter, which
+refuses (no fixed point) after the write; the edit lands, the
+exception is noise. Worth a `.py` guard in applicare.

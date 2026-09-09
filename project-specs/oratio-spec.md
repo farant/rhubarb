@@ -1858,6 +1858,37 @@ Pass (convention, named). First reading of the numbers: gender is the
 next Latin problem (81–84 %), then charter verb form and voice
 (83–87 %); person, mood and tense are above 93 % everywhere.
 
+**As built — T30 a, the gender census (2026-09-09).** Feature errata
+in the oracle: `oraculum.sh -errata -nota <accidens|omnes>` lists
+every class-right word whose first reading carries the wrong value —
+form, class, gold and our value, decision and rule, binding partner
+and distance, and ATTINGIBILE (a Latin reading of the class carries
+the gold value) or absens; machine rows `ERRATUM-NOTA`; the element
+keeps a bitmask of reachable values; gate law: an accident's errata
+sum to verba − recti (planted fault red). Two oracle CONVENTIONS,
+Fran's decision, both named in the code: gold multi-values
+(`Gender=Fem,Masc`) any accepted, replacing a substring reader that
+saw only the first (Seneca 837 → 847); `commune` accepted for gold
+Masc and Fem as deponent voice is for Act and Pass, with
+`conventione N` (right by the alternate only) printed on every
+feature line in the gate, the instrument and the `NOTA` row so the
+convention cannot hide. Gender pins 897 / 890 / 885 (by convention
+248 / 584 / 588); shelf 856 / 901 / 923 / 866; voice's deponent
+count visible (163 / 48 / 45). The census that decided it (Seneca /
+charters dev share of wrong genders): commune 32 / 41 % (PROIEL
+60 %, personal pronouns marked masculine); other unreachable
+16 / 24 % (dictionary holes; known medieval forms `sancte`, `bone`,
+`suprascripte` whose vocative reading blocks the `-ae` variant, since
+T22 asks only for unknown forms); homonym lemma order 20 / 5 %
+(`armus/arma`, `caelus/caelum`, `tela/telum`, `census/censum` — WORDS
+frequency codes are in the dictionary, not on readings); gerundive
+listed before the neuter reading 7 / 12 %; determiner prior agreeing
+with the partner's rarer reading 8 / 11 %; head rules 13 / 6 %, the
+smallest bucket. Next by that ranking: a frequency prior for homonym
+lemmas, the medieval variant on known forms (T22 b), the gerund
+reading; a derived-gender count through the agreement partner if the
+convention is to be earned rather than granted.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

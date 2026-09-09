@@ -134,13 +134,13 @@
 #define EWT_TEST_LIGATIONIS_PINNA  826
 #define CIRCSE_CASUUM_PINNA      666   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666 */
 #define CIRCSE_NUMERI_PINNA   914   /* T29: nativitas */
-#define CIRCSE_GENERIS_PINNA  837   /* T29: nativitas */
+#define CIRCSE_GENERIS_PINNA  897   /* T29: nativitas 837; T30: 837 -> 847 valores aurei plures (Fem,Masc), 847 -> 897 conventio communis (decisio Frani) */
 #define LLCT_DEV_CASUUM_PINNA    653   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA */
 #define LLCT_DEV_NUMERI_PINNA   928   /* T29: nativitas */
-#define LLCT_DEV_GENERIS_PINNA  813   /* T29: nativitas */
+#define LLCT_DEV_GENERIS_PINNA  890   /* T29: nativitas 813; T30: conventio communis 813 -> 890 */
 #define LLCT_TEST_CASUUM_PINNA   671   /* T27: 637 -> 665; T27 b: 665 -> 671 */
 #define LLCT_TEST_NUMERI_PINNA   933   /* T29: nativitas */
-#define LLCT_TEST_GENERIS_PINNA  810   /* T29: nativitas */
+#define LLCT_TEST_GENERIS_PINNA  885   /* T29: nativitas 810; T30: conventio communis 810 -> 885 */
 #define EWT_DEV_CASUUM_PINNA     0
 #define EWT_DEV_NUMERI_PINNA   0   /* T29 */
 #define EWT_DEV_GENERIS_PINNA  0   /* T29 */
@@ -517,15 +517,62 @@ _thesaurus_arborum (
                 i32 pinna = k == ZEPHYRUM ? pinna_numeri
                     : k == I ? pinna_generis : ZEPHYRUM;
 
-                imprimere("    nota %-12s %d/%d = %d permille (pinna %d)\n",
+                imprimere("    nota %-12s %d/%d = %d permille (pinna %d)"
+                    "  conventione %d\n",
                     oratio_oraculum_nota_titulus(k),
                     (integer)census.notae_recti[k],
                     (integer)census.notae_verba[k], (integer)permille,
-                    (integer)pinna);
+                    (integer)pinna,
+                    (integer)census.notae_conventione[k]);
                 si (pinna > ZEPHYRUM)
                 {
                     CREDO_VERUM (census.notae_verba[k] > ZEPHYRUM);
                     CREDO_VERUM (permille >= pinna);
+                }
+                /* T30: lex erratorum notae - summa numerorum == verba -
+                 * recti accidentis; generis errata prima III relata
+                 * (forma, aurea, nostra, auctor, attingibile) */
+                {
+                    Xar* es = oratio_oraculum_errata_notarum(p, &census,
+                        (s32)k);
+                    i32 summa = ZEPHYRUM;
+                    i32 m;
+
+                    CREDO_NON_NIHIL (es);
+                    per (m = ZEPHYRUM; es != NIHIL
+                        && m < xar_numerus(es);
+                         m++)
+                    {
+                        constans OratioOraculumErratumNotae* d =
+                            *(OratioOraculumErratumNotae**)xar_obtinere(
+                            es, m);
+
+                        summa = summa + d->numerus;
+                        si (k == I && m < (i32)III)
+                        {
+                            constans character* aurea =
+                                oratio_oraculum_nota_valor_titulus(k,
+                                d->aurea);
+                            constans character* nostra =
+                                oratio_oraculum_nota_valor_titulus(k,
+                                d->nostra);
+
+                            imprimere("      erratum %-14.*s aurea %-10s"
+                                " nostra %-10s %-28.*s %s %d\n",
+                                (integer)d->forma.mensura,
+                                (constans character*)d->forma.datum,
+                                aurea != NIHIL ? aurea : "?",
+                                nostra != NIHIL ? nostra : "?",
+                                (integer)d->auctor.mensura,
+                                d->auctor.mensura > ZEPHYRUM
+                                    ? (constans character*)d->auctor.datum
+                                    : "-",
+                                d->attingibile ? "attingibile" : "absens",
+                                (integer)d->numerus);
+                        }
+                    }
+                    CREDO_AEQUALIS_I32 (summa,
+                        census.notae_verba[k] - census.notae_recti[k]);
                 }
             }
         }
