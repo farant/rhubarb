@@ -2779,3 +2779,45 @@ between the present resolver and the dependency structure of the
 roadmap's second step, measured before that structure is designed.
 Named, not done: attachment per deciding rule (the author table),
 which needs the umbra to carry its author.
+
+## 2026-09-08 — T27: the retry door measured; first reading per case is a prior
+
+Fran's question was whether adding tracked features (number, gender,
+person, mood) would multiply the hand-written rules. Reading the rule
+file again: number and gender are already captures, unified by name
+through regula V; only CASE is literal, and only because the matcher
+never retried a capture bound on the carrier's first reading. So the
+multiplication I feared (84 rules per motif) was wrong — the literal
+dimension is one, seven values, and it costs 28 head rules where 4
+would do and 2 object rules where 1 would. New motifs (verb with a
+nominative subject, an accusative object) each need one or two
+literal cases, so growth is already linear in the features; the
+collapse is worth 28 → 4, not 84 → 2.
+
+The door was opened in the macro engine as a complete leftmost-first
+search (spec decree 21) and measured here with every rule as written.
+Primary and forced identical on all five files; case 645/622/637 →
+641/619/635; attachment precision 431/364/377 → 438/359/374 (Seneca
+up 7, charters down 5 and 3); the law-of-umbrae fallback grew on
+every Latin file (48 → 53, 143 → 164, 133 → 158). The author table
+shows the trade: `umbra-caput-nominativus-sequente` 798 → 823
+decisions, the strict one 319 → 361, `umbra-caput-accusativus-
+sequente-proximo` 125 → 87 at lower accuracy (792 → 735). Retry
+lets the nominative rule, first in order, claim a carrier's rarer
+nominative readings (bona NOM P N) before the accusative rule sees
+its first accusative reading (bona ACC P N), and the dictionary's
+first reading per case is right more often than the rarer one that
+happens to agree. That prior was implicit in greedy matching plus
+rule order; a unified rule enumerating the carrier's readings in
+dictionary order would lose it the same way.
+
+Decision: the search is an option per EXEMPLAR (`quaesitio=
+"completa"`), the default stays greedy, no rule here changed, every
+pin identical to the word. Next (tranche 2): write the unified head
+and object rules WITH the attribute beside the literal ones and
+measure them on the five files; if the loss reappears, the fix is an
+enumeration order that puts each case's first reading before any
+case's second — a policy to name and measure, not a return to
+twenty-eight rules. Scratch: `aurum_census.py`, `verbum_caput.py`
+(the gold census behind the morning's answer), `ante.log`/`post.log`
+author-table diff.

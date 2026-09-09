@@ -803,3 +803,61 @@ that compiled was the inversion (`!strictus`), which also makes the
 classic matcher strict - red at the first classic fixture, green on
 revert; the dropped-parameter plant was refused pre-flight as an
 unused parameter, as usual.
+
+## 2026-09-08 — quaesitio="completa": the backtracking door, opened as an option
+
+The loose matcher was greedy by construction: each form child
+consumed the first candidate that matched it locally and a later
+child's failure sank the whole level, never the earlier choice.
+Regula V (a repeated capture name means equality) has been in the
+loose matcher since the start, so oratio's agreement rules already
+unify number and gender by name; case they wrote as seven literal
+rules per order because `$cas` on both nodes bound to the carrier's
+first reading and never retried. The rule file called retry "a door
+kept closed until the damage is measured". Today it was measured.
+
+Design: continuation-passing without function pointers. There is
+only one way to continue — match the remaining siblings of the
+enclosing level — so the continuation is a struct (`LaxaContinuatio`:
+form and candidate children, next form child, cursor, one-candidate
+flag, strict flag, search flag, enclosing continuation) and one
+function, `_fratres_congruere`, is one search step: pick the form
+child at `pi`, try candidates from `ci`, and on a local head match
+descend into the candidate's children with a continuation that says
+"then the siblings after me". When a level completes it calls the
+enclosing continuation; when that fails, the failure unwinds to the
+nearest choice point, which truncates its bindings and tries the
+next reading or the next candidate. The state passed down is a
+by-value copy, so the caller's state survives the retry. Greedy's
+path is the first path the search explores, so wherever greedy
+succeeded the result is byte-identical — the whole stml suite, canon
+and the codex 69 descent chains said so without a change.
+
+Measured on oratio with complete search as the default (every rule
+as written): primary and forced identical, case 645/622/637 →
+641/619/635, attachment precision 431/364/377 → 438/359/374. The
+author table names the mechanism: the nominative head rules gained
+what the accusative rules lost, because a literal-case rule with
+retry claims a carrier's rarer readings of its case ahead of the
+next case's first reading, and the dictionary's first reading per
+case is a prior worth two to four permille. So the door is an option
+per EXEMPLAR, `quaesitio="completa"`, and the greedy branch stays the
+default: it takes the first locally matching candidate and returns
+whatever the continuation returns, never retrying — exactly the old
+loop, now written as one step of the same machine.
+
+Canon: while mirroring the new value in both judges I found that
+neither had ever accepted `cursus="strictus"` — increment 20's evening
+entry says canon mirrored it, and it did not. Both judges now accept
+`fratrum` and `strictus`, and refuse any other value of either
+attribute; the canon gate carries the two malformed values and a sane
+document with both attributes. Planted faults: swapping the complete
+branch's call for the greedy pair went red at the first retry
+fixture; forcing the flag on went red at the greedy-default fixture.
+Oracle gate 49.9 → 51.8 s warm.
+
+Method notes. Editio took all sixteen anchors first time, including
+one that spans an inner block comment, because every anchor began
+and ended on a code line. The "before" numbers came from `git stash
+push -- lib/stml_macros.c`, one gate run, `git stash pop` — cheaper
+than any argument about what the old matcher would have done.

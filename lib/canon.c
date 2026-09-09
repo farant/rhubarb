@@ -2315,16 +2315,33 @@ _catena_nexus_iudicare (
                 chorda* cursus_regula = stml_attributum_capere(l,
                     "cursus");
 
-                si (   cursus_regula != NIHIL
-                    && !chorda_aequalis_literis(*cursus_regula,
-                                                "fratrum"))
-                {
+                                si (   cursus_regula != NIHIL
+                                    && !chorda_aequalis_literis(*cursus_regula,
+                                                "fratrum")
+                                    && !chorda_aequalis_literis(*cursus_regula,
+                                                "strictus"))
+                                {
                     vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
                                   l, l->titulus, cursus_regula,
                                   ZEPHYRUM, ZEPHYRUM);
                     perge;
+                                }
+            }
+            {
+                chorda* quaesitio_regula = stml_attributum_capere(l,
+                    "quaesitio");
+
+                si (   quaesitio_regula != NIHIL
+                    && !chorda_aequalis_literis(*quaesitio_regula,
+                                                "completa"))
+                {
+                    vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                                  l, l->titulus, quaesitio_regula,
+                                  ZEPHYRUM, ZEPHYRUM);
+                    perge;
                 }
             }
+
 
             forma  = NIHIL;
             m      = stml_numerus_liberorum(l);
@@ -2769,20 +2786,41 @@ _caps_iudicare (
             redde;
         }
                 de = stml_attributum_capere(n, "de");
-        /* cursus fratrum (incrementum XX): 'fratrum' solus - machina
-         * idem, 'strictus' reservatus */
+        /* cursus (incrementum XX): 'fratrum' aut 'strictus' (speculum
+         * machinae - strictus 2026-09-07 apertus, speculum 2026-09-08
+         * correctum) */
         {
             chorda* cursus_regula = stml_attributum_capere(n, "cursus");
 
-            si (   cursus_regula != NIHIL
-                && !chorda_aequalis_literis(*cursus_regula, "fratrum"))
-            {
+                        si (   cursus_regula != NIHIL
+                            && !chorda_aequalis_literis(*cursus_regula,
+                            "fratrum")
+                            && !chorda_aequalis_literis(*cursus_regula,
+                            "strictus"))
+                        {
                 vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
                               n->titulus, cursus_regula, ZEPHYRUM,
                               ZEPHYRUM);
                 redde;
+                        }
+        }
+        /* quaesitio completa (incrementum XXI): 'completa' solus -
+         * machina idem */
+        {
+            chorda* quaesitio_regula = stml_attributum_capere(n,
+                "quaesitio");
+
+            si (   quaesitio_regula != NIHIL
+                && !chorda_aequalis_literis(*quaesitio_regula,
+                                            "completa"))
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                              n->titulus, quaesitio_regula, ZEPHYRUM,
+                              ZEPHYRUM);
+                redde;
             }
         }
+
         /* retentio radicis: valor 'fontis' solus; sine de= nihil
          * retinendum est (iudicium staticum - machina idem) */
         radix_regula = stml_attributum_capere(n, "radix");

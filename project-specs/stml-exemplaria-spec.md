@@ -601,7 +601,7 @@ decision:
     element child, binding = first COMPATIBLE descendant in
     document order (regula V conflicts walk on — deep self-joins
     free), no joint backtracking across shared-name constraints
-    (documented). Visibility = EXACTLY petere's (one law for both
+    (documented; opened as an option by 21, `quaesitio="completa"`). Visibility = EXACTLY petere's (one law for both
     walkers; blindness, template-space, no alias-descent).
     Setup-time form probe = vitium XXV, loud, never silent
     non-match; strict matcher refuses. 219/219; positional-
@@ -684,6 +684,56 @@ decision:
     fixed first child, gaps after the start, head captures + modus
     primum, ancorata, `<**>`, both vitia). First consumer: oratio's
     adposition rules rooted at `<elementa>`.
+
+21. **QUAESITIO COMPLETA `quaesitio="completa"` — BUILT 2026-09-08**
+    (the joint-backtracking door §2.4 documented as absent, opened AS
+    AN OPTION per EXEMPLAR; the greedy walk stays the default because
+    it measured better — below). With it the loose child match is a
+    COMPLETE leftmost-first search: when a later form child fails,
+    the earlier child's choice is retried — the next reading INSIDE
+    the candidate it chose (a continuation carries the remaining
+    siblings of every enclosing level), then the next candidate.
+    Wherever the greedy walk succeeds the search finds the same path
+    first, so existing matches are unchanged; new matches appear only
+    where greedy failed. Laws: (a) an earlier choice is KEPT while any
+    completion exists — leftmost-first, not nearest; nearness stays
+    `cursus="strictus"`; (b) regula V holds through retry — a failed
+    attempt truncates its bindings, so a shared-name capture re-binds
+    on the retried reading; (c) `<**>` stays existential, first
+    compatible, never retried; (d) the strict and sibling cursors keep
+    their laws (retry happens inside the fixed candidate). Any other
+    value is XIII; canon mirrors it in both judges — and, corrected
+    the same day, both judges now accept `cursus="strictus"`, which
+    increment 20 opened in the engine but never in canon. Engine:
+    `LaxaContinuatio` (form/candidate children, next form child,
+    cursor, one-candidate flag, strict flag, search flag, enclosing
+    continuation) + `_fratres_congruere` (one search step; its greedy
+    branch consumes the first locally matching candidate and never
+    returns) + `_laxa_congruere_cont`; the classic wrappers are greedy
+    without continuation and the existential walker uses them. Gate:
+    eight fixtures in probatio_stml_exemplaria (classic retry on an
+    attribute value, on a text capture two levels down, node bindings
+    undone by retry, leftmost-kept under `fratrum`, retry inside the
+    fixed candidate under `strictus`, no completion = no rows, the
+    same form WITHOUT the attribute finding nothing, XIII); canon
+    gate: two malformed values plus the sane document carrying both
+    attributes; planted faults: greedy-for-complete red at the first
+    retry fixture, always-complete red at the greedy-default fixture.
+    MEASUREMENT (oratio, five treebanks, every rule as written):
+    complete search as the DEFAULT left primary and forced unchanged
+    but moved case 645/622/637 → 641/619/635 and attachment precision
+    431/364/377 → 438/359/374 (Seneca up, charters down on every
+    column), and the author table says why — the nominative head
+    rules, first in rule order, gained decisions (Seneca 798 → 823,
+    strict 319 → 361) that the accusative rules lost (125 → 87): with
+    retry a literal-case rule claims a carrier's RARER readings of
+    that case ahead of the next case's FIRST reading, and the
+    dictionary's first reading per case is an informative prior. So
+    the engine feature is kept and gated, the resolver default is
+    unchanged and its pins identical to the word, and oratio's unified
+    rules (one per motif with `$cas` on both nodes) will carry the
+    attribute and be measured against the literal set. Oracle gate
+    wall time 49.9 → 51.8 s warm.
 
 ---
 

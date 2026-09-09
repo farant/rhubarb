@@ -1888,14 +1888,16 @@ _descensus_probare (
 
 interior b32
 _exemplar_petere (
-    StmlMacroContextus* ctx,
-             StmlNodus* forma,
-             StmlNodus* nodus,
-                   b32  ancorata,
-                   Xar* congruentiae,
-                   Xar* opus_ligamina,
-                   b32  cursus_fratrum,
-                   b32  cursus_strictus);
+                       StmlMacroContextus* ctx,
+                                StmlNodus* forma,
+                                StmlNodus* nodus,
+                                      b32  ancorata,
+                                      Xar* congruentiae,
+                                      Xar* opus_ligamina,
+                                      b32  cursus_fratrum,
+                                      b32  cursus_strictus,
+                                      b32  quaesitio);
+
 
 interior Xar*
 _ligamina_ad_argumenta (
@@ -2623,12 +2625,17 @@ _commutationem_implere (
                         {
                             redde FALSUM;
                         }
-                        si (!_exemplar_petere(ctx, forma_impleta, radix,
-                                              VERUM, congruentiae,
-                                              opus, FALSUM, FALSUM))
-                        {
+                                                si (!_exemplar_petere(ctx,
+                                                    forma_impleta,
+                                                    radix,
+                                                    VERUM, congruentiae,
+                                                    opus, FALSUM,
+                                                    FALSUM,
+                                                    FALSUM))
+
+                                                {
                             redde FALSUM;
-                        }
+                                                }
                         congruit = xar_numerus(congruentiae) > ZEPHYRUM;
                         si (congruit)
                         {
@@ -3661,11 +3668,45 @@ _ligamen_ponere (
     redde VERUM;
 }
 
+/* Continuatio quaesitionis (retentatio, incrementum XXI,
+ * 2026-09-08): status fratrum residuorum gradus cuiusque - liberis
+ * formae gradus interioris omnibus congruentibus quaesitio in
+ * fratribus gradus superioris pergit; superior NIHIL = congruentia
+ * completa. Sine indice functionis: modus pergendi unus
+ * (_fratres_congruere), ergo status solus copiatur. */
+nomen structura LaxaContinuatio LaxaContinuatio;
+structura LaxaContinuatio {
+                Xar* effectivi_formae;  /* liberi formae */
+                Xar* effectivi;         /* liberi candidati */
+                i32  pi;                /* liberum formae proximum */
+                i32  ci;                /* cursor candidati */
+                b32  primum;            /* candidatus unus temptandus */
+                                b32  strictus;          /* nullus saltus posthac */
+                b32  quaesitio;         /* completa (retentatio) an avida */
+    LaxaContinuatio* superior;          /* fratres gradus superioris */
+};
+
 interior b32
 _laxa_congruere (
     StmlMacroContextus* ctx,
              StmlNodus* forma,
              StmlNodus* candidatus,
+                   Xar* ligamina);
+
+interior b32
+_laxa_congruere_cont (
+    StmlMacroContextus* ctx,
+             StmlNodus* forma,
+             StmlNodus* candidatus,
+                   Xar* ligamina,
+                   b32  quaesitio,
+       LaxaContinuatio* continuatio);
+
+
+interior b32
+_fratres_congruere (
+    StmlMacroContextus* ctx,
+       LaxaContinuatio* status,
                    Xar* ligamina);
 
 
@@ -3843,48 +3884,64 @@ _alicubi_congruere (
 }
 
 /* Liberi formae contra liberos effectivos candidati: subsequentia
- * ordinata AVARA - quodque liberum formae candidatum congruentem
- * PRIMUM consumit; saltus liberi. Liberi '<**>' e subsequentia
- * SUBLATI (existentiales - vide caput descensus supra).
- * Temptationes cadentes ligamina
- * sua truncant (matcher numquam retro tollit - vocans truncat).
+ * ordinata, quaesitio COMPLETA primum a sinistra (retentatio,
+ * incrementum XXI, 2026-09-08): liberum formae quodque candidatum
+ * congruentem primum sumit, at libero posteriore cadente electio
+ * prior retro tentatur - lectio proxima INTRA candidatum electum
+ * (continuatio: liberi candidati electi contra liberos formae,
+ * deinde fratres residui gradus cuiusque superioris; defectu
+ * illorum electio interior proxima), deinde candidatus proximus.
+ * Ubi cursus avidus succedebat semita eadem prima invenitur -
+ * exitus idem; congruentiae novae solum ubi avidus cadebat.
+ * Electio prior MANET dum impletio ulla exstat (primum a
+ * sinistra, non proximum: proximitas = cursus strictus). Regula V
+ * per retentationem servata: temptatio cadens ligamina sua
+ * truncat, captura nominis iterati in lectione retentata denuo
+ * ligatur. Saltus liberi. Liberi '<**>' e subsequentia SUBLATI
+ * (existentiales, primus compatibilis, NON retentati - vide caput
+ * descensus supra). Matcher numquam retro tollit - vocans truncat.
  * CURSUS FRATRUM (2026-09-07, incrementum XX): initium = index
  * liberi candidati unde cursor incipit; primum_fixum = liberum
  * formae ordinarium PRIMUM candidatum 'initium' ipsum congruere
  * debet (nullus saltus ante initium) - cetera saltibus ut semper.
  * Vocans (_exemplar_petere sub cursus="fratrum") initium quodque
- * temptat: congruentia una per initium. */
+ * temptat: congruentia una per initium. continuatio = fratres
+ * residui gradus superioris (NIHIL in radice: congruentia
+ * completa). */
 interior b32
 _laxa_liberos_congruere_ab (
-    StmlMacroContextus* ctx,
-             StmlNodus* forma,
-             StmlNodus* candidatus,
-                   Xar* ligamina,
-                   i32  initium,
-                   b32  primum_fixum,
-                   b32  strictus)
+                       StmlMacroContextus* ctx,
+                                StmlNodus* forma,
+                                StmlNodus* candidatus,
+                                      Xar* ligamina,
+                                      i32  initium,
+                                      b32  primum_fixum,
+                                      b32  strictus,
+                                      b32  quaesitio,
+                          LaxaContinuatio* continuatio)
 {
-    Xar* effectivi;
-    Xar* effectivi_formae;
-    i32  pi;
-    i32  ci;
-    i32  pnum;
-    i32  cnum;
-    b32  primum = primum_fixum;
+    LaxaContinuatio status;
+
 
     si (   forma->liberi              == NIHIL
         || xar_numerus(forma->liberi) == ZEPHYRUM)
     {
-        redde VERUM;  /* nihil scriptum = nihil requisitum */
+        /* nihil scriptum = nihil requisitum: fratres superiores */
+        si (continuatio == NIHIL)
+        {
+            redde VERUM;
+        }
+        redde _fratres_congruere(ctx, continuatio, ligamina);
     }
-    effectivi        = xar_creare(ctx->piscina,
-                                  magnitudo(StmlNodus*));
-    effectivi_formae = xar_creare(ctx->piscina,
-                                  magnitudo(StmlNodus*));
-    si (   effectivi        == NIHIL
-        || effectivi_formae == NIHIL
-        || !_liberi_effectivi(ctx, candidatus, effectivi, ZEPHYRUM)
-        || !_liberi_effectivi(ctx, forma, effectivi_formae,
+    status.effectivi        = xar_creare(ctx->piscina,
+                                         magnitudo(StmlNodus*));
+    status.effectivi_formae = xar_creare(ctx->piscina,
+                                         magnitudo(StmlNodus*));
+    si (   status.effectivi        == NIHIL
+        || status.effectivi_formae == NIHIL
+        || !_liberi_effectivi(ctx, candidatus, status.effectivi,
+                              ZEPHYRUM)
+        || !_liberi_effectivi(ctx, forma, status.effectivi_formae,
                               ZEPHYRUM))
     {
         redde FALSUM;
@@ -3893,93 +3950,150 @@ _laxa_liberos_congruere_ab (
      * cadunt - forma ex captura splicata (pons SINE) trivia fert
      * quae candidatus effectivus numquam praebet; asymmetria =
      * congruentia numquam possibilis, silentio */
-    pnum  = xar_numerus(effectivi_formae);
-    cnum  = xar_numerus(effectivi);
-    ci    = initium;
-    per (pi = ZEPHYRUM; pi < pnum; pi++)
+    status.pi            = ZEPHYRUM;
+    status.ci            = initium;
+    status.primum        = primum_fixum;
+        status.strictus  = strictus;
+    status.quaesitio     = quaesitio;
+    status.superior      = continuatio;
+
+    redde _fratres_congruere(ctx, &status, ligamina);
+}
+
+/* Gradus quaesitionis unus: liberum formae status->pi contra
+ * candidatos a status->ci (candidatus unus si status->primum);
+ * congruente libero quaesitio per continuationem pergit (liberi
+ * eius, deinde fratres residui - status proximus per valorem, ergo
+ * status vocantis retentationi intactus); gradu completo fratres
+ * gradus superioris aut, superiore nullo, congruentia tota. */
+interior b32
+_fratres_congruere (
+    StmlMacroContextus* ctx,
+       LaxaContinuatio* status,
+                   Xar* ligamina)
+{
+    LaxaContinuatio  proximus;
+          StmlNodus* pf;
+                i32  pnum;
+                i32  cnum;
+                i32  pi;
+                i32  ci;
+
+    pnum  = xar_numerus(status->effectivi_formae);
+    cnum  = xar_numerus(status->effectivi);
+    pi    = status->pi;
+    pf    = NIHIL;
+    dum (pi < pnum)
     {
-        StmlNodus* pf =
-            *(StmlNodus**)xar_obtinere(effectivi_formae, pi);
-              b32 congruit;
-
-        si (pf == NIHIL || pf->genus == STML_NODUS_COMMENTUM)
+        pf = *(StmlNodus**)xar_obtinere(status->effectivi_formae, pi);
+        si (pf != NIHIL && pf->genus != STML_NODUS_COMMENTUM)
         {
-            perge;
+            frange;
         }
-        si (_est_descensus(pf))
+        pf = NIHIL;
+        pi++;
+    }
+    si (pf == NIHIL)
+    {
+        /* gradus completus: fratres superiores aut congruentia tota */
+        si (status->superior == NIHIL)
         {
-            /* existentiale SUBLATUM e subsequentia: P alicubi
-             * infra candidatum, cursor immotus (ordo inter
-             * ordinarios intactus) */
-            StmlNodus* forma_d = _descensus_forma(pf);
-                  b32  inventum;
-                  i32  di;
-
-            si (forma_d == NIHIL)
-            {
-                redde FALSUM;  /* XXV praeparatione iam positum */
-            }
-            inventum = FALSUM;
-            per (di = ZEPHYRUM; di < cnum; di++)
-            {
-                StmlNodus* cd =
-                    *(StmlNodus**)xar_obtinere(effectivi, di);
-
-                si (   cd != NIHIL
-                    && _alicubi_congruere(ctx, forma_d, cd,
-                                          ligamina))
-                {
-                    inventum = VERUM;
-                    frange;
-                }
-            }
-            si (!inventum)
-            {
-                redde FALSUM;
-            }
-            perge;
+            redde VERUM;
         }
-        congruit = FALSUM;
+        redde _fratres_congruere(ctx, status->superior, ligamina);
+    }
+    proximus     = *status;
+    proximus.pi  = pi + I;
+    si (_est_descensus(pf))
+    {
+        /* existentiale SUBLATUM e subsequentia: P alicubi infra
+         * candidatum, cursor immotus (ordo inter ordinarios
+         * intactus), primus compatibilis, non retentatus */
+        StmlNodus* forma_d = _descensus_forma(pf);
+              b32  inventum;
+              i32  di;
+
+        si (forma_d == NIHIL)
+        {
+            redde FALSUM;  /* XXV praeparatione iam positum */
+        }
+        inventum = FALSUM;
+        per (di = ZEPHYRUM; di < cnum; di++)
+        {
+            StmlNodus* cd =
+                *(StmlNodus**)xar_obtinere(status->effectivi, di);
+
+            si (   cd != NIHIL
+                && _alicubi_congruere(ctx, forma_d, cd, ligamina))
+            {
+                inventum = VERUM;
+                frange;
+            }
+        }
+        si (!inventum)
+        {
+            redde FALSUM;
+        }
+        /* cursor immotus, lex candidati unius immota */
+        redde _fratres_congruere(ctx, &proximus, ligamina);
+    }
+    /* strictus (cursus="strictus", 2026-09-07): liberi sequentes
+     * quoque candidatum PROXIMUM solum temptant - nullus saltus
+     * (vicinitas: 'to' + verbum, determinans + substantivum) */
+        proximus.primum  = status->strictus;
+    ci                   = status->ci;
+    si (!status->quaesitio)
+    {
+        /* LEX AVIDA (defalta, mensurata 2026-09-08): candidatus
+         * congruens PRIMUS consumitur - lectio prima intra eum -
+         * numquam retro; libero posteriore cadente gradus totus
+         * cadit. Oratio: quaesitio completa sub regulis casus
+         * litteralibus casum Senecae/chartarum -4/-3/-2 et
+         * ligationem chartarum -5/-3 deprimebat - lectio PRIMA per
+         * casum prior informans est (regula casus sequentis ante
+         * lectionem rariorem casus prioris). Retentatio =
+         * quaesitio="completa" per EXEMPLAR. */
         dum (ci < cnum)
         {
             StmlNodus* cc =
-                *(StmlNodus**)xar_obtinere(effectivi, ci);
+                *(StmlNodus**)xar_obtinere(status->effectivi, ci);
                   i32 ante = xar_numerus(ligamina);
 
             ci++;
+            proximus.ci = ci;
             si (_laxa_congruere(ctx, pf, cc, ligamina))
             {
-                congruit = VERUM;
-                frange;
+                redde _fratres_congruere(ctx, &proximus, ligamina);
             }
             xar_truncare(ligamina, ante);
-            si (primum)
+            si (status->primum)
             {
                 frange;  /* initium fixum: candidatus unus temptatur */
             }
         }
-        /* strictus (cursus="strictus", 2026-09-07): liberi sequentes
-         * quoque candidatum PROXIMUM solum temptant - nullus saltus
-         * (vicinitas: 'to' + verbum, determinans + substantivum) */
-        primum = strictus;
-        si (!congruit)
+        redde FALSUM;
+    }
+    /* quaesitio COMPLETA (retentatio) */
+    dum (ci < cnum)
+    {
+        StmlNodus* cc =
+            *(StmlNodus**)xar_obtinere(status->effectivi, ci);
+              i32 ante = xar_numerus(ligamina);
+
+        ci++;
+        proximus.ci = ci;
+        si (_laxa_congruere_cont(ctx, pf, cc, ligamina, VERUM,
+                                 &proximus))
         {
-            redde FALSUM;
+            redde VERUM;
+        }
+        xar_truncare(ligamina, ante);
+        si (status->primum)
+        {
+            frange;  /* initium fixum: candidatus unus temptatur */
         }
     }
-    redde VERUM;
-}
-
-/* forma classica: initium 0, saltus ab initio */
-interior b32
-_laxa_liberos_congruere (
-    StmlMacroContextus* ctx,
-             StmlNodus* forma,
-             StmlNodus* candidatus,
-                   Xar* ligamina)
-{
-    redde _laxa_liberos_congruere_ab(ctx, forma, candidatus, ligamina,
-                                     ZEPHYRUM, FALSUM, FALSUM);
+    redde FALSUM;
 }
 
 /* Congruentia laxa CAPITIS nodi unius (vide caput sectionis):
@@ -4133,7 +4247,25 @@ _laxa_caput_congruere (
 }
 
 /* Congruentia laxa nodi unius: caput, deinde liberi (subsequentia
- * ordinata a liberis primis) */
+ * ordinata a liberis primis) cum continuatione - liberis omnibus
+ * congruentibus quaesitio in fratribus gradus superioris pergit */
+interior b32
+_laxa_congruere_cont (
+    StmlMacroContextus* ctx,
+             StmlNodus* forma,
+             StmlNodus* candidatus,
+                   Xar* ligamina,
+                   b32  quaesitio,
+       LaxaContinuatio* continuatio)
+{
+    redde _laxa_caput_congruere(ctx, forma, candidatus, ligamina)
+        && _laxa_liberos_congruere_ab(ctx, forma, candidatus, ligamina,
+                                      ZEPHYRUM, FALSUM, FALSUM,
+                                      quaesitio, continuatio);
+}
+
+/* forma classica: sine continuatione (existentiale '<**>', nodus
+ * sine cursu in _exemplar_petere, congruentia tota in radice) */
 interior b32
 _laxa_congruere (
     StmlMacroContextus* ctx,
@@ -4141,8 +4273,8 @@ _laxa_congruere (
              StmlNodus* candidatus,
                    Xar* ligamina)
 {
-    redde _laxa_caput_congruere(ctx, forma, candidatus, ligamina)
-        && _laxa_liberos_congruere(ctx, forma, candidatus, ligamina);
+        redde _laxa_congruere_cont(ctx, forma, candidatus, ligamina,
+                               FALSUM, NIHIL);
 }
 
 /* congruentiam registrare: ligamina laboris in copiam novam, radix =
@@ -4221,14 +4353,15 @@ _liberum_ordinarium_habere (
  * inventum orationis T17). FALSUM = defectus memoriae solum. */
 interior b32
 _exemplar_petere (
-    StmlMacroContextus* ctx,
-             StmlNodus* forma,
-             StmlNodus* nodus,
-                   b32  ancorata,
-                   Xar* congruentiae,
-                   Xar* opus_ligamina,
-                   b32  cursus_fratrum,
-                   b32  cursus_strictus)
+                       StmlMacroContextus* ctx,
+                                StmlNodus* forma,
+                                StmlNodus* nodus,
+                                      b32  ancorata,
+                                      Xar* congruentiae,
+                                      Xar* opus_ligamina,
+                                      b32  cursus_fratrum,
+                                      b32  cursus_strictus,
+                                      b32  quaesitio)
 {
     i32 i;
     i32 num;
@@ -4237,6 +4370,7 @@ _exemplar_petere (
     {
         redde VERUM;
     }
+
     si (   nodus->genus              == STML_NODUS_ELEMENTUM
         && !nodus->fragmentum
         && nodus->attributum_titulus == NIHIL
@@ -4263,20 +4397,30 @@ _exemplar_petere (
                 per (initium = ZEPHYRUM; initium < cnum; initium++)
                 {
                     xar_truncare(opus_ligamina, ante);
-                    si (   _laxa_liberos_congruere_ab(ctx, forma, nodus,
-                               opus_ligamina, initium, VERUM,
-                               cursus_strictus)
-                        && !_congruentiam_addere(ctx, congruentiae,
-                               nodus, opus_ligamina))
-                    {
+                                        si (   _laxa_liberos_congruere_ab(ctx,
+                                            forma, nodus,
+                                                                           opus_ligamina,
+                                                                           initium,
+                                                                           VERUM,
+                                            cursus_strictus, quaesitio,
+                                            NIHIL)
+
+
+                                            && !_congruentiam_addere(ctx,
+                                            congruentiae,
+                                            nodus, opus_ligamina))
+                                        {
                         redde FALSUM;
-                    }
+                                        }
                 }
             }
         }
-        alioquin si (   _laxa_congruere(ctx, forma, nodus,
-                                        opus_ligamina)
-                     && !_congruentiam_addere(ctx, congruentiae, nodus,
+                alioquin si (   _laxa_congruere_cont(ctx, forma, nodus,
+                                             opus_ligamina, quaesitio,
+                                             NIHIL)
+
+                             && !_congruentiam_addere(ctx, congruentiae,
+                             nodus,
                                               opus_ligamina))
         {
             redde FALSUM;
@@ -4322,12 +4466,14 @@ _exemplar_petere (
                 perge;
             }
         }
-        si (!_exemplar_petere(ctx, forma, l, ancorata, congruentiae,
+                si (!_exemplar_petere(ctx, forma, l, ancorata,
+                    congruentiae,
                               opus_ligamina, cursus_fratrum,
-                              cursus_strictus))
-        {
+                              cursus_strictus, quaesitio))
+
+                {
             redde FALSUM;
-        }
+                }
     }
     redde VERUM;
 }
@@ -4456,19 +4602,22 @@ _exemplar_nucleus (
                 chorda*  titulus,
                    Xar** exitus)
 {
-                    chorda* modus;
-                    chorda* radix_regula;
-                 StmlNodus* forma;
-                       Xar* congruentiae;
-                       Xar* opus;
-                       b32  ancorata;
-                       b32  retinens;
-                       b32  pons;
-                    chorda* cursus_regula;
-                       b32  cursus_fratrum;
-                       b32  cursus_strictus;
-                       i32  i;
-                       i32  num;
+                                        chorda* modus;
+                                        chorda* radix_regula;
+                                     StmlNodus* forma;
+                                           Xar* congruentiae;
+                                           Xar* opus;
+                                           b32  ancorata;
+                                           b32  retinens;
+                                           b32  pons;
+                                        chorda* cursus_regula;
+                                           b32  cursus_fratrum;
+                                           b32  cursus_strictus;
+                                        chorda* quaesitio_regula;
+                                           b32  quaesitio;
+                                           i32  i;
+                                           i32  num;
+
 
     *exitus  = NIHIL;
     modus    = stml_attributum_capere(nodus, "modus");
@@ -4518,9 +4667,24 @@ _exemplar_nucleus (
                        nodus, NIHIL, cursus_regula);
         redde FALSUM;
     }
-    cursus_fratrum  = cursus_regula != NIHIL;
+        cursus_fratrum  = cursus_regula != NIHIL;
     cursus_strictus = cursus_regula != NIHIL
         && chorda_aequalis_literis(*cursus_regula, "strictus");
+    /* quaesitio completa (retentatio, incrementum XXI, 2026-09-08):
+     * 'completa' solum - liberum formae posterius cadens electionem
+     * prioris retro tentat (lectio proxima intra candidatum, deinde
+     * candidatus proximus); sine eo lex avida (defalta mensurata).
+     * Valor alius vitium clarum. */
+    quaesitio_regula = stml_attributum_capere(nodus, "quaesitio");
+    si (   quaesitio_regula != NIHIL
+        && !chorda_aequalis_literis(*quaesitio_regula, "completa"))
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                       nodus, NIHIL, quaesitio_regula);
+        redde FALSUM;
+    }
+    quaesitio = quaesitio_regula != NIHIL;
+
 
     /* corpus: elementum UNUM (spec par. 2.4 - corpus silvestre sub
      * applicatione fluitanti clarum, alternativis nominatis) */
@@ -4608,12 +4772,16 @@ _exemplar_nucleus (
                         redde FALSUM;
                     }
                 }
-                si (!_exemplar_petere(ctx, forma_ordinis,
-                        ordo->radix, ancorata, congruentiae, opus,
-                        cursus_fratrum, cursus_strictus))
-                {
+                                si (!_exemplar_petere(ctx,
+                                    forma_ordinis,
+                                    ordo->radix, ancorata, congruentiae,
+                                    opus,
+                                    cursus_fratrum, cursus_strictus,
+                                    quaesitio))
+
+                                {
                     redde FALSUM;
-                }
+                                }
             }
             /* lex extensionis: ordines novi capturas fontis
              * hereditant (vide _ligamina_hereditare); sub
@@ -4652,12 +4820,14 @@ _exemplar_nucleus (
     {
         /* scopus defaltus: arbor expansa PARTIALIS = contentum
          * supra (lex stratorum per constructionem) */
-        si (!_exemplar_petere(ctx, forma, ctx->radix_expansa,
+                si (!_exemplar_petere(ctx, forma, ctx->radix_expansa,
                               ancorata, congruentiae, opus,
-                              cursus_fratrum, cursus_strictus))
-        {
+                              cursus_fratrum, cursus_strictus,
+                              quaesitio))
+
+                {
             redde FALSUM;
-        }
+                }
     }
 
     /* modus (spec par. 2.3): defaltus omnia; unum/optional CLARE */

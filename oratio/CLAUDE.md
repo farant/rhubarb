@@ -662,6 +662,16 @@ PRECISION pinned 431/364/377 (Latin), 815/826 (EWT); RECALL reported
 umbrae 408/363. FINDING: we draw ~1/5 of the gold arcs and get < 1/2
 right — the measured distance to the dependency design. Glossary
 `ligatio`. Named: attachment per rule (umbra carries no author).
+**T27 RETRY DOOR MEASURED (same day)**: the STML matcher's joint
+backtracking now exists as `quaesitio="completa"` per EXEMPLAR
+(exemplaria decree 21); run as the DEFAULT under the literal rules it
+kept primary/forced but cost case 645/622/637 → 641/619/635 and
+charter attachment 364/377 → 359/374 — the nominative rules claimed
+rarer nominative readings before the accusative rules saw their first
+reading; FIRST READING PER CASE IS A PRIOR. Default stays greedy, no
+rule changed, pins identical. Number/gender were captures already;
+case is the only literal dimension (28 head rules → 4 possible). NEXT
+= unified rules with the attribute measured beside the literal set.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

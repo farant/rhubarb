@@ -2577,6 +2577,7 @@ principale (vacuum)
                 "<TRANSPARENTIA tags=\"expansio ante post\"/>"
                 "<EXEMPLAR output=\"$m\"><conditio/></EXEMPLAR>"
                 "<EXEMPLAR de=\"$m\" modus=\"unum\" ancorata"
+                " cursus=\"strictus\" quaesitio=\"completa\""
                 " output=\"$n\"><x v=\"$v\"/></EXEMPLAR>"
                 "<CATENA de=\"$m\" output=\"$c\">"
                 "<(><EXEMPLAR modus=\"primum\" radix=\"fontis\">"
@@ -2605,7 +2606,7 @@ principale (vacuum)
 
             /* malformata: quodque vitium UNUM XXIII */
             {
-                constans character* mala[XXII];
+                constans character* mala[XXIV];
                                i32  m;
 
                 mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
@@ -2666,7 +2667,13 @@ principale (vacuum)
                 mala[21] = "<DIRIBITIO output=\"$d2\">"
                            "<ORDINARIUS angustans><EXEMPLAR><s/>"
                            "</EXEMPLAR></ORDINARIUS></DIRIBITIO>";
-                per (m = ZEPHYRUM; m < XXII; m++)
+                /* cursus / quaesitio valore ignoto (specula
+                 * machinae, incrementa XX/XXI) */
+                mala[22] = "<EXEMPLAR output=\"$q1\" cursus=\"alius\">"
+                           "<s><w/></s></EXEMPLAR>";
+                mala[23] = "<EXEMPLAR output=\"$q2\""
+                           " quaesitio=\"alia\"><s><w/></s></EXEMPLAR>";
+                per (m = ZEPHYRUM; m < XXIV; m++)
                 {
                     vitia = iudicare_literis(c, mala[m], piscina,
                                              intern);

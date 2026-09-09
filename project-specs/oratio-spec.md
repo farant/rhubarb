@@ -1771,6 +1771,27 @@ coordination are never drawn. This is the measured distance to the
 dependency design. Named: attachment per deciding rule (the umbra
 would carry its author).
 
+**As built — T27, the retry door measured (2026-09-08, same
+session).** The STML matcher's joint backtracking (exemplaria spec
+decree 21, `quaesitio="completa"`) was built and run against every
+rule as written on the five treebanks. Primary and forced identical;
+case 645/622/637 → 641/619/635; attachment precision 431/364/377 →
+438/359/374; the law-of-umbrae tier grew on every Latin file. Cause
+from the author table: the nominative head rules gained (798 → 823,
+strict 319 → 361) what the accusative ones lost (125 → 87), because
+retry lets a literal-case rule claim a carrier's rarer readings of
+its case before the next case's first reading, and FIRST READING PER
+CASE is an informative prior (two to four permille). DECISION: the
+search is opt-in per EXEMPLAR, the resolver default stays greedy, no
+rule changed, pins identical. FINDING on rule growth: number and
+gender were already captures; case is the only literal dimension
+(28 head rules where 4 suffice, 2 object rules where 1), so the
+tracked features grow rules linearly already and the collapse is
+worth 28 → 4. Next: unified rules with the attribute, measured
+beside the literal set; if the loss returns, an enumeration order
+(each case's first reading before any case's second) is the named
+policy to measure.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

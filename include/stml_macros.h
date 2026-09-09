@@ -82,10 +82,13 @@ nomen enumeratio {
      * radicis 'radix=' valore ignoto aut sine ordine intrante;
      * pons '&@n;' in forma sine ordinibus (uniformitas pontis,
      * decretum 2026-09-01: referentia ipsa = electio impletionis
-     * per ordinem); cursus= valore alio quam 'fratrum' ('strictus'
-     * reservatus) aut forma sine libero ordinario (incrementum XX,
-     * 2026-09-07: cursus fratrum = congruentia una per initium
-     * liberorum candidati, primus fixus) */
+     * per ordinem); cursus= valore alio quam 'fratrum'/'strictus'
+     * aut forma sine libero ordinario (incrementum XX, 2026-09-07:
+     * cursus fratrum = congruentia una per initium liberorum
+     * candidati, primus fixus; strictus = sine saltibus);
+     * quaesitio= valore alio quam 'completa' (incrementum XXI,
+     * 2026-09-08: retentatio - liberum posterius cadens electionem
+     * prioris retro tentat; defalta = lex avida mensurata) */
     STML_EXPANSIO_EXEMPLAR_MALFORMATUM     = XIII,
     /* de= aut congruentia= relationem nullam priorem nominans */
     STML_EXPANSIO_SCOPUS_IGNOTUS           = XIV,
