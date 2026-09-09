@@ -382,7 +382,18 @@ _numerus_attributi (
  * aequat - lex haec semen legit, non capsam (informatio propria
  * capsae = clausura, stratum debilissimum). Interruptor ZEPHYRUM cum
  * numeris manet; lex clausulae quaevis custodiam VI vincere debet. */
-hic_manens constans i32 RECUSATIO_TRANS_CLAUSULAS = ZEPHYRUM;
+/* T28 (2026-09-09, decisio Frani): lex I re-iudicata columna LIGATIONIS
+ * (T26), quae T20c deerat. Gradus II (relationes omnes, strata pura)
+ * regulis strictis unitis: ligatio 441/386/394 -> 462/398/412, EWT dev
+ * 815 -> 817, scrinium +20/+44/+41/+16; coactae 765/711/712 ->
+ * 769/713/717; casus 660/654/671 -> 666/653/671 (chartae dev -1 CAUSA
+ * NOMINATA, VII verba; Aquinas -2 relatum); primaria immota; revocatio
+ * aequalis - arcus remoti falsi sublati, non recti. Gradus I: ligatio
+ * 458/391/405. Census auri (caput_census.py): socius concordans
+ * proximus caput est 96-99 % ubi concordantia vera; verbum interiectum
+ * in versu 30 % arcuum - capsa in FORMA (clausula="$c") versum
+ * laederet, recusatio in exsecutore (strata pura) non laedit. */
+hic_manens constans i32 RECUSATIO_TRANS_CLAUSULAS = (i32)II;
 
 
 interior b32

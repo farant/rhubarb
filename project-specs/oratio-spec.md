@@ -1834,6 +1834,20 @@ distance-only loses 7–15, so ablative-first stands and the hand
 sentences `Puella bona ambulat` / `Hoc templum est` read ablative and
 accusative, recorded as the price.
 
+**As built — T28, the loose tier censused; LEX I CLAUSULAE adopted at
+level II (2026-09-09, decision Fran's).** Gold census: the nearest
+agreeing nominal is the head 96–99 % of adjective/determiner arcs on
+all seven Latin files given true agreement — the law is right, the
+readings are not; a verb intervenes in 30 % of Seneca's arcs, so the
+clause may not be a MATCH condition for verse. Unifying the loose tier
+loses attachment under every ordering tried (four, incl. a per-rule
+`politica` attribute, reverted): the literal tier stays, destined for
+the §8.5 template. T20c's clause refusal, re-judged on the attachment
+column it lacked: level II gives attachment 462/398/412, EWT dev 817,
+shelf +16..+44, forced 769/713/717, case 666/653/671 (charters dev
+654 → 653 NAMED), primary and recall unchanged. Pins moved
+accordingly.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

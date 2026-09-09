@@ -121,20 +121,25 @@
  * explicitae semel per sententiam emendatus - prima vincit trans gradus):
  * ligatio 437/368/378 -> 441/386/394, casus chartarum 644/665 ->
  * 654/671, scrinium casus +4..+7 et ligatio +10..+12; casus Senecae
- * 662 -> 660 CAUSA NOMINATA (decisio Frani, IX verba). */
-#define CIRCSE_LIGATIONIS_PINNA    441   /* T27: 431 -> 437; T27 b: 437 -> 441 */
-#define LLCT_DEV_LIGATIONIS_PINNA  386   /* T27: 364 -> 368; T27 b: 368 -> 386 */
-#define LLCT_TEST_LIGATIONIS_PINNA 394   /* T27: 377 -> 378; T27 b: 378 -> 394 */
-#define EWT_DEV_LIGATIONIS_PINNA   815
+ * 662 -> 660 CAUSA NOMINATA (decisio Frani, IX verba).
+ * T28 (2026-09-09): LEX I CLAUSULAE gradu II (ligatio trans clausulas
+ * recusata, relationes omnes, strata pura) columna ligationis iudicata:
+ * ligatio 441/386/394 -> 462/398/412, EWT dev 815 -> 817, coactae
+ * 765/711/712 -> 769/713/717, casus Senecae 660 -> 666; casus chartarum
+ * dev 654 -> 653 CAUSA NOMINATA (decisio Frani, VII verba). */
+#define CIRCSE_LIGATIONIS_PINNA    462   /* T27: 431 -> 437; T27 b: 437 -> 441; T28: 441 -> 462 */
+#define LLCT_DEV_LIGATIONIS_PINNA  398   /* T27: 364 -> 368; T27 b: 368 -> 386; T28: 386 -> 398 */
+#define LLCT_TEST_LIGATIONIS_PINNA 412   /* T27: 377 -> 378; T27 b: 378 -> 394; T28: 394 -> 412 */
+#define EWT_DEV_LIGATIONIS_PINNA   817   /* T28: 815 -> 817 */
 #define EWT_TEST_LIGATIONIS_PINNA  826
-#define CIRCSE_CASUUM_PINNA      660   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA */
-#define LLCT_DEV_CASUUM_PINNA    654   /* T27: 622 -> 644; T27 b: 644 -> 654 */
+#define CIRCSE_CASUUM_PINNA      666   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666 */
+#define LLCT_DEV_CASUUM_PINNA    653   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA */
 #define LLCT_TEST_CASUUM_PINNA   671   /* T27: 637 -> 665; T27 b: 665 -> 671 */
 #define EWT_DEV_CASUUM_PINNA     0
 #define EWT_TEST_CASUUM_PINNA    0
-#define CIRCSE_COACTAE_PINNA     765   /* T27: 764 -> 765 */
-#define LLCT_DEV_COACTAE_PINNA   711   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA */
-#define LLCT_TEST_COACTAE_PINNA  712   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA */
+#define CIRCSE_COACTAE_PINNA     769   /* T27: 764 -> 765; T28: 765 -> 769 */
+#define LLCT_DEV_COACTAE_PINNA   713   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA; T28: 711 -> 713 */
+#define LLCT_TEST_COACTAE_PINNA  717   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA; T28: 712 -> 717 */
 #define EWT_DEV_COACTAE_PINNA    913
 #define EWT_TEST_COACTAE_PINNA   913
 /* T20a (2026-09-08, decisio XLVII): CLAUSULAE - PURITAS verborum

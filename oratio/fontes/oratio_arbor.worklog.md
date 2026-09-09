@@ -2946,3 +2946,51 @@ Shelf: case 751/715/738/693, attachment 531/529/492/354. Suite 18/18,
 pythonica green, discordes 0. Two pin moves down in two days, each
 named, each against a column rising on eight of nine files; the
 rule stays that a pin never moves down silently.
+
+## 2026-09-09 — T28: the loose tier's law, censused; the clause refusal re-judged on arcs
+
+The tranche set out to find a better law for the remote head rules
+and ended by adopting a law that already existed, once it was judged
+on the right column.
+
+**The census.** For every adjective and determiner in the seven Latin
+treebanks (`caput_census.py`, scratch): with the gold's own features,
+the NEAREST agreeing nominal is the head 96–99 % of the time on every
+file, verse included. So "nearest agreeing" is the right law; our
+remote errors come from spurious agreement between over-generated
+readings, not from choosing the wrong candidate. Two more facts: a
+verb stands between adjective and noun in 30 % of Seneca's arcs
+(nearest-with-no-verb-between drops to 70 % there, against 93–98 %
+in prose), so a clause bound inside the MATCH would cost verse; and
+the head lies after the adjective 70 % of the time, so "prefer after"
+beats "prefer before" by 8 points on Seneca.
+
+**Every generalization of the loose tier loses attachment.** A per-rule
+policy attribute (`politica="casus"`) was built and the unified loose
+rule with every completion measured under four orderings: case then
+distance (nominative-first), the same with the ablative-first table,
+both with the carrier's reading index as a second key, and a global
+case-major sort across carriers imitating rule order. All four lose
+6–15 permille of attachment on the shelf and 7–15 on the charters;
+the ablative table swings case +34 on Seneca and −26 on Aquinas. The
+literal tier's conservatism — one completion, first reading per case,
+rule order — is a reading-quality filter no ordering reproduced. The
+loose tier stays literal and is the first family for the §8.5
+template door; the policy code was reverted (numbers in this entry,
+not in the tree).
+
+**The clause refusal, judged on arcs.** T20c's LEX I refused every
+variant on primary alone. With the attachment column, level II
+(all relations, pure strata): attachment 441/386/394 → 462/398/412,
+EWT dev 815 → 817, shelf +20/+44/+41/+16; forced 765/711/712 →
+769/713/717; case 660/654/671 → 666/653/671 (charters dev −1, seven
+words, named; Aquinas −2 reported); primary unchanged; recall level,
+so the removed arcs were wrong ones. Level I: 458/391/405. Adopted,
+Fran's decision. The T20c comment's "every variant depresses Seneca
+primary" stands as written — it was the wrong column.
+
+**Lesson.** The right column changes the verdict on a law measured a
+day earlier. And a census over gold features tells the ceiling of a
+law before any code: here it said the law was fine and the readings
+were not, which is where the next work goes (feature columns, then
+the verb star).

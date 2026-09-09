@@ -689,9 +689,18 @@ indices were two discordant bindings on Hilarius; no number moves);
 `EMENDATIO_SEMEL_PER_SENTENTIAM` ON (Fran 2026-09-09: attachment
 441/386/394, case 660/654/671, Seneca case pin 662 → 660 NAMED); pair order
 `ORDO_CASUUM_PARIUM` (nominative-first loses 6–19 case: ablative
-first stands; `Hoc templum est` reads accusative, recorded). NEXT =
-loose tier law or template (§8.5), feature columns, verb star with
-`omnes`.
+first stands; `Hoc templum est` reads accusative, recorded). **T28 (2026-09-09,
+Fran's decision): LEX I CLAUSULAE ADOPTED AT LEVEL II** — re-judged on
+the attachment column T20c lacked: attachment 462/398/412 (EWT dev
+817, shelf +16..+44), forced 769/713/717, case 666/653/671 (charters
+dev −1 NAMED); primary and recall unchanged. Gold census: nearest
+agreeing nominal IS the head 96–99 % given true agreement — the
+readings are the problem, not the law; a verb intervenes in 30 % of
+Seneca's adjective arcs (no clause bound in the MATCH). Unifying the
+loose tier loses attachment under every ordering (four tried, policy
+attribute reverted): loose tier stays literal → §8.5 template. NEXT =
+feature columns (number/gender, then verb features), verb star with
+`omnes`, §8.5 template family.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
