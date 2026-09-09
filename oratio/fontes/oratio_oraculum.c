@@ -2386,6 +2386,11 @@ _ligationes_iudicare (
                 census->arcus_aurei_subiecti =
                     census->arcus_aurei_subiecti + I;
             }
+            si (_literis(t->deprel, "obj"))
+            {
+                census->arcus_aurei_obiecti =
+                    census->arcus_aurei_obiecti + I;   /* T31 b */
+            }
         }
     }
     /* ligationes nostrae */

@@ -511,7 +511,7 @@ MateriaLexiconRatum  ratum;
                 == ZEPHYRUM);
             CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
                 ORATIO_RELATIO_SUBIECTUM], "subiectum") == ZEPHYRUM);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_RELATIO_NUMERUS, (i32)IV);
+            CREDO_AEQUALIS_I32 ((i32)ORATIO_RELATIO_NUMERUS, (i32)V);   /* T31 b: + obiectum-verbi */
         }
         /* clausula (T20a): genus post umbram, loci IV (semen species
          * pater INDEX, umbrae LISTA_NODUS); tituli specierum et

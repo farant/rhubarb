@@ -786,9 +786,21 @@ binding to correct another. Rarity rows `flexio-rarior` (WORDS
 inflection code, syncopated perfect `-ere`) and `imperativum-futurum`.
 Seneca case 670 → 690, forced 770 → 801, attachment 463 → 485, primary
 841; shelf case +16..+40; charters case −2/−8, attachment dev −9 NAMED
-(far, accusative subjects) — Fran's decision. NEXT = object slot,
-dialect-gated loose subject tier, acc+inf subjects, §8.5 template
-family, capitalised known forms, derived gender for commune.
+(far, accusative subjects) — Fran's decision. **T31 b (2026-09-09):
+OBJECT SLOT + LEX CARRIER.** Relation `obiectum-verbi` (5th) on finite
+active/deponent readings of TRANS/DEP/SEMIDEP/X verbs (never passive
+or rare); adjacent rules only — the loose tier LOSES everywhere
+(charters −49/−50). LEX CARRIER: a verb-object order whose verb
+reading is not the word's FIRST reading is refused — a bare case match
+may fill a slot but never decide a class (without it homograph nouns
+`amor`/`regis` became verbs, Seneca primary −26). Partner refusals
+(class change, adposition membership, own subject) measured and
+INACTIVE. Seneca attachment 485 → 503, case 690 → 704, object precision
+55 % at recall 47 %, shelf attachment +10..+26; named falls 1–5 on
+Seneca primary/forced/gender and charters gender/attachment — Fran's
+decision. NEXT = objects on infinitives, dialect-gated loose subject
+tier, acc+inf subjects, §8.5 template family, capitalised known forms,
+derived gender for commune.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

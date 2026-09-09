@@ -337,6 +337,10 @@ nomen enumeratio {
      * subiectum = nominativus cum verbo concordans */
     ORATIO_RELATIO_VERBUM_FINITUM,
     ORATIO_RELATIO_SUBIECTUM,
+    /* T31 b: obiectum VERBI (accusativum verbi transitivi) - relatio
+     * propria ne regulae obiecti adpositionum (gradus I, relatio 0) eam
+     * impleant; directio UD: verbum caput obiecti (obj) */
+    ORATIO_RELATIO_OBIECTUM_VERBI,
 
     ORATIO_RELATIO_NUMERUS
 } OratioRelatio;

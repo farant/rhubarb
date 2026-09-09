@@ -437,6 +437,11 @@ _tabulam_imprimere (
                 _pars(c->ligationes_rectae_relationum[ORATIO_RELATIO_SUBIECTUM],
                     c->arcus_aurei_subiecti),
                 (integer)c->arcus_aurei_subiecti);
+            imprimere("    obiectum-verbi revocatio %.1f%% (arcus aurei obiecti %d)\n",
+                _pars(c->ligationes_rectae_relationum[
+                    ORATIO_RELATIO_OBIECTUM_VERBI],
+                    c->arcus_aurei_obiecti),
+                (integer)c->arcus_aurei_obiecti);
         }
         imprimere("  sententiae censae: latina %d  anglica %d\n",
             (integer)c->sententiae_linguae[ORATIO_LINGUA_LATINA],
@@ -773,7 +778,9 @@ _machinam_imprimere (
                     (integer)c->ligationes_nostrae_relationum[r],
                     (integer)c->ligationes_rectae_relationum[r],
                     (integer)(r == (i32)ORATIO_RELATIO_SUBIECTUM
-                        ? c->arcus_aurei_subiecti : ZEPHYRUM));
+                        ? c->arcus_aurei_subiecti
+                        : r == (i32)ORATIO_RELATIO_OBIECTUM_VERBI
+                        ? c->arcus_aurei_obiecti : ZEPHYRUM));
             }
         }
         /* T19g: ordines PARTITIO genus verba primaria; AUCTOR titulus verba

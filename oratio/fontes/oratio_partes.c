@@ -248,7 +248,38 @@ _natura_impersonalis (
 interior i32
 _raritas (
     constans OratioDescriptio* d);
+/* T31 b: species stirpis WORDS (lexema primum) = titulus? */
+interior b32
+_natura_est (
+                chorda  natura,
+    constans character* titulus)
+{
+    i32 l = (i32)strlen(titulus);
 
+    redde (b32)(   natura.mensura >= l
+        && memcmp(natura.datum, titulus, (size_t)l) == ZEPHYRUM
+        && (natura.mensura == l || natura.datum[l] == ' '));
+}
+
+/* T31 b: verba speciei ignotae ('X': 2751 entria, mitto inter ea)
+ * obiectum accipiunt; ORATIO_OBIECTUM_X=0 abrogat (mensura) */
+interior b32
+_obiectum_speciei_ignotae (
+    vacuum)
+{
+    hic_manens i32 lectum   = ZEPHYRUM;
+    hic_manens b32 activum  = VERUM;
+
+    si (!lectum)
+    {
+        constans character* ambitus = getenv("ORATIO_OBIECTUM_X");
+
+        activum = (b32)(ambitus == NIHIL
+            || strcmp(ambitus, "0") != ZEPHYRUM);
+        lectum = I;
+    }
+    redde activum;
+}
 
 interior b32
 _umbras_ponere (
@@ -301,14 +332,41 @@ _umbras_ponere (
      * subiectum 69-81 % (chartae 45-52 %). */
     si (   d->classis     == ORATIO_CLASSIS_VERBUM
         && d->forma_verbi == (s32)ORATIO_FORMA_VERBI_FINITUM
-        && d->persona     == (s32)ORATIO_PERSONA_TERTIA
-        && d->numerus     >= ZEPHYRUM
         && !_natura_impersonalis(d->natura)
         && _raritas(d)    == ZEPHYRUM)
     {
-        redde _umbram_addere(piscina, analysis, d->classis,
-            ORATIO_RELATIO_SUBIECTUM, (s32)-I,
-            (s32)ORATIO_CASUS_NOMINATIVUS, d->numerus, (s32)-I);
+        si (   d->persona == (s32)ORATIO_PERSONA_TERTIA
+            && d->numerus >= ZEPHYRUM
+            && !_umbram_addere(piscina, analysis, d->classis,
+                ORATIO_RELATIO_SUBIECTUM, (s32)-I,
+                (s32)ORATIO_CASUS_NOMINATIVUS, d->numerus, (s32)-I))
+        {
+            redde FALSUM;
+        }
+        /* OBIECTUM VERBI (T31 b, 2026-09-09): lectio finita activa aut
+         * deponens verbi transitivi (WORDS TRANS, DEP, SEMIDEP; species
+         * ignota X quoque - mitto) accusativum exspectat; passivae non
+         * (obiectum subiectum factum), INTRANS IMPERS DAT GEN ABL non.
+         * Census auri: verba finita activa cum obiecto explicito 33-54 %,
+         * passiva 0-8 % (Seneca 25 % = deponentia Voice=Pass); obiectum
+         * accusativum 89-97 %, substantivum 49-77 % pronomen 11-37 %;
+         * ante verbum 54-79 %, vicinum 36-59 %, intra III 65-92 %;
+         * accusativus proximus obiectum 68-79 % (chartae 52-54 %), sine
+         * obiectis adpositionum 69-82 % (chartae 58-65 %). */
+        si (   (   d->vox == (s32)ORATIO_VOX_ACTIVA
+                || d->vox == (s32)ORATIO_VOX_DEPONENS)
+            && (   _natura_est(d->natura, "TRANS")
+                || _natura_est(d->natura, "DEP")
+                || _natura_est(d->natura, "SEMIDEP")
+                || (   _natura_est(d->natura, "X")
+                    && _obiectum_speciei_ignotae()))
+            && !_umbram_addere(piscina, analysis, d->classis,
+                ORATIO_RELATIO_OBIECTUM_VERBI, (s32)-I,
+                (s32)ORATIO_CASUS_ACCUSATIVUS, (s32)-I, (s32)-I))
+        {
+            redde FALSUM;
+        }
+        redde VERUM;
     }
     si (   (   d->classis == ORATIO_CLASSIS_ADIECTIVUM
             || d->classis == ORATIO_CLASSIS_DETERMINANS)

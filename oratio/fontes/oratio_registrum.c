@@ -344,7 +344,7 @@ constans character* constans ORATIO_TITULI_DIALECTORUM[] = {
     "ignotus", "classicus", "medius"
 };
 constans character* constans ORATIO_TITULI_RELATIONUM[] = {
-    "obiectum", "caput", "verbum-finitum", "subiectum"
+    "obiectum", "caput", "verbum-finitum", "subiectum", "obiectum-verbi"
 };
 constans character* constans ORATIO_TITULI_DECISIONUM[] = {
     "praelatio", "impletio", "umbra"

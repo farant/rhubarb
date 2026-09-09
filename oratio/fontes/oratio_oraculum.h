@@ -253,6 +253,7 @@ nomen structura {
         i32 ligationes_nostrae_relationum[ORATIO_RELATIO_NUMERUS];
         i32 ligationes_rectae_relationum[ORATIO_RELATIO_NUMERUS];
         i32 arcus_aurei_subiecti;
+        i32 arcus_aurei_obiecti;   /* T31 b: deprel obj alignati */
         i32 ligationes_capitis;
         i32 ligationes_capitis_rectae;
         i32 ligationes_vicinae;

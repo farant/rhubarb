@@ -2010,6 +2010,34 @@ tier alone was cleaner but half the gain. Not done: objects, first
 and second person, accusative subjects of infinitives, a
 dialect-gated loose tier, coordination.
 
+**As built — T31 b, the object slot and the carrier law
+(2026-09-09).** Census: finite active verbs with an explicit object
+33–54 %, passives 0–8 % (deponents apart), objects accusative 89–97 %,
+adjacent 36–59 %, within three words 65–92 %, nearest accusative the
+object 68–79 % (charters 52–54 %), 69–82 % excluding adposition
+objects. Relation `obiectum-verbi` (fifth value of `OratioRelatio`,
+so stage-1 adposition rules never fill it); the annotator writes it
+on finite active or deponent readings of verbs WORDS marks TRANS,
+DEP, SEMIDEP or X (`_natura_est`, `ORATIO_OBIECTUM_X=0` to measure),
+never passive or rare readings; two adjacent rules beside the
+subject's strict pair; oracle counts gold `obj` arcs, object
+precision pinned. LEX CARRIER (`_obiectum_carrier_primus`,
+`ORATIO_OBIECTUM_CARRIER_PRIMUS=0`): a verb-object order whose verb
+reading is not the word's first reading is refused — without it
+homograph nouns became verbs (Seneca primary 841 → 815). Refused by
+measurement: the loose tier (attachment −49 / −50 charters, −14..−24
+shelf); partner refusals for class change, adposition membership and
+subject identity (`_obiectum_socius_recusandus`, inactive under
+`ORATIO_OBIECTUM_SOCIUS`); excluding unknown-kind verbs. Adopted:
+Seneca attachment 485 → 503, case 690 → 704, verb form 989, voice
+991, object precision 55 % at recall 47 %; shelf attachment +10..+26,
+case +7..+16; charters case +3 / +2, object precision 42 / 47 % at
+recall 25 / 27 %; named falls of 1–5 permille on Seneca primary,
+forced and gender and on the charters' gender, attachment, voice and
+verb form, all from the partner's promoted accusative reading. Not
+done: objects on infinitives and participles, dative and ablative
+kinds, a dialect gate.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

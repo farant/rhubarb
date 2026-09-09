@@ -3367,3 +3367,68 @@ subject since `puella` is vindicated ablative, a hand case noted.
 **Not done.** Objects (the second ray of the star), first and second
 person subjects, accusative subjects of infinitives, a dialect-gated
 loose tier for the charters, coordinated subjects.
+
+## 2026-09-09 — T31 b: the object slot, and the carrier law
+
+**Census** (`obiectum_census.py`, gold only): finite active verbs
+carry an explicit object 45–54 % of the time on classical text, 43 %
+in Aquinas, 33 % on the charters; passive finite verbs 0–8 %, except
+Seneca's 25 % which are deponents tagged passive. Objects are
+accusative 89–97 %, nouns 49–77 % and pronouns 11–37 %, before the
+verb 54–79 %, adjacent 36–59 %, within three words 65–92 %. The
+nearest accusative is the object 68–79 % (charters 52–54 %), and
+69–82 % once accusatives already belonging to an adposition are
+excluded — a fifth to a third of all accusatives. A fifth to two
+fifths of objects hang on infinitives and participles.
+
+**Built.** A fifth relation, `obiectum-verbi`, so the adposition
+rules of stage 1 cannot fill it. The annotator writes it on Latin
+finite active or deponent readings of verbs WORDS marks transitive,
+deponent, semi-deponent or of unknown kind (`mitto` is unknown;
+excluding those collapsed recall to a sixth), never on passives or on
+readings with a rarity. Two adjacent rules beside the subject's
+strict pair. The oracle counts the gold's object arcs; object
+precision is pinned, recall reported.
+
+**The carrier law.** The first measurement lost primary on every
+file, 32 permille on Seneca. The class errata named it: nouns with a
+homograph verb reading — `amor`, `regis`, `duce` — had that reading
+bound to an adjacent accusative and promoted, 178 nouns and 76
+adjectives became verbs on Seneca alone. So a verb-object order whose
+verb reading is not already the word's first reading is refused: a
+bare case match may fill a slot but never decide a class, where the
+subject's case plus number plus person may. With it, the same tier
+gains on every classical file.
+
+**Refused, all measured on nine treebanks with the carrier law:**
+the loose tier (attachment −49 / −50 on the charters, −14 to −24 on
+the shelf; distant accusatives are somebody else's); refusing a
+partner reading that changes the partner's class (−1 to −3 attachment,
+recall 47 → 44 %: it refused right promotions too); refusing a
+partner already bound as an adposition's object (−1 to −4: our
+adposition bindings are wrong often enough that trusting them
+costs); refusing the verb's own subject as its object (inert: the
+subject slot is not yet filled when the object order is applied).
+The three partner laws stay in the code inactive, under
+`ORATIO_OBIECTUM_SOCIUS`.
+
+**Adopted, Fran's decision, against the committed state.** Seneca
+attachment 485 → 503, case 690 → 704, verb form 981 → 989, voice 981 →
+991, object precision 55 % at recall 47 %; Aquinas, Perseus, PROIEL,
+Dante attachment +10 / +24 / +21 / +26 and case +7 / +16 / +12 / +11;
+charters case +3 / +2, forced +2 / +3, object precision 42 / 47 % at
+recall 25 / 27 %. Named falls: Seneca primary 841 → 836, forced 801 →
+796, gender 913 → 909, charters gender 930 → 926 / 929 → 927,
+attachment 402 → 397 / 428 → 426, primary dev 866 → 865, subject
+precision dev 244 → 242, voice 999 → 998 twice, verb form dev 993 →
+992 — one cause, about thirty words on Seneca: the partner's promoted
+accusative reading changes its class or gender, and the refusal that
+would prevent it costs more than it saves.
+
+**Fixture.** `In urbem venit` now produces a third order, the object
+order of `venit` refused by the carrier law.
+
+**Not done.** Objects on infinitives and participles (two fifths of
+the charters' objects); the dative and ablative kinds; the subject
+refusal once slots fill in order; a dialect-gated anything for the
+charters.

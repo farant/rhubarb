@@ -395,6 +395,26 @@ _numerus_attributi (
  * laederet, recusatio in exsecutore (strata pura) non laedit. */
 hic_manens constans i32 RECUSATIO_TRANS_CLAUSULAS = (i32)II;
 
+interior b32
+_obiectum_carrier_primus (
+    vacuum);
+
+/* T31 b LEX SOCII OBIECTI: recusationes socii (w, b) obiecti verbi -
+ * (I) classis: lectio b classem lectionis primae socii mutans (casus
+ * solus classem non decidit); (II) adpositionis: socius iam obiectum
+ * adpositionis (umbra obiecti carrier adpositionis in w impleta);
+ * (III) subiecti: socius subiectum eiusdem verbi (umbra subiecti
+ * carrier v in w impleta). Ambitus ORATIO_OBIECTUM_SOCIUS=0 omnes
+ * abrogat, =classis|adpositionis|subiecti unam solam (mensura). */
+interior b32
+_obiectum_socius_recusandus (
+    constans MateriaValor* elementa,
+                      i32  ne,
+                      i32  v,
+                      i32  a,
+                      i32  w,
+                      i32  b);
+
 
 interior b32
 _stratum_purum (
@@ -1511,10 +1531,40 @@ _sententiam_resolvere_gradu (
                 }
                 perge;
             }
-                        si (cursus->census != NIHIL)
-                        {
+            /* T31 b LEX CARRIER OBIECTI: lectio carrier prima sola */
+            si (   _obiectum_carrier_primus()
+                && umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                    == MATERIA_VALOR_INDEX
+                && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
+                    == (s32)ORATIO_RELATIO_OBIECTUM_VERBI
+                && a != ZEPHYRUM)
+            {
+                si (cursus->census != NIHIL)
+                {
+                    cursus->census->recusatae =
+                        cursus->census->recusatae + I;
+                }
+                perge;
+            }
+            /* T31 b LEX SOCII OBIECTI (classis, adpositionis, subiecti) */
+            si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                    == MATERIA_VALOR_INDEX
+                && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
+                    == (s32)ORATIO_RELATIO_OBIECTUM_VERBI
+                && _obiectum_socius_recusandus(elementa, ne, v, a, w,
+                b))
+            {
+                si (cursus->census != NIHIL)
+                {
+                    cursus->census->recusatae =
+                        cursus->census->recusatae + I;
+                }
+                perge;
+            }
+            si (cursus->census != NIHIL)
+            {
                 cursus->census->ordines = cursus->census->ordines + I;
-                        }
+            }
             /* vocabulum implens gradu priore vindicatum: veritas eius =
              * lectio PRIMA (n = 0 in proiectione huius gradus); ordo
              * lectionem aliam nominans repetita est (cum puella bona:
@@ -2565,7 +2615,8 @@ _ligationes_ad_caput_sequi (
                 }
                 relatio = umbra->loci[ORATIO_UMBRA_RELATIO].datum.index;
                 si (   relatio != (s32)ORATIO_RELATIO_SUBIECTUM
-                    && relatio != (s32)ORATIO_RELATIO_OBIECTUM)
+                    && relatio != (s32)ORATIO_RELATIO_OBIECTUM
+                    && relatio != (s32)ORATIO_RELATIO_OBIECTUM_VERBI)
                 {
                     perge;
                 }
@@ -2679,6 +2730,183 @@ _ligationes_ad_caput_sequi (
         }
     }
     redde VERUM;
+}
+
+/* LEX CARRIER OBIECTI (T31 b, 2026-09-09): ordo obiecti verbi cuius
+ * lectio carrier (verbum) lectio PRIMA vocabuli non est recusatur -
+ * obiectum verbi classem carrier non decidit (testimonium casus solius
+ * debile: homographa 'amor', 'regis', 'canis' verba fiebant, errata
+ * classis Senecae substantivum -> verbum CLXXVIII, adiectivum -> verbum
+ * LXXVI, primarium 841 -> 815 gradu stricto solo). Subiectum (casus +
+ * numerus + persona) classem decidere sinitur. Ambitus
+ * ORATIO_OBIECTUM_CARRIER_PRIMUS=0 abrogat (mensura). */
+interior b32
+_obiectum_carrier_primus (
+    vacuum)
+{
+    hic_manens i32 lectum   = ZEPHYRUM;
+    hic_manens b32 activum  = VERUM;
+
+    si (!lectum)
+    {
+        constans character* ambitus =
+            getenv("ORATIO_OBIECTUM_CARRIER_PRIMUS");
+
+        activum = (b32)(ambitus == NIHIL
+            || strcmp(ambitus, "0") != ZEPHYRUM);
+        lectum = I;
+    }
+    redde activum;
+}
+
+interior b32
+_obiectum_socius_lex_activa (
+    constans character* titulus)
+{
+                   hic_manens i32  lectum   = ZEPHYRUM;
+    hic_manens constans character* ambitus  = NIHIL;
+
+    si (!lectum)
+    {
+        ambitus  = getenv("ORATIO_OBIECTUM_SOCIUS");
+        lectum   = I;
+    }
+    /* MENSURATAE 2026-09-09 gradu stricto cum lege carrier (ligatio
+     * thesauris VII): classis -1..-3 ubique (revocatio obiecti 47 -> 44 %:
+     * promotiones classis rectae quoque recusabat); adpositionis -1..-4
+     * (ligationes adpositionum nostrae ipsae falsae: recusatio ex eis
+     * peior); subiecti NIHIL mutat (umbra subiecti eodem gradu nondum
+     * impleta) - omnes INACTIVAE, ambitu solo */
+    si (ambitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde (b32)(strcmp(ambitus, titulus) == ZEPHYRUM);
+}
+
+interior b32
+_obiectum_socius_recusandus (
+    constans MateriaValor* elementa,
+                      i32  ne,
+                      i32  v,
+                      i32  a,
+                      i32  w,
+                      i32  b)
+{
+    constans MateriaNodus* socius =
+        materia_valor_lista_obtinere(*elementa,
+        w)->datum.nodus;
+    constans MateriaNodus* carrier = materia_valor_lista_obtinere(
+        *elementa, v)->datum.nodus;
+    constans MateriaValor* analyses =
+        &socius->loci[ORATIO_VOCABULUM_ANALYSES];
+                      i32 j;
+
+    si (   socius->genus   != (s32)ORATIO_GENUS_VOCABULUM
+        || analyses->genus != MATERIA_VALOR_LISTA
+        || b               >= materia_valor_lista_numerus(*analyses))
+    {
+        redde FALSUM;
+    }
+    /* (I) classis lectionis b == classis lectionis primae socii */
+    si (   _obiectum_socius_lex_activa("classis")
+        && oratio_genus_classis((OratioGenus)materia_valor_lista_obtinere(
+                *analyses, b)->datum.nodus->genus)
+            != oratio_genus_classis((OratioGenus)materia_valor_lista_obtinere(
+                *analyses, ZEPHYRUM)->datum.nodus->genus))
+    {
+        redde VERUM;
+    }
+    /* (III) subiectum eiusdem verbi: umbra subiecti lectionis a carrier
+     * in w impleta */
+    si (_obiectum_socius_lex_activa("subiecti"))
+    {
+        constans MateriaValor* analyses_v =
+            &carrier->loci[ORATIO_VOCABULUM_ANALYSES];
+        constans MateriaValor* umbrae = analyses_v->genus
+            == MATERIA_VALOR_LISTA
+            && a < materia_valor_lista_numerus(*analyses_v)
+            ? _umbrae_lectionis(materia_valor_lista_obtinere(*analyses_v,
+            a)
+                ->datum.nodus) : NIHIL;
+        i32 u;
+
+        per (u = ZEPHYRUM; umbrae != NIHIL
+             && u < materia_valor_lista_numerus(*umbrae); u++)
+        {
+            constans MateriaNodus* umbra = materia_valor_lista_obtinere(
+                *umbrae, u)->datum.nodus;
+
+            si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                == MATERIA_VALOR_INDEX
+                && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
+                    == (s32)ORATIO_RELATIO_SUBIECTUM
+                && umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
+                    == MATERIA_VALOR_INDEX
+                && umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index
+                    == (s32)w)
+            {
+                redde VERUM;
+            }
+        }
+    }
+    /* (II) socius obiectum adpositionis: umbra obiecti (relatio 0)
+     * lectionis primae carrier adpositionis cuiusvis in w impleta */
+    si (!_obiectum_socius_lex_activa("adpositionis"))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < ne; j++)
+    {
+        constans MateriaValor* elementum = materia_valor_lista_obtinere(
+            *elementa, j);
+        constans MateriaValor* analyses_j;
+        constans MateriaNodus* prima;
+        constans MateriaValor* umbrae;
+                          i32  u;
+
+        si (   j                == v || elementum == NIHIL
+            || elementum->genus != MATERIA_VALOR_NODUS
+            || elementum->datum.nodus->genus
+                != (s32)ORATIO_GENUS_VOCABULUM)
+        {
+            perge;
+        }
+        analyses_j =
+            &elementum->datum.nodus->loci[ORATIO_VOCABULUM_ANALYSES];
+        si (   analyses_j->genus != MATERIA_VALOR_LISTA
+            || materia_valor_lista_numerus(*analyses_j) == ZEPHYRUM)
+        {
+            perge;
+        }
+        prima = materia_valor_lista_obtinere(*analyses_j,
+            ZEPHYRUM)->datum.nodus;
+        si (oratio_genus_classis((OratioGenus)prima->genus)
+            != ORATIO_CLASSIS_ADPOSITIO)
+        {
+            perge;
+        }
+        umbrae = _umbrae_lectionis(prima);
+        per (u = ZEPHYRUM; umbrae != NIHIL
+             && u < materia_valor_lista_numerus(*umbrae); u++)
+        {
+            constans MateriaNodus* umbra = materia_valor_lista_obtinere(
+                *umbrae, u)->datum.nodus;
+
+            si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                == MATERIA_VALOR_INDEX
+                && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
+                    == (s32)ORATIO_RELATIO_OBIECTUM
+                && umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
+                    == MATERIA_VALOR_INDEX
+                && umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index
+                    == (s32)w)
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
 }
 
 interior b32

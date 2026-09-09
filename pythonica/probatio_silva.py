@@ -1341,7 +1341,7 @@ credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa 
 # T19g bis: -errata -machina - ordines PARTITIO (summa = verba aurea IV) et ERRATUM (nullum: nemo decidit in thesauro minimo)
 r_er = subprocess.run(['./oratio/oraculum.sh', '-errata', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
 part = [l.split('\t') for l in r_er.stdout.splitlines() if '\tPARTITIO\t' in l]
-credo(r_er.returncode == 0 and len(part) == 7 and sum(int(x[3]) for x in part) == 4 and not any('\tERRATUM\t' in l for l in r_er.stdout.splitlines()) and any('\tAUCTOR\tumbra-subiectum' in l for l in r_er.stdout.splitlines()), 'oraculum.sh -errata -machina: PARTITIO VII genera summa IV verba, nullum ERRATUM; AUCTOR subiecti (T31 a: amat Puellam subiectum ligat)')
+credo(r_er.returncode == 0 and len(part) == 7 and sum(int(x[3]) for x in part) == 4 and all('umbra-obiectum-verbi' in l for l in r_er.stdout.splitlines() if '\tERRATUM\t' in l) and any('\tAUCTOR\tumbra-subiectum' in l for l in r_er.stdout.splitlines()) and any('\tAUCTOR\tumbra-obiectum-verbi' in l for l in r_er.stdout.splitlines()), 'oraculum.sh -errata -machina: PARTITIO VII genera summa IV verba; AUCTOR subiecti et obiecti (T31 a/b: amat Puellam subiectum, rosam obiectum ligat); ERRATUM obiecti solum (rosam participium rodo primum - casus manualis notatus)')
 # T30: -errata -nota genus -machina - ordines NOTA sex columnis (plagula NOTA accidens verba recti conventione), ERRATUM-NOTA ordo columnis XIII si adest; -nota ignota exitus II
 r_no = subprocess.run(['./oratio/oraculum.sh', '-errata', '-nota', 'genus', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
 notae = [l.split('\t') for l in r_no.stdout.splitlines() if '\tNOTA\t' in l]

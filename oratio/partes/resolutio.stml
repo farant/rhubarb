@@ -673,6 +673,47 @@
     </PER>
   </consilium>
 </regula>
+<!-- T31 b (2026-09-09): STELLA VERBI - obiectum verbi (relatio 4, casus
+     accusativus; annotator: lectio finita activa aut deponens verbi
+     transitivi). Gradus strictus SOLUS (laxus mensuratus et recusatus,
+     vide caudam); ordo idem ac subiecti (praecedens prima: obiectum ante
+     verbum 54-79 %). LEX CARRIER exsecutoris: ordo cuius lectio verbi
+     prima non est recusatur (obiectum classem carrier non decidit -
+     sine ea primarium 841 -> 815 Senecae). -->
+<regula titulus="umbra-obiectum-verbi-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" quaesitio="omnes" output="$umbra_obiectum_verbi_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>3</casus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <analysis-verbi n="$a"><umbrae><umbra n="$u"><relatio>4</relatio><casus>3</casus></umbra></umbrae></analysis-verbi>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$umbra_obiectum_verbi_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-obiectum-verbi-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-obiectum-verbi-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" quaesitio="omnes" output="$umbra_obiectum_verbi_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <analysis-verbi n="$a"><umbrae><umbra n="$u"><relatio>4</relatio><casus>3</casus></umbra></umbrae></analysis-verbi>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>3</casus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$umbra_obiectum_verbi_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-obiectum-verbi-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
 <!-- T30 e (2026-09-09): ORDO GRADUS LAXI MENSURATUS. Regulae litterales
      ordine casuum genitivus, nominativus, dativus, accusativus, ablativus,
      locativus, vocativus (antea nominativus primus = ordo enumerationis
@@ -1010,3 +1051,9 @@
     </PER>
   </consilium>
 </regula>
+
+<!-- T31 b: obiectum verbi GRADUS LAXUS RECUSATUS (2026-09-09): cum lege
+     carrier ligatio Senecae +1 sola, chartae -49/-50, Aquinas -21, Perseus
+     -24, PROIEL -22, Dante -14; casus chartarum -18/-26 (praecisio obiecti
+     24-54 %) - obiecta remota accusativis vicinis spuriis cedunt; gradus
+     strictus solus (praecisio 55-65 %, revocatio 45-55 %). -->

@@ -665,7 +665,7 @@ principale (vacuum)
                 /* T27: gradus strictus unitus XIV -> II: regulae XLII
                  * (strictae XXII..XXV cum incertis, laxae XXVI..XLI) */
                 CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
-                                (i32)XLVI);   /* T31 a: + subiectum IV (strictae II gradu II, laxae II gradu III) */
+                                (i32)XLVIII);   /* T31 a: + subiectum IV; T31 b: + obiectum verbi II (strictae; laxae recusatae) */
         {
             i32 k;
 
@@ -678,7 +678,7 @@ principale (vacuum)
                                                 CREDO_AEQUALIS_I32 (r->gradus,
                                                     k <= (i32)XXI ? I
                                                                         : (k
-                                                                            <= (i32)XXVII ? (i32)II : (i32)III));
+                                                                            <= (i32)XXIX ? (i32)II : (i32)III));
             }
             {
                 constans OratioRegula* prima =
@@ -688,7 +688,7 @@ principale (vacuum)
                 constans OratioRegula* laxa =
                     (constans OratioRegula*)xar_obtinere(
                                         programma->regulae,
-                                        (i32)XXVIII);   /* T31 a: laxa prima post subiecta stricta */
+                                        (i32)XXX);   /* T31 a/b: laxa prima post subiecta et obiecta stricta */
 
                 CREDO_VERUM (_aequalis(prima->titulus,
                     "umbra-caput-sequente-proximo"));
@@ -886,7 +886,7 @@ principale (vacuum)
                 CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
                     &ratum,
                     programma, (s32)-I, "latina", doc, &census));
-        CREDO_AEQUALIS_I32 (census.ordines, (i32)II);   /* T19b: + In */
+        CREDO_AEQUALIS_I32 (census.ordines, (i32)III);   /* T19b: + In; T31 b: + ordo obiecti venit (recusatus: lex carrier) */
         CREDO_AEQUALIS_I32 (census.applicatae, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_ACCUSATIVUS);
