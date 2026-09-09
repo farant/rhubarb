@@ -784,6 +784,46 @@ principale (vacuum)
                 (OratioGenus)prima->genus),
                 (s32)ORATIO_CLASSIS_VERBUM);
         }
+        /* T30 d RARITAS FLEXIONUM: scribere - infinitivum ante passivum
+         * personae secundae; faciendum - gerundivum neutrum ante
+         * masculinum; sequere (deponens) - finitum personae secundae
+         * manet primum (deponentia excepta) */
+        {
+            constans character* fons_r = "scribere faciendum sequere\n";
+                  MateriaNodus* doc_r = oratio_arbor_parsare(piscina,
+                      fons_r, (i32)strlen(fons_r));
+              OratioPartesCensus  census_r;
+           constans MateriaNodus* lectio;
+
+            CREDO_NON_NIHIL (doc_r);
+            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+                doc_r, &census_r));
+            lectio = materia_valor_lista_obtinere(_vocabulum(doc_r,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM)->loci[
+                ORATIO_VOCABULUM_ANALYSES], ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (_index(lectio,
+                ORATIO_ANALYSIS_VERBI_FORMA_VERBI),
+                (s32)ORATIO_FORMA_VERBI_INFINITIVUM);
+            lectio = materia_valor_lista_obtinere(_vocabulum(doc_r,
+                ZEPHYRUM, ZEPHYRUM, I)->loci[
+                ORATIO_VOCABULUM_ANALYSES], ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (_index(lectio,
+                ORATIO_ANALYSIS_VERBI_FORMA_VERBI),
+                (s32)ORATIO_FORMA_VERBI_GERUNDIVUM);
+            CREDO_AEQUALIS_S32 (_index(lectio,
+                (i32)oratio_partes_locus(ORATIO_CLASSIS_VERBUM,
+                "genus")),
+                (s32)ORATIO_GENUS_GRAMMATICUM_NEUTRUM);
+            lectio = materia_valor_lista_obtinere(_vocabulum(doc_r,
+                ZEPHYRUM, ZEPHYRUM, (i32)II)->loci[
+                ORATIO_VOCABULUM_ANALYSES], ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (_index(lectio,
+                ORATIO_ANALYSIS_VERBI_FORMA_VERBI),
+                (s32)ORATIO_FORMA_VERBI_FINITUM);
+            CREDO_AEQUALIS_S32 (_index(lectio,
+                ORATIO_ANALYSIS_VERBI_PERSONA),
+                (s32)ORATIO_PERSONA_SECUNDA);
+        }
         /* T22 b (T30 c) DIALECTUS: documentum cum formis mediis
          * recuperatis (memorie, ecclesie) MEDIUS - forma nota 'bone'
          * lectiones variantes (bonae, fons orthographia) post nativas

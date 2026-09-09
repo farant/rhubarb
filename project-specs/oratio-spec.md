@@ -1939,6 +1939,27 @@ Dante gains case, number, gender and attachment; every classical file
 and EWT byte-identical. Not done: capitalised known forms, the loose
 tier's order, a sentence-level dialect.
 
+**As built — T30 d, the rarity of inflections (2026-09-09).** Gold
+census: only CIRCSE and PROIEL tag Ger/Gdv; the other five tag every
+`-nd-` form as Part with a gender, neuter 97 % for `-ndum/-ndi/-ndo`;
+and 332 of the charters' 467 verb-form errors were infinitives read
+as the second-person passive WORDS lists first. Oracle conventions
+(counted): gold Part and Ger accept `gerundivum`. A RARITY table in
+the annotator (`RARITATES`, `_raritas`, `_gradus_lectionis` =
+stem-frequency rank then rarity) sorts verb readings with a rare
+inflection after the others of their stem: `gerundivum-masculinum`
+(feminine kept: `-nda` feminine singular beats neuter plural on three
+files of four) and `passivum-secundae` (deponents exempt: their
+passive form is their form); `participium-vocativus` measured null,
+inactive. `ORATIO_ORDO_RARITATIS=0|titulus` for measurement. Nine
+treebanks: gender charters 913 → 929 / 912 → 930, Aquinas 862 → 874,
+Dante 878 → 895; verb form Seneca 930 → 978, charters 883 → 986 /
+989, shelf 982–990; voice Seneca 930 → 982, charters 871 → 999, shelf
+988–999; primary, forced, case, attachment identical; Seneca number
+917 unchanged with three fewer words judged. Pins: gender 908 / 929 /
+930; verb form and voice pinned at birth 978 / 986 / 989 and 982 /
+999 / 999.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

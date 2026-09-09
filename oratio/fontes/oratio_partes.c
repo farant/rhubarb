@@ -408,8 +408,105 @@ _gradus_frequentiae (
     }
 }
 
-/* descriptiones intra greges (classis, lingua) per gradum frequentiae
- * stabiliter permutare; FALSUM = memoria */
+/* T30 d RARITAS FLEXIONUM (2026-09-09): clavis altera ordinis post
+ * frequentiam stirpis - lectiones verbi flexionis RARAE post ceteras
+ * eiusdem stirpis. Census thesaurorum VII (aurum): (I) gerundivum
+ * (VPAR FUT PASSIVE) MASCULINUM: formae -ndum/-ndi/-ndo neutrae
+ * 97 % (chartae 155/155, Aquinas 139/139, Dante 66/67, Perseus 10/16;
+ * CIRCSE et PROIEL gerundium sine genere aut Gdv neutrum) - WORDS
+ * ACC S M primum ponit, femininum NON demotum (-nda: feminina singularis
+ * contra neutra pluralia Seneca 5/2, PROIEL 5/2, Dante 3/18 - ordo
+ * dictionarii F prima in tribus ex quattuor rectus; 'non neutrum'
+ * mensuratum numerum Senecae et PROIEL laedebat); (II) finitum passivum personae secundae
+ * (-re, -ris: 'scribere' IND/IMP 2 S) ante infinitivum eiusdem formae:
+ * infinitivi -re 338/342 chartae, 137/196 Seneca (finita -re Senecae
+ * imperativi deponentes sine infinitivo homographo), 187/192 PROIEL -
+ * DEPONENTIA excepta: 'sequere', 'loquere', 'morere' forma passiva
+ * forma sua est, demota infinitivo spurio cedebant (Seneca forma verbi
+ * -15, numerus et persona -25 populo);
+ * (III) participium vocativo ('date' = datus VOC S M ante 'date'
+ * imperativum): participia vocativa 6/496 Seneca, 0 alibi - MENSURATA: nihil mutat (inactiva). Tabula titulata, mensura: ORATIO_ORDO_RARITATIS=0 (nulla) aut =titulus
+ * (una sola). */
+nomen structura {
+    constans character* titulus;
+                   b32  activa;
+} Raritas;
+
+hic_manens constans Raritas RARITATES[] = {
+    { "gerundivum-masculinum", VERUM },
+    { "passivum-secundae", VERUM },
+    { "participium-vocativus", FALSUM }
+};
+
+interior b32
+_raritas_activa (
+    i32 r)
+{
+                   hic_manens i32  lectum   = ZEPHYRUM;
+    hic_manens constans character* ambitus  = NIHIL;
+
+    si (!lectum)
+    {
+        ambitus  = getenv("ORATIO_ORDO_RARITATIS");
+        lectum   = I;
+    }
+    si (!RARITATES[r].activa)
+    {
+        redde FALSUM;
+    }
+    si (ambitus != NIHIL)
+    {
+        redde (b32)(strcmp(ambitus, RARITATES[r].titulus) == ZEPHYRUM);
+    }
+    redde VERUM;
+}
+
+/* gradus raritatis descriptionis: numerus raritatum activarum quas
+ * lectio fert (verba sola) */
+interior i32
+_raritas (
+    constans OratioDescriptio* d)
+{
+    i32 r = ZEPHYRUM;
+
+    si (d->classis != ORATIO_CLASSIS_VERBUM)
+    {
+        redde ZEPHYRUM;
+    }
+    si (   _raritas_activa(ZEPHYRUM)
+        && d->forma_verbi == (s32)ORATIO_FORMA_VERBI_GERUNDIVUM
+        && d->genus       == (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM)
+    {
+        r = r + I;
+    }
+    si (   _raritas_activa(I)
+        && d->forma_verbi == (s32)ORATIO_FORMA_VERBI_FINITUM
+        && d->persona     == (s32)ORATIO_PERSONA_SECUNDA
+        && d->vox         == (s32)ORATIO_VOX_PASSIVA)
+    {
+        r = r + I;
+    }
+    si (   _raritas_activa((i32)II)
+        && d->forma_verbi       == (s32)ORATIO_FORMA_VERBI_PARTICIPIUM
+        && d->casus_grammaticus == (s32)ORATIO_CASUS_VOCATIVUS)
+    {
+        r = r + I;
+    }
+    redde r;
+}
+
+/* gradus ordinis lectionis: frequentia stirpis maior, raritas flexionis
+ * minor */
+interior i32
+_gradus_lectionis (
+    constans OratioDescriptio* d)
+{
+    redde _gradus_frequentiae(d->frequentia) * (i32)VIII + _raritas(d);
+}
+
+/* descriptiones intra greges (classis, lingua) per gradum lectionis
+ * (frequentia stirpis, raritas flexionis) stabiliter permutare; FALSUM =
+ * memoria */
 interior b32
 _descriptiones_frequentia_ordinare (
     Piscina* scratch,
@@ -424,7 +521,7 @@ _descriptiones_frequentia_ordinare (
 
     si (n < (i32)II || !_ordo_frequentiae_activus())
     {
-        redde VERUM;
+        redde VERUM;   /* raritas quoque sub ordine frequentiae */
     }
     copia = (OratioDescriptio*)piscina_allocare(scratch,
         (memoriae_index)n * (memoriae_index)magnitudo(OratioDescriptio));
@@ -480,8 +577,8 @@ _descriptiones_frequentia_ordinare (
             i32 b = a;
 
             dum (   b > ZEPHYRUM
-                 && _gradus_frequentiae(copia[ordo[b - I]].frequentia)
-                     > _gradus_frequentiae(copia[k].frequentia))
+                 && _gradus_lectionis(&copia[ordo[b - I]])
+                     > _gradus_lectionis(&copia[k]))
             {
                 ordo[b]  = ordo[b - I];
                 b        = b - I;

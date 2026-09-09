@@ -3201,3 +3201,52 @@ inverted threshold went red.
 **Left on the table.** Capitalised known forms (`Sancte` at charter
 openings) still do not vary, as in T22; the loose tier's nominative-
 first order; a sentence-level dialect for mixed documents.
+
+## 2026-09-09 — T30 d: the gerund reading, which became the rarity of inflections
+
+The census bucket was "gerundive listed before the neuter reading":
+`faciendum` is ACC S M first in WORDS, and the charters mean the
+neuter every time. Two gold facts reshaped the tranche. Only CIRCSE
+and PROIEL tag gerunds and gerundives at all (Ger without gender, Gdv
+with); the charters, Aquinas, Perseus and Dante tag every `-nd-` form
+as a participle with a gender, neuter 97 % of the time for
+`-ndum/-ndi/-ndo`. And the verb-form column's biggest loss was not
+the gerund: 332 of the charters' 467 wrong verb forms were
+infinitives read as finite — `scribere`, `reddere`, `abere` — because
+WORDS lists the second-person passive (`PRES PASSIVE IND 2 S are`)
+before the infinitive of the same form, and the voice column lost
+the same 312 words as passives.
+
+**Two oracle conventions**, counted under `conventione`: gold `Part`
+accepts our `gerundivum` (the four treebanks' convention), and gold
+`Ger` accepts it too, since WORDS has no gerund and the neuter
+gerundive is the reading we have. Charters verb form 840 → 883.
+
+**The rarity table.** A second key in the reading order after the
+stem's frequency (T30 b): a verb reading carrying a RARE inflection
+sorts after the others of its stem. Data-driven, titled, each entry
+measured alone on nine treebanks with `ORATIO_ORDO_RARITATIS`:
+- `gerundivum-masculinum`: gender charters +16 / +18, Aquinas +12,
+  Dante +17, PROIEL +3, Seneca +1, nothing else moves. The first
+  version demoted every non-neuter gerundive and cost number on
+  Seneca and PROIEL through `-nda`, where feminine singular beats
+  neuter plural on three files of four; the dictionary order stays.
+- `passivum-secundae`: verb form Seneca 930 → 978, charters 883 →
+  986 / 989, Aquinas 938 → 983, PROIEL 929 → 982, Dante 913 → 988;
+  voice Seneca 930 → 982, charters 871 → 999 / 999, the shelf 988–999.
+  The first version also demoted deponents and cost Seneca fifteen
+  imperatives (`sequere`, `loquere`, `morere`) to a spurious active
+  infinitive, and 25 words of number and person population; a
+  deponent's passive form is its form, so they are exempt.
+- `participium-vocativus` (`date` as the vocative of `datus`):
+  measured, changes nothing on any file; kept inactive in the table.
+
+Primary, forced, case and attachment are identical on every file;
+Seneca number 917 stays with three fewer words judged. Pins: gender
+908 / 929 / 930, and the verb-form and voice columns are pinned for
+the first time, 978 / 986 / 989 and 982 / 999 / 999.
+
+**Lesson.** The order of a dictionary's inflection table is a prior
+nobody chose. Two rare inflections listed first cost a sixth of the
+verb-form column on the charters; the fix was a table of named
+rarities with a census behind each row, not a rule.

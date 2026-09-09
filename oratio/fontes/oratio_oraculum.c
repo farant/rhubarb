@@ -147,11 +147,18 @@ hic_manens constans ValorNotae VALORES_VOCIS[] = {
     { "Act", (s32)ORATIO_VOX_ACTIVA, (s32)ORATIO_VOX_DEPONENS },
     { "Pass", (s32)ORATIO_VOX_PASSIVA, (s32)ORATIO_VOX_DEPONENS }
 };
+/* T30 d: gerundivum (WORDS VPAR FUT PASSIVE) pro auro Part acceptum -
+ * chartae, Aquinas, Perseus, Dante formas -nd- omnes 'Part' notant
+ * (CIRCSE et PROIEL solae Gdv/Ger) - et pro Ger: gerundium lectionem
+ * propriam non habet (WORDS gerundivum neutrum) - CONVENTIONES, numero
+ * 'conventione' visibiles */
 hic_manens constans ValorNotae VALORES_FORMAE_VERBI[] = {
     { "Fin", (s32)ORATIO_FORMA_VERBI_FINITUM, (s32)-I },
     { "Inf", (s32)ORATIO_FORMA_VERBI_INFINITIVUM, (s32)-I },
-    { "Part", (s32)ORATIO_FORMA_VERBI_PARTICIPIUM, (s32)-I },
-    { "Ger", (s32)ORATIO_FORMA_VERBI_GERUNDIUM, (s32)-I },
+    { "Part", (s32)ORATIO_FORMA_VERBI_PARTICIPIUM,
+      (s32)ORATIO_FORMA_VERBI_GERUNDIVUM },
+    { "Ger", (s32)ORATIO_FORMA_VERBI_GERUNDIUM,
+      (s32)ORATIO_FORMA_VERBI_GERUNDIVUM },
     { "Gdv", (s32)ORATIO_FORMA_VERBI_GERUNDIVUM, (s32)-I },
     { "Sup", (s32)ORATIO_FORMA_VERBI_SUPINUM, (s32)-I }
 };

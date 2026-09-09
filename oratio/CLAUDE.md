@@ -746,8 +746,20 @@ attachment +15/+16; number −3/−1 NAMED (loose tier nominative-first
 binds `sancte … ecclesie` plural) — Fran's decision; classical files
 byte-identical. Unfiltered known-form variants lost primary on every
 file: over-generated readings win spurious agreement (T28 again).
-NEXT = gerund reading, loose-tier order (§8.5 family), inflection
-frequency as a second key, verb star with `omnes`.
+**T30 d (2026-09-09): RARITY OF INFLECTIONS** — gold: only CIRCSE
+and PROIEL tag Ger/Gdv, the rest tag `-nd-` forms as Part with gender
+(neuter 97 %); 332 of the charters' 467 verb-form errors were
+infinitives read as WORDS's first-listed second-person passive.
+Oracle conventions: gold Part/Ger accept `gerundivum`. Annotator
+`RARITATES` table = second sort key after stem frequency: verb
+readings with a rare inflection go after their stem's others —
+`gerundivum-masculinum` (feminine kept, `-nda`), `passivum-secundae`
+(deponents exempt); `participium-vocativus` measured null. Verb form
+930/883 → 978/986, voice 930/871 → 982/999, gender charters 913/912 →
+929/930, nothing else moves; verb form and voice PINNED at birth.
+LESSON: a dictionary's inflection order is a prior nobody chose.
+NEXT = loose-tier order (§8.5 family), verb star with `omnes`, capitalised
+known forms, derived gender for commune.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
