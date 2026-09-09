@@ -643,7 +643,15 @@ Perseus, UDante; CC BY-NC-SA) into git-ignored `oratio/build/ud/`,
 REPORTED never pinned or committed. Unseen by any rule they score
 primary 862/824/790/780, case 722/707/723/676, coverage 949/914/934/859
 — same band as the tuned files: no overfitting; expected other-Latin
-class 78–86, case ~70.
+class 78–86, case ~70. **T25 PAIR POLICY (same day): NULL RESULT on
+readings** — `_ordines_ordinare` reorders a rule's rows per (carrier,
+umbra): nearest partner, then case rank (`POLITICA_PARIUM`, on at II);
+works on hand cases (`magna` → `puella` not `Terra`), but primary /
+forced / case IDENTICAL on nine treebanks: both candidates agree with
+the same reading, so only ATTACHMENT changes, which the oracle does
+not measure. Kept on as the attachment default. NEXT = attachment
+column in the oracle (gold heads), then the remote head rules judged
+on it.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

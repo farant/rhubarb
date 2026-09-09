@@ -566,6 +566,23 @@ _trans_clausulas (
 /* IMPLETIO (T19d): umbra ligandum post permutationes - umbra nodus
  * (stabilis per permutationem listae), vocabulum implens w, analysis
  * implens b (index ANTE permutationem; remittitur) */
+/* gradus casuum ordine ORATIO_CASUS: NOM GEN DAT ACC ABL LOC VOC (prior
+ * casuum T24: abl > acc > gen > nom > dat > voc > loc; politica parium
+ * T25 eodem utitur) */
+hic_manens constans s32 ORDO_CASUUM[ORATIO_CASUS_NUMERUS] = {
+    (s32)III, (s32)II, (s32)IV, I, ZEPHYRUM, (s32)VI, (s32)V
+};
+
+/* POLITICA PARIUM (T25, 2026-09-08): ordines impletionis regulae unius
+ * ordine exemplaris veniunt - regulae 'praecedente' cursu fratrum ad
+ * vocabulum PRIMUM congruens ligant, non proximum (T19g bis), et inter
+ * lectiones congruentes ordo listae (dictionarii) vincit: prior tacitus
+ * intra regulas testimonii. Politica ordines cuiusque regulae intra
+ * greges (carrier v, umbra u) stabiliter reordinat: I distantia |v - w|
+ * minima prima; II deinde gradus casuum lectionis implentis (ORDO_CASUUM);
+ * ordo originis ultimus. Greges ordine apparitionis manent. 0 = nulla. */
+hic_manens constans i32 POLITICA_PARIUM = (i32)II;
+
 nomen structura {
     MateriaNodus* umbra;
              i32  w;
@@ -932,6 +949,139 @@ _umbram_invenire (
  * vocabula gradibus prioribus vindicata (prima vincit TRANS gradus:
  * ordines in ea repetitae); post gradum vocabula praelata vindicantur.
  * FALSUM = memoria sola. */
+/* clavis ordinis impletionis (T25): grex = index apparitionis primae
+ * paris (v, u), distantia, gradus casuum lectionis (w, b) */
+nomen structura {
+    i32 index;
+    i32 grex;
+    i32 distantia;
+    s32 gradus;
+} ClavisOrdinis;
+
+/* ordines impletionis regulae intra greges (v, u) stabiliter reordinare
+ * secundum POLITICA_PARIUM; FALSUM = memoria */
+interior b32
+_ordines_ordinare (
+         Piscina* scratch,
+    MateriaValor  elementa,
+             Xar* ordines,
+             i32  ne)
+{
+    i32            n = xar_numerus(ordines);
+    ClavisOrdinis* claves;
+    StmlNodus**    copia;
+    i32*           grex_v;      /* per (v, u) -> index gregis: tabula v * XVI + u */
+    i32            greges = ZEPHYRUM;
+    i32            i;
+    i32            j;
+
+    si (n < (i32)II)
+    {
+        redde VERUM;
+    }
+    claves = (ClavisOrdinis*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(ClavisOrdinis));
+    copia  = (StmlNodus**)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(StmlNodus*));
+    grex_v = (i32*)piscina_allocare(scratch,
+        (memoriae_index)(ne * (i32)XVI)
+        * (memoriae_index)magnitudo(i32));
+    si (claves == NIHIL || copia == NIHIL || grex_v == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < ne * (i32)XVI; i++)
+    {
+        grex_v[i] = (i32)-I;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        StmlNodus* ordo = *(StmlNodus**)xar_obtinere(ordines, i);
+              i32  v;
+              i32  u;
+              i32  w;
+              i32  b;
+
+        copia[i]             = ordo;
+        claves[i].index      = i;
+        claves[i].grex       = (i32)-I;
+        claves[i].distantia  = ZEPHYRUM;
+        claves[i].gradus     = (s32)ORATIO_CASUS_NUMERUS;
+        si (   !_numerus_attributi(ordo, "vocabulum", &v)
+            || !_numerus_attributi(ordo, "umbra", &u)
+            || !_numerus_attributi(ordo, "ad-vocabulum", &w)
+            || !_numerus_attributi(ordo, "ad-analysis", &b)
+            || v >= ne || w >= ne || u >= (i32)XVI)
+        {
+            perge;   /* ordo malus: sede sua manet (recusatur postea) */
+        }
+        si (grex_v[v * (i32)XVI + u] == (i32)-I)
+        {
+            grex_v[v * (i32)XVI + u]  = greges;
+            greges                    = greges + I;
+        }
+        claves[i].grex       = grex_v[v * (i32)XVI + u];
+        claves[i].distantia  = v > w ? v - w : w - v;
+        si (   POLITICA_PARIUM >= (i32)II
+            && _analysis_adest(elementa, w, b))
+        {
+            constans MateriaNodus* lectio =
+                materia_valor_lista_obtinere(
+                materia_valor_lista_obtinere(elementa, w)->datum.nodus
+                    ->loci[ORATIO_VOCABULUM_ANALYSES], b)->datum.nodus;
+            s32 casus_lectionis = _accidens_lectionis(lectio, "casus");
+
+            si (   casus_lectionis >= ZEPHYRUM
+                && casus_lectionis < (s32)ORATIO_CASUS_NUMERUS)
+            {
+                claves[i].gradus = ORDO_CASUUM[casus_lectionis];
+            }
+        }
+    }
+    /* insertio stabilis: (grex, distantia, gradus, index); ordines sine
+     * grege (mali) sedem originis tenent per indicem solum */
+    per (i = I; i < n; i++)
+    {
+        ClavisOrdinis x = claves[i];
+
+        j = i;
+        dum (j > ZEPHYRUM)
+        {
+            ClavisOrdinis y = claves[j - I];
+                      b32 ante;
+
+            si (x.grex == (i32)-I || y.grex == (i32)-I)
+            {
+                ante = FALSUM;
+            }
+            alioquin si (x.grex != y.grex)
+            {
+                ante = (b32)(x.grex < y.grex);
+            }
+            alioquin si (x.distantia != y.distantia)
+            {
+                ante = (b32)(x.distantia < y.distantia);
+            }
+            alioquin
+            {
+                ante = (b32)(x.gradus < y.gradus);
+            }
+            si (!ante)
+            {
+                frange;
+            }
+            claves[j]  = y;
+            j          = j - I;
+        }
+        claves[j] = x;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        *(StmlNodus**)xar_obtinere(ordines, i) = copia[claves[i].index];
+    }
+    redde VERUM;
+}
+
 interior b32
 _sententiam_resolvere_gradu (
           Cursus* cursus,
@@ -1175,7 +1325,15 @@ _sententiam_resolvere_gradu (
          * remissis) et utramque lectionem praefert - carrier v/a et
          * implens w/b - prima regula per vocabulum vincente ut
          * praelatio. Ordo malus recusatur. */
-        ordines = _liberi_titulo(scratch, consilium_nodus, "impletio");
+                ordines = _liberi_titulo(scratch, consilium_nodus,
+                    "impletio");
+        /* T25: politica parium - ordines intra greges (v, u) reordinati */
+        si (   ordines != NIHIL && POLITICA_PARIUM > ZEPHYRUM
+            && !_ordines_ordinare(scratch, *elementa, ordines, ne))
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
         si (ordines == NIHIL)
         {
             piscina_destruere(scratch);
@@ -1824,10 +1982,6 @@ _umbris_ordinare (
  * abl/acc/nom/voc, abl/nom/voc, abl/acc (Seneca nom/acc, chartae abl) -
  * quodque solum mensuratum (ORATIO_PRIOR_CASUUM_SOLA=titulus). */
 hic_manens constans b32 PRIOR_CASUUM = VERUM;
-/* gradus casuum ordine ORATIO_CASUS: NOM GEN DAT ACC ABL LOC VOC */
-hic_manens constans s32 ORDO_CASUUM[ORATIO_CASUS_NUMERUS] = {
-    (s32)III, (s32)II, (s32)IV, I, ZEPHYRUM, (s32)VI, (s32)V
-};
 
 nomen structura {
     constans character* titulus;

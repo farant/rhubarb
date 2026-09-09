@@ -1736,6 +1736,20 @@ gate's permutation count). The remaining distance to the census's
 73 % is the bound tier: the head rules' own case choice (52 / 45 %),
 a rule question, not a prior.
 
+**As built — T25, the pair policy (2026-09-08, same session).**
+`_ordines_ordinare` reorders each rule's impletio rows within groups
+of the same carrier and umbra: nearest partner first, then the partner
+reading's case rank (`ORDO_CASUUM`), then original order; a stable
+sort before the first-wins loop (switch `POLITICA_PARIUM`: 0, I
+distance, II distance and rank). NULL RESULT on readings: primary,
+forced and case identical on all nine treebanks (five vendored, four
+on the shelf); the policy moves one to four remote partners per rule
+and both candidates always agree with the same reading. Kept on as
+the principled attachment default. NEXT measure: ATTACHMENT in the
+oracle (head umbra: partner == gold head of the carrier; object
+umbra: carrier == gold head of the partner), which the policy, the
+remote head rules and the dependency design all need.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

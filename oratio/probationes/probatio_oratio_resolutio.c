@@ -954,6 +954,33 @@ principale (vacuum)
             (s32)MATERIA_VALOR_NIHIL);   /* ordo, non decisio */
     }
 
+    /* T25 POLITICA PARIUM: adiectivum cum candidatis duobus non vicinis
+     * (Terra puella non magna est: non inter puellam et magnam) ordine
+     * exemplaris ad PRIMUM (Terra, remotius) ligabatur; politica ordines
+     * regulae intra (carrier, umbra) proximo primo ordinat -> puella (I) */
+    imprimere("\n--- II c. Politica parium (T25) ---\n");
+    {
+           OratioPartesCensus  census_partium;
+        OratioResolutioCensus  census;
+                 MateriaNodus* doc = _documentum(piscina, &vocabularia,
+                     "Terra puella non magna est.\n", &census_partium);
+        constans MateriaNodus* magna;
+
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I,
+            oratio_resolutio_lingua_censu(census_partium.vocabula_linguarum),
+            doc,
+            &census));
+        magna = _analysis(_vocabulum(doc, (i32)III), ZEPHYRUM);
+        CREDO_NON_NIHIL (magna);
+        CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(magna, ZEPHYRUM),
+            I);
+        CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, (i32)III), ZEPHYRUM),
+            (s32)ORATIO_CASUS_NOMINATIVUS);
+    }
+
     imprimere("\n--- III. Planum iudicatum; ordo malus recusatus"
         " ---\n");
     {

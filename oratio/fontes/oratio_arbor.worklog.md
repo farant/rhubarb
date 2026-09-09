@@ -2702,3 +2702,36 @@ case around 70, coverage 86 to 95. The lemma numbers differ by
 convention as much as by us (ITTB and UDante lemmatise differently
 from WORDS). These are reported figures; the shelf is a calibration
 instrument and a source of errata, not a gate.
+
+## 2026-09-08 — T25: the pair policy, a null result on readings, and the measure it needs
+
+The head rules take the first admissible row of a rule in pattern
+order. The sibling cursor yields one row per start, the start's first
+match, so for the preceding-partner rules a carrier with two agreeing
+nouns before it gets two rows, farthest first, and the farthest wins:
+the T19g bis finding. The policy reorders each rule's rows within
+groups of the same carrier and umbra, nearest partner first, then the
+partner reading's case rank, then the original order, a stable sort
+before the first-wins loop. It works: `Terra puella non magna est`
+binds `magna` to `puella` with it and to `Terra` without.
+
+Measured on nine treebanks, the five vendored and the four on the
+shelf, at none, distance, and distance then case rank: primary,
+forced and case identical to the word on every file. The per-rule
+rows explain why. The policy moved between one and four remote
+partners per rule on Seneca, and in every such case both candidates
+agreed with the same reading of the carrier, so the promoted reading
+did not change. The remote head rules' 33 to 70 percent is not a
+wrong choice among partners; it is a single agreeing partner that
+agrees with the wrong reading, and no ordering of partners reaches
+that. The case-rank part had nothing to rank for the same reason.
+
+The policy stays on: it costs nothing, nearest partner is the right
+attachment more often than farthest, and the attachment is what the
+search index and the dependency design will consume. But its value
+is unmeasured until the oracle measures attachment, and the treebanks
+carry the gold heads for it: for a head umbra, is the partner the
+gold head of the carrier; for an object umbra, is the carrier the
+gold head of the partner. That column is the next oracle addition,
+and until it exists the policy is a principled default, not a
+measured gain. Switch `POLITICA_PARIUM`, scratch `mensura_politica.sh`.
