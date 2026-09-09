@@ -86,9 +86,10 @@ nomen enumeratio {
      * aut forma sine libero ordinario (incrementum XX, 2026-09-07:
      * cursus fratrum = congruentia una per initium liberorum
      * candidati, primus fixus; strictus = sine saltibus);
-     * quaesitio= valore alio quam 'completa' (incrementum XXI,
-     * 2026-09-08: retentatio - liberum posterius cadens electionem
-     * prioris retro tentat; defalta = lex avida mensurata) */
+     * quaesitio= valore alio quam 'completa'/'omnes' (incrementum
+     * XXI, 2026-09-08: retentatio - liberum posterius cadens
+     * electionem prioris retro tentat; 'omnes' = completio quaeque
+     * per initium ordo suus; defalta = lex avida mensurata) */
     STML_EXPANSIO_EXEMPLAR_MALFORMATUM     = XIII,
     /* de= aut congruentia= relationem nullam priorem nominans */
     STML_EXPANSIO_SCOPUS_IGNOTUS           = XIV,

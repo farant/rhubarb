@@ -1307,17 +1307,21 @@ credo(len(aa) == 3 and a.classis == 'substantivum' and a.lemma == 'puella' and a
 credo(a.accidentia == {'casus': 'ablativus', 'numerus': 'singularis', 'genus': 'femininum', 'declinatio': '1'} and [x.accidentia['casus'] for x in aa] == ['ablativus', 'nominativus', 'vocativus'], 'Oratio.analyses: accidentia titulis, absentia omissa, declinatio numero (T24: ordo prioris abl > nom > voc, fontis NOM VOC ABL)')
 am = o.analyses(2)[0]
 credo(am.classis == 'verbum' and am.accidentia['persona'] == 'III' and am.accidentia['tempus'] == 'praesens' and am.accidentia['modus'] == 'indicativus' and am.accidentia['vox'] == 'activa' and am.accidentia['forma-verbi'] == 'finitum' and am.accidentia['coniugatio'] == '1' and 'casus' not in am.accidentia and [(x.classis, x.fons, x.nativum, x.lingua, x.accidentia) for x in o.analyses(ig[0])] == [('ignotum', 'regula', 'ignotum', '', {})] and o.partitio()['nulla'] == 1, 'Oratio.analyses(index): verbum amat - persona tempus modus vox forma coniugatio; ignotum = lectio ignoti una (classis ignotum, fons regula, sine lingua), partitio nulla')
-ob = silva.Oratio('Puella bona ambulat. Hoc est.\n')
+# T27 (2026-09-08): 'Puella bona ambulat' nunc ABLATIVA legitur - regula stricta unita
+# (quaesitio omnes) paria concordantia omnia fert et politica parium (II) inter paria
+# aeque vicina gradum casuum (ORDO_CASUUM, ablativus primus) sequitur: thesauris IX
+# melior (casus +17..+28), hic falsa - sententia inambigua substituta.
+ob = silva.Oratio('Puerum bonum videt. Hoc est.\n')
 ab = ob.analyses(1)
-credo(ab[0].classis == 'adiectivum' and ab[0].umbrae == ('caput:nominativus.singularis.femininum=0.0',) and all(x.umbrae == () for x in ab if x.classis == 'substantivum') and any(u.endswith('=?') for x in ab for u in x.umbrae) and all(x.umbrae == () for x in ob.analyses(0)), 'Oratio.analyses: umbrae (T19d) - caput bonae ligata ad Puellam 0.0, substantiva sine umbris, umbra vacua =?')
+credo(ab[0].classis == 'adiectivum' and ab[0].umbrae == ('caput:accusativus.singularis.masculinum=0.0',) and all(x.umbrae == () for x in ab if x.classis == 'substantivum') and any(u.endswith('=?') for x in ab for u in x.umbrae) and all(x.umbrae == () for x in ob.analyses(0)), 'Oratio.analyses: umbrae (T19d/T27) - caput boni ligata ad Puerum 0.0, substantiva sine umbris, umbra vacua =?')
 hoc = ob.analyses(3)
 credo(hoc[0].classis == 'determinans' and all(x.umbrae == ('caput:%s.singularis.%s=?' % (x.accidentia['casus'], x.accidentia['genus']),) for x in hoc if x.classis == 'determinans') and len([x for x in hoc if x.classis == 'determinans']) == 4, 'Oratio.analyses: umbrae determinantis hoc omnes vacuae (=?), determinans primum (T19i: hic DET sine exceptione apud UD)')
 # T19g: decisio in arbore - genus decisionis et auctor per vocabulum, partitio documenti
 vd = ob.vocabula()
-credo([v.forma for v in vd] == ['Puella', 'bona', 'ambulat', 'Hoc', 'est'] and vd[1].decisio == 'impletio' and vd[1].auctor == 'umbra-caput-nominativus-praecedente-proximo' and vd[0].decisio == 'impletio' and vd[0].auctor == vd[1].auctor, 'Oratio.vocabula: decisio impletio bonae et Puellae, auctor regula capitis nominativi praecedens STRICTA (T19g/T19h)')
+credo([v.forma for v in vd] == ['Puerum', 'bonum', 'videt', 'Hoc', 'est'] and vd[1].decisio == 'impletio' and vd[1].auctor == 'umbra-caput-praecedente-proximo' and vd[0].decisio == 'impletio' and vd[0].auctor == vd[1].auctor, 'Oratio.vocabula: decisio impletio boni et Pueri, auctor regula capitis praecedens STRICTA unita (T19g/T19h/T27)')
 credo(vd[3].decisio == 'praelatio' and vd[3].auctor == 'determinans-primum-latinum' and vd[3].analyses > 1 and vd[4].decisio == 'praelatio' and vd[4].auctor == 'auxiliare-primum-latinum', 'Oratio.vocabula: Hoc per priorem determinantium certorum (T19i: hic DET sine exceptione), est per priorem auxiliaris (praelatio)')
 pf = ob.partitio()
-credo(pf['impletio'] == 2 and pf['praelatio'] == 2 and pf['umbra'] == 0 and pf['coactae'] == 2 and pf['una'] + pf['aperta'] == 1 and sum(pf[k] for k in silva.ORATIO_PARTITIO) == 5, 'Oratio.partitio: coactae II, praelatae II (Hoc, est), ambulat una/aperta - summa vocabula V')
+credo(pf['impletio'] == 2 and pf['praelatio'] == 2 and pf['umbra'] == 0 and pf['coactae'] == 2 and pf['una'] + pf['aperta'] == 1 and sum(pf[k] for k in silva.ORATIO_PARTITIO) == 5, 'Oratio.partitio: coactae II, praelatae II (Hoc, est), videt una/aperta - summa vocabula V')
 credo(all(v.decisio == '' and v.auctor == '' for v in silva.Oratio('Puella bona ambulat.\n', crudus=True).vocabula()), 'Oratio(crudus): nulla decisio scripta')
 ol = silva.Oratio('In bona terra est.\n')
 credo(ol.vocabula()[1].decisio == 'umbra' and ol.vocabula()[1].auctor == 'lex-umbrarum' and ol.vocabula()[0].decisio == 'praelatio' and ol.vocabula()[0].auctor == 'adpositio-prima-latina' and ol.partitio()['umbra'] == 1, 'Oratio.vocabula: bona per legem umbrarum (auctor lex-umbrarum), in per priorem adpositionis (praelatio - prior Latinus ante testimonium)')

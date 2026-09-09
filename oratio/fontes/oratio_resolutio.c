@@ -573,6 +573,19 @@ hic_manens constans s32 ORDO_CASUUM[ORATIO_CASUS_NUMERUS] = {
     (s32)III, (s32)II, (s32)IV, I, ZEPHYRUM, (s32)VI, (s32)V
 };
 
+/* gradus casuum POLITICAE PARIUM (T27 b): inter paria concordantia aeque
+ * vicina (quaesitio omnes) casus lectionis implentis - tabula propria,
+ * mensurata seorsum a priore T24 et hodie eadem: nominativo primo
+ * (nom acc abl gen ... aut nom abl acc gen ...) casus 662/644/665 ->
+ * 656/634/646 et scrinium -14/-1/-1/-5 (thesauri IX); sine gradu
+ * (politica I) 655/629/655. Ablativus primus inter paria vicina
+ * concordantia vincit - 'Puella bona ambulat' ablativa legitur, pretium
+ * notatum. */
+hic_manens constans s32 ORDO_CASUUM_PARIUM[ORATIO_CASUS_NUMERUS] = {
+    (s32)III, (s32)II, (s32)IV, I, ZEPHYRUM, (s32)VI, (s32)V
+};
+
+
 /* POLITICA PARIUM (T25, 2026-09-08): ordines impletionis regulae unius
  * ordine exemplaris veniunt - regulae 'praecedente' cursu fratrum ad
  * vocabulum PRIMUM congruens ligant, non proximum (T19g bis), et inter
@@ -1034,7 +1047,8 @@ _ordines_ordinare (
             si (   casus_lectionis >= ZEPHYRUM
                 && casus_lectionis < (s32)ORATIO_CASUS_NUMERUS)
             {
-                claves[i].gradus = ORDO_CASUUM[casus_lectionis];
+                                claves[i].gradus =
+                                    ORDO_CASUUM_PARIUM[casus_lectionis];
             }
         }
     }
@@ -1082,6 +1096,119 @@ _ordines_ordinare (
     redde VERUM;
 }
 
+/* EMENDATIO SEMEL PER SENTENTIAM (T27 b, 2026-09-08/09): VERUM = casus
+ * vocabuli classis explicitae per testimonium (T19i) semel per
+ * SENTENTIAM emendatur, FALSUM = semel per gradum (T19i, lex hodierna):
+ * regula laxa gradus III vocabulum gradu II emendatum iterum emendat
+ * (prima vincit trans gradus hic non valet). MENSURATUM thesauris IX
+ * (regulis strictis unitis): VERUM casus 662/644/665 -> 660/654/671,
+ * ligatio 437/368/378 -> 441/386/394, scrinium casus +7/+4/+6/+6 et
+ * ligatio +10..+12 - Seneca casus -2 (IX verba) solus descendit;
+ * decisio Frani exspectatur (pinna casus Senecae). Ligationes in
+ * lectionem alienam spectantes (Hilarius discordes II) iam per
+ * _ligationes_remittere sanatae utroque valore. */
+hic_manens constans b32 EMENDATIO_SEMEL_PER_SENTENTIAM = FALSUM;
+
+interior constans MateriaValor*
+_umbrae_lectionis (
+    constans MateriaNodus* analysis);
+
+
+/* ligationes in vocabulum k PERMUTATUM spectantes remittere (T27 b):
+ * umbra quaeque sententiae cuius implens vocabulum == k indicem analysis
+ * novum per inversam accipit - ligationes graduum priorum aliter
+ * lectionem alienam nominarent (index vetus in ordinem novum) */
+interior b32
+_ligationes_remittere (
+    constans MateriaValor* elementa,
+                      i32  ne,
+                      i32  k,
+             constans i32* inversa,
+                      i32  n)
+{
+    i32 j;
+
+    per (j = ZEPHYRUM; j < ne; j++)
+    {
+        constans MateriaValor* elementum =
+            materia_valor_lista_obtinere(*elementa, j);
+        constans MateriaValor* analyses;
+                          i32  a;
+
+        si (   elementum        == NIHIL
+            || elementum->genus != MATERIA_VALOR_NODUS
+            || elementum->datum.nodus->genus
+                != (s32)ORATIO_GENUS_VOCABULUM)
+        {
+            perge;
+        }
+        analyses =
+            &elementum->datum.nodus->loci[ORATIO_VOCABULUM_ANALYSES];
+        si (analyses->genus != MATERIA_VALOR_LISTA)
+        {
+            perge;
+        }
+        per (a = ZEPHYRUM; a < materia_valor_lista_numerus(*analyses);
+             a++)
+        {
+            constans MateriaValor* valor =
+                materia_valor_lista_obtinere(*analyses, a);
+            constans MateriaValor* umbrae;
+                              i32  u;
+
+            si (valor == NIHIL || valor->genus != MATERIA_VALOR_NODUS)
+            {
+                perge;
+            }
+            umbrae = _umbrae_lectionis(valor->datum.nodus);
+            si (umbrae == NIHIL)
+            {
+                perge;
+            }
+            per (u = ZEPHYRUM; u < materia_valor_lista_numerus(*umbrae);
+                 u++)
+            {
+                constans MateriaValor* valor_umbrae =
+                    materia_valor_lista_obtinere(*umbrae, u);
+                         MateriaNodus* umbra;
+                                  s32  w;
+                                  s32  b;
+
+                si (   valor_umbrae        == NIHIL
+                    || valor_umbrae->genus != MATERIA_VALOR_NODUS)
+                {
+                    perge;
+                }
+                umbra = valor_umbrae->datum.nodus;
+                si (   umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                        .genus != MATERIA_VALOR_INDEX
+                    || umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
+                        .genus != MATERIA_VALOR_INDEX)
+                {
+                    perge;
+                }
+                w = umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                    .datum.index;
+                b = umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
+                    .datum.index;
+                si (w != (s32)k || b < ZEPHYRUM || b >= (s32)n)
+                {
+                    perge;
+                }
+                                /* reponere: locus semel scribendus iam scriptus est */
+                si (!materia_nodus_reponere(umbra,
+                        (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
+                        materia_valor_index((s32)inversa[b]),
+                        MATERIA_LOCUS_INDEX))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
 interior b32
 _sententiam_resolvere_gradu (
           Cursus* cursus,
@@ -1089,6 +1216,7 @@ _sententiam_resolvere_gradu (
              i32  gradus,
              b32* vindicata,
              b32* explicita,
+             b32* emendata,
          Decisio* decisiones)
 {
 
@@ -1107,9 +1235,7 @@ _sententiam_resolvere_gradu (
                  StmlResultus  lectio;
          StmlExpansioResultus  expansio;
                                                     Xar* regulae;
-                          s32* praelata;
-                          b32* emendata;      /* T19i: casus per testimonium
-                                               * semel per gradum */
+                                                    s32* praelata;
                           Xar* impletiones;   /* Impletio (T19d) */
 
 
@@ -1220,10 +1346,8 @@ _sententiam_resolvere_gradu (
     regulae = _liberi_titulo(scratch, expansio.radix_expansa, "regula");
         praelata = (s32*)piscina_allocare(scratch, (memoriae_index)ne
             * (memoriae_index)magnitudo(s32));
-    emendata = (b32*)piscina_allocare(scratch, (memoriae_index)ne
-        * (memoriae_index)magnitudo(b32));
     impletiones = xar_creare(scratch, (i32)magnitudo(Impletio));
-    si (   regulae == NIHIL || praelata == NIHIL || emendata == NIHIL
+    si (   regulae     == NIHIL || praelata == NIHIL
         || impletiones == NIHIL)
     {
         piscina_destruere(scratch);
@@ -1232,7 +1356,10 @@ _sententiam_resolvere_gradu (
     per (k = ZEPHYRUM; k < ne; k++)
     {
         praelata[k] = (s32)-I;
-        emendata[k] = FALSUM;
+        si (!EMENDATIO_SEMEL_PER_SENTENTIAM)
+        {
+            emendata[k] = FALSUM;   /* semel per gradum (T19i) */
+        }
     }
     /* ordines consilii cuiusque regulae ordine programmatis: prima
      * vincit */
@@ -1527,10 +1654,11 @@ _sententiam_resolvere_gradu (
     /* permutationes: analysis praelata prima, ceterae ordine suo */
     per (k = ZEPHYRUM; k < ne; k++)
     {
-        MateriaNodus* vocabulum;
+                MateriaNodus* vocabulum;
         constans MateriaValor* analyses;
                           i32  n;
                           i32* ordo;
+                          i32* inversa;
                           i32  i;
                           i32  j;
 
@@ -1549,8 +1677,8 @@ _sententiam_resolvere_gradu (
             piscina_destruere(scratch);
             redde FALSUM;
         }
-        ordo[ZEPHYRUM]  = (i32)praelata[k];
-        j               = I;
+                ordo[ZEPHYRUM]  = (i32)praelata[k];
+        j                       = I;
         per (i = ZEPHYRUM; i < n; i++)
         {
             si (i != (i32)praelata[k])
@@ -1559,11 +1687,23 @@ _sententiam_resolvere_gradu (
                 j        = j + I;
             }
         }
+        inversa = (i32*)piscina_allocare(scratch, (memoriae_index)n
+            * (memoriae_index)magnitudo(i32));
+        si (inversa == NIHIL)
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            inversa[ordo[i]] = i;
+        }
         si (   !materia_nodus_lista_permutare(cursus->piscina,
             vocabulum,
                 (i32)ORATIO_VOCABULUM_ANALYSES, ordo, n)
             || !oratio_partes_compendia_reponere(cursus->piscina,
-                vocabulum))
+                vocabulum)
+            || !_ligationes_remittere(elementa, ne, k, inversa, n))
         {
             piscina_destruere(scratch);
             redde FALSUM;
@@ -2313,8 +2453,9 @@ _sententiam_resolvere (
                                             i32  gradus_maximus = I;
                                             i32  gradus;
                                             i32  k;
-                                            b32* vindicata;
+                                                                                        b32* vindicata;
                                             b32* explicita;
+                                            b32* emendata;
                                         Decisio* decisiones;
 
         si (cursus->census != NIHIL)
@@ -2360,26 +2501,33 @@ _sententiam_resolvere (
         (memoriae_index)ne * (memoriae_index)magnitudo(b32));
         decisiones = (Decisio*)piscina_allocare(cursus->piscina,
             (memoriae_index)ne * (memoriae_index)magnitudo(Decisio));
-    si (vindicata == NIHIL || explicita == NIHIL || decisiones == NIHIL)
+        emendata = (b32*)piscina_allocare(cursus->piscina,
+            (memoriae_index)ne
+            * (memoriae_index)magnitudo(b32));
+    si (   vindicata == NIHIL || explicita == NIHIL || emendata == NIHIL
+        || decisiones == NIHIL)
     {
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < ne; k++)
     {
-        vindicata[k]                  = FALSUM;
+                vindicata[k]          = FALSUM;
         explicita[k]                  = FALSUM;
+        emendata[k]                   = FALSUM;
         decisiones[k].genus           = (s32)-I;
         decisiones[k].auctor.datum    = NIHIL;
         decisiones[k].auctor.mensura  = ZEPHYRUM;
     }
     per (gradus = I; gradus <= gradus_maximus; gradus++)
     {
-                si (!_sententiam_resolvere_gradu(cursus, sententia,
-                    gradus,
-                    vindicata, explicita, decisiones))
-                {
+                                si (!_sententiam_resolvere_gradu(cursus,
+                                    sententia,
+                                    gradus,
+                                    vindicata, explicita, emendata,
+                                    decisiones))
+                                {
             redde FALSUM;
-                }
+                                }
     }
         /* lex umbrarum, deinde decisiones in arborem (T19g); T20b: catena
      * clausularum post ligationes omnes (stratum IV) */

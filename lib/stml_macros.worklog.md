@@ -861,3 +861,28 @@ one that spans an inner block comment, because every anchor began
 and ended on a code line. The "before" numbers came from `git stash
 push -- lib/stml_macros.c`, one gate run, `git stash pop` — cheaper
 than any argument about what the old matcher would have done.
+
+## 2026-09-08 (later) — quaesitio="omnes": every completion is a row
+
+The first consumer of the complete search asked for the thing the
+relational reading always implied: not the first consistent pair but
+all of them, so that the consumer can choose. With `omnes` the root
+continuation records each completion as a row and returns FALSUM, and
+the search simply continues into the next reading or candidate. The
+sink lives on the context (`omnes_congruentiae`, `omnes_radix`) and
+is set by `_exemplar_petere` around the root call only; nested levels
+carry `completa`, so a level below the root never records, and the
+existential walker stays greedy. A memory failure inside the sink is
+flagged and surfaces as FALSUM from the walk. Rows come out in search
+order: reading order outer, candidate order inner — which the two
+fixtures pin (under `fratrum` and in the classic form).
+
+The measurement it was built for (oratio T27 b) is worth recording
+here because it says what the search is for. Under the strict head
+tier, `omnes` plus oratio's nearest-first pair policy beat `completa`
+on every charter column, and both beat the literal rule set on case.
+Under the loose tier, every-completion was the loser: the nearest
+agreeing word in the whole sentence is not the head often enough. So
+the value is not "more rows are better" but "rows plus a policy in C
+beat a first match chosen by search order", and only where the policy
+has something true to say — adjacency.

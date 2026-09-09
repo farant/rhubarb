@@ -734,6 +734,27 @@ decision:
     rules (one per motif with `$cas` on both nodes) will carry the
     attribute and be measured against the literal set. Oracle gate
     wall time 49.9 → 51.8 s warm.
+    **`quaesitio="omnes"` — BUILT 2026-09-08, same day.** The complete
+    search continues past each completion and EVERY completion per
+    start becomes its own row: the root continuation records the row
+    through a sink on the context (`omnes_congruentiae` /
+    `omnes_radix`, set by `_exemplar_petere` around the root call and
+    cleared after; a memory failure is flagged and surfaces as FALSUM)
+    and returns FALSUM so the search goes on. Nested levels carry
+    `completa`; the existential walker stays greedy. Rows come out in
+    search order (reading order outer, candidate order inner). This is
+    the relational reading of a pattern — every consistent tuple is a
+    row — and it hands the choice among a carrier's readings to the
+    consumer. Gate: two fixtures (every completion under `fratrum`, in
+    search order; the classic form yielding both readings' pairs);
+    canon accepts the value in both judges. First consumer, oratio
+    T27 b: the strict head tier unified with `omnes` plus the
+    nearest-first pair policy beat both the literal rules and
+    `completa` on nine treebanks (case 645/622/637 → 662/644/665, the
+    shelf +3 to +21), so the "first reading per case" reading of the
+    earlier measurement was withdrawn — it was nominative-first rule
+    order plus retry that hurt. The loose tier stayed literal:
+    agreement anywhere in the sentence does not pick the head.
 
 ---
 

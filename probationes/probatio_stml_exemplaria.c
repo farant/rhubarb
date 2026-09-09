@@ -482,6 +482,42 @@ principale (
                 "<radix><s><w><a c=\"1\"/><a c=\"2\"/></w><w><a c=\"3\"/>"
                 "</w></s></radix>");
         }
+        /* quaesitio OMNES: completio quaeque per initium ordo suus,
+         * ordine quaesitionis (lectio prima cum fratre tertio c=1,
+         * lectio secunda cum fratre secundo c=2); initium alterum
+         * sine socio */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w><a c=\"1\"/><a c=\"2\"/></w><w><a c=\"2\"/></w>"
+            "<w><a c=\"1\"/></w></s>"
+            "<EXEMPLAR cursus=\"fratrum\" quaesitio=\"omnes\""
+            " output=\"$m\">"
+            "<s><w><a c=\"$c\"/></w><w><a c=\"$c\"/></w></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@c;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w><a c=\"1\"/><a c=\"2\"/></w><w><a c=\"2\"/>"
+                "</w><w><a c=\"1\"/></w></s><p>1</p><p>2</p></radix>");
+        }
+        /* omnes classicus (sine cursu): completiones ambae, ordine
+         * lectionum candidati primi; deinde nihil */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><w><a c=\"1\"/><a c=\"2\"/></w>"
+            "<w><a c=\"2\"/><a c=\"1\"/></w></s>"
+            "<EXEMPLAR quaesitio=\"omnes\" output=\"$m\">"
+            "<s><w><a c=\"$c\"/></w><w><a c=\"$c\"/></w></s></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><p>&@c;</p></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><w><a c=\"1\"/><a c=\"2\"/></w>"
+                "<w><a c=\"2\"/><a c=\"1\"/></w></s><p>1</p><p>2</p>"
+                "</radix>");
+        }
         /* DEFALTA AVIDA: eadem forma sine quaesitio= nihil invenit
          * (lectio prima c=1 cadit, nulla retentatio) */
         e = _expandere_litteras(piscina, intern,

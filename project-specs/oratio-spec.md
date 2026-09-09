@@ -1792,6 +1792,47 @@ beside the literal set; if the loss returns, an enumeration order
 (each case's first reading before any case's second) is the named
 policy to measure.
 
+**As built — T27 b, the strict head tier unified (2026-09-08, same
+session; decision Fran's).** The one-hour measurement was run and it
+overturned T27's reading. The engine gained `quaesitio="omnes"`
+(every completion per start is a row; exemplaria decree 21). Nine
+treebanks, seven variants: all thirty rules unified (object rule
+loses 50–150 bindings per file: refused); head only (case up, charter
+attachment −8/−11); head only with every completion and nearest-first
+(Seneca case 698 but charters −17 attachment, Aquinas −19 case); the
+LOOSE tier alone carries all of that loss; the STRICT tier alone is
+up or equal on every column of every file except the charters' forced
+ratio, −1 each (the law-of-umbrae fallback grows: a row for a losing
+reading still binds and decides its partner; refusing such rows was
+measured and is far worse); strict with first completion only is
+worse than every completion on every charter column; distance-only
+pair ordering is worse than distance-then-case-rank on every file, so
+the T25 policy's case rank is real work. ADOPTED: 14 strict rules →
+2 (`$cas` on both nodes, `quaesitio="omnes"`, stage 2), 54 → 42
+rules; loose tier literal. Pins: case 662/644/665, attachment
+437/368/378, forced 765/711/712 (charters −1 NAMED CAUSE); shelf case
++21/+3/+9/+10 and attachment +5..+8. WITHDRAWN: "first reading per
+case is a prior" — dictionary order with every completion beats rule
+order; what T27 a measured was nominative-first order plus retry.
+Known miss: `Puella bona ambulat` now reads ablative (equal-distance
+agreeing pairs tie-break by ORDO_CASUUM, ablative first — better on
+nine files, wrong here); the pythonica hand case moved to `Puerum
+bonum videt`. Refused for the record: object unification, own-reading
+refusal, policy I, strict `completa`.
+ADDENDA (2026-09-09): (i) `_ligationes_remittere` — a stage that
+permutes a word's readings remaps every umbra pointing at it (stale
+indices found by the resolutio probatio's discordance check: two on
+Hilarius, both class-explicit partners re-emended at stage 3); no
+number moves, discordes 0. (ii) `EMENDATIO_SEMEL_PER_SENTENTIAM`
+(off, measured): emending a class-explicit word once per sentence
+rather than once per stage gives attachment 441/386/394 and shelf
++10..+12, case up on eight files, Seneca case −2 — a pin decision
+pending. (iii) `ORDO_CASUUM_PARIUM`: the pair policy's case rank as
+its own table; nominative-first orders lose 6–19 permille of case,
+distance-only loses 7–15, so ablative-first stands and the hand
+sentences `Puella bona ambulat` / `Hoc templum est` read ablative and
+accusative, recorded as the price.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

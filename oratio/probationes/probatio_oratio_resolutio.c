@@ -662,8 +662,10 @@ principale (vacuum)
          * stricto gradu II (XX..XXXV, titulo -proximo), eaedem cursu
                   * fratrum gradu III; regulae LIII (T19i: + prior determinantium
          * gradu I: strictae XXI..XXXVI, laxae XXXVII..LII) */
+                /* T27: gradus strictus unitus XIV -> II: regulae XLII
+                 * (strictae XXII..XXV cum incertis, laxae XXVI..XLI) */
                 CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
-                                (i32)LIV);
+                                (i32)XLII);
         {
             i32 k;
 
@@ -676,7 +678,7 @@ principale (vacuum)
                                                 CREDO_AEQUALIS_I32 (r->gradus,
                                                     k <= (i32)XXI ? I
                                                                         : (k
-                                                                            <= (i32)XXXVII ? (i32)II : (i32)III));
+                                                                            <= (i32)XXV ? (i32)II : (i32)III));
             }
             {
                 constans OratioRegula* prima =
@@ -686,10 +688,10 @@ principale (vacuum)
                 constans OratioRegula* laxa =
                     (constans OratioRegula*)xar_obtinere(
                                         programma->regulae,
-                                        (i32)XXXVIII);
+                                        (i32)XXVI);
 
                 CREDO_VERUM (_aequalis(prima->titulus,
-                    "umbra-caput-nominativus-sequente-proximo"));
+                    "umbra-caput-sequente-proximo"));
                 CREDO_VERUM (_aequalis(laxa->titulus,
                     "umbra-caput-nominativus-sequente"));
             }
@@ -1287,8 +1289,13 @@ principale (vacuum)
             programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(bona, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_ADIECTIVUM);
+        /* T27 b: ABLATIVA - regula stricta unita (quaesitio omnes) paria
+         * concordantia tria fert (NOM/ABL/VOC S F aeque vicina), politica
+         * parium gradu casuum (ORDO_CASUUM_PARIUM, ablativus primus)
+         * eligit: thesauris IX melior (nominativo primo 662/644/665 ->
+         * 656/634/646), hic falsa - pretium notatum */
         CREDO_AEQUALIS_S32 (_casus(bona, ZEPHYRUM),
-            (s32)ORATIO_CASUS_NOMINATIVUS);
+            (s32)ORATIO_CASUS_ABLATIVUS);
         CREDO_VERUM (census.impletae >= I);
         /* gradus I solus (regulae XV primae): umbrae capitis absunt -
          * bona substantivum manet */
@@ -1332,10 +1339,13 @@ principale (vacuum)
             programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_DETERMINANS);
+        /* T27 b: neutrum NOM/ACC aeque vicinum - gradus casuum accusativum
+         * ante nominativum ponit (vide 'Puella bona' supra): hoc templum
+         * ACCUSATIVA leguntur, pretium notatum */
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM),
-            (s32)ORATIO_CASUS_NOMINATIVUS);
+            (s32)ORATIO_CASUS_ACCUSATIVUS);
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
-            (s32)ORATIO_CASUS_NOMINATIVUS);
+            (s32)ORATIO_CASUS_ACCUSATIVUS);
         doc = _documentum(piscina, &vocabularia, "Hoc est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
@@ -1491,8 +1501,9 @@ principale (vacuum)
          * lectio determinantis ACCUSATIVA quaeritur, non secunda */
         CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_DETERMINANS);
+        /* T27 b: accusativus (neutrum aeque vicinum, gradus casuum) */
         CREDO_AEQUALIS_S32 (_casus(verbum, ZEPHYRUM),
-            (s32)ORATIO_CASUS_NOMINATIVUS);
+            (s32)ORATIO_CASUS_ACCUSATIVUS);
         {
             i32 a;
             i32 inventa = ZEPHYRUM;
@@ -1727,7 +1738,7 @@ principale (vacuum)
             (s32)ORATIO_DECISIO_IMPLETIO);
                 CREDO_VERUM (_aequalis(_compendium(verbum,
                     (i32)ORATIO_VOCABULUM_AUCTOR),
-                    "umbra-caput-nominativus-praecedente-proximo"));
+                    "umbra-caput-praecedente-proximo"));
         CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, ZEPHYRUM)),
             (s32)ORATIO_DECISIO_IMPLETIO);
         CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, (i32)II)),

@@ -670,8 +670,28 @@ charter attachment 364/377 → 359/374 — the nominative rules claimed
 rarer nominative readings before the accusative rules saw their first
 reading; FIRST READING PER CASE IS A PRIOR. Default stays greedy, no
 rule changed, pins identical. Number/gender were captures already;
-case is the only literal dimension (28 head rules → 4 possible). NEXT
-= unified rules with the attribute measured beside the literal set.
+case is the only literal dimension (28 head rules → 4 possible).
+**T27 b (same day, Fran's decision): STRICT HEAD TIER UNIFIED** — 14
+literal strict rules → 2 (`$cas` on both nodes, `quaesitio="omnes"` =
+every agreeing pair is a row, T25 pair policy picks the nearest; 54 →
+42 rules); pins case 662/644/665, attachment 437/368/378, forced
+765/711/712 (charters −1 NAMED: fallback tier grows, refusing those
+rows is worse); shelf case +21/+3/+9/+10. LOOSE tier stays literal
+(unified it costs charter attachment −17, Aquinas case −19). WITHDRAWN:
+"first reading per case is a prior" — nominative-first rule order plus
+retry was the harm; dictionary order with every completion wins. Pair
+policy case rank (level II) is REAL under these rules (level I loses
+7/15/10 case); known miss `Puella bona ambulat` → ablative (hand case
+moved to `Puerum bonum videt`). Refused: object unification, strict
+`completa`, own-reading refusal. 2026-09-09: `_ligationes_remittere`
+(a permuting stage remaps every umbra pointing at the word; stale
+indices were two discordant bindings on Hilarius; no number moves);
+`EMENDATIO_SEMEL_PER_SENTENTIAM` OFF but measured (attachment
+441/386/394, Seneca case −2 — pin decision pending); pair order
+`ORDO_CASUUM_PARIUM` (nominative-first loses 6–19 case: ablative
+first stands; `Hoc templum est` reads accusative, recorded). NEXT =
+emendation decision, loose tier law or template (§8.5), feature
+columns, verb star with `omnes`.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

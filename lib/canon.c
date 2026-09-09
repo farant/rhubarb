@@ -2331,15 +2331,17 @@ _catena_nexus_iudicare (
                 chorda* quaesitio_regula = stml_attributum_capere(l,
                     "quaesitio");
 
-                si (   quaesitio_regula != NIHIL
-                    && !chorda_aequalis_literis(*quaesitio_regula,
-                                                "completa"))
-                {
+                                si (   quaesitio_regula != NIHIL
+                                    && !chorda_aequalis_literis(*quaesitio_regula,
+                                                "completa")
+                                    && !chorda_aequalis_literis(*quaesitio_regula,
+                                                "omnes"))
+                                {
                     vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
                                   l, l->titulus, quaesitio_regula,
                                   ZEPHYRUM, ZEPHYRUM);
                     perge;
-                }
+                                }
             }
 
 
@@ -2810,15 +2812,17 @@ _caps_iudicare (
             chorda* quaesitio_regula = stml_attributum_capere(n,
                 "quaesitio");
 
-            si (   quaesitio_regula != NIHIL
-                && !chorda_aequalis_literis(*quaesitio_regula,
-                                            "completa"))
-            {
+                        si (   quaesitio_regula != NIHIL
+                            && !chorda_aequalis_literis(*quaesitio_regula,
+                                            "completa")
+                            && !chorda_aequalis_literis(*quaesitio_regula,
+                            "omnes"))
+                        {
                 vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
                               n->titulus, quaesitio_regula, ZEPHYRUM,
                               ZEPHYRUM);
                 redde;
-            }
+                        }
         }
 
         /* retentio radicis: valor 'fontis' solus; sine de= nihil

@@ -108,19 +108,28 @@
  * adpositionis/particulae/auxiliaris: socius == caput carrier (UD: casus
  * et mark a nomine/verbo pendent); obiecti verbi: carrier == caput
  * socii), solum crescens; revocatio relata */
-#define CIRCSE_LIGATIONIS_PINNA    431
-#define LLCT_DEV_LIGATIONIS_PINNA  364
-#define LLCT_TEST_LIGATIONIS_PINNA 377
+/* T27 (2026-09-08): gradus strictus regularum capitis UNITUS (XIV -> II,
+ * $cas utrimque, EXEMPLAR quaesitio="omnes", politica parium socium
+ * proximum eligens): casus 645/622/637 -> 662/644/665, ligatio
+ * 431/364/377 -> 437/368/378, coactae Senecae 764 -> 765; coactae
+ * chartarum 712 -> 711 et 713 -> 712 CAUSA NOMINATA (decisio Frani):
+ * gradus legis umbrarum crescit (ordo lectionis victae socium suum
+ * decernit; recusatio eius mensurata et peior), numerator paene idem
+ * (+3 / -3 verba); thesauris IX nihil aliud descendit, scrinium casu
+ * et ligatione ubique ascendit. */
+#define CIRCSE_LIGATIONIS_PINNA    437   /* T27: 431 -> 437 */
+#define LLCT_DEV_LIGATIONIS_PINNA  368   /* T27: 364 -> 368 */
+#define LLCT_TEST_LIGATIONIS_PINNA 378   /* T27: 377 -> 378 */
 #define EWT_DEV_LIGATIONIS_PINNA   815
 #define EWT_TEST_LIGATIONIS_PINNA  826
-#define CIRCSE_CASUUM_PINNA      645
-#define LLCT_DEV_CASUUM_PINNA    622
-#define LLCT_TEST_CASUUM_PINNA   637
+#define CIRCSE_CASUUM_PINNA      662   /* T27: 645 -> 662 */
+#define LLCT_DEV_CASUUM_PINNA    644   /* T27: 622 -> 644 */
+#define LLCT_TEST_CASUUM_PINNA   665   /* T27: 637 -> 665 */
 #define EWT_DEV_CASUUM_PINNA     0
 #define EWT_TEST_CASUUM_PINNA    0
-#define CIRCSE_COACTAE_PINNA     764
-#define LLCT_DEV_COACTAE_PINNA   712   /* T22: 710 -> 712 */
-#define LLCT_TEST_COACTAE_PINNA  713   /* T22: 711 -> 713 */
+#define CIRCSE_COACTAE_PINNA     765   /* T27: 764 -> 765 */
+#define LLCT_DEV_COACTAE_PINNA   711   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA */
+#define LLCT_TEST_COACTAE_PINNA  712   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA */
 #define EWT_DEV_COACTAE_PINNA    913
 #define EWT_TEST_COACTAE_PINNA   913
 /* T20a (2026-09-08, decisio XLVII): CLAUSULAE - PURITAS verborum

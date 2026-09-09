@@ -92,7 +92,13 @@ nomen structura {
      * TRANSPARENTIA/CATENA producta ut datum emittuntur, numquam
      * consumpta nec vitium XIII (refinamentum portationis-contra-
      * applicationem, ratificatio 2026-08-31). */
-                    i32 applicatio;
+                                        i32 applicatio;
+    /* quaesitio OMNES (incrementum XXI b, 2026-09-08): lavacrum
+     * ordinum radicis quaesitionis currentis - completio quaeque
+     * ordo suus, quaesitio pergit; NIHIL extra quaesitionem */
+                    Xar* omnes_congruentiae;
+              StmlNodus* omnes_radix;
+                    b32  omnes_defectus;
 } StmlMacroContextus;
 
 /* Ligamen unum congruentiae laxae: gradus I (nodus) aut II (valor).
@@ -1895,8 +1901,8 @@ _exemplar_petere (
                                       Xar* congruentiae,
                                       Xar* opus_ligamina,
                                       b32  cursus_fratrum,
-                                      b32  cursus_strictus,
-                                      b32  quaesitio);
+                                                         b32  cursus_strictus,
+                   i32  quaesitio);
 
 
 interior Xar*
@@ -3682,7 +3688,7 @@ structura LaxaContinuatio {
                 i32  ci;                /* cursor candidati */
                 b32  primum;            /* candidatus unus temptandus */
                                 b32  strictus;          /* nullus saltus posthac */
-                b32  quaesitio;         /* completa (retentatio) an avida */
+                                i32  quaesitio;         /* 0 avida, I completa, II omnes */
     LaxaContinuatio* superior;          /* fratres gradus superioris */
 };
 
@@ -3695,12 +3701,12 @@ _laxa_congruere (
 
 interior b32
 _laxa_congruere_cont (
-    StmlMacroContextus* ctx,
-             StmlNodus* forma,
-             StmlNodus* candidatus,
-                   Xar* ligamina,
-                   b32  quaesitio,
-       LaxaContinuatio* continuatio);
+                       StmlMacroContextus* ctx,
+                                StmlNodus* forma,
+                                StmlNodus* candidatus,
+                                      Xar* ligamina,
+                                      i32  quaesitio,
+                          LaxaContinuatio* continuatio);
 
 
 interior b32
@@ -3708,6 +3714,13 @@ _fratres_congruere (
     StmlMacroContextus* ctx,
        LaxaContinuatio* status,
                    Xar* ligamina);
+
+interior b32
+_congruentiam_addere (
+    StmlMacroContextus* ctx,
+                   Xar* congruentiae,
+             StmlNodus* nodus,
+                   Xar* opus_ligamina);
 
 
 /* ==================================================
@@ -3916,9 +3929,9 @@ _laxa_liberos_congruere_ab (
                                       Xar* ligamina,
                                       i32  initium,
                                       b32  primum_fixum,
-                                      b32  strictus,
-                                      b32  quaesitio,
-                          LaxaContinuatio* continuatio)
+                                                         b32  strictus,
+                   i32  quaesitio,
+       LaxaContinuatio* continuatio)
 {
     LaxaContinuatio status;
 
@@ -3993,15 +4006,29 @@ _fratres_congruere (
         pf = NIHIL;
         pi++;
     }
-    si (pf == NIHIL)
-    {
+        si (pf == NIHIL)
+        {
         /* gradus completus: fratres superiores aut congruentia tota */
         si (status->superior == NIHIL)
         {
+            /* quaesitio OMNES (radix sola: gradus interiores I
+             * ferunt): completio haec ordo suus, quaesitio pergit -
+             * FALSUM electiones priores retro tentat */
+            si (   status->quaesitio       == (i32)II
+                && ctx->omnes_congruentiae != NIHIL)
+            {
+                si (!_congruentiam_addere(ctx, ctx->omnes_congruentiae,
+                                          ctx->omnes_radix, ligamina))
+                {
+                    ctx->omnes_defectus = VERUM;
+                }
+                redde FALSUM;
+            }
             redde VERUM;
         }
         redde _fratres_congruere(ctx, status->superior, ligamina);
-    }
+        }
+
     proximus     = *status;
     proximus.pi  = pi + I;
     si (_est_descensus(pf))
@@ -4251,12 +4278,12 @@ _laxa_caput_congruere (
  * congruentibus quaesitio in fratribus gradus superioris pergit */
 interior b32
 _laxa_congruere_cont (
-    StmlMacroContextus* ctx,
-             StmlNodus* forma,
-             StmlNodus* candidatus,
-                   Xar* ligamina,
-                   b32  quaesitio,
-       LaxaContinuatio* continuatio)
+                       StmlMacroContextus* ctx,
+                                StmlNodus* forma,
+                                StmlNodus* candidatus,
+                                      Xar* ligamina,
+                                      i32  quaesitio,
+                          LaxaContinuatio* continuatio)
 {
     redde _laxa_caput_congruere(ctx, forma, candidatus, ligamina)
         && _laxa_liberos_congruere_ab(ctx, forma, candidatus, ligamina,
@@ -4360,11 +4387,12 @@ _exemplar_petere (
                                       Xar* congruentiae,
                                       Xar* opus_ligamina,
                                       b32  cursus_fratrum,
-                                      b32  cursus_strictus,
-                                      b32  quaesitio)
+                                                         b32  cursus_strictus,
+                   i32  quaesitio)
 {
     i32 i;
     i32 num;
+
 
     si (nodus == NIHIL)
     {
@@ -4376,7 +4404,14 @@ _exemplar_petere (
         && nodus->attributum_titulus == NIHIL
         && !_est_perspicuum(ctx, nodus->titulus))
     {
-        xar_truncare(opus_ligamina, ZEPHYRUM);
+                xar_truncare(opus_ligamina, ZEPHYRUM);
+        si (quaesitio == (i32)II)
+        {
+            /* omnes: ordines intra quaesitionem adduntur (radix) */
+            ctx->omnes_congruentiae  = congruentiae;
+            ctx->omnes_radix         = nodus;
+            ctx->omnes_defectus      = FALSUM;
+        }
         si (cursus_fratrum)
         {
             si (_laxa_caput_congruere(ctx, forma, nodus, opus_ligamina))
@@ -4415,17 +4450,27 @@ _exemplar_petere (
                 }
             }
         }
-                alioquin si (   _laxa_congruere_cont(ctx, forma, nodus,
+                        alioquin si (   _laxa_congruere_cont(ctx, forma,
+                                     nodus,
                                              opus_ligamina, quaesitio,
                                              NIHIL)
-
-                             && !_congruentiam_addere(ctx, congruentiae,
-                             nodus,
+                                     && !_congruentiam_addere(ctx,
+                                     congruentiae, nodus,
                                               opus_ligamina))
         {
             redde FALSUM;
         }
+        si (quaesitio == (i32)II)
+        {
+            ctx->omnes_congruentiae  = NIHIL;
+            ctx->omnes_radix         = NIHIL;
+            si (ctx->omnes_defectus)
+            {
+                redde FALSUM;
+            }
+        }
     }
+
     /* ancorata: radix scopi sola - descensus solum dum nodus
      * elementum nondum est (involucrum documenti) */
     si (ancorata && nodus->genus == STML_NODUS_ELEMENTUM)
@@ -4613,8 +4658,8 @@ _exemplar_nucleus (
                                         chorda* cursus_regula;
                                            b32  cursus_fratrum;
                                            b32  cursus_strictus;
-                                        chorda* quaesitio_regula;
-                                           b32  quaesitio;
+                                                            chorda* quaesitio_regula;
+                       i32  quaesitio;
                                            i32  i;
                                            i32  num;
 
@@ -4675,15 +4720,21 @@ _exemplar_nucleus (
      * prioris retro tentat (lectio proxima intra candidatum, deinde
      * candidatus proximus); sine eo lex avida (defalta mensurata).
      * Valor alius vitium clarum. */
-    quaesitio_regula = stml_attributum_capere(nodus, "quaesitio");
+        quaesitio_regula = stml_attributum_capere(nodus, "quaesitio");
     si (   quaesitio_regula != NIHIL
-        && !chorda_aequalis_literis(*quaesitio_regula, "completa"))
+        && !chorda_aequalis_literis(*quaesitio_regula, "completa")
+        && !chorda_aequalis_literis(*quaesitio_regula, "omnes"))
     {
         _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
                        nodus, NIHIL, quaesitio_regula);
         redde FALSUM;
     }
-    quaesitio = quaesitio_regula != NIHIL;
+    /* 'omnes' (incrementum XXI b): completio QUAEQUE per initium ordo
+     * suus (lectio quaeque cum socio quoque) - electio inter eos
+     * consumentis (oratio: politica parium, proximus primus) */
+    quaesitio = quaesitio_regula == NIHIL ? ZEPHYRUM
+        : chorda_aequalis_literis(*quaesitio_regula, "omnes") ? (i32)II
+        : (i32)I;
 
 
     /* corpus: elementum UNUM (spec par. 2.4 - corpus silvestre sub
@@ -6684,7 +6735,10 @@ stml_expandere (
     ctx.indago                   = FALSUM;
     ctx.indago_scriptor          = NIHIL;
     ctx.radix_expansa            = NIHIL;
-    ctx.applicatio               = ZEPHYRUM;
+        ctx.applicatio           = ZEPHYRUM;
+    ctx.omnes_congruentiae       = NIHIL;
+    ctx.omnes_radix              = NIHIL;
+    ctx.omnes_defectus           = FALSUM;
     si (ctx.definitiones == NIHIL)
     {
         redde resultus;

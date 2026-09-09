@@ -2821,3 +2821,117 @@ case's second — a policy to name and measure, not a return to
 twenty-eight rules. Scratch: `aurum_census.py`, `verbum_caput.py`
 (the gold census behind the morning's answer), `ante.log`/`post.log`
 author-table diff.
+
+## 2026-09-08 — T27 b: the strict head tier unified; the retry finding overturned
+
+The one-hour measurement from the morning's plan was run, and it did
+not confirm the morning's reading. Nine treebanks (the five pinned,
+the four on the shelf), seven variants, each a swap of the rule file
+and one gate run plus the shelf:
+
+| variant | outcome |
+|---|---|
+| all 30 literal rules → 5 unified, first completion | case up everywhere; the object rule alone loses 50–150 bindings per file (refused) |
+| head unified, object literal | case +22/+12/+34, charter attachment −8/−11 |
+| head unified, every completion, nearest first | Seneca case 698 (+53), charters −17 attachment, Aquinas −19 case |
+| loose tier only, every completion | carries all of the attachment and Aquinas loss |
+| STRICT tier only, every completion | up or equal on every column of every file, except forced −1 on both charters |
+| strict tier, first completion only | worse than every-completion on every charter column |
+| refuse a row whose carrier holds another reading | primary and forced down on every Latin file (refused) |
+| distance-only pair policy (I) under the adopted rules | worse than distance-then-case (II) on every file |
+
+Adopted, with Fran's decision on the forced pins: the fourteen strict
+head rules become two, `$cas` captured on both nodes like number and
+gender always were, `quaesitio="omnes"` so that every agreeing pair
+is a row, and the T25 pair policy picks the nearest. Fifty-four rules
+become forty-two. Pins: case 645/622/637 → 662/644/665, attachment
+431/364/377 → 437/368/378, forced 764/712/713 → 765/711/712 — the
+two charter pins move DOWN with the named cause below; on the shelf
+case rises +21/+3/+9/+10 and attachment +5..+8, primary and EWT are
+identical.
+
+The named cause. The strict family itself gains right decisions on
+all three files (Seneca 717 → 740, dev charters 950 → 968). The dip is
+the law-of-umbrae fallback tier growing (143 → 160 words on dev, at
+lower accuracy): with every completion a carrier's LOSING reading
+still gets its umbra filled and still decides its partner, and the
+fallback then promotes some of those. Refusing such rows outright
+was the seventh variant and it is far worse — those bindings carry
+real information even when the carrier's own preference lies
+elsewhere. In absolute terms the forced tier gains three right words
+on dev and loses three on test.
+
+What this overturns. T27 a concluded that "the dictionary's first
+reading per case is an informative prior". It is not, or not in the
+way stated: dictionary order with every completion beats rule order
+on case by twenty to thirty permille on the adjacent tier. What
+T27 a had actually measured was nominative-FIRST rule order plus
+retry — retry let the first rule claim rarer readings before later
+rules saw the word at all. Two other laws came out of the isolation
+runs. The loose tier must stay literal for now: "the nearest agreeing
+word anywhere in the sentence" is not the head often enough, and
+every-completion there costs the charters 17 permille of attachment.
+And the T25 pair policy's second key, the partner reading's case rank
+(ORDO_CASUUM, ablative first), which was a null result on readings
+when it was built, is now real work: distance-only ordering under the
+adopted rules loses 7/15/10 permille of case on the pinned files and
+22 on Perseus. That key is also the reason `Puella bona ambulat`, the
+resolver's oldest hand sentence, now reads ablative — among three
+equal-distance agreeing pairs the ablative one sorts first. The bet
+wins on nine files and loses on that sentence; the pythonica hand
+case moved to `Puerum bonum videt`, which has one agreeing pair, and
+the miss is recorded.
+
+Method. Every variant was a swap of the rule file from a scratch
+generator (`unita.py`), one gate run, four shelf runs, `git checkout`
+of the rule file; the family sums over the author tables (scratch
+`post_*.log`) said where each loss lived before any code was written.
+Two engine changes were needed on the way and both are general:
+`quaesitio="omnes"` in the macro engine, and nothing in oratio's C —
+the policy-level-III grouping I wrote turned out redundant (a head
+umbra is always index 0, so the (carrier, umbra) group already holds
+all of a carrier's readings) and was dropped before commit.
+
+## 2026-09-09 — T27 b, second half: stale binding indices, the emendation law, the pair order
+
+Three things surfaced while wiring the adopted rules into the gates.
+
+**Two discordant bindings on Hilarius.** The resolutio probatio checks
+that every bound umbra points at a reading of its own case, and two
+did not: the carrier's preferred reading said ablative or accusative,
+the partner's reading 0 was nominative. Traced with a temporary print
+in the checker: both partners were class-explicit words (determiners
+under the T19i prior) that the strict tier had emended at stage 2 and
+a loose literal rule re-emended at stage 3 — the "once" in the T19i
+emendation law was once per STAGE — and the stage-3 permutation moved
+the partner's readings under a stage-2 binding that nobody remitted.
+Two fixes. `_ligationes_remittere`: whenever a stage permutes a
+word's readings, every umbra in the sentence that points at that
+word is remapped through the inverse permutation (first written with
+the write-once setter, which refused — the re-put form is the one the
+law of umbrae's own remit uses). With the emendation law unchanged
+this changes NOTHING on nine treebanks and discordes is 0: a pure
+correctness fix. `EMENDATIO_SEMEL_PER_SENTENTIAM`: emend a
+class-explicit word once per sentence instead of once per stage —
+that is the "first wins across stages" law applied to emendation.
+Measured: attachment 437/368/378 → 441/386/394, shelf attachment
++10 to +12 on all four, case up on eight files (charters +10/+6,
+shelf +4 to +7), Seneca case 662 → 660 (nine words). Left OFF with
+the numbers in its comment; it is the next pin decision.
+
+**The pair order.** The T25 policy's second key is the partner
+reading's case rank, borrowed from the T24 prior (ablative first).
+Under the unified strict rules it is real work: distance-only
+ordering loses 7/15/10 permille of case, and a nominative-first order
+(either nom-acc-abl or nom-abl-acc) loses 6/10/19 on the pinned files
+and up to 14 on Perseus. So among equal-distance agreeing pairs the
+ablative and the accusative win over the nominative — which is why
+`Puella bona ambulat` reads ablative and `Hoc templum est` reads
+accusative now. The table is now `ORDO_CASUUM_PARIUM`, identical to
+the prior's but measured on its own; the four hand cases that
+asserted nominative for those sentences say ablative and accusative
+with the reason, and the pythonica case moved to `Puerum bonum
+videt`, which has one agreeing pair.
+
+**Rule counts.** 54 → 42; the resolutio probatio's stage boundaries
+moved from 22/38 to 22/26.
