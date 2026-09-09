@@ -719,9 +719,20 @@ unknown forms), homonym lemma order 20/5 % (`armus/arma`,
 `caelus/caelum`: WORDS frequency codes are in the dictionary, not on
 readings), gerundive-before-gerund 7/12 %, determiner prior with the
 partner's rarer reading 8/11 %, head rules 13/6 % (smallest — the pair
-policy is not where gender points are). NEXT = frequency prior for
-homonym lemmas, T22 b variants on known forms, gerund reading, verb
-star with `omnes`, §8.5 template family.
+policy is not where gender points are). **T30 b (2026-09-09): THE
+FREQUENCY ORDER** — `OratioDescriptio.frequentia` = WORDS stem
+frequency code; the annotator stable-sorts each (class, language)
+group of readings among its own positions by rank BEFORE nodes and
+rules (class order untouched → primary cannot move; equal ranks keep
+dictionary order; `ORATIO_ORDO_FREQUENTIAE=0` disables). Before the
+rules unlike T24 because it changes no evidence, only which reading
+of a case comes first; bound words repaired too. Nine treebanks:
+primary identical, gender +5..+10 everywhere (pins 907/895/892),
+Seneca number 917 and attachment 463; the `conventione` count
+exposed `testes` moving to WORDS's common-gender entry on the
+charters (same lemma). NEXT = T22 b variants on known forms, gerund
+reading, inflection frequency as a second key, verb star with
+`omnes`, §8.5 template family.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

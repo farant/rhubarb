@@ -7,6 +7,7 @@
 #include "materia_arbor.h"
 #include "xar.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 interior chorda
@@ -342,6 +343,156 @@ oratio_partes_nodum_struere (
     redde nodus;
 }
 
+
+/* T30 b ORDO FREQUENTIAE (2026-09-09): lectiones eiusdem CLASSIS et
+ * LINGUAE inter sedes suas ordine codicis frequentiae stirpis WORDS
+ * (A ante B ... F; I M N rarissimi; X ignotus medius; sine codice -
+ * glossarium, unicum, regula - primae) STABILITER permutantur; ordo
+ * classium et linguarum manet (classis prima eadem: primarium immotum;
+ * Latinae ante Anglicas), copia lectionum eadem (nihil eliminatur).
+ * Census T30 a: ordo lemmatum homonymorum (armus ante arma, caelus
+ * ante caelum, tela ante telum, census ante censum) quinta pars
+ * falsorum generis Senecae attingibilium. Regulae par congruens PRIMUM
+ * ligant, ergo ordo ANTE regulas: evidentia casus/numeri/generis
+ * eadem, lemma frequentius primum (contra priorem casuum T24, qui
+ * casus permutat et ante regulas primarium laedebat). Ambitus
+ * ORATIO_ORDO_FREQUENTIAE=0 abrogat (mensura ante/post sine
+ * recoctione). */
+hic_manens constans b32 ORDO_FREQUENTIAE = VERUM;
+
+interior b32
+_ordo_frequentiae_activus (
+    vacuum)
+{
+    hic_manens i32 lectum   = ZEPHYRUM;
+    hic_manens b32 activus  = VERUM;
+
+    si (!lectum)
+    {
+        constans character* ambitus = getenv("ORATIO_ORDO_FREQUENTIAE");
+
+        activus = (b32)(ORDO_FREQUENTIAE
+            && (ambitus == NIHIL || strcmp(ambitus, "0") != ZEPHYRUM));
+        lectum  = I;
+    }
+    redde activus;
+}
+
+interior i32
+_gradus_frequentiae (
+    character codex)
+{
+    commutatio (codex)
+    {
+        casus 'A':
+            redde ZEPHYRUM;
+        casus 'B':
+            redde I;
+        casus 'C':
+            redde (i32)II;
+        casus 'D':
+            redde (i32)III;
+        casus 'E':
+            redde (i32)IV;
+        casus 'F':
+            redde (i32)V;
+        casus 'I':
+        casus 'M':
+        casus 'N':
+            redde (i32)VI;
+        casus ZEPHYRUM:
+            redde ZEPHYRUM;   /* sine stirpe: locus suus manet inter primas */
+        ordinarius:
+            redde (i32)III;   /* X ignotus: medius */
+    }
+}
+
+/* descriptiones intra greges (classis, lingua) per gradum frequentiae
+ * stabiliter permutare; FALSUM = memoria */
+interior b32
+_descriptiones_frequentia_ordinare (
+    Piscina* scratch,
+        Xar* descriptiones)
+{
+                 i32  n = xar_numerus(descriptiones);
+    OratioDescriptio* copia;
+                 i32* sedes;
+                 i32* ordo;
+                 b32* visa;
+                 i32  i;
+
+    si (n < (i32)II || !_ordo_frequentiae_activus())
+    {
+        redde VERUM;
+    }
+    copia = (OratioDescriptio*)piscina_allocare(scratch,
+        (memoriae_index)n * (memoriae_index)magnitudo(OratioDescriptio));
+    sedes = (i32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(i32));
+    ordo  = (i32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(i32));
+    visa  = (b32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(b32));
+    si (   copia == NIHIL || sedes == NIHIL || ordo == NIHIL
+        || visa  == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        copia[i] =
+            *(constans OratioDescriptio*)xar_obtinere(descriptiones,
+            i);
+        visa[i]  = FALSUM;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        i32 m = ZEPHYRUM;
+        i32 j;
+        i32 a;
+
+        si (visa[i])
+        {
+            perge;
+        }
+        /* grex: sedes lectionum classis et linguae eiusdem, ordine */
+        per (j = i; j < n; j++)
+        {
+            si (   !visa[j]
+                && copia[j].classis       == copia[i].classis
+                && copia[j].lingua        == copia[i].lingua
+                && copia[j].lingua_ignota == copia[i].lingua_ignota)
+            {
+                sedes[m]  = j;
+                ordo[m]   = j;
+                visa[j]   = VERUM;
+                m         = m + I;
+            }
+        }
+        /* insertio stabilis per gradum */
+        per (a = I; a < m; a++)
+        {
+            i32 k = ordo[a];
+            i32 b = a;
+
+            dum (   b > ZEPHYRUM
+                 && _gradus_frequentiae(copia[ordo[b - I]].frequentia)
+                     > _gradus_frequentiae(copia[k].frequentia))
+            {
+                ordo[b]  = ordo[b - I];
+                b        = b - I;
+            }
+            ordo[b] = k;
+        }
+        per (a = ZEPHYRUM; a < m; a++)
+        {
+            *(OratioDescriptio*)xar_obtinere(descriptiones, sedes[a]) =
+                copia[ordo[a]];
+        }
+    }
+    redde VERUM;
+}
+
 /* T22: formae variantes formis CAPITALIBUS quoque? MENSURATUM (quinque
  * correspondentiae activae): cum capitalibus Seneca 9607, chartae
  * 20884/20617; sine 9610 (Erebo Pelei Polybo nomina manent),
@@ -561,6 +712,11 @@ oratio_partes_vocabulum_annotare (
         }
         oratio_partes_la_ignotum(piscina, textus, d);
         ignotum_additum = VERUM;
+    }
+    /* T30 b: ordo frequentiae intra greges classis et linguae */
+    si (!_descriptiones_frequentia_ordinare(scratch, descriptiones))
+    {
+        redde FALSUM;
     }
 
     per (k = ZEPHYRUM; k < xar_numerus(descriptiones); k++)

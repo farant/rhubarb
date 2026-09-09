@@ -1889,6 +1889,29 @@ lemmas, the medieval variant on known forms (T22 b), the gerund
 reading; a derived-gender count through the agreement partner if the
 convention is to be earned rather than granted.
 
+**As built — T30 b, the frequency order (2026-09-09).** Every reading
+description carries the WORDS frequency code of its stem
+(`OratioDescriptio.frequentia`; zero for glossary, unique, rule and
+English readings). Before nodes are built, the annotator stable-sorts
+the readings of each (class, language) group among their own
+positions by frequency rank (A … F, rarer codes last, X in the
+middle, no code first); class and language order are untouched, so
+the first class of a word cannot move and nothing is eliminated;
+equal ranks keep dictionary order. It runs BEFORE the rules, unlike
+the case prior (T24), because it changes no case, number or gender
+evidence — only which reading of a case is met first — so the rules
+bind the same evidence with the frequent lemma, and bound words are
+repaired too. `ORATIO_ORDO_FREQUENTIAE=0` disables it for measurement.
+Nine treebanks, off → on: primary identical everywhere; gender Seneca
+897 → 907, charters 890 → 895 and 885 → 892, shelf +6/+3/+8/+3;
+Seneca number 914 → 917 and attachment 462 → 463; case and forced
+level. Pins gender 907 / 895 / 892, Seneca number 917, Seneca
+attachment 463. The `conventione` count showed that on the charters
+about 120 / 150 words moved from strictly right to right by
+convention: `testes`, the witnesses, now read WORDS's common-gender
+`testis` entry before its masculine one — the same lemma. Not done:
+inflection frequency as a second key, the age code, derived gender.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

@@ -743,6 +743,47 @@ principale (vacuum)
             umbrae_adpositionum = umbrae_adpositionum + I;
         }
         CREDO_VERUM (umbrae_adpositionum >= (i32)II);   /* in: abl + acc */
+        /* T30 b ORDO FREQUENTIAE: lectiones classis eiusdem ordine
+         * codicis frequentiae stirpis WORDS - armis: armum (arma, A)
+         * ante armus (D); tela: telum ante tela; ordo classium immotus:
+         * rosam - verbum (rodo) ante substantivum (rosa) ut fons */
+        {
+            constans character* fons_f = "armis tela rosam\n";
+                  MateriaNodus* doc_f = oratio_arbor_parsare(piscina,
+                      fons_f, (i32)strlen(fons_f));
+              OratioPartesCensus census_f;
+                    MateriaNodus* armis;
+                    MateriaNodus* tela;
+                    MateriaNodus* rosam;
+            constans MateriaNodus* prima;
+
+            CREDO_NON_NIHIL (doc_f);
+            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+                doc_f, &census_f));
+            armis  = _vocabulum(doc_f, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+            tela   = _vocabulum(doc_f, ZEPHYRUM, ZEPHYRUM, I);
+            rosam  = _vocabulum(doc_f, ZEPHYRUM, ZEPHYRUM, (i32)II);
+            CREDO_VERUM (_numerus_analysium(armis) > I);
+            prima = materia_valor_lista_obtinere(
+                armis->loci[ORATIO_VOCABULUM_ANALYSES], ZEPHYRUM)
+                ->datum.nodus;
+            CREDO_VERUM (_aequalis(_derivatum(prima,
+                ORATIO_ANALYSIS_LEMMA), "armum"));
+            CREDO_AEQUALIS_S32 (_index(prima,
+                ORATIO_ANALYSIS_SUBSTANTIVI_GENUS),
+                (s32)ORATIO_GENUS_GRAMMATICUM_NEUTRUM);
+            prima = materia_valor_lista_obtinere(
+                tela->loci[ORATIO_VOCABULUM_ANALYSES], ZEPHYRUM)
+                ->datum.nodus;
+            CREDO_VERUM (_aequalis(_derivatum(prima,
+                ORATIO_ANALYSIS_LEMMA), "telum"));
+            prima = materia_valor_lista_obtinere(
+                rosam->loci[ORATIO_VOCABULUM_ANALYSES], ZEPHYRUM)
+                ->datum.nodus;
+            CREDO_AEQUALIS_S32 ((s32)oratio_genus_classis(
+                (OratioGenus)prima->genus),
+                (s32)ORATIO_CLASSIS_VERBUM);
+        }
         /* CAPUT (T19d beta): lectio adiectivi cum casu umbram capitis
          * fert casu numero genere suis; substantivum sine */
         {

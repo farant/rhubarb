@@ -127,20 +127,20 @@
  * ligatio 441/386/394 -> 462/398/412, EWT dev 815 -> 817, coactae
  * 765/711/712 -> 769/713/717, casus Senecae 660 -> 666; casus chartarum
  * dev 654 -> 653 CAUSA NOMINATA (decisio Frani, VII verba). */
-#define CIRCSE_LIGATIONIS_PINNA    462   /* T27: 431 -> 437; T27 b: 437 -> 441; T28: 441 -> 462 */
+#define CIRCSE_LIGATIONIS_PINNA    463   /* T27: 431 -> 437; T27 b: 437 -> 441; T28: 441 -> 462; T30 b: 462 -> 463 */
 #define LLCT_DEV_LIGATIONIS_PINNA  398   /* T27: 364 -> 368; T27 b: 368 -> 386; T28: 386 -> 398 */
 #define LLCT_TEST_LIGATIONIS_PINNA 412   /* T27: 377 -> 378; T27 b: 378 -> 394; T28: 394 -> 412 */
 #define EWT_DEV_LIGATIONIS_PINNA   817   /* T28: 815 -> 817 */
 #define EWT_TEST_LIGATIONIS_PINNA  826
 #define CIRCSE_CASUUM_PINNA      666   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666 */
-#define CIRCSE_NUMERI_PINNA   914   /* T29: nativitas */
-#define CIRCSE_GENERIS_PINNA  897   /* T29: nativitas 837; T30: 837 -> 847 valores aurei plures (Fem,Masc), 847 -> 897 conventio communis (decisio Frani) */
+#define CIRCSE_NUMERI_PINNA   917   /* T29: nativitas 914; T30 b: ordo frequentiae 914 -> 917 */
+#define CIRCSE_GENERIS_PINNA  907   /* T29: nativitas 837; T30 a: 837 -> 847 valores aurei plures (Fem,Masc), 847 -> 897 conventio communis (decisio Frani); T30 b: 897 -> 907 ordo frequentiae */
 #define LLCT_DEV_CASUUM_PINNA    653   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA */
 #define LLCT_DEV_NUMERI_PINNA   928   /* T29: nativitas */
-#define LLCT_DEV_GENERIS_PINNA  890   /* T29: nativitas 813; T30: conventio communis 813 -> 890 */
+#define LLCT_DEV_GENERIS_PINNA  895   /* T29: nativitas 813; T30 a: conventio communis 813 -> 890; T30 b: ordo frequentiae 890 -> 895 */
 #define LLCT_TEST_CASUUM_PINNA   671   /* T27: 637 -> 665; T27 b: 665 -> 671 */
 #define LLCT_TEST_NUMERI_PINNA   933   /* T29: nativitas */
-#define LLCT_TEST_GENERIS_PINNA  885   /* T29: nativitas 810; T30: conventio communis 810 -> 885 */
+#define LLCT_TEST_GENERIS_PINNA  892   /* T29: nativitas 810; T30 a: conventio communis 810 -> 885; T30 b: ordo frequentiae 885 -> 892 */
 #define EWT_DEV_CASUUM_PINNA     0
 #define EWT_DEV_NUMERI_PINNA   0   /* T29 */
 #define EWT_DEV_GENERIS_PINNA  0   /* T29 */

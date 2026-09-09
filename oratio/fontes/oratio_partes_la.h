@@ -52,6 +52,7 @@ nomen structura {
               s32 coniugatio;    /* I-IV aut -I */
                       chorda lemma;         /* copia in piscina */
            chorda natura;        /* species stirpis WORDS verbatim ("F L", "DEP"; referens) */
+        character frequentia;    /* T30 b: codex frequentiae stirpis WORDS (A..F, X); ZEPHYRUM sine stirpe (glossarium, unicum, regula, Anglica) */
            chorda nativum;       /* codex fontis verbatim (copia) */
            chorda sensus;        /* fontem referens (non copiatur) */
     OratioFonsAnalysis fons;

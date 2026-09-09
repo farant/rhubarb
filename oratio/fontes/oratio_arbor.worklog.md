@@ -3087,3 +3087,56 @@ the convention earned rather than granted.
 **Wart.** `silva.Editio` on a `.py` file runs the C formatter, which
 refuses (no fixed point) after the write; the edit lands, the
 exception is noise. Worth a `.py` guard in applicare.
+
+## 2026-09-09 — T30 b: the frequency order
+
+The census ranked homonym lemma order first among the reachable
+gender errors: WORDS lists `armus` before `arma`, `tela` before
+`telum`, `testa` before `testis`, `census` before `censum`, and the
+first reading of a case is whatever entry the dictionary happens to
+list first. The dictionary carries WORDS's frequency code per stem
+(A very frequent … F very rare, X unknown), and the readings did not.
+
+**What was built.** `OratioDescriptio.frequentia` carries the stem's
+code (zero for glossary, unique, rule and English readings). Before
+nodes are built, `_descriptiones_frequentia_ordinare` stable-sorts the
+readings of each (class, language) group among their own positions by
+frequency rank. Class order and language order are untouched, so the
+first class of every word is what it was and primary cannot move;
+nothing is eliminated. Equal ranks keep dictionary order (`caelus` and
+`caelum` are both A, so `caelus` still leads). `ORATIO_ORDO_FREQUENTIAE=0`
+turns it off for measurement without a rebuild.
+
+**Where it runs, and why before the rules.** T24 taught that a prior
+may not change what evidence rules see: the case prior before the
+rules wrecked primary because loose head rules bind the first
+agreeing pair, and ablative-first found spurious pairs. The frequency
+order changes no case, number or gender evidence — the same tuples
+are there — only which reading of a case is met first, so the rules
+bind the same evidence with the frequent lemma. Bound words are
+fixed too (`caelum` under the accusative object rule), which a
+last-stage prior on untouched words could not reach.
+
+**Measured, nine treebanks, off → on.** Primary identical on every
+file. Gender: Seneca 897 → 907, charters 890 → 895 and 885 → 892,
+Aquinas 856 → 862, Perseus 901 → 904, PROIEL 923 → 931, Dante 866 →
+869. Number: Seneca 914 → 917, others +0..1. Case: Seneca 666 → 666
+(+3 words), charters equal, shelf +2/−1/+3/+3 words. Attachment:
+Seneca 462 → 463, charters equal, shelf +3/+1/+1/0 right. Forced
+equal. Pins: gender 907/895/892, Seneca number 917, Seneca attachment
+463.
+
+**One thing the `conventione` count caught.** On the charters the
+words right by convention rose from 584/588 to 744/794 while the
+total rose 38/53, so strictly-right fell by about 120/150. The probe
+named it: `testes` (the charters' witnesses, hundreds of them) now
+reads WORDS's common-gender `testis` entry before its masculine entry
+— same lemma, both entries correct, the convention covers it. The
+count did what it was built for: it showed that part of a rise was
+the convention, and where. `comes` improved as a lemma (was the
+genitive of `come`).
+
+**Not done here.** Inflection frequency (the flexion's own code,
+which would push locatives back) as a second key; the age code
+(medieval entries first on the charters); a derived gender through
+the agreement partner for commune words.

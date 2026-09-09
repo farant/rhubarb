@@ -817,8 +817,9 @@ oratio_partes_la_describere (
                         d.lemma =
                             oratio_vocabularium_la_lemma(piscina, voc,
                             a->stirps);
-            d.sensus = stirps->sensus;
-            d.natura = stirps->species;
+            d.sensus      = stirps->sensus;
+            d.natura      = stirps->species;
+            d.frequentia  = stirps->frequentia;   /* T30 b */
             d.nativum = _nativum(piscina, flexio->pars,
                 stirps->declinatio,
                 stirps->varians, flexio->accidentia,
