@@ -784,6 +784,83 @@ principale (vacuum)
                 (OratioGenus)prima->genus),
                 (s32)ORATIO_CLASSIS_VERBUM);
         }
+        /* T22 b (T30 c) DIALECTUS: documentum cum formis mediis
+         * recuperatis (memorie, ecclesie) MEDIUS - forma nota 'bone'
+         * lectiones variantes (bonae, fons orthographia) post nativas
+         * accipit; documentum classicum CLASSICUS - 'male' nullam */
+        {
+            constans character* fons_m = "bone memorie ecclesie\n";
+            constans character* fons_c = "male vere dicit\n";
+                  MateriaNodus* doc_m = oratio_arbor_parsare(piscina,
+                      fons_m, (i32)strlen(fons_m));
+                  MateriaNodus* doc_c = oratio_arbor_parsare(piscina,
+                      fons_c, (i32)strlen(fons_c));
+              OratioPartesCensus census_m;
+              OratioPartesCensus census_c;
+                             i32 recuperata;
+                             i32 verba;
+                    MateriaNodus* v;
+           constans MateriaValor* an;
+                             i32  variantes;
+                             i32  m;
+
+            CREDO_NON_NIHIL (doc_m);
+            CREDO_NON_NIHIL (doc_c);
+            CREDO_VERUM (oratio_partes_praescandere(piscina,
+                &vocabularia,
+                doc_m, &recuperata, &verba));
+            CREDO_AEQUALIS_I32 (verba, (i32)III);
+            CREDO_AEQUALIS_I32 (recuperata, (i32)II);
+            CREDO_AEQUALIS_S32 ((s32)oratio_partes_dialectus_censu(
+                recuperata, verba), (s32)ORATIO_DIALECTUS_MEDIUS);
+            CREDO_AEQUALIS_S32 ((s32)oratio_partes_dialectus_censu(
+                ZEPHYRUM, (i32)III), (s32)ORATIO_DIALECTUS_CLASSICUS);
+            CREDO_AEQUALIS_S32 ((s32)oratio_partes_dialectus_censu(I,
+                (i32)300), (s32)ORATIO_DIALECTUS_CLASSICUS);
+            CREDO_AEQUALIS_S32 ((s32)oratio_partes_dialectus_censu(I,
+                (i32)200), (s32)ORATIO_DIALECTUS_MEDIUS);
+            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+                doc_m, &census_m));
+            CREDO_AEQUALIS_S32 (census_m.dialectus,
+                (s32)ORATIO_DIALECTUS_MEDIUS);
+            CREDO_VERUM (census_m.orthographia_notae >= I);
+            v = _vocabulum(doc_m, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+            an = &v->loci[ORATIO_VOCABULUM_ANALYSES];
+            variantes = ZEPHYRUM;
+            per (m = ZEPHYRUM; m
+                < materia_valor_lista_numerus(*an); m++)
+            {
+                constans MateriaNodus* a = materia_valor_lista_obtinere(
+                    *an, m)->datum.nodus;
+
+                si (_index(a, ORATIO_ANALYSIS_FONS)
+                    == (s32)ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA)
+                {
+                    variantes = variantes + I;
+                }
+                alioquin si (_index(a, ORATIO_ANALYSIS_LINGUA)
+                             == (s32)ORATIO_LINGUA_LATINA)
+                {
+                    /* nativae Latinae ante variantes (Anglicae post) */
+                    CREDO_AEQUALIS_I32 (variantes, ZEPHYRUM);
+                }
+            }
+            CREDO_VERUM (variantes > ZEPHYRUM);
+            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+                doc_c, &census_c));
+            CREDO_AEQUALIS_S32 (census_c.dialectus,
+                (s32)ORATIO_DIALECTUS_CLASSICUS);
+            CREDO_AEQUALIS_I32 (census_c.orthographia_notae, ZEPHYRUM);
+            v   = _vocabulum(doc_c, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+            an  = &v->loci[ORATIO_VOCABULUM_ANALYSES];
+            per (m = ZEPHYRUM; m
+                < materia_valor_lista_numerus(*an); m++)
+            {
+                CREDO_VERUM (_index(materia_valor_lista_obtinere(*an, m)
+                        ->datum.nodus, ORATIO_ANALYSIS_FONS)
+                    != (s32)ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA);
+            }
+        }
         /* CAPUT (T19d beta): lectio adiectivi cum casu umbram capitis
          * fert casu numero genere suis; substantivum sine */
         {

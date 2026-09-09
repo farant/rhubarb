@@ -730,9 +730,24 @@ of a case comes first; bound words repaired too. Nine treebanks:
 primary identical, gender +5..+10 everywhere (pins 907/895/892),
 Seneca number 917 and attachment 463; the `conventione` count
 exposed `testes` moving to WORDS's common-gender entry on the
-charters (same lemma). NEXT = T22 b variants on known forms, gerund
-reading, inflection frequency as a second key, verb star with
-`omnes`, §8.5 template family.
+charters (same lemma). **T30 c / T22 b (2026-09-09): MEDIEVAL
+VARIANTS ON KNOWN FORMS, GATED BY DIALECT** — a document has a
+DIALECT (`OratioDialectus` classicus | medius) decided like its
+language: `oratio_partes_praescandere` counts words T22 recovers
+(charters 29 ‰, Dante 12, classical ≤ 1), `dialectus_censu` says
+medius at 5 ‰, `annotare_dialecto` takes or decides it; the oracle
+decides per FILE in the language pass. In a medius document a KNOWN
+form also varies, only through `e-ae` (table flag `notis`;
+`h-praefixa`/`e-i` on known forms REFUSED, lose everywhere) and only
+into readings whose WORDS part is already native (`que` never becomes
+`quae`); variants after native Latin readings, source `orthographia`.
+Charters: primary +2/+1, forced +6/+11, case +9/+14, gender +18/+20,
+attachment +15/+16; number −3/−1 NAMED (loose tier nominative-first
+binds `sancte … ecclesie` plural) — Fran's decision; classical files
+byte-identical. Unfiltered known-form variants lost primary on every
+file: over-generated readings win spurious agreement (T28 again).
+NEXT = gerund reading, loose-tier order (§8.5 family), inflection
+frequency as a second key, verb star with `omnes`.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

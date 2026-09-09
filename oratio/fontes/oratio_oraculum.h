@@ -261,6 +261,14 @@ nomen structura {
      * per thesaurum; -I = non censa (sine programmate) */
                                             s32 lingua_documenti;
                                             i32 suffragia_linguarum[ORATIO_LINGUA_NUMERUS];
+    /* DIALECTUS DOCUMENTI (T22 b / T30 c): thesaurus totus censetur in
+     * eodem circuitu ac lingua - recuperata = formae per orthographiam
+     * mediam recuperatae, verba = vocabula; dialectus per
+     * oratio_partes_dialectus_censu, sententiis datus (ignotus sine
+     * programmate: sententia quaeque se ipsa censet) */
+                                            s32 dialectus;
+                                            i32 dialectus_recuperata;
+                                            i32 dialectus_verba;
     /* discrepantiae primarii (T19a): Xar de OratioOraculumDiscrepantia*
      * (cellae stabiles in piscina iudicii) + index clavis
      * 'aurea/nostra/forma'; pigre creata in iudicio, NIHIL ante */

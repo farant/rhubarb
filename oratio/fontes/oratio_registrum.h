@@ -299,6 +299,21 @@ nomen enumeratio {
     ORATIO_LINGUA_NUMERUS
 } OratioLingua;
 
+/* DIALECTUS documenti (T22 b / T30 c, 2026-09-09): classicus | medius -
+ * decisio ex censu formarum per orthographiam mediam (contractus IV)
+ * recuperatarum inter vocabula documenti (praescansio); medius si
+ * >= V millesimae (chartae XXIX, Dante XII, classici <= I). Ignotus =
+ * nondum censum (annotator ipse censet). Medius: formae NOTAE quoque
+ * variant (sancte = sanctae). Ut lingua documenti (T18), non locus
+ * arboris sed decisio censu documenti toti. */
+nomen enumeratio {
+    ORATIO_DIALECTUS_IGNOTUS = 0,
+    ORATIO_DIALECTUS_CLASSICUS,
+    ORATIO_DIALECTUS_MEDIUS,
+
+    ORATIO_DIALECTUS_NUMERUS
+} OratioDialectus;
+
 /* fons */
 nomen enumeratio {
     ORATIO_FONS_ANALYSIS_VOCABULARIUM_LA = 0,
@@ -535,6 +550,7 @@ externus constans character* constans ORATIO_TITULI_FORMARUM_VERBI[];
 externus constans character* constans ORATIO_TITULI_GRADUUM[];
 externus constans character* constans ORATIO_TITULI_SPECIERUM_NUMERALIS[];
 externus constans character* constans ORATIO_TITULI_LINGUARUM[];
+externus constans character* constans ORATIO_TITULI_DIALECTORUM[];   /* T22 b */
 externus constans character* constans ORATIO_TITULI_RELATIONUM[];   /* T19d */
 externus constans character* constans ORATIO_TITULI_DECISIONUM[];   /* T19g */
 externus constans character* constans ORATIO_TITULI_SPECIERUM_CLAUSULAE[];   /* T20a */

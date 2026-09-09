@@ -3098,8 +3098,9 @@ _sententiam_iudicare (
         : NIHIL;
     elementa = xar_creare(scratch, (i32)magnitudo(Elementum));
         si (   doc == NIHIL || elementa == NIHIL
-            || !oratio_partes_annotare(scratch, vocabularia, doc,
-            &census_partium))
+            || !oratio_partes_annotare_dialecto(scratch, vocabularia,
+            doc,
+                &census_partium, (OratioDialectus)census->dialectus))
         {
         census->sententiae_fractae = census->sententiae_fractae + I;
         piscina_destruere(scratch);
@@ -3342,6 +3343,11 @@ _linguam_documenti_censere (
             && oratio_partes_annotare(scratch, vocabularia, doc,
                 &census_partium))
         {
+            /* T22 b: census dialecti in eodem circuitu */
+            census->dialectus_recuperata = census->dialectus_recuperata
+                + census_partium.orthographia;
+            census->dialectus_verba = census->dialectus_verba
+                + census_partium.vocabula;
             per (k = ZEPHYRUM; k < (i32)ORATIO_LINGUA_NUMERUS; k++)
             {
                 census->suffragia_linguarum[k] =
@@ -3388,6 +3394,8 @@ oratio_oraculum_iudicare_resolutum (
             piscina, vocabularia, sententiae, census);
         resolutio.lingua_documenti =
             ORATIO_TITULI_LINGUARUM[(i32)census->lingua_documenti];
+        census->dialectus = (s32)oratio_partes_dialectus_censu(
+            census->dialectus_recuperata, census->dialectus_verba);
     }
     per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
     {

@@ -70,8 +70,8 @@
  * (formae ignotae MDCXXII -> MIX, MDCLXIV -> MLXI), Seneca 834 -> 835
  * (mecum temet glossario) */
 #define CIRCSE_PRIMARIA_PINNA    835
-#define LLCT_DEV_PRIMARIA_PINNA  863
-#define LLCT_TEST_PRIMARIA_PINNA 856
+#define LLCT_DEV_PRIMARIA_PINNA  865   /* T30 c: variantes mediae formis notis 863 -> 865 */
+#define LLCT_TEST_PRIMARIA_PINNA 858   /* T30 c: 856 -> 858 */
 
 
 /* T18 (2026-09-07): regula linguae documenti + lex casus recordorum
@@ -128,19 +128,19 @@
  * 765/711/712 -> 769/713/717, casus Senecae 660 -> 666; casus chartarum
  * dev 654 -> 653 CAUSA NOMINATA (decisio Frani, VII verba). */
 #define CIRCSE_LIGATIONIS_PINNA    463   /* T27: 431 -> 437; T27 b: 437 -> 441; T28: 441 -> 462; T30 b: 462 -> 463 */
-#define LLCT_DEV_LIGATIONIS_PINNA  398   /* T27: 364 -> 368; T27 b: 368 -> 386; T28: 386 -> 398 */
-#define LLCT_TEST_LIGATIONIS_PINNA 412   /* T27: 377 -> 378; T27 b: 378 -> 394; T28: 394 -> 412 */
+#define LLCT_DEV_LIGATIONIS_PINNA  413   /* T27: 364 -> 368; T27 b: 368 -> 386; T28: 386 -> 398; T30 c: 398 -> 413 */
+#define LLCT_TEST_LIGATIONIS_PINNA 428   /* T27: 377 -> 378; T27 b: 378 -> 394; T28: 394 -> 412; T30 c: 412 -> 428 */
 #define EWT_DEV_LIGATIONIS_PINNA   817   /* T28: 815 -> 817 */
 #define EWT_TEST_LIGATIONIS_PINNA  826
 #define CIRCSE_CASUUM_PINNA      666   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666 */
 #define CIRCSE_NUMERI_PINNA   917   /* T29: nativitas 914; T30 b: ordo frequentiae 914 -> 917 */
 #define CIRCSE_GENERIS_PINNA  907   /* T29: nativitas 837; T30 a: 837 -> 847 valores aurei plures (Fem,Masc), 847 -> 897 conventio communis (decisio Frani); T30 b: 897 -> 907 ordo frequentiae */
-#define LLCT_DEV_CASUUM_PINNA    653   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA */
-#define LLCT_DEV_NUMERI_PINNA   928   /* T29: nativitas */
-#define LLCT_DEV_GENERIS_PINNA  895   /* T29: nativitas 813; T30 a: conventio communis 813 -> 890; T30 b: ordo frequentiae 890 -> 895 */
-#define LLCT_TEST_CASUUM_PINNA   671   /* T27: 637 -> 665; T27 b: 665 -> 671 */
-#define LLCT_TEST_NUMERI_PINNA   933   /* T29: nativitas */
-#define LLCT_TEST_GENERIS_PINNA  892   /* T29: nativitas 810; T30 a: conventio communis 810 -> 885; T30 b: ordo frequentiae 885 -> 892 */
+#define LLCT_DEV_CASUUM_PINNA    662   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA; T30 c: 653 -> 662 */
+#define LLCT_DEV_NUMERI_PINNA   925   /* T29: nativitas 928; T30 c: 928 -> 925 CAUSA NOMINATA (decisio Frani): gradus laxus litteralis nominativo primo paria pluralia sanctae/ecclesiae ligat */
+#define LLCT_DEV_GENERIS_PINNA  913   /* T29: nativitas 813; T30 a: conventio communis 813 -> 890; T30 b: ordo frequentiae 890 -> 895; T30 c: 895 -> 913 */
+#define LLCT_TEST_CASUUM_PINNA   685   /* T27: 637 -> 665; T27 b: 665 -> 671; T30 c: 671 -> 685 */
+#define LLCT_TEST_NUMERI_PINNA   932   /* T29: nativitas 933; T30 c: 933 -> 932 CAUSA NOMINATA (decisio Frani), ut dev */
+#define LLCT_TEST_GENERIS_PINNA  912   /* T29: nativitas 810; T30 a: conventio communis 810 -> 885; T30 b: ordo frequentiae 885 -> 892; T30 c: 892 -> 912 */
 #define EWT_DEV_CASUUM_PINNA     0
 #define EWT_DEV_NUMERI_PINNA   0   /* T29 */
 #define EWT_DEV_GENERIS_PINNA  0   /* T29 */
@@ -148,8 +148,8 @@
 #define EWT_TEST_NUMERI_PINNA   0   /* T29 */
 #define EWT_TEST_GENERIS_PINNA  0   /* T29 */
 #define CIRCSE_COACTAE_PINNA     769   /* T27: 764 -> 765; T28: 765 -> 769 */
-#define LLCT_DEV_COACTAE_PINNA   713   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA; T28: 711 -> 713 */
-#define LLCT_TEST_COACTAE_PINNA  717   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA; T28: 712 -> 717 */
+#define LLCT_DEV_COACTAE_PINNA   719   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA; T28: 711 -> 713; T30 c: 713 -> 719 */
+#define LLCT_TEST_COACTAE_PINNA  728   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA; T28: 712 -> 717; T30 c: 717 -> 728 */
 #define EWT_DEV_COACTAE_PINNA    913
 #define EWT_TEST_COACTAE_PINNA   913
 /* T20a (2026-09-08, decisio XLVII): CLAUSULAE - PURITAS verborum
@@ -507,6 +507,19 @@ _thesaurus_arborum (
         }
         /* T29 NOTAE: numerus et genus pinnati solum crescentes, cetera
          * relata (persona, modus, vox, forma verbi, tempus) */
+        /* T22 b (T30 c): dialectus documenti ex censu thesauri toti -
+         * chartae MEDIUS, ceteri CLASSICUS */
+        {
+            s32 speratus = strstr(plagula, "llct") != NIHIL
+                ? (s32)ORATIO_DIALECTUS_MEDIUS
+                : (s32)ORATIO_DIALECTUS_CLASSICUS;
+
+            imprimere("    dialectus %s (recuperata %d de %d)\n",
+                ORATIO_TITULI_DIALECTORUM[(i32)census.dialectus],
+                (integer)census.dialectus_recuperata,
+                (integer)census.dialectus_verba);
+            CREDO_AEQUALIS_S32 (census.dialectus, speratus);
+        }
         {
             i32 k;
 

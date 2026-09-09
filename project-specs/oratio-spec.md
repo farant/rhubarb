@@ -1912,6 +1912,33 @@ convention: `testes`, the witnesses, now read WORDS's common-gender
 `testis` entry before its masculine one — the same lemma. Not done:
 inflection frequency as a second key, the age code, derived gender.
 
+**As built — T30 c (T22 b), medieval variants on known forms
+(2026-09-09).** A document has a DIALECT (`OratioDialectus`:
+ignotus, classicus, medius), decided like its language (T18) from
+evidence the pipeline already produces: `oratio_partes_praescandere`
+counts the words T22 recovers as unknown medieval spellings (one
+cached lookup per folded form); `oratio_partes_dialectus_censu` says
+medius at five per thousand (charters 29, Dante 12, classical ≤ 1);
+`oratio_partes_annotare_dialecto` takes the dialect or decides it for
+the subtree; the oracle decides per treebank file in the language
+census pass and hands it to every sentence (`DIALECTUS` line and row,
+`census.dialectus`). In a medieval document a KNOWN form also asks
+for variants, through the correspondences flagged `notis` in the
+table — only `e-ae`; `h-praefixa` and `e-i` measured on known forms
+lose everywhere — and keeps a variant reading only if its WORDS part
+of speech is among the form's native readings (`que` stays a
+conjunction). Variant readings come after the native Latin ones
+(their own group in the frequency order), source `orthographia`,
+census `orthographia_notae`. Measured against the committed state:
+charters dev / test primary 863 → 865 / 857 → 858, forced 713 → 719 /
+717 → 728, case 653 → 662 / 671 → 685, gender 895 → 913 / 892 → 912,
+attachment 398 → 413 / 412 → 428; number 928 → 925 / 933 → 932, the
+one fall, cause named (the loose tier's nominative-first literal
+order binds `sancte … ecclesie` as a plural pair), Fran's decision;
+Dante gains case, number, gender and attachment; every classical file
+and EWT byte-identical. Not done: capitalised known forms, the loose
+tier's order, a sentence-level dialect.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

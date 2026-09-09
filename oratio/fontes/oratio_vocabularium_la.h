@@ -86,6 +86,7 @@ nomen structura {
          constans character* a;
          constans character* b;
                         b32  activa;
+                        b32  notis;    /* T22 b: formis NOTIS quoque (lectiones appensae) */
 } OratioOrthographia;
 
 externus constans OratioOrthographia ORATIO_ORTHOGRAPHIA[];
@@ -143,6 +144,16 @@ oratio_vocabularium_la_quaerere (
  * -I. Xar vacuus = nihil; NIHIL = memoria. */
 Xar*
 oratio_vocabularium_la_quaerere_variantes (
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc,
+                           chorda  forma,
+                              s32* varians);
+
+/* T22 b (T30 c): idem formis NOTIS - correspondentiae 'notis' solae
+ * (tabula, deinde ORATIO_ORTHOGRAPHIA_NOTAE); vocator lectiones
+ * post nativas appendit. */
+Xar*
+oratio_vocabularium_la_quaerere_variantes_notis (
                           Piscina* piscina,
     constans OratioVocabulariumLa* voc,
                            chorda  forma,

@@ -970,17 +970,26 @@ constans OratioOrthographia ORATIO_ORTHOGRAPHIA[] = {
      * chartae dev coactae 709; i-e 708; p-b EWT dev 912, chartae 709;
      * inb-imb nihil mutat. Quinque simul (sine capitalibus): Seneca
      * 835/764, chartae 863/712 + 856/713, EWT immotae. */
-    { "h-praefixa", ORATIO_ORTHOGRAPHIA_PRAEFIXUM, "", "h", VERUM },
-    { "e-ae", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "e", "ae", VERUM },
-    { "inp-imp", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "inp", "imp", VERUM },
-    { "b-p", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "b", "p", VERUM },
-    { "e-i", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "e", "i", VERUM },
-    { "geminatio", ORATIO_ORTHOGRAPHIA_GEMINATIO, "lmnrstcp", "",
+    /* 'notis' (T22 b, T30 c): formis NOTIS quoque, lectiones variantes
+     * post nativas appensae; mensura: ORATIO_ORTHOGRAPHIA_NOTAE=0 (nulla)
+     * aut =titulus (una sola) */
+    { "h-praefixa", ORATIO_ORTHOGRAPHIA_PRAEFIXUM, "", "h", VERUM,
         FALSUM },
-    { "d-t", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "d", "t", FALSUM },
-    { "o-u", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "o", "u", FALSUM },
-    { "i-e", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "i", "e", FALSUM },
-    { "p-b", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "p", "b", FALSUM }
+    { "e-ae", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "e", "ae", VERUM,
+        VERUM },
+    { "inp-imp", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "inp", "imp", VERUM,
+        FALSUM },
+    { "b-p", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "b", "p", VERUM, FALSUM },
+    { "e-i", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "e", "i", VERUM, FALSUM },
+    { "geminatio", ORATIO_ORTHOGRAPHIA_GEMINATIO, "lmnrstcp", "",
+        FALSUM, FALSUM },
+    { "d-t", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "d", "t", FALSUM,
+        FALSUM },
+    { "o-u", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "o", "u", FALSUM,
+        FALSUM },
+    { "i-e", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "i", "e", FALSUM,
+        FALSUM },
+    { "p-b", ORATIO_ORTHOGRAPHIA_SUBSTITUTIO, "p", "b", FALSUM, FALSUM }
 };
 constans i32 ORATIO_ORTHOGRAPHIA_NUMERUS =
     (i32)(magnitudo(ORATIO_ORTHOGRAPHIA)
@@ -1017,6 +1026,33 @@ _activa (
     {
         redde (b32)(strcmp(sine, ORATIO_ORTHOGRAPHIA[c].titulus)
             != ZEPHYRUM);
+    }
+    redde VERUM;
+}
+
+/* an correspondentia c formis NOTIS activa sit (T22 b): tabula 'notis'
+ * sub 'activa', deinde ambitus ORATIO_ORTHOGRAPHIA_NOTAE ('0' nulla,
+ * titulus una sola), semel lectus */
+interior b32
+_activa_notis (
+    i32 c)
+{
+                   hic_manens i32  lectum   = ZEPHYRUM;
+    hic_manens constans character* ambitus  = NIHIL;
+
+    si (!lectum)
+    {
+        ambitus  = getenv("ORATIO_ORTHOGRAPHIA_NOTAE");
+        lectum   = I;
+    }
+    si (!_activa(c) || !ORATIO_ORTHOGRAPHIA[c].notis)
+    {
+        redde FALSUM;
+    }
+    si (ambitus != NIHIL)
+    {
+        redde (b32)(strcmp(ambitus, ORATIO_ORTHOGRAPHIA[c].titulus)
+            == ZEPHYRUM);
     }
     redde VERUM;
 }
@@ -1104,12 +1140,15 @@ _varians (
     redde FALSUM;
 }
 
-Xar*
-oratio_vocabularium_la_quaerere_variantes (
+/* variantes quaerere: notis = correspondentiae formis notis solae
+ * (_activa_notis), aliter activae (_activa) */
+interior Xar*
+_variantes_quaerere (
                           Piscina* piscina,
     constans OratioVocabulariumLa* voc,
                            chorda  forma,
-                              s32* varians)
+                              s32* varians,
+                              b32  notis)
 {
     Xar* exitus = xar_creare(piscina, (i32)magnitudo(OratioAnalysis));
     chorda f;
@@ -1132,7 +1171,7 @@ oratio_vocabularium_la_quaerere_variantes (
         i32 mensura;
         i32 k;
 
-                si (!_activa(c))
+                si (notis ? !_activa_notis(c) : !_activa(c))
                 {
             perge;
                 }
@@ -1163,6 +1202,26 @@ oratio_vocabularium_la_quaerere_variantes (
         }
     }
     redde exitus;
+}
+
+Xar*
+oratio_vocabularium_la_quaerere_variantes (
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc,
+                           chorda  forma,
+                              s32* varians)
+{
+    redde _variantes_quaerere(piscina, voc, forma, varians, FALSUM);
+}
+
+Xar*
+oratio_vocabularium_la_quaerere_variantes_notis (
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc,
+                           chorda  forma,
+                              s32* varians)
+{
+    redde _variantes_quaerere(piscina, voc, forma, varians, VERUM);
 }
 
 Xar*

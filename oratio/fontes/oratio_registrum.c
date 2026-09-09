@@ -339,6 +339,10 @@ constans character* constans ORATIO_TITULI_SPECIERUM_NUMERALIS[] = {
 constans character* constans ORATIO_TITULI_LINGUARUM[] = {
     "latina", "anglica"
 };
+/* T22 b: dialectus documenti (index = valor) */
+constans character* constans ORATIO_TITULI_DIALECTORUM[] = {
+    "ignotus", "classicus", "medius"
+};
 constans character* constans ORATIO_TITULI_RELATIONUM[] = {
     "obiectum", "caput", "verbum-finitum", "subiectum"
 };

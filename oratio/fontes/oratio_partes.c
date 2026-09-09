@@ -5,6 +5,7 @@
 #include "oratio_lexicon.h"
 #include "oratio_lexema.h"
 #include "materia_arbor.h"
+#include "tabula_dispersa.h"
 #include "xar.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -461,7 +462,10 @@ _descriptiones_frequentia_ordinare (
             si (   !visa[j]
                 && copia[j].classis       == copia[i].classis
                 && copia[j].lingua        == copia[i].lingua
-                && copia[j].lingua_ignota == copia[i].lingua_ignota)
+                && copia[j].lingua_ignota == copia[i].lingua_ignota
+                && (copia[j].fons == ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA)
+                    == (copia[i].fons
+                        == ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA))
             {
                 sedes[m]  = j;
                 ordo[m]   = j;
@@ -500,14 +504,86 @@ _descriptiones_frequentia_ordinare (
 hic_manens constans b32 ORTHOGRAPHIA_CAPITALIA = FALSUM;
 /* interruptor totius contractus IV (mensura: basis sine variantibus) */
 hic_manens constans b32 ORTHOGRAPHIA_ACTIVA = VERUM;
+/* T22 b (T30 c, 2026-09-09): formae NOTAE quoque variant - lectiones
+ * variantes post nativas APPENSAE (fons orthographia; ordo frequentiae
+ * eas post nativas tenet, grex proprius): sancte = sanctae, bone =
+ * bonae, suprascripte = suprascriptae, ipse = ipsae. Census generis
+ * T30 a: formae mediae notae, quarum vocativus variantem -ae obstruebat,
+ * quinta pars falsorum absentium chartarum. Custodia capitalium eadem;
+ * custodia Moby NON adhibetur (forma iam Latina nota: bone, male, pure
+ * Anglica quoque sunt). ORATIO_ORTHOGRAPHIA_NOTAE=0 abrogat (mensura). */
+hic_manens constans b32 ORTHOGRAPHIA_NOTAE = VERUM;
+/* T22 b: lectio varians formae NOTAE cuius pars orationis (WORDS,
+ * stirpis) inter partes lectionum nativarum stirpium NON est omittitur
+ * - 'que' (coniunctio) per 'quae' pronomen/determinans fiebat et
+ * substantivum proximum utrimque ligabat (ecclesie pluralis XXXV,
+ * numerus chartarum 928 -> 924); forma nota classem suam servat,
+ * variantes accidentia addunt. ORATIO_ORTHOGRAPHIA_NOTAE_CLASSIS=0
+ * abrogat (mensura). */
+hic_manens constans b32 ORTHOGRAPHIA_NOTAE_CLASSIS = VERUM;
+
+interior b32
+_orthographia_notae_classis_activa (
+    vacuum)
+{
+    hic_manens i32 lectum = ZEPHYRUM;
+    hic_manens b32 activa = VERUM;
+
+    si (!lectum)
+    {
+        constans character* ambitus =
+            getenv("ORATIO_ORTHOGRAPHIA_NOTAE_CLASSIS");
+
+        activa = (b32)(ORTHOGRAPHIA_NOTAE_CLASSIS
+            && (ambitus == NIHIL || strcmp(ambitus, "0") != ZEPHYRUM));
+        lectum = I;
+    }
+    redde activa;
+}
+
+/* pars orationis (WORDS) stirpis analysis; -I sine stirpe */
+interior s32
+_pars_analysis (
+    constans OratioVocabulariumLa* voc,
+          constans OratioAnalysis* a)
+{
+    constans OratioStirps* stirps;
+
+    si (a->genus != ORATIO_ANALYSIS_STIRPS || a->stirps < ZEPHYRUM)
+    {
+        redde (s32)-I;
+    }
+    stirps = oratio_vocabularium_la_stirps(voc, a->stirps);
+    redde stirps != NIHIL ? (s32)stirps->pars : (s32)-I;
+}
+
+interior b32
+_orthographia_notae_activa (
+    vacuum)
+{
+    hic_manens i32 lectum = ZEPHYRUM;
+    hic_manens b32 activa = VERUM;
+
+    si (!lectum)
+    {
+        constans character* ambitus =
+            getenv("ORATIO_ORTHOGRAPHIA_NOTAE");
+
+        activa = (b32)(ORTHOGRAPHIA_NOTAE
+            && (ambitus == NIHIL || strcmp(ambitus, "0") != ZEPHYRUM));
+        lectum = I;
+    }
+    redde activa;
+}
 
 b32
 oratio_partes_vocabulum_annotare (
-                          Piscina* piscina,
-                          Piscina* scratch,
-       constans OratioVocabularia* vocabularia,
-                     MateriaNodus* vocabulum,
-               OratioPartesCensus* census)
+                           Piscina* piscina,
+                           Piscina* scratch,
+        constans OratioVocabularia* vocabularia,
+                      MateriaNodus* vocabulum,
+                OratioPartesCensus* census,
+                   OratioDialectus  dialectus)
 {
     constans MateriaValor* partes =
         &vocabulum->loci[ORATIO_VOCABULUM_PARTES];
@@ -515,6 +591,7 @@ oratio_partes_vocabulum_annotare (
                    chorda  textus;
                       Xar* analyses;
                       Xar* descriptiones;
+                      b32  forma_nota;   /* T22 b: forma ipsa vocabulario Latino nota */
                       i32  k;
                       b32  classis_visa[ORATIO_CLASSIS_NUMERUS_CLASSIUM];
             OratioClassis  ordo_classium[ORATIO_CLASSIS_NUMERUS_CLASSIUM];
@@ -553,6 +630,7 @@ oratio_partes_vocabulum_annotare (
     {
         redde FALSUM;
     }
+    forma_nota = (b32)(xar_numerus(analyses) > ZEPHYRUM);
     /* T22 CONTRACTUS IV: forma vocabulario Latino ignota et Moby ignota
      * (custodia Anglica ut T21) per formas variantes orthographiae mediae
      * quaeritur (e > ae, h addita ...); lectiones fontem 'orthographia'
@@ -596,6 +674,65 @@ oratio_partes_vocabulum_annotare (
             }
         }
         }
+    /* T22 b (T30 c): forma NOTA - lectiones variantes post nativas
+     * appensae (vide ORTHOGRAPHIA_NOTAE) */
+    si (   ORTHOGRAPHIA_ACTIVA && _orthographia_notae_activa()
+        && forma_nota && dialectus == ORATIO_DIALECTUS_MEDIUS
+        && (   ORTHOGRAPHIA_CAPITALIA
+            || !(   textus.datum[ZEPHYRUM] >= 'A'
+                 && textus.datum[ZEPHYRUM] <= 'Z')))
+    {
+        s32  varians;
+        Xar* variantes =
+            oratio_vocabularium_la_quaerere_variantes_notis(scratch,
+            vocabularia->la, textus, &varians);
+        i32 j;
+
+        si (variantes == NIHIL)
+        {
+            redde FALSUM;
+        }
+        {
+            i32 nativae = xar_numerus(analyses);
+
+            per (j = ZEPHYRUM; j < xar_numerus(variantes); j++)
+            {
+                constans OratioAnalysis* a =
+                    (constans OratioAnalysis*)xar_obtinere(variantes,
+                    j);
+                OratioAnalysis* cella;
+
+                si (_orthographia_notae_classis_activa())
+                {
+                    s32 pars = _pars_analysis(vocabularia->la, a);
+                    i32 i;
+                    b32 inter = FALSUM;
+
+                    per (i = ZEPHYRUM; i < nativae && !inter; i++)
+                    {
+                        inter = (b32)(pars >= ZEPHYRUM
+                            && _pars_analysis(vocabularia->la,
+                                (constans OratioAnalysis*)xar_obtinere(
+                                    analyses, i)) == pars);
+                    }
+                    si (!inter)
+                    {
+                        perge;
+                    }
+                }
+                cella = (OratioAnalysis*)xar_addere(analyses);
+                si (cella == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                *cella = *a;
+            }
+        }
+        si (xar_numerus(variantes) > ZEPHYRUM && census != NIHIL)
+        {
+            census->orthographia_notae = census->orthographia_notae + I;
+        }
+    }
         per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
         {
         si (!oratio_partes_la_describere(piscina, vocabularia->la,
@@ -1056,7 +1193,8 @@ _annotare (
                            Piscina* scratch,
         constans OratioVocabularia* vocabularia,
                       MateriaNodus* n,
-                OratioPartesCensus* census)
+                OratioPartesCensus* census,
+                   OratioDialectus  dialectus)
 {
     i32 i;
 
@@ -1068,7 +1206,7 @@ _annotare (
     {
         redde oratio_partes_vocabulum_annotare(piscina, scratch,
             vocabularia,
-            n, census);
+            n, census, dialectus);
     }
     per (i = ZEPHYRUM; i < n->numerus_locorum; i++)
     {
@@ -1078,7 +1216,7 @@ _annotare (
         {
             si (!_annotare(piscina, scratch, vocabularia,
                 v->datum.nodus,
-                census))
+                census, dialectus))
             {
                 redde FALSUM;
             }
@@ -1107,7 +1245,7 @@ _annotare (
                     redde FALSUM;
                 }
                 si (!_annotare(piscina, scratch, vocabularia,
-                        e->datum.nodus, census))
+                        e->datum.nodus, census, dialectus))
                 {
                     redde FALSUM;
                 }
@@ -1161,12 +1299,193 @@ _annotare (
     redde VERUM;
 }
 
+/* T22 b: praescansio - status formae plicatae (I nota, II ignota
+ * recuperata, III ignota) semel per indicem; vocabula subarboris */
+interior b32
+_praescandere (
+                           Piscina* scratch,
+        constans OratioVocabularia* vocabularia,
+                    TabulaDispersa* index,
+             constans MateriaNodus* n,
+                               i32* recuperata,
+                               i32* verba)
+{
+    i32 i;
+
+    si (n == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (n->genus == (s32)ORATIO_GENUS_VOCABULUM)
+    {
+        chorda  textus = oratio_partes_textus_vocabuli(scratch, n);
+        chorda  plicata;
+        vacuum* valor;
+           i32* status;
+
+        si (textus.datum == NIHIL || textus.mensura == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+        plicata = oratio_vocabularium_la_plicare(scratch, textus);
+        si (plicata.datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (tabula_dispersa_invenire(index, plicata, &valor))
+        {
+            status = (i32*)valor;
+        }
+        alioquin
+        {
+            Xar* analyses = oratio_vocabularium_la_quaerere(scratch,
+                vocabularia->la, textus);
+
+            status = (i32*)piscina_allocare(scratch,
+                (memoriae_index)magnitudo(i32));
+            si (analyses == NIHIL || status == NIHIL)
+            {
+                redde FALSUM;
+            }
+            *status = I;
+            si (xar_numerus(analyses) == ZEPHYRUM)
+            {
+                *status = (i32)III;
+                si (   ORTHOGRAPHIA_ACTIVA
+                    && (   ORTHOGRAPHIA_CAPITALIA
+                        || !(   textus.datum[ZEPHYRUM] >= 'A'
+                             && textus.datum[ZEPHYRUM] <= 'Z')))
+                {
+                    b32 anglica_nota = FALSUM;
+
+                    si (vocabularia->en != NIHIL)
+                    {
+                        Xar* nota_en = oratio_vocabularium_en_analysare(
+                            scratch, vocabularia->en, textus);
+
+                        si (nota_en == NIHIL)
+                        {
+                            redde FALSUM;
+                        }
+                        anglica_nota = (b32)(xar_numerus(nota_en)
+                            > ZEPHYRUM);
+                    }
+                    si (!anglica_nota)
+                    {
+                        s32  varians;
+                        Xar* variantes =
+                            oratio_vocabularium_la_quaerere_variantes(
+                            scratch, vocabularia->la, textus, &varians);
+
+                        si (variantes == NIHIL)
+                        {
+                            redde FALSUM;
+                        }
+                        si (xar_numerus(variantes) > ZEPHYRUM)
+                        {
+                            *status = (i32)II;
+                        }
+                    }
+                }
+            }
+            (vacuum)tabula_dispersa_inserere(index, plicata, status);
+        }
+        *verba = *verba + I;
+        si (*status == (i32)II)
+        {
+            *recuperata = *recuperata + I;
+        }
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < n->numerus_locorum; i++)
+    {
+        constans MateriaValor* v = &n->loci[i];
+
+        si (v->genus == MATERIA_VALOR_NODUS)
+        {
+            si (!_praescandere(scratch, vocabularia, index,
+                v->datum.nodus,
+                    recuperata, verba))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (v->genus == MATERIA_VALOR_LISTA)
+        {
+            i32 m = materia_valor_lista_numerus(*v);
+            i32 j;
+
+            per (j = ZEPHYRUM; j < m; j++)
+            {
+                constans MateriaValor* e =
+                    materia_valor_lista_obtinere(*v,
+                    j);
+
+                si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
+                    && !_praescandere(scratch, vocabularia, index,
+                        e->datum.nodus, recuperata, verba))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
 b32
-oratio_partes_annotare (
+oratio_partes_praescandere (
                           Piscina* piscina,
        constans OratioVocabularia* vocabularia,
-                     MateriaNodus* radix,
-               OratioPartesCensus* census)
+            constans MateriaNodus* radix,
+                              i32* recuperata,
+                              i32* verba)
+{
+    Piscina* scratch = piscina_generare_dynamicum("partes_praescansio",
+        67108864);
+    TabulaDispersa* index;
+               b32  sanum;
+
+    (vacuum)piscina;
+    *recuperata  = ZEPHYRUM;
+    *verba       = ZEPHYRUM;
+    si (scratch == NIHIL)
+    {
+        redde FALSUM;
+    }
+    index = tabula_dispersa_creare_chorda(scratch, (i32)4096);
+    sanum = index != NIHIL && _praescandere(scratch, vocabularia, index,
+        radix, recuperata, verba);
+    piscina_destruere(scratch);
+    redde sanum;
+}
+
+/* limen dialecti medii (millesimae verborum recuperatarum): census
+ * thesaurorum (formae per orthographiam recuperatae / vocabula): chartae
+ * dev 602/20704 = XXIX, test 601/20727 = XXIX, Dante 140/11441 = XII;
+ * Seneca 0, Aquinas 0, Perseus 5/9102 < I, PROIEL 2/14110 < I */
+hic_manens constans i32 DIALECTUS_MEDIUS_MILLESIMAE = 5;
+
+OratioDialectus
+oratio_partes_dialectus_censu (
+    i32 recuperata,
+    i32 verba)
+{
+    si (verba == ZEPHYRUM || recuperata == ZEPHYRUM)
+    {
+        redde ORATIO_DIALECTUS_CLASSICUS;
+    }
+    redde recuperata * (i32)1000 >= verba * DIALECTUS_MEDIUS_MILLESIMAE
+        ? ORATIO_DIALECTUS_MEDIUS : ORATIO_DIALECTUS_CLASSICUS;
+}
+
+b32
+oratio_partes_annotare_dialecto (
+                           Piscina* piscina,
+        constans OratioVocabularia* vocabularia,
+                      MateriaNodus* radix,
+                OratioPartesCensus* census,
+                   OratioDialectus  dialectus)
 {
     Piscina* scratch = piscina_generare_dynamicum("partes_annotatio",
         67108864);
@@ -1180,7 +1499,26 @@ oratio_partes_annotare (
     {
         memset(census, ZEPHYRUM, magnitudo(*census));
     }
-        sanum = _annotare(piscina, scratch, vocabularia, radix, census);
+    /* T22 b: dialectus ignotus - praescansio subarboris ipsius */
+    si (dialectus == ORATIO_DIALECTUS_IGNOTUS)
+    {
+        i32 recuperata;
+        i32 verba;
+
+        si (!oratio_partes_praescandere(piscina, vocabularia, radix,
+                &recuperata, &verba))
+        {
+            piscina_destruere(scratch);
+            redde FALSUM;
+        }
+        dialectus = oratio_partes_dialectus_censu(recuperata, verba);
+    }
+    si (census != NIHIL)
+    {
+        census->dialectus = (s32)dialectus;
+    }
+    sanum = _annotare(piscina, scratch, vocabularia, radix, census,
+        dialectus);
     piscina_destruere(scratch);
     /* nodi novi patres accipiunt (lex materiae: comparator patres confert) */
     si (sanum)
@@ -1188,6 +1526,17 @@ oratio_partes_annotare (
         materia_arbor_patres_figere(piscina, radix);
     }
     redde sanum;
+}
+
+b32
+oratio_partes_annotare (
+                          Piscina* piscina,
+       constans OratioVocabularia* vocabularia,
+                     MateriaNodus* radix,
+               OratioPartesCensus* census)
+{
+    redde oratio_partes_annotare_dialecto(piscina, vocabularia, radix,
+        census, ORATIO_DIALECTUS_IGNOTUS);
 }
 
 b32

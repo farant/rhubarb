@@ -426,6 +426,10 @@ _tabulam_imprimere (
             (integer)c->suffragia_linguarum[ORATIO_LINGUA_LATINA],
             (integer)c->suffragia_linguarum[ORATIO_LINGUA_ANGLICA]);
     }
+    /* T22 b: dialectus documenti (thesaurus totus) */
+    imprimere("  dialectus documenti: %s (recuperata %d de %d)\n",
+        ORATIO_TITULI_DIALECTORUM[(i32)c->dialectus],
+        (integer)c->dialectus_recuperata, (integer)c->dialectus_verba);
         /* T19g: partitio decisionum (decretum SUDOKU XL) */
     imprimere("  partitio decisionum (elementum primum verbi aurei):\n");
     per (i = ZEPHYRUM; i < ORATIO_ORACULUM_PARTITIO_NUMERUS; i++)
@@ -708,6 +712,11 @@ _machinam_imprimere (
             (integer)c->ignota,
             (integer)c->inalignata, (integer)c->casus_verba,
             (integer)c->casus_recti);
+        /* T22 b: ordo DIALECTUS titulus recuperata verba */
+        imprimere("%s\tDIALECTUS\t%s\t%d\t%d\n", titulus,
+            ORATIO_TITULI_DIALECTORUM[(i32)c->dialectus],
+            (integer)c->dialectus_recuperata,
+            (integer)c->dialectus_verba);
         /* T29: ordines NOTA accidens verba recti */
         {
             i32 k;

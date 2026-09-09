@@ -3140,3 +3140,64 @@ genitive of `come`).
 which would push locatives back) as a second key; the age code
 (medieval entries first on the charters); a derived gender through
 the agreement partner for commune words.
+
+## 2026-09-09 — T30 c (T22 b): medieval variants on known forms, gated by dialect
+
+The gender census had a second unreachable bucket after the commune
+convention: known medieval forms. `sancte`, `bone`, `suprascripte`,
+`ipse` are all in WORDS as vocatives or nominatives, so T22 never
+asked for their `-ae` variant — contract IV asks only for UNKNOWN
+forms — and the feminine genitive the charters meant was never a
+candidate.
+
+**First measurement, no gate.** Appending the variant readings of
+every active correspondence to every known form lost primary on all
+seven Latin files (Seneca −182 words, the charters −225 / −334):
+the readings won spurious agreement, T28's lesson again. One
+correspondence at a time on known forms: `h-praefixa` and `e-i` lose
+everywhere and are refused; `e-ae` alone gains the charters +2 / +6 /
++9 / +17 / +15 (primary, forced, case, gender, attachment) and Dante,
+but costs Seneca −3 / −7 / −5 and PROIEL −10 / −38: classical adverbs
+and vocatives in `-e` (`male`, `vere`, `domine`) become feminine
+genitives.
+
+**The dialect.** What separates the files is evidence the pipeline
+already produces: the share of words T22 recovers as unknown medieval
+spellings — charters 29 per thousand, Dante 12, Perseus and PROIEL
+under 1, Seneca and Aquinas 0. So a document has a DIALECT, decided
+the way its language is (T18): a pre-scan over the document's words
+(one lookup per folded form, cached) counts recovered forms, and at
+five per thousand the document is `medius`. The oracle decides per
+treebank file in the same pass that decides the language and hands
+the dialect to every sentence; a document annotated on its own
+decides for itself. Known forms vary only in a medieval document.
+
+**Two more filters, both measured.** Only `e-ae` has the `notis`
+flag in the correspondence table (the others refused above). And a
+variant reading is kept only if its WORDS part of speech is already
+among the form's native readings: `que` (the enclitic standalone,
+very common in charters as `quae`) otherwise became a pronoun and
+determiner with 140 readings and bound the nearest noun on either
+side — `ecclesie` went plural 35 times. With the filter the number
+column recovers 1 permille and attachment 3 on the test file; Dante
+loses 4 permille of primary and gains 5 of case and 7 of attachment.
+
+**Adopted (Fran's decision), against the committed state.** Charters
+dev / test: primary 863 → 865 / 857 → 858, forced 713 → 719 / 717 →
+728, case 653 → 662 / 671 → 685, gender 895 → 913 / 892 → 912,
+attachment 398 → 413 / 412 → 428; number 928 → 925 / 933 → 932, the
+one fall, CAUSE NAMED from the errata: the loose tier's literal head
+rules run nominative first, so `sancte … ecclesie` at distance two
+binds as a plural nominative pair before the genitive rule can, and
+both go plural (13 + 13 + 8 words). That is the §8.5 family's known
+order problem, to be fixed there. Dante 781 → 780 / 631 → 633 / 696 →
+705 / 932 → 935 / 869 → 878 / 370 → 374. Every classical file and EWT
+byte-identical. Gates: partes asserts the pre-scan counts, the
+threshold on both sides, `bone` carrying `bonae` after its native
+Latin readings in a medieval document and `male` carrying nothing in
+a classical one; the oracle asserts the dialect per treebank; the
+inverted threshold went red.
+
+**Left on the table.** Capitalised known forms (`Sancte` at charter
+openings) still do not vary, as in T22; the loose tier's nominative-
+first order; a sentence-level dialect for mixed documents.

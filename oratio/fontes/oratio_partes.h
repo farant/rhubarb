@@ -50,6 +50,12 @@ nomen structura {
     i32 enclitica;
     /* T22: vocabula per formam variantem orthographiae mediae annotata */
     i32 orthographia;
+    /* T22 b (T30 c): vocabula NOTA quibus lectiones variantes appensae
+     * (dialecto medio solo) */
+    i32 orthographia_notae;
+    /* T22 b: dialectus documenti annotati (OratioDialectus; datus aut
+     * praescansione censum) */
+    s32 dialectus;
 } OratioPartesCensus;
 
 /* Locus accidentis (titulo) intra genus analysis classis; -I si genus
@@ -97,11 +103,12 @@ oratio_partes_encliticum_scindere (
  * arbore); census NIHIL licet. FALSUM = memoria. */
 b32
 oratio_partes_vocabulum_annotare (
-                          Piscina* piscina,
-                          Piscina* scratch,
-       constans OratioVocabularia* vocabularia,
-                     MateriaNodus* vocabulum,
-               OratioPartesCensus* census);
+                           Piscina* piscina,
+                           Piscina* scratch,
+        constans OratioVocabularia* vocabularia,
+                      MateriaNodus* vocabulum,
+                OratioPartesCensus* census,
+                   OratioDialectus  dialectus);
 
 /* Compendia CLASSES/LINGUAE vocabuli ex ordine analysium PRAESENTI
  * reponere (post permutationem resolutionis, gradus V; verbum
@@ -120,5 +127,36 @@ oratio_partes_annotare (
        constans OratioVocabularia* vocabularia,
                      MateriaNodus* radix,
                OratioPartesCensus* census);
+
+/* PRAESCANSIO dialecti (T22 b / T30 c): vocabula subarboris vocabulario
+ * Latino quaesita (forma plicata semel per indicem) - verba = vocabula
+ * omnia, recuperata = formae ignotae per orthographiam mediam
+ * recuperatae (custodiae annotationis eaedem: capitales non, Moby
+ * novit non). FALSUM = memoria. */
+b32
+oratio_partes_praescandere (
+                          Piscina* piscina,
+       constans OratioVocabularia* vocabularia,
+            constans MateriaNodus* radix,
+                              i32* recuperata,
+                              i32* verba);
+
+/* Dialectus ex censu: MEDIUS si recuperata >= V millesimae verborum
+ * (et > 0), aliter CLASSICUS. */
+OratioDialectus
+oratio_partes_dialectus_censu (
+    i32 recuperata,
+    i32 verba);
+
+/* Annotare dialecto dato; IGNOTUS = praescansio subarboris ipsius
+ * decernit (documentum totum: oraculum thesaurum totum censet et
+ * dialectum sententiis dat). census->dialectus scribitur. */
+b32
+oratio_partes_annotare_dialecto (
+                           Piscina* piscina,
+        constans OratioVocabularia* vocabularia,
+                      MateriaNodus* radix,
+                OratioPartesCensus* census,
+                   OratioDialectus  dialectus);
 
 #endif /* ORATIO_PARTES_H */
