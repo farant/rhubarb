@@ -686,12 +686,12 @@ moved to `Puerum bonum videt`). Refused: object unification, strict
 `completa`, own-reading refusal. 2026-09-09: `_ligationes_remittere`
 (a permuting stage remaps every umbra pointing at the word; stale
 indices were two discordant bindings on Hilarius; no number moves);
-`EMENDATIO_SEMEL_PER_SENTENTIAM` OFF but measured (attachment
-441/386/394, Seneca case −2 — pin decision pending); pair order
+`EMENDATIO_SEMEL_PER_SENTENTIAM` ON (Fran 2026-09-09: attachment
+441/386/394, case 660/654/671, Seneca case pin 662 → 660 NAMED); pair order
 `ORDO_CASUUM_PARIUM` (nominative-first loses 6–19 case: ablative
 first stands; `Hoc templum est` reads accusative, recorded). NEXT =
-emendation decision, loose tier law or template (§8.5), feature
-columns, verb star with `omnes`.
+loose tier law or template (§8.5), feature columns, verb star with
+`omnes`.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

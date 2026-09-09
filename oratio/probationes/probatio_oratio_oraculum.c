@@ -116,15 +116,20 @@
  * gradus legis umbrarum crescit (ordo lectionis victae socium suum
  * decernit; recusatio eius mensurata et peior), numerator paene idem
  * (+3 / -3 verba); thesauris IX nihil aliud descendit, scrinium casu
- * et ligatione ubique ascendit. */
-#define CIRCSE_LIGATIONIS_PINNA    437   /* T27: 431 -> 437 */
-#define LLCT_DEV_LIGATIONIS_PINNA  368   /* T27: 364 -> 368 */
-#define LLCT_TEST_LIGATIONIS_PINNA 378   /* T27: 377 -> 378 */
+ * et ligatione ubique ascendit.
+ * T27 b (2026-09-09): EMENDATIO_SEMEL_PER_SENTENTIAM (casus classis
+ * explicitae semel per sententiam emendatus - prima vincit trans gradus):
+ * ligatio 437/368/378 -> 441/386/394, casus chartarum 644/665 ->
+ * 654/671, scrinium casus +4..+7 et ligatio +10..+12; casus Senecae
+ * 662 -> 660 CAUSA NOMINATA (decisio Frani, IX verba). */
+#define CIRCSE_LIGATIONIS_PINNA    441   /* T27: 431 -> 437; T27 b: 437 -> 441 */
+#define LLCT_DEV_LIGATIONIS_PINNA  386   /* T27: 364 -> 368; T27 b: 368 -> 386 */
+#define LLCT_TEST_LIGATIONIS_PINNA 394   /* T27: 377 -> 378; T27 b: 378 -> 394 */
 #define EWT_DEV_LIGATIONIS_PINNA   815
 #define EWT_TEST_LIGATIONIS_PINNA  826
-#define CIRCSE_CASUUM_PINNA      662   /* T27: 645 -> 662 */
-#define LLCT_DEV_CASUUM_PINNA    644   /* T27: 622 -> 644 */
-#define LLCT_TEST_CASUUM_PINNA   665   /* T27: 637 -> 665 */
+#define CIRCSE_CASUUM_PINNA      660   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA */
+#define LLCT_DEV_CASUUM_PINNA    654   /* T27: 622 -> 644; T27 b: 644 -> 654 */
+#define LLCT_TEST_CASUUM_PINNA   671   /* T27: 637 -> 665; T27 b: 665 -> 671 */
 #define EWT_DEV_CASUUM_PINNA     0
 #define EWT_TEST_CASUUM_PINNA    0
 #define CIRCSE_COACTAE_PINNA     765   /* T27: 764 -> 765 */

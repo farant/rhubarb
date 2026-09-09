@@ -1103,11 +1103,12 @@ _ordines_ordinare (
  * (prima vincit trans gradus hic non valet). MENSURATUM thesauris IX
  * (regulis strictis unitis): VERUM casus 662/644/665 -> 660/654/671,
  * ligatio 437/368/378 -> 441/386/394, scrinium casus +7/+4/+6/+6 et
- * ligatio +10..+12 - Seneca casus -2 (IX verba) solus descendit;
- * decisio Frani exspectatur (pinna casus Senecae). Ligationes in
- * lectionem alienam spectantes (Hilarius discordes II) iam per
- * _ligationes_remittere sanatae utroque valore. */
-hic_manens constans b32 EMENDATIO_SEMEL_PER_SENTENTIAM = FALSUM;
+ * ligatio +10..+12 - Seneca casus -2 (IX verba) solus descendit.
+ * ADOPTUM 2026-09-09 (decisio Frani: pinna casus Senecae 662 -> 660
+ * causa nominata - lex 'prima vincit trans gradus' emendationi quoque).
+ * Ligationes in lectionem alienam spectantes (Hilarius discordes II)
+ * per _ligationes_remittere sanatae utroque valore. */
+hic_manens constans b32 EMENDATIO_SEMEL_PER_SENTENTIAM = VERUM;
 
 interior constans MateriaValor*
 _umbrae_lectionis (

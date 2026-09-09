@@ -2935,3 +2935,14 @@ videt`, which has one agreeing pair.
 
 **Rule counts.** 54 → 42; the resolutio probatio's stage boundaries
 moved from 22/38 to 22/26.
+
+## 2026-09-09 — T27 b closed: emendation once per sentence adopted
+
+Fran's decision: `EMENDATIO_SEMEL_PER_SENTENTIAM` on, the Seneca case
+pin 662 → 660 with the cause named (nine words; the law "first wins
+across stages" now covers the T19i emendation as well). Pins: case
+660/654/671, attachment 441/386/394, forced unchanged 765/711/712.
+Shelf: case 751/715/738/693, attachment 531/529/492/354. Suite 18/18,
+pythonica green, discordes 0. Two pin moves down in two days, each
+named, each against a column rising on eight of nine files; the
+rule stays that a pin never moves down silently.

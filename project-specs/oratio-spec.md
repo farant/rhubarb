@@ -1826,8 +1826,9 @@ Hilarius, both class-explicit partners re-emended at stage 3); no
 number moves, discordes 0. (ii) `EMENDATIO_SEMEL_PER_SENTENTIAM`
 (off, measured): emending a class-explicit word once per sentence
 rather than once per stage gives attachment 441/386/394 and shelf
-+10..+12, case up on eight files, Seneca case −2 — a pin decision
-pending. (iii) `ORDO_CASUUM_PARIUM`: the pair policy's case rank as
++10..+12, case up on eight files, Seneca case −2 — ADOPTED
+2026-09-09 (Fran), Seneca case pin 662 → 660 named; pins now case
+660/654/671, attachment 441/386/394. (iii) `ORDO_CASUUM_PARIUM`: the pair policy's case rank as
 its own table; nominative-first orders lose 6–19 permille of case,
 distance-only loses 7–15, so ablative-first stands and the hand
 sentences `Puella bona ambulat` / `Hoc templum est` read ablative and
