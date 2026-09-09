@@ -70,7 +70,7 @@
  * (formae ignotae MDCXXII -> MIX, MDCLXIV -> MLXI), Seneca 834 -> 835
  * (mecum temet glossario) */
 #define CIRCSE_PRIMARIA_PINNA    835
-#define LLCT_DEV_PRIMARIA_PINNA  865   /* T30 c: variantes mediae formis notis 863 -> 865 */
+#define LLCT_DEV_PRIMARIA_PINNA  864   /* T30 c: variantes mediae formis notis 863 -> 865; T30 e: 865 -> 864 CAUSA NOMINATA (decisio Frani): ordo gradus laxi genitivo primo - regulae genitivi ligationes remotas a nominativi capiunt, classis V verba */
 #define LLCT_TEST_PRIMARIA_PINNA 858   /* T30 c: 856 -> 858 */
 
 
@@ -128,22 +128,22 @@
  * 765/711/712 -> 769/713/717, casus Senecae 660 -> 666; casus chartarum
  * dev 654 -> 653 CAUSA NOMINATA (decisio Frani, VII verba). */
 #define CIRCSE_LIGATIONIS_PINNA    463   /* T27: 431 -> 437; T27 b: 437 -> 441; T28: 441 -> 462; T30 b: 462 -> 463 */
-#define LLCT_DEV_LIGATIONIS_PINNA  413   /* T27: 364 -> 368; T27 b: 368 -> 386; T28: 386 -> 398; T30 c: 398 -> 413 */
-#define LLCT_TEST_LIGATIONIS_PINNA 428   /* T27: 377 -> 378; T27 b: 378 -> 394; T28: 394 -> 412; T30 c: 412 -> 428 */
+#define LLCT_DEV_LIGATIONIS_PINNA  411   /* T27: 364 -> 368; T27 b: 368 -> 386; T28: 386 -> 398; T30 c: 398 -> 413; T30 e: 413 -> 411 CAUSA NOMINATA (decisio Frani): arcus remoti genitivi minus saepe caput aureum */
+#define LLCT_TEST_LIGATIONIS_PINNA 427   /* T27: 377 -> 378; T27 b: 378 -> 394; T28: 394 -> 412; T30 c: 412 -> 428; T30 e: 428 -> 427 CAUSA NOMINATA (decisio Frani) */
 #define EWT_DEV_LIGATIONIS_PINNA   817   /* T28: 815 -> 817 */
 #define EWT_TEST_LIGATIONIS_PINNA  826
-#define CIRCSE_CASUUM_PINNA      666   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666 */
-#define CIRCSE_NUMERI_PINNA   917   /* T29: nativitas 914; T30 b: ordo frequentiae 914 -> 917 */
+#define CIRCSE_CASUUM_PINNA      670   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666; T30 e: 666 -> 670 */
+#define CIRCSE_NUMERI_PINNA   920   /* T29: nativitas 914; T30 b: ordo frequentiae 914 -> 917; T30 e: 917 -> 920 */
 #define CIRCSE_GENERIS_PINNA  908   /* T29: nativitas 837; T30 a: 837 -> 847 valores aurei plures (Fem,Masc), 847 -> 897 conventio communis (decisio Frani); T30 b: 897 -> 907 ordo frequentiae; T30 d: 907 -> 908 gerundivum masculinum demotum */
 #define CIRCSE_VOCIS_PINNA          982   /* T30 d: nativitas (raritas passivi secundae; 930 ante) */
 #define CIRCSE_FORMAE_VERBI_PINNA   978   /* T30 d: nativitas (925 ante T30 c; conventio Part/Ger = gerundivum + raritas) */
-#define LLCT_DEV_CASUUM_PINNA    662   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA; T30 c: 653 -> 662 */
-#define LLCT_DEV_NUMERI_PINNA   925   /* T29: nativitas 928; T30 c: 928 -> 925 CAUSA NOMINATA (decisio Frani): gradus laxus litteralis nominativo primo paria pluralia sanctae/ecclesiae ligat */
-#define LLCT_DEV_GENERIS_PINNA  929   /* T29: nativitas 813; T30 a: conventio communis 813 -> 890; T30 b: ordo frequentiae 890 -> 895; T30 c: 895 -> 913; T30 d: 913 -> 929 */
+#define LLCT_DEV_CASUUM_PINNA    665   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA; T30 c: 653 -> 662; T30 e: 662 -> 665 */
+#define LLCT_DEV_NUMERI_PINNA   928   /* T29: nativitas 928; T30 c: 928 -> 925 CAUSA NOMINATA (decisio Frani): gradus laxus litteralis nominativo primo paria pluralia sanctae/ecclesiae ligat; T30 e: genitivo primo 925 -> 928 */
+#define LLCT_DEV_GENERIS_PINNA  928   /* T29: nativitas 813; T30 a: conventio communis 813 -> 890; T30 b: ordo frequentiae 890 -> 895; T30 c: 895 -> 913; T30 d: 913 -> 929; T30 e: 929 -> 928 CAUSA NOMINATA (decisio Frani) */
 #define LLCT_DEV_VOCIS_PINNA          999   /* T30 d: nativitas (867 ante) */
 #define LLCT_DEV_FORMAE_VERBI_PINNA   986   /* T30 d: nativitas (840 ante) */
-#define LLCT_TEST_CASUUM_PINNA   685   /* T27: 637 -> 665; T27 b: 665 -> 671; T30 c: 671 -> 685 */
-#define LLCT_TEST_NUMERI_PINNA   932   /* T29: nativitas 933; T30 c: 933 -> 932 CAUSA NOMINATA (decisio Frani), ut dev */
+#define LLCT_TEST_CASUUM_PINNA   692   /* T27: 637 -> 665; T27 b: 665 -> 671; T30 c: 671 -> 685; T30 e: 685 -> 692 */
+#define LLCT_TEST_NUMERI_PINNA   939   /* T29: nativitas 933; T30 c: 933 -> 932 CAUSA NOMINATA (decisio Frani), ut dev; T30 e: 932 -> 939 */
 #define LLCT_TEST_GENERIS_PINNA  930   /* T29: nativitas 810; T30 a: conventio communis 810 -> 885; T30 b: ordo frequentiae 885 -> 892; T30 c: 892 -> 912; T30 d: 912 -> 930 */
 #define LLCT_TEST_VOCIS_PINNA          999   /* T30 d: nativitas (870 ante) */
 #define LLCT_TEST_FORMAE_VERBI_PINNA   989   /* T30 d: nativitas (832 ante) */
@@ -158,8 +158,8 @@
 #define EWT_TEST_VOCIS_PINNA          0   /* T30 d */
 #define EWT_TEST_FORMAE_VERBI_PINNA   0   /* T30 d */
 #define CIRCSE_COACTAE_PINNA     769   /* T27: 764 -> 765; T28: 765 -> 769 */
-#define LLCT_DEV_COACTAE_PINNA   719   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA; T28: 711 -> 713; T30 c: 713 -> 719 */
-#define LLCT_TEST_COACTAE_PINNA  728   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA; T28: 712 -> 717; T30 c: 717 -> 728 */
+#define LLCT_DEV_COACTAE_PINNA   718   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA; T28: 711 -> 713; T30 c: 713 -> 719; T30 e: 719 -> 718 CAUSA NOMINATA (decisio Frani) */
+#define LLCT_TEST_COACTAE_PINNA  727   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA; T28: 712 -> 717; T30 c: 717 -> 728; T30 e: 728 -> 727 CAUSA NOMINATA (decisio Frani) */
 #define EWT_DEV_COACTAE_PINNA    913
 #define EWT_TEST_COACTAE_PINNA   913
 /* T20a (2026-09-08, decisio XLVII): CLAUSULAE - PURITAS verborum

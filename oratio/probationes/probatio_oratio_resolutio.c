@@ -693,7 +693,7 @@ principale (vacuum)
                 CREDO_VERUM (_aequalis(prima->titulus,
                     "umbra-caput-sequente-proximo"));
                 CREDO_VERUM (_aequalis(laxa->titulus,
-                    "umbra-caput-nominativus-sequente"));
+                    "umbra-caput-genitivus-sequente"));   /* T30 e: genitivus primus */
             }
         }
     }

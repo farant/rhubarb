@@ -1960,6 +1960,24 @@ Dante 878 → 895; verb form Seneca 930 → 978, charters 883 → 986 /
 930; verb form and voice pinned at birth 978 / 986 / 989 and 982 /
 999 / 999.
 
+**As built — T30 e, the loose tier's order (2026-09-09).** The
+fourteen literal head rules of stage 3 now run genitive, nominative,
+dative, accusative, ablative, locative, vocative (they ran in the
+case enumeration's order, nominative first, unmeasured since T19d).
+Pure data: rule blocks permuted in `resolutio.stml`, four orders on
+nine treebanks. Adopted, Fran's decision: case Seneca 666 → 670,
+charters 662 → 665 / 685 → 692; number Seneca 917 → 920, charters
+925 → 928 / 932 → 939; charters primary 865 → 864 (dev), forced 719 →
+718 / 728 → 727, attachment 413 → 411 / 428 → 427, gender 929 → 928
+(dev), all named: the genitive rules take 227 distant bindings from
+the nominative rules, with better readings and slightly worse arcs;
+Dante case −3. Refused: the pair policy's ablative-first order
+(gender and attachment fall everywhere, Aquinas case −26 — at
+distance the ablative finds spurious pairs, as T24 saw); genitive
+then accusative before nominative (gender −10 everywhere); the
+dative-accusative order is inert at distance. Not done: a
+dialect-specific order; the tier stays literal and greedy (§8.5).
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

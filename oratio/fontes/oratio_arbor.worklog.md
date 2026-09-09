@@ -3250,3 +3250,43 @@ the first time, 978 / 986 / 989 and 982 / 999 / 999.
 nobody chose. Two rare inflections listed first cost a sixth of the
 verb-form column on the charters; the fix was a table of named
 rarities with a census behind each row, not a rule.
+
+## 2026-09-09 — T30 e: the loose tier's order, measured at last
+
+The fourteen literal head rules of stage 3 had run in the order of
+the case enumeration since T19d — nominative first — and no one had
+measured that order on its own. T28 measured replacing the tier with
+one unified rule under four case orders and lost attachment every
+time; T30 c named the tier's nominative-first as the cause of the
+charters' number loss (`sancte … ecclesie` at distance two binds as
+a nominative plural pair before the genitive rule can speak).
+
+**The experiment** was pure data: permute the rule blocks in
+`resolutio.stml`, no code, nine treebanks each. Four orders:
+- genitive, nominative, dative, accusative, ablative: case Seneca
+  666 → 670, charters 662 → 665 / 685 → 692, Aquinas and Perseus +2,
+  Dante −3; number Seneca 917 → 920, charters 925 → 928 / 932 → 939;
+  charters primary −1 (dev), forced −1 / −1, attachment −2 / −1,
+  gender −1 (dev). ADOPTED, Fran's decision.
+- the strict tier's pair-policy order, ablative first: case +28 /
+  +34 / +36 on Seneca and the charters, but gender −11 / −5 / −3 and
+  attachment −5 / −8 / −9, and Aquinas case −26. Refused: at distance
+  the ablative finds spurious pairs, which is what T24 saw when the
+  case prior ran before the rules.
+- genitive, accusative, nominative: gender −10 everywhere, charter
+  forced −12 / −7. Refused.
+- genitive, nominative, accusative, dative: identical to the first on
+  every number. The dative-accusative order is inert at distance.
+
+**The mechanism**, from the per-rule tables on the charters: the
+genitive rules take 227 distant bindings from the nominative rules.
+The bound words get the right case and number more often, but the
+genitive-preceding rule is 39 % right on class and the moved arcs
+are the gold head a little less often, so five pins slip by one or
+two while four rise by three to seven. The named cause on every
+lowered pin is that trade.
+
+**Not done.** The tier is still literal and greedy, and its order is
+still one global order; Dante loses where the charters gain, and a
+dialect-specific order was not tried. The §8.5 template family is
+where this tier gets structure.

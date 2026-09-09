@@ -758,8 +758,21 @@ readings with a rare inflection go after their stem's others —
 930/883 → 978/986, voice 930/871 → 982/999, gender charters 913/912 →
 929/930, nothing else moves; verb form and voice PINNED at birth.
 LESSON: a dictionary's inflection order is a prior nobody chose.
-NEXT = loose-tier order (§8.5 family), verb star with `omnes`, capitalised
-known forms, derived gender for commune.
+**T30 e (2026-09-09): LOOSE-TIER ORDER MEASURED** — the fourteen
+literal head rules of stage 3 now run genitive, nominative, dative,
+accusative, ablative, locative, vocative (nominative-first was the
+enumeration order, never measured). Four orders on nine treebanks:
+adopted genitive-first (case Seneca 666 → 670, charters +3/+7; number
+917 → 920, charters 925/932 → 928/939; charters primary/forced/
+attachment/gender −1..−2 NAMED: the genitive rules take 227 distant
+bindings, readings better, arcs slightly worse — Fran's decision);
+REFUSED the pair policy's ablative-first (gender and attachment fall
+everywhere, Aquinas case −26: at distance the ablative finds spurious
+pairs, T24's lesson) and accusative-before-nominative; dative vs
+accusative order is INERT at distance. NEXT = verb star with `omnes`,
+§8.5 template family (the tier is still literal and greedy),
+capitalised known forms, derived gender for commune, dialect-specific
+order (Dante loses where the charters gain).
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
