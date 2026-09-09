@@ -103,6 +103,16 @@
  * aurum casum fert - mensura quam primarium non videt; EWT relata (0) */
 /* T24 (prior casuum post regulas, verbis apertis): 609/565/567 ->
  * 645/622/637; primarium et coactae immota */
+/* T26 LIGATIO (2026-09-08): praecisio ligationum nostrarum contra capita
+ * aurea (umbra capitis: socius == caput carrier; umbra obiecti
+ * adpositionis/particulae/auxiliaris: socius == caput carrier (UD: casus
+ * et mark a nomine/verbo pendent); obiecti verbi: carrier == caput
+ * socii), solum crescens; revocatio relata */
+#define CIRCSE_LIGATIONIS_PINNA    431
+#define LLCT_DEV_LIGATIONIS_PINNA  364
+#define LLCT_TEST_LIGATIONIS_PINNA 377
+#define EWT_DEV_LIGATIONIS_PINNA   815
+#define EWT_TEST_LIGATIONIS_PINNA  826
 #define CIRCSE_CASUUM_PINNA      645
 #define LLCT_DEV_CASUUM_PINNA    622
 #define LLCT_TEST_CASUUM_PINNA   637
@@ -293,7 +303,8 @@ _thesaurus_arborum (
                                                       i32  pinna_permille,
                            i32  pinna_primaria,
                                                       i32  pinna_coactae,
-                           i32  pinna_casuum,
+                                                      i32  pinna_casuum,
+                           i32  pinna_ligationis,
                            i32  pinna_puritatis,
                            i32  pinna_parium,
                            i32  pinna_concordiae)
@@ -457,10 +468,31 @@ _thesaurus_arborum (
                 " crescens)\n", (integer)census.casus_recti,
                 (integer)census.casus_verba, (integer)casus_permille,
                 (integer)pinna_casuum);
-            si (pinna_casuum > ZEPHYRUM)
-            {
+                        si (pinna_casuum > ZEPHYRUM)
+                        {
                 CREDO_VERUM (census.casus_verba > ZEPHYRUM);
                 CREDO_VERUM (casus_permille >= pinna_casuum);
+                        }
+        }
+        /* T26 LIGATIO: praecisio pinnata solum crescens, revocatio relata */
+        {
+            i32 ligatio_permille = _permille(census.ligationes_rectae,
+                census.ligationes_nostrae);
+
+            imprimere("    ligatio praecisio %d/%d = %d permille (pinna %d,"
+                " solum crescens)  revocatio %d/%d = %d permille\n",
+                (integer)census.ligationes_rectae,
+                (integer)census.ligationes_nostrae,
+                (integer)ligatio_permille,
+                (integer)pinna_ligationis,
+                (integer)census.ligationes_rectae,
+                (integer)census.arcus_aurei,
+                (integer)_permille(census.ligationes_rectae,
+                    census.arcus_aurei));
+            si (pinna_ligationis > ZEPHYRUM)
+            {
+                CREDO_VERUM (census.ligationes_nostrae > ZEPHYRUM);
+                CREDO_VERUM (ligatio_permille >= pinna_ligationis);
             }
         }
         /* auctores: summa verborum == decisa (praelatio + impletio +
@@ -905,6 +937,7 @@ principale (vacuum)
         (i32)CIRCSE_PRIMARIA_PINNA,
                 (i32)CIRCSE_COACTAE_PINNA,
         (i32)CIRCSE_CASUUM_PINNA,
+        (i32)CIRCSE_LIGATIONIS_PINNA,
         (i32)CIRCSE_PURITAS_PINNA,
         (i32)CIRCSE_PARES_PINNA,
         (i32)CIRCSE_CONCORDIA_PINNA);
@@ -916,6 +949,7 @@ principale (vacuum)
         (i32)LLCT_DEV_PRIMARIA_PINNA,
                 (i32)LLCT_DEV_COACTAE_PINNA,
         (i32)LLCT_DEV_CASUUM_PINNA,
+        (i32)LLCT_DEV_LIGATIONIS_PINNA,
         (i32)LLCT_DEV_PURITAS_PINNA,
         (i32)LLCT_DEV_PARES_PINNA,
         (i32)LLCT_DEV_CONCORDIA_PINNA);
@@ -927,6 +961,7 @@ principale (vacuum)
         (i32)LLCT_TEST_PRIMARIA_PINNA,
                 (i32)LLCT_TEST_COACTAE_PINNA,
         (i32)LLCT_TEST_CASUUM_PINNA,
+        (i32)LLCT_TEST_LIGATIONIS_PINNA,
         (i32)LLCT_TEST_PURITAS_PINNA,
         (i32)LLCT_TEST_PARES_PINNA,
         (i32)LLCT_TEST_CONCORDIA_PINNA);
@@ -938,6 +973,7 @@ principale (vacuum)
         (i32)EWT_DEV_PRIMARIA_PINNA,
                 (i32)EWT_DEV_COACTAE_PINNA,
         (i32)EWT_DEV_CASUUM_PINNA,
+        (i32)EWT_DEV_LIGATIONIS_PINNA,
         (i32)EWT_DEV_PURITAS_PINNA,
         (i32)EWT_DEV_PARES_PINNA,
         (i32)EWT_DEV_CONCORDIA_PINNA);
@@ -949,6 +985,7 @@ principale (vacuum)
         (i32)EWT_TEST_PRIMARIA_PINNA,
                 (i32)EWT_TEST_COACTAE_PINNA,
         (i32)EWT_TEST_CASUUM_PINNA,
+        (i32)EWT_TEST_LIGATIONIS_PINNA,
         (i32)EWT_TEST_PURITAS_PINNA,
         (i32)EWT_TEST_PARES_PINNA,
         (i32)EWT_TEST_CONCORDIA_PINNA);

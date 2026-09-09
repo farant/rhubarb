@@ -273,7 +273,8 @@ nomen structura {
     constans MateriaNodus* nodus;      /* pro socio ligationis (T19g bis) */
                 s32 clausula;                      /* T20a: -I = aperta */
         s32 clausula_causa;
-        s32 casus_primus;                  /* T23: casus lectionis primae Latinae; -I = nullus */
+                s32 casus_primus;                  /* T23: casus lectionis primae Latinae; -I = nullus */
+        s32 lexema;                        /* T26: index lexematis aurei alignati; -I */
 } Elementum;
 
 constans character* constans ORATIO_ORACULUM_TITULI_PARTITIONIS[] = {
@@ -819,8 +820,9 @@ _elementum_addere (
         e->a         = (s32)-I;
     e->b             = ZEPHYRUM;
     e->decisio       = (s32)-I;
-    e->nodus         = n;
+        e->nodus     = n;
     e->casus_primus  = (s32)-I;
+    e->lexema        = (s32)-I;
     /* T20a: clausula elementi (locus per genus) */
     e->clausula        = (s32)-I;
     e->clausula_causa  = (s32)-I;
@@ -1799,6 +1801,211 @@ _elementum_formae (
     redde inventum;
 }
 
+/* LIGATIONES (T26): umbrae impletae lectionis primae cuiusque elementi
+ * alignati contra capita aurea; arcus aurei = lexemata alignata non
+ * interpuncta capite alignato (revocatio). FALSUM = memoria */
+interior b32
+_ligationes_iudicare (
+                           Piscina* scratch,
+              OratioOraculumCensus* census,
+    constans OratioConlluSententia* s,
+                               Xar* elementa)
+{
+    i32  n           = xar_numerus(s->lexemata);
+    i32  ne          = xar_numerus(elementa);
+    s32  id_maximus  = ZEPHYRUM;
+    s32* positio;      /* id aureum -> index lexematis */
+    s32* caput;        /* index lexematis -> index capitis; -I radix */
+    s32* elementum;    /* index lexematis -> index elementi; -I */
+    i32  k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+
+        si (!t->ranga && (s32)t->a > id_maximus)
+        {
+            id_maximus = (s32)t->a;
+        }
+    }
+    positio   = (s32*)piscina_allocare(scratch,
+        (memoriae_index)(id_maximus
+        + I) * (memoriae_index)magnitudo(s32));
+    caput     = (s32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(s32));
+    elementum = (s32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(s32));
+    si (positio == NIHIL || caput == NIHIL || elementum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k <= (i32)id_maximus; k++)
+    {
+        positio[k] = (s32)-I;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+
+        caput[k]      = (s32)-I;
+        elementum[k]  = (s32)-I;
+        si (!t->ranga)
+        {
+            positio[t->a] = (s32)k;
+        }
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        s32 h = t->ranga ? ZEPHYRUM : _numerus_chordae(t->head);
+
+        si (h > ZEPHYRUM && h <= id_maximus)
+        {
+            caput[k] = positio[h];
+        }
+    }
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        constans Elementum* e =
+            (constans Elementum*)xar_obtinere(elementa,
+            k);
+
+        si (e->lexema >= ZEPHYRUM && e->lexema < (s32)n)
+        {
+            elementum[e->lexema] = (s32)k;
+        }
+    }
+    /* arcus aurei: lexema alignatum non interpunctum, caput alignatum */
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+
+        si (   !t->ranga && !_literis(t->upos, "PUNCT")
+            && elementum[k]        >= ZEPHYRUM && caput[k] >= ZEPHYRUM
+            && elementum[caput[k]] >= ZEPHYRUM)
+        {
+            census->arcus_aurei = census->arcus_aurei + I;
+        }
+    }
+    /* ligationes nostrae */
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        constans Elementum* e =
+            (constans Elementum*)xar_obtinere(elementa,
+            k);
+        constans MateriaValor* analyses;
+        constans MateriaNodus* prima;
+        constans MateriaValor* umbrae;
+                          i32  u;
+
+        si (   e->nodus        == NIHIL || e->lexema < ZEPHYRUM
+            || e->nodus->genus != (s32)ORATIO_GENUS_VOCABULUM)
+        {
+            perge;
+        }
+        analyses = &e->nodus->loci[ORATIO_VOCABULUM_ANALYSES];
+        si (   analyses->genus != MATERIA_VALOR_LISTA
+            || materia_valor_lista_numerus(*analyses) == ZEPHYRUM)
+        {
+            perge;
+        }
+        prima = materia_valor_lista_obtinere(*analyses, ZEPHYRUM)
+            ->datum.nodus;
+        {
+            OratioClassis cl =
+                oratio_genus_classis((OratioGenus)prima->genus);
+            s32 locus = (i32)cl < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                ? oratio_partes_locus(cl, "umbrae") : (s32)-I;
+
+            si (   locus < ZEPHYRUM
+                || prima->loci[locus].genus != MATERIA_VALOR_LISTA)
+            {
+                perge;
+            }
+            umbrae = &prima->loci[locus];
+        }
+        per (u = ZEPHYRUM; u
+            < materia_valor_lista_numerus(*umbrae); u++)
+        {
+            constans MateriaNodus* umbra = materia_valor_lista_obtinere(
+                *umbrae, u)->datum.nodus;
+            constans MateriaValor* w =
+                &umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
+            constans Elementum* socius;
+                           b32  capitis;
+                           b32  recta;
+                           i32  distantia;
+
+            si (   w->genus != MATERIA_VALOR_INDEX || w->datum.index
+                < ZEPHYRUM || w->datum.index >= (s32)ne)
+            {
+                perge;
+            }
+            socius = (constans Elementum*)xar_obtinere(elementa,
+                (i32)w->datum.index);
+            si (socius->lexema < ZEPHYRUM)
+            {
+                perge;
+            }
+                        capitis =
+                            (b32)(   umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                            == MATERIA_VALOR_INDEX
+                            && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
+                            == (s32)ORATIO_RELATIO_CAPUT);
+            /* directio UD: caput adiectivi = nomen (amod); adpositio,
+             * particula (to) et auxiliare (have) a regimine suo pendent
+             * (case, mark, aux) - socius caput carrier; obiectum verbi
+             * a verbo pendet (obj) - carrier caput socii */
+            {
+                OratioClassis cc = oratio_genus_classis(
+                    (OratioGenus)prima->genus);
+                b32 pendet = (b32)(capitis
+                    || cc == ORATIO_CLASSIS_ADPOSITIO
+                    || cc == ORATIO_CLASSIS_PARTICULA
+                    || cc == ORATIO_CLASSIS_AUXILIARE);
+
+                recta = pendet
+                    ? (b32)(caput[e->lexema] == socius->lexema)
+                    : (b32)(caput[socius->lexema] == e->lexema);
+            }
+            distantia = (i32)w->datum.index > k ? (i32)w->datum.index
+                - k
+                : k - (i32)w->datum.index;
+            census->ligationes_nostrae = census->ligationes_nostrae + I;
+            si (recta)
+            {
+                census->ligationes_rectae = census->ligationes_rectae
+                    + I;
+            }
+            si (capitis)
+            {
+                census->ligationes_capitis = census->ligationes_capitis
+                    + I;
+                si (recta)
+                {
+                    census->ligationes_capitis_rectae =
+                        census->ligationes_capitis_rectae + I;
+                }
+            }
+            si (distantia == I)
+            {
+                census->ligationes_vicinae = census->ligationes_vicinae
+                    + I;
+                si (recta)
+                {
+                    census->ligationes_vicinae_rectae =
+                        census->ligationes_vicinae_rectae + I;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
 /* verbum aureum unum contra classes elementorum [e0, e1) iudicare */
 interior vacuum
 _verbum_iudicare (
@@ -2478,27 +2685,47 @@ _sententiam_iudicare (
                                     elementa, e0, e1,
                                     pars->forma);
 
-                si (ep >= ZEPHYRUM)
-                {
+                                si (ep >= ZEPHYRUM)
+                                {
+                    ((Elementum*)xar_obtinere(elementa,
+                        (i32)ep))->lexema =
+                        (s32)(k + I + w);
                     _verbum_iudicare(piscina, census, textus, elementa,
                         (i32)ep, (i32)ep + I, pars, VERUM, paria,
                         cl[k + I + w]);
-                }
+                                }
                 alioquin
-                {
+                                {
+                    si (w == ZEPHYRUM && e1 > e0)
+                    {
+                        ((Elementum*)xar_obtinere(elementa,
+                            e0))->lexema =
+                            (s32)(k + I);
+                    }
                     _verbum_iudicare(piscina, census, textus, elementa,
                         e0, e1, pars, (b32)(w == ZEPHYRUM), paria,
                         cl[k + I + w]);
-                }
+                                }
             }
             k = k + verba_rangae;
                                 }
-        alioquin
+                alioquin
                                 {
+            si (e1 > e0)
+            {
+                ((Elementum*)xar_obtinere(elementa, e0))->lexema =
+                    (s32)k;
+            }
                         _verbum_iudicare(piscina, census, textus,
                             elementa, e0, e1,
                             t, VERUM, paria, cl[k]);
                                 }
+    }
+    /* T26: ligationes contra capita aurea */
+    si (!_ligationes_iudicare(scratch, census, s, elementa))
+    {
+        piscina_destruere(scratch);
+        redde FALSUM;
     }
         /* T20b: discordiae et catenatae ex censu resolutionis */
     census->catena_discordiae = census->catena_discordiae

@@ -195,8 +195,22 @@ nomen structura {
      * prima Latina locum casus fert; recti = casus lectionis primae ==
      * aureus. Condicionalis classi: casuum disambiguationem sola metitur
      * (lex subiecti T20c IV hic apparet); pinnata solum crescens. */
-        i32 casus_verba;
-        i32 casus_recti;
+            i32 casus_verba;
+            i32 casus_recti;
+    /* T26 LIGATIO (2026-09-08): ligationes nostrae (umbrae impletae
+     * lectionis primae verbi alignati, socio alignato) contra capita
+     * aurea - umbra capitis: socius == caput aureum carrier; umbra
+     * obiecti: carrier == caput aureum socii. PRAECISIO = rectae /
+     * nostrae; REVOCATIO = rectae / arcus aurei (verba alignata non
+     * interpuncta capite alignato). Per relationem (caput | obiectum)
+     * et distantiam (vicina |v - w| = I | remota). */
+        i32 ligationes_nostrae;
+        i32 ligationes_rectae;
+        i32 arcus_aurei;
+        i32 ligationes_capitis;
+        i32 ligationes_capitis_rectae;
+        i32 ligationes_vicinae;
+        i32 ligationes_vicinae_rectae;
         i32 sententiae_linguae[ORATIO_LINGUA_NUMERUS];   /* census linguae per
                                                       * sententiam (T18):
                                                       * quot Latinae, quot

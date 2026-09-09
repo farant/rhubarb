@@ -372,9 +372,22 @@ _tabulam_imprimere (
                     (integer)c->inalignata);
         /* T23: casus - classis recta, aurum casum fert, lectio prima
          * Latina casum fert */
-        imprimere("  CASUS %.1f%% (%d de %d: classis recta, casus aureus,"
-            " lectio Latina)\n", _pars(c->casus_recti, c->casus_verba),
-            (integer)c->casus_recti, (integer)c->casus_verba);
+                imprimere("  CASUS %.1f%% (%d de %d: classis recta, casus aureus,"
+                    " lectio Latina)\n", _pars(c->casus_recti,
+                    c->casus_verba),
+                    (integer)c->casus_recti, (integer)c->casus_verba);
+        /* T26: ligationes contra capita aurea */
+        imprimere("  LIGATIO praecisio %.1f%% (%d de %d)  revocatio %.1f%%"
+            " (arcus aurei %d)  capitis %.1f%% (%d)  vicinae %.1f%% (%d)\n",
+            _pars(c->ligationes_rectae, c->ligationes_nostrae),
+            (integer)c->ligationes_rectae,
+            (integer)c->ligationes_nostrae,
+            _pars(c->ligationes_rectae, c->arcus_aurei),
+            (integer)c->arcus_aurei,
+            _pars(c->ligationes_capitis_rectae, c->ligationes_capitis),
+            (integer)c->ligationes_capitis,
+            _pars(c->ligationes_vicinae_rectae, c->ligationes_vicinae),
+            (integer)c->ligationes_vicinae);
         imprimere("  sententiae censae: latina %d  anglica %d\n",
             (integer)c->sententiae_linguae[ORATIO_LINGUA_LATINA],
             (integer)c->sententiae_linguae[ORATIO_LINGUA_ANGLICA]);
@@ -597,6 +610,15 @@ _machinam_imprimere (
             (integer)c->ignota,
             (integer)c->inalignata, (integer)c->casus_verba,
             (integer)c->casus_recti);
+                /* T26: ordo LIGATIO nostrae rectae aurei capitis capitis-rectae
+         * vicinae vicinae-rectae */
+        imprimere("%s\tLIGATIO\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", titulus,
+            (integer)c->ligationes_nostrae,
+            (integer)c->ligationes_rectae,
+            (integer)c->arcus_aurei, (integer)c->ligationes_capitis,
+            (integer)c->ligationes_capitis_rectae,
+            (integer)c->ligationes_vicinae,
+            (integer)c->ligationes_vicinae_rectae);
         /* T19g: ordines PARTITIO genus verba primaria; AUCTOR titulus verba
      * primaria */
     per (i = ZEPHYRUM; i < ORATIO_ORACULUM_PARTITIO_NUMERUS; i++)

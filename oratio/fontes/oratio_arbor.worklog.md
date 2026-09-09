@@ -2735,3 +2735,47 @@ gold head of the carrier; for an object umbra, is the carrier the
 gold head of the partner. That column is the next oracle addition,
 and until it exists the policy is a principled default, not a
 measured gain. Switch `POLITICA_PARIUM`, scratch `mensura_politica.sh`.
+
+## 2026-09-08 — T26: the attachment column, and how much of the tree we actually assert
+
+T25 changed partners without changing readings, and nothing we
+measured could see it. The bindings have always been in the tree,
+the umbra of a reading naming its partner word and reading; the
+oracle only ever asked whether the first reading's class and case
+matched the gold. The treebanks carry a head for every word, so the
+question was answerable all along.
+
+The measure. Every element remembers the gold token it aligned to.
+After alignment, a pass walks each aligned element's FIRST reading
+and its filled umbrae with an aligned partner. For a head umbra the
+binding says "my head is the partner", right when the gold head of
+the carrier is the partner. For an object umbra the direction
+depends on the carrier: a preposition, an English particle or an
+auxiliary hangs from its object in Universal Dependencies (case,
+mark, aux), so the binding is right when the carrier's gold head is
+the partner; a verb's object hangs from the verb, so it is right when
+the partner's gold head is the carrier. My first cut had prepositions
+the other way round and every one of them counted wrong, which is
+why the first Seneca number was 35 percent. Precision is right over
+asserted, recall is right over the gold arcs among aligned non-
+punctuation words, and both are split by head umbrae and by adjacent
+partners. Human line `LIGATIO`, machine row `LIGATIO`, precision
+pinned per file only rising, recall reported.
+
+Numbers (precision permille, recall permille): Seneca 431 of 2345
+bindings, recall 95 of 10565 gold arcs; charters 364 and 377, recall
+95 and 98; EWT 815 and 826 on few hundred bindings, recall 19 and 22.
+Adjacent bindings 586 on Seneca and 730 on the test charters; head
+umbrae 408 and 363. Pins 431 / 364 / 377 / 815 / 826.
+
+Two readings of the numbers. Adjacent bindings are decent, remote
+ones are poor, which is the T19g finding again but now about the
+arc and not the reading, and it is the number the pair policy and
+any remote-rule variant will be judged on. And recall is under ten
+percent: we assert about a fifth of the gold arcs and get half of
+those right. The subject, the verb's object, the adverbial, the
+coordination are arcs we never draw. That is the honest distance
+between the present resolver and the dependency structure of the
+roadmap's second step, measured before that structure is designed.
+Named, not done: attachment per deciding rule (the author table),
+which needs the umbra to carry its author.

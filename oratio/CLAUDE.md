@@ -651,7 +651,17 @@ forced / case IDENTICAL on nine treebanks: both candidates agree with
 the same reading, so only ATTACHMENT changes, which the oracle does
 not measure. Kept on as the attachment default. NEXT = attachment
 column in the oracle (gold heads), then the remote head rules judged
-on it.
+on it. **T26 ATTACHMENT MEASURE DONE (same day)**: oracle
+`LIGATIO` — every aligned element remembers its gold token;
+`_ligationes_iudicare` judges the first reading's filled umbrae
+against gold heads (head umbra: partner == carrier's head; object
+umbra of adposition/particle/auxiliary: partner == carrier's head, UD
+case/mark/aux direction; verb object: carrier == partner's head).
+PRECISION pinned 431/364/377 (Latin), 815/826 (EWT); RECALL reported
+95/95/98 permille of gold arcs (EWT 19/22). Adjacent 586/730, head
+umbrae 408/363. FINDING: we draw ~1/5 of the gold arcs and get < 1/2
+right — the measured distance to the dependency design. Glossary
+`ligatio`. Named: attachment per rule (umbra carries no author).
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

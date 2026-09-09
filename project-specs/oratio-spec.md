@@ -1750,6 +1750,27 @@ oracle (head umbra: partner == gold head of the carrier; object
 umbra: carrier == gold head of the partner), which the policy, the
 remote head rules and the dependency design all need.
 
+**As built — T26, the attachment measure (2026-09-08, same
+session).** Each element remembers its aligned gold token; after
+alignment `_ligationes_iudicare` walks every aligned element's first
+reading and its filled umbrae with an aligned partner. Head umbra:
+right when the carrier's gold head is the partner. Object umbra:
+direction by the carrier's class — a preposition, particle or
+auxiliary hangs from its object in UD (case, mark, aux), so right when
+the carrier's gold head is the partner; a verb's object hangs from the
+verb, right when the partner's gold head is the carrier. PRECISION =
+right / asserted, pinned per file only rising; RECALL = right / gold
+arcs among aligned non-punctuation words, reported; split by head
+umbrae and adjacent partners. Human `LIGATIO` line, machine `LIGATIO`
+row. NUMBERS: precision 431 / 364 / 377 permille on Seneca and the
+charters, 815 / 826 on EWT; recall 95 / 95 / 98 and 19 / 22; adjacent
+586 / 730, head umbrae 408 / 363. FINDING: we assert about a fifth of
+the gold arcs and get under half of those right; adjacent bindings
+are fair, remote ones poor; subjects, verb objects, adverbials and
+coordination are never drawn. This is the measured distance to the
+dependency design. Named: attachment per deciding rule (the umbra
+would carry its author).
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the
