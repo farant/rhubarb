@@ -698,9 +698,13 @@ agreeing nominal IS the head 96–99 % given true agreement — the
 readings are the problem, not the law; a verb intervenes in 30 % of
 Seneca's adjective arcs (no clause bound in the MATCH). Unifying the
 loose tier loses attachment under every ordering (four tried, policy
-attribute reverted): loose tier stays literal → §8.5 template. NEXT =
-feature columns (number/gender, then verb features), verb star with
-`omnes`, §8.5 template family.
+attribute reverted): loose tier stays literal → §8.5 template. **T29 (2026-09-09): FEATURE
+COLUMNS** — oracle `NOTAE_ORACULI` table (Number, Gender, Person,
+Mood, Voice, VerbForm, Tense = Tense+Aspect) → `NOTA` lines/rows;
+pins number 914/928/933, gender 837/813/810; person/mood/tense > 93 %
+everywhere, GENDER 81–84 % is the next Latin problem, charter verb
+form and voice 83–87 %. NEXT = gender (spurious agreement on rarer
+gender readings), verb star with `omnes`, §8.5 template family.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

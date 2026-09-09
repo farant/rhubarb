@@ -34,6 +34,10 @@
 #include "tabula_dispersa.h"
 
 #define ORATIO_ORACULUM_EXEMPLA 5
+/* T29 NOTAE (2026-09-09): accidentia praeter casum contra aurum UD -
+ * numerus, genus, persona, modus, vox, forma verbi, tempus (ordo
+ * tabulae NOTAE_ORACULI in oratio_oraculum.c) */
+#define ORATIO_ORACULUM_NOTAE 7
 
 /* PARTITIO decisionum (T19g 2026-09-08, decretum SUDOKU decisio XL):
  * verbum aureum quodque per genus decisionis elementi PRIMI sui -
@@ -197,6 +201,13 @@ nomen structura {
      * (lex subiecti T20c IV hic apparet); pinnata solum crescens. */
             i32 casus_verba;
             i32 casus_recti;
+    /* T29 NOTAE: per accidens k tabulae - verba aurea accidens ferentia
+     * classis rectae cum lectione prima Latina accidens ferente; recti
+     * = valor lectionis primae == valor aureus (tabula mappat; tempus
+     * ex Tense + Aspect). Numerus et genus pinnati solum crescentes,
+     * cetera relata. */
+            i32 notae_verba[ORATIO_ORACULUM_NOTAE];
+            i32 notae_recti[ORATIO_ORACULUM_NOTAE];
     /* T26 LIGATIO (2026-09-08): ligationes nostrae (umbrae impletae
      * lectionis primae verbi alignati, socio alignato) contra capita
      * aurea - umbra capitis: socius == caput aureum carrier; umbra
@@ -365,5 +376,10 @@ oratio_oraculum_iudicare_resolutum (
                               s32  regulae_numerus,
                               Xar* sententiae,
              OratioOraculumCensus* census);
+
+/* titulus accidentis k tabulae notarum (T29); NIHIL extra tabulam */
+constans character*
+oratio_oraculum_nota_titulus (
+    i32 k);
 
 #endif /* ORATIO_ORACULUM_H */

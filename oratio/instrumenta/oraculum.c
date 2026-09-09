@@ -376,6 +376,22 @@ _tabulam_imprimere (
                     " lectio Latina)\n", _pars(c->casus_recti,
                     c->casus_verba),
                     (integer)c->casus_recti, (integer)c->casus_verba);
+        /* T29: accidentia praeter casum, eadem condicio */
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
+            {
+                si (c->notae_verba[k] > ZEPHYRUM)
+                {
+                    imprimere("  NOTA %-12s %.1f%% (%d de %d)\n",
+                        oratio_oraculum_nota_titulus(k),
+                        _pars(c->notae_recti[k], c->notae_verba[k]),
+                        (integer)c->notae_recti[k],
+                        (integer)c->notae_verba[k]);
+                }
+            }
+        }
         /* T26: ligationes contra capita aurea */
         imprimere("  LIGATIO praecisio %.1f%% (%d de %d)  revocatio %.1f%%"
             " (arcus aurei %d)  capitis %.1f%% (%d)  vicinae %.1f%% (%d)\n",
@@ -610,6 +626,18 @@ _machinam_imprimere (
             (integer)c->ignota,
             (integer)c->inalignata, (integer)c->casus_verba,
             (integer)c->casus_recti);
+        /* T29: ordines NOTA accidens verba recti */
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
+            {
+                imprimere("%s\tNOTA\t%s\t%d\t%d\n", titulus,
+                    oratio_oraculum_nota_titulus(k),
+                    (integer)c->notae_verba[k],
+                    (integer)c->notae_recti[k]);
+            }
+        }
                 /* T26: ordo LIGATIO nostrae rectae aurei capitis capitis-rectae
          * vicinae vicinae-rectae */
         imprimere("%s\tLIGATIO\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", titulus,

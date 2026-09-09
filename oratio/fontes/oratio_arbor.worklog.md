@@ -2994,3 +2994,31 @@ day earlier. And a census over gold features tells the ceiling of a
 law before any code: here it said the law was fine and the readings
 were not, which is where the next work goes (feature columns, then
 the verb star).
+
+## 2026-09-09 — T29: the feature columns
+
+The case column (T23) generalised: a table in the oracle maps each
+gold feature key to one of our accidents and its values to our
+indices — Number, Gender, Person, Mood, Voice, VerbForm by value
+lists, Tense by a small function because UD Latin spells the perfect
+as Tense=Past plus Aspect=Perf. Same condition as case: class right,
+gold feature present, first reading Latin and carrying the accident.
+Voice accepts WORDS's deponent for both Act and Pass, which is a
+convention and says so in the table. Every element remembers its
+first reading's seven accident indices beside its case; the census
+carries verba/recti per key; the instrument prints a `NOTA` line and
+machine row per key; the gate prints all seven and pins number and
+gender only, the others reported until someone works on them.
+
+First numbers (permille, Seneca / charters dev / charters test):
+number 914 / 928 / 933; gender 837 / 813 / 810; person 997 / 979 /
+977; mood 961 / 992 / 994; voice 928 / 867 / 870; verb form 925 /
+840 / 832; tense 931 / 995 / 997. EWT has five and six pronouns with
+Number and nothing else, as expected. Reading: the Latin problem
+after case is GENDER — a fifth of class-right words with a gold
+gender carry the wrong one, which is exactly the spurious agreement
+T28's census predicted (an adjective's rarer gender reading agreeing
+with a neighbour); on the charters verb form and voice lose a sixth
+each, which is the participle-versus-finite and deponent question.
+Planted fault: swapping the singular mapping went red at the number
+pin. Pins 914/837, 928/813, 933/810, only rising.

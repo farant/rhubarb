@@ -133,10 +133,20 @@
 #define EWT_DEV_LIGATIONIS_PINNA   817   /* T28: 815 -> 817 */
 #define EWT_TEST_LIGATIONIS_PINNA  826
 #define CIRCSE_CASUUM_PINNA      666   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666 */
+#define CIRCSE_NUMERI_PINNA   914   /* T29: nativitas */
+#define CIRCSE_GENERIS_PINNA  837   /* T29: nativitas */
 #define LLCT_DEV_CASUUM_PINNA    653   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA */
+#define LLCT_DEV_NUMERI_PINNA   928   /* T29: nativitas */
+#define LLCT_DEV_GENERIS_PINNA  813   /* T29: nativitas */
 #define LLCT_TEST_CASUUM_PINNA   671   /* T27: 637 -> 665; T27 b: 665 -> 671 */
+#define LLCT_TEST_NUMERI_PINNA   933   /* T29: nativitas */
+#define LLCT_TEST_GENERIS_PINNA  810   /* T29: nativitas */
 #define EWT_DEV_CASUUM_PINNA     0
+#define EWT_DEV_NUMERI_PINNA   0   /* T29 */
+#define EWT_DEV_GENERIS_PINNA  0   /* T29 */
 #define EWT_TEST_CASUUM_PINNA    0
+#define EWT_TEST_NUMERI_PINNA   0   /* T29 */
+#define EWT_TEST_GENERIS_PINNA  0   /* T29 */
 #define CIRCSE_COACTAE_PINNA     769   /* T27: 764 -> 765; T28: 765 -> 769 */
 #define LLCT_DEV_COACTAE_PINNA   713   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA; T28: 711 -> 713 */
 #define LLCT_TEST_COACTAE_PINNA  717   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA; T28: 712 -> 717 */
@@ -323,6 +333,8 @@ _thesaurus_arborum (
                            i32  pinna_primaria,
                                                       i32  pinna_coactae,
                                                       i32  pinna_casuum,
+                           i32  pinna_numeri,
+                           i32  pinna_generis,
                            i32  pinna_ligationis,
                            i32  pinna_puritatis,
                            i32  pinna_parium,
@@ -492,6 +504,30 @@ _thesaurus_arborum (
                 CREDO_VERUM (census.casus_verba > ZEPHYRUM);
                 CREDO_VERUM (casus_permille >= pinna_casuum);
                         }
+        }
+        /* T29 NOTAE: numerus et genus pinnati solum crescentes, cetera
+         * relata (persona, modus, vox, forma verbi, tempus) */
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
+            {
+                i32 permille = _permille(census.notae_recti[k],
+                    census.notae_verba[k]);
+                i32 pinna = k == ZEPHYRUM ? pinna_numeri
+                    : k == I ? pinna_generis : ZEPHYRUM;
+
+                imprimere("    nota %-12s %d/%d = %d permille (pinna %d)\n",
+                    oratio_oraculum_nota_titulus(k),
+                    (integer)census.notae_recti[k],
+                    (integer)census.notae_verba[k], (integer)permille,
+                    (integer)pinna);
+                si (pinna > ZEPHYRUM)
+                {
+                    CREDO_VERUM (census.notae_verba[k] > ZEPHYRUM);
+                    CREDO_VERUM (permille >= pinna);
+                }
+            }
         }
         /* T26 LIGATIO: praecisio pinnata solum crescens, revocatio relata */
         {
@@ -956,6 +992,8 @@ principale (vacuum)
         (i32)CIRCSE_PRIMARIA_PINNA,
                 (i32)CIRCSE_COACTAE_PINNA,
         (i32)CIRCSE_CASUUM_PINNA,
+        (i32)CIRCSE_NUMERI_PINNA,
+        (i32)CIRCSE_GENERIS_PINNA,
         (i32)CIRCSE_LIGATIONIS_PINNA,
         (i32)CIRCSE_PURITAS_PINNA,
         (i32)CIRCSE_PARES_PINNA,
@@ -968,6 +1006,8 @@ principale (vacuum)
         (i32)LLCT_DEV_PRIMARIA_PINNA,
                 (i32)LLCT_DEV_COACTAE_PINNA,
         (i32)LLCT_DEV_CASUUM_PINNA,
+        (i32)LLCT_DEV_NUMERI_PINNA,
+        (i32)LLCT_DEV_GENERIS_PINNA,
         (i32)LLCT_DEV_LIGATIONIS_PINNA,
         (i32)LLCT_DEV_PURITAS_PINNA,
         (i32)LLCT_DEV_PARES_PINNA,
@@ -980,6 +1020,8 @@ principale (vacuum)
         (i32)LLCT_TEST_PRIMARIA_PINNA,
                 (i32)LLCT_TEST_COACTAE_PINNA,
         (i32)LLCT_TEST_CASUUM_PINNA,
+        (i32)LLCT_TEST_NUMERI_PINNA,
+        (i32)LLCT_TEST_GENERIS_PINNA,
         (i32)LLCT_TEST_LIGATIONIS_PINNA,
         (i32)LLCT_TEST_PURITAS_PINNA,
         (i32)LLCT_TEST_PARES_PINNA,
@@ -992,6 +1034,8 @@ principale (vacuum)
         (i32)EWT_DEV_PRIMARIA_PINNA,
                 (i32)EWT_DEV_COACTAE_PINNA,
         (i32)EWT_DEV_CASUUM_PINNA,
+        (i32)EWT_DEV_NUMERI_PINNA,
+        (i32)EWT_DEV_GENERIS_PINNA,
         (i32)EWT_DEV_LIGATIONIS_PINNA,
         (i32)EWT_DEV_PURITAS_PINNA,
         (i32)EWT_DEV_PARES_PINNA,
@@ -1004,6 +1048,8 @@ principale (vacuum)
         (i32)EWT_TEST_PRIMARIA_PINNA,
                 (i32)EWT_TEST_COACTAE_PINNA,
         (i32)EWT_TEST_CASUUM_PINNA,
+        (i32)EWT_TEST_NUMERI_PINNA,
+        (i32)EWT_TEST_GENERIS_PINNA,
         (i32)EWT_TEST_LIGATIONIS_PINNA,
         (i32)EWT_TEST_PURITAS_PINNA,
         (i32)EWT_TEST_PARES_PINNA,

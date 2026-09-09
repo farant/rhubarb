@@ -1848,6 +1848,16 @@ shelf +16..+44, forced 769/713/717, case 666/653/671 (charters dev
 654 → 653 NAMED), primary and recall unchanged. Pins moved
 accordingly.
 
+**As built — T29, the feature columns (2026-09-09).** Oracle table
+`NOTAE_ORACULI` (Number → numerus, Gender → genus, Person → persona,
+Mood → modus, Voice → vox, VerbForm → forma-verbi, Tense → tempus via
+Tense+Aspect); per-key census `notae_verba/recti`, instrument `NOTA`
+lines and rows, gate prints seven and pins number and gender
+(914/837, 928/813, 933/810). Voice: deponent accepted for Act and
+Pass (convention, named). First reading of the numbers: gender is the
+next Latin problem (81–84 %), then charter verb form and voice
+(83–87 %); person, mood and tense are above 93 % everywhere.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

@@ -11,6 +11,7 @@
 #include "materia_nodus.h"
 #include "materia_token.h"
 #include <string.h>
+#include <stdio.h>
 
 interior chorda
 _chorda (
@@ -95,6 +96,74 @@ oratio_oraculum_census_vacare (
 {
     memset(census, ZEPHYRUM, magnitudo(*census));
     census->lingua_documenti = (s32)-I;
+}
+
+/* T29 NOTAE: tabula accidentium contra aurum UD - clavis aurea, titulus
+ * loci nostri, valores (chorda aurea -> index noster; alter = index
+ * alter acceptus, -I nullus). Vox: deponens (WORDS) utrique acceptum -
+ * conventio, non iudicium. Tempus compositum (Tense + Aspect) per
+ * _tempus_aureum. */
+nomen structura {
+    constans character* valor_aureus;
+                   s32  index;
+                   s32  alter;
+} ValorNotae;
+
+nomen structura {
+     constans character* clavis;      /* UD */
+     constans character* accidens;    /* titulus loci */
+    constans ValorNotae* valores;
+                    i32  numerus;
+} NotaOraculi;
+
+hic_manens constans ValorNotae VALORES_NUMERI[] = {
+    { "Sing", (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS, (s32)-I },
+    { "Plur", (s32)ORATIO_NUMERUS_GRAMMATICUS_PLURALIS, (s32)-I }
+};
+hic_manens constans ValorNotae VALORES_GENERIS[] = {
+    { "Masc", (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM, (s32)-I },
+    { "Fem", (s32)ORATIO_GENUS_GRAMMATICUM_FEMININUM, (s32)-I },
+    { "Neut", (s32)ORATIO_GENUS_GRAMMATICUM_NEUTRUM, (s32)-I },
+    { "Com", (s32)ORATIO_GENUS_GRAMMATICUM_COMMUNE, (s32)-I }
+};
+hic_manens constans ValorNotae VALORES_PERSONAE[] = {
+    { "1", (s32)ORATIO_PERSONA_PRIMA, (s32)-I },
+    { "2", (s32)ORATIO_PERSONA_SECUNDA, (s32)-I },
+    { "3", (s32)ORATIO_PERSONA_TERTIA, (s32)-I }
+};
+hic_manens constans ValorNotae VALORES_MODI[] = {
+    { "Ind", (s32)ORATIO_MODUS_INDICATIVUS, (s32)-I },
+    { "Sub", (s32)ORATIO_MODUS_SUBIUNCTIVUS, (s32)-I },
+    { "Imp", (s32)ORATIO_MODUS_IMPERATIVUS, (s32)-I }
+};
+hic_manens constans ValorNotae VALORES_VOCIS[] = {
+    { "Act", (s32)ORATIO_VOX_ACTIVA, (s32)ORATIO_VOX_DEPONENS },
+    { "Pass", (s32)ORATIO_VOX_PASSIVA, (s32)ORATIO_VOX_DEPONENS }
+};
+hic_manens constans ValorNotae VALORES_FORMAE_VERBI[] = {
+    { "Fin", (s32)ORATIO_FORMA_VERBI_FINITUM, (s32)-I },
+    { "Inf", (s32)ORATIO_FORMA_VERBI_INFINITIVUM, (s32)-I },
+    { "Part", (s32)ORATIO_FORMA_VERBI_PARTICIPIUM, (s32)-I },
+    { "Ger", (s32)ORATIO_FORMA_VERBI_GERUNDIUM, (s32)-I },
+    { "Gdv", (s32)ORATIO_FORMA_VERBI_GERUNDIVUM, (s32)-I },
+    { "Sup", (s32)ORATIO_FORMA_VERBI_SUPINUM, (s32)-I }
+};
+hic_manens constans NotaOraculi NOTAE_ORACULI[ORATIO_ORACULUM_NOTAE] = {
+    { "Number", "numerus", VALORES_NUMERI, (i32)II },
+    { "Gender", "genus", VALORES_GENERIS, (i32)IV },
+    { "Person", "persona", VALORES_PERSONAE, (i32)III },
+    { "Mood", "modus", VALORES_MODI, (i32)III },
+    { "Voice", "vox", VALORES_VOCIS, (i32)II },
+    { "VerbForm", "forma-verbi", VALORES_FORMAE_VERBI, (i32)VI },
+    { "Tense", "tempus", NIHIL, ZEPHYRUM }
+};
+
+constans character*
+oratio_oraculum_nota_titulus (
+    i32 k)
+{
+    redde k >= ZEPHYRUM && k < ORATIO_ORACULUM_NOTAE
+        ? NOTAE_ORACULI[k].accidens : NIHIL;
 }
 
 /* discrepantiam notare (T19a): clavis 'aurea/nostra/forma plicata' in
@@ -274,6 +343,7 @@ nomen structura {
                 s32 clausula;                      /* T20a: -I = aperta */
         s32 clausula_causa;
                 s32 casus_primus;                  /* T23: casus lectionis primae Latinae; -I = nullus */
+                s32 notae_primae[ORATIO_ORACULUM_NOTAE];   /* T29: accidentia lectionis primae Latinae; -I = nullum */
         s32 lexema;                        /* T26: index lexematis aurei alignati; -I */
 } Elementum;
 
@@ -822,6 +892,14 @@ _elementum_addere (
     e->decisio       = (s32)-I;
         e->nodus     = n;
     e->casus_primus  = (s32)-I;
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
+        {
+            e->notae_primae[k] = (s32)-I;
+        }
+    }
     e->lexema        = (s32)-I;
     /* T20a: clausula elementi (locus per genus) */
     e->clausula        = (s32)-I;
@@ -892,6 +970,29 @@ _elementum_addere (
                     && prima->loci[locus].genus == MATERIA_VALOR_INDEX)
                 {
                     e->casus_primus = prima->loci[locus].datum.index;
+                }
+                /* T29: accidentia tabulae notarum, lectio prima Latina */
+                si (   prima->loci[ORATIO_ANALYSIS_LINGUA].genus
+                        == MATERIA_VALOR_INDEX
+                    && prima->loci[ORATIO_ANALYSIS_LINGUA].datum.index
+                        == (s32)ORATIO_LINGUA_LATINA
+                    && (i32)cl < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM)
+                {
+                    i32 k;
+
+                    per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
+                    {
+                        s32 locus_k = oratio_partes_locus(cl,
+                            NOTAE_ORACULI[k].accidens);
+
+                        si (   locus_k >= ZEPHYRUM
+                            && prima->loci[locus_k].genus
+                                == MATERIA_VALOR_INDEX)
+                        {
+                            e->notae_primae[k] =
+                                prima->loci[locus_k].datum.index;
+                        }
+                    }
                 }
             }
                 }
@@ -1731,6 +1832,65 @@ _formam_invenire (
     redde (s32)-I;
 }
 
+/* T29: tempus aureum ex Tense + Aspect (UD Latinum: Past+Perf =
+ * perfectum, Past+Imp = imperfectum, Fut+Perf = futurum exactum) */
+interior s32
+_tempus_aureum (
+    chorda notae)
+{
+    si (_continet(notae, "Tense=Pqp"))
+    {
+        redde (s32)ORATIO_TEMPUS_PLUSQUAMPERFECTUM;
+    }
+    si (_continet(notae, "Tense=Pres"))
+    {
+        redde (s32)ORATIO_TEMPUS_PRAESENS;
+    }
+    si (_continet(notae, "Tense=Past"))
+    {
+        redde _continet(notae, "Aspect=Perf")
+            ? (s32)ORATIO_TEMPUS_PERFECTUM
+            : (s32)ORATIO_TEMPUS_IMPERFECTUM;
+    }
+    si (_continet(notae, "Tense=Fut"))
+    {
+        redde _continet(notae, "Aspect=Perf")
+            ? (s32)ORATIO_TEMPUS_FUTURUM_EXACTUM
+            : (s32)ORATIO_TEMPUS_FUTURUM;
+    }
+    redde (s32)-I;
+}
+
+/* T29: valor aureus accidentis k ex notis UD ('Clavis=Valor'); alter =
+ * index alter acceptus aut -I; -I = absens aut extra tabulam */
+interior s32
+_nota_aurea (
+    chorda  notae,
+       i32  k,
+       s32* alter)
+{
+    constans NotaOraculi* nota = &NOTAE_ORACULI[k];
+               character  quaesitum[32];
+                     i32  i;
+
+    *alter = (s32)-I;
+    si (nota->valores == NIHIL)
+    {
+        redde _tempus_aureum(notae);
+    }
+    per (i = ZEPHYRUM; i < nota->numerus; i++)
+    {
+        sprintf(quaesitum, "%s=%s", nota->clavis,
+            nota->valores[i].valor_aureus);
+        si (_continet(notae, quaesitum))
+        {
+            *alter = nota->valores[i].alter;
+            redde nota->valores[i].index;
+        }
+    }
+    redde (s32)-I;
+}
+
 /* casus aureus ex 'Case=Nom|...' (UD): OratioCasus aut -I */
 interior s32
 _casus_aureus (
@@ -2113,6 +2273,29 @@ _verbum_iudicare (
             {
                 census->casus_recti  = census->casus_recti + I;
                 c->casus_recti       = c->casus_recti + I;
+            }
+        }
+        /* T29 NOTAE: accidens quodque tabulae, eadem condicio */
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < ORATIO_ORACULUM_NOTAE; k++)
+            {
+                s32 alter;
+                s32 aureus = _nota_aurea(verbum->feats, k, &alter);
+
+                si (   aureus                    >= ZEPHYRUM
+                    && e_primum->notae_primae[k] >= ZEPHYRUM)
+                {
+                    census->notae_verba[k] = census->notae_verba[k] + I;
+                    si (   e_primum->notae_primae[k] == aureus
+                        || (   alter >= ZEPHYRUM
+                            && e_primum->notae_primae[k] == alter))
+                    {
+                        census->notae_recti[k] =
+                            census->notae_recti[k] + I;
+                    }
+                }
             }
         }
     }
