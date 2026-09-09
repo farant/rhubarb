@@ -637,7 +637,13 @@ Gotchas: unsigned index initialised to −1 (examen "comparatio vana"),
 class consolidation (`Cum`). Older resolutio hand cases now expect
 the prior's ablative where no rule fired. NEXT candidates: head
 rules' case choice (52/45 %), T8b pronoun tackons, charter glossary,
-T21b.
+T21b. **TREEBANK SHELF (2026-09-08)**: `./oratio/oraculum.sh -petere`
+fetches the four non-commercial Latin treebanks (ITTB, PROIEL,
+Perseus, UDante; CC BY-NC-SA) into git-ignored `oratio/build/ud/`,
+REPORTED never pinned or committed. Unseen by any rule they score
+primary 862/824/790/780, case 722/707/723/676, coverage 949/914/934/859
+— same band as the tuned files: no overfitting; expected other-Latin
+class 78–86, case ~70.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

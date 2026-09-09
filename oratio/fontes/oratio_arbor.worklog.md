@@ -2672,3 +2672,33 @@ rule question, not a prior. The gate's older hand cases that said
 "no rule fired, so the nominative stands" now say "no rule fired, so
 the prior's ablative stands", with the rule count still zero beside
 them. Scratch: `mensura_prior.sh`.
+
+## 2026-09-08 — The treebank shelf: four Latin treebanks no rule has seen
+
+Fran asked what we could say about Latin from elsewhere. The spec's
+licence table from the fourth already settled the policy: share-alike
+treebanks are vendored and pinned, the non-commercial ones (Aquinas,
+PROIEL, Perseus, UDante) are fetched into `oratio/build/ud/` by
+`oraculum.sh -petere`, reported and never committed. The build tree is
+git-ignored, so the files never enter the repository. Today's numbers
+on their test splits, with every rule and prior as committed at
+76bfe4f8 and nothing tuned on them:
+
+- Perseus (Cicero, Vergil, Ovid, Sallust, Jerome): 10,964 words,
+  coverage 949, primary 862, lemma 742, case 722, forced 749
+- ITTB (Aquinas): 29,842 words, coverage 914, primary 824, lemma 757,
+  case 707, forced 707, 512 unknown
+- PROIEL (Vulgate, Caesar, Cicero, Palladius): 14,091 words, coverage
+  934, primary 790, lemma 915, case 723, forced 690
+- UDante (Dante's Latin): 13,474 words, coverage 859, primary 780,
+  lemma 693, case 676, forced 626, 749 unknown
+
+Against the tuned files (Seneca 835, charters 863 / 856; case 645 /
+622 / 637) that is the same band, above it on Perseus, and case is
+higher on every unseen file than on verse and charters. So nothing
+this session fitted the three files it was measured on, and the
+calibrated expectation for other Latin is class between 78 and 86,
+case around 70, coverage 86 to 95. The lemma numbers differ by
+convention as much as by us (ITTB and UDante lemmatise differently
+from WORDS). These are reported figures; the shelf is a calibration
+instrument and a source of errata, not a gate.
