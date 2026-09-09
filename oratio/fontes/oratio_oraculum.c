@@ -2378,6 +2378,14 @@ _ligationes_iudicare (
             && elementum[caput[k]] >= ZEPHYRUM)
         {
             census->arcus_aurei = census->arcus_aurei + I;
+            /* T31 a: arcus subiecti aurei (nsubj, nsubj:pass) */
+            si (   t->deprel.mensura >= (i32)V
+                && memcmp(t->deprel.datum, "nsubj", (size_t)V)
+                    == ZEPHYRUM)
+            {
+                census->arcus_aurei_subiecti =
+                    census->arcus_aurei_subiecti + I;
+            }
         }
     }
     /* ligationes nostrae */
@@ -2469,6 +2477,25 @@ _ligationes_iudicare (
             {
                 census->ligationes_rectae = census->ligationes_rectae
                     + I;
+            }
+            /* T31 a: per relationem */
+            si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                    == MATERIA_VALOR_INDEX
+                && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
+                    >= ZEPHYRUM
+                && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
+                    < (s32)ORATIO_RELATIO_NUMERUS)
+            {
+                i32 r =
+                    (i32)umbra->loci[ORATIO_UMBRA_RELATIO].datum.index;
+
+                census->ligationes_nostrae_relationum[r] =
+                    census->ligationes_nostrae_relationum[r] + I;
+                si (recta)
+                {
+                    census->ligationes_rectae_relationum[r] =
+                        census->ligationes_rectae_relationum[r] + I;
+                }
             }
             si (capitis)
             {

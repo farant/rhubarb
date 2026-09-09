@@ -246,6 +246,13 @@ nomen structura {
         i32 ligationes_nostrae;
         i32 ligationes_rectae;
         i32 arcus_aurei;
+    /* T31 a: per RELATIONEM umbrae (index OratioRelatio: obiectum caput
+     * verbum-finitum subiectum) nostrae et rectae; arcus aurei subiecti
+     * = lexemata alignata deprel nsubj* capite alignato (revocatio
+     * subiecti = rectae[subiectum] / arcus aurei subiecti) */
+        i32 ligationes_nostrae_relationum[ORATIO_RELATIO_NUMERUS];
+        i32 ligationes_rectae_relationum[ORATIO_RELATIO_NUMERUS];
+        i32 arcus_aurei_subiecti;
         i32 ligationes_capitis;
         i32 ligationes_capitis_rectae;
         i32 ligationes_vicinae;

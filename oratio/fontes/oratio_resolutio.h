@@ -79,6 +79,9 @@ nomen structura {
         /* vocabula decisa per genus decisionis (T19g: locus 'decisio'
      * vocabuli scriptus - praelatio | impletio | umbra) */
     i32 decisae[ORATIO_DECISIO_NUMERUS];
+    /* T31 a LEX CAPITIS: ligationes subiecti/obiecti ad caput socii
+     * secutae (socius adiectivum/determinans umbra capitis impleta) */
+    i32 ad_caput_secutae;
         /* T20a: stampa clausularum (strata I-III) ante gradus - census
      * eius (semina, causae, clausulae per speciem) */
     OratioClausulaCensus clausulae;

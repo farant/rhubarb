@@ -625,6 +625,54 @@
   </consilium>
 </regula>
 
+<!-- T31 a (2026-09-09): STELLA VERBI - subiectum, GRADUS STRICTUS (vicinum;
+     laxus gradu III in cauda). Umbra subiecti (relatio 3) lectionis verbi
+     finiti personae tertiae (casus nominativus, numerus verbi; annotator,
+     impersonalia exclusa) a lectione nominativa numero concordante
+     impletur; completiones omnes, politica parium; recusatio trans
+     clausulas (T28 II). MENSURA thesauris IX contra 70cb79e4: gradus
+     strictus solus praecisio subiecti 63-87 %, revocatio 14-30 %, ligatio
+     ubique sursum (Seneca 463 -> 495); ambo gradus praecisio 50-61 %
+     (chartae 24-39 %), revocatio 36-52 % (chartae 7-12 %), casus Seneca
+     670 -> 691, Aquinas +40, PROIEL +21, Dante +16, coactae +31 Senecae,
+     primarium +5/+6; chartae casus -1/-8, ligatio dev -9 CAUSA NOMINATA
+     (subiecta chartarum remota VII+ verba tertia pars, accusativa tertia
+     pars) - decisio Frani: ambo. Substantiva sola RECUSATA (pronomina et
+     nomina propria tertia pars subiectorum; remota peiora). -->
+<regula titulus="umbra-subiectum-praecedente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" quaesitio="omnes" output="$umbra_subiectum_praecedente_proximo">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>0</casus><numerus>$num</numerus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <analysis-verbi n="$a"><umbrae><umbra n="$u"><relatio>3</relatio><casus>0</casus><numerus>$num</numerus></umbra></umbrae></analysis-verbi>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$umbra_subiectum_praecedente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-subiectum-praecedente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-subiectum-sequente-proximo" gradus="2">
+  <EXEMPLAR cursus="strictus" quaesitio="omnes" output="$umbra_subiectum_sequente_proximo">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <analysis-verbi n="$a"><umbrae><umbra n="$u"><relatio>3</relatio><casus>0</casus><numerus>$num</numerus></umbra></umbrae></analysis-verbi>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>0</casus><numerus>$num</numerus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$umbra_subiectum_sequente_proximo">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-subiectum-sequente-proximo"/>
+    </PER>
+  </consilium>
+</regula>
 <!-- T30 e (2026-09-09): ORDO GRADUS LAXI MENSURATUS. Regulae litterales
      ordine casuum genitivus, nominativus, dativus, accusativus, ablativus,
      locativus, vocativus (antea nominativus primus = ordo enumerationis
@@ -919,4 +967,46 @@
   </consilium>
 </regula>
 
-
+<!-- T31 a (2026-09-09): STELLA VERBI - subiectum, GRADUS LAXUS (strictus gradu II supra). Umbra subiecti (relatio 3)
+     lectionis verbi finiti (casus nominativus, numerus verbi, annotator)
+     a lectione nominativa numero concordante impletur; completiones
+     OMNES, politica parium (T25/T27 b) proximam eligit; recusatio
+     trans clausulas (T28 gradu II) omnibus relationibus. Praecedens
+     prima (census: subiectum ante verbum 63-88 %), sequens deinde.
+     Lectio quaelibet casum ferens ($b: substantivum pronomen nomen
+     proprium determinans adiectivum) - census: NOUN 43-69 %, PRON
+     11-39 %, PROPN ad 59 % chartis. Gradus III post regulas capitis. -->
+<regula titulus="umbra-subiectum-praecedente" gradus="3">
+  <EXEMPLAR cursus="fratrum" quaesitio="omnes" output="$umbra_subiectum_praecedente">
+    <elementa>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>0</casus><numerus>$num</numerus></>
+      </analyses></vocabulum>
+      <vocabulum n="$v"><analyses>
+        <analysis-verbi n="$a"><umbrae><umbra n="$u"><relatio>3</relatio><casus>0</casus><numerus>$num</numerus></umbra></umbrae></analysis-verbi>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$umbra_subiectum_praecedente">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-subiectum-praecedente"/>
+    </PER>
+  </consilium>
+</regula>
+<regula titulus="umbra-subiectum-sequente" gradus="3">
+  <EXEMPLAR cursus="fratrum" quaesitio="omnes" output="$umbra_subiectum_sequente">
+    <elementa>
+      <vocabulum n="$v"><analyses>
+        <analysis-verbi n="$a"><umbrae><umbra n="$u"><relatio>3</relatio><casus>0</casus><numerus>$num</numerus></umbra></umbrae></analysis-verbi>
+      </analyses></vocabulum>
+      <vocabulum n="$w"><analyses>
+        <* n="$b"><casus>0</casus><numerus>$num</numerus></>
+      </analyses></vocabulum>
+    </elementa>
+  </EXEMPLAR>
+  <consilium>
+    <PER congruentia="$umbra_subiectum_sequente">
+      <impletio vocabulum="&@v;" analysis="&@a;" umbra="&@u;" ad-vocabulum="&@w;" ad-analysis="&@b;" regula="umbra-subiectum-sequente"/>
+    </PER>
+  </consilium>
+</regula>

@@ -416,6 +416,28 @@ _tabulam_imprimere (
             (integer)c->ligationes_capitis,
             _pars(c->ligationes_vicinae_rectae, c->ligationes_vicinae),
             (integer)c->ligationes_vicinae);
+        /* T31 a: per relationem */
+        {
+            i32 r;
+
+            per (r = ZEPHYRUM; r < (i32)ORATIO_RELATIO_NUMERUS; r++)
+            {
+                si (c->ligationes_nostrae_relationum[r] > ZEPHYRUM)
+                {
+                    imprimere("    %-16s praecisio %.1f%% (%d de %d)%s\n",
+                        ORATIO_TITULI_RELATIONUM[r],
+                        _pars(c->ligationes_rectae_relationum[r],
+                            c->ligationes_nostrae_relationum[r]),
+                        (integer)c->ligationes_rectae_relationum[r],
+                        (integer)c->ligationes_nostrae_relationum[r],
+                        r == (i32)ORATIO_RELATIO_SUBIECTUM ? "" : "");
+                }
+            }
+            imprimere("    subiectum revocatio %.1f%% (arcus aurei subiecti %d)\n",
+                _pars(c->ligationes_rectae_relationum[ORATIO_RELATIO_SUBIECTUM],
+                    c->arcus_aurei_subiecti),
+                (integer)c->arcus_aurei_subiecti);
+        }
         imprimere("  sententiae censae: latina %d  anglica %d\n",
             (integer)c->sententiae_linguae[ORATIO_LINGUA_LATINA],
             (integer)c->sententiae_linguae[ORATIO_LINGUA_ANGLICA]);
@@ -739,6 +761,21 @@ _machinam_imprimere (
             (integer)c->ligationes_capitis_rectae,
             (integer)c->ligationes_vicinae,
             (integer)c->ligationes_vicinae_rectae);
+        /* T31 a: ordines LIGATIO-RELATIO titulus nostrae rectae aurei (subiecti) */
+        {
+            i32 r;
+
+            per (r = ZEPHYRUM; r < (i32)ORATIO_RELATIO_NUMERUS; r++)
+            {
+                imprimere("%s\tLIGATIO-RELATIO\t%s\t%d\t%d\t%d\n",
+                    titulus,
+                    ORATIO_TITULI_RELATIONUM[r],
+                    (integer)c->ligationes_nostrae_relationum[r],
+                    (integer)c->ligationes_rectae_relationum[r],
+                    (integer)(r == (i32)ORATIO_RELATIO_SUBIECTUM
+                        ? c->arcus_aurei_subiecti : ZEPHYRUM));
+            }
+        }
         /* T19g: ordines PARTITIO genus verba primaria; AUCTOR titulus verba
      * primaria */
     per (i = ZEPHYRUM; i < ORATIO_ORACULUM_PARTITIO_NUMERUS; i++)

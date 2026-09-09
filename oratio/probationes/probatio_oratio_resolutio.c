@@ -665,7 +665,7 @@ principale (vacuum)
                 /* T27: gradus strictus unitus XIV -> II: regulae XLII
                  * (strictae XXII..XXV cum incertis, laxae XXVI..XLI) */
                 CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
-                                (i32)XLII);
+                                (i32)XLVI);   /* T31 a: + subiectum IV (strictae II gradu II, laxae II gradu III) */
         {
             i32 k;
 
@@ -678,7 +678,7 @@ principale (vacuum)
                                                 CREDO_AEQUALIS_I32 (r->gradus,
                                                     k <= (i32)XXI ? I
                                                                         : (k
-                                                                            <= (i32)XXV ? (i32)II : (i32)III));
+                                                                            <= (i32)XXVII ? (i32)II : (i32)III));
             }
             {
                 constans OratioRegula* prima =
@@ -688,7 +688,7 @@ principale (vacuum)
                 constans OratioRegula* laxa =
                     (constans OratioRegula*)xar_obtinere(
                                         programma->regulae,
-                                        (i32)XXVI);
+                                        (i32)XXVIII);   /* T31 a: laxa prima post subiecta stricta */
 
                 CREDO_VERUM (_aequalis(prima->titulus,
                     "umbra-caput-sequente-proximo"));
@@ -780,7 +780,7 @@ principale (vacuum)
                 /* T19b: ordines II, permutatae II - 'cum' a regula
          * adpositio-prima-latina (WORDS adverbium primum, adpositio
          * quinta: permutata), 'puella' ab ablativum-regit */
-        CREDO_AEQUALIS_I32 (census.ordines, (i32)II);
+        CREDO_AEQUALIS_I32 (census.ordines, (i32)IV);   /* T31 a: + ordines subiecti ambulat II (puella ablativa vindicata) */
         CREDO_AEQUALIS_I32 (census.applicatae, (i32)II);
 
         CREDO_AEQUALIS_I32 (census.recusatae, ZEPHYRUM);
@@ -847,7 +847,7 @@ principale (vacuum)
         oratio_resolutio_census_vacare(&census);
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, (s32)-I, "latina", doc, &census));
-        CREDO_AEQUALIS_I32 (census.ordines, (i32)II);
+        CREDO_AEQUALIS_I32 (census.ordines, (i32)IV);   /* T31 a: + ordines subiecti ambulat II (puella ablativa vindicata) */
         CREDO_AEQUALIS_I32 (census.applicatae, ZEPHYRUM);
 
         CREDO_AEQUALIS_S32 (_casus(puella, ZEPHYRUM),
@@ -899,10 +899,12 @@ principale (vacuum)
         CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
             programma, (s32)-I, "latina", doc, &census));
                 CREDO_AEQUALIS_I32 (census.sententiae, I);
-        CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
-        /* T24: sine regula prior casuum solus - abl ante nom */
+        /* T31 a: ordines subiecti II (strictus, laxus), Puella
+         * NOMINATIVA per subiectum ambulat - pretium T24 (abl ante nom)
+         * hic repensum */
+        CREDO_AEQUALIS_I32 (census.ordines, (i32)II);
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM),
-            (s32)ORATIO_CASUS_ABLATIVUS);
+            (s32)ORATIO_CASUS_NOMINATIVUS);
         /* programma sine regulis: nihil, nulla fractura */
         {
             OratioProgramma* vacuum_programma =
@@ -1327,7 +1329,7 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_casus(bona, ZEPHYRUM),
             (s32)ORATIO_CASUS_ABLATIVUS);
         CREDO_VERUM (census.repetitae >= I);   /* regula NOM recusata */
-        CREDO_AEQUALIS_I32 (census.impletae, (i32)II);   /* cum, bona */
+        CREDO_AEQUALIS_I32 (census.impletae, (i32)III);   /* cum, bona; T31 a: ambulat subiectum (bona nominativa - puella ablativa vindicata: casus manualis notatus) */
         /* determinans per caput: hoc templum (templum GEN P crudum
          * primum - lectio NOM per caput inventa et praelata); hoc solum
          * pronomen manet */

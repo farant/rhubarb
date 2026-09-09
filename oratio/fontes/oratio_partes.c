@@ -229,6 +229,27 @@ _umbram_addere (
         materia_valor_nodus(umbra), MATERIA_LOCUS_LISTA_NODUS);
 }
 
+/* T31 a: species stirpis WORDS 'IMPERS' (verbum impersonale) */
+interior b32
+_natura_impersonalis (
+    chorda natura)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i + (i32)VI <= natura.mensura; i++)
+    {
+        si (memcmp(natura.datum + i, "IMPERS", (size_t)VI) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+interior i32
+_raritas (
+    constans OratioDescriptio* d);
+
+
 interior b32
 _umbras_ponere (
                       Piscina* piscina,
@@ -268,6 +289,27 @@ _umbras_ponere (
     /* CAPUT (T19d beta): adiectivum et determinans caput substantivum
      * exspectant quod casu numero genere concordat - condiciones ex
      * lectione IPSA (ADJ 1 1 NOM S F -> umbra capitis NOM S F) */
+    /* SUBIECTUM (T31 a, 2026-09-09, stella verbi): verbum finitum personae
+     * tertiae subiectum NOMINATIVUM numero concordans exspectat; verba
+     * impersonalia (WORDS IMPERS) non; personae I et II (subiecta
+     * pronomina, plerumque omissa) nondum. Census auri thesaurorum VII:
+     * verba finita cum subiecto explicito 40-69 % (cetera vacua =
+     * INVENTUM), subiectum nominativum 77-89 % (chartae 55-61 %,
+     * accusativum 32 % - acc. cum inf.), ante verbum 63-88 %, intra III
+     * verba 65-74 % (chartae 30-37 %), numerus concordat 92-98 %
+     * (discordia = coordinatio), nominativus proximus concordans
+     * subiectum 69-81 % (chartae 45-52 %). */
+    si (   d->classis     == ORATIO_CLASSIS_VERBUM
+        && d->forma_verbi == (s32)ORATIO_FORMA_VERBI_FINITUM
+        && d->persona     == (s32)ORATIO_PERSONA_TERTIA
+        && d->numerus     >= ZEPHYRUM
+        && !_natura_impersonalis(d->natura)
+        && _raritas(d)    == ZEPHYRUM)
+    {
+        redde _umbram_addere(piscina, analysis, d->classis,
+            ORATIO_RELATIO_SUBIECTUM, (s32)-I,
+            (s32)ORATIO_CASUS_NOMINATIVUS, d->numerus, (s32)-I);
+    }
     si (   (   d->classis == ORATIO_CLASSIS_ADIECTIVUM
             || d->classis == ORATIO_CLASSIS_DETERMINANS)
         && d->casus_grammaticus >= ZEPHYRUM)
@@ -435,7 +477,15 @@ nomen structura {
 hic_manens constans Raritas RARITATES[] = {
     { "gerundivum-masculinum", VERUM },
     { "passivum-secundae", VERUM },
-    { "participium-vocativus", FALSUM }
+    { "participium-vocativus", FALSUM },
+    /* T31 a: (IV) flexio ipsa rarior (codex frequentiae flexionis B..F:
+     * perfectum syncopatum -ere tertiae pluralis 'residere' B contra
+     * -erunt A) et (V) imperativum futurum ('negato', 'expleto') -
+     * lectiones finitae quas umbra subiecti promovebat super
+     * infinitivum aut participium (forma verbi Senecae 978 -> 977,
+     * chartae vox 999 -> 998); subiectum lectioni rarae non datur */
+    { "flexio-rarior", VERUM },
+    { "imperativum-futurum", VERUM }
 };
 
 interior b32
@@ -489,6 +539,20 @@ _raritas (
     si (   _raritas_activa((i32)II)
         && d->forma_verbi       == (s32)ORATIO_FORMA_VERBI_PARTICIPIUM
         && d->casus_grammaticus == (s32)ORATIO_CASUS_VOCATIVUS)
+    {
+        r = r + I;
+    }
+    si (   _raritas_activa((i32)III)
+        && d->frequentia_flexionis != ZEPHYRUM
+        && d->frequentia_flexionis != 'X'
+        && _gradus_frequentiae(d->frequentia_flexionis) > ZEPHYRUM)
+    {
+        r = r + I;
+    }
+    si (   _raritas_activa((i32)IV)
+        && d->forma_verbi == (s32)ORATIO_FORMA_VERBI_FINITUM
+        && d->modus       == (s32)ORATIO_MODUS_IMPERATIVUS
+        && d->tempus      == (s32)ORATIO_TEMPUS_FUTURUM)
     {
         r = r + I;
     }

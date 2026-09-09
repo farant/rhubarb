@@ -769,10 +769,26 @@ bindings, readings better, arcs slightly worse — Fran's decision);
 REFUSED the pair policy's ablative-first (gender and attachment fall
 everywhere, Aquinas case −26: at distance the ablative finds spurious
 pairs, T24's lesson) and accusative-before-nominative; dative vs
-accusative order is INERT at distance. NEXT = verb star with `omnes`,
-§8.5 template family (the tier is still literal and greedy),
-capitalised known forms, derived gender for commune, dialect-specific
-order (Dante loses where the charters gain).
+accusative order is INERT at distance. **T31 a (2026-09-09): THE
+VERB STAR BEGINS — SUBJECT SLOT + LEX CAPITIS.** Census: explicit
+subjects 40–69 % of finite verbs (empty slot = FINDING), nominative
+77–89 % (charters a third accusative), within three words 65–74 %
+(charters 30 %), nearest agreeing nominative = subject 69–81 %
+(charters 45–52 %). Annotator writes `subiectum` umbrae on finite
+3rd-person verb readings (impersonal and rare readings excluded); four
+all-completion rules (adjacent in the strict tier, distant at the end
+of the loose tier). Oracle counts arcs PER RELATION (`LIGATIO-RELATIO`),
+subject precision pinned 520/244/394, recall 48/7/11 %. LEX CAPITIS =
+executor's last pass: a subject/object binding to an ADJECTIVE with an
+ADJACENT filled head binding follows it to the noun (determiners and
+distant heads measured and excluded) — the first law that uses one
+binding to correct another. Rarity rows `flexio-rarior` (WORDS
+inflection code, syncopated perfect `-ere`) and `imperativum-futurum`.
+Seneca case 670 → 690, forced 770 → 801, attachment 463 → 485, primary
+841; shelf case +16..+40; charters case −2/−8, attachment dev −9 NAMED
+(far, accusative subjects) — Fran's decision. NEXT = object slot,
+dialect-gated loose subject tier, acc+inf subjects, §8.5 template
+family, capitalised known forms, derived gender for commune.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

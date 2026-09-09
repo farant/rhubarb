@@ -3290,3 +3290,80 @@ lowered pin is that trade.
 still one global order; Dante loses where the charters gain, and a
 dialect-specific order was not tried. The §8.5 template family is
 where this tier gets structure.
+
+## 2026-09-09 — T31 a: the verb star begins — the subject slot, and the law of the head
+
+**The census first** (`stella_census.py`, seven Latin treebanks, gold
+only). Finite verbs have an explicit subject 40–46 % of the time in
+classical prose and verse, 69 % in Aquinas, 47–51 % in the charters:
+half the slots will rightly stay empty. Subjects are nominative
+77–89 % everywhere except the charters (55–61 %, and 32–34 %
+accusative: accusative-with-infinitive formulae). The subject stands
+before the verb 63–88 % of the time and within three words 65–74 %,
+except the charters, where a third of subjects are seven or more
+words away. Number agrees 92–98 %; the exceptions are coordinated
+subjects. Nearest agreeing nominative is the subject 69–81 % with
+gold cases, 45–52 % on the charters. Objects are accusative 89–97 %
+and the nearest accusative is the object 68–79 %.
+
+**What was built.** The annotator writes a `subiectum` umbra on every
+Latin finite third-person verb reading (nominative, the verb's
+number; impersonal verbs excluded; readings with a rarity excluded,
+below). Four rules fill it, written with every completion from birth:
+adjacent ones in the strict tier beside the strict head rules,
+distant ones at the end of the loose tier, preceding before
+following in each. The clause refusal applies. The oracle counts
+arcs per relation and the gold's subject arcs, so subject precision
+and recall are printed and precision is pinned. The dictionary's verb
+kind (`species`) reaches the annotator; WORDS marks 3065 verbs
+transitive, 1003 intransitive, 67 impersonal.
+
+**Measured.** Nouns-only candidates: refused, worse everywhere.
+Adjacent tier alone: precision 63–87 %, recall 14–30 %, attachment up
+on every file and nothing down. Both tiers: precision 50–61 % on
+classical text, 24–39 % on the charters, recall 36–52 % and 7–12 %;
+Seneca case 670 → 691, forced 770 → 801, primary +5, number +12,
+attachment 463 → 479; Aquinas case +40, PROIEL +21, Dante +16;
+charters case −1 / −8, attachment −9 / +1, number −2, gender −1 on
+test. Adopted, Fran's decision: both tiers.
+
+**The law of the head.** `Puella bona ambulat` showed the flaw: the
+adjacent adjective is taken as the subject. The adjective already
+carries a filled head binding naming its noun, so a final pass in
+the executor follows a subject or object binding whose partner is an
+adjective with an ADJACENT filled head binding to that noun
+(`_ligationes_ad_caput_sequi`, `ORATIO_LEX_CAPITIS=0` to measure).
+Three versions measured: any partner with any head binding lost on
+the charters and Dante (determiners: a relative pronoun IS the
+subject, its head is the antecedent); adjectives only still lost
+where the loose head tier's bindings are wrong; adjectives with an
+adjacent head: attachment Seneca +4, Aquinas +3, Perseus +4, charters
+−1 / 0, Dante −2, subject precision up or level everywhere. Adopted.
+This is the first law that uses one binding to correct another.
+
+**Two more rarities.** The subject binding promoted the finite
+reading of `residere`, `defendere`, `uidere` over the infinitive:
+the syncopated perfect third plural in `-ere`, which WORDS's own
+inflection table marks B where `-erunt` is A. And `negato`,
+`expleto`: the future imperative. Both are rows in the rarity table
+now (`flexio-rarior` from the inflection's frequency code, which the
+description carries as `frequentia_flexionis`; `imperativum-futurum`),
+and a reading with any rarity gets no subject slot. Verb form went
+past its pins: Seneca 978 → 981, charters 986 → 993 / 989 → 992.
+
+**Pins**, Seneca / charters dev / test: primary 841 / 866 / 859,
+forced 801 / 742 / 749, case 690 / 663 / 684, number 931 / 930 / 937,
+gender 913 / 930 / 929, attachment 485 / 402 / 428, subject precision
+520 / 244 / 394 at birth, verb form 981 / 993 / 992, voice 981 / 999
+/ 999. Down with named causes: charters case, attachment (dev),
+number and gender (test) — the loose subject tier on medieval
+formulae; Seneca voice 982 → 981 — fourteen fewer words judged, the
+promoted first reading of one carries no voice.
+
+**Fixtures.** `Puella ambulat` reads nominative now, the price
+recorded at T24 repaid; `Cum puella bona ambulat` binds `bona` as
+subject since `puella` is vindicated ablative, a hand case noted.
+
+**Not done.** Objects (the second ray of the star), first and second
+person subjects, accusative subjects of infinitives, a dialect-gated
+loose tier for the charters, coordinated subjects.

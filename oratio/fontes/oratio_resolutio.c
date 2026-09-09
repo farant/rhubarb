@@ -2451,6 +2451,235 @@ _prior_casuum (
     piscina_destruere(scratch);
     redde VERUM;
 }
+/* LEX CAPITIS (T31 a, 2026-09-09): ligatio subiecti aut obiecti cuius
+ * socius (lectio implens w.b) umbram CAPITIS impletam fert (adiectivum
+ * aut determinans substantivo suo ligatum) ad caput illud (w'.b')
+ * sequitur - modificator subiectum aut obiectum esse non potest, caput
+ * eius est ('Puella bona ambulat': subiectum 'bona' proxima -> 'Puella';
+ * 'in magna urbe': obiectum 'magna' -> 'urbe'; directio UD: nsubj et
+ * obj/case ad caput nominale). Gradus unus (caput substantivum umbram
+ * capitis non fert); post gradus omnes, ante legem umbrarum. Ambitus
+ * ORATIO_LEX_CAPITIS=0 abrogat (mensura). */
+hic_manens constans b32 LEX_CAPITIS = VERUM;
+
+interior b32
+_lex_capitis_activa (
+    vacuum)
+{
+    hic_manens i32 lectum = ZEPHYRUM;
+    hic_manens b32 activa = VERUM;
+
+    si (!lectum)
+    {
+        constans character* ambitus = getenv("ORATIO_LEX_CAPITIS");
+
+        activa = (b32)(LEX_CAPITIS
+            && (ambitus == NIHIL || strcmp(ambitus, "0") != ZEPHYRUM));
+        lectum = I;
+    }
+    redde activa;
+}
+
+interior b32
+_ligationes_ad_caput_sequi (
+          Cursus* cursus,
+    MateriaNodus* sententia)
+{
+    constans MateriaValor* elementa =
+        &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
+                      i32 ne;
+                      i32 j;
+
+    si (   !_lex_capitis_activa()
+        || elementa->genus != MATERIA_VALOR_LISTA)
+    {
+        redde VERUM;
+    }
+    ne = materia_valor_lista_numerus(*elementa);
+    per (j = ZEPHYRUM; j < ne; j++)
+    {
+        constans MateriaValor* elementum =
+            materia_valor_lista_obtinere(*elementa, j);
+        constans MateriaValor* analyses;
+                          i32  a;
+
+        si (   elementum        == NIHIL
+            || elementum->genus != MATERIA_VALOR_NODUS
+            || elementum->datum.nodus->genus
+                != (s32)ORATIO_GENUS_VOCABULUM)
+        {
+            perge;
+        }
+        analyses =
+            &elementum->datum.nodus->loci[ORATIO_VOCABULUM_ANALYSES];
+        si (analyses->genus != MATERIA_VALOR_LISTA)
+        {
+            perge;
+        }
+        per (a = ZEPHYRUM; a < materia_valor_lista_numerus(*analyses);
+             a++)
+        {
+            constans MateriaValor* valor =
+                materia_valor_lista_obtinere(*analyses, a);
+            constans MateriaValor* umbrae;
+                              i32  u;
+
+            si (valor == NIHIL || valor->genus != MATERIA_VALOR_NODUS)
+            {
+                perge;
+            }
+            umbrae = _umbrae_lectionis(valor->datum.nodus);
+            si (umbrae == NIHIL)
+            {
+                perge;
+            }
+            per (u = ZEPHYRUM; u < materia_valor_lista_numerus(*umbrae);
+                 u++)
+            {
+                constans MateriaValor* valor_umbrae =
+                    materia_valor_lista_obtinere(*umbrae, u);
+                         MateriaNodus* umbra;
+                                  s32  relatio;
+                                  s32  w;
+                                  s32  b;
+                constans MateriaValor* socius;
+                constans MateriaValor* analyses_socii;
+                constans MateriaValor* lectio_socii;
+                constans MateriaValor* umbrae_socii;
+                                  i32  x;
+
+                si (   valor_umbrae        == NIHIL
+                    || valor_umbrae->genus != MATERIA_VALOR_NODUS)
+                {
+                    perge;
+                }
+                umbra = valor_umbrae->datum.nodus;
+                si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                        != MATERIA_VALOR_INDEX
+                    || umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                        .genus != MATERIA_VALOR_INDEX
+                    || umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
+                        .genus != MATERIA_VALOR_INDEX)
+                {
+                    perge;
+                }
+                relatio = umbra->loci[ORATIO_UMBRA_RELATIO].datum.index;
+                si (   relatio != (s32)ORATIO_RELATIO_SUBIECTUM
+                    && relatio != (s32)ORATIO_RELATIO_OBIECTUM)
+                {
+                    perge;
+                }
+                w = umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                    .datum.index;
+                b = umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
+                    .datum.index;
+                si (w < ZEPHYRUM || w >= (s32)ne || b < ZEPHYRUM)
+                {
+                    perge;
+                }
+                socius = materia_valor_lista_obtinere(*elementa,
+                    (i32)w);
+                si (   socius        == NIHIL
+                    || socius->genus != MATERIA_VALOR_NODUS
+                    || socius->datum.nodus->genus
+                        != (s32)ORATIO_GENUS_VOCABULUM)
+                {
+                    perge;
+                }
+                analyses_socii =
+                    &socius->datum.nodus->loci[ORATIO_VOCABULUM_ANALYSES];
+                si (   analyses_socii->genus != MATERIA_VALOR_LISTA
+                    || b >= (s32)materia_valor_lista_numerus(
+                        *analyses_socii))
+                {
+                    perge;
+                }
+                lectio_socii =
+                    materia_valor_lista_obtinere(*analyses_socii,
+                    (i32)b);
+                si (   lectio_socii        == NIHIL
+                    || lectio_socii->genus != MATERIA_VALOR_NODUS)
+                {
+                    perge;
+                }
+                /* adiectiva sola: determinantia (qui, hic, ille - T19i)
+                 * subiecta ipsa sunt, caput eorum antecedens (mensuratum:
+                 * cum determinantibus chartae -5/-7, Dante -13) */
+                si (oratio_genus_classis((OratioGenus)lectio_socii->datum
+                        .nodus->genus) != ORATIO_CLASSIS_ADIECTIVUM)
+                {
+                    perge;
+                }
+                umbrae_socii =
+                    _umbrae_lectionis(lectio_socii->datum.nodus);
+                si (umbrae_socii == NIHIL)
+                {
+                    perge;
+                }
+                per (x = ZEPHYRUM;
+                     x
+                         < materia_valor_lista_numerus(*umbrae_socii); x++)
+                {
+                    constans MateriaValor* valor_capitis =
+                        materia_valor_lista_obtinere(*umbrae_socii, x);
+                    constans MateriaNodus* caput;
+                                      s32  w2;
+                                      s32  b2;
+
+                    si (   valor_capitis        == NIHIL
+                        || valor_capitis->genus != MATERIA_VALOR_NODUS)
+                    {
+                        perge;
+                    }
+                    caput = valor_capitis->datum.nodus;
+                    si (   caput->loci[ORATIO_UMBRA_RELATIO].genus
+                            != MATERIA_VALOR_INDEX
+                        || caput->loci[ORATIO_UMBRA_RELATIO].datum.index
+                            != (s32)ORATIO_RELATIO_CAPUT
+                        || caput->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                            .genus != MATERIA_VALOR_INDEX
+                        || caput->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
+                            .genus != MATERIA_VALOR_INDEX)
+                    {
+                        perge;
+                    }
+                    w2 = caput->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
+                        .datum.index;
+                    b2 = caput->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
+                        .datum.index;
+                    /* caput VICINUM solum: ligationes capitis remotae (gradus
+                     * laxus, chartis 39-66 % rectae) secutae subiectum
+                     * alio transferunt (mensuratum: chartae -5/-7, Dante -9) */
+                    si (   w2 < ZEPHYRUM || w2 >= (s32)ne
+                        || w2 == (s32)j
+                        || w2 == w || b2 < ZEPHYRUM
+                        || (w2 > w ? w2 - w : w - w2) != I)
+                    {
+                        perge;
+                    }
+                    si (   !materia_nodus_reponere(umbra,
+                            (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM,
+                            materia_valor_index(w2),
+                            MATERIA_LOCUS_INDEX)
+                        || !materia_nodus_reponere(umbra,
+                            (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
+                            materia_valor_index(b2),
+                            MATERIA_LOCUS_INDEX))
+                    {
+                        redde FALSUM;
+                    }
+                    si (cursus->census != NIHIL)
+                    {
+                        cursus->census->ad_caput_secutae =
+                            cursus->census->ad_caput_secutae + I;
+                    }
+                    frange;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
 
 interior b32
 _sententiam_resolvere (
@@ -2543,7 +2772,8 @@ _sententiam_resolvere (
     }
         /* lex umbrarum, deinde decisiones in arborem (T19g); T20b: catena
      * clausularum post ligationes omnes (stratum IV) */
-    redde _umbris_ordinare(cursus, sententia, explicita, decisiones)
+    redde _ligationes_ad_caput_sequi(cursus, sententia)
+        && _umbris_ordinare(cursus, sententia, explicita, decisiones)
         && _decisiones_scribere(cursus, sententia, decisiones)
         && oratio_clausulas_propagare(cursus->piscina, sententia,
             cursus->lingua,

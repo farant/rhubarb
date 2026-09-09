@@ -53,6 +53,7 @@ nomen structura {
                       chorda lemma;         /* copia in piscina */
            chorda natura;        /* species stirpis WORDS verbatim ("F L", "DEP"; referens) */
         character frequentia;    /* T30 b: codex frequentiae stirpis WORDS (A..F, X); ZEPHYRUM sine stirpe (glossarium, unicum, regula, Anglica) */
+        character frequentia_flexionis;   /* T31 a: codex frequentiae FLEXIONIS WORDS ('erunt' A, 'ere' B); ZEPHYRUM sine flexione */
            chorda nativum;       /* codex fontis verbatim (copia) */
            chorda sensus;        /* fontem referens (non copiatur) */
     OratioFonsAnalysis fons;

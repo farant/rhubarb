@@ -1978,6 +1978,38 @@ then accusative before nominative (gender −10 everywhere); the
 dative-accusative order is inert at distance. Not done: a
 dialect-specific order; the tier stays literal and greedy (§8.5).
 
+**As built — T31 a, the verb star: the subject slot and the law of
+the head (2026-09-09).** Census (seven treebanks): finite verbs with
+an explicit subject 40–69 %, subjects nominative 77–89 % (charters
+55–61 %, a third accusative), before the verb 63–88 %, within three
+words 65–74 % (charters 30–37 %), number agreeing 92–98 %, nearest
+agreeing nominative the subject 69–81 % (charters 45–52 %). The
+annotator writes a `subiectum` umbra (nominative, the verb's number)
+on Latin finite third-person verb readings, impersonal verbs and
+readings with a rarity excluded; four rules with every completion
+fill it, adjacent ones in the strict tier, distant ones at the end
+of the loose tier, preceding first; clause refusal applies. Oracle:
+arcs per relation (`LIGATIO-RELATIO` rows, `ligationes_*_relationum`,
+`arcus_aurei_subiecti`), subject precision pinned, recall reported.
+LEX CAPITIS (`_ligationes_ad_caput_sequi`): a subject or object
+binding whose partner is an adjective with an ADJACENT filled head
+binding follows it to the noun — the first law that uses one binding
+to correct another; determiners excluded (a relative pronoun is the
+subject), distant head bindings excluded (measured, both lose).
+Rarity rows added: `flexio-rarior` (the inflection's own WORDS
+frequency code, `OratioDescriptio.frequentia_flexionis`: syncopated
+perfect `-ere` is B) and `imperativum-futurum`. Measured, both tiers
+against the committed state: Seneca primary 835 → 841, forced 770 →
+801, case 670 → 690, number 920 → 931, attachment 463 → 485, subject
+precision 52 % at recall 48 %; Aquinas case +40, PROIEL +21, Dante
++16; charters forced +24 / +22, case −2 / −8, attachment −9 / +1,
+number −2 and gender −1 on test, subject precision 24 / 39 % at
+recall 7 / 11 % (subjects far and accusative there); Seneca voice
+982 → 981 by population. Refused: nouns-only candidates; the strict
+tier alone was cleaner but half the gain. Not done: objects, first
+and second person, accusative subjects of infinitives, a
+dialect-gated loose tier, coordination.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the
