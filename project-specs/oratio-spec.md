@@ -2126,6 +2126,22 @@ files case, forced and charter attachment. REFUSED (R19). Next
 instrument: a case-aware contest census (loser's and winner's reading
 against the partner's gold case).
 
+**As built — T32 d, the case-aware contest census (2026-09-10).** The
+oracle records the reading each side of a contest proposed for the
+dependent (the winner's from its filling or carrier primary, the
+loser's from the alternative) and judges both against the gold case;
+`OratioOraculumContentio` carries judged / loser-right-alone /
+winner-right-alone for case beside the arc counts, `CONTENTIO` columns
+IX–XI, `contentiones.py` shows both dimensions with the gain of a
+flip. Gate: alone counts within judged within contests; judged total
+positive on the Latin pinned files. Finding: adjacent subject versus
+adjacent object of one verb is a coin flip on Seneca's verse (121 :
+123, 51 : 56) and on Aquinas before the verb, accusative 2 : 1 to
+20 : 1 on every other file — a genre split, not the dialect split. A
+rule-order flip is predicted at Seneca −7 cases, charters +76,
+Perseus +102, PROIEL +127; the Seneca tie needs a perpendicular
+feature (another nominative candidate for the verb).
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

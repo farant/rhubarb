@@ -503,13 +503,17 @@ _tabulam_imprimere (
                 *(OratioOraculumContentio**)xar_obtinere(contentiones,
                 j);
 
-            imprimere("    contentio %-40.*s > %-40.*s %5d  victa recta %5.1f%%\n",
+            imprimere("    contentio %-40.*s > %-40.*s %5d  victa recta %5.1f%%"
+                "  casu iudicatae %d victa sola %d victor solus %d\n",
                 (integer)ct->victor.mensura,
                 (constans character*)ct->victor.datum,
                 (integer)ct->victa.mensura,
                 (constans character*)ct->victa.datum,
                 (integer)ct->numerus,
-                _pars(ct->victae_rectae, ct->numerus));
+                _pars(ct->victae_rectae, ct->numerus),
+                (integer)ct->casus_iudicati,
+                (integer)ct->victa_casu_sola,
+                (integer)ct->victor_casu_solus);
         }
     }
     /* T32 a: dependentes contesti (caput unum per verbum violatum) */
@@ -825,7 +829,9 @@ _machinam_imprimere (
             }
         }
         /* T32 b: ordo TECTUM petitae tectae rectae alternae alternae-rectae;
-         * ordines CONTENTIO victor victa numerus victae-rectae */
+         * ordines CONTENTIO victor victa numerus victae-rectae victa-sola
+         * victor-solus (T32 c) casus-iudicati victa-casu-sola
+         * victor-casu-solus (T32 d) */
         imprimere("%s\tTECTUM\t%d\t%d\t%d\t%d\t%d\n", titulus,
             (integer)c->ligationes_petitae,
             (integer)c->ligationes_tectae,
@@ -843,14 +849,17 @@ _machinam_imprimere (
                     *(OratioOraculumContentio**)xar_obtinere(contentiones,
                     j);
 
-                imprimere("%s\tCONTENTIO\t%.*s\t%.*s\t%d\t%d\t%d\t%d\n",
+                imprimere("%s\tCONTENTIO\t%.*s\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
                     titulus,
                     (integer)ct->victor.mensura,
                     (constans character*)ct->victor.datum,
                     (integer)ct->victa.mensura,
                     (constans character*)ct->victa.datum,
                     (integer)ct->numerus, (integer)ct->victae_rectae,
-                    (integer)ct->victa_sola, (integer)ct->victor_solus);
+                    (integer)ct->victa_sola, (integer)ct->victor_solus,
+                    (integer)ct->casus_iudicati,
+                    (integer)ct->victa_casu_sola,
+                    (integer)ct->victor_casu_solus);
             }
         }
         /* T32 a: ordo CONTESTA dependentes petitiones rectae */

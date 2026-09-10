@@ -763,14 +763,27 @@ _thesaurus_arborum (
             {
                 Xar* contentiones = oratio_oraculum_contentiones(p,
                     &census);
-                i32 summa_contentionum = ZEPHYRUM;
+                i32 summa_contentionum        = ZEPHYRUM;
+                i32 summa_casuum_iudicatorum  = ZEPHYRUM;   /* T32 d */
 
                 per (j = ZEPHYRUM; contentiones != NIHIL
                     && j < xar_numerus(contentiones); j++)
                 {
+                    constans OratioOraculumContentio* ct =
+                        *(OratioOraculumContentio**)xar_obtinere(
+                            contentiones, j);
+
                     summa_contentionum = summa_contentionum
-                        + (*(OratioOraculumContentio**)xar_obtinere(
-                            contentiones, j))->numerus;
+                        + ct->numerus;
+                    /* T32 d: casus - solae inter iudicatos, iudicati inter
+                     * contentiones (culpa plantata: condicio victoris in
+                     * victa sola omissa RUBRA) */
+                    CREDO_VERUM (ct->victa_casu_sola
+                        + ct->victor_casu_solus
+                        <= ct->casus_iudicati);
+                    CREDO_VERUM (ct->casus_iudicati <= ct->numerus);
+                    summa_casuum_iudicatorum = summa_casuum_iudicatorum
+                        + ct->casus_iudicati;
                 }
                 imprimere("    arcus tecti %d de petitis %d = %d permille"
                     " (recti %d permille; alternae %d, rectae %d)\n",
@@ -788,6 +801,13 @@ _thesaurus_arborum (
                     <= census.ligationes_petitae);
                 CREDO_AEQUALIS_I32 (summa_contentionum,
                     (i32)census.alternae_numerus);
+                /* T32 d: columna casus viva in thesauris Latinis pinnatis */
+                imprimere("    contentiones casu iudicatae %d\n",
+                    (integer)summa_casuum_iudicatorum);
+                si (pinna_casuum > ZEPHYRUM)
+                {
+                    CREDO_VERUM (summa_casuum_iudicatorum > ZEPHYRUM);
+                }
             }
             /* T19g bis: errata auctoris - summa numerorum == verba -
              * primaria eius; errata prima III auctorum II maximorum relata

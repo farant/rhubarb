@@ -3733,3 +3733,71 @@ contests on a single arc, and the instrument to judge them is a
 case-aware contest census: for each contest, whether the loser's
 reading matches the partner's gold case and whether the winner's
 does. That is the next instrument before any judge.
+
+## 2026-09-10 — T32 d: the case-aware contest census
+
+**The instrument.** Each contest already carried the arc verdict for
+both sides (T32 c). It now carries the case verdict. Beside the
+primary head each dependent received, the oracle records the READING
+the winning claim proposed for it: the carrier's own primary reading
+for head-type claims (the umbra sits on it), the filling's analysis
+ordinal for subject and object claims. An alternative names the
+reading the loser proposed the same way (its `analysis` ordinal, or
+the carrier's primary). Both are read for case (`_casus_lectionis`,
+Latin readings only) and compared with the dependent's gold `Case=`.
+A contest is judged for case when all three are known; the pair
+counts loser-right-alone and winner-right-alone, mirroring the arc
+columns. `OratioOraculumContentio` gains three counts, the `CONTENTIO`
+row columns IX–XI, `contentiones.py` prints arcs and cases side by
+side with the gain a flip would bring in each dimension (`-casus`
+sorts by case discrimination). Gate: per pair the two alone counts
+fit inside the judged count, which fits inside the contest count, and
+on the Latin pinned files the judged total must be positive (Seneca
+1930, charters 2858 / 1061, English 0 by construction — the column
+cannot die silently).
+
+**What it shows — the reading contest on one arc.** Adjacent subject
+against adjacent object of the same verb, the pair that fooled the
+arc census. Judged contests, loser (accusative) right alone, winner
+(nominative) right alone:
+
+| file | noun before verb | noun after verb |
+|---|---|---|
+| Seneca | 254: 121 / 123 | 109: 51 / 56 |
+| charters dev | 15: 15 / 0 | 4: 4 / 0 |
+| charters test | 22: 19 / 2 | 38: 38 / 0 |
+| Aquinas | 419: 174 / 178 | 113: 95 / 12 |
+| Perseus | 263: 169 / 83 | 74: 43 / 27 |
+| PROIEL | 216: 155 / 60 | 92: 62 / 30 |
+| Dante | 76: 47 / 19 | 22: 9 / 13 |
+
+Where prose is prose (the charters, Perseus, PROIEL, Dante, Aquinas
+after the verb) the accusative reading wins 2:1 to 20:1, and the
+subject rule, which fires first, is wrong to claim the word. On
+Seneca's verse and on Aquinas before the verb it is a coin flip. A
+blanket flip of the rule order therefore predicts: Seneca −7 cases
+(nothing), charters +76 over dev and test, Perseus +102, PROIEL +127,
+Aquinas +79 (almost all after the verb), Dante +24. That is the
+cheapest next experiment and it is a rule-ORDER experiment, the kind
+T30 e and T32 a warned about, so it must be measured, not assumed.
+The split is not the dialect split: classical Perseus and PROIEL side
+with the medieval charters against classical Seneca. It is verse
+against prose — word-order freedom — which means the tie on Seneca
+needs a perpendicular feature (sudoku doctrine): whether the verb
+already has an unambiguous nominative candidate elsewhere in the
+clause is the obvious one, and the next census question.
+
+**Where case is silent, arcs speak.** Three pairs discriminate only
+by arc and are shelf-dominated: adjacent head-preceding beats adjacent
+subject-preceding (339 contests: loser's arc right alone 284, winner's
+43 — PROIEL 235 : 13, Aquinas 26 : 7, Dante 11 : 4, but Seneca 7 : 10
+and Perseus 4 : 9), adjacent head-following beats adjacent
+object-preceding (353: 161 : 36), the unknown-proper-noun head rule
+beats adjacent object-preceding (134: 121 : 6). These are the T32 c
+candidates seen from the shelf; the pinned files still lose a little
+on the first, which is why R19 stands.
+
+**Not done.** No flip built, no judge. Order: the rule-order flip
+with the prediction above (or the subject rule declining a
+nominative-or-accusative word when the verb has another nominative
+candidate), then the per-dialect trust table.

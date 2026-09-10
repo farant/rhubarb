@@ -858,7 +858,16 @@ Census corrected (loser judged against the winner's actual head, same
 head = neither); four discriminating pairs remain; the judge
 (`fixa/contentiones.tsv`, `ORATIO_IUDEX=1`, inactive) gains right arcs
 but costs pinned case/forced/charter attachment. NEXT instrument = a
-CASE-AWARE contest census.
+CASE-AWARE contest census. **T32 d (2026-09-10): CASE-AWARE CONTEST
+CENSUS.** The oracle keeps the reading each side proposed for the
+dependent and judges both against the gold case (`CONTENTIO` columns
+IX–XI; `census/contentiones.py … -casus`). Adjacent subject vs adjacent
+object of one verb: coin flip on Seneca's VERSE (121 : 123) and Aquinas
+before the verb, accusative 2 : 1 to 20 : 1 on every prose file — a
+GENRE split, not the dialect split. Predicted rule-order flip: Seneca
+−7 cases, charters +76, Perseus +102, PROIEL +127 (measure, never
+assume — rule order decides readings). Seneca's tie needs a
+perpendicular feature: another nominative candidate for the verb.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

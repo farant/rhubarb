@@ -99,6 +99,12 @@ nomen structura {
      * contra obiectum eiusdem verbi) in neutro - contentio lectionis, non arcus */
        i32 victa_sola;
        i32 victor_solus;
+    /* T32 d: CASUS - lectio dependentis quam victa et victor proposuerunt
+     * contra casum aureum; contentio lectionis in arcu uno (subiectum contra
+     * obiectum eiusdem verbi) hic sola discriminat */
+       i32 casus_iudicati;      /* casus aureus, victae, victoris omnes noti */
+       i32 victa_casu_sola;     /* lectio victae casum aureum fert, victoris non */
+       i32 victor_casu_solus;
 } OratioOraculumContentio;
 
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
