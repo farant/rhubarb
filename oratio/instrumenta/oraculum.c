@@ -25,6 +25,7 @@
  *              caput-victoris-idem clausula primum nominativi
  *              nominativi-certi nominativi-concordes accusativi-certi
  *              genus-victae numerus-capitis persona-capitis vox-capitis
+ *              numerus-victae numerus-victoris (T32 f)
  *   -nota T    cum -errata (T30): errata accidentis T (numerus genus
  *              persona modus vox forma-verbi tempus | omnes) - verba
  *              classis rectae cuius lectio prima valorem falsum fert:
@@ -888,7 +889,7 @@ _machinam_imprimere (
                 *(OratioOraculumLis**)xar_obtinere(c->lites, i);
 
             imprimere("%s\tLIS\t%.*s\t%.*s\t%.*s\t%.*s\t%d\t%s\t%s\t%s"
-                "\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\n",
+                "\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\n",
                 titulus,
                 (integer)l->victor.mensura,
                 (constans character*)l->victor.datum,
@@ -925,7 +926,13 @@ _machinam_imprimere (
                 _titulus_valoris(ORATIO_TITULI_PERSONARUM,
                     l->persona_capitis, (i32)ORATIO_PERSONA_NUMERUS),
                 _titulus_valoris(ORATIO_TITULI_VOCUM, l->vox_capitis,
-                    (i32)ORATIO_VOX_NUMERUS));
+                    (i32)ORATIO_VOX_NUMERUS),
+                _titulus_valoris(ORATIO_TITULI_NUMERORUM,
+                l->numerus_victae,
+                    (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS),
+                _titulus_valoris(ORATIO_TITULI_NUMERORUM,
+                    l->numerus_victoris,
+                    (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
         }
         /* T32 a: ordo CONTESTA dependentes petitiones rectae */
         imprimere("%s\tCONTESTA\t%d\t%d\t%d\n", titulus,

@@ -98,6 +98,9 @@ nomen structura {
     i32 recusatae_capitis;
     /* T32 a: petitiones stantes a petitione fideliore revocatae */
     i32 revocatae_capitis;
+    /* T32 f: ordines recusati ut contentio LECTIONIS - caput idem ac
+     * petitionis stantis (fiducia arcuum eam iudicare nequit; ordo decidit) */
+    i32 recusatae_lectionis;
     /* T32 b: alternae scriptae (petitiones cedentes servatae) */
     i32 alternae;
         /* T20a: stampa clausularum (strata I-III) ante gradus - census

@@ -2159,6 +2159,24 @@ charters. Residual: singular verb with no agreeing nominative is a
 coin flip on Seneca (97 / 85) — semantics. Partition-lattice tool
 (scrutinium-shaped) banked as desideratum 01M24V1387.
 
+**As built — T32 f, the conditional order refused as a global rule;
+the reading-contest law (2026-09-10).** Executor: a verb-star claim
+on the same head as the standing claim of the dependent is a reading
+contest and is refused under rule order, never revoked by arc trust
+(`Petitio.caput`, `ORATIO_CONTENTIO_LECTIONIS=0`, census
+`recusatae_lectionis`; narrowed to the verb star — adposition
+accusative/ablative contests stay with trust; byte-identical today;
+gated by an inline two-rule programme with the real trust table).
+Measured: subject first when the verb is plural, object first when
+singular — case and right arcs up on every file, but Seneca primary
+−1, forced −2, number −2, gender −4 ‰ (the '-a' words: feminine
+nominative singular against neuter accusative plural, subjects in
+verse 82 : 41, objects in prose 85 : 40); the number-refined variant
+restores Seneca and breaks every prose file. REFUSED (R20): the order
+is genre-dependent and the pins straddle both genres. Next: a GENRE
+gate (verse / prose per document from the T6b forma layer), then
+order per genre.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

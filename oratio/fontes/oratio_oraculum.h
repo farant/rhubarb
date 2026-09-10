@@ -128,6 +128,8 @@ nomen structura {
        s32 casus_victae;
        s32 casus_victoris;
        s32 genus_victae;
+       s32 numerus_victae;       /* T32 f: numerus lectionis victae / victoris */
+       s32 numerus_victoris;
        s32 clausula;             /* -I aperta */
        b32 primum_clausulae;
        i32 nominativi;

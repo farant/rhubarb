@@ -3867,3 +3867,85 @@ because it counts the reading, not the slot.
 change: the strict subject rules split into a plural copy before the
 object rules and a singular copy after them. Measured against the
 prediction above (T32 f).
+
+## 2026-09-10 — T32 f: the conditional order measured and refused as a global rule (R20); the reading-contest law in the verb star
+
+**The executor law, kept.** A claim on the same head as the standing
+claim of the same dependent, when both are verb-star claims (subject
+or object of the same verb), is a READING contest on one arc, and arc
+trust cannot judge it (T32 c). It is now refused under rule order,
+never revoked by trust: `Petitio.caput` records the head each standing
+claim petitioned, `_contentio_lectionis_activa`
+(`ORATIO_CONTENTIO_LECTIONIS=0` disables), census
+`recusatae_lectionis`. First cut refused ALL same-head contests and
+broke 'In bona terra est': the adposition 'in' gets an accusative
+object claim in stage 1 and an ablative one in stage 3, a reading
+contest that trust decides today, correctly here for a reason that
+is not a reason (the two adposition rules' arc precisions differ by
+the adpositions they cover). Narrowed to the verb star, the law is
+byte-identical on all eight files with the current grammar, because
+subject rules precede object rules and the object challenger has the
+lower trust anyway. Gated by an inline two-rule programme (object
+rule before subject rule, the real trust table attached) on 'Bellum
+videt': accusative stays, `recusatae_lectionis` ≥ 1, no revocation;
+planted fault = trust allowed to revoke → nominative, RED. Any
+conditional order needs this law: with the same titles a later
+subject copy (705) would otherwise revoke the object claim (555).
+
+**Variant one: subject first when the verb is plural, object first
+when singular** (the strict subject rules split into a plural copy
+before the object rules and a singular copy after, same titles).
+Case rose on every file, right arcs rose on every file, and the
+prediction held in direction but not in size:
+
+| file | case words, predicted | measured | number | gender | primary |
+|---|---|---|---|---|---|
+| Seneca | +26 | +14 | −30 | −22 | −11 |
+| charters dev | +17 | +3 | −4 | −5 | −1 |
+| charters test | +45 | +26 | +28 | −5 | −1 |
+| Aquinas | +94 | +79 | +32 | +51 | −6 |
+| Perseus | +128 | +27 | +6 | 0 | +3 |
+| PROIEL | +129 | +16 | −8 | −1 | −1 |
+| Dante | +33 | +6 | −1 | −7 | −2 |
+
+The shortfall: the prediction assumed the loser's recorded reading
+becomes primary; the object rule's first completion is not always
+that reading, and words decided upstream keep their primary. Pins:
+Seneca case 714 → 718, attachment 526 → 528, right arcs 1676 → 1717,
+charters test case 697 → 700, object precision 553 → 558 / 503 → 522;
+DOWN: Seneca primary 836 → 835, forced 800 → 798, number 932 → 930,
+gender 908 → 904, charters dev number 931 → 930, gender 925 → 924,
+object dev 545 → 542, subject precision 581 / 315 / 478 → 574 / 304
+/ 435 (an arc artifact: objects with lucky arcs used to count as
+right subject arcs; they moved to the object relation, +75 right
+object arcs on Seneca, +31 on charters test).
+
+**Where the Seneca harm comes from.** The rows (`-lites`, now with
+the number of both readings) under variant one: before a singular
+verb, a promoted accusative PLURAL reading is wrong on Seneca (41
+right : 82 wrong) and right on Aquinas (85 : 40); a promoted
+accusative SINGULAR is right on Seneca (59 : 31), Perseus (98 : 43),
+PROIEL (104 : 21). The words are the Latin '-a' ambiguity, feminine
+nominative singular against neuter accusative plural: bona, illa,
+haec, multa, sua. In verse 'illa' is she; in prose 'haec' is these
+things.
+
+**Variant two: plural accusatives behind the singular subject copy**
+(pre-verbal object rule split by number). Seneca restored: case 720,
+number 933, gender 907, attachment 530. Everything else broke:
+charters attachment 459 → 450 / 480 → 467, forced −6 / −5, case dev
+−2, shelf attachment −5 to −18 on every file, right arcs down
+everywhere but Seneca. 'omnia bona sua' before 'habet' in a charter
+is the object.
+
+**REFUSED as global rules (R20, decisio Frani).** The order is
+genre-dependent and the pinned files straddle both genres: Seneca is
+verse, the charters prose. Neither variant is adoptable without
+moving pins down on one side. The enabling step is a GENRE GATE: the
+document already carries a verse-or-prose form per paragraph (T6b
+forma layer); lift it to a document-level fact the way the dialect
+was, gate rules on it, then order per genre — plain conditional order
+for prose, subject-first for verse. Kept: the executor law, the
+`numerus-victae` / `numerus-victoris` columns of the rows, the
+fixture. Reverted: the grammar split (both variants in the session
+scratchpad).

@@ -990,6 +990,55 @@ principale (vacuum)
             (s32)ORATIO_CASUS_NOMINATIVUS);
     }
 
+    /* T32 f (2026-09-10) CONTENTIO LECTIONIS in stella verbi: petitio
+     * caput idem petens ac petitio stans (subiectum contra obiectum
+     * eiusdem verbi) fiducia arcuum NON revocatur - ordo regularum
+     * decidit (T32 c: arcus idem, fiducia arcuum lectiones iudicare
+     * nequit). Programma minimum: regula obiecti ANTE regulam subiecti
+     * (ordo grammaticae inversus - ordo condicionalis numero verbi ut
+     * regula universalis RECUSATUS R20, scissio generis), fiducia
+     * vera (subiectum 705 > obiectum 555): 'Bellum videt' - obiectum
+     * primum, petitio subiecti posterior fidelior RECUSATA (accusativus
+     * manet). Culpa plantata (lex sublata: fiducia revocat) RUBRA. */
+    imprimere("\n--- II d. Contentio lectionis in stella verbi (T32 f) ---\n");
+    {
+             OratioPartesCensus census_partium;
+          OratioResolutioCensus census;
+       OratioVocabulariumVitium vitium_minimi;
+              OratioProgramma* minimum;
+                 MateriaNodus* doc;
+                    character  textus_minimi[4096];
+
+        textus_minimi[0] = '\0';
+        strcat(textus_minimi,
+            "<regula titulus=\"umbra-obiectum-verbi-praecedente-proximo\" gradus=\"2\"><EXEMPLAR cursus=\"strictus\" quaesitio=\"omnes\" output=\"$umbra_obiectum_verbi_praecedente_proximo\"><elementa><vocabulum n=\"$w\"><analyses><* n=\"$b\"><casus>3</casus></></analyses></vocabulum><vocabulum n=\"$v\"><analyses><analysis-verbi n=\"$a\"><umbrae><umbra n=\"$u\"><relatio>4</relatio><casus>3</casus></umbra>");
+        strcat(textus_minimi,
+            "</umbrae></analysis-verbi></analyses></vocabulum></elementa></EXEMPLAR><consilium><PER congruentia=\"$umbra_obiectum_verbi_praecedente_proximo\"><impletio vocabulum=\"&@v;\" analysis=\"&@a;\" umbra=\"&@u;\" ad-vocabulum=\"&@w;\" ad-analysis=\"&@b;\" regula=\"umbra-obiectum-verbi-praecedente-proximo\"/></PER></consilium></regula>");
+        strcat(textus_minimi,
+            "<regula titulus=\"umbra-subiectum-praecedente-proximo\" gradus=\"2\"><EXEMPLAR cursus=\"strictus\" quaesitio=\"omnes\" output=\"$umbra_subiectum_praecedente_proximo\"><elementa><vocabulum n=\"$w\"><analyses><* n=\"$b\"><casus>0</casus><numerus>$num</numerus></></analyses></vocabulum><vocabulum n=\"$v\"><analyses><analysis-verbi n=\"$a\"><umbrae><umbra n=\"$u\"><relatio>3</relatio><casus>0</casus>");
+        strcat(textus_minimi,
+            "<numerus>$num</numerus></umbra></umbrae></analysis-verbi></analyses></vocabulum></elementa></EXEMPLAR><consilium><PER congruentia=\"$umbra_subiectum_praecedente_proximo\"><impletio vocabulum=\"&@v;\" analysis=\"&@a;\" umbra=\"&@u;\" ad-vocabulum=\"&@w;\" ad-analysis=\"&@b;\" regula=\"umbra-subiectum-praecedente-proximo\"/></PER></consilium></regula>\n");
+        minimum = oratio_resolutio_programma_legere(piscina, intern,
+            _l(textus_minimi), &vitium_minimi);
+        CREDO_NON_NIHIL (minimum);
+        CREDO_AEQUALIS_I32 (minimum == NIHIL ? ZEPHYRUM
+            : xar_numerus(minimum->regulae), (i32)II);
+        si (minimum != NIHIL)
+        {
+            minimum->fiducia = programma->fiducia;   /* tabula vera */
+        }
+        doc = _documentum(piscina, &vocabularia, "Bellum videt.\n",
+            &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            minimum, (s32)-I, "latina", doc, &census));
+        CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM),
+            (s32)ORATIO_CASUS_ACCUSATIVUS);
+        CREDO_VERUM (census.recusatae_lectionis >= I);
+        CREDO_AEQUALIS_I32 (census.revocatae_capitis, ZEPHYRUM);
+    }
+
     imprimere("\n--- III. Planum iudicatum; ordo malus recusatus"
         " ---\n");
     {

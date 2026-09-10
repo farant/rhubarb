@@ -1740,6 +1740,7 @@ _auctorem_umbrae_scribere (
 nomen structura {
     MateriaNodus* umbra;
              s32  fides;
+             s32  caput;   /* T32 f: index vocabuli capitis petiti; -I */
 } Petitio;
 
 /* petitionem stantem revocare: cella impletionis huius gradus vacuatur
@@ -2043,6 +2044,29 @@ _caput_unum_activum (
     si (!lectum)
     {
         constans character* ambitus = getenv("ORATIO_CAPUT_UNUM");
+
+        activum = (b32)(ambitus == NIHIL
+            || strcmp(ambitus, "0") != ZEPHYRUM);
+        lectum = I;
+    }
+    redde activum;
+}
+
+/* T32 f: CONTENTIO LECTIONIS - petitio caput idem petens ac petitio stans
+ * (subiectum et obiectum eiusdem verbi) arcum eundem petit: fiducia
+ * arcuum eam iudicare nequit (T32 c), ordo regularum decidit -
+ * recusatur, numquam revocat. ORATIO_CONTENTIO_LECTIONIS=0 abrogat. */
+interior b32
+_contentio_lectionis_activa (
+    vacuum)
+{
+    hic_manens i32 lectum   = ZEPHYRUM;
+    hic_manens b32 activum  = VERUM;
+
+    si (!lectum)
+    {
+        constans character* ambitus =
+            getenv("ORATIO_CONTENTIO_LECTIONIS");
 
         activum = (b32)(ambitus == NIHIL
             || strcmp(ambitus, "0") != ZEPHYRUM);
@@ -2489,7 +2513,9 @@ _sententiam_resolvere_gradu (
                     s32  fides = titulus != NIHIL
                         ? _fiducia_regulae(cursus->programma, *titulus)
                         : (s32)-I;
-                s32 iudicium = ZEPHYRUM;   /* T32 c */
+                s32 iudicium     = ZEPHYRUM;   /* T32 c */
+                s32 caput_novum  = (s32)-I;   /* T32 f */
+                b32 lectionis    = FALSUM;
 
                 /* LEX CAPITIS IN CONTENTIONE: socius w adiectivum capiti
                  * vicino iam ligatum - petitio subiecti/obiecti ad caput
@@ -2605,19 +2631,50 @@ _sententiam_resolvere_gradu (
                         }
                     }
                 }
+                /* T32 f: caput petitionis novae (dependens socius: carrier v;
+                 * dependens carrier: socius w); caput idem ac petitionis
+                 * stantis in STELLA VERBI (subiectum contra obiectum verbi
+                 * eiusdem, T32 d/e mensuratum) = contentio LECTIONIS -
+                 * recusatur sub ordine. Paria alia capite eodem (obiecta
+                 * adpositionis accusativum contra ablativum) fiduciae
+                 * manent donec mensurentur ('In bona terra est'). */
+                caput_novum = dependens == w ? (s32)v : (s32)w;
+                {
+                    s32 relatio_stans = petitio->umbra != NIHIL
+                        && petitio->umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                            == MATERIA_VALOR_INDEX
+                        ? petitio->umbra->loci[ORATIO_UMBRA_RELATIO]
+                            .datum.index
+                        : (s32)-I;
+
+                    lectionis = (b32)(   _contentio_lectionis_activa()
+                        && petitio->umbra != NIHIL
+                        && petitio->umbra != umbra
+                        && petitio->caput >= ZEPHYRUM
+                        && petitio->caput == caput_novum
+                        && (   relatio == (s32)ORATIO_RELATIO_SUBIECTUM
+                            || relatio
+                                == (s32)ORATIO_RELATIO_OBIECTUM_VERBI)
+                        && (   relatio_stans
+                                == (s32)ORATIO_RELATIO_SUBIECTUM
+                            || relatio_stans
+                                == (s32)ORATIO_RELATIO_OBIECTUM_VERBI));
+                }
                 si (petitio->umbra != NIHIL && petitio->umbra != umbra)
                 {
                     /* CONTENTIO: iudex (T32 c, tabula parium) primum, deinde
-                     * fiducia (T32 a): petitio fidelior stantem revocat */
+                     * fiducia (T32 a): petitio fidelior stantem revocat;
+                     * contentio lectionis (T32 f) numquam */
                     iudicium = _iudex_contentionis(cursus->programma,
                         scratch,
                         _auctor_petitionis(petitio->umbra, impletiones),
                         titulus != NIHIL ? *titulus : _chorda(NIHIL,
                         ZEPHYRUM));
-                    si (   iudicium > ZEPHYRUM
-                        || (   iudicium == ZEPHYRUM
-                            && (_fiducia_modus() & (i32)II)
-                            && fides > petitio->fides))
+                    si (   !lectionis
+                        && (   iudicium > ZEPHYRUM
+                            || (   iudicium == ZEPHYRUM
+                                && (_fiducia_modus() & (i32)II)
+                                && fides > petitio->fides)))
                     {
                         /* T32 b: petitio stans alterna (revocata) suae
                          * umbrae fit antequam vacuetur */
@@ -2658,6 +2715,12 @@ _sententiam_resolvere_gradu (
                         {
                             cursus->census->recusatae_capitis =
                                 cursus->census->recusatae_capitis + I;
+                            si (lectionis)
+                            {
+                                cursus->census->recusatae_lectionis =
+                                    cursus->census->recusatae_lectionis
+                                        + I;
+                            }
                         }
                         /* T32 b: petitio recusata alterna fit */
                         si (!_alternam_addere(cursus, *elementa, umbra,
@@ -2677,6 +2740,7 @@ _sententiam_resolvere_gradu (
                 }
                 petitio->umbra = umbra;
                 petitio->fides = fides;
+                petitio->caput = caput_novum;
             }
             cella = (Impletio*)xar_addere(impletiones);
 
@@ -4030,6 +4094,7 @@ _sententiam_resolvere (
     {
                 capita_data[k].umbra  = NIHIL;
                 capita_data[k].fides  = (s32)-I;
+                capita_data[k].caput  = (s32)-I;
                 vindicata[k]          = FALSUM;
         explicita[k]                  = FALSUM;
         emendata[k]                   = FALSUM;

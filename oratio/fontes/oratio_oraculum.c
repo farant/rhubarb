@@ -2549,7 +2549,8 @@ _litem_notare (
                                s32  casus_aureus,
                                s32  casus_victae,
                                s32  casus_victoris,
-                               s32  lectio_victae)
+                               s32  lectio_victae,
+                               s32  lectio_victoris)
 {
      OratioOraculumLis*  l;
      OratioOraculumLis** cella;
@@ -2608,6 +2609,12 @@ _litem_notare (
     l->genus_victae        = _accidens_lectionis(d->nodus,
         lectio_victae,
         "genus");
+    l->numerus_victae      = _accidens_lectionis(d->nodus,
+        lectio_victae,
+        "numerus");
+    l->numerus_victoris    = _accidens_lectionis(d->nodus,
+        lectio_victoris,
+        "numerus");
     l->clausula          = d->clausula;
     l->numerus_capitis   = h->notae_primae[NOTA_NUMERI];
     l->persona_capitis   = h->notae_primae[NOTA_PERSONAE];
@@ -3189,7 +3196,10 @@ _ligationes_iudicare (
                             victor->datum.token->valor,
                             auctor->datum.token->valor, casus_aureus_d,
                             casus_victae, casus_victoris,
-                            lectio_victae);
+                            lectio_victae,
+                            caput_v
+                                >= ZEPHYRUM ? lectio_nostra[dependens_a]
+                                : (s32)-I);
                     }
                 }
                 census->alternae_numerus = census->alternae_numerus + I;

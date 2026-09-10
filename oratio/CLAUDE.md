@@ -879,7 +879,21 @@ Aquinas +94, Perseus +128, PROIEL +129; residual coin flip = singular
 verb with no agreeing nominative (Seneca 97 : 85) → semantics. A
 quarter of the answers are neither `obj` nor `nsubj`. NEXT = T32 f,
 the conditional order as a grammar edit, measured against the
-prediction.
+prediction. **T32 f (2026-09-10): CONDITIONAL ORDER MEASURED AND
+REFUSED AS A GLOBAL RULE (R20).** Plain (subject first when the verb
+is plural, object first when singular): case and right arcs up on
+every file, prediction held in direction not size (Seneca +14 words
+of +26 predicted, Perseus +27 of +128), but Seneca primary −1, forced
+−2, number −2, gender −4 ‰ — the '-a' words (bona, illa, haec: fem
+nom sg vs neut acc pl) before a singular verb are SUBJECTS in verse
+(82 : 41) and OBJECTS in prose (85 : 40). Number-refined variant
+restores Seneca and breaks every prose file. GENRE-dependent; the pins
+straddle both genres → NEXT = a GENRE GATE (verse / prose per document
+from the T6b forma layer), then order per genre. KEPT: the executor
+READING-CONTEST law in the verb star (same head as the standing claim
+→ refused under order, never revoked by arc trust;
+`ORATIO_CONTENTIO_LECTIONIS=0`; byte-identical today; a prerequisite
+of any conditional order), the reading-number columns of the rows.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

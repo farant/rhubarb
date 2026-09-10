@@ -40,6 +40,8 @@ NOTAE = [
     ('caput pluralis',        lambda c: c[20] == 'pluralis'),
     ('caput III persona',     lambda c: c[21] == 'III'),
     ('caput deponens',        lambda c: c[22] == 'deponens'),
+    ('lectio victae pluralis', lambda c: len(c) > 23 and c[23] == 'pluralis'),
+    ('lectio victoris pluralis', lambda c: len(c) > 24 and c[24] == 'pluralis'),
     ('deprel nsubj',          lambda c: c[10].startswith('nsubj')),
     ('deprel obj',            lambda c: c[10] == 'obj'),
     ('caput aureum idem',     lambda c: c[11] == '1'),
