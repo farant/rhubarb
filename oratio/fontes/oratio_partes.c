@@ -281,6 +281,54 @@ _obiectum_speciei_ignotae (
     redde activum;
 }
 
+/* T31 c (2026-09-09): quae formae verbi obiectum accipiunt. Finita
+ * semper; infinita per ORATIO_OBIECTUM_INFINITA: 0 = finita sola,
+ * infinitivum = et infinitivi (absens: ADOPTUM), participium = et
+ * infinitivi et participia (MENSURATUM et RECUSATUM: casus +4..+13
+ * classicis sed ligatio Seneca -5 Aquinas -3 PROIEL -3, praecisio
+ * obiecti -2..-4 ubique - accusativus vicinus participii obiectum
+ * eius 39-49 % solum, 24-49 % verbi alius, plerumque verbi principalis
+ * inter quod participium stat; lectio accusativa recte promota, arcus
+ * falsus). Census auri: infinitivi activi cum obiecto 38-61 %, obiecta
+ * accusativa 92-99 %, vicina 48-60 % (chartae 8-11 %); accusativus
+ * vicinus ante infinitivum obiectum 41-59 % (chartae 16-20 %),
+ * subiectum accusativum 3-33 %. */
+interior b32
+_obiectum_forma_fert (
+    s32 forma_verbi)
+{
+    hic_manens i32 lectum = ZEPHYRUM;
+    hic_manens i32 gradus = I;
+
+    si (!lectum)
+    {
+        constans character* ambitus =
+            getenv("ORATIO_OBIECTUM_INFINITA");
+
+        si (ambitus != NIHIL)
+        {
+            gradus = strcmp(ambitus, "participium")
+                == ZEPHYRUM ? (i32)II
+                   : strcmp(ambitus, "infinitivum") == ZEPHYRUM ? I
+                   : ZEPHYRUM;
+        }
+        lectum = I;
+    }
+    si (forma_verbi == (s32)ORATIO_FORMA_VERBI_FINITUM)
+    {
+        redde VERUM;
+    }
+    si (forma_verbi == (s32)ORATIO_FORMA_VERBI_INFINITIVUM)
+    {
+        redde (b32)(gradus >= I);
+    }
+    si (forma_verbi == (s32)ORATIO_FORMA_VERBI_PARTICIPIUM)
+    {
+        redde (b32)(gradus >= (i32)II);
+    }
+    redde FALSUM;
+}
+
 interior b32
 _umbras_ponere (
                       Piscina* piscina,
@@ -330,13 +378,13 @@ _umbras_ponere (
      * verba 65-74 % (chartae 30-37 %), numerus concordat 92-98 %
      * (discordia = coordinatio), nominativus proximus concordans
      * subiectum 69-81 % (chartae 45-52 %). */
-    si (   d->classis     == ORATIO_CLASSIS_VERBUM
-        && d->forma_verbi == (s32)ORATIO_FORMA_VERBI_FINITUM
+    si (   d->classis  == ORATIO_CLASSIS_VERBUM
         && !_natura_impersonalis(d->natura)
-        && _raritas(d)    == ZEPHYRUM)
+        && _raritas(d) == ZEPHYRUM)
     {
-        si (   d->persona == (s32)ORATIO_PERSONA_TERTIA
-            && d->numerus >= ZEPHYRUM
+        si (   d->forma_verbi == (s32)ORATIO_FORMA_VERBI_FINITUM
+            && d->persona     == (s32)ORATIO_PERSONA_TERTIA
+            && d->numerus     >= ZEPHYRUM
             && !_umbram_addere(piscina, analysis, d->classis,
                 ORATIO_RELATIO_SUBIECTUM, (s32)-I,
                 (s32)ORATIO_CASUS_NOMINATIVUS, d->numerus, (s32)-I))
@@ -353,7 +401,8 @@ _umbras_ponere (
          * ante verbum 54-79 %, vicinum 36-59 %, intra III 65-92 %;
          * accusativus proximus obiectum 68-79 % (chartae 52-54 %), sine
          * obiectis adpositionum 69-82 % (chartae 58-65 %). */
-        si (   (   d->vox == (s32)ORATIO_VOX_ACTIVA
+        si (   _obiectum_forma_fert(d->forma_verbi)
+            && (   d->vox == (s32)ORATIO_VOX_ACTIVA
                 || d->vox == (s32)ORATIO_VOX_DEPONENS)
             && (   _natura_est(d->natura, "TRANS")
                 || _natura_est(d->natura, "DEP")

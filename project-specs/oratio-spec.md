@@ -2038,6 +2038,27 @@ verb form, all from the partner's promoted accusative reading. Not
 done: objects on infinitives and participles, dative and ablative
 kinds, a dialect gate.
 
+**As built — T31 c, objects on infinitives (2026-09-09).** Census:
+active infinitives carry an object 38–61 %, the objects accusative
+92–99 %, adjacent 48–60 % (charters 8–11 %); an adjacent accusative
+before an active infinitive is its object 41–59 % (charters 16–20 %),
+its accusative subject 3–33 %; active participles carry an object
+11–36 %, an adjacent accusative is theirs 39–49 % and another verb's
+24–49 %. `_obiectum_forma_fert` in the annotator: the object slot goes
+on finite readings always and on infinitive readings by default
+(`ORATIO_OBIECTUM_INFINITA=0` finite only, `=participium` adds
+participles — measured and refused, kept inactive); the subject slot
+stays finite-only; no rule change. Adopted: attachment up on every
+classical file (Seneca 503 → 505, Dante 421 → 431), case +2..+4 and
+forced +4..+10 everywhere, object recall Seneca 47 → 52 %, Dante 45 →
+60 %; named falls: charters attachment −1 / −4 and object precision
+42 → 39 / 47 → 41 % (formula accusatives), gender −1 on four files
+(promoted accusative readings). Participles refused: case +4..+13 but
+attachment −5 / −3 / −2 on Seneca, Aquinas, PROIEL — a right case with
+the wrong owner, the arc belonging to the main verb across the
+participle. Not done: the main verb claiming across a participle, an
+accusative-subject slot on infinitives, the dialect gate.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

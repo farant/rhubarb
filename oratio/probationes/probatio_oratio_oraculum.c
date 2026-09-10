@@ -70,7 +70,7 @@
  * (formae ignotae MDCXXII -> MIX, MDCLXIV -> MLXI), Seneca 834 -> 835
  * (mecum temet glossario) */
 #define CIRCSE_PRIMARIA_PINNA    836   /* T31 a: stella verbi (subiectum) 835 -> 841; T31 b: 841 -> 836 CAUSA NOMINATA (decisio Frani): obiectum verbi - lectio accusativa socii promota classem mutat (XXX verba) */
-#define LLCT_DEV_PRIMARIA_PINNA  865   /* T30 c: variantes mediae formis notis 863 -> 865; T30 e: 865 -> 864 CAUSA NOMINATA (decisio Frani): ordo gradus laxi genitivo primo; T31 a: 864 -> 866; T31 b: 866 -> 865 CAUSA NOMINATA (decisio Frani) */
+#define LLCT_DEV_PRIMARIA_PINNA  866   /* T30 c: variantes mediae formis notis 863 -> 865; T30 e: 865 -> 864 CAUSA NOMINATA (decisio Frani): ordo gradus laxi genitivo primo; T31 a: 864 -> 866; T31 b: 866 -> 865 CAUSA NOMINATA (decisio Frani); T31 c: 865 -> 866 (obiecta infinitivorum) */
 #define LLCT_TEST_PRIMARIA_PINNA 859   /* T30 c: 856 -> 858; T31 a: 858 -> 859 */
 
 
@@ -127,34 +127,34 @@
  * ligatio 441/386/394 -> 462/398/412, EWT dev 815 -> 817, coactae
  * 765/711/712 -> 769/713/717, casus Senecae 660 -> 666; casus chartarum
  * dev 654 -> 653 CAUSA NOMINATA (decisio Frani, VII verba). */
-#define CIRCSE_LIGATIONIS_PINNA    503   /* T27: 431 -> 437; T27 b: 437 -> 441; T28: 441 -> 462; T30 b: 462 -> 463; T31 a: 463 -> 485 (subiectum + lex capitis); T31 b: 485 -> 503 (obiectum verbi) */
-#define CIRCSE_SUBIECTI_PINNA      522   /* T31 a: nativitas 520 - praecisio subiecti (revocatio relata); T31 b: 522 */
-#define CIRCSE_OBIECTI_PINNA       551   /* T31 b: nativitas - praecisio obiecti verbi (revocatio relata) */
-#define LLCT_DEV_LIGATIONIS_PINNA  397   /* T27: 364 -> 368; T27 b: 368 -> 386; T28: 386 -> 398; T30 c: 398 -> 413; T30 e: 413 -> 411 CAUSA NOMINATA; T31 a: 411 -> 402 CAUSA NOMINATA (decisio Frani): gradus laxus subiecti chartis; T31 b: 402 -> 397 CAUSA NOMINATA (decisio Frani): obiecta verbi chartis (praecisio 42 %) */
+#define CIRCSE_LIGATIONIS_PINNA    505   /* T27: 431 -> 437; T27 b: 437 -> 441; T28: 441 -> 462; T30 b: 462 -> 463; T31 a: 463 -> 485 (subiectum + lex capitis); T31 b: 485 -> 503 (obiectum verbi); T31 c: 503 -> 505 (obiecta infinitivorum) */
+#define CIRCSE_SUBIECTI_PINNA      524   /* T31 a: nativitas 520 - praecisio subiecti (revocatio relata); T31 b: 522; T31 c: 524 */
+#define CIRCSE_OBIECTI_PINNA       551   /* T31 b: nativitas - praecisio obiecti verbi (revocatio relata); T31 c: 551 (revocatio 47 -> 52 %) */
+#define LLCT_DEV_LIGATIONIS_PINNA  396   /* T27: 364 -> 368; T27 b: 368 -> 386; T28: 386 -> 398; T30 c: 398 -> 413; T30 e: 413 -> 411 CAUSA NOMINATA; T31 a: 411 -> 402 CAUSA NOMINATA (decisio Frani): gradus laxus subiecti chartis; T31 b: 402 -> 397 CAUSA NOMINATA (decisio Frani): obiecta verbi chartis (praecisio 42 %); T31 c: 397 -> 396 CAUSA NOMINATA (decisio Frani): obiecta infinitivorum chartis (accusativus vicinus ante infinitivum obiectum 16-20 % solum) */
 #define LLCT_DEV_SUBIECTI_PINNA    242   /* T31 a: nativitas 244; T31 b: 244 -> 242 CAUSA NOMINATA (decisio Frani): obiecta verbi socios subiecti praeripiunt */
-#define LLCT_DEV_OBIECTI_PINNA     421   /* T31 b: nativitas */
-#define LLCT_TEST_LIGATIONIS_PINNA 426   /* T27: 377 -> 378; T27 b: 378 -> 394; T28: 394 -> 412; T30 c: 412 -> 428; T30 e: 428 -> 427 CAUSA NOMINATA; T31 a: 427 -> 428; T31 b: 428 -> 426 CAUSA NOMINATA (decisio Frani) */
-#define LLCT_TEST_SUBIECTI_PINNA   395   /* T31 a: nativitas 394; T31 b: 395 */
-#define LLCT_TEST_OBIECTI_PINNA    470   /* T31 b: nativitas */
+#define LLCT_DEV_OBIECTI_PINNA     397   /* T31 b: nativitas; T31 c: 421 -> 397 CAUSA NOMINATA (decisio Frani): obiecta infinitivorum chartis (revocatio 25 -> 31 %) */
+#define LLCT_TEST_LIGATIONIS_PINNA 422   /* T27: 377 -> 378; T27 b: 378 -> 394; T28: 394 -> 412; T30 c: 412 -> 428; T30 e: 428 -> 427 CAUSA NOMINATA; T31 a: 427 -> 428; T31 b: 428 -> 426 CAUSA NOMINATA (decisio Frani); T31 c: 426 -> 422 CAUSA NOMINATA (decisio Frani): obiecta infinitivorum chartis */
+#define LLCT_TEST_SUBIECTI_PINNA   397   /* T31 a: nativitas 394; T31 b: 395; T31 c: 397 */
+#define LLCT_TEST_OBIECTI_PINNA    417   /* T31 b: nativitas; T31 c: 470 -> 417 CAUSA NOMINATA (decisio Frani): obiecta infinitivorum chartis (revocatio 27 -> 33 %) */
 #define EWT_DEV_LIGATIONIS_PINNA   817   /* T28: 815 -> 817 */
 #define EWT_DEV_SUBIECTI_PINNA     0
 #define EWT_DEV_OBIECTI_PINNA      0
 #define EWT_TEST_LIGATIONIS_PINNA  826
 #define EWT_TEST_SUBIECTI_PINNA    0
 #define EWT_TEST_OBIECTI_PINNA     0
-#define CIRCSE_CASUUM_PINNA      704   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666; T30 e: 666 -> 670; T31 a: 670 -> 690; T31 b: 690 -> 704 */
+#define CIRCSE_CASUUM_PINNA      707   /* T27: 645 -> 662; T27 b: 662 -> 660 CAUSA NOMINATA; T28: 660 -> 666; T30 e: 666 -> 670; T31 a: 670 -> 690; T31 b: 690 -> 704; T31 c: 704 -> 707 */
 #define CIRCSE_NUMERI_PINNA   932   /* T29: nativitas 914; T30 b: ordo frequentiae 914 -> 917; T30 e: 917 -> 920; T31 a: 920 -> 931; T31 b: 932 */
-#define CIRCSE_GENERIS_PINNA  909   /* T29: nativitas 837; T30 a: 837 -> 847 valores aurei plures (Fem,Masc), 847 -> 897 conventio communis (decisio Frani); T30 b: 897 -> 907 ordo frequentiae; T30 d: 907 -> 908 gerundivum masculinum demotum; T31 a: 908 -> 913; T31 b: 913 -> 909 CAUSA NOMINATA (decisio Frani): lectio accusativa socii promota genus mutat */
+#define CIRCSE_GENERIS_PINNA  908   /* T29: nativitas 837; T30 a: 837 -> 847 valores aurei plures (Fem,Masc), 847 -> 897 conventio communis (decisio Frani); T30 b: 897 -> 907 ordo frequentiae; T30 d: 907 -> 908 gerundivum masculinum demotum; T31 a: 908 -> 913; T31 b: 913 -> 909 CAUSA NOMINATA (decisio Frani): lectio accusativa socii promota genus mutat; T31 c: 909 -> 908 CAUSA NOMINATA (decisio Frani): obiecta infinitivorum, lectio accusativa socii promota */
 #define CIRCSE_VOCIS_PINNA          991   /* T30 d: nativitas (raritas passivi secundae; 930 ante); T31 a: 982 -> 981 CAUSA NOMINATA (decisio Frani); T31 b: 981 -> 991 (obiectum lectiones finitas rectas promovet) */
 #define CIRCSE_FORMAE_VERBI_PINNA   989   /* T30 d: nativitas (925 ante T30 c; conventio Part/Ger = gerundivum + raritas); T31 a: raritates flexio-rarior + imperativum-futurum 978 -> 981; T31 b: 981 -> 989 */
-#define LLCT_DEV_CASUUM_PINNA    666   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA; T30 c: 653 -> 662; T30 e: 662 -> 665; T31 a: 665 -> 663 CAUSA NOMINATA (decisio Frani): gradus laxus subiecti chartis; T31 b: 663 -> 666 */
+#define LLCT_DEV_CASUUM_PINNA    668   /* T27: 622 -> 644; T27 b: 644 -> 654; T28: 654 -> 653 CAUSA NOMINATA; T30 c: 653 -> 662; T30 e: 662 -> 665; T31 a: 665 -> 663 CAUSA NOMINATA (decisio Frani): gradus laxus subiecti chartis; T31 b: 663 -> 666; T31 c: 666 -> 668 */
 #define LLCT_DEV_NUMERI_PINNA   931   /* T29: nativitas 928; T30 c: 928 -> 925 CAUSA NOMINATA (decisio Frani); T30 e: genitivo primo 925 -> 928; T31 a: 928 -> 930; T31 b: 931 */
 #define LLCT_DEV_GENERIS_PINNA  926   /* T29: nativitas 813; T30 a: conventio communis 813 -> 890; T30 b: ordo frequentiae 890 -> 895; T30 c: 895 -> 913; T30 d: 913 -> 929; T30 e: 929 -> 928 CAUSA NOMINATA (decisio Frani); T31 a: 928 -> 930; T31 b: 930 -> 926 CAUSA NOMINATA (decisio Frani): lectio accusativa socii promota */
 #define LLCT_DEV_VOCIS_PINNA          998   /* T30 d: nativitas (867 ante); T31 b: 999 -> 998 CAUSA NOMINATA (decisio Frani): obiectum verbi, IV verba */
 #define LLCT_DEV_FORMAE_VERBI_PINNA   992   /* T30 d: nativitas (840 ante); T31 a: 986 -> 993; T31 b: 993 -> 992 CAUSA NOMINATA (decisio Frani) */
-#define LLCT_TEST_CASUUM_PINNA   686   /* T27: 637 -> 665; T27 b: 665 -> 671; T30 c: 671 -> 685; T30 e: 685 -> 692; T31 a: 692 -> 684 CAUSA NOMINATA (decisio Frani): gradus laxus subiecti chartis; T31 b: 684 -> 686 */
+#define LLCT_TEST_CASUUM_PINNA   688   /* T27: 637 -> 665; T27 b: 665 -> 671; T30 c: 671 -> 685; T30 e: 685 -> 692; T31 a: 692 -> 684 CAUSA NOMINATA (decisio Frani): gradus laxus subiecti chartis; T31 b: 684 -> 686; T31 c: 686 -> 688 */
 #define LLCT_TEST_NUMERI_PINNA   937   /* T29: nativitas 933; T30 c: 933 -> 932 CAUSA NOMINATA (decisio Frani), ut dev; T30 e: 932 -> 939; T31 a: 939 -> 937 CAUSA NOMINATA (decisio Frani) */
-#define LLCT_TEST_GENERIS_PINNA  927   /* T29: nativitas 810; T30 a: conventio communis 810 -> 885; T30 b: ordo frequentiae 885 -> 892; T30 c: 892 -> 912; T30 d: 912 -> 930; T31 a: 930 -> 929 CAUSA NOMINATA (decisio Frani); T31 b: 929 -> 927 CAUSA NOMINATA (decisio Frani) */
+#define LLCT_TEST_GENERIS_PINNA  926   /* T29: nativitas 810; T30 a: conventio communis 810 -> 885; T30 b: ordo frequentiae 885 -> 892; T30 c: 892 -> 912; T30 d: 912 -> 930; T31 a: 930 -> 929 CAUSA NOMINATA (decisio Frani); T31 b: 929 -> 927 CAUSA NOMINATA (decisio Frani); T31 c: 927 -> 926 CAUSA NOMINATA (decisio Frani): lectio accusativa socii promota */
 #define LLCT_TEST_VOCIS_PINNA          998   /* T30 d: nativitas (870 ante); T31 b: 999 -> 998 CAUSA NOMINATA (decisio Frani) */
 #define LLCT_TEST_FORMAE_VERBI_PINNA   992   /* T30 d: nativitas (832 ante); T31 a: 989 -> 992 */
 #define EWT_DEV_CASUUM_PINNA     0
@@ -167,9 +167,9 @@
 #define EWT_TEST_GENERIS_PINNA  0   /* T29 */
 #define EWT_TEST_VOCIS_PINNA          0   /* T30 d */
 #define EWT_TEST_FORMAE_VERBI_PINNA   0   /* T30 d */
-#define CIRCSE_COACTAE_PINNA     796   /* T27: 764 -> 765; T28: 765 -> 769; T31 a: 769 -> 801 (subiecta: verba decisa); T31 b: 801 -> 796 CAUSA NOMINATA (decisio Frani): obiecta verbi coactae classis socii */
-#define LLCT_DEV_COACTAE_PINNA   744   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA; T28: 711 -> 713; T30 c: 713 -> 719; T30 e: 719 -> 718 CAUSA NOMINATA (decisio Frani); T31 a: 718 -> 742; T31 b: 744 */
-#define LLCT_TEST_COACTAE_PINNA  752   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA; T28: 712 -> 717; T30 c: 717 -> 728; T30 e: 728 -> 727 CAUSA NOMINATA (decisio Frani); T31 a: 727 -> 749; T31 b: 752 */
+#define CIRCSE_COACTAE_PINNA     800   /* T27: 764 -> 765; T28: 765 -> 769; T31 a: 769 -> 801 (subiecta: verba decisa); T31 b: 801 -> 796 CAUSA NOMINATA (decisio Frani): obiecta verbi coactae classis socii; T31 c: 796 -> 800 */
+#define LLCT_DEV_COACTAE_PINNA   751   /* T22: 710 -> 712; T27: 712 -> 711 CAUSA NOMINATA; T28: 711 -> 713; T30 c: 713 -> 719; T30 e: 719 -> 718 CAUSA NOMINATA (decisio Frani); T31 a: 718 -> 742; T31 b: 744; T31 c: 744 -> 751 */
+#define LLCT_TEST_COACTAE_PINNA  760   /* T22: 711 -> 713; T27: 713 -> 712 CAUSA NOMINATA; T28: 712 -> 717; T30 c: 717 -> 728; T30 e: 728 -> 727 CAUSA NOMINATA (decisio Frani); T31 a: 727 -> 749; T31 b: 752; T31 c: 752 -> 760 */
 #define EWT_DEV_COACTAE_PINNA    913
 #define EWT_TEST_COACTAE_PINNA   913
 /* T20a (2026-09-08, decisio XLVII): CLAUSULAE - PURITAS verborum

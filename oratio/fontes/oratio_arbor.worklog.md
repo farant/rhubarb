@@ -3432,3 +3432,60 @@ order of `venit` refused by the carrier law.
 the charters' objects); the dative and ablative kinds; the subject
 refusal once slots fill in order; a dialect-gated anything for the
 charters.
+
+## 2026-09-09 — T31 c: objects on infinitives; participles refused
+
+**Census** (`infinitivum_census.py`, gold only). Active infinitives
+carry an explicit object 38–61 % of the time; the objects are
+accusative 92–99 %, before the infinitive 43–75 %, adjacent 48–60 %
+on classical text but only 8–11 % on the charters. An adjacent free
+accusative before an active infinitive is its object 41–59 %
+(charters 16–20 %), its accusative subject 3–33 % (Aquinas the high
+end, Seneca 3 %), and no dependent of it at all 8–55 % (charters
+72–80 %: the formula's accusatives belong elsewhere); after the
+infinitive, object 50–69 %. Active participles carry an object
+11–36 %; an adjacent free accusative is the participle's object
+39–49 % and belongs to another verb 24–49 % of the time, usually the
+main verb the participle stands between. Gold tags no tense on
+participles outside PROIEL, so no tense split is available.
+
+**Built.** `_obiectum_forma_fert` in the annotator decides which verb
+forms carry the object slot: finite always, infinitives by default,
+participles under `ORATIO_OBIECTUM_INFINITA=participium` (measured,
+refused, kept inactive); `=0` restores finite only. The verb block in
+`_umbras_ponere` no longer requires the finite form; the subject slot
+still does. Same transitivity, voice and rarity conditions; deponent
+infinitives and participles already carry the deponent voice from
+`oratio_partes_la`. No rule change: the strict object rules match any
+`analysis-verbi` bearing the relation, whatever its form.
+
+**Measured** on eight files against 09590900. Infinitives: attachment
+Seneca 503 → 505, Aquinas 612 → 615, Perseus 585 → 586, PROIEL 581 →
+584, Dante 421 → 431; case +2..+4 and forced +4..+10 on every Latin
+file; primary flat; object recall Seneca 47 → 52 %, Aquinas 53 → 63 %,
+PROIEL 55 → 64 %, Dante 45 → 60 %, charters 25 / 27 → 31 / 33 %. The
+new bindings are 57 % right on Seneca and 64–78 % on the shelf, above
+every file's standing precision. Named falls: charters attachment
+397 → 396 / 426 → 422 and object precision 42 → 39 / 47 → 41 % — the
+formula accusatives before infinitives that are not their objects;
+gender −1 on Seneca, charters test, Aquinas and Dante — promoted
+accusative readings, the T31 b cause. Participles on top of that:
+case +4..+13 and gender +2..+6 on every classical file, but attachment
+Seneca −5, Aquinas −3, PROIEL −2, object precision −2..−4 everywhere,
+Seneca primary −1 and forced −4. The participle bindings are 31–56 %
+right, below every file's precision, exactly the census band: the
+accusative is promoted rightly while the arc goes to the wrong verb.
+A right case with a wrong owner is the loose-tier shape again.
+Refused, Fran's decision.
+
+**Pins**, Seneca / charters dev / test: primary 836 / 866 / 859,
+forced 800 / 751 / 760, case 707 / 668 / 688, number 932 / 931 / 937,
+gender 908 / 926 / 926, attachment 505 / 396 / 422, subject precision
+524 / 242 / 397, object precision 551 / 397 / 417, verb form and
+voice unchanged.
+
+**Not done.** Participle objects: what they need is the main verb
+claiming an accusative across an intervening participle, the
+distant-object question refused at T31 b. The accusative subject of
+infinitives as a slot of its own. The dialect gate for the charters,
+whose infinitive objects are nine tenths non-adjacent.

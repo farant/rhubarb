@@ -798,9 +798,19 @@ may fill a slot but never decide a class (without it homograph nouns
 INACTIVE. Seneca attachment 485 → 503, case 690 → 704, object precision
 55 % at recall 47 %, shelf attachment +10..+26; named falls 1–5 on
 Seneca primary/forced/gender and charters gender/attachment — Fran's
-decision. NEXT = objects on infinitives, dialect-gated loose subject
-tier, acc+inf subjects, §8.5 template family, capitalised known forms,
-derived gender for commune.
+decision. **T31 c (2026-09-09): OBJECTS ON INFINITIVES.** The object
+slot goes on infinitive readings too (`_obiectum_forma_fert`;
+`ORATIO_OBIECTUM_INFINITA=0|infinitivum|participium`); the subject
+slot stays finite. Attachment up on every classical file (Dante +10),
+case and forced up everywhere, object recall Seneca 47 → 52 %; charters
+attachment −1/−4 NAMED (an accusative before a charter infinitive is
+its object 16–20 % only). PARTICIPLES MEASURED AND REFUSED: case
++4..+13 but attachment −5/−3/−2 — the accusative is promoted rightly
+and the arc goes to the participle instead of the main verb it stands
+between (a right case with the wrong owner); kept inactive. NEXT =
+dialect-gated loose subject tier, acc+inf subjects (a slot of their
+own), the main verb claiming across a participle, §8.5 template
+family, capitalised known forms, derived gender for commune.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
