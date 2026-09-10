@@ -42,7 +42,8 @@ seven-file Latin list.
 | `relationes.sh x.tsv` | subject and object precision and recall per file |
 | `grep CONTESTA x.tsv` | contested dependents, claims on them, right claims (T32 a) |
 | `grep TECTUM x.tsv` | arc coverage per file: umbrae with any claim, with a right claim, right primaries, alternatives, right alternatives (T32 b) |
-| `contentiones.py <mensura.tsv> [file-part]` | the contest table: per (winner rule, loser rule) how many contests and how often the loser was right — the tie-break census (T32 b) |
+| `contentiones.py <mensura.tsv> [file-part]` | the contest table: per (winner rule, loser rule) contests, loser right, loser right ALONE (winner's actual head wrong), winner right alone — same-head contests are reading contests and count as neither (T32 b/c) |
+| `contentiones.py <mensura.tsv> -scribere [out]` | writes `oratio/probationes/fixa/contentiones.tsv` (discriminating contests per pair, pinned files only) — the judge's table, inactive (`ORATIO_IUDEX=1`), T32 c refused |
 | `errata_delta.py A B [nota…]` | feature errata deltas between two `-errata -nota` runs |
 
 The baseline for a measurement is the tsv of the committed state; keep

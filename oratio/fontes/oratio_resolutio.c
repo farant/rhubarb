@@ -180,9 +180,10 @@ oratio_resolutio_programma_legere (
         vitium->causa = "memoria";
         redde NIHIL;
     }
-    p->textus   = _copia(piscina, textus);
-    p->regulae  = xar_creare(piscina, (i32)magnitudo(OratioRegula));
-    p->fiducia  = NIHIL;   /* T32 a: onerare ponit */
+    p->textus = _copia(piscina, textus);
+    p->regulae = xar_creare(piscina, (i32)magnitudo(OratioRegula));
+    p->fiducia = NIHIL;   /* T32 a: onerare ponit */
+    p->contentiones = NIHIL;   /* T32 c */
     si (p->textus.datum == NIHIL || p->regulae == NIHIL)
     {
         vitium->causa = "memoria";
@@ -336,6 +337,189 @@ _fiduciam_onerare (
     redde VERUM;
 }
 
+/* T32 c: IUDICIUM contentionis (par regularum) */
+nomen structura {
+    i32 numerus;
+    i32 permille;   /* victae rectae */
+} Iudicium;
+
+/* T32 c: tabulam iudicis legere (radix/oratio/probationes/fixa/
+ * contentiones.tsv: '#' commentum; victor TAB victa TAB numerus TAB rectae
+ * TAB permille) in programma->contentiones; plagula absens = NIHIL.
+ * FALSUM = memoria sola. */
+interior b32
+_contentiones_onerare (
+               Piscina* piscina,
+    constans character* radix,
+       OratioProgramma* programma)
+{
+    character via[1024];
+       chorda fons;
+          i32 i = ZEPHYRUM;
+
+    sprintf(via, "%s/oratio/probationes/fixa/contentiones.tsv", radix);
+    si (!_plagulam_legere(piscina, via, &fons))
+    {
+        redde VERUM;
+    }
+    programma->contentiones = tabula_dispersa_creare_chorda(piscina,
+        (i32)256);
+    si (programma->contentiones == NIHIL)
+    {
+        redde FALSUM;
+    }
+    dum (i < fons.mensura)
+    {
+        i32 finis = i;
+        i32 campi[5];
+        i32 n = ZEPHYRUM;
+        i32 k;
+
+        dum (finis < fons.mensura && fons.datum[finis] != '\n')
+        {
+            finis = finis + I;
+        }
+        si (finis > i && fons.datum[i] != '#')
+        {
+            campi[n]  = i;
+            n         = I;
+            per (k = i; k < finis && n < (i32)V; k++)
+            {
+                si (fons.datum[k] == '\t')
+                {
+                    campi[n]  = k + I;
+                    n         = n + I;
+                }
+            }
+            si (n == (i32)V)
+            {
+                /* clavis = victor TAB victa (campi 0..1 contigui) */
+                chorda clavis = _copia(piscina, _chorda(fons.datum
+                    + campi[ZEPHYRUM], campi[(i32)II] - I
+                    - campi[ZEPHYRUM]));
+                s32 numerus = _numerus_decimalis(_chorda(fons.datum
+                    + campi[(i32)II], campi[(i32)III] - I
+                    - campi[(i32)II]));
+                s32 permille = _numerus_decimalis(_chorda(fons.datum
+                    + campi[(i32)IV], finis - campi[(i32)IV]));
+                Iudicium* valor = (Iudicium*)piscina_allocare(piscina,
+                    (memoriae_index)magnitudo(Iudicium));
+
+                si (valor == NIHIL || clavis.datum == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                valor->numerus   = numerus >= ZEPHYRUM ? (i32)numerus
+                    : ZEPHYRUM;
+                valor->permille  = permille >= ZEPHYRUM ? (i32)permille
+                    : ZEPHYRUM;
+                (vacuum)tabula_dispersa_inserere(programma->contentiones,
+                    clavis, valor);
+            }
+        }
+        i = finis + I;
+    }
+    redde VERUM;
+}
+
+/* IUDEX CONTENTIONUM ex tabula parium (T32 c, 2026-09-09): MENSURATUS ET
+ * RECUSATUS (R19). Tabula primo arcus solos numerabat: par 'subiectum
+ * vicinum > obiectum vicinum' (1764 contentiones, victa recta 85 %)
+ * arcum EUNDEM habet (verbum idem) - contentio LECTIONIS (nom/acc), non
+ * arcus; flexa casum -19 Senecae perdidit. Numeris coniunctis (victa
+ * sola contra caput victoris) paria discriminantia pauca manent
+ * (caput-sequente > obiectum-praecedente 944, obiectum-sequente >
+ * obiectum-accusativi 972, caput-incerti > subiectum 852) et iudex
+ * limine D: Seneca ligatio +4 arcus recti +43, chartae ligatio -9/-9,
+ * casus -4/-2/-1; limine DCCC supportu XXX: arcus recti ubique sursum
+ * (+9..+79) sed ligatio chartae -5/-5, Dante -2, casus -3/-3/-2,
+ * coactae -2/-6/-4. Iudex lectionum (casus aureus socii) desideratur.
+ * ORATIO_IUDEX=1 activat (mensura); ORATIO_IUDEX_LIMEN=permille
+ * (ordinarium D), ORATIO_IUDEX_MINIMUM=numerus (ordinarium XX). */
+interior b32
+_iudex_parametra (
+    i32* limen,
+    i32* numerus_minimus)
+{
+    hic_manens i32 lectum     = ZEPHYRUM;
+    hic_manens b32 activus    = FALSUM;
+    hic_manens i32 limen_h    = (i32)D;
+    hic_manens i32 minimus_h  = (i32)XX;
+
+    si (!lectum)
+    {
+        constans character* a = getenv("ORATIO_IUDEX");
+        constans character* l = getenv("ORATIO_IUDEX_LIMEN");
+        constans character* s = getenv("ORATIO_IUDEX_MINIMUM");
+
+        activus = (b32)(a != NIHIL && strcmp(a, "1") == ZEPHYRUM);
+        si (l != NIHIL && atoi(l) > ZEPHYRUM)
+        {
+            limen_h = (i32)atoi(l);
+        }
+        si (s != NIHIL && atoi(s) > ZEPHYRUM)
+        {
+            minimus_h = (i32)atoi(s);
+        }
+        lectum = I;
+    }
+    *limen            = limen_h;
+    *numerus_minimus  = minimus_h;
+    redde activus;
+}
+
+/* T32 c IUDEX CONTENTIONUM: par (stans, nova) in tabula cum supportu et
+ * victa recta >= limen -> +I (nova vincit: ordo hodiernus errat); par
+ * inversum (nova, stans) ita -> -I (stans manet); aliter 0 (fiducia
+ * decidit). Tabula: census contentionum statu ante iudicem (T32 b),
+ * plagulis pinnatis; scrinium validatio. */
+interior s32
+_iudex_contentionis (
+    constans OratioProgramma* programma,
+                     Piscina* scratch,
+                      chorda  stans,
+                      chorda  nova)
+{
+    i32 limen;
+    i32 numerus_minimus;
+    i32 k;
+
+    si (   !_iudex_parametra(&limen, &numerus_minimus)
+        || programma->contentiones == NIHIL
+        || stans.mensura == ZEPHYRUM || nova.mensura == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < (i32)II; k++)
+    {
+           chorda  a = k == ZEPHYRUM ? stans : nova;
+           chorda  b = k == ZEPHYRUM ? nova : stans;
+        character* datum = (character*)piscina_allocare(scratch,
+            (memoriae_index)(a.mensura + b.mensura + I));
+        vacuum* valor;
+
+        si (datum == NIHIL)
+        {
+            redde ZEPHYRUM;
+        }
+        memcpy(datum, a.datum, (size_t)a.mensura);
+        datum[a.mensura] = '\t';
+        memcpy(datum + a.mensura + I, b.datum, (size_t)b.mensura);
+        si (tabula_dispersa_invenire(programma->contentiones,
+                _chorda((i8*)datum, a.mensura + I + b.mensura), &valor))
+        {
+            constans Iudicium* iud = (constans Iudicium*)valor;
+
+            si (   iud->numerus  >= numerus_minimus
+                && iud->permille >= limen)
+            {
+                redde k == ZEPHYRUM ? (s32)I : (s32)-I;
+            }
+        }
+    }
+    redde ZEPHYRUM;
+}
+
 /* fiducia regulae titulo: permille aut -I ignota */
 interior s32
 _fiducia_regulae (
@@ -482,7 +666,9 @@ oratio_resolutio_programma_onerare (
         OratioProgramma* p = oratio_resolutio_programma_legere(piscina,
             intern, fons, vitium);
 
-        si (p != NIHIL && !_fiduciam_onerare(piscina, radix, p))
+        si (   p != NIHIL
+            && (   !_fiduciam_onerare(piscina, radix, p)
+                || !_contentiones_onerare(piscina, radix, p)))
         {
             redde NIHIL;
         }
@@ -2303,6 +2489,7 @@ _sententiam_resolvere_gradu (
                     s32  fides = titulus != NIHIL
                         ? _fiducia_regulae(cursus->programma, *titulus)
                         : (s32)-I;
+                s32 iudicium = ZEPHYRUM;   /* T32 c */
 
                 /* LEX CAPITIS IN CONTENTIONE: socius w adiectivum capiti
                  * vicino iam ligatum - petitio subiecti/obiecti ad caput
@@ -2367,7 +2554,20 @@ _sententiam_resolvere_gradu (
                                                   "numerus")
                                                       == numerus_umbrae));
                         }
+                        /* T32 c: iudex - si tabula petitionem in adiectivum
+                         * rectam dicit (caput-praecedente > subiectum
+                         * 84 %), contentio infra caput revocat */
                         si (!licet)
+                        {
+                            iudicium =
+                                _iudex_contentionis(cursus->programma,
+                                scratch,
+                                _auctor_petitionis(petitio->umbra,
+                                    impletiones),
+                                titulus != NIHIL ? *titulus
+                                    : _chorda(NIHIL, ZEPHYRUM));
+                        }
+                        si (!licet && iudicium <= ZEPHYRUM)
                         {
                             si (cursus->census != NIHIL)
                             {
@@ -2390,23 +2590,34 @@ _sententiam_resolvere_gradu (
                             }
                             perge;
                         }
-                        w          = (i32)w2;
-                        b          = (i32)b2;
-                        dependens  = w;
-                        petitio    = &capita_data[dependens];
-                        si (cursus->census != NIHIL)
+                        si (licet)
                         {
-
-                            cursus->census->ad_caput_secutae =
-                                cursus->census->ad_caput_secutae + I;
+                            w          = (i32)w2;
+                            b          = (i32)b2;
+                            dependens  = w;
+                            petitio    = &capita_data[dependens];
+                            si (cursus->census != NIHIL)
+                            {
+                                cursus->census->ad_caput_secutae =
+                                    cursus->census->ad_caput_secutae
+                                        + I;
+                            }
                         }
                     }
                 }
                 si (petitio->umbra != NIHIL && petitio->umbra != umbra)
                 {
-                    /* CONTENTIO (fiducia): petitio fidelior stantem revocat */
-                    si (   (_fiducia_modus() & (i32)II)
-                        && fides > petitio->fides)
+                    /* CONTENTIO: iudex (T32 c, tabula parium) primum, deinde
+                     * fiducia (T32 a): petitio fidelior stantem revocat */
+                    iudicium = _iudex_contentionis(cursus->programma,
+                        scratch,
+                        _auctor_petitionis(petitio->umbra, impletiones),
+                        titulus != NIHIL ? *titulus : _chorda(NIHIL,
+                        ZEPHYRUM));
+                    si (   iudicium > ZEPHYRUM
+                        || (   iudicium == ZEPHYRUM
+                            && (_fiducia_modus() & (i32)II)
+                            && fides > petitio->fides))
                     {
                         /* T32 b: petitio stans alterna (revocata) suae
                          * umbrae fit antequam vacuetur */

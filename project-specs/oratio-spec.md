@@ -2112,6 +2112,20 @@ nominative/accusative word 1764 times and the object was right 85 %.
 Not done: tie-break by relation pair and adjacency inside contests,
 per-dialect trust table, promotion laws over alternatives.
 
+**As built — T32 c, the contest judge from the pair table, refused
+(2026-09-09).** `oratio/probationes/fixa/contentiones.tsv` (pairs with
+joint counts: loser right while the winner, the primary head of the
+same dependent, was wrong; same-head contests discriminate nothing)
+read by the executor and consulted before trust (`ORATIO_IUDEX=1`,
+inactive). The first fit exposed a flaw in the contest census: the
+adjacent subject-versus-object contest is a reading contest on one
+arc, invisible to the arc oracle, and flipping it cost case −19 on
+Seneca. With the corrected census only four pairs discriminate; the
+judge at 500 / 20 and at 800 / 30 gains right arcs but costs the pinned
+files case, forced and charter attachment. REFUSED (R19). Next
+instrument: a case-aware contest census (loser's and winner's reading
+against the partner's gold case).
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

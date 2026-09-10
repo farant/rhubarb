@@ -94,6 +94,11 @@ nomen structura {
     chorda victa;
        i32 numerus;
        i32 victae_rectae;
+    /* T32 c: numeri CONIUNCTI - victa recta VICTORE FALSO (flectendum) et
+     * victor rectus VICTA FALSA (servandum); arcus ambo eodem capite (subiectum
+     * contra obiectum eiusdem verbi) in neutro - contentio lectionis, non arcus */
+       i32 victa_sola;
+       i32 victor_solus;
 } OratioOraculumContentio;
 
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius

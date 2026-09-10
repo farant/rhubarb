@@ -843,13 +843,14 @@ _machinam_imprimere (
                     *(OratioOraculumContentio**)xar_obtinere(contentiones,
                     j);
 
-                imprimere("%s\tCONTENTIO\t%.*s\t%.*s\t%d\t%d\n",
+                imprimere("%s\tCONTENTIO\t%.*s\t%.*s\t%d\t%d\t%d\t%d\n",
                     titulus,
                     (integer)ct->victor.mensura,
                     (constans character*)ct->victor.datum,
                     (integer)ct->victa.mensura,
                     (constans character*)ct->victa.datum,
-                    (integer)ct->numerus, (integer)ct->victae_rectae);
+                    (integer)ct->numerus, (integer)ct->victae_rectae,
+                    (integer)ct->victa_sola, (integer)ct->victor_solus);
             }
         }
         /* T32 a: ordo CONTESTA dependentes petitiones rectae */

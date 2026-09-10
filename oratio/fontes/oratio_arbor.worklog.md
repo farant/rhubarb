@@ -3684,3 +3684,52 @@ rather than guessed.
 **Not done.** The tie-break inside contests (relation pair and
 adjacency below trust), the per-dialect trust table, promotion of
 alternatives by later laws, the strict-decided tier.
+
+## 2026-09-09 — T32 c: the contest judge from the pair table, measured and refused; the census corrected
+
+**The plan.** A tie-break below trust, read off the contest table: for
+a pair (winner rule, loser rule) where the loser was right more than
+half the time with enough support, the loser wins. A second fitted
+table, `oratio/probationes/fixa/contentiones.tsv`, written by
+`census/contentiones.py -scribere` from the pinned files, read by the
+executor (`_contentiones_onerare`, `_iudex_contentionis`), consulted
+before the trust comparison and also where the redirect to an
+adjacent head fails.
+
+**First fit, and why it was wrong.** The headline pair, adjacent
+subject beats adjacent object on a word with both readings, 1764
+contests, loser right 85 %: both claims hang the word on the SAME
+verb. The arc oracle judges heads, not relations, so both claims are
+right together, and the contest is about the reading, nominative
+against accusative, which the arc census cannot see. Flipping it
+promoted accusative readings: case −19 on Seneca, −10 / −16 on the
+charters. Second fit with joint counts, loser right while the winner
+was wrong, was still wrong, because an alternative lives on the
+loser's umbra and I had compared it with that umbra's own primary.
+Third fit: the oracle now remembers the primary head each dependent
+received and judges the loser against THAT; contests with the same
+head count as neither. The same-verb pair vanishes from the
+discriminating table, as it should.
+
+**What discriminates.** Few pairs: adjacent head-following beats
+adjacent object-preceding (125, loser right alone 94 %), adjacent
+object-following beats the adposition object rule (36, 97 %), the
+unknown-noun head rule beats the adjacent subject rule (34, 85 %),
+accusative-following beats nominative-following in the loose tier (48,
+67 %). Everything else is under 25 % or under 20 contests.
+
+**Measured, nine files.** Threshold 500 / support 20: Seneca
+attachment 526 → 530 and +43 right arcs, case 714 → 710; charters
+attachment 459 → 450 / 480 → 471, primary −1 / −1, forced −5 / −3;
+shelf mixed. Threshold 800 / support 30: right arcs up on every file
+(+9 to +79) but attachment charters −5 / −5, Dante −2, case −3 / −3 /
+−2, forced −2 / −6 / −4 on the pinned files. REFUSED (R19): the pinned
+files lose case, forced and attachment for a recall gain the floor
+would allow but the pins would not. Kept in the code inactive
+(`ORATIO_IUDEX=1`), the table committed as the measured artifact.
+
+**What it taught.** The contests that matter most are reading
+contests on a single arc, and the instrument to judge them is a
+case-aware contest census: for each contest, whether the loser's
+reading matches the partner's gold case and whether the winner's
+does. That is the next instrument before any judge.

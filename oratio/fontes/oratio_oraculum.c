@@ -442,7 +442,8 @@ _contentionem_notare (
     OratioOraculumCensus* census,
                   chorda  victor,
                   chorda  victa,
-                     b32  recta)
+                     b32  recta,
+                     b32  victor_rectus)
 {
                         vacuum*  valor;
        OratioOraculumContentio*  c;
@@ -504,6 +505,14 @@ _contentionem_notare (
     si (recta)
     {
         c->victae_rectae = c->victae_rectae + I;
+    }
+    si (recta && !victor_rectus)
+    {
+        c->victa_sola = c->victa_sola + I;
+    }
+    si (victor_rectus && !recta)
+    {
+        c->victor_solus = c->victor_solus + I;
     }
 }
 
@@ -2478,6 +2487,7 @@ _ligationes_iudicare (
     s32* elementum;    /* index lexematis -> index elementi; -I */
     i32* petitiones;   /* T32 a: petitiones dependentis per elementum */
     i32* petitiones_rectae;
+    s32* caput_nostrum;   /* T32 c: caput primae petitionis dependentis; -I */
     i32  k;
 
     per (k = ZEPHYRUM; k < n; k++)
@@ -2501,8 +2511,11 @@ _ligationes_iudicare (
         (memoriae_index)(ne + I) * (memoriae_index)magnitudo(i32));
     petitiones_rectae = (i32*)piscina_allocare(scratch,
         (memoriae_index)(ne + I) * (memoriae_index)magnitudo(i32));
-    si (   positio    == NIHIL || caput == NIHIL || elementum == NIHIL
-        || petitiones == NIHIL || petitiones_rectae == NIHIL)
+    caput_nostrum = (s32*)piscina_allocare(scratch,
+        (memoriae_index)(ne + I) * (memoriae_index)magnitudo(s32));
+    si (   positio == NIHIL || caput == NIHIL || elementum == NIHIL
+        || petitiones == NIHIL || petitiones_rectae == NIHIL
+        || caput_nostrum == NIHIL)
     {
         redde FALSUM;
     }
@@ -2510,6 +2523,7 @@ _ligationes_iudicare (
     {
         petitiones[k]         = ZEPHYRUM;
         petitiones_rectae[k]  = ZEPHYRUM;
+        caput_nostrum[k]      = (s32)-I;
     }
     per (k = ZEPHYRUM; k <= (i32)id_maximus; k++)
     {
@@ -2686,6 +2700,13 @@ _ligationes_iudicare (
                     petitiones_rectae[dependens] =
                         petitiones_rectae[dependens] + I;
                 }
+                /* T32 c: caput primae petitionis dependentis (prima vincit) */
+                si (caput_nostrum[dependens] < ZEPHYRUM)
+                {
+                    caput_nostrum[dependens] =
+                        pendet ? (s32)w->datum.index
+                        : (s32)k;
+                }
             }
             /* T31 a: per relationem */
             si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
@@ -2776,8 +2797,9 @@ _ligationes_iudicare (
             constans MateriaValor* alternae =
                 &umbra->loci[ORATIO_UMBRA_ALTERNAE];
                            b32 pendet;
-                           b32 aliqua  = FALSUM;
-                           b32 tecta   = FALSUM;
+                           b32 aliqua       = FALSUM;
+                           b32 tecta        = FALSUM;
+                           b32 prima_recta  = FALSUM;   /* T32 c */
                            i32 x;
 
             {
@@ -2802,10 +2824,11 @@ _ligationes_iudicare (
 
                 si (socius->lexema >= ZEPHYRUM)
                 {
-                    aliqua = VERUM;
-                    tecta  = (b32)(tecta || (pendet
+                    aliqua       = VERUM;
+                    prima_recta  = (b32)(pendet
                         ? caput[e->lexema] == socius->lexema
-                        : caput[socius->lexema] == e->lexema));
+                        : caput[socius->lexema] == e->lexema);
+                    tecta        = (b32)(tecta || prima_recta);
                 }
             }
             per (x = ZEPHYRUM; alternae->genus == MATERIA_VALOR_LISTA
@@ -2840,6 +2863,37 @@ _ligationes_iudicare (
                     ? (b32)(caput[e->lexema] == socius->lexema)
                     : (b32)(caput[socius->lexema] == e->lexema);
                 tecta = (b32)(tecta || recta);
+                /* T32 c: victor = petitio prima eiusdem dependentis; caput
+                 * idem = arcus idem (contentio lectionis, non arcus):
+                 * neuter solus */
+                {
+                    i32 dependens_a = pendet ? k
+                        : (i32)socius_alternae->datum.index;
+                    i32 caput_a     =
+                        pendet ? (i32)socius_alternae->datum.index
+                        : k;
+                    s32 caput_v     = caput_nostrum[dependens_a];
+
+                    si (caput_v >= ZEPHYRUM && (i32)caput_v != caput_a)
+                    {
+                        constans Elementum* dependens_e =
+                            (constans Elementum*)
+                            xar_obtinere(elementa, dependens_a);
+                        constans Elementum* cap_e =
+                            (constans Elementum*)
+                            xar_obtinere(elementa, (i32)caput_v);
+
+                        prima_recta = (b32)(dependens_e->lexema
+                            >= ZEPHYRUM
+                            && cap_e->lexema >= ZEPHYRUM
+                            && caput[dependens_e->lexema]
+                                == cap_e->lexema);
+                    }
+                    alioquin
+                    {
+                        prima_recta = recta;   /* arcus idem aut nullus */
+                    }
+                }
                 census->alternae_numerus = census->alternae_numerus + I;
                 si (recta)
                 {
@@ -2853,7 +2907,7 @@ _ligationes_iudicare (
                 {
                     _contentionem_notare(piscina, census,
                         victor->datum.token->valor,
-                        auctor->datum.token->valor, recta);
+                        auctor->datum.token->valor, recta, prima_recta);
                 }
             }
             si (aliqua)

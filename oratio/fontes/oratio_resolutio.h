@@ -61,6 +61,11 @@ nomen structura {
      * NIHIL = plagula absens). ORATIO_FIDUCIA=1: regulae graduum II+
      * ordine fiduciae applicantur (petitio fidelior prior). */
     TabulaDispersa* fiducia;
+    /* T32 c (2026-09-09): TABULA IUDICIS CONTENTIONUM - clavis 'victor TAB
+     * victa' -> Iudicium (numerus, permille victae rectae) ex
+     * oratio/probationes/fixa/contentiones.tsv (census contentionum
+     * plagularum pinnatarum ante iudicem); NIHIL = plagula absens. */
+    TabulaDispersa* contentiones;
 } OratioProgramma;
 
 /* census per regulam: ordines applicati (vocabula quorum praelatio

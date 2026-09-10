@@ -850,7 +850,15 @@ Aquinas 447, charters ~100 — Seneca's residual is RANKING, the
 charters' is PROPOSAL. Contest census: adjacent subject beats adjacent
 object on a nom/acc word 1764× and the object was right 85 % → the
 tie-break of the next tranche. `census/contentiones.py`,
-`grep TECTUM|CONTENTIO`.
+`grep TECTUM|CONTENTIO`. **T32 c (2026-09-09): CONTEST JUDGE FROM
+THE PAIR TABLE — REFUSED (R19).** The arc census lied once: adjacent
+subject vs adjacent object on one word is the SAME arc (same verb), a
+READING contest the arc oracle cannot judge; flipping it cost case −19.
+Census corrected (loser judged against the winner's actual head, same
+head = neither); four discriminating pairs remain; the judge
+(`fixa/contentiones.tsv`, `ORATIO_IUDEX=1`, inactive) gains right arcs
+but costs pinned case/forced/charter attachment. NEXT instrument = a
+CASE-AWARE contest census.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
