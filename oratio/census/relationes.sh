@@ -1,0 +1,1 @@
+grep 'LIGATIO-RELATIO' "$1" | awk -F'\t' '($3=="subiectum" || $3=="obiectum-verbi") && $1 !~ /ewt/ {split($1,a,"/"); printf "   %-26s %-15s %5d nostrae %5d rectae = %3d%%  revocatio %d%%\n", a[length(a)], $3, $4, $5, ($4?100*$5/$4:0), ($6?100*$5/$6:0)}'

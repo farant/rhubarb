@@ -811,6 +811,20 @@ between (a right case with the wrong owner); kept inactive. NEXT =
 dialect-gated loose subject tier, acc+inf subjects (a slot of their
 own), the main verb claiming across a participle, §8.5 template
 family, capitalised known forms, derived gender for commune.
+**T31 d (2026-09-09): MULTIPASS PROBE + CENSUS HOME + REFUSAL
+REGISTRY.** A naive second resolution pass (`ORATIO_RESOLUTIO_CURSUS=2`)
+is inert on classical text and −5/−6 attachment on the charters: the
+greedy rules re-fire on readings reordered by untrusted authors (new
+arcs 2–19 % right); the omnes tiers see nothing new. Prior off
+(`ORATIO_RESOLUTIO_PRIOR_ULTIMO=numquam`): case −41/−53/−63 but gender
++9 (the prior picks number/gender with the case). DECIDED ORDER: trust
+table from the auctor tables → one head per word, best-wins → a
+strict-decided tier. The gold census scripts and the measurement
+harness live in `oratio/census/` (README there; `conllu.py` shared
+reader). Refusals carry their COMPONENT in `oratio/recusata.md`
+(annotatio | exsecutor | regulae | substratum | oraculum) and a retry
+condition — a refusal is a fact about the configuration it was
+measured against.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

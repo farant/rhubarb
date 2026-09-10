@@ -3489,3 +3489,56 @@ claiming an accusative across an intervening participle, the
 distant-object question refused at T31 b. The accusative subject of
 infinitives as a slot of its own. The dialect gate for the charters,
 whose infinitive objects are nine tenths non-adjacent.
+
+## 2026-09-09 — T31 d: the multipass probe, the census moved home, the refusal registry
+
+**The probe.** Fran asked whether re-evaluating decisions in the light
+of other decisions (a multipass) would pay. The cheapest test needed
+no new machinery: run the resolution a second time on its own output.
+A switch in `oratio_resolutio_applicare` does it
+(`ORATIO_RESOLUTIO_CURSUS=N`; `ORATIO_RESOLUTIO_PRIOR_ULTIMO=1` runs the
+case prior only in the last pass, `=numquam` never; default one pass,
+prior active, nothing changes). Two passes: inert on classical text
+(attachment −1..−3, primary flat) and harmful on the charters
+(attachment 396 → 391 / 422 → 416). The author and relation tables
+explain it: the second pass adds about a hundred arcs per charter file
+from the GREEDY rules, adposition objects at 19 % right and the literal
+head tier at 2 %, because pass one reordered readings through the
+loose tier, the law of umbrae and the prior, and a greedy capture
+takes the first reading met. The strict tiers use every completion, so
+order tells them nothing and they add nothing. Prior-last was
+byte-identical. Reading decisions did improve slightly (a hundred
+charter words moved from the law of umbrae to the strict head rule at
+70 %), which is why case rose while attachment fell: right case, wrong
+owner, for the third time this week.
+
+**Side finding.** With the prior off entirely, case falls 41 on Seneca
+and 53 / 63 on the charters, so the prior still earns its place; but
+gender rises 9 and number 4 on Seneca and both rise on every Latin
+file. The prior picks a reading by case and takes whatever number and
+gender that reading carries. A case-only prior that keeps the standing
+number and gender where a reading of the target case allows it is a
+cheap future experiment.
+
+**What the probe decides.** Feedback through reading order is real and
+poisonous; the rules must see decisions as features; and nothing in a
+later pass can correct an earlier one while a filled claim is never
+contested. So the order of work, Fran's decision: trust from the
+auctor tables as a fixed artifact the executor reads, one head per
+word with best-wins, then a strict-decided tier. Encoding before
+readout before rules — the DKC hierarchy read into oratio.
+
+**The census moved home.** Every census script of the last week lived
+in the session scratchpad. They are now `oratio/census/` with a shared
+CoNLL-U reader (`conllu.py`), Latin names, a README, and the
+measurement harness (`metire.sh`, `compara.py`, `notae.py`,
+`relationes.sh`, `errata_delta.py`) beside them. Each moved script was
+checked byte-for-byte against its original on the same files.
+
+**The refusal registry.** `oratio/recusata.md` lists sixteen refusals
+with the pipeline component each wall sat in (annotatio, exsecutor,
+regulae, substratum, oraculum) and the condition under which it is
+re-measured. Four of this week's refusals are readout or encoding
+walls, not rule walls: the loose object tier, the partner refusals,
+the participle slot, the naive second pass. They come back for
+measurement once the one-head law and the trust table exist.

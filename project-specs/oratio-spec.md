@@ -2059,6 +2059,18 @@ the wrong owner, the arc belonging to the main verb across the
 participle. Not done: the main verb claiming across a participle, an
 accusative-subject slot on infinitives, the dialect gate.
 
+**As built — T31 d, the multipass probe, the census home and the
+refusal registry (2026-09-09).** A second resolution pass over the
+resolved tree (`ORATIO_RESOLUTIO_CURSUS=N`, prior placement
+`ORATIO_RESOLUTIO_PRIOR_ULTIMO`) is inert on classical text and costs
+the charters attachment: greedy rules re-fire on readings reordered by
+untrusted authors; the every-completion tiers gain nothing from order.
+Decided order for the multipass proper: a trust table compiled from
+the auctor tables, one head per word with best-wins, a strict-decided
+tier. The census scripts and the measurement harness are in
+`oratio/census/`; refusals are registered with their pipeline
+component and retry condition in `oratio/recusata.md`.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

@@ -27,6 +27,8 @@ nomen structura {
                            s32  regulae_numerus;
             constans character* lingua;
          OratioResolutioCensus* census;
+    /* probatio cursuum plurium (2026-09-09): prior casuum hoc cursu? */
+                           b32 prior_activus;
 } Cursus;
 
 interior chorda
@@ -3007,7 +3009,7 @@ _sententiam_resolvere (
             cursus->lingua,
             cursus->census != NIHIL ? &cursus->census->clausulae
                 : NIHIL)
-        && (!PRIOR_CASUUM
+        && (!PRIOR_CASUUM || !cursus->prior_activus
         || _prior_casuum(cursus, sententia, decisiones));
 }
 
@@ -3079,5 +3081,36 @@ oratio_resolutio_applicare (
     cursus.regulae_numerus  = regulae_numerus;
     cursus.lingua           = lingua;
     cursus.census           = census;
-    redde _sententias_resolvere(&cursus, radix);
+    /* PROBATIO cursuum plurium (2026-09-09): ORATIO_RESOLUTIO_CURSUS=N
+     * resolutionem N-ies super arborem iam resolutam currit (regulae
+     * decisiones cursus prioris vident: lectiones permutatae, umbrae
+     * impletae; decisio scripta reponitur); ORATIO_RESOLUTIO_PRIOR_ULTIMO=1
+     * priorem casuum cursu ultimo solo currit (T24: prior quod regulae
+     * vident mutare non debet). Ordinarium: cursus unus, prior activus. */
+    {
+        constans character* ambitus = getenv("ORATIO_RESOLUTIO_CURSUS");
+        constans character* ultimo =
+            getenv("ORATIO_RESOLUTIO_PRIOR_ULTIMO");
+                       i32 numerus = (ambitus != NIHIL
+                           && atoi(ambitus) > I)
+                                    ? (i32)atoi(ambitus) : I;
+                       i32 i;
+
+        per (i = I; i <= numerus; i++)
+        {
+            cursus.prior_activus = (b32)(   ultimo == NIHIL
+                                         || (   strcmp(ultimo, "1")
+                                             != ZEPHYRUM
+                                             && strcmp(ultimo,
+                                             "numquam") != ZEPHYRUM)
+                                         || (   strcmp(ultimo, "1")
+                                             == ZEPHYRUM
+                                             && i == numerus));
+            si (!_sententias_resolvere(&cursus, radix))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
 }
