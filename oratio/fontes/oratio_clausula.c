@@ -1321,17 +1321,17 @@ _impletiones_lectionis_primae (
     {
         constans MateriaValor* v = materia_valor_lista_obtinere(*umbrae,
             u);
-        constans MateriaValor* w;
+        s32 w_i;
 
         si (v == NIHIL || v->genus != MATERIA_VALOR_NODUS)
         {
             perge;
         }
-        w = &v->datum.nodus->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
-        si (   w->genus       == MATERIA_VALOR_INDEX
-            && w->datum.index >= ZEPHYRUM)
+        w_i = oratio_referentiae_vocabulum(v->datum.nodus,
+            (i32)ORATIO_UMBRA_IMPLETIO);
+        si (w_i >= ZEPHYRUM)
         {
-            exitus[numerus]  = w->datum.index;
+            exitus[numerus]  = w_i;
             numerus          = numerus + I;
         }
     }

@@ -365,16 +365,19 @@ nomen enumeratio {
 } OratioDecisio;
 
 /* loci generis UMBRA (T19d): condiciones INDEX (non scriptae =
- * liberae), impletio INDEX ordinalibus sententiae (non scripta =
- * INVENTUM: dependens non repertus). Vide oratio-spec par. VII. */
+ * liberae), impletio REFERENTIA ad nodum analysis implentis (T33
+ * 2026-09-10; olim ordinales vocabulum + analysis INDEX, quos
+ * permutatio obsoletos faciebat - _ligationes_remittere bis momordit;
+ * non scripta = INVENTUM: dependens non repertus; scripta scopo NIHIL
+ * = REVOCATA). Ordinales per oratio_referentiae_ordinales derivantur.
+ * Vide oratio-spec par. VII. */
 nomen enumeratio {
     ORATIO_UMBRA_RELATIO = 0,        /* INDEX: OratioRelatio */
     ORATIO_UMBRA_CLASSIS,            /* INDEX: OratioClassis exspectata (absens = quaelibet) */
     ORATIO_UMBRA_CASUS,              /* INDEX: OratioCasus */
     ORATIO_UMBRA_NUMERUS,            /* INDEX: OratioNumerusGrammaticus */
     ORATIO_UMBRA_GENUS,              /* INDEX: OratioGenusGrammaticum */
-        ORATIO_UMBRA_IMPLETIO_VOCABULUM, /* INDEX: ordinalis vocabuli implentis intra elementa */
-    ORATIO_UMBRA_IMPLETIO_ANALYSIS,  /* INDEX: ordinalis analysis implentis intra analyses */
+    ORATIO_UMBRA_IMPLETIO,           /* REFERENTIA: nodus analysis implentis (T33) */
     /* T20a: condicio FORMAE VERBI (finitum | infinitivum | ...) -
      * valor unus finitatem dicit (modus tres valores poscerret);
      * APPENSA post impletionem, non scripta = quaelibet */
@@ -412,13 +415,12 @@ nomen enumeratio {
 } OratioClausulaLocus;
 
 /* loci generis ALTERNA (T32 b, 2026-09-09): petitio umbrae quae cessit -
- * socius (vocabulum, analysis ordinales sententiae, remissi cum
- * permutationibus ut impletio), auctor (regula petens), causa, fides
+ * socius (REFERENTIA ad nodum analysis socii, T33; olim ordinales
+ * remissi cum permutationibus), auctor (regula petens), causa, fides
  * (permille tabulae, absens = ignota), victor (regula cui cessit).
  * Causa + victor = materia legum posteriorum quae alternas promovent. */
 nomen enumeratio {
-    ORATIO_ALTERNA_VOCABULUM = 0,    /* INDEX: ordinalis vocabuli socii */
-    ORATIO_ALTERNA_ANALYSIS,         /* INDEX: ordinalis analysis socii */
+    ORATIO_ALTERNA_SOCIUS = 0,       /* REFERENTIA: nodus analysis socii (T33) */
     ORATIO_ALTERNA_AUCTOR,           /* TOKEN derivatum: titulus regulae petentis */
     ORATIO_ALTERNA_CAUSA,            /* INDEX: OratioAlternaCausa */
     ORATIO_ALTERNA_FIDES,            /* INDEX: permille fiduciae (absens = ignota) */

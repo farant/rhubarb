@@ -1924,3 +1924,138 @@ oratio_partes_compendia_reponere (
     }
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Referentiae (T33, 2026-09-10) - vide caput
+ * ================================================== */
+
+s32
+oratio_ordinalis (
+    constans MateriaNodus* nodus)
+{
+    constans MateriaNodus* pater;
+                      i32  l;
+
+    si (nodus == NIHIL || nodus->pater == NIHIL)
+    {
+        redde (s32)-I;
+    }
+    pater = nodus->pater;
+    per (l = ZEPHYRUM; l < pater->numerus_locorum; l++)
+    {
+        constans MateriaValor* v = &pater->loci[l];
+                          i32  n;
+                          i32  k;
+
+        si (v->genus != MATERIA_VALOR_LISTA)
+        {
+            perge;
+        }
+        n = materia_valor_lista_numerus(*v);
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            constans MateriaValor* e = materia_valor_lista_obtinere(*v,
+                k);
+
+            si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
+                && e->datum.nodus == nodus)
+            {
+                redde (s32)k;
+            }
+        }
+    }
+    redde (s32)-I;
+}
+
+MateriaNodus*
+oratio_analysis_ordinalibus (
+    MateriaValor elementa,
+             i32 w,
+             i32 b)
+{
+    constans MateriaValor* elementum;
+    constans MateriaValor* analyses;
+    constans MateriaValor* analysis;
+
+    si (w < ZEPHYRUM || b < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    elementum = materia_valor_lista_obtinere(elementa, w);
+    si (   elementum                     == NIHIL
+        || elementum->genus              != MATERIA_VALOR_NODUS
+        || elementum->datum.nodus->genus != (s32)ORATIO_GENUS_VOCABULUM)
+    {
+        redde NIHIL;
+    }
+    analyses = &elementum->datum.nodus->loci[ORATIO_VOCABULUM_ANALYSES];
+    si (analyses->genus != MATERIA_VALOR_LISTA)
+    {
+        redde NIHIL;
+    }
+    analysis = materia_valor_lista_obtinere(*analyses, b);
+    si (analysis == NIHIL || analysis->genus != MATERIA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    redde analysis->datum.nodus;
+}
+
+b32
+oratio_referentia_scripta (
+    constans MateriaNodus* nodus,
+                      i32  locus)
+{
+    redde (b32)(   nodus != NIHIL && locus < nodus->numerus_locorum
+                && nodus->loci[locus].genus
+                    == MATERIA_VALOR_REFERENTIA);
+}
+
+MateriaNodus*
+oratio_referentiae_scopus (
+    constans MateriaNodus* nodus,
+                      i32  locus)
+{
+    si (!oratio_referentia_scripta(nodus, locus))
+    {
+        redde NIHIL;
+    }
+    redde nodus->loci[locus].datum.nodus;
+}
+
+b32
+oratio_referentiae_ordinales (
+    constans MateriaNodus* nodus,
+                      i32  locus,
+                      s32* vocabulum,
+                      s32* analysis)
+{
+    constans MateriaNodus* scopus = oratio_referentiae_scopus(nodus,
+        locus);
+
+    *vocabulum  = (s32)-I;
+    *analysis   = (s32)-I;
+    si (scopus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *analysis = oratio_ordinalis(scopus);
+    si (scopus->pater != NIHIL)
+    {
+        *vocabulum = oratio_ordinalis(scopus->pater);
+    }
+    redde (b32)(*vocabulum >= ZEPHYRUM && *analysis >= ZEPHYRUM);
+}
+
+s32
+oratio_referentiae_vocabulum (
+    constans MateriaNodus* nodus,
+                      i32  locus)
+{
+    s32 vocabulum;
+    s32 analysis;
+
+    oratio_referentiae_ordinales(nodus, locus, &vocabulum, &analysis);
+    redde vocabulum;
+}

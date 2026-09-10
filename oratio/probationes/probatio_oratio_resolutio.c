@@ -342,12 +342,24 @@ _umbra_index (
     redde umbra->loci[locus].datum.index;
 }
 
+/* T33: ordinales impletionis ex referentia derivati; -I si umbra
+ * absens, vacua aut revocata */
 interior s32
 _umbra_impletio_vocabulum (
     constans MateriaNodus* lectio,
                       i32  u)
 {
-    redde _umbra_index(lectio, u, (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM);
+    constans MateriaNodus* umbra = _umbra(lectio, u);
+                      s32  w;
+                      s32  b;
+
+    si (umbra == NIHIL)
+    {
+        redde (s32)-I;
+    }
+    oratio_referentiae_ordinales(umbra, (i32)ORATIO_UMBRA_IMPLETIO, &w,
+        &b);
+    redde w;
 }
 
 interior s32
@@ -355,7 +367,17 @@ _umbra_impletio_analysis (
     constans MateriaNodus* lectio,
                       i32  u)
 {
-    redde _umbra_index(lectio, u, (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS);
+    constans MateriaNodus* umbra = _umbra(lectio, u);
+                      s32  w;
+                      s32  b;
+
+    si (umbra == NIHIL)
+    {
+        redde (s32)-I;
+    }
+    oratio_referentiae_ordinales(umbra, (i32)ORATIO_UMBRA_IMPLETIO, &w,
+        &b);
+    redde b;
 }
 
 /* accidens lectionis per titulum loci: -I si genus sine aut non
@@ -834,13 +856,18 @@ principale (vacuum)
                 .datum.index, (s32)ORATIO_RELATIO_OBIECTUM);
             CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_CASUS]
                 .datum.index, (s32)ORATIO_CASUS_ABLATIVUS);
-            CREDO_AEQUALIS_S32 ((s32)umbra->loci[
-                ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus,
-                (s32)MATERIA_VALOR_INDEX);
-            CREDO_AEQUALIS_S32 (umbra->loci[
-                ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index, (s32)I);
-            CREDO_AEQUALIS_S32 (umbra->loci[
-                ORATIO_UMBRA_IMPLETIO_ANALYSIS].datum.index, ZEPHYRUM);
+            /* T33: referentia scripta, ordinales derivati (1, 0) */
+            CREDO_VERUM (oratio_referentia_scripta(umbra,
+                (i32)ORATIO_UMBRA_IMPLETIO));
+            {
+                s32 w;
+                s32 b;
+
+                CREDO_VERUM (oratio_referentiae_ordinales(umbra,
+                    (i32)ORATIO_UMBRA_IMPLETIO, &w, &b));
+                CREDO_AEQUALIS_S32 (w, (s32)I);
+                CREDO_AEQUALIS_S32 (b, ZEPHYRUM);
+            }
         }
 
         /* idempotens: cursus alter nihil mutat */
@@ -1005,7 +1032,7 @@ principale (vacuum)
              OratioPartesCensus census_partium;
           OratioResolutioCensus census;
        OratioVocabulariumVitium vitium_minimi;
-              OratioProgramma* minimum;
+                OratioProgramma* minimum;
                  MateriaNodus* doc;
                     character  textus_minimi[4096];
 

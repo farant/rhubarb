@@ -420,7 +420,7 @@ MateriaLexiconRatum  ratum;
          * CLXXXIV (T20a: clausulae sententiae I, clausula +
          * clausula-causa elementorum VI, forma-verbi umbrae I,
          * clausula IV) */
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_locorum, (i32)192);   /* T32 a: + auctor umbrae; T32 b: + alternae umbrae, genus alterna VI */
+        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_locorum, (i32)190);   /* T32 a: + auctor umbrae; T32 b: + alternae umbrae, genus alterna VI; T33: referentiae - umbra X -> IX, alterna VI -> V */
         per (i = ZEPHYRUM; i
             < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
         {
@@ -475,12 +475,13 @@ MateriaLexiconRatum  ratum;
             CREDO_AEQUALIS_S32 (oratio_partes_locus(cl, "umbrae"),
                 (s32)j);
         }
-        /* umbra (T19d): genus post analyses, loci VII INDEX ordine */
+        /* umbra (T19d): genus post analyses; T33: impletio REFERENTIA
+         * una pro ordinalibus duobus (loci IX) */
         {
                         hic_manens constans character* constans tituli_umbrae[] =
                             {
                 "relatio", "classis", "casus", "numerus", "genus",
-                "impletio-vocabulum", "impletio-analysis",
+                "impletio",     /* T33: REFERENTIA ad nodum analysis */
                 "forma-verbi",  /* T20a */
                 "auctor",       /* T32 a: TOKEN derivatum */
                 "alternae"      /* T32 b: LISTA_NODUS alterna */
@@ -492,26 +493,31 @@ MateriaLexiconRatum  ratum;
                 ORATIO_GENUS_UMBRA].loci_numerus,
                 (i32)ORATIO_UMBRA_NUMERUS_LOCORUM);
                         CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_NUMERUS_LOCORUM,
-                            (i32)X);
-            per (j = ZEPHYRUM; j < (i32)VIII; j++)
+                            (i32)IX);
+            per (j = ZEPHYRUM; j < (i32)IX; j++)
             {
                 CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_UMBRA, j),
                     tituli_umbrae[j]) == ZEPHYRUM);
+            }
+            per (j = ZEPHYRUM; j < (i32)V; j++)
+            {
                 CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, j),
                     (s32)MATERIA_LOCUS_INDEX);
             }
-            /* T32 a: locus VIII 'auctor' TOKEN derivatum (ut vocabuli) */
-            CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_UMBRA, (i32)VIII),
-                tituli_umbrae[VIII]) == ZEPHYRUM);
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VIII),
+            /* T33: locus V 'impletio' REFERENTIA */
+            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)V),
+                (s32)MATERIA_LOCUS_REFERENTIA);
+            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_IMPLETIO, (i32)V);
+            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VI),
+                (s32)MATERIA_LOCUS_INDEX);   /* forma-verbi */
+            /* T32 a: locus VII 'auctor' TOKEN derivatum (ut vocabuli) */
+            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VII),
                 (s32)MATERIA_LOCUS_TOKEN);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_AUCTOR, (i32)VIII);
-            /* T32 b: locus IX 'alternae' LISTA_NODUS */
-            CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_UMBRA, (i32)IX),
-                tituli_umbrae[IX]) == ZEPHYRUM);
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)IX),
+            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_AUCTOR, (i32)VII);
+            /* T32 b: locus VIII 'alternae' LISTA_NODUS */
+            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VIII),
                 (s32)MATERIA_LOCUS_LISTA_NODUS);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_ALTERNAE, (i32)IX);
+            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_ALTERNAE, (i32)VIII);
             CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(
                 ORATIO_GENUS_UMBRA),
                 (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
@@ -528,13 +534,12 @@ MateriaLexiconRatum  ratum;
                 ORATIO_RELATIO_SUBIECTUM], "subiectum") == ZEPHYRUM);
             CREDO_AEQUALIS_I32 ((i32)ORATIO_RELATIO_NUMERUS, (i32)V);   /* T31 b: + obiectum-verbi */
         }
-        /* alterna (T32 b): genus post clausulam, loci VI (vocabulum
-         * analysis causa fides INDEX, auctor victor TOKEN) */
+        /* alterna (T32 b): genus post clausulam, loci V (T33: socius
+         * REFERENTIA; causa fides INDEX, auctor victor TOKEN) */
         {
             hic_manens constans character* constans tituli_alternae[] =
                 {
-                "vocabulum", "analysis", "auctor", "causa", "fides",
-                    "victor"
+                "socius", "auctor", "causa", "fides", "victor"
             };
 
             CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[
@@ -543,12 +548,15 @@ MateriaLexiconRatum  ratum;
                 ORATIO_GENUS_ALTERNA].loci_numerus,
                 (i32)ORATIO_ALTERNA_NUMERUS_LOCORUM);
             CREDO_AEQUALIS_I32 ((i32)ORATIO_ALTERNA_NUMERUS_LOCORUM,
-                (i32)VI);
-            per (j = ZEPHYRUM; j < (i32)VI; j++)
+                (i32)V);
+            per (j = ZEPHYRUM; j < (i32)V; j++)
             {
                 CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ALTERNA, j),
                     tituli_alternae[j]) == ZEPHYRUM);
             }
+            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
+                (i32)ORATIO_ALTERNA_SOCIUS),
+                (s32)MATERIA_LOCUS_REFERENTIA);
             CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
                 (i32)ORATIO_ALTERNA_AUCTOR), (s32)MATERIA_LOCUS_TOKEN);
             CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,

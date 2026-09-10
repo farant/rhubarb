@@ -736,7 +736,7 @@ principale (vacuum)
             CREDO_AEQUALIS_S32 (umbra->loci[ORATIO_UMBRA_CASUS]
                 .datum.index, a->loci[locus_casus].datum.index);
             CREDO_AEQUALIS_S32 ((s32)umbra->loci[
-                ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus,
+                ORATIO_UMBRA_IMPLETIO].genus,
                 (s32)MATERIA_VALOR_NIHIL);
             CREDO_AEQUALIS_S32 ((s32)umbra->loci[
                 ORATIO_UMBRA_CLASSIS].genus, (s32)MATERIA_VALOR_NIHIL);

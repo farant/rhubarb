@@ -301,7 +301,8 @@ umbra = the adposition's object (the existing rule as the comparison).
 (seal `54a5e44f`): every analysis genus gained a last slot `umbrae`
 (LISTA_NODUS) and a genus `umbra` (relatio, classis, casus, numerus,
 genus, impletio-vocabulum, impletio-analysis — all INDEX; unwritten =
-unconstrained / unfilled) is appended AFTER the analyses, so
+unconstrained / unfilled; **T33 2026-09-10: the two ordinals became ONE
+REFERENTIA locus `impletio`, see below**) is appended AFTER the analyses, so
 `ORATIO_GENUS_ANALYSIS_ULTIMUM` bounds the class mapping. The
 annotator (`_umbras_ponere`) gives every adposition reading with a
 case an object umbra in that case, from the dictionary's own code.
@@ -894,6 +895,27 @@ READING-CONTEST law in the verb star (same head as the standing claim
 → refused under order, never revoked by arc trust;
 `ORATIO_CONTENTIO_LECTIONIS=0`; byte-identical today; a prerequisite
 of any conditional order), the reading-number columns of the rows.
+**T33 (2026-09-10): REFERENCES.** The umbra's filler and the
+alternative's partner are no longer ordinal pairs but ONE materia
+REFERENCE each (`impletio`, `socius`: species `MATERIA_LOCUS_REFERENTIA`,
+the analysis node itself). Ordinals are DERIVED through parents
+(`oratio_referentiae_ordinales`, `oratio_referentiae_vocabulum`,
+`oratio_referentiae_scopus`, `oratio_referentia_scripta` in
+`oratio_partes.h`) and mirrored as attributes on the umbra/alterna
+elements (`impletio-vocabulum`/`-analysis`, `vocabulum`/`analysis`);
+the locus prints `#nodN`, the analysis element `id="nodN"` (canon
+declares `id` on the 17 analysis genera; seal `305a78a5`, 190 loci).
+Every remap is GONE: `_ligationes_remittere`, the emendation remap
+block, the `b_novus` arithmetic — a filling captures its analysis node
+when the row is read (`Impletio.analysis`) and permutation keeps node
+objects. A revoked claim = reference with NIHIL target (was index −1),
+still unprojectable — the pre-existing "sentence with a cross-stage
+revocation drops out of later stages" contract is unchanged, NAMED not
+fixed. Pins and every SUMMA row identical on all eight metire files;
+27 of 11,290 per-contest rows corrected: the old alternative ordinal
+was NOT remapped by the emendation pass (a third silent staleness),
+so the loser's recorded reading was sometimes wrong — now the case its
+rule proposes. The decoder will dereference these pointers directly.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

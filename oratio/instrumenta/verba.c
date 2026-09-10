@@ -476,16 +476,22 @@ _umbras_imprimere (
                 (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS, index), stdout);
         }
         putchar('=');
-        index = _index_loci(umbra,
-            (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM);
-        si (index < ZEPHYRUM)
         {
-            putchar('?');
-        }
-        alioquin
-        {
-            imprimere("%d.%d", (integer)index, (integer)_index_loci(
-                umbra, (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS));
+            s32 index_analysis;
+
+            /* T33: ordinales ex referentia derivati */
+            oratio_referentiae_ordinales(umbra,
+                (i32)ORATIO_UMBRA_IMPLETIO,
+                &index, &index_analysis);
+            si (index < ZEPHYRUM)
+            {
+                putchar('?');
+            }
+            alioquin
+            {
+                imprimere("%d.%d", (integer)index,
+                    (integer)index_analysis);
+            }
         }
     }
 }

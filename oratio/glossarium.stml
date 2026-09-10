@@ -987,5 +987,6 @@
   <vocabulum lemma="dualis" lingua="latina" classis="adiectivum" nota="grammaticorum: numerus dualis"><forma textus="dualis"/></vocabulum>
   <vocabulum lemma="numerale" lingua="latina" classis="adiectivum" nota="grammaticorum: nomen numerale (classis UD NUM)"><forma textus="numerale"/></vocabulum>
   <vocabulum lemma="pronomen" lingua="latina" classis="substantivum" nota="grammaticorum: pars orationis (classis UD PRON)"><forma textus="pronomen"/><forma textus="pronominis"/></vocabulum>
+  <vocabulum lemma="ordinalis" lingua="latina" classis="adiectivum" nota="grammaticorum (Prisciani): ordinalis, -e - numerus ordinalis; formae plurales pro ordinalibus referentiarum (T33 2026-09-10: oratio_referentiae_ordinales, oratio_analysis_ordinalibus)"><forma textus="ordinalis" casus="nominativus" numerus="singularis" genus="masculinum"/><forma textus="ordinales" casus="nominativus" numerus="pluralis" genus="masculinum"/><forma textus="ordinalibus" casus="ablativus" numerus="pluralis" genus="masculinum"/></vocabulum>
 
 </glossarium>

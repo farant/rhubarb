@@ -57,7 +57,11 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T32 b 2026-09-09
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T33 2026-09-10
+            305a78a5: XXVI genera, CXC loci - REFERENTIAE: umbra locus
+            'impletio' REFERENTIA pro impletio-vocabulum/-analysis (X -> IX),
+            alterna locus 'socius' REFERENTIA pro vocabulum/analysis (VI -> V);
+            T32 b 2026-09-09
             bc662e39: XXVI genera, CXCII loci - genus 'alterna' VI locorum
             post clausulam, locus 'alternae' umbrae; T32 a 2026-09-09
             53bb8633: XXV genera, CLXXXV loci - locus 'auctor' TOKEN
@@ -72,7 +76,7 @@
             CXLVI loci; T6b 93c1c9cf, VI genera XVII loci; T1 b27fe13a,
             XVI loci). Tabula mutata sine hac optione mutata rubet in
             iudicio ET in custode derivae.">
-      <optio>bc662e39</optio>
+      <optio>305a78a5</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -331,6 +335,8 @@
   <elementum nomen="analysis-substantivi"
     nota="classis substantivum">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -371,6 +377,8 @@
   <elementum nomen="analysis-nominis-proprii"
     nota="classis nomen-proprium">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -411,6 +419,8 @@
   <elementum nomen="analysis-verbi"
     nota="classis verbum">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -466,6 +476,8 @@
   <elementum nomen="analysis-auxiliaris"
     nota="classis auxiliare">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -521,6 +533,8 @@
   <elementum nomen="analysis-adiectivi"
     nota="classis adiectivum">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -564,6 +578,8 @@
   <elementum nomen="analysis-adverbii"
     nota="classis adverbium">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -595,6 +611,8 @@
   <elementum nomen="analysis-pronominis"
     nota="classis pronomen">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -635,6 +653,8 @@
   <elementum nomen="analysis-determinantis"
     nota="classis determinans">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -672,6 +692,8 @@
   <elementum nomen="analysis-adpositionis"
     nota="classis adpositio">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -703,6 +725,8 @@
   <elementum nomen="analysis-numeralis"
     nota="classis numerale">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -743,6 +767,8 @@
   <elementum nomen="analysis-coniunctionis-coordinantis"
     nota="classis coniunctio-coordinans">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -771,6 +797,8 @@
   <elementum nomen="analysis-coniunctionis-subordinantis"
     nota="classis coniunctio-subordinans">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -799,6 +827,8 @@
   <elementum nomen="analysis-particulae"
     nota="classis particula">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -827,6 +857,8 @@
   <elementum nomen="analysis-interiectionis"
     nota="classis interiectio">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -855,6 +887,8 @@
   <elementum nomen="analysis-symboli"
     nota="classis symbolum">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -883,6 +917,8 @@
   <elementum nomen="analysis-interpunctionis"
     nota="classis interpunctio">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -911,6 +947,8 @@
   <elementum nomen="analysis-ignoti"
     nota="classis ignotum">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="id" genus="textus"
+      nota="T33: ancora referentiae (nodN) - materia scribit ubi umbra aut alterna in hanc lectionem spectat"/>
     <liberum nomen="lemma" maximum="1"/>
     <liberum nomen="lingua" maximum="1"/>
     <liberum nomen="fons" maximum="1"/>
@@ -937,13 +975,16 @@
   <elementum nomen="umbra"
     nota="genus umbra (T19d): dependens exspectatus lectionis - relatio + condiciones + impletio">
     <attributum nomen="n" genus="numerus"/>
+    <attributum nomen="impletio-vocabulum" genus="numerus"
+      nota="T33: SPECULUM - ordinalis vocabuli implentis intra elementa, ex referentia derivatus; lector ignorat"/>
+    <attributum nomen="impletio-analysis" genus="numerus"
+      nota="T33: SPECULUM - ordinalis analysis implentis intra analyses vocabuli"/>
     <liberum nomen="relatio" maximum="1"/>
     <liberum nomen="classis" maximum="1"/>
     <liberum nomen="casus" maximum="1"/>
     <liberum nomen="numerus" maximum="1"/>
     <liberum nomen="genus" maximum="1"/>
-    <liberum nomen="impletio-vocabulum" maximum="1"/>
-    <liberum nomen="impletio-analysis" maximum="1"/>
+    <liberum nomen="impletio" maximum="1"/>
     <liberum nomen="forma-verbi" maximum="1"/>
     <liberum nomen="auctor" maximum="1"/>
     <liberum nomen="alternae" maximum="1"/>
@@ -958,10 +999,8 @@
     nota="OratioNumerusGrammaticus exspectatus"/>
   <elementum nomen="genus" intra="umbra" textus="verum"
     nota="OratioGenusGrammaticum exspectatum"/>
-  <elementum nomen="impletio-vocabulum" intra="umbra" textus="verum"
-    nota="ordinalis vocabuli implentis intra elementa sententiae (absens = inventum)"/>
-  <elementum nomen="impletio-analysis" intra="umbra" textus="verum"
-    nota="ordinalis analysis implentis intra analyses vocabuli implentis"/>
+  <elementum nomen="impletio" intra="umbra" textus="verum"
+    nota="T33 (2026-09-10): REFERENTIA ad nodum analysis implentis - textus '#nodN', ancora id=&quot;nodN&quot; in elemento analysis (materia); absens = inventum; scripta scopo nullo = revocata (proiectio recusat). Olim ordinales impletio-vocabulum/-analysis, nunc specula attributa umbrae."/>
   <elementum nomen="forma-verbi" intra="umbra" textus="verum"
     nota="T20a: OratioFormaVerbi exspectata (0 finitum ...) - condicio umbrae verbi finiti clausulae; absens = quaelibet"/>
   <elementum nomen="auctor" intra="umbra"
@@ -980,17 +1019,18 @@
   <elementum nomen="alterna"
     nota="genus alterna (T32 b): petitio cedens umbrae">
     <attributum nomen="n" genus="numerus"/>
-    <liberum nomen="vocabulum" maximum="1"/>
-    <liberum nomen="analysis" maximum="1"/>
+    <attributum nomen="vocabulum" genus="numerus"
+      nota="T33: SPECULUM - ordinalis vocabuli socii, ex referentia derivatus"/>
+    <attributum nomen="analysis" genus="numerus"
+      nota="T33: SPECULUM - ordinalis analysis socii"/>
+    <liberum nomen="socius" maximum="1"/>
     <liberum nomen="auctor" maximum="1"/>
     <liberum nomen="causa" maximum="1"/>
     <liberum nomen="fides" maximum="1"/>
     <liberum nomen="victor" maximum="1"/>
   </elementum>
-  <elementum nomen="vocabulum" intra="alterna" textus="verum"
-    nota="ordinalis vocabuli socii intra elementa sententiae"/>
-  <elementum nomen="analysis" intra="alterna" textus="verum"
-    nota="ordinalis analysis socii (remissus cum permutationibus)"/>
+  <elementum nomen="socius" intra="alterna" textus="verum"
+    nota="T33 (2026-09-10): REFERENTIA ad nodum analysis socii ('#nodN'); olim ordinales vocabulum/analysis remissi cum permutationibus, nunc specula attributa alternae"/>
   <elementum nomen="auctor" intra="alterna"
     nota="derivatum - titulus regulae petentis">
     <liberum nomen="or-derivatum" maximum="1"/>

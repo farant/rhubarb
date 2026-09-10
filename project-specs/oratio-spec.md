@@ -2177,6 +2177,25 @@ is genre-dependent and the pins straddle both genres. Next: a GENRE
 gate (verse / prose per document from the T6b forma layer), then
 order per genre.
 
+**As built — T33, references (2026-09-10).** The umbra's filler and
+the alternative's partner are one materia REFERENCE each (`impletio`,
+`socius`; species `MATERIA_LOCUS_REFERENTIA`, the analysis node
+itself) instead of two ordinals that every permutation of a reading
+list staled. Ordinals are derived through parents and mirrored as
+attributes on the umbra and alterna elements; the locus serializes as
+`#nodN` with `id="nodN"` on the referenced analysis element (canon
+declares `id` on the analysis genera; registry 190 loci, seal
+`305a78a5`). Both remap blocks and the binding arithmetic are deleted;
+a filling captures its node when the rule row is read. A revoked claim
+is a reference with a NIHIL target, still unprojectable as the old
+−1 was — the contract that such a sentence drops out of later stages
+is unchanged and named. Every pin and summary row byte-identical;
+27 of 11,290 per-contest census rows corrected, because the old
+alternative ordinal was never remapped by the emendation pass — the
+loser's recorded reading was stale in those rows (measured against a
+worktree of the previous commit). The decoder (decision 48, to come)
+dereferences these pointers directly.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

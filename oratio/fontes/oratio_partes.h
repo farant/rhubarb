@@ -119,6 +119,56 @@ oratio_partes_compendia_reponere (
          Piscina* piscina,
     MateriaNodus* vocabulum);
 
+/* REFERENTIAE (T33, 2026-09-10): impletio umbrae et socius alternae
+ * REFERENTIAE ad nodum analysis sunt (materia MATERIA_LOCUS_REFERENTIA:
+ * permutationem listae supervivunt, remissio ordinalium sublata);
+ * ordinales (vocabulum intra elementa, analysis intra analyses) per
+ * PATRES derivantur, ut speculum 'n' proiectionis. Referentia scripta
+ * cum scopo NIHIL = REVOCATA (olim index -I): scripta, non impleta -
+ * proiectio eam recusat ut olim indicem negativum. */
+
+/* Ordinalis nodi intra listam patris (lista prima in qua sedet); -I
+ * sine patre aut absens. */
+s32
+oratio_ordinalis (
+    constans MateriaNodus* nodus);
+
+/* Nodus analysis b vocabuli w inter elementa sententiae; NIHIL extra
+ * fines aut sine analysi. */
+MateriaNodus*
+oratio_analysis_ordinalibus (
+    MateriaValor elementa,
+             i32 w,
+             i32 b);
+
+/* An locus referentiae SCRIPTUS sit (impletus aut revocatus). */
+b32
+oratio_referentia_scripta (
+    constans MateriaNodus* nodus,
+                      i32  locus);
+
+/* Scopus referentiae loci: nodus analysis; NIHIL si non scripta aut
+ * revocata. */
+MateriaNodus*
+oratio_referentiae_scopus (
+    constans MateriaNodus* nodus,
+                      i32  locus);
+
+/* Ordinalis vocabuli scopi intra elementa; -I si scopus nullus. */
+s32
+oratio_referentiae_vocabulum (
+    constans MateriaNodus* nodus,
+                      i32  locus);
+
+/* Ordinales scopi: *vocabulum intra elementa, *analysis intra analyses
+ * vocabuli; FALSUM et ambo -I si scopus nullus aut sine patribus. */
+b32
+oratio_referentiae_ordinales (
+    constans MateriaNodus* nodus,
+                      i32  locus,
+                      s32* vocabulum,
+                      s32* analysis);
+
 /* Arborem totam (documentum aut subarborem quamlibet) annotare;
  * census NIHIL licet. FALSUM = memoria. */
 b32

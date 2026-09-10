@@ -384,8 +384,8 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_index_loci(verbum,
             (s32)ORATIO_UMBRA_FORMA_VERBI),
             (s32)ORATIO_FORMA_VERBI_FINITUM);
-        CREDO_AEQUALIS_S32 (_index_loci(verbum,
-            (s32)ORATIO_UMBRA_IMPLETIO_VOCABULUM), (s32)-I);
+        CREDO_FALSUM (oratio_referentia_scripta(verbum,
+            (i32)ORATIO_UMBRA_IMPLETIO));   /* T33: vacua */
         CREDO_AEQUALIS_S32 (_index_loci(subiectum,
             (s32)ORATIO_UMBRA_RELATIO), (s32)ORATIO_RELATIO_SUBIECTUM);
         CREDO_AEQUALIS_S32 (_index_loci(subiectum,

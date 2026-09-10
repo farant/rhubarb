@@ -232,29 +232,28 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "umbrae",              (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
     /* umbra - T19d: dependens exspectatus lectionis; forma-verbi T20a */
-    /* umbra (172..181) - T32 a: auctor 180; T32 b: alternae 181 */
+    /* umbra (172..180) - T32 a: auctor; T32 b: alternae; T33
+     * (2026-09-10): impletio REFERENTIA una pro ordinalibus duobus */
     { "relatio",             (s32)MATERIA_LOCUS_INDEX },   /* OratioRelatio */
     { "classis",             (s32)MATERIA_LOCUS_INDEX },   /* OratioClassis exspectata */
     { "casus",               (s32)MATERIA_LOCUS_INDEX },   /* OratioCasus */
     { "numerus",             (s32)MATERIA_LOCUS_INDEX },   /* OratioNumerusGrammaticus */
     { "genus",               (s32)MATERIA_LOCUS_INDEX },   /* OratioGenusGrammaticum */
-    { "impletio-vocabulum",  (s32)MATERIA_LOCUS_INDEX },   /* ordinalis vocabuli implentis */
-    { "impletio-analysis",   (s32)MATERIA_LOCUS_INDEX },   /* ordinalis analysis implentis */
+    { "impletio",            (s32)MATERIA_LOCUS_REFERENTIA },   /* nodus analysis implentis (T33) */
     { "forma-verbi",         (s32)MATERIA_LOCUS_INDEX },   /* OratioFormaVerbi exspectata (T20a) */
     { "auctor",              (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM: titulus regulae implentis (T32 a) */
     { "alternae",            (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T32 b: petitiones cedentes (nodi alterna) */
 
     /* clausula - T20a (2026-09-08): capsa sudoku, nodus in sententia */
-    /* clausula (182..185) */
+    /* clausula (181..184) */
     { "semen",               (s32)MATERIA_LOCUS_INDEX },   /* ordinalis elementi seminis (T20a) */
     { "species",             (s32)MATERIA_LOCUS_INDEX },   /* OratioSpeciesClausulae */
     { "pater",               (s32)MATERIA_LOCUS_INDEX },   /* clausula continens */
     { "umbrae",              (s32)MATERIA_LOCUS_LISTA_NODUS },   /* verbum-finitum, subiectum */
 
     /* alterna - T32 b (2026-09-09): petitio umbrae cedens */
-    /* alterna (186..191) */
-    { "vocabulum",           (s32)MATERIA_LOCUS_INDEX },   /* ordinalis vocabuli socii */
-    { "analysis",            (s32)MATERIA_LOCUS_INDEX },   /* ordinalis analysis socii */
+    /* alterna (185..189) - T33: socius REFERENTIA pro ordinalibus */
+    { "socius",              (s32)MATERIA_LOCUS_REFERENTIA },   /* nodus analysis socii (T33) */
     { "auctor",              (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM: regula petens */
     { "causa",               (s32)MATERIA_LOCUS_INDEX },   /* OratioAlternaCausa */
     { "fides",               (s32)MATERIA_LOCUS_INDEX },   /* permille fiduciae */
@@ -292,10 +291,12 @@ hic_manens constans MateriaTabGenus GENERA_ORATIONIS[] = {
     /* T19d (2026-09-07): UMBRA appensa post analyses; T20a (2026-09-08):
      * CLAUSULA appensa post umbram (loci CLXXII -> CLXXXIV); T32 a
      * (2026-09-09): locus 'auctor' umbrae appensus (CLXXXIV -> CLXXXV) */
-    { "umbra",                                     (i32)172, (i32)10 },
-    { "clausula",                                  (i32)182, (i32)4 },
-    /* T32 b (2026-09-09): ALTERNA appensa post clausulam (CLXXXV -> CXCII) */
-    { "alterna",                                   (i32)186, (i32)6 },
+    { "umbra",                                     (i32)172, (i32)9 },
+    { "clausula",                                  (i32)181, (i32)4 },
+    /* T32 b (2026-09-09): ALTERNA appensa post clausulam (CLXXXV -> CXCII);
+     * T33 (2026-09-10): REFERENTIAE - umbra X -> IX, alterna VI -> V
+     * (CXCII -> CXC) */
+    { "alterna",                                   (i32)185, (i32)5 },
 };
 
 constans MateriaRegistrumCoctum ORATIO_REGISTRUM = {

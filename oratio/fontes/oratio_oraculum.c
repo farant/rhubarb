@@ -787,17 +787,20 @@ _ligatum (
         {
             constans MateriaValor* vu =
                 materia_valor_lista_obtinere(*umbrae, u);
-            constans MateriaValor* w;
 
             si (vu == NIHIL || vu->genus != MATERIA_VALOR_NODUS)
             {
                 perge;
             }
-            w = &vu->datum.nodus->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
-            si (   w->genus == MATERIA_VALOR_INDEX
-                && (petitum < ZEPHYRUM || w->datum.index == petitum))
+            /* T33: referentia scripta (impleta aut revocata = -I) */
+            si (   oratio_referentia_scripta(vu->datum.nodus,
+                    (i32)ORATIO_UMBRA_IMPLETIO)
+                && (   petitum < ZEPHYRUM
+                    || oratio_referentiae_vocabulum(vu->datum.nodus,
+                        (i32)ORATIO_UMBRA_IMPLETIO) == petitum))
             {
-                redde w->datum.index;
+                redde oratio_referentiae_vocabulum(vu->datum.nodus,
+                    (i32)ORATIO_UMBRA_IMPLETIO);
             }
         }
     }
@@ -2884,21 +2887,22 @@ _ligationes_iudicare (
         {
             constans MateriaNodus* umbra = materia_valor_lista_obtinere(
                 *umbrae, u)->datum.nodus;
-            constans MateriaValor* w =
-                &umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
             constans Elementum* socius;
                            b32  capitis;
                            b32  recta;
                            b32  pendet;
                            i32  distantia;
+                           s32  w_i;   /* T33: ordinales derivati */
+                           s32  b_i;
 
-            si (   w->genus != MATERIA_VALOR_INDEX || w->datum.index
-                < ZEPHYRUM || w->datum.index >= (s32)ne)
+            si (   !oratio_referentiae_ordinales(umbra,
+                    (i32)ORATIO_UMBRA_IMPLETIO, &w_i, &b_i)
+                || w_i >= (s32)ne)
             {
                 perge;
             }
             socius = (constans Elementum*)xar_obtinere(elementa,
-                (i32)w->datum.index);
+                (i32)w_i);
             si (socius->lexema < ZEPHYRUM)
             {
                 perge;
@@ -2924,9 +2928,9 @@ _ligationes_iudicare (
                     ? (b32)(caput[e->lexema] == socius->lexema)
                     : (b32)(caput[socius->lexema] == e->lexema);
             }
-            distantia = (i32)w->datum.index > k ? (i32)w->datum.index
+            distantia = (i32)w_i > k ? (i32)w_i
                 - k
-                : k - (i32)w->datum.index;
+                : k - (i32)w_i;
             census->ligationes_nostrae = census->ligationes_nostrae + I;
             si (recta)
             {
@@ -2938,7 +2942,7 @@ _ligationes_iudicare (
             {
                 constans MateriaValor* auctor =
                     &umbra->loci[ORATIO_UMBRA_AUCTOR];
-                i32 dependens = pendet ? k : (i32)w->datum.index;
+                i32 dependens = pendet ? k : (i32)w_i;
 
                 si (   auctor->genus       == MATERIA_VALOR_TOKEN
                     && auctor->datum.token != NIHIL)
@@ -2956,17 +2960,12 @@ _ligationes_iudicare (
                 /* T32 c: caput primae petitionis dependentis (prima vincit) */
                 si (caput_nostrum[dependens] < ZEPHYRUM)
                 {
-                    constans MateriaValor* b =
-                        &umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS];
-
                     caput_nostrum[dependens] =
-                        pendet ? (s32)w->datum.index
+                        pendet ? w_i
                         : (s32)k;
                     /* T32 d: lectio dependentis proposita - carrier: prima
                      * (umbra in ea sedet); socius: analysis impletionis */
-                    lectio_nostra[dependens] = pendet ? ZEPHYRUM
-                        : (b->genus == MATERIA_VALOR_INDEX
-                            ? b->datum.index : (s32)-I);
+                    lectio_nostra[dependens] = pendet ? ZEPHYRUM : b_i;
                 }
             }
             /* T31 a: per relationem */
@@ -3053,10 +3052,10 @@ _ligationes_iudicare (
         {
             constans MateriaNodus* umbra = materia_valor_lista_obtinere(
                 *umbrae, u)->datum.nodus;
-            constans MateriaValor* w =
-                &umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
             constans MateriaValor* alternae =
                 &umbra->loci[ORATIO_UMBRA_ALTERNAE];
+                           s32 w_i;   /* T33: ordinales derivati */
+                           s32 b_i;
                            b32 pendet;
                            b32 aliqua       = FALSUM;
                            b32 tecta        = FALSUM;
@@ -3077,11 +3076,12 @@ _ligationes_iudicare (
                                || cc == ORATIO_CLASSIS_PARTICULA
                                || cc == ORATIO_CLASSIS_AUXILIARE);
             }
-            si (   w->genus == MATERIA_VALOR_INDEX && w->datum.index
-                >= ZEPHYRUM && w->datum.index < (s32)ne)
+            si (   oratio_referentiae_ordinales(umbra,
+                    (i32)ORATIO_UMBRA_IMPLETIO, &w_i, &b_i)
+                && w_i < (s32)ne)
             {
                 constans Elementum* socius = (constans Elementum*)
-                    xar_obtinere(elementa, (i32)w->datum.index);
+                    xar_obtinere(elementa, (i32)w_i);
 
                 si (socius->lexema >= ZEPHYRUM)
                 {
@@ -3098,8 +3098,8 @@ _ligationes_iudicare (
                 constans MateriaNodus* alterna =
                     materia_valor_lista_obtinere(
                     *alternae, x)->datum.nodus;
-                constans MateriaValor* socius_alternae =
-                    &alterna->loci[ORATIO_ALTERNA_VOCABULUM];
+                               s32  w_s;   /* T33: socius derivatus */
+                               s32  b_s;
                 constans MateriaValor* auctor =
                     &alterna->loci[ORATIO_ALTERNA_AUCTOR];
                 constans MateriaValor* victor =
@@ -3111,14 +3111,14 @@ _ligationes_iudicare (
                                s32  casus_victoris  = (s32)-I;
                                s32  lectio_victae   = (s32)-I;   /* T32 e */
 
-                si (   socius_alternae->genus != MATERIA_VALOR_INDEX
-                    || socius_alternae->datum.index < ZEPHYRUM
-                    || socius_alternae->datum.index >= (s32)ne)
+                si (   !oratio_referentiae_ordinales(alterna,
+                        (i32)ORATIO_ALTERNA_SOCIUS, &w_s, &b_s)
+                    || w_s >= (s32)ne)
                 {
                     perge;
                 }
                 socius = (constans Elementum*)xar_obtinere(elementa,
-                    (i32)socius_alternae->datum.index);
+                    (i32)w_s);
                 si (socius->lexema < ZEPHYRUM)
                 {
                     perge;
@@ -3133,16 +3133,14 @@ _ligationes_iudicare (
                  * neuter solus */
                 {
                     i32 dependens_a = pendet ? k
-                        : (i32)socius_alternae->datum.index;
+                        : (i32)w_s;
                     i32 caput_a     =
-                        pendet ? (i32)socius_alternae->datum.index
+                        pendet ? (i32)w_s
                         : k;
                     s32 caput_v     = caput_nostrum[dependens_a];
                     constans Elementum* dependens_e =
                         (constans Elementum*)
                         xar_obtinere(elementa, dependens_a);
-                    constans MateriaValor* analysis_alternae =
-                        &alterna->loci[ORATIO_ALTERNA_ANALYSIS];
 
                     si (caput_v >= ZEPHYRUM && (i32)caput_v != caput_a)
                     {
@@ -3172,10 +3170,7 @@ _ligationes_iudicare (
 
                         casus_aureus_d = _casus_aureus(t->feats);
                     }
-                    lectio_victae = pendet ? ZEPHYRUM
-                        : (analysis_alternae->genus
-                            == MATERIA_VALOR_INDEX
-                            ? analysis_alternae->datum.index : (s32)-I);
+                    lectio_victae = pendet ? ZEPHYRUM : b_s;
                     casus_victae  = _casus_lectionis(dependens_e->nodus,
                         lectio_victae);
                     si (caput_v >= ZEPHYRUM)

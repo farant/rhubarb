@@ -3949,3 +3949,72 @@ for prose, subject-first for verse. Kept: the executor law, the
 `numerus-victae` / `numerus-victoris` columns of the rows, the
 fixture. Reverted: the grammar split (both variants in the session
 scratchpad).
+
+## 2026-09-10 — T33: references — the umbra names its filler, the ordinals are derived
+
+**What changed.** The umbra's two ordinal loci (`impletio-vocabulum`,
+`impletio-analysis`, both INDEX) became one locus `impletio` of the
+new materia species REFERENTIA, holding the analysis node itself; the
+alternative's `vocabulum`/`analysis` became one `socius` reference.
+Registry 26 genera / 190 loci (seal `305a78a5`): umbra 10 → 9,
+alterna 6 → 5. The ordinals are DERIVED from the reference through
+parents (`oratio_referentiae_ordinales`: the analysis's index in its
+word's list, the word's index in the sentence's elements), the same
+way the projection derives `n`. They survive as mirror attributes on
+the umbra and alterna elements (`impletio-vocabulum="3"
+impletio-analysis="1"`, `vocabulum`/`analysis`) so a rule or an eye
+can still read them; the locus prints `#nodN` and the referenced
+analysis element carries `id="nodN"` (canon: `id` declared on the 17
+analysis genera).
+
+**What went away.** `_ligationes_remittere` (T27 b) and the second
+remap block after the umbra-order emendation, the `inversa` tables in
+both permutation loops, and the `b_novus` arithmetic in the binding
+block. A filling now captures its analysis node when the rule's row
+is read (`Impletio.analysis`, before any permutation of this stage)
+and binds the pointer after the permutations; `permutare` keeps the
+node objects, so nothing is remapped. Lex capitis rebinds an umbra to
+the very node its head umbra references. A revoked claim is a
+reference written with a NIHIL target (it was an index of −1): still
+"written" for the repeated-binding check, still unprojectable — the
+writer refuses `referentia nihil` where it used to refuse `index
+negativus`, so the (pre-existing) contract that a sentence with a
+cross-stage revocation drops out of later stages is unchanged, not
+fixed. Named here so it is not mistaken for new.
+
+**Measured against the previous commit (worktree of d32e3c5b).**
+`census/metire.sh` over the eight treebank files: every SUMMA row
+identical, the oracle probatio's five pins untouched, the canon judge
+green over the corpus sample with the new `id` attributes and the
+`#nodN` loci — the executor's decisions did not move. Five CONTENTIO
+rows moved in the case-judged columns (circse victor-casu-solus 8 → 9,
+ITTB victa-casu-sola 18 → 21 and 0 → 1, Perseus casus-iudicati
+494 → 495, victa-casu-sola 4 → 6). Per-contest rows (`-lites`, 11,290
+rows over circse + ITTB + Perseus) name the cause exactly: 27 rows
+differ, all and only in the LOSER's proposed reading (casus-victae,
+genus-victae, numerus-victae). The old tree read that reading through
+the alternative's `analysis` ordinal, and the umbra-order emendation
+pass (T19d gamma) remapped the umbra's ordinal but NEVER the
+alternatives' — `_ligationes_remittere` handled both, the second remap
+block only umbrae. So after an emendation permuted the partner's
+readings, the alternative pointed at the wrong reading: 'mare dirimat'
+recorded the object rule's loser as nominative, 'cognita considerat'
+the subject rule's loser as ablative and the object rule's as
+nominative, 'Albis oritur' a reading without gender. The new values
+are the case each losing rule proposes (accusative for the object
+rule, nominative for the subject rule). A third silent staleness of
+the class this tranche removes, 0.24 % of contest rows; the T32 d/e
+conclusions rest on the other 99.76 %, unchanged in direction. Placing
+verbs now set parents in materia, so the clause code's hand-poked
+`pater` assignments are redundant but harmless (left in place).
+
+**Cost.** The oracle derives two ordinals per umbra per look instead
+of reading two integers: a scan of the word's analyses and of the
+sentence's elements. Oracle probatio 61.7 s against ~55 s before on a
+loaded machine — within noise of the run-to-run spread; to be
+re-measured on a quiet run before anyone optimises it (a per-sentence
+pointer→index cache is the obvious move if it ever matters).
+
+**Words.** The lint refused `ordinales`/`ordinalibus` (WORDS knows the
+lemma, not the plural forms it seems) → glossary entry `ordinalis`
+with the three forms.

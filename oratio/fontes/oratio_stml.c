@@ -2,6 +2,7 @@
 
 #include "oratio_stml.h"
 #include "oratio_registrum.h"
+#include "oratio_partes.h"
 #include "oratio_lexicon.h"
 #include "materia_arbor.h"
 #include "materia_nodus.h"
@@ -59,44 +60,6 @@ hic_manens constans MateriaOrigoUncus ORIGO_ORATIONIS = {
     NIHIL
 };
 
-/* Ordinalis nodi intra listam patris cuiuslibet (loci listarum
- * patris percurruntur); -I sine patre aut absens */
-interior s32
-_ordinalis (
-    constans MateriaNodus* nodus)
-{
-    constans MateriaNodus* pater = nodus->pater;
-                      i32  l;
-
-    si (pater == NIHIL)
-    {
-        redde (s32)-I;
-    }
-    per (l = ZEPHYRUM; l < pater->numerus_locorum; l++)
-    {
-        constans MateriaValor* v = &pater->loci[l];
-                          i32  n;
-                          i32  k;
-
-        si (v->genus != MATERIA_VALOR_LISTA)
-        {
-            perge;
-        }
-        n = materia_valor_lista_numerus(*v);
-        per (k = ZEPHYRUM; k < n; k++)
-        {
-            constans MateriaValor* e = materia_valor_lista_obtinere(*v,
-                k);
-
-            si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
-                && e->datum.nodus == nodus)
-            {
-                redde (s32)k;
-            }
-        }
-    }
-    redde (s32)-I;
-}
 
 /* Uncus nodi (T12, uncus substrati secundus): compendia derivata
  * CLASSES et LINGUAE vocabuli etiam ut ATTRIBUTA elementi <vocabulum>
@@ -125,7 +88,7 @@ _nodum_ornare (
         || nodus->genus == (s32)ORATIO_GENUS_NUMERUS
         || nodus->genus >= (s32)ORATIO_GENUS_ANALYSIS_PRIMUM)
     {
-        s32 ordinalis = _ordinalis(nodus);
+        s32 ordinalis = oratio_ordinalis(nodus);
 
         si (   ordinalis >= ZEPHYRUM
             && !materia_arbor_attributum_numeri(scriptor, elementum,
@@ -134,6 +97,32 @@ _nodum_ornare (
         {
             materia_arbor_scriptor_recusare(scriptor,
                 "attributum ordinalis scribi non potuit");
+            redde FALSUM;
+        }
+    }
+    /* T33 (2026-09-10): SPECULA referentiarum - impletio umbrae et
+     * socius alternae in locis '#nodN' sunt (veritas); ordinales
+     * derivati (vocabulum intra elementa, analysis intra analyses) ut
+     * attributa, ut oculi et exemplaria eos legant. Lector ea ignorat. */
+    si (   nodus->genus == (s32)ORATIO_GENUS_UMBRA
+        || nodus->genus == (s32)ORATIO_GENUS_ALTERNA)
+    {
+        b32 umbra_est = (b32)(nodus->genus == (s32)ORATIO_GENUS_UMBRA);
+        s32 w;
+        s32 b;
+
+        si (   oratio_referentiae_ordinales(nodus,
+                umbra_est ? (i32)ORATIO_UMBRA_IMPLETIO
+                          : (i32)ORATIO_ALTERNA_SOCIUS, &w, &b)
+            && (   !materia_arbor_attributum_numeri(scriptor, elementum,
+                    umbra_est ? "impletio-vocabulum" : "vocabulum",
+                    (i32)w)
+                || !materia_arbor_attributum_numeri(scriptor, elementum,
+                    umbra_est ? "impletio-analysis" : "analysis",
+                    (i32)b)))
+        {
+            materia_arbor_scriptor_recusare(scriptor,
+                "specula referentiae scribi non potuerunt");
             redde FALSUM;
         }
     }

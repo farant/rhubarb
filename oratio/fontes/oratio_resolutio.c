@@ -1044,6 +1044,9 @@ nomen structura {
     MateriaNodus* umbra;
              i32  w;
              i32  b;
+    /* T33: nodus analysis (w, b) ANTE permutationes captus - referentia
+     * eum nominat, ordo novus eum non movet */
+    MateriaNodus* analysis;
     /* T32 a: carrier v et titulus regulae (auctor impletionis) */
              i32 v;
           chorda titulus;
@@ -1554,141 +1557,14 @@ _ordines_ordinare (
  * ADOPTUM 2026-09-09 (decisio Frani: pinna casus Senecae 662 -> 660
  * causa nominata - lex 'prima vincit trans gradus' emendationi quoque).
  * Ligationes in lectionem alienam spectantes (Hilarius discordes II)
- * per _ligationes_remittere sanatae utroque valore. */
+ * olim per _ligationes_remittere sanatae; T33 (2026-09-10):
+ * referentiae permutationem ipsae supervivunt, remissio sublata. */
 hic_manens constans b32 EMENDATIO_SEMEL_PER_SENTENTIAM = VERUM;
 
 interior constans MateriaValor*
 _umbrae_lectionis (
     constans MateriaNodus* analysis);
 
-
-/* ligationes in vocabulum k PERMUTATUM spectantes remittere (T27 b):
- * umbra quaeque sententiae cuius implens vocabulum == k indicem analysis
- * novum per inversam accipit - ligationes graduum priorum aliter
- * lectionem alienam nominarent (index vetus in ordinem novum) */
-interior b32
-_ligationes_remittere (
-    constans MateriaValor* elementa,
-                      i32  ne,
-                      i32  k,
-             constans i32* inversa,
-                      i32  n)
-{
-    i32 j;
-
-    per (j = ZEPHYRUM; j < ne; j++)
-    {
-        constans MateriaValor* elementum =
-            materia_valor_lista_obtinere(*elementa, j);
-        constans MateriaValor* analyses;
-                          i32  a;
-
-        si (   elementum        == NIHIL
-            || elementum->genus != MATERIA_VALOR_NODUS
-            || elementum->datum.nodus->genus
-                != (s32)ORATIO_GENUS_VOCABULUM)
-        {
-            perge;
-        }
-        analyses =
-            &elementum->datum.nodus->loci[ORATIO_VOCABULUM_ANALYSES];
-        si (analyses->genus != MATERIA_VALOR_LISTA)
-        {
-            perge;
-        }
-        per (a = ZEPHYRUM; a < materia_valor_lista_numerus(*analyses);
-             a++)
-        {
-            constans MateriaValor* valor =
-                materia_valor_lista_obtinere(*analyses, a);
-            constans MateriaValor* umbrae;
-                              i32  u;
-
-            si (valor == NIHIL || valor->genus != MATERIA_VALOR_NODUS)
-            {
-                perge;
-            }
-            umbrae = _umbrae_lectionis(valor->datum.nodus);
-            si (umbrae == NIHIL)
-            {
-                perge;
-            }
-            per (u = ZEPHYRUM; u < materia_valor_lista_numerus(*umbrae);
-                 u++)
-            {
-                constans MateriaValor* valor_umbrae =
-                    materia_valor_lista_obtinere(*umbrae, u);
-                         MateriaNodus* umbra;
-                                  s32  w;
-                                  s32  b;
-
-                si (   valor_umbrae        == NIHIL
-                    || valor_umbrae->genus != MATERIA_VALOR_NODUS)
-                {
-                    perge;
-                }
-                umbra = valor_umbrae->datum.nodus;
-                /* T32 b: alternae quoque remittuntur (analysis socii) */
-                {
-                    constans MateriaValor* alternae =
-                        &umbra->loci[ORATIO_UMBRA_ALTERNAE];
-                    i32 x;
-
-                    per (x = ZEPHYRUM; alternae->genus
-                        == MATERIA_VALOR_LISTA
-                        && x
-                            < materia_valor_lista_numerus(*alternae); x++)
-                    {
-                        MateriaNodus* alterna =
-                            materia_valor_lista_obtinere(
-                            *alternae, x)->datum.nodus;
-                        s32 vocabulum_alternae =
-                            alterna->loci[ORATIO_ALTERNA_VOCABULUM]
-                            .datum.index;
-                        s32 analysis_alternae =
-                            alterna->loci[ORATIO_ALTERNA_ANALYSIS]
-                            .datum.index;
-
-                        si (   vocabulum_alternae == (s32)k
-                            && analysis_alternae  >= ZEPHYRUM
-                            && analysis_alternae < (s32)n
-                            && !materia_nodus_reponere(alterna,
-                                (i32)ORATIO_ALTERNA_ANALYSIS,
-                                materia_valor_index((s32)inversa[analysis_alternae]),
-                                MATERIA_LOCUS_INDEX))
-                        {
-                            redde FALSUM;
-                        }
-                    }
-                }
-                si (   umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                        .genus != MATERIA_VALOR_INDEX
-                    || umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
-                        .genus != MATERIA_VALOR_INDEX)
-                {
-                    perge;
-                }
-                w = umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                    .datum.index;
-                b = umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
-                    .datum.index;
-                si (w != (s32)k || b < ZEPHYRUM || b >= (s32)n)
-                {
-                    perge;
-                }
-                                /* reponere: locus semel scribendus iam scriptus est */
-                si (!materia_nodus_reponere(umbra,
-                        (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
-                        materia_valor_index((s32)inversa[b]),
-                        MATERIA_LOCUS_INDEX))
-                {
-                    redde FALSUM;
-                }
-            }
-        }
-    }
-    redde VERUM;
-}
 
 /* T32 a (2026-09-09): AUCTOR impletionis in umbram scribere - lexema
  * derivatum ex titulo regulae (origo = pars prima vocabuli carrier v,
@@ -1764,12 +1640,10 @@ _petitionem_revocare (
             redde VERUM;
         }
     }
-    redde materia_nodus_reponere(umbra,
-            (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM,
-            materia_valor_index((s32)-I), MATERIA_LOCUS_INDEX)
-        && materia_nodus_reponere(umbra,
-            (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
-            materia_valor_index((s32)-I), MATERIA_LOCUS_INDEX);
+    /* T33: revocata = referentia scripta scopo NIHIL (olim index -I);
+     * proiectio eam recusat ut olim indicem negativum */
+    redde materia_nodus_reponere(umbra, (i32)ORATIO_UMBRA_IMPLETIO,
+        materia_valor_referentia(NIHIL), MATERIA_LOCUS_REFERENTIA);
 }
 
 /* T32 a (2026-09-09) CAPUT UNUM PER VERBUM: dependens ordinis = carrier
@@ -1868,14 +1742,13 @@ _socius_petitionis (
             redde (s32)cella->w;
         }
     }
-    si (   stans->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
-            == MATERIA_VALOR_INDEX
-        && stans->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS].genus
-            == MATERIA_VALOR_INDEX)
+    si (oratio_referentia_scripta(stans, (i32)ORATIO_UMBRA_IMPLETIO))
     {
-        *b_socii =
-            stans->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS].datum.index;
-        redde stans->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index;
+        s32 w_stans;
+
+        oratio_referentiae_ordinales(stans, (i32)ORATIO_UMBRA_IMPLETIO,
+            &w_stans, b_socii);
+        redde w_stans;
     }
     redde (s32)-I;
 }
@@ -1944,10 +1817,9 @@ _alternam_addere (
         (s32)ORATIO_GENUS_ALTERNA,
         ORATIO_REGISTRUM.genera[ORATIO_GENUS_ALTERNA].loci_numerus);
     si (   alterna == NIHIL
-        || !materia_nodus_ponere(alterna, (i32)ORATIO_ALTERNA_VOCABULUM,
-            materia_valor_index((s32)w), MATERIA_LOCUS_INDEX)
-        || !materia_nodus_ponere(alterna, (i32)ORATIO_ALTERNA_ANALYSIS,
-            materia_valor_index((s32)b), MATERIA_LOCUS_INDEX)
+        || !materia_nodus_ponere(alterna, (i32)ORATIO_ALTERNA_SOCIUS,
+            materia_valor_referentia(oratio_analysis_ordinalibus(
+                elementa, w, b)), MATERIA_LOCUS_REFERENTIA)
         || !materia_nodus_ponere(alterna, (i32)ORATIO_ALTERNA_CAUSA,
             materia_valor_index(causa), MATERIA_LOCUS_INDEX))
     {
@@ -2022,14 +1894,13 @@ _caput_petitionis (
             redde (s32)cella->w;
         }
     }
-    si (   stans->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
-            == MATERIA_VALOR_INDEX
-        && stans->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS].genus
-            == MATERIA_VALOR_INDEX)
+    si (oratio_referentia_scripta(stans, (i32)ORATIO_UMBRA_IMPLETIO))
     {
-        *b_capitis =
-            stans->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS].datum.index;
-        redde stans->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index;
+        s32 w_stans;
+
+        oratio_referentiae_ordinales(stans, (i32)ORATIO_UMBRA_IMPLETIO,
+            &w_stans, b_capitis);
+        redde w_stans;
     }
     redde (s32)-I;
 }
@@ -2752,7 +2623,9 @@ _sententiam_resolvere_gradu (
             cella->umbra  = umbra;
             cella->w      = w;
             cella->b      = b;
-            cella->v      = v;
+            cella->analysis  = oratio_analysis_ordinalibus(*elementa, w,
+                b);
+            cella->v         = v;
             cella->titulus  = titulus != NIHIL ? *titulus
                 : _chorda(NIHIL, ZEPHYRUM);
                         /* praelationes ambae sub lege 'prima vincit per
@@ -2805,7 +2678,6 @@ _sententiam_resolvere_gradu (
         constans MateriaValor* analyses;
                           i32  n;
                           i32* ordo;
-                          i32* inversa;
                           i32  i;
                           i32  j;
 
@@ -2834,23 +2706,13 @@ _sententiam_resolvere_gradu (
                 j        = j + I;
             }
         }
-        inversa = (i32*)piscina_allocare(scratch, (memoriae_index)n
-            * (memoriae_index)magnitudo(i32));
-        si (inversa == NIHIL)
-        {
-            piscina_destruere(scratch);
-            redde FALSUM;
-        }
-        per (i = ZEPHYRUM; i < n; i++)
-        {
-            inversa[ordo[i]] = i;
-        }
+        /* T33: referentiae in analyses huius vocabuli permutationem
+         * supervivunt (elementa eadem, ordo solus) - remissio nulla */
         si (   !materia_nodus_lista_permutare(cursus->piscina,
             vocabulum,
                 (i32)ORATIO_VOCABULUM_ANALYSES, ordo, n)
             || !oratio_partes_compendia_reponere(cursus->piscina,
-                vocabulum)
-            || !_ligationes_remittere(elementa, ne, k, inversa, n))
+                vocabulum))
         {
             piscina_destruere(scratch);
             redde FALSUM;
@@ -2860,22 +2722,20 @@ _sententiam_resolvere_gradu (
             cursus->census->applicatae = cursus->census->applicatae + I;
         }
     }
-    /* LIGATIO umbrarum (T19d) post permutationes: index analysis
-     * implentis in ordinem NOVUM remittitur (praelata prima, ceterae
-     * ordine suo - lex permutationis supra); umbra iam ligata manet
-     * (prima vincit: repetita). Lex 'semel scribere' ligationem primam
-     * per ponere custodit. */
+    /* LIGATIO umbrarum (T19d) post permutationes: referentia ad nodum
+     * analysis ante permutationes captum (T33; olim index in ordinem
+     * novum remissus); umbra iam ligata manet (prima vincit: repetita).
+     * Lex 'semel scribere' ligationem primam per ponere custodit. */
     per (k = ZEPHYRUM; k < xar_numerus(impletiones); k++)
     {
         Impletio* imp = (Impletio*)xar_obtinere(impletiones, k);
-             i32  b_novus;
 
         si (imp->umbra == NIHIL)
         {
             perge;   /* T32 a: petitio revocata */
         }
-        si (imp->umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
-            != MATERIA_VALOR_NIHIL)
+        si (oratio_referentia_scripta(imp->umbra,
+                (i32)ORATIO_UMBRA_IMPLETIO))
         {
             si (cursus->census != NIHIL)
             {
@@ -2884,24 +2744,11 @@ _sententiam_resolvere_gradu (
             }
             perge;
         }
-        b_novus = imp->b;
-        si (praelata[imp->w] >= ZEPHYRUM)
-        {
-            si (imp->b == (i32)praelata[imp->w])
-            {
-                b_novus = ZEPHYRUM;
-            }
-            alioquin si (imp->b < (i32)praelata[imp->w])
-            {
-                b_novus = imp->b + I;
-            }
-        }
-        si (   !materia_nodus_ponere(imp->umbra,
-                (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM,
-                materia_valor_index((s32)imp->w), MATERIA_LOCUS_INDEX)
+        si (   imp->analysis == NIHIL
             || !materia_nodus_ponere(imp->umbra,
-                (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
-                materia_valor_index((s32)b_novus), MATERIA_LOCUS_INDEX)
+                (i32)ORATIO_UMBRA_IMPLETIO,
+                materia_valor_referentia(imp->analysis),
+                MATERIA_LOCUS_REFERENTIA)
             || !_auctorem_umbrae_scribere(cursus, *elementa, imp->umbra,
                 imp->v, imp->titulus))
         {
@@ -2987,16 +2834,17 @@ _gradus_umbrarum (
             materia_valor_lista_obtinere(*umbrae, u);
 
                 s32 w;
+                s32 b;
 
         si (   valor        == NIHIL
             || valor->genus != MATERIA_VALOR_NODUS
-            || valor->datum.nodus->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                .genus == MATERIA_VALOR_NIHIL)
+            || !oratio_referentia_scripta(valor->datum.nodus,
+                (i32)ORATIO_UMBRA_IMPLETIO))
         {
             redde I;   /* vacua */
         }
-        w = valor->datum.nodus->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-            .datum.index;
+        oratio_referentiae_ordinales(valor->datum.nodus,
+            (i32)ORATIO_UMBRA_IMPLETIO, &w, &b);
         si (w < ZEPHYRUM || ((i32)w > k ? (i32)w - k : k - (i32)w) != I)
         {
             redde I;   /* implens remotus */
@@ -3027,10 +2875,7 @@ _umbris_ordinare (
 {
     constans MateriaValor* elementa =
         &sententia->loci[ORATIO_SENTENTIA_ELEMENTA];
-                 Piscina*  scratch;
-                     i32** inversa;   /* per vocabulum: vetus -> novus;
-                                      * NIHIL = immotum */
-                      i32* numeri;    /* analyses per vocabulum */
+                  Piscina* scratch;
                       i32  ne;
                       i32  k;
 
@@ -3038,15 +2883,6 @@ _umbris_ordinare (
     scratch  = piscina_generare_dynamicum("oratio_lex_umbrarum", 65536);
     si (scratch == NIHIL)
     {
-        redde FALSUM;
-    }
-    inversa = (i32**)piscina_allocare(scratch, (memoriae_index)ne
-        * (memoriae_index)magnitudo(i32*));
-    numeri  = (i32*)piscina_allocare(scratch, (memoriae_index)ne
-        * (memoriae_index)magnitudo(i32));
-    si (inversa == NIHIL || numeri == NIHIL)
-    {
-        piscina_destruere(scratch);
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < ne; k++)
@@ -3063,8 +2899,6 @@ _umbris_ordinare (
                           s32  g;
                           b32  immotum = VERUM;
 
-                inversa[k]  = NIHIL;
-        numeri[k]           = ZEPHYRUM;
         si (   elementum        == NIHIL
             || elementum->genus != MATERIA_VALOR_NODUS
             || elementum->datum.nodus->genus
@@ -3083,7 +2917,6 @@ _umbris_ordinare (
             perge;
         }
         n          = materia_valor_lista_numerus(*analyses);
-        numeri[k]  = n;
         si (n < (i32)II)
         {
             perge;
@@ -3132,17 +2965,6 @@ _umbris_ordinare (
         {
             perge;
         }
-        inversa[k] = (i32*)piscina_allocare(scratch,
-            (memoriae_index)n * (memoriae_index)magnitudo(i32));
-        si (inversa[k] == NIHIL)
-        {
-            piscina_destruere(scratch);
-            redde FALSUM;
-        }
-        per (i = ZEPHYRUM; i < n; i++)
-        {
-            inversa[k][ordo[i]] = i;
-        }
         si (   !materia_nodus_lista_permutare(cursus->piscina,
             vocabulum,
                 (i32)ORATIO_VOCABULUM_ANALYSES, ordo, n)
@@ -3166,88 +2988,7 @@ _umbris_ordinare (
                 ORATIO_DECISIO_UMBRA, NIHIL);
         }
     }
-    /* ligationes remittere: umbra quaeque in vocabulum permutatum
-     * spectans indicem novum analysis implentis accipit */
-    per (k = ZEPHYRUM; k < ne; k++)
-    {
-        constans MateriaValor* elementum =
-            materia_valor_lista_obtinere(*elementa, k);
-        constans MateriaValor* analyses;
-                          i32  a;
-
-        si (   elementum        == NIHIL
-            || elementum->genus != MATERIA_VALOR_NODUS
-            || elementum->datum.nodus->genus
-                != (s32)ORATIO_GENUS_VOCABULUM)
-        {
-            perge;
-        }
-        analyses =
-            &elementum->datum.nodus->loci[ORATIO_VOCABULUM_ANALYSES];
-        si (analyses->genus != MATERIA_VALOR_LISTA)
-        {
-            perge;
-        }
-        per (a = ZEPHYRUM; a < materia_valor_lista_numerus(*analyses);
-             a++)
-        {
-            constans MateriaValor* valor =
-                materia_valor_lista_obtinere(*analyses, a);
-            constans MateriaValor* umbrae;
-                              i32  u;
-
-            si (valor == NIHIL || valor->genus != MATERIA_VALOR_NODUS)
-            {
-                perge;
-            }
-            umbrae = _umbrae_lectionis(valor->datum.nodus);
-            si (umbrae == NIHIL)
-            {
-                perge;
-            }
-            per (u = ZEPHYRUM; u < materia_valor_lista_numerus(*umbrae);
-                 u++)
-            {
-                constans MateriaValor* valor_umbrae =
-                    materia_valor_lista_obtinere(*umbrae, u);
-                         MateriaNodus* umbra;
-                                  s32  w;
-                                  s32  b;
-
-                si (   valor_umbrae        == NIHIL
-                    || valor_umbrae->genus != MATERIA_VALOR_NODUS)
-                {
-                    perge;
-                }
-                umbra = valor_umbrae->datum.nodus;
-                si (   umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                        .genus == MATERIA_VALOR_NIHIL
-                    || umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
-                        .genus == MATERIA_VALOR_NIHIL)
-                {
-                    perge;
-                }
-                w = umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                    .datum.index;
-                b = umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
-                    .datum.index;
-                si (   w < ZEPHYRUM || (i32)w >= ne
-                    || inversa[w] == NIHIL
-                    || b < ZEPHYRUM || (i32)b >= numeri[w])
-                {
-                    perge;
-                }
-                si (!materia_nodus_reponere(umbra,
-                        (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
-                        materia_valor_index((s32)inversa[w][b]),
-                        MATERIA_LOCUS_INDEX))
-                {
-                    piscina_destruere(scratch);
-                    redde FALSUM;
-                }
-            }
-        }
-    }
+    /* T33: ligationes referentiae sunt - permutatio eas non movet */
     piscina_destruere(scratch);
     redde VERUM;
 }
@@ -3564,15 +3305,15 @@ _prior_casuum (
                 constans MateriaNodus* umbra =
                     materia_valor_lista_obtinere(
                     *umbrae, u)->datum.nodus;
-                constans MateriaValor* w =
-                    &umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
+                s32 w;
+                s32 b;
 
-                si (   w->genus       == MATERIA_VALOR_INDEX
-                    && w->datum.index >= ZEPHYRUM
-                    && w->datum.index < (s32)ne)
+                si (   oratio_referentiae_ordinales(umbra,
+                        (i32)ORATIO_UMBRA_IMPLETIO, &w, &b)
+                    && w < (s32)ne)
                 {
-                    tangitur[k]               = VERUM;
-                    tangitur[w->datum.index]  = VERUM;
+                    tangitur[k] = VERUM;
+                    tangitur[w] = VERUM;
                 }
             }
         }
@@ -3697,10 +3438,8 @@ _ligationes_ad_caput_sequi (
                 umbra = valor_umbrae->datum.nodus;
                 si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
                         != MATERIA_VALOR_INDEX
-                    || umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                        .genus != MATERIA_VALOR_INDEX
-                    || umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
-                        .genus != MATERIA_VALOR_INDEX)
+                    || !oratio_referentia_scripta(umbra,
+                        (i32)ORATIO_UMBRA_IMPLETIO))
                 {
                     perge;
                 }
@@ -3711,11 +3450,8 @@ _ligationes_ad_caput_sequi (
                 {
                     perge;
                 }
-                w = umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                    .datum.index;
-                b = umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
-                    .datum.index;
-                si (w < ZEPHYRUM || b < ZEPHYRUM)
+                si (!oratio_referentiae_ordinales(umbra,
+                        (i32)ORATIO_UMBRA_IMPLETIO, &w, &b))
                 {
                     perge;   /* T32 a: petitio revocata */
                 }
@@ -3782,17 +3518,13 @@ _ligationes_ad_caput_sequi (
                             != MATERIA_VALOR_INDEX
                         || caput->loci[ORATIO_UMBRA_RELATIO].datum.index
                             != (s32)ORATIO_RELATIO_CAPUT
-                        || caput->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                            .genus != MATERIA_VALOR_INDEX
-                        || caput->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
-                            .genus != MATERIA_VALOR_INDEX)
+                        || !oratio_referentia_scripta(caput,
+                            (i32)ORATIO_UMBRA_IMPLETIO))
                     {
                         perge;
                     }
-                    w2 = caput->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM]
-                        .datum.index;
-                    b2 = caput->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
-                        .datum.index;
+                    oratio_referentiae_ordinales(caput,
+                        (i32)ORATIO_UMBRA_IMPLETIO, &w2, &b2);
                     /* caput VICINUM solum: ligationes capitis remotae (gradus
                      * laxus, chartis 39-66 % rectae) secutae subiectum
                      * alio transferunt (mensuratum: chartae -5/-7, Dante -9) */
@@ -3803,14 +3535,13 @@ _ligationes_ad_caput_sequi (
                     {
                         perge;
                     }
-                    si (   !materia_nodus_reponere(umbra,
-                            (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM,
-                            materia_valor_index(w2),
-                            MATERIA_LOCUS_INDEX)
-                        || !materia_nodus_reponere(umbra,
-                            (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
-                            materia_valor_index(b2),
-                            MATERIA_LOCUS_INDEX))
+                    /* T33: eundem nodum analysis nominat quem caput */
+                    si (!materia_nodus_reponere(umbra,
+                            (i32)ORATIO_UMBRA_IMPLETIO,
+                            materia_valor_referentia(
+                                oratio_referentiae_scopus(caput,
+                                    (i32)ORATIO_UMBRA_IMPLETIO)),
+                            MATERIA_LOCUS_REFERENTIA))
                     {
                         redde FALSUM;
                     }
@@ -3950,10 +3681,8 @@ _obiectum_socius_recusandus (
                 == MATERIA_VALOR_INDEX
                 && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
                     == (s32)ORATIO_RELATIO_SUBIECTUM
-                && umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
-                    == MATERIA_VALOR_INDEX
-                && umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index
-                    == (s32)w)
+                && oratio_referentiae_vocabulum(umbra,
+                    (i32)ORATIO_UMBRA_IMPLETIO) == (s32)w)
             {
                 redde VERUM;
             }
@@ -4006,10 +3735,8 @@ _obiectum_socius_recusandus (
                 == MATERIA_VALOR_INDEX
                 && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
                     == (s32)ORATIO_RELATIO_OBIECTUM
-                && umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
-                    == MATERIA_VALOR_INDEX
-                && umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index
-                    == (s32)w)
+                && oratio_referentiae_vocabulum(umbra,
+                    (i32)ORATIO_UMBRA_IMPLETIO) == (s32)w)
             {
                 redde VERUM;
             }
