@@ -482,6 +482,14 @@ _tabulam_imprimere (
                     (integer)coactae, _pars(coactae, c->verba),
                     _pars(rectae, coactae));
     }
+    /* T32 a: dependentes contesti (caput unum per verbum violatum) */
+    si (c->dependentes_contesti > ZEPHYRUM)
+    {
+        imprimere("  dependentes contesti %d (petitiones %d, rectae %d)\n",
+            (integer)c->dependentes_contesti,
+            (integer)c->petitiones_contestae,
+            (integer)c->petitiones_contestae_rectae);
+    }
     /* T19g: accuratio per auctorem (regula decidens) */
     {
         Xar* auctores = oratio_oraculum_auctores(piscina, c);
@@ -503,7 +511,7 @@ _tabulam_imprimere (
 
                                                                         imprimere("    %-44.*s %6d  primaria %5.1f%%"
                                                                             "  vicina %5d %5.1f%%  remota %5d %5.1f%%"
-                                                                            "  casus %5d %5.1f%%\n",
+                                                                            "  casus %5d %5.1f%%  arcus %5d %5.1f%%\n",
                                                                             (integer)a->titulus.mensura,
                                                                             (constans character*)a->titulus.datum,
                                                                             (integer)a->verba,
@@ -517,7 +525,10 @@ _tabulam_imprimere (
                                                                             a->remota),
                                                                             (integer)a->casus_verba,
                                                                             _pars(a->casus_recti,
-                                                                            a->casus_verba));
+                                                                            a->casus_verba),
+                                                                            (integer)a->ligationes,
+                                                                            _pars(a->ligationes_rectae,
+                                                                            a->ligationes));
         }
         /* T19g bis: errata per auctorem - decisiones falsae cum
          * socio ligationis, frequentissimae primae */
@@ -783,6 +794,11 @@ _machinam_imprimere (
                         ? c->arcus_aurei_obiecti : ZEPHYRUM));
             }
         }
+        /* T32 a: ordo CONTESTA dependentes petitiones rectae */
+        imprimere("%s\tCONTESTA\t%d\t%d\t%d\n", titulus,
+            (integer)c->dependentes_contesti,
+            (integer)c->petitiones_contestae,
+            (integer)c->petitiones_contestae_rectae);
         /* T19g: ordines PARTITIO genus verba primaria; AUCTOR titulus verba
      * primaria */
     per (i = ZEPHYRUM; i < ORATIO_ORACULUM_PARTITIO_NUMERUS; i++)
@@ -803,7 +819,7 @@ _machinam_imprimere (
             constans OratioOraculumAuctor* a =
                 *(OratioOraculumAuctor**)xar_obtinere(auctores, j);
 
-                                    imprimere("%s\tAUCTOR\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+                                    imprimere("%s\tAUCTOR\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
                                         titulus,
                                         (integer)a->titulus.mensura,
                                         (constans character*)a->titulus.datum,
@@ -814,7 +830,11 @@ _machinam_imprimere (
                                         (integer)a->remota,
                                         (integer)a->remota_primaria,
                                         (integer)a->casus_verba,
-                                        (integer)a->casus_recti);
+                                        (integer)a->casus_recti,
+                                        (integer)a->ligationes,
+                                        (integer)a->ligationes_rectae,
+                                        (integer)a->ligationes_vicinae,
+                                        (integer)a->ligationes_vicinae_rectae);
         }
     }
         /* T20a: ordines CLAUSULA causa verba rectae; CLAUSULAE sententiae

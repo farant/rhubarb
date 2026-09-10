@@ -979,8 +979,13 @@ principale (vacuum)
             &census));
         magna = _analysis(_vocabulum(doc, (i32)III), ZEPHYRUM);
         CREDO_NON_NIHIL (magna);
+        /* T32 a (2026-09-09) LEX CAPITIS UNIUS cum contentione: caput
+         * magnae (puella, regula laxa 112 permille) petitioni subiecti
+         * verbi 'est' (vicina, 705 permille) cedit - impletio REVOCATA
+         * (-I); caput non vicinum, ergo petitio ad caput non transit.
+         * Ante: I (politica parium, T25). */
         CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(magna, ZEPHYRUM),
-            I);
+            (s32)-I);
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, (i32)III), ZEPHYRUM),
             (s32)ORATIO_CASUS_NOMINATIVUS);
     }
@@ -1329,7 +1334,13 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_casus(bona, ZEPHYRUM),
             (s32)ORATIO_CASUS_ABLATIVUS);
         CREDO_VERUM (census.repetitae >= I);   /* regula NOM recusata */
-        CREDO_AEQUALIS_I32 (census.impletae, (i32)III);   /* cum, bona; T31 a: ambulat subiectum (bona nominativa - puella ablativa vindicata: casus manualis notatus) */
+        /* T32 a: petitio subiecti in 'bona' (capiti vicino 'puella'
+         * ablativae vindicatae ligatam) ad caput transire nequit
+         * (concordantia: subiectum nominativum, puella ablativa) et
+         * caput non revocat - RECUSATA: impletae II (ante III: lex capitis
+         * posterior subiectum ad puellam ablativam sequebatur, casus
+         * manualis). */
+        CREDO_AEQUALIS_I32 (census.impletae, (i32)II);   /* cum, bona; T31 a: ambulat subiectum (bona nominativa - puella ablativa vindicata: casus manualis notatus) */
         /* determinans per caput: hoc templum (templum GEN P crudum
          * primum - lectio NOM per caput inventa et praelata); hoc solum
          * pronomen manet */

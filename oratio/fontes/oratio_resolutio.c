@@ -182,6 +182,7 @@ oratio_resolutio_programma_legere (
     }
     p->textus   = _copia(piscina, textus);
     p->regulae  = xar_creare(piscina, (i32)magnitudo(OratioRegula));
+    p->fiducia  = NIHIL;   /* T32 a: onerare ponit */
     si (p->textus.datum == NIHIL || p->regulae == NIHIL)
     {
         vitium->causa = "memoria";
@@ -239,6 +240,222 @@ oratio_resolutio_programma_legere (
     redde p;
 }
 
+/* T32 a: numerus decimalis chordae (digiti soli); -I si nullus */
+interior s32
+_numerus_decimalis (
+    chorda c)
+{
+    s32 n = ZEPHYRUM;
+    i32 i;
+
+    si (c.mensura == ZEPHYRUM)
+    {
+        redde (s32)-I;
+    }
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        si (c.datum[i] < '0' || c.datum[i] > '9')
+        {
+            redde (s32)-I;
+        }
+        n = n * (s32)X + (s32)(c.datum[i] - '0');
+    }
+    redde n;
+}
+
+/* T32 a: tabulam fiduciae legere (radix/oratio/probationes/fixa/
+ * auctores.tsv: '#' commentum; titulus TAB arcus TAB rectae TAB permille)
+ * in programma->fiducia; plagula absens = NIHIL (nihil ordinatur).
+ * FALSUM = memoria sola. */
+interior b32
+_fiduciam_onerare (
+               Piscina* piscina,
+    constans character* radix,
+       OratioProgramma* programma)
+{
+    character via[1024];
+       chorda fons;
+          i32 i = ZEPHYRUM;
+
+    sprintf(via, "%s/oratio/probationes/fixa/auctores.tsv", radix);
+    si (!_plagulam_legere(piscina, via, &fons))
+    {
+        redde VERUM;
+    }
+    programma->fiducia = tabula_dispersa_creare_chorda(piscina,
+        (i32)128);
+    si (programma->fiducia == NIHIL)
+    {
+        redde FALSUM;
+    }
+    dum (i < fons.mensura)
+    {
+        i32 finis = i;
+        i32 campi[4];
+        i32 n = ZEPHYRUM;
+        i32 k;
+
+        dum (finis < fons.mensura && fons.datum[finis] != '\n')
+        {
+            finis = finis + I;
+        }
+        si (finis > i && fons.datum[i] != '#')
+        {
+            campi[n]  = i;
+            n         = I;
+            per (k = i; k < finis && n < (i32)IV; k++)
+            {
+                si (fons.datum[k] == '\t')
+                {
+                    campi[n]  = k + I;
+                    n         = n + I;
+                }
+            }
+            si (n == (i32)IV)
+            {
+                chorda titulus = _chorda(fons.datum + campi[ZEPHYRUM],
+                    campi[I] - I - campi[ZEPHYRUM]);
+                s32 permille = _numerus_decimalis(_chorda(fons.datum
+                    + campi[(i32)III], finis - campi[(i32)III]));
+                i32* valor = (i32*)piscina_allocare(piscina,
+                    (memoriae_index)magnitudo(i32));
+                chorda clavis = _copia(piscina, titulus);
+
+                si (valor == NIHIL || clavis.datum == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                *valor = permille
+                    >= ZEPHYRUM ? (i32)permille : ZEPHYRUM;
+                (vacuum)tabula_dispersa_inserere(programma->fiducia,
+                    clavis, valor);
+            }
+        }
+        i = finis + I;
+    }
+    redde VERUM;
+}
+
+/* fiducia regulae titulo: permille aut -I ignota */
+interior s32
+_fiducia_regulae (
+    constans OratioProgramma* programma,
+                      chorda  titulus)
+{
+    vacuum* valor;
+
+    si (   programma->fiducia == NIHIL
+        || !tabula_dispersa_invenire(programma->fiducia, titulus,
+        &valor))
+    {
+        redde (s32)-I;
+    }
+    redde (s32)*(i32*)valor;
+}
+
+/* FIDUCIA (T32 a, 2026-09-09): tabula auctores.tsv (praecisio arcuum per
+ * regulam plagulis pinnatis) duobus modis adhiberi potest. 'contentio'
+ * (ADOPTUM, decisio Frani): petitio fidelior petitionem stantem
+ * dependentis revocat, ordo regularum intactus - ligatio chartae
+ * 405/428 -> 455/479, Seneca 520 -> 523, scrinium +9..+46, coactae supra
+ * pinnas omnes, arcus recti chartis +466 (Seneca -114: tabula chartis
+ * dominata regulas laxas Senecae subaestimat - tabula per dialectum
+ * FUTURA). 'ordo' (MENSURATUM, RECUSATUM): regulae graduum II+ ordine
+ * fiduciae applicantur - ligatio sursum sed casus -10 quinque plagulis,
+ * coactae chartarum -14: ordo regularum lectiones quoque decidit et ordo
+ * ille mensuratus est (T30 e). 'ambo'; '0' nihil. Modus: 0 nihil, I
+ * ordo, II contentio (ordinarium), III ambo. */
+interior i32
+_fiducia_modus (
+    vacuum)
+{
+    hic_manens i32 lectum  = ZEPHYRUM;
+    hic_manens i32 modus   = (i32)II;
+
+    si (!lectum)
+    {
+        constans character* ambitus = getenv("ORATIO_FIDUCIA");
+
+        si (ambitus != NIHIL)
+        {
+            modus = strcmp(ambitus, "ordo") == ZEPHYRUM ? I
+                : strcmp(ambitus, "contentio") == ZEPHYRUM ? (i32)II
+                : strcmp(ambitus, "ambo")
+                    == ZEPHYRUM ? (i32)III : ZEPHYRUM;
+        }
+        lectum = I;
+    }
+    redde modus;
+}
+
+interior b32
+_fiducia_activa (
+    vacuum)
+{
+    redde (b32)(_fiducia_modus() & I);
+}
+
+/* T32 a: regulas gradus (nodi <regula> expansi) ordine fiduciae non
+ * crescente stabiliter reordinare (ignotae in cauda ordine suo);
+ * gradus I (priores, regulae adpositionum) intactus - prior classis
+ * ante regulas obiecti loquitur (T19g). FALSUM = memoria. */
+interior b32
+_regulas_fiducia_ordinare (
+    constans Cursus* cursus,
+            Piscina* scratch,
+                Xar* regulae,
+                i32  gradus)
+{
+          i32   n = xar_numerus(regulae);
+          s32*  fides;
+    StmlNodus** copia;
+          i32   i;
+          i32   j;
+
+    si (   !_fiducia_activa() || gradus < (i32)II || n < (i32)II
+        || cursus->programma->fiducia == NIHIL)
+    {
+        redde VERUM;
+    }
+    fides = (s32*)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(s32));
+    copia = (StmlNodus**)piscina_allocare(scratch, (memoriae_index)n
+        * (memoriae_index)magnitudo(StmlNodus*));
+    si (fides == NIHIL || copia == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        StmlNodus* regula   = *(StmlNodus**)xar_obtinere(regulae, i);
+           chorda* titulus  = stml_attributum_capere(regula, "titulus");
+
+        copia[i]  = regula;
+        fides[i]  = titulus != NIHIL
+            ? _fiducia_regulae(cursus->programma, *titulus) : (s32)-I;
+    }
+    per (i = I; i < n; i++)
+    {
+         StmlNodus* r = copia[i];
+               s32  f = fides[i];
+
+        j = i;
+        dum (j > ZEPHYRUM && fides[j - I] < f)
+        {
+            copia[j]  = copia[j - I];
+            fides[j]  = fides[j - I];
+            j         = j - I;
+        }
+        copia[j] = r;
+        fides[j] = f;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        *(StmlNodus**)xar_obtinere(regulae, i) = copia[i];
+    }
+    redde VERUM;
+}
+
 OratioProgramma*
 oratio_resolutio_programma_onerare (
                      Piscina* piscina,
@@ -261,8 +478,16 @@ oratio_resolutio_programma_onerare (
         vitium->causa    = "plagula absens";
         redde NIHIL;
     }
-    redde oratio_resolutio_programma_legere(piscina, intern, fons,
-        vitium);
+    {
+        OratioProgramma* p = oratio_resolutio_programma_legere(piscina,
+            intern, fons, vitium);
+
+        si (p != NIHIL && !_fiduciam_onerare(piscina, radix, p))
+        {
+            redde NIHIL;
+        }
+        redde p;
+    }
 }
 
 vacuum
@@ -633,6 +858,9 @@ nomen structura {
     MateriaNodus* umbra;
              i32  w;
              i32  b;
+    /* T32 a: carrier v et titulus regulae (auctor impletionis) */
+             i32 v;
+          chorda titulus;
 } Impletio;
 
 /* decisio vocabuli (T19g, decretum SUDOKU decisio XL): genus
@@ -1243,6 +1471,218 @@ _ligationes_remittere (
     redde VERUM;
 }
 
+/* T32 a (2026-09-09): AUCTOR impletionis in umbram scribere - lexema
+ * derivatum ex titulo regulae (origo = pars prima vocabuli carrier v,
+ * ut auctor decisionis vocabuli); titulus vacuus = nihil. Umbra iam
+ * auctorem ferens reponitur (lex capitis 'lex-capitis' scribit).
+ * Oraculum hinc praecisionem arcuum per auctorem computat - tabula
+ * fiduciae ex qua ordo petitionum (gradus decisus). FALSUM = memoria. */
+interior b32
+_auctorem_umbrae_scribere (
+          Cursus* cursus,
+    MateriaValor  elementa,
+    MateriaNodus* umbra,
+             i32  v,
+          chorda  titulus)
+{
+    constans MateriaValor* partes;
+             MateriaToken* t;
+                      b32  scriptum;
+
+    si (   titulus.mensura == ZEPHYRUM
+        || v               >= materia_valor_lista_numerus(elementa))
+    {
+        redde VERUM;
+    }
+    partes = &materia_valor_lista_obtinere(elementa, v)->datum.nodus
+        ->loci[ORATIO_VOCABULUM_PARTES];
+    si (   partes->genus                        != MATERIA_VALOR_LISTA
+        || materia_valor_lista_numerus(*partes) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    t = oratio_lexema_derivatum(cursus->piscina,
+        (s32)ORATIO_LEX_DERIVATUM, titulus,
+        materia_valor_lista_obtinere(*partes, ZEPHYRUM)->datum.token);
+    si (t == NIHIL)
+    {
+        redde FALSUM;
+    }
+    scriptum = umbra->loci[ORATIO_UMBRA_AUCTOR].genus
+        != MATERIA_VALOR_NIHIL;
+    redde scriptum
+        ? materia_nodus_reponere(umbra, (i32)ORATIO_UMBRA_AUCTOR,
+            materia_valor_token(t), MATERIA_LOCUS_TOKEN)
+        : materia_nodus_ponere(umbra, (i32)ORATIO_UMBRA_AUCTOR,
+            materia_valor_token(t), MATERIA_LOCUS_TOKEN);
+}
+
+/* T32 a: PETITIO dependentis - umbra quae eum petit et fiducia eius */
+nomen structura {
+    MateriaNodus* umbra;
+             s32  fides;
+} Petitio;
+
+/* petitionem stantem revocare: cella impletionis huius gradus vacuatur
+ * (umbra NIHIL: scriptio eam praeterit), aut umbra gradus prioris iam
+ * scripta impletionem -I accipit (vacua oraculo et legibus). FALSUM =
+ * memoria. */
+interior b32
+_petitionem_revocare (
+             Xar* impletiones,
+    MateriaNodus* umbra)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(impletiones); k++)
+    {
+        Impletio* cella = (Impletio*)xar_obtinere(impletiones, k);
+
+        si (cella->umbra == umbra)
+        {
+            cella->umbra = NIHIL;
+            redde VERUM;
+        }
+    }
+    redde materia_nodus_reponere(umbra,
+            (i32)ORATIO_UMBRA_IMPLETIO_VOCABULUM,
+            materia_valor_index((s32)-I), MATERIA_LOCUS_INDEX)
+        && materia_nodus_reponere(umbra,
+            (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
+            materia_valor_index((s32)-I), MATERIA_LOCUS_INDEX);
+}
+
+/* T32 a (2026-09-09) CAPUT UNUM PER VERBUM: dependens ordinis = carrier
+ * v si umbra capitis aut carrier adpositio/particula/auxiliare (UD:
+ * amod, case, mark, aux - carrier a socio pendet), socius w aliter
+ * (subiectum, obiectum verbi: socius a carrier pendet). Directio eadem
+ * qua oraculum arcus iudicat. */
+interior i32
+_dependens_ordinis (
+             MateriaValor  elementa,
+                      i32  v,
+                      i32  a,
+    constans MateriaNodus* umbra,
+                      i32  w)
+{
+    constans MateriaValor* analyses =
+        &materia_valor_lista_obtinere(elementa, v)->datum.nodus
+        ->loci[ORATIO_VOCABULUM_ANALYSES];
+             OratioClassis cc;
+
+    si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
+        == MATERIA_VALOR_INDEX
+        && umbra->loci[ORATIO_UMBRA_RELATIO].datum.index
+            == (s32)ORATIO_RELATIO_CAPUT)
+    {
+        redde v;
+    }
+    si (   analyses->genus != MATERIA_VALOR_LISTA
+        || a               >= materia_valor_lista_numerus(*analyses))
+    {
+        redde w;
+    }
+    cc = oratio_genus_classis((OratioGenus)materia_valor_lista_obtinere(
+        *analyses, a)->datum.nodus->genus);
+    redde (   cc == ORATIO_CLASSIS_ADPOSITIO
+           || cc == ORATIO_CLASSIS_PARTICULA
+           || cc == ORATIO_CLASSIS_AUXILIARE) ? v : w;
+}
+
+/* umbra iam in impletionibus huius gradus? (ordo alter eiusdem umbrae
+ * repetitus fit in scriptione - dependentem non petit) */
+interior b32
+_umbra_iam_petita (
+             constans Xar* impletiones,
+    constans MateriaNodus* umbra)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(impletiones); k++)
+    {
+        si (((constans Impletio*)xar_obtinere(impletiones, k))->umbra
+            == umbra)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* LEX CAPITIS UNIUS (T32 a, ADOPTA 2026-09-09, decisio Frani): verbum
+ * dependens unius capitis - ordo cuius dependens ab umbra alia iam
+ * petitus est recusatur (prima vincit per dependentem; contentio
+ * fiduciae infra petitionem fideliorem praefert). MENSURATUM thesauris
+ * IX contra 2a26ab96 (cum contentione): ligatio Seneca 505 -> 523,
+ * chartae 396/422 -> 455/479, scrinium +44..+65; coactae et casus
+ * sursum ubique fere; arcus recti Senecae 2057 -> 1648 (dependentes
+ * contesti 607, petitiones 1331: prima vincit rectam 46 % servabat;
+ * arbor ante legem capita duo in verbo uno ferebat) - chartis arcus recti
+ * SURSUM. ORATIO_CAPUT_UNUM=0 abrogat (mensura). */
+/* T32 a LEX CAPITIS IN CONTENTIONE: umbra stans dependentis si umbra
+ * CAPITIS impleta est (adiectivum capiti ligatum), caput eius (index
+ * vocabuli, lectionis) reddere - ex cella huius gradus aut ex locis
+ * umbrae (gradus prior); -I aliter. Petitio subiecti/obiecti in
+ * adiectivum ad caput VICINUM sequitur pro capite revocando ('Puella
+ * bona ambulat': bona caput puella tenet, subiectum ambulat puellam
+ * accipit) - lex capitis posterior (_ligationes_ad_caput_sequi) idem
+ * post factum faciebat, contentio eam praeveniebat. */
+interior s32
+_caput_petitionis (
+    constans MateriaNodus* stans,
+             constans Xar* impletiones,
+                      s32* b_capitis)
+{
+    i32 k;
+
+    si (   stans->loci[ORATIO_UMBRA_RELATIO].genus
+        != MATERIA_VALOR_INDEX
+        || stans->loci[ORATIO_UMBRA_RELATIO].datum.index
+            != (s32)ORATIO_RELATIO_CAPUT)
+    {
+        redde (s32)-I;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(impletiones); k++)
+    {
+        constans Impletio* cella =
+            (constans Impletio*)xar_obtinere(impletiones, k);
+
+        si (cella->umbra == stans)
+        {
+            *b_capitis = (s32)cella->b;
+            redde (s32)cella->w;
+        }
+    }
+    si (   stans->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
+            == MATERIA_VALOR_INDEX
+        && stans->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS].genus
+            == MATERIA_VALOR_INDEX)
+    {
+        *b_capitis =
+            stans->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS].datum.index;
+        redde stans->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].datum.index;
+    }
+    redde (s32)-I;
+}
+
+interior b32
+_caput_unum_activum (
+    vacuum)
+{
+    hic_manens i32 lectum   = ZEPHYRUM;
+    hic_manens b32 activum  = VERUM;
+
+    si (!lectum)
+    {
+        constans character* ambitus = getenv("ORATIO_CAPUT_UNUM");
+
+        activum = (b32)(ambitus == NIHIL
+            || strcmp(ambitus, "0") != ZEPHYRUM);
+        lectum = I;
+    }
+    redde activum;
+}
+
 interior b32
 _sententiam_resolvere_gradu (
           Cursus* cursus,
@@ -1251,7 +1691,8 @@ _sententiam_resolvere_gradu (
              b32* vindicata,
              b32* explicita,
              b32* emendata,
-         Decisio* decisiones)
+         Decisio* decisiones,
+         Petitio* capita_data)
 {
 
                       Piscina* scratch;
@@ -1378,6 +1819,12 @@ _sententiam_resolvere_gradu (
         redde VERUM;
     }
     regulae = _liberi_titulo(scratch, expansio.radix_expansa, "regula");
+    si (   regulae != NIHIL
+        && !_regulas_fiducia_ordinare(cursus, scratch, regulae, gradus))
+    {
+        piscina_destruere(scratch);
+        redde FALSUM;
+    }
         praelata = (s32*)piscina_allocare(scratch, (memoriae_index)ne
             * (memoriae_index)magnitudo(s32));
     impletiones = xar_creare(scratch, (i32)magnitudo(Impletio));
@@ -1662,6 +2109,135 @@ _sententiam_resolvere_gradu (
                 }
                 perge;
             }
+            /* T32 a CAPUT UNUM PER VERBUM: dependens iam ab umbra ALIA
+             * petitus (hoc aut gradu priore) - ordo recusatus, prima
+             * vincit per dependentem; umbra iam petita nihil petit */
+            si (   _caput_unum_activum()
+                && !_umbra_iam_petita(impletiones, umbra))
+            {
+                i32 dependens = _dependens_ordinis(*elementa, v, a,
+                    umbra, w);
+                Petitio* petitio = &capita_data[dependens];
+                    s32  fides = titulus != NIHIL
+                        ? _fiducia_regulae(cursus->programma, *titulus)
+                        : (s32)-I;
+
+                /* LEX CAPITIS IN CONTENTIONE: socius w adiectivum capiti
+                 * vicino iam ligatum - petitio subiecti/obiecti ad caput
+                 * transit (w, b := caput), dependens caput fit */
+                si (   petitio->umbra != NIHIL
+                    && petitio->umbra != umbra
+                    && dependens      == w
+                    && (   relatio == (s32)ORATIO_RELATIO_SUBIECTUM
+                        || relatio
+                            == (s32)ORATIO_RELATIO_OBIECTUM_VERBI))
+                {
+                    s32 b2 = (s32)-I;
+                    s32 w2 = _caput_petitionis(petitio->umbra,
+                        impletiones,
+                        &b2);
+
+                    si (   w2 >= ZEPHYRUM && w2 < (s32)ne
+                        && b2 >= ZEPHYRUM
+                        && w2 != (s32)v
+                        && (w2 > (s32)w ? w2 - (s32)w : (s32)w - w2)
+                            == I)
+                    {
+                        /* caput VICINUM adest: petitio ad caput transit si
+                         * lectio capitis umbrae concordat (casus, numerus)
+                         * et licet; aliter RECUSATUR - petitio subiecti in
+                         * adiectivum capiti vicino ligatum caput numquam
+                         * revocat (concordantia vicina testimonium fortius,
+                         * 743/624 contra 705 permille) */
+                        b32 licet = (b32)(   _analysis_adest(*elementa,
+                                (i32)w2, (i32)b2)
+                            && !(vindicata[w2] && b2 != ZEPHYRUM)
+                            && !(   explicita[w2]
+                            && praelata[w2] >= ZEPHYRUM
+                                 && b2 != praelata[w2]));
+
+                        si (licet)
+                        {
+                            constans MateriaNodus* lectio =
+                                materia_valor_lista_obtinere(
+                                materia_valor_lista_obtinere(*elementa,
+                                    (i32)w2)->datum.nodus
+                                    ->loci[ORATIO_VOCABULUM_ANALYSES],
+                                (i32)b2)->datum.nodus;
+                            s32 casus_umbrae =
+                                umbra->loci[ORATIO_UMBRA_CASUS].genus
+                                == MATERIA_VALOR_INDEX
+                                ? umbra->loci[ORATIO_UMBRA_CASUS].datum.index
+                                : (s32)-I;
+                            s32 numerus_umbrae =
+                                umbra->loci[ORATIO_UMBRA_NUMERUS].genus
+                                == MATERIA_VALOR_INDEX
+                                ? umbra->loci[ORATIO_UMBRA_NUMERUS].datum.index
+                                : (s32)-I;
+
+                            licet = (b32)(   (   casus_umbrae < ZEPHYRUM
+                                              || _accidens_lectionis(lectio,
+                                                  "casus")
+                                                      == casus_umbrae)
+                                          && (   numerus_umbrae
+                                              < ZEPHYRUM
+                                              || _accidens_lectionis(lectio,
+                                                  "numerus")
+                                                      == numerus_umbrae));
+                        }
+                        si (!licet)
+                        {
+                            si (cursus->census != NIHIL)
+                            {
+                                cursus->census->recusatae_capitis =
+                                    cursus->census->recusatae_capitis
+                                        + I;
+                            }
+                            perge;
+                        }
+                        w          = (i32)w2;
+                        b          = (i32)b2;
+                        dependens  = w;
+                        petitio    = &capita_data[dependens];
+                        si (cursus->census != NIHIL)
+                        {
+
+                            cursus->census->ad_caput_secutae =
+                                cursus->census->ad_caput_secutae + I;
+                        }
+                    }
+                }
+                si (petitio->umbra != NIHIL && petitio->umbra != umbra)
+                {
+                    /* CONTENTIO (fiducia): petitio fidelior stantem revocat */
+                    si (   (_fiducia_modus() & (i32)II)
+                        && fides > petitio->fides)
+                    {
+                        si (!_petitionem_revocare(impletiones,
+                                petitio->umbra))
+                        {
+                            piscina_destruere(scratch);
+                            redde FALSUM;
+                        }
+                        si (cursus->census != NIHIL)
+                        {
+                            cursus->census->revocatae_capitis =
+                                cursus->census->revocatae_capitis + I;
+                        }
+                    }
+                    alioquin
+                    {
+                        si (cursus->census != NIHIL)
+                        {
+                            cursus->census->recusatae_capitis =
+                                cursus->census->recusatae_capitis + I;
+                        }
+                        perge;
+                    }
+                }
+                petitio->umbra = umbra;
+                petitio->fides = fides;
+            }
             cella = (Impletio*)xar_addere(impletiones);
 
             si (cella == NIHIL)
@@ -1672,6 +2248,9 @@ _sententiam_resolvere_gradu (
             cella->umbra  = umbra;
             cella->w      = w;
             cella->b      = b;
+            cella->v      = v;
+            cella->titulus  = titulus != NIHIL ? *titulus
+                : _chorda(NIHIL, ZEPHYRUM);
                         /* praelationes ambae sub lege 'prima vincit per
              * vocabulum' (trans gradus quoque: vindicata) */
                                     si (emendare_v)
@@ -1787,6 +2366,10 @@ _sententiam_resolvere_gradu (
         Impletio* imp = (Impletio*)xar_obtinere(impletiones, k);
              i32  b_novus;
 
+        si (imp->umbra == NIHIL)
+        {
+            perge;   /* T32 a: petitio revocata */
+        }
         si (imp->umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM].genus
             != MATERIA_VALOR_NIHIL)
         {
@@ -1814,7 +2397,9 @@ _sententiam_resolvere_gradu (
                 materia_valor_index((s32)imp->w), MATERIA_LOCUS_INDEX)
             || !materia_nodus_ponere(imp->umbra,
                 (i32)ORATIO_UMBRA_IMPLETIO_ANALYSIS,
-                materia_valor_index((s32)b_novus), MATERIA_LOCUS_INDEX))
+                materia_valor_index((s32)b_novus), MATERIA_LOCUS_INDEX)
+            || !_auctorem_umbrae_scribere(cursus, *elementa, imp->umbra,
+                imp->v, imp->titulus))
         {
             piscina_destruere(scratch);
             redde FALSUM;
@@ -2626,6 +3211,10 @@ _ligationes_ad_caput_sequi (
                     .datum.index;
                 b = umbra->loci[ORATIO_UMBRA_IMPLETIO_ANALYSIS]
                     .datum.index;
+                si (w < ZEPHYRUM || b < ZEPHYRUM)
+                {
+                    perge;   /* T32 a: petitio revocata */
+                }
                 si (w < ZEPHYRUM || w >= (s32)ne || b < ZEPHYRUM)
                 {
                     perge;
@@ -2720,6 +3309,20 @@ _ligationes_ad_caput_sequi (
                             MATERIA_LOCUS_INDEX))
                     {
                         redde FALSUM;
+                    }
+                    /* T32 a: arcus nunc legis capitis est - auctor
+                     * 'lex-capitis' (tabula fiduciae eum seorsum metitur) */
+                    {
+                        hic_manens character lex[] = "lex-capitis";
+
+                        si (!_auctorem_umbrae_scribere(cursus,
+                            *elementa,
+                                umbra, (i32)j,
+                                _chorda((i8*)lex,
+                                    (i32)(magnitudo(lex) - I))))
+                        {
+                            redde FALSUM;
+                        }
                     }
                     si (cursus->census != NIHIL)
                     {
@@ -2928,6 +3531,7 @@ _sententiam_resolvere (
                                             b32* explicita;
                                             b32* emendata;
                                         Decisio* decisiones;
+                                        Petitio* capita_data;   /* T32 a */
 
         si (cursus->census != NIHIL)
         {
@@ -2975,13 +3579,17 @@ _sententiam_resolvere (
         emendata = (b32*)piscina_allocare(cursus->piscina,
             (memoriae_index)ne
             * (memoriae_index)magnitudo(b32));
+    capita_data = (Petitio*)piscina_allocare(cursus->piscina,
+        (memoriae_index)ne * (memoriae_index)magnitudo(Petitio));
     si (   vindicata == NIHIL || explicita == NIHIL || emendata == NIHIL
-        || decisiones == NIHIL)
+        || decisiones == NIHIL || capita_data == NIHIL)
     {
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < ne; k++)
     {
+                capita_data[k].umbra  = NIHIL;
+                capita_data[k].fides  = (s32)-I;
                 vindicata[k]          = FALSUM;
         explicita[k]                  = FALSUM;
         emendata[k]                   = FALSUM;
@@ -2995,7 +3603,7 @@ _sententiam_resolvere (
                                     sententia,
                                     gradus,
                                     vindicata, explicita, emendata,
-                                    decisiones))
+                                    decisiones, capita_data))
                                 {
             redde FALSUM;
                                 }

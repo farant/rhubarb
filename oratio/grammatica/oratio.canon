@@ -57,8 +57,10 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T20a 2026-09-08:
-            XXV genera, CLXXXIV loci - genus 'clausula' IV locorum post
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T32 a 2026-09-09
+            53bb8633: XXV genera, CLXXXV loci - locus 'auctor' TOKEN
+            derivatum umbrae appensus, titulus regulae implentis; T20a
+            2026-09-08 62a7afd8: XXV genera, CLXXXIV loci - genus 'clausula' IV locorum post
             umbram, locus 'clausulae' sententiae, loci 'clausula' +
             'clausula-causa' elementorum, 'forma-verbi' umbrae; T19g
             6c5a6ab9, XXIV genera, CLXXII loci - loci 'decisio' INDEX et 'auctor'
@@ -68,7 +70,7 @@
             CXLVI loci; T6b 93c1c9cf, VI genera XVII loci; T1 b27fe13a,
             XVI loci). Tabula mutata sine hac optione mutata rubet in
             iudicio ET in custode derivae.">
-      <optio>62a7afd8</optio>
+      <optio>53bb8633</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -941,6 +943,7 @@
     <liberum nomen="impletio-vocabulum" maximum="1"/>
     <liberum nomen="impletio-analysis" maximum="1"/>
     <liberum nomen="forma-verbi" maximum="1"/>
+    <liberum nomen="auctor" maximum="1"/>
   </elementum>
   <elementum nomen="relatio" intra="umbra" textus="verum"
     nota="OratioRelatio: 0 obiectum 1 caput 2 verbum-finitum 3 subiectum (T20a: relationes clausulae)"/>
@@ -958,6 +961,10 @@
     nota="ordinalis analysis implentis intra analyses vocabuli implentis"/>
   <elementum nomen="forma-verbi" intra="umbra" textus="verum"
     nota="T20a: OratioFormaVerbi exspectata (0 finitum ...) - condicio umbrae verbi finiti clausulae; absens = quaelibet"/>
+  <elementum nomen="auctor" intra="umbra"
+    nota="T32 a (2026-09-09): derivatum - titulus regulae quae umbram implevit (lex-capitis si lex capitis ligationem secuta est); absens = umbra vacua. Oraculum praecisionem arcuum per auctorem hinc computat">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
 
   <!-- =============== CLAUSULA (T20a, 2026-09-08) ===============
        Capsa sudoku inter vicinitatem et sententiam (decisiones

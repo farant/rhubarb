@@ -769,7 +769,13 @@ principale (vacuum)
             (s32)ORATIO_SPECIES_CLAUSULAE_PRINCIPALIS);
         CREDO_AEQUALIS_S32 (_causa(doc, (i32)IV),
             (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA);
-                CREDO_VERUM (rc.clausulae.discordiae >= I);
+        /* T32 a (2026-09-09) LEX CAPITIS UNIUS cum contentione: caput
+         * bonae (puella, remotum, regula laxa gradus III) post petitionem
+         * subiecti 'cantat' (vicina, gradus II) venit - dependens iam
+         * petitus, ordo RECUSATUS; ligatio trans clausulas nulla,
+         * discordia nulla (ante T32 a >= I). */
+        CREDO_AEQUALIS_I32 (rc.clausulae.discordiae, ZEPHYRUM);
+        CREDO_VERUM (rc.recusatae_capitis + rc.revocatae_capitis >= I);
         CREDO_AEQUALIS_I32 (rc.clausulae.catenatae, ZEPHYRUM);
         /* T20c lex I: recusatio trans clausulas mensurata VII modis et
          * RECUSATA (interruptor ZEPHYRUM) - numerator quiescit */

@@ -419,7 +419,7 @@ MateriaLexiconRatum  ratum;
          * CLXXXIV (T20a: clausulae sententiae I, clausula +
          * clausula-causa elementorum VI, forma-verbi umbrae I,
          * clausula IV) */
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_locorum, (i32)184);
+        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_locorum, (i32)185);   /* T32 a: + auctor umbrae */
         per (i = ZEPHYRUM; i
             < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
         {
@@ -480,7 +480,8 @@ MateriaLexiconRatum  ratum;
                             {
                 "relatio", "classis", "casus", "numerus", "genus",
                 "impletio-vocabulum", "impletio-analysis",
-                "forma-verbi"   /* T20a */
+                "forma-verbi",  /* T20a */
+                "auctor"        /* T32 a: TOKEN derivatum */
             };
 
             CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[
@@ -489,7 +490,7 @@ MateriaLexiconRatum  ratum;
                 ORATIO_GENUS_UMBRA].loci_numerus,
                 (i32)ORATIO_UMBRA_NUMERUS_LOCORUM);
                         CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_NUMERUS_LOCORUM,
-                            (i32)VIII);
+                            (i32)IX);
             per (j = ZEPHYRUM; j < (i32)VIII; j++)
             {
                 CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_UMBRA, j),
@@ -497,6 +498,12 @@ MateriaLexiconRatum  ratum;
                 CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, j),
                     (s32)MATERIA_LOCUS_INDEX);
             }
+            /* T32 a: locus VIII 'auctor' TOKEN derivatum (ut vocabuli) */
+            CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_UMBRA, (i32)VIII),
+                tituli_umbrae[VIII]) == ZEPHYRUM);
+            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VIII),
+                (s32)MATERIA_LOCUS_TOKEN);
+            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_AUCTOR, (i32)VIII);
             CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(
                 ORATIO_GENUS_UMBRA),
                 (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);

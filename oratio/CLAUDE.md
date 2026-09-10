@@ -824,7 +824,23 @@ harness live in `oratio/census/` (README there; `conllu.py` shared
 reader). Refusals carry their COMPONENT in `oratio/recusata.md`
 (annotatio | exsecutor | regulae | substratum | oraculum) and a retry
 condition — a refusal is a fact about the configuration it was
-measured against.
+measured against. **T32 a (2026-09-09): AUTHOR ON THE ARC + ONE HEAD
+PER WORD + TRUST ON CONTESTS.** Umbrae carry their filling rule
+(`auctor`); the oracle prints arc precision PER AUTHOR (a different
+animal from reading accuracy: loose nominative head rules 11–18 %,
+strict subject 70 %) and CONTESTED dependents. LEX CAPITIS UNIUS: a
+claim on an already-claimed dependent is refused; FIDUCIA
+(`fixa/auctores.tsv`, `census/fiducia.py`, regenerated only with a named
+cause): the higher-trust claim wins the contest (`ORATIO_FIDUCIA=
+contentio`; `ordo` = rules reordered by trust, MEASURED AND REFUSED:
+case −10, rule order decides readings). LEX CAPITIS lives in the
+contest (follow to the adjacent agreeing noun, else refuse, never
+unseat the head). Attachment Seneca 505 → 526, charters 396/422 →
+459/480, shelf +39..+67; RIGHT ARCS pinned as a FLOOR (Seneca 2057 →
+1676 named: first-wins kept the right claim 46 %, the table is
+charter-dominated). NEXT = losing claims kept as ALTERNATIVES with arc
+coverage, per-dialect trust table, adjacency tie-break in contests,
+strict-decided tier.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

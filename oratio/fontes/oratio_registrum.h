@@ -378,6 +378,12 @@ nomen enumeratio {
      * valor unus finitatem dicit (modus tres valores poscerret);
      * APPENSA post impletionem, non scripta = quaelibet */
     ORATIO_UMBRA_FORMA_VERBI,        /* INDEX: OratioFormaVerbi exspectata */
+    /* T32 a (2026-09-09): AUCTOR impletionis - lexema derivatum, titulus
+     * regulae quae umbram implevit ('lex-capitis' si lex capitis
+     * ligationem ad caput secuta est); non scriptus = umbra vacua.
+     * Oraculum praecisionem arcuum per auctorem hinc computat (tabula
+     * fiduciae, gradus decisus). APPENSUS post forma-verbi. */
+    ORATIO_UMBRA_AUCTOR,             /* TOKEN derivatum: titulus regulae implentis */
 
     ORATIO_UMBRA_NUMERUS_LOCORUM
 } OratioUmbraLocus;

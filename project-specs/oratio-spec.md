@@ -2071,6 +2071,30 @@ tier. The census scripts and the measurement harness are in
 `oratio/census/`; refusals are registered with their pipeline
 component and retry condition in `oratio/recusata.md`.
 
+**As built — T32 a, author on the arc, one head per word, trust on
+contests (2026-09-09).** The umbra carries the filling rule's title
+(`auctor`, canon sigillum 53bb8633); the oracle reports arc precision
+per author and contested dependents (gate law: authored arcs == arcs
+judged). LEX CAPITIS UNIUS: an order whose dependent (carrier for head
+and adposition umbrae, partner for subject and object) is already
+claimed is refused. FIDUCIA: `oratio/probationes/fixa/auctores.tsv`
+(per-rule arc precision on the pinned files, `census/fiducia.py`,
+regenerated only with a named cause) read by the executor; on a
+contest the higher-trust claim withdraws the standing one
+(`ORATIO_FIDUCIA=contentio`, default); ordering the rules by trust was
+measured and refused (case −10 on five files: rule order decides
+readings too). LEX CAPITIS moved into the contest: a subject or object
+claim on an adjective bound to an adjacent agreeing noun follows to the
+noun, else is refused, never unseating the head. Adopted: attachment
+Seneca 505 → 526, charters 396/422 → 459/480, shelf +39..+67; subject
+precision 581/315/478, object 553/545/503; case, forced, primary up or
+level; named falls Seneca voice −1, charters gender/number −1. Right
+arcs Seneca 2057 → 1676 (contested dependents: first-wins kept the
+right claim 46 %, the table ranks Seneca by the charters' failures),
+charters up; right arcs now PINNED as a floor. Not done: losing claims
+kept as alternatives with arc coverage, per-dialect trust table,
+adjacency tie-break in contests, strict-decided tier.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

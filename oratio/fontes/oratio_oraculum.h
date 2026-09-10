@@ -77,6 +77,15 @@ nomen structura {
      * primae == casus aureus (quae regula casum falsum eligit) */
        i32 casus_verba;
        i32 casus_recti;
+    /* T32 a (2026-09-09): ARCUS per auctorem - umbrae lectionis primae
+     * quas haec regula implevit (auctor umbrae) et rectae earum; vicinae
+     * = distantia I. Tabula fiduciae hinc: praecisio arcuum, non
+     * accuratio lectionum (differunt: regulae obiecti lectiones 85 %,
+     * arcus 55-65 %). */
+       i32 ligationes;
+       i32 ligationes_rectae;
+       i32 ligationes_vicinae;
+       i32 ligationes_vicinae_rectae;
 } OratioOraculumAuctor;
 
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
@@ -258,6 +267,12 @@ nomen structura {
         i32 ligationes_capitis_rectae;
         i32 ligationes_vicinae;
         i32 ligationes_vicinae_rectae;
+    /* T32 a: DEPENDENTES CONTESTI - elementa quae umbrae impletae plures
+     * (lectionum primarum) ut dependens petunt (caput unum per verbum
+     * violatum); petitiones earum et rectae. Census legis capitis unius. */
+        i32 dependentes_contesti;
+        i32 petitiones_contestae;
+        i32 petitiones_contestae_rectae;
         i32 sententiae_linguae[ORATIO_LINGUA_NUMERUS];   /* census linguae per
                                                       * sententiam (T18):
                                                       * quot Latinae, quot

@@ -3542,3 +3542,92 @@ re-measured. Four of this week's refusals are readout or encoding
 walls, not rule walls: the loose object tier, the partner refusals,
 the participle slot, the naive second pass. They come back for
 measurement once the one-head law and the trust table exist.
+
+## 2026-09-09 — T32 a: author on the arc, one head per word, trust on contests
+
+**Author on the arc.** The umbra carries an `auctor` slot (token, like
+the word's decision author), written when the executor fills it with
+the rule's title, or `lex-capitis` when the head law rewrites it. The
+oracle judges arcs as before and now counts them per author, adjacent
+and distant, and counts CONTESTED dependents: words claimed by more
+than one filled umbra, with the direction table it already uses (the
+carrier depends on the partner for head, adposition, particle and
+auxiliary umbrae; the partner depends on the carrier for subject and
+object). Gate law: the sum of author arcs equals the arcs judged, so an
+unauthored filling is red. Canon: one liberum, sigillum 62a7afd8 →
+53bb8633 (XXV genera, CLXXXV loci). No behaviour change; every pin held.
+
+**What the arc table said.** Reading accuracy and arc precision are
+different animals: the object rules decide readings 85 % right and
+arcs 55–66 %; the loose nominative head rules are 11–18 % right on
+arcs; the following-object rule 34 %; the strict subject rule 70 %;
+the charters' loose tiers 1–5 %. A third of Seneca's arcs sat on
+contested dependents (607 words, 1331 claims) and 95 % of those
+dependents had a right claim among their competitors: first-wins by
+rule order kept it 46 % of the time. The trust table
+(`oratio/probationes/fixa/auctores.tsv`, from `census/fiducia.py` on a
+measurement of the pinned files, regenerated only with a named cause)
+is fitted on the committed state, before the law, so that it records
+what each rule does on its own and never ranks on numbers the ranking
+produced.
+
+**One head per dependent, first-wins.** An order whose dependent is
+already claimed by another umbra is refused (`_dependens_ordinis`,
+`capita_data` per sentence across stages, census `recusatae_capitis`).
+Measured alone: attachment up everywhere (Seneca 505 → 520, charters
+396/422 → 405/428, shelf +19..+45), contested dependents to zero,
+forced down 4 on Seneca and 7 on the charters test because refused
+orders no longer promote readings.
+
+**Trust on contests.** Two ways to use the table were measured. Rule
+ORDER by trust (stages II+ applied in descending arc precision):
+attachment up but case −10 on five files and forced −14 on the
+charters, because rule order also decides readings and that order was
+tuned (T30 e); REFUSED, kept as `ORATIO_FIDUCIA=ordo`. CONTEST only: a
+higher-trust claim withdraws the standing claim on the dependent
+(`_petitionem_revocare`: the stage's cell is voided, or an earlier
+stage's filling set to −I), rule order untouched; attachment up again
+everywhere, forced back above every pin, charters +50/+51 and their
+right arcs UP (+466), Seneca −114 right arcs because the table is
+charter-dominated for the loose rules. ADOPTED, Fran's decision, with
+the per-dialect table named as the next refinement.
+
+**LEX CAPITIS in the contest.** `Puella bona ambulat` showed the
+interplay: the adjacent subject rule (705) outranked the head-preceding
+rule (624) on `bona`, the head claim was withdrawn and the post-hoc
+head law had nothing to redirect. So the head law now lives in the
+contest: a subject or object claim on an adjective already bound to an
+ADJACENT noun follows to the noun when the noun's reading agrees with
+the umbra (case, number), and is refused otherwise; it never unseats
+the head. Right arcs +13..+54 on every file. The post-hoc law stays
+(+2 arcs on Seneca and Perseus).
+
+**Adopted, against 2a26ab96**, Seneca / charters dev / test: attachment
+505 → 526 / 396 → 459 / 422 → 480, subject precision 524 → 581 / 242 →
+315 / 397 → 478, object 551 → 553 / 397 → 545 / 417 → 503, case 707 →
+714 / 668 → 677 / 688 → 697, forced 800 = / 751 → 760 / 760 → 766,
+primary 836 = / 866 → 867 / 859 → 861; shelf attachment +60 / +61 / +39
+/ +67. Named falls: Seneca voice 991 → 990, charters gender dev 926 →
+925, number test 937 → 936 (refused orders no longer promote readings).
+Right arcs: Seneca 2057 → 1676, charters 2369/2469 → 2440/2513, shelf
+−7..−11 %, and a NEW PIN: right arcs as a floor (only rising), so no
+tranche can buy precision by pruning without a named cause.
+
+**The registry's promise kept.** R11 (loose object tier), R12 (subject
+partner refusal) and R14 (participle objects) were re-measured under
+the law: R11 still loses (charters attachment −40; distant accusatives
+fill dependents nobody claims, wrongly), R12 still inert, R14 the same
+shape (case +10, attachment mixed). All three stay refused, dated.
+
+**Fixtures.** `Terra puella non magna est`: `magna`'s distant head claim
+yields to the subject claim of `est` (filling −I). `Cum puella bona
+ambulat`: the subject claim on `bona` cannot follow to ablative
+`puella` and does not unseat the head, filled II not III. `Cum puella
+venisset, bona cantat` (the T20 b chain fixture): the distant head
+claim of `bona` yields to the adjacent subject claim of `cantat`, so no
+binding crosses the clause and the chain counts no discordance.
+
+**Not done.** Keep losing claims as alternatives with arc coverage
+printed (so the refused right arcs stop being lost); the per-dialect
+trust table; adjacency as the tie-break inside contests; the
+strict-decided tier.

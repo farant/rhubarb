@@ -232,7 +232,7 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "umbrae",              (s32)MATERIA_LOCUS_LISTA_NODUS },   /* T19d: umbrae lectionis */
 
     /* umbra - T19d: dependens exspectatus lectionis; forma-verbi T20a */
-    /* umbra (172..179) */
+    /* umbra (172..180) - T32 a: auctor 180 */
     { "relatio",             (s32)MATERIA_LOCUS_INDEX },   /* OratioRelatio */
     { "classis",             (s32)MATERIA_LOCUS_INDEX },   /* OratioClassis exspectata */
     { "casus",               (s32)MATERIA_LOCUS_INDEX },   /* OratioCasus */
@@ -241,9 +241,10 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "impletio-vocabulum",  (s32)MATERIA_LOCUS_INDEX },   /* ordinalis vocabuli implentis */
     { "impletio-analysis",   (s32)MATERIA_LOCUS_INDEX },   /* ordinalis analysis implentis */
     { "forma-verbi",         (s32)MATERIA_LOCUS_INDEX },   /* OratioFormaVerbi exspectata (T20a) */
+    { "auctor",              (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM: titulus regulae implentis (T32 a) */
 
     /* clausula - T20a (2026-09-08): capsa sudoku, nodus in sententia */
-    /* clausula (180..183) */
+    /* clausula (181..184) */
     { "semen",               (s32)MATERIA_LOCUS_INDEX },   /* ordinalis elementi seminis (T20a) */
     { "species",             (s32)MATERIA_LOCUS_INDEX },   /* OratioSpeciesClausulae */
     { "pater",               (s32)MATERIA_LOCUS_INDEX },   /* clausula continens */
@@ -279,9 +280,10 @@ hic_manens constans MateriaTabGenus GENERA_ORATIONIS[] = {
     { "analysis-ignoti",                           (i32)166, (i32)6 },
 
     /* T19d (2026-09-07): UMBRA appensa post analyses; T20a (2026-09-08):
-     * CLAUSULA appensa post umbram (loci CLXXII -> CLXXXIV) */
-    { "umbra",                                     (i32)172, (i32)8 },
-    { "clausula",                                  (i32)180, (i32)4 },
+     * CLAUSULA appensa post umbram (loci CLXXII -> CLXXXIV); T32 a
+     * (2026-09-09): locus 'auctor' umbrae appensus (CLXXXIV -> CLXXXV) */
+    { "umbra",                                     (i32)172, (i32)9 },
+    { "clausula",                                  (i32)181, (i32)4 },
 };
 
 constans MateriaRegistrumCoctum ORATIO_REGISTRUM = {

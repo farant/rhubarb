@@ -37,6 +37,7 @@
 #include "oratio_vocabularium.h"
 #include "oratio_registrum.h"
 #include "oratio_clausula.h"
+#include "tabula_dispersa.h"
 
 
 /* regula programmatis: titulus (attributum) et textus eius in
@@ -54,6 +55,12 @@ nomen structura {
 nomen structura {
     chorda  textus;    /* programma totum (copia in piscina) */
        Xar* regulae;   /* Xar de OratioRegula ordine documenti */
+    /* T32 a (2026-09-09): TABULA FIDUCIAE - titulus regulae -> i32*
+     * permille praecisionis arcuum (oratio/probationes/fixa/auctores.tsv,
+     * artefactum fixum ex tabulis auctorum plagularum pinnatarum;
+     * NIHIL = plagula absens). ORATIO_FIDUCIA=1: regulae graduum II+
+     * ordine fiduciae applicantur (petitio fidelior prior). */
+    TabulaDispersa* fiducia;
 } OratioProgramma;
 
 /* census per regulam: ordines applicati (vocabula quorum praelatio
@@ -82,6 +89,10 @@ nomen structura {
     /* T31 a LEX CAPITIS: ligationes subiecti/obiecti ad caput socii
      * secutae (socius adiectivum/determinans umbra capitis impleta) */
     i32 ad_caput_secutae;
+    /* T32 a: ordines recusati lege CAPITIS UNIUS (dependens iam petitus) */
+    i32 recusatae_capitis;
+    /* T32 a: petitiones stantes a petitione fideliore revocatae */
+    i32 revocatae_capitis;
         /* T20a: stampa clausularum (strata I-III) ante gradus - census
      * eius (semina, causae, clausulae per speciem) */
     OratioClausulaCensus clausulae;

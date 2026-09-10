@@ -29,6 +29,8 @@ seven-file Latin list.
 | `obiectum.py` | objects of finite verbs: rate by voice, case, position, nearest accusative with and without adposition objects, non-finite heads | T31 b |
 | `infinitivum.py` | objects and accusative subjects of infinitives and participles; an adjacent free accusative is whose | T31 c |
 | `participium.py` | active participles by tense; where an adjacent accusative really hangs | T31 c |
+| `auctores.py <mensura.tsv>` | the trust view: per rule, words decided and primary, ARCS and precision, adjacent precision, worst file (from a `metire.sh` tsv, T32 a `AUCTOR` columns XI–XIV) | T32 a |
+| `fiducia.py <mensura.tsv> [out]` | writes `oratio/probationes/fixa/auctores.tsv`, the executor's trust table, from the PINNED files only; regenerate with a named cause | T32 a |
 
 ## Measurement harness
 
@@ -38,6 +40,7 @@ seven-file Latin list.
 | `compara.py A.tsv B.tsv` | per file: primary, forced, case, number, gender, attachment, and the word deltas |
 | `notae.py A.tsv B.tsv` | the feature columns: verb form, voice, gender, number, person |
 | `relationes.sh x.tsv` | subject and object precision and recall per file |
+| `grep CONTESTA x.tsv` | contested dependents, claims on them, right claims (T32 a) |
 | `errata_delta.py A B [nota…]` | feature errata deltas between two `-errata -nota` runs |
 
 The baseline for a measurement is the tsv of the committed state; keep

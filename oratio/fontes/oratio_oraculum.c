@@ -389,14 +389,13 @@ constans character* constans ORATIO_ORACULUM_TITULI_PARTITIONIS[] = {
  * ut clavis stabilis sit - titulus elementi in piscina sententiae
  * vivit); cella nova aut numeri aucti. Ut _discrepantiam_notare. */
 /* casus_iudicatus (T23): -I extra populum, 0 falsus, I rectus */
-interior vacuum
-_auctorem_notare (
+/* auctorem titulo capere aut creare (tabula per titulum); NIHIL =
+ * memoria. T32 a: communis decisionibus verborum et arcubus umbrarum. */
+interior OratioOraculumAuctor*
+_auctorem_capere (
                  Piscina* piscina,
     OratioOraculumCensus* census,
-                  chorda  titulus,
-                     b32  primaria,
-                     s32  distantia,
-                     s32  casus_iudicatus)
+                  chorda  titulus)
 {
                    vacuum*  valor;
      OratioOraculumAuctor*  a;
@@ -413,30 +412,78 @@ _auctorem_notare (
             || census->auctores_index == NIHIL)
         {
             census->auctores = NIHIL;
-            redde;
+            redde NIHIL;
         }
     }
-        si (tabula_dispersa_invenire(census->auctores_index, titulus,
+    si (tabula_dispersa_invenire(census->auctores_index, titulus,
             &valor))
+    {
+        redde (OratioOraculumAuctor*)valor;
+    }
+    clavis = _copia(piscina, titulus);
+    a      = (OratioOraculumAuctor*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(*a));
+    cella  = (OratioOraculumAuctor**)xar_addere(census->auctores);
+    si (clavis.datum == NIHIL || a == NIHIL || cella == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(a, ZEPHYRUM, magnitudo(*a));
+    a->titulus  = clavis;
+    *cella      = a;
+    (vacuum)tabula_dispersa_inserere(census->auctores_index, clavis, a);
+    redde a;
+}
+
+/* T32 a: arcum umbrae auctori notare (umbra lectionis primae impleta,
+ * auctor = titulus regulae implentis) */
+interior vacuum
+_auctorem_ligationem_notare (
+                 Piscina* piscina,
+    OratioOraculumCensus* census,
+                  chorda  titulus,
+                     b32  recta,
+                     b32  vicina)
+{
+    OratioOraculumAuctor* a = _auctorem_capere(piscina, census,
+        titulus);
+
+    si (a == NIHIL)
+    {
+        redde;
+    }
+    a->ligationes = a->ligationes + I;
+    si (recta)
+    {
+        a->ligationes_rectae = a->ligationes_rectae + I;
+    }
+    si (vicina)
+    {
+        a->ligationes_vicinae = a->ligationes_vicinae + I;
+        si (recta)
         {
-        a = (OratioOraculumAuctor*)valor;
+            a->ligationes_vicinae_rectae = a->ligationes_vicinae_rectae
+                + I;
         }
-    alioquin
-        {
-        clavis = _copia(piscina, titulus);
-        a      = (OratioOraculumAuctor*)piscina_allocare(piscina,
-            (memoriae_index)magnitudo(*a));
-        cella  = (OratioOraculumAuctor**)xar_addere(census->auctores);
-        si (clavis.datum == NIHIL || a == NIHIL || cella == NIHIL)
-        {
-            redde;
-        }
-        memset(a, ZEPHYRUM, magnitudo(*a));
-        a->titulus  = clavis;
-        *cella      = a;
-        (vacuum)tabula_dispersa_inserere(census->auctores_index, clavis,
-            a);
-        }
+    }
+}
+
+interior vacuum
+_auctorem_notare (
+                 Piscina* piscina,
+    OratioOraculumCensus* census,
+                  chorda  titulus,
+                     b32  primaria,
+                     s32  distantia,
+                     s32  casus_iudicatus)
+{
+     OratioOraculumAuctor* a;
+
+    a = _auctorem_capere(piscina, census, titulus);
+    si (a == NIHIL)
+    {
+        redde;
+    }
         a->verba = a->verba + I;
     si (casus_iudicatus >= ZEPHYRUM)
     {
@@ -2295,6 +2342,7 @@ _elementum_formae (
  * interpuncta capite alignato (revocatio). FALSUM = memoria */
 interior b32
 _ligationes_iudicare (
+                           Piscina* piscina,
                            Piscina* scratch,
               OratioOraculumCensus* census,
     constans OratioConlluSententia* s,
@@ -2306,6 +2354,8 @@ _ligationes_iudicare (
     s32* positio;      /* id aureum -> index lexematis */
     s32* caput;        /* index lexematis -> index capitis; -I radix */
     s32* elementum;    /* index lexematis -> index elementi; -I */
+    i32* petitiones;   /* T32 a: petitiones dependentis per elementum */
+    i32* petitiones_rectae;
     i32  k;
 
     per (k = ZEPHYRUM; k < n; k++)
@@ -2325,9 +2375,19 @@ _ligationes_iudicare (
         * (memoriae_index)magnitudo(s32));
     elementum = (s32*)piscina_allocare(scratch, (memoriae_index)n
         * (memoriae_index)magnitudo(s32));
-    si (positio == NIHIL || caput == NIHIL || elementum == NIHIL)
+    petitiones = (i32*)piscina_allocare(scratch,
+        (memoriae_index)(ne + I) * (memoriae_index)magnitudo(i32));
+    petitiones_rectae = (i32*)piscina_allocare(scratch,
+        (memoriae_index)(ne + I) * (memoriae_index)magnitudo(i32));
+    si (   positio    == NIHIL || caput == NIHIL || elementum == NIHIL
+        || petitiones == NIHIL || petitiones_rectae == NIHIL)
     {
         redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        petitiones[k]         = ZEPHYRUM;
+        petitiones_rectae[k]  = ZEPHYRUM;
     }
     per (k = ZEPHYRUM; k <= (i32)id_maximus; k++)
     {
@@ -2440,6 +2500,7 @@ _ligationes_iudicare (
             constans Elementum* socius;
                            b32  capitis;
                            b32  recta;
+                           b32  pendet;
                            i32  distantia;
 
             si (   w->genus != MATERIA_VALOR_INDEX || w->datum.index
@@ -2465,7 +2526,7 @@ _ligationes_iudicare (
             {
                 OratioClassis cc = oratio_genus_classis(
                     (OratioGenus)prima->genus);
-                b32 pendet = (b32)(capitis
+                pendet = (b32)(capitis
                     || cc == ORATIO_CLASSIS_ADPOSITIO
                     || cc == ORATIO_CLASSIS_PARTICULA
                     || cc == ORATIO_CLASSIS_AUXILIARE);
@@ -2482,6 +2543,27 @@ _ligationes_iudicare (
             {
                 census->ligationes_rectae = census->ligationes_rectae
                     + I;
+            }
+            /* T32 a: per AUCTOREM impletionis; dependens petitus (carrier
+             * si pendet, socius aliter) numeratur - contentio capitis */
+            {
+                constans MateriaValor* auctor =
+                    &umbra->loci[ORATIO_UMBRA_AUCTOR];
+                i32 dependens = pendet ? k : (i32)w->datum.index;
+
+                si (   auctor->genus       == MATERIA_VALOR_TOKEN
+                    && auctor->datum.token != NIHIL)
+                {
+                    _auctorem_ligationem_notare(piscina, census,
+                        auctor->datum.token->valor, recta,
+                        (b32)(distantia == I));
+                }
+                petitiones[dependens] = petitiones[dependens] + I;
+                si (recta)
+                {
+                    petitiones_rectae[dependens] =
+                        petitiones_rectae[dependens] + I;
+                }
             }
             /* T31 a: per relationem */
             si (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
@@ -2522,6 +2604,20 @@ _ligationes_iudicare (
                         census->ligationes_vicinae_rectae + I;
                 }
             }
+        }
+    }
+    /* T32 a: dependentes contesti = elementa petita bis aut pluries */
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        si (petitiones[k] >= (i32)II)
+        {
+            census->dependentes_contesti = census->dependentes_contesti
+                + I;
+            census->petitiones_contestae = census->petitiones_contestae
+                + petitiones[k];
+            census->petitiones_contestae_rectae =
+                census->petitiones_contestae_rectae
+                    + petitiones_rectae[k];
         }
     }
     redde VERUM;
@@ -3298,7 +3394,7 @@ _sententiam_iudicare (
                                 }
     }
     /* T26: ligationes contra capita aurea */
-    si (!_ligationes_iudicare(scratch, census, s, elementa))
+    si (!_ligationes_iudicare(piscina, scratch, census, s, elementa))
     {
         piscina_destruere(scratch);
         redde FALSUM;
