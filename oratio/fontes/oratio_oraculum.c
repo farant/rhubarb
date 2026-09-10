@@ -435,6 +435,128 @@ _auctorem_capere (
     redde a;
 }
 
+/* T32 b: contentionem notare (victor, victa) - alterna una, recta? */
+interior vacuum
+_contentionem_notare (
+                 Piscina* piscina,
+    OratioOraculumCensus* census,
+                  chorda  victor,
+                  chorda  victa,
+                     b32  recta)
+{
+                        vacuum*  valor;
+       OratioOraculumContentio*  c;
+       OratioOraculumContentio** cella;
+                     character*  clavis_datum;
+                        chorda   clavis;
+
+    si (census->contentiones == NIHIL)
+    {
+        census->contentiones = xar_creare(piscina,
+            (i32)magnitudo(OratioOraculumContentio*));
+        census->contentiones_index =
+            tabula_dispersa_creare_chorda(piscina,
+            (i32)256);
+        si (   census->contentiones       == NIHIL
+            || census->contentiones_index == NIHIL)
+        {
+            census->contentiones = NIHIL;
+            redde;
+        }
+    }
+    clavis_datum = (character*)piscina_allocare(piscina,
+        (memoriae_index)(victor.mensura + victa.mensura + I));
+    si (clavis_datum == NIHIL)
+    {
+        redde;
+    }
+    memcpy(clavis_datum, victor.datum, (size_t)victor.mensura);
+    clavis_datum[victor.mensura] = '\t';
+    memcpy(clavis_datum + victor.mensura + I, victa.datum,
+        (size_t)victa.mensura);
+    clavis = _chorda((i8*)clavis_datum, victor.mensura + I
+        + victa.mensura);
+    si (tabula_dispersa_invenire(census->contentiones_index, clavis,
+        &valor))
+    {
+        c = (OratioOraculumContentio*)valor;
+    }
+    alioquin
+    {
+        c     = (OratioOraculumContentio*)piscina_allocare(piscina,
+            (memoriae_index)magnitudo(*c));
+        cella =
+            (OratioOraculumContentio**)xar_addere(census->contentiones);
+        si (c == NIHIL || cella == NIHIL)
+        {
+            redde;
+        }
+        memset(c, ZEPHYRUM, magnitudo(*c));
+        c->victor  = _chorda((i8*)clavis_datum, victor.mensura);
+        c->victa   = _chorda((i8*)clavis_datum + victor.mensura + I,
+            victa.mensura);
+        *cella     = c;
+        (vacuum)tabula_dispersa_inserere(census->contentiones_index,
+            clavis,
+            c);
+    }
+    c->numerus = c->numerus + I;
+    si (recta)
+    {
+        c->victae_rectae = c->victae_rectae + I;
+    }
+}
+
+Xar*
+oratio_oraculum_contentiones (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census)
+{
+    Xar* copia;
+    i32  k;
+
+    si (census->contentiones == NIHIL)
+    {
+        redde NIHIL;
+    }
+    copia = xar_creare(piscina,
+        (i32)magnitudo(OratioOraculumContentio*));
+    si (copia == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(census->contentiones); k++)
+    {
+        OratioOraculumContentio** cella =
+            (OratioOraculumContentio**)xar_addere(copia);
+
+        si (cella == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *cella = *(OratioOraculumContentio**)xar_obtinere(
+            census->contentiones, k);
+    }
+    /* insertio stabilis, numero non crescente */
+    per (k = I; k < xar_numerus(copia); k++)
+    {
+        OratioOraculumContentio* x =
+            *(OratioOraculumContentio**)xar_obtinere(copia, k);
+        i32 j = k;
+
+        dum (   j > ZEPHYRUM
+             && (*(OratioOraculumContentio**)xar_obtinere(copia, j - I))
+                ->numerus < x->numerus)
+        {
+            *(OratioOraculumContentio**)xar_obtinere(copia, j) =
+                *(OratioOraculumContentio**)xar_obtinere(copia, j - I);
+            j = j - I;
+        }
+        *(OratioOraculumContentio**)xar_obtinere(copia, j) = x;
+    }
+    redde copia;
+}
+
 /* T32 a: arcum umbrae auctori notare (umbra lectionis primae impleta,
  * auctor = titulus regulae implentis) */
 interior vacuum
@@ -2602,6 +2724,147 @@ _ligationes_iudicare (
                 {
                     census->ligationes_vicinae_rectae =
                         census->ligationes_vicinae_rectae + I;
+                }
+            }
+        }
+    }
+    /* T32 b: TECTUM ARCUUM - umbrae lectionis primae cum petitione ulla
+     * (prima aut alternae): tecta si petitio ulla recta (directio eadem
+     * qua prima iudicatur); alternae numeratae, contentiones notatae */
+    per (k = ZEPHYRUM; k < ne; k++)
+    {
+        constans Elementum* e =
+            (constans Elementum*)xar_obtinere(elementa, k);
+        constans MateriaValor* analyses;
+        constans MateriaNodus* prima;
+        constans MateriaValor* umbrae;
+                          i32  u;
+
+        si (   e->nodus        == NIHIL || e->lexema < ZEPHYRUM
+            || e->nodus->genus != (s32)ORATIO_GENUS_VOCABULUM)
+        {
+            perge;
+        }
+        analyses = &e->nodus->loci[ORATIO_VOCABULUM_ANALYSES];
+        si (   analyses->genus != MATERIA_VALOR_LISTA
+            || materia_valor_lista_numerus(*analyses) == ZEPHYRUM)
+        {
+            perge;
+        }
+        prima = materia_valor_lista_obtinere(*analyses, ZEPHYRUM)
+            ->datum.nodus;
+        {
+            OratioClassis cl =
+                oratio_genus_classis((OratioGenus)prima->genus);
+            s32 locus = (i32)cl < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+                ? oratio_partes_locus(cl, "umbrae") : (s32)-I;
+
+            si (   locus < ZEPHYRUM
+                || prima->loci[locus].genus != MATERIA_VALOR_LISTA)
+            {
+                perge;
+            }
+            umbrae = &prima->loci[locus];
+        }
+        per (u = ZEPHYRUM; u
+            < materia_valor_lista_numerus(*umbrae); u++)
+        {
+            constans MateriaNodus* umbra = materia_valor_lista_obtinere(
+                *umbrae, u)->datum.nodus;
+            constans MateriaValor* w =
+                &umbra->loci[ORATIO_UMBRA_IMPLETIO_VOCABULUM];
+            constans MateriaValor* alternae =
+                &umbra->loci[ORATIO_UMBRA_ALTERNAE];
+                           b32 pendet;
+                           b32 aliqua  = FALSUM;
+                           b32 tecta   = FALSUM;
+                           i32 x;
+
+            {
+                OratioClassis cc = oratio_genus_classis(
+                    (OratioGenus)prima->genus);
+
+                pendet =
+                    (b32)(   (   umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                                      == MATERIA_VALOR_INDEX
+                                   && umbra->loci[ORATIO_UMBRA_RELATIO]
+                                      .datum.index
+                                      == (s32)ORATIO_RELATIO_CAPUT)
+                               || cc == ORATIO_CLASSIS_ADPOSITIO
+                               || cc == ORATIO_CLASSIS_PARTICULA
+                               || cc == ORATIO_CLASSIS_AUXILIARE);
+            }
+            si (   w->genus == MATERIA_VALOR_INDEX && w->datum.index
+                >= ZEPHYRUM && w->datum.index < (s32)ne)
+            {
+                constans Elementum* socius = (constans Elementum*)
+                    xar_obtinere(elementa, (i32)w->datum.index);
+
+                si (socius->lexema >= ZEPHYRUM)
+                {
+                    aliqua = VERUM;
+                    tecta  = (b32)(tecta || (pendet
+                        ? caput[e->lexema] == socius->lexema
+                        : caput[socius->lexema] == e->lexema));
+                }
+            }
+            per (x = ZEPHYRUM; alternae->genus == MATERIA_VALOR_LISTA
+                && x < materia_valor_lista_numerus(*alternae); x++)
+            {
+                constans MateriaNodus* alterna =
+                    materia_valor_lista_obtinere(
+                    *alternae, x)->datum.nodus;
+                constans MateriaValor* socius_alternae =
+                    &alterna->loci[ORATIO_ALTERNA_VOCABULUM];
+                constans MateriaValor* auctor =
+                    &alterna->loci[ORATIO_ALTERNA_AUCTOR];
+                constans MateriaValor* victor =
+                    &alterna->loci[ORATIO_ALTERNA_VICTOR];
+                constans Elementum* socius;
+                               b32  recta;
+
+                si (   socius_alternae->genus != MATERIA_VALOR_INDEX
+                    || socius_alternae->datum.index < ZEPHYRUM
+                    || socius_alternae->datum.index >= (s32)ne)
+                {
+                    perge;
+                }
+                socius = (constans Elementum*)xar_obtinere(elementa,
+                    (i32)socius_alternae->datum.index);
+                si (socius->lexema < ZEPHYRUM)
+                {
+                    perge;
+                }
+                aliqua = VERUM;
+                recta  = pendet
+                    ? (b32)(caput[e->lexema] == socius->lexema)
+                    : (b32)(caput[socius->lexema] == e->lexema);
+                tecta = (b32)(tecta || recta);
+                census->alternae_numerus = census->alternae_numerus + I;
+                si (recta)
+                {
+                    census->alternae_rectae = census->alternae_rectae
+                        + I;
+                }
+                si (   auctor->genus       == MATERIA_VALOR_TOKEN
+                    && auctor->datum.token != NIHIL
+                    && victor->genus       == MATERIA_VALOR_TOKEN
+                    && victor->datum.token != NIHIL)
+                {
+                    _contentionem_notare(piscina, census,
+                        victor->datum.token->valor,
+                        auctor->datum.token->valor, recta);
+                }
+            }
+            si (aliqua)
+            {
+                census->ligationes_petitae = census->ligationes_petitae
+                    + I;
+                si (tecta)
+                {
+                    census->ligationes_tectae =
+                        census->ligationes_tectae
+                        + I;
                 }
             }
         }

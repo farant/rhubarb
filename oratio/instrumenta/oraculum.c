@@ -482,6 +482,36 @@ _tabulam_imprimere (
                     (integer)coactae, _pars(coactae, c->verba),
                     _pars(rectae, coactae));
     }
+    /* T32 b: tectum arcuum et contentiones */
+    si (c->ligationes_petitae > ZEPHYRUM)
+    {
+        Xar* contentiones = oratio_oraculum_contentiones(piscina, c);
+        i32  j;
+
+        imprimere("  arcus tecti %d de petitis %d = %5.1f%% (recti %d = %5.1f%%;"
+            " alternae %d, rectae %d)\n",
+            (integer)c->ligationes_tectae,
+            (integer)c->ligationes_petitae,
+            _pars(c->ligationes_tectae, c->ligationes_petitae),
+            (integer)c->ligationes_rectae,
+            _pars(c->ligationes_rectae, c->ligationes_petitae),
+            (integer)c->alternae_numerus, (integer)c->alternae_rectae);
+        per (j = ZEPHYRUM; contentiones != NIHIL
+            && j < xar_numerus(contentiones) && j < (i32)XII; j++)
+        {
+            constans OratioOraculumContentio* ct =
+                *(OratioOraculumContentio**)xar_obtinere(contentiones,
+                j);
+
+            imprimere("    contentio %-40.*s > %-40.*s %5d  victa recta %5.1f%%\n",
+                (integer)ct->victor.mensura,
+                (constans character*)ct->victor.datum,
+                (integer)ct->victa.mensura,
+                (constans character*)ct->victa.datum,
+                (integer)ct->numerus,
+                _pars(ct->victae_rectae, ct->numerus));
+        }
+    }
     /* T32 a: dependentes contesti (caput unum per verbum violatum) */
     si (c->dependentes_contesti > ZEPHYRUM)
     {
@@ -792,6 +822,34 @@ _machinam_imprimere (
                         ? c->arcus_aurei_subiecti
                         : r == (i32)ORATIO_RELATIO_OBIECTUM_VERBI
                         ? c->arcus_aurei_obiecti : ZEPHYRUM));
+            }
+        }
+        /* T32 b: ordo TECTUM petitae tectae rectae alternae alternae-rectae;
+         * ordines CONTENTIO victor victa numerus victae-rectae */
+        imprimere("%s\tTECTUM\t%d\t%d\t%d\t%d\t%d\n", titulus,
+            (integer)c->ligationes_petitae,
+            (integer)c->ligationes_tectae,
+            (integer)c->ligationes_rectae, (integer)c->alternae_numerus,
+            (integer)c->alternae_rectae);
+        {
+            Xar* contentiones = oratio_oraculum_contentiones(piscina,
+                c);
+            i32 j;
+
+            per (j = ZEPHYRUM; contentiones != NIHIL
+                && j < xar_numerus(contentiones); j++)
+            {
+                constans OratioOraculumContentio* ct =
+                    *(OratioOraculumContentio**)xar_obtinere(contentiones,
+                    j);
+
+                imprimere("%s\tCONTENTIO\t%.*s\t%.*s\t%d\t%d\n",
+                    titulus,
+                    (integer)ct->victor.mensura,
+                    (constans character*)ct->victor.datum,
+                    (integer)ct->victa.mensura,
+                    (constans character*)ct->victa.datum,
+                    (integer)ct->numerus, (integer)ct->victae_rectae);
             }
         }
         /* T32 a: ordo CONTESTA dependentes petitiones rectae */

@@ -70,6 +70,7 @@ nomen enumeratio {
      * finitum, subiectum); elementa plana per INDEX eum monstrant.
      * APPENSA post umbram (extra [PRIMUM, ULTIMUM) analysium) */
     ORATIO_GENUS_CLAUSULA,
+    ORATIO_GENUS_ALTERNA,   /* T32 b (2026-09-09): petitio umbrae cedens */
 
     ORATIO_GENUS_NUMERUS_GENERUM,
     ORATIO_GENUS_ANALYSIS_PRIMUM = ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
@@ -384,6 +385,11 @@ nomen enumeratio {
      * Oraculum praecisionem arcuum per auctorem hinc computat (tabula
      * fiduciae, gradus decisus). APPENSUS post forma-verbi. */
     ORATIO_UMBRA_AUCTOR,             /* TOKEN derivatum: titulus regulae implentis */
+    /* T32 b (2026-09-09): ALTERNAE - petitiones quae cesserunt (recusatae
+     * dependente iam petito, revocatae a fideliore), nodi genus alterna
+     * ordine adventus; umbra formam vocabuli imitatur: impletio prima +
+     * alternae, NIHIL DELETUM. Oraculum tectum arcuum hinc computat. */
+    ORATIO_UMBRA_ALTERNAE,           /* LISTA_NODUS alterna */
 
     ORATIO_UMBRA_NUMERUS_LOCORUM
 } OratioUmbraLocus;
@@ -404,6 +410,30 @@ nomen enumeratio {
 
     ORATIO_CLAUSULA_NUMERUS_LOCORUM
 } OratioClausulaLocus;
+
+/* loci generis ALTERNA (T32 b, 2026-09-09): petitio umbrae quae cessit -
+ * socius (vocabulum, analysis ordinales sententiae, remissi cum
+ * permutationibus ut impletio), auctor (regula petens), causa, fides
+ * (permille tabulae, absens = ignota), victor (regula cui cessit).
+ * Causa + victor = materia legum posteriorum quae alternas promovent. */
+nomen enumeratio {
+    ORATIO_ALTERNA_VOCABULUM = 0,    /* INDEX: ordinalis vocabuli socii */
+    ORATIO_ALTERNA_ANALYSIS,         /* INDEX: ordinalis analysis socii */
+    ORATIO_ALTERNA_AUCTOR,           /* TOKEN derivatum: titulus regulae petentis */
+    ORATIO_ALTERNA_CAUSA,            /* INDEX: OratioAlternaCausa */
+    ORATIO_ALTERNA_FIDES,            /* INDEX: permille fiduciae (absens = ignota) */
+    ORATIO_ALTERNA_VICTOR,           /* TOKEN derivatum: titulus regulae victricis */
+
+    ORATIO_ALTERNA_NUMERUS_LOCORUM
+} OratioAlternaLocus;
+
+/* causa cessionis (T32 b) */
+nomen enumeratio {
+    ORATIO_ALTERNA_CAUSA_RECUSATA = 0,   /* dependens iam petitus (lex capitis unius) */
+    ORATIO_ALTERNA_CAUSA_REVOCATA,       /* petitio stans a fideliore revocata (contentio) */
+
+    ORATIO_ALTERNA_CAUSA_NUMERUS
+} OratioAlternaCausa;
 
 /* species clausulae (T20a): APPENSAE solum */
 nomen enumeratio {
@@ -565,6 +595,7 @@ externus constans character* constans ORATIO_TITULI_RELATIONUM[];   /* T19d */
 externus constans character* constans ORATIO_TITULI_DECISIONUM[];   /* T19g */
 externus constans character* constans ORATIO_TITULI_SPECIERUM_CLAUSULAE[];   /* T20a */
 externus constans character* constans ORATIO_TITULI_CAUSARUM_CLAUSULAE[];    /* T20a */
+externus constans character* constans ORATIO_TITULI_CAUSARUM_ALTERNAE[];     /* T32 b */
 externus constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[];
 
 /* T20a: locus 'clausula' (causa FALSUM) aut 'clausula-causa' (causa

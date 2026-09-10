@@ -41,6 +41,8 @@ seven-file Latin list.
 | `notae.py A.tsv B.tsv` | the feature columns: verb form, voice, gender, number, person |
 | `relationes.sh x.tsv` | subject and object precision and recall per file |
 | `grep CONTESTA x.tsv` | contested dependents, claims on them, right claims (T32 a) |
+| `grep TECTUM x.tsv` | arc coverage per file: umbrae with any claim, with a right claim, right primaries, alternatives, right alternatives (T32 b) |
+| `contentiones.py <mensura.tsv> [file-part]` | the contest table: per (winner rule, loser rule) how many contests and how often the loser was right — the tie-break census (T32 b) |
 | `errata_delta.py A B [nota…]` | feature errata deltas between two `-errata -nota` runs |
 
 The baseline for a measurement is the tsv of the committed state; keep

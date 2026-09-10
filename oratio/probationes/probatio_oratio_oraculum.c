@@ -757,6 +757,38 @@ _thesaurus_arborum (
                 (integer)census.dependentes_contesti,
                 (integer)census.petitiones_contestae,
                 (integer)census.petitiones_contestae_rectae);
+            /* T32 b: TECTUM arcuum - leges: tectae inter rectas et petitas;
+             * contentiones notatae == alternae (alterna quaeque victorem
+             * fert: culpa plantata victor non scriptus RUBRA) */
+            {
+                Xar* contentiones = oratio_oraculum_contentiones(p,
+                    &census);
+                i32 summa_contentionum = ZEPHYRUM;
+
+                per (j = ZEPHYRUM; contentiones != NIHIL
+                    && j < xar_numerus(contentiones); j++)
+                {
+                    summa_contentionum = summa_contentionum
+                        + (*(OratioOraculumContentio**)xar_obtinere(
+                            contentiones, j))->numerus;
+                }
+                imprimere("    arcus tecti %d de petitis %d = %d permille"
+                    " (recti %d permille; alternae %d, rectae %d)\n",
+                    (integer)census.ligationes_tectae,
+                    (integer)census.ligationes_petitae,
+                    (integer)_permille(census.ligationes_tectae,
+                        census.ligationes_petitae),
+                    (integer)_permille(census.ligationes_rectae,
+                        census.ligationes_petitae),
+                    (integer)census.alternae_numerus,
+                    (integer)census.alternae_rectae);
+                CREDO_VERUM (census.ligationes_tectae
+                    >= census.ligationes_rectae);
+                CREDO_VERUM (census.ligationes_tectae
+                    <= census.ligationes_petitae);
+                CREDO_AEQUALIS_I32 (summa_contentionum,
+                    (i32)census.alternae_numerus);
+            }
             /* T19g bis: errata auctoris - summa numerorum == verba -
              * primaria eius; errata prima III auctorum II maximorum relata
              * (forma, aurea, nostra, socius) */

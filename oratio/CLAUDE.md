@@ -840,7 +840,17 @@ unseat the head). Attachment Seneca 505 → 526, charters 396/422 →
 1676 named: first-wins kept the right claim 46 %, the table is
 charter-dominated). NEXT = losing claims kept as ALTERNATIVES with arc
 coverage, per-dialect trust table, adjacency tie-break in contests,
-strict-decided tier.
+strict-decided tier. **T32 b (2026-09-09): ALTERNATIVES ON THE
+UMBRA + ARC COVERAGE.** Losing claims are kept as `alterna` nodes on
+the umbra (partner, rule, cause recusata|revocata, trust, victor) —
+nothing deleted, remapped like fillings; the oracle prints ARC COVERAGE
+(any claim right) beside precision and the CONTEST table (winner rule,
+loser rule, loser right %). Recoverable by ranking alone: Seneca 420,
+Aquinas 447, charters ~100 — Seneca's residual is RANKING, the
+charters' is PROPOSAL. Contest census: adjacent subject beats adjacent
+object on a nom/acc word 1764× and the object was right 85 % → the
+tie-break of the next tranche. `census/contentiones.py`,
+`grep TECTUM|CONTENTIO`.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

@@ -2095,6 +2095,23 @@ charters up; right arcs now PINNED as a floor. Not done: losing claims
 kept as alternatives with arc coverage, per-dialect trust table,
 adjacency tie-break in contests, strict-decided tier.
 
+**As built — T32 b, alternatives on the umbra and arc coverage
+(2026-09-09).** Genus `alterna` (partner word and reading, proposing
+rule, cause `recusata` | `revocata`, trust, winning rule) in an
+`alternae` list on the umbra; the executor records every refused claim
+and every withdrawn standing claim there (remapped with permutations);
+canon sigillum bc662e39. Oracle: arc coverage (umbrae with any claim /
+with a right claim among primary and alternatives) beside precision;
+contest table per (winner, loser) rule pair with the loser's rate of
+being right; gate laws tectae ∈ [rectae, petitae] and contests ==
+alternatives. Behaviour unchanged. Findings: recoverable by ranking
+alone Seneca 420, Aquinas 447, PROIEL 252, Perseus 250, charters
+103 / 96 — Seneca's residual is ranking, the charters' is proposal;
+contest census: adjacent subject beats adjacent object on a
+nominative/accusative word 1764 times and the object was right 85 %.
+Not done: tie-break by relation pair and adjacency inside contests,
+per-dialect trust table, promotion laws over alternatives.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

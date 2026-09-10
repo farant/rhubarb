@@ -88,6 +88,14 @@ nomen structura {
        i32 ligationes_vicinae_rectae;
 } OratioOraculumAuctor;
 
+/* CONTENTIO (T32 b): regula victrix, regula victa, alternae, victae rectae */
+nomen structura {
+    chorda victor;
+    chorda victa;
+       i32 numerus;
+       i32 victae_rectae;
+} OratioOraculumContentio;
+
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
  * elementum primum decisionem fert (praelatio | impletio | umbra) sed
  * non PRIMARIUM est - tabulatum per (auctor, forma plicata, classis
@@ -273,6 +281,18 @@ nomen structura {
         i32 dependentes_contesti;
         i32 petitiones_contestae;
         i32 petitiones_contestae_rectae;
+    /* T32 b (2026-09-09): TECTUM ARCUUM - umbrae lectionis primae quae
+     * petitionem ullam ferunt (prima aut alterna) = petitae; tectae =
+     * petitio ulla recta (arcus aureus inter candidatos, ut tectum
+     * lectionum contra primarium); alternae numeratae et rectae. */
+        i32 ligationes_petitae;
+        i32 ligationes_tectae;
+        i32 alternae_numerus;
+        i32 alternae_rectae;
+    /* CONTENTIONES (T32 b): per (victor, victa) numerus alternarum et
+     * victae rectae - census iudicis contentionum */
+        Xar* contentiones;
+        TabulaDispersa* contentiones_index;
         i32 sententiae_linguae[ORATIO_LINGUA_NUMERUS];   /* census linguae per
                                                       * sententiam (T18):
                                                       * quot Latinae, quot
@@ -374,6 +394,13 @@ oratio_oraculum_discrepantiae (
  * memoria. */
 Xar*
 oratio_oraculum_auctores (
+                          Piscina* piscina,
+    constans OratioOraculumCensus* census);
+
+/* Contentiones (T32 b): Xar de OratioOraculumContentio* ordine numeri
+ * non crescente; NIHIL sine contentionibus */
+Xar*
+oratio_oraculum_contentiones (
                           Piscina* piscina,
     constans OratioOraculumCensus* census);
 

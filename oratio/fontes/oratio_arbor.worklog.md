@@ -3631,3 +3631,56 @@ binding crosses the clause and the chain counts no discordance.
 printed (so the refused right arcs stop being lost); the per-dialect
 trust table; adjacency as the tie-break inside contests; the
 strict-decided tier.
+
+## 2026-09-09 — T32 b: losing claims kept as alternatives; arc coverage; the contest census
+
+**Why.** After T32 a a claim that lost, refused on a claimed dependent
+or withdrawn by a higher-trust claim, vanished. The 409 right arcs
+Seneca lost were unrecoverable in the tree and invisible after the
+fact. Fran's point: keep them, with the reason, so that later laws can
+act on sets of decisions.
+
+**Built.** A genus `alterna` (six loci: partner word and reading,
+proposing rule, cause, trust, winning rule) and an `alternae` list on
+the umbra, so an umbra has the shape a word has: a primary filling and
+ranked alternatives, nothing deleted. The executor writes an
+alternative at every refusal (`recusata`) and, before withdrawing a
+standing claim, records it on its own umbra (`revocata`, with the
+withdrawing rule as victor). Alternatives are remapped with the
+permutations like fillings. Canon sigillum 53bb8633 → bc662e39 (XXVI
+genera, CXCII loci). Behaviour unchanged, every column identical.
+
+**Oracle.** Arc coverage: an umbra of the first reading is "petita" if
+it carries any claim and "tecta" if any claim, primary or alternative,
+is right by the same direction rule; printed beside precision. The
+contest table counts, per (winner, loser) pair of rules, how many
+contests and how often the loser was right. Gate laws: tectae between
+rectae and petitae; contests == alternatives (every alternative names
+its victor; the planted fault, victor unwritten, is red).
+
+**What the numbers say, Seneca / charters dev / test / Aquinas /
+Perseus / PROIEL / Dante.** Umbrae with a right claim among their
+candidates: 2096 / 2543 / 2609 / 4424 / 1823 / 2423 / 1483; right
+primaries 1676 / 2440 / 2513 / 3977 / 1573 / 2171 / 1341. Recoverable
+by ranking alone: 420 / 103 / 96 / 447 / 250 / 252 / 142. So Seneca's
+residual is a RANKING problem, a quarter more right arcs are already
+proposed, and the charters' is a PROPOSAL problem: their coverage is
+43–45 % and almost nothing is waiting in the alternatives.
+
+**The contest census** (`census/contentiones.py`), seven files:
+- adjacent subject vs adjacent object on the same word (a word with a
+  nominative and an accusative reading): 1764 contests, the subject
+  rule wins by order, the OBJECT claim was right 85 % (Seneca 64 %).
+- adjacent head-preceding vs adjacent subject on an adjective: 339,
+  the subject claim right 84 % — the redirect could not follow (no
+  agreement) and refused it.
+- the loose subject rule against itself, two verbs claiming one distant
+  nominative: 7947 contests, the loser right 7 % — order is fine there.
+- adjacent head-following vs adjacent object: 353, loser right 47 %,
+  86 % on Seneca.
+These are the tie-break rules of the next tranche, read off a table
+rather than guessed.
+
+**Not done.** The tie-break inside contests (relation pair and
+adjacency below trust), the per-dialect trust table, promotion of
+alternatives by later laws, the strict-decided tier.

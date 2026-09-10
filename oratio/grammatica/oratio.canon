@@ -57,7 +57,9 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T32 a 2026-09-09
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T32 b 2026-09-09
+            bc662e39: XXVI genera, CXCII loci - genus 'alterna' VI locorum
+            post clausulam, locus 'alternae' umbrae; T32 a 2026-09-09
             53bb8633: XXV genera, CLXXXV loci - locus 'auctor' TOKEN
             derivatum umbrae appensus, titulus regulae implentis; T20a
             2026-09-08 62a7afd8: XXV genera, CLXXXIV loci - genus 'clausula' IV locorum post
@@ -70,7 +72,7 @@
             CXLVI loci; T6b 93c1c9cf, VI genera XVII loci; T1 b27fe13a,
             XVI loci). Tabula mutata sine hac optione mutata rubet in
             iudicio ET in custode derivae.">
-      <optio>53bb8633</optio>
+      <optio>bc662e39</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -944,6 +946,7 @@
     <liberum nomen="impletio-analysis" maximum="1"/>
     <liberum nomen="forma-verbi" maximum="1"/>
     <liberum nomen="auctor" maximum="1"/>
+    <liberum nomen="alternae" maximum="1"/>
   </elementum>
   <elementum nomen="relatio" intra="umbra" textus="verum"
     nota="OratioRelatio: 0 obiectum 1 caput 2 verbum-finitum 3 subiectum (T20a: relationes clausulae)"/>
@@ -963,6 +966,41 @@
     nota="T20a: OratioFormaVerbi exspectata (0 finitum ...) - condicio umbrae verbi finiti clausulae; absens = quaelibet"/>
   <elementum nomen="auctor" intra="umbra"
     nota="T32 a (2026-09-09): derivatum - titulus regulae quae umbram implevit (lex-capitis si lex capitis ligationem secuta est); absens = umbra vacua. Oraculum praecisionem arcuum per auctorem hinc computat">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="alternae" intra="umbra"
+    nota="T32 b (2026-09-09): petitiones umbrae quae cesserunt (nodi alterna ordine adventus) - recusatae dependente iam petito, revocatae a fideliore; nihil deletum">
+    <liberum nomen="alterna"/>
+  </elementum>
+  <!-- =============== ALTERNA (T32 b, 2026-09-09) ===============
+       petitio umbrae quae cessit: socius, regula petens, causa, fides,
+       regula victrix. Umbra formam vocabuli imitatur (impletio prima +
+       alternae): tectum arcuum = arcus aureus inter primam et alternas;
+       leges posteriores alternam promovent sine regulis iterum currentibus. -->
+  <elementum nomen="alterna"
+    nota="genus alterna (T32 b): petitio cedens umbrae">
+    <attributum nomen="n" genus="numerus"/>
+    <liberum nomen="vocabulum" maximum="1"/>
+    <liberum nomen="analysis" maximum="1"/>
+    <liberum nomen="auctor" maximum="1"/>
+    <liberum nomen="causa" maximum="1"/>
+    <liberum nomen="fides" maximum="1"/>
+    <liberum nomen="victor" maximum="1"/>
+  </elementum>
+  <elementum nomen="vocabulum" intra="alterna" textus="verum"
+    nota="ordinalis vocabuli socii intra elementa sententiae"/>
+  <elementum nomen="analysis" intra="alterna" textus="verum"
+    nota="ordinalis analysis socii (remissus cum permutationibus)"/>
+  <elementum nomen="auctor" intra="alterna"
+    nota="derivatum - titulus regulae petentis">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="causa" intra="alterna" textus="verum"
+    nota="OratioAlternaCausa: 0 recusata (dependens iam petitus) 1 revocata (a fideliore)"/>
+  <elementum nomen="fides" intra="alterna" textus="verum"
+    nota="permille fiduciae regulae petentis (tabula auctores.tsv); absens = ignota"/>
+  <elementum nomen="victor" intra="alterna"
+    nota="derivatum - titulus regulae cui petitio cessit">
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
 
