@@ -99,6 +99,47 @@ _arborem_struere (
     redde radix;
 }
 
+/* Arbor cum REFERENTIA (2026-09-10):
+ *   radix (genus XX, loci II)
+ *     [0] LISTA  { filius_0, filius_1 } (genus XXI, locus I: INDEX)
+ *     [1] REFERENTIA -> filius_k
+ * Patres a verbis ponentibus figuntur - semita comparatoris eos
+ * poscit. */
+interior MateriaNodus*
+_arborem_cum_referentia (
+    Piscina* piscina,
+        i32  k)
+{
+    MateriaNodus* radix;
+    MateriaNodus* filii[II];
+             i32  i;
+
+    radix = materia_nodus_creare(piscina, (s32)XX, (i32)II);
+    si (radix == NIHIL)
+    { redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < (i32)II; i++)
+    {
+        filii[i] = materia_nodus_creare(piscina, (s32)XXI, (i32)I);
+        si (   filii[i] == NIHIL
+            || !materia_nodus_ponere(filii[i], ZEPHYRUM,
+                    materia_valor_index((s32)i), MATERIA_LOCUS_INDEX)
+            || !materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+                    materia_valor_nodus(filii[i]),
+                    MATERIA_LOCUS_LISTA_NODUS))
+        {
+            redde NIHIL;
+        }
+    }
+    si (!materia_nodus_ponere(radix, (i32)I,
+            materia_valor_referentia(filii[k]),
+            MATERIA_LOCUS_REFERENTIA))
+    {
+        redde NIHIL;
+    }
+    redde radix;
+}
+
 interior MateriaToken*
 _caput_arboris (
     MateriaNodus* arbor)
@@ -200,14 +241,18 @@ principale (vacuum)
             == ZEPHYRUM);
 
         imprimere("\n--- Probans patrem INTERIORUM collatum ---\n");
+        /* Verba ponentia patrem figunt (2026-09-10), ergo latus SINE
+         * patre manu fingitur - comparator nullitatem interiorum
+         * adhuc confert. */
         b                          = _arborem_struere(piscina);
-        _filius_arboris(a)->pater  = a;
+        CREDO_AEQUALIS_PTR (_filius_arboris(a)->pater, a);
+        _filius_arboris(b)->pater  = NIHIL;
         CREDO_FALSUM (materia_arbor_aequalis(a, b,
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
         CREDO_VERUM (strcmp(d.campus, "nodus/pater-nullitas")
             == ZEPHYRUM);
         CREDO_VERUM (d.via[ZEPHYRUM] != '\0');
-        _filius_arboris(a)->pater = NIHIL;
+        _filius_arboris(b)->pater = b;
     }
 
 
@@ -355,6 +400,60 @@ principale (vacuum)
         CREDO_VERUM (strcmp(d.campus, "lexema/linea") == ZEPHYRUM);
     }
 
+
+    /* ==================================================
+     * PROBARE: referentiae per SEMITAM relativam (2026-09-10)
+     * ================================================== */
+
+    {
+        MateriaNodus* a;
+        MateriaNodus* b;
+
+        imprimere("\n--- Probans referentias (semita relativa) ---\n");
+        a = _arborem_cum_referentia(piscina, ZEPHYRUM);
+        b = _arborem_cum_referentia(piscina, ZEPHYRUM);
+        CREDO_NON_NIHIL (a);
+        CREDO_NON_NIHIL (b);
+        /* monstratores diversi, semitae eaedem: aequales */
+        CREDO_INAEQUALITAS_PTR (a->loci[I].datum.nodus,
+                                b->loci[I].datum.nodus);
+        CREDO_VERUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        CREDO_VERUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_FIDELITAS, &d));
+
+        /* scopus alius (frater secundus): semita divergit */
+        b = _arborem_cum_referentia(piscina, (i32)I);
+        CREDO_FALSUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        CREDO_VERUM (strcmp(d.campus, "referentia/semita") == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (d.locus, (s32)I);
+
+        /* scopus EXTRA arborem collatam */
+        b = _arborem_cum_referentia(piscina, ZEPHYRUM);
+        b->loci[I] = materia_valor_referentia(
+            materia_nodus_creare(piscina, (s32)XXI, (i32)I));
+        CREDO_FALSUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        CREDO_VERUM (strcmp(d.campus, "referentia/extra") == ZEPHYRUM);
+
+        /* NIHIL contra scopum divergit; NIHIL contra NIHIL aequales */
+        b           = _arborem_cum_referentia(piscina, ZEPHYRUM);
+        b->loci[I]  = materia_valor_referentia(NIHIL);
+        CREDO_FALSUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        CREDO_VERUM (strcmp(d.campus, "referentia/nihil") == ZEPHYRUM);
+        a->loci[I] = materia_valor_referentia(NIHIL);
+        CREDO_VERUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+
+        /* genus valoris dispar (REFERENTIA contra INDEX) */
+        b->loci[I] = materia_valor_index(ZEPHYRUM);
+        CREDO_FALSUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        CREDO_VERUM (strcmp(d.campus, "locus/genus-valoris")
+            == ZEPHYRUM);
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

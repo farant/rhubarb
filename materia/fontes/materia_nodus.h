@@ -56,6 +56,18 @@ nomen enumeratio {
     MATERIA_LOCUS_LISTA_TOKEN,
     MATERIA_LOCUS_LISTA_MIXTA,
     MATERIA_LOCUS_INDEX,
+    /* REFERENTIA (2026-09-10): nodus ALIUS eiusdem arboris, NON
+     * possessus - nexus lateralis super arborem (umbra orationis ad
+     * lectionem socii; md nexus ad definitionem; C89 identificator
+     * ad declarationem). Ordinalis in listam permutationem NON
+     * supervivit (oratio: _ligationes_remittere bis momordit);
+     * monstrator nodi supervivit, quia permutare elementa EADEM
+     * servat. Scriptura: nodus referendus id="nodN", locus '#nodN'
+     * (spatium '#' documenti STML); lector post arborem lectam
+     * solvit (antrorsum et in circuitu licet). Ambulationes in eam
+     * NUMQUAM descendunt. Species ULTIMA appensa: sigilla registrorum
+     * numeros specierum friant. */
+    MATERIA_LOCUS_REFERENTIA,
 
     MATERIA_LOCUS_NUMERUS_SPECIERUM
 } MateriaLocusSpecies;
@@ -72,7 +84,12 @@ nomen enumeratio {
     MATERIA_VALOR_NODUS,
     MATERIA_VALOR_TOKEN,
     MATERIA_VALOR_LISTA,
-    MATERIA_VALOR_INDEX
+    MATERIA_VALOR_INDEX,
+    /* Genus NOVUM, non signum in NODUS: commutatio quaeque quae
+     * genera valorum ambulat casum suum doceatur (scriptor, lector,
+     * patres, comparator, scriptor octetorum) - aliter in scopum
+     * descenderet ut in filium, et arbor circuitum haberet. */
+    MATERIA_VALOR_REFERENTIA
 } MateriaValorGenus;
 
 /* Prospectus listae: valor listae {repositorium, mensura} est, non
@@ -88,7 +105,7 @@ nomen structura {
 nomen structura {
     MateriaValorGenus genus;
     unio {
-                  MateriaNodus* nodus;
+                  MateriaNodus* nodus;   /* NODUS possessus; REFERENTIA scopus */
                   MateriaToken* token;
         MateriaListaProspectus  lista;
                            s32  index;
@@ -104,7 +121,12 @@ structura MateriaNodus {
              s32  genus;            /* index in registrum generum */
              i32  numerus_locorum;
     MateriaValor* loci;
-    MateriaNodus* pater;            /* post-acceptum SOLUM */
+    /* Verba ponentia (ponere/appendere/reponere) patrem filii NODUS
+     * figunt (2026-09-10); lector eum post lectionem figit
+     * (patres_figere). Ante id 'post-acceptum SOLUM' erat et
+     * clientes eum manu ponebant. Scopus REFERENTIAE patrem suum
+     * a domino suo habet, non a referente. */
+    MateriaNodus* pater;
 };
 
 
@@ -168,6 +190,12 @@ materia_valor_token (
 MateriaValor
 materia_valor_index (
     s32 index);
+/* Referentia ad nodum ALIUM (non possidens) - vide speciem
+ * MATERIA_LOCUS_REFERENTIA supra. NIHIL licet in constructione;
+ * scriptor referentiam NIHIL recusat. */
+MateriaValor
+materia_valor_referentia (
+    MateriaNodus* scopus);
 MateriaValor
 materia_valor_lista (
     Xar* lista);
@@ -257,7 +285,8 @@ materia_valor_congruit (
   MateriaLocusSpecies species);
 
 /* Liberi nodales: loci NODUS + elementa NODUS listarum, ordine
- * locorum. Tabulis non eget - valores signati sunt. */
+ * locorum. Tabulis non eget - valores signati sunt. REFERENTIAE
+ * liberi NON sunt (patres_figere hac ambulatione it). */
 Xar*
 materia_nodus_liberi (
                   Piscina* piscina,

@@ -408,6 +408,10 @@ _valorem_scribere (
         casus MATERIA_VALOR_NIHIL:
         casus MATERIA_VALOR_INDEX:
             frange;
+        casus MATERIA_VALOR_REFERENTIA:
+            /* scopus octetos suos in sede SUA emittit - referentia
+             * nullos (2026-09-10) */
+            frange;
         casus MATERIA_VALOR_TOKEN:
             _lexema_scribere(st, valor.datum.token);
             frange;

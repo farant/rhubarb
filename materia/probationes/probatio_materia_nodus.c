@@ -394,6 +394,98 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (pater->loci[I].datum.index, (s32)6);
     }
 
+
+    /* ========================================================
+     * PROBARE: REFERENTIA (2026-09-10) - valor non possidens; verba
+     * ponentia patrem filii POSSESSI figunt, scopi referentiae non
+     * ======================================================== */
+
+    {
+        MateriaNodus* pater;
+        MateriaNodus* alter;
+        MateriaNodus* filius_a;
+        MateriaNodus* filius_b;
+        MateriaNodus* filius_c;
+                 Xar* liberi;
+                 i32  ordo[II];
+
+        imprimere("\n--- Probans referentiam et patrem fixum ---\n");
+
+        /* congruentia: REFERENTIA sola cum REFERENTIA */
+        CREDO_VERUM  (materia_valor_congruit(
+            materia_valor_referentia(NIHIL), MATERIA_LOCUS_REFERENTIA));
+        CREDO_FALSUM (materia_valor_congruit(
+            materia_valor_referentia(NIHIL), MATERIA_LOCUS_NODUS));
+        CREDO_FALSUM (materia_valor_congruit(materia_valor_nodus(NIHIL),
+            MATERIA_LOCUS_REFERENTIA));
+        CREDO_AEQUALIS_S32 ((s32)materia_valor_referentia(NIHIL).genus,
+            (s32)MATERIA_VALOR_REFERENTIA);
+
+        /* loci: [0] NODUS, [1] LISTA_NODUS, [2] REFERENTIA */
+        pater     = materia_nodus_creare(piscina, (s32)20, (i32)III);
+        alter     = materia_nodus_creare(piscina, (s32)20, (i32)III);
+        filius_a  = materia_nodus_creare(piscina, (s32)21, ZEPHYRUM);
+        filius_b  = materia_nodus_creare(piscina, (s32)21, ZEPHYRUM);
+        filius_c  = materia_nodus_creare(piscina, (s32)21, ZEPHYRUM);
+        CREDO_NON_NIHIL (pater);
+        CREDO_NON_NIHIL (alter);
+        CREDO_NIHIL (filius_a->pater);
+
+        /* ponere figit */
+        CREDO_VERUM (materia_nodus_ponere(pater, ZEPHYRUM,
+            materia_valor_nodus(filius_a), MATERIA_LOCUS_NODUS));
+        CREDO_AEQUALIS_PTR (filius_a->pater, pater);
+
+        /* appendere figit elementum appensum */
+        CREDO_VERUM (materia_nodus_appendere(piscina, pater, I,
+            materia_valor_nodus(filius_b), MATERIA_LOCUS_LISTA_NODUS));
+        CREDO_VERUM (materia_nodus_appendere(piscina, pater, I,
+            materia_valor_nodus(filius_c), MATERIA_LOCUS_LISTA_NODUS));
+        CREDO_AEQUALIS_PTR (filius_b->pater, pater);
+        CREDO_AEQUALIS_PTR (filius_c->pater, pater);
+
+        /* referentia ex ALTERO in filium_b: pater filii_b IMMOTUS -
+         * scopus patrem a domino suo habet, non a referente */
+        CREDO_VERUM (materia_nodus_ponere(alter, (i32)II,
+            materia_valor_referentia(filius_b),
+            MATERIA_LOCUS_REFERENTIA));
+        CREDO_AEQUALIS_PTR (filius_b->pater, pater);
+        CREDO_AEQUALIS_PTR (alter->loci[II].datum.nodus, filius_b);
+
+        /* referentia in locum NODUS recusatur (species) */
+        imprimere("  (unus nuntius 'materia_nodus:' infra EXSPECTATUR)\n");
+        CREDO_FALSUM (materia_nodus_ponere(alter, ZEPHYRUM,
+            materia_valor_referentia(filius_b), MATERIA_LOCUS_NODUS));
+
+        /* liberi: referentia NON est liber (patres_figere hac via it) */
+        liberi = materia_nodus_liberi(piscina, alter);
+        CREDO_AEQUALIS_I32 (xar_numerus(liberi), ZEPHYRUM);
+        liberi = materia_nodus_liberi(piscina, pater);
+        CREDO_AEQUALIS_I32 (xar_numerus(liberi), (i32)III);
+
+        /* permutare: elementa eadem, patres immoti */
+        ordo[ZEPHYRUM]  = I;
+        ordo[I]         = ZEPHYRUM;
+        CREDO_VERUM (materia_nodus_lista_permutare(piscina, pater, I,
+            ordo, (i32)II));
+        CREDO_AEQUALIS_PTR (filius_b->pater, pater);
+        CREDO_AEQUALIS_PTR (filius_c->pater, pater);
+        CREDO_AEQUALIS_PTR (materia_valor_lista_obtinere(pater->loci[I],
+            ZEPHYRUM)->datum.nodus, filius_c);
+        /* referentia permutationem supervivit sine remissione */
+        CREDO_AEQUALIS_PTR (alter->loci[II].datum.nodus, filius_b);
+
+        /* reponere figit filium novum */
+        {
+            MateriaNodus* filius_d = materia_nodus_creare(piscina,
+                (s32)21, ZEPHYRUM);
+
+            CREDO_VERUM (materia_nodus_reponere(pater, ZEPHYRUM,
+                materia_valor_nodus(filius_d), MATERIA_LOCUS_NODUS));
+            CREDO_AEQUALIS_PTR (filius_d->pater, pater);
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

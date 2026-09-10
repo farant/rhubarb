@@ -32,6 +32,18 @@ nomen structura {
     constans StmlNodus* elementum;
 } ArborPar;
 
+/* Nodus REFERENDUS (2026-09-10): quotiens referentia in eum spectat
+ * (passus I), numerus ancorae ei datus (0 = nondum), an elementum
+ * eius iam emissum sit (passus II). Sine 'emissum' in fine
+ * referentia ad nodum EXTRA subarborem scriptam '#nodN' sine ancora
+ * scriberet - lector id recusaret, sed sero et alibi. */
+nomen structura {
+    constans MateriaNodus* nodus;
+                      i32  usus;
+                      i32  numerus;
+                      b32  emissum;
+} ArborReferendum;
+
 structura MateriaArborScriptor {
                             Piscina* piscina;
                 InternamentumChorda* intern;
@@ -39,6 +51,11 @@ structura MateriaArborScriptor {
                      TabulaDispersa* lexemata;
                                 Xar* paria;    /* ArborPar; NIHIL = nulla */
                                 i32  numerus_notarum;
+    /* referenda: MateriaNodus* -> ArborReferendum*; series ordine
+     * notationis (custodia finalis). Ambo PIGRE in passu I. */
+                     TabulaDispersa* referenda;
+                                Xar* referenda_series;
+                                i32  numerus_ancorarum;
 
     /* Ancora - vide legem in capite */
                                 b32 ancora_nota;
@@ -319,6 +336,116 @@ _nota_lexematis (
     redde NIHIL;
 }
 
+interior i32
+_numerus_ad_literas (
+    i32,
+    character*,
+    i32);
+
+/* Nota nodi REFERENDI; NIHIL si nemo in eum spectat */
+interior ArborReferendum*
+_referendum_nodi (
+     MateriaArborScriptor* st,
+    constans MateriaNodus* nodus)
+{
+    vacuum* inventum;
+    chorda  clavis;
+
+    si (st->referenda == NIHIL || nodus == NIHIL)
+    { redde NIHIL;
+    }
+    clavis = _clavis_monstratoris(st->piscina,
+        (constans vacuum*)nodus);
+    si (clavis.datum == NIHIL)
+    { redde NIHIL;
+    }
+    si (tabula_dispersa_invenire(st->referenda, clavis, &inventum))
+    {
+        redde (ArborReferendum*)inventum;
+    }
+    redde NIHIL;
+}
+
+/* Passus I: referentiam in nodum notare (nota nova aut usus++) */
+interior vacuum
+_referendum_notare (
+     MateriaArborScriptor* st,
+    constans MateriaNodus* nodus)
+{
+    ArborReferendum* r;
+
+    si (nodus == NIHIL)
+    { redde;
+    }
+    /* PIGRE: arbor sine referentiis nihil solvit - columnae computi
+     * clientium (css, md, oratio) immotae manent. */
+    si (st->referenda == NIHIL)
+    {
+        st->referenda         = tabula_dispersa_creare_chorda(
+            st->piscina, 64);
+        st->referenda_series  = xar_creare(st->piscina,
+            magnitudo(ArborReferendum*));
+        si (st->referenda == NIHIL || st->referenda_series == NIHIL)
+        {
+            st->causa = "tabula referendorum creari non potuit";
+            redde;
+        }
+    }
+    r = _referendum_nodi(st, nodus);
+    si (r != NIHIL)
+    { r->usus++; redde;
+    }
+    r = (ArborReferendum*)piscina_allocare(st->piscina,
+        magnitudo(ArborReferendum));
+    si (r == NIHIL)
+    { redde;
+    }
+    r->nodus    = nodus;
+    r->usus     = I;
+    r->numerus  = ZEPHYRUM;
+    r->emissum  = FALSUM;
+    tabula_dispersa_inserere(st->referenda,
+        _clavis_monstratoris(st->piscina, (constans vacuum*)nodus), r);
+    si (st->referenda_series != NIHIL)
+    {
+        ArborReferendum** cella =
+            (ArborReferendum**)xar_addere(st->referenda_series);
+
+        si (cella != NIHIL)
+        { *cella = r;
+        }
+    }
+}
+
+/* Nomen ancorae 'nodN' (cum '#' praefixo pro loco referentiae).
+ * Praefixum 'nod' parallelum 'lexN' fragmentorum lexematum: lex =
+ * lexema communicatum, nod = nodus referendus. */
+interior b32
+_nomen_ancorae (
+          i32  numerus,
+          b32  cum_signo,
+    character* buffer,
+          i32  capacitas)
+{
+    i32 praefixum;
+
+    si (buffer == NIHIL || capacitas < VIII)
+    { redde FALSUM;
+    }
+    praefixum = ZEPHYRUM;
+    si (cum_signo)
+    {
+        buffer[praefixum] = '#';
+        praefixum++;
+    }
+    buffer[praefixum]       = 'n';
+    buffer[praefixum + I]   = 'o';
+    buffer[praefixum + II]  = 'd';
+    praefixum               += III;
+    redde (b32)(_numerus_ad_literas(numerus, buffer + praefixum,
+        capacitas - praefixum) != ZEPHYRUM);
+}
+
 
 /* ==================================================
  * Passus I - usus numerare + ancoram capere
@@ -455,6 +582,9 @@ _numerare_valorem (
             }
         }
         frange;
+    casus MATERIA_VALOR_REFERENTIA:
+        /* scopus notatur, NUMQUAM ambulatur - non filius est */
+        _referendum_notare(st, valor.datum.nodus); frange;
     ordinarius: frange;
     }
 }
@@ -1314,13 +1444,54 @@ _scribere_valorem_in (
       MateriaLocusSpecies  species,
     constans MateriaNodus* sedes)
 {
-    StmlNodus* liberum;
-    character  buffer[XVI];
-          i32  numerus;
-          i32  i;
+           StmlNodus* liberum;
+           character  buffer[XVI];
+           character  ancora[XXXII];
+     ArborReferendum* referendum;
+                 i32  numerus;
+                 i32  i;
 
     commutatio (species)
     {
+    casus MATERIA_LOCUS_REFERENTIA:
+        /* NOMEN, non transclusio: '#nodN' textus loci; scopus id
+         * suum in elemento SUO fert (ubicumque in documento -
+         * antrorsum et in circuitu licet). Passus I scopum notavit;
+         * numerus ut primum nominatur. */
+        si (valor.genus != MATERIA_VALOR_REFERENTIA)
+        {
+            st->causa = "locus REFERENTIA valorem alienum fert";
+            st->sedes = sedes;
+            redde FALSUM;
+        }
+        si (valor.datum.nodus == NIHIL)
+        {
+            st->causa = "referentia nihil";
+            st->sedes = sedes;
+            redde FALSUM;
+        }
+        referendum = _referendum_nodi(st, valor.datum.nodus);
+        si (referendum == NIHIL)
+        {
+            st->causa = "referentia passu primo non notata";
+            st->sedes = sedes;
+            redde FALSUM;
+        }
+        si (referendum->numerus == ZEPHYRUM)
+        {
+            st->numerus_ancorarum++;
+            referendum->numerus = st->numerus_ancorarum;
+        }
+        si (!_nomen_ancorae(referendum->numerus, VERUM, ancora,
+                (i32)magnitudo(ancora)))
+        {
+            st->causa = "nomen ancorae scribi non potuit";
+            st->sedes = sedes;
+            redde FALSUM;
+        }
+        redde stml_textum_addere(parens, st->piscina, st->intern,
+            ancora);
+
     casus MATERIA_LOCUS_NODUS:
         si (valor.genus != MATERIA_VALOR_NODUS)
         {
@@ -1491,6 +1662,36 @@ _scribere_nodum_internum (
         }
         }
 
+    /* ANCORA REFERENTIAE (2026-09-10): nodus in quem referentia
+     * spectat id="nodN" fert - spatium '#' documenti STML (selector
+     * #x, attributum 'id'). Identitas scripturae, non locus nec
+     * speculum - eiusdem gradus ac nomina fragmentorum 'lexN'.
+     * ANTE attributa frontis, ut ordo octetim fixus sit. */
+    {
+        ArborReferendum* referendum = _referendum_nodi(st, nodus);
+
+        si (referendum != NIHIL)
+        {
+            character ancora[XXXII];
+
+            si (referendum->numerus == ZEPHYRUM)
+            {
+                st->numerus_ancorarum++;
+                referendum->numerus = st->numerus_ancorarum;
+            }
+            referendum->emissum = VERUM;
+            si (   !_nomen_ancorae(referendum->numerus, FALSUM, ancora,
+                        (i32)magnitudo(ancora))
+                || !stml_attributum_addere(elementum, st->piscina,
+                        st->intern, "id", ancora))
+            {
+                st->causa = "ancora referentiae scribi non potuit";
+                st->sedes = nodus;
+                redde NIHIL;
+            }
+        }
+    }
+
     /* ATTRIBUTA FRONTIS in nodo (derivata; lector ea ignorat) */
     si (   st->consilium->frons               != NIHIL
         && st->consilium->frons->nodum_ornare != NIHIL
@@ -1640,6 +1841,9 @@ materia_arbor_scribere_nodum (
     st.lexemata = tabula_dispersa_creare_chorda(piscina, 256);
     st.paria    = consilium->sedes_colligere
         ? xar_creare(piscina, magnitudo(ArborPar)) : NIHIL;
+    st.referenda          = NIHIL;   /* pigre, in passu I */
+    st.referenda_series   = NIHIL;
+    st.numerus_ancorarum  = ZEPHYRUM;
     si (st.lexemata == NIHIL)
     {
         fructus.causa = "tabula lexematum creari non potuit";
@@ -1702,6 +1906,29 @@ materia_arbor_scribere_nodum (
         redde fructus;
     }
 
+    /* CUSTODIA REFERENTIARUM: scopus quisque INTRA subarborem
+     * scriptam emissus sit. Aliter '#nodN' sine ancora exiret -
+     * lector eam recusaret, sed sero, alibi, sine sede. Contractus:
+     * subarbor cum referentia foras scribi NON potest. */
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; st.referenda_series != NIHIL
+            && k < xar_numerus(st.referenda_series); k++)
+        {
+            ArborReferendum* r = *(ArborReferendum**)xar_obtinere(
+                st.referenda_series, k);
+
+            si (r != NIHIL && !r->emissum)
+            {
+                fructus.causa =
+                    "referentia ad nodum extra arborem scriptam";
+                fructus.sedes = r->nodus;
+                redde fructus;
+            }
+        }
+    }
+
     fructus.textus     = stml_scribere(involucrum, piscina, VERUM);
     fructus.census     = st.census;
     fructus.successus  = VERUM;
@@ -1713,12 +1940,26 @@ materia_arbor_scribere_nodum (
  * LECTOR: STML canonicum -> arbor
  * ================================================== */
 
+/* Referentia PENDENS (2026-09-10): locus lectus cuius scopus post
+ * arborem TOTAM solvitur - antrorsum et in circuitu licet, ergo lex
+ * 'fragmentum ante usum' lexematum hic NON valet. Forma eadem ac
+ * patres_figere: passus post lectionem. */
+nomen structura {
+    MateriaNodus* nodus;
+             i32  locus;
+          chorda  ancora;   /* sine '#' */
+             i32  linea;
+} ArborReferentiaPendens;
+
 structura MateriaArborLector {
                        Piscina* piscina;
            InternamentumChorda* intern;
     constans MateriaArborConsilium* consilium;
             MateriaArborVitium* vitium;
                  TabulaDispersa* fragmenta;   /* id -> MateriaToken* */
+                 TabulaDispersa* ancorae;     /* id -> MateriaNodus* */
+    /* referentiae: ArborReferentiaPendens, PIGRE in lectione */
+                            Xar* referentiae;
                             s32  fons_ordinarius;
 };
 
@@ -2519,6 +2760,45 @@ _valorem_loci_legere (
     fragmenti_id  = NIHIL;
     cursor        = ZEPHYRUM;
 
+    si (species == MATERIA_LOCUS_REFERENTIA)
+    {
+        chorda textus = _textus_directus(lector,
+            involucrum);
+        ArborReferentiaPendens* pendens;
+
+        si (textus.mensura < II || textus.datum[ZEPHYRUM] != (i8)'#')
+        {
+            redde materia_arbor_lector_recusare(lector,
+                "locus REFERENTIA ancoram '#' non fert",
+                involucrum->linea);
+        }
+        si (lector->referentiae == NIHIL)
+        {
+            lector->referentiae = xar_creare(lector->piscina,
+                magnitudo(ArborReferentiaPendens));
+            si (lector->referentiae == NIHIL)
+            {
+                redde materia_arbor_lector_recusare(lector,
+                    "tabula referentiarum creari non potuit",
+                    involucrum->linea);
+            }
+        }
+        pendens = (ArborReferentiaPendens*)xar_addere(
+            lector->referentiae);
+        si (pendens == NIHIL)
+        {
+            redde materia_arbor_lector_recusare(lector,
+                "referentia pendens notari non potuit",
+                involucrum->linea);
+        }
+        pendens->nodus           = nodus;
+        pendens->locus           = locus;
+        pendens->ancora.datum    = textus.datum + I;
+        pendens->ancora.mensura  = textus.mensura - I;
+        pendens->linea           = involucrum->linea;
+        redde VERUM;
+    }
+
     si (species == MATERIA_LOCUS_INDEX)
     {
         chorda textus = _textus_directus(lector, involucrum);
@@ -2737,6 +3017,41 @@ _nodum_legere (
         redde NIHIL;
     }
 
+    /* ANCORA id="nodN" -> tabula ancorarum; referentiae pendentes
+     * post arborem totam solvuntur. Duplex = documentum mendax. */
+    {
+        chorda* ancora = stml_attributum_capere(elementum, "id");
+
+        si (ancora != NIHIL)
+        {
+            si (lector->ancorae == NIHIL)
+            {
+                lector->ancorae = tabula_dispersa_creare_chorda(
+                    lector->piscina, 64);
+                si (lector->ancorae == NIHIL)
+                {
+                    materia_arbor_lector_recusare(lector,
+                        "tabula ancorarum creari non potuit",
+                        elementum->linea);
+                    redde NIHIL;
+                }
+            }
+            si (ancora->mensura == ZEPHYRUM)
+            {
+                materia_arbor_lector_recusare(lector, "ancora vacua",
+                    elementum->linea);
+                redde NIHIL;
+            }
+            si (tabula_dispersa_continet(lector->ancorae, *ancora))
+            {
+                materia_arbor_lector_recusare(lector, "ancora duplex",
+                    elementum->linea);
+                redde NIHIL;
+            }
+            tabula_dispersa_inserere(lector->ancorae, *ancora, nodus);
+        }
+    }
+
     cursor = ZEPHYRUM;
     per (;;)
     {
@@ -2780,6 +3095,46 @@ _nodum_legere (
         }
     }
     redde nodus;
+}
+
+/* Referentias pendentes solvere - post arborem TOTAM lectam, ut
+ * scopus antrorsum aut in circuitu nominatus iam exsistat. Ancora
+ * ignota = recusatio nominata cum linea, numquam silentium. */
+interior b32
+_referentias_solvere (
+    MateriaArborLector* lector)
+{
+    i32 k;
+
+    si (lector->referentiae == NIHIL)
+    { redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(lector->referentiae); k++)
+    {
+        ArborReferentiaPendens* p =
+            (ArborReferentiaPendens*)xar_obtinere(
+            lector->referentiae, k);
+        vacuum* inventum;
+
+        si (p == NIHIL)
+        { perge;
+        }
+        si (   lector->ancorae == NIHIL
+            || !tabula_dispersa_invenire(lector->ancorae, p->ancora,
+                    &inventum))
+        {
+            redde materia_arbor_lector_recusare(lector,
+                "referentia ad ancoram ignotam", p->linea);
+        }
+        si (!materia_nodus_ponere(p->nodus, p->locus,
+                 materia_valor_referentia((MateriaNodus*)inventum),
+                 MATERIA_LOCUS_REFERENTIA))
+        {
+            redde materia_arbor_lector_recusare(lector,
+                "referentia poni non potuit", p->linea);
+        }
+    }
+    redde VERUM;
 }
 
 
@@ -3034,6 +3389,9 @@ _positiones_valoris (
             }
         }
         frange;
+    casus MATERIA_VALOR_REFERENTIA:
+        /* scopus octetos SUOS in sede sua tenet - non ambulatur */
+        frange;
     ordinarius: frange;
     }
 }
@@ -3116,6 +3474,8 @@ materia_arbor_legere (
     lector.consilium        = consilium;
     lector.vitium           = vitium;
     lector.fragmenta        = NIHIL;
+    lector.ancorae          = NIHIL;
+    lector.referentiae      = NIHIL;
     lector.fons_ordinarius  = ZEPHYRUM;
 
     si (   piscina               == NIHIL || consilium == NIHIL
@@ -3226,6 +3586,8 @@ materia_arbor_legere (
     }
 
     lector.fragmenta = tabula_dispersa_creare_chorda(piscina, 64);
+    /* ancorae et referentiae PIGRE (in lectione): arbor sine
+     * referentiis nihil solvit */
     si (lector.fragmenta == NIHIL)
     {
         materia_arbor_lector_recusare(&lector,
@@ -3248,6 +3610,9 @@ materia_arbor_legere (
 
     arbor = _nodum_legere(&lector, radix);
     si (arbor == NIHIL)
+    { redde NIHIL;
+    }
+    si (!_referentias_solvere(&lector))
     { redde NIHIL;
     }
 

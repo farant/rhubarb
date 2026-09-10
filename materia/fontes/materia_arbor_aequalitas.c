@@ -22,8 +22,86 @@ nomen structura {
                       character  via[MATERIA_ARBOR_VIA_CAPACITAS];
                             i32  via_longitudo;
                             i32  profunditas;
+          constans MateriaNodus* radix_a;   /* radices comparationis */
+          constans MateriaNodus* radix_b;
 } ArborComparator;
 
+/* Semita scopi REFERENTIAE (2026-09-10): gradus (locus, index) a
+ * scopo sursum per patres usque ad radicem comparationis, scopo
+ * primo. RELATIVA radici, non absoluta: subarbor in arbore maiore
+ * electa patres supra radicem habet, arbor eadem seorsum lecta non
+ * habet - semita absoluta divergeret ubi arbores aequales sunt.
+ * Monstratores conferri non possunt: arbor lecta nodos novos fert. */
+#define ARBOR_SEMITA_CAPACITAS 128
+
+nomen structura {
+    i32 locus;
+    s32 index;   /* -I = locus singularis */
+} ArborGradus;
+
+/* FALSUM = scopus EXTRA subarborem collatam (pater NIHIL ante
+ * radicem), pater eum non possidet (arbor corrupta), aut semita
+ * capacitatem excedit. */
+interior b32
+_arbor_semita_scopi (
+    constans MateriaNodus* scopus,
+    constans MateriaNodus* radix,
+              ArborGradus* gradus,
+                      i32* numerus)
+{
+    constans MateriaNodus* n = scopus;
+
+    *numerus = ZEPHYRUM;
+    dum (n != radix)
+    {
+        constans MateriaNodus* pater = n->pater;
+                          i32  l;
+                          b32  inventum = FALSUM;
+
+        si (pater == NIHIL || *numerus >= ARBOR_SEMITA_CAPACITAS)
+        {
+            redde FALSUM;
+        }
+        per (l = ZEPHYRUM; l < pater->numerus_locorum && !inventum; l++)
+        {
+            constans MateriaValor* v = &pater->loci[l];
+
+            si (v->genus == MATERIA_VALOR_NODUS && v->datum.nodus == n)
+            {
+                gradus[*numerus].locus  = l;
+                gradus[*numerus].index  = (s32)-I;
+                inventum                = VERUM;
+            }
+            alioquin si (v->genus == MATERIA_VALOR_LISTA)
+            {
+                i32 m = materia_valor_lista_numerus(*v);
+                i32 k;
+
+                per (k = ZEPHYRUM; k < m; k++)
+                {
+                    constans MateriaValor* e =
+                        materia_valor_lista_obtinere(*v, k);
+
+                    si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
+                        && e->datum.nodus == n)
+                    {
+                        gradus[*numerus].locus  = l;
+                        gradus[*numerus].index  = (s32)k;
+                        inventum                = VERUM;
+                        frange;
+                    }
+                }
+            }
+        }
+        si (!inventum)
+        {
+            redde FALSUM;
+        }
+        (*numerus)++;
+        n = pater;
+    }
+    redde VERUM;
+}
 
 /* Decimale in buffer; longitudinem scriptam reddit */
 interior i32
@@ -344,6 +422,50 @@ _arbor_valores_aequales (
             }
             redde VERUM;
 
+        casus MATERIA_VALOR_REFERENTIA:
+        {
+            ArborGradus semita_a[ARBOR_SEMITA_CAPACITAS];
+            ArborGradus semita_b[ARBOR_SEMITA_CAPACITAS];
+                    i32 numerus_a_semitae;
+                    i32 numerus_b_semitae;
+
+            si (a.datum.nodus == NIHIL || b.datum.nodus == NIHIL)
+            {
+                si (a.datum.nodus == b.datum.nodus)
+                {
+                    redde VERUM;
+                }
+                redde _arbor_divergere(comparator, "referentia/nihil",
+                    nodus_a, nodus_b, NIHIL, NIHIL, locus, -I);
+            }
+            si (   !_arbor_semita_scopi(a.datum.nodus,
+                comparator->radix_a,
+                        semita_a, &numerus_a_semitae)
+                || !_arbor_semita_scopi(b.datum.nodus,
+                comparator->radix_b,
+                        semita_b, &numerus_b_semitae))
+            {
+                redde _arbor_divergere(comparator, "referentia/extra",
+                    nodus_a, nodus_b, NIHIL, NIHIL, locus, -I);
+            }
+            si (numerus_a_semitae != numerus_b_semitae)
+            {
+                redde _arbor_divergere(comparator, "referentia/semita",
+                    nodus_a, nodus_b, NIHIL, NIHIL, locus, -I);
+            }
+            per (i = ZEPHYRUM; i < numerus_a_semitae; i++)
+            {
+                si (   semita_a[i].locus != semita_b[i].locus
+                    || semita_a[i].index != semita_b[i].index)
+                {
+                    redde _arbor_divergere(comparator,
+                        "referentia/semita", nodus_a, nodus_b, NIHIL,
+                        NIHIL, locus, (s32)i);
+                }
+            }
+            redde VERUM;
+        }
+
         casus MATERIA_VALOR_LISTA:
             /* Mensura PROSPECTUS, numquam xar_numerus repositorii:
              * repositorium inter furcas commune et append-only est,
@@ -496,6 +618,8 @@ materia_arbor_aequalis (
     comparator.via_longitudo  = ZEPHYRUM;
     comparator.profunditas    = ZEPHYRUM;
     comparator.via[0]         = '\0';
+    comparator.radix_a        = a;
+    comparator.radix_b        = b;
 
     redde _arbor_nodi_aequales(&comparator, a, b);
 }

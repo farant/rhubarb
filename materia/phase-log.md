@@ -1984,3 +1984,98 @@ the change: materia 6/6, css 9/9, shim 348/348. Also observed, not
 changed: the raw text form's refusal of a value containing its own
 closing tag is real for any client whose values can contain STML-shaped
 text — md avoids it by splitting tokens at `</md-`.
+
+## 2026-09-10 — referentiae: a node can name a node (fourth client, oratio)
+
+Oratio is the first client whose own processing REORDERS lists while
+sideways links exist: an umbra under a verb's reading names its filler
+by two ordinals (word, reading), and every preferred-reading permutation
+stales the reading ordinal — `_ligationes_remittere` remapped after
+each permutation and bit twice (umbrae, then the alternatives added in
+T32 b). The problem is general, not oratio's: md stores reference links
+by label (name), C89 is nothing but identifier→declaration links, HTML
+brings label-for and href anchors, and materia had already met the
+shape once for TOKENS (a macro expansion's tokens reachable from two
+places — the `#lexN` fragment + `<<#lexN>>` transclusion, "identity
+would lie" otherwise). Decree 01M260XYXB (Fran, 2026-09-10) from
+desideratum 01M24Z4Q5Y frictio (a).
+
+BUILT (materia 6/6, three planted faults red on the named assertion):
+
+- `MATERIA_LOCUS_REFERENTIA` species (appended LAST — registry seals
+  hash species numbers) and `MATERIA_VALOR_REFERENTIA` value kind, a
+  NEW kind rather than a flag on NODUS so every walk is taught its
+  case: writer pass I notes the target and never descends; the byte
+  writer emits nothing; positions and `patres_figere` skip it
+  (`materia_nodus_liberi` never listed it); the comparator compares
+  references by PATH RELATIVE to the comparison root (locus/index
+  steps up the parent chain), naming `referentia/semita`,
+  `referentia/extra` (target outside the compared subtree),
+  `referentia/nihil`.
+- SERIALIZATION is a NAME, not a transclusion. Transclusion is a window
+  (canon judges through it, refuses cycles, fragment must precede use);
+  a dependency graph has mutual arcs and forward references, so the
+  target carries `id="nodN"` on its own element (STML's `#` document
+  space, selector `#x`) and the locus prints `#nodN` as text. Anchors
+  are numbered as first met in the document (target or referrer,
+  whichever comes first) — serialization identity of the same standing
+  as the `lexN` fragment names, not a locus and not a mirror. The
+  writer REFUSES a reference whose target is outside the written
+  subtree (`referentia ad nodum extra arborem scriptam`, with sedes) —
+  the alternative is a `#nodN` without an anchor that the reader would
+  refuse later, elsewhere, without a seat.
+- The READER resolves in a pass after the whole tree is built (same
+  shape as `patres_figere`): `id` attributes fill an anchor table
+  (duplicate refused), reference loci are recorded pending, then
+  resolved; unknown anchor = `referentia ad ancoram ignotam` with the
+  line. Mirror attributes (oratio's derived ordinals) are ignored on
+  read like `n`.
+- PLACING VERBS FIX PARENTS: `ponere`/`appendere`/`reponere` set
+  `pater` on the owned NODUS child (list elements too when a list is
+  placed whole). Before this `pater` was "post-acceptum SOLUM";
+  `oratio_clausula.c` poked the field by hand and oratio refixed the
+  whole tree after annotation. The comparator's relative paths and the
+  ordinal mirrors need parents at construction. One comparator test
+  had encoded the old contract (unparented construction) and now
+  forges the null side by hand.
+
+MEASURED, not argued: the arbor probatio round-trips a mutual pair
+(A→B forward, B→A back) twice byte-identical, reads back pointer
+identity (A'.socius == B'), permutes the list and shows the anchor
+following the node with no remap, refuses orphan/duplicate/unsigiled
+anchors and the outside-subtree write, and accepts a self-reference
+(minimal cycle). Plants: reader resolving to self → `_socium_filii(a2)
+== b2` red; writer guard inverted → `s1.successus` red; comparator
+dropping the list index → the sibling-target divergence red.
+
+COST TO CLIENTS WITHOUT REFERENCES: ZERO, measured. The first cut
+created the referendum and anchor tables on every write and read and
+looked every written node up by pointer key (one arena allocation per
+lookup, the `_nota_lexematis` pattern) — `allocationes_arboris` moved
++1.4 % on every css/md/oratio computus pin. The tables are now created
+lazily (pass I on the first reference; the reader on the first `id` or
+reference locus) and a writer with no referenda skips the lookup, so
+all three computus goldens are byte-identical without regeneration. A
+representational change may move nothing; when it does, make it not.
+
+NEXT (oratio half): `impletio-vocabulum`/`impletio-analysis` on umbra
+and `vocabulum`/`analysis` on alterna become one REFERENTIA locus each
+with derived ordinal mirrors; executor/oracle/clausula dereference
+pointers; `_ligationes_remittere` deleted; canon declares `id` on the
+analysis genera; registry seal + probatio pin updated by hand (frictio
+(b), paid once more). Acceptance: all nine treebank pins BYTE-IDENTICAL
+— a representational change may move nothing.
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: legati caput (tabula_dispersa API sine grep); sample(1) on
+the oracle for the cost split that re-ranked frictio (c); formator
+-scribere/-vitia; vocabula -nova (NOVA 0); silva.planta ×3.
+FRUCTUS: reading materia_arbor.c whole found the token identity
+mechanism and its two blockers for nodes (before-use, cycles) — the
+design fell out of the code, not the other way round.
+ASPERITATES: (1) BSD grep `\s` silently no-op again (sample parsing);
+(2) the pretty writer's capturing-fragment form (`<socius(> #nod2`)
+is what strstr must match — dump the text before pinning a layout;
+(3) a test that encodes a contract ("pater post-acceptum SOLUM") goes
+red when the contract improves — read it as a contract change, not a
+regression.

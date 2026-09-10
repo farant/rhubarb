@@ -49,6 +49,24 @@ conditional here."
   loudly, with a named cause — because the alternative is a confident
   wrong answer (the CSS comment-block case; see `materia_lexicon.h`).
 
+## Referentiae (2026-09-10)
+
+**A node can name another node of the same tree without owning it.**
+`MATERIA_LOCUS_REFERENTIA` / `MATERIA_VALOR_REFERENTIA` — a NEW value
+kind (never a flag on NODUS), so every walk is taught not to descend.
+Serialized as a NAME in STML's `#` document space: the target carries
+`id="nodN"`, the locus prints `#nodN`; never a transclusion (a window
+that canon judges through, refusing cycles and forward use — a
+dependency graph has both). The reader resolves after the whole tree is
+built; unknown or duplicate anchors refuse loudly; the writer refuses a
+reference whose target lies outside the written subtree. The comparator
+compares references by path RELATIVE to the comparison root. Placing
+verbs (`ponere`/`appendere`/`reponere`) now fix `pater` on owned
+children — parents are no longer "post-acceptum SOLUM". Born for oratio
+(ordinals stale under permutation; remap bit twice); general to md
+links, C89 identifiers, HTML anchors. Decree `01M260XYXB`; phase-log
+2026-09-10.
+
 ## The whitespace contract (2026-08-28)
 
 **A `VERBATIM` trivium whose value is whitespace-only projects to

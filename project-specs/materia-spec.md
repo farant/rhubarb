@@ -517,6 +517,7 @@ typed face — which is precisely rowan's bargain, and why M8 matters.
 | MG2 | Token vocabulary block and slot genus constraints deferred (§5.4) | Shaped now so the format does not preclude them. |
 | MG3 | Whether `quaestio` belongs in materia or above it | It needs registry types only, so it *can* live in materia — but M8 says thin. Decide when CSS actually wants a query. |
 | MG4 | The lapifex landmine | `lib/nuntium_schema.c` builds on a predecessor generation. Untouched by this fork, but it is the standing proof that superseded generations here do not die on schedule. |
+| ~~MG5~~ | **CLOSED 2026-09-10** — sideways references (`MATERIA_LOCUS_REFERENTIA`) | Found by the fourth client (oratio): a tree can only say ownership, so cross-links were client-encoded ordinals that list permutation stales. Now a non-owning value kind, serialized as a name (`id="nodN"` / `#nodN`), resolved after read, compared by relative path; placing verbs fix parents. Decree `01M260XYXB`. |
 
 
 ---
@@ -543,6 +544,17 @@ template-compression species guard (T3), the whitespace contract
 (T9), lexeme-path raw marking (B6) and CR representation via the
 `cr` attribute (B6, which also names a latent silva bug for the
 phase-5 replay). The as-built record is `materia/phase-log.md`.
+
+**As built (2026-09-10, fourth client).** Oratio, the first client
+whose processing reorders lists while the tree carries sideways links,
+paid a fifth substrate change: the REFERENTIA locus species and value
+kind (MG5). The token identity mechanism (fragment + transclusion) did
+not transfer to nodes — it is aliasing with a before-use rule, and a
+dependency graph has forward references and cycles — so references
+serialize as names in the `#` document space and resolve in a pass
+after reading, the shape of `patres_figere`. With it the placing verbs
+took over parent fixing from the clients. Gates: materia, css, md,
+oratio, shim, all green with no pin moved.
 
 ### The measurement that shapes it (2026-08-27)
 

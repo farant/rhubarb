@@ -100,6 +100,17 @@ materia_valor_index (
 }
 
 MateriaValor
+materia_valor_referentia (
+    MateriaNodus* scopus)
+{
+    MateriaValor v;
+
+    v.genus        = MATERIA_VALOR_REFERENTIA;
+    v.datum.nodus  = scopus;
+    redde v;
+}
+
+MateriaValor
 materia_valor_lista (
     Xar* lista)
 {
@@ -274,8 +285,47 @@ materia_valor_congruit (
             redde (b32)(valor.genus == MATERIA_VALOR_LISTA);
         casus MATERIA_LOCUS_INDEX:
             redde (b32)(valor.genus == MATERIA_VALOR_INDEX);
+        casus MATERIA_LOCUS_REFERENTIA:
+            redde (b32)(valor.genus == MATERIA_VALOR_REFERENTIA);
         ordinarius:
             redde FALSUM;
+    }
+}
+
+/* Patrem filii POSSESSI figere (2026-09-10): valor NODUS unus, aut
+ * elementa NODUS listae positae totius. REFERENTIA scopum NON
+ * tangit - patrem a domino suo habet. Specula ordinalium
+ * (oratio 'n') et semitae comparatoris patrem poscunt; ante hoc
+ * clientes eum manu ponebant aut arborem totam refigebant. */
+interior vacuum
+_patrem_figere (
+    MateriaNodus* nodus,
+    MateriaValor  valor)
+{
+    si (valor.genus == MATERIA_VALOR_NODUS)
+    {
+        si (valor.datum.nodus != NIHIL)
+        {
+            valor.datum.nodus->pater = nodus;
+        }
+        redde;
+    }
+    si (valor.genus == MATERIA_VALOR_LISTA)
+    {
+        i32 n = materia_valor_lista_numerus(valor);
+        i32 k;
+
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            constans MateriaValor* e =
+                materia_valor_lista_obtinere(valor, k);
+
+            si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
+                && e->datum.nodus != NIHIL)
+            {
+                e->datum.nodus->pater = nodus;
+            }
+        }
     }
 }
 
@@ -309,6 +359,7 @@ materia_nodus_ponere (
         redde FALSUM;
     }
     nodus->loci[locus] = valor;
+    _patrem_figere(nodus, valor);
     redde VERUM;
 }
 
@@ -417,6 +468,7 @@ materia_nodus_reponere (
         redde FALSUM;
     }
     nodus->loci[locus] = valor;
+    _patrem_figere(nodus, valor);
     redde VERUM;
 }
 
@@ -458,6 +510,7 @@ materia_nodus_appendere (
         redde FALSUM;
     }
     nodus->loci[locus] = novus;
+    _patrem_figere(nodus, valor);
     redde VERUM;
 }
 
