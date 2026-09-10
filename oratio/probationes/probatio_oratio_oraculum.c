@@ -808,6 +808,11 @@ _thesaurus_arborum (
                 {
                     CREDO_VERUM (summa_casuum_iudicatorum > ZEPHYRUM);
                 }
+                /* T32 e: lis una per alternam (culpa plantata: lites sine
+                 * capite victoris omissae RUBRA) */
+                CREDO_AEQUALIS_I32 (census.lites != NIHIL
+                    ? xar_numerus(census.lites) : ZEPHYRUM,
+                    (i32)census.alternae_numerus);
             }
             /* T19g bis: errata auctoris - summa numerorum == verba -
              * primaria eius; errata prima III auctorum II maximorum relata

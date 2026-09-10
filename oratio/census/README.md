@@ -36,7 +36,7 @@ seven-file Latin list.
 
 | script | use |
 |---|---|
-| `metire.sh <out.tsv>` | `oraculum.sh -machina` over the eight files into one tsv (environment variables reach the oracle: `ORATIO_…=… ./oratio/census/metire.sh x.tsv`) |
+| `metire.sh <out.tsv> [oracle flags…]` | `oraculum.sh -machina` over the eight files into one tsv (environment variables reach the oracle: `ORATIO_…=… ./oratio/census/metire.sh x.tsv`; extra flags pass through, e.g. `-lites`) |
 | `compara.py A.tsv B.tsv` | per file: primary, forced, case, number, gender, attachment, and the word deltas |
 | `notae.py A.tsv B.tsv` | the feature columns: verb form, voice, gender, number, person |
 | `relationes.sh x.tsv` | subject and object precision and recall per file |
@@ -45,6 +45,7 @@ seven-file Latin list.
 | `contentiones.py <mensura.tsv> [file-part] [-casus]` | the contest table: per (winner rule, loser rule) contests, loser right, then ARCS (loser right alone with the winner's actual head wrong, winner right alone, the gain of a flip) and CASES (contests judged for case, loser's reading right alone, winner's reading right alone, the gain of a flip); same-head contests are reading contests and discriminate by case only; `-casus` sorts by case discrimination (T32 b/c/d) |
 | `contentiones.py <mensura.tsv> -scribere [out]` | writes `oratio/probationes/fixa/contentiones.tsv` (discriminating contests per pair, pinned files only) — the judge's table, inactive (`ORATIO_IUDEX=1`), T32 c refused |
 | `errata_delta.py A B [nota…]` | feature errata deltas between two `-errata -nota` runs |
+| `lites.py <x.tsv> [file-part] [-victor V] [-victa W] [-meet]` | the feature census over contests (T32 e): from `LIS` rows (`metire.sh x.tsv -lites`), for the same-verb subject/object pair by default, each feature the rule could see (direction, other nominatives in the clause, certain accusatives, neuter, first of clause, head number / person / voice) against the gold case, with the purity of "feature → accusative, else nominative"; `-meet` tries every pair of features (in-sample, optimistic) |
 
 The baseline for a measurement is the tsv of the committed state; keep
 it beside the variant tsvs in the scratchpad, never in the tree.

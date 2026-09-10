@@ -3801,3 +3801,69 @@ on the first, which is why R19 stands.
 with the prediction above (or the subject rule declining a
 nominative-or-accusative word when the verb has another nominative
 candidate), then the per-dialect trust table.
+
+## 2026-09-10 — T32 e: the feature census over contests (lites); verb number splits the coin flip
+
+**The instrument.** Every alternative now also yields a LIS, one row
+per contest, carrying what a rule could have seen when it fired:
+direction, the dependent's clause and whether it is the first word of
+it, the other words of that clause with a nominative reading (any /
+without an accusative reading / agreeing in number with the head), the
+unambiguous accusatives, the gender of the loser's reading, the head's
+number, person and voice, plus the gold: case, deprel, and whether the
+gold head is the head claimed. `OratioOraculumLis`, `census->lites`,
+`oraculum -machina -lites` (rows `LIS`, 21 columns), `metire.sh x.tsv
+-lites` passes flags through, `census/lites.py` tabulates each feature
+against the gold case for the same-verb pair and, with `-meet`, every
+pair of features (four cells, majority per cell, in-sample and so
+optimistic). Gate: one lis per alternative. Fran asked whether a
+partition-lattice tool in the shape of knotapel's scrutinium would pay
+here; the question is the same one (which detector partition refines
+the gold partition), the rows are already in its shape, and it is
+banked as desideratum 01M24V1387 until a second census asks it —
+`-meet` is its miniature.
+
+**What splits the coin flip.** Same-verb adjacent subject versus
+object, 1605 contests with a gold nominative or accusative, majority
+accusative 624 ‰. The hypothesis I had bet on, another nominative
+candidate in the clause, is weak and inconsistent: on Aquinas it
+splits 75 % / 43 %, on Seneca 62 % / 58 % only with number agreement,
+on Dante it points the other way. Clause-initial position is
+inconsistent too. The feature that holds on every file is the VERB'S
+NUMBER: with a plural verb the word is the subject, with a singular
+verb it leans object.
+
+| file | plural verb: nom / acc | singular verb: nom / acc | rule right | today right |
+|---|---|---|---|---|
+| Seneca | 53 / 20 | 126 / 152 | 205 (584 ‰) | 179 (510 ‰) |
+| charters dev | 0 / 2 | 0 / 17 | 17 | 0 |
+| charters test | 2 / 12 | 0 / 45 | 47 | 2 |
+| Aquinas | 22 / 7 | 168 / 262 | 284 (619 ‰) | 190 |
+| Perseus | 37 / 11 | 73 / 201 | 238 (739 ‰) | 110 |
+| PROIEL | 39 / 37 | 51 / 180 | 219 (713 ‰) | 90 |
+| Dante | 12 / 3 | 20 / 53 | 65 (739 ‰) | 32 |
+
+"Rule" = subject first when the verb is plural, object first when it
+is singular; "today" = subject first always. The reason is pro-drop: a
+singular third-person verb very often carries its subject implicitly,
+so an adjacent ambiguous word is more likely its object; a plural verb
+more often has its subject spelled out. Predicted gain over today,
+in cases: Seneca +26, charters +17 / +45, Aquinas +94, Perseus +128,
+PROIEL +129, Dante +33 — better than the blanket flip everywhere but
+the charters (+19 / +55 there), and positive on Seneca where the
+blanket flip was −7. The residual is real: singular verb and no other
+agreeing nominative on Seneca is 97 nom / 85 acc, a coin flip that
+morphology and order cannot break — semantics, the perpendicular
+dimension.
+
+**A quarter of the answers are neither subject nor object.** Of the
+1002 accusatives only 752 are `obj` of the verb (90 `obl`, 38 `amod`,
+34 `xcomp`, 27 `det`); of the 603 nominatives 417 are `nsubj` (56
+`amod`, 23 `advcl:pred`, 18 `csubj`). The reading contest is not
+binary between two slots; the case column is still the right measure
+because it counts the reading, not the slot.
+
+**Next.** The conditional order is a grammar edit, not an executor
+change: the strict subject rules split into a plural copy before the
+object rules and a singular copy after them. Measured against the
+prediction above (T32 f).

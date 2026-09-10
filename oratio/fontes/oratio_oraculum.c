@@ -181,6 +181,11 @@ hic_manens constans NotaOraculi NOTAE_ORACULI[ORATIO_ORACULUM_NOTAE] = {
       ORATIO_TITULI_TEMPORUM, (i32)ORATIO_TEMPUS_NUMERUS }
 };
 
+/* T32 e: indices notarum capitis in tabula NOTAE_ORACULI */
+#define NOTA_NUMERI   0
+#define NOTA_PERSONAE 2
+#define NOTA_VOCIS    4
+
 constans character*
 oratio_oraculum_nota_titulus (
     i32 k)
@@ -2453,12 +2458,13 @@ _casus_aureus (
     redde (s32)-I;
 }
 
-/* T32 d: casus lectionis ordinalis vocabuli (Latinae, classis casum
- * ferentis); -I aliter */
+/* T32 d/e: accidens lectionis ordinalis vocabuli (Latinae, classis id
+ * ferentis) - "casus", "numerus", "genus"; -I aliter */
 interior s32
-_casus_lectionis (
+_accidens_lectionis (
     constans MateriaNodus* vocabulum,
-                      s32  ordinalis)
+                      s32  ordinalis,
+       constans character* accidens)
 {
      constans MateriaValor* analyses;
      constans MateriaNodus* lectio;
@@ -2480,7 +2486,7 @@ _casus_lectionis (
         ->datum.nodus;
     cl     = oratio_genus_classis((OratioGenus)lectio->genus);
     locus  = (i32)cl < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
-        ? oratio_partes_locus(cl, "casus") : (s32)-I;
+        ? oratio_partes_locus(cl, accidens) : (s32)-I;
     si (   locus < ZEPHYRUM
         || lectio->loci[ORATIO_ANALYSIS_LINGUA].genus
             != MATERIA_VALOR_INDEX
@@ -2491,6 +2497,183 @@ _casus_lectionis (
         redde (s32)-I;
     }
     redde lectio->loci[locus].datum.index;
+}
+
+/* T32 d: casus lectionis ordinalis vocabuli; -I aliter */
+interior s32
+_casus_lectionis (
+    constans MateriaNodus* vocabulum,
+                      s32  ordinalis)
+{
+    redde _accidens_lectionis(vocabulum, ordinalis, "casus");
+}
+
+/* T32 e: chordam in piscinam condere (aurum et tokens sententiae piscinam
+ * iudicii non supervivunt) */
+interior chorda
+_chordam_condere (
+    Piscina* piscina,
+     chorda  c)
+{
+    character* datum;
+
+    si (c.mensura == ZEPHYRUM)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    datum = (character*)piscina_allocare(piscina,
+        (memoriae_index)c.mensura);
+    si (datum == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    memcpy(datum, c.datum, (size_t)c.mensura);
+    redde _chorda((i8*)datum, c.mensura);
+}
+
+/* T32 e: LIS notare - contentio singula cum notis (vide
+ * OratioOraculumLis): clausula dependentis percurritur, lectiones
+ * cuiusque vocabuli casu (et numero) legitur */
+interior vacuum
+_litem_notare (
+                           Piscina* piscina,
+              OratioOraculumCensus* census,
+    constans OratioConlluSententia* s,
+                               Xar* elementa,
+                      constans s32* caput,
+                               i32  dependens_a,
+                               i32  caput_a,
+                               s32  caput_v,
+                            chorda  victor,
+                            chorda  victa,
+                               s32  casus_aureus,
+                               s32  casus_victae,
+                               s32  casus_victoris,
+                               s32  lectio_victae)
+{
+     OratioOraculumLis*  l;
+     OratioOraculumLis** cella;
+    constans Elementum*  d = (constans Elementum*)xar_obtinere(elementa,
+        dependens_a);
+    constans Elementum* h = (constans Elementum*)xar_obtinere(elementa,
+        caput_a);
+                    i32 ne  = xar_numerus(elementa);
+                    i32 n   = xar_numerus(s->lexemata);
+                    i32 j;
+
+    si (census->lites == NIHIL)
+    {
+        census->lites = xar_creare(piscina,
+            (i32)magnitudo(OratioOraculumLis*));
+        si (census->lites == NIHIL)
+        {
+            redde;
+        }
+    }
+    l     = (OratioOraculumLis*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(*l));
+    cella = (OratioOraculumLis**)xar_addere(census->lites);
+    si (l == NIHIL || cella == NIHIL)
+    {
+        redde;
+    }
+    memset(l, ZEPHYRUM, magnitudo(*l));
+    *cella     = l;
+    l->victor  = _chordam_condere(piscina, victor);
+    l->victa   = _chordam_condere(piscina, victa);
+    si (d->lexema >= ZEPHYRUM && d->lexema < (s32)n)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+            (i32)d->lexema);
+
+        l->dependens  = _chordam_condere(piscina, t->forma);
+        l->deprel     = _chordam_condere(piscina, t->deprel);
+        l->caput_aureum_idem = (b32)(h->lexema >= ZEPHYRUM
+            && caput[d->lexema] == h->lexema);
+    }
+    si (h->lexema >= ZEPHYRUM && h->lexema < (s32)n)
+    {
+        constans OratioConlluLexema* t =
+            (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+            (i32)h->lexema);
+
+        l->caput = _chordam_condere(piscina, t->forma);
+    }
+    l->ante                 = (b32)(dependens_a < caput_a);
+    l->caput_victoris_idem  = (b32)(caput_v == (s32)caput_a);
+    l->casus_aureus         = casus_aureus;
+    l->casus_victae         = casus_victae;
+    l->casus_victoris       = casus_victoris;
+    l->genus_victae        = _accidens_lectionis(d->nodus,
+        lectio_victae,
+        "genus");
+    l->clausula          = d->clausula;
+    l->numerus_capitis   = h->notae_primae[NOTA_NUMERI];
+    l->persona_capitis   = h->notae_primae[NOTA_PERSONAE];
+    l->vox_capitis       = h->notae_primae[NOTA_VOCIS];
+    l->primum_clausulae  = VERUM;
+    per (j = ZEPHYRUM; j < ne; j++)
+    {
+        constans Elementum* alterum =
+            (constans Elementum*)xar_obtinere(elementa, j);
+                       b32 nominativa  = FALSUM;
+                       b32 accusativa  = FALSUM;
+                       b32 concors     = FALSUM;
+                       i32 r;
+
+        si (   alterum->nodus        == NIHIL
+            || alterum->nodus->genus != (s32)ORATIO_GENUS_VOCABULUM
+            || alterum->clausula     != d->clausula)
+        {
+            perge;
+        }
+        si (j < dependens_a)
+        {
+            l->primum_clausulae = FALSUM;
+        }
+        si (j == dependens_a || j == caput_a)
+        {
+            perge;
+        }
+        per (r = ZEPHYRUM; r < alterum->numerus_analysium; r++)
+        {
+            s32 cs = _accidens_lectionis(alterum->nodus, (s32)r,
+                "casus");
+
+            si (cs == (s32)ORATIO_CASUS_NOMINATIVUS)
+            {
+                nominativa = VERUM;
+                si (   l->numerus_capitis >= ZEPHYRUM
+                    && _accidens_lectionis(alterum->nodus, (s32)r,
+                        "numerus") == l->numerus_capitis)
+                {
+                    concors = VERUM;
+                }
+            }
+            alioquin si (cs == (s32)ORATIO_CASUS_ACCUSATIVUS)
+            {
+                accusativa = VERUM;
+            }
+        }
+        si (nominativa)
+        {
+            l->nominativi = l->nominativi + I;
+            si (!accusativa)
+            {
+                l->nominativi_certi = l->nominativi_certi + I;
+                si (concors)
+                {
+                    l->nominativi_concordes = l->nominativi_concordes
+                        + I;
+                }
+            }
+        }
+        si (accusativa && !nominativa)
+        {
+            l->accusativi_certi = l->accusativi_certi + I;
+        }
+    }
 }
 
 /* elementum unum inter [e0, e1) cuius textus formam octetim aequat;
@@ -2919,6 +3102,7 @@ _ligationes_iudicare (
                                s32  casus_aureus_d  = (s32)-I;   /* T32 d */
                                s32  casus_victae    = (s32)-I;
                                s32  casus_victoris  = (s32)-I;
+                               s32  lectio_victae   = (s32)-I;   /* T32 e */
 
                 si (   socius_alternae->genus != MATERIA_VALOR_INDEX
                     || socius_alternae->datum.index < ZEPHYRUM
@@ -2981,18 +3165,31 @@ _ligationes_iudicare (
 
                         casus_aureus_d = _casus_aureus(t->feats);
                     }
-                    casus_victae = pendet
-                        ? _casus_lectionis(e->nodus, ZEPHYRUM)
+                    lectio_victae = pendet ? ZEPHYRUM
                         : (analysis_alternae->genus
                             == MATERIA_VALOR_INDEX
-                            ? _casus_lectionis(socius->nodus,
-                                analysis_alternae->datum.index)
-                            : (s32)-I);
+                            ? analysis_alternae->datum.index : (s32)-I);
+                    casus_victae  = _casus_lectionis(dependens_e->nodus,
+                        lectio_victae);
                     si (caput_v >= ZEPHYRUM)
                     {
                         casus_victoris =
                             _casus_lectionis(dependens_e->nodus,
                             lectio_nostra[dependens_a]);
+                    }
+                    /* T32 e: lis una per alternam (materia census notarum) */
+                    si (   auctor->genus       == MATERIA_VALOR_TOKEN
+                        && auctor->datum.token != NIHIL
+                        && victor->genus       == MATERIA_VALOR_TOKEN
+                        && victor->datum.token != NIHIL)
+                    {
+                        _litem_notare(piscina, census, s, elementa,
+                            caput,
+                            dependens_a, caput_a, caput_v,
+                            victor->datum.token->valor,
+                            auctor->datum.token->valor, casus_aureus_d,
+                            casus_victae, casus_victoris,
+                            lectio_victae);
                     }
                 }
                 census->alternae_numerus = census->alternae_numerus + I;

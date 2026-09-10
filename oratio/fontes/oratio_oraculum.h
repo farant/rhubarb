@@ -107,6 +107,38 @@ nomen structura {
        i32 victor_casu_solus;
 } OratioOraculumContentio;
 
+/* LIS (T32 e): contentio singula cum notis quas regula videre potuit -
+ * materia census notarum (quae nota sortem Senecae findat). Aurum: casus,
+ * deprel, caput dependentis; nostrum: casus lectionis victae et victoris,
+ * genus lectionis victae, clausula dependentis et in ea nominativi alii
+ * (lectione ulla | certi = sine accusativa | concordes numero capitis),
+ * accusativi certi; primum clausulae; numerus, persona, vox lectionis
+ * primae capitis petiti. Caput = caput a victa petitum; victoris idem =
+ * contentio lectionis in arcu uno. */
+nomen structura {
+    chorda victor;
+    chorda victa;
+    chorda dependens;            /* forma aurea */
+    chorda caput;                /* forma aurea capitis petiti */
+    chorda deprel;               /* deprel aureus dependentis */
+       b32 ante;                 /* dependens ante caput */
+       b32 caput_aureum_idem;    /* caput aureum dependentis == caput petitum */
+       b32 caput_victoris_idem;  /* caput victoris == caput petitum */
+       s32 casus_aureus;
+       s32 casus_victae;
+       s32 casus_victoris;
+       s32 genus_victae;
+       s32 clausula;             /* -I aperta */
+       b32 primum_clausulae;
+       i32 nominativi;
+       i32 nominativi_certi;
+       i32 nominativi_concordes;
+       i32 accusativi_certi;
+       s32 numerus_capitis;
+       s32 persona_capitis;
+       s32 vox_capitis;
+} OratioOraculumLis;
+
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
  * elementum primum decisionem fert (praelatio | impletio | umbra) sed
  * non PRIMARIUM est - tabulatum per (auctor, forma plicata, classis
@@ -302,8 +334,11 @@ nomen structura {
         i32 alternae_rectae;
     /* CONTENTIONES (T32 b): per (victor, victa) numerus alternarum et
      * victae rectae - census iudicis contentionum */
-        Xar* contentiones;
+                   Xar* contentiones;
         TabulaDispersa* contentiones_index;
+    /* T32 e: lites - Xar de OratioOraculumLis*, una per alternam; pigre
+     * creatae, NIHIL ante (instrumentum -lites) */
+        Xar* lites;
         i32 sententiae_linguae[ORATIO_LINGUA_NUMERUS];   /* census linguae per
                                                       * sententiam (T18):
                                                       * quot Latinae, quot

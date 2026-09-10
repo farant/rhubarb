@@ -2142,6 +2142,23 @@ rule-order flip is predicted at Seneca −7 cases, charters +76,
 Perseus +102, PROIEL +127; the Seneca tie needs a perpendicular
 feature (another nominative candidate for the verb).
 
+**As built — T32 e, the feature census over contests (2026-09-10).**
+One `LIS` per alternative (`OratioOraculumLis`, `oraculum -machina
+-lites`, `census/lites.py [-meet]`): direction, clause features (other
+nominatives any / certain / number-agreeing, certain accusatives, first
+of clause), the loser's reading gender, the head's number, person,
+voice, and the gold case, deprel and head. Gate: one lis per
+alternative. Finding on the same-verb reading contest (1605 rows): the
+verb's NUMBER splits it on every file — plural verb → subject (53 / 20
+Seneca, 37 / 11 Perseus), singular verb → object-leaning (126 / 152,
+73 / 201) — pro-drop; the other-nominative hypothesis is weak and
+inconsistent. Predicted conditional order (subject first when plural,
+object first when singular): Seneca +26 cases, Aquinas +94, Perseus
++128, PROIEL +129, better than the blanket flip everywhere but the
+charters. Residual: singular verb with no agreeing nominative is a
+coin flip on Seneca (97 / 85) — semantics. Partition-lattice tool
+(scrutinium-shaped) banked as desideratum 01M24V1387.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

@@ -868,6 +868,18 @@ GENRE split, not the dialect split. Predicted rule-order flip: Seneca
 −7 cases, charters +76, Perseus +102, PROIEL +127 (measure, never
 assume — rule order decides readings). Seneca's tie needs a
 perpendicular feature: another nominative candidate for the verb.
+**T32 e (2026-09-10): FEATURE CENSUS OVER CONTESTS (LITES).** One row
+per contest with what the rule could see (`oraculum -machina -lites`,
+`census/lites.py [-meet]`). The other-nominative hypothesis is WEAK and
+inconsistent; the VERB'S NUMBER splits the coin flip on every file:
+plural verb → subject (Seneca 53 : 20), singular verb → object-leaning
+(126 : 152) — PRO-DROP. Predicted conditional rule order (subject
+first when plural, object first when singular): Seneca +26 cases,
+Aquinas +94, Perseus +128, PROIEL +129; residual coin flip = singular
+verb with no agreeing nominative (Seneca 97 : 85) → semantics. A
+quarter of the answers are neither `obj` nor `nsubj`. NEXT = T32 f,
+the conditional order as a grammar edit, measured against the
+prediction.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

@@ -19,6 +19,12 @@
  *              'titulus verba primaria vicina vicina-primaria remota
  *              remota-primaria' (socius ad distantiam I | ultra)
  *   -auctor T  cum -errata: auctoris T solius
+ *   -lites     cum -machina (T32 e): ordines LIS, contentio singula cum
+ *              notis - victor victa dependens caput ante casus-aureus
+ *              casus-victae casus-victoris deprel caput-aureum-idem
+ *              caput-victoris-idem clausula primum nominativi
+ *              nominativi-certi nominativi-concordes accusativi-certi
+ *              genus-victae numerus-capitis persona-capitis vox-capitis
  *   -nota T    cum -errata (T30): errata accidentis T (numerus genus
  *              persona modus vox forma-verbi tempus | omnes) - verba
  *              classis rectae cuius lectio prima valorem falsum fert:
@@ -746,6 +752,17 @@ _tabulam_imprimere (
     }
 }
 
+/* T32 e: titulus valoris enumerati aut '-' (absens) */
+interior constans character*
+_titulus_valoris (
+    constans character* constans* tituli,
+                              s32  valor,
+                              i32  numerus)
+{
+    redde valor >= ZEPHYRUM
+        && valor < (s32)numerus ? tituli[valor] : "-";
+}
+
 interior vacuum
 _machinam_imprimere (
                           Piscina* piscina,
@@ -754,7 +771,8 @@ _machinam_imprimere (
                               b32  discrepantiae,
                               b32  errata,
                            chorda  auctor_petitus,
-                              s32  nota_petita)
+                              s32  nota_petita,
+                              b32  lites)
 {
     i32 i;
 
@@ -861,6 +879,53 @@ _machinam_imprimere (
                     (integer)ct->victa_casu_sola,
                     (integer)ct->victor_casu_solus);
             }
+        }
+        /* T32 e: ordines LIS (cum -lites) - contentio singula cum notis */
+        per (i = ZEPHYRUM; lites && c->lites != NIHIL
+            && i < xar_numerus(c->lites); i++)
+        {
+            constans OratioOraculumLis* l =
+                *(OratioOraculumLis**)xar_obtinere(c->lites, i);
+
+            imprimere("%s\tLIS\t%.*s\t%.*s\t%.*s\t%.*s\t%d\t%s\t%s\t%s"
+                "\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\n",
+                titulus,
+                (integer)l->victor.mensura,
+                (constans character*)l->victor.datum,
+                (integer)l->victa.mensura,
+                (constans character*)l->victa.datum,
+                (integer)l->dependens.mensura,
+                (constans character*)l->dependens.datum,
+                (integer)l->caput.mensura,
+                (constans character*)l->caput.datum,
+                (integer)l->ante,
+                _titulus_valoris(ORATIO_TITULI_CASUUM, l->casus_aureus,
+                    (i32)ORATIO_CASUS_NUMERUS),
+                _titulus_valoris(ORATIO_TITULI_CASUUM, l->casus_victae,
+                    (i32)ORATIO_CASUS_NUMERUS),
+                _titulus_valoris(ORATIO_TITULI_CASUUM,
+                l->casus_victoris,
+                    (i32)ORATIO_CASUS_NUMERUS),
+                (integer)l->deprel.mensura,
+                (constans character*)l->deprel.datum,
+                (integer)l->caput_aureum_idem,
+                (integer)l->caput_victoris_idem,
+                (integer)l->clausula,
+                (integer)l->primum_clausulae,
+                (integer)l->nominativi,
+                (integer)l->nominativi_certi,
+                (integer)l->nominativi_concordes,
+                (integer)l->accusativi_certi,
+                _titulus_valoris(ORATIO_TITULI_GENERUM_GRAMMATICORUM,
+                    l->genus_victae,
+                    (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS),
+                _titulus_valoris(ORATIO_TITULI_NUMERORUM,
+                    l->numerus_capitis,
+                    (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS),
+                _titulus_valoris(ORATIO_TITULI_PERSONARUM,
+                    l->persona_capitis, (i32)ORATIO_PERSONA_NUMERUS),
+                _titulus_valoris(ORATIO_TITULI_VOCUM, l->vox_capitis,
+                    (i32)ORATIO_VOX_NUMERUS));
         }
         /* T32 a: ordo CONTESTA dependentes petitiones rectae */
         imprimere("%s\tCONTESTA\t%d\t%d\t%d\n", titulus,
@@ -1076,7 +1141,8 @@ principale (
                                                                             FALSUM;
                                                                         b32 clausulae =
                                                                             FALSUM;   /* T20a */
-                                    b32 semina = FALSUM;   /* T20a */
+                                    b32 semina  = FALSUM;   /* T20a */
+                                    b32 lites   = FALSUM;   /* T32 e */
                                     i32 sententiae_ostendendae =
                                         ZEPHYRUM;   /* T20a quater */
                                     s32 causa_ostendenda = (s32)-I;
@@ -1179,6 +1245,10 @@ principale (
                 alioquin si (strcmp(argv[i], "-semina") == ZEPHYRUM)
         {
             semina = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-lites") == ZEPHYRUM)
+        {
+            lites = VERUM;
         }
         alioquin si (   strcmp(argv[i], "-sententiae") == ZEPHYRUM
                      && i + I < argc)
@@ -1406,7 +1476,7 @@ principale (
                                 _machinam_imprimere(p, &census, plagula,
                                     discrepantiae,
                                     errata, auctor_petitus,
-                                    nota_petita);
+                                    nota_petita, lites);
             }
             alioquin
             {
