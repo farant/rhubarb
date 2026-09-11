@@ -271,6 +271,41 @@ chorda_ex_f64 (
             i32  praecisio,
         Piscina* piscina);
 
+/* chorda_ut_s64 - Convertere chordam ad integrum LXIV bitorum
+ *
+ * Omnes cifrae, signum optionale, nihil aliud; zephyra ducentia sine
+ * pondere. RECUSAT: NULLUM insertum (chorda terminatorem non fert,
+ * ergo cstr eam truncaret), sordes post numerum, superfluitas (limes
+ * LEXICE confertur - strtoll sub -std=c89 latet).
+ *
+ * Redde: VERUM si conversa
+ */
+b32
+chorda_ut_s64 (
+         chorda  s,
+            s64* fructus);
+
+/* chorda_ex_s64 - Convertere integrum LXIV bitorum ad chordam
+ * Redde: Nova chorda (allocata ex piscina)
+ */
+chorda
+chorda_ex_s64 (
+            s64  numerus,
+        Piscina* piscina);
+
+/* chorda_ex_f64_exacta - Forma quae ITER REDITUS fert ('%.17g')
+ *
+ * chorda_ex_f64 praecisionem decimalem FIXAM scribit, ergo 1e300 et
+ * 1e-20 per eam pereunt. Haec forma legi potest et eundem duplicem
+ * reddere.
+ *
+ * Redde: Nova chorda (allocata ex piscina), vacua si defectu
+ */
+chorda
+chorda_ex_f64_exacta (
+            f64  numerus,
+        Piscina* piscina);
+
 /* chorda_character_ad - Extrahere singularem characterem ut chordam
  * Redde: Chorda longitudinis 1, vel vacua si index extra limites
  */

@@ -1434,6 +1434,127 @@ s32 principale (vacuum)
      * Compendium
      * ================================================== */
 
+    /* ---- s64: ambae directiones, limites exacti, recusationes ---- */
+    {
+                    chorda  s;
+                       s64  v;
+                        i8  cum_nullo[III];
+                       f64  r;
+                       i32  i;
+        constans character* bona[V];
+                       s64  exspectata[V];
+
+        imprimere("\n--- Probans chorda_ut_s64 / ex_s64 ---\n");
+
+        bona[0]        = "0";
+        exspectata[0]  = 0;
+        bona[1]        = "-1";
+        exspectata[1]  = -1;
+        bona[2]        = "9223372036854775807";
+        exspectata[2]  = 9223372036854775807LL;
+        bona[3]        = "-9223372036854775808";
+        exspectata[3]  = -9223372036854775807LL - 1LL;
+        bona[4]        = "0000000000000000000012";
+        exspectata[4]  = 12;
+
+        per (i = ZEPHYRUM; i < V; i++)
+        {
+            CREDO_VERUM(chorda_ut_s64(
+                chorda_ex_literis(bona[i], piscina), &v));
+            CREDO_AEQUALIS_S64(v, exspectata[i]);
+        }
+
+        /* iter reditus: ex_s64 -> ut_s64 idem */
+        per (i = ZEPHYRUM; i < V; i++)
+        {
+            CREDO_VERUM(chorda_ut_s64(
+                chorda_ex_s64(exspectata[i], piscina), &v));
+            CREDO_AEQUALIS_S64(v, exspectata[i]);
+        }
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_s64(0, piscina), "0");
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_s64(-1, piscina), "-1");
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            chorda_ex_s64(-9223372036854775807LL - 1LL, piscina),
+            "-9223372036854775808");
+
+        /* superfluitas, sordes, vacuum */
+        CREDO_FALSUM(chorda_ut_s64(
+            chorda_ex_literis("9223372036854775808", piscina), &v));
+        CREDO_FALSUM(chorda_ut_s64(
+            chorda_ex_literis("99999999999999999999", piscina), &v));
+        CREDO_FALSUM(chorda_ut_s64(
+            chorda_ex_literis("12x", piscina), &v));
+        CREDO_FALSUM(chorda_ut_s64(
+            chorda_ex_literis("-", piscina), &v));
+
+        /* NULLUM insertum: familia tota recusat */
+        cum_nullo[0]  = (i8)'1';
+        cum_nullo[1]  = (i8)ZEPHYRUM;
+        cum_nullo[2]  = (i8)'2';
+        s.datum       = cum_nullo;
+        s.mensura     = III;
+        CREDO_FALSUM(chorda_ut_s64(s, &v));
+        {
+            s32 a;
+            i32 b;
+
+            CREDO_FALSUM(chorda_ut_s32(s, &a));
+            CREDO_FALSUM(chorda_ut_i32(s, &b));
+            CREDO_FALSUM(chorda_ut_f64(s, &r));
+        }
+    }
+
+    /* ---- superfluitas s32 / i32: truncatio tacita recusata ---- */
+    {
+        s32 a;
+        i32 b;
+
+        imprimere("\n--- Probans limites s32 / i32 ---\n");
+
+        CREDO_VERUM(chorda_ut_s32(
+            chorda_ex_literis("2147483647", piscina), &a));
+        CREDO_AEQUALIS_S32(a, 2147483647L);
+        CREDO_VERUM(chorda_ut_s32(
+            chorda_ex_literis("-2147483648", piscina), &a));
+        CREDO_AEQUALIS_S32(a, -2147483647L - 1L);
+        CREDO_FALSUM(chorda_ut_s32(
+            chorda_ex_literis("2147483648", piscina), &a));
+        CREDO_FALSUM(chorda_ut_s32(
+            chorda_ex_literis("99999999999", piscina), &a));
+
+        CREDO_VERUM(chorda_ut_i32(
+            chorda_ex_literis("4294967295", piscina), &b));
+        CREDO_FALSUM(chorda_ut_i32(
+            chorda_ex_literis("4294967296", piscina), &b));
+        /* strtoul '-1' circumvolvit - nunc recusatur */
+        CREDO_FALSUM(chorda_ut_i32(
+            chorda_ex_literis("-1", piscina), &b));
+    }
+
+    /* ---- f64 exacta: iter reditus duplicis ---- */
+    {
+        f64 valores[III];
+        f64 reditus;
+        i32 i;
+
+        imprimere("\n--- Probans chorda_ex_f64_exacta ---\n");
+
+        valores[0] = 1e300;
+        valores[1] = 1e-20;
+        valores[2] = 0.1;
+
+        per (i = ZEPHYRUM; i < III; i++)
+        {
+            CREDO_VERUM(chorda_ut_f64(
+                chorda_ex_f64_exacta(valores[i], piscina), &reditus));
+            CREDO_VERUM(reditus == valores[i]);
+        }
+        /* forma vetus 1e300 non capit: buffer CXXXII octetorum, sed
+         * snprintf longitudinem VERAM (CCCVII) reddit - memcpy sine
+         * custodia trans buffer legebat. Nunc chorda VACUA. */
+        CREDO_CHORDA_VACUA(chorda_ex_f64(1e300, VI, piscina));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

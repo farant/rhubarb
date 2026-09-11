@@ -246,7 +246,8 @@ chorda_fissio (
     }
 
     capacitas = XVI;
-    elementa = (chorda*)piscina_allocare(piscina, capacitas * magnitudo(chorda));
+    elementa = (chorda*)piscina_allocare(piscina,
+        capacitas * magnitudo(chorda));
     si (!elementa)
     {
         fructus.elementa  = NIHIL;
@@ -270,7 +271,8 @@ chorda_fissio (
                     i32  j;
 
                 capacitas *= II;
-                elementa_nova = (chorda*)piscina_allocare(piscina, capacitas * magnitudo(chorda));
+                elementa_nova = (chorda*)piscina_allocare(piscina,
+                    capacitas * magnitudo(chorda));
                 si (!elementa_nova)
                 {
                     fructus.elementa  = NIHIL;
@@ -371,7 +373,8 @@ chorda_aequalis_case_insensitivus (
 
     per (i = ZEPHYRUM; i < a.mensura; i++)
     {
-        si (tolower((character)a.datum[i]) != tolower((character)b.datum[i]))
+        si (tolower((character)a.datum[i])
+            != tolower((character)b.datum[i]))
         {
             redde FALSUM;
         }
@@ -426,7 +429,8 @@ chorda_continet (
 
     per (i = ZEPHYRUM; i <= fenum.mensura - acus.mensura; i++)
     {
-        si (memcmp(fenum.datum + i, acus.datum, acus.mensura) == ZEPHYRUM)
+        si (memcmp(fenum.datum + i, acus.datum, acus.mensura)
+            == ZEPHYRUM)
         {
             redde VERUM;
         }
@@ -471,7 +475,8 @@ chorda_terminatur (
     }
 
     offset = s.mensura - suffixum.mensura;
-    redde memcmp(s.datum + offset, suffixum.datum, suffixum.mensura) == ZEPHYRUM;
+    redde memcmp(s.datum + offset, suffixum.datum, suffixum.mensura)
+        == ZEPHYRUM;
 }
 
 chorda
@@ -497,7 +502,8 @@ chorda_invenire (
 
     per (i = ZEPHYRUM; i <= fenum.mensura - acus.mensura; i++)
     {
-        si (memcmp(fenum.datum + i, acus.datum, acus.mensura) == ZEPHYRUM)
+        si (memcmp(fenum.datum + i, acus.datum, acus.mensura)
+            == ZEPHYRUM)
         {
             fructus.mensura  = acus.mensura;
             fructus.datum    = fenum.datum + i;
@@ -530,7 +536,8 @@ chorda_invenire_index (
 
     per (i = ZEPHYRUM; i <= fenum.mensura - acus.mensura; i++)
     {
-        si (memcmp(fenum.datum + i, acus.datum, (memoriae_index)acus.mensura) == ZEPHYRUM)
+        si (memcmp(fenum.datum + i, acus.datum,
+            (memoriae_index)acus.mensura) == ZEPHYRUM)
         {
             redde (s32)i;
         }
@@ -566,7 +573,8 @@ chorda_invenire_ultimum (
 
     per (i = max_i; i >= ZEPHYRUM; i--)
     {
-        si (memcmp(fenum.datum + i, acus.datum, (memoriae_index)acus.mensura) == ZEPHYRUM)
+        si (memcmp(fenum.datum + i, acus.datum,
+            (memoriae_index)acus.mensura) == ZEPHYRUM)
         {
             ultima_positio = i;
             frange;
@@ -607,7 +615,8 @@ chorda_invenire_ultimum_index (
 
     per (i = max_i; i >= ZEPHYRUM; i--)
     {
-        si (memcmp(fenum.datum + i, acus.datum, (memoriae_index)acus.mensura) == ZEPHYRUM)
+        si (memcmp(fenum.datum + i, acus.datum,
+            (memoriae_index)acus.mensura) == ZEPHYRUM)
         {
             redde i;
         }
@@ -624,7 +633,8 @@ chorda_numerare_occurrentia (
     i32 count;
     i32 positus;
 
-    si (!fenum.datum || !acus.datum || acus.mensura > fenum.mensura || acus.mensura == ZEPHYRUM)
+    si (   !fenum.datum || !acus.datum || acus.mensura > fenum.mensura
+        || acus.mensura == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
@@ -634,7 +644,8 @@ chorda_numerare_occurrentia (
 
     dum (positus <= fenum.mensura - acus.mensura)
     {
-        si (memcmp(fenum.datum + positus, acus.datum, (memoriae_index)acus.mensura) == ZEPHYRUM)
+        si (memcmp(fenum.datum + positus, acus.datum,
+            (memoriae_index)acus.mensura) == ZEPHYRUM)
         {
             count++;
             positus += acus.mensura;
@@ -736,7 +747,8 @@ chorda_maiuscula (
         redde fructus;
     }
 
-    allocatus = (character*)piscina_allocare(piscina, (memoriae_index)s.mensura);
+    allocatus = (character*)piscina_allocare(piscina,
+        (memoriae_index)s.mensura);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -843,7 +855,8 @@ chorda_substituere (
     }
 
     /* Calculare mensuram novam */
-    mensura_nova = s.mensura + (numerus_occurrentia * (novum.mensura - antiquum.mensura));
+    mensura_nova = s.mensura + (numerus_occurrentia * (novum.mensura
+        - antiquum.mensura));
 
     si (mensura_nova <= ZEPHYRUM)
     {
@@ -852,7 +865,8 @@ chorda_substituere (
         redde fructus;
     }
 
-    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura_nova);
+    allocatus = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura_nova);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -867,7 +881,8 @@ chorda_substituere (
     {
         /* Verificare si hic est antiquum */
         si (   positus_lecti <= s.mensura - antiquum.mensura
-            && memcmp(s.datum + positus_lecti, antiquum.datum, (memoriae_index)antiquum.mensura) == ZEPHYRUM)
+            && memcmp(s.datum + positus_lecti, antiquum.datum,
+            (memoriae_index)antiquum.mensura) == ZEPHYRUM)
         {
             /* Scribere novum */
             per (i = ZEPHYRUM; i < novum.mensura; i++)
@@ -903,7 +918,8 @@ chorda_invertere (
         redde fructus;
     }
 
-    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)s.mensura);
+    allocatus = (i8*)piscina_allocare(piscina,
+        (memoriae_index)s.mensura);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -948,7 +964,8 @@ chorda_duplicare (
 
     mensura_nova = s.mensura * numerus;
 
-    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura_nova);
+    allocatus = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura_nova);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -958,7 +975,8 @@ chorda_duplicare (
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        memcpy(allocatus + (i * s.mensura), s.datum, (memoriae_index)s.mensura);
+        memcpy(allocatus + (i * s.mensura), s.datum,
+            (memoriae_index)s.mensura);
     }
 
     fructus.mensura  = mensura_nova;
@@ -995,6 +1013,25 @@ chorda_ut_cstr (
     redde allocatus;
 }
 
+/* NULLUM insertum? Conversiones numericae per cstr transeunt, ubi
+ * NULLUM tacite truncaret ('1\0garbage' -> 1, quia *terminus == '\0'
+ * VERUM est AD nullum insertum). Custodia UNA in limine. */
+interior b32
+_chorda_nullum_habet (
+    chorda s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < s.mensura; i++)
+    {
+        si (s.datum[i] == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 b32
 chorda_ut_s32 (
     chorda  s,
@@ -1004,7 +1041,8 @@ chorda_ut_s32 (
           character* terminus;
     signatus longus  longus_valor;
 
-    si (!s.datum || !fructus || s.mensura == ZEPHYRUM)
+    si (   !s.datum || !fructus || s.mensura == ZEPHYRUM
+        || _chorda_nullum_habet(s))
     {
         redde FALSUM;
     }
@@ -1020,7 +1058,9 @@ chorda_ut_s32 (
 
     longus_valor = strtol(cstr_temporalis, &terminus, X);
 
-    si (terminus != cstr_temporalis && *terminus == '\0')
+    si (   terminus     != cstr_temporalis && *terminus == '\0'
+        && longus_valor <= 2147483647L
+        && longus_valor >= -2147483647L - 1L)
     {
         *fructus = (s32)longus_valor;
         liberare(cstr_temporalis);
@@ -1040,7 +1080,8 @@ chorda_ut_i32 (
             character* terminus;
     insignatus longus  valor;
 
-    si (!s.datum || !fructus || s.mensura == ZEPHYRUM)
+    si (   !s.datum || !fructus || s.mensura == ZEPHYRUM
+        || _chorda_nullum_habet(s) || s.datum[ZEPHYRUM] == '-')
     {
         redde FALSUM;
     }
@@ -1058,7 +1099,8 @@ chorda_ut_i32 (
 
 
     /* Confer si tota chorda parata est */
-    si (terminus != cstr_temporalis && *terminus == '\0')
+    si (   terminus != cstr_temporalis && *terminus == '\0'
+        && valor    <= 4294967295UL)
     {
         *fructus = (i32)valor;
         liberare(cstr_temporalis);
@@ -1129,7 +1171,8 @@ _extrahere_verba (
     }
 
     capacitas = XVI;
-    verba = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
+    verba = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(chorda));
     si (!verba)
     {
         redde fructus;
@@ -1161,9 +1204,11 @@ _extrahere_verba (
 
         si (c_praecedans != '\0')
         {
-            praec_minuscula = islower((integer)c_praecedans) != ZEPHYRUM;
+            praec_minuscula = islower((integer)c_praecedans)
+                != ZEPHYRUM;
             praec_digitus = isdigit((integer)c_praecedans) != ZEPHYRUM;
-            praec_maiuscula = isupper((integer)c_praecedans) != ZEPHYRUM;
+            praec_maiuscula = isupper((integer)c_praecedans)
+                != ZEPHYRUM;
         }
 
         /* Determinare si debemus scindere */
@@ -1181,7 +1226,8 @@ _extrahere_verba (
             }
             /* Maiuscula ante maiusculam, sed proximus est minuscula: scinde ante currens */
             /* Exemplum: "XMLParser" - quando ad 'P' venimus post 'L', scinde */
-            alioquin si (praec_maiuscula && est_maiuscula && i + I < s.mensura)
+            alioquin si (   praec_maiuscula && est_maiuscula
+                         && i + I < s.mensura)
             {
                 character c_proximus = (character)s.datum[i + I];
                 si (islower((integer)c_proximus))
@@ -1192,7 +1238,9 @@ _extrahere_verba (
         }
 
         /* Finis verbi */
-        si (in_verbo && (est_finis || (!est_alpha && !est_digitus) || debet_scindere))
+        si (   in_verbo
+            && (est_finis || (!est_alpha && !est_digitus)
+            || debet_scindere))
         {
             /* Verificare capacitatem */
             si (numerus >= capacitas)
@@ -1201,7 +1249,8 @@ _extrahere_verba (
                     i32  j;
 
                 capacitas *= II;
-                verba_nova = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
+                verba_nova = (chorda*)piscina_allocare(piscina,
+                    (memoriae_index)capacitas * magnitudo(chorda));
                 si (!verba_nova)
                 {
                     fructus.elementa  = NIHIL;
@@ -1279,7 +1328,8 @@ chorda_pascalis (
     }
 
     /* Allocare maximum possibile (originalis mensura) */
-    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)s.mensura);
+    allocatus = (i8*)piscina_allocare(piscina,
+        (memoriae_index)s.mensura);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -1343,7 +1393,8 @@ chorda_camelus (
         redde fructus;
     }
 
-    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)s.mensura);
+    allocatus = (i8*)piscina_allocare(piscina,
+        (memoriae_index)s.mensura);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -1424,7 +1475,8 @@ chorda_serpens (
         }
     }
 
-    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura_nova);
+    allocatus = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura_nova);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -1445,7 +1497,8 @@ chorda_serpens (
 
         per (j = ZEPHYRUM; j < verbum.mensura; j++)
         {
-            allocatus[positus++] = (i8)tolower((integer)(character)verbum.datum[j]);
+            allocatus[positus++] =
+                (i8)tolower((integer)(character)verbum.datum[j]);
         }
     }
 
@@ -1494,7 +1547,8 @@ chorda_kebab (
         }
     }
 
-    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura_nova);
+    allocatus = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura_nova);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -1515,7 +1569,8 @@ chorda_kebab (
 
         per (j = ZEPHYRUM; j < verbum.mensura; j++)
         {
-            allocatus[positus++] = (i8)tolower((integer)(character)verbum.datum[j]);
+            allocatus[positus++] =
+                (i8)tolower((integer)(character)verbum.datum[j]);
         }
     }
 
@@ -1564,7 +1619,8 @@ chorda_pascalis_serpens (
         }
     }
 
-    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura_nova);
+    allocatus = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura_nova);
     si (!allocatus)
     {
         fructus.mensura  = ZEPHYRUM;
@@ -1619,12 +1675,14 @@ chorda_ut_f64 (
     character* terminus;
           f64  valor;
 
-    si (!s.datum || !fructus || s.mensura == ZEPHYRUM)
+    si (   !s.datum || !fructus || s.mensura == ZEPHYRUM
+        || _chorda_nullum_habet(s))
     {
         redde FALSUM;
     }
 
-    cstr_temporalis = (character*)memoriae_allocare((memoriae_index)s.mensura + I);
+    cstr_temporalis =
+        (character*)memoriae_allocare((memoriae_index)s.mensura + I);
     si (!cstr_temporalis)
     {
         redde FALSUM;
@@ -1685,6 +1743,174 @@ chorda_ex_s32 (
     redde fructus;
 }
 
+b32
+chorda_ut_s64 (
+     chorda  s,
+        s64* fructus)
+{
+    constans character* limes;
+                   s64  valor    = ZEPHYRUM;
+                   i32  initium  = ZEPHYRUM;
+                   i32  cifrae;
+                   i32  k;
+                   b32  negans  = FALSUM;
+
+    si (   !s.datum || !fructus || s.mensura == ZEPHYRUM
+        || _chorda_nullum_habet(s))
+    {
+        redde FALSUM;
+    }
+    si (s.datum[ZEPHYRUM] == '+' || s.datum[ZEPHYRUM] == '-')
+    {
+        negans   = (s.datum[ZEPHYRUM] == '-') ? VERUM : FALSUM;
+        initium  = I;
+    }
+    si (initium >= s.mensura)
+    {
+        redde FALSUM;
+    }
+    per (k = initium; k < s.mensura; k++)
+    {
+        si (s.datum[k] < '0' || s.datum[k] > '9')
+        {
+            redde FALSUM;
+        }
+    }
+    /* zephyra ducentia sine pondere (unum servatur) */
+    dum (initium < s.mensura - I && s.datum[initium] == '0')
+    {
+        initium++;
+    }
+    cifrae = s.mensura - initium;
+    si (cifrae > XIX)
+    {
+        redde FALSUM;
+    }
+    /* limes LEXICE confertur: arithmetica ipsa circumvolveret */
+    limes = negans ? "9223372036854775808" : "9223372036854775807";
+    si (cifrae == XIX)
+    {
+        per (k = ZEPHYRUM; k < XIX; k++)
+        {
+            si (s.datum[initium + k] > (i8)limes[k])
+            {
+                redde FALSUM;
+            }
+            si (s.datum[initium + k] < (i8)limes[k])
+            {
+                frange;
+            }
+        }
+    }
+    /* negativa NEGATIVE accumulantur: -9223372036854775808 positivum
+     * esse non potest */
+    per (k = initium; k < s.mensura; k++)
+    {
+        s64 cifra = (s64)(s.datum[k] - '0');
+
+        valor = negans ? valor * X - cifra : valor * X + cifra;
+    }
+    *fructus = valor;
+    redde VERUM;
+}
+
+chorda
+chorda_ex_s64 (
+            s64  numerus,
+        Piscina* piscina)
+{
+       chorda  fructus;
+    character  buffer[XXIV];
+    character  inversa[XXIV];
+          i32  mensura = ZEPHYRUM;
+          i32  k;
+          i64  magnitudo_numeri;
+          b32  negans;
+           i8* allocatus;
+
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
+
+    si (!piscina)
+    {
+        redde fructus;
+    }
+    si (numerus < ZEPHYRUM)
+    {
+        negans            = VERUM;
+        /* -(numerus + I) + I: extremum negativum negari non potest */
+        magnitudo_numeri  = (i64)(-(numerus + I)) + I;
+    }
+    alioquin
+    {
+        negans            = FALSUM;
+        magnitudo_numeri  = (i64)numerus;
+    }
+    fac
+    {
+        buffer[mensura] = (character)('0'
+            + (integer)(magnitudo_numeri % X));
+        mensura++;
+        magnitudo_numeri = magnitudo_numeri / X;
+    }
+    dum (magnitudo_numeri != ZEPHYRUM);
+    si (negans)
+    {
+        buffer[mensura] = '-';
+        mensura++;
+    }
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        inversa[k] = buffer[mensura - I - k];
+    }
+    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
+    si (!allocatus)
+    {
+        redde fructus;
+    }
+    memcpy(allocatus, inversa, (memoriae_index)mensura);
+    fructus.datum    = allocatus;
+    fructus.mensura  = mensura;
+    redde fructus;
+}
+
+chorda
+chorda_ex_f64_exacta (
+            f64  numerus,
+        Piscina* piscina)
+{
+       chorda  fructus;
+    character  buffer[XLVIII];
+          s32  mensura_signed;
+          i32  mensura;
+           i8* allocatus;
+
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
+
+    si (!piscina)
+    {
+        redde fructus;
+    }
+    mensura_signed = snprintf(buffer, magnitudo(buffer), "%.17g",
+                              numerus);
+    si (   mensura_signed < ZEPHYRUM
+        || mensura_signed >= (s32)magnitudo(buffer))
+    {
+        redde fructus;
+    }
+    mensura = (i32)mensura_signed;
+    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
+    si (!allocatus)
+    {
+        redde fructus;
+    }
+    memcpy(allocatus, buffer, (memoriae_index)mensura);
+    fructus.datum    = allocatus;
+    fructus.mensura  = mensura;
+    redde fructus;
+}
+
 chorda
 chorda_ex_f64 (
         f64  numerus,
@@ -1707,8 +1933,13 @@ chorda_ex_f64 (
     }
 
     snprintf(formatalis, magnitudo(formatalis), "%%.%df", praecisio);
-    mensura_signed = snprintf(buffer, magnitudo(buffer), formatalis, numerus);
-    si (mensura_signed < ZEPHYRUM)
+    mensura_signed = snprintf(buffer, magnitudo(buffer), formatalis,
+        numerus);
+    /* snprintf longitudinem VERAM reddit, non scriptam: sine hac
+     * custodia memcpy infra trans buffer legebat (1e300 sub '%.6f'
+     * CCCVII octetos poscit, buffer CXXXII fert) */
+    si (   mensura_signed < ZEPHYRUM
+        || mensura_signed >= (s32)magnitudo(buffer))
     {
         redde fructus;
     }
@@ -1788,7 +2019,8 @@ chorda_fissio_chorda (
     /* Si delimitator vacuus, redde totam chordam ut unum elementum */
     si (!delim.datum || delim.mensura == ZEPHYRUM)
     {
-        elementa = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        elementa = (chorda*)piscina_allocare(piscina,
+            magnitudo(chorda));
         si (!elementa)
         {
             redde fructus;
@@ -1800,7 +2032,8 @@ chorda_fissio_chorda (
     }
 
     capacitas = XVI;
-    elementa = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
+    elementa = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(chorda));
     si (!elementa)
     {
         redde fructus;
@@ -1813,7 +2046,8 @@ chorda_fissio_chorda (
     dum (i <= s.mensura - delim.mensura)
     {
         /* Verificare si hic est delimitator */
-        si (memcmp(s.datum + i, delim.datum, (memoriae_index)delim.mensura) == ZEPHYRUM)
+        si (memcmp(s.datum + i, delim.datum,
+            (memoriae_index)delim.mensura) == ZEPHYRUM)
         {
             /* Verificare capacitatem */
             si (numerus >= capacitas)
@@ -1822,7 +2056,8 @@ chorda_fissio_chorda (
                     i32  j;
 
                 capacitas *= II;
-                elementa_nova = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
+                elementa_nova = (chorda*)piscina_allocare(piscina,
+                    (memoriae_index)capacitas * magnitudo(chorda));
                 si (!elementa_nova)
                 {
                     fructus.elementa  = NIHIL;
@@ -1855,7 +2090,8 @@ chorda_fissio_chorda (
             i32  j;
 
         capacitas *= II;
-        elementa_nova = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
+        elementa_nova = (chorda*)piscina_allocare(piscina,
+            (memoriae_index)capacitas * magnitudo(chorda));
         si (!elementa_nova)
         {
             fructus.elementa  = NIHIL;
@@ -1910,7 +2146,8 @@ chorda_iungere (
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        si (i > ZEPHYRUM && separator.datum != NIHIL && separator.mensura > ZEPHYRUM)
+        si (   i > ZEPHYRUM && separator.datum != NIHIL
+            && separator.mensura > ZEPHYRUM)
         {
             chorda_aedificator_appendere_chorda(aed, separator);
         }
