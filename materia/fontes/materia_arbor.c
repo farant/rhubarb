@@ -1712,8 +1712,17 @@ _scribere_nodum_internum (
                        StmlNodus* involucrum;
                              i32  absolutus;
 
-        /* Locus NIHIL = elementum OMISSUM (absentia canonica) */
-        si (nodus->loci[i].genus == MATERIA_VALOR_NIHIL)
+        /* Locus NIHIL = elementum OMISSUM (absentia canonica).
+         * REFERENTIA VACUA (scopus NIHIL) IDEM (2026-09-11): in
+         * memoria 'scripta' manet - cliens eam a numquam scripta
+         * discernit (oratio: petitio revocata numquam iterum impletur)
+         * - sed in documento absentia est: nomen sine scopo scribi
+         * non potest, et refusio sententiam totam ex gradibus
+         * sequentibus TACITE excludebat (oratio XXV/XLIII/XIX
+         * sententiae-gradus per thesaurum). */
+        si (   nodus->loci[i].genus == MATERIA_VALOR_NIHIL
+            || (   nodus->loci[i].genus == MATERIA_VALOR_REFERENTIA
+                && nodus->loci[i].datum.nodus == NIHIL))
         { perge;
         }
 

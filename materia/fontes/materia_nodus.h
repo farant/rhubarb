@@ -191,8 +191,11 @@ MateriaValor
 materia_valor_index (
     s32 index);
 /* Referentia ad nodum ALIUM (non possidens) - vide speciem
- * MATERIA_LOCUS_REFERENTIA supra. NIHIL licet in constructione;
- * scriptor referentiam NIHIL recusat. */
+ * MATERIA_LOCUS_REFERENTIA supra. REFERENTIA VACUA (scopus NIHIL) =
+ * ABSENTIA SCRIPTA (2026-09-11): scriptor locum omittit, lector eam
+ * numquam gignit, comparator eam loco non scripto aequat; in memoria
+ * 'scripta' manet, ut cliens petitionem revocatam a numquam facta
+ * discernat. */
 MateriaValor
 materia_valor_referentia (
     MateriaNodus* scopus);

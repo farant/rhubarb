@@ -908,14 +908,27 @@ declares `id` on the 17 analysis genera; seal `305a78a5`, 190 loci).
 Every remap is GONE: `_ligationes_remittere`, the emendation remap
 block, the `b_novus` arithmetic — a filling captures its analysis node
 when the row is read (`Impletio.analysis`) and permutation keeps node
-objects. A revoked claim = reference with NIHIL target (was index −1),
-still unprojectable — the pre-existing "sentence with a cross-stage
-revocation drops out of later stages" contract is unchanged, NAMED not
-fixed. Pins and every SUMMA row identical on all eight metire files;
+objects. A revoked claim = reference with NIHIL target (was index −1); since T33 b an empty reference is written ABSENCE, so the sentence no longer drops out of later stages. Pins and every SUMMA row identical on all eight metire files;
 27 of 11,290 per-contest rows corrected: the old alternative ordinal
 was NOT remapped by the emendation pass (a third silent staleness),
 so the loser's recorded reading was sometimes wrong — now the case its
 rule proposes. The decoder will dereference these pointers directly.
+**T33 b (2026-09-11): SILENT STAGE DROP-OUT FIXED, PINS RE-PINNED
+(decisio Frani).** A cross-stage revocation made the umbra unprojectable,
+the next stage's projection failed, and the sentence silently skipped
+every later stage (Seneca 25, charters dev 43, Perseus 19
+sentence-stages) — in practice no loose tier for sentences whose strict
+tier revoked a prior claim. Materia now writes an empty reference as
+absence; the oracle sums `resolutiones_fractae` (`RESOLUTIO-FRACTAE`
+row) and the probatio pins it to ZERO. Recovered sentences get the
+loose tier, which draws mostly wrong arcs on them: precision, forced,
+case, number, gender and subject pins DOWN on the charters (attachment
+459 → 446 / 480 → 469, forced 760 → 751 / 766 → 757, subject
+315 → 284 / 478 → 460), Seneca case 714 → 710, attachment 526 → 520,
+subject 581 → 570; right-arc floors and purity UP. Finding: the loose
+tier is net harmful on contested sentences. OPEN (ledger): a row on an
+umbra written in an EARLIER stage still enters the one-head contest — it
+can revoke or block another claim and then never binds.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

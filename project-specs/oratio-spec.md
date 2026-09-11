@@ -2186,15 +2186,27 @@ attributes on the umbra and alterna elements; the locus serializes as
 `#nodN` with `id="nodN"` on the referenced analysis element (canon
 declares `id` on the analysis genera; registry 190 loci, seal
 `305a78a5`). Both remap blocks and the binding arithmetic are deleted;
-a filling captures its node when the rule row is read. A revoked claim
-is a reference with a NIHIL target, still unprojectable as the old
-−1 was — the contract that such a sentence drops out of later stages
-is unchanged and named. Every pin and summary row byte-identical;
+a filling captures its node when the rule row is read. A revoked claim is a reference with a NIHIL target; T33 b below makes an empty reference written absence, so the sentence keeps its later stages. Every pin and summary row byte-identical;
 27 of 11,290 per-contest census rows corrected, because the old
 alternative ordinal was never remapped by the emendation pass — the
 loser's recorded reading was stale in those rows (measured against a
 worktree of the previous commit). The decoder (decision 48, to come)
 dereferences these pointers directly.
+
+**As built — T33 b, the silent stage drop-out fixed (2026-09-11,
+decisio Frani).** A revocation across stages made the next stage's
+projection fail and the sentence skip every later stage without trace
+(25 / 43 / 19 sentence-stages on Seneca, charters dev, Perseus). Materia
+writes an empty reference as absence; the oracle reports the summed
+projection failures and the probatio pins them to zero. The recovered
+sentences now receive the loose tier, which on them draws mostly wrong
+arcs: attachment precision, forced accuracy, case, number, gender and
+subject precision moved down on the charters and partly on Seneca,
+right arcs and purity up; pins re-pinned with the named cause. The
+decoder needs every sentence to carry every tier's candidates, which
+decided the trade. Open: a claim on an umbra bound in an earlier stage
+still competes for its dependent and can revoke or block another claim
+without ever binding.
 
 ## 8. Stage 6 — search
 

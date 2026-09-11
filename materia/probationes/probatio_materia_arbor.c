@@ -841,13 +841,38 @@ MateriaLexiconRatum  ratum;
             CREDO_AEQUALIS_PTR ((constans vacuum*)s5.sedes,
                 (constans vacuum*)b);
 
-            /* referentia NIHIL recusatur */
+            /* REFERENTIA VACUA = absentia scripta (2026-09-11): locus
+             * omittitur, lectio NIHIL reddit, comparator aequat -
+             * in memoria 'scripta' manet */
             solus = _filium_struere(piscina, (s32)III);
             CREDO_VERUM (materia_nodus_ponere(solus, (i32)LR_SOCIUS - I,
                 materia_valor_referentia(NIHIL),
                 MATERIA_LOCUS_REFERENTIA));
             s5 = materia_arbor_scribere_nodum(piscina, solus, &c);
-            CREDO_FALSUM (s5.successus);
+            CREDO_VERUM (s5.successus);
+            si (s5.successus)
+            {
+                MateriaNodus* lectus;
+
+                CREDO_NIHIL (strstr((character*)s5.textus.datum,
+                    "<socius"));
+                CREDO_NON_NIHIL (strstr((character*)s5.textus.datum,
+                    "<gradus(> 3"));
+                lectus = materia_arbor_legere(piscina, NIHIL, s5.textus,
+                    &c, &vitium);
+                CREDO_NON_NIHIL (lectus);
+                si (lectus != NIHIL)
+                {
+                    CREDO_AEQUALIS_S32 ((s32)lectus->loci[
+                        (i32)LR_SOCIUS - I].genus,
+                        (s32)MATERIA_VALOR_NIHIL);
+                    CREDO_VERUM (materia_arbor_aequalis(solus, lectus,
+                        MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+                }
+                /* in memoria scripta manet */
+                CREDO_AEQUALIS_S32 ((s32)solus->loci[(i32)LR_SOCIUS - I]
+                    .genus, (s32)MATERIA_VALOR_REFERENTIA);
+            }
         }
 
         /* CUSTODIAE LECTORIS: documenta manu scripta, sigillo vivo */

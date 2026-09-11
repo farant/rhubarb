@@ -4018,3 +4018,73 @@ pointer→index cache is the obvious move if it ever matters).
 **Words.** The lint refused `ordinales`/`ordinalibus` (WORDS knows the
 lemma, not the plural forms it seems) → glossary entry `ordinalis`
 with the three forms.
+
+## 2026-09-11 — T33 b: the silent stage drop-out fixed; pins re-pinned (decisio Frani)
+
+**The defect.** When a resolution stage revokes a claim an earlier stage
+already bound, the umbra's filling is overwritten with a revocation
+sentinel (loci are write-once): index −1 before T33, an empty reference
+since. At the next stage the sentence is projected to STML again, the
+materia writer refused the sentinel, `_sententiam_resolvere_gradu`
+counted `fractae` and returned success — and the sentence silently got
+none of that stage's rules. The counter was never printed; the oracle
+summed other fields of the same census. Only the resolution probatio
+pinned it to zero, on fixtures where no cross-stage revocation occurs.
+Probe (temporary, reverted): Seneca 25, charters dev 43, Perseus 19
+sentence-stage projections dropped, all "referentia nihil". In practice
+the loose tier (stage 3) was skipped for every sentence in which the
+strict tier revoked a prior claim.
+
+**The fix.** Materia law: an empty reference is WRITTEN ABSENCE (omitted
+on write, never produced on read, equal to an unwritten locus in the
+comparator; still written in memory, so a revoked umbra is still never
+refilled — that policy untouched). Oracle census gains
+`resolutiones_fractae` (sum of the resolution census's `fractae`),
+printed in the human header and as a `RESOLUTIO-FRACTAE` machine row,
+and the treebank probatio pins it to ZERO on all five pinned files.
+After the fix every metire file reports 0.
+
+**What moved (pinned, permille).** The recovered sentences now receive
+the loose tier; it draws many arcs on them, most wrong:
+
+| measure | Seneca | charters dev | charters test |
+|---|---|---|---|
+| primary | 836 → 837 | 867 → 866 | 861 → 860 |
+| forced | 800 → 800 | 760 → 751 | 766 → 757 |
+| case | 714 → 710 | 677 → 673 | 697 → 695 |
+| number | 932 → 932 | 931 → 929 | 936 → 934 |
+| gender | 908 → 910 | 925 → 923 | 926 → 925 |
+| attachment precision | 526 → 520 | 459 → 446 | 480 → 469 |
+| right arcs | 1676 → 1699 | 2440 → 2457 | 2513 → 2528 |
+| subject precision | 581 → 570 | 315 → 284 | 478 → 460 |
+| object precision | 553 | 545 | 503 → 504 |
+| clause purity (reported) | 850 → 856 | 870 → 875 | 893 → 892 |
+
+Arcs drawn: Seneca +81 (+23 right), charters dev +195 (+17), test
++163 (+15). Head arcs carry most of it (dev 2777 → 2934 drawn, +15
+right). EWT untouched (no cross-stage revocations). Shelf: ITTB right
+arcs +64, case +24 words, primary +4 words; Perseus right arcs +6, case
+−3, primary −1; PROIEL +9, −7, −7; UDante +32, −14, −15; precision down
+by 2–14 ‰ on every shelf file.
+
+**Read of it.** The drop-out was acting as an unwritten law — "a
+sentence whose strict tier revoked a prior claim gets no loose tier" —
+and on prose that accident was helping. The honest finding: the loose
+tier is net harmful on exactly the contested sentences. Fran accepted
+the fix and the re-pin (2026-09-11) over re-introducing it as an
+explicit gate: the decoder scores over fillings and alternatives, and
+a sentence that skips the loose tier offers it no loose candidates on
+precisely the sentences it exists for.
+
+**Open, code path read, effect UNMEASURED.** Row intake skips an umbra
+already claimed in THIS stage (`_umbra_iam_petita` scans this stage's
+fillings) but not one written in an EARLIER stage, filled or revoked.
+Such a row still enters the one-head contest as a claimant: winning it
+revokes the standing claim on that dependent (writing an empty
+reference and an alternative), taking an unclaimed dependent makes it
+the standing claim that later rows must beat — and at LIGATIO it never
+binds, because its umbra is already written (`repetitae`). So a later
+stage can destroy or block a binding without making one. Pre-existing
+for filled umbrae; now reachable for revoked ones too, whose sentences
+used to drop out. A candidate contributor to the precision loss above;
+ledger question, not fixed here.

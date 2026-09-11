@@ -65,7 +65,11 @@ verbs (`ponere`/`appendere`/`reponere`) now fix `pater` on owned
 children — parents are no longer "post-acceptum SOLUM". Born for oratio
 (ordinals stale under permutation; remap bit twice); general to md
 links, C89 identifiers, HTML anchors. Decree `01M260XYXB`; phase-log
-2026-09-10.
+2026-09-10. **An EMPTY reference (NIHIL target) is WRITTEN ABSENCE**
+(2026-09-11): omitted on write, never produced on read, equal to an
+unwritten locus in the comparator; in memory it stays written, so a
+client can tell "revoked" from "never set". Refusing it silently
+dropped oratio sentences out of later resolution stages.
 
 ## The whitespace contract (2026-08-28)
 

@@ -395,6 +395,17 @@ _arbor_valores_aequales (
     i32 numerus_b;
     i32 i;
 
+    /* REFERENTIA VACUA = absentia (2026-09-11): scriptor eam omittit,
+     * lector numquam gignit, ergo arbor scripta et lecta hic
+     * divergerent nisi vacua vacuo aequaretur. */
+    si (a.genus == MATERIA_VALOR_REFERENTIA && a.datum.nodus == NIHIL)
+    {
+        a = materia_valor_nihil();
+    }
+    si (b.genus == MATERIA_VALOR_REFERENTIA && b.datum.nodus == NIHIL)
+    {
+        b = materia_valor_nihil();
+    }
     si (a.genus != b.genus)
     {
         redde _arbor_divergere(comparator, "locus/genus-valoris",
@@ -429,15 +440,7 @@ _arbor_valores_aequales (
                     i32 numerus_a_semitae;
                     i32 numerus_b_semitae;
 
-            si (a.datum.nodus == NIHIL || b.datum.nodus == NIHIL)
-            {
-                si (a.datum.nodus == b.datum.nodus)
-                {
-                    redde VERUM;
-                }
-                redde _arbor_divergere(comparator, "referentia/nihil",
-                    nodus_a, nodus_b, NIHIL, NIHIL, locus, -I);
-            }
+            /* scopi ambo adsunt: vacuae supra ad NIHIL normatae */
             si (   !_arbor_semita_scopi(a.datum.nodus,
                 comparator->radix_a,
                         semita_a, &numerus_a_semitae)

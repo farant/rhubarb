@@ -271,6 +271,12 @@ nomen structura {
 nomen structura {
     i32 sententiae;
     i32 sententiae_fractae;   /* parsura aut annotatio fracta */
+    /* 2026-09-11: proiectiones gradus resolutionis fractae, summa
+     * census resolutionis (fractae) per sententias - sententia cuius
+     * proiectio in gradu fallit gradum TACITE amittebat (petitio
+     * revocata trans gradus improiectabilis: XXV/XLIII/XIX per
+     * thesaurum); pinna ZEPHYRUM ne recurrat */
+    i32 resolutiones_fractae;
     i32 verba;                /* verba aurea (verba rangarum inclusa, rangae ipsae non) */
     i32 rangae;
         i32 tecta;

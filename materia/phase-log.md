@@ -2079,3 +2079,30 @@ is what strstr must match — dump the text before pinning a layout;
 (3) a test that encodes a contract ("pater post-acceptum SOLUM") goes
 red when the contract improves — read it as a contract change, not a
 regression.
+
+## 2026-09-11 — empty reference = written absence (oratio drop-out fix)
+
+The 2026-09-10 writer refused a REFERENTIA locus whose target is NIHIL
+("referentia nihil"), mirroring the old INDEX refusal of a negative
+index. Oratio writes exactly that when a later resolution stage revokes
+a claim an earlier stage already bound (loci are write-once, so the
+revocation overwrites the filling with an empty reference). The refusal
+failed the WHOLE sentence projection at the next stage; the executor
+counted it in a census field nobody printed and returned success, so
+the sentence silently skipped every later stage. Measured with a
+temporary probe: Seneca 25, charters dev 43, Perseus 19 sentence-stage
+projections dropped, every one "referentia nihil".
+
+LAW: an empty reference is WRITTEN ABSENCE. The writer omits the locus
+(same branch as an unwritten locus), the reader never produces one, and
+the comparator normalizes an empty reference to NIHIL before comparing
+kinds — so written-and-read trees stay equal, and "empty vs target"
+now reports `locus/genus-valoris` like absence vs value (the
+`referentia/nihil` divergence is gone). In memory the locus stays
+written: a client can still tell a revoked claim from one never made
+(oratio never refills a revoked umbra). Probationes: the arbor suite
+writes an empty reference, finds no `<socius`, reads NIHIL back, and
+the comparator calls them equal; the comparator suite checks empty
+against unwritten both ways. Oratio pins the summed projection
+failures to ZERO on every pinned treebank, so the class cannot hide
+again.

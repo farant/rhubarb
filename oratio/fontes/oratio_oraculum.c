@@ -3884,6 +3884,9 @@ _sententiam_iudicare (
         piscina_destruere(scratch);
         redde VERUM;
         }
+    /* 2026-09-11: proiectiones gradus fractae summantur - olim mutae */
+    census->resolutiones_fractae = census->resolutiones_fractae
+        + census_resolutionis.fractae;
         /* T20a: clausulae aureae (radices finitae) et paria pro puritate;
      * resolutio absens (crudus) = paria sine clausula nostra (apertae) */
     paria = xar_creare(scratch, (i32)magnitudo(ParClausulae));
@@ -4082,9 +4085,9 @@ _linguam_documenti_censere (
             i);
         Piscina* scratch = piscina_generare_dynamicum(
             "oraculum_census_linguae", 16777216);
-        chorda textus;
-        MateriaNodus* doc;
-        OratioPartesCensus census_partium;
+                    chorda textus;
+              MateriaNodus* doc;
+        OratioPartesCensus  census_partium;
 
         si (scratch == NIHIL)
         {

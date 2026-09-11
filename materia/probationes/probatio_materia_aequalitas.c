@@ -437,15 +437,26 @@ principale (vacuum)
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
         CREDO_VERUM (strcmp(d.campus, "referentia/extra") == ZEPHYRUM);
 
-        /* NIHIL contra scopum divergit; NIHIL contra NIHIL aequales */
+        /* VACUA contra scopum divergit ut absentia contra scriptum
+         * (genus valoris); vacua contra vacuam aequales */
         b           = _arborem_cum_referentia(piscina, ZEPHYRUM);
         b->loci[I]  = materia_valor_referentia(NIHIL);
         CREDO_FALSUM (materia_arbor_aequalis(a, b,
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
-        CREDO_VERUM (strcmp(d.campus, "referentia/nihil") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(d.campus, "locus/genus-valoris")
+            == ZEPHYRUM);
         a->loci[I] = materia_valor_referentia(NIHIL);
         CREDO_VERUM (materia_arbor_aequalis(a, b,
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        /* REFERENTIA VACUA = absentia (2026-09-11): vacua contra locum
+         * non scriptum aequales, utroque latere */
+        b->loci[I] = materia_valor_nihil();
+        CREDO_VERUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        CREDO_VERUM (materia_arbor_aequalis(b, a,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        a->loci[I] = materia_valor_nihil();
+        b->loci[I] = materia_valor_referentia(NIHIL);
 
         /* genus valoris dispar (REFERENTIA contra INDEX) */
         b->loci[I] = materia_valor_index(ZEPHYRUM);
