@@ -118,7 +118,7 @@ Findings: `fontes/briar.worklog.md`.
 
 ## Gates (`./briar/compile_probationes.sh [filter]`; exit 2 = NOTHING RAN)
 registrum · lexema · arbor · stml · canon · totalitas · computus · nexus
-· silva · fabrica · imperium · amalgama · contextus · facies (fourteen files;
+· silva · fabrica · imperium · amalgama · contextus · facies · spectator (fifteen files;
 every one born red by a planted fault — see the worklog). Goldens:
 `fixa/contextus/fragmenta.contextus` (`BRIAR_CONTEXTUS_SCRIBERE=1`),
 `fixa/fabrica/fragmenta/`. Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
@@ -146,6 +146,19 @@ and the silva amalgam as one object (cold ~21 s once; warm suite ~9 s).
 - **HTML in prose is TEXT**, through `briar/facies/md-html-facies.stml`
   — md's projection minus `<crudum!>` in three arms, held to exactly
   that difference by a drift gate. HTML lives in regions.
+- **The spectator is briar with a window** (`tools/briar_spectator.c`,
+  `bin/briar-spectator`; `briar -visio` execs it). It repeats NO
+  rendering — same `briar_faciem_fingere`, same chrome, so its page and
+  `-html`'s are identical BY CONSTRUCTION. Identity holds *given the
+  same corpus source*: inside the tree briar reads the DISK corpus, the
+  spectator always the EMBEDDED one, so the fabrica key differs there.
+- **`briar_optiones_plagulae` is the one place options are built.**
+  Two binaries building them separately drifted (absolute vs raw path)
+  and no in-process test could see it — the fumus caught it.
+- **The bridge's brain is a LIBRARY, not a handler**: `briar_symbolum`
+  answers title+header → definition as a pure function over the corpus,
+  so the gate hits it with no window anywhere. The parse cache lives on
+  a caller-held cursor, keyed by path.
 - `-html` on a REFUSED thistle still writes the page (F4) and exits 0:
   the render succeeded, the cause is on stderr AND in the margin. Every
   other action exits 1 on refusal.

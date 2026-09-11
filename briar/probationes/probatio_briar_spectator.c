@@ -18,6 +18,7 @@
 #include "briar_facies.h"
 #include "briar_nexus.h"
 #include "briar_silva.h"
+#include "briar_symbolum.h"
 #include "capsula.h"
 #include "chorda.h"
 #include "filum.h"
@@ -234,6 +235,85 @@ principale (vacuum)
             piscina), chorda_ex_literis("salve.thistle", piscina));
         CREDO_CHORDA_AEQUALIS (chorda_ex_literis(o.stampa, piscina),
             chorda_ex_literis(fons->titulus, piscina));
+    }
+
+    imprimere("\n--- Probans symbola bibliothecae ---\n");
+    {
+         BriarCursorSymbolorum* cursor;
+         BriarSymboliResponsum  r;
+
+        cursor = briar_cursorem_symbolorum_creare(piscina, fons);
+        CREDO_NON_NIHIL (cursor);
+
+        /* inventum: gemellum, textus, linea */
+        r = briar_symbolum_quaerere(cursor,
+            chorda_ex_literis("piscina_generare_dynamicum", piscina),
+            chorda_ex_literis("piscina.h", piscina));
+        CREDO_VERUM (r.inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS (r.via, "lib/piscina.c");
+        CREDO_CHORDA_CONTINET (r.definitio,
+            chorda_ex_literis("piscina_generare_dynamicum", piscina));
+        CREDO_MAIOR_S32 ((s32)r.linea, (s32)0);
+
+        /* caput SINE gemello: latina.h macra sola fert - non vitium,
+         * sed 'non inventum' */
+        r = briar_symbolum_quaerere(cursor,
+            chorda_ex_literis("NIHIL", piscina),
+            chorda_ex_literis("latina.h", piscina));
+        CREDO_FALSUM (r.inventum);
+
+        /* symbolum quod nusquam est */
+        r = briar_symbolum_quaerere(cursor,
+            chorda_ex_literis("nemo_hic_est_omnino", piscina),
+            chorda_ex_literis("piscina.h", piscina));
+        CREDO_FALSUM (r.inventum);
+
+        /* caput FALSUM: symbolum verum, gemellum aliud - responsum
+         * dimidiatum numquam */
+        r = briar_symbolum_quaerere(cursor,
+            chorda_ex_literis("piscina_generare_dynamicum", piscina),
+            chorda_ex_literis("chorda.h", piscina));
+        CREDO_FALSUM (r.inventum);
+
+        /* plagula ALIA arborem ALIAM habet: cursor VIA clavem facit.
+         * Sine hac assertione cursor viam ignorans una sola
+         * assertione rubesceret (lectio T3: numerus rubrorum
+         * legendus est). */
+        {
+            i32 ante = briar_cursoris_parsurae(cursor);
+
+            /* xar.h nondum tacta: chorda.h iam in cursore est
+               (quaesitio capitis falsi eam parsavit) */
+            r = briar_symbolum_quaerere(cursor,
+                chorda_ex_literis("xar_creare", piscina),
+                chorda_ex_literis("xar.h", piscina));
+            CREDO_VERUM (r.inventum);
+            CREDO_CHORDA_AEQUALIS_LITERIS (r.via, "lib/xar.c");
+            CREDO_CHORDA_CONTINET (r.definitio,
+                chorda_ex_literis("xar_creare", piscina));
+            CREDO_AEQUALIS_S32 ((s32)briar_cursoris_parsurae(cursor),
+                (s32)(ante + I));
+        }
+
+        /* CURSOR: symbolum alterum EIUSDEM plagulae nihil parsat */
+        {
+                              i32 ante;
+            BriarSymboliResponsum s2;
+
+            ante = briar_cursoris_parsurae(cursor);
+
+            s2 = briar_symbolum_quaerere(cursor,
+                chorda_ex_literis("piscina_destruere", piscina),
+                chorda_ex_literis("piscina.h", piscina));
+            CREDO_VERUM (s2.inventum);
+            CREDO_AEQUALIS_S32 ((s32)briar_cursoris_parsurae(cursor),
+                (s32)ante);
+            /* et responsum idem bis */
+            r = briar_symbolum_quaerere(cursor,
+                chorda_ex_literis("piscina_destruere", piscina),
+                chorda_ex_literis("piscina.h", piscina));
+            CREDO_CHORDA_AEQUALIS (r.definitio, s2.definitio);
+        }
     }
 
     credo_imprimere_compendium();

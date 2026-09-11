@@ -24,6 +24,9 @@
 #include "briar_imperium.h"
 #include "briar_nexus.h"
 #include "briar_silva.h"
+#include "briar_symbolum.h"
+#include "internuntius.h"
+#include "json.h"
 #include "capsula.h"
 #include "chorda.h"
 #include "filum.h"
@@ -178,6 +181,52 @@ _paginam_parare (
     redde dir;
 }
 
+/* PONS: 'facies.symbolum' {titulus, caput} -> definitio ex corpore.
+ * Cursor per 'datum' venit, ergo arbores parsatae trans ictus manent -
+ * ictus secundus in eadem plagula gratis est. */
+interior JsonValor*
+_symbolum_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
+{
+     BriarCursorSymbolorum* cursor = (BriarCursorSymbolorum*)datum;
+     BriarSymboliResponsum  r;
+                 JsonValor* fructus;
+                 JsonValor* t;
+                 JsonValor* c;
+
+    (vacuum)culpa;
+    fructus = json_objectum_creare(piscina);
+    t = (argumenta != NIHIL)
+        ? json_objectum_capere(argumenta, "titulus") : NIHIL;
+    c = (argumenta != NIHIL)
+        ? json_objectum_capere(argumenta, "caput") : NIHIL;
+    si (   t == NIHIL || !json_est_chorda(t)
+        || c == NIHIL || !json_est_chorda(c))
+    {
+        json_objectum_ponere(fructus, "absens",
+            json_boolean_creare(piscina, VERUM));
+        redde fructus;
+    }
+    r = briar_symbolum_quaerere(cursor, json_ad_chorda(t),
+        json_ad_chorda(c));
+    si (!r.inventum)
+    {
+        json_objectum_ponere(fructus, "absens",
+            json_boolean_creare(piscina, VERUM));
+        redde fructus;
+    }
+    json_objectum_ponere(fructus, "via",
+        json_chorda_creare(piscina, r.via));
+    json_objectum_ponere(fructus, "linea",
+        json_integer_creare(piscina, (s64)r.linea));
+    json_objectum_ponere(fructus, "definitio",
+        json_chorda_creare(piscina, r.definitio));
+    redde fructus;
+}
+
 s32
 principale (
       integer   argc,
@@ -267,6 +316,9 @@ principale (
             (constans character*)causa_atrii.datum);
         redde I;
     }
+    (vacuum)internuntius_praebere(atrium_internuntius(atrium),
+        "facies.symbolum", _symbolum_tractare,
+        (vacuum*)briar_cursorem_symbolorum_creare(piscina, fons));
     imprimere("[spectator] %s\n", figura.via_initialis);
     si (atrium_portus(atrium) != ZEPHYRUM)
     {

@@ -422,3 +422,40 @@ ergo politica per tagum EXPOSITIO erit, non extensio parsatoris
 **Lectio crustae.** `tools/briar.c` recusationem ante actionem
 sistebat, ergo modulus legem F4 servabat sed BINARIUM eam frangebat.
 Fumus id invenit, non porta: porta modulum solum videt.
+
+## 2026-09-11 — spectator (consilium VI): quod porta videre non poterat
+
+**Assertio mea inutilis erat.** Identitatem octetorum inter '-html' et
+spectatorem probare volui, et probationem scripsi quae plagulam eandem
+BIS intra processum UNUM reddebat, optionibus IISDEM. Cum binaria vere
+divergerent (via absoluta contra argv crudum in capite paginae, XXXII
+octeti differentiae), assertio VIRIDIS mansit. Cursus verus rem XXX
+secundis invenit.
+
+Remedium ad CAUSAM: briar_optiones_plagulae, sedes una quam ambo
+vocant - ergo deriva structuraliter impossibilis. Et probatio vera in
+fumum ivit, ubi binaria DUO conferuntur. LECTIO: probatio quae unum
+processum non excedit divergentiam binariorum videre non potest,
+quantumvis callida sit.
+
+**Caveat identitatis.** 'Octetim aequales' valet EODEM CORPORE. Intra
+arborem briar corpus disci legit, spectator semper infixum, ergo
+stampa fabricae (et clavis in capite) differunt. Area fumi extra
+repositorium iacet, ubi ambo idem legunt - ideo ibi probatur.
+
+**Planta quae mentitur.** Cursorem symbolorum probare volui planta quae
+clavem tabulae 'planta' faceret - sed quia et lectio et insertio eandem
+clavem fictam ferebant, mores fere servabantur: UNA assertio rubra.
+Planta secunda (lex gemelli fracta: omne caput -> lib/piscina.c) QUINQUE
+dedit. Non omnis planta aequalis est: planta quae duo loca simul mutat
+se ipsam celare potest.
+
+**Quod cursus verus docuit et porta non.** Directorium '/x' fictum quod
+parentem crearet directorium VERUM 'x' reliquit (briar_directoria_creare
+viam TOTAM creat, non parentem solum). Et silex monitionem 'latina.h
+sine implementatione' bis clamabat donec silex_monitiones_tacere
+adderetur - quod briar ipse iam faciebat, et ego oblitus eram.
+
+**Gradus tres scripti (S4).** facies.js nunc pontem quaerit, deinde
+insulam, deinde tacet. Plagulae tres EAEDEM spectatori et navigatori
+serviunt - id est quod vestem in plagulas ponere (F3) meruit.

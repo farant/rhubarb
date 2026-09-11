@@ -300,8 +300,8 @@ if [ "$AGERE" = 0 ]; then
     exit 0
 fi
 
-# ---- XI. agere: app vitrea per manus ----
-echo "FUMUS: XI. bin/manus incipere $VITREUM_DIR/bin/salve_vitreum -vivum"
+# ---- XIII. agere: app vitrea per manus ----
+echo "FUMUS: XIII. bin/manus incipere $VITREUM_DIR/bin/salve_vitreum -vivum"
 SESSIO="$( cd "$AREA" && "$RADIX/bin/manus" incipere "$VITREUM_DIR/bin/salve_vitreum" -vivum \
     2>"$AREA/manus.err" )" \
     || deficere "manus incipere defecit" "$AREA/manus.err"
@@ -324,7 +324,38 @@ case "$CORPUS" in
     *) deficere "corpus paginae 'salve, munde' non continet: [$CORPUS] - pons 'salve' tacuit" "$AREA/textus.err" ;;
 esac
 
-echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, actum)"
+# ---- XIV. agere: spectator, pagina et PONS ----
+if command -v briar-spectator >/dev/null 2>&1; then
+    echo "FUMUS: XIV. briar-spectator salutatio2.thistle (fenestra + pons)"
+    SPEC_SESSIO="$( cd "$AREA" && "$RADIX/bin/manus" incipere \
+        "$(command -v briar-spectator)" salutatio2.thistle -vivum \
+        2>"$AREA/spec_manus.err" )" \
+        || deficere "spectator per manus incipere defecit" "$AREA/spec_manus.err"
+    SPEC_PORTUS="$(printf '%s\n' "$SPEC_SESSIO" | grep -oE '[0-9]{4,5}' | head -1)"
+    [ -n "$SPEC_PORTUS" ] \
+        || deficere "portus spectatoris legi non potuit: [$SPEC_SESSIO]" "$AREA/spec_manus.err"
+    spec_sublevare () { "$RADIX/bin/manus" -s "$SPEC_PORTUS" finire >/dev/null 2>&1; }
+    SPEC_CORPUS="$("$RADIX/bin/manus" -s "$SPEC_PORTUS" -exspecta textus body 2>"$AREA/spec_textus.err")"
+    case "$SPEC_CORPUS" in
+        *"principale"*) echo "FUMUS:    pagina onerata" ;;
+        *) spec_sublevare
+           deficere "corpus paginae spectatoris '#principale' non fert" "$AREA/spec_textus.err" ;;
+    esac
+    # PONS: symbolum derivatum premere -> definitio VERA ex corpore
+    "$RADIX/bin/manus" -s "$SPEC_PORTUS" premere-textum \
+        piscina_generare_dynamicum > "$AREA/spec_premere.log" 2>&1 \
+        || { spec_sublevare; deficere "symbolum premere defecit" "$AREA/spec_premere.log"; }
+    SPEC_POST="$("$RADIX/bin/manus" -s "$SPEC_PORTUS" -exspecta textus body 2>"$AREA/spec_post.err")"
+    spec_sublevare
+    case "$SPEC_POST" in
+        *"piscina.h"*) echo "FUMUS:    pons respondit: piscina.h" ;;
+        *) deficere "tabella caput 'piscina.h' non ostendit - pons tacuit" "$AREA/spec_post.err" ;;
+    esac
+else
+    echo "FUMUS: XIV. OMISSA (briar-spectator non institutus)"
+fi
+
+echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, actum)"
 purgare
 echo "fumus briar: sanum"
 exit 0

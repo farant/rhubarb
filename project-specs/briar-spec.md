@@ -1076,7 +1076,8 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
   fumus stage XI. No clang, no window, no network — the page is a
   string the suite can compare.
 
-- **P7 spectator (§4.7) — PLANNED (plan 6).** (a) `tools/briar_spectator.c`
+- **P7 spectator (§4.7) — DONE (plan 6, 2026-09-11; T1 14d251e0, T2). MEASURED: `briar-spectator` links first try by the rule "take from `build/` only what `briar/build/` lacks"; page identity with `-html` proven end to end in fumus XII (71,574 bytes, byte-equal) once the option divergence was fixed. AS BUILT, three deviations: `briar_optiones_plagulae` was extracted because the two binaries DID drift (absolute vs raw path) and no in-process assertion could see it — the real check lives in the fumus, across two binaries · identity holds GIVEN THE SAME CORPUS SOURCE (in-tree briar reads the disk corpus, the spectator always the embedded one, so the fabrica key differs) · `-parare` was added so the fumus can check identity without a window.**
+- **P7 as planned (superseded by the line above):** (a) `tools/briar_spectator.c`
   on atrium + its struere script + `-visio` in `briar_imperium` and
   `tools/briar.c`; byte-identity assertion against `-html`. (b) the
   `facies.symbolum` handler with the per-file silva cache, gated

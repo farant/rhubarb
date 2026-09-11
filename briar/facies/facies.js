@@ -5,6 +5,12 @@
  * markup et CSS sunt et SINE hoc scripto vivunt. Si hoc deficit,
  * pagina integra manet: id est lex.
  *
+ * TRES GRADUS (par. 4.7 S4), quisque in suo loco:
+ *   pons adest (spectator) -> C definitionem VERAM ex corpore parsat
+ *   insula sola (navigator) -> caput et signatura ex pagina ipsa
+ *   neutrum -> pagina adhuc legitur, ancoris suis
+ * Ergo plagulae hae TRES eaedem spectatori et navigatori serviunt.
+ *
  * Nulla bibliotheca, nihil petitum, nihil repositum.
  */
 (function () {
@@ -70,6 +76,29 @@
             tabella.appendChild(typus);
         }
         tabella.hidden = false;
+        definitionem_petere(titulus, datum);
+    }
+
+    /* gradus primus: pons spectatoris. Absente eo nihil fit et
+     * insula (iam ostensa) sufficit. */
+    function definitionem_petere (titulus, datum) {
+        if (typeof internuntius === 'undefined'
+                || !internuntius.vocare || !datum.caput) {
+            return;
+        }
+        internuntius.vocare('facies.symbolum',
+            {titulus: titulus, caput: datum.caput}).then(
+            function (r) {
+                var corpus;
+
+                if (!r || r.absens || !r.definitio) { return; }
+                if (tabella.hidden) { return; }
+                corpus = document.createElement('pre');
+                corpus.className = 'fr-t-definitio';
+                corpus.textContent = r.definitio;
+                tabella.appendChild(corpus);
+            },
+            function () { /* pons tacuit: insula sufficit */ });
     }
 
     document.addEventListener('click', function (eventus) {
