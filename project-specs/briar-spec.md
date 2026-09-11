@@ -1,4 +1,4 @@
-# briar — spec v1.7 (literate C89 programs; `.thistle`)
+# briar — spec v1.8 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -8,6 +8,10 @@ else is PROPOSITUM and was agreed in conversation unless marked OPEN.
 Names marked (unsealed) are working names — Fran names. Every
 "exists" claim cites the header it rests on. English prose, Latin
 identifiers, as in pictor-spec.md.*
+
+*v1.8 (2026-09-11) adds §4.7, the spectator — `-visio`, the viewer
+over the facies page, decisions S1–S4. It is §4.6's F1 step 2 and
+sits beside it for that reason.*
 
 *v1.7 (2026-09-05) adds §4.6, the facies — `-html`, the literate
 rendering, designed with Fran the same day and struck from the §9
@@ -794,6 +798,86 @@ and a named cause — and the two-layer split is the mitigation: a
 class rename may redden the byte goldens and must never redden the
 invariants.
 
+### 4.7 Spectator — the viewer (`-visio`, v1.8, 2026-09-11)
+
+Step 2 of §4.6's F1. `-html` writes an artifact; `-visio` opens a
+window on it. The window has to earn its existence: a browser already
+has find, zoom, print and bookmarks, so a viewer that only *shows* the
+page is a worse browser. What it adds is **the bridge** — a live C side
+answering what a static page cannot, which is F5's reserved half:
+click a library symbol, see its definition.
+
+Decided with Fran 2026-09-11:
+
+| decision | chosen | reserved |
+|---|---|---|
+| S1 where the intelligence lives | a C tool on silex's shape (`tools/briar_spectator.c`): vitrea + fenestra + briar's modules + the corpus, ~20 MB (Fran: the size is fine) | a **`.thistle`** viewer — briar building its own reader. MEASURED and rejected: the corpus is `lib/*.c` + `include/*.h` + vendor, so `briar/fontes/` is unreachable from a thistle; and the blocker is not code but the corpus **as runtime data** — `silex_fons_corporis` needs a `CapsulaEmbed*` a generated app does not link, so fixing it makes EVERY vitrea thistle app carry the 10 MB corpus · a **thin viewer forwarding to `briar` as a subprocess**: one brain, ~3 MB, but a process per click and no cached parse |
+| S2 v1 scope | (a) show the page, then (b) the bridge — staged, both in v1 | (c) live reload on change, a fragment-tree sidebar, corpus-wide search — after Fran has used (b) |
+| S3 how the page reaches the window | atrium's `capsula_radix`: assets from a DIRECTORY, same `capsula://` origin, the page cannot tell. The facies page is self-contained, so the directory holds exactly ONE file | opening a disk capsula by hand (atrium already does it); assembling the page in JavaScript (breaks §4.6's law that the page reads with JS off) |
+| S4 one chrome or two | ONE: `facies.js` degrades bridge → island → nothing, so the same three files serve spectator, browser, and a page with scripting off | a second front end for the viewer — which is exactly what putting the chrome in files (F3) was meant to avoid |
+
+**Words.** The viewer is the *spectator* — one who watches, from
+*specto*. `visio` stays the flag (a seeing); in this repository the
+bare word names a vision document, so it is not a binary's name.
+
+**Pipeline.** The spectator is briar plus a window; it repeats no
+rendering logic:
+
+    fabricare -> briar_faciem_fingere -> <t>.html in <domus>/facies/
+              -> atrium (capsula_radix = illud directorium,
+                         via_initialis = "<t>.html")
+              -> fenestra + vitrea + internuntius
+
+`briar -visio x.thistle` execs `briar-spectator` as `-probatio` execs
+the built binary; `briar-spectator x.thistle` works directly. briar
+stays headless — if the binary is absent, `-visio` refuses BY NAME and
+says which script builds it, and never opens a window itself.
+
+**The page in the window is the page on disk, byte for byte.** One
+artifact, two ways to look at it; a divergence is a bug with an
+obvious test (below). It also means §4.6's law holds inside the
+window: the document loads as a document, not as something JavaScript
+assembles.
+
+**The bridge** (stage b), one method:
+
+    internuntius.vocare('facies.symbolum', {titulus: "..."})
+      -> {caput, typus, definitio, via, linea} | {absens: verum}
+
+The handler takes the header from the island data the page already
+carries, finds its twin by silex's rule (`piscina.h` → `lib/piscina.c`),
+reads it **from the corpus** — never from disk, so it works outside any
+repository — parses it once with silva, caches the parse per file, and
+returns the definition's extent verbatim. The second click anywhere in
+that file is free, which is the whole argument for carrying the corpus.
+
+**Gates.** The deliverable is a window; almost none of the work needs
+one.
+
+- The renderer is gated already (§4.6, T1–T3), unchanged.
+- **The handler is a pure function** over the corpus — title in,
+  definition out — so it is gated headless and hard: the twin rule, a
+  symbol whose header has no twin, a symbol absent from the corpus, a
+  symbol declared but not defined, and the cache returning identical
+  bytes twice.
+- **Byte identity**: the page the spectator writes equals the page
+  `-html` writes for the same file. Two paths, one artifact — the
+  cheapest possible guard against silent divergence.
+- The window is `-agere`, but NOT only by hand: an atrium app exposes a
+  driver port and the fumus already drives one (stage IV reads
+  `atrium_portus` and uses `bin/manus` to list affordances, press by
+  text, and read `textus body`). Stage XII under `-agere`: open
+  `salutatio2.thistle`, assert the body carries `frag-principale` (the
+  page loaded), press a `data-s` symbol, assert the body then carries
+  its header (the bridge answered).
+
+So everything except "a human looked at it and it was good" is
+gateable, and that part stays Fran's.
+
+**Reserved** beyond S1–S4: speculum's `fontes` capsula in the spectator
+(Cmd+Shift+D over briar's own source — the scaffold field exists);
+`-radix` as a live dev mode for the chrome, which atrium gives free.
+
 ## 5. The binary and its build
 
 - **Flags, not verbs (DECISUS, Fran 2026-09-04: thistle files are
@@ -816,6 +900,7 @@ invariants.
   | `-partes` | print the closure, ADEST/ABEST as `silex partes` |
   | `-amalgama` | write `<t>.c` (+ `probatio_<t>.c`) beside the thistle |
   | `-html` | write `<t>.html` beside the thistle (§4.6); opens nothing |
+  | `-visio` | exec `briar-spectator` on the file (§4.7); refuses by name if absent |
   | `-versio` | corpus stamp and the flag-string hash of §4.1 |
 
 - **`-amalgama` (BUILT 2026-09-05, `briar_amalgama`; design banked
@@ -923,6 +1008,7 @@ guard, per-test logs), registered in pythonica's four tables
 | `amalgama` | synthetic fabrica → byte golden `fixa/amalgama/gamma.c` (`BRIAR_AMALGAMA_SCRIBERE=1` + a named cause); real fixtures structurally (once per file, no local include, `#define`/`#undef` pairs, posix first, probatio separate); vitrea + vendor refusals; writer guard |
 | `contextus` | `fragmenta.thistle` (nested fragments, indentation, one used twice, one used by the probatio, one carrying an `#include`): the woven text of each root byte-compared to a golden under `fixa/contextus/`, the line table pinned at the splices, the identity table for a root without references; five adversa fixtures, one per refusal, with lines; unused fragment listed; born red by dropping the indentation prefix. Fabrica gate adds the `fragmenta` golden directory (`#line` runs inside a function body and in the probatio unit); silva gate adds derivation of a symbol that lives in a fragment; fumus adds the run, the probatio, the amalgam, and the `#line`-truth stage of §3.4 |
 | `facies` | §4.6, two layers: structural invariants over a real `html_lexema` lex (unique line ids, no dangling `#frag-` link, every `data-s` in the island, `<details>` count == roots); byte goldens `fixa/facies/` (`BRIAR_FACIES_SCRIBERE=1` + a named cause) over `salve.thistle` and the line-pinned `fragmenta.thistle`; the six `adversa/` fixtures each rendering with the cause at its line; new escaping and UTF-8 fixtures; **the page and `-partes` asserted to agree**. Born red by a planted fault in the line table or the escaping. Fumus adds stage XI over `salutatio2.thistle` |
+| `spectator` | §4.7 HEADLESS: the `facies.symbolum` handler as a pure function over the corpus (twin rule; header with no twin; symbol absent; declared-not-defined; cache returns identical bytes twice), and the page the spectator writes byte-compared to the page `-html` writes. The window is fumus stage XII under `-agere`, driven through `atrium_portus` with `bin/manus` |
 | `probatio_silex` | UNCHANGED after §4.4 — the promotion is behavior-preserving |
 
 Plus the end-to-end `tools/briar_fumus.sh` (§5), the only gate that
@@ -944,6 +1030,7 @@ New in `briar/`, each with a probatio and a `.worklog.md`:
 | `briar_computus` | briar_arbor | bench twin |
 | `briar_contextus` (v1.6) | briar_nexus | fragments and transclusion: classification, the weave, the line table, refusals; between nexus and silva |
 | `briar_facies` (v1.7) | briar_contextus, briar_fabrica, silva (`silva_lexare_cruda`), capsula | fructus → one self-contained HTML page; chrome from an embedded capsula; after the fabrica, a sibling of `briar_amalgama` |
+| `briar_spectator` (v1.8) | briar_facies, silva, silex, atrium, vitrea, fenestra, capsula | `tools/briar_spectator.c` + `tools/briar_spectator_struere.sh`: the window and the bridge; repeats no rendering |
 | `tools/briar.c` | all above, argumenta, processus, capsula | the binary |
 | `tools/briar_struere.sh`, `tools/corpus_infixum.sh`, `tools/briar_fumus.sh` | — | build, shared corpus block, freshness gate |
 
@@ -989,6 +1076,13 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
   fumus stage XI. No clang, no window, no network — the page is a
   string the suite can compare.
 
+- **P7 spectator (§4.7) — PLANNED (plan 6).** (a) `tools/briar_spectator.c`
+  on atrium + its struere script + `-visio` in `briar_imperium` and
+  `tools/briar.c`; byte-identity assertion against `-html`. (b) the
+  `facies.symbolum` handler with the per-file silva cache, gated
+  headless; `facies.js` gains the bridge → island → nothing fallback;
+  fumus stage XII under `-agere`.
+
 ## 9. Named deferrals
 
 Interpreted mode (waits on machinula piscina support, desideratum
@@ -1033,13 +1127,20 @@ files carry six statics each), the `-framework` triple on the banner
 line, and sqlite as text under `#pragma clang diagnostic ignored
 "-Weverything"` with its `-D` defines as `#define` lines — a plain
 program pulling `volumen` meets the same vendor wall).
- · **the facies viewer (step 2 of §4.6, F1)**: `-visio` — the same
-three chrome files served from a vitrea capsula, the JSON island
-become a bridge response, and with it F5's reserved half, a library
-symbol's **definition** parsed on demand (the viewer holds the corpus
-and silva in-process, so it parses the one file clicked, when it is
-clicked); whether the viewer is itself a `.thistle` carried in the
-corpus — briar building its reader with briar — is a step-2 decision
+ · **briar's own modules available to THISTLES** (Fran's idea
+2026-09-11, raised while designing §4.7 and deliberately NOT decided
+there): put `briar/fontes/` and silva's amalgam in the corpus and a
+thistle becomes a tool ABOUT C code — a linter, a formatter, a browser,
+each a literate script with its prose beside it. Genuinely a widening
+of what the format is for, and it should be decided on its own merits,
+not as a side effect of a viewer. Two findings for whoever takes it:
+(i) code availability is not the blocker — the corpus as RUNTIME DATA
+is, since `silex_fons_corporis` wants a `CapsulaEmbed*` no generated
+app links, so every vitrea thistle app would carry the 10 MB corpus;
+(ii) briar's project key is the closure-content hash, so briar's own
+source in the corpus means every briar edit invalidates every cached
+project on the machine. Sizes measured: briar's modules 308 KB, silva's
+amalgam 3.4 MB
 · the facies alternatives reserved at F2 (two panes, tabs), F3 (an
 STML template program), F4 (a vitia strip as the diagnostic reader) ·
 **per-tag policy for prose HTML** (F6's reserved half): an allowlist —
