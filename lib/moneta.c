@@ -1,12 +1,14 @@
-/* moneta.c - Cusio identitatum (ULID; contractus in capite).
- * Implementatio ex lib/scrinium.c mota 2026-07-21 (exemplar
+/* moneta.c - Cusio identitatum (ULID, nanoid; contractus in capite).
+ * Implementatio ULID ex lib/scrinium.c mota 2026-07-21 (exemplar
  * libraries.ts: monotona intra ms; semita POSIX gettimeofday -
- * exemplar tcp_posix). */
+ * exemplar tcp_posix). Nanoid addita 2026-09-10 (larva + abiectio
+ * ut nanoid; fons sine reservo). */
 
 #include "postulata_posix.h"
 #include "moneta.h"
 #include "fasti.h"   /* Momentum: millisecunda ab epocha (canon) */
 #include <stdio.h>
+#include <string.h>
 #include <sys/time.h>
 
 hic_manens constans character ULID_LITTERAE[] =
@@ -105,8 +107,8 @@ moneta_ulid (
     }
 
     {
-        i64 t = (i64)_ulid_tempus_ultimum;   /* cifrae basi-32: bits
-                                              * crudi - erasio consulta */
+        /* cifrae basi-32: bits crudi - erasio consulta */
+        i64 t = (i64)_ulid_tempus_ultimum;
 
         per (k = 9; k >= 0; k--)
         {
@@ -191,4 +193,108 @@ moneta_octeti_fortuiti (
     }
     fclose(fons);
     redde VERUM;
+}
+
+/* nanoid configurabile: larva + abiectio (contractus in moneta.h) */
+b32
+moneta_nanoid_alphabeto (
+             character* effusio,
+                   i32  longitudo,
+    constans character* alphabetum)
+{
+     i8 octeti[CCLVI];
+     i8 visa[CCLVI];
+     i8 littera;
+    i32 mensura;
+    i32 larva;
+    i32 haustus;
+    i32 scripta;
+    i32 locus;
+    i32 k;
+
+    si (effusio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    effusio[ZEPHYRUM] = '\0';
+    si (alphabetum == NIHIL || longitudo == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* mensura alphabeti; signum bis datum recusatur. Signa distincta
+     * non NUL plus 255 esse nequeunt, ergo recusatio mensuram quoque
+     * terminat (visa numquam extra CCLVI). */
+    memset(visa, ZEPHYRUM, magnitudo(visa));
+    per (mensura = ZEPHYRUM; alphabetum[mensura] != '\0'; mensura++)
+    {
+        littera = (i8)alphabetum[mensura];
+        si (visa[littera])
+        {
+            redde FALSUM;
+        }
+        visa[littera] = I;
+    }
+    si (mensura < II)
+    {
+        redde FALSUM;
+    }
+
+    /* larva: minima 2^k - 1 quae indicem ultimum tegit; 'mensura - I'
+     * tutum quia mensura >= II supra (i32 INSIGNATUM) */
+    larva = I;
+    dum (larva < mensura - I)
+    {
+        larva = (larva << I) | I;
+    }
+
+    /* octeti per haustum ut nanoid: 1.6 x larva x longitudo ad
+     * mensuram, ut haustus unus fere sufficiat; summum CCLVI */
+    haustus = CCLVI;
+    si (longitudo < CCLVI)
+    {
+        haustus = (XVI * larva * longitudo) / (X * mensura) + I;
+        si (haustus > CCLVI)
+        {
+            haustus = CCLVI;
+        }
+    }
+
+    scripta = ZEPHYRUM;
+    dum (scripta < longitudo)
+    {
+        si (!moneta_octeti_fortuiti(octeti, haustus))
+        {
+            effusio[ZEPHYRUM] = '\0';
+            redde FALSUM;
+        }
+        per (k = ZEPHYRUM; k < haustus && scripta < longitudo; k++)
+        {
+            locus = (i32)octeti[k] & larva;
+            si (locus < mensura)
+            {
+                effusio[scripta] = alphabetum[locus];
+                scripta++;
+            }
+        }
+    }
+    effusio[longitudo] = '\0';
+    redde VERUM;
+}
+
+b32
+moneta_nanoid (
+    character* effusio)
+{
+    redde moneta_nanoid_alphabeto(effusio, MONETA_NANOID_LONGITUDO,
+                                  MONETA_NANOID_ALPHABETUM);
+}
+
+b32
+moneta_nanoid_plagulae (
+    character* effusio)
+{
+    redde moneta_nanoid_alphabeto(effusio,
+                                  MONETA_NANOID_PLAGULAE_LONGITUDO,
+                                  MONETA_NANOID_PLAGULAE_ALPHABETUM);
 }
