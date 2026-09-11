@@ -44,6 +44,10 @@ _actio_vexilli (
     {
         redde (s32)BRIAR_ACTIO_HTML;
     }
+    si (_est(a, "-visio"))
+    {
+        redde (s32)BRIAR_ACTIO_VISIO;
+    }
     si (_est(a, "-versio"))
     {
         redde (s32)BRIAR_ACTIO_VERSIO;
@@ -119,7 +123,7 @@ briar_imperium_legere (
             chorda_aedificator_appendere_literis(aed, a);
             chorda_aedificator_appendere_literis(aed,
                 " (nota: -probatio -struere [-iterum] -arbor"
-                " -partes -amalgama -html -versio -f <radix>)");
+                " -partes -amalgama -html -visio -versio -f <radix>)");
             imp->causa = chorda_aedificator_finire(aed);
             redde FALSUM;
         }

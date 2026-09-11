@@ -58,6 +58,18 @@ nomen structura {
     constans character* fons_titulus;  /* stampa ordinum vitreorum */
 } BriarFabricaOptiones;
 
+/* optiones e via plagulae implere: via ABSOLUTA (ea in '#line' et in
+ * capite paginae apparet), titulus et stampa e fonte. UNA SEDES - sine
+ * hoc '-html' et spectator vias differentes darent et paginae eorum
+ * octetis differrent, quod nulla probatio intra processum unum videt
+ * (inventum 2026-09-11, cursu vero). */
+vacuum
+briar_optiones_plagulae (
+                 Piscina* piscina,
+      constans SilexFons* fons,
+      constans character* via,
+    BriarFabricaOptiones* optiones);
+
 /* nexus post briar_silvam_texere; octeti = plagula tota (clavis).
  * Recusatio: successus FALSUM, causa + linea_causae; nihil genitum. */
 BriarFabricaFructus

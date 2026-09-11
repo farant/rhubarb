@@ -41,8 +41,7 @@ mkdir -p bin
 echo "  [briar] tools/briar.c + corpus"
 clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     -Ibriar/fontes -Isilva/amalgama \
-    tools/briar.c build/capsula_corpus_silicis.c \
-    build/capsula_facies_briar.c $OBJ \
+    tools/briar.c build/capsula_corpus_silicis.c $OBJ \
     -o bin/briar || exit 1
 echo "aedificatum: bin/briar"
 

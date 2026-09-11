@@ -97,6 +97,14 @@ principale (vacuum)
     CREDO_CHORDA_CONTINET (imp.causa,
         chorda_ex_literis("-html", piscina));
 
+    /* briar -visio x.thistle; shebang ./x.thistle -visio (par. 4.7) */
+    CREDO_VERUM (_legere(piscina, &imp, II, "-visio", "x.thistle",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_VISIO);
+    CREDO_VERUM (_legere(piscina, &imp, II, "./x.thistle", "-visio",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_VISIO);
+
     /* briar x.thistle -- -probatio : '--' abscisum, vexillum
      * programmatis */
     CREDO_VERUM (_legere(piscina, &imp, III, "x.thistle", "--",

@@ -1237,6 +1237,65 @@ _involucrum_implere (
  * Principale moduli
  * ================================================== */
 
+/* plagula vestis e capsula; vacua si abest */
+interior chorda
+_plagulam_vestis (
+               Capsula* capsula,
+               Piscina* piscina,
+    constans character* via)
+{
+    CapsulaFructus f = capsula_legere(capsula, via, piscina);
+            chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    redde (f.status == CAPSULA_OK) ? f.datum : vacua;
+}
+
+b32
+briar_vestem_legere (
+                    Piscina* piscina,
+      constans CapsulaEmbed* capsula_infixa,
+                BriarVestis* vestis,
+                     chorda* causa)
+{
+               Capsula* capsula;
+                   i32  i;
+    constans character* viae[4];
+                chorda* campi[4];
+
+    capsula         = capsula_aperire(capsula_infixa, piscina);
+    causa->datum    = NIHIL;
+    causa->mensura  = ZEPHYRUM;
+    si (capsula == NIHIL)
+    {
+        *causa = chorda_ex_literis("vestis: capsula non aperta",
+            piscina);
+        redde FALSUM;
+    }
+    viae[0]   = "briar/facies/facies.html";
+    viae[1]   = "briar/facies/facies.css";
+    viae[2]   = "briar/facies/facies.js";
+    viae[3]   = "briar/facies/md-html-facies.stml";
+    campi[0]  = &vestis->involucrum;
+    campi[1]  = &vestis->styli;
+    campi[2]  = &vestis->scriptum;
+    campi[3]  = &vestis->exemplar;
+    per (i = ZEPHYRUM; i < (i32)4; i++)
+    {
+        *campi[i] = _plagulam_vestis(capsula, piscina, viae[i]);
+        si (campi[i]->mensura == ZEPHYRUM)
+        {
+            character b[128];
+
+            sprintf(b, "vestis: '%s' in capsula deest", viae[i]);
+            *causa = chorda_ex_literis(b, piscina);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 chorda
 briar_faciem_fingere (
                           Piscina* piscina,

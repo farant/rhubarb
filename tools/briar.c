@@ -61,21 +61,6 @@ externus constans CapsulaEmbed capsula_corpus_silicis;
  * contractus. */
 externus constans CapsulaEmbed capsula_facies_briar;
 
-/* plagula vestis e capsula; vacua si abest (vocans clamat) */
-interior chorda
-_vestem_legere (
-               Capsula* capsula,
-               Piscina* piscina,
-    constans character* via)
-{
-    CapsulaFructus f = capsula_legere(capsula, via, piscina);
-            chorda vacua;
-
-    vacua.datum    = NIHIL;
-    vacua.mensura  = ZEPHYRUM;
-    redde (f.status == CAPSULA_OK) ? f.datum : vacua;
-}
-
 #define BRIAR_VERSIO "v0"
 #define BRIAR_MORA_AEDIFICANDI_MS 600000
 
@@ -252,7 +237,6 @@ principale (
     BriarFabricaOptiones optiones;
      BriarFabricaFructus fructus;
                   chorda octeti;
-                  chorda via_plena;
      constans character* stampa;
      constans character* dir;
      constans character* binarium;
@@ -328,12 +312,7 @@ principale (
     }
     octeti.datum    = (i8*)textus;
     octeti.mensura  = mensura;
-    via_plena = via_absoluta(chorda_ex_literis(imp.via, piscina),
-        piscina);
-    optiones.via_thistle  = via_plena.mensura > ZEPHYRUM
-        ? chorda_ut_cstr(via_plena, piscina) : imp.via;
-    optiones.fons_titulus  = fons->titulus;
-    optiones.stampa        = fons->titulus;
+    briar_optiones_plagulae(piscina, fons, imp.via, &optiones);
     fructus = briar_fabricare(piscina, doc, nexus, fons, &optiones,
         octeti);
     /* '-html' recusationem TRANSIT: lex par. 4.6 F4 - pagina semper
@@ -458,6 +437,27 @@ principale (
         redde ZEPHYRUM;
         }
 
+        si (imp.actio == BRIAR_ACTIO_VISIO)
+        {
+        /* spectator binarium SEPARATUM est (par. 4.7 S1): briar
+         * sine capite manet - fenestram numquam ipse aperit, ne
+         * cursus omnis Cocoa ferat. Absens = recusatio quae eum
+         * NOMINAT et scriptum aedificans dicit. */
+        constans character* argumenta[3];
+
+        argumenta[0] = "briar-spectator";
+        argumenta[1] = optiones.via_thistle;
+        argumenta[2] = NIHIL;
+        si (!processus_transformare(argumenta))
+        {
+            fprintf(stderr, "briar: 'briar-spectator' non inventum in"
+                " PATH - ./tools/briar_spectator_struere.sh eum"
+                " aedificat\n");
+            redde I;
+        }
+        redde ZEPHYRUM;   /* numquam huc pervenitur */
+        }
+
         si (imp.actio == BRIAR_ACTIO_HTML)
         {
                   BriarVestis  vestis;
@@ -466,26 +466,12 @@ principale (
                        chorda  directorium;
            constans character* dir_paginae;
            constans character* via_paginae;
-                      Capsula* capsula;
 
-        capsula = capsula_aperire(&capsula_facies_briar, piscina);
-        si (capsula == NIHIL)
+        si (!briar_vestem_legere(piscina, &capsula_facies_briar,
+            &vestis, &causa))
         {
-            fprintf(stderr, "briar: vestis faciei non aperta\n");
-            redde I;
-        }
-        vestis.involucrum = _vestem_legere(capsula, piscina,
-            "briar/facies/facies.html");
-        vestis.styli      = _vestem_legere(capsula, piscina,
-            "briar/facies/facies.css");
-        vestis.scriptum   = _vestem_legere(capsula, piscina,
-            "briar/facies/facies.js");
-        vestis.exemplar   = _vestem_legere(capsula, piscina,
-            "briar/facies/md-html-facies.stml");
-        si (   vestis.involucrum.mensura == ZEPHYRUM
-            || vestis.exemplar.mensura   == ZEPHYRUM)
-        {
-            fprintf(stderr, "briar: vestis faciei incompleta\n");
+            fprintf(stderr, "briar: %.*s\n", (integer)causa.mensura,
+                (constans character*)causa.datum);
             redde I;
         }
         pagina = briar_faciem_fingere(piscina, intern, nexus,

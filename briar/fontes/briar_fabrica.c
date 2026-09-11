@@ -1233,6 +1233,22 @@ _clausuras_fundere (
  * Fabricare
  * ================================================== */
 
+vacuum
+briar_optiones_plagulae (
+                 Piscina* piscina,
+      constans SilexFons* fons,
+      constans character* via,
+    BriarFabricaOptiones* optiones)
+{
+    chorda plena = via_absoluta(chorda_ex_literis(via, piscina),
+        piscina);
+
+    optiones->via_thistle   = plena.mensura > ZEPHYRUM
+        ? chorda_ut_cstr(plena, piscina) : via;
+    optiones->fons_titulus  = fons->titulus;
+    optiones->stampa        = fons->titulus;
+}
+
 BriarFabricaFructus
 briar_fabricare (
                           Piscina* piscina,

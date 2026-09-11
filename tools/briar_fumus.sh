@@ -275,8 +275,25 @@ grep -q 'circulus' "$PAGINA_FRACTA" \
     || deficere "pagina fracta causam 'circulus' non nominat" "$PAGINA_FRACTA"
 echo "FUMUS:    pagina: $( wc -c < "$PAGINA" | tr -d ' ' ) octeti, contexta $N_CONTEXTA, #repositorium usus $N_USUS"
 
+# ---- XII. spectator: identitas paginae (sine fenestra) ----
+# Area EXTRA repositorium est, ergo briar et spectator corpus INFIXUM
+# idem legunt - et identitas octetorum sensum habet. (Intra arborem
+# briar corpus DISCI legit, ergo stampa et clavis differunt: identitas
+# 'eodem corpore' valet, non absolute.)
+if command -v briar-spectator >/dev/null 2>&1; then
+    echo "FUMUS: XII. briar-spectator -parare (identitas contra -html)"
+    SPEC_PAGINA="$( cd "$AREA" && briar-spectator -parare salutatio2.thistle 2>"$AREA/spectator.err" | tail -1 )" \
+        || deficere "spectator -parare defecit" "$AREA/spectator.err"
+    [ -s "$SPEC_PAGINA" ] || deficere "pagina spectatoris vacua" "$AREA/spectator.err"
+    cmp -s "$SPEC_PAGINA" "$AREA/salutatio2.html" \
+        || deficere "pagina spectatoris et pagina '-html' DIFFERUNT - artificium unum esse debet" "$AREA/spectator.err"
+    echo "FUMUS:    identitas: $( wc -c < "$SPEC_PAGINA" | tr -d ' ' ) octeti, octetim aequales"
+else
+    echo "FUMUS: XII. OMISSA (briar-spectator non institutus)"
+fi
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"

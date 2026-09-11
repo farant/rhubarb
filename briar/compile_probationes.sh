@@ -39,6 +39,11 @@ mkdir -p "$BUILD_DIR"
 source "$RADIX_DIR/tools/corpus_infixum.sh"
 ( cd "$RADIX_DIR" && corpus_symbola_generare ) || { echo "FRACTA: corpus.symbola.tsv" ; exit 1; }
 
+# vestis faciei infixa: porta spectatoris eam contra plagulas discI
+# confert (capsula stala = vitium verum, non molestia)
+source "$RADIX_DIR/tools/briar_facies_capsula.sh"
+( cd "$RADIX_DIR" && briar_facies_capsula_regenerare ) || { echo "FRACTA: capsula faciei" ; exit 1; }
+
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
@@ -203,6 +208,17 @@ for base in md_registrum md_lexicon md_lexema md_arbor md_inlinea md_decoctum md
     fi
     obj_files="$obj_files $obj"
 done
+
+# capsula vestis (generata in build/ radicis)
+src="$RADIX_DIR/build/capsula_facies_briar.c"
+obj="$BUILD_DIR/capsula_facies_briar.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
+    echo "  [capsula] capsula_facies_briar.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
+        echo "FRACTA: capsula_facies_briar.c" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
 
 for src in "$BRIAR_DIR"/fontes/*.c; do
     base="$(basename "$src" .c)"

@@ -30,6 +30,7 @@
 #include "xar.h"
 #include "internamentum.h"
 #include "briar_fabrica.h"
+#include "capsula.h"
 
 /* involucrum notas sex fert, quaeque semel substituta:
  * titulus, styli, caput, corpus, symbola, scriptum.
@@ -40,6 +41,18 @@ nomen structura {
     chorda scriptum;    /* facies.js */
     chorda exemplar;    /* md/html/md-html.stml (programma md_html) */
 } BriarVestis;
+
+/* vestem e capsula infixa legere (quattuor plagulae sub
+ * 'briar/facies/'). UNA SEDES pro omni consumptore - binarium et
+ * spectator eandem vocant, ergo pagina quam ille ostendit et pagina
+ * quam iste scribit eaedem sunt PER CONSTRUCTIONEM, non per fidem.
+ * FALSUM + causa si plagula deest. */
+b32
+briar_vestem_legere (
+                    Piscina* piscina,
+      constans CapsulaEmbed* capsula,
+                BriarVestis* vestis,
+                     chorda* causa);
 
 /* pagina una; vacua + causa si vestis vitiosa est */
 chorda

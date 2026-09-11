@@ -3,7 +3,8 @@
  *
  * Forma: briar [-vexillum] [-f <radix>] <x.thistle> [argumenta...]
  * Ante plagulam: -probatio -struere [-iterum] -arbor -partes -amalgama
- * -html -versio -auxilium/-h, -f <radix>; aliud '-...' = recusatio
+ * -html -visio -versio -auxilium/-h, -f <radix>; aliud '-...' =
+ * recusatio
  * (spiritus optionum declaratarum). Post plagulam argumentum PRIMUM
  * solum inspicitur: unum e septem vexillis actionis = actio (shebang
  * './x.thistle -probatio'); '--' = finis vexillorum (abscisum);
@@ -33,6 +34,7 @@ nomen enumeratio {
     BRIAR_ACTIO_PARTES,        /* -partes */
     BRIAR_ACTIO_AMALGAMA,      /* -amalgama: plagula una (effugium) */
     BRIAR_ACTIO_HTML,          /* -html: pagina litterata (par. 4.6) */
+    BRIAR_ACTIO_VISIO,         /* -visio: spectator (par. 4.7) */
     BRIAR_ACTIO_VERSIO,        /* -versio (sine plagula) */
     BRIAR_ACTIO_AUXILIUM       /* -auxilium / -h (sine plagula) */
 } BriarActio;
