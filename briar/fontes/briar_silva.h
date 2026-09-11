@@ -33,11 +33,20 @@
 #include "silva.h"
 #include "briar_nexus.h"
 
+/* symbolum cuius caput DERIVATUM est: par (titulus, caput). Plagula
+ * inclusionem non scribit, ergo lector signum non habet quo sciat
+ * unde nomen veniat - hoc par id reddit (facies par. 4.6 F5). */
+nomen structura {
+    chorda titulus;
+    chorda caput;    /* 'piscina.h', sine 'include/' */
+} BriarSymbolumDerivatum;
+
 nomen structura BriarSilva {
              SilvaPiscina* piscina;     /* arena silvae (solvere!) */
     constans SilvaParsura* parsura;     /* NIHIL si parsura fracta */
            SilvaSemantica* semantica;   /* symbola + typi */
                       Xar* capita_derivata;   /* chorda, alphabetice */
+                      Xar* symbola_derivata; /* pares derivati */
 } BriarSilva;
 
 /* Regiones 'c' (quocumque munere) parsare. Reddit numerum regionum

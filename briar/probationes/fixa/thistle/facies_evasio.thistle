@@ -1,0 +1,18 @@
+#!/usr/bin/env briar
+# Facies evasio
+
+Prose may contain markup that must never reach the page as markup:
+a <script>alert(1)</script> tag, an ampersand `&amp;`, and a quoted
+"citation". The C below carries the same hazards in string literals.
+
+<c!>
+s32
+principale (vacuum)
+{
+    constans character* a = "</script><script>alert(1)</script>";
+    constans character* b = "& < > \" ampersand et anguli";
+
+    imprimere("%s %s\n", a, b);
+    redde ZEPHYRUM;
+}
+</c>

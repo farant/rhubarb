@@ -262,7 +262,8 @@ _caput_addere (
             chorda  symbolum,
                Xar* capita,
     TabulaDispersa* visa,
-    TabulaDispersa* definita)
+    TabulaDispersa* definita,
+               Xar* pares)
 {
     vacuum* caput    = NIHIL;
     vacuum* alterum  = NIHIL;
@@ -303,6 +304,19 @@ _caput_addere (
         r->causa          = chorda_aedificator_finire(aed);
         r->linea_erroris  = r->linea_initium - I;
         redde FALSUM;
+    }
+    /* par symboli servatur ANTE plicationem capitum: capita unica
+     * sunt, symbola multa idem caput habent */
+    si (pares != NIHIL)
+    {
+        BriarSymbolumDerivatum* par = (BriarSymbolumDerivatum*)
+            xar_addere(pares);
+
+        si (par != NIHIL)
+        {
+            par->titulus  = symbolum;
+            par->caput    = *(chorda*)caput;
+        }
     }
     si (!tabula_dispersa_continet(visa, *(chorda*)caput))
     {
@@ -355,7 +369,8 @@ _capita_derivare (
     BriarNexusRes* r,
        BriarSilva* arbor_silvae,
               Xar* capita,
-   TabulaDispersa* definita)
+   TabulaDispersa* definita,
+              Xar* pares)
 {
         TabulaDispersa* visa;
     insignatus integer  k;
@@ -373,7 +388,7 @@ _capita_derivare (
                     && !_caput_addere(piscina, t, r,
                     _silva_chorda_ut_chorda(piscina, s->titulus),
                     capita, visa,
-                    definita))
+                    definita, pares))
                 {
             redde FALSUM;
                 }
@@ -403,7 +418,7 @@ _capita_derivare (
                     _detondere(chorda_sectio(
                     r->textus_silvae, (i32)minimum, (i32)maximum)),
                     capita,
-                    visa, definita))
+                    visa, definita, pares))
                 {
             redde FALSUM;
                 }
@@ -478,9 +493,10 @@ _parsare (
     {
         redde FALSUM;
     }
-    arbor_silvae->parsura          = NIHIL;
-    arbor_silvae->semantica        = NIHIL;
-    arbor_silvae->capita_derivata  = NIHIL;
+    arbor_silvae->parsura           = NIHIL;
+    arbor_silvae->semantica         = NIHIL;
+    arbor_silvae->capita_derivata   = NIHIL;
+    arbor_silvae->symbola_derivata  = NIHIL;
     arbor_silvae->piscina   =
         silva_piscina_generare_dynamicum("briar_silva",
         (size_t)8388608);
@@ -599,20 +615,24 @@ _regionem_derivare (
         TabulaDispersa* definita)
 {
     Xar* capita = xar_creare(piscina, (i32)magnitudo(chorda));
+    Xar* pares  = xar_creare(piscina,
+        (i32)magnitudo(BriarSymbolumDerivatum));
 
     si (   r->silva            == NIHIL || r->silva->parsura == NIHIL
         || r->silva->semantica == NIHIL || !symbola->adest)
     {
         si (r->silva != NIHIL)
         {
-            r->silva->capita_derivata = capita;
+            r->silva->capita_derivata   = capita;
+            r->silva->symbola_derivata  = pares;
         }
         redde VERUM;
     }
     si (!_capita_derivare(piscina, symbola, r, r->silva, capita,
-        definita))
+        definita, pares))
     {
-        r->silva->capita_derivata = capita;
+        r->silva->capita_derivata   = capita;
+        r->silva->symbola_derivata  = pares;
         redde VERUM;   /* ambiguum: causa + linea posita, arbor manet */
     }
     si (xar_numerus(capita) > ZEPHYRUM)
@@ -625,7 +645,8 @@ _regionem_derivare (
     }
     si (r->silva != NIHIL)
     {
-        r->silva->capita_derivata = capita;
+        r->silva->capita_derivata   = capita;
+        r->silva->symbola_derivata  = pares;
     }
     redde VERUM;
 }

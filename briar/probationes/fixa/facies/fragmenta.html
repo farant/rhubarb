@@ -46,7 +46,7 @@ probatio; one fragment carries an include; one is never used.</p></section>
 <pre class="fr-c"><code><span class="fr-linea" id="l32" data-n="32"><a class="fr-transclusio" href="#frag-capita">&lt;&lt;#capita&gt;&gt;</a></span>
 <span class="fr-linea" id="l33" data-n="33"></span>
 <span class="fr-linea" id="l34" data-n="34"><span class="ca-sy-genus">i32</span></span>
-<span class="fr-linea" id="l35" data-n="35">summare (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">i32</span>* numeri, <span class="ca-sy-genus">i32</span> n)</span>
+<span class="fr-linea" id="l35" data-n="35"><a class="fr-sym" href="#l35">summare</a> (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">i32</span>* numeri, <span class="ca-sy-genus">i32</span> n)</span>
 <span class="fr-linea" id="l36" data-n="36">{</span>
 <span class="fr-linea" id="l37" data-n="37">    <span class="ca-sy-genus">i32</span> summa = <span class="ca-sy-numerus">ZEPHYRUM</span>;</span>
 <span class="fr-linea" id="l38" data-n="38">    <span class="ca-sy-genus">i32</span> i;</span>
@@ -67,7 +67,7 @@ probatio; one fragment carries an include; one is never used.</p></section>
 <span class="fr-linea" id="l53" data-n="53">    numeri[<span class="ca-sy-numerus">2</span>] = III;</span>
 <span class="fr-linea" id="l54" data-n="54">    imprimere(<span class="ca-sy-chorda">&quot;%.*s: %d\n&quot;</span>, (<span class="ca-sy-genus">integer</span>)salutatio.mensura,</span>
 <span class="fr-linea" id="l55" data-n="55">        (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">character</span>*)salutatio.datum,</span>
-<span class="fr-linea" id="l56" data-n="56">        (<span class="ca-sy-genus">integer</span>)summare(numeri, III));</span>
+<span class="fr-linea" id="l56" data-n="56">        (<span class="ca-sy-genus">integer</span>)<a class="fr-sym" href="#l35">summare</a>(numeri, III));</span>
 <span class="fr-linea" id="l57" data-n="57">    piscina_destruere(piscina);</span>
 <span class="fr-linea" id="l58" data-n="58">    <span class="ca-sy-clavis">redde</span> <span class="ca-sy-numerus">ZEPHYRUM</span>;</span>
 <span class="fr-linea" id="l59" data-n="59">}</span>
@@ -77,7 +77,7 @@ probatio; one fragment carries an include; one is never used.</p></section>
 <pre class="fr-c"><code><span class="fr-linea"><a class="fr-numerus" href="#l20" data-n="20"></a><span class="ca-sy-praeprocessor">#include &quot;chorda.h&quot;</span></span>
 <span class="fr-linea"><a class="fr-numerus" href="#l33" data-n="33"></a></span>
 <span class="fr-linea"><a class="fr-numerus" href="#l34" data-n="34"></a><span class="ca-sy-genus">i32</span></span>
-<span class="fr-linea"><a class="fr-numerus" href="#l35" data-n="35"></a>summare (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">i32</span>* numeri, <span class="ca-sy-genus">i32</span> n)</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l35" data-n="35"></a><a class="fr-sym" href="#l35">summare</a> (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">i32</span>* numeri, <span class="ca-sy-genus">i32</span> n)</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l36" data-n="36"></a>{</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l37" data-n="37"></a>    <span class="ca-sy-genus">i32</span> summa = <span class="ca-sy-numerus">ZEPHYRUM</span>;</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l38" data-n="38"></a>    <span class="ca-sy-genus">i32</span> i;</span>
@@ -101,7 +101,7 @@ probatio; one fragment carries an include; one is never used.</p></section>
 <span class="fr-linea"><a class="fr-numerus" href="#l53" data-n="53"></a>    numeri[<span class="ca-sy-numerus">2</span>] = III;</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l54" data-n="54"></a>    imprimere(<span class="ca-sy-chorda">&quot;%.*s: %d\n&quot;</span>, (<span class="ca-sy-genus">integer</span>)salutatio.mensura,</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l55" data-n="55"></a>        (<span class="ca-sy-clavis">constans</span> <span class="ca-sy-genus">character</span>*)salutatio.datum,</span>
-<span class="fr-linea"><a class="fr-numerus" href="#l56" data-n="56"></a>        (<span class="ca-sy-genus">integer</span>)summare(numeri, III));</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l56" data-n="56"></a>        (<span class="ca-sy-genus">integer</span>)<a class="fr-sym" href="#l35">summare</a>(numeri, III));</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l57" data-n="57"></a>    piscina_destruere(piscina);</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l58" data-n="58"></a>    <span class="ca-sy-clavis">redde</span> <span class="ca-sy-numerus">ZEPHYRUM</span>;</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l59" data-n="59"></a>}</span>
@@ -122,7 +122,7 @@ probatio; one fragment carries an include; one is never used.</p></section>
 <span class="fr-linea" id="l73" data-n="73">    numeri[<span class="ca-sy-numerus">1</span>] = II;</span>
 <span class="fr-linea" id="l74" data-n="74">    numeri[<span class="ca-sy-numerus">2</span>] = III;</span>
 <span class="fr-linea" id="l75" data-n="75">    credo_aperire(piscina);</span>
-<span class="fr-linea" id="l76" data-n="76">    CREDO_AEQUALIS_I32(summare(numeri, III), VI);</span>
+<span class="fr-linea" id="l76" data-n="76">    CREDO_AEQUALIS_I32(<a class="fr-sym" href="#l35">summare</a>(numeri, III), VI);</span>
 <span class="fr-linea" id="l77" data-n="77">    CREDO_AEQUALIS_I32(salutatio.mensura, XVI);</span>
 <span class="fr-linea" id="l78" data-n="78">    credo_imprimere_compendium();</span>
 <span class="fr-linea" id="l79" data-n="79">    <span class="ca-sy-clavis">redde</span> credo_omnia_praeterierunt() ? <span class="ca-sy-numerus">ZEPHYRUM</span> : I;</span>
@@ -143,7 +143,7 @@ probatio; one fragment carries an include; one is never used.</p></section>
 <span class="fr-linea"><a class="fr-numerus" href="#l73" data-n="73"></a>    numeri[<span class="ca-sy-numerus">1</span>] = II;</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l74" data-n="74"></a>    numeri[<span class="ca-sy-numerus">2</span>] = III;</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l75" data-n="75"></a>    credo_aperire(piscina);</span>
-<span class="fr-linea"><a class="fr-numerus" href="#l76" data-n="76"></a>    CREDO_AEQUALIS_I32(summare(numeri, III), VI);</span>
+<span class="fr-linea"><a class="fr-numerus" href="#l76" data-n="76"></a>    CREDO_AEQUALIS_I32(<a class="fr-sym" href="#l35">summare</a>(numeri, III), VI);</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l77" data-n="77"></a>    CREDO_AEQUALIS_I32(salutatio.mensura, XVI);</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l78" data-n="78"></a>    credo_imprimere_compendium();</span>
 <span class="fr-linea"><a class="fr-numerus" href="#l79" data-n="79"></a>    <span class="ca-sy-clavis">redde</span> credo_omnia_praeterierunt() ? <span class="ca-sy-numerus">ZEPHYRUM</span> : I;</span>
@@ -168,5 +168,6 @@ probatio; one fragment carries an include; one is never used.</p></section>
 </ul>
 </footer>
 
+<script type="application/json" id="fr-symbola">{}</script>
 
 <script></script>

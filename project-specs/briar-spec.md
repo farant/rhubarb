@@ -626,6 +626,7 @@ dropped:
 | F3 where the markup lives | three chrome files embedded verbatim (`briar/facies/facies.{html,css,js}`), a generated body, a JSON island | an STML template program (md_html's shape — macro expansion to move a div); HTML built in C string literals (speculum's scar: "JS-in-C-strings… Latin leaks in") |
 | F4 a file that does not build | always render; each refusal pinned at its thistle line | render only what fabricates; a vitia strip as the primary way to read briar's diagnostics (arrives on its own if wanted) |
 | F5 symbol depth | the file's own symbols, plus the declaration of every library symbol it uses | library **definitions** — no `lib/*.c` is parsed today, and eagerly parsing a closure to answer clicks nobody makes is the wrong trade; this is what step 2 is for (§9) |
+| F6 raw HTML in prose (2026-09-11) | **escaped**: prose HTML is text, through a briar-owned projection `briar/facies/md-html-facies.stml` differing from md's in exactly three `CASUS` arms (a drift gate holds that) | markdown's passthrough. Rejected because the format ALREADY refuses block-level HTML at column 0 (the lexer reads it as an STML element with a vitium), so passthrough would accept inline HTML while refusing block HTML — an accident of two layers meeting, not a rule. Escaping gives one statable rule: HTML in prose is text, HTML lives in regions. It is also the reversible direction — loosening later is free, tightening later breaks files already written |
 
 **Words.** The rendered page is the *facies* — the word house prose
 already uses for a front end (the laboratorium's experiment
@@ -738,6 +739,29 @@ gate must run it without a window appearing, and the shebang form
 reads only the first flag after the file (`briar_imperium.h`), so
 `./x.thistle -html -aperire` could not work. Opening is `open
 x.html`; in step 2 a second verb, `-visio`, writes and shows.
+
+**As built (T1–T3, 2026-09-05/11), deviations each measured:** head
+matter carries no generation time — a byte golden cannot hold a clock,
+so provenance is the source path plus the fabrica's content key, which
+identifies the content better than a timestamp would · the island
+carries the symbols briar **derived**, not every library symbol: those
+are exactly the names with no `#include` line for the reader to look
+at, the cost `salutatio2.thistle` pays back by hand in a table it warns
+may drift; a symbol from an explicitly included header gets nothing,
+because the signal is already three lines up · the `(symbol → header)`
+pairing comes from `briar_silva`, which already computed and discarded
+it (`BriarSymbolumDerivatum`) · the gutter is `data-n` drawn by CSS
+`::before`, so what a reader copies is code, not code-with-line-numbers;
+woven lines carry no `id` (they would collide with the as-written ones)
+and their number is an EMPTY anchor — copy stays clean, link still
+works without JavaScript · **the fabrica's cause is a FALLBACK**: when
+any region carries its own cause the regions own the diagnostics —
+found by a planted fault that reddened only ONE assertion because the
+page-level aside was duplicating the region-level one · five refusal
+fixtures are asserted against briar's OWN `causa` and `linea_erroris`
+rather than pinned as goldens (less brittle, and it tests the
+relationship rather than the bytes); `circulus.html` is pinned as the
+one representative.
 
 **Gates**, in two layers that fail for different reasons.
 *Structural invariants*, checked over a real lex of the page with
@@ -1017,7 +1041,22 @@ and silva in-process, so it parses the one file clicked, when it is
 clicked); whether the viewer is itself a `.thistle` carried in the
 corpus — briar building its reader with briar — is a step-2 decision
 · the facies alternatives reserved at F2 (two panes, tabs), F3 (an
-STML template program), F4 (a vitia strip as the diagnostic reader)
+STML template program), F4 (a vitia strip as the diagnostic reader) ·
+**per-tag policy for prose HTML** (F6's reserved half): an allowlist —
+`<kbd>`, `<abbr>`, `<sub>`, `<sup>`, `<mark>` rendered, everything else
+escaped — is one `CASUS` per permitted tag, the shape heading levels
+already use. It needs ONE thing md does not do yet: record the tag
+name in the node. **md already SCANS it** (`md_lexema.c` matches
+`TAGI_CRUDI` and the 62 `TAGI_BLOCORUM` to classify CommonMark's block
+types; `md_inlinea.c` walks the name to find the tag boundary) and
+then discards it — so this is EXPOSURE, not a parser extension, and
+cannot change how any existing markdown parses. Answer a real want in
+this order: does markdown already cover it (usually — `code`, `em`,
+`strong`, `del`, tables with alignment, fenced blocks with a language);
+should briar MINT it (heading anchors, a definition-list treatment for
+glossaries — the facies generates the page, so those are its job);
+only then the allowlist · migrating `md-html-facies.stml` to
+`md/html/` as a general safe projection, if a second consumer wants one
 
 Cross-references: ludus-brainstorm.md §XII (codex L5 and the
 `<tractator/>` vocabulary briar deliberately does not reuse);

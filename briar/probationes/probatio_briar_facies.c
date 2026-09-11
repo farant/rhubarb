@@ -19,6 +19,7 @@
 #include "briar_nexus.h"
 #include "briar_silva.h"
 #include "chorda.h"
+#include "chorda_aedificator.h"
 #include "filum.h"
 #include "html_lexema.h"
 #include "internamentum.h"
@@ -101,6 +102,46 @@ _texere (
         chorda_ex_literis(b, piscina), piscina), piscina);
 }
 
+/* causam ut in pagina apparet: evasa. Causae '->' et '<<#x>>' ferunt,
+ * ergo comparatio cruda semper falleret - et evasio ipsa probanda
+ * est, non praetereunda */
+interior constans character*
+_evasum (
+               Piscina* piscina,
+                chorda  t)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)256);
+                   i32 k;
+
+    per (k = ZEPHYRUM; k < t.mensura; k++)
+    {
+        character c = (character)t.datum[k];
+
+        si (c == '&')
+        {
+            chorda_aedificator_appendere_literis(a, "&amp;");
+        }
+        alioquin si (c == '<')
+        {
+            chorda_aedificator_appendere_literis(a, "&lt;");
+        }
+        alioquin si (c == '>')
+        {
+            chorda_aedificator_appendere_literis(a, "&gt;");
+        }
+        alioquin si (c == '"')
+        {
+            chorda_aedificator_appendere_literis(a, "&quot;");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_character(a, c);
+        }
+    }
+    redde chorda_ut_cstr(chorda_aedificator_finire(a), piscina);
+}
+
 interior s32
 _numerare (
                Piscina* piscina,
@@ -126,6 +167,40 @@ _continet (
     constans character* acus)
 {
     redde (b32)(strstr(chorda_ut_cstr(fenum, piscina), acus) != NIHIL);
+}
+
+/* lineae 'CASUS' plagulae exemplaris, ordine, detonsae */
+interior Xar*
+_lineae_casuum (
+    Piscina* piscina,
+     chorda  textus)
+{
+    Xar* lineae = xar_creare(piscina, magnitudo(chorda));
+    i32  cursor = ZEPHYRUM;
+
+    dum (cursor < textus.mensura)
+    {
+           i32 finis = cursor;
+        chorda linea;
+
+        dum (finis < textus.mensura && textus.datum[finis] != (i8)'\n')
+        {
+            finis = finis + I;
+        }
+        linea.datum    = textus.datum + cursor;
+        linea.mensura  = finis - cursor;
+        dum (linea.mensura > ZEPHYRUM && linea.datum[0] == (i8)' ')
+        {
+            linea.datum    = linea.datum + I;
+            linea.mensura  = linea.mensura - I;
+        }
+        si (_continet(piscina, linea, "<CASUS"))
+        {
+            *(chorda*)xar_addere(lineae) = linea;
+        }
+        cursor = (finis < textus.mensura) ? finis + I : finis;
+    }
+    redde lineae;
 }
 
 /* plagulam thistle in paginam vertere; nexus/fragmenta redduntur */
@@ -180,8 +255,8 @@ _paginam_fingere (
         piscina);
     vestis.styli     = vacua;
     vestis.scriptum  = vacua;
-    vestis.exemplar   = filum_legere_totum("md/html/md-html.stml",
-        piscina);
+    vestis.exemplar   = filum_legere_totum(
+        "briar/facies/md-html-facies.stml", piscina);
     CREDO_VERUM (vestis.exemplar.mensura > ZEPHYRUM);
     redde briar_faciem_fingere(piscina, intern, nexus, fragmenta,
         &fructus, octeti, via, &vestis, causa);
@@ -199,6 +274,7 @@ nomen structura {
     i32 nexus_fragmentorum;         /* href ad "#frag-" */
     i32 nexus_pendentes;    /* sine sede pari */
     i32 data_s;             /* attributum data-s */
+    i32 data_s_absentia;    /* clavis in insula symbolorum deest */
     i32 contexta;            /* elementa details: textus contexti */
 } FaciesCensus;
 
@@ -581,6 +657,166 @@ principale (vacuum)
                 }
             }
         }
+    }
+
+    imprimere("\n--- Probans symbola ---\n");
+    {
+         Xar* nexus;
+         Xar* fragmenta;
+      chorda  causa;
+      chorda  pagina = _paginam_fingere(piscina, intern, fons,
+          _texere(piscina, FIXA, "fragmenta_derivata.thistle"), &nexus,
+          &fragmenta, &causa);
+      FaciesCensus c;
+
+        CREDO_CHORDA_VACUA (causa);
+        c = _censere(piscina, pagina);
+        /* insula NON vacua: sine hoc 'omne data-s in insula est'
+         * nihil probat (zephyrum ex zephyro congruit) */
+        CREDO_MAIOR_S32 ((s32)c.data_s, (s32)0);
+        CREDO_AEQUALIS_S32 ((s32)c.data_s_absentia, (s32)0);
+        /* symbolum DERIVATUM: piscina_generare_dynamicum caput suum
+         * nusquam in plagula habet - hoc est pretium quod pagina
+         * reddit */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "data-s=\"piscina_generare_dynamicum\""));
+        CREDO_VERUM (_continet(piscina, pagina,
+            "\"piscina_generare_dynamicum\":{\"caput\":\"piscina.h\""));
+    }
+
+    imprimere("\n--- Probans symbola domestica ---\n");
+    {
+         Xar* nexus;
+         Xar* fragmenta;
+      chorda  causa;
+      chorda  pagina = _paginam_fingere(piscina, intern, fons,
+          _texere(piscina, FIXA, "fragmenta.thistle"), &nexus,
+          &fragmenta, &causa);
+
+        CREDO_CHORDA_VACUA (causa);
+        /* 'summare' linea XXXV definitum, linea LVI adhibitum ->
+         * ancora ad sedem, non data-s (plagula eam ipsa definit) */
+        CREDO_VERUM (_continet(piscina, pagina,
+            "<a class=\"fr-sym\" href=\"#l35\">summare</a>"));
+    }
+
+    imprimere("\n--- Probans evasionem ---\n");
+    {
+         Xar* nexus;
+         Xar* fragmenta;
+      chorda  causa;
+      chorda  pagina = _paginam_fingere(piscina, intern, fons,
+          _texere(piscina, FIXA, "facies_evasio.thistle"), &nexus,
+          &fragmenta, &causa);
+
+        CREDO_CHORDA_VACUA (causa);
+        /* nullum '<script' praeter involucri proprium (vestis
+         * probatoria unum fert) */
+        /* unum '<script>' nudum (involucri); insula '<script type=
+         * "application/json"' est - iners, nihil exsequitur */
+        CREDO_AEQUALIS_S32 (_numerare(piscina, pagina, "<script>"),
+            (s32)1);
+        CREDO_AEQUALIS_S32 (_numerare(piscina, pagina,
+            "<script type=\"application/json\""), (s32)1);
+        CREDO_FALSUM (_continet(piscina, pagina, "alert(1)</script>"));
+        CREDO_VERUM (_continet(piscina, pagina, "&lt;/script&gt;"));
+        CREDO_VERUM (_continet(piscina, pagina, "&amp; &lt; &gt;"));
+    }
+
+    imprimere("\n--- Probans recusationes (adversa) ---\n");
+    {
+        constans character* adversa[6];
+                       i32  v;
+
+        adversa[0] = "adversa/fragmentum_absens.thistle";
+        adversa[1] = "adversa/fragmentum_circulus.thistle";
+        adversa[2] = "adversa/fragmentum_iteratum.thistle";
+        adversa[3] = "adversa/fragmentum_munus.thistle";
+        adversa[4] = "adversa/fragmentum_sine_id.thistle";
+        adversa[5] = "adversa/transclusio_malformata.thistle";
+        per (v = ZEPHYRUM; v < (i32)6; v++)
+        {
+             Xar* nexus;
+             Xar* fragmenta;
+          chorda  causa;
+          chorda  pagina = _paginam_fingere(piscina, intern, fons,
+              _texere(piscina, FIXA, adversa[v]), &nexus, &fragmenta,
+              &causa);
+             i32 recusationes = ZEPHYRUM;
+             i32 j;
+
+            /* LEX F4: pagina SEMPER redditur */
+            CREDO_CHORDA_VACUA (causa);
+            CREDO_VERUM (pagina.mensura > ZEPHYRUM);
+            /* causa cuiusque regionis fractae in pagina stat, ad
+             * lineam suam affixa */
+            per (j = ZEPHYRUM; j < xar_numerus(nexus); j++)
+            {
+                constans BriarNexusRes* r = (constans BriarNexusRes*)
+                    xar_obtinere(nexus, j);
+                character b[64];
+
+                si (r->linea_erroris <= ZEPHYRUM)
+                {
+                    perge;
+                }
+                recusationes = recusationes + I;
+                CREDO_VERUM (_continet(piscina, pagina,
+                    _evasum(piscina, r->causa)));
+                sprintf(b, "data-linea=\"%d\"",
+                    (integer)r->linea_erroris);
+                CREDO_VERUM (_continet(piscina, pagina, b));
+            }
+            /* numerare, non absentiam: fixtura sine recusatione
+             * hanc sectionem tacite praeteriret */
+            CREDO_MAIOR_S32 ((s32)recusationes, (s32)0);
+            /* unum aurum repraesentativum: lex F4 concrete pinnata
+             * (ceterae quinque per causam+lineam ex briar ipso
+             * probatae - aurea sex markup mutato omnia caderent) */
+            si (v == I)
+            {
+                _aurum_conferre(piscina, pagina, "circulus.html");
+            }
+        }
+    }
+
+    imprimere("\n--- Probans derivam exemplarium ---\n");
+    {
+        /* duo exemplaria per annos taciti divergent: porta differentiam
+         * ad tria bracchia html CONSTRINGIT. Lineae 'CASUS' ambarum
+         * comparantur; quae differunt 'html' nominare DEBENT. */
+        chorda domus  = filum_legere_totum("md/html/md-html.stml",
+            piscina);
+        chorda facies = filum_legere_totum(
+            "briar/facies/md-html-facies.stml", piscina);
+            Xar* ld;
+            Xar* lf;
+            i32  i;
+            i32  divergentes = ZEPHYRUM;
+
+        CREDO_VERUM (domus.mensura  > ZEPHYRUM);
+        CREDO_VERUM (facies.mensura > ZEPHYRUM);
+        ld = _lineae_casuum(piscina, domus);
+        lf = _lineae_casuum(piscina, facies);
+        CREDO_AEQUALIS_S32 ((s32)xar_numerus(ld),
+            (s32)xar_numerus(lf));
+        CREDO_MAIOR_S32 ((s32)xar_numerus(ld), (s32)30);
+        per (i = ZEPHYRUM; i < xar_numerus(ld)
+            && i < xar_numerus(lf); i++)
+        {
+            chorda a = *(chorda*)xar_obtinere(ld, i);
+            chorda b = *(chorda*)xar_obtinere(lf, i);
+
+            si (chorda_aequalis(a, b))
+            {
+                perge;
+            }
+            divergentes = divergentes + I;
+            /* linea divergens html nominet - aliter deriva est */
+            CREDO_VERUM (_continet(piscina, a, "html"));
+            CREDO_VERUM (_continet(piscina, b, "html"));
+        }
+        CREDO_AEQUALIS_S32 ((s32)divergentes, (s32)3);
     }
 
     credo_imprimere_compendium();

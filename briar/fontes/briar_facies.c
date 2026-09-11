@@ -13,12 +13,14 @@
 
 #include "briar_arbor.h"
 #include "briar_nexus.h"
+#include "briar_silva.h"
 #include "briar_registrum.h"
 #include "chorda_aedificator.h"
 #include "briar_contextus.h"
 #include "md_html.h"
 #include "silex.h"
 #include "silva.h"
+#include "tabula_dispersa.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -137,10 +139,21 @@ interior constans character* constans _constantia_nota[] = {
     "NIHIL", "VERUM", "FALSUM", "ZEPHYRUM", NIHIL };
 
 nomen structura {
-                    i32  ab;   /* columna octetorum in linea */
-                    i32  ad;
-     constans character* cl;
+                     i32  ab;   /* columna octetorum in linea */
+                     i32  ad;
+      constans character* cl;   /* classis coloris; NIHIL = nulla */
+                  chorda  ancora;    /* '#l35': symbolum domesticum */
+                  chorda  symbolum;  /* data-s: symbolum derivatum */
 } BriarTectum;
+
+/* symbola paginae: domestica (titulus -> linea .thistle) et derivata
+ * (titulus -> caput). Derivata SOLA in insulam eunt - ea sunt quorum
+ * provenientia in plagula INVISIBILIS est, quia briar inclusionem
+ * derivavit et lector lineam quam legat non habet. */
+nomen structura {
+    TabulaDispersa* domestica;
+    TabulaDispersa* derivata;
+} BriarSymbolaPaginae;
 
 interior b32
 _in_tabula (
@@ -205,6 +218,18 @@ _classis (
     redde NIHIL;
 }
 
+interior BriarTectum*
+_tectum_ultimum (
+    Xar* tecta_lineae)
+{
+    si (tecta_lineae == NIHIL || xar_numerus(tecta_lineae) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    redde (BriarTectum*)xar_obtinere(tecta_lineae,
+        xar_numerus(tecta_lineae) - I);
+}
+
 interior vacuum
 _tectum_addere (
                    Xar* tecta_lineae,
@@ -223,9 +248,13 @@ _tectum_addere (
     {
         redde;
     }
-    t->ab = ab;
-    t->ad = ad;
-    t->cl = cl;
+    t->ab                = ab;
+    t->ad                = ad;
+    t->cl                = cl;
+    t->ancora.datum      = NIHIL;
+    t->ancora.mensura    = ZEPHYRUM;
+    t->symbolum.datum    = NIHIL;
+    t->symbolum.mensura  = ZEPHYRUM;
 }
 
 /* extensionem [off, fin) octetorum trans lineas SECARE: commentarium
@@ -261,9 +290,10 @@ _extensionem_addere (
 /* tecta per lineam: Xar de (Xar* de BriarTectum) */
 interior Xar*
 _tecta_computare (
-          Piscina* piscina,
-     SilvaPiscina* silva_piscina,
-           chorda  textus)
+                         Piscina* piscina,
+                    SilvaPiscina* silva_piscina,
+                          chorda  textus,
+    constans BriarSymbolaPaginae* symbola)
 {
           Xar* tecta;
           Xar* cruda;
@@ -346,6 +376,52 @@ _tecta_computare (
             perge;
         }
         cl = _classis(t);
+        si (   cl       == NIHIL
+            && t->genus == SILVA_LEX_IDENTIFICATOR
+            && symbola  != NIHIL)
+        {
+                    chorda  titulus;
+                    vacuum* valor = NIHIL;
+                       Xar* linea_tecta = *(Xar**)xar_obtinere(tecta,
+                           (i32)t->linea - I);
+              BriarTectum* tectum;
+
+            titulus.datum    = (i8*)t->valor.datum;
+            titulus.mensura  = (i32)t->valor.mensura;
+            si (   symbola->domestica != NIHIL
+                && tabula_dispersa_invenire(symbola->domestica,
+                    titulus, &valor))
+            {
+                character b[32];
+
+                sprintf(b, "#l%d", (integer)*(i32*)valor);
+                _tectum_addere(linea_tecta,
+                    (i32)t->byte_offset - initia[t->linea - I],
+                    (i32)t->byte_offset + (i32)t->longitudo
+                    - initia[t->linea - I], NIHIL);
+                tectum = _tectum_ultimum(linea_tecta);
+                si (tectum != NIHIL)
+                {
+                    tectum->ancora = chorda_ex_literis(b, piscina);
+                }
+                perge;
+            }
+            si (   symbola->derivata != NIHIL
+                && tabula_dispersa_invenire(symbola->derivata,
+                    titulus, &valor))
+            {
+                _tectum_addere(linea_tecta,
+                    (i32)t->byte_offset - initia[t->linea - I],
+                    (i32)t->byte_offset + (i32)t->longitudo
+                    - initia[t->linea - I], NIHIL);
+                tectum = _tectum_ultimum(linea_tecta);
+                si (tectum != NIHIL)
+                {
+                    tectum->symbolum = titulus;
+                }
+            }
+            perge;
+        }
         si (cl == NIHIL)
         {
             perge;
@@ -389,11 +465,35 @@ _lineam_coloratam_emittere (
             - t->ab;
         si (pars.mensura > ZEPHYRUM)
         {
-            chorda_aedificator_appendere_literis(a, "<span class=\"");
-            chorda_aedificator_appendere_literis(a, t->cl);
-            chorda_aedificator_appendere_literis(a, "\">");
-            _evadere(a, pars);
-            chorda_aedificator_appendere_literis(a, "</span>");
+            si (t->ancora.mensura > ZEPHYRUM)
+            {
+                /* symbolum domesticum: ancora ad sedem suam -
+                 * sine JavaScript, ut lex paginae poscit */
+                chorda_aedificator_appendere_literis(a,
+                    "<a class=\"fr-sym\" href=\"");
+                _evadere(a, t->ancora);
+                chorda_aedificator_appendere_literis(a, "\">");
+                _evadere(a, pars);
+                chorda_aedificator_appendere_literis(a, "</a>");
+            }
+            alioquin si (t->symbolum.mensura > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(a,
+                    "<span class=\"fr-sym\" data-s=\"");
+                _evadere(a, t->symbolum);
+                chorda_aedificator_appendere_literis(a, "\">");
+                _evadere(a, pars);
+                chorda_aedificator_appendere_literis(a, "</span>");
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(a,
+                    "<span class=\"");
+                chorda_aedificator_appendere_literis(a, t->cl);
+                chorda_aedificator_appendere_literis(a, "\">");
+                _evadere(a, pars);
+                chorda_aedificator_appendere_literis(a, "</span>");
+            }
         }
         cursor = t->ad;
     }
@@ -570,6 +670,254 @@ _prosam_emittere (
     chorda_aedificator_appendere_literis(a, "</section>\n");
 }
 
+/* octetos in literale JSON evadere; '</' scinditur ne insula
+ * '</script' ferens tagum claudat (insula intra <script> vivit) */
+interior vacuum
+_json_evadere (
+    ChordaAedificator* a,
+               chorda  t)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < t.mensura; k++)
+    {
+        character c = (character)t.datum[k];
+
+        si (c == '"' || c == '\\')
+        {
+            chorda_aedificator_appendere_character(a, '\\');
+            chorda_aedificator_appendere_character(a, c);
+        }
+        alioquin si (c == '<')
+        {
+            chorda_aedificator_appendere_literis(a, "\\u003c");
+        }
+        alioquin si (c == '\n')
+        {
+            chorda_aedificator_appendere_literis(a, "\\n");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_character(a, c);
+        }
+    }
+}
+
+/* typus symboli ut textus (redditor silvae); vacua si irreddibilis */
+interior chorda
+_typus_symboli (
+                     Piscina* piscina,
+     constans SilvaSemantica* sem,
+                      chorda  titulus)
+{
+    insignatus integer k;
+                chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (sem == NIHIL)
+    {
+        redde vacua;
+    }
+    per (k = ZEPHYRUM; k < silva_c89_symbola_numerus(sem); k++)
+    {
+        constans SemanticaSymbolum* s = silva_c89_symbolum_per_indicem(
+            sem, k);
+                 character b[512];
+        insignatus integer n;
+
+        si (   s                       == NIHIL
+            || (i32)s->titulus.mensura != titulus.mensura
+            || memcmp(s->titulus.datum, titulus.datum,
+                (size_t)titulus.mensura) != ZEPHYRUM)
+        {
+            perge;
+        }
+        n = silva_c89_typum_scribere(s->typus, b, (insignatus integer)
+            magnitudo(b));
+        si (n == ZEPHYRUM)
+        {
+            perge;
+        }
+        redde chorda_ex_literis(b, piscina);
+    }
+    redde vacua;
+}
+
+/* symbola paginae colligere et insulam scribere.
+ *
+ * DOMESTICA: quae plagula ipsa definit (profunditas 0, lexema in
+ * fonte principe, corpus definitionis adest) -> linea .thistle.
+ * DERIVATA: quorum caput briar derivavit - ea sola insulam merent,
+ * quia sola sunt quorum provenientiam lector aliter invenire non
+ * potest (nulla linea inclusionis in plagula stat). Symbolum e
+ * capite QUOD REGIO IPSA INCLUDIT nihil accipit: signum iam adest,
+ * tribus lineis supra.
+ */
+interior chorda
+_symbola_colligere (
+                Piscina* piscina,
+                    Xar* nexus,
+    BriarSymbolaPaginae* symbola)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)4096);
+                   i32 i;
+                   i32 numerus = ZEPHYRUM;
+
+    symbola->domestica  = tabula_dispersa_creare_chorda(piscina, 64);
+    symbola->derivata   = tabula_dispersa_creare_chorda(piscina, 64);
+    chorda_aedificator_appendere_literis(a,
+        "<script type=\"application/json\" id=\"fr-symbola\">");
+    chorda_aedificator_appendere_character(a, '{');
+    per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
+    {
+        constans BriarNexusRes* r = (constans BriarNexusRes*)
+            xar_obtinere(nexus, i);
+        insignatus integer k;
+                       i32 j;
+
+        si (r->silva == NIHIL)
+        {
+            perge;
+        }
+        /* domestica */
+        si (r->silva->semantica != NIHIL && r->silva->parsura != NIHIL)
+        {
+            per (k = ZEPHYRUM;
+                k < silva_c89_symbola_numerus(r->silva->semantica); k++)
+            {
+                constans SemanticaSymbolum* sy =
+                    silva_c89_symbolum_per_indicem(r->silva->semantica,
+                    k);
+                chorda  titulus;
+                   i32* linea;
+
+                si (   sy              == NIHIL
+                    || sy->est_implicitum
+                    || sy->ex_systemate
+                    || sy->profunditas != (insignatus integer)ZEPHYRUM
+                    || sy->lexema      == NIHIL
+                    || sy->lexema->fons_index
+                        != r->silva->parsura->fons_princeps
+                    || silva_c89_definitio_functionis_corpus(
+                        sy->declarans).genus == SILVA_VALOR_NIHIL)
+                {
+                    perge;
+                }
+                titulus.datum    = (i8*)sy->titulus.datum;
+                titulus.mensura  = (i32)sy->titulus.mensura;
+                si (tabula_dispersa_continet(symbola->domestica,
+                    titulus))
+                {
+                    perge;
+                }
+                linea   = (i32*)piscina_allocare(piscina,
+                    magnitudo(i32));
+                *linea  = briar_nexus_linea_silvae(r,
+                    (i32)sy->lexema->linea);
+                tabula_dispersa_inserere(symbola->domestica, titulus,
+                    (vacuum*)linea);
+            }
+        }
+        /* derivata */
+        si (r->silva->symbola_derivata == NIHIL)
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM;
+            j < xar_numerus(r->silva->symbola_derivata); j++)
+        {
+            constans BriarSymbolumDerivatum* par =
+                (constans BriarSymbolumDerivatum*)xar_obtinere(
+                r->silva->symbola_derivata, j);
+            chorda* caput;
+            chorda  typus;
+
+            si (tabula_dispersa_continet(symbola->derivata,
+                par->titulus))
+            {
+                perge;
+            }
+            caput   = (chorda*)piscina_allocare(piscina,
+                magnitudo(chorda));
+            *caput  = par->caput;
+            tabula_dispersa_inserere(symbola->derivata, par->titulus,
+                (vacuum*)caput);
+            si (numerus > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_character(a, ',');
+            }
+            numerus = numerus + I;
+            chorda_aedificator_appendere_character(a, '"');
+            _json_evadere(a, par->titulus);
+            chorda_aedificator_appendere_literis(a, "\":{\"caput\":\"");
+            _json_evadere(a, par->caput);
+            typus = _typus_symboli(piscina, r->silva->semantica,
+                par->titulus);
+            si (typus.mensura > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(a,
+                    "\",\"typus\":\"");
+                _json_evadere(a, typus);
+            }
+            chorda_aedificator_appendere_literis(a, "\"}");
+        }
+    }
+    chorda_aedificator_appendere_character(a, '}');
+    chorda_aedificator_appendere_literis(a, "</script>\n");
+    redde chorda_aedificator_finire(a);
+}
+
+/* an ulla regio causam suam ferat? */
+interior b32
+_vitium_regionis_adest (
+    constans Xar* nexus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
+    {
+        constans BriarNexusRes* r = (constans BriarNexusRes*)
+            xar_obtinere(nexus, i);
+
+        si (r->linea_erroris > ZEPHYRUM && r->causa.mensura > ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* recusatio ad lineam suam affixa (lex F4: pagina SEMPER redditur,
+ * vitium in margine stat ubi pertinet - numquam pagina vacua, numquam
+ * causa tacita) */
+interior vacuum
+_vitium_emittere (
+    ChordaAedificator* a,
+               chorda  causa,
+                  i32  linea)
+{
+    si (causa.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(a,
+        "<aside class=\"fr-vitium\" data-linea=\"");
+    chorda_aedificator_appendere_i32(a, (i32)linea);
+    chorda_aedificator_appendere_literis(a, "\">");
+    si (linea > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a, "<a href=\"#l");
+        chorda_aedificator_appendere_i32(a, (i32)linea);
+        chorda_aedificator_appendere_literis(a, "\">linea ");
+        chorda_aedificator_appendere_i32(a, (i32)linea);
+        chorda_aedificator_appendere_literis(a, "</a>: ");
+    }
+    _evadere(a, causa);
+    chorda_aedificator_appendere_literis(a, "</aside>\n");
+}
+
 /* fragmentum huius regionis aut NIHIL (radix) */
 interior constans BriarFragmentum*
 _fragmentum_regionis (
@@ -632,15 +980,16 @@ _usus_emittere (
 
 interior vacuum
 _regionem_emittere (
-                Piscina* piscina,
-           SilvaPiscina* silva_piscina,
-      ChordaAedificator* a,
- constans BriarNexusRes* r,
-           constans Xar* fragmenta)
+                         Piscina* piscina,
+                    SilvaPiscina* silva_piscina,
+               ChordaAedificator* a,
+          constans BriarNexusRes* r,
+                    constans Xar* fragmenta,
+    constans BriarSymbolaPaginae* symbola)
 {
     constans BriarFragmentum* f = _fragmentum_regionis(fragmenta, r);
                          Xar* tecta = _tecta_computare(piscina,
-                             silva_piscina, r->contentum);
+                             silva_piscina, r->contentum, symbola);
 
     si (f != NIHIL)
     {
@@ -662,6 +1011,7 @@ _regionem_emittere (
         chorda_aedificator_appendere_i32(a, (i32)r->linea_initium);
         chorda_aedificator_appendere_literis(a, "\">\n");
     }
+    _vitium_emittere(a, r->causa, r->linea_erroris);
     chorda_aedificator_appendere_literis(a,
         "<pre class=\"fr-c\"><code>");
     _lineas_emittere(a, r->contentum, NIHIL, r->linea_initium, "l",
@@ -675,7 +1025,7 @@ _regionem_emittere (
         && !chorda_aequalis(r->contextus, r->contentum))
     {
         Xar* tecta_contexta = _tecta_computare(piscina, silva_piscina,
-            r->contextus);
+            r->contextus, symbola);
 
         chorda_aedificator_appendere_literis(a,
             "<details class=\"fr-contextum\">\n<summary>contextum (");
@@ -904,6 +1254,8 @@ briar_faciem_fingere (
                    i32  i;
                 chorda  vacua;
           SilvaPiscina* silva_piscina;
+   BriarSymbolaPaginae  symbola;
+                chorda  insula;
 
     vacua.datum     = NIHIL;
     vacua.mensura   = ZEPHYRUM;
@@ -920,6 +1272,7 @@ briar_faciem_fingere (
         *causa = chorda_ex_literis("piscina silvae deest", piscina);
         redde vacua;
     }
+    insula = _symbola_colligere(piscina, nexus, &symbola);
     corpus = chorda_aedificator_creare(piscina,
         (memoriae_index)65536);
     chorda_aedificator_appendere_literis(corpus,
@@ -941,8 +1294,15 @@ briar_faciem_fingere (
         alioquin
         {
             _regionem_emittere(piscina, silva_piscina, corpus, r,
-                fragmenta);
+                fragmenta, &symbola);
         }
+    }
+    /* causa fabricae SUBSIDIARIA est: si regio ulla causam suam iam
+     * fert, regiones diagnostica tenent et haec eadem bis staret
+     * (inventum a culpa plantata 2026-09-11) */
+    si (!fructus->successus && !_vitium_regionis_adest(nexus))
+    {
+        _vitium_emittere(corpus, fructus->causa, fructus->linea_causae);
     }
     chorda_aedificator_appendere_literis(corpus, "</main>\n");
     chorda_aedificator_appendere_chorda(corpus,
@@ -958,7 +1318,7 @@ briar_faciem_fingere (
     notae[3].titulus  = "corpus";
     notae[3].valor    = chorda_aedificator_finire(corpus);
     notae[4].titulus  = "symbola";
-    notae[4].valor    = vacua;
+    notae[4].valor    = insula;
     notae[5].titulus  = "scriptum";
     notae[5].valor    = vestis->scriptum;
     per (i = ZEPHYRUM; i < (i32)6; i++)
