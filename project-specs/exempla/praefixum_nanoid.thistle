@@ -1,0 +1,400 @@
+#!/usr/bin/env briar
+# Praefixum nanoid
+
+Rename each file or folder named on the command line so that its name
+starts with a file nanoid: `charta.pdf` becomes
+`K7Q20MXZ4B1R-charta.pdf`, in the same folder. A name that already
+carries a nanoid is left alone, so running this twice over the same
+selection changes nothing the second time.
+
+    ./praefixum_nanoid.thistle ~/Desktop/charta.pdf ~/Desktop/tabulae
+    ./praefixum_nanoid.thistle -siccum ~/Desktop/charta.pdf
+
+Every path prints its final path on stdout, renamed or not. A path that
+cannot be done is named on stderr with the reason, the exit status
+becomes 1, and the remaining paths are still done. No paths at all is
+exit 2: nothing ran.
+
+`-siccum` is a dry run: it prints the paths the real run would produce
+and moves nothing. *Siccus* is dry, as in *pede sicco*, dry-shod.
+
+*Praefixum* is the neuter participle of *praefigere*, to fasten in
+front, the word English borrowed as *prefix*. A *titulus* is the name
+on a thing; a *via* is a road, and here a path.
+
+## The rule
+
+A name is already prefixed when its first twelve characters come from
+`MONETA_NANOID_PLAGULAE_ALPHABETUM` and the thirteenth is `-`. The check
+reads the alphabet from moneta itself, so the script recognizes exactly
+what moneta mints and cannot drift from it.
+
+The separator is `-` because the file alphabet (`0-9A-Z`) never
+contains it, so the end of the id is never in doubt. The price is one
+false positive: a name that happens to start with twelve capitals or
+digits and a hyphen (`INVOICE20241-march.pdf`) is taken as already
+prefixed and left alone. Leaving a name alone is the safe failure;
+prefixing twice is not.
+
+<c!>
+#include <errno.h>
+
+#define SEPARATOR_NANOID '-'
+
+b32
+praefixum_nanoid_habet (
+    chorda titulus)
+{
+    i32 k;
+
+    si (titulus.mensura < MONETA_NANOID_PLAGULAE_LONGITUDO + I)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < MONETA_NANOID_PLAGULAE_LONGITUDO; k++)
+    {
+        si (titulus.datum[k] == '\0'
+            || strchr(MONETA_NANOID_PLAGULAE_ALPHABETUM,
+                      (integer)titulus.datum[k]) == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    redde titulus.datum[MONETA_NANOID_PLAGULAE_LONGITUDO]
+        == SEPARATOR_NANOID ? VERUM : FALSUM;
+}
+</c>
+
+## Taking the name and prefixing it
+
+Trailing slashes are dropped first, so a folder passed as `tabulae/` is
+named `tabulae`; the house basename, `via_nomen`, returns the empty
+string for a path that ends in a slash. Prefixing a bare name touches
+nothing on disk, which lets the probatio check the rule on its own.
+
+<c!>
+chorda
+viam_purgare (
+    chorda via)
+{
+    dum (via.mensura > I && via.datum[via.mensura - I] == '/')
+    {
+        via.mensura--;
+    }
+    redde via;
+}
+
+chorda
+titulum_praefixum (
+     chorda  via,
+    Piscina* piscina)
+{
+       chorda  titulus;
+       chorda  fructus;
+    character  nanoid[MONETA_NANOID_PLAGULAE_MENSURA];
+
+    fructus.datum   = NIHIL;
+    fructus.mensura = ZEPHYRUM;
+    titulus = via_nomen(viam_purgare(via), piscina);
+    si (titulus.mensura == ZEPHYRUM)
+    {
+        redde fructus;
+    }
+    si (praefixum_nanoid_habet(titulus))
+    {
+        redde titulus;
+    }
+    si (!moneta_nanoid_plagulae(nanoid))
+    {
+        redde fructus;
+    }
+    fructus.mensura = MONETA_NANOID_PLAGULAE_LONGITUDO + I
+                    + titulus.mensura;
+    fructus.datum   = (i8*)piscina_allocare(piscina, fructus.mensura);
+    memcpy(fructus.datum, nanoid, MONETA_NANOID_PLAGULAE_LONGITUDO);
+    fructus.datum[MONETA_NANOID_PLAGULAE_LONGITUDO] = SEPARATOR_NANOID;
+    memcpy(fructus.datum + MONETA_NANOID_PLAGULAE_LONGITUDO + I,
+           titulus.datum, titulus.mensura);
+    redde fructus;
+}
+</c>
+
+## Renaming
+
+The new path is the old path with its last component replaced. Before
+anything moves:
+
+- the old path must exist (`filum_status`, which is `stat`: an
+  unreadable file still counts, where `filum_existit` opens the file
+  and would call it absent);
+- a name already prefixed is the answer as it stands, and nothing moves;
+- the new path must NOT exist. `filum_movere` is plain `rename`, and
+  `rename` silently replaces whatever sits at the destination. Twelve
+  characters from thirty-six are about 62 bits, so a collision is not
+  expected; the check is there so that the one time it happens, a file
+  is refused rather than destroyed. The probatio cannot provoke a
+  collision on purpose, so this one branch is untested.
+
+Folders rename exactly as files do.
+
+<c!>
+b32
+viam_praefigere (
+    constans character*  via_literis,
+                   b32   siccum,
+               Piscina*  piscina,
+                chorda*  nova,
+    constans character** causa)
+{
+         chorda  via;
+         chorda  titulus;
+         chorda  novus;
+     character*  vetus_c;
+     character*  nova_c;
+     character*  textus;
+    FilumStatus  status;
+            i32  directorium;
+
+    *causa  = NIHIL;
+    via     = viam_purgare(chorda_ex_literis(via_literis, piscina));
+    vetus_c = chorda_ut_cstr(via, piscina);
+    si (!filum_status(vetus_c, &status))
+    {
+        *causa = "non existit";
+        redde FALSUM;
+    }
+    titulus = via_nomen(via, piscina);
+    si (titulus.mensura == ZEPHYRUM)
+    {
+        *causa = "via sine nomine";
+        redde FALSUM;
+    }
+    si (praefixum_nanoid_habet(titulus))
+    {
+        *nova = via;
+        redde VERUM;
+    }
+    novus = titulum_praefixum(via, piscina);
+    si (novus.mensura == ZEPHYRUM)
+    {
+        *causa = "fons fortuitus deficit";
+        redde FALSUM;
+    }
+    directorium   = via.mensura - titulus.mensura;
+    nova->mensura = directorium + novus.mensura;
+    nova->datum   = (i8*)piscina_allocare(piscina, nova->mensura);
+    memcpy(nova->datum, via.datum, directorium);
+    memcpy(nova->datum + directorium, novus.datum, novus.mensura);
+    nova_c = chorda_ut_cstr(*nova, piscina);
+    si (filum_status(nova_c, &status))
+    {
+        *causa = "destinatio iam existit";
+        redde FALSUM;
+    }
+    si (siccum)
+    {
+        redde VERUM;
+    }
+    si (!filum_movere(vetus_c, nova_c))
+    {
+        textus = (character*)piscina_allocare(piscina, CCLVI);
+        sprintf(textus, "renominatio fracta: %.200s", strerror(errno));
+        *causa = textus;
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+</c>
+
+## Principale
+
+<c!>
+s32
+principale (
+           s32  numerus,
+    character** argumenta)
+{
+               Piscina*  piscina;
+                chorda   nova;
+    constans character*  causa;
+                   b32   siccum = FALSUM;
+                   s32   primus = I;
+                   s32   i;
+                   s32   exitus = ZEPHYRUM;
+
+    si (numerus > I && strcmp(argumenta[I], "-siccum") == ZEPHYRUM)
+    {
+        siccum = VERUM;
+        primus = II;
+    }
+    si (numerus <= primus)
+    {
+        fprintf(stderr, "usus: praefixum_nanoid.thistle"
+                        " [-siccum] via [via ...]\n");
+        redde II;
+    }
+    piscina = piscina_generare_dynamicum("praefixum_nanoid", LXIV * M);
+    si (piscina == NIHIL)
+    {
+        redde I;
+    }
+    per (i = primus; i < numerus; i++)
+    {
+        si (viam_praefigere(argumenta[i], siccum, piscina, &nova, &causa))
+        {
+            imprimere("%.*s\n", (integer)nova.mensura,
+                      (constans character*)nova.datum);
+        }
+        alioquin
+        {
+            fprintf(stderr, "%s: %s\n", argumenta[i], causa);
+            exitus = I;
+        }
+    }
+    redde exitus;
+}
+</c>
+
+## Probatio
+
+`./praefixum_nanoid.thistle -probatio`. The first half checks the naming
+rule without touching the disk; its most important line is the last,
+that running the rule on its own output changes nothing, for a hundred
+fresh ids. The second half makes a scratch folder under `/tmp` (named
+with a nanoid, so two runs never meet), renames a file and a folder in
+it, checks that a dry run moves nothing and a second run moves nothing,
+and removes everything it made.
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+               Piscina*  piscina;
+                chorda   fructus;
+                chorda   iterum;
+                chorda   nova;
+    constans character*  causa;
+             character   nanoid[MONETA_NANOID_PLAGULAE_MENSURA];
+             character   area[CXXVIII];
+             character   charta[CXXVIII];
+             character   absens[CXXVIII];
+             character   tabulae[CXXVIII];
+             character   tabulae_separatae[CXXVIII];
+             character*  charta_nova;
+             character*  tabulae_novae;
+                   i32   i;
+                   i32   defectus = ZEPHYRUM;
+
+    piscina = piscina_generare_dynamicum("probatio", LXIV * M);
+    credo_aperire(piscina);
+
+    /* ---- regula sine disco ---- */
+
+    /* sine praefixo: id + '-' + nomen integrum */
+    fructus = titulum_praefixum(
+        chorda_ex_literis("/a/b/charta.pdf", piscina), piscina);
+    CREDO_AEQUALIS_I32(fructus.mensura, XXIII);
+    CREDO_VERUM(praefixum_nanoid_habet(fructus));
+    CREDO_VERUM(memcmp(fructus.datum + XIII, "charta.pdf", X)
+                == ZEPHYRUM);
+
+    /* iam praefixum: nomen idem redditur */
+    fructus = titulum_praefixum(
+        chorda_ex_literis("/x/K7Q20MXZ4B1R-charta.pdf", piscina),
+        piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(fructus, "K7Q20MXZ4B1R-charta.pdf");
+
+    /* sine directorio; directorium cum '/' finali */
+    fructus = titulum_praefixum(
+        chorda_ex_literis("charta.pdf", piscina), piscina);
+    CREDO_AEQUALIS_I32(fructus.mensura, XXIII);
+    fructus = titulum_praefixum(
+        chorda_ex_literis("/a/tabulae/", piscina), piscina);
+    CREDO_AEQUALIS_I32(fructus.mensura, XX);
+    CREDO_VERUM(memcmp(fructus.datum + XIII, "tabulae", VII)
+                == ZEPHYRUM);
+
+    /* praefixa falsa: minusculae, XI signa, sine separatore */
+    fructus = titulum_praefixum(
+        chorda_ex_literis("k7q20mxz4b1r-charta.pdf", piscina), piscina);
+    CREDO_AEQUALIS_I32(fructus.mensura, XXXVI);
+    fructus = titulum_praefixum(
+        chorda_ex_literis("K7Q20MXZ4B1-charta.pdf", piscina), piscina);
+    CREDO_AEQUALIS_I32(fructus.mensura, XXXV);
+    fructus = titulum_praefixum(
+        chorda_ex_literis("K7Q20MXZ4B1Rcharta.pdf", piscina), piscina);
+    CREDO_AEQUALIS_I32(fructus.mensura, XXXV);
+
+    /* via sine nomine */
+    fructus = titulum_praefixum(chorda_ex_literis("/", piscina), piscina);
+    CREDO_AEQUALIS_I32(fructus.mensura, ZEPHYRUM);
+
+    /* idempotentia: C ids recentes, bis applicatum = semel */
+    per (i = ZEPHYRUM; i < C; i++)
+    {
+        fructus = titulum_praefixum(
+            chorda_ex_literis("/a/charta.pdf", piscina), piscina);
+        iterum  = titulum_praefixum(fructus, piscina);
+        si (fructus.mensura != XXIII
+            || iterum.mensura != fructus.mensura
+            || memcmp(iterum.datum, fructus.datum, fructus.mensura)
+               != ZEPHYRUM)
+        {
+            defectus++;
+        }
+    }
+    CREDO_AEQUALIS_I32(defectus, ZEPHYRUM);
+
+    /* ---- in disco: area /tmp/praefixum_probatio_<nanoid> ---- */
+    CREDO_VERUM(moneta_nanoid_plagulae(nanoid));
+    sprintf(area, "/tmp/praefixum_probatio_%s", nanoid);
+    CREDO_VERUM(filum_directorium_creare(area));
+    sprintf(charta, "%s/charta.txt", area);
+    CREDO_VERUM(filum_scribere_literis(charta, "salve"));
+
+    /* siccum: via nova computata, nihil motum */
+    CREDO_VERUM(viam_praefigere(charta, VERUM, piscina, &nova, &causa));
+    CREDO_AEQUALIS_I32(nova.mensura, (i32)strlen(area) + I + XXIII);
+    CREDO_VERUM(filum_existit(charta));
+
+    /* verum: charta abest, nova adest, contentum idem, area eadem */
+    CREDO_VERUM(viam_praefigere(charta, FALSUM, piscina, &nova, &causa));
+    charta_nova = chorda_ut_cstr(nova, piscina);
+    CREDO_FALSUM(filum_existit(charta));
+    CREDO_VERUM(filum_existit(charta_nova));
+    CREDO_CHORDA_AEQUALIS_LITERIS(
+        filum_legere_totum(charta_nova, piscina), "salve");
+    CREDO_VERUM(strncmp(charta_nova, area, strlen(area)) == ZEPHYRUM);
+
+    /* iterum: iam praefixa - via eadem redditur, filum manet */
+    CREDO_VERUM(viam_praefigere(charta_nova, FALSUM, piscina, &iterum,
+                                &causa));
+    CREDO_AEQUALIS_I32(iterum.mensura, (i32)strlen(charta_nova));
+    CREDO_VERUM(memcmp(iterum.datum, charta_nova, iterum.mensura)
+                == ZEPHYRUM);
+    CREDO_VERUM(filum_existit(charta_nova));
+
+    /* via absens: FALSUM cum causa */
+    sprintf(absens, "%s/absens.txt", area);
+    CREDO_FALSUM(viam_praefigere(absens, FALSUM, piscina, &nova, &causa));
+    CREDO_NON_NIHIL(causa);
+
+    /* directorium, cum '/' finali */
+    sprintf(tabulae, "%s/tabulae", area);
+    CREDO_VERUM(filum_directorium_creare(tabulae));
+    sprintf(tabulae_separatae, "%s/", tabulae);
+    CREDO_VERUM(viam_praefigere(tabulae_separatae, FALSUM, piscina,
+                                &nova, &causa));
+    tabulae_novae = chorda_ut_cstr(nova, piscina);
+    CREDO_FALSUM(filum_directorium_existit(tabulae));
+    CREDO_VERUM(filum_directorium_existit(tabulae_novae));
+
+    /* purgatio: omnia quae facta sunt */
+    CREDO_VERUM(filum_delere(charta_nova));
+    CREDO_VERUM(filum_delere(tabulae_novae));
+    CREDO_VERUM(filum_delere(area));
+
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

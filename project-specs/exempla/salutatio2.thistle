@@ -1,0 +1,415 @@
+#!/usr/bin/env briar
+# Salutatio
+
+A window that says hello. The program builds a small logical tree of
+components, lowers one node of that tree into drawing commands, paints
+the commands with the CPU rasterizer, and presents the result sixty
+times a second until the window closes or six hundred frames have
+gone by.
+
+That is the whole program, and it is worth saying plainly before any
+code appears, because the code cannot say it. C makes you write the
+helpers before the thing that uses them, so a reader who starts at
+the top of an ordinary `.c` file meets a rasterization callback with
+no idea why it exists. Here the order is the reader's: the shape of
+the program first, then each piece as the reader becomes ready for
+it. briar generates a prototype for every function this file defines
+and puts them in the derived header, so definition order carries no
+weight with the compiler at all. The order is free, so it should be
+spent on the reader.
+
+The second thing this file does is teach its own vocabulary. Every
+identifier here is Latin. A reader who knows the words reads the
+program; a reader who does not is looking at noise. So the words are
+glossed as they arrive, and the recurring ones are gathered first.
+
+## Verba: the standing vocabulary
+
+These appear in every rhubarb program and are not glossed again below.
+
+| word | sense | note |
+|---|---|---|
+| *piscina* | fish-pond, basin, cistern | a Roman reservoir; in a church, the basin near the altar for washing the sacred vessels. Here: an arena. Memory is drawn from it and it is emptied whole. |
+| *chorda* | a string, a cord | from Greek χορδή, the gut string of an instrument |
+| *vacuum* | empty | `void` |
+| *nihil* | nothing | `NULL` |
+| *zephyrum* | zero | Fibonacci Latinizes Arabic *ṣifr* as *zephirum* in the *Liber Abaci* (1202); Italian *zefiro* wears down to *zero* |
+| *redde* | give back! | imperative of *reddere*. *Reddite ergo quae sunt Caesaris Caesari* |
+| *magnitudo* | greatness, size | `sizeof` |
+| *probatio* | a testing, a proof | *probatio fidei vestrae*, 1 Pet. 1:7 |
+| *interior* | inner | `static` at file scope: not for export |
+
+Numeric constants are Roman numerals: `I`, `II`, `X`, `XX`, `L`, `C`,
+`CXX`, `CCC`, `CCCXX`, `DC`, `IV`, `M`. So `IV * M * M` is four
+mebibytes and `DC` is six hundred frames.
+
+*Salutatio* is a greeting — third declension, genitive *salutationis*,
+which is why the two functions below are named with the genitive:
+`figura_salutationis` is *the figure of the greeting*, and
+`componere_salutationis` is *the composing of the greeting*. The word
+carries its own weight in the *salutatio angelica*, the Angelic
+Salutation.
+
+## Clausura: where the words come from
+
+This file contains no `#include`. briar derives the closure from the
+symbols used, which is a real convenience and a real cost: the reader
+loses the one signal that tells him which library a name belongs to.
+The table below pays that cost back. It is the reader's copy, not the
+build's; `./salutatio.thistle -partes` prints the authoritative list,
+and if the two ever disagree the table is wrong.
+
+| header | what this file takes from it |
+|---|---|
+| `piscina.h` | the arena |
+| `chorda.h`, `internamentum.h` | strings and the string interner |
+| `componens.h` | the logical component tree, `Fines`, `PARTES_*` |
+| `figura.h` | the figura registry: node kind → drawing function |
+| `mandatum.h` | `Mandata`, `mandata_textus`, `ColorMandati` |
+| `thema.h` | the colour theme, `COLOR_TEXT` |
+| `insula.h`, `actio.h` | the island repository and the action registry |
+| `dispensator.h` | the steward that rebuilds the tree each frame |
+| `fenestra.h` | the native window and its pixel tablet |
+| `ludus_fenestra.h` | the frame loop |
+| `credo.h` | the test harness, in the probatio only |
+
+## The shape of the program
+
+Three units, in the order a reader wants them:
+
+<c!>
+<<#principale>>
+<<#componere-salutationis>>
+<<#figura-salutationis>>
+</c>
+
+## Principale: the whole program at a glance
+
+*Principale* is the entry point — the *principal* thing, from
+*princeps*, the one who takes first place.
+
+The body is seven steps and nothing else. Each is named; each is
+below. Read this and you have read the program; read the rest and you
+know how it is done.
+
+The declarations come first because C89 requires every declaration at
+the head of its block. That constraint, which is usually a nuisance,
+is here an asset: the block is the cast list. Ten objects, each named
+for what it is, and a reader who takes the ten words in has taken in
+the design.
+
+<c! id="principale">
+s32
+principale (vacuum)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+         ActioRegistrum* actiones;
+        FiguraRegistrum* figurae;
+            Dispensator* d;
+               Fenestra* fenestra;
+        TabulaPixelorum* tabula;
+          LudusFenestra* lf;
+   FenestraConfiguratio  cfg;
+                    s32  exitus;
+
+    <<#fundamentum>>
+    <<#registra>>
+    <<#figura-registrata>>
+    <<#dispensator>>
+    <<#fenestra>>
+    <<#ansa>>
+}
+</c>
+
+## Fundamentum: the ground
+
+*Fundamentum*, a foundation, from *fundus*, the bottom of a thing.
+*Internamentum* is not a classical word — it is coined from *internus*
+for the string interner, which gives one canonical *chorda* per
+distinct text so that later comparisons are pointer comparisons.
+*Thema* is Greek, a thing set down: the colour theme.
+
+Four mebibytes for the pool, taken once. Nothing below this line
+calls `malloc`.
+
+<c! id="fundamentum">
+piscina = piscina_generare_dynamicum("salutatio", IV * M * M);
+intern  = internamentum_creare(piscina);
+thema_initiare();
+</c>
+
+## Registra: the three registries
+
+*Registrum* is late Latin for a list or roll. *Insula* is an island,
+and in Rome also an apartment block — a self-contained thing standing
+on its own. *Actio* is a doing.
+
+The repository holds the document and its ephemera as STML text; the
+action registry holds what the user may do; the figura registry maps
+a kind of node to the function that draws it.
+
+<c! id="registra">
+<<#repositorium>>
+actiones = actio_registrum_creare(piscina, intern);
+figurae  = figura_registrum_creare(piscina);
+</c>
+
+The repository line is written once and used twice — here and in the
+probatio at the end of the file. It is one fragment with two windows,
+not two copies that can drift apart.
+
+<c! id="repositorium">
+repo = insula_repositorium_creare(piscina, intern,
+    "<documentum/>", "<ephemera/>");
+</c>
+
+## Figura registrata: where the two halves meet
+
+One line, and the hinge of the whole program.
+
+*Figura* is a shape or form. The word is doing more work here than it
+looks: in patristic exegesis a *figura* is a type, an earlier thing
+that carries the shape of a later one. That is exactly the office of
+a figura in ludus. The component tree is logical and knows nothing of
+pixels; a figura is what a node's shape becomes when it is brought
+down into drawing commands. The tree is the type, the mandata are the
+fulfilment.
+
+This call says: when you meet a node of kind `PARTES_TITULUS`, draw it
+with `figura_salutationis`.
+
+<c! id="figura-registrata">
+figura_registrare(figurae, PARTES_TITULUS, ZEPHYRUM,
+                  figura_salutationis, NIHIL);
+</c>
+
+## Dispensator: the steward
+
+*Dispensator* is a steward, the man who weighs out the household's
+stores — *dispensatores mysteriorum Dei*, 1 Cor. 4:1. He does not own
+what he hands out; he produces it on demand, in order, when asked.
+
+That is the frame model. The dispensator is given the composing
+function and calls it to rebuild the logical tree each frame. `CCC` is
+its capacity in nodes.
+
+<c! id="dispensator">
+d = dispensator_creare(piscina, intern, repo, actiones,
+                       componere_salutationis, NIHIL, CCC);
+</c>
+
+## Fenestra: the native window
+
+*Fenestra*, a window — the same word as in *defenestration*.
+*Vexilla* are military standards, the banners carried before a legion;
+here, flag bits. *Vexilla regis prodeunt*.
+
+The configuration struct is zeroed before use so that fields this
+program does not set take their zero value rather than whatever was
+on the stack. That is the C89 substitute for a designated initializer,
+and it is the one place in this file where the language shows its age.
+
+<c! id="fenestra">
+memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
+cfg.titulus  = "salutatio";
+cfg.x        = C;
+cfg.y        = C;
+cfg.latitudo = CCCXX;
+cfg.altitudo = CXX;
+cfg.vexilla  = FENESTRA_ORDINARIA;
+fenestra = fenestra_creare(piscina, &cfg);
+si (!fenestra)
+{
+    redde I;
+}
+</c>
+
+## Ansa: the frame loop
+
+*Ansa* is the handle of a vessel, the haft you take hold of — the
+word rhubarb uses for a loop. *Tabula* is a board or tablet, as in the
+*tabulae* of the Law; a `TabulaPixelorum` is the flat array of pixels
+the rasterizer writes and the window presents.
+
+`CXX` is the tablet's stride hint; `DC` is the frame cap, so the
+program closes itself after six hundred frames whether or not anyone
+closes the window. There is no `piscina_destruere` here: the pool dies
+with the process, and pretending otherwise would be ceremony.
+
+<c! id="ansa">
+tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CXX);
+lf = ludus_fenestra_creare(piscina, d, figurae, ZEPHYRUM, NIHIL, NIHIL,
+                           tabula);
+exitus = ludus_fenestra_currere(lf, fenestra, DC);
+fenestra_destruere(fenestra);
+redde exitus;
+</c>
+
+## Componere salutationis: building the logical tree
+
+*Componere* is to put together, to compose; *componens* is its present
+participle, *a thing putting together* — hence a component is not a
+box but an act of composition caught mid-motion.
+
+The dispensator calls this every frame. It builds two nodes: a root
+that holds the window's extent, and a title node inside it. Nothing
+here knows what a pixel is.
+
+*Fines* are boundaries or limits, always plural — *fines terrae*, the
+ends of the earth. *Radix* is a root: *O Radix Iesse*.
+
+<c! id="componere-salutationis">
+Componens*
+componere_salutationis (
+     InsulaRepositorium* repo,
+        constans Motus* motus,
+               Piscina* p,
+    InternamentumChorda* in,
+                vacuum* ctx)
+{
+    Componens* radix;
+    Componens* titulus;
+         Fines f;
+
+    (vacuum)repo;
+    (vacuum)motus;
+    (vacuum)ctx;
+    <<#componens-radix>>
+    <<#componens-titulus>>
+    redde radix;
+}
+</c>
+
+The root fills the window and draws nothing: `PARTES_NULLUM`, the kind
+that is no part at all.
+
+<c! id="componens-radix">
+radix = componens_creare(p, in, "radix", PARTES_NULLUM);
+f.x        = ZEPHYRUM;
+f.y        = ZEPHYRUM;
+f.latitudo = CCCXX;
+f.altitudo = CXX;
+componens_ponere_fines(radix, f);
+</c>
+
+The title node is inset and carries the text. *Titulus* is an
+inscription — the *titulus* is the board Pilate had nailed above the
+Cross. *Ponere* is to place or set. *Liberum* is a child: *liberi* are
+one's children, so `componens_addere_liberum` reads *add a child*, not
+*add a free thing*.
+
+<c! id="componens-titulus">
+titulus = componens_creare(p, in, "salutatio", PARTES_TITULUS);
+f.x        = X;
+f.y        = L;
+f.latitudo = CCC;
+f.altitudo = XX;
+componens_ponere_fines(titulus, f);
+componens_ponere_titulum(titulus, "salve, munde");
+componens_addere_liberum(radix, titulus);
+</c>
+
+## Figura salutationis: lowering the node into commands
+
+*Mandata* are things commanded, neuter plural of *mandatum* — *si
+diligitis me, mandata mea servate*. A `Mandata` is the list of drawing
+orders for one frame. This function turns one logical node into one
+such order: put this text at this offset in this colour.
+
+The colour is named by theme rather than by value, so the same tree
+draws light or dark without touching this function. Nothing is drawn
+from the pictor here — no volumen, no sqlite, so the closure stays
+small.
+
+<c! id="figura-salutationis">
+vacuum
+figura_salutationis (
+    constans Componens* c,
+              Mandata* m,
+                  i32  thema,
+              vacuum* ctx)
+{
+    ColorMandati color;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    color.genus = COLOR_MANDATI_THEMA;
+    color.valor = (i32)COLOR_TEXT;
+    mandata_textus(m, II, II, c->titulus, ZEPHYRUM, color);
+}
+</c>
+
+## Probatio
+
+The probatio does not open a window. It runs the composing function
+directly and checks that the tree came out with the title node in it
+and the right text on that node — the part of this program that can be
+judged without a screen in front of it.
+
+Note the shared `#repositorium` fragment: the probatio builds its
+repository with the same line the program does, because if that line
+ever changes the test must change with it.
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+              Componens* arbor;
+              Componens* c;
+
+    piscina = piscina_generare_dynamicum("probatio", LXIV * M);
+    credo_aperire(piscina);
+    intern = internamentum_creare(piscina);
+    <<#repositorium>>
+    arbor = componere_salutationis(repo, NIHIL, piscina, intern, NIHIL);
+    CREDO_NON_NIHIL(arbor);
+    c = componens_invenire_per_id(arbor,
+                                  chorda_ex_literis("salutatio", piscina));
+    CREDO_NON_NIHIL(c);
+    CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "salve, munde");
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>
+
+## Consilia: what was considered and not done
+
+A literate program that only says what it does is half a document.
+These are the choices behind the code, and the places a later reader
+will stub his toe.
+
+**The frame cap.** `DC` frames is a measurement artifact: this file
+was first written to time a run, and a program that closes itself is
+easier to time than one that waits. The alternative — run until the
+window closes — is one argument away and is what a real application
+would want. The cap stays because an example that never exits is a
+bad example.
+
+**The plain-program form, not the window region.** briar offers a
+`<fenestra>` region with bridge methods, which drives the vitrea web
+view. This file deliberately uses the plain form and calls
+`fenestra_creare` itself, because the point is to exercise ludus down
+to the rasterizer. A thistle file that wanted a web UI would look
+nothing like this one.
+
+**Known gaps in the derivation.** Three were found when this program
+was first built by hand and are worth carrying here rather than
+losing in a commit message. The plain form needs `.m` files and
+`-framework Cocoa` in its generated `aedificare.sh`. The closure for
+`fenestra_textus`, the font path, and utf8 is not complete. And a
+function passed as a value is not derived — which bites this file
+exactly once, at `figura_salutationis` in `#figura-registrata`, where
+the name is used but never called. That last one is the interesting
+failure: derivation follows calls, and a callback is a use that is
+not a call.
+
+**What fragments did not solve.** C89 forces every declaration to the
+head of its block, so `#principale` cannot hand each object to the
+step that uses it — the cast list has to arrive whole. Knuth's
+stepwise refinement wants the declaration beside the use, and C89
+will not give it. Nothing in briar can fix that; it is the language.

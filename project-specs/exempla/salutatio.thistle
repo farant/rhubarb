@@ -100,7 +100,7 @@ principale (vacuum)
     tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CXX);
     lf = ludus_fenestra_creare(piscina, d, figurae, ZEPHYRUM, NIHIL, NIHIL,
                                tabula);
-    exitus = ludus_fenestra_currere(lf, fenestra, DC);
+    exitus = ludus_fenestra_currere(lf, fenestra, DC*C);
     fenestra_destruere(fenestra);
     redde exitus;
 }
