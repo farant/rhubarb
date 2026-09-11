@@ -630,6 +630,48 @@ s32 principale(vacuum)
      * Compendium
      * ================================================== */
 
+
+    /* ==================================================
+     * Probare DOCTYPE in prologo (plists eam semper ferunt)
+     * ================================================== */
+
+    imprimere("\n--- Probans DOCTYPE in prologo ---\n");
+
+    {
+               XmlResultus  r;
+        constans character* cum_doctype =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" "
+            "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+            "<plist version=\"1.0\"><dict/></plist>";
+        constans character* cum_parte_interna =
+            "<!DOCTYPE x [ <!ENTITY a \"b\"> ]>\n<x/>";
+        constans character* per_lineas =
+            "<!DOCTYPE plist PUBLIC\n"
+            "  \"-//Apple//DTD PLIST 1.0//EN\"\n"
+            "  \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+            "<plist version=\"1.0\"><array/></plist>";
+
+        r = xml_legere_ex_literis(cum_doctype, piscina, intern);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)XML_SUCCESSUS);
+        CREDO_NON_NIHIL(r.radix);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*r.radix->titulus, "plist");
+
+        /* declaratio per lineas plures extensa */
+        r = xml_legere_ex_literis(per_lineas, piscina, intern);
+        CREDO_VERUM(r.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*r.radix->titulus, "plist");
+
+        /* pars interna: ad '>' primum saltare intra eam resumeret
+         * et corpus frangeret, ergo RECUSATUR nominatim */
+        r = xml_legere_ex_literis(cum_parte_interna, piscina, intern);
+        CREDO_FALSUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)r.status,
+                           (i32)XML_ERROR_PARS_INTERNA);
+    }
+
+
     imprimere("\n");
     credo_imprimere_compendium();
 

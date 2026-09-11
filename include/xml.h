@@ -46,7 +46,10 @@ nomen enumeratio {
     XML_ERROR_TAG_IMPROPRIE      = IV,
     XML_ERROR_ATTRIBUTUM         = V,
     XML_ERROR_EFFUGIUM           = VI,
-    XML_ERROR_VACUUM_INPUT       = VII
+    XML_ERROR_VACUUM_INPUT       = VII,
+    XML_ERROR_PARS_INTERNA       = VIII  /* declaratio generis cum
+                                          * parte interna: non
+                                          * tractatur */
 } XmlStatus;
 
 

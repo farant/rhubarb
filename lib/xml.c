@@ -45,7 +45,8 @@ _praeterire_spatium (
     chorda* input,
        i32* positus)
 {
-    dum (*positus < input->mensura && _est_spatium((character)input->datum[*positus]))
+    dum (   *positus < input->mensura
+         && _est_spatium((character)input->datum[*positus]))
     {
         (*positus)++;
     }
@@ -217,7 +218,8 @@ xml_attributum_addere (
 
     si (!nodus->attributa)
     {
-        nodus->attributa = xar_creare(piscina, magnitudo(XmlAttributum));
+        nodus->attributa = xar_creare(piscina,
+            magnitudo(XmlAttributum));
         si (!nodus->attributa)
         {
             redde FALSUM;
@@ -258,7 +260,8 @@ xml_attributum_addere_chorda (
 
     si (!nodus->attributa)
     {
-        nodus->attributa = xar_creare(piscina, magnitudo(XmlAttributum));
+        nodus->attributa = xar_creare(piscina,
+            magnitudo(XmlAttributum));
         si (!nodus->attributa)
         {
             redde FALSUM;
@@ -386,7 +389,8 @@ xml_invenire_liberum (
     per (i = ZEPHYRUM; i < num; i++)
     {
         liberum = xml_liberum_ad_indicem(nodus, i);
-        si (liberum && liberum->genus == XML_NODUS_ELEMENTUM && liberum->titulus)
+        si (   liberum && liberum->genus == XML_NODUS_ELEMENTUM
+            && liberum->titulus)
         {
             /* Comparare nomina (interned, ergo pointer comparatio) */
             si (_chorda_ptr_aequalis_literis(liberum->titulus, titulus))
@@ -427,7 +431,8 @@ xml_invenire_omnes_liberos (
     per (i = ZEPHYRUM; i < num; i++)
     {
         liberum = xml_liberum_ad_indicem(nodus, i);
-        si (liberum && liberum->genus == XML_NODUS_ELEMENTUM && liberum->titulus)
+        si (   liberum && liberum->genus == XML_NODUS_ELEMENTUM
+            && liberum->titulus)
         {
             si (_chorda_ptr_aequalis_literis(liberum->titulus, titulus))
             {
@@ -527,7 +532,8 @@ xml_textus_internus (
     per (i = ZEPHYRUM; i < num; i++)
     {
         liberum = xml_liberum_ad_indicem(nodus, i);
-        si (liberum && liberum->genus == XML_NODUS_TEXTUS && liberum->valor)
+        si (   liberum && liberum->genus == XML_NODUS_TEXTUS
+            && liberum->valor)
         {
             chorda_aedificator_appendere_chorda(aed, *liberum->valor);
         }
@@ -713,7 +719,8 @@ xml_scribere_ad_aedificator (
     chorda_aedificator_appendere_chorda(aed, *nodus->titulus);
 
     /* Attributa */
-    num_attr = nodus->attributa ? xar_numerus(nodus->attributa) : ZEPHYRUM;
+    num_attr =
+        nodus->attributa ? xar_numerus(nodus->attributa) : ZEPHYRUM;
     per (i = ZEPHYRUM; i < num_attr; i++)
     {
         attr = xar_obtinere(nodus->attributa, i);
@@ -756,11 +763,13 @@ xml_scribere_ad_aedificator (
             si (solum_textus)
             {
                 /* Scribere textum sine indentatio */
-                xml_scribere_ad_aedificator(liberum, aed, FALSUM, ZEPHYRUM);
+                xml_scribere_ad_aedificator(liberum, aed, FALSUM,
+                    ZEPHYRUM);
             }
             alioquin
             {
-                xml_scribere_ad_aedificator(liberum, aed, pulchrum, indentatio + I);
+                xml_scribere_ad_aedificator(liberum, aed, pulchrum,
+                    indentatio + I);
             }
         }
     }
@@ -849,7 +858,8 @@ _legere_titulus (
         redde NIHIL;
     }
 
-    redde _internare_sectio(ctx->intern, ctx->input, initium, ctx->positus);
+    redde _internare_sectio(ctx->intern, ctx->input, initium,
+        ctx->positus);
 }
 
 /* Legere valor attributi (post =") */
@@ -1224,7 +1234,8 @@ _legere_contentum (
             textus = _legere_textus(ctx);
             si (textus)
             {
-                nodus_textus = xml_textum_creare_ex_chorda(ctx->piscina, ctx->intern,
+                nodus_textus = xml_textum_creare_ex_chorda(ctx->piscina,
+                    ctx->intern,
                                                            *textus);
                 si (nodus_textus)
                 {
@@ -1272,10 +1283,11 @@ _legere_elementum (
         redde NIHIL;
     }
 
-    nodus->genus = XML_NODUS_ELEMENTUM;
-    nodus->titulus = tag_titulus;
-    nodus->valor = NIHIL;
-    nodus->attributa = xar_creare(ctx->piscina, magnitudo(XmlAttributum));
+    nodus->genus    = XML_NODUS_ELEMENTUM;
+    nodus->titulus  = tag_titulus;
+    nodus->valor    = NIHIL;
+    nodus->attributa = xar_creare(ctx->piscina,
+        magnitudo(XmlAttributum));
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(XmlNodus*));
     nodus->parens = NIHIL;
 
@@ -1518,6 +1530,57 @@ xml_legere (
                     }
                     ctx.positus++;
                     ctx.columna++;
+                }
+
+                perge;
+            }
+
+            /* Verificare si declaratio generis (DOCTYPE): plists eam
+             * SEMPER ferunt. PARS INTERNA eius RECUSATUR nominatim,
+             * quia ad '>' primum saltare intra eam resumeret et
+             * corpus documenti frangeret. */
+            si (   ctx.positus + VIII < ctx.input.mensura
+                && ctx.input.datum[ctx.positus + I]    == '!'
+                && ctx.input.datum[ctx.positus + II]   == 'D'
+                && ctx.input.datum[ctx.positus + III]  == 'O'
+                && ctx.input.datum[ctx.positus + IV]   == 'C'
+                && ctx.input.datum[ctx.positus + V]    == 'T'
+                && ctx.input.datum[ctx.positus + VI]   == 'Y'
+                && ctx.input.datum[ctx.positus + VII]  == 'P'
+                && ctx.input.datum[ctx.positus + VIII] == 'E')
+            {
+                ctx.positus += IX;
+                ctx.columna += IX;
+
+                dum (ctx.positus < ctx.input.mensura)
+                {
+                    character d;
+
+                    d = (character)ctx.input.datum[ctx.positus];
+                    si (d == '[')
+                    {
+                        resultus.status           =
+                            XML_ERROR_PARS_INTERNA;
+                        resultus.linea_erroris    = ctx.linea;
+                        resultus.columna_erroris  = ctx.columna;
+                        redde resultus;
+                    }
+                    si (d == '>')
+                    {
+                        ctx.positus++;
+                        ctx.columna++;
+                        frange;
+                    }
+                    si (d == '\n')
+                    {
+                        ctx.linea++;
+                        ctx.columna = I;
+                    }
+                    alioquin
+                    {
+                        ctx.columna++;
+                    }
+                    ctx.positus++;
                 }
 
                 perge;
