@@ -1,0 +1,299 @@
+/* facies.css - vestis paginae litteratae (briar -html, spec par. 4.6).
+ *
+ * Documentum spina est: columna una, ordine plagulae. Color syntaxis
+ * per variabiles (experimentum laboratorii 0023) ut thema mutari
+ * possit sine hac plagula tangenda. Nihil hic JavaScript poscit:
+ * margo, nexus, plicae - omnia markup et CSS sunt.
+ */
+
+:root {
+    --fr-charta:      #fbfaf7;
+    --fr-atramentum:  #23211d;
+    --fr-tenue:       #6d6862;
+    --fr-linea-tenuis:#e2ddd4;
+    --fr-codex-fundus:#f5f2ec;
+    --fr-nexus:       #7a4a2f;
+    --fr-vitium:      #9c2f2f;
+    --fr-vitium-fundus:#fbf0ee;
+    --fr-mensura:     42rem;
+
+    --ca-sy-commentarium: #7a8a6f;
+    --ca-sy-chorda:       #a5654a;
+    --ca-sy-numerus:      #8a6fa8;
+    --ca-sy-clavis:       #4a6fa5;
+    --ca-sy-genus:        #3f8a7a;
+    --ca-sy-praeprocessor:#8a8a8a;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --fr-charta:      #1a1917;
+        --fr-atramentum:  #ddd8d0;
+        --fr-tenue:       #918a80;
+        --fr-linea-tenuis:#33302b;
+        --fr-codex-fundus:#221f1c;
+        --fr-nexus:       #c99a76;
+        --fr-vitium:      #e0736b;
+        --fr-vitium-fundus:#2a1e1d;
+
+        --ca-sy-commentarium: #8b9a80;
+        --ca-sy-chorda:       #c98a6b;
+        --ca-sy-numerus:      #a992c4;
+        --ca-sy-clavis:       #7fa3d4;
+        --ca-sy-genus:        #62b5a0;
+        --ca-sy-praeprocessor:#9a9a9a;
+    }
+}
+
+html { background: var(--fr-charta); }
+
+body {
+    margin: 0;
+    padding: 0 1.5rem 6rem;
+    background: var(--fr-charta);
+    color: var(--fr-atramentum);
+    font: 16px/1.62 Palatino, "Palatino Linotype", "Iowan Old Style",
+          Georgia, serif;
+}
+
+/* ==================================================
+ * Caput: provenientia
+ * ================================================== */
+
+.fr-caput {
+    max-width: var(--fr-mensura);
+    margin: 0 auto;
+    padding: 3rem 0 1.25rem;
+    border-bottom: 1px solid var(--fr-linea-tenuis);
+}
+.fr-caput h1 {
+    margin: 0 0 .6rem;
+    font-size: 1.9rem;
+    font-weight: normal;
+    letter-spacing: .01em;
+}
+.fr-provenientia {
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: .1rem .8rem;
+    font-size: .78rem;
+    color: var(--fr-tenue);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.fr-provenientia dt { font-style: italic; font-family: inherit; }
+.fr-provenientia dd { margin: 0; }
+
+/* ==================================================
+ * Documentum
+ * ================================================== */
+
+.fr-documentum { max-width: var(--fr-mensura); margin: 0 auto; }
+
+.fr-prosa { margin: 1.6rem 0; }
+.fr-prosa h1, .fr-prosa h2, .fr-prosa h3 {
+    font-weight: normal;
+    line-height: 1.3;
+    margin: 2.2rem 0 .7rem;
+}
+.fr-prosa h1 { font-size: 1.55rem; }
+.fr-prosa h2 { font-size: 1.25rem; }
+.fr-prosa h3 { font-size: 1.05rem; font-style: italic; }
+.fr-prosa p { margin: .8rem 0; }
+.fr-prosa code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .86em;
+    background: var(--fr-codex-fundus);
+    padding: .08em .3em;
+    border-radius: 3px;
+}
+.fr-prosa table {
+    border-collapse: collapse;
+    font-size: .88rem;
+    margin: 1rem 0;
+    width: 100%;
+}
+.fr-prosa th, .fr-prosa td {
+    border-bottom: 1px solid var(--fr-linea-tenuis);
+    padding: .3rem .6rem .3rem 0;
+    text-align: left;
+    vertical-align: top;
+}
+.fr-prosa blockquote {
+    margin: 1rem 0;
+    padding-left: 1rem;
+    border-left: 2px solid var(--fr-linea-tenuis);
+    color: var(--fr-tenue);
+}
+.fr-prosa pre {
+    background: var(--fr-codex-fundus);
+    padding: .8rem 1rem;
+    overflow-x: auto;
+    border-radius: 4px;
+}
+
+/* ==================================================
+ * Regiones et fragmenta
+ * ================================================== */
+
+.fr-regio, .fr-fragmentum, .fr-elementum { margin: 1.5rem 0; }
+
+.fr-titulus {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .8rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .78rem;
+    padding-bottom: .35rem;
+}
+.fr-id { font-weight: 600; color: var(--fr-nexus); }
+.fr-usus, .fr-otiosum { color: var(--fr-tenue); }
+.fr-otiosum { font-style: italic; }
+
+pre.fr-c, pre.fr-stml {
+    margin: 0;
+    background: var(--fr-codex-fundus);
+    border: 1px solid var(--fr-linea-tenuis);
+    border-radius: 4px;
+    padding: .7rem 0;
+    overflow-x: auto;
+    font: .82rem/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* margo: numerus PICTUS, non textus - quod lector copiat codex est */
+.fr-linea { display: block; padding: 0 1rem 0 0; }
+.fr-linea::before {
+    content: attr(data-n);
+    display: inline-block;
+    width: 3.2rem;
+    padding-right: 1rem;
+    text-align: right;
+    color: var(--fr-tenue);
+    opacity: .55;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.fr-linea:target { background: color-mix(in srgb,
+    var(--fr-nexus) 12%, transparent); }
+
+/* in visu contexto numerus ANCORA vacua est: nexus sine textu */
+.fr-numerus {
+    display: inline-block;
+    width: 3.2rem;
+    padding-right: 1rem;
+    text-align: right;
+    color: var(--fr-tenue);
+    opacity: .55;
+    text-decoration: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.fr-numerus::before { content: attr(data-n); }
+.fr-numerus:hover { opacity: 1; color: var(--fr-nexus); }
+.fr-contextum .fr-linea { padding-left: 0; }
+.fr-contextum .fr-linea::before { content: none; width: 0; padding: 0; }
+
+.fr-transclusio {
+    color: var(--fr-nexus);
+    text-decoration: none;
+    border-bottom: 1px dashed currentColor;
+}
+.fr-transclusio:hover { border-bottom-style: solid; }
+
+a.fr-sym { color: inherit; text-decoration: none;
+    border-bottom: 1px dotted var(--fr-tenue); }
+a.fr-sym:hover { border-bottom-color: var(--fr-nexus);
+    color: var(--fr-nexus); }
+span.fr-sym { cursor: help;
+    border-bottom: 1px dotted var(--fr-tenue); }
+span.fr-sym:hover { border-bottom-color: var(--fr-nexus); }
+
+/* plica: forma quam compilator videt */
+.fr-contextum { margin-top: .5rem; }
+.fr-contextum summary {
+    cursor: pointer;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .76rem;
+    color: var(--fr-tenue);
+    padding: .25rem 0;
+}
+.fr-contextum summary:hover { color: var(--fr-nexus); }
+
+/* color syntaxis (0023) */
+.ca-sy-commentarium { color: var(--ca-sy-commentarium);
+    font-style: italic; }
+.ca-sy-chorda        { color: var(--ca-sy-chorda); }
+.ca-sy-numerus       { color: var(--ca-sy-numerus); }
+.ca-sy-clavis        { color: var(--ca-sy-clavis); font-weight: 600; }
+.ca-sy-genus         { color: var(--ca-sy-genus); }
+.ca-sy-praeprocessor { color: var(--ca-sy-praeprocessor); }
+
+/* ==================================================
+ * Vitia
+ * ================================================== */
+
+.fr-vitium {
+    margin: .5rem 0;
+    padding: .5rem .8rem;
+    background: var(--fr-vitium-fundus);
+    border-left: 3px solid var(--fr-vitium);
+    color: var(--fr-vitium);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .78rem;
+    line-height: 1.45;
+}
+.fr-vitium a { color: inherit; font-weight: 600; }
+
+/* ==================================================
+ * Pes et tabella
+ * ================================================== */
+
+.fr-pes {
+    max-width: var(--fr-mensura);
+    margin: 4rem auto 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--fr-linea-tenuis);
+    font-size: .8rem;
+    color: var(--fr-tenue);
+}
+.fr-pes h2 { font-size: .8rem; font-weight: 600; margin: 0 0 .5rem;
+    text-transform: lowercase; letter-spacing: .06em; }
+.fr-clausura {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    columns: 3;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .74rem;
+}
+
+#fr-tabella {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    max-width: min(28rem, calc(100vw - 2rem));
+    background: var(--fr-charta);
+    border: 1px solid var(--fr-linea-tenuis);
+    border-radius: 5px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.14);
+    padding: .7rem .9rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .78rem;
+    line-height: 1.5;
+}
+#fr-tabella[hidden] { display: none; }
+#fr-tabella .fr-t-nomen { font-weight: 600; color: var(--fr-nexus); }
+#fr-tabella .fr-t-caput { color: var(--fr-tenue); }
+#fr-tabella .fr-t-typus { display: block; margin-top: .35rem;
+    white-space: pre-wrap; word-break: break-word; }
+#fr-tabella .fr-t-claudere {
+    float: right; margin-left: 1rem; cursor: pointer;
+    border: 0; background: none; color: var(--fr-tenue);
+    font: inherit; padding: 0;
+}
+
+@media print {
+    #fr-tabella { display: none; }
+    .fr-contextum[open] summary { display: none; }
+}

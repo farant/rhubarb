@@ -62,3 +62,19 @@ octetim comparata; nata 2026-09-05 (causa: nativitas portae), manu
 compilata linea II sua (`clang … gamma.c -o gamma`), imprimit `8`.
 Regeneratio `BRIAR_AMALGAMA_SCRIBERE=1 ./briar/compile_probationes.sh
 amalgama` cum causa nominata in commissione; inspectio manu ante.
+
+## facies (consilium V, 2026-09-11)
+
+- `thistle/facies_utf8.thistle` — commentarium C per lineas duas cum
+  charactere non-ASCII (`æ`): tectum coloris per lineas SECTUM, octeti
+  utf8 non scissi (decretum 01M0ATF1E1).
+- `thistle/facies_evasio.thistle` — `<script>` et `&` et citationes in
+  PROSA et in literalibus C: prosa evaditur (proiectio faciei), C
+  semper evaditur.
+- `facies/salve.html`, `facies/fragmenta.html` — aurea corporis
+  paginae, VESTE PROBATORIA reddita (notae solae): CSS verum ea movere
+  non potest. `BRIAR_FACIES_SCRIBERE=1` + causa nominata.
+- `facies/circulus.html` — aurum UNUM repraesentativum legis F4
+  (pagina plagulae fractae). Quinque adversa cetera contra causam +
+  lineam BRIAR IPSIUS probantur, non contra aurea: minus fragile, et
+  relationem probat non octetos.

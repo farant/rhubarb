@@ -58,3 +58,8 @@ probationes/pictor/specimina/*.differentia.png
 # Python dev-time (pythonica)
 __pycache__/
 *.pyc
+
+# vestis faciei infixa (tools/briar_facies_capsula.sh)
+capsula_facies_briar.h
+capsula_facies_briar.c
+facies_briar.toml

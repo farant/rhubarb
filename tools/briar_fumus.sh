@@ -82,6 +82,8 @@ for f in salve punctum derivatum fragmenta salve_vitreum adversa/probatio_rubra 
 done
 [ -f "$RADIX/project-specs/exempla/salutatio.thistle" ] \
     || { echo "FUMUS: exemplum abest: project-specs/exempla/salutatio.thistle" >&2; exit 2; }
+[ -f "$RADIX/project-specs/exempla/salutatio2.thistle" ] \
+    || { echo "FUMUS: exemplum abest: project-specs/exempla/salutatio2.thistle" >&2; exit 2; }
 
 AREA="$(mktemp -d /tmp/briar_fumus.XXXXXX)" || exit 2
 # HOME PROPRIUM (exportatum): briar ~/.rhubarb/briar/<t>-<clavis>/ scribit,
@@ -115,7 +117,9 @@ cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
    "$FIXA/fragmenta.thistle" "$FIXA/salve_vitreum.thistle" \
    "$FIXA/adversa/probatio_rubra.thistle" "$FIXA/adversa/duo_principalia.thistle" \
    "$FIXA/adversa/fragmentum_erratum.thistle" \
+   "$FIXA/adversa/fragmentum_circulus.thistle" \
    "$RADIX/project-specs/exempla/salutatio.thistle" \
+   "$RADIX/project-specs/exempla/salutatio2.thistle" \
    "$AREA/" || exit 2
 chmod +x "$AREA"/*.thistle
 echo "FUMUS: area $AREA"
@@ -238,8 +242,41 @@ if grep -q 'lib/\*\.c' "$SALUTATIO_DIR/aedificare.sh"; then
     deficere "aedificare.sh salutationis globum 'lib/*.c' adhuc fert" "$SALUTATIO_DIR/aedificare.sh"
 fi
 
+# ---- XI. facies: pagina litterata (-html; nihil aperit) ----
+echo "FUMUS: XI. ./salutatio2.thistle -html (pagina litterata)"
+PAGINA="$( cd "$AREA" && ./salutatio2.thistle -html 2>"$AREA/facies.err" | tail -1 )" \
+    || deficere "salutatio2 -html defecit" "$AREA/facies.err"
+[ -s "$PAGINA" ] || deficere "pagina vacua aut absens: $PAGINA" "$AREA/facies.err"
+grep -q '<!--@' "$PAGINA" \
+    && deficere "nota involucri non consumpta in pagina" "$PAGINA"
+grep -q 'id="frag-principale"' "$PAGINA" \
+    || deficere "sedes fragmenti #principale abest" "$PAGINA"
+# fragmentum COMMUNE: usus DUO (programma et probatio) - hic probatur
+# quod tergum-nexus GREX est, non numerus unus
+grep -q 'id="frag-repositorium"' "$PAGINA" \
+    || deficere "sedes fragmenti #repositorium abest" "$PAGINA"
+# caput fragmenti linea UNA post sedem sequitur; nexus in eo numerantur
+N_USUS="$( grep -A1 'id="frag-repositorium"' "$PAGINA" | grep 'fr-usus' \
+    | grep -o 'href="#l[0-9]*"' | wc -l | tr -d ' ' )"
+[ "$N_USUS" = 2 ] \
+    || deficere "#repositorium usus II exspectati (programma + probatio), inventi $N_USUS" "$PAGINA"
+# numerare, numquam absentiam: contexta = radices duae
+N_CONTEXTA="$( grep -c '<details class="fr-contextum"' "$PAGINA" )"
+[ "$N_CONTEXTA" = 2 ] \
+    || deficere "contexta II exspectata (radix + probatio), inventa $N_CONTEXTA" "$PAGINA"
+# insula symbolorum: capita derivata quae plagula nusquam scribit
+grep -q '"caput":"piscina.h"' "$PAGINA" \
+    || deficere "insula symbolorum piscina.h non nominat" "$PAGINA"
+# plagula FRACTA paginam tamen dat, causam nominans (lex F4)
+PAGINA_FRACTA="$( cd "$AREA" && ./fragmentum_circulus.thistle -html 2>"$AREA/facies_fracta.err" | tail -1 )" \
+    || deficere "circulus -html defecit (pagina semper reddi debet)" "$AREA/facies_fracta.err"
+[ -s "$PAGINA_FRACTA" ] || deficere "pagina plagulae fractae vacua" "$AREA/facies_fracta.err"
+grep -q 'circulus' "$PAGINA_FRACTA" \
+    || deficere "pagina fracta causam 'circulus' non nominat" "$PAGINA_FRACTA"
+echo "FUMUS:    pagina: $( wc -c < "$PAGINA" | tr -d ' ' ) octeti, contexta $N_CONTEXTA, #repositorium usus $N_USUS"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"
@@ -270,7 +307,7 @@ case "$CORPUS" in
     *) deficere "corpus paginae 'salve, munde' non continet: [$CORPUS] - pons 'salve' tacuit" "$AREA/textus.err" ;;
 esac
 
-echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, actum)"
+echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, actum)"
 purgare
 echo "fumus briar: sanum"
 exit 0

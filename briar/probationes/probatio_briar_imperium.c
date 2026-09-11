@@ -83,6 +83,20 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_AMALGAMA);
     CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, ZEPHYRUM);
 
+    /* briar -html x.thistle; shebang ./x.thistle -html (par. 4.6) */
+    CREDO_VERUM (_legere(piscina, &imp, II, "-html", "x.thistle",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_HTML);
+    CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, ZEPHYRUM);
+    CREDO_VERUM (_legere(piscina, &imp, II, "./x.thistle", "-html",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_HTML);
+    /* vexillum ignotum adhuc recusatur, et nuntius '-html' nominat */
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-htmlx", "x.thistle",
+        NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("-html", piscina));
+
     /* briar x.thistle -- -probatio : '--' abscisum, vexillum
      * programmatis */
     CREDO_VERUM (_legere(piscina, &imp, III, "x.thistle", "--",

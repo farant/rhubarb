@@ -3,9 +3,9 @@
  *
  * Forma: briar [-vexillum] [-f <radix>] <x.thistle> [argumenta...]
  * Ante plagulam: -probatio -struere [-iterum] -arbor -partes -amalgama
- * -versio -auxilium/-h, -f <radix>; aliud '-...' = recusatio (spiritus
- * optionum declaratarum). Post plagulam argumentum PRIMUM solum
- * inspicitur: unum e sex vexillis actionis = actio (forma shebang
+ * -html -versio -auxilium/-h, -f <radix>; aliud '-...' = recusatio
+ * (spiritus optionum declaratarum). Post plagulam argumentum PRIMUM
+ * solum inspicitur: unum e septem vexillis actionis = actio (shebang
  * './x.thistle -probatio'); '--' = finis vexillorum (abscisum);
  * cetera reliqua programmatis, intacta. Cur non argumenta.h: vexilla
  * ignota recusat nec in positionali sistit - '-foo' programmatis
@@ -32,6 +32,7 @@ nomen enumeratio {
     BRIAR_ACTIO_ARBOR,         /* -arbor */
     BRIAR_ACTIO_PARTES,        /* -partes */
     BRIAR_ACTIO_AMALGAMA,      /* -amalgama: plagula una (effugium) */
+    BRIAR_ACTIO_HTML,          /* -html: pagina litterata (par. 4.6) */
     BRIAR_ACTIO_VERSIO,        /* -versio (sine plagula) */
     BRIAR_ACTIO_AUXILIUM       /* -auxilium / -h (sine plagula) */
 } BriarActio;

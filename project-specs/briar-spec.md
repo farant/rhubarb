@@ -983,7 +983,7 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
   (closure size, cold build time, sqlite compile time, binary size) —
   they decide the vendor-object sharing question of §10.
 
-- **P6 facies (§4.6) — PLANNED (plan 5).** `briar_facies` + gate
+- **P6 facies (§4.6) — DONE (plan 5, 2026-09-05/11; T1 3d08992f, T2 3fdc4797, T3 cff9da70, T4). MEASURED: `salutatio2.thistle` (415 lines) → 70,107 bytes of self-contained page in 0.07 s; 13 fragments, 15 transclusion links, 2 woven views, 115 decorated derived symbols, 14 headers in the island. On its FIRST real run the page found a genuine error in the example: `salutatio2.thistle`'s hand-written header table names 13 headers and briar derives 14 — `motus.h` is missing, and the file uses `constans Motus* motus` at line 267. That file's own prose says "if the two ever disagree the table is wrong", so the feature paid back the cost it was built to pay back, on day one.** `briar_facies` + gate
   (fourteenth); the three chrome files and their capsula; `-html` in
   `briar_imperium` and `tools/briar.c`; escaping and UTF-8 fixtures;
   fumus stage XI. No clang, no window, no network — the page is a

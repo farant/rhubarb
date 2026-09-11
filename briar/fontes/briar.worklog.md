@@ -379,3 +379,46 @@ a `.m` is present. Notes:
   a bare function name passed as a value raises nothing — and joins
   the bare-macro case in spec §9. Reading other sessions' commit
   messages before debugging would have saved the first hour.
+
+## 2026-09-11 — facies (consilium V, T1-T4): quid pagina docuit
+
+**Numeri.** `salutatio2.thistle` (415 lineae) -> 70.107 octeti paginae
+sui sufficientis, 0,07 s. Fragmenta XIII, transclusiones XV, contexta
+II, symbola derivata CXV notata, capita XIV in insula. Porta facies
+currit sine clang, sine fenestra, sine rete.
+
+**Quod pagina INVENIT primo cursu vero.** `salutatio2.thistle` tabulam
+capitum MANU scriptam fert et ipsa monet: *"if the two ever disagree
+the table is wrong."* Discrepant. Tabula XIII nominat; briar XIV
+derivat. Deest `motus.h` — plagula `constans Motus* motus` linea CCLXVII
+adhibet. Charta ergo munus suum primo die praestitit: pretium quod
+prosa manu reddebat, pagina automatice reddit et errare non potest.
+
+**Culpa plantata quae TEGMEN nominavit, non successum.** Aside
+regionis sublatum -> assertio UNA rubra sola (aurum). Causae
+assertiones omnes viridis manebant quia aside PAGINAE (causa fabricae)
+aside REGIONIS geminabat: `circulus.html` causam eandem BIS ferebat.
+Emendatio: causa fabricae SUBSIDIARIA est. Eadem planta postea XIII
+assertiones rubras dedit. LECTIO: planta quae parum rubet defectum
+tegminis nuntiat; numerus rubrorum legendus est, non solum color.
+
+**Vestis ut parametrum.** Aurea corporis paginae veste PROBATORIA
+(notae solae) redduntur. Sine hoc CSS quodque emendatum aurea moveret
+et nemo post mensem sciret an mutatio significans esset.
+
+**Evasio prosae (F6).** HTML crudum in prosa transibat - non vitium
+briaris sed mos markdown, tribus bracchiis in md/html/md-html.stml.
+Proiectio propria (`briar/facies/md-html-facies.stml`) ea evadit.
+Ratio non securitas primum sed COHAERENTIA: forma HTML bloci columna 0
+IAM recusat, ergo transitus inlineum acceptum et bloccum refutatum
+faceret. Porta derivae exemplaria duo comparat.
+
+**Semita quae CODICE non eguit.** Par (symbolum -> caput)
+briar_silva IAM computabat et abiciebat; insula id servat. Similiter
+md nomen tagi IAM scandit (TAGI_CRUDI, LXII TAGI_BLOCORUM) et abicit -
+ergo politica per tagum EXPOSITIO erit, non extensio parsatoris
+(par. 9). Bis eadem forma: quod quaeris saepe iam computatum est.
+
+**Lectio crustae.** `tools/briar.c` recusationem ante actionem
+sistebat, ergo modulus legem F4 servabat sed BINARIUM eam frangebat.
+Fumus id invenit, non porta: porta modulum solum videt.

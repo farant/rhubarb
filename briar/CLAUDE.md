@@ -118,7 +118,7 @@ Findings: `fontes/briar.worklog.md`.
 
 ## Gates (`./briar/compile_probationes.sh [filter]`; exit 2 = NOTHING RAN)
 registrum · lexema · arbor · stml · canon · totalitas · computus · nexus
-· silva · fabrica · imperium · amalgama · contextus (thirteen files;
+· silva · fabrica · imperium · amalgama · contextus · facies (fourteen files;
 every one born red by a planted fault — see the worklog). Goldens:
 `fixa/contextus/fragmenta.contextus` (`BRIAR_CONTEXTUS_SCRIBERE=1`),
 `fixa/fabrica/fragmenta/`. Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
@@ -130,11 +130,25 @@ the vitrea build scripts are asserted structurally, their lists come
 from the corpus); amalgam golden `fixa/amalgama/gamma.c` over the
 SYNTHETIC fabrica `fixa/amalgama/fabrica/` (`BRIAR_AMALGAMA_SCRIBERE=1`
 + a named cause; real-corpus amalgams are asserted structurally, they
-would churn with every lib edit). The runner links silex's closure, `vendor/sqlite3.c`
+would churn with every lib edit); facies goldens `fixa/facies/`
+(`BRIAR_FACIES_SCRIBERE=1` + a named cause) rendered with TEST CHROME,
+so editing the real CSS can never move one. The runner links silex's closure, `vendor/sqlite3.c`
 and the silva amalgam as one object (cold ~21 s once; warm suite ~9 s).
 
 ## Laws
 - Column 0 is the only place briar looks. Prose needs no escaping.
+- **The facies page reads with JavaScript off.** Fragment links, use
+  sites, own-symbol anchors, the woven view and its gutter are markup
+  and anchors. The ONE script is the declaration panel. Break that and
+  the page is no longer what §4.6 says it is.
+- **The chrome is files, never C string literals** (`briar/facies/`,
+  carried in a capsula). briar splices; it does not contain CSS or JS.
+- **HTML in prose is TEXT**, through `briar/facies/md-html-facies.stml`
+  — md's projection minus `<crudum!>` in three arms, held to exactly
+  that difference by a drift gate. HTML lives in regions.
+- `-html` on a REFUSED thistle still writes the page (F4) and exits 0:
+  the render succeeded, the cause is on stderr AND in the margin. Every
+  other action exits 1 on refusal.
 - A raw region ends only at a column-0 `</name>`; an STML element at
   its column-0 close or its own self-closing line.
 - Every byte belongs to exactly one token; derived tokens (fons 1) hold

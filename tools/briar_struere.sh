@@ -26,6 +26,8 @@ fi
 
 source "$SCRIPT_DIR/corpus_infixum.sh"
 corpus_infixum_regenerare || exit 1
+source "$SCRIPT_DIR/briar_facies_capsula.sh"
+briar_facies_capsula_regenerare || exit 1
 
 # obiecta: omnia briar/build/*.o praeter probationes (obiecta
 # probationum ibi non cadunt, sed custodia eadem quae silex_struere)
@@ -39,7 +41,8 @@ mkdir -p bin
 echo "  [briar] tools/briar.c + corpus"
 clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     -Ibriar/fontes -Isilva/amalgama \
-    tools/briar.c build/capsula_corpus_silicis.c $OBJ \
+    tools/briar.c build/capsula_corpus_silicis.c \
+    build/capsula_facies_briar.c $OBJ \
     -o bin/briar || exit 1
 echo "aedificatum: bin/briar"
 

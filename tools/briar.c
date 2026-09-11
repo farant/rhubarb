@@ -38,6 +38,7 @@
 #include "via.h"
 #include "xar.h"
 #include "briar_amalgama.h"
+#include "briar_facies.h"
 #include "briar_arbor.h"
 #include "briar_contextus.h"
 #include "briar_fabrica.h"
@@ -54,6 +55,26 @@
  * (tools/corpus_infixum.sh); externus directus */
 /* <aedilis obiectum="build/capsula_corpus_silicis.c"/> */
 externus constans CapsulaEmbed capsula_corpus_silicis;
+/* vestis faciei (build/capsula_facies_briar.c). Caput genitum NON
+ * includitur - silva inclusionem citatam cum '..' solvere nequit
+ * (regula speculi, nota tabularii 01KY0T6T64): symbolum est
+ * contractus. */
+externus constans CapsulaEmbed capsula_facies_briar;
+
+/* plagula vestis e capsula; vacua si abest (vocans clamat) */
+interior chorda
+_vestem_legere (
+               Capsula* capsula,
+               Piscina* piscina,
+    constans character* via)
+{
+    CapsulaFructus f = capsula_legere(capsula, via, piscina);
+            chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    redde (f.status == CAPSULA_OK) ? f.datum : vacua;
+}
 
 #define BRIAR_VERSIO "v0"
 #define BRIAR_MORA_AEDIFICANDI_MS 600000
@@ -131,6 +152,8 @@ _auxilium (vacuum)
         "  -struere    aedificare solum; -iterum = clavem neglegere\n"
         "  -arbor      proiectionem STML imprimere\n"
                 "  -partes     clausuram imprimere (via, origo)\n"
+        "  -html       paginam <t>.html iuxta thistle scribere"
+        "\n"
         "  -amalgama   plagulam UNAM <t>.c iuxta thistle scribere"
         " (effugium: clang sola)\n"
         "  -versio     stampam corporis et sigilla vexillorum\n"
@@ -313,13 +336,21 @@ principale (
     optiones.stampa        = fons->titulus;
     fructus = briar_fabricare(piscina, doc, nexus, fons, &optiones,
         octeti);
+    /* '-html' recusationem TRANSIT: lex par. 4.6 F4 - pagina semper
+     * redditur, causa in margine ad lineam suam. Plagula fracta est
+     * ipsum momentum quo eam VIDERE maxime prodest (circulus inter
+     * fragmenta quattuor paragraphus in stderr est, sed PICTURA in
+     * margine). Causa tamen in stderr manet, cursoribus. */
     si (!fructus.successus)
     {
         fprintf(stderr, "%s:%d: %.*s\n", imp.via,
             (integer)fructus.linea_causae,
             (integer)fructus.causa.mensura,
             (constans character*)fructus.causa.datum);
-        redde I;
+        si (imp.actio != BRIAR_ACTIO_HTML)
+        {
+            redde I;
+        }
     }
         si (imp.actio == BRIAR_ACTIO_PARTES)
         {
@@ -424,6 +455,65 @@ principale (
                 (integer)p->via.mensura,
                 (constans character*)p->via.datum);
         }
+        redde ZEPHYRUM;
+        }
+
+        si (imp.actio == BRIAR_ACTIO_HTML)
+        {
+                  BriarVestis  vestis;
+                       chorda  pagina;
+                       chorda  causa;
+                       chorda  directorium;
+           constans character* dir_paginae;
+           constans character* via_paginae;
+                      Capsula* capsula;
+
+        capsula = capsula_aperire(&capsula_facies_briar, piscina);
+        si (capsula == NIHIL)
+        {
+            fprintf(stderr, "briar: vestis faciei non aperta\n");
+            redde I;
+        }
+        vestis.involucrum = _vestem_legere(capsula, piscina,
+            "briar/facies/facies.html");
+        vestis.styli      = _vestem_legere(capsula, piscina,
+            "briar/facies/facies.css");
+        vestis.scriptum   = _vestem_legere(capsula, piscina,
+            "briar/facies/facies.js");
+        vestis.exemplar   = _vestem_legere(capsula, piscina,
+            "briar/facies/md-html-facies.stml");
+        si (   vestis.involucrum.mensura == ZEPHYRUM
+            || vestis.exemplar.mensura   == ZEPHYRUM)
+        {
+            fprintf(stderr, "briar: vestis faciei incompleta\n");
+            redde I;
+        }
+        pagina = briar_faciem_fingere(piscina, intern, nexus,
+            fragmenta, &fructus, octeti, optiones.via_thistle, &vestis,
+            &causa);
+        si (pagina.mensura == ZEPHYRUM)
+        {
+            fprintf(stderr, "briar: %.*s\n", (integer)causa.mensura,
+                (constans character*)causa.datum);
+            redde I;
+        }
+        directorium = via_directorium(chorda_ex_literis(
+            optiones.via_thistle, piscina), piscina);
+        dir_paginae = directorium.mensura > ZEPHYRUM
+            ? chorda_ut_cstr(directorium, piscina) : ".";
+        via_paginae = chorda_ut_cstr(chorda_concatenare(
+            chorda_concatenare(chorda_ex_literis(dir_paginae, piscina),
+            chorda_ex_literis("/", piscina), piscina),
+            chorda_concatenare(chorda_ex_literis(fructus.titulus,
+            piscina), chorda_ex_literis(".html", piscina), piscina),
+            piscina), piscina);
+        si (!filum_scribere(via_paginae, pagina))
+        {
+            fprintf(stderr, "briar: pagina non scripta: %s\n",
+                via_paginae);
+            redde I;
+        }
+        imprimere("%s\n", via_paginae);
         redde ZEPHYRUM;
         }
 
