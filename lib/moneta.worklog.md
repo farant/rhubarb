@@ -78,3 +78,21 @@ calling `moneta_nanoid_plagulae` fails in `~/.bin/briar` with
 corpus is BAKED into the binary (`tools/corpus_infixum.sh`), so new
 lib functions reach thistle scripts only after the corpus is rebaked
 and briar + silex are rebuilt.
+
+## 2026-09-10 (later) — corpus rebaked; thistles see nanoid
+
+After commit 62dd6a1f: `./briar/compile_probationes.sh` 14/14 (fresh
+objects), then `./tools/briar_struere.sh` and `./tools/silex_struere.sh`
+(sequentially — both regenerate the SAME `build/capsula_corpus_silicis.c`).
+Both binaries report `corpus commit=62dd6a1f` with no SORDIDUM. The
+scratch thistle now prints 12-char ids from outside the repo. Gates on
+the installed binaries: `tools/briar_fumus.sh` sanum (stages I–X),
+`tools/silex_semen_fumus.sh` FACTUM (I–III, headless).
+
+- **Probe from OUTSIDE the tree.** A thistle run from inside the repo
+  uses the DISK corpus (`briar -versio` says `(discus)`), so it sees new
+  lib functions with no rebake at all. Only a run from elsewhere — like
+  a Finder Quick Action — exercises the embedded corpus.
+- The binaries were linked from the working tree, which held another
+  session's uncommitted materia edits (5 files, +66/−17); the briar
+  suite and both fumus gates were green with them in.
