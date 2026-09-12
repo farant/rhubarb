@@ -377,3 +377,78 @@ the arena was never the constraint.
 
 `sips` joined the glossary as `ignotum-permissum` beside `apple`, `icns`
 and `iconset`. Probatio: 212 assertions.
+
+## 2026-09-12 — Task 5 (part B): the CLI and the `iconutil` gate (I4)
+
+### `tools/icones_instrumentum.c`
+
+`-fons x.png -radix dir [-titulus AppIcon] [-latera 16,32,…]` writes
+`<radix>/<titulus>.iconset` and `<radix>/<titulus>.icns` and prints any
+omitted sizes; `-legere x.icns` prints one line per chunk —
+`ic04 434 png 16x16`, `ic04 324 argb` (Apple's own 16/32 px payloads),
+or `info 318 aliud`. Exit 0 done, 1 refused (cause named), 2 nothing done.
+**`stb_image` lives here and nowhere else**: the library still takes an
+already-decoded `Imago` (D7), so its closure stays vendor-free. The reader
+refuses a bad magic, a declared length that does not match the file, and
+a chunk header that is truncated or overruns — before every read. It is
+the third copy of the four-line big-endian helper (library writes,
+probatio and tool read); a shared home was not worth inventing for four
+lines. The chunk reader lives in the TOOL because a library reader is a
+§10 deferral.
+
+An unknown pixel size in `-latera` is an argument error (exit 2), not a
+library refusal: there is no flag it could map to.
+
+### The gate, `probationes/probatio_icones_iconutil.sh`
+
+Built on the leniency measured in part A, so it never trusts `rc`:
+
+- **0.** Relinks the CLI from the CURRENT `build/*.o` every run. The
+  suite's `compile_tool_if_needed` compares the tool binary against the
+  tool's own source only, never the library objects — a gate relying on
+  it would run a tool linked against yesterday's `lib/icones.c` and
+  report today's library green.
+- **I. Control:** Calculator's own `AppIcon.icns` must convert, so the
+  oracle is proven before it judges ours.
+- **II.** A 1024 px source (`sips` upscale of the committed fixture) →
+  our `.iconset` (10 files) and `.icns`.
+- **III. Direction A:** our `.icns` → `iconutil` → exactly 10 files, each
+  at its own size by `sips -g`.
+- **IV. Direction B:** our `.iconset` → `iconutil` → Apple's `.icns`;
+  `-legere` both; the code SETS must match (Apple adds `info` and orders
+  differently), and sizes must agree wherever both carry PNG — at least 8
+  such chunks, or "no discrepancy" would prove nothing. A note fires if
+  Apple ever stops writing `ic04` as `ARGB` (D9 would need revisiting).
+- **V. Adversarial:** declared length +1 — `iconutil` and `-legere` must
+  both refuse (the oracle can say no).
+- **VI. Adversarial:** a chunk length missing its header — prints the
+  measured `rc=0`-with-one-file behaviour as a note, and `-legere` must
+  refuse with `CHUNKUS`.
+
+Byte patching uses `perl`, which the suite already requires
+(`Time::HiRes`), rather than adding Python to a root gate.
+
+**Registration** (`compile_tests.sh`, after the `plutil` block): unfiltered
+runs always; filtered runs only when the filter matches
+`probatio_icones_iconutil` (so `icones` and `iconutil` do). The gate
+relinks a Cocoa/WebKit tool and makes a dozen `iconutil`/`sips` calls; an
+unrelated `./compile_tests.sh stml` should not pay for that. `plutil`
+always runs because it is cheap.
+
+### Calibration — and what it revealed about coverage
+
+Plant: the 128 px row's code `"ic07"` → `"ic13"`. **`probatio_icones`
+stayed GREEN at 212**; the gate went red with *"iconutil ex .icns nostro 9
+plagulas extraxit, X exspectatae (rc=0 non sufficit)"* — `iconutil`
+reported success on a mislabelled container, and only the file count
+caught it. planta's green re-run was also the gate's first run inside a
+filtered suite.
+
+**So the code → size mapping above 64 px is guarded ONLY by I4.** I3 pins
+codes for a 64 px source (`ic04 ic11 ic05 ic12`), and nothing in C checks
+128 and up. Left that way deliberately: Apple's tool knows Apple's truth,
+while a hand-written table in the probatio would restate `ORDINES` from
+the same memory that wrote it — self-consistency, not evidence (the
+lesson of `manus`' 200-vs-202). The consequence is worth naming: a
+machine without `iconutil` (exit 2, a named skip) runs with that mapping
+unguarded.

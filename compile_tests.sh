@@ -841,6 +841,31 @@ run_all_tests() {
         fi
     fi
 
+    # Oraculum iconum: iconutil (instrumentum Apple) continentem .icns et
+    # .iconset NOSTRA utraque directione iudicat. Post ansam, ut plutil.
+    # Porta instrumentum ex obiectis PRAESENTIBUS reaedificat et iconutil
+    # sipsque saepe vocat (secundae aliquot), ergo in cursu FILTRATO
+    # solum currit si filtrum eam nominat ('icones', 'iconutil') - cursus
+    # alieni ('stml') pretium eius non solvunt. Exitus 2 = NIHIL CURSUM,
+    # nominatim praetermissum, numquam viride tacitum.
+    if [ -x "probationes/probatio_icones_iconutil.sh" ] \
+        && { [ -z "$FILTER" ] \
+             || [[ "probatio_icones_iconutil" == *"$FILTER"* ]]; }; then
+        ./probationes/probatio_icones_iconutil.sh > "$SINGULAE/iconutil.log" 2>&1
+        iconutil_rc=$?
+        if [ "$iconutil_rc" = "0" ]; then
+            echo -e "${BLUE}icones iconutil: continens ab Apple utraque directione acceptus${RESET}"
+        elif [ "$iconutil_rc" = "2" ]; then
+            echo -e "${YELLOW}icones iconutil: NIHIL CURSUM (praerequisita desunt)${RESET}"
+            head -3 "$SINGULAE/iconutil.log" 2>/dev/null
+        else
+            echo -e "${RED}✗ icones iconutil fractus (curre: ./probationes/probatio_icones_iconutil.sh)${RESET}"
+            head -12 "$SINGULAE/iconutil.log" 2>/dev/null
+            TESTS_FAILED=$((TESTS_FAILED + 1))
+            FAILED_TESTS="$FAILED_TESTS icones_iconutil"
+        fi
+    fi
+
     # Build GUI apps (but don't run them)
     if [ -n "$gui_apps" ]; then
         echo -e "${BLUE}═══════════════════════════════════════${RESET}"
