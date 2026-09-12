@@ -71,30 +71,47 @@ _recusare (
     redde FALSUM;
 }
 
-/* Quadratum ad centrum, deinde ad latera exacta. Dimensiones IPSI
- * computamus et non 'intra limites' petimus, quia creatores
- * aspectum servantes rationem et productum truncant (imago_opus.c:
- * 263-271) et 512 ex crop 512 lato 511 dare possunt. Ad 1:1 nihil
- * scalatur: imago fontis ipsa redditur. */
+/* Quadratum ad CENTRUM recisum, SEMEL pro omnibus lateribus.
+ *
+ * Olim regio et scala uno vocamine imago_extrahere_et_scalare
+ * petebantur, et commentarium hic dicebat nos dimensiones IPSOS
+ * computare. FALSUM erat: illa functio latera ut LIMITES accipit et ea
+ * truncat (fons M px ad XVI -> XV), et modum AREA tacite bilinearem
+ * faciebat (2026-09-12, oraculum sips congelatum invenit). Nunc regio
+ * hic copiatur et imago_scalare - dimensiones EXACTAE - quodque latus
+ * facit. Fons iam quadratus ipse redditur: nihil copiatur. */
 interior Imago
-_quadratum_scalare (
+_quadratum_recidere (
      constans Imago* fons,
-                s32  latus_fontis,
-                s32  latera,
+                s32  latus,
             Piscina* piscina)
 {
-    s32 x = ((s32)fons->latitudo - latus_fontis) / II;
-    s32 y = ((s32)fons->altitudo - latus_fontis) / II;
+    Imago quadratum;
+      s32 x = ((s32)fons->latitudo - latus) / II;
+      s32 y = ((s32)fons->altitudo - latus) / II;
+      s32 versus;
 
-    si (latera == latus_fontis && x == ZEPHYRUM && y == ZEPHYRUM)
+    si ((s32)fons->latitudo == latus && (s32)fons->altitudo == latus)
     {
         redde *fons;
     }
-    redde imago_extrahere_et_scalare(fons, (i32)x, (i32)y,
-                                     (i32)latus_fontis,
-                                     (i32)latus_fontis, (i32)latera,
-                                     (i32)latera, IMAGO_SCALA_AREA,
-                                     piscina);
+    quadratum.latitudo = (i32)latus;
+    quadratum.altitudo = (i32)latus;
+    quadratum.pixela    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)((s64)latus * latus * IV));
+    si (quadratum.pixela == NIHIL)
+    {
+        redde quadratum;
+    }
+    per (versus = ZEPHYRUM; versus < latus; versus++)
+    {
+        memcpy(quadratum.pixela + ((s64)versus * latus * IV),
+               fons->pixela
+                   + ((((s64)y + versus) * (s64)fons->latitudo
+                   + x) * IV),
+               (size_t)((s64)latus * IV));
+    }
+    redde quadratum;
 }
 
 /* Longitudo magni-endiana octetum post octetum, significantissimum
@@ -269,6 +286,7 @@ icones_reddere (
        i32 i;
        i32 j;
        b32 tegit;
+     Imago quadratum;
 
     vacua.datum    = NIHIL;
     vacua.mensura  = ZEPHYRUM;
@@ -375,6 +393,14 @@ icones_reddere (
                         vacua);
     }
 
+    /* recisio SEMEL, ante ansam laterum */
+    quadratum = _quadratum_recidere(petitio->fons, latus, piscina);
+    si (quadratum.pixela == NIHIL)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_MEMORIA,
+                        vacua);
+    }
+
     per (i = ZEPHYRUM; i < X; i++)
     {
         cache[i] = vacua;
@@ -413,9 +439,12 @@ icones_reddere (
                   Imago parva;
              PngFructus png;
 
-            parva = _quadratum_scalare(petitio->fons, latus,
-                                       (s32)ORDINES[i].latera,
-                                       piscina);
+            /* 1:1 nihil scalatur; aliter dimensiones EXACTAE */
+            parva = (ORDINES[i].latera == (i32)latus)
+                ? quadratum
+                : imago_scalare(&quadratum, ORDINES[i].latera,
+                                ORDINES[i].latera, IMAGO_SCALA_AREA,
+                                piscina);
             si (parva.pixela == NIHIL)
             {
                 redde _recusare(status, sedes_vitii,

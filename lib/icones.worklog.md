@@ -249,3 +249,131 @@ assertions themselves.
 The formatter flags lines over 72 columns but cannot wrap them: six
 needed hand edits, and the terminal tail hid the one in `lib/icones.c`
 — the full `-vitia` log named it. Probatio: 180 assertions.
+
+## 2026-09-12 — Task 5 (part A): two defects the new oracles found
+
+### What was shipped wrong, and why nothing saw it
+
+Building I7 (quality against `sips`) and the CLI surfaced two real
+defects in code committed in Tasks 2–3:
+
+1. **Every icon was bilinear.** icones requested `IMAGO_SCALA_AREA`
+   through `imago_extrahere_et_scalare`, whose dispatch was `si
+   (PROXIMUS) … alioquin bilinear` — Task 1 had added `AREA` only to
+   `imago_scalare`. Fixed at the source in `4fe5ab6f` (see
+   `lib/imago_opus.worklog.md`).
+2. **Off-by-one dimensions for any non-power-of-two source.**
+   `_quadratum_scalare` passed exact sizes as MAXIMUM bounds, and the
+   fit-within arithmetic truncates twice: a 1000 px source gave 15, 31,
+   63, 127, 255, 511; a 100 px source gave 15, 31, 63. Measured through
+   the CLI's `-legere`. **Its own comment claimed the opposite** ("we
+   compute the dimensions OURSELVES and do not ask 'within bounds'") —
+   the comment was written knowing the hazard, and the code beneath it
+   walked straight into it.
+
+I1–I6 could see neither: none looks at a pixel value, and every fixture
+was 64, 256, 512 or 1024 — sizes where the truncation happens to be
+exact. Same class as `imago_opus` I2 a: a fixture whose varied property
+is constant along the axis that fails.
+
+### The fix: crop once, scale to exact dimensions
+
+`_quadratum_recidere` crops the centred square ONCE (a square source is
+returned as-is, no copy), and each size is `imago_scalare(&quadratum,
+latera, latera, IMAGO_SCALA_AREA)` — which takes exact dimensions. icones
+no longer calls `imago_extrahere_et_scalare` at all.
+
+### I7 measures the INTERIOR — the plan's metric could not work
+
+The plan asked for a ceiling on `delta_maximum`. Measured against the
+frozen oracle, straight RGBA cannot separate the modes: max delta area
+224, bilinear 255, dominated by partly-transparent disc-edge pixels where
+Apple's filter legitimately reaches further (pixel (2,4): `sips` alpha
+111, ours 224). Premultiplying did not rescue it either (>32: area 44,
+bilinear 46). **Restricted to pixels opaque in both images** (112 of 256):
+
+| vs `sips` | px delta > 16 | max | mean ×100 |
+|---|---|---|---|
+| area | 0 | 14 | 226 |
+| bilinear | 75 | 202 | 2113 |
+| nearest | 112 | 202 | 9341 |
+
+Limits: at most 8 differing pixels, mean at most 600. The gate asserts
+that bilinear and nearest EXCEED both (calibration kept in the test, not
+only in a one-off plant), and that the interior holds more than 100
+pixels (an over-masked comparison would pass vacuously). Counting goes
+through `imago_conferre` on masked copies, so "differs" keeps the
+library's own definition. The edge ring stays covered by `imago_opus`
+I2's exact alpha pins.
+
+Colour management was ruled out first: `sips` tagged its output
+`sRGB IEC61966-2.1` (the source had no profile), but interior values agree
+within 7, so no conversion shifted them.
+
+**The oracle is frozen, not live.** `sips`' output depends on the fixture
+alone, never on our code, so `probationes/fixa/icones/generare.py` writes
+`fons_256.png` deterministically (stdlib `zlib`/`struct`) and runs `sips
+-z 16 16` once. Same discipline as Python-pinned constants. The fixture is
+built to falsify: transparent WHITE outside the disc (a halo shows in
+every channel), and 1 px black lines every 8 rows — at 16× nearest lands
+on a line every time, area shades them.
+
+### I8: exact dimensions, and the crop that was never tested
+
+A 100×100 source must give 16/32/32/64, read from each PNG's IHDR. And a
+120×100 source with red 10-column margins and a blue centre must render
+64×64 with ZERO red pixels — **centred cropping (spec D1) had never been
+tested**, because every fixture was square. The positive twin (exactly
+64×64 blue) stops an empty image from passing.
+
+### Calibration: 3 plants, 15 reds predicted, 15 counted
+
+| Plant | Red | Where |
+|---|---|---|
+| `AREA` → `BILINEARIS` in the new call | 2 | I7 only |
+| crop column offset × 0 (left-aligned) | 2 | I8 crop only |
+| route back through `imago_extrahere_et_scalare` | 11 | I8 dims (8) + crop size/blue (3); I7 green |
+
+The third plant is the regression that actually happened, re-created on
+purpose: with `extrahere`'s `AREA` arm now fixed, it no longer breaks I7 —
+only I8 — which is itself the evidence that the two defects were
+independent.
+
+### A prediction I got wrong, and why
+
+Before the icones fix I predicted the new tests would show 13 reds; they
+showed 11. I7 was already GREEN (interior 112, differing 0, mean 226 —
+identical to the probe's area row), because `4fe5ab6f` had fixed
+`extrahere` one commit earlier and icones still called it. I predicted
+against a picture of the code one commit stale. So I7 was never red
+against the icones path until the mode plant made it red — which is why
+that plant was not optional.
+
+### Correction to Task 3
+
+Task 3 chose a 512 source for I6 citing "~13 MB of the 16 MB arena". That
+premise was wrong: `piscina_generare_dynamicum` GROWS (`est_dynamicum`;
+a full block adds one of twice the initial size, or `request + initial`
+for an oversized request — `lib/piscina.c` `_allocare_interna`). The 512
+choice still stands on its own merit (two duplicate pairs on disk), but
+the arena was never the constraint.
+
+### Apple's behaviour, measured for Task 5's remaining gates
+
+- **`iconutil` is a lenient oracle.** Of six corruptions of our `.icns` it
+  rejected only a declared length LARGER than the file. It returned
+  `rc=0` for: declared length one short; a zeroed PNG signature; an
+  unknown chunk code (silently dropped, 9 files out); and **a chunk length
+  missing its 8-byte header — one file extracted, success reported**. Our
+  `-legere` rejects the first two of those. So I4 must assert file COUNT
+  and each file's dimensions, never the return code alone.
+- **When `iconutil` builds an `.icns` from our PNGs, `ic04`/`ic05` come out
+  as `ARGB` payloads, not PNG** (`ic11` stays PNG; `info` is a `bplist00`).
+  Evidence behind spec D9 — and the reason the Finder check needs an
+  `ic04`-only bundle. `-legere` now labels them `argb`.
+- **Apple re-encodes every PNG, ~2.4× smaller than ours** (our `ic10`
+  221,158 bytes vs Apple's 91,157). Our encoder writes filter type NONE.
+  Named, not fixed: size, not correctness.
+
+`sips` joined the glossary as `ignotum-permissum` beside `apple`, `icns`
+and `iconset`. Probatio: 212 assertions.

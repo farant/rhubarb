@@ -1004,5 +1004,6 @@
   <vocabulum lemma="icns" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae Apple (continens iconum, magicum 'icns'), ut plist et json: nomen alienum FIXUM quod Latine reddi non debet; sedes icones_icns_codificare, icones_icns_scribere"/>
   <vocabulum lemma="iconset" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen directorii Apple (.iconset, plagulae PNG quas iconutil in .icns vertit); sedes icones_iconset_scribere"/>
   <vocabulum lemma="apple" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen societatis; in ICONES_SETUM_APPLE setum magnitudinum quod Apple ipsa definit (spec icones par. IV, per iconutil mensuratum)"/>
+  <vocabulum lemma="sips" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen instrumenti Apple (/usr/bin/sips, imagines scalat et convertit); in probatio_icones.c imago XVI px quam sips ex fonte fixo reddidit - oraculum CONGELATUM portae I7 (probationes/fixa/icones/generare.py)"/>
 
 </glossarium>

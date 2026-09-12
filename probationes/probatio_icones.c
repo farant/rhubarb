@@ -10,6 +10,9 @@
 #include "filum.h"
 #include "credo.h"
 #include "piscina.h"
+#include "imago.h"
+#include "imago_opus.h"
+#include "imago_collatio.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -200,6 +203,98 @@ _recusatam_purgare (vacuum)
     filum_delere(VIA_RECUSATA_ICNS);
     filum_delere(VIA_PLAGULA_PARENS);
     filum_delere(VIA_RECUSATA);
+}
+
+/* I7: limites MENSURATI 2026-09-12 contra sips_16.png congelatum,
+ * INTERIOR tantum (pixela in utraque imagine plene opaca). Mensurae:
+ * area >XVI nulla, media 2.26; bilinearis LXXV, 21.13; proximus CXII,
+ * 93.41. Limites largi - area bis et semis infra mediam, bilinearis
+ * ter et semis supra - ergo 'modus falsus per errorem' capitur, non
+ * 'filtrum nostrum ab Apple differt'. */
+#define LIMES_DIVERSA  VIII
+#define LIMES_MEDIA    600      /* media per canalem, x C */
+
+/* COMPARATIO INTERIOR. In margine disci filtra LEGITIME dissentiunt
+ * (sips alpha latius spargit: pixelum (2,4) sips 111, nostrum 224),
+ * et in RGBA recto margo omnes numeros dominabatur - delta maxima area
+ * 224, bilinearis 255, indiscreta. Interior modum discernit. Marginem
+ * alpha I2 in imago_opus pinnis exactis tenet.
+ *
+ * Numerus per imago_conferre super copias LARVATAS (pixela non
+ * interiora in utraque ad nihilum posita): definitio 'differt'
+ * bibliothecae ipsa, non nova. Media hic computatur, quia collatio
+ * mediam non fert. 'intus' redditur ut vocans comparationem NON VACUAM
+ * asserere possit - larva nimia 'nulla differentia' daret. */
+interior vacuum
+_interior_conferre (
+    constans Imago* a,
+    constans Imago* b,
+               i32  tolerantia,
+               i32* diversa,
+               i32* media,
+               i32* intus,
+           Piscina* piscina)
+{
+               Imago la;
+               Imago lb;
+      CollatioRegula regula;
+     CollatioFructus collatio;
+                 i32 n;
+                 i32 i;
+                 i32 ch;
+                 s64 summa = ZEPHYRUM;
+
+    *diversa  = ZEPHYRUM;
+    *media    = ZEPHYRUM;
+    *intus    = ZEPHYRUM;
+    si (   !a->pixela || !b->pixela
+        || a->latitudo != b->latitudo || a->altitudo != b->altitudo)
+    {
+        *diversa  = MMMMXCVI;
+        *media    = MMMMXCVI;
+        redde;
+    }
+    n   = a->latitudo * a->altitudo;
+    la  = *a;
+    lb  = *b;
+    la.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(n * IV));
+    lb.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(n * IV));
+    si (!la.pixela || !lb.pixela)
+    {
+        *diversa  = MMMMXCVI;
+        *media    = MMMMXCVI;
+        redde;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans i8* pa = a->pixela + (i * IV);
+        constans i8* pb = b->pixela + (i * IV);
+
+        si (pa[III] == 255 && pb[III] == 255)
+        {
+            memcpy(la.pixela + (i * IV), pa, (size_t)IV);
+            memcpy(lb.pixela + (i * IV), pb, (size_t)IV);
+            (*intus)++;
+            per (ch = ZEPHYRUM; ch < III; ch++)
+            {
+                summa += (pa[ch] > pb[ch]) ? (s64)(pa[ch] - pb[ch])
+                                           : (s64)(pb[ch] - pa[ch]);
+            }
+        }
+        alioquin
+        {
+            memset(la.pixela + (i * IV), ZEPHYRUM, (size_t)IV);
+            memset(lb.pixela + (i * IV), ZEPHYRUM, (size_t)IV);
+        }
+    }
+    memset(&regula, ZEPHYRUM, magnitudo(CollatioRegula));
+    regula.tolerantia  = tolerantia;
+    collatio           = imago_conferre(&la, &lb, regula, piscina);
+    *diversa           = collatio.pixela_diversa;
+    *media    = (*intus > ZEPHYRUM)
+        ? (i32)((summa * C) / ((s64)*intus * III)) : ZEPHYRUM;
 }
 
 s32
@@ -750,6 +845,192 @@ principale (vacuum)
                   "AppIcon.iconset/icon_16x16.png");
 
         _recusatam_purgare();
+    }
+
+    /* ---- I7: qualitas contra sips CONGELATUM, interior ---- */
+    {
+         ImagoFructus  fons;
+         ImagoFructus  sips;
+         ImagoFructus  nostra;
+               Icones  petitio;
+        IconesFructus  fructus;
+         IconesStatus  status;
+               chorda  sedes;
+           IconesPars* pars;
+                Imago  alia;
+                  i32  diversa;
+                  i32  media;
+                  i32  intus;
+
+        imprimere("\n--- I7: qualitas contra sips congelatum ---\n");
+
+        /* Fixa et oraculum: probationes/fixa/icones/generare.py. Exitus
+         * sips fontis SOLIUS functio est, ergo congelari licet: codex
+         * noster mutatur sine hoc fixo renovando. */
+        fons = imago_caricare_ex_file(
+            "probationes/fixa/icones/fons_256.png", piscina);
+        sips = imago_caricare_ex_file(
+            "probationes/fixa/icones/sips_16.png", piscina);
+        CREDO_VERUM(fons.successus);
+        CREDO_VERUM(sips.successus);
+
+        si (!fons.successus || !sips.successus)
+        {
+            CREDO_CULPA("fixa icones legi non possunt (cwd = radix?)");
+        }
+        alioquin
+        {
+            memset(&petitio, ZEPHYRUM, magnitudo(Icones));
+            petitio.fons = &fons.imago;
+            petitio.titulus = chorda_ex_literis("AppIcon",
+                piscina);
+            petitio.latera_petita = ICONES_LATERA_XVI;
+            CREDO_VERUM(icones_reddere(&petitio, &fructus, &status,
+                &sedes,
+                                       piscina));
+            pars = (IconesPars*)xar_obtinere(fructus.partes, ZEPHYRUM);
+            CREDO_NON_NIHIL(pars);
+            nostra = imago_caricare_ex_memoria(pars->octeti.datum,
+                                               pars->octeti.mensura,
+                                               piscina);
+            CREDO_VERUM(nostra.successus);
+
+            _interior_conferre(&sips.imago, &nostra.imago, XVI,
+                &diversa,
+                               &media, &intus, piscina);
+            imprimere("  icones:     intus %u, diversa %u, media %u\n",
+                      intus, diversa, media);
+            /* comparatio NON VACUA */
+            CREDO_MAIOR_I32(intus, C);
+            CREDO_MINOR_AUT_AEQUALIS_I32(diversa, LIMES_DIVERSA);
+            CREDO_MINOR_AUT_AEQUALIS_I32(media, LIMES_MEDIA);
+
+            /* CALIBRATIO IN PORTA IPSA: modi falsi limites EXCEDERE
+             * debent, aliter limites nihil discernunt */
+            alia = imago_scalare(&fons.imago, XVI, XVI,
+                                 IMAGO_SCALA_BILINEARIS, piscina);
+            _interior_conferre(&sips.imago, &alia, XVI, &diversa,
+                &media,
+                               &intus, piscina);
+            imprimere("  bilinearis: intus %u, diversa %u, media %u\n",
+                      intus, diversa, media);
+            CREDO_MAIOR_I32(diversa, LIMES_DIVERSA);
+            CREDO_MAIOR_I32(media, LIMES_MEDIA);
+
+            alia = imago_scalare(&fons.imago, XVI, XVI,
+                                 IMAGO_SCALA_PROXIMUS, piscina);
+            _interior_conferre(&sips.imago, &alia, XVI, &diversa,
+                &media,
+                               &intus, piscina);
+            imprimere("  proximus:   intus %u, diversa %u, media %u\n",
+                      intus, diversa, media);
+            CREDO_MAIOR_I32(diversa, LIMES_DIVERSA);
+            CREDO_MAIOR_I32(media, LIMES_MEDIA);
+        }
+    }
+
+    /* ---- I8: dimensiones EXACTAE et recisio CENTRALIS ---- */
+    {
+               Icones  petitio;
+        IconesFructus  fructus;
+         IconesStatus  status;
+               chorda  sedes;
+                Imago  centum;
+                Imago  lata;
+           IconesPars* pars;
+         ImagoFructus  decodificata;
+                  i32  i;
+                  s32  x;
+                  s32  y;
+                  i32  rubra;
+                  i32  caerulea;
+                  i32  numerus;
+
+        imprimere("\n--- I8: dimensiones exactae, recisio ---\n");
+
+        /* Fons C x C: latus NON potestas binaria. Olim creator 'intra
+         * limites' truncabat (M -> XV; C -> XV, XXXI, LXIII), et fixa
+         * omnia priora potestates binariae erant - nihil id videbat. */
+        centum = _fingere(C, piscina);
+        CREDO_NON_NIHIL(centum.pixela);
+        memset(&petitio, ZEPHYRUM, magnitudo(Icones));
+        petitio.fons     = &centum;
+        petitio.titulus  = chorda_ex_literis("AppIcon", piscina);
+        CREDO_VERUM(icones_reddere(&petitio, &fructus, &status, &sedes,
+                                   piscina));
+        CREDO_AEQUALIS_I32(xar_numerus(fructus.partes), IV);
+        per (i = ZEPHYRUM; i < xar_numerus(fructus.partes); i++)
+        {
+            pars = (IconesPars*)xar_obtinere(fructus.partes, i);
+            si (pars == NIHIL)
+            {
+                CREDO_CULPA("pars NIHIL");
+                perge;
+            }
+            /* IHDR: latitudo ad octetum XVI, altitudo ad XX */
+            CREDO_AEQUALIS_I32(_be32_legere(pars->octeti.datum + XVI),
+                               pars->latera);
+            CREDO_AEQUALIS_I32(_be32_legere(pars->octeti.datum + XX),
+                               pars->latera);
+        }
+
+        /* Fons CXX x C: margines RUBRI X columnarum utrimque, centrum
+         * CAERULEUM. Recisio ad CENTRUM rubrum nullum retinet; recisio
+         * ad sinistram X columnas rubras retineret. Recisio centralis
+         * (D1) antea NUMQUAM probata erat: fixa omnia quadrata. */
+        lata.latitudo = CXX;
+        lata.altitudo = C;
+        lata.pixela    = (i8*)piscina_allocare(piscina,
+            (memoriae_index)(CXX * C * IV));
+        CREDO_NON_NIHIL(lata.pixela);
+        per (y = ZEPHYRUM; y < C; y++)
+        {
+            per (x = ZEPHYRUM; x < CXX; x++)
+            {
+                 i8* p      = lata.pixela + (((y * CXX) + x) * IV);
+                b32  margo  = (x < X || x >= CX) ? VERUM : FALSUM;
+
+                p[ZEPHYRUM]  = margo ? (i8)255 : (i8)ZEPHYRUM;
+                p[I]         = (i8)ZEPHYRUM;
+                p[II]        = margo ? (i8)ZEPHYRUM : (i8)255;
+                p[III]       = (i8)255;
+            }
+        }
+        memset(&petitio, ZEPHYRUM, magnitudo(Icones));
+        petitio.fons           = &lata;
+        petitio.titulus        = chorda_ex_literis("AppIcon", piscina);
+        petitio.latera_petita  = ICONES_LATERA_LXIV;
+        CREDO_VERUM(icones_reddere(&petitio, &fructus, &status, &sedes,
+                                   piscina));
+        CREDO_AEQUALIS_I32(fructus.latera_fontis, C);
+        pars = (IconesPars*)xar_obtinere(fructus.partes, ZEPHYRUM);
+        CREDO_NON_NIHIL(pars);
+        decodificata = imago_caricare_ex_memoria(pars->octeti.datum,
+                                                 pars->octeti.mensura,
+                                                 piscina);
+        CREDO_VERUM(decodificata.successus);
+        CREDO_AEQUALIS_I32(decodificata.imago.latitudo, LXIV);
+        CREDO_AEQUALIS_I32(decodificata.imago.altitudo, LXIV);
+        rubra     = ZEPHYRUM;
+        caerulea  = ZEPHYRUM;
+        numerus = decodificata.imago.latitudo
+            * decodificata.imago.altitudo;
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            constans i8* q = decodificata.imago.pixela + (i * IV);
+
+            si (q[ZEPHYRUM] != ZEPHYRUM)
+            {
+                rubra++;
+            }
+            si (q[II] == 255)
+            {
+                caerulea++;
+            }
+        }
+        CREDO_AEQUALIS_I32(rubra, ZEPHYRUM);
+        /* gemellus POSITIVUS: imago vacua 'rubrum nullum' daret */
+        CREDO_AEQUALIS_I32(caerulea, (i32)(LXIV * LXIV));
     }
 
     imprimere("\n");
