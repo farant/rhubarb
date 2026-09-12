@@ -185,6 +185,205 @@ principale (vacuum)
         CREDO_CHORDA_VACUA(nihil_scriptum);
     }
 
+    /* ---- G2: lector, unum genus per casum ---- */
+    {
+             PlistResultus  r;
+                PlistValor* v;
+        constans character* textus =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" "
+            "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+            "<plist version=\"1.0\"><dict>\n"
+            "  <key>S</key><string>a &lt; b</string>\n"
+            "  <key>I</key><integer>-42</integer>\n"
+            "  <key>R</key><real>0.5</real>\n"
+            "  <key>V</key><true/>\n"
+            "  <key>D</key><date>2026-09-11T02:41:32Z</date>\n"
+            "  <key>B</key><data>AAH/</data>\n"
+            "  <key>L</key><array><integer>1</integer>"
+            "<integer>2</integer></array>\n"
+            "</dict></plist>\n";
+
+        imprimere("\n--- G2: lector ---\n");
+
+        r = plist_legere(chorda_ex_literis(textus, piscina), piscina,
+                         intern);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_SUCCESSUS);
+        CREDO_NON_NIHIL(r.radix);
+        CREDO_AEQUALIS_I32(plist_numerus(r.radix), VII);
+
+        v = plist_dictio_capere(r.radix, "S");
+        CREDO_NON_NIHIL(v);
+        CREDO_AEQUALIS_I32((i32)v->genus, (i32)PLIST_CHORDA);
+        CREDO_CHORDA_AEQUALIS_LITERIS(v->textus, "a < b");
+
+        v = plist_dictio_capere(r.radix, "I");
+        CREDO_AEQUALIS_S64(v->integrum, -42);
+        v = plist_dictio_capere(r.radix, "R");
+        CREDO_VERUM(v->realis == 0.5);
+        v = plist_dictio_capere(r.radix, "V");
+        CREDO_VERUM(v->veritas);
+        v = plist_dictio_capere(r.radix, "D");
+        CREDO_AEQUALIS_S32(v->dies.dies.annus, 2026);
+        CREDO_AEQUALIS_S32(v->dies.hora.minutum, 41);
+        v = plist_dictio_capere(r.radix, "B");
+        CREDO_AEQUALIS_I32(v->textus.mensura, III);
+        CREDO_AEQUALIS_I32((i32)(i8)v->textus.datum[II], 255);
+        v = plist_dictio_capere(r.radix, "L");
+        CREDO_AEQUALIS_I32(plist_numerus(v), II);
+        CREDO_AEQUALIS_S64(plist_ad_indicem(v, I)->integrum, 2);
+    }
+
+    /* ---- G2: data ut Apple eam scribit (per lineas fracta) et
+     * data VACUA (nulli octeti licent) ---- */
+    {
+             PlistResultus  r;
+                PlistValor* v;
+        constans character* fracta =
+            "<plist version=\"1.0\"><dict>\n"
+            "\t<key>B</key>\n"
+            "\t<data>\n"
+            "\tAAECAwQF\n"
+            "\t</data>\n"
+            "\t<key>V</key>\n"
+            "\t<data></data>\n"
+            "</dict></plist>";
+
+        imprimere("\n--- G2: data fracta et vacua ---\n");
+
+        r = plist_legere(chorda_ex_literis(fracta, piscina), piscina,
+                         intern);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_SUCCESSUS);
+        CREDO_NON_NIHIL(r.radix);
+
+        v = plist_dictio_capere(r.radix, "B");
+        CREDO_NON_NIHIL(v);
+        CREDO_AEQUALIS_I32((i32)v->genus, (i32)PLIST_DATA);
+        CREDO_AEQUALIS_I32(v->textus.mensura, VI);
+        CREDO_AEQUALIS_I32((i32)(i8)v->textus.datum[ZEPHYRUM], 0);
+        CREDO_AEQUALIS_I32((i32)(i8)v->textus.datum[V], 5);
+
+        v = plist_dictio_capere(r.radix, "V");
+        CREDO_NON_NIHIL(v);
+        CREDO_AEQUALIS_I32((i32)v->genus, (i32)PLIST_DATA);
+        CREDO_AEQUALIS_I32(v->textus.mensura, ZEPHYRUM);
+    }
+
+    /* ---- G2: recusationes, quaeque per statum et semitam ---- */
+    {
+             PlistResultus  r;
+                       i32  i;
+        constans character* mala[VIII];
+               PlistStatus  exspectati[VIII];
+
+        imprimere("\n--- G2: recusationes nominatae ---\n");
+
+        mala[0]        = "<dict/>";
+        exspectati[0]  = PLIST_ERROR_NON_PLIST;
+        mala[1]        = "<plist version=\"2.0\"><dict/></plist>";
+        exspectati[1]  = PLIST_ERROR_VERSIO;
+        mala[2]        = "bplist00\001\002";
+        exspectati[2]  = PLIST_ERROR_BINARIUM;
+        mala[3]       = "<plist version=\"1.0\"><dict>"
+                        "<key>a</key></dict></plist>";
+        exspectati[3] = PLIST_ERROR_STRUCTURA;
+        mala[4]       = "<plist version=\"1.0\"><dict>"
+                        "<string>sine clave</string></dict></plist>";
+        exspectati[4]  = PLIST_ERROR_STRUCTURA;
+        mala[5]        = "<plist version=\"1.0\"><ignotum/></plist>";
+        exspectati[5]  = PLIST_ERROR_STRUCTURA;
+        mala[6]       = "<plist version=\"1.0\">"
+                        "<data>!! non 64 !!</data></plist>";
+        exspectati[6] = PLIST_ERROR_BASE64;
+        mala[7]       = "<plist version=\"1.0\"><integer>"
+                        "99999999999999999999</integer></plist>";
+        exspectati[7] = PLIST_ERROR_NUMERUS;
+
+        per (i = ZEPHYRUM; i < VIII; i++)
+        {
+            r = plist_legere(chorda_ex_literis(mala[i], piscina),
+                             piscina, intern);
+            CREDO_AEQUALIS_I32((i32)r.status, (i32)exspectati[i]);
+            CREDO_NIHIL(r.radix);
+            CREDO_CHORDA_NON_VACUA(r.semita);
+        }
+
+        /* dies mala, radices plures, textus non albus in continente */
+        r = plist_legere(chorda_ex_literis(
+            "<plist version=\"1.0\"><date>heri</date></plist>",
+            piscina), piscina, intern);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_ERROR_DIES);
+        r = plist_legere(chorda_ex_literis(
+            "<plist version=\"1.0\"><dict/><dict/></plist>", piscina),
+            piscina, intern);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_ERROR_STRUCTURA);
+        r = plist_legere(chorda_ex_literis(
+            "<plist version=\"1.0\"><dict>sordes<key>a</key>"
+            "<string>b</string></dict></plist>", piscina), piscina,
+            intern);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_ERROR_STRUCTURA);
+    }
+
+    /* ---- G4: iter reditus nostrum (valor -> octeti -> valor) ---- */
+    {
+         PlistValor* d;
+         PlistValor* lista;
+        PlistStatus  status;
+      PlistResultus  r;
+             chorda  octeti;
+           DiesHora  dh;
+                 i8  data[II];
+
+        imprimere("\n--- G4: iter reditus ---\n");
+
+        dh.dies = fasti_dies(1978, 2, 3);
+        dh.hora = fasti_hora(23, 59, 58);
+        data[0] = (i8)0x10;
+        data[1] = (i8)0x20;
+
+        lista = plist_lista_creare(piscina);
+        plist_lista_addere(lista,
+            plist_realem_creare(1e-20, piscina), piscina);
+        plist_lista_addere(lista,
+            plist_data_creare(chorda_ex_buffer(data, II), piscina),
+            piscina);
+
+        d = plist_dictio_creare(piscina);
+        plist_dictio_ponere(d, chorda_ex_literis("a", piscina),
+            plist_chordam_creare(
+                chorda_ex_literis("&<>\"'", piscina), piscina),
+            piscina);
+        plist_dictio_ponere(d, chorda_ex_literis("b", piscina),
+            plist_integrum_creare(9223372036854775807LL, piscina),
+            piscina);
+        plist_dictio_ponere(d, chorda_ex_literis("c", piscina),
+            plist_diem_creare(dh, piscina), piscina);
+        plist_dictio_ponere(d, chorda_ex_literis("d", piscina),
+            lista, piscina);
+
+        octeti = plist_scribere(d, &status, piscina);
+        CREDO_AEQUALIS_I32((i32)status, (i32)PLIST_SUCCESSUS);
+        r = plist_legere(octeti, piscina, intern);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_SUCCESSUS);
+        CREDO_VERUM(plist_aequalis(d, r.radix));
+
+        /* aequalitas ORDINEM curat: eaedem claves, ordo inversus */
+        {
+            PlistValor* e = plist_dictio_creare(piscina);
+            PlistValor* f = plist_dictio_creare(piscina);
+
+            plist_dictio_ponere(e, chorda_ex_literis("y", piscina),
+                plist_integrum_creare(2, piscina), piscina);
+            plist_dictio_ponere(e, chorda_ex_literis("x", piscina),
+                plist_integrum_creare(1, piscina), piscina);
+            plist_dictio_ponere(f, chorda_ex_literis("x", piscina),
+                plist_integrum_creare(1, piscina), piscina);
+            plist_dictio_ponere(f, chorda_ex_literis("y", piscina),
+                plist_integrum_creare(2, piscina), piscina);
+            CREDO_FALSUM(plist_aequalis(e, f));
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

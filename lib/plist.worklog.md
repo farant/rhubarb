@@ -43,3 +43,39 @@ Numbers: 38 assertions, whole root suite 162 -> 163 tests. The new
 library entered `compile_tests_fontes_generata.sh` (177 -> 178 C
 sources) via `./tools/compile_tests_fontes_generare.sh`, which reads
 `lib/`, so it had to run AFTER `lib/plist.c` existed, not before.
+
+## 2026-09-11 — the reader (plan 1, task V)
+
+`plist_legere` walks the same `XmlNodus` tree the writer builds, so the
+two halves share one notion of what a plist is. 94 assertions now.
+
+**Refusals name a PLACE, not a line.** `XmlNodus` carries no position
+(`include/xml.h:68`), so every refusal carries a `semita` built on the
+way down: `plist/dict/key[3]`. Ten named statuses, each asserted
+individually — the house rule is that a refusal test proves its own
+cause, never merely that something was refused.
+
+**Two robustness cases went in BEFORE the implementation**, because a
+real `Info.plist` has both and neither is in the spec's example:
+
+- **Apple wraps `<data>` across lines**, indented with tabs. The reader
+  strips whitespace before decoding (`_album_tollere`). Without this,
+  every base64 payload Apple ever wrote would be refused.
+- **`<data></data>` is legal and means zero bytes.** That short-circuits
+  rather than asking the decoder what it thinks of empty input — the
+  decoder's answer for an empty string is not a documented contract, and
+  a guess there would have turned a legal plist into `PLIST_ERROR_BASE64`.
+
+**`nomen` is `typedef`.** The helper's parameter `constans character*
+nomen` expanded to `constans character* typedef`, and clang said
+"invalid parameter name: 'typedef' is a keyword". CLAUDE.md warns about
+this exact word and suggests the substitute I used, `titulus`. Second
+instance of the class today after `integer` -> `int` in task IV, and
+both were downstream-noisy: three "incompatible class assignment"
+violations at `:857/:895/:927` were only the call sites seeing an
+implicit `int`-returning helper. **When examen reports assignment
+violations at CALL SITES, look for a broken DEFINITION first.**
+
+Calibration: accepting multiple root children reddened `:319`;
+accepting non-whitespace text inside a container reddened `:324`. Both
+green after revert.

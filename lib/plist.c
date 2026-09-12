@@ -594,3 +594,441 @@ plist_scribere_plagulam (
     }
     redde filum_scribere(via, textus);
 }
+
+
+/* ==================================================
+ * Legere
+ * ================================================== */
+
+/* "basis/nomen" aut "basis/nomen[index]" - semita sedis, quia
+ * XmlNodus lineam non fert */
+interior chorda
+_semita_liberi (
+                 chorda  basis,
+     constans character* titulus,
+                    i32  index,
+                    b32  cum_indice,
+                Piscina* piscina)
+{
+    ChordaAedificator* aed;
+
+    aed = chorda_aedificator_creare(piscina,
+        (memoriae_index)basis.mensura + LXIV);
+    si (!aed)
+    {
+        redde basis;
+    }
+    chorda_aedificator_appendere_chorda(aed, basis);
+    chorda_aedificator_appendere_literis(aed, "/");
+    chorda_aedificator_appendere_literis(aed, titulus);
+    si (cum_indice)
+    {
+        chorda_aedificator_appendere_literis(aed, "[");
+        chorda_aedificator_appendere_i32(aed, index);
+        chorda_aedificator_appendere_literis(aed, "]");
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+interior b32
+_textus_albus (
+    chorda s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < s.mensura; i++)
+    {
+        i8 c = s.datum[i];
+
+        si (   c != (i8)' ' && c != (i8)'\t' && c != (i8)'\n'
+            && c != (i8)'\r')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Apple data per lineas frangit (tabulationibus indentata), ergo
+ * spatium album ante decodificationem tollendum est. */
+interior chorda
+_album_tollere (
+      chorda  s,
+     Piscina* piscina)
+{
+    chorda  fructus;
+        i8* purgata;
+       i32  i;
+       i32  n = ZEPHYRUM;
+
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
+
+    si (s.mensura == ZEPHYRUM)
+    {
+        redde fructus;
+    }
+    purgata = (i8*)piscina_allocare(piscina,
+        (memoriae_index)s.mensura);
+    si (!purgata)
+    {
+        redde fructus;
+    }
+    per (i = ZEPHYRUM; i < s.mensura; i++)
+    {
+        i8 c = s.datum[i];
+
+        si (   c != (i8)' ' && c != (i8)'\t' && c != (i8)'\n'
+            && c != (i8)'\r')
+        {
+            purgata[n] = c;
+            n++;
+        }
+    }
+    fructus.datum    = purgata;
+    fructus.mensura  = n;
+    redde fructus;
+}
+
+/* Liberum proximum quod ELEMENTUM est; textum album praeterit,
+ * textum aliud VITIUM nominat (numquam tacite deicit). */
+interior XmlNodus*
+_elementum_proximum (
+    XmlNodus* parens,
+         i32* index,
+         b32* vitium)
+{
+    *vitium = FALSUM;
+    dum (*index < xml_numerus_liberorum(parens))
+    {
+        XmlNodus* liberum = xml_liberum_ad_indicem(parens, *index);
+
+        (*index)++;
+        si (!liberum)
+        {
+            perge;
+        }
+        si (liberum->genus == XML_NODUS_ELEMENTUM)
+        {
+            redde liberum;
+        }
+        si (   liberum->genus == XML_NODUS_TEXTUS && liberum->valor
+            && !_textus_albus(*liberum->valor))
+        {
+            *vitium = VERUM;
+            redde NIHIL;
+        }
+    }
+    redde NIHIL;
+}
+
+interior PlistValor*
+_recusare (
+          PlistResultus* r,
+            PlistStatus  status,
+                 chorda  semita,
+     constans character* causa,
+                Piscina* piscina)
+{
+    r->status  = status;
+    r->semita  = semita;
+    r->causa   = chorda_ex_literis(causa, piscina);
+    redde NIHIL;
+}
+
+interior PlistValor*
+_valorem_ex_nodo (
+               XmlNodus* nodus,
+                 chorda  semita,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+          PlistResultus* r)
+{
+         PlistValor* v;
+             chorda  textus;
+                i32  index = ZEPHYRUM;
+                b32  vitium;
+
+    si (!nodus || !nodus->titulus)
+    {
+        redde _recusare(r, PLIST_ERROR_STRUCTURA, semita,
+                        "nodus sine titulo", piscina);
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "string"))
+    {
+        redde plist_chordam_creare(
+            xml_textus_internus(nodus, piscina), piscina);
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "true"))
+    {
+        redde plist_veritatem_creare(VERUM, piscina);
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "false"))
+    {
+        redde plist_veritatem_creare(FALSUM, piscina);
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "integer"))
+    {
+        s64 numerus;
+
+        si (!chorda_ut_s64(xml_textus_internus(nodus, piscina),
+                           &numerus))
+        {
+            redde _recusare(r, PLIST_ERROR_NUMERUS, semita,
+                            "integer non legitur", piscina);
+        }
+        redde plist_integrum_creare(numerus, piscina);
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "real"))
+    {
+        f64 numerus;
+
+        si (!chorda_ut_f64(xml_textus_internus(nodus, piscina),
+                           &numerus))
+        {
+            redde _recusare(r, PLIST_ERROR_NUMERUS, semita,
+                            "real non legitur", piscina);
+        }
+        redde plist_realem_creare(numerus, piscina);
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "date"))
+    {
+        DiesHora dh;
+
+        si (!fasti_ex_iso(xml_textus_internus(nodus, piscina), &dh))
+        {
+            redde _recusare(r, PLIST_ERROR_DIES, semita,
+                            "date non est instans ISO-8601 UTC",
+                            piscina);
+        }
+        redde plist_diem_creare(dh, piscina);
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "data"))
+    {
+        Base64Fructus decocta;
+               chorda purgata;
+
+        purgata = _album_tollere(
+            xml_textus_internus(nodus, piscina), piscina);
+        /* data vacua licet (nulli octeti); decodificatorem de
+         * ingressu vacuo non interrogamus */
+        si (purgata.mensura == ZEPHYRUM)
+        {
+            textus.datum    = NIHIL;
+            textus.mensura  = ZEPHYRUM;
+            redde plist_data_creare(textus, piscina);
+        }
+        decocta = base64_decodificare(purgata, piscina);
+        si (!decocta.datum)
+        {
+            redde _recusare(r, PLIST_ERROR_BASE64, semita,
+                            "data non est base64", piscina);
+        }
+        textus.datum    = decocta.datum;
+        textus.mensura  = decocta.mensura;
+        redde plist_data_creare(textus, piscina);
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "array"))
+    {
+        i32 ordo = ZEPHYRUM;
+
+        v = plist_lista_creare(piscina);
+        si (!v)
+        {
+            redde _recusare(r, PLIST_ERROR_MEMORIA, semita,
+                            "lista non creata", piscina);
+        }
+        per (;;)
+        {
+            XmlNodus* liberum = _elementum_proximum(nodus, &index,
+                                                    &vitium);
+            PlistValor* filius;
+
+            si (vitium)
+            {
+                redde _recusare(r, PLIST_ERROR_STRUCTURA, semita,
+                                "textus non albus in array", piscina);
+            }
+            si (!liberum)
+            {
+                frange;
+            }
+            filius = _valorem_ex_nodo(liberum,
+                _semita_liberi(semita, "array", ordo, VERUM, piscina),
+                piscina, intern, r);
+            si (!filius)
+            {
+                redde NIHIL;
+            }
+            plist_lista_addere(v, filius, piscina);
+            ordo++;
+        }
+        redde v;
+    }
+    si (chorda_aequalis_literis(*nodus->titulus, "dict"))
+    {
+        i32 ordo = ZEPHYRUM;
+
+        v = plist_dictio_creare(piscina);
+        si (!v)
+        {
+            redde _recusare(r, PLIST_ERROR_MEMORIA, semita,
+                            "dictio non creata", piscina);
+        }
+        per (;;)
+        {
+               XmlNodus* nodus_clavis;
+               XmlNodus* nodus_valoris;
+             PlistValor* filius;
+                 chorda  semita_clavis;
+
+            nodus_clavis = _elementum_proximum(nodus, &index, &vitium);
+            si (vitium)
+            {
+                redde _recusare(r, PLIST_ERROR_STRUCTURA, semita,
+                                "textus non albus in dict", piscina);
+            }
+            si (!nodus_clavis)
+            {
+                frange;
+            }
+            semita_clavis = _semita_liberi(semita, "key", ordo, VERUM,
+                                           piscina);
+            si (   !nodus_clavis->titulus
+                || !chorda_aequalis_literis(*nodus_clavis->titulus,
+                                            "key"))
+            {
+                redde _recusare(r, PLIST_ERROR_STRUCTURA,
+                                semita_clavis,
+                                "valor sine clave", piscina);
+            }
+            nodus_valoris = _elementum_proximum(nodus, &index,
+                                                &vitium);
+            si (vitium || !nodus_valoris)
+            {
+                redde _recusare(r, PLIST_ERROR_STRUCTURA,
+                                semita_clavis,
+                                "clavis sine valore", piscina);
+            }
+            filius = _valorem_ex_nodo(nodus_valoris, semita_clavis,
+                                      piscina, intern, r);
+            si (!filius)
+            {
+                redde NIHIL;
+            }
+            plist_dictio_ponere(v,
+                xml_textus_internus(nodus_clavis, piscina), filius,
+                piscina);
+            ordo++;
+        }
+        redde v;
+    }
+    redde _recusare(r, PLIST_ERROR_STRUCTURA,
+                    _semita_liberi(semita,
+                        chorda_ut_cstr(*nodus->titulus, piscina),
+                        ZEPHYRUM, FALSUM, piscina),
+                    "elementum ignotum", piscina);
+}
+
+PlistResultus
+plist_legere (
+                 chorda  textus,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    PlistResultus  r;
+      XmlResultus  fructus_xml;
+         XmlNodus* radix_xml;
+           chorda* versio;
+         XmlNodus* unicum;
+         XmlNodus* superfluum;
+              i32  index = ZEPHYRUM;
+              b32  vitium;
+
+    r.status         = PLIST_SUCCESSUS;
+    r.radix          = NIHIL;
+    r.causa.datum    = NIHIL;
+    r.causa.mensura  = ZEPHYRUM;
+    r.semita         = chorda_ex_literis("plist", piscina);
+
+    si (!piscina || !intern || chorda_vacua(textus))
+    {
+        (vacuum)_recusare(&r, PLIST_ERROR_STRUCTURA, r.semita,
+                          "textus vacuus aut plagula non legibilis",
+                          piscina);
+        redde r;
+    }
+    /* plist BINARIA: forma alia, ante omnia recusatur */
+    si (   textus.mensura                       >= VIII
+        && memcmp(textus.datum, "bplist0", VII) == ZEPHYRUM)
+    {
+        (vacuum)_recusare(&r, PLIST_ERROR_BINARIUM, r.semita,
+                          "bplist00 - forma binaria non tractatur",
+                          piscina);
+        redde r;
+    }
+    fructus_xml = xml_legere(textus, piscina, intern);
+    si (!fructus_xml.successus || !fructus_xml.radix)
+    {
+        r.status  = PLIST_ERROR_XML;
+        r.causa   = chorda_ex_s32((s32)fructus_xml.status,
+            piscina);
+        redde r;
+    }
+    radix_xml = fructus_xml.radix;
+    si (   !radix_xml->titulus
+        || !chorda_aequalis_literis(*radix_xml->titulus, "plist"))
+    {
+        (vacuum)_recusare(&r, PLIST_ERROR_NON_PLIST, r.semita,
+                          "radix non est plist", piscina);
+        redde r;
+    }
+    versio = xml_attributum_capere(radix_xml, "version");
+    si (versio && !chorda_aequalis_literis(*versio, "1.0"))
+    {
+        (vacuum)_recusare(&r, PLIST_ERROR_VERSIO, r.semita,
+                          "versio praeter 1.0", piscina);
+        redde r;
+    }
+    unicum = _elementum_proximum(radix_xml, &index, &vitium);
+    si (vitium || !unicum)
+    {
+        (vacuum)_recusare(&r, PLIST_ERROR_STRUCTURA, r.semita,
+                          "plist liberum unum poscit", piscina);
+        redde r;
+    }
+    superfluum = _elementum_proximum(radix_xml, &index, &vitium);
+    si (superfluum || vitium)
+    {
+        (vacuum)_recusare(&r, PLIST_ERROR_STRUCTURA, r.semita,
+                          "plist plus uno libero fert", piscina);
+        redde r;
+    }
+    r.radix = _valorem_ex_nodo(unicum, r.semita, piscina, intern, &r);
+    si (r.status != PLIST_SUCCESSUS)
+    {
+        r.radix = NIHIL;
+    }
+    redde r;
+}
+
+PlistResultus
+plist_legere_plagulam (
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    si (!via || !piscina)
+    {
+        PlistResultus r;
+
+        r.status         = PLIST_ERROR_STRUCTURA;
+        r.radix          = NIHIL;
+        r.semita         = chorda_ex_literis("plist", piscina);
+        r.causa.datum    = NIHIL;
+        r.causa.mensura  = ZEPHYRUM;
+        redde r;
+    }
+    redde plist_legere(filum_legere_totum(via, piscina), piscina,
+                       intern);
+}

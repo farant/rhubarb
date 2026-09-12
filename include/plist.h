@@ -181,4 +181,30 @@ plist_scribere_plagulam (
            PlistStatus* status,
                Piscina* piscina);
 
+
+/* ==================================================
+ * Legere
+ * ================================================== */
+
+/* Recusationes SEDEM nominant, non lineam: XmlNodus positionem non
+ * fert (include/xml.h:68), ergo semita ut "plist/dict/key[3]". */
+nomen structura {
+     PlistStatus  status;
+      PlistValor* radix;   /* NIHIL nisi PLIST_SUCCESSUS */
+          chorda  semita;
+          chorda  causa;
+} PlistResultus;
+
+PlistResultus
+plist_legere (
+                 chorda  textus,
+                Piscina* piscina,
+    InternamentumChorda* intern);
+
+PlistResultus
+plist_legere_plagulam (
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern);
+
 #endif /* PLIST_H */
