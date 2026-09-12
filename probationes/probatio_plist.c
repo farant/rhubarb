@@ -12,6 +12,7 @@
 #include "internamentum.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 s32
@@ -381,6 +382,82 @@ principale (vacuum)
             plist_dictio_ponere(f, chorda_ex_literis("y", piscina),
                 plist_integrum_creare(2, piscina), piscina);
             CREDO_FALSUM(plist_aequalis(e, f));
+        }
+    }
+
+    /* ---- G5: iter reditus ALIENUM (Info.plist ab Apple scripta) ----
+     *
+     * Fixum verum fert: (a) declarationem generis cum identificatore
+     * VETERE '-//Apple Computer//DTD PLIST 1.0//EN' (Xcode eum adhuc
+     * in fasciculos dSYM imprimit), quem scriptor noster non imitatur;
+     * (b) septem valores chordae, nullum genus aliud. Ergo comparatio
+     * OCTETORUM cum plagula Apple numquam succederet - G5 VALORES
+     * confert, consulto. */
+    {
+         PlistResultus  prima;
+         PlistResultus  secunda;
+           PlistStatus  status;
+                chorda  nostra;
+            PlistValor* v;
+    constans character* via_fixi =
+        "probationes/fixa/plist/apple_info.plist";
+
+        imprimere("\n--- G5: iter reditus alienum ---\n");
+
+        prima = plist_legere_plagulam(via_fixi, piscina, intern);
+        CREDO_AEQUALIS_I32((i32)prima.status, (i32)PLIST_SUCCESSUS);
+        CREDO_NON_NIHIL(prima.radix);
+        CREDO_AEQUALIS_I32((i32)prima.radix->genus, (i32)PLIST_DICTIO);
+        CREDO_AEQUALIS_I32(plist_numerus(prima.radix), VII);
+
+        v = plist_dictio_capere(prima.radix, "CFBundleIdentifier");
+        CREDO_NON_NIHIL(v);
+        CREDO_AEQUALIS_I32((i32)v->genus, (i32)PLIST_CHORDA);
+        CREDO_CHORDA_AEQUALIS_LITERIS(v->textus,
+            "com.apple.xcode.dsym.demo_85");
+
+        v = plist_dictio_capere(prima.radix, "CFBundlePackageType");
+        CREDO_NON_NIHIL(v);
+        CREDO_CHORDA_AEQUALIS_LITERIS(v->textus, "dSYM");
+
+        /* CFBundleSignature quattuor signa interrogationis fert */
+        v = plist_dictio_capere(prima.radix, "CFBundleSignature");
+        CREDO_NON_NIHIL(v);
+        CREDO_AEQUALIS_I32(v->textus.mensura, IV);
+
+        /* ordo servatus: clavis prima ea est quam Apple primam
+         * scripsit */
+        {
+            PlistPar* par = (PlistPar*)xar_obtinere(
+                prima.radix->liberi, ZEPHYRUM);
+
+            CREDO_NON_NIHIL(par);
+            CREDO_CHORDA_AEQUALIS_LITERIS(par->clavis,
+                "CFBundleDevelopmentRegion");
+        }
+
+        /* nostra scriptio, deinde lectio: VALORES idem */
+        nostra = plist_scribere(prima.radix, &status, piscina);
+        CREDO_AEQUALIS_I32((i32)status, (i32)PLIST_SUCCESSUS);
+        CREDO_CHORDA_NON_VACUA(nostra);
+        secunda = plist_legere(nostra, piscina, intern);
+        CREDO_AEQUALIS_I32((i32)secunda.status, (i32)PLIST_SUCCESSUS);
+        CREDO_VERUM(plist_aequalis(prima.radix, secunda.radix));
+
+        /* pro porta plutil (probatio_plist_plutil.sh): si PLIST_AREA
+         * in ambitu est, scriptionem nostram illuc pone */
+        {
+            constans character* area = getenv("PLIST_AREA");
+
+            si (area != NIHIL)
+            {
+                character via[CCLVI];
+
+                sprintf(via, "%.200s/nostra.plist", area);
+                CREDO_VERUM(plist_scribere_plagulam(prima.radix, via,
+                    &status, piscina));
+                CREDO_AEQUALIS_I32((i32)status, (i32)PLIST_SUCCESSUS);
+            }
         }
     }
 

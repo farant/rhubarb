@@ -79,3 +79,60 @@ violations at CALL SITES, look for a broken DEFINITION first.**
 Calibration: accepting multiple root children reddened `:319`;
 accepting non-whitespace text inside a container reddened `:324`. Both
 green after revert.
+
+## 2026-09-11 — the foreign oracle (plan 1, task VI)
+
+Apple's own 636-byte dSYM `Info.plist` copied into
+`probationes/fixa/plist/`, read, written back, value-compared (G5), and
+`probationes/probatio_plist_plutil.sh` added so Apple's `plutil` judges
+our bytes (G6). 111 assertions; whole root suite 163/163.
+
+**G5 passed on first contact** — no reader change was needed. That is
+not luck: the two robustness cases front-loaded in task V (strip
+whitespace before base64, empty `<data/>` means zero bytes) are exactly
+what a real Apple file needs. Front-loading them turned this task from
+a debugging session into a confirmation.
+
+**The fixture's DOCTYPE says `-//Apple Computer//DTD PLIST 1.0//EN`**,
+the older public identifier Xcode still stamps into dSYM bundles; our
+writer emits `-//Apple//DTD PLIST 1.0//EN`. Reading is unaffected (the
+skip never inspects the identifier), but a BYTE comparison against
+Apple's file could never pass — which is why G5 compares VALUES and
+G6 compares `plutil -convert xml1` canonical forms. Recorded before it
+could be mistaken for a bug.
+
+## The ordering trap this task actually hit
+
+I registered the gate inside `run_speculum()`, which `run_all_tests()`
+calls at line 722 — **before** the test loop. But this gate *executes
+the test binary*, so it ran before the binary existed, exited 2, and
+aborted the whole suite. Every `rc=2` I then saw was that abort, not a
+lock and not "nothing ran" in the usual sense. `qr_gyrus` gets away
+with living there because its binary is built by other means.
+
+The gate now runs **after** the test loop (line ~828), which is the
+only place its prerequisite exists. Exit 2 there is reported as a named
+skip rather than a failure, so a filtered run that never built the
+binary says so out loud.
+
+**And a self-inflicted one worth writing down.** I ran two calibration
+scripts in the same parallel batch: one planted a fault in
+`lib/plist.c` and rebuilt, the other swapped the fixture for a
+non-plist. They raced over `lib/` and `build/`, and I spent three
+rounds diagnosing a "failure" that was just my own planted binary
+surviving a source revert — the stale-binary trap, entered by reverting
+source without forcing a rebuild. **Calibrations mutate shared state:
+they run sequentially, never batched, and a revert must delete the
+binary, not just restore the file.**
+
+## Calibrations (all four, after the rebuild discipline was fixed)
+
+1. Planted `<sordes>` in the prolog, forced a rebuild: suite red AND
+   `plutil` refused our bytes (`Encountered unknown tag sordes`).
+2. Pointed `FIXUM` at a non-plist: `CONTROLLUM FRACTUM ... Unexpected
+   character #`, exit 1. The control is load-bearing, not decoration.
+3. Removed the binary: the standalone gate reported `NIHIL CURSUM` with
+   exit 2 as designed. **Honest limit:** through the runner the suite
+   rebuilds the binary first, so the runner's skip BRANCH is still
+   unexercised — it is reasoned, not proven.
+4. Restored state verified against HEAD each time.

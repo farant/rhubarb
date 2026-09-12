@@ -649,6 +649,7 @@ run_speculum() {
         fi
         echo -e "${BLUE}qr gyrus: codices legibiles (oraculum CoreImage)${RESET}"
     fi
+
     return 0
 }
 
@@ -815,6 +816,28 @@ run_all_tests() {
                 fi
                 echo ""
             done <<< "$test_files"
+        fi
+    fi
+
+    # Oraculum plist: plutil (instrumentum Apple) octetos nostros
+    # iudicat. HIC currit, non in run_speculum: porta binarium
+    # probationis ipsum vocat, ergo post ansam probationum sola sedes
+    # est ubi id exsistit (circulus aliter, rc=2). Exitus 2 = NIHIL
+    # CURSUM (binarium absens in cursu filtrato) - nominatim
+    # praetermittitur, numquam ut viride tacitum.
+    if [ -x "probationes/probatio_plist_plutil.sh" ]; then
+        ./probationes/probatio_plist_plutil.sh > "$SINGULAE/plutil.log" 2>&1
+        plutil_rc=$?
+        if [ "$plutil_rc" = "0" ]; then
+            echo -e "${BLUE}plist plutil: octeti ab Apple accepti${RESET}"
+        elif [ "$plutil_rc" = "2" ]; then
+            echo -e "${YELLOW}plist plutil: NIHIL CURSUM (praerequisita desunt)${RESET}"
+            head -3 "$SINGULAE/plutil.log" 2>/dev/null
+        else
+            echo -e "${RED}✗ plist plutil fractus (curre: ./probationes/probatio_plist_plutil.sh)${RESET}"
+            head -10 "$SINGULAE/plutil.log" 2>/dev/null
+            TESTS_FAILED=$((TESTS_FAILED + 1))
+            FAILED_TESTS="$FAILED_TESTS plist_plutil"
         fi
     fi
 
