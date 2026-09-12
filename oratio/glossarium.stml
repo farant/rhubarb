@@ -748,6 +748,7 @@
   <vocabulum lemma="api" lingua="anglica" classis="ignotum-permissum" nota="sedes 138"/>
   <vocabulum lemma="ascii" lingua="anglica" classis="ignotum-permissum" nota="sedes 46"/>
   <vocabulum lemma="nanoid" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="sedes 13; nomen algorithmi (moneta, 2026-09-10)"/>
+  <vocabulum lemma="plist" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae Apple (tabula proprietatum), ut xml / json; bibliotheca plist 2026-09-11"/>
 
   <!-- ================= TERMINI T13/T14 (oraculum UD; nexus renovatus 2026-09-05) =================
        verba plagularum T13 quae tabula symbolorum post commissionem T13

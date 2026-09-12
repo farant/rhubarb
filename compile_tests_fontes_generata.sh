@@ -120,6 +120,7 @@ declare -a SOURCE_FILES=(
     "lib/pinacotheca_visus.c"
     "lib/piscina.c"
     "lib/planta_lectio.c"
+    "lib/plist.c"
     "lib/processus_posix.c"
     "lib/qr.c"
     "lib/quaerere.c"
