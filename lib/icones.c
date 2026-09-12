@@ -14,6 +14,7 @@
 #include "imago_png.h"
 #include "filum.h"
 #include "via.h"
+#include "chorda_aedificator.h"
 
 #include <string.h>
 
@@ -38,6 +39,25 @@ hic_manens constans IconesOrdo ORDINES[X] = {
     {    DXII, "icon_512x512.png",    "ic09", ICONES_LATERA_DXII    },
     {   MXXIV, "icon_512x512@2x.png", "ic10", ICONES_LATERA_MXXIV   }
 };
+
+/* Nomina camporum ut sedes recusationum, in memoria STATICA: sedes
+ * etiam ubi piscina ipsa deest nominari debet. Tabulae MUTABILES, non
+ * literae: literae sub vexillis domus constantes sunt, et const in i8*
+ * abiicere -Wcast-qual vetat. */
+hic_manens character SEDES_PETITIO[]      = "petitio";
+hic_manens character SEDES_FRUCTUS[]      = "fructus";
+hic_manens character SEDES_PISCINA[]      = "piscina";
+hic_manens character SEDES_TITULUS[]      = "titulus";
+hic_manens character SEDES_FONS[]         = "fons";
+hic_manens character SEDES_PIXELA[]       = "pixela";
+hic_manens character SEDES_LATITUDO[]     = "latitudo";
+hic_manens character SEDES_ALTITUDO[]     = "altitudo";
+hic_manens character SEDES_PARTES[]       = "partes";
+hic_manens character SEDES_VIA[]          = "via";
+hic_manens character SEDES_VIA_RADICIS[]  = "via_radicis";
+
+#define SEDES_FIXA(tabula) \
+    chorda_ex_buffer((i8*)(tabula), (i32)(magnitudo(tabula) - I))
 
 interior b32
 _recusare (
@@ -136,6 +156,103 @@ _ordinem_scribere (
     redde sedes + (i32)VIII + octeti.mensura;
 }
 
+/* Latera petita ut textus ("128 1024"): sedes recusationis quae QUID
+ * petitum sit dicit, non vexilla nuda. Ordines tabulae ascendunt et
+ * gemini adiacent, ergo latus ultimum scriptum duplicata tollit.
+ * Magnitudo IGNOTA et TEXTUS: munus ipsum chorda_aedificator (cf.
+ * continens .icns, ubi magnitudo nota est et octeti crudi). */
+interior chorda
+_latera_nominare (
+         i32  petita,
+     Piscina* piscina)
+{
+    ChordaAedificator* aedificator;
+               chorda  vacua;
+                  i32  ultimum;
+                  i32  i;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+
+    aedificator = chorda_aedificator_creare(piscina, XXXII);
+    si (!aedificator)
+    {
+        redde vacua;
+    }
+    ultimum = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        si (   (petita & ORDINES[i].vexillum) == ZEPHYRUM
+            || ORDINES[i].latera              == ultimum)
+        {
+            perge;
+        }
+        si (ultimum != ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(aedificator, ' ');
+        }
+        chorda_aedificator_appendere_i32(aedificator,
+            ORDINES[i].latera);
+        ultimum = ORDINES[i].latera;
+    }
+    redde chorda_aedificator_finire(aedificator);
+}
+
+/* Fructus IUDICATUR antequam scriptor quicquam tangat. Fructus manu
+ * factus (non per icones_reddere) partes nullas, semitam tabulae
+ * ignotam aut octetos vacuos ferre potest, et quisque .icns aut
+ * .iconset VALIDUM sed inanem daret: icon vacuus sine errore, forma
+ * ipsa quam haec bibliotheca claudere exsistit. Semita VACUA hic
+ * LATERA est, non SCRIPTIO: via_iungere partes vacuas praeterit, ergo
+ * sine iudice in directorium ipsum scriberetur.
+ *
+ * Sedes: nomen campi, aut SEMITA partis vitiosae. */
+interior b32
+_fructum_iudicare (
+    constans IconesFructus* fructus,
+              IconesStatus* status,
+                    chorda* sedes_vitii)
+{
+    i32 numerus;
+    i32 i;
+
+    si (!fructus)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_FRUCTUS));
+    }
+    si (!fructus->partes || xar_numerus(fructus->partes) == ZEPHYRUM)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_PARTES));
+    }
+    numerus = xar_numerus(fructus->partes);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        IconesPars* pars = (IconesPars*)xar_obtinere(fructus->partes,
+            i);
+
+        /* intra limites NUMQUAM NIHIL: ramus defensivus quem nulla
+         * probatio attingit, ergo nulla planta */
+        si (!pars)
+        {
+            redde _recusare(status, sedes_vitii, ICONES_ERROR_MEMORIA,
+                            SEDES_FIXA(SEDES_PARTES));
+        }
+        si (!_codicem_invenire(pars->semita))
+        {
+            redde _recusare(status, sedes_vitii, ICONES_ERROR_LATERA,
+                            pars->semita);
+        }
+        si (chorda_vacua(pars->octeti))
+        {
+            redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                            pars->semita);
+        }
+    }
+    redde VERUM;
+}
+
 b32
 icones_reddere (
     constans Icones* petitio,
@@ -151,6 +268,7 @@ icones_reddere (
        s32 latus;
        i32 i;
        i32 j;
+       b32 tegit;
 
     vacua.datum    = NIHIL;
     vacua.mensura  = ZEPHYRUM;
@@ -162,22 +280,49 @@ icones_reddere (
     *status       = ICONES_SUCCESSUS;
     *sedes_vitii  = vacua;
 
-    si (!petitio || !fructus || !piscina)
+    si (!petitio)
     {
         redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
-                        vacua);
+                        SEDES_FIXA(SEDES_PETITIO));
+    }
+    si (!fructus)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_FRUCTUS));
+    }
+    si (!piscina)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_PISCINA));
     }
     si (chorda_vacua(petitio->titulus))
     {
         redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
-                        chorda_ex_literis("titulus", piscina));
+                        SEDES_FIXA(SEDES_TITULUS));
     }
-    si (   !petitio->fons || !petitio->fons->pixela
-        || petitio->fons->latitudo <= (i32)0
-        || petitio->fons->altitudo <= (i32)0)
+
+    /* Fons ABSENS = DESUNT, ut commentarium enumerationis dicit ('fons
+     * aut titulus'); fons PRAESENS sed vitiosus = FONS, campo nominato.
+     * Olim ambo FONS erant, contra caput ipsum. */
+    si (!petitio->fons)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_FONS));
+    }
+    si (!petitio->fons->pixela)
     {
         redde _recusare(status, sedes_vitii, ICONES_ERROR_FONS,
-                        chorda_ex_literis("fons", piscina));
+                        SEDES_FIXA(SEDES_PIXELA));
+    }
+    si (petitio->fons->latitudo == (i32)ZEPHYRUM)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_FONS,
+                        SEDES_FIXA(SEDES_LATITUDO));
+    }
+    si (petitio->fons->altitudo == (i32)ZEPHYRUM)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_FONS,
+                        SEDES_FIXA(SEDES_ALTITUDO));
     }
 
     latus = ((s32)petitio->fons->latitudo
@@ -192,10 +337,31 @@ icones_reddere (
 
     petita = (petitio->latera_petita == ZEPHYRUM)
         ? (i32)ICONES_SETUM_APPLE : petitio->latera_petita;
+    /* bita IGNOTA SOLA nominantur, non petitio tota */
     si ((petita & ~((i32)ICONES_SETUM_APPLE)) != ZEPHYRUM)
     {
         redde _recusare(status, sedes_vitii, ICONES_ERROR_LATERA,
-                        chorda_ex_s64((s64)petita, piscina));
+            chorda_ex_s64((s64)(petita & ~((i32)ICONES_SETUM_APPLE)),
+                          piscina));
+    }
+
+    /* D10 LATIUS: fons qui latus PETITUM nullum tegit nihil reddit, et
+     * successus sine parte icon nullus esset - recusatio, non fructus
+     * vacuus cum omissis plenis. Sedes latera petita nominat. */
+    tegit = FALSUM;
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        si (   (petita & ORDINES[i].vexillum) != ZEPHYRUM
+            && ORDINES[i].latera              <= (i32)latus)
+        {
+            tegit = VERUM;
+            frange;
+        }
+    }
+    si (!tegit)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_MINIMUS,
+                        _latera_nominare(petita, piscina));
     }
 
     fructus->partes         = xar_creare(piscina,
@@ -306,6 +472,28 @@ icones_iconset_scribere (
     *status       = ICONES_SUCCESSUS;
     *sedes_vitii  = vacua;
 
+    si (!via_radicis)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_VIA_RADICIS));
+    }
+    si (!piscina)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_PISCINA));
+    }
+    si (!_fructum_iudicare(fructus, status, sedes_vitii))
+    {
+        redde FALSUM;
+    }
+    /* titulus vacuus directorium '.iconset' daret - OCCULTUM et sine
+     * nomine */
+    si (chorda_vacua(fructus->titulus))
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_TITULUS));
+    }
+
     /* Suffixum .iconset FORMAE est, non electionis: iconutil
      * directorium sine eo recusat. Ergo bibliotheca id possidet. */
     relativa = chorda_concatenare(fructus->titulus,
@@ -314,6 +502,7 @@ icones_iconset_scribere (
     iungenda[I]         = relativa;
     directorium         = via_iungere(iungenda, II, piscina);
     via_directorii      = chorda_ut_cstr(directorium, piscina);
+    /* allocatio sola hic deficere potest: nulla probatio id attingit */
     si (!relativa.datum || !via_directorii)
     {
         redde _recusare(status, sedes_vitii, ICONES_ERROR_MEMORIA,
@@ -335,12 +524,9 @@ icones_iconset_scribere (
             chorda  via_plagulae;
          character* via_c;
 
-        pars = (IconesPars*)xar_obtinere(fructus->partes, i);
-        si (!pars)
-        {
-            redde _recusare(status, sedes_vitii, ICONES_ERROR_MEMORIA,
-                            vacua);
-        }
+        /* partes iam IUDICATAE: intra limites, semita nota */
+        pars                = (IconesPars*)xar_obtinere(fructus->partes,
+            i);
         iungenda[ZEPHYRUM]  = directorium;
         iungenda[I]         = pars->semita;
         via_plagulae        = via_iungere(iungenda, II, piscina);
@@ -369,8 +555,10 @@ icones_icns_codificare (
               IconesStatus* status,
                    Piscina* piscina)
 {
-    chorda  vacua;
-    chorda  continens;
+    chorda vacua;
+    chorda continens;
+    chorda sedes_neglecta;   /* iudex sedem poscit; codificatio sedem
+                               * non refert */
         i8* tela;
        i32  mensura;
        i32  sedes;
@@ -386,10 +574,20 @@ icones_icns_codificare (
     }
     *status = ICONES_SUCCESSUS;
 
-    /* Transitus PRIMUS: mensura tota et codex cuiusque partis ANTE
-     * allocationem. Magnitudo NOTA est, ergo tela semel allocatur -
-     * non chorda_aedificator, qui magnitudini ignotae et TEXTO
-     * destinatur (caput eius ipsum id dicit). */
+    si (!piscina)
+    {
+        *status = ICONES_ERROR_DESUNT;
+        redde vacua;
+    }
+    si (!_fructum_iudicare(fructus, status, &sedes_neglecta))
+    {
+        redde vacua;
+    }
+
+    /* Magnitudo NOTA ante allocationem, ergo tela semel allocatur - non
+     * chorda_aedificator, qui magnitudini ignotae et TEXTO destinatur
+     * (caput eius ipsum id dicit). Partes iam IUDICATAE: codex cuiusque
+     * notus, octeti non vacui. */
     numerus = xar_numerus(fructus->partes);
     mensura = (i32)VIII;
     per (i = ZEPHYRUM; i < numerus; i++)
@@ -397,16 +595,6 @@ icones_icns_codificare (
         IconesPars* pars = (IconesPars*)xar_obtinere(fructus->partes,
             i);
 
-        si (!pars)
-        {
-            *status = ICONES_ERROR_MEMORIA;
-            redde vacua;
-        }
-        si (!_codicem_invenire(pars->semita))
-        {
-            *status = ICONES_ERROR_LATERA;
-            redde vacua;
-        }
         mensura += (i32)VIII + pars->octeti.mensura;
     }
 
@@ -457,9 +645,26 @@ icones_icns_scribere (
     *status       = ICONES_SUCCESSUS;
     *sedes_vitii  = vacua;
 
+    si (!via)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_VIA));
+    }
+    si (!piscina)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
+                        SEDES_FIXA(SEDES_PISCINA));
+    }
+    /* iudicium HIC quoque, non solum in codificatione: sedem fert */
+    si (!_fructum_iudicare(fructus, status, sedes_vitii))
+    {
+        redde FALSUM;
+    }
+
     /* Gemellus TENUIS: octetos codificationis purae scribit et nihil
      * aliud computat, ergo plagula et chorda pura constructione
-     * congruunt (I6 id octetim probat). */
+     * congruunt (I6 id octetim probat). Post iudicium sola MEMORIA hic
+     * cadere potest. */
     continens = icones_icns_codificare(fructus, status, piscina);
     si (*status != ICONES_SUCCESSUS)
     {

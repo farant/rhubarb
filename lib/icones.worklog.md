@@ -129,3 +129,123 @@ Task 4 case.
 - **`si (!pars)` → `_MEMORIA` in the writers is unreachable by any
   test** (`xar_obtinere` within range). The plan's "a plant per refusal
   branch" cannot cover it; Task 4 should keep or remove it on purpose.
+
+## 2026-09-12 — Task 4: refusals (gate I5)
+
+### What the red run showed, observed rather than read
+
+Tests first, against the Task 3 code. Every red named a real behaviour:
+
+- missing `petitio` / `fructus` / `piscina` → the right status with an
+  EMPTY `sedes_vitii` (nothing named);
+- `fons` NIHIL → `ICONES_ERROR_FONS`, although the enum's own comment
+  says `DESUNT /* fons aut titulus */` — the code contradicted its
+  header;
+- `pixela` NIHIL, `latitudo` 0 and `altitudo` 0 → all three named
+  `"fons"`: three faults, one name;
+- an unknown size bit named as the WHOLE request (`129`, not `128`);
+- every requested size larger than the source → **`VERUM` with zero
+  parts** — D10's forbidden empty success, now measured;
+- then SIGSEGV (exit 139) at the first NIHIL writer argument, which
+  swallowed every later assertion, as the plan predicted.
+
+Two cases were already GREEN before implementation — `titulus` and the
+12 px source. A test that passes before the change cannot show it
+reaches its branch; plants R05 and R10 are what prove those two.
+
+### Decisions
+
+- **Nothing requested is covered → `ICONES_ERROR_MINIMUS`** (Fran),
+  with `sedes_vitii` naming the requested pixel sizes, `"128 1024"`.
+  Same failure `_MINIMUS` already reports — the source cannot cover
+  what was asked — so no new status. Built with `chorda_aedificator`,
+  which is exactly its job here: text of unknown length. (The `.icns`
+  container refused it for the opposite reasons.) A positive twin pins
+  the boundary: ONE covered size plus one uncovered still SUCCEEDS with
+  omissions, and `sedes_vitii` is cleared after that success.
+- **`fons` absent = `DESUNT`, present-but-broken = `FONS`**, each broken
+  field named (`pixela`, `latitudo`, `altitudo`).
+- **Unknown bits name only the unknown bits.**
+
+### Field names live in static arrays
+
+`sedes_vitii` must name the field even when `piscina` is the missing
+argument, so the names cannot be arena allocations. String literals are
+`const` under `-Wwrite-strings`, and `-Wcast-qual` forbids casting that
+away into `i8*` — so the names are mutable `hic_manens character[]`
+arrays, wrapped by `SEDES_FIXA(tabula)`. That macro uses
+`magnitudo(tabula) - I` for the length, so it is correct ONLY on an
+array: handed a pointer it would silently yield `sizeof(char*) - 1`.
+
+### One shared check for the three writers
+
+`_fructum_iudicare` runs before any writer touches disk: fructus NIHIL,
+partes NIHIL or empty, a part whose semita the table does not know
+(`LATERA`, naming the semita), a part with empty bytes (`DESUNT`,
+naming the semita). A hand-built fructus could otherwise produce a
+VALID but empty `.icns` or `.iconset` — a blank icon with no error, the
+exact failure this library exists to prevent. The empty semita from
+Task 3 lands here as `LATERA` instead of a confusing `SCRIPTIO` on the
+directory path. The writers' three `si (!pars)` checks were deleted;
+one remains inside the check, commented as unreachable.
+
+### Branches with NO plant, named so the claim is not overstated
+
+Every `_MEMORIA` refusal (xar creation, scaling, part append, path
+building, the container allocation, `pars` NIHIL in range) and
+`_ERROR_PNG` (its input is already validated) can only fire on
+allocation failure or impossible input. No test reaches them, so no
+plant can prove them. "A plant per refusal branch" means per REACHABLE
+branch: 28 of them.
+
+### Test design worth reusing
+
+- **`RECUSATIO(redditum, sperata, sedes_sperata)` is a MACRO, not a
+  function**, so `__LINE__` names the case line; a helper function
+  would put every red on one line inside itself. Non-variadic, so
+  examen accepts it.
+- **Refusal-before-write is proven against a WRITABLE area.** The
+  "file not created" assertions only mean something because a positive
+  twin then writes successfully to the same path; against an
+  unwritable path "not created" would be vacuous.
+- **I/O faults without `chmod`:** a regular FILE as a path parent makes
+  mkdir -p fail (`DIRECTORIUM`); a DIRECTORY occupying the first file's
+  name makes `fopen("wb")` fail (`SCRIPTIO`). Both hold even as root,
+  and neither leaves a mode to restore if the run dies — unlike
+  fasciculum's 0500 directories.
+
+### Calibration: 28 plants, 28 matched, 35 reds predicted and counted
+
+Plant form: swap the branch's status for a sibling status (equal token
+count, no crash), so it can go red ONLY if a test reaches that branch.
+The no-channel guards (`!status || !sedes_vitii`) were planted
+`FALSUM` → `VERUM` (2 reds each); `codificare`'s `status`-NIHIL guard
+by returning a non-empty chorda.
+
+**The multi-site reds are the evidence the check is shared.** F02
+(partes) reddened `icns_scribere` twice and `iconset_scribere` once; F03
+(unknown semita) reddened `icns_scribere`, `icns_codificare` and
+`iconset_scribere`. So each writer's CALL into the check is proven by a
+red, not assumed from reading the code.
+
+Not separately proven: the `sedes_vitii` assertions. A status swap
+proves reach and status precision; sedes precision rests on the literal
+assertions themselves.
+
+### Two tool facts
+
+- **`silva.planta` has no occurrence selector** — it calls
+  `Editio.replace` with the default count, so an anchor must be unique
+  text. The `si (!status || !sedes_vitii)` guard is identical in four
+  functions; the anchors take the token that follows it (`si (!petitio)`,
+  `si (!via_radicis)`, `si (!via)`). planta's default `tolerans` matches
+  token sequences across line breaks, so a flat anchor survives the
+  formatter re-wrapping.
+- **A MULTI-LINE replacement with a different token count IS accepted**;
+  only a FLAT one with a different count is refused (`forma
+  perderetur`). That is how the `codificare` plant returned a
+  non-empty value.
+
+The formatter flags lines over 72 columns but cannot wrap them: six
+needed hand edits, and the terminal tail hid the one in `lib/icones.c`
+— the full `-vitia` log named it. Probatio: 180 assertions.

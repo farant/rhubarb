@@ -761,6 +761,23 @@ Implements spec §7; gate I5.
   parts) to the directory path itself, and `filum_scribere` then fails
   `_SCRIPTIO`. Legible, but worth a case.
 
+**As executed (2026-09-12):**
+
+- **28 reachable refusal branches**, each tested by status AND
+  `sedes_vitii`, each with its own plant: 28 matched, 35 reds predicted
+  and counted. Plant form: swap the branch's status for a sibling
+  (equal tokens, no crash), so it reddens only if a test reaches it.
+- **Nothing requested covered → `_MINIMUS`** naming the requested sizes
+  (`"128 1024"`), Fran's call; one covered size still succeeds
+  (positive twin).
+- **`fons` NIHIL is now `_DESUNT`** — the enum's comment said so; the
+  code said `_FONS`.
+- **One shared `_fructum_iudicare` for all three writers**; the writers'
+  `si (!pars)` checks are deleted. Unreachable `_MEMORIA`/`_PNG`
+  branches carry no plant and are named in the worklog.
+- **`silva.planta` cannot select an occurrence**; anchors are token
+  sequences with enough context to be unique.
+
 ---
 
 ### Task 5: the oracles, the tool, the smoke, the seal

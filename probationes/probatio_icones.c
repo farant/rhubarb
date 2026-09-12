@@ -138,6 +138,70 @@ _aream_purgare (vacuum)
     filum_delere(VIA_AREAE);
 }
 
+/* Area recusationum SEPARATA ab area I6, ne purgatio unius alteram
+ * tangat. */
+#define VIA_RECUSATA        "/tmp/probatio_icones_recusata"
+#define VIA_RECUSATA_ICNS   VIA_RECUSATA "/AppIcon.icns"
+#define VIA_RECUSATA_SET    VIA_RECUSATA "/AppIcon.iconset"
+#define VIA_PLAGULA_PARENS  VIA_RECUSATA "/plagula"
+
+/* Recusatio TOTA uno versu: redditum FALSUM, status SPECIFICUS, sedes
+ * SPECIFICA. MACRO, non functio, ut __LINE__ lineam CASUS nominet -
+ * aliter rubra omnia lineam adiutoris dicerent. Variabiles 'status' et
+ * 'sedes' in ambitu vocantis esse debent. */
+#define RECUSATIO(redditum, sperata, sedes_sperata)              \
+    fac {                                                         \
+        CREDO_FALSUM(redditum);                                   \
+        CREDO_AEQUALIS_I32((i32)status, (i32)(sperata));          \
+        CREDO_CHORDA_AEQUALIS_LITERIS(sedes, (sedes_sperata));    \
+    } dum (FALSUM)
+
+/* Fructus MANU factus, non per icones_reddere: partem unam fert cum
+ * semita et octetis datis - forma quam scriptores iudicare debent. */
+interior IconesFructus
+_fructum_fingere (
+    constans character* semita,
+                chorda  octeti,
+               Piscina* piscina)
+{
+    IconesFructus  f;
+       IconesPars* p;
+
+    memset(&f, ZEPHYRUM, magnitudo(IconesFructus));
+    f.titulus  = chorda_ex_literis("AppIcon", piscina);
+    f.partes   = xar_creare(piscina, (i32)magnitudo(IconesPars));
+    p          = (IconesPars*)xar_addere(f.partes);
+    si (p != NIHIL)
+    {
+        p->latera = XVI;
+        p->semita = chorda_ex_literis(semita, piscina);
+        p->octeti = octeti;
+    }
+    redde f;
+}
+
+/* Profundissima PRIMUM: filum_delere remove() est, directoria VACUA
+ * sola tollit. Plagula prima iconset DIRECTORIUM esse potest (casus
+ * SCRIPTIO). */
+interior vacuum
+_recusatam_purgare (vacuum)
+{
+    character via[CCLVI];
+          i32 i;
+
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        sprintf(via, "%.200s/%.40s", VIA_RECUSATA_SET,
+            PLAGULAE_APPLE[i]);
+        filum_delere(via);
+    }
+    filum_delere(VIA_RECUSATA_SET);
+    filum_delere(VIA_RECUSATA "/.iconset");
+    filum_delere(VIA_RECUSATA_ICNS);
+    filum_delere(VIA_PLAGULA_PARENS);
+    filum_delere(VIA_RECUSATA);
+}
+
 s32
 principale (vacuum)
 {
@@ -429,6 +493,263 @@ principale (vacuum)
         CREDO_VERUM(_octeti_aequales(lectum, icns_pura));
 
         _aream_purgare();
+    }
+
+    /* ---- I5: recusationes, quaeque statu SUO et sede SUA ---- */
+    {
+               Icones bona;
+               Icones p;
+        IconesFructus fructus;
+        IconesFructus f;
+         IconesStatus status;
+               chorda sedes;
+               chorda icns;
+               chorda octeti;
+               chorda vacua;
+                Imago fons;
+                Imago parva;
+                Imago mala;
+
+        imprimere("\n--- I5: recusationes ---\n");
+
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        octeti         = chorda_ex_literis("octeti", piscina);
+
+        fons = _fingere(LXIV, piscina);
+        CREDO_NON_NIHIL(fons.pixela);
+        memset(&bona, ZEPHYRUM, magnitudo(Icones));
+        bona.fons      = &fons;
+        bona.titulus   = chorda_ex_literis("AppIcon", piscina);
+        bona.recidere  = ICONES_RECIDERE_CENTRUM;
+
+        /* ======== icones_reddere ======== */
+
+        /* sine canali nihil nominari potest: FALSUM, non ruina */
+        CREDO_FALSUM(icones_reddere(&bona, &fructus, NIHIL, &sedes,
+                                    piscina));
+        CREDO_FALSUM(icones_reddere(&bona, &fructus, &status, NIHIL,
+                                    piscina));
+
+        RECUSATIO(icones_reddere(NIHIL, &fructus, &status, &sedes,
+                                 piscina),
+                  ICONES_ERROR_DESUNT, "petitio");
+        RECUSATIO(icones_reddere(&bona, NIHIL, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_DESUNT, "fructus");
+        /* piscina ABSENS quoque nominatur: sedes in memoria statica */
+        RECUSATIO(icones_reddere(&bona, &fructus, &status, &sedes,
+            NIHIL),
+                  ICONES_ERROR_DESUNT, "piscina");
+
+        p          = bona;
+        p.titulus  = vacua;
+        RECUSATIO(icones_reddere(&p, &fructus, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_DESUNT, "titulus");
+
+        /* fons ABSENS = DESUNT (caput: 'fons aut titulus'); fons
+         * PRAESENS sed vitiosus = FONS, campo nominato */
+        p       = bona;
+        p.fons  = NIHIL;
+        RECUSATIO(icones_reddere(&p, &fructus, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_DESUNT, "fons");
+
+        mala         = fons;
+        mala.pixela  = NIHIL;
+        p.fons       = &mala;
+        RECUSATIO(icones_reddere(&p, &fructus, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_FONS, "pixela");
+
+        mala           = fons;
+        mala.latitudo  = ZEPHYRUM;
+        RECUSATIO(icones_reddere(&p, &fructus, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_FONS, "latitudo");
+
+        mala           = fons;
+        mala.altitudo  = ZEPHYRUM;
+        RECUSATIO(icones_reddere(&p, &fructus, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_FONS, "altitudo");
+
+        /* latus < XVI: sedes LATUS nominat */
+        parva = _fingere(XII, piscina);
+        CREDO_NON_NIHIL(parva.pixela);
+        p       = bona;
+        p.fons  = &parva;
+        RECUSATIO(icones_reddere(&p, &fructus, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_MINIMUS, "12");
+
+        /* bit IGNOTUM: valor CXXVIII bit EXTRA setum est - NON
+         * ICONES_LATERA_CXXVIII, quod VIII valet. Sedes bita ignota
+         * SOLA nominat, non petitionem totam (quae 129 esset). */
+        p                = bona;
+        p.latera_petita  = (i32)ICONES_LATERA_XVI | (i32)CXXVIII;
+        RECUSATIO(icones_reddere(&p, &fructus, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_LATERA, "128");
+
+        /* D10 LATIUS: latus PETITUM nullum a fonte LXIV tegitur. Olim
+         * VERUM cum partibus nullis (inventum operis III). */
+        p.latera_petita = (i32)(ICONES_LATERA_CXXVIII
+                                | ICONES_LATERA_MXXIV);
+        RECUSATIO(icones_reddere(&p, &fructus, &status, &sedes,
+            piscina),
+                  ICONES_ERROR_MINIMUS, "128 1024");
+
+        /* gemellus POSITIVUS: latus UNUM tectum = successus cum omissis
+         * (D2). Sine eo recusatio quae QUAMLIBET omissionem recusaret
+         * ab hac discerni non posset. Sedes post successum PURGATA:
+         * nulla recusatio prior eam inquinat. */
+        p.latera_petita = (i32)(ICONES_LATERA_XVI
+            | ICONES_LATERA_MXXIV);
+        CREDO_VERUM(icones_reddere(&p, &fructus, &status, &sedes,
+                                   piscina));
+        CREDO_AEQUALIS_I32((i32)status, (i32)ICONES_SUCCESSUS);
+        CREDO_CHORDA_VACUA(sedes);
+        CREDO_AEQUALIS_I32(xar_numerus(fructus.partes), I);
+        CREDO_AEQUALIS_I32(fructus.omissa, (i32)ICONES_LATERA_MXXIV);
+
+        /* ======== scriptores: fructus bonus, IV partes ======== */
+
+        CREDO_VERUM(icones_reddere(&bona, &fructus, &status, &sedes,
+                                   piscina));
+        CREDO_AEQUALIS_I32(xar_numerus(fructus.partes), IV);
+
+        _recusatam_purgare();
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(
+            VIA_RECUSATA));
+
+        /* ---- iudex fructus, per icones_icns_scribere (sedem fert).
+         * Area SCRIBILIS est (gemellus positivus infra), ergo 'plagula
+         * non scripta' recusationem ANTE scriptionem probat, non
+         * scriptionem impossibilem. ---- */
+        RECUSATIO(icones_icns_scribere(NIHIL, VIA_RECUSATA_ICNS,
+            &status,
+                                       &sedes, piscina),
+                  ICONES_ERROR_DESUNT, "fructus");
+
+        memset(&f, ZEPHYRUM, magnitudo(IconesFructus));
+        RECUSATIO(icones_icns_scribere(&f, VIA_RECUSATA_ICNS, &status,
+                                       &sedes, piscina),
+                  ICONES_ERROR_DESUNT, "partes");
+        f.partes = xar_creare(piscina, (i32)magnitudo(IconesPars));
+        RECUSATIO(icones_icns_scribere(&f, VIA_RECUSATA_ICNS, &status,
+                                       &sedes, piscina),
+                  ICONES_ERROR_DESUNT, "partes");
+
+        f = _fructum_fingere("icon_17x17.png", octeti, piscina);
+        RECUSATIO(icones_icns_scribere(&f, VIA_RECUSATA_ICNS, &status,
+                                       &sedes, piscina),
+                  ICONES_ERROR_LATERA, "icon_17x17.png");
+
+        /* octeti VACUI: chunkus sine onere = icon inanis sine errore */
+        f = _fructum_fingere("icon_16x16.png", vacua, piscina);
+        RECUSATIO(icones_icns_scribere(&f, VIA_RECUSATA_ICNS, &status,
+                                       &sedes, piscina),
+                  ICONES_ERROR_DESUNT, "icon_16x16.png");
+
+        CREDO_FALSUM(filum_existit(VIA_RECUSATA_ICNS));
+
+        /* ---- icones_icns_scribere: argumenta et scriptio ---- */
+        CREDO_FALSUM(icones_icns_scribere(&fructus, VIA_RECUSATA_ICNS,
+                                          NIHIL, &sedes, piscina));
+        CREDO_FALSUM(icones_icns_scribere(&fructus, VIA_RECUSATA_ICNS,
+                                          &status, NIHIL, piscina));
+        RECUSATIO(icones_icns_scribere(&fructus, NIHIL, &status, &sedes,
+                                       piscina),
+                  ICONES_ERROR_DESUNT, "via");
+        RECUSATIO(icones_icns_scribere(&fructus, VIA_RECUSATA_ICNS,
+                                       &status, &sedes, NIHIL),
+                  ICONES_ERROR_DESUNT, "piscina");
+        CREDO_FALSUM(filum_existit(VIA_RECUSATA_ICNS));
+
+        /* via DIRECTORIUM est: fopen deficit, via ipsa nominatur */
+        RECUSATIO(icones_icns_scribere(&fructus, VIA_RECUSATA, &status,
+                                       &sedes, piscina),
+                  ICONES_ERROR_SCRIPTIO, VIA_RECUSATA);
+
+        /* gemellus POSITIVUS: eadem area SCRIBILIS est */
+        CREDO_VERUM(icones_icns_scribere(&fructus, VIA_RECUSATA_ICNS,
+                                         &status, &sedes, piscina));
+        CREDO_VERUM(filum_existit(VIA_RECUSATA_ICNS));
+
+        /* ---- icones_icns_codificare: sine sede, status et chorda
+         * vacua ---- */
+        icns = icones_icns_codificare(&fructus, NIHIL, piscina);
+        CREDO_CHORDA_VACUA(icns);
+
+        status  = ICONES_SUCCESSUS;
+        icns    = icones_icns_codificare(&fructus, &status, NIHIL);
+        CREDO_CHORDA_VACUA(icns);
+        CREDO_AEQUALIS_I32((i32)status, (i32)ICONES_ERROR_DESUNT);
+
+        /* iudicem VOCAT: pars ignota = LATERA, non continens */
+        f     = _fructum_fingere("icon_17x17.png", octeti, piscina);
+        icns  = icones_icns_codificare(&f, &status, piscina);
+        CREDO_CHORDA_VACUA(icns);
+        CREDO_AEQUALIS_I32((i32)status, (i32)ICONES_ERROR_LATERA);
+
+        /* ---- icones_iconset_scribere ---- */
+        CREDO_FALSUM(icones_iconset_scribere(&fructus, VIA_RECUSATA,
+                                             NIHIL, &sedes, piscina));
+        CREDO_FALSUM(icones_iconset_scribere(&fructus, VIA_RECUSATA,
+                                             &status, NIHIL, piscina));
+        RECUSATIO(icones_iconset_scribere(&fructus, NIHIL, &status,
+                                          &sedes, piscina),
+                  ICONES_ERROR_DESUNT, "via_radicis");
+        RECUSATIO(icones_iconset_scribere(&fructus, VIA_RECUSATA,
+                                          &status, &sedes, NIHIL),
+                  ICONES_ERROR_DESUNT, "piscina");
+
+        /* iudicem VOCAT, ANTE mkdir: partes nullae nihil creant */
+        f.partes = xar_creare(piscina, (i32)magnitudo(IconesPars));
+        RECUSATIO(icones_iconset_scribere(&f, VIA_RECUSATA, &status,
+                                          &sedes, piscina),
+                  ICONES_ERROR_DESUNT, "partes");
+
+        /* SEMITA VACUA: LATERA, non SCRIPTIO. via_iungere partem vacuam
+         * praeterit, ergo sine iudice scriptor in directorium ipsum
+         * scribere conaretur (inventum operis III). Sedes vacua est,
+         * quia id quod nominat vacuum est. */
+        f = _fructum_fingere("", octeti, piscina);
+        CREDO_FALSUM(icones_iconset_scribere(&f, VIA_RECUSATA, &status,
+                                             &sedes, piscina));
+        CREDO_AEQUALIS_I32((i32)status, (i32)ICONES_ERROR_LATERA);
+        CREDO_CHORDA_VACUA(sedes);
+        CREDO_FALSUM(filum_directorium_existit(VIA_RECUSATA_SET));
+
+        /* titulus vacuus directorium OCCULTUM '.iconset' daret */
+        f          = fructus;
+        f.titulus  = vacua;
+        RECUSATIO(icones_iconset_scribere(&f, VIA_RECUSATA, &status,
+                                          &sedes, piscina),
+                  ICONES_ERROR_DESUNT, "titulus");
+        CREDO_FALSUM(filum_directorium_existit(
+            VIA_RECUSATA "/.iconset"));
+
+        /* radix sub PLAGULA: mkdir -p deficere debet */
+        CREDO_VERUM(filum_scribere_literis(VIA_PLAGULA_PARENS,
+                                           "non directorium"));
+        RECUSATIO(icones_iconset_scribere(&fructus,
+                                          VIA_PLAGULA_PARENS "/sub",
+                                          &status, &sedes, piscina),
+                  ICONES_ERROR_DIRECTORIUM, "AppIcon.iconset");
+
+        /* plagula prima DIRECTORIO occupata: fopen deficit, semita
+         * RELATIVA nominatur */
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(
+            VIA_RECUSATA_SET "/icon_16x16.png"));
+        RECUSATIO(icones_iconset_scribere(&fructus, VIA_RECUSATA,
+                                          &status, &sedes, piscina),
+                  ICONES_ERROR_SCRIPTIO,
+                  "AppIcon.iconset/icon_16x16.png");
+
+        _recusatam_purgare();
     }
 
     imprimere("\n");

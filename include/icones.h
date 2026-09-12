@@ -24,12 +24,19 @@
 #include "imago_typus.h"
 #include "xar.h"
 
+/* Omnis recusatio sedem nominat (sedes_vitii): campum absentem, latus,
+ * bita ignota, semitam partis vitiosae aut viam. Nomina camporum in
+ * memoria STATICA vivunt, ergo etiam piscina absens nominatur. */
 nomen enumeratio {
     ICONES_SUCCESSUS = ZEPHYRUM,
-    ICONES_ERROR_DESUNT,        /* fons aut titulus */
-    ICONES_ERROR_FONS,          /* pixela NIHIL aut dimensio <= 0 */
-    ICONES_ERROR_MINIMUS,       /* latus < XVI: NIHIL tegitur */
-    ICONES_ERROR_LATERA,        /* vexillum sine codice .icns */
+    ICONES_ERROR_DESUNT,        /* argumentum NIHIL, titulus, fons
+                                 * absens, partes, octeti partis */
+    ICONES_ERROR_FONS,          /* fons praesens sed pixela NIHIL aut
+                                 * dimensio ZEPHYRUM */
+    ICONES_ERROR_MINIMUS,       /* latus < XVI, aut latus PETITUM
+                                 * nullum tegitur (D10) */
+    ICONES_ERROR_LATERA,        /* bit ignotum, aut semita partis
+                                 * tabulae ignota */
     ICONES_ERROR_PNG,           /* imago_png recusavit */
     ICONES_ERROR_DIRECTORIUM,
     ICONES_ERROR_SCRIPTIO,
@@ -83,7 +90,9 @@ nomen structura {
 } IconesFructus;
 
 /* Reddere: PURUM (nihil in disco tangit). Quadratum ad centrum recidit,
- * latera <= quadrato reddit, cetera in 'omissa' refert. */
+ * latera <= quadrato reddit, cetera in 'omissa' refert. Si latus
+ * PETITUM NULLUM tegitur, RECUSAT (MINIMUS, sedes latera petita ut
+ * "128 1024"): successus sine parte icon nullus esset (D10). */
 b32
 icones_reddere (
     constans Icones* petitio,
@@ -93,7 +102,9 @@ icones_reddere (
             Piscina* piscina);
 
 /* Scribere .iconset: directorium <via_radicis>/<titulus>.iconset cum
- * parentibus, deinde plagulam per partem. */
+ * parentibus, deinde plagulam per partem. Scriptores TRES fructum
+ * IUDICANT antequam quicquam tangant: partes nullae, semita tabulae
+ * ignota et octeti vacui recusantur (fructus manu factus). */
 b32
 icones_iconset_scribere (
     constans IconesFructus* fructus,
