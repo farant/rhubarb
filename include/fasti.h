@@ -425,6 +425,28 @@ fasti_parsare_diem (
     chorda  s,
       Dies* fructus);
 
+/* Formare instans ISO-8601 UTC: "YYYY-MM-DDTHH:MM:SSZ" (XX octeti)
+ *
+ * Iuxta fasti_ad_unix / fasti_ex_unix: idem par, alia scriptura.
+ * Redde: chorda vacua si dies aut hora invalida, aut annus extra
+ *        0..9999 (forma quattuor cifrarum eum non capit)
+ */
+chorda
+fasti_ad_iso (
+    DiesHora  dh,
+     Piscina* piscina);
+
+/* Parsare instans ISO-8601: 'Z' aut offsetum '±HH:MM' (ad UTC versum)
+ *
+ * Fractiones secundorum RECUSANTUR (v1): nihil eas poscit, et forma
+ * tacite truncata peius est quam recusatio nominata.
+ * Redde: VERUM si parsatum ET validum
+ */
+b32
+fasti_ex_iso (
+      chorda  s,
+    DiesHora* fructus);
+
 
 /* ==================================================
  * Computus Paschalis

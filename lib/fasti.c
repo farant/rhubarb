@@ -361,7 +361,8 @@ fasti_hebdomada_anni (
     si (jdn_dies < jdn_prima_feria_ii)
     {
         /* Dies est in ultima hebdomada anni praecedentis */
-        redde fasti_hebdomada_anni(fasti_dies(dies.annus - I, XII, XXVIII));
+        redde fasti_hebdomada_anni(fasti_dies(dies.annus - I, XII,
+            XXVIII));
     }
 
     hebdomada = (s32)((jdn_dies - jdn_prima_feria_ii) / VII) + I;
@@ -733,13 +734,15 @@ fasti_scribere_diem (
             chorda_aedificator_appendere_character(aedificator, '-');
             si (dies.mensis < X)
             {
-                chorda_aedificator_appendere_character(aedificator, '0');
+                chorda_aedificator_appendere_character(aedificator,
+                    '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.mensis);
             chorda_aedificator_appendere_character(aedificator, '-');
             si (dies.dies < X)
             {
-                chorda_aedificator_appendere_character(aedificator, '0');
+                chorda_aedificator_appendere_character(aedificator,
+                    '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
             frange;
@@ -748,13 +751,15 @@ fasti_scribere_diem (
             /* DD/MM/YYYY */
             si (dies.dies < X)
             {
-                chorda_aedificator_appendere_character(aedificator, '0');
+                chorda_aedificator_appendere_character(aedificator,
+                    '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
             chorda_aedificator_appendere_character(aedificator, '/');
             si (dies.mensis < X)
             {
-                chorda_aedificator_appendere_character(aedificator, '0');
+                chorda_aedificator_appendere_character(aedificator,
+                    '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.mensis);
             chorda_aedificator_appendere_character(aedificator, '/');
@@ -765,13 +770,15 @@ fasti_scribere_diem (
             /* MM/DD/YYYY */
             si (dies.mensis < X)
             {
-                chorda_aedificator_appendere_character(aedificator, '0');
+                chorda_aedificator_appendere_character(aedificator,
+                    '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.mensis);
             chorda_aedificator_appendere_character(aedificator, '/');
             si (dies.dies < X)
             {
-                chorda_aedificator_appendere_character(aedificator, '0');
+                chorda_aedificator_appendere_character(aedificator,
+                    '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
             chorda_aedificator_appendere_character(aedificator, '/');
@@ -837,13 +844,15 @@ fasti_scribere_diem (
             chorda_aedificator_appendere_character(aedificator, '-');
             si (dies.mensis < X)
             {
-                chorda_aedificator_appendere_character(aedificator, '0');
+                chorda_aedificator_appendere_character(aedificator,
+                    '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.mensis);
             chorda_aedificator_appendere_character(aedificator, '-');
             si (dies.dies < X)
             {
-                chorda_aedificator_appendere_character(aedificator, '0');
+                chorda_aedificator_appendere_character(aedificator,
+                    '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
             frange;
@@ -1034,6 +1043,145 @@ fasti_parsare_iso (
     fructus->dies    = dies;
 
     redde fasti_dies_valida(*fructus);
+}
+
+chorda
+fasti_ad_iso (
+    DiesHora  dh,
+     Piscina* piscina)
+{
+    chorda  fructus;
+        i8* a;
+       s32  annus;
+
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
+
+    si (   !piscina || !fasti_dies_valida(dh.dies)
+        || !fasti_hora_valida(dh.hora) || dh.dies.annus < ZEPHYRUM
+        || dh.dies.annus > 9999)
+    {
+        redde fructus;
+    }
+    a = (i8*)piscina_allocare(piscina, (memoriae_index)XX);
+    si (!a)
+    {
+        redde fructus;
+    }
+    annus = dh.dies.annus;
+    /* cifrae directe in piscinam: nullum buffer intermedium */
+    a[ZEPHYRUM]  = (i8)('0' + annus / 1000);
+    a[I]         = (i8)('0' + (annus / 100) % X);
+    a[II]        = (i8)('0' + (annus / X) % X);
+    a[III]       = (i8)('0' + annus % X);
+    a[IV]        = (i8)'-';
+    a[V]         = (i8)('0' + dh.dies.mensis / X);
+    a[VI]        = (i8)('0' + dh.dies.mensis % X);
+    a[VII]       = (i8)'-';
+    a[VIII]      = (i8)('0' + dh.dies.dies / X);
+    a[IX]        = (i8)('0' + dh.dies.dies % X);
+    a[X]         = (i8)'T';
+    a[XI]        = (i8)('0' + dh.hora.hora / X);
+    a[XII]       = (i8)('0' + dh.hora.hora % X);
+    a[XIII]      = (i8)':';
+    a[XIV]       = (i8)('0' + dh.hora.minutum / X);
+    a[XV]        = (i8)('0' + dh.hora.minutum % X);
+    a[XVI]       = (i8)':';
+    a[XVII]      = (i8)('0' + dh.hora.secundum / X);
+    a[XVIII]     = (i8)('0' + dh.hora.secundum % X);
+    a[XIX]       = (i8)'Z';
+
+    fructus.datum    = a;
+    fructus.mensura  = XX;
+    redde fructus;
+}
+
+b32
+fasti_ex_iso (
+      chorda  s,
+    DiesHora* fructus)
+{
+           Dies dies;
+            s32 hora;
+            s32 minutum;
+            s32 secundum;
+            s32 offsetum         = ZEPHYRUM;
+            s32 off_horae        = ZEPHYRUM;
+            s32 off_minuta       = ZEPHYRUM;
+            b32 offsetum_negans  = FALSUM;
+    MomentumSec instans;
+
+    si (!s.datum || !fructus || s.mensura < XX)
+    {
+        redde FALSUM;
+    }
+    /* dies: pars prima, parsatore exsistente */
+    si (!fasti_parsare_iso(chorda_sectio(s, ZEPHYRUM, X), &dies))
+    {
+        redde FALSUM;
+    }
+    si (s.datum[X] != (i8)'T')
+    {
+        redde FALSUM;
+    }
+    si (   !_parsare_duo_digiti(s, XI, &hora)
+        || s.datum[XIII] != (i8)':'
+        || !_parsare_duo_digiti(s, XIV, &minutum)
+        || s.datum[XVI]  != (i8)':'
+        || !_parsare_duo_digiti(s, XVII, &secundum))
+    {
+        redde FALSUM;
+    }
+    /* zona: 'Z' aut '±HH:MM'; nihil aliud (fractiones recusatae) */
+    si (s.datum[XIX] == (i8)'Z')
+    {
+        si (s.mensura != XX)
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (s.datum[XIX] == (i8)'+' || s.datum[XIX] == (i8)'-')
+    {
+        si (s.mensura != XXV || s.datum[XXII] != (i8)':')
+        {
+            redde FALSUM;
+        }
+        offsetum_negans = (s.datum[XIX] == (i8)'-') ? VERUM : FALSUM;
+        si (   !_parsare_duo_digiti(s, XX, &off_horae)
+            || !_parsare_duo_digiti(s, XXIII, &off_minuta))
+        {
+            redde FALSUM;
+        }
+        si (off_horae > 14 || off_minuta > 59)
+        {
+            redde FALSUM;
+        }
+        /* '+02:00' significat horam localem ANTE UTC ire, ergo UTC =
+         * localis - offsetum; signum hic invertitur semel */
+        offsetum = off_horae * 3600 + off_minuta * 60;
+        si (!offsetum_negans)
+        {
+            offsetum = -offsetum;
+        }
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+
+    fructus->dies = dies;
+    fructus->hora = fasti_hora(hora, minutum, secundum);
+    si (   !fasti_dies_valida(fructus->dies)
+        || !fasti_hora_valida(fructus->hora))
+    {
+        redde FALSUM;
+    }
+    si (offsetum != ZEPHYRUM)
+    {
+        instans   = fasti_ad_unix(*fructus) + (MomentumSec)offsetum;
+        *fructus  = fasti_ex_unix(instans);
+    }
+    redde VERUM;
 }
 
 b32

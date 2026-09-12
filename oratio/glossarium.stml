@@ -721,6 +721,9 @@
   <vocabulum lemma="offset" lingua="anglica" classis="ignotum-permissum" nota="sedes 604">
     <forma textus="offsets"/>
   </vocabulum>
+  <vocabulum lemma="offsetum" lingua="latina" classis="substantivum" nota="offset Latinizatum, declinatio secunda (ut internamentum); entrium Anglicum 'offset' supra manet pro identificatoribus nudis (fasti_ex_iso, 2026-09-11)">
+    <forma textus="offsetum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
   <vocabulum lemma="index" lingua="anglica" classis="ignotum-permissum" nota="sedes 3854"/>
   <vocabulum lemma="token" lingua="anglica" classis="ignotum-permissum" nota="sedes 3729">
     <forma textus="tokens"/>

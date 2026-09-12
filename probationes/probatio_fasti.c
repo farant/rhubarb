@@ -760,6 +760,78 @@ s32 principale (vacuum)
      * Conclusio
      * ================================================== */
 
+
+    /* ==================================================
+     * Probare fasti_ad_iso / fasti_ex_iso (instans plenum, UTC)
+     * ================================================== */
+
+    imprimere("\n--- Probans fasti_ad_iso / fasti_ex_iso ---\n");
+
+    {
+        DiesHora dh;
+        DiesHora reditus;
+          chorda s;
+
+        dh.dies  = fasti_dies(2026, 9, 11);
+        dh.hora  = fasti_hora(2, 41, 32);
+        s        = fasti_ad_iso(dh, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(s, "2026-09-11T02:41:32Z");
+
+        CREDO_VERUM(fasti_ex_iso(s, &reditus));
+        CREDO_AEQUALIS_S32(reditus.dies.annus, 2026);
+        CREDO_AEQUALIS_S32(reditus.dies.mensis, 9);
+        CREDO_AEQUALIS_S32(reditus.dies.dies, 11);
+        CREDO_AEQUALIS_S32(reditus.hora.hora, 2);
+        CREDO_AEQUALIS_S32(reditus.hora.minutum, 41);
+        CREDO_AEQUALIS_S32(reditus.hora.secundum, 32);
+
+        /* offsetum ad UTC vertitur */
+        CREDO_VERUM(fasti_ex_iso(
+            chorda_ex_literis("2026-09-11T04:41:32+02:00", piscina),
+            &reditus));
+        CREDO_AEQUALIS_S32(reditus.hora.hora, 2);
+        CREDO_AEQUALIS_S32(reditus.dies.dies, 11);
+
+        /* offsetum trans medium noctis diem quoque mutat */
+        CREDO_VERUM(fasti_ex_iso(
+            chorda_ex_literis("2026-09-11T00:30:00+02:00", piscina),
+            &reditus));
+        CREDO_AEQUALIS_S32(reditus.dies.dies, 10);
+        CREDO_AEQUALIS_S32(reditus.hora.hora, 22);
+
+        /* offsetum negativum in alteram partem */
+        CREDO_VERUM(fasti_ex_iso(
+            chorda_ex_literis("2026-09-11T23:30:00-02:00", piscina),
+            &reditus));
+        CREDO_AEQUALIS_S32(reditus.dies.dies, 12);
+        CREDO_AEQUALIS_S32(reditus.hora.hora, 1);
+
+        /* recusationes nominatae */
+        CREDO_FALSUM(fasti_ex_iso(
+            chorda_ex_literis("2026-09-11", piscina), &reditus));
+        CREDO_FALSUM(fasti_ex_iso(
+            chorda_ex_literis("2026-09-11 02:41:32Z", piscina),
+            &reditus));
+        CREDO_FALSUM(fasti_ex_iso(
+            chorda_ex_literis("2026-09-11T02:41:32", piscina),
+            &reditus));
+        CREDO_FALSUM(fasti_ex_iso(
+            chorda_ex_literis("2026-13-11T02:41:32Z", piscina),
+            &reditus));
+        CREDO_FALSUM(fasti_ex_iso(
+            chorda_ex_literis("2026-09-11T25:41:32Z", piscina),
+            &reditus));
+        /* fractiones secundorum: v1 RECUSAT nominatim */
+        CREDO_FALSUM(fasti_ex_iso(
+            chorda_ex_literis("2026-09-11T02:41:32.5Z", piscina),
+            &reditus));
+
+        /* ad_iso diem invalidam RECUSAT (chorda vacua) */
+        dh.dies = fasti_dies(2026, 13, 11);
+        CREDO_CHORDA_VACUA(fasti_ad_iso(dh, piscina));
+    }
+
+
     imprimere("\n");
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
