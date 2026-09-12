@@ -348,6 +348,127 @@ whether Finder DRAWS our icon — see §11.
   (`sips` reports some as such). We emit PNG only, which is legal
   everywhere we measured.
 
+## 12. As built (2026-09-12)
+
+*Written at the seal. Everything above is the design as agreed; this
+section records where the building disagreed with it and what was
+measured. Worklog: `lib/icones.worklog.md` (Tasks 2–5); resampler:
+`lib/imago_opus.worklog.md`.*
+
+Commits: `7ad7df7d` area resampler + I2 · `2009347d` worklog note ·
+`4ab18e60` value + pure core + I1 · `9f7c81c0` writers + container +
+I3/I6 · `4f60b21b` refusals + I5 · `4fe5ab6f` `imago_opus` `AREA` via
+`extrahere` + I2 d · `34d78ac3` exact dimensions + I7 + I8 · `4e32d9c8`
+CLI + I4 · `71b5f3e9` `ARGB` for `ic04`/`ic05` · `this commit` seal.
+
+### 12.1 Decisions that changed
+
+- **D9 is overturned, and so is its named fallback.** PNG under
+  `ic04`/`ic05` is drawn by Finder as NOISE. Measured three ways on
+  single-chunk bundles: Finder (Fran's screenshot — PNG in `ic04` noise,
+  PNG in `icp4` a different noise, Apple's `ARGB` a clean disc);
+  `iconutil` (PNG in `ic04` 10/256 pixels identical, `ic05` 20/1024,
+  `icp4` 0/256, `icp5` 0/1024; Apple's `ARGB` exact; and the SAME PNG
+  bytes exact under `ic11`); and `sips`/ImageIO, which decoded every one
+  of them correctly — the lenient oracle, which briefly produced a false
+  "answered yes" before the others were consulted. `ic04`/`ic05` now
+  carry `ARGB`: the tag, then the A, R, G, B planes, each run-length
+  coded (control < 0x80 → control+1 literal bytes; ≥ 0x80 → next byte
+  repeated control−125 times — verified by decoding Apple's own
+  payloads), with colour **premultiplied**: `iconutil` divides the RGB
+  planes by alpha (verified on every partly transparent pixel, 52/52 and
+  108/108). An earlier conclusion that Apple stores straight values came
+  from Apple payloads with no partial alpha, where the two are the same
+  bytes; it is retracted. Decretum `01M2BZDWEB`.
+- **D6 as built:** `.iconset` and `.icns` agree on BYTES for every
+  PNG-carrying code and on PIXELS for `ic04`/`ic05`. `IconesPars`
+  gained `chorda onus_icns` — what the container carries.
+- **§3:** `IconesFructus` gained `chorda titulus` — the iconset writer
+  receives only the fructus (decretum `01M2BKGE69`).
+- **§5 — "icones computes exact target dimensions itself" was false
+  until `34d78ac3`.** The first implementation passed exact sizes as
+  MAXIMUM bounds to `imago_extrahere_et_scalare`, which (1) silently ran
+  bilinear for `AREA` — Task 1 had added `AREA` to `imago_scalare` only
+  — and (2) truncates, so a 1000 px source gave 15, 31, 63, 127, 255,
+  511 px icons. Fixed at the source (`4fe5ab6f`) and in icones (crop
+  once, `imago_scalare` per size).
+- **§7 as built:** 28 reachable refusal branches, each with its own
+  planted fault. `fons` NIHIL is `DESUNT` (the enum comment said so; the
+  first code said `FONS`). A request whose every size exceeds the source
+  refuses `MINIMUS` naming the requested sizes, `"128 1024"` (decretum
+  `01M2BNPAJ2`). One shared check (`_fructum_iudicare`) runs before any
+  writer touches disk: partes, unknown semita (`LATERA`), empty `octeti`
+  or `onus_icns` (`DESUNT`). Field names in `sedes_vitii` are static, so
+  a missing `piscina` is still named.
+- **§11 risk:** the `s32` offset wrap is near 23170², not 8192².
+- **§11 note "we emit PNG only" is no longer true:** `ic04`/`ic05`
+  carry `ARGB`; every other code carries PNG.
+- **`_ERROR_PNG`** carries the encoder's own message.
+- **§9 order:** writers came before the container gates because I4
+  needs real files.
+- **§6 container:** assembled with a known size (compute, allocate once,
+  fill — `imago_png.c`'s shape), not `chorda_aedificator`, which serves
+  unknown-size text.
+
+### 12.2 Gates as built
+
+- **I1** pure core (byte sharing). **I2** resampler, plus **I2 d**
+  (`extrahere` `AREA` ≡ `imago_scalare` `AREA`, hand pins 98/88).
+- **I3** container structure; payload kind per code; `ARGB` decodes to
+  the premultiplied pixels of the same-size PNG. **I3 b** byte pins: a
+  uniform opaque plane (`FF v FB v`), a no-run plane (two 128-byte
+  literal blocks), and a half-alpha plane (premultiplied 100/50/25).
+  The I3 fixture now has partial alpha — an opaque one could not tell
+  straight from premultiplied.
+- **I4** (`probatio_icones_iconutil.sh`): relinks the CLI every run;
+  control on Calculator's icon; direction A asserts file COUNT, sizes
+  and composited PIXELS (`-conferre`), never `iconutil`'s return code;
+  direction B compares code sets and PNG sizes; two adversarial cases.
+  Runs unfiltered, or when a filter names it. The code → size map above
+  64 px is guarded by I4 alone, deliberately.
+- **I5** refusals (28 plants). **I6** writers — a 512 px source, NINE
+  files (the spec's "ten" needs ≥ 1024; the arena reason first given was
+  wrong — the piscina grows).
+- **I7** quality against a FROZEN `sips` oracle
+  (`probationes/fixa/icones/generare.py`), measured on the INTERIOR —
+  `delta_maximum` could not separate area (224) from bilinear (255).
+  Limits: ≤ 8 interior pixels differing by > 16, mean ≤ 6.00; the gate
+  asserts bilinear (75, 21.13) and nearest (112, 93.41) exceed them.
+- **I8** (new): exact sizes from a 100 px source; centred cropping (D1)
+  on a 120×100 source — never tested before.
+
+`probatio_icones`: `235` assertions.
+
+### 12.3 Apple, measured
+
+- `iconutil` accepts broken containers: `rc=0` for a declared length one
+  short, a zeroed PNG signature, an unknown code (silently dropped), and
+  a chunk length missing its header (one file extracted). It rejects
+  only a declared length larger than the file.
+- `iconutil` writes `ic04`/`ic05` as `ARGB` itself, and re-encodes PNG
+  about 2.4× smaller than ours (our encoder writes filter NONE).
+- `sips` tags its output sRGB without shifting values.
+
+### 12.4 AUDIENDA
+
+- **Finder and PNG in `ic04`: answered NO** (noise) → `ARGB`.
+  **`ARGB` confirmed by eye** (Fran's second screenshot, Icons view):
+  `SolumXVI`, whose ONLY image is our 16 px `ARGB`, draws a clean disc —
+  blurred by Finder's upscale, with no noise, no pale fringe, and no
+  dark stripe (Apple's encode of the bilinear-era 16 px showed one).
+  `SolumXXXII` draws a sharper disc; `Apple.app` shows Calculator's
+  icon, so the control held.
+- **Visual quality at 16 px:** I7 pins our interior within a mean of
+  2.26 per channel of `sips`.
+
+### 12.5 New PARCATUM rows
+
+| Row | Pull |
+|---|---|
+| PNG filter selection | Icon file size (Apple's PNGs are ~2.4× smaller). |
+| ~~`icp4`/`icp5` instead of `ic04`/`ic05`~~ (§10) | CLOSED: measured, and it fails too (noise in Finder, 0/256 in `iconutil`). `ARGB` replaced it. |
+| Payload-kind check for hand-built fructus | A caller who builds a fructus by hand can still put PNG in `ic04`'s `onus_icns`; `reddere` never does. |
+
 ## Cross-references
 
 - `project-specs/plist-spec.md`, `project-specs/fasciculum-spec.md` —

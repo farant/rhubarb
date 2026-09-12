@@ -848,7 +848,9 @@ oracles found two defects in committed code:**
   planes, colour PREMULTIPLIED, because `iconutil` divides by alpha. A
   first straight-value version passed I3 and FAILED I4, whose pixel
   comparison was added for exactly this. `IconesPars` gained `onus_icns`;
-  I3 b pins three encodings; I4 compares composited pixels.
+  I3 b pins three encodings; I4 compares composited pixels. **Finder
+  confirmed it** (Fran's second screenshot): `SolumXVI`, whose only image
+  is our 16 px `ARGB`, draws a clean disc. Sealed with spec §12.
 
 ---
 
