@@ -58,6 +58,7 @@ declare -a SOURCE_FILES=(
     "lib/entitas_repositorium_impl.c"
     "lib/eventus_stml.c"
     "lib/exemplar.c"
+    "lib/fasciculum.c"
     "lib/fasti.c"
     "lib/fenestra_textus.c"
     "lib/figura.c"
