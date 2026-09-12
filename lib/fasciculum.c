@@ -254,3 +254,95 @@ fasciculum_reddere (
     }
     redde VERUM;
 }
+
+b32
+fasciculum_scribere (
+           constans Xar* partes,
+     constans character* via_radicis,
+       FasciculumStatus* status,
+                 chorda* sedes_vitii,
+                Piscina* piscina)
+{
+    chorda vacua;
+       i32 i;
+
+    si (!status || !sedes_vitii)
+    {
+        redde FALSUM;
+    }
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    *status        = FASCICULUM_SUCCESSUS;
+    *sedes_vitii   = vacua;
+
+    si (!partes || !via_radicis || !piscina)
+    {
+        redde _recusare(status, sedes_vitii, FASCICULUM_ERROR_DESUNT,
+                        vacua);
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(partes); i++)
+    {
+        FasciculumPars* pars;
+                chorda  absoluta;
+             character* via_c;
+                chorda  directorium;
+
+        pars = (FasciculumPars*)xar_obtinere(partes, i);
+        si (!pars)
+        {
+            redde _recusare(status, sedes_vitii,
+                            FASCICULUM_ERROR_MEMORIA, vacua);
+        }
+        absoluta     = _semita_iuncta(via_radicis, pars->semita,
+                                      piscina);
+        via_c        = chorda_ut_cstr(absoluta, piscina);
+        directorium  = via_directorium(absoluta, piscina);
+        si (!via_c || chorda_vacua(directorium))
+        {
+            redde _recusare(status, sedes_vitii,
+                            FASCICULUM_ERROR_MEMORIA, pars->semita);
+        }
+
+        /* CUM PARENTIBUS: Contents/MacOS/ duos gradus ab area virgine
+         * poscit, et creator unius gradus hic de ENOENT deficeret
+         * (filum, par modi II) */
+        si (!filum_directorium_creare_cum_parentibus(
+                chorda_ut_cstr(directorium, piscina)))
+        {
+            redde _recusare(status, sedes_vitii,
+                            FASCICULUM_ERROR_DIRECTORIUM,
+                            pars->semita);
+        }
+
+        si (pars->origo == FASCICULUM_GENITUM)
+        {
+            si (!filum_scribere(via_c, pars->octeti))
+            {
+                redde _recusare(status, sedes_vitii,
+                                FASCICULUM_ERROR_SCRIPTIO,
+                                pars->semita);
+            }
+        }
+        alioquin
+        {
+            si (!pars->fons || !filum_copiare(pars->fons, via_c))
+            {
+                redde _recusare(status, sedes_vitii,
+                                FASCICULUM_ERROR_SCRIPTIO,
+                                pars->semita);
+            }
+        }
+
+        /* Modus SOLUM ubi planum eum poscit: copia octetorum nuda
+         * modum non servat (filum, par modi I) */
+        si (   pars->exsecutabile_fiat
+            && !filum_modum_ponere(via_c, 0755))
+        {
+            redde _recusare(status, sedes_vitii, FASCICULUM_ERROR_MODUS,
+                            pars->semita);
+        }
+    }
+    redde VERUM;
+}
