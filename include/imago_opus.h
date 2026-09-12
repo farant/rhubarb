@@ -22,7 +22,12 @@
  */
 nomen enumeratio {
     IMAGO_SCALA_PROXIMUS,   /* Nearest neighbor - velox, pixelatum */
-    IMAGO_SCALA_BILINEARIS  /* Bilinear interpolatio - lenis */
+    IMAGO_SCALA_BILINEARIS, /* Bilinear interpolatio - lenis */
+    IMAGO_SCALA_AREA        /* Media areae, alpha-ponderata: pro
+                             * DEMINUTIONE. Bilinearis vicinitatem
+                             * II x II legit quantavis scala sit, ergo
+                             * 1024 -> 16 pixela IV ex 4096 legit. Ad
+                             * AUCTIONEM bilinearem adhibe. */
 } ImagoScalaModus;
 
 

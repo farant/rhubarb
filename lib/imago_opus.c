@@ -118,10 +118,18 @@ _scalare_bilinearis (
                 per (c = 0; c < 4; c++)
                 {
                     /* Obtinere valores quattuor vicinorum */
-                    s32 v00 = (s32)(insignatus character)fons_pixela[idx00 + c];
-                    s32 v01 = (s32)(insignatus character)fons_pixela[idx01 + c];
-                    s32 v10 = (s32)(insignatus character)fons_pixela[idx10 + c];
-                    s32 v11 = (s32)(insignatus character)fons_pixela[idx11 + c];
+                    s32 v00 =
+                        (s32)(insignatus character)fons_pixela[idx00
+                            + c];
+                    s32 v01 =
+                        (s32)(insignatus character)fons_pixela[idx01
+                            + c];
+                    s32 v10 =
+                        (s32)(insignatus character)fons_pixela[idx10
+                            + c];
+                    s32 v11 =
+                        (s32)(insignatus character)fons_pixela[idx11
+                            + c];
 
                     /* Interpolatio horizontalis */
                     s32 v0 = v00 + ((v01 - v00) * frac_x >> FP_SHIFT);
@@ -148,6 +156,128 @@ _scalare_bilinearis (
 /* ============================================================
  * Functiones Publicae
  * ============================================================ */
+
+#define AREA_FIX_SHIFT XVI
+#define AREA_FIX_ONE   (((s64)I) << AREA_FIX_SHIFT)
+
+/* Media areae ALPHA-PONDERATA. Pixela NON praemultiplicata sunt
+ * (imago_typus.h), ergo RGB per alpha ponderandum et per summam alpha
+ * dividendum est: aliter pixelum pellucidum colorem suum in vicinos
+ * trahit (halo classicus), et icones marginibus pellucidis constant.
+ *
+ * Accumulatio in s64: area LXIV x LXIV ad ~266M summat (intra s32), sed
+ * reductio CCLVI x duo miliarda transit. Offsetum quoque in s64
+ * computatur - semitae veteres s32 utuntur et circa 23170^2 fontis
+ * circumvolvuntur.
+ *
+ * Ad 1:1 nulla custodia opus est: extentum unius pixeli pondus plenum
+ * accipit et rotundatio dimidii sursum valorem non movet. */
+interior vacuum
+_scalare_area (
+    constans i8* fons_pixela,
+            s32  fons_lat,
+            s32  fons_alt,
+             i8* dest_pixela,
+            s32  dest_lat,
+            s32  dest_alt)
+{
+    s32 dx, dy;
+
+    per (dy = ZEPHYRUM; dy < dest_alt; dy++)
+    {
+        s64 sy0 = ((s64)dy * fons_alt * AREA_FIX_ONE) / dest_alt;
+        s64 sy1 = ((s64)(dy + I) * fons_alt * AREA_FIX_ONE) / dest_alt;
+        s32 y_primus = (s32)(sy0 >> AREA_FIX_SHIFT);
+        s32 y_ultimus = (s32)((sy1 - I) >> AREA_FIX_SHIFT);
+
+        si (y_ultimus >= fons_alt)
+        {
+            y_ultimus = fons_alt - I;
+        }
+
+        per (dx = ZEPHYRUM; dx < dest_lat; dx++)
+        {
+            s64 sx0 = ((s64)dx * fons_lat * AREA_FIX_ONE) / dest_lat;
+            s64 sx1 = ((s64)(dx + I) * fons_lat * AREA_FIX_ONE)
+                / dest_lat;
+            s32 x_primus      = (s32)(sx0 >> AREA_FIX_SHIFT);
+            s32 x_ultimus     = (s32)((sx1 - I) >> AREA_FIX_SHIFT);
+            s64 pondus_totum  = ZEPHYRUM;
+            s64 summa_a       = ZEPHYRUM;
+            s64 summa_r       = ZEPHYRUM;
+            s64 summa_g       = ZEPHYRUM;
+            s64 summa_b       = ZEPHYRUM;
+            s32 sy, sx;
+            i8* dest_ptr;
+
+            si (x_ultimus >= fons_lat)
+            {
+                x_ultimus = fons_lat - I;
+            }
+
+            per (sy = y_primus; sy <= y_ultimus; sy++)
+            {
+                s64 y_ab = (sy == y_primus)
+                    ? sy0 : ((s64)sy * AREA_FIX_ONE);
+                s64 y_ad = (sy == y_ultimus)
+                    ? sy1 : ((s64)(sy + I) * AREA_FIX_ONE);
+                s64 pondus_y = y_ad - y_ab;
+
+                per (sx = x_primus; sx <= x_ultimus; sx++)
+                {
+                    s64 x_ab = (sx == x_primus)
+                        ? sx0 : ((s64)sx * AREA_FIX_ONE);
+                    s64 x_ad = (sx == x_ultimus)
+                        ? sx1 : ((s64)(sx + I) * AREA_FIX_ONE);
+                    s64 pondus = (pondus_y * (x_ad - x_ab))
+                        >> AREA_FIX_SHIFT;
+                    s64 offsetum  = (((s64)sy * fons_lat) + sx) * IV;
+                    s64 a         = (s64)fons_pixela[offsetum + III];
+
+                    pondus_totum  += pondus;
+                    summa_a       += a * pondus;
+                    summa_r       += (s64)fons_pixela[offsetum] * a
+                        * pondus;
+                    summa_g       += (s64)fons_pixela[offsetum + I] * a
+                        * pondus;
+                    summa_b       += (s64)fons_pixela[offsetum + II] * a
+                        * pondus;
+                }
+            }
+
+            dest_ptr = dest_pixela
+                + ((((s64)dy * dest_lat) + dx) * IV);
+
+            si (pondus_totum <= ZEPHYRUM)
+            {
+                dest_ptr[ZEPHYRUM]  = ZEPHYRUM;
+                dest_ptr[I]         = ZEPHYRUM;
+                dest_ptr[II]        = ZEPHYRUM;
+                dest_ptr[III]       = ZEPHYRUM;
+                perge;
+            }
+
+            /* alpha = media simplex; RGB = media per alpha ponderata */
+            dest_ptr[III] = (i8)((summa_a + (pondus_totum / II))
+                / pondus_totum);
+            si (summa_a > ZEPHYRUM)
+            {
+                dest_ptr[ZEPHYRUM] = (i8)((summa_r + (summa_a / II))
+                    / summa_a);
+                dest_ptr[I] = (i8)((summa_g + (summa_a / II))
+                    / summa_a);
+                dest_ptr[II] = (i8)((summa_b + (summa_a / II))
+                    / summa_a);
+            }
+            alioquin
+            {
+                dest_ptr[ZEPHYRUM]  = ZEPHYRUM;
+                dest_ptr[I]         = ZEPHYRUM;
+                dest_ptr[II]        = ZEPHYRUM;
+            }
+        }
+    }
+}
 
 Imago
 imago_scalare (
@@ -177,7 +307,8 @@ imago_scalare (
 
     /* Allocare buffer pro nova imagine */
     pixela_size = nova_latitudo * nova_altitudo * 4;
-    dest.pixela = (i8*)piscina_allocare(piscina, (memoriae_index)pixela_size);
+    dest.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)pixela_size);
     si (dest.pixela == NIHIL)
     {
         redde dest;
@@ -198,7 +329,15 @@ imago_scalare (
 
         casus IMAGO_SCALA_BILINEARIS:
             _scalare_bilinearis(fons->pixela,
-                                (s32)fons->latitudo, (s32)fons->altitudo,
+                                (s32)fons->latitudo,
+                                (s32)fons->altitudo,
+                                dest.pixela,
+                                (s32)dest.latitudo, (s32)dest.altitudo);
+            frange;
+        casus IMAGO_SCALA_AREA:
+            _scalare_area(fons->pixela,
+                                (s32)fons->latitudo,
+                                (s32)fons->altitudo,
                                 dest.pixela,
                                 (s32)dest.latitudo, (s32)dest.altitudo);
             frange;
@@ -278,7 +417,8 @@ imago_scalare_ad_limites (
     #undef SCALE_FP_ONE
 
     /* Scalare ad novas dimensiones */
-    redde imago_scalare(fons, (i32)nova_lat, (i32)nova_alt, modus, piscina);
+    redde imago_scalare(fons, (i32)nova_lat, (i32)nova_alt, modus,
+        piscina);
 }
 
 Imago
@@ -352,7 +492,8 @@ imago_extrahere_et_scalare (
     }
 
     /* Allocare output buffer */
-    dest.pixela = (i8*)piscina_allocare(piscina, (memoriae_index)(dest_lat * dest_alt * IV));
+    dest.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(dest_lat * dest_alt * IV));
     si (dest.pixela == NIHIL)
     {
         redde dest;
@@ -386,7 +527,8 @@ imago_extrahere_et_scalare (
                 src_ptr = src_row + (src_x * IV);
 
                 /* Copy 4 bytes as 32-bit value */
-                *(insignatus integer*)dest_ptr = *(constans insignatus integer*)src_ptr;
+                *(insignatus integer*)dest_ptr =
+                    *(constans insignatus integer*)src_ptr;
                 dest_ptr += IV;
             }
             dest_row += dest_row_bytes;
@@ -398,8 +540,10 @@ imago_extrahere_et_scalare (
         #define FP_SHIFT 12
         #define FP_ONE_BL (1 << FP_SHIFT)
 
-        s32 scale_x_bl = (cw > 1) ? ((cw - 1) * FP_ONE_BL) / (dest_lat > 1 ? dest_lat - 1 : 1) : 0;
-        s32 scale_y_bl = (ch > 1) ? ((ch - 1) * FP_ONE_BL) / (dest_alt > 1 ? dest_alt - 1 : 1) : 0;
+        s32 scale_x_bl = (cw > 1) ? ((cw - 1) * FP_ONE_BL) / (dest_lat
+            > 1 ? dest_lat - 1 : 1) : 0;
+        s32 scale_y_bl = (ch > 1) ? ((ch - 1) * FP_ONE_BL) / (dest_alt
+            > 1 ? dest_alt - 1 : 1) : 0;
 
         per (y = 0; y < dest_alt; y++)
         {
@@ -434,40 +578,56 @@ imago_extrahere_et_scalare (
                     s32 v00, v01, v10, v11, v0, v1, v;
 
                     /* R */
-                    v00 = (s32)(insignatus character)fons->pixela[idx00 + 0];
-                    v01 = (s32)(insignatus character)fons->pixela[idx01 + 0];
-                    v10 = (s32)(insignatus character)fons->pixela[idx10 + 0];
-                    v11 = (s32)(insignatus character)fons->pixela[idx11 + 0];
+                    v00 = (s32)(insignatus character)fons->pixela[idx00
+                        + 0];
+                    v01 = (s32)(insignatus character)fons->pixela[idx01
+                        + 0];
+                    v10 = (s32)(insignatus character)fons->pixela[idx10
+                        + 0];
+                    v11 = (s32)(insignatus character)fons->pixela[idx11
+                        + 0];
                     v0 = v00 + ((v01 - v00) * frac_x >> FP_SHIFT);
                     v1 = v10 + ((v11 - v10) * frac_x >> FP_SHIFT);
                     v = v0 + ((v1 - v0) * frac_y >> FP_SHIFT);
                     dest.pixela[dst_idx + 0] = (i8)v;
 
                     /* G */
-                    v00 = (s32)(insignatus character)fons->pixela[idx00 + 1];
-                    v01 = (s32)(insignatus character)fons->pixela[idx01 + 1];
-                    v10 = (s32)(insignatus character)fons->pixela[idx10 + 1];
-                    v11 = (s32)(insignatus character)fons->pixela[idx11 + 1];
+                    v00 = (s32)(insignatus character)fons->pixela[idx00
+                        + 1];
+                    v01 = (s32)(insignatus character)fons->pixela[idx01
+                        + 1];
+                    v10 = (s32)(insignatus character)fons->pixela[idx10
+                        + 1];
+                    v11 = (s32)(insignatus character)fons->pixela[idx11
+                        + 1];
                     v0 = v00 + ((v01 - v00) * frac_x >> FP_SHIFT);
                     v1 = v10 + ((v11 - v10) * frac_x >> FP_SHIFT);
                     v = v0 + ((v1 - v0) * frac_y >> FP_SHIFT);
                     dest.pixela[dst_idx + 1] = (i8)v;
 
                     /* B */
-                    v00 = (s32)(insignatus character)fons->pixela[idx00 + 2];
-                    v01 = (s32)(insignatus character)fons->pixela[idx01 + 2];
-                    v10 = (s32)(insignatus character)fons->pixela[idx10 + 2];
-                    v11 = (s32)(insignatus character)fons->pixela[idx11 + 2];
+                    v00 = (s32)(insignatus character)fons->pixela[idx00
+                        + 2];
+                    v01 = (s32)(insignatus character)fons->pixela[idx01
+                        + 2];
+                    v10 = (s32)(insignatus character)fons->pixela[idx10
+                        + 2];
+                    v11 = (s32)(insignatus character)fons->pixela[idx11
+                        + 2];
                     v0 = v00 + ((v01 - v00) * frac_x >> FP_SHIFT);
                     v1 = v10 + ((v11 - v10) * frac_x >> FP_SHIFT);
                     v = v0 + ((v1 - v0) * frac_y >> FP_SHIFT);
                     dest.pixela[dst_idx + 2] = (i8)v;
 
                     /* A */
-                    v00 = (s32)(insignatus character)fons->pixela[idx00 + 3];
-                    v01 = (s32)(insignatus character)fons->pixela[idx01 + 3];
-                    v10 = (s32)(insignatus character)fons->pixela[idx10 + 3];
-                    v11 = (s32)(insignatus character)fons->pixela[idx11 + 3];
+                    v00 = (s32)(insignatus character)fons->pixela[idx00
+                        + 3];
+                    v01 = (s32)(insignatus character)fons->pixela[idx01
+                        + 3];
+                    v10 = (s32)(insignatus character)fons->pixela[idx10
+                        + 3];
+                    v11 = (s32)(insignatus character)fons->pixela[idx11
+                        + 3];
                     v0 = v00 + ((v01 - v00) * frac_x >> FP_SHIFT);
                     v1 = v10 + ((v11 - v10) * frac_x >> FP_SHIFT);
                     v = v0 + ((v1 - v0) * frac_y >> FP_SHIFT);
