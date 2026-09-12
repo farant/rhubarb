@@ -136,3 +136,26 @@ binary, not just restore the file.**
    rebuilds the binary first, so the runner's skip BRANCH is still
    unexercised — it is reasoned, not proven.
 4. Restored state verified against HEAD each time.
+
+## 2026-09-11 — plan 1 sealed (task VII)
+
+Six commits: `698f7475` chorda, `351ab229` xml, `64bd6dc9` fasti,
+`fcd52773` plist value + writer, `a92b9ef7` reader, `67a385bc` oracle.
+`project-specs/plist-spec.md` §11 and `plist-plan-1.md` carry the
+as-built notes; five plan steps were wrong as written and are corrected
+there for whoever re-runs it.
+
+**What the design work bought.** Five gaps in existing libraries were
+found by READING before any plist code existed — three in `chorda` (the
+`ut_*` family's NUL acceptance, silent overflow truncation, and a
+132-byte stack overread in `ex_f64`), one in `xml` (no DOCTYPE branch,
+so no Apple plist could be parsed at all), one in `fasti` (date-only ISO
+parsing). None of them was plist's own bug, and all five are now fixed
+in their home libraries with their own tests. The spec predicted four of
+the five; `ex_f64`'s overread turned up while writing the first test.
+
+**What remains for fasciculum** (the next library in the arc): plist
+gives it `plist_legere_plagulam`, `plist_scribere_plagulam` and
+`plist_aequalis` — the last exists precisely so a bundle writer can ask
+"does this Info.plist already say what I want?" and leave the file
+alone.

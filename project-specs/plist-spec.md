@@ -335,6 +335,8 @@ as proof.)
 
 ## 10. Risks, notes, AUDIENDA
 
+*Revised and closed items: see §11, as built 2026-09-11.*
+
 - **VERIFIED 2026-09-11** (was AUDIENDUM): numeric character
   references are NOT decoded — `lib/xml.c:951-957` copies any
   unrecognized entity through verbatim. Became §6.7.
@@ -369,3 +371,68 @@ as proof.)
 - Next specs in this arc: `fasciculum` (bundle layout: value → pure
   render → thin writer → reader), `icones` (`.icns` and `.iconset`,
   with an area/box resampler landing in `imago_opus`).
+
+
+## 11. As built (2026-09-11, plan 1 tasks I–VII)
+
+Everything in §1–§9 was implemented. This section records where the
+built thing differs from the design, and closes what §10 left open.
+Commits: `698f7475` (chorda), `351ab229` (xml), `64bd6dc9` (fasti),
+`fcd52773` (plist value + writer), `a92b9ef7` (reader), `67a385bc`
+(oracle).
+
+### Amendments to the design
+
+1. **`plist_scribere` takes a `PlistStatus*`** (§5 showed it without
+   one). §6.7's control-character refusal needs to name a cause, and an
+   empty `chorda` cannot. Signature: `chorda plist_scribere(PlistValor*,
+   PlistStatus*, Piscina*)`; `plist_scribere_plagulam` likewise.
+2. **The xml status is `XML_ERROR_PARS_INTERNA`, not
+   `XML_ERROR_SUBSETUM_INTERNUM`** (§6.1 guessed the latter). The Latin
+   identifier lint refused the first commit over the coined word
+   `subsetum`; with three sites the lint's own rule says rename, and
+   *pars interna* says what the XML spec calls the internal subset in
+   real Latin. Value VIII, appended.
+3. **The value field is `integrum`, not `integer`** — `integer` is a
+   `latina.h` macro, so `s64 integer;` expanded to `s64 int;`. Same
+   class bit twice: a helper parameter named `nomen` expanded to
+   `typedef`. Both are named in `lib/plist.worklog.md`.
+4. **Two reader contracts the design did not state**, both required by
+   real Apple files and both now pinned: `<data>` text is stripped of
+   whitespace before base64 decoding (Apple wraps it across
+   tab-indented lines), and `<data></data>` means zero bytes without
+   consulting the decoder about empty input.
+5. **G6 runs after the test loop, not in the runner's preflight.** The
+   gate executes `build/probationes/probatio_plist`, so registering it
+   beside the `qr_gyrus` gate inside `run_speculum()` made it run before
+   its own prerequisite existed — it exited 2 and aborted the suite.
+   `qr_gyrus` survives there because its binary is built by other
+   means. Exit 2 in the new position is a named skip, not a failure.
+
+### §10 items now settled
+
+- **`chorda_ut_i32` — CLOSED.** It shares `ut_f64`'s NUL flaw *and*
+  accepted `-1` as 4294967295 via `strtoul`. Both fixed in task I, with
+  the whole `chorda_ut_*` family guarded by one helper.
+- **Whitespace-only text nodes — CLOSED.** `xml_legere` does keep them;
+  the reader skips them and refuses non-whitespace text inside a
+  container. Proven by a planted fault (`probatio_plist.c:324`).
+- **`plutil -convert xml1` — CLOSED.** Used by G6 to compare canonical
+  forms; behaves as assumed.
+- **A third `chorda` defect found while implementing task I**, not
+  predicted here: `chorda_ex_f64` used `snprintf`'s would-have-written
+  length as a `memcpy` length against a 132-byte buffer, so
+  `chorda_ex_f64(1e300, 6, …)` read ~175 bytes past it. Guarded.
+- **CDATA and processing instructions — STILL AUDIENDUM.** Plists
+  contain neither; untested.
+- **Byte identity against Apple — CONFIRMED IMPOSSIBLE, as designed.**
+  Apple's dSYM files carry the older `-//Apple Computer//DTD PLIST
+  1.0//EN` public identifier while we emit `-//Apple//…`. G5 compares
+  values and G6 compares `plutil` canonical forms, which is why neither
+  is affected.
+
+### Numbers
+
+`probatio_plist` 111 assertions; `chorda` 271, `xml` 95, `fasti` 179.
+Whole root suite 162 → 163 tests, all green. Every gate was seen red by
+a planted fault before being trusted.

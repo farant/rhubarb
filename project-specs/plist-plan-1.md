@@ -2949,3 +2949,39 @@ plist meeting a fresh reader for the first time. That is the step most
 likely to find something, and the plan's instruction there is the
 important one — read `r.status` and `r.causa`, fix the READER, never
 the fixture.
+
+
+---
+
+## As built (2026-09-11) — corrections for anyone re-running this plan
+
+The plan executed end to end; these five steps were wrong as written.
+
+1. **Task 4 Step 3: the fontes generator must run AFTER `lib/plist.c`
+   exists.** It derives `SOURCE_FILES` from `lib/`, so running it before
+   the library is written reports "no change" and the link then fails on
+   thirteen undefined symbols. Run `scribe` for the header and tests,
+   watch the link fail, write the library, THEN regenerate (177 → 178 C
+   sources).
+2. **Task 6 Step 6: register G6 after the test loop, not before
+   `return 0` in `run_speculum()`.** The gate runs the test binary, so in
+   the preflight it runs before that binary exists, exits 2 and aborts
+   the whole suite. Correct site is after the per-test loop (~line 828),
+   where exit 2 is reported as a named skip.
+3. **Task 1 Step 7's planted-fault anchor no longer exists** — the
+   formatter rewraps those guards into a form shared by three functions,
+   so the anchor is ambiguous. Plant on the helper's own detection
+   instead, and remember a plant must keep every variable used:
+   blinding a condition that sets a variable trips
+   `-Wunused-but-set-variable` and `silva.planta` refuses it pre-flight.
+4. **Task 3's plant must invert, not blind**, for the same reason.
+5. **Calibrations may not be batched.** Two run in parallel will race
+   over `lib/` and `build/`; and reverting a plant must DELETE the built
+   binary, not merely restore the source, or the next run judges the
+   planted binary (cost me three rounds of misdiagnosis in task VI).
+
+Also worth knowing: the Latin identifier lint blocked three of six
+commits, each time for a different reason and each time printing its own
+three exits. Two were resolved by a glossary entry (`offsetum`, `plist`)
+and two by renaming (`pars interna`, `fructus_xml` — the latter was a
+bad two-letter name, not a missing dictionary word).
