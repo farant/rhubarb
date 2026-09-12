@@ -1039,6 +1039,71 @@ s32 principale (vacuum)
     }
 
 
+    /* ---- directoria nidificata: semita tota uno actu ---- */
+    {
+        constans character* radix_areae =
+            "/tmp/probatio_filum_semita";
+        constans character* primum =
+            "/tmp/probatio_filum_semita/a";
+        constans character* medium =
+            "/tmp/probatio_filum_semita/a/b";
+        constans character* nidus =
+            "/tmp/probatio_filum_semita/a/b/c";
+        constans character* via_fili =
+            "/tmp/probatio_filum_semita/a/b/c/opus.txt";
+
+        imprimere("\n--- Probans directoria cum parentibus ---\n");
+
+        /* STATUS DETERMINATUS: arborem cursus prioris tollere,
+         * altissima primum - aliter 'creavit' nihil probat, quia
+         * directoria iam adessent (porta viridis de causa falsa) */
+        filum_delere(via_fili);
+        filum_delere(nidus);
+        filum_delere(medium);
+        filum_delere(primum);
+        filum_delere(radix_areae);
+        CREDO_FALSUM(filum_directorium_existit(radix_areae));
+
+        /* CAUSA huius functionis, pinnata: creare_si_necesse UNUM
+         * gradum facit (mkdir unus), ergo in semita virgine
+         * nidificata DEFICIT. Si quis eam recursivam faciat, haec
+         * assertio mutationem NOMINAT. */
+        CREDO_FALSUM(filum_directorium_creare_si_necesse(nidus));
+        CREDO_FALSUM(filum_directorium_existit(nidus));
+
+        /* semita tota uno actu */
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(nidus));
+        CREDO_VERUM(filum_directorium_existit(primum));
+        CREDO_VERUM(filum_directorium_existit(medium));
+        CREDO_VERUM(filum_directorium_existit(nidus));
+
+        /* IDEMPOTENS: iterum vocata VERUM reddit */
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(nidus));
+        CREDO_VERUM(filum_directorium_existit(nidus));
+
+        /* directoria VERA sunt, non nomina sola */
+        CREDO_VERUM(filum_scribere_literis(via_fili, "opus"));
+        CREDO_VERUM(filum_existit(via_fili));
+
+        /* argumenta mala RECUSANTUR, non tacent */
+        CREDO_FALSUM(filum_directorium_creare_cum_parentibus(NIHIL));
+
+        /* filum_delere directorium VACUUM tollit, quia remove() est non
+         * unlink(): fundamentum purgationis supra et in fasciculo.
+         * NOTA: C89 remove() de directorio implementationi relinquit;
+         * POSIX ad rmdir mittit. Morem platformae consulto pinnamus. */
+        filum_delere(via_fili);
+        CREDO_VERUM(filum_delere(nidus));
+        CREDO_FALSUM(filum_directorium_existit(nidus));
+        CREDO_VERUM(filum_directorium_existit(medium));
+
+        CREDO_VERUM(filum_delere(medium));
+        CREDO_VERUM(filum_delere(primum));
+        CREDO_VERUM(filum_delere(radix_areae));
+        CREDO_FALSUM(filum_directorium_existit(radix_areae));
+    }
+
+
     /* ==================================================
 	 * Compendium
 	 * ================================================== */

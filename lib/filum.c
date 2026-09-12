@@ -1018,6 +1018,68 @@ filum_directorium_creare_cum_modo (
 }
 
 b32
+filum_directorium_creare_cum_parentibus (
+    constans character* via)
+{
+         character semita[MMMMXCVI];
+    memoriae_index longitudo;
+    memoriae_index i;
+
+    si (!via)
+    {
+        _filum_error_ponere("via est NIHIL");
+        redde FALSUM;
+    }
+
+    _filum_error_purgare();
+
+    longitudo = strlen(via);
+    si (longitudo == ZEPHYRUM)
+    {
+        _filum_error_ponere("via vacua est");
+        redde FALSUM;
+    }
+    si (longitudo >= magnitudo(semita))
+    {
+        _filum_error_ponere("via nimis longa");
+        redde FALSUM;
+    }
+
+    memcpy(semita, via, longitudo);
+    semita[longitudo] = '\0';
+
+    /* Ab I incipimus: '/' primum semitae absolutae numquam creatur.
+     * Segmentum quodque truncando terminamus, creamus, restituimus. */
+    per (i = I; i < longitudo; i++)
+    {
+        si (semita[i] != '/')
+        {
+            perge;
+        }
+        si (semita[i - I] == '/')
+        {
+            perge;   /* '//' duplicatum: segmentum vacuum */
+        }
+        semita[i] = '\0';
+        si (!filum_directorium_creare_si_necesse(semita))
+        {
+            /* Causa interior SERVATUR: 'mkdir fracta' aut 'via
+             * existit sed non est directorium' plus dicit quam
+             * nuntius generalis quem hic ponere possem */
+            redde FALSUM;
+        }
+        semita[i] = '/';
+    }
+
+    /* Semita in '/' desinens parentes suos solos nominat */
+    si (semita[longitudo - I] == '/')
+    {
+        redde VERUM;
+    }
+    redde filum_directorium_creare_si_necesse(semita);
+}
+
+b32
 filum_directorium_existit (
     constans character* via)
 {

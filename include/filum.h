@@ -192,6 +192,28 @@ filum_directorium_creare_cum_modo (
     constans character* via,
                integer  modus);
 
+/* Creare directorium ET OMNES PARENTES desideratos (mkdir -p)
+ *
+ * CUR EXSISTIT: tres creatores supra UNUM mkdir faciunt, ergo semita
+ * nidificata cuius parentes absunt cum ENOENT DEFICIT - et quisquis
+ * semitam struit id tacite patitur (concha, mensa, villa_agens
+ * creatores simplices vocant hodie). fasciculum_scribere
+ * Contents/MacOS/ creare debet antequam exsecutabile eo copiet
+ * (fasciculum-spec par. V).
+ *
+ * Modus 0755 ut in creare_si_necesse. SINE REVERSIONE: si segmentum
+ * medium deficit, quae iam creata sunt MANENT (mos ipse ipsius
+ * mkdir -p).
+ *
+ * Reddit VERUM si semita tota post vocationem exsistit (iam
+ * exsistens VERUM est, ergo idempotens); FALSUM si via NIHIL aut
+ * vacua aut nimis longa, aut si segmentum creari non potest - causa
+ * specifica vocationis interioris SERVATUR (filum_error_recens).
+ */
+b32
+filum_directorium_creare_cum_parentibus (
+    constans character* via);
+
 /* Verificare si directorium existit */
 b32
 filum_directorium_existit (
