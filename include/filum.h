@@ -197,6 +197,20 @@ b32
 filum_directorium_existit (
     constans character* via);
 
+/* Ponere modum fili (chmod)
+ *
+ * CUR EXSISTIT: filum_copiare ansa octetorum nuda est, ergo modum NON
+ * servat - binarium in fasciculum .app copiatum non exsecutabile
+ * caderet, et fasciculus sine bite +x duplici ictu sine ulla diagnosi
+ * deficit (fasciculum-spec par. VII.1).
+ *
+ * Reddit VERUM in successu; FALSUM si via NIHIL aut chmod deficit.
+ */
+b32
+filum_modum_ponere (
+    constans character* via,
+               integer  modus);
+
 
 /* ==================================================
  * Interrogatio Status
@@ -208,6 +222,7 @@ nomen structura {
                b32 est_filum;       /* Est filum regulare? */
                b32 potest_legere;   /* Legibile? */
                b32 potest_scribere; /* Scribabile? */
+               b32 potest_exsequi;  /* Exsequibile? (bit +x usoris) */
 } FilumStatus;
 
 /* Cape statum/informationem fili

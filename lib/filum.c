@@ -195,7 +195,8 @@ filum_lector_aperire (
 
     _filum_error_purgare();
 
-    lector = (FilumLector*)piscina_allocare(piscina, magnitudo(FilumLector));
+    lector = (FilumLector*)piscina_allocare(piscina,
+        magnitudo(FilumLector));
     si (!lector)
     {
         _filum_error_ponere("piscina_allocare fracta");
@@ -290,7 +291,8 @@ filum_lector_lineam_proximam (
         }
 
         /* Allocare ex piscina */
-        buffer_allocatus = (i8*)piscina_allocare(lector->piscina, longitudo);
+        buffer_allocatus = (i8*)piscina_allocare(lector->piscina,
+            longitudo);
         si (!buffer_allocatus)
         {
             _filum_error_ponere("piscina_allocare fracta");
@@ -307,7 +309,8 @@ filum_lector_lineam_proximam (
     }
 
     /* Linea continuat - usare ChordaAedificator pro crescentia dynamica */
-    aedificator = chorda_aedificator_creare(lector->piscina, MMMMXCVI * II);
+    aedificator = chorda_aedificator_creare(lector->piscina,
+        MMMMXCVI * II);
     si (!aedificator)
     {
         _filum_error_ponere("chorda_aedificator_creare fracta");
@@ -319,7 +322,8 @@ filum_lector_lineam_proximam (
     /* Appendere primum fragmentum */
     per (i = ZEPHYRUM; i < longitudo; i++)
     {
-        si (!chorda_aedificator_appendere_character(aedificator, lector->buffer[i]))
+        si (!chorda_aedificator_appendere_character(aedificator,
+            lector->buffer[i]))
         {
             _filum_error_ponere("chorda_aedificator_appendere fracta");
             linea_out->mensura  = ZEPHYRUM;
@@ -367,7 +371,8 @@ filum_lector_lineam_proximam (
         /* Appendere fragmentum */
         per (i = ZEPHYRUM; i < longitudo; i++)
         {
-            si (!chorda_aedificator_appendere_character(aedificator, lector->buffer[i]))
+            si (!chorda_aedificator_appendere_character(aedificator,
+                lector->buffer[i]))
             {
                 _filum_error_ponere("chorda_aedificator_appendere fracta");
                 linea_out->mensura  = ZEPHYRUM;
@@ -437,7 +442,8 @@ filum_scriptor_aperire (
 
     _filum_error_purgare();
 
-    scriptor = (FilumScriptor*)piscina_allocare(piscina, magnitudo(FilumScriptor));
+    scriptor = (FilumScriptor*)piscina_allocare(piscina,
+        magnitudo(FilumScriptor));
     si (!scriptor)
     {
         _filum_error_ponere("piscina_allocare fracta");
@@ -487,7 +493,8 @@ filum_scriptor_scribere (
 
     _filum_error_purgare();
 
-    scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura,
+    scriptus = fwrite(contentum.datum, I,
+        (memoriae_index)contentum.mensura,
                       scriptor->descriptum);
 
     si (scriptus != (memoriae_index)contentum.mensura)
@@ -642,7 +649,8 @@ filum_scribere (
         redde FALSUM;
     }
 
-    scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura, f);
+    scriptus = fwrite(contentum.datum, I,
+        (memoriae_index)contentum.mensura, f);
     fclose(f);
 
     si (scriptus != (memoriae_index)contentum.mensura)
@@ -714,7 +722,8 @@ filum_appendere (
         redde FALSUM;
     }
 
-    scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura, f);
+    scriptus = fwrite(contentum.datum, I,
+        (memoriae_index)contentum.mensura, f);
     fclose(f);
 
     si (scriptus != (memoriae_index)contentum.mensura)
@@ -860,6 +869,34 @@ filum_copiare (
 
     fclose(fons);
     fclose(dest);
+
+    redde VERUM;
+}
+
+b32
+filum_modum_ponere (
+    constans character* via,
+               integer  modus)
+{
+    si (!via)
+    {
+        _filum_error_ponere("via est NIHIL");
+        redde FALSUM;
+    }
+
+    _filum_error_purgare();
+
+#ifdef _WIN32
+    /* MSVC: _chmod ex <io.h>, mode_t non existit. Vicinum
+     * filum_directorium_creare_cum_modo eandem custodiam gerit. */
+    si (_chmod(via, modus) != ZEPHYRUM)
+#else
+    si (chmod(via, (mode_t)modus) != ZEPHYRUM)
+#endif
+    {
+        _filum_error_ponere("chmod fracta");
+        redde FALSUM;
+    }
 
     redde VERUM;
 }
@@ -1026,11 +1063,13 @@ filum_status (
     status_out->est_filum       = (st.st_mode & _S_IFREG) != ZEPHYRUM;
     status_out->potest_legere   = (st.st_mode & _S_IREAD) != ZEPHYRUM;
     status_out->potest_scribere = (st.st_mode & _S_IWRITE) != ZEPHYRUM;
+    status_out->potest_exsequi  = (st.st_mode & _S_IEXEC) != ZEPHYRUM;
 #else
     status_out->est_directorium  = S_ISDIR(st.st_mode);
     status_out->est_filum        = S_ISREG(st.st_mode);
     status_out->potest_legere    = (st.st_mode & S_IRUSR) != ZEPHYRUM;
     status_out->potest_scribere  = (st.st_mode & S_IWUSR) != ZEPHYRUM;
+    status_out->potest_exsequi   = (st.st_mode & S_IXUSR) != ZEPHYRUM;
 #endif
 
     redde VERUM;

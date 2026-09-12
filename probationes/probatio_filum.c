@@ -992,7 +992,54 @@ s32 principale (vacuum)
     }
 
 
-    /* =================================================
+    /* ---- modus: ponere, et bit exsequendi in statu ---- */
+    {
+        constans character* via_modi =
+            "/tmp/probatio_filum_modus.txt";
+        constans character* via_copiae =
+            "/tmp/probatio_filum_copia.txt";
+                FilumStatus st;
+
+        imprimere("\n--- Probans filum_modum_ponere ---\n");
+
+        /* STATUS DETERMINATUS: fopen("w") modum NON restituit, ergo
+         * plagula ex cursu interrupto cum 0755 relicta assertionem
+         * primam frangeret de causa aliena */
+        filum_delere(via_modi);
+        filum_delere(via_copiae);
+
+        CREDO_VERUM(filum_scribere_literis(via_modi, "x"));
+        CREDO_VERUM(filum_status(via_modi, &st));
+        CREDO_FALSUM(st.potest_exsequi);
+
+        CREDO_VERUM(filum_modum_ponere(via_modi, 0755));
+        CREDO_VERUM(filum_status(via_modi, &st));
+        CREDO_VERUM(st.potest_exsequi);
+        CREDO_VERUM(st.potest_legere);
+        CREDO_VERUM(st.potest_scribere);
+
+        /* modus restrictus: bit exsequendi iterum abest */
+        CREDO_VERUM(filum_modum_ponere(via_modi, 0644));
+        CREDO_VERUM(filum_status(via_modi, &st));
+        CREDO_FALSUM(st.potest_exsequi);
+
+        /* argumenta mala RECUSANTUR, non tacent */
+        CREDO_FALSUM(filum_modum_ponere(
+            "/tmp/probatio_filum_nusquam_xyz", 0755));
+        CREDO_FALSUM(filum_modum_ponere(NIHIL, 0755));
+
+        /* CAUSA huius paris: copia modum NON servat */
+        CREDO_VERUM(filum_modum_ponere(via_modi, 0755));
+        CREDO_VERUM(filum_copiare(via_modi, via_copiae));
+        CREDO_VERUM(filum_status(via_copiae, &st));
+        CREDO_FALSUM(st.potest_exsequi);
+
+        filum_delere(via_copiae);
+        filum_delere(via_modi);
+    }
+
+
+    /* ==================================================
 	 * Compendium
 	 * ================================================== */
 
