@@ -815,6 +815,41 @@ Gates I4, I7 plus the by-hand AUDIENDUM.
   carries the encoder's own message; and the task order deviates from
   §9 because I4 needs files.
 
+**As executed (2026-09-12) — Task 5 became four commits, because its
+oracles found two defects in committed code:**
+
+- **`4fe5ab6f` (imago_opus):** `imago_extrahere_et_scalare` dispatched
+  `si (PROXIMUS) … alioquin bilinear`, so `AREA` silently ran bilinear —
+  Task 1 had added `AREA` only to `imago_scalare`. Every icon icones had
+  produced was bilinear. New gate I2 d (equivalence + hand pins 98/88).
+- **`34d78ac3` (icones):** icones passed exact sizes to that function as
+  MAXIMUM bounds; its fit-within arithmetic truncates, so any
+  non-power-of-two source gave icons one pixel short (1000 px → 15, 31,
+  …). Fix: crop the centred square once, `imago_scalare` per size (exact).
+  **I7 as built:** a FROZEN `sips` oracle (committed fixture + generator),
+  measured on the INTERIOR — the plan's `delta_maximum` could not separate
+  area (224) from bilinear (255). **I8, new:** exact sizes from a 100 px
+  source and centred cropping (D1), which had never been tested.
+- **`4e32d9c8`:** `tools/icones_instrumentum.c` (with `-legere`) and I4.
+  `iconutil` measured LENIENT (`rc=0` on broken containers), so I4 asserts
+  file count and sizes. Registered after `plutil`, filtered runs only when
+  the filter names it. Its plant showed the code → size map above 64 px is
+  guarded by I4 alone, deliberately.
+- **The fumus** builds FOUR bundles, not one: Calculator's icon as a
+  control, all sizes, `ic04` only, `ic11`+`ic05` only — on Retina Finder
+  draws the 32 px image at 16 pt, so a full set never exercises `ic04`.
+  **AUDIENDUM — answered NO, and D9 overturned.** PNG in `ic04`/`ic05`
+  is drawn by Finder as noise (Fran's screenshot of single-chunk
+  bundles), `iconutil` misreads it the same way (10/256 and 20/1024
+  pixels identical), and the spec's own fallback `icp4`/`icp5` fails too
+  — while `sips`/ImageIO decoded all of it correctly, which had produced
+  an "answered yes" here that was retracted within the hour. Fix
+  (decretum `01M2BZDWEB`): `ic04`/`ic05` carry Apple's `ARGB` — RLE
+  planes, colour PREMULTIPLIED, because `iconutil` divides by alpha. A
+  first straight-value version passed I3 and FAILED I4, whose pixel
+  comparison was added for exactly this. `IconesPars` gained `onus_icns`;
+  I3 b pins three encodings; I4 compares composited pixels.
+
 ---
 
 ## Self-review

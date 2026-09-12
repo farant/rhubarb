@@ -1005,5 +1005,9 @@
   <vocabulum lemma="iconset" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen directorii Apple (.iconset, plagulae PNG quas iconutil in .icns vertit); sedes icones_iconset_scribere"/>
   <vocabulum lemma="apple" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen societatis; in ICONES_SETUM_APPLE setum magnitudinum quod Apple ipsa definit (spec icones par. IV, per iconutil mensuratum)"/>
   <vocabulum lemma="sips" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen instrumenti Apple (/usr/bin/sips, imagines scalat et convertit); in probatio_icones.c imago XVI px quam sips ex fonte fixo reddidit - oraculum CONGELATUM portae I7 (probationes/fixa/icones/generare.py)"/>
+  <!-- icones (2026-09-12): onus ARGB pro ic04/ic05 -->
+  <vocabulum lemma="argb" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae oneris Apple in ic04/ic05 (signum 'ARGB', plana A R G B per RLE, colore praemultiplicato), ut png et icns: nomen alienum FIXUM; sedes CODICES_ARGB, _argb_codificare, _argb_decodificare"/>
+  <vocabulum lemma="rle" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio 'run-length encoding' (compressio per cursus eiusdem valoris), ut png: sedes _rle_planum in lib/icones.c"/>
+  <vocabulum lemma="praemultiplicatus" lingua="latina" classis="adiectivum" nota="color per alpha iam multiplicatus (R x A / 255): forma quam iconutil in planis ARGB exspectat et per alpha dividit (mensuratum 2026-09-12); vox technica ex prae + multiplicare"><forma textus="praemultiplicata"/></vocabulum>
 
 </glossarium>

@@ -11,7 +11,10 @@
 # signo PNG corrupto, codice ignoto (chunkus tacite omissus) et chunko
 # SINE capite (plagula UNA extracta, successus nuntiatus); solum
 # longitudinem declaratam MAIOREM recusat. ERGO haec porta NUMERUM
-# plagularum et DIMENSIONES cuiusque asserit, numquam rc solum.
+# plagularum, DIMENSIONES et PIXELA cuiusque asserit (color compositus,
+# per -conferre), numquam rc solum: PNG in ic04/ic05 magnitudine recta
+# ut strepitum legitur, et ARGB rectum pro praemultiplicato margines
+# albescentes dat (utrumque mensuratum 2026-09-12).
 #
 # Instrumentum bin/icones_instrumentum SEMPER hic reaedificatur:
 # compile_tool_if_needed binarium cum FONTE instrumenti solo confert,
@@ -104,6 +107,12 @@ for par in 16x16:16 16x16@2x:32 32x32:32 32x32@2x:64 128x128:128 \
     if [ "$lat" != "$px" ] || [ "$alt" != "$px" ]; then
         deficere "$nomen_plagulae ex .icns nostro: ${lat}x${alt}, ${px}x${px} exspectatum"
     fi
+    # PIXELA, non magnitudo sola: PNG in ic04/ic05 iconutil (et Finder)
+    # ut STREPITUM legunt magnitudine recta (mensuratum 2026-09-12)
+    "$INSTRUMENTUM" -conferre "$AREA/AppIcon.iconset/$nomen_plagulae" "$f" \
+        > "$AREA/conferre.log" 2>&1 \
+        || deficere "$nomen_plagulae: iconutil PIXELA aliter legit quam scripsimus" \
+                    "$AREA/conferre.log"
 done
 
 # ---- IV. DIRECTIO B: .iconset NOSTRUM -> iconutil -> .icns APPLE ----

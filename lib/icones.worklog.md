@@ -452,3 +452,132 @@ the same memory that wrote it — self-consistency, not evidence (the
 lesson of `manus`' 200-vs-202). The consequence is worth naming: a
 machine without `iconutil` (exit 2, a named skip) runs with that mapping
 unguarded.
+
+## 2026-09-12 — Task 5 (part C): Finder draws PNG in `ic04` as noise → premultiplied `ARGB`
+
+### How the AUDIENDUM was answered — and how I first got it wrong
+
+The fumus built four bundles (Calculator control, all sizes, `ic04`
+only, `ic11`+`ic05` only). Fran, on `SolumXVI`: "blurry when big, not
+exactly a disk, more a square area with some random color pixels."
+
+I then decoded that bundle's `.icns` with `sips`/ImageIO: **0/256 pixels
+differ** from what we encoded, a transparent-cornered octagon. On that
+alone I told Fran the AUDIENDUM was answered yes and wrote it into the
+plan. Minutes later `iconutil`'s extraction of the same file differed in
+**246/256** pixels, and I retracted it. The mistake has a precise shape:
+**I stopped at the first decoder that agreed with us.** A lenient reader
+agreeing with our bytes proves only that it is lenient — the lesson
+`imago_png` paid for with stb_image, repeated here within the same arc.
+
+What the probes then showed:
+
+| Container, 1x small slot | `iconutil` pixels identical |
+|---|---|
+| our PNG under `ic04` (alone or with other sizes) | 10 / 256 |
+| our PNG under `ic05` | 20 / 1024 |
+| our PNG under `icp4` / `icp5` (spec §4's named fallback) | 0 / 256, 0 / 1024 |
+| our PNG under `ic11` / `ic07` | exact |
+| **Apple's `ARGB` `ic04` / `ic05`** | **256 / 256**, 1016 / 1024 (8 invisible: transparent pixels' RGB) |
+
+In `IcpXXXII` the `ic11` and `icp5` chunks carried the SAME PNG buffer:
+exact under `ic11`, wrong under `icp5`. So the defect was never our PNG
+bytes — it is what those slots mean to Apple's icon machinery.
+
+**Fran's screenshot settled Finder**: `SolumXVI` noise with the same
+structure as `iconutil`'s decode; `IcpXVI` a different noise; Apple's
+`ARGB` (`ArgbXVI`, `ArgbXXXII`) clean discs. Incidentally `ArgbXVI` —
+encoded by Apple from the PRE-fix 16 px — shows a solid black stripe:
+bilinear landing on a fixture line, the defect `34d78ac3` fixed, visible
+to the eye.
+
+Also measured: a broken `ic04` shows as noise, NOT as a generic icon.
+Nothing refuses. That is the exact failure shape this library exists to
+prevent.
+
+### The format, verified before a line was written
+
+`ARGB` = the tag, then the A, R, G, B planes, each run-length coded:
+control < 0x80 → control+1 literal bytes; ≥ 0x80 → the next byte
+repeated control−125 times. Checked by decoding Apple's own payloads in
+Python (316 and 990 bytes): four planes of exactly width×height, zero
+bytes left over, every plane equal to the source.
+
+### Straight or premultiplied — the second unfalsifiable fixture
+
+From that decode I concluded "values are straight, not premultiplied"
+and told Fran so. The first encoder wrote straight values. Result:
+**C gates 231/231 green; I4 red** — `iconutil` read 204/256 identical, 52
+visibly different.
+
+52 was exactly the number of partly transparent pixels in the 16 px
+octagon. My first hypothesis — premultiply/unpremultiply *rounding* —
+was refuted by measurement: straight-RGB deltas up to 234, premultiplied
+deltas up to 50. Not rounding. The samples gave the real rule: we store
+82 at alpha 101, Apple returns 207 = 82 × 255 / 101; at alpha 9, 72 →
+2040 → clamped 255. **`iconutil` treats the RGB planes as PREMULTIPLIED
+and divides by alpha** — verified on every partial pixel, 52/52 (`ic04`)
+and 108/108 (`ic05`), exact.
+
+Why the first check could not see it: Apple's sample payloads had been
+encoded from the bilinear-era 16 px, whose sample points land on whole
+pixels — alpha only 0 or 255 — and **when alpha is 0 or 255, straight and
+premultiplied are the same bytes.** The very same hole sat in I3: its
+fixture `_fingere` was fully opaque, so the new premultiplied comparison
+would have passed against either encoder. `_fingere` now has partial
+alpha (255 falling to ~128 across each row). This is `imago_opus` I2 a's
+lesson — a fixture constant along the axis that fails — hitting twice in
+one hour.
+
+What straight values would have looked like: every antialiased edge
+pixel brightened toward white (alpha 9 → (255,255,255)) — the halo D8
+exists to forbid, reintroduced by the container.
+
+### Implementation
+
+- `IconesPars.onus_icns` — what the `.icns` chunk carries: the shared PNG
+  for most codes, `ARGB` of the same pixels for `ic04`/`ic05`.
+- `CODICES_ARGB = { "ic04", "ic05" }` beside `ORDINES`, not a fifth
+  column: a column pushes every table row past 72, which the formatter
+  cannot wrap. Still data, with the measurement in its comment.
+- `_rle_planum` greedy (runs 3..130, else literals up to 128 or until a
+  run of 3 begins); `_argb_codificare` premultiplies into a scratch copy
+  first; `reddere` keeps the scaled `Imago` per size beside the PNG cache,
+  so `ic05` reuses `ic11`'s image; the shared check refuses an empty
+  `onus_icns`; the container writes `onus_icns`.
+- CLI `-conferre a b`: alpha equal AND premultiplied colour equal — the
+  composited colour anyone can see. Tolerance 0 holds after the fix.
+- I4 compares every extracted file's pixels, not only its size.
+- I3 b pins three encodings by hand from the verified rule: uniform
+  opaque (`FF v FB v`), no-run (two 128-byte literal blocks), half-alpha
+  (premultiplied 100/50/25; straight `C8 64 32` fails it).
+
+### Calibration
+
+5 plants, 22 C reds predicted and counted; all five I4 outcomes as
+predicted; no remnants after restoration.
+
+| Plant | Fault | C reds | I4 |
+|---|---|---|---|
+| P1 | colour stored straight, not premultiplied | 3 — premultiplied `ic04`/`ic05` checks + half-alpha bytes | red |
+| P2 | repeat control `cursus − III` → `− II` | 6 — both decodes `NIHIL`, both checks, uniform and half-alpha bytes | red |
+| P3 | literal control `n − I` → `n − II` | 5 — both decodes, both checks, literal-plane bytes | red |
+| P4 | shared check stops refusing an empty `onus_icns` | 5 — the case's own + "no file" cascades | **green** |
+| P5 | `CODICES_ARGB` lists `ic07` instead of `ic05` | 3 — `ic05` kind, its decode, its check | red |
+
+P4 staying green in I4 is the informative one: that refusal guards
+hand-built fructus, which `iconutil` never sees, so the C gate is its
+only guard. P1 is the defect that actually happened — the gates now
+catch it from two directions, C through the partial-alpha fixture and
+I4 through Apple.
+
+Fumus after the fix: `SolumXVI: ic04 596 argb`, `SolumXXXII: ic05 1545
+argb`, `iconutil` reads all three containers, four bundles built.
+
+### Two tool slips, both already in memory
+
+- **zsh does not word-split an unquoted `$F`**: the formatter received
+  four paths as ONE filename, exited 2, and formatted nothing.
+- **vocabula read a stale nexus index** after four renames and still
+  reported the old names; `nexus -renovare` then gave `NOVA 0`. Verify
+  the file before believing a NOVUM that should be gone.

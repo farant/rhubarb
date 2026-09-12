@@ -45,7 +45,11 @@ _fingere (
             p[ZEPHYRUM]  = (i8)((x * 255) / latera);
             p[I]         = (i8)((y * 255) / latera);
             p[II]        = (i8)64;
-            p[III]       = (i8)255;
+            /* alpha PARTIALIS per x: fixum opacum rectum et
+             * praemultiplicatum discernere non poterat (ARGB,
+             * 2026-09-12 - planta 'recti pro praemultiplicatis' viridis
+             * mansisset) */
+            p[III]       = (i8)(CCLV - ((x * CXXVIII) / latera));
         }
     }
     redde im;
@@ -176,9 +180,10 @@ _fructum_fingere (
     p          = (IconesPars*)xar_addere(f.partes);
     si (p != NIHIL)
     {
-        p->latera = XVI;
-        p->semita = chorda_ex_literis(semita, piscina);
-        p->octeti = octeti;
+        p->latera     = XVI;
+        p->semita     = chorda_ex_literis(semita, piscina);
+        p->octeti     = octeti;
+        p->onus_icns  = octeti;
     }
     redde f;
 }
@@ -295,6 +300,162 @@ _interior_conferre (
     *diversa           = collatio.pixela_diversa;
     *media    = (*intus > ZEPHYRUM)
         ? (i32)((summa * C) / ((s64)*intus * III)) : ZEPHYRUM;
+}
+
+/* Genus oneris .icns: ARGB (signum IV litterarum) aut PNG (signum
+ * VIII octetorum). */
+interior b32
+_onus_argb (
+    chorda onus)
+{
+    redde (   onus.mensura > (i32)IV
+           && memcmp(onus.datum, "ARGB", (size_t)IV) == ZEPHYRUM)
+        ? VERUM : FALSUM;
+}
+
+interior b32
+_onus_png (
+    chorda onus)
+{
+    redde (   onus.mensura > (i32)VIII
+           && memcmp(onus.datum, SIGNUM_PNG, (size_t)VIII) == ZEPHYRUM)
+        ? VERUM : FALSUM;
+}
+
+/* Decodificator ARGB (ic04/ic05): 'ARGB', deinde plana A R G B, quodque
+ * latus x latus octetorum per RLE: imperium < 0x80 -> (imperium + I)
+ * octeti crudi sequuntur; >= 0x80 -> octetus sequens (imperium - 125)
+ * vicibus. Regula VERIFICATA Pythone super onera ipsa Apple (ic04 316,
+ * ic05 990 octeti): plana exacte, octeti reliqui nulli.
+ *
+ * Ab eadem manu scriptus est quae codificatorem scripsit, ergo SOLUS
+ * consistentiam probat, non veritatem: pinnae octetorum (I3 b) et porta
+ * I4 (iconutil pixela confert) oracula alterius generis sunt. Forma
+ * falsa (cursus ultra planum, octeti reliqui) pixela NIHIL reddit, ut
+ * codificator fractus rubrum LEGIBILE det, non ruinam. */
+interior Imago
+_argb_decodificare (
+      chorda  onus,
+         i32  latus,
+     Piscina* piscina)
+{
+               Imago im;
+        constans i32 ordo[IV] = { III, ZEPHYRUM, I, II };
+                 i32 n;
+                 i32 sedes;
+                 i32 planum;
+                 i32 k;
+                 i32 t;
+                 i32 imperium;
+                 i32 m;
+
+    im.latitudo  = latus;
+    im.altitudo  = latus;
+    im.pixela    = NIHIL;
+    si (!_onus_argb(onus))
+    {
+        redde im;
+    }
+    n          = latus * latus;
+    im.pixela  = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(n * IV));
+    si (!im.pixela)
+    {
+        redde im;
+    }
+    sedes = (i32)IV;
+    per (planum = ZEPHYRUM; planum < IV; planum++)
+    {
+        k = ZEPHYRUM;
+        dum (k < n)
+        {
+            si (sedes >= onus.mensura)
+            {
+                im.pixela = NIHIL;
+                redde im;
+            }
+            imperium = (i32)onus.datum[sedes];
+            sedes++;
+            si (imperium < CXXVIII)
+            {
+                m = imperium + I;
+                si (k + m > n || sedes + m > onus.mensura)
+                {
+                    im.pixela = NIHIL;
+                    redde im;
+                }
+                per (t = ZEPHYRUM; t < m; t++)
+                {
+                    im.pixela[((k + t) * IV) + ordo[planum]] =
+                        onus.datum[sedes + t];
+                }
+                sedes += m;
+            }
+            alioquin
+            {
+                m = (imperium - CXXVIII) + III;
+                si (k + m > n || sedes >= onus.mensura)
+                {
+                    im.pixela = NIHIL;
+                    redde im;
+                }
+                per (t = ZEPHYRUM; t < m; t++)
+                {
+                    im.pixela[((k + t) * IV) + ordo[planum]] =
+                        onus.datum[sedes];
+                }
+                sedes++;
+            }
+            k += m;
+        }
+    }
+    si (sedes != onus.mensura)
+    {
+        im.pixela = NIHIL;
+    }
+    redde im;
+}
+
+/* ARGB decodificatum (PRAEMULTIPLICATUM) contra PNG (rectum): alpha
+ * idem, et RGB ARGB == round(RGB PNG x alpha / CCLV). Formula eadem ac
+ * codificatoris, ergo consistentiam probat; veritatem (quod iconutil
+ * per alpha dividit) I3 b pinna dimidia et porta I4 tenent. */
+interior b32
+_praemultiplicata_aequalia (
+    constans Imago* argb,
+    constans Imago* png)
+{
+    i32 n;
+    i32 i;
+    i32 canalis;
+
+    si (   !argb->pixela || !png->pixela
+        || argb->latitudo != png->latitudo
+        || argb->altitudo != png->altitudo)
+    {
+        redde FALSUM;
+    }
+    n = png->latitudo * png->altitudo;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans i8* p = argb->pixela + (i * IV);
+        constans i8* q = png->pixela + (i * IV);
+
+        si (p[III] != q[III])
+        {
+            redde FALSUM;
+        }
+        per (canalis = ZEPHYRUM; canalis < III; canalis++)
+        {
+            si ((i32)p[canalis]
+                != ((((i32)q[canalis] * (i32)q[III]) + (CXXVIII - I))
+                    / CCLV))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
 }
 
 s32
@@ -481,21 +642,160 @@ principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(codices[II], "ic05");
         CREDO_CHORDA_AEQUALIS_LITERIS(codices[III], "ic12");
 
-        /* onus quodque PNG verum, et IIDEM octeti partis suae (D6 in
-         * continente, non solum in partibus) */
+        /* GENUS ONERIS per codicem: ic04 et ic05 ARGB, ceteri PNG. Olim
+         * omnes PNG - et Finder PNG in ic04 ut STREPITUM pinxit
+         * (2026-09-12, fasciculus SolumXVI; iconutil idem legit), dum
+         * sips/ImageIO recte legebat: oraculum lene nobis favens. */
+        CREDO_VERUM(_onus_argb(onera[ZEPHYRUM]));   /* ic04 */
+        CREDO_VERUM(_onus_png(onera[I]));           /* ic11 */
+        CREDO_VERUM(_onus_argb(onera[II]));         /* ic05 */
+        CREDO_VERUM(_onus_png(onera[III]));         /* ic12 */
+
+        /* continens IIDEM octetos fert quos pars in onus_icns */
         per (i = ZEPHYRUM; i < IV; i++)
         {
             IconesPars* p = (IconesPars*)xar_obtinere(fructus.partes,
                 i);
 
-            CREDO_VERUM(   onera[i].mensura > (i32)VIII
-                        && memcmp(onera[i].datum, SIGNUM_PNG,
-                                  (size_t)VIII) == ZEPHYRUM);
             CREDO_VERUM(   p != NIHIL
-                        && _octeti_aequales(onera[i], p->octeti));
+                        && _octeti_aequales(onera[i], p->onus_icns));
         }
-        /* par geminum XXXII px (ic11, ic05) octetim aequale */
-        CREDO_VERUM(_octeti_aequales(onera[I], onera[II]));
+
+        /* EAEDEM PIXELAE, non idem octeti: ARGB ic04 == PNG partis XVI;
+         * ARGB ic05 == PNG ic11 (idem latus XXXII, eadem imago) */
+        {
+              IconesPars* p16;
+              IconesPars* p32;
+            ImagoFructus  png_minor;
+            ImagoFructus  png_maior;
+                   Imago  argb_minor;
+                   Imago  argb_maior;
+
+            p16 = (IconesPars*)xar_obtinere(fructus.partes, ZEPHYRUM);
+            p32 = (IconesPars*)xar_obtinere(fructus.partes, I);
+            CREDO_NON_NIHIL(p16);
+            CREDO_NON_NIHIL(p32);
+            png_minor = imago_caricare_ex_memoria(p16->octeti.datum,
+                                              p16->octeti.mensura,
+                                              piscina);
+            png_maior = imago_caricare_ex_memoria(p32->octeti.datum,
+                                              p32->octeti.mensura,
+                                              piscina);
+            CREDO_VERUM(png_minor.successus);
+            CREDO_VERUM(png_maior.successus);
+            argb_minor = _argb_decodificare(onera[ZEPHYRUM], XVI,
+                piscina);
+            argb_maior = _argb_decodificare(onera[II], XXXII, piscina);
+            CREDO_NON_NIHIL(argb_minor.pixela);
+            CREDO_NON_NIHIL(argb_maior.pixela);
+            CREDO_VERUM(_praemultiplicata_aequalia(&argb_minor,
+                &png_minor.imago));
+            CREDO_VERUM(_praemultiplicata_aequalia(&argb_maior,
+                &png_maior.imago));
+        }
+    }
+
+    /* ---- I3 b: ARGB OCTETIM pinnatum ---- */
+    {
+                        Icones  petitio;
+                 IconesFructus  fructus;
+                  IconesStatus  status;
+                        chorda  sedes;
+                         Imago  plana;
+                    IconesPars* p;
+                           i32  k;
+        hic_manens constans i8  UNIFORMIS[XX] = {
+            (i8)'A',  (i8)'R', (i8)'G',         (i8)'B',
+            (i8)CCLV, (i8)CCLV, (i8)(CCLV - IV), (i8)CCLV,
+            (i8)CCLV, (i8)CC,   (i8)(CCLV - IV), (i8)CC,
+            (i8)CCLV, (i8)C,    (i8)(CCLV - IV), (i8)C,
+            (i8)CCLV, (i8)L,    (i8)(CCLV - IV), (i8)L
+        };
+
+        hic_manens constans i8 DIMIDIA[XX] = {
+            (i8)'A',  (i8)'R',     (i8)'G',         (i8)'B',
+            (i8)CCLV, (i8)CXXVIII, (i8)(CCLV - IV), (i8)CXXVIII,
+            (i8)CCLV, (i8)C,       (i8)(CCLV - IV), (i8)C,
+            (i8)CCLV, (i8)L,       (i8)(CCLV - IV), (i8)L,
+            (i8)CCLV, (i8)XXV,     (i8)(CCLV - IV), (i8)XXV
+        };
+
+        imprimere("\n--- I3 b: ARGB octetim pinnatum ---\n");
+
+        /* Regula (verificata Pythone super onera Apple): cursus maximus
+         * CXXX -> imperium 0x80 + (CXXX - III) = CCLV; CCLVI = CXXX +
+         * CXXVI, reliquum CXXVI -> 0x80 + CXXIII = CCLI. Ergo planum
+         * uniforme XVI x XVI = FF v FB v, et onus totum XX octeti.
+         * Codificator cupidus hanc formam dat; decodificator Apple
+         * alias quoque acciperet - pinna FORMAM nostram tenet, I4
+         * veritatem. */
+        plana.latitudo = XVI;
+        plana.altitudo = XVI;
+        plana.pixela    = (i8*)piscina_allocare(piscina,
+            (memoriae_index)(XVI * XVI * IV));
+        CREDO_NON_NIHIL(plana.pixela);
+        per (k = ZEPHYRUM; k < XVI * XVI; k++)
+        {
+            plana.pixela[k * IV]          = (i8)CC;
+            plana.pixela[(k * IV) + I]    = (i8)C;
+            plana.pixela[(k * IV) + II]   = (i8)L;
+            plana.pixela[(k * IV) + III]  = (i8)CCLV;
+        }
+        memset(&petitio, ZEPHYRUM, magnitudo(Icones));
+        petitio.fons           = &plana;
+        petitio.titulus        = chorda_ex_literis("AppIcon", piscina);
+        petitio.latera_petita  = ICONES_LATERA_XVI;
+        CREDO_VERUM(icones_reddere(&petitio, &fructus, &status, &sedes,
+                                   piscina));
+        p = (IconesPars*)xar_obtinere(fructus.partes, ZEPHYRUM);
+        CREDO_NON_NIHIL(p);
+        CREDO_AEQUALIS_I32(p->onus_icns.mensura, XX);
+        CREDO_VERUM(   p->onus_icns.mensura == (i32)XX
+                    && memcmp(p->onus_icns.datum, UNIFORMIS, (size_t)XX)
+                       == ZEPHYRUM);
+
+        /* CURSUS CRUDI: R per pixelum alternans (0, 1, 0, 1 ...) cursum
+         * nullum habet, ergo duo blocci CXXVIII crudorum, imperium
+         * CXXVII bis. Onus = IV + A IV + R CCLVIII + G IV + B IV =
+         * CCLXXIV; imperia ad octetos VIII et VIII + CXXIX. */
+        per (k = ZEPHYRUM; k < XVI * XVI; k++)
+        {
+            plana.pixela[k * IV] = (i8)(k % II);
+        }
+        CREDO_VERUM(icones_reddere(&petitio, &fructus, &status, &sedes,
+                                   piscina));
+        p = (IconesPars*)xar_obtinere(fructus.partes, ZEPHYRUM);
+        CREDO_NON_NIHIL(p);
+        CREDO_AEQUALIS_I32(p->onus_icns.mensura, 274);
+        CREDO_VERUM(   p->onus_icns.mensura == 274
+                    && p->onus_icns.datum[VIII] == CXXVIII - I
+                    && p->onus_icns.datum[IX] == ZEPHYRUM
+                    && p->onus_icns.datum[X] == I
+                    && p->onus_icns.datum[VIII + CXXVIII + I]
+                       == CXXVIII - I);
+
+        /* PRAEMULTIPLICATIO: (CC, C, L) ad alpha CXXVIII. iconutil
+         * plana RGB per alpha DIVIDIT (mensuratum), ergo
+         * praemultiplicata scribenda sunt: round(CC x CXXVIII / CCLV) =
+         * C, round(C x CXXVIII / CCLV) = L, round(L x CXXVIII / CCLV) =
+         * XXV. Recta (C8 64 32) hic cadunt - pinnae priores omnes
+         * OPACAE erant, et ideo errorem 'rectum pro praemultiplicato'
+         * non videbant. */
+        per (k = ZEPHYRUM; k < XVI * XVI; k++)
+        {
+            plana.pixela[k * IV]          = (i8)CC;
+            plana.pixela[(k * IV) + I]    = (i8)C;
+            plana.pixela[(k * IV) + II]   = (i8)L;
+            plana.pixela[(k * IV) + III]  = (i8)CXXVIII;
+        }
+        CREDO_VERUM(icones_reddere(&petitio, &fructus, &status, &sedes,
+                                   piscina));
+        p = (IconesPars*)xar_obtinere(fructus.partes, ZEPHYRUM);
+        CREDO_NON_NIHIL(p);
+        CREDO_AEQUALIS_I32(p->onus_icns.mensura, XX);
+        CREDO_VERUM(   p->onus_icns.mensura == (i32)XX
+                    && memcmp(p->onus_icns.datum, DIMIDIA, (size_t)XX)
+                       == ZEPHYRUM);
     }
 
     /* ---- I6: scriptores in area virgine NIDIFICATA ---- */
@@ -744,6 +1044,18 @@ principale (vacuum)
 
         /* octeti VACUI: chunkus sine onere = icon inanis sine errore */
         f = _fructum_fingere("icon_16x16.png", vacua, piscina);
+        /* onus NON vacuum: solus ramus octetorum hic probatur */
+        ((IconesPars*)xar_obtinere(f.partes, ZEPHYRUM))->onus_icns =
+            octeti;
+        RECUSATIO(icones_icns_scribere(&f, VIA_RECUSATA_ICNS, &status,
+                                       &sedes, piscina),
+                  ICONES_ERROR_DESUNT, "icon_16x16.png");
+
+        /* ONUS .icns VACUUM, octeti PNG praesentes: continens chunkum
+         * sine onere ferret - ramus alter eiusdem custodiae */
+        f = _fructum_fingere("icon_16x16.png", octeti, piscina);
+        ((IconesPars*)xar_obtinere(f.partes, ZEPHYRUM))->onus_icns =
+            vacua;
         RECUSATIO(icones_icns_scribere(&f, VIA_RECUSATA_ICNS, &status,
                                        &sedes, piscina),
                   ICONES_ERROR_DESUNT, "icon_16x16.png");

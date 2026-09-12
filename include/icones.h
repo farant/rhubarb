@@ -30,7 +30,8 @@
 nomen enumeratio {
     ICONES_SUCCESSUS = ZEPHYRUM,
     ICONES_ERROR_DESUNT,        /* argumentum NIHIL, titulus, fons
-                                 * absens, partes, octeti partis */
+                                 * absens, partes, octeti aut onus
+                                 * partis */
     ICONES_ERROR_FONS,          /* fons praesens sed pixela NIHIL aut
                                  * dimensio ZEPHYRUM */
     ICONES_ERROR_MINIMUS,       /* latus < XVI, aut latus PETITUM
@@ -71,12 +72,19 @@ nomen structura {
 
 /* Pars = PLAGULA una .iconset. Decem partes, SEPTEM redditiones: tria
  * latera bis sub nominibus logicis diversis apparent, et partes
- * geminae EOSDEM octetos ferunt (idem datum), ergo .iconset et .icns
- * constructione consentiunt, non duabus semitis. */
+ * geminae EOSDEM octetos PNG ferunt (idem datum).
+ *
+ * onus_icns = octeti quos CONTINENS .icns fert. Pro codicibus
+ * recentioribus IIDEM ac octeti (idem datum). Pro ic04 et ic05 ARGB
+ * earundem pixelorum: Finder et iconutil PNG in his locis PERPERAM
+ * legunt - strepitus, non icon (mensuratum 2026-09-12; sips recte
+ * legit, Finder non). Ergo .iconset et .icns PIXELIS consentiunt, non
+ * semper octetis. */
 nomen structura {
-       i32 latera;   /* 16, 32, 64 ... pixela */
-    chorda semita;   /* "icon_16x16.png" */
-    chorda octeti;   /* PNG */
+       i32 latera;      /* 16, 32, 64 ... pixela */
+    chorda semita;      /* "icon_16x16.png" */
+    chorda octeti;      /* PNG - plagula .iconset */
+    chorda onus_icns;   /* chunkus .icns: PNG aut ARGB */
 } IconesPars;
 
 nomen structura {
@@ -115,7 +123,8 @@ icones_iconset_scribere (
 
 /* Codificare .icns: PURUM. 'icns', longitudo tota, deinde chunki
  * (codex IV litterarum + longitudo INCLUSO capite VIII octetorum +
- * onus PNG). Redde chordam vacuam nisi status == SUCCESSUS. */
+ * onus_icns partis: PNG, aut ARGB pro ic04/ic05). Redde chordam vacuam
+ * nisi status == SUCCESSUS. */
 chorda
 icones_icns_codificare (
     constans IconesFructus* fructus,

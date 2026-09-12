@@ -112,6 +112,7 @@ _usus (vacuum)
     imprimere("  icones_instrumentum -fons <x.png> -radix <dir>"
               " [-titulus <t>] [-latera 16,32,...]\n");
     imprimere("  icones_instrumentum -legere <x.icns>\n");
+    imprimere("  icones_instrumentum -conferre <a.png> <b.png>\n");
 }
 
 /* "16,32,1024" -> vexilla. Latus extra setum Apple argumentum ignotum
@@ -355,6 +356,78 @@ _legere (
     redde ZEPHYRUM;
 }
 
+/* -conferre: pixela duarum imaginum VISIBILITER aequalia? Alpha idem,
+ * et color PRAEMULTIPLICATUS (R x A / CCLV) idem - color compositus
+ * quem pictor videt. Ita pixelum pellucidum colorem quemlibet ferre
+ * potest (iconutil eum mutat: ic05 Apple VIII pixela), et onus ARGB
+ * praemultiplicatum, quod iconutil per alpha dividit, ad alpha parvam
+ * RGB rectum quantizat sine differentia visibili. Porta iconutil hoc
+ * utitur: magnitudo sola strepitum non videt (PNG in ic04: Finder et
+ * iconutil strepitum, magnitudo recta). Exitus 0 visibiliter aequalia,
+ * I aliter. */
+interior s32
+_conferre (
+    constans character* via_a,
+    constans character* via_b,
+               Piscina* piscina)
+{
+    ImagoFructus a;
+    ImagoFructus b;
+             i32 n;
+             i32 i;
+             i32 idem         = ZEPHYRUM;
+             i32 visibiliter  = ZEPHYRUM;
+             i32 canalis;
+
+    a = imago_caricare_ex_file(via_a, piscina);
+    b = imago_caricare_ex_file(via_b, piscina);
+    si (!a.successus || !b.successus)
+    {
+        imprimere("RECUSATUM DECODIFICATIO: %s\n",
+                  !a.successus ? via_a : via_b);
+        redde I;
+    }
+    si (   a.imago.latitudo != b.imago.latitudo
+        || a.imago.altitudo != b.imago.altitudo)
+    {
+        imprimere("MENSURAE %ux%u %ux%u\n", a.imago.latitudo,
+                  a.imago.altitudo, b.imago.latitudo, b.imago.altitudo);
+        redde I;
+    }
+    n = a.imago.latitudo * a.imago.altitudo;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans i8* p = a.imago.pixela + (i * IV);
+        constans i8* q = b.imago.pixela + (i * IV);
+
+        si (memcmp(p, q, (size_t)IV) == ZEPHYRUM)
+        {
+            idem++;
+            perge;
+        }
+        si (p[III] != q[III])
+        {
+            visibiliter++;
+            perge;
+        }
+        /* color COMPOSITUS (praemultiplicatus) quem pictor videt */
+        per (canalis = ZEPHYRUM; canalis < III; canalis++)
+        {
+            si (   ((((i32)p[canalis] * (i32)p[III]) + (CXXVIII - I))
+                    / CCLV)
+                != ((((i32)q[canalis] * (i32)q[III]) + (CXXVIII - I))
+                    / CCLV))
+            {
+                visibiliter++;
+                frange;
+            }
+        }
+    }
+    imprimere("idem %u/%u, visibiliter diversa %u\n", idem, n,
+              visibiliter);
+    redde (visibiliter == ZEPHYRUM) ? ZEPHYRUM : I;
+}
+
 s32
 principale (
        integer   numerus,
@@ -366,6 +439,8 @@ principale (
      constans character* titulus      = "AppIcon";
      constans character* latera       = NIHIL;
      constans character* via_legenda  = NIHIL;
+     constans character* via_prima    = NIHIL;
+     constans character* via_altera   = NIHIL;
                     i32  vexilla      = ZEPHYRUM;
                 integer  i;
                     s32  fructus      = II;
@@ -400,6 +475,17 @@ principale (
         {
             via_legenda = argumenta[++i];
         }
+        alioquin si (strcmp(a, "-conferre") == ZEPHYRUM)
+        {
+            si (i + II >= numerus)
+            {
+                imprimere("-conferre duas vias poscit\n");
+                _usus();
+                redde II;
+            }
+            via_prima   = argumenta[++i];
+            via_altera  = argumenta[++i];
+        }
         alioquin
         {
             imprimere("argumentum ignotum: %s\n", a);
@@ -408,7 +494,7 @@ principale (
         }
     }
 
-    si (!via_legenda && (!via_fontis || !via_radicis))
+    si (!via_legenda && !via_prima && (!via_fontis || !via_radicis))
     {
         _usus();
         redde II;
@@ -430,6 +516,10 @@ principale (
     si (via_legenda)
     {
         fructus = _legere(via_legenda, piscina);
+    }
+    alioquin si (via_prima)
+    {
+        fructus = _conferre(via_prima, via_altera, piscina);
     }
     alioquin
     {

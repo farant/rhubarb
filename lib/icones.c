@@ -6,6 +6,11 @@
  * octetorum ferunt. Ita .iconset et .icns constructione consentiunt,
  * non duabus semitis quae consentire debent.
  *
+ * EXCEPTIO MENSURATA: ic04 et ic05 in continente ARGB ferunt, non PNG -
+ * Finder et iconutil PNG ibi ut strepitum legunt (2026-09-12). Ibi
+ * .icns et .iconset PIXELIS consentiunt (eadem imago scalata), non
+ * octetis.
+ *
  * Nihil decodificat: Imago a vocante venit (par. III, D7).
  */
 
@@ -150,9 +155,10 @@ _codicem_invenire (
 }
 
 /* Chunkus unus .icns: codex IV litterarum, longitudo magni-endiana
- * INCLUSO capite VIII octetorum, onus PNG. Longitudo SCRIPTA et sedes
- * REDDITA separatim computantur: culpa in longitudine tabulam in
- * memoria non rumpit, sed ambulationem legentis (I3) fallit.
+ * INCLUSO capite VIII octetorum, onus (PNG, aut ARGB pro ic04/ic05).
+ * Longitudo SCRIPTA et sedes REDDITA separatim computantur: culpa in
+ * longitudine tabulam in memoria non rumpit, sed ambulationem legentis
+ * (I3) fallit.
  *
  * Redde: sedes proxima post chunkum. */
 interior i32
@@ -178,6 +184,156 @@ _ordinem_scribere (
  * gemini adiacent, ergo latus ultimum scriptum duplicata tollit.
  * Magnitudo IGNOTA et TEXTUS: munus ipsum chorda_aedificator (cf.
  * continens .icns, ubi magnitudo nota est et octeti crudi). */
+/* Codices quos Apple ARGB implet, non PNG. Finder et iconutil PNG in
+ * his locis ut STREPITUM legunt (fasciculus SolumXVI, 2026-09-12),
+ * sips/ImageIO recte - sips hic oraculum LENE nobis favens erat.
+ * icp4/icp5 (remedium in spec par. IV nominatum) aeque male leguntur.
+ * Tabula, non condicio in codice: si Apple mutat, linea mutatur. Non
+ * columna ORDINUM, quia columna quinta omnes lineas tabulae ultra
+ * LXXII columnas truderet. */
+hic_manens constans character* CODICES_ARGB[II] = { "ic04", "ic05" };
+
+interior b32
+_onus_argb_poscitur (
+    constans character* codex)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < II; i++)
+    {
+        si (memcmp(codex, CODICES_ARGB[i], (size_t)IV) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* RLE plani unius (A, R, G aut B) in dest. Imperium < 0x80: (imperium
+ * + I) octeti crudi sequuntur; >= 0x80: octetus sequens (imperium -
+ * 125) vicibus. Regula Pythone super onera ipsa Apple VERIFICATA (ic04
+ * 316, ic05 990 octeti: plana exacte, octeti reliqui nulli). CUPIDE:
+ * cursus III..CXXX eiusdem valoris, aliter crudi usque ad CXXVIII aut
+ * donec cursus III incipiat.
+ *
+ * Redde: octeti scripti. */
+interior i32
+_rle_planum (
+    constans i8* pixela,
+            i32  numerus,
+            i32  canalis,
+             i8* dest)
+{
+    i32 i        = ZEPHYRUM;
+    i32 scripta  = ZEPHYRUM;
+    i32 cursus;
+    i32 initium;
+    i32 n;
+    i32 k;
+
+    dum (i < numerus)
+    {
+        cursus = I;
+        dum (   i + cursus < numerus
+             && cursus < CXXVIII + II
+             && pixela[((i + cursus) * IV) + canalis]
+                == pixela[(i * IV) + canalis])
+        {
+            cursus++;
+        }
+        si (cursus >= III)
+        {
+            dest[scripta++]  = (i8)(CXXVIII + (cursus - III));
+            dest[scripta++]  = pixela[(i * IV) + canalis];
+            i                += cursus;
+            perge;
+        }
+
+        initium  = i;
+        n        = ZEPHYRUM;
+        dum (i < numerus && n < CXXVIII)
+        {
+            si (   i + II < numerus
+                && pixela[(i * IV) + canalis]
+                   == pixela[((i + I) * IV) + canalis]
+                && pixela[(i * IV) + canalis]
+                   == pixela[((i + II) * IV) + canalis])
+            {
+                frange;
+            }
+            i++;
+            n++;
+        }
+        dest[scripta++] = (i8)(n - I);
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            dest[scripta++] = pixela[((initium + k) * IV) + canalis];
+        }
+    }
+    redde scripta;
+}
+
+/* Onus ARGB (ic04/ic05): 'ARGB' + plana A, R, G, B, colore
+ * PRAEMULTIPLICATO: R' = round(R x A / CCLV). iconutil plana RGB ut
+ * praemultiplicata legit et per alpha dividit - MENSURATUM 2026-09-12:
+ * nostrum rectum 82 ad alpha 101 -> Apple 207 = 82 x 255 / 101, in
+ * omnibus pixelis partialibus (LII de LII ic04, CVIII de CVIII ic05).
+ * Recta scripta marginem ALBESCENTEM darent, halonem quem D8 vetat.
+ *
+ * Assertio prior 'valores recti' FALSA erat: onera Apple quae
+ * decodificavi ex redditione bilineari facta erant, ubi alpha solum 0
+ * aut 255 est - ibi rectum et praemultiplicatum IDEM octeti sunt, ergo
+ * probatio discernere non poterat.
+ *
+ * Tela ad pessimum casum: copia praemultiplicata n x IV, et planum n
+ * octetorum crudorum n + n / CXXVIII + I poscit. */
+interior chorda
+_argb_codificare (
+    constans Imago* imago,
+           Piscina* piscina)
+{
+    chorda  onus;
+        i8* tela;
+        i8* praemultiplicata;
+       i32  n;
+       i32  i;
+       i32  canalis;
+       i32  alpha;
+       i32  sedes;
+
+    onus.datum    = NIHIL;
+    onus.mensura  = ZEPHYRUM;
+    n             = imago->latitudo * imago->altitudo;
+    praemultiplicata = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(n * IV));
+    tela          = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(IV + (IV * (n + (n / CXXVIII) + I))));
+    si (!tela || !praemultiplicata)
+    {
+        redde onus;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        alpha = (i32)imago->pixela[(i * IV) + III];
+        per (canalis = ZEPHYRUM; canalis < III; canalis++)
+        {
+            praemultiplicata[(i * IV) + canalis] = (i8)(
+                (((i32)imago->pixela[(i * IV) + canalis] * alpha)
+                 + (CXXVIII - I)) / CCLV);
+        }
+        praemultiplicata[(i * IV) + III] = (i8)alpha;
+    }
+    memcpy(tela, "ARGB", (size_t)IV);
+    sedes = (i32)IV;
+    sedes += _rle_planum(praemultiplicata, n, III, tela + sedes);
+    sedes += _rle_planum(praemultiplicata, n, ZEPHYRUM, tela + sedes);
+    sedes += _rle_planum(praemultiplicata, n, I, tela + sedes);
+    sedes += _rle_planum(praemultiplicata, n, II, tela + sedes);
+    onus.datum = tela;
+    onus.mensura = sedes;
+    redde onus;
+}
+
 interior chorda
 _latera_nominare (
          i32  petita,
@@ -261,7 +417,7 @@ _fructum_iudicare (
             redde _recusare(status, sedes_vitii, ICONES_ERROR_LATERA,
                             pars->semita);
         }
-        si (chorda_vacua(pars->octeti))
+        si (chorda_vacua(pars->octeti) || chorda_vacua(pars->onus_icns))
         {
             redde _recusare(status, sedes_vitii, ICONES_ERROR_DESUNT,
                             pars->semita);
@@ -281,6 +437,7 @@ icones_reddere (
     chorda vacua;
     chorda cache[X];        /* octeti per ORDINEM, communes geminis */
        b32 habet[X];
+     Imago imagines[X];   /* imago per ordinem, communis geminis */
        i32 petita;
        s32 latus;
        i32 i;
@@ -428,9 +585,10 @@ icones_reddere (
         {
             si (habet[j] && ORDINES[j].latera == ORDINES[i].latera)
             {
-                cache[i]  = cache[j];
-                habet[i]  = VERUM;
-                iam       = VERUM;
+                cache[i]     = cache[j];
+                imagines[i]  = imagines[j];
+                habet[i]     = VERUM;
+                iam          = VERUM;
                 frange;
             }
         }
@@ -457,6 +615,7 @@ icones_reddere (
                 redde _recusare(status, sedes_vitii, ICONES_ERROR_PNG,
                                 png.error);
             }
+            imagines[i]       = parva;
             cache[i].datum    = png.datum;
             cache[i].mensura  = png.mensura;
             habet[i]          = VERUM;
@@ -471,6 +630,21 @@ icones_reddere (
         pars->latera = ORDINES[i].latera;
         pars->semita = chorda_ex_literis(ORDINES[i].semita, piscina);
         pars->octeti = cache[i];
+        /* continens: PNG communis, aut ARGB earundem pixelorum ubi
+         * Apple ARGB poscit (CODICES_ARGB) */
+        si (_onus_argb_poscitur(ORDINES[i].codex))
+        {
+            pars->onus_icns = _argb_codificare(&imagines[i], piscina);
+            si (!pars->onus_icns.datum)
+            {
+                redde _recusare(status, sedes_vitii,
+                                ICONES_ERROR_MEMORIA, vacua);
+            }
+        }
+        alioquin
+        {
+            pars->onus_icns = cache[i];
+        }
     }
     redde VERUM;
 }
@@ -624,7 +798,7 @@ icones_icns_codificare (
         IconesPars* pars = (IconesPars*)xar_obtinere(fructus->partes,
             i);
 
-        mensura += (i32)VIII + pars->octeti.mensura;
+        mensura += (i32)VIII + pars->onus_icns.mensura;
     }
 
     tela = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
@@ -645,7 +819,7 @@ icones_icns_codificare (
 
         sedes = _ordinem_scribere(tela, sedes,
                                   _codicem_invenire(pars->semita),
-                                  pars->octeti);
+                                  pars->onus_icns);
     }
 
     continens.datum    = tela;
