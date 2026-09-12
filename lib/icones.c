@@ -77,6 +77,65 @@ _quadratum_scalare (
                                      piscina);
 }
 
+/* Longitudo magni-endiana octetum post octetum, significantissimum
+ * PRIMUM - numquam memcpy i32 hospitis, qui in machina parvi-endiana
+ * inversus scriberetur. Forma ipsa imago_png.c (ibi interior, ergo
+ * hic iterata). */
+interior vacuum
+_be32_scribere (
+     i8* destinatio,
+    i32  valor)
+{
+    destinatio[ZEPHYRUM]  = (i8)((valor >> XXIV) & CCLV);
+    destinatio[I]         = (i8)((valor >> XVI) & CCLV);
+    destinatio[II]        = (i8)((valor >> VIII) & CCLV);
+    destinatio[III]       = (i8)(valor & CCLV);
+}
+
+/* Codex .icns per SEMITAM partis. Partes codicem non ferunt (spec
+ * par. III) et ordinem tabulae CUM LACUNIS sequuntur (latera omissa
+ * aut non petita), ergo index directus in ORDINES falleret. NIHIL si
+ * semita tabulae ignota est. */
+interior constans character*
+_codicem_invenire (
+    chorda semita)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        si (chorda_aequalis_literis(semita, ORDINES[i].semita))
+        {
+            redde ORDINES[i].codex;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Chunkus unus .icns: codex IV litterarum, longitudo magni-endiana
+ * INCLUSO capite VIII octetorum, onus PNG. Longitudo SCRIPTA et sedes
+ * REDDITA separatim computantur: culpa in longitudine tabulam in
+ * memoria non rumpit, sed ambulationem legentis (I3) fallit.
+ *
+ * Redde: sedes proxima post chunkum. */
+interior i32
+_ordinem_scribere (
+                 i8* tela,
+                i32  sedes,
+ constans character* codex,
+             chorda  octeti)
+{
+    tela[sedes]        = (i8)codex[ZEPHYRUM];
+    tela[sedes + I]    = (i8)codex[I];
+    tela[sedes + II]   = (i8)codex[II];
+    tela[sedes + III]  = (i8)codex[III];
+
+    _be32_scribere(tela + sedes + IV, (i32)VIII + octeti.mensura);
+    memcpy(tela + sedes + VIII, octeti.datum, (size_t)octeti.mensura);
+
+    redde sedes + (i32)VIII + octeti.mensura;
+}
+
 b32
 icones_reddere (
     constans Icones* petitio,
@@ -143,6 +202,7 @@ icones_reddere (
         (i32)magnitudo(IconesPars));
     fructus->omissa         = ZEPHYRUM;
     fructus->latera_fontis  = (i32)latus;
+    fructus->titulus        = petitio->titulus;
     si (!fructus->partes)
     {
         redde _recusare(status, sedes_vitii, ICONES_ERROR_MEMORIA,
@@ -216,6 +276,199 @@ icones_reddere (
         pars->latera = ORDINES[i].latera;
         pars->semita = chorda_ex_literis(ORDINES[i].semita, piscina);
         pars->octeti = cache[i];
+    }
+    redde VERUM;
+}
+
+b32
+icones_iconset_scribere (
+    constans IconesFructus* fructus,
+        constans character* via_radicis,
+              IconesStatus* status,
+                    chorda* sedes_vitii,
+                   Piscina* piscina)
+{
+        chorda  vacua;
+        chorda  relativa;     /* "AppIcon.iconset" - in sedibus */
+        chorda  directorium;
+        chorda  iungenda[II];
+     character* via_directorii;
+           i32  numerus;
+           i32  i;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+
+    si (!status || !sedes_vitii)
+    {
+        redde FALSUM;
+    }
+    *status       = ICONES_SUCCESSUS;
+    *sedes_vitii  = vacua;
+
+    /* Suffixum .iconset FORMAE est, non electionis: iconutil
+     * directorium sine eo recusat. Ergo bibliotheca id possidet. */
+    relativa = chorda_concatenare(fructus->titulus,
+        chorda_ex_literis(".iconset", piscina), piscina);
+    iungenda[ZEPHYRUM]  = chorda_ex_literis(via_radicis, piscina);
+    iungenda[I]         = relativa;
+    directorium         = via_iungere(iungenda, II, piscina);
+    via_directorii      = chorda_ut_cstr(directorium, piscina);
+    si (!relativa.datum || !via_directorii)
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_MEMORIA,
+                        vacua);
+    }
+
+    /* Consumptor ALTER mkdir -p (primus fasciculum): radix nidificata
+     * cuius parentes absunt aliter ENOENT caderet */
+    si (!filum_directorium_creare_cum_parentibus(via_directorii))
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_DIRECTORIUM,
+                        relativa);
+    }
+
+    numerus = xar_numerus(fructus->partes);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        IconesPars* pars;
+            chorda  via_plagulae;
+         character* via_c;
+
+        pars = (IconesPars*)xar_obtinere(fructus->partes, i);
+        si (!pars)
+        {
+            redde _recusare(status, sedes_vitii, ICONES_ERROR_MEMORIA,
+                            vacua);
+        }
+        iungenda[ZEPHYRUM]  = directorium;
+        iungenda[I]         = pars->semita;
+        via_plagulae        = via_iungere(iungenda, II, piscina);
+        via_c               = chorda_ut_cstr(via_plagulae, piscina);
+        si (!via_c)
+        {
+            redde _recusare(status, sedes_vitii, ICONES_ERROR_MEMORIA,
+                            vacua);
+        }
+
+        /* partes geminae EOSDEM octetos scribunt: nihil hic
+         * duplicatur nisi scriptio ipsa */
+        si (!filum_scribere(via_c, pars->octeti))
+        {
+            iungenda[ZEPHYRUM] = relativa;
+            redde _recusare(status, sedes_vitii, ICONES_ERROR_SCRIPTIO,
+                            via_iungere(iungenda, II, piscina));
+        }
+    }
+    redde VERUM;
+}
+
+chorda
+icones_icns_codificare (
+    constans IconesFructus* fructus,
+              IconesStatus* status,
+                   Piscina* piscina)
+{
+    chorda  vacua;
+    chorda  continens;
+        i8* tela;
+       i32  mensura;
+       i32  sedes;
+       i32  numerus;
+       i32  i;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+
+    si (!status)
+    {
+        redde vacua;
+    }
+    *status = ICONES_SUCCESSUS;
+
+    /* Transitus PRIMUS: mensura tota et codex cuiusque partis ANTE
+     * allocationem. Magnitudo NOTA est, ergo tela semel allocatur -
+     * non chorda_aedificator, qui magnitudini ignotae et TEXTO
+     * destinatur (caput eius ipsum id dicit). */
+    numerus = xar_numerus(fructus->partes);
+    mensura = (i32)VIII;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        IconesPars* pars = (IconesPars*)xar_obtinere(fructus->partes,
+            i);
+
+        si (!pars)
+        {
+            *status = ICONES_ERROR_MEMORIA;
+            redde vacua;
+        }
+        si (!_codicem_invenire(pars->semita))
+        {
+            *status = ICONES_ERROR_LATERA;
+            redde vacua;
+        }
+        mensura += (i32)VIII + pars->octeti.mensura;
+    }
+
+    tela = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
+    si (!tela)
+    {
+        *status = ICONES_ERROR_MEMORIA;
+        redde vacua;
+    }
+
+    memcpy(tela, "icns", (size_t)IV);
+    _be32_scribere(tela + IV, mensura);
+
+    sedes = (i32)VIII;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        IconesPars* pars = (IconesPars*)xar_obtinere(fructus->partes,
+            i);
+
+        sedes = _ordinem_scribere(tela, sedes,
+                                  _codicem_invenire(pars->semita),
+                                  pars->octeti);
+    }
+
+    continens.datum    = tela;
+    continens.mensura  = mensura;
+    redde continens;
+}
+
+b32
+icones_icns_scribere (
+    constans IconesFructus* fructus,
+        constans character* via,
+              IconesStatus* status,
+                    chorda* sedes_vitii,
+                   Piscina* piscina)
+{
+    chorda vacua;
+    chorda continens;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+
+    si (!status || !sedes_vitii)
+    {
+        redde FALSUM;
+    }
+    *status       = ICONES_SUCCESSUS;
+    *sedes_vitii  = vacua;
+
+    /* Gemellus TENUIS: octetos codificationis purae scribit et nihil
+     * aliud computat, ergo plagula et chorda pura constructione
+     * congruunt (I6 id octetim probat). */
+    continens = icones_icns_codificare(fructus, status, piscina);
+    si (*status != ICONES_SUCCESSUS)
+    {
+        redde FALSUM;
+    }
+    si (!filum_scribere(via, continens))
+    {
+        redde _recusare(status, sedes_vitii, ICONES_ERROR_SCRIPTIO,
+                        chorda_ex_literis(via, piscina));
     }
     redde VERUM;
 }

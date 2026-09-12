@@ -698,6 +698,29 @@ patch — I6's byte-equality must go red.
 
 - [ ] **Step 5: Whole suite, format, commit.**
 
+**As executed (2026-09-12) — four deviations, each with its reason:**
+
+- **No `chorda_aedificator`.** Its own header says it serves an
+  UNKNOWN final size and TEXT; it has no raw-byte append. The `.icns`
+  size is known before writing, so the container is computed,
+  allocated once and filled — `lib/imago_png.c`'s shape. Its closing
+  size self-check was NOT carried over: a mismatch has no honest
+  `IconesStatus`, and I3's independent walk catches the short case.
+- **`IconesFructus` gained `chorda titulus`** (Fran chose this over
+  making `via_radicis` the full directory path). The iconset writer
+  receives only the fructus, so without it `<titulus>.iconset` could
+  not be derived; the suffix is a format requirement `iconutil`
+  enforces, so the library owns it.
+- **I6 uses a 512 source and asserts NINE files, not ten.** Ten needs
+  a source ≥ 1024, about 13 MB of the 16 MB arena; 512 also reaches
+  TWO duplicate pairs on disk where 256 reaches one.
+- **Plant two translated, plant three added.** The thin twin has no
+  length patch to skip, so plant two writes one byte short: 1 red, and
+  the writer still returns `VERUM`/`SUCCESSUS` — only the byte
+  comparison sees it. Plant three writes part 0's bytes into every
+  file: 8 reds on the per-file loop while BOTH duplicate-pair checks
+  stay green. Plant one: 13 reds, all in I3.
+
 ---
 
 ### Task 4: refusals
@@ -717,6 +740,26 @@ Implements spec §7; gate I5.
   one path from outside, and one plant stayed green because no test
   reached the other branch.
 - [ ] **Step 5** — whole suite, format, commit.
+
+**Found during Task 3 — cases Step 1 must add** (see
+`lib/icones.worklog.md`):
+
+- **Every requested size exceeds the source** (`latera_petita =
+  ICONES_LATERA_MXXIV` from a 256 px source): `reddere` today returns
+  `VERUM` with ZERO parts, because `_MINIMUS` only checks side < 16.
+  That is D10's forbidden shape. Which status refuses it is a decision
+  to make here; `_MINIMUS` naming the requested set is the obvious
+  candidate.
+- **The writers have no argument guards** — a NIHIL `fructus`, `via`
+  or `via_radicis` dereferences. Left out deliberately so these tests
+  are born red; expect a crash rather than a legible red until the
+  guards land, so run this step's red with that in mind.
+- **`si (!pars)` → `_MEMORIA` in the writers is unreachable by test**
+  (`xar_obtinere` within range). "A plant per branch" cannot cover it;
+  keep or remove it on purpose.
+- **An empty `semita`** collapses under `via_iungere` (it skips empty
+  parts) to the directory path itself, and `filum_scribere` then fails
+  `_SCRIPTIO`. Legible, but worth a case.
 
 ---
 

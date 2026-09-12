@@ -76,6 +76,10 @@ nomen structura {
      Xar* partes;         /* IconesPars */
      i32  omissa;         /* vexilla laterum quae fons non tulit */
      i32  latera_fontis;  /* quadratum post recisionem */
+  chorda  titulus;        /* ex petitione transcriptus: scriptor
+                           * .iconset fructum SOLUM accipit, ergo
+                           * sine hoc titulum directorii derivare
+                           * non posset */
 } IconesFructus;
 
 /* Reddere: PURUM (nihil in disco tangit). Quadratum ad centrum recidit,
