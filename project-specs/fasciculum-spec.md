@@ -275,9 +275,13 @@ unavoidable platform question is asked where a human can watch it.
 
 ## 11. Risks, notes, AUDIENDA
 
-- **AUDIENDUM:** whether a bundle assembled by this library actually
-  launches on double-click. That is P5's by-hand fumus, and nothing in
-  the automated suite can answer it.
+- **RESPONSUM 2026-09-12 (was AUDIENDUM):** a bundle assembled by this
+  library **launches on double-click**. `tools/fasciculum_fumus.sh`
+  built `Probatio.app` around a sentinel binary; opened from Finder, it
+  ran and wrote its sentinel (`vixi`, 00:17). No signing, no
+  notarization, no `PkgInfo`, no quarantine problem — so D3's premise
+  and §10's `PkgInfo` row are both confirmed by observation rather than
+  assumed. Nothing in the automated suite could have answered this.
 - **AUDIENDUM:** whether `filum_copiare`'s 4 KB buffer loop is fast
   enough for a 20 MB binary in practice. Unmeasured; if it bites,
   the fix belongs in `filum`, not here.
@@ -290,6 +294,27 @@ unavoidable platform question is asked where a human can watch it.
   the merge direction; nothing stops a determined caller, by design.
 - **Risk, named:** no rollback (§5). A failed write leaves a partial
   directory. Accepted deliberately.
+
+## 12. As-built (plan 1 executed 2026-09-11/12)
+
+Corrections this arc forced, recorded where the claim was made rather
+than silently reconciled:
+
+| § | Spec said | As built |
+|---|---|---|
+| §8 H1 | "four entries" | **two** for a minimal bundle (`Contents/Info.plist` + `Contents/MacOS/<exe>`), three with an icon. Four was counted while `PkgInfo` was still in scope; §10 later deferred it. |
+| §8 H4 | "the plist validated with `plutil -lint`" | `plutil` lives in the by-hand fumus (stages II, IV, VII), not in H4. plist's own arc already proves our plist bytes are Apple-acceptable, so linting them inside H4 would re-test the serializer; what fasciculum adds is the KEY SET, which H2 checks by parsing the bytes back. The fumus additionally has `plutil -extract` read our keys — Apple's parser, not ours. |
+| §6 | `FASCICULUM_ERROR_PLISTA` "carries plist's own status and semita" | The four signatures §3 fixes have nowhere to put a `PlistStatus`. What travels is `Contents/Info.plist` joined with plist's element path; the numeric status is genuinely LOST. Named, not quietly weakened. |
+| §7 | two `filum` rows | **four.** Also needed: `filum_directorium_creare_cum_parentibus` (mkdir -p — all three existing creators are a single `mkdir`, so `Contents/MacOS` under a virgin root fails ENOENT and the writer could not have worked); and the discovery that `filum_delere` is `remove()`, so it already removes empty directories — which is what makes the gates' teardown honest. |
+| §4 | `legere` confirms the executable | Confirmed; the icon's presence is deliberately NOT required. §4 names only the executable and §11 already records that we never validate an `.icns`. |
+| — | (unstated) | `fasciculum_aequalis` compares **effective** values: an empty field equals the default `reddere` would write, and `NIHIL` `plista_extra` equals an empty dict. A literal comparison reports "different" for a bundle byte-identical to what we would write, defeating the function's stated purpose. Defaults live in one place shared with `reddere`. |
+| — | (unstated) | There was no way to BUILD a bundle: `fasciculum` is a library with no CLI, and the plan's by-hand fumus assumed one existed. Hence `tools/fasciculum_instrumentum.c`. |
+
+Found in passing and fixed with Fran's approval, unrelated to bundles:
+`compile_tools.sh` linked every `build/*.o`, including 14 probatio
+objects carrying their own `principale` and an undefined generated
+capsula symbol — so **no tool in the tree could be built**. Pre-existing;
+`tools/canon_examen.c` failed identically.
 
 ## Cross-references
 

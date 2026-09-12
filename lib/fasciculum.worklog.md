@@ -149,6 +149,94 @@ with a `(memoriae_index)` cast on the array index — the cast only
 existed because the type was wrong. It is an `i32` now and the cast is
 gone.
 
+## 2026-09-12 (task 5) — IT LAUNCHES, and compile_tools.sh was broken for everything
+
+**THE AUDIENDUM IS ANSWERED: the bundle launches.** Fran opened
+`Probatio.app` from Finder; the bundled binary ran and wrote its
+sentinel — `vixi`, 5 bytes, 00:17. This is the one question spec §11
+said nothing in the automated suite could answer, and 132 assertions
+could not: whether macOS actually accepts a directory this library
+assembled. It does.
+
+Three things that validates, none of which a test could have shown:
+
+- **D3 holds empirically.** No code signing, no notarization. A locally
+  built binary is ad-hoc signed by clang and a bundle directory needs no
+  signature for local use — asserted in the spec as a premise, now
+  observed.
+- **§10's `PkgInfo` deferral was right.** The bundle contains no
+  `PkgInfo` ("modern macOS ignores it; add if a tool complains"). Nothing
+  complained.
+- **The `filum` mode pair earned itself.** Without `+x` on
+  `Contents/MacOS/<exe>`, Finder declines silently — the failure shape
+  named in `lib/filum.worklog.md` as the worst this arc could ship. The
+  bit was set, and the app ran.
+
+**The plan had no driver.** It says the smoke "builds a real bundle
+around a real binary" and never says what builds it — `fasciculum` is a
+library with no CLI, so nothing in the tree could assemble a real
+bundle. Hence `tools/fasciculum_instrumentum.c` (struere + legere,
+house exit discipline 0 / 1 / 2 where 2 means nothing was done). It is
+not smoke-test scaffolding: a CLI for building `.app` bundles is what a
+consumer wants, and the plan's suggested `bin/moneta_probatio` did not
+exist.
+
+**The sentinel writes next to its own `argv[0]`, not into `$HOME`.**
+`briar_fumus.sh` exports a private `$HOME` so a run cannot soil real
+user data, and I copied that — then realised it silently stops
+protecting under `-agere`, because `open` hands off to **launchd**,
+which does not inherit our environment. Deriving the path from `argv[0]`
+keeps every artifact inside the `mktemp` area no matter who starts the
+process. It also turns "did it launch?" from a question about what
+someone saw into a file that either exists or does not.
+
+**Two adversarial stages, because there were two things that could be
+theatre.** `briar_fumus.sh` stage V exists so the gate can prove it sees
+red. Here that needs doubling: the tool must REFUSE a non-existent
+executable (proving the script notices a refusal, and that `reddere`
+created nothing), and `plutil -lint` must REJECT a deliberately
+corrupted plist (proving the lint judges rather than always printing OK).
+A lint that cannot fail is not an oracle.
+
+**`plutil -extract` is better evidence than our own reader.** Stage IV
+has Apple's parser read `CFBundleExecutable` and `CFBundleIconFile` back
+out of the plist we generated. Our reader agreeing with our writer only
+proves we are self-consistent; Apple agreeing proves the bytes mean what
+we think.
+
+**`compile_tools.sh` was broken for EVERY tool in the tree** (fixed,
+Fran approved the scope). It links `ls build/*.o` — all 200 objects —
+and `compile_tests.sh` now puts probatio objects in `build/`'s root
+beside the libraries. 14 of them carry their own `principale`, and
+`probatio_vitrea_hospes.o` references `_capsula_speculi_hospes`, a
+generated capsula symbol NO object in `build/` defines. So every tool
+link failed. Pre-existing, not mine: `tools/canon_examen.c` hits the
+identical symbol, and `bin/canon_examen` on disk predates whatever moved
+those objects. One-line filter (`grep -v '/probatio_'`) with the reason
+recorded at the site; 186 objects link clean and produce working
+binaries.
+
+Three errors of my own from that hour, all reusable:
+
+- **Unquoted `$VAR` does not word-split in zsh.** I handed clang a
+  186-line newline-separated blob as a single filename. There is a
+  memory note on exactly this trap (`${=VAR}` splits) and I walked into
+  it anyway. Worse: `compile_tools.sh` is `#!/bin/bash`, where the same
+  idiom DOES split — so my probe and the real script were failing for
+  different reasons, and conflating them nearly sent me after the wrong
+  bug. Probe in the shell the script actually uses.
+- **`-o /dev/null` is not a valid link probe when `-g` is set.** The
+  link SUCCEEDS and then `dsymutil` fails parsing `/dev/null` as an
+  object file, which reads exactly like a link failure. The house note
+  says `-o /dev/null` proves you can compile, not that you did; add that
+  with debug info it cannot even prove the link. Link to a real temp
+  path.
+- **Three times consecutively I grepped for the error I expected and
+  hid the error I got** — the undefined symbol names, then the quoting
+  failure, then the dsymutil message. A grep pattern is a hypothesis,
+  and running it as the only read makes the hypothesis unfalsifiable.
+  Tail the log unconditionally, THEN filter.
+
 ## 2026-09-11 (task 3) — a plant that stayed green found an unasserted branch
 
 `fasciculum_scribere`: per plan entry, create the parent, write bytes

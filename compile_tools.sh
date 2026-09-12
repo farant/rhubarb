@@ -58,7 +58,18 @@ compile_tool() {
     mkdir -p bin
 
     # Get object files
-    local obj_files=$(ls $BUILD_DIR/*.o 2>/dev/null | tr '\n' ' ')
+    #
+    # PROBATIONES EXCLUSAE (2026-09-12): compile_tests.sh obiecta
+    # probationum in build/ RADICE ponit iuxta bibliothecas, et
+    # probatio_*.o et 'principale' suum ferunt (XIV ex CC) et symbola
+    # quae sola linea nectendi probationis propriae praebet - capsulae
+    # generatae, ut _capsula_speculi_hospes ex probatio_vitrea_hospes.o,
+    # quod NULLUM obiectum in build/ definit. Sine hoc filtro NULLUM
+    # instrumentum nectitur: bin/canon_examen ipsum (structum antequam
+    # obiecta probationum huc venerunt) eodem symbolo cadit. Inventum
+    # dum tools/fasciculum_instrumentum.c conderetur.
+    local obj_files=$(ls $BUILD_DIR/*.o 2>/dev/null \
+        | grep -v '/probatio_' | tr '\n' ' ')
 
     if [ -z "$obj_files" ]; then
         echo -e "${RED}Error: No object files in $BUILD_DIR/${RESET}"
