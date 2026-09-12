@@ -72,6 +72,83 @@ so this is legal rather than a hack, but one library walking another's
 `Xar` is the kind of coupling that ages badly — a candidate desideratum
 for plist, not a blocker here.
 
+## 2026-09-11 (task 4) — two defects in one comparison, and why only one test caught one
+
+`fasciculum_legere` (the inverse of §4) and `fasciculum_aequalis`, gates
+H3 and H5; 76 → 132 assertions.
+
+**`fasciculum_aequalis` shipped two defects into its first green build,
+and the second is the instructive one.**
+
+1. `_nomina_aequalia` compared FULL PATHS while its own name and comment
+   said it compared names. `/tmp/probatio_fasciculum_binarium` never
+   equals `<area>/Contents/MacOS/probatio_fasciculum_binarium`, so H5's
+   round trip went red immediately. `via_nomen` was not available as a
+   fix: it allocates, and `aequalis` takes NO piscina — the same
+   no-allocation constraint I had already solved for the default
+   literals with `chorda_aequalis_literis` and then failed to carry
+   across. A `strrchr`-based basename helper needs no arena at all.
+2. **`titulus` was never compared.** I wrote a comment explaining that
+   titulus must be compared AFTER the names because its default derives
+   from the executable's basename — and then did not write the
+   comparison. Two bundles differing only in `CFBundleName` compared
+   equal.
+
+**No test caught the second, and the reason generalises.** H5's
+dissimilitude case varied exactly one field, `identitas` — which was one
+of the fields I did compare. **A test that varies one field proves that
+one field is compared.** It says nothing about the others, and a green
+result from it feels like evidence about the whole comparison. The block
+now varies every compared field in turn (identitas, titulus, versio,
+versio_aedificationis, sine_scandali, executable name, icon name,
+plista_extra), one `CREDO_FALSUM` each. That widening is also what made
+the plan's named plant meaningful: blinding the `plist_aequalis`
+delegation reddens exactly the `plista_extra` case and leaves the other
+seven green, which is the evidence that each case exercises a different
+branch instead of all funnelling through one.
+
+**Effective equality, decided rather than inherited.** `reddere`
+defaults `versio` to "1.0" and `versio_aedificationis` to "1" and writes
+them into the plist, so a minimal value written and read back differs
+from itself in those fields. A literal comparison would report
+"different" for a bundle byte-identical to what we would write — which
+defeats the documented purpose of the function ("ut scriptor fasciculum
+iam rectum non rescribat"). So `aequalis` compares EFFECTIVE values: an
+empty field equals its default. The defaults live in one place
+(`FASCICULUM_*_ORDINARIA`) used by both `reddere` and `aequalis`, so the
+property holds by construction rather than by two sites agreeing. NIHIL
+`plista_extra` equals an empty dict for the same reason — `plist_numerus`
+tolerates NIHIL while `plist_aequalis` returns FALSUM for it, so the
+zero-pair case is settled before delegating.
+
+**A spec requirement the approved API cannot carry.** §6 says
+`FASCICULUM_ERROR_PLISTA` "carries plist's own status and semita rather
+than flattening them", but the four signatures §3 fixes have nowhere to
+put a `PlistStatus`. What travels is `Contents/Info.plist` joined with
+plist's element path, so the refusal names both the file and the
+offending element; the numeric plist status is genuinely lost. Named in
+the code, in H3's comment and here rather than quietly satisfied by a
+weaker reading.
+
+**`<string.h>` and a rule about include hygiene.** Task 2 deliberately
+dropped it because `reddere` used nothing from it. Correct then; wrong
+the moment the reader arrived, and the build failed with `rc=2` —
+NOTHING RAN — on implicit `strcmp` and `memset` under `-Werror`.
+"Include only what you use" has to be re-asked when a file grows a
+second function, not decided once at birth.
+
+**Asymmetry recorded, not accidental:** `legere` confirms the executable
+named by `CFBundleExecutable` exists, and does NOT require the icon to
+exist. §4 says to confirm the executable and is silent on the icon, and
+§11's AUDIENDUM already records that we never validate an `.icns`. A
+bundle with a missing executable is the failure that cannot be
+diagnosed from the outside; a missing icon renders blank.
+
+Also fixed in passing: `_clavis_levata` used a `character` loop counter
+with a `(memoriae_index)` cast on the array index — the cast only
+existed because the type was wrong. It is an `i32` now and the cast is
+gone.
+
 ## 2026-09-11 (task 3) — a plant that stayed green found an unasserted branch
 
 `fasciculum_scribere`: per plan entry, create the parent, write bytes

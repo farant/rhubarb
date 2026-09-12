@@ -382,6 +382,284 @@ principale (vacuum)
         filum_delere(radix_areae);
     }
 
+    /* ---- H3: recusationes, unaquaeque statu SUO et sede SUA ---- */
+    {
+              Fasciculum  f;
+                     Xar* partes;
+        FasciculumStatus  status;
+                  chorda  sedes;
+      constans character* via_nusquam =
+          "/tmp/probatio_fasciculum_nusquam_xyz";
+     constans character* radix_areae =
+         "/tmp/probatio_fasciculum_recusata";
+     constans character* area =
+         "/tmp/probatio_fasciculum_recusata/Probatio.app";
+               character via_contents[CCLVI];
+               character via_macos[CCLVI];
+               character via_plistae[CCLVI];
+               character via_exs[CCLVI];
+
+        imprimere("\n--- H3: recusationes ---\n");
+
+        sprintf(via_contents, "%.200s/Contents", area);
+        sprintf(via_macos, "%.200s/Contents/MacOS", area);
+        sprintf(via_plistae, "%.200s/Contents/Info.plist", area);
+        sprintf(via_exs,
+            "%.200s/Contents/MacOS/probatio_fasciculum_binarium", area);
+
+        filum_delere(via_plistae);
+        filum_delere(via_exs);
+        filum_delere(via_macos);
+        filum_delere(via_contents);
+        filum_delere(area);
+        filum_delere(radix_areae);
+
+        /* (i) identitas DEEST: clavis nominatur, non chorda vacua.
+         * Tres primae recusationes in reddere ab opere II iam vivunt;
+         * hic primum ASSERUNTUR. */
+        f = _fasciculum_minimum(via_binarii, piscina);
+        f.identitas.datum = NIHIL;
+        f.identitas.mensura = ZEPHYRUM;
+        CREDO_FALSUM(fasciculum_reddere(&f, &partes, &status, &sedes,
+                                        piscina));
+        CREDO_AEQUALIS_I32((i32)status, (i32)FASCICULUM_ERROR_DESUNT);
+        CREDO_CHORDA_AEQUALIS_LITERIS(sedes, "CFBundleIdentifier");
+
+        /* (ii) exsecutabile NON exsistit: via ipsa nominatur */
+        f = _fasciculum_minimum(via_nusquam, piscina);
+        CREDO_FALSUM(fasciculum_reddere(&f, &partes, &status, &sedes,
+                                        piscina));
+        CREDO_AEQUALIS_I32((i32)status,
+                           (i32)FASCICULUM_ERROR_EXSECUTABILE);
+        CREDO_CHORDA_AEQUALIS_LITERIS(sedes, via_nusquam);
+
+        /* (iii) icon NON exsistit: status SUUS, non EXSECUTABILE */
+        f       = _fasciculum_minimum(via_binarii, piscina);
+        f.icon  = via_nusquam;
+        CREDO_FALSUM(fasciculum_reddere(&f, &partes, &status, &sedes,
+                                        piscina));
+        CREDO_AEQUALIS_I32((i32)status, (i32)FASCICULUM_ERROR_ICON);
+        CREDO_CHORDA_AEQUALIS_LITERIS(sedes, via_nusquam);
+
+        /* (iv) directorium SINE Contents/: non est fasciculus */
+        {
+            Fasciculum lectus;
+
+            CREDO_VERUM(filum_directorium_creare_cum_parentibus(area));
+            CREDO_FALSUM(fasciculum_legere(area, &lectus, &status,
+                                           &sedes, piscina, intern));
+            CREDO_AEQUALIS_I32((i32)status,
+                               (i32)FASCICULUM_ERROR_NON_FASCICULUM);
+            CREDO_CHORDA_CONTINET(sedes,
+                chorda_ex_literis("Contents", piscina));
+        }
+
+        /* (v) Info.plist DEPRAVATA: status PLISTA, et sedes plagulam
+         * NOMINAT. Nota: par. VI dicit statum ipsius plist quoque
+         * iter facere, sed signatura probata nullum locum PlistStatus
+         * habet - semita elementi in sede vehitur, numerus non. */
+        {
+            Fasciculum lectus;
+
+            CREDO_VERUM(filum_directorium_creare_cum_parentibus(
+                via_contents));
+            CREDO_VERUM(filum_scribere_literis(via_plistae,
+                "<?xml version=\"1.0\"?>\n<plist><dict><key>"));
+            CREDO_FALSUM(fasciculum_legere(area, &lectus, &status,
+                                           &sedes, piscina, intern));
+            CREDO_AEQUALIS_I32((i32)status,
+                               (i32)FASCICULUM_ERROR_PLISTA);
+            CREDO_CHORDA_CONTINET(sedes,
+                chorda_ex_literis("Contents/Info.plist", piscina));
+        }
+
+        /* (vi) exsecutabile quod CFBundleExecutable nominat ABEST:
+         * fasciculus qui duplici ictu taceret */
+        {
+            Fasciculum lectus;
+
+            f = _fasciculum_minimum(via_binarii, piscina);
+            CREDO_VERUM(fasciculum_reddere(&f, &partes, &status,
+                                           &sedes, piscina));
+            CREDO_VERUM(fasciculum_scribere(partes, area, &status,
+                                            &sedes, piscina));
+            CREDO_VERUM(filum_delere(via_exs));
+            CREDO_FALSUM(fasciculum_legere(area, &lectus, &status,
+                                           &sedes, piscina, intern));
+            CREDO_AEQUALIS_I32((i32)status,
+                               (i32)FASCICULUM_ERROR_EXSECUTABILE);
+            CREDO_CHORDA_CONTINET(sedes,
+                chorda_ex_literis("probatio_fasciculum_binarium",
+                                  piscina));
+        }
+
+        filum_delere(via_plistae);
+        filum_delere(via_exs);
+        filum_delere(via_macos);
+        filum_delere(via_contents);
+        filum_delere(area);
+        filum_delere(radix_areae);
+    }
+
+    /* ---- H5: iter reditus, et aequalitas EFFECTIVA ---- */
+    {
+              Fasciculum  f;
+              Fasciculum  lectus;
+                     Xar* partes;
+        FasciculumStatus  status;
+                  chorda  sedes;
+      constans character* via_iconis =
+          "/tmp/probatio_fasciculum_h5_icon.icns";
+     constans character* radix_areae =
+         "/tmp/probatio_fasciculum_iter";
+     constans character* area =
+         "/tmp/probatio_fasciculum_iter/Probatio.app";
+               character via_contents[CCLVI];
+               character via_macos[CCLVI];
+               character via_res[CCLVI];
+               character via_plistae[CCLVI];
+               character via_exs[CCLVI];
+               character via_icon_posita[CCLVI];
+
+        imprimere("\n--- H5: iter reditus ---\n");
+
+        sprintf(via_contents, "%.200s/Contents", area);
+        sprintf(via_macos, "%.200s/Contents/MacOS", area);
+        sprintf(via_res, "%.200s/Contents/Resources", area);
+        sprintf(via_plistae, "%.200s/Contents/Info.plist", area);
+        sprintf(via_exs,
+            "%.200s/Contents/MacOS/probatio_fasciculum_binarium", area);
+        sprintf(via_icon_posita,
+            "%.200s/Contents/Resources/"
+            "probatio_fasciculum_h5_icon.icns",
+            area);
+
+        filum_delere(via_plistae);
+        filum_delere(via_exs);
+        filum_delere(via_icon_posita);
+        filum_delere(via_macos);
+        filum_delere(via_res);
+        filum_delere(via_contents);
+        filum_delere(area);
+        filum_delere(radix_areae);
+        CREDO_VERUM(filum_scribere_literis(via_iconis, "icns"));
+
+        /* VALOR PLENE DICTUS: iter exactum est solum ubi nihil
+         * ordinarium supponitur (vide aequalitatem effectivam infra) */
+        f = _fasciculum_minimum(via_binarii, piscina);
+        f.versio = chorda_ex_literis("3.1", piscina);
+        f.versio_aedificationis = chorda_ex_literis("42", piscina);
+        f.sine_scandali = VERUM;
+        f.icon = via_iconis;
+        f.plista_extra = plist_dictio_creare(piscina);
+        plist_dictio_ponere(f.plista_extra,
+            chorda_ex_literis("NSAppleScriptEnabled", piscina),
+            plist_veritatem_creare(VERUM, piscina), piscina);
+
+        CREDO_VERUM(fasciculum_reddere(&f, &partes, &status, &sedes,
+                                       piscina));
+        CREDO_VERUM(fasciculum_scribere(partes, area, &status, &sedes,
+                                        piscina));
+        CREDO_VERUM(fasciculum_legere(area, &lectus, &status, &sedes,
+                                      piscina, intern));
+        CREDO_AEQUALIS_I32((i32)status, (i32)FASCICULUM_SUCCESSUS);
+
+        /* campi singuli ANTE aequalitatem, ut defectus se nominet */
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectus.identitas,
+                                      "org.rhubarb.probatio");
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectus.titulus, "Probatio");
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectus.versio, "3.1");
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectus.versio_aedificationis,
+                                      "42");
+        CREDO_VERUM(lectus.sine_scandali);
+        /* vias SUAS novit, non fontium: nomina sola conferuntur */
+        CREDO_NON_NIHIL(lectus.exsecutabile);
+        CREDO_NON_NIHIL(lectus.icon);
+
+        CREDO_VERUM(fasciculum_aequalis(&f, &lectus));
+
+        /* AEQUALITAS EFFECTIVA: valor minimus (versio vacua,
+         * plista_extra NIHIL) aequalis est fasciculo qui '1.0', '1' et
+         * dictionem vacuam fert - aliter scriptor fasciculum iam
+         * rectum semper rescriberet, quod huius functionis causa est */
+        {
+                  Fasciculum  minimus;
+                  Fasciculum  lectus_minimi;
+                         Xar* partes_minimi;
+          constans character* area_minimi =
+              "/tmp/probatio_fasciculum_iter/Minimus.app";
+
+            minimus = _fasciculum_minimum(via_binarii, piscina);
+            CREDO_VERUM(fasciculum_reddere(&minimus, &partes_minimi,
+                                           &status, &sedes, piscina));
+            CREDO_VERUM(fasciculum_scribere(partes_minimi, area_minimi,
+                                            &status, &sedes, piscina));
+            CREDO_VERUM(fasciculum_legere(area_minimi, &lectus_minimi,
+                                          &status, &sedes, piscina,
+                                          intern));
+            CREDO_CHORDA_AEQUALIS_LITERIS(lectus_minimi.versio, "1.0");
+            CREDO_CHORDA_AEQUALIS_LITERIS(
+                lectus_minimi.versio_aedificationis, "1");
+            CREDO_VERUM(chorda_vacua(minimus.versio));
+            CREDO_NIHIL(minimus.plista_extra);
+            CREDO_VERUM(fasciculum_aequalis(&minimus, &lectus_minimi));
+        }
+
+        /* DISSIMILITUDO vera deprehenditur, ne aequalitas semper
+         * VERUM reddat */
+        {
+            Fasciculum alius;
+
+            alius            = lectus;
+            alius.identitas  = chorda_ex_literis("org.aliud", piscina);
+            CREDO_FALSUM(fasciculum_aequalis(&f, &alius));
+
+            alius          = lectus;
+            alius.titulus  = chorda_ex_literis("Aliud", piscina);
+            CREDO_FALSUM(fasciculum_aequalis(&f, &alius));
+
+            alius         = lectus;
+            alius.versio  = chorda_ex_literis("9.9", piscina);
+            CREDO_FALSUM(fasciculum_aequalis(&f, &alius));
+
+            alius = lectus;
+            alius.versio_aedificationis =
+                chorda_ex_literis("99", piscina);
+            CREDO_FALSUM(fasciculum_aequalis(&f, &alius));
+
+            alius                = lectus;
+            alius.sine_scandali  = FALSUM;
+            CREDO_FALSUM(fasciculum_aequalis(&f, &alius));
+
+            alius               = lectus;
+            alius.exsecutabile  = "/alibi/nomen_aliud";
+            CREDO_FALSUM(fasciculum_aequalis(&f, &alius));
+
+            alius       = lectus;
+            alius.icon  = "/alibi/icon_aliud.icns";
+            CREDO_FALSUM(fasciculum_aequalis(&f, &alius));
+
+            alius               = lectus;
+            alius.plista_extra  = plist_dictio_creare(piscina);
+            CREDO_FALSUM(fasciculum_aequalis(&f, &alius));
+        }
+
+        /* exsecutabile SUBLATUM: lector RECUSAT */
+        CREDO_VERUM(filum_delere(via_exs));
+        CREDO_FALSUM(fasciculum_legere(area, &lectus, &status, &sedes,
+                                       piscina, intern));
+        CREDO_AEQUALIS_I32((i32)status,
+                           (i32)FASCICULUM_ERROR_EXSECUTABILE);
+
+        filum_delere(via_plistae);
+        filum_delere(via_icon_posita);
+        filum_delere(via_macos);
+        filum_delere(via_res);
+        filum_delere(via_contents);
+        filum_delere(area);
+        filum_delere(via_iconis);
+    }
+
     filum_delere(via_binarii);
 
     imprimere("\n");
