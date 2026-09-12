@@ -167,6 +167,20 @@ exactly that mechanism), so the excubitor then prints a 15-row staleness
 table that pushes the suite's verdict off the end of `tail`. Grep the log
 for `Totalis`; do not tail it.
 
+**Why this commit shows 790 changed lines in `latina.h` for a one-line
+addition.** I passed `include/latina.h` to `./silva/formator.sh
+-scribere`, and the formator re-tabulated the whole file's numeral
+alignment. Verified whitespace-only before believing it: `git show -w`
+reduces the entire diff to the single added `#define MXXIV 1024`, and a
+value census across the file counts **345 numerals before, 346 after,
+with `MXXIV 1024` the only difference** — no existing macro's value
+moved. The reformat is noise in the history, not a change in the
+foundation header, and it rides in a commit about a resampler because
+that is where it happened. Lesson worth the line: **do not hand
+`latina.h` to the formatter as a matter of routine** — it is the
+most-included header in the tree, a whole-file restyle buries the real
+change, and the pre-commit formats whole files anyway.
+
 **A fixture hazard that will bite the next person to edit `latina.h`.**
 `probationes/probatio_git.c` compares `include/latina.h` **as committed at
 HEAD** against the same file **on disk** — `git_massam_per_viam(repositorium,
