@@ -1000,5 +1000,9 @@
   <vocabulum lemma="macos" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen directorii exsecutabilium in forma fasciculi Apple (Contents/MacOS/) - nomen systematis, ergo intactum; sedes via_macos"/>
   <!-- icones (2026-09-12): numerale quod latina.h carebat -->
   <vocabulum lemma="mxxiv" lingua="latina" classis="numerale" nota="numerale Romanum MXXIV = 1024, macrum in latina.h additum pro latere maximo iconum (icon_512x512@2x); tabula numeralium DXII et MMMMXCVI ferebat, MXXIV non. Fratres eius (cclvi dxii lxiv cxxviii mmmmxcvi mmxxiv) in copia tolerata vivunt, quae SOLUM minui debet - ergo hic entrium ponitur ne pinna manu augeatur"><forma textus="mxxiv"/></vocabulum>
+  <!-- icones (2026-09-12): nomina formarum et societatis Apple, non voces Latinae -->
+  <vocabulum lemma="icns" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae Apple (continens iconum, magicum 'icns'), ut plist et json: nomen alienum FIXUM quod Latine reddi non debet; sedes icones_icns_codificare, icones_icns_scribere"/>
+  <vocabulum lemma="iconset" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen directorii Apple (.iconset, plagulae PNG quas iconutil in .icns vertit); sedes icones_iconset_scribere"/>
+  <vocabulum lemma="apple" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen societatis; in ICONES_SETUM_APPLE setum magnitudinum quod Apple ipsa definit (spec icones par. IV, per iconutil mensuratum)"/>
 
 </glossarium>

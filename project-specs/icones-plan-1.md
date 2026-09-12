@@ -611,8 +611,10 @@ constans character*  codex;   /* codex .icns */
 } IconesOrdo;
 
 /* Decem plagulae, SEPTEM redditiones: tria latera bis sub nominibus
- * logicis diversis apparent (spec par. IV, iconutil mensuratum). */
-hic_manens constans IconesOrdo _ORDINES[X] = {
+ * logicis diversis apparent (spec par. IV, iconutil mensuratum).
+ * NOMEN SINE '_' PRAEPOSITO: '_' + capitalis implementationi
+ * reservatum est (C89 7.1.3) et examen id recusat - clang TACET. */
+hic_manens constans IconesOrdo ORDINES[X] = {
     {   XVI, "icon_16x16.png",       "ic04", ICONES_LATERA_XVI     },
     { XXXII, "icon_16x16@2x.png",    "ic11", ICONES_LATERA_XXXII   },
     { XXXII, "icon_32x32.png",       "ic05", ICONES_LATERA_XXXII   },
@@ -631,7 +633,7 @@ hic_manens constans IconesOrdo _ORDINES[X] = {
 for each DISTINCT `latera` ≤ `latus`, crop-and-scale ONCE (own row copy
 when `latera == latus`, else `imago_extrahere_et_scalare` with
 `IMAGO_SCALA_AREA` and EXACT dimensions) and encode ONCE with
-`imago_png_codificare`, caching `chorda` per size; then walk `_ORDINES`
+`imago_png_codificare`, caching `chorda` per size; then walk `ORDINES`
 emitting one part per row, reusing the cached `chorda` so duplicates
 share `datum`. On `!fructus_png.successus`, refuse `ICONES_ERROR_PNG`
 carrying `fructus_png.error` as `sedes_vitii` — the encoder's own
@@ -667,7 +669,7 @@ Implements spec §6; gates I3, I6.
 I3 is pure: `icones_icns_codificare` output starts `icns`, its declared
 big-endian length equals the buffer length, the chunk table walks to
 exactly the end, every payload begins with the PNG signature
-`\x89PNG\r\n\x1a\n`, and the codes match `_ORDINES` in order.
+`\x89PNG\r\n\x1a\n`, and the codes match `ORDINES` in order.
 
 I6 writes into a nested virgin directory and asserts the duplicates are
 byte-identical ON DISK, then that the `.icns` FILE is byte-equal to the
@@ -757,7 +759,7 @@ Gates I4, I7 plus the by-hand AUDIENDUM.
 
 ## Self-review
 
-**Spec coverage.** §3 → Task 2. §4 → Task 2's `_ORDINES` table. §5 →
+**Spec coverage.** §3 → Task 2. §4 → Task 2's `ORDINES` table. §5 →
 Task 1. §6 → Task 3. §7 → Task 4. §8: I1 → Task 2, I2 → Task 1, I3/I6 →
 Task 3, I5 → Task 4, I4/I7 → Task 5. §9 P1–P5 → Tasks 1–5, reordered
 with the reason stated. §10 deferrals: nothing here implements them.

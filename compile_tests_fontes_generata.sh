@@ -71,6 +71,7 @@ declare -a SOURCE_FILES=(
     "lib/hospitium.c"
     "lib/html_lexema.c"
     "lib/http.c"
+    "lib/icones.c"
     "lib/imago.c"
     "lib/imago_collatio.c"
     "lib/imago_opus.c"
