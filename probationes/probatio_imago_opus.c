@@ -17,6 +17,7 @@
 #include "piscina.h"
 
 #include <stdio.h>
+#include <string.h>
 
 interior Imago
 _fingere (
@@ -214,6 +215,87 @@ principale (vacuum)
             55);
         CREDO_AEQUALIS_I32((i32)_legere(&par, I, ZEPHYRUM, I), 89);
         CREDO_AEQUALIS_I32((i32)_legere(&par, II, ZEPHYRUM, III), 100);
+    }
+
+    /* ---- I2 d: AREA per REGIONEM (imago_extrahere_et_scalare) ---- */
+    {
+        Imago fons;
+        Imago regio;
+        Imago per_regionem;
+        Imago area_regionis;
+        Imago bilinearis_regionis;
+          s32 x;
+          s32 y;
+          s32 valor;
+
+        imprimere("\n--- I2 d: area per regionem ---\n");
+
+        /* Olim imago_extrahere_et_scalare modum NULLUM nisi PROXIMUS
+         * agnoscebat, et AREA TACITE bilinearis fiebat: icones sic
+         * omnes icones bilineares scripsit, et nulla porta id vidit
+         * quia I2 solum imago_scalare probabat. Porta EQUIVALENTIAE:
+         * regio per extrahere == eadem regio manu copiata per
+         * imago_scalare.
+         *
+         * Fons VI x II; regio [I, V) x [0, II) = IV x II; exitus
+         * II x I. Rationes IV -> II et II -> I EXACTAE sunt, ergo
+         * truncatio 'intra limites' functionis dimensiones non
+         * movet. */
+        fons = _fingere(VI, II, piscina);
+        CREDO_NON_NIHIL(fons.pixela);
+        per (x = ZEPHYRUM; x < VI; x++)
+        {
+            valor = (x + I) * X;
+            _ponere(&fons, x, ZEPHYRUM, valor, 255 - valor, 100, 255);
+            _ponere(&fons, x, I, 200 - (x * XX), x * XX, 100, 255);
+        }
+
+        regio = _fingere(IV, II, piscina);
+        CREDO_NON_NIHIL(regio.pixela);
+        per (y = ZEPHYRUM; y < II; y++)
+        {
+            per (x = ZEPHYRUM; x < IV; x++)
+            {
+                _ponere(&regio, x, y,
+                        _legere(&fons, x + I, y, ZEPHYRUM),
+                        _legere(&fons, x + I, y, I),
+                        _legere(&fons, x + I, y, II),
+                        _legere(&fons, x + I, y, III));
+            }
+        }
+
+        per_regionem = imago_extrahere_et_scalare(&fons, I, ZEPHYRUM,
+            IV, II, II, I, IMAGO_SCALA_AREA, piscina);
+        area_regionis = imago_scalare(&regio, II, I, IMAGO_SCALA_AREA,
+                                      piscina);
+        bilinearis_regionis = imago_scalare(&regio, II, I,
+                                            IMAGO_SCALA_BILINEARIS,
+                                            piscina);
+        CREDO_NON_NIHIL(per_regionem.pixela);
+        CREDO_NON_NIHIL(area_regionis.pixela);
+        CREDO_NON_NIHIL(bilinearis_regionis.pixela);
+        CREDO_AEQUALIS_I32(per_regionem.latitudo, II);
+        CREDO_AEQUALIS_I32(per_regionem.altitudo, I);
+
+        /* PINNAE MANU COMPUTATAE: (20 + 30 + 180 + 160) / 4 = 97.5 ->
+         * XCVIII; (40 + 50 + 140 + 120) / 4 = 87.5 -> LXXXVIII
+         * (rotundatio dimidii sursum, pondera omnia plena). */
+        CREDO_AEQUALIS_I32((i32)_legere(&per_regionem, ZEPHYRUM,
+                                       ZEPHYRUM, ZEPHYRUM), 98);
+        CREDO_AEQUALIS_I32((i32)_legere(&per_regionem, I, ZEPHYRUM,
+                                       ZEPHYRUM), 88);
+
+        /* EQUIVALENTIA octetim cum imago_scalare super regionem */
+        CREDO_VERUM(memcmp(per_regionem.pixela, area_regionis.pixela,
+                           (size_t)VIII) == ZEPHYRUM);
+
+        /* FIXUM FALSIFICABILE: bilinearis HIC aliud dat, ergo
+         * aequalitas supra non per casum stat. Si area et bilinearis
+         * in hoc fixo congruerent, porta modum discernere non
+         * posset. */
+        CREDO_VERUM(memcmp(bilinearis_regionis.pixela,
+                           area_regionis.pixela, (size_t)VIII)
+                    != ZEPHYRUM);
     }
 
     imprimere("\n");

@@ -203,3 +203,64 @@ stash would have swept it up with mine.
 `MXXIV` (1024) was missing from `latina.h`, which has `DXII` 512 and
 `MMMMXCVI` 4096 — added, since a numeral table spanning 4096 without
 1024 is simply incomplete, and 1024 is the largest icon rendering.
+
+## 2026-09-12 — `imago_extrahere_et_scalare` silently ran BILINEAR for `AREA`
+
+**The defect.** Task 1 added `IMAGO_SCALA_AREA` to `imago_scalare`'s
+`commutatio` and missed the second entry point. `imago_extrahere_et_scalare`
+dispatched as `si (modus == IMAGO_SCALA_PROXIMUS) { … } alioquin
+{ bilinear }`, so an `AREA` request fell into the bilinear arm with no
+error. `icones` asks for `AREA` through exactly that function, so **every
+icon icones produced was bilinear** — the whole resampler arc bypassed.
+
+**How it was found — not by any gate this library had.** I2 tested
+`imago_scalare` directly, and icones' gates I1–I6 never look at pixel
+values. It surfaced when building icones' quality gate (I7) against a
+frozen `sips -z 16 16` oracle: a scratch probe compared `sips`' 16 px with
+our area, bilinear and nearest results, and icones' actual 16 px matched
+the BILINEAR row on all twelve numbers (mean delta, four threshold counts,
+per-channel maxima) while differing from direct `imago_scalare` AREA by a
+mean of ~100. Identical measurements across a dozen independent columns
+are a fingerprint, not a coincidence.
+
+**The general lesson: appending an enum value means finding EVERY place
+that enum is dispatched.** A `commutatio` without `ordinarius` would at
+least let `-Wswitch` speak; an `if` / `alioquin` chain never warns, and its
+final `alioquin` silently captures every value added later. "Enums append,
+never reorder" protects existing callers of the enum — it does nothing for
+the dispatch sites. `nexus` / legati `vocantes` on the SIBLING values
+(`IMAGO_SCALA_PROXIMUS`) is how to find them.
+
+**The fix: copy the region, call the proven function.** The new `AREA` arm
+copies the crop rectangle into a piscina buffer (offsets in `s64`) and
+calls the unchanged `_scalare_area`. Giving `_scalare_area` crop
+parameters would have meant editing the function I2's exact constants pin;
+copying adds no arithmetic that could be wrong. Cost: one crop-sized
+allocation, `AREA` only.
+
+**Gate I2 d — equivalence, with a fixture that can fail.** A 6×2 source,
+crop `[1, 5) × [0, 2)` to 2×1: `extrahere(AREA)` must equal
+`imago_scalare(AREA)` over a hand-copied crop, byte for byte, and is pinned
+to hand-computed reds **98** ((20+30+180+160)/4 = 97.5, round half up) and
+**88**. Both ratios (4→2, 2→1) are exact, so `extrahere`'s fit-within
+truncation cannot move the dimensions. The block ALSO asserts that
+bilinear gives something DIFFERENT on this fixture — if area and bilinear
+agreed here, the equivalence would prove nothing (the fixture lesson of
+I2 a, again).
+
+- **Red before the fix, as predicted by hand:** the pins received **20 and
+  50** — bilinear's corner-aligned samples of the crop's first row — plus
+  the equivalence. 3 reds; the "bilinear differs" assertion green.
+- **Plant:** `si (modus == IMAGO_SCALA_AREA)` → `IMAGO_SCALA_BILINEARIS`
+  (equal tokens): exactly the same 3 reds, nothing else. 37 assertions.
+
+**Still true and now named:** `extrahere`'s fit-within dimensions truncate
+(e.g. a 1000 px crop asked for 16 yields 15), which is its documented
+contract for its other caller (`lib/importatio_visus.c`, `PROXIMUS`, a
+zoomed preview where one pixel does not matter). icones stops using this
+function in its next commit and crops to an exact square instead.
+
+**Left alone deliberately:** `-vitia` reports four banner lines of 60 `=`
+at `:11`, `:13`, `:156`, `:158` (house width 50). `git blame`: `e288f0c59`,
+2026-01-03 — eight months older than this change, which touches only the
+new arm. Reformatting unrelated lines would widen a one-defect commit.

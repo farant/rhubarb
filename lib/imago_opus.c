@@ -501,8 +501,36 @@ imago_extrahere_et_scalare (
     dest.latitudo = (i32)dest_lat;
     dest.altitudo = (i32)dest_alt;
 
-    /* Single-pass crop + scale (nearest neighbor or bilinear) */
-    si (modus == IMAGO_SCALA_PROXIMUS)
+    /* Transitus unus: regio + scala. AREA PRIMUM: olim modus nullus
+     * nisi PROXIMUS hic agnoscebatur, et AREA TACITE in ramum
+     * bilinearem cadebat - icones sic omnes icones bilineares scripsit
+     * (2026-09-12, oraculum sips congelatum invenit). Regio copiatur et
+     * _scalare_area ipsum vocatur, quod I2 iam pinnat: nulla
+     * arithmetica nova ubi falsa fieri posset. */
+    si (modus == IMAGO_SCALA_AREA)
+    {
+         i8* regio;
+        s32  ry;
+
+        regio = (i8*)piscina_allocare(piscina,
+            (memoriae_index)((s64)cw * ch * IV));
+        si (regio == NIHIL)
+        {
+            dest.pixela    = NIHIL;
+            dest.latitudo  = 0;
+            dest.altitudo  = 0;
+            redde dest;
+        }
+        per (ry = 0; ry < ch; ry++)
+        {
+            memcpy(regio + ((s64)ry * cw * IV),
+                   fons->pixela + ((((s64)cy + ry) * fons_lat
+                       + cx) * IV),
+                   (size_t)(cw * IV));
+        }
+        _scalare_area(regio, cw, ch, dest.pixela, dest_lat, dest_alt);
+    }
+    alioquin si (modus == IMAGO_SCALA_PROXIMUS)
     {
         /* Nearest neighbor - optimized with pointer arithmetic */
          i8* dest_row        = dest.pixela;
