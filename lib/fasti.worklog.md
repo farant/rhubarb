@@ -47,3 +47,41 @@ reverts.
 Note for readers of the diff: this was `lib/fasti.c`'s first pass under
 the formatter, so the commit carries `cosmetica` rewraps of pre-existing
 lines beside the two added functions.
+
+## 2026-09-12 — Latin date forms: genitive month, Roman numerals
+
+Found through `project-specs/exempla/kalendarium.thistle`:
+`FASTI_FORMA_LITURGICA` wrote "Feria II, 14 September 2026" and
+`FASTI_FORMA_LATINA_LONGA` "14 September 2026". The header promised
+"Dominica, 15 Martii 2024" and "XV Martii MMXXIV". The `.c` admitted
+"simplificatum: 15 Martii 2024" for the long form, but even the
+simplification was not what it said: `NOMINA_MENSIUM_LATINA` is
+nominative (Martius, September), and a Latin date takes the month in
+the genitive — *XV Martii*, the fifteenth (day) of March. No code in the
+tree used either form; `probatio_fasti.c` tested only the short one.
+
+The header's own example was wrong too: 15 March 2024 was a Friday,
+"Feria VI", not "Dominica".
+
+**Changes.** `NOMINA_MENSIUM_LATINA_GENETIVO` (Ianuarii … Decembris;
+Aprilis and the -ber months are third declension, -is). Both forms use
+it. `_romanum_scribere` writes I..MMMCMXCIX; outside that range (year 0,
+negative years, 4000 and up) it writes digits, because a Roman numeral
+cannot express them and a wrong numeral is worse than a foreign one.
+The long form writes day and year with it; the liturgical form keeps
+digits, as its header example always showed. `fasti_nomen_mensis` is
+unchanged: naming a month, the nominative is right.
+
+**Gates (179 → 199).** Both forms on 15 March 2024; the first of every
+month of 2026 in the long form (all twelve genitives); 31 December 1999
+(CM, XC, IX); 24 August 3999 (IV, and the top of the range); 19 July
+3888 (the longest numeral below 4000); 9 January 4000 and 14 April of
+year 0 (digits); 14 September 2026 in the liturgical form. Born red:
+20, predicted 20.
+
+| Plant | Predicted | Observed |
+|---|---|---|
+| FP1 liturgical form back to the nominative | 2 | 2 |
+| FP2 "DCCCC" for "CM" | 2 | 2 (1999, 3999) |
+| FP3 3999 excluded from the range | 1 | 1 |
+| FP4 year 0 admitted | 1 | 1 — nothing written where the year should be |

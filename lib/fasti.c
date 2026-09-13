@@ -31,6 +31,14 @@ interior constans character* NOMINA_MENSIUM_LATINA[XII] = {
     "September", "October", "November", "December"
 };
 
+/* Nomina mensium Latina GENETIVO: in dato "XV Martii" = dies XV
+ * Martii (mensis), ergo mensis genetivo scribitur */
+interior constans character* NOMINA_MENSIUM_LATINA_GENETIVO[XII] = {
+    "Ianuarii", "Februarii", "Martii", "Aprilis",
+    "Maii", "Iunii", "Iulii", "Augusti",
+    "Septembris", "Octobris", "Novembris", "Decembris"
+};
+
 interior constans character* NOMINA_MENSIUM_LATINA_BREVIA[XII] = {
     "Ian", "Feb", "Mar", "Apr", "Mai", "Iun",
     "Iul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -720,6 +728,40 @@ fasti_nomen_diei_hebdomadis (
     redde chorda_ex_literis(titulis, piscina);
 }
 
+/* Numerus Romanus ad aedificatorem, I..MMMCMXCIX. Extra hos limites
+ * (nihil, negativus, IV milia et supra) cifrae scribuntur: forma
+ * Romana eos non capit, et numerus Romanus falsus peior est quam
+ * cifrae. */
+interior vacuum
+_romanum_scribere (
+    ChordaAedificator* aedificator,
+                  s32  numerus)
+{
+    hic_manens constans s32 VALORES[XIII] = {
+        M, CM, D, CD, C, XC, L, XL, X, IX, V, IV, I
+    };
+    hic_manens constans character* constans SIGNA[XIII] = {
+        "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V",
+        "IV", "I"
+    };
+    s32 reliquum = numerus;
+    s32 i;
+
+    si (numerus < I || numerus > MMMM - I)
+    {
+        chorda_aedificator_appendere_s32(aedificator, numerus);
+        redde;
+    }
+    per (i = ZEPHYRUM; i < XIII; i++)
+    {
+        dum (reliquum >= VALORES[i])
+        {
+            chorda_aedificator_appendere_literis(aedificator, SIGNA[i]);
+            reliquum = reliquum - VALORES[i];
+        }
+    }
+}
+
 vacuum
 fasti_scribere_diem (
     ChordaAedificator* aedificator,
@@ -796,17 +838,17 @@ fasti_scribere_diem (
             frange;
 
         casus FASTI_FORMA_LATINA_LONGA:
-            /* XV Martii MMXXIV - simplificatum: 15 Martii 2024 */
-            chorda_aedificator_appendere_s32(aedificator, dies.dies);
+            /* XV Martii MMXXIV: numeri Romani, mensis genetivo */
+            _romanum_scribere(aedificator, dies.dies);
             chorda_aedificator_appendere_character(aedificator, ' ');
             chorda_aedificator_appendere_literis(aedificator,
-                NOMINA_MENSIUM_LATINA[dies.mensis - I]);
+                NOMINA_MENSIUM_LATINA_GENETIVO[dies.mensis - I]);
             chorda_aedificator_appendere_character(aedificator, ' ');
-            chorda_aedificator_appendere_s32(aedificator, dies.annus);
+            _romanum_scribere(aedificator, dies.annus);
             frange;
 
         casus FASTI_FORMA_LITURGICA: {
-            /* Dominica, 15 Martii 2024 */
+            /* Feria VI, 15 Martii 2024: cifrae, mensis genetivo */
             s32 dh = fasti_dies_hebdomadis(dies);
             chorda_aedificator_appendere_literis(aedificator,
                 NOMINA_DIERUM_LATINA[dh]);
@@ -814,7 +856,7 @@ fasti_scribere_diem (
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
             chorda_aedificator_appendere_character(aedificator, ' ');
             chorda_aedificator_appendere_literis(aedificator,
-                NOMINA_MENSIUM_LATINA[dies.mensis - I]);
+                NOMINA_MENSIUM_LATINA_GENETIVO[dies.mensis - I]);
             chorda_aedificator_appendere_character(aedificator, ' ');
             chorda_aedificator_appendere_s32(aedificator, dies.annus);
             frange;

@@ -73,7 +73,7 @@
 #define FASTI_FORMA_AMERICANA       III     /* 03/15/2024 */
 #define FASTI_FORMA_LATINA_LONGA    IV      /* XV Martii MMXXIV */
 #define FASTI_FORMA_LATINA_BREVIS   V       /* 15 Mar 2024 */
-#define FASTI_FORMA_LITURGICA       VI      /* Dominica, 15 Martii 2024 */
+#define FASTI_FORMA_LITURGICA       VI      /* Feria VI, 15 Martii 2024 */
 #define FASTI_FORMA_ANGLICA_LONGA   VII     /* Thursday, December 25th 2025 */
 
 

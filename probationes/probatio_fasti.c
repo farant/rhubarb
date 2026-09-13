@@ -499,6 +499,80 @@ s32 principale (vacuum)
         s = fasti_formare_diem(d, FASTI_FORMA_LATINA_BREVIS, piscina);
         CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("15 Mar 2024",
             piscina));
+
+        s = fasti_formare_diem(d, FASTI_FORMA_LATINA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("XV Martii MMXXIV",
+            piscina));
+
+        s = fasti_formare_diem(d, FASTI_FORMA_LITURGICA, piscina);
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis(
+            "Feria VI, 15 Martii 2024", piscina));
+    }
+
+
+    /* ==================================================
+     * Probare formas Latinas: mensis GENETIVO, numeri Romani
+     *
+     * "XV Martii" = dies quintus decimus Martii (mensis):
+     * nomen mensis in dato genetivum est. Numeri Romani
+     * I..MMMCMXCIX; extra limites cifrae scribuntur.
+     * ================================================== */
+
+    {
+        interior constans character* constans CALENDAE[XII] = {
+            "I Ianuarii MMXXVI",   "I Februarii MMXXVI",
+            "I Martii MMXXVI",     "I Aprilis MMXXVI",
+            "I Maii MMXXVI",       "I Iunii MMXXVI",
+            "I Iulii MMXXVI",      "I Augusti MMXXVI",
+            "I Septembris MMXXVI", "I Octobris MMXXVI",
+            "I Novembris MMXXVI",  "I Decembris MMXXVI"
+        };
+        chorda s;
+           s32 m;
+
+        imprimere("\n--- Probans formas Latinas ---\n");
+
+        per (m = I; m <= XII; m++)
+        {
+            s = fasti_formare_diem(fasti_dies(MM + XXVI, m, I),
+                FASTI_FORMA_LATINA_LONGA, piscina);
+            CREDO_CHORDA_AEQUALIS(s,
+                chorda_ex_literis(CALENDAE[m - I], piscina));
+        }
+
+        /* formae subtractivae: CM, XC, IX, IV */
+        s = fasti_formare_diem(fasti_dies(MCMXCIX, XII, XXXI),
+            FASTI_FORMA_LATINA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s,
+            chorda_ex_literis("XXXI Decembris MCMXCIX", piscina));
+
+        s = fasti_formare_diem(fasti_dies(MMMM - I, VIII, XXIV),
+            FASTI_FORMA_LATINA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s,
+            chorda_ex_literis("XXIV Augusti MMMCMXCIX", piscina));
+
+        /* longissimus sub IV milibus: 3888 */
+        s = fasti_formare_diem(fasti_dies(MMMM - C - XII, VII, XIX),
+            FASTI_FORMA_LATINA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s,
+            chorda_ex_literis("XIX Iulii MMMDCCCLXXXVIII", piscina));
+
+        /* extra limites: cifrae, non numerus Romanus falsus */
+        s = fasti_formare_diem(fasti_dies(MMMM, I, IX),
+            FASTI_FORMA_LATINA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s,
+            chorda_ex_literis("IX Ianuarii 4000", piscina));
+
+        s = fasti_formare_diem(fasti_dies(ZEPHYRUM, IV, XIV),
+            FASTI_FORMA_LATINA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s,
+            chorda_ex_literis("XIV Aprilis 0", piscina));
+
+        /* forma liturgica: dies et annus cifris, mensis genetivo */
+        s = fasti_formare_diem(fasti_dies(MM + XXVI, IX, XIV),
+            FASTI_FORMA_LITURGICA, piscina);
+        CREDO_CHORDA_AEQUALIS(s,
+            chorda_ex_literis("Feria II, 14 Septembris 2026", piscina));
     }
 
 
