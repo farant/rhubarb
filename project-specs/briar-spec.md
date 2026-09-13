@@ -1,4 +1,4 @@
-# briar — spec v1.8 (literate C89 programs; `.thistle`)
+# briar — spec v1.9 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -8,6 +8,12 @@ else is PROPOSITUM and was agreed in conversation unless marked OPEN.
 Names marked (unsealed) are working names — Fran names. Every
 "exists" claim cites the header it rests on. English prose, Latin
 identifiers, as in pictor-spec.md.*
+
+*v1.9 (2026-09-12) adds §4.8, the fasciculus — `-app`, a thistle built
+into a double-clickable `x.app` with an icon, decisions A1–A8. It wires
+three sealed libraries (fasciculum, icones, and briar's own capsula
+pattern) and builds the `<briar>` element that §2 described but nothing
+ever read.*
 
 *v1.8 (2026-09-11) adds §4.7, the spectator — `-visio`, the viewer
 over the facies page, decisions S1–S4. It is §4.6's F1 step 2 and
@@ -878,6 +884,154 @@ gateable, and that part stays Fran's.
 (Cmd+Shift+D over briar's own source — the scaffold field exists);
 `-radix` as a live dev mode for the chrome, which atrium gives free.
 
+### 4.8 Fasciculus — the `.app` (`-app`, v1.9, 2026-09-12)
+
+A thistle that opens a window should be able to live in the Dock. `-app`
+turns the program briar already builds into a double-clickable bundle
+`x.app` beside the thistle, with an icon. Almost nothing is new:
+**fasciculum** writes bundles and **icones** writes `.icns` from pixels
+(both sealed 2026-09-12), and briar already carries files inside its
+binary (§4.6's capsula). The feature is the wiring, plus two small
+changes those libraries lack and one element §2 promised.
+
+Decided with Fran 2026-09-12:
+
+| decision | chosen | reserved |
+|---|---|---|
+| A1 who decodes an image | briar: `stb_image` (through `lib/imago.c`) is linked into the briar BINARY. It stays out of briar's modules, which take an `Imago` exactly as icones does (icones D7), so no gate in the briar suite links a decoder | briar never decodes — the default baked as `.icns` at build time and `-icon` accepting only `.icns`, one more command for every custom icon |
+| A2 what can be bundled | any program briar builds; no test for the vitrea form. It is useful for window apps; a command-line program launched from Finder simply runs without a terminal | refusing plain programs — a structural test briar could make, with nothing gained by making it |
+| A3 where | `x.app` beside the thistle, as `-html` and `-amalgama` write | the working directory; an output flag |
+| A4 identity | `org.rhubarb.briar.<t>`, `<t>` the file's name with `_` turned into `-`; overridden by `identitas="…"` on a `<briar>` element; its characters validated by fasciculum | an identity flag (the identity belongs to the program, not to one invocation); a path hash for uniqueness (it would change whenever the file moves) |
+| A5 name and version | `CFBundleName` = `<fenestra titulus>`, else `<t>`; `CFBundleShortVersionString` = `<briar versio>`, omitted when absent | `CFBundleVersion`; a version flag |
+| A6 an existing `x.app` | replaced only when it is briar's own — its `Info.plist` identity equals this one; anything else is refused by name and left untouched | writing over the old bundle in place (fasciculum never deletes, so stale files would survive); moving it to the Trash |
+| A7 where the icon comes from | `-icon <via>`, relative to the working directory > `<briar icon="…">`, relative to the thistle > the embedded default, `default-thistle.jpg` | converting the default to PNG first: 1.6 MB against 386 KB, identical pixels once decoded |
+| A8 Finder's icon cache | measured by hand in the fumus; a timestamp update only if a rebuilt bundle shows a stale icon | `lsregister -f` |
+
+**Words.** A bundle is a *fasciculus*, a little bundle, as the library
+is named; the module is `briar_fasciculum`. The flag stays `-app`: a
+format name, like `-html`.
+
+**The `<briar>` element, first built here.** §2 lists an optional
+`<briar titulus="…">`. Measured 2026-09-12: nothing reads it — no module
+looks for the element and no fixture uses one. This section builds the
+element with three optional attributes, `identitas`, `versio` and
+`icon`. `titulus` stays unbuilt: renaming a project renames its capsula
+symbol and its header guard, a larger change than an app needs (§9). A
+second `<briar>` element is a refusal naming both lines.
+
+**Pipeline.** `-app` is a run that stops before exec:
+
+    parse -> fabrica -> build <domus>/bin/<t> if absent (key of §4.1, unchanged)
+          -> icon source (A7) -> decode (tools/briar.c, stb) -> Imago
+          -> icones_reddere -> icones_icns_codificare -> <domus>/fasciculum/<t>.icns
+          -> Fasciculum { identitas, titulus, versio,
+                          exsecutabile = <domus>/bin/<t>, icon = that .icns }
+          -> fasciculum_reddere
+          -> <dir>/<t>.app exists? briar's own: remove it; otherwise refuse
+          -> fasciculum_scribere(partes, "<dir>/<t>.app") -> print the path
+
+A vitrea program carries its page inside the binary (its capsula), so
+the bundle needs only `Contents/MacOS/<t>`, `Contents/Info.plist` and
+`Contents/Resources/<t>.icns`. A thistle that does not fabricate refuses
+`-app` with exit 1, as every action but `-html` does.
+
+**One module, two calls.** Everything decidable without the disk is one
+pure function; the writer takes pixels already decoded:
+
+    nomen structura {
+        chorda  identitas;   /* A4, characters validated */
+        chorda  titulus;     /* A5 */
+        chorda  versio;      /* A5; empty = omitted */
+        chorda  via_icon;    /* A7 resolved; empty = the embedded default */
+        chorda  via_app;     /* <dir of the thistle>/<t>.app */
+           i32  linea_briar; /* the <briar> line, 0 when absent */
+    } BriarFasciculumConsilium;
+
+    b32 briar_fasciculum_consilium (Piscina*, Xar* nexus,
+            constans character* via_thistle,
+            constans character* via_icon_vexilli,
+            BriarFasciculumConsilium*, chorda* causa, i32* linea_causae);
+
+    b32 briar_fasciculum_scribere (Piscina*,
+            constans BriarFasciculumConsilium*, constans Imago* icon,
+            constans character* exsecutabile, constans character* domus,
+            chorda* causa);
+
+The consilium reads the nexus (`briar_nexus_attributum` over the
+`<fenestra>` and `<briar>` elements, as the fabrica reads `<fenestra>`).
+The writer's gate feeds a synthetic `Imago` and a stub executable into a
+temporary directory: no decoder, no window.
+
+**Changes to sealed libraries**, each its own commit with its own
+planted fault:
+
+- **fasciculum** — `fasciculum_reddere` refuses an identity containing a
+  character outside `A–Z a–z 0–9 . -`, with a new status
+  `FASCICULUM_ERROR_IDENTITAS` appended to the enumeration and the
+  identity named. Today only an empty identity is refused, and a bad
+  one fails silently inside Launch Services. `fasciculum_instrumentum`
+  inherits the check.
+- **filum** — a helper that removes a directory tree (name unsealed:
+  `filum_arborem_delere`). It uses `lstat` and removes a symbolic link AS
+  a link. It cannot be built on `directorium_ambulare`, which calls
+  `stat()` and so walks through a link into the directory it points at
+  (`lib/iter_directoria.c`, measured by reading 2026-09-12). Refuses
+  NIHIL, the empty path and `/`.
+
+**Embedding the default.** `default-thistle.jpg` moves from the
+repository root to `briar/icon/default-thistle.jpg`, embedded by a new
+`tools/briar_icon_capsula.sh` (the shape of `briar_facies_capsula.sh`)
+into `build/capsula_icon_briar.c`, which `briar_struere.sh` compiles into
+the link. `tools/briar.c` declares `externus constans CapsulaEmbed
+capsula_icon_briar;` directly, by §4.6's rule. It is kept apart from the
+facies capsula so the spectator does not carry an icon it never shows.
+The default decodes with `imago_caricare_ex_memoria`, a user's file with
+`imago_caricare_ex_file`.
+
+**Linking.** `briar/compile_probationes.sh` adds `plist xml base64
+fasciculum icones imago_opus imago_png` to its library list (`flatura`
+is already there); `imago` is not added, so no briar gate links
+`stb_image`. `briar_struere.sh` adds `build/imago.o` and the icon capsula.
+The spectator's rule — take from `build/` only what `briar/build/`
+lacks — picks up the new library objects without a change. Binary size
+is recorded at P8 (briar is 10.7 MB before).
+
+**Flags.** `-app` joins the action flags, before the file and as the
+reserved first argument after it (`./x.thistle -app`). `-icon <via>` is
+an option before the file, like `-f <radix>`; with any action but `-app`
+it is a refusal, as is `-icon` with no path. The shebang form therefore
+cannot pass `-icon`; the `icon` attribute is its way (A7).
+
+**Gates.**
+
+- `imperium`: `-app` before the file and as the first argument after
+  it; `-icon <via>`; `-icon` without `-app` and without a path refused.
+- **`fasciculum`** (new, `probatio_briar_fasciculum`). The consilium
+  over fixtures: the default identity from a name containing `_`; the
+  `identitas` override; an invalid identity refused at the `<briar>`
+  line; two `<briar>` elements refused naming both; the name from
+  `<fenestra titulus>` and from the file; `versio` present and absent;
+  icon precedence flag > attribute (resolved against the thistle's
+  directory) > default. The writer, over a synthetic 64 px `Imago` and a
+  stub executable: the bundle read back with `fasciculum_legere`
+  (identity, name, version, executable, icon); the `.icns` structurally
+  valid; a second write REPLACES (a stale file planted in the old bundle
+  is gone); a foreign bundle (another identity) refused and left byte
+  for byte untouched.
+- Root `fasciculum` and `filum` gates: the identity check, and the tree
+  removal with nested directories, files, and a link to a directory
+  OUTSIDE the tree whose contents must survive.
+- **Fumus, headless:** the installed briar, from outside the repository
+  with a fake `HOME`: `briar -app salve_vitreum.thistle` writes
+  `salve_vitreum.app` beside it; `plutil` reads the identity
+  `org.rhubarb.briar.salve-vitreum`; `iconutil -c iconset` extracts the
+  bundle's `.icns`, asserted by file COUNT (iconutil returns 0 on broken
+  containers, icones §12.3); `-icon` with a PNG fixture; a second `-app`
+  replaces; a foreign `salve_vitreum.app` is refused.
+- **Fumus, `-agere`:** `open salve_vitreum.app`, the window found and
+  driven through `bin/manus`, Fran's look at the icon, then a changed
+  icon rebuilt and looked at again (A8).
+
 ## 5. The binary and its build
 
 - **Flags, not verbs (DECISUS, Fran 2026-09-04: thistle files are
@@ -901,6 +1055,8 @@ gateable, and that part stays Fran's.
   | `-amalgama` | write `<t>.c` (+ `probatio_<t>.c`) beside the thistle |
   | `-html` | write `<t>.html` beside the thistle (§4.6); opens nothing |
   | `-visio` | exec `briar-spectator` on the file (§4.7); refuses by name if absent |
+  | `-app` | build if absent, then write `<t>.app` beside the thistle (§4.8) |
+  | `-icon <via>` | option before the file, with `-app` only: the icon's source (§4.8 A7) |
   | `-versio` | corpus stamp and the flag-string hash of §4.1 |
 
 - **`-amalgama` (BUILT 2026-09-05, `briar_amalgama`; design banked
@@ -1009,6 +1165,7 @@ guard, per-test logs), registered in pythonica's four tables
 | `contextus` | `fragmenta.thistle` (nested fragments, indentation, one used twice, one used by the probatio, one carrying an `#include`): the woven text of each root byte-compared to a golden under `fixa/contextus/`, the line table pinned at the splices, the identity table for a root without references; five adversa fixtures, one per refusal, with lines; unused fragment listed; born red by dropping the indentation prefix. Fabrica gate adds the `fragmenta` golden directory (`#line` runs inside a function body and in the probatio unit); silva gate adds derivation of a symbol that lives in a fragment; fumus adds the run, the probatio, the amalgam, and the `#line`-truth stage of §3.4 |
 | `facies` | §4.6, two layers: structural invariants over a real `html_lexema` lex (unique line ids, no dangling `#frag-` link, every `data-s` in the island, `<details>` count == roots); byte goldens `fixa/facies/` (`BRIAR_FACIES_SCRIBERE=1` + a named cause) over `salve.thistle` and the line-pinned `fragmenta.thistle`; the six `adversa/` fixtures each rendering with the cause at its line; new escaping and UTF-8 fixtures; **the page and `-partes` asserted to agree**. Born red by a planted fault in the line table or the escaping. Fumus adds stage XI over `salutatio2.thistle` |
 | `spectator` | §4.7 HEADLESS: the `facies.symbolum` handler as a pure function over the corpus (twin rule; header with no twin; symbol absent; declared-not-defined; cache returns identical bytes twice), and the page the spectator writes byte-compared to the page `-html` writes. The window is fumus stage XII under `-agere`, driven through `atrium_portus` with `bin/manus` |
+| `fasciculum` | §4.8: the consilium (identity default and override, invalid identity and a second `<briar>` refused at their lines, name, version, icon precedence) and the writer over a synthetic `Imago` (bundle read back, `.icns` valid, own bundle replaced with a stale file gone, foreign bundle refused and untouched); `imperium` gains `-app` and `-icon`; root `fasciculum` and `filum` gain the identity check and the tree removal |
 | `probatio_silex` | UNCHANGED after §4.4 — the promotion is behavior-preserving |
 
 Plus the end-to-end `tools/briar_fumus.sh` (§5), the only gate that
@@ -1031,11 +1188,18 @@ New in `briar/`, each with a probatio and a `.worklog.md`:
 | `briar_contextus` (v1.6) | briar_nexus | fragments and transclusion: classification, the weave, the line table, refusals; between nexus and silva |
 | `briar_facies` (v1.7) | briar_contextus, briar_fabrica, silva (`silva_lexare_cruda`), capsula | fructus → one self-contained HTML page; chrome from an embedded capsula; after the fabrica, a sibling of `briar_amalgama` |
 | `briar_spectator` (v1.8) | briar_facies, silva, silex, atrium, vitrea, fenestra, capsula | `tools/briar_spectator.c` + `tools/briar_spectator_struere.sh`: the window and the bridge; repeats no rendering |
+| `briar_fasciculum` (v1.9) | briar_nexus, fasciculum, icones, filum, via | the consilium (pure) and the writer over a decoded `Imago`; decoding stays in `tools/briar.c` |
 | `tools/briar.c` | all above, argumenta, processus, capsula | the binary |
 | `tools/briar_struere.sh`, `tools/corpus_infixum.sh`, `tools/briar_fumus.sh` | — | build, shared corpus block, freshness gate |
 
 New in v1.7: `briar/facies/facies.{html,css,js}` (the chrome, embedded
 verbatim) and `tools/briar_facies_capsula.sh`.
+
+New in v1.9: `briar/icon/default-thistle.jpg` and
+`tools/briar_icon_capsula.sh`. Modified: `include/fasciculum.h` +
+`lib/fasciculum.c` (identity check), `include/filum.h` + `lib/filum.c`
+(tree removal), `briar/compile_probationes.sh` and `tools/briar_struere.sh`
+(objects), `tools/briar_fumus.sh` (two stages).
 
 Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 `tools/silex_struere.sh` (sources the extracted corpus block);
@@ -1077,12 +1241,12 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
   string the suite can compare.
 
 - **P7 spectator (§4.7) — DONE (plan 6, 2026-09-11; T1 14d251e0, T2). MEASURED: `briar-spectator` links first try by the rule "take from `build/` only what `briar/build/` lacks"; page identity with `-html` proven end to end in fumus XII (71,574 bytes, byte-equal) once the option divergence was fixed. AS BUILT, three deviations: `briar_optiones_plagulae` was extracted because the two binaries DID drift (absolute vs raw path) and no in-process assertion could see it — the real check lives in the fumus, across two binaries · identity holds GIVEN THE SAME CORPUS SOURCE (in-tree briar reads the disk corpus, the spectator always the embedded one, so the fabrica key differs) · `-parare` was added so the fumus can check identity without a window.**
-- **P7 as planned (superseded by the line above):** (a) `tools/briar_spectator.c`
-  on atrium + its struere script + `-visio` in `briar_imperium` and
-  `tools/briar.c`; byte-identity assertion against `-html`. (b) the
-  `facies.symbolum` handler with the per-file silva cache, gated
-  headless; `facies.js` gains the bridge → island → nothing fallback;
-  fumus stage XII under `-agere`.
+
+- **P8 fasciculus (§4.8) — PLANNED.** The two library changes first
+  (fasciculum identity check, filum tree removal), each with its planted
+  fault; then `briar_fasciculum` and its gate headless; then the flags,
+  the icon capsula, the link and `tools/briar.c`; then the two fumus
+  stages. Record here: binary size after the link, and what A8 measured.
 
 ## 9. Named deferrals
 
@@ -1159,6 +1323,10 @@ should briar MINT it (heading anchors, a definition-list treatment for
 glossaries — the facies generates the page, so those are its job);
 only then the allowlist · migrating `md-html-facies.stml` to
 `md/html/` as a general safe projection, if a second consumer wants one
+· `<briar titulus>` (§2; never built, measured 2026-09-12 — renaming a
+project renames its capsula symbol and header guard) · icon options:
+letterboxing a non-square source (icones reserves it) and masking to the
+macOS icon shape · a signed `.app` for another Mac (fasciculum D3)
 
 Cross-references: ludus-brainstorm.md §XII (codex L5 and the
 `<tractator/>` vocabulary briar deliberately does not reuse);
@@ -1212,3 +1380,13 @@ references are the ludus session's to add.
   choice), regio / prosa / interpres / elementum / nexus / fabrica,
   `methodus` and `munus`, the flag names, the promoted silex names —
   Fran names before P0 commits to `briar/`.
+- **An app from Finder is not the script from a shell** (§4.8): its
+  working directory is `/` and it has no terminal, so a program reading
+  relative paths behaves differently from `./x.thistle`. Documented, not
+  fixed.
+- **A bundle is a copy.** Editing the thistle does not change an
+  existing `x.app` until `-app` runs again.
+- **Default identities collide by name**: two `salve.thistle` in
+  different folders share `org.rhubarb.briar.salve`. Set `identitas` on
+  one of them.
+- **Finder's icon cache** (A8) is unmeasured until the `-agere` stage.
