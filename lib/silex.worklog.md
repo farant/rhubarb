@@ -561,7 +561,7 @@ briar/instrumenta/fabrica.c all pass "." and get the root.
 Lesson, the same as the morning's index defect: identity inferred
 from the ABSENCE of a file is a negative test on state nobody owns.
 Declare it.
-\n
+
 ## 2026-09-12 — Annotated implementations were read only when the twin was missing
 
 Found by building `project-specs/exempla/kalendarium.thistle`, a vitrea
