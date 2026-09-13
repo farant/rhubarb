@@ -242,6 +242,9 @@ calendarium_finis_temporis (
  * Quaestiones Cycli Lectionum
  * ================================================== */
 
+/* annus: annus LITURGICUS, id est annus civilis in quo finit
+ * (Dominica I Adventus 2025 annum 2026 incipit). Pro die
+ * calendarium_obtinere_diem eum computat. */
 CyclusDominicalis
 calendarium_cyclus_dominicalis (
     s32 annus);

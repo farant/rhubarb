@@ -83,3 +83,33 @@ formula that forgets weekdays belong to the week their Sunday began.
   reads "Dominica XXXIV per Annum", Palm Sunday "Dominica VI
   Quadragesimae". Only a saint's feast replaces the title.
 - Christmas season weeks are all I.
+
+## 2026-09-12 — The reading cycles followed the civil year
+
+`calendarium_obtinere_diem` passed `dies.annus` to
+`calendarium_cyclus_dominicalis` and `calendarium_cyclus_quotidianus`.
+The liturgical year begins on the First Sunday of Advent and bears the
+number of the civil year in which it ends, so from Advent I to 31
+December every date got the previous year's cycles: Advent I 2024 read
+Sunday Year B where Year C began that day, and weekday Year II where
+Year I began.
+
+**The suite held the error as a fact.** Its Advent I 2024 check
+asserted `CYCLUS_B`. A test written from the same assumption as the
+code agrees with the code. It now asserts C, with a comment saying what
+it used to say and why it changed.
+
+**Fix.** `annus_liturgicus` is the civil year, plus one from Advent I of
+that year onward; both cycle functions receive it. They still take a
+year, and the header now says it is the liturgical year.
+
+**Gates (164 → 173).** Advent I 2024: C and I (the corrected assertion
+and its weekday twin). 28 November 2026, the last day of liturgical
+2026: A and II — the positive twin on the near side of the boundary.
+29 November 2026: B and I. 31 December 2024: C and I. 6 January 2025:
+C and I. Born red: 6, predicted 6.
+
+| Plant | Predicted | Observed |
+|---|---|---|
+| CP1 no `+ I` | 6 | 6 |
+| CP2 `>` for `>=` (Advent I itself left in the old year) | 4 | 4 — only the two Advent I days; 31 December stays green |

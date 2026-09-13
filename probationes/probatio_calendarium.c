@@ -510,8 +510,57 @@ s32 principale(vacuum)
         CREDO_VERUM(info->tempus_info.est_dominica);
         CREDO_AEQUALIS_S32((s32)info->color_diei,
             (s32)COLLIT_VIOLACEUS);
+        /* Adventus I 2024 INCIPIT annum liturgicum 2025: cyclus C,
+         * ferialis I (olim hic 'CYCLUS_B' - annus civilis) */
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_dominicalis,
+            (s32)CYCLUS_C);
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_quotidianus,
+            (s32)CYCLUS_I);
+    }
+
+
+    /* ==================================================
+     * Probare Cyclos Anni Liturgici
+     *
+     * Annus liturgicus Dominica I Adventus incipit et nomen
+     * anni civilis in quo FINIT fert: 29 Nov 2026 - 28 Nov 2027
+     * est annus 2027 (cyclus B, ferialis I).
+     * ================================================== */
+
+    {
+        imprimere("\n--- Probans Cyclos Anni Liturgici ---\n");
+
+        /* 28 Nov 2026, ultima dies anni liturgici 2026: A, II */
+        info = calendarium_obtinere_diem(cal,
+            fasti_dies(MM + XXVI, FASTI_NOVEMBER, XXVIII), piscina);
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_dominicalis,
+            (s32)CYCLUS_A);
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_quotidianus,
+            (s32)CYCLUS_II);
+
+        /* 29 Nov 2026, Dominica I Adventus: annus 2027 - B, I */
+        info = calendarium_obtinere_diem(cal,
+            fasti_dies(MM + XXVI, FASTI_NOVEMBER, XXIX), piscina);
         CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_dominicalis,
             (s32)CYCLUS_B);
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_quotidianus,
+            (s32)CYCLUS_I);
+
+        /* 31 Dec 2024 (octava Nativitatis): annus 2025 - C, I */
+        info = calendarium_obtinere_diem(cal,
+            fasti_dies(MMXXIV, FASTI_DECEMBER, XXXI), piscina);
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_dominicalis,
+            (s32)CYCLUS_C);
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_quotidianus,
+            (s32)CYCLUS_I);
+
+        /* 6 Ian 2025: idem annus 2025 - C, I */
+        info = calendarium_obtinere_diem(cal,
+            fasti_dies(MMXXV, FASTI_IANUARIUS, VI), piscina);
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_dominicalis,
+            (s32)CYCLUS_C);
+        CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_quotidianus,
+            (s32)CYCLUS_I);
     }
 
 

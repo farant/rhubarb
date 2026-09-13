@@ -1251,6 +1251,7 @@ calendarium_obtinere_diem (
                   Celebratio* celebrationes_array;
                          s32  num_celebrationum;
                          s32  idx;
+                         s32  annus_liturgicus;
 
     info = (InformatioDiei*)piscina_allocare(piscina,
         magnitudo(InformatioDiei));
@@ -1265,11 +1266,21 @@ calendarium_obtinere_diem (
     info->titulus_diei = calendarium_formare_titulum(cal, dies,
         piscina);
 
-    /* Cyclus lectionum */
+    /* Cyclus lectionum ANNI LITURGICI, qui Dominica I Adventus
+     * incipit et nomen anni civilis in quo finit fert: a Dominica
+     * I Adventus ad XXXI Dec annus liturgicus est annus civilis
+     * SEQUENS. Olim annus civilis legebatur, ergo per Adventum et
+     * octavam Nativitatis cyclus anno uno retro erat (2026-09-12). */
+    annus_liturgicus = dies.annus;
+    si (fasti_comparare(dies, calendarium_anchorae(cal,
+            dies.annus)->dominica_i_adventus) >= ZEPHYRUM)
+    {
+        annus_liturgicus = dies.annus + I;
+    }
     info->cyclus.cyclus_dominicalis =
-        calendarium_cyclus_dominicalis(dies.annus);
+        calendarium_cyclus_dominicalis(annus_liturgicus);
     info->cyclus.cyclus_quotidianus =
-        calendarium_cyclus_quotidianus(dies.annus);
+        calendarium_cyclus_quotidianus(annus_liturgicus);
     info->cyclus.hebdomada_psalterii =
         calendarium_hebdomada_psalterii(cal, dies);
 
