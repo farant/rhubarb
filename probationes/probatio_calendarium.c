@@ -10,6 +10,30 @@
 #include <stdio.h>
 
 
+/* hebdomada et hebdomada psalterii diei - brevitatis causa */
+interior s32
+_hebdomada_diei (
+    CalendariumLiturgicum* cal,
+                      s32  annus,
+                      s32  mensis,
+                      s32  dies)
+{
+    redde calendarium_tempus_info(cal,
+        fasti_dies(annus, mensis, dies)).hebdomada;
+}
+
+interior s32
+_psalterium_diei (
+    CalendariumLiturgicum* cal,
+                      s32  annus,
+                      s32  mensis,
+                      s32  dies)
+{
+    redde calendarium_hebdomada_psalterii(cal,
+        fasti_dies(annus, mensis, dies));
+}
+
+
 s32 principale(vacuum)
 {
                   Piscina* piscina;
@@ -89,6 +113,47 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(anch->dominica_i_adventus.mensis,
             FASTI_NOVEMBER);
         CREDO_AEQUALIS_S32(anch->dominica_i_adventus.dies, XXX);
+    }
+
+
+    /* ==================================================
+     * Probare Anchorae Mobiles 2026 et Adventum 2023
+     * ================================================== */
+
+    {
+        imprimere("\n--- Probans Anchorae 2026 (et Adventus 2023)"
+            " ---\n");
+
+        anch = calendarium_anchorae(cal, MM + XXVI);
+
+        /* Pascha 2026 = 5 Aprilis; Ascensio (feria V) = 14 Maii */
+        CREDO_AEQUALIS_S32(anch->pascha.mensis, FASTI_APRILIS);
+        CREDO_AEQUALIS_S32(anch->pascha.dies, V);
+        CREDO_AEQUALIS_S32(anch->ascensio.mensis, FASTI_MAIUS);
+        CREDO_AEQUALIS_S32(anch->ascensio.dies, XIV);
+
+        /* Sacratissimum Cor Iesu 2026 = 12 Iunii (feria VI) */
+        CREDO_AEQUALIS_S32(anch->cor_iesu.mensis, FASTI_IUNIUS);
+        CREDO_AEQUALIS_S32(anch->cor_iesu.dies, XII);
+
+        /* Baptisma Domini 2026 = 11 Ianuarii (Epiphania feria III) */
+        CREDO_AEQUALIS_S32(anch->baptisma_domini.mensis,
+            FASTI_IANUARIUS);
+        CREDO_AEQUALIS_S32(anch->baptisma_domini.dies, XI);
+
+        /* Christus Rex 2026 = 22 Novembris; Adventus I = 29 */
+        CREDO_AEQUALIS_S32(anch->christus_rex.mensis, FASTI_NOVEMBER);
+        CREDO_AEQUALIS_S32(anch->christus_rex.dies, XXII);
+        CREDO_AEQUALIS_S32(anch->dominica_i_adventus.mensis,
+            FASTI_NOVEMBER);
+        CREDO_AEQUALIS_S32(anch->dominica_i_adventus.dies, XXIX);
+
+        /* Adventus 2023: vigilia Nativitatis IPSA dominica est, ergo
+         * Dominica IV = 24 Dec et Adventus I = 3 Decembris */
+        anch = calendarium_anchorae(cal, MMXXIII);
+        CREDO_AEQUALIS_S32(anch->dominica_i_adventus.mensis,
+            FASTI_DECEMBER);
+        CREDO_AEQUALIS_S32(anch->dominica_i_adventus.dies, III);
     }
 
 
@@ -218,6 +283,98 @@ s32 principale(vacuum)
         dies = fasti_dies(MMXXV, FASTI_IUNIUS, XV);
         CREDO_AEQUALIS_S32((s32)calendarium_tempus(cal, dies),
             (s32)TEMPUS_PER_ANNUM_II);
+    }
+
+
+    /* ==================================================
+     * Probare Hebdomadas (numerus hebdomadae et psalterii)
+     *
+     * Dies noti sine hac bibliotheca. Post Pentecosten
+     * numeratio RETRORSUM fit: hebdomada Christi Regis est
+     * XXXIV, et hebdomada psalterii ex hebdomada rotat.
+     * ================================================== */
+
+    {
+        imprimere("\n--- Probans Hebdomadas ---\n");
+
+        /* Tempus per annum I: 12 Ian 2026 = feria II hebdomadae I;
+         * 18 Ian = Dominica II; 17 Feb (ante Cineres) = VI */
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_IANUARIUS, XII), I);
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_IANUARIUS, XVIII), II);
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_FEBRUARIUS, XVII), VI);
+        CREDO_AEQUALIS_S32(_psalterium_diei(cal,
+            MM + XXVI, FASTI_FEBRUARIUS, XVII), II);
+
+        /* Quadragesima et Pascha 2026 */
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_FEBRUARIUS, XXII), I);
+        titulus = calendarium_formare_titulum(cal,
+            fasti_dies(MM + XXVI, FASTI_FEBRUARIUS, XXII), piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(titulus,
+            "Dominica I Quadragesimae");
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_APRILIS, XII), II);
+        titulus = calendarium_formare_titulum(cal,
+            fasti_dies(MM + XXVI, FASTI_APRILIS, XII), piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(titulus, "Dominica II Paschae");
+
+        /* Adventus: 21 Dec 2025 = Dominica IV; 29 Nov 2026 = I */
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MMXXV, FASTI_DECEMBER, XXI), IV);
+        dies = fasti_dies(MM + XXVI, FASTI_NOVEMBER, XXIX);
+        CREDO_AEQUALIS_S32((s32)calendarium_tempus(cal, dies),
+            (s32)TEMPUS_ADVENTUS);
+        CREDO_AEQUALIS_S32(calendarium_tempus_info(cal, dies).hebdomada,
+            I);
+        titulus = calendarium_formare_titulum(cal, dies, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(titulus, "Dominica I Adventus");
+
+        /* Tempus per annum II. Ultima dies ante Adventum 2026 */
+        dies = fasti_dies(MM + XXVI, FASTI_NOVEMBER, XXVIII);
+        CREDO_AEQUALIS_S32((s32)calendarium_tempus(cal, dies),
+            (s32)TEMPUS_PER_ANNUM_II);
+        CREDO_AEQUALIS_S32(calendarium_tempus_info(cal, dies).hebdomada,
+            XXXIV);
+
+        /* Feria II post Pentecosten: 2024 = VII, 2025 = X,
+         * 2026 = VIII (psalterium IV) */
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MMXXIV, FASTI_MAIUS, XX), VII);
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MMXXV, FASTI_IUNIUS, IX), X);
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_MAIUS, XXV), VIII);
+        CREDO_AEQUALIS_S32(_psalterium_diei(cal,
+            MM + XXVI, FASTI_MAIUS, XXV), IV);
+
+        /* Septembris 2026: sabbatum 12 = hebdomada XXIII, dominica
+         * 13 = XXIV (psalterium IV) */
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_SEPTEMBER, XII), XXIII);
+        titulus = calendarium_formare_titulum(cal,
+            fasti_dies(MM + XXVI, FASTI_SEPTEMBER, XII), piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(titulus,
+            "Sabbatum, Hebdomada XXIII");
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_SEPTEMBER, XIII), XXIV);
+        CREDO_AEQUALIS_S32(_psalterium_diei(cal,
+            MM + XXVI, FASTI_SEPTEMBER, XIII), IV);
+        titulus = calendarium_formare_titulum(cal,
+            fasti_dies(MM + XXVI, FASTI_SEPTEMBER, XIII), piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(titulus,
+            "Dominica XXIV per Annum");
+
+        /* Christus Rex = Dominica XXXIV (psalterium II):
+         * 23 Nov 2025 et 22 Nov 2026 */
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MMXXV, FASTI_NOVEMBER, XXIII), XXXIV);
+        CREDO_AEQUALIS_S32(_hebdomada_diei(cal,
+            MM + XXVI, FASTI_NOVEMBER, XXII), XXXIV);
+        CREDO_AEQUALIS_S32(_psalterium_diei(cal,
+            MM + XXVI, FASTI_NOVEMBER, XXII), II);
     }
 
 
