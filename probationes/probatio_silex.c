@@ -301,6 +301,46 @@ s32 principale (vacuum)
     }
 
 
+    /* ==================================================
+     * PROBARE: clausura - caput cum GEMINO et annotatione
+     * ALIAM plagulam nominante ('<aedilis
+     * corpus="lib/sanctorale.c"/>' in calendarium_liturgicum.h).
+     * Annotatio post geminum SEMPER legenda est, non solum ubi
+     * geminus deest: fenestra.h (sine gemino) casum celabat, et
+     * kalendarium.thistle nexu defecit (_sanctorale_obtinere).
+     * ================================================== */
+
+    {
+        Xar* res_omnes;
+        i32  k;
+        i32  sanctorale_vices = ZEPHYRUM;
+        interior constans character* constans SEMINA_CALENDARII[] = {
+            "calendarium_liturgicum.h"
+        };
+
+        imprimere("\n--- Probans clausuram (calendarium: geminus et"
+            " corpus annotatum) ---\n");
+
+        res_omnes = silex_clausuram_colligere(piscina,
+            silex_fons_disci(piscina, "."), SEMINA_CALENDARII, 1);
+        CREDO_NON_NIHIL(res_omnes);
+        CREDO_VERUM(_manifestum_continet(res_omnes,
+            "lib/calendarium_liturgicum.c"));
+        CREDO_VERUM(_manifestum_continet(res_omnes,
+            "lib/sanctorale.c"));
+        per (k = 0; k < xar_numerus(res_omnes); k = k + 1)
+        {
+            SilexRes* e = (SilexRes*)xar_obtinere(res_omnes, k);
+
+            si (chorda_aequalis_literis(e->via, "lib/sanctorale.c"))
+            {
+                sanctorale_vices = sanctorale_vices + I;
+            }
+        }
+        CREDO_AEQUALIS_I32(sanctorale_vices, I);
+    }
+
+
     /* ========================================================
      * PROBARE: fabrica invalida = recusatio (in constructore)
      * ======================================================== */

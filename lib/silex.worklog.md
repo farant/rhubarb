@@ -561,3 +561,55 @@ briar/instrumenta/fabrica.c all pass "." and get the root.
 Lesson, the same as the morning's index defect: identity inferred
 from the ABSENCE of a file is a negative test on state nobody owns.
 Declare it.
+\n
+## 2026-09-12 — Annotated implementations were read only when the twin was missing
+
+Found by building `project-specs/exempla/kalendarium.thistle`, a vitrea
+app over `calendarium_liturgicum.h`: it compiled, then failed to link on
+`_sanctorale_obtinere`. The header names its second implementation file
+with `/* <aedilis corpus="lib/sanctorale.c"/> */`, and
+`silex_clausuram_colligere` never collected it.
+
+**Cause.** `_corpora_annotata_colligere` was called inside
+`si (!_plagulam_e_fonte_colligere(... "lib/X.c" ...))`, the branch that
+runs only when the conventional twin is missing. The comment above it
+("deinde implementatores ANNOTATI ... dedup per viam - motus.h geminum
+suum quoque annotat") and briar-spec §3 ("after the conventional twin,
+deduplicated by path") both describe reading annotations after the twin
+in every case; `motus.h` annotating its own twin only makes sense that
+way. In since `1cc061ac` (2026-09-05).
+
+**Why the gate missed it.** Its only annotated seed is `fenestra.h`,
+which has no `fenestra.c` — the one shape in which the misplaced call
+runs. Measured over `include/`: three headers have a twin AND an
+annotation naming a different file — `calendarium_liturgicum.h` →
+`lib/sanctorale.c`, `arbor2_glr.h` → `lib/arbor2_glr_tabula.c`,
+`nuntium_schema.h` → `lib/nuntium_schema_generare.c`. The other twenty
+annotate only their own twin or have no twin, and were right either way.
+
+**Fix.** `inventum` moves to the enclosing block and is set by the twin
+lookup; the suffix search stays in the no-twin branch; the annotated
+collection and the "nulla implementatio" warning run after it in every
+case. Deduplication by path was already there (`_fructus_viam_habet`).
+
+**Gate.** A new block in `probatio_silex.c` seeded with
+`calendarium_liturgicum.h`: the twin present, `lib/sanctorale.c`
+present, and present exactly once. Born red before the fix: 2 reds
+(lines 330, 340).
+
+**Calibration, two plants:**
+
+| Plant | Predicted | Observed |
+|---|---|---|
+| annotation call guarded by `!inventum &&` | 2 | **6** |
+| the old code verbatim: call moved back inside the no-`X.c` branch | 2 | 2 (330, 340); the `fenestra.h` block stayed green |
+
+The first prediction was wrong because the first plant was not the old
+code. `!inventum` is also false after a SUFFIX twin (`fenestra_macos.m`),
+so that plant skipped `fenestra.h`'s annotation too and turned the old
+block red (286, 288, 289, 300). A plant written as "the same bug, more
+simply" can be a different bug. Planting the old code verbatim is what
+shows that the NEW assertions, and only they, catch this defect.
+
+The closure walker is compiled into `bin/briar` and the silex CLI, so
+both need a rebuild before they see this.

@@ -684,6 +684,7 @@ silex_clausuram_colligere (
                         chorda radix_capitis;
                         chorda titulus_c;
                         chorda caput_textus;
+                           b32 inventum;
             {
                 SilexRes* caput_res = (SilexRes*)xar_obtinere(fructus,
                     xar_numerus(fructus) - 1);
@@ -708,8 +709,9 @@ silex_clausuram_colligere (
                 chorda_aedificator_appendere_literis(aed, ".c");
                 titulus_c = chorda_aedificator_finire(aed);
             }
-            si (!_plagulam_e_fonte_colligere(piscina, fons,
-                "lib/", titulus_c, fructus, opus))
+            inventum = _plagulam_e_fonte_colligere(piscina, fons,
+                "lib/", titulus_c, fructus, opus);
+            si (!inventum)
             {
                 /* SUFFIXA CONVENTIONIS. Prius duo sola temptabantur
                  * (X.c, X_macos.m) et defectus AMBORUM tacebat -
@@ -731,7 +733,6 @@ silex_clausuram_colligere (
                 constans character* constans suffixa[] = {
                     "_macos.m", "_posix.c", "_impl.c"
                 };
-                b32 inventum = FALSUM;
                 i32 s_i;
 
                 per (s_i = 0; s_i < III && !inventum; s_i = s_i + I)
@@ -748,31 +749,39 @@ silex_clausuram_colligere (
                         fons, "lib/", chorda_aedificator_finire(aed_s),
                         fructus, opus);
                 }
+            }
 
-                si (_corpora_annotata_colligere(piscina, fons,
-                        caput_textus, fructus, opus) > 0)
-                {
-                    inventum = VERUM;   /* implementatores annotati */
-                }
-                si (!inventum)
-                {
-                    /* CLAMOR, non silentium. Falsum positivum hic
-                     * pretium rectum est: caput vere solum (latina,
-                     * postulata_posix, fons_6x8) lineam unam parit
-                     * quam lector semel legit et neglegit; caput cum
-                     * implementatione non inventa aliter DEBITUM
-                     * INVISIBILE pareret quod nemo umquam nuntiat. */
-                    _monere(
-                        "silex: monitio - nulla implementatio pro"
-                        " %.*s (temptata: lib/%.*s.c, _macos.m,"
-                        " _posix.c, _impl.c).\n"
-                        "  si caput SOLUM est (macra, data), neglege;"
-                        " aliter plagulam MANU adde.\n",
-                        (integer)caput.mensura,
-                        (constans character*)caput.datum,
-                        (integer)radix_capitis.mensura,
-                        (constans character*)radix_capitis.datum);
-                }
+            /* IMPLEMENTATORES ANNOTATI post geminum SEMPER leguntur,
+             * non solum ubi geminus deest. Olim intra ramum superiorem
+             * sedebant: caput cum gemino ET annotatione ALIAM plagulam
+             * nominante eam numquam trahebat (calendarium_liturgicum.h
+             * -> lib/sanctorale.c; item arbor2_glr.h et
+             * nuntium_schema.h), et vitium ad nexum demum apparebat
+             * (2026-09-12, kalendarium.thistle). Duplicata per viam
+             * vitantur - motus.h geminum suum ipse annotat. */
+            si (_corpora_annotata_colligere(piscina, fons,
+                    caput_textus, fructus, opus) > 0)
+            {
+                inventum = VERUM;
+            }
+            si (!inventum)
+            {
+                /* CLAMOR, non silentium. Falsum positivum hic
+                 * pretium rectum est: caput vere solum (latina,
+                 * postulata_posix, fons_6x8) lineam unam parit
+                 * quam lector semel legit et neglegit; caput cum
+                 * implementatione non inventa aliter DEBITUM
+                 * INVISIBILE pareret quod nemo umquam nuntiat. */
+                _monere(
+                    "silex: monitio - nulla implementatio pro"
+                    " %.*s (temptata: lib/%.*s.c, _macos.m,"
+                    " _posix.c, _impl.c).\n"
+                    "  si caput SOLUM est (macra, data), neglege;"
+                    " aliter plagulam MANU adde.\n",
+                    (integer)caput.mensura,
+                    (constans character*)caput.datum,
+                    (integer)radix_capitis.mensura,
+                    (constans character*)radix_capitis.datum);
             }
         }
     }
