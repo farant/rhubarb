@@ -1,0 +1,1218 @@
+#!/usr/bin/env briar
+# Kalendarium
+
+A window that shows one day of the Roman liturgical year: its date in
+Latin, the season and the week, the celebrations that fall on it and
+their rank, the colour the priest wears, the cycles of readings and
+psalms, and the mysteries of the Rosary prayed on that weekday. Three
+buttons walk to the day before, back to today, and to the day after; a
+field takes any date; and a panel lists the feasts that move with
+Easter in the year on screen, each of them a door to its own day.
+
+The program is two halves that never share memory. The page — HTML, a
+stylesheet, a script — knows how to draw and how to ask. The C knows
+the calendar. Between them runs one bridge, the *internuntius*, and
+everything that crosses it is JSON: the page sends a question, and C
+sends back either an answer or a fault. The page does no date
+arithmetic at all. That is a decision, and its reason is at the end of
+this file.
+
+This is the web-view counterpart of `salutatio2.thistle`, which draws
+with the CPU rasterizer and opens its window itself. Here briar writes
+the main function, the window is a WebKit view, and the order below
+follows a single request: from the window, to the page that sends it,
+to the C that answers it, to the probatio that checks the answer
+without any window at all.
+
+## Verba: the standing vocabulary
+
+These appear in every rhubarb program and are not glossed again below.
+
+| word | sense | note |
+|---|---|---|
+| *piscina* | fish-pond, basin | a Roman reservoir. Here: an arena. Memory is drawn from it and it is emptied whole. |
+| *chorda* | a string, a cord | a length and a pointer; never terminated by a zero byte |
+| *vacuum*, *nihil*, *zephyrum* | empty, nothing, zero | `void`, `NULL`, `0` |
+| *si*, *alioquin*, *per*, *redde* | if, otherwise, through, give back | `if`, `else`, `for`, `return` |
+| *hic manens* | staying here | `static` on an object at file scope: it stays put for the life of the process |
+| *interior* | inner | `static` on a function: not for export |
+| *constans* | standing firm | `const` |
+| *fructus* | fruit, yield | what a call gives back — *benedictus fructus ventris tui* |
+| *culpa* | fault | *mea culpa*, from the Confiteor. Here: the text of an error |
+| *argumenta* | things brought forward | what the page sends with a call |
+| *probatio* | a testing, a proof | the part of the file that checks the rest |
+
+Numeric constants are Roman numerals: `I`, `II`, `III`, `IV`, `V`,
+`VI`, `VII`, `XI`, `LXIV`, `M`. So `LXIV * M` is sixty-four thousand
+bytes and `VII` is the length of a week.
+
+## Kalendarium: the words of the calendar
+
+The *Kalendae* were the first day of every Roman month, from *calare*,
+to call out: on that morning a minor pontiff announced how many days
+remained until the Nones. Debts fell due on the Kalends, so a
+moneylender's book of accounts was his *kalendarium*, and the word
+moved from the ledger to the list of days itself.
+
+*Fasti* are the days that are *fas*, when it is lawful to do business
+before a magistrate; the published table of them became the Roman
+calendar, and `fasti.h` is the house library of dates. *Pridie* is the
+day before and *postridie* the day after, the words Romans used to
+count toward a named day. *Hodie* is today — *hodie Christus natus
+est*, the Christmas antiphon.
+
+*Tempus per annum*, "time through the year", is Ordinary Time. A
+*hebdomada* is a week, from the Greek for a set of seven. The
+*psalterium* is the four-week cycle of psalms in the Liturgy of the
+Hours; the *cyclus dominicalis* is the Sunday lectionary year (A for
+Matthew, B for Mark, C for Luke), and the *cyclus ferialis* the
+weekday year (I in odd years, II in even).
+
+## Clausura: where the words come from
+
+This file contains no `#include`. briar derives the closure from the
+symbols used. The table below is the reader's copy, taken from the
+output of `briar -partes`; if the two ever disagree, the table is
+wrong.
+
+| header | what this file takes from it |
+|---|---|
+| `json.h` | `JsonValor` and every `json_*` call — the one include written by hand, below |
+| `calendarium_liturgicum.h` | `CalendariumLiturgicum`, `InformatioDiei`, `Celebratio`, `AnchoresMobiles`, `ColorLiturgicus`, and the `calendarium_*` questions |
+| `fasti.h` | `Dies`, `fasti_parsare_iso`, `fasti_formare_diem` with its `FASTI_FORMA_*`, `fasti_addere_dies`, `fasti_dies_hebdomadis`, `fasti_dies_hodie` |
+| `credo.h` | the test harness, in the probatio only |
+
+`piscina.h` and `chorda.h` arrive through those headers, and the
+generated main adds `atrium.h`, `internuntius.h` and the bundle of
+assets. The whole closure `-partes` lists runs to eighty files: a web
+view in a native window brings WebKit's glue, the HTTP control port
+that lets `bin/manus` drive the app, and everything those need.
+
+## Fenestra: the window, and the main function nobody writes
+
+*Fenestra* is a window. The tag below is the whole of it:
+
+<fenestra titulus="kalendarium" latitudo="720" altitudo="720"/>
+
+This file defines no `principale`. A file with a `fenestra` tag and no
+`principale` is an app, and briar writes its main function: a pool, an
+`AtriumConfiguratio` filled from the tag, `atrium_creare`, one
+`internuntius_praebere` for every C region marked `methodus=`, and the
+loop that turns the window's crank until it closes. *Atrium* is the
+entrance hall of a Roman house, the room every visitor passes through;
+here it is the layer that owns the window, the web view and the bridge.
+*Internuntius* is a go-between, a messenger sent between two parties —
+the word the Church still uses for a papal envoy.
+
+Two facts about that generated main shape everything in the C below.
+
+**Each method is registered with its `datum` set to NIHIL.** The
+signature carries a `vacuum* datum` for the program's own state, but
+briar v1 always passes nothing there. State that must survive from one
+call to the next has to live somewhere else.
+
+**The memory a method answers into is wiped every tick.** Atrium keeps
+one arena for calls and resets it at the start of each turn of the
+loop. Whatever a method builds there lives exactly long enough to be
+written out as JSON and sent to the page, and then it is gone. That is
+the right lifetime for an answer. It is the wrong lifetime for a
+calendar.
+
+## One exchange across the bridge
+
+Before the code, the conversation it carries. When the window opens,
+the page asks for today by sending no date at all; clicking a feast
+sends its date. The answer below is real output for 14 September
+2026, printed by a copy of this file whose probatio writes it out:
+
+```js
+internuntius.vocare("diem_describere", { iso: "2026-09-14" })
+```
+
+```json
+{
+  "iso": "2026-09-14",
+  "liturgica": "Feria II, 14 Septembris 2026",
+  "romana": "XIV Septembris MMXXVI",
+  "pridie": "2026-09-13",
+  "postridie": "2026-09-15",
+  "hodie": false,
+  "titulus": "The Exaltation of the Holy Cross",
+  "tempus": "Tempus per Annum",
+  "hebdomada": 24,
+  "color": "Ruber",
+  "color_css": "#9e1b22",
+  "celebrationes": [
+    {
+      "titulus": "Feria II, Hebdomada XXIV",
+      "gradus": "Feria",
+      "color": "Viridis"
+    },
+    {
+      "titulus": "The Exaltation of the Holy Cross",
+      "gradus": "Festum",
+      "color": "Ruber"
+    }
+  ],
+  "cyclus": {
+    "dominicalis": "A",
+    "ferialis": "II",
+    "psalterii": 4
+  },
+  "mysteria": {
+    "genus": "Gaudiosa",
+    "tituli": [
+      "Annuntiatio",
+      "Visitatio",
+      "Nativitas Domini",
+      "Praesentatio in Templo",
+      "Inventio in Templo"
+    ]
+  }
+}
+```
+
+Two celebrations fall on that Monday: the weekday of the season, green,
+and the feast, red. The feast outranks the weekday, so it gives the day
+its title and its colour.
+
+The page reads those fields and nothing else. `pridie` and
+`postridie` are why the navigation buttons need no arithmetic: C has
+already said which days they are.
+
+## The page
+
+### The skeleton
+
+Every element the script will fill has an `id`, and nothing on the
+page has content until the first answer arrives. The stylesheet and
+the script are linked by name: briar writes `kalendarium.css` and
+`kalendarium.js` beside `index.html` in the app's bundle of assets, but
+it injects nothing into the page, so the page must ask for them
+itself.
+
+The button marked *i* is the imperative of *ire*: go.
+
+<html!>
+<meta charset="utf-8">
+<title>kalendarium</title>
+<link rel="stylesheet" href="kalendarium.css">
+
+<header>
+    <p id="liturgica" class="supra"></p>
+    <h1 id="titulus"></h1>
+    <p id="tempus"></p>
+    <p id="romana" class="romana"></p>
+</header>
+
+<nav>
+    <button id="pridie">&larr; pridie</button>
+    <button id="hodie">hodie</button>
+    <button id="postridie">postridie &rarr;</button>
+    <input id="quaesitum" placeholder="AAAA-MM-DD" size="11"
+           spellcheck="false">
+    <button id="quaerere">i</button>
+</nav>
+<p id="culpa" class="culpa"></p>
+
+<section>
+    <h2>Celebrationes</h2>
+    <ul id="celebrationes"></ul>
+</section>
+
+<section>
+    <h2>Rosarium &middot; <span id="genus-mysteriorum"></span></h2>
+    <ol id="mysteria"></ol>
+</section>
+
+<section>
+    <h2>Cycli</h2>
+    <p id="cyclus"></p>
+</section>
+
+<section>
+    <h2>Festa mobilia anni <span id="annus"></span></h2>
+    <ul id="festa" class="festa"></ul>
+</section>
+
+<script src="kalendarium.js"></script>
+</html>
+
+### The colour of the day
+
+One custom property, `--color-diei`, carries the liturgical colour.
+The script sets it from each answer; the band across the top, the
+title and the feast links all read it, so the whole page changes
+vestments at once. *Charta* is paper, *atramentum* ink, *tenue* the
+faint grey of secondary text.
+
+<css!>
+:root {
+    --color-diei: #2e6b3f;
+    --atramentum: #1f1b16;
+    --charta: #faf6ee;
+    --tenue: #756c60;
+}
+
+body {
+    margin: 0;
+    padding: 0 32px 32px;
+    border-top: 12px solid var(--color-diei);
+    background: var(--charta);
+    color: var(--atramentum);
+    font: 16px/1.45 "Iowan Old Style", Palatino, Georgia, serif;
+}
+
+header {
+    padding-top: 20px;
+}
+
+.supra, .romana, #tempus {
+    margin: 0;
+}
+
+.supra, .romana {
+    color: var(--tenue);
+}
+
+.romana {
+    letter-spacing: 0.06em;
+}
+
+h1 {
+    margin: 4px 0 2px;
+    font-size: 28px;
+    font-weight: normal;
+    color: var(--color-diei);
+}
+
+h2 {
+    margin: 22px 0 6px;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tenue);
+}
+
+nav {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin: 16px 0 4px;
+}
+
+button, input {
+    font: inherit;
+    font-size: 14px;
+}
+
+.culpa {
+    min-height: 1.3em;
+    margin: 2px 0;
+    color: #9e1b22;
+}
+
+ul, ol {
+    margin: 0;
+    padding-left: 1.4em;
+}
+
+#mysteria {
+    list-style-type: upper-roman;
+}
+
+.glossa {
+    color: var(--tenue);
+    font-size: 14px;
+}
+
+.festa button {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--color-diei);
+    font-size: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+</css>
+
+### Asking, and drawing the answer
+
+`internuntius.vocare(methodus, argumenta)` is the whole bridge from
+this side. It returns a promise. If the C method gives back a value,
+the promise resolves with it; if the method sets `culpa`, the promise
+rejects with an `Error` whose message is that text. So a malformed
+date typed into the field needs no checking here: C refuses it, and
+`culpam_ostendere` prints the refusal under the buttons.
+
+The script keeps one thing, `ultimum`, the last answer. The arrow
+buttons and the arrow keys read `pridie` and `postridie` from it. The
+year's feasts are asked for only when the year on screen changes.
+
+`romanus` writes the week and the year in Roman numerals, because the
+page should not show `23` beside `Hebdomada XXIII`.
+
+<js!>
+(function () {
+    "use strict";
+
+    var ultimum = null;
+    var annus_monstratus = null;
+
+    function el(id) {
+        return document.getElementById(id);
+    }
+
+    function scribere(id, textus) {
+        el(id).textContent = textus;
+    }
+
+    function vacuare(id) {
+        var nodus = el(id);
+        while (nodus.firstChild) {
+            nodus.removeChild(nodus.firstChild);
+        }
+        return nodus;
+    }
+
+    function romanus(n) {
+        var valores = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+        var signa = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX",
+                     "V", "IV", "I"];
+        var textus = "";
+        var i;
+        for (i = 0; i < valores.length; i++) {
+            while (n >= valores[i]) {
+                textus += signa[i];
+                n -= valores[i];
+            }
+        }
+        return textus;
+    }
+
+    function addere(lista, textus, glossa) {
+        var li = document.createElement("li");
+        var parva;
+        li.textContent = textus;
+        if (glossa) {
+            parva = document.createElement("span");
+            parva.className = "glossa";
+            parva.textContent = " — " + glossa;
+            li.appendChild(parva);
+        }
+        lista.appendChild(li);
+    }
+
+    function culpam_ostendere(e) {
+        scribere("culpa", e.message);
+    }
+
+    function diem_ostendere(r) {
+        var lista;
+
+        ultimum = r;
+        document.documentElement.style.setProperty("--color-diei",
+                                                   r.color_css);
+        scribere("liturgica", r.liturgica);
+        scribere("titulus", r.titulus);
+        scribere("tempus", r.hebdomada > 0
+            ? r.tempus + ", hebdomada " + romanus(r.hebdomada)
+            : r.tempus);
+        scribere("romana", r.romana);
+        scribere("culpa", "");
+        el("hodie").disabled = r.hodie;
+
+        lista = vacuare("celebrationes");
+        r.celebrationes.forEach(function (c) {
+            addere(lista, c.titulus, c.gradus + ", " + c.color.toLowerCase());
+        });
+
+        scribere("genus-mysteriorum", r.mysteria.genus);
+        lista = vacuare("mysteria");
+        r.mysteria.tituli.forEach(function (t) {
+            addere(lista, t);
+        });
+
+        scribere("cyclus", "Cyclus dominicalis " + r.cyclus.dominicalis
+            + " · ferialis " + r.cyclus.ferialis
+            + " · hebdomada psalterii " + romanus(r.cyclus.psalterii));
+
+        if (r.iso.slice(0, 4) !== annus_monstratus) {
+            annum_petere(r.iso);
+        }
+    }
+
+    function annum_ostendere(r) {
+        var lista = vacuare("festa");
+
+        annus_monstratus = String(r.annus);
+        scribere("annus", romanus(r.annus));
+        r.festa.forEach(function (f) {
+            var li = document.createElement("li");
+            var bulla = document.createElement("button");
+            bulla.textContent = f.titulus;
+            bulla.onclick = function () { petere(f.iso); };
+            li.appendChild(bulla);
+            li.appendChild(document.createTextNode(" " + f.brevis));
+            lista.appendChild(li);
+        });
+    }
+
+    function petere(iso) {
+        internuntius.vocare("diem_describere", iso ? { iso: iso } : {})
+            .then(diem_ostendere)
+            .catch(culpam_ostendere);
+    }
+
+    function annum_petere(iso) {
+        internuntius.vocare("annum_describere", { iso: iso })
+            .then(annum_ostendere)
+            .catch(culpam_ostendere);
+    }
+
+    function gradi(clavis) {
+        if (ultimum) {
+            petere(ultimum[clavis]);
+        }
+    }
+
+    el("pridie").onclick = function () { gradi("pridie"); };
+    el("postridie").onclick = function () { gradi("postridie"); };
+    el("hodie").onclick = function () { petere(null); };
+    el("quaerere").onclick = function () {
+        petere(el("quaesitum").value.trim());
+    };
+    el("quaesitum").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            el("quaerere").click();
+        }
+    });
+    document.addEventListener("keydown", function (e) {
+        if (e.target === el("quaesitum")) {
+            return;
+        }
+        if (e.key === "ArrowLeft") {
+            gradi("pridie");
+        } else if (e.key === "ArrowRight") {
+            gradi("postridie");
+        }
+    });
+
+    petere(null);
+}());
+</js>
+
+## The C
+
+### The one include this file writes
+
+briar derives every header this file needs except one. The methods
+speak JSON, and `json.h` is not found: the first build of this file
+stopped at `unknown type name 'JsonValor'`. The cause is the check on
+method signatures. To compare each `methodus=` function against the
+bridge's type, briar parses that region with `internuntius.h` already
+included, so `JsonValor` never looks unknown to it and nothing adds
+its header to the generated one. `salve_vitreum.thistle` carries the
+same line for the same reason. Written once, it reaches
+every region, because briar gathers the directives of all C regions
+into one generated header.
+
+<c!>
+#include "json.h"
+</c>
+
+### A calendar that outlives the call
+
+`calendarium_creare` takes a pool and keeps it. The calendar computes
+each year's movable feasts once — Easter by the computus, and every
+feast that hangs from it — and caches them in that pool, so the second
+question about a year costs nothing. Handed the call arena, the cache
+would be wiped at the next tick while the calendar still pointed into
+it.
+
+So the calendar gets a pool of its own, made on the first call and
+never emptied. Both live at file scope, *hic manens*, because the
+`datum` slot that would normally carry them is NIHIL. briar places
+file-scope objects in the generated `kalendarium_regiones.c`, where
+the methods are, and nowhere else can see them; everything outside
+reaches the calendar through `kalendarium_obtinere`.
+
+<c!>
+hic_manens Piscina*               piscina_perpetua      = NIHIL;
+hic_manens CalendariumLiturgicum* kalendarium_perpetuum = NIHIL;
+
+CalendariumLiturgicum*
+kalendarium_obtinere (vacuum)
+{
+    si (kalendarium_perpetuum == NIHIL)
+    {
+        piscina_perpetua = piscina_generare_dynamicum("kalendarium",
+                                                      LXIV * M);
+        si (piscina_perpetua == NIHIL)
+        {
+            redde NIHIL;
+        }
+        kalendarium_perpetuum = calendarium_creare(piscina_perpetua);
+    }
+    redde kalendarium_perpetuum;
+}
+</c>
+
+### Two fragments both methods share
+
+Both methods begin the same way: find out which day was asked about,
+then make sure the calendar exists. Each of those is written once, as
+a fragment, and woven into both methods — one text in two places, not
+two copies that can drift apart.
+
+The day comes from the `iso` field. If the page sent none, the day is
+today. If it sent something that is not a string, or a string that is
+not a real date, the method sets `culpa` and gives back nothing, and
+the bridge turns that into a rejected promise on the page.
+`fasti_parsare_iso` does the work in one call: it reads `AAAA-MM-DD`
+and then checks the date exists, so `2026-02-30` is refused along with
+`quinta`.
+
+<c! id="dies-ex-argumentis">
+iso = json_objectum_capere(argumenta, "iso");
+si (iso == NIHIL)
+{
+    dies = fasti_dies_hodie();
+}
+alioquin si (!json_est_chorda(iso)
+         || !fasti_parsare_iso(json_ad_chorda(iso), &dies))
+{
+    *culpa = chorda_ex_literis(
+        "dies non intellecta: forma AAAA-MM-DD exspectatur", piscina);
+    redde NIHIL;
+}
+</c>
+
+`json_objectum_capere` is safe to call on `argumenta` even when the
+page sent nothing and `argumenta` is NIHIL: it returns NIHIL, and the
+day becomes today.
+
+<c! id="kalendarium-paratum">
+cal = kalendarium_obtinere();
+si (cal == NIHIL)
+{
+    *culpa = chorda_ex_literis("kalendarium creari non potuit", piscina);
+    redde NIHIL;
+}
+</c>
+
+### Diem describere: the day
+
+*Describere* is to write out, to copy down; *diem describere*, to
+write out the day. This is the method the page calls on every step.
+
+Read the cast list as the plan: a calendar, the information it gives
+about one day, the day itself, the argument it came from, and the
+answer being built. The body finds the day, readies the calendar, asks
+the calendar, and then fills the answer in five parts.
+
+<c! methodus="diem_describere">
+JsonValor*
+diem_describere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
+{
+    CalendariumLiturgicum* cal;
+           InformatioDiei* info;
+                      Dies  dies;
+                JsonValor* iso;
+                JsonValor* fructus;
+
+    (vacuum)datum;
+    <<#dies-ex-argumentis>>
+    <<#kalendarium-paratum>>
+    info = calendarium_obtinere_diem(cal, dies, piscina);
+    si (info == NIHIL)
+    {
+        *culpa = chorda_ex_literis("dies describi non potuit", piscina);
+        redde NIHIL;
+    }
+
+    fructus = json_objectum_creare(piscina);
+    <<#fructus-diei>>
+    <<#fructus-temporis>>
+    json_objectum_ponere(fructus, "celebrationes",
+        celebrationes_describere(info, piscina));
+    json_objectum_ponere(fructus, "cyclus",
+        cyclum_describere(info, piscina));
+    json_objectum_ponere(fructus, "mysteria",
+        mysteria_describere(fasti_dies_hebdomadis(dies), piscina));
+    redde fructus;
+}
+</c>
+
+Note where the answer is built: in `piscina`, the call arena. That is
+also where `calendarium_obtinere_diem` puts the day's information, and
+the only thing the answer points into besides constant tables. The
+whole answer is written out as JSON before the next tick wipes the
+arena, which is exactly the life it needs.
+
+#### The date, four ways
+
+The same day, written as the page needs it: `iso` for asking again,
+the liturgical form for the top line, the Roman form with its numerals
+for the line under the title, and the neighbouring days. `hodie` tells
+the page whether to grey out its *hodie* button.
+
+<c! id="fructus-diei">
+json_objectum_ponere(fructus, "iso",
+    valor_diei(dies, FASTI_FORMA_ISO, piscina));
+json_objectum_ponere(fructus, "liturgica",
+    valor_diei(dies, FASTI_FORMA_LITURGICA, piscina));
+json_objectum_ponere(fructus, "romana",
+    valor_diei(dies, FASTI_FORMA_LATINA_LONGA, piscina));
+json_objectum_ponere(fructus, "pridie",
+    valor_diei(fasti_addere_dies(dies, -I), FASTI_FORMA_ISO, piscina));
+json_objectum_ponere(fructus, "postridie",
+    valor_diei(fasti_addere_dies(dies, I), FASTI_FORMA_ISO, piscina));
+json_objectum_ponere(fructus, "hodie", json_boolean_creare(piscina,
+    fasti_aequalis(dies, fasti_dies_hodie())));
+</c>
+
+`valor_diei` is the one line those five share: format the day, wrap
+the text as a JSON string.
+
+<c!>
+JsonValor*
+valor_diei (
+        Dies  dies,
+         s32  forma,
+    Piscina* piscina)
+{
+    redde json_chorda_creare(piscina,
+                             fasti_formare_diem(dies, forma, piscina));
+}
+</c>
+
+`json_chorda_creare` does not copy the text; it keeps the `chorda` it
+is given, pointer and length. That is safe here because
+`fasti_formare_diem` allocates the text in the same call arena. Handed
+a buffer on the stack, the same call would send the page whatever the
+stack held by the time the answer was written.
+
+#### The season and the colour
+
+`titulus_diei` is the calendar's name for the day: *Sabbatum,
+Hebdomada XXIII* on an ordinary Saturday, or the saint's name when a
+feast outranks the weekday. The colour goes over twice, once as the
+calendar names it and once as the page should paint it.
+
+<c! id="fructus-temporis">
+json_objectum_ponere(fructus, "titulus",
+    json_chorda_creare(piscina, info->titulus_diei));
+json_objectum_ponere(fructus, "tempus", json_chorda_creare(piscina,
+    calendarium_nomen_temporis(info->tempus_info.tempus, FALSUM, piscina)));
+json_objectum_ponere(fructus, "hebdomada", json_integer_creare(piscina,
+    (s64)info->tempus_info.hebdomada));
+json_objectum_ponere(fructus, "color", json_chorda_creare(piscina,
+    calendarium_nomen_coloris(info->color_diei, piscina)));
+json_objectum_ponere(fructus, "color_css",
+    json_chorda_creare_literis(piscina, color_paginae(info->color_diei)));
+</c>
+
+The page colours come from a table indexed by the calendar's own
+`ColorLiturgicus`, so the rows follow the order of that enumeration in
+`calendarium_liturgicum.h`: white, red, green, violet, rose, black.
+
+White is drawn as gold. A white band on a white page cannot be seen,
+and gold is the colour that stands in for white on solemn days.
+
+<c!>
+hic_manens constans character* constans COLORES_PAGINAE[VI] = {
+    "#9a7b2f",    /* albus, pictus ut aurum */
+    "#9e1b22",    /* ruber */
+    "#2e6b3f",    /* viridis */
+    "#5a2a6e",    /* violaceus */
+    "#b76e8c",    /* rosaceus */
+    "#2b2b2b"     /* niger */
+};
+
+constans character*
+color_paginae (
+    ColorLiturgicus color)
+{
+    si ((s32)color < ZEPHYRUM || (s32)color > (s32)COLLIT_NIGER)
+    {
+        redde COLORES_PAGINAE[II];
+    }
+    redde COLORES_PAGINAE[color];
+}
+</c>
+
+#### The celebrations
+
+A day can carry more than one celebration: the weekday of the season,
+and any saints whose rank lets them be kept on it. The calendar has
+already done the ranking; this only lists what it kept, each with its
+rank and colour by name.
+
+<c!>
+JsonValor*
+celebrationes_describere (
+    constans InformatioDiei* info,
+                   Piscina* piscina)
+{
+    JsonValor* tabula;
+    JsonValor* celebratio;
+          s32  i;
+
+    tabula = json_tabulatum_creare(piscina);
+    per (i = ZEPHYRUM; i < info->numerus_celebrationum; i++)
+    {
+        constans Celebratio* c = &info->celebrationes[i];
+
+        celebratio = json_objectum_creare(piscina);
+        json_objectum_ponere(celebratio, "titulus",
+            json_chorda_creare(piscina, c->titulus));
+        json_objectum_ponere(celebratio, "gradus",
+            json_chorda_creare(piscina,
+                calendarium_nomen_gradus(c->gradus, FALSUM, piscina)));
+        json_objectum_ponere(celebratio, "color",
+            json_chorda_creare(piscina,
+                calendarium_nomen_coloris(c->color, piscina)));
+        json_tabulatum_addere(tabula, celebratio);
+    }
+    redde tabula;
+}
+</c>
+
+#### The cycles
+
+<c!>
+hic_manens constans character* constans CYCLI_DOMINICALES[III] = {
+    "A", "B", "C"
+};
+
+hic_manens constans character* constans CYCLI_FERIALES[II] = {
+    "I", "II"
+};
+
+JsonValor*
+cyclum_describere (
+    constans InformatioDiei* info,
+                   Piscina* piscina)
+{
+    JsonValor* cyclus = json_objectum_creare(piscina);
+
+    json_objectum_ponere(cyclus, "dominicalis",
+        json_chorda_creare_literis(piscina,
+            CYCLI_DOMINICALES[info->cyclus.cyclus_dominicalis]));
+    json_objectum_ponere(cyclus, "ferialis",
+        json_chorda_creare_literis(piscina,
+            CYCLI_FERIALES[info->cyclus.cyclus_quotidianus]));
+    json_objectum_ponere(cyclus, "psalterii", json_integer_creare(piscina,
+        (s64)info->cyclus.hebdomada_psalterii));
+    redde cyclus;
+}
+</c>
+
+#### The mysteries of the Rosary
+
+The mysteries are four sets of five: *Gaudiosa*, the joyful;
+*Luminosa*, the luminous; *Dolorosa*, the sorrowful; *Gloriosa*, the
+glorious. John Paul II added the luminous mysteries in *Rosarium
+Virginis Mariae* (2002), and the same letter gives the days: joyful on
+Monday and Saturday, sorrowful on Tuesday and Friday, glorious on
+Wednesday and Sunday, luminous on Thursday.
+
+That rule is a table of seven, written with names so it can be checked
+against the sentence above by eye. It begins on Sunday, because
+`fasti` counts the week from the Lord's day: `FASTI_DOMINICA` is zero.
+
+<c!>
+nomen enumeratio {
+    MYSTERIA_GAUDIOSA = ZEPHYRUM,
+    MYSTERIA_LUMINOSA = I,
+    MYSTERIA_DOLOROSA = II,
+    MYSTERIA_GLORIOSA = III
+} GenusMysteriorum;
+
+hic_manens constans GenusMysteriorum GENUS_PER_DIEM[VII] = {
+    MYSTERIA_GLORIOSA,    /* Dominica */
+    MYSTERIA_GAUDIOSA,    /* Feria II */
+    MYSTERIA_DOLOROSA,    /* Feria III */
+    MYSTERIA_GLORIOSA,    /* Feria IV */
+    MYSTERIA_LUMINOSA,    /* Feria V */
+    MYSTERIA_DOLOROSA,    /* Feria VI */
+    MYSTERIA_GAUDIOSA     /* Sabbatum */
+};
+
+hic_manens constans character* constans GENERA_MYSTERIORUM[IV] = {
+    "Gaudiosa", "Luminosa", "Dolorosa", "Gloriosa"
+};
+
+hic_manens constans character* constans TITULI_MYSTERIORUM[IV][V] = {
+    { "Annuntiatio", "Visitatio", "Nativitas Domini",
+      "Praesentatio in Templo", "Inventio in Templo" },
+    { "Baptisma in Iordane", "Nuptiae in Cana", "Proclamatio Regni",
+      "Transfiguratio", "Institutio Eucharistiae" },
+    { "Agonia in Horto", "Flagellatio", "Coronatio Spinis",
+      "Baiulatio Crucis", "Crucifixio" },
+    { "Resurrectio", "Ascensio", "Descensus Spiritus Sancti",
+      "Assumptio", "Coronatio in Caelo" }
+};
+
+GenusMysteriorum
+genus_mysteriorum (
+    s32 dies_hebdomadis)
+{
+    si (dies_hebdomadis < ZEPHYRUM || dies_hebdomadis > VI)
+    {
+        redde MYSTERIA_GAUDIOSA;
+    }
+    redde GENUS_PER_DIEM[dies_hebdomadis];
+}
+
+JsonValor*
+mysteria_describere (
+         s32  dies_hebdomadis,
+    Piscina* piscina)
+{
+          JsonValor* mysteria;
+          JsonValor* tituli;
+    GenusMysteriorum  genus;
+                 s32  i;
+
+    genus    = genus_mysteriorum(dies_hebdomadis);
+    mysteria = json_objectum_creare(piscina);
+    tituli   = json_tabulatum_creare(piscina);
+    json_objectum_ponere(mysteria, "genus",
+        json_chorda_creare_literis(piscina, GENERA_MYSTERIORUM[genus]));
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        json_tabulatum_addere(tituli, json_chorda_creare_literis(piscina,
+            TITULI_MYSTERIORUM[genus][i]));
+    }
+    json_objectum_ponere(mysteria, "tituli", tituli);
+    redde mysteria;
+}
+</c>
+
+### Annum describere: the feasts that move
+
+Easter falls on the first Sunday after the first full moon on or after
+the spring equinox, as the Church reckons both, and a whole season of
+feasts is counted from it. `calendarium_anchorae` computes those
+anchors for a year once and caches them in the calendar's own pool —
+the reason, above, that the calendar has one.
+
+The second method takes the same argument as the first, a day, and
+answers for that day's year. The page asks for it only when the year
+on screen changes.
+
+<c! methodus="annum_describere">
+JsonValor*
+annum_describere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
+{
+    CalendariumLiturgicum* cal;
+          AnchoresMobiles* a;
+                      Dies  dies;
+                JsonValor* iso;
+                JsonValor* festa;
+                JsonValor* fructus;
+
+    (vacuum)datum;
+    <<#dies-ex-argumentis>>
+    <<#kalendarium-paratum>>
+    a = calendarium_anchorae(cal, dies.annus);
+    si (a == NIHIL)
+    {
+        *culpa = chorda_ex_literis("festa mobilia computari non potuerunt",
+                                   piscina);
+        redde NIHIL;
+    }
+
+    festa = json_tabulatum_creare(piscina);
+    <<#festa-anni>>
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "annus",
+        json_integer_creare(piscina, (s64)dies.annus));
+    json_objectum_ponere(fructus, "festa", festa);
+    redde fructus;
+}
+</c>
+
+Eleven feasts, in the order they fall in the year. The names are the
+Latin ones, written here; the dates are the calendar's.
+
+<c! id="festa-anni">
+festum_addere(festa, "Baptisma Domini",         a->baptisma_domini,
+              piscina);
+festum_addere(festa, "Feria IV Cinerum",        a->feria_iv_cinerum,
+              piscina);
+festum_addere(festa, "Dominica in Palmis",      a->dominica_palmarum,
+              piscina);
+festum_addere(festa, "Dominica Resurrectionis", a->pascha,
+              piscina);
+festum_addere(festa, "Ascensio Domini",         a->ascensio,
+              piscina);
+festum_addere(festa, "Pentecoste",              a->pentecoste,
+              piscina);
+festum_addere(festa, "Sanctissima Trinitas",    a->ss_trinitas,
+              piscina);
+festum_addere(festa, "Corpus Christi",          a->corpus_christi,
+              piscina);
+festum_addere(festa, "Sacratissimum Cor Iesu",  a->cor_iesu,
+              piscina);
+festum_addere(festa, "Christus Rex",            a->christus_rex,
+              piscina);
+festum_addere(festa, "Dominica I Adventus",     a->dominica_i_adventus,
+              piscina);
+</c>
+
+<c!>
+vacuum
+festum_addere (
+             JsonValor* festa,
+    constans character* titulus,
+                   Dies  dies,
+               Piscina* piscina)
+{
+    JsonValor* festum = json_objectum_creare(piscina);
+
+    json_objectum_ponere(festum, "titulus",
+        json_chorda_creare_literis(piscina, titulus));
+    json_objectum_ponere(festum, "iso",
+        valor_diei(dies, FASTI_FORMA_ISO, piscina));
+    json_objectum_ponere(festum, "brevis",
+        valor_diei(dies, FASTI_FORMA_LATINA_BREVIS, piscina));
+    json_tabulatum_addere(festa, festum);
+}
+</c>
+
+## Probatio
+
+The probatio opens no window. It calls the two methods directly, the
+way the bridge would, with arguments built by hand, and reads the
+answers the way the page would. That covers everything except the
+page itself.
+
+Two small helpers keep the checks readable. `campus` reads a string
+field; for a missing field it gives back an empty string rather than
+failing, because `json_ad_chorda` does, so a missing field fails its
+assertion instead of crashing the test.
+
+<c! munus="probatio">
+interior JsonValor*
+argumenta_diei (
+    constans character* iso,
+               Piscina* piscina)
+{
+    JsonValor* argumenta = json_objectum_creare(piscina);
+
+    json_objectum_ponere(argumenta, "iso",
+        json_chorda_creare_literis(piscina, iso));
+    redde argumenta;
+}
+
+interior chorda
+campus (
+             JsonValor* objectum,
+    constans character* clavis)
+{
+    redde json_ad_chorda(json_objectum_capere(objectum, clavis));
+}
+
+s32
+principale (vacuum)
+{
+      Piscina* piscina;
+    JsonValor* r;
+    JsonValor* festa;
+    JsonValor* argumenta;
+        chorda  culpa;
+
+    piscina = piscina_generare_dynamicum("probatio", LXIV * M);
+    credo_aperire(piscina);
+    culpa.datum   = NIHIL;
+    culpa.mensura = ZEPHYRUM;
+
+    <<#probatio-pascha>>
+    <<#probatio-festum>>
+    <<#probatio-mysteria>>
+    <<#probatio-culpa>>
+    <<#probatio-hodie>>
+    <<#probatio-annus>>
+
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>
+
+**Easter 2026.** The fifth of April is a Sunday. It must be Paschal
+time, the colour white, the neighbouring days the fourth and the
+sixth, and the mysteries glorious.
+
+<c! id="probatio-pascha">
+r = diem_describere(argumenta_diei("2026-04-05", piscina), piscina,
+                    NIHIL, &culpa);
+CREDO_NON_NIHIL(r);
+CREDO_CHORDA_AEQUALIS_LITERIS(campus(r, "tempus"), "Tempus Paschale");
+CREDO_CHORDA_AEQUALIS_LITERIS(campus(r, "color"), "Albus");
+CREDO_CHORDA_AEQUALIS_LITERIS(campus(r, "pridie"), "2026-04-04");
+CREDO_CHORDA_AEQUALIS_LITERIS(campus(r, "postridie"), "2026-04-06");
+CREDO_CHORDA_AEQUALIS_LITERIS(
+    campus(json_objectum_capere(r, "mysteria"), "genus"), "Gloriosa");
+</c>
+
+**A feast that outranks the weekday.** The Exaltation of the Holy
+Cross falls on 14 September, a Monday in 2026. It is a feast, which
+outranks a weekday in Ordinary Time, so the day turns red, and the
+page colour with it — while the mysteries stay those of a Monday.
+It is also Monday of the twenty-fourth week, psalter week IV, and its
+dates read *Feria II, 14 Septembris 2026* and *XIV Septembris MMXXVI*:
+four answers this file's first build got wrong, before the calendar
+and `fasti` were fixed (see the end of the file).
+
+<c! id="probatio-festum">
+r = diem_describere(argumenta_diei("2026-09-14", piscina), piscina,
+                    NIHIL, &culpa);
+CREDO_NON_NIHIL(r);
+CREDO_CHORDA_AEQUALIS_LITERIS(campus(r, "color"), "Ruber");
+CREDO_CHORDA_AEQUALIS_LITERIS(campus(r, "color_css"), "#9e1b22");
+CREDO_CHORDA_AEQUALIS_LITERIS(campus(r, "liturgica"),
+                              "Feria II, 14 Septembris 2026");
+CREDO_CHORDA_AEQUALIS_LITERIS(campus(r, "romana"),
+                              "XIV Septembris MMXXVI");
+CREDO_AEQUALIS_S64(json_ad_integer(json_objectum_capere(r, "hebdomada")),
+                   (s64)XXIV);
+CREDO_AEQUALIS_S64(json_ad_integer(json_objectum_capere(
+    json_objectum_capere(r, "cyclus"), "psalterii")), (s64)IV);
+CREDO_CHORDA_AEQUALIS_LITERIS(
+    campus(json_objectum_capere(r, "mysteria"), "genus"), "Gaudiosa");
+</c>
+
+**The weekday rule, at its two lone days.** Thursday is the only
+luminous day, and Wednesday shares glory with Sunday.
+
+<c! id="probatio-mysteria">
+CREDO_AEQUALIS_S32((s32)genus_mysteriorum(FASTI_FERIA_V),
+                   (s32)MYSTERIA_LUMINOSA);
+CREDO_AEQUALIS_S32((s32)genus_mysteriorum(FASTI_FERIA_IV),
+                   (s32)MYSTERIA_GLORIOSA);
+</c>
+
+**A day that does not exist, and a date that is not text.** Both must
+set `culpa` and give back nothing — the two ways the first fragment
+refuses.
+
+<c! id="probatio-culpa">
+r = diem_describere(argumenta_diei("2026-02-30", piscina), piscina,
+                    NIHIL, &culpa);
+CREDO_NIHIL(r);
+CREDO_CHORDA_NON_VACUA(culpa);
+
+culpa.mensura = ZEPHYRUM;
+argumenta = json_objectum_creare(piscina);
+json_objectum_ponere(argumenta, "iso",
+    json_integer_creare(piscina, (s64)20260405));
+r = diem_describere(argumenta, piscina, NIHIL, &culpa);
+CREDO_NIHIL(r);
+CREDO_CHORDA_NON_VACUA(culpa);
+</c>
+
+**No argument at all means today.** This is the call the page makes
+when the window opens.
+
+<c! id="probatio-hodie">
+r = diem_describere(NIHIL, piscina, NIHIL, &culpa);
+CREDO_NON_NIHIL(r);
+CREDO_VERUM(json_ad_boolean(json_objectum_capere(r, "hodie")));
+</c>
+
+**The year's feasts.** Eleven, in order, and four of them checked
+against dates known without this calendar: Ash Wednesday is Easter
+less forty-six days, Pentecost Easter plus forty-nine, and the first
+Sunday of Advent the fourth Sunday before Christmas, which in 2026
+falls on a Friday.
+
+<c! id="probatio-annus">
+r = annum_describere(argumenta_diei("2026-09-12", piscina), piscina,
+                     NIHIL, &culpa);
+CREDO_NON_NIHIL(r);
+festa = json_objectum_capere(r, "festa");
+CREDO_AEQUALIS_I32(json_tabulatum_numerus(festa), XI);
+CREDO_CHORDA_AEQUALIS_LITERIS(
+    campus(json_tabulatum_obtinere(festa, I), "iso"), "2026-02-18");
+CREDO_CHORDA_AEQUALIS_LITERIS(
+    campus(json_tabulatum_obtinere(festa, III), "iso"), "2026-04-05");
+CREDO_CHORDA_AEQUALIS_LITERIS(
+    campus(json_tabulatum_obtinere(festa, V), "iso"), "2026-05-24");
+CREDO_CHORDA_AEQUALIS_LITERIS(
+    campus(json_tabulatum_obtinere(festa, X), "iso"), "2026-11-29");
+</c>
+
+## Consilia: what was considered and not done
+
+**What building this file found.** An example that puts a library on
+screen is a test that the library's own suite was not. The first builds
+of this file turned up four defects, each fixed in its own commit with
+its own gate:
+
+- the build closure never collected `lib/sanctorale.c`, which
+  `calendarium_liturgicum.h` names in an annotation, so the app did not
+  link (`41e1d0c8`, in `lib/silex.c`);
+- every day of Ordinary Time after Pentecost was "week I", psalter week
+  I (`0cb8d33d`);
+- the reading cycles lagged a year from Advent to 31 December
+  (`caf2fc0f`);
+- the Latin date forms wrote the month in the nominative, and the long
+  form had no Roman numerals (`11d6d6c4`).
+
+One more stays open and is worked around above: briar does not derive
+`json.h` for method regions. And the calendar still gives a movable
+solemnity the season's title — Christ the King reads *Dominica XXXIV
+per Annum*.
+
+**The page does no date arithmetic.** It could: JavaScript has a
+`Date`, and "the day after" looks like one line. But `Date` works in
+milliseconds and the local time zone, and a day stepped across a
+change of clocks can land an hour short of midnight and print the
+same date twice. C already has a calendar that counts in days. So C
+names the neighbouring days in every answer, and the page only ever
+repeats a date it was given.
+
+**State lives at file scope because `datum` is NIHIL.** In a
+hand-written app the calendar would ride in the `datum` pointer given
+to `internuntius_praebere`, and the methods would find it there. briar
+v1 always registers methods with NIHIL, and the richer arrangement is a
+named deferral in its spec. For one window in one process, a
+file-scope object is honest: there is exactly one calendar, and it is
+where the methods can reach it.
+
+**The saints' names are English.** The seasons, the weekdays and the
+ranks come out of the calendar in Latin; the saints come from
+`lib/sanctorale.c`, whose table is in English. Translating them in this
+file would fork the calendar's data into a second copy that must be
+kept in step by hand. The right place to fix it is the table.
+
+**White is painted gold.** A literal white would vanish on the page.
+
+**Sundays of Advent and Lent.** A long custom prays the joyful
+mysteries on the Sundays of Advent and the sorrowful on the Sundays of
+Lent. This program keeps the plain weekday rule of *Rosarium Virginis
+Mariae*, which itself leaves room for such customs.
+
+**The page is untested.** The probatio proves every answer the page
+can receive, but not that the page draws it. A test that clicks the
+buttons exists as a pattern — `tools/briar_fumus.sh -agere` drives a
+window through `bin/manus` — and would be the next step if this file
+became more than an example.
+
+**No single-file export.** `briar -amalgama` writes a thistle out as one
+C file that clang compiles alone. It refuses vitrea programs in v1:
+the web view needs Objective-C and a bundle of assets that one `.c`
+file cannot carry.
