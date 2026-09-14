@@ -1134,6 +1134,39 @@ key typed in the Visio window reaches atrium as if typed in the main
 window: ⌘⇧D there toggles the speculum overlay on the MAIN page.
 Accepted in v1.10; the cure is events tagged with their window (§9).
 
+**As built** (plan 8, 2026-09-14; 94aaf5a1 fenestra, c8a9bbb1 atrium,
+8813c51f briar, then fumus + seal):
+- The key function is `briar_stampa_vestita` (the plan's
+  `briar_stampam_vestire`, renamed for the lexicon): the stampa +
+  `"\nfacies "` + 16 hex of a SHA-256 over the four chrome files, each
+  prefixed by its length, so bytes MOVING from `facies.css` to
+  `facies.js` change the key too. `briar_visionem_addere` splices the name
+  into the toml list before its first `]`.
+- Beyond the text above: atrium refuses `visio = ""` before the capsula
+  check (so the gate needs no AppKit); the Visio window inherits `-retro`;
+  ⌘⇧V is written as an uppercase `V` with ⌘ only — the `@"Z"` form that
+  injected keys were measured to match — and `manus clavis Cmd+Shift+v`
+  fired it on the first poll, so WebKit does not swallow it; one modifier
+  parser now serves `fenestra_claviarius` and the menu; every switch over
+  the event enumeration already had a default arm. A project from
+  `./briar/fabrica.sh` gets `figura.visio` but no page.
+- MEASURED: `salve_vitreum` page 20,416 B inside the tree (20,370 B
+  outside — the absolute path is in the page), binary 417,152 B;
+  kalendarium page 167,397 B, binary 601,936 B; cold build 2.36 s, cache
+  hit 0.050 s with no render; `bin/briar` 12,828,120 B. Fumus headless
+  12.1 s; `-agere` 39.2 s, green through XVI.
+- PLANTS: rendering the page from the raw `imp.via` in `tools/briar.c`
+  failed fumus IV (page ≠ `-html`'s) while the briar suite stayed blind to
+  it; atrium returning `ATRIUM_ACTUM_NIHIL` failed XIV. The first XIV run
+  failed at XII instead: editing `lib/` regenerated `bin/briar`'s corpus
+  with a new dated stamp while `bin/briar-spectator` kept the old one, so
+  their pages differed by the stamp. After ANY `lib/` edit — a plant and
+  its restore included — rebake every corpus-embedding binary (briar,
+  briar-spectator, silex) before a fumus.
+- Fran looked twice: the item above Exire, the second window, a raise on
+  the second ⌘⇧V, closing it leaves the app running — first on a
+  hand-patched `salve_vitreum`, then on kalendarium with its real page.
+
 ## 5. The binary and its build
 
 - **Flags, not verbs (DECISUS, Fran 2026-09-04: thistle files are
@@ -1354,10 +1387,7 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 
 - **P8 fasciculus (§4.8) — DONE (plan 7, 2026-09-14; T1 d84399c5, T2 f5c7c2de, T3 200592be, T4 dbec0b2f, T5 bd0e1831, default icon af2c7fa8, T6 fumus + seal). MEASURED: `bin/briar` 10.7 MB before, 11.3 MB with the JPEG default, 12.8 MB with the transparent PNG; `briar -app kalendarium.thistle` 3 s inside the tree, and the vitrea app RUNS from its bundle (its page is capsula-compiled into the binary); the default icon yields 10 iconset files, a 256 px `-icon` 7; A8: Dock and Finder showed a changed icon immediately. AS BUILT, beyond the plan: the tree removal refuses the root by `st_dev`/`st_ino` identity (so `//` and `/tmp/..` too) and bounds its re-read loop; the examen's POSIX lexicon lacked ENOENT, lstat, rmdir and symlink (healed 160c680f, auspex-certified); the silva suite had been red since 2026-09-11 behind radix-only commits — lib census pin, stale latina datum, stale excludenda manifests — and was healed first (5b6b049b); A5's absent version is fasciculum's default 1.0; the default icon became a PNG; the consilium's gate plant for the duplicate `<briar>` is `r == NIHIL` (equal tokens, no clang self-comparison warning). FUMUS: headless 12 s with stage XIII; the planted skipped deletion failed it at "plagula stala superest"; `-agere` ran for the FIRST time (39 s, green) after two fixes — stage XV exposed a plan-6 spectator bug (`manus incipere` adds `-portus N` and the spectator took `N` as the thistle path), and stage XVI measured that `open --args -vivum -portus` reaches atrium, driven with `manus adhaerere` (a manus session is not a raw port; `finire` on an attached session leaves the app running).**
 
-- **P9 visio (§4.9) — PLANNED.** fenestra's menu seam first (an item
-  appears, a click arrives as an event); then atrium's field and window;
-  then the page asset, the chrome in the key and the generated main with
-  their gates; then the fumus checks and Fran's look.
+- **P9 visio (§4.9) — DONE (plan 8, 2026-09-14; T1 94aaf5a1 fenestra menu seam, T2 c8a9bbb1 atrium `visio` and the second window, T3 8813c51f page asset + chrome in the key + generated main, T4 fumus IV/XIV + seal). Gates born red and planted: eventus_stml 2/2, atrium 1/1, facies 7/7 (plants 1 and 1), fabrica 2 then 1 (golden regenerated with its cause); fumus IV and XIV each failed on their plant. Fumus headless 12.1 s, `-agere` 39.2 s. As built in §4.9.**
 
 ## 9. Named deferrals
 

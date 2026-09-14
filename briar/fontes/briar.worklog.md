@@ -674,3 +674,30 @@ erat, ne identitas octetorum gradus XII falleret.
 - **Known.** A project written by the dev instrument `./briar/fabrica.sh`
   gets `figura.visio` but no page (the instrument renders none), so its
   Visio window shows the capsula 404. Every project briar writes has it.
+
+
+## 2026-09-14 — visio in applicatione, opus IV: fumus et sigillum (plan 8)
+
+- **Fumus IV** now checks the page in the built `salve_vitreum` project:
+  present, named by the toml, and `cmp`-equal to the page `-html` writes in
+  the same area (20,370 B). **XIV** sends `manus clavis Cmd+Shift+v` and
+  polls `effusio` (at most 5 s) for `visio aperta`. The header's stage
+  list and the FACTUM line say so.
+- **Plant IV:** the page rendered from the raw `imp.via` in place of
+  `optiones.via_thistle` -> fumus FAILED at IV ("pagina visionis a pagina
+  '-html' differt"). The briar suite cannot see `tools/briar.c`; this is
+  exactly the drift `briar_optiones_plagulae` exists to prevent, and only a
+  two-binary check catches it.
+- **Plant XIV:** atrium `actum |= ATRIUM_ACTUM_NIHIL`. The first run FAILED
+  AT XII, not XIV: planting (and later restoring) `lib/atrium.c` made
+  `tools/corpus_infixum.sh` regenerate the corpus (it regenerates when a
+  source is newer and dates the stamp) for `bin/briar` only;
+  `bin/briar-spectator` still embedded the previous corpus, and the page
+  carries the stamp, so the spectator's page no longer equalled `-html`'s.
+  With the spectator rebaked alongside briar: I–XIII green, FAILED at XIV
+  ("effusio 'visio aperta' non continet") as predicted. Restored; briar,
+  spectator and silex rebaked; `-agere` green through XVI in 39.2 s.
+- **Lesson:** after ANY `lib/` edit — a plant and its restore count, the
+  mtime is enough — rebake every corpus-embedding binary before a fumus
+  (briar, briar-spectator, silex). Otherwise XII goes red for a reason
+  unrelated to the change under test.

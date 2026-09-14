@@ -3,7 +3,11 @@
 > **For agentic workers:** execute task by task with the executing-plans
 > discipline (test first, run red, implement, run green, plant, commit).
 > Steps use checkbox syntax. Written 2026-09-14 from briar-spec.md §4.9
-> (v1.10, approved by Fran the same day, commit `d511f950`). Not started.
+> (v1.10, approved by Fran the same day, commit `d511f950`). DONE
+> 2026-09-14 (T1 94aaf5a1, T2 c8a9bbb1, T3 8813c51f, T4 fumus + seal;
+> spec §8 P9). As built, two names differ from this text for the
+> lexicon: `briar_stampam_vestire` is `briar_stampa_vestita` and
+> `_vestem_probatoriam` is `_vestem_probationis`.
 
 **Goal:** every vitrea program briar builds carries its own literate page
 (`<t>.visio.html`, the page `-html` writes) and shows it from a **Visio**

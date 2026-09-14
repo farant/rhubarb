@@ -19,7 +19,9 @@
 #   II.  ./salve.thistle -probatio -> exitus 0, OMNIA PRAETERIERUNT
 #   III. ./punctum.thistle -> 'summa 3'; -probatio viridis
 #   IV.  ./salve_vitreum.thistle -struere -> directorium; bin/ adest;
-#        -probatio viridis (app vitrea nectitur, fenestra NON aperitur)
+#        -probatio viridis (app vitrea nectitur, fenestra NON aperitur);
+#        visio (par. 4.9): assets/salve_vitreum.visio.html adest, toml
+#        eam nominat, et OCTETIM aequalis est paginae quam '-html' scribit
 #   V.   PLANTA: ./probatio_rubra.thistle -probatio exitum non-zerum
 #        dare DEBET - porta quae rubrum videre nequit mortua est
 #   VI.  recusatio: ./duo_principalia.thistle exitu 1 cum 'duo principalia'
@@ -60,7 +62,8 @@
 # QUAE FENESTRAM VERAM APERIUNT ('-agere' solum; manu currenda, non in
 # suite - scrinium poscunt):
 #   XIV. app vitrea per bin/manus agitur: affordantiae >= I (bulla),
-#        premere, textus corporis 'salve, munde' continet
+#        premere, textus corporis 'salve, munde' continet; Cmd+Shift+v
+#        (res menu Visio, par. 4.9) -> effusio 'visio aperta'
 #   XV.  spectator per bin/manus: pagina onerata ('#principale' in
 #        corpore), symbolum derivatum premitur, tabella caput
 #        'piscina.h' ostendit - PONS respondit
@@ -194,11 +197,22 @@ grep -q 'summa 3' "$AREA/punctum.log" \
     || deficere "punctum -probatio defecit" "$AREA/punctum_probatio.log"
 
 # ---- IV. ./salve_vitreum.thistle -struere + -probatio ----
-echo "FUMUS: IV. ./salve_vitreum.thistle -struere (+ -probatio)"
+echo "FUMUS: IV. ./salve_vitreum.thistle -struere (+ visio, -probatio)"
 VITREUM_DIR="$( cd "$AREA" && ./salve_vitreum.thistle -struere 2>"$AREA/vitreum.err" | tail -1 )" \
     || deficere "salve_vitreum -struere defecit" "$AREA/vitreum.err"
 [ -x "$VITREUM_DIR/bin/salve_vitreum" ] \
     || deficere "binarium vitreum abest: $VITREUM_DIR/bin/salve_vitreum" "$AREA/vitreum.err"
+# visio (par. 4.9): pagina in proiecto, octetim pagina quam '-html' in
+# eadem area scribit - duo cursus binarii installati, nulla fides
+[ -s "$VITREUM_DIR/assets/salve_vitreum.visio.html" ] \
+    || deficere "pagina visionis in proiecto abest: $VITREUM_DIR/assets" "$AREA/vitreum.err"
+grep -q 'salve_vitreum.visio.html' "$VITREUM_DIR/assets/salve_vitreum.toml" \
+    || deficere "toml capsulae paginam visionis non nominat" "$VITREUM_DIR/assets/salve_vitreum.toml"
+PAGINA_VITREA="$( cd "$AREA" && ./salve_vitreum.thistle -html 2>"$AREA/vitreum_html.err" | tail -1 )" \
+    || deficere "salve_vitreum -html defecit" "$AREA/vitreum_html.err"
+cmp -s "$VITREUM_DIR/assets/salve_vitreum.visio.html" "$PAGINA_VITREA" \
+    || deficere "pagina visionis a pagina '-html' differt ($PAGINA_VITREA)" "$AREA/vitreum_html.err"
+echo "FUMUS:    visio: $( wc -c < "$PAGINA_VITREA" | tr -d ' ' ) octeti, eadem ac '-html'"
 ( cd "$AREA" && ./salve_vitreum.thistle -probatio ) > "$AREA/vitreum_probatio.log" 2>&1 \
     || deficere "salve_vitreum -probatio defecit" "$AREA/vitreum_probatio.log"
 
@@ -407,6 +421,20 @@ echo "FUMUS:    affordantiae: $N_AFF"
 "$RADIX/bin/manus" -s "$PORTUS" premere-textum tange > "$AREA/premere.log" 2>&1 \
     || { sublevare; deficere "premere 'tange' defecit" "$AREA/premere.log"; }
 CORPUS="$("$RADIX/bin/manus" -s "$PORTUS" -exspecta textus body 2>"$AREA/textus.err")"
+# visio (par. 4.9): Cmd+Shift+v per menu applicationis -> fenestra
+# altera; principale genitum 'visio aperta' imprimit (atrium tacet)
+"$RADIX/bin/manus" -s "$PORTUS" clavis Cmd+Shift+v > "$AREA/visio.log" 2>&1 \
+    || { sublevare; deficere "clavis Cmd+Shift+v defecit" "$AREA/visio.log"; }
+k=0
+until "$RADIX/bin/manus" -s "$PORTUS" effusio 2>>"$AREA/visio.log" | grep -q 'visio aperta'; do
+    k=$((k + 1))
+    if [ "$k" -ge 20 ]; then
+        sublevare
+        deficere "effusio 'visio aperta' non continet (res menu Visio non pressa?)" "$AREA/visio.log"
+    fi
+    sleep 0.25
+done
+echo "FUMUS:    visio aperta (Cmd+Shift+v)"
 sublevare
 case "$CORPUS" in
     *"salve, munde"*) echo "FUMUS:    corpus: ...salve, munde" ;;
@@ -472,7 +500,7 @@ fasciculum_necare
 echo "FUMUS:    fasciculus apertus, affordantiae $N_APP"
 echo "FUMUS:    ASPICE MANU: icon (discus fons_256) in Dock - A8 mensuratum 2026-09-14: statim renovatur"
 
-echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, actum)"
+echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, visio, actum)"
 purgare
 echo "fumus briar: sanum"
 exit 0

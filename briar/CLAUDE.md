@@ -45,6 +45,21 @@ Findings: `fontes/briar.worklog.md`.
   left untouched). The `<briar>` element is read ONLY here; the fabrica
   ignores every element but `fenestra`. Fumus XIII (headless) and XVI
   (`-agere`, Launch Services).
+- **Visio** (spec §4.9, plan 8) = every vitrea program briar builds
+  carries its literate page `assets/<t>.visio.html` (the page `-html`
+  writes) and shows it from **Visio ⌘⇧V** in its app menu, in a second
+  window — for `./x.thistle`, `-struere` and `x.app` alike. For a vitrea
+  fructus `tools/briar.c` reads the chrome and folds its hash into the
+  key (`briar_stampa_vestita`: length-prefixed SHA-256 of the four
+  facies files), renders the page ONLY when it writes the project, and
+  `briar_visionem_addere` adds the file and its toml entry. The
+  generated main sets `figura.visio` and prints `[<t>] visio aperta`.
+  atrium owns the item and the window (`AtriumConfiguratio.visio`,
+  `ATRIUM_ACTUM_VISIO`); fenestra's seam is `fenestra_menu_addere` +
+  `EVENTUS_MENU`. Keys typed in the Visio window reach the MAIN queue
+  (⌘⇧D there toggles the main speculum). A project from
+  `./briar/fabrica.sh` has no page. Fumus IV (the page equals `-html`'s,
+  byte for byte) and XIV (`manus clavis Cmd+Shift+v`).
 - **Decoding lives ONLY in `tools/briar.c`** (`_fasciculum_facere`,
   stb_image via `lib/imago.c`): briar modules take an `Imago`, and no
   briar gate links a decoder (`nm`: icones/imago_opus/imago_png need no
@@ -66,7 +81,7 @@ Findings: `fontes/briar.worklog.md`.
   and run, fragmenta with `-probatio` and `-partes`, and the `#line`
   truth (a broken fragment line must be named by clang); XIII = `-app`
   (bundle, icon counts 10/7, own replaced, foreign refused). `-agere`
-  adds XIV–XVI: the vitrea window and the spectator driven by
+  adds XIV–XVI: the vitrea window (⌘⇧V opening Visio) and the spectator driven by
   `bin/manus`, and the `.app` opened by Launch Services and ATTACHED with
   `manus adhaerere` (first run 2026-09-14, green, 39 s).
 - Plain build scripts list the closure's `lib/*.c` AND `lib/*.m`
