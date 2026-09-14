@@ -4153,3 +4153,33 @@ siblings here: 'Puella currit et miles pugnat' produced no row for a
 verb-then-noun rule because 'et' sat between them, while the same rule
 matched once the conjunction was gone. Worth confirming against the
 engine before relying on it, but write fixtures with adjacency in mind.
+
+## 2026-09-14 (later) — correction to the T34 rule-writing note
+
+The T34 entry above ends with a note saying that `cursus="fratrum"`
+matched only ADJACENT siblings, inferred from one oratio fixture where
+a verb-then-noun rule produced no row while 'et' sat between the verb
+and the noun. **That inference is WRONG.** Tested against the pattern
+engine directly, away from oratio, with `stml expandere`:
+
+```
+<s><w a="1"/><w a="2"/><w a="3"/></s>        pattern <w a="$x"/><w a="$y"/>  ->  12, 23   (the reference's own example)
+<s><w a="1"/><x/><w a="2"/></s>              ->  12        (different tag skipped)
+<s><w a="1"/><w b="9"/><w a="2"/></s>        ->  12        (same tag, attribute fails: skipped)
+<s><w n="1"><c>0</c></w><w n="2"><c>1</c></w><w n="3"><c>0</c></w></s>   ->  13   (same tag, nested child fails: skipped)
+<s>... middle carries <c>1</c><c>0</c> ...</s>                          ->  12, 23   (middle matched on its SECOND child)
+```
+
+So the engine skips non-matching siblings exactly as §19.1 documents,
+including the shape the oratio fixture had. The reference is right and
+my note was a wrong generalisation from a single negative observation.
+
+What actually blocked that rule is UNKNOWN and is now a ledger
+question. The facts: the rule reported zero rows in the per-rule
+census, 'et' carries five readings including a substantive one, and
+removing 'et' from the sentence made the same rule fire. Hypotheses
+worth testing first: the row matched but was rejected downstream, or a
+capture bound 'et' and did not retry the next sibling, or the number
+agreement capture failed. LESSON: a single negative observation is not
+a semantics; the engine had a two-line test that would have settled it
+in one command.

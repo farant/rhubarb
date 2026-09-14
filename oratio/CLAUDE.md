@@ -941,8 +941,7 @@ English / 3058 Aquinas). MEASURED (probe, before the fix): of such rows
 the vast majority are harmless re-proposals; harmful ones ~104 / 23 / 48
 = 3 % / 0.4 % / 2 % of arcs. Case UP on every Latin file, subject
 precision and attachment DOWN 1–9 ‰; fifteen pins re-set. Gate: inline
-two-stage programme, plant RED on `revocatae_capitis`. NOTE: with
-`cursus="fratrum"` only ADJACENT siblings matched in that fixture. CLOSED by T34 (2026-09-14): a row on an umbra
+two-stage programme, plant RED on `revocatae_capitis`. NOTE (corrected same day): `cursus="fratrum"` DOES skip non-matching siblings, proven against the engine with `stml expandere`; why that fixture's rule yielded no row is an open ledger question. CLOSED by T34 (2026-09-14): a row on an umbra
 written in an EARLIER stage no longer enters the one-head contest.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
