@@ -1,4 +1,4 @@
-# briar — spec v1.9 (literate C89 programs; `.thistle`)
+# briar — spec v1.10 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -8,6 +8,11 @@ else is PROPOSITUM and was agreed in conversation unless marked OPEN.
 Names marked (unsealed) are working names — Fran names. Every
 "exists" claim cites the header it rests on. English prose, Latin
 identifiers, as in pictor-spec.md.*
+
+*v1.10 (2026-09-14) adds §4.9, the visio in the app — every vitrea
+program briar builds embeds its own literate page and shows it from a
+Visio menu item in a second window, decisions V1–V5. atrium gains one
+optional field and fenestra its first app-menu seam.*
 
 *v1.9 (2026-09-12) adds §4.8, the fasciculus — `-app`, a thistle built
 into a double-clickable `x.app` with an icon, decisions A1–A8. It wires
@@ -1036,6 +1041,99 @@ cannot pass `-icon`; the `icon` attribute is its way (A7).
   driven through `bin/manus`, Fran's look at the icon, then a changed
   icon rebuilt and looked at again (A8).
 
+### 4.9 Visio in the app (`<t>.visio.html`, v1.10, 2026-09-14)
+
+A vitrea program briar builds should be able to show the literate page
+it was built from. Every such program gets **Visio** (⌘⇧V) in its app
+menu, above Exire. It opens the page — the same page `-html` writes — in
+a second window beside the program's own, and it works the same for
+`./x.thistle`, `-struere` and a double-clicked `x.app`.
+
+Decided with Fran 2026-09-14:
+
+| decision | chosen | reserved |
+|---|---|---|
+| V1 where the page lives | inside the program's binary: one more asset, `<t>.visio.html`, in the app's own capsula beside `index.html` (167 KB for kalendarium, 70 KB for salutatio2) | a resource in the `.app` bundle only — Visio would exist only in bundles, not for `./x.thistle`; launching `briar-spectator` — it needs briar on the machine and the thistle at its path |
+| V2 who owns the item and the window | atrium, through ONE optional field; `NIHIL` = no item and no second window, so atrium apps that are not thistles (forum, villa, mensor_ui, the spectator) are untouched | a menu seam reported to the app as a gressus flag, the app opening the window itself; a separate viewer executable in the bundle |
+| V3 which programs | every vitrea program briar builds, automatically | a `<briar visio="…">` switch to turn it off (§9) |
+| V4 definitions | none: the Visio window's bridge has no methods, so the page's symbol lookups fail at once and it shows the header and signature it carries (its island, as in a browser) | the corpus inside every app (10 MB); the spectator's bridge |
+| V5 freshness | the page's chrome (the four facies files) joins the fabrica key of vitrea programs, so a briar with new chrome rebuilds instead of keeping an old page | `-iterum` by hand |
+
+**fenestra — the first app-menu seam** (names unsealed):
+
+    b32 fenestra_menu_addere (Fenestra* fenestra,
+            constans character* titulus, constans character* clavis,
+            i32 signum);
+
+It adds an item to the app menu (one menu for the whole application)
+above a separator and `Exire`; `clavis` is in the house form
+(`"Cmd+Shift+v"`). A click is an EVENT, not a callback: `EVENTUS_MENU`,
+appended last to the event enumeration, with `datum.menu.signum`, queued
+on the `fenestra` that added the item — for atrium, its main window —
+through the same queue as keys. Every
+switch over that enumeration is checked for a default arm that would
+swallow the new value.
+
+**atrium — one field, one flag:**
+
+    constans character* visio;   /* a path INSIDE the capsula; NIHIL = no Visio */
+
+When it is set, `atrium_creare` adds the item (⌘⇧V). `atrium_gressus`
+consumes that item's `EVENTUS_MENU` as it consumes the speculum's
+shortcut, and:
+- opens the Visio window when none is open — `fenestra_creare` (title
+  `"<titulus> — visio"`, 1100×860, closable, resizable, centred) and
+  `vitrea_creare` over the SAME opened capsula, embedded or `-radix`, so
+  development mode keeps working, with `via_initialis = visio` and an
+  `Internuntius` of its own holding no methods;
+- brings it to the front when it is open;
+- drains that window's bridge queue every tick (refusals answered,
+  nothing accumulates);
+- destroys it, vitrea before fenestra, when its close button is pressed;
+  the app keeps running;
+- returns `ATRIUM_ACTUM_VISIO` (appended, value 8) on the tick it opens.
+
+`atrium_destruere` destroys the Visio window first. The Visio window has
+no speculum and no imperium; `-vivum` and `bin/manus` drive the main
+window only. atrium prints nothing — it is a library; the generated main
+does.
+
+**briar — the page in every vitrea build:**
+- `tools/briar.c`, for a vitrea fructus: the chrome is read with
+  `briar_vestem_legere` (as `-html` reads it) and its hash joins the key
+  (V5). When the project is written (binary absent, or `-iterum`), the
+  page is rendered with `briar_faciem_fingere` and added to the fructus
+  by a new function (unsealed `briar_visionem_addere(piscina, fructus,
+  pagina)`): a generated file `assets/<t>.visio.html` and
+  `"<t>.visio.html"` in the `assets/<t>.toml` list, before
+  `briar_fabricam_scribere`. A cache hit renders nothing.
+- The generated main sets `figura.visio = "<t>.visio.html";` and prints
+  `[<t>] visio aperta` when `atrium_gressus` returns
+  `ATRIUM_ACTUM_VISIO`, as it already prints its `imperium:` line.
+- `-app` changes nothing: the page is inside the binary it copies.
+- Plain programs and native-window programs (no atrium) get nothing.
+
+**Gates:**
+- briar: `briar_visionem_addere` over `salve_vitreum.thistle` with TEST
+  chrome — the generated file present and byte-equal to the rendered
+  page, the toml listing it, nothing added for a plain program; the key
+  differs under two different chromes.
+- briar `fabrica`: the `salve_vitreum` golden main gains the visio lines
+  (regenerated with a named cause and inspected).
+- Fumus stage IV (headless): the built `salve_vitreum` project carries
+  `assets/salve_vitreum.visio.html`, byte-equal to the page `-html`
+  writes in the same area.
+- Fumus stage XIV (`-agere`): `manus clavis Cmd+Shift+v` against the
+  running salve_vitreum, then `manus effusio` contains `[salve_vitreum]
+  visio aperta`.
+- By hand (Fran): Visio in kalendarium's menu, the page in a second
+  window beside the app, closing it leaves the app running.
+
+**The known wrinkle.** fenestra's event pump is application-wide, so a
+key typed in the Visio window reaches atrium as if typed in the main
+window: ⌘⇧D there toggles the speculum overlay on the MAIN page.
+Accepted in v1.10; the cure is events tagged with their window (§9).
+
 ## 5. The binary and its build
 
 - **Flags, not verbs (DECISUS, Fran 2026-09-04: thistle files are
@@ -1170,6 +1268,7 @@ guard, per-test logs), registered in pythonica's four tables
 | `facies` | §4.6, two layers: structural invariants over a real `html_lexema` lex (unique line ids, no dangling `#frag-` link, every `data-s` in the island, `<details>` count == roots); byte goldens `fixa/facies/` (`BRIAR_FACIES_SCRIBERE=1` + a named cause) over `salve.thistle` and the line-pinned `fragmenta.thistle`; the six `adversa/` fixtures each rendering with the cause at its line; new escaping and UTF-8 fixtures; **the page and `-partes` asserted to agree**. Born red by a planted fault in the line table or the escaping. Fumus adds stage XI over `salutatio2.thistle` |
 | `spectator` | §4.7 HEADLESS: the `facies.symbolum` handler as a pure function over the corpus (twin rule; header with no twin; symbol absent; declared-not-defined; cache returns identical bytes twice), and the page the spectator writes byte-compared to the page `-html` writes. The window is fumus stage XII under `-agere`, driven through `atrium_portus` with `bin/manus` |
 | `fasciculum` | §4.8: the consilium (identity default and override, invalid identity and a second `<briar>` refused at their lines, name, version, icon precedence) and the writer over a synthetic `Imago` (bundle read back, `.icns` valid, own bundle replaced with a stale file gone, foreign bundle refused and untouched); `imperium` gains `-app` and `-icon`; root `fasciculum` and `filum` gain the identity check and the tree removal |
+| `visio` (§4.9) | the page added as an asset under TEST chrome (generated file byte-equal to the render, toml lists it, nothing for a plain program); the key moves with the chrome; the `salve_vitreum` golden main carries `figura.visio`; fumus IV (page equals `-html`'s) and XIV (`manus clavis` → `visio aperta`) |
 | `probatio_silex` | UNCHANGED after §4.4 — the promotion is behavior-preserving |
 
 Plus the end-to-end `tools/briar_fumus.sh` (§5), the only gate that
@@ -1199,11 +1298,18 @@ New in `briar/`, each with a probatio and a `.worklog.md`:
 New in v1.7: `briar/facies/facies.{html,css,js}` (the chrome, embedded
 verbatim) and `tools/briar_facies_capsula.sh`.
 
-New in v1.9: `briar/icon/default-thistle.jpg` and
+New in v1.9: `briar/icon/app-icon-transparent.png` (first `default-thistle.jpg`) and
 `tools/briar_icon_capsula.sh`. Modified: `include/fasciculum.h` +
 `lib/fasciculum.c` (identity check), `include/filum.h` + `lib/filum.c`
 (tree removal), `briar/compile_probationes.sh` and `tools/briar_struere.sh`
 (objects), `tools/briar_fumus.sh` (two stages).
+
+New in v1.10: `fenestra_menu_addere` and `EVENTUS_MENU`
+(`include/fenestra.h`, `lib/fenestra_macos.m`); `AtriumConfiguratio.visio`
+and `ATRIUM_ACTUM_VISIO` (`include/atrium.h`, `lib/atrium.c`); the page
+asset and the chrome in the key (`tools/briar.c` and a briar function);
+the generated vitrea main (`briar_fabrica.c`, its golden); fumus stages
+IV and XIV.
 
 Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 `tools/silex_struere.sh` (sources the extracted corpus block);
@@ -1247,6 +1353,11 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 - **P7 spectator (§4.7) — DONE (plan 6, 2026-09-11; T1 14d251e0, T2). MEASURED: `briar-spectator` links first try by the rule "take from `build/` only what `briar/build/` lacks"; page identity with `-html` proven end to end in fumus XII (71,574 bytes, byte-equal) once the option divergence was fixed. AS BUILT, three deviations: `briar_optiones_plagulae` was extracted because the two binaries DID drift (absolute vs raw path) and no in-process assertion could see it — the real check lives in the fumus, across two binaries · identity holds GIVEN THE SAME CORPUS SOURCE (in-tree briar reads the disk corpus, the spectator always the embedded one, so the fabrica key differs) · `-parare` was added so the fumus can check identity without a window.**
 
 - **P8 fasciculus (§4.8) — DONE (plan 7, 2026-09-14; T1 d84399c5, T2 f5c7c2de, T3 200592be, T4 dbec0b2f, T5 bd0e1831, default icon af2c7fa8, T6 fumus + seal). MEASURED: `bin/briar` 10.7 MB before, 11.3 MB with the JPEG default, 12.8 MB with the transparent PNG; `briar -app kalendarium.thistle` 3 s inside the tree, and the vitrea app RUNS from its bundle (its page is capsula-compiled into the binary); the default icon yields 10 iconset files, a 256 px `-icon` 7; A8: Dock and Finder showed a changed icon immediately. AS BUILT, beyond the plan: the tree removal refuses the root by `st_dev`/`st_ino` identity (so `//` and `/tmp/..` too) and bounds its re-read loop; the examen's POSIX lexicon lacked ENOENT, lstat, rmdir and symlink (healed 160c680f, auspex-certified); the silva suite had been red since 2026-09-11 behind radix-only commits — lib census pin, stale latina datum, stale excludenda manifests — and was healed first (5b6b049b); A5's absent version is fasciculum's default 1.0; the default icon became a PNG; the consilium's gate plant for the duplicate `<briar>` is `r == NIHIL` (equal tokens, no clang self-comparison warning). FUMUS: headless 12 s with stage XIII; the planted skipped deletion failed it at "plagula stala superest"; `-agere` ran for the FIRST time (39 s, green) after two fixes — stage XV exposed a plan-6 spectator bug (`manus incipere` adds `-portus N` and the spectator took `N` as the thistle path), and stage XVI measured that `open --args -vivum -portus` reaches atrium, driven with `manus adhaerere` (a manus session is not a raw port; `finire` on an attached session leaves the app running).**
+
+- **P9 visio (§4.9) — PLANNED.** fenestra's menu seam first (an item
+  appears, a click arrives as an event); then atrium's field and window;
+  then the page asset, the chrome in the key and the generated main with
+  their gates; then the fumus checks and Fran's look.
 
 ## 9. Named deferrals
 
@@ -1326,7 +1437,7 @@ only then the allowlist · migrating `md-html-facies.stml` to
 · `<briar titulus>` (§2; never built, measured 2026-09-12 — renaming a
 project renames its capsula symbol and header guard) · icon options:
 letterboxing a non-square source (icones reserves it) and masking to the
-macOS icon shape · a signed `.app` for another Mac (fasciculum D3)
+macOS icon shape · a signed `.app` for another Mac (fasciculum D3) · **Visio (§4.9):** a label field in atrium (always "Visio" in v1.10), events tagged with their window (the ⌘⇧D wrinkle), live definitions in the Visio window, `<briar visio="…">` to turn it off, Visio for native-window programs
 
 Cross-references: ludus-brainstorm.md §XII (codex L5 and the
 `<tractator/>` vocabulary briar deliberately does not reuse);
@@ -1389,4 +1500,10 @@ references are the ludus session's to add.
 - **Default identities collide by name**: two `salve.thistle` in
   different folders share `org.rhubarb.briar.salve`. Set `identitas` on
   one of them.
-- **Finder's icon cache** (A8) is unmeasured until the `-agere` stage.
+- **Finder's icon cache** (A8): measured 2026-09-14 — Dock and Finder
+  showed a changed icon immediately.
+- **Every vitrea binary grows by its page** (§4.9): 70–170 KB for the
+  examples. The page is rendered only when a project is written, so a
+  cache hit costs nothing.
+- **Keys typed in the Visio window reach the main window's handling**
+  (§4.9's wrinkle): ⌘⇧D there toggles the main page's speculum.
