@@ -264,7 +264,7 @@ _fasciculum_facere (
             redde I;
         }
         lectum = capsula_legere(capsula,
-            "briar/icon/default-thistle.jpg", piscina);
+            "briar/icon/app-icon-transparent.png", piscina);
         si (lectum.datum.mensura == ZEPHYRUM)
         {
             fprintf(stderr,

@@ -579,3 +579,22 @@ nectitur, nulla porta briar stb_image nectit (A1).
 - **A8: icon novus in Dock ET Finder statim apparuit** (applicatione
   clausa, fasciculo reposito, iterum aperta). Nulla mutatio temporis
   necessaria; nihil additum.
+
+## 2026-09-14 — icon ordinarius: PNG pellucidum (Fran)
+
+Fran `app-icon-transparent.png` (MXXIV px, RGBA, 1,9 MB) pro
+`default-thistle.jpg` elegit: eadem pictura, charta circumcisa, margo
+pellucidus. JPEG e repositorio sublatum (in bd0e1831 manet).
+
+**Custodia capsulae viam confert.** `briar_icon_capsula.sh` recentiam
+per tempora SOLA iudicabat: via iconis mutata ad plagulam tabula
+vetustiorem tabulam priorem tacite servaret. Nunc etiam `grep -qF
+"$ICON"` in tabula (tabula viam fili nominat). Probatum: struere I
+regeneravit (tabula JPEG nominabat; nunc PNG II, JPEG 0), struere II
+omisit.
+
+**Mensurata.** `bin/briar` 11.292.264 -> 12.827.864 octeti (+1,5 MB:
+PNG maius JPEG). `briar -app kalendarium.thistle`: `.icns` 4,6 MB,
+iconutil X plagulas, alpha in MXXIV et XXXII px; 16 et 32 px (ic04/ic05,
+ARGB praemultiplicatum) oculo inspecta sine strepitu. Fran Dock et
+Finder spectavit: recte, sine quadrato albo.
