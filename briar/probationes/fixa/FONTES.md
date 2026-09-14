@@ -18,6 +18,9 @@
 | `thistle/adversa/fragmentum_{absens,circulus,iteratum,munus,sine_id}.thistle`, `adversa/transclusio_malformata.thistle` | recusationes VI contextus cum linea | probatio_briar_contextus.c, probatio_briar_fabrica.c | consilium IV T1/T3 |
 | `thistle/adversa/fragmentum_erratum.thistle` | error typi INTRA fragmentum: clang lineam fragmenti in .thistle nominet (veritas tabulae linearum); NULLUM #include - clausura VACUA, ordo planus sine bibliothecis | tools/briar_fumus.sh gradus IX; probatio_briar_fabrica.c | consilium IV T4 |
 | `thistle/fenestra_nativa.thistle` | programma planum cum `fenestra.h`: lib/fenestra_macos.m in clausura -> ordo planus fontes explicitos + frameworks (globus 'lib/*.c' .m omittebat: salutatio.thistle) | probatio_briar_fabrica.c; fumus gradus X (salutatio -struere) | 2026-09-05 |
+| `thistle/app_vestitum.thistle` | elementum briar cum attributis omnibus (identitas, versio, icon) + fenestra titulus; LINEIS PINNATIS (briar linea 8, ne reflue) | probatio_briar_fasciculum.c (consilium; icon non exsistere debet) | plan 7, Opus 3 |
+| `thistle/adversa/app_identitas_prava.thistle` | identitas cum `_` (briar linea 4): consilium recusat, lineam et identitatem nominat | probatio_briar_fasciculum.c | plan 7, Opus 3 |
+| `thistle/adversa/app_briar_duplex.thistle` | elementum briar ITERATUM (lineae 4, 6): recusatio in secundo, primum nominat | probatio_briar_fasciculum.c | plan 7, Opus 3 |
 
 Snapshots manu scripti 2026-09-04 (plan 1). Mutatio = mutatio pinnarum
 in probationibus arbor/stml/nexus/computus - causa nominanda.

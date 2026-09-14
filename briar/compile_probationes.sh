@@ -90,6 +90,12 @@ declare -a RADIX_FONTES=(
     "fasti"
     "volumen"
     "silex"
+    # briar -app (spec par. 4.8): fasciculum et quae trahit
+    # (bin/aedilis lib/fasciculum.c --partes, 2026-09-14)
+    "xml"
+    "base64"
+    "plist"
+    "fasciculum"
 )
 
 FILTER="${1:-}"

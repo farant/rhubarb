@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# App vestitum
+
+Fixum portae fasciculi (plan 7, Opus 3): elementum briar cum omnibus
+attributis. Lineae pinnatae - ne reflue.
+
+Consilium nexum solum legit; icon non exsistere debet.
+<briar identitas="org.exemplum.vestitum" versio="2.1" icon="signa/vestitum.png"/>
+
+<fenestra titulus="Vestitum" latitudo="320" altitudo="200"/>
+
+<html!>
+<h1>vestitum</h1>
+</html>

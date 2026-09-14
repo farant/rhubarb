@@ -459,3 +459,51 @@ adderetur - quod briar ipse iam faciebat, et ego oblitus eram.
 **Gradus tres scripti (S4).** facies.js nunc pontem quaerit, deinde
 insulam, deinde tacet. Plagulae tres EAEDEM spectatori et navigatori
 serviunt - id est quod vestem in plagulas ponere (F3) meruit.
+
+## 2026-09-14 — fasciculus, opus III: consilium purum (plan 7)
+
+`briar_fasciculum_consilium` ex nexu et via plagulae decernit
+identitatem (A4), nomen et versionem (A5), fontem iconis (A7) et viam
+fasciculi iuxta plagulam (A3), sine disco. Elementum `briar`, in spec
+par. 2 nominatum sed numquam aedificatum, hic primum legitur
+(identitas, versio, icon; titulus manet non aedificatus). Fabrica
+elementa praeter fenestram tacite praeterit (`briar_fabrica.c:323`),
+ergo elementum briar aedificationem non turbat.
+
+**Regula una.** Identitas ordinaria = `org.rhubarb.briar.` + nomen
+plagulae cum `_` in `-`; `briar_fabrica_titulus` characteres extra
+[A-Za-z0-9_] iam in `_` vertit, ergo ordinaria semper valida est.
+Attributum per `fasciculum_identitas_valida` (opus I) iudicatur: regula
+non duplicatur.
+
+**Lineae.** Recusatio lineam tagi fert (elementum STML: `linea_initium`
+EST linea tagi). Elementum iteratum in SECUNDO recusatur et primum
+nominat.
+
+**Tres correctiones plani.**
+- Nullae uncinae angulares in chordis aut commentariis C (lex scansoris:
+  tag in commentario aut chorda evocatur): nuntius "elementum briar
+  iteratum", commentaria "elementa briar et fenestra".
+- `Editio.inserere_ante(functio)` in plagula ubi functio commentarium
+  suum non habet adiutorem SUPRA commentarium plagulae et inclusiones
+  posuit: `ChordaAedificator` ignotus, examen REICE. Emendatum ancoris
+  exactis ex `e.textus`. In plagula nova adiutorem cum ancora
+  inclusionis ultimae insere, non per nomen functionis.
+- Planta III plani (`FALSUM &&`) numerum lexematum mutat et
+  `elementum_briar != elementum_briar` monitum tautologiae clang daret;
+  `r == NIHIL` (numquam verum) lexematum numerum servat.
+
+**Porta** `probatio_briar_fasciculum` (XXV assertiones): rubra contra
+stipitem XX, praedicta XX; viridis XXV.
+
+| Planta | Praedicta | Observata |
+|---|---|---|
+| P1 `_` manet in identitate ordinaria (consilium recusat) | 4 | 4 — lineae 79 82 83 87 |
+| P2 icon attributi sine directorio plagulae | 1 | 1 — 119 |
+| P3 briar iteratum non recusatum (`r == NIHIL`) | 3 | 3 — 145 146 148 |
+| P4 validitas identitatis omissa | 3 | 3 — 138 139 141 |
+
+**Clausura.** `bin/aedilis lib/fasciculum.c --partes`: plist, xml,
+base64 et fasti (iam aderat); RADIX_FONTES quattuor accepit.
+`tools/briar_struere.sh` omnia `briar/build/*.o` nectit, ergo binarium
+post hoc opus nectibile manet (imago et icones opus IV/V exspectant).

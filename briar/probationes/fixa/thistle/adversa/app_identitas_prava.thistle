@@ -1,0 +1,6 @@
+#!/usr/bin/env briar
+# App identitas prava
+
+<briar identitas="org.exemplum.vitium_malum"/>
+
+<fenestra titulus="prava"/>
