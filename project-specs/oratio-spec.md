@@ -2280,7 +2280,7 @@ Constructors `partitio_ex_notis` (arbitrary labels), `partitio_ex_chordis`
 where scrutinium is groups × n), `partitio_aequalis`, `partitio_infimum`
 (meet; i64 pair keys), `partitio_supremum` (join; union-find).
 `PartitioReticulum` over k partitions: `ordo` (refinement matrix),
-`tegit` (covering relation only, for printing), `duplex` (index of the
+`tegit` (covering relation only, for printing), `geminus` (index of the
 first equal partition, itself when unique — i32 is unsigned, no −1),
 `altitudo` (longest chain among the unique), `latitudo` (maximum
 antichain by DILWORTH: k minus a maximum matching over the order, which

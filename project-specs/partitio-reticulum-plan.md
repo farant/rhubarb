@@ -31,7 +31,7 @@ desideratum 01M24V1387.
 
 | tranche | state |
 |---|---|
-| T35 a the algebra | pending |
+| T35 a the algebra | done — gate `probatio_partitio` (10,623 random pairs, Dilworth = brute force), plant red at the first hand case; `duplex` (a latina.h macro) renamed `geminus` |
 | T35 b the judgment | pending |
 | T35 c the oracle columns | pending |
 | T35 d the instrument | pending |
@@ -139,7 +139,7 @@ nomen structura {
     i32  numerus;          /* k */
     b32* ordo;             /* ordo[i*k+j]: i subtilior j (i != j; diagonalis FALSUM) */
     b32* tegit;            /* tegit[i*k+j]: j tegit i immediate (unicae solae, stricte) */
-    i32* duplex;           /* index aequalis primi; sibi ipsi si unica */
+    i32* geminus;           /* index aequalis primi; sibi ipsi si unica */
     i32  altitudo;         /* catena longissima stricta inter unicas (arcus) */
     i32  latitudo;         /* antichain maxima inter unicas (Dilworth) */
 } PartitioReticulum;
@@ -170,7 +170,7 @@ valid empty partition (0 groups; arrays of length 1 allocated).
      - `infimum(P1,P2)` aequalis `P0`; `infimum(P1,P3)` has `grex {0,0,1,2}`;
        `supremum(P1,P2)` and `supremum(P1,P3)` aequalis `P4`.
      - `partitio_reticulum_struere` over `{P0..P5}` (k = 6):
-       `duplex {0,1,2,3,4,1}`; `tegit` VERUM exactly at (0,1) (0,2) (0,3)
+       `geminus {0,1,2,3,4,1}`; `tegit` VERUM exactly at (0,1) (0,2) (0,3)
        (1,4) (2,4) (3,4) — six cells, none on row 5 or column 5, not (0,4);
        `altitudo` 2; `latitudo` 3.
   4. Unequal rows: `subtilior(P1, partitio_una(p, III))` FALSUM;
@@ -183,7 +183,7 @@ valid empty partition (0 groups; arrays of length 1 allocated).
        `subtilior(a,b) && subtilior(b,a)` ⇒ `aequalis(a,b)`;
      - every triple: `subtilior(a,b) && subtilior(b,c)` ⇒ `subtilior(a,c)`;
      - `latitudo` equals BRUTE FORCE: over every bitmask of unique
-       indices (`duplex[i] == i`), the largest set with no `ordo` in
+       indices (`geminus[i] == i`), the largest set with no `ordo` in
        either direction between members (scrutinium's method, k ≤ 12).
      - `ordo` agrees with `partitio_subtilior` cell by cell.
 
@@ -304,7 +304,7 @@ _partitio_ex_clavibus (
     `partitio_ex_notis` (first appearance renumbers the roots).
   - `partitio_reticulum_struere`:
     1. `ordo[i*k+j] = i != j && partitio_subtilior(partes[i], partes[j])`.
-    2. `duplex[i]` = smallest j ≤ i with `aequalis` (j = i when unique).
+    2. `geminus[i]` = smallest j ≤ i with `aequalis` (j = i when unique).
     3. strict order among uniques: `stricte[i*k+j] = unica(i) && unica(j)
        && ordo[i*k+j] && !ordo[j*k+i]`.
     4. `tegit[i*k+j] = stricte[i*k+j]` and no unique m with
