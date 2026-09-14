@@ -1,10 +1,12 @@
 /* probatio_filum.c - Probationes Fili */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "filum.h"
 #include "piscina.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 s32 principale (vacuum)
 {
@@ -1101,6 +1103,70 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_delere(primum));
         CREDO_VERUM(filum_delere(radix_areae));
         CREDO_FALSUM(filum_directorium_existit(radix_areae));
+    }
+
+
+    /* ==================================================
+     * Probare filum_arborem_delere (nexum NON sequitur)
+     * ================================================== */
+
+    {
+        constans character* radix   = "/tmp/test_rhubarb_arbor";
+        constans character* aliena  = "/tmp/test_rhubarb_arbor_aliena";
+        constans character* testis =
+            "/tmp/test_rhubarb_arbor_aliena/testis.txt";
+        constans character* planum =
+            "/tmp/test_rhubarb_arbor_filum.txt";
+
+        imprimere("\n--- Probans filum_arborem_delere ---\n");
+
+        /* reliquiae cursus prioris, a fundo sursum */
+        (vacuum)filum_delere(
+            "/tmp/test_rhubarb_arbor/sub/subsub/c.txt");
+        (vacuum)filum_delere("/tmp/test_rhubarb_arbor/sub/subsub");
+        (vacuum)filum_delere("/tmp/test_rhubarb_arbor/sub/b.txt");
+        (vacuum)filum_delere("/tmp/test_rhubarb_arbor/sub");
+        (vacuum)filum_delere("/tmp/test_rhubarb_arbor/a.txt");
+        (vacuum)filum_delere("/tmp/test_rhubarb_arbor/nexus");
+        (vacuum)filum_delere(radix);
+        (vacuum)filum_delere(testis);
+        (vacuum)filum_delere(aliena);
+        (vacuum)filum_delere(planum);
+
+        /* arbor: a.txt, sub/b.txt, sub/subsub/c.txt, nexus -> aliena */
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(
+            "/tmp/test_rhubarb_arbor/sub/subsub"));
+        CREDO_VERUM(filum_scribere_literis(
+            "/tmp/test_rhubarb_arbor/a.txt", "a"));
+        CREDO_VERUM(filum_scribere_literis(
+            "/tmp/test_rhubarb_arbor/sub/b.txt", "b"));
+        CREDO_VERUM(filum_scribere_literis(
+            "/tmp/test_rhubarb_arbor/sub/subsub/c.txt", "c"));
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(aliena));
+        CREDO_VERUM(filum_scribere_literis(testis, "testis"));
+        CREDO_VERUM(symlink(aliena, "/tmp/test_rhubarb_arbor/nexus")
+                    == ZEPHYRUM);
+
+        CREDO_VERUM(filum_arborem_delere(radix));
+        CREDO_FALSUM(filum_directorium_existit(radix));
+        /* destinatio nexus INTACTA - hoc est ius functionis */
+        CREDO_VERUM(filum_existit(testis));
+        /* iterum: nihil delendum = VERUM */
+        CREDO_VERUM(filum_arborem_delere(radix));
+
+        CREDO_FALSUM(filum_arborem_delere(NIHIL));
+        CREDO_FALSUM(filum_arborem_delere(""));
+        /* NUMQUAM culpam in recusatione radicis plantes: haec
+         * assertio functionem in "/" VOCAT, et recusatio fracta
+         * discum deleret */
+        CREDO_FALSUM(filum_arborem_delere("/"));
+
+        CREDO_VERUM(filum_scribere_literis(planum, "planum"));
+        CREDO_VERUM(filum_arborem_delere(planum));
+        CREDO_FALSUM(filum_existit(planum));
+
+        (vacuum)filum_delere(testis);
+        (vacuum)filum_delere(aliena);
     }
 
 

@@ -13,6 +13,7 @@
 #else
     #include <sys/stat.h>
     #include <unistd.h>
+    #include <dirent.h>
 #endif
 
 
@@ -796,6 +797,109 @@ filum_delere (
     }
 
     redde VERUM;
+}
+
+b32
+filum_arborem_delere (
+    constans character* via)
+{
+#ifdef _WIN32
+    (vacuum)via;
+    _filum_error_ponere("filum_arborem_delere: POSIX solum");
+    redde FALSUM;
+#else
+    structura stat  st;
+    structura stat  radix;
+               b32 deleta;
+               i32 transitus;
+
+    si (!via || via[ZEPHYRUM] == '\0')
+    {
+        _filum_error_ponere("via NIHIL aut vacua");
+        redde FALSUM;
+    }
+    _filum_error_purgare();
+    si (lstat(via, &st) != ZEPHYRUM)
+    {
+        si (errno == ENOENT)
+        {
+            redde VERUM;
+        }
+        _filum_error_ponere("lstat fracta");
+        redde FALSUM;
+    }
+    si (!S_ISDIR(st.st_mode))
+    {
+        /* filum aut NEXUS: ipse removetur, numquam destinatio */
+        si (unlink(via) != ZEPHYRUM)
+        {
+            _filum_error_ponere("unlink fracta");
+            redde FALSUM;
+        }
+        redde VERUM;
+    }
+    /* RADIX per IDENTITATEM (st_dev + st_ino), non per literas: "//",
+     * "/." et "/tmp/.." radicem quoque nominant. Stat radicis fractus
+     * = recusatio. NUMQUAM culpam hic plantes: probatio functionem in
+     * "/" vocat, et recusatio fracta discum deleret. */
+    si (   stat("/", &radix) != ZEPHYRUM
+        || (st.st_dev == radix.st_dev && st.st_ino == radix.st_ino))
+    {
+        _filum_error_ponere("via radix systematis est - non deletur");
+        redde FALSUM;
+    }
+    /* Relegere donec vacuum: readdir post unlink introitus omittere
+     * potest. Transitus finiti, ne introitus quem lstat non invenit
+     * (VERUM, 'nihil delendum') cursum aeternum faciat - rmdir tunc
+     * deficit et nominat. */
+    transitus = ZEPHYRUM;
+    fac
+    {
+                   DIR* d;
+        structura dirent* e;
+              character  filius[MMMMXCVI];
+
+        deleta  = FALSUM;
+        d       = opendir(via);
+        si (d == NIHIL)
+        {
+            _filum_error_ponere("opendir fracta");
+            redde FALSUM;
+        }
+        dum ((e = readdir(d)) != NIHIL)
+        {
+            integer n;
+
+            si (   strcmp(e->d_name, ".")  == ZEPHYRUM
+                || strcmp(e->d_name, "..") == ZEPHYRUM)
+            {
+                perge;
+            }
+            n = snprintf(filius, magnitudo(filius), "%s/%s", via,
+                         e->d_name);
+            si (n < ZEPHYRUM || (size_t)n >= magnitudo(filius))
+            {
+                closedir(d);
+                _filum_error_ponere("via nimis longa");
+                redde FALSUM;
+            }
+            si (!filum_arborem_delere(filius))
+            {
+                closedir(d);
+                redde FALSUM;
+            }
+            deleta = VERUM;
+        }
+        closedir(d);
+        transitus++;
+    } dum (deleta && transitus < XVI);
+    si (rmdir(via) != ZEPHYRUM)
+    {
+        _filum_error_ponere("rmdir fracta");
+        redde FALSUM;
+    }
+    redde VERUM;
+#endif
 }
 
 b32

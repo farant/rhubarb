@@ -151,6 +151,23 @@ b32
 filum_delere (
     constans character* via);
 
+/* Delere ARBOREM directorii (rm -r) SINE nexibus symbolicis sequendis.
+ *
+ * CUR NON directorium_ambulare: id stat() vocat, ergo nexum ad
+ * directorium ut directorium tractat et IN EUM descendit - arbor aliena
+ * extra viam datam deleretur. Hic lstat(): nexus UT NEXUS removetur,
+ * destinatio eius intacta manet.
+ *
+ * Recusat NIHIL, viam vacuam et RADICEM systematis (per identitatem,
+ * non per literas: "//" et "/tmp/.." quoque). Via non exsistens =
+ * VERUM (nihil delendum). Filum aut nexus = ipse removetur. Directorium
+ * relegitur donec vacuum sit (readdir post unlink introitus omittere
+ * potest). FALSUM ad primum defectum; quod iam deletum est manet
+ * deletum. POSIX solum (sub _WIN32 recusat). */
+b32
+filum_arborem_delere (
+    constans character* via);
+
 /* Renominare/movere filum */
 b32
 filum_movere (

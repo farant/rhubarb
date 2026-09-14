@@ -154,3 +154,67 @@ rather than surgical, and correctly so: the function *is* that loop, so
 nothing downstream of it survives. Contrast the mode pair above, where
 one red was the right expectation because only one assertion read the
 field.
+
+## 2026-09-14 — `filum_arborem_delere`: rm -r without following links (briar plan 7, Task 2)
+
+**Why.** briar `-app` replaces its own `.app` bundle (briar-spec §4.8,
+A6), and a bundle is a directory tree. filum could delete a file or an
+EMPTY directory (`remove()`), never a tree.
+
+**Why not `directorium_ambulare`.** `lib/iter_directoria.c:176`
+classifies each entry with `stat()`, which follows symbolic links: a
+link to a directory is reported as a directory and walked INTO, so a
+delete built on that walk would empty the link's target, outside the
+path it was given. Here `lstat()`: a link is unlinked as a link and its
+target is never touched. The gate builds exactly that case (`nexus ->
+/tmp/test_rhubarb_arbor_aliena`, a witness file inside) and asserts the
+witness survives.
+
+**Root refused by IDENTITY, not by string.** The plan refused
+`strcmp(via, "/")`, but `//`, `/.` and `/tmp/..` name the same directory
+and would have passed. Now, once `lstat` says directory, its
+`st_dev`/`st_ino` are compared with `stat("/")`, and a failing
+`stat("/")` refuses too (fail closed). The gate's `"/"` assertion runs
+through that same line, so one TESTED guard covers every spelling.
+**Never plant a fault there**: the test calls the function on `/`, and
+a broken refusal would delete whatever the user can write. The function
+and the test both say so beside the line.
+
+**Re-read until empty, with a pass limit.** `readdir` after `unlink`
+may skip entries on some file systems, so a directory is re-read until
+a pass removes nothing. The plan's loop had no bound: an entry that
+`readdir` returns but `lstat` reports as ENOENT counts as deleted
+(ENOENT = nothing to delete = VERUM) and would loop forever. XVI passes,
+then `rmdir` fails and names itself. Named, not reachable by a test.
+
+**`MMMMXCVI` buffer, not `PATH_MAX`.** No lib file uses `PATH_MAX`;
+macOS's is 1024 and its visibility under strict flags varies. The
+neighbour `filum_directorium_creare_cum_parentibus` uses 4096. Named
+limit: the buffer lives in each recursion frame, so a tree nested about
+2,000 levels deep (the most a 4,096-byte path allows) would need about
+8 MB of stack. A bundle is five levels.
+
+**The examen refused the first implementation, and the fault was its
+lexicon.** `ENOENT` unknown although `<errno.h>` is included (a
+violation, so REICE), `lstat` and `rmdir` implicit calls, and `symlink`
+in the probatio. clang accepted everything; no committed C file had used
+any of the four names. Healed in `silva/fontes/systema_posix.h` (its
+new worklog has the certification), not worked around.
+
+**Gate** (17 assertions; the pre-clean uses `filum_delere`, never the
+function under test): a three-level tree plus a link to an outside
+directory deleted, the witness intact, a second delete of the absent
+tree VERUM, NIHIL / "" / "/" refused, a plain file removed. Born red
+against a stub returning FALSUM: 5, predicted 5. Suite 294/294.
+
+| Plant | Predicted | Observed |
+|---|---|---|
+| `stat` for `lstat` | 4 | 4 — lines 1150, 1151, 1153, 1155 |
+
+Under the plant the first delete descends through the link, deletes the
+witness, then `rmdir` on the link fails; the tree remains; the second
+delete fails the same way. The plan hedged "3 or 4"; counting what the
+leftover link touches gives 4 in ANY `readdir` order, because the
+delete fails at the link whether it is visited first or last. The
+witness line is the one that matters: it separates "a delete that
+failed" from "a delete that reached outside its path".
