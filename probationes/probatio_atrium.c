@@ -305,6 +305,18 @@ s32 principale (vacuum)
         CREDO_NIHIL (atrium);
         CREDO_CHORDA_NON_VACUA (causa);
 
+        /* visio VACUA recusatur, ANTE capsulam: sine capsula probatur,
+         * ergo AppKit numquam tangitur (NIHIL = sine Visio) */
+        memset(&figura, 0, magnitudo(figura));
+        figura.titulus  = "probatio";
+        figura.visio    = "";
+        causa.datum     = NIHIL; causa.mensura = ZEPHYRUM;
+        atrium = atrium_creare(piscina, &figura, &causa);
+        CREDO_NIHIL (atrium);
+        CREDO_VERUM (causa.mensura > ZEPHYRUM
+            && strstr(chorda_ut_cstr(causa, piscina), "Visio vacua")
+                != NIHIL);
+
         /* causa NIHIL: recusatio adhuc valet, nulla ruina */
         memset(&figura, 0, magnitudo(figura));
         atrium = atrium_creare(piscina, &figura, NIHIL);

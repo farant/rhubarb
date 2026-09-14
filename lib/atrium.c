@@ -15,6 +15,9 @@
 
 #define ATRIUM_LATITUDO_ORDINARIA  1000
 #define ATRIUM_ALTITUDO_ORDINARIA   900
+#define ATRIUM_SIGNUM_VISIO         VII
+#define ATRIUM_VISIO_LATITUDO      1100
+#define ATRIUM_VISIO_ALTITUDO       860
 
 structura Atrium {
            Piscina* piscina;      /* vita atrii (vocantis) */
@@ -34,6 +37,15 @@ structura Atrium {
 
     AtriumEventor  eventor;
            vacuum* datum;
+
+    /* --- VISIO (fenestra altera, briar-spec par. 4.9) --- */
+                   b32  retro;             /* Visio vexillum heres */
+    constans character* titulus;           /* copia: titulus Visionis */
+    constans character* visio;             /* copia; NIHIL = sine */
+               Piscina* visio_piscina;     /* vita fenestrae Visio */
+              Fenestra* visio_fenestra;    /* NIHIL = clausa */
+                Vitrea* visio_vitrea;
+          Internuntius* visio_internuntius;  /* sine methodis */
 };
 
 
@@ -175,6 +187,13 @@ atrium_creare (
         redde _frangere(causa,
             "Titulus deest - fenestra nomen poscit", piscina);
     }
+    /* Visio VACUA ante capsulam: recusatio sine AppKit probabilis */
+    si (figura->visio != NIHIL && figura->visio[0] == '\0')
+    {
+        redde _frangere(causa,
+            "Visio vacua - via paginae intra capsulam aut NIHIL",
+            piscina);
+    }
     si (figura->capsula == NIHIL)
     {
         redde _frangere(causa,
@@ -189,6 +208,13 @@ atrium_creare (
                       ? figura->tictus_ms : (Mora)CC;
     atrium->eventor  = figura->eventor;
     atrium->datum    = figura->datum;
+    atrium->retro    = figura->retro;
+    atrium->titulus  = chorda_ut_cstr(chorda_ex_literis(figura->titulus,
+        piscina), piscina);
+    atrium->visio    = (figura->visio != NIHIL)
+                     ? chorda_ut_cstr(chorda_ex_literis(figura->visio,
+                         piscina), piscina)
+                     : NIHIL;
 
     /* --- ARENA PER-TICTUM ---
      * Piscina PROPRIA, non sectio piscinae vocantis: reficitur
@@ -292,6 +318,15 @@ atrium_creare (
                         piscina);
     }
 
+    /* --- VISIO (optiva): res menu; fenestra altera in gressu --- */
+    si (   atrium->visio != NIHIL
+        && !fenestra_menu_addere(atrium->fenestra, "Visio",
+               "Cmd+Shift+v", (i32)ATRIUM_SIGNUM_VISIO))
+    {
+        redde _frangere(causa, "Visio: res menu addi non potuit",
+            piscina);
+    }
+
     /* --- SPECULUM (optivum) --- */
     si (figura->fontes != NIHIL)
     {
@@ -350,6 +385,138 @@ atrium_creare (
 
 
 /* ==================================================
+ * Visio: fenestra altera (briar-spec par. 4.9)
+ * ================================================== */
+
+/* ordo: vitrea ANTE fenestram, deinde piscina; partes absentes
+ * praetereuntur, ergo et apertio fracta hic purgatur */
+interior vacuum
+_visionem_claudere (
+    Atrium* atrium)
+{
+    si (atrium->visio_vitrea != NIHIL)
+    {
+        vitrea_destruere(atrium->visio_vitrea);
+    }
+    si (atrium->visio_fenestra != NIHIL)
+    {
+        fenestra_destruere(atrium->visio_fenestra);
+    }
+    si (atrium->visio_piscina != NIHIL)
+    {
+        piscina_destruere(atrium->visio_piscina);
+    }
+    atrium->visio_vitrea        = NIHIL;
+    atrium->visio_fenestra      = NIHIL;
+    atrium->visio_internuntius  = NIHIL;
+    atrium->visio_piscina       = NIHIL;
+}
+
+/* Aperire (VERUM) aut apertam ante ponere (FALSUM). Piscina PROPRIA:
+ * clausa destruitur, ergo apertio iterata nihil cumulat. Eadem capsula
+ * (infixa aut -radix): pagina eodem modo legitur ac principalis. */
+interior b32
+_visionem_aperire (
+    Atrium* atrium)
+{
+    FenestraConfiguratio figura_fenestrae;
+      VitreaConfiguratio figura_vitreae;
+               character titulus[CCLVI];
+
+    si (atrium->visio_fenestra != NIHIL)
+    {
+        fenestra_monstrare(atrium->visio_fenestra);
+        redde FALSUM;
+    }
+    atrium->visio_piscina = piscina_generare_dynamicum("atrium/visio",
+        (memoriae_index)(M * M));
+    si (atrium->visio_piscina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* lineola longa UTF-8 (e2 80 94) inter titulum et 'visio' */
+    sprintf(titulus, "%.200s \xe2\x80\x94 visio", atrium->titulus);
+    memset(&figura_fenestrae, 0, magnitudo(figura_fenestrae));
+    figura_fenestrae.titulus   = titulus;
+    figura_fenestrae.x         = CC;
+    figura_fenestrae.y         = CC;
+    figura_fenestrae.latitudo  = (i32)ATRIUM_VISIO_LATITUDO;
+    figura_fenestrae.altitudo  = (i32)ATRIUM_VISIO_ALTITUDO;
+    figura_fenestrae.vexilla   = (i32)(FENESTRA_CLAUDIBILIS
+                               | FENESTRA_MUTABILIS
+                               | FENESTRA_CENTRATA);
+    si (atrium->retro)
+    {
+        figura_fenestrae.vexilla = figura_fenestrae.vexilla
+                                 | (i32)FENESTRA_RETRO;
+    }
+    atrium->visio_fenestra = fenestra_creare(atrium->visio_piscina,
+        &figura_fenestrae);
+    si (atrium->visio_fenestra == NIHIL)
+    {
+        _visionem_claudere(atrium);
+        redde FALSUM;
+    }
+    memset(&figura_vitreae, 0, magnitudo(figura_vitreae));
+    figura_vitreae.origo          = VITREA_ORIGO_CAPSULA;
+    figura_vitreae.capsula        = atrium->capsula;
+    figura_vitreae.via_initialis  = atrium->visio;
+    figura_vitreae.url            = NIHIL;
+    figura_vitreae.inspectabilis  = VERUM;
+    atrium->visio_vitrea = vitrea_creare(atrium->visio_piscina,
+        atrium->visio_fenestra, &figura_vitreae);
+    /* internuntius SINE methodis: vocationes paginae 'methodus ignota'
+     * statim accipiunt et pagina ad insulam suam labitur (V4) */
+    atrium->visio_internuntius = (atrium->visio_vitrea != NIHIL)
+        ? internuntius_creare(atrium->visio_piscina, vitrea_missor,
+              atrium->visio_vitrea)
+        : NIHIL;
+    si (atrium->visio_internuntius == NIHIL)
+    {
+        _visionem_claudere(atrium);
+        redde FALSUM;
+    }
+    fenestra_monstrare(atrium->visio_fenestra);
+    redde VERUM;
+}
+
+/* per tictum: clausuram videre, pontem exhaurire (nihil cumulatur).
+ * Pumpa fenestrae eventus TOTIUS applicationis in caudam principalem
+ * trahit; cauda Visionis vacua manet et legenda non est. */
+interior vacuum
+_visionem_pulsare (
+    Atrium* atrium)
+{
+                chorda nuntium;
+    VitreaNuntiusGenus genus;
+
+    si (atrium->visio_fenestra == NIHIL)
+    {
+        redde;
+    }
+    si (fenestra_debet_claudere(atrium->visio_fenestra))
+    {
+        _visionem_claudere(atrium);
+        redde;
+    }
+    dum (vitrea_obtinere_nuntium(atrium->visio_vitrea, &nuntium,
+            &genus))
+    {
+        si (genus == VITREA_NUNTIUS_INTERITUS)
+        {
+            vitrea_recargare(atrium->visio_vitrea);
+            perge;
+        }
+        si (atrium_nuntium_discernere(nuntium) == ATRIUM_NUNTIUS_RPC)
+        {
+            internuntius_tractare(atrium->visio_internuntius, nuntium,
+                atrium->arena);
+        }
+    }
+}
+
+
+/* ==================================================
  * Gyrus
  * ================================================== */
 
@@ -399,6 +566,18 @@ atrium_gressus (
 
     dum (fenestra_obtinere_eventus(atrium->fenestra, &eventus))
     {
+        /* VISIO PRIMUM: res menu atrii, non applicationis. Ceterae
+         * res menu (app eas ipsa addere potest) eventori transeunt. */
+        si (   eventus.genus             == EVENTUS_MENU
+            && atrium->visio             != NIHIL
+            && eventus.datum.menu.signum == (i32)ATRIUM_SIGNUM_VISIO)
+        {
+            si (_visionem_aperire(atrium))
+            {
+                actum |= (i32)ATRIUM_ACTUM_VISIO;
+            }
+            perge;
+        }
         /* Speculum PRIMUM: Cmd+Shift+D rapit et VERUM reddit.
          * Quod rapuit eventori non ostenditur - aliter app
          * compendium domus ut suum tractare posset. */
@@ -451,6 +630,9 @@ atrium_gressus (
         }
     }
 
+    /* Visio: clausura videtur, pons exhauritur */
+    _visionem_pulsare(atrium);
+
     /* Imperium: innocuum si vivarium non successit (gressus
      * successum intus probat). */
     vivarium_gressus(&atrium->vivarium);
@@ -466,6 +648,9 @@ atrium_destruere (
     {
         redde;
     }
+
+    /* Visio PRIMUM: fenestra altera ante principalem */
+    _visionem_claudere(atrium);
 
     /* ORDO: vitrea ANTE fenestram (vitrea.h id nominat quia facile
      * invertitur). Semel hic, non in quaque app. */

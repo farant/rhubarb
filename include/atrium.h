@@ -141,8 +141,9 @@ nomen enumeratio {
     ATRIUM_ACTUM_NIHIL   = 0,
     ATRIUM_ACTUM_PARATA  = 1,  /* pagina se paratam nuntiavit */
     ATRIUM_ACTUM_RPC     = 2,  /* nuntius internuntio traditus */
-    ATRIUM_ACTUM_INTERITUS = 4 /* processus interretialis obiit;
+    ATRIUM_ACTUM_INTERITUS = 4, /* processus interretialis obiit;
                                 * atrium IAM recargavit */
+    ATRIUM_ACTUM_VISIO     = 8  /* fenestra Visio hoc tictu aperta */
 } AtriumActum;
 
 
@@ -205,6 +206,14 @@ nomen structura {
      * Campum 'sine_inspectore' nominare regionem occuparet quam
      * nondum decrevimus. */
     b32 sine_inspectore_webkit;
+
+    /* --- VISIO (optiva, briar-spec par. 4.9) --- */
+    /* Via paginae INTRA capsulam ("x.visio.html"). NIHIL = nulla res
+     * menu, nulla fenestra altera: applicationes quae thistle non sunt
+     * nihil mutant. Posita: res 'Visio' (Cmd+Shift+v) supra 'Exire';
+     * pressio fenestram ALTERAM super eandem capsulam aperit, aut
+     * apertam ante ponit. Vacua recusatur. */
+    constans character* visio;
 
     /* --- SPECULUM (Cmd+Shift+D) --- */
     /* Capsula FONTIUM, non assetorum - a bin/capsula_generare
@@ -271,7 +280,8 @@ atrium_currendum (
  * atrium_gressus - Gradus unus: arena reficitur, eventa fenestrae
  * exhauriuntur (speculum primum, deinde eventor), cauda pontis
  * exhauritur, imperium pulsatur, iniectio curritur si pagina
- * modo parata est.
+ * modo parata est. VISIO (si posita): pressa fenestram alteram
+ * aperit aut ante ponit; ea hic pulsatur et clausa destruitur.
  *
  * Redde vexilla AtriumActum (OR-iuncta). Ignorare tutum est.
  *

@@ -150,3 +150,45 @@ speculum rather than nobody noticing) but not free. That's the `fabrica`
 thread — parked `01KZYN4VPZ`, with Fran's refinement that producers
 should be arbitrary operations with declared inputs/outputs and
 **content hashes** rather than mtimes.
+
+
+## 2026-09-14 — Visio: fenestra altera (plan 8, T2)
+
+atrium gains ONE optional field, `visio` (a path inside the capsula), and
+one flag, `ATRIUM_ACTUM_VISIO = 8` (briar-spec §4.9 V2). `NIHIL` = no menu
+item, no second window: forum, villa, mensor_ui and the spectator are
+untouched.
+
+- **Creation.** `visio = ""` is refused BEFORE the capsula check, so the
+  refusal test runs without a capsula and never reaches AppKit
+  (probatio_atrium +1 = 47, born red 1/1; plant `'\0'` -> `'x'` gave
+  exactly 1 red). After the internuntius:
+  `fenestra_menu_addere(main, "Visio", "Cmd+Shift+v", VII)`.
+- **Gressus.** The menu event is consumed FIRST in the event loop (before
+  the speculum), only when `visio` is set and the signum is ours; other
+  menu events still reach the eventor. `_visionem_aperire` opens (flag 8)
+  or raises (no flag). The window has its OWN piscina, created on open and
+  destroyed on close, so repeated open/close accumulates nothing in the
+  caller's pool. Title "titulus — visio", 1100x860, closable, resizable,
+  centred, inherits `-retro`; vitrea over the SAME `atrium->capsula`
+  (embedded or `-radix`); an internuntius with NO methods (V4: the page's
+  calls get "methodus ignota" and it falls back to its island).
+- **Every tick,** after the main bridge, `_visionem_pulsare`: the close
+  flag -> destroy (vitrea, fenestra, piscina, in that order); otherwise
+  drain its bridge (INTERITUS -> recargare, RPC -> internuntius_tractare).
+  The Visio window's own event ring stays empty and is never read: the
+  pump pulls every NSApp event into the MAIN window's ring, and the
+  delegate's `windowShouldClose` answers NO and only raises the flag
+  (`setReleasedWhenClosed:NO`), so `fenestra_destruere` is the single
+  release. `atrium_destruere` closes Visio first.
+- **Measured by hand,** in a cached salve_vitreum project (disk corpus)
+  with its main patched to `visio = "index.html"`: `manus clavis
+  Cmd+Shift+v` -> `[probatio] visio aperta` on the first poll, so the
+  injected key matched the item's uppercase-V equivalent and WebKit did
+  not swallow it; a second ⌘⇧V only raised the window (the line stayed
+  single); with Visio open the main bridge still answered (`tange` ->
+  "salve, munde"). Fran looked: Visio ⌘⇧V above a separator and Exire,
+  the second window, closing it leaves the app running — all working.
+- **The wrinkle** (accepted in §4.9): keys typed in the Visio window land
+  in the MAIN ring, so ⌘⇧D there toggles the main page's speculum. The
+  cure is events tagged with their window (spec §9).
