@@ -598,3 +598,38 @@ PNG maius JPEG). `briar -app kalendarium.thistle`: `.icns` 4,6 MB,
 iconutil X plagulas, alpha in MXXIV et XXXII px; 16 et 32 px (ic04/ic05,
 ARGB praemultiplicatum) oculo inspecta sine strepitu. Fran Dock et
 Finder spectavit: recte, sine quadrato albo.
+
+## 2026-09-14 — fasciculus, opus VI: fumus XIII et XVI, sigillum (plan 7)
+
+**XIII (sine fenestra).** `./salve_vitreum.thistle -app` in area extra
+repositorium (corpus infixum, HOME fictum): identitas
+`org.rhubarb.briar.salve-vitreum` (plutil), exsecutabile +x, icon
+infixus X plagulae (iconutil NUMERATUR), `-app` iterum proprium reponit
+(`vetus.txt` evanescit), `-icon fons_256.png` VII plagulae, fasciculus
+alienus (`fasciculum_instrumentum`, `org.aliud.alienum`) recusatur et
+identitate intactus manet. Fumus sine `-agere`: 12 s.
+
+**Calibratio.** Planta operis IV (`filum_arborem_delere` in
+`filum_directorium_existit`) + registrum + struere: fumus rc 1 ad
+"plagula stala superest - fasciculus non repositus" (gradus XIII);
+plagula restituta (octetis aequalis), aedificata iterum: sanum.
+
+**`-agere` PRIMUM cursum (39 s, sanum post duas emendationes).**
+- XV (spectator, plan 6) numquam cucurrerat. `manus incipere` `-portus
+  N` addit, et `briar-spectator` argumentum primum sine '-' pro plagula
+  sumebat: 'N' plagula legebatur, "plagula non lecta", portus numquam
+  apertus. Emendatio in `tools/briar_spectator.c`: valores `-portus` et
+  `-radix` praetereuntur. Prima coniectura (cwd diversus) FALSA erat -
+  via absoluta addita nihil mutavit; plagula `.effusio` sessionis manus
+  errorem verum nominavit. Via absoluta in fumo manet (innocua).
+- XVI (fasciculus per Launch Services), MENSURATUM: `open -n X.app
+  --args -vivum -portus 18765 -retro` portum in atrio aperit (~1 s;
+  stdout per `open --stdout`). Planum `manus -s P affordantiae` dicebat:
+  FALSUM - `-s` sessionem manus nominat, et applicatio a manu non
+  genita "sessio ignota" est; `manus adhaerere P` prius. `finire` super
+  sessione adhaesa sessionem SOLAM claudit, applicatio vivit: processus
+  per viam fasciculi necatur.
+
+**Mensurae sigilli.** `bin/briar` 12.827.864 octeti; `briar-spectator`
+20.108.560, reaedificatus: corpus eius infixum post opera I-V renovandum
+erat, ne identitas octetorum gradus XII falleret.

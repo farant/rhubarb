@@ -38,9 +38,37 @@
 #        (ludus, lib/fenestra_macos.m in clausura) aedificatur et
 #        nectitur - ordo planus fontes explicitos et frameworks fert;
 #        fenestra NON aperitur (-struere solum)
-#   XI.  (-agere) app vitrea per bin/manus agitur: affordantiae >= I
-#        (bulla), premere, textus corporis 'salve, munde' continet.
-#        FENESTRA VERA apparet - manu currendum, non in suite.
+#   XI.  facies (par. 4.6): ./salutatio2.thistle -html paginam scribit;
+#        notae involucri consumptae, '#principale' adest, fragmentum
+#        COMMUNE '#repositorium' usus DUOS fert (tergum-nexus grex est,
+#        non numerus), contexta duo; plagula FRACTA (circulus) paginam
+#        tamen dat causam nominans (lex F4)
+#   XII. spectator sine fenestra (par. 4.7): briar-spectator -parare
+#        paginam scribit et exit, et ea pagina '-html' paginae OCTETIM
+#        aequalis est - artificium unum, binaria duo. (Area extra
+#        repositorium iacet, ergo ambo corpus INFIXUM idem legunt;
+#        intra arborem briar corpus DISCI legeret et clavis differret.)
+#        Nulla probatio intra processum unum hoc videre potest.
+#   XIII. fasciculus (par. 4.8): ./salve_vitreum.thistle -app scribit
+#        salve_vitreum.app iuxta thistle; identitas (plutil)
+#        org.rhubarb.briar.salve-vitreum, exsecutabile adest; icon
+#        infixus X plagulas iconset dat (iconutil NUMERATUR: rc 0 etiam
+#        in continente fracto); -app iterum proprium REPONIT (plagula
+#        stala evanescit); -icon fons_256.png VII plagulas dat;
+#        fasciculus ALIENUS (fasciculum_instrumentum) recusatur, intactus
+#
+# QUAE FENESTRAM VERAM APERIUNT ('-agere' solum; manu currenda, non in
+# suite - scrinium poscunt):
+#   XIV. app vitrea per bin/manus agitur: affordantiae >= I (bulla),
+#        premere, textus corporis 'salve, munde' continet
+#   XV.  spectator per bin/manus: pagina onerata ('#principale' in
+#        corpore), symbolum derivatum premitur, tabella caput
+#        'piscina.h' ostendit - PONS respondit
+#   XVI. fasciculus per Launch Services: open salve_vitreum.app --args
+#        -vivum -portus P (mensuratum 2026-09-14: portum aperit);
+#        manus ADHAERET (applicationem non gignit) et affordantias
+#        videt; finire sessionem SOLAM claudit, ergo processus per
+#        viam fasciculi necatur; icon in Dock oculo inspicitur
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -76,6 +104,17 @@ if [ "$AGERE" = 1 ] && [ ! -x bin/manus ]; then
     echo "FUMUS: bin/manus abest - ./compile_tools.sh manus_instrumentum prius" >&2
     exit 2
 fi
+# gradus XIII: fasciculus alienus struitur, plutil et iconutil oracula
+if [ ! -x bin/fasciculum_instrumentum ]; then
+    echo "FUMUS: bin/fasciculum_instrumentum abest - ./compile_tools.sh fasciculum_instrumentum prius" >&2
+    exit 2
+fi
+for instr in plutil iconutil; do
+    command -v "$instr" >/dev/null 2>&1 \
+        || { echo "FUMUS: $instr abest (macOS) - gradus XIII eo eget" >&2; exit 2; }
+done
+[ -f "$RADIX/probationes/fixa/icones/fons_256.png" ] \
+    || { echo "FUMUS: fixum abest: probationes/fixa/icones/fons_256.png" >&2; exit 2; }
 FIXA="$RADIX/briar/probationes/fixa/thistle"
 for f in salve punctum derivatum fragmenta salve_vitreum adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
     [ -f "$FIXA/$f.thistle" ] || { echo "FUMUS: fixum abest: $f.thistle" >&2; exit 2; }
@@ -120,6 +159,7 @@ cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
    "$FIXA/adversa/fragmentum_circulus.thistle" \
    "$RADIX/project-specs/exempla/salutatio.thistle" \
    "$RADIX/project-specs/exempla/salutatio2.thistle" \
+   "$RADIX/probationes/fixa/icones/fons_256.png" \
    "$AREA/" || exit 2
 chmod +x "$AREA"/*.thistle
 echo "FUMUS: area $AREA"
@@ -292,16 +332,65 @@ else
     echo "FUMUS: XII. OMISSA (briar-spectator non institutus)"
 fi
 
+# ---- XIII. fasciculus: -app (par. 4.8; nihil aperit) ----
+echo "FUMUS: XIII. ./salve_vitreum.thistle -app (fasciculus cum icone)"
+APP="$( cd "$AREA" && ./salve_vitreum.thistle -app 2>"$AREA/app.err" | tail -1 )"
+case "$APP" in
+    */salve_vitreum.app) ;;
+    *) deficere "fasciculus non iuxta thistle: [$APP]" "$AREA/app.err" ;;
+esac
+[ -d "$APP" ] || deficere "fasciculus abest: $APP" "$AREA/app.err"
+ID="$(plutil -extract CFBundleIdentifier raw "$APP/Contents/Info.plist" 2>/dev/null)"
+[ "$ID" = "org.rhubarb.briar.salve-vitreum" ] \
+    || deficere "identitas [$ID], exspectata org.rhubarb.briar.salve-vitreum" "$APP/Contents/Info.plist"
+[ -x "$APP/Contents/MacOS/salve_vitreum" ] \
+    || deficere "exsecutabile in fasciculo abest" "$AREA/app.err"
+ICNS="$APP/Contents/Resources/salve_vitreum.icns"
+# iconutil rc=0 etiam in continente fracto (icones par. 12.3): NUMERUS
+iconutil -c iconset "$ICNS" -o "$AREA/ordinarius.iconset" >/dev/null 2>&1
+N_ORD="$(ls "$AREA/ordinarius.iconset" 2>/dev/null | wc -l | tr -d ' ')"
+[ "$N_ORD" = 10 ] \
+    || deficere "icon ordinarius (MXXIV px): X plagulae exspectatae, inventae $N_ORD" "$AREA/app.err"
+
+# proprius REPONITUR: plagula stala evanescit
+touch "$APP/Contents/Resources/vetus.txt"
+( cd "$AREA" && ./salve_vitreum.thistle -app ) > "$AREA/app2.log" 2>&1 \
+    || deficere "-app iteratum (fasciculus proprius) defecit" "$AREA/app2.log"
+[ -f "$APP/Contents/Resources/vetus.txt" ] \
+    && deficere "plagula stala superest - fasciculus non repositus" "$AREA/app2.log"
+
+# -icon: forma vexilli (CCLVI px -> VII plagulae, mensuratum 2026-09-14)
+( cd "$AREA" && "$BRIAR" -app -icon fons_256.png salve_vitreum.thistle ) \
+    > "$AREA/app_icon.log" 2>&1 || deficere "-app -icon defecit" "$AREA/app_icon.log"
+iconutil -c iconset "$ICNS" -o "$AREA/proprius.iconset" >/dev/null 2>&1
+N_PROP="$(ls "$AREA/proprius.iconset" 2>/dev/null | wc -l | tr -d ' ')"
+[ "$N_PROP" = 7 ] \
+    || deficere "icon CCLVI px: VII plagulae exspectatae, inventae $N_PROP" "$AREA/app_icon.log"
+
+# ALIENUS recusatur et intactus manet
+mkdir -p "$AREA/alienum" && cp "$AREA/salve_vitreum.thistle" "$AREA/alienum/"
+"$RADIX/bin/fasciculum_instrumentum" -radix "$AREA/alienum/salve_vitreum.app" \
+    -identitas org.aliud.alienum -exsecutabile /bin/echo > "$AREA/alienum.log" 2>&1 \
+    || deficere "fasciculus alienus creari non potuit" "$AREA/alienum.log"
+if ( cd "$AREA/alienum" && "$BRIAR" -app salve_vitreum.thistle ) > "$AREA/alienum_app.log" 2>&1; then
+    deficere "fasciculus ALIENUS repositus est" "$AREA/alienum_app.log"
+fi
+grep -q 'alienus' "$AREA/alienum_app.log" \
+    || deficere "recusatio 'alienus' non nominat" "$AREA/alienum_app.log"
+[ "$(plutil -extract CFBundleIdentifier raw "$AREA/alienum/salve_vitreum.app/Contents/Info.plist")" = org.aliud.alienum ] \
+    || deficere "fasciculus alienus mutatus est" "$AREA/alienum_app.log"
+echo "FUMUS:    fasciculus: $ID, icon $N_ORD/$N_PROP plagulae, proprius repositus, alienus recusatus"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"
     exit 0
 fi
 
-# ---- XIII. agere: app vitrea per manus ----
-echo "FUMUS: XIII. bin/manus incipere $VITREUM_DIR/bin/salve_vitreum -vivum"
+# ---- XIV. agere: app vitrea per manus ----
+echo "FUMUS: XIV. bin/manus incipere $VITREUM_DIR/bin/salve_vitreum -vivum"
 SESSIO="$( cd "$AREA" && "$RADIX/bin/manus" incipere "$VITREUM_DIR/bin/salve_vitreum" -vivum \
     2>"$AREA/manus.err" )" \
     || deficere "manus incipere defecit" "$AREA/manus.err"
@@ -324,11 +413,11 @@ case "$CORPUS" in
     *) deficere "corpus paginae 'salve, munde' non continet: [$CORPUS] - pons 'salve' tacuit" "$AREA/textus.err" ;;
 esac
 
-# ---- XIV. agere: spectator, pagina et PONS ----
+# ---- XV. agere: spectator, pagina et PONS ----
 if command -v briar-spectator >/dev/null 2>&1; then
-    echo "FUMUS: XIV. briar-spectator salutatio2.thistle (fenestra + pons)"
+    echo "FUMUS: XV. briar-spectator salutatio2.thistle (fenestra + pons)"
     SPEC_SESSIO="$( cd "$AREA" && "$RADIX/bin/manus" incipere \
-        "$(command -v briar-spectator)" salutatio2.thistle -vivum \
+        "$(command -v briar-spectator)" "$AREA/salutatio2.thistle" -vivum \
         2>"$AREA/spec_manus.err" )" \
         || deficere "spectator per manus incipere defecit" "$AREA/spec_manus.err"
     SPEC_PORTUS="$(printf '%s\n' "$SPEC_SESSIO" | grep -oE '[0-9]{4,5}' | head -1)"
@@ -352,10 +441,38 @@ if command -v briar-spectator >/dev/null 2>&1; then
         *) deficere "tabella caput 'piscina.h' non ostendit - pons tacuit" "$AREA/spec_post.err" ;;
     esac
 else
-    echo "FUMUS: XIV. OMISSA (briar-spectator non institutus)"
+    echo "FUMUS: XV. OMISSA (briar-spectator non institutus)"
 fi
 
-echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, actum)"
+# ---- XVI. agere: fasciculus per Launch Services ----
+echo "FUMUS: XVI. open salve_vitreum.app (Launch Services, -portus)"
+PORTUS_APP=18765
+# Launch Services stdout applicationis abicit: in aream dirigitur
+open -n --stdout "$AREA/app_vivum.out" --stderr "$AREA/app_vivum.err" \
+    "$APP" --args -vivum -portus "$PORTUS_APP" -retro \
+    || deficere "open fasciculi defecit"
+# manus applicationem NON gignit: 'adhaerere' sessionem portui ligat
+# ('-s P' sine adhaesione = 'sessio ignota'); iteratur donec respondeat
+fasciculum_necare () { pkill -f 'salve_vitreum.app/Contents/MacOS/salve_vitreum' >/dev/null 2>&1; }
+k=0
+until "$RADIX/bin/manus" adhaerere "$PORTUS_APP" >/dev/null 2>&1 \
+      && "$RADIX/bin/manus" -s "$PORTUS_APP" affordantiae -machina > "$AREA/app_afford.tsv" 2>"$AREA/app_afford.err"; do
+    k=$((k + 1))
+    if [ "$k" -ge 20 ]; then
+        fasciculum_necare
+        deficere "fasciculus apertus in portu $PORTUS_APP non respondit" "$AREA/app_vivum.out"
+    fi
+    sleep 0.5
+done
+N_APP="$(wc -l < "$AREA/app_afford.tsv" | tr -d ' ')"
+# finire sessionem ADHAESAM solam claudit (mensuratum): processus necandus
+"$RADIX/bin/manus" -s "$PORTUS_APP" finire >/dev/null 2>&1
+fasciculum_necare
+[ "$N_APP" -ge 1 ] || deficere "fasciculus apertus: affordantiae vacuae" "$AREA/app_afford.err"
+echo "FUMUS:    fasciculus apertus, affordantiae $N_APP"
+echo "FUMUS:    ASPICE MANU: icon (discus fons_256) in Dock - A8 mensuratum 2026-09-14: statim renovatur"
+
+echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, actum)"
 purgare
 echo "fumus briar: sanum"
 exit 0

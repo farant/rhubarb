@@ -249,6 +249,15 @@ principale (
      * vexillis consumit ('-radix', '-portus'...) */
     per (k = I; k < argc; k++)
     {
+        /* valores vexillorum atrii (portus, via radicis) plagula NON
+         * sunt: manus 'incipere' '-portus N' addit, et 'N' plagula
+         * legebatur - "plagula non lecta" (fumus XV, 2026-09-14) */
+        si (   strcmp(argv[k], "-portus") == ZEPHYRUM
+            || strcmp(argv[k], "-radix")  == ZEPHYRUM)
+        {
+            k = k + I;
+            perge;
+        }
         si (argv[k][0] != '-')
         {
             via_thistle = argv[k];

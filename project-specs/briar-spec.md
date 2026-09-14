@@ -902,10 +902,10 @@ Decided with Fran 2026-09-12:
 | A2 what can be bundled | any program briar builds; no test for the vitrea form. It is useful for window apps; a command-line program launched from Finder simply runs without a terminal | refusing plain programs — a structural test briar could make, with nothing gained by making it |
 | A3 where | `x.app` beside the thistle, as `-html` and `-amalgama` write | the working directory; an output flag |
 | A4 identity | `org.rhubarb.briar.<t>`, `<t>` the file's name with `_` turned into `-`; overridden by `identitas="…"` on a `<briar>` element; its characters validated by fasciculum | an identity flag (the identity belongs to the program, not to one invocation); a path hash for uniqueness (it would change whenever the file moves) |
-| A5 name and version | `CFBundleName` = `<fenestra titulus>`, else `<t>`; `CFBundleShortVersionString` = `<briar versio>`, omitted when absent | `CFBundleVersion`; a version flag |
+| A5 name and version | `CFBundleName` = `<fenestra titulus>`, else `<t>`; `CFBundleShortVersionString` = `<briar versio>`; **as built, when absent fasciculum writes its default `1.0`** (`FASCICULUM_VERSIO_ORDINARIA` — "omitted" was the design, not what `fasciculum_reddere` does) | `CFBundleVersion`; a version flag |
 | A6 an existing `x.app` | replaced only when it is briar's own — its `Info.plist` identity equals this one; anything else is refused by name and left untouched | writing over the old bundle in place (fasciculum never deletes, so stale files would survive); moving it to the Trash |
-| A7 where the icon comes from | `-icon <via>`, relative to the working directory > `<briar icon="…">`, relative to the thistle > the embedded default, `default-thistle.jpg` | converting the default to PNG first: 1.6 MB against 386 KB, identical pixels once decoded |
-| A8 Finder's icon cache | measured by hand in the fumus; a timestamp update only if a rebuilt bundle shows a stale icon | `lsregister -f` |
+| A7 where the icon comes from | `-icon <via>`, relative to the working directory > `<briar icon="…">`, relative to the thistle > the embedded default — **as built `briar/icon/app-icon-transparent.png`**, Fran's 1024 px transparent PNG (2026-09-14, af2c7fa8; the JPEG shipped first in bd0e1831) | converting the default to PNG first: 1.6 MB against 386 KB, identical pixels once decoded — taken up after all, for the transparent margin (1.9 MB) |
+| A8 Finder's icon cache | measured by hand in the fumus; a timestamp update only if a rebuilt bundle shows a stale icon — **MEASURED 2026-09-14: Dock and Finder showed a changed icon immediately** (app quit, bundle replaced with `-icon`, reopened); no timestamp update added | `lsregister -f` |
 
 **Words.** A bundle is a *fasciculus*, a little bundle, as the library
 is named; the module is `briar_fasciculum`. The flag stays `-app`: a
@@ -941,7 +941,7 @@ pure function; the writer takes pixels already decoded:
     nomen structura {
         chorda  identitas;   /* A4, characters validated */
         chorda  titulus;     /* A5 */
-        chorda  versio;      /* A5; empty = omitted */
+        chorda  versio;      /* A5; empty = fasciculum's 1.0 */
         chorda  via_icon;    /* A7 resolved; empty = the embedded default */
         chorda  via_app;     /* <dir of the thistle>/<t>.app */
            i32  linea_briar; /* the <briar> line, 0 when absent */
@@ -978,11 +978,13 @@ planted fault:
   (`lib/iter_directoria.c`, measured by reading 2026-09-12). Refuses
   NIHIL, the empty path and `/`.
 
-**Embedding the default.** `default-thistle.jpg` moves from the
-repository root to `briar/icon/default-thistle.jpg`, embedded by a new
+**Embedding the default.** As built: `briar/icon/app-icon-transparent.png`
+(Fran's, replacing the first `default-thistle.jpg`), embedded by
 `tools/briar_icon_capsula.sh` (the shape of `briar_facies_capsula.sh`)
 into `build/capsula_icon_briar.c`, which `briar_struere.sh` compiles into
-the link. `tools/briar.c` declares `externus constans CapsulaEmbed
+the link. The script regenerates when the icon is newer than the table
+OR the table does not name the icon's path — timestamps alone kept the
+old image when the path changed to an older file. `tools/briar.c` declares `externus constans CapsulaEmbed
 capsula_icon_briar;` directly, by §4.6's rule. It is kept apart from the
 facies capsula so the spectator does not carry an icon it never shows.
 The default decodes with `imago_caricare_ex_memoria`, a user's file with
@@ -1027,7 +1029,9 @@ cannot pass `-icon`; the `icon` attribute is its way (A7).
   `org.rhubarb.briar.salve-vitreum`; `iconutil -c iconset` extracts the
   bundle's `.icns`, asserted by file COUNT (iconutil returns 0 on broken
   containers, icones §12.3); `-icon` with a PNG fixture; a second `-app`
-  replaces; a foreign `salve_vitreum.app` is refused.
+  replaces; a foreign `salve_vitreum.app` is refused. As built (stage
+  XIII): the default gives 10 iconset files, the 256 px fixture 7 — the
+  plan's reasoned count, measured before it was pinned.
 - **Fumus, `-agere`:** `open salve_vitreum.app`, the window found and
   driven through `bin/manus`, Fran's look at the icon, then a changed
   icon rebuilt and looked at again (A8).
@@ -1242,11 +1246,7 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 
 - **P7 spectator (§4.7) — DONE (plan 6, 2026-09-11; T1 14d251e0, T2). MEASURED: `briar-spectator` links first try by the rule "take from `build/` only what `briar/build/` lacks"; page identity with `-html` proven end to end in fumus XII (71,574 bytes, byte-equal) once the option divergence was fixed. AS BUILT, three deviations: `briar_optiones_plagulae` was extracted because the two binaries DID drift (absolute vs raw path) and no in-process assertion could see it — the real check lives in the fumus, across two binaries · identity holds GIVEN THE SAME CORPUS SOURCE (in-tree briar reads the disk corpus, the spectator always the embedded one, so the fabrica key differs) · `-parare` was added so the fumus can check identity without a window.**
 
-- **P8 fasciculus (§4.8) — PLANNED.** The two library changes first
-  (fasciculum identity check, filum tree removal), each with its planted
-  fault; then `briar_fasciculum` and its gate headless; then the flags,
-  the icon capsula, the link and `tools/briar.c`; then the two fumus
-  stages. Record here: binary size after the link, and what A8 measured.
+- **P8 fasciculus (§4.8) — DONE (plan 7, 2026-09-14; T1 d84399c5, T2 f5c7c2de, T3 200592be, T4 dbec0b2f, T5 bd0e1831, default icon af2c7fa8, T6 fumus + seal). MEASURED: `bin/briar` 10.7 MB before, 11.3 MB with the JPEG default, 12.8 MB with the transparent PNG; `briar -app kalendarium.thistle` 3 s inside the tree, and the vitrea app RUNS from its bundle (its page is capsula-compiled into the binary); the default icon yields 10 iconset files, a 256 px `-icon` 7; A8: Dock and Finder showed a changed icon immediately. AS BUILT, beyond the plan: the tree removal refuses the root by `st_dev`/`st_ino` identity (so `//` and `/tmp/..` too) and bounds its re-read loop; the examen's POSIX lexicon lacked ENOENT, lstat, rmdir and symlink (healed 160c680f, auspex-certified); the silva suite had been red since 2026-09-11 behind radix-only commits — lib census pin, stale latina datum, stale excludenda manifests — and was healed first (5b6b049b); A5's absent version is fasciculum's default 1.0; the default icon became a PNG; the consilium's gate plant for the duplicate `<briar>` is `r == NIHIL` (equal tokens, no clang self-comparison warning). FUMUS: headless 12 s with stage XIII; the planted skipped deletion failed it at "plagula stala superest"; `-agere` ran for the FIRST time (39 s, green) after two fixes — stage XV exposed a plan-6 spectator bug (`manus incipere` adds `-portus N` and the spectator took `N` as the thistle path), and stage XVI measured that `open --args -vivum -portus` reaches atrium, driven with `manus adhaerere` (a manus session is not a raw port; `finire` on an attached session leaves the app running).**
 
 ## 9. Named deferrals
 

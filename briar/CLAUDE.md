@@ -18,8 +18,9 @@ Findings: `fontes/briar.worklog.md`.
   object is SHARED with silex (`tools/corpus_infixum.sh`); a stale
   binary lies green — rebuild after touching lib/ or briar/.
 - Flags (hand-parsed, `briar_imperium`, gated): `briar [-probatio |
-  -struere [-iterum] | -arbor | -partes | -amalgama | -versio | -h]
-  [-f <radix>] x.thistle [args…]`; shebang form recognizes ONE reserved
+  -struere [-iterum] | -arbor | -partes | -amalgama | -html | -visio |
+  -app | -versio | -h] [-f <radix>] [-icon <via>] x.thistle [args…]`
+  (`-icon` only with `-app`); shebang form recognizes ONE reserved
   first argument after the file (`./x.thistle -probatio`), `--` ends
   flags.
 - **`-amalgama`** = the escape hatch: ONE file `<t>.c` beside the
@@ -31,6 +32,26 @@ Findings: `fontes/briar.worklog.md`.
   `corpus.symbola.tsv`), regions, main; local includes blanked, `#line
   1 "<via>"` per file. v1 refuses vitrea, `vendor/`, `.m` (spec §9).
   Never overwrites a file it did not write (banner check).
+- **`-app`** (spec §4.8, plan 7) = `<t>.app` beside the thistle. Builds
+  as a run does, then `briar_fasciculum_consilium` (pure: identity
+  `org.rhubarb.briar.<t>` with `_`→`-`, or `<briar identitas=…>` judged
+  by `fasciculum_identitas_valida`; name = `<fenestra titulus>` else
+  `<t>`; `<briar versio=…>`, absent = fasciculum's 1.0; icon `-icon`
+  (cwd) > `<briar icon=…>` (thistle's dir) > embedded
+  `briar/icon/app-icon-transparent.png`) and `briar_fasciculum_scribere`
+  (icones `.icns` under `<domus>/fasciculum/`; an existing bundle is
+  replaced ONLY when its Info.plist identity matches, via
+  `filum_arborem_delere`; a foreign bundle or a plain file is refused and
+  left untouched). The `<briar>` element is read ONLY here; the fabrica
+  ignores every element but `fenestra`. Fumus XIII (headless) and XVI
+  (`-agere`, Launch Services).
+- **Decoding lives ONLY in `tools/briar.c`** (`_fasciculum_facere`,
+  stb_image via `lib/imago.c`): briar modules take an `Imago`, and no
+  briar gate links a decoder (`nm`: icones/imago_opus/imago_png need no
+  symbol from imago.o). `briar_struere.sh` links `build/imago.o` and
+  `build/capsula_icon_briar.c` (`tools/briar_icon_capsula.sh`, which
+  regenerates when the table does not NAME the icon path, not only on
+  timestamps).
 - Corpus: `-f` > ascent from cwd (disk, `-versio` says `(discus)`) >
   embedded. Key: embedded = corpus stamp + flags + bytes (before any
   parse); disk = closure-content hash + flags + bytes (after fabrica).
@@ -39,12 +60,15 @@ Findings: `fontes/briar.worklog.md`.
   to stderr on failure) → `processus_transformare` into `bin/<t>`.
   `-probatio` execs `bin/probatio_<t>` or `probare.sh` (compiles+execs).
 - Gate: `./tools/briar_fumus.sh` (pythonica `briar-fumus`) — installed
-  binary, from outside the repo, fake HOME, nine stages incl. the plant
+  binary, from outside the repo, fake HOME, thirteen headless stages incl. the plant
   `adversa/probatio_rubra.thistle` (must fail), a refusal, the amalgams
   of salve + derivatum + fragmenta compiled by their own banner line
   and run, fragmenta with `-probatio` and `-partes`, and the `#line`
-  truth (a broken fragment line must be named by clang); `-agere`
-  opens the vitrea window and drives it with `bin/manus` (by hand).
+  truth (a broken fragment line must be named by clang); XIII = `-app`
+  (bundle, icon counts 10/7, own replaced, foreign refused). `-agere`
+  adds XIV–XVI: the vitrea window and the spectator driven by
+  `bin/manus`, and the `.app` opened by Launch Services and ATTACHED with
+  `manus adhaerere` (first run 2026-09-14, green, 39 s).
 - Plain build scripts list the closure's `lib/*.c` AND `lib/*.m`
   explicitly and add the Cocoa/Security/WebKit frameworks when a `.m`
   is present (silex's plain generators take briar's closure; passed
@@ -111,6 +135,11 @@ Findings: `fontes/briar.worklog.md`.
   of the line table — a fragment inside a function body opens its own
   `#line`, so clang names the fragment's thistle line (fumus stage IX
   proves it with `adversa/fragmentum_erratum.thistle`)
+- `briar_fasciculum` (§4.8): `briar_fasciculum_consilium` (identity,
+  name, version, icon source, `.app` path from the nexus, no disk) and
+  `briar_fasciculum_scribere` (decoded `Imago` → `.icns` → bundle; own
+  replaced, foreign refused); fixtures `app_vestitum.thistle` (LINE-PINNED,
+  `<briar>` on line 8), `adversa/app_{identitas_prava,briar_duplex}`
 - `briar_computus`: bench twin; instruments `./briar/arbor.sh`,
   `./briar/computus.sh`, **`./briar/fabrica.sh <x.thistle> <dir>`**
   (then `cd <dir> && ./aedificare.sh && ./probare.sh` — the only clang
@@ -118,7 +147,8 @@ Findings: `fontes/briar.worklog.md`.
 
 ## Gates (`./briar/compile_probationes.sh [filter]`; exit 2 = NOTHING RAN)
 registrum · lexema · arbor · stml · canon · totalitas · computus · nexus
-· silva · fabrica · imperium · amalgama · contextus · facies · spectator (fifteen files;
+· silva · fabrica · imperium · amalgama · contextus · facies · spectator ·
+fasciculum (sixteen files;
 every one born red by a planted fault — see the worklog). Goldens:
 `fixa/contextus/fragmenta.contextus` (`BRIAR_CONTEXTUS_SCRIBERE=1`),
 `fixa/fabrica/fragmenta/`. Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),

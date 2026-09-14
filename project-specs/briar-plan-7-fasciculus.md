@@ -3,7 +3,9 @@
 > **For agentic workers:** execute task by task with the executing-plans
 > discipline (test first, run red, implement, run green, plant, commit).
 > Steps use checkbox syntax. Written 2026-09-12 from briar-spec.md §4.8
-> (v1.9, approved by Fran the same day, commit `b32016c9`). Not started.
+> (v1.9, approved by Fran the same day, commit `b32016c9`). DONE
+> 2026-09-14 (T1 d84399c5, T2 f5c7c2de, T3 200592be, T4 dbec0b2f, T5
+> bd0e1831, default icon af2c7fa8, T6 fumus + seal; spec §8 P8).
 
 **Goal:** `briar -app x.thistle` (or `./x.thistle -app`) builds the
 program and writes `x.app` beside the thistle, with an icon from
