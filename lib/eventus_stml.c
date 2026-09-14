@@ -13,7 +13,7 @@ hic_manens constans character* tituli[] = {
     "exponere", "clavis_depressus", "clavis_liberatus", "mus_depressus",
     "mus_liberatus", "mus_motus", "mus_rotula", "mus_duplex",
     "mus_intravit", "mus_exiit", "focus_captus", "focus_amissus",
-    "focus_petitus"
+    "focus_petitus", "menu"
 };
 #define TITULI_NUMERUS ((i32)(magnitudo(tituli) / magnitudo(tituli[0])))
 

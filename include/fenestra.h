@@ -106,7 +106,9 @@ nomen enumeratio {
     EVENTUS_MUS_EXIIT,
     EVENTUS_FOCUS_CAPTUS,
     EVENTUS_FOCUS_AMISSUS,
-    EVENTUS_FOCUS_PETITUS
+    EVENTUS_FOCUS_PETITUS,
+    /* res menu applicationis pressa (fenestra_menu_addere) */
+    EVENTUS_MENU
 } eventus_genus_t;
 
 
@@ -226,6 +228,9 @@ nomen structura {
             f32 delta_x;
             f32 delta_y;
         } rotula;
+        structura {
+            i32 signum;         /* a fenestra_menu_addere datum */
+        } menu;
     } datum;
 } Eventus;
 
@@ -717,6 +722,31 @@ fenestra_magnitudinator (
        i32  altitudo,
        i32* latitudo_facta,
        i32* altitudo_facta);
+
+
+/* ==================================================
+ * Menu applicationis
+ * ==================================================
+ *
+ * Rem in menu APPLICATIONIS addere, supra separatorem et 'Exire'.
+ *
+ * Menu UNUM toti applicationi est. Pressio NON revocatio est: eventum
+ * EVENTUS_MENU cum datum.menu.signum in caudam HUIUS fenestrae ponit,
+ * per eandem caudam ac claves - app eum in gyro suo legit.
+ *
+ * clavis: forma claviarii ("Cmd+Shift+v": modificantes, deinde
+ * littera UNA) aut NIHIL (sine aequivalente).
+ *
+ * Redde FALSUM si fenestra aut titulus NIHIL, si menu applicationis
+ * abest (fenestra_creare id struit), aut si clavis prava est.
+ */
+
+b32
+fenestra_menu_addere (
+               Fenestra* fenestra,
+     constans character* titulus,
+     constans character* clavis,
+                    i32  signum);
 
 
 /* ==================================================

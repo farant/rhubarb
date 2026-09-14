@@ -47,6 +47,10 @@ s32 principale (vacuum)
                         "clavis_liberatus") == ZEPHYRUM);
     CREDO_VERUM (eventus_genus_ex_titulo("ignotissimum")
         == EVENTUS_NIHIL);
+    /* EVENTUS_MENU (plan 8): titulus ultimus, ordine enumerationis */
+    CREDO_VERUM (strcmp(eventus_genus_titulus(EVENTUS_MENU), "menu")
+        == ZEPHYRUM);
+    CREDO_VERUM (eventus_genus_ex_titulo("menu") == EVENTUS_MENU);
 
     imprimere("\n--- Probans circuitum ---\n");
     index = xar_creare(piscina, (i32)magnitudo(Eventus));

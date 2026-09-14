@@ -289,6 +289,26 @@ extrahere_eventum (
     redde VERUM;
 }
 
+/* Scopus rei menu: pressio in EVENTUS_MENU fenestrae suae vertitur -
+ * nulla revocatio C, eventus per caudam ut claves. Res menu scopum
+ * NON retinet (target assign), ergo scopus numquam dimittitur: vivit
+ * quamdiu applicatio (res menu non removentur). */
+@interface FenestraMenuScopus : NSObject
+@property (assign) Fenestra *fenestra;
+- (void)pressa:(id)sender;
+@end
+
+@implementation FenestraMenuScopus
+- (void)pressa:(id)sender {
+    Eventus eventus;
+
+    memset(&eventus, 0, magnitudo(eventus));
+    eventus.genus              = EVENTUS_MENU;
+    eventus.datum.menu.signum  = (i32)[sender tag];
+    impellere_eventum(self.fenestra, &eventus);
+}
+@end
+
 Fenestra*
 fenestra_creare (
     Piscina*                       piscina,
@@ -1189,6 +1209,50 @@ fenestra_magnitudinator (
     redde VERUM;
 }
 
+/* Praefixa modificatorum ('Cmd+' 'Ctrl+' 'Shift+' 'Alt+' 'Opt+'),
+ * cumulabilia; *p post ea ponitur. SEDES UNA: fenestra_claviarius
+ * (claves immissae) et fenestra_menu_addere (aequivalens rei). */
+interior i32
+_modificantes_legere (
+    constans character** p)
+{
+    i32 modi = ZEPHYRUM;
+
+    per (;;)
+    {
+        si (strncmp(*p, "Cmd+", 4) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagCommand;
+            *p = *p + 4;
+        }
+        alioquin si (strncmp(*p, "Ctrl+", 5) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagControl;
+            *p = *p + 5;
+        }
+        alioquin si (strncmp(*p, "Shift+", 6) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagShift;
+            *p = *p + 6;
+        }
+        alioquin si (strncmp(*p, "Alt+", 4) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagOption;
+            *p = *p + 4;
+        }
+        alioquin si (strncmp(*p, "Opt+", 4) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagOption;
+            *p = *p + 4;
+        }
+        alioquin
+        {
+            frange;
+        }
+    }
+    redde modi;
+}
+
 /* ==================================================
  * Claves NOMINATAE
  * ==================================================
@@ -1248,39 +1312,8 @@ fenestra_claviarius (
         redde FALSUM;
     }
 
-    /* Praefixa modificatorum, cumulabilia */
-    per (;;)
-    {
-        si (strncmp(p, "Cmd+", 4) == 0)
-        {
-            modi = modi | (i32)NSEventModifierFlagCommand;
-            p = p + 4;
-        }
-        alioquin si (strncmp(p, "Ctrl+", 5) == 0)
-        {
-            modi = modi | (i32)NSEventModifierFlagControl;
-            p = p + 5;
-        }
-        alioquin si (strncmp(p, "Shift+", 6) == 0)
-        {
-            modi = modi | (i32)NSEventModifierFlagShift;
-            p = p + 6;
-        }
-        alioquin si (strncmp(p, "Alt+", 4) == 0)
-        {
-            modi = modi | (i32)NSEventModifierFlagOption;
-            p = p + 4;
-        }
-        alioquin si (strncmp(p, "Opt+", 4) == 0)
-        {
-            modi = modi | (i32)NSEventModifierFlagOption;
-            p = p + 4;
-        }
-        alioquin
-        {
-            frange;
-        }
-    }
+    /* Praefixa modificatorum, cumulabilia (sedes una) */
+    modi = _modificantes_legere(&p);
 
     /* LITTERA CUM MODIFICATORE - 'Cmd+c', 'Cmd+Shift+z'.
      *
@@ -1379,6 +1412,85 @@ fenestra_claviarius (
     /* Nomen ignotum: RECUSATIO, non ictus mutus qui 'factum'
      * nuntiaret. */
     redde FALSUM;
+}
+
+/* Menu applicationis: vide fenestra.h */
+b32
+fenestra_menu_addere (
+               Fenestra* fenestra,
+    constans character* titulus,
+    constans character* clavis,
+                    i32  signum)
+{
+                 NSMenu* app_menu;
+             NSMenuItem* res;
+     FenestraMenuScopus* scopus;
+               NSString* aequivalens = @"";
+               NSInteger  locus;
+     constans character* p;
+                     i32  modi = ZEPHYRUM;
+
+    si (   fenestra == NIHIL || titulus == NIHIL || NSApp == nil
+        || [NSApp mainMenu] == nil)
+    {
+        redde FALSUM;
+    }
+    @autoreleasepool {
+        app_menu = [[[NSApp mainMenu] itemAtIndex:0] submenu];
+        locus    = (app_menu != nil)
+                 ? [app_menu indexOfItemWithTitle:@"Exire"] : -1;
+        si (locus < 0)
+        {
+            redde FALSUM;
+        }
+        si (clavis != NIHIL)
+        {
+            character littera[2];
+
+            p     = clavis;
+            modi  = _modificantes_legere(&p);
+            si (p[0] == '\0' || p[1] != '\0')
+            {
+                redde FALSUM;   /* littera UNA post modificantes */
+            }
+            littera[0]  = p[0];
+            littera[1]  = '\0';
+            /* Shift + littera = aequivalens MAIUSCULUM sine Shift in
+             * masca: forma '@"Z"' rei Iterare, quam claves immissae
+             * congruere MENSURATAE sunt (fenestra_claviarius) */
+            si (   (modi & (i32)NSEventModifierFlagShift) != ZEPHYRUM
+                && littera[0] >= 'a' && littera[0] <= 'z')
+            {
+                littera[0]  = (character)(littera[0] - ('a' - 'A'));
+                modi        = modi & ~(i32)NSEventModifierFlagShift;
+            }
+            aequivalens = [NSString stringWithUTF8String:littera];
+        }
+        scopus           = [[FenestraMenuScopus alloc] init];
+        scopus.fenestra  = fenestra;
+        res = [[NSMenuItem alloc]
+            initWithTitle:[NSString stringWithUTF8String:titulus]
+                   action:@selector(pressa:)
+            keyEquivalent:aequivalens];
+        [res setTarget:scopus];
+        [res setTag:(NSInteger)signum];
+        [res setKeyEquivalentModifierMask:
+            (NSEventModifierFlags)(unsigned long)modi];
+        /* separator SEMEL ante 'Exire'; res priores supra eum */
+        si (   locus > 0
+            && [[app_menu itemAtIndex:locus - 1] isSeparatorItem])
+        {
+            locus = locus - 1;
+        }
+        alioquin
+        {
+            [app_menu insertItem:[NSMenuItem separatorItem]
+                         atIndex:locus];
+        }
+        [app_menu insertItem:res atIndex:locus];
+        [res release];
+    }
+    redde VERUM;
 }
 
 /* Implementatio tabulae pixelorum */
