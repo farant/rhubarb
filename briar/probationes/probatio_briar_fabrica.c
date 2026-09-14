@@ -578,6 +578,18 @@ principale (vacuum)
                 "        \"salve\", salve, NIHIL);"));
             CREDO_VERUM (_continet(piscina, princeps->contentum,
                 "atrium_vexilla_legere(&figura, argc, argv);"));
+            /* VISIO (par. 4.9): via paginae ante vexilla; vexillum
+             * gressus in lineam effusionis */
+            CREDO_VERUM (_continet(piscina, princeps->contentum,
+                "    figura.visio    = \"salve_vitreum.visio.html\";\n"
+                "    atrium_vexilla_legere(&figura, argc, argv);"));
+            CREDO_VERUM (_continet(piscina, princeps->contentum,
+                "        si (atrium_gressus(atrium)"
+                " & (i32)ATRIUM_ACTUM_VISIO)\n"
+                "        {\n"
+                "            imprimere(\"[salve_vitreum] visio"
+                " aperta\\n\");\n"
+                "            fflush(stdout);\n"));
             /* ordines vitrei: listae computatae (corpus-dependentes -
              * non aurum) */
             CREDO_VERUM (_continet(piscina, aed->contentum,

@@ -81,6 +81,17 @@ briar_fabricare (
     constans BriarFabricaOptiones* optiones,
                            chorda  octeti);
 
+/* VISIO (par. 4.9): paginam litteratam in proiectum VITREUM addere -
+ * plagula genita assets/TITULUS.visio.html et nomen eius in lista
+ * _files plagulae assets/TITULUS.toml. Post briar_fabricare, ante
+ * briar_fabricam_scribere. FALSUM, nihil mutato, si fructus non
+ * sanus, forma non vitrea, pagina vacua aut toml non inventum. */
+b32
+briar_visionem_addere (
+                Piscina* piscina,
+    BriarFabricaFructus* fructus,
+                 chorda  pagina);
+
 /* proiectum in directorium scribere (parentes creat); ordines
  * exsecutabiles (chmod 0755); FALSUM + causa si plagula non scripta */
 b32

@@ -322,6 +322,7 @@ principale (
      constans character* dir;
      constans character* binarium;
                character clavis[17];
+             BriarVestis vestis_visionis;
 
     piscina = piscina_generare_dynamicum("briar", 33554432);
     si (piscina == NIHIL)
@@ -587,6 +588,23 @@ principale (
     /* clavis: infixum = stampa corporis; discus = contenta clausurae */
     stampa = e_disco ? briar_stampa_clausurae(piscina, fructus.clausura)
                      : fons->titulus;
+    /* VISIO (par. 4.9): programma vitreum paginam suam in binario
+     * fert, ergo vestis clavem intrat (V5) - briar cum vestibus novis
+     * aedificat, paginam veterem e cache non reddit */
+    si (fructus.forma == BRIAR_FORMA_VITREA)
+    {
+        chorda causa;
+
+        si (!briar_vestem_legere(piscina, &capsula_facies_briar,
+            &vestis_visionis, &causa))
+        {
+            fprintf(stderr, "briar: %.*s\n", (integer)causa.mensura,
+                (constans character*)causa.datum);
+            redde I;
+        }
+        stampa = briar_stampa_vestita(piscina, stampa,
+            &vestis_visionis);
+    }
     briar_fabrica_clavem_computare(stampa,
         briar_fabrica_vexilla(fructus.forma), octeti, clavis);
     dir = briar_domus_proiecti(piscina, fructus.titulus, clavis);
@@ -604,6 +622,27 @@ principale (
          constans character* ordo[3];
           ProcessusResultus  res;
 
+        /* pagina SOLUM cum proiectum scribitur: ictus cache nihil
+         * reddit. Optiones eaedem ac '-html' (briar_optiones_plagulae),
+         * ergo pagina eadem PER CONSTRUCTIONEM - fumus IV id probat */
+        si (fructus.forma == BRIAR_FORMA_VITREA)
+        {
+            chorda pagina;
+
+            causa.datum    = NIHIL;
+            causa.mensura  = ZEPHYRUM;
+            pagina = briar_faciem_fingere(piscina, intern, nexus,
+                fragmenta, &fructus, octeti, optiones.via_thistle,
+                &vestis_visionis, &causa);
+            si (   pagina.mensura == ZEPHYRUM
+                || !briar_visionem_addere(piscina, &fructus, pagina))
+            {
+                fprintf(stderr, "briar: visio non reddita: %.*s\n",
+                    (integer)causa.mensura,
+                    (constans character*)causa.datum);
+                redde I;
+            }
+        }
         si (!briar_fabricam_scribere(piscina, &fructus, dir, &causa))
         {
             fprintf(stderr, "briar: %.*s\n", (integer)causa.mensura,

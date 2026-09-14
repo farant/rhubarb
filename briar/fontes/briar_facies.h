@@ -54,6 +54,17 @@ briar_vestem_legere (
                 BriarVestis* vestis,
                      chorda* causa);
 
+/* stampa clavis VESTITA (par. 4.9 V5): stampa + "\nfacies " + XVI hex
+ * SHA-256 vestis, quaeque plagula mensura sua praefixa (octeti inter
+ * plagulas migrantes clavem quoque mutant). Programma vitreum paginam
+ * in binario fert: sine hoc briar cum vestibus novis binarium cum
+ * pagina VETERE e cache daret. */
+constans character*
+briar_stampa_vestita (
+                Piscina* piscina,
+     constans character* stampa,
+   constans BriarVestis* vestis);
+
 /* pagina una; vacua + causa si vestis vitiosa est */
 chorda
 briar_faciem_fingere (

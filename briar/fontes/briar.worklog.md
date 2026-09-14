@@ -633,3 +633,44 @@ plagula restituta (octetis aequalis), aedificata iterum: sanum.
 **Mensurae sigilli.** `bin/briar` 12.827.864 octeti; `briar-spectator`
 20.108.560, reaedificatus: corpus eius infixum post opera I-V renovandum
 erat, ne identitas octetorum gradus XII falleret.
+
+
+## 2026-09-14 — visio in applicatione, opus III (plan 8)
+
+- **The page in every vitrea build.** For a vitrea fructus `tools/briar.c`
+  reads the chrome (`briar_vestem_legere`, as `-html` does) and folds its
+  hash into the key through `briar_stampa_vestita`: stampa + "\nfacies " +
+  16 hex of a SHA-256 over the four chrome files, each prefixed by its
+  length, so bytes MOVING from facies.css to facies.js change the key too
+  (the gate proves both directions). Only when the project is written
+  (binary absent, or `-iterum`) is the page rendered — `briar_faciem_fingere`
+  with the same options as `-html` (`briar_optiones_plagulae`) — and added
+  by `briar_visionem_addere`: a genita `assets/<t>.visio.html` plus the name
+  spliced into the toml `_files` list before its FIRST `]` (the list
+  `_toml_fingere` writes). A cache hit renders nothing: cold 2.36 s, hit
+  0.050 s, same directory.
+- **The generated main** sets `figura.visio = "<t>.visio.html";` before the
+  flags and prints `[<t>] visio aperta` when `atrium_gressus` returns
+  `ATRIUM_ACTUM_VISIO`. Golden `fixa/fabrica/salve_vitreum/fontes/salve_vitreum.c`
+  regenerated with that cause: one file changed, the diff exactly those
+  two places.
+- **Names.** The plan's `briar_stampam_vestire` became `briar_stampa_vestita`,
+  a noun phrase beside `briar_stampa_clausurae`; the test helper is
+  `_vestem_probationis` (`probatoriam` is IGNOTUM and would have been a new
+  word for the lint).
+- **Gates.** Facies: `_paginam_fingere` split into `_fructum_fingere` +
+  `_vestem_probationis` — proof of no behaviour change: the count stayed
+  133 and every golden stayed green. The visio block +15 (148), born red
+  7/7 against stubs; plants `partes[1] = vestis->scriptum` -> exactly 1 red
+  (a != c) and a toml `.visio.htm` -> exactly 1 red. Fabrica: +2 structural
+  (257), red 2 -> template -> 1 red (DIFFERT) -> regenerated -> green.
+- **Measured.** salve_vitreum page 20,416 B, binary 417,152 B; kalendarium
+  page 167,397 B, binary 601,936 B; `bin/briar` 12,828,120 B. The two-dot
+  asset name goes through capsula_generare fine. `manus clavis
+  Cmd+Shift+v` against salve_vitreum -> `[salve_vitreum] visio aperta` with
+  the REAL page. Fran looked at kalendarium: Visio in its menu, the
+  literate page in a second window, the symbol panel's island, closing it
+  leaves the calendar running — all good.
+- **Known.** A project written by the dev instrument `./briar/fabrica.sh`
+  gets `figura.visio` but no page (the instrument renders none), so its
+  Visio window shows the capsula 404. Every project briar writes has it.

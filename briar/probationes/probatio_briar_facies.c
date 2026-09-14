@@ -203,63 +203,97 @@ _lineae_casuum (
     redde lineae;
 }
 
-/* plagulam thistle in paginam vertere; nexus/fragmenta redduntur */
-interior chorda
-_paginam_fingere (
-                Piscina* piscina,
-    InternamentumChorda* intern,
-     constans SilexFons* fons,
-     constans character* via,
-                   Xar** nexus_out,
-                   Xar** fragmenta_out,
-                 chorda* causa)
+/* plagulam in fructum vertere (via ut data, stampa "probatio");
+ * octeti_out->datum NIHIL si plagula non lecta */
+interior BriarFabricaFructus
+_fructum_fingere (
+                Piscina*  piscina,
+    InternamentumChorda*  intern,
+     constans SilexFons*  fons,
+     constans character*  via,
+                    Xar** nexus_out,
+                    Xar** fragmenta_out,
+                 chorda*  octeti_out)
 {
      BriarFabricaFructus  fructus;
     BriarFabricaOptiones  optiones;
-             BriarVestis  vestis;
                character* textus;
                      i32  mensura = ZEPHYRUM;
            MateriaNodus* doc;
-                    Xar* nexus;
-                    Xar* fragmenta = NIHIL;
-                  chorda octeti;
-                  chorda vacua;
+
+    memset(&fructus, 0, magnitudo(fructus));
+    *nexus_out           = NIHIL;
+    *fragmenta_out       = NIHIL;
+    octeti_out->datum    = NIHIL;
+    octeti_out->mensura  = ZEPHYRUM;
+    textus               = _plagulam_legere(piscina, via, &mensura);
+    si (textus == NIHIL)
+    {
+        redde fructus;
+    }
+    doc         = briar_arbor_parsare(piscina, textus, mensura);
+    *nexus_out  = briar_nexus_texere(piscina, doc, intern);
+    (vacuum)briar_contexere(piscina, *nexus_out, fragmenta_out);
+    (vacuum)briar_silvam_texere(piscina, *nexus_out, fons);
+    optiones.via_thistle   = via;
+    optiones.stampa        = "probatio";
+    optiones.fons_titulus  = "probatio";
+    octeti_out->datum      = (i8*)textus;
+    octeti_out->mensura    = mensura;
+    redde briar_fabricare(piscina, doc, *nexus_out, fons, &optiones,
+        *octeti_out);
+}
+
+/* vestis probatoria: notae solae, sine stylis, sine scripto */
+interior BriarVestis
+_vestem_probationis (
+    Piscina* piscina)
+{
+    BriarVestis vestis;
+         chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    vestis.involucrum  = chorda_ex_literis(INVOLUCRUM_PROBATORIUM,
+        piscina);
+    vestis.styli     = vacua;
+    vestis.scriptum  = vacua;
+    vestis.exemplar    = filum_legere_totum(
+        "briar/facies/md-html-facies.stml", piscina);
+    CREDO_VERUM (vestis.exemplar.mensura > ZEPHYRUM);
+    redde vestis;
+}
+
+/* plagulam thistle in paginam vertere; nexus/fragmenta redduntur */
+interior chorda
+_paginam_fingere (
+                Piscina*  piscina,
+    InternamentumChorda*  intern,
+     constans SilexFons*  fons,
+     constans character*  via,
+                    Xar** nexus_out,
+                    Xar** fragmenta_out,
+                 chorda*  causa)
+{
+    BriarFabricaFructus fructus;
+            BriarVestis vestis;
+                 chorda octeti;
+                 chorda vacua;
 
     vacua.datum     = NIHIL;
     vacua.mensura   = ZEPHYRUM;
-    *nexus_out      = NIHIL;
-    *fragmenta_out  = NIHIL;
     causa->datum    = NIHIL;
     causa->mensura  = ZEPHYRUM;
-    textus          = _plagulam_legere(piscina, via, &mensura);
-    si (textus == NIHIL)
+    fructus = _fructum_fingere(piscina, intern, fons, via, nexus_out,
+        fragmenta_out, &octeti);
+    si (octeti.datum == NIHIL)
     {
         *causa = chorda_ex_literis("plagula non lecta", piscina);
         redde vacua;
     }
-    doc    = briar_arbor_parsare(piscina, textus, mensura);
-    nexus  = briar_nexus_texere(piscina, doc, intern);
-    (vacuum)briar_contexere(piscina, nexus, &fragmenta);
-    (vacuum)briar_silvam_texere(piscina, nexus, fons);
-    optiones.via_thistle   = via;
-    optiones.stampa        = "probatio";
-    optiones.fons_titulus  = "probatio";
-    octeti.datum           = (i8*)textus;
-    octeti.mensura         = mensura;
-    fructus = briar_fabricare(piscina, doc, nexus, fons, &optiones,
-        octeti);
-    *nexus_out      = nexus;
-    *fragmenta_out  = fragmenta;
-
-    vestis.involucrum = chorda_ex_literis(INVOLUCRUM_PROBATORIUM,
-        piscina);
-    vestis.styli     = vacua;
-    vestis.scriptum  = vacua;
-    vestis.exemplar   = filum_legere_totum(
-        "briar/facies/md-html-facies.stml", piscina);
-    CREDO_VERUM (vestis.exemplar.mensura > ZEPHYRUM);
-    redde briar_faciem_fingere(piscina, intern, nexus, fragmenta,
-        &fructus, octeti, via, &vestis, causa);
+    vestis = _vestem_probationis(piscina);
+    redde briar_faciem_fingere(piscina, intern, *nexus_out,
+        *fragmenta_out, &fructus, octeti, via, &vestis, causa);
 }
 
 
@@ -817,6 +851,109 @@ principale (vacuum)
             CREDO_VERUM (_continet(piscina, b, "html"));
         }
         CREDO_AEQUALIS_S32 ((s32)divergentes, (s32)3);
+    }
+
+    imprimere("\n--- Probans visionem in proiecto (par. 4.9) ---\n");
+    {
+        /* pagina in proiectum vitreum addita: plagula genita octetim
+         * pagina ipsa, toml eam nominat; programma planum nihil
+         * accipit; clavis cum vestibus differt, etiam cum octeti
+         * tantum inter plagulas vestis migrant */
+                           Xar* nexus;
+                           Xar* fragmenta;
+                        chorda  octeti;
+                        chorda  causa;
+                        chorda  pagina;
+           BriarFabricaFructus  vitreum;
+           BriarFabricaFructus  planum;
+                   BriarVestis  vestis;
+                   BriarVestis  styli_mutati;
+                   BriarVestis  scriptum_mutatum;
+         constans BriarPlagula* genita  = NIHIL;
+         constans BriarPlagula* toml    = NIHIL;
+            constans character* vexilla;
+            constans character* via;
+                           i32  numerus;
+                           i32  i;
+                     character  clavis_a[17];
+                     character  clavis_b[17];
+                     character  clavis_c[17];
+                     character  clavis_d[17];
+
+        via      = _texere(piscina, FIXA, "salve_vitreum.thistle");
+        vitreum  = _fructum_fingere(piscina, intern, fons, via, &nexus,
+            &fragmenta, &octeti);
+        CREDO_VERUM (vitreum.successus);
+        CREDO_AEQUALIS_S32 ((s32)vitreum.forma,
+            (s32)BRIAR_FORMA_VITREA);
+        vestis         = _vestem_probationis(piscina);
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        pagina = briar_faciem_fingere(piscina, intern, nexus, fragmenta,
+            &vitreum, octeti, via, &vestis, &causa);
+        CREDO_VERUM (pagina.mensura > ZEPHYRUM);
+
+        /* clavis: eadem vestis eadem clavis; styli mutati aliam;
+         * iidem octeti in scripto aliam quoque */
+        vexilla                    = briar_fabrica_vexilla(
+            BRIAR_FORMA_VITREA);
+        styli_mutati               = vestis;
+        styli_mutati.styli         = chorda_ex_literis("body{}",
+            piscina);
+        scriptum_mutatum           = vestis;
+        scriptum_mutatum.scriptum  = chorda_ex_literis("body{}",
+            piscina);
+        briar_fabrica_clavem_computare(briar_stampa_vestita(piscina,
+            "probatio", &vestis), vexilla, octeti, clavis_a);
+        briar_fabrica_clavem_computare(briar_stampa_vestita(piscina,
+            "probatio", &vestis), vexilla, octeti, clavis_b);
+        briar_fabrica_clavem_computare(briar_stampa_vestita(piscina,
+            "probatio", &styli_mutati), vexilla, octeti, clavis_c);
+        briar_fabrica_clavem_computare(briar_stampa_vestita(piscina,
+            "probatio", &scriptum_mutatum), vexilla, octeti, clavis_d);
+        CREDO_VERUM (strcmp(clavis_a, clavis_b) == ZEPHYRUM);
+        CREDO_VERUM (strcmp(clavis_a, clavis_c) != ZEPHYRUM);
+        CREDO_VERUM (strcmp(clavis_c, clavis_d) != ZEPHYRUM);
+        CREDO_VERUM (strncmp(briar_stampa_vestita(piscina, "probatio",
+            &vestis), "probatio\nfacies ", (size_t)XVI) == ZEPHYRUM);
+
+        /* pagina in fructum */
+        numerus = xar_numerus(vitreum.genitae);
+        CREDO_VERUM (briar_visionem_addere(piscina, &vitreum, pagina));
+        CREDO_AEQUALIS_S32 ((s32)xar_numerus(vitreum.genitae),
+            (s32)(numerus + I));
+        per (i = ZEPHYRUM; i < xar_numerus(vitreum.genitae); i++)
+        {
+            constans BriarPlagula* p = (constans BriarPlagula*)
+                xar_obtinere(vitreum.genitae, i);
+
+            si (chorda_aequalis_literis(p->via,
+                "assets/salve_vitreum.visio.html"))
+            {
+                genita = p;
+            }
+            si (chorda_aequalis_literis(p->via,
+                "assets/salve_vitreum.toml"))
+            {
+                toml = p;
+            }
+        }
+        CREDO_VERUM (genita != NIHIL
+            && chorda_aequalis(genita->contentum, pagina));
+        CREDO_VERUM (toml != NIHIL
+            && _continet(piscina, toml->contentum,
+            "salve_vitreum_files = [\"index.html\","
+            " \"salve_vitreum.visio.html\"]\n"));
+
+        /* programma planum: nihil */
+        planum = _fructum_fingere(piscina, intern, fons,
+            _texere(piscina, FIXA, "salve.thistle"), &nexus, &fragmenta,
+            &octeti);
+        CREDO_VERUM (planum.successus);
+        numerus = xar_numerus(planum.genitae);
+        CREDO_FALSUM (briar_visionem_addere(piscina, &planum, pagina));
+        CREDO_AEQUALIS_S32 ((s32)xar_numerus(planum.genitae),
+            (s32)numerus);
     }
 
     credo_imprimere_compendium();

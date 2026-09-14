@@ -29,6 +29,7 @@ principale (integer argc, character** argv)
     figura.latitudo = 640;
     figura.altitudo = 400;
     figura.capsula  = &capsula_salve_vitreum;
+    figura.visio    = "salve_vitreum.visio.html";
     atrium_vexilla_legere(&figura, argc, argv);
 
     atrium = atrium_creare(piscina, &figura, &causa);
@@ -51,7 +52,11 @@ principale (integer argc, character** argv)
     atrium_monstrare(atrium);
     dum (atrium_currendum(atrium))
     {
-        (vacuum)atrium_gressus(atrium);
+        si (atrium_gressus(atrium) & (i32)ATRIUM_ACTUM_VISIO)
+        {
+            imprimere("[salve_vitreum] visio aperta\n");
+            fflush(stdout);
+        }
     }
     atrium_destruere(atrium);
     piscina_destruere(piscina);

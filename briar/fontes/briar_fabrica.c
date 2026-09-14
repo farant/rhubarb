@@ -1088,6 +1088,10 @@ _principem_vitreum_fingere (
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         ";\n"
+        "    figura.visio    = \"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".visio.html\";\n"
         "    atrium_vexilla_legere(&figura, argc, argv);\n"
         "\n"
         "    atrium = atrium_creare(piscina, &figura, &causa);\n"
@@ -1138,7 +1142,15 @@ _principem_vitreum_fingere (
         "    atrium_monstrare(atrium);\n"
         "    dum (atrium_currendum(atrium))\n"
         "    {\n"
-        "        (vacuum)atrium_gressus(atrium);\n"
+        "        si (atrium_gressus(atrium)"
+        " & (i32)ATRIUM_ACTUM_VISIO)\n"
+        "        {\n"
+        "            imprimere(\"[");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "] visio aperta\\n\");\n"
+        "            fflush(stdout);\n"
+        "        }\n"
         "    }\n"
         "    atrium_destruere(atrium);\n"
         "    piscina_destruere(piscina);\n"
@@ -1534,6 +1546,65 @@ briar_fabricare (
         briar_fabrica_vexilla(f.forma), octeti, f.sigillum);
     f.successus = VERUM;
     redde f;
+}
+
+
+/* ==================================================
+ * Visio (par. 4.9)
+ * ================================================== */
+
+b32
+briar_visionem_addere (
+                Piscina* piscina,
+    BriarFabricaFructus* fructus,
+                 chorda  pagina)
+{
+    constans character* via_toml;
+                   i32  i;
+                   i32  k;
+
+    si (   piscina == NIHIL || fructus == NIHIL || !fructus->successus
+        || fructus->forma != BRIAR_FORMA_VITREA
+        || pagina.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    via_toml = _texere(piscina, "assets/", fructus->titulus, ".toml");
+    per (i = ZEPHYRUM; i < xar_numerus(fructus->genitae); i++)
+    {
+        BriarPlagula* p = (BriarPlagula*)xar_obtinere(fructus->genitae,
+            i);
+
+        si (!chorda_aequalis_literis(p->via, via_toml))
+        {
+            perge;
+        }
+        /* lista _files (_toml_fingere) ']' PRIMO clauditur */
+        per (k = ZEPHYRUM; k < p->contentum.mensura; k++)
+        {
+            ChordaAedificator* a;
+
+            si ((character)p->contentum.datum[k] != ']')
+            {
+                perge;
+            }
+            a = chorda_aedificator_creare(piscina,
+                (memoriae_index)(p->contentum.mensura + 64));
+            chorda_aedificator_appendere_chorda(a,
+                chorda_sectio(p->contentum, ZEPHYRUM, k));
+            chorda_aedificator_appendere_literis(a, ", \"");
+            chorda_aedificator_appendere_literis(a, fructus->titulus);
+            chorda_aedificator_appendere_literis(a, ".visio.html\"");
+            chorda_aedificator_appendere_chorda(a,
+                chorda_sectio(p->contentum, k, p->contentum.mensura));
+            p->contentum = chorda_aedificator_finire(a);
+            _genitam_addere(piscina, fructus->genitae,
+                _texere(piscina, "assets/", fructus->titulus,
+                ".visio.html"), pagina);
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 

@@ -18,6 +18,7 @@
 #include "chorda_aedificator.h"
 #include "briar_contextus.h"
 #include "md_html.h"
+#include "sigillum.h"
 #include "silex.h"
 #include "silva.h"
 #include "tabula_dispersa.h"
@@ -1294,6 +1295,48 @@ briar_vestem_legere (
         }
     }
     redde VERUM;
+}
+
+constans character*
+briar_stampa_vestita (
+                Piscina* piscina,
+     constans character* stampa,
+   constans BriarVestis* vestis)
+{
+    SigillumContextus  ctx;
+             Sigillum  s;
+               chorda  partes[4];
+            character  hex[SIGILLUM_HEX_MENSURA];
+            character  mensura[24];
+            character* exitus;
+                  i32  i;
+               size_t  m;
+
+    partes[0] = vestis->involucrum;
+    partes[1] = vestis->styli;
+    partes[2] = vestis->scriptum;
+    partes[3] = vestis->exemplar;
+    sigillum_incipere(&ctx);
+    per (i = ZEPHYRUM; i < (i32)4; i++)
+    {
+        sprintf(mensura, "%lu\n", (unsigned long)partes[i].mensura);
+        sigillum_addere(&ctx, mensura, (memoriae_index)strlen(mensura));
+        si (partes[i].mensura > ZEPHYRUM)
+        {
+            sigillum_addere(&ctx, partes[i].datum,
+                (memoriae_index)partes[i].mensura);
+        }
+    }
+    s = sigillum_finire(&ctx);
+    sigillum_hex(&s, hex);
+    m       = strlen(stampa);
+    exitus  = (character*)piscina_allocare(piscina,
+        (memoriae_index)(m + (size_t)25));
+    memcpy(exitus, stampa, m);
+    memcpy(exitus + m, "\nfacies ", (size_t)8);
+    memcpy(exitus + m + 8, hex, (size_t)16);
+    exitus[m + 24] = '\0';
+    redde exitus;
 }
 
 chorda
