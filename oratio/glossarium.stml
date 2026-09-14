@@ -749,6 +749,10 @@
   <vocabulum lemma="ascii" lingua="anglica" classis="ignotum-permissum" nota="sedes 46"/>
   <vocabulum lemma="nanoid" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="sedes 13; nomen algorithmi (moneta, 2026-09-10)"/>
   <vocabulum lemma="plist" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae Apple (tabula proprietatum), ut xml / json; bibliotheca plist 2026-09-11"/>
+  <vocabulum lemma="lstat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (status nexus IPSIUS, non destinationis); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
+  <vocabulum lemma="rmdir" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (directorium vacuum delere); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
+  <vocabulum lemma="symlink" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (nexum symbolicum creare); systema_posix.h 2026-09-14 pro probatio_filum"/>
+  <vocabulum lemma="enoent" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen macri errno POSIX (via non exsistit); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
 
   <!-- ================= TERMINI T13/T14 (oraculum UD; nexus renovatus 2026-09-05) =================
        verba plagularum T13 quae tabula symbolorum post commissionem T13

@@ -118,6 +118,9 @@ struct stat {
 int stat(const char* via, struct stat* sedes);
 int mkdir(const char* via, mode_t modus);
 int chmod(const char* via, mode_t modus);
+/* lstat: nexum IPSUM describit, non destinationem
+ * (filum_arborem_delere, 2026-09-14) */
+int lstat(const char* via, struct stat* sedes);
 
 
 /* ==================================================
@@ -128,6 +131,9 @@ int chmod(const char* via, mode_t modus);
 
 char* getcwd(char* sedes, size_t mensura);
 int   unlink(const char* via);
+/* rmdir + symlink: filum_arborem_delere et probatio (2026-09-14) */
+int   rmdir(const char* via);
+int   symlink(const char* fons, const char* nexus);
 
 
 /* ==================================================
@@ -228,6 +234,7 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
 
 /* <sectio caput="errno.h"/> errno.h (valores Darwin communes; errno
  * ipsum in systema_c89.h) */
+#define ENOENT      2
 #define EINTR       4
 #define EAGAIN      35
 #define EWOULDBLOCK 35

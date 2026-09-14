@@ -169,6 +169,8 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(sigset_t) == 4);"
     echo "IUNGO_ASSERTA(SIGCONT == 19 && SIGTSTP == 18 && SIGWINCH == 28);"
     echo "IUNGO_ASSERTA(EEXIST == 17);"
+    # filum_arborem_delere (2026-09-14): lstat ENOENT = nihil delendum
+    echo "IUNGO_ASSERTA(ENOENT == 2);"
     echo "IUNGO_ASSERTA(EINTR == 4 && EAGAIN == 35 && EISCONN == 56);"
 }
 
