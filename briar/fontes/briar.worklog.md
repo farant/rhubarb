@@ -507,3 +507,40 @@ stipitem XX, praedicta XX; viridis XXV.
 base64 et fasti (iam aderat); RADIX_FONTES quattuor accepit.
 `tools/briar_struere.sh` omnia `briar/build/*.o` nectit, ergo binarium
 post hoc opus nectibile manet (imago et icones opus IV/V exspectant).
+
+## 2026-09-14 — fasciculus, opus IV: scriptor super Imaginem decodificatam (plan 7)
+
+`briar_fasciculum_scribere(piscina, consilium, icon, exsecutabile,
+domus, causa)`: pixela in `.icns` sub `domus/fasciculum/t.icns`
+(icones, setum Apple, ad centrum recisum), planum fasciculi
+(`fasciculum_reddere`), deinde lex A6 super viam exsistentem, deinde
+`fasciculum_scribere`.
+
+**Lex A6, ordine.** (1) via exsistens quae directorium non est, aut
+directorium quod `fasciculum_legere` recusat: "exsistit neque
+fasciculus est", nihil tangitur; (2) fasciculus cuius
+CFBundleIdentifier differt: "fasciculus alienus", intactus; (3)
+proprius: `filum_arborem_delere` (opus II, lstat), deinde scriptio.
+fasciculum ipsum numquam delet: sine deletione plagula stala superest
+(planta P2 id probat).
+
+**stb_image extra portas.** `bin/aedilis lib/icones.c --partes`
+`lib/imago.c` nominat, quia caput `imago_opus.h` caput `imago.h`
+includit; sed `nm -u` super icones.o, imago_opus.o, imago_png.o contra
+symbola in imago.o definita NIHIL commune dat. Ergo RADIX_FONTES
+imago_opus, imago_png, icones SOLA accepit. Clausura capitum non est
+clausura symbolorum.
+
+**Porta** (XXV assertiones novae, III apparatus; summa L): rubra contra
+stipitem XVII, praedicta XVII (I 9, II 3, III 4, IV 1); viridis L.
+
+| Planta | Praedicta | Observata |
+|---|---|---|
+| P1 comparatio identitatis caeca (`vetus.identitas` bis) | 3 | 3 — lineae 238 240 244 |
+| P2 deletio omissa (`filum_directorium_existit` pro deletione) | 1 | 1 — 226 (plagula stala superest) |
+| P3 plagula plana ut absens (`filum_directorium_existit` bis) | 1 | 1 — 252 (scriptio adhuc deficit; causa SOLA rubet, ideo causa asseritur) |
+
+**Periculum nominatum.** Fasciculus proprius semiscriptus (fasciculum
+non revertit) exsecutabile legibile non habet, ergo `fasciculum_legere`
+eum recusat et scriptor "neque fasciculus" dicit: usor manu delet.
+Acceptum (plan 7, periculum I).

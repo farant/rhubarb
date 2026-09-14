@@ -96,6 +96,12 @@ declare -a RADIX_FONTES=(
     "base64"
     "plist"
     "fasciculum"
+    # icones (opus IV): imago NON additur - nm: icones, imago_opus,
+    # imago_png nullum symbolum ex imago.o poscunt (stb_image extra
+    # omnem portam briar manet); aedilis imago.c per imago.h nominat
+    "imago_opus"
+    "imago_png"
+    "icones"
 )
 
 FILTER="${1:-}"

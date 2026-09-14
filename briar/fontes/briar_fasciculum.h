@@ -14,6 +14,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "imago_typus.h"
 
 #define BRIAR_FASCICULUM_PRAEFIXUM "org.rhubarb.briar."
 
@@ -36,5 +37,19 @@ briar_fasciculum_consilium (
     BriarFasciculumConsilium* consilium,
                       chorda* causa,
                          i32* linea_causae);
+
+/* Scribere consilium->via_app. Icon -> domus/fasciculum/t.icns
+ * (icones; t = nomen exsecutabilis), deinde fasciculus. Fasciculus
+ * EXSISTENS reponitur SOLUM si proprius est (identitas Info.plist
+ * aequalis); alienus aut plagula quae fasciculus non est recusatur et
+ * intacta manet (A6). FALSUM + causa. */
+b32
+briar_fasciculum_scribere (
+                               Piscina* piscina,
+     constans BriarFasciculumConsilium* consilium,
+                        constans Imago* icon,
+                    constans character* exsecutabile,
+                    constans character* domus,
+                                chorda* causa);
 
 #endif /* BRIAR_FASCICULUM_H */

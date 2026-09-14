@@ -5,6 +5,9 @@
 #include "briar_nexus.h"
 #include "chorda_aedificator.h"
 #include "fasciculum.h"
+#include "filum.h"
+#include "icones.h"
+#include "internamentum.h"
 #include "via.h"
 #include <string.h>
 
@@ -164,5 +167,149 @@ briar_fasciculum_consilium (
         chorda_ex_literis(titulus_plagulae, piscina),
         chorda_ex_literis(".app", piscina), piscina);
     consilium->via_app  = via_iungere(partes, II, piscina);
+    redde VERUM;
+}
+
+/* causa scriptoris: textus, status si non negativus, sedes si adest */
+interior b32
+_scriptoris_recusare (
+                 Piscina* piscina,
+                  chorda* causa,
+      constans character* textus,
+                  chorda  sedes,
+                     s32  status)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+        (memoriae_index)160);
+
+    chorda_aedificator_appendere_literis(aed, textus);
+    si (status >= ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed, " (status ");
+        chorda_aedificator_appendere_s32(aed, status);
+        chorda_aedificator_appendere_literis(aed, ")");
+    }
+    si (sedes.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed, ": ");
+        chorda_aedificator_appendere_chorda(aed, sedes);
+    }
+    *causa = chorda_aedificator_finire(aed);
+    redde FALSUM;
+}
+
+b32
+briar_fasciculum_scribere (
+                               Piscina* piscina,
+     constans BriarFasciculumConsilium* consilium,
+                        constans Imago* icon,
+                    constans character* exsecutabile,
+                    constans character* domus,
+                                chorda* causa)
+{
+                 Icones  petitio;
+          IconesFructus  fructus;
+           IconesStatus  st_icon;
+             Fasciculum  f;
+             Fasciculum  vetus;
+       FasciculumStatus  st_fasciculi;
+                 chorda  sedes;
+                 chorda  vacua;
+                 chorda  titulus_exs;
+                 chorda  directorium;
+                 chorda  partes_viae[II];
+                    Xar* partes;
+     constans character* via_icns;
+     constans character* via_app;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    *causa         = vacua;
+    via_app        = chorda_ut_cstr(consilium->via_app, piscina);
+    titulus_exs    = via_nomen(chorda_ex_literis(exsecutabile, piscina),
+        piscina);
+
+    /* I. pixela in .icns, in domo proiecti */
+    memset(&petitio, ZEPHYRUM, magnitudo(Icones));
+    petitio.fons           = icon;
+    petitio.titulus        = titulus_exs;
+    petitio.recidere       = ICONES_RECIDERE_CENTRUM;
+    petitio.latera_petita  = ZEPHYRUM;
+    si (!icones_reddere(&petitio, &fructus, &st_icon, &sedes, piscina))
+    {
+        redde _scriptoris_recusare(piscina, causa,
+            "icon reddi non potuit", sedes, (s32)st_icon);
+    }
+    partes_viae[ZEPHYRUM]  = chorda_ex_literis(domus, piscina);
+    partes_viae[I]         = chorda_ex_literis("fasciculum", piscina);
+    directorium            = via_iungere(partes_viae, II, piscina);
+    si (!filum_directorium_creare_cum_parentibus(
+            chorda_ut_cstr(directorium, piscina)))
+    {
+        redde _scriptoris_recusare(piscina, causa,
+            "directorium iconis creari non potuit", directorium, -I);
+    }
+    partes_viae[ZEPHYRUM]  = directorium;
+    partes_viae[I]         = chorda_concatenare(titulus_exs,
+        chorda_ex_literis(".icns", piscina), piscina);
+    via_icns = chorda_ut_cstr(via_iungere(partes_viae, II, piscina),
+        piscina);
+    si (!icones_icns_scribere(&fructus, via_icns, &st_icon, &sedes,
+            piscina))
+    {
+        redde _scriptoris_recusare(piscina, causa,
+            "icon scribi non potuit", sedes, (s32)st_icon);
+    }
+
+    /* II. planum fasciculi (purum) */
+    memset(&f, ZEPHYRUM, magnitudo(Fasciculum));
+    f.identitas     = consilium->identitas;
+    f.titulus       = consilium->titulus;
+    f.versio        = consilium->versio;
+    f.exsecutabile  = exsecutabile;
+    f.icon          = via_icns;
+    si (!fasciculum_reddere(&f, &partes, &st_fasciculi, &sedes,
+        piscina))
+    {
+        redde _scriptoris_recusare(piscina, causa,
+            "planum fasciculi recusatum", sedes, (s32)st_fasciculi);
+    }
+
+    /* III. exsistens: PROPRIUS reponitur, cetera recusantur (A6) */
+    si (filum_existit(via_app) || filum_directorium_existit(via_app))
+    {
+        InternamentumChorda* intern = internamentum_creare(piscina);
+
+        si (   !filum_directorium_existit(via_app)
+            || !fasciculum_legere(via_app, &vetus, &st_fasciculi,
+            &sedes,
+                                  piscina, intern))
+        {
+            redde _scriptoris_recusare(piscina, causa,
+                "exsistit neque fasciculus est - non tangitur",
+                consilium->via_app, -I);
+        }
+        si (!chorda_aequalis(vetus.identitas, consilium->identitas))
+        {
+            redde _scriptoris_recusare(piscina, causa,
+                "fasciculus alienus est - non tangitur (identitas)",
+                vetus.identitas, -I);
+        }
+        si (!filum_arborem_delere(via_app))
+        {
+            redde _scriptoris_recusare(piscina, causa,
+                "fasciculus vetus deleri non potuit",
+                consilium->via_app,
+                -I);
+        }
+    }
+
+    /* IV. scribere */
+    si (!fasciculum_scribere(partes, via_app, &st_fasciculi, &sedes,
+        piscina))
+    {
+        redde _scriptoris_recusare(piscina, causa,
+            "fasciculus scribi non potuit", sedes, (s32)st_fasciculi);
+    }
     redde VERUM;
 }

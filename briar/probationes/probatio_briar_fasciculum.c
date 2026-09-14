@@ -9,6 +9,7 @@
 #include "briar_fasciculum.h"
 #include "briar_nexus.h"
 #include "chorda.h"
+#include "fasciculum.h"
 #include "filum.h"
 #include "internamentum.h"
 #include "materia_nodus.h"
@@ -146,6 +147,113 @@ principale (vacuum)
         CREDO_AEQUALIS_I32(linea, VI);
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("linea 4", piscina));
+    }
+
+    imprimere("\n--- Probans scriptorem ---\n");
+    {
+        constans character* area =
+            "/tmp/probatio_briar_fasciculum";
+        constans character* exsecutabile =
+            "/tmp/probatio_briar_fasciculum/bin/salve";
+        constans character* domus =
+            "/tmp/probatio_briar_fasciculum/domus";
+        constans character* app =
+            "/tmp/probatio_briar_fasciculum/Salve.app";
+        constans character* aliena =
+            "/tmp/probatio_briar_fasciculum/Alienum.app";
+        constans character* planum =
+            "/tmp/probatio_briar_fasciculum/Planum.app";
+        constans character* stala =
+            "/tmp/probatio_briar_fasciculum/Salve.app/Contents/"
+            "Resources/vetus.txt";
+        BriarFasciculumConsilium c;
+                      Fasciculum lectus;
+                FasciculumStatus status;
+                          chorda sedes;
+                          chorda causa;
+                          chorda icns;
+                           Imago imago;
+                             i32 k;
+
+        (vacuum)filum_arborem_delere(area);
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(
+            "/tmp/probatio_briar_fasciculum/bin"));
+        CREDO_VERUM(filum_scribere_literis(exsecutabile,
+            "#!/bin/sh\n"));
+        CREDO_VERUM(filum_modum_ponere(exsecutabile, 0755));
+
+        /* imago ficta LXIV x LXIV: nullus decodificator in porta */
+        imago.latitudo = LXIV;
+        imago.altitudo = LXIV;
+        imago.pixela    = (i8*)piscina_allocare(piscina,
+            (memoriae_index)(LXIV * LXIV * IV));
+        per (k = ZEPHYRUM; k < (i32)(LXIV * LXIV * IV); k++)
+        {
+            imago.pixela[k] = (i8)0x7F;
+        }
+
+        memset(&c, ZEPHYRUM, magnitudo(c));
+        c.identitas  = chorda_ex_literis("org.rhubarb.briar.salve",
+            piscina);
+        c.titulus  = chorda_ex_literis("Salve", piscina);
+        c.versio   = chorda_ex_literis("2.1", piscina);
+        c.via_app  = chorda_ex_literis(app, piscina);
+
+        /* I. scriptio prima */
+        CREDO_VERUM(briar_fasciculum_scribere(piscina, &c, &imago,
+            exsecutabile, domus, &causa));
+        CREDO_CHORDA_VACUA(causa);
+        CREDO_VERUM(fasciculum_legere(app, &lectus, &status, &sedes,
+            piscina, intern));
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectus.identitas,
+            "org.rhubarb.briar.salve");
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectus.titulus, "Salve");
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectus.versio, "2.1");
+        CREDO_VERUM(filum_existit(
+            "/tmp/probatio_briar_fasciculum/Salve.app/Contents/MacOS/"
+            "salve"));
+        icns = filum_legere_totum(
+            "/tmp/probatio_briar_fasciculum/Salve.app/Contents/"
+            "Resources/salve.icns", piscina);
+        CREDO_VERUM(icns.mensura > VIII);
+        CREDO_VERUM(icns.mensura > VIII
+            && memcmp(icns.datum, "icns", (size_t)IV) == ZEPHYRUM);
+
+        /* II. PROPRIUS reponitur: plagula stala evanescit */
+        CREDO_VERUM(filum_scribere_literis(stala, "vetus"));
+        CREDO_VERUM(briar_fasciculum_scribere(piscina, &c, &imago,
+            exsecutabile, domus, &causa));
+        CREDO_FALSUM(filum_existit(stala));
+        CREDO_VERUM(fasciculum_legere(app, &lectus, &status, &sedes,
+            piscina, intern));
+
+        /* III. ALIENUS recusatur et intactus manet */
+        c.identitas  = chorda_ex_literis("org.aliud.alienum", piscina);
+        c.via_app    = chorda_ex_literis(aliena, piscina);
+        CREDO_VERUM(briar_fasciculum_scribere(piscina, &c, &imago,
+            exsecutabile, domus, &causa));
+        c.identitas  = chorda_ex_literis("org.rhubarb.briar.salve",
+            piscina);
+        CREDO_FALSUM(briar_fasciculum_scribere(piscina, &c, &imago,
+            exsecutabile, domus, &causa));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("alienus", piscina));
+        CREDO_VERUM(fasciculum_legere(aliena, &lectus, &status, &sedes,
+            piscina, intern));
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectus.identitas,
+            "org.aliud.alienum");
+
+        /* IV. plagula quae fasciculus non est: recusata, intacta */
+        CREDO_VERUM(filum_scribere_literis(planum, "non fasciculus"));
+        c.via_app = chorda_ex_literis(planum, piscina);
+        CREDO_FALSUM(briar_fasciculum_scribere(piscina, &c, &imago,
+            exsecutabile, domus, &causa));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("neque fasciculus", piscina));
+        CREDO_VERUM(filum_existit(planum)
+            && !filum_directorium_existit(planum));
+
+        (vacuum)filum_arborem_delere(area);
     }
 
     credo_imprimere_compendium();
