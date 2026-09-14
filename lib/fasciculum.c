@@ -69,6 +69,25 @@ _semita_iuncta (
 }
 
 b32
+fasciculum_identitas_valida (
+    chorda identitas)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < identitas.mensura; i++)
+    {
+        character c = (character)identitas.datum[i];
+
+        si (!(   (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+              || (c >= '0' && c <= '9') || c == '.' || c == '-'))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
 fasciculum_reddere (
     constans Fasciculum*  f,
                     Xar** partes,
@@ -109,6 +128,12 @@ fasciculum_reddere (
         redde _recusare(status, sedes_vitii, FASCICULUM_ERROR_DESUNT,
                         chorda_ex_literis("CFBundleIdentifier",
                                           piscina));
+    }
+    /* Nomen pravum a Launch Services TACITE fallit: hic nominatur */
+    si (!fasciculum_identitas_valida(f->identitas))
+    {
+        redde _recusare(status, sedes_vitii, FASCICULUM_ERROR_IDENTITAS,
+                        f->identitas);
     }
     si (!f->exsecutabile)
     {

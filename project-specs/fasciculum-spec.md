@@ -188,9 +188,18 @@ nomen enumeratio {
     FASCICULUM_ERROR_DIRECTORIUM,     /* scribere: directorium */
     FASCICULUM_ERROR_SCRIPTIO,        /* scribere: filum aut copia */
     FASCICULUM_ERROR_MODUS,           /* scribere: modus +x */
-    FASCICULUM_ERROR_MEMORIA
+    FASCICULUM_ERROR_MEMORIA,
+    FASCICULUM_ERROR_IDENTITAS        /* extra A-Z a-z 0-9 . - */
 } FasciculumStatus;
 ```
+
+`FASCICULUM_ERROR_IDENTITAS` was added 2026-09-14 (briar plan 7,
+Task 1). `CFBundleIdentifier` may hold only letters, digits, `.` and
+`-`, and a bundle with any other character fails silently in Launch
+Services, so `fasciculum_reddere` refuses it and names the identity.
+The rule is public as `fasciculum_identitas_valida`, so briar judges a
+`<briar identitas>` attribute by the same one. An empty identity is
+still `DESUNT`.
 
 Every refusal sets `sedes_vitii`. `FASCICULUM_ERROR_PLISTA` carries
 plist's own status and `semita` rather than flattening them — a bad key

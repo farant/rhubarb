@@ -53,6 +53,8 @@ _titulus_status (
             redde "MODUS";
         casus FASCICULUM_ERROR_MEMORIA:
             redde "MEMORIA";
+        casus FASCICULUM_ERROR_IDENTITAS:
+            redde "IDENTITAS";
         ordinarius:
             redde "IGNOTUS";
     }

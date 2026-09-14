@@ -98,6 +98,45 @@ principale (vacuum)
         CREDO_FALSUM(filum_existit("Contents/Info.plist"));
     }
 
+    /* ---- H7: identitas characteribus iudicata ---- */
+    {
+              Fasciculum  f;
+                     Xar* partes;
+        FasciculumStatus  status;
+                  chorda  sedes;
+
+        imprimere("\n--- H7: identitas iudicata ---\n");
+
+        f = _fasciculum_minimum(via_binarii, piscina);
+        f.identitas = chorda_ex_literis("org.rhubarb.salve_vitreum",
+                                        piscina);
+        CREDO_FALSUM(fasciculum_reddere(&f, &partes, &status, &sedes,
+                                        piscina));
+        CREDO_AEQUALIS_S32((s32)status,
+                           (s32)FASCICULUM_ERROR_IDENTITAS);
+        CREDO_CHORDA_AEQUALIS_LITERIS(sedes,
+                                      "org.rhubarb.salve_vitreum");
+
+        f.identitas = chorda_ex_literis("org.rhubarb.salve vitreum",
+                                        piscina);
+        CREDO_FALSUM(fasciculum_reddere(&f, &partes, &status, &sedes,
+                                        piscina));
+        CREDO_AEQUALIS_S32((s32)status,
+                           (s32)FASCICULUM_ERROR_IDENTITAS);
+
+        /* gemellus positivus: '-', '.', cifrae licita */
+        f.identitas = chorda_ex_literis(
+            "org.rhubarb.briar.salve-vitreum2", piscina);
+        CREDO_VERUM(fasciculum_reddere(&f, &partes, &status, &sedes,
+                                       piscina));
+        CREDO_AEQUALIS_S32((s32)status, (s32)FASCICULUM_SUCCESSUS);
+
+        CREDO_VERUM(fasciculum_identitas_valida(
+            chorda_ex_literis("a.B-9", piscina)));
+        CREDO_FALSUM(fasciculum_identitas_valida(
+            chorda_ex_literis("a/b", piscina)));
+    }
+
     /* ---- H2: claves Info.plist et directio fusionis ---- */
     {
               Fasciculum  f;

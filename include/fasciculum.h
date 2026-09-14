@@ -34,7 +34,8 @@ nomen enumeratio {
     FASCICULUM_ERROR_DIRECTORIUM,
     FASCICULUM_ERROR_SCRIPTIO,
     FASCICULUM_ERROR_MODUS,
-    FASCICULUM_ERROR_MEMORIA
+    FASCICULUM_ERROR_MEMORIA,
+    FASCICULUM_ERROR_IDENTITAS  /* characteres extra A-Z a-z 0-9 . - */
 } FasciculumStatus;
 
 nomen enumeratio {
@@ -75,6 +76,13 @@ fasciculum_reddere (
        FasciculumStatus*  status,
                  chorda*  sedes_vitii,
                 Piscina*  piscina);
+
+/* CFBundleIdentifier: litterae, cifrae, '.' et '-' SOLAE (Apple).
+ * Vacua VERUM reddit - absentia DESUNT est, non characteres pravi.
+ * Publica ut briar eandem regulam UNO loco adhibeat. */
+b32
+fasciculum_identitas_valida (
+    chorda identitas);
 
 /* Scribere planum sub radice data: directoria, plagulae genitae,
  * copiae, modus +x. SINE REVERSIONE: quod scriptum est manet, et

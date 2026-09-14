@@ -379,3 +379,47 @@ this notion `exsequibile` in its comments while the identifiers say
 `exsecutabile` — two words for one thing, noted on purpose. Judged by
 `canon_examen` (VITIA 0) and the glossarium gate; identifier unknowns
 2950 → 2947.
+
+## 2026-09-14 — the identity's characters are judged (briar plan 7, Task 1)
+
+Found while designing briar `-app` (briar-spec §4.8, A4).
+`CFBundleIdentifier` may contain only letters, digits, `.` and `-`. A
+bundle whose identity breaks that is written without complaint and then
+fails SILENTLY in Launch Services: the double-click does nothing and
+nothing names why. briar derives its default identity from the file
+name (`salve_vitreum`), so an underscore is the common case there, not
+an edge.
+
+**One rule, one place.** `fasciculum_identitas_valida(chorda)` is
+public so briar judges a `<briar identitas>` attribute with the same
+function `fasciculum_reddere` uses; two copies of a character class
+drift. Empty returns VERUM on purpose: absence is already
+`FASCICULUM_ERROR_DESUNT` naming `CFBundleIdentifier`, and a second
+status for the same fact would make that refusal ambiguous. The check
+runs directly after the empty check, before the executable is looked
+for; the refusal's sedes is the identity itself.
+
+**`FASCICULUM_ERROR_IDENTITAS` is appended LAST**, so no existing value
+moves. nexus lists two files using the enum and one switch over it,
+`_titulus_status` in `tools/fasciculum_instrumentum.c`, which gained
+the case. The plan said `-Wswitch` would have stopped the tool's build
+without it; it would not have: that switch has an `ordinarius:` arm,
+and a default label silences `-Wswitch` (the house flags do not include
+`-Wswitch-enum`). The tool would have printed `IGNOTUS`. The site was
+found by listing the enum's users, which is the icones lesson again: a
+new enum value is swallowed by any default arm without a warning.
+`project-specs/fasciculum-spec.md` §6 carries the new status.
+
+**Gate H7** (9 assertions, suite 135 → 141): an underscore refused
+with status and sedes; a space refused; a positive twin with `-`, `.`
+and a digit accepted through `fasciculum_reddere`; the public function
+directly on `a.B-9` (VERUM) and `a/b` (FALSUM). Born red against a stub
+returning VERUM: 6, predicted 6.
+
+| Plant | Predicted | Observed |
+|---|---|---|
+| `\|\| c == '_'` added to the accepted class | 3 | 3 — case one only (lines 114, 116, 118) |
+
+The space case and `a/b` stay green under that plant, which is why they
+are there: widening the class by one character must not look the same
+as deleting the check.
