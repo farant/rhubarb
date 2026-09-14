@@ -2204,9 +2204,22 @@ arcs: attachment precision, forced accuracy, case, number, gender and
 subject precision moved down on the charters and partly on Seneca,
 right arcs and purity up; pins re-pinned with the named cause. The
 decoder needs every sentence to carry every tier's candidates, which
-decided the trade. Open: a claim on an umbra bound in an earlier stage
-still competes for its dependent and can revoke or block another claim
-without ever binding.
+decided the trade. Closed by T34.
+
+**As built — T34, a claim that cannot bind may not compete (2026-09-14,
+decisio Frani).** The standing-claim table lives per sentence while the
+fillings list is per stage, and the intake guard consulted only the
+latter, so a row naming an umbra written in an earlier stage still
+entered the one-head contest: it could revoke a bindable claim or take
+a dependent and block genuine rows, while never binding itself. The
+guard now spans the sentence but covers the contest ONLY, because an
+impletio row also fixes reading preference and suppressing that broke
+idempotence. A counter reports the refused rows per file. Measured with
+a probe before the fix: the harmful share is about 3 % of arcs on
+Seneca, 0.4 % on the charters, 2 % on Perseus, and it does NOT explain
+the T33 b precision loss. Adopted after measuring nine treebanks: case
+up on every Latin file, subject precision and attachment down by one to
+nine permille, fifteen pins re-set with the named cause.
 
 ## 8. Stage 6 — search
 

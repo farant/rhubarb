@@ -2372,11 +2372,36 @@ _sententiam_resolvere_gradu (
                 }
                 perge;
             }
+            /* T34 (2026-09-14): UMBRA GRADU PRIORE SCRIPTA NON
+             * CONTENDIT. Umbra semel scripta (impleta aut revocata)
+             * ligari non potest - LIGATIO infra eam praeterit
+             * (repetita) - ergo ordo eam nominans nihil lucrari
+             * potest, nocere potest: vincens contentionem petitionem
+             * LIGABILEM revocat, dependentem vacuum capiens ordines
+             * legitimos eiusdem gradus excludit. Custodia
+             * _umbra_iam_petita idem INTRA gradum facit; haec per
+             * SENTENTIAM, quia capita_data per sententiam manent.
+             * MENSURATUM 2026-09-14 (proba temporaria, thesauri III):
+             * tales ordines Seneca 1357 / chartae 2057 / Perseus 893,
+             * quorum pars maxima innocua (eadem umbra eundem
+             * dependentem re-petens), sed revocantes XLVII / XIII / XII
+             * et dependentes vacuos capientes LVII / X / XXXVI. */
             /* T32 a CAPUT UNUM PER VERBUM: dependens iam ab umbra ALIA
              * petitus (hoc aut gradu priore) - ordo recusatus, prima
              * vincit per dependentem; umbra iam petita nihil petit */
             si (   _caput_unum_activum()
-                && !_umbra_iam_petita(impletiones, umbra))
+                && !_umbra_iam_petita(impletiones, umbra)
+                && oratio_referentia_scripta(umbra,
+                    (i32)ORATIO_UMBRA_IMPLETIO)
+                && cursus->census != NIHIL)
+            {
+                cursus->census->recusatae_scriptae =
+                    cursus->census->recusatae_scriptae + I;
+            }
+            si (   _caput_unum_activum()
+                && !_umbra_iam_petita(impletiones, umbra)
+                && !oratio_referentia_scripta(umbra,
+                    (i32)ORATIO_UMBRA_IMPLETIO))
             {
                 i32 dependens = _dependens_ordinis(*elementa, v, a,
                     umbra, w);

@@ -926,9 +926,24 @@ case, number, gender and subject pins DOWN on the charters (attachment
 459 → 446 / 480 → 469, forced 760 → 751 / 766 → 757, subject
 315 → 284 / 478 → 460), Seneca case 714 → 710, attachment 526 → 520,
 subject 581 → 570; right-arc floors and purity UP. Finding: the loose
-tier is net harmful on contested sentences. OPEN (ledger): a row on an
-umbra written in an EARLIER stage still enters the one-head contest — it
-can revoke or block another claim and then never binds.
+tier is net harmful on contested sentences.
+**T34 (2026-09-14): A CLAIM THAT CANNOT BIND MAY NOT COMPETE (decisio
+Frani).** `capita_data` lives per SENTENCE, `impletiones` per STAGE, and
+the intake guard `_umbra_iam_petita` scanned only the stage list — so a
+row naming an umbra written in an earlier stage still contested: winning
+revoked a bindable claim, taking a free dependent blocked genuine rows,
+and it could never bind itself (one slot, one filling). Guard extended
+to the sentence, over the CONTEST ONLY: an impletio row also PREFERS
+readings, and killing that too broke idempotence (a second run over a
+resolved document re-decided readings). Counter `recusatae_scriptae` →
+oracle `ORDINES-SCRIPTI` row (1379 Seneca / 2127 / 2206 charters / 88
+English / 3058 Aquinas). MEASURED (probe, before the fix): of such rows
+the vast majority are harmless re-proposals; harmful ones ~104 / 23 / 48
+= 3 % / 0.4 % / 2 % of arcs. Case UP on every Latin file, subject
+precision and attachment DOWN 1–9 ‰; fifteen pins re-set. Gate: inline
+two-stage programme, plant RED on `revocatae_capitis`. NOTE: with
+`cursus="fratrum"` only ADJACENT siblings matched in that fixture. CLOSED by T34 (2026-09-14): a row on an umbra
+written in an EARLIER stage no longer enters the one-head contest.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

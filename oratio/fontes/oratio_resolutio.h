@@ -101,6 +101,10 @@ nomen structura {
     /* T32 f: ordines recusati ut contentio LECTIONIS - caput idem ac
      * petitionis stantis (fiducia arcuum eam iudicare nequit; ordo decidit) */
     i32 recusatae_lectionis;
+    /* T34 (2026-09-14): ordines recusati quia umbra GRADU PRIORE iam
+     * scripta est (impleta aut revocata) - ligari non possunt (LIGATIO
+     * umbram scriptam praeterit), ergo nec contendere debent */
+    i32 recusatae_scriptae;
     /* T32 b: alternae scriptae (petitiones cedentes servatae) */
     i32 alternae;
         /* T20a: stampa clausularum (strata I-III) ante gradus - census

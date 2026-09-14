@@ -384,6 +384,8 @@ _tabulam_imprimere (
         titulus, (integer)c->sententiae, (integer)c->sententiae_fractae,
         (integer)c->resolutiones_fractae,
         (integer)c->verba, (integer)c->rangae);
+    imprimere("  ordines ex umbra iam scripta recusati %d (T34)\n",
+        (integer)c->ordines_scripti_recusati);
                 imprimere("  TECTA %.1f%%  primaria %.1f%%  lemmata %.1f%%  ignota %.1f%%  inalignata %d\n",
                     _pars(c->tecta, c->verba), _pars(c->primaria,
                     c->verba),
@@ -808,6 +810,9 @@ _machinam_imprimere (
         /* 2026-09-11: proiectiones gradus resolutionis fractae (pinna 0) */
         imprimere("%s\tRESOLUTIO-FRACTAE\t%d\n", titulus,
             (integer)c->resolutiones_fractae);
+        /* T34: ordines ex umbra gradu priore scripta recusati (relatum) */
+        imprimere("%s\tORDINES-SCRIPTI\t%d\n", titulus,
+            (integer)c->ordines_scripti_recusati);
         /* T22 b: ordo DIALECTUS titulus recuperata verba */
         imprimere("%s\tDIALECTUS\t%s\t%d\t%d\n", titulus,
             ORATIO_TITULI_DIALECTORUM[(i32)c->dialectus],

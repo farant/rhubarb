@@ -380,6 +380,44 @@ _umbra_impletio_analysis (
     redde b;
 }
 
+/* T34: ordinalis vocabuli quod umbram SUBIECTI vocabuli implet
+ * (lectio quaeque, umbra quaeque); -I si nulla impleta */
+interior s32
+_impletio_subiecti (
+    constans MateriaNodus* vocabulum)
+{
+    i32 k;
+
+    si (vocabulum == NIHIL)
+    {
+        redde (s32)-I;
+    }
+    per (k = ZEPHYRUM; k < _numerus_analysium(vocabulum); k++)
+    {
+        constans MateriaNodus* lectio = _analysis(vocabulum, k);
+                          i32  u;
+
+        si (lectio == NIHIL)
+        {
+            perge;
+        }
+        per (u = ZEPHYRUM; u < (i32)VIII; u++)
+        {
+            si (_umbra(lectio, u) == NIHIL)
+            {
+                frange;
+            }
+            si (   _umbra_index(lectio, u, (i32)ORATIO_UMBRA_RELATIO)
+                    == (s32)ORATIO_RELATIO_SUBIECTUM
+                && _umbra_impletio_vocabulum(lectio, u) >= ZEPHYRUM)
+            {
+                redde _umbra_impletio_vocabulum(lectio, u);
+            }
+        }
+    }
+    redde (s32)-I;
+}
+
 /* accidens lectionis per titulum loci: -I si genus sine aut non
  * scriptum */
 interior s32
@@ -1064,6 +1102,67 @@ principale (vacuum)
             (s32)ORATIO_CASUS_ACCUSATIVUS);
         CREDO_VERUM (census.recusatae_lectionis >= I);
         CREDO_AEQUALIS_I32 (census.revocatae_capitis, ZEPHYRUM);
+    }
+
+    /* II e. UMBRA GRADU PRIORE SCRIPTA NON CONTENDIT (T34, 2026-09-14).
+     * 'Puella currit miles pugnat' (asyndeton: cursus 'fratrum'
+     * fratres CONTIGUOS poscit - MENSURATUM, coniunctio 'et' in medio
+     * congruentiam rumpit). Gradus I regula 'praecedente' (fiducia
+     * CCXXVIII) ambas umbras implet: currit <- puella, pugnat <-
+     * miles. Gradus II regula 'sequente-proximo' (fiducia DCCIV)
+     * umbram currit SCRIPTAM iterum nominat, dependentem 'miles'
+     * petens: ANTE T34 fiducia maior petitionem gradus prioris
+     * (pugnat <- miles) REVOCABAT et ipsa numquam ligabatur - arcus
+     * periit. POST T34: ordo contentionem non intrat, ambo arcus
+     * manent, numerator recusatae_scriptae eum notat. */
+    imprimere("\n--- II e. Umbra gradu priore scripta non contendit"
+        " (T34) ---\n");
+    {
+             OratioPartesCensus census_partium;
+          OratioResolutioCensus census;
+       OratioVocabulariumVitium vitium_custodiae;
+                OratioProgramma* programma_custodiae;
+                   MateriaNodus* doc;
+                      character  textus_custodiae[4096];
+
+        textus_custodiae[0] = '\0';
+        strcat(textus_custodiae,
+            "<regula titulus=\"umbra-subiectum-praecedente\" gradus=\"1\"><EXEMPLAR cursus=\"fratrum\" quaesitio=\"omnes\" output=\"$umbra_subiectum_praecedente\"><elementa><vocabulum n=\"$w\"><analyses><* n=\"$b\"><casus>0</casus><numerus>$num</numerus></></analyses></vocabulum>");
+        strcat(textus_custodiae,
+            "<vocabulum n=\"$v\"><analyses><analysis-verbi n=\"$a\"><umbrae><umbra n=\"$u\"><relatio>3</relatio><casus>0</casus><numerus>$num</numerus></umbra></umbrae></analysis-verbi></analyses></vocabulum></elementa></EXEMPLAR><consilium><PER congruentia=\"$umbra_subiectum_praecedente\"><impletio vocabulum=\"&@v;\" analysis=\"&@a;\" umbra=\"&@u;\" ad-vocabulum=\"&@w;\" ad-analysis=\"&@b;\" regula=\"umbra-subiectum-praecedente\"/></PER></consilium></regula>");
+        strcat(textus_custodiae,
+            "<regula titulus=\"umbra-subiectum-sequente-proximo\" gradus=\"2\"><EXEMPLAR cursus=\"fratrum\" quaesitio=\"omnes\" output=\"$umbra_subiectum_sequente_proximo\"><elementa><vocabulum n=\"$v\"><analyses><analysis-verbi n=\"$a\"><umbrae><umbra n=\"$u\"><relatio>3</relatio><casus>0</casus><numerus>$num</numerus></umbra></umbrae></analysis-verbi></analyses></vocabulum>");
+        strcat(textus_custodiae,
+            "<vocabulum n=\"$w\"><analyses><* n=\"$b\"><casus>0</casus><numerus>$num</numerus></></analyses></vocabulum></elementa></EXEMPLAR><consilium><PER congruentia=\"$umbra_subiectum_sequente_proximo\"><impletio vocabulum=\"&@v;\" analysis=\"&@a;\" umbra=\"&@u;\" ad-vocabulum=\"&@w;\" ad-analysis=\"&@b;\" regula=\"umbra-subiectum-sequente-proximo\"/></PER></consilium></regula>\n");
+        programma_custodiae = oratio_resolutio_programma_legere(piscina,
+            intern, _l(textus_custodiae), &vitium_custodiae);
+        CREDO_NON_NIHIL (programma_custodiae);
+        CREDO_AEQUALIS_I32 (programma_custodiae == NIHIL ? ZEPHYRUM
+            : xar_numerus(programma_custodiae->regulae), (i32)II);
+        si (programma_custodiae != NIHIL)
+        {
+            programma_custodiae->fiducia = programma->fiducia;
+        }
+        doc = _documentum(piscina, &vocabularia,
+            "Puella currit miles pugnat.\n", &census_partium);
+        CREDO_NON_NIHIL (doc);
+        oratio_resolutio_census_vacare(&census);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma_custodiae, (s32)-I, "latina", doc, &census));
+        imprimere("    currit -> %d   pugnat -> %d   recusatae"
+            " scriptae %d   revocatae %d\n",
+            (integer)_impletio_subiecti(_vocabulum(doc, (i32)I)),
+            (integer)_impletio_subiecti(_vocabulum(doc, (i32)III)),
+            (integer)census.recusatae_scriptae,
+            (integer)census.revocatae_capitis);
+        /* ordo ex umbra scripta contentionem non intravit */
+        CREDO_VERUM (census.recusatae_scriptae >= I);
+        /* petitio gradus prioris INTACTA (ante T34 revocabatur) */
+        CREDO_AEQUALIS_I32 (census.revocatae_capitis, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_impletio_subiecti(_vocabulum(doc, (i32)I)),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_impletio_subiecti(_vocabulum(doc,
+            (i32)III)), (s32)II);
     }
 
     imprimere("\n--- III. Planum iudicatum; ordo malus recusatus"

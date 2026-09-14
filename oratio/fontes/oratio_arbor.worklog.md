@@ -4088,3 +4088,68 @@ stage can destroy or block a binding without making one. Pre-existing
 for filled umbrae; now reachable for revoked ones too, whose sentences
 used to drop out. A candidate contributor to the precision loss above;
 ledger question, not fixed here.
+
+## 2026-09-14 — T34: a claim that cannot bind may no longer compete
+
+**The defect.** The executor keeps two tables with different lifetimes:
+the standing-claim table (`capita_data`, one `Petitio` per element) is
+allocated once per SENTENCE and passed into every stage; the fillings
+list (`impletiones`) is rebuilt per STAGE. The row-intake guard
+`_umbra_iam_petita` scans only the stage's own list, so a row naming an
+umbra that was written in an EARLIER stage went through. Such a row can
+never bind, because the binding loop skips any umbra already written
+(`repetitae`) — one slot, one filling. It could still compete: winning
+the one-head contest revoked a bindable standing claim, and taking an
+unclaimed dependent made it the incumbent that genuine later rows had
+to beat. A later stage could therefore destroy or block an arc without
+ever making one.
+
+**Measured first, with a temporary probe** (Seneca / charters dev /
+Perseus, arcs drawn 3263 / 5503 / 2446). Rows from an already-written
+umbra, by outcome: re-proposing the dependent they already hold 1253 /
+2034 / 845, losing the contest 253 / 334 / 48 — both harmless; winning
+and revoking 47 / 13 / 12, of which the victim was an earlier-stage
+binding 4 / 3 / 2; taking a free dependent 57 / 10 / 36. So the harmful
+population is about 104 / 23 / 48, roughly 3 % / 0.4 % / 2 % of arcs.
+NEGATIVE FINDING, recorded because it killed my hypothesis: the
+charters lost the most precision at T33 b and have the FEWEST of these
+events; Seneca lost the least and has the most. This path does not
+explain that loss — the loose tier itself is what hurts contested
+sentences.
+
+**The fix, and the nuance that shaped it.** First cut skipped the whole
+row and broke the idempotence fixture: an impletio row does TWO jobs,
+it claims a dependent AND prefers the readings of carrier and filler
+(`praelata`), and killing both let a later rule decide readings the
+first had settled — a second run over a resolved document permuted
+readings that used to stand. The guard now covers the CONTEST only, so
+reading preference is untouched and re-application is idempotent again.
+Counter `recusatae_scriptae`, summed into the oracle as
+`ordines_scripti_recusati` and printed as the `ORDINES-SCRIPTI` row:
+1379 / 2127 / 2206 / 88 English / 3058 Aquinas / 896 Perseus / 1522
+PROIEL / 1024 Dante.
+
+**Gate.** Inline two-stage programme with the real trust table:
+'Puella currit miles pugnat', stage 1 `umbra-subiectum-praecedente`
+(228) binds currit←puella and pugnat←miles; stage 2
+`umbra-subiectum-sequente-proximo` (704) names the written currit umbra
+again and claims miles. Before T34 the higher trust revoked pugnat's
+binding and the winner never bound; now the row stays out of the
+contest, both arcs survive, and `recusatae_scriptae` counts it. Planted
+fault (the new condition removed) → RED on
+`census.revocatae_capitis == 0`.
+
+**Measured on nine treebanks, adopted with Fran's decision.** Case rises
+on every Latin file (Seneca 710→711, charters 673→675 and 695→698,
+Aquinas +22 words, Dante +17, PROIEL +11, Perseus +3). Subject
+precision falls (566 / 283 / 451 from 570 / 284 / 460), attachment
+falls one on each charter file, forced accuracy one, Seneca gender one;
+Seneca right arcs 1699→1711, charters −2 / −1. English untouched.
+Fifteen pins re-set, the ten downward ones with the named cause.
+
+**Rule-writing note, measured while building the fixture.** With
+`cursus="fratrum"` the pattern's elements matched only ADJACENT
+siblings here: 'Puella currit et miles pugnat' produced no row for a
+verb-then-noun rule because 'et' sat between them, while the same rule
+matched once the conjunction was gone. Worth confirming against the
+engine before relying on it, but write fixtures with adjacency in mind.

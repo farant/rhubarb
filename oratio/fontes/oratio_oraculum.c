@@ -3887,6 +3887,8 @@ _sententiam_iudicare (
     /* 2026-09-11: proiectiones gradus fractae summantur - olim mutae */
     census->resolutiones_fractae = census->resolutiones_fractae
         + census_resolutionis.fractae;
+    census->ordines_scripti_recusati = census->ordines_scripti_recusati
+        + census_resolutionis.recusatae_scriptae;
         /* T20a: clausulae aureae (radices finitae) et paria pro puritate;
      * resolutio absens (crudus) = paria sine clausula nostra (apertae) */
     paria = xar_creare(scratch, (i32)magnitudo(ParClausulae));
