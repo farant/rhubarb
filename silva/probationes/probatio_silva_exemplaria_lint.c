@@ -820,8 +820,13 @@ principale (vacuum)
     /* 156 -> 173 (2026-09-07): plagulae lib XVII sessionis ludus/pictor
      * (2026-09-04/05, mandatum .. ludus_fenestra) - omnes latinizatae,
      * purae, exactae; suita silvae ab ea sessione non cursa, pinna a
-     * commissione orationis inventa. */
-    CREDO_AEQUALIS_I32 (census_latinum.plagulae, 173);
+     * commissione orationis inventa.
+     *
+     * 173 -> 176 (2026-09-14): plist, fasciculum, icones
+     * (2026-09-11/12) - omnes latinizatae, purae, exactae; commissiones
+     * eorum portam radicis solam cucurrerunt, pinna a commissione
+     * systema_posix inventa. */
+    CREDO_AEQUALIS_I32 (census_latinum.plagulae, 176);
     CREDO_AEQUALIS_I32 (census_latinum.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.divergentes, ZEPHYRUM);

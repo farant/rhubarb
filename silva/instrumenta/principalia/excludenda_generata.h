@@ -21,6 +21,7 @@ interior constans character* constans EXCLUDENDA_PISCINAE[] = {
 };
 
 interior constans character* constans EXCLUDENDA_CHORDAE[] = {
+    "_chorda_nullum_habet",
     "_extrahere_verba",
     "chorda_aequalis_case_insensitivus",
     "chorda_camelus",
@@ -31,7 +32,9 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "chorda_ex_buffer",
     "chorda_ex_bytes_legibilis",
     "chorda_ex_f64",
+    "chorda_ex_f64_exacta",
     "chorda_ex_s32",
+    "chorda_ex_s64",
     "chorda_fissio_chorda",
     "chorda_friare",
     "chorda_incipit",
@@ -57,6 +60,7 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "chorda_ut_f64",
     "chorda_ut_i32",
     "chorda_ut_s32",
+    "chorda_ut_s64",
     "chorda_vacua",
     NIHIL
 };

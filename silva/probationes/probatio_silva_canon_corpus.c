@@ -579,16 +579,21 @@ principale (vacuum)
     /* 156 -> 173 (2026-09-07): plagulae lib XVII sessionis ludus/pictor
      * (2026-09-04/05, mandatum .. ludus_fenestra) - omnes latinizatae,
      * purae, exactae; suita silvae ab ea sessione non cursa, pinna a
-     * commissione orationis inventa. */
-    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)173);
-    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)173);
+     * commissione orationis inventa.
+     *
+     * 173 -> 176 (2026-09-14): plist, fasciculum, icones
+     * (2026-09-11/12) - omnes latinizatae, purae, exactae; commissiones
+     * eorum portam radicis solam cucurrerunt, pinna a commissione
+     * systema_posix inventa. */
+    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)176);
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)176);
     CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.parsura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.vitia_summa, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)173);
-    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)173);
+    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)176);
+    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)176);
 
 
     /* ============================================================
