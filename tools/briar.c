@@ -10,7 +10,9 @@
  * -struere [-iterum] = aedificare solum, directorium proiecti
  * imprimere; -arbor = proiectio STML; -partes = clausura; -amalgama =
  * plagula una <t>.c (+ probatio_<t>.c) iuxta thistle, clang sola
- * compilanda (briar_amalgama); -versio = stampa corporis + sigilla
+ * compilanda (briar_amalgama); -app [-icon <via>] = fasciculus
+ * <t>.app iuxta thistle cum icone (briar_fasciculum); -versio = stampa
+ * corporis + sigilla
  * vexillorum. Forma shebang vexilla ut
  * argumentum PRIMUM post plagulam agnoscit ('./x.thistle -probatio');
  * '--' ea programmati relinquit. Regulae in briar_imperium (porta).
@@ -32,6 +34,7 @@
 #include "chorda_aedificator.h"
 #include "capsula.h"
 #include "filum.h"
+#include "imago.h"
 #include "internamentum.h"
 #include "processus.h"
 #include "silex.h"
@@ -39,6 +42,7 @@
 #include "xar.h"
 #include "briar_amalgama.h"
 #include "briar_facies.h"
+#include "briar_fasciculum.h"
 #include "briar_arbor.h"
 #include "briar_contextus.h"
 #include "briar_fabrica.h"
@@ -60,6 +64,9 @@ externus constans CapsulaEmbed capsula_corpus_silicis;
  * (regula speculi, nota tabularii 01KY0T6T64): symbolum est
  * contractus. */
 externus constans CapsulaEmbed capsula_facies_briar;
+/* icon ordinarius '-app' (build/capsula_icon_briar.c, par. 4.8):
+ * symbolum contractus est, caput genitum non includitur */
+externus constans CapsulaEmbed capsula_icon_briar;
 
 #define BRIAR_VERSIO "v0"
 #define BRIAR_MORA_AEDIFICANDI_MS 600000
@@ -141,6 +148,8 @@ _auxilium (vacuum)
         "\n"
         "  -amalgama   plagulam UNAM <t>.c iuxta thistle scribere"
         " (effugium: clang sola)\n"
+        "  -app        fasciculum <t>.app iuxta thistle scribere\n"
+        "  -icon <via> cum -app: fons iconis (alioquin infixus)\n"
         "  -versio     stampam corporis et sigilla vexillorum\n"
         "  -f <radix>  arbor rhubarb (alioquin ascensus, alioquin"
         " corpus infixum)\n"
@@ -217,6 +226,78 @@ _effusionem_scribere (
     {
         fwrite(c.datum, I, (size_t)c.mensura, quo);
     }
+}
+
+/* -app (par. 4.8): consilium, icon DECODIFICATUS, fasciculus. Hic
+ * SOLUM stb_image vivit (per imago.h): moduli briar pixela accipiunt,
+ * numquam vias imaginum (icones D7). */
+interior s32
+_fasciculum_facere (
+                   Piscina* piscina,
+                       Xar* nexus,
+    constans BriarImperium* imp,
+        constans character* via_thistle,
+        constans character* domus,
+        constans character* binarium)
+{
+    BriarFasciculumConsilium consilium;
+                      chorda causa;
+                         i32 linea = ZEPHYRUM;
+                ImagoFructus icon;
+
+    si (!briar_fasciculum_consilium(piscina, nexus, via_thistle,
+            imp->icon, &consilium, &causa, &linea))
+    {
+        fprintf(stderr, "%s:%d: %.*s\n", imp->via, (integer)linea,
+            (integer)causa.mensura, (constans character*)causa.datum);
+        redde I;
+    }
+    si (chorda_vacua(consilium.via_icon))
+    {
+              Capsula* capsula = capsula_aperire(&capsula_icon_briar,
+                  piscina);
+        CapsulaFructus lectum;
+
+        si (capsula == NIHIL)
+        {
+            fprintf(stderr, "briar: capsula iconis non aperta\n");
+            redde I;
+        }
+        lectum = capsula_legere(capsula,
+            "briar/icon/default-thistle.jpg", piscina);
+        si (lectum.datum.mensura == ZEPHYRUM)
+        {
+            fprintf(stderr,
+                "briar: icon ordinarius in capsula deest\n");
+            redde I;
+        }
+        icon = imago_caricare_ex_memoria(lectum.datum.datum,
+            lectum.datum.mensura, piscina);
+    }
+    alioquin
+    {
+        icon = imago_caricare_ex_file(
+            chorda_ut_cstr(consilium.via_icon, piscina), piscina);
+    }
+    si (!icon.successus)
+    {
+        fprintf(stderr, "briar: icon non decodificatus (%s): %.*s\n",
+            chorda_vacua(consilium.via_icon) ? "infixus"
+                : chorda_ut_cstr(consilium.via_icon, piscina),
+            (integer)icon.error.mensura,
+            (constans character*)icon.error.datum);
+        redde I;
+    }
+    si (!briar_fasciculum_scribere(piscina, &consilium, &icon.imago,
+            binarium, domus, &causa))
+    {
+        fprintf(stderr, "briar: %.*s\n", (integer)causa.mensura,
+            (constans character*)causa.datum);
+        redde I;
+    }
+    imprimere("%.*s\n", (integer)consilium.via_app.mensura,
+        (constans character*)consilium.via_app.datum);
+    redde ZEPHYRUM;
 }
 
 s32
@@ -554,6 +635,12 @@ principale (
     {
         imprimere("%s\n", dir);
         redde ZEPHYRUM;
+    }
+    /* -app: aedificatio iam facta (supra), binarium in fasciculum */
+    si (imp.actio == BRIAR_ACTIO_APP)
+    {
+        redde _fasciculum_facere(piscina, nexus, &imp,
+            optiones.via_thistle, dir, binarium);
     }
     si (imp.actio == BRIAR_ACTIO_PROBATIO)
     {

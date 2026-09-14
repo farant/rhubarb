@@ -544,3 +544,38 @@ stipitem XVII, praedicta XVII (I 9, II 3, III 4, IV 1); viridis L.
 non revertit) exsecutabile legibile non habet, ergo `fasciculum_legere`
 eum recusat et scriptor "neque fasciculus" dicit: usor manu delet.
 Acceptum (plan 7, periculum I).
+
+## 2026-09-14 — fasciculus, opus V: vexilla, icon infixus, binarium (plan 7)
+
+`-app` (actio) et `-icon <via>` (ante plagulam, iuxta `-f`) in
+`briar_imperium`. `-icon` sine `-app` recusatur POST sectionem II (forma
+shebang `./x.thistle -app` actionem ibi demum dat); argumentum sequens
+quod '-' incipit aut '.thistle' continet = "-icon sine via". Porta
+imperii +XII: rubra VIII praedicta VIII; planta (custodia `!= APP` in
+`== VERSIO`, lexemata aequalia) II praedicta II.
+
+Icon ordinarius `briar/icon/default-thistle.jpg` (Frani, MXXIV px, 386
+KB) in capsula PROPRIA (`tools/briar_icon_capsula.sh`; spectator eam non
+vehit). Decodificatio SOLUM in `tools/briar.c` (`_fasciculum_facere`):
+capsula -> `imago_caricare_ex_memoria`, aut via iconis ->
+`imago_caricare_ex_file`; `build/imago.o` radicis in `briar_struere.sh`
+nectitur, nulla porta briar stb_image nectit (A1).
+
+**Mensurata manu (Fran spectavit).**
+- `bin/briar` 10.716.968 -> 11.292.264 octeti (+575 KB: JPEG infixum et
+  stb_image).
+- `briar -app kalendarium.thistle` (in arbore, corpus disci): 3 s;
+  identitas `org.rhubarb.briar.kalendarium`, CFBundleName = titulus
+  fenestrae; exsecutabile arm64 +x; `.icns` 4,7 MB, iconutil X plagulas
+  reddit; icon MXXIV px oculo inspectus (colores et situs recti).
+- Applicatio vitrea IN FASCICULO currit et fenestram aperit: assets per
+  capsulam in binarium compilata sunt, ergo exsecutabile copiatum sibi
+  sufficit.
+- `-app` iterum: plagula stala in Resources evanuit (proprius
+  repositus), identitas eadem.
+- `-icon fons_256.png`: `.icns` 210 KB, iconutil VII plagulas (16,
+  16@2x, 32, 32@2x, 128, 128@2x, 256) - numerus in plano ratiocinatus
+  nunc MENSURATUS.
+- **A8: icon novus in Dock ET Finder statim apparuit** (applicatione
+  clausa, fasciculo reposito, iterum aperta). Nulla mutatio temporis
+  necessaria; nihil additum.

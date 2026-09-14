@@ -63,3 +63,7 @@ __pycache__/
 capsula_facies_briar.h
 capsula_facies_briar.c
 facies_briar.toml
+# icon ordinarius '-app' infixus (tools/briar_icon_capsula.sh)
+capsula_icon_briar.h
+capsula_icon_briar.c
+icon_briar.toml

@@ -48,6 +48,10 @@ _actio_vexilli (
     {
         redde (s32)BRIAR_ACTIO_VISIO;
     }
+    si (_est(a, "-app"))
+    {
+        redde (s32)BRIAR_ACTIO_APP;
+    }
     si (_est(a, "-versio"))
     {
         redde (s32)BRIAR_ACTIO_VERSIO;
@@ -113,6 +117,17 @@ briar_imperium_legere (
             imp->fabrica  = argv[i + I];
             i             = i + I;
         }
+        alioquin si (_est(a, "-icon"))
+        {
+            si (   i + I >= argc || argv[i + I][0] == '-'
+                || strstr(argv[i + I], ".thistle") != NIHIL)
+            {
+                _recusare(imp, piscina, "-icon sine via");
+                redde FALSUM;
+            }
+            imp->icon  = argv[i + I];
+            i          = i + I;
+        }
         alioquin si (a[0] == '-' && a[1] != '\0')
         {
             ChordaAedificator* aed = chorda_aedificator_creare(piscina,
@@ -123,7 +138,8 @@ briar_imperium_legere (
             chorda_aedificator_appendere_literis(aed, a);
             chorda_aedificator_appendere_literis(aed,
                 " (nota: -probatio -struere [-iterum] -arbor"
-                " -partes -amalgama -html -visio -versio -f <radix>)");
+                " -partes -amalgama -html -visio -app -versio"
+                " -f <radix> -icon <via>)");
             imp->causa = chorda_aedificator_finire(aed);
             redde FALSUM;
         }
@@ -173,6 +189,13 @@ briar_imperium_legere (
                 i            = i + I;
             }
         }
+    }
+    /* -icon post sectionem II: forma shebang './x.thistle -app' ibi
+     * demum actionem dat */
+    si (imp->icon != NIHIL && imp->actio != BRIAR_ACTIO_APP)
+    {
+        _recusare(imp, piscina, "-icon solum cum -app");
+        redde FALSUM;
     }
     /* III. reliqua (NIHIL-terminata) */
     imp->numerus_reliquorum = argc - i;

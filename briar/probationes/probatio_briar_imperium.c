@@ -105,6 +105,40 @@ principale (vacuum)
         NIHIL));
     CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_VISIO);
 
+    /* briar -app x.thistle; shebang ./x.thistle -app (par. 4.8) */
+    CREDO_VERUM (_legere(piscina, &imp, II, "-app", "x.thistle",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_APP);
+    CREDO_NIHIL (imp.icon);
+    CREDO_VERUM (_legere(piscina, &imp, II, "./x.thistle", "-app",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_APP);
+    /* -icon sine -app recusatur, et -app nominatur */
+    CREDO_FALSUM (_legere(piscina, &imp, III, "-icon", "signum.png",
+        "x.thistle"));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("-app", piscina));
+    /* -icon sine via recusatur */
+    CREDO_FALSUM (_legere(piscina, &imp, III, "-app", "-icon",
+        "x.thistle"));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("-icon sine via", piscina));
+    {
+        constans character* argv_icon[6];
+
+        argv_icon[0] = "briar";
+        argv_icon[1] = "-app";
+        argv_icon[2] = "-icon";
+        argv_icon[3] = "signum.png";
+        argv_icon[4] = "x.thistle";
+        argv_icon[5] = NIHIL;
+        CREDO_VERUM (briar_imperium_legere(piscina, V, argv_icon,
+            &imp));
+        CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_APP);
+        CREDO_VERUM (imp.icon != NIHIL
+            && strcmp(imp.icon, "signum.png") == ZEPHYRUM);
+    }
+
     /* briar x.thistle -- -probatio : '--' abscisum, vexillum
      * programmatis */
     CREDO_VERUM (_legere(piscina, &imp, III, "x.thistle", "--",
