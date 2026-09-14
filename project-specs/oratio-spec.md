@@ -205,6 +205,42 @@ row and the whole grid: the box.
   layer, coverage and count agreement are pinned only rising per
   treebank; the verb slot is scored against the gold root.
 
+**The partition lattice (Fran, 2026-09-14, the design conversation
+after T34; decisions 49–53; design in §7 "Design — T35").** The
+decoder's weights will be keyed by a pattern signature and a bucket
+(desideratum 01M24Z45XK; decision 48 stays reserved for the decoder).
+Before any weight exists the census must say which buckets are real: a
+feature that looks pure in the sample can be memorised, or can flip
+between genres (R20). The instrument is a partition lattice in the
+shape of knotapel's `scrutinium.h`: every census column, the gold answer
+and the corpus split are partitions of the same rows.
+
+- **49 A bucket is earned by held-out gain.** Moderate realism made
+  measurable: a feature is a category only when its partition predicts
+  the gold partition on a corpus it was not fitted on. Leave one corpus
+  out; majorities from the training corpora only; a group votes only
+  with at least `limen` training rows; the score is rows right against
+  the fold's base answer, in rows and permille, never a float.
+- **50 No fold falls.** A chain step that loses rows on any corpus is
+  refused whatever it gains pooled — the rule doctrine ("no treebank
+  drops") applied to buckets. The pooled chain is printed beside the
+  vetoed one; where they diverge, a pooled gain hides a corpus that
+  falls.
+- **51 Machine rows describe themselves.** A machine row kind that a
+  reader consumes carries a `COLUMNAE` header row naming its columns;
+  columns are appended, never reordered; a reader selects by title and
+  refuses an unknown title, a differing header or a row of the wrong
+  width by name. Positional readers go stale silently — the class T33
+  removed from the tree.
+- **52 Gold is named.** A column that reads the gold carries the
+  `aurum-` prefix and is never a feature; the gold column must carry it.
+  A leak is a refusal, not a discipline remembered in a script.
+- **53 Unjudgeable is said aloud.** A column whose values live within
+  one corpus cannot be judged by leaving that corpus out; it is reported
+  INAESTIMABILIS by name, never as the base rate dressed as a score.
+  Known cases: a per-corpus genre column (CIRCSE is the only wholly
+  verse corpus) and English (one corpus).
+
 ## 3. Stage 1 — the tree (`oratio_arbor`)
 
 **Registry (`oratio_registrum`, hand-written like md's).** Genera:
@@ -2220,6 +2256,159 @@ Seneca, 0.4 % on the charters, 2 % on Perseus, and it does NOT explain
 the T33 b precision loss. Adopted after measuring nine treebanks: case
 up on every Latin file, subject precision and attachment down by one to
 nine permille, fifteen pins re-set with the named cause.
+
+**Design — T35, the partition lattice (2026-09-14, the conversation
+after T34; decisions 49–53; desideratum 01M24V1387).**
+
+SOURCE. `knotapel/raqiya/scrutinium.h` (values × detectors → partitions;
+refines, equal, meet, join, duplicates, refinement DAG, meet of all,
+structural signature). Its refinement is exact; census rows need a
+graded judgment against a gold partition, held out. Ported, not
+vendored: its ring vtable, pair histograms, edge lists and graph
+analyser have no consumer here, it allocates with malloc, and its
+identifiers are English.
+
+ALGEBRA — `include/partitio.h`, `lib/partitio.c`. `Partitio` =
+`numerus`, `numerus_gregum`, `grex[]`, `magnitudines[]`, `primus[]`,
+groups numbered by FIRST APPEARANCE: equal partitions have identical
+arrays (equality is a byte compare) and every group has a
+representative row, so a partition carries no titles — a reader names
+any group, a meet's included, from the columns at `primus[g]`.
+Constructors `partitio_ex_notis` (arbitrary labels), `partitio_ex_chordis`
+(cell values by bytes), `partitio_una`, `partitio_discreta`;
+`partitio_subtilior(a, b)` (a refines b; O(n) through one group map,
+where scrutinium is groups × n), `partitio_aequalis`, `partitio_infimum`
+(meet; i64 pair keys), `partitio_supremum` (join; union-find).
+`PartitioReticulum` over k partitions: `ordo` (refinement matrix),
+`tegit` (covering relation only, for printing), `duplex` (index of the
+first equal partition, itself when unique — i32 is unsigned, no −1),
+`altitudo` (longest chain among the unique), `latitudo` (maximum
+antichain by DILWORTH: k minus a maximum matching over the order, which
+refinement makes transitive; scrutinium's brute force stops at k ≤ 20
+and the LIS rows carry 31 columns). Piscina only; unequal row counts
+refused. Read in this domain: width = how many independent evidence
+dimensions the columns hold; altitude = how deep a back-off nesting
+alone allows.
+
+JUDGMENT — `include/partitio_aestimatio.h`, `lib/partitio_aestimatio.c`.
+Candidate P, gold A and folds S partition the same rows; one pass builds
+C[p][a][s], and for held-out fold s the training counts are the totals
+minus C[·][·][s]. Base answer b_s = the gold group with the most
+training rows. A group VOTES only with at least `limen` training rows,
+for its training majority; a tie votes b_s; a group without a vote
+answers b_s and its rows count as `inaestimati`. Per fold and summed
+over rows: `ordines`, `recti`, `basis`, `inaestimati`; `lucrum` = recti
+− basis (s32); `puritas_intra` (in-sample majority purity — reported
+only, the cross-check against a Python census); `greges_mutabiles`
+(voting groups whose vote differs between folds: the R20 flip);
+`inaestimabilis` when more than half the rows were answered by
+fallback. `partitio_catenam_struere`: from the one-group partition,
+each step meets the chain with every unused column, ranks by rows right
+(ties by column order) and takes the first candidate that gains at
+least `lucrum_minimum` rows over the previous step and, with
+`sortes_vetant`, loses no row on any fold against the previous step;
+the chain ends when none passes. Each step refines the last,
+so an accepted chain is a candidate BACK-OFF ORDER for the weight table.
+A scratch piscina per candidate holds its groups × gold × folds counts.
+
+ORACLE. A machine row is `via TAB KIND TAB fields`; its header is `via
+TAB COLUMNAE TAB KIND TAB titles`, printed once per run before the first
+row of its kind, titles from a static table beside the printf
+(`ORATIO_COLUMNAE_LIS`). LIS titles for the existing 23 fields:
+`victor victa dependens caput ante aurum-casus casus-victae
+casus-victoris aurum-deprel aurum-caput-idem caput-victoris-idem
+clausula primum-clausulae nominativi nominativi-certi
+nominativi-concordes accusativi-certi genus-victae numerus-capitis
+persona-capitis vox-capitis numerus-victae numerus-victoris`. Appended:
+`thesaurus` (UD file stem before `-ud-`, dev and test one corpus: the
+fold), `aurum-arcus` (victor | victa | ambo | neutra | idem — idem = the
+same head, a reading contest the arc cannot judge), `aurum-lectio`
+(victor | victa | ambo | neutra | ignotum), `relatio-victae`,
+`relatio-victoris` (umbra relation titles; the winner's by a walk over
+its head's umbrae), `ante-victoris`, `distantia-victae`,
+`distantia-victoris` (elements between the dependent and the claimed
+head). The last five are the pieces of the weight key's back-off
+(relation → relation + direction + adjacency → exact rule), so the
+instrument tests that order instead of assuming it.
+
+INSTRUMENT — `oratio/instrumenta/reticulum.c`, `./oratio/reticulum.sh
+<x.tsv> -genus K -aurum aurum-… -sortes column [-ubi title=v1,v2]…
+[-columnae … | -praeter …] [-gradus …] [-limen N] [-lucrum N] [-greges
+column | catena] [-machina]`. `-ubi` is equality only (comma = or,
+repeated = and); features default to every column not prefixed
+`aurum-` except via and the fold; `-gradus` maps a count to 0 | 1 |
+plures, the only transformation; `limen` defaults to XX (twenty
+training rows), `lucrum` to `limen`. Output: header (rows, gold split, folds, base), single columns
+by gain (groups, held-out purity, gain, in-sample purity, fallback rows,
+mutable groups, falling folds; INAESTIMABILIS by name without numbers),
+the lattice of columns (duplicates, covering edges, altitude, width),
+both chains (the refused candidate named after the last step, the
+divergence named), the top twenty pairs by interaction gain (the pair's
+rows right minus the better single's), and `-greges` per group (title
+from the representative row, rows, gold split, vote per fold, `!` when
+it flips). Machine rows carry their own headers: `RETICULUM-COLUMNA`,
+`-SORS`, `-CATENA`, `-PAR`, `-TEGIT`, `-DUPLEX`. Exit 0 = judged, 2 =
+nothing judged with the cause: a kind without a header, an unknown
+title, an `aurum-` feature, a gold column without the prefix, fewer than
+two folds, no rows after `-ubi`, two differing headers of one kind, a
+row of the wrong width (line named).
+
+GATES (each red at birth by a planted fault). `probatio_partitio`:
+canonical numbering, hand cases, laws over seeded random partitions
+(the meet refines both, both refine the join, idempotence, refinement a
+partial order), Dilworth width equal to brute force on random families
+of k ≤ 12; plant = renumbering skipped → equality red.
+`probatio_partitio_aestimatio`: the toy grid replicated past `limen`
+over three folds with every count derived in a comment (tie → base,
+sub-threshold fallback, a fold-constant column INAESTIMABILIS, a column
+gaining pooled and losing one fold → the vetoed chain refuses what the
+pooled chain takes); plant = training counts include the held-out fold
+(the circularity) → red. `probatio_oratio_oraculum`: header law (NF of
+the header = NF of the row + 1, unique titles), append law (the first
+23 titles pinned), CROSS-COUNT laws — LIS and CONTENTIO rows are written
+under one condition at one site, so rows with `aurum-arcus=victa` equal
+ΣCONTENTIO `victa_sola`, and likewise `victor_solus`, `victa_casu_sola`,
+`victor_casu_solus`; plant = victor and victa swapped.
+`probatio_oratio_reticulum`: a committed fixture tsv → the expected
+machine rows line by line, every refusal exit 2 with its cause; plant =
+`-ubi` ignored.
+
+ACCEPTANCE (T35 e, written before the run; LIS rows regenerated with
+`metire.sh x.tsv -lites` — the scratchpad copies predate T33 b). (1) An
+independent recount, `oratio/census/reticulum_recensio.py`, from these
+definitions equals the C machine rows for every single column and every
+chain step. (2) Retrodiction of T32 e/f on same-verb subject/object
+contests with gold `aurum-lectio`: (a) `numerus-capitis` is among the
+top single columns (plural verb → subject 53:20 on Seneca); (b) a meet
+with the loser reading's number or gender shows a mutable group between
+CIRCSE and the prose corpora (the '-a' words: subjects 82:41 in verse,
+objects 85:40 in prose) and the vetoed chain refuses a step the pooled
+chain takes, naming CIRCSE. If (b) fails, the tool or the reading of
+T32 f is wrong, and that is settled before any weight work.
+
+TRANCHES. T35 a the algebra; T35 b the judgment; T35 c the oracle
+columns and laws; T35 d the instrument; T35 e the first run, the
+acceptance and the records (as-built, worklog, census README, oratio
+CLAUDE.md, desideratum 01M24V1387 closed). About two days.
+
+LEFT OUT, named: scrutinium's V and diamond flags and complementary
+pairs (held-out scoring and `limen` catch memorisation), pair
+histograms, edge lists, the graph analyser; a Python face (when a
+Python census asks); expressions in `-ubi` and bucketing beyond 0 | 1 |
+plures; per-group weights (the weight-table spec reads
+`RETICULUM-CATENA`); header rows for the other nineteen machine row
+kinds (each when a reader first needs it); a genre column (CIRCSE is
+the only wholly verse corpus and Perseus mixes both — returns with a
+per-sentence genre, e.g. Perseus sentence ids naming the work); English
+folds (EWT dev and test are one corpus); the raw-text census over
+forced cells and sentence-level candidate counts (desideratum
+01M2H23T9R, Fran's proposal: the same library, a new row producer, its
+patterns verified against treebank gold before they feed anything).
+
+OPEN, for the weight-table spec: decision 11 says nothing derived from
+a treebank is ever shipped, yet `fixa/auctores.tsv` is derived from the
+pinned treebanks and committed. A committed weight table needs this
+settled, and the NC shelf corpora can never train a shipped table.
 
 ## 8. Stage 6 — search
 
