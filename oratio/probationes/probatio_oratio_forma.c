@@ -841,6 +841,74 @@ principale (vacuum)
             >= md.paragraphi * (s64)IV / (s64)V);
     }
 
+    /* T38 a: FORMA DOCUMENTI ex censu formarum paragraphorum - versus
+     * si verba paragraphorum versuum plus quam dimidium verborum;
+     * distichon (XIV verba, casus II fixturae) + prosa XXI verborum -> prosa;
+     * + prosa VII verborum -> versus; paria (XIV + XIV) -> prosa
+     * (ambiguitas ad prosam); NIHIL -> prosa cum numeris nullis */
+    imprimere("\n--- VI. Forma documenti (T38 a) ---\n");
+    {
+        constans character* stropha =
+            "Odi et amo. quare id faciam, fortasse requiris.\n"
+            "    nescio, sed fieri sentio et excrucior.\n\n";
+        constans character* prosa_longa =
+            "Gallia est omnis divisa in partes tres, quarum unam"
+            " incolunt Belgae, aliam Aquitani, tertiam qui ipsorum"
+            " lingua Celtae, nostra Galli appellantur.\n";
+        constans character* prosa_brevis =
+            "Gallia est omnis divisa in partes tres.\n";
+        constans character* prosa_par =
+            "Gallia est omnis divisa in partes tres, quarum unam"
+            " incolunt Belgae, aliam Aquitani, tertiam.\n";
+        character textus[1024];
+        MateriaNodus* doc;
+        i32 in_versu;
+        i32 omnia;
+
+        strcpy(textus, stropha);
+        strcat(textus, prosa_longa);
+        doc = oratio_arbor_parsare(piscina, textus,
+            (i32)strlen(textus));
+        CREDO_NON_NIHIL (doc);
+        CREDO_AEQUALIS_I32 (_numerus_listae(doc,
+            (i32)ORATIO_DOCUMENTUM_PARAGRAPHI), (i32)II);
+        CREDO_AEQUALIS_S32 ((s32)oratio_forma_paragraphi(
+            _paragraphus(doc, ZEPHYRUM)), (s32)ORATIO_FORMA_VERSUS);
+        CREDO_AEQUALIS_S32 ((s32)oratio_forma_paragraphi(
+            _paragraphus(doc, I)), (s32)ORATIO_FORMA_PROSA);
+        CREDO_AEQUALIS_S32 ((s32)oratio_forma_documenti_censu(doc,
+            &in_versu, &omnia), (s32)ORATIO_FORMA_PROSA);
+        imprimere("    stropha + prosa longa: verba versuum %d de %d\n",
+            (integer)in_versu, (integer)omnia);
+        CREDO_AEQUALIS_I32 (in_versu, (i32)XIV);
+        CREDO_AEQUALIS_I32 (omnia, (i32)XXXV);
+
+        strcpy(textus, stropha);
+        strcat(textus, prosa_brevis);
+        doc = oratio_arbor_parsare(piscina, textus,
+            (i32)strlen(textus));
+        CREDO_NON_NIHIL (doc);
+        CREDO_AEQUALIS_S32 ((s32)oratio_forma_documenti_censu(doc,
+            &in_versu, &omnia), (s32)ORATIO_FORMA_VERSUS);
+        CREDO_AEQUALIS_I32 (in_versu, (i32)XIV);
+        CREDO_AEQUALIS_I32 (omnia, (i32)XXI);
+
+        strcpy(textus, stropha);
+        strcat(textus, prosa_par);
+        doc = oratio_arbor_parsare(piscina, textus,
+            (i32)strlen(textus));
+        CREDO_NON_NIHIL (doc);
+        CREDO_AEQUALIS_S32 ((s32)oratio_forma_documenti_censu(doc,
+            &in_versu, &omnia), (s32)ORATIO_FORMA_PROSA);
+        CREDO_AEQUALIS_I32 (in_versu, (i32)XIV);
+        CREDO_AEQUALIS_I32 (omnia, (i32)XXVIII);
+
+        CREDO_AEQUALIS_S32 ((s32)oratio_forma_documenti_censu(NIHIL,
+            &in_versu, &omnia), (s32)ORATIO_FORMA_PROSA);
+        CREDO_AEQUALIS_I32 (in_versu, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia, ZEPHYRUM);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     {

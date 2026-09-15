@@ -37,6 +37,7 @@
 #include "oratio_vocabularium.h"
 #include "oratio_registrum.h"
 #include "oratio_clausula.h"
+#include "oratio_partes.h"
 #include "tabula_dispersa.h"
 
 
@@ -118,6 +119,18 @@ nomen structura {
     i32 prior_casuum;
 } OratioResolutioCensus;
 
+/* CONTEXTUS DECLARATUS (T38 a, 2026-09-15, decisio LVII): lingua
+ * documenti (titulus, ut hodie), dialectus (OratioDialectus, census
+ * T30 c) et forma (OratioForma versus | prosa: census formarum
+ * paragraphorum in documento, declaratio per identitatem in oraculo).
+ * Tabula ponderum decretoris (T38 b/c) his condicionatur; ante T38 c
+ * nihil eum legit praeter linguam. */
+nomen structura {
+    constans character* lingua;
+                   s32  dialectus;
+                   s32  forma;
+} OratioContextus;
+
 
 /* Programma ex textu legere (stml_legere); regulae = elementa 'regula'
  * radicis ordine. NIHIL cum vitio (plagula "resolutio.stml", linea,
@@ -159,6 +172,28 @@ oratio_resolutio_applicare (
             constans character* lingua,
                   MateriaNodus* radix,
          OratioResolutioCensus* census);
+
+/* Idem cum CONTEXTU DECLARATO (T38 a): oratio_resolutio_applicare
+ * delegat cum {lingua, classicus, prosa}. */
+b32
+oratio_resolutio_applicare_contextu (
+                        Piscina* piscina,
+            InternamentumChorda* intern,
+   constans MateriaLexiconRatum* ratum,
+       constans OratioProgramma* programma,
+                            s32  regulae_numerus,
+       constans OratioContextus* contextus,
+                   MateriaNodus* radix,
+          OratioResolutioCensus* census);
+
+/* Contextus documenti ex censibus eius (instrumenta verba, arbor):
+ * lingua per suffragia annotationis, dialectus ex censu partium
+ * (ignotus = classicus), forma per oratio_forma_documenti_censu. */
+vacuum
+oratio_resolutio_contextus_documenti (
+    constans OratioPartesCensus* census,
+          constans MateriaNodus* radix,
+                OratioContextus* contextus);
 
 /* Lingua documenti ex censu annotationis: titulus linguae cuius
  * SUFFRAGIA plura (OratioPartesCensus.vocabula_linguarum - vocabula

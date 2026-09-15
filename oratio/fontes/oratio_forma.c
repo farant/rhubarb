@@ -1045,3 +1045,120 @@ oratio_forma_initium_lineae (
     }
     redde ZEPHYRUM;
 }
+
+
+/* ==================================================
+ * Forma documenti (T38 a)
+ * ================================================== */
+
+/* verba (elementa generis vocabulum) paragraphi unius */
+interior i32
+_verba_paragraphi (
+    constans MateriaNodus* paragraphus)
+{
+    constans MateriaValor* sententiae =
+        &paragraphus->loci[ORATIO_PARAGRAPHUS_SENTENTIAE];
+                      i32 summa = ZEPHYRUM;
+                      i32 s;
+
+    si (sententiae->genus != MATERIA_VALOR_LISTA)
+    {
+        redde ZEPHYRUM;
+    }
+    per (s = ZEPHYRUM; s
+        < materia_valor_lista_numerus(*sententiae); s++)
+    {
+        constans MateriaValor* sv =
+            materia_valor_lista_obtinere(*sententiae, s);
+        constans MateriaValor* elementa;
+                          i32  e;
+
+        si (sv == NIHIL || sv->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        elementa = &sv->datum.nodus->loci[ORATIO_SENTENTIA_ELEMENTA];
+        si (elementa->genus != MATERIA_VALOR_LISTA)
+        {
+            perge;
+        }
+        per (e = ZEPHYRUM; e
+            < materia_valor_lista_numerus(*elementa); e++)
+        {
+            constans MateriaValor* ev =
+                materia_valor_lista_obtinere(*elementa, e);
+
+            si (   ev != NIHIL && ev->genus == MATERIA_VALOR_NODUS
+                && ev->datum.nodus->genus
+                    == (s32)ORATIO_GENUS_VOCABULUM)
+            {
+                summa = summa + I;
+            }
+        }
+    }
+    redde summa;
+}
+
+OratioForma
+oratio_forma_documenti_censu (
+    constans MateriaNodus* radix,
+                      i32* verba_versus,
+                      i32* verba)
+{
+    constans MateriaValor* paragraphi  = NIHIL;
+                      i32  numerus     = ZEPHYRUM;
+                      i32  in_versu    = ZEPHYRUM;
+                      i32  omnia       = ZEPHYRUM;
+                      i32  p;
+
+    si (radix != NIHIL && radix->genus == (s32)ORATIO_GENUS_DOCUMENTUM)
+    {
+        paragraphi = &radix->loci[ORATIO_DOCUMENTUM_PARAGRAPHI];
+        si (paragraphi->genus == MATERIA_VALOR_LISTA)
+        {
+            numerus = materia_valor_lista_numerus(*paragraphi);
+        }
+        alioquin
+        {
+            paragraphi = NIHIL;
+        }
+    }
+    alioquin si (   radix        != NIHIL
+                 && radix->genus == (s32)ORATIO_GENUS_PARAGRAPHUS)
+    {
+        numerus = I;
+    }
+    per (p = ZEPHYRUM; p < numerus; p++)
+    {
+        constans MateriaNodus* par = radix;
+                          i32  v;
+
+        si (paragraphi != NIHIL)
+        {
+            constans MateriaValor* pv =
+                materia_valor_lista_obtinere(*paragraphi, p);
+
+            si (pv == NIHIL || pv->genus != MATERIA_VALOR_NODUS)
+            {
+                perge;
+            }
+            par = pv->datum.nodus;
+        }
+        v      = _verba_paragraphi(par);
+        omnia  = omnia + v;
+        si (oratio_forma_paragraphi(par) == ORATIO_FORMA_VERSUS)
+        {
+            in_versu = in_versu + v;
+        }
+    }
+    si (verba_versus != NIHIL)
+    {
+        *verba_versus = in_versu;
+    }
+    si (verba != NIHIL)
+    {
+        *verba = omnia;
+    }
+    redde in_versu * (i32)II > omnia ? ORATIO_FORMA_VERSUS
+        : ORATIO_FORMA_PROSA;
+}

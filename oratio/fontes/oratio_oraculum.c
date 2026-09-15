@@ -2,6 +2,7 @@
 
 #include "oratio_oraculum.h"
 #include "oratio_partes.h"
+#include "oratio_forma.h"
 #include "oratio_lexicon.h"
 #include "oratio_stml.h"
 #include "materia_lexicon.h"
@@ -2664,6 +2665,10 @@ _litem_notare (
             l->sententia = chorda_aedificator_finire(t);
         }
     }
+    /* T38 a: contextus declaratus - dialectus plagulae (census toti),
+     * forma sententiae per identitatem */
+    l->dialectus            = census->dialectus;
+    l->forma                = (s32)oratio_oraculum_forma_sententiae(s);
     l->ante                 = (b32)(dependens_a < caput_a);
     l->caput_victoris_idem  = (b32)(caput_v == (s32)caput_a);
     /* T35 c: IUDICIA - condicio contentionis eadem (caput victoris
@@ -2820,7 +2825,8 @@ constans character* constans
     "relatio-victoris", "ante-victoris", "distantia-victae",
     "distantia-victoris",
     "lemma-capitis",
-    "sententia"
+    "sententia",
+    "dialectus", "forma"
 };
 
 /* titulus valoris enumerati aut '-' (absens) */
@@ -3001,6 +3007,11 @@ oratio_oraculum_lis_linea (
     _lis_campus_chordae(a, lis->lemma_capitis);
     /* T37 b: campus XXXIII appensus */
     _lis_campus_chordae(a, lis->sententia);
+    /* T38 a: campi XXXIV-XXXV appensi - contextus declaratus */
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_DIALECTORUM,
+        lis->dialectus, (i32)ORATIO_DIALECTUS_NUMERUS));
+    _lis_campus_literis(a,
+        oratio_forma_titulus((OratioForma)lis->forma));
     redde chorda_aedificator_finire(a);
 }
 
@@ -4153,6 +4164,58 @@ nomen structura {
                                                   * sententiae solius */
 } Resolutio;
 
+/* FORMAE THESAURORUM (T38 a, 2026-09-15): forma sententiae thesauri
+ * DECLARATA per identitatem (CoNLL-U lineas non habet, forma T6b tacet):
+ * CIRCSE id '_prose' -> prosa (Tacitus Ger CXIX), '_poetry' (DCXLVII)
+ * et 'SenPhoen' (Phoenissae CXXVII) versus; Perseus per documentum
+ * PHI: phi0690 Vergilius, phi0959 Ovidius, phi0975 Phaedrus versus,
+ * phi0972 Petronius prosa; ceterae plagulae prosa. INVENTUM: Perseus
+ * tres opera versuum, contentiones tamen prosae similes (T32 d) -
+ * reticulum cum columna forma decernit (T38 b). Prima congruens
+ * vincit. */
+nomen structura {
+    constans character* signum;         /* substring identitatis */
+                   b32  in_documento;   /* VERUM: in '# newdoc id',
+                                         * FALSUM: in sent_id */
+            OratioForma forma;
+} FormaThesauri;
+
+hic_manens constans FormaThesauri FORMAE_THESAURORUM[] = {
+    { "_prose",   FALSUM, ORATIO_FORMA_PROSA  },
+    { "_poetry",  FALSUM, ORATIO_FORMA_VERSUS },
+    { "SenPhoen", FALSUM, ORATIO_FORMA_VERSUS },
+    { "phi0690",  VERUM,  ORATIO_FORMA_VERSUS },
+    { "phi0959",  VERUM,  ORATIO_FORMA_VERSUS },
+    { "phi0975",  VERUM,  ORATIO_FORMA_VERSUS },
+    { "phi0972",  VERUM,  ORATIO_FORMA_PROSA  }
+};
+
+OratioForma
+oratio_oraculum_forma_sententiae (
+    constans OratioConlluSententia* s)
+{
+    i32 n = (i32)(magnitudo(FORMAE_THESAURORUM)
+        / magnitudo(FORMAE_THESAURORUM[0]));
+    i32 k;
+
+    si (s == NIHIL)
+    {
+        redde ORATIO_FORMA_PROSA;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        chorda c = FORMAE_THESAURORUM[k].in_documento ? s->documentum
+            : s->id;
+
+        si (   c.mensura > ZEPHYRUM
+            && _continet(c, FORMAE_THESAURORUM[k].signum))
+        {
+            redde FORMAE_THESAURORUM[k].forma;
+        }
+    }
+    redde ORATIO_FORMA_PROSA;
+}
+
 interior b32
 _sententiam_iudicare (
                            Piscina* piscina,
@@ -4171,6 +4234,8 @@ _sententiam_iudicare (
     i32 n;
         i32 e_proximum = ZEPHYRUM;
     i32 lingua_index;
+    s32 forma;                   /* T38 a: forma declarata */
+    OratioContextus contextus;   /* T38 a */
             OratioPartesCensus census_partium;
  OratioResolutioCensus census_resolutionis;   /* T20b: catena */
                   Xar* paria;   /* T20a: ParClausulae */
@@ -4205,14 +4270,24 @@ _sententiam_iudicare (
             census_partium.vocabula_linguarum);
                 census->sententiae_linguae[lingua_index] =
                     census->sententiae_linguae[lingua_index] + I;
+    /* T38 a: forma sententiae declarata (census per plagulam) et
+     * CONTEXTUS resolutionis - lingua documenti, dialectus plagulae,
+     * forma sententiae (decisio LVII) */
+    forma =
+        (s32)oratio_oraculum_forma_sententiae(s);
+    census->formae[(i32)forma] = census->formae[(i32)forma] + I;
+    contextus.lingua             = resolutio != NIHIL
+        && resolutio->lingua_documenti != NIHIL
+            ? resolutio->lingua_documenti
+            : ORATIO_TITULI_LINGUARUM[lingua_index];
+    contextus.dialectus  = census->dialectus;
+    contextus.forma      = forma;
                 oratio_resolutio_census_vacare(&census_resolutionis);
         si (   (   resolutio != NIHIL && resolutio->programma != NIHIL
-            && !oratio_resolutio_applicare(scratch, resolutio->intern,
+            && !oratio_resolutio_applicare_contextu(scratch,
+                resolutio->intern,
                 resolutio->ratum, resolutio->programma,
-                resolutio->regulae_numerus,
-                resolutio->lingua_documenti != NIHIL
-                    ? resolutio->lingua_documenti
-                    : ORATIO_TITULI_LINGUARUM[lingua_index], doc,
+                resolutio->regulae_numerus, &contextus, doc,
                 &census_resolutionis))
             || !_elementa_colligere(scratch, vocabularia->la, doc,
             elementa))

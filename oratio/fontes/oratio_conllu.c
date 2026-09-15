@@ -125,6 +125,9 @@ oratio_conllu_legere (
     OratioConlluSententia* s       = NIHIL;
                       i32  cursor  = ZEPHYRUM;
                       i32  linea   = ZEPHYRUM;
+    /* T38 a: '# newdoc id' ultimum visum - documentum sententiarum
+     * sequentium (vacuum ante primum) */
+                   chorda documentum = _chorda(NIHIL, ZEPHYRUM);
 
     si (sententiae == NIHIL)
     {
@@ -167,7 +170,8 @@ oratio_conllu_legere (
             memset(s, ZEPHYRUM, magnitudo(*s));
             s->lexemata = xar_creare(piscina,
                 (i32)magnitudo(OratioConlluLexema));
-            s->linea    = linea;
+            s->linea       = linea;
+            s->documentum  = documentum;   /* T38 a */
             si (s->lexemata == NIHIL)
             {
                 redde NIHIL;
@@ -184,6 +188,13 @@ oratio_conllu_legere (
             {
                 s->id = _chorda(l.datum + (i32)XII, l.mensura
                     - (i32)XII);
+            }
+            alioquin si (_incipit(l, "# newdoc id = "))
+            {
+                /* T38 a: documentum novum - haec sententia et sequentes */
+                documentum    = _chorda(l.datum + (i32)XIV, l.mensura
+                    - (i32)XIV);
+                s->documentum = documentum;
             }
             perge;
         }

@@ -139,6 +139,7 @@ principale (
                OratioVocabularia vocabularia;
         OratioVocabulariumVitium vitium;
               OratioPartesCensus census;
+                 OratioContextus contextus;   /* T38 a */
 
         si (!oratio_vocabularia_onerare(piscina,
             getenv("RHUBARB_RADIX"),
@@ -175,11 +176,12 @@ principale (
                     (integer)vitium.linea, vitium.causa);
                 redde II;
             }
+            /* T38 a: contextus documenti ex censibus eius */
+            oratio_resolutio_contextus_documenti(&census, radix,
+                &contextus);
             si (   programma != NIHIL
-                && !oratio_resolutio_applicare(piscina, intern, &ratum,
-                    programma, (s32)-I,
-                    oratio_resolutio_lingua_censu(census.vocabula_linguarum),
-                    radix,
+                && !oratio_resolutio_applicare_contextu(piscina, intern,
+                    &ratum, programma, (s32)-I, &contextus, radix,
                     NIHIL))
             {
                 fprintf(stderr, "arbor: resolutio fracta\n");

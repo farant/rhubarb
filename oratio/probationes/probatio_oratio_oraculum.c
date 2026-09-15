@@ -573,6 +573,31 @@ _thesaurus_arborum (
                 (integer)census.dialectus_verba);
             CREDO_AEQUALIS_S32 (census.dialectus, speratus);
         }
+        /* T38 a: forma per sententiam DECLARATA (FORMAE_THESAURORUM):
+         * CIRCSE versus DCCLXXIV (_poetry DCXLVII + Phoenissae CXXVII),
+         * prosa CXIX (Tacitus Ger '_prose'); ceterae plagulae prosa
+         * omnes; summa = sententiae annotatae */
+        {
+            b32 circse = strstr(plagula, "circse") != NIHIL;
+
+            imprimere("    forma versus %d prosa %d (sententiae %d,"
+                " fractae %d)\n",
+                (integer)census.formae[ORATIO_FORMA_VERSUS],
+                (integer)census.formae[ORATIO_FORMA_PROSA],
+                (integer)census.sententiae,
+                (integer)census.sententiae_fractae);
+            CREDO_AEQUALIS_I32 (census.formae[ORATIO_FORMA_VERSUS]
+                + census.formae[ORATIO_FORMA_PROSA],
+                census.sententiae - census.sententiae_fractae);
+            CREDO_AEQUALIS_I32 (census.formae[ORATIO_FORMA_PROSA],
+                circse ? (i32)119
+                : census.sententiae - census.sententiae_fractae);
+            si (circse)
+            {
+                CREDO_AEQUALIS_I32 (census.formae[ORATIO_FORMA_VERSUS],
+                    (i32)774 - census.sententiae_fractae);
+            }
+        }
         {
             i32 k;
 
@@ -922,6 +947,7 @@ _thesaurus_arborum (
                             plagula, prima);
                            i32 cum_lemmate    = ZEPHYRUM;
                            i32 cum_sententia  = ZEPHYRUM;
+                           i32 cum_contextu   = ZEPHYRUM;   /* T38 a */
                            i32 m;
 
                         CREDO_AEQUALIS_I32 (_tabulae(caput_lis),
@@ -945,6 +971,19 @@ _thesaurus_arborum (
                             {
                                 cum_sententia = cum_sententia + I;
                             }
+                            /* T38 a: contextus in omni lite - dialectus
+                             * classicus | medius, forma prosa | versus */
+                            si (   (   l->dialectus
+                                    == (s32)ORATIO_DIALECTUS_CLASSICUS
+                                    || l->dialectus
+                                    == (s32)ORATIO_DIALECTUS_MEDIUS)
+                                && (   l->forma
+                                    == (s32)ORATIO_FORMA_PROSA
+                                    || l->forma
+                                    == (s32)ORATIO_FORMA_VERSUS))
+                            {
+                                cum_contextu = cum_contextu + I;
+                            }
                         }
                         imprimere("    lites cum lemmate capitis %d /"
                             " %d\n", (integer)cum_lemmate,
@@ -953,6 +992,9 @@ _thesaurus_arborum (
                             xar_numerus(census.lites));
                         /* T37 b: identitas sententiae in omni lite */
                         CREDO_AEQUALIS_I32 (cum_sententia,
+                            xar_numerus(census.lites));
+                        /* T38 a: contextus declaratus in omni lite */
+                        CREDO_AEQUALIS_I32 (cum_contextu,
                             xar_numerus(census.lites));
                     }
                 }
@@ -1170,7 +1212,7 @@ _columnas_lis_probare (
        i32 aequales  = ZEPHYRUM;
     chorda t;
 
-    CREDO_AEQUALIS_I32 ((i32)ORATIO_COLUMNAE_LIS_NUMERUS, (i32)XXXIII);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_COLUMNAE_LIS_NUMERUS, (i32)XXXV);
     per (i = ZEPHYRUM; i < (i32)ORATIO_COLUMNAE_LIS_NUMERUS; i++)
     {
         si (ORATIO_COLUMNAE_LIS[i] == NIHIL)
@@ -1186,6 +1228,12 @@ _columnas_lis_probare (
     /* T37 b: columna XXXIII - identitas sententiae (sent_id aut
      * ordinalis) pro exemplis reticuli */
     CREDO_VERUM (strcmp(ORATIO_COLUMNAE_LIS[XXXII], "sententia")
+        == ZEPHYRUM);
+    /* T38 a: columnae XXXIV-XXXV - contextus declaratus (dialectus
+     * plagulae, forma sententiae) pro tabula ponderum */
+    CREDO_VERUM (strcmp(ORATIO_COLUMNAE_LIS[XXXIII], "dialectus")
+        == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_COLUMNAE_LIS[XXXIV], "forma")
         == ZEPHYRUM);
     per (i = ZEPHYRUM; i < (i32)XXIII; i++)
     {
@@ -1276,6 +1324,7 @@ principale (vacuum)
             "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n"
             "\n"
             "\n"
+            "# newdoc id = phi0690.x\n"
             "# sent_id = a-2\r\n"
             "1-2\tpronumque\t_\t_\t_\t_\t_\t_\t_\t_\r\n"
             "1\tpronum\tpronus\tADJ\t_\t_\t3\tadvcl\t_\t_\r\n"
@@ -1324,6 +1373,40 @@ principale (vacuum)
         CREDO_VERUM (_aequalis(_lexema(b, I)->forma, "pronum"));
         textus = oratio_conllu_textus(piscina, b);
         CREDO_VERUM (_aequalis(textus, "pronumque abstulit."));
+        /* T38 a: '# newdoc id' sententiis sequentibus datur, prioribus
+         * non; forma DECLARATA per identitatem (FORMAE_THESAURORUM) */
+        CREDO_AEQUALIS_I32 (a->documentum.mensura, ZEPHYRUM);
+        CREDO_VERUM (_aequalis(b->documentum, "phi0690.x"));
+        CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(a),
+            (s32)ORATIO_FORMA_PROSA);
+        CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(b),
+            (s32)ORATIO_FORMA_VERSUS);
+        {
+            OratioConlluSententia t;
+
+            memset(&t, ZEPHYRUM, magnitudo(t));
+            t.id = _l("Latin_Tacitus_Ger_prose-192");
+            CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(&t),
+                (s32)ORATIO_FORMA_PROSA);
+            t.id = _l("Latin_SenecaYounger_Ag_poetry-279");
+            CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(&t),
+                (s32)ORATIO_FORMA_VERSUS);
+            t.id = _l("SenPhoen-P-12");
+            CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(&t),
+                (s32)ORATIO_FORMA_VERSUS);
+            t.id          = _l("phi0972.phi001.perseus-lat1.xml@7");
+            t.documentum  = _l("phi0972.phi001.perseus-lat1.xml");
+            CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(&t),
+                (s32)ORATIO_FORMA_PROSA);
+            t.documentum = _l("phi0959.phi006.perseus-lat1.tb.xml");
+            CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(&t),
+                (s32)ORATIO_FORMA_VERSUS);
+            t.id                  = _l("test-s1");
+            t.documentum.datum    = NIHIL;
+            t.documentum.mensura  = ZEPHYRUM;
+            CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(&t),
+                (s32)ORATIO_FORMA_PROSA);
+        }
         CREDO_VERUM (oratio_conllu_spatium_post(_l("_")));
         CREDO_FALSUM (oratio_conllu_spatium_post(_l("SpaceAfter=No")));
         CREDO_FALSUM (oratio_conllu_spatium_post(_l("X=1|SpaceAfter=No|Y=2")));

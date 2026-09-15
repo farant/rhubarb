@@ -6,6 +6,7 @@
 #include "oratio_partes.h"
 #include "oratio_lexema.h"
 #include "oratio_lexicon.h"
+#include "oratio_forma.h"
 #include "materia_arbor.h"
 #include "stml.h"
 #include "stml_macros.h"
@@ -28,7 +29,8 @@ nomen structura {
             constans character* lingua;
          OratioResolutioCensus* census;
     /* probatio cursuum plurium (2026-09-09): prior casuum hoc cursu? */
-                           b32 prior_activus;
+                            b32  prior_activus;
+       constans OratioContextus* contextus;   /* T38 a: dialectus, forma */
 } Cursus;
 
 interior chorda
@@ -3923,19 +3925,19 @@ _sententias_resolvere (
 }
 
 b32
-oratio_resolutio_applicare (
-                       Piscina* piscina,
-           InternamentumChorda* intern,
-  constans MateriaLexiconRatum* ratum,
-      constans OratioProgramma* programma,
-                           s32  regulae_numerus,
-            constans character* lingua,
-                  MateriaNodus* radix,
-         OratioResolutioCensus* census)
+oratio_resolutio_applicare_contextu (
+                        Piscina* piscina,
+            InternamentumChorda* intern,
+   constans MateriaLexiconRatum* ratum,
+       constans OratioProgramma* programma,
+                            s32  regulae_numerus,
+       constans OratioContextus* contextus,
+                   MateriaNodus* radix,
+          OratioResolutioCensus* census)
 {
     Cursus cursus;
 
-    si (programma == NIHIL || radix == NIHIL)
+    si (programma == NIHIL || radix == NIHIL || contextus == NIHIL)
     {
         redde VERUM;
     }
@@ -3944,7 +3946,8 @@ oratio_resolutio_applicare (
     cursus.ratum            = ratum;
     cursus.programma        = programma;
     cursus.regulae_numerus  = regulae_numerus;
-    cursus.lingua           = lingua;
+    cursus.lingua           = contextus->lingua;
+    cursus.contextus        = contextus;   /* T38 a */
     cursus.census           = census;
     /* PROBATIO cursuum plurium (2026-09-09): ORATIO_RESOLUTIO_CURSUS=N
      * resolutionem N-ies super arborem iam resolutam currit (regulae
@@ -3978,4 +3981,41 @@ oratio_resolutio_applicare (
         }
     }
     redde VERUM;
+}
+
+/* T38 a: aditus vetus - contextus {lingua, classicus, prosa} */
+b32
+oratio_resolutio_applicare (
+                       Piscina* piscina,
+           InternamentumChorda* intern,
+  constans MateriaLexiconRatum* ratum,
+      constans OratioProgramma* programma,
+                           s32  regulae_numerus,
+            constans character* lingua,
+                  MateriaNodus* radix,
+         OratioResolutioCensus* census)
+{
+    OratioContextus contextus;
+
+    contextus.lingua     = lingua;
+    contextus.dialectus  = (s32)ORATIO_DIALECTUS_CLASSICUS;
+    contextus.forma      = (s32)ORATIO_FORMA_PROSA;
+    redde oratio_resolutio_applicare_contextu(piscina, intern, ratum,
+        programma, regulae_numerus, &contextus, radix, census);
+}
+
+vacuum
+oratio_resolutio_contextus_documenti (
+    constans OratioPartesCensus* census,
+          constans MateriaNodus* radix,
+                OratioContextus* contextus)
+{
+    contextus->lingua    = oratio_resolutio_lingua_censu(
+        census->vocabula_linguarum);
+    contextus->dialectus = census->dialectus
+        == (s32)ORATIO_DIALECTUS_MEDIUS
+            ? (s32)ORATIO_DIALECTUS_MEDIUS
+            : (s32)ORATIO_DIALECTUS_CLASSICUS;
+    contextus->forma     = (s32)oratio_forma_documenti_censu(radix,
+        NIHIL, NIHIL);
 }

@@ -42,6 +42,10 @@ nomen structura {
     chorda  textus;      /* '# text = ...' (vacua si absens) */
        Xar* lexemata;   /* OratioConlluLexema ordine plagulae (rangae inclusae) */
        i32  linea;       /* linea primae lineae sententiae */
+    /* T38 a (2026-09-15): '# newdoc id = ...' ultimum visum ante aut in
+     * sententia (vacua si nullum) - forma declarata per documentum
+     * (Perseus PHI) */
+    chorda documentum;
 } OratioConlluSententia;
 
 /* Fontem legere: Xar de OratioConlluSententia (sententiae vacuae

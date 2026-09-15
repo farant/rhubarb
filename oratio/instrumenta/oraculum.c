@@ -807,6 +807,11 @@ _machinam_imprimere (
             ORATIO_TITULI_DIALECTORUM[(i32)c->dialectus],
             (integer)c->dialectus_recuperata,
             (integer)c->dialectus_verba);
+        /* T38 a: ordo FORMA versus N prosa M - sententiae per formam
+         * DECLARATAM (FORMAE_THESAURORUM) */
+        imprimere("%s\tFORMA\tversus\t%d\tprosa\t%d\n", titulus,
+            (integer)c->formae[ORATIO_FORMA_VERSUS],
+            (integer)c->formae[ORATIO_FORMA_PROSA]);
         /* T29: ordines NOTA accidens verba recti */
         {
             i32 k;

@@ -127,7 +127,7 @@ externus constans character* constans ORATIO_TITULI_IUDICIORUM[];
  * machinae ordine impressionis; XXIII primi = campi ante T35,
  * PINNATI (columnae appenduntur, numquam reordinantur); columna
  * aurum legens praefixum 'aurum-' fert (decisio LII) */
-#define ORATIO_COLUMNAE_LIS_NUMERUS XXXIII
+#define ORATIO_COLUMNAE_LIS_NUMERUS XXXV
 externus constans character* constans
     ORATIO_COLUMNAE_LIS[ORATIO_COLUMNAE_LIS_NUMERUS];
 
@@ -180,6 +180,11 @@ nomen structura {
     /* T37 b: identitas sententiae - '# sent_id' si adest, aliter linea
      * prima sententiae in plagula - pro exemplis reticuli */
     chorda sententia;
+    /* T38 a: CONTEXTUS DECLARATUS (columnae XXXIV-XXXV) - dialectus
+     * plagulae (census T30 c) et forma sententiae (FORMAE_THESAURORUM:
+     * versus | prosa) - condiciones tabulae ponderum (decisio LVII) */
+       s32 dialectus;
+       s32 forma;
 } OratioOraculumLis;
 
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
@@ -410,6 +415,10 @@ nomen structura {
                                             s32 dialectus;
                                             i32 dialectus_recuperata;
                                             i32 dialectus_verba;
+    /* FORMA SENTENTIARUM (T38 a): sententiae per formam DECLARATAM
+     * (FORMAE_THESAURORUM: versus | prosa per identitatem, quia
+     * CoNLL-U lineas non habet) - ordo FORMA instrumenti */
+                                            i32 formae[ORATIO_FORMA_NUMERUS_FORMARUM];
     /* discrepantiae primarii (T19a): Xar de OratioOraculumDiscrepantia*
      * (cellae stabiles in piscina iudicii) + index clavis
      * 'aurea/nostra/forma'; pigre creata in iudicio, NIHIL ante */
@@ -515,6 +524,15 @@ chorda
 oratio_oraculum_lis_columnae (
                Piscina* piscina,
     constans character* via);
+
+/* FORMA SENTENTIAE THESAURI DECLARATA (T38 a): per identitatem
+ * (FORMAE_THESAURORUM) - sent_id '_prose' -> prosa, '_poetry' aut
+ * 'SenPhoen' -> versus (CIRCSE); documentum ('# newdoc id') PHI
+ * Vergilii, Ovidii, Phaedri -> versus, Petronii -> prosa (Perseus);
+ * aliter prosa. Prima tabulae congruens vincit. */
+OratioForma
+oratio_oraculum_forma_sententiae (
+    constans OratioConlluSententia* s);
 
 /* "via TAB LIS TAB <campi>" sine linea nova (T35 c) */
 chorda

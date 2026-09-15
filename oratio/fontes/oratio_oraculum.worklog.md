@@ -115,3 +115,48 @@ cross-count law — `arcus_victa == summa_victa_sola` at
 The two independent paths through `_litem_notare` and
 `_contentionem_notare` are what the law compares, so a mislabelled
 judgment cannot pass unnoticed.
+
+## 2026-09-15 — T38 a: the declared context (dialect and form)
+
+The decoder's table conditions on a DECLARED context: dialect (T30 c,
+already per file) and text form, versus | prosa. A CoNLL-U file has no
+line structure, so the T6b form layer cannot see verse there; the
+oracle DECLARES form per sentence from the ids instead
+(`FORMAE_THESAURORUM`). What the ids say: CIRCSE is not wholly verse —
+119 Tacitus, Germania sentences carry `_prose`; 647 carry `_poetry`
+and 127 Phoenissae ids (`SenPhoen-P…`) carry no suffix and are verse.
+Perseus's test file is four works by `# newdoc id`: Vergil (phi0690),
+Ovid (phi0959), Phaedrus (phi0975) verse and Petronius (phi0972)
+prose — so Perseus is mostly VERSE, though its subject/object contests
+behave like prose (T32 d). The declared form may therefore not separate
+Seneca from Vergil and Ovid; the lattice with the new `forma` column
+decides that in T38 b, not this tranche.
+
+Plumbing: the reader keeps the last `# newdoc id` on every sentence
+(`OratioConlluSententia.documentum`, appended field); LIS rows gain
+columns 34 `dialectus` and 35 `forma` (append-only header law); the
+resolver takes an `OratioContextus {lingua, dialectus, forma}` through
+`oratio_resolutio_applicare_contextu`, the old entry delegating with
+classicus and prosa; instruments build the context from the document's
+censuses (`oratio_forma_documenti_censu`: versus when the words in
+versus paragraphs exceed half). Nothing reads the context before T38 c,
+so every pin and every non-LIS row is byte-identical after this
+tranche — that is the acceptance.
+
+**Built (same day).** The FORMA rows of the nine-file run: CIRCSE
+774 versus / 119 prosa; Perseus 392 versus / 547 prosa (Petronius is
+the largest work in that file); every other file prosa. Contest rows
+by declared context: CIRCSE 2,241 versus + 172 prosa, Perseus 1,274 +
+920, UDante 3,484 `medius` (Dante's Latin trips the dialect census at
+12 ‰, as T30 c measured — so `medius` covers LLCT and UDante, not the
+charters alone; a fact the table's dialect rows must carry). Byte
+identity: all 24,306 LIS rows equal on fields 1–35 (the 33 old
+columns), every non-LIS row equal, against the T37 baseline. Gates:
+oracle and resolver green first run; the form gate's first fixture
+(four short lines each ending in a full stop) was judged an INDEX by
+the T6b rules — a list, which is what four terminated short lines look
+like — replaced by the suite's own Catullus distich (14 words).
+Plants, each red on the intended law then green: `_prose` declared
+versus (the inline identity law, before the CIRCSE count could speak),
+`>=` in the document census (the 14/28 tie became versus), reader
+prefix XV for XIV (`documentum` = "hi0690.x").

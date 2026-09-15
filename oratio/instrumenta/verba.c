@@ -770,6 +770,7 @@ principale (
                  i32  mensura = ZEPHYRUM;
         MateriaNodus* radix;
   OratioPartesCensus  census;
+     OratioContextus  contextus;   /* T38 a */
 
                 si (   strcmp(argv[i], "-machina")   == ZEPHYRUM
                     || strcmp(argv[i], "-analyses")  == ZEPHYRUM
@@ -799,13 +800,13 @@ principale (
             fprintf(stderr, "verba: annotatio fracta: %s\n", argv[i]);
             redde II;
         }
+        /* T38 a: contextus documenti (lingua, dialectus, forma) ex
+         * censibus eius */
+        oratio_resolutio_contextus_documenti(&census, radix,
+            &contextus);
         si (   programma != NIHIL && !crudus
-            && !oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma,
-                (s32)-I,
-                oratio_resolutio_lingua_censu(census.vocabula_linguarum),
-                radix,
-                NIHIL))
+            && !oratio_resolutio_applicare_contextu(piscina, intern,
+                &ratum, programma, (s32)-I, &contextus, radix, NIHIL))
         {
             fprintf(stderr, "verba: resolutio fracta: %s\n", argv[i]);
             redde II;

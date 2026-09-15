@@ -30,7 +30,7 @@ agreement step was skipped).
 
 | tranche | state |
 |---|---|
-| T38 a context | pending |
+| T38 a context | done — `oratio_forma_documenti_censu`, `OratioConlluSententia.documentum`, `FORMAE_THESAURORUM` + `oratio_oraculum_forma_sententiae`, `FORMA` row, LIS columns 34–35, `OratioContextus` + `oratio_resolutio_applicare_contextu` + `oratio_resolutio_contextus_documenti`, instruments; oracle and resolver gates green on the first run, the form gate's first fixture was judged an INDEX (four short full-stop lines) — replaced by the suite's own Catullus distich (14 words); plants: `_prose` → versus (oracle), `>=` (form census), prefix XIV → XV (reader) |
 | T38 b table | pending |
 | T38 c decoder | pending |
 | T38 d the run | pending |

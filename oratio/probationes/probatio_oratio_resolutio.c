@@ -800,6 +800,52 @@ principale (vacuum)
             "latina") == ZEPHYRUM);
     }
 
+    /* T38 a: CONTEXTUS DECLARATUS - aditus novus cum {lingua, dialectus,
+     * forma} et vetus (classicus, prosa delegans) arborem eandem
+     * reddunt: nihil contextum legit ante decretorem (T38 c) */
+    imprimere("\n--- I b. Contextus declaratus (T38 a) ---\n");
+    {
+           OratioPartesCensus  census_a;
+           OratioPartesCensus  census_b;
+        OratioResolutioCensus  ca;
+        OratioResolutioCensus  cb;
+              OratioContextus  contextus;
+                 MateriaNodus* a = _documentum(piscina, &vocabularia,
+                     "Puella bona ambulat.\n", &census_a);
+                MateriaNodus* b = _documentum(piscina, &vocabularia,
+                    "Puella bona ambulat.\n", &census_b);
+                          i32 k;
+
+        CREDO_NON_NIHIL (a);
+        CREDO_NON_NIHIL (b);
+        contextus.lingua     = "latina";
+        contextus.dialectus  = (s32)ORATIO_DIALECTUS_MEDIUS;
+        contextus.forma      = (s32)ORATIO_FORMA_VERSUS;
+        oratio_resolutio_census_vacare(&ca);
+        oratio_resolutio_census_vacare(&cb);
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+            programma, (s32)-I, "latina", a, &ca));
+        CREDO_VERUM (oratio_resolutio_applicare_contextu(piscina,
+            intern,
+            &ratum, programma, (s32)-I, &contextus, b, &cb));
+        per (k = ZEPHYRUM; k < (i32)III; k++)
+        {
+            CREDO_AEQUALIS_S32 (_casus(_vocabulum(a, k), ZEPHYRUM),
+                _casus(_vocabulum(b, k), ZEPHYRUM));
+        }
+        CREDO_AEQUALIS_S32 (_impletio_subiecti(_vocabulum(a, (i32)II)),
+            _impletio_subiecti(_vocabulum(b, (i32)II)));
+        CREDO_AEQUALIS_I32 (ca.impletae, cb.impletae);
+        CREDO_AEQUALIS_I32 (ca.applicatae, cb.applicatae);
+        CREDO_AEQUALIS_I32 (ca.umbris_ordinata, cb.umbris_ordinata);
+        /* contextus documenti ex censibus: Latina, classicus, prosa */
+        oratio_resolutio_contextus_documenti(&census_a, a, &contextus);
+        CREDO_VERUM (strcmp(contextus.lingua, "latina") == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (contextus.dialectus,
+            (s32)ORATIO_DIALECTUS_CLASSICUS);
+        CREDO_AEQUALIS_S32 (contextus.forma, (s32)ORATIO_FORMA_PROSA);
+    }
+
     imprimere("\n--- II. Skeleton: adpositio casum regit ---\n");
     {
            OratioPartesCensus  census_partium;

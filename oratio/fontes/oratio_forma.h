@@ -146,6 +146,18 @@ OratioForma
 oratio_forma_paragraphi (
     constans MateriaNodus* paragraphus);
 
+/* FORMA DOCUMENTI (T38 a, 2026-09-15): ex formis paragraphorum -
+ * VERSUS si verba (elementa vocabulum) paragraphorum versuum plus
+ * quam dimidium verborum omnium, aliter PROSA (ambiguitas ad prosam,
+ * decisio XXIV). Radix = documentum aut paragraphus unus; aliud aut
+ * NIHIL = prosa cum numeris nullis. *verba_versus, *verba NIHIL
+ * licent. Contextus declaratus resolutionis (decisio LVII). */
+OratioForma
+oratio_forma_documenti_censu (
+    constans MateriaNodus* radix,
+                      i32* verba_versus,
+                      i32* verba);
+
 /* An cauda elementi lineam novam ferat (linea finit). */
 b32
 oratio_forma_linea_finit (
