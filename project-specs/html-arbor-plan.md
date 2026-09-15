@@ -463,7 +463,7 @@ silva.commissio("html: aedificator simplex II - elementa vacua (XIII), clausurae
 - Create: `probationes/fixa/html/adversarius_2.html`
 - Create: `html/probationes/probatio_html_corpus.c`
 
-- [ ] **Step 1: Write `adversarius_2.html`** — spec §11.9's list: CRLF line
+- [x] **Step 1: Write `adversarius_2.html`** — spec §11.9's list: CRLF line
   endings THROUGHOUT (write it with `printf` or Python so the `\r\n` are
   real), unclosed everything, `</` at EOF, `<b><i>x</b></i>`, `<table>`
   with stray text between rows, `<script>var s = "</script";</script>`,
@@ -472,7 +472,7 @@ silva.commissio("html: aedificator simplex II - elementa vacua (XIII), clausurae
   200 deep, and the literal strings `</lex-textus>` and
   `</lex-textus-crudus>` inside text. No NUL (rides inline in H8).
 
-- [ ] **Step 2: Write the failing corpus gate** — `CORPUS[]` = the four
+- [x] **Step 2: Write the failing corpus gate** — `CORPUS[]` = the four
   fixtures + the ten live house pages of spec §11.9 (paths relative to
   `RHUBARB_RADIX`, the css pattern). For each: read (piscina), parse,
   `materia_scribere_nodum`, `memcmp`; tally causes (`idem / NIHIL /
@@ -483,17 +483,19 @@ silva.commissio("html: aedificator simplex II - elementa vacua (XIII), clausurae
     CREDO_MAIOR_I32    (octeti_probati, C * M);   /* > 100 000 */
 ```
 
-- [ ] **Step 3: Run and read failure #1 first** — judge by the cause tally;
+- [x] **Step 3: Run and read failure #1 first** — judge by the cause tally;
   a failure here may be upstream (adaptare, ligator). One cause per commit.
 
-- [ ] **Step 4: Fix causes until green** — a substrate defect (materia)
+- [x] **Step 4: Fix causes until green** — a substrate defect (materia)
   gets its own gate in `materia/probationes` and its own commit before
   this one continues.
 
-- [ ] **Step 5: Plant** — skip `documentum.cauda` for one file → that file
-  short by its trailing bytes → red; revert.
+- [x] **Step 5: Plant** — drop every `commentarium` node in the builder →
+  every page with a comment short → red; revert. (The plan's original
+  plant, skipping `cauda`, cannot fire: trailing bytes are TEXTUS content,
+  and FINIS carries trivia only after a tag cut at EOF.)
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("html: porta corporis - XIV plagulae (fixa IV + paginae domus X, > C milia octetorum) octetim exactae, tegumentum se metiens; adversarius II (CRLF, </lex-textus> in textu, nidificatio CC)",

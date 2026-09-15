@@ -55,7 +55,16 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   mechanism 1 of spec §6.1. Gate: +73 assertions (table rows, siblings
   after implied close, `<input disabled><img src=x>y`, tr/td chains,
   dt/dd, `<p>a<b>x<div>y` asserted as nested on purpose).
-- Next: H5 the corpus gate (fourteen files) + `adversarius_2.html`.
+- **H5 (2026-09-15):** `probatio_html_corpus` — fourteen files
+  (four fixtures incl. `adversarius_2.html`: CRLF throughout, 200-deep
+  nesting, `</lex-textus>` literally in text, misnested formatting,
+  stray table text, `</` at EOF; ten live house pages by path: briar
+  facies ×4, villa, mensor, silex, knotapel, speculum, reference),
+  162,775 bytes, every one byte-identical through parse → emit on the
+  first run; cause tally with the first divergent offset; self-
+  measured (files read, bytes). Plant: comment nodes dropped → red.
+- Next: H6 the STML projection (two cycles + comparator) — the
+  `</lex-textus>`-in-text case is the one to watch.
 
 ## The registry is generated
 
