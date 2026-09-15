@@ -327,7 +327,7 @@ every open element closes only by its own end tag or EOF):
 - `FINIS` → `ligator_solvere(finis)`; `documentum.cauda = finis`; every
   open element stays as it is (absent closes).
 
-- [ ] **Step 1: Write the failing tests** — `_octetos_probare(piscina,
+- [x] **Step 1: Write the failing tests** — `_octetos_probare(piscina,
   fons, mensura)` = parse → `materia_scribere_nodum` → length equal and
   `memcmp` (lift the css helper, four lines). Cases:
 
@@ -355,17 +355,17 @@ every open element closes only by its own end tag or EOF):
   hand and write the count beside each literal (the css plan's XXVI/XXVII
   lesson).
 
-- [ ] **Step 2: Run and verify it fails** — `./html/compile_probationes.sh arbor`.
+- [x] **Step 2: Run and verify it fails** — `./html/compile_probationes.sh arbor`.
 
-- [ ] **Step 3: Implement** (scope above). Write with `./silva/scribe.sh`.
+- [x] **Step 3: Implement** (scope above). Write with `./silva/scribe.sh`.
 
-- [ ] **Step 4: Run the whole suite** — `./html/compile_probationes.sh`,
+- [x] **Step 4: Run the whole suite** — `./html/compile_probationes.sh`,
   exit 0; registrum's named-slot table still holds.
 
-- [ ] **Step 5: Plant** — drop the `tok_clausura_finis` assignment →
+- [x] **Step 5: Plant** — drop the `tok_clausura_finis` assignment →
   `_octetos_probare("<p>a</p>")` red by one byte; revert.
 
-- [ ] **Step 6: Format, words, commit**
+- [x] **Step 6: Format, words, commit**
 
 ```python
 silva.commissio("html: aedificator simplex I - documentum, elementa, attributa, contentum; acervus apertorum Xar (numquam recursio); octeti idem (rubra nata: finis clausurae omissa)",

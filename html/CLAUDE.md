@@ -27,8 +27,23 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   accumulations). A stray `/` inside a tag binds as trivia beside the
   spaces (`<a /\n href>`: space + `/` go to `<a`, the newline run to
   `href`).
-- Next: H3 the builder, part one (document, elements, attributes,
-  content; iterative stack; byte oracle through `materia_scribere_nodum`).
+- **H3 (2026-09-15):** `html_arbor_parsare` — the builder's first
+  half: `documentum`, elements, attributes, content nodes by lexer
+  genus, over an EXPLICIT open-element stack (`Xar` + depth, never
+  recursion). An end tag pops to the nearest open element of its name
+  (ASCII case-insensitive), closing the ones above it with absent
+  slots; no such element → `elementum-malum` carrying `</x` and its
+  `>`. `/>` does NOT close a non-void element (HTML5 ignores the
+  self-closing flag on HTML elements; void handled by the H4 table).
+  Three PENDING states carry a tag across its lexemes (`tag_apertum`,
+  `clausura`, `malum`); any lexeme not belonging to the tag closes
+  them with absent slots (truncation expressed, never a synthetic
+  token). Gate `probatio_html_arbor`: byte oracle through
+  `materia_scribere_nodum` on 16 cases + §4.2's rows (`<div>` at EOF,
+  `<img/>`, `<div cl`, `<a = x>`), parentage, case-insensitive close,
+  implicit close by an outer end tag, malum, content genera, raw text.
+- Next: H4 the builder, part two (void elements, implied closes as
+  tables).
 
 ## The registry is generated
 
