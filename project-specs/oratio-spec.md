@@ -2583,6 +2583,64 @@ in milliseconds here); a Python face; the weight table itself (its own
 spec, reading GREX-SORS); a per-sentence genre column (the captive rule
 is ready for it); English folds.
 
+**As built — T36, refinements of the partition lattice (2026-09-14;
+commits 1b72e8a3, ccabfd59, f66219a7, and the records).** Everything in
+the design, with these additions and corrections: a training TIE makes a
+group APERTUS, not ORDINATUS (the tie vote is the base's, not the
+group's); the k-meet table's records, tuples and hash-table insertions
+are allocated before the scratch mark and only the meet and its
+judgment inside it; constants leave the lattice, the meet table and the
+seed; `-sortes-alternae` makes the corpus column a FEATURE unless
+`-praeter thesaurus` removes it; the interleaved-fold numbers the plan
+derived by hand for grid II were off by one row, and the C tool and the
+recount agreed against the draft (23 right, not 22). Coinages the
+dictionary refused became `series`, `combinatio`, `recordum`,
+`quotiens`.
+
+SECOND RUN (24,306 LIS rows regenerated with `lemma-capitis`, present on
+every contest row; the same 1,607 same-verb subject/object contests).
+ACCEPTANCE 1 held: recount = C on every row kind it derives, 184 rows
+for the depth-three run, 190 for the seeded run with group rows, 166
+for the interleaved folds. (2) HALF-HELD, and the half that failed was
+the prediction's fault: the triple position × loser number × verb
+number is NOT among the top INFIMUM rows — held out it scores 1,041
+against its best pair's 1,081, increment −40 — because a group that
+flips between corpora is answered wrongly whenever its corpus is held
+out. Its GREX rows show exactly that: "before, plural loser, singular
+verb" (207 rows, victa 100 : victor 107) is APERTUS and mutable — with
+CIRCSE held out the five prose corpora vote victa by 16 and CIRCSE's 83
+rows are 53 victor : 30 victa; with Perseus held out the rest vote
+victor by 20 and Perseus's 35 rows are 11 victor : 24 victa — and "after,
+plural loser, plural verb" (77 rows) flips the same way. So the T32 f
+flip is real, and the held-out judgment refuses to make a universal
+bucket of it: that is decision 54's conditioned candidate, found by the
+tool. (3a) HELD: with six interleaved folds the vetoed chain ACCEPTS
+verb number (+75) and then the loser's gender (+30), no fold falls, the
+chains agree — the LLCT refusal by corpus is genre, not fold size. (3b)
+HELD: with the 307 verb lemmas as folds verb number still gains +75
+pooled — structural, not lexical; zero tolerance over 307 folds refuses
+it (some forty lemmas lose a row), which says decision 50 is a rule
+about corpora, not about arbitrary folds. (4) The arc contests (8,406
+rows the arc can judge, base victor 748 permille): the winner's head
+direction gains +555 held out and falls on CIRCSE, Perseus and UDante,
+the corpora with verse — refused by the veto and named as a conditioned
+candidate; the pooled chain takes direction, the loser's distance
+(+137), the loser's gender (+42, UDante falls) and the loser's relation
+(+149, ITTB and UDante fall); the top pair, direction × distance, is a
+pure interaction of +692; twenty feature columns hold nineteen
+independent dimensions there. On the reading contests the top triple is
+the three count columns together (+57 with 120 fallback rows and three
+corpora falling), thin evidence. Every run under a second; the recount
+under two.
+
+WHAT THE TOOL NOW SAYS, for the weight table: universal buckets on
+these contests are verb number (only with the charters conditioned
+away) and, at depth two, position × loser number; the verse/prose flip
+at depth three is a conditioned bucket keyed by corpus; the arc
+contests have a strong universal first bucket (head direction) that the
+verse corpora condition. The GREX-SORS rows carry the counts and
+margins the table will be built from.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

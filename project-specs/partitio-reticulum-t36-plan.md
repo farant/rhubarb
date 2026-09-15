@@ -38,7 +38,7 @@ buckets, no tolerance), 01M2HB154D (decided: captive rule).
 | T36 a the judgment | done — grid IV (captive flags at limen II, not IV), profiles on grids I–III and the seeded chain all green on the first run; the captive plant went red FIRST in grid I's one-group case (an inverted test makes every spread-out group captive), green after the revert; a training tie is APERTUS (spec text refined) |
 | T36 b the search | done — k-meet table (`RETICULUM-INFIMUM` for `-PAR`), seed, CONDICIO, split titles, constants out of the lattice; parity fixture and regenerated grid II rows green on the first run; the sub-meet hash table and the tuples must be allocated BEFORE the scratch mark (worklog); plant = the subtraction zeroed |
 | T36 c the evidence | done — GREX / GREX-SORS rows, `-sortes-alternae`, `lemma-capitis` (present on 100 % of contest rows), recount grown to every judged kind and equal to both fixtures; the plan's interleaved-fold count was off by one row (22 → 23) and the C tool and the recount agreed against it; plant = margin as the majority |
-| T36 d second run, acceptance, records | pending |
+| T36 d second run, acceptance, records | done — recount = C on 184 + 190 + 166 rows; (3a) HELD (interleaved folds: the vetoed chain accepts verb number, the LLCT refusal is genre); (3b) HELD (307 lemma folds: verb number +75, structural); (2) half: the flip is exact in the GREX rows (CIRCSE 53:30 / Perseus 11:24) but a flipping group cannot rank held out (−40) — the prediction was misstated, the tool is right; (4) arc census: head direction +555 vetoed by the verse corpora, direction × distance +692; records in spec §7 "As built — T36" |
 
 ---
 

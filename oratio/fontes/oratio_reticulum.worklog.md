@@ -184,3 +184,44 @@ every contest row of the three pinned Latin treebanks (2,413 / 4,233 /
 GREX, GREX-SORS) and equals both fixtures' expected rows before the real
 run. zsh does not split an unquoted `$extra` — `${=extra}` — a flag
 string passed as one word made the recount look broken for a minute.
+
+## 2026-09-14 — T36 d, the second run
+
+Rows regenerated (24,306, `lemma-capitis` on every contest row). Runs:
+depth three, seeded from position × loser number with group rows, six
+interleaved folds, 307 verb lemmas as folds, and the arc contests.
+Numbers in the spec's "As built — T36".
+
+**Acceptance 1 held** (184 + 190 + 166 rows equal) — after a zsh
+detour: a two-word command kept in a variable (`P="python3 x.py"`)
+does not split either, so `$P` is "command not found" and the recount
+file is empty; the C side of the diff looked like a recount defect for
+one turn. `${=P}`, or do not keep commands in variables.
+
+**The prediction that was wrong.** (2) said the flipping triple would be
+among the top meets. It cannot be: a group whose majority flips between
+corpora is answered by the other corpora's majority when its own corpus
+is held out, so it loses exactly where it flips (increment −40 against
+its best pair). The GREX rows show the flip precisely — CIRCSE 53:30 for
+the winner, Perseus 11:24 for the loser, both groups APERTUS and mutable
+— and the held-out table refuses to credit it. That refusal is the
+tool doing its job: the flip is a CONDITIONED bucket (decision 54), not
+a universal one. Write predictions from the definition, not from the
+in-sample table.
+
+**The bets that held.** With interleaved folds the LLCT veto vanishes
+and the chain accepts verb number then the loser's gender: genre, not
+fold size. With lemma folds verb number still gains +75: structural,
+not lexical. Zero tolerance over 307 tiny folds refuses everything, so
+decision 50 is a rule about corpora; with many small folds read the
+pooled chain and the per-fold rows.
+
+**Constants and captives on real data.** Two constant columns left the
+lattice (altitude 1 → 0, the eleven cover edges gone); six columns each
+carry one captive group of two rows (a rare case value living in one
+corpus), reported and under the threshold.
+
+**The arc census** (8,406 contests) is the richer table: head direction
++555 held out, vetoed by the three verse-bearing corpora and named as a
+conditioned candidate; direction × distance a pure interaction of +692;
+width 19.

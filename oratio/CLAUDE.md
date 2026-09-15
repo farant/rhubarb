@@ -963,6 +963,30 @@ contests: verb number best (+75 held out) but vetoed by LLCT (78 rows,
 Perseus 11:24). Open: veto tolerance by fold size, triple reach
 (quaestio 01M2HA2RAF) — decide before any weights.
 
+**T36 (2026-09-14): LATTICE REFINEMENTS, decided and measured** (spec
+§2 decisions 54–56, §7 "Design — T36" + as-built; plan
+`project-specs/partitio-reticulum-t36-plan.md`). Decided: the vetoed
+chain feeds UNIVERSAL buckets and a pooled step that falls on a corpus
+is a CONDITIONED candidate (`RETICULUM-CONDICIO`), no tolerance knob;
+a CAPTIVE group (all its rows in one corpus) of at least `limen` rows
+flags the column; every group has a profile COACTUS | ORDINATUS |
+APERTUS (a training tie is apertus) and a mutable flag. Built: chain
+options with a seed (`-initium t1,t2`), k-meet table `-profunditas N`
+(`RETICULUM-INFIMUM` superseded `-PAR`), constants named and out of the
+lattice, evidence rows `RETICULUM-GREX` / `-GREX-SORS` per group and
+fold (the weight table's raw material; `-greges columna|catena|
+catena-libera|initium`), interleaved folds `-sortes-alternae N` (the
+corpus column then becomes a FEATURE — `-praeter thesaurus`), LIS
+column 32 `lemma-capitis` (leave-one-verb-out via `-sortes
+lemma-capitis`); the recount covers every judged kind. Second run: the
+LLCT veto is GENRE (interleaved folds accept verb number, +75, then
+loser gender, +30); verb number is STRUCTURAL (+75 with 307 lemma
+folds); the T32 f flip is exact in the GREX rows but scores −40 held
+out — a flipping group is a conditioned bucket, never a universal one;
+arc census (8,406): head direction +555 vetoed by the verse corpora,
+direction × distance +692. NEXT: the weight table spec reading
+`GREX-SORS`, then the decoder.
+
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
 `latina.h` shadowing `include/latina.h` in the nexus sweep (first-wins
