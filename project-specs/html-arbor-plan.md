@@ -835,6 +835,52 @@ silva.commissio("html: cliens navatus - relatio phasis IV (auditus shim N/N), wo
   with iframe content parses its inner text as tags — byte-identical,
   wrong tree. Extend the lexer's table when the oracle shows it.
 
+## Oraculum html5lib (O1–O4; opened 2026-09-15 after H11; ledger 01M2KPNTT0)
+
+H1–H11 stay CLOSED; the three items named above run as four further
+tasks, one commit each, under the same Global Constraints.
+
+- [x] **O1 — corpus + reader + count gate** (2026-09-15). The
+  tree-construction `.dat` corpus vendored from the LOCAL Go module
+  cache (`golang.org/x/net@v0.30.0/html/testdata/webkit/`, WebKit BSD;
+  Fran chose it over an upstream fetch — no network): 54 files,
+  428,448 bytes, 1,708 cases (184 `#document-fragment`, 8 `#script-on`,
+  27 `#script-off`) under `probationes/fixa/html/html5lib/` with the
+  README as licence and `probationes/fixa/html/FONTES.md`. Reader
+  `html/fontes/html_exempla.{h,c}` (`HtmlExemplum`, `html_exempla_legere`,
+  manifest `HTML_EXEMPLA_PLAGULAE`) mirrors html5lib's own `support.py`
+  TestData: a heading is a line whose STRIPPED form starts with `#`;
+  one trailing newline per section, two before the next `#data`. Gate
+  `probatio_html_exempla` (125 assertions): in-memory contract, whole
+  manifest with every count pinned and the three NUL-bearing files by
+  name (plain `grep` counted them as zero — the first tally said
+  1,625), six fixture edge cases. Born red by a plant (the separator
+  rule).
+- [ ] **O2 — cooked view, serializer, comparison, rising pin.**
+  `probatio_html_oraculum`: parse `datum` with `html_arbor_parsare`,
+  serialize our tree into the `| ` format through a COOKED view
+  (lowercase ASCII tag names; numeric + a small named entity table for
+  text and attribute values; attribute quotes stripped; attributes
+  sorted by name; text printed raw, newlines included — a node may span
+  lines, tests3 #7), compare with `documentum`. Fragment cases first
+  (no html/head/body synthesis; the context is the parent, two words
+  for foreign contexts `svg desc` / `math mi`), then document cases
+  through the UNWRAP rule: when the input names none of html/head/body,
+  the expected `head` children + `body` children are compared against
+  our top-level children (doctype and top-level comments stay in
+  place). Failures counted per HTML5 mechanism (spec §6.1: button
+  scope, adoption agency, foster parenting, foreign content, template,
+  script-on) and printed as a table; `ORACULUM_OMNIA=1`,
+  `ORACULUM_EXEMPLUM=<file>:<n>`. Pin = whatever the simple builder
+  scores at birth, RISING only — that first number is the measurement
+  Fran asked for.
+- [ ] **O3 — wild fixtures.** Five to ten pages under
+  `probationes/fixa/html/silvestria/` with their rows in `FONTES.md`;
+  each fetch listed and asked. They feed totality, computus and the
+  STML size ratio.
+- [ ] **O4 — the lexer's raw-text set** (xmp, iframe, noembed,
+  noframes, plaintext), when O2's table shows cases falling to it.
+
 ## Self-Review
 
 **Spec coverage (§11 governs).** §11.3 declaration → H1. §11.4 lexicon →

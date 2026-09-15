@@ -141,3 +141,36 @@ adaptare + ligator, builder, canon, computus, pythonica face.
 **What its own gates found in it:** the pending-close byte-order bug
 (totality, H8) and nothing else in eleven commits. Two of the ten gates
 were born red for real (totality, md); the other eight by plants.
+
+## 2026-09-15 — O1: the html5lib corpus vendored, and a grep that lied
+
+The tree-construction suite was already on this machine: Go's html
+package vendors it under `golang.org/x/net/html/testdata/webkit/`
+(WebKit BSD, x/net v0.30.0, October 2024). Fran chose the local copy
+over an upstream fetch: 54 `.dat` files, 428,448 bytes, now under
+`probationes/fixa/html/html5lib/` with the README as the licence.
+
+The first tally said 1,625 cases. The true count is 1,708. Three
+files (`domjs-unsafe`, `plain-text-unsafe`,
+`pending-spec-changes-plain-text-unsafe`) carry NUL bytes; `grep -c`
+without `-a` treats them as binary and prints NOTHING for them, and a
+shell loop summing the counts read nothing as zero. Eighty-three cases
+vanished without an error. Same family as "N/N clean may mean never
+appeared": a tool that skips silently lies by omission. The gate pins
+those three files by name.
+
+The reader (`html_exempla.c`) mirrors html5lib's own `support.py`
+TestData rather than a guess at the format: a heading is a line whose
+STRIPPED form starts with `#` (so an indented `#script-on` is a
+heading), each section loses one trailing newline, and the last
+section before the next `#data` loses one more (the blank separator).
+Two consequences O2 must know: an input that IS a blank line is empty
+(tests1 #62), and an expected-tree text node containing a newline is
+printed across two lines (`|       "` then `foo"`, tests3 #7), so the
+serializer must not assume one node per line.
+
+My expectations were wrong three times before the reader was: a bare
+suffix match on `plain-text-unsafe.dat` also caught the
+`pending-spec-changes-` file (fixed with a leading `/`), and twice I
+recorded the line of the content rather than the line of the `#data`
+heading above it. The reader passed first time.

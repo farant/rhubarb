@@ -29,8 +29,11 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   (drift guard both ways, seal pin, 37 documents) · reservatio ·
   totalitas (919 cases; depth pins) · computus (golden
   `fixa/computus/basis.tsv`) · md (md's rendered HTML through the whole
-  chain, 7 inputs). The runner compiles `materia/fontes` and
-  `md/fontes` into `html/build/` — consumed, never contained.
+  chain, 7 inputs) · exempla (the html5lib `.dat` reader over the
+  vendored corpus: 54 files, 428,448 bytes, 1,708 cases, 184 fragments
+  PINNED; `probationes/fixa/html/FONTES.md`). The runner compiles
+  `materia/fontes` and `md/fontes` into `html/build/` — consumed,
+  never contained.
 - **What it found:** in itself, one byte-order bug (a pending close
   taking a later `>`; totality, H8). In the substrate, ZERO changes
   forced (css 4, oratio 5) and two measurements: the raw-form limit
@@ -42,9 +45,18 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   raw (pinned at one malum; md polish 01M1NBEVM0).
 - **Numbers:** STML projection ≈ 15× the source; round trip ≈ 19× the
   parse (css 30×).
-- **Next (Fran):** the html5lib oracle with a rising pin + wild
-  fixtures under a sources file + the lexer's raw-text set (xmp,
-  iframe, noembed, noframes, plaintext) — plan's "named after". Then JS.
+- **Oracle in progress (plan "Oraculum html5lib", O1–O4):** O1 DONE
+  2026-09-15 — the html5lib tree-construction corpus vendored from the
+  LOCAL Go module cache (`probationes/fixa/html/html5lib/`, WebKit BSD,
+  no network; Fran's choice), reader `html/fontes/html_exempla.{h,c}`
+  mirroring html5lib's own `support.py` TestData rules, gate
+  `probatio_html_exempla`. **O2 next:** the cooked-view serializer of
+  our tree into the `| ` format + comparison + `probatio_html_oraculum`
+  with a RISING pin (fragment cases first, then documents through the
+  unwrap rule; failures counted per HTML5 mechanism). Then O3 wild
+  fixtures (one ask per page), O4 the lexer's raw-text set (xmp, iframe,
+  noembed, noframes, plaintext) if the oracle shows it. Then JS.
+  Design: ledger desideratum 01M2KPNTT0.
 
 ## Laws (spec §11)
 
