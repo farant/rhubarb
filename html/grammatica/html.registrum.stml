@@ -1,0 +1,79 @@
+<!--
+  html.registrum.stml - DECLARATIO registri generum (html)
+
+  FONS UNUS tabularum coctarum html_registrum_coctum.{h,c}
+  (materia/coquere.sh; canon materia/grammatica/registrum.canon).
+  Genera APPENDUNTUR, numquam interponuntur: ordo = enumeratio =
+  offsets; permutatio sigillum canonis movet (pinna, manu mota cum
+  causa). Ordo LOCORUM intra genus = ordo EMISSIONIS
+  (materia_scribere_nodum locos ordine registri ambulat): attributa
+  ante tok_finis, liberi ante tok_clausura. Notae in commentaria
+  generata transeunt.
+
+  Vocabularium: project-specs/html-arbor-spec.md par. XI.3 (addendum
+  2026-09-15 super materia). Nulla genera structuralia.
+
+  PUNCTA EXTENSIONIS NOMINATA, NON DECLARATA (spec par. XI.6): pro
+  paritate plena HTML5 loci appendentur cum mechanismo suo veniente -
+  'ancora' et genus 'reinserendum' (foster parenting, mechanismus IV),
+  'spatium' (contentum alienum svg/mathml, V), 'clonatum' (adoption
+  agency, II-III). Appensio = declaratio + sigillum motum, non
+  migratio formae: proiectio numquam plagula archivi est. Documentum
+  quod ea iam fert RECUSATUR: elementa ignota a lectore ('locus
+  generi ignotus'), attributa ignota a canone.
+-->
+<registrum grammatica="html" praefixum="HTML" typus="HtmlGenus"
+  sedes="html/fontes">
+
+  <genus titulus="documentum"
+    nota="Structura documenti: series nodorum summorum (fragmentum nullum aut plura elementa radicis habere potest - synthesis vetita, H4) + lexema FINIS">
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="cauda" species="token"/>
+  </genus>
+
+  <genus titulus="doctype">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="elementum"
+    nota="Sex loci lexematum OMNES optionales (H4): vacuum, clausura implicita, apertum ad EOF, se-claudens = loci absentes, numquam lexemata ficta">
+    <locus titulus="tok_apertura" species="token"/>
+    <locus titulus="attributa" species="lista-nodus"/>
+    <locus titulus="tok_finis" species="token"/>
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_clausura_finis" species="token"/>
+  </genus>
+
+  <genus titulus="attributum">
+    <locus titulus="tok_nomen" species="token"/>
+    <locus titulus="tok_aequale" species="token"/>
+    <locus titulus="tok_valor" species="token"/>
+  </genus>
+
+  <genus titulus="textus"
+    nota="Contentum: nodi, non trivia (H6). Spatia extra tags textus sunt">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="referentia">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="textus-crudus">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="commentarium">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="cdata">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="elementum-malum"
+    nota="Robustitas: tag clausurae sine pari aperto (etiam '&lt;/br&gt;', quod HTML5 in '&lt;br&gt;' vertit - deviatio nominata)">
+    <locus titulus="tokens" species="lista-token"/>
+  </genus>
+</registrum>

@@ -104,7 +104,7 @@ shape), `css/CLAUDE.md` and `md/CLAUDE.md` (the client shape as built).
   `HTML_GENUS_ELEMENTUM_MALUM`, `HTML_GENUS_NUMERUS_GENERUM`),
   `HTML_LEXICON`, the slot enums below.
 
-- [ ] **Step 1: The declaration** — `html/grammatica/html.registrum.stml`
+- [x] **Step 1: The declaration** — `html/grammatica/html.registrum.stml`
   verbatim from spec §11.3 (ten genera in that order; `elementum`'s loci in
   BYTE order; `documentum` = `liberi` + `cauda`). Add to the `<registrum>`
   header comment the four extension points as prose (`ancora`,
@@ -112,13 +112,13 @@ shape), `css/CLAUDE.md` and `md/CLAUDE.md` (the client shape as built).
   spec par. XI.6"). Judge it: `bin/canon_examen html/grammatica/html.registrum.stml`
   (root `<registrum>` is registered) — expect no vitia.
 
-- [ ] **Step 2: Generate** —
+- [x] **Step 2: Generate** —
   `./materia/coquere.sh html/grammatica/html.registrum.stml -scribere`,
   then `./materia/coquere.sh html/grammatica/html.registrum.stml` (compare
   mode, exit 0 = recens). Read the generated header once: it defines
   `HtmlGenus`, `HTML_GENUS_NUMERUS_GENERUM`, `HTML_REGISTRUM`.
 
-- [ ] **Step 3: Slot enums (hand-written, `html_registrum.h`)** — includes
+- [x] **Step 3: Slot enums (hand-written, `html_registrum.h`)** — includes
   the generated header; one enum per genus, in declaration order:
 
 ```c
@@ -142,7 +142,7 @@ nomen enumeratio { HTML_CDATA_TOK = 0 } HtmlCdataLocus;
 nomen enumeratio { HTML_MALUM_TOKENS = 0 } HtmlMalumLocus;
 ```
 
-- [ ] **Step 4: The lexicon (`html_lexicon.c`)** — 23 rows in
+- [x] **Step 4: The lexicon (`html_lexicon.c`)** — 22 rows in
   `HtmlLexemaGenus` order, per spec §11.4. Transcribe from
   `css/fontes/css_lexicon.c`'s shape; the rows that are not VERBATIM /
   SUBSTANTIVUM:
@@ -162,16 +162,16 @@ nomen enumeratio { HTML_MALUM_TOKENS = 0 } HtmlMalumLocus;
 
   `HTML_LEXICON = { GENERA_HTML, count, "lex-", (s32)-I }`.
 
-- [ ] **Step 5: The runner** — copy `css/compile_probationes.sh` to
+- [x] **Step 5: The runner** — copy `css/compile_probationes.sh` to
   `html/compile_probationes.sh`; rename every `css`/`CSS` (dir, log
   `build/test_logs/html.log`, banner `HTML PROBATIONES: N/M praeteritae`,
   mensor prefix `html.`); `RADIX_FONTES` = css's list with `css_lexema` →
   `html_lexema` and `stml_html` added (md's list is the model). Keep the
   materia sub-fontes loop, the header guard, the sera lock.
 
-- [ ] **Step 6: Write the failing registrum probatio** — transcribe
+- [x] **Step 6: Write the failing registrum probatio** — transcribe
   `css/probationes/probatio_css_registrum.c` for html: `ORDO_EXSPECTATUS`
-  = the 23 titles in lexer order; `GENERA_EXSPECTATA` = the ten titles;
+  = the 22 titles in lexer order; `GENERA_EXSPECTATA` = the ten titles;
   the recens gate over `"html/grammatica/html.registrum.stml"`; the
   `munus LINEA` absence + the line-sensitive capability REFUSED
   (positive assertions); contiguity of `loci_offset`; one minimal tree
@@ -180,20 +180,23 @@ nomen enumeratio { HTML_MALUM_TOKENS = 0 } HtmlMalumLocus;
   named-slot table (`LOCI_NOMINATI[]`, the css pattern at
   `probatio_css_arbor.c:43-120`) asserting every enum member above
   against the table's titles and that the count equals `numerus_locorum`
-  (17) — put it HERE, not in the arbor probatio, so H3 inherits it.
+  (18) — put it HERE, not in the arbor probatio, so H3 inherits it.
+  Register the suite in pythonica NOW (`PORTAE`, `FORMAE`, `SUITAE`;
+  the mensor prefix and `metiri` wait for H9): a runner outside the
+  gate table is a dead gate, and the H1 commit gates on `html`.
 
-- [ ] **Step 7: Run and verify it fails** —
+- [x] **Step 7: Run and verify it fails** —
   `./html/compile_probationes.sh registrum`. Expected: compile of the
   probatio fails until the fontes exist; then green. Exit 2 = the runner
   matched nothing = a path is wrong.
 
-- [ ] **Step 8: Plant** — `silva.planta('html/fontes/html_lexicon.c',
+- [x] **Step 8: Plant** — `silva.planta('html/fontes/html_lexicon.c',
   <the SPATIA row>, <the DELIM row swapped into its place>, 'html',
   'registrum')` → the order-by-title assertion must go red; reverted
   green. Second plant: edit one byte of the generated `.c` → the recens
   gate names the line.
 
-- [ ] **Step 9: Words, format, commit** — `./oratio/quaere.sh` on every new
+- [x] **Step 9: Words, format, commit** — `./oratio/quaere.sh` on every new
   identifier word; `./silva/formator.sh html/fontes/*.c html/fontes/*.h
   html/probationes/*.c -scribere` then `-vitia`; then
 
@@ -560,7 +563,7 @@ silva.commissio("html: circuitus STML - duo cycli octetim idem, comparator STRUC
 
 Model on `css/grammatica/css.canon` (read its header first): the `<arbor>`
 envelope with `grammatica="html"` + `registrum-sigillum` pinned; fragments
-`<#lexema-unum>` / `<#lexemata-multa>` over the 23 `lex-*` tags (tag
+`<#lexema-unum>` / `<#lexemata-multa>` over the 22 `lex-*` tags (tag
 mangling: `_` → `-`, lower case — check one against `s1.textus` from H6
 rather than assuming); one rule per genus constraining loci at SPECIES
 level (G3, stated in the header); trivia forms `<ante>`/`<post>` allow
@@ -593,7 +596,7 @@ would be a refusal, correct).
 - [ ] **Step 6: Commit**
 
 ```python
-silva.commissio("html: canon manu scriptum (X genera, loci ad gradum speciei, lexemata XXIII, trivia intra tag sola) - custos derivae utrimque, sigillum pinnatum, corpus iudicatum (rubra nata: regula textus deleta)",
+silva.commissio("html: canon manu scriptum (X genera, loci ad gradum speciei, lexemata XXII, trivia intra tag sola) - custos derivae utrimque, sigillum pinnatum, corpus iudicatum (rubra nata: regula textus deleta)",
     ["html/grammatica/html.canon", "html/probationes/probatio_html_canon.c"], ["html"])
 ```
 

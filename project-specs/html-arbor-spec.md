@@ -441,7 +441,7 @@ bytes
 | `html/grammatica/html.registrum.stml` | the declaration: ten genera, their loci in BYTE ORDER |
 | `html/fontes/html_registrum_coctum.{h,c}` | GENERATED (never hand-edited; `probatio_html_registrum` compares bytes) |
 | `html/fontes/html_registrum.h` | includes the generated header; hand-written slot enums per genus |
-| `html/fontes/html_lexicon.{h,c}` | the `MateriaLexiconCoctum` for the 23 lexer genera |
+| `html/fontes/html_lexicon.{h,c}` | the `MateriaLexiconCoctum` for the 22 lexer genera (the enum's 23 members less the sentinel) |
 | `html/fontes/html_adaptare.{h,c}` | `HtmlLexema` → `MateriaToken*` one for one; `HtmlLigator` (cumulare/solvere) |
 | `html/fontes/html_arbor.{h,c}` | the simple builder; `VOID_ELEMENTA` and `CLAUSURAE_IMPLICITAE` as tables (M7) |
 | `html/fontes/html_computus.{h,c}` + `html/instrumenta/computus.c` + `html/computus.sh` | the bench twin (css precedent) |
@@ -528,7 +528,7 @@ lexer saw; the node genus says what it is.
 
 ### 11.4 The lexicon
 
-23 rows in `HtmlLexemaGenus` order (asserted by title, css precedent).
+22 rows in `HtmlLexemaGenus` order (asserted by title, css precedent).
 The two decisions that are not mechanical:
 
 | lexer genus | species | munus | why |
