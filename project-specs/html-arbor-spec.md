@@ -12,6 +12,13 @@ client survives a second one. Fran's proposal, and it has already paid
 for itself: §2 records four findings, two of which correct the CSS
 spec and its plan.
 
+> **ADDENDUM 2026-09-15 — §11 "As built on materia" governs.** This
+> spec was written against silva, the same day the materia fork was
+> decided; three clients (css, md, oratio) have since fixed the client
+> shape and the substrate has changed under every §2 finding. §11
+> retargets the body before a line of `html/` is written. Where §11
+> and §§0–10 disagree, §11 wins. Plan: `project-specs/html-arbor-plan.md`.
+
 ---
 
 ## 0. Decisions
@@ -385,3 +392,305 @@ debugging a lexicon that three languages already depended on.
 division and nested template interpolation are the two places a lexer
 genuinely cannot decide alone. If the pipe survives JS too, the
 substrate is proven for S6. If it breaks, better to know it on paper.
+
+---
+
+## 11. As built on materia — addendum before construction (2026-09-15)
+
+*Decided with Fran 2026-09-15 (decree 01M2KC03NG: oratio paused,
+consumers resume HTML → JS → silva). Nothing in `html/` exists yet;
+this section is the retarget the body needs, written from the three
+clients that do exist (`css/`, `md/`, `oratio/`) and from materia's
+source as read today, not from the spec's predictions.*
+
+### 11.1 What changed under this spec
+
+| body says | as built |
+|---|---|
+| D2 build `SilvaNodus` | `MateriaNodus` — materia is the substrate; silva is frozen |
+| D4 consume silva through its amalgam | consume **materia directly**: `html/compile_probationes.sh` compiles `materia/fontes/*.c` into `html/build/` exactly as `css/` and `md/` do; html CONSUMES materia, never contains it |
+| D5 reuse ladder S2+S3+S4 | materia's writer, reader, comparator (`materia_arbor_scribere_nodum` / `_legere` / `_aequalis`) and the byte emitter `materia_scribere_nodum` |
+| D6 defer the S6 extraction | S6 **is** materia; parcum `01M12BD0` closes when this client's gates run (its evidence is §2 plus this addendum) |
+| §2.2 `genus_identificator` is C-shaped | **CLOSED** — `MateriaLexiconCoctum` has no such field (HG1) |
+| §2.3 five structural genera required | **CLOSED** — materia's registry requires none; css declares ten genera, none structural (HG2) |
+| §2.4 foster parenting needs the reinserenda extension | still the one named extension (HG3): materia's reinserenda are reachable from the subtree path (MG1), but tree content emitted out of place is not what they carry |
+| §3 `html/grammatica/html.stml` + G4's vestigial production | **DEAD** — the registry is GENERATED from a declaration (`html/grammatica/html.registrum.stml`, `./materia/coquere.sh`), not from a grammar; the canon is HAND-WRITTEN and drift-guarded (css B7 precedent, Fran's decree 2026-09-01) |
+| §7 `silva_arbor_scribere_nodum` yields `<arbor grammatica="html" …>` | same envelope, materia's writer; the seal is `materia_arbor_sigillum` over the generated registry, pinned in `html.canon` and moved by hand with a cause |
+
+H1–H6 stand unchanged. H4 gains a materia fact the css plan measured:
+the writer omits an absent slot entirely (`materia_arbor.c`, the
+`VALOR_NIHIL` path), so byte-exactness through absent slots is by
+construction, as §4.2 claims.
+
+### 11.2 Architecture as built
+
+```
+bytes
+  ├─ html_lexare                      lib/html_lexema.c   EXISTS   Xar<HtmlLexema>
+  ├─ html_adaptare                    html/fontes/        new      Xar<MateriaToken*>, ONE FOR ONE
+  ├─ HtmlLigator                      html/fontes/        new      trivia bind INSIDE TAGS ONLY
+  ├─ html_arbor_parsare               html/fontes/        new      MateriaNodus* (documentum), iterative
+  ├─ materia_scribere_nodum           materia/            —        bytes: the SEPARATING oracle
+  ├─ materia_arbor_scribere/legere    materia/            —        STML projection, two cycles
+  ├─ materia_arbor_aequalis           materia/            —        the tree oracle
+  └─ html.canon                       html/grammatica/    new      hand-written, drift-guarded
+```
+
+| module | owns |
+|---|---|
+| `html/grammatica/html.registrum.stml` | the declaration: ten genera, their loci in BYTE ORDER |
+| `html/fontes/html_registrum_coctum.{h,c}` | GENERATED (never hand-edited; `probatio_html_registrum` compares bytes) |
+| `html/fontes/html_registrum.h` | includes the generated header; hand-written slot enums per genus |
+| `html/fontes/html_lexicon.{h,c}` | the `MateriaLexiconCoctum` for the 23 lexer genera |
+| `html/fontes/html_adaptare.{h,c}` | `HtmlLexema` → `MateriaToken*` one for one; `HtmlLigator` (cumulare/solvere) |
+| `html/fontes/html_arbor.{h,c}` | the simple builder; `VOID_ELEMENTA` and `CLAUSURAE_IMPLICITAE` as tables (M7) |
+| `html/fontes/html_computus.{h,c}` + `html/instrumenta/computus.c` + `html/computus.sh` | the bench twin (css precedent) |
+| `html/grammatica/html.canon` | hand-written; NOT in `canones.registrum` (the `<arbor>` root collision) |
+| `html/compile_probationes.sh` | runner in the css shape; also compiles `md/fontes/*.c` for the consumer gate (§11.8) |
+
+**No `html_selector`, no synthetic tokens, no lexer changes.** The
+lexer already owns raw text and RCDATA (§2.1); the builder never
+tells it anything.
+
+### 11.3 The declaration (replaces §4.1's `<genera-extra>`)
+
+Ten genera, appended in this order — the order is the enumeration and
+the seal. Locus order within a genus is the emission order:
+`materia_scribere_nodum` walks loci in registry order, so `attributa`
+MUST precede `tok_finis` and `liberi` MUST precede `tok_clausura`.
+
+```xml
+<registrum grammatica="html" praefixum="HTML" typus="HtmlGenus"
+  sedes="html/fontes">
+  <genus titulus="documentum" nota="Structura documenti">
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="cauda"  species="token"/>
+  </genus>
+  <genus titulus="doctype">
+    <locus titulus="tok" species="token"/>
+  </genus>
+  <genus titulus="elementum" nota="Sex loci lexematum OMNES optionales (H4)">
+    <locus titulus="tok_apertura"       species="token"/>
+    <locus titulus="attributa"          species="lista-nodus"/>
+    <locus titulus="tok_finis"          species="token"/>
+    <locus titulus="liberi"             species="lista-nodus"/>
+    <locus titulus="tok_clausura"       species="token"/>
+    <locus titulus="tok_clausura_finis" species="token"/>
+  </genus>
+  <genus titulus="attributum">
+    <locus titulus="tok_nomen"   species="token"/>
+    <locus titulus="tok_aequale" species="token"/>
+    <locus titulus="tok_valor"   species="token"/>
+  </genus>
+  <genus titulus="textus" nota="Contentum: nodi, non trivia (H6)">
+    <locus titulus="tok" species="token"/>
+  </genus>
+  <genus titulus="referentia">
+    <locus titulus="tok" species="token"/>
+  </genus>
+  <genus titulus="textus-crudus">
+    <locus titulus="tok" species="token"/>
+  </genus>
+  <genus titulus="commentarium">
+    <locus titulus="tok" species="token"/>
+  </genus>
+  <genus titulus="cdata">
+    <locus titulus="tok" species="token"/>
+  </genus>
+  <genus titulus="elementum-malum" nota="Robustitas: tag clausurae sine pari">
+    <locus titulus="tokens" species="lista-token"/>
+  </genus>
+</registrum>
+```
+
+**One deviation from §4.1, named.** `documentum` was
+`prologus:lista-nodus radix:nodus cauda:token`. That shape assumes
+exactly one root element, which HTML source does not guarantee: a
+fragment has several top-level elements or none, and the parser that
+guarantees one (`<html>`) does it by SYNTHESIS, which H4 forbids. A
+total builder with no synthetic tokens must accept any sequence of
+top-level nodes, so `documentum` is `liberi:lista-nodus cauda:token`
+and the doctype is simply the first child when present. Nothing is
+lost: "the document element" is a derived view (H3), not a slot.
+
+The five structural genera of §4.1 do not exist. The `elementum-malum`
+genus covers exactly one case in v1: an end tag whose name is open
+nowhere on the stack (including `</br>`, which HTML5 rewrites to
+`<br>` — v1 keeps it malum, total and honest, named deviation).
+Everything else the lexer emits maps to a content genus by lexer
+genus: `TEXTUS` → `textus`; `REFERENTIA` → `referentia`;
+`TEXTUS_CRUDUS` and `_IMPERFECTUS` → `textus-crudus`; `COMMENTARIUM`,
+`_IMPERFECTUM` and `_PRAVUM` → `commentarium`; `DOCTYPE` and
+`_IMPERFECTUM` → `doctype`; `CDATA` and `_IMPERFECTA` → `cdata`. The
+imperfect and pravum genera keep their own LEXEME genus in the
+projection (`lex-commentarium-pravum`), so the tree says what the
+lexer saw; the node genus says what it is.
+
+### 11.4 The lexicon
+
+23 rows in `HtmlLexemaGenus` order (asserted by title, css precedent).
+The two decisions that are not mechanical:
+
+| lexer genus | species | munus | why |
+|---|---|---|---|
+| `TEXTUS`, `REFERENTIA`, `TEXTUS_CRUDUS*`, `COMMENTARIUM*`, `DOCTYPE*`, `CDATA*`, `TAG_APERTURA`, `TAG_CLAUSURA`, `ATTRIBUTUM_NOMEN`, `ATTRIBUTUM_VALOR*` | VERBATIM | SUBSTANTIVUM | content. **Comments are SUBSTANTIVUM, not COMMENTUM**: H6 makes them nodes, and a COMMENTUM munus would let the ligator swallow them as trivia |
+| `TAG_FINIS` `>`, `TAG_FINIS_SOLUS` `/>`, `AEQUALE` `=` | FIXUM | SUBSTANTIVUM | orthography lives in the genus, as css punctuation |
+| `SPATIA` | VERBATIM | SPATIUM | absorbs newlines inside a tag; **no `munus LINEA`**, the same capability refusal css asserts positively |
+| `DELIM` (a stray `/` inside a tag) | VERBATIM | SPATIUM | HTML5 names it "unexpected solidus in tag" and IGNORES it — trivia by the language's own definition; binding it as trivia keeps `elementum` free of a junk slot |
+| `FINIS` | FIXUM `""` | FINIS | |
+
+`genus_spatii = -I` (VERBATIM cannot feed template compression; css
+precedent, guarded in materia).
+
+### 11.5 Trivia: only inside tags, and that is the whole ligator
+
+§5 stands and gets sharper. The lexer emits `SPATIA`/`DELIM` only
+between `<name` and `>`; between tags every byte is `TEXTUS`. So the
+`HtmlLigator` binds pending trivia to the next significant token
+INSIDE a tag (attribute name, `=`, value, `>`) with css's divisio rule
+(the first whitespace token containing a newline and everything after
+it go to the NEXT token as `ante`), and is never consulted between
+tags. `documentum.cauda` receives the pending trivia of a tag cut off
+by EOF (`<div cl` + EOF) — the only way trivia reach the end.
+
+Consequence for the substrate: a `textus` node whose token value is
+whitespace-only (`\n    ` between `<ul>` and `<li>`) is a VERBATIM
+lexeme with NO trivia, the sole child of its `<lex-textus>` — exactly
+the case the T9 fix covers and the T11 constraint does not reach. md
+already projects this shape. `\r\n` inside text takes materia's `cr`
+attribute (B6); the corpus carries a CRLF fixture to prove it.
+
+### 11.6 Reservations re-scoped (H5 under materia)
+
+Two facts measured in `materia_arbor.c` today:
+
+1. The reader REFUSES an unknown element: a child element whose title
+   is not a locus of the genus → `"locus generi ignotus"` (line 3170);
+   an element whose title is not a genus → `"genus registro ignotum"`
+   (line 3090).
+2. The reader IGNORES an unknown ATTRIBUTE on a node element:
+   `_nodum_legere` reads `id` and nothing else; positions, `cr`, `n`,
+   `f` are read on lexeme elements; there is no attribute census.
+
+So §6.3 as written cannot be built: a reserved attribute (`ancora`,
+`spatium`, `clonatum` on `elementum`) would be silently accepted by
+the reader, which is precisely what H5 forbids, and the only thing
+that refuses it is the canon at judgment time.
+
+And the premise of H2 has weakened. In materia the format IS the
+declaration plus the seal. Appending a locus later is a declaration
+append and a seal move — the house law for every client, exercised
+twice on css (B8) — and every projection is regenerated from source
+(a projection is never a file of record; the seal refuses a stale
+one). There is no format migration to fear.
+
+**Decision (Fran to veto): v1 declares NOTHING reserved.** The four
+extension points are recorded as `nota` text on the declaration, not
+as loci. Refusal of a foreign extension is automatic and stays gated:
+
+| a document carrying | is refused by |
+|---|---|
+| `<reinserendum>`, `<ancora>`, `<spatium>`, `<clonatum>` as a child of `<elementum>` | the reader: `locus generi ignotus` |
+| `<reinserendum>` at any level as an element | the reader: `genus registro ignotum` |
+| `ancora=`, `spatium=`, `clonatum=` as attributes on `<elementum>` | the canon: unknown attribute at judgment (every corpus document is judged) |
+
+Gate 7 (§8) survives in that form: one probatio per row above, with
+the named cause asserted, born red by a planted fault. The clone
+question (`clonatum`: four NIHIL slots indistinguishable from damage)
+is moot in v1, which never writes a clone; it is appended as an
+`index` locus with the seal moved on the day mechanisms 2–3 arrive.
+H2's INTENT is preserved where it matters: §4.2's genera are shaped so
+parity needs no new genus.
+
+### 11.7 Builder rules as tables (M7)
+
+- **Void elements** (WHATWG list, 13): `area base br col embed hr img
+  input link meta source track wbr`. A void element never opens; its
+  `tok_clausura*` slots are NIHIL by construction.
+- **Implied closes** (v1 "basic", one table `CLAUSURAE_IMPLICITAE`:
+  open element → the start tags that close it): `p` ← every block
+  start (`address article aside blockquote details div dl fieldset
+  figcaption figure footer form h1…h6 header hgroup hr main menu nav
+  ol p pre section table ul`); `li` ← `li`; `dt`/`dd` ← `dt dd`;
+  `option` ← `option optgroup`; `optgroup` ← `optgroup`; `tr` ← `tr
+  tbody thead tfoot`; `td`/`th` ← `td th tr tbody thead tfoot`;
+  `thead`/`tbody`/`tfoot` ← `tbody thead tfoot`.
+- **End-tag rule**: an end tag pops the stack to the nearest open
+  element of the same name (ASCII case-insensitive, H1), implicitly
+  closing everything above it (`<div><p>x</div>` closes `p` with
+  absent `tok_clausura*`); no open element of that name → the end tag
+  and its `>` become one `elementum-malum`.
+- **Raw text**: nothing — the lexer emits `TEXTUS_CRUDUS` after
+  `script style title textarea`; the builder appends `textus-crudus`.
+- **EOF**: every open element closes with absent `tok_clausura*`; a
+  tag cut off mid-attributes keeps its `elementum` with `tok_finis`
+  absent (the model expresses truncation; §4.2 last column).
+
+The builder keeps an explicit open-element stack (an `Xar`), never
+recursion: the parse of a 100 000-deep `<div>` chain must not touch
+the C stack. The projection and the emitter are materia's, and
+recursive; the totalitas gate measures where the first one dies and
+pins it against `01M1FAD8`, which is the depth question this client
+was chosen to force.
+
+### 11.8 Gates as built (§8 mapped to probationes)
+
+| # | probatio | asserts | planted fault at birth |
+|---|---|---|---|
+| — | `probatio_html_registrum` | `materia_registrum_recens` (generated tables byte-equal), lexicon order by title, loci contiguity, `munus LINEA` absent and the line-sensitive capability REFUSED, one minimal tree through writer→reader→writer | two lexicon rows swapped |
+| 1 | `probatio_html_lexema` (exists, root suite) | lexer round trip | — |
+| 2+7 | `probatio_html_adaptare` | one-for-one adaptation, BYTE COVERAGE (trivia + values == source) over the fixtures, segmented-Xar contract (allocate between accumulations) | a trivium dropped in `solvere` |
+| 2 | `probatio_html_arbor` | parse → `materia_scribere_nodum` → `memcmp` on every inline case; §4.2's absent-slot table row by row; implied-close, void, raw-text, EOF cases | `tok_clausura_finis` never assigned |
+| 5+6 | `probatio_html_corpus` | every corpus file byte-exact; self-measure (files read, bytes) | `cauda` skipped for one file |
+| 3 | `probatio_html_stml` | write → read → write, TWO cycles byte-equal; `materia_arbor_aequalis` STRUCTURALIS (FIDELITAS unrunnable: no LINEA munus, as css); compression census 0; over the whole corpus | the re-read tree mutated before comparison |
+| 4 | `probatio_html_canon` | drift guard both ways (every genus/locus/lexeme/envelope has one rule; every rule names one of them), seal pin vs live `materia_arbor_sigillum`, judgment of every corpus document + inline documents | one genus rule deleted → guard AND judgment red |
+| 7 | `probatio_html_reservatio` | the three rows of §11.6, each with its named cause | the refusal message misnamed |
+| — | `probatio_html_totalitas` | random bytes, mutated and truncated corpus, nesting, under `CREDO_NON_RUIT`; the parse alone at 100k depth survives; the first recursive walker's limit measured and pinned | the stack replaced by recursion for one construct |
+| — | `probatio_html_computus` | golden `html/probationes/fixa/computus/basis.tsv` (deterministic columns only) | a golden count edited |
+| — | `probatio_html_md` | **consumer of a consumer**: md's own fixtures rendered by `md_html_reddere` parse, emit byte-identical, project, pass `html.canon`, and contain ZERO `elementum-malum` | a malformed rendering asserted well-formed |
+
+Every probatio self-measures its coverage ("N/N clean" of nothing is
+the lying-green class). The C89 shim (`./materia/shim_probare.sh`)
+runs at the end of the client as the phase-boundary audit and its
+count goes in the phase-log.
+
+### 11.9 Corpus
+
+Snapshots in `probationes/fixa/html/` (the three that exist plus
+`adversarius_2.html`: CRLF throughout, unclosed everything, `</` at
+EOF, misnested formatting, `<table>` with stray content, `<script>`
+with `</script` inside a string, mixed-case tags, duplicate
+attributes, `<p>` chains, valueless and unquoted attributes, a bare
+`&`, `]]>` in text, nesting to 200, and the literal strings
+`</lex-textus>` and `</lex-textus-crudus>` inside text — the raw-form
+refusal case md found); NUL rides inline in the probatio. Live house
+pages by path, as css references `lib/speculum_assets/speculum.css`:
+`briar/facies/facies.html`, `briar/probationes/fixa/facies/{salve,
+circulus,fragmenta}.html`, `apps/villa/assets/index.html`,
+`apps/mensor/assets/index.html`, `tools/silex_assets/index.html`,
+`knotapel/atlas/web/index.html`, `lib/speculum_assets/probatio_visus.html`,
+`reference/aquinas-dithering-tool.html` — fourteen files, ~110 KB,
+every one with `<script>` and most with `<style>` (raw text is not a
+corner case here, it is every page).
+
+### 11.10 What this client tests in the substrate
+
+Named before building so the answer is an answer either way:
+
+- absent slots as MEANING at scale — every void and every implied
+  close is an absent typed slot the emitter must skip and the reader
+  must accept;
+- a content-dominant tree with almost no trivia — the ligator is
+  consulted only inside tags, so `spatia_ante/post` are empty on
+  nearly every token; whitespace-only VERBATIM text values at every
+  level of the tree (T9's fix, exercised thousands of times);
+- raw-text regions owned by the lexer, with `</`-shaped bytes inside
+  token values, through the STML raw form and its refusal;
+- an ITERATIVE builder under materia's RECURSIVE walkers — the depth
+  crash `01M1FAD8` measured on the substrate's side alone;
+- a consumer of a consumer: the md client's output parsed by the html
+  client, both on materia.
+
+§10's recommendation for JS stands, and JS is next: regex-vs-division
+and template interpolation are where the one-way pipe will finally be
+tested.
