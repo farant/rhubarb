@@ -241,6 +241,32 @@ and the corpus split are partitions of the same rows.
   Known cases: a per-corpus genre column (CIRCSE is the only wholly
   verse corpus) and English (one corpus).
 
+**Refinements after the first run (Fran, 2026-09-14, the review after
+compaction; decisions 54–56; design in §7 "Design — T36").**
+
+- **54 The vetoed chain feeds universal buckets.** Decision 50 keeps
+  zero tolerance: a fold whose base is near a thousand permille can
+  only ever veto, and that is a finding about the fold, not noise to be
+  tolerated. A step the pooled chain accepts and the vetoed chain
+  refuses is a CONDITIONED candidate, printed with the corpora that
+  fall; it may enter the weight table only under a declared context
+  (the decoder's back-off design), never the unconditioned table. No
+  tolerance knob, no minimum fold size.
+- **55 A captive group flags the column.** A group whose rows all lie
+  in one corpus can never be judged by leaving that corpus out; when it
+  holds at least `limen` rows the column is INAESTIMABILIS by name,
+  beside the half-of-rows rule. Captive groups and their rows are
+  counted always. Decision 53's own genre case was proven missed by the
+  half rule with a synthetic column: 351 fallback rows of 1,607, no
+  flag, a verse group voting in five corpora and answering no row.
+- **56 A group's profile is said.** The sudoku profile (decision 40)
+  applied to buckets: COACTUS when every corpus's training rows are
+  unanimous, ORDINATUS when every corpus votes the same, APERTUS
+  otherwise; mutability (the vote differs between corpora) is a column
+  of its own so a genre flip is never buried in "open". The tool emits
+  per-group, per-corpus evidence rows: the weight table's raw material,
+  produced by the census, not designed around it.
+
 ## 3. Stage 1 — the tree (`oratio_arbor`)
 
 **Registry (`oratio_registrum`, hand-written like md's).** Genera:
@@ -2453,6 +2479,109 @@ search (greedy chain plus pairs) cannot reach a three-column pattern —
 candidates are a veto tolerance scaled to fold size (or a minimum fold
 size) and a triple table or a chain seeded from a named column. No
 weight is taken from the vetoed chain alone until that is decided.
+
+**Design — T36, refinements of the partition lattice (2026-09-14, the
+review after compaction; decisions 54–56; quaestiones 01M2HA2RAF and
+01M2HB154D).**
+
+JUDGMENT — `lib/partitio_aestimatio`, appended fields, nothing renamed.
+Captive groups: g is captive when one fold holds all its rows
+(`in_sorte(g, s) == numeri(g)` for some s); `captivus[g]` (the fold
+index, S = none), `greges_captivi`, `ordines_captivi`;
+`inaestimabilis` = 2·inaestimati > ordines OR a captive group with at
+least `limen` rows (decision 55). Per group and fold: `retenti[g·S+s]`
+(held-out rows), `recti_gregum[g·S+s]` (held-out rows right),
+`margo[g·S+s]` (training majority minus the runner-up, a tie 0). Per
+group `habitus[g]` = COACTUS | ORDINATUS | APERTUS (coactus: every fold
+votes and its margin equals its training rows; ordinatus: every fold
+votes and all votes agree; apertus otherwise) and `mutabilis[g]`
+(decision 56). The chain takes `PartitioCatenaOptiones {limen,
+lucrum_minimum (0 = limen), sortes_vetant, semen}` with
+`partitio_catena_optiones_initium` (XX, 0, VERUM, NIHIL) in place of
+three loose parameters, before the weight table becomes a caller.
+`semen` is the step-0 partition (NIHIL = one group), kept on the
+catena; a column already inside the seed gains nothing and the gain
+floor refuses it.
+
+SEARCH — the instrument. The pair table becomes the k-MEET table:
+`-profunditas N` (default II, refused above IV by name) evaluates every
+subset of 2..N feature columns; the increment of a meet is its rows
+right minus the best rows right among its (k−1)-subsets, singles at
+depth 1, so at depth 2 the pair definition is unchanged; sub-meet
+results are found through a table keyed by the sorted column tuple.
+Row kind `RETICULUM-INFIMUM` (`profunditas`, `columnae` joined by `+`,
+`greges`, `recti`, `incrementum`, `cadentes-basi`, `inaestimati`)
+supersedes `RETICULUM-PAR`, which no reader consumed; `-prima N`
+(default XX) rows per depth by increment. `-initium t1,t2` seeds the
+chain from the meet of the named columns; step 0 names them.
+`RETICULUM-CONDICIO` (`gradus`, `columna`, `sors`, `recti`, `priores`):
+one row per falling fold of each pooled-chain step (decision 54), and
+a block CANDIDATI CONDICIONATI in the human report. Titles split by
+meaning: `cadentes-basi` (COLUMNA and INFIMUM, folds below the base)
+and `cadentes-gradu` (CATENA, below the previous step); the recount
+follows. Constant columns (one group after `-ubi`) are named on one
+line and leave the lattice: no cover edge, no duplicate row, they are
+the top element. `-greges catena-libera` and `-greges initium`.
+Permille in 64 bits. The usage line says `-ubi` matches raw values,
+before `-gradus`.
+
+EVIDENCE — `RETICULUM-GREX`, one row per group of the partition
+`-greges` names (a column, `catena`, `catena-libera`, `initium`):
+`partitio`, `grex` (the values at the representative row joined by
+`+`), `ordines`, `aurum-maximum`, `aurum-maximum-ordines`, `puritas`
+(permille of the majority, in-sample), `captivus`, `habitus`,
+`mutabilis`, `sortes-suffragantes`, `retenti`, `recti`.
+`RETICULUM-GREX-SORS`, one per group and fold: `partitio`, `grex`,
+`sors`, `disciplina` (training rows), `suffragium` (a gold title or
+`-`), `margo`, `retenti`, `recti`. The human `-greges` view gains
+margin and profile. Folds other than the corpus: `-sortes-alternae N`
+makes fold i = the row's index among the kept rows mod N, titles
+`alterna-0..`, and `-sortes` may then be omitted. Interleaved folds
+hold every corpus, so a column that gains there but not by corpus
+flips by genre, and one that gains by corpus but not interleaved was
+fold noise. Leave-one-lemma-out needs a lemma column: LIS gains
+`lemma-capitis` (the winner's head reading's lemma, oracle side,
+appended under the header law), and `-sortes lemma-capitis` then holds
+out each verb. The recount grows to INFIMUM (depth ≤ III), CONDICIO,
+GREX and GREX-SORS.
+
+GATES (each red at birth by a planted fault). T36 a
+`probatio_partitio_aestimatio`: grid IV, one captive group at the
+threshold, flagged, counted; profiles on grids I–III derived by hand
+(grid II: `v` COACTUS, `u` ORDINATUS; grid III: the one group APERTUS
+and mutable; grid I: the meet's groups COACTUS at limen II); a seeded
+chain on grid I from the number column reaches the meet the greedy
+chain could not (+3); plant = the captive test inverted. T36 b
+`probatio_oratio_reticulum`: the fixture gains a third column so a
+triple exists; the expected rows are regenerated once with the cause
+(new kinds, renamed titles) and derived by hand again; plant = the
+increment taken against the worse sub-meet. T36 c: GREX and GREX-SORS
+rows on the fixture derived by hand; `-sortes-alternae II` on the
+fixture; the recount equals the C rows on the fixture for every kind;
+the oracle's header law covers the new LIS column; plant = margin as
+the majority instead of majority minus runner-up.
+
+ACCEPTANCE (T36 d, written before the run, the same 1,607 contests).
+(1) Recount = C on every row kind. (2) At depth III the triple position
+× loser number × verb number is among the top INFIMUM rows and its
+GREX-SORS rows show the flip: the group "before, plural loser, singular
+verb" votes victor from CIRCSE and victa from Perseus — mutable,
+APERTUS. (3a) With interleaved folds (N = VI) the vetoed chain ACCEPTS
+verb number: the LLCT refusal is genre, not fold size. If (3a) fails,
+the reading behind decision 54 is wrong, and that is settled before any
+weight work. (3b) With `-sortes lemma-capitis` verb number still gains
+at least +50 pooled: structural, not lexical. (4) The arc contests
+(gold `aurum-arcus`, every LIS row) as a second census, reported, no
+prediction.
+
+TRANCHES. T36 a the judgment; T36 b the search; T36 c the evidence;
+T36 d the second run and the records. About two days.
+
+LEFT OUT, named: a tolerance knob and a minimum fold size (decided
+against, decision 54); beam search (the k-meet table reaches depth III
+in milliseconds here); a Python face; the weight table itself (its own
+spec, reading GREX-SORS); a per-sentence genre column (the captive rule
+is ready for it); English folds.
 
 ## 8. Stage 6 — search
 
