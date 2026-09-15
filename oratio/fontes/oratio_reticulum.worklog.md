@@ -265,6 +265,30 @@ options, so the acceptance diff covers it.
 hand (the FINIS numbers rest on one fact — the meet of a column with a
 constant column is the column itself), the recount equal to both, the
 human laws (`sortes:` line, `recusatae:`, `ceterae`, `sine lucro`,
-`nulla`). Plant: `>=` for `>` in the gaining-fold count, red on the
-parity columns (three gaining folds where there are none), green after
+`nulla`). Plant: `>=` for `>` in the gaining-fold count, red at the
+first fixture comparison (equal folds counted as gaining), green after
 the revert.
+
+## 2026-09-15 — T37 b, examples and the sentence id
+
+`-exempla N` prints under each group its first N kept rows, in file
+order, as `linea L: t=v …` over the first three header titles, the
+fold column (once — on grid II the fold IS the third title; `sors=` when
+interleaved) and `sententia` when the header has it. The rows come from
+the kept-row array and the group from the partition over kept rows, so
+`-ubi` and the examples agree by construction.
+
+**A weak law, caught by its plant.** The first examples law asserted
+that `linea 3: f=u …` and `linea 7: f=v …` appear. The plant walked the
+rows in reverse; the lines still appeared, under the other group, and
+the gate stayed green — a silent gate. The law now pins each example to
+the tail of its group's own line (`C:O(8)\n    linea 3: …`). Lesson
+worth keeping: a substring law over a report cannot see placement;
+when placement is the claim, assert the two lines together.
+
+**Third run.** Rows regenerated with `sententia` (LIS column 33, the
+CoNLL-U `sent_id`, else the sentence's first line number). Recount = C
+on every kind (224 + 245 + 203 rows). The flipping groups' examples
+resolve to Seneca (Hercules Furens 318 / 330 / 339, Agamemnon 279 /
+361) and Tacitus (Germania 192), verified in the files. From a bucket to
+its sentences in one flag.

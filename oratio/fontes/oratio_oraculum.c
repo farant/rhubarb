@@ -2648,6 +2648,22 @@ _litem_notare (
     /* T36 c: lemma lectionis primae capitis petiti */
     l->lemma_capitis = _chordam_condere(piscina,
         _lemma_lectionis(h->nodus, ZEPHYRUM));
+    /* T37 b: identitas sententiae - sent_id, aliter linea prima */
+    si (s->id.mensura > ZEPHYRUM)
+    {
+        l->sententia = _chordam_condere(piscina, s->id);
+    }
+    alioquin
+    {
+        ChordaAedificator* t = chorda_aedificator_creare(piscina,
+            (memoriae_index)XVI);
+
+        si (t != NIHIL)
+        {
+            (vacuum)chorda_aedificator_appendere_i32(t, s->linea);
+            l->sententia = chorda_aedificator_finire(t);
+        }
+    }
     l->ante                 = (b32)(dependens_a < caput_a);
     l->caput_victoris_idem  = (b32)(caput_v == (s32)caput_a);
     /* T35 c: IUDICIA - condicio contentionis eadem (caput victoris
@@ -2803,7 +2819,8 @@ constans character* constans
     "thesaurus", "aurum-arcus", "aurum-lectio", "relatio-victae",
     "relatio-victoris", "ante-victoris", "distantia-victae",
     "distantia-victoris",
-    "lemma-capitis"
+    "lemma-capitis",
+    "sententia"
 };
 
 /* titulus valoris enumerati aut '-' (absens) */
@@ -2982,6 +2999,8 @@ oratio_oraculum_lis_linea (
     _lis_campus_numeri(a, (s32)lis->distantia_victoris);
     /* T36 c: campus XXXII appensus */
     _lis_campus_chordae(a, lis->lemma_capitis);
+    /* T37 b: campus XXXIII appensus */
+    _lis_campus_chordae(a, lis->sententia);
     redde chorda_aedificator_finire(a);
 }
 

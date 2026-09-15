@@ -987,6 +987,26 @@ arc census (8,406): head direction +555 vetoed by the verse corpora,
 direction × distance +692. NEXT: the weight table spec reading
 `GREX-SORS`, then the decoder.
 
+**T37 (2026-09-14/15): THE INSTRUMENT'S SECOND PASS** (spec §7
+"Design — T37" + as-built; plan `partitio-reticulum-t37-plan.md`; order
+after it fixed by decretum 01M2HGPT52: subject-verb NUMBER AGREEMENT as
+a constraint (01M2HGQ2HM), then the decoder). Rows now carry the folds
+that GAIN beside those that fall (`sortes-lucrantes`, `lucrantes-gradu`)
+— the integer noise floor; `RETICULUM-FINIS` names every candidate at a
+chain's end with its cause (`recusatae:` / `ceterae N lucro
+deficientes` in the report); `RETICULUM-OPTIONES` is the first machine
+row; the report collapses zero-gain columns (`sine lucro:`), stops meet
+lists at the first non-positive increment, turns fold lists over eight
+into `cadit N ex S`, and prints `sortes: la_circse +33 …` under every
+column with a gain; `-exempla N` prints under each group its first N
+rows (`linea L: t=v … sententia=id`) and LIS column 33 `sententia`
+(`sent_id`, else the sentence's first line) makes them findable. Third
+run: recount = C (224 + 245 + 203 rows); the flipping groups resolve to
+Seneca HercF 318/330/339, Ag 279/361, Tacitus Germania 192. LESSON: a
+substring law over a report cannot see PLACEMENT — the reversed-rows
+plant stayed green until the law pinned each example to its group's
+line.
+
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
 `latina.h` shadowing `include/latina.h` in the nexus sweep (first-wins

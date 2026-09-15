@@ -920,7 +920,8 @@ _thesaurus_arborum (
                             plagula);
                         chorda linea     = oratio_oraculum_lis_linea(p,
                             plagula, prima);
-                           i32 cum_lemmate = ZEPHYRUM;
+                           i32 cum_lemmate    = ZEPHYRUM;
+                           i32 cum_sententia  = ZEPHYRUM;
                            i32 m;
 
                         CREDO_AEQUALIS_I32 (_tabulae(caput_lis),
@@ -940,11 +941,18 @@ _thesaurus_arborum (
                             {
                                 cum_lemmate = cum_lemmate + I;
                             }
+                            si (l->sententia.mensura > ZEPHYRUM)
+                            {
+                                cum_sententia = cum_sententia + I;
+                            }
                         }
                         imprimere("    lites cum lemmate capitis %d /"
                             " %d\n", (integer)cum_lemmate,
                             (integer)xar_numerus(census.lites));
                         CREDO_MAIOR_I32 (II * cum_lemmate,
+                            xar_numerus(census.lites));
+                        /* T37 b: identitas sententiae in omni lite */
+                        CREDO_AEQUALIS_I32 (cum_sententia,
                             xar_numerus(census.lites));
                     }
                 }
@@ -1162,7 +1170,7 @@ _columnas_lis_probare (
        i32 aequales  = ZEPHYRUM;
     chorda t;
 
-    CREDO_AEQUALIS_I32 ((i32)ORATIO_COLUMNAE_LIS_NUMERUS, (i32)XXXII);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_COLUMNAE_LIS_NUMERUS, (i32)XXXIII);
     per (i = ZEPHYRUM; i < (i32)ORATIO_COLUMNAE_LIS_NUMERUS; i++)
     {
         si (ORATIO_COLUMNAE_LIS[i] == NIHIL)
@@ -1174,6 +1182,10 @@ _columnas_lis_probare (
     /* T36 c: columna XXXII appensa - lemma lectionis primae capitis
      * (sors 'lemma retentum' pro reticulo) */
     CREDO_VERUM (strcmp(ORATIO_COLUMNAE_LIS[XXXI], "lemma-capitis")
+        == ZEPHYRUM);
+    /* T37 b: columna XXXIII - identitas sententiae (sent_id aut
+     * ordinalis) pro exemplis reticuli */
+    CREDO_VERUM (strcmp(ORATIO_COLUMNAE_LIS[XXXII], "sententia")
         == ZEPHYRUM);
     per (i = ZEPHYRUM; i < (i32)XXIII; i++)
     {

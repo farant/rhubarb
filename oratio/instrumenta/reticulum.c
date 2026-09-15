@@ -6,7 +6,7 @@
  *   [-ubi titulus=v1,v2]... [-columnae t1,t2 | -praeter t1,t2]
  *   [-gradus t1,t2] [-limen N] [-lucrum N] [-profunditas N] [-prima N]
  *   [-initium t1,t2] [-greges columna|catena|catena-libera|initium]
- *   [-machina]
+ *   [-exempla N] [-machina]
  * -ubi valores crudos confert (ante -gradus). Numeri decimales.
  * Exitus: 0 iudicatum; 2 nihil iudicatum (causa in stderr), usus,
  * plagula absens.
@@ -196,7 +196,8 @@ _usus (vacuum)
         "[-ubi titulus=v1,v2]... [-columnae t1,t2 | -praeter t1,t2] "
         "[-gradus t1,t2] [-limen N] [-lucrum N] "
         "[-profunditas N] [-prima N] [-initium t1,t2] "
-        "[-greges columna|catena|catena-libera|initium] [-machina]\n"
+        "[-greges columna|catena|catena-libera|initium] [-exempla N] "
+        "[-machina]\n"
         "  -ubi valores crudos confert (ante -gradus); numeri "
         "decimales\n");
     redde II;
@@ -309,6 +310,13 @@ principale (
                          == ZEPHYRUM)
             {
                 si (!_numerum_legere(valor, &optiones.alternae))
+                {
+                    redde _usus();
+                }
+            }
+            alioquin si (strcmp(argumentum, "-exempla") == ZEPHYRUM)
+            {
+                si (!_numerum_legere(valor, &optiones.exempla))
                 {
                     redde _usus();
                 }

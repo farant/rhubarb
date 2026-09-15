@@ -56,6 +56,8 @@ nomen structura {
                     i32  alternae;    /* sortes alternae N (0 = nullae):
                                          sors = index ordinis mod N;
                                          -sortes tum omissa (T36 c) */
+                    i32 exempla;     /* ordines primi N gregis
+                                         cuiusque sub -greges (T37 b) */
 } OratioReticulumOptiones;
 
 nomen structura {

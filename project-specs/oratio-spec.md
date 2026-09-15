@@ -2703,6 +2703,30 @@ LEFT OUT, named: ranking by fold agreement (kept as the increment, Fran
 2026-09-14); a "nearly forced" profile grade; numeric `-ubi`; finer
 bucketing than 0 | 1 | plures; a lattice over meets.
 
+**As built — T37 (2026-09-14/15; commits 081dfe1c and the T37 b
+commit).** Everything in the design, with three deviations. The
+sentence id falls back to the sentence's FIRST LINE NUMBER in the file,
+not its ordinal, when a treebank has no `sent_id` (a line number is what
+one greps for); every pinned file has ids, so the fallback is a safety
+net. The examples line prints the fold column once when it is already
+among the first three titles. And a weak law was caught by its own
+plant: the first examples law asserted substrings, and with the rows
+walked in reverse the same lines still appeared, only under the other
+group — the gate stayed green, which is the silent-gate class the
+doctrine plants for; the law now pins each example to its group's
+line. Sizes: the FINIS rows keep every candidate's per-fold falls, so
+the end-of-chain probe holds k × S flags allocated before the scratch
+mark. THIRD RUN (24,306 rows with `sententia`, the same 1,607 contests):
+recount = C on every kind including FINIS and OPTIONES — 224 rows at
+depth three, 245 seeded with group rows, 203 interleaved. The flipping
+groups' examples name real sentences: "before, plural loser, singular
+verb" opens with Seneca, Hercules Furens 318, 330, 339 (`occasus`,
+`pinguis`, `uiolenta`); "after, plural loser, plural verb" with
+Agamemnon 279, 361 and Tacitus, Germania 192 (`sorores`, `uultus`,
+`insignes`) — verified present in the CoNLL-U files. The tool now goes
+from a bucket to its sentences in one flag, which is what the agreement
+constraint's design will start from.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

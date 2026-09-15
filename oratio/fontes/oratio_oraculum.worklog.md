@@ -1,5 +1,16 @@
 # oratio_oraculum worklog
 
+## 2026-09-15 — T37 b, `sententia` on the LIS rows
+
+Column 33: the sentence's `# sent_id` (the CoNLL-U reader already kept
+it as `OratioConlluSententia.id`), else the sentence's first line
+number in the file — a line number greps, an ordinal does not. Law:
+non-empty on every contest row of every judged treebank (all pinned
+files carry ids). Plant: the field declared but not printed — the T35 c
+width law (header = row + 1) went red at once, which is what that law
+is for. Purpose: `./oratio/reticulum.sh … -greges … -exempla N` names
+the sentences behind a bucket.
+
 ## 2026-09-14 — T36 c, `lemma-capitis` on the LIS rows
 
 Column 32, appended under the T35 c header law: the LEMMA token of the

@@ -611,6 +611,48 @@ principale (vacuum)
     _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
         &optiones), "reticulum: ambae -sortes et -sortes-alternae");
 
+    imprimere("\n--- IX. -exempla: ordines primi gregum ---\n");
+    /* T37 b: proba.tsv linea 3 = ordo u primus, linea 7 = ordo v
+     * primus; tituli tres primi (f h thesaurus - sors inter eos semel);
+     * paritas seminata: linea 3 = 0 0 0 A */
+    _optiones_basis(piscina, &optiones);
+    optiones.greges   = "f";
+    optiones.exempla  = II;
+    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+        &optiones);
+    CREDO_VERUM (exitus.iudicatum);
+    si (exitus.iudicatum)
+    {
+        imprimere("%.*s", (integer)exitus.relatio.mensura,
+            (constans character*)exitus.relatio.datum);
+        /* exempla SUB linea gregis sui: culpa plantata (ordines
+         * inversi) lineas easdem sub grege altero imprimebat et lex
+         * substringarum sola VIRIDIS manebat - lex placitum pinnat */
+        CREDO_VERUM (_continet(exitus.relatio,
+            "C:O(8)\n    linea 3: f=u h=una thesaurus=A\n"
+            "    linea 4: f=u h=una thesaurus=A\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "C:S(10)\n    linea 7: f=v h=una thesaurus=A\n"
+            "    linea 8: f=v h=una thesaurus=A\n"));
+        CREDO_AEQUALIS_I32 (_quotiens_continet(exitus.relatio,
+            "    linea "), IV);
+    }
+    _optiones_basis(piscina, &optiones);
+    optiones.greges   = "catena";
+    optiones.exempla  = I;
+    _titulum_addere(piscina, optiones.initium, "f");
+    _titulum_addere(piscina, optiones.initium, "g");
+    exitus = oratio_reticulum_currere(piscina, paritas, "fixa",
+        &optiones);
+    CREDO_VERUM (exitus.iudicatum);
+    CREDO_VERUM (exitus.iudicatum
+        && _continet(exitus.relatio,
+        "  0 / 0 / 0: ordines 3; aurum S 3 O 0; habitus coactus; "
+        "suffragia A:S(2) B:S(2) C:S(2)\n"
+        "    linea 3: f=0 g=0 h=0 thesaurus=A\n"));
+    CREDO_VERUM (exitus.iudicatum
+        && _quotiens_continet(exitus.relatio, "    linea ") == VIII);
+
     imprimere("\n");
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

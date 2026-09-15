@@ -2538,6 +2538,66 @@ _catenam_humanam (
     }
 }
 
+/* T37 b: exempla gregis g - ordines primi N (ordine plagulae) ut
+ * 'linea L: t=v ...' super titulos tres primos, sortem (semel; 'sors'
+ * si alterna) et 'sententia' si titulus adest */
+interior vacuum
+_exempla_scribere (
+             ChordaAedificator* a,
+    constans ContextusReticuli* c,
+             constans Partitio* p,
+                           i32  g)
+{
+    s32 index_sententiae  = _index_literis(c, "sententia");
+    i32 primi             = c->numerus_titulorum < III
+        ? c->numerus_titulorum : III;
+    i32 impressi          = ZEPHYRUM;
+    i32 r;
+    i32 k;
+
+    per (r = ZEPHYRUM; r < c->numerus
+        && impressi < c->optiones->exempla;
+        r++)
+    {
+        constans OrdoReticuli* ordo;
+
+        si (p->grex[r] != g)
+        {
+            perge;
+        }
+        ordo = c->manentes[r];
+        _scribe_literas(a, "    linea ");
+        _scribe_numerum(a, ordo->linea);
+        _scribe_literas(a, ":");
+        per (k = ZEPHYRUM; k < primi; k++)
+        {
+            _scribe_literas(a, " ");
+            _scribe_chordam(a, c->tituli[k]);
+            _scribe_literas(a, "=");
+            _scribe_chordam(a, ordo->campi[II + k]);
+        }
+        si (c->index_sortium >= (s32)III)
+        {
+            _scribe_literas(a, " ");
+            _scribe_chordam(a, c->tituli[c->index_sortium]);
+            _scribe_literas(a, "=");
+            _scribe_chordam(a, ordo->campi[II + c->index_sortium]);
+        }
+        alioquin si (c->index_sortium < ZEPHYRUM)
+        {
+            _scribe_literas(a, " sors=");
+            _scribe_chordam(a, c->valores_sortium[r]);
+        }
+        si (index_sententiae >= (s32)III)
+        {
+            _scribe_literas(a, " sententia=");
+            _scribe_chordam(a, ordo->campi[II + index_sententiae]);
+        }
+        _scribe_lineam_novam(a);
+        impressi = impressi + I;
+    }
+}
+
 interior vacuum
 _greges_scribere (
     constans ContextusReticuli* c,
@@ -2615,6 +2675,10 @@ _greges_scribere (
             _scribe_literas(a, " !");
         }
         _scribe_lineam_novam(a);
+        si (o->exempla > ZEPHYRUM)
+        {
+            _exempla_scribere(a, c, p, g);
+        }
     }
 }
 
