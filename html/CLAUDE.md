@@ -42,8 +42,20 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   `materia_scribere_nodum` on 16 cases + §4.2's rows (`<div>` at EOF,
   `<img/>`, `<div cl`, `<a = x>`), parentage, case-insensitive close,
   implicit close by an outer end tag, malum, content genera, raw text.
-- Next: H4 the builder, part two (void elements, implied closes as
-  tables).
+- **H4 (2026-09-15):** the two TABLES (M7): `VACUA` (WHATWG's 13
+  void elements: never pushed, so their close slots are absent by
+  construction; `</br>` stays malum, named deviation) and
+  `CLAUSURAE_IMPLICITAE` (open element → the start tags that close
+  it: p ← the block starts, li ← li, dt/dd ← dt dd, option ←
+  option optgroup, optgroup ← optgroup, tr ← tr tbody thead tfoot,
+  td/th ← td th tr tbody thead tfoot, thead/tbody/tfoot ← the three).
+  The rule looks at the TOP of the stack only and repeats while it
+  fires: `<p><b>x<div>` does NOT close p (b is on top) — the simple
+  builder's named limit; the full algorithm's "button scope" is
+  mechanism 1 of spec §6.1. Gate: +73 assertions (table rows, siblings
+  after implied close, `<input disabled><img src=x>y`, tr/td chains,
+  dt/dd, `<p>a<b>x<div>y` asserted as nested on purpose).
+- Next: H5 the corpus gate (fourteen files) + `adversarius_2.html`.
 
 ## The registry is generated
 

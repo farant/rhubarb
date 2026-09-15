@@ -412,7 +412,7 @@ stack is an element E such that N is in `CLAUSURAE_IMPLICITAE[E]`, pop E
 rule: the lexer emits `TEXTUS_CRUDUS` after `script style title
 textarea`, the builder appends `textus-crudus` (H3 already does).
 
-- [ ] **Step 1: Write the failing tests** — §4.2's remaining rows and the
+- [x] **Step 1: Write the failing tests** — §4.2's remaining rows and the
   tables:
 
 ```c
@@ -420,9 +420,9 @@ textarea`, the builder appends `textus-crudus` (H3 already does).
     CREDO_VERUM (_octetos_probare(piscina, "<ul><li>a<li>b</ul>", XIX));
     CREDO_VERUM (_octetos_probare(piscina, "<br><br/><BR>x", XIV));
     CREDO_VERUM (_octetos_probare(piscina, "<p>a<div>b</div>", XVI));
-    CREDO_VERUM (_octetos_probare(piscina, "<table><tr><td>1<td>2<tr><td>3</table>", XL));
+    CREDO_VERUM (_octetos_probare(piscina, "<table><tr><td>1<td>2<tr><td>3</table>", XXXVIII));
     CREDO_VERUM (_octetos_probare(piscina, "<script>a</b></script>", XXII));
-    CREDO_VERUM (_octetos_probare(piscina, "<textarea><p></textarea>", XXV));
+    CREDO_VERUM (_octetos_probare(piscina, "<textarea><p></textarea>", XXIV));
     CREDO_VERUM (_octetos_probare(piscina, "</br>", V));
     CREDO_VERUM (_octetos_probare(piscina, "<div><p>x</div>", XV));
 ```
@@ -436,19 +436,19 @@ textarea`, the builder appends `textus-crudus` (H3 already does).
   (named deviation); `<div><p>x</div>` → `p` inside `div`, `p` unclosed,
   `div` closed.
 
-- [ ] **Step 2: Run and verify it fails** — `./html/compile_probationes.sh arbor`.
+- [x] **Step 2: Run and verify it fails** — `./html/compile_probationes.sh arbor`.
 
-- [ ] **Step 3: Implement** — the two tables + the pre-push loop + the
+- [x] **Step 3: Implement** — the two tables + the pre-push loop + the
   void check. Case-insensitive comparisons through one helper
   `_titulus_aequalis(chorda, constans character*)` (ASCII fold; no
   `strncasecmp` — it is not C89).
 
-- [ ] **Step 4: Run the whole suite** — exit 0.
+- [x] **Step 4: Run the whole suite** — exit 0.
 
-- [ ] **Step 5: Plant** — remove `"p"` from the block list → the
+- [x] **Step 5: Plant** — remove `"p"` from the block list → the
   `<p>a<div>` sibling assertion red; revert.
 
-- [ ] **Step 6: Format, commit**
+- [x] **Step 6: Format, commit**
 
 ```python
 silva.commissio("html: aedificator simplex II - elementa vacua (XIII), clausurae implicitae (tabula), textus crudus lexatoris; loci absentes = sensus (H4) (rubra nata: p ex blocis sublatum)",

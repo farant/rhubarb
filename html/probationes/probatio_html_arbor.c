@@ -9,9 +9,8 @@
  * II. STRUCTURA - tabula locorum absentium spec par. IV.2 ordine
  *                 per ordinem asserta; parentela; clausura litteris
  *                 neglectis; malum sine pari.
- *
- * H3: sine elementis vacuis et clausuris implicitis (H4). Casus
- * qui eas poscunt HIC NON asseruntur - non tacentur: H4 eos addit.
+  * H4: elementa vacua (tabula XIII) et clausurae implicitae (tabula,
+ * vertex acervi solus) - tabulae par. IV.2 ordines ceteri.
  */
 
 #include "latina.h"
@@ -160,6 +159,25 @@ principale (vacuum)
         CREDO_VERUM (_octetos_probare(piscina,
             "<script>a</b></script>", XXII));
         CREDO_VERUM (_octetos_probare(piscina, "", ZEPHYRUM));
+        /* H4 */
+        CREDO_VERUM (_octetos_probare(piscina, "<p>a<p>b", VIII));
+        CREDO_VERUM (_octetos_probare(piscina, "<ul><li>a<li>b</ul>",
+            XIX));
+        CREDO_VERUM (_octetos_probare(piscina, "<br><br/><BR>x", XIV));
+        CREDO_VERUM (_octetos_probare(piscina, "<p>a<div>b</div>",
+            XVI));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "<table><tr><td>1<td>2<tr><td>3</table>", XXXVIII));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "<textarea><p></textarea>", XXIV));
+        CREDO_VERUM (_octetos_probare(piscina, "</br>", V));
+        CREDO_VERUM (_octetos_probare(piscina, "<div><p>x</div>", XV));
+        CREDO_VERUM (_octetos_probare(piscina, "<p>a<b>x<div>y", XIV));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "<dl><dt>a<dd>b<dt>c</dl>", XXIV));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "<input disabled><img src=x>y", XXVIII));
+        CREDO_VERUM (_octetos_probare(piscina, "<br></br>", IX));
     }
 
 
@@ -379,6 +397,182 @@ principale (vacuum)
             _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)->genus,
             (s32)HTML_GENUS_TEXTUS_CRUDUS);
         CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+    }
+
+
+    /* ==================================================
+     * STRUCTURA H4: elementa vacua, clausurae implicitae
+     * ================================================== */
+
+    {
+        MateriaNodus* documentum;
+        MateriaNodus* elementum;
+        MateriaNodus* liber;
+
+        imprimere("\n--- Probans '<p>a<p>b': p implicite ---\n");
+        documentum = _parsare(piscina, "<p>a<p>b");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (elementum->genus,
+            (s32)HTML_GENUS_ELEMENTUM);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_VERUM (_absens(elementum,
+            HTML_ELEMENTUM_TOK_CLAUSURA_FINIS));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
+        liber = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_S32 (liber->genus, (s32)HTML_GENUS_ELEMENTUM);
+        CREDO_AEQUALIS_PTR (liber->pater, documentum);
+
+        imprimere("\n--- Probans '<ul><li>a<li>b</ul>' ---\n");
+        documentum = _parsare(piscina, "<ul><li>a<li>b</ul>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, I);
+        CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
+
+        imprimere("\n--- Probans '<br><br/><BR>x': vacua ---\n");
+        documentum = _parsare(piscina, "<br><br/><BR>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            IV);
+        {
+            i32 i;
+            per (i = ZEPHYRUM; i < III; i++)
+            {
+                liber = _liber(documentum, HTML_DOCUMENTUM_LIBERI, i);
+                CREDO_AEQUALIS_S32 (liber->genus,
+                    (s32)HTML_GENUS_ELEMENTUM);
+                CREDO_NON_NIHIL (_tok(liber, HTML_ELEMENTUM_TOK_FINIS));
+                CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_LIBERI));
+                CREDO_VERUM (_absens(liber,
+                    HTML_ELEMENTUM_TOK_CLAUSURA));
+                CREDO_VERUM (_absens(liber,
+                    HTML_ELEMENTUM_TOK_CLAUSURA_FINIS));
+            }
+        }
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, III)->genus,
+            (s32)HTML_GENUS_TEXTUS);
+
+        imprimere("\n--- Probans '<input disabled><img src=x>y' ---\n");
+        documentum = _parsare(piscina, "<input disabled><img src=x>y");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            III);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum,
+            HTML_ELEMENTUM_ATTRIBUTA),
+            I);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_LIBERI));
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_I32 (_numerus(elementum,
+            HTML_ELEMENTUM_ATTRIBUTA),
+            I);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_LIBERI));
+
+        imprimere("\n--- Probans '<p>a<div>b</div>': fratres ---\n");
+        documentum = _parsare(piscina, "<p>a<div>b</div>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+
+        imprimere("\n--- Probans '<p>a<b>x<div>y': vertex solus ---\n");
+        /* b in vertice: p NON clauditur (aedificator simplex) - div
+         * intra b intra p. Nominatum, non celatum. */
+        documentum = _parsare(piscina, "<p>a<b>x<div>y");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), II);
+        CREDO_AEQUALIS_S32 (
+            _liber(liber, HTML_ELEMENTUM_LIBERI, I)->genus,
+            (s32)HTML_GENUS_ELEMENTUM);
+
+        imprimere("\n--- Probans tabulam: tr/td implicite ---\n");
+        documentum = _parsare(piscina,
+            "<table><tr><td>1<td>2<tr><td>3</table>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), II);
+        CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_VERUM (_absens(_liber(liber, HTML_ELEMENTUM_LIBERI,
+            ZEPHYRUM),
+            HTML_ELEMENTUM_TOK_CLAUSURA));
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
+        CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
+
+        imprimere("\n--- Probans '<dl><dt>a<dd>b<dt>c</dl>' ---\n");
+        documentum = _parsare(piscina, "<dl><dt>a<dd>b<dt>c</dl>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            III);
+
+        imprimere("\n--- Probans '<textarea><p></textarea>' ---\n");
+        documentum = _parsare(piscina, "<textarea><p></textarea>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
+        CREDO_AEQUALIS_S32 (
+            _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_TEXTUS_CRUDUS);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+
+        imprimere("\n--- Probans '</br>' et '<br></br>': malum ---\n");
+        documentum = _parsare(piscina, "</br>");
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        documentum = _parsare(piscina, "<br></br>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, I)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+
+        imprimere("\n--- Probans '<div><p>x</div>' ---\n");
+        documentum = _parsare(piscina, "<div><p>x</div>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
     }
 
 

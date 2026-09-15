@@ -1,9 +1,8 @@
 /* html_arbor.c - Vide html_arbor.h.
- *
- * H3: documentum, elementa, attributa, contentum; clausura per tag
+  * H3: documentum, elementa, attributa, contentum; clausura per tag
  * congruentem (litteris neglectis) ad elementum apertum proximum,
- * superiora implicite clausa. H4 addit: elementa vacua, clausurae
- * implicitae per tabulam.
+ * superiora implicite clausa. H4: elementa vacua et clausurae
+ * implicitae per TABULAS (M7), vertice acervi solo.
  *
  * STATUS PENDENS. Lexator tag in lexemata plura scindit ('<div',
  * spatia, attributa, '>'); aedificator ergo tres res 'pendentes'
@@ -359,6 +358,164 @@ _apertum_invenire (
 
 
 /* ==================================================
+ * Tabulae (M7): elementa vacua, clausurae implicitae
+ * ================================================== */
+
+#define TABULAE_NUMERUS(t) ((i32)(magnitudo(t) / magnitudo((t)[0])))
+
+/* WHATWG, XIII: numquam aperiuntur - loci clausurae absentes per
+ * constructionem. '</br>' sine pari malum manet (HTML5 id in '<br>'
+ * vertit - deviatio nominata, spec par. XI.3). */
+hic_manens constans character* constans VACUA[] = {
+    "area", "base", "br", "col", "embed", "hr", "img", "input",
+    "link", "meta", "source", "track", "wbr"
+};
+
+/* Clausurae implicitae (spec par. XI.7): elementum apertum in
+ * VERTICE acervi clauditur cum tag apertionis nominatum advenit,
+ * iterum dum vertex novus quoque clauditur. Vertex solus
+ * (aedificator simplex, H1): '<p><b>x<div>' p NON claudit quia b in
+ * vertice est - algorithmus plenus HTML5 scopum 'button' quaereret
+ * (mechanismus I, spec par. VI.1). */
+hic_manens constans character* constans CLAUDENTIA_PARAGRAPHI[] = {
+    "address", "article", "aside", "blockquote", "details", "div",
+    "dl", "fieldset", "figcaption", "figure", "footer", "form", "h1",
+    "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "main",
+    "menu", "nav", "ol", "p", "pre", "section", "table", "ul"
+};
+hic_manens constans character* constans CLAUDENTIA_MEMBRI[] = {
+    "li"
+};
+hic_manens constans character* constans CLAUDENTIA_DEFINITIONIS[] = {
+    "dt", "dd"
+};
+hic_manens constans character* constans CLAUDENTIA_OPTIONIS[] = {
+    "option", "optgroup"
+};
+hic_manens constans character* constans CLAUDENTIA_GREGIS[] = {
+    "optgroup"
+};
+hic_manens constans character* constans CLAUDENTIA_ORDINIS[] = {
+    "tr", "tbody", "thead", "tfoot"
+};
+hic_manens constans character* constans CLAUDENTIA_CELLAE[] = {
+    "td", "th", "tr", "tbody", "thead", "tfoot"
+};
+hic_manens constans character* constans CLAUDENTIA_SECTIONIS[] = {
+    "tbody", "thead", "tfoot"
+};
+
+nomen structura {
+              constans character* apertum;
+    constans character* constans*  claudentia;
+                             i32 numerus;
+} ClausuraImplicita;
+
+hic_manens constans ClausuraImplicita CLAUSURAE_IMPLICITAE[] = {
+    { "p",        CLAUDENTIA_PARAGRAPHI,
+        TABULAE_NUMERUS(CLAUDENTIA_PARAGRAPHI) },
+    { "li",       CLAUDENTIA_MEMBRI,
+        TABULAE_NUMERUS(CLAUDENTIA_MEMBRI) },
+    { "dt",       CLAUDENTIA_DEFINITIONIS,
+        TABULAE_NUMERUS(CLAUDENTIA_DEFINITIONIS) },
+    { "dd",       CLAUDENTIA_DEFINITIONIS,
+        TABULAE_NUMERUS(CLAUDENTIA_DEFINITIONIS) },
+    { "option",   CLAUDENTIA_OPTIONIS,
+        TABULAE_NUMERUS(CLAUDENTIA_OPTIONIS) },
+    { "optgroup", CLAUDENTIA_GREGIS,
+        TABULAE_NUMERUS(CLAUDENTIA_GREGIS) },
+    { "tr",       CLAUDENTIA_ORDINIS,
+        TABULAE_NUMERUS(CLAUDENTIA_ORDINIS) },
+    { "td",       CLAUDENTIA_CELLAE,
+        TABULAE_NUMERUS(CLAUDENTIA_CELLAE) },
+    { "th",       CLAUDENTIA_CELLAE,
+        TABULAE_NUMERUS(CLAUDENTIA_CELLAE) },
+    { "thead",    CLAUDENTIA_SECTIONIS,
+        TABULAE_NUMERUS(CLAUDENTIA_SECTIONIS) },
+    { "tbody",    CLAUDENTIA_SECTIONIS,
+        TABULAE_NUMERUS(CLAUDENTIA_SECTIONIS) },
+    { "tfoot",    CLAUDENTIA_SECTIONIS,
+        TABULAE_NUMERUS(CLAUDENTIA_SECTIONIS) }
+};
+
+/* Titulus tagi (litteris neglectis) == litterae tabulae? */
+interior b32
+_titulus_est (
+                 chorda  titulus,
+     constans character* litterae)
+{
+    i32 mensura = (i32)strlen(litterae);
+    i32 i;
+
+    si (titulus.mensura != mensura)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < mensura; i++)
+    {
+        i8 x = titulus.datum[i];
+
+        si (x >= 'A' && x <= 'Z')
+        {
+            x = (i8)(x + ('a' - 'A'));
+        }
+        si ((character)x != litterae[i])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_in_tabula (
+                          chorda  titulus,
+    constans character* constans* tabula,
+                             i32  numerus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (_titulus_est(titulus, tabula[k]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+_vacuum_est (
+    chorda titulus)
+{
+    redde _in_tabula(titulus, VACUA, TABULAE_NUMERUS(VACUA));
+}
+
+/* An tag apertionis 'novum' elementum apertum 'apertum' implicite
+ * claudat. */
+interior b32
+_claudit (
+    chorda apertum,
+    chorda novum)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < TABULAE_NUMERUS(CLAUSURAE_IMPLICITAE); k++)
+    {
+        constans ClausuraImplicita* regula = &CLAUSURAE_IMPLICITAE[k];
+
+        si (_titulus_est(apertum, regula->apertum))
+        {
+            redde _in_tabula(novum, regula->claudentia,
+                regula->numerus);
+        }
+    }
+    redde FALSUM;
+}
+
+
+/* ==================================================
  * Lexemata singula
  * ================================================== */
 
@@ -368,8 +525,27 @@ _aperturam_tractare (
     MateriaToken* token)
 {
     MateriaNodus* elementum;
+          chorda  titulus;
 
     _pendentia_claudere(p);
+    titulus = _tag_titulus(token);
+
+    /* clausurae implicitae: vertex acervi dum tabula id iubet */
+    dum (p->profunditas > ZEPHYRUM)
+    {
+        MateriaNodus* vertex = _apertum(p, p->profunditas - I);
+        MateriaToken* apertura;
+
+        apertura =
+            vertex->loci[HTML_ELEMENTUM_TOK_APERTURA].datum.token;
+        si (   apertura == NIHIL
+            || !_claudit(_tag_titulus(apertura), titulus))
+        {
+            frange;
+        }
+        p->profunditas = p->profunditas - I;
+    }
+
     elementum = materia_nodus_creare(p->piscina,
         (s32)HTML_GENUS_ELEMENTUM, (i32)VI);
     si (elementum == NIHIL)
@@ -386,9 +562,14 @@ _aperturam_tractare (
     {
         redde FALSUM;
     }
-    si (!_impellere(p, elementum))
+    /* vacuum numquam aperitur: non impellitur; tag eius tamen
+     * pendens manet (attributa, '>') */
+    si (!_vacuum_est(titulus))
     {
-        redde FALSUM;
+        si (!_impellere(p, elementum))
+        {
+            redde FALSUM;
+        }
     }
     p->tag_apertum = elementum;
     redde VERUM;
