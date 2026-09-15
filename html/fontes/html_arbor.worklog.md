@@ -107,3 +107,37 @@ one for that input. Two things it says about the neighbours:
   prose never closes, and the simple builder does not invent closes
   for unknown names. Correct, and a reminder that a projection's depth
   is the source's, not the parser's.
+
+## 2026-09-15 — H11: the five questions of spec §11.10, answered
+
+1. **Absent slots as meaning at scale.** Every void, implied close,
+   unclosed-at-EOF and truncated tag is an absent typed slot; the
+   emitter skips it and the reader accepts it. Fourteen pages, 919
+   totality cases, 39 STML round trips: zero cost, zero surprise. H4's
+   law holds without a line of substrate support.
+2. **A content-dominant tree with almost no trivia.** The ligator runs
+   only inside tags; between tags every byte is a text node. The
+   whitespace-only VERBATIM values that T9 made projectable appear
+   thousands of times per page and round-trip. The one place trivia
+   mattered was the H8 bug, and that was the builder's pending state,
+   not the substrate.
+3. **Raw text through the STML raw form.** Held on every real page. The
+   named limit is real: a value containing its own lexeme element's
+   closing tag is refused rather than escaped (01M2KJ3PK2). Reachable
+   only adversarially; pinned; the substrate's decision.
+4. **An iterative builder under recursive walkers.** Parse survives
+   100,000 levels; the byte emitter dies at 50,000; the STML projection
+   is quadratic in depth (2,000 deep = 56 MB). The depth question is
+   now the substrate's alone, with numbers (01M1FAD8).
+5. **A consumer of a consumer.** md's rendering parsed by html, whole
+   chain, seven inputs; one finding that belongs to neither parser.
+
+**Substrate changes this client forced: none.** css forced four,
+oratio five. html found one limit and measured one, and both are
+recorded where the substrate can act on them. The client shape held
+exactly: declaration → generated registry, hand enums, lexicon,
+adaptare + ligator, builder, canon, computus, pythonica face.
+
+**What its own gates found in it:** the pending-close byte-order bug
+(totality, H8) and nothing else in eleven commits. Two of the ten gates
+were born red for real (totality, md); the other eight by plants.

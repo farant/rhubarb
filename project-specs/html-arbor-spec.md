@@ -694,3 +694,33 @@ Named before building so the answer is an answer either way:
 §10's recommendation for JS stands, and JS is next: regex-vs-division
 and template interpolation are where the one-way pipe will finally be
 tested.
+
+### 11.11 As built (2026-09-15, H1–H11; plan `html-arbor-plan.md`)
+
+Built in eleven commits the same day, one per task, every gate born
+red. §11 held as written with these as-built facts:
+
+- Lexicon 22 rows (not 23), loci 18 (not 17) — counted at H1.
+- The reader IGNORES unknown attributes and REFUSES unknown elements,
+  as §11.6 predicted; both pinned in `probatio_html_reservatio`.
+- `/>` never closes an HTML element (HTML5); `</br>` is malum.
+- Attribute tokens after an end tag (`</h3 x=y>`) close the pending
+  clausura and form one malum — found by the totality gate at birth,
+  the only builder bug in the arc.
+- **Substrate limit found** (01M2KJ3PK2): a raw-text or comment token
+  containing its own `</lex-…>` closing tag is refused by materia's
+  writer; pinned in `probatio_html_stml`, Fran's decision.
+- **Depth measured** (01M1FAD8): parse alone survives 100,000 levels
+  (iterative); `materia_scribere_nodum` dies at 50,000; the STML
+  projection is quadratic in depth. Pinned in `probatio_html_totalitas`.
+- STML projection = 15× the source over the corpus; the round trip is
+  ~19× the parse (css: 30×). Golden in `fixa/computus/basis.tsv`.
+- md's rendered HTML parses through the whole chain; sabaw's notation
+  yields one malum, pinned (md polish 01M1NBEVM0).
+- Substrate changes forced: NONE (css 4, oratio 5). The generality
+  test of §10's phase 4 passed in the sense the spec meant: nothing
+  HTML needed was HTML-shaped.
+
+Named after: the html5lib oracle with a rising pin, wild fixtures under
+a sources file, the lexer's raw-text set (xmp, iframe, noembed,
+noframes, plaintext). Then JS, per §10's recommendation.

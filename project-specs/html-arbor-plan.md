@@ -5,6 +5,8 @@
 > task-by-task, ONE TASK PER TURN with Fran's approval. Steps use checkbox
 > (`- [ ]`) syntax for tracking.
 
+**STATUS: CLOSED 2026-09-15 — H1–H11 done in eleven commits, plan file kept as the record.**
+
 **Goal:** The HTML tree on materia — the simple builder of
 `html-arbor-spec.md` (void elements, implied closes, case-insensitive
 matching, raw text owned by the lexer), byte-exact through the emitter,
@@ -775,32 +777,32 @@ silva.commissio("html: consumens consumentis - html redditum ab md (VII initus) 
   clients
 - Memory: `materia-fork.md`, `MEMORY.md` materia line
 
-- [ ] **Step 1: Run the phase-boundary audit** — `./materia/shim_probare.sh`;
+- [x] **Step 1: Run the phase-boundary audit** — `./materia/shim_probare.sh`;
   record `probatae N, fractae 0` and the wall in the phase-log RELATIO.
   Then every client suite that consumes materia: `css`, `md`, `oratio`,
   `materia`, `html`, `briar` — all green, no pin moved (or the pin's
   cause named).
 
-- [ ] **Step 2: Worklog** — what the corpus gate found that unit tests
+- [x] **Step 2: Worklog** — what the corpus gate found that unit tests
   missed; where the seam differed from §11's predictions; every §11.10
   question answered (absent slots, empty trivia, raw form refusal,
   depth, consumer of consumer); the substrate changes html forced (count
   them: css forced four, oratio five).
 
-- [ ] **Step 3: Spec + phase-log** — paragraphs, not rewrites.
+- [x] **Step 3: Spec + phase-log** — paragraphs, not rewrites.
 
-- [ ] **Step 4: Ledger** — `gerere 01M12BD0 status clausum` (S6 IS
+- [x] **Step 4: Ledger** — `gerere 01M12BD0 status clausum` (S6 IS
   materia; the second-client evidence is this client's gates);
   `gerere 01KY0P4TFN status impletum` (analyzator HTML); a note on decree
   `01M2KC03NG` (HTML done, JS next); the instrument debrief (adhibita /
   fructus / asperitates / desiderata) in the RELATIO.
 
-- [ ] **Step 5: Memory** — materia-fork.md paragraph "2026-09-xx (html,
+- [x] **Step 5: Memory** — materia-fork.md paragraph "2026-09-xx (html,
   fifth client)"; MEMORY.md materia line: HTML DONE, NEXT = JS (spec
   §10's exercise on paper first: regex-vs-division, template
   interpolation).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("html: cliens navatus - relatio phasis IV (auditus shim N/N), worklog, spec ut aedificatum, acta clausa (S6 clausum, analyzator HTML impletum), memoria",

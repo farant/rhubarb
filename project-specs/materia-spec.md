@@ -617,6 +617,19 @@ after reading, the shape of `patres_figere`. With it the placing verbs
 took over parent fixing from the clients. Gates: materia, css, md,
 oratio, shim, all green with no pin moved.
 
+**As built (2026-09-15, fifth client — phase 4).** HTML, in eleven
+commits, spec `html-arbor-spec.md` §11 (the retarget) + plan
+`html-arbor-plan.md`. Ten gates; the shim ran 392/392 before and after
+as the phase-boundary audit; every client suite green. The substrate
+paid NOTHING for HTML — the first client since the fork that forced no
+change — and gave back two measurements: the raw-form limit (a token
+value containing its own closing tag is refused, not escaped;
+01M2KJ3PK2, pinned) and the depth of the recursive walkers (emitter
+dies at 50,000 levels; projection quadratic in depth; 01M1FAD8,
+pinned). §10's phase-4 sentence was the right test: nothing HTML
+needed turned out HTML-shaped. Next per Fran: the html5lib oracle,
+then JS (the one-way lexer pipe's real test), then phase 5.
+
 ### The measurement that shapes it (2026-08-27)
 
 What `silva_arbor` and `silva_scribere` actually use from the

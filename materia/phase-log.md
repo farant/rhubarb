@@ -2266,3 +2266,48 @@ lexicon (22 rows), runner, registrum gate (212 assertions); plants:
 lexicon rows swapped → red on the title comparison; one byte of the
 generated header → red on `rancor.recens`. Pythonica `PORTAE['html']`
 registered at birth (a runner outside the gate table is a dead gate).
+RELATIO (2026-09-15, same day, eleven commits 411850b8 → 8e68cf8f):
+H1 declaration + generated registry + lexicon + runner + registrum
+gate; H2 adaptare + ligator + byte coverage; H3 the iterative builder
+(explicit stack, three pending states); H4 the void and implied-close
+tables; H5 the corpus (fourteen files, 162,775 bytes, byte-identical
+first run) + `adversarius_2.html`; H6 the STML round trip (two cycles,
+comparator, direct emission of the re-read tree) — SUBSTRATE LIMIT
+FOUND: a token value containing its own `</lex-…>` is refused
+("valor sequentiam claudentem fert"), no fallback (01M2KJ3PK2,
+pinned); H7 the hand-written canon (53 rules, seal pinned, drift guard
+both ways); H8 reservation (reader ignores unknown attributes —
+pinned — refuses unknown elements; canon names the attribute) +
+totality (919 cases; FOUND the only builder bug: a pending close
+taking a later `>` after a mutated `</h3`; DEPTH MEASURED: parse
+100k lives, `materia_scribere_nodum` dies at 50k, STML quadratic —
+01M1FAD8 noted, pinned); H9 computus twin + instruments + pythonica;
+H10 md's rendered HTML through html (seven inputs, whole chain;
+sabaw's notation = one malum, pinned, md polish noted); H11 this.
+AUDIT: shim 392/392 (16 s) before and after; html 10/10 · materia 7/7
+· css 9/9 · md 14/14 · briar 16/16 · oratio 19/19. Substrate changes
+forced by HTML: ZERO (css 4, oratio 5). The five §11.10 questions
+answered in `html/fontes/html_arbor.worklog.md`.
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: coquere.sh (registry generated first try, canon-judged);
+scribe.sh for every new C file (examen at write time caught one
+`strstr`-on-chorda and the `CCCC` numeral); silva.planta ×9 (one
+needed `tolerans='verba'` — a comment anchor is one lexeme); silva.Editio
+for every C edit; formator -scribere/-vitia before every commit
+(seventeen inherited long lines from css's computus files);
+silva.commissio with explicit paths and the html gate; three scratch
+probes (STML shape, first divergent byte with tokens, depth per
+process); canon_examen on the declaration; html/arbor.sh once born.
+FRUCTUS: two gates born red for real (totality, md) — the mutation
+generator and the consumer-of-a-consumer are the two that earn their
+cost; the depth probe per process turned "does it crash" into a table.
+ASPERITATES: zsh bit three times (`$?` after a pipe; `set -- $spec`
+and `"$F"` unsplit — every probe run got one mangled argument and
+reported the same crash); the formator reflows a one-line block into a
+worse shape; the css computus originals carry lines the formator now
+refuses — transcription inherits debt.
+DESIDERATA: a planting helper for non-C files (canon, TSV — done by
+hand twice); a formator mode that reports without reflowing
+one-liners; a `-vitia` that names the css originals as the source of
+inherited findings.
