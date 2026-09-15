@@ -34,7 +34,7 @@ desideratum 01M24V1387.
 | T35 a the algebra | done — gate `probatio_partitio` (10,623 random pairs, Dilworth = brute force), plant red at the first hand case; `duplex` (a latina.h macro) renamed `geminus` |
 | T35 b the judgment | done — gate `probatio_partitio_aestimatio` (three grids, every hand number on the first run); the leak plant went red FIRST in grid I's `limen III` case (not grid III as predicted), grid II immune; numerals `DCLIII`/`DCCCLXXXIV` absent from latina.h |
 | T35 c the oracle columns | done — header row + 8 appended columns; laws green on five treebanks (CIRCSE arc victa/victor 389/660, reading 243/278); first 25 fields byte-identical on 2,413 CIRCSE rows; 481 rows (20 %) have no winner relation (IDEM, no aligned winning head); swap plant red on the cross-count law |
-| T35 d the instrument | pending |
+| T35 d the instrument | done — `oratio_reticulum` + `reticulum.sh`; fixture machine rows equal the hand-derived file on the first run, nine named refusals, `-ubi` plant red on both predicted cases; numeric flags are decimal (this plan wrote `-limen II -lucrum I`, corrected) |
 | T35 e first run, acceptance, records | pending |
 
 ---
@@ -782,7 +782,7 @@ rows, gold split, vote per fold, `!` when mutable).
   at the top (`# fixtura T35 d: grid II probationis partitio_aestimatio`)
   and one row of another kind (`fixa\tALIUD\t1`) that must be ignored.
   `fixa/reticulum/exspectata.tsv` = the machine rows for
-  `-genus PROBA -aurum aurum-x -sortes thesaurus -limen II -lucrum I
+  `-genus PROBA -aurum aurum-x -sortes thesaurus -limen 2 -lucrum 1
   -machina`, from T35 b's derivations:
 
 ```
@@ -839,7 +839,7 @@ fixa	COLUMNAE	RETICULUM-DUPLEX	columna	aequalis
 - [ ] **Step 4: Run green.** `./oratio/compile_probationes.sh reticulum`
   → passes; `./oratio/reticulum.sh
   oratio/probationes/fixa/reticulum/proba.tsv -genus PROBA -aurum aurum-x
-  -sortes thesaurus -limen II -lucrum I` prints the human report, exit 0;
+  -sortes thesaurus -limen 2 -lucrum 1` prints the human report, exit 0;
   `-aurum thesaurus` → exit 2 with the cause on stderr.
 
 - [ ] **Step 5: Planted fault.** `silva.planta('oratio/fontes/oratio_reticulum.c',

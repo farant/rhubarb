@@ -66,6 +66,8 @@ declare -a RADIX_FONTES=(
     "utf8"
     "canon"
     "credo"
+    "partitio"
+    "partitio_aestimatio"
 )
 
 FILTER="${1:-}"

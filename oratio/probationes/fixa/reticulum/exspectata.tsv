@@ -1,0 +1,19 @@
+fixa	COLUMNAE	RETICULUM-COLUMNA	columna	greges	ordines	recti	basis	lucrum	puritas	puritas-intra	inaestimati	mutabiles	cadentes	inaestimabilis
+fixa	RETICULUM-COLUMNA	f	2	26	23	17	6	884	884	0	0	1	0
+fixa	RETICULUM-COLUMNA	h	1	26	17	17	0	653	653	0	0	0	0
+fixa	COLUMNAE	RETICULUM-SORS	columna	sors	ordines	recti	basis	inaestimati
+fixa	RETICULUM-SORS	f	A	9	9	5	0
+fixa	RETICULUM-SORS	f	B	9	9	5	0
+fixa	RETICULUM-SORS	f	C	8	5	7	0
+fixa	RETICULUM-SORS	h	A	9	5	5	0
+fixa	RETICULUM-SORS	h	B	9	5	5	0
+fixa	RETICULUM-SORS	h	C	8	7	7	0
+fixa	COLUMNAE	RETICULUM-CATENA	vetans	gradus	columna	greges	recti	lucrum	cadentes
+fixa	RETICULUM-CATENA	1	0	-	1	17	0	0
+fixa	RETICULUM-CATENA	0	0	-	1	17	0	0
+fixa	RETICULUM-CATENA	0	1	f	2	23	6	1
+fixa	COLUMNAE	RETICULUM-PAR	columna-a	columna-b	greges	recti	incrementum	cadentes
+fixa	RETICULUM-PAR	f	h	2	23	0	1
+fixa	COLUMNAE	RETICULUM-TEGIT	subtilior	crassior
+fixa	RETICULUM-TEGIT	f	h
+fixa	COLUMNAE	RETICULUM-DUPLEX	columna	aequalis
