@@ -78,7 +78,22 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   text). Pinned as current behaviour; flips red when materia falls
   back. In plain text `</lex-textus>` is harmless: the HTML lexer
   splits it into an end tag.
-- Next: H7 `html.canon` hand-written + drift guard + seal pin.
+- **H7 (2026-09-15):** `html/grammatica/html.canon` HAND-WRITTEN, 53
+  rules (envelope with the seal `0ae63151` pinned as an `<optio>`,
+  `ante`/`post` = `lex-spatia` + `lex-delim` only, 10 genera, 18 loci
+  by `intra=`, 22 lexemes: VERBATIM ones `textus="verum"` + `cr`, the
+  four FIXUM ones bare). NOT in `canones.registrum` (the `<arbor>` root
+  collision); judge by hand with `bin/canon_examen -canon
+  html/grammatica/html.canon <doc.stml>`. Gate `probatio_html_canon`:
+  drift guard both ways (every genus, locus-within-genus and lexeme
+  has exactly one rule; every rule matches one of them), seal pin
+  against the live `materia_arbor_sigillum`, judgment of 23 inline
+  documents + the 14-file corpus with zero faults. Plants: the `textus`
+  genus rule deleted → guard AND judgment red; a false seal → pin AND
+  judgment red. To add a genus or locus: declaration → `-scribere` →
+  slot enum → `LOCI_NOMINATI` → canon rule → move the seal.
+- Next: H8 reservation gate + totality gate (depth measured against
+  01M1FAD8).
 
 ## The registry is generated
 

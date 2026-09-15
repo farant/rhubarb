@@ -573,7 +573,7 @@ level (G3, stated in the header); trivia forms `<ante>`/`<post>` allow
 node elements is NOT declared (html has no references; an `id` appearing
 would be a refusal, correct).
 
-- [ ] **Step 1: Write the failing gate** — `canon_legere(chorda fons,
+- [x] **Step 1: Write the failing gate** — `canon_legere(chorda fons,
   piscina, intern, &causa)`; for every H6 document (inline + corpus):
   `stml_legere` the projected text, `canon_iudicare(canon, radix,
   piscina)`, assert non-NIHIL and `xar_numerus(vitia) == 0`; self-measure
@@ -585,17 +585,17 @@ would be a refusal, correct).
   `registrum-sigillum` equals `materia_arbor_sigillum(piscina,
   &HTML_REGISTRUM)` live.
 
-- [ ] **Step 2: Run and verify it fails** — no canon yet.
+- [x] **Step 2: Run and verify it fails** — no canon yet.
 
-- [ ] **Step 3: Write the canon**; `./tools/natura_struere.sh`.
+- [x] **Step 3: Write the canon**; `./tools/natura_struere.sh`.
 
-- [ ] **Step 4: Run the whole suite** — exit 0.
+- [x] **Step 4: Run the whole suite** — exit 0.
 
-- [ ] **Step 5: Plant** — delete the `textus` genus rule → the guard AND the
+- [x] **Step 5: Plant** — delete the `textus` genus rule → the guard AND the
   judgment must both fire (a document with text is now unjudgeable-clean);
   revert. Second plant: pin a false sigillum → guard red.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("html: canon manu scriptum (X genera, loci ad gradum speciei, lexemata XXII, trivia intra tag sola) - custos derivae utrimque, sigillum pinnatum, corpus iudicatum (rubra nata: regula textus deleta)",

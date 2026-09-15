@@ -1,0 +1,440 @@
+<!--
+  html.canon
+  MANU SCRIPTUM (exemplar css.canon, decretum Frani 2026-09-01; H7).
+
+  Registrum ex html.registrum.stml GENERATUR (html_registrum_coctum.c),
+  canon manu: custos derivae (probatio_html_canon) regulas huius
+  plagulae contra registrum generum, loci, lexicon et involucrum
+  UTRIMQUE retiret (regula absens ET regula rancida rubent);
+  sigillum registri infra PINNATUM contra vivum conferitur.
+
+  CONSTRICTIONES LOCORUM AD GRADUM SPECIEI (G3): quae liberi cuique
+  loco licent MANU ex html_arbor.c lecta sunt (quid aedificator in
+  locum ponat), ergo aedificator mutatus canonem mutare debet; porta
+  corporis id falsificat. Locus TOKEN liberum unum fert; canon
+  'unum ex his' dicere non potest, maximum="1" per nomen solum -
+  debilitas nominata.
+
+  INVOLUCRUM: <arbor>. Consulto NON in canones.registrum ('<arbor>'
+  documentis silvae et css/md quoque competeret). Iudicium manuale:
+    bin/canon_examen -canon html/grammatica/html.canon <doc.stml>
+  Attributa positionis lexematum (b/linea/columna/linea-initium)
+  ABSUNT: materia ea lexematibus DERIVATIS solis scribit. 'cr':
+  offsets '\r' in valore VERBATIM (STML CRLF etiam in crudo normat) -
+  paginae CRLF (adversarius II) eum ferunt. 'id' NON declaratur: html
+  referentias non habet; si appareat, 'attributum ignotum' clamet.
+
+  TRIVIA INTRA TAG SOLA (html_adaptare.h): <ante>/<post> lex-spatia
+  et lex-delim solum ferunt; extra tags omne spatium TEXTUS nodus
+  est (H6).
+
+  RESERVATIONES (spec par. XI.6): nihil declaratum. 'ancora',
+  'spatium', 'clonatum' ut attributa elementi hic 'attributum
+  ignotum' dant (porta reservationis H8 id asserit); ut elementa
+  lector ipse ea recusat.
+-->
+<canon dialectus="html" versio="1">
+
+  <!-- =============== FRAGMENTA =============== -->
+
+  <!-- lexema unum quodlibet (locus TOKEN) -->
+  <#lexema-unum>
+    <liberum nomen="lex-finis" maximum="1"/>
+    <liberum nomen="lex-textus" maximum="1"/>
+    <liberum nomen="lex-referentia" maximum="1"/>
+    <liberum nomen="lex-textus-crudus" maximum="1"/>
+    <liberum nomen="lex-textus-crudus-imperfectus" maximum="1"/>
+    <liberum nomen="lex-tag-apertura" maximum="1"/>
+    <liberum nomen="lex-tag-clausura" maximum="1"/>
+    <liberum nomen="lex-tag-finis" maximum="1"/>
+    <liberum nomen="lex-tag-finis-solus" maximum="1"/>
+    <liberum nomen="lex-attributum-nomen" maximum="1"/>
+    <liberum nomen="lex-aequale" maximum="1"/>
+    <liberum nomen="lex-attributum-valor" maximum="1"/>
+    <liberum nomen="lex-attributum-valor-imperfectus" maximum="1"/>
+    <liberum nomen="lex-commentarium" maximum="1"/>
+    <liberum nomen="lex-commentarium-imperfectum" maximum="1"/>
+    <liberum nomen="lex-commentarium-pravum" maximum="1"/>
+    <liberum nomen="lex-doctype" maximum="1"/>
+    <liberum nomen="lex-doctype-imperfectum" maximum="1"/>
+    <liberum nomen="lex-cdata" maximum="1"/>
+    <liberum nomen="lex-cdata-imperfecta" maximum="1"/>
+    <liberum nomen="lex-spatia" maximum="1"/>
+    <liberum nomen="lex-delim" maximum="1"/>
+  </#>
+
+  <!-- lexemata quotlibet (locus LISTA_TOKEN) -->
+  <#lexemata-multa>
+    <liberum nomen="lex-finis"/>
+    <liberum nomen="lex-textus"/>
+    <liberum nomen="lex-referentia"/>
+    <liberum nomen="lex-textus-crudus"/>
+    <liberum nomen="lex-textus-crudus-imperfectus"/>
+    <liberum nomen="lex-tag-apertura"/>
+    <liberum nomen="lex-tag-clausura"/>
+    <liberum nomen="lex-tag-finis"/>
+    <liberum nomen="lex-tag-finis-solus"/>
+    <liberum nomen="lex-attributum-nomen"/>
+    <liberum nomen="lex-aequale"/>
+    <liberum nomen="lex-attributum-valor"/>
+    <liberum nomen="lex-attributum-valor-imperfectus"/>
+    <liberum nomen="lex-commentarium"/>
+    <liberum nomen="lex-commentarium-imperfectum"/>
+    <liberum nomen="lex-commentarium-pravum"/>
+    <liberum nomen="lex-doctype"/>
+    <liberum nomen="lex-doctype-imperfectum"/>
+    <liberum nomen="lex-cdata"/>
+    <liberum nomen="lex-cdata-imperfecta"/>
+    <liberum nomen="lex-spatia"/>
+    <liberum nomen="lex-delim"/>
+  </#>
+
+  <!-- contentum: liberi documenti et elementi (H6: textus nodus) -->
+  <#contentum>
+    <liberum nomen="elementum"/>
+    <liberum nomen="textus"/>
+    <liberum nomen="referentia"/>
+    <liberum nomen="textus-crudus"/>
+    <liberum nomen="commentarium"/>
+    <liberum nomen="doctype"/>
+    <liberum nomen="cdata"/>
+    <liberum nomen="elementum-malum"/>
+  </#>
+
+  <!-- trivia liberi: intra tag sola - spatia et '/' solivagus -->
+  <#trivia>
+    <liberum nomen="lex-spatia"/>
+    <liberum nomen="lex-delim"/>
+  </#>
+
+  <!-- =============== INVOLUCRUM =============== -->
+
+  <elementum nomen="arbor" radix="verum"
+    nota="documentum subarboris (arbor M1): liberum unum, genus
+          quodlibet - documentum ex aedificatore, aliud ex proiectione
+          subarboris">
+    <attributum nomen="grammatica" genus="electio"
+      necessarium="verum">
+      <optio>html</optio>
+    </attributum>
+    <attributum nomen="registrum-sigillum" genus="electio"
+      necessarium="verum"
+      nota="PINNA: sigillum FNV-1a tabularum html_registrum_coctum.c
+            (ex html.registrum.stml; H1: X genera, XVIII loci). Tabula
+            mutata sine hac optione mutata rubet in iudicio ET in
+            custode derivae (probatio_html_canon optionem contra
+            materia_arbor_sigillum vivum confert). Manu movenda cum
+            causa.">
+      <optio>0ae63151</optio>
+    </attributum>
+    <attributum nomen="fons"    genus="numerus"/>
+    <attributum nomen="b"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+    <liberum nomen="documentum"      maximum="1"/>
+    <liberum nomen="doctype"         maximum="1"/>
+    <liberum nomen="elementum"       maximum="1"/>
+    <liberum nomen="attributum"      maximum="1"/>
+    <liberum nomen="textus"          maximum="1"/>
+    <liberum nomen="referentia"      maximum="1"/>
+    <liberum nomen="textus-crudus"   maximum="1"/>
+    <liberum nomen="commentarium"    maximum="1"/>
+    <liberum nomen="cdata"           maximum="1"/>
+    <liberum nomen="elementum-malum" maximum="1"/>
+  </elementum>
+
+  <!-- TRIVIA: unius domini semper (invariatum circuitus) -->
+
+  <elementum nomen="ante">
+    <<#trivia>>
+  </elementum>
+
+  <elementum nomen="post">
+    <<#trivia>>
+  </elementum>
+
+  <!-- =============== GENERA ET LOCI ===============
+       Ordo registri (html.registrum.stml). Locus quisque SEMEL aut
+       nusquam: absentia canonica (locus NIHIL non scribitur; lista in
+       primo appendendo nascitur - elementum vacuum nec attributa nec
+       liberos scribit).
+       -->
+
+  <elementum nomen="documentum"
+    nota="series nodorum summorum + lexema FINIS (spec par. XI.3:
+          radix unica non praesumitur, synthesis vetita H4)">
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="cauda"  maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="documentum">
+    <<#contentum>>
+  </elementum>
+
+  <elementum nomen="cauda" intra="documentum"
+    nota="lexema FINIS: trivia tagi ad EOF scissi solum">
+    <liberum nomen="lex-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="doctype">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="doctype">
+    <liberum nomen="lex-doctype"             maximum="1"/>
+    <liberum nomen="lex-doctype-imperfectum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="elementum"
+    nota="sex loci lexematum OMNES optionales (H4): vacuum, clausura
+          implicita, apertum ad EOF, tag scissum = loci absentes">
+    <liberum nomen="tok_apertura"       maximum="1"/>
+    <liberum nomen="attributa"          maximum="1"/>
+    <liberum nomen="tok_finis"          maximum="1"/>
+    <liberum nomen="liberi"             maximum="1"/>
+    <liberum nomen="tok_clausura"       maximum="1"/>
+    <liberum nomen="tok_clausura_finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="elementum">
+    <liberum nomen="lex-tag-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="attributa" intra="elementum">
+    <liberum nomen="attributum"/>
+  </elementum>
+
+  <elementum nomen="tok_finis" intra="elementum"
+    nota="'/>' elementum HTML non claudit (HTML5) - forma finis sola">
+    <liberum nomen="lex-tag-finis"       maximum="1"/>
+    <liberum nomen="lex-tag-finis-solus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="elementum">
+    <<#contentum>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="elementum">
+    <liberum nomen="lex-tag-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura_finis" intra="elementum">
+    <liberum nomen="lex-tag-finis"       maximum="1"/>
+    <liberum nomen="lex-tag-finis-solus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="attributum"
+    nota="'=' aut valor sine titulo attributum anonymum dat (loci
+          absentes, H4)">
+    <liberum nomen="tok_nomen"   maximum="1"/>
+    <liberum nomen="tok_aequale" maximum="1"/>
+    <liberum nomen="tok_valor"   maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_nomen" intra="attributum">
+    <liberum nomen="lex-attributum-nomen" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_aequale" intra="attributum">
+    <liberum nomen="lex-aequale" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_valor" intra="attributum">
+    <liberum nomen="lex-attributum-valor"             maximum="1"/>
+    <liberum nomen="lex-attributum-valor-imperfectus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="textus"
+    nota="contentum inter tags, spatia inclusa (H6)">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="textus">
+    <liberum nomen="lex-textus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="referentia">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="referentia">
+    <liberum nomen="lex-referentia" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="textus-crudus"
+    nota="script/style/title/textarea - lexator dominus">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="textus-crudus">
+    <liberum nomen="lex-textus-crudus"             maximum="1"/>
+    <liberum nomen="lex-textus-crudus-imperfectus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="commentarium"
+    nota="genus lexematis (imperfectum, pravum) servatur: arbor dicit
+          quid lexator vidit, nodus quid res est">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="commentarium">
+    <liberum nomen="lex-commentarium"             maximum="1"/>
+    <liberum nomen="lex-commentarium-imperfectum" maximum="1"/>
+    <liberum nomen="lex-commentarium-pravum"      maximum="1"/>
+  </elementum>
+
+  <elementum nomen="cdata">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="cdata">
+    <liberum nomen="lex-cdata"            maximum="1"/>
+    <liberum nomen="lex-cdata-imperfecta" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="elementum-malum"
+    nota="tag clausurae sine pari ('</x' + '>'); lexemata quaelibet
+          per totalitatem">
+    <liberum nomen="tokens" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tokens" intra="elementum-malum">
+    <<#lexemata-multa>>
+  </elementum>
+
+  <!-- =============== LEXEMATA ===============
+       Ex HtmlLexemaGenus (include/html_lexema.h) per html_lexicon.c:
+       VERBATIM textum fert (+ 'cr'), FIXUM orthographiam in genere
+       ipso habet (finis, '>', '/>', '='). Trivia ante/post omnibus
+       licent (intra tag).
+       -->
+
+  <elementum nomen="lex-finis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-textus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-referentia" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-textus-crudus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-textus-crudus-imperfectus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-tag-apertura" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-tag-clausura" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-tag-finis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-tag-finis-solus">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-attributum-nomen" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-aequale">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-attributum-valor" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-attributum-valor-imperfectus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-commentarium" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-commentarium-imperfectum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-commentarium-pravum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-doctype" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-doctype-imperfectum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-cdata" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-cdata-imperfecta" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-spatia" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="lex-delim" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+</canon>
