@@ -350,3 +350,46 @@ above still holds for the rows that remain. The oracle's inline law on
 `Puella bellum videt` now reads ELECTA with the object rule chosen: the
 plain rung (II) decides where the bucket used to, and the decoder gets
 the sentence right. The Python face sees `partitio()['decretum'] == 1`.
+
+**Where the added arcs came from, and the pure chooser (same day).**
+Two levers found nothing: lone-candidate cells and cells without a
+standing claim contribute no arcs. Then the mirror of the hiding
+defect: promoting the winner's reading can SURFACE filled umbrae a
+later stage had demoted (arcs the executor abandoned) — refused now
+alongside hiding (`_arcum_celaret`: a decision changes one arc, its
+own). Still +215 arcs on Seneca. The last place: a standing claim
+whose CARRIER reading is not first is invisible to the oracle and to
+every consumer, so its word has no arc today; the decoder was
+replacing it with a visible alternative, and the oracle counted an
+addition. Their quality: Seneca 47 %, Aquinas 31 %, the charters and
+Dante 10 % (the loose tier on formulae). Law: only a VISIBLE standing
+claim makes a cell a re-decision; a cell whose only standing claim is
+hidden is an ADDITION cell, untouched unless `ORATIO_DECRETOR_ADDITIONES`
+(`1` everywhere, `classicus` | `medius` for one dialect) says so.
+
+THREE CONFIGURATIONS against off, the three pinned files (Seneca,
+charters dev, charters test), permille unless words:
+
+| | (A) pure chooser | (B) A + additions in classicus | (C) A + all additions |
+|---|---|---|---|
+| primary | 837→836, =, = | 837→837, =, = | =, =, = |
+| forced | 800→804, 750→755, 756→758 | 810, 755, 758 | 810, 770, 774 |
+| case | 711→713, 675→676, 698→701 | 714, 676, 701 | 714, 676, 702 |
+| number / gender (Seneca) | 932→932 / 909→908 | 933 / 908 | 933 / 908 |
+| attachment precision | 520→529, 445→449, 468→469 | 516, 449, 469 | 516, 430, 449 |
+| right arcs | +22, +16, +5 | +100, +16, +5 | +100, +38, +32 |
+| subject / object precision (Seneca) | 566→561 / 553→579 | 552 / 581 | 552 / 581 |
+| subject precision (charters) | 283→276, 451→386 | same | same |
+| object precision (charters) | 545→592, 504→568 | same | same |
+| changed cells (Seneca) | 291 | 528 | 528 |
+
+Shelf under (A): case +27 Aquinas, +15 Perseus, +13 PROIEL words;
+right arcs +9 PROIEL, −14 Aquinas, −8 Perseus, −4 Dante; precision
+level. Under (B)/(C) the classical shelf gains +148/+45/+58 right arcs
+at −26/−13/−11 ‰ precision. The subject-precision falls are the T32 f
+arc artifact (objects with lucky arcs counted as right subjects; the
+object side rises by more everywhere). Recommendation recorded for
+Fran: (A) as the default — every pin up or level except Seneca primary
+and gender by one permille (3 and 8 words) and the subject-precision
+artifact pins; (B) is +100 right arcs on Seneca for −4 ‰ precision;
+additions belong to a recall family with its own gate.

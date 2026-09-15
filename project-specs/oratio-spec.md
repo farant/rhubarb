@@ -3050,9 +3050,21 @@ The lattice over the decoder's own 6,822 judged decisions finds no
 column of the row that predicts the runner-up being right: the next
 bucket is not in the row yet (candidates named: both sides' relations,
 the rung that answered each). R14 and R20 not re-measured this day
-(named). PINS: to adopt the decoder as default, the three pinned
-attachment-precision pins fall (−4 / −15 / −19 ‰) while right arcs,
-case, primary and forced accuracy rise — Fran's call.
+(named). THE PURE CHOOSER: the arcs the first runs "added" were
+hidden claims made visible — a standing claim whose carrier reading is
+not first is no arc to any consumer, and replacing it with a visible
+alternative is an ADDITION, not a choice (Seneca 47 % right, the
+charters 10 %). Two laws: a decision changes one arc, its own (no
+hiding, no surfacing: `_arcum_celaret`); only a visible standing claim
+makes a re-decision, addition cells are untouched unless
+`ORATIO_DECRETOR_ADDITIONES` (everywhere, or one dialect) allows them.
+The pure chooser against off on the pinned files: precision 520→529,
+445→449, 468→469; right arcs +22 / +16 / +5; case +2 / +1 / +3 ‰; forced
++4 / +5 / +2; primary and gender on Seneca −1 ‰ (3 and 8 words);
+subject precision down and object precision up by more (the T32 f arc
+artifact). Additions in classical documents add +100 right arcs on
+Seneca for −4 ‰ precision. Default still OFF at the d commit; the
+configuration and the pins are Fran's call, recorded in the worklog.
 
 ## 8. Stage 6 — search
 

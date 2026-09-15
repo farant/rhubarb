@@ -3902,6 +3902,35 @@ _decretor_activus (vacuum)
     redde (b32)(ambitus != NIHIL && strcmp(ambitus, "0") != ZEPHYRUM);
 }
 
+/* ORATIO_DECRETOR_ADDITIONES=1: cellulae SINE petitione stante (alternae
+ * solae: dependens quem exsecutor sine capite reliquit) caput accipiunt
+ * - ADDITIONES arcuum extra electionem (T38 d: chartis et Danti X %
+ * rectae, classicis XXXI-XLVII %; ordinarium OFF: decretor inter
+ * proposita ELIGIT, tectum non extendit) */
+interior b32
+_additiones_activae (
+    constans Cursus* cursus)
+{
+    constans character* ambitus = getenv("ORATIO_DECRETOR_ADDITIONES");
+
+    si (ambitus == NIHIL || strcmp(ambitus, "0") == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* 'classicus' | 'medius': additiones dialecto uno (mensura T38 d:
+     * additiones classicis XXXI-XLVII % rectae, chartis et Danti X %) */
+    si (   strcmp(ambitus, "classicus") == ZEPHYRUM
+        || strcmp(ambitus, "medius")    == ZEPHYRUM)
+    {
+        redde (b32)(cursus->contextus != NIHIL
+            && cursus->contextus->dialectus
+                == (strcmp(ambitus, "medius") == ZEPHYRUM
+                    ? (s32)ORATIO_DIALECTUS_MEDIUS
+                    : (s32)ORATIO_DIALECTUS_CLASSICUS));
+    }
+    redde VERUM;
+}
+
 /* ORATIO_PONDERA_SINE=<folliculus>: folliculus unus omissus (mensura) */
 interior b32
 _folliculus_omissus (
@@ -4378,8 +4407,17 @@ _arcum_celaret (
     {
         redde VERUM;
     }
-    redde (b32)(prima != NIHIL && prima != c->analysis
-        && _lectio_umbras_impletas_fert(prima));
+    si (prima == NIHIL || prima == c->analysis)
+    {
+        redde FALSUM;
+    }
+    /* demotio lectionis primae cum umbris impletis (arcus celati) AUT
+     * promotio lectionis implentis cum umbris impletis (arcus a gradu
+     * posteriore demoti resurgerent: T38 d cursus - arcus +CCXIV Senecae
+     * ex lectionibus ab exsecutore relictis, chartis X % recti) - decretum
+     * arcum UNUM mutat, suum */
+    redde (b32)(_lectio_umbras_impletas_fert(prima)
+        || _lectio_umbras_impletas_fert(c->analysis));
 }
 
 /* an caput -> ... -> dependens per capita accepta (circuitus) */
@@ -4547,6 +4585,7 @@ _decretor (
                       Xar* candidati;
                       i32  nc;
                       i32* cellae;
+                      i32* stantes;   /* petitiones stantes per cellulam */
                       s32* capita;
                       i32* ordo;
                       i32  ordinatae;
@@ -4566,18 +4605,22 @@ _decretor (
     }
     cellae = (i32*)piscina_allocare(cursus->piscina, (memoriae_index)ne
         * (memoriae_index)magnitudo(i32));
+    stantes = (i32*)piscina_allocare(cursus->piscina, (memoriae_index)ne
+        * (memoriae_index)magnitudo(i32));
     capita = (s32*)piscina_allocare(cursus->piscina, (memoriae_index)ne
         * (memoriae_index)magnitudo(s32));
     ordo   = (i32*)piscina_allocare(cursus->piscina, (memoriae_index)nc
         * (memoriae_index)magnitudo(i32));
-    si (cellae == NIHIL || capita == NIHIL || ordo == NIHIL)
+    si (   cellae == NIHIL || stantes == NIHIL || capita == NIHIL
+        || ordo   == NIHIL)
     {
         redde FALSUM;
     }
     per (k = ZEPHYRUM; k < ne; k++)
     {
-        cellae[k] = ZEPHYRUM;
-        capita[k] = (s32)-I;
+        cellae[k]   = ZEPHYRUM;
+        stantes[k]  = ZEPHYRUM;
+        capita[k]   = (s32)-I;
     }
     per (k = ZEPHYRUM; k < nc; k++)
     {
@@ -4587,6 +4630,14 @@ _decretor (
         si (c->dependens < ne)
         {
             cellae[c->dependens] = cellae[c->dependens] + I;
+            /* petitio stans VISIBILIS sola numeratur: lectio carrier
+             * prima (arcus in lectione demota = arcus nullus consumptori;
+             * eam alterna visibili reponere = additio, non electio) */
+            si (   c->causa < ZEPHYRUM
+                && oratio_ordinalis(c->lectio_carrier) == ZEPHYRUM)
+            {
+                stantes[c->dependens] = stantes[c->dependens] + I;
+            }
         }
     }
     /* contentio LECTIONIS (T32 f): candidatae cellulae caput idem
@@ -4688,9 +4739,12 @@ _decretor (
          Candidatus* c = (Candidatus*)xar_obtinere(candidati, k);
                 i32  j;
 
-        si (c->accepta)
+        si (   c->accepta
+            || (   c->dependens < ne
+                && stantes[c->dependens] == ZEPHYRUM
+                && !_additiones_activae(cursus)))
         {
-            perge;
+            perge;   /* cellula sine petitione stante: intacta nisi additiones */
         }
         j = ordinatae;
         dum (j > ZEPHYRUM)
