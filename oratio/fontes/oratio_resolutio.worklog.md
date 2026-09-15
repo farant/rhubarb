@@ -479,3 +479,57 @@ envelope) red. Rule parsing per stage stays (4 %, measured): parsing
 the rules once would need a cache outside the per-call cursus and is
 not worth its own step. Step two (rows carry node identity instead
 of ordinals) and the per-rule expansion probe remain named.
+
+## 2026-09-15 — spike: the expansion per rule
+
+Temporary probe (reverted, never committed): on the first 300
+sentences of a file, after the normal expansion of a stage, expand
+the projection with a dummy element alone, then with each rule of the
+stage by itself (`stml_expandere` leaves its input intact, so the
+projection element is moved between documents), clock each, print at
+exit. Two findings about the probe itself: an `i32` sentinel of −1 is
+never negative in this house (the probe ran on every sentence and
+printed nothing), and an `atexit` hook that prints chordas pointing
+into arenas segfaults after `main` freed them — copy what you print.
+
+Perseus, 300 sentences, 900 stage runs, milliseconds:
+
+| | total | per stage run |
+|---|---|---|
+| all rules of the stage together (the normal expansion) | 936 | 1.04 |
+| projection alone (the fixed cost of expanding it) | 110 | 0.12 |
+| sum of the 48 single-rule expansions | 2773 | — |
+
+Seneca 300: 1138 / 132 / 3342, same shape. Per rule the cost is
+FLAT: the dearest (`umbra-subiectum-praecedente`, stage 3) is 4 % of
+the sum, the top ten 27 %; net of the fixed cost a stage-3 head rule
+costs 0.08–0.12 ms, a stage-1 Latin rule 0.06–0.08, an English rule
+0.03. There is no hot rule to fix. Per sentence the net cost splits
+by STAGE: stage 3 (the 18 loose-tier head rules, 14 of them
+`umbra-caput-<casus>-<praecedente|sequente>`) ≈ 1.8 ms = 58 % of the
+expansion, stage 1 ≈ 0.6 ms (19 %), stage 2 ≈ 0.6 ms (19 %), the
+projection's own cost ≈ 0.36 ms (12 %). Each rule is a separate pass
+over the whole projection (52–125 KB), so cost ≈ rules × bytes.
+
+Levers this points at, in order of cost to build:
+
+1. **Language gating.** The 14 English rules run on every Latin
+   sentence and cannot match; net ≈ 0.4 ms of 3.1 per sentence
+   (~13 % of the expansion). A `lingua` attribute on `<regula>` and a
+   skip in the stage loop; gate = rows identical on Latin AND on EWT.
+2. **A leaner projection per stage.** Omit the loci no rule of the
+   program mentions (lemma, nativum, sensus, alternae, auctor, habitus
+   … — the rules match casus/numerus/genus/relatio and the tags). The
+   inclusion set can be DERIVED from the program (element names in
+   the EXEMPLAR bodies against the registry's titles), so it is data,
+   not a hand list. Cuts the per-pass cost of all 48 rules and the
+   fixed cost together; the byte-identity gate over the nine
+   treebanks decides whether any strict-cursus pattern depended on an
+   omitted sibling (it would start matching where it failed before).
+3. **A multi-pattern pass in the machine.** 48 passes over one
+   document become one indexed pass. Engine-level, deepest, and the
+   loose tier is literal BY MEASURED DECISION (unifying it cost
+   attachment), so the 14 head rules stay 14 patterns.
+
+The decoder and the later laws are not in this table because they do
+not go through the machine (≤ 1 % measured in the first spike).
