@@ -92,8 +92,25 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   genus rule deleted → guard AND judgment red; a false seal → pin AND
   judgment red. To add a genus or locus: declaration → `-scribere` →
   slot enum → `LOCI_NOMINATI` → canon rule → move the seal.
-- Next: H8 reservation gate + totality gate (depth measured against
-  01M1FAD8).
+- **H8 (2026-09-15):** `probatio_html_reservatio` (spec §11.6's three
+  rows: reserved names as child elements → "locus generi ignotus",
+  `<reinserendum>` as a genus → "genus registro ignotum", as attributes
+  → the reader ACCEPTS, pinned, and the canon flags "attributum extra
+  canonem"; positive control first) and `probatio_html_totalitas`
+  (random bytes, corpus mutated ×4 and truncated ×23, five nesting
+  forms to 1,000, NUL parsed and emitted with the STML writer's named
+  refusal, 919 assertions). **The totality gate found a real bug at
+  birth**: a mutated `</h3` without its `>` reordered bytes — the
+  pending close took a later `>`. Fixed: attribute tokens with no open
+  start tag close the pending clausura and collect in one pending
+  malum until `>` (worklog). DEPTH MEASURED: parse alone survives
+  100,000 (iterative); materia's emitter survives 40,000 and dies at
+  50,000 (pinned RUIT_CUM, flips on the substrate fix, 01M1FAD8); the
+  STML projection is quadratic in depth (2,000 deep = 56 MB), recorded
+  not pinned. H6's gate also gained the direct emission of the re-read
+  tree against the source, closing the chain in one assertion.
+- Next: H9 computus twin + instruments + the rest of the pythonica
+  registration.
 
 ## The registry is generated
 

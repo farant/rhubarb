@@ -610,7 +610,7 @@ silva.commissio("html: canon manu scriptum (X genera, loci ad gradum speciei, le
 - Create: `html/probationes/probatio_html_reservatio.c`
 - Create: `html/probationes/probatio_html_totalitas.c`
 
-- [ ] **Step 1: Reservatio — write the failing gate** — build documents by
+- [x] **Step 1: Reservatio — write the failing gate** — build documents by
   hand as text from a real projection (take `s1.textus` of `<p>a</p>` and
   splice): (a) `<reinserendum/>` as a child of `<elementum>` →
   `materia_arbor_legere` NIHIL, `vitium.causa` equals `"locus generi
@@ -622,7 +622,7 @@ silva.commissio("html: canon manu scriptum (X genera, loci ad gradum speciei, le
   materia is noticed) AND the canon judges it with ≥ 1 vitium naming the
   attribute. Every message compared by `strcmp`, not by prefix.
 
-- [ ] **Step 2: Totalitas — write the failing gate** — transcribe
+- [x] **Step 2: Totalitas — write the failing gate** — transcribe
   `css/probationes/probatio_css_totalitas.c` (LCG random bytes,
   mutation 1/40, 23 truncation steps, nesting forms) over the html
   corpus with `html_arbor_parsare` + `materia_scribere_nodum` under
@@ -638,19 +638,23 @@ silva.commissio("html: canon manu scriptum (X genera, loci ad gradum speciei, le
   refusal of it is asserted as a NAMED refusal (`causa` non-NIHIL), not
   as a crash.
 
-- [ ] **Step 3: Run both and verify they fail** — `./html/compile_probationes.sh
+- [x] **Step 3: Run both and verify they fail** — `./html/compile_probationes.sh
   reservatio` then `… totalitas`.
 
-- [ ] **Step 4: Implement nothing unless red names a defect** — the
+- [x] **Step 4: Implement nothing unless red names a defect** — the
   reservatio gate tests materia's behaviour; totalitas tests the
   builder. A builder crash found here is fixed in `html_arbor.c` with
   the failing source added as a fixture line.
 
-- [ ] **Step 5: Plant** — reservatio: compare against `"locus ignotus"` →
-  red; revert. Totalitas: replace the stack loop for `TAG_CLAUSURA` with
-  a recursive helper → the 100 000 parse dies → red; revert.
+- [x] **Step 5: Plant** — reservatio: born red by its own positive control
+  (the canon flags the attribute; the reader's acceptance pinned).
+  Totalitas: BORN RED FOR REAL — a mutated page (`>` after `</h3` → tab)
+  reordered bytes; fixed in the builder (pending clausura closed by any
+  attribute token, one pending malum until `>`), regression case in
+  the arbor gate. Plant besides: the parser giving up on a truncated
+  script → truncations red; revert.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("html: porta reservationis (lector elementa ignota RECUSAT, attributa ignota IGNORAT - mensuratum, canon ea iudicat) + porta totalitatis (fortuiti, mutati, truncati, nidificatio C milium parsata sine recursione; scriptor/proiectio ad profunditatem mensurati, 01M1FAD8)",
@@ -806,6 +810,28 @@ silva.commissio("html: cliens navatus - relatio phasis IV (auditus shim N/N), wo
 ```
 
 ---
+
+## Named after this plan (Fran, 2026-09-15, during H7)
+
+- **The html5lib oracle.** The byte gate cannot see a WRONG tree: the
+  lexer is total, the builder places every token once, so wild pages
+  round-trip by construction. Structure needs an oracle. The html5lib
+  test suite (MIT; `tree-construction/*.dat`, thousands of inputs with
+  expected DOMs) is HTML's CommonMark: an oracle probatio with a RISING
+  pin (md's precedent, 1,270/1,324) measures the simple builder's
+  distance from full HTML5 parity, mechanism by mechanism (spec §6.1).
+  Vendor the suite under `probationes/fixa/html/html5lib/` with its
+  licence; first pin whatever the simple builder scores.
+- **Wild fixtures.** Five to ten pages under
+  `probationes/fixa/html/silvestria/` with a `FONTES.md` (URL, date,
+  licence): Gutenberg HTML from the local mirror (public domain, no
+  network), a W3C spec page, one minified framework page. They feed
+  totality, computus and the STML size ratio, not the byte gate. Each
+  fetch is an external action: list, then ask.
+- **The lexer's raw-text set** is closed at script/style/title/textarea;
+  HTML5 also has xmp, iframe, noembed, noframes, plaintext. A wild page
+  with iframe content parses its inner text as tags — byte-identical,
+  wrong tree. Extend the lexer's table when the oracle shows it.
 
 ## Self-Review
 

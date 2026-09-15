@@ -584,13 +584,14 @@ _titulum_attributi_tractare (
 
     si (p->tag_apertum == NIHIL)
     {
-        /* per lexatorem inattingibile - totalitas tamen */
-        si (!_malum_addere(p, token))
-        {
-            redde FALSUM;
-        }
-        p->malum = NIHIL;
-        redde VERUM;
+        /* Tag clausurae cum attributis ('</h3 x=y>': '>' mutatum aut
+         * absens - porta totalitatis id primo cursu invenit): clausura
+         * pendens CLAUDITUR (finis absens) et lexemata in malum UNUM
+         * pendens eunt, quod '>' sequens accipit. Sine clausura
+         * clausa '>' serius elemento iam clauso adhaereret et ANTE
+         * lexemata media emitteretur - ordo octetorum fractus. */
+        p->clausura = NIHIL;
+        redde _malum_addere(p, token);
     }
     attributum = _attributum_novum(p);
     si (attributum == NIHIL)
@@ -613,12 +614,9 @@ _partem_attributi_tractare (
 {
     si (p->tag_apertum == NIHIL)
     {
-        si (!_malum_addere(p, token))
-        {
-            redde FALSUM;
-        }
-        p->malum = NIHIL;
-        redde VERUM;
+        /* ut supra: malum pendens usque ad '>' */
+        p->clausura = NIHIL;
+        redde _malum_addere(p, token);
     }
     si (   p->attributum == NIHIL
         || _locus_scriptus(p->attributum, locus)

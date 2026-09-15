@@ -178,6 +178,10 @@ principale (vacuum)
         CREDO_VERUM (_octetos_probare(piscina,
             "<input disabled><img src=x>y", XXVIII));
         CREDO_VERUM (_octetos_probare(piscina, "<br></br>", IX));
+        /* H8: tag clausurae cum attributis (totalitas invenit) */
+        CREDO_VERUM (_octetos_probare(piscina, "<h3>a</h3\t x=y>z",
+            XVI));
+        CREDO_VERUM (_octetos_probare(piscina, "<p>a</p b", IX));
     }
 
 
@@ -562,6 +566,29 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (
             _liber(documentum, HTML_DOCUMENTUM_LIBERI, I)->genus,
             (s32)HTML_GENUS_ELEMENTUM_MALUM);
+
+        imprimere("\n--- Probans '</h3 x=y>' clausura attributa ---\n");
+        /* Porta totalitatis H8 invenit: '>' post '</h3' mutatum,
+         * lexator
+         * in modo tagi manet; lexemata attributorum malum UNUM pendens
+         * fiunt, h3 clausum sine fine, '>' serius malo (non h3) datur -
+         * ordo octetorum servatur. */
+        documentum = _parsare(piscina, "<h3>a</h3\t x=y>z");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            III);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_VERUM (_absens(elementum,
+            HTML_ELEMENTUM_TOK_CLAUSURA_FINIS));
+        liber = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_S32 (liber->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_MALUM_TOKENS), IV);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, II)->genus,
+            (s32)HTML_GENUS_TEXTUS);
 
         imprimere("\n--- Probans '<div><p>x</div>' ---\n");
         documentum = _parsare(piscina, "<div><p>x</div>");

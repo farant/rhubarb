@@ -34,6 +34,7 @@
 #include "html_lexicon.h"
 #include "materia_arbor.h"
 #include "materia_nodus.h"
+#include "materia_scribere.h"
 #include "materia_lexicon.h"
 #include "materia_token.h"
 #include "piscina.h"
@@ -98,7 +99,8 @@ enumeratio {
     CIRCUITUS_RESCRIPTURA_RECUSATA,
     CIRCUITUS_OCTETI_DISPARES,
     CIRCUITUS_ARBOR_DISPAR,
-    CIRCUITUS_COMPRESSIO_VIVA
+    CIRCUITUS_COMPRESSIO_VIVA,
+    CIRCUITUS_RELECTA_DISPAR_FONTI
 };
 
 hic_manens constans character* CAUSAE[] = {
@@ -109,7 +111,8 @@ hic_manens constans character* CAUSAE[] = {
     "rescriptura recusata",
     "octeti STML dispares inter cyclos",
     "arbor relecta dispar",
-    "compressio templorum viva"
+    "compressio templorum viva",
+    "arbor relecta fontem non emittit"
 };
 
 hic_manens character*
@@ -210,7 +213,29 @@ _circuitum_probare (
     si (   s1.textus.mensura != s2.textus.mensura
         || memcmp(s1.textus.datum, s2.textus.datum,
                (size_t)s1.textus.mensura) != ZEPHYRUM)
-    { c.causa = CIRCUITUS_OCTETI_DISPARES; redde c;
+    {
+        c.causa = CIRCUITUS_OCTETI_DISPARES;
+        redde c;
+    }
+
+    /* CATENA CLAUSA UNA ASSERTIONE: arbor RELECTA per scriptorem
+     * octetorum emissa == fons. Sine hac 'STML bis idem' + 'arbor
+     * aequalis' + 'parsata emittit fontem' catenam implicant, non
+     * dicunt (Fran, H7). */
+    {
+        MateriaScripturaConsilium cs;
+                 MateriaScriptura emissa;
+
+        materia_scriptura_consilium_nudum(&cs, &HTML_REGISTRUM);
+        emissa = materia_scribere_nodum(piscina, relecta, &cs);
+        si (   !emissa.successus || emissa.textus.mensura != mensura
+            || (mensura > ZEPHYRUM
+                && memcmp(emissa.textus.datum, fons,
+                       (size_t)mensura) != ZEPHYRUM))
+        {
+            c.causa = CIRCUITUS_RELECTA_DISPAR_FONTI;
+            redde c;
+        }
     }
 
     si (mutare)
