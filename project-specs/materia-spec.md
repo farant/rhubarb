@@ -565,8 +565,9 @@ anchor rather than ordinal (identity across the seam), and the
 expansion's share, to be probed per rule before the projection's
 shape is touched.
 
-**Visio (2026-09-15, planned; `project-specs/proiectio-macrior-plan.md`
-tranche b).** The per-rule spike found the expansion flat per rule and
+**Visio (2026-09-15, BUILT the same day; `project-specs/proiectio-macrior-plan.md`
+tranche b — `MateriaArborConsilium.loci_admissi`, stamp
+`visio`/`omissi`, reader refusal, gate + plant in the arbor probatio).** The per-rule spike found the expansion flat per rule and
 proportional to rules × projection bytes, so the lever is a smaller
 projection. The writer will take a table of admitted locus titles per
 genus (`MateriaArborConsilium.loci_admissi`; NIHIL = everything) and

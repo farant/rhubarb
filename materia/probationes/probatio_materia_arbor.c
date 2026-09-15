@@ -463,6 +463,61 @@ MateriaLexiconRatum  ratum;
                 MATERIA_ARBOR_TAG_ENVOLUCRI));
         }
 
+        /* VISIO (2026-09-15): filtrum locorum - locus omissus abest,
+         * involucrum 'visio' et 'omissi' fert, lector eam RECUSAT;
+         * filtro NIHIL octeti scriptoris idem manent */
+        {
+            b32* admissi = (b32*)piscina_allocare(piscina,
+                (memoriae_index)REG.numerus_locorum
+                * (memoriae_index)magnitudo(b32));
+            MateriaArborConsilium cv = c;
+            MateriaArborScriptura v;
+               MateriaArborVitium vit;
+                     MateriaNodus* lv;
+                           chorda  tv;
+                           chorda* omissa;
+                              i32  k;
+
+            imprimere("\n--- Probans visionem ---\n");
+            CREDO_NON_NIHIL (admissi);
+            per (k = ZEPHYRUM; k < REG.numerus_locorum; k++)
+            {
+                admissi[k] = VERUM;
+            }
+            admissi[REG.genera[ZEPHYRUM].loci_offset] = FALSUM;
+            cv.loci_admissi = admissi;
+            v = materia_arbor_proicere_nodum(piscina, n, &cv);
+            CREDO_VERUM (v.successus);
+            CREDO_NON_NIHIL (v.arbor);
+            CREDO_NON_NIHIL (stml_attributum_capere(v.arbor, "visio"));
+            omissa = stml_attributum_capere(v.arbor, "omissi");
+            CREDO_NON_NIHIL (omissa);
+            si (omissa != NIHIL)
+            {
+                CREDO_CHORDA_INCIPIT (*omissa, chorda_ex_literis(
+                    REG.genera[ZEPHYRUM].titulus, piscina));
+            }
+            /* radix sine liberis: locus unicus omissus */
+            CREDO_AEQUALIS_I32 (stml_numerus_liberorum(
+                stml_primus_liberum(v.arbor)), ZEPHYRUM);
+            tv = stml_scribere(v.arbor, piscina, VERUM);
+            CREDO_VERUM (tv.mensura < s1.textus.mensura);
+            lv = materia_arbor_legere(piscina, NIHIL, tv, &c, &vit);
+            CREDO_NIHIL (lv);
+            CREDO_NON_NIHIL (vit.causa);
+            si (vit.causa != NIHIL)
+            {
+                CREDO_NON_NIHIL (strstr(vit.causa, "visio"));
+            }
+            /* sine filtro: octeti idem, sine stampa */
+            cv.loci_admissi = NIHIL;
+            v = materia_arbor_proicere_nodum(piscina, n, &cv);
+            CREDO_VERUM (v.successus);
+            CREDO_NIHIL (stml_attributum_capere(v.arbor, "visio"));
+            tv = stml_scribere(v.arbor, piscina, VERUM);
+            CREDO_AEQUALIS_I32 (tv.mensura, s1.textus.mensura);
+        }
+
         /* CIRCUITUS SECUNDUS */
         lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus, &c,
             &vitium);

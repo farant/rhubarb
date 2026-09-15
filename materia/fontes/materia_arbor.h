@@ -298,6 +298,15 @@ nomen structura {
                 InternamentumChorda*  intern;     /* NIHIL = pigre */
                                  b32  templa_activa;
                                  b32  sedes_colligere;
+    /* VISIO (2026-09-15, proiectio-macrior tranche b): filtrum locorum -
+     * signum per locum in serie plana registri (index = offset generis
+     * + locus; VERUM = scriptus). NIHIL = omnia (documentum canonicum).
+     * Cum adest, proiectio VISIO est, non documentum: involucrum
+     * 'visio="partialis"' et 'omissi="genus/locus ..."' fert, lector
+     * eam RECUSAT ('visio partialis: non arbor'); in memoria sola vivit
+     * pro consumptore exemplarium (arbor tradita). Species caeca: quid
+     * locus significet materia nescit - tabula clientis est. */
+                       constans b32* loci_admissi;
 
     /* LECTIO: Xar de MateriaLacuna, per offset ORDINATUS. NIHIL
      * licet (casus subarboris). */

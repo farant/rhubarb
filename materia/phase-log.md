@@ -2187,6 +2187,35 @@ treebanks byte-identical to the text path; Perseus oracle 7.1 → 5.6 s.
 NEXT for (c): step two (rows name nodes by anchor, not ordinal); a
 per-rule probe of the expansion before touching the projection's
 shape (lever = leaner projection per stage).
+
+## 2026-09-15 — VISIO: a filtered projection (proiectio-macrior plan, tranche b)
+
+INTENTIO: the per-rule spike (oratio worklog) made the expansion cost
+≈ rules × projection bytes with no hot rule; oratio's tranche a
+(language gating) landed; the remaining lever is a smaller
+projection. Materia's half: `MateriaArborConsilium.loci_admissi` — a
+flat mask over the registry's loci (index = genus offset + locus;
+NIHIL = everything, today's behaviour); the writer skips an omitted
+locus on its walk, species-blind; the envelope is stamped
+`visio="partialis"` + `omissi="genus/locus …"`; the reader REFUSES a
+stamped envelope ("visio partialis: non arbor"). A view lives in
+memory for a matcher, never as a document. Gate in the arbor
+probatio; plant = stamp dropped. The client (oratio, tranche c)
+derives the mask from its programme.
+RELATIO: built the same day. `loci_admissi` (constans b32*, flat over
+the registry) on the consilium; the writer's locus walk skips an
+unadmitted index before it touches the locus; `_arborem_struere`
+stamps `visio="partialis"` and `omissi="genus/locus …"` (titles from
+the registry, space-separated) when a mask is present; the reader
+refuses a `visio` envelope before it reads the grammatica. Gate in
+`probatio_materia_arbor`: mask omitting the test node's only locus →
+stamp present, omissi begins with the genus title, the inner root has
+no children, the serialized view is shorter than the writer's bytes,
+`materia_arbor_legere` returns NIHIL with a cause naming "visio"; mask
+NIHIL → no stamp and bytes identical to the writer's. Plant: the
+stamp attribute misnamed → red at the stamp assertion, green on
+revert. Nothing in materia knows what a locus means: the mask is the
+client's table (oratio derives it from its programme in tranche c).
 ------------------------------------------------------------------------
 DEBRIEF INSTRUMENTORUM
 ADHIBITA: temporary clock probe under an env var (reverted, never

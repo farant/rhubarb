@@ -106,5 +106,5 @@ Fourteen English rules run on every Latin sentence and cannot match:
 |---|---|
 | plan + spec paragraphs | written 2026-09-15 |
 | a language gating | done 2026-09-15 — `lingua` on 18 rules + canon, `OratioRegula.lingua`, `_regula_linguae_cursus`, counter `regulae_omissae_lingua` printed as `REGULAE-OMISSAE-LINGUA`; nine treebanks byte-identical (EWT omits the six Latin rules); Perseus 5.6 → 5.2 s; plant = comparison inverted → skeleton law red |
-| b the view (materia) | — |
+| b the view (materia) | done 2026-09-15 — `loci_admissi` flat mask on the consilium, writer skip, envelope `visio`/`omissi`, reader refusal; arbor gate (omitted locus absent, stamp, refusal, NIHIL bytes identical); plant = stamp misnamed → red |
 | c the derivation (oratio) | — |

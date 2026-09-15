@@ -1733,6 +1733,12 @@ _scribere_nodum_internum (
             st->sedes = nodus;
             redde NIHIL;
         }
+        /* VISIO: locus non admissus omittitur (filtrum clientis) */
+        si (   st->consilium->loci_admissi != NIHIL
+            && !st->consilium->loci_admissi[absolutus])
+        {
+            perge;
+        }
         locus = &st->consilium->tabularium->loci[absolutus];
 
         involucrum = stml_elementum_creare(st->piscina, st->intern,
@@ -1885,6 +1891,48 @@ _arborem_struere (
     }
     stml_attributum_addere_chorda(involucrum, piscina, intern,
         "registrum-sigillum", sigillum);
+    /* VISIO: proiectio filtrata se ipsam profitetur - lector recusat */
+    si (consilium->loci_admissi != NIHIL)
+    {
+        ChordaAedificator* omissi = chorda_aedificator_creare(piscina,
+            (memoriae_index)CCLVI);
+        i32 g;
+
+        si (omissi == NIHIL)
+        {
+            fructus.causa = "omissi scribi non potuerunt";
+            redde fructus;
+        }
+        per (g = ZEPHYRUM; g < consilium->tabularium->numerus_generum;
+             g++)
+        {
+            constans MateriaTabGenus* genus =
+                &consilium->tabularium->genera[g];
+            i32 k;
+
+            per (k = ZEPHYRUM; k < genus->loci_numerus; k++)
+            {
+                si (consilium->loci_admissi[genus->loci_offset + k])
+                {
+                    perge;
+                }
+                si (chorda_aedificator_longitudo(omissi) > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_character(omissi, ' ');
+                }
+                chorda_aedificator_appendere_literis(omissi,
+                    genus->titulus);
+                chorda_aedificator_appendere_character(omissi, '/');
+                chorda_aedificator_appendere_literis(omissi,
+                    consilium->tabularium->loci[genus->loci_offset + k]
+                        .titulus);
+            }
+        }
+        stml_attributum_addere(involucrum, piscina, intern, "visio",
+            "partialis");
+        stml_attributum_addere_chorda(involucrum, piscina, intern,
+            "omissi", chorda_aedificator_finire(omissi));
+    }
 
     /* ANCORA sola - positiones ceterae ambulatione derivantur.
      * Lex: documentum canonicum mentiri non possit. */
@@ -3561,6 +3609,14 @@ materia_arbor_legere (
         redde NIHIL;
     }
 
+    /* VISIO: proiectio filtrata documentum canonicum non est - lector
+     * eam numquam in arborem legit (locus omissus formam alienam daret) */
+    si (stml_attributum_capere(involucrum, "visio") != NIHIL)
+    {
+        materia_arbor_lector_recusare(&lector,
+            "visio partialis: non arbor", involucrum->linea);
+        redde NIHIL;
+    }
     attributum = stml_attributum_capere(involucrum, "grammatica");
     si (   attributum == NIHIL
         || !chorda_aequalis_literis(*attributum, consilium->grammatica))

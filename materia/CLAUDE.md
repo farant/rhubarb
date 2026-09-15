@@ -84,6 +84,18 @@ comparison makes every pattern mute. Oratio was the first consumer
 (resolution −40 %, rows byte-identical); measured in
 `oratio/fontes/oratio_resolutio.worklog.md` (2026-09-15).
 
+## Visio (2026-09-15)
+
+**A filtered projection is a view, not the document.**
+`MateriaArborConsilium.loci_admissi` (a flat `b32` mask over the
+registry's loci; NIHIL = everything) makes the writer skip unadmitted
+loci; the envelope is stamped `visio="partialis"` +
+`omissi="genus/locus …"` and the reader REFUSES it ("visio partialis:
+non arbor"). A view lives in memory for a pattern consumer (arbor
+tradita); it never becomes a file. The mask is the client's table
+(oratio derives it from the element names its rules use). Plan:
+`project-specs/proiectio-macrior-plan.md`.
+
 ## The whitespace contract (2026-08-28)
 
 **A `VERBATIM` trivium whose value is whitespace-only projects to
