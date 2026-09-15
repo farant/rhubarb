@@ -373,7 +373,7 @@ charters dev, charters test), permille unless words:
 | | (A) pure chooser | (B) A + additions in classicus | (C) A + all additions |
 |---|---|---|---|
 | primary | 837→836, =, = | 837→837, =, = | =, =, = |
-| forced | 800→804, 750→755, 756→758 | 810, 755, 758 | 810, 770, 774 |
+| forced (comparison script's column; the GATE's own measure under A: 800→801, 750→753, 756→757) | 800→804, 750→755, 756→758 | 810, 755, 758 | 810, 770, 774 |
 | case | 711→713, 675→676, 698→701 | 714, 676, 701 | 714, 676, 702 |
 | number / gender (Seneca) | 932→932 / 909→908 | 933 / 908 | 933 / 908 |
 | attachment precision | 520→529, 445→449, 468→469 | 516, 449, 469 | 516, 430, 449 |
@@ -393,3 +393,16 @@ Fran: (A) as the default — every pin up or level except Seneca primary
 and gender by one permille (3 and 8 words) and the subject-precision
 artifact pins; (B) is +100 right arcs on Seneca for −4 ‰ precision;
 additions belong to a recall family with its own gate.
+
+**ADOPTED (Fran, 2026-09-15).** The pure chooser is the default;
+`ORATIO_DECRETOR=0` disables it. Pins moved with the run's numbers:
+up — attachment precision 520→529 / 445→449 / 468→469, right arcs
+1711→1733 / 2455→2471 / 2527→2532, case 711→713 / 675→676 / 698→701,
+forced 800→801 / 750→753 / 756→757 (the gate's own measure; the comparison script's column differs by a few ‰), object precision 553→579 /
+545→592 / 504→568, charter number 929→930 / 936→938; down with a named
+cause — Seneca primary 837→836 (3 words) and gender 909→908 (8 words),
+subject precision 566→561 / 283→276 / 451→386 (T32 f's arc artifact:
+objects with lucky arcs no longer count as right subjects; the object
+side rises by more). The decoder's forced tier is pinned at birth
+(coacti right per mille 424 / 471 / 481, only rising). Additions stay
+behind their lever.

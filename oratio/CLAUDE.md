@@ -1029,9 +1029,17 @@ that would hide an arc on a demoted reading is refused); write-back
 through the executor's paths; `habitus` slot (coactus | ordinatus |
 apertus); oracle `DECRETUM` rows and `DECRETOR` summary, `-decreta`;
 (d) the run: right arcs up on every file, case and forced up,
-attachment precision down where arcs were added. DEFAULT OFF
-(`ORATIO_DECRETOR=1`); `ORATIO_PONDERA_SINE=<bucket|regula|structura>`,
-`ORATIO_PONDERA_LIMEN=N`. Adoption = Fran's pin decision.
+attachment precision down where arcs were added — until the PURE
+CHOOSER: the added arcs were hidden standing claims (carrier reading
+not first) replaced by visible alternatives; a decision now changes
+exactly one arc, and only a visible standing claim makes a
+re-decision. ADOPTED AS DEFAULT (Fran 2026-09-15): precision 520→529 /
+445→449 / 468→469, right arcs +22/+16/+5, case and forced up, Seneca
+primary and gender −1 ‰ named, subject-precision pins down (the T32 f
+arc artifact) with object precision up by more. `ORATIO_DECRETOR=0`
+disables; `ORATIO_DECRETOR_ADDITIONES=1|classicus|medius` (recall
+lever, off: Seneca +100 right arcs for −4 ‰ precision);
+`ORATIO_PONDERA_SINE=<bucket|regula|structura>`, `ORATIO_PONDERA_LIMEN=N`.
 
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated

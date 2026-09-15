@@ -3892,14 +3892,15 @@ nomen structura {
 
 hic_manens character DECRETOR_TITULUS[] = "decretor";
 
-/* ORATIO_DECRETOR=1 decretorem accendit; absens aut 0 = exsecutor solus
- * (T38 c: ordinarium OFF donec cursus T38 d pinnas decernat) */
+/* ORATIO_DECRETOR=0 decretorem abrogat (mensura); absens = ACTIVUS -
+ * elector purus ordinarius (decisio Frani 2026-09-15 post cursum T38 d:
+ * pinnae praecisionis, arcuum rectorum, casuum, coactarum sursum) */
 interior b32
 _decretor_activus (vacuum)
 {
     constans character* ambitus = getenv("ORATIO_DECRETOR");
 
-    redde (b32)(ambitus != NIHIL && strcmp(ambitus, "0") != ZEPHYRUM);
+    redde (b32)(ambitus == NIHIL || strcmp(ambitus, "0") != ZEPHYRUM);
 }
 
 /* ORATIO_DECRETOR_ADDITIONES=1: cellulae SINE petitione stante (alternae

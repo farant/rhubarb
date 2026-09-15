@@ -1417,7 +1417,7 @@ principale (vacuum)
             redde I;
         }
         minimum->fiducia = programma->fiducia;
-        setenv("ORATIO_DECRETOR", "1", I);   /* ordinarium OFF (T38 c) */
+        setenv("ORATIO_DECRETOR", "1", I);   /* explicite (ordinarium activus) */
         /* (1) tabula obiecti */
         strcpy(tabula, caput_tabulae);
         strcat(tabula, tabula_obiecti);
@@ -1514,8 +1514,8 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (census.cellae_contestatae, I);
         CREDO_AEQUALIS_I32 (census.decretae, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (census.habitus[ORATIO_HABITUS_APERTUS], I);
-        /* (4) decretor abrogatus (ordinarium: variabilis absens) */
-        unsetenv("ORATIO_DECRETOR");
+        /* (4) decretor abrogatus (ORATIO_DECRETOR=0; ordinarium ACTIVUS) */
+        setenv("ORATIO_DECRETOR", "0", I);
         doc = _documentum(piscina, &vocabularia,
             "Puella bellum videt.\n",
             &census_partium);
@@ -1528,6 +1528,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (census.cellae_contestatae, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (_index_vocabuli(_vocabulum(doc, I),
             (i32)ORATIO_VOCABULUM_HABITUS), (s32)-I);
+        unsetenv("ORATIO_DECRETOR");
     }
 
     /* II e. UMBRA GRADU PRIORE SCRIPTA NON CONTENDIT (T34, 2026-09-14).

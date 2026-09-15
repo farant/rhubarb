@@ -3060,11 +3060,17 @@ makes a re-decision, addition cells are untouched unless
 `ORATIO_DECRETOR_ADDITIONES` (everywhere, or one dialect) allows them.
 The pure chooser against off on the pinned files: precision 520→529,
 445→449, 468→469; right arcs +22 / +16 / +5; case +2 / +1 / +3 ‰; forced
-+4 / +5 / +2; primary and gender on Seneca −1 ‰ (3 and 8 words);
++1 / +3 / +1 (the gate's own measure); primary and gender on Seneca −1 ‰ (3 and 8 words);
 subject precision down and object precision up by more (the T32 f arc
 artifact). Additions in classical documents add +100 right arcs on
-Seneca for −4 ‰ precision. Default still OFF at the d commit; the
-configuration and the pins are Fran's call, recorded in the worklog.
+Seneca for −4 ‰ precision. ADOPTED (Fran, 2026-09-15): the pure
+chooser is the default (`ORATIO_DECRETOR=0` disables it); pins moved —
+up: precision, right arcs, case, forced, object precision, charter
+number; down with named cause: Seneca primary 837→836 and gender
+909→908 (3 and 8 words), subject precision 566→561 / 283→276 / 451→386
+(the T32 f arc artifact, object precision up by more); the forced
+tier of the decoder pinned at birth (424 / 471 / 481 ‰). Additions
+stay a lever for a recall family with its own gate.
 
 ## 8. Stage 6 — search
 

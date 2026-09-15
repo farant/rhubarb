@@ -1334,8 +1334,13 @@ finally:
     _os2.environ.pop('ORATIO_DECRETOR', None)
 credo([v.forma for v in _vv] == ['Puella', 'bellum', 'videt'] and _vv[1].habitus == 'ordinatus' and _vv[0].habitus == '' and _vv[2].habitus == '', 'Oratio.vocabula: habitus ordinatus in bellum solo (cellula contestata decretoris, tabula vera: obiectum electum), ceteris vacuus')
 credo('decretum' in _pd and _pd['decretum'] == 1 and sum(_pd[k] for k in silva.ORATIO_PARTITIO) == 3, 'Oratio.partitio: decretum I (bellum obiectum per decretorem, T38 d: folliculus numeri verbi inactivus), summa vocabula III')
-_oe = silva.Oratio('Puella bellum videt.\n')
-credo(all(v.habitus == '' for v in _oe.vocabula()), 'Oratio.vocabula: sine ORATIO_DECRETOR habitus nullus (ordinarium OFF, T38 c)')
+_os2.environ['ORATIO_DECRETOR'] = '0'
+try:
+    _oe = silva.Oratio('Puella bellum videt.\n')
+    _oev = _oe.vocabula()
+finally:
+    _os2.environ.pop('ORATIO_DECRETOR', None)
+credo(all(v.habitus == '' for v in _oev), 'Oratio.vocabula: ORATIO_DECRETOR=0 habitus nullus (decretor abrogatus; ordinarium activus, T38 d)')
 
 print('--- pondera.py: generator tabulae ponderum decretoris (T38 b) ---')
 import subprocess as _sp, tempfile as _tf, os as _os
