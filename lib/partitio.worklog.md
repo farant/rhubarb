@@ -130,3 +130,49 @@ mutability, votes). Grid II stayed green — its votes do not depend on
 the held-out fold's own rows. GREEN after the revert. Lesson for census
 work: a leak shows first where a group's training count sits right at
 the threshold.
+
+## 2026-09-14 — T36 a, captives, the profile, the seed
+
+Spec §2 decisions 55–56, §7 "Design — T36"; plan
+`project-specs/partitio-reticulum-t36-plan.md`. Appended fields only,
+nothing renamed.
+
+**Captive groups (decision 55).** A group whose rows all lie in one
+fold can never be judged by leaving that fold out. The half-of-rows
+rule missed the case decision 53 names (a synthetic verse/prose column
+over the real contests: 351 fallback rows of 1,607, no flag, the verse
+group voting in five corpora and answering no row). Now `captivus[g]`
+holds the fold, and a captive group with at least `limen` rows flags
+the column. Grid IV: eleven rows, flagged at threshold two, not at
+threshold four — the threshold is tested, not just the presence.
+
+**The profile (decision 56) — a tie is OPEN.** The spec text said
+"ordinatus: every fold votes and all votes agree". A group whose
+training rows tie votes the base by rule, so that vote is the base's,
+not the group's; calling it ordered would dress the base rate as a
+bucket. Built: COACTUS = every fold votes with `margo == disciplina`;
+ORDINATUS = every fold votes with `margo > 0` and one gold; APERTUS
+otherwise, and a mutable group is apertus too (`mutabilis[g]` stays
+its own flag so the flip is visible). `margo` is the largest training
+count minus the second; the second is tracked beside the maximum in
+the same loop (a value equal to the maximum sets the second to it, so
+a tie is margin 0 without a special case).
+
+**Options struct for the chain.** `PartitioCatenaOptiones {limen,
+lucrum_minimum, sortes_vetant, semen}` replaces three loose
+parameters — before the weight table becomes a caller, while the only
+callers are the probatio and the instrument. `semen` is the step-0
+partition, kept on the catena; a column already inside the seed meets
+to the same partition and the gain floor refuses it, so the library
+needs no "used" flags for the seed's columns. The instrument's two
+`c->una` fallbacks became `catena->semen`.
+
+**Gate.** Grid IV and every profile matched on the first green run.
+**Planted fault** (`silva.planta`, gate `radix` filtered
+`partitio_aestimatio`): the captive test inverted (`in_sorte !=
+totales[g]`). RED — and FIRST in grid I's one-group case
+(`probatio_partitio_aestimatio.c:141`, `inaestimabilis`), not in grid
+IV: with the test inverted every group spread over several folds
+becomes "captive", so the first column judged is the first to flag.
+GREEN after the revert. Same lesson as the T35 b plant: a fault lands
+where the data first crosses it, not where the test for it was written.

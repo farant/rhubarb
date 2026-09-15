@@ -3,6 +3,11 @@
 #include "partitio_aestimatio.h"
 #include <string.h>
 
+constans character* constans
+    PARTITIO_TITULI_HABITUUM[PARTITIO_HABITUS_NUMERUS] = {
+    "coactus", "ordinatus", "apertus"
+};
+
 
 /* ==================================================
  * Adiutores interni
@@ -69,10 +74,12 @@ partitio_aestimare (
                    i32* numeri_sortium;   /* [(g*A+a)*S+s] */
                    i32* aurea_sortium;    /* [a*S+s] */
                    i32* aurea;            /* [a] */
+                   i32* totales;          /* [g] ordines gregis */
                    i32  numerus_gregum;
                    i32  numerus_aureorum;
                    i32  numerus_sortium;
                    i64  maxima_summa;
+                   b32  captivus_limine = FALSUM;
                    i32  i;
                    i32  g;
                    i32  a;
@@ -114,11 +121,36 @@ partitio_aestimare (
         * magnitudo(i32));
     aurea               = (i32*)_allocare_nullum(piscina,
         _saltem_unum(numerus_aureorum) * magnitudo(i32));
+    totales             = (i32*)_allocare_nullum(piscina,
+        _saltem_unum(numerus_gregum) * magnitudo(i32));
+    e->captivus         = (i32*)_allocare_nullum(piscina,
+        _saltem_unum(numerus_gregum) * magnitudo(i32));
+    e->habitus          = (i32*)_allocare_nullum(piscina,
+        _saltem_unum(numerus_gregum) * magnitudo(i32));
+    e->mutabilis        = (b32*)_allocare_nullum(piscina,
+        _saltem_unum(numerus_gregum) * magnitudo(b32));
+    e->retenti          = (i32*)_allocare_nullum(piscina,
+        _saltem_unum(numerus_gregum) * _saltem_unum(numerus_sortium)
+        * magnitudo(i32));
+    e->recti_gregum     = (i32*)_allocare_nullum(piscina,
+        _saltem_unum(numerus_gregum) * _saltem_unum(numerus_sortium)
+        * magnitudo(i32));
+    e->margo            = (i32*)_allocare_nullum(piscina,
+        _saltem_unum(numerus_gregum) * _saltem_unum(numerus_sortium)
+        * magnitudo(i32));
     si (   e->sortes     == NIHIL || e->suffragia == NIHIL
         || e->numeri     == NIHIL || numeri_sortium == NIHIL
-        || aurea_sortium == NIHIL || aurea == NIHIL)
+        || aurea_sortium == NIHIL || aurea == NIHIL
+        || totales       == NIHIL || e->captivus == NIHIL
+        || e->habitus    == NIHIL || e->mutabilis == NIHIL
+        || e->retenti    == NIHIL || e->recti_gregum == NIHIL
+        || e->margo      == NIHIL)
     {
         redde NIHIL;
+    }
+    per (g = ZEPHYRUM; g < numerus_gregum; g++)
+    {
+        e->captivus[g] = numerus_sortium;
     }
 
     /* I. numeri: grex x aurum x sors */
@@ -131,6 +163,7 @@ partitio_aestimare (
         s = sortes->grex[i];
         locus = _locus(g, a, s, numerus_aureorum, numerus_sortium);
         numeri_sortium[locus] = numeri_sortium[locus] + I;
+        totales[g] = totales[g] + I;
         e->numeri[(memoriae_index)g * numerus_aureorum + a] =
             e->numeri[(memoriae_index)g * numerus_aureorum + a] + I;
         aurea_sortium[(memoriae_index)a * numerus_sortium + s] =
@@ -169,13 +202,16 @@ partitio_aestimare (
 
         per (g = ZEPHYRUM; g < numerus_gregum; g++)
         {
-            i32 disciplina  = ZEPHYRUM;
-            i32 in_sorte    = ZEPHYRUM;
-            i32 maxima      = ZEPHYRUM;
-            i32 candidatum  = ZEPHYRUM;
-            i32 paria       = ZEPHYRUM;
-            i32 suffragium  = numerus_aureorum;
-            i32 responsum   = basis_sortis;
+            memoriae_index locus_gs  = (memoriae_index)g
+                * numerus_sortium + s;
+                       i32 disciplina  = ZEPHYRUM;
+                       i32 in_sorte    = ZEPHYRUM;
+                       i32 maxima      = ZEPHYRUM;
+                       i32 secundum    = ZEPHYRUM;
+                       i32 candidatum  = ZEPHYRUM;
+                       i32 paria       = ZEPHYRUM;
+                       i32 suffragium  = numerus_aureorum;
+                       i32 responsum   = basis_sortis;
 
             per (a = ZEPHYRUM; a < numerus_aureorum; a++)
             {
@@ -191,13 +227,19 @@ partitio_aestimare (
                 in_sorte    = in_sorte + numerus_in_sorte;
                 si (a == ZEPHYRUM || numerus_disciplinae > maxima)
                 {
+                    secundum    = a == ZEPHYRUM ? ZEPHYRUM : maxima;
                     maxima      = numerus_disciplinae;
                     candidatum  = a;
                     paria       = I;
                 }
                 alioquin si (numerus_disciplinae == maxima)
                 {
-                    paria = paria + I;
+                    secundum  = maxima;
+                    paria     = paria + I;
+                }
+                alioquin si (numerus_disciplinae > secundum)
+                {
+                    secundum = numerus_disciplinae;
                 }
             }
             si (numerus_aureorum > ZEPHYRUM && disciplina >= limen)
@@ -209,12 +251,21 @@ partitio_aestimare (
             {
                 sors->inaestimati = sors->inaestimati + in_sorte;
             }
-            e->suffragia[(memoriae_index)g * numerus_sortium + s] =
-                suffragium;
+            e->suffragia[locus_gs]  = suffragium;
+            e->retenti[locus_gs]    = in_sorte;
+            e->margo[locus_gs]      = maxima - secundum;
+            /* captivus: ordines omnes gregis in hac sorte */
+            si (in_sorte > ZEPHYRUM && in_sorte == totales[g])
+            {
+                e->captivus[g] = s;
+            }
             si (numerus_aureorum > ZEPHYRUM)
             {
-                sors->recti = sors->recti + numeri_sortium[_locus(g,
-                    responsum, s, numerus_aureorum, numerus_sortium)];
+                i32 recti_gregis = numeri_sortium[_locus(g, responsum,
+                    s, numerus_aureorum, numerus_sortium)];
+
+                sors->recti                = sors->recti + recti_gregis;
+                e->recti_gregum[locus_gs]  = recti_gregis;
             }
         }
         e->summa.ordines = e->summa.ordines + sors->ordines;
@@ -223,17 +274,33 @@ partitio_aestimare (
         e->summa.inaestimati = e->summa.inaestimati + sors->inaestimati;
     }
 
-    /* III. greges mutabiles: suffragia inter sortes diversa */
+    /* III. habitus et mutabilitas gregum (T36 a, decisio LVI): coactus
+     * = sors quaeque suffragatur unanimis (margo == disciplina);
+     * ordinatus = sors quaeque suffragatur margine > 0, idem ubique;
+     * apertus aliter (sine suffragio, par, discors) */
     per (g = ZEPHYRUM; g < numerus_gregum; g++)
     {
-        i32 primum = numerus_aureorum;
+        i32 primum    = numerus_aureorum;
+        b32 apertus   = FALSUM;
+        b32 unanimis  = VERUM;
 
         per (s = ZEPHYRUM; s < numerus_sortium; s++)
         {
-            i32 votum;
+            memoriae_index locus_gs    = (memoriae_index)g
+                * numerus_sortium + s;
+                       i32 votum       = e->suffragia[locus_gs];
+                       i32 disciplina  = totales[g]
+                           - e->retenti[locus_gs];
 
-            votum = e->suffragia[(memoriae_index)g * numerus_sortium
-                + s];
+            si (   votum              == numerus_aureorum
+                || e->margo[locus_gs] == ZEPHYRUM)
+            {
+                apertus = VERUM;
+            }
+            si (e->margo[locus_gs] != disciplina)
+            {
+                unanimis = FALSUM;
+            }
             si (votum == numerus_aureorum)
             {
                 perge;
@@ -244,10 +311,17 @@ partitio_aestimare (
             }
             alioquin si (votum != primum)
             {
-                e->greges_mutabiles = e->greges_mutabiles + I;
-                frange;
+                e->mutabilis[g] = VERUM;
             }
         }
+        si (e->mutabilis[g])
+        {
+            e->greges_mutabiles  = e->greges_mutabiles + I;
+            apertus              = VERUM;
+        }
+        e->habitus[g] = apertus ? (i32)PARTITIO_HABITUS_APERTUS
+            : unanimis ? (i32)PARTITIO_HABITUS_COACTUS
+            : (i32)PARTITIO_HABITUS_ORDINATUS;
     }
 
     /* IV. puritas in specimine, lucrum, inaestimabilis */
@@ -272,9 +346,23 @@ partitio_aestimare (
         e->puritas_intra = (i32)(maxima_summa * (i64)M
             / (i64)p->numerus);
     }
-    e->lucrum         = (s32)e->summa.recti - (s32)e->summa.basis;
+    e->lucrum = (s32)e->summa.recti - (s32)e->summa.basis;
+    /* captivi (decisio LV): grex captivus cum ordinibus >= limen
+     * columnam inaestimabilem signat praeter regulam dimidii */
+    per (g = ZEPHYRUM; g < numerus_gregum; g++)
+    {
+        si (e->captivus[g] < numerus_sortium)
+        {
+            e->greges_captivi   = e->greges_captivi + I;
+            e->ordines_captivi  = e->ordines_captivi + totales[g];
+            si (totales[g] >= limen)
+            {
+                captivus_limine = VERUM;
+            }
+        }
+    }
     e->inaestimabilis = (b32)(II * e->summa.inaestimati
-        > e->summa.ordines);
+        > e->summa.ordines || captivus_limine);
     redde e;
 }
 
@@ -283,16 +371,28 @@ partitio_aestimare (
  * Catena
  * ================================================== */
 
+vacuum
+partitio_catena_optiones_initium (
+    PartitioCatenaOptiones* optiones)
+{
+    si (optiones == NIHIL)
+    {
+        redde;
+    }
+    optiones->limen           = XX;
+    optiones->lucrum_minimum  = ZEPHYRUM;
+    optiones->sortes_vetant   = VERUM;
+    optiones->semen           = NIHIL;
+}
+
 PartitioCatena*
 partitio_catenam_struere (
-                       Piscina* piscina,
-    constans Partitio* constans* columnae,
-                            i32 k,
-             constans Partitio* aurum,
-             constans Partitio* sortes,
-                            i32 limen,
-                            i32 lucrum_minimum,
-                            b32 sortes_vetant)
+                         Piscina* piscina,
+      constans Partitio* constans* columnae,
+                              i32 k,
+               constans Partitio* aurum,
+               constans Partitio* sortes,
+    constans PartitioCatenaOptiones* optiones)
 {
          PartitioCatena* catena;
       constans Partitio* currens;
@@ -301,14 +401,23 @@ partitio_catenam_struere (
                     b32* tentata;
                     b32* cadit;
                     i32* recti;
+                    i32  limen;
+                    i32  lucrum_minimum;
+                    b32  sortes_vetant;
                     i32  i;
                     i32  s;
 
-    si (   piscina == NIHIL || aurum == NIHIL || sortes == NIHIL
-        || (columnae == NIHIL && k > ZEPHYRUM))
+    si (   piscina  == NIHIL || aurum == NIHIL || sortes == NIHIL
+        || optiones == NIHIL || (columnae == NIHIL && k > ZEPHYRUM)
+        || (   optiones->semen != NIHIL
+            && optiones->semen->numerus != aurum->numerus))
     {
         redde NIHIL;
     }
+    limen           = optiones->limen;
+    lucrum_minimum  = optiones->lucrum_minimum > ZEPHYRUM
+        ? optiones->lucrum_minimum : optiones->limen;
+    sortes_vetant   = optiones->sortes_vetant;
     per (i = ZEPHYRUM; i < k; i++)
     {
         si (   columnae[i]          == NIHIL
@@ -343,7 +452,8 @@ partitio_catenam_struere (
     {
         redde NIHIL;
     }
-    currens = partitio_una(piscina, aurum->numerus);
+    currens = optiones->semen != NIHIL ? optiones->semen
+        : partitio_una(piscina, aurum->numerus);
     aestimatio_currens = currens != NIHIL
         ? partitio_aestimare(piscina, currens, aurum, sortes, limen)
         : NIHIL;
@@ -351,7 +461,8 @@ partitio_catenam_struere (
     {
         redde NIHIL;
     }
-    catena->initium = aestimatio_currens;
+    catena->semen    = currens;
+    catena->initium  = aestimatio_currens;
 
     dum (catena->numerus < k)
     {

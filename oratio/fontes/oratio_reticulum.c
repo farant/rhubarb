@@ -904,7 +904,7 @@ _finem_computare (
                      i32  s;
 
     ultima   = catena->numerus > ZEPHYRUM
-        ? catena->partes[catena->numerus - I] : c->una;
+        ? catena->partes[catena->numerus - I] : catena->semen;
     prior    = catena->numerus > ZEPHYRUM
         ? catena->aestimationes[catena->numerus - I] : catena->initium;
     adhibita = (b32*)piscina_allocare(c->piscina,
@@ -976,6 +976,7 @@ _computare (
           constans Partitio* constans* partes =
               (constans Partitio* constans*)c->partes;
                     ChordaAedificator* a;
+               PartitioCatenaOptiones  oc;
                                   i32  k = c->numerus_notarum;
                                   i32  i;
                                   i32  j;
@@ -1002,10 +1003,15 @@ _computare (
     c->reticulum = partitio_reticulum_struere(c->piscina, partes,
         k);
     c->lucrum_minimum = o->lucrum > ZEPHYRUM ? o->lucrum : o->limen;
-    c->catena_vetans  = partitio_catenam_struere(c->piscina, partes, k,
-        c->aurum, c->sortes, o->limen, c->lucrum_minimum, VERUM);
-    c->catena_libera  = partitio_catenam_struere(c->piscina, partes, k,
-        c->aurum, c->sortes, o->limen, c->lucrum_minimum, FALSUM);
+    partitio_catena_optiones_initium(&oc);
+    oc.limen           = o->limen;
+    oc.lucrum_minimum  = c->lucrum_minimum;
+    oc.sortes_vetant   = VERUM;
+    c->catena_vetans   = partitio_catenam_struere(c->piscina, partes,
+        k, c->aurum, c->sortes, &oc);
+    oc.sortes_vetant   = FALSUM;
+    c->catena_libera   = partitio_catenam_struere(c->piscina, partes,
+        k, c->aurum, c->sortes, &oc);
     si (   c->reticulum     == NIHIL || c->catena_vetans == NIHIL
         || c->catena_libera == NIHIL)
     {
@@ -1459,7 +1465,7 @@ _greges_scribere (
     si (catenae)
     {
         p = catena->numerus > ZEPHYRUM
-            ? catena->partes[catena->numerus - I] : c->una;
+            ? catena->partes[catena->numerus - I] : catena->semen;
         e = catena->numerus > ZEPHYRUM
             ? catena->aestimationes[catena->numerus
                 - I] : catena->initium;
