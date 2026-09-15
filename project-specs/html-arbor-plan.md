@@ -240,7 +240,7 @@ b32    html_ligator_cumulare (HtmlLigator*, MateriaToken* trivium);
 b32    html_ligator_solvere  (HtmlLigator*, MateriaToken* sequens);
 ```
 
-- [ ] **Step 1: Write the failing test** — for each fixture in
+- [x] **Step 1: Write the failing test** — for each fixture in
   `probationes/fixa/html/` (the three): lex, adapt, assert
   `xar_numerus(exitus) == xar_numerus(lexemata)`, and per index genus,
   offset, and value bytes equal. Then the BYTE COVERAGE gate: walk the
@@ -252,21 +252,21 @@ b32    html_ligator_solvere  (HtmlLigator*, MateriaToken* sequens);
   `cumulare` calls (the css lesson: contiguity by luck), solve, assert
   all 23 land. Self-measure: fixtures read == 3.
 
-- [ ] **Step 2: Run and verify it fails** — `./html/compile_probationes.sh adaptare`.
+- [x] **Step 2: Run and verify it fails** — `./html/compile_probationes.sh adaptare`.
 
-- [ ] **Step 3: Implement** — transcribe `css/fontes/css_adaptare.c`
+- [x] **Step 3: Implement** — transcribe `css/fontes/css_adaptare.c`
   (one-for-one loop; `fons_index` ZEPHYRUM; `initium_lineae` never set,
   same comment: html has no `munus LINEA`). The ligator is css's with the
   divisio rule unchanged (`_terminatorem_lineae_fert` over `\n \r \f`).
   Header comment: trivia exist INSIDE TAGS ONLY (spec §11.5); between
   tags every byte is `TEXTUS` and the ligator is never consulted.
 
-- [ ] **Step 4: Run and verify** — green, including coverage.
+- [x] **Step 4: Run and verify** — green, including coverage.
 
-- [ ] **Step 5: Plant** — in `html_ligator_solvere`, `plana + divisio + I`
+- [x] **Step 5: Plant** — in `html_ligator_solvere`, `plana + divisio + I`
   for one branch → coverage red by a byte count; revert.
 
-- [ ] **Step 6: Format, words, commit**
+- [x] **Step 6: Format, words, commit**
 
 ```python
 silva.commissio("html: adaptatio UNUM PRO UNO + ligator triviorum intra tag; porta tegumenti octetorum (rubra nata: trivium omissum)",

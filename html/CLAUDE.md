@@ -18,7 +18,17 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   INSIDE TAGS ONLY; comments are content, not `munus COMMENTUM`; a
   stray `/` inside a tag is trivia); runner; gate
   `probatio_html_registrum`. Registered in pythonica (`PORTAE['html']`).
-- Next: H2 adaptare + ligator + byte-coverage gate.
+- **H2 (2026-09-15):** `html_adaptare` one for one (positions carried,
+  `initium_lineae` never set) + `HtmlLigator` (css's division rule;
+  trivia bind only inside tags; `FINIS` receives the trivia of a tag
+  cut off at EOF); gate `probatio_html_adaptare` = BYTE COVERAGE
+  (every offset exactly once) over 25 inline cases, a NUL case and the
+  three fixtures, plus the segmented-Xar contract (allocate between
+  accumulations). A stray `/` inside a tag binds as trivia beside the
+  spaces (`<a /\n href>`: space + `/` go to `<a`, the newline run to
+  `href`).
+- Next: H3 the builder, part one (document, elements, attributes,
+  content; iterative stack; byte oracle through `materia_scribere_nodum`).
 
 ## The registry is generated
 

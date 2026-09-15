@@ -2228,3 +2228,41 @@ ASPERITATES: the probe printed per sentence because the oracle calls
 the resolver per sentence (1.8 MB of output; the last block carries
 the totals) — a probe that prints at "the end of the run" must know
 what the run is.
+
+## 2026-09-15 — phase 4: the HTML client (html-arbor-spec §11, html-arbor-plan H1–H11)
+
+INTENTIO: Fran's order of 2026-09-15 (decree 01M2KC03NG): oratio
+paused, consumers resume — HTML, then JS, then silva (phase 5). The
+HTML spec of 2026-08-27 was written against silva as the S6
+evaluation instrument; §11 (the addendum) retargets it to materia
+before a line of `html/` exists: materia's writer/reader/comparator
+for silva's, the registry GENERATED from a declaration, the canon
+hand-written, `documentum` = `liberi` + `cauda` (a source may have
+zero or several top-level elements; a synthetic root is H4-forbidden),
+the lexicon with trivia INSIDE TAGS ONLY (comments are content, a
+stray `/` inside a tag is trivia by HTML5's own definition), an
+ITERATIVE builder over an explicit stack, and the reservations
+re-scoped: measured, the reader refuses an unknown ELEMENT
+(`materia_arbor.c:3090/3170`) and IGNORES an unknown ATTRIBUTE (it
+reads `id` and nothing else), so v1 declares nothing reserved and
+refusal is automatic for elements, canon-borne for attributes. What
+this client asks of the substrate, named before building: absent
+slots as meaning at scale (every void and implied close), a content-
+dominant tree with almost no trivia, whitespace-only VERBATIM text
+values at every level (T9's fix exercised thousands of times), raw-
+text regions with `</`-shaped bytes inside token values through the
+STML raw form and its refusal, materia's recursive walkers under an
+iterative parser (the depth crash 01M1FAD8 measured on the
+substrate's side alone), and a consumer of a consumer (md's rendered
+HTML through this parser). Gates: registrum, adaptare (byte
+coverage), arbor, corpus (fourteen files, every one with `<script>`),
+stml (two cycles + comparator), canon, reservatio, totalitas,
+computus, md. The shim runs at the end as the phase-boundary audit
+(it ran 392/392 in 16 s on 2026-09-15 before this phase began, through
+registrum coctum + arbor tradita + visio).
+H1 DONE 2026-09-15 (411850b8): declaration (10 genera, 18 loci) →
+generated tables (canon-judged, compare-mode fresh), slot enums,
+lexicon (22 rows), runner, registrum gate (212 assertions); plants:
+lexicon rows swapped → red on the title comparison; one byte of the
+generated header → red on `rancor.recens`. Pythonica `PORTAE['html']`
+registered at birth (a runner outside the gate table is a dead gate).
