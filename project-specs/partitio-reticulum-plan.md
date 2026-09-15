@@ -35,7 +35,7 @@ desideratum 01M24V1387.
 | T35 b the judgment | done — gate `probatio_partitio_aestimatio` (three grids, every hand number on the first run); the leak plant went red FIRST in grid I's `limen III` case (not grid III as predicted), grid II immune; numerals `DCLIII`/`DCCCLXXXIV` absent from latina.h |
 | T35 c the oracle columns | done — header row + 8 appended columns; laws green on five treebanks (CIRCSE arc victa/victor 389/660, reading 243/278); first 25 fields byte-identical on 2,413 CIRCSE rows; 481 rows (20 %) have no winner relation (IDEM, no aligned winning head); swap plant red on the cross-count law |
 | T35 d the instrument | done — `oratio_reticulum` + `reticulum.sh`; fixture machine rows equal the hand-derived file on the first run, nine named refusals, `-ubi` plant red on both predicted cases; numeric flags are decimal (this plan wrote `-limen II -lucrum I`, corrected) |
-| T35 e first run, acceptance, records | pending |
+| T35 e first run, acceptance, records | done — recount equals the instrument (146 rows); (a) verb number best (+75); (b) failed as stated: the veto is decided by LLCT (78 rows), the T32 f flip is real at depth three (CIRCSE 53:30 vs Perseus 11:24); tool limits open in quaestio 01M2HA2RAF |
 
 ---
 

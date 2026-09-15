@@ -65,3 +65,31 @@ where predicted: the `-ubi f=w` run no longer refuses ("nulli ordines
 post -ubi", `probatio_oratio_reticulum.c:191` and `:198`) and the
 `-ubi f=u` run no longer keeps 12 rows (`:328`). GREEN after the
 automatic revert.
+
+## 2026-09-14 — T35 e, the first real run
+
+Rows regenerated with `metire.sh x.tsv -lites`: 24,306 LIS rows, seven
+headers (EWT dev produced no contests). Filter: `-ubi caput-victoris-idem=1
+-ubi relatio-victoris=subiectum,obiectum-verbi -ubi
+relatio-victae=subiectum,obiectum-verbi -ubi aurum-lectio=victor,victa`,
+`-gradus` on the counts and distances, `-praeter victor,victa,dependens,
+caput,clausula` → 1,607 contests, six folds, base 623 permille. Both runs
+take under a second.
+
+**Acceptance 1 held**: the recount (first checked against the fixture)
+and the instrument agree on all 146 COLUMNA/SORS/CATENA rows.
+
+**What the tool showed, and what it could not.** Verb number is the best
+single column (+75), but the zero-tolerance veto refuses it because LLCT
+— 78 rows, 76 loser-right — loses 12; the pooled chain takes it and stops
+at `accusativi-certi +5 < 20`. The pair table's top entry, `ante ×
+numerus-victae` (+79), is a pure interaction the greedy chain cannot
+reach. Ad hoc tables (scratchpad, not committed) confirmed the T32 f
+verse/prose flip only at depth three (position × loser number × verb
+number: CIRCSE 53:30, Perseus 11:24). Both limits — the veto decided by
+the smallest lopsided fold, and depth two — are recorded as quaestio
+01M2HA2RAF for Fran; the spec's as-built states the numbers.
+
+**Slip in the ad hoc table**: the vote label was cut to four letters
+(`vict`), making victor and victa indistinguishable — the counts and the
+flip marker carried the reading. Print labels whole.

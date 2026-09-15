@@ -2410,6 +2410,50 @@ a treebank is ever shipped, yet `fixa/auctores.tsv` is derived from the
 pinned treebanks and committed. A committed weight table needs this
 settled, and the NC shelf corpora can never train a shipped table.
 
+**As built — T35, the partition lattice (2026-09-14; commits 49b74c28,
+5b1cafa0, bbc730fa, 74d4a1bc, and the records).** `lib/partitio` (the
+algebra; the planned field `duplex` is a `latina.h` macro, it is
+`geminus`), `lib/partitio_aestimatio` (the retention law in ONE helper,
+so the circularity plant hits base and votes alike; the plant went red
+first where a group's training count sits at the threshold), LIS rows
+with a `COLUMNAE` header and the eight appended columns (the row
+formatter moved into the library so the header law is testable
+in-process; cross-count laws against the contest table on five
+treebanks; the first 25 fields byte-identical), the instrument
+`./oratio/reticulum.sh`, and the independent recount
+`oratio/census/reticulum_recensio.py`. Additions to the design:
+`suffragia`, `numeri`, `initium`, `oratio_reticulum_optiones_initium`,
+the base tie to the lowest gold index; numeric flags are decimal.
+
+FIRST RUN. Regenerated LIS rows: 24,306 over seven files (EWT dev has no
+contests). Same-verb subject/object reading contests with gold victor |
+victa: 1,607 over the six Latin corpora (ITTB 459, CIRCSE 351, Perseus
+324, PROIEL 307, UDante 88, LLCT 78); gold victa 1,002 : victor 605,
+base 623 permille. ACCEPTANCE 1 held: instrument and recount agree on
+all 146 COLUMNA, SORS and CATENA rows (the recount first reproduced the
+hand-derived fixture). PREDICTION (a) held: verb number
+(`numerus-capitis`) is the best single column, +75 rows held out (670
+permille), gaining on five corpora (CIRCSE +33, Perseus +28, ITTB +15,
+UDante +9, PROIEL +2) and losing 12 of LLCT's 78 rows (76 of which the
+loser held). PREDICTION (b) failed as stated: the chains diverge at step
+1, but the vetoed chain names LLCT, not CIRCSE, and no gaining column
+has a mutable group. The T32 f flip is real ONE LEVEL DEEPER: position
+× the loser reading's number is a pure interaction (+79 over the better
+single; position alone 0, loser number alone −62) favouring the winner
+in every corpus (CIRCSE 86:50, ITTB 46:30, Perseus 44:30), and the
+triple with verb number flips between verse and prose — dependent
+before a singular verb, plural losing reading: CIRCSE 53:30 for the
+winner, Perseus 11:24 for the loser, ITTB 24:27, PROIEL 16:15. The
+lattice: 20 feature columns hold 11 independent dimensions (winner's
+number = verb number; the two proposed cases one split; relations and
+distances coincide with it; person constant). FINDINGS ON THE TOOL
+(open, Fran's decision, quaestio 01M2HA2RAF): the zero-tolerance veto
+(decision 50) is decided by the smallest lopsided corpus, and depth-two
+search (greedy chain plus pairs) cannot reach a three-column pattern —
+candidates are a veto tolerance scaled to fold size (or a minimum fold
+size) and a triple table or a chain seeded from a named column. No
+weight is taken from the vetoed chain alone until that is decided.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

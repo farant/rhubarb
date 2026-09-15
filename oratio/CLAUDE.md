@@ -944,6 +944,25 @@ precision and attachment DOWN 1–9 ‰; fifteen pins re-set. Gate: inline
 two-stage programme, plant RED on `revocatae_capitis`. NOTE (corrected same day): `cursus="fratrum"` DOES skip non-matching siblings, proven against the engine with `stml expandere`; why that fixture's rule yielded no row is an open ledger question. CLOSED by T34 (2026-09-14): a row on an umbra
 written in an EARLIER stage no longer enters the one-head contest.
 
+**T35 (2026-09-14): THE PARTITION LATTICE** (spec §2 decisions 49–53,
+§7 design + as-built; plan `project-specs/partitio-reticulum-plan.md`).
+`lib/partitio` (algebra from knotapel `scrutinium.h`), `lib/partitio_
+aestimatio` (leave one corpus out, `limen` before a vote, greedy chain
+with a zero-tolerance fold veto), LIS rows with a `COLUMNAE` header and
+eight appended columns (`thesaurus`, `aurum-arcus`, `aurum-lectio`,
+relations, direction, distances; the formatter lives in
+`oratio_oraculum.c`), instrument `./oratio/reticulum.sh <tsv> -genus LIS
+-aurum aurum-… -sortes thesaurus [-ubi t=v1,v2]… [-gradus …] [-praeter …]
+[-greges columna|catena] [-machina]` (decimal flags; exit 2 = refused
+with the cause), recount `oratio/census/reticulum_recensio.py` (must
+equal the C rows). Select machine rows by FIELD (`$2=="LIS"`): the header
+line matches `\tLIS\t`. First run on 1,607 same-verb subject/object
+contests: verb number best (+75 held out) but vetoed by LLCT (78 rows,
+76 loser-right); position × loser-reading number a pure interaction
+(+79); the T32 f verse/prose flip real at DEPTH THREE (CIRCSE 53:30,
+Perseus 11:24). Open: veto tolerance by fold size, triple reach
+(quaestio 01M2HA2RAF) — decide before any weights.
+
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
 `latina.h` shadowing `include/latina.h` in the nexus sweep (first-wins
