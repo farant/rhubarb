@@ -123,8 +123,18 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   parse (css saw 30×), same shape. The 200-deep fixture: 3,475 bytes →
   996,225 STML, write 12–36 ms. Plant: a golden `nodi` count edited →
   red on the named column.
-- Next: H10 md's rendered HTML through the parser (runner compiles
-  `md/fontes/*.c`).
+- **H10 (2026-09-15):** `probatio_html_md` — the consumer of a
+  consumer. The runner compiles `md/fontes/*.c` into `html/build/` (md
+  CONSUMED, never contained). Seven markdown inputs (md's four fixtures
+  + three CLAUDE.md files) rendered by `md_html_reddere`, then parsed,
+  emitted byte-identical to the rendering, projected, re-read, compared
+  and canon-judged: all seven hold. Bad-element count pinned per input
+  (`MALA_EXSPECTATA`): zero for six, ONE for `sabaw.md` — sabaw's
+  notation `<if⟨condition⟩>…</if⟨⟩>` passed through raw by md, names
+  differ, no partner (worklog). Positive control: `<p>a</b></p>` counts
+  one. Born red for real (the sabaw finding).
+- Next: H11 closure — shim audit, worklog answers, spec as-built,
+  ledger, memory.
 
 ## The registry is generated
 

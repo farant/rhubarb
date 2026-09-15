@@ -83,3 +83,27 @@ the substrate is fixed). The STML cost is recorded, not pinned.
 Two probe lessons: `$?` after a pipe is the pipe's; and zsh does not
 word-split `$spec` in `set -- $spec` — every run got one mangled
 argument and reported the same crash. Measure, then read the measure.
+
+## 2026-09-15 — H10: md's HTML through the html parser, one finding
+
+Seven markdown inputs rendered by `md_html_reddere`, then parsed,
+emitted byte-identical, projected, re-read, compared and judged by
+`html.canon`: every step held for all seven. The bad-element count was
+zero for six and ONE for `sabaw.md`.
+
+The one is sabaw's notation, passed through by md as an HTML block:
+`<if⟨condition⟩>` … `</if⟨⟩>`. The condition lives inside the tag
+name, so the closing name differs from the opening one and no open
+element matches — exactly what `elementum-malum` records. Pinned at
+one for that input. Two things it says about the neighbours:
+
+- md accepts non-ASCII bytes in an HTML-block tag name (the html lexer
+  does too: bytes ≥ 0x80 are name characters). CommonMark's HTML-block
+  rule wants an ASCII tag name, so per spec that block is a paragraph
+  and the angle brackets should be escaped. A polish item for md's
+  oracle list, not a defect this client can judge.
+- the rendered page nests 363 levels deep in the projection: sabaw's
+  `<wright>`, `<slot>`, `<random>` examples open elements that the
+  prose never closes, and the simple builder does not invent closes
+  for unknown names. Correct, and a reminder that a projection's depth
+  is the source's, not the parser's.

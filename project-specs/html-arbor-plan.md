@@ -729,30 +729,30 @@ silva.commissio("html: computus gemellus (aurum fixa/computus/basis.tsv), instru
   the four fixtures plus `md/CLAUDE.md`, `css/CLAUDE.md`, `materia/CLAUDE.md`
   (house prose with code spans, lists, tables). Seven inputs, listed.
 
-- [ ] **Step 1: Write the failing gate** — for each input: render; assert
+- [x] **Step 1: Write the failing gate** — for each input: render; assert
   `successus`; parse the html; emit → byte-equal to the rendering;
   project + read back + compare (H6's trio); judge with `html.canon`
   (H7's loader); walk the tree and count `elementum-malum` — assert
   ZERO (md's HTML is well-formed: every end tag has its partner). Self-
   measure: inputs rendered == 7, total html bytes > 0.
 
-- [ ] **Step 2: Run and verify it fails** — link errors until the runner
+- [x] **Step 2: Run and verify it fails** — link errors until the runner
   compiles md's sources; then green or a real finding (a rendering the
   parser mis-nests is a finding about md OR html — name which by
   reading the bytes).
 
-- [ ] **Step 3: Runner** — add the md loop (`for m in md_*`, list them
+- [x] **Step 3: Runner** — add the md loop (`for m in md_*`, list them
   explicitly as the materia loop does; exclude nothing).
 
-- [ ] **Step 4: Run the whole suite** — exit 0.
+- [x] **Step 4: Run the whole suite** — exit 0.
 
-- [ ] **Step 5: Plant** — the plant lives in the DATA: append
+- [x] **Step 5: Plant** — the plant lives in the DATA: append
   `"<p>unclosed<b>x</p>"` as an eighth input rendered by hand (not by
   md) and assert the malum count is still zero → red, proving the
   counter sees a mismatch; then move that input under a separate
   assertion that EXPECTS one malum (it stays as the positive control).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("html: consumens consumentis - html redditum ab md (VII initus) parsatur, octetim idem, proicitur, canone iudicatur, elementum-malum NULLUM (testis positivus: unum exspectatum); cursor fontes md compilat",
