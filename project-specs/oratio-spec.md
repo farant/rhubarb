@@ -2641,6 +2641,68 @@ contests have a strong universal first bucket (head direction) that the
 verse corpora condition. The GREX-SORS rows carry the counts and
 margins the table will be built from.
 
+**Design — T37, the instrument's second pass (2026-09-14, after the
+second run; decretum 01M2HGPT52 fixes the order: T37, then agreement
+as a constraint, then the decoder).** Nothing in the libraries changes;
+no table is reordered. Six changes, each learned from reading the two
+runs.
+
+NOISE FLOOR BY FOLD AGREEMENT. The twenty-row minimum is the only guard
+today, so +6 sits beside +79 in the meet table. Appended columns:
+`sortes-lucrantes` on COLUMNA and INFIMUM (folds whose rows right exceed
+the base) and `lucrantes-gradu` on CATENA (folds above the previous
+step). The human lines read `lucrum +75, lucrantes 5, cadentes 1`. The
+ranking stays the increment; the count is the reader's guard.
+
+EXAMPLES PER GROUP. `-exempla N` with `-greges` prints under each group
+its first N rows as `linea L: t1=v1 t2=v2 …` over the first three
+header titles, the fold column, and a `sententia` column when the
+header has one. LIS rows gain column 33, `sententia`: the CoNLL-U
+`sent_id` when the file carries one, else the sentence's ordinal in the
+file; appended under the header law, non-empty on every row.
+
+THE CONDENSED REPORT. Single columns with no gain, no fallback, no
+captive and no mutable group collapse to one line `sine lucro: a b c`
+(constants stay on their own line); columns with a negative gain stay
+listed. Meet lists stop at the first non-positive increment (`nulla`
+when none). A fold list longer than eight names becomes a count
+(`cadit 41 ex 307`), in the column lines, the chain lines and the
+conditioned block alike. Each listed column with a non-zero gain gets a
+second line `sortes: la_circse +33 la_perseus +28 … la_llct -12` (rows
+right minus base per fold, descending) when the folds are eight or
+fewer, else `sortes: 41 lucrantes, 12 cadentes, 254 pares`.
+
+THE TRANSPARENT VETO. At each chain's end every remaining candidate that
+clears the gain floor is named with its cause — `recusatae:
+numerus-victoris cadit la_llct, genus-victae cadit la_llct` — and the
+rest counted (`ceterae 17 lucro deficientes`). Machine rows
+`RETICULUM-FINIS` (`vetans`, `columna`, `greges`, `recti`, `lucrum`,
+`cadentes`, `causa` ∈ cadit | lucrum | accepta) for every candidate at
+the last step, the pooled chain included; the recount derives them.
+
+A SELF-DESCRIBING MACHINE FILE. First row of machine output:
+`RETICULUM-OPTIONES` with its own header — `genus aurum sortes ubi
+columnae praeter gradus limen lucrum profunditas prima initium greges
+alternae`, lists joined by `,`, conditions by `;`, absent `-` — so a
+saved file says how it was made (decision 51 applied to the run).
+
+GATES. T37 a (instrument + recount): both fixtures' expected rows
+regenerated once for the appended columns, the FINIS rows and the
+OPTIONES row; human laws — paritas prints `sine lucro: f g h` and
+`nulla` at depth two; proba prints `sortes: A +4 B +4 C -2` under `f`
+and `recusatae:` at the vetoed chain's end; recount equals both
+fixtures; plant = `lucrantes` counted with ≥ instead of > (paritas
+columns would show 3, not 0). T37 b (oracle + examples + run): title 32
+is `sententia`, non-empty on every LIS row of the pinned treebanks;
+`-exempla 2` on proba prints `linea 3: f=u`; plant = the sentence id
+left empty. ACCEPTANCE: recount = C on every kind including FINIS and
+OPTIONES; the flipping group's examples name sentence ids that exist in
+the treebank files. Records as before.
+
+LEFT OUT, named: ranking by fold agreement (kept as the increment, Fran
+2026-09-14); a "nearly forced" profile grade; numeric `-ubi`; finer
+bucketing than 0 | 1 | plures; a lattice over meets.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the
