@@ -1,0 +1,26 @@
+# fixtura T36 b: paritas trium columnarum (interactio pura gradu III)
+fixa	COLUMNAE	PROBA	f	g	h	thesaurus	aurum-x
+fixa	PROBA	0	0	0	A	S
+fixa	PROBA	0	0	1	A	O
+fixa	PROBA	0	1	0	A	O
+fixa	PROBA	0	1	1	A	S
+fixa	PROBA	1	0	0	A	O
+fixa	PROBA	1	0	1	A	S
+fixa	PROBA	1	1	0	A	S
+fixa	PROBA	1	1	1	A	O
+fixa	PROBA	0	0	0	B	S
+fixa	PROBA	0	0	1	B	O
+fixa	PROBA	0	1	0	B	O
+fixa	PROBA	0	1	1	B	S
+fixa	PROBA	1	0	0	B	O
+fixa	PROBA	1	0	1	B	S
+fixa	PROBA	1	1	0	B	S
+fixa	PROBA	1	1	1	B	O
+fixa	PROBA	0	0	0	C	S
+fixa	PROBA	0	0	1	C	O
+fixa	PROBA	0	1	0	C	O
+fixa	PROBA	0	1	1	C	S
+fixa	PROBA	1	0	0	C	O
+fixa	PROBA	1	0	1	C	S
+fixa	PROBA	1	1	0	C	S
+fixa	PROBA	1	1	1	C	O

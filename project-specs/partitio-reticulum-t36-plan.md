@@ -36,7 +36,7 @@ buckets, no tolerance), 01M2HB154D (decided: captive rule).
 | tranche | state |
 |---|---|
 | T36 a the judgment | done — grid IV (captive flags at limen II, not IV), profiles on grids I–III and the seeded chain all green on the first run; the captive plant went red FIRST in grid I's one-group case (an inverted test makes every spread-out group captive), green after the revert; a training tie is APERTUS (spec text refined) |
-| T36 b the search | pending |
+| T36 b the search | done — k-meet table (`RETICULUM-INFIMUM` for `-PAR`), seed, CONDICIO, split titles, constants out of the lattice; parity fixture and regenerated grid II rows green on the first run; the sub-meet hash table and the tuples must be allocated BEFORE the scratch mark (worklog); plant = the subtraction zeroed |
 | T36 c the evidence | pending |
 | T36 d second run, acceptance, records | pending |
 

@@ -8,10 +8,14 @@
  * paria, reticulum columnarum; inaestimabilis nominatur (decisio LIII).
  *
  * Relatio humana aut ordines machinae RETICULUM-COLUMNA, -SORS,
- * -CATENA, -PAR, -TEGIT, -DUPLEX, quisque genus cum ordine COLUMNAE
- * suo. Recusatio nominata (iudicatum FALSUM, causa 'reticulum: ...')
- * numquam relatio vacua.
- * Planum: project-specs/partitio-reticulum-plan.md.
+ * -CATENA, -CONDICIO, -INFIMUM, -TEGIT, -DUPLEX, quisque genus cum
+ * ordine COLUMNAE suo. Recusatio nominata (iudicatum FALSUM, causa
+ * 'reticulum: ...') numquam relatio vacua.
+ * T36 b (decisio LIV): tabula INFIMORUM k columnarum (-profunditas,
+ * pro paribus), catena SEMINATA (-initium), gradus catenae liberae
+ * sortibus cadentibus = candidatus CONDICIONATUS; columnae CONSTANTES
+ * (grex unus) extra reticulum et infima.
+ * Plana: project-specs/partitio-reticulum-plan.md, -t36-plan.md.
  */
 
 #ifndef ORATIO_RETICULUM_H
@@ -40,8 +44,12 @@ nomen structura {
                     Xar* gradus;      /* chorda: 0 | 1 | plures */
                     i32  limen;       /* ordinarie XX */
                     i32  lucrum;      /* 0 = limen */
-     constans character* greges;      /* NIHIL, titulus, aut "catena" */
+     constans character* greges;      /* NIHIL, titulus, catena,
+                                         catena-libera, initium */
                     b32  machina;
+                    Xar* initium;     /* chorda: columnae seminis */
+                    i32  profunditas; /* infima II..IV; ordinarie II */
+                    i32  prima;       /* infima per profunditatem, XX */
 } OratioReticulumOptiones;
 
 nomen structura {
@@ -50,7 +58,8 @@ nomen structura {
     chorda relatio;      /* textus humanus aut ordines machinae */
 } OratioReticulumExitus;
 
-/* optiones ordinariae: limen XX, listae vacuae (ex piscina) */
+/* optiones ordinariae: limen XX, profunditas II, prima XX, listae
+ * vacuae (ex piscina) */
 vacuum
 oratio_reticulum_optiones_initium (
                     Piscina* piscina,

@@ -3,8 +3,10 @@
  *
  * Usus: reticulum <x.tsv> -genus K -aurum aurum-... -sortes columna
  *   [-ubi titulus=v1,v2]... [-columnae t1,t2 | -praeter t1,t2]
- *   [-gradus t1,t2] [-limen N] [-lucrum N] [-greges columna|catena]
+ *   [-gradus t1,t2] [-limen N] [-lucrum N] [-profunditas N] [-prima N]
+ *   [-initium t1,t2] [-greges columna|catena|catena-libera|initium]
  *   [-machina]
+ * -ubi valores crudos confert (ante -gradus). Numeri decimales.
  * Exitus: 0 iudicatum; 2 nihil iudicatum (causa in stderr), usus,
  * plagula absens.
  */
@@ -191,7 +193,10 @@ _usus (vacuum)
     fprintf(stderr, "usus: reticulum <x.tsv> -genus K -aurum aurum-... "
         "-sortes columna [-ubi titulus=v1,v2]... [-columnae t1,t2 | "
         "-praeter t1,t2] [-gradus t1,t2] [-limen N] [-lucrum N] "
-        "[-greges columna|catena] [-machina]\n");
+        "[-profunditas N] [-prima N] [-initium t1,t2] "
+        "[-greges columna|catena|catena-libera|initium] [-machina]\n"
+        "  -ubi valores crudos confert (ante -gradus); numeri "
+        "decimales\n");
     redde II;
 }
 
@@ -279,6 +284,24 @@ principale (
                 {
                     redde _usus();
                 }
+            }
+            alioquin si (strcmp(argumentum, "-profunditas") == ZEPHYRUM)
+            {
+                si (!_numerum_legere(valor, &optiones.profunditas))
+                {
+                    redde _usus();
+                }
+            }
+            alioquin si (strcmp(argumentum, "-prima") == ZEPHYRUM)
+            {
+                si (!_numerum_legere(valor, &optiones.prima))
+                {
+                    redde _usus();
+                }
+            }
+            alioquin si (strcmp(argumentum, "-initium") == ZEPHYRUM)
+            {
+                _listam_addere(piscina, optiones.initium, valor);
             }
             alioquin
             {

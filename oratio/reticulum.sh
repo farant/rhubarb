@@ -4,7 +4,9 @@
 #
 # Usage:  ./oratio/reticulum.sh <x.tsv> -genus K -aurum aurum-... -sortes columna
 #           [-ubi titulus=v1,v2]... [-columnae t1,t2 | -praeter t1,t2]
-#           [-gradus t1,t2] [-limen N] [-lucrum N] [-greges columna|catena] [-machina]
+#           [-gradus t1,t2] [-limen N] [-lucrum N] [-profunditas N] [-prima N]
+#           [-initium t1,t2] [-greges columna|catena|catena-libera|initium] [-machina]
+#         -ubi valores crudos confert (ante -gradus); numeri decimales
 # Exit:   0 iudicatum | 2 nihil iudicatum (causa in stderr), usus, plagula absens
 # Obiecta oratio/build/*.o poscit (cursor oratio/compile_probationes.sh ea
 # struit); instrumentum in oratio/build/reticulum.

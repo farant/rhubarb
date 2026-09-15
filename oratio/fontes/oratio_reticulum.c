@@ -1,16 +1,19 @@
-/* oratio_reticulum.c - instrumentum reticuli partitionum (T35 d; vide
- * oratio_reticulum.h). Ordo operum: legere, optiones iudicare, ordines
- * eligere, partes struere, COMPUTARE (regiones piscinae notatae) - et
- * tum demum scribere: aedificator intra regionem crescens memoriam
- * reficiendam teneret. */
+/* oratio_reticulum.c - instrumentum reticuli partitionum (T35 d, T36 b;
+ * vide oratio_reticulum.h). Ordo operum: legere, optiones iudicare,
+ * ordines eligere, partes struere, COMPUTARE (regiones piscinae
+ * notatae) - et tum demum scribere: aedificator intra regionem
+ * crescens memoriam reficiendam teneret. Tabula infimorum: series et
+ * numeri EXTRA regionem allocati (tabula dispersa quoque ante notam),
+ * infimum et aestimatio intra. */
 
 #include "oratio_reticulum.h"
 #include "partitio.h"
 #include "partitio_aestimatio.h"
 #include "chorda_aedificator.h"
+#include "tabula_dispersa.h"
 #include <string.h>
 
-#define RETICULUM_PARIA_PRIMA XX
+#define RETICULUM_PROFUNDITAS_MAXIMA IV
 #define NUMERUS_TITULORUM(t) ((i32)(magnitudo(t) / magnitudo((t)[0])))
 
 nomen structura {
@@ -19,14 +22,18 @@ nomen structura {
        i32  linea;
 } OrdoReticuli;
 
+/* infimum k columnarum (T36 b): series indicum notarum ascendens;
+ * incrementum = recti minus optimum serierum_minorum (k - I) */
 nomen structura {
-    i32 a;
-    i32 b;
-    i32 greges;
-    i32 recti;
-    s32 incrementum;
-    i32 cadentes;
-} ParReticuli;
+    i32  profunditas;
+    i32* columnae;      /* [profunditas] indices notarum */
+    i32  index;         /* in c->infima (valor tabulae dispersae) */
+    i32  greges;
+    i32  recti;
+    s32  incrementum;
+    i32  cadentes;      /* sortes sub basi */
+    i32  inaestimati;
+} InfimumReticuli;
 
 nomen structura {
      s32  columna;       /* -I: nulla restat */
@@ -64,27 +71,40 @@ nomen structura {
                       PartitioCatena*  catena_libera;
                         FinisCatenae   finis_vetans;
                         FinisCatenae   finis_libera;
-                         ParReticuli*  paria;
-                                 i32   numerus_parium;
+                     InfimumReticuli*  infima;
+                                 i32   numerus_infimorum;
+                                 i32*  selecti;          /* prima */
+                                 i32   numerus_selectorum;
+                                 b32*  constantes;       /* [nota] */
+                                 i32   numerus_constantium;
+                                 i32*  reticulum_index;  /* -> nota */
+                                 i32   numerus_reticuli;
+                   constans Partitio*  semen;
+                                 i32*  semen_columnae;   /* notae */
+                                 i32   numerus_seminis;
                                  i32   lucrum_minimum;
                                  i32*  ordo;
 } ContextusReticuli;
 
 hic_manens constans character* constans TITULI_COLUMNAE[] = {
     "columna", "greges", "ordines", "recti", "basis", "lucrum",
-    "puritas", "puritas-intra", "inaestimati", "mutabiles", "cadentes",
-    "inaestimabilis"
+    "puritas", "puritas-intra", "inaestimati", "mutabiles",
+    "cadentes-basi", "inaestimabilis", "greges-captivi",
+    "ordines-captivi"
 };
 hic_manens constans character* constans TITULI_SORTIS[] = {
     "columna", "sors", "ordines", "recti", "basis", "inaestimati"
 };
 hic_manens constans character* constans TITULI_CATENAE[] = {
     "vetans", "gradus", "columna", "greges", "recti", "lucrum",
-        "cadentes"
+        "cadentes-gradu"
 };
-hic_manens constans character* constans TITULI_PARIS[] = {
-    "columna-a", "columna-b", "greges", "recti", "incrementum",
-        "cadentes"
+hic_manens constans character* constans TITULI_CONDICIONIS[] = {
+    "gradus", "columna", "sors", "recti", "priores"
+};
+hic_manens constans character* constans TITULI_INFIMI[] = {
+    "profunditas", "columnae", "greges", "recti", "incrementum",
+        "cadentes-basi", "inaestimati"
 };
 hic_manens constans character* constans TITULI_TEGMINIS[] = {
     "subtilior", "crassior"
@@ -386,6 +406,33 @@ _auri_titulus (
     redde c->valores[c->index_auri][c->aurum->primus[aureus]];
 }
 
+/* sortes quarum recti sub basi */
+interior i32
+_cadentes_basis (
+    constans PartitioAestimatio* e)
+{
+    i32 s;
+    i32 cadentes = ZEPHYRUM;
+
+    per (s = ZEPHYRUM; s < e->numerus_sortium; s++)
+    {
+        si (e->sortes[s].recti < e->sortes[s].basis)
+        {
+            cadentes = cadentes + I;
+        }
+    }
+    redde cadentes;
+}
+
+interior i32
+_puritas (
+    constans AestimatioSortis* summa)
+{
+    redde summa->ordines > ZEPHYRUM
+        ? (i32)((i64)summa->recti * (i64)M / (i64)summa->ordines)
+        : ZEPHYRUM;
+}
+
 
 /* ==================================================
  * I. Legere
@@ -560,6 +607,24 @@ _in_lista (
     redde FALSUM;
 }
 
+/* positio columnae (index tituli) inter notas; -I si absens */
+interior s32
+_positio_notae (
+    constans ContextusReticuli* c,
+                           s32  index)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < c->numerus_notarum; k++)
+    {
+        si ((s32)c->notae[k] == index)
+        {
+            redde (s32)k;
+        }
+    }
+    redde (s32)-I;
+}
+
 interior ChordaAedificator*
 _listam_iudicare (
     constans ContextusReticuli* c,
@@ -641,10 +706,22 @@ _optiones_iudicare (
     {
         redde a;
     }
-    si (   o->greges != NIHIL && strcmp(o->greges, "catena") != ZEPHYRUM
-        && _index_literis(c, o->greges) < ZEPHYRUM)
+    si (o->greges != NIHIL)
     {
-        redde _literae_ignotae(c->piscina, o->greges);
+        si (strcmp(o->greges, "initium") == ZEPHYRUM)
+        {
+            si (_numerus_listae(o->initium) == ZEPHYRUM)
+            {
+                redde _causa(c->piscina,
+                    "greges initium sine -initium");
+            }
+        }
+        alioquin si (   strcmp(o->greges, "catena")        != ZEPHYRUM
+                     && strcmp(o->greges, "catena-libera") != ZEPHYRUM
+                     && _index_literis(c, o->greges) < ZEPHYRUM)
+        {
+            redde _literae_ignotae(c->piscina, o->greges);
+        }
     }
 
     c->gradus_columnae = (b32*)piscina_allocare(c->piscina,
@@ -694,6 +771,37 @@ _optiones_iudicare (
     si (c->numerus_notarum == ZEPHYRUM)
     {
         redde _causa(c->piscina, "nullae columnae notae");
+    }
+    /* T36 b: semen - tituli noti, non aurei, inter notas */
+    a = _listam_iudicare(c, o->initium);
+    si (a != NIHIL)
+    {
+        redde a;
+    }
+    per (i = ZEPHYRUM; i < _numerus_listae(o->initium); i++)
+    {
+        constans chorda* t = (constans chorda*)xar_obtinere(o->initium,
+            i);
+
+        si (_praefixum_auri(*t))
+        {
+            a = _causa(c->piscina, "columna aurea ut initium: ");
+            _scribe_chordam(a, *t);
+            redde a;
+        }
+        si (_positio_notae(c, _index_tituli(c, *t)) < ZEPHYRUM)
+        {
+            a = _causa(c->piscina,
+                "columna non inter notas ut initium: ");
+            _scribe_chordam(a, *t);
+            redde a;
+        }
+    }
+    si (o->profunditas > RETICULUM_PROFUNDITAS_MAXIMA)
+    {
+        a = _causa(c->piscina, "profunditas maior quam IV: ");
+        _scribe_numerum(a, o->profunditas);
+        redde a;
     }
     redde NIHIL;
 }
@@ -775,6 +883,24 @@ _ordines_eligere (
 /* ==================================================
  * IV. Partes struere (-gradus)
  * ================================================== */
+
+/* infimum series notarum (a sinistra plicatum); NIHIL si memoria
+ * deficit */
+interior Partitio*
+_infimum_seriei (
+    constans ContextusReticuli* c,
+                  constans i32* series,
+                           i32  numerus)
+{
+    Partitio* p = c->partes[series[ZEPHYRUM]];
+         i32  i;
+
+    per (i = I; i < numerus && p != NIHIL; i++)
+    {
+        p = partitio_infimum(c->piscina, p, c->partes[series[i]]);
+    }
+    redde p;
+}
 
 interior ChordaAedificator*
 _valores_struere (
@@ -882,6 +1008,66 @@ _partes_struere (
         _scribe_numerum(a, c->sortes->numerus_gregum);
         redde a;
     }
+    /* T36 b: constantes (grex unus post -ubi) extra reticulum et
+     * infima; index reticuli -> nota */
+    c->constantes      = (b32*)piscina_allocare(c->piscina,
+        (memoriae_index)c->numerus_notarum * magnitudo(b32));
+    c->reticulum_index = (i32*)piscina_allocare(c->piscina,
+        (memoriae_index)c->numerus_notarum * magnitudo(i32));
+    si (c->constantes == NIHIL || c->reticulum_index == NIHIL)
+    {
+        redde _causa(c->piscina, "memoria deficit");
+    }
+    c->numerus_reticuli     = ZEPHYRUM;
+    c->numerus_constantium  = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < c->numerus_notarum; k++)
+    {
+        si (c->partes[k]->numerus_gregum <= I)
+        {
+            c->constantes[k]        = VERUM;
+            c->numerus_constantium  = c->numerus_constantium + I;
+        }
+        alioquin
+        {
+            c->constantes[k] = FALSUM;
+            c->reticulum_index[c->numerus_reticuli] = k;
+            c->numerus_reticuli = c->numerus_reticuli + I;
+        }
+    }
+    /* semen catenae: infimum columnarum -initium (non constantium) */
+    c->numerus_seminis = _numerus_listae(c->optiones->initium);
+    si (c->numerus_seminis > ZEPHYRUM)
+    {
+        i32 i;
+
+        c->semen_columnae = (i32*)piscina_allocare(c->piscina,
+            (memoriae_index)c->numerus_seminis * magnitudo(i32));
+        si (c->semen_columnae == NIHIL)
+        {
+            redde _causa(c->piscina, "memoria deficit");
+        }
+        per (i = ZEPHYRUM; i < c->numerus_seminis; i++)
+        {
+            constans chorda* t = (constans chorda*)xar_obtinere(
+                c->optiones->initium, i);
+                        s32 positio = _positio_notae(c,
+                            _index_tituli(c, *t));
+
+            si (c->constantes[positio])
+            {
+                a = _causa(c->piscina, "columna constans ut initium: ");
+                _scribe_chordam(a, *t);
+                redde a;
+            }
+            c->semen_columnae[i] = (i32)positio;
+        }
+        c->semen = _infimum_seriei(c, c->semen_columnae,
+            c->numerus_seminis);
+        si (c->semen == NIHIL)
+        {
+            redde _causa(c->piscina, "memoria deficit");
+        }
+    }
     redde NIHIL;
 }
 
@@ -889,6 +1075,106 @@ _partes_struere (
 /* ==================================================
  * V. Computare
  * ================================================== */
+
+/* numerus subsetorum magnitudinis d ex m (productus exactus) */
+interior i32
+_numerus_combinationum (
+    i32 m,
+    i32 d)
+{
+    i64 n = I;
+    i32 i;
+
+    si (d > m)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < d; i++)
+    {
+        n = n * (i64)(m - i) / (i64)(i + I);
+    }
+    redde (i32)n;
+}
+
+/* combinatio lexicographica proxima; FALSUM si ultima */
+interior b32
+_combinatio_proxima (
+    i32* combinatio,
+    i32  d,
+    i32  m)
+{
+    i32 i = d;
+
+    dum (i > ZEPHYRUM)
+    {
+        i = i - I;
+        si (combinatio[i] < m - d + i)
+        {
+            i32 j;
+
+            combinatio[i] = combinatio[i] + I;
+            per (j = i + I; j < d; j++)
+            {
+                combinatio[j] = combinatio[j - I] + I;
+            }
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* optimum rectorum inter series minores (d - I): singulae ex
+ * aestimationibus, ceterae ex tabula dispersa (clavis = octeti
+ * series) */
+interior i32
+_recti_optimum_serierum_minorum (
+    constans ContextusReticuli* c,
+                TabulaDispersa* tabula,
+                  constans i32* series,
+                           i32  d)
+{
+    i32 minor[RETICULUM_PROFUNDITAS_MAXIMA];
+    i32 optimum = ZEPHYRUM;
+    i32 omissa;
+
+    per (omissa = ZEPHYRUM; omissa < d; omissa++)
+    {
+        i32 r = ZEPHYRUM;
+        i32 k = ZEPHYRUM;
+        i32 i;
+
+        per (i = ZEPHYRUM; i < d; i++)
+        {
+            si (i != omissa)
+            {
+                minor[k]  = series[i];
+                k         = k + I;
+            }
+        }
+        si (d == II)
+        {
+            r = c->aestimationes[minor[ZEPHYRUM]]->summa.recti;
+        }
+        alioquin
+        {
+            chorda  clavis;
+            vacuum* valor;
+
+            clavis.datum    = (i8*)minor;
+            clavis.mensura  = (i32)((memoriae_index)(d - I)
+                * magnitudo(i32));
+            si (tabula_dispersa_invenire(tabula, clavis, &valor))
+            {
+                r = c->infima[*(i32*)valor].recti;
+            }
+        }
+        si (r > optimum)
+        {
+            optimum = r;
+        }
+    }
+    redde optimum;
+}
 
 interior ChordaAedificator*
 _finem_computare (
@@ -980,7 +1266,6 @@ _computare (
                                   i32  k = c->numerus_notarum;
                                   i32  i;
                                   i32  j;
-                                  i32  s;
                                   i32  q;
 
     c->aestimationes =
@@ -1000,12 +1285,31 @@ _computare (
             redde _causa(c->piscina, "memoria deficit");
         }
     }
-    c->reticulum = partitio_reticulum_struere(c->piscina, partes,
-        k);
+    /* T36 b: reticulum super notas non constantes solas */
+    {
+        constans Partitio** partes_reticuli =
+            (constans Partitio**)piscina_allocare(c->piscina,
+            (memoriae_index)(c->numerus_reticuli
+                > ZEPHYRUM ? c->numerus_reticuli : I)
+            * magnitudo(Partitio*));
+
+        si (partes_reticuli == NIHIL)
+        {
+            redde _causa(c->piscina, "memoria deficit");
+        }
+        per (i = ZEPHYRUM; i < c->numerus_reticuli; i++)
+        {
+            partes_reticuli[i] = c->partes[c->reticulum_index[i]];
+        }
+        c->reticulum = partitio_reticulum_struere(c->piscina,
+            (constans Partitio* constans*)partes_reticuli,
+            c->numerus_reticuli);
+    }
     c->lucrum_minimum = o->lucrum > ZEPHYRUM ? o->lucrum : o->limen;
     partitio_catena_optiones_initium(&oc);
     oc.limen           = o->limen;
     oc.lucrum_minimum  = c->lucrum_minimum;
+    oc.semen           = c->semen;
     oc.sortes_vetant   = VERUM;
     c->catena_vetans   = partitio_catenam_struere(c->piscina, partes,
         k, c->aurum, c->sortes, &oc);
@@ -1028,61 +1332,101 @@ _computare (
         redde a;
     }
 
-    /* paria: numeri soli servantur, regio piscinae per par */
-    c->numerus_parium = k * (k - I) / II;
-    c->paria = (ParReticuli*)piscina_allocare(c->piscina,
-        (memoriae_index)(c->numerus_parium
-            > ZEPHYRUM ? c->numerus_parium
-        : I) * magnitudo(ParReticuli));
-    si (c->paria == NIHIL)
+    /* T36 b: infima k columnarum non constantium, profunditate
+     * II..N: series, numeri et tabula dispersa EXTRA regionem, infimum
+     * et aestimatio intra; incrementum contra optimum serierum
+     * minorum */
     {
-        redde _causa(c->piscina, "memoria deficit");
-    }
-    q = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < k; i++)
-    {
-        per (j = i + I; j < k; j++)
+        TabulaDispersa* tabula;
+                   i32* series;
+                   i32  m                   = c->numerus_reticuli;
+                   i32  longitudo_serierum  = ZEPHYRUM;
+                   i32  t                   = ZEPHYRUM;
+                   i32  d;
+
+        c->numerus_infimorum = ZEPHYRUM;
+        per (d = II; d <= o->profunditas; d++)
         {
-                 PiscinaNotatio  nota;
-                       Partitio* infimum;
-             PartitioAestimatio* e;
-                    ParReticuli* par = &c->paria[q];
+            i32 n = _numerus_combinationum(m, d);
 
-            nota = piscina_notare(c->piscina);
-            infimum = partitio_infimum(c->piscina, c->partes[i],
-                c->partes[j]);
-            e = infimum != NIHIL
-                ? partitio_aestimare(c->piscina, infimum, c->aurum,
-                    c->sortes, o->limen)
-                : NIHIL;
-            par->a            = i;
-            par->b            = j;
-            par->greges       = ZEPHYRUM;
-            par->recti        = ZEPHYRUM;
-            par->incrementum  = (s32)ZEPHYRUM;
-            par->cadentes     = ZEPHYRUM;
-            si (e != NIHIL)
+            c->numerus_infimorum  = c->numerus_infimorum + n;
+            longitudo_serierum    = longitudo_serierum + n * d;
+        }
+        c->infima = (InfimumReticuli*)piscina_allocare(c->piscina,
+            (memoriae_index)(c->numerus_infimorum
+                > ZEPHYRUM ? c->numerus_infimorum : I)
+            * magnitudo(InfimumReticuli));
+        series    = (i32*)piscina_allocare(c->piscina,
+            (memoriae_index)(longitudo_serierum
+                > ZEPHYRUM ? longitudo_serierum : I)
+            * magnitudo(i32));
+        tabula    = tabula_dispersa_creare_chorda(c->piscina,
+            c->numerus_infimorum > XVI ? c->numerus_infimorum * II
+            : XXXII);
+        si (c->infima == NIHIL || series == NIHIL || tabula == NIHIL)
+        {
+            redde _causa(c->piscina, "memoria deficit");
+        }
+        q = ZEPHYRUM;
+        per (d = II; d <= o->profunditas; d++)
+        {
+            i32 combinatio[RETICULUM_PROFUNDITAS_MAXIMA];
+
+            si (_numerus_combinationum(m, d) == ZEPHYRUM)
             {
-                i32 optima_singula =
-                    c->aestimationes[i]->summa.recti
-                    > c->aestimationes[j]->summa.recti
-                    ? c->aestimationes[i]->summa.recti
-                    : c->aestimationes[j]->summa.recti;
-
-                par->greges  = infimum->numerus_gregum;
-                par->recti   = e->summa.recti;
-                par->incrementum = (s32)e->summa.recti
-                    - (s32)optima_singula;
-                per (s = ZEPHYRUM; s < e->numerus_sortium; s++)
-                {
-                    si (e->sortes[s].recti < e->sortes[s].basis)
-                    {
-                        par->cadentes = par->cadentes + I;
-                    }
-                }
+                perge;
             }
-            piscina_reficere(c->piscina, nota);
-            q = q + I;
+            per (i = ZEPHYRUM; i < d; i++)
+            {
+                combinatio[i] = i;
+            }
+            fac
+            {
+                    InfimumReticuli* recordum =&c->infima[q];
+                     PiscinaNotatio  nota;
+                           Partitio* infimum;
+                 PartitioAestimatio* e;
+                             chorda  clavis;
+
+                recordum->profunditas  = d;
+                recordum->columnae     = series + t;
+                recordum->index        = q;
+                per (i = ZEPHYRUM; i < d; i++)
+                {
+                    recordum->columnae[i] =
+                        c->reticulum_index[combinatio[i]];
+                }
+                t             = t + d;
+                clavis.datum  = (i8*)recordum->columnae;
+                clavis.mensura  = (i32)((memoriae_index)d
+                    * magnitudo(i32));
+                si (!tabula_dispersa_inserere(tabula, clavis,
+                    &recordum->index))
+                {
+                    redde _causa(c->piscina, "memoria deficit");
+                }
+                nota     = piscina_notare(c->piscina);
+                infimum  = _infimum_seriei(c, recordum->columnae, d);
+                e = infimum != NIHIL
+                    ? partitio_aestimare(c->piscina, infimum, c->aurum,
+                        c->sortes, o->limen)
+                    : NIHIL;
+                si (e == NIHIL)
+                {
+                    piscina_reficere(c->piscina, nota);
+                    redde _causa(c->piscina, "memoria deficit");
+                }
+                recordum->greges  = infimum->numerus_gregum;
+                recordum->recti   = e->summa.recti;
+                recordum->incrementum  = (s32)e->summa.recti
+                    - (s32)_recti_optimum_serierum_minorum(c, tabula,
+                        recordum->columnae, d);
+                recordum->cadentes     = _cadentes_basis(e);
+                recordum->inaestimati  = e->summa.inaestimati;
+                piscina_reficere(c->piscina, nota);
+                q = q + I;
+            }
+            dum (_combinatio_proxima(combinatio, d, m));
         }
     }
 
@@ -1107,19 +1451,55 @@ _computare (
         }
         c->ordo[j] = v;
     }
-    /* paria: incrementum descendens, par -> ordo priorum */
-    per (i = I; i < c->numerus_parium; i++)
+    /* selecti: prima quaeque profunditate, incremento descendente,
+     * par -> ordo enumerationis (electio repetita, non ordinatio) */
     {
-        ParReticuli par = c->paria[i];
+        b32* sumptus = (b32*)piscina_allocare(c->piscina,
+            (memoriae_index)(c->numerus_infimorum
+                > ZEPHYRUM ? c->numerus_infimorum : I)
+            * magnitudo(b32));
+         i32 d;
 
-        j = i;
-        dum (   j > ZEPHYRUM
-             && c->paria[j - I].incrementum < par.incrementum)
+        c->selecti = (i32*)piscina_allocare(c->piscina,
+            (memoriae_index)RETICULUM_PROFUNDITAS_MAXIMA
+            * (memoriae_index)(o->prima > ZEPHYRUM ? o->prima : I)
+            * magnitudo(i32));
+        si (sumptus == NIHIL || c->selecti == NIHIL)
         {
-            c->paria[j]  = c->paria[j - I];
-            j            = j - I;
+            redde _causa(c->piscina, "memoria deficit");
         }
-        c->paria[j] = par;
+        memset(sumptus, ZEPHYRUM, (memoriae_index)(c->numerus_infimorum
+            > ZEPHYRUM ? c->numerus_infimorum : I) * magnitudo(b32));
+        c->numerus_selectorum = ZEPHYRUM;
+        per (d = II; d <= o->profunditas; d++)
+        {
+            per (j = ZEPHYRUM; j < o->prima; j++)
+            {
+                i32 optimus = c->numerus_infimorum;
+
+                per (i = ZEPHYRUM; i < c->numerus_infimorum; i++)
+                {
+                    si (sumptus[i] || c->infima[i].profunditas != d)
+                    {
+                        perge;
+                    }
+                    si (   optimus == c->numerus_infimorum
+                        || c->infima[i].incrementum
+                            > c->infima[optimus].incrementum)
+                    {
+                        optimus = i;
+                    }
+                }
+                si (optimus == c->numerus_infimorum)
+                {
+                    frange;
+                }
+                sumptus[optimus]                   = VERUM;
+                c->selecti[c->numerus_selectorum]  = optimus;
+                c->numerus_selectorum              =
+                    c->numerus_selectorum + I;
+            }
+        }
     }
     redde NIHIL;
 }
@@ -1190,29 +1570,25 @@ _campus_chordae (
     _scribe_chordam(a, c);
 }
 
-interior i32
-_cadentes_basis (
-    constans PartitioAestimatio* e)
+/* tituli notarum separatore iuncti */
+interior vacuum
+_titulos_scribere (
+             ChordaAedificator* a,
+    constans ContextusReticuli* c,
+                  constans i32* indices,
+                           i32  numerus,
+            constans character* separator)
 {
-    i32 s;
-    i32 cadentes = ZEPHYRUM;
+    i32 i;
 
-    per (s = ZEPHYRUM; s < e->numerus_sortium; s++)
+    per (i = ZEPHYRUM; i < numerus; i++)
     {
-        si (e->sortes[s].recti < e->sortes[s].basis)
+        si (i > ZEPHYRUM)
         {
-            cadentes = cadentes + I;
+            _scribe_literas(a, separator);
         }
+        _scribe_chordam(a, _notae_titulus(c, indices[i]));
     }
-    redde cadentes;
-}
-
-interior i32
-_puritas (
-    constans AestimatioSortis* summa)
-{
-    redde summa->ordines > ZEPHYRUM ? summa->recti * M / summa->ordines
-        : ZEPHYRUM;
 }
 
 interior vacuum
@@ -1230,8 +1606,16 @@ _catenam_machinae (
     _campus_numeri(a, vetans);
     _campus_numeri(a, ZEPHYRUM);
     _scribe_tabulam(a);
-    _scribe_literas(a, "-");
-    _campus_numeri(a, I);
+    si (c->numerus_seminis > ZEPHYRUM)
+    {
+        _titulos_scribere(a, c, c->semen_columnae, c->numerus_seminis,
+            "+");
+    }
+    alioquin
+    {
+        _scribe_literas(a, "-");
+    }
+    _campus_numeri(a, catena->semen->numerus_gregum);
     _campus_numeri(a, catena->initium->summa.recti);
     _campus_integri(a, (s32)ZEPHYRUM);
     _campus_numeri(a, ZEPHYRUM);
@@ -1295,6 +1679,8 @@ _machinam_scribere (
         _campus_numeri(a, e->greges_mutabiles);
         _campus_numeri(a, _cadentes_basis(e));
         _campus_numeri(a, e->inaestimabilis ? I : ZEPHYRUM);
+        _campus_numeri(a, e->greges_captivi);
+        _campus_numeri(a, e->ordines_captivi);
         _scribe_lineam_novam(a);
     }
     _caput_machinae(a, via, "RETICULUM-SORS", TITULI_SORTIS,
@@ -1319,25 +1705,53 @@ _machinam_scribere (
         NUMERUS_TITULORUM(TITULI_CATENAE));
     _catenam_machinae(c, a, via, c->catena_vetans, I);
     _catenam_machinae(c, a, via, c->catena_libera, ZEPHYRUM);
-    _caput_machinae(a, via, "RETICULUM-PAR", TITULI_PARIS,
-        NUMERUS_TITULORUM(TITULI_PARIS));
-    per (q = ZEPHYRUM; q < c->numerus_parium
-        && q < RETICULUM_PARIA_PRIMA;
-        q++)
+    /* CONDICIO: gradus catenae liberae per sortem cadentem (LIV) */
+    _caput_machinae(a, via, "RETICULUM-CONDICIO", TITULI_CONDICIONIS,
+        NUMERUS_TITULORUM(TITULI_CONDICIONIS));
+    per (i = ZEPHYRUM; i < c->catena_libera->numerus; i++)
     {
-        constans ParReticuli* par = &c->paria[q];
+        constans PartitioAestimatio* prior = i > ZEPHYRUM
+            ? c->catena_libera->aestimationes[i - I]
+            : c->catena_libera->initium;
+        constans PartitioAestimatio* e =
+            c->catena_libera->aestimationes[i];
 
-        _ordinem_incipere(a, via, "RETICULUM-PAR");
-        _campus_chordae(a, _notae_titulus(c, par->a));
-        _campus_chordae(a, _notae_titulus(c, par->b));
-        _campus_numeri(a, par->greges);
-        _campus_numeri(a, par->recti);
-        _campus_integri(a, par->incrementum);
-        _campus_numeri(a, par->cadentes);
+        per (s = ZEPHYRUM; s < e->numerus_sortium; s++)
+        {
+            si (e->sortes[s].recti < prior->sortes[s].recti)
+            {
+                _ordinem_incipere(a, via, "RETICULUM-CONDICIO");
+                _campus_numeri(a, i + I);
+                _campus_chordae(a, _notae_titulus(c,
+                    c->catena_libera->columnae[i]));
+                _campus_chordae(a, _sortis_titulus(c, s));
+                _campus_numeri(a, e->sortes[s].recti);
+                _campus_numeri(a, prior->sortes[s].recti);
+                _scribe_lineam_novam(a);
+            }
+        }
+    }
+    _caput_machinae(a, via, "RETICULUM-INFIMUM", TITULI_INFIMI,
+        NUMERUS_TITULORUM(TITULI_INFIMI));
+    per (q = ZEPHYRUM; q < c->numerus_selectorum; q++)
+    {
+        constans InfimumReticuli* recordum =&c->infima[c->selecti[q]];
+
+        _ordinem_incipere(a, via, "RETICULUM-INFIMUM");
+        _campus_numeri(a, recordum->profunditas);
+        _scribe_tabulam(a);
+        _titulos_scribere(a, c, recordum->columnae,
+            recordum->profunditas, "+");
+        _campus_numeri(a, recordum->greges);
+        _campus_numeri(a, recordum->recti);
+        _campus_integri(a, recordum->incrementum);
+        _campus_numeri(a, recordum->cadentes);
+        _campus_numeri(a, recordum->inaestimati);
         _scribe_lineam_novam(a);
     }
     _caput_machinae(a, via, "RETICULUM-TEGIT", TITULI_TEGMINIS,
         NUMERUS_TITULORUM(TITULI_TEGMINIS));
+    k = c->numerus_reticuli;
     per (i = ZEPHYRUM; i < k; i++)
     {
         per (j = ZEPHYRUM; j < k; j++)
@@ -1345,8 +1759,10 @@ _machinam_scribere (
             si (c->reticulum->tegit[i * k + j])
             {
                 _ordinem_incipere(a, via, "RETICULUM-TEGIT");
-                _campus_chordae(a, _notae_titulus(c, i));
-                _campus_chordae(a, _notae_titulus(c, j));
+                _campus_chordae(a, _notae_titulus(c,
+                    c->reticulum_index[i]));
+                _campus_chordae(a, _notae_titulus(c,
+                    c->reticulum_index[j]));
                 _scribe_lineam_novam(a);
             }
         }
@@ -1358,9 +1774,10 @@ _machinam_scribere (
         si (c->reticulum->geminus[i] != i)
         {
             _ordinem_incipere(a, via, "RETICULUM-DUPLEX");
-            _campus_chordae(a, _notae_titulus(c, i));
             _campus_chordae(a, _notae_titulus(c,
-                c->reticulum->geminus[i]));
+                c->reticulum_index[i]));
+            _campus_chordae(a, _notae_titulus(c,
+                c->reticulum_index[c->reticulum->geminus[i]]));
             _scribe_lineam_novam(a);
         }
     }
@@ -1381,7 +1798,19 @@ _catenam_humanam (
     i32 i;
     i32 s;
 
-    _scribe_literas(a, "  0 una: recti ");
+    si (c->numerus_seminis > ZEPHYRUM)
+    {
+        _scribe_literas(a, "  0 initium ");
+        _titulos_scribere(a, c, c->semen_columnae, c->numerus_seminis,
+            " x ");
+        _scribe_literas(a, ": greges ");
+        _scribe_numerum(a, catena->semen->numerus_gregum);
+        _scribe_literas(a, ", recti ");
+    }
+    alioquin
+    {
+        _scribe_literas(a, "  0 una: recti ");
+    }
     _scribe_numerum(a, catena->initium->summa.recti);
     _scribe_lineam_novam(a);
     per (i = ZEPHYRUM; i < catena->numerus; i++)
@@ -1455,20 +1884,33 @@ _greges_scribere (
              constans PartitioCatena* catena  = c->catena_vetans;
                    constans Partitio* p;
          constans PartitioAestimatio* e;
-                                 b32  catenae = (b32)(strcmp(o->greges,
-                                     "catena") == ZEPHYRUM);
-                              s32 nota    = (s32)-I;
-                              i32 g;
-                              i32 i;
-                              i32 s;
+                                 b32  catenae  = VERUM;
+                                 i32  gradus   = ZEPHYRUM;
+                                 s32  nota     = (s32)-I;
+                                 i32  g;
+                                 i32  i;
+                                 i32  s;
 
+    /* T36 b: catena (vetans), catena-libera, initium (semen solum) */
+    si (strcmp(o->greges, "catena-libera") == ZEPHYRUM)
+    {
+        catena = c->catena_libera;
+        gradus = catena->numerus;
+    }
+    alioquin si (strcmp(o->greges, "catena") == ZEPHYRUM)
+    {
+        gradus = catena->numerus;
+    }
+    alioquin si (strcmp(o->greges, "initium") != ZEPHYRUM)
+    {
+        catenae = FALSUM;
+    }
     si (catenae)
     {
-        p = catena->numerus > ZEPHYRUM
-            ? catena->partes[catena->numerus - I] : catena->semen;
-        e = catena->numerus > ZEPHYRUM
-            ? catena->aestimationes[catena->numerus
-                - I] : catena->initium;
+        p = gradus > ZEPHYRUM ? catena->partes[gradus - I]
+            : catena->semen;
+        e = gradus > ZEPHYRUM ? catena->aestimationes[gradus - I]
+            : catena->initium;
     }
     alioquin
     {
@@ -1501,15 +1943,26 @@ _greges_scribere (
         i32 aureus;
 
         _scribe_literas(a, "  ");
-        si (catenae && catena->numerus == ZEPHYRUM)
+        si (   catenae && gradus == ZEPHYRUM
+            && c->numerus_seminis == ZEPHYRUM)
         {
             _scribe_literas(a, "(una)");
         }
         alioquin si (catenae)
         {
-            per (i = ZEPHYRUM; i < catena->numerus; i++)
+            per (i = ZEPHYRUM; i < c->numerus_seminis; i++)
             {
                 si (i > ZEPHYRUM)
+                {
+                    _scribe_literas(a, " / ");
+                }
+                _scribe_chordam(a,
+                    c->valores[c->notae[c->semen_columnae[i]]]
+                    [p->primus[g]]);
+            }
+            per (i = ZEPHYRUM; i < gradus; i++)
+            {
+                si (i > ZEPHYRUM || c->numerus_seminis > ZEPHYRUM)
                 {
                     _scribe_literas(a, " / ");
                 }
@@ -1636,6 +2089,14 @@ _humanam_scribere (
         _scribe_numerum(a, e->summa.inaestimati);
         _scribe_literas(a, ", mutabiles ");
         _scribe_numerum(a, e->greges_mutabiles);
+        si (e->greges_captivi > ZEPHYRUM)
+        {
+            _scribe_literas(a, ", captivi ");
+            _scribe_numerum(a, e->greges_captivi);
+            _scribe_literas(a, " (");
+            _scribe_numerum(a, e->ordines_captivi);
+            _scribe_literas(a, ")");
+        }
         per (s = ZEPHYRUM; s < e->numerus_sortium; s++)
         {
             si (e->sortes[s].recti < e->sortes[s].basis)
@@ -1665,34 +2126,50 @@ _humanam_scribere (
     {
         _scribe_lineam_novam(a);
     }
+    si (c->numerus_constantium > ZEPHYRUM)
+    {
+        _scribe_literas(a, "  constantes:");
+        per (i = ZEPHYRUM; i < k; i++)
+        {
+            si (c->constantes[i])
+            {
+                _scribe_literas(a, " ");
+                _scribe_chordam(a, _notae_titulus(c, i));
+            }
+        }
+        _scribe_lineam_novam(a);
+    }
 
     _scribe_literas(a, "\nRETICULUM COLUMNARUM: altitudo ");
     _scribe_numerum(a, c->reticulum->altitudo);
     _scribe_literas(a, ", latitudo ");
     _scribe_numerum(a, c->reticulum->latitudo);
     _scribe_lineam_novam(a);
-    per (i = ZEPHYRUM; i < k; i++)
+    per (i = ZEPHYRUM; i < c->numerus_reticuli; i++)
     {
         si (c->reticulum->geminus[i] != i)
         {
             _scribe_literas(a, "  aequalis: ");
-            _scribe_chordam(a, _notae_titulus(c, i));
+            _scribe_chordam(a, _notae_titulus(c,
+                c->reticulum_index[i]));
             _scribe_literas(a, " = ");
             _scribe_chordam(a, _notae_titulus(c,
-                c->reticulum->geminus[i]));
+                c->reticulum_index[c->reticulum->geminus[i]]));
             _scribe_lineam_novam(a);
         }
     }
-    per (i = ZEPHYRUM; i < k; i++)
+    per (i = ZEPHYRUM; i < c->numerus_reticuli; i++)
     {
-        per (j = ZEPHYRUM; j < k; j++)
+        per (j = ZEPHYRUM; j < c->numerus_reticuli; j++)
         {
-            si (c->reticulum->tegit[i * k + j])
+            si (c->reticulum->tegit[i * c->numerus_reticuli + j])
             {
                 _scribe_literas(a, "  tegit: ");
-                _scribe_chordam(a, _notae_titulus(c, i));
+                _scribe_chordam(a, _notae_titulus(c,
+                    c->reticulum_index[i]));
                 _scribe_literas(a, " < ");
-                _scribe_chordam(a, _notae_titulus(c, j));
+                _scribe_chordam(a, _notae_titulus(c,
+                    c->reticulum_index[j]));
                 _scribe_lineam_novam(a);
             }
         }
@@ -1722,26 +2199,88 @@ _humanam_scribere (
         _scribe_lineam_novam(a);
     }
 
-    _scribe_literas(a, "\nPARIA (incrementum descendens, XX prima)\n");
-    per (q = ZEPHYRUM; q < c->numerus_parium
-        && q < RETICULUM_PARIA_PRIMA;
-        q++)
+    /* CANDIDATI CONDICIONATI (decisio LIV): gradus catenae liberae
+     * quorum sors ulla contra gradum priorem cadit */
+    _scribe_literas(a, "\nCANDIDATI CONDICIONATI\n");
+    ullus = FALSUM;
+    per (i = ZEPHYRUM; i < c->catena_libera->numerus; i++)
     {
-        constans ParReticuli* par = &c->paria[q];
+        constans PartitioAestimatio* prior = i > ZEPHYRUM
+            ? c->catena_libera->aestimationes[i - I]
+            : c->catena_libera->initium;
+        constans PartitioAestimatio* e =
+            c->catena_libera->aestimationes[i];
+                                 b32 primum = VERUM;
 
-        _scribe_literas(a, "  ");
-        _scribe_chordam(a, _notae_titulus(c, par->a));
-        _scribe_literas(a, " x ");
-        _scribe_chordam(a, _notae_titulus(c, par->b));
-        _scribe_literas(a, ": greges ");
-        _scribe_numerum(a, par->greges);
-        _scribe_literas(a, ", recti ");
-        _scribe_numerum(a, par->recti);
-        _scribe_literas(a, ", incrementum ");
-        _scribe_signatum(a, par->incrementum);
-        _scribe_literas(a, ", cadentes ");
-        _scribe_numerum(a, par->cadentes);
-        _scribe_lineam_novam(a);
+        per (s = ZEPHYRUM; s < e->numerus_sortium; s++)
+        {
+            si (e->sortes[s].recti >= prior->sortes[s].recti)
+            {
+                perge;
+            }
+            si (primum)
+            {
+                _scribe_literas(a, "  ");
+                _scribe_chordam(a, _notae_titulus(c,
+                    c->catena_libera->columnae[i]));
+                _scribe_literas(a, " (gradus ");
+                _scribe_numerum(a, i + I);
+                _scribe_literas(a, "): ");
+                primum = FALSUM;
+            }
+            alioquin
+            {
+                _scribe_literas(a, ", ");
+            }
+            _scribe_chordam(a, _sortis_titulus(c, s));
+            _scribe_literas(a, " ");
+            _scribe_numerum(a, prior->sortes[s].recti);
+            _scribe_literas(a, " -> ");
+            _scribe_numerum(a, e->sortes[s].recti);
+        }
+        si (!primum)
+        {
+            _scribe_lineam_novam(a);
+            ullus = VERUM;
+        }
+    }
+    si (!ullus)
+    {
+        _scribe_literas(a, "  nulli\n");
+    }
+
+    per (d = II; d <= o->profunditas; d++)
+    {
+        _scribe_literas(a, "\nINFIMA profunditate ");
+        _scribe_numerum(a, d);
+        _scribe_literas(a, " (prima ");
+        _scribe_numerum(a, o->prima);
+        _scribe_literas(a, ")\n");
+        per (q = ZEPHYRUM; q < c->numerus_selectorum; q++)
+        {
+            constans InfimumReticuli* recordum =
+                &c->infima[c->selecti[q]];
+
+            si (recordum->profunditas != d)
+            {
+                perge;
+            }
+            _scribe_literas(a, "  ");
+            _titulos_scribere(a, c, recordum->columnae,
+                recordum->profunditas,
+                " x ");
+            _scribe_literas(a, ": greges ");
+            _scribe_numerum(a, recordum->greges);
+            _scribe_literas(a, ", recti ");
+            _scribe_numerum(a, recordum->recti);
+            _scribe_literas(a, ", incrementum ");
+            _scribe_signatum(a, recordum->incrementum);
+            _scribe_literas(a, ", cadentes ");
+            _scribe_numerum(a, recordum->cadentes);
+            _scribe_literas(a, ", inaestimati ");
+            _scribe_numerum(a, recordum->inaestimati);
+            _scribe_lineam_novam(a);
+        }
     }
     si (o->greges != NIHIL)
     {
@@ -1765,7 +2304,9 @@ oratio_reticulum_optiones_initium (
         redde;
     }
     memset(optiones, ZEPHYRUM, magnitudo(*optiones));
-    optiones->limen = XX;
+    optiones->limen        = XX;
+    optiones->profunditas  = II;
+    optiones->prima        = XX;
     si (piscina != NIHIL)
     {
         optiones->ubi      = xar_creare(piscina,
@@ -1775,6 +2316,8 @@ oratio_reticulum_optiones_initium (
         optiones->praeter = xar_creare(piscina,
             (i32)magnitudo(chorda));
         optiones->gradus = xar_creare(piscina,
+            (i32)magnitudo(chorda));
+        optiones->initium = xar_creare(piscina,
             (i32)magnitudo(chorda));
     }
 }
