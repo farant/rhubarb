@@ -307,6 +307,25 @@ decisions 57–59; design in §7 "Design — T38").**
   singular verb's is more often the object — a tendency of 55–75 %
   that orders and never eliminates. A grammatical law lives in the
   rules; a tendency lives in the table.
+- **60 A rule declares its language; the executor skips the rest.**
+  (2026-09-15, planned; `project-specs/proiectio-macrior-plan.md`
+  tranche a.) The per-rule spike put the fourteen English rules at
+  ~13 % of a Latin sentence's expansion for matches that cannot
+  happen. A `<regula>` carries `lingua` (absent = every language) and
+  a stage's rule text omits the rules of another language. Rows must
+  not change on any treebank, Latin or English: a rule that only
+  matches its own language is gated by data, not by a guess.
+- **61 The projection a stage matches over is the program's view.**
+  (2026-09-15, planned; plan tranches b–c; materia-spec "Visio".) The
+  expansion's cost is rules × projection bytes with no hot rule, so
+  the projection each stage hands to the machine admits only the loci
+  the rules NAME (element names collected from the parsed patterns
+  against the registry's titles, once, at program load — data derived
+  from the program, never a hand list). Materia honours the table and
+  stamps the result a view that its reader refuses. Acceptance is the
+  byte-identity of every row; a strict-cursus pattern that starts
+  matching across an omitted sibling is a named decision, never a
+  silent widening of the set.
 
 ## 3. Stage 1 — the tree (`oratio_arbor`)
 

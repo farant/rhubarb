@@ -565,6 +565,20 @@ anchor rather than ordinal (identity across the seam), and the
 expansion's share, to be probed per rule before the projection's
 shape is touched.
 
+**Visio (2026-09-15, planned; `project-specs/proiectio-macrior-plan.md`
+tranche b).** The per-rule spike found the expansion flat per rule and
+proportional to rules × projection bytes, so the lever is a smaller
+projection. The writer will take a table of admitted locus titles per
+genus (`MateriaArborConsilium.loci_admissi`; NIHIL = everything) and
+skip the rest on its walk — a filter, species-blind, no knowledge of
+what a slot means (M7, M8). THE CONTRACT: a filtered projection is a
+VIEW, not the canonical document. It cannot round-trip, so the writer
+stamps its envelope (`visio="partialis"`, `omissi=…`) and the reader
+refuses a stamped envelope with a named cause; a view lives only in
+memory, for a consumer that matches over the handed-over tree. Who
+decides the table is the client (oratio derives it from the element
+names its rules use); materia only honours it.
+
 
 ---
 
