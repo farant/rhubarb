@@ -406,3 +406,45 @@ objects with lucky arcs no longer count as right subjects; the object
 side rises by more). The decoder's forced tier is pinned at birth
 (coacti right per mille 424 / 471 / 481, only rising). Additions stay
 behind their lever.
+
+## 2026-09-15 — spike: where the re-projection cost actually sits
+
+Point (c) of materia wish 01M24Z4Q5Y (every stage re-projects the
+sentence to STML text and re-matches). Before choosing a lever, a
+TEMPORARY probe (clock marks in `_sententiam_resolvere_gradu` and
+`_sententiam_resolvere`, `ORATIO_HOROLOGIA=1`, reverted after the run,
+never committed) split the resolution time per stage on three
+treebanks. Milliseconds, whole file, decoder on; the two "solae"
+rows are extra measurement-only parses of the projection text alone
+and the rule text alone:
+
+| phase | Perseus | Seneca | charters test |
+|---|---|---|---|
+| projection written to STML text | 1028 | 1315 | 2267 |
+| parse of projection + rules (one document) | 1062 | 1345 | 2590 |
+| — projection text alone | 855 | 1124 | 2230 |
+| — rule text alone | 185 | 177 | 182 |
+| expansion (pattern machine) | 2395 | 3396 | 7964 |
+| rows applied to the tree | 34 | 46 | 147 |
+| decoder | 65 | 62 | 141 |
+| later laws (caput, umbrae, clausulae, prior) | 28 | 35 | 63 |
+| stage runs | 2817 | 2679 | 2652 |
+| projection bytes written, total | 146 MB | 189 MB | 331 MB |
+| rule bytes parsed, total | 38 MB | 36 MB | 36 MB |
+| wall (oracle, with probe) | 8.5 s | 10.6 s | 20.6 s |
+
+Readings. (1) Write + parse of the projection = 41 % of resolution on
+Perseus, 43 % Seneca, 34 % charters: that is what "hand the writer's
+tree over" buys — the writer already builds the STML node tree and
+serializes it, oratio parses it back. (2) Parsing the RULES is 4 % of
+resolution: "parse the rules once" was a guess and the measurement
+retires it — not worth its own step, a free by-product of step one.
+(3) Expansion is the largest share, 52–60 %, and grows with the
+projection size (52 KB per sentence-stage on Perseus, 125 KB on the
+charters: every reading with every slot and umbra is projected while a
+rule touches a handful). The next probe, if the expansion matters, is
+per RULE on a sample of sentences (each EXEMPLAR is independent), and
+the lever it would point at is a LEANER projection per stage, which
+shrinks write, parse and expansion together. (4) The decoder and the
+later laws are noise (≤ 1 %): C passes over materia are cheap; the
+cost is the STML detour and the matcher, nothing else.
