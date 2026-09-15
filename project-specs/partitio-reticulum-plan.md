@@ -32,7 +32,7 @@ desideratum 01M24V1387.
 | tranche | state |
 |---|---|
 | T35 a the algebra | done — gate `probatio_partitio` (10,623 random pairs, Dilworth = brute force), plant red at the first hand case; `duplex` (a latina.h macro) renamed `geminus` |
-| T35 b the judgment | pending |
+| T35 b the judgment | done — gate `probatio_partitio_aestimatio` (three grids, every hand number on the first run); the leak plant went red FIRST in grid I's `limen III` case (not grid III as predicted), grid II immune; numerals `DCLIII`/`DCCCLXXXIV` absent from latina.h |
 | T35 c the oracle columns | pending |
 | T35 d the instrument | pending |
 | T35 e first run, acceptance, records | pending |

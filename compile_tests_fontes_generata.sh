@@ -114,6 +114,7 @@ declare -a SOURCE_FILES=(
     "lib/paginarium.c"
     "lib/paginatio.c"
     "lib/partitio.c"
+    "lib/partitio_aestimatio.c"
     "lib/persistentia_memoria.c"
     "lib/persistentia_nuntium.c"
     "lib/pictor_actiones.c"

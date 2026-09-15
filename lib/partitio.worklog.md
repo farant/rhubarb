@@ -77,3 +77,56 @@ canonicalizer's found-key branch `p->grex[i] = *(i32*)valor;` replaced by
 `p->grex[i] = i;` (a repeated key gets its row index instead of its
 group). RED at the first hand case — `p->grex[II] == ZEPHYRUM` at
 `probatio_partitio.c:126` — then GREEN after the automatic revert.
+
+## 2026-09-14 — T35 b, the judgment
+
+`include/partitio_aestimatio.h`, `lib/partitio_aestimatio.c`: held-out
+scoring and the greedy chain, exactly to the plan's definitions (spec §7
+JUDGMENT plus the named additions `suffragia`, `numeri`, `initium`, and
+the base tie rule).
+
+**One place for the retention law.** Training counts are totals minus
+the held-out fold, computed by ONE helper, `_disciplina(totalis,
+in_sorte)`, shared by the base answer and the group votes. This is not
+style: a leak planted only in the votes would leave grid III green (the
+base is still right, and a tied group votes the base), so the plant
+would prove nothing. One law point makes the circularity plant mean
+what it says.
+
+**Rules as built.** Base = gold group with the most training rows, a tie
+to the lowest gold index. A group votes only with at least `limen`
+training rows, for its strict training majority; a tie votes the base. A
+group without a vote answers the base, and its rows in the fold count
+as `inaestimati`; `inaestimabilis` = `2 * inaestimati > ordines`. The
+chain evaluates candidates inside `piscina_notare`/`piscina_reficere`,
+keeping only rows right and a "some fold fell" flag in arrays allocated
+before the mark, then recomputes the accepted meet outside the scratch
+region. Candidates are ranked by rows right; if the best fails the
+minimum gain, all the rest do too, so the chain stops there.
+
+**Numerals.** `latina.h` defines a subset of Roman numerals: `D` and
+`DCCL` exist, `DCLIII` and `DCCCLXXXIV` do not. Examen reports an
+undefined numeral as "identificator ignotus in expressione". The
+probatio uses the literals `653` and `884` for those two purities.
+
+**Gate.** `probationes/probatio_partitio_aestimatio.c`, three grids with
+every number derived in a comment; all matched on the first green run.
+Grid I (interaction): each single column scores 9 of 12, their meet 12,
+and the greedy chain takes ZERO steps with or without the veto — the
+interaction is invisible to a greedy chain, which is why the instrument
+prints pairs. Grid II (veto): the column gains +6 pooled but fold C falls
+7 → 5; the vetoed chain refuses it, the pooled chain takes it. Grid III
+(ties): votes O, S, S across the folds, one mutable group, both tie
+rules exercised.
+
+**Planted fault** (`silva.planta`, gate `radix` filtered
+`partitio_aestimatio`): `_disciplina` returned `totalis` (the held-out
+fold leaks into training). RED — and FIRST not in grid III as the plan
+predicted but in grid I's `limen III` case: inflated training counts
+(2 → 3) clear the vote threshold, so every fold scores 4 instead of 3
+with no fallback rows. Also red: the fold-as-candidate case
+(`inaestimati`, `inaestimabilis`) and grid III (rows right, base,
+mutability, votes). Grid II stayed green — its votes do not depend on
+the held-out fold's own rows. GREEN after the revert. Lesson for census
+work: a leak shows first where a group's training count sits right at
+the threshold.
