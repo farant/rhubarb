@@ -127,7 +127,7 @@ externus constans character* constans ORATIO_TITULI_IUDICIORUM[];
  * machinae ordine impressionis; XXIII primi = campi ante T35,
  * PINNATI (columnae appenduntur, numquam reordinantur); columna
  * aurum legens praefixum 'aurum-' fert (decisio LII) */
-#define ORATIO_COLUMNAE_LIS_NUMERUS XXXI
+#define ORATIO_COLUMNAE_LIS_NUMERUS XXXII
 externus constans character* constans
     ORATIO_COLUMNAE_LIS[ORATIO_COLUMNAE_LIS_NUMERUS];
 
@@ -174,6 +174,9 @@ nomen structura {
        b32 ante_victoris;
        i32 distantia_victae;
        i32 distantia_victoris;
+    /* T36 c: lemma lectionis primae capitis petiti (vacuum si nullum)
+     * - sors 'lemma retentum' reticuli */
+    chorda lemma_capitis;
 } OratioOraculumLis;
 
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius

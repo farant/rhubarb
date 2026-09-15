@@ -8,9 +8,12 @@
  * paria, reticulum columnarum; inaestimabilis nominatur (decisio LIII).
  *
  * Relatio humana aut ordines machinae RETICULUM-COLUMNA, -SORS,
- * -CATENA, -CONDICIO, -INFIMUM, -TEGIT, -DUPLEX, quisque genus cum
- * ordine COLUMNAE suo. Recusatio nominata (iudicatum FALSUM, causa
- * 'reticulum: ...') numquam relatio vacua.
+ * -CATENA, -CONDICIO, -INFIMUM, -TEGIT, -DUPLEX, -GREX, -GREX-SORS,
+ * quisque genus cum ordine COLUMNAE suo. Recusatio nominata (iudicatum
+ * FALSUM, causa 'reticulum: ...') numquam relatio vacua.
+ * T36 c (decisio LVI): ordines TESTIMONII per gregem (-greges) et per
+ * gregem et sortem - materia tabulae ponderum; sortes ALTERNAE
+ * (-sortes-alternae N) corpus quodque tenent.
  * T36 b (decisio LIV): tabula INFIMORUM k columnarum (-profunditas,
  * pro paribus), catena SEMINATA (-initium), gradus catenae liberae
  * sortibus cadentibus = candidatus CONDICIONATUS; columnae CONSTANTES
@@ -50,6 +53,9 @@ nomen structura {
                     Xar* initium;     /* chorda: columnae seminis */
                     i32  profunditas; /* infima II..IV; ordinarie II */
                     i32  prima;       /* infima per profunditatem, XX */
+                    i32  alternae;    /* sortes alternae N (0 = nullae):
+                                         sors = index ordinis mod N;
+                                         -sortes tum omissa (T36 c) */
 } OratioReticulumOptiones;
 
 nomen structura {

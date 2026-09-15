@@ -920,11 +920,32 @@ _thesaurus_arborum (
                             plagula);
                         chorda linea     = oratio_oraculum_lis_linea(p,
                             plagula, prima);
+                           i32 cum_lemmate = ZEPHYRUM;
+                           i32 m;
 
                         CREDO_AEQUALIS_I32 (_tabulae(caput_lis),
                             _tabulae(linea) + I);
                         CREDO_AEQUALIS_I32 (_tabulae(linea),
                             (i32)ORATIO_COLUMNAE_LIS_NUMERUS + I);
+                        /* T36 c: lemma capitis plerisque litibus
+                         * praesens (caput = verbum resolutum) */
+                        per (m = ZEPHYRUM;
+                            m < xar_numerus(census.lites); m++)
+                        {
+                            constans OratioOraculumLis* l =
+                                *(OratioOraculumLis**)xar_obtinere(
+                                census.lites, m);
+
+                            si (l->lemma_capitis.mensura > ZEPHYRUM)
+                            {
+                                cum_lemmate = cum_lemmate + I;
+                            }
+                        }
+                        imprimere("    lites cum lemmate capitis %d /"
+                            " %d\n", (integer)cum_lemmate,
+                            (integer)xar_numerus(census.lites));
+                        CREDO_MAIOR_I32 (II * cum_lemmate,
+                            xar_numerus(census.lites));
                     }
                 }
             }
@@ -1141,7 +1162,7 @@ _columnas_lis_probare (
        i32 aequales  = ZEPHYRUM;
     chorda t;
 
-    CREDO_AEQUALIS_I32 ((i32)ORATIO_COLUMNAE_LIS_NUMERUS, (i32)XXXI);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_COLUMNAE_LIS_NUMERUS, (i32)XXXII);
     per (i = ZEPHYRUM; i < (i32)ORATIO_COLUMNAE_LIS_NUMERUS; i++)
     {
         si (ORATIO_COLUMNAE_LIS[i] == NIHIL)
@@ -1150,6 +1171,10 @@ _columnas_lis_probare (
             redde;
         }
     }
+    /* T36 c: columna XXXII appensa - lemma lectionis primae capitis
+     * (sors 'lemma retentum' pro reticulo) */
+    CREDO_VERUM (strcmp(ORATIO_COLUMNAE_LIS[XXXI], "lemma-capitis")
+        == ZEPHYRUM);
     per (i = ZEPHYRUM; i < (i32)XXIII; i++)
     {
         si (strcmp(ORATIO_COLUMNAE_LIS[i], TITULI_LIS_PINNATI[i])

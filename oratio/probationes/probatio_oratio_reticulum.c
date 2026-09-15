@@ -17,8 +17,16 @@
  *      humana: catenae congruunt, altitudo 0 latitudo 3.
  * VI.  (T36 b) Semen -initium f,g: gradus 0 f+g, gradus I h (+XII);
  *      -greges initium.
+ * VII. (T36 c) Ordines testimonii RETICULUM-GREX et -GREX-SORS manu
+ *      derivati: proba.tsv -greges f (u ordinatus margine II II VIII,
+ *      v coactus IX IX X); paritas seminata -greges catena (VIII
+ *      greges coacti, XXIV ordines sortium).
+ * VIII.(T36 c) -sortes-alternae II super proba.tsv: sortes alternae
+ *      corpus quodque tenent - vetum quod in C cadebat NON cadit
+ *      (f 23/17 +6, decisio LIV in minimo); recusationes II.
  * Culpae plantatae: -ubi neglectum (T35 d); incrementum sine
- * subtractione (T36 b: ordines INFIMUM paritatis).
+ * subtractione (T36 b: ordines INFIMUM paritatis); margo = maximum
+ * (T36 c: ordines GREX-SORS).
  */
 
 #include "latina.h"
@@ -94,6 +102,25 @@ _continet (
         }
     }
     redde FALSUM;
+}
+
+interior i32
+_quotiens_continet (
+                chorda  c,
+    constans character* literae)
+{
+    i32 longitudo  = (i32)strlen(literae);
+    i32 numerus    = ZEPHYRUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; i + longitudo <= c.mensura; i++)
+    {
+        si (memcmp(c.datum + i, literae, (size_t)longitudo) == ZEPHYRUM)
+        {
+            numerus = numerus + I;
+        }
+    }
+    redde numerus;
 }
 
 /* lineas conferre; prima differens imprimitur */
@@ -447,6 +474,118 @@ principale (vacuum)
     CREDO_VERUM (exitus.iudicatum
         && _continet(exitus.relatio,
         "0 initium f x g: greges 4, recti 12"));
+
+    imprimere("\n--- VII. Ordines testimonii GREX, GREX-SORS ---\n");
+    _optiones_basis(piscina, &optiones);
+    optiones.machina  = VERUM;
+    optiones.greges   = "f";
+    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+        &optiones);
+    CREDO_VERUM (exitus.iudicatum);
+    si (exitus.iudicatum)
+    {
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX\tf\tu\t12\tO\t9\t750\t-\tordinatus"
+            "\t0\t3\t12\t9\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX\tf\tv\t14\tS\t14\t1000\t-\tcoactus"
+            "\t0\t3\t14\t14\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX-SORS\tf\tu\tA\t8\tO\t2\t4\t4\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX-SORS\tf\tu\tB\t8\tO\t2\t4\t4\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX-SORS\tf\tu\tC\t8\tO\t8\t4\t1\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX-SORS\tf\tv\tA\t9\tS\t9\t5\t5\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX-SORS\tf\tv\tB\t9\tS\t9\t5\t5\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX-SORS\tf\tv\tC\t10\tS\t10\t4\t4\n"));
+    }
+    _optiones_basis(piscina, &optiones);
+    optiones.greges = "f";
+    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+        &optiones);
+    CREDO_VERUM (exitus.iudicatum);
+    si (exitus.iudicatum)
+    {
+        imprimere("%.*s", (integer)exitus.relatio.mensura,
+            (constans character*)exitus.relatio.datum);
+        CREDO_VERUM (_continet(exitus.relatio, "habitus ordinatus"));
+        CREDO_VERUM (_continet(exitus.relatio, "habitus coactus"));
+        CREDO_VERUM (_continet(exitus.relatio, "C:O(8)"));
+    }
+    _optiones_basis(piscina, &optiones);
+    optiones.machina  = VERUM;
+    optiones.greges   = "catena";
+    _titulum_addere(piscina, optiones.initium, "f");
+    _titulum_addere(piscina, optiones.initium, "g");
+    exitus = oratio_reticulum_currere(piscina, paritas, "fixa",
+        &optiones);
+    CREDO_VERUM (exitus.iudicatum);
+    si (exitus.iudicatum)
+    {
+        CREDO_AEQUALIS_I32 (_quotiens_continet(exitus.relatio,
+            "\tRETICULUM-GREX\tcatena\t"), VIII);
+        CREDO_AEQUALIS_I32 (_quotiens_continet(exitus.relatio,
+            "\tRETICULUM-GREX-SORS\tcatena\t"), XXIV);
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX\tcatena\t0+0+0\t3\tS\t3\t1000\t-"
+            "\tcoactus\t0\t3\t3\t3\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX\tcatena\t1+1+1\t3\tO\t3\t1000\t-"
+            "\tcoactus\t0\t3\t3\t3\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-GREX-SORS\tcatena\t0+1+1\tB\t2\tS\t2\t1"
+            "\t1\n"));
+    }
+
+    imprimere("\n--- VIII. Sortes alternae II ---\n");
+    _optiones_basis(piscina, &optiones);
+    optiones.machina   = VERUM;
+    optiones.sortes    = NIHIL;
+    optiones.alternae  = II;
+    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+        &optiones);
+    CREDO_VERUM (exitus.iudicatum);
+    si (exitus.iudicatum)
+    {
+        /* sortes alternae: pares u O IV S II, v S VII; impares u O V
+         * S I, v S VII; retenta 0: u -> O IV, v VII = XI (basis IX);
+         * retenta I: u -> O V, v VII = XII (basis VIII): XXIII / XVII
+         * (planum XXII scripserat - v impares VII, non VI) */
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-COLUMNA\tf\t2\t26\t23\t17\t6\t884\t884\t0"
+            "\t0\t0\t0\t0\t0\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-COLUMNA\th\t1\t26\t17\t17\t0\t653\t653\t0"
+            "\t0\t0\t0\t0\t0\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-SORS\tf\talterna-0\t13\t11\t9\t0\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-SORS\tf\talterna-1\t13\t12\t8\t0\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-SORS\th\talterna-0\t13\t9\t9\t0\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-SORS\th\talterna-1\t13\t8\t8\t0\n"));
+        CREDO_VERUM (_continet(exitus.relatio,
+            "fixa\tRETICULUM-CATENA\t1\t1\tf\t2\t23\t6\t0\n"));
+    }
+    alioquin
+    {
+        imprimere("  causa |%.*s|\n", (integer)exitus.causa.mensura,
+            (constans character*)exitus.causa.datum);
+    }
+    _optiones_basis(piscina, &optiones);
+    optiones.sortes    = NIHIL;
+    optiones.alternae  = I;
+    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+        &optiones), "reticulum: sortes alternae pauciores quam II: 1");
+    _optiones_basis(piscina, &optiones);
+    optiones.alternae = II;
+    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+        &optiones), "reticulum: ambae -sortes et -sortes-alternae");
 
     imprimere("\n");
     credo_imprimere_compendium();

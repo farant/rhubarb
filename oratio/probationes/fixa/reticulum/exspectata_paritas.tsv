@@ -23,3 +23,5 @@ fixa	RETICULUM-INFIMUM	2	g+h	4	12	0	0	0
 fixa	RETICULUM-INFIMUM	3	f+g+h	8	24	12	0	0
 fixa	COLUMNAE	RETICULUM-TEGIT	subtilior	crassior
 fixa	COLUMNAE	RETICULUM-DUPLEX	columna	aequalis
+fixa	COLUMNAE	RETICULUM-GREX	partitio	grex	ordines	aurum-maximum	aurum-maximum-ordines	puritas	captivus	habitus	mutabilis	sortes-suffragantes	retenti	recti
+fixa	COLUMNAE	RETICULUM-GREX-SORS	partitio	grex	sors	disciplina	suffragium	margo	retenti	recti

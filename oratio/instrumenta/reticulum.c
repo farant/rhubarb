@@ -1,7 +1,8 @@
 /* reticulum.c - instrumentum reticuli partitionum (oratio/reticulum.sh,
  * T35 d; vide oratio_reticulum.h)
  *
- * Usus: reticulum <x.tsv> -genus K -aurum aurum-... -sortes columna
+ * Usus: reticulum <x.tsv> -genus K -aurum aurum-...
+ *   (-sortes columna | -sortes-alternae N)
  *   [-ubi titulus=v1,v2]... [-columnae t1,t2 | -praeter t1,t2]
  *   [-gradus t1,t2] [-limen N] [-lucrum N] [-profunditas N] [-prima N]
  *   [-initium t1,t2] [-greges columna|catena|catena-libera|initium]
@@ -191,8 +192,9 @@ interior integer
 _usus (vacuum)
 {
     fprintf(stderr, "usus: reticulum <x.tsv> -genus K -aurum aurum-... "
-        "-sortes columna [-ubi titulus=v1,v2]... [-columnae t1,t2 | "
-        "-praeter t1,t2] [-gradus t1,t2] [-limen N] [-lucrum N] "
+        "(-sortes columna | -sortes-alternae N) "
+        "[-ubi titulus=v1,v2]... [-columnae t1,t2 | -praeter t1,t2] "
+        "[-gradus t1,t2] [-limen N] [-lucrum N] "
         "[-profunditas N] [-prima N] [-initium t1,t2] "
         "[-greges columna|catena|catena-libera|initium] [-machina]\n"
         "  -ubi valores crudos confert (ante -gradus); numeri "
@@ -303,6 +305,14 @@ principale (
             {
                 _listam_addere(piscina, optiones.initium, valor);
             }
+            alioquin si (strcmp(argumentum, "-sortes-alternae")
+                         == ZEPHYRUM)
+            {
+                si (!_numerum_legere(valor, &optiones.alternae))
+                {
+                    redde _usus();
+                }
+            }
             alioquin
             {
                 redde _usus();
@@ -315,7 +325,8 @@ principale (
         }
     }
     si (   via            == NIHIL || optiones.genus == NIHIL
-        || optiones.aurum == NIHIL || optiones.sortes == NIHIL)
+        || optiones.aurum == NIHIL
+        || (optiones.sortes == NIHIL && optiones.alternae == ZEPHYRUM))
     {
         redde _usus();
     }

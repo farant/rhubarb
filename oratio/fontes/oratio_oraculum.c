@@ -2503,6 +2503,42 @@ _accidens_lectionis (
     redde lectio->loci[locus].datum.index;
 }
 
+/* T36 c: lemma lectionis ordinalis vocabuli (signum LEMMA); chorda
+ * vacua aliter */
+interior chorda
+_lemma_lectionis (
+    constans MateriaNodus* vocabulum,
+                      s32  ordinalis)
+{
+     constans MateriaValor* analyses;
+     constans MateriaNodus* lectio;
+     constans MateriaValor* lemma;
+                    chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (   vocabulum        == NIHIL || ordinalis < ZEPHYRUM
+        || vocabulum->genus != (s32)ORATIO_GENUS_VOCABULUM)
+    {
+        redde vacua;
+    }
+    analyses = &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    si (   analyses->genus != MATERIA_VALOR_LISTA
+        || ordinalis >= (s32)materia_valor_lista_numerus(*analyses))
+    {
+        redde vacua;
+    }
+    lectio = materia_valor_lista_obtinere(*analyses, (i32)ordinalis)
+        ->datum.nodus;
+    lemma  = &lectio->loci[ORATIO_ANALYSIS_LEMMA];
+    si (   lemma->genus       != MATERIA_VALOR_TOKEN
+        || lemma->datum.token == NIHIL)
+    {
+        redde vacua;
+    }
+    redde lemma->datum.token->valor;
+}
+
 /* T32 d: casus lectionis ordinalis vocabuli; -I aliter */
 interior s32
 _casus_lectionis (
@@ -2609,6 +2645,9 @@ _litem_notare (
 
         l->caput = _chordam_condere(piscina, t->forma);
     }
+    /* T36 c: lemma lectionis primae capitis petiti */
+    l->lemma_capitis = _chordam_condere(piscina,
+        _lemma_lectionis(h->nodus, ZEPHYRUM));
     l->ante                 = (b32)(dependens_a < caput_a);
     l->caput_victoris_idem  = (b32)(caput_v == (s32)caput_a);
     /* T35 c: IUDICIA - condicio contentionis eadem (caput victoris
@@ -2763,7 +2802,8 @@ constans character* constans
     "numerus-victae", "numerus-victoris",
     "thesaurus", "aurum-arcus", "aurum-lectio", "relatio-victae",
     "relatio-victoris", "ante-victoris", "distantia-victae",
-    "distantia-victoris"
+    "distantia-victoris",
+    "lemma-capitis"
 };
 
 /* titulus valoris enumerati aut '-' (absens) */
@@ -2940,6 +2980,8 @@ oratio_oraculum_lis_linea (
     _lis_campus_numeri(a, (s32)lis->ante_victoris);
     _lis_campus_numeri(a, (s32)lis->distantia_victae);
     _lis_campus_numeri(a, (s32)lis->distantia_victoris);
+    /* T36 c: campus XXXII appensus */
+    _lis_campus_chordae(a, lis->lemma_capitis);
     redde chorda_aedificator_finire(a);
 }
 

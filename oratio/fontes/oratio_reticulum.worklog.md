@@ -142,3 +142,45 @@ run.
 line by line, seeded chain rows, `-greges initium`, five new refusals
 (depth above four, unknown / gold / non-feature / constant seed column,
 `-greges initium` without a seed).
+
+## 2026-09-14 — T36 c, the evidence rows
+
+Spec §2 decision 56, §7 "Design — T36" EVIDENCE.
+
+**Group rows.** `RETICULUM-GREX` (one per group of the partition
+`-greges` names: a column, the vetoed or pooled chain's end, or the
+seed) and `RETICULUM-GREX-SORS` (one per group and fold: training rows,
+vote, margin, held-out rows, rows right). This is the weight table's raw
+material, produced by the census. The partition choice is one helper
+(`_greges_eligere`) shared by the human view and the machine rows, so
+they cannot drift; a group's title is the values of the partition's
+columns at its representative row, seed columns first. Both headers
+print on every run, rows only with `-greges` — the T35 d expected files
+gained the two header lines for that reason.
+
+**Interleaved folds.** `-sortes-alternae N` makes the fold of the r-th
+kept row `r mod N`, with synthetic titles `alterna-0..`; `-sortes` is
+then omitted, so no feature is excluded on the fold's account — the
+corpus column becomes a FEATURE, which is itself a question (on grid II
+the chain takes `thesaurus` at step 2). Pass `-praeter thesaurus` when
+that is not the question. The fold column index is −1 and the fold
+titles come from one `valores_sortium` array whichever way they were
+made.
+
+**A counting slip caught by the tool.** The plan derived the
+interleaved-fold numbers for grid II by hand as 22 right of 26; the C
+tool said 23 and the independent Python recount said 23. Recounting the
+odd rows by index showed `v` has seven of them, not six. The two
+implementations agreeing against the hand number is the acceptance
+working in miniature; the plan text is corrected in place and says so.
+
+**`lemma-capitis`** (oracle): the LEMMA token of the head's first
+reading, appended as LIS column 32 under the header law; present on
+every contest row of the three pinned Latin treebanks (2,413 / 4,233 /
+1,973). It exists so `-sortes lemma-capitis` can hold out each verb.
+
+**The recount** grew to every kind it can derive from the judgment
+(COLUMNA with captives, SORS, CATENA with the seed, CONDICIO, INFIMUM,
+GREX, GREX-SORS) and equals both fixtures' expected rows before the real
+run. zsh does not split an unquoted `$extra` — `${=extra}` — a flag
+string passed as one word made the recount look broken for a minute.

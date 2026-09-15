@@ -37,7 +37,7 @@ buckets, no tolerance), 01M2HB154D (decided: captive rule).
 |---|---|
 | T36 a the judgment | done — grid IV (captive flags at limen II, not IV), profiles on grids I–III and the seeded chain all green on the first run; the captive plant went red FIRST in grid I's one-group case (an inverted test makes every spread-out group captive), green after the revert; a training tie is APERTUS (spec text refined) |
 | T36 b the search | done — k-meet table (`RETICULUM-INFIMUM` for `-PAR`), seed, CONDICIO, split titles, constants out of the lattice; parity fixture and regenerated grid II rows green on the first run; the sub-meet hash table and the tuples must be allocated BEFORE the scratch mark (worklog); plant = the subtraction zeroed |
-| T36 c the evidence | pending |
+| T36 c the evidence | done — GREX / GREX-SORS rows, `-sortes-alternae`, `lemma-capitis` (present on 100 % of contest rows), recount grown to every judged kind and equal to both fixtures; the plan's interleaved-fold count was off by one row (22 → 23) and the C tool and the recount agreed against it; plant = margin as the majority |
 | T36 d second run, acceptance, records | pending |
 
 ---
@@ -570,15 +570,20 @@ Definitions:
   \t3\t3\t3` … (gold S O O S O S S O in order) and 24 GREX-SORS rows
   `disciplina 2, suffragium S|O, margo 2, retenti 1, recti 1`. Part
   VIII — interleaved: `proba.tsv` with `optiones.alternae = II`
-  (`sortes = NIHIL`): COLUMNA `f\t2\t26\t22\t17\t5\t846\t884\t0\t0\t0
+  (`sortes = NIHIL`): COLUMNA `f\t2\t26\t23\t17\t6\t884\t884\t0\t0\t0
   \t0\t0\t0`, `h\t1\t26\t17\t17\t0\t653\t653\t…`; SORS `f alterna-0 13
-  11 9 0`, `f alterna-1 13 11 8 0`, `h alterna-0 13 9 9 0`, `h alterna-1
-  13 8 8 0`; CATENA vetans `1 1 f 2 22 5 0` (the veto that fell on C by
+  11 9 0`, `f alterna-1 13 12 8 0`, `h alterna-0 13 9 9 0`, `h alterna-1
+  13 8 8 0`; CATENA vetans `1 1 f 2 23 6 0` (the veto that fell on C by
   corpus does NOT fall when the folds interleave — decision 54's logic
   in miniature; derivation: even rows fold 0 = u O4 S2, v S7; odd rows
-  fold 1 = u O5 S1, v S6; held out 0: base S basis 9, u votes O (O5 S1)
-  → 4 right, v S → 7: 11; held out 1: basis 8, u O (O4 S2) → 5, v → 6:
-  11). Refusals: `alternae` I → `reticulum: sortes alternae pauciores
+  fold 1 = u O5 S1, v S7 (rows 5 7 13 15 17 23 25); held out 0: base S
+  basis 9, u votes O (O5 S1) → 4 right, v S → 7: 11; held out 1: basis
+  8, u O (O4 S2) → 5, v → 7: 12. CORRECTED at execution: the first
+  draft counted v's odd rows as six; the C tool and the recount agreed
+  on 23 against the draft's 22, and the recount of the rows settled it.
+  Note `thesaurus` becomes a FEATURE here (no fold column excludes it)
+  and the chain takes it at step 2 — pass `-praeter thesaurus` on real
+  data unless that is the question). Refusals: `alternae` I → `reticulum: sortes alternae pauciores
   quam II: 1`; both → `reticulum: ambae -sortes et -sortes-alternae`.
   `probatio_oratio_oraculum.c`: title XXXI equals `lemma-capitis`; on
   CIRCSE the LIS rows with a non-empty field 34 are more than half of

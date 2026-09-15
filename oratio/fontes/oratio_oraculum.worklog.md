@@ -1,5 +1,17 @@
 # oratio_oraculum worklog
 
+## 2026-09-14 — T36 c, `lemma-capitis` on the LIS rows
+
+Column 32, appended under the T35 c header law: the LEMMA token of the
+claimed head's first reading (`_lemma_lectionis`, the same walk as
+`_accidens_lectionis` but returning the token's chorda), condensed into
+the census piscina like the forms. Present on every contest row of the
+three pinned Latin treebanks (2,413 / 4,233 / 1,973 — the head of a
+subject/object contest is a resolved verb). Purpose: the partition
+lattice's `-sortes lemma-capitis`, leave-one-verb-out, to separate a
+structural bucket from a lexical one (T36 d). Readers select by title;
+the first 31 fields are untouched.
+
 ## 2026-09-14 — T35 c, the LIS rows describe themselves
 
 Part of oratio T35, the partition lattice (spec `oratio-spec.md` §2

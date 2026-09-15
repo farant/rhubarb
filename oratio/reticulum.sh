@@ -2,7 +2,8 @@
 # oratio/reticulum.sh - instrumentum reticuli partitionum (T35 d): ordines
 # machinae cum ordine COLUMNAE per titulum, partitiones retentae
 #
-# Usage:  ./oratio/reticulum.sh <x.tsv> -genus K -aurum aurum-... -sortes columna
+# Usage:  ./oratio/reticulum.sh <x.tsv> -genus K -aurum aurum-...
+#           (-sortes columna | -sortes-alternae N)
 #           [-ubi titulus=v1,v2]... [-columnae t1,t2 | -praeter t1,t2]
 #           [-gradus t1,t2] [-limen N] [-lucrum N] [-profunditas N] [-prima N]
 #           [-initium t1,t2] [-greges columna|catena|catena-libera|initium] [-machina]
