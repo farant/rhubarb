@@ -846,6 +846,84 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (contextus.forma, (s32)ORATIO_FORMA_PROSA);
     }
 
+    /* T38 b: TABULA PONDERUM - lector caput NOMINE probat, latitudinem
+     * cum linea; fixtura exspectata (LII ordines manu derivati in
+     * worklog resolutionis; generator pondera.py aequalis per portam
+     * pythonicam); limen ordinarium XX */
+    imprimere("\n--- I c. Tabula ponderum (T38 b) ---\n");
+    {
+                 OratioProgramma  tabula;
+        OratioVocabulariumVitium  vitium_ponderum;
+                          chorda  fons;
+                       character  via[1024];
+           constans OratioPondus* pondus;
+
+        memset(&tabula, ZEPHYRUM, magnitudo(tabula));
+        sprintf(via,
+            "%s/oratio/probationes/fixa/pondera/exspectata.tsv",
+            radix);
+        CREDO_VERUM (_plagulam_legere(piscina, via, &fons));
+        CREDO_VERUM (oratio_resolutio_pondera_legere(piscina, &tabula,
+            fons, &vitium_ponderum));
+        CREDO_NON_NIHIL (tabula.pondera);
+        CREDO_AEQUALIS_I32 (tabula.pondera != NIHIL
+            ? tabula_dispersa_numerus(tabula.pondera) : ZEPHYRUM,
+            (i32)52);
+        pondus = oratio_resolutio_pondus(&tabula,
+            _l("umbra-subiectum-praecedente-proximo"), "-", "-",
+            "numerus-capitis", "singularis");
+        CREDO_NON_NIHIL (pondus);
+        si (pondus != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (pondus->contentiones, (i32)VIII);
+            CREDO_AEQUALIS_I32 (pondus->rectae, (i32)II);
+            CREDO_AEQUALIS_I32 (pondus->permille, (i32)250);
+        }
+        pondus = oratio_resolutio_pondus(&tabula,
+            _l("umbra-obiectum-verbi-praecedente-proximo"), "medius",
+            "-",
+            "numerus-capitis", "pluralis");
+        CREDO_NON_NIHIL (pondus);
+        si (pondus != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (pondus->contentiones, I);
+            CREDO_AEQUALIS_I32 (pondus->rectae, I);
+            CREDO_AEQUALIS_I32 (pondus->permille, (i32)M);
+        }
+        pondus = oratio_resolutio_pondus(&tabula,
+            _l("@subiectum+ante+proximo"), "-", "prosa", "-", "-");
+        CREDO_NON_NIHIL (pondus);
+        si (pondus != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (pondus->contentiones, (i32)V);
+            CREDO_AEQUALIS_I32 (pondus->rectae, I);
+            CREDO_AEQUALIS_I32 (pondus->permille, (i32)200);
+        }
+        CREDO_NIHIL (oratio_resolutio_pondus(&tabula,
+            _l("umbra-subiectum-praecedente-proximo"), "-", "-",
+            "numerus-capitis", "dualis"));
+        /* caput alienum: titulus nominatus in causa */
+        memset(&tabula, ZEPHYRUM, magnitudo(tabula));
+        CREDO_FALSUM (oratio_resolutio_pondera_legere(piscina, &tabula,
+            _l("regula\tdialectus\tforma\tfolliculus\tvalor"
+               "\tcontentiones\trecta\tpermille\n"
+               "a\t-\t-\t-\t-\t1\t1\t1000\n"), &vitium_ponderum));
+        CREDO_VERUM (vitium_ponderum.causa != NIHIL
+            && strncmp(vitium_ponderum.causa, "caput ponderum: recta",
+                (size_t)21) == ZEPHYRUM);
+        /* latitudo aliena: linea nominata */
+        memset(&tabula, ZEPHYRUM, magnitudo(tabula));
+        CREDO_FALSUM (oratio_resolutio_pondera_legere(piscina, &tabula,
+            _l("regula\tdialectus\tforma\tfolliculus\tvalor"
+               "\tcontentiones\trectae\tpermille\n"
+               "a\t-\t-\t-\t-\t1\t1\n"), &vitium_ponderum));
+        CREDO_AEQUALIS_I32 (vitium_ponderum.linea, (i32)II);
+        CREDO_VERUM (vitium_ponderum.causa != NIHIL
+            && strcmp(vitium_ponderum.causa, "latitudo ponderum")
+                == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (oratio_resolutio_pondera_limen(), (i32)XX);
+    }
+
     imprimere("\n--- II. Skeleton: adpositio casum regit ---\n");
     {
            OratioPartesCensus  census_partium;

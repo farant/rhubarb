@@ -31,6 +31,7 @@ seven-file Latin list.
 | `participium.py` | active participles by tense; where an adjacent accusative really hangs | T31 c |
 | `auctores.py <mensura.tsv>` | the trust view: per rule, words decided and primary, ARCS and precision, adjacent precision, worst file (from a `metire.sh` tsv, T32 a `AUCTOR` columns XI–XIV) | T32 a |
 | `fiducia.py <mensura.tsv> [out]` | writes `oratio/probationes/fixa/auctores.tsv`, the executor's trust table, from the PINNED files only; regenerate with a named cause | T32 a |
+| `pondera.py <lites.tsv> [-scribere [out]]` | the DECODER's weight table (T38 b, decisions 57–58): from the contest rows (`metire.sh x.tsv -lites`) of the pinned SHIPPABLE corpora only (`la_circse`, `la_llct`; refuses a run lacking either, exit 2), contests and rights per (rule, dialect, form, bucket, value) — each side of a judged contest credited (unjudged: no gold arc, or same head with an unjudgeable reading), right = its arc gold and its reading not wrong; keys: bucket rows (`numerus-capitis` and `positio-numerus` under dialect, each also pooled; `directio-distantia` measured and REFUSED by the lattice, kept as an inactive data row with its cause), the rule's plain rate in four context variants, the structural key `@relatio+ante\|post+proximo\|remoto` (`#` is the comment marker); bucket rows are DATA in the script with the lattice's numbers as cause; `-scribere` writes `oratio/probationes/fixa/pondera.tsv` with a provenance line — regenerate with a named cause | T38 b |
 
 ## Measurement harness
 

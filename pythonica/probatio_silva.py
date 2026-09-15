@@ -1322,6 +1322,17 @@ credo([v.forma for v in vd] == ['Puerum', 'bonum', 'videt', 'Hoc', 'est'] and vd
 credo(vd[3].decisio == 'praelatio' and vd[3].auctor == 'determinans-primum-latinum' and vd[3].analyses > 1 and vd[4].decisio == 'praelatio' and vd[4].auctor == 'auxiliare-primum-latinum', 'Oratio.vocabula: Hoc per priorem determinantium certorum (T19i: hic DET sine exceptione), est per priorem auxiliaris (praelatio)')
 pf = ob.partitio()
 credo(pf['impletio'] == 2 and pf['praelatio'] == 2 and pf['umbra'] == 0 and pf['coactae'] == 2 and pf['una'] + pf['aperta'] == 1 and sum(pf[k] for k in silva.ORATIO_PARTITIO) == 5, 'Oratio.partitio: coactae II, praelatae II (Hoc, est), videt una/aperta - summa vocabula V')
+
+print('--- pondera.py: generator tabulae ponderum decretoris (T38 b) ---')
+import subprocess as _sp, tempfile as _tf, os as _os
+_pondera = ['python3', 'oratio/census/pondera.py']
+_p = _sp.run(_pondera + ['oratio/probationes/fixa/pondera/proba_lites.tsv'], capture_output=True, text=True)
+_e = open('oratio/probationes/fixa/pondera/exspectata.tsv', encoding='utf-8').read()
+credo(_p.returncode == 0 and _p.stdout == _e, 'pondera.py super fixturam proba_lites == exspectata.tsv (LII ordines manu derivati)')
+_sine = ''.join(l for l in open('oratio/probationes/fixa/pondera/proba_lites.tsv', encoding='utf-8') if 'la_llct' not in l)
+_t = _tf.NamedTemporaryFile('w', suffix='.tsv', delete=False, encoding='utf-8'); _t.write(_sine); _t.close()
+_q = _sp.run(_pondera + [_t.name], capture_output=True, text=True); _os.unlink(_t.name)
+credo(_q.returncode == 2 and 'la_llct' in _q.stderr, 'pondera.py sine la_llct: recusatio exitu II plagulam absentem nominans')
 credo(all(v.decisio == '' and v.auctor == '' for v in silva.Oratio('Puella bona ambulat.\n', crudus=True).vocabula()), 'Oratio(crudus): nulla decisio scripta')
 ol = silva.Oratio('In bona terra est.\n')
 credo(ol.vocabula()[1].decisio == 'umbra' and ol.vocabula()[1].auctor == 'lex-umbrarum' and ol.vocabula()[0].decisio == 'praelatio' and ol.vocabula()[0].auctor == 'adpositio-prima-latina' and ol.partitio()['umbra'] == 1, 'Oratio.vocabula: bona per legem umbrarum (auctor lex-umbrarum), in per priorem adpositionis (praelatio - prior Latinus ante testimonium)')

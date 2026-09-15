@@ -31,7 +31,7 @@ agreement step was skipped).
 | tranche | state |
 |---|---|
 | T38 a context | done — `oratio_forma_documenti_censu`, `OratioConlluSententia.documentum`, `FORMAE_THESAURORUM` + `oratio_oraculum_forma_sententiae`, `FORMA` row, LIS columns 34–35, `OratioContextus` + `oratio_resolutio_applicare_contextu` + `oratio_resolutio_contextus_documenti`, instruments; oracle and resolver gates green on the first run, the form gate's first fixture was judged an INDEX (four short full-stop lines) — replaced by the suite's own Catullus distich (14 words); plants: `_prose` → versus (oracle), `>=` (form census), prefix XIV → XV (reader) |
-| T38 b table | pending |
+| T38 b table | done — `pondera.py` (crediting law: each side of a judged contest; same head + unjudgeable reading = unjudged), 13-row hand fixture + 52 expected rows (derivation in the resolver worklog), C loader with header refusal by name and width by line, `oratio_resolutio_pondus`, `pondera_limen`; LATTICE VERDICTS changed the buckets: `positio-numerus` dialect-conditioned like verb number (form REFUSED: inside verse CIRCSE and Perseus flip against each other), `directio-distantia` REFUSED (falls 3 of 6, mutable groups CIRCSE vs rest and LLCT vs rest) — kept as an inactive data row; `#` collided with the comment marker → structural prefix `@` (the first loader silently dropped 14 rows); real table 403 rows, one bucket recounted independently (295/97/328); FINDING: `classicus` = CIRCSE's coin, the prose flip lives only in `medius` — the (d) prediction re-aimed at the charters and Dante; plant = reading ignored in the crediting (Python gate red) |
 | T38 c decoder | pending |
 | T38 d the run | pending |
 
@@ -231,7 +231,7 @@ pondera.tsv line 2 (caput): regula	dialectus	forma	folliculus	valor	contentiones
 rows: umbra-subiectum-praecedente-proximo	-	-	numerus-capitis	singularis	NNN	RRR	PPP
       umbra-subiectum-praecedente-proximo	medius	-	numerus-capitis	singularis	…
       umbra-obiectum-verbi-praecedente-proximo	-	versus	positio-numerus	1+pluralis	…
-      #subiectum+ante+proximo	-	-	-	-	…          (structural rows, '#' prefix)
+      @subiectum+ante+proximo	-	-	-	-	…          (structural rows, "@" prefix: "#" is the comment marker)
       umbra-subiectum-praecedente-proximo	-	-	-	-	…           (plain contest rate)
 ```
 Absent context or bucket = `-`. Permille = rectae × 1000 / contentiones,
@@ -263,8 +263,8 @@ key level it has: (regula, dialectus, forma, folliculus, valor) for
 every bucket whose relation matches the side's relation, (regula,
 dialectus, forma), (structural key, dialectus, forma), (regula).
 Structural key from the title: `umbra-<relatio>-<praecedente|sequente>
-[-proximo]` → `#<relatio>+<ante|post>+<proximo|remoto>`; a title
-without a direction part → `#<relatio>`. Context columns come from
+[-proximo]` → `@<relatio>+<ante|post>+<proximo|remoto>`; a title
+without a direction part → `@<relatio>`. Context columns come from
 the row (34, 35); the generator ALSO writes the `-` (unconditioned)
 rows by summing over contexts. Refuses (exit 2, message) when no row
 carries `la_circse` or none `la_llct`.
@@ -418,7 +418,7 @@ with `contentiones >= _pondera_limen()`: 1 `(titulus, dialectus,
 forma, folliculus, valor)` for the bucket of the candidate's relation
 (`numerus-capitis` and `positio-numerus` for subject/object-of-verb,
 `directio-distantia` for caput); 2 `(titulus, dialectus, forma)`; 3
-`(#structura, dialectus, forma)`; 4 `(titulus, -, -, -, -)`; 5
+`(@structura, dialectus, forma)`; 4 `(titulus, -, -, -, -)`; 5
 `_fiducia_regulae` (auctores.tsv); none → `-I`. Bucket values: the
 carrier reading's `numerus` slot; `ante` = `w < v`; the filler
 reading's `numerus`; distance `|w − v|` graded `1 | plures`.

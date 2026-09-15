@@ -67,7 +67,21 @@ nomen structura {
      * oratio/probationes/fixa/contentiones.tsv (census contentionum
      * plagularum pinnatarum ante iudicem); NIHIL = plagula absens. */
     TabulaDispersa* contentiones;
+    /* T38 b (2026-09-15): TABULA PONDERUM DECRETORIS - clavis 'regula TAB
+     * dialectus TAB forma TAB folliculus TAB valor' ('-' absens) ->
+     * OratioPondus* ex oratio/probationes/fixa/pondera.tsv (generator
+     * oratio/census/pondera.py, plagulae editibiles solae, decisio
+     * LVII); NIHIL = plagula absens (decretor = exsecutor). */
+    TabulaDispersa* pondera;
 } OratioProgramma;
+
+/* PONDUS (T38 b, decisio LVII): contentiones regulae sub contextu et
+ * folliculo, rectae, permille = rectae * M / contentiones (integer). */
+nomen structura {
+    i32 contentiones;
+    i32 rectae;
+    i32 permille;
+} OratioPondus;
 
 /* census per regulam: ordines applicati (vocabula quorum praelatio
  * huic regulae debetur, prima vincente) */
@@ -194,6 +208,36 @@ oratio_resolutio_contextus_documenti (
     constans OratioPartesCensus* census,
           constans MateriaNodus* radix,
                 OratioContextus* contextus);
+
+/* Tabulam ponderum ex textu legere in programma->pondera (T38 b): linea
+ * '#' commentum; prima cetera CAPUT 'regula dialectus forma folliculus
+ * valor contentiones rectae permille' NOMINE probatum - titulus alienus
+ * refusatur (vitium->causa 'caput ponderum: <titulus>'), ordo latitudine
+ * aliena refusatur cum linea ('latitudo ponderum'). Clavis = campi V
+ * primi TAB iuncti. Limen NON applicatur (decretor applicat: tabula tota
+ * inspectabilis). FALSUM cum vitio aut memoria. */
+b32
+oratio_resolutio_pondera_legere (
+                     Piscina* piscina,
+             OratioProgramma* programma,
+                      chorda  textus,
+    OratioVocabulariumVitium* vitium);
+
+/* Pondus clavis (regula; dialectus, forma, folliculus, valor literis,
+ * '-' absens); NIHIL si tabula nulla aut clavis absens. */
+constans OratioPondus*
+oratio_resolutio_pondus (
+    constans OratioProgramma* programma,
+                      chorda  regula,
+          constans character* dialectus,
+          constans character* forma,
+          constans character* folliculus,
+          constans character* valor);
+
+/* Minimum contentionum ordinis ponderum quo ordo respondet
+ * (ORATIO_PONDERA_LIMEN; ordinarium XX). */
+i32
+oratio_resolutio_pondera_limen (vacuum);
 
 /* Lingua documenti ex censu annotationis: titulus linguae cuius
  * SUFFRAGIA plura (OratioPartesCensus.vocabula_linguarum - vocabula

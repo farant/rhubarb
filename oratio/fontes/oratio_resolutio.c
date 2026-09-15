@@ -20,6 +20,14 @@ _numerus_attributi (
     constans character* titulus,
                    i32* exitus);
 
+/* T38 b: tabula ponderum ex plagula (definitio ad finem) */
+interior b32
+_pondera_onerare (
+                     Piscina* piscina,
+          constans character* radix,
+             OratioProgramma* programma,
+    OratioVocabulariumVitium* vitium);
+
 nomen structura {
                        Piscina* piscina;
            InternamentumChorda* intern;
@@ -186,6 +194,7 @@ oratio_resolutio_programma_legere (
     p->regulae = xar_creare(piscina, (i32)magnitudo(OratioRegula));
     p->fiducia = NIHIL;   /* T32 a: onerare ponit */
     p->contentiones = NIHIL;   /* T32 c */
+    p->pondera = NIHIL;   /* T38 b */
     si (p->textus.datum == NIHIL || p->regulae == NIHIL)
     {
         vitium->causa = "memoria";
@@ -670,7 +679,8 @@ oratio_resolutio_programma_onerare (
 
         si (   p != NIHIL
             && (   !_fiduciam_onerare(piscina, radix, p)
-                || !_contentiones_onerare(piscina, radix, p)))
+                || !_contentiones_onerare(piscina, radix, p)
+                || !_pondera_onerare(piscina, radix, p, vitium)))
         {
             redde NIHIL;
         }
@@ -4018,4 +4028,225 @@ oratio_resolutio_contextus_documenti (
             : (s32)ORATIO_DIALECTUS_CLASSICUS;
     contextus->forma     = (s32)oratio_forma_documenti_censu(radix,
         NIHIL, NIHIL);
+}
+
+
+/* ==================================================
+ * Tabula ponderum decretoris (T38 b, 2026-09-15)
+ * ================================================== */
+
+hic_manens constans character* constans TITULI_PONDERUM[] = {
+    "regula", "dialectus", "forma", "folliculus", "valor",
+    "contentiones", "rectae", "permille"
+};
+
+/* initia camporum lineae [i, finis) per TAB in campi[] (ad X servata),
+ * numerus camporum redditus (maior X = latitudo aliena) */
+interior i32
+_campi_ponderum (
+    chorda  textus,
+       i32  i,
+       i32  finis,
+       i32* campi)
+{
+    i32 n = I;
+    i32 k;
+
+    campi[ZEPHYRUM] = i;
+    per (k = i; k < finis; k++)
+    {
+        si (textus.datum[k] == '\t')
+        {
+            si (n < (i32)X)
+            {
+                campi[n] = k + I;
+            }
+            n = n + I;
+        }
+    }
+    redde n;
+}
+
+/* numerus campi k (initia campi, finis lineae): decimalis, negativus = 0 */
+interior i32
+_numerus_campi (
+          chorda  textus,
+    constans i32* campi,
+             i32  k,
+             i32  n,
+             i32  finis)
+{
+    i32 a = campi[k];
+    i32 b = k + I < n ? campi[k + I] - I : finis;
+    s32 v = _numerus_decimalis(_chorda(textus.datum + a, b - a));
+
+    redde v > ZEPHYRUM ? (i32)v : ZEPHYRUM;
+}
+
+b32
+oratio_resolutio_pondera_legere (
+                     Piscina* piscina,
+             OratioProgramma* programma,
+                      chorda  textus,
+    OratioVocabulariumVitium* vitium)
+{
+    i32 i             = ZEPHYRUM;
+    i32 linea         = ZEPHYRUM;
+    b32 caput_lectum  = FALSUM;
+
+    memset(vitium, ZEPHYRUM, magnitudo(*vitium));
+    vitium->plagula    = "pondera.tsv";
+    programma->pondera = tabula_dispersa_creare_chorda(piscina,
+        (i32)1024);
+    si (programma->pondera == NIHIL)
+    {
+        redde FALSUM;
+    }
+    dum (i < textus.mensura)
+    {
+        i32 finis = i;
+        i32 campi[10];
+        i32 n;
+        i32 k;
+
+        dum (finis < textus.mensura && textus.datum[finis] != '\n')
+        {
+            finis = finis + I;
+        }
+        linea = linea + I;
+        si (finis > i && textus.datum[i] != '#')
+        {
+            n = _campi_ponderum(textus, i, finis, campi);
+            si (n != (i32)VIII)
+            {
+                vitium->linea = linea;
+                vitium->causa = "latitudo ponderum";
+                redde FALSUM;
+            }
+            si (!caput_lectum)
+            {
+                per (k = ZEPHYRUM; k < (i32)VIII; k++)
+                {
+                    i32 a = campi[k];
+                    i32 b = k + I < n ? campi[k + I] - I : finis;
+                    i32 l = (i32)strlen(TITULI_PONDERUM[k]);
+
+                    si (   b - a != l
+                        || memcmp(textus.datum + a, TITULI_PONDERUM[k],
+                            (size_t)l) != ZEPHYRUM)
+                    {
+                        character* causa = (character*)piscina_allocare(
+                            piscina, (memoriae_index)(b - a)
+                            + (memoriae_index)XXXII);
+
+                        si (causa == NIHIL)
+                        {
+                            redde FALSUM;
+                        }
+                        sprintf(causa, "caput ponderum: %.*s",
+                            (integer)(b - a),
+                            (constans character*)textus.datum + a);
+                        vitium->linea = linea;
+                        vitium->causa = causa;
+                        redde FALSUM;
+                    }
+                }
+                caput_lectum = VERUM;
+            }
+            alioquin
+            {
+                chorda clavis = _copia(piscina, _chorda(textus.datum
+                    + campi[ZEPHYRUM],
+                    campi[(i32)V] - I - campi[ZEPHYRUM]));
+                OratioPondus* pondus = (OratioPondus*)piscina_allocare(
+                    piscina, (memoriae_index)magnitudo(*pondus));
+
+                si (clavis.datum == NIHIL || pondus == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                pondus->contentiones = _numerus_campi(textus, campi,
+                    (i32)V, n, finis);
+                pondus->rectae       = _numerus_campi(textus, campi,
+                    (i32)VI, n, finis);
+                pondus->permille     = _numerus_campi(textus, campi,
+                    (i32)VII, n, finis);
+                (vacuum)tabula_dispersa_inserere(programma->pondera,
+                    clavis, pondus);
+            }
+        }
+        i = finis + I;
+    }
+    si (!caput_lectum)
+    {
+        vitium->causa = "caput ponderum absens";
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+constans OratioPondus*
+oratio_resolutio_pondus (
+    constans OratioProgramma* programma,
+                      chorda  regula,
+          constans character* dialectus,
+          constans character* forma,
+          constans character* folliculus,
+          constans character* valor)
+{
+    character  clavis[512];
+          i32  n;
+       vacuum* v;
+
+    si (programma == NIHIL || programma->pondera == NIHIL)
+    {
+        redde NIHIL;
+    }
+    n = regula.mensura + (i32)IV + (i32)strlen(dialectus)
+        + (i32)strlen(forma) + (i32)strlen(folliculus)
+        + (i32)strlen(valor);
+    si (n >= (i32)512)
+    {
+        redde NIHIL;
+    }
+    sprintf(clavis, "%.*s\t%s\t%s\t%s\t%s", (integer)regula.mensura,
+        (constans character*)regula.datum, dialectus, forma, folliculus,
+        valor);
+    si (!tabula_dispersa_invenire(programma->pondera,
+        _chorda((i8*)clavis, n), &v))
+    {
+        redde NIHIL;
+    }
+    redde (constans OratioPondus*)v;
+}
+
+i32
+oratio_resolutio_pondera_limen (vacuum)
+{
+    constans character* ambitus = getenv("ORATIO_PONDERA_LIMEN");
+
+    redde ambitus != NIHIL && atoi(ambitus) > ZEPHYRUM
+        ? (i32)atoi(ambitus) : (i32)XX;
+}
+
+/* T38 b: radix/oratio/probationes/fixa/pondera.tsv in programma->pondera;
+ * plagula absens = NIHIL (decretor = exsecutor); plagula mala = FALSUM
+ * cum vitio (recusatio clara, numquam tacita). */
+interior b32
+_pondera_onerare (
+                     Piscina* piscina,
+          constans character* radix,
+             OratioProgramma* programma,
+    OratioVocabulariumVitium* vitium)
+{
+    character via[1024];
+       chorda fons;
+
+    sprintf(via, "%s/oratio/probationes/fixa/pondera.tsv", radix);
+    si (!_plagulam_legere(piscina, via, &fons))
+    {
+        redde VERUM;
+    }
+    redde oratio_resolutio_pondera_legere(piscina, programma, fons,
+        vitium);
 }
