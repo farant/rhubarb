@@ -1,7 +1,8 @@
 /* md_registrum.h - Vocabularium nodorum markdown (md-arbor-spec par. IV)
  *
  * MANU SCRIPTUM ut css_registrum.h: enumeratio typum VERUM habet et
- * comitem MD_GENUS_NUMERUS; probatio congruentiam cum tabula per
+ * comitem MD_GENUS_NUMERUS_GENERUM (ambo GENERATA ex declaratione,
+ * 2026-09-15); probatio congruentiam cum tabula per
  * TITULOS et CONTIGUITATEM offsetuum asserit.
  *
  * MODELLUM LINEARUM (spec par. III): quaeque linea a bloco FOLIO
@@ -27,41 +28,13 @@
 #include "latina.h"
 #include "materia_registrum.h"
 
-nomen enumeratio {
-    /* bloci */
-    MD_GENUS_DOCUMENTUM = 0,
-    MD_GENUS_PRAEFATIO,        /* YAML front matter, crudum */
-    MD_GENUS_LINEA,            /* linea cruda: praefixa + contentum + finis */
-    MD_GENUS_LINEA_VACUA,      /* praefixa + finis */
-    MD_GENUS_PARAGRAPHUS,
-    MD_GENUS_CAPITULUM,
-    MD_GENUS_SAEPTUM,          /* blocus codicis (saeptus aut indentatus) */
-    MD_GENUS_LIMES,            /* linea saepti aperiens/claudens */
-    MD_GENUS_CITATIO,
-    MD_GENUS_LISTA,
-    MD_GENUS_ELEMENTUM,
-    MD_GENUS_DIVISIO,          /* fractura thematica */
-    MD_GENUS_TABULA,
-    MD_GENUS_ORDO,
-    MD_GENUS_CELLA,
-    MD_GENUS_HTML,             /* blocus html opacus */
-    MD_GENUS_DEFINITIO_NEXUS,
-
-    /* inlinea */
-    MD_GENUS_INLINEA,
-    MD_GENUS_TEXTUS,
-    MD_GENUS_EMPHASIS,
-    MD_GENUS_FORTIS,
-    MD_GENUS_DELETIO,
-    MD_GENUS_VERBATIM,         /* code span */
-    MD_GENUS_NEXUS,
-    MD_GENUS_IMAGO,
-    MD_GENUS_FRACTURA_MOLLIS,
-    MD_GENUS_FRACTURA_DURA,
-    MD_GENUS_HTML_INLINEUM,
-
-    MD_GENUS_NUMERUS
-} MdGenus;
+/* Enumeratio generum et tabulae COCTAE generantur ex
+ * md/grammatica/md.registrum.stml (materia/coquere.sh, 2026-09-15):
+ * MdGenus, MD_GENUS_NUMERUS_GENERUM, MD_REGISTRUM. Genera APPENDUNTUR,
+ * numquam interponuntur (ordo = enumeratio = offsets; sigillum
+ * canonis pinna). Hic manent quae clientis sunt: enumerationes
+ * LOCORUM nominatae. */
+#include "md_registrum_coctum.h"
 
 
 /* ==================================================
@@ -273,7 +246,5 @@ nomen enumeratio {
     MD_NEXUS_AUTO
 } MdFormaNexus;
 
-
-externus constans MateriaRegistrumCoctum MD_REGISTRUM;
 
 #endif /* MD_REGISTRUM_H */

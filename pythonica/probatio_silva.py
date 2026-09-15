@@ -547,6 +547,23 @@ finally:
     silva.VETITAE = tuple(v for v in silva.VETITAE if v != vet)
 
 print('--- metiri ---')
+# registrum coctum (2026-09-15): involucrum tenue instrumenti C89 -
+# declaratio orationis commissa RECENS (rc 0, viae ambae nominatae);
+# declaratio mala (species ignota) RECUSATA (rc 2, nihil scriptum)
+rc = silva.registrum_coquere('oratio/grammatica/oratio.registrum.stml')
+credo(rc.rc == 0 and rc.recens,
+      'registrum_coquere: declaratio orationis recens (rc 0): %s' % rc.acta.strip())
+credo(rc.viae == ['oratio/fontes/oratio_registrum_coctum.h',
+                  'oratio/fontes/oratio_registrum_coctum.c'],
+      'registrum_coquere: viae generatae nominatae: %r' % (rc.viae,))
+with open(silva._absoluta('build/proba_mala.registrum.stml'), 'w') as f:
+    f.write('<registrum grammatica="p" praefixum="P" typus="PG" sedes="build">\n'
+            '  <genus titulus="g"><locus titulus="a" species="lista"/></genus>\n'
+            '</registrum>\n')
+rm = silva.registrum_coquere('build/proba_mala.registrum.stml')
+credo(rm.rc == 2 and not rm.recens and rm.viae == [],
+      'registrum_coquere: declaratio mala recusata (rc 2): %s' % rm.acta.strip()[:120])
+
 mm = silva.metiri('lib/piscina.c', n=1)
 credo(mm.parsare_ms > 0 and mm.allocationes > 0 and 'glr' in mm.phases and mm.campi and mm.campi['via'].endswith('piscina.c'), 'metiri: mensura cum phasibus (%.1f ms)' % mm.parsare_ms)
 mc = silva.metiri('probationes/fixa/css/adversarius.css', n=1)

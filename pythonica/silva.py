@@ -3095,6 +3095,30 @@ Mensura = namedtuple('Mensura', 'via parsare_ms lexare_ms phases allocationes us
                     ' campi', defaults=(None,))
 
 
+Coctio = namedtuple('Coctio', 'rc recens viae acta')
+
+
+def registrum_coquere(via, scribere=False):
+    """involucrum tenue instrumenti C89 ./materia/coquere.sh (registrum
+    coctum ex declaratione STML, 2026-09-15): via declarationis radici
+    relativa. Sine scribere = comparatio (rc 0 recens, 1 RANCIDUM, 2
+    recusatio/defectus); scribere=True plagulas scribit. viae = plagulae
+    generatae nominatae in effusione (recens:/scriptum:), radici
+    relativae. Instrumentum ipsum iudicat et generat - hic nihil
+    interpretatur praeter effusionem."""
+    args = ['./materia/coquere.sh', via] + (['-scribere'] if scribere else [])
+    r = _curre(args)
+    acta = r.stdout + r.stderr
+    viae = []
+    for linea in r.stdout.splitlines():
+        for praefixum in ('recens: ', 'scriptum: '):
+            if linea.startswith(praefixum):
+                v = linea[len(praefixum):].strip()
+                radix = RADIX + '/'
+                viae.append(v[len(radix):] if v.startswith(radix) else v)
+    return Coctio(r.returncode, r.returncode == 0 and not scribere, viae, acta)
+
+
 def metiri(via, n=7, nudum=False):
     """computus min-of-n (singuli +-X%): parsare/lexare ms, phases,
     allocationes, usus - pro A/B optimizationum. Instrumentum ex

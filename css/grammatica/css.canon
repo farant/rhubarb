@@ -2,7 +2,8 @@
   css.canon
   MANU SCRIPTUM (decretum Frani 2026-09-01, consilium B, B7).
 
-  Nulla grammatica css.stml exsistit: registrum (css_registrum.c)
+  Nulla grammatica css.stml exsistit: registrum (css_registrum_coctum.c,
+  ex css.registrum.stml generatum 2026-09-15)
   manu scriptum est, ergo canon quoque. Custos derivae
   (probatio_css_canon) portam recentiae generatoris supplet:
   regulae huius plagulae contra registrum generum, loci, lexicon
@@ -154,7 +155,7 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum FNV-1a tabularum css_registrum.c
+      nota="PINNA: sigillum FNV-1a tabularum css_registrum_coctum.c (ex css.registrum.stml)
             (B8: XXI genera, XLV loci).
             Tabula mutata sine hac optione mutata rubet in
             iudicio (documentum sigillum vivum fert) ET in custode
@@ -190,7 +191,7 @@
   </elementum>
 
   <!-- =============== GENERA ET LOCI ===============
-       Ordo registri (css_registrum.c). Locus quisque SEMEL aut
+       Ordo registri (css.registrum.stml). Locus quisque SEMEL aut
        nusquam: absentia canonica (locus NIHIL non scribitur),
        lista vacua scribitur (<contentum/>).
        -->

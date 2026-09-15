@@ -19,6 +19,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 hic_manens constans character* constans DECLARATIO =
@@ -35,6 +36,15 @@ hic_manens constans character* constans DECLARATIO =
     "    <locus titulus=\"mixta\" species=\"lista-mixta\"/>\n"
     "    <locus titulus=\"index\" species=\"index\"/>\n"
     "    <locus titulus=\"socius\" species=\"referentia\"/>\n"
+    "  </genus>\n"
+    "</registrum>\n";
+
+/* eadem declaratio, sedes in materia/build (porta rancoris VI) */
+hic_manens constans character* constans DECLARATIO_AEDIFICATA =
+    "<registrum grammatica=\"proba\" praefixum=\"PROBA\"\n"
+    "  typus=\"ProbaGenus\" sedes=\"materia/build\">\n"
+    "  <genus titulus=\"radix\">\n"
+    "    <locus titulus=\"caput\" species=\"token\"/>\n"
     "  </genus>\n"
     "</registrum>\n";
 
@@ -384,6 +394,100 @@ principale (vacuum)
             "{ \"g\", (i32)0, (i32)0 },"));
         CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.fons, piscina),
             "{ \"h\", (i32)0, (i32)1 },"));
+    }
+
+    {
+        MateriaCoctio coctio;
+
+        imprimere("\n--- V. Tituli cum subducto (css: tok_nomen) ---\n");
+        CREDO_VERUM (_coquere(piscina,
+            "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\"\n"
+            "  sedes=\"p\">\n"
+            "  <genus titulus=\"regula-apud\">\n"
+            "    <locus titulus=\"tok_nomen\" species=\"token\"/>\n"
+            "    <locus titulus=\"tok_terminator\" species=\"token\"/>\n"
+            "  </genus>\n"
+            "</registrum>\n", &coctio));
+        CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.fons, piscina),
+            "{ \"tok_nomen\", (s32)MATERIA_LOCUS_TOKEN },"));
+        CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.caput, piscina),
+            "P_GENUS_REGULA_APUD = 0,"));
+    }
+
+    {
+        constans character* radix = getenv("RHUBARB_RADIX");
+                 character  via[1024];
+             MateriaRancor  rancor;
+                      FILE* f;
+
+        imprimere("\n--- VI. Porta rancoris: recens, rancida, absens ---\n");
+        /* declaratio et plagulae generatae in materia/build (sedes) */
+        radix = radix != NIHIL ? radix : ".";
+        sprintf(via, "%s/materia/build/proba.registrum.stml", radix);
+        f = fopen(via, "wb");
+        CREDO_NON_NIHIL (f);
+        si (f != NIHIL)
+        {
+            fputs(DECLARATIO_AEDIFICATA, f);
+            fclose(f);
+        }
+        /* absens: plagulae cursus prioris remotae (suite iterata eas
+         * inveniret - cursus plenus 2026-09-15 id docuit) */
+        sprintf(via, "%s/materia/build/proba_registrum_coctum.h",
+            radix);
+        remove(via);
+        sprintf(via, "%s/materia/build/proba_registrum_coctum.c",
+            radix);
+        remove(via);
+        CREDO_VERUM (materia_registrum_recens(piscina, radix,
+            "materia/build/proba.registrum.stml", &rancor));
+        CREDO_FALSUM (rancor.recens);
+        CREDO_AEQUALIS_I32 (rancor.linea, ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS (rancor.via,
+            "materia/build/proba_registrum_coctum.h");
+        /* scriptae ex redditione: recens */
+        sprintf(via, "%s/materia/build/proba_registrum_coctum.h",
+            radix);
+        f = fopen(via, "wb");
+        CREDO_NON_NIHIL (f);
+        si (f != NIHIL)
+        {
+            fwrite(rancor.coctio.caput.datum, I,
+                (size_t)rancor.coctio.caput.mensura, f);
+            fclose(f);
+        }
+        sprintf(via, "%s/materia/build/proba_registrum_coctum.c",
+            radix);
+        f = fopen(via, "wb");
+        CREDO_NON_NIHIL (f);
+        si (f != NIHIL)
+        {
+            fwrite(rancor.coctio.fons.datum, I,
+                (size_t)rancor.coctio.fons.mensura, f);
+            fclose(f);
+        }
+        CREDO_VERUM (materia_registrum_recens(piscina, radix,
+            "materia/build/proba.registrum.stml", &rancor));
+        CREDO_VERUM (rancor.recens);
+        /* fons manu tactus: rancidus cum linea */
+        f = fopen(via, "ab");
+        CREDO_NON_NIHIL (f);
+        si (f != NIHIL)
+        {
+            fputs("/* manu */\n", f);
+            fclose(f);
+        }
+        CREDO_VERUM (materia_registrum_recens(piscina, radix,
+            "materia/build/proba.registrum.stml", &rancor));
+        CREDO_FALSUM (rancor.recens);
+        CREDO_CHORDA_AEQUALIS_LITERIS (rancor.via,
+            "materia/build/proba_registrum_coctum.c");
+        CREDO_MAIOR_I32 (rancor.linea, ZEPHYRUM);
+        /* declaratio absens: FALSUM cum causa */
+        CREDO_FALSUM (materia_registrum_recens(piscina, radix,
+            "materia/build/absens.registrum.stml", &rancor));
+        CREDO_CHORDA_CONTINET (rancor.causa,
+            chorda_ex_literis("absens", piscina));
     }
 
     imprimere("\n");

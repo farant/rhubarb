@@ -110,6 +110,19 @@ lexeme-path raw marking (B6) - **CR representation: `cr` attribute
 (offsets), STML normalizes CRLF even in raw (measured); silva has
 the same LATENT bug for C89 comments (phase-5 replay)**.
 
+## The registry is generated (2026-09-15)
+
+`CssGenus`, `CSS_GENUS_NUMERUS_GENERUM` (was `CSS_GENUS_NUMERUS`) and
+the tables `CSS_REGISTRUM` come from `css/grammatica/css.registrum.stml`
+via `./materia/coquere.sh css/grammatica/css.registrum.stml -scribere`
+into `css/fontes/css_registrum_coctum.{h,c}`; `css_registrum.c` no
+longer exists. To add a genus or slot: append to the declaration
+(genera append-only), run `-scribere`, add the slot enum member by
+hand in `css_registrum.h`, then move the seal in `css.canon` and any
+count pin by hand with a cause. `probatio_css_registrum` regenerates
+in-process and compares bytes; a hand edit of a `_coctum` file goes
+red with the first divergent line.
+
 ## Named slot indices — use them, never bare numbers
 
 `css_registrum.h` carries an enum per genus (`CSS_DECL_VALOR`,

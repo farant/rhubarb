@@ -2,7 +2,7 @@
   md.canon
   MANU SCRIPTUM (ut css.canon, decretum Frani 2026-09-01, consilium B).
 
-  Registrum md_registrum.c et lexicon md_lexicon.c manu scripta sunt,
+  Registrum ex md.registrum.stml generatur (2026-09-15), lexicon md_lexicon.c manu scriptum est,
   ergo canon quoque. Custos derivae (probatio_md_canon) regulas huius
   plagulae contra registrum generum, loci, lexicon et involucrum
   UTRIMQUE retiret (regula absens ET regula rancida rubent); sigillum
@@ -132,7 +132,7 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum md_registrum.c (A8: XXVIII
+      nota="PINNA: sigillum tabularum md_registrum_coctum.c (ex md.registrum.stml) (A8: XXVIII
             genera, LXXXVII loci). Tabula mutata sine hac optione
             mutata rubet in iudicio ET in custode derivae
             (probatio_md_canon optionem contra materia_arbor_sigillum
@@ -174,7 +174,7 @@
   </elementum>
 
   <!-- =============== GENERA ET LOCI ===============
-       Ordo registri (md_registrum.c). Locus quisque SEMEL aut nusquam:
+       Ordo registri (md.registrum.stml). Locus quisque SEMEL aut nusquam:
        absentia canonica (locus NIHIL non scribitur), lista vacua
        scribitur.
        -->

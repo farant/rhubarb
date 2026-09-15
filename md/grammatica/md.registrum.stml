@@ -1,0 +1,202 @@
+<!--
+  md.registrum.stml - DECLARATIO registri generum (md)
+
+  FONS UNUS tabularum coctarum md_registrum_coctum.{h,c}
+  (materia/coquere.sh; canon materia/grammatica/registrum.canon).
+  Genera APPENDUNTUR, numquam interponuntur: ordo = enumeratio =
+  offsets; permutatio sigillum canonis movet (pinna, manu mota cum
+  causa). Notae in commentaria generata transeunt.
+-->
+<registrum grammatica="md" praefixum="MD" typus="MdGenus"
+  sedes="md/fontes">
+
+  <genus titulus="documentum"
+    nota="bloci (documentum .. definitio-nexus)">
+    <locus titulus="praefatio" species="nodus"/>
+    <locus titulus="bloci" species="lista-nodus"/>
+    <locus titulus="finis" species="token"/>
+  </genus>
+
+  <genus titulus="praefatio">
+    <locus titulus="apertum" species="nodus"/>
+    <locus titulus="lineae" species="lista-nodus"/>
+    <locus titulus="clausum" species="nodus"/>
+  </genus>
+
+  <genus titulus="linea">
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="contentum" species="lista-token"
+      nota="scissa ad &quot;&lt;/md-&quot;"/>
+    <locus titulus="finis" species="token"/>
+  </genus>
+
+  <genus titulus="linea-vacua">
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="finis" species="token"/>
+  </genus>
+
+  <genus titulus="paragraphus">
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="nudus" species="index"/>
+    <locus titulus="inlinea" species="nodus"/>
+    <locus titulus="finis" species="token"/>
+  </genus>
+
+  <genus titulus="capitulum">
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="gradus" species="index"/>
+    <locus titulus="marca" species="token"/>
+    <locus titulus="inlinea" species="nodus"/>
+    <locus titulus="clausum" species="token"/>
+    <locus titulus="finis" species="token"/>
+    <locus titulus="subductio" species="nodus"/>
+  </genus>
+
+  <genus titulus="saeptum">
+    <locus titulus="forma" species="index"/>
+    <locus titulus="apertum" species="nodus"/>
+    <locus titulus="lingua" species="token"
+      nota="DERIVATUM: verbum primum info"/>
+    <locus titulus="lineae" species="lista-nodus"/>
+    <locus titulus="clausum" species="nodus"/>
+    <locus titulus="valor" species="token"
+      nota="DERIVATUM: contentum decoctum, lineae + '\n'"/>
+  </genus>
+
+  <genus titulus="limes">
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="signum" species="token"/>
+    <locus titulus="info" species="token"/>
+    <locus titulus="finis" species="token"/>
+  </genus>
+
+  <genus titulus="citatio">
+    <locus titulus="bloci" species="lista-nodus"/>
+  </genus>
+
+  <genus titulus="lista">
+    <locus titulus="genus" species="index"/>
+    <locus titulus="initium" species="index"/>
+    <locus titulus="laxa" species="index"/>
+    <locus titulus="elementa" species="lista-nodus"/>
+  </genus>
+
+  <genus titulus="elementum">
+    <locus titulus="officium" species="index"/>
+    <locus titulus="bloci" species="lista-nodus"/>
+  </genus>
+
+  <genus titulus="divisio">
+    <locus titulus="linea" species="nodus"/>
+  </genus>
+
+  <genus titulus="tabula">
+    <locus titulus="caput" species="nodus"/>
+    <locus titulus="separator" species="nodus"/>
+    <locus titulus="ordines" species="lista-nodus"/>
+  </genus>
+
+  <genus titulus="ordo">
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="cellae" species="lista-nodus"/>
+    <locus titulus="clausum" species="token"/>
+    <locus titulus="finis" species="token"/>
+  </genus>
+
+  <genus titulus="cella">
+    <locus titulus="ordinatio" species="index"/>
+    <locus titulus="apertum" species="token"/>
+    <locus titulus="inlinea" species="nodus"/>
+  </genus>
+
+  <genus titulus="html"
+    nota="blocus html opacus">
+    <locus titulus="lineae" species="lista-nodus"/>
+    <locus titulus="valor" species="token"
+      nota="DERIVATUM: lineae verbatim + '\n' (B3.1)"/>
+  </genus>
+
+  <genus titulus="definitio-nexus">
+    <locus titulus="lineae" species="lista-nodus"/>
+    <locus titulus="titulus" species="token"/>
+    <locus titulus="url" species="token"/>
+    <locus titulus="descriptio" species="token"/>
+  </genus>
+
+  <genus titulus="inlinea"
+    nota="inlinea (inlinea .. html-inlineum): arbor inlinea octetos suos possidet">
+    <locus titulus="liberi" species="lista-nodus"/>
+  </genus>
+
+  <genus titulus="textus">
+    <locus titulus="crudum" species="lista-token"/>
+    <locus titulus="valor" species="token"/>
+  </genus>
+
+  <genus titulus="emphasis">
+    <locus titulus="apertum" species="token"/>
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="clausum" species="token"/>
+  </genus>
+
+  <genus titulus="fortis">
+    <locus titulus="apertum" species="token"/>
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="clausum" species="token"/>
+  </genus>
+
+  <genus titulus="deletio">
+    <locus titulus="apertum" species="token"/>
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="clausum" species="token"/>
+  </genus>
+
+  <genus titulus="verbatim"
+    nota="code span">
+    <locus titulus="apertum" species="token"/>
+    <locus titulus="crudum" species="lista-token"/>
+    <locus titulus="valor" species="token"/>
+    <locus titulus="clausum" species="token"/>
+  </genus>
+
+  <genus titulus="nexus">
+    <locus titulus="forma" species="index"/>
+    <locus titulus="apertum" species="token"/>
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="cauda" species="lista-token"/>
+    <locus titulus="url" species="token"/>
+    <locus titulus="descriptio" species="token"/>
+  </genus>
+
+  <genus titulus="imago">
+    <locus titulus="forma" species="index"/>
+    <locus titulus="apertum" species="token"/>
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="cauda" species="lista-token"/>
+    <locus titulus="url" species="token"/>
+    <locus titulus="descriptio" species="token"/>
+    <locus titulus="alt" species="token"
+      nota="DERIVATUM: textus planus liberorum"/>
+  </genus>
+
+  <genus titulus="fractura-mollis">
+    <locus titulus="finis" species="token"/>
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="valor" species="token"
+      nota="DERIVATUM: '\n' redditum (terminator octetos in proiectione non fert)"/>
+  </genus>
+
+  <genus titulus="fractura-dura">
+    <locus titulus="signum" species="token"/>
+    <locus titulus="finis" species="token"/>
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="valor" species="token"
+      nota="DERIVATUM: '\n' post &lt;br/>"/>
+  </genus>
+
+  <genus titulus="html-inlineum">
+    <locus titulus="crudum" species="lista-token"/>
+    <locus titulus="valor" species="token"
+      nota="DERIVATUM: octeti cum lineis novis (B3.3, cum lineas plures tenet)"/>
+  </genus>
+</registrum>

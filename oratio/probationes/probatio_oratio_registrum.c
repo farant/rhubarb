@@ -805,75 +805,57 @@ MateriaLexiconRatum  ratum;
         }
     }
 
-    /* PORTA RANCORIS (2026-09-15): tabulae coctae oratio_registrum_coctum.{h,c}
-     * ex oratio.registrum.stml GENERATAE - regenerata in memoria contra
-     * plagulas commissas OCTETIM (output, numquam tempora): declaratio
-     * mutata sine ./materia/coquere.sh -scribere, aut plagula generata
-     * manu tacta, hic rubet cum linea prima divergente. Numerus locorum
-     * declarationis == tabula viva. */
+
+    /* ========================================================
+     * PROBARE: porta rancoris tabularum coctarum (2026-09-15)
+     * oratio_registrum_coctum.{h,c} ex oratio.registrum.stml GENERATAE -
+     * redditio in memoria contra plagulas commissas OCTETIM (output,
+     * numquam tempora): declaratio mutata sine ./materia/coquere.sh
+     * -scribere, aut plagula generata manu tacta, hic rubet cum linea
+     * prima divergente. Numeri declarationis == tabula viva.
+     * ======================================================== */
+
     {
         constans character* radix = getenv("RHUBARB_RADIX");
-                 character  via[1024];
-                    chorda  declaratio;
-                    chorda  in_disco;
-             MateriaCoctio  coctio;
-                       i32  linea;
+             MateriaRancor  rancor;
 
         imprimere("\n--- Probans rancorem tabularum coctarum ---\n");
-        sprintf(via, "%s/oratio/grammatica/oratio.registrum.stml",
-            radix != NIHIL ? radix : ".");
-        si (!_plagulam_legere(piscina, via, &declaratio))
+        si (!materia_registrum_recens(piscina, radix
+            != NIHIL ? radix : ".",
+                "oratio/grammatica/oratio.registrum.stml", &rancor))
         {
-            CREDO_CULPA ("oratio.registrum.stml absens");
-        }
-        alioquin si (!materia_registrum_coquere(piscina, declaratio,
-                     "oratio/grammatica/oratio.registrum.stml",
-                     &coctio))
-        {
-            imprimere("    recusatio: %.*s (linea %u)\n",
-                (integer)coctio.causa.mensura,
-                (constans character*)coctio.causa.datum, coctio.linea);
-            CREDO_CULPA ("declaratio recusata");
+            imprimere("    recusatio: %.*s\n",
+                (integer)rancor.causa.mensura,
+                (constans character*)rancor.causa.datum);
+            CREDO_CULPA ("declaratio absens aut recusata");
         }
         alioquin
         {
-            CREDO_AEQUALIS_I32 (coctio.numerus_locorum,
+            si (!rancor.recens)
+            {
+                imprimere("    RANCIDUM: %.*s:%u\n",
+                    (integer)rancor.via.mensura,
+                    (constans character*)rancor.via.datum,
+                    rancor.linea);
+            }
+            CREDO_VERUM (rancor.recens);
+            CREDO_AEQUALIS_I32 (rancor.coctio.numerus_locorum,
                 ORATIO_REGISTRUM.numerus_locorum);
-            CREDO_AEQUALIS_I32 (coctio.numerus_generum,
+            CREDO_AEQUALIS_I32 (rancor.coctio.numerus_generum,
                 ORATIO_REGISTRUM.numerus_generum);
-            sprintf(via, "%s/%.*s", radix != NIHIL ? radix : ".",
-                (integer)coctio.via_capitis.mensura,
-                (constans character*)coctio.via_capitis.datum);
-            CREDO_VERUM (_plagulam_legere(piscina, via, &in_disco));
-            CREDO_VERUM (materia_coctio_aequalis(coctio.caput, in_disco,
-                &linea));
-            si (linea != ZEPHYRUM)
-            {
-                imprimere("    caput RANCIDUM linea %u\n", linea);
-            }
-            sprintf(via, "%s/%.*s", radix != NIHIL ? radix : ".",
-                (integer)coctio.via_fontis.mensura,
-                (constans character*)coctio.via_fontis.datum);
-            CREDO_VERUM (_plagulam_legere(piscina, via, &in_disco));
-            CREDO_VERUM (materia_coctio_aequalis(coctio.fons, in_disco,
-                &linea));
-            si (linea != ZEPHYRUM)
-            {
-                imprimere("    fons RANCIDUS linea %u\n", linea);
-            }
         }
     }
 
     {
         MateriaArborConsilium c;
-        MateriaNodus*         documentum;
-        MateriaNodus*         paragraphus;
-        MateriaNodus*         sententia;
-        MateriaNodus*         vocabulum;
-        MateriaArborScriptura s1;
-        MateriaArborScriptura s2;
-        MateriaNodus*         lecta;
-        MateriaArborVitium    vitium;
+                 MateriaNodus* documentum;
+                 MateriaNodus* paragraphus;
+                 MateriaNodus* sententia;
+                 MateriaNodus* vocabulum;
+        MateriaArborScriptura  s1;
+        MateriaArborScriptura  s2;
+                 MateriaNodus* lecta;
+           MateriaArborVitium  vitium;
 
         imprimere("\n--- Probans circuitum orationis per materiam ---\n");
         /* "a\n": vocabulum 'a' cum cauda LINEA */

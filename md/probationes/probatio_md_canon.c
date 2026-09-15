@@ -501,7 +501,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quot, I);
     }
     CREDO_AEQUALIS_I32 (MD_REGISTRUM.numerus_generum,
-        (i32)MD_GENUS_NUMERUS);
+        (i32)MD_GENUS_NUMERUS_GENERUM);
 
     /* (b) loci: regula intra= genus suum una quaeque */
     per (i = ZEPHYRUM; i < MD_REGISTRUM.numerus_generum; i++)

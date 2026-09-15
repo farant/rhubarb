@@ -1,0 +1,124 @@
+<!--
+  css.registrum.stml - DECLARATIO registri generum (css)
+
+  FONS UNUS tabularum coctarum css_registrum_coctum.{h,c}
+  (materia/coquere.sh; canon materia/grammatica/registrum.canon).
+  Genera APPENDUNTUR, numquam interponuntur: ordo = enumeratio =
+  offsets; permutatio sigillum canonis movet (pinna, manu mota cum
+  causa). Notae in commentaria generata transeunt.
+-->
+<registrum grammatica="css" praefixum="CSS" typus="CssGenus"
+  sedes="css/fontes">
+
+  <genus titulus="plagula"
+    nota="Structura">
+    <locus titulus="regulae" species="lista-nodus"/>
+    <locus titulus="cauda" species="token"/>
+  </genus>
+
+  <genus titulus="regula-qualificata">
+    <locus titulus="praeludium" species="lista-nodus"/>
+    <locus titulus="corpus" species="nodus"/>
+  </genus>
+
+  <genus titulus="regula-apud">
+    <locus titulus="tok_nomen" species="token"/>
+    <locus titulus="praeludium" species="lista-nodus"/>
+    <locus titulus="corpus" species="nodus"/>
+    <locus titulus="tok_terminator" species="token"/>
+  </genus>
+
+  <genus titulus="declaratio">
+    <locus titulus="tok_nomen" species="token"/>
+    <locus titulus="tok_colon" species="token"/>
+    <locus titulus="valor" species="lista-nodus"/>
+    <locus titulus="praevalentia" species="nodus"/>
+    <locus titulus="tok_terminator" species="token"/>
+  </genus>
+
+  <genus titulus="praevalentia">
+    <locus titulus="tok_clamor" species="token"/>
+    <locus titulus="tok_verbum" species="token"/>
+  </genus>
+
+  <genus titulus="lexema-servatum"
+    nota="Valores componentes (CSS Syntax L3)">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="functio">
+    <locus titulus="tok_nomen" species="token"/>
+    <locus titulus="argumenta" species="lista-nodus"/>
+    <locus titulus="tok_clausum" species="token"/>
+  </genus>
+
+  <genus titulus="saeptum">
+    <locus titulus="tok_apertum" species="token"/>
+    <locus titulus="contentum" species="lista-nodus"/>
+    <locus titulus="tok_clausum" species="token"/>
+  </genus>
+
+  <genus titulus="regula-mala"
+    nota="Robustitas: recuperatio spec-definita">
+    <locus titulus="tokens" species="lista-token"/>
+  </genus>
+
+  <genus titulus="declaratio-mala">
+    <locus titulus="tokens" species="lista-token"/>
+  </genus>
+
+  <genus titulus="selector-lista"
+    nota="Selectores (spec par. V, B8) - arbor ANALYSEOS super lexemata praeludii (css_selector), non emissionis. APPENSA post genera priora: interpositio indices registri tacite moveret">
+    <locus titulus="selectores" species="lista-nodus"/>
+  </genus>
+
+  <genus titulus="selector-complexus">
+    <locus titulus="sinister" species="nodus"/>
+    <locus titulus="combinator" species="token"/>
+    <locus titulus="dexter" species="nodus"/>
+  </genus>
+
+  <genus titulus="selector-compositus">
+    <locus titulus="partes" species="lista-nodus"/>
+  </genus>
+
+  <genus titulus="selector-typi">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="selector-universalis">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="selector-classis">
+    <locus titulus="tok_punctum" species="token"/>
+    <locus titulus="tok_nomen" species="token"/>
+  </genus>
+
+  <genus titulus="selector-identitatis">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="selector-attributi">
+    <locus titulus="tok_apertum" species="token"/>
+    <locus titulus="tok_nomen" species="token"/>
+    <locus titulus="tok_operator" species="token"/>
+    <locus titulus="valor" species="token"/>
+    <locus titulus="tok_clausum" species="token"/>
+  </genus>
+
+  <genus titulus="pseudo-classis">
+    <locus titulus="tok_colon" species="token"/>
+    <locus titulus="tok_nomen" species="token"/>
+    <locus titulus="argumenta" species="lista-nodus"/>
+  </genus>
+
+  <genus titulus="pseudo-elementum">
+    <locus titulus="tok_colon" species="token"/>
+    <locus titulus="tok_nomen" species="token"/>
+  </genus>
+
+  <genus titulus="selector-malus">
+    <locus titulus="tokens" species="lista-token"/>
+  </genus>
+</registrum>

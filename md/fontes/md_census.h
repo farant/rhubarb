@@ -33,7 +33,7 @@ nomen structura {
     i32  lineae;                /* lexemata terminatoris md-linea */
     i32  lexemata;
     i32  derivata;              /* fons I */
-    i32  genera[MD_GENUS_NUMERUS];
+    i32  genera[MD_GENUS_NUMERUS_GENERUM];
     i32  capitula_gradus[7];    /* [1..6] */
     i32  listae_punctatae;
     i32  listae_numeratae;

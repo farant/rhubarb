@@ -49,6 +49,19 @@ html (twelve inputs byte-exact) · oraculum (1,270/1,324 pinned, only
 rising; `ORACULUM_OMNIA=1`, `ORACULUM_EXEMPLUM=N`) · extenta (57) ·
 census (41). Every gate was born red by a planted fault.
 
+## The registry is generated (2026-09-15)
+
+`MdGenus`, `MD_GENUS_NUMERUS_GENERUM` (was `MD_GENUS_NUMERUS`) and the
+tables `MD_REGISTRUM` come from `md/grammatica/md.registrum.stml` via
+`./materia/coquere.sh md/grammatica/md.registrum.stml -scribere` into
+`md/fontes/md_registrum_coctum.{h,c}`; `md_registrum.c` no longer
+exists. To add a genus or slot: append to the declaration (genera
+append-only), run `-scribere`, add the slot enum member by hand in
+`md_registrum.h`, then move the seal in `md.canon` by hand with a
+cause. `probatio_md_registrum` regenerates in-process and compares
+bytes; a hand edit of a `_coctum` file goes red with the first
+divergent line.
+
 ## Laws to keep (spec §3)
 
 - **Line model, zero trivia**: every byte is a token in ONE slot; every

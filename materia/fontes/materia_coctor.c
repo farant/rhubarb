@@ -12,6 +12,7 @@
 #include "chorda_aedificator.h"
 #include "internamentum.h"
 #include "xar.h"
+#include <stdio.h>
 #include <string.h>
 
 nomen structura {
@@ -138,7 +139,8 @@ _recusare (
     redde FALSUM;
 }
 
-/* titulus kebab: [a-z][a-z0-9-]* */
+/* titulus: [a-z][a-z0-9_-]* (css loci 'tok_nomen' subductum ferunt;
+ * hyphen et subductum ambo in '_' identificatoris transeunt) */
 interior b32
 _titulus_sanus (
     chorda t)
@@ -159,7 +161,7 @@ _titulus_sanus (
         {
             redde FALSUM;
         }
-        si (!littera && !cifra && c != '-')
+        si (!littera && !cifra && c != '-' && c != '_')
         {
             redde FALSUM;
         }
@@ -895,4 +897,140 @@ materia_registrum_coquere (
                 && coctio->fons.mensura > ZEPHYRUM
                 && coctio->via_capitis.mensura > ZEPHYRUM
                 && coctio->via_fontis.mensura > ZEPHYRUM);
+}
+
+
+/* ==================================================
+ * Porta rancoris
+ * ================================================== */
+
+/* plagulam totam legere (stdio solum: bibliotheca filum in catenis
+ * clientium abest); FALSUM = absens aut illegibilis */
+interior b32
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                chorda* exitus)
+{
+      FILE* f = fopen(via, "rb");
+    longus  longitudo;
+        i8* memoria;
+
+    exitus->datum    = NIHIL;
+    exitus->mensura  = ZEPHYRUM;
+    si (f == NIHIL)
+    {
+        redde FALSUM;
+    }
+    fseek(f, 0L, SEEK_END);
+    longitudo = ftell(f);
+    rewind(f);
+    si (longitudo < 0L)
+    {
+        fclose(f);
+        redde FALSUM;
+    }
+    memoria = (i8*)piscina_allocare(piscina,
+        (memoriae_index)longitudo + I);
+    si (   memoria                                 == NIHIL
+        || fread(memoria, I, (size_t)longitudo, f) != (size_t)longitudo)
+    {
+        fclose(f);
+        redde FALSUM;
+    }
+    fclose(f);
+    memoria[longitudo]  = ZEPHYRUM;
+    exitus->datum       = memoria;
+    exitus->mensura     = (i32)longitudo;
+    redde VERUM;
+}
+
+/* radix + '/' + relativa; relativa absoluta ('/...') sola manet */
+interior constans character*
+_via_radice (
+               Piscina* piscina,
+    constans character* radix,
+                chorda  relativa)
+{
+    character* v;
+       size_t  n = strlen(radix) + (size_t)relativa.mensura
+           + (size_t)II;
+
+    si (   relativa.mensura > ZEPHYRUM
+        && relativa.datum[ZEPHYRUM] == (i8)'/')
+    {
+        redde chorda_ut_cstr(relativa, piscina);
+    }
+    v = (character*)piscina_allocare(piscina, (memoriae_index)n);
+    si (v == NIHIL)
+    {
+        redde NIHIL;
+    }
+    sprintf(v, "%s/%.*s", radix, (integer)relativa.mensura,
+        (constans character*)relativa.datum);
+    redde v;
+}
+
+/* plagulam generatam contra textum conferre; rancor scriptus si
+ * differt aut abest */
+interior b32
+_plagula_recens (
+               Piscina* piscina,
+    constans character* radix,
+                chorda  via,
+                chorda  generatum,
+         MateriaRancor* rancor)
+{
+    constans character* absoluta = _via_radice(piscina, radix, via);
+                chorda  in_disco;
+                   i32  linea;
+
+    si (   absoluta == NIHIL || !_plagulam_legere(piscina, absoluta,
+            &in_disco))
+    {
+        rancor->via    = via;
+        rancor->linea  = ZEPHYRUM;
+        redde FALSUM;
+    }
+    si (!materia_coctio_aequalis(generatum, in_disco, &linea))
+    {
+        rancor->via    = via;
+        rancor->linea  = linea;
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
+materia_registrum_recens (
+               Piscina* piscina,
+    constans character* radix,
+    constans character* via_declarationis,
+         MateriaRancor* rancor)
+{
+    constans character* absoluta;
+                chorda  declaratio;
+
+    memset(rancor, ZEPHYRUM, magnitudo(*rancor));
+    absoluta = _via_radice(piscina, radix,
+        chorda_ex_literis(via_declarationis, piscina));
+    si (   absoluta == NIHIL || !_plagulam_legere(piscina, absoluta,
+            &declaratio))
+    {
+        rancor->causa = chorda_ex_literis("declaratio absens", piscina);
+        redde FALSUM;
+    }
+    si (!materia_registrum_coquere(piscina, declaratio,
+            via_declarationis, &rancor->coctio))
+    {
+        rancor->causa = rancor->coctio.causa;
+        redde FALSUM;
+    }
+    rancor->recens = (b32)(   _plagula_recens(piscina, radix,
+                                  rancor->coctio.via_capitis,
+                                  rancor->coctio.caput, rancor)
+                           && _plagula_recens(piscina, radix,
+                                  rancor->coctio.via_fontis,
+                                  rancor->coctio.fons, rancor));
+    redde VERUM;
 }

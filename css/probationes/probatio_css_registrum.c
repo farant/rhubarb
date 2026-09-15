@@ -22,8 +22,10 @@
 #include "materia_arbor.h"
 #include "materia_nodus.h"
 #include "materia_token.h"
+#include "materia_coctor.h"   /* porta rancoris tabularum coctarum */
 #include "piscina.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 hic_manens constans MateriaTokenForma FORMA = { ZEPHYRUM };
@@ -159,6 +161,47 @@ MateriaLexiconRatum  ratum;
 
 
     /* ========================================================
+     * PROBARE: porta rancoris tabularum coctarum (2026-09-15)
+     * css_registrum_coctum.{h,c} ex css.registrum.stml GENERATAE -
+     * redditio in memoria contra plagulas commissas OCTETIM (output,
+     * numquam tempora): declaratio mutata sine ./materia/coquere.sh
+     * -scribere, aut plagula generata manu tacta, hic rubet cum linea
+     * prima divergente. Numeri declarationis == tabula viva.
+     * ======================================================== */
+
+    {
+        constans character* radix = getenv("RHUBARB_RADIX");
+             MateriaRancor  rancor;
+
+        imprimere("\n--- Probans rancorem tabularum coctarum ---\n");
+        si (!materia_registrum_recens(piscina, radix
+            != NIHIL ? radix : ".",
+                "css/grammatica/css.registrum.stml", &rancor))
+        {
+            imprimere("    recusatio: %.*s\n",
+                (integer)rancor.causa.mensura,
+                (constans character*)rancor.causa.datum);
+            CREDO_CULPA ("declaratio absens aut recusata");
+        }
+        alioquin
+        {
+            si (!rancor.recens)
+            {
+                imprimere("    RANCIDUM: %.*s:%u\n",
+                    (integer)rancor.via.mensura,
+                    (constans character*)rancor.via.datum,
+                    rancor.linea);
+            }
+            CREDO_VERUM (rancor.recens);
+            CREDO_AEQUALIS_I32 (rancor.coctio.numerus_locorum,
+                CSS_REGISTRUM.numerus_locorum);
+            CREDO_AEQUALIS_I32 (rancor.coctio.numerus_generum,
+                CSS_REGISTRUM.numerus_generum);
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: registrum - ordo et CONTIGUITAS locorum
      * ======================================================== */
 
@@ -169,12 +212,13 @@ MateriaLexiconRatum  ratum;
         imprimere("\n--- Probans registrum nodorum ---\n");
 
         CREDO_AEQUALIS_I32 (CSS_REGISTRUM.numerus_generum,
-            (i32)CSS_GENUS_NUMERUS);
+            (i32)CSS_GENUS_NUMERUS_GENERUM);
         CREDO_AEQUALIS_I32 ((i32)(magnitudo(GENERA_EXSPECTATA)
-            / magnitudo(GENERA_EXSPECTATA[0])), (i32)CSS_GENUS_NUMERUS);
+            / magnitudo(GENERA_EXSPECTATA[0])),
+            (i32)CSS_GENUS_NUMERUS_GENERUM);
 
         /* Enumeratio et tabula congruunt, per TITULOS */
-        per (i = ZEPHYRUM; i < (i32)CSS_GENUS_NUMERUS; i++)
+        per (i = ZEPHYRUM; i < (i32)CSS_GENUS_NUMERUS_GENERUM; i++)
         {
             CREDO_NON_NIHIL (CSS_REGISTRUM.genera[i].titulus);
             CREDO_VERUM (strcmp(CSS_REGISTRUM.genera[i].titulus,
@@ -189,7 +233,7 @@ MateriaLexiconRatum  ratum;
          * Hic tabula manu scripta errat, et error TACITUS est -
          * nodus formam alienam legeret sine querela. */
         exspectatus_offset = ZEPHYRUM;
-        per (i = ZEPHYRUM; i < (i32)CSS_GENUS_NUMERUS; i++)
+        per (i = ZEPHYRUM; i < (i32)CSS_GENUS_NUMERUS_GENERUM; i++)
         {
             CREDO_AEQUALIS_I32 (CSS_REGISTRUM.genera[i].loci_offset,
                 exspectatus_offset);
@@ -217,13 +261,13 @@ MateriaLexiconRatum  ratum;
 
     {
         MateriaArborConsilium c;
-        MateriaNodus*         plagula;
-        MateriaNodus*         regula;
-        MateriaNodus*         saeptum;
-        MateriaArborScriptura s1;
-        MateriaArborScriptura s2;
-        MateriaNodus*         lecta;
-        MateriaArborVitium    vitium;
+                 MateriaNodus* plagula;
+                 MateriaNodus* regula;
+                 MateriaNodus* saeptum;
+        MateriaArborScriptura  s1;
+        MateriaArborScriptura  s2;
+                 MateriaNodus* lecta;
+           MateriaArborVitium  vitium;
 
         imprimere("\n--- Probans circuitum CSS per materiam ---\n");
 

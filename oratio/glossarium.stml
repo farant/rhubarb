@@ -1024,5 +1024,9 @@
     <forma textus="decretore" casus="ablativus" numerus="singularis" genus="masculinum"/>
     <forma textus="decretores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="rancor" lingua="latina" classis="substantivum" nota="rancor, -oris: status plagulae generatae quae a redditione recenti differt (materia_coctor: MateriaRancor, porta rancoris; 2026-09-15)">
+    <forma textus="rancor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="rancoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
 
 </glossarium>

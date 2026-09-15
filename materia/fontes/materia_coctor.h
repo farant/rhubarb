@@ -75,4 +75,24 @@ materia_coctio_aequalis (
     chorda  in_disco,
        i32* linea_divergens);
 
+/* PORTA RANCORIS, una pro clientibus omnibus: declarationem legere,
+ * coquere, plagulas generatas commissas legere, octetim conferre. */
+nomen structura {
+              b32 recens;    /* plagulae ambae octetim aequales */
+           chorda via;       /* divergens aut absens (relativa) */
+              i32 linea;     /* prima divergens; ZEPHYRUM = absens */
+           chorda causa;     /* recusatio declarationis */
+    MateriaCoctio coctio;    /* redditio (viae, numeri) */
+} MateriaRancor;
+
+/* radix = directorium repositorii (viae ei relativae: declaratio,
+ * sedes). VERUM = comparatio facta (rancor->recens dicit); FALSUM =
+ * declaratio absens, recusata (causa) aut memoria. */
+b32
+materia_registrum_recens (
+               Piscina* piscina,
+    constans character* radix,
+    constans character* via_declarationis,
+         MateriaRancor* rancor);
+
 #endif /* MATERIA_COCTOR_H */

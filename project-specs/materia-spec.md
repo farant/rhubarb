@@ -541,8 +541,13 @@ files. C89 throughout; usable without Python (Fran, 2026-09-15). NOT
 generated, on purpose: the locus enums (client-shaped: oratio's
 analysis genera share a common enum; typedef names are genitives) and
 the pins (locus count in the probatio, seal in the client canon) —
-those are gates, moved by hand with a cause. Oratio migrated first
-(seal unchanged); css and md follow.
+those are gates, moved by hand with a cause. All three clients are
+migrated (oratio first, then css and md the same day; every seal
+unchanged); the freshness check is one library call,
+`materia_registrum_recens`, shared by the three registrum probationes
+and the instrument's compare mode. Titles admit `_` as well as `-`
+(css's `tok_nomen` loci). A thin Python wrapper
+(`silva.registrum_coquere`) shells to the C89 instrument.
 
 
 ---

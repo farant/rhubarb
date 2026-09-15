@@ -125,30 +125,6 @@ _iudicare (
     redde vitia != NIHIL ? (s32)xar_numerus(vitia) : ZEPHYRUM;
 }
 
-/* plagulam generatam contra discum conferre: VERUM recens */
-interior b32
-_conferre (
-               Piscina* piscina,
-    constans character* via,
-                chorda  generatum)
-{
-    chorda in_disco = filum_legere_totum(via, piscina);
-       i32 linea;
-
-    si (in_disco.mensura == ZEPHYRUM)
-    {
-        imprimere("RANCIDUM: %s: absens\n", via);
-        redde FALSUM;
-    }
-    si (!materia_coctio_aequalis(generatum, in_disco, &linea))
-    {
-        imprimere("RANCIDUM: %s:%u\n", via, linea);
-        redde FALSUM;
-    }
-    imprimere("recens: %s\n", via);
-    redde VERUM;
-}
-
 s32
 principale (
           s32   numerus,
@@ -243,10 +219,39 @@ principale (
         redde ZEPHYRUM;
     }
     {
-        b32 caput_recens = _conferre(piscina, via_capitis,
-            coctio.caput);
-        b32 fons_recens = _conferre(piscina, via_fontis, coctio.fons);
+        MateriaRancor rancor;
 
-        redde (caput_recens && fons_recens) ? ZEPHYRUM : I;
+        /* porta rancoris eadem quam probationes clientium vocant */
+        si (!materia_registrum_recens(piscina, radix,
+                _via_relativa(radix, via), &rancor))
+        {
+            fprintf(stderr, "coctor: rancor non iudicatus: %.*s\n",
+                (integer)rancor.causa.mensura,
+                (constans character*)rancor.causa.datum);
+            redde II;
+        }
+        si (!rancor.recens)
+        {
+            si (rancor.linea == ZEPHYRUM)
+            {
+                imprimere("RANCIDUM: %.*s: absens\n",
+                    (integer)rancor.via.mensura,
+                    (constans character*)rancor.via.datum);
+            }
+            alioquin
+            {
+                imprimere("RANCIDUM: %.*s:%u\n",
+                    (integer)rancor.via.mensura,
+                    (constans character*)rancor.via.datum,
+                    rancor.linea);
+            }
+            redde I;
+        }
+        imprimere("recens: %.*s\nrecens: %.*s\n",
+            (integer)coctio.via_capitis.mensura,
+            (constans character*)coctio.via_capitis.datum,
+            (integer)coctio.via_fontis.mensura,
+            (constans character*)coctio.via_fontis.datum);
+        redde ZEPHYRUM;
     }
 }

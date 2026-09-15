@@ -4,7 +4,8 @@
  * BONA quam consilium notat: registro manu scripto enumeratio genus
  * TYPEDEF et COMITEM habere potest - quae silvae, a generatore
  * anonyme emissa, carebat (silva_tabulae_c89.h:21). Ergo hic
- * 'CssGenus' typus VERUS est et CSS_GENUS_NUMERUS exsistit.
+ * 'CssGenus' typus VERUS est et CSS_GENUS_NUMERUS_GENERUM exsistit
+ * (ambo GENERATA ex declaratione, 2026-09-15).
  *
  * QUINQUE GENERA STRUCTURALIA NON DECLARANTUR. Silva ea poscebat
  * (ambiguus, error, conditionalis, ramus-sumptus, ramus-omissus);
@@ -23,40 +24,13 @@
 #include "latina.h"
 #include "materia_registrum.h"
 
-nomen enumeratio {
-    /* Structura */
-    CSS_GENUS_PLAGULA = 0,
-    CSS_GENUS_REGULA_QUALIFICATA,
-    CSS_GENUS_REGULA_APUD,
-    CSS_GENUS_DECLARATIO,
-    CSS_GENUS_PRAEVALENTIA,
-
-    /* Valores componentes (CSS Syntax L3) */
-    CSS_GENUS_LEXEMA_SERVATUM,
-    CSS_GENUS_FUNCTIO,
-    CSS_GENUS_SAEPTUM,
-
-    /* Robustitas: recuperatio spec-definita */
-    CSS_GENUS_REGULA_MALA,
-    CSS_GENUS_DECLARATIO_MALA,
-
-    /* Selectores (spec par. V, B8) - arbor ANALYSEOS super lexemata
-     * praeludii (css_selector), non emissionis. APPENSA post genera
-     * priora: interpositio indices registri TACITE moveret. */
-    CSS_GENUS_SELECTOR_LISTA,
-    CSS_GENUS_SELECTOR_COMPLEXUS,
-    CSS_GENUS_SELECTOR_COMPOSITUS,
-    CSS_GENUS_SELECTOR_TYPI,
-    CSS_GENUS_SELECTOR_UNIVERSALIS,
-    CSS_GENUS_SELECTOR_CLASSIS,
-    CSS_GENUS_SELECTOR_IDENTITATIS,
-    CSS_GENUS_SELECTOR_ATTRIBUTI,
-    CSS_GENUS_PSEUDO_CLASSIS,
-    CSS_GENUS_PSEUDO_ELEMENTUM,
-    CSS_GENUS_SELECTOR_MALUS,
-
-    CSS_GENUS_NUMERUS
-} CssGenus;
+/* Enumeratio generum et tabulae COCTAE generantur ex
+ * css/grammatica/css.registrum.stml (materia/coquere.sh, 2026-09-15):
+ * CssGenus, CSS_GENUS_NUMERUS_GENERUM, CSS_REGISTRUM. Genera APPENDUNTUR,
+ * numquam interponuntur (ordo = enumeratio = offsets; sigillum
+ * canonis pinna). Hic manent quae clientis sunt: enumerationes
+ * LOCORUM nominatae. */
+#include "css_registrum_coctum.h"
 
 
 /* ==================================================
@@ -175,7 +149,5 @@ nomen enumeratio {
     CSS_PSEUDO_ELEMENTI_TOK_NOMEN
 } CssLocusPseudoElementi;
 
-
-externus constans MateriaRegistrumCoctum CSS_REGISTRUM;
 
 #endif /* CSS_REGISTRUM_H */

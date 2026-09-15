@@ -99,7 +99,8 @@ _nodum_numerare (
     {
         redde;
     }
-    si (n->genus >= ZEPHYRUM && n->genus < (s32)MD_GENUS_NUMERUS)
+    si (   n->genus >= ZEPHYRUM
+        && n->genus < (s32)MD_GENUS_NUMERUS_GENERUM)
     {
         c->genera[n->genus]++;
     }

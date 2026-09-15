@@ -2149,3 +2149,17 @@ ASPERITATES: (1) the examen's "nodi erroris 1" carries no line; the
 precede the first assertion (loud, so cheap); (4) an English field
 name copied from `CanonVitium` (`detail`) would have met the lint —
 renamed before staging.
+
+ADDENDUM (same day, tranche two): css and md migrated; tables equal
+row for row (45/21, 94/28), seals fb55041d and ba282b8a unchanged,
+`css_registrum.c`/`md_registrum.c` deleted (empty TU is not C89).
+Titles admit `_` (css `tok_nomen`); the genus companion is now
+`<P>_GENUS_NUMERUS_GENERUM` in every client (css/md usages renamed).
+The freshness check moved into the library
+(`materia_registrum_recens`) — one call in all three registrum
+probationes and in the instrument's compare mode; gate part VI
+exercises it on files in `materia/build`. Plants: a comment edit in
+each generated header went red at `rancor.recens`, green on revert.
+`silva.registrum_coquere` is the thin Python face (pythonica law:
+oratio declaration recens rc 0; bad species rc 2). Worklog has the
+detail. Point (c) of the oratio wish (re-projection) stays open.

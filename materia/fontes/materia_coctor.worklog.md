@@ -78,7 +78,61 @@ changed a species in the generated `.c` was caught first by the older
 species assertion, not by the freshness block; re-planted as a comment
 edit in the generated file, which only the byte comparison can see.
 
-**Next (tranche two).** css and md: same scope (their locus enums are
-irregular too); verify `MD_GENUS_*` member names derive from the
-titles; each gets its declaration, freshness block and hand-moved
-pins; a thin Python wrapper in pythonica that shells to the binary.
+## 2026-09-15 — tranche two: css and md migrated, the gate became one call
+
+**Two findings the second and third clients brought.** (1) css locus
+titles carry underscores (`tok_nomen`, `tok_terminator`); the kebab
+rule refused them, so titles now admit `_` as well as `-` (both map
+to `_` in the identifier; gate part V). (2) Both clients named the
+genus companion `<P>_GENUS_NUMERUS`, oratio `_NUMERUS_GENERUM`; the
+generator emits one name, so the css/md usages were renamed to
+`_NUMERUS_GENERUM` (twelve sites; `renominare.sh` planned three splices
+and called the rest "manual" because they sit inside CREDO macro
+invocations — a regex over the six named files, reviewed by grep,
+did the job). Every `<P>_GENUS_X` and `Md*Genus` name derived from the
+titles as the rule says (`linea-vacua` → `LINEA_VACUA`, `html-inlineum`
+→ `HTML_INLINEUM`).
+
+**The gate became one library call.** With three clients the
+freshness block would have been three copies of a file-reading
+comparison, so it moved into the library:
+`materia_registrum_recens(piscina, radix, via_declarationis, &rancor)`
+reads the declaration, bakes, reads the two committed files (stdio,
+so no client runner needs `filum`) and compares bytes; `rancor` names
+the file and the first divergent line, or `absens`. Each client's
+registrum probatio is now the same ten lines, and the instrument's
+compare mode calls the same function, so instrument and gates cannot
+disagree. Gate part VI exercises it on files written into
+`materia/build` (absent → rancid line 0; written → recens; a line
+appended → rancid at that line; missing declaration → refusal).
+
+**Migration acceptance.** css 45 loci / 21 genera and md 94 / 28
+equal row for row by the script; seals `fb55041d` and `ba282b8a`
+unchanged (both canon gates green); `css_registrum.c` and
+`md_registrum.c` DELETED — they held nothing but the tables, and an
+empty translation unit is not C89 (`-pedantic` refuses it), so the
+generated `.c` takes their place in the runners' globs. Plants: a
+hand edit of a comment in each generated header went red at
+`rancor.recens` in the client's registrum gate, green on revert.
+
+**Two things the full runs taught.** (1) Gate part VI wrote its
+fixture files into `materia/build` and the second run of the suite
+found them already there: the "absent" case saw a rancid `.c` from
+the previous run (line 28). The part now removes both files first —
+a test that writes outside its arena must reset before it asserts.
+(2) Deleting `css_registrum.c`/`md_registrum.c` left their `.o` in
+four build directories (briar, css, md, oratio); the suites compile
+sources by name and stayed green, but oratio's instruments link
+`build/*.o` by glob, so `sententiae.sh` linked the old `md_registrum.o`
+beside `md_registrum_coctum.o` — `ld: duplicate symbols _MD_REGISTRUM`,
+and the pythonica gate went red through an instrument, not a suite.
+A source deletion is the one change the `-nt` staleness guard cannot
+see. Deleted by hand today; the runner-side pruning is a ledger
+question. Briar's runner also listed `md_registrum` by name and now
+lists `md_registrum_coctum`.
+
+**Python.** `silva.registrum_coquere(via, scribere=False)` shells to
+`./materia/coquere.sh` and returns `(rc, recens, viae, acta)`; the
+pythonica gate checks the committed oratio declaration (rc 0, both
+paths named) and a bad declaration (rc 2, nothing named). C89 first,
+Python on top, as decided.

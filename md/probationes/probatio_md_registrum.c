@@ -23,10 +23,12 @@
 #include "materia_arbor.h"
 #include "materia_nodus.h"
 #include "materia_token.h"
+#include "materia_coctor.h"   /* porta rancoris tabularum coctarum */
 #include "materia_lexicon.h"
 #include "chorda.h"
 #include "piscina.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 hic_manens constans MateriaTokenForma FORMA = { ZEPHYRUM };
@@ -161,6 +163,47 @@ MateriaLexiconRatum  ratum;
 
 
     /* ========================================================
+     * PROBARE: porta rancoris tabularum coctarum (2026-09-15)
+     * md_registrum_coctum.{h,c} ex md.registrum.stml GENERATAE -
+     * redditio in memoria contra plagulas commissas OCTETIM (output,
+     * numquam tempora): declaratio mutata sine ./materia/coquere.sh
+     * -scribere, aut plagula generata manu tacta, hic rubet cum linea
+     * prima divergente. Numeri declarationis == tabula viva.
+     * ======================================================== */
+
+    {
+        constans character* radix = getenv("RHUBARB_RADIX");
+             MateriaRancor  rancor;
+
+        imprimere("\n--- Probans rancorem tabularum coctarum ---\n");
+        si (!materia_registrum_recens(piscina, radix
+            != NIHIL ? radix : ".",
+                "md/grammatica/md.registrum.stml", &rancor))
+        {
+            imprimere("    recusatio: %.*s\n",
+                (integer)rancor.causa.mensura,
+                (constans character*)rancor.causa.datum);
+            CREDO_CULPA ("declaratio absens aut recusata");
+        }
+        alioquin
+        {
+            si (!rancor.recens)
+            {
+                imprimere("    RANCIDUM: %.*s:%u\n",
+                    (integer)rancor.via.mensura,
+                    (constans character*)rancor.via.datum,
+                    rancor.linea);
+            }
+            CREDO_VERUM (rancor.recens);
+            CREDO_AEQUALIS_I32 (rancor.coctio.numerus_locorum,
+                MD_REGISTRUM.numerus_locorum);
+            CREDO_AEQUALIS_I32 (rancor.coctio.numerus_generum,
+                MD_REGISTRUM.numerus_generum);
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: registrum - ordo et CONTIGUITAS locorum
      * ======================================================== */
 
@@ -171,11 +214,12 @@ MateriaLexiconRatum  ratum;
         imprimere("\n--- Probans registrum nodorum ---\n");
 
         CREDO_AEQUALIS_I32 (MD_REGISTRUM.numerus_generum,
-            (i32)MD_GENUS_NUMERUS);
+            (i32)MD_GENUS_NUMERUS_GENERUM);
         CREDO_AEQUALIS_I32 ((i32)(magnitudo(GENERA_EXSPECTATA)
-            / magnitudo(GENERA_EXSPECTATA[0])), (i32)MD_GENUS_NUMERUS);
+            / magnitudo(GENERA_EXSPECTATA[0])),
+            (i32)MD_GENUS_NUMERUS_GENERUM);
 
-        per (i = ZEPHYRUM; i < (i32)MD_GENUS_NUMERUS; i++)
+        per (i = ZEPHYRUM; i < (i32)MD_GENUS_NUMERUS_GENERUM; i++)
         {
             CREDO_NON_NIHIL (MD_REGISTRUM.genera[i].titulus);
             CREDO_VERUM (strcmp(MD_REGISTRUM.genera[i].titulus,
@@ -186,7 +230,7 @@ MateriaLexiconRatum  ratum;
         }
 
         exspectatus_offset = ZEPHYRUM;
-        per (i = ZEPHYRUM; i < (i32)MD_GENUS_NUMERUS; i++)
+        per (i = ZEPHYRUM; i < (i32)MD_GENUS_NUMERUS_GENERUM; i++)
         {
             CREDO_AEQUALIS_I32 (MD_REGISTRUM.genera[i].loci_offset,
                 exspectatus_offset);
@@ -251,12 +295,12 @@ MateriaLexiconRatum  ratum;
 
     {
         MateriaArborConsilium c;
-        MateriaNodus*         documentum;
-        MateriaNodus*         vacua;
-        MateriaArborScriptura s1;
-        MateriaArborScriptura s2;
-        MateriaNodus*         lecta;
-        MateriaArborVitium    vitium;
+                 MateriaNodus* documentum;
+                 MateriaNodus* vacua;
+        MateriaArborScriptura  s1;
+        MateriaArborScriptura  s2;
+                 MateriaNodus* lecta;
+           MateriaArborVitium  vitium;
 
         imprimere("\n--- Probans circuitum md per materiam ---\n");
 
