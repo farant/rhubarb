@@ -63,8 +63,22 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   162,775 bytes, every one byte-identical through parse → emit on the
   first run; cause tally with the first divergent offset; self-
   measured (files read, bytes). Plant: comment nodes dropped → red.
-- Next: H6 the STML projection (two cycles + comparator) — the
-  `</lex-textus>`-in-text case is the one to watch.
+- **H6 (2026-09-15):** `probatio_html_stml` — write → read → write,
+  two cycles byte-equal, tree comparator STRUCTURALIS (FIDELITAS
+  unrunnable: no `munus LINEA`), compression census zero, over 23
+  inline cases and the fourteen-file corpus (2,384,563 STML bytes for
+  162,775 of source: 15×; the 200-deep fixture 287× — pretty
+  indentation is quadratic in depth). Oracle-separation pin: the
+  re-read tree mutated after rewriting → bytes IDEM, tree DISPAR.
+  **SUBSTRATE LIMIT FOUND (ledger 01M2KJ3PK2, worklog):** a raw-text or
+  comment token whose value contains its own lexeme element's closing
+  tag (`</lex-textus-crudus>` inside a script, `</lex-commentarium>`
+  inside a comment) is REFUSED by materia's writer ("valor sequentiam
+  claudentem fert" — raw form impossible, no fallback to escaped
+  text). Pinned as current behaviour; flips red when materia falls
+  back. In plain text `</lex-textus>` is harmless: the HTML lexer
+  splits it into an end tag.
+- Next: H7 `html.canon` hand-written + drift guard + seal pin.
 
 ## The registry is generated
 

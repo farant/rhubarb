@@ -525,7 +525,7 @@ silva.commissio("html: porta corporis - XIV plagulae (fixa IV + paginae domus X,
 FIDELITAS is not runnable (no `munus LINEA`; the reader's cursor never
 advances lines) — STRUCTURALIS is the asserted mode; say so in a comment.
 
-- [ ] **Step 1: Write the failing gate** — inline cases (every H3/H4 case
+- [x] **Step 1: Write the failing gate** — inline cases (every H3/H4 case
   string) AND the whole H5 corpus: `s1 = scribere(radix)`; `r1 =
   legere(s1)`; `s2 = scribere(r1)`; `CREDO_CHORDAE_AEQUALES(s1, s2)`;
   `CREDO_VERUM(aequalis(radix, r1, STRUCTURALIS))`; `s1.census.spatia_vocationes
@@ -537,18 +537,18 @@ advances lines) — STRUCTURALIS is the asserted mode; say so in a comment.
   a substrate finding (md split its values by hand; html cannot): stop,
   name it, gate it in materia.
 
-- [ ] **Step 2: Run and verify it fails** — `./html/compile_probationes.sh stml`.
+- [x] **Step 2: Run and verify it fails** — `./html/compile_probationes.sh stml`.
 
-- [ ] **Step 3: Fix what the refusals name** — causes, never assertions.
+- [x] **Step 3: Fix what the refusals name** — causes, never assertions.
 
-- [ ] **Step 4: Run the whole suite** — exit 0.
+- [x] **Step 4: Run the whole suite** — exit 0.
 
-- [ ] **Step 5: Plant** — before the comparator, `materia_nodus_ponere(r1,
+- [x] **Step 5: Plant** — before the comparator, `materia_nodus_ponere(r1,
   HTML_DOCUMENTUM_CAUDA, VALOR_NIHIL, TOKEN)` on the re-read tree → the
   tree oracle red while bytes of `s1`/`s2` stay equal (this is the
   oracle-separation pin: bytes IDEM, tree DISPAR); revert.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("html: circuitus STML - duo cycli octetim idem, comparator STRUCTURALIS (FIDELITAS: sine munere LINEA), census compressionis nulla, corpus totum (rubra nata: cauda relectae sublata - octeti idem, arbor dispar)",
