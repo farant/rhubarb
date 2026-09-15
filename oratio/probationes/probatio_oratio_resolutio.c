@@ -1119,6 +1119,9 @@ principale (vacuum)
          * adpositio-prima-latina (WORDS adverbium primum, adpositio
          * quinta: permutata), 'puella' ab ablativum-regit */
         CREDO_AEQUALIS_I32 (census.ordines, (i32)IV);   /* T31 a: + ordines subiecti ambulat II (puella ablativa vindicata) */
+        /* decisio LX: regulae anglicae XII in sententia Latina omissae
+         * (textus gradus eas non fert); regulae Latinae et neutrae manent */
+        CREDO_AEQUALIS_I32 (census.regulae_omissae_lingua, (i32)XII);
         CREDO_AEQUALIS_I32 (census.applicatae, (i32)II);
 
         CREDO_AEQUALIS_I32 (census.recusatae, ZEPHYRUM);

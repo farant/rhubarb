@@ -4513,6 +4513,8 @@ _sententiam_iudicare (
     /* 2026-09-11: proiectiones gradus fractae summantur - olim mutae */
     census->resolutiones_fractae = census->resolutiones_fractae
         + census_resolutionis.fractae;
+    census->regulae_omissae_lingua = census->regulae_omissae_lingua
+        + census_resolutionis.regulae_omissae_lingua;
     census->ordines_scripti_recusati = census->ordines_scripti_recusati
         + census_resolutionis.recusatae_scriptae;
     /* T38 c: cellulae contestatae ex censu resolutionis */

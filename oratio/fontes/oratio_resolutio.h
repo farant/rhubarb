@@ -50,6 +50,9 @@ nomen structura {
                        * regulae gradus II post permutationes gradus I
                        * proiectionem NOVAM vident (umbrae capitis
                        * substantivum iam resolutum sequuntur) */
+    chorda lingua;    /* decisio LX: attributum 'lingua' (latina | anglica);
+                       * vacua = omnis lingua. Regula linguae alterius in
+                       * textum gradus non intrat (~XIII % expansionis) */
 } OratioRegula;
 
 
@@ -93,6 +96,7 @@ nomen structura {
 nomen structura {
     i32  sententiae;   /* sententiae tractatae */
     i32  fractae;      /* compositio/expansio fracta: praeterita */
+    i32 regulae_omissae_lingua;   /* decisio LX: regulae linguae alterius omissae (per gradum, per sententiam) */
     i32  ordines;      /* praelationes lectae (sanae) */
     i32  recusatae;    /* praelationes malae */
     i32  repetitae;    /* in vocabulo iam fixo (prima vincit) */

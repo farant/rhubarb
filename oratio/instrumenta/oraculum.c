@@ -803,6 +803,9 @@ _machinam_imprimere (
         /* 2026-09-11: proiectiones gradus resolutionis fractae (pinna 0) */
         imprimere("%s\tRESOLUTIO-FRACTAE\t%d\n", titulus,
             (integer)c->resolutiones_fractae);
+        /* decisio LX (2026-09-15): regulae linguae alterius omissae */
+        imprimere("%s\tREGULAE-OMISSAE-LINGUA\t%d\n", titulus,
+            (integer)c->regulae_omissae_lingua);
         /* T34: ordines ex umbra gradu priore scripta recusati (relatum) */
         imprimere("%s\tORDINES-SCRIPTI\t%d\n", titulus,
             (integer)c->ordines_scripti_recusati);

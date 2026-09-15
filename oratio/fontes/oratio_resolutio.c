@@ -248,6 +248,13 @@ oratio_resolutio_programma_legere (
             r->gradus = _numerus_attributi(n, "gradus", &gradus)
                 && gradus > ZEPHYRUM ? gradus : I;
         }
+        /* decisio LX: attributum 'lingua', absens = omnis lingua */
+        {
+            chorda* lingua = stml_attributum_capere(n, "lingua");
+
+            r->lingua = lingua != NIHIL ? _copia(piscina, *lingua)
+                : _chorda(NIHIL, ZEPHYRUM);
+        }
     }
     redde p;
 }
@@ -2003,6 +2010,22 @@ _contentio_lectionis_activa (
     redde activum;
 }
 
+/* decisio LX (2026-09-15): regula linguae alterius in textum gradus non
+ * intrat - exemplar eius congruere nequit et cursum machinae tamen
+ * solvebat (~XIII % expansionis, spica per regulam). Lingua regulae
+ * vacua = omnis; lingua cursus ignota = nihil omittitur. */
+interior b32
+_regula_linguae_cursus (
+          constans Cursus* cursus,
+    constans OratioRegula* r)
+{
+    si (r->lingua.mensura == ZEPHYRUM || cursus->lingua == NIHIL)
+    {
+        redde VERUM;
+    }
+    redde chorda_aequalis_literis(r->lingua, cursus->lingua);
+}
+
 interior b32
 _sententiam_resolvere_gradu (
           Cursus* cursus,
@@ -2092,6 +2115,15 @@ _sententiam_resolvere_gradu (
         {
             perge;
         }
+        si (!_regula_linguae_cursus(cursus, r))
+        {
+            si (cursus->census != NIHIL)
+            {
+                cursus->census->regulae_omissae_lingua =
+                    cursus->census->regulae_omissae_lingua + I;
+            }
+            perge;
+        }
         mensura = mensura + r->textus.mensura + I;
     }
     si (mensura == ZEPHYRUM)
@@ -2113,7 +2145,7 @@ _sententiam_resolvere_gradu (
             (constans OratioRegula*)xar_obtinere(
             cursus->programma->regulae, k);
 
-        si (r->gradus != gradus)
+        si (r->gradus != gradus || !_regula_linguae_cursus(cursus, r))
         {
             perge;
         }

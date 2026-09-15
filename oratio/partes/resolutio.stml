@@ -67,7 +67,7 @@
      STRICTUS (vicinus solus: 'to the store to buy' - to adpositio, to
      particula). Nomen proprium capitale: vocabulum NON primum sententiae
      cum lectione 'capitalis' (regula T16). -->
-<regula titulus="a-determinans-anglicum">
+<regula titulus="a-determinans-anglicum" lingua="anglica">
   <!-- EXCEPTIO ante regulas umbrarum et adpositionem: articulus 'a' apud Moby
        etiam praepositio et VERBUM (a DNVP: twice a day; have a car - umbra
        verbi 'have' per lectionem verbi 'a' impleretur, T19e) - EWT DET CDXCII;
@@ -89,7 +89,7 @@
   </consilium>
 </regula>
 
-<regula titulus="nomen-proprium-capitale-anglicum">
+<regula titulus="nomen-proprium-capitale-anglicum" lingua="anglica">
   <!-- EWT dev PROPN MDCCCLXVII aurea, XIX % primae ante (Moby Bush/Debra/Israel substantiva novit); initiale sententiae exclusum (Thanks, Store): elementum quodlibet ANTE -->
   <EXEMPLAR output="$sent_proprium_anglicum">
     <sententia lingua="anglica"/>
@@ -109,7 +109,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-obiectum-auxiliaris-anglicum">
+<regula titulus="umbra-obiectum-auxiliaris-anglicum" lingua="anglica">
   <!-- have been / had been: implens auxiliare verum (titulus 'auxiliaria') ANTE regulam implentis verbi, ne lectio verbi 'been' praeferatur (EWT dev been AUX XXXII) -->
   <EXEMPLAR output="$sent_obiectum_auxiliaris">
     <sententia lingua="anglica"/>
@@ -131,7 +131,7 @@
   </consilium>
 </regula>
 
-<regula titulus="umbra-obiectum-verbi-anglicum">
+<regula titulus="umbra-obiectum-verbi-anglicum" lingua="anglica">
   <!-- carrier: lectio Anglica cum umbra obiecti classis verbum (to particula CXCVI adpositio aurea ante; have/do verbum CLXXXVIII aurea ante); implens: lectio verbi Anglica vocabuli PROXIMI -->
   <EXEMPLAR output="$sent_obiectum_verbi">
     <sententia lingua="anglica"/>
@@ -153,7 +153,7 @@
   </consilium>
 </regula>
 
-<regula titulus="auxiliare-primum-latinum">
+<regula titulus="auxiliare-primum-latinum" lingua="latina">
   <!-- sum: UD AUX (copula, passivum periphrasticum); CIRCSE CLXVIII / LLCT DX / CDXLII aurea, 0 prima ante -->
   <EXEMPLAR output="$sent_auxiliare_primum_latinum">
     <sententia lingua="latina"/>
@@ -170,7 +170,7 @@
   </consilium>
 </regula>
 
-<regula titulus="auxiliare-primum-anglicum">
+<regula titulus="auxiliare-primum-anglicum" lingua="anglica">
   <!-- be/have/do/modalia (lista auxiliaria): EWT MDXLIII aurea, 0 prima ante; verbum principale (have a car) pretium mensuratum -->
   <EXEMPLAR output="$sent_auxiliare_primum_anglicum">
     <sententia lingua="anglica"/>
@@ -187,7 +187,7 @@
   </consilium>
 </regula>
 
-<regula titulus="auxiliare-contractum-anglicum">
+<regula titulus="auxiliare-contractum-anglicum" lingua="anglica">
   <!-- T19e: lectiones auxiliares CONTRACTIONUM ('s 'm 'll 're 've 'd: regulae Moby, fons vocabularium-en, nativum 'r contractio-...') - titulo 'auxiliaria' carent (lista), have/do ambigua fonte 'regula' sunt: fons I = vocabularium-en eas solas seligit -->
   <EXEMPLAR output="$sent_auxiliare_contractum">
     <sententia lingua="anglica"/>
@@ -204,7 +204,7 @@
   </consilium>
 </regula>
 
-<regula titulus="particula-prima-latina">
+<regula titulus="particula-prima-latina" lingua="latina">
   <!-- non haud ne quidem: non = Non. abbreviatio prima (LXXXIV / LXIII) -->
   <EXEMPLAR output="$sent_particula_prima_latina">
     <sententia lingua="latina"/>
@@ -221,7 +221,7 @@
   </consilium>
 </regula>
 
-<regula titulus="particula-prima-anglica">
+<regula titulus="particula-prima-anglica" lingua="anglica">
   <!-- not (XCVIII adverbium prima), to (CCCLXXI adpositio prima - contra to adpositionem veram: mensuratum; ianua cursus fratrum to + verbum) -->
   <EXEMPLAR output="$sent_particula_prima_anglica">
     <sententia lingua="anglica"/>
@@ -238,7 +238,7 @@
   </consilium>
 </regula>
 
-<regula titulus="supra-adverbium-latinum">
+<regula titulus="supra-adverbium-latinum" lingua="latina">
   <!-- EXCEPTIO ante adpositionem: supra in chartis 'ut supra', 'supra
        dicta' adverbium (LLCT ADV CCIX aurea, ADP paucae) - lectio
        adverbii lemmatis supra prima, ut regula adpositionis (prima quae
@@ -258,7 +258,7 @@
   </consilium>
 </regula>
 
-<regula titulus="adpositio-prima-latina">
+<regula titulus="adpositio-prima-latina" lingua="latina">
   <!-- ad a ab cum post ante sine super usque: adverbium aut nomen proprium (A.) prima; cum subordinans (XX CIRCSE) ianuae cursus fratrum -->
   <EXEMPLAR output="$sent_adpositio_prima_latina">
     <sententia lingua="latina"/>
@@ -275,7 +275,7 @@
   </consilium>
 </regula>
 
-<regula titulus="adpositio-prima-anglica">
+<regula titulus="adpositio-prima-anglica" lingua="anglica">
   <!-- up out like than as: substantivum/adverbium/adiectivum prima (EWT CXCIV) -->
   <EXEMPLAR output="$sent_adpositio_prima_anglica">
     <sententia lingua="anglica"/>
@@ -292,7 +292,7 @@
   </consilium>
 </regula>
 
-<regula titulus="subordinans-prima-latina">
+<regula titulus="subordinans-prima-latina" lingua="latina">
   <!-- sicut qualiter quam nisi licet (CERTAE solae, nativum 'subordinantes'):
        adverbium/pronomen prima (LLCT CLII, CIRCSE C). Mensuratum prius
        sine titulo: ubi/unde adverbia relativa (LLCT ADV LXVIII/XXV) et
@@ -312,7 +312,7 @@
   </consilium>
 </regula>
 
-<regula titulus="subordinans-prima-anglica">
+<regula titulus="subordinans-prima-anglica" lingua="anglica">
   <!-- if because while whether that (lista subordinantium, nativum
        'subordinantes' sola): coordinans/determinans prima (EWT CCXCIII).
        so/when/where adverbia (lista ambigua) intacta; as/than/like/since
@@ -332,7 +332,7 @@
   </consilium>
 </regula>
 
-<regula titulus="interiectio-prima-anglica">
+<regula titulus="interiectio-prima-anglica" lingua="anglica">
   <!-- please yes yeah hello okay sorry (lista interiectionum, nativum
        'interiectiones' SOLA): verbum/adverbium prima (EWT LX). Mensuratum
        prius super lectionem quamlibet: codex Moby '!' good/thanks/there/
@@ -352,7 +352,7 @@
   </consilium>
 </regula>
 
-<regula titulus="numerale-primum-anglicum">
+<regula titulus="numerale-primum-anglicum" lingua="anglica">
   <!-- one two three four ten million: determinans/substantivum prima (EWT LXXV); one substantivum (the one) pretium mensuratum -->
   <EXEMPLAR output="$sent_numerale_primum_anglicum">
     <sententia lingua="anglica"/>
@@ -369,7 +369,7 @@
   </consilium>
 </regula>
 
-<regula titulus="lingua-documenti-anglica">
+<regula titulus="lingua-documenti-anglica" lingua="anglica">
   <!-- T18 (2026-09-07): documentum Anglicum (census sententiae stampat
        lingua="anglica") - lectio Anglica PRIMA cuiusque vocabuli quod
        eam fert. Annotator Latinas ante Anglicas ponit ('in' adpositio
@@ -394,7 +394,7 @@
   </consilium>
 </regula>
 
-<regula titulus="determinans-primum-latinum">
+<regula titulus="determinans-primum-latinum" lingua="latina">
   <!-- T19i (2026-09-08, ex indice erratorum T19g bis): lemmata quae UD
        DET sine exceptione notat (CERTA solae, nativum 'determinantia':
        ipse omnis meus noster vester ille suus alius iste suprascriptus ...

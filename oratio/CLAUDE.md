@@ -1068,6 +1068,15 @@ in one intern, else every rule is mute (planted red). Rows of all
 treebanks byte-identical to the old path. Named next: rows naming
 nodes by anchor instead of ordinal; a per-rule probe of the expansion.
 
+**REGULAE PER LINGUAM (2026-09-15, decision 60; plan
+`proiectio-macrior-plan.md` tranche a).** A `<regula>` may carry
+`lingua="latina|anglica"`; the stage loop leaves a rule of another
+language out of the stage's text (the twelve English rules on Latin,
+the six Latin rules on English), counted in `regulae_omissae_lingua`
+and printed by the oracle as `REGULAE-OMISSAE-LINGUA`. Rows on all
+nine treebanks unchanged; Perseus oracle −7 %. Tranches b (materia
+view) and c (admitted loci derived from the programme) follow.
+
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
 `latina.h` shadowing `include/latina.h` in the nexus sweep (first-wins

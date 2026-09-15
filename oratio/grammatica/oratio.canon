@@ -122,6 +122,11 @@
     nota="regula resolutionis (radix ALTERA documenti expansi post arbor - canon radicem unam solam declarat): titulus = nomen regulae (causa in plano et in censu); liberi = bracchia CAPS machinae + consilium">
     <attributum nomen="titulus" genus="textus" necessarium="verum"/>
     <attributum nomen="gradus" genus="numerus"/>
+    <attributum nomen="lingua" genus="electio"
+      nota="decisio LX (2026-09-15): regula linguae unius - exsecutor eam in documento linguae alterius omittit (textus gradus eam non fert); absens = omnis lingua">
+      <optio>latina</optio>
+      <optio>anglica</optio>
+    </attributum>
     <liberum nomen="consilium" maximum="1"/>
   </elementum>
   <elementum nomen="consilium" intra="regula"

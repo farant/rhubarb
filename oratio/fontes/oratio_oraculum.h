@@ -363,6 +363,7 @@ nomen structura {
      * revocata trans gradus improiectabilis: XXV/XLIII/XIX per
      * thesaurum); pinna ZEPHYRUM ne recurrat */
     i32 resolutiones_fractae;
+    i32 regulae_omissae_lingua;   /* decisio LX: regulae linguae alterius omissae (summa) */
     /* T34 (2026-09-14): ordines recusati quia umbra gradu priore iam
      * scripta (summa census resolutionis) - RELATUM, non pinnatum */
     i32 ordines_scripti_recusati;

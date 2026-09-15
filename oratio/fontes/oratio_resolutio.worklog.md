@@ -533,3 +533,27 @@ Levers this points at, in order of cost to build:
 
 The decoder and the later laws are not in this table because they do
 not go through the machine (≤ 1 % measured in the first spike).
+
+## 2026-09-15 — tranche a: rules gated by language (decision 60)
+
+`<regula lingua="anglica|latina">` in `resolutio.stml` (twelve English
+rules, six Latin; the thirty neutral ones carry none), declared in
+`oratio.canon`; `OratioRegula.lingua` (empty = every language) read by
+the loader; `_regula_linguae_cursus` in the stage loop keeps a rule
+out of the stage's text when its language differs from the cursus's
+(`cursus->lingua` is the census's title; unknown = nothing omitted).
+Every omission is counted (`regulae_omissae_lingua`, summed by the
+oracle and printed as `REGULAE-OMISSAE-LINGUA`) so the gate cannot go
+mute: the skeleton law on `Cum puella ambulat.` sees XII omissions.
+Plant: the comparison inverted (Latin rules skipped on Latin) → the
+skeleton's row count falls → red, green on revert.
+
+Acceptance: all nine treebanks byte-identical to the baseline
+(seven Latin, the two EWT files — on EWT the six Latin rules are the
+omitted ones: 12,234 / 12,594 omissions, six per sentence). Perseus
+oracle 5.6 → 5.2 s wall; the English rules were already self-gated
+by `<sententia lingua="anglica"/>` in their patterns, so the saving
+is exactly the machine's scan, as the spike predicted (~13 % of the
+expansion). Known and untouched: `canon_examen` reports one
+pre-existing fault on the programme (`<regula>` as a second root
+beside `arbor`; the canon's own note names it).
