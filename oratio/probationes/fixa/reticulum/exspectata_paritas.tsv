@@ -1,7 +1,9 @@
-fixa	COLUMNAE	RETICULUM-COLUMNA	columna	greges	ordines	recti	basis	lucrum	puritas	puritas-intra	inaestimati	mutabiles	cadentes-basi	inaestimabilis	greges-captivi	ordines-captivi
-fixa	RETICULUM-COLUMNA	f	2	24	12	12	0	500	500	0	0	0	0	0	0
-fixa	RETICULUM-COLUMNA	g	2	24	12	12	0	500	500	0	0	0	0	0	0
-fixa	RETICULUM-COLUMNA	h	2	24	12	12	0	500	500	0	0	0	0	0	0
+fixa	COLUMNAE	RETICULUM-OPTIONES	genus	aurum	sortes	ubi	columnae	praeter	gradus	limen	lucrum	profunditas	prima	initium	greges	alternae
+fixa	RETICULUM-OPTIONES	PROBA	aurum-x	thesaurus	-	-	-	-	2	1	3	20	-	-	0
+fixa	COLUMNAE	RETICULUM-COLUMNA	columna	greges	ordines	recti	basis	lucrum	puritas	puritas-intra	inaestimati	mutabiles	cadentes-basi	inaestimabilis	greges-captivi	ordines-captivi	sortes-lucrantes
+fixa	RETICULUM-COLUMNA	f	2	24	12	12	0	500	500	0	0	0	0	0	0	0
+fixa	RETICULUM-COLUMNA	g	2	24	12	12	0	500	500	0	0	0	0	0	0	0
+fixa	RETICULUM-COLUMNA	h	2	24	12	12	0	500	500	0	0	0	0	0	0	0
 fixa	COLUMNAE	RETICULUM-SORS	columna	sors	ordines	recti	basis	inaestimati
 fixa	RETICULUM-SORS	f	A	8	4	4	0
 fixa	RETICULUM-SORS	f	B	8	4	4	0
@@ -12,15 +14,22 @@ fixa	RETICULUM-SORS	g	C	8	4	4	0
 fixa	RETICULUM-SORS	h	A	8	4	4	0
 fixa	RETICULUM-SORS	h	B	8	4	4	0
 fixa	RETICULUM-SORS	h	C	8	4	4	0
-fixa	COLUMNAE	RETICULUM-CATENA	vetans	gradus	columna	greges	recti	lucrum	cadentes-gradu
-fixa	RETICULUM-CATENA	1	0	-	1	12	0	0
-fixa	RETICULUM-CATENA	0	0	-	1	12	0	0
+fixa	COLUMNAE	RETICULUM-CATENA	vetans	gradus	columna	greges	recti	lucrum	cadentes-gradu	lucrantes-gradu
+fixa	RETICULUM-CATENA	1	0	-	1	12	0	0	0
+fixa	RETICULUM-CATENA	0	0	-	1	12	0	0	0
+fixa	COLUMNAE	RETICULUM-FINIS	vetans	columna	greges	recti	lucrum	cadentes	causa
+fixa	RETICULUM-FINIS	1	f	2	12	0	0	lucrum
+fixa	RETICULUM-FINIS	1	g	2	12	0	0	lucrum
+fixa	RETICULUM-FINIS	1	h	2	12	0	0	lucrum
+fixa	RETICULUM-FINIS	0	f	2	12	0	0	lucrum
+fixa	RETICULUM-FINIS	0	g	2	12	0	0	lucrum
+fixa	RETICULUM-FINIS	0	h	2	12	0	0	lucrum
 fixa	COLUMNAE	RETICULUM-CONDICIO	gradus	columna	sors	recti	priores
-fixa	COLUMNAE	RETICULUM-INFIMUM	profunditas	columnae	greges	recti	incrementum	cadentes-basi	inaestimati
-fixa	RETICULUM-INFIMUM	2	f+g	4	12	0	0	0
-fixa	RETICULUM-INFIMUM	2	f+h	4	12	0	0	0
-fixa	RETICULUM-INFIMUM	2	g+h	4	12	0	0	0
-fixa	RETICULUM-INFIMUM	3	f+g+h	8	24	12	0	0
+fixa	COLUMNAE	RETICULUM-INFIMUM	profunditas	columnae	greges	recti	incrementum	cadentes-basi	inaestimati	sortes-lucrantes
+fixa	RETICULUM-INFIMUM	2	f+g	4	12	0	0	0	0
+fixa	RETICULUM-INFIMUM	2	f+h	4	12	0	0	0	0
+fixa	RETICULUM-INFIMUM	2	g+h	4	12	0	0	0	0
+fixa	RETICULUM-INFIMUM	3	f+g+h	8	24	12	0	0	3
 fixa	COLUMNAE	RETICULUM-TEGIT	subtilior	crassior
 fixa	COLUMNAE	RETICULUM-DUPLEX	columna	aequalis
 fixa	COLUMNAE	RETICULUM-GREX	partitio	grex	ordines	aurum-maximum	aurum-maximum-ordines	puritas	captivus	habitus	mutabilis	sortes-suffragantes	retenti	recti

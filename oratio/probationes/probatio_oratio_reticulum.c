@@ -24,9 +24,15 @@
  * VIII.(T36 c) -sortes-alternae II super proba.tsv: sortes alternae
  *      corpus quodque tenent - vetum quod in C cadebat NON cadit
  *      (f 23/17 +6, decisio LIV in minimo); recusationes II.
+ * T37 a: sortes-lucrantes (COLUMNA, INFIMUM), lucrantes-gradu
+ *      (CATENA), ordines RETICULUM-FINIS (candidatae ad finem catenae
+ *      cum causa) et RETICULUM-OPTIONES (primus); relatio contracta -
+ *      'sine lucro', 'nulla', 'sortes: A +4 B +4 C -2', 'recusatae:',
+ *      'ceterae N lucro deficientes'.
  * Culpae plantatae: -ubi neglectum (T35 d); incrementum sine
  * subtractione (T36 b: ordines INFIMUM paritatis); margo = maximum
- * (T36 c: ordines GREX-SORS).
+ * (T36 c: ordines GREX-SORS); lucrantes >= pro > (T37 a: columnae
+ * paritatis III pro 0).
  */
 
 #include "latina.h"
@@ -317,6 +323,14 @@ principale (vacuum)
             "CANDIDATI CONDICIONATI"));
         CREDO_VERUM  (_continet(exitus.relatio,
             "f (gradus 1): C 7 -> 5"));
+        /* T37 a: lucra per sortem sub f (recti - basis descendentia),
+         * vetum perspicuum ad finem catenae vetantis */
+        CREDO_VERUM  (_continet(exitus.relatio,
+            "sortes: A +4 B +4 C -2"));
+        CREDO_VERUM  (_continet(exitus.relatio,
+            "recusatae: f cadit C"));
+        CREDO_VERUM  (_continet(exitus.relatio,
+            "ceterae 1 lucro deficientes"));
     }
     _optiones_basis(piscina, &optiones);
     optiones.sortes = "h";
@@ -446,6 +460,11 @@ principale (vacuum)
             "altitudo 0, latitudo 3"));
         CREDO_VERUM (_continet(exitus.relatio,
             "f x g x h: greges 8, recti 24, incrementum +12"));
+        /* T37 a: columnae sine lucro in linea una, infima nulla gradu
+         * II, nulla linea 'sortes:' (lucrum nullum) */
+        CREDO_VERUM  (_continet(exitus.relatio, "sine lucro: f g h"));
+        CREDO_VERUM  (_continet(exitus.relatio, "  nulla\n"));
+        CREDO_FALSUM (_continet(exitus.relatio, "sortes:"));
     }
 
     imprimere("\n--- VI. Semen f,g: catena h accipit ---\n");
@@ -458,10 +477,10 @@ principale (vacuum)
     CREDO_VERUM (exitus.iudicatum);
     CREDO_VERUM (exitus.iudicatum
         && _continet(exitus.relatio,
-        "fixa\tRETICULUM-CATENA\t1\t0\tf+g\t4\t12\t0\t0\n"));
+        "fixa\tRETICULUM-CATENA\t1\t0\tf+g\t4\t12\t0\t0\t0\n"));
     CREDO_VERUM (exitus.iudicatum
         && _continet(exitus.relatio,
-        "fixa\tRETICULUM-CATENA\t1\t1\th\t8\t24\t12\t0\n"));
+        "fixa\tRETICULUM-CATENA\t1\t1\th\t8\t24\t12\t0\t3\n"));
     _optiones_basis(piscina, &optiones);
     _titulum_addere(piscina, optiones.initium, "f");
     _titulum_addere(piscina, optiones.initium, "g");
@@ -474,6 +493,11 @@ principale (vacuum)
     CREDO_VERUM (exitus.iudicatum
         && _continet(exitus.relatio,
         "0 initium f x g: greges 4, recti 12"));
+    /* T37 a: post h columnae f, g lucro deficiunt; vetata nulla */
+    CREDO_VERUM (exitus.iudicatum
+        && _continet(exitus.relatio, "ceterae 2 lucro deficientes"));
+    CREDO_VERUM (exitus.iudicatum
+        && !_continet(exitus.relatio, "recusatae:"));
 
     imprimere("\n--- VII. Ordines testimonii GREX, GREX-SORS ---\n");
     _optiones_basis(piscina, &optiones);
@@ -557,10 +581,10 @@ principale (vacuum)
          * (planum XXII scripserat - v impares VII, non VI) */
         CREDO_VERUM (_continet(exitus.relatio,
             "fixa\tRETICULUM-COLUMNA\tf\t2\t26\t23\t17\t6\t884\t884\t0"
-            "\t0\t0\t0\t0\t0\n"));
+            "\t0\t0\t0\t0\t0\t2\n"));
         CREDO_VERUM (_continet(exitus.relatio,
             "fixa\tRETICULUM-COLUMNA\th\t1\t26\t17\t17\t0\t653\t653\t0"
-            "\t0\t0\t0\t0\t0\n"));
+            "\t0\t0\t0\t0\t0\t0\n"));
         CREDO_VERUM (_continet(exitus.relatio,
             "fixa\tRETICULUM-SORS\tf\talterna-0\t13\t11\t9\t0\n"));
         CREDO_VERUM (_continet(exitus.relatio,
@@ -570,7 +594,7 @@ principale (vacuum)
         CREDO_VERUM (_continet(exitus.relatio,
             "fixa\tRETICULUM-SORS\th\talterna-1\t13\t8\t8\t0\n"));
         CREDO_VERUM (_continet(exitus.relatio,
-            "fixa\tRETICULUM-CATENA\t1\t1\tf\t2\t23\t6\t0\n"));
+            "fixa\tRETICULUM-CATENA\t1\t1\tf\t2\t23\t6\t0\t2\n"));
     }
     alioquin
     {

@@ -1,11 +1,12 @@
-# reticulum_recensio.py - RECENSIO INDEPENDENS instrumenti reticuli partitionum (T35 e, T36 c): ex ordinibus machinae
-# cum ordine COLUMNAE eadem DEFINITIONE (oratio-spec par. 7 "Design - T35", "Design - T36") ordines RETICULUM-COLUMNA,
-# -SORS, -CATENA, -CONDICIO, -INFIMUM, -GREX, -GREX-SORS reddit - dictis et tuplis Pythonis, numquam instrumentum C
-# vocans. Acceptatio: ordines horum generum utriusque (awk -F'\t' '$2 ~ /^RETICULUM-/') eadem esse debent (eadem
-# vexilla, eadem via). TEGIT et DUPLEX (algebra) non recensentur: porta probatio_partitio ea tenet.
+# reticulum_recensio.py - RECENSIO INDEPENDENS instrumenti reticuli partitionum (T35 e, T36 c, T37 a): ex ordinibus
+# machinae cum ordine COLUMNAE eadem DEFINITIONE (oratio-spec par. 7 "Design - T35/T36/T37") ordines RETICULUM-OPTIONES,
+# -COLUMNA, -SORS, -CATENA, -FINIS, -CONDICIO, -INFIMUM, -GREX, -GREX-SORS reddit - dictis et tuplis Pythonis, numquam
+# instrumentum C vocans. Acceptatio: ordines horum generum utriusque (awk -F'\t' '$2 ~ /^RETICULUM-/') eadem esse
+# debent (eadem vexilla, eadem via). TEGIT et DUPLEX (algebra) non recensentur: porta probatio_partitio ea tenet.
 # Usus: reticulum_recensio.py <x.tsv> -genus K -aurum aurum-... (-sortes columna | -sortes-alternae N)
 #       [-ubi titulus=v1,v2]... [-columnae t1,t2] [-praeter t1,t2] [-gradus t1,t2] [-limen N] [-lucrum N]
-#       [-profunditas N] [-prima N] [-initium t1,t2] [-greges columna|catena|catena-libera|initium]   (-machina praeteritur)
+#       [-profunditas N] [-prima N] [-initium t1,t2] [-greges columna|catena|catena-libera|initium]
+#       (-machina et -exempla praetereuntur). zsh: ${=F} vexilla findit; mandatum ipsum numquam in variabili.
 import sys
 from collections import defaultdict
 from itertools import combinations
@@ -28,11 +29,12 @@ def optiones_legere(argv):
             if a in ('-genus', '-aurum', '-sortes', '-greges'):
                 o[a[1:]] = v
             elif a == '-ubi':
-                t, valores = v.split('=', 1); o['ubi'].append((t, set(valores.split(','))))
+                t, valores = v.split('=', 1); o['ubi'].append((t, valores.split(',')))
             elif a in ('-columnae', '-praeter', '-gradus', '-initium'):
                 o[a[1:]] += v.split(',')
-            elif a in ('-limen', '-lucrum', '-profunditas', '-prima'):
-                o[a[1:]] = int(v)
+            elif a in ('-limen', '-lucrum', '-profunditas', '-prima', '-exempla'):
+                if a != '-exempla':
+                    o[a[1:]] = int(v)
             elif a == '-sortes-alternae':
                 o['alternae'] = int(v)
             i += 2
@@ -120,11 +122,22 @@ def aestimare(claves, aurum, sortes, aurei, sortium, limen):
         'mutabiles': sum(1 for g in greges if gregum[g]['mutabilis']),
         'inaestimabilis': 2 * summa['inaestimati'] > summa['ordines'] or captivus_limine,
         'greges_captivi': len(captivi), 'ordines_captivi': sum(totales[g] for g in captivi),
+        'cadentes': sum(1 for x in per_sortem if x['recti'] < x['basis']),
+        'lucrantes': sum(1 for x in per_sortem if x['recti'] > x['basis']),
     }
 
 
+def cadentes_gradu(e, prior):
+    return sum(1 for x, y in zip(e['sortes'], prior['sortes']) if x['recti'] < y['recti'])
+
+
+def lucrantes_gradu(e, prior):
+    return sum(1 for x, y in zip(e['sortes'], prior['sortes']) if x['recti'] > y['recti'])
+
+
 def catena(valores_notarum, aurum, sortes, aurei, sortium, limen, lucrum_minimum, vetans, semen):
-    """Catena avida a semine (claves gradus 0) - vetans aut libera; gradus = (index columnae, claves, aestimatio, prior)."""
+    """Catena avida a semine (claves gradus 0) - vetans aut libera. Redditur (initium, gradus, claves ultimae, adhibitae,
+    aestimatio ultima); gradus = (index columnae, aestimatio, prior, claves)."""
     n, k = len(aurum), len(valores_notarum)
     currens = list(semen)
     aestimatio = aestimare(currens, aurum, sortes, aurei, sortium, limen)
@@ -141,7 +154,7 @@ def catena(valores_notarum, aurum, sortes, aurei, sortium, limen, lucrum_minimum
         for i, claves, e in candidatae:
             if e['summa']['recti'] - aestimatio['summa']['recti'] < lucrum_minimum:
                 break
-            if vetans and any(e['sortes'][s]['recti'] < aestimatio['sortes'][s]['recti'] for s in range(len(sortium))):
+            if vetans and cadentes_gradu(e, aestimatio) > 0:
                 continue
             accepta = (i, claves, e)
             break
@@ -149,7 +162,7 @@ def catena(valores_notarum, aurum, sortes, aurei, sortium, limen, lucrum_minimum
             break
         adhibitae.add(accepta[0]); currens = accepta[1]
         gradus.append((accepta[0], accepta[2], aestimatio, currens)); aestimatio = accepta[2]
-    return initium, gradus, currens
+    return initium, gradus, currens, adhibitae, aestimatio
 
 
 def principale():
@@ -195,32 +208,53 @@ def principale():
     def titulus(q):
         return tituli[notae[q]]
 
+    def lista(l):
+        return ','.join(l) if l else '-'
+
+    # OPTIONES (T37 a): plagula se describit
+    caput('RETICULUM-OPTIONES', ['genus', 'aurum', 'sortes', 'ubi', 'columnae', 'praeter', 'gradus', 'limen', 'lucrum',
+                                 'profunditas', 'prima', 'initium', 'greges', 'alternae'])
+    scribe('RETICULUM-OPTIONES', [o['genus'], o['aurum'], o['sortes'] or '-',
+                                  ';'.join('%s=%s' % (t, ','.join(v)) for t, v in o['ubi']) or '-',
+                                  lista(o['columnae']), lista(o['praeter']), lista(o['gradus']), o['limen'], o['lucrum'],
+                                  o['profunditas'], o['prima'], lista(o['initium']), o['greges'] or '-', o['alternae']])
     caput('RETICULUM-COLUMNA', ['columna', 'greges', 'ordines', 'recti', 'basis', 'lucrum', 'puritas', 'puritas-intra',
                                 'inaestimati', 'mutabiles', 'cadentes-basi', 'inaestimabilis', 'greges-captivi',
-                                'ordines-captivi'])
+                                'ordines-captivi', 'sortes-lucrantes'])
     for q in ordo:
         e = aestimationes[q]; sm = e['summa']
         scribe('RETICULUM-COLUMNA', [titulus(q), len(e['greges']), sm['ordines'], sm['recti'], sm['basis'], e['lucrum'],
                                      sm['recti'] * 1000 // sm['ordines'] if sm['ordines'] else 0, e['intra'],
-                                     sm['inaestimati'], e['mutabiles'],
-                                     sum(1 for x in e['sortes'] if x['recti'] < x['basis']), int(e['inaestimabilis']),
-                                     e['greges_captivi'], e['ordines_captivi']])
+                                     sm['inaestimati'], e['mutabiles'], e['cadentes'], int(e['inaestimabilis']),
+                                     e['greges_captivi'], e['ordines_captivi'], e['lucrantes']])
     caput('RETICULUM-SORS', ['columna', 'sors', 'ordines', 'recti', 'basis', 'inaestimati'])
     for q in ordo:
         for s, x in zip(sortium, aestimationes[q]['sortes']):
             scribe('RETICULUM-SORS', [titulus(q), s, x['ordines'], x['recti'], x['basis'], x['inaestimati']])
-    caput('RETICULUM-CATENA', ['vetans', 'gradus', 'columna', 'greges', 'recti', 'lucrum', 'cadentes-gradu'])
+    caput('RETICULUM-CATENA', ['vetans', 'gradus', 'columna', 'greges', 'recti', 'lucrum', 'cadentes-gradu',
+                               'lucrantes-gradu'])
     catenae = {}
     for vetans in (1, 0):
-        initium, gradus_catenae, ultimae = catena(valores_notarum, aurum, sortes, aurei, sortium, limen,
-                                                  lucrum_minimum, vetans, semen)
-        catenae[vetans] = (initium, gradus_catenae, ultimae)
+        catenae[vetans] = catena(valores_notarum, aurum, sortes, aurei, sortium, limen, lucrum_minimum, vetans, semen)
+        initium, gradus_catenae = catenae[vetans][0], catenae[vetans][1]
         scribe('RETICULUM-CATENA', [vetans, 0, '+'.join(titulus(q) for q in semen_columnae) or '-',
-                                    len(initium['greges']), initium['summa']['recti'], 0, 0])
+                                    len(initium['greges']), initium['summa']['recti'], 0, 0, 0])
         for g, (i, e, prior, _) in enumerate(gradus_catenae):
             scribe('RETICULUM-CATENA', [vetans, g + 1, titulus(i), len(e['greges']), e['summa']['recti'],
-                                        e['summa']['recti'] - prior['summa']['recti'],
-                                        sum(1 for x, y in zip(e['sortes'], prior['sortes']) if x['recti'] < y['recti'])])
+                                        e['summa']['recti'] - prior['summa']['recti'], cadentes_gradu(e, prior),
+                                        lucrantes_gradu(e, prior)])
+    # FINIS (T37 a): candidatae omnes ad gradum ultimum, causa lucrum | cadit
+    caput('RETICULUM-FINIS', ['vetans', 'columna', 'greges', 'recti', 'lucrum', 'cadentes', 'causa'])
+    for vetans in (1, 0):
+        _, _, ultimae, adhibitae, ultima = catenae[vetans]
+        for i in range(len(notae)):
+            if i in adhibitae:
+                continue
+            claves = [ultimae[r] + (valores_notarum[i][r],) for r in range(len(ordines))]
+            e = aestimare(claves, aurum, sortes, aurei, sortium, limen)
+            lucrum = e['summa']['recti'] - ultima['summa']['recti']
+            scribe('RETICULUM-FINIS', [vetans, titulus(i), len(e['greges']), e['summa']['recti'], lucrum,
+                                       cadentes_gradu(e, ultima), 'lucrum' if lucrum < lucrum_minimum else 'cadit'])
     caput('RETICULUM-CONDICIO', ['gradus', 'columna', 'sors', 'recti', 'priores'])
     for g, (i, e, prior, _) in enumerate(catenae[0][1]):
         for s, x, y in zip(sortium, e['sortes'], prior['sortes']):
@@ -229,7 +263,7 @@ def principale():
 
     # infima: subseta II..profunditas notarum non constantium; incrementum contra optimum serierum minorum
     caput('RETICULUM-INFIMUM', ['profunditas', 'columnae', 'greges', 'recti', 'incrementum', 'cadentes-basi',
-                                'inaestimati'])
+                                'inaestimati', 'sortes-lucrantes'])
     recti_seriei = {(q,): aestimationes[q]['summa']['recti'] for q in range(len(notae))}
     infima = []
     for d in range(2, o['profunditas'] + 1):
@@ -239,18 +273,18 @@ def principale():
             recti_seriei[combo] = e['summa']['recti']
             optimum = max(recti_seriei[combo[:j] + combo[j + 1:]] for j in range(d))
             infima.append((d, combo, len(e['greges']), e['summa']['recti'], e['summa']['recti'] - optimum,
-                           sum(1 for x in e['sortes'] if x['recti'] < x['basis']), e['summa']['inaestimati']))
+                           e['cadentes'], e['summa']['inaestimati'], e['lucrantes']))
     for d in range(2, o['profunditas'] + 1):
         eius = [x for x in infima if x[0] == d]
         for x in sorted(eius, key=lambda x: -x[4])[:o['prima']]:      # stabilis: par -> ordo enumerationis
-            scribe('RETICULUM-INFIMUM', [d, '+'.join(titulus(q) for q in x[1]), x[2], x[3], x[4], x[5], x[6]])
+            scribe('RETICULUM-INFIMUM', [d, '+'.join(titulus(q) for q in x[1]), x[2], x[3], x[4], x[5], x[6], x[7]])
 
     # testimonium gregum (T36 c)
     caput('RETICULUM-GREX', ['partitio', 'grex', 'ordines', 'aurum-maximum', 'aurum-maximum-ordines', 'puritas',
                              'captivus', 'habitus', 'mutabilis', 'sortes-suffragantes', 'retenti', 'recti'])
     electa = None
     if o['greges'] in ('catena', 'catena-libera', 'initium'):
-        initium, gradus_catenae, ultimae = catenae[1 if o['greges'] != 'catena-libera' else 0]
+        initium, gradus_catenae, ultimae, _, _ = catenae[1 if o['greges'] != 'catena-libera' else 0]
         if o['greges'] == 'initium' or not gradus_catenae:
             electa = (semen, initium)
         else:
