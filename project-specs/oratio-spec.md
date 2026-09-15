@@ -204,6 +204,19 @@ row and the whole grid: the box.
   finite aux/cop) minus the finite subtrees below it. Purity per
   layer, coverage and count agreement are pinned only rising per
   treebank; the verb slot is scored against the gold root.
+- **48 The decoder chooses; rules propose** (reserved 2026-09-10,
+  written 2026-09-15; design in §7 "Design — T38"). After the last
+  stage a sentence's proposals are complete: every umbra's standing
+  filling and every displaced claim with its author, cause and trust.
+  A separate pass decides each contested cell from those proposals
+  alone and never fires a rule, so the second-pass feedback problem
+  (R15) cannot arise. Hard constraints eliminate — one filling per
+  umbra, one head per dependent, no cycle, one subject per finite
+  verb, the executor's own laws; a counted score orders what
+  survives; a tie keeps the standing claim. Every cell reports its
+  profile (decision 40) and every decision is a machine row naming
+  what it consulted, so a wrong decision is a row the lattice can
+  read.
 
 **The partition lattice (Fran, 2026-09-14, the design conversation
 after T34; decisions 49–53; design in §7 "Design — T35").** The
@@ -266,6 +279,34 @@ compaction; decisions 54–56; design in §7 "Design — T36").**
   of its own so a genre flip is never buried in "open". The tool emits
   per-group, per-corpus evidence rows: the weight table's raw material,
   produced by the census, not designed around it.
+
+**The decoder's table (Fran, 2026-09-15, after the agreement check;
+decisions 57–59; design in §7 "Design — T38").**
+
+- **57 Weights are counted under a declared context.** A weight is
+  contests and rights per (rule, context, bucket), counted from the
+  pinned shippable corpora and never set by hand; the shelf is
+  measured and never fitted (decision 11). Context = dialect and text
+  form (versus | prosa), declared by the document's own censuses or,
+  for a treebank, by a data table over its sentence ids. Back-off: a
+  row answers only with at least twenty contests, else the next
+  coarser key answers; the coarsest key is the rule's plain rate,
+  which is today's behaviour, so an empty table decodes as the
+  executor decided.
+- **58 A bucket enters the table by the lattice's verdict.** Universal
+  when the vetoed chain accepted it; conditioned when the pooled chain
+  accepted it and a named corpus fell, and then only under a context
+  that separates that corpus (decision 54). The generator's bucket
+  rows carry the lattice's numbers as their cause; a bucket nobody
+  measured is not in the table.
+- **59 Agreement is already a constraint.** Checked before this
+  design: the subject rules require the filler's number to equal the
+  verb's on both tiers (`Puellae ambulat` leaves the slot empty,
+  `Puellae ambulant` binds it). The lattice's verb-number signal is
+  pro-drop — a plural verb's contested word is its subject, a
+  singular verb's is more often the object — a tendency of 55–75 %
+  that orders and never eliminates. A grammatical law lives in the
+  rules; a tendency lives in the table.
 
 ## 3. Stage 1 — the tree (`oratio_arbor`)
 
@@ -2726,6 +2767,217 @@ Agamemnon 279, 361 and Tacitus, Germania 192 (`sorores`, `uultus`,
 `insignes`) — verified present in the CoNLL-U files. The tool now goes
 from a bucket to its sentences in one flag, which is what the agreement
 constraint's design will start from.
+
+**Checked before T38 — the agreement constraint was already built
+(2026-09-15).** The step the order put before the decoder rested on a
+premise written from memory: that the subject rules do not require
+number agreement. They do, on both tiers (`resolutio.stml` captures
+the verb's number on the umbra and demands it on the filler), and a
+live probe confirmed it. What the lattice's `numerus-capitis` column
+measures is pro-drop, named in T32 e: in the 1,607 same-verb contests
+the subject rule always wins by trust, and the gold reading splits by
+the verb's number — plural verb, subject right (CIRCSE 38:11, Perseus
+28:7, ITTB 17:8; PROIEL 32:41 against), singular verb, object right
+(ITTB 157:255, Perseus 57:166, PROIEL 36:148, UDante 15:52, LLCT
+0:59; CIRCSE 86:79, a coin). Gold agreement is 97–98 % on classical
+text and 92–93 % on the charters, half of the charter discordance
+coordination, so no medieval relaxation is justified either. Decision
+59 records it; the desideratum is fulfilled as already satisfied; the
+order skips to the decoder with verb number as its first conditioned
+bucket.
+
+**Design — T38, the decoder (2026-09-15, the conversation after the
+agreement check; decisions 48 and 57–59; desideratum 01M24Z45XK;
+decretum 01M2HGPT52).** Scope decided by Fran: every contested cell,
+arcs and readings. The executor is untouched as a proposer; the
+decoder is a pass after the last stage.
+
+CANDIDATES AND CELLS. A candidate is one umbra of one carrier reading
+with one filler reading: the standing filling, or an alternative
+whose cause is a trust decision — `recusata` (one-head law),
+`revocata` (contest), and the new `praeoccupata`: a row naming an
+umbra already filled in an earlier stage, which T34 rightly keeps out
+of the executor's contest and which is nevertheless the second
+proposal for that umbra (in `Puella bellum videt` it is `Puella` as
+subject after `bellum` took the slot). Refusals by a law — lex
+carrier, the explicit-class law, cannot-bind — are not candidates:
+those are constraints. The cell of a candidate is its dependent word,
+found by the relation's direction as the oracle judges arcs (head and
+adposition-object umbrae: the carrier is the dependent; verb star: the
+partner is). A cell with one candidate passes through untouched, a
+cell with two or more is contested. The decoder needs every tier's
+candidates, which T33 b already decided.
+
+SCORE AND TABLE. `oratio/probationes/fixa/pondera.tsv`, generated by
+`oratio/census/pondera.py <lites.tsv> [-scribere]` from the contest
+rows (`-lites`) of the PINNED SHIPPABLE files only — `thesaurus` in
+{la_circse, la_llct} — the shelf never enters (decision 57). Header
+row `regula dialectus forma folliculus valor contentiones rectae
+permille`; the loader refuses a differing header or width by name
+(decision 51). Each judged contest credits both sides: the victor's
+row gains a contest and a right when `aurum-lectio` is `victor`, the
+loser's when `victa`; `neutra` counts a contest for both, `ignotum`
+counts nothing. Buckets are DATA rows in the generator — name, the
+LIS column(s) that define the value, the contexts it may condition
+on, and the lattice's numbers as cause. V1 rows: `numerus-capitis`
+(singularis | pluralis) for verb-star candidates, universal with the
+charters conditioned by dialect (chain +75, LLCT −12 → decision 54);
+`ante` × `numerus-lectionis` (the candidate's own reading's number)
+conditioned by form (the T32 f flip: −40 held out pooled, exact per
+corpus); `ante` × `distantia` (1 | plures, the `-gradus` law) for
+head candidates, conditioned by form (arc census +692, direction
+vetoed by the verse corpora). The bucket VALUES are the LIS columns'
+values, so generator and decoder agree by construction; the decoder
+computes them from the tree (the carrier reading's `numerus`, the
+filler's position and `numerus`, the distance). An unconditioned row
+writes `-` in the context and bucket columns. Ladder, finest first:
+(regula, dialectus, forma, folliculus) → (regula, dialectus, forma) →
+(structural key, dialectus, forma) → (regula) → the rule's
+`auctores.tsv` rate; a rule in neither table scores nothing and only
+the standing claim can hold its cell. The structural key is relation,
+direction and adjacency, derived from the candidate, not the title,
+so a new rule of the same shape inherits evidence; the exact pattern
+signature waits until a rename or a same-shape rule pair exists
+(named, not built). A row answers only with at least twenty contests
+(`limen`), else the ladder descends; the last rung is today's trust,
+so an empty table reproduces the executor. Named circularity: the
+two shippable corpora are two of
+the five pinned files; LLCT's train split in `build/` (never
+vendored, decision 13) is the follow-up that removes it for the
+charters, and CIRCSE has no train split.
+
+DECLARED CONTEXT. Dialect exists (T30 c: per document by census, per
+file in the oracle). Text form is new: per document, `versus` when
+the words in `versus` paragraphs (the T6b `forma` layer) are more
+than half of the words, else `prosa` (`oratio_forma_documenti_censu`,
+counts in the annotation census like the dialect's). A treebank has
+no line structure, so the oracle DECLARES form by a data table over
+sentence ids (`FORMAE_THESAURORUM` in the oracle library): CIRCSE by
+the id — `_prose` is prosa (119 Tacitus, Germania sentences, which
+corrects decision 53's aside that CIRCSE is wholly verse), everything
+else versus (647 `_poetry`, 127 Phoenissae ids without a suffix);
+Perseus by the `# newdoc id` PHI number, which the CoNLL-U reader
+must keep — the test file holds four works: Vergil (phi0690), Ovid
+(phi0959) and Phaedrus (phi0975) verse, Petronius (phi0972) prose;
+every other file prosa. A finding in that table already: Perseus is
+three verse works, yet its contests behave like prose (T32 d), so
+the declared form may NOT separate Seneca from Vergil and Ovid — the
+lattice with the new column decides whether the position × number
+bucket is form-conditioned (decision 58) or stays a corpus fact
+outside the table. The oracle prints a `FORMA` row per file
+(sentences versus, prosa) beside `DIALECTUS`.
+LIS rows gain columns 34 `dialectus` and 35 `forma` under the header
+law, so the lattice can judge form-conditioned buckets directly
+(`-ubi forma=prosa`). The resolver receives the context as a struct:
+`OratioContextus { lingua, dialectus, forma }` through
+`oratio_resolutio_applicare_contextu(…)`; the old entry keeps its
+signature and delegates with classicus and prosa (the API is the
+part that is hard to change later).
+
+CONSTRAINTS, THEN ORDER. Hard, eliminating: one filling per umbra;
+one head per dependent word across all umbrae; no cycle; one subject
+per finite verb reading; the explicit-class law (a filler word
+decided by an explicit rule as another reading is refused, T19e).
+Agreement needs no line here: every proposal already satisfies it
+(decision 59). The score orders what survives; a tie keeps the
+standing claim.
+
+DECODE AND WRITE-BACK. Greedy best-first: every candidate of every
+contested cell sorted by score descending, standing claims first
+among equals, accepted in order when consistent with the accepted set
+and with the uncontested claims; an acceptance blocks the candidates
+it conflicts with. A cell whose candidates all conflict stays as the
+executor left it. Profile per cell (decision 40): COACTUM when one
+candidate survived the constraints, ORDINATUM when several did and
+the winner's score exceeds the runner-up's, APERTUM when the top
+scores tie (the standing claim stands). Write-back: the winner
+becomes the umbra's filling and its reading goes first in its word
+through the executor's permutation path (`materia_nodus_lista_permutare`
++ `oratio_partes_compendia_reponere`, the same as a filling); the
+displaced claim becomes an alternative with cause `decreta` and
+victor `decretor`; the umbra's `auctor` stays the proposing rule (the
+arc's author, as the AUCTOR table counts it); the dependent word's
+`decisio` gains the value `decretum` with `auctor` `decretor`; a new
+INDEX slot `habitus` on `vocabulum` (coactus | ordinatus | apertus —
+the lattice's own profile titles, decision 56; unwritten = not a
+contested cell) — registry append, canon rule, seal moves with the
+task as cause, computus golden regenerated with the cause.
+Enumerations appended only: `ORATIO_DECISIO_DECRETUM`,
+`ORATIO_ALTERNA_CAUSA_PRAEOCCUPATA`, `_DECRETA`. Worked example, the
+one the doctrine tension was named on: `Puella bellum videt` — cells
+`bellum` {subject standing 705, object revoked 555} and `videt`'s
+subject umbra {bellum standing, Puella praeoccupata 228}; with the
+singular-verb bucket the subject rule's conditioned rate falls below
+the object rule's, the object claim is accepted first, the subject
+claim on `bellum` is blocked (one head), `Puella` takes the subject
+umbra; habitus ordinatus on both cells; `bellum` reads accusative.
+
+PLACEMENT AND SWITCHES. In `_sententiam_resolvere` right after the
+stage loop, before the law of umbrae, lex capitis and the case prior,
+so those see the decoder's fillings. `ORATIO_DECRETOR=0` disables the
+pass; `ORATIO_PONDERA_SINE=<folliculus>` decodes without one bucket;
+`ORATIO_PONDERA_LIMEN=N` moves the row minimum — the three levers for
+measurement, each measured on the nine treebanks against the same
+pins. Census counters printed and pinned, never silent: cells,
+contested, changed, per profile.
+
+THE DECISION ROW. Machine row `DECRETUM` per contested cell with a
+`COLUMNAE` header: `sententia dependens caput regula-electa
+regula-cedens ante numerus-capitis numerus-lectionis distantia gradus
+pondus-electae pondus-cedentis habitus aurum-electio thesaurus
+dialectus forma` — `gradus` = the ladder rung that answered,
+`aurum-electio` ∈ electa | cedens | neutra | ignotum (the chosen
+candidate's arc and reading against gold, as LIS judges victor and
+victa). Summary row `DECRETOR`: cells, contested, changed, and per
+profile the count and the right count. Two things follow for free: a
+listing of wrong decisions by bucket (`oraculum.sh -errata -decreta`)
+and the lattice over the decoder's own decisions (`reticulum.sh x.tsv
+-genus DECRETUM -aurum aurum-electio …`), which is how the next bucket
+is found — decisions to rows to lattice to table.
+
+MEASUREMENT AND THE BET. Same pins on nine treebanks; forced accuracy
+per profile pinned at birth (decision 40's first real cell profile).
+Prediction before the run, from the GREX rows of the verb-number
+bucket: turning the singular-verb contests toward the object is worth
+at most +98 cells on Aquinas, +109 Perseus, +112 PROIEL, +59 charters,
++37 Dante, −7 Seneca; T32 f says expect the direction and not the
+size, because a word decided upstream keeps its reading. The charters'
+residual is proposal, not ranking (T32 b): if they do not move that
+is the recall families, not a tuning failure. A treebank that falls
+is a named cause and Fran's decision, as always.
+
+GATES. `probatio_oratio_resolutio`: an inline two-rule programme with
+an inline table (object rule 700 under a singular verb, subject rule
+300) decodes `Puella bellum videt` to `bellum` accusative object and
+`Puella` subject with habitus ordinatus; an empty table leaves the
+executor's result byte-identical; `ORATIO_DECRETOR=0` likewise;
+plant = the ladder walked coarsest-first (the exact row ignored, the
+decision unchanged → red). Loader: a header with a renamed column is
+refused by name. Generator: `pondera.py` over the proba fixture rows
+equals a hand count. Oracle: DECRETUM rows equal DECRETOR counts;
+sum law contested = coactae + ordinatae + apertae; FORMA row counts
+sum to the file's sentences; plant = `_prose` ids counted as versus.
+Corpus invariant: after the pass every filling still points at a
+reading of its case, number and gender.
+
+TRANCHES. (a) Context: form per document, `FORMAE_THESAURORUM`, the
+`FORMA` row, LIS columns 34–35, `OratioContextus` and the delegating
+entry — no decision changes, every pin byte-identical. (b) Table:
+`pondera.py`, `fixa/pondera.tsv` with the three V1 buckets, the
+loader with header refusal, the recount of one bucket by hand. (c)
+Decoder: `praeoccupata` recording, the pass, registry slot and
+enumerations, switches, census, DECRETUM/DECRETOR rows, gates with
+the plant. (d) The run: nine treebanks, the prediction checked, pins
+moved with causes, records, and the R11 / R14 / R19 / R20 walls
+re-measured under the decoder.
+
+LEFT OUT, named: the exact pattern signature; LLCT train in `build/`;
+a valency table per lemma and natura semantic classes as further
+buckets; MST decoding (the candidate graph has one to three
+candidates per word and cycles are rare); a trust table per dialect
+as a separate artifact (it is the `dialectus` column now); English
+validation (the decoder runs on EWT unchanged — no bucket rows exist
+for its rules, so it reproduces the executor there by construction).
 
 ## 8. Stage 6 — search
 
