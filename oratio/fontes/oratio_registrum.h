@@ -1,8 +1,10 @@
 /* oratio_registrum.h - Vocabularium nodorum orationis (oratio-spec par. III)
  *
- * MANU SCRIPTUM ut md_registrum.h: enumeratio typum VERUM habet et
- * comitem ORATIO_GENUS_NUMERUS; probatio congruentiam cum tabula per
- * TITULOS et CONTIGUITATEM offsetuum asserit.
+ * Enumeratio generum et tabulae ex DECLARATIONE generantur
+ * (oratio.registrum.stml -> oratio_registrum_coctum.{h,c}, porta
+ * rancoris in probatione); enumerationes locorum MANU (ut
+ * md_registrum.h) - probatio congruentiam earum cum tabula per TITULOS
+ * asserit.
  *
  * MODELLUM (spec par. III, ut aedificatum): documentum -> paragraphi
  * -> sententiae -> elementa (vocabulum | interpunctio | numerus).
@@ -33,49 +35,19 @@
 #include "latina.h"
 #include "materia_registrum.h"
 
-nomen enumeratio {
-    ORATIO_GENUS_DOCUMENTUM = 0,
-    ORATIO_GENUS_PARAGRAPHUS,
-    ORATIO_GENUS_SENTENTIA,
-    ORATIO_GENUS_VOCABULUM,
-    ORATIO_GENUS_INTERPUNCTIO,
-    ORATIO_GENUS_NUMERUS,
+/* Enumeratio generum et tabulae COCTAE generantur ex
+ * oratio/grammatica/oratio.registrum.stml (materia/coquere.sh,
+ * 2026-09-15): OratioGenus, ORATIO_GENUS_NUMERUS_GENERUM,
+ * ORATIO_REGISTRUM. Genera APPENDUNTUR, numquam interponuntur (ordo
+ * = enumeratio = offsets; sigillum canonis pinna). Hic manent quae
+ * clientis sunt: nomina super enumerationem, enumerationes LOCORUM,
+ * accidentia, tituli. */
+#include "oratio_registrum_coctum.h"
 
-    /* gradus III (T11): genera analysis-* APPENSA, unum per classem
-     * universalem ordine UD (spec par. V); genus = PRIMUM + classis */
-    ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
-    ORATIO_GENUS_ANALYSIS_NOMINIS_PROPRII,
-    ORATIO_GENUS_ANALYSIS_VERBI,
-    ORATIO_GENUS_ANALYSIS_AUXILIARIS,
-    ORATIO_GENUS_ANALYSIS_ADIECTIVI,
-    ORATIO_GENUS_ANALYSIS_ADVERBII,
-    ORATIO_GENUS_ANALYSIS_PRONOMINIS,
-    ORATIO_GENUS_ANALYSIS_DETERMINANTIS,
-    ORATIO_GENUS_ANALYSIS_ADPOSITIONIS,
-    ORATIO_GENUS_ANALYSIS_NUMERALIS,
-    ORATIO_GENUS_ANALYSIS_CONIUNCTIONIS_COORDINANTIS,
-    ORATIO_GENUS_ANALYSIS_CONIUNCTIONIS_SUBORDINANTIS,
-    ORATIO_GENUS_ANALYSIS_PARTICULAE,
-    ORATIO_GENUS_ANALYSIS_INTERIECTIONIS,
-    ORATIO_GENUS_ANALYSIS_SYMBOLI,
-    ORATIO_GENUS_ANALYSIS_INTERPUNCTIONIS,
-    ORATIO_GENUS_ANALYSIS_IGNOTI,
-    /* T19d (2026-09-07): UMBRA - dependens exspectatus lectionis
-     * (relatio, condiciones, impletio); APPENSA post analyses, ergo
-     * analyses [PRIMUM, ULTIMUM) contiguae manent */
-        ORATIO_GENUS_UMBRA,
-    /* T20a (2026-09-08, decisiones XLIII-XLIV): CLAUSULA - capsa
-     * sudoku inter vicinitatem et sententiam; nodus in lista
-     * 'clausulae' sententiae, umbras e schemate ferens (verbum
-     * finitum, subiectum); elementa plana per INDEX eum monstrant.
-     * APPENSA post umbram (extra [PRIMUM, ULTIMUM) analysium) */
-    ORATIO_GENUS_CLAUSULA,
-    ORATIO_GENUS_ALTERNA,   /* T32 b (2026-09-09): petitio umbrae cedens */
-
-    ORATIO_GENUS_NUMERUS_GENERUM,
-    ORATIO_GENUS_ANALYSIS_PRIMUM = ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
-    ORATIO_GENUS_ANALYSIS_ULTIMUM = ORATIO_GENUS_UMBRA   /* exclusivum */
-} OratioGenus;
+/* analyses [PRIMUM, ULTIMUM) contiguae (T11, T19d): umbra, clausula,
+ * alterna post eas APPENSAE, extra intervallum */
+#define ORATIO_GENUS_ANALYSIS_PRIMUM ORATIO_GENUS_ANALYSIS_SUBSTANTIVI
+#define ORATIO_GENUS_ANALYSIS_ULTIMUM ORATIO_GENUS_UMBRA   /* exclusivum */
 
 /* Classes universales (UD XVII, spec par. V) ordine generum analysis-*;
  * tituli = optiones 'classis' canonis glossarii (custos in porta). */

@@ -2106,3 +2106,46 @@ the comparator calls them equal; the comparator suite checks empty
 against unwritten both ways. Oratio pins the summed projection
 failures to ZERO on every pinned treebank, so the class cannot hide
 again.
+
+## 2026-09-15 — registrum coctum: the genera table generated (oratio wish 01M24Z4Q5Y b)
+
+INTENTIO: remove the hand arithmetic from every client's registry
+(offsets, counts, the enum kept in step) without removing the gates.
+Fran's constraints: C89, usable without Python, STML declaration.
+
+RELATIO: `materia_coctor` (library: text in, two texts out, no files)
++ `materia/instrumenta/coctor.c` + `./materia/coquere.sh` +
+`materia/grammatica/registrum.canon` (registered by root in
+`canones.registrum`). Declaration `<registrum>` → genus enum with its
+`_NUMERUS_GENERUM` and the baked `LOCI`/`GENERA`/struct; identifiers
+derived from kebab titles; notes as comments above rows; output a
+fixed point of the formator (CONFORMIS on the real oratio render).
+Refusals are named with the declaration line (duplicate locus title
+within a genus, unknown species, missing root attribute, non-kebab
+title, foreign root, parse failure, no loci at all). Oratio migrated:
+hand tables deleted, the header includes the generated one, the two
+analysis-range aliases are `#define`s, the registrum probatio gained a
+freshness block (render in-process, compare bytes with the committed
+files). Acceptance: tables equal row for row by an independent script,
+seal `c4752e42` unchanged (canon gate 271/271), registrum 1121/1121,
+birth gate 64/64 with byte-exact fixtures derived by hand before the
+emitter ran. Left hand-written on purpose: locus enums (oratio's
+analysis genera share a common enum; typedef names are genitives) and
+the pins (count, seal). Next: css and md, then a thin Python wrapper.
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: legati caput (stml, chorda_aedificator, canon, filum APIs
+without grep); legati corpus (StmlNodus, StmlResultus); scribe for
+every new C file (the examen caught a comment closed by " */" inside
+its own prose, an anchor-looking `<sedes>` in a comment, and a chorda
+handed to strstr); formator -scribere/-vitia; quaere.sh on the new
+identifier words before staging; canon_examen through the registry.
+FRUCTUS: the byte-exact fixture written by hand from the wrap rule
+matched the emitter on the first run — writing the rule down first
+made the test a spec, not a transcript.
+ASPERITATES: (1) the examen's "nodi erroris 1" carries no line; the
+"vocatio implicita" warnings on the next function located it; (2)
+`-Wcast-qual` on a needless `(Xar*)` cast; (3) `credo_aperire` must
+precede the first assertion (loud, so cheap); (4) an English field
+name copied from `CanonVitium` (`detail`) would have met the lint —
+renamed before staging.

@@ -1,0 +1,465 @@
+<!--
+  oratio.registrum.stml - DECLARATIO registri generum orationis
+
+  FONS UNUS tabularum coctarum oratio_registrum_coctum.{h,c}
+  (materia/coquere.sh; canon materia/grammatica/registrum.canon).
+  Genera APPENDUNTUR, numquam interponuntur: ordo = enumeratio =
+  offsets; permutatio sigillum canonis movet (pinna, manu mota cum
+  causa). Notae in commentaria generata transeunt.
+-->
+<registrum grammatica="oratio" praefixum="ORATIO" typus="OratioGenus"
+  sedes="oratio/fontes">
+
+  <genus titulus="documentum">
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="paragraphi" species="lista-nodus"/>
+    <locus titulus="finis" species="token"/>
+  </genus>
+
+  <genus titulus="paragraphus">
+    <locus titulus="praefixa" species="lista-token"/>
+    <locus titulus="sententiae" species="lista-nodus"/>
+    <locus titulus="cauda" species="lista-token"/>
+    <locus titulus="forma" species="index"
+      nota="OratioForma (T6b)"/>
+  </genus>
+
+  <genus titulus="sententia">
+    <locus titulus="elementa" species="lista-nodus"/>
+    <locus titulus="clausulae" species="lista-nodus"
+      nota="T20a: clausulae sententiae"/>
+  </genus>
+
+  <genus titulus="vocabulum">
+    <locus titulus="partes" species="lista-token"/>
+    <locus titulus="cauda" species="lista-token"/>
+    <locus titulus="analyses" species="lista-nodus"/>
+    <locus titulus="classes" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="linguae" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="decisio" species="index"
+      nota="OratioDecisio (T19g)"/>
+    <locus titulus="auctor" species="token"
+      nota="DERIVATUM (T19g)"/>
+    <locus titulus="clausula" species="index"
+      nota="T20a: clausula intra sententiam"/>
+    <locus titulus="clausula-causa" species="index"
+      nota="OratioClausulaCausa (T20a)"/>
+    <locus titulus="habitus" species="index"
+      nota="OratioHabitus (T38 c)"/>
+  </genus>
+
+  <genus titulus="interpunctio">
+    <locus titulus="signum" species="token"/>
+    <locus titulus="cauda" species="lista-token"/>
+    <locus titulus="clausula" species="index"
+      nota="T20a"/>
+    <locus titulus="clausula-causa" species="index"
+      nota="OratioClausulaCausa (T20a)"/>
+  </genus>
+
+  <genus titulus="numerus">
+    <locus titulus="crudum" species="lista-token"/>
+    <locus titulus="cauda" species="lista-token"/>
+    <locus titulus="clausula" species="index"
+      nota="T20a"/>
+    <locus titulus="clausula-causa" species="index"
+      nota="OratioClausulaCausa (T20a)"/>
+  </genus>
+
+  <!-- gradus III (T11): analysis-* unum per classem universalem,
+       ordine UD, APPENSA post elementa; loci communes V primi (lemma
+       lingua fons nativum sensus), deinde accidentia INDEX, umbrae
+       ultimae (T19d) -->
+  <genus titulus="analysis-substantivi">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="declinatio" species="index"
+      nota="declinatio I-V (WORDS)"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-nominis-proprii">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="declinatio" species="index"
+      nota="declinatio I-V (WORDS)"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-verbi">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="persona" species="index"
+      nota="OratioPersona"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="tempus" species="index"
+      nota="OratioTempus"/>
+    <locus titulus="modus" species="index"
+      nota="OratioModus"/>
+    <locus titulus="vox" species="index"
+      nota="OratioVox"/>
+    <locus titulus="forma-verbi" species="index"
+      nota="OratioFormaVerbi"/>
+    <locus titulus="coniugatio" species="index"
+      nota="coniugatio I-IV (WORDS)"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-auxiliaris">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="persona" species="index"
+      nota="OratioPersona"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="tempus" species="index"
+      nota="OratioTempus"/>
+    <locus titulus="modus" species="index"
+      nota="OratioModus"/>
+    <locus titulus="vox" species="index"
+      nota="OratioVox"/>
+    <locus titulus="forma-verbi" species="index"
+      nota="OratioFormaVerbi"/>
+    <locus titulus="coniugatio" species="index"
+      nota="coniugatio I-IV (WORDS)"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-adiectivi">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="gradus" species="index"
+      nota="OratioGradus"/>
+    <locus titulus="declinatio" species="index"
+      nota="declinatio I-V (WORDS)"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-adverbii">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="gradus" species="index"
+      nota="OratioGradus"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-pronominis">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="persona" species="index"
+      nota="OratioPersona"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-determinantis">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-adpositionis">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-numeralis">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="species" species="index"
+      nota="OratioSpeciesNumeralis"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-coniunctionis-coordinantis">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-coniunctionis-subordinantis">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-particulae">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-interiectionis">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-symboli">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-interpunctionis">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="analysis-ignoti">
+    <locus titulus="lemma" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="lingua" species="index"
+      nota="OratioLingua"/>
+    <locus titulus="fons" species="index"
+      nota="OratioFonsAnalysis"/>
+    <locus titulus="nativum" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="sensus" species="token"
+      nota="DERIVATUM"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="T19d: umbrae lectionis"/>
+  </genus>
+
+  <genus titulus="umbra"
+    nota="T19d (2026-09-07): dependens exspectatus lectionis (relatio, condiciones, impletio); APPENSA post analyses, ergo analyses [PRIMUM, ULTIMUM) contiguae manent">
+    <locus titulus="relatio" species="index"
+      nota="OratioRelatio"/>
+    <locus titulus="classis" species="index"
+      nota="OratioClassis exspectata"/>
+    <locus titulus="casus" species="index"
+      nota="OratioCasus"/>
+    <locus titulus="numerus" species="index"
+      nota="OratioNumerusGrammaticus"/>
+    <locus titulus="genus" species="index"
+      nota="OratioGenusGrammaticum"/>
+    <locus titulus="impletio" species="referentia"
+      nota="nodus analysis implentis (T33)"/>
+    <locus titulus="forma-verbi" species="index"
+      nota="OratioFormaVerbi exspectata (T20a)"/>
+    <locus titulus="auctor" species="token"
+      nota="DERIVATUM: titulus regulae implentis (T32 a)"/>
+    <locus titulus="alternae" species="lista-nodus"
+      nota="T32 b: petitiones cedentes (nodi alterna)"/>
+  </genus>
+
+  <genus titulus="clausula"
+    nota="T20a (2026-09-08, decisiones XLIII-XLIV): capsa sudoku inter vicinitatem et sententiam; nodus in lista clausulae sententiae, umbras e schemate ferens; APPENSA post umbram, extra intervallum analysium">
+    <locus titulus="semen" species="index"
+      nota="ordinalis elementi seminis (T20a)"/>
+    <locus titulus="species" species="index"
+      nota="OratioSpeciesClausulae"/>
+    <locus titulus="pater" species="index"
+      nota="clausula continens"/>
+    <locus titulus="umbrae" species="lista-nodus"
+      nota="verbum-finitum, subiectum"/>
+  </genus>
+
+  <genus titulus="alterna"
+    nota="T32 b (2026-09-09): petitio umbrae cedens (socius, auctor, causa, fides, victor); T33 socius REFERENTIA">
+    <locus titulus="socius" species="referentia"
+      nota="nodus analysis socii (T33)"/>
+    <locus titulus="auctor" species="token"
+      nota="DERIVATUM: regula petens"/>
+    <locus titulus="causa" species="index"
+      nota="OratioAlternaCausa"/>
+    <locus titulus="fides" species="index"
+      nota="permille fiduciae"/>
+    <locus titulus="victor" species="token"
+      nota="DERIVATUM: regula victrix"/>
+  </genus>
+</registrum>

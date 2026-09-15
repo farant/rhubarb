@@ -22,6 +22,7 @@
 #include "materia_nodus.h"
 #include "materia_token.h"
 #include "materia_lexicon.h"
+#include "materia_coctor.h"   /* porta rancoris tabularum coctarum */
 #include "chorda.h"
 #include "piscina.h"
 #include <stdio.h>
@@ -800,6 +801,65 @@ MateriaLexiconRatum  ratum;
                     (i32)ORATIO_FORMA_VERBI_NUMERUS));
                 CREDO_VERUM (_optiones_congruunt(canon, "gradus",
                     ORATIO_TITULI_GRADUUM, (i32)ORATIO_GRADUS_NUMERUS));
+            }
+        }
+    }
+
+    /* PORTA RANCORIS (2026-09-15): tabulae coctae oratio_registrum_coctum.{h,c}
+     * ex oratio.registrum.stml GENERATAE - regenerata in memoria contra
+     * plagulas commissas OCTETIM (output, numquam tempora): declaratio
+     * mutata sine ./materia/coquere.sh -scribere, aut plagula generata
+     * manu tacta, hic rubet cum linea prima divergente. Numerus locorum
+     * declarationis == tabula viva. */
+    {
+        constans character* radix = getenv("RHUBARB_RADIX");
+                 character  via[1024];
+                    chorda  declaratio;
+                    chorda  in_disco;
+             MateriaCoctio  coctio;
+                       i32  linea;
+
+        imprimere("\n--- Probans rancorem tabularum coctarum ---\n");
+        sprintf(via, "%s/oratio/grammatica/oratio.registrum.stml",
+            radix != NIHIL ? radix : ".");
+        si (!_plagulam_legere(piscina, via, &declaratio))
+        {
+            CREDO_CULPA ("oratio.registrum.stml absens");
+        }
+        alioquin si (!materia_registrum_coquere(piscina, declaratio,
+                     "oratio/grammatica/oratio.registrum.stml",
+                     &coctio))
+        {
+            imprimere("    recusatio: %.*s (linea %u)\n",
+                (integer)coctio.causa.mensura,
+                (constans character*)coctio.causa.datum, coctio.linea);
+            CREDO_CULPA ("declaratio recusata");
+        }
+        alioquin
+        {
+            CREDO_AEQUALIS_I32 (coctio.numerus_locorum,
+                ORATIO_REGISTRUM.numerus_locorum);
+            CREDO_AEQUALIS_I32 (coctio.numerus_generum,
+                ORATIO_REGISTRUM.numerus_generum);
+            sprintf(via, "%s/%.*s", radix != NIHIL ? radix : ".",
+                (integer)coctio.via_capitis.mensura,
+                (constans character*)coctio.via_capitis.datum);
+            CREDO_VERUM (_plagulam_legere(piscina, via, &in_disco));
+            CREDO_VERUM (materia_coctio_aequalis(coctio.caput, in_disco,
+                &linea));
+            si (linea != ZEPHYRUM)
+            {
+                imprimere("    caput RANCIDUM linea %u\n", linea);
+            }
+            sprintf(via, "%s/%.*s", radix != NIHIL ? radix : ".",
+                (integer)coctio.via_fontis.mensura,
+                (constans character*)coctio.via_fontis.datum);
+            CREDO_VERUM (_plagulam_legere(piscina, via, &in_disco));
+            CREDO_VERUM (materia_coctio_aequalis(coctio.fons, in_disco,
+                &linea));
+            si (linea != ZEPHYRUM)
+            {
+                imprimere("    fons RANCIDUS linea %u\n", linea);
             }
         }
     }

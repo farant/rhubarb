@@ -1,0 +1,64 @@
+<!--
+  registrum.canon - DECLARATIO registri generum (materia, 2026-09-15)
+
+  Documentum <registrum> est FONS UNUS tabularum coctarum cuiusque
+  clientis materiae (<grammatica>_registrum_coctum.{h,c}): genera
+  ordine appenso, loci cuiusque generis ordine et specie. Instrumentum
+  materia/coquere.sh (bibliotheca materia_coctor) declarationem contra
+  hunc canonem iudicat ANTEQUAM generet; declaratio recusata nihil
+  scribit.
+
+  Identificatores C ex titulis MECHANICE derivantur: '-' -> '_',
+  litterae maiusculae; ergo tituli litteris minusculis, cifris et
+  hyphenis solis constant (instrumentum id ipsum retirat).
+
+  Quod canon iudicare NON potest: ordinem appensum (permutatio
+  compilat) - id sigillum registri in canone clientis pinnatum custodit,
+  manu motum cum causa.
+
+  Iudicium: bin/canon_examen oratio/grammatica/oratio.registrum.stml
+  (radix <registrum> in canones.registrum).
+-->
+<canon dialectus="registrum" versio="1">
+
+  <elementum nomen="registrum" radix="verum"
+    nota="registrum generum clientis unius: genera ordine appenso">
+    <attributum nomen="grammatica" genus="textus" necessarium="verum"
+      nota="titulus grammaticae (oratio, css, md): stirps plagularum generatarum"/>
+    <attributum nomen="praefixum" genus="textus" necessarium="verum"
+      nota="praefixum identificatorum C (ORATIO): <praefixum>_GENUS_<TITULUS>, <praefixum>_REGISTRUM"/>
+    <attributum nomen="typus" genus="textus" necessarium="verum"
+      nota="titulus enumerationis generum (OratioGenus)"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"
+      nota="directorium plagularum generatarum, radici repositorii relativum (oratio/fontes)"/>
+    <liberum nomen="genus"/>
+  </elementum>
+
+  <elementum nomen="genus" intra="registrum"
+    nota="genus nodi: fenestra sua in seriem planam locorum (offset, numerus) ex ordine loci derivatur">
+    <attributum nomen="titulus" genus="textus" necessarium="verum"
+      nota="titulus generis (kebab): documentum, analysis-verbi"/>
+    <attributum nomen="nota" genus="textus"
+      nota="in commentarium enumerationis generatae transit"/>
+    <liberum nomen="locus"/>
+  </elementum>
+
+  <elementum nomen="locus" intra="genus"
+    nota="locus unus generis: titulus et species (MateriaLocusSpecies)">
+    <attributum nomen="titulus" genus="textus" necessarium="verum"
+      nota="titulus loci (kebab): praefixa, clausula-causa"/>
+    <attributum nomen="species" genus="electio" necessarium="verum"
+      nota="species loci = tituli enumerationis MateriaLocusSpecies (materia_nodus.h), ordine eius">
+      <optio>nodus</optio>
+      <optio>token</optio>
+      <optio>lista-nodus</optio>
+      <optio>lista-token</optio>
+      <optio>lista-mixta</optio>
+      <optio>index</optio>
+      <optio>referentia</optio>
+    </attributum>
+    <attributum nomen="nota" genus="textus"
+      nota="in commentarium ordinis tabulae generatae transit"/>
+  </elementum>
+
+</canon>

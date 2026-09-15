@@ -43,3 +43,6 @@
 # ABEST - proiectio tag eius tegit, involucrum eius non describitur.
 <parsura>	silva/c89.canon
 <glossarium>	oratio/grammatica/glossarium.canon
+# Declaratio registri generum (materia, 2026-09-15): fons tabularum
+# coctarum cuiusque clientis (materia/coquere.sh); radix <registrum>.
+<registrum>	materia/grammatica/registrum.canon

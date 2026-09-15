@@ -1041,6 +1041,22 @@ disables; `ORATIO_DECRETOR_ADDITIONES=1|classicus|medius` (recall
 lever, off: Seneca +100 right arcs for −4 ‰ precision);
 `ORATIO_PONDERA_SINE=<bucket|regula|structura>`, `ORATIO_PONDERA_LIMEN=N`.
 
+**REGISTRUM COCTUM (2026-09-15).** The genus enum (`OratioGenus`,
+`ORATIO_GENUS_NUMERUS_GENERUM`) and the tables (`ORATIO_REGISTRUM`)
+are GENERATED into `oratio/fontes/oratio_registrum_coctum.{h,c}` from
+`oratio/grammatica/oratio.registrum.stml` by `./materia/coquere.sh
+oratio/grammatica/oratio.registrum.stml -scribere` (materia's
+`materia_coctor`; canon `materia/grammatica/registrum.canon`). To add
+a locus: append it to the declaration (append-only genera), run
+`-scribere`, add the enum member to the hand-written locus enum in
+`oratio_registrum.h`, then move the locus-count pin in
+`probatio_oratio_registrum.c` and the seal in `oratio.canon` BY HAND
+with a cause. The registrum probatio regenerates in-process and
+compares bytes with the committed files (a hand edit of a `_coctum`
+file or a declaration edit without `-scribere` goes red with the first
+divergent line). `ORATIO_GENUS_ANALYSIS_PRIMUM/ULTIMUM` are `#define`
+aliases in the hand header.
+
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
 `latina.h` shadowing `include/latina.h` in the nexus sweep (first-wins

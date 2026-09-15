@@ -518,6 +518,31 @@ typed face — which is precisely rowan's bargain, and why M8 matters.
 | MG3 | Whether `quaestio` belongs in materia or above it | It needs registry types only, so it *can* live in materia — but M8 says thin. Decide when CSS actually wants a query. |
 | MG4 | The lapifex landmine | `lib/nuntium_schema.c` builds on a predecessor generation. Untouched by this fork, but it is the standing proof that superseded generations here do not die on schedule. |
 | ~~MG5~~ | **CLOSED 2026-09-10** — sideways references (`MATERIA_LOCUS_REFERENTIA`) | Found by the fourth client (oratio): a tree can only say ownership, so cross-links were client-encoded ordinals that list permutation stales. Now a non-owning value kind, serialized as a name (`id="nodN"` / `#nodN`), resolved after read, compared by relative path; placing verbs fix parents. Decree `01M260XYXB`. |
+| ~~MG6~~ | **CLOSED 2026-09-15** — the genera table hand-maintained (oratio wish `01M24Z4Q5Y`, point b) | Generated now: see *Registrum coctum* below. Point c of the same wish (re-projection per stage) stays open. |
+
+**Registrum coctum (2026-09-15).** A client's registry is declared once,
+in STML, and baked: `<cliens>/grammatica/<cliens>.registrum.stml`
+(root `<registrum grammatica praefixum typus sedes>`, then `<genus
+titulus nota>` holding `<locus titulus species nota/>`; canon
+`materia/grammatica/registrum.canon`, species = the seven
+`MateriaLocusSpecies` titles in kebab) is read by `materia_coctor`
+(`materia_registrum_coquere`) and rendered as
+`<sedes>/<grammatica>_registrum_coctum.h` (genus enum, typedef `typus`,
+`<PRAEFIXUM>_GENUS_NUMERUS_GENERUM`, extern `<PRAEFIXUM>_REGISTRUM`)
+and `.c` (flat loci, genera with offset and count, the baked struct).
+Identifiers derive mechanically from titles (hyphen to underscore,
+uppercase); notes become comments above their row; the output is a
+fixed point of the formator. `./materia/coquere.sh <declaratio>
+[-scribere]` judges the declaration against the canon, then writes or
+compares (output compared, never timestamps; exit 1 names the first
+divergent line, exit 2 refuses). Each client's registrum probatio
+regenerates in-process and asserts byte equality with the committed
+files. C89 throughout; usable without Python (Fran, 2026-09-15). NOT
+generated, on purpose: the locus enums (client-shaped: oratio's
+analysis genera share a common enum; typedef names are genitives) and
+the pins (locus count in the probatio, seal in the client canon) —
+those are gates, moved by hand with a cause. Oratio migrated first
+(seal unchanged); css and md follow.
 
 
 ---
