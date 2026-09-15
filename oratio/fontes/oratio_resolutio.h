@@ -131,7 +131,44 @@ nomen structura {
         i32 recusatae_clausulis;
     /* T24: vocabula quorum lectiones prior casuum permutavit */
     i32 prior_casuum;
+    /* T38 c DECRETOR (decisio XLVIII): cellulae contestatae (dependens
+     * cum candidatis II+), decretae (petitio stans mutata), per habitum;
+     * alternae praeoccupatae (ordines T34 servati ut candidatae);
+     * decreta = Xar de OratioDecretum per cellulam contestatam (piscina
+     * cursus; NIHIL ante) - materia ordinum DECRETUM oraculi */
+    i32  cellae_contestatae;
+    i32  decretae;
+    i32  habitus[ORATIO_HABITUS_NUMERUS];
+    i32  alternae_praeoccupatae;
+    Xar* decreta;
 } OratioResolutioCensus;
+
+/* DECRETUM (T38 c): cellula contestata decisa. Nodi vocabulorum (non
+ * ordinales) ut oraculum elementa sua per nodum inveniat; cedens =
+ * candidata secunda superstes (petitio stans deposita si mutata). */
+nomen structura {
+    MateriaNodus* dependens;
+    MateriaNodus* caput;
+    MateriaNodus* umbra_electa;
+    MateriaNodus* analysis_electa;
+    MateriaNodus* umbra_cedens;        /* NIHIL si nulla */
+    MateriaNodus* analysis_cedens;
+    MateriaNodus* caput_cedentis;      /* vocabulum capitis cedentis */
+          chorda  regula_electa;
+          chorda  regula_cedens;
+             s32  relatio;             /* OratioRelatio umbrae electae */
+             b32  ante;                /* dependens ante caput */
+             s32  numerus_capitis;     /* -I absens */
+             s32  numerus_lectionis;
+             i32  distantia;
+             i32  gradus_electae;      /* scala: I folliculus, II regula,
+                                        * III structura, IV fiducia; 0 nulla */
+             i32 gradus_cedentis;
+             s32 pondus_electae;      /* permille; -I nullum */
+             s32 pondus_cedentis;
+             s32 habitus;             /* OratioHabitus */
+             b32 mutata;
+} OratioDecretum;
 
 /* CONTEXTUS DECLARATUS (T38 a, 2026-09-15, decisio LVII): lingua
  * documenti (titulus, ut hodie), dialectus (OratioDialectus, census

@@ -17,6 +17,7 @@
  * numquam tectum).
  */
 
+#include "postulata_posix.h"   /* T38 c: setenv (ORATIO_DECRETOR) */
 #include "latina.h"
 #include "credo.h"
 #include "oratio_conllu.h"
@@ -287,6 +288,42 @@ _plagulam_legere (
     redde VERUM;
 }
 
+/* T38 c: campus k-tus lineae (TAB separatus); vacuus si absens */
+interior chorda
+_campus_lineae (
+    chorda linea,
+       i32 k)
+{
+    i32 i = ZEPHYRUM;
+    i32 a = ZEPHYRUM;
+    i32 n = ZEPHYRUM;
+
+    dum (i <= linea.mensura)
+    {
+        si (i == linea.mensura || linea.datum[i] == '\t')
+        {
+            si (n == k)
+            {
+                chorda c;
+
+                c.datum    = linea.datum + a;
+                c.mensura  = i - a;
+                redde c;
+            }
+            n = n + I;
+            a = i + I;
+        }
+        i = i + I;
+    }
+    {
+        chorda vacua;
+
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        redde vacua;
+    }
+}
+
 interior chorda
 _l (
     constans character* literae)
@@ -519,9 +556,11 @@ _thesaurus_arborum (
      * crescens (decretum SUDOKU XL) */
     {
         i32 coactae = census.partitio_verba[ORATIO_DECISIO_IMPLETIO]
-            + census.partitio_verba[ORATIO_DECISIO_UMBRA];
+            + census.partitio_verba[ORATIO_DECISIO_UMBRA]
+            + census.partitio_verba[ORATIO_DECISIO_DECRETUM];   /* T38 c */
         i32 rectae = census.partitio_primaria[ORATIO_DECISIO_IMPLETIO]
-            + census.partitio_primaria[ORATIO_DECISIO_UMBRA];
+            + census.partitio_primaria[ORATIO_DECISIO_UMBRA]
+            + census.partitio_primaria[ORATIO_DECISIO_DECRETUM];
         i32 coactae_permille  = _permille(rectae, coactae);
         i32 summa             = ZEPHYRUM;
         i32 i;
@@ -596,6 +635,65 @@ _thesaurus_arborum (
             {
                 CREDO_AEQUALIS_I32 (census.formae[ORATIO_FORMA_VERSUS],
                     (i32)774 - census.sententiae_fractae);
+            }
+        }
+        /* T38 c: DECRETOR - cellae == summa habituum, rectae <= habitus,
+         * ordines DECRETUM == cellae, latitudo lineae, tituli habitus et
+         * electionis in linea ipsa (culpa plantata: tituli dialectorum
+         * pro habituum in scriptore -> rubra) */
+        {
+            i32 summa_habituum =
+                census.decretor_habitus[ORATIO_HABITUS_COACTUS]
+                + census.decretor_habitus[ORATIO_HABITUS_ORDINATUS]
+                + census.decretor_habitus[ORATIO_HABITUS_APERTUS];
+            i32 h;
+
+            imprimere("    decretor cellae %d contestatae %d mutatae %d;"
+                " coacti %d/%d ordinati %d/%d aperti %d/%d\n",
+                (integer)census.decretor_cellae,
+                (integer)census.decretor_contestatae,
+                (integer)census.decretor_mutatae,
+                (integer)census.decretor_rectae[ORATIO_HABITUS_COACTUS],
+                (integer)census.decretor_habitus[ORATIO_HABITUS_COACTUS],
+                (integer)census.decretor_rectae[ORATIO_HABITUS_ORDINATUS],
+                (integer)census.decretor_habitus[ORATIO_HABITUS_ORDINATUS],
+                (integer)census.decretor_rectae[ORATIO_HABITUS_APERTUS],
+                (integer)census.decretor_habitus[ORATIO_HABITUS_APERTUS]);
+            CREDO_AEQUALIS_I32 (census.decretor_cellae, summa_habituum);
+            per (h = ZEPHYRUM; h < (i32)ORATIO_HABITUS_NUMERUS; h++)
+            {
+                CREDO_VERUM (census.decretor_rectae[h]
+                    <= census.decretor_habitus[h]);
+            }
+            CREDO_AEQUALIS_I32 (census.decreta != NIHIL
+                ? xar_numerus(census.decreta) : ZEPHYRUM,
+                census.decretor_cellae);
+            si (census.decreta != NIHIL && xar_numerus(census.decreta)
+                > ZEPHYRUM)
+            {
+                constans OratioOraculumDecretum* primum =
+                    *(OratioOraculumDecretum**)xar_obtinere(
+                    census.decreta, ZEPHYRUM);
+                chorda caput_decreti =
+                    oratio_oraculum_decreti_columnae(p,
+                    plagula);
+                chorda linea = oratio_oraculum_decreti_linea(p, plagula,
+                    primum);
+
+                CREDO_AEQUALIS_I32 (_tabulae(caput_decreti),
+                    _tabulae(linea) + I);
+                CREDO_AEQUALIS_I32 (_tabulae(linea),
+                    (i32)ORATIO_COLUMNAE_DECRETI_NUMERUS + I);
+                CREDO_VERUM (primum->habitus >= ZEPHYRUM
+                    && primum->habitus < (s32)ORATIO_HABITUS_NUMERUS
+                    && primum->electio >= ZEPHYRUM
+                    && primum->electio < (s32)ORATIO_ELECTIO_NUMERUS);
+                CREDO_VERUM (primum->habitus >= ZEPHYRUM
+                    && _aequalis(_campus_lineae(linea, (i32)XIV),
+                        ORATIO_TITULI_HABITUUM[primum->habitus]));
+                CREDO_VERUM (primum->electio >= ZEPHYRUM
+                    && _aequalis(_campus_lineae(linea, (i32)XV),
+                        ORATIO_TITULI_ELECTIONUM[primum->electio]));
             }
         }
         {
@@ -1469,6 +1567,60 @@ principale (vacuum)
             ZEPHYRUM);
         CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
             .numerus_exemplorum, ZEPHYRUM);
+
+        /* T38 c: DECRETUM iudicatum super 'Puella bellum videt' programmate
+         * vero et tabula vera (classicus, prosa): cellula bellum -
+         * subiectum stans (numerus-capitis singularis CCXCIV) contra
+         * obiectum (CLXXXIX) - subiectum manet ordinatus; aurum obj:
+         * electa falsa (nominativus contra Acc), cedens recta -> CEDENS.
+         * CULPA PLANTATA: comparatio casuum inversa -> ELECTA. */
+        si (programma != NIHIL)
+        {
+            OratioOraculumCensus cd;
+
+            s = oratio_conllu_legere(piscina, _l(
+                "# sent_id = proba-decretoris-1\n"
+                "# text = Puella bellum videt.\n"
+                "1\tPuella\tpuella\tNOUN\t_\tCase=Nom|Gender=Fem|Number=Sing\t3\tnsubj\t_\t_\n"
+                "2\tbellum\tbellum\tNOUN\t_\tCase=Acc|Gender=Neut|Number=Sing\t3\tobj\t_\t_\n"
+                "3\tvidet\tvideo\tVERB\t_\tNumber=Sing|Person=3\t0\troot\t_\tSpaceAfter=No\n"
+                "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n"), &vitium);
+            CREDO_NON_NIHIL (s);
+            oratio_oraculum_census_vacare(&cd);
+            setenv("ORATIO_DECRETOR", "1", I);   /* ordinarium OFF */
+            CREDO_VERUM (oratio_oraculum_iudicare_resolutum(piscina,
+                &vocabularia, programma, (s32)-I, s, &cd));
+            unsetenv("ORATIO_DECRETOR");
+            imprimere("    decreta %d: %s\n",
+                (integer)cd.decretor_cellae,
+                cd.decreta != NIHIL
+                    && xar_numerus(cd.decreta) > ZEPHYRUM
+                    ? ORATIO_TITULI_ELECTIONUM[
+                        (*(OratioOraculumDecretum**)xar_obtinere(
+                            cd.decreta, ZEPHYRUM))->electio]
+                    : "-");
+            CREDO_AEQUALIS_I32 (cd.decretor_cellae, I);
+            si (cd.decreta != NIHIL && xar_numerus(cd.decreta) == I)
+            {
+                constans OratioOraculumDecretum* d =
+                    *(OratioOraculumDecretum**)xar_obtinere(cd.decreta,
+                    ZEPHYRUM);
+
+                CREDO_VERUM (_aequalis(d->dependens, "bellum"));
+                CREDO_VERUM (_aequalis(d->caput, "videt"));
+                CREDO_VERUM (_aequalis(d->regula_electa,
+                    "umbra-subiectum-praecedente-proximo"));
+                CREDO_AEQUALIS_S32 (d->electio,
+                    (s32)ORATIO_ELECTIO_CEDENS);
+                CREDO_AEQUALIS_S32 (d->habitus,
+                    (s32)ORATIO_HABITUS_ORDINATUS);
+                CREDO_FALSUM (d->mutata);
+                CREDO_AEQUALIS_I32 (d->gradus, I);
+                CREDO_AEQUALIS_S32 (d->dialectus,
+                    (s32)ORATIO_DIALECTUS_CLASSICUS);
+                CREDO_AEQUALIS_S32 (d->forma, (s32)ORATIO_FORMA_PROSA);
+            }
+        }
 
         /* ranga, ignotum, inalignatum, UPOS extra tabulam */
         s = oratio_conllu_legere(piscina, _l(

@@ -19,6 +19,9 @@
  *              'titulus verba primaria vicina vicina-primaria remota
  *              remota-primaria' (socius ad distantiam I | ultra)
  *   -auctor T  cum -errata: auctoris T solius
+ *   -decreta   cum -machina (T38 c): ordines DECRETUM, cellula decretoris
+ *              iudicata (electa | cedens | neutra | ignotum) cum capite
+ *              COLUMNAE; ordo DECRETOR semper
  *   -lites     cum -machina (T32 e): ordines LIS, contentio singula cum
  *              notis - victor victa dependens caput ante casus-aureus
  *              casus-victae casus-victoris deprel caput-aureum-idem
@@ -766,7 +769,8 @@ _machinam_imprimere (
                               b32  errata,
                            chorda  auctor_petitus,
                               s32  nota_petita,
-                              b32  lites)
+                              b32  lites,
+                              b32  decreta)
 {
     i32 i;
 
@@ -812,6 +816,18 @@ _machinam_imprimere (
         imprimere("%s\tFORMA\tversus\t%d\tprosa\t%d\n", titulus,
             (integer)c->formae[ORATIO_FORMA_VERSUS],
             (integer)c->formae[ORATIO_FORMA_PROSA]);
+        /* T38 c: ordo DECRETOR cellae contestatae mutatae coacti
+         * coacti-rectae ordinati ordinati-rectae aperti aperti-rectae */
+        imprimere("%s\tDECRETOR\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+            titulus, (integer)c->decretor_cellae,
+            (integer)c->decretor_contestatae,
+            (integer)c->decretor_mutatae,
+            (integer)c->decretor_habitus[ORATIO_HABITUS_COACTUS],
+            (integer)c->decretor_rectae[ORATIO_HABITUS_COACTUS],
+            (integer)c->decretor_habitus[ORATIO_HABITUS_ORDINATUS],
+            (integer)c->decretor_rectae[ORATIO_HABITUS_ORDINATUS],
+            (integer)c->decretor_habitus[ORATIO_HABITUS_APERTUS],
+            (integer)c->decretor_rectae[ORATIO_HABITUS_APERTUS]);
         /* T29: ordines NOTA accidens verba recti */
         {
             i32 k;
@@ -907,6 +923,35 @@ _machinam_imprimere (
                 *(OratioOraculumLis**)xar_obtinere(c->lites, i);
             chorda linea = oratio_oraculum_lis_linea(piscina, titulus,
                 l);
+
+            si (linea.mensura > ZEPHYRUM)
+            {
+                imprimere("%.*s\n", (integer)linea.mensura,
+                    (constans character*)linea.datum);
+            }
+        }
+        /* T38 c: ordines DECRETUM (cum -decreta) - cellula decretoris
+         * iudicata, caput COLUMNAE semel ante primum */
+        si (   decreta && c->decreta != NIHIL
+            && xar_numerus(c->decreta) > ZEPHYRUM)
+        {
+            chorda caput_decreti = oratio_oraculum_decreti_columnae(
+                piscina, titulus);
+
+            si (caput_decreti.mensura > ZEPHYRUM)
+            {
+                imprimere("%.*s\n", (integer)caput_decreti.mensura,
+                    (constans character*)caput_decreti.datum);
+            }
+        }
+        per (i = ZEPHYRUM; decreta && c->decreta != NIHIL
+            && i < xar_numerus(c->decreta); i++)
+        {
+            constans OratioOraculumDecretum* d =
+                *(OratioOraculumDecretum**)xar_obtinere(c->decreta, i);
+            chorda linea = oratio_oraculum_decreti_linea(piscina,
+                titulus,
+                d);
 
             si (linea.mensura > ZEPHYRUM)
             {
@@ -1128,8 +1173,9 @@ principale (
                                                                             FALSUM;
                                                                         b32 clausulae =
                                                                             FALSUM;   /* T20a */
-                                    b32 semina  = FALSUM;   /* T20a */
-                                    b32 lites   = FALSUM;   /* T32 e */
+                                    b32 semina   = FALSUM;   /* T20a */
+                                    b32 lites    = FALSUM;   /* T32 e */
+                                    b32 decreta  = FALSUM;   /* T38 c */
                                     i32 sententiae_ostendendae =
                                         ZEPHYRUM;   /* T20a quater */
                                     s32 causa_ostendenda = (s32)-I;
@@ -1236,6 +1282,10 @@ principale (
         alioquin si (strcmp(argv[i], "-lites") == ZEPHYRUM)
         {
             lites = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-decreta") == ZEPHYRUM)
+        {
+            decreta = VERUM;   /* T38 c */
         }
         alioquin si (   strcmp(argv[i], "-sententiae") == ZEPHYRUM
                      && i + I < argc)
@@ -1463,7 +1513,7 @@ principale (
                                 _machinam_imprimere(p, &census, plagula,
                                     discrepantiae,
                                     errata, auctor_petitus,
-                                    nota_petita, lites);
+                                    nota_petita, lites, decreta);
             }
             alioquin
             {

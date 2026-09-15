@@ -3885,8 +3885,9 @@ OratioSententia = namedtuple('OratioSententia',
 OratioVocabulum = namedtuple('OratioVocabulum',
                              'index initium finis linea paragraphus sententia'
                              ' forma classes linguae lemma analyses'
-                             ' decisio auctor clausula clausula_causa')
-ORATIO_PARTITIO = ('praelatio', 'impletio', 'umbra', 'una', 'aperta', 'nulla')
+                             ' decisio auctor clausula clausula_causa'
+                             ' habitus')
+ORATIO_PARTITIO = ('praelatio', 'impletio', 'umbra', 'decretum', 'una', 'aperta', 'nulla')
 # T20a: clausula sententiae - index intra sententiam, species (principalis
 # subordinata relativa coordinata parenthetica), semen (ordinalis elementi
 # aperientis; None = principalis sine semine), pater (index clausulae
@@ -4002,7 +4003,8 @@ class Oratio(object):
                                 tuple(p[8].split()), tuple(p[9].split()),
                                 p[10], int(p[11]), p[12], p[13],
                                 int(p[14]) if len(p) > 14 and p[14] else None,
-                                p[15] if len(p) > 15 else '')
+                                p[15] if len(p) > 15 else '',
+                                p[16] if len(p) > 16 else '')
                 for p in self._machina('./oratio/verba.sh')]
         xs = self._vocabula
         if classis is not None:
@@ -4062,7 +4064,7 @@ class Oratio(object):
                 p['aperta'] += 1
             else:
                 p['nulla'] += 1
-        p['coactae'] = p['impletio'] + p['umbra']
+        p['coactae'] = p['impletio'] + p['umbra'] + p['decretum']
         return p
 
     def analyses(self, vocabulum):

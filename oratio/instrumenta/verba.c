@@ -322,6 +322,17 @@ _vocabulum_imprimere (
             fputs(ORATIO_TITULI_CAUSARUM_CLAUSULAE[causa], stdout);
         }
     }
+    /* T38 c: habitus cellulae decretoris (titulus); vacuus = non
+     * contestata */
+    {
+        s32 h = _index_loci(vocabulum, (i32)ORATIO_VOCABULUM_HABITUS);
+
+        putchar('\t');
+        si (h >= ZEPHYRUM && h < (s32)ORATIO_HABITUS_NUMERUS)
+        {
+            fputs(ORATIO_TITULI_HABITUUM[h], stdout);
+        }
+    }
     putchar('\n');
 }
 
@@ -760,7 +771,7 @@ principale (
 
             : "# via\tindex\tinitium\tfinis\tlinea\tparagraphus"
               "\tsententia\tforma\tclasses\tlinguae\tlemma\tanalyses"
-              "\tdecisio\tauctor\tclausula\tclausula-causa\n",
+              "\tdecisio\tauctor\tclausula\tclausula-causa\thabitus\n",
             stdout);
         }
     per (i = I; i < argc; i++)

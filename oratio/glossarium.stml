@@ -1015,4 +1015,14 @@
   <vocabulum lemma="rle" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio 'run-length encoding' (compressio per cursus eiusdem valoris), ut png: sedes _rle_planum in lib/icones.c"/>
   <vocabulum lemma="praemultiplicatus" lingua="latina" classis="adiectivum" nota="color per alpha iam multiplicatus (R x A / 255): forma quam iconutil in planis ARGB exspectat et per alpha dividit (mensuratum 2026-09-12); vox technica ex prae + multiplicare"><forma textus="praemultiplicata"/></vocabulum>
 
+  <!-- ================= TERMINI T38 (decretor, 2026-09-15) ================= -->
+  <vocabulum lemma="decretor" lingua="latina" classis="substantivum" nota="vox domus: qui decernit - gradus resolutionis (T38 c, decisio XLVIII) qui inter proposita exsecutoris cellulam contestatam decernit (nomen agentis ex decernere, ut auctor); sedes _decretor, DECRETOR_TITULUS, decretor_cellae">
+    <forma textus="decretor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="decretoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="decretori" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="decretorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="decretore" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="decretores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+
 </glossarium>

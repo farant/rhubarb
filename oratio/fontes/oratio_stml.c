@@ -217,6 +217,25 @@ _nodum_ornare (
             redde FALSUM;
         }
     }
+    /* T38 c: habitus cellulae decretoris (INDEX OratioHabitus) titulo suo
+     * ut attributum, ut selectio '[habitus=apertus]' congruat */
+    {
+        constans MateriaValor* h =
+            &nodus->loci[ORATIO_VOCABULUM_HABITUS];
+
+        si (   h->genus       == MATERIA_VALOR_INDEX
+            && h->datum.index >= ZEPHYRUM
+            && h->datum.index < (s32)ORATIO_HABITUS_NUMERUS
+            && !stml_attributum_addere(elementum,
+                materia_arbor_scriptor_piscina(scriptor),
+                materia_arbor_scriptor_intern(scriptor), "habitus",
+                ORATIO_TITULI_HABITUUM[h->datum.index]))
+        {
+            materia_arbor_scriptor_recusare(scriptor,
+                "attributum habitus scribi non potuit");
+            redde FALSUM;
+        }
+    }
     redde VERUM;
 }
 

@@ -131,7 +131,6 @@ atol
 atomic
 attachere
 attemptae
-attingibiles
 attingibilitatem
 atx
 auc
@@ -1799,7 +1798,6 @@ ord0
 ordinale
 ordinalem
 ordinali
-ordinalis
 org
 orig
 origin

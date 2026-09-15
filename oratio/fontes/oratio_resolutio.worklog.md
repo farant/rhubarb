@@ -160,3 +160,92 @@ for a shippable classical prose corpus or for a decision on fitting
 (a question for Fran, not this tranche). An independent recount of
 the subject rule's singular-verb row from the raw contest rows gives
 295 / 97 / 328, the table's numbers.
+
+## 2026-09-15 — T38 c: the decoder (`_decretor`)
+
+A pass after the last stage, before the law of umbrae, lex capitis and
+the case prior. It never fires a rule: its inputs are the tree and the
+table (decision 48).
+
+**Candidates.** For every umbra of every reading of every word: the
+standing filling (`impletio` with a scope) and every alternative whose
+cause is a trust decision — `recusata`, `revocata`, and the new
+`praeoccupata`, recorded at the T34 site: a row naming an umbra already
+filled in an earlier stage stays out of the executor's contest (T34)
+but is the second proposal for that umbra, so it is now written as an
+alternative (deduplicated against the umbra's filling and alternatives
+by filler reading). A candidate's CELL is its dependent word by the
+relation's direction (`_dependens_ordinis`, the oracle's law). A cell
+with two or more distinct (umbra, reading) candidates is contested.
+Uncontested standing claims are fixed first: their heads are taken and
+their umbrae marked, so a contested cell's candidate on the same umbra
+is blocked (one filling per umbra).
+
+**Score** (`_pondus_candidati`), ladder finest first, each rung under
+the four context variants (dialect + form, dialect, form, pooled) and
+answering only with at least `limen` contests: I the bucket rows of the
+candidate's relation (`numerus-capitis` with the carrier reading's
+number, `positio-numerus` with `<ante>+<filler reading's number>`;
+`ORATIO_PONDERA_SINE=<folliculus>` skips one), II the rule's plain row,
+III the structural row `@<relatio>+<ante|post>+<proximo|remoto>`
+recomputed from the candidate, IV the trust table. None → no score
+(only the standing claim can hold that cell). The rung that answered
+is recorded (`gradus`).
+
+**Decode.** The candidates of contested cells sorted by score
+descending, standing first among equals (stable insertion sort);
+accepted in order when the umbra is free, the dependent has no head,
+no cycle arises (walking accepted heads), and the explicit-class law
+holds (a filler word decided by an explicit rule keeps its first
+reading). A candidate that passes those checks but finds its cell
+already headed is SUPERSTES — it survived the constraints and lost on
+order. Habitus per cell: COACTUS one survivor, ORDINATUS several with
+the winner's score above the runner-up's, APERTUS a tie at the top
+(the standing claim stands, swapped in if a tie put an alternative
+first) or no survivor (the cell keeps the executor's state).
+
+**Write-back** when the winner is not the standing claim: the umbra's
+previous filling becomes an alternative `decreta` with victor
+`decretor`; the winner's reading goes into `impletio` (reponere) and
+its rule into `auctor`; the reading is promoted first in its word
+(`_lectionem_promovere`: the same two materia calls the stages use,
+`materia_nodus_lista_permutare` + `oratio_partes_compendia_reponere`);
+the dependent's decision becomes `decretum` by `decretor`, and the word
+is marked explicit so the later law of umbrae leaves it. Every
+contested cell gets its `habitus` slot. One `OratioDecretum` record per
+contested cell goes to the census (`decreta`) for the oracle.
+
+**Deviation from the plan.** The stage code keeps its own permutation
+block; the decoder's promotion helper repeats the two calls rather than
+refactoring T19d's loop — the calls are the contract, and touching the
+stage loop for a decoder tranche would have widened the blast radius.
+
+**Built (same day) — two laws the first run forced, and the default.**
+The first oracle run with the decoder on changed 676 cells on Seneca
+and its chosen candidates were right in 27 % of the ordered cells,
+32 % of the forced ones; every pin fell. Reading the numbers: the
+ladder MIXED POPULATIONS. A bucket or plain row counts a contest for
+both sides even when neither is right (the word hangs elsewhere), so
+its absolute rates sit at 200–300 ‰; the trust table is arc precision
+at 500–700 ‰. A candidate scored on rung I lost to one scored on rung
+IV by construction. Law now: every candidate of a cell is scored on
+the SAME rung, the finest that answers for all of them (`pondera[4]`
+per candidate, the rung chosen per cell); no common rung, no scores,
+the standing claim stands. Second law, from the same run: a READING
+contest (every candidate of the cell claims the same head) never
+reaches rung IV — trust cannot judge readings (R19, T32 f); without a
+table row the executor's order stands. With both laws the gate's four
+scenarios hold: object row 700 keeps the object (ordinatus), subject
+row 700 flips `bellum` to the subject with the object claim deposed
+(`decreta`, reference NIHIL) and `decisio` = decretum by `decretor`,
+no table = executor (apertus), variable unset = untouched. DEFAULT OFF:
+`ORATIO_DECRETOR=1` turns the pass on; unset or 0 leaves the executor
+alone, so every pin is byte-identical at this commit and the T38 d run
+decides the default with Fran (the plan said "on, pins move in d";
+pins cannot move at a c commit). The oracle judges each record as LIS
+judges a side — arc gold AND reading not wrong — and the inline law on
+`Puella bellum videt` with the real programme and table reads `cedens`:
+the subject rule kept (294 vs 189 in classicus) is wrong against the
+gold `obj`, the deposed object candidate was right. The
+`praeoccupata` alternatives add contest rows to `-lites`, so the table
+must be regenerated from a post-c run in T38 d (named cause).

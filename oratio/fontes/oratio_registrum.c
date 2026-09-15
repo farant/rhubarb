@@ -36,8 +36,9 @@ hic_manens constans MateriaTabLocus LOCI_ORATIONIS[] = {
     { "auctor",              (s32)MATERIA_LOCUS_TOKEN },   /* DERIVATUM (T19g) */
     { "clausula",            (s32)MATERIA_LOCUS_INDEX },   /* T20a: clausula intra sententiam */
     { "clausula-causa",      (s32)MATERIA_LOCUS_INDEX },   /* OratioClausulaCausa (T20a) */
+    { "habitus",             (s32)MATERIA_LOCUS_INDEX },   /* OratioHabitus (T38 c) */
 
-    /* interpunctio (18..21) */
+    /* interpunctio (19..22) */
     { "signum",              (s32)MATERIA_LOCUS_TOKEN },
     { "cauda",               (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "clausula",            (s32)MATERIA_LOCUS_INDEX },   /* T20a */
@@ -265,38 +266,40 @@ hic_manens constans MateriaTabGenus GENERA_ORATIONIS[] = {
     { "documentum",                                (i32)0, (i32)3 },
     { "paragraphus",                               (i32)3, (i32)4 },
     { "sententia",                                 (i32)7, (i32)2 },
-    { "vocabulum",                                 (i32)9, (i32)9 },
-    { "interpunctio",                              (i32)18, (i32)4 },
-    { "numerus",                                   (i32)22, (i32)4 },
+    /* T38 c (2026-09-15): locus 'habitus' vocabuli appensus (IX -> X;
+     * offsets sequentes +I, loci CXC -> CXCI) */
+    { "vocabulum",                                 (i32)9, (i32)10 },
+    { "interpunctio",                              (i32)19, (i32)4 },
+    { "numerus",                                   (i32)23, (i32)4 },
 
     /* gradus III (T11): unum per classem universalem, ordine UD */
-    { "analysis-substantivi",                      (i32)26, (i32)10 },
-    { "analysis-nominis-proprii",                  (i32)36, (i32)10 },
-    { "analysis-verbi",                            (i32)46, (i32)15 },
-    { "analysis-auxiliaris",                       (i32)61, (i32)15 },
-    { "analysis-adiectivi",                        (i32)76, (i32)11 },
-    { "analysis-adverbii",                         (i32)87, (i32)7 },
-    { "analysis-pronominis",                       (i32)94, (i32)10 },
-    { "analysis-determinantis",                    (i32)104, (i32)9 },
-    { "analysis-adpositionis",                     (i32)113, (i32)7 },
-    { "analysis-numeralis",                        (i32)120, (i32)10 },
-    { "analysis-coniunctionis-coordinantis",       (i32)130, (i32)6 },
-    { "analysis-coniunctionis-subordinantis",      (i32)136, (i32)6 },
-    { "analysis-particulae",                       (i32)142, (i32)6 },
-    { "analysis-interiectionis",                   (i32)148, (i32)6 },
-    { "analysis-symboli",                          (i32)154, (i32)6 },
-    { "analysis-interpunctionis",                  (i32)160, (i32)6 },
-    { "analysis-ignoti",                           (i32)166, (i32)6 },
+    { "analysis-substantivi",                      (i32)27, (i32)10 },
+    { "analysis-nominis-proprii",                  (i32)37, (i32)10 },
+    { "analysis-verbi",                            (i32)47, (i32)15 },
+    { "analysis-auxiliaris",                       (i32)62, (i32)15 },
+    { "analysis-adiectivi",                        (i32)77, (i32)11 },
+    { "analysis-adverbii",                         (i32)88, (i32)7 },
+    { "analysis-pronominis",                       (i32)95, (i32)10 },
+    { "analysis-determinantis",                    (i32)105, (i32)9 },
+    { "analysis-adpositionis",                     (i32)114, (i32)7 },
+    { "analysis-numeralis",                        (i32)121, (i32)10 },
+    { "analysis-coniunctionis-coordinantis",       (i32)131, (i32)6 },
+    { "analysis-coniunctionis-subordinantis",      (i32)137, (i32)6 },
+    { "analysis-particulae",                       (i32)143, (i32)6 },
+    { "analysis-interiectionis",                   (i32)149, (i32)6 },
+    { "analysis-symboli",                          (i32)155, (i32)6 },
+    { "analysis-interpunctionis",                  (i32)161, (i32)6 },
+    { "analysis-ignoti",                           (i32)167, (i32)6 },
 
     /* T19d (2026-09-07): UMBRA appensa post analyses; T20a (2026-09-08):
      * CLAUSULA appensa post umbram (loci CLXXII -> CLXXXIV); T32 a
      * (2026-09-09): locus 'auctor' umbrae appensus (CLXXXIV -> CLXXXV) */
-    { "umbra",                                     (i32)172, (i32)9 },
-    { "clausula",                                  (i32)181, (i32)4 },
+    { "umbra",                                     (i32)173, (i32)9 },
+    { "clausula",                                  (i32)182, (i32)4 },
     /* T32 b (2026-09-09): ALTERNA appensa post clausulam (CLXXXV -> CXCII);
      * T33 (2026-09-10): REFERENTIAE - umbra X -> IX, alterna VI -> V
      * (CXCII -> CXC) */
-    { "alterna",                                   (i32)185, (i32)5 },
+    { "alterna",                                   (i32)186, (i32)5 },
 };
 
 constans MateriaRegistrumCoctum ORATIO_REGISTRUM = {
@@ -362,7 +365,12 @@ constans character* constans ORATIO_TITULI_RELATIONUM[] = {
     "obiectum", "caput", "verbum-finitum", "subiectum", "obiectum-verbi"
 };
 constans character* constans ORATIO_TITULI_DECISIONUM[] = {
-    "praelatio", "impletio", "umbra"
+    "praelatio", "impletio", "umbra", "decretum"
+};
+
+/* T38 c: habitus cellulae decretoris = tituli reticuli (decisio LVI) */
+constans character* constans ORATIO_TITULI_HABITUUM[] = {
+    "coactus", "ordinatus", "apertus"
 };
 /* T20a: species et causae clausularum (index = valor) */
 constans character* constans ORATIO_TITULI_SPECIERUM_CLAUSULAE[] = {
@@ -373,7 +381,7 @@ constans character* constans ORATIO_TITULI_CAUSARUM_CLAUSULAE[] = {
     "semen", "extentum", "clausura", "catena", "unica", "verbum"
 };
 constans character* constans ORATIO_TITULI_CAUSARUM_ALTERNAE[] = {
-    "recusata", "revocata"
+    "recusata", "revocata", "praeoccupata", "decreta"
 };
 constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[] = {
     "vocabularium-la", "vocabularium-en", "glossarium", "regula",

@@ -187,6 +187,46 @@ nomen structura {
        s32 forma;
 } OratioOraculumLis;
 
+/* T38 c: iudicium ELECTIONIS decretoris (ut victor/victa litis): electa
+ * = candidata electa arcu aureo et lectione non falsa; cedens = secunda
+ * ita; neutra; ignotum = dependens sine arcu aureo */
+nomen enumeratio {
+    ORATIO_ELECTIO_ELECTA = 0,
+    ORATIO_ELECTIO_CEDENS,
+    ORATIO_ELECTIO_NEUTRA,
+    ORATIO_ELECTIO_IGNOTUM,
+    ORATIO_ELECTIO_NUMERUS
+} OratioOraculumElectio;
+externus constans character* constans
+    ORATIO_TITULI_ELECTIONUM[ORATIO_ELECTIO_NUMERUS];
+
+/* DECRETUM (T38 c): cellula decretoris iudicata - ordo machinae DECRETUM
+ * cum capite COLUMNAE (decisio LI; reticulo legibilis: -genus DECRETUM
+ * -aurum aurum-electio). Chordae in piscina conditae. */
+nomen structura {
+    chorda sententia;
+    chorda dependens;         /* forma aurea */
+    chorda caput;             /* forma aurea capitis electi */
+    chorda regula_electa;
+    chorda regula_cedens;
+       b32 ante;
+       s32 numerus_capitis;
+       s32 numerus_lectionis;
+       i32 distantia;
+       i32 gradus;            /* scala quae respondit */
+       s32 pondus_electae;    /* -I nullum */
+       s32 pondus_cedentis;
+       s32 habitus;           /* OratioHabitus */
+       s32 electio;           /* OratioOraculumElectio */
+       s32 dialectus;
+       s32 forma;
+       b32 mutata;
+} OratioOraculumDecretum;
+
+#define ORATIO_COLUMNAE_DECRETI_NUMERUS XVIII
+externus constans character* constans
+    ORATIO_COLUMNAE_DECRETI[ORATIO_COLUMNAE_DECRETI_NUMERUS];
+
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
  * elementum primum decisionem fert (praelatio | impletio | umbra) sed
  * non PRIMARIUM est - tabulatum per (auctor, forma plicata, classis
@@ -419,6 +459,15 @@ nomen structura {
      * (FORMAE_THESAURORUM: versus | prosa per identitatem, quia
      * CoNLL-U lineas non habet) - ordo FORMA instrumenti */
                                             i32 formae[ORATIO_FORMA_NUMERUS_FORMARUM];
+    /* DECRETOR (T38 c): cellulae decretoris iudicatae (ordines DECRETUM
+     * in decreta, pigre), contestatae ex censu resolutionis, mutatae,
+     * per habitum numerus et rectae (electio electa) */
+                                            Xar* decreta;
+                                            i32 decretor_cellae;
+                                            i32 decretor_contestatae;
+                                            i32 decretor_mutatae;
+                                            i32 decretor_habitus[ORATIO_HABITUS_NUMERUS];
+                                            i32 decretor_rectae[ORATIO_HABITUS_NUMERUS];
     /* discrepantiae primarii (T19a): Xar de OratioOraculumDiscrepantia*
      * (cellae stabiles in piscina iudicii) + index clavis
      * 'aurea/nostra/forma'; pigre creata in iudicio, NIHIL ante */
@@ -540,6 +589,19 @@ oratio_oraculum_lis_linea (
                        Piscina* piscina,
             constans character* via,
     constans OratioOraculumLis* lis);
+
+/* T38 c: "via TAB COLUMNAE TAB DECRETUM TAB <tituli>" et "via TAB
+ * DECRETUM TAB <campi>" sine linea nova */
+chorda
+oratio_oraculum_decreti_columnae (
+               Piscina* piscina,
+    constans character* via);
+
+chorda
+oratio_oraculum_decreti_linea (
+                            Piscina* piscina,
+                 constans character* via,
+    constans OratioOraculumDecretum* d);
 
 /* Errata auctoris (auctor vacuus = omnium) ordine numeri non
  * crescente, deinde auctoris et formae: Xar de OratioOraculumErratum*

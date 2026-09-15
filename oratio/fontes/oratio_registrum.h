@@ -149,7 +149,8 @@ nomen enumeratio {
         ORATIO_VOCABULUM_DECISIO,         /* INDEX? OratioDecisio (T19g): non scripta = nemo decidit */
     ORATIO_VOCABULUM_AUCTOR,          /* TOKEN? DERIVATUM (T19g): titulus regulae decidentis */
     ORATIO_VOCABULUM_CLAUSULA,        /* INDEX? (T20a): clausula intra clausulas sententiae; non scripta = APERTA */
-    ORATIO_VOCABULUM_CLAUSULA_CAUSA   /* INDEX? OratioClausulaCausa (T20a): stratum quod posuit */
+    ORATIO_VOCABULUM_CLAUSULA_CAUSA,  /* INDEX? OratioClausulaCausa (T20a): stratum quod posuit */
+    ORATIO_VOCABULUM_HABITUS          /* INDEX? OratioHabitus (T38 c, decisio XL/XLVIII): profilum cellulae decretoris; non scriptus = cellula non contestata */
 } OratioLocusVocabuli;
 
 nomen enumeratio {
@@ -360,6 +361,7 @@ nomen enumeratio {
     ORATIO_DECISIO_PRAELATIO = 0,
     ORATIO_DECISIO_IMPLETIO,
     ORATIO_DECISIO_UMBRA,
+    ORATIO_DECISIO_DECRETUM,   /* T38 c: decretor cellulam contestatam mutavit (auctor 'decretor') */
 
     ORATIO_DECISIO_NUMERUS
 } OratioDecisio;
@@ -433,9 +435,23 @@ nomen enumeratio {
 nomen enumeratio {
     ORATIO_ALTERNA_CAUSA_RECUSATA = 0,   /* dependens iam petitus (lex capitis unius) */
     ORATIO_ALTERNA_CAUSA_REVOCATA,       /* petitio stans a fideliore revocata (contentio) */
+    ORATIO_ALTERNA_CAUSA_PRAEOCCUPATA,   /* T38 c: umbra gradu priore iam scripta (T34: extra contentionem exsecutoris) - candidata decretoris */
+    ORATIO_ALTERNA_CAUSA_DECRETA,        /* T38 c: petitio a decretore deposita (victor 'decretor') */
 
     ORATIO_ALTERNA_CAUSA_NUMERUS
 } OratioAlternaCausa;
+
+/* HABITUS cellulae decretoris (T38 c, decisiones XL, XLVIII, LVI): tituli
+ * reticuli ipsius (PARTITIO_TITULI_HABITUUM) - COACTUS candidata una
+ * constrictis superstes, ORDINATUS plures pondere electa, APERTUS pondera
+ * paria (petitio stans manet) aut omnes ceciderunt. APPENDUNTUR. */
+nomen enumeratio {
+    ORATIO_HABITUS_COACTUS = 0,
+    ORATIO_HABITUS_ORDINATUS,
+    ORATIO_HABITUS_APERTUS,
+
+    ORATIO_HABITUS_NUMERUS
+} OratioHabitus;
 
 /* species clausulae (T20a): APPENSAE solum */
 nomen enumeratio {
@@ -598,6 +614,7 @@ externus constans character* constans ORATIO_TITULI_DECISIONUM[];   /* T19g */
 externus constans character* constans ORATIO_TITULI_SPECIERUM_CLAUSULAE[];   /* T20a */
 externus constans character* constans ORATIO_TITULI_CAUSARUM_CLAUSULAE[];    /* T20a */
 externus constans character* constans ORATIO_TITULI_CAUSARUM_ALTERNAE[];     /* T32 b */
+externus constans character* constans ORATIO_TITULI_HABITUUM[];             /* T38 c */
 externus constans character* constans ORATIO_TITULI_FONTIUM_ANALYSIS[];
 
 /* T20a: locus 'clausula' (causa FALSUM) aut 'clausula-causa' (causa

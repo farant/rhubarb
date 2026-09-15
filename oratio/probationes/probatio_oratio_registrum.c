@@ -323,7 +323,26 @@ MateriaLexiconRatum  ratum;
             == ZEPHYRUM);
                 /* T20a: clausula + clausula-causa (INDEX) ultimi vocabuli,
          * interpunctionis, numeri; per oratio_locus_clausulae */
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_VOCABULUM_CLAUSULA_CAUSA + I,
+        /* T38 c: habitus (INDEX OratioHabitus) ultimus vocabuli */
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_VOCABULUM_HABITUS + I,
+            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
+        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+            + (i32)ORATIO_VOCABULUM_HABITUS].titulus, "habitus")
+            == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+            + (i32)ORATIO_VOCABULUM_HABITUS].species,
+            (s32)MATERIA_LOCUS_INDEX);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_HABITUUM[ORATIO_HABITUS_APERTUS],
+            "apertus") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[ORATIO_DECISIO_DECRETUM],
+            "decretum") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_ALTERNAE[
+            ORATIO_ALTERNA_CAUSA_PRAEOCCUPATA], "praeoccupata")
+                == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_VOCABULUM_CLAUSULA_CAUSA
+            + (i32)II,
             ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
         CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
             ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
@@ -353,7 +372,7 @@ MateriaLexiconRatum  ratum;
             == ZEPHYRUM);
         CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
             ORATIO_GENUS_SENTENTIA].loci_numerus, (i32)II);
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_DECISIO_NUMERUS, (i32)III);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_DECISIO_NUMERUS, (i32)IV);   /* T38 c: + decretum */
         CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[
             ORATIO_DECISIO_PRAELATIO], "praelatio") == ZEPHYRUM);
         CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[
@@ -420,7 +439,7 @@ MateriaLexiconRatum  ratum;
          * CLXXXIV (T20a: clausulae sententiae I, clausula +
          * clausula-causa elementorum VI, forma-verbi umbrae I,
          * clausula IV) */
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_locorum, (i32)190);   /* T32 a: + auctor umbrae; T32 b: + alternae umbrae, genus alterna VI; T33: referentiae - umbra X -> IX, alterna VI -> V */
+        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_locorum, (i32)191);   /* T32 a: + auctor umbrae; T32 b: + alternae umbrae, genus alterna VI; T33: referentiae - umbra X -> IX, alterna VI -> V; T38 c: + habitus vocabuli (CXC -> CXCI) */
         per (i = ZEPHYRUM; i
             < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
         {
@@ -564,7 +583,7 @@ MateriaLexiconRatum  ratum;
             CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
                 (i32)ORATIO_ALTERNA_CAUSA), (s32)MATERIA_LOCUS_INDEX);
             CREDO_AEQUALIS_I32 ((i32)ORATIO_ALTERNA_CAUSA_NUMERUS,
-                (i32)II);
+                (i32)IV);   /* T38 c: + praeoccupata, decreta */
             CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_ALTERNAE[
                 ORATIO_ALTERNA_CAUSA_REVOCATA], "revocata")
                     == ZEPHYRUM);

@@ -57,7 +57,10 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum tabularum oratio_registrum.c (T33 2026-09-10
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T38 c 2026-09-15
+            c4752e42: XXVI genera, CXCI loci - locus 'habitus' INDEX
+            vocabuli appensus (OratioHabitus: profilum cellulae
+            decretoris); T33 2026-09-10
             305a78a5: XXVI genera, CXC loci - REFERENTIAE: umbra locus
             'impletio' REFERENTIA pro impletio-vocabulum/-analysis (X -> IX),
             alterna locus 'socius' REFERENTIA pro vocabulum/analysis (VI -> V);
@@ -76,7 +79,7 @@
             CXLVI loci; T6b 93c1c9cf, VI genera XVII loci; T1 b27fe13a,
             XVI loci). Tabula mutata sine hac optione mutata rubet in
             iudicio ET in custode derivae.">
-      <optio>305a78a5</optio>
+      <optio>c4752e42</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -216,6 +219,8 @@
       nota="T20a: speculum loci clausula (index in clausulas sententiae) per uncum nodi"/>
     <attributum nomen="clausula-causa" genus="textus"
       nota="T20a: speculum loci clausula-causa (titulus OratioClausulaCausa)"/>
+    <attributum nomen="habitus" genus="textus"
+      nota="T38 c: speculum loci habitus (titulus OratioHabitus) per uncum nodi, ut selectio '[habitus=apertus]' congruat"/>
     <attributum nomen="n"       genus="numerus"/>
     <liberum nomen="partes"   maximum="1"/>
     <liberum nomen="cauda"    maximum="1"/>
@@ -226,6 +231,7 @@
     <liberum nomen="auctor"   maximum="1"/>
     <liberum nomen="clausula" maximum="1"/>
     <liberum nomen="clausula-causa" maximum="1"/>
+    <liberum nomen="habitus"  maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="vocabulum">
     <<#partes>>
@@ -262,7 +268,9 @@
     <liberum nomen="or-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="decisio" intra="vocabulum" textus="verum"
-    nota="T19g (decretum SUDOKU decisio XL): OratioDecisio - 0 praelatio (ordo praelationis: prior classis, exceptio, regula linguae - decisio mollis) 1 impletio (lectio ligata praelata - testimonium) 2 umbra (lex umbrarum - testimonium); absens = nemo decidit (cellula aperta si lectiones plures, soluta si una)"/>
+    nota="T19g (decretum SUDOKU decisio XL): OratioDecisio - 0 praelatio (ordo praelationis: prior classis, exceptio, regula linguae - decisio mollis) 1 impletio (lectio ligata praelata - testimonium) 2 umbra (lex umbrarum - testimonium) 3 decretum (T38 c: decretor cellulam contestatam mutavit, auctor 'decretor'); absens = nemo decidit (cellula aperta si lectiones plures, soluta si una)"/>
+  <elementum nomen="habitus" intra="vocabulum" textus="verum"
+    nota="T38 c (decisiones XL, XLVIII, LVI): OratioHabitus cellulae decretoris - 0 coactus (candidata una constrictis superstes) 1 ordinatus (plures, pondere electa) 2 apertus (pondera paria: petitio stans manet, aut omnes ceciderunt); absens = cellula non contestata"/>
   <elementum nomen="auctor" intra="vocabulum"
     nota="T19g: derivatum - titulus regulae quae decidit (lex-umbrarum pro lege)">
     <liberum nomen="or-derivatum" maximum="1"/>

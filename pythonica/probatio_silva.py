@@ -1323,6 +1323,20 @@ credo(vd[3].decisio == 'praelatio' and vd[3].auctor == 'determinans-primum-latin
 pf = ob.partitio()
 credo(pf['impletio'] == 2 and pf['praelatio'] == 2 and pf['umbra'] == 0 and pf['coactae'] == 2 and pf['una'] + pf['aperta'] == 1 and sum(pf[k] for k in silva.ORATIO_PARTITIO) == 5, 'Oratio.partitio: coactae II, praelatae II (Hoc, est), videt una/aperta - summa vocabula V')
 
+print('--- Oratio: habitus decretoris et partitio decretum (T38 c) ---')
+import os as _os2
+_os2.environ['ORATIO_DECRETOR'] = '1'
+try:
+    _od = silva.Oratio('Puella bellum videt.\n')
+    _vv = _od.vocabula()
+    _pd = _od.partitio()
+finally:
+    _os2.environ.pop('ORATIO_DECRETOR', None)
+credo([v.forma for v in _vv] == ['Puella', 'bellum', 'videt'] and _vv[1].habitus == 'ordinatus' and _vv[0].habitus == '' and _vv[2].habitus == '', 'Oratio.vocabula: habitus ordinatus in bellum solo (cellula contestata decretoris, tabula vera: subiectum manet), ceteris vacuus')
+credo('decretum' in _pd and _pd['decretum'] == 0 and sum(_pd[k] for k in silva.ORATIO_PARTITIO) == 3, 'Oratio.partitio: genus decretum adest (0: petitio stans manet), summa vocabula III')
+_oe = silva.Oratio('Puella bellum videt.\n')
+credo(all(v.habitus == '' for v in _oe.vocabula()), 'Oratio.vocabula: sine ORATIO_DECRETOR habitus nullus (ordinarium OFF, T38 c)')
+
 print('--- pondera.py: generator tabulae ponderum decretoris (T38 b) ---')
 import subprocess as _sp, tempfile as _tf, os as _os
 _pondera = ['python3', 'oratio/census/pondera.py']
@@ -1352,7 +1366,7 @@ credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa 
 # T19g bis: -errata -machina - ordines PARTITIO (summa = verba aurea IV) et ERRATUM (nullum: nemo decidit in thesauro minimo)
 r_er = subprocess.run(['./oratio/oraculum.sh', '-errata', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
 part = [l.split('\t') for l in r_er.stdout.splitlines() if '\tPARTITIO\t' in l]
-credo(r_er.returncode == 0 and len(part) == 7 and sum(int(x[3]) for x in part) == 4 and all('umbra-obiectum-verbi' in l for l in r_er.stdout.splitlines() if '\tERRATUM\t' in l) and any('\tAUCTOR\tumbra-subiectum' in l for l in r_er.stdout.splitlines()) and any('\tAUCTOR\tumbra-obiectum-verbi' in l for l in r_er.stdout.splitlines()), 'oraculum.sh -errata -machina: PARTITIO VII genera summa IV verba; AUCTOR subiecti et obiecti (T31 a/b: amat Puellam subiectum, rosam obiectum ligat); ERRATUM obiecti solum (rosam participium rodo primum - casus manualis notatus)')
+credo(r_er.returncode == 0 and len(part) == 8 and sum(int(x[3]) for x in part) == 4 and all('umbra-obiectum-verbi' in l for l in r_er.stdout.splitlines() if '\tERRATUM\t' in l) and any('\tAUCTOR\tumbra-subiectum' in l for l in r_er.stdout.splitlines()) and any('\tAUCTOR\tumbra-obiectum-verbi' in l for l in r_er.stdout.splitlines()), 'oraculum.sh -errata -machina: PARTITIO VIII genera (decretum T38 c) summa IV verba; AUCTOR subiecti et obiecti (T31 a/b: amat Puellam subiectum, rosam obiectum ligat); ERRATUM obiecti solum (rosam participium rodo primum - casus manualis notatus)')
 # T30: -errata -nota genus -machina - ordines NOTA sex columnis (plagula NOTA accidens verba recti conventione), ERRATUM-NOTA ordo columnis XIII si adest; -nota ignota exitus II
 r_no = subprocess.run(['./oratio/oraculum.sh', '-errata', '-nota', 'genus', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
 notae = [l.split('\t') for l in r_no.stdout.splitlines() if '\tNOTA\t' in l]

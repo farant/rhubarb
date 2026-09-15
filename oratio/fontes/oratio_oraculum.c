@@ -389,7 +389,8 @@ nomen structura {
 } Elementum;
 
 constans character* constans ORATIO_ORACULUM_TITULI_PARTITIONIS[] = {
-    "praelatio", "impletio", "umbra", "una", "aperta", "nulla", "ranga"
+    "praelatio", "impletio", "umbra", "decretum",   /* T38 c: decretum */
+    "una", "aperta", "nulla", "ranga"
 };
 
 /* auctorem notare (T19g): clavis = titulus (copia in piscina iudicii
@@ -2812,6 +2813,20 @@ constans character* constans ORATIO_TITULI_IUDICIORUM[] = {
     "victor", "victa", "ambo", "neutra", "idem", "ignotum"
 };
 
+/* T38 c */
+constans character* constans ORATIO_TITULI_ELECTIONUM[ORATIO_ELECTIO_NUMERUS] =
+    {
+    "electa", "cedens", "neutra", "ignotum"
+};
+constans character* constans
+    ORATIO_COLUMNAE_DECRETI[ORATIO_COLUMNAE_DECRETI_NUMERUS] = {
+    "sententia", "dependens", "caput", "regula-electa", "regula-cedens",
+    "ante", "numerus-capitis", "numerus-lectionis", "distantia",
+        "gradus",
+    "pondus-electae", "pondus-cedentis", "habitus", "aurum-electio",
+    "thesaurus", "dialectus", "forma", "mutata"
+};
+
 constans character* constans
     ORATIO_COLUMNAE_LIS[ORATIO_COLUMNAE_LIS_NUMERUS] = {
     "victor", "victa", "dependens", "caput", "ante", "aurum-casus",
@@ -3052,13 +3067,199 @@ _elementum_formae (
 /* LIGATIONES (T26): umbrae impletae lectionis primae cuiusque elementi
  * alignati contra capita aurea; arcus aurei = lexemata alignata non
  * interpuncta capite alignato (revocatio). FALSUM = memoria */
+/* T38 c: index elementi nodi vocabuli; -I absens */
+interior s32
+_elementum_nodi (
+             constans Xar* elementa,
+    constans MateriaNodus* nodus)
+{
+    i32 k;
+
+    si (nodus == NIHIL)
+    {
+        redde (s32)-I;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(elementa); k++)
+    {
+        si (((constans Elementum*)xar_obtinere(elementa, k))->nodus
+            == nodus)
+        {
+            redde (s32)k;
+        }
+    }
+    redde (s32)-I;
+}
+
+/* T38 c: lectio candidatae NON FALSA - casus lectionis (stella verbi:
+ * lectio implens = dependentis; caput/adpositio: lectio prima carrier
+ * = dependentis) casui aureo aequalis, aut alteruter absens (ut lex
+ * crediti pondera.py) */
+interior b32
+_lectio_non_falsa (
+              constans Elementum* dependens,
+     constans OratioConlluLexema* t,
+                             s32  relatio,
+           constans MateriaNodus* analysis)
+{
+    s32 aureus = _casus_aureus(t->feats);
+    s32 ordinalis = (   relatio == (s32)ORATIO_RELATIO_SUBIECTUM
+                     || relatio == (s32)ORATIO_RELATIO_OBIECTUM_VERBI)
+        ? oratio_ordinalis(analysis) : ZEPHYRUM;
+    s32 noster;
+
+    si (   aureus < ZEPHYRUM || dependens->nodus == NIHIL
+        || ordinalis < ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    noster = _casus_lectionis(dependens->nodus, ordinalis);
+    redde (b32)(noster < ZEPHYRUM || noster == aureus);
+}
+
+/* T38 c: DECRETUM iudicare - electio contra caput aureum dependentis et
+ * casum aureum; census decretoris et ordo DECRETUM (chordae conditae).
+ * FALSUM = memoria. */
+interior b32
+_decretum_iudicare (
+                           Piscina* piscina,
+              OratioOraculumCensus* census,
+    constans OratioConlluSententia* s,
+                      constans Xar* elementa,
+                      constans s32* caput,
+           constans OratioDecretum* d,
+                               s32  dialectus,
+                               s32  forma)
+{
+                        s32 ed = _elementum_nodi(elementa,
+                            d->dependens);
+         constans Elementum* dependens = ed >= ZEPHYRUM
+             ? (constans Elementum*)xar_obtinere(elementa,
+             (i32)ed) : NIHIL;
+                        s32  electio = (s32)ORATIO_ELECTIO_IGNOTUM;
+                        s32  eh = _elementum_nodi(elementa, d->caput);
+    constans OratioConlluLexema* t = NIHIL;
+     OratioOraculumDecretum*  r;
+     OratioOraculumDecretum** cella;
+
+    si (   dependens != NIHIL && dependens->lexema >= ZEPHYRUM
+        && dependens->lexema < (s32)xar_numerus(s->lexemata))
+    {
+        t = (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+            (i32)dependens->lexema);
+    }
+    si (t != NIHIL && caput[dependens->lexema] >= ZEPHYRUM)
+    {
+        s32 ec = _elementum_nodi(elementa, d->caput_cedentis);
+        b32 electa = (b32)(   d->analysis_electa != NIHIL
+            && eh >= ZEPHYRUM
+            && ((constans Elementum*)xar_obtinere(elementa, (i32)eh))
+                ->lexema == caput[dependens->lexema]
+            && _lectio_non_falsa(dependens, t, d->relatio,
+            d->analysis_electa));
+        b32 cedens = (b32)(   d->analysis_cedens != NIHIL
+            && ec >= ZEPHYRUM
+            && ((constans Elementum*)xar_obtinere(elementa, (i32)ec))
+                ->lexema == caput[dependens->lexema]
+            && _lectio_non_falsa(dependens, t, d->relatio,
+            d->analysis_cedens));
+
+        electio = electa ? (s32)ORATIO_ELECTIO_ELECTA
+            : cedens ? (s32)ORATIO_ELECTIO_CEDENS
+            : (s32)ORATIO_ELECTIO_NEUTRA;
+    }
+    census->decretor_cellae = census->decretor_cellae + I;
+    si (   d->habitus >= ZEPHYRUM
+        && d->habitus < (s32)ORATIO_HABITUS_NUMERUS)
+    {
+        census->decretor_habitus[d->habitus] =
+            census->decretor_habitus[d->habitus] + I;
+        si (electio == (s32)ORATIO_ELECTIO_ELECTA)
+        {
+            census->decretor_rectae[d->habitus] =
+                census->decretor_rectae[d->habitus] + I;
+        }
+    }
+    si (d->mutata)
+    {
+        census->decretor_mutatae = census->decretor_mutatae + I;
+    }
+    si (census->decreta == NIHIL)
+    {
+        census->decreta = xar_creare(piscina,
+            (i32)magnitudo(OratioOraculumDecretum*));
+        si (census->decreta == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    r     = (OratioOraculumDecretum*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(*r));
+    cella = (OratioOraculumDecretum**)xar_addere(census->decreta);
+    si (r == NIHIL || cella == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(r, ZEPHYRUM, magnitudo(*r));
+    *cella = r;
+    si (s->id.mensura > ZEPHYRUM)
+    {
+        r->sententia = _chordam_condere(piscina, s->id);
+    }
+    alioquin
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(piscina,
+            (memoriae_index)XVI);
+
+        si (a != NIHIL)
+        {
+            (vacuum)chorda_aedificator_appendere_i32(a, s->linea);
+            r->sententia = chorda_aedificator_finire(a);
+        }
+    }
+    si (t != NIHIL)
+    {
+        r->dependens = _chordam_condere(piscina, t->forma);
+    }
+    si (eh >= ZEPHYRUM)
+    {
+        constans Elementum* h =
+            (constans Elementum*)xar_obtinere(elementa, (i32)eh);
+
+        si (   h->lexema >= ZEPHYRUM
+            && h->lexema < (s32)xar_numerus(s->lexemata))
+        {
+            r->caput = _chordam_condere(piscina,
+                ((constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+                    (i32)h->lexema))->forma);
+        }
+    }
+    r->regula_electa      = _chordam_condere(piscina, d->regula_electa);
+    r->regula_cedens      = _chordam_condere(piscina, d->regula_cedens);
+    r->ante               = d->ante;
+    r->numerus_capitis    = d->numerus_capitis;
+    r->numerus_lectionis  = d->numerus_lectionis;
+    r->distantia          = d->distantia;
+    r->gradus             = d->gradus_electae;
+    r->pondus_electae     = d->pondus_electae;
+    r->pondus_cedentis    = d->pondus_cedentis;
+    r->habitus            = d->habitus;
+    r->electio            = electio;
+    r->dialectus          = dialectus;
+    r->forma              = forma;
+    r->mutata             = d->mutata;
+    redde VERUM;
+}
+
 interior b32
 _ligationes_iudicare (
                            Piscina* piscina,
                            Piscina* scratch,
               OratioOraculumCensus* census,
     constans OratioConlluSententia* s,
-                               Xar* elementa)
+                               Xar* elementa,
+                      constans Xar* decreta,
+                               s32  dialectus,
+                               s32  forma)
 {
     i32  n           = xar_numerus(s->lexemata);
     i32  ne          = xar_numerus(elementa);
@@ -3151,6 +3352,19 @@ _ligationes_iudicare (
         si (e->lexema >= ZEPHYRUM && e->lexema < (s32)n)
         {
             elementum[e->lexema] = (s32)k;
+        }
+    }
+    /* T38 c: DECRETA iudicata - cellula decretoris contra caput aureum
+     * dependentis et casum aureum (ordines DECRETUM, census DECRETOR) */
+    per (k = ZEPHYRUM; decreta != NIHIL
+        && k < xar_numerus(decreta); k++)
+    {
+        si (!_decretum_iudicare(piscina, census, s, elementa, caput,
+            (constans OratioDecretum*)xar_obtinere(decreta, k),
+            dialectus,
+            forma))
+        {
+            redde FALSUM;
         }
     }
     /* arcus aurei: lexema alignatum non interpunctum, caput alignatum */
@@ -4301,6 +4515,9 @@ _sententiam_iudicare (
         + census_resolutionis.fractae;
     census->ordines_scripti_recusati = census->ordines_scripti_recusati
         + census_resolutionis.recusatae_scriptae;
+    /* T38 c: cellulae contestatae ex censu resolutionis */
+    census->decretor_contestatae = census->decretor_contestatae
+        + census_resolutionis.cellae_contestatae;
         /* T20a: clausulae aureae (radices finitae) et paria pro puritate;
      * resolutio absens (crudus) = paria sine clausula nostra (apertae) */
     paria = xar_creare(scratch, (i32)magnitudo(ParClausulae));
@@ -4432,7 +4649,8 @@ _sententiam_iudicare (
                                 }
     }
     /* T26: ligationes contra capita aurea */
-    si (!_ligationes_iudicare(piscina, scratch, census, s, elementa))
+    si (!_ligationes_iudicare(piscina, scratch, census, s, elementa,
+        census_resolutionis.decreta, census->dialectus, forma))
     {
         piscina_destruere(scratch);
         redde FALSUM;
@@ -4581,4 +4799,79 @@ oratio_oraculum_iudicare_resolutum (
         }
     }
     redde VERUM;
+}
+
+
+/* ==================================================
+ * Ordines DECRETUM (T38 c)
+ * ================================================== */
+
+chorda
+oratio_oraculum_decreti_columnae (
+               Piscina* piscina,
+    constans character* via)
+{
+     ChordaAedificator* a;
+                   i32  i;
+
+    a = chorda_aedificator_creare(piscina, (memoriae_index)DXII);
+    si (a == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a,
+        via != NIHIL ? via : "");
+    _lis_campus_literis(a, "COLUMNAE");
+    _lis_campus_literis(a, "DECRETUM");
+    per (i = ZEPHYRUM; i < (i32)ORATIO_COLUMNAE_DECRETI_NUMERUS; i++)
+    {
+        _lis_campus_literis(a, ORATIO_COLUMNAE_DECRETI[i]);
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+chorda
+oratio_oraculum_decreti_linea (
+                            Piscina* piscina,
+                 constans character* via,
+    constans OratioOraculumDecretum* d)
+{
+    ChordaAedificator* a;
+
+    si (d == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)DXII);
+    si (a == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a,
+        via != NIHIL ? via : "");
+    _lis_campus_literis(a, "DECRETUM");
+    _lis_campus_chordae(a, d->sententia);
+    _lis_campus_chordae(a, d->dependens);
+    _lis_campus_chordae(a, d->caput);
+    _lis_campus_chordae(a, d->regula_electa);
+    _lis_campus_chordae(a, d->regula_cedens);
+    _lis_campus_numeri(a, (s32)d->ante);
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_NUMERORUM,
+        d->numerus_capitis, (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_NUMERORUM,
+        d->numerus_lectionis, (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
+    _lis_campus_numeri(a, (s32)d->distantia);
+    _lis_campus_numeri(a, (s32)d->gradus);
+    _lis_campus_numeri(a, d->pondus_electae);
+    _lis_campus_numeri(a, d->pondus_cedentis);
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_HABITUUM,
+        d->habitus, (i32)ORATIO_HABITUS_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_ELECTIONUM,
+        d->electio, (i32)ORATIO_ELECTIO_NUMERUS));
+    _lis_campus_chordae(a, oratio_oraculum_thesaurus(piscina, via));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_DIALECTORUM,
+        d->dialectus, (i32)ORATIO_DIALECTUS_NUMERUS));
+    _lis_campus_literis(a, oratio_forma_titulus((OratioForma)d->forma));
+    _lis_campus_numeri(a, (s32)d->mutata);
+    redde chorda_aedificator_finire(a);
 }
