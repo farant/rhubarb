@@ -10,6 +10,7 @@
 #include "oratio_partes.h"
 #include "materia_nodus.h"
 #include "materia_token.h"
+#include "chorda_aedificator.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -2553,7 +2554,11 @@ _litem_notare (
                                s32  casus_victae,
                                s32  casus_victoris,
                                s32  lectio_victae,
-                               s32  lectio_victoris)
+                               s32  lectio_victoris,
+                               b32  recta,
+                               b32  prima_recta,
+                               s32  relatio_victae,
+                               s32  relatio_victoris)
 {
      OratioOraculumLis*  l;
      OratioOraculumLis** cella;
@@ -2606,9 +2611,65 @@ _litem_notare (
     }
     l->ante                 = (b32)(dependens_a < caput_a);
     l->caput_victoris_idem  = (b32)(caput_v == (s32)caput_a);
-    l->casus_aureus         = casus_aureus;
-    l->casus_victae         = casus_victae;
-    l->casus_victoris       = casus_victoris;
+    /* T35 c: IUDICIA - condicio contentionis eadem (caput victoris
+     * idem aut nullum: arcus idem, neuter solus; casus omnes noti)
+     * - et SIGNATURA */
+    si (caput_v < ZEPHYRUM || (i32)caput_v == caput_a)
+    {
+        l->iudicium_arcus = (s32)ORATIO_IUDICIUM_IDEM;
+    }
+    alioquin si (recta && prima_recta)
+    {
+        l->iudicium_arcus = (s32)ORATIO_IUDICIUM_AMBO;
+    }
+    alioquin si (recta)
+    {
+        l->iudicium_arcus = (s32)ORATIO_IUDICIUM_VICTA;
+    }
+    alioquin si (prima_recta)
+    {
+        l->iudicium_arcus = (s32)ORATIO_IUDICIUM_VICTOR;
+    }
+    alioquin
+    {
+        l->iudicium_arcus = (s32)ORATIO_IUDICIUM_NEUTRA;
+    }
+    si (   casus_aureus < ZEPHYRUM || casus_victae < ZEPHYRUM
+        || casus_victoris < ZEPHYRUM)
+    {
+        l->iudicium_lectionis = (s32)ORATIO_IUDICIUM_IGNOTUM;
+    }
+    alioquin si (   casus_victae   == casus_aureus
+                 && casus_victoris == casus_aureus)
+    {
+        l->iudicium_lectionis = (s32)ORATIO_IUDICIUM_AMBO;
+    }
+    alioquin si (casus_victae == casus_aureus)
+    {
+        l->iudicium_lectionis = (s32)ORATIO_IUDICIUM_VICTA;
+    }
+    alioquin si (casus_victoris == casus_aureus)
+    {
+        l->iudicium_lectionis = (s32)ORATIO_IUDICIUM_VICTOR;
+    }
+    alioquin
+    {
+        l->iudicium_lectionis = (s32)ORATIO_IUDICIUM_NEUTRA;
+    }
+    l->relatio_victae    = relatio_victae;
+    l->relatio_victoris  = relatio_victoris;
+    l->ante_victoris    = (b32)(caput_v >= ZEPHYRUM
+        && (s32)dependens_a < caput_v);
+    l->distantia_victae = dependens_a > caput_a ? dependens_a - caput_a
+        : caput_a - dependens_a;
+    si (caput_v >= ZEPHYRUM)
+    {
+        l->distantia_victoris = dependens_a > (i32)caput_v
+            ? dependens_a - (i32)caput_v : (i32)caput_v - dependens_a;
+    }
+    l->casus_aureus    = casus_aureus;
+    l->casus_victae    = casus_victae;
+    l->casus_victoris  = casus_victoris;
     l->genus_victae        = _accidens_lectionis(d->nodus,
         lectio_victae,
         "genus");
@@ -2686,6 +2747,202 @@ _litem_notare (
     }
 }
 
+/* T35 c: tituli iudiciorum et columnarum ordinis LIS (vide caput) */
+constans character* constans ORATIO_TITULI_IUDICIORUM[] = {
+    "victor", "victa", "ambo", "neutra", "idem", "ignotum"
+};
+
+constans character* constans
+    ORATIO_COLUMNAE_LIS[ORATIO_COLUMNAE_LIS_NUMERUS] = {
+    "victor", "victa", "dependens", "caput", "ante", "aurum-casus",
+    "casus-victae", "casus-victoris", "aurum-deprel",
+        "aurum-caput-idem",
+    "caput-victoris-idem", "clausula", "primum-clausulae", "nominativi",
+    "nominativi-certi", "nominativi-concordes", "accusativi-certi",
+    "genus-victae", "numerus-capitis", "persona-capitis", "vox-capitis",
+    "numerus-victae", "numerus-victoris",
+    "thesaurus", "aurum-arcus", "aurum-lectio", "relatio-victae",
+    "relatio-victoris", "ante-victoris", "distantia-victae",
+    "distantia-victoris"
+};
+
+/* titulus valoris enumerati aut '-' (absens) */
+interior constans character*
+_lis_titulus (
+    constans character* constans* tituli,
+                              s32  valor,
+                              i32  numerus)
+{
+    redde valor >= ZEPHYRUM && valor < (s32)numerus ? tituli[valor]
+        : "-";
+}
+
+interior vacuum
+_lis_campus_literis (
+     ChordaAedificator* aedificator,
+    constans character* literae)
+{
+    (vacuum)chorda_aedificator_appendere_character(aedificator, '\t');
+    (vacuum)chorda_aedificator_appendere_literis(aedificator, literae);
+}
+
+interior vacuum
+_lis_campus_chordae (
+     ChordaAedificator* aedificator,
+                chorda  c)
+{
+    (vacuum)chorda_aedificator_appendere_character(aedificator, '\t');
+    si (c.mensura > ZEPHYRUM)
+    {
+        (vacuum)chorda_aedificator_appendere_chorda(aedificator, c);
+    }
+}
+
+interior vacuum
+_lis_campus_numeri (
+     ChordaAedificator* aedificator,
+                   s32  numerus)
+{
+    (vacuum)chorda_aedificator_appendere_character(aedificator, '\t');
+    (vacuum)chorda_aedificator_appendere_s32(aedificator, numerus);
+}
+
+chorda
+oratio_oraculum_thesaurus (
+               Piscina* piscina,
+    constans character* via)
+{
+     constans character* plagula;
+     constans character* finis;
+              character* datum;
+                    i32  mensura;
+
+    si (via == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    plagula  = strrchr(via, '/');
+    plagula  = plagula != NIHIL ? plagula + I : via;
+    finis    = strstr(plagula, "-ud-");
+    si (finis == NIHIL)
+    {
+        finis = strrchr(plagula, '.');
+    }
+    si (finis == NIHIL)
+    {
+        finis = plagula + strlen(plagula);
+    }
+    mensura = (i32)(finis - plagula);
+    si (mensura == ZEPHYRUM)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    datum = (character*)piscina_allocare(piscina,
+        (memoriae_index)mensura);
+    si (datum == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    memcpy(datum, plagula, (size_t)mensura);
+    redde _chorda((i8*)datum, mensura);
+}
+
+chorda
+oratio_oraculum_lis_columnae (
+               Piscina* piscina,
+    constans character* via)
+{
+     ChordaAedificator* aedificator;
+                   i32  i;
+
+    aedificator = chorda_aedificator_creare(piscina,
+        (memoriae_index)DXII);
+    si (aedificator == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    (vacuum)chorda_aedificator_appendere_literis(aedificator,
+        via != NIHIL ? via : "");
+    _lis_campus_literis(aedificator, "COLUMNAE");
+    _lis_campus_literis(aedificator, "LIS");
+    per (i = ZEPHYRUM; i < (i32)ORATIO_COLUMNAE_LIS_NUMERUS; i++)
+    {
+        _lis_campus_literis(aedificator, ORATIO_COLUMNAE_LIS[i]);
+    }
+    redde chorda_aedificator_finire(aedificator);
+}
+
+chorda
+oratio_oraculum_lis_linea (
+                       Piscina* piscina,
+            constans character* via,
+    constans OratioOraculumLis* lis)
+{
+    ChordaAedificator* a;
+
+    si (lis == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)DXII);
+    si (a == NIHIL)
+    {
+        redde _chorda(NIHIL, ZEPHYRUM);
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a,
+        via != NIHIL ? via : "");
+    _lis_campus_literis(a, "LIS");
+    /* campi XXIII ante T35 - ordo ut impressio prior octetim */
+    _lis_campus_chordae(a, lis->victor);
+    _lis_campus_chordae(a, lis->victa);
+    _lis_campus_chordae(a, lis->dependens);
+    _lis_campus_chordae(a, lis->caput);
+    _lis_campus_numeri(a, (s32)lis->ante);
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_CASUUM,
+        lis->casus_aureus, (i32)ORATIO_CASUS_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_CASUUM,
+        lis->casus_victae, (i32)ORATIO_CASUS_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_CASUUM,
+        lis->casus_victoris, (i32)ORATIO_CASUS_NUMERUS));
+    _lis_campus_chordae(a, lis->deprel);
+    _lis_campus_numeri(a, (s32)lis->caput_aureum_idem);
+    _lis_campus_numeri(a, (s32)lis->caput_victoris_idem);
+    _lis_campus_numeri(a, lis->clausula);
+    _lis_campus_numeri(a, (s32)lis->primum_clausulae);
+    _lis_campus_numeri(a, (s32)lis->nominativi);
+    _lis_campus_numeri(a, (s32)lis->nominativi_certi);
+    _lis_campus_numeri(a, (s32)lis->nominativi_concordes);
+    _lis_campus_numeri(a, (s32)lis->accusativi_certi);
+    _lis_campus_literis(a, _lis_titulus(
+        ORATIO_TITULI_GENERUM_GRAMMATICORUM, lis->genus_victae,
+        (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_NUMERORUM,
+        lis->numerus_capitis, (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_PERSONARUM,
+        lis->persona_capitis, (i32)ORATIO_PERSONA_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_VOCUM,
+        lis->vox_capitis, (i32)ORATIO_VOX_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_NUMERORUM,
+        lis->numerus_victae, (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_NUMERORUM,
+        lis->numerus_victoris,
+        (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
+    /* T35 c: campi VIII appensi */
+    _lis_campus_chordae(a, oratio_oraculum_thesaurus(piscina, via));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_IUDICIORUM,
+        lis->iudicium_arcus, (i32)ORATIO_IUDICIUM_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_IUDICIORUM,
+        lis->iudicium_lectionis, (i32)ORATIO_IUDICIUM_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_RELATIONUM,
+        lis->relatio_victae, (i32)ORATIO_RELATIO_NUMERUS));
+    _lis_campus_literis(a, _lis_titulus(ORATIO_TITULI_RELATIONUM,
+        lis->relatio_victoris, (i32)ORATIO_RELATIO_NUMERUS));
+    _lis_campus_numeri(a, (s32)lis->ante_victoris);
+    _lis_campus_numeri(a, (s32)lis->distantia_victae);
+    _lis_campus_numeri(a, (s32)lis->distantia_victoris);
+    redde chorda_aedificator_finire(a);
+}
+
 /* elementum unum inter [e0, e1) cuius textus formam octetim aequat;
  * -I si nullum aut plura (T21) */
 interior s32
@@ -2741,6 +2998,7 @@ _ligationes_iudicare (
     i32* petitiones_rectae;
     s32* caput_nostrum;   /* T32 c: caput primae petitionis dependentis; -I */
     s32* lectio_nostra;   /* T32 d: lectio dependentis a petitione prima proposita; -I */
+    s32* relatio_nostra;  /* T35 c: relatio petitionis primae; -I */
     i32  k;
 
     per (k = ZEPHYRUM; k < n; k++)
@@ -2768,9 +3026,12 @@ _ligationes_iudicare (
         (memoriae_index)(ne + I) * (memoriae_index)magnitudo(s32));
     lectio_nostra = (s32*)piscina_allocare(scratch,
         (memoriae_index)(ne + I) * (memoriae_index)magnitudo(s32));
+    relatio_nostra = (s32*)piscina_allocare(scratch,
+        (memoriae_index)(ne + I) * (memoriae_index)magnitudo(s32));
     si (   positio == NIHIL || caput == NIHIL || elementum == NIHIL
         || petitiones == NIHIL || petitiones_rectae == NIHIL
-        || caput_nostrum == NIHIL || lectio_nostra == NIHIL)
+        || caput_nostrum == NIHIL || lectio_nostra == NIHIL
+        || relatio_nostra == NIHIL)
     {
         redde FALSUM;
     }
@@ -2780,6 +3041,7 @@ _ligationes_iudicare (
         petitiones_rectae[k]  = ZEPHYRUM;
         caput_nostrum[k]      = (s32)-I;
         lectio_nostra[k]      = (s32)-I;
+        relatio_nostra[k]     = (s32)-I;
     }
     per (k = ZEPHYRUM; k <= (i32)id_maximus; k++)
     {
@@ -2966,6 +3228,13 @@ _ligationes_iudicare (
                     /* T32 d: lectio dependentis proposita - carrier: prima
                      * (umbra in ea sedet); socius: analysis impletionis */
                     lectio_nostra[dependens] = pendet ? ZEPHYRUM : b_i;
+                    /* T35 c: relatio umbrae petitionis primae */
+                    relatio_nostra[dependens] =
+                        umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                            == MATERIA_VALOR_INDEX
+                        ? (s32)umbra->loci[ORATIO_UMBRA_RELATIO]
+                            .datum.index
+                        : (s32)-I;
                 }
             }
             /* T31 a: per relationem */
@@ -3194,7 +3463,14 @@ _ligationes_iudicare (
                             lectio_victae,
                             caput_v
                                 >= ZEPHYRUM ? lectio_nostra[dependens_a]
-                                : (s32)-I);
+                                : (s32)-I,
+                            recta, prima_recta,
+                            umbra->loci[ORATIO_UMBRA_RELATIO].genus
+                                == MATERIA_VALOR_INDEX
+                                ? (s32)umbra->loci[ORATIO_UMBRA_RELATIO]
+                                    .datum.index
+                                : (s32)-I,
+                            relatio_nostra[dependens_a]);
                     }
                 }
                 census->alternae_numerus = census->alternae_numerus + I;

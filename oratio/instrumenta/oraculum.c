@@ -757,17 +757,6 @@ _tabulam_imprimere (
     }
 }
 
-/* T32 e: titulus valoris enumerati aut '-' (absens) */
-interior constans character*
-_titulus_valoris (
-    constans character* constans* tituli,
-                              s32  valor,
-                              i32  numerus)
-{
-    redde valor >= ZEPHYRUM
-        && valor < (s32)numerus ? tituli[valor] : "-";
-}
-
 interior vacuum
 _machinam_imprimere (
                           Piscina* piscina,
@@ -891,58 +880,34 @@ _machinam_imprimere (
                     (integer)ct->victor_casu_solus);
             }
         }
-        /* T32 e: ordines LIS (cum -lites) - contentio singula cum notis */
+        /* T32 e: ordines LIS (cum -lites) - contentio singula cum
+         * notis; T35 c: ordo COLUMNAE semel ante primum, campi per
+         * bibliothecam (lex latitudinis in probatione) */
+        si (   lites && c->lites != NIHIL
+            && xar_numerus(c->lites) > ZEPHYRUM)
+        {
+            chorda caput_lis = oratio_oraculum_lis_columnae(piscina,
+                titulus);
+
+            si (caput_lis.mensura > ZEPHYRUM)
+            {
+                imprimere("%.*s\n", (integer)caput_lis.mensura,
+                    (constans character*)caput_lis.datum);
+            }
+        }
         per (i = ZEPHYRUM; lites && c->lites != NIHIL
             && i < xar_numerus(c->lites); i++)
         {
             constans OratioOraculumLis* l =
                 *(OratioOraculumLis**)xar_obtinere(c->lites, i);
+            chorda linea = oratio_oraculum_lis_linea(piscina, titulus,
+                l);
 
-            imprimere("%s\tLIS\t%.*s\t%.*s\t%.*s\t%.*s\t%d\t%s\t%s\t%s"
-                "\t%.*s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\n",
-                titulus,
-                (integer)l->victor.mensura,
-                (constans character*)l->victor.datum,
-                (integer)l->victa.mensura,
-                (constans character*)l->victa.datum,
-                (integer)l->dependens.mensura,
-                (constans character*)l->dependens.datum,
-                (integer)l->caput.mensura,
-                (constans character*)l->caput.datum,
-                (integer)l->ante,
-                _titulus_valoris(ORATIO_TITULI_CASUUM, l->casus_aureus,
-                    (i32)ORATIO_CASUS_NUMERUS),
-                _titulus_valoris(ORATIO_TITULI_CASUUM, l->casus_victae,
-                    (i32)ORATIO_CASUS_NUMERUS),
-                _titulus_valoris(ORATIO_TITULI_CASUUM,
-                l->casus_victoris,
-                    (i32)ORATIO_CASUS_NUMERUS),
-                (integer)l->deprel.mensura,
-                (constans character*)l->deprel.datum,
-                (integer)l->caput_aureum_idem,
-                (integer)l->caput_victoris_idem,
-                (integer)l->clausula,
-                (integer)l->primum_clausulae,
-                (integer)l->nominativi,
-                (integer)l->nominativi_certi,
-                (integer)l->nominativi_concordes,
-                (integer)l->accusativi_certi,
-                _titulus_valoris(ORATIO_TITULI_GENERUM_GRAMMATICORUM,
-                    l->genus_victae,
-                    (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS),
-                _titulus_valoris(ORATIO_TITULI_NUMERORUM,
-                    l->numerus_capitis,
-                    (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS),
-                _titulus_valoris(ORATIO_TITULI_PERSONARUM,
-                    l->persona_capitis, (i32)ORATIO_PERSONA_NUMERUS),
-                _titulus_valoris(ORATIO_TITULI_VOCUM, l->vox_capitis,
-                    (i32)ORATIO_VOX_NUMERUS),
-                _titulus_valoris(ORATIO_TITULI_NUMERORUM,
-                l->numerus_victae,
-                    (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS),
-                _titulus_valoris(ORATIO_TITULI_NUMERORUM,
-                    l->numerus_victoris,
-                    (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
+            si (linea.mensura > ZEPHYRUM)
+            {
+                imprimere("%.*s\n", (integer)linea.mensura,
+                    (constans character*)linea.datum);
+            }
         }
         /* T32 a: ordo CONTESTA dependentes petitiones rectae */
         imprimere("%s\tCONTESTA\t%d\t%d\t%d\n", titulus,

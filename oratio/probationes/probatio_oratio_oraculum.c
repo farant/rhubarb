@@ -35,6 +35,24 @@
 #include <string.h>
 #include <time.h>
 
+/* T35 c: tabulae in chorda (campi = tabulae + I) */
+interior i32
+_tabulae (
+    chorda c)
+{
+    i32 i;
+    i32 numerus = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        si (c.datum[i] == '\t')
+        {
+            numerus = numerus + I;
+        }
+    }
+    redde numerus;
+}
+
 /* PINNAE coverage (permille verborum aureorum tectorum), solum crescentes;
  * 0 = nondum mensuratum (nativitas) */
 /* Pinnae coverage permille, solum crescentes; causa cuiusque motus:
@@ -813,6 +831,102 @@ _thesaurus_arborum (
                 CREDO_AEQUALIS_I32 (census.lites != NIHIL
                     ? xar_numerus(census.lites) : ZEPHYRUM,
                     (i32)census.alternae_numerus);
+                /* T35 c: LEGES ORDINIS LIS - iudicia litium ==
+                 * summae contentionum (condicio et sedes eaedem;
+                 * culpa plantata: victor et victa permutati RUBRA);
+                 * latitudo capitis == latitudo ordinis + I (LI) */
+                {
+                    i32 arcus_victa         = ZEPHYRUM;
+                    i32 arcus_victor        = ZEPHYRUM;
+                    i32 lectio_victa        = ZEPHYRUM;
+                    i32 lectio_victor       = ZEPHYRUM;
+                    i32 lectio_iudicata     = ZEPHYRUM;
+                    i32 summa_victa_sola    = ZEPHYRUM;
+                    i32 summa_victor_solus  = ZEPHYRUM;
+                    i32 summa_victa_casu    = ZEPHYRUM;
+                    i32 summa_victor_casu   = ZEPHYRUM;
+
+                    per (j = ZEPHYRUM; census.lites != NIHIL
+                        && j < xar_numerus(census.lites); j++)
+                    {
+                        constans OratioOraculumLis* l =
+                            *(OratioOraculumLis**)xar_obtinere(
+                            census.lites, j);
+
+                        si (l->iudicium_arcus
+                            == (s32)ORATIO_IUDICIUM_VICTA)
+                        {
+                            arcus_victa = arcus_victa + I;
+                        }
+                        si (l->iudicium_arcus
+                            == (s32)ORATIO_IUDICIUM_VICTOR)
+                        {
+                            arcus_victor = arcus_victor + I;
+                        }
+                        si (l->iudicium_lectionis
+                            == (s32)ORATIO_IUDICIUM_VICTA)
+                        {
+                            lectio_victa = lectio_victa + I;
+                        }
+                        si (l->iudicium_lectionis
+                            == (s32)ORATIO_IUDICIUM_VICTOR)
+                        {
+                            lectio_victor = lectio_victor + I;
+                        }
+                        si (l->iudicium_lectionis
+                            != (s32)ORATIO_IUDICIUM_IGNOTUM)
+                        {
+                            lectio_iudicata = lectio_iudicata + I;
+                        }
+                    }
+                    per (j = ZEPHYRUM; contentiones != NIHIL
+                        && j < xar_numerus(contentiones); j++)
+                    {
+                        constans OratioOraculumContentio* ct =
+                            *(OratioOraculumContentio**)xar_obtinere(
+                                contentiones, j);
+
+                        summa_victa_sola   = summa_victa_sola
+                            + ct->victa_sola;
+                        summa_victor_solus = summa_victor_solus
+                            + ct->victor_solus;
+                        summa_victa_casu   = summa_victa_casu
+                            + ct->victa_casu_sola;
+                        summa_victor_casu  = summa_victor_casu
+                            + ct->victor_casu_solus;
+                    }
+                    imprimere("    lites iudicatae: arcus victa %d"
+                        " victor %d, lectio victa %d victor %d"
+                        " iudicata %d\n",
+                        (integer)arcus_victa, (integer)arcus_victor,
+                        (integer)lectio_victa, (integer)lectio_victor,
+                        (integer)lectio_iudicata);
+                    CREDO_AEQUALIS_I32 (arcus_victa, summa_victa_sola);
+                    CREDO_AEQUALIS_I32 (arcus_victor,
+                        summa_victor_solus);
+                    CREDO_AEQUALIS_I32 (lectio_victa, summa_victa_casu);
+                    CREDO_AEQUALIS_I32 (lectio_victor,
+                        summa_victor_casu);
+                    CREDO_AEQUALIS_I32 (lectio_iudicata,
+                        summa_casuum_iudicatorum);
+                    si (   census.lites != NIHIL
+                        && xar_numerus(census.lites) > ZEPHYRUM)
+                    {
+                        constans OratioOraculumLis* prima =
+                            *(OratioOraculumLis**)xar_obtinere(
+                            census.lites, ZEPHYRUM);
+                        chorda caput_lis =
+                            oratio_oraculum_lis_columnae(p,
+                            plagula);
+                        chorda linea     = oratio_oraculum_lis_linea(p,
+                            plagula, prima);
+
+                        CREDO_AEQUALIS_I32 (_tabulae(caput_lis),
+                            _tabulae(linea) + I);
+                        CREDO_AEQUALIS_I32 (_tabulae(linea),
+                            (i32)ORATIO_COLUMNAE_LIS_NUMERUS + I);
+                    }
+                }
             }
             /* T19g bis: errata auctoris - summa numerorum == verba -
              * primaria eius; errata prima III auctorum II maximorum relata
@@ -1002,6 +1116,72 @@ _thesaurus_arborum (
     CREDO_VERUM (census.verba > (i32)10000);
     CREDO_VERUM (tecta_permille >= pinna_permille);
     piscina_destruere(p);
+}
+
+/* T35 c (decisio LI): tituli XXIII priores ordinis LIS PINNATI -
+ * columnae appenduntur, numquam reordinantur; tituli unici; thesaurus
+ * ex via (sors census corporis) */
+hic_manens constans character* constans TITULI_LIS_PINNATI[XXIII] = {
+    "victor", "victa", "dependens", "caput", "ante", "aurum-casus",
+    "casus-victae", "casus-victoris", "aurum-deprel",
+        "aurum-caput-idem",
+    "caput-victoris-idem", "clausula", "primum-clausulae", "nominativi",
+    "nominativi-certi", "nominativi-concordes", "accusativi-certi",
+    "genus-victae", "numerus-capitis", "persona-capitis", "vox-capitis",
+    "numerus-victae", "numerus-victoris"
+};
+
+interior vacuum
+_columnas_lis_probare (
+    Piscina* piscina)
+{
+       i32 i;
+       i32 j;
+       i32 mutati    = ZEPHYRUM;
+       i32 aequales  = ZEPHYRUM;
+    chorda t;
+
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_COLUMNAE_LIS_NUMERUS, (i32)XXXI);
+    per (i = ZEPHYRUM; i < (i32)ORATIO_COLUMNAE_LIS_NUMERUS; i++)
+    {
+        si (ORATIO_COLUMNAE_LIS[i] == NIHIL)
+        {
+            CREDO_CULPA ("titulus columnae LIS NIHIL");
+            redde;
+        }
+    }
+    per (i = ZEPHYRUM; i < (i32)XXIII; i++)
+    {
+        si (strcmp(ORATIO_COLUMNAE_LIS[i], TITULI_LIS_PINNATI[i])
+            != ZEPHYRUM)
+        {
+            imprimere("  titulus %d motus: %s pro %s\n", (integer)i,
+                ORATIO_COLUMNAE_LIS[i], TITULI_LIS_PINNATI[i]);
+            mutati = mutati + I;
+        }
+    }
+    per (i = ZEPHYRUM; i < (i32)ORATIO_COLUMNAE_LIS_NUMERUS; i++)
+    {
+        per (j = i + I; j < (i32)ORATIO_COLUMNAE_LIS_NUMERUS; j++)
+        {
+            si (strcmp(ORATIO_COLUMNAE_LIS[i], ORATIO_COLUMNAE_LIS[j])
+                == ZEPHYRUM)
+            {
+                aequales = aequales + I;
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32 (mutati, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (aequales, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_tabulae(oratio_oraculum_lis_columnae(piscina,
+        "fixa")), (i32)ORATIO_COLUMNAE_LIS_NUMERUS + II);
+    t = oratio_oraculum_thesaurus(piscina, "la_llct-ud-dev.conllu");
+    CREDO_VERUM (_aequalis(t, "la_llct"));
+    t = oratio_oraculum_thesaurus(piscina,
+        "oratio/build/ud/la_ittb-ud-test.conllu");
+    CREDO_VERUM (_aequalis(t, "la_ittb"));
+    t = oratio_oraculum_thesaurus(piscina, "x.tsv");
+    CREDO_VERUM (_aequalis(t, "x"));
 }
 
 s32
@@ -1220,6 +1400,9 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)oratio_oraculum_classis_ex_upos(_l("_")),
             (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
     }
+
+    imprimere("\n--- II b. Columnae LIS (T35 c) ---\n");
+    _columnas_lis_probare(piscina);
 
     imprimere("\n--- III. Treebanks venditae (CC BY-SA) ---\n");
     _thesaurus_arborum(piscina, &vocabularia, programma, radix,

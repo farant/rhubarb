@@ -107,6 +107,30 @@ nomen structura {
        i32 victor_casu_solus;
 } OratioOraculumContentio;
 
+/* IUDICIUM petitionis contentae (T35 c): quae petitio aurum tenet -
+ * arcus: victor | victa | ambo | neutra | idem (caput victoris idem aut
+ * nullum: arcus non discriminat); lectio: ignotum si casus aureus,
+ * victae aut victoris ignotus */
+nomen enumeratio {
+    ORATIO_IUDICIUM_VICTOR = ZEPHYRUM,
+    ORATIO_IUDICIUM_VICTA,
+    ORATIO_IUDICIUM_AMBO,
+    ORATIO_IUDICIUM_NEUTRA,
+    ORATIO_IUDICIUM_IDEM,
+    ORATIO_IUDICIUM_IGNOTUM,
+    ORATIO_IUDICIUM_NUMERUS
+} OratioOraculumIudicium;
+
+externus constans character* constans ORATIO_TITULI_IUDICIORUM[];
+
+/* ORDO COLUMNAE (T35 c, decisio LI): tituli camporum ordinis LIS
+ * machinae ordine impressionis; XXIII primi = campi ante T35,
+ * PINNATI (columnae appenduntur, numquam reordinantur); columna
+ * aurum legens praefixum 'aurum-' fert (decisio LII) */
+#define ORATIO_COLUMNAE_LIS_NUMERUS XXXI
+externus constans character* constans
+    ORATIO_COLUMNAE_LIS[ORATIO_COLUMNAE_LIS_NUMERUS];
+
 /* LIS (T32 e): contentio singula cum notis quas regula videre potuit -
  * materia census notarum (quae nota sortem Senecae findat). Aurum: casus,
  * deprel, caput dependentis; nostrum: casus lectionis victae et victoris,
@@ -139,6 +163,17 @@ nomen structura {
        s32 numerus_capitis;
        s32 persona_capitis;
        s32 vox_capitis;
+    /* T35 c (2026-09-14): iudicia (OratioOraculumIudicium) et signatura
+     * petitionum pro reticulo partitionum - relationes umbrarum (-I
+     * ignota), directio victoris, distantiae in elementis (0 = caput
+     * victoris nullum) */
+       s32 iudicium_arcus;
+       s32 iudicium_lectionis;
+       s32 relatio_victae;
+       s32 relatio_victoris;
+       b32 ante_victoris;
+       i32 distantia_victae;
+       i32 distantia_victoris;
 } OratioOraculumLis;
 
 /* ERRATUM decisionis (T19g bis, 2026-09-08): verbum aureum cuius
@@ -460,6 +495,27 @@ Xar*
 oratio_oraculum_contentiones (
                           Piscina* piscina,
     constans OratioOraculumCensus* census);
+
+/* THESAURUS (T35 c): nomen plagulae (sine directorio) ante "-ud-", aut
+ * ante extensionem ultimam - sors census corporis (dev et test eiusdem
+ * thesauri sors una). Copia in piscina; vacua si via NIHIL. */
+chorda
+oratio_oraculum_thesaurus (
+               Piscina* piscina,
+    constans character* via);
+
+/* "via TAB COLUMNAE TAB LIS TAB <tituli>" sine linea nova (T35 c) */
+chorda
+oratio_oraculum_lis_columnae (
+               Piscina* piscina,
+    constans character* via);
+
+/* "via TAB LIS TAB <campi>" sine linea nova (T35 c) */
+chorda
+oratio_oraculum_lis_linea (
+                       Piscina* piscina,
+            constans character* via,
+    constans OratioOraculumLis* lis);
 
 /* Errata auctoris (auctor vacuus = omnium) ordine numeri non
  * crescente, deinde auctoris et formae: Xar de OratioOraculumErratum*
