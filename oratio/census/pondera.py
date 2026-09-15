@@ -48,8 +48,8 @@ FOLLICULI = [
     # (nomen, valor, relationes, contextus, activus, causa) - VERDICTA
     # RETICULI 2026-09-15 super lites_t38a (columna forma adest):
     ('numerus-capitis', _valor_numeri_capitis,
-     ('subiectum', 'obiectum-verbi'), ('dialectus',), True,
-     'T35 e / T36 d: catena vetans sortibus alternis +75, per corpora la_llct cadit 12 -> universalis, chartis condicionatus (decisio LIV)'),
+     ('subiectum', 'obiectum-verbi'), ('dialectus',), False,
+     'T35 e / T36 d: catena vetans sortibus alternis +75, la_llct cadit 12 -> dialecto condicionatus; T38 d RECUSATUS: cursu decretoris ordo classicus = sors CIRCSE (subiectum 294 contra obiectum 189) prosae classicae impositus - eo omisso casus sursum omnibus plagulis Latinis (CIRCSE +13 contra +5 verba, ITTB +34 contra +14, Perseus +23 contra +6, PROIEL +12 contra 0, LLCT test +42 contra +32); folliculus verus, tabula falsa: prosa classica editibilis deest (decisio LVII)'),
     ('positio-numerus', _valor_positionis_numeri,
      ('subiectum', 'obiectum-verbi'), ('dialectus',), True,
      'T38 b: par ante x numerus-victae infimum +79 retentum, lucrantes 5, cadit 1 (la_llct 1+pluralis 2/8 contra victorem) -> dialecto condicionatus ut numerus verbi; FORMA RECUSATA: intra versum CIRCSE et Perseus in triplice flectunt (1+pluralis+singularis CIRCSE 47:29 victor, Perseus 18:7 victa) - forma corpora non separat'),

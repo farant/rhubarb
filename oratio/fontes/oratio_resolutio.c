@@ -3867,6 +3867,7 @@ _obiectum_socius_recusandus (
 nomen structura {
     MateriaNodus* umbra;
     MateriaNodus* analysis;          /* lectio implens (nodus) */
+    MateriaNodus* lectio_carrier;    /* lectio quae umbram fert */
              i32  v;                 /* carrier */
              i32  a;                 /* lectio carrier */
              i32  w;                 /* implens */
@@ -4008,14 +4009,15 @@ _candidatum_addere (
         redde FALSUM;
     }
     memset(c, ZEPHYRUM, magnitudo(*c));
-    c->umbra     = umbra;
-    c->analysis  = analysis;
-    c->v         = v;
-    c->a         = a;
-    c->w         = w;
-    c->b         = b;
-    c->titulus   = titulus;
-    c->causa     = causa;
+    c->umbra           = umbra;
+    c->analysis        = analysis;
+    c->lectio_carrier  = lectio_carrier;
+    c->v               = v;
+    c->a               = a;
+    c->w               = w;
+    c->b               = b;
+    c->titulus         = titulus;
+    c->causa           = causa;
     c->dependens          = _dependens_ordinis(elementa, v, a, umbra,
         w);
     c->caput              = c->dependens == v ? w : v;
@@ -4272,13 +4274,17 @@ _pondera_candidati (
         c->pondera[ZEPHYRUM] = _pondus_ordinis(cursus, c->titulus, d, f,
             "directio-distantia", valor, limen);
     }
-    /* II regula plana */
-    c->pondera[I] = _pondus_ordinis(cursus, c->titulus, d, f, "-", "-",
-        limen);
-    /* III structura */
+    /* II regula plana (ORATIO_PONDERA_SINE=regula omittit) */
+    si (!_folliculus_omissus("regula"))
+    {
+        c->pondera[I] = _pondus_ordinis(cursus, c->titulus, d, f, "-",
+            "-", limen);
+    }
+    /* III structura (ORATIO_PONDERA_SINE=structura omittit) */
     si (   c->relatio >= ZEPHYRUM
         && c->relatio < (s32)ORATIO_RELATIO_NUMERUS
-        && c->distantia > ZEPHYRUM)
+        && c->distantia > ZEPHYRUM
+        && !_folliculus_omissus("structura"))
     {
         sprintf(clavis_structurae, "@%s+%s+%s",
             ORATIO_TITULI_RELATIONUM[c->relatio],
@@ -4291,6 +4297,89 @@ _pondera_candidati (
     /* IV fiducia (arcuum solum: contentio lectionis eam non habet, R19) */
     c->pondera[(i32)III] = _fiducia_regulae(cursus->programma,
         c->titulus);
+}
+
+/* an lectio umbram impletam ullam ferat (arcus in ea vivit) */
+interior b32
+_lectio_umbras_impletas_fert (
+    constans MateriaNodus* lectio)
+{
+            OratioClassis  classis;
+                      s32  locus;
+    constans MateriaValor* umbrae;
+                      i32  u;
+
+    si (lectio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    classis = oratio_genus_classis((OratioGenus)lectio->genus);
+    locus   = (i32)classis < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM
+        ? oratio_partes_locus(classis, "umbrae") : (s32)-I;
+    si (   locus < ZEPHYRUM
+        || lectio->loci[locus].genus != MATERIA_VALOR_LISTA)
+    {
+        redde FALSUM;
+    }
+    umbrae = &lectio->loci[locus];
+    per (u = ZEPHYRUM; u < materia_valor_lista_numerus(*umbrae); u++)
+    {
+        constans MateriaValor* valor_umbrae =
+            materia_valor_lista_obtinere(*umbrae, u);
+
+        si (   valor_umbrae        != NIHIL
+            && valor_umbrae->genus == MATERIA_VALOR_NODUS
+            && oratio_referentiae_scopus(valor_umbrae->datum.nodus,
+                (i32)ORATIO_UMBRA_IMPLETIO) != NIHIL)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* lectio prima vocabuli w (NIHIL sine analysi) */
+interior MateriaNodus*
+_lectio_prima (
+    MateriaValor elementa,
+             i32 w)
+{
+             MateriaNodus* vocabulum = _vocabulum_ordinalis(elementa,
+                 w);
+    constans MateriaValor* analyses;
+
+    si (vocabulum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    analyses = &vocabulum->loci[ORATIO_VOCABULUM_ANALYSES];
+    si (   analyses->genus                        != MATERIA_VALOR_LISTA
+        || materia_valor_lista_numerus(*analyses) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    redde materia_valor_lista_obtinere(*analyses,
+        ZEPHYRUM)->datum.nodus;
+}
+
+/* ARCUS SERVANTUR (T38 d): candidata quae arcum exsistentem CELARET
+ * recusatur - lectio carrier eius non prima (arcus novus invisibilis:
+ * oraculum et consumptores lectionem primam solam legunt), aut lectio
+ * implens promovenda lectionem primam vocabuli sui cum umbris impletis
+ * demoveret (arcus eorum in tenebras) */
+interior b32
+_arcum_celaret (
+           MateriaValor  elementa,
+    constans Candidatus* c)
+{
+    MateriaNodus* prima = _lectio_prima(elementa, c->w);
+
+    si (oratio_ordinalis(c->lectio_carrier) != ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde (b32)(prima != NIHIL && prima != c->analysis
+        && _lectio_umbras_impletas_fert(prima));
 }
 
 /* an caput -> ... -> dependens per capita accepta (circuitus) */
@@ -4460,6 +4549,7 @@ _decretor (
                       i32* cellae;
                       s32* capita;
                       i32* ordo;
+                      i32  ordinatae;
                       i32  k;
                       i32  i;
 
@@ -4592,7 +4682,7 @@ _decretor (
     }
     /* ordo (insertio stabilis: pondus descendens, stans prior inter
      * paria, deinde ordo collectionis) */
-    i = ZEPHYRUM;
+    ordinatae = ZEPHYRUM;
     per (k = ZEPHYRUM; k < nc; k++)
     {
          Candidatus* c = (Candidatus*)xar_obtinere(candidati, k);
@@ -4602,7 +4692,7 @@ _decretor (
         {
             perge;
         }
-        j = i;
+        j = ordinatae;
         dum (j > ZEPHYRUM)
         {
             constans Candidatus* prior =
@@ -4619,28 +4709,63 @@ _decretor (
             ordo[j]  = ordo[j - I];
             j        = j - I;
         }
-        ordo[j]  = k;
-        i        = i + I;
+        ordo[j]    = k;
+        ordinatae  = ordinatae + I;
     }
-    /* decodatio avida */
-    per (k = ZEPHYRUM; k < i; k++)
+    /* decodatio avida in CURSIBUS II - ARCUS SERVANTUR: (I) candidatae
+     * umbra libera aut occupata a petitione stante cellulae EIUSDEM;
+     * (II) candidatae umbra cuius occupans (petitio stans cellulae
+     * alterius) cellulam suam iam perdidit. Mutatio arcum arcu reponit,
+     * dependens numquam orbatur (cursus primus T38 d: umbra rapta
+     * dependentem alterum sine capite reliquit - arcus -CCLXI Senecae,
+     * -CCLVIII chartis, praecisione sursum, arcus recti deorsum) */
+    per (i = ZEPHYRUM; i < (i32)II; i++)
     {
-        Candidatus* c = (Candidatus*)xar_obtinere(candidati, ordo[k]);
-               b32  liber;
+        per (k = ZEPHYRUM; k < ordinatae; k++)
+        {
+                            i32  kk = ordo[k];
+                     Candidatus* c;
+            constans Candidatus* occupans = NIHIL;
+                            b32  liber;
+                            i32  j;
 
-        si (c->dependens >= ne)
-        {
-            perge;
-        }
-        liber = (b32)(   !_umbra_capta(candidati, c->umbra, ordo[k])
-                      && !_cyclum_facit(capita, ne, c->caput,
-                          c->dependens)
-                      && !(explicita[c->w] && c->b != ZEPHYRUM));
-        c->superstes = liber;
-        si (liber && capita[c->dependens] < ZEPHYRUM)
-        {
-            c->accepta            = VERUM;
-            capita[c->dependens]  = (s32)c->caput;
+            c = (Candidatus*)xar_obtinere(candidati, kk);
+            si (c->accepta || c->dependens >= ne || c->pondus < (s32)-I)
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; j < nc; j++)
+            {
+                constans Candidatus* s =
+                    (constans Candidatus*)xar_obtinere(candidati, j);
+
+                si (   s->causa < ZEPHYRUM && s->umbra == c->umbra
+                    && s->dependens != c->dependens && s != c)
+                {
+                    occupans = s;
+                }
+            }
+            si (i == ZEPHYRUM && occupans != NIHIL)
+            {
+                perge;   /* cursu II, si occupans perdiderit */
+            }
+            si (   i == I && occupans != NIHIL
+                && (   occupans->accepta
+                    || capita[occupans->dependens] < ZEPHYRUM))
+            {
+                perge;   /* occupans manet: umbra capta */
+            }
+            liber = (b32)(   !_umbra_capta(candidati, c->umbra, kk)
+                          && !_cyclum_facit(capita, ne, c->caput,
+                              c->dependens)
+                          && !(explicita[c->w] && c->b != ZEPHYRUM)
+                          && !_arcum_celaret(*elementa, c));
+            c->superstes = liber;
+            si (liber && capita[c->dependens] < ZEPHYRUM)
+            {
+                c->accepta            = VERUM;
+                capita[c->dependens]  = (s32)c->caput;
+            }
         }
     }
     /* per cellulam: habitus, rescriptio, decretum */

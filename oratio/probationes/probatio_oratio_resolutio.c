@@ -1022,10 +1022,10 @@ principale (vacuum)
         CREDO_NON_NIHIL (tabula.pondera);
         CREDO_AEQUALIS_I32 (tabula.pondera != NIHIL
             ? tabula_dispersa_numerus(tabula.pondera) : ZEPHYRUM,
-            (i32)52);
+            (i32)40);   /* T38 d: ordines numeri verbi inactivi (XII) */
         pondus = oratio_resolutio_pondus(&tabula,
             _l("umbra-subiectum-praecedente-proximo"), "-", "-",
-            "numerus-capitis", "singularis");
+            "positio-numerus", "1+singularis");
         CREDO_NON_NIHIL (pondus);
         si (pondus != NIHIL)
         {
@@ -1036,12 +1036,12 @@ principale (vacuum)
         pondus = oratio_resolutio_pondus(&tabula,
             _l("umbra-obiectum-verbi-praecedente-proximo"), "medius",
             "-",
-            "numerus-capitis", "pluralis");
+            "positio-numerus", "1+pluralis");
         CREDO_NON_NIHIL (pondus);
         si (pondus != NIHIL)
         {
-            CREDO_AEQUALIS_I32 (pondus->contentiones, I);
-            CREDO_AEQUALIS_I32 (pondus->rectae, I);
+            CREDO_AEQUALIS_I32 (pondus->contentiones, (i32)II);
+            CREDO_AEQUALIS_I32 (pondus->rectae, (i32)II);
             CREDO_AEQUALIS_I32 (pondus->permille, (i32)M);
         }
         pondus = oratio_resolutio_pondus(&tabula,

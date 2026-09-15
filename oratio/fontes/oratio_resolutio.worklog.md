@@ -249,3 +249,104 @@ the subject rule kept (294 vs 189 in classicus) is wrong against the
 gold `obj`, the deposed object candidate was right. The
 `praeoccupata` alternatives add contest rows to `-lites`, so the table
 must be regenerated from a post-c run in T38 d (named cause).
+
+## 2026-09-15 — T38 d: the run. PREDICTION, written before it
+
+Table regenerated from the post-c contest rows (the `praeoccupata`
+alternatives add ~2,000 rows; cause named in the table's header).
+What the table says (T38 b reading, `classicus` = CIRCSE's coin,
+`medius` = the charters): under a SINGULAR verb the decoder flips
+same-verb cells toward the object only where the document is
+`medius` — the charters (dev, test) and UDante, which the dialect
+census puts with them; on `classicus` files (CIRCSE, ITTB, PROIEL,
+Perseus) the subject claim keeps the cell (294 vs 189), so the
+prose-shelf gain the raw contests promised (ITTB 157:255 etc.) does
+NOT arrive in this run — the table cannot know it (decision 57).
+Expected, direction not size (T32 f): charters and Dante — right arcs
+and case UP (ceilings +59 / +59 / +37 cells on their singular-verb
+contests, in-sample for the charters); CIRCSE ≈ flat (coin kept);
+ITTB / PROIEL / Perseus ≈ flat on the verb star. Arc contests
+(different heads) are the unknown: the per-cell rung compares plain
+or structural rows instead of the executor's trust order, and T32 b
+said ranking alone could recover Seneca 420 / Aquinas 447 / PROIEL
+252 / Perseus 250 arcs — if the rows rank better than trust did, arcs
+rise there; if worse, they fall and the ladder's rungs II–III are the
+suspects. Watch: `DECRETOR mutatae` per file, the electa rate per
+habitus (coacti should be the most accurate tier, decision 40), and
+every pin.
+
+**THE RUN (2026-09-15, nine treebanks, `ORATIO_DECRETOR=1`, baseline
+= the same code with the decoder off; every number is words or arcs
+unless marked ‰).** Three runs were needed before the numbers could be
+read, and each forced a law:
+
+1. First run: right arcs −82 … −258 on every file while the changed
+   cells were right MORE often than the claims they replaced (Seneca
+   117:83, Aquinas 189:163, charters 189:165). Cause: when a winner took
+   an umbra whose standing filling belonged to ANOTHER word, that word
+   could end with no head. Law: the greedy runs in two passes — an umbra
+   changes hands only after its occupant has lost its own cell
+   (`arcus servantur`). Result: no change in the arc counts — the
+   mechanism was elsewhere.
+2. Second reading: an arc lives on a READING; the oracle and every
+   consumer see a word's first reading only. Promoting the winner's
+   filler reading demoted a first reading that carried filled umbrae
+   (an adjective bound to its noun, re-read as an object), and a winner
+   whose carrier reading was not first was invisible from birth. Law:
+   a candidate that would hide an existing arc is refused
+   (`_arcum_celaret`: carrier reading not first, or the filler word's
+   first reading carries a filling and is not the candidate's). With
+   it, arcs RISE on every file (+212 … +475: freed single-alternative
+   cells now get heads), right arcs rise on every file (Seneca +106,
+   charters +38/+31, Aquinas +139, Perseus +42, PROIEL +57, Dante
+   +21), primary, case and forced accuracy rise or hold everywhere.
+3. Levers each alone: `ORATIO_PONDERA_SINE=regula` a wash;
+   `ORATIO_PONDERA_LIMEN=40` a wash; `positio-numerus` off = no change
+   (it rarely answered); `numerus-capitis` OFF — case UP on every Latin
+   file beyond the bucket-on run (Seneca +13 vs +5, Aquinas +34 vs +14,
+   Perseus +23 vs +6, PROIEL +12 vs 0, charters test +42 vs +32),
+   primary up too (Aquinas +9, Perseus +12). The tranche b reading came
+   true: the bucket's `classicus` rows are Seneca's coin (subject 294
+   vs object 189) imposed on classical prose. The bucket row is now
+   INACTIVE in `pondera.py` with those numbers as its cause (decision
+   58: the lattice earned the bucket, the fit did not), the table
+   regenerated (383 rows), and the run reproduces the lever exactly.
+
+FINAL (decoder on, table without the verb-number bucket) against off,
+per file: primary +1 / +13 / +3 words (Seneca, charters dev, test),
+Aquinas +9, Perseus +12; forced accuracy 800→810, 750→770, 756→774 ‰;
+case 711→714, 675→676, 698→702 ‰ (Aquinas 768→771, Perseus 787→790,
+PROIEL 779→781); number/gender +16/+22 and +30/+8 on the charters,
+Seneca −1/−5 words; right arcs +100 / +38 / +32 (Aquinas +149,
+Perseus +44, PROIEL +58, Dante +22); ATTACHMENT PRECISION DOWN on six
+files because the added arcs are right less often than the old ones
+(Seneca 520→516, charters 445→430 and 468→449, Aquinas 668→642,
+Perseus 645→632, PROIEL 620→609, Dante 483→455 ‰). Changed cells: 405
+Seneca, 512/509 charters, 632 Aquinas, 244 Perseus, 271 PROIEL, 415
+Dante; among them the change was right vs the old claim right 123:33
+Seneca, 210:44 Aquinas, 115:4 charters, 77:27 Perseus, 87:22 PROIEL,
+56:15 Dante — the decoder's changes are right three to four times as
+often as what they replace; most changed cells are `neutra` (neither
+right: the word hangs elsewhere). By rung: bucket 121:34, plain
+482:103, structural 56:8. Habitus: coacti dominate (one survivor) and
+are the most accurate tier (39–53 %), as decision 40 wants.
+
+LATTICE OVER THE DECISIONS (`-genus DECRETUM -aurum aurum-electio`,
+6,822 judged cells): no column of the decision row — position, the
+numbers, distance, habitus, dialect, form, mutated — gains 20 rows
+held out over the base (933 ‰ electa); the next bucket is not in what
+the row carries. Candidates named for the row: the winner's and the
+runner-up's RELATIONS (a subject-versus-head cell behaves unlike an
+object-versus-adposition one) and the rung that answered each side.
+
+PINS: the run moves them; the decoder stays OFF by default at this
+commit and Fran decides (the precision pins would fall on the three
+pinned files, −4 / −15 / −19 ‰, while right arcs, case, primary and
+forced accuracy rise).
+
+Fixture consequence: `exspectata.tsv` drops the twelve verb-number rows
+(52 → 40) because the bucket row is inactive; the hand derivation
+above still holds for the rows that remain. The oracle's inline law on
+`Puella bellum videt` now reads ELECTA with the object rule chosen: the
+plain rung (II) decides where the bucket used to, and the decoder gets
+the sentence right. The Python face sees `partitio()['decretum'] == 1`.

@@ -1568,12 +1568,14 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
             .numerus_exemplorum, ZEPHYRUM);
 
-        /* T38 c: DECRETUM iudicatum super 'Puella bellum videt' programmate
+        /* T38 c/d: DECRETUM iudicatum super 'Puella bellum videt' programmate
          * vero et tabula vera (classicus, prosa): cellula bellum -
-         * subiectum stans (numerus-capitis singularis CCXCIV) contra
-         * obiectum (CLXXXIX) - subiectum manet ordinatus; aurum obj:
-         * electa falsa (nominativus contra Acc), cedens recta -> CEDENS.
-         * CULPA PLANTATA: comparatio casuum inversa -> ELECTA. */
+         * subiectum stans contra obiectum alternam; folliculo numeri
+         * verbi INACTIVO (T38 d: sors CIRCSE prosae imposita casum
+         * laedebat) folliculus positio-numerus (gradus I) respondet et OBIECTUM
+         * vincit: bellum accusativum, decretum mutatum, ELECTA contra
+         * aurum obj. CULPA PLANTATA: comparatio casuum inversa ->
+         * lectio electa 'falsa' -> CEDENS/NEUTRA pro ELECTA. */
         si (programma != NIHIL)
         {
             OratioOraculumCensus cd;
@@ -1609,13 +1611,15 @@ principale (vacuum)
                 CREDO_VERUM (_aequalis(d->dependens, "bellum"));
                 CREDO_VERUM (_aequalis(d->caput, "videt"));
                 CREDO_VERUM (_aequalis(d->regula_electa,
+                    "umbra-obiectum-verbi-praecedente-proximo"));
+                CREDO_VERUM (_aequalis(d->regula_cedens,
                     "umbra-subiectum-praecedente-proximo"));
                 CREDO_AEQUALIS_S32 (d->electio,
-                    (s32)ORATIO_ELECTIO_CEDENS);
+                    (s32)ORATIO_ELECTIO_ELECTA);
                 CREDO_AEQUALIS_S32 (d->habitus,
                     (s32)ORATIO_HABITUS_ORDINATUS);
-                CREDO_FALSUM (d->mutata);
-                CREDO_AEQUALIS_I32 (d->gradus, I);
+                CREDO_VERUM (d->mutata);
+                CREDO_AEQUALIS_I32 (d->gradus, I);   /* positio-numerus respondit */
                 CREDO_AEQUALIS_S32 (d->dialectus,
                     (s32)ORATIO_DIALECTUS_CLASSICUS);
                 CREDO_AEQUALIS_S32 (d->forma, (s32)ORATIO_FORMA_PROSA);

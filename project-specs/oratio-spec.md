@@ -2979,6 +2979,81 @@ as a separate artifact (it is the `dialectus` column now); English
 validation (the decoder runs on EWT unchanged — no bucket rows exist
 for its rules, so it reproduces the executor there by construction).
 
+**As built — T38 (2026-09-15; commits 4d71fa78 a, 515b920f b, 06b4dbfe
+c, and the d commit).** Everything in the design, with the deviations
+and findings below; the DEFAULT IS OFF at this commit (`ORATIO_DECRETOR=1`
+turns the pass on) because the run moves pins and a pin moves only
+with Fran's decision.
+
+CONTEXT (a). Form is per document from the paragraph layer and
+DECLARED per treebank sentence from the ids; the reader keeps `# newdoc
+id`. CIRCSE is 774 verse and 119 prose sentences; Perseus's test file
+is Vergil, Ovid and Phaedrus (392 sentences) with Petronius (547),
+mostly VERSE by its ids — yet its contests behave like prose (T32 d),
+so form never separated it from Seneca. UDante is `medius` by the
+dialect census (T30 c's 12 ‰), so the dialect column covers Dante with
+the charters. Every pinned row byte-identical.
+
+TABLE (b). The crediting law: each side of a judged contest counts a
+contest, right when its arc is gold AND its reading is not wrong; a
+same-head contest whose reading the gold cannot judge counts nothing.
+Keys: bucket rows under the contexts the bucket declares, the rule's
+plain rate in four context variants, the structural key
+`@<relatio>+<ante|post>+<proximo|remoto>` recomputed from the
+candidate (`#` opens a comment line, which the first loader learned by
+silently dropping 14 rows). Lattice verdicts, as data rows with their
+numbers: `positio-numerus` DIALECT-conditioned (form refused: inside
+verse Seneca and Perseus flip against each other on the T32 f triple);
+`directio-distantia` REFUSED (falls on three of six corpora; its
+mutable groups split Seneca and the charters against the rest). The
+real table: `classicus` is Seneca's coin (subject 294 vs object 189 ‰
+under a singular verb), only `medius` flips toward the object (794 vs
+453) — the prose shelf never enters the table (decision 57).
+
+DECODER (c). As designed, plus three laws the runs forced. (1) ONE
+RUNG PER CELL: the first run compared bucket rows at 200–300 ‰ (a
+contest counts for both sides even when neither is right) with trust
+at 500–700 ‰ and changed 676 cells on Seneca at 27 % right; every
+candidate of a cell is now scored on the finest rung that answers for
+all of them. (2) A READING CONTEST never reaches the trust rung
+(R19). (3) ARCS ARE CONSERVED: an arc lives on a reading and every
+consumer sees a word's first reading only, so a candidate whose
+acceptance would demote a first reading carrying filled umbrae, or
+whose own carrier reading is not first, is refused (`_arcum_celaret`);
+before it, right arcs fell on every file while the changed cells were
+right more often than the claims they replaced — the two facts fit
+only that mechanism. The greedy also runs in two passes (an umbra
+changes hands only after its occupant lost its own cell), which by
+itself changed nothing. `praeoccupata` alternatives (the T34 rows)
+were needed: without them `Puella` never competes for the subject.
+Records go to the oracle as `DECRETUM` rows readable by the lattice.
+
+THE RUN (d), decoder on against off, nine treebanks. Right arcs UP on
+every file (Seneca +100, charters +38 / +32, Aquinas +149, Perseus +44,
+PROIEL +58, Dante +22), arcs up (+215 … +475: freed cells get heads),
+primary up or level (charters dev +13 words, Aquinas +9, Perseus +12),
+case up on every Latin file (Seneca +13 words, charters +12 / +42,
+Aquinas +34, Perseus +23, PROIEL +12), forced accuracy up everywhere
+(800→810, 750→770, 756→774 ‰ on the pinned files); ATTACHMENT PRECISION
+DOWN on six files because the added arcs are right less often than the
+old (Seneca 520→516, charters 445→430 / 468→449 ‰). The changed cells
+are right three to four times as often as what they replaced (Seneca
+123:33, Aquinas 210:44, charters 115:4); the forced tier is the most
+accurate (decision 40). LEVERS each alone: the plain rung off and the
+row minimum at 40 are washes; the verb-number bucket OFF raises case
+on every Latin file beyond the bucket-on run — the tranche b reading
+came true, Seneca's coin imposed on classical prose — so that bucket
+row is INACTIVE with the numbers as its cause and the table (383 rows)
+carries none of it; the oracle's inline law now reads ELECTA on `Puella
+bellum videt` with the object chosen by the position-by-number row.
+The lattice over the decoder's own 6,822 judged decisions finds no
+column of the row that predicts the runner-up being right: the next
+bucket is not in the row yet (candidates named: both sides' relations,
+the rung that answered each). R14 and R20 not re-measured this day
+(named). PINS: to adopt the decoder as default, the three pinned
+attachment-precision pins fall (−4 / −15 / −19 ‰) while right arcs,
+case, primary and forced accuracy rise — Fran's call.
+
 ## 8. Stage 6 — search
 
 Candidate lemmas of every word become an extra indexed column of the

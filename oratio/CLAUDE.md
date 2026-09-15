@@ -1007,6 +1007,32 @@ substring law over a report cannot see PLACEMENT — the reversed-rows
 plant stayed green until the law pinned each example to its group's
 line.
 
+**T38 (2026-09-15): THE DECODER** (spec §2 decisions 48, 57–59; §7
+"Design — T38" + as-built; plan `decretor-t38-plan.md`). The agreement
+step before it was found already built (the subject rules capture the
+verb's number; the lattice's verb-number signal is pro-drop, a tendency
+— decision 59). Built in four tranches: (a) declared CONTEXT — text
+`forma` per document from the paragraph layer, declared per treebank
+sentence from the ids (CIRCSE has 119 prose sentences; Perseus's test
+file is mostly verse), contest columns 34–35, `OratioContextus` into
+the resolver; (b) the TABLE `fixa/pondera.tsv` from `census/pondera.py`
+over the shippable corpora only, buckets as data rows carrying the
+lattice's verdict (`positio-numerus` dialect-conditioned, form
+refused; `directio-distantia` refused; `numerus-capitis` refused BY THE
+RUN — Seneca's coin imposed on classical prose); (c) the pass
+`_decretor` after the last stage: candidates = standing fillings +
+alternatives (`recusata`, `revocata`, `praeoccupata`), one rung per
+cell (mixed rungs compare mixed populations), reading contests never
+reach the trust rung (R19), greedy under one filling per umbra, one
+head, no cycle, the explicit-class law, and ARCS CONSERVED (a candidate
+that would hide an arc on a demoted reading is refused); write-back
+through the executor's paths; `habitus` slot (coactus | ordinatus |
+apertus); oracle `DECRETUM` rows and `DECRETOR` summary, `-decreta`;
+(d) the run: right arcs up on every file, case and forced up,
+attachment precision down where arcs were added. DEFAULT OFF
+(`ORATIO_DECRETOR=1`); `ORATIO_PONDERA_SINE=<bucket|regula|structura>`,
+`ORATIO_PONDERA_LIMEN=N`. Adoption = Fran's pin decision.
+
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
 `latina.h` shadowing `include/latina.h` in the nexus sweep (first-wins
