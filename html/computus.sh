@@ -1,0 +1,34 @@
+#!/bin/bash
+# html/computus.sh - imago memoriae et temporis parseris HTML (gemellus
+# silva/computus.sh; RP par. 11) - semita MATERIAE per clientem quintum
+#
+# usus: ./html/computus.sh <plagula.html> [-machina] [-iter N]
+#
+# Obiecta html/build/*.o poscit (./html/compile_probationes.sh primum) -
+# ut materia/shim_probare.sh; binaria probationum (sine .o) non nectit.
+set -u
+HTML_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RADIX_DIR="$(cd "$HTML_DIR/.." && pwd)"
+MATERIA_DIR="$RADIX_DIR/materia"
+BUILD="$HTML_DIR/build"
+cd "$RADIX_DIR"
+source "$RADIX_DIR/tools/vexilla.sh"
+
+OBIECTA=$(ls "$BUILD"/*.o 2>/dev/null | grep -v -E "/probatio_")
+if [ -z "$OBIECTA" ]; then
+    echo "DEEST: html/build/*.o - curre ./html/compile_probationes.sh primum" >&2
+    exit 2
+fi
+BIN="$BUILD/computus"
+SRC="$HTML_DIR/instrumenta/computus.c"
+recens=""
+if [ -f "$BIN" ]; then
+    recens="$(find "$BUILD" -name '*.o' -newer "$BIN" 2>/dev/null | head -1)"
+fi
+if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$recens" ]; then
+    echo "  [computus] html" >&2
+    clang "${VEXILLA_C89[@]}" -I"$RADIX_DIR/include" -I"$MATERIA_DIR/fontes" \
+        -I"$HTML_DIR/fontes" -I"$HTML_DIR/probationes" \
+        "$SRC" $OBIECTA -o "$BIN" || exit 1
+fi
+exec "$BIN" "$@"

@@ -674,14 +674,14 @@ silva.commissio("html: porta reservationis (lector elementa ignota RECUSAT, attr
 - Modify: `pythonica/silva.py` (`PORTAE`, `FORMAE`, the mensor `praef`
   dict, `SUITAE`, `metiri`'s client-by-suffix)
 
-- [ ] **Step 1: Write the failing computus gate** — transcribe
+- [x] **Step 1: Write the failing computus gate** — transcribe
   `probatio_css_computus.c`: corpus = the four html fixtures, the same
   eleven deterministic columns, golden `basis.tsv`, `COMPUTUS_SCRIBERE=1`
   regenerates (a named cause in the commit).
 
-- [ ] **Step 2: Run and verify it fails** — no `html_computus` yet.
+- [x] **Step 2: Run and verify it fails** — no `html_computus` yet.
 
-- [ ] **Step 3: Implement** — `html_computus_metiri(fons, mensura,
+- [x] **Step 3: Implement** — `html_computus_metiri(fons, mensura,
   &exitus)` = css's twin (`HtmlComputus` with the same fields; parse in
   its own piscina with `HTML_COMPUTUS_ALVEUS_INITIUM`; emit; STML write /
   read / compare in a second piscina; `clock()` ms). `html/computus.sh`
@@ -689,7 +689,7 @@ silva.commissio("html: porta reservationis (lector elementa ignota RECUSAT, attr
   shape) from the css/md scripts. Generate the golden once with
   `COMPUTUS_SCRIBERE=1`, read it, commit it.
 
-- [ ] **Step 4: Register in pythonica** — `PORTAE['html'] =
+- [x] **Step 4: Register in pythonica** — `PORTAE['html'] =
   (['./html/compile_probationes.sh'], r'HTML PROBATIONES: \d+/\d+')`;
   `FORMAE['html'] = 'suita'`; the mensor `praef` dict gains
   `'html': 'html.'`; `SUITAE['html'] = ('html/probationes',
@@ -697,9 +697,9 @@ silva.commissio("html: porta reservationis (lector elementa ignota RECUSAT, attr
   `silva.porta('html')` from Python must run the suite and parse the
   banner; `./pythonica/probare.sh` stays green.
 
-- [ ] **Step 5: Plant** — edit one `nodi` count in `basis.tsv` → red; revert.
+- [x] **Step 5: Plant** — edit one `nodi` count in `basis.tsv` → red; revert.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("html: computus gemellus (aurum fixa/computus/basis.tsv), instrumenta computus.sh/arbor.sh, registratio pythonica (PORTAE/FORMAE/SUITAE/metiri) (rubra nata: aurum mutatum)",

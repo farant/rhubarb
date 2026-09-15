@@ -2421,7 +2421,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         tot = _totum_actorum(acta)
         if tot is None:
             praef = {'radix': '', 'silva': 'silva.', 'css': 'css.',
-                     'materia': 'materia.', 'md': 'md.',
+                     'materia': 'materia.', 'md': 'md.', 'html': 'html.',
                      'briar': 'briar.',
                      'oratio': 'oratio.'}.get(nomen)
             if praef is not None:
@@ -3124,7 +3124,8 @@ def registrum_coquere(via, scribere=False):
 def metiri(via, n=7, nudum=False):
     """computus min-of-n (singuli +-X%): parsare/lexare ms, phases,
     allocationes, usus - pro A/B optimizationum. Instrumentum ex
-    suffixo: .css -> css/computus.sh, .md -> md/computus.sh, .txt ->
+    suffixo: .css -> css/computus.sh, .md -> md/computus.sh, .html ->
+    html/computus.sh, .txt ->
     oratio/computus.sh (semita
     materiae; phases emittendi/arbor_scribendi/arbor_legendi/comparandi),
     aliter silva/computus.sh (lex/expansio/glr/commissio). Columnae per
@@ -3132,6 +3133,7 @@ def metiri(via, n=7, nudum=False):
     ordo TSV crudus."""
     cliens = ('css' if via.endswith('.css')
               else 'md' if via.endswith('.md')
+              else 'html' if via.endswith('.html')
               else 'oratio' if via.endswith('.txt') else None)
     best = None
     for _ in range(n):

@@ -109,8 +109,22 @@ faithful, owns raw text and RCDATA — the builder never tells it anything).
   STML projection is quadratic in depth (2,000 deep = 56 MB), recorded
   not pinned. H6's gate also gained the direct emission of the re-read
   tree against the source, closing the chain in one assertion.
-- Next: H9 computus twin + instruments + the rest of the pythonica
-  registration.
+- **H9 (2026-09-15):** `html_computus` (css's twin field for field:
+  parse in its own arena, emit, STML write/read, comparator, `clock()`
+  ms), instruments `./html/computus.sh <x.html> [-machina] [-iter N]`
+  and `./html/arbor.sh <x.html> [-tacitus]` (projection to stdout; both
+  need `html/build/*.o` from the runner), gate `probatio_html_computus`
+  with the golden `html/probationes/fixa/computus/basis.tsv` over the
+  four fixtures (deterministic columns only; `COMPUTUS_SCRIBERE=1` + a
+  named cause regenerates; born with cause "nativitas portae H9").
+  pythonica: mensor prefix `html.`, `silva.metiri('x.html', n)` reads
+  the html bench by column title. First reading, villa page: parse
+  0.23 ms, STML write 1.96 + read 2.34 ms — the round trip is ~19× the
+  parse (css saw 30×), same shape. The 200-deep fixture: 3,475 bytes →
+  996,225 STML, write 12–36 ms. Plant: a golden `nodi` count edited →
+  red on the named column.
+- Next: H10 md's rendered HTML through the parser (runner compiles
+  `md/fontes/*.c`).
 
 ## The registry is generated
 
