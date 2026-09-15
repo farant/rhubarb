@@ -2059,9 +2059,17 @@ _sententiam_resolvere_gradu (
     }
     oratio_stml_consilium_ornatum(&consilium, cursus->ratum, &ornatus,
         cursus->lingua);
-    scriptura = materia_arbor_scribere_nodum(scratch, sententia,
+    /* ARBOR TRADITA (2026-09-15, desideratum materiae 01M24Z4Q5Y (c)):
+     * proiectio sententiae ut arbor STML a scriptore structa accipitur
+     * - textus nec scribitur nec legitur (scriptura + lectio proiectionis
+     * = XXXIV-XLIII % resolutionis, spica eiusdem diei). Internamentum
+     * IDEM regulis: machina exemplarium identitates internatas comparat;
+     * internamentum alienum regulas omnes mutas faceret (culpa plantata
+     * nativitatis). */
+    consilium.intern = cursus->intern;
+    scriptura = materia_arbor_proicere_nodum(scratch, sententia,
         &consilium);
-    si (!scriptura.successus)
+    si (!scriptura.successus || scriptura.arbor == NIHIL)
     {
         si (cursus->census != NIHIL)
         {
@@ -2070,9 +2078,10 @@ _sententiam_resolvere_gradu (
         piscina_destruere(scratch);
         redde VERUM;
     }
-        /* compositio: proiectio + regulae primae N HUIUS gradus, lineis
-     * novis divisae */
-    mensura = scriptura.textus.mensura + I;
+    /* compositio: regulae primae N HUIUS gradus solae, lineis novis
+     * divisae; proiectio arbori lectae PRAEPONITUR (ordo idem ac textus
+     * compositus olim: proiectio prima, regulae deinde) */
+    mensura = ZEPHYRUM;
     per (k = ZEPHYRUM; k < regulae_numerus; k++)
     {
         constans OratioRegula* r =
@@ -2085,22 +2094,21 @@ _sententiam_resolvere_gradu (
         }
         mensura = mensura + r->textus.mensura + I;
     }
-
+    si (mensura == ZEPHYRUM)
+    {
+        piscina_destruere(scratch);   /* gradus sine regulis: nihil agendum */
+        redde VERUM;
+    }
     textus = (character*)piscina_allocare(scratch,
-        (memoriae_index)mensura
-        + I);
+        (memoriae_index)mensura + I);
     si (textus == NIHIL)
     {
         piscina_destruere(scratch);
         redde FALSUM;
     }
-    memcpy(textus, scriptura.textus.datum,
-        (size_t)scriptura.textus.mensura);
-    mensura          = scriptura.textus.mensura;
-    textus[mensura]  = '\n';
-    mensura          = mensura + I;
-        per (k = ZEPHYRUM; k < regulae_numerus; k++)
-        {
+    mensura = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < regulae_numerus; k++)
+    {
         constans OratioRegula* r =
             (constans OratioRegula*)xar_obtinere(
             cursus->programma->regulae, k);
@@ -2111,15 +2119,23 @@ _sententiam_resolvere_gradu (
         }
         memcpy(textus + mensura, r->textus.datum,
             (size_t)r->textus.mensura);
-
         mensura          = mensura + r->textus.mensura;
         textus[mensura]  = '\n';
         mensura          = mensura + I;
-        }
+    }
     textus[mensura]  = ZEPHYRUM;
     fons             = _chorda((i8*)textus, mensura);
     lectio           = stml_legere(fons, scratch, cursus->intern);
     si (!lectio.successus || lectio.radix == NIHIL)
+    {
+        si (cursus->census != NIHIL)
+        {
+            cursus->census->fractae = cursus->census->fractae + I;
+        }
+        piscina_destruere(scratch);
+        redde VERUM;
+    }
+    si (!stml_praeponere(lectio.radix, scriptura.arbor, scratch))
     {
         si (cursus->census != NIHIL)
         {
@@ -2269,17 +2285,17 @@ _sententiam_resolvere_gradu (
         }
         per (o = ZEPHYRUM; o < xar_numerus(ordines); o++)
         {
-                        StmlNodus* ordo;
-                              i32  v;
-                              i32  a;
-                              i32  u;
-                              i32  w;
-                              i32  b;
+                                             StmlNodus* ordo;
+                                                   i32  v;
+                                                   i32  a;
+                                                   i32  u;
+                                                   i32  w;
+                                                   i32  b;
                                           MateriaNodus* umbra;
-                         Impletio* cella;
-                              s32  relatio;
-                              b32  emendare_v;
-                              b32  emendare_w;
+                                              Impletio* cella;
+                                                   s32  relatio;
+                                                   b32  emendare_v;
+                                                   b32  emendare_w;
 
 
             ordo = *(StmlNodus**)xar_obtinere(ordines, o);
@@ -2785,7 +2801,7 @@ _sententiam_resolvere_gradu (
     /* permutationes: analysis praelata prima, ceterae ordine suo */
     per (k = ZEPHYRUM; k < ne; k++)
     {
-                MateriaNodus* vocabulum;
+                 MateriaNodus* vocabulum;
         constans MateriaValor* analyses;
                           i32  n;
                           i32* ordo;

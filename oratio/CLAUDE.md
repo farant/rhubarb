@@ -1057,6 +1057,17 @@ file or a declaration edit without `-scribere` goes red with the first
 divergent line). `ORATIO_GENUS_ANALYSIS_PRIMUM/ULTIMUM` are `#define`
 aliases in the hand header.
 
+**ARBOR TRADITA (2026-09-15).** Each resolution stage takes the
+sentence's STML projection as the TREE materia's writer builds
+(`materia_arbor_proicere_nodum`), parses only the stage's rule text,
+prepends the projection and expands — no text is written or read
+(measured first: write + projection parse were 34–43 % of resolution,
+rule parsing 4 %, expansion 52–60 %; table in the resolver worklog).
+INTERN LAW: `consilium.intern = cursus->intern` — projection and rules
+in one intern, else every rule is mute (planted red). Rows of all
+treebanks byte-identical to the old path. Named next: rows naming
+nodes by anchor instead of ordinal; a per-rule probe of the expansion.
+
 **Index defect and lint hardening (2026-09-07).** The pythonica
 gate's red `usus: sedes definitionis` was a briar fixture's truncated
 `latina.h` shadowing `include/latina.h` in the nexus sweep (first-wins

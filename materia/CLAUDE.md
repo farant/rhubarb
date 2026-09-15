@@ -71,6 +71,19 @@ unwritten locus in the comparator; in memory it stays written, so a
 client can tell "revoked" from "never set". Refusing it silently
 dropped oratio sentences out of later resolution stages.
 
+## Arbor tradita (2026-09-15)
+
+**The writer builds the STML node tree before it writes bytes; a
+client that runs STML patterns over the projection can take the tree
+and skip the text.** `materia_arbor_proicere_nodum` returns it in
+`MateriaArborScriptura.arbor` (last field; `scribere_nodum` fills it
+too). Law: serializing that tree equals the writer's bytes. INTERN
+LAW for pattern clients: build the projection in the SAME intern as
+the patterns (`consilium.intern`), or the machine's interned identity
+comparison makes every pattern mute. Oratio was the first consumer
+(resolution −40 %, rows byte-identical); measured in
+`oratio/fontes/oratio_resolutio.worklog.md` (2026-09-15).
+
 ## The whitespace contract (2026-08-28)
 
 **A `VERBATIM` trivium whose value is whitespace-only projects to

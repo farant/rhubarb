@@ -448,3 +448,34 @@ the lever it would point at is a LEANER projection per stage, which
 shrinks write, parse and expansion together. (4) The decoder and the
 later laws are noise (≤ 1 %): C passes over materia are cheap; the
 cost is the STML detour and the matcher, nothing else.
+
+## 2026-09-15 — step one built: the projection is handed over as a tree
+
+`_sententiam_resolvere_gradu` no longer serializes the sentence to
+STML text and re-parses it. Materia's writer already builds the STML
+node tree before it writes bytes; `materia_arbor_proicere_nodum` (new,
+same body as `scribere_nodum` without the final `stml_scribere`)
+returns that tree in `Scriptura.arbor` (new last field, also filled by
+`scribere_nodum`). The stage now parses only the stage's rule text,
+prepends the projection element to the parsed rule document
+(`stml_praeponere`) and expands as before; a stage without rules is
+skipped (the old path expanded a rule-less document to nothing).
+
+THE INTERN LAW: the pattern machine compares interned identities, so
+the projection must be built in the SAME intern as the rules —
+`consilium.intern = cursus->intern`. With a foreign intern every rule
+is silently mute (planted: the resolutio gate goes red). This is the
+one new invariant the change introduces, and the reason the writer's
+consilium exposes `intern` at all.
+
+Acceptance: `-machina -decreta -lites` rows of the seven treebanks
+(three pinned, four shelf) BYTE-IDENTICAL to the text path's, so
+every pin and every contest is unchanged — a representational change
+that moved nothing. Perseus oracle run 7.1 s → 5.6 s wall (the
+resolution share fell by the ~40 % the spike predicted). Materia law:
+`stml_scribere(proicere(x).arbor)` equals `scribere_nodum(x).textus`
+byte for byte; plant (the inner root handed over instead of the
+envelope) red. Rule parsing per stage stays (4 %, measured): parsing
+the rules once would need a cache outside the per-call cursus and is
+not worth its own step. Step two (rows carry node identity instead
+of ordinals) and the per-rule expansion probe remain named.

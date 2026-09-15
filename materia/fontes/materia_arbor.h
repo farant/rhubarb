@@ -88,6 +88,13 @@ nomen structura {
      constans MateriaNodus* sedes;
                        Xar* sedes_valorum;   /* MateriaArborSedes */
         MateriaArborCensus  census;
+    /* ARBOR TRADITA (2026-09-15): elementum involucri quod scriptor
+     * struxit antequam textum scriberet - consumens qui exemplaria
+     * STML super proiectionem applicat eam directe accipit, sine
+     * scriptura et lectione (oratio: XXXIV-XLIII % resolutionis).
+     * Campus ULTIMUS. Per materia_arbor_proicere_nodum textus vacuus
+     * manet. */
+                StmlNodus* arbor;
 } MateriaArborScriptura;
 
 
@@ -313,6 +320,19 @@ materia_arbor_consilium_nudum (
 
 MateriaArborScriptura
 materia_arbor_scribere_nodum (
+                           Piscina* piscina,
+             constans MateriaNodus* nodus,
+    constans MateriaArborConsilium* consilium);
+
+/* Arborem STML proiectionis TRADERE sine textu: idem ambulatio,
+ * ornatus, ancorae et custodiae quae scribere_nodum, sed textus non
+ * scribitur - fructus.arbor est elementum involucri (stml_scribere
+ * super eo == scribere_nodum().textus, lex portae). Tituli et valores
+ * in consilium->intern internantur: consumens qui exemplaria super
+ * arborem applicat internamentum IDEM regulis dare debet (machina
+ * identitates internatas comparat). */
+MateriaArborScriptura
+materia_arbor_proicere_nodum (
                            Piscina* piscina,
              constans MateriaNodus* nodus,
     constans MateriaArborConsilium* consilium);

@@ -441,6 +441,28 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
             (size_t)s1.textus.mensura) == ZEPHYRUM);
 
+        /* ARBOR TRADITA (2026-09-15): proicere_nodum arborem EANDEM
+         * quam scribere_nodum serializat reddit, sine textu -
+         * stml_scribere super ea == textus scriptoris octetim;
+         * scribere_nodum arborem suam quoque fert (campus ultimus) */
+        {
+            MateriaArborScriptura p = materia_arbor_proicere_nodum(
+                piscina, n, &c);
+            chorda t;
+
+            imprimere("\n--- Probans arborem traditam ---\n");
+            CREDO_VERUM (p.successus);
+            CREDO_NON_NIHIL (p.arbor);
+            CREDO_AEQUALIS_I32 (p.textus.mensura, ZEPHYRUM);
+            CREDO_NON_NIHIL (s1.arbor);
+            t = stml_scribere(p.arbor, piscina, VERUM);
+            CREDO_AEQUALIS_I32 (t.mensura, s1.textus.mensura);
+            CREDO_VERUM (memcmp(t.datum, s1.textus.datum,
+                (size_t)s1.textus.mensura) == ZEPHYRUM);
+            CREDO_VERUM (chorda_aequalis_literis(*p.arbor->titulus,
+                MATERIA_ARBOR_TAG_ENVOLUCRI));
+        }
+
         /* CIRCUITUS SECUNDUS */
         lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus, &c,
             &vitium);

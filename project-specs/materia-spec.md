@@ -549,6 +549,22 @@ and the instrument's compare mode. Titles admit `_` as well as `-`
 (css's `tok_nomen` loci). A thin Python wrapper
 (`silva.registrum_coquere`) shells to the C89 instrument.
 
+**Arbor tradita (2026-09-15, wish `01M24Z4Q5Y` point c, step one).**
+The writer builds the STML node tree before serializing;
+`materia_arbor_proicere_nodum` hands that tree over
+(`MateriaArborScriptura.arbor`, last field, also filled by
+`scribere_nodum`), so a client that applies STML patterns to the
+projection skips the text round trip. Law: `stml_scribere` over the
+handed-over tree equals the writer's bytes. Intern law: the client
+must build the projection in the same intern as its patterns.
+Measured on oratio: write + projection parse were 34–43 % of
+resolution (rule parsing 4 %, expansion 52–60 %); after the change
+the rows of seven treebanks are byte-identical and the Perseus oracle
+run fell 7.1 → 5.6 s. Still open under (c): rows naming nodes by
+anchor rather than ordinal (identity across the seam), and the
+expansion's share, to be probed per rule before the projection's
+shape is touched.
+
 
 ---
 

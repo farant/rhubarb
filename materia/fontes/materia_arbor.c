@@ -1784,8 +1784,11 @@ materia_arbor_consilium_nudum (
     consilium->grammatica  = grammatica;
 }
 
-MateriaArborScriptura
-materia_arbor_scribere_nodum (
+/* Corpus commune scriptoris: ambulatio, involucrum, custodiae; arbor
+ * in fructus.arbor, textus NON scriptus (scribere_nodum eum addit,
+ * proicere_nodum non). */
+interior MateriaArborScriptura
+_arborem_struere (
                            Piscina* piscina,
              constans MateriaNodus* nodus,
     constans MateriaArborConsilium* consilium)
@@ -1804,6 +1807,7 @@ materia_arbor_scribere_nodum (
     fructus.sedes                     = NIHIL;
     fructus.sedes_valorum             = NIHIL;
     fructus.census.spatia_vocationes  = ZEPHYRUM;
+    fructus.arbor                     = NIHIL;
 
     si (   piscina == NIHIL || nodus == NIHIL || consilium == NIHIL
         || consilium->tabularium == NIHIL
@@ -1938,10 +1942,35 @@ materia_arbor_scribere_nodum (
         }
     }
 
-    fructus.textus     = stml_scribere(involucrum, piscina, VERUM);
+    fructus.arbor      = involucrum;
     fructus.census     = st.census;
     fructus.successus  = VERUM;
     redde fructus;
+}
+
+MateriaArborScriptura
+materia_arbor_scribere_nodum (
+                           Piscina* piscina,
+             constans MateriaNodus* nodus,
+    constans MateriaArborConsilium* consilium)
+{
+    MateriaArborScriptura fructus = _arborem_struere(piscina, nodus,
+        consilium);
+
+    si (fructus.successus)
+    {
+        fructus.textus = stml_scribere(fructus.arbor, piscina, VERUM);
+    }
+    redde fructus;
+}
+
+MateriaArborScriptura
+materia_arbor_proicere_nodum (
+                           Piscina* piscina,
+             constans MateriaNodus* nodus,
+    constans MateriaArborConsilium* consilium)
+{
+    redde _arborem_struere(piscina, nodus, consilium);
 }
 
 

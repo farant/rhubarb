@@ -2163,3 +2163,39 @@ each generated header went red at `rancor.recens`, green on revert.
 `silva.registrum_coquere` is the thin Python face (pythonica law:
 oratio declaration recens rc 0; bad species rc 2). Worklog has the
 detail. Point (c) of the oratio wish (re-projection) stays open.
+
+## 2026-09-15 — arbor tradita: the writer's STML tree handed to the client (wish c, step one)
+
+INTENTIO: oratio re-projected every sentence to STML TEXT per stage
+and parsed it back for the pattern machine. A spike (temporary
+clocks, reverted; table in oratio_resolutio.worklog.md) put write +
+projection parse at 34–43 % of resolution, rule parsing at 4 %, the
+expansion at 52–60 %. The writer already builds the STML node tree
+before serializing: the text was a detour.
+
+RELATIO: `materia_arbor_proicere_nodum` returns the envelope element
+the writer built (`MateriaArborScriptura.arbor`, new LAST field;
+`scribere_nodum` fills it too and then serializes). Body shared
+(`_arborem_struere`): same walk, ornaments, anchors, reference
+guards. Law: `stml_scribere(proicere(x).arbor, pulchrum)` ==
+`scribere_nodum(x).textus` byte for byte; plant (inner root instead
+of envelope) red, green on revert. Oratio's stage loop takes the tree,
+parses only the stage's rules, prepends the projection, expands as
+before; INTERN LAW: projection and rules in the same intern or every
+rule is mute (planted red in the resolutio gate). Rows of seven
+treebanks byte-identical to the text path; Perseus oracle 7.1 → 5.6 s.
+NEXT for (c): step two (rows name nodes by anchor, not ordinal); a
+per-rule probe of the expansion before touching the projection's
+shape (lever = leaner projection per stage).
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: temporary clock probe under an env var (reverted, never
+committed); `-machina -decreta -lites` snapshots of seven treebanks as
+the byte-identity oracle; silva.planta ×2; formator; examen.
+FRUCTUS: measuring before designing retired a lever I had already
+written down (rules parsed once, 4 %) and showed the detour for what
+it was; the acceptance test was a diff, not a judgment.
+ASPERITATES: the probe printed per sentence because the oracle calls
+the resolver per sentence (1.8 MB of output; the last block carries
+the totals) — a probe that prints at "the end of the run" must know
+what the run is.
