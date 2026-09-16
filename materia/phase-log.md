@@ -2352,3 +2352,42 @@ probatio; the crash report under DiagnosticReports is faster. (6)
 `grep -c` without `-a` counts zero in a NUL file. (7) The identifier
 lint refused `frameset`, `rcdata`, `math`, `numericam`, `titularis` —
 each a renamed identifier, the glossary untouched.
+
+**RELATIO, sequela II (2026-09-15/16): O7a, the corpus gate, O7b —
+`ef802131`, `974da919`, `fef160d9`.** The design turn produced three
+annotations on the html registry and no substrate change. O7a
+`synthesis:index`: what HTML5 invents (html/head/body, tbody/tr/
+colgroup) is a token-less element with an index, the emitter walks
+through it, the cooked view prints it; the oracle's unwrap rule
+retired, a fragment entry point added (the context is the frame under
+the stack, and foreign breakout never fires in a fragment — x/net's
+`!p.fragment`); 1,195 → 1,299. Fran asked whether the whole html5lib
+corpus went through the byte round trip; it did not, so
+`probatio_html_circuitus` now runs all 1,708 cases through direct
+emission (all identical) and the STML cycle (1,672 identical, 36 NUL
+refusals pinned BY CAUSE against 01M2KPJ0HW). O7b `sedes:referentia`
+on four genera: the DOM parent of a node whose bytes lie elsewhere,
+printed before the containing table or after everything; table modes
+per frame, foster parenting by annotation, `</body>`/`</html>` now
+close (O5 reversed) with the element open at that moment as the sedes
+for later content, head content after `</head>`; 1,299 → 1,398 (82 %),
+fragments 152/184, zero regressions. html is the first client after
+oratio to declare a reference locus; materia's `id`/`#nodN` machinery
+carried every reference through the corpus unchanged.
+
+Instrument debrief II: (1) the corpus gate refused O7b's first cut one
+commit after its birth — the invented body's closing tokens were
+dropped, the oracle rewarded the matching tree, the byte law did not;
+a tree oracle alone would have shipped it. (2) A diff of failing sets
+loses one case per file when credo's dots prefix the first failure
+line — strip, then COUNT against the pin before trusting a diff. (3)
+A case can pass by accident of the view (foreign-fragment #48: the
+cooked view painted the context namespace over an HTML tree); when
+the builder gains the truth the accident becomes an honest failure —
+read the reference implementation before "fixing" it. (4) A per-frame
+index for every per-token question, never a stack walk (three more
+this arc). (5) A mode may only move forward: accepting `<frameset>`
+had reset it to "in body" and silently lost the post-body sedes.
+(6) A gate that pins REFUSALS by cause turns a substrate limit into a
+rising pin instead of a hidden skip. Next: O7c, the adoption agency
+and `exemplar`.
