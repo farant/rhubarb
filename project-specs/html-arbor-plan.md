@@ -962,13 +962,23 @@ tasks, one commit each, under the same Global Constraints.
   PERFECT raw token (no closing tag can be missing). Eight root-suite
   lexer cases. **1,086 → 1,112**, fragments 82 → 83. Plant: `xmp`
   removed → root lexer test red.
-- [ ] **O5 — tokens the DOM ignores** (Fran, 2026-09-15: keep pushing
-  conformance — the cheap chunks first): one mechanism for frameset
-  modes (58), select modes (33), a doctype after content (5),
-  duplicate `html`/`head`/`body` and content after `</body>` (23):
-  the ignored token goes into an `elementum-malum`, which becomes
-  by wording "tokens the DOM keeps no node for" (§11.3); the cooked
-  view already drops it. Then template (39).
+- [x] **O5 — tokens the DOM ignores** (2026-09-15): one mechanism.
+  Document flags (`html_visum head_visum body_visum compages_visa
+  contentum_visum compages_licet`) and two per-frame markers
+  (`selectum`, `intra_compagem`) in `ScopiGradus`; tables
+  `COMPAGIS_INNOCUA` (what keeps frameset-ok), `COMPAGIS_PERMISSA`,
+  `SELECT_PERMISSA`, `SELECT_CLAUSURAE`. Ignored start tags become a
+  pending `elementum-malum` (attributes and `>` follow by the H8
+  paths); `</body>` and `</html>` never close their element (HTML5
+  only switches mode) and go to a malum, so the body stays open to
+  EOF and later content lands inside it; a doctype after content and
+  non-blank text in frameset modes are one-token mala; `input`/
+  `keygen`/`textarea` close an open `select`. Arbor gate: seven cases.
+  Real pages gained two nodes each (their `</body></html>`): computus
+  golden regenerated with that cause. **1,112 → 1,189**, fragments
+  83 → 85. Plant: a repeated `<html>` accepted → arbor red. §11.3
+  wording: the malum is "tokens the DOM keeps no node for".
+- [ ] **O6 — template** (39): `content` model, table interplay.
 
 ## Self-Review
 

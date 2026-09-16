@@ -46,6 +46,9 @@ nomen structura {
     /* spatium proprium et liberorum (O2b-6): eruptio, se-claudens */
     HtmlAlienum proprium;
     HtmlAlienum liberorum;
+    /* O5: index select proximi visibilis (-I nullum); intra frameset */
+    s32 selectum;
+    b32 intra_compagem;
 } ScopiGradus;
 
 nomen structura {
@@ -62,6 +65,16 @@ nomen structura {
             MateriaNodus* attributum;
             MateriaNodus* clausura;
             MateriaNodus* malum;
+    /* O5 (2026-09-15) - modi neglegendi: lexemata quae DOM nodo non
+     * retinet in elementum-malum eunt (octeti manent, visio cocta ea
+     * omittit). html/head/body iterata, frameset post contentum,
+     * doctype post contentum. compages_licet = vexillum 'frameset-ok'. */
+                     b32 html_visum;
+                     b32 head_visum;
+                     b32 body_visum;
+                     b32 compages_visa;
+                     b32 contentum_visum;
+                     b32 compages_licet;
 } HtmlParsura;
 
 
@@ -645,12 +658,14 @@ _scopi_gradus (
     }
     alioquin
     {
-        infra.p             = (s32)-I;
-        infra.membri        = (s32)-I;
-        infra.definitionis  = (s32)-I;
-        infra.bullae        = (s32)-I;
-        infra.proprium      = HTML_ALIENUM_NULLUM;
-        infra.liberorum     = HTML_ALIENUM_NULLUM;
+        infra.p               = (s32)-I;
+        infra.membri          = (s32)-I;
+        infra.definitionis    = (s32)-I;
+        infra.bullae          = (s32)-I;
+        infra.proprium        = HTML_ALIENUM_NULLUM;
+        infra.liberorum       = HTML_ALIENUM_NULLUM;
+        infra.selectum        = (s32)-I;
+        infra.intra_compagem  = FALSUM;
     }
     si (_titulus_est(titulus, "p"))
     {
@@ -706,6 +721,10 @@ _scopi_gradus (
     g.proprium  = html_alienum_proprium(infra.proprium, infra.liberorum,
         titulus);
     g.liberorum = html_alienum_liberorum(g.proprium, titulus, NIHIL);
+    g.selectum = _titulus_est(titulus,
+        "select") ? (s32)k : infra.selectum;
+    g.intra_compagem = (b32)(_titulus_est(titulus, "frameset")
+                             || infra.intra_compagem);
     redde g;
 }
 
@@ -811,6 +830,133 @@ _claudit (
  * Lexemata singula
  * ================================================== */
 
+
+/* ==================================================
+ * Modi neglegendi (O5): quae DOM nodo non retinet
+ * ================================================== */
+
+/* WHATWG: tags quae vexillum 'frameset-ok' NON exstinguunt */
+hic_manens constans character* constans COMPAGIS_INNOCUA[] = {
+    "html", "head", "body", "frameset", "frame", "noframes", "base",
+    "basefont", "bgsound", "link", "meta", "title", "style", "script",
+    "noscript", "template"
+};
+/* in frameset / post frameset: tags apertionis permissa */
+hic_manens constans character* constans COMPAGIS_PERMISSA[] = {
+    "frameset", "frame", "noframes"
+};
+/* 'in select': tags apertionis permissa (input/keygen/textarea select
+ * claudunt et normaliter tractantur; select ipsum a se clauditur) */
+hic_manens constans character* constans SELECT_PERMISSA[] = {
+    "option", "optgroup", "hr", "script", "template", "select", "input",
+    "keygen", "textarea"
+};
+hic_manens constans character* constans SELECT_CLAUSURAE[] = {
+    "option", "optgroup", "select", "template"
+};
+
+interior constans ScopiGradus*
+_vertex_gradus (
+    constans HtmlParsura* p)
+{
+    si (p->profunditas == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    redde (constans ScopiGradus*)xar_obtinere(p->scopi,
+        p->profunditas - I);
+}
+
+/* Tag apertionis quod DOM neglegit (spec 'parse error, ignore the
+ * token') -> malum. */
+interior b32
+_tag_neglegendum (
+    constans HtmlParsura* p,
+                  chorda  titulus)
+{
+    constans ScopiGradus* vertex = _vertex_gradus(p);
+                     b32  intra_compagem = (b32)(vertex != NIHIL
+                                                 && vertex->intra_compagem);
+
+    si (_titulus_est(titulus, "html"))
+    {
+        redde p->html_visum;
+    }
+    si (_titulus_est(titulus, "head"))
+    {
+        redde (b32)(p->head_visum || p->body_visum
+            || p->compages_visa);
+    }
+    si (_titulus_est(titulus, "body"))
+    {
+        redde (b32)(p->body_visum || p->compages_visa);
+    }
+    si (_titulus_est(titulus, "frameset") && !intra_compagem)
+    {
+        redde (b32)!p->compages_licet;
+    }
+    si (intra_compagem || p->compages_visa)
+    {
+        redde (b32)!_in_tabula(titulus, COMPAGIS_PERMISSA,
+            TABULAE_NUMERUS(COMPAGIS_PERMISSA));
+    }
+    si (vertex != NIHIL && vertex->selectum >= ZEPHYRUM)
+    {
+        redde (b32)!_in_tabula(titulus, SELECT_PERMISSA,
+            TABULAE_NUMERUS(SELECT_PERMISSA));
+    }
+    redde FALSUM;
+}
+
+/* Vexilla documenti post tag apertionis acceptum */
+interior vacuum
+_vexilla_renovare (
+    HtmlParsura* p,
+         chorda  titulus)
+{
+    si (_titulus_est(titulus, "html"))
+    {
+        p->html_visum = VERUM;
+    }
+    alioquin si (_titulus_est(titulus, "head"))
+    {
+        p->head_visum = VERUM;
+    }
+    alioquin si (_titulus_est(titulus, "body"))
+    {
+        p->body_visum = VERUM;
+    }
+    alioquin si (_titulus_est(titulus, "frameset"))
+    {
+        p->compages_visa = VERUM;
+    }
+    si (!_in_tabula(titulus, COMPAGIS_INNOCUA,
+            TABULAE_NUMERUS(COMPAGIS_INNOCUA)))
+    {
+        p->compages_licet = FALSUM;
+    }
+    p->contentum_visum = VERUM;
+}
+
+interior b32
+_textus_albus (
+    constans MateriaToken* token)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < token->valor.mensura; i++)
+    {
+        i8 c = token->valor.datum[i];
+
+        si (   c != ' ' && c != '\t' && c != '\n' && c != '\r'
+            && c != '\f')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 interior b32
 _aperturam_tractare (
      HtmlParsura* p,
@@ -821,6 +967,27 @@ _aperturam_tractare (
 
     _pendentia_claudere(p);
     titulus = _tag_titulus(token);
+
+    /* O5: tag neglectum -> malum pendens (attributa et '>' per vias
+     * H8 sequuntur; tag_apertum NIHIL manet) */
+    si (_tag_neglegendum(p, titulus))
+    {
+        redde _malum_addere(p, token);
+    }
+    /* 'in select': input/keygen/textarea select claudunt (spec), deinde
+     * tag normaliter */
+    {
+        constans ScopiGradus* vertex = _vertex_gradus(p);
+
+        si (   vertex != NIHIL && vertex->selectum >= ZEPHYRUM
+            && (_titulus_est(titulus, "input")
+                || _titulus_est(titulus, "keygen")
+                || _titulus_est(titulus, "textarea")))
+        {
+            p->profunditas = (i32)vertex->selectum;
+        }
+    }
+    _vexilla_renovare(p, titulus);
 
     /* clausurae per scopum (O2b-5), deinde vertex acervi dum tabula
      * id iubet */
@@ -992,6 +1159,22 @@ _clausuram_tractare (
     s32 k;
 
     _pendentia_claudere(p);
+    /* O5: </body> et </html> elementum NON claudunt (spec: modus 'after
+     * body' solum) - malum, corpus ad EOF apertum manet; in select tags
+     * clausurae aliena neglecta */
+    {
+        constans ScopiGradus* vertex   = _vertex_gradus(p);
+                      chorda  titulus  = _tag_titulus(token);
+
+        si (   _titulus_est(titulus, "body")
+            || _titulus_est(titulus, "html")
+            || (vertex != NIHIL && vertex->selectum >= ZEPHYRUM
+                && !_in_tabula(titulus, SELECT_CLAUSURAE,
+                    TABULAE_NUMERUS(SELECT_CLAUSURAE))))
+        {
+            redde _malum_addere(p, token);
+        }
+    }
     k = _apertum_invenire(p, _tag_titulus(token));
     si (k < ZEPHYRUM)
     {
@@ -1014,6 +1197,44 @@ _contentum_tractare (
 
     _pendentia_claudere(p);
     genus = _genus_contenti(token->genus);
+    /* O5: doctype post contentum et textus non albus in frameset
+     * neglecta -> malum unius lexematis */
+    {
+        constans ScopiGradus* vertex     = _vertex_gradus(p);
+                         b32  albus      = _textus_albus(token);
+                         b32  neglectum  = FALSUM;
+
+        si (genus == (s32)HTML_GENUS_DOCTYPE && p->contentum_visum)
+        {
+            neglectum = VERUM;
+        }
+        alioquin si (   (genus == (s32)HTML_GENUS_TEXTUS
+                         || genus == (s32)HTML_GENUS_REFERENTIA
+                         || genus == (s32)HTML_GENUS_CDATA)
+                     && !albus
+                     && ((vertex != NIHIL && vertex->intra_compagem)
+                         || p->compages_visa))
+        {
+            neglectum = VERUM;
+        }
+        si (neglectum)
+        {
+            si (!_malum_addere(p, token))
+            {
+                redde FALSUM;
+            }
+            p->malum = NIHIL;
+            redde VERUM;
+        }
+        si (   !albus
+            && (genus == (s32)HTML_GENUS_TEXTUS
+                || genus == (s32)HTML_GENUS_REFERENTIA
+                || genus == (s32)HTML_GENUS_CDATA))
+        {
+            p->contentum_visum  = VERUM;
+            p->compages_licet   = FALSUM;
+        }
+    }
     si (genus < ZEPHYRUM)
     {
         /* lexema ignotum - tabula nostra deficit; totalitas tamen */
@@ -1054,7 +1275,8 @@ html_arbor_parsare (
 
     /* ZEPHYRUM PRIMUM (vide html_ligator_incipere pro ratione). */
     memset(&p, ZEPHYRUM, magnitudo(HtmlParsura));
-    p.piscina = piscina;
+    p.piscina         = piscina;
+    p.compages_licet  = VERUM;
 
     /* PORTA ONERIS, politica degradationis B: recusatio hic vitium
      * TABULAE NOSTRAE nominat, non fontis. */

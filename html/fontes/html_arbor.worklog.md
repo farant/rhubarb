@@ -358,3 +358,30 @@ parser after html.
 O4 was the lexer's: four RAWTEXT names and a `plaintext` mode (see
 `lib/html_lexema.worklog.md`). Twenty-six cases rose; nothing in the
 builder or the cooked view moved.
+
+## 2026-09-15 — O5: tokens the DOM ignores; 1,112 → 1,189
+
+HTML5 says "parse error, ignore the token" in a dozen places: a
+second `<html>` or `<body>`, a `<head>` after the body began, a
+doctype after any content, a `<frameset>` once the frameset-ok flag
+is off, everything but frame/frameset/noframes inside a frameset,
+everything but options and a few others inside a `select`, and
+`</body>`/`</html>`, which never pop anything and only change mode.
+The byte law has one answer for all of them: the token still owns
+its bytes, so it goes into an `elementum-malum`, the genus that
+already meant "bytes the DOM keeps no node for" once `</x>` without
+a match lived there. The cooked view drops mala, so the html5lib
+trees line up. The pending-tag machinery from H8 did the rest for
+start tags: mark the tag ignored, and its attributes and `>` follow
+into the same malum.
+
+Two consequences worth knowing. `</body>` no longer closes the body
+element: it stays open to EOF with an absent `tok_clausura`, its
+`</body>` bytes sit in a malum child, and content after it lands
+inside the body, which is what browsers do. The two real pages in
+the computus golden therefore gained two nodes each. And a
+`<frameset>` after an empty `<body>` still mismatches: HTML5 removes
+the body element from the DOM, and a node whose bytes must stay
+cannot be removed — those few cases stay red by design.
+
+Seventy-seven cases rose: frameset, select, domjs-unsafe, tests1.

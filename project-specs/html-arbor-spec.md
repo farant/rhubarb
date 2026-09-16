@@ -517,6 +517,16 @@ The five structural genera of §4.1 do not exist. The `elementum-malum`
 genus covers exactly one case in v1: an end tag whose name is open
 nowhere on the stack (including `</br>`, which HTML5 rewrites to
 `<br>` — v1 keeps it malum, total and honest, named deviation).
+**Widened by O5 (2026-09-15) to its true meaning: the tokens the DOM
+keeps no node for.** Every place HTML5 says "parse error, ignore the
+token" lands here — a repeated `<html>`/`<head>`/`<body>`, a doctype
+after content, a `<frameset>` once frameset-ok is off, non-permitted
+tags and non-blank text inside a frameset, non-permitted tags and end
+tags inside a `select`, and `</body>`/`</html>`, which never pop (the
+body stays open to EOF with `tok_clausura` absent; content after
+`</body>` is inside it, as in browsers). The bytes stay where they
+are; the cooked view omits the malum. An ignored start tag becomes a
+PENDING malum, so its attributes and `>` join it by the H8 paths.
 Everything else the lexer emits maps to a content genus by lexer
 genus: `TEXTUS` → `textus`; `REFERENTIA` → `referentia`;
 `TEXTUS_CRUDUS` and `_IMPERFECTUS` → `textus-crudus`; `COMMENTARIUM`,
@@ -659,7 +669,19 @@ parity needs no new genus.
   element of the same name (ASCII case-insensitive, H1), implicitly
   closing everything above it (`<div><p>x</div>` closes `p` with
   absent `tok_clausura*`); no open element of that name → the end tag
-  and its `>` become one `elementum-malum`.
+  and its `>` become one `elementum-malum`. **O5:** `</body>` and
+  `</html>` never pop (malum); inside a `select` only `option optgroup
+  select template` end tags act; `input`/`keygen`/`textarea` start tags
+  close an open `select` first.
+- **Modes that ignore (O5, 2026-09-15):** document flags `html_visum
+  head_visum body_visum compages_visa contentum_visum compages_licet`
+  and per-frame `selectum`/`intra_compagem` decide which start tags,
+  doctypes and text the DOM ignores (tables `COMPAGIS_INNOCUA`,
+  `COMPAGIS_PERMISSA`, `SELECT_PERMISSA`, `SELECT_CLAUSURAE`); the
+  ignored token goes to a malum (§11.3). Not modelled: HTML5 REMOVES
+  an empty `body` when a `frameset` follows — a node whose bytes must
+  stay cannot be removed, so those cases stay red. Oracle 1,112 →
+  1,189.
 - **Raw text**: nothing — the lexer emits `TEXTUS_CRUDUS` after
   `script style title textarea`; the builder appends `textus-crudus`.
   **O4 (2026-09-15):** the lexer's set is WHATWG's whole RAWTEXT list

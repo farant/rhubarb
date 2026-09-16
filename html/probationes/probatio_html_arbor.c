@@ -600,6 +600,75 @@ principale (vacuum)
                 HTML_ELEMENTUM_LIBERI), I);
         }
 
+        /* O5: lexemata a DOM neglecta -> elementum-malum in loco */
+        imprimere("\n--- Probans doctype post contentum: malum ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "<p>x<!DOCTYPE html>y",
+            XX));
+        documentum = _parsare(piscina, "<p>x<!DOCTYPE html>y");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            III);
+        CREDO_AEQUALIS_S32 (
+            _liber(elementum, HTML_ELEMENTUM_LIBERI, I)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        imprimere("\n--- Probans '<html><html x>' iteratum ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "<html><html x=1>y",
+            XVII));
+        documentum = _parsare(piscina, "<html><html x=1>y");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (
+            _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        imprimere("\n--- Probans '<body></body>x' apertum ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "<body></body>x", XIV));
+        documentum = _parsare(piscina, "<body></body>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        imprimere("\n--- Probans frameset: neglecta ---\n");
+        CREDO_VERUM (_octetos_probare(piscina,
+            "<frameset><p>x<frame></frameset>", XXXII));
+        documentum = _parsare(piscina,
+            "<frameset><p>x<frame></frameset>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            III);
+        CREDO_AEQUALIS_S32 (
+            _liber(elementum, HTML_ELEMENTUM_LIBERI, I)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        /* frameset post contentum neglectum */
+        documentum = _parsare(piscina, "<p>x<frameset>y");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            III);
+        imprimere("\n--- Probans select: div neglectum ---\n");
+        documentum = _parsare(piscina,
+            "<select><div>a<option>b</select>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            III);
+        documentum = _parsare(piscina, "<select><input>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+
         imprimere("\n--- Probans tabulam: tr/td implicite ---\n");
         documentum = _parsare(piscina,
             "<table><tr><td>1<td>2<tr><td>3</table>");

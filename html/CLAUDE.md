@@ -35,8 +35,8 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   through the cooked view `html_coctum` against html5lib's expected
   trees, html/head/body unwrapped when the input never names them;
   RISING pin — 887 at birth, 930 after O2b-1, 985 after O2b-3, 1,047
-  after O2b-4, 1,054 after O2b-5, 1,086 after O2b-6, 1,112 after O4 —
-  of 1,700, fragments 83/184; `ORACULUM_OMNIA=1`,
+  after O2b-4, 1,054 after O2b-5, 1,086 after O2b-6, 1,112 after O4,
+  1,189 after O5 — of 1,700, fragments 85/184; `ORACULUM_OMNIA=1`,
   `ORACULUM_EXEMPLUM=tests1.dat:20`) · alienum (the shared SVG/MathML
   namespace tables `html_alienum`, 28). The runner compiles
   `materia/fontes` and `md/fontes` into `html/build/` — consumed,
@@ -76,10 +76,12 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   self-closing acknowledged in SVG/MathML, breakout; → 1,086) DONE.
   **Fran, 2026-09-15: keep pushing conformance** ("flesh out html
   pretty well while the tests are here"), cheap chunks first: O4
-  lexer raw-text set DONE (→ 1,112); next O5 tokens the DOM ignores
-  (frameset/select/doctype/duplicates → `elementum-malum`), template,
-  then the design turn on `clonatum`/`reinserendum` for the adoption
-  agency and table synthesis. O3 wild fixtures after. Candidate next
+  lexer raw-text set (→ 1,112) and O5 tokens the DOM ignores
+  (frameset/select modes, doctype after content, repeated
+  html/head/body, `</body>`/`</html>` → `elementum-malum`; → 1,189)
+  DONE; next O6 template, then the design turn on
+  `clonatum`/`reinserendum` for the adoption agency and table
+  synthesis. O3 wild fixtures after. Candidate next
   parser after html (Fran's research): bash scripts, before JS. Then O3 wild fixtures (one ask per
   page), O4 the lexer's raw-text set. Then JS. Design: ledger
   desideratum 01M2KPNTT0.
@@ -89,6 +91,12 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
 - **Absent slots are meaning** (H4): void, implied close, unclosed at
   EOF, self-closing, truncated tag = NIHIL token slots, never synthetic
   tokens. `/>` does NOT close an HTML element (HTML5); `</br>` is malum.
+  **`elementum-malum` = the tokens the DOM keeps no node for** (O5):
+  unmatched end tags, but also everything HTML5 "ignores" — a repeated
+  `<html>`/`<body>`, a doctype after content, tags inside a frameset
+  or a select, and `</body>`/`</html>`, which never close anything
+  (the body stays open to EOF, later content lands inside it). The
+  bytes stay in place; the cooked view drops the malum.
 - **Text is a node** (H6): between tags every byte is `TEXTUS`; the
   ligator binds trivia only inside tags; `FINIS` receives trivia only
   after a tag cut off at EOF.
