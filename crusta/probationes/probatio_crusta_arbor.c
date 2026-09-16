@@ -279,9 +279,9 @@ principale (vacuum)
         _filius(n, (i32)CRUSTA_ASSIGNATIO_VALOR, ZEPHYRUM), "1"));
     CREDO_VERUM (r.sana);
 
-    /* 'A=1 if': verbum reservatum post assignationem = verbum nudum
-     * (bash 5.2 mensum: 'A=1 if b' sanum); lexema genus RESERVATUM
-     * servat */
+    /* 'A=1 if': post assignationem modus ASSIGNATIONES - 'if' verbum
+     * nudum LITTERALE (bash 5.2 mensum: 'A=1 if b' sanum); 'X=1' +
+     * linea nova imperium finit (corpus P6: 'OBJ=""' ante 'for') */
     p         = _casus(piscina, "A=1 if", &r);
     imperium  = _sententia(p, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (_numerus(imperium, (i32)CRUSTA_IMPERIUM_LIBERI),
@@ -289,8 +289,16 @@ principale (vacuum)
     n = _filius(imperium, (i32)CRUSTA_IMPERIUM_LIBERI, I);
     CREDO_VERUM (_genus(n, CRUSTA_GENUS_VERBUM));
     CREDO_AEQUALIS_S32 (_tok(_pars(n, ZEPHYRUM),
-        (i32)CRUSTA_PARS_TOK)->genus, (s32)CRUSTA_LEX_RESERVATUM);
+        (i32)CRUSTA_PARS_TOK)->genus, (s32)CRUSTA_LEX_LITTERALIS);
     CREDO_VERUM (_staticum_est(piscina, n, "if"));
+    CREDO_VERUM (r.sana);
+
+    p = _casus(piscina, "X=1\nfor i in a; do :; done\n>f\necho", &r);
+    CREDO_AEQUALIS_I32 (_numerus(p, (i32)CRUSTA_PROGRAMMA_LIBERI),
+        (i32)VII);
+    CREDO_VERUM (_genus(_sententia(p, II), CRUSTA_GENUS_ITERATIO));
+    CREDO_VERUM (_genus(_sententia(p, IV), CRUSTA_GENUS_IMPERIUM));
+    CREDO_VERUM (_genus(_sententia(p, VI), CRUSTA_GENUS_IMPERIUM));
     CREDO_VERUM (r.sana);
 
     /* aedificator: x=(1 2) assignatio cum tabulato */
@@ -834,8 +842,9 @@ principale (vacuum)
     CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_ITERATIO_TOK_IN), "in"));
     CREDO_AEQUALIS_I32 (_numerus(n, (i32)CRUSTA_ITERATIO_VERBA),
         (i32)II);
-    CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_ITERATIO_TOK_SEPARATOR),
-        ";"));
+    CREDO_VERUM (_tok_est(_tok(_filius(n,
+        (i32)CRUSTA_ITERATIO_SEPARATOR,
+        ZEPHYRUM), (i32)CRUSTA_SEPARATOR_TOK), ";"));
     {
         MateriaNodus* cursus = _filius(n, (i32)CRUSTA_ITERATIO_CURSUS,
             ZEPHYRUM);
@@ -852,21 +861,23 @@ principale (vacuum)
 
     p = _casus(piscina, "for i in a b\ndo c; done", &r);
     n = _sententia(p, ZEPHYRUM);
-    CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_ITERATIO_TOK_SEPARATOR),
-        "\n"));
+    CREDO_VERUM (_tok_est(_tok(_filius(n,
+        (i32)CRUSTA_ITERATIO_SEPARATOR,
+        ZEPHYRUM), (i32)CRUSTA_SEPARATOR_TOK), "\n"));
     CREDO_VERUM (r.sana);
 
     p = _casus(piscina, "for i; do :; done", &r);
     n = _sententia(p, ZEPHYRUM);
     CREDO_VERUM (_absens(n, (i32)CRUSTA_ITERATIO_TOK_IN));
     CREDO_VERUM (_absens(n, (i32)CRUSTA_ITERATIO_VERBA));
-    CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_ITERATIO_TOK_SEPARATOR),
-        ";"));
+    CREDO_VERUM (_tok_est(_tok(_filius(n,
+        (i32)CRUSTA_ITERATIO_SEPARATOR,
+        ZEPHYRUM), (i32)CRUSTA_SEPARATOR_TOK), ";"));
     CREDO_VERUM (r.sana);
 
     p = _casus(piscina, "for i do :; done", &r);
     n = _sententia(p, ZEPHYRUM);
-    CREDO_VERUM (_absens(n, (i32)CRUSTA_ITERATIO_TOK_SEPARATOR));
+    CREDO_VERUM (_absens(n, (i32)CRUSTA_ITERATIO_SEPARATOR));
     CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_ITERATIO_CURSUS,
         ZEPHYRUM), CRUSTA_GENUS_CURSUS));
     CREDO_VERUM (r.sana);
@@ -887,8 +898,8 @@ principale (vacuum)
         CRUSTA_GENUS_POSTPOSITA));
     CREDO_VERUM (_tok_est(_tok(n,
         (i32)CRUSTA_CYCLUS_TOK_PARENTHESIS_CLAUSURA), "))"));
-    CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_CYCLUS_TOK_SEPARATOR),
-        ";"));
+    CREDO_VERUM (_tok_est(_tok(_filius(n, (i32)CRUSTA_CYCLUS_SEPARATOR,
+        ZEPHYRUM), (i32)CRUSTA_SEPARATOR_TOK), ";"));
     CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_CYCLUS_CURSUS, ZEPHYRUM),
         CRUSTA_GENUS_CURSUS));
     CREDO_VERUM (r.sana);
@@ -898,7 +909,7 @@ principale (vacuum)
     CREDO_VERUM (_genus(n, CRUSTA_GENUS_CYCLUS));
     CREDO_AEQUALIS_I32 (_numerus(n, (i32)CRUSTA_CYCLUS_LIBERI),
         (i32)II);
-    CREDO_VERUM (_absens(n, (i32)CRUSTA_CYCLUS_TOK_SEPARATOR));
+    CREDO_VERUM (_absens(n, (i32)CRUSTA_CYCLUS_SEPARATOR));
     CREDO_VERUM (r.sana);
 
     p = _casus(piscina, "select x in a; do :; done", &r);
@@ -1435,6 +1446,62 @@ principale (vacuum)
     CREDO_VERUM (_tok_est(_tok(_filius(n, (i32)CRUSTA_HEREDOC_PARTES,
         ZEPHYRUM), (i32)CRUSTA_PARS_TOK), "b\n"));
     CREDO_VERUM (r.sana);
+
+    /* corpora heredoc in lacunis compositorum (corpus FreeBSD P6):
+     * post separatorem iterationis, post nomen ('for i' + linea nova),
+     * post verbum electionis; transpositum ('for' + linea nova) */
+    p = _casus(piscina,
+        "read x <<EOF; for i in \"$x\"\nvalue\nEOF\ndo\n :\ndone\n",
+        &r);
+    n = _sententia(p, II);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_ITERATIO));
+    CREDO_AEQUALIS_I32 (_numerus(n, (i32)CRUSTA_ITERATIO_SEPARATOR),
+        (i32)II);
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_ITERATIO_SEPARATOR, I),
+        CRUSTA_GENUS_HEREDOC));
+    CREDO_VERUM (_absens(n, (i32)CRUSTA_ITERATIO_INTERIECTA));
+    CREDO_VERUM (r.sana);
+
+    p = _casus(piscina, "read x <<EOF; for i\nvalue\nEOF\ndo :; done\n",
+        &r);
+    n = _sententia(p, II);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_ITERATIO));
+    CREDO_AEQUALIS_I32 (_numerus(n, (i32)CRUSTA_ITERATIO_INTERIECTA),
+        (i32)I);
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_ITERATIO_INTERIECTA,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    CREDO_VERUM (_absens(n, (i32)CRUSTA_ITERATIO_SEPARATOR));
+    CREDO_VERUM (r.sana);
+
+    p = _casus(piscina,
+        "read x <<EOF; case $x\nvalue\nEOF\nin a) ;; esac\n", &r);
+    n = _sententia(p, II);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_ELECTIO));
+    CREDO_AEQUALIS_I32 (_numerus(n, (i32)CRUSTA_ELECTIO_INTERIECTA),
+        (i32)I);
+    CREDO_VERUM (r.sana);
+
+    p = _casus(piscina, "for ((;;))\ndo :; done", &r);
+    n = _sententia(p, ZEPHYRUM);
+    CREDO_VERUM (_tok_est(_tok(_filius(n, (i32)CRUSTA_CYCLUS_SEPARATOR,
+        ZEPHYRUM), (i32)CRUSTA_SEPARATOR_TOK), "\n"));
+    CREDO_VERUM (r.sana);
+
+    /* transpositum: 'for' + linea nova + corpus - octeti in arbore
+     * omnes, ordo ruptus, nominatum (heredoca_transposita), sana
+     * FALSUM; emissio hic NON octetim idem - _casus id asserit, ergo
+     * parsatur directe */
+    {
+                       i32  mensura;
+        constans character* fons = _copia(piscina,
+            "cat <<A; for\nx\nA\ni in a; do :; done\n", &mensura);
+
+        p = crusta_arbor_parsare(piscina, fons, mensura, &CRUSTA_BASH,
+            &r);
+        CREDO_NON_NIHIL (p);
+        CREDO_AEQUALIS_I32 (r.heredoca_transposita, (i32)I);
+        CREDO_FALSUM (r.sana);
+    }
 
     /* heredoc in probatione conditionis */
     p = _casus(piscina, "if cat <<A\nx\nA\nthen :; fi", &r);

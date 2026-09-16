@@ -168,6 +168,12 @@ for src in "$CRUSTA_DIR"/probationes/*.c; do
     obj_files="$obj_files $obj"
 done
 
+# corpus domus: omnis .sh tracta (viae relativae radici) pro porta
+# corporis (probatio_crusta_corpus legit build/crusta_corpus.lst
+# radicis; lista absens = CREDO_CULPA)
+mkdir -p "$RADIX_DIR/build"
+(cd "$RADIX_DIR" && git ls-files '*.sh') > "$RADIX_DIR/build/crusta_corpus.lst"
+
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "crusta." - silva.mensurae('crusta.', n) eas legit); numquam suitam frangit
 source "$RADIX_DIR/tools/mensor_suitae.sh"

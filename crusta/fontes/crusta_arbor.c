@@ -94,8 +94,11 @@ nomen structura {
     /* socius: verbum primum post 'coproc' (titulus aut imperium?) */
      MateriaToken* candidatus;
     /* substitutio: petitiones heredoc ante aperturam (regio backtick
-     * suas intra claudit) */
+          * suas intra claudit) */
               i32 heredoca_ante;
+    /* $((: numerus lexematum recordatorum ante aperturam (reversio
+     * ea sublata) */
+              i32 lexemata_ante;
 } Gradus;
 
 nomen structura {
@@ -108,12 +111,35 @@ nomen structura {
                 MateriaToken* prior_antea;   /* prior ante prior */
     /* redirectiones heredoc quarum corpus pendet (MateriaNodus*),
      * ordine petitionum lectoris; caput = proxima */
-                         Xar* redirectiones_pendentes;
-                         i32  redirectio_caput;
-    constans CrustaDialectus* dialectus;
-               CrustaParsura* relatio;
-                         b32  memoria_defecit;
+                                        Xar* redirectiones_pendentes;
+                                        i32  redirectio_caput;
+                   constans CrustaDialectus* dialectus;
+                              CrustaParsura* relatio;
+                                        b32  memoria_defecit;
+    /* lexemata accepta ordine (NIHIL = sine memoria) */
+                         Xar* lexemata;
 } Aedificatio;
+
+/* lexema acceptum recordare (tegumentum lectoris per corpus) */
+interior b32
+_lexema_recordare (
+       Aedificatio* p,
+      MateriaToken* t)
+{
+    MateriaToken** sedes;
+
+    si (p->lexemata == NIHIL)
+    {
+        redde VERUM;
+    }
+    sedes = (MateriaToken**)xar_addere(p->lexemata);
+    si (sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *sedes = t;
+    redde VERUM;
+}
 
 interior Gradus*
 _vertex (
@@ -591,10 +617,17 @@ _claudere (
             redde FALSUM;
         }
     }
-    alioquin si (!_nodum_dare(p, parens->nodus, parens->locus,
-                 g->nodus))
+        alioquin si (!_nodum_dare(p, parens->nodus, parens->locus,
+                     g->nodus))
     {
         redde FALSUM;
+    }
+    /* imperium sine verbo post liberum primum (assignatio,
+     * redirectio): linea nova iam terminat */
+    si (   parens->genus  == (s32)CRUSTA_GENUS_IMPERIUM
+        && parens->status == ZEPHYRUM)
+    {
+        parens->modus = CRUSTA_MODUS_ASSIGNATIONES;
     }
     xar_removere_ultimum(p->gradus);
     redde VERUM;
@@ -1030,15 +1063,21 @@ _separator (
             || (g->genus == (s32)CRUSTA_GENUS_CYCLUS && g->status == I))
         && t->valor.datum[ZEPHYRUM] != '&')
     {
-        i32 locus = g->genus == (s32)CRUSTA_GENUS_ITERATIO
-            ? (i32)CRUSTA_ITERATIO_TOK_SEPARATOR
-            : (i32)CRUSTA_CYCLUS_TOK_SEPARATOR;
+                i32 locus = g->genus == (s32)CRUSTA_GENUS_ITERATIO
+                    ? (i32)CRUSTA_ITERATIO_SEPARATOR
+                    : (i32)CRUSTA_CYCLUS_SEPARATOR;
 
-        si (!_token_ponere(g->nodus, locus, t))
+        /* lista: nodus separator, deinde corpora heredoc quae lineam
+         * novam sequuntur */
+        s = _nodus(p, (s32)CRUSTA_GENUS_SEPARATOR);
+        si (   s == NIHIL
+            || !_token_ponere(s, (i32)CRUSTA_SEPARATOR_TOK, t)
+            || !_nodum_dare(p, g->nodus, locus, s))
         {
             redde FALSUM;
         }
         g->status  = IV;
+        g->locus   = locus;
         g->modus   = CRUSTA_MODUS_INITIUM;
         redde VERUM;
     }
@@ -1255,6 +1294,10 @@ _imperium_aperire (
         CRUSTA_MODUS_INITIUM) != NIHIL;
 }
 
+/* modus imperii post liberum primum: VERBA post verbum, aliter
+ * ASSIGNATIONES (assignationes et redirectiones ante titulum; linea
+ * nova terminat - 'X=1' + linea nova imperium finit, 'A=1 if' verbum
+ * 'if' nudum est, bash idem) */
 interior CrustaModus
 _modus_imperii (
     constans Gradus* g)
@@ -1263,11 +1306,7 @@ _modus_imperii (
     {
         redde CRUSTA_MODUS_VERBA;
     }
-    si (g->status == II)
-    {
-        redde CRUSTA_MODUS_ASSIGNATIONES;
-    }
-    redde CRUSTA_MODUS_INITIUM;
+    redde CRUSTA_MODUS_ASSIGNATIONES;
 }
 
 interior b32
@@ -1772,7 +1811,9 @@ _partem_recipere (
             novus->apertura = t;
             novus->prior_antea = p->prior_antea;
             novus->situs_initii = crusta_lector_situs(&p->lector);
-            novus->situs_initii.cursor = t->byte_offset;
+                        novus->situs_initii.cursor = t->byte_offset;
+            novus->lexemata_ante = p->lexemata == NIHIL ? ZEPHYRUM
+                : xar_numerus(p->lexemata) - I;
             redde VERUM;
         }
         casus CRUSTA_LEX_GRAVIS:
@@ -1928,10 +1969,16 @@ _arithmeticam_recusare (
     {
         redde FALSUM;
     }
-    s                       = g->situs_initii;
-    s.arithmetica_recusata  = g->apertura->byte_offset;
+    s                           = g->situs_initii;
+        s.arithmetica_recusata  = g->apertura->byte_offset;
     crusta_lector_situm_reponere(&p->lector, s);
     xar_vacare(p->pendentia);
+    /* lexemata temptationis sublata (apertura ipsa relegitur) */
+    dum (   p->lexemata != NIHIL
+         && xar_numerus(p->lexemata) > g->lexemata_ante)
+    {
+        xar_removere_ultimum(p->lexemata);
+    }
     per (j = ZEPHYRUM; j < g->apertura->numerus_ante; j++)
     {
         si (!_cumulare(p, g->apertura->spatia_ante[j]))
@@ -1982,9 +2029,9 @@ _arithmeticam_claudere (
         {
             redde FALSUM;
         }
-        g->status  = I;
-        g->locus   = (i32)CRUSTA_CYCLUS_TOK_SEPARATOR;
-        g->modus   = CRUSTA_MODUS_POST_COMPOSITUM;
+                g->status  = I;
+        g->locus           = (i32)CRUSTA_CYCLUS_SEPARATOR;
+        g->modus           = CRUSTA_MODUS_POST_COMPOSITUM;
         redde VERUM;
     }
     /* imperium (( )): clausum, redirectiones exspectat, sententia
@@ -3034,25 +3081,87 @@ _iudicium_tractare (
  * Heredoca (decretum 01M2NJ16RG)
  * ================================================== */
 
-/* gradus intimus cuius locus lista sententiarum est (heredoc post
- * separatorem aut operatorem qui lineam novam fert) */
+/* gradus intimus qui corpus heredoc recipit, et locus eius: lista
+ * sententiarum (programma, substitutio, compositum apertum, catena,
+ * pipa) aut lacuna compositi cum lista (iteratio: interiecta post
+ * nomen, separator post separatorem; cyclus: separator, liberi intra
+ * '(('; electio: interiecta post verbum; optio: exemplaria;
+ * tabulatum: liberi; expansio: argumenta). Gradus sine lista ('for'
+ * ante nomen, functio, socius, arithmetica, iudicium) transitur et
+ * corpus TRANSPOSITUM numeratur: ordo octetorum ruptus, limes
+ * nominatus (relatio.heredoca_transposita, sana FALSUM). */
 interior Gradus*
 _lista_recipiens (
-    Aedificatio* p)
+    Aedificatio* p,
+            i32* locus)
 {
     s32 i;
+    b32 transitum = FALSUM;
 
     per (i = (s32)xar_numerus(p->gradus) - I; i >= ZEPHYRUM; i--)
     {
         Gradus* h = (Gradus*)xar_obtinere(p->gradus, (i32)i);
+           s32  l = (s32)-I;
 
         si (   _lista_est(h)
             || h->genus == (s32)CRUSTA_GENUS_CATENA
             || h->genus == (s32)CRUSTA_GENUS_PIPA)
         {
+            l = (s32)h->locus;
+        }
+        alioquin commutatio (h->genus)
+                 {
+            casus CRUSTA_GENUS_ITERATIO:
+                si (h->status == I)
+                {
+                    l = (s32)CRUSTA_ITERATIO_INTERIECTA;
+                }
+                alioquin si (h->status == IV)
+                {
+                    l = (s32)CRUSTA_ITERATIO_SEPARATOR;
+                }
+                frange;
+            casus CRUSTA_GENUS_CYCLUS:
+                si (h->machina != NIHIL)
+                {
+                    l = (s32)CRUSTA_CYCLUS_LIBERI;
+                }
+                alioquin si (h->status == I || h->status == III)
+                {
+                    l = (s32)CRUSTA_CYCLUS_SEPARATOR;
+                }
+                frange;
+            casus CRUSTA_GENUS_ELECTIO:
+                si (   h->locus  == (i32)CRUSTA_ELECTIO_VERBUM
+                    && h->status == I)
+                {
+                    l = (s32)CRUSTA_ELECTIO_INTERIECTA;
+                }
+                frange;
+            casus CRUSTA_GENUS_OPTIO:
+                l = (s32)CRUSTA_OPTIO_EXEMPLARIA;
+                frange;
+            casus CRUSTA_GENUS_TABULATUM:
+                l = (s32)CRUSTA_TABULATUM_LIBERI;
+                frange;
+            casus CRUSTA_GENUS_PARS_EXPANSIO:
+                l = (s32)CRUSTA_EXPANSIO_ARGUMENTA;
+                frange;
+            ordinarius:
+                frange;
+                 }
+        si (l >= ZEPHYRUM)
+        {
+            si (transitum && p->relatio != NIHIL)
+            {
+                p->relatio->heredoca_transposita++;
+            }
+            *locus = (i32)l;
             redde h;
         }
+        transitum = VERUM;
     }
+    *locus = (i32)CRUSTA_PROGRAMMA_LIBERI;
     redde (Gradus*)xar_obtinere(p->gradus, ZEPHYRUM);
 }
 
@@ -3063,9 +3172,10 @@ interior b32
 _heredoc_aperire_proximum (
     Aedificatio* p)
 {
-    CrustaHeredocPetitio petitio;
+        CrustaHeredocPetitio petitio;
     MateriaNodus* h;
     Gradus* lista;
+    i32 locus;
     MateriaNodus* redirectio = NIHIL;
 
     si (!crusta_lector_heredoca_pendent(&p->lector))
@@ -3081,8 +3191,8 @@ _heredoc_aperire_proximum (
     {
         redde FALSUM;
     }
-    lista = _lista_recipiens(p);
-    si (!_nodum_dare(p, lista->nodus, lista->locus, h))
+        lista = _lista_recipiens(p, &locus);
+    si (!_nodum_dare(p, lista->nodus, locus, h))
     {
         redde FALSUM;
     }
@@ -3115,9 +3225,10 @@ _heredoc_claudere (
     MateriaToken* finis;
 
     delimitator = crusta_lector_heredoc_delimitator(&p->lector);
-    si (delimitator != NIHIL)
-    {
-        si (   !_solvere(p, delimitator)
+        si (delimitator != NIHIL)
+        {
+        si (   !_lexema_recordare(p, delimitator)
+            || !_solvere(p, delimitator)
             || !_token_ponere(g->nodus,
             (i32)CRUSTA_HEREDOC_TOK_DELIMITATOR,
                 delimitator))
@@ -3125,19 +3236,20 @@ _heredoc_claudere (
             redde FALSUM;
         }
         finis = crusta_lector_heredoc_finis(&p->lector);
-        si (   finis != NIHIL
-            && (   !_solvere(p, finis)
-                || !_token_ponere(g->nodus,
-                (i32)CRUSTA_HEREDOC_TOK_FINIS,
+                si (   finis != NIHIL
+                    && (   !_lexema_recordare(p, finis)
+                    || !_solvere(p, finis)
+                    || !_token_ponere(g->nodus,
+                    (i32)CRUSTA_HEREDOC_TOK_FINIS,
                     finis)))
-        {
+                {
             redde FALSUM;
+                }
         }
-    }
     alioquin si (p->relatio != NIHIL)
-    {
+        {
         p->relatio->clausurae_absentes++;
-    }
+        }
     xar_removere_ultimum(p->gradus);
     redde _heredoc_aperire_proximum(p);
 }
@@ -3191,37 +3303,6 @@ _reservatum_est (
         && memcmp(t->valor.datum, verbum, strlen(verbum)) == ZEPHYRUM;
 }
 
-/* verbum reservatum post assignationes ('x=1 if'): verbum nudum
- * (bash idem) - pars litteralis cuius lexema genus RESERVATUM servat */
-interior b32
-_reservatum_ut_verbum (
-       Aedificatio* p,
-      MateriaToken* t)
-{
-       b32  praeparatum;
-    Gradus* g;
-    MateriaNodus* pars;
-
-    si (!_verbum_parare(p, t, &praeparatum))
-    {
-        redde FALSUM;
-    }
-    si (!praeparatum)
-    {
-        redde VERUM;
-    }
-    g     = _vertex(p);
-    pars  = _nodus(p, (s32)CRUSTA_GENUS_PARS_LITTERALIS);
-    si (   pars == NIHIL
-        || !_token_ponere(pars, (i32)CRUSTA_PARS_TOK, t)
-        || !_nodum_dare(p, g->nodus, g->locus, pars))
-    {
-        redde FALSUM;
-    }
-    _verbi_finem_ponere(p, _token_finis(t));
-    redde VERUM;
-}
-
 /* verbum reservatum in positione imperii (aut nomen post
  * for/select: 'for if in' licet) */
 interior b32
@@ -3237,10 +3318,7 @@ _reservatum (
     {
         redde _titulum_ponere(g, t, (i32)CRUSTA_ITERATIO_TOK_TITULUS);
     }
-    si (g->genus == (s32)CRUSTA_GENUS_IMPERIUM)
-    {
-        redde _reservatum_ut_verbum(p, t);
-    }
+
     si (_reservatum_est(t, "!") || _reservatum_est(t, "time"))
     {
         si (!_intra_sententiam_claudere(p))
@@ -3801,13 +3879,14 @@ _regionem_finire (
         g->gravis = FALSUM;
         redde _claudere(p);
     }
-    si (   !_solvere(p, clausura)
-        || !_token_ponere(g->nodus,
-        (i32)CRUSTA_SUBSTITUTIO_TOK_CLAUSURA,
+        si (   !_lexema_recordare(p, clausura)
+            || !_solvere(p, clausura)
+            || !_token_ponere(g->nodus,
+            (i32)CRUSTA_SUBSTITUTIO_TOK_CLAUSURA,
             clausura))
-    {
+        {
         redde FALSUM;
-    }
+        }
     redde _partem_claudere(p, clausura);
 }
 
@@ -3848,6 +3927,19 @@ crusta_arbor_parsare (
     constans CrustaDialectus* dialectus,
                CrustaParsura* relatio)
 {
+    redde crusta_arbor_parsare_cum_lexematis(piscina, fons, mensura,
+        dialectus, relatio, NIHIL);
+}
+
+MateriaNodus*
+crusta_arbor_parsare_cum_lexematis (
+                     Piscina* piscina,
+          constans character* fons,
+                         i32  mensura,
+    constans CrustaDialectus* dialectus,
+               CrustaParsura* relatio,
+                         Xar* lexemata)
+{
              Aedificatio p;
       MateriaLexIudicium iudicium;
     MateriaNodus* programma;
@@ -3855,9 +3947,10 @@ crusta_arbor_parsare (
 
     memset(&p, ZEPHYRUM, magnitudo(p));
     memset(&relatio_propria, ZEPHYRUM, magnitudo(relatio_propria));
-    p.piscina    = piscina;
-    p.dialectus  = dialectus;
-    p.relatio    = relatio != NIHIL ? relatio : &relatio_propria;
+    p.piscina        = piscina;
+        p.dialectus  = dialectus;
+    p.lexemata       = lexemata;
+    p.relatio        = relatio != NIHIL ? relatio : &relatio_propria;
     memset(p.relatio, ZEPHYRUM, magnitudo(*p.relatio));
     si (!materia_lexicon_ratum_facere(&p.lexicon, &CRUSTA_LEXICON,
             &iudicium))
@@ -3891,7 +3984,11 @@ crusta_arbor_parsare (
               Gradus* g = _vertex(&p);
         MateriaToken* t = crusta_lector_proximum(&p.lector, g->modus);
 
-        si (t == NIHIL || p.memoria_defecit)
+                si (t == NIHIL || p.memoria_defecit)
+                {
+            redde NIHIL;
+                }
+        si (!_lexema_recordare(&p, t))
         {
             redde NIHIL;
         }
@@ -3954,8 +4051,9 @@ crusta_arbor_parsare (
             redde NIHIL;
         }
     }
-    p.relatio->sana = p.relatio->mala == ZEPHYRUM
-                   && p.relatio->clausurae_absentes == ZEPHYRUM;
+        p.relatio->sana = p.relatio->mala == ZEPHYRUM
+                   && p.relatio->clausurae_absentes == ZEPHYRUM
+                   && p.relatio->heredoca_transposita == ZEPHYRUM;
     redde programma;
 }
 

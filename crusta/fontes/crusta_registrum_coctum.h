@@ -2,7 +2,7 @@
  *
  * Registrum generum COCTUM grammaticae 'crusta' - GENERATUM, NE MANU
  * EDITES. Fons: crusta/grammatica/crusta.registrum.stml
- * (materia/coquere.sh). Genera L, loci CL.
+ * (materia/coquere.sh). Genera L, loci CLII.
  */
 
 #ifndef CRUSTA_REGISTRUM_COCTUM_H
@@ -62,19 +62,26 @@ nomen enumeratio {
     /* elif probatio then liberi (IV loci) aut else liberi (probatio
      * et tok_deinde absentes) */
     CRUSTA_GENUS_RAMUS,
-    /* for/select titulus [in verba] separator cursus
-     * [redirectiones]; tok_separator = ';' aut linea nova quae verba
-     * terminat */
+    /* for/select titulus [interiecta] [in verba] separator cursus
+     * [redirectiones]; separator = lista: nodus separator (';' aut
+     * linea nova quae verba terminat) et corpora heredoc quae ei
+     * sequuntur; interiecta = corpora heredoc post titulum ante in
+     * (linea nova ibi trivium est) - P6: corpus FreeBSD 'read x
+     * <<EOF; for i' + linea nova */
     CRUSTA_GENUS_ITERATIO,
     /* for (( a; b; c )) separator cursus; liberi = expressio,
      * operator(;), expressio, operator(;), expressio - expressiones
-     * vacuae absentes */
+     * vacuae absentes; separator = lista ut in iteratione (nodus
+     * separator et corpora heredoc) */
     CRUSTA_GENUS_CYCLUS,
     /* while/until probatio cursus [redirectiones] */
     CRUSTA_GENUS_REPETITIO,
     /* do lista done */
     CRUSTA_GENUS_CURSUS,
-    /* case verbum in optiones esac [redirectiones] */
+    /* case verbum [interiecta] in optiones esac [redirectiones];
+     * interiecta = corpora heredoc post verbum ante in (linea nova
+     * ibi trivium est) - P6: corpus FreeBSD 'read x <<EOF; case $x'
+     * + linea nova */
     CRUSTA_GENUS_ELECTIO,
     /* ['('] exemplar | exemplar ')' lista [terminator: ;; aut formae
      * bash]; exemplaria = verbum, operator(|), verbum; terminator

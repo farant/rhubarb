@@ -18,8 +18,38 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P5 done)
+## Praesens status (2026-09-16 — P6 done)
 
+- **P6, cases and corpus:** `crusta_exempla.{h,c}` reads the Oils
+  `#### titulus` / `## SECTIO:` … `## END` case format (copies into the
+  piscina; CRLF kept in data) and carries the manifest
+  `CRUSTA_FREEBSD_PLAGULAE` (89 scripts of FreeBSD `bin/sh/tests/
+  parser`, BSD-2, `probationes/fixa/crusta/FONTES.md`, fetch approved by
+  Fran). Fixtures `probationes/fixa/crusta/pathologiae.sh` (32 blocks:
+  spec A.9 plus P6's additions) and `adversarius.sh` (17, CRLF
+  throughout, everything left open, a 200-deep `$( )`, a backslash at
+  EOF). Gate `exempla` (reader contract, both fixtures, the manifest
+  pinned: 89 files, 17,297 bytes). Gate `corpus`: every tracked `.sh`
+  (the RUNNER writes `build/crusta_corpus.lst` with `git ls-files`
+  before the loop; a missing list is CREDO_CULPA) + fixtures + FreeBSD
+  through parse → emit → memcmp, plus LECTOR COVERAGE through the
+  builder's own pulls (`crusta_arbor_parsare_cum_lexematis` records
+  every received token; the gate concatenates them): 231 house files,
+  817,646 bytes, and 91 fixtures, all byte-identical, coverage clean,
+  house corpus ZERO mala. What it found: (1) a command with only
+  assignments kept INITIUM mode, where a newline is trivia, so the
+  next line joined it — ~150 house files had mala at `then`/`do`/`(`
+  until the mode after a first non-word child became ASSIGNATIONES;
+  (2) FreeBSD heredoc14–16.0 put heredoc bodies after a loop's
+  separator, a loop name and a case word: the declaration grew
+  `iteratio.interiecta`, `electio.interiecta`, and the two
+  `tok_separator` tokens became `separator` LISTS (separator node,
+  then bodies; 152 loci, LOCI_NOMINATI regenerated, pin CLII); bodies
+  in the gaps that keep no list (`for` before its name, a function's
+  title/parens, inside `(( ))`/`[[ ]]`) land in the nearest list below
+  out of byte order and are counted `heredoca_transposita` (sana FALSUM,
+  a named limit, one case pinned). Plants: corpus — separator nodes
+  dropped; exempla — `## END` kept in the section.
 - **P5, the builder part two:** every compound command (`grex`,
   `crustula`, `conditio`/`ramus`, `iteratio`/`cyclus`/`repetitio`
   with `cursus`, `electio`/`optio`), the three function forms (`f()`,
@@ -46,7 +76,7 @@ P3 on).
   program list (the two bodies after `cat <<A <<B |` then emit before
   the pipe). Known `sana` vs `bash -n` divergences: heredoc cut off by
   EOF and `[[ a b ]]` (bash warns, exits 0). Named corner: a heredoc
-  whose newline lands in `iteratio.tok_separator` (P6 pathology).
+  whose newline lands in a loop separator or after a loop name or case word — RESOLVED in P6 by declaration.
 - **P4, arithmetic (`crusta_arithmetica.{h,c}`):** the precedence
   machine (shunting-yard over two explicit stacks) that the BUILDER
   drives: every frame with a `machina` (`pars-arithmetica`,

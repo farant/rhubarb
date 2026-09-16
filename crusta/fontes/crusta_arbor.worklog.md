@@ -156,3 +156,53 @@ divergence for P11's sanitas oracle, like a heredoc cut off by EOF
 `RESERVATUM` token arriving on an imperium becomes a `pars-litteralis`
 whose token keeps genus RESERVATUM. The P3 case that pinned it as a
 malum was an intermediate and is rewritten.
+
+## 2026-09-16 — P6 (cases and corpus)
+
+**The corpus found the bug every house script had.** 231 tracked `.sh`
+files, byte-identical from the first run, but ~150 of them "insane"
+with mala at `then`, `do`, `(`. Bisecting a script to the shortest
+suffix that still produced the malum named the culprit every time: an
+ASSIGNMENT-ONLY command on the previous line (`OBJ=""`, `RESET=...`,
+`radix=$(...)`). A command frame with only assignments (status 0) kept
+asking the lector for INITIUM, where a newline is a trivium, so the
+newline never ended the command and the next line's `for`/`if`/
+`name()` joined it as words. The mode after a first child that is not
+a word is now ASSIGNATIONES (assignments still recognised, newline
+terminates, reserved words are plain words — `A=1 if` stays a command
+named `if`, now a LITTERALIS token). With that one fix the whole house
+corpus parses with ZERO mala and zero absent closures. The lesson is
+the html one again: a corpus finds what forty hand cases cannot, and
+the first failure is worth reading before the tally.
+
+**FreeBSD put heredoc bodies in the gaps.** `read x <<EOF; for i in
+"$x"` + newline + body + `do …`, `read x <<EOF; for i` + newline, and
+`read x <<EOF; case $x` + newline (heredoc14–16.0). The named corner
+from P5 was not a corner: a `<<` on a command EARLIER on the line
+leaves its body to whatever newline comes next, including the loop's
+separator and the trivia after a loop name or a case word. The
+declaration grew: `iteratio.separator` and `cyclus.separator` are now
+LISTS (the separator node, then the bodies that follow it),
+`iteratio.interiecta` and `electio.interiecta` hold bodies after the
+name / the word (150 → 152 loci, seal not yet born). `_lista_recipiens`
+returns (frame, locus) by phase. Gaps that keep no list — `for` before
+its name, a function's title and parens, inside `(( ))` and `[[ ]]` —
+are crossed and the body lands in the nearest list BELOW, out of byte
+order: counted as `heredoca_transposita`, `sana` FALSUM, one case pinned
+(`cat <<A; for` + newline). A limit named is better than a limit
+hidden.
+
+**Lector coverage through the builder's own pulls.** `crusta_arbor_
+parsare_cum_lexematis` records every token the builder receives (the
+main loop, the heredoc delimiter and end tokens, the backtick closer)
+and drops the tokens of an abandoned `$((` attempt (`lexemata_ante` on
+the frame); the corpus gate concatenates the values and compares with
+the source. Clean over 322 files — the P2 gate could only measure
+coverage per hand case.
+
+**The reader copies.** `crusta_exempla` first sliced into the source
+(no copies); `-Wcast-qual` refused the `const char*` → `i8*` slice
+because `chorda.datum` is not const. It copies into the piscina, as
+html's reader does. A `spec/*.test.sh` in a block comment is a
+`-Wcomment` error (the `/*` inside) — the third time this repo has
+been bitten by a glob in a comment.

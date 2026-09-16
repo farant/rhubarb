@@ -747,6 +747,7 @@
     <forma textus="heredoci"/>
   </vocabulum>
   <vocabulum lemma="bash" lingua="anglica" classis="ignotum-permissum" nota="dialectus crustae; CRUSTA_BASH (2026-09-16)"/>
+  <vocabulum lemma="freebsd" lingua="anglica" classis="ignotum-permissum" nota="casus parser FreeBSD vendati; CRUSTA_FREEBSD_PLAGULAE (2026-09-16)"/>
   <vocabulum lemma="stml" lingua="anglica" classis="ignotum-permissum" nota="sedes 10918"/>
   <vocabulum lemma="xml" lingua="anglica" classis="ignotum-permissum" nota="sedes 187"/>
   <vocabulum lemma="url" lingua="anglica" classis="ignotum-permissum" nota="sedes 187"/>

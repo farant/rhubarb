@@ -246,7 +246,10 @@ ends inside a still-open quote waits for the next unquoted newline
 Loci in byte order (`materia_scribere_nodum` walks loci in registry
 order). An absent slot is meaning (html's H4): no synthetic tokens,
 ever. Genera are appended, never reordered; the seal in `crusta.canon`
-moves by hand with a cause. 50 genera, 150 loci.
+moves by hand with a cause. 50 genera, 152 loci (150 at P1; P6 added
+`iteratio.interiecta` and `electio.interiecta` and turned the two
+`tok_separator` tokens into `separator` lists — the FreeBSD corpus put
+heredoc bodies in those gaps).
 
 ```xml
 <registrum grammatica="crusta" praefixum="CRUSTA" typus="CrustaGenus"
@@ -335,12 +338,13 @@ moves by hand with a cause. 50 genera, 150 loci.
     <locus titulus="tok_deinde"   species="token"/>
     <locus titulus="liberi"       species="lista-nodus"/>
   </genus>
-  <genus titulus="iteratio">                           <!-- for/select titulus [in verba] separator cursus -->
+  <genus titulus="iteratio">                           <!-- for/select titulus [interiecta] [in verba] separator cursus -->
     <locus titulus="tok_apertura"  species="token"/>
     <locus titulus="tok_titulus"   species="token"/>
+    <locus titulus="interiecta"    species="lista-nodus"/> <!-- corpora heredoc post titulum (P6: 'read x <<EOF; for i' + linea nova) -->
     <locus titulus="tok_in"        species="token"/>
     <locus titulus="verba"         species="lista-nodus"/>
-    <locus titulus="tok_separator" species="token"/>   <!-- ; aut linea nova quae verba terminat -->
+    <locus titulus="separator"     species="lista-nodus"/> <!-- separator (; aut linea nova quae verba terminat) et corpora heredoc quae eum sequuntur (P6) -->
     <locus titulus="cursus"        species="nodus"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
@@ -349,7 +353,7 @@ moves by hand with a cause. 50 genera, 150 loci.
     <locus titulus="tok_parenthesis"          species="token"/>
     <locus titulus="liberi"                   species="lista-nodus"/> <!-- expressio, operator(;), ... -->
     <locus titulus="tok_parenthesis_clausura" species="token"/>
-    <locus titulus="tok_separator"            species="token"/>
+    <locus titulus="separator"                species="lista-nodus"/> <!-- ut in iteratione (P6) -->
     <locus titulus="cursus"                   species="nodus"/>
     <locus titulus="redirectiones"            species="lista-nodus"/>
   </genus>
@@ -364,9 +368,10 @@ moves by hand with a cause. 50 genera, 150 loci.
     <locus titulus="liberi"       species="lista-nodus"/>
     <locus titulus="tok_clausura" species="token"/>
   </genus>
-  <genus titulus="electio">                            <!-- case verbum in optiones esac -->
+  <genus titulus="electio">                            <!-- case verbum [interiecta] in optiones esac -->
     <locus titulus="tok_apertura"  species="token"/>
     <locus titulus="verbum"        species="nodus"/>
+    <locus titulus="interiecta"    species="lista-nodus"/> <!-- corpora heredoc post verbum (P6: 'read x <<EOF; case $x' + linea nova) -->
     <locus titulus="tok_in"        species="token"/>
     <locus titulus="liberi"        species="lista-nodus"/>
     <locus titulus="tok_clausura"  species="token"/>
@@ -528,7 +533,7 @@ Notes on shape:
 | `f() {…}` | `functio.tok_verbum` |
 | `function f {…}` | `functio.tok_apertura`, `tok_clausura` |
 | `for x; do …` | `iteratio.tok_in`, `verba` empty |
-| `for x do …` / `for x\ndo …` | also `tok_separator` (the newline is trivia here) |
+| `for x do …` / `for x\ndo …` | also `separator` (the newline is trivia here) |
 | `else` branch | `ramus.probatio`, `tok_deinde` |
 | last `case` item before `esac` | `optio.tok_terminator` |
 | `case x in a) ;; esac` | `optio.tok_parenthesis` |

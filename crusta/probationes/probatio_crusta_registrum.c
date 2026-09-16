@@ -213,7 +213,9 @@ hic_manens constans character* GENERA_EXSPECTATA[] = {
 };
 
 /* Locus NOMINATUS: enumeratio crusta_registrum.h contra TITULOS
- * tabulae (CL ordines, ex declaratione generati). */
+ * tabulae (CLII ordines, ex declaratione generati; P6 duo
+ * addidit: iteratio.interiecta, electio.interiecta, et separator
+ * iterationis/cycli lista facta). */
 nomen structura {
                     s32  genus;
                     i32  locus;
@@ -320,11 +322,13 @@ hic_manens constans LocusNominatus LOCI_NOMINATI[] = {
     { (s32)CRUSTA_GENUS_ITERATIO,
         (i32)CRUSTA_ITERATIO_TOK_TITULUS, "tok_titulus" },
     { (s32)CRUSTA_GENUS_ITERATIO,
+        (i32)CRUSTA_ITERATIO_INTERIECTA, "interiecta" },
+    { (s32)CRUSTA_GENUS_ITERATIO,
         (i32)CRUSTA_ITERATIO_TOK_IN, "tok_in" },
     { (s32)CRUSTA_GENUS_ITERATIO,
         (i32)CRUSTA_ITERATIO_VERBA, "verba" },
     { (s32)CRUSTA_GENUS_ITERATIO,
-        (i32)CRUSTA_ITERATIO_TOK_SEPARATOR, "tok_separator" },
+        (i32)CRUSTA_ITERATIO_SEPARATOR, "separator" },
     { (s32)CRUSTA_GENUS_ITERATIO,
         (i32)CRUSTA_ITERATIO_CURSUS, "cursus" },
     { (s32)CRUSTA_GENUS_ITERATIO,
@@ -339,7 +343,7 @@ hic_manens constans LocusNominatus LOCI_NOMINATI[] = {
         (i32)CRUSTA_CYCLUS_TOK_PARENTHESIS_CLAUSURA,
             "tok_parenthesis_clausura" },
     { (s32)CRUSTA_GENUS_CYCLUS,
-        (i32)CRUSTA_CYCLUS_TOK_SEPARATOR, "tok_separator" },
+        (i32)CRUSTA_CYCLUS_SEPARATOR, "separator" },
     { (s32)CRUSTA_GENUS_CYCLUS,
         (i32)CRUSTA_CYCLUS_CURSUS, "cursus" },
     { (s32)CRUSTA_GENUS_CYCLUS,
@@ -362,6 +366,8 @@ hic_manens constans LocusNominatus LOCI_NOMINATI[] = {
         (i32)CRUSTA_ELECTIO_TOK_APERTURA, "tok_apertura" },
     { (s32)CRUSTA_GENUS_ELECTIO,
         (i32)CRUSTA_ELECTIO_VERBUM, "verbum" },
+    { (s32)CRUSTA_GENUS_ELECTIO,
+        (i32)CRUSTA_ELECTIO_INTERIECTA, "interiecta" },
     { (s32)CRUSTA_GENUS_ELECTIO,
         (i32)CRUSTA_ELECTIO_TOK_IN, "tok_in" },
     { (s32)CRUSTA_GENUS_ELECTIO,
@@ -737,7 +743,8 @@ MateriaLexiconRatum  ratum;
         CREDO_AEQUALIS_I32 (CRUSTA_REGISTRUM.numerus_generum,
             (i32)CRUSTA_GENUS_NUMERUS_GENERUM);
         CREDO_AEQUALIS_I32 ((i32)CRUSTA_GENUS_NUMERUS_GENERUM, (i32)L);
-        CREDO_AEQUALIS_I32 (CRUSTA_REGISTRUM.numerus_locorum, (i32)CL);
+        CREDO_AEQUALIS_I32 (CRUSTA_REGISTRUM.numerus_locorum,
+            (i32)CLII);
         CREDO_AEQUALIS_I32 ((i32)(magnitudo(GENERA_EXSPECTATA)
             / magnitudo(GENERA_EXSPECTATA[0])),
             (i32)CRUSTA_GENUS_NUMERUS_GENERUM);

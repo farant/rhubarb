@@ -40,7 +40,13 @@ nomen structura {
     i32 clausurae_absentes;    /* constructa sine lexemate clausurae */
     i32 profunditas_maxima;    /* acervus gradum */
     i32 heredoca;              /* petitiones heredoc */
-    b32 sana;                  /* mala nulla, clausurae omnes */
+    /* corpora heredoc quorum linea nova in gradu sine lista cecidit
+     * (post 'for' ante nomen, intra '(( ))' aut '[[ ]]', post nomen
+     * functionis): listae proximae appensa, ORDO OCTETORUM RUPTUS -
+     * limes nominatus; sana FALSUM */
+    i32 heredoca_transposita;
+    /* mala nulla, clausurae omnes, heredoca in sede */
+    b32 sana;
 } CrustaParsura;
 
 /* relatio NIHIL licet. NIHIL = memoria deficit. */
@@ -51,6 +57,20 @@ crusta_arbor_parsare (
                          i32  mensura,
     constans CrustaDialectus* dialectus,
                CrustaParsura* relatio);
+
+/* Idem, cum lexematis: omne lexema quod aedificator accepit (trivia,
+ * FINIS, delimitatores heredoc, clausurae backtick) in 'lexemata'
+ * (Xar de MateriaToken*) ordine appenditur; lexemata temptationis
+ * '$((' recusatae sublata. Valores concatenati = fons (tegumentum
+ * lectoris per corpus). lexemata NIHIL = sine memoria. */
+MateriaNodus*
+crusta_arbor_parsare_cum_lexematis (
+                     Piscina* piscina,
+          constans character* fons,
+                         i32  mensura,
+    constans CrustaDialectus* dialectus,
+               CrustaParsura* relatio,
+                         Xar* lexemata);
 
 /* Valor staticus verbi: partes litterales, effugia, apices decodati
  * (profunditas backtick ex cauda lexematis exuta); FALSUM si pars

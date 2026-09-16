@@ -142,23 +142,24 @@
   </genus>
 
   <genus titulus="iteratio"
-    nota="for/select titulus [in verba] separator cursus [redirectiones]; tok_separator = ';' aut linea nova quae verba terminat">
+    nota="for/select titulus [interiecta] [in verba] separator cursus [redirectiones]; separator = lista: nodus separator (';' aut linea nova quae verba terminat) et corpora heredoc quae ei sequuntur; interiecta = corpora heredoc post titulum ante in (linea nova ibi trivium est) - P6: corpus FreeBSD 'read x <<EOF; for i' + linea nova">
     <locus titulus="tok_apertura"  species="token"/>
     <locus titulus="tok_titulus"   species="token"/>
+    <locus titulus="interiecta"    species="lista-nodus"/>
     <locus titulus="tok_in"        species="token"/>
     <locus titulus="verba"         species="lista-nodus"/>
-    <locus titulus="tok_separator" species="token"/>
+    <locus titulus="separator"     species="lista-nodus"/>
     <locus titulus="cursus"        species="nodus"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
   <genus titulus="cyclus"
-    nota="for (( a; b; c )) separator cursus; liberi = expressio, operator(;), expressio, operator(;), expressio - expressiones vacuae absentes">
+    nota="for (( a; b; c )) separator cursus; liberi = expressio, operator(;), expressio, operator(;), expressio - expressiones vacuae absentes; separator = lista ut in iteratione (nodus separator et corpora heredoc)">
     <locus titulus="tok_apertura"             species="token"/>
     <locus titulus="tok_parenthesis"          species="token"/>
     <locus titulus="liberi"                   species="lista-nodus"/>
     <locus titulus="tok_parenthesis_clausura" species="token"/>
-    <locus titulus="tok_separator"            species="token"/>
+    <locus titulus="separator"                species="lista-nodus"/>
     <locus titulus="cursus"                   species="nodus"/>
     <locus titulus="redirectiones"            species="lista-nodus"/>
   </genus>
@@ -176,9 +177,10 @@
     <locus titulus="tok_clausura" species="token"/>
   </genus>
 
-  <genus titulus="electio" nota="case verbum in optiones esac [redirectiones]">
+  <genus titulus="electio" nota="case verbum [interiecta] in optiones esac [redirectiones]; interiecta = corpora heredoc post verbum ante in (linea nova ibi trivium est) - P6: corpus FreeBSD 'read x <<EOF; case $x' + linea nova">
     <locus titulus="tok_apertura"  species="token"/>
     <locus titulus="verbum"        species="nodus"/>
+    <locus titulus="interiecta"    species="lista-nodus"/>
     <locus titulus="tok_in"        species="token"/>
     <locus titulus="liberi"        species="lista-nodus"/>
     <locus titulus="tok_clausura"  species="token"/>

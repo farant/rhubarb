@@ -1038,7 +1038,7 @@ with non-blank text after the colon is a one-line section; `## NOMEN:`
 alone opens a multi-line section that ends at `## END` (exclusive). The
 reader works on bytes (CRLF cases keep their `\r`).
 
-- [ ] **Step 1: ASK Fran** before any fetch: "vendor FreeBSD
+- [x] **Step 1: ASK Fran** before any fetch: "vendor FreeBSD
   `bin/sh/tests/parser/` (BSD-2) into `probationes/fixa/crusta/freebsd/`?"
   On yes, in the scratchpad: `git clone --depth 1 --filter=blob:none
   --sparse https://github.com/freebsd/freebsd-src freebsd && cd freebsd &&
@@ -1048,7 +1048,7 @@ reader works on bytes (CRLF cases keep their `\r`).
   text from the repo's `COPYRIGHT`. On no, the corpus is the house scripts
   plus the two fixtures and this task's pins change accordingly.
 
-- [ ] **Step 2: Write `pathologiae.sh`** — one `#### title` block per
+- [x] **Step 2: Write `pathologiae.sh`** — one `#### title` block per
   snippet of spec Appendix A.9 (each with its own title: `positio-verba`,
   `heredoc-bini`, `substitutio-commentum`, `arith-subcrusta`,
   `sublinguae`, `fd-glutinatio`, `gravis-nidus`, `extglob`, `alias`), plus:
@@ -1064,7 +1064,7 @@ reader works on bytes (CRLF cases keep their `\r`).
   `si-apertum` (`if true; then` — invalid), `esac-solum`, `parenthesis-
   vaga`. Every block's datum ends with `\n`.
 
-- [ ] **Step 3: Write `adversarius.sh`** — CRLF THROUGHOUT (written with
+- [x] **Step 3: Write `adversarius.sh`** — CRLF THROUGHOUT (written with
   Python so the `\r\n` are real), unclosed `"`, `'`, `$(`, `${`, `((`,
   `[[`, `{`, `if`, `case`, a heredoc without delimiter at the end, `\` at
   EOF, `#` comment at EOF without newline, `$` at EOF, nesting `$( … )`
@@ -1072,13 +1072,13 @@ reader works on bytes (CRLF cases keep their `\r`).
   `</lex-litteralis>` and `</crusta-litteralis>` inside a word (the raw-form
   refusal case). No NUL (rides inline in P9).
 
-- [ ] **Step 4: Write the failing exempla gate** — read `pathologiae.sh`
+- [x] **Step 4: Write the failing exempla gate** — read `pathologiae.sh`
   (count pinned: the number of blocks written), every FreeBSD file (count
   and total bytes pinned from `FONTES.md`), a synthetic file with the
   one-line and multi-line section forms, a CRLF case; assert titles, data
   bytes, section lookup, `crusta_exemplum_sectio` NIHIL for an absent name.
 
-- [ ] **Step 5: Write the failing corpus gate** — `CORPUS[]` = every tracked
+- [x] **Step 5: Write the failing corpus gate** — `CORPUS[]` = every tracked
   `.sh` of the repo (the list is built at test time: the gate reads
   `RHUBARB_RADIX/build/crusta_corpus.lst`, which the RUNNER writes with
   `git ls-files '*.sh'` before the loop — add that line to
@@ -1092,16 +1092,16 @@ reader works on bytes (CRLF cases keep their `\r`).
   `plagulae_lectae ≥ 230`, `octeti_probati > 800 000`; house-corpus mala
   printed per file (pinned in P11, reported here).
 
-- [ ] **Step 6: Run, read failure #1 first** — one cause per fix; a
+- [x] **Step 6: Run, read failure #1 first** — one cause per fix; a
   substrate defect gets its own materia gate and commit first.
 
-- [ ] **Step 7: Fix until green.**
+- [x] **Step 7: Fix until green.**
 
-- [ ] **Step 8: Plant** — corpus: drop every `separator` node in the builder
+- [x] **Step 8: Plant** — corpus: drop every `separator` node in the builder
   → every file with `;` short → red; exempla: the section reader keeps the
   `## END` line → bytes red; revert both.
 
-- [ ] **Step 9: Words, format, commit**
+- [x] **Step 9: Words, format, commit**
 
 ```python
 silva.commissio("crusta: lector casuum (forma Oils '#### titulus' / '## SECTIO:'), fixa pathologiarum (appendix A.IX + additamenta) et adversarii (CRLF, aperta omnia, nidus CC), casus parser FreeBSD vendati (BSD-2, FONTES.md), porta exemplorum et porta corporis (plagulae domus CCXXX + fixa + FreeBSD octetim exactae, tegumentum lectoris per corpus; rubrae natae)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",
@@ -1114,6 +1114,20 @@ silva.commissio("crusta: lector casuum (forma Oils '#### titulus' / '## SECTIO:'
      "crusta/probationes/probatio_crusta_exempla.c",
      "crusta/probationes/probatio_crusta_corpus.c"], ["crusta"])
 ```
+
+**Executed 2026-09-16.** Fran approved the fetch: FreeBSD commit
+`3820d1e1`, 89 scripts, 17,297 bytes (`FONTES.md`). Corpus: 231 house
+scripts (817,646 bytes) + 2 fixtures + 89 FreeBSD, all byte-identical,
+lector coverage clean. The corpus found (1) the assignment-newline bug
+(a command with only assignments kept INITIUM mode, where a newline is
+trivia — ~150 house files had mala; fixed: ASSIGNATIONES after a first
+non-word child; the house corpus then parses with zero mala) and (2)
+FreeBSD heredoc14–16.0 putting heredoc bodies after a loop's separator,
+a loop name and a case word — the declaration grew two lists
+(`iteratio.interiecta`, `electio.interiecta`) and the two `tok_separator`
+tokens became `separator` lists (152 loci); bodies in gaps that keep no
+list are counted `heredoca_transposita` (sana FALSUM). Pathologiae: 32
+blocks; adversarius: 17 (last one `echo a \` at EOF).
 
 ---
 
