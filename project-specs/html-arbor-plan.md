@@ -993,12 +993,34 @@ tasks, one commit each, under the same Global Constraints.
   special stop removed → arbor red. The rest of template.dat (and of
   the tail) is table interplay — foster parenting — and joins the
   tables mechanism.
-- [ ] **O7 — the design turn:** `clonatum` (adoption agency, 75) and
-  `reinserendum` (table synthesis + foster parenting, 97 + template's
-  remainder). Spec §2.4 named the shape in 2026-08; the registry's
-  header names the extension points. To be talked through with Fran
-  before a line is written: a node with no bytes of its own, and a
-  node whose bytes live elsewhere than its tree position.
+- [ ] **O7 — the big mechanisms as DERIVED-VIEW ANNOTATIONS** (design
+  approved by Fran 2026-09-15, ledger decree "html O7"; materia
+  untouched). Three loci APPENDED to the html registry (declaration →
+  `-scribere` → slot enums by hand → canon rules + seal → computus
+  golden), each read only by the cooked view:
+  - `synthesis:index` on `elementum` — the element HTML5 invents
+    (`tbody`, `tr`, and the `html`/`head`/`body` wrappers): NO tokens,
+    name from a small table, the emitter prints nothing (H4 kept: no
+    synthetic tokens). Also retires the oracle's UNWRAP rule.
+  - `exemplar:referentia` on `elementum` — the adoption agency's
+    reopened formatting element: no tokens, name and attributes read
+    through the reference to the original.
+  - `sedes:referentia` on any node — foster parenting: the node stays
+    where its bytes are; the annotation names the table it belongs
+    before in the DOM; the cooked view moves it. (Spec §2.4's
+    substrate mechanism is NOT built; this is cheaper and honest: the
+    parse tree is the byte tree with DOM annotations.)
+  **ACCEPTANCE (Fran's condition): the STML round trip stays whole** —
+  every synthesis/exemplar/sedes case runs through `probatio_html_stml`
+  (two cycles, comparator, direct emission of the RE-READ tree
+  byte-identical to the source). It holds by construction (annotated
+  nodes carry no tokens or stay at their bytes; materia's REFERENTIA
+  and INDEX already project and read back — a reference target must
+  lie inside the written subtree, which a same-document table does),
+  and the gate asserts it. Order: O7a synthesis (+ wrappers, unwrap
+  rule retired), O7b table modes + `sedes` (foster parenting, table
+  scope), O7c adoption agency + `exemplar` (active formatting list).
+  Each its own commit with the pin moving.
 
 ## Self-Review
 

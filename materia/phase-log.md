@@ -2311,3 +2311,44 @@ DESIDERATA: a planting helper for non-C files (canon, TSV — done by
 hand twice); a formator mode that reports without reflowing
 one-liners; a `-vitia` that names the css originals as the source of
 inherited findings.
+
+## 2026-09-15 — phase 4 sequel: the html5lib oracle arc
+
+**INTENTIO.** After H11 the byte gate could not see a wrong tree, so
+the html client got an oracle: html5lib's tree-construction corpus
+(1,708 cases, vendored from the local Go module cache — 83 of them in
+NUL-bearing files a plain `grep` had silently dropped), read by
+`html_exempla`, judged by `probatio_html_oraculum` through a COOKED
+VIEW (`html_coctum`) with an unwrap rule for the html/head/body the
+expected trees synthesize. Then Fran: burn the cheap classes down,
+one commit each, the pin rising in the same commit.
+
+**RELATIO.** Nine commits: 887 at birth → 1,195 (70 %). Builder
+tables with `nisi` rows; `--!>` cooking; script-data escaping in
+`lib/html_lexema.c`; the 2,231-name entity table as a generated
+root-tier library shared with md; scope for p/li/dd/dt/button as
+per-frame visibility indices; foreign content through a shared
+`html_alienum` module; the lexer's full raw-text set and `plaintext`;
+tokens the DOM ignores widening `elementum-malum` to its true meaning;
+end tags in three classes. Substrate changes forced: NONE — the H1
+vocabulary of ten genera held through every mechanism, because each
+one was a placement decision expressed by absent slots. The two open
+materia items (raw-form limit, emitter depth) are exactly where they
+were. What remains is the first work that touches the registry: O7,
+derived-view annotations (`synthesis`, `exemplar`, `sedes`), design
+approved by Fran with the round-trip condition as the acceptance
+gate.
+
+**DEBRIEF INSTRUMENTORUM.** (1) The totality gate paid for itself a
+second time: a stack walk per start tag was quadratic in depth and
+killed the 100,000-deep pins while both oracles stayed green — keep
+the builder O(1) per token. (2) `silva.Editio` on a `.sh` applies the
+C width rule and breaks bash (quaestio 01M2KTVFG0). (3) A generated
+`.c` needs its own `.h` or aedilis' include closure never links it.
+(4) A suite that compiles another client's sources (briar builds md's
+decoder) must be in the gate list when a lib is added — the O2b-4
+commit broke briar unseen. (5) `lldb --batch` hangs on a forking
+probatio; the crash report under DiagnosticReports is faster. (6)
+`grep -c` without `-a` counts zero in a NUL file. (7) The identifier
+lint refused `frameset`, `rcdata`, `math`, `numericam`, `titularis` —
+each a renamed identifier, the glossary untouched.
