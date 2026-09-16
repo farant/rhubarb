@@ -129,7 +129,7 @@ built), `md/fontes/md_lexema.c` (a client-owned lexer making
   `CRUSTA_LEXICON`, `CrustaLexGenus`, `CrustaDialectus`, `CRUSTA_BASH`,
   the slot enums below.
 
-- [ ] **Step 1: Glossary** — after the `html` line of `oratio/glossarium.stml`
+- [x] **Step 1: Glossary** — after the `html` line of `oratio/glossarium.stml`
   (line 744 today) add:
 
 ```xml
@@ -141,7 +141,7 @@ built), `md/fontes/md_lexema.c` (a client-owned lexer making
 
   then `./tools/natura_struere.sh`.
 
-- [ ] **Step 2: The declaration** — `crusta/grammatica/crusta.registrum.stml`
+- [x] **Step 2: The declaration** — `crusta/grammatica/crusta.registrum.stml`
   verbatim from spec §4 (fifty genera in that order; loci in BYTE order).
   Header comment: the spec path, "genera APPENDUNTUR, numquam
   interponuntur", the C5 note on `heredoc` as the `corpus` target (`id`
@@ -150,13 +150,13 @@ built), `md/fontes/md_lexema.c` (a client-owned lexer making
   `bin/canon_examen crusta/grammatica/crusta.registrum.stml` — no vitia
   (exit 2 = nothing judged = the root is not registered; check the path).
 
-- [ ] **Step 3: Generate** —
+- [x] **Step 3: Generate** —
   `./materia/coquere.sh crusta/grammatica/crusta.registrum.stml -scribere`,
   then the same without `-scribere` (compare mode, exit 0 = recens). Read
   the generated header once: `CrustaGenus`, `CRUSTA_GENUS_NUMERUS_GENERUM`,
   `CRUSTA_REGISTRUM`; confirm `numerus_locorum == 150`.
 
-- [ ] **Step 4: Slot enums and the dialect (`crusta_registrum.h`)** —
+- [x] **Step 4: Slot enums and the dialect (`crusta_registrum.h`)** —
   includes the generated header; one enum per genus in declaration order,
   members in locus order (the registrum gate asserts each by title):
 
@@ -288,7 +288,7 @@ externus constans CrustaDialectus CRUSTA_BASH;
   < >`; arithmetici in P4 (the table is declared here, filled there — an
   empty NIHIL-terminated table until then).
 
-- [ ] **Step 5: The lexicon (`crusta_lexicon.h` + `.c`)** — the enum
+- [x] **Step 5: The lexicon (`crusta_lexicon.h` + `.c`)** — the enum
   `CrustaLexGenus` in the header, 50 members + sentinel, in THIS order
   (the rows follow it; the gate asserts by title):
 
@@ -347,7 +347,7 @@ nomen enumeratio {
   the LINEA munus PRESENT (md's answer, not html's) and the FIDELITAS
   question left to the stml gate.
 
-- [ ] **Step 6: The runner** — copy `html/compile_probationes.sh` to
+- [x] **Step 6: The runner** — copy `html/compile_probationes.sh` to
   `crusta/compile_probationes.sh`; rename every `html`/`HTML` (dir, log
   `build/test_logs/crusta.log`, banner `CRUSTA PROBATIONES: N/M
   praeteritae`, mensor prefix `crusta.`, env `CRUSTA_PROBATIONES_EFFUSIO`);
@@ -359,7 +359,7 @@ nomen enumeratio {
   include (crusta consumes materia only); keep the materia loop, the header
   guard, the sera lock, the adiumenta loop.
 
-- [ ] **Step 7: Write the failing registrum probatio** — transcribe
+- [x] **Step 7: Write the failing registrum probatio** — transcribe
   `html/probationes/probatio_html_registrum.c`: `ORDO_EXSPECTATUS` = the 50
   lexicon titles in enum order; `GENERA_EXSPECTATA` = the 50 genus titles
   in declaration order; the recens gate over
@@ -376,27 +376,27 @@ nomen enumeratio {
   through writer → reader → writer, byte-equal, `grammatica="crusta"` and
   `<lex-litteralis` present in the text.
 
-- [ ] **Step 8: Register in pythonica NOW** — `PORTAE['crusta'] =
+- [x] **Step 8: Register in pythonica NOW** — `PORTAE['crusta'] =
   (['./crusta/compile_probationes.sh'], r'CRUSTA PROBATIONES: \d+/\d+')`,
   `FORMAE['crusta'] = 'suita'`, `SUITAE['crusta'] = ('crusta/probationes',
   'crusta/build/%s')` (the mensor `praef` dict and `metiri` wait for P10).
   A runner outside the gate table is a dead gate, and this commit gates on
   `crusta`.
 
-- [ ] **Step 9: Run and verify it fails, then passes** —
+- [x] **Step 9: Run and verify it fails, then passes** —
   `./crusta/compile_probationes.sh registrum`. Exit 2 = a path is wrong.
 
-- [ ] **Step 10: Plant** — `silva.planta('crusta/fontes/crusta_lexicon.c',
+- [x] **Step 10: Plant** — `silva.planta('crusta/fontes/crusta_lexicon.c',
   <the SPATIUM row>, <the COMMENTUM row swapped into its place>, 'crusta',
   'registrum')` → red on the order-by-title assertion; reverted green.
   Second plant by hand: one byte of the generated `.c` → the recens gate
   names the line; revert.
 
-- [ ] **Step 11: `crusta/CLAUDE.md` stub** — what it is (one paragraph),
+- [x] **Step 11: `crusta/CLAUDE.md` stub** — what it is (one paragraph),
   spec and plan paths, the runner and its exit contract, "generated
   registry" paragraph (html's, retargeted), the two decrees by id.
 
-- [ ] **Step 12: Words, format, commit** — `./oratio/quaere.sh` on every
+- [x] **Step 12: Words, format, commit** — `./oratio/quaere.sh` on every
   new identifier word (`crusta lector situs regio petitio gradus …` as they
   appear); `./silva/formator.sh crusta/fontes/*.c crusta/fontes/*.h
   crusta/probationes/*.c -scribere` then `-vitia`; then
@@ -475,7 +475,7 @@ MateriaToken* crusta_lector_heredoc_finis (CrustaLector*);
               /* the newline after it, SEPARATOR_LINEAE; NIHIL at EOF */
 ```
 
-- [ ] **Step 1: Write the failing lector gate** — cases are `{fons, modi[],
+- [x] **Step 1: Write the failing lector gate** — cases are `{fons, modi[],
   exspectata[]}`: the test pulls in the listed mode sequence and asserts
   each token's genus and bytes, then BYTE COVERAGE: the concatenation of
   every token's value (trivia are tokens here, nothing is bound yet) equals
@@ -532,9 +532,9 @@ MateriaToken* crusta_lector_heredoc_finis (CrustaLector*);
     same tokens.
   Self-measure: cases run ≥ 40, bytes covered printed.
 
-- [ ] **Step 2: Run and verify it fails** — `./crusta/compile_probationes.sh lector`.
+- [x] **Step 2: Run and verify it fails** — `./crusta/compile_probationes.sh lector`.
 
-- [ ] **Step 3: Implement `crusta_lector.c`** — one `commutatio` on the mode
+- [x] **Step 3: Implement `crusta_lector.c`** — one `commutatio` on the mode
   choosing a scanner; every scanner returns a token from `_facere(lector,
   genus, ab, ad)` = `materia_token_creare(piscina, &forma, genus,
   {fons + ab, ad − ab}, ab, linea, columna, ZEPHYRUM)` and advances
@@ -587,12 +587,12 @@ MateriaToken* crusta_lector_heredoc_finis (CrustaLector*);
     delimiter; the region ends at that line's start; the modes HEREDOC /
     HEREDOC_LITTERALE lex inside it (a literal never crosses a line end).
 
-- [ ] **Step 4: Run and verify** — green, coverage printed.
+- [x] **Step 4: Run and verify** — green, coverage printed.
 
-- [ ] **Step 5: Plant** — in `_trivium`, the LAMINA branch consumes the
+- [x] **Step 5: Plant** — in `_trivium`, the LAMINA branch consumes the
   backslash but not the newline → coverage red by one byte; revert.
 
-- [ ] **Step 6: Words, format, commit**
+- [x] **Step 6: Words, format, commit**
 
 ```python
 silva.commissio("crusta: lector - functio (modus, positio), modi XV, regiones (heredoc, backtick cum profunditate), queue heredoc, glutinatio fd, partes verbi; porta lectoris (tegumentum octetorum per modos; rubra nata: lamina dimidiata)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",

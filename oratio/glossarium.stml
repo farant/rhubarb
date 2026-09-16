@@ -742,8 +742,9 @@
   <vocabulum lemma="json" lingua="anglica" classis="ignotum-permissum" nota="sedes 3327"/>
   <vocabulum lemma="utf8" lingua="anglica" classis="ignotum-permissum" nota="sedes 167"/>
   <vocabulum lemma="html" lingua="anglica" classis="ignotum-permissum" nota="sedes 860"/>
-  <vocabulum lemma="heredoc" lingua="anglica" classis="ignotum-permissum" nota="shell; sedes crusta (2026-09-16)">
+  <vocabulum lemma="heredoc" lingua="anglica" classis="ignotum-permissum" nota="shell; sedes crusta (2026-09-16); formae Latinizatae heredoca (pl.), heredoci (gen.)">
     <forma textus="heredoca"/>
+    <forma textus="heredoci"/>
   </vocabulum>
   <vocabulum lemma="bash" lingua="anglica" classis="ignotum-permissum" nota="dialectus crustae; CRUSTA_BASH (2026-09-16)"/>
   <vocabulum lemma="stml" lingua="anglica" classis="ignotum-permissum" nota="sedes 10918"/>

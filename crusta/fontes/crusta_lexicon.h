@@ -38,7 +38,8 @@ nomen enumeratio {
     /* structura */
     CRUSTA_LEX_RESERVATUM,
     CRUSTA_LEX_ASSIGNATIO_TITULUS,
-    CRUSTA_LEX_ASSIGNATIO_SUBSCRIPTUM,
+    CRUSTA_LEX_SUBSCRIPTUM,        /* [..] crudum: assignatio, expansio,
+                                    * variabilis arithmetica */
     CRUSTA_LEX_ASSIGNATIO_OPERATOR,
     CRUSTA_LEX_REDIRECTIO_FD,
     CRUSTA_LEX_REDIRECTIO_OPERATOR,
