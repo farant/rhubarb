@@ -882,13 +882,36 @@ tasks, one commit each, under the same Global Constraints.
   by a plant in the builder's void table (`br` removed → below the
   pin). Two oracle-side bugs fixed before pinning (svg/math self
   namespace; NUL cooking): 778 → 887.
-- [ ] **O2b — the oracle-named cheap rises (Fran to order):** builder
-  tables — `head` closed by `body` and the full HTML5 p-closing list
-  (`center dialog dir listing plaintext search summary xmp`); lexer
-  states — `--!>` closing a comment, script-data escaping
-  (`<!--<script>…</script>`), legacy entities without `;`; the 2,231
-  named entities as a generated table. Each a named change with the
-  pin moving in the same commit.
+- [ ] **O2b — the oracle-named cheap rises** (Fran, 2026-09-15: "burn
+  them down", one commit each, the pin moving in the same commit):
+  - [x] **O2b-1 builder tables** (2026-09-15): `p`'s closers completed
+    to WHATWG "in body" (`center dialog dir search summary listing
+    plaintext xmp li dd dt`); sections/rows/cells also closed by
+    `caption col colgroup`; `caption` row; ruby `rb rt rp rtc` rows;
+    `h1…h6` close each other; `a nobr button select` closed by
+    themselves (row with `claudentia` NIHIL); `head` and `colgroup`
+    closed by every start tag except a permitted set (`nisi` rows — the
+    table gained one flag, no program). Arbor gate: six new cases.
+    **887 → 930.** Plant: `dir` removed from the p-closers.
+  - [ ] **O2b-2 lexer: `--!>`** closes a comment (WHATWG "comment end
+    bang state"); bogus comment forms at EOF.
+  - [ ] **O2b-3 lexer: script-data escaping** (`<!--` inside script
+    opens the escaped states; `<script>` there opens double-escaped;
+    `</script>` closes only outside; `-->` returns) — real pages carry
+    `<!--` in scripts.
+  - [ ] **O2b-4 named entities** — DESIGN: one generated table of the
+    2,231 HTML5 names (+ the legacy no-semicolon forms) at root tier
+    (`lib/`), generated OFFLINE from Python's stdlib `html.entities`
+    by a tool script with a freshness gate, consumed by `md_decoctum`
+    (md's oracle polish 01M1NBEVM0 names it) and by `html_coctum`.
+  - [ ] **O2b-5 button scope for `p`** (mechanism 1): a `p` anywhere
+    in button scope is closed by a p-closer, not only at the top of
+    the stack — a change to the H1 top-of-stack LAW, to be explained
+    to Fran with the number before it lands.
+  - [ ] **O2b-6 foreign attributes**: SVG attribute case table
+    (`viewBox` …), MathML `definitionURL`, and the breakout of HTML
+    elements from foreign content (a stack walk to the nearest
+    integration point).
 - [ ] **O3 — wild fixtures.** Five to ten pages under
   `probationes/fixa/html/silvestria/` with their rows in `FONTES.md`;
   each fetch listed and asked. They feed totality, computus and the

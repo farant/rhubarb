@@ -600,6 +600,58 @@ principale (vacuum)
         liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
         CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
         CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
+
+        /* O2b (oraculum html5lib): tabulae impletae */
+        imprimere("\n--- Probans '<head><body>': head ab omni nisi ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "<head><body>", XII));
+        documentum = _parsare(piscina, "<head><body>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_LIBERI));
+        /* exceptio: title in head manet */
+        documentum = _parsare(piscina, "<head><title>t</title>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+
+        imprimere("\n--- Probans '<ruby>a<rb>b<rt>c</ruby>' ---\n");
+        CREDO_VERUM (_octetos_probare(piscina,
+            "<ruby>a<rb>b<rt>c</ruby>", XXIV));
+        documentum = _parsare(piscina, "<ruby>a<rb>b<rt>c</ruby>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            III);
+
+        imprimere("\n--- Probans '<p>x<dir>y' et '<h1>a<h2>b' ---\n");
+        documentum = _parsare(piscina, "<p>x<dir>y");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        documentum = _parsare(piscina, "<h1>a<h2>b");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+
+        imprimere("\n--- Probans '<a>1<a>2': a se ipso clausum ---\n");
+        documentum = _parsare(piscina, "<a>1<a>2");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+
+        imprimere("\n--- Probans '<colgroup><col><tbody>' ---\n");
+        documentum = _parsare(piscina, "<colgroup><col><tbody>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
     }
 
 

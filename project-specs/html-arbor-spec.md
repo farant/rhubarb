@@ -615,6 +615,17 @@ parity needs no new genus.
   `option` ← `option optgroup`; `optgroup` ← `optgroup`; `tr` ← `tr
   tbody thead tfoot`; `td`/`th` ← `td th tr tbody thead tfoot`;
   `thead`/`tbody`/`tfoot` ← `tbody thead tfoot`.
+  **Refilled from the html5lib oracle (O2b-1, 2026-09-15):** `p`'s
+  list completed to WHATWG "in body" (`+ center dialog dir search
+  summary listing plaintext xmp li dd dt`); table sections, rows and
+  cells also closed by `caption col colgroup`; `caption` ← `caption
+  col colgroup tbody td tfoot th thead tr`; ruby `rb`/`rt`/`rp` ← `rb
+  rt rtc rp`, `rtc` ← `rb rtc`; `h1…h6` ← `h1…h6`; `a nobr button
+  select` ← themselves (row with `claudentia` NIHIL); `head` and
+  `colgroup` ← EVERY start tag except their permitted set (`nisi`
+  rows: `base basefont bgsound link meta title noscript noframes style
+  script template head`; `col template`). Still top-of-stack only
+  (button scope = mechanism 1, deferred). Oracle 887 → 930.
 - **End-tag rule**: an end tag pops the stack to the nearest open
   element of the same name (ASCII case-insensitive, H1), implicitly
   closing everything above it (`<div><p>x</div>` closes `p` with

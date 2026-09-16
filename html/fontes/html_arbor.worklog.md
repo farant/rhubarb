@@ -217,3 +217,20 @@ The expensive ones are the mechanisms spec §6.1 deferred by H1
 (table synthesis, adoption agency, foreign breakout): those are the
 distance the oracle was built to measure, and 887 is that distance's
 first mark.
+
+## 2026-09-15 — O2b-1: the tables refilled from the oracle, 887 → 930
+
+Ranking the depth-class failures by the node at the wrong depth gave
+the list directly: `p` 15, `div` 11, `rt` 10, `plaintext` 6, `nobr`
+6, `button` 5, `rp` 5, `li` 5, `rtc`/`rb` 4, `dd` 3, `listing`,
+`summary`, `h2`. Every one is a missing row in `CLAUSURAE_IMPLICITAE`,
+not a missing mechanism. The table gained one flag (`nisi`: the list
+names the exceptions, everything else closes — for `head` and
+`colgroup`, whose HTML5 rule is "any start tag not allowed here") and
+one convention (`claudentia` NIHIL = closed by its own name — `a`,
+`nobr`, `button`, `select`). Still a table, no program (M7).
+
+Forty-three cases rose. The remaining depth failures are the real
+mechanism: `<a>1<p>2</a>3</p>` wants the adoption agency to reopen `a`
+inside `p`, and `<p><b>x<div>` wants button scope, which O2b-5 will
+ask about before changing the top-of-stack law.

@@ -376,12 +376,20 @@ hic_manens constans character* constans VACUA[] = {
  * iterum dum vertex novus quoque clauditur. Vertex solus
  * (aedificator simplex, H1): '<p><b>x<div>' p NON claudit quia b in
  * vertice est - algorithmus plenus HTML5 scopum 'button' quaereret
- * (mechanismus I, spec par. VI.1). */
+ * (mechanismus I, spec par. VI.1). Tabulae ex oraculo html5lib
+ * (O2b, 2026-09-15) impletae: tabula p plena WHATWG 'in body'
+ * (center dialog dir search summary listing plaintext xmp li dd dt),
+ * sectiones tabularum a caption/col/colgroup, annotationes ruby,
+ * capita h1-h6 inter se, a/nobr/button/select a se ipsis (claudentia
+ * NIHIL = titulus proprius), head et colgroup ab OMNI tag praeter
+ * exceptiones (nisi VERUM: tabula = exceptiones). */
 hic_manens constans character* constans CLAUDENTIA_PARAGRAPHI[] = {
-    "address", "article", "aside", "blockquote", "details", "div",
-    "dl", "fieldset", "figcaption", "figure", "footer", "form", "h1",
-    "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "main",
-    "menu", "nav", "ol", "p", "pre", "section", "table", "ul"
+    "address", "article", "aside", "blockquote", "center", "details",
+    "dialog", "dir", "div", "dl", "fieldset", "figcaption", "figure",
+    "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header",
+    "hgroup", "hr", "main", "menu", "nav", "ol", "p", "pre", "section",
+    "table", "ul", "search", "summary", "listing", "plaintext", "xmp",
+    "li", "dd", "dt"
 };
 hic_manens constans character* constans CLAUDENTIA_MEMBRI[] = {
     "li"
@@ -396,46 +404,84 @@ hic_manens constans character* constans CLAUDENTIA_GREGIS[] = {
     "optgroup"
 };
 hic_manens constans character* constans CLAUDENTIA_ORDINIS[] = {
-    "tr", "tbody", "thead", "tfoot"
+    "tr", "tbody", "thead", "tfoot", "caption", "col", "colgroup"
 };
 hic_manens constans character* constans CLAUDENTIA_CELLAE[] = {
-    "td", "th", "tr", "tbody", "thead", "tfoot"
+    "td", "th", "tr", "tbody", "thead", "tfoot", "caption", "col",
+    "colgroup"
 };
 hic_manens constans character* constans CLAUDENTIA_SECTIONIS[] = {
-    "tbody", "thead", "tfoot"
+    "tbody", "thead", "tfoot", "caption", "col", "colgroup"
+};
+hic_manens constans character* constans CLAUDENTIA_INSCRIPTIONIS[] = {
+    "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead",
+    "tr"
+};
+hic_manens constans character* constans CLAUDENTIA_ANNOTATIONIS[] = {
+    "rb", "rt", "rtc", "rp"
+};
+hic_manens constans character* constans CLAUDENTIA_ANNOTATIONUM[] = {
+    "rb", "rtc"
+};
+hic_manens constans character* constans CLAUDENTIA_CAPITUM[] = {
+    "h1", "h2", "h3", "h4", "h5", "h6"
+};
+/* nisi: quae head NON claudunt (WHATWG 'in head') */
+hic_manens constans character* constans PERMISSA_CAPITIS[] = {
+    "base", "basefont", "bgsound", "link", "meta", "title", "noscript",
+    "noframes", "style", "script", "template", "head"
+};
+/* nisi: quae colgroup NON claudunt (WHATWG 'in column group') */
+hic_manens constans character* constans PERMISSA_COLUMNARUM[] = {
+    "col", "template"
 };
 
+/* claudentia NIHIL = titulus proprius solus; nisi VERUM = claudentia
+ * sunt EXCEPTIONES (omne aliud tag claudit). */
 nomen structura {
               constans character* apertum;
     constans character* constans*  claudentia;
                              i32 numerus;
+                             b32 nisi;
 } ClausuraImplicita;
 
+#define REGULA(apertum, tabula) \
+    { apertum, tabula, TABULAE_NUMERUS(tabula), FALSUM }
+#define REGULA_NISI(apertum, tabula) \
+    { apertum, tabula, TABULAE_NUMERUS(tabula), VERUM }
+#define REGULA_IPSIUS(apertum) \
+    { apertum, NIHIL, ZEPHYRUM, FALSUM }
+
 hic_manens constans ClausuraImplicita CLAUSURAE_IMPLICITAE[] = {
-    { "p",        CLAUDENTIA_PARAGRAPHI,
-        TABULAE_NUMERUS(CLAUDENTIA_PARAGRAPHI) },
-    { "li",       CLAUDENTIA_MEMBRI,
-        TABULAE_NUMERUS(CLAUDENTIA_MEMBRI) },
-    { "dt",       CLAUDENTIA_DEFINITIONIS,
-        TABULAE_NUMERUS(CLAUDENTIA_DEFINITIONIS) },
-    { "dd",       CLAUDENTIA_DEFINITIONIS,
-        TABULAE_NUMERUS(CLAUDENTIA_DEFINITIONIS) },
-    { "option",   CLAUDENTIA_OPTIONIS,
-        TABULAE_NUMERUS(CLAUDENTIA_OPTIONIS) },
-    { "optgroup", CLAUDENTIA_GREGIS,
-        TABULAE_NUMERUS(CLAUDENTIA_GREGIS) },
-    { "tr",       CLAUDENTIA_ORDINIS,
-        TABULAE_NUMERUS(CLAUDENTIA_ORDINIS) },
-    { "td",       CLAUDENTIA_CELLAE,
-        TABULAE_NUMERUS(CLAUDENTIA_CELLAE) },
-    { "th",       CLAUDENTIA_CELLAE,
-        TABULAE_NUMERUS(CLAUDENTIA_CELLAE) },
-    { "thead",    CLAUDENTIA_SECTIONIS,
-        TABULAE_NUMERUS(CLAUDENTIA_SECTIONIS) },
-    { "tbody",    CLAUDENTIA_SECTIONIS,
-        TABULAE_NUMERUS(CLAUDENTIA_SECTIONIS) },
-    { "tfoot",    CLAUDENTIA_SECTIONIS,
-        TABULAE_NUMERUS(CLAUDENTIA_SECTIONIS) }
+    REGULA("p",        CLAUDENTIA_PARAGRAPHI),
+    REGULA("li",       CLAUDENTIA_MEMBRI),
+    REGULA("dt",       CLAUDENTIA_DEFINITIONIS),
+    REGULA("dd",       CLAUDENTIA_DEFINITIONIS),
+    REGULA("option",   CLAUDENTIA_OPTIONIS),
+    REGULA("optgroup", CLAUDENTIA_GREGIS),
+    REGULA("tr",       CLAUDENTIA_ORDINIS),
+    REGULA("td",       CLAUDENTIA_CELLAE),
+    REGULA("th",       CLAUDENTIA_CELLAE),
+    REGULA("thead",    CLAUDENTIA_SECTIONIS),
+    REGULA("tbody",    CLAUDENTIA_SECTIONIS),
+    REGULA("tfoot",    CLAUDENTIA_SECTIONIS),
+    REGULA("caption",  CLAUDENTIA_INSCRIPTIONIS),
+    REGULA("rb",       CLAUDENTIA_ANNOTATIONIS),
+    REGULA("rt",       CLAUDENTIA_ANNOTATIONIS),
+    REGULA("rp",       CLAUDENTIA_ANNOTATIONIS),
+    REGULA("rtc",      CLAUDENTIA_ANNOTATIONUM),
+    REGULA("h1",       CLAUDENTIA_CAPITUM),
+    REGULA("h2",       CLAUDENTIA_CAPITUM),
+    REGULA("h3",       CLAUDENTIA_CAPITUM),
+    REGULA("h4",       CLAUDENTIA_CAPITUM),
+    REGULA("h5",       CLAUDENTIA_CAPITUM),
+    REGULA("h6",       CLAUDENTIA_CAPITUM),
+    REGULA_IPSIUS("a"),
+    REGULA_IPSIUS("nobr"),
+    REGULA_IPSIUS("button"),
+    REGULA_IPSIUS("select"),
+    REGULA_NISI("head",     PERMISSA_CAPITIS),
+    REGULA_NISI("colgroup", PERMISSA_COLUMNARUM)
 };
 
 /* Titulus tagi (litteris neglectis) == litterae tabulae? */
@@ -507,8 +553,15 @@ _claudit (
 
         si (_titulus_est(apertum, regula->apertum))
         {
-            redde _in_tabula(novum, regula->claudentia,
+            b32 in_tabula;
+
+            si (regula->claudentia == NIHIL)
+            {
+                redde _titulus_est(novum, regula->apertum);
+            }
+            in_tabula = _in_tabula(novum, regula->claudentia,
                 regula->numerus);
+            redde regula->nisi ? (b32)!in_tabula : in_tabula;
         }
     }
     redde FALSUM;
