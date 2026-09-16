@@ -11,6 +11,12 @@
  *
  * TESTIS POSITIVUS: initus manu scriptus '<p>a</b></p>' malum UNUM
  * exspectatum - ne numerator mala non videat.
+ *
+ * O7a (2026-09-15): md CONTENTUM CORPORIS reddit (nec html nec
+ * body), ergo ut FRAGMENTUM contextu 'body' parsatur: involucra non
+ * finguntur, spatia inter commentaria ducentia textus manent. Ut
+ * documentum parsatum spatia ante html malum darent (spec 'before
+ * html' ea neglegit) - IV in sabaw.md, quae nihil de md dicunt.
  */
 
 #include "latina.h"
@@ -179,8 +185,9 @@ _html_probare (
     MateriaArborDifferentia d;
     s32 vitia;
 
-    radix = html_arbor_parsare(piscina, (constans character*)html.datum,
-        html.mensura);
+    radix = html_arbor_parsare_fragmentum(piscina,
+        (constans character*)html.datum, html.mensura,
+        chorda_ex_literis("body", piscina), HTML_ALIENUM_NULLUM);
     si (radix == NIHIL)
     {
         imprimere("  %s: parsator NIHIL\n", titulus);

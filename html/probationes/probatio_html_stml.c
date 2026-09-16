@@ -25,6 +25,13 @@
  * (dominus unus). PINNA infra: recusatio ipsa asseritur - cum
  * materia recidat, pinna rubet et in circuitum promovetur. Ledger
  * quaestio materiae.
+ *
+ * ACCEPTATIO O7 (Fran 2026-09-15): annotationes visionis derivatae
+ * (synthesis O7a; sedes O7b; exemplar O7c) circuitum INTEGRUM servant
+ * - casus annotati infra (involucra ficta, partes tabulae fictae,
+ * fragmenta) per cyclos duos, comparatorem et emissionem directam
+ * arboris RELECTAE octetim == fons; et annotatio ipsa per circuitum
+ * vivit (locus synthesis in arbore relecta, PORTA infra).
  */
 
 #include "latina.h"
@@ -85,10 +92,36 @@ hic_manens constans character* CASUS[] = {
     "<p>\n  <b>x</b>\n</p>\n",
     "<p>textus cum </lex-textus> intra se</p>",
     "a\r\nb<p\r\n class=x>c\r\n</p>",
-    "<div\n"
+    "<div\n",
+    /* O7a: involucra ficta, partes tabulae fictae, textus albus ante
+     * html (malum), '</head>' in ficto */
+    "<p>a",
+    "<table><td>x",
+    "<table><col><col>",
+    "<title>t</title>x",
+    "\n<p>x</p>\n",
+    "</head>x",
+    "<html><head></head><body></body></html>\n"
 };
 
 #define NUMERUS_CASUUM ((i32)(magnitudo(CASUS)/magnitudo(CASUS[0])))
+
+/* O7a: fragmenta (contextus HTML) - contextus vertex sub acervo */
+nomen structura {
+    constans character* contextus;
+    constans character* fons;
+} Fragmentum;
+
+hic_manens constans Fragmentum FRAGMENTA[] = {
+    { "table", "<tr><td>x" },
+    { "tbody", "<td>x</td>" },
+    { "html",  "<p>a" },
+    { "body",  "<td>x" },
+    { "frameset", "<p><frame>" }
+};
+
+#define NUMERUS_FRAGMENTORUM \
+    ((i32)(magnitudo(FRAGMENTA)/magnitudo(FRAGMENTA[0])))
 
 /* Causae nominatae */
 enumeratio {
@@ -151,6 +184,58 @@ _plagulam_legere (
     redde memoria;
 }
 
+hic_manens MateriaNodus*
+_liber (
+    constans MateriaNodus* nodus,
+                      i32  locus,
+                      i32  i)
+{
+    MateriaValor* v;
+
+    si (   nodus                    == NIHIL
+        || nodus->loci[locus].genus != MATERIA_VALOR_LISTA)
+    { redde NIHIL;
+    }
+    v = materia_valor_lista_obtinere(nodus->loci[locus], i);
+    redde (v != NIHIL && v->genus == MATERIA_VALOR_NODUS)
+        ? v->datum.nodus : NIHIL;
+}
+
+/* Valor loci synthesis (NULLA si absens aut nodus non elementum) */
+hic_manens s32
+_synthesis (
+    constans MateriaNodus* nodus)
+{
+    si (   nodus        == NIHIL
+        || nodus->genus != (s32)HTML_GENUS_ELEMENTUM
+        || nodus->loci[HTML_ELEMENTUM_SYNTHESIS].genus
+               != MATERIA_VALOR_INDEX)
+    { redde (s32)HTML_SYNTHESIS_NULLA;
+    }
+    redde nodus->loci[HTML_ELEMENTUM_SYNTHESIS].datum.index;
+}
+
+hic_manens b32
+_textus_continet (
+                 chorda  textus,
+     constans character* litterae)
+{
+    i32 mensura = (i32)strlen(litterae);
+    i32 i;
+
+    si (mensura == ZEPHYRUM || textus.mensura < mensura)
+    { redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i + mensura <= textus.mensura; i++)
+    {
+        si (memcmp(textus.datum + i, litterae, (size_t)mensura)
+                == ZEPHYRUM)
+        { redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* nuntius = causa scriptoris aut lectoris (NIHIL si nulla) */
 nomen structura {
                     integer  causa;
@@ -161,13 +246,15 @@ nomen structura {
 
 /* Duo cycli + comparator. 'mutare' = culpa plantata probationis:
  * arborem relectam ANTE comparationem laedere (octeti iam scripti)
- * - oraculum separans: octeti idem, arbor dispar. */
+ * - oraculum separans: octeti idem, arbor dispar. contextus NIHIL =
+ * documentum, aliter fragmentum (O7a). */
 hic_manens Circuitus
 _circuitum_probare (
                             Piscina* piscina,
      constans MateriaArborConsilium* consilium,
                  constans character* fons,
                                 i32  mensura,
+                 constans character* contextus,
                                 b32  mutare)
 {
     Circuitus c;
@@ -180,7 +267,15 @@ _circuitum_probare (
     memset(&c, ZEPHYRUM, magnitudo(Circuitus));
     c.causa = CIRCUITUS_IDEM;
 
-    radix = html_arbor_parsare(piscina, fons, mensura);
+    si (contextus == NIHIL)
+    {
+        radix = html_arbor_parsare(piscina, fons, mensura);
+    }
+    alioquin
+    {
+        radix = html_arbor_parsare_fragmentum(piscina, fons, mensura,
+            chorda_ex_literis(contextus, piscina), HTML_ALIENUM_NULLUM);
+    }
     si (radix == NIHIL)
     { c.causa = CIRCUITUS_PARSATOR_NIHIL; redde c;
     }
@@ -314,11 +409,29 @@ principale (vacuum)
     per (i = ZEPHYRUM; i < NUMERUS_CASUUM; i++)
     {
         Circuitus c = _circuitum_probare(piscina, &consilium, CASUS[i],
-            (i32)strlen(CASUS[i]), FALSUM);
+            (i32)strlen(CASUS[i]), NIHIL, FALSUM);
 
         si (c.causa != CIRCUITUS_IDEM)
         {
             imprimere("  casus %d: %s\n", (integer)i, CASUS[i]);
+            _causam_imprimere(&c);
+        }
+        CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
+        circuitus_numerus = circuitus_numerus + I;
+    }
+
+    imprimere("\n--- PORTA: circuitus STML, fragmenta (%d) ---\n",
+        (integer)NUMERUS_FRAGMENTORUM);
+    per (i = ZEPHYRUM; i < NUMERUS_FRAGMENTORUM; i++)
+    {
+        Circuitus c = _circuitum_probare(piscina, &consilium,
+            FRAGMENTA[i].fons, (i32)strlen(FRAGMENTA[i].fons),
+            FRAGMENTA[i].contextus, FALSUM);
+
+        si (c.causa != CIRCUITUS_IDEM)
+        {
+            imprimere("  fragmentum %d [%s]: %s\n", (integer)i,
+                FRAGMENTA[i].contextus, FRAGMENTA[i].fons);
             _causam_imprimere(&c);
         }
         CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
@@ -352,7 +465,7 @@ principale (vacuum)
             perge;
         }
         c = _circuitum_probare(piscina, &consilium, textus, mensura,
-            FALSUM);
+            NIHIL, FALSUM);
         imprimere("  %-56s %7d -> %8d octeti STML  %s\n", CORPUS[i],
             (integer)mensura, (integer)c.octeti_stml, CAUSAE[c.causa]);
         _causam_imprimere(&c);
@@ -364,7 +477,53 @@ principale (vacuum)
 
     /* se metiens */
     CREDO_AEQUALIS_I32 (circuitus_numerus, NUMERUS_CASUUM
-        + NUMERUS_CORPORIS);
+        + NUMERUS_FRAGMENTORUM + NUMERUS_CORPORIS);
+
+
+    /* ==================================================
+     * PORTA: annotatio synthesis per circuitum VIVIT (O7a)
+     * ================================================== */
+
+    {
+        MateriaNodus* radix;
+        MateriaNodus* relecta;
+        MateriaNodus* html;
+        MateriaNodus* corpus;
+        MateriaNodus* tabula;
+        MateriaNodus* sectio;
+        MateriaArborScriptura s;
+        MateriaArborVitium vitium;
+
+        imprimere("\n--- PORTA: annotatio synthesis relecta ---\n");
+        radix = html_arbor_parsare(piscina, "<table><td>x", (i32)XII);
+        CREDO_NON_NIHIL (radix);
+        s = materia_arbor_scribere_nodum(piscina, radix, &consilium);
+        CREDO_VERUM (s.successus);
+        /* locus index in STML: '<synthesis(> n' (forma textus) */
+        CREDO_VERUM (_textus_continet(s.textus, "<synthesis("));
+        relecta = s.successus ? materia_arbor_legere(piscina, NIHIL,
+            s.textus, &consilium, &vitium) : NIHIL;
+        CREDO_NON_NIHIL (relecta);
+        html = _liber(relecta, (i32)HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        corpus = _liber(html, (i32)HTML_ELEMENTUM_LIBERI, (i32)I);
+        tabula = _liber(corpus, (i32)HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        sectio = _liber(tabula, (i32)HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(html),
+            (s32)HTML_SYNTHESIS_RADIX);
+        CREDO_AEQUALIS_S32 (_synthesis(_liber(html,
+            (i32)HTML_ELEMENTUM_LIBERI, ZEPHYRUM)),
+            (s32)HTML_SYNTHESIS_CAPUT);
+        CREDO_AEQUALIS_S32 (_synthesis(corpus),
+            (s32)HTML_SYNTHESIS_CORPUS);
+        CREDO_AEQUALIS_S32 (_synthesis(tabula),
+            (s32)HTML_SYNTHESIS_NULLA);
+        CREDO_AEQUALIS_S32 (_synthesis(sectio),
+            (s32)HTML_SYNTHESIS_CORPUS_TABULAE);
+        CREDO_AEQUALIS_S32 (_synthesis(_liber(sectio,
+            (i32)HTML_ELEMENTUM_LIBERI, ZEPHYRUM)),
+            (s32)HTML_SYNTHESIS_ORDO);
+    }
     CREDO_MAIOR_I32 (octeti_fontis, (i32)(C * M));
     CREDO_MAIOR_I32 (octeti_stml, octeti_fontis);
     imprimere("  summa: %d circuitus, %d octeti fontis, %d STML\n",
@@ -387,7 +546,7 @@ principale (vacuum)
         per (k = ZEPHYRUM; k < II; k++)
         {
             Circuitus c = _circuitum_probare(piscina, &consilium,
-                LIMITES[k], (i32)strlen(LIMITES[k]), FALSUM);
+                LIMITES[k], (i32)strlen(LIMITES[k]), NIHIL, FALSUM);
 
             /* RUBET CUM MATERIA RECIDAT - tunc in CASUS promovendi */
             CREDO_AEQUALIS_S32 ((s32)c.causa,
@@ -414,7 +573,7 @@ principale (vacuum)
          * manent, comparator solus dissentit. Si haec assertio
          * viridis esset sine laesione, comparator non curreret. */
         c = _circuitum_probare(piscina, &consilium, "<p>a</p><p>b</p>",
-            (i32)XVI, VERUM);
+            (i32)XVI, NIHIL, VERUM);
         CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_ARBOR_DISPAR);
         CREDO_NON_NIHIL (c.differentia.campus);
     }

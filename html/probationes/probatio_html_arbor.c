@@ -12,6 +12,13 @@
  * H4: elementa vacua (tabula XIII) et clausurae implicitae (tabula,
  * vertex acervi) - tabulae par. IV.2 ordines ceteri. O2b-5: scopus
  * (p per b, li per div non per pre, button per b, object limes).
+ *
+ * O7a (2026-09-15): probationes structurae 'in body' per FRAGMENTUM
+ * contextu 'body' currunt (_parsare) - mechanica elementorum sine
+ * involucris fictis; involucra html/head/body, partes tabulae fictae
+ * et fragmenta per _parsare_documentum / _parsare_fragmentum in
+ * ordine suo (STRUCTURA O7a) asseruntur: locus synthesis, tok_apertura
+ * absens, clausura vera in ficto.
  */
 
 #include "latina.h"
@@ -66,17 +73,53 @@ _octetos_probare (
 /* Fontem ex piscina allocare: parsator octetos NON copiat, ergo
  * litterae staticae sufficiunt, sed haec via lectionem css
  * (buffer acervi = lexemata in tabulatum mortuum) documentat. */
+hic_manens character*
+_fons (
+               Piscina* piscina,
+    constans character* litterae,
+                   i32* mensura)
+{
+    character* fons;
+
+    *mensura  = (i32)strlen(litterae);
+    fons      = (character*)piscina_allocare(piscina,
+        (memoriae_index)*mensura + I);
+    memcpy(fons, litterae, (size_t)*mensura + I);
+    redde fons;
+}
+
+hic_manens MateriaNodus*
+_parsare_documentum (
+               Piscina* piscina,
+    constans character* litterae)
+{
+           i32  mensura;
+     character* fons = _fons(piscina, litterae, &mensura);
+
+    redde html_arbor_parsare(piscina, fons, mensura);
+}
+
+hic_manens MateriaNodus*
+_parsare_fragmentum (
+               Piscina* piscina,
+    constans character* contextus,
+    constans character* litterae)
+{
+           i32  mensura;
+     character* fons = _fons(piscina, litterae, &mensura);
+
+    redde html_arbor_parsare_fragmentum(piscina, fons, mensura,
+        chorda_ex_literis(contextus, piscina), HTML_ALIENUM_NULLUM);
+}
+
+/* Mechanica 'in body' sine involucris fictis (O7a): fragmentum
+ * contextu 'body'. */
 hic_manens MateriaNodus*
 _parsare (
                Piscina* piscina,
     constans character* litterae)
 {
-          i32  mensura = (i32)strlen(litterae);
-    character* fons = (character*)piscina_allocare(piscina,
-        (memoriae_index)mensura + I);
-
-    memcpy(fons, litterae, (size_t)mensura + I);
-    redde html_arbor_parsare(piscina, fons, mensura);
+    redde _parsare_fragmentum(piscina, "body", litterae);
 }
 
 hic_manens i32
@@ -121,6 +164,38 @@ _tok (
 {
     redde (nodus->loci[locus].genus == MATERIA_VALOR_TOKEN)
         ? nodus->loci[locus].datum.token : NIHIL;
+}
+
+/* Valor loci synthesis elementi (NULLA si absens, nodus non elementum
+ * aut NIHIL) */
+hic_manens s32
+_synthesis (
+    constans MateriaNodus* nodus)
+{
+    si (   nodus        == NIHIL
+        || nodus->genus != (s32)HTML_GENUS_ELEMENTUM
+        || nodus->loci[HTML_ELEMENTUM_SYNTHESIS].genus
+               != MATERIA_VALOR_INDEX)
+    {
+        redde (s32)HTML_SYNTHESIS_NULLA;
+    }
+    redde nodus->loci[HTML_ELEMENTUM_SYNTHESIS].datum.index;
+}
+
+/* Liber i elementi html (liber primus documenti) - involucra ficta
+ * documenti: ZEPHYRUM head, I body (aut frameset) */
+hic_manens MateriaNodus*
+_involutum (
+    constans MateriaNodus* documentum,
+                      i32  i)
+{
+    MateriaNodus* html = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+        ZEPHYRUM);
+
+    si (html == NIHIL)
+    { redde NIHIL;
+    }
+    redde _liber(html, HTML_ELEMENTUM_LIBERI, i);
 }
 
 integer
@@ -567,13 +642,24 @@ principale (vacuum)
             HTML_DOCUMENTUM_LIBERI),
             I);
         imprimere("\n--- Probans '<svg><p>x': eruptio ---\n");
+        /* documentum: in fragmento eruptio numquam (spec 'fragment
+         * case', O7a) - p intra g manet */
+        documentum  = _parsare_documentum(piscina, "<svg><g><p>x");
+        elementum   = _involutum(documentum, I);   /* body fictum */
+        CREDO_NON_NIHIL (elementum);
+        si (elementum != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_numerus(elementum,
+                HTML_ELEMENTUM_LIBERI), II);
+            elementum = _liber(elementum, HTML_ELEMENTUM_LIBERI,
+                ZEPHYRUM);
+            CREDO_VERUM (_absens(elementum,
+                HTML_ELEMENTUM_TOK_CLAUSURA));
+        }
         documentum = _parsare(piscina, "<svg><g><p>x");
         CREDO_AEQUALIS_I32 (_numerus(documentum,
             HTML_DOCUMENTUM_LIBERI),
-            II);
-        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
-            ZEPHYRUM);
-        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+            I);
         /* punctum integrationis: p intra desc manet, b intra mi */
         documentum = _parsare(piscina, "<svg><desc><p>x</desc></svg>");
         CREDO_AEQUALIS_I32 (_numerus(documentum,
@@ -616,46 +702,70 @@ principale (vacuum)
             _liber(elementum, HTML_ELEMENTUM_LIBERI, I)->genus,
             (s32)HTML_GENUS_ELEMENTUM_MALUM);
         imprimere("\n--- Probans '<html><html x>' iteratum ---\n");
+        /* O7a: html verum, malum, head fictum (vacuum), body fictum
+         * cum y */
         CREDO_VERUM (_octetos_probare(piscina, "<html><html x=1>y",
             XVII));
-        documentum = _parsare(piscina, "<html><html x=1>y");
+        documentum = _parsare_documentum(piscina, "<html><html x=1>y");
         elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
             ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_APERTURA));
         CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
-            II);
+            III);
         CREDO_AEQUALIS_S32 (
             _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)->genus,
             (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        CREDO_AEQUALIS_S32 (_synthesis(_involutum(documentum, I)),
+            (s32)HTML_SYNTHESIS_CAPUT);
+        CREDO_AEQUALIS_S32 (_synthesis(_involutum(documentum, II)),
+            (s32)HTML_SYNTHESIS_CORPUS);
         imprimere("\n--- Probans '<body></body>x' apertum ---\n");
         CREDO_VERUM (_octetos_probare(piscina, "<body></body>x", XIV));
-        documentum = _parsare(piscina, "<body></body>x");
+        documentum = _parsare_documentum(piscina, "<body></body>x");
         CREDO_AEQUALIS_I32 (_numerus(documentum,
             HTML_DOCUMENTUM_LIBERI),
             I);
-        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
-            ZEPHYRUM);
-        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
-        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
-            II);
+        elementum = _involutum(documentum, I);   /* body verum */
+        CREDO_NON_NIHIL (elementum);
+        si (elementum != NIHIL)
+        {
+            CREDO_NON_NIHIL (_tok(elementum,
+                HTML_ELEMENTUM_TOK_APERTURA));
+            CREDO_VERUM (_absens(elementum,
+                HTML_ELEMENTUM_TOK_CLAUSURA));
+            CREDO_AEQUALIS_I32 (_numerus(elementum,
+                HTML_ELEMENTUM_LIBERI), II);
+        }
         imprimere("\n--- Probans frameset: neglecta ---\n");
         CREDO_VERUM (_octetos_probare(piscina,
             "<frameset><p>x<frame></frameset>", XXXII));
-        documentum = _parsare(piscina,
+        documentum = _parsare_documentum(piscina,
             "<frameset><p>x<frame></frameset>");
-        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
-            ZEPHYRUM);
-        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
-        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
-            III);
-        CREDO_AEQUALIS_S32 (
-            _liber(elementum, HTML_ELEMENTUM_LIBERI, I)->genus,
-            (s32)HTML_GENUS_ELEMENTUM_MALUM);
-        /* frameset post contentum neglectum */
-        documentum = _parsare(piscina, "<p>x<frameset>y");
-        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
-            ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
-            III);
+        elementum = _involutum(documentum, I);   /* frameset verum */
+        CREDO_NON_NIHIL (elementum);
+        si (elementum != NIHIL)
+        {
+            CREDO_NON_NIHIL (_tok(elementum,
+                HTML_ELEMENTUM_TOK_CLAUSURA));
+            CREDO_AEQUALIS_I32 (_numerus(elementum,
+                HTML_ELEMENTUM_LIBERI), III);
+            CREDO_AEQUALIS_S32 (
+                _liber(elementum, HTML_ELEMENTUM_LIBERI, I)->genus,
+                (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        }
+        /* frameset post contentum neglectum (body fictum) */
+        documentum  = _parsare_documentum(piscina, "<p>x<frameset>y");
+        elementum   = _involutum(documentum, I);
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_CORPUS);
+        elementum = elementum ? _liber(elementum, HTML_ELEMENTUM_LIBERI,
+            ZEPHYRUM) : NIHIL;
+        CREDO_NON_NIHIL (elementum);
+        si (elementum != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_numerus(elementum,
+                HTML_ELEMENTUM_LIBERI), III);
+        }
         imprimere("\n--- Probans select: div neglectum ---\n");
         documentum = _parsare(piscina,
             "<select><div>a<option>b</select>");
@@ -690,18 +800,27 @@ principale (vacuum)
         elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
             ZEPHYRUM);
         CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
-        /* '</span>' per td (special) NON claudit */
-        documentum = _parsare(piscina, "<span><td>x</span>y");
+        /* '</span>' per pre (special) NON claudit (O7a: td extra
+         * tabulam iam neglectum est - pre eius vicem gerit) */
+        documentum = _parsare(piscina, "<span><pre>x</span>y");
         elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
             ZEPHYRUM);
         CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
 
         imprimere("\n--- Probans tabulam: tr/td implicite ---\n");
+        /* O7a: tbody FICTUM inter table et tr (spec 'in table') */
         documentum = _parsare(piscina,
             "<table><tr><td>1<td>2<tr><td>3</table>");
         elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
             ZEPHYRUM);
         CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
+        elementum = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_CORPUS_TABULAE);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_APERTURA));
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
         CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
             II);
         liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
@@ -783,18 +902,30 @@ principale (vacuum)
         imprimere("\n--- Probans '<head><body>': head ab omni "
             "nisi ---\n");
         CREDO_VERUM (_octetos_probare(piscina, "<head><body>", XII));
-        documentum = _parsare(piscina, "<head><body>");
+        documentum = _parsare_documentum(piscina, "<head><body>");
         CREDO_AEQUALIS_I32 (_numerus(documentum,
             HTML_DOCUMENTUM_LIBERI),
-            II);
+            I);
         elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
-            ZEPHYRUM);
+            ZEPHYRUM);   /* html fictum: head verum, body verum */
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_RADIX);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        elementum = _involutum(documentum, ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_APERTURA));
         CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
         CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_LIBERI));
-        /* exceptio: title in head manet */
-        documentum = _parsare(piscina, "<head><title>t</title>x");
-        CREDO_AEQUALIS_I32 (_numerus(documentum,
-            HTML_DOCUMENTUM_LIBERI),
+        /* exceptio: title in head manet; x corpus fictum postulat */
+        documentum = _parsare_documentum(piscina,
+            "<head><title>t</title>x");
+        elementum = _involutum(documentum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
+        elementum = _involutum(documentum, I);
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_CORPUS);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
             I);
 
         imprimere("\n--- Probans '<ruby>a<rb>b<rt>c</ruby>' ---\n");
@@ -823,7 +954,9 @@ principale (vacuum)
             II);
 
         imprimere("\n--- Probans '<colgroup><col><tbody>' ---\n");
-        documentum = _parsare(piscina, "<colgroup><col><tbody>");
+        /* contextu 'table' (O7a: extra tabulam partes neglectae) */
+        documentum = _parsare_fragmentum(piscina, "table",
+            "<colgroup><col><tbody>");
         CREDO_AEQUALIS_I32 (_numerus(documentum,
             HTML_DOCUMENTUM_LIBERI),
             II);
@@ -831,6 +964,202 @@ principale (vacuum)
             ZEPHYRUM);
         CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
             I);
+    }
+
+
+    /* ==================================================
+     * STRUCTURA O7a: synthesis - involucra, partes tabulae, fragmenta
+     * ================================================== */
+
+    {
+        MateriaNodus* documentum;
+        MateriaNodus* elementum;
+        MateriaNodus* liber;
+
+        imprimere("\n--- Probans involucra ficta: '<p>a' ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "<p>a", IV));
+        documentum = _parsare_documentum(piscina, "<p>a");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_RADIX);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_APERTURA));
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_ATTRIBUTA));
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        liber = _involutum(documentum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_CAPUT);
+        CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_LIBERI));
+        liber = _involutum(documentum, I);
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_CORPUS);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
+        CREDO_AEQUALIS_PTR (liber->pater, elementum);
+        /* elementum verum: locus synthesis ABSENS */
+        liber = _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_NULLA);
+        CREDO_NON_NIHIL (_tok(liber, HTML_ELEMENTUM_TOK_APERTURA));
+        /* tabula titulorum */
+        CREDO_VERUM (strcmp(html_arbor_synthesis_titulus(
+            (s32)HTML_SYNTHESIS_CORPUS_TABULAE), "tbody") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(html_arbor_synthesis_titulus(
+            (s32)HTML_SYNTHESIS_COLUMNAE), "colgroup") == ZEPHYRUM);
+        CREDO_NIHIL (html_arbor_synthesis_titulus(ZEPHYRUM));
+        CREDO_NIHIL (html_arbor_synthesis_titulus(
+            (s32)HTML_SYNTHESIS_NUMERUS));
+
+        imprimere("\n--- Probans '' vacuum: involucra ad EOF ---\n");
+        documentum = _parsare_documentum(piscina, "");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (_synthesis(_involutum(documentum, I)),
+            (s32)HTML_SYNTHESIS_CORPUS);
+
+        imprimere("\n--- Probans '<title>t</title><p>a' ---\n");
+        documentum = _parsare_documentum(piscina,
+            "<title>t</title><p>a");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        liber = _involutum(documentum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_CAPUT);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
+        liber = _involutum(documentum, I);
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_CORPUS);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
+
+        imprimere("\n--- Probans textum album ante html: malum ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "\n<p>x", V));
+        documentum = _parsare_documentum(piscina, "\n<p>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        /* commentarium ante html non fingit: sub documento manet */
+        documentum = _parsare_documentum(piscina, "<!--c--><p>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_COMMENTARIUM);
+
+        imprimere("\n--- Probans '</head>x': head fictum clausum "
+            "---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "</head>x", VIII));
+        documentum = _parsare_documentum(piscina, "</head>x");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        liber = _involutum(documentum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_CAPUT);
+        CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_TOK_APERTURA));
+        CREDO_NON_NIHIL (_tok(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_S32 (_synthesis(_involutum(documentum, I)),
+            (s32)HTML_SYNTHESIS_CORPUS);
+
+        imprimere("\n--- Probans partes tabulae fictas ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "<table><td>x", XII));
+        documentum = _parsare(piscina, "<table><td>x");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_CORPUS_TABULAE);
+        liber = liber ? _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)
+                      : NIHIL;
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_ORDO);
+        liber = liber ? _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)
+                      : NIHIL;
+        CREDO_NON_NIHIL (liber);
+        si (liber != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (_synthesis(liber),
+                (s32)HTML_SYNTHESIS_NULLA);
+            CREDO_NON_NIHIL (_tok(liber, HTML_ELEMENTUM_TOK_APERTURA));
+        }
+        documentum = _parsare(piscina, "<table><col><col>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(liber),
+            (s32)HTML_SYNTHESIS_COLUMNAE);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), II);
+        /* '</tbody>' fictum claudit (clausura vera in ficto); tr
+         * sequens tbody novum */
+        documentum = _parsare(piscina, "<table><tr></tbody><tr>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
+        /* partes tabulae extra tabulam neglectae */
+        documentum = _parsare(piscina, "<td>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+
+        imprimere("\n--- Probans fragmenta: contextus vertex sub "
+            "acervo ---\n");
+        documentum = _parsare_fragmentum(piscina, "table", "<tr><td>x");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_CORPUS_TABULAE);
+        documentum = _parsare_fragmentum(piscina, "tbody", "<td>x");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_ORDO);
+        /* contextus html: head et body sub radice ficta */
+        documentum = _parsare_fragmentum(piscina, "html", "<p>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (_synthesis(_liber(documentum,
+            HTML_DOCUMENTUM_LIBERI, I)), (s32)HTML_SYNTHESIS_CORPUS);
+        /* contextus body: nihil fictum, '<html>' neglectum */
+        documentum = _parsare(piscina, "<html><p>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        /* contextus frameset: p neglectum, frame acceptum */
+        documentum = _parsare_fragmentum(piscina, "frameset",
+            "<p><frame>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
     }
 
 

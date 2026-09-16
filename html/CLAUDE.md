@@ -14,30 +14,39 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
 ## Praesens status (2026-09-15 — PLAN CLOSED)
 
 - **Built:** declaration `html/grammatica/html.registrum.stml` →
-  GENERATED `html_registrum_coctum.{h,c}` (10 genera, 18 loci); hand
-  slot enums `html_registrum.h`; `html_lexicon` (22 rows: trivia INSIDE
-  TAGS ONLY, comments are content); `html_adaptare` (one for one) +
-  `HtmlLigator` (css's division rule); `html_arbor` (the simple builder:
-  ITERATIVE over an explicit stack, three pending states, tables `VACUA`
-  and `CLAUSURAE_IMPLICITAE`, top-of-stack rule); `html.canon` (53 rules,
-  seal `0ae63151` pinned); `html_computus` + `./html/computus.sh` +
-  `./html/arbor.sh`; pythonica `PORTAE['html']`, `silva.metiri('.html')`.
+  GENERATED `html_registrum_coctum.{h,c}` (10 genera, 19 loci — the
+  19th is `synthesis:index` on `elementum`, O7a); hand slot enums
+  `html_registrum.h` (+ `HtmlSynthesis`); `html_lexicon` (22 rows:
+  trivia INSIDE TAGS ONLY, comments are content); `html_adaptare` (one
+  for one) + `HtmlLigator` (css's division rule); `html_arbor` (the
+  builder: ITERATIVE over an explicit stack, three pending states,
+  tables `VACUA` and `CLAUSURAE_IMPLICITAE`, per-frame scope indices,
+  WHATWG wrapper modes, token-less synthesized elements; document
+  entry `html_arbor_parsare` + fragment entry
+  `html_arbor_parsare_fragmentum(…, contextus, spatium)`); `html.canon`
+  (54 rules, seal `a69b019f` pinned — moved from `0ae63151` by O7a);
+  `html_computus` + `./html/computus.sh` + `./html/arbor.sh`; pythonica
+  `PORTAE['html']`, `silva.metiri('.html')`.
 - **Gates (10, `./html/compile_probationes.sh`, every one born red):**
   registrum · adaptare (byte coverage) · arbor (byte oracle + absent-slot
-  rows) · corpus (14 files, 162,775 bytes, byte-identical) · stml (two
-  cycles + comparator + direct emission of the re-read tree) · canon
-  (drift guard both ways, seal pin, 37 documents) · reservatio ·
+  rows; structure cases run as a `body` FRAGMENT, wrappers and
+  synthesis in document mode) · corpus (14 files, 162,775 bytes,
+  byte-identical) · stml (two cycles + comparator + direct emission of
+  the re-read tree; O7 ACCEPTANCE: synthesized wrappers/table parts,
+  five fragments, and the `synthesis` annotation itself read back) ·
+  canon (drift guard both ways, seal pin, 37 documents) · reservatio ·
   totalitas (919 cases; depth pins) · computus (golden
-  `fixa/computus/basis.tsv`) · md (md's rendered HTML through the whole
-  chain, 7 inputs) · exempla (the html5lib `.dat` reader over the
-  vendored corpus: 54 files, 428,448 bytes, 1,708 cases, 184 fragments
-  PINNED; `probationes/fixa/html/FONTES.md`) · oraculum (our tree
-  through the cooked view `html_coctum` against html5lib's expected
-  trees, html/head/body unwrapped when the input never names them;
-  RISING pin — 887 at birth, 930 after O2b-1, 985 after O2b-3, 1,047
-  after O2b-4, 1,054 after O2b-5, 1,086 after O2b-6, 1,112 after O4,
-  1,189 after O5, 1,195 after O6 — of 1,700, fragments 85/184;
-  `ORACULUM_OMNIA=1`,
+  `fixa/computus/basis.tsv`) · md (md's rendered HTML — body content,
+  parsed as a `body` fragment — through the whole chain, 7 inputs) ·
+  exempla (the html5lib `.dat` reader over the vendored corpus: 54
+  files, 428,448 bytes, 1,708 cases, 184 fragments PINNED;
+  `probationes/fixa/html/FONTES.md`) · oraculum (our tree through the
+  cooked view `html_coctum` against html5lib's expected trees, WHOLE
+  — the O2 unwrap rule is retired, the builder synthesizes the
+  wrappers; RISING pin — 887 at birth, 930 after O2b-1, 985 after
+  O2b-3, 1,047 after O2b-4, 1,054 after O2b-5, 1,086 after O2b-6,
+  1,112 after O4, 1,189 after O5, 1,195 after O6, 1,299 after O7a — of
+  1,700, fragments 131/184; `ORACULUM_OMNIA=1`,
   `ORACULUM_EXEMPLUM=tests1.dat:20`) · alienum (the shared SVG/MathML
   namespace tables `html_alienum`, 28). The runner compiles
   `materia/fontes` and `md/fontes` into `html/build/` — consumed,
@@ -81,15 +90,25 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   (frameset/select modes, doctype after content, repeated
   html/head/body, `</body>`/`</html>` → `elementum-malum`; → 1,189)
   and O6 end tags in three classes (own rule / in scope / stop at
-  "special"; → 1,195) DONE. **The cheap chunks are exhausted.** Next is
-  O7, the design turn on `clonatum` (adoption agency, 75 cases) and
-  `reinserendum` (table synthesis + foster parenting, ~130 with
-  template's remainder) — talk it through with Fran first; then the
-  foreign tail (SVG `title` not raw, `font` breakout), then O3 wild
-  fixtures. O3 wild fixtures after. Candidate next
-  parser after html (Fran's research): bash scripts, before JS. Then O3 wild fixtures (one ask per
-  page), O4 the lexer's raw-text set. Then JS. Design: ledger
-  desideratum 01M2KPNTT0.
+  "special"; → 1,195) DONE. The cheap chunks were exhausted there.
+  **O7 (design approved by Fran 2026-09-15, ledger decree 01M2M1B279):
+  the expensive mechanisms as DERIVED-VIEW ANNOTATIONS on the html
+  registry, materia untouched** — `synthesis:index` (O7a),
+  `sedes:referentia` (O7b, foster parenting), `exemplar:referentia`
+  (O7c, adoption agency); acceptance = the STML round trip stays
+  whole. **O7a DONE 2026-09-15 (→ 1,299, fragments 85 → 131):** the
+  wrappers html/head/body and tbody/tr/colgroup as token-less
+  synthesized elements, the fragment entry point (the context is the
+  frame under the stack), table parts ignored outside a table, the
+  fragment case of foreign breakout (x/net: never in a fragment), a
+  `<frameset>` after a synthesized body removes that body. Two named
+  regressions, both `sedes` (O7b): a comment after `</body>` belongs
+  to html, head content after `</head>` belongs to head — a node whose
+  bytes lie inside the body cannot sit outside it without the
+  annotation. Next O7b (table modes + `sedes`), O7c, then the foreign
+  tail (SVG `title` not raw, `font` breakout), then O3 wild fixtures
+  (one ask per page). Candidate next parser after html (Fran's
+  research): bash scripts, before JS. Ledger desideratum 01M2KPNTT0.
 
 ## Laws (spec §11)
 
@@ -122,9 +141,29 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   derived from names and integration points); inside SVG/MathML a
   self-closing tag closes its element and an HTML breakout tag pops
   the foreign elements. In HTML `/>` still never closes.
+- **Synthesis is an annotation, not a token** (O7a, 2026-09-15): what
+  HTML5 invents — the wrappers `html`/`head`/`body` (WHATWG modes
+  "before html" … "after head", tracked as `HtmlModus`) and the table
+  parts `tbody`/`tr`/`colgroup` — is an `elementum` with NO tokens and
+  the `synthesis` index set (`HtmlSynthesis`, names in `html_arbor`).
+  H4 holds: the emitter walks through it and writes nothing; the
+  cooked view prints it; the STML round trip carries the index. A real
+  end tag may close a synthesized element (`</head>`, `</tbody>`: the
+  closing tokens land in the fictum). A synthesized node CAN be removed
+  (`<frameset>` after an invented body: its mala move up); a node with
+  bytes never can (O5). Whitespace before html/head is a malum (the
+  DOM drops it); a comment before html stays under the document.
+  Inside an open `template` the wrapper modes are silent and table
+  parts are accepted (per-frame `templi`, `in_tabula`). A FRAGMENT
+  (`html_arbor_parsare_fragmentum`) puts the context UNDER the stack
+  (`basis`: namespace, select, frameset, table scope) and never
+  synthesizes wrappers except in an `html` context; breakout from
+  foreign content never happens in a fragment (x/net's `!p.fragment`).
 - **Nothing reserved in v1** (§11.6): the reader refuses unknown
   elements with a named cause and IGNORES unknown attributes (measured,
-  pinned); extension points are named in the declaration's header.
+  pinned); extension points are named in the declaration's header —
+  `synthesis` is the first one DECLARED (O7a); `sedes` and `exemplar`
+  remain named.
 
 ## The registry is generated
 
@@ -134,8 +173,9 @@ html/grammatica/html.registrum.stml -scribere`. To add a genus or
 locus: append to the declaration (locus order = emission order), run
 `-scribere`, add the slot enum in `html_registrum.h`, the row in
 `LOCI_NOMINATI` (registrum probatio), the rule in `html.canon`, and move
-the seal there by hand with a cause. A hand edit of a `_coctum` file
-goes red with the first divergent line.
+the seal there by hand with a cause (done once, O7a: `0ae63151` →
+`a69b019f`, the canon gate prints the live seal). A hand edit of a
+`_coctum` file goes red with the first divergent line.
 
 ## Birth lessons
 

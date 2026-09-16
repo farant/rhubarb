@@ -21,12 +21,21 @@
   migratio formae: proiectio numquam plagula archivi est. Documentum
   quod ea iam fert RECUSATUR: elementa ignota a lectore ('locus
   generi ignotus'), attributa ignota a canone.
+
+  O7 (decretum Frani 2026-09-15): mechanismi pretiosi ut ANNOTATIONES
+  VISIONIS DERIVATAE, materia intacta - loci appensi quos visio cocta
+  sola legit, emissor octetorum nihil discit. O7a 'synthesis' (index,
+  in elementum) DECLARATUS: elementum a spec HTML5 fictum sine
+  lexematibus (html/head/body, tbody/tr/colgroup). Nominata, nondum
+  declarata: 'sedes' (referentia; foster parenting, O7b) et
+  'exemplar' (referentia; adoption agency, O7c). Sigillum canonis
+  motum cum causa in html.canon.
 -->
 <registrum grammatica="html" praefixum="HTML" typus="HtmlGenus"
   sedes="html/fontes">
 
   <genus titulus="documentum"
-    nota="Structura documenti: series nodorum summorum (fragmentum nullum aut plura elementa radicis habere potest - synthesis vetita, H4) + lexema FINIS">
+    nota="Structura documenti: series nodorum summorum (fragmentum nullum aut plura elementa radicis habere potest; involucrum html FICTUM sub documento, locus synthesis - O7a) + lexema FINIS">
     <locus titulus="liberi" species="lista-nodus"/>
     <locus titulus="cauda" species="token"/>
   </genus>
@@ -36,13 +45,14 @@
   </genus>
 
   <genus titulus="elementum"
-    nota="Sex loci lexematum OMNES optionales (H4): vacuum, clausura implicita, apertum ad EOF, se-claudens = loci absentes, numquam lexemata ficta">
+    nota="Sex loci lexematum OMNES optionales (H4): vacuum, clausura implicita, apertum ad EOF, se-claudens = loci absentes, numquam lexemata ficta. synthesis (O7a, 2026-09-15): elementum a spec HTML5 FICTUM - lexemata nulla, index in tabulam html_arbor (html head body tbody tr colgroup; ZEPHYRUM numquam scriptus, locus absens = elementum verum); visio cocta id imprimit, emissor nihil">
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="attributa" species="lista-nodus"/>
     <locus titulus="tok_finis" species="token"/>
     <locus titulus="liberi" species="lista-nodus"/>
     <locus titulus="tok_clausura" species="token"/>
     <locus titulus="tok_clausura_finis" species="token"/>
+    <locus titulus="synthesis" species="index"/>
   </genus>
 
   <genus titulus="attributum">

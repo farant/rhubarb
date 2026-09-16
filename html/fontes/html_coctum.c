@@ -2,6 +2,7 @@
 
 #include "html_coctum.h"
 #include "html_alienum.h"
+#include "html_arbor.h"
 #include "html_registrum.h"
 #include "html_lexema.h"
 #include "materia_token.h"
@@ -654,17 +655,35 @@ _elementum_scribere (
 
     si (apertura == NIHIL)
     {
-        redde;
+        /* elementum FICTUM (O7a): titulus ex loco synthesis, attributa
+         * nulla; sine eo nodus mutilus - nihil */
+        constans MateriaValor* synthesis =
+            &e->loci[HTML_ELEMENTUM_SYNTHESIS];
+           constans character* fictum = NIHIL;
+
+        si (synthesis->genus == MATERIA_VALOR_INDEX)
+        {
+            fictum =
+                html_arbor_synthesis_titulus(synthesis->datum.index);
+        }
+        si (fictum == NIHIL)
+        {
+            redde;
+        }
+        titulus = _copia_literis(s->piscina, fictum);
     }
-    crudus = apertura->valor;
-    si (crudus.mensura >= I)
+    alioquin
     {
-        crudus.datum    = crudus.datum + I;
-        crudus.mensura  = crudus.mensura - I;
+        crudus = apertura->valor;
+        si (crudus.mensura >= I)
+        {
+            crudus.datum    = crudus.datum + I;
+            crudus.mensura  = crudus.mensura - I;
+        }
+        titulus = _copia_minuscula(s->piscina, crudus);
     }
     /* spatium PROPRIUM ex parente (svg/math ipsa aliena: '<svg svg>';
      * mglyph in mi MathML), titulus svg accommodatus in eo */
-    titulus   = _copia_minuscula(s->piscina, crudus);
     proprium  = html_alienum_proprium(parentis, alienum, titulus);
     titulus   = html_alienum_titulus(s->piscina, titulus, proprium);
     _lineam_incipere(s, gradus);

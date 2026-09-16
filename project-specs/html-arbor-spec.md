@@ -476,6 +476,7 @@ MUST precede `tok_finis` and `liberi` MUST precede `tok_clausura`.
     <locus titulus="liberi"             species="lista-nodus"/>
     <locus titulus="tok_clausura"       species="token"/>
     <locus titulus="tok_clausura_finis" species="token"/>
+    <locus titulus="synthesis"          species="index"/>   <!-- O7a -->
   </genus>
   <genus titulus="attributum">
     <locus titulus="tok_nomen"   species="token"/>
@@ -512,6 +513,21 @@ total builder with no synthetic tokens must accept any sequence of
 top-level nodes, so `documentum` is `liberi:lista-nodus cauda:token`
 and the doctype is simply the first child when present. Nothing is
 lost: "the document element" is a derived view (H3), not a slot.
+
+**Appended by O7a (2026-09-15, decree 01M2M1B279): `synthesis:index`
+on `elementum`.** H4 still forbids synthetic TOKENS; what HTML5
+invents — the wrappers `html`/`head`/`body` and the table parts
+`tbody`/`tr`/`colgroup` — is an `elementum` with every token slot
+absent and `synthesis` set to an index into a small name table
+(`HtmlSynthesis`: 1 html, 2 head, 3 body, 4 tbody, 5 tr, 6 colgroup;
+0 is never written, the absent locus means a real element). The
+emitter walks through it and writes nothing; the cooked view prints
+it; the STML projection carries `<synthesis(> n` and reads it back
+(the stml gate asserts the annotation survives). The document therefore
+does have ONE root element in practice — the invented `html` — but the
+genus shape above is unchanged: a fragment (`html_arbor_parsare_fragmentum`)
+still has several top-level nodes or none. Nineteen loci, seal
+`a69b019f`.
 
 The five structural genera of §4.1 do not exist. The `elementum-malum`
 genus covers exactly one case in v1: an end tag whose name is open
@@ -612,6 +628,17 @@ is moot in v1, which never writes a clone; it is appended as an
 H2's INTENT is preserved where it matters: §4.2's genera are shaped so
 parity needs no new genus.
 
+**The day came (O7, 2026-09-15).** The extension points are declared
+as DERIVED-VIEW ANNOTATIONS, read by the cooked view only, materia
+untouched (§2.4's substrate mechanism is NOT built): `synthesis:index`
+(O7a, DECLARED — the first append, seal `0ae63151` → `a69b019f`, the
+reservation gate's rows unchanged), `sedes:referentia` (O7b, foster
+parenting: the node stays at its bytes, the annotation names where the
+DOM puts it) and `exemplar:referentia` (O7c, the adoption agency's
+reopened element: no tokens, name and attributes through the
+reference). Acceptance for all three (Fran's condition): the STML
+round trip stays whole — §11.8 gate 5 runs every annotated case.
+
 ### 11.7 Builder rules as tables (M7)
 
 - **Void elements** (WHATWG list, 13): `area base br col embed hr img
@@ -689,6 +716,41 @@ parity needs no new genus.
   an empty `body` when a `frameset` follows — a node whose bytes must
   stay cannot be removed, so those cases stay red. Oracle 1,112 →
   1,189.
+- **Synthesis (O7a, 2026-09-15 — mechanism 4's first half, the
+  invented elements):** the builder tracks the WHATWG wrapper modes
+  "before html" → "before head" → "in head" → "after head" → "in
+  body"/"in frameset" (`HtmlModus`) and, before the first token that
+  needs them, invents the missing wrappers as token-less elements
+  annotated with `synthesis` (`_involucra_fingere`): head content
+  (`base basefont bgsound link meta title noscript noframes style
+  script template`) opens an invented head, anything else closes the
+  head (invented or real) and opens an invented body; non-blank text
+  does the same; whitespace before html/head is a malum (the DOM drops
+  it); comments and doctypes never invent; EOF completes whatever is
+  missing (an empty document is `html > head, body`). `</head>` before
+  a head invents one and closes it (the real closing tokens land in
+  the fictum); `</body>`/`</html>`/`</br>` before the body invent
+  through to the body, then act as in O5. Inside an open `template` the
+  modes are silent (per-frame `templi`; EOF still completes). Table
+  parts: `tr` under `table` invents `tbody`, `td`/`th` under `table` or
+  a section invent `tbody`+`tr` or `tr`, `col` under `table` invents
+  `colgroup` (`_partes_tabulae_fingere`, current node only — the full
+  table modes are O7b); `caption col colgroup tbody td tfoot th thead
+  tr` outside a table in table scope are ignored (malum; per-frame
+  `in_tabula`, set by `table` and `template`, cleared by `html`),
+  never inside foreign content. `<frameset>` after an INVENTED body
+  removes it (its mala move up; a node with bytes stays — O5).
+  FRAGMENTS (`html_arbor_parsare_fragmentum(fons, contextus,
+  spatium)`): the context element is the frame UNDER the stack
+  (`basis`: namespace, `select`, `frameset`, table scope), wrappers
+  are never invented except in an `html` context (head and body under
+  the root), and foreign breakout never fires (the spec's fragment
+  case, x/net's `!p.fragment`). The oracle's unwrap rule is retired:
+  whole trees are compared. Oracle 1,195 → 1,299, fragments 85 → 131.
+  Two named regressions, both `sedes` cases for O7b: a comment after
+  `</body>` belongs to html (tests18 #34) and head content after
+  `</head>` belongs to head (tests7 #4) — their bytes lie inside the
+  body/after the head, so only the annotation can place them.
 - **Raw text**: nothing — the lexer emits `TEXTUS_CRUDUS` after
   `script style title textarea`; the builder appends `textus-crudus`.
   **O4 (2026-09-15):** the lexer's set is WHATWG's whole RAWTEXT list

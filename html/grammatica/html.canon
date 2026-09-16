@@ -32,6 +32,12 @@
   'spatium', 'clonatum' ut attributa elementi hic 'attributum
   ignotum' dant (porta reservationis H8 id asserit); ut elementa
   lector ipse ea recusat.
+
+  O7a (2026-09-15): locus 'synthesis' (index) in elementum APPENSUS -
+  elementum a spec HTML5 fictum sine lexematibus (involucra
+  html/head/body, tbody/tr/colgroup); sigillum 0ae63151 -> a69b019f
+  (loci XVIII -> XIX). Nominata nondum declarata: 'sedes' (O7b),
+  'exemplar' (O7c).
 -->
 <canon dialectus="html" versio="1">
 
@@ -120,12 +126,13 @@
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
       nota="PINNA: sigillum FNV-1a tabularum html_registrum_coctum.c
-            (ex html.registrum.stml; H1: X genera, XVIII loci). Tabula
-            mutata sine hac optione mutata rubet in iudicio ET in
-            custode derivae (probatio_html_canon optionem contra
-            materia_arbor_sigillum vivum confert). Manu movenda cum
-            causa.">
-      <optio>0ae63151</optio>
+            (ex html.registrum.stml; H1: X genera, XVIII loci; O7a
+            2026-09-15: XIX loci, synthesis appensus, 0ae63151 ->
+            a69b019f). Tabula mutata sine hac optione mutata rubet in
+            iudicio ET in custode derivae (probatio_html_canon
+            optionem contra materia_arbor_sigillum vivum confert).
+            Manu movenda cum causa.">
+      <optio>a69b019f</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -187,13 +194,15 @@
 
   <elementum nomen="elementum"
     nota="sex loci lexematum OMNES optionales (H4): vacuum, clausura
-          implicita, apertum ad EOF, tag scissum = loci absentes">
+          implicita, apertum ad EOF, tag scissum = loci absentes;
+          synthesis (O7a) = elementum fictum sine lexematibus">
     <liberum nomen="tok_apertura"       maximum="1"/>
     <liberum nomen="attributa"          maximum="1"/>
     <liberum nomen="tok_finis"          maximum="1"/>
     <liberum nomen="liberi"             maximum="1"/>
     <liberum nomen="tok_clausura"       maximum="1"/>
     <liberum nomen="tok_clausura_finis" maximum="1"/>
+    <liberum nomen="synthesis"          maximum="1"/>
   </elementum>
 
   <elementum nomen="tok_apertura" intra="elementum">
@@ -222,6 +231,12 @@
     <liberum nomen="lex-tag-finis"       maximum="1"/>
     <liberum nomen="lex-tag-finis-solus" maximum="1"/>
   </elementum>
+
+  <elementum nomen="synthesis" intra="elementum" textus="verum"
+    nota="O7a: index HtmlSynthesis (I html, II head, III body, IV
+          tbody, V tr, VI colgroup) - elementum a spec fictum, loci
+          lexematum omnes absentes praeter clausuram veram quae in
+          fictum cadere potest ('</head>', '</tbody>')"/>
 
   <elementum nomen="attributum"
     nota="'=' aut valor sine titulo attributum anonymum dat (loci

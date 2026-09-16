@@ -11,7 +11,8 @@
  * genera structuralia; robustitas per genus SPEC-DEFINITUM unum
  * (elementum-malum: tag clausurae sine pari). Ordo locorum intra
  * genus = ordo EMISSIONIS: attributa ante tok_finis, liberi ante
- * tok_clausura.
+ * tok_clausura. Locus 'synthesis' (O7a) index est: emissor eum
+ * transit, visio cocta legit.
  */
 
 #ifndef HTML_REGISTRUM_H
@@ -47,8 +48,25 @@ nomen enumeratio {
     HTML_ELEMENTUM_TOK_FINIS,
     HTML_ELEMENTUM_LIBERI,
     HTML_ELEMENTUM_TOK_CLAUSURA,
-    HTML_ELEMENTUM_TOK_CLAUSURA_FINIS
+    HTML_ELEMENTUM_TOK_CLAUSURA_FINIS,
+    HTML_ELEMENTUM_SYNTHESIS
 } HtmlLocusElementi;
+
+/* Valores loci 'synthesis' (O7a, 2026-09-15): elementum a spec HTML5
+ * FICTUM, lexemata nulla - involucra html/head/body et partes
+ * tabulae tbody/tr/colgroup. Titulus per html_arbor_synthesis_titulus
+ * (html_arbor.h). NULLA numquam scribitur: locus absens = elementum
+ * verum (tok_apertura eius). */
+nomen enumeratio {
+    HTML_SYNTHESIS_NULLA = 0,
+    HTML_SYNTHESIS_RADIX,             /* html */
+    HTML_SYNTHESIS_CAPUT,             /* head */
+    HTML_SYNTHESIS_CORPUS,            /* body */
+    HTML_SYNTHESIS_CORPUS_TABULAE,    /* tbody */
+    HTML_SYNTHESIS_ORDO,              /* tr */
+    HTML_SYNTHESIS_COLUMNAE,          /* colgroup */
+    HTML_SYNTHESIS_NUMERUS
+} HtmlSynthesis;
 
 nomen enumeratio {
     HTML_ATTRIBUTUM_TOK_NOMEN = 0,

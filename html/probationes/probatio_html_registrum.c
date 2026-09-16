@@ -103,6 +103,8 @@ hic_manens constans LocusNominatus LOCI_NOMINATI[] = {
     { (s32)HTML_GENUS_ELEMENTUM,
         (i32)HTML_ELEMENTUM_TOK_CLAUSURA_FINIS,
         "tok_clausura_finis" },
+    { (s32)HTML_GENUS_ELEMENTUM,  (i32)HTML_ELEMENTUM_SYNTHESIS,
+        "synthesis" },
     { (s32)HTML_GENUS_ATTRIBUTUM, (i32)HTML_ATTRIBUTUM_TOK_NOMEN,
         "tok_nomen" },
     { (s32)HTML_GENUS_ATTRIBUTUM, (i32)HTML_ATTRIBUTUM_TOK_AEQUALE,
@@ -331,8 +333,8 @@ MateriaLexiconRatum  ratum;
         }
 
         /* LOCI NOMINATI: enumeratio cuiusque generis contra titulos,
-         * et numerus nominatorum == numerus locorum (XVIII) - ne
-         * locus ullus innominatus maneat */
+         * et numerus nominatorum == numerus locorum (XIX: synthesis
+         * O7a) - ne locus ullus innominatus maneat */
         numerus_nominatorum = (i32)(magnitudo(LOCI_NOMINATI)
             / magnitudo(LOCI_NOMINATI[0]));
         CREDO_AEQUALIS_I32 (numerus_nominatorum,
@@ -370,7 +372,7 @@ MateriaLexiconRatum  ratum;
         /* '<br>' - elementum vacuum: apertura et finis soli, clausura
          * ABSENS (H4) */
         elementum = materia_nodus_creare(piscina,
-            (s32)HTML_GENUS_ELEMENTUM, (i32)VI);
+            (s32)HTML_GENUS_ELEMENTUM, (i32)VII);
         CREDO_VERUM (materia_nodus_ponere(elementum,
             (i32)HTML_ELEMENTUM_TOK_APERTURA,
             materia_valor_token(materia_token_creare(piscina, &FORMA,

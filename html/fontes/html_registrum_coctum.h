@@ -2,7 +2,7 @@
  *
  * Registrum generum COCTUM grammaticae 'html' - GENERATUM, NE MANU
  * EDITES. Fons: html/grammatica/html.registrum.stml
- * (materia/coquere.sh). Genera X, loci XVIII.
+ * (materia/coquere.sh). Genera X, loci XIX.
  */
 
 #ifndef HTML_REGISTRUM_COCTUM_H
@@ -13,13 +13,18 @@
 
 nomen enumeratio {
     /* Structura documenti: series nodorum summorum (fragmentum
-     * nullum aut plura elementa radicis habere potest - synthesis
-     * vetita, H4) + lexema FINIS */
+     * nullum aut plura elementa radicis habere potest; involucrum
+     * html FICTUM sub documento, locus synthesis - O7a) + lexema
+     * FINIS */
     HTML_GENUS_DOCUMENTUM = 0,
     HTML_GENUS_DOCTYPE,
     /* Sex loci lexematum OMNES optionales (H4): vacuum, clausura
      * implicita, apertum ad EOF, se-claudens = loci absentes,
-     * numquam lexemata ficta */
+     * numquam lexemata ficta. synthesis (O7a, 2026-09-15): elementum
+     * a spec HTML5 FICTUM - lexemata nulla, index in tabulam
+     * html_arbor (html head body tbody tr colgroup; ZEPHYRUM numquam
+     * scriptus, locus absens = elementum verum); visio cocta id
+     * imprimit, emissor nihil */
     HTML_GENUS_ELEMENTUM,
     HTML_GENUS_ATTRIBUTUM,
     /* Contentum: nodi, non trivia (H6). Spatia extra tags textus

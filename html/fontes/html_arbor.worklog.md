@@ -407,3 +407,64 @@ reaches something the v1 registry deliberately left out: a node
 without bytes (`clonatum`, the adoption agency) or a node whose bytes
 lie elsewhere than its tree position (`reinserendum`, tables). The
 worklog stops here and the design conversation starts.
+
+## 2026-09-15 — O7a: synthesis as an annotation; 1,195 → 1,299
+
+The design turn ended with three annotations appended to the html
+registry and materia untouched: `synthesis:index`, `sedes:referentia`,
+`exemplar:referentia`. O7a is the first. An element HTML5 invents —
+`html`, `head`, `body`, `tbody`, `tr`, `colgroup` — is an `elementum`
+with every token slot absent and the `synthesis` index set. The
+emitter walks through it and writes nothing (H4 keeps its word: no
+synthetic tokens), the cooked view prints it, the STML projection
+writes `<synthesis(> n` and reads it back, and the comparator sees
+the index. The oracle's unwrap rule, which had hidden the wrappers
+since O2, is gone; whole trees are compared now.
+
+The builder gained the WHATWG wrapper modes ("before html" through
+"after head") as `HtmlModus`, one function that invents what is
+missing before a token that needs it, and one for table parts that
+looks only at the current node. Fragments got their own entry point:
+the context element is the frame UNDER the stack (`basis`), which is
+why select/frameset/table contexts started passing for free. The
+arbor gate's structure cases now run as a `body` fragment — they test
+in-body mechanics, not wrappers — and the md gate parses md's output
+as a `body` fragment too, which is what it is.
+
+What the first run taught, in order:
+
+- The diff of failing sets lied by one case per file: credo prints a
+  dot per assertion and the oracle asserts once per file, so the
+  first failure line of every file began with `..` and my `^  `
+  anchor missed it. Strip the dots before matching; count the lines
+  against the pin before trusting a diff.
+- Content inside a `<template>` in the head was being pushed into an
+  invented body (47 template cases). Inside an open template the
+  wrapper modes must be silent — a per-frame `templi` index, O(1),
+  never a stack walk (the O2b-5 lesson holds).
+- The new "table parts outside a table are ignored" rule fired inside
+  SVG (`<svg><tr>` is a foreign element) and refused `<col>` in a
+  `colgroup` context; a `<td>` inside a template must be accepted
+  (the spec's "in template" mode hands it to "in row"). `in_tabula` is
+  set by `table` AND `template`.
+- Breakout from foreign content never happens in a fragment. The spec
+  calls it the fragment case; x/net's `parse.go` has `if !p.fragment`
+  around the whole breakout branch. Before O7a we passed
+  `foreign-fragment.dat` #48 by accident: the document parse broke
+  out, and the cooked view painted the SVG namespace from the context
+  over an HTML tree.
+- `</body><frameset>`: HTML5 invents a body at `</body>`, then removes
+  it when the frameset arrives. A node with bytes cannot be removed
+  (O5); a node WITHOUT bytes can — the invented body's only children
+  are mala, they move up, the frameset takes its place. The
+  asymmetry is the whole point of the annotation.
+- Two cases that used to pass now fail, and they should: a comment
+  after `</body>` belongs to `html`, and `<title>` after `</head>`
+  belongs to `head`. Their bytes lie inside the body / after the head,
+  so the byte tree cannot put them where the DOM does. That is exactly
+  `sedes` (O7b): the node stays at its bytes, the annotation names its
+  DOM parent.
+
+Numbers: 1,195 → 1,299 of 1,700 (76 %), fragments 85 → 131; 106 rises,
+2 named regressions. Zero substrate changes, again. Next: O7b — table
+modes and `sedes`.

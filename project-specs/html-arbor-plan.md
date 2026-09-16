@@ -1021,6 +1021,29 @@ tasks, one commit each, under the same Global Constraints.
   rule retired), O7b table modes + `sedes` (foster parenting, table
   scope), O7c adoption agency + `exemplar` (active formatting list).
   Each its own commit with the pin moving.
+  - [x] **O7a — synthesis** (2026-09-15): `synthesis:index` appended
+    (declaration → `-scribere`, 19 loci, `HtmlSynthesis` enum, canon
+    rule + seal `0ae63151` → `a69b019f`, computus golden regenerated:
+    the invented wrappers/tbody are nodes). Builder: WHATWG wrapper
+    modes (`HtmlModus`) with `_involucra_fingere`, table parts
+    `_partes_tabulae_fingere`, table parts ignored outside table scope
+    (`in_tabula`), the `template` guard (`templi`), `<frameset>`
+    removing an invented body, the fragment entry
+    `html_arbor_parsare_fragmentum` (context under the stack, no
+    breakout in fragments — x/net). Cooked view prints the fictum;
+    oracle unwrap retired, fragments through the fragment entry; arbor
+    gate's structure cases run as a `body` fragment; md gate parses
+    md's body content as a `body` fragment. Stml gate = the O7
+    acceptance: seven annotated documents, five fragments, the
+    annotation read back. **1,195 → 1,299 (76 %), fragments 85 →
+    131.** Two named regressions (both `sedes`, O7b): comment after
+    `</body>` (tests18 #34), head content after `</head>` (tests7 #4).
+    Plant: `tbody` synthesis removed → arbor red.
+  - [ ] **O7b — table modes + `sedes`** (foster parenting, table scope,
+    the two O7a regressions, `<table><div>` before the table, text in
+    tables, `</body>` comments to html, head content after `</head>`
+    to head).
+  - [ ] **O7c — adoption agency + `exemplar`** (active formatting list).
 
 ## Self-Review
 

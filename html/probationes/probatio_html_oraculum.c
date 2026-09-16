@@ -1,19 +1,19 @@
 /* probatio_html_oraculum.c - Oraculum html5lib (O2): arbor nostra
  * COCTA contra '#document' exspectatum
  *
- * Quodque exemplum .dat (html_exempla) parsatur (html_arbor_parsare),
- * per html_coctum in formam html5lib scribitur et octetim cum arbore
- * exspectata confertur. Arbor exspectata html/head/body SYNTHESIZAT
- * quae aedificator simplex numquam fingit (H4): EXUITUR - elementum
- * quod initus tag apertionis non nominat ('<html' '<head' '<body',
- * titulo integro) ex arbore exspectata tollitur, liberi eius gradu uno
- * sursum; fragmenta nihil synthesizant (contextus contentum alienum
- * solum dat). Exempla '#script-on' OMITTUNTUR (aedificator = scriptum
- * clausum). PINNA CRESCENS: praeterita minui non possunt; tabula per
- * plagulam = mechanismi HTML5 per plagulas iam distributi (adoption,
- * tables, template, foreign, entities, doctype, comments...).
- * ORACULUM_OMNIA=1 omnes fracturas imprimit; ORACULUM_EXEMPLUM=
- * plagula:n initum, exspectatum crudum, exutum et nostrum imprimit.
+ * Quodque exemplum .dat (html_exempla) parsatur (html_arbor_parsare;
+ * fragmenta per html_arbor_parsare_fragmentum cum contextu suo), per
+ * html_coctum in formam html5lib scribitur et octetim cum arbore
+ * exspectata confertur INTEGRA. Involucra html/head/body quae arbor
+ * exspectata fert aedificator ipse FINGIT (O7a, locus synthesis) -
+ * regula exuendi O2 (elementum quod initus non nominat ex exspectata
+ * sublatum) RETIRATA. Exempla '#script-on' OMITTUNTUR (aedificator =
+ * scriptum clausum). PINNA CRESCENS: praeterita minui non possunt;
+ * tabula per plagulam = mechanismi HTML5 per plagulas iam distributi
+ * (adoption, tables, template, foreign, entities, doctype,
+ * comments...). ORACULUM_OMNIA=1 omnes fracturas imprimit;
+ * ORACULUM_EXEMPLUM=plagula:n initum, exspectatum et nostrum
+ * imprimit.
  */
 
 #include "latina.h"
@@ -31,8 +31,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* pinna: praeterita minima (nativitas: valor post cursum primum) */
-#define PINNA_PRAETERITA   ((s32)1195)
+/* pinna: praeterita minima (nativitas: valor post cursum primum; O7a
+ * 2026-09-15: 1195 -> 1299, involucra et partes tabulae fictae) */
+#define PINNA_PRAETERITA   ((s32)1299)
 /* exempla iudicata = MDCCVIII - VIII script-on */
 #define TOTALIS_PINNATUS   ((i32)1700)
 #define LINEAE_MAXIMAE     ((i32)8192)
@@ -52,7 +53,6 @@ nomen structura {
     s32 a;
     s32 b;
     i32 gradus;
-    b32 delenda;
 } LineaArboris;
 
 hic_manens character*
@@ -104,67 +104,6 @@ _titulus (
     redde t == NIHIL ? via : t + I;
 }
 
-hic_manens i8
-_minuscula (
-    i8 c)
-{
-    si (c >= 'A' && c <= 'Z')
-    {
-        redde (i8)(c + ('a' - 'A'));
-    }
-    redde c;
-}
-
-hic_manens b32
-_littera_tituli (
-    i8 c)
-{
-    redde (b32)((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-                || (c >= '0' && c <= '9') || c == '-');
-}
-
-/* An initus tag apertionis '<titulus' nominet (litteris neglectis,
- * titulo integro: '<head' non '<header'). */
-hic_manens b32
-_initus_nominat (
-                 chorda  initus,
-     constans character* titulus)
-{
-    i32 n = (i32)strlen(titulus);
-    s32 i;
-
-    per (i = ZEPHYRUM; i + I + (s32)n <= (s32)initus.mensura; i++)
-    {
-        i32 k;
-        b32 par = VERUM;
-
-        si (initus.datum[i] != '<')
-        {
-            perge;
-        }
-        per (k = ZEPHYRUM; k < n; k++)
-        {
-            si ((character)_minuscula(initus.datum[i + I + (s32)k])
-                != titulus[k])
-            {
-                par = FALSUM;
-                frange;
-            }
-        }
-        si (!par)
-        {
-            perge;
-        }
-        si (   i + I + (s32)n < (s32)initus.mensura
-            && _littera_tituli(initus.datum[i + I + (s32)n]))
-        {
-            perge;
-        }
-        redde VERUM;
-    }
-    redde FALSUM;
-}
-
 /* Arborem exspectatam in lineas scindere; ultra maximum lineae
  * omittuntur (comparatio tum cadit - tutum). */
 hic_manens i32
@@ -201,11 +140,10 @@ _lineas_legere (
             }
             si (n < maximum)
             {
-                lineae[n].a        = k;
-                lineae[n].b        = b;
-                lineae[n].gradus   = spatia / II;
-                lineae[n].delenda  = FALSUM;
-                n                  = n + I;
+                lineae[n].a       = k;
+                lineae[n].b       = b;
+                lineae[n].gradus  = spatia / II;
+                n                 = n + I;
             }
         }
         alioquin si (n > ZEPHYRUM)
@@ -217,76 +155,8 @@ _lineas_legere (
     redde n;
 }
 
-hic_manens b32
-_linea_est (
-                   chorda  doc,
-    constans LineaArboris* l,
-       constans character* litterae)
-{
-    i32 n = (i32)strlen(litterae);
-
-    redde (b32)((i32)(l->b - l->a) == n
-                && memcmp(doc.datum + l->a, litterae, (size_t)n)
-                    == ZEPHYRUM);
-}
-
-/* html/head/body synthesizata tollere: elementum quod initus non
- * nominat deletur, subarbor eius gradu uno sursum. */
-hic_manens vacuum
-_exuere (
-          chorda  doc,
-    LineaArboris* l,
-             i32  n,
-          chorda  initus)
-{
-    b32 html         = _initus_nominat(initus, "html");
-    b32 head         = _initus_nominat(initus, "head");
-    b32 body         = _initus_nominat(initus, "body");
-    i32 gradus_html  = ZEPHYRUM;
-    i32 i;
-
-    si (!html)
-    {
-        per (i = ZEPHYRUM; i < n; i++)
-        {
-            si (   l[i].gradus == ZEPHYRUM
-                && _linea_est(doc, &l[i], "<html>"))
-            {
-                i32 k;
-
-                l[i].delenda = VERUM;
-                per (k = i + I; k < n && l[k].gradus > ZEPHYRUM; k++)
-                {
-                    l[k].gradus = l[k].gradus - I;
-                }
-                frange;
-            }
-        }
-    }
-    alioquin
-    {
-        gradus_html = I;
-    }
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        si (l[i].delenda || l[i].gradus != gradus_html)
-        {
-            perge;
-        }
-        si (   (!head && _linea_est(doc, &l[i], "<head>"))
-            || (!body && _linea_est(doc, &l[i], "<body>")))
-        {
-            i32 k;
-
-            l[i].delenda = VERUM;
-            per (k = i + I; k < n && l[k].gradus > gradus_html; k++)
-            {
-                l[k].gradus = l[k].gradus - I;
-            }
-        }
-    }
-}
-
+/* Lineas normatas rescribere ('| ' + gradus * II spatia + textus,
+ * '\n' inter lineas, sine ultimo) - forma quam html_coctum scribit. */
 hic_manens chorda
 _lineas_scribere (
          Piscina* piscina,
@@ -305,10 +175,6 @@ _lineas_scribere (
         chorda t;
            i32 k;
 
-        si (l[i].delenda)
-        {
-            perge;
-        }
         si (!prima)
         {
             chorda_aedificator_appendere_character(aed, '\n');
@@ -328,13 +194,15 @@ _lineas_scribere (
 
 /* Contentum contextus fragmenti: 'svg desc' -> parens SVG (desc),
  * liberi HTML (punctum integrationis); 'math ms' -> MATHEMATICA,
- * NULLUM; 'td' -> NULLUM, NULLUM. */
+ * NULLUM; 'td' -> NULLUM, NULLUM. *titulus_contextus = titulus sine
+ * spatio ('desc', 'td') pro aedificatore. */
 hic_manens vacuum
 _alienum_contextus (
         Piscina* piscina,
          chorda  contextus,
     HtmlAlienum* parentis,
-    HtmlAlienum* liberorum)
+    HtmlAlienum* liberorum,
+         chorda* titulus_contextus)
 {
     HtmlAlienum spatium = HTML_ALIENUM_NULLUM;
          chorda titulus = contextus;
@@ -361,9 +229,12 @@ _alienum_contextus (
             frange;
         }
     }
-    titulus     = html_alienum_titulus(piscina, titulus, spatium);
-    *parentis   = spatium;
-    *liberorum  = html_alienum_liberorum(spatium, titulus, NIHIL);
+    titulus = html_alienum_titulus(piscina, titulus,
+        spatium);
+    *parentis = spatium;
+    *liberorum = html_alienum_liberorum(spatium, titulus,
+        NIHIL);
+    *titulus_contextus = titulus;
 }
 
 /* linea k (ZEPHYRUM-basata) chordae; vacua ultra finem */
@@ -533,41 +404,49 @@ principale (vacuum)
             {
                 perge;
             }
-            arbor = html_arbor_parsare(p,
-                (constans character*)e->datum.datum,
-                e->datum.mensura);
-            si (arbor == NIHIL)
             {
-                nihil_reddita = nihil_reddita + I;
-            }
-            alioquin
-            {
-                LineaArboris* lineae;
-                         i32  numerus_linearum;
-                 HtmlAlienum  parentis  = HTML_ALIENUM_NULLUM;
-                 HtmlAlienum  alienum   = HTML_ALIENUM_NULLUM;
+                HtmlAlienum parentis  = HTML_ALIENUM_NULLUM;
+                HtmlAlienum alienum   = HTML_ALIENUM_NULLUM;
+                     chorda titulus_contextus;
 
+                titulus_contextus.datum    = NIHIL;
+                titulus_contextus.mensura  = ZEPHYRUM;
                 si (e->fragmentum)
                 {
                     _alienum_contextus(p, e->contextus, &parentis,
-                        &alienum);
+                        &alienum, &titulus_contextus);
+                    arbor = html_arbor_parsare_fragmentum(p,
+                        (constans character*)e->datum.datum,
+                        e->datum.mensura, titulus_contextus, parentis);
                 }
-                nostra = html_coctum_scribere(p, arbor, parentis,
-                    alienum);
-                lineae = (LineaArboris*)piscina_allocare(p,
-                    magnitudo(LineaArboris)
-                    * (memoriae_index)LINEAE_MAXIMAE);
-                numerus_linearum = _lineas_legere(e->documentum, lineae,
-                    LINEAE_MAXIMAE);
-                si (!e->fragmentum)
+                alioquin
                 {
-                    _exuere(e->documentum, lineae, numerus_linearum,
-                        e->datum);
+                    arbor = html_arbor_parsare(p,
+                        (constans character*)e->datum.datum,
+                        e->datum.mensura);
                 }
-                sperata = _lineas_scribere(p, e->documentum, lineae,
-                    numerus_linearum);
-                sanum   = (b32)(nostra.datum != NIHIL
-                                && chorda_aequalis(nostra, sperata));
+                si (arbor == NIHIL)
+                {
+                    nihil_reddita = nihil_reddita + I;
+                }
+                alioquin
+                {
+                    LineaArboris* lineae;
+                             i32  numerus_linearum;
+
+                    nostra = html_coctum_scribere(p, arbor, parentis,
+                        alienum);
+                    lineae = (LineaArboris*)piscina_allocare(p,
+                        magnitudo(LineaArboris)
+                        * (memoriae_index)LINEAE_MAXIMAE);
+                    numerus_linearum = _lineas_legere(e->documentum,
+                        lineae, LINEAE_MAXIMAE);
+                    sperata = _lineas_scribere(p, e->documentum, lineae,
+                        numerus_linearum);
+                    sanum   = (b32)(nostra.datum != NIHIL
+                                    && chorda_aequalis(nostra,
+                                    sperata));
+                }
             }
             si (exemplum_petitum != NIHIL)
             {
@@ -589,7 +468,7 @@ principale (vacuum)
                 imprimere("\n=== EXEMPLUM %s:%d (linea %d%s%.*s) ===\n"
                           "--- initus (%d octeti) ---\n%.*s\n"
                           "--- exspectatum crudum ---\n%.*s\n"
-                          "--- sperata (exuta) ---\n%.*s\n"
+                          "--- sperata (normata) ---\n%.*s\n"
                           "--- nostra ---\n%.*s\n",
                     s->plagula, (integer)e->numerus, (integer)e->linea,
                     e->fragmentum ? ", fragmentum " : "",

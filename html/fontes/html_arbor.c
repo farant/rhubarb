@@ -13,6 +13,13 @@
  * (elementum-malum '>' exspectans). Lexema quod ad tag non pertinet
  * (contentum, FINIS, tag novum) statum pendentem CLAUDIT sine '>' -
  * locus absens, truncatio expressa (spec par. IV.2).
+ *
+ * SYNTHESIS (O7a, 2026-09-15): involucra html/head/body per modos
+ * WHATWG 'before html' ... 'after head' (_involucra_fingere) et
+ * partes tabulae tbody/tr/colgroup (_partes_tabulae_fingere) nodi
+ * FICTI sunt - elementum sine lexematibus, locus 'synthesis' solus.
+ * Fragmentum (html_arbor_parsare_fragmentum): contextus vertex sub
+ * acervo (basis), involucra iam adsunt.
  */
 
 #include "html_arbor.h"
@@ -49,7 +56,22 @@ nomen structura {
     /* O5: index select proximi visibilis (-I nullum); intra frameset */
     s32 selectum;
     b32 intra_compagem;
+    /* O7a: tabula aperta in scopo tabulae (limites html/template);
+     * index template aperti proximi (-I nullum): intra template modi
+     * involucrorum tacent (spec 'in template') */
+    b32 in_tabula;
+    s32 templi;
 } ScopiGradus;
+
+/* Modi involucrorum (WHATWG 'before html' -> 'before head' -> 'in
+ * head' -> 'after head' -> 'in body'/'in frameset'); O7a. */
+nomen enumeratio {
+    MODUS_ANTE_RADICEM = 0,
+    MODUS_ANTE_CAPUT,
+    MODUS_IN_CAPITE,
+    MODUS_POST_CAPUT,
+    MODUS_IN_CORPORE
+} HtmlModus;
 
 nomen structura {
                  Piscina* piscina;
@@ -75,6 +97,14 @@ nomen structura {
                      b32 compages_visa;
                      b32 contentum_visum;
                      b32 compages_licet;
+    /* O7a (2026-09-15) - involucra et fragmenta: modus involucrorum;
+     * basis = gradus scoporum SUB acervo (contextus fragmenti, aut
+     * vacuus in documento); contextus = titulus elementi contextus
+     * (vacuus in documento) - vertex acervi vacui. */
+               HtmlModus modus;
+             ScopiGradus basis;
+                  chorda contextus;
+                     b32 fragmentum;
 } HtmlParsura;
 
 
@@ -143,16 +173,19 @@ interior chorda
 _tag_titulus (
     constans MateriaToken* token);
 
-/* Elementum (et gradum scoporum eius) impellere - loci acervorum
- * reusi sub profunditate. */
+interior chorda
+_titulus_elementi (
+    constans MateriaNodus* elementum);
+
+/* Elementum (et gradum scoporum eius, ex titulo) impellere - loci
+ * acervorum reusi sub profunditate. */
 interior b32
 _impellere (
      HtmlParsura* p,
-    MateriaNodus* elementum)
+    MateriaNodus* elementum,
+          chorda  titulus)
 {
-    ScopiGradus gradus = _scopi_gradus(p, p->profunditas,
-        _tag_titulus(elementum->loci[HTML_ELEMENTUM_TOK_APERTURA]
-            .datum.token));
+    ScopiGradus gradus = _scopi_gradus(p, p->profunditas, titulus);
 
     si (p->profunditas < xar_numerus(p->acervus))
     {
@@ -346,6 +379,68 @@ _tag_titulus (
     redde titulus;
 }
 
+interior chorda
+_vacua (vacuum)
+{
+    chorda c;
+
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    redde c;
+}
+
+
+/* ==================================================
+ * Synthesis (O7a): tituli elementorum fictorum
+ * ================================================== */
+
+/* Tabula loci 'synthesis' ordine HtmlSynthesis. SCRIPTIBILIS consulto
+ * (non constans), ut chorda (i8*) in eam sine allocatione spectet. */
+hic_manens character SYNTHESES[HTML_SYNTHESIS_NUMERUS][IX] = {
+    "", "html", "head", "body", "tbody", "tr", "colgroup"
+};
+
+constans character*
+html_arbor_synthesis_titulus (
+    s32 synthesis)
+{
+    si (   synthesis <= ZEPHYRUM
+        || synthesis >= (s32)HTML_SYNTHESIS_NUMERUS)
+    {
+        redde NIHIL;
+    }
+    redde SYNTHESES[synthesis];
+}
+
+/* Titulus elementi: ex tag apertionis, aut ex loco synthesis
+ * (elementum fictum); vacuus si neutrum (tag ad EOF scissum numquam:
+ * apertura semper adest, sed defensive). */
+interior chorda
+_titulus_elementi (
+    constans MateriaNodus* elementum)
+{
+    constans MateriaValor* apertura;
+    constans MateriaValor* synthesis;
+                   chorda  titulus;
+
+    apertura   = &elementum->loci[HTML_ELEMENTUM_TOK_APERTURA];
+    synthesis  = &elementum->loci[HTML_ELEMENTUM_SYNTHESIS];
+    si (apertura->genus == MATERIA_VALOR_TOKEN)
+    {
+        redde _tag_titulus(apertura->datum.token);
+    }
+    titulus = _vacua();
+    si (   synthesis->genus == MATERIA_VALOR_INDEX
+        && synthesis->datum.index > ZEPHYRUM
+        && synthesis->datum.index < (s32)HTML_SYNTHESIS_NUMERUS)
+    {
+        titulus.datum = (i8*)SYNTHESES[synthesis->datum.index];
+        titulus.mensura =
+            (i32)strlen(SYNTHESES[synthesis->datum.index]);
+    }
+    redde titulus;
+}
+
 interior b32
 _tituli_pares (
     chorda a,
@@ -389,13 +484,8 @@ _apertum_invenire (
 
     per (k = p->profunditas; k > ZEPHYRUM; k--)
     {
-        MateriaNodus* elementum = _apertum(p, k - I);
-        MateriaToken* apertura;
-
-        apertura = elementum->loci[HTML_ELEMENTUM_TOK_APERTURA]
-            .datum.token;
-        si (   apertura != NIHIL
-            && _tituli_pares(_tag_titulus(apertura), titulus))
+        si (_tituli_pares(_titulus_elementi(_apertum(p, k - I)),
+                titulus))
         {
             redde (s32)(k - I);
         }
@@ -643,6 +733,26 @@ _sistit_membrum (
  * (lex H1): ambulatio acervi per tag quadratica erat, porta
  * totalitatis id primo cursu monuit (CDLXXXIX s, pinnae profunditatis
  * mortuae). */
+/* Gradus sub acervo vacuo: nihil visibile (documentum; fragmentum
+ * contextum suum superponit - vide _parsare). */
+interior ScopiGradus
+_basis_vacua (vacuum)
+{
+    ScopiGradus g;
+
+    g.p               = (s32)-I;
+    g.membri          = (s32)-I;
+    g.definitionis    = (s32)-I;
+    g.bullae          = (s32)-I;
+    g.proprium        = HTML_ALIENUM_NULLUM;
+    g.liberorum       = HTML_ALIENUM_NULLUM;
+    g.selectum        = (s32)-I;
+    g.intra_compagem  = FALSUM;
+    g.in_tabula       = FALSUM;
+    g.templi          = (s32)-I;
+    redde g;
+}
+
 interior ScopiGradus
 _scopi_gradus (
     constans HtmlParsura* p,
@@ -658,14 +768,7 @@ _scopi_gradus (
     }
     alioquin
     {
-        infra.p               = (s32)-I;
-        infra.membri          = (s32)-I;
-        infra.definitionis    = (s32)-I;
-        infra.bullae          = (s32)-I;
-        infra.proprium        = HTML_ALIENUM_NULLUM;
-        infra.liberorum       = HTML_ALIENUM_NULLUM;
-        infra.selectum        = (s32)-I;
-        infra.intra_compagem  = FALSUM;
+        infra = p->basis;   /* contextus fragmenti aut vacuus (O7a) */
     }
     si (_titulus_est(titulus, "p"))
     {
@@ -725,6 +828,24 @@ _scopi_gradus (
         "select") ? (s32)k : infra.selectum;
     g.intra_compagem = (b32)(_titulus_est(titulus, "frameset")
                              || infra.intra_compagem);
+    /* O7a: partes tabulae hic accipiuntur - tabula in scopo tabulae
+     * (WHATWG 'table scope', limes html) aut template (spec 'in
+     * template': td/tr/col in contentum eius eunt) */
+    si (   _titulus_est(titulus, "table")
+        || _titulus_est(titulus, "template"))
+    {
+        g.in_tabula = VERUM;
+    }
+    alioquin si (_titulus_est(titulus, "html"))
+    {
+        g.in_tabula = FALSUM;
+    }
+    alioquin
+    {
+        g.in_tabula = infra.in_tabula;
+    }
+    g.templi = _titulus_est(titulus,
+        "template") ? (s32)k : infra.templi;
     redde g;
 }
 
@@ -747,8 +868,11 @@ _scopos_claudere (
         p->profunditas - I);
     /* ERUPTIO ex contento alieno (WHATWG 'in foreign content'): tag
      * HTML rumpens elementa aliena claudit usque ad elementum cuius
-     * liberi HTML sunt (HTML ipsum aut punctum integrationis). */
-    si (   vertex->liberorum != HTML_ALIENUM_NULLUM
+     * liberi HTML sunt (HTML ipsum aut punctum integrationis). In
+     * fragmento NUMQUAM (spec 'fragment case': ut tag aliud quodlibet;
+     * x/net parse.go 'if !p.fragment' - O7a). */
+    si (   !p->fragmentum
+        && vertex->liberorum != HTML_ALIENUM_NULLUM
         && html_alienum_rumpit(titulus))
     {
         dum (   p->profunditas > ZEPHYRUM
@@ -835,17 +959,20 @@ _titulus_aperti (
     constans HtmlParsura* p,
                      i32  k)
 {
-    MateriaToken* apertura = _apertum(p, k)
-        ->loci[HTML_ELEMENTUM_TOK_APERTURA].datum.token;
-          chorda vacua;
+    redde _titulus_elementi(_apertum(p, k));
+}
 
-    si (apertura != NIHIL)
+/* Titulus verticis acervi; acervo vacuo contextus fragmenti (vacuus
+ * in documento) - contextus vertex SUB acervo est (O7a). */
+interior chorda
+_titulus_verticis (
+    constans HtmlParsura* p)
+{
+    si (p->profunditas > ZEPHYRUM)
     {
-        redde _tag_titulus(apertura);
+        redde _titulus_aperti(p, p->profunditas - I);
     }
-    vacua.datum    = NIHIL;
-    vacua.mensura  = ZEPHYRUM;
-    redde vacua;
+    redde p->contextus;
 }
 
 /* Tags clausurae in tres classes (WHATWG 'in body', O6):
@@ -949,14 +1076,28 @@ hic_manens constans character* constans SELECT_PERMISSA[] = {
 hic_manens constans character* constans SELECT_CLAUSURAE[] = {
     "option", "optgroup", "select", "template"
 };
+/* WHATWG 'in body': partes tabulae extra tabulam in scopo neglectae
+ * (O7a) */
+hic_manens constans character* constans PARTES_TABULAE[] = {
+    "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead",
+    "tr"
+};
+/* contextus fragmenti qui partes tabulae accipiunt (spec 'reset the
+ * insertion mode': td/th/caption ad 'in body' recidunt; colgroup
+ * col accipit) */
+hic_manens constans character* constans CONTEXTUS_TABULAE[] = {
+    "table", "tbody", "thead", "tfoot", "tr", "colgroup"
+};
 
+/* Gradus verticis; acervo vacuo basis (contextus fragmenti aut
+ * nihil visibile) - numquam NIHIL (O7a). */
 interior constans ScopiGradus*
 _vertex_gradus (
     constans HtmlParsura* p)
 {
     si (p->profunditas == ZEPHYRUM)
     {
-        redde NIHIL;
+        redde &p->basis;
     }
     redde (constans ScopiGradus*)xar_obtinere(p->scopi,
         p->profunditas - I);
@@ -1001,6 +1142,16 @@ _tag_neglegendum (
         redde (b32)!_in_tabula(titulus, SELECT_PERMISSA,
             TABULAE_NUMERUS(SELECT_PERMISSA));
     }
+    /* O7a: partes tabulae sine tabula in scopo ('in body': parse
+     * error, ignore) - in contento alieno numquam (svg tr elementum
+     * alienum est) */
+    si (   vertex            != NIHIL && !vertex->in_tabula
+        && vertex->liberorum == HTML_ALIENUM_NULLUM
+        && _in_tabula(titulus, PARTES_TABULAE,
+            TABULAE_NUMERUS(PARTES_TABULAE)))
+    {
+        redde VERUM;
+    }
     redde FALSUM;
 }
 
@@ -1010,21 +1161,30 @@ _vexilla_renovare (
     HtmlParsura* p,
          chorda  titulus)
 {
+    /* modus involucrorum (O7a): tag verum acceptum modum movet ut
+     * fictum moveret */
     si (_titulus_est(titulus, "html"))
     {
         p->html_visum = VERUM;
+        si (p->modus == MODUS_ANTE_RADICEM)
+        {
+            p->modus = MODUS_ANTE_CAPUT;
+        }
     }
     alioquin si (_titulus_est(titulus, "head"))
     {
-        p->head_visum = VERUM;
+        p->head_visum  = VERUM;
+        p->modus       = MODUS_IN_CAPITE;
     }
     alioquin si (_titulus_est(titulus, "body"))
     {
-        p->body_visum = VERUM;
+        p->body_visum  = VERUM;
+        p->modus       = MODUS_IN_CORPORE;
     }
     alioquin si (_titulus_est(titulus, "frameset"))
     {
-        p->compages_visa = VERUM;
+        p->compages_visa  = VERUM;
+        p->modus          = MODUS_IN_CORPORE;
     }
     si (!_in_tabula(titulus, COMPAGIS_INNOCUA,
             TABULAE_NUMERUS(COMPAGIS_INNOCUA)))
@@ -1052,6 +1212,290 @@ _textus_albus (
     }
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Synthesis (O7a, 2026-09-15): elementa quae spec fingit
+ * ================================================== */
+
+/* Elementum fictum: nodus generis elementum sine lexematibus, locus
+ * 'synthesis' solus (lex H4 servata - lexemata ficta nulla, nodus
+ * fictus annotatus; emissor octetorum nihil scribit). Parenti
+ * praesenti appensum, impulsum si iussum. */
+interior b32
+_elementum_fingere (
+      HtmlParsura* p,
+    HtmlSynthesis  synthesis,
+              b32  impellendum)
+{
+    MateriaNodus* elementum;
+
+    elementum = materia_nodus_creare(p->piscina,
+        (s32)HTML_GENUS_ELEMENTUM, (i32)VII);
+    si (elementum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!materia_nodus_ponere(elementum, (i32)HTML_ELEMENTUM_SYNTHESIS,
+            materia_valor_index((s32)synthesis), MATERIA_LOCUS_INDEX))
+    {
+        redde FALSUM;
+    }
+    si (!_liberum_appendere(p, elementum))
+    {
+        redde FALSUM;
+    }
+    si (!impellendum)
+    {
+        redde VERUM;
+    }
+    redde _impellere(p, elementum, _titulus_elementi(elementum));
+}
+
+/* Tag quod in head manet (WHATWG 'in head', praeter head ipsum) */
+interior b32
+_caput_contentum (
+    chorda titulus)
+{
+    redde (b32)(_in_tabula(titulus, PERMISSA_CAPITIS,
+        TABULAE_NUMERUS(PERMISSA_CAPITIS))
+                && !_titulus_est(titulus, "head"));
+}
+
+/* Index elementi aperti proximi cuius titulus litteris datis par est;
+ * -I si nullum. */
+interior s32
+_apertum_invenire_literis (
+    constans HtmlParsura* p,
+      constans character* litterae)
+{
+    i32 k;
+
+    per (k = p->profunditas; k > ZEPHYRUM; k--)
+    {
+        si (_titulus_est(_titulus_aperti(p, k - I), litterae))
+        {
+            redde (s32)(k - I);
+        }
+    }
+    redde (s32)-I;
+}
+
+/* INVOLUCRA html/head/body (WHATWG 'before html' ... 'after head'):
+ * ante lexema quod ea postulat, quae desunt FINGERE. titulus = tag
+ * apertionis (vacuus: textus non albus aut EOF); caput_contentum =
+ * tag quod in head manet. Textus albus et commentaria numquam
+ * fingunt (spec: neglecta aut in parentem praesentem). Head fictum
+ * sine contento non impellitur (vacuum, iam clausum). Contentum
+ * capitis POST head (spec: in head reponitur) in html manet - octeti
+ * eius post head iacent (sedes, O7b). */
+interior b32
+_involucra_fingere (
+    HtmlParsura* p,
+         chorda  titulus,
+            b32  caput_contentum,
+            b32  finis)
+{
+    /* intra template (in head aut post head) modi involucrorum tacent:
+     * contentum in template manet (spec 'in template'); O(I) per
+     * gradum verticis, non ambulatio. EOF template apertum claudit et
+     * body fingit (spec 'in template' EOF). */
+    si (!finis && _vertex_gradus(p)->templi >= ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (p->modus == MODUS_ANTE_RADICEM)
+    {
+        si (_titulus_est(titulus, "html"))
+        {
+            redde VERUM;
+        }
+        si (!_elementum_fingere(p, HTML_SYNTHESIS_RADIX, VERUM))
+        {
+            redde FALSUM;
+        }
+        p->html_visum  = VERUM;
+        p->modus       = MODUS_ANTE_CAPUT;
+    }
+    si (p->modus == MODUS_ANTE_CAPUT)
+    {
+        si (_titulus_est(titulus, "head"))
+        {
+            redde VERUM;
+        }
+        si (!_elementum_fingere(p, HTML_SYNTHESIS_CAPUT,
+            caput_contentum))
+        {
+            redde FALSUM;
+        }
+        p->head_visum = VERUM;
+        si (caput_contentum)
+        {
+            p->modus = MODUS_IN_CAPITE;
+            redde VERUM;
+        }
+        p->modus = MODUS_POST_CAPUT;
+    }
+    si (p->modus == MODUS_IN_CAPITE)
+    {
+        s32 k;
+
+        si (caput_contentum)
+        {
+            redde VERUM;
+        }
+        k = _apertum_invenire_literis(p, "head");
+        si (k >= ZEPHYRUM)
+        {
+            p->profunditas = (i32)k;
+        }
+        p->modus = MODUS_POST_CAPUT;
+    }
+    si (p->modus == MODUS_POST_CAPUT)
+    {
+        si (   caput_contentum
+            || _titulus_est(titulus, "body")
+            || _titulus_est(titulus, "frameset"))
+        {
+            redde VERUM;
+        }
+        si (!_elementum_fingere(p, HTML_SYNTHESIS_CORPUS, VERUM))
+        {
+            redde FALSUM;
+        }
+        p->body_visum  = VERUM;
+        p->modus       = MODUS_IN_CORPORE;
+    }
+    redde VERUM;
+}
+
+/* '<frameset>' post body FICTUM (spec 'in body', frameset-ok manente:
+ * body e parente removetur, frameset in html inseritur): body sine
+ * lexematibus cuius liberi mala sola sunt (aut nulli) e liberis
+ * parentis tollitur - ultimus est - et mala eius in parentem
+ * transferuntur (octeti manent, ordo servatur; nodus sine octetis
+ * removeri POTEST, cum octetis non - O5). Body verum aut cum contento
+ * manet: rubrum consulto. */
+interior b32
+_corpus_fictum_removere (
+    HtmlParsura* p)
+{
+    MateriaNodus* corpus;
+    MateriaNodus* parens;
+    MateriaValor* liberi;
+    MateriaValor* ultimus;
+             s32  k = _apertum_invenire_literis(p, "body");
+             i32  locus;
+             i32  n;
+             i32  i;
+
+    si (k < ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    corpus = _apertum(p, (i32)k);
+    si (corpus->loci[HTML_ELEMENTUM_SYNTHESIS].genus
+            != MATERIA_VALOR_INDEX)
+    {
+        redde VERUM;
+    }
+    liberi = &corpus->loci[HTML_ELEMENTUM_LIBERI];
+    n = (liberi->genus == MATERIA_VALOR_LISTA)
+        ? materia_valor_lista_numerus(*liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        MateriaValor* v = materia_valor_lista_obtinere(
+            corpus->loci[HTML_ELEMENTUM_LIBERI], i);
+
+        si (   v == NIHIL || v->genus != MATERIA_VALOR_NODUS
+            || v->datum.nodus->genus != (s32)HTML_GENUS_ELEMENTUM_MALUM)
+        {
+            redde VERUM;
+        }
+    }
+    parens = (k > ZEPHYRUM) ? _apertum(p, (i32)k - I) : p->documentum;
+    locus  = (parens->genus == (s32)HTML_GENUS_DOCUMENTUM)
+           ? (i32)HTML_DOCUMENTUM_LIBERI : (i32)HTML_ELEMENTUM_LIBERI;
+    liberi = &parens->loci[locus];
+    si (   liberi->genus               != MATERIA_VALOR_LISTA
+        || liberi->datum.lista.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    ultimus = materia_valor_lista_obtinere(*liberi,
+        liberi->datum.lista.mensura - I);
+    si (   ultimus == NIHIL || ultimus->genus != MATERIA_VALOR_NODUS
+        || ultimus->datum.nodus != corpus)
+    {
+        redde VERUM;
+    }
+    liberi->datum.lista.mensura  = liberi->datum.lista.mensura - I;
+    p->profunditas               = (i32)k;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        MateriaValor* v = materia_valor_lista_obtinere(
+            corpus->loci[HTML_ELEMENTUM_LIBERI], i);
+
+        si (!materia_nodus_appendere(p->piscina, parens, locus, *v,
+                MATERIA_LOCUS_LISTA_NODUS))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Partes tabulae fictae (WHATWG 'in table' / 'in table body'): tr
+ * sub table -> tbody; td/th sub table -> tbody et tr, sub sectione
+ * -> tr; col sub table -> colgroup. Vertex solus spectatur (modi
+ * tabularum pleni et foster parenting = O7b). */
+interior b32
+_partes_tabulae_fingere (
+    HtmlParsura* p,
+         chorda  titulus)
+{
+    b32 cella = (b32)(_titulus_est(titulus, "td")
+                      || _titulus_est(titulus, "th"));
+
+    /* in contento alieno nihil fingitur (svg table alienum est) */
+    si (_vertex_gradus(p)->liberorum != HTML_ALIENUM_NULLUM)
+    {
+        redde VERUM;
+    }
+    si (cella || _titulus_est(titulus, "tr"))
+    {
+        chorda vertex = _titulus_verticis(p);
+
+        si (_titulus_est(vertex, "table"))
+        {
+            si (!_elementum_fingere(p, HTML_SYNTHESIS_CORPUS_TABULAE,
+                    VERUM))
+            {
+                redde FALSUM;
+            }
+            vertex = _titulus_verticis(p);
+        }
+        si (   cella
+            && (_titulus_est(vertex, "tbody")
+                || _titulus_est(vertex, "thead")
+                || _titulus_est(vertex, "tfoot")))
+        {
+            redde _elementum_fingere(p, HTML_SYNTHESIS_ORDO, VERUM);
+        }
+        redde VERUM;
+    }
+    si (   _titulus_est(titulus, "col")
+        && _titulus_est(_titulus_verticis(p), "table"))
+    {
+        redde _elementum_fingere(p, HTML_SYNTHESIS_COLUMNAE, VERUM);
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Lexemata singula: tags
+ * ================================================== */
 
 interior b32
 _aperturam_tractare (
@@ -1083,6 +1527,19 @@ _aperturam_tractare (
             p->profunditas = (i32)vertex->selectum;
         }
     }
+    /* O7a: '<frameset>' acceptum post body fictum: body removetur */
+    si (   _titulus_est(titulus, "frameset")
+        && p->modus == MODUS_IN_CORPORE && !p->compages_visa
+        && !_corpus_fictum_removere(p))
+    {
+        redde FALSUM;
+    }
+    /* O7a: involucra quae desunt ante tag fingere (html/head/body) */
+    si (!_involucra_fingere(p, titulus, _caput_contentum(titulus),
+            FALSUM))
+    {
+        redde FALSUM;
+    }
     _vexilla_renovare(p, titulus);
 
     /* clausurae per scopum (O2b-5), deinde vertex acervi dum tabula
@@ -1090,21 +1547,22 @@ _aperturam_tractare (
     _scopos_claudere(p, titulus);
     dum (p->profunditas > ZEPHYRUM)
     {
-        MateriaNodus* vertex = _apertum(p, p->profunditas - I);
-        MateriaToken* apertura;
+        chorda vertex = _titulus_aperti(p, p->profunditas - I);
 
-        apertura =
-            vertex->loci[HTML_ELEMENTUM_TOK_APERTURA].datum.token;
-        si (   apertura == NIHIL
-            || !_claudit(_tag_titulus(apertura), titulus))
+        si (vertex.mensura == ZEPHYRUM || !_claudit(vertex, titulus))
         {
             frange;
         }
         p->profunditas = p->profunditas - I;
     }
+    /* O7a: partes tabulae quas spec fingit (tbody/tr/colgroup) */
+    si (!_partes_tabulae_fingere(p, titulus))
+    {
+        redde FALSUM;
+    }
 
     elementum = materia_nodus_creare(p->piscina,
-        (s32)HTML_GENUS_ELEMENTUM, (i32)VI);
+        (s32)HTML_GENUS_ELEMENTUM, (i32)VII);
     si (elementum == NIHIL)
     {
         redde FALSUM;
@@ -1123,7 +1581,7 @@ _aperturam_tractare (
      * pendens manet (attributa, '>') */
     si (!_vacuum_est(titulus))
     {
-        si (!_impellere(p, elementum))
+        si (!_impellere(p, elementum, titulus))
         {
             redde FALSUM;
         }
@@ -1252,42 +1710,61 @@ _clausuram_tractare (
      HtmlParsura* p,
     MateriaToken* token)
 {
-    s32 k;
+    constans ScopiGradus* vertex;
+                  chorda  titulus;
+                     s32  k;
 
     _pendentia_claudere(p);
+    titulus  = _tag_titulus(token);
+    /* O7a: '</body>' '</html>' '</br>' ante corpus (spec 'anything
+     * else' in modis involucrorum): involucra usque ad body ficta,
+     * deinde ut in corpore */
+    si (   p->modus != MODUS_IN_CORPORE
+        && (_titulus_est(titulus, "body")
+        || _titulus_est(titulus, "html")
+            || _titulus_est(titulus, "br")))
+    {
+        si (!_involucra_fingere(p, _vacua(), FALSUM, FALSUM))
+        {
+            redde FALSUM;
+        }
+    }
+    vertex   = _vertex_gradus(p);
     /* O5: </body> et </html> elementum NON claudunt (spec: modus 'after
      * body' solum) - malum, corpus ad EOF apertum manet; in select tags
      * clausurae aliena neglecta */
+    si (   _titulus_est(titulus, "body")
+        || _titulus_est(titulus, "html")
+        || (vertex != NIHIL && vertex->selectum >= ZEPHYRUM
+            && !_in_tabula(titulus, SELECT_CLAUSURAE,
+                TABULAE_NUMERUS(SELECT_CLAUSURAE))))
     {
-        constans ScopiGradus* vertex   = _vertex_gradus(p);
-                      chorda  titulus  = _tag_titulus(token);
-
-        si (   _titulus_est(titulus, "body")
-            || _titulus_est(titulus, "html")
-            || (vertex != NIHIL && vertex->selectum >= ZEPHYRUM
-                && !_in_tabula(titulus, SELECT_CLAUSURAE,
-                    TABULAE_NUMERUS(SELECT_CLAUSURAE))))
+        redde _malum_addere(p, token);
+    }
+    /* O7a: '</head>' ante head (spec 'anything else': head fingitur,
+     * deinde ab hoc tag clauditur - clausura vera in elemento ficto) */
+    si (   _titulus_est(titulus, "head")
+        && (p->modus == MODUS_ANTE_RADICEM
+            || p->modus == MODUS_ANTE_CAPUT))
+    {
+        si (!_involucra_fingere(p, _vacua(), VERUM, FALSUM))
         {
-            redde _malum_addere(p, token);
+            redde FALSUM;
         }
     }
+    si (_in_tabula(titulus, CLAUSURAE_PROPRIAE,
+            TABULAE_NUMERUS(CLAUSURAE_PROPRIAE)))
     {
-        chorda titulus = _tag_titulus(token);
-
-        si (_in_tabula(titulus, CLAUSURAE_PROPRIAE,
-                TABULAE_NUMERUS(CLAUSURAE_PROPRIAE)))
-        {
-            k = _apertum_invenire(p, titulus);
-        }
-        alioquin si (_in_tabula(titulus, CLAUSURAE_SCOPI,
-                         TABULAE_NUMERUS(CLAUSURAE_SCOPI)))
-        {
-            k = _apertum_in_scopo_invenire(p, titulus);
-        }
-        alioquin
-        {
-            k = _apertum_generale_invenire(p, titulus);
-        }
+        k = _apertum_invenire(p, titulus);
+    }
+    alioquin si (_in_tabula(titulus, CLAUSURAE_SCOPI,
+                     TABULAE_NUMERUS(CLAUSURAE_SCOPI)))
+    {
+        k = _apertum_in_scopo_invenire(p, titulus);
+    }
+    alioquin
+    {
+        k = _apertum_generale_invenire(p, titulus);
     }
     si (k < ZEPHYRUM)
     {
@@ -1295,6 +1772,11 @@ _clausuram_tractare (
     }
     p->clausura     = _apertum(p, (i32)k);
     p->profunditas  = (i32)k;
+    /* head clausum: modus 'after head' (O7a) */
+    si (p->modus == MODUS_IN_CAPITE && _titulus_est(titulus, "head"))
+    {
+        p->modus = MODUS_POST_CAPUT;
+    }
     redde materia_nodus_ponere(p->clausura,
         (i32)HTML_ELEMENTUM_TOK_CLAUSURA, materia_valor_token(token),
         MATERIA_LOCUS_TOKEN);
@@ -1330,6 +1812,14 @@ _contentum_tractare (
         {
             neglectum = VERUM;
         }
+        /* O7a: textus albus ante html/head (spec 'before html' et
+         * 'before head' eum neglegunt) */
+        alioquin si (   genus == (s32)HTML_GENUS_TEXTUS && albus
+                     && (p->modus == MODUS_ANTE_RADICEM
+                         || p->modus == MODUS_ANTE_CAPUT))
+        {
+            neglectum = VERUM;
+        }
         si (neglectum)
         {
             si (!_malum_addere(p, token))
@@ -1346,6 +1836,13 @@ _contentum_tractare (
         {
             p->contentum_visum  = VERUM;
             p->compages_licet   = FALSUM;
+            /* O7a: textus corporis involucra postulat (cdata extra
+             * alienos commentarium est - non fingit, ut commentaria) */
+            si (   genus != (s32)HTML_GENUS_CDATA
+                && !_involucra_fingere(p, _vacua(), FALSUM, FALSUM))
+            {
+                redde FALSUM;
+            }
         }
     }
     si (genus < ZEPHYRUM)
@@ -1371,11 +1868,14 @@ _contentum_tractare (
  * Ingressus
  * ================================================== */
 
-MateriaNodus*
-html_arbor_parsare (
+interior MateriaNodus*
+_parsare (
                Piscina* piscina,
     constans character* fons,
-                   i32  mensura)
+                   i32  mensura,
+                chorda  contextus,
+           HtmlAlienum  spatium,
+                   b32  fragmentum)
 {
            HtmlParsura  p;
     MateriaLexIudicium  iudicium;
@@ -1390,6 +1890,33 @@ html_arbor_parsare (
     memset(&p, ZEPHYRUM, magnitudo(HtmlParsura));
     p.piscina         = piscina;
     p.compages_licet  = VERUM;
+    p.basis           = _basis_vacua();
+    p.contextus       = contextus;
+    p.modus           = MODUS_ANTE_RADICEM;
+    p.fragmentum      = fragmentum;
+    si (fragmentum)
+    {
+        b32 radix = _titulus_est(contextus, "html");
+
+        /* contextus = vertex SUB acervo: spatia, select, frameset,
+         * tabula ex eo; involucra iam adsunt (spec 'reset the
+         * insertion mode': 'in body', nisi contextu html - 'before
+         * head', head et body sub radice fingenda) */
+        p.basis.proprium        = spatium;
+        p.basis.liberorum       = html_alienum_liberorum(spatium,
+            contextus, NIHIL);
+        p.basis.selectum        = _titulus_est(contextus, "select")
+                                ? ZEPHYRUM : (s32)-I;
+        p.basis.intra_compagem  = _titulus_est(contextus, "frameset");
+        p.basis.in_tabula       = _in_tabula(contextus,
+            CONTEXTUS_TABULAE,
+            TABULAE_NUMERUS(CONTEXTUS_TABULAE));
+        p.modus           = radix ? MODUS_ANTE_CAPUT : MODUS_IN_CORPORE;
+        p.html_visum      = VERUM;
+        p.head_visum      = (b32)!radix;
+        p.body_visum      = (b32)!radix;
+        p.compages_licet  = radix;
+    }
 
     /* PORTA ONERIS, politica degradationis B: recusatio hic vitium
      * TABULAE NOSTRAE nominat, non fontis. */
@@ -1437,6 +1964,12 @@ html_arbor_parsare (
                 == MATERIA_MUNUS_FINIS)
         {
             _pendentia_claudere(&p);
+            /* O7a: involucra quae desunt ad EOF (spec 'anything else'
+             * usque ad body fictum, template apertum non obstante) */
+            si (!_involucra_fingere(&p, _vacua(), FALSUM, VERUM))
+            {
+                redde NIHIL;
+            }
             si (!materia_nodus_ponere(p.documentum,
                     (i32)HTML_DOCUMENTUM_CAUDA,
                     materia_valor_token(token),
@@ -1491,4 +2024,26 @@ html_arbor_parsare (
      * politicam reconstructionis lectori aequat (css exemplar). */
     materia_arbor_patres_figere(piscina, p.documentum);
     redde p.documentum;
+}
+
+MateriaNodus*
+html_arbor_parsare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
+{
+    redde _parsare(piscina, fons, mensura, _vacua(),
+        HTML_ALIENUM_NULLUM,
+        FALSUM);
+}
+
+MateriaNodus*
+html_arbor_parsare_fragmentum (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura,
+                chorda  contextus,
+           HtmlAlienum  spatium)
+{
+    redde _parsare(piscina, fons, mensura, contextus, spatium, VERUM);
 }
