@@ -484,3 +484,56 @@ grows its escaped fallback, that pin goes red and the cases promote.
 No closing-sequence refusal in the corpus, no other cause. 0.3 s. The
 O7b and O7c annotations will be proven here rather than on cases I
 chose.
+
+## 2026-09-16 — O7b: table modes and `sedes`; 1,299 → 1,398
+
+The second annotation. `sedes:referentia` on `elementum`, `textus`,
+`referentia` and `commentarium` names the DOM parent of a node whose
+bytes lie somewhere else. The node stays where its bytes are; materia
+writes `<sedes(> #nodN` on it and `id="nodN"` on the target — html is
+the first client to declare a reference locus after oratio, and the
+canon now declares `id` on `elementum` and `documentum`. The cooked
+view merges each parent's byte-children with the nodes whose sedes
+point at it: before the child that is a `table` and contains them
+(foster parenting), otherwise after everything (content after
+`</body>`, head content after `</head>`, fragments in a table
+context, where the spec appends). One rule, three sources.
+
+The builder learned WHATWG's table modes as per-frame fields, O(1)
+as always: the mode from the frame's own HTML title (a MathML `tr`
+never sets one), the nearest open table, the nearest REAL table
+part. A table-part start tag clears the stack back to that real
+part; `<table>` inside a table closes it; when the current node is
+`table tbody tfoot thead tr` and the token is not one the mode
+handles, the node is created where it is and fostered by annotation.
+
+The O5 law reversed: `</body>` and `</html>` now close their
+element. The spec leaves the stack untouched and only switches mode,
+so later content goes into whatever element was open then — that
+element is remembered (`sedes_posterior`) and everything inserted at
+html or document level afterwards carries `sedes` to it. Comments
+follow only once content has re-entered the body, which is why
+`commentarium` got the locus too.
+
+What the runs taught:
+
+- Fragment contexts whose table mode comes from the context alone
+  fail the spec's "in table scope" checks, because the context
+  element is not on the stack: a table body accepts only tr/td/th, a
+  row td/th, a caption nothing, a column group col, a table
+  everything but table. Twelve innerHTML cases hung on that.
+- `<input type=hidden>` stays in the table, and attributes are not
+  seen at push time — the decision is deferred to the tag's `>`
+  (`fovens`), the first time a pending state carries a placement.
+- The first cut of "`<frameset>` after `</body>` removes the
+  invented body" dropped the body's closing tokens. The oracle
+  rewarded it (the tree matched) and the corpus round-trip gate
+  refused it (bytes lost). The tokens now move into a malum. That is
+  the gate Fran asked for doing exactly its job, one commit after it
+  was born.
+- Accepting `<frameset>` had reset the mode to "in body", silently
+  discarding the post-body sedes. A mode may only move forward.
+
+Numbers: 1,299 → 1,398 of 1,700 (82 %), fragments 131 → 152, 99
+rises, zero regressions. Next: O7c, the adoption agency and
+`exemplar`.

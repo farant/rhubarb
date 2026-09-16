@@ -1051,10 +1051,24 @@ tasks, one commit each, under the same Global Constraints.
     Every later annotation (`sedes`, `exemplar`) is proven here, not on
     hand-picked cases. Plant: an invented element pushed but not
     appended → red.
-  - [ ] **O7b — table modes + `sedes`** (foster parenting, table scope,
-    the two O7a regressions, `<table><div>` before the table, text in
-    tables, `</body>` comments to html, head content after `</head>`
-    to head).
+  - [x] **O7b — table modes + `sedes`** (2026-09-16): `sedes:referentia`
+    appended on `elementum`, `textus`, `referentia`, `commentarium`
+    (23 loci, `id` declared on `elementum`/`documentum` in the canon,
+    seal `a69b019f` → `5bf2be5d`, node sizes from the registry via
+    `_loci_numerus`); per-frame table modes (`modus_tabulae`,
+    `tabulae`, `partis`, `pars_tabulae`), `_tabulas_purgare`,
+    `_fovendum`/`_parens_fovens`, `input type=hidden` decided at `>`
+    (`fovens`), `form` not pushed, `</body>`/`</html>` CLOSE with
+    `sedes_posterior` for later content (comments after re-entry),
+    head content after `</head>` → head, fragment-context scope rules;
+    cooked view merges byte-children with sedes-nodes (before the
+    containing table, else after all). Gates: arbor (13 new cases),
+    stml (7 documents, 2 fragments, the reference read back), oracle
+    pin 1,299 → 1,398 (fragments 152), computus golden (`</body>` now
+    a closing token, −2 nodes on real pages). **Zero regressions; the
+    corpus round-trip gate carried every reference and caught the one
+    byte loss of the first cut.** Plant: foster parent = the table
+    itself → arbor red.
   - [ ] **O7c — adoption agency + `exemplar`** (active formatting list).
 
 ## Self-Review

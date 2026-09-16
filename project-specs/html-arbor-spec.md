@@ -538,11 +538,25 @@ keeps no node for.** Every place HTML5 says "parse error, ignore the
 token" lands here — a repeated `<html>`/`<head>`/`<body>`, a doctype
 after content, a `<frameset>` once frameset-ok is off, non-permitted
 tags and non-blank text inside a frameset, non-permitted tags and end
-tags inside a `select`, and `</body>`/`</html>`, which never pop (the
-body stays open to EOF with `tok_clausura` absent; content after
-`</body>` is inside it, as in browsers). The bytes stay where they
-are; the cooked view omits the malum. An ignored start tag becomes a
-PENDING malum, so its attributes and `>` join it by the H8 paths.
+tags inside a `select`, table parts outside a table mode. The bytes
+stay where they are; the cooked view omits the malum. An ignored
+start tag becomes a PENDING malum, so its attributes and `>` join it
+by the H8 paths. (O5 also made `</body>`/`</html>` mala with the body
+open to EOF; **O7b, 2026-09-16, reversed that**: they CLOSE their
+element, and the content after them — which HTML5 puts back into the
+element that was open — carries `sedes`, below.)
+
+**Appended by O7b (2026-09-16): `sedes:referentia` on `elementum`,
+`textus`, `referentia` and `commentarium`** — the DOM parent of a
+node whose bytes lie elsewhere. The node stays where its bytes are;
+materia writes `<sedes(> #nodN` on it and `id="nodN"` on the target
+(the canon declares `id` on `elementum` and `documentum`); the cooked
+view prints the node under its `sedes`: BEFORE the child of the sedes
+that is a `table` and contains it (foster parenting), otherwise AFTER
+all children (content after `</body>`, head content after `</head>`,
+fragments in a table context — the spec appends there). Twenty-three
+loci, seal `5bf2be5d`. The corpus round-trip gate carried every
+reference on its first run.
 Everything else the lexer emits maps to a content genus by lexer
 genus: `TEXTUS` → `textus`; `REFERENTIA` → `referentia`;
 `TEXTUS_CRUDUS` and `_IMPERFECTUS` → `textus-crudus`; `COMMENTARIUM`,
@@ -632,9 +646,10 @@ parity needs no new genus.
 as DERIVED-VIEW ANNOTATIONS, read by the cooked view only, materia
 untouched (§2.4's substrate mechanism is NOT built): `synthesis:index`
 (O7a, DECLARED — the first append, seal `0ae63151` → `a69b019f`, the
-reservation gate's rows unchanged), `sedes:referentia` (O7b, foster
-parenting: the node stays at its bytes, the annotation names where the
-DOM puts it) and `exemplar:referentia` (O7c, the adoption agency's
+reservation gate's rows unchanged), `sedes:referentia` (O7b, DECLARED
+on four genera, seal → `5bf2be5d`: the node stays at its bytes, the
+annotation names its DOM parent) and `exemplar:referentia` (O7c, the
+adoption agency's
 reopened element: no tokens, name and attributes through the
 reference). Acceptance for all three (Fran's condition): the STML
 round trip stays whole — §11.8 gate 5 runs every annotated case.
@@ -751,6 +766,40 @@ round trip stays whole — §11.8 gate 5 runs every annotated case.
   `</body>` belongs to html (tests18 #34) and head content after
   `</head>` belongs to head (tests7 #4) — their bytes lie inside the
   body/after the head, so only the annotation can place them.
+- **Table modes and foster parenting (O7b, 2026-09-16 — mechanism 4's
+  second half):** per frame, O(1): `modus_tabulae` (WHATWG in table /
+  in table body / in row / in cell / in caption / in column group,
+  from the frame's own HTML title — a foreign `math tr` never sets
+  one — inherited otherwise, cleared by `html` and `template`), the
+  nearest open `tabulae`, the nearest REAL table part `partis`. A
+  table-part start tag in a table mode clears the stack back to the
+  nearest real part (`_tabulas_purgare`; the cell/row/section closes
+  then follow from the implied-close table), `<table>` in table,
+  section, row or column-group mode closes the open table, and a
+  fragment whose mode comes from the context alone fails the spec's
+  "in table scope" checks (table body accepts only tr/td/th, row
+  td/th, caption nothing, column group col, table everything but
+  table). FOSTER PARENTING (`_fovendum`): when the current node is
+  `table tbody tfoot thead tr` and the token is not one the table
+  mode handles (`caption col colgroup tbody tfoot thead td th tr table
+  style script template form`), the element or non-blank text is
+  created as a byte-child of the current node and gets `sedes` = the
+  table's parent (the document root when no table is on the stack —
+  the fragment case, where the spec appends); `input` is decided when
+  its attributes are read (`type=hidden` stays); `form` in a table is
+  inserted and not pushed; non-blank text under `colgroup` pops it
+  first. AFTER BODY: `</body>` and `</html>` close their element
+  (O5 reversed) and remember the element that was the current node
+  (`sedes_posterior`); everything inserted at html or document level
+  afterwards carries `sedes` to it (comments only once non-blank
+  content or a tag has re-entered the body; a `</body>` inside a
+  table mode or template is a malum); `<frameset>` after an invented
+  body still removes it, its closing tokens moving into a malum (the
+  corpus round-trip gate caught the first cut dropping them). AFTER
+  HEAD: head content after `</head>` carries `sedes` to head. Oracle
+  1,299 → 1,398, fragments 131 → 152, zero regressions. Named
+  deviations: `</html>` inside an open `frameset` closes it (spec
+  ignores); `<b>x</body>y` closes `b` (spec keeps it open).
 - **Raw text**: nothing — the lexer emits `TEXTUS_CRUDUS` after
   `script style title textarea`; the builder appends `textus-crudus`.
   **O4 (2026-09-15):** the lexer's set is WHATWG's whole RAWTEXT list

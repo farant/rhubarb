@@ -8,6 +8,7 @@
 #include "materia_token.h"
 #include "entitates_html.h"
 #include "chorda_aedificator.h"
+#include "xar.h"
 #include <string.h>
 
 #define ATTRIBUTA_MAXIMA ((i32)64)
@@ -17,6 +18,9 @@ nomen structura {
     ChordaAedificator* aed;
     /* nondum linea ulla scripta: '\n' ante lineam omittendum */
     b32 prima;
+    /* O7b: nodi cum sede (parens DOM alibi), ordine documenti - Xar
+     * de constans MateriaNodus* */
+    Xar* sedentes;
 } Scriptor;
 
 nomen structura {
@@ -175,6 +179,141 @@ _liber (
     v = materia_valor_lista_obtinere(nodus->loci[locus], i);
     redde (v != NIHIL && v->genus == MATERIA_VALOR_NODUS)
         ? v->datum.nodus : NIHIL;
+}
+
+
+/* ==================================================
+ * Sedes (O7b): parens DOM alibi
+ * ================================================== */
+
+/* Sedes nodi: parens DOM alibi, aut NIHIL (elementum locus
+ * HTML_ELEMENTUM_SEDES, textus et referentia locus I). */
+interior MateriaNodus*
+_sedes (
+    constans MateriaNodus* nodus)
+{
+    i32 locus;
+
+    si (nodus->genus == (s32)HTML_GENUS_ELEMENTUM)
+    {
+        locus = (i32)HTML_ELEMENTUM_SEDES;
+    }
+    alioquin si (nodus->genus == (s32)HTML_GENUS_TEXTUS)
+    {
+        locus = (i32)HTML_TEXTUS_SEDES;
+    }
+    alioquin si (nodus->genus == (s32)HTML_GENUS_REFERENTIA)
+    {
+        locus = (i32)HTML_REFERENTIA_SEDES;
+    }
+    alioquin si (nodus->genus == (s32)HTML_GENUS_COMMENTARIUM)
+    {
+        locus = (i32)HTML_COMMENTARIUM_SEDES;
+    }
+    alioquin
+    {
+        redde NIHIL;
+    }
+    si (   locus                    >= nodus->numerus_locorum
+        || nodus->loci[locus].genus != MATERIA_VALOR_REFERENTIA)
+    {
+        redde NIHIL;
+    }
+    redde nodus->loci[locus].datum.nodus;
+}
+
+/* Nodos cum sede colligere, ordine documenti (ambulatio recursiva -
+ * fixurae oraculi, non paginae M gradus profundae). */
+interior vacuum
+_sedentes_colligere (
+                      Xar* sedentes,
+    constans MateriaNodus* nodus)
+{
+    i32 locus;
+    i32 n;
+    i32 i;
+
+    si (_sedes(nodus) != NIHIL)
+    {
+        constans MateriaNodus** l =
+            (constans MateriaNodus**)xar_addere(sedentes);
+
+        si (l != NIHIL)
+        {
+            *l = nodus;
+        }
+    }
+    si (nodus->genus == (s32)HTML_GENUS_DOCUMENTUM)
+    {
+        locus = (i32)HTML_DOCUMENTUM_LIBERI;
+    }
+    alioquin si (nodus->genus == (s32)HTML_GENUS_ELEMENTUM)
+    {
+        locus = (i32)HTML_ELEMENTUM_LIBERI;
+    }
+    alioquin
+    {
+        redde;
+    }
+    n = _numerus(nodus, locus);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans MateriaNodus* liber = _liber(nodus, locus, i);
+
+        si (liber != NIHIL)
+        {
+            _sedentes_colligere(sedentes, liber);
+        }
+    }
+}
+
+/* Liber parentis dati qui nodum continet (per patres); NIHIL si nodus
+ * extra parentem iacet. */
+interior constans MateriaNodus*
+_liber_continens (
+    constans MateriaNodus* parens,
+    constans MateriaNodus* nodus)
+{
+    constans MateriaNodus* n = nodus;
+
+    dum (n != NIHIL && n->pater != parens)
+    {
+        n = n->pater;
+    }
+    redde n;
+}
+
+/* Elementum verum 'table' (litteris neglectis)? */
+interior b32
+_tabula_est (
+    constans MateriaNodus* nodus)
+{
+    MateriaToken* apertura;
+          chorda  t;
+             i32  i;
+
+    si (nodus == NIHIL || nodus->genus != (s32)HTML_GENUS_ELEMENTUM)
+    {
+        redde FALSUM;
+    }
+    apertura = _tok(nodus, (i32)HTML_ELEMENTUM_TOK_APERTURA);
+    si (apertura == NIHIL)
+    {
+        redde FALSUM;
+    }
+    t = apertura->valor;
+    si (t.mensura != VI)
+    {
+        redde FALSUM;
+    }
+    per (i = I; i < VI; i++)
+    {
+        si ((character)_minuscula(t.datum[i]) != "<table"[i])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 /* Octetos textus appendere: CR LF -> LF, CR -> LF (praeparatio fluxi
@@ -735,17 +874,86 @@ _liberos_scribere (
                   b32  cumulus_primus  = FALSUM;
                   b32  primus          = VERUM;
                   i32  n               = _numerus(nodus, locus);
+                  i32  m               = xar_numerus(s->sedentes);
+                  Xar* ordo;
+                  i32  numerus;
                   i32  i;
+                  i32  j;
 
+    /* ORDO DOM (O7b): liberi octetorum sine sede in ordine suo;
+     * sedentes huius parentis ANTE liberum tabulam quae eos continet
+     * (foster parenting: 'ante tabulam in parente eius'), aliter POST
+     * omnes (contentum post body, caput post head, fragmentum contextu
+     * tabulae - spec: appenditur). Ordo inter sedentes = documenti. */
+    ordo = xar_creare(s->piscina, magnitudo(constans MateriaNodus*));
+    si (ordo == NIHIL)
+    {
+        redde;
+    }
     per (i = ZEPHYRUM; i < n; i++)
     {
-        MateriaNodus* liber = _liber(nodus, locus, i);
-        MateriaToken* tok;
+        constans MateriaNodus*  liber = _liber(nodus, locus, i);
+        constans MateriaNodus** l;
 
-        si (liber == NIHIL)
+        si (liber == NIHIL || _sedes(liber) != NIHIL)
         {
             perge;
         }
+        si (_tabula_est(liber))
+        {
+            per (j = ZEPHYRUM; j < m; j++)
+            {
+                constans MateriaNodus* sedens =
+                    *(constans MateriaNodus**)xar_obtinere(s->sedentes,
+                        j);
+
+                si (   _sedes(sedens)                  == nodus
+                    && _liber_continens(nodus, sedens) == liber)
+                {
+                    l = (constans MateriaNodus**)xar_addere(ordo);
+                    si (l != NIHIL)
+                    {
+                        *l = sedens;
+                    }
+                }
+            }
+        }
+        l = (constans MateriaNodus**)xar_addere(ordo);
+        si (l != NIHIL)
+        {
+            *l = liber;
+        }
+    }
+    per (j = ZEPHYRUM; j < m; j++)
+    {
+        constans MateriaNodus* sedens =
+            *(constans MateriaNodus**)xar_obtinere(s->sedentes, j);
+        constans MateriaNodus* continens;
+
+        si (_sedes(sedens) != nodus)
+        {
+            perge;
+        }
+        continens = _liber_continens(nodus, sedens);
+        si (continens == NIHIL || !_tabula_est(continens))
+        {
+            constans MateriaNodus** l =
+                (constans MateriaNodus**)xar_addere(ordo);
+
+            si (l != NIHIL)
+            {
+                *l = sedens;
+            }
+        }
+    }
+
+    numerus = xar_numerus(ordo);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        constans MateriaNodus* liber =
+            *(constans MateriaNodus**)xar_obtinere(ordo, i);
+              MateriaToken* tok;
+
         si (liber->genus == (s32)HTML_GENUS_ELEMENTUM_MALUM)
         {
             perge;   /* DOM nihil retinet; textus circa coniungitur */
@@ -854,7 +1062,8 @@ html_coctum_scribere (
     s.aed = chorda_aedificator_creare(piscina,
         (memoriae_index)MXXIV);
     s.prima = VERUM;
-    si (s.aed == NIHIL)
+    s.sedentes = xar_creare(piscina, magnitudo(constans MateriaNodus*));
+    si (s.aed == NIHIL || s.sedentes == NIHIL)
     {
         chorda c;
 
@@ -862,6 +1071,7 @@ html_coctum_scribere (
         c.mensura  = ZEPHYRUM;
         redde c;
     }
+    _sedentes_colligere(s.sedentes, radix);
     locus = (radix->genus == (s32)HTML_GENUS_DOCUMENTUM)
           ? (i32)HTML_DOCUMENTUM_LIBERI : (i32)HTML_ELEMENTUM_LIBERI;
     _liberos_scribere(&s, radix, locus, ZEPHYRUM, parentis, alienum,

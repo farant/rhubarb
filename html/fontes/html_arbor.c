@@ -20,6 +20,18 @@
  * FICTI sunt - elementum sine lexematibus, locus 'synthesis' solus.
  * Fragmentum (html_arbor_parsare_fragmentum): contextus vertex sub
  * acervo (basis), involucra iam adsunt.
+ *
+ * SEDES (O7b, 2026-09-15): nodus cuius parens DOM alius est quam
+ * parens octetorum locum 'sedes' (referentia) fert - nodus ubi octeti
+ * sunt manet, visio cocta eum sub sede imprimit. Tres fontes: foster
+ * parenting (modi tabularum: vertex table/tbody/tfoot/thead/tr, tag
+ * aut textus quem modus tabulae non tractat -> sedes = parens
+ * tabulae), contentum post '</body>' aut '</html>' (spec 'after
+ * body': in body - '</body>' et '</html>' nunc CLAUDUNT, O5 ea mala
+ * tenebat), contentum capitis post '</head>' (spec 'after head': in
+ * head). Modi tabularum per gradum (modus_tabulae, tabulae,
+ * pars_tabulae): tag partis tabulae acervum ad partem proximam
+ * purgat, '<table>' in tabula tabulam claudit.
  */
 
 #include "html_arbor.h"
@@ -44,6 +56,20 @@
  * elementum cuius tag legitur, attributum = attributum eius apertum;
  * clausura = elementum cuius '</x' visum est ('>' exspectat); malum =
  * elementum-malum '>' exspectans. */
+/* Modi tabularum (WHATWG 'in table' / 'in table body' / 'in row' /
+ * 'in cell' / 'in caption' / 'in column group'), O7b: per gradum ex
+ * titulo proprio partis tabulae, hereditati, html et template eos
+ * tollunt (limites scopi tabulae). NULLUS = 'in body' quoad tabulas. */
+nomen enumeratio {
+    TABULAE_NULLUS = 0,
+    TABULAE_TABULA,
+    TABULAE_SECTIO,
+    TABULAE_ORDO,
+    TABULAE_CELLA,
+    TABULAE_INSCRIPTIO,
+    TABULAE_COLUMNAE
+} HtmlModusTabulae;
+
 /* Scopi visibiles per gradum acervi (O2b-5; vide _scopi_gradus) */
 nomen structura {
     s32 p;
@@ -56,21 +82,31 @@ nomen structura {
     /* O5: index select proximi visibilis (-I nullum); intra frameset */
     s32 selectum;
     b32 intra_compagem;
-    /* O7a: tabula aperta in scopo tabulae (limites html/template);
-     * index template aperti proximi (-I nullum): intra template modi
-     * involucrorum tacent (spec 'in template') */
-    b32 in_tabula;
-    s32 templi;
+    /* O7a: index template aperti proximi (-I nullum): intra template
+     * modi involucrorum tacent (spec 'in template'). O7b: modus
+     * tabularum huius gradus, index table apertae proximae (-I nulla;
+     * parens eius = parens fovens), titulus proprius pars tabulae est
+     * (purgatio acervi hic sistit) */
+                 s32 templi;
+    HtmlModusTabulae modus_tabulae;
+                 s32 tabulae;
+                 b32 pars_tabulae;
+    /* index partis tabulae VERAE proximae in acervo (-I nulla: modus ex
+     * contextu fragmenti solo - spec 'in table scope' tum fallit) */
+    s32 partis;
 } ScopiGradus;
 
 /* Modi involucrorum (WHATWG 'before html' -> 'before head' -> 'in
- * head' -> 'after head' -> 'in body'/'in frameset'); O7a. */
+ * head' -> 'after head' -> 'in body'/'in frameset' -> 'after body' ->
+ * 'after after body'); O7a, post corpus O7b. */
 nomen enumeratio {
     MODUS_ANTE_RADICEM = 0,
     MODUS_ANTE_CAPUT,
     MODUS_IN_CAPITE,
     MODUS_POST_CAPUT,
-    MODUS_IN_CORPORE
+    MODUS_IN_CORPORE,
+    MODUS_POST_CORPUS,
+    MODUS_POST_RADICEM
 } HtmlModus;
 
 nomen structura {
@@ -105,6 +141,20 @@ nomen structura {
              ScopiGradus basis;
                   chorda contextus;
                      b32 fragmentum;
+    /* O7b: involucra (vera aut ficta; NIHIL si nondum) - sedes
+     * contenti capitis post head; corpus pro remotione; radix = html.
+     * sedes_posterior = vertex DOM cum '</body>'/'</html>' venit (spec:
+     * acervus manet, modus solus mutatur) - sedes contenti posterioris.
+     * fovens = parens fovens tagi aperti pendentis (input: type=hidden
+     * in tabula manet, decernitur cum attributa lecta sunt) */
+            MateriaNodus* caput;
+            MateriaNodus* corpus;
+            MateriaNodus* radix;
+            MateriaNodus* sedes_posterior;
+            MateriaNodus* fovens;
+    /* post '</body>' contentum non album aut tag venit: spec ad 'in
+     * body' redit - commentaria quoque in sedem posteriorem */
+                     b32 corpus_iterum;
 } HtmlParsura;
 
 
@@ -233,8 +283,18 @@ _liberum_appendere (
  * Nodi
  * ================================================== */
 
-/* Folium contenti: genus unius loci 'tok' (index ZEPHYRUM in omni
- * genere contenti - registrum id asserit per titulos). */
+/* Numerus locorum generis ex registro cocto - ne tabula manu scripta
+ * a declaratione labatur (O7b: textus et referentia locum sedes
+ * ferunt). */
+interior i32
+_loci_numerus (
+    s32 genus)
+{
+    redde HTML_REGISTRUM.genera[genus].loci_numerus;
+}
+
+/* Folium contenti: genus cuius locus primus 'tok' est (index ZEPHYRUM
+ * in omni genere contenti - registrum id asserit per titulos). */
 interior MateriaNodus*
 _folium (
      HtmlParsura* p,
@@ -243,7 +303,8 @@ _folium (
 {
     MateriaNodus* nodus;
 
-    nodus = materia_nodus_creare(p->piscina, genus, (i32)I);
+    nodus = materia_nodus_creare(p->piscina, genus,
+        _loci_numerus(genus));
     si (nodus == NIHIL)
     {
         redde NIHIL;
@@ -343,13 +404,29 @@ _locus_scriptus (
     redde (b32)(nodus->loci[locus].genus != MATERIA_VALOR_NIHIL);
 }
 
+/* Lexema loci TOKEN, NIHIL si absens */
+interior MateriaToken*
+_tok (
+    constans MateriaNodus* nodus,
+                      i32  locus)
+{
+    redde (nodus->loci[locus].genus == MATERIA_VALOR_TOKEN)
+        ? nodus->loci[locus].datum.token : NIHIL;
+}
+
 /* Statum pendentem CLAUDERE: lexema advenit quod ad tag pendens non
  * pertinet ('>' numquam venit - EOF aut tag novum). Loci absentes
  * truncationem exprimunt. */
+interior b32
+_fovens_solvere (
+    HtmlParsura* p);
+
 interior vacuum
 _pendentia_claudere (
     HtmlParsura* p)
 {
+    /* input in tabula abruptum: fotum (attributa lecta iudicant) */
+    _fovens_solvere(p);
     p->tag_apertum  = NIHIL;
     p->attributum   = NIHIL;
     p->clausura     = NIHIL;
@@ -677,6 +754,52 @@ _vacuum_est (
     redde _in_tabula(titulus, VACUA, TABULAE_NUMERUS(VACUA));
 }
 
+/* Modus tabularum quem titulus proprius dat (NULLUS = non pars) */
+interior HtmlModusTabulae
+_modus_tabulae_tituli (
+    chorda titulus)
+{
+    si (_titulus_est(titulus, "table"))
+    {
+        redde TABULAE_TABULA;
+    }
+    si (   _titulus_est(titulus, "tbody")
+        || _titulus_est(titulus, "thead")
+        || _titulus_est(titulus, "tfoot"))
+    {
+        redde TABULAE_SECTIO;
+    }
+    si (_titulus_est(titulus, "tr"))
+    {
+        redde TABULAE_ORDO;
+    }
+    si (_titulus_est(titulus, "td") || _titulus_est(titulus, "th"))
+    {
+        redde TABULAE_CELLA;
+    }
+    si (_titulus_est(titulus, "caption"))
+    {
+        redde TABULAE_INSCRIPTIO;
+    }
+    si (_titulus_est(titulus, "colgroup"))
+    {
+        redde TABULAE_COLUMNAE;
+    }
+    redde TABULAE_NULLUS;
+}
+
+/* WHATWG 'in table': vertex quo locus insertionis fovetur (foster
+ * parenting) - table, tbody, tfoot, thead, tr */
+hic_manens constans character* constans FOVENTIA[] = {
+    "table", "tbody", "tfoot", "thead", "tr"
+};
+/* tags quae modi tabularum ipsi tractant (partes, table, regulae
+ * capitis, form, input) - numquam fota */
+hic_manens constans character* constans TABULAE_ACCEPTA[] = {
+    "caption", "col", "colgroup", "tbody", "tfoot", "thead", "td", "th",
+    "tr", "table", "style", "script", "template", "form"
+};
+
 /* SCOPUS (WHATWG 'has an element in scope', O2b-5 2026-09-15 - lex
  * verticis solius pro p/li/dd/dt/button relicta). Limites scopi
  * elementum quaesitum CELANT (etiam puncta integrationis MathML/SVG -
@@ -748,8 +871,11 @@ _basis_vacua (vacuum)
     g.liberorum       = HTML_ALIENUM_NULLUM;
     g.selectum        = (s32)-I;
     g.intra_compagem  = FALSUM;
-    g.in_tabula       = FALSUM;
     g.templi          = (s32)-I;
+    g.modus_tabulae   = TABULAE_NULLUS;
+    g.tabulae         = (s32)-I;
+    g.pars_tabulae    = FALSUM;
+    g.partis          = (s32)-I;
     redde g;
 }
 
@@ -828,24 +954,41 @@ _scopi_gradus (
         "select") ? (s32)k : infra.selectum;
     g.intra_compagem = (b32)(_titulus_est(titulus, "frameset")
                              || infra.intra_compagem);
-    /* O7a: partes tabulae hic accipiuntur - tabula in scopo tabulae
-     * (WHATWG 'table scope', limes html) aut template (spec 'in
-     * template': td/tr/col in contentum eius eunt) */
-    si (   _titulus_est(titulus, "table")
-        || _titulus_est(titulus, "template"))
-    {
-        g.in_tabula = VERUM;
-    }
-    alioquin si (_titulus_est(titulus, "html"))
-    {
-        g.in_tabula = FALSUM;
-    }
-    alioquin
-    {
-        g.in_tabula = infra.in_tabula;
-    }
     g.templi = _titulus_est(titulus,
         "template") ? (s32)k : infra.templi;
+    /* O7b: modi tabularum - titulus proprius partis HTML modum dat
+     * (elementum alienum 'math tr' numquam), html et template eum
+     * tollunt (limites scopi tabulae), ceteri hereditant (elementum
+     * fotum in modo tabulae manet: spec modum non mutat) */
+    {
+        HtmlModusTabulae proprius = (g.proprium == HTML_ALIENUM_NULLUM)
+                                  ? _modus_tabulae_tituli(titulus)
+                                  : TABULAE_NULLUS;
+                     b32 limes = (b32)(_titulus_est(titulus, "html")
+                                       || _titulus_est(titulus,
+                                           "template"));
+
+        g.pars_tabulae = (b32)(proprius != TABULAE_NULLUS);
+        si (proprius != TABULAE_NULLUS)
+        {
+            g.modus_tabulae  = proprius;
+            g.partis         = (s32)k;
+        }
+        alioquin
+        {
+            g.modus_tabulae =
+                limes ? TABULAE_NULLUS : infra.modus_tabulae;
+            g.partis = limes ? (s32)-I : infra.partis;
+        }
+        si (proprius == TABULAE_TABULA)
+        {
+            g.tabulae = (s32)k;
+        }
+        alioquin
+        {
+            g.tabulae = limes ? (s32)-I : infra.tabulae;
+        }
+    }
     redde g;
 }
 
@@ -1076,17 +1219,11 @@ hic_manens constans character* constans SELECT_PERMISSA[] = {
 hic_manens constans character* constans SELECT_CLAUSURAE[] = {
     "option", "optgroup", "select", "template"
 };
-/* WHATWG 'in body': partes tabulae extra tabulam in scopo neglectae
- * (O7a) */
+/* WHATWG 'in body': partes tabulae extra modum tabulae neglectae
+ * (O7a; O7b per modum, non per scopum) */
 hic_manens constans character* constans PARTES_TABULAE[] = {
     "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead",
     "tr"
-};
-/* contextus fragmenti qui partes tabulae accipiunt (spec 'reset the
- * insertion mode': td/th/caption ad 'in body' recidunt; colgroup
- * col accipit) */
-hic_manens constans character* constans CONTEXTUS_TABULAE[] = {
-    "table", "tbody", "thead", "tfoot", "tr", "colgroup"
 };
 
 /* Gradus verticis; acervo vacuo basis (contextus fragmenti aut
@@ -1142,15 +1279,49 @@ _tag_neglegendum (
         redde (b32)!_in_tabula(titulus, SELECT_PERMISSA,
             TABULAE_NUMERUS(SELECT_PERMISSA));
     }
-    /* O7a: partes tabulae sine tabula in scopo ('in body': parse
-     * error, ignore) - in contento alieno numquam (svg tr elementum
-     * alienum est) */
-    si (   vertex            != NIHIL && !vertex->in_tabula
-        && vertex->liberorum == HTML_ALIENUM_NULLUM
+    /* O7a/O7b: partes tabulae extra modum tabulae ('in body': parse
+     * error, ignore) - intra template acceptae (spec 'in template'),
+     * in contento alieno numquam (svg tr elementum alienum est) */
+    si (   vertex                != NIHIL
+        && vertex->modus_tabulae == TABULAE_NULLUS
+        && vertex->templi < ZEPHYRUM
+        && vertex->liberorum     == HTML_ALIENUM_NULLUM
         && _in_tabula(titulus, PARTES_TABULAE,
             TABULAE_NUMERUS(PARTES_TABULAE)))
     {
         redde VERUM;
+    }
+    /* O7b: modus tabulae ex contextu fragmenti SOLO (pars vera nulla
+     * in acervo): spec 'has an element in table scope' fallit - in
+     * table omnia praeter table, in table body tr/td/th, in row td/th,
+     * in caption nihil, in column group col; cetera neglecta */
+    si (   vertex                != NIHIL
+        && vertex->modus_tabulae != TABULAE_NULLUS
+        && vertex->partis < ZEPHYRUM
+        && vertex->liberorum     == HTML_ALIENUM_NULLUM
+        && (_titulus_est(titulus, "table")
+            || _in_tabula(titulus, PARTES_TABULAE,
+                TABULAE_NUMERUS(PARTES_TABULAE))))
+    {
+        b32 cella = (b32)(_titulus_est(titulus, "td")
+                          || _titulus_est(titulus, "th"));
+
+        commutatio (vertex->modus_tabulae)
+        {
+            casus TABULAE_TABULA:
+                redde _titulus_est(titulus, "table");
+            casus TABULAE_SECTIO:
+                redde (b32)!(cella || _titulus_est(titulus, "tr"));
+            casus TABULAE_ORDO:
+                redde (b32)!cella;
+            casus TABULAE_COLUMNAE:
+                redde (b32)!_titulus_est(titulus, "col");
+            casus TABULAE_INSCRIPTIO:
+                /* 'in caption': partes neglectae, table in body nova */
+                redde (b32)!_titulus_est(titulus, "table");
+            ordinarius:
+                redde VERUM;
+        }
     }
     redde FALSUM;
 }
@@ -1183,8 +1354,18 @@ _vexilla_renovare (
     }
     alioquin si (_titulus_est(titulus, "frameset"))
     {
-        p->compages_visa  = VERUM;
-        p->modus          = MODUS_IN_CORPORE;
+        p->compages_visa = VERUM;
+        /* post '</body>'/'</html>' modus posterior manet (O7b) */
+        si (p->modus < MODUS_IN_CORPORE)
+        {
+            p->modus = MODUS_IN_CORPORE;
+        }
+    }
+    /* O7b: contentum post '</body>'/'</html>' modum 'in body' iterum
+     * facit (spec 'anything else'): commentaria deinde in body */
+    si (p->modus >= MODUS_POST_CORPUS)
+    {
+        p->corpus_iterum = VERUM;
     }
     si (!_in_tabula(titulus, COMPAGIS_INNOCUA,
             TABULAE_NUMERUS(COMPAGIS_INNOCUA)))
@@ -1231,7 +1412,8 @@ _elementum_fingere (
     MateriaNodus* elementum;
 
     elementum = materia_nodus_creare(p->piscina,
-        (s32)HTML_GENUS_ELEMENTUM, (i32)VII);
+        (s32)HTML_GENUS_ELEMENTUM,
+        _loci_numerus((s32)HTML_GENUS_ELEMENTUM));
     si (elementum == NIHIL)
     {
         redde FALSUM;
@@ -1244,6 +1426,19 @@ _elementum_fingere (
     si (!_liberum_appendere(p, elementum))
     {
         redde FALSUM;
+    }
+    /* sedes futurae (O7b) */
+    si (synthesis == HTML_SYNTHESIS_RADIX)
+    {
+        p->radix = elementum;
+    }
+    alioquin si (synthesis == HTML_SYNTHESIS_CAPUT)
+    {
+        p->caput = elementum;
+    }
+    alioquin si (synthesis == HTML_SYNTHESIS_CORPUS)
+    {
+        p->corpus = elementum;
     }
     si (!impellendum)
     {
@@ -1380,7 +1575,7 @@ interior b32
 _corpus_fictum_removere (
     HtmlParsura* p)
 {
-    MateriaNodus* corpus;
+    MateriaNodus* corpus = p->corpus;
     MateriaNodus* parens;
     MateriaValor* liberi;
     MateriaValor* ultimus;
@@ -1389,13 +1584,11 @@ _corpus_fictum_removere (
              i32  n;
              i32  i;
 
-    si (k < ZEPHYRUM)
-    {
-        redde VERUM;
-    }
-    corpus = _apertum(p, (i32)k);
-    si (corpus->loci[HTML_ELEMENTUM_SYNTHESIS].genus
-            != MATERIA_VALOR_INDEX)
+    /* body vivum aut iam clausum ('</body>' / '</html>' ante, O7b) */
+    si (   corpus        == NIHIL
+        || corpus->loci[HTML_ELEMENTUM_SYNTHESIS].genus
+               != MATERIA_VALOR_INDEX
+        || corpus->pater == NIHIL)
     {
         redde VERUM;
     }
@@ -1413,7 +1606,7 @@ _corpus_fictum_removere (
             redde VERUM;
         }
     }
-    parens = (k > ZEPHYRUM) ? _apertum(p, (i32)k - I) : p->documentum;
+    parens = corpus->pater;
     locus  = (parens->genus == (s32)HTML_GENUS_DOCUMENTUM)
            ? (i32)HTML_DOCUMENTUM_LIBERI : (i32)HTML_ELEMENTUM_LIBERI;
     liberi = &parens->loci[locus];
@@ -1429,8 +1622,17 @@ _corpus_fictum_removere (
     {
         redde VERUM;
     }
-    liberi->datum.lista.mensura  = liberi->datum.lista.mensura - I;
-    p->profunditas               = (i32)k;
+    liberi->datum.lista.mensura = liberi->datum.lista.mensura - I;
+    si (k >= ZEPHYRUM)
+    {
+        p->profunditas = (i32)k;
+    }
+    p->corpus = NIHIL;
+    /* sedes contenti posterioris erat body: nunc html */
+    si (p->sedes_posterior == corpus)
+    {
+        p->sedes_posterior = p->radix;
+    }
     per (i = ZEPHYRUM; i < n; i++)
     {
         MateriaValor* v = materia_valor_lista_obtinere(
@@ -1438,6 +1640,41 @@ _corpus_fictum_removere (
 
         si (!materia_nodus_appendere(p->piscina, parens, locus, *v,
                 MATERIA_LOCUS_LISTA_NODUS))
+        {
+            redde FALSUM;
+        }
+    }
+    /* '</body>' iam in ficto (O7b): lexemata clausurae in malum
+     * transeunt - octeti manent, DOM nodum nullum retinet (lex O5);
+     * porta circuitus id primo cursu invenit (octeti perditi) */
+    si (   _tok(corpus, (i32)HTML_ELEMENTUM_TOK_CLAUSURA) != NIHIL
+        || _tok(corpus, (i32)HTML_ELEMENTUM_TOK_CLAUSURA_FINIS)
+            != NIHIL)
+    {
+        MateriaNodus* malum = materia_nodus_creare(p->piscina,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM, (i32)I);
+        i32 loci[II];
+
+        loci[ZEPHYRUM]  = (i32)HTML_ELEMENTUM_TOK_CLAUSURA;
+        loci[I]         = (i32)HTML_ELEMENTUM_TOK_CLAUSURA_FINIS;
+        si (malum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < II; i++)
+        {
+            MateriaToken* t = _tok(corpus, loci[i]);
+
+            si (   t != NIHIL
+                && !materia_nodus_appendere(p->piscina, malum,
+                    (i32)HTML_MALUM_TOKENS, materia_valor_token(t),
+                    MATERIA_LOCUS_LISTA_TOKEN))
+            {
+                redde FALSUM;
+            }
+        }
+        si (!materia_nodus_appendere(p->piscina, parens, locus,
+                materia_valor_nodus(malum), MATERIA_LOCUS_LISTA_NODUS))
         {
             redde FALSUM;
         }
@@ -1494,6 +1731,198 @@ _partes_tabulae_fingere (
 
 
 /* ==================================================
+ * Sedes (O7b, 2026-09-15): parens DOM alibi
+ * ================================================== */
+
+/* Locum 'sedes' nodi ponere: referentia ad parentem DOM (elementum
+ * aut documentum). Nodus ipse ubi octeti sunt manet. */
+interior b32
+_sedem_ponere (
+    MateriaNodus* nodus,
+             i32  locus,
+    MateriaNodus* parens_dom)
+{
+    redde materia_nodus_ponere(nodus, locus,
+        materia_valor_referentia(parens_dom), MATERIA_LOCUS_REFERENTIA);
+}
+
+/* Parens fovens (spec 'foster parent'): parens table apertae proximae;
+ * sine table in acervo (fragmentum contextu tabulae) radix. */
+interior MateriaNodus*
+_parens_fovens (
+    constans HtmlParsura* p)
+{
+    s32 tabulae = _vertex_gradus(p)->tabulae;
+
+    redde (tabulae > ZEPHYRUM) ? _apertum(p, (i32)tabulae - I)
+                               : p->documentum;
+}
+
+/* An locus insertionis foveatur: vertex (aut contextus) table/tbody/
+ * tfoot/thead/tr HTML in modo tabulae (spec: 'foster parenting
+ * enabled and target is table, tbody, tfoot, thead, or tr'). */
+interior b32
+_fovendum (
+    constans HtmlParsura* p)
+{
+    constans ScopiGradus* vertex = _vertex_gradus(p);
+
+    redde (b32)(vertex->liberorum == HTML_ALIENUM_NULLUM
+                && vertex->modus_tabulae != TABULAE_NULLUS
+                && _in_tabula(_titulus_verticis(p), FOVENTIA,
+                    TABULAE_NUMERUS(FOVENTIA)));
+}
+
+/* Post '</body>' aut '</html>' (spec 'after body' / 'after after
+ * body': lexemata praeter commentaria 'in body' iterum tractantur -
+ * in vertice DOM tum aperto inseruntur, qui in spec manet): nodus in
+ * html aut documento inserendus sedem illius verticis accipit
+ * (sedes_posterior: body, elementum in eo apertum, aut html post
+ * frameset). NIHIL si sedes = parens octetorum (superflua) aut nulla.
+ * Liberi elementorum ibi apertorum normales. */
+interior MateriaNodus*
+_sedes_posterior (
+    constans HtmlParsura* p)
+{
+    si (   (p->modus == MODUS_POST_CORPUS
+            || p->modus == MODUS_POST_RADICEM)
+        && p->sedes_posterior != NIHIL
+        && (p->profunditas == ZEPHYRUM
+            || _titulus_est(_titulus_verticis(p), "html"))
+        && p->sedes_posterior != _parens(p))
+    {
+        redde p->sedes_posterior;
+    }
+    redde NIHIL;
+}
+
+/* '<input type=hidden>' in tabula manet (spec 'in table': input non
+ * celatus fovetur); attributa post tag leguntur - decisio pendens
+ * (fovens) hic solvitur, cum tag clauditur aut abrumpitur. */
+interior b32
+_input_celatum (
+    constans MateriaNodus* elementum)
+{
+    constans MateriaValor* attributa =
+        &elementum->loci[HTML_ELEMENTUM_ATTRIBUTA];
+                      i32 n;
+                      i32 i;
+
+    si (attributa->genus != MATERIA_VALOR_LISTA)
+    {
+        redde FALSUM;
+    }
+    n = materia_valor_lista_numerus(*attributa);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        MateriaValor* v = materia_valor_lista_obtinere(*attributa, i);
+        MateriaNodus* a;
+        MateriaToken* titulus;
+        MateriaToken* valor;
+              chorda  c;
+
+        si (v == NIHIL || v->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        a        = v->datum.nodus;
+        titulus  = _tok(a, (i32)HTML_ATTRIBUTUM_TOK_NOMEN);
+        valor    = _tok(a, (i32)HTML_ATTRIBUTUM_TOK_VALOR);
+        si (   titulus == NIHIL || valor == NIHIL
+            || !_titulus_est(titulus->valor, "type"))
+        {
+            perge;
+        }
+        c = valor->valor;
+        si (   c.mensura >= I
+            && (c.datum[ZEPHYRUM] == '"' || c.datum[ZEPHYRUM] == '\''))
+        {
+            c.datum    = c.datum + I;
+            c.mensura  = c.mensura - I;
+            si (   c.mensura >= I
+                && c.datum[c.mensura - I]
+                    == valor->valor.datum[ZEPHYRUM])
+            {
+                c.mensura = c.mensura - I;
+            }
+        }
+        redde _titulus_est(c, "hidden");
+    }
+    redde FALSUM;
+}
+
+interior b32
+_fovens_solvere (
+    HtmlParsura* p)
+{
+    MateriaNodus* elementum  = p->tag_apertum;
+    MateriaNodus* fovens     = p->fovens;
+
+    p->fovens = NIHIL;
+    si (   fovens == NIHIL || elementum == NIHIL
+        || _input_celatum(elementum))
+    {
+        redde VERUM;
+    }
+    redde _sedem_ponere(elementum, (i32)HTML_ELEMENTUM_SEDES, fovens);
+}
+
+/* Contentum capitis post '</head>' (spec 'after head': in head
+ * reponitur): elementum in html inserendum sedem head accipit. */
+interior b32
+_post_caput (
+    constans HtmlParsura* p,
+                  chorda  titulus)
+{
+    redde (b32)(p->modus == MODUS_POST_CAPUT && p->caput != NIHIL
+                && _caput_contentum(titulus)
+                && p->profunditas > ZEPHYRUM
+                && _titulus_est(_titulus_verticis(p), "html"));
+}
+
+/* Modi tabularum ante clausuras implicitas (O7b). Tag partis tabulae
+ * in modo tabulae acervum ad partem tabulae proximam purgat (spec
+ * 'clear the stack back to a table / table body / row context';
+ * cella et caption per tabulam clausurarum deinde cadunt) - elementa
+ * fota inter eas cadunt. '<table>' in modis table/section/row/colgroup
+ * tabulam apertam claudit (spec 'in table' <table>: pop until table);
+ * in cella et caption nidificat. */
+interior vacuum
+_tabulas_purgare (
+    HtmlParsura* p,
+         chorda  titulus)
+{
+    constans ScopiGradus* vertex = _vertex_gradus(p);
+
+    /* in contento alieno nihil (math tbody elementum alienum est) */
+    si (   vertex->modus_tabulae == TABULAE_NULLUS
+        || vertex->liberorum     != HTML_ALIENUM_NULLUM)
+    {
+        redde;
+    }
+    si (_titulus_est(titulus, "table"))
+    {
+        si (   vertex->modus_tabulae != TABULAE_CELLA
+            && vertex->modus_tabulae != TABULAE_INSCRIPTIO
+            && vertex->tabulae       >= ZEPHYRUM)
+        {
+            p->profunditas = (i32)vertex->tabulae;
+        }
+        redde;
+    }
+    si (!_in_tabula(titulus, PARTES_TABULAE,
+            TABULAE_NUMERUS(PARTES_TABULAE)))
+    {
+        redde;
+    }
+    dum (p->profunditas > ZEPHYRUM && !_vertex_gradus(p)->pars_tabulae)
+    {
+        p->profunditas = p->profunditas - I;
+    }
+}
+
+
+/* ==================================================
  * Lexemata singula: tags
  * ================================================== */
 
@@ -1504,6 +1933,8 @@ _aperturam_tractare (
 {
     MateriaNodus* elementum;
           chorda  titulus;
+             b32  fovendum;
+             b32  forma_tabulae;
 
     _pendentia_claudere(p);
     titulus = _tag_titulus(token);
@@ -1527,9 +1958,11 @@ _aperturam_tractare (
             p->profunditas = (i32)vertex->selectum;
         }
     }
-    /* O7a: '<frameset>' acceptum post body fictum: body removetur */
+    /* O7a: '<frameset>' acceptum post body fictum: body removetur
+     * (etiam post '</body>'/'</html>', O7b: spec 'after body' ->
+     * 'in body' iterum) */
     si (   _titulus_est(titulus, "frameset")
-        && p->modus == MODUS_IN_CORPORE && !p->compages_visa
+        && p->modus >= MODUS_IN_CORPORE && !p->compages_visa
         && !_corpus_fictum_removere(p))
     {
         redde FALSUM;
@@ -1542,8 +1975,10 @@ _aperturam_tractare (
     }
     _vexilla_renovare(p, titulus);
 
-    /* clausurae per scopum (O2b-5), deinde vertex acervi dum tabula
+    /* O7b: modi tabularum (purgatio acervi, '<table>' in tabula),
+     * clausurae per scopum (O2b-5), deinde vertex acervi dum tabula
      * id iubet */
+    _tabulas_purgare(p, titulus);
     _scopos_claudere(p, titulus);
     dum (p->profunditas > ZEPHYRUM)
     {
@@ -1560,9 +1995,19 @@ _aperturam_tractare (
     {
         redde FALSUM;
     }
+    /* O7b: foster parenting - vertex table/tbody/tfoot/thead/tr et tag
+     * quod modus tabulae non tractat: nodus hic manet, sedes = parens
+     * tabulae; form in tabula inseritur nec impellitur (spec 'in
+     * table' form: insert, pop) */
+    fovendum      = (b32)(_fovendum(p)
+                          && !_in_tabula(titulus, TABULAE_ACCEPTA,
+                              TABULAE_NUMERUS(TABULAE_ACCEPTA)));
+    forma_tabulae = (b32)(_fovendum(p)
+        && _titulus_est(titulus, "form"));
 
     elementum = materia_nodus_creare(p->piscina,
-        (s32)HTML_GENUS_ELEMENTUM, (i32)VII);
+        (s32)HTML_GENUS_ELEMENTUM,
+        _loci_numerus((s32)HTML_GENUS_ELEMENTUM));
     si (elementum == NIHIL)
     {
         redde FALSUM;
@@ -1573,13 +2018,56 @@ _aperturam_tractare (
     {
         redde FALSUM;
     }
+    /* O7b: sedes - fotum ante tabulam (input: decisio pendens usque ad
+     * attributa), post body in vertice tum aperto, contentum capitis
+     * post head in head */
+    si (fovendum && _titulus_est(titulus, "input"))
+    {
+        p->fovens = _parens_fovens(p);
+    }
+    alioquin si (fovendum)
+    {
+        si (!_sedem_ponere(elementum, (i32)HTML_ELEMENTUM_SEDES,
+                _parens_fovens(p)))
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (_sedes_posterior(p) != NIHIL)
+    {
+        si (!_sedem_ponere(elementum, (i32)HTML_ELEMENTUM_SEDES,
+                _sedes_posterior(p)))
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (_post_caput(p, titulus))
+    {
+        si (!_sedem_ponere(elementum, (i32)HTML_ELEMENTUM_SEDES,
+                p->caput))
+        {
+            redde FALSUM;
+        }
+    }
     si (!_liberum_appendere(p, elementum))
     {
         redde FALSUM;
     }
+    si (_titulus_est(titulus, "html"))
+    {
+        p->radix = elementum;
+    }
+    alioquin si (_titulus_est(titulus, "head"))
+    {
+        p->caput = elementum;
+    }
+    alioquin si (_titulus_est(titulus, "body"))
+    {
+        p->corpus = elementum;
+    }
     /* vacuum numquam aperitur: non impellitur; tag eius tamen
      * pendens manet (attributa, '>') */
-    si (!_vacuum_est(titulus))
+    si (!_vacuum_est(titulus) && !forma_tabulae)
     {
         si (!_impellere(p, elementum, titulus))
         {
@@ -1677,6 +2165,12 @@ _finem_tractare (
     {
         MateriaNodus* elementum = p->tag_apertum;
 
+        /* O7b: input in tabula - attributa nunc lecta: fotum nisi
+         * type=hidden */
+        si (!_fovens_solvere(p))
+        {
+            redde FALSUM;
+        }
         p->tag_apertum  = NIHIL;
         p->attributum   = NIHIL;
         /* tag se-claudens in contento alieno elementum CLAUDIT (spec:
@@ -1730,14 +2224,19 @@ _clausuram_tractare (
         }
     }
     vertex   = _vertex_gradus(p);
-    /* O5: </body> et </html> elementum NON claudunt (spec: modus 'after
-     * body' solum) - malum, corpus ad EOF apertum manet; in select tags
-     * clausurae aliena neglecta */
-    si (   _titulus_est(titulus, "body")
-        || _titulus_est(titulus, "html")
-        || (vertex != NIHIL && vertex->selectum >= ZEPHYRUM
+    /* O5: in select tags clausurae aliena neglecta. O7b: '</body>' et
+     * '</html>' CLAUDUNT (O5 ea mala tenebat, corpus ad EOF apertum) -
+     * contentum posterius sedem verticis tum aperti accipit
+     * (_sedes_posterior); intra template et in modis tabularum
+     * neglecta (spec 'in template', 'in table' ... 'in cell') */
+    si (   (vertex != NIHIL && vertex->selectum >= ZEPHYRUM
             && !_in_tabula(titulus, SELECT_CLAUSURAE,
-                TABULAE_NUMERUS(SELECT_CLAUSURAE))))
+                TABULAE_NUMERUS(SELECT_CLAUSURAE)))
+        || (vertex != NIHIL
+            && (vertex->templi >= ZEPHYRUM
+                || vertex->modus_tabulae != TABULAE_NULLUS)
+            && (_titulus_est(titulus, "body")
+                || _titulus_est(titulus, "html"))))
     {
         redde _malum_addere(p, token);
     }
@@ -1770,12 +2269,32 @@ _clausuram_tractare (
     {
         redde _malum_addere(p, token);
     }
+    /* O7b: vertex DOM cum '</body>' aut '</html>' venit sedes contenti
+     * posterioris fit (spec: acervus non mutatur); semel */
+    si (   p->sedes_posterior == NIHIL && p->profunditas > ZEPHYRUM
+        && (_titulus_est(titulus, "body")
+        || _titulus_est(titulus, "html")))
+    {
+        p->sedes_posterior = _apertum(p, p->profunditas - I);
+    }
     p->clausura     = _apertum(p, (i32)k);
     p->profunditas  = (i32)k;
-    /* head clausum: modus 'after head' (O7a) */
+    /* head clausum: modus 'after head' (O7a); body clausum: 'after
+     * body', html clausum: 'after after body' (O7b) */
     si (p->modus == MODUS_IN_CAPITE && _titulus_est(titulus, "head"))
     {
         p->modus = MODUS_POST_CAPUT;
+    }
+    alioquin si (   p->modus == MODUS_IN_CORPORE
+                 && _titulus_est(titulus, "body"))
+    {
+        p->modus = MODUS_POST_CORPUS;
+    }
+    alioquin si (   (p->modus == MODUS_IN_CORPORE
+                     || p->modus == MODUS_POST_CORPUS)
+                 && _titulus_est(titulus, "html"))
+    {
+        p->modus = MODUS_POST_RADICEM;
     }
     redde materia_nodus_ponere(p->clausura,
         (i32)HTML_ELEMENTUM_TOK_CLAUSURA, materia_valor_token(token),
@@ -1789,14 +2308,15 @@ _contentum_tractare (
 {
     MateriaNodus* folium;
              s32  genus;
+             b32  albus;
 
     _pendentia_claudere(p);
     genus = _genus_contenti(token->genus);
+    albus = _textus_albus(token);
     /* O5: doctype post contentum et textus non albus in frameset
      * neglecta -> malum unius lexematis */
     {
         constans ScopiGradus* vertex     = _vertex_gradus(p);
-                         b32  albus      = _textus_albus(token);
                          b32  neglectum  = FALSUM;
 
         si (genus == (s32)HTML_GENUS_DOCTYPE && p->contentum_visum)
@@ -1860,6 +2380,49 @@ _contentum_tractare (
     {
         redde FALSUM;
     }
+    /* O7b: sedes textus - fotus (spec 'in table text': textus non
+     * albus in vertice table/tbody/tfoot/thead/tr; colgroup prius
+     * clauditur, spec 'in column group') aut post body; commentarium
+     * post body solum si contentum iam in body rediit */
+    si (   genus == (s32)HTML_GENUS_TEXTUS
+        || genus == (s32)HTML_GENUS_REFERENTIA)
+    {
+        i32 locus = (genus == (s32)HTML_GENUS_TEXTUS)
+                  ? (i32)HTML_TEXTUS_SEDES : (i32)HTML_REFERENTIA_SEDES;
+
+        si (   !albus && p->profunditas > ZEPHYRUM
+            && _titulus_est(_titulus_verticis(p), "colgroup"))
+        {
+            p->profunditas = p->profunditas - I;
+        }
+        si (!albus && _fovendum(p))
+        {
+            si (!_sedem_ponere(folium, locus, _parens_fovens(p)))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (_sedes_posterior(p) != NIHIL)
+        {
+            si (!_sedem_ponere(folium, locus, _sedes_posterior(p)))
+            {
+                redde FALSUM;
+            }
+            si (!albus)
+            {
+                p->corpus_iterum = VERUM;
+            }
+        }
+    }
+    alioquin si (   genus == (s32)HTML_GENUS_COMMENTARIUM
+                 && p->corpus_iterum && _sedes_posterior(p) != NIHIL)
+    {
+        si (!_sedem_ponere(folium, (i32)HTML_COMMENTARIUM_SEDES,
+                _sedes_posterior(p)))
+        {
+            redde FALSUM;
+        }
+    }
     redde _liberum_appendere(p, folium);
 }
 
@@ -1908,9 +2471,14 @@ _parsare (
         p.basis.selectum        = _titulus_est(contextus, "select")
                                 ? ZEPHYRUM : (s32)-I;
         p.basis.intra_compagem  = _titulus_est(contextus, "frameset");
-        p.basis.in_tabula       = _in_tabula(contextus,
-            CONTEXTUS_TABULAE,
-            TABULAE_NUMERUS(CONTEXTUS_TABULAE));
+        /* modus tabulae contextus (spec 'reset the insertion mode':
+         * td/th ultimi ad 'in body' recidunt, caption/colgroup manent);
+         * table nulla in acervo: parens fovens = radix */
+        p.basis.modus_tabulae   = _modus_tabulae_tituli(contextus);
+        si (p.basis.modus_tabulae == TABULAE_CELLA)
+        {
+            p.basis.modus_tabulae = TABULAE_NULLUS;
+        }
         p.modus           = radix ? MODUS_ANTE_CAPUT : MODUS_IN_CORPORE;
         p.html_visum      = VERUM;
         p.head_visum      = (b32)!radix;

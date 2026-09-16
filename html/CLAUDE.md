@@ -14,18 +14,21 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
 ## Praesens status (2026-09-15 — PLAN CLOSED)
 
 - **Built:** declaration `html/grammatica/html.registrum.stml` →
-  GENERATED `html_registrum_coctum.{h,c}` (10 genera, 19 loci — the
-  19th is `synthesis:index` on `elementum`, O7a); hand slot enums
-  `html_registrum.h` (+ `HtmlSynthesis`); `html_lexicon` (22 rows:
-  trivia INSIDE TAGS ONLY, comments are content); `html_adaptare` (one
-  for one) + `HtmlLigator` (css's division rule); `html_arbor` (the
-  builder: ITERATIVE over an explicit stack, three pending states,
-  tables `VACUA` and `CLAUSURAE_IMPLICITAE`, per-frame scope indices,
-  WHATWG wrapper modes, token-less synthesized elements; document
-  entry `html_arbor_parsare` + fragment entry
-  `html_arbor_parsare_fragmentum(…, contextus, spatium)`); `html.canon`
-  (54 rules, seal `a69b019f` pinned — moved from `0ae63151` by O7a);
-  `html_computus` + `./html/computus.sh` + `./html/arbor.sh`; pythonica
+  GENERATED `html_registrum_coctum.{h,c}` (10 genera, 23 loci — the
+  annotations `synthesis:index` on `elementum` (O7a) and
+  `sedes:referentia` on `elementum`/`textus`/`referentia`/
+  `commentarium` (O7b)); hand slot enums `html_registrum.h` (+
+  `HtmlSynthesis`); `html_lexicon` (22 rows: trivia INSIDE TAGS ONLY,
+  comments are content); `html_adaptare` (one for one) + `HtmlLigator`
+  (css's division rule); `html_arbor` (the builder: ITERATIVE over an
+  explicit stack, three pending states, tables `VACUA` and
+  `CLAUSURAE_IMPLICITAE`, per-frame scope indices and table modes,
+  WHATWG wrapper modes, token-less synthesized elements, foster
+  parenting as an annotation; document entry `html_arbor_parsare` +
+  fragment entry `html_arbor_parsare_fragmentum(…, contextus,
+  spatium)`); `html.canon` (58 rules, seal `5bf2be5d` pinned — moved
+  `0ae63151` → `a69b019f` by O7a, → `5bf2be5d` by O7b); `html_computus`
+  + `./html/computus.sh` + `./html/arbor.sh`; pythonica
   `PORTAE['html']`, `silva.metiri('.html')`.
 - **Gates (14, `./html/compile_probationes.sh`, every one born red):**
   registrum · adaptare (byte coverage) · arbor (byte oracle + absent-slot
@@ -45,8 +48,8 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   — the O2 unwrap rule is retired, the builder synthesizes the
   wrappers; RISING pin — 887 at birth, 930 after O2b-1, 985 after
   O2b-3, 1,047 after O2b-4, 1,054 after O2b-5, 1,086 after O2b-6,
-  1,112 after O4, 1,189 after O5, 1,195 after O6, 1,299 after O7a — of
-  1,700, fragments 131/184; `ORACULUM_OMNIA=1`,
+  1,112 after O4, 1,189 after O5, 1,195 after O6, 1,299 after O7a,
+  1,398 after O7b — of 1,700, fragments 152/184; `ORACULUM_OMNIA=1`,
   `ORACULUM_EXEMPLUM=tests1.dat:20`) · alienum (the shared SVG/MathML
   namespace tables `html_alienum`, 28) · **circuitus** (Fran's
   question, 2026-09-15: the WHOLE html5lib corpus through the byte law
@@ -108,11 +111,19 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   synthesized elements, the fragment entry point (the context is the
   frame under the stack), table parts ignored outside a table, the
   fragment case of foreign breakout (x/net: never in a fragment), a
-  `<frameset>` after a synthesized body removes that body. Two named
-  regressions, both `sedes` (O7b): a comment after `</body>` belongs
-  to html, head content after `</head>` belongs to head — a node whose
-  bytes lie inside the body cannot sit outside it without the
-  annotation. Next O7b (table modes + `sedes`), O7c, then the foreign
+  `<frameset>` after a synthesized body removes that body. **O7b DONE
+  2026-09-16 (→ 1,398, fragments 131 → 152, ZERO regressions):**
+  `sedes:referentia` on four genera = the DOM parent of a node whose
+  bytes lie elsewhere; table modes per frame (`modus_tabulae`,
+  `tabulae`, `partis`), foster parenting (the node stays a byte-child
+  of the table part, `sedes` names the table's parent, the cooked view
+  prints it before the table), `</body>`/`</html>` now CLOSE (the O5
+  law reversed) and later content carries `sedes` to the element that
+  was open, head content after `</head>` carries `sedes` to head,
+  `<input type=hidden>` stays in the table (decided when its
+  attributes are read), `form` in a table is not pushed, the spec's
+  fragment-context scope rules. The corpus round trip carried every
+  reference. Next O7c (adoption agency + `exemplar`), then the foreign
   tail (SVG `title` not raw, `font` breakout), then O3 wild fixtures
   (one ask per page). Candidate next parser after html (Fran's
   research): bash scripts, before JS. Ledger desideratum 01M2KPNTT0.
@@ -125,9 +136,33 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   **`elementum-malum` = the tokens the DOM keeps no node for** (O5):
   unmatched end tags, but also everything HTML5 "ignores" — a repeated
   `<html>`/`<body>`, a doctype after content, tags inside a frameset
-  or a select, and `</body>`/`</html>`, which never close anything
-  (the body stays open to EOF, later content lands inside it). The
-  bytes stay in place; the cooked view drops the malum.
+  or a select, table parts outside a table mode. The bytes stay in
+  place; the cooked view drops the malum. (O5 also kept `</body>` and
+  `</html>` as mala with the body open to EOF; O7b reversed that: they
+  CLOSE, and content after them carries `sedes`.)
+- **`sedes` is the DOM parent of a node whose bytes lie elsewhere**
+  (O7b, 2026-09-16): a `referentia` locus on `elementum`, `textus`,
+  `referentia`, `commentarium`. The node stays where its bytes are;
+  the cooked view prints it under its `sedes`, BEFORE the child of
+  the sedes that is a `table` and contains it (foster parenting), else
+  AFTER all children (content after `</body>`/`</html>` in the element
+  that was open, head content after `</head>` in head, fragments in a
+  table context). Three sources: foster parenting (current node
+  `table tbody tfoot thead tr` in a table mode and a token the mode
+  does not handle: `sedes` = the table's parent, the document root in
+  a fragment; `input type=hidden` is decided when its attributes are
+  read; `form` in a table is inserted, not pushed), content after
+  `</body>`/`</html>` (`sedes` = the element that was the current
+  node then, `sedes_posterior`; comments only once content has
+  re-entered the body; `</body>` inside a table or template is a
+  malum), head content after `</head>`. Table modes are per frame
+  (`modus_tabulae`, nearest `tabulae`, nearest real `partis`, own
+  `pars_tabulae`), O(1): a table-part start tag clears the stack back
+  to the nearest real part, `<table>` in a table mode closes the open
+  table, a foreign element never sets a mode, and in a fragment whose
+  mode comes from the context alone the spec's "in table scope"
+  checks fail (table body accepts tr/td/th, row td/th, caption
+  nothing, column group col, table everything but table).
 - **Text is a node** (H6): between tags every byte is `TEXTUS`; the
   ligator binds trivia only inside tags; `FINIS` receives trivia only
   after a tag cut off at EOF.
@@ -169,8 +204,10 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
 - **Nothing reserved in v1** (§11.6): the reader refuses unknown
   elements with a named cause and IGNORES unknown attributes (measured,
   pinned); extension points are named in the declaration's header —
-  `synthesis` is the first one DECLARED (O7a); `sedes` and `exemplar`
-  remain named.
+  `synthesis` (O7a) and `sedes` (O7b) are DECLARED; `exemplar` remains
+  named. A `referentia` locus makes materia write `id="nodN"` on the
+  target and `<sedes(> #nodN` on the node: the canon declares `id` on
+  `elementum` and `documentum` (the targets).
 
 ## The registry is generated
 
@@ -180,9 +217,11 @@ html/grammatica/html.registrum.stml -scribere`. To add a genus or
 locus: append to the declaration (locus order = emission order), run
 `-scribere`, add the slot enum in `html_registrum.h`, the row in
 `LOCI_NOMINATI` (registrum probatio), the rule in `html.canon`, and move
-the seal there by hand with a cause (done once, O7a: `0ae63151` →
-`a69b019f`, the canon gate prints the live seal). A hand edit of a
-`_coctum` file goes red with the first divergent line.
+the seal there by hand with a cause (done twice, O7a: `0ae63151` →
+`a69b019f`, O7b: → `5bf2be5d`; the canon gate prints the live seal).
+Node creation sizes come from the registry (`_loci_numerus`), never a
+hand count. A hand edit of a `_coctum` file goes red with the first
+divergent line.
 
 ## Birth lessons
 

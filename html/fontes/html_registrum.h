@@ -49,8 +49,21 @@ nomen enumeratio {
     HTML_ELEMENTUM_LIBERI,
     HTML_ELEMENTUM_TOK_CLAUSURA,
     HTML_ELEMENTUM_TOK_CLAUSURA_FINIS,
-    HTML_ELEMENTUM_SYNTHESIS
+    HTML_ELEMENTUM_SYNTHESIS,
+    HTML_ELEMENTUM_SEDES
 } HtmlLocusElementi;
+
+/* Locus 'sedes' (O7b, 2026-09-15; in elementum, textus, referentia,
+ * commentarium):
+ * REFERENTIA ad parentem DOM nodi cuius octeti alibi iacent - nodus in
+ * arbore octetorum ubi octeti sunt manet, visio cocta eum sub sede
+ * imprimit: ANTE liberum sedis quod tabula est et eum continet
+ * (foster parenting), aliter POST liberos omnes (contentum post
+ * '</body>'/'</html>' in body, contentum capitis post '</head>' in
+ * head, fragmentum contextu tabulae; commentarium post body cum
+ * contentum iam in body rediit). Absens = parens octetorum est
+ * parens DOM. Index eius in textu, referentia et commentario I (post
+ * 'tok'). */
 
 /* Valores loci 'synthesis' (O7a, 2026-09-15): elementum a spec HTML5
  * FICTUM, lexemata nulla - involucra html/head/body et partes
@@ -75,11 +88,13 @@ nomen enumeratio {
 } HtmlLocusAttributi;
 
 nomen enumeratio {
-    HTML_TEXTUS_TOK = 0
+    HTML_TEXTUS_TOK = 0,
+    HTML_TEXTUS_SEDES
 } HtmlLocusTextus;
 
 nomen enumeratio {
-    HTML_REFERENTIA_TOK = 0
+    HTML_REFERENTIA_TOK = 0,
+    HTML_REFERENTIA_SEDES
 } HtmlLocusReferentiae;
 
 nomen enumeratio {
@@ -87,7 +102,8 @@ nomen enumeratio {
 } HtmlLocusCrudi;
 
 nomen enumeratio {
-    HTML_COMMENTARIUM_TOK = 0
+    HTML_COMMENTARIUM_TOK = 0,
+    HTML_COMMENTARIUM_SEDES
 } HtmlLocusCommentarii;
 
 nomen enumeratio {

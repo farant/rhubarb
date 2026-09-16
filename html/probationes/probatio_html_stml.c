@@ -101,7 +101,16 @@ hic_manens constans character* CASUS[] = {
     "<title>t</title>x",
     "\n<p>x</p>\n",
     "</head>x",
-    "<html><head></head><body></body></html>\n"
+    "<html><head></head><body></body></html>\n",
+    /* O7b: sedes - fota (elementum, textus, input non celatus), post
+     * body (textus, elementum, commentarium), caput post head */
+    "<table><div>x</div><tr><td>1</table>",
+    "<table>a &amp; b<tr><td>c",
+    "<table><input type=hidden><input>",
+    "<body></body><!--c--><p>x",
+    "<html><body></body></html>x<!--c-->",
+    "<head></head><title>t</title><p>x",
+    "<bdy></body><br>"
 };
 
 #define NUMERUS_CASUUM ((i32)(magnitudo(CASUS)/magnitudo(CASUS[0])))
@@ -117,7 +126,10 @@ hic_manens constans Fragmentum FRAGMENTA[] = {
     { "tbody", "<td>x</td>" },
     { "html",  "<p>a" },
     { "body",  "<td>x" },
-    { "frameset", "<p><frame>" }
+    { "frameset", "<p><frame>" },
+    /* O7b: sedes in radicem (referentia ad documentum) */
+    { "table", "<tr><div>x" },
+    { "tbody", "a<caption>x" }
 };
 
 #define NUMERUS_FRAGMENTORUM \
@@ -213,6 +225,37 @@ _synthesis (
     { redde (s32)HTML_SYNTHESIS_NULLA;
     }
     redde nodus->loci[HTML_ELEMENTUM_SYNTHESIS].datum.index;
+}
+
+/* Sedes nodi (O7b): parens DOM alibi, aut NIHIL */
+hic_manens MateriaNodus*
+_sedes (
+    constans MateriaNodus* nodus)
+{
+    i32 locus;
+
+    si (nodus == NIHIL)
+    { redde NIHIL;
+    }
+    si (nodus->genus == (s32)HTML_GENUS_ELEMENTUM)
+    { locus = (i32)HTML_ELEMENTUM_SEDES;
+    }
+    alioquin si (nodus->genus == (s32)HTML_GENUS_TEXTUS)
+    { locus = (i32)HTML_TEXTUS_SEDES;
+    }
+    alioquin si (nodus->genus == (s32)HTML_GENUS_REFERENTIA)
+    { locus = (i32)HTML_REFERENTIA_SEDES;
+    }
+    alioquin si (nodus->genus == (s32)HTML_GENUS_COMMENTARIUM)
+    { locus = (i32)HTML_COMMENTARIUM_SEDES;
+    }
+    alioquin
+    { redde NIHIL;
+    }
+    si (nodus->loci[locus].genus != MATERIA_VALOR_REFERENTIA)
+    { redde NIHIL;
+    }
+    redde nodus->loci[locus].datum.nodus;
 }
 
 hic_manens b32
@@ -523,6 +566,45 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_synthesis(_liber(sectio,
             (i32)HTML_ELEMENTUM_LIBERI, ZEPHYRUM)),
             (s32)HTML_SYNTHESIS_ORDO);
+    }
+
+
+    /* ==================================================
+     * PORTA: annotatio sedes per circuitum VIVIT (O7b)
+     * ================================================== */
+
+    {
+        MateriaNodus* radix;
+        MateriaNodus* relecta;
+        MateriaNodus* html;
+        MateriaNodus* corpus;
+        MateriaNodus* tabula;
+        MateriaNodus* fotum;
+        MateriaArborScriptura s;
+        MateriaArborVitium vitium;
+
+        imprimere("\n--- PORTA: annotatio sedes relecta ---\n");
+        /* div fotum: sedes = body; post relectionem referentia in body
+         * RELECTUM spectat (identitas per '#nodN' et id) */
+        radix = html_arbor_parsare(piscina,
+            "<table><div>x</div><tr><td>1</table>", (i32)XXXVI);
+        CREDO_NON_NIHIL (radix);
+        s = materia_arbor_scribere_nodum(piscina, radix, &consilium);
+        CREDO_VERUM (s.successus);
+        CREDO_VERUM (_textus_continet(s.textus, "<sedes(> #nod"));
+        CREDO_VERUM (_textus_continet(s.textus, "id=\"nod"));
+        relecta = s.successus ? materia_arbor_legere(piscina, NIHIL,
+            s.textus, &consilium, &vitium) : NIHIL;
+        CREDO_NON_NIHIL (relecta);
+        html = _liber(relecta, (i32)HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        corpus  = _liber(html, (i32)HTML_ELEMENTUM_LIBERI, (i32)I);
+        tabula  = _liber(corpus, (i32)HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        fotum   = _liber(tabula, (i32)HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_NON_NIHIL (fotum);
+        CREDO_NON_NIHIL (corpus);
+        CREDO_AEQUALIS_PTR (_sedes(fotum), corpus);
+        CREDO_NIHIL (_sedes(tabula));
     }
     CREDO_MAIOR_I32 (octeti_fontis, (i32)(C * M));
     CREDO_MAIOR_I32 (octeti_stml, octeti_fontis);

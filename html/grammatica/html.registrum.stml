@@ -26,10 +26,15 @@
   VISIONIS DERIVATAE, materia intacta - loci appensi quos visio cocta
   sola legit, emissor octetorum nihil discit. O7a 'synthesis' (index,
   in elementum) DECLARATUS: elementum a spec HTML5 fictum sine
-  lexematibus (html/head/body, tbody/tr/colgroup). Nominata, nondum
-  declarata: 'sedes' (referentia; foster parenting, O7b) et
-  'exemplar' (referentia; adoption agency, O7c). Sigillum canonis
-  motum cum causa in html.canon.
+  lexematibus (html/head/body, tbody/tr/colgroup). O7b 'sedes'
+  (referentia, in elementum/textus/referentia/commentarium)
+  DECLARATUS: parens DOM
+  nodi cuius octeti alibi iacent - foster parenting (nodus intra
+  tabulam manet, DOM ante tabulam in parente eius), contentum post
+  '</body>' aut '</html>' (in body), contentum capitis post '</head>'
+  (in head). Nominatum, nondum declaratum: 'exemplar' (referentia;
+  adoption agency, O7c). Sigillum canonis motum cum causa in
+  html.canon.
 -->
 <registrum grammatica="html" praefixum="HTML" typus="HtmlGenus"
   sedes="html/fontes">
@@ -53,6 +58,7 @@
     <locus titulus="tok_clausura" species="token"/>
     <locus titulus="tok_clausura_finis" species="token"/>
     <locus titulus="synthesis" species="index"/>
+    <locus titulus="sedes" species="referentia"/>
   </genus>
 
   <genus titulus="attributum">
@@ -62,20 +68,25 @@
   </genus>
 
   <genus titulus="textus"
-    nota="Contentum: nodi, non trivia (H6). Spatia extra tags textus sunt">
+    nota="Contentum: nodi, non trivia (H6). Spatia extra tags textus sunt. sedes (O7b): parens DOM textus alibi positi (foster parenting, post body)">
     <locus titulus="tok" species="token"/>
+    <locus titulus="sedes" species="referentia"/>
   </genus>
 
-  <genus titulus="referentia">
+  <genus titulus="referentia"
+    nota="Referentia characteris (entitas). sedes (O7b) ut in textu">
     <locus titulus="tok" species="token"/>
+    <locus titulus="sedes" species="referentia"/>
   </genus>
 
   <genus titulus="textus-crudus">
     <locus titulus="tok" species="token"/>
   </genus>
 
-  <genus titulus="commentarium">
+  <genus titulus="commentarium"
+    nota="sedes (O7b): commentarium post '</body>' cum contentum iam in body rediit (spec 'after body' -> 'in body')">
     <locus titulus="tok" species="token"/>
+    <locus titulus="sedes" species="referentia"/>
   </genus>
 
   <genus titulus="cdata">

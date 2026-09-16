@@ -36,8 +36,13 @@
   O7a (2026-09-15): locus 'synthesis' (index) in elementum APPENSUS -
   elementum a spec HTML5 fictum sine lexematibus (involucra
   html/head/body, tbody/tr/colgroup); sigillum 0ae63151 -> a69b019f
-  (loci XVIII -> XIX). Nominata nondum declarata: 'sedes' (O7b),
-  'exemplar' (O7c).
+  (loci XVIII -> XIX). O7b (2026-09-15): locus 'sedes' (referentia)
+  in elementum, textus, referentia, commentarium APPENSUS - parens
+  DOM nodi cuius octeti alibi iacent (foster parenting, contentum
+  post body, caput post head); textus '#nodN', ancora id="nodN" in
+  scopo (materia: elementum aut documentum) - 'id' ergo NUNC
+  declaratur in ambobus; sigillum a69b019f -> 5bf2be5d, loci XIX ->
+  XXIII. Nominatum nondum declaratum: 'exemplar' (O7c).
 -->
 <canon dialectus="html" versio="1">
 
@@ -128,11 +133,12 @@
       nota="PINNA: sigillum FNV-1a tabularum html_registrum_coctum.c
             (ex html.registrum.stml; H1: X genera, XVIII loci; O7a
             2026-09-15: XIX loci, synthesis appensus, 0ae63151 ->
-            a69b019f). Tabula mutata sine hac optione mutata rubet in
-            iudicio ET in custode derivae (probatio_html_canon
-            optionem contra materia_arbor_sigillum vivum confert).
-            Manu movenda cum causa.">
-      <optio>a69b019f</optio>
+            a69b019f; O7b 2026-09-16: XXIII loci, sedes quater
+            appensus, a69b019f -> 5bf2be5d). Tabula mutata sine hac
+            optione mutata rubet in iudicio ET in custode derivae
+            (probatio_html_canon optionem contra materia_arbor_sigillum
+            vivum confert). Manu movenda cum causa.">
+      <optio>5bf2be5d</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -170,6 +176,9 @@
   <elementum nomen="documentum"
     nota="series nodorum summorum + lexema FINIS (spec par. XI.3:
           radix unica non praesumitur, synthesis vetita H4)">
+    <attributum nomen="id" genus="textus"
+      nota="O7b: ancora referentiae (nodN) - materia scribit ubi sedes
+            in radicem spectat (fragmentum contextu tabulae)"/>
     <liberum nomen="liberi" maximum="1"/>
     <liberum nomen="cauda"  maximum="1"/>
   </elementum>
@@ -195,7 +204,11 @@
   <elementum nomen="elementum"
     nota="sex loci lexematum OMNES optionales (H4): vacuum, clausura
           implicita, apertum ad EOF, tag scissum = loci absentes;
-          synthesis (O7a) = elementum fictum sine lexematibus">
+          synthesis (O7a) = elementum fictum sine lexematibus; sedes
+          (O7b) = parens DOM alibi">
+    <attributum nomen="id" genus="textus"
+      nota="O7b: ancora referentiae (nodN) - materia scribit ubi sedes
+            alicuius nodi in hoc elementum spectat"/>
     <liberum nomen="tok_apertura"       maximum="1"/>
     <liberum nomen="attributa"          maximum="1"/>
     <liberum nomen="tok_finis"          maximum="1"/>
@@ -203,6 +216,7 @@
     <liberum nomen="tok_clausura"       maximum="1"/>
     <liberum nomen="tok_clausura_finis" maximum="1"/>
     <liberum nomen="synthesis"          maximum="1"/>
+    <liberum nomen="sedes"              maximum="1"/>
   </elementum>
 
   <elementum nomen="tok_apertura" intra="elementum">
@@ -238,6 +252,11 @@
           lexematum omnes absentes praeter clausuram veram quae in
           fictum cadere potest ('</head>', '</tbody>')"/>
 
+  <elementum nomen="sedes" intra="elementum" textus="verum"
+    nota="O7b: REFERENTIA '#nodN' ad parentem DOM (elementum aut
+          documentum cum id) - foster parenting, contentum post body,
+          caput post head; absens = parens octetorum"/>
+
   <elementum nomen="attributum"
     nota="'=' aut valor sine titulo attributum anonymum dat (loci
           absentes, H4)">
@@ -261,20 +280,29 @@
 
   <elementum nomen="textus"
     nota="contentum inter tags, spatia inclusa (H6)">
-    <liberum nomen="tok" maximum="1"/>
+    <liberum nomen="tok"   maximum="1"/>
+    <liberum nomen="sedes" maximum="1"/>
   </elementum>
 
   <elementum nomen="tok" intra="textus">
     <liberum nomen="lex-textus" maximum="1"/>
   </elementum>
 
+  <elementum nomen="sedes" intra="textus" textus="verum"
+    nota="O7b: ut in elemento - textus in tabula fotus, textus post
+          body"/>
+
   <elementum nomen="referentia">
-    <liberum nomen="tok" maximum="1"/>
+    <liberum nomen="tok"   maximum="1"/>
+    <liberum nomen="sedes" maximum="1"/>
   </elementum>
 
   <elementum nomen="tok" intra="referentia">
     <liberum nomen="lex-referentia" maximum="1"/>
   </elementum>
+
+  <elementum nomen="sedes" intra="referentia" textus="verum"
+    nota="O7b: ut in textu"/>
 
   <elementum nomen="textus-crudus"
     nota="script/style/title/textarea - lexator dominus">
@@ -289,7 +317,8 @@
   <elementum nomen="commentarium"
     nota="genus lexematis (imperfectum, pravum) servatur: arbor dicit
           quid lexator vidit, nodus quid res est">
-    <liberum nomen="tok" maximum="1"/>
+    <liberum nomen="tok"   maximum="1"/>
+    <liberum nomen="sedes" maximum="1"/>
   </elementum>
 
   <elementum nomen="tok" intra="commentarium">
@@ -297,6 +326,10 @@
     <liberum nomen="lex-commentarium-imperfectum" maximum="1"/>
     <liberum nomen="lex-commentarium-pravum"      maximum="1"/>
   </elementum>
+
+  <elementum nomen="sedes" intra="commentarium" textus="verum"
+    nota="O7b: commentarium post body cum contentum iam in body rediit
+          (spec 'after body' -> 'in body')"/>
 
   <elementum nomen="cdata">
     <liberum nomen="tok" maximum="1"/>

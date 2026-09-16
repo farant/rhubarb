@@ -2,7 +2,7 @@
  *
  * Registrum generum COCTUM grammaticae 'html' - GENERATUM, NE MANU
  * EDITES. Fons: html/grammatica/html.registrum.stml
- * (materia/coquere.sh). Genera X, loci XIX.
+ * (materia/coquere.sh). Genera X, loci XXIII.
  */
 
 #ifndef HTML_REGISTRUM_COCTUM_H
@@ -28,10 +28,14 @@ nomen enumeratio {
     HTML_GENUS_ELEMENTUM,
     HTML_GENUS_ATTRIBUTUM,
     /* Contentum: nodi, non trivia (H6). Spatia extra tags textus
-     * sunt */
+     * sunt. sedes (O7b): parens DOM textus alibi positi (foster
+     * parenting, post body) */
     HTML_GENUS_TEXTUS,
+    /* Referentia characteris (entitas). sedes (O7b) ut in textu */
     HTML_GENUS_REFERENTIA,
     HTML_GENUS_TEXTUS_CRUDUS,
+    /* sedes (O7b): commentarium post '</body>' cum contentum iam in
+     * body rediit (spec 'after body' -> 'in body') */
     HTML_GENUS_COMMENTARIUM,
     HTML_GENUS_CDATA,
     /* Robustitas: tag clausurae sine pari aperto (etiam
