@@ -55,6 +55,8 @@ declare -a RADIX_FONTES=(
     "tabula_dispersa"
     "internamentum"
     "html_lexema"
+    "entitates_html"
+    "entitates_html_tabula"
     "stml_html"
     "selectio"
     "stml"

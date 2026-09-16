@@ -32,7 +32,7 @@
 #include <string.h>
 
 /* pinna: praeterita minima (B3.2 nativitas: valor post cursum primum) */
-#define PINNA_PRAETERITA 1270
+#define PINNA_PRAETERITA 1272
 
 hic_manens constans character* TAGI_BLOCORUM[] = {
     "p", "div", "ul", "ol", "li", "blockquote", "pre", "h1", "h2", "h3",

@@ -4,7 +4,7 @@
 #include "html_registrum.h"
 #include "html_lexema.h"
 #include "materia_token.h"
-#include "md_decoctum.h"
+#include "entitates_html.h"
 #include "chorda_aedificator.h"
 #include <string.h>
 
@@ -21,6 +21,15 @@ nomen structura {
     chorda titulus;
     chorda valor;
 } Attributum;
+
+/* decoctio referentiarum characterum in textu appendendo: nulla
+ * (script/style, commentaria), textus (formae veteres inclusae),
+ * attributi (exceptio ante '=' aut litteram) */
+nomen enumeratio {
+    DECOCTIO_NULLA = 0,
+    DECOCTIO_TEXTUS,
+    DECOCTIO_ATTRIBUTI
+} Decoctio;
 
 /* Tituli svg quorum litterae maiusculae in DOM restituuntur (WHATWG
  * 'adjust SVG tag names'): minusculus -> accommodatus. */
@@ -219,7 +228,7 @@ interior vacuum
 _textum_appendere (
     ChordaAedificator* aed,
                chorda  c,
-                  b32  decoquere,
+             Decoctio  decoctio,
                   b32  nul_delere)
 {
     s32 i = ZEPHYRUM;
@@ -248,14 +257,17 @@ _textum_appendere (
             }
             perge;
         }
-        si (ch == '&' && decoquere)
+        si (ch == '&' && decoctio != DECOCTIO_NULLA)
         {
             character exitus[XVI];
                   i32 longitudo;
                   s32 post;
 
-            si (md_ens_decoquere((constans character*)c.datum, i,
-                    (s32)c.mensura, exitus, &longitudo, &post))
+            si (entitates_html_decoquere((constans character*)c.datum,
+                i,
+                    (s32)c.mensura, (b32)(decoctio
+                        == DECOCTIO_ATTRIBUTI),
+                    exitus, &longitudo, &post))
             {
                 chorda d;
 
@@ -296,7 +308,7 @@ _valor_coctus (
     }
     aed = chorda_aedificator_creare(piscina,
         (memoriae_index)v.mensura + XVI);
-    _textum_appendere(aed, v, VERUM, FALSUM);
+    _textum_appendere(aed, v, DECOCTIO_ATTRIBUTI, FALSUM);
     redde chorda_aedificator_finire(aed);
 }
 
@@ -506,7 +518,7 @@ _cumulare (
               Scriptor*  s,
      ChordaAedificator** cumulus,
                 chorda   c,
-                   b32   decoquere,
+              Decoctio   decoctio,
                    b32   nul_delere)
 {
     si (*cumulus == NIHIL)
@@ -518,7 +530,7 @@ _cumulare (
             redde;
         }
     }
-    _textum_appendere(*cumulus, c, decoquere, nul_delere);
+    _textum_appendere(*cumulus, c, decoctio, nul_delere);
 }
 
 /* Cumulum ut nodum textus scribere; linea nova prima dempta si
@@ -603,7 +615,7 @@ _commentarium_scribere (
     }
     _lineam_incipere(s, gradus);
     chorda_aedificator_appendere_literis(s->aed, "<!-- ");
-    _textum_appendere(s->aed, datum, FALSUM, FALSUM);
+    _textum_appendere(s->aed, datum, DECOCTIO_NULLA, FALSUM);
     chorda_aedificator_appendere_literis(s->aed, " -->");
 }
 
@@ -944,10 +956,8 @@ _liberos_scribere (
                 /* NUL: in textu corporis HTML ignoratur, in crudo et
                  * alienis U+FFFD */
                 _cumulare(s, &cumulus, tok->valor,
-                    (b32)(liber->genus == (s32)HTML_GENUS_REFERENTIA
-                          || (liber->genus
-                              == (s32)HTML_GENUS_TEXTUS_CRUDUS
-                              && decoquendum)),
+                    (liber->genus != (s32)HTML_GENUS_TEXTUS_CRUDUS
+                     || decoquendum) ? DECOCTIO_TEXTUS : DECOCTIO_NULLA,
                     (b32)(liber->genus != (s32)HTML_GENUS_TEXTUS_CRUDUS
                           && alienum == HTML_ALIENUM_NULLUM));
             }
@@ -972,7 +982,7 @@ _liberos_scribere (
                 {
                     cumulus_primus = primus;
                 }
-                _cumulare(s, &cumulus, c, FALSUM, FALSUM);
+                _cumulare(s, &cumulus, c, DECOCTIO_NULLA, FALSUM);
             }
         }
         alioquin
@@ -1005,7 +1015,7 @@ _liberos_scribere (
                 }
                 _lineam_incipere(s, gradus);
                 chorda_aedificator_appendere_literis(s->aed, "<!-- ");
-                _textum_appendere(s->aed, c, FALSUM, FALSUM);
+                _textum_appendere(s->aed, c, DECOCTIO_NULLA, FALSUM);
                 chorda_aedificator_appendere_literis(s->aed, " -->");
             }
             alioquin si (   liber->genus == (s32)HTML_GENUS_DOCTYPE

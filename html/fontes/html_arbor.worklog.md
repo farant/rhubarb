@@ -256,3 +256,30 @@ the byte gate, the STML gate and the totality gate never noticed.
 
 Fifty-five cases rose, all from `scriptdata01`, `domjs-unsafe`,
 `comments01`, `tests16`.
+
+## 2026-09-15 — O2b-4: the entity table, shared with md; 985 → 1,047
+
+HTML's 2,231 named references live in Python's standard library
+(`html.entities.html5`, WHATWG's own list), so the table is
+GENERATED offline by `tools/entitates_html_generare.sh` into
+`lib/entitates_html_tabula.c`, byte-sorted for a binary search, with
+`-probare` as the freshness check. The hand-written half
+(`lib/entitates_html.c`) carries the HTML5 decoder: numeric
+references with or without `;`, the C1 remap to Windows-1252, the
+longest-match rule that turns `&notit;` into `¬it;`, and the
+attribute exception that leaves `&ampx` alone in a value. md keeps
+CommonMark's stricter rule (a name is only an entity with its `;`)
+but looks it up in the same table; its 57-entry table is gone.
+
+Two things bit on the way. A generated `.c` with no header of its own
+is invisible to aedilis' include closure, so the root suite linked
+without it: the table got `entitates_html_tabula.h`. And
+`silva.Editio` on a `.sh` file applied the C formatter's width rule
+and broke the md runner's `if … || …; then` lines — filed. Also a
+latent md overflow: `md_decoquere` allocated input + 4 bytes on the
+theory that a decoded entity never grows, but `&nGt;` is 5 bytes in
+and 6 out (two code points); the buffer is now twice the input.
+
+Sixty-two html cases rose (entities01/02, tests with `&nbsp` and
+friends in text and attributes). md rose by two: the polish list had
+called the table "cheapest", and it was, but its gain was small.

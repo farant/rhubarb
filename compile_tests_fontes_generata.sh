@@ -56,6 +56,8 @@ declare -a SOURCE_FILES=(
     "lib/elementa.c"
     "lib/entitas.c"
     "lib/entitas_repositorium_impl.c"
+    "lib/entitates_html.c"
+    "lib/entitates_html_tabula.c"
     "lib/eventus_stml.c"
     "lib/exemplar.c"
     "lib/fasciculum.c"

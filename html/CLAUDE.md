@@ -34,8 +34,8 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   PINNED; `probationes/fixa/html/FONTES.md`) · oraculum (our tree
   through the cooked view `html_coctum` against html5lib's expected
   trees, html/head/body unwrapped when the input never names them;
-  RISING pin — 887 at birth, 930 after O2b-1, 985 after O2b-3 — of
-  1,700, fragments 77/184; `ORACULUM_OMNIA=1`,
+  RISING pin — 887 at birth, 930 after O2b-1, 985 after O2b-3, 1,047
+  after O2b-4 — of 1,700, fragments 77/184; `ORACULUM_OMNIA=1`,
   `ORACULUM_EXEMPLUM=tests1.dat:20`). The runner compiles
   `materia/fontes` and `md/fontes` into `html/build/` — consumed,
   never contained.
@@ -65,10 +65,11 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   states (`--!>`, script escaping); the expensive ones are the §6.1
   mechanisms (table synthesis, adoption agency, foreign breakout).
   **O2b in progress (Fran: burn them down, one commit each, pin
-  moving):** O2b-1 builder tables (887 → 930) and O2b-2/3 `--!>`
-  cooking + script-data escaping in `lib/html_lexema.c` (→ 985) DONE;
-  next the generated entity table (design in the plan), button scope
-  for `p` (a law change, explained first), foreign attributes. Then O3 wild fixtures (one ask per
+  moving):** O2b-1 builder tables (887 → 930), O2b-2/3 `--!>` cooking
+  + script-data escaping in `lib/html_lexema.c` (→ 985), O2b-4 the
+  shared generated entity table `lib/entitates_html` (→ 1,047; md
+  consumes it too) DONE; next button scope for `p` (a law change,
+  explained first), foreign attributes. Then O3 wild fixtures (one ask per
   page), O4 the lexer's raw-text set. Then JS. Design: ledger
   desideratum 01M2KPNTT0.
 

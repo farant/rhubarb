@@ -826,3 +826,18 @@ Stated as wrong, per the B10 discipline:
   (totality), the list-continuation confusion, the multi-line inline
   html newline, token values containing `</md-`, the terminator crlf
   slot. Every one arrived through a gate, none through review.
+
+## 2026-09-15 — the entity table becomes shared (html O2b-4)
+
+`md_decoctum` dropped its 57-entry table for `lib/entitates_html`,
+the 2,231-name HTML5 table generated from Python's stdlib list. The
+CommonMark rule stays stricter than HTML's: a name is an entity only
+with its `;`, so the lookup is exact (`entitates_html_quaerere` on
+`name;`) and the legacy forms are never used here. The oracle rose
+1,270 → 1,272 — the polish list's "cheapest" item, and a small one.
+
+A latent overflow went with it: `md_decoquere` allocated input + 4
+on the theory that a decoded entity never outgrows its source, but
+`&nGt;` is 5 bytes in and 6 out (two code points, three bytes each).
+The buffer is now twice the input. The computus golden moved on its
+memory columns for that reason and was regenerated with the cause.
