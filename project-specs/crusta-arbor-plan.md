@@ -1148,7 +1148,7 @@ blocks; adversarius: 17 (last one `echo a \` at EOF).
     b32 materia_arbor_aequalis(a, b, MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d);
 ```
 
-- [ ] **Step 1: Write the failing gate** — inline cases (every P3/P4/P5
+- [x] **Step 1: Write the failing gate** — inline cases (every P3/P4/P5
   case string) AND the whole P6 corpus: `s1 = scribere(radix)`; `r1 =
   legere(s1)`; `s2 = scribere(r1)`; `CREDO_CHORDAE_AEQUALES(s1, s2)`;
   `CREDO_VERUM(aequalis(radix, r1, STRUCTURALIS))`; then the re-read
@@ -1164,23 +1164,43 @@ blocks; adversarius: 17 (last one `echo a \` at EOF).
   any cause other than the raw-form limit (01M2KPJ0HW) is red. Self-measure:
   documents round-tripped == corpus files + inline count.
 
-- [ ] **Step 2: Run and verify it fails** — `./crusta/compile_probationes.sh stml`.
+- [x] **Step 2: Run and verify it fails** — `./crusta/compile_probationes.sh stml`.
 
-- [ ] **Step 3: Fix what the refusals name** — causes, never assertions.
+- [x] **Step 3: Fix what the refusals name** — causes, never assertions.
 
-- [ ] **Step 4: Run the whole suite** — exit 0.
+- [x] **Step 4: Run the whole suite** — exit 0.
 
-- [ ] **Step 5: Plant** — before the comparator,
+- [x] **Step 5: Plant** — before the comparator,
   `materia_nodus_ponere(r1, CRUSTA_PROGRAMMA_CAUDA, VALOR_NIHIL, TOKEN)` on
   the re-read tree → tree oracle red while `s1`/`s2` stay equal (the
   oracle-separation pin); revert.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("crusta: circuitus STML - duo cycli octetim idem, comparator STRUCTURALIS (FIDELITAS mensurata), referentiae heredoc relatae, emissio relectae idem, corpus totum (rubra nata: cauda relectae sublata)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",
     ["crusta/probationes/probatio_crusta_stml.c"], ["crusta"])
 ```
+
+**Executed 2026-09-16.** Deviations from the text above: the inline
+set is the arbor gate's 90 cases + its 7 mala + the arithmetic gate's
+5 builder cases (102); the fixture cases run through the case reader
+as well as whole. FIDELITAS holds on every document and is asserted.
+The lexeme tag prefix is `crusta-`, not `lex-`: the fixture case
+`forma-cruda` was corrected to a comment carrying `</crusta-commentum>`
+(a bare `</…>` lexes as redirections, a quoted one is written escaped
+and passes); the inline pins are a comment and a heredoc body line.
+Two causes fixed, never assertions: (1) `initium_lineae` — the reader
+derives it from LINEA-munus trivia; the builder now sets it by the same
+rule in `_lexema_recordare` (315 of 322 corpus files and 8 inline cases
+were red on it); (2) a SUBSTRATE change, `materia_arbor.c
+_textus_tutus`: a value whose edge whitespace run contains a newline in
+a mixed element lost the run silently through the round trip
+(adversarial `simplex-apertus`); it is now a named refusal, pinned
+(materia/css/md/html/oratio suites green). The whole `adversarius.sh`
+transits (open constructs change the downstream lexing context —
+measured, pinned as measured). Plant: the oracle-separation mutation
+(the re-read program's `cauda` removed) made unconditional.
 
 ---
 

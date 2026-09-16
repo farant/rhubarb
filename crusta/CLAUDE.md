@@ -18,8 +18,49 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P6 done)
+## Praesens status (2026-09-16 — P7 done)
 
+- **P7, the STML projection:** gate `stml` (`probatio_crusta_stml.c`):
+  every inline case of the arbor and arithmetic gates (102), every
+  fixture case through the case reader (49) and the whole P6 corpus
+  (231 house + 2 fixtures + 89 FreeBSD = 322 files) through write →
+  read → write: the two STML texts byte-identical, the re-read tree
+  equal to the parsed one under the comparator, the re-read tree's
+  direct emission equal to the source — 473 documents, 838 KB of
+  source → 23.7 MB of STML (≈ 28×). FIDELITAS (spec §10) MEASURED:
+  it holds on every document, so it is ASSERTED (the reader's cursor
+  counts the newlines inside substantive values, so the newline
+  separator and heredoc bodies keep line and column). Heredoc
+  references carried: `<corpus(> #nodN` and `id="nodN"` in the text;
+  the re-read redirection's `corpus` is a REFERENTIA to the re-read
+  `heredoc` (14 cases, count = petitions). What it found: (1) the
+  `initium_lineae` flag — the STML reader DERIVES it (a lexeme begins
+  a line iff a LINEA-munus trivium intervened since the previous
+  lexeme; LAMINA and the substantive newline separator do not count);
+  crusta never set it, so 315 of 322 corpus files differed on the
+  envelope's `linea-initium` and eight inline cases structurally. The
+  builder now sets it by the same rule in `_lexema_recordare` (the
+  `$((` rewind restores it from the opener). (2) A SUBSTRATE find: a
+  token value whose leading or trailing whitespace run contains a
+  newline, in a MIXED element (one carrying trivia), was written in
+  the escaped form and the reader dropped the run by STML's trivia
+  ownership law — two bytes silently lost on `a 'b ` + newline (the
+  adversarial `simplex-apertus`, a quote open to EOF). materia's
+  `_textus_tutus` now REFUSES it (`valor lexematis textui non tutus
+  (mixtum)`); materia, css, md, html and oratio suites unchanged.
+  (3) The raw-form limit (01M2KPJ0HW) as in html: a comment trivium or
+  a heredoc body line carrying its own `</crusta-…>` closing tag is
+  refused by name — pinned inline and by the fixture case
+  `forma-cruda` (corrected: the tag prefix is `crusta-`, not `lex-`;
+  a bare `</…>` lexes as redirections and a single-quoted one passes
+  in the escaped form, so the case now carries a comment). The whole
+  `adversarius.sh` transits: its open constructs change the lexing
+  context downstream (measured, pinned as measured). Named limit: the
+  token tail (`CrustaCauda.gravis`, backtick depth) is not projected
+  (no frons); the consilium hands the reader the same forma so re-read
+  tokens carry a zeroed tail. Oracle-separation pin: the re-read
+  program's `cauda` removed → comparator red while the texts stay
+  equal. Plant: that mutation made unconditional.
 - **P6, cases and corpus:** `crusta_exempla.{h,c}` reads the Oils
   `#### titulus` / `## SECTIO:` … `## END` case format (copies into the
   piscina; CRLF kept in data) and carries the manifest

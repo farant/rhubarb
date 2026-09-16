@@ -130,8 +130,17 @@ second client, exactly as the fork predicted.
 **Still constrained:** the *lexeme* path (`materia_arbor.c:945`)
 raw-marks only when text is the element's sole child (`elementum
 mixtum crudum esse NON potest`). A significant whitespace token that
-also carries trivia therefore still cannot project — CSS content mode
-(D7), a T11 problem, named ahead of time.
+also carries trivia therefore still cannot project — CSS content
+mode (D7), a T11 problem, named ahead of time.
+**Reached from the other side by crusta (2026-09-16, P7):** a value
+whose LEADING or TRAILING whitespace run contains a newline, in a
+mixed element, was written escaped and the reader dropped the run by
+the ownership law — two bytes silently lost on a quote open to EOF
+(`a 'b ` + newline). `_textus_tutus` now REFUSES it (`valor lexematis
+textui non tutus (mixtum)`); whitespace without a newline at the
+edges still projects. Measured: `'b \n`, `'b\n `, `'b\n\n`, `'b\t\n`
+lost the whole run; `'b ` survived; `'b\n` as a sole child is raw
+and survives.
 
 ## Currere
 

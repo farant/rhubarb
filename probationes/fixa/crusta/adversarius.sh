@@ -32,6 +32,6 @@ a=(1 2
 #### terminator-vagus
 a;; b
 #### forma-cruda
-echo </lex-litteralis> </crusta-litteralis> x
+echo '</crusta-litteralis>' # </crusta-commentum>
 #### retroversum-ad-finem
 echo a \

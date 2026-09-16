@@ -206,3 +206,65 @@ because `chorda.datum` is not const. It copies into the piscina, as
 html's reader does. A `spec/*.test.sh` in a block comment is a
 `-Wcomment` error (the `/*` inside) — the third time this repo has
 been bitten by a glob in a comment.
+
+## 2026-09-16 — P7 (STML projection)
+
+**`initium_lineae` is derived, so the builder must derive it the same
+way.** materia's STML reader does not read a per-token `linea-initium`
+for source tokens (it is written only for DERIVED tokens); it
+reconstructs the flag in its position-fixing pass: `post_lineam` is set
+by every trivium of munus LINEA (not LAMINA) and consumed by the next
+lexeme; the envelope carries the first lexeme's flag. crusta's lector
+never set it, so the parsed tree had FALSUM everywhere while the re-read
+tree had VERUM after every LINEA trivium: 315 of 322 corpus files
+differed on the envelope (a shebang comment, then a LINEA trivium, then
+the first lexeme) and eight inline cases structurally (`a &&\n\n  b`,
+`if a\nthen`, heredoc bodies after `&&`…). Fix: `_lexema_recordare` —
+the one function every received token passes — sets the flag by the
+reader's rule; the `$((` rewind restores `post_lineam` from the opener's
+own flag. The flag has no bash meaning: after a substantive newline
+separator it is FALSUM, after a trivium newline (a blank line after
+`&&`, the line after `then`) VERUM. It exists so the projection
+round-trips; css and html sidestep it by having no LINEA munus at all.
+
+**A trailing newline in a mixed element was silently lost — now
+refused.** `a 'b` + newline (a quote open to EOF) parses into a
+`simplex` token whose value ends in `\n` and carries ante trivia (the
+space). A token with trivia is a MIXED element, which cannot take the
+raw form, so the value is written escaped; STML's trivia ownership law
+then hands the trailing whitespace run through the newline to layout,
+and the reader's value lacks it: two bytes lost, two STML texts of
+different length, no refusal. Measured with a scratch probe: `'b \n`,
+`'b\n `, `'b\n\n`, `'b\t\n` all lose the whole edge run; `'b ` (no
+newline) survives; `'b\n` as a SOLE child is raw and survives.
+materia's `_textus_tutus` now refuses a value whose leading or trailing
+whitespace run contains a newline (`valor lexematis textui non tutus
+(mixtum)`) — the refusal materia's orientation predicted for
+significant-whitespace tokens with trivia (D7), reached from the other
+side. In the real corpus only a quote open at EOF hits it. materia,
+css, md, html and oratio suites unchanged by the guard.
+
+**The raw-form limit needs the right prefix and a raw element.** The
+plan said `</lex-…>`; crusta's lexeme elements are `crusta-litteralis`,
+`crusta-commentum`, … A bare `</crusta-litteralis>` in a command lexes
+as two redirections and a word; a single-quoted one is a `simplex`
+written escaped (`&lt;`), so it passes. What refuses: a comment
+carrying `</crusta-commentum>` (trivia are raw) and a heredoc body line
+carrying `</crusta-litteralis>` (a sole-child part). The fixture's
+`forma-cruda` case was corrected to a comment. The previous whole-file
+refusal came from a token spanning cases (open constructs of earlier
+cases change the lexing context), which the new line no longer
+triggers; the whole-file result is measured and pinned as measured.
+
+**FIDELITAS holds.** The reader's cursor counts newlines inside token
+values, so positions survive the substantive newline separator and
+multi-line heredoc bodies; asserted on all 473 documents. STML is
+≈ 28× the source here (html: 15×) — every token is an element with
+its trivia series.
+
+**The token tail is not projected.** `CrustaCauda.gravis` (backtick
+depth) lives in the token's private tail, which materia does not write
+(no frons hook). The gate hands the reader the same `forma` so re-read
+tokens have a zeroed tail; `crusta_verbum_staticum` on a re-read tree
+would decode backtick-nested words at depth 0. No consumer yet; the
+seam is materia's frons.

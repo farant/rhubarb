@@ -118,6 +118,10 @@ nomen structura {
                                         b32  memoria_defecit;
     /* lexemata accepta ordine (NIHIL = sine memoria) */
                          Xar* lexemata;
+    /* vexillum initium_lineae per regulam lectoris STML: VERUM post
+     * trivium LINEA usque ad lexema proximum (vide
+     * _lexema_recordare) */
+                          b32 post_lineam;
 } Aedificatio;
 
 /* lexema acceptum recordare (tegumentum lectoris per corpus) */
@@ -128,6 +132,23 @@ _lexema_recordare (
 {
     MateriaToken** sedes;
 
+    /* VEXILLUM initium_lineae per regulam qua lector STML
+     * (materia_arbor, fixura positionum) eam ex triviis reficit:
+     * lexema lineam incipit si trivium muneris LINEA ab lexemate
+     * priore intervenit (LAMINA non; separator linea nova
+     * SUBSTANTIVUS non, C6); documenti initium lineam incipit.
+     * Regula derivata, non factum bash - proiectio eam sic reficit,
+     * ergo arbor parsata eam sic ferat aut comparator dissentit
+     * (P7). Consumptor crustae nullus. */
+    si (t->genus == (s32)CRUSTA_LEX_LINEA)
+    {
+        p->post_lineam = VERUM;
+    }
+    alioquin si (!materia_lexicon_trivium_est(&p->lexicon, t->genus))
+    {
+        materia_token_initium_lineae_ponere(t, p->post_lineam);
+        p->post_lineam = FALSUM;
+    }
     si (p->lexemata == NIHIL)
     {
         redde VERUM;
@@ -1979,6 +2000,8 @@ _arithmeticam_recusare (
     {
         xar_removere_ultimum(p->lexemata);
     }
+    /* vexillum lineae: status ante aperturam = vexillum aperturae */
+    p->post_lineam = materia_token_initium_lineae(g->apertura);
     per (j = ZEPHYRUM; j < g->apertura->numerus_ante; j++)
     {
         si (!_cumulare(p, g->apertura->spatia_ante[j]))
@@ -3950,6 +3973,7 @@ crusta_arbor_parsare_cum_lexematis (
     p.piscina        = piscina;
         p.dialectus  = dialectus;
     p.lexemata       = lexemata;
+    p.post_lineam    = VERUM;
     p.relatio        = relatio != NIHIL ? relatio : &relatio_propria;
     memset(p.relatio, ZEPHYRUM, magnitudo(*p.relatio));
     si (!materia_lexicon_ratum_facere(&p.lexicon, &CRUSTA_LEXICON,

@@ -608,11 +608,23 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (signum->numerus_ante, (i32)I);
         CREDO_AEQUALIS_I32 (b->numerus_ante, (i32)I);
         CREDO_AEQUALIS_I32 (b->numerus_post, ZEPHYRUM);
+        /* vexillum initium_lineae per regulam lectoris STML (P7): 'a'
+         * documentum incipit, 'b' post trivia LINEA lineam incipit,
+         * '&&' non */
+        CREDO_VERUM (materia_token_initium_lineae(_tok(_pars(_filius(
+            _filius(n, (i32)CRUSTA_CATENA_LIBERI, ZEPHYRUM),
+            (i32)CRUSTA_IMPERIUM_LIBERI, ZEPHYRUM), ZEPHYRUM),
+            (i32)CRUSTA_PARS_TOK)));
+        CREDO_VERUM (materia_token_initium_lineae(b));
+        CREDO_FALSUM (materia_token_initium_lineae(signum));
     }
 
     p = _casus(piscina, "a # c\n", &r);
     n = _sententia(p, I);
     CREDO_VERUM (_genus(n, CRUSTA_GENUS_SEPARATOR));
+    /* separator linea nova substantivus: FINIS lineam NON incipit */
+    CREDO_FALSUM (materia_token_initium_lineae(_tok(p,
+        (i32)CRUSTA_PROGRAMMA_CAUDA)));
     CREDO_AEQUALIS_I32 (_tok(n,
         (i32)CRUSTA_SEPARATOR_TOK)->numerus_ante,
         (i32)II);

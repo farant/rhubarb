@@ -693,7 +693,8 @@ _textus_tutus (
     constans chorda* valor)
 {
     i32 i;
-    b32 album_solum;
+    s32 primus   = (s32)-I;   /* primus non albus; -I = album solum */
+    s32 ultimus  = (s32)-I;
 
     si (valor == NIHIL || valor->mensura == ZEPHYRUM)
     { redde VERUM;
@@ -701,7 +702,6 @@ _textus_tutus (
     si (_nul_fert(valor))
     { redde FALSUM;
     }
-    album_solum = VERUM;
     per (i = ZEPHYRUM; i < valor->mensura; i++)
     {
         character c = (character)valor->datum[i];
@@ -709,10 +709,39 @@ _textus_tutus (
         si (   c != ' ' && c != '\t' && c != '\n'
             && c != '\r' && c != '\f' && c != '\v')
         {
-            album_solum = FALSUM;
+            si (primus < ZEPHYRUM)
+            { primus = (s32)i;
+            }
+            ultimus = (s32)i;
         }
     }
-    redde album_solum ? FALSUM : VERUM;
+    si (primus < ZEPHYRUM)
+    { redde FALSUM;
+    }
+
+    /* MARGO ALBA CUM LINEA NOVA (mensuratum 2026-09-16, crusta P7,
+     * apex apertus ad finem plagulae: "a 'b \n" -> octeti DUO tacite
+     * perditi, "a 'b " integer): series alba initialis aut finalis
+     * quae lineam novam fert in elemento NON crudo DISPOSITIO fit -
+     * lex dominii triviorum STML (M1: per lineam novam primam ad
+     * 'post' prioris, cetera ad 'ante' sequentis) - ergo lector eam
+     * in valorem non reddit. Album sine linea nova in valore manet.
+     * Refutatio hic circuitum tacite corruptum in recusationem
+     * nominatam vertit; forma cruda (elementum solius textus) eam
+     * fert. */
+    per (i = ZEPHYRUM; i < (i32)primus; i++)
+    {
+        si ((character)valor->datum[i] == '\n')
+        { redde FALSUM;
+        }
+    }
+    per (i = (i32)ultimus + I; i < valor->mensura; i++)
+    {
+        si ((character)valor->datum[i] == '\n')
+        { redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 /* Valorem genere CRUDO notare: valores arboris OCTETI CODICIS sunt,
