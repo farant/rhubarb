@@ -20,6 +20,7 @@
 #include "html_lexicon.h"
 #include "html_lexema.h"
 #include "html_registrum.h"
+#include "html_alienum.h"
 #include "materia_arbor.h"
 #include "materia_lexicon.h"
 #include "materia_token.h"
@@ -42,6 +43,9 @@ nomen structura {
     s32 membri;
     s32 definitionis;
     s32 bullae;
+    /* spatium proprium et liberorum (O2b-6): eruptio, se-claudens */
+    HtmlAlienum proprium;
+    HtmlAlienum liberorum;
 } ScopiGradus;
 
 nomen structura {
@@ -645,6 +649,8 @@ _scopi_gradus (
         infra.membri        = (s32)-I;
         infra.definitionis  = (s32)-I;
         infra.bullae        = (s32)-I;
+        infra.proprium      = HTML_ALIENUM_NULLUM;
+        infra.liberorum     = HTML_ALIENUM_NULLUM;
     }
     si (_titulus_est(titulus, "p"))
     {
@@ -695,6 +701,11 @@ _scopi_gradus (
     {
         g.bullae = infra.bullae;
     }
+    /* spatia nominum: attributa in impulsu nondum visa (annotation-xml
+     * tum MathML) */
+    g.proprium  = html_alienum_proprium(infra.proprium, infra.liberorum,
+        titulus);
+    g.liberorum = html_alienum_liberorum(g.proprium, titulus, NIHIL);
     redde g;
 }
 
@@ -715,6 +726,27 @@ _scopos_claudere (
     }
     vertex = (constans ScopiGradus*)xar_obtinere(p->scopi,
         p->profunditas - I);
+    /* ERUPTIO ex contento alieno (WHATWG 'in foreign content'): tag
+     * HTML rumpens elementa aliena claudit usque ad elementum cuius
+     * liberi HTML sunt (HTML ipsum aut punctum integrationis). */
+    si (   vertex->liberorum != HTML_ALIENUM_NULLUM
+        && html_alienum_rumpit(titulus))
+    {
+        dum (   p->profunditas > ZEPHYRUM
+             && vertex->liberorum != HTML_ALIENUM_NULLUM)
+        {
+            p->profunditas = p->profunditas - I;
+            si (p->profunditas > ZEPHYRUM)
+            {
+                vertex = (constans ScopiGradus*)xar_obtinere(p->scopi,
+                    p->profunditas - I);
+            }
+        }
+        si (p->profunditas == ZEPHYRUM)
+        {
+            redde;
+        }
+    }
     si (_titulus_est(titulus, "li"))
     {
         k = vertex->membri;
@@ -926,6 +958,17 @@ _finem_tractare (
 
         p->tag_apertum  = NIHIL;
         p->attributum   = NIHIL;
+        /* tag se-claudens in contento alieno elementum CLAUDIT (spec:
+         * 'acknowledge self-closing flag'; O2b-6) - in HTML numquam
+         * (caput): elementum in vertice, spatium proprium alienum */
+        si (   token->genus == (s32)HTML_LEX_TAG_FINIS_SOLUS
+            && p->profunditas > ZEPHYRUM
+            && _apertum(p, p->profunditas - I) == elementum
+            && ((constans ScopiGradus*)xar_obtinere(p->scopi,
+                p->profunditas - I))->proprium != HTML_ALIENUM_NULLUM)
+        {
+            p->profunditas = p->profunditas - I;
+        }
         redde materia_nodus_ponere(elementum,
             (i32)HTML_ELEMENTUM_TOK_FINIS,
             materia_valor_token(token), MATERIA_LOCUS_TOKEN);

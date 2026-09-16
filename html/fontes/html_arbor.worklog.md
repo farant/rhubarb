@@ -306,3 +306,36 @@ below in O(1). A query reads the top frame. Totality is back to
 `SPECIALIA`), and the arbor gate's "vertex solus" case is inverted
 with its cause. Seven cases rose. The depth class is now mostly the
 adoption agency and table synthesis, which are not closes at all.
+
+## 2026-09-15 — O2b-6: foreign content in two halves; 1,054 → 1,086
+
+Cooked half first: SVG's attribute case table (58 names), MathML's
+`definitionURL`, and the rule that `mglyph`/`malignmark` stay MathML
+inside a text integration point — which needs the PARENT's own
+namespace, not only the children's context, so the walk now carries
+both. 1,054 → 1,073. The namespace logic left the cooked view for
+`html_alienum`, a module shared with the builder, with its own gate.
+
+Builder half: each stack frame now knows its element's own namespace
+and its children's (computed at push from the frame below, like the
+scope indices), and two HTML5 rules follow: a self-closing tag inside
+SVG or MathML closes its element (`<path/><circle/>` are siblings; in
+HTML `/>` still never closes, the H4 law), and an HTML start tag from
+the breakout list pops foreign elements up to the nearest element
+whose children are HTML. 1,073 → 1,086; fragments 77 → 82.
+
+One bug of mine cost a segfault: the module compares names
+case-insensitively by lowercasing the INPUT, so a literal with a
+capital (`"foreignObject"`) can never match. Children of
+`foreignObject` became SVG, `<div/>` self-closed, and my own test
+walked into a missing child. Found through the crash report in
+`~/Library/Logs/DiagnosticReports` (lldb in batch mode hangs on a
+forking probatio); the gate now guards its walk. Lesson: a helper
+that lowercases one side needs lowercase literals — the table's
+values (`foreignObject`) are output, its keys are input.
+
+What remains foreign, named not built: the lexer treats `<title>`
+and `<textarea>` as raw text everywhere, but inside SVG `title` is an
+ordinary element; `<font>` breaks out only with color/face/size,
+which arrive after the tag; `annotation-xml`'s encoding is likewise
+unseen at push.

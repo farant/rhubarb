@@ -640,6 +640,21 @@ parity needs no new genus.
   (489 s). The other rows stay top-of-stack (h1–h6, table parts,
   options, self-closers: their HTML5 rules are top-of-stack or belong
   to the table machinery). Oracle 1,047 → 1,054.
+- **Foreign content (O2b-6, 2026-09-15):** `html_alienum` derives each
+  element's own namespace from its parent (`svg`/`math` open; in a
+  MathML text integration point `mglyph`/`malignmark` stay MathML)
+  and its children's from itself (HTML integration points
+  `foreignObject desc title` / `mi mo mn ms mtext` / `annotation-xml`
+  with an HTML encoding). The builder stores both per stack frame
+  (`ScopiGradus`); a self-closing start tag whose element is foreign
+  closes it (WHATWG "acknowledge the self-closing flag" — in HTML `/>`
+  never closes, §11.3), and a start tag from the breakout list (`b big
+  blockquote body br center code dd div dl dt em embed h1–h6 head hr i
+  img li listing menu meta nobr ol p pre ruby s small span strong
+  strike sub sup table tt u ul var`) pops foreign elements up to the
+  nearest one whose children are HTML. Attributes at push are unseen,
+  so `font` never breaks out and `annotation-xml` children are MathML
+  in the builder. Oracle 1,054 → 1,086.
 - **End-tag rule**: an end tag pops the stack to the nearest open
   element of the same name (ASCII case-insensitive, H1), implicitly
   closing everything above it (`<div><p>x</div>` closes `p` with

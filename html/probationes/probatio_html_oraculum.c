@@ -20,6 +20,7 @@
 #include "credo.h"
 #include "html_arbor.h"
 #include "html_coctum.h"
+#include "html_alienum.h"
 #include "html_exempla.h"
 #include "materia_nodus.h"
 #include "piscina.h"
@@ -31,7 +32,7 @@
 #include <string.h>
 
 /* pinna: praeterita minima (nativitas: valor post cursum primum) */
-#define PINNA_PRAETERITA   ((s32)1054)
+#define PINNA_PRAETERITA   ((s32)1086)
 /* exempla iudicata = MDCCVIII - VIII script-on */
 #define TOTALIS_PINNATUS   ((i32)1700)
 #define LINEAE_MAXIMAE     ((i32)8192)
@@ -325,40 +326,44 @@ _lineas_scribere (
     redde chorda_aedificator_finire(aed);
 }
 
-/* Contentum alienum contextus fragmenti: 'svg desc' -> liberi elementi
- * desc in svg (punctum integrationis -> HTML); 'td' -> HTML. */
-hic_manens HtmlAlienum
+/* Contentum contextus fragmenti: 'svg desc' -> parens SVG (desc),
+ * liberi HTML (punctum integrationis); 'math ms' -> MATHEMATICA,
+ * NULLUM; 'td' -> NULLUM, NULLUM. */
+hic_manens vacuum
 _alienum_contextus (
-    Piscina* piscina,
-     chorda  contextus)
+        Piscina* piscina,
+         chorda  contextus,
+    HtmlAlienum* parentis,
+    HtmlAlienum* liberorum)
 {
-    HtmlAlienum parentis  = HTML_ALIENUM_NULLUM;
-         chorda titulus   = contextus;
+    HtmlAlienum spatium = HTML_ALIENUM_NULLUM;
+         chorda titulus = contextus;
             i32 i;
 
     per (i = ZEPHYRUM; i < contextus.mensura; i++)
     {
         si (contextus.datum[i] == ' ')
         {
-            chorda spatium;
+            chorda primum;
 
-            spatium.datum    = contextus.datum;
-            spatium.mensura  = i;
-            si (chorda_aequalis_literis(spatium, "svg"))
+            primum.datum    = contextus.datum;
+            primum.mensura  = i;
+            si (chorda_aequalis_literis(primum, "svg"))
             {
-                parentis = HTML_ALIENUM_SVG;
+                spatium = HTML_ALIENUM_SVG;
             }
-            alioquin si (chorda_aequalis_literis(spatium, "math"))
+            alioquin si (chorda_aequalis_literis(primum, "math"))
             {
-                parentis = HTML_ALIENUM_MATHEMATICA;
+                spatium = HTML_ALIENUM_MATHEMATICA;
             }
             titulus.datum    = contextus.datum + i + I;
             titulus.mensura  = contextus.mensura - i - I;
             frange;
         }
     }
-    titulus = html_coctum_titulus(piscina, titulus, parentis);
-    redde html_coctum_alienum_liberorum(parentis, titulus, NIHIL);
+    titulus     = html_alienum_titulus(piscina, titulus, spatium);
+    *parentis   = spatium;
+    *liberorum  = html_alienum_liberorum(spatium, titulus, NIHIL);
 }
 
 /* linea k (ZEPHYRUM-basata) chordae; vacua ultra finem */
@@ -539,13 +544,16 @@ principale (vacuum)
             {
                 LineaArboris* lineae;
                          i32  numerus_linearum;
-                 HtmlAlienum  alienum = HTML_ALIENUM_NULLUM;
+                 HtmlAlienum  parentis  = HTML_ALIENUM_NULLUM;
+                 HtmlAlienum  alienum   = HTML_ALIENUM_NULLUM;
 
                 si (e->fragmentum)
                 {
-                    alienum = _alienum_contextus(p, e->contextus);
+                    _alienum_contextus(p, e->contextus, &parentis,
+                        &alienum);
                 }
-                nostra = html_coctum_scribere(p, arbor, alienum);
+                nostra = html_coctum_scribere(p, arbor, parentis,
+                    alienum);
                 lineae = (LineaArboris*)piscina_allocare(p,
                     magnitudo(LineaArboris)
                     * (memoriae_index)LINEAE_MAXIMAE);

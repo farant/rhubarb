@@ -935,10 +935,23 @@ tasks, one commit each, under the same Global Constraints.
     **1,047 → 1,054** (small: the remaining depth failures are
     adoption agency and table synthesis). Law text updated in
     `html/CLAUDE.md` and spec §11.7.
-  - [ ] **O2b-6 foreign attributes**: SVG attribute case table
-    (`viewBox` …), MathML `definitionURL`, and the breakout of HTML
-    elements from foreign content (a stack walk to the nearest
-    integration point).
+  - [x] **O2b-6 foreign content** (2026-09-15): new module
+    `html/fontes/html_alienum.{h,c}` shared by builder and cooked view
+    (`html_alienum_proprium` / `_liberorum` / `_titulus` /
+    `_attributum` / `_rumpit`; gate `probatio_html_alienum`, 28).
+    Cooked half: SVG attribute table (58), `definitionURL`,
+    `mglyph`/`malignmark` stay MathML in a text integration point
+    (the walk now carries the parent's own namespace and the
+    children's context; `html_coctum_scribere` takes both). Builder
+    half: `ScopiGradus` gains `proprium`/`liberorum` per frame; a
+    self-closing tag in SVG/MathML closes its element (HTML never,
+    H4); an HTML start tag from the breakout list pops foreign
+    elements to the nearest element with HTML children. Arbor gate:
+    six foreign cases. **1,054 → 1,073 → 1,086**, fragments 77 → 82.
+    Plant: `p` removed from the breakout list → arbor red. Bug on the
+    way: a case-insensitive helper against a capitalised literal
+    (crash report, not lldb, found it). Named, not built: SVG `title`
+    is not raw text; `font` breakout needs its attributes.
 - [ ] **O3 — wild fixtures.** Five to ten pages under
   `probationes/fixa/html/silvestria/` with their rows in `FONTES.md`;
   each fetch listed and asked. They feed totality, computus and the

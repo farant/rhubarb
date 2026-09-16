@@ -550,6 +550,56 @@ principale (vacuum)
             HTML_DOCUMENTUM_LIBERI),
             II);
 
+        /* O2b-6: contentum alienum - tag se-claudens claudit, tag HTML
+         * rumpens erumpit, puncta integrationis HTML manent */
+        imprimere("\n--- Probans '<svg><path/><circle/></svg>' ---\n");
+        CREDO_VERUM (_octetos_probare(piscina,
+            "<svg><path/><circle/></svg>", XXVII));
+        documentum = _parsare(piscina, "<svg><path/><circle/></svg>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        /* in HTML '/>' numquam claudit (caput H4) */
+        documentum = _parsare(piscina, "<div/><p/>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        imprimere("\n--- Probans '<svg><p>x': eruptio ---\n");
+        documentum = _parsare(piscina, "<svg><g><p>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        /* punctum integrationis: p intra desc manet, b intra mi */
+        documentum = _parsare(piscina, "<svg><desc><p>x</desc></svg>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        documentum = _parsare(piscina, "<math><mi><b>x</mi></math>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        /* intra foreignObject regula HTML: '<div/>' non claudit */
+        documentum = _parsare(piscina, "<svg><foreignObject><div/>x");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (elementum);
+        elementum = elementum ? _liber(elementum, HTML_ELEMENTUM_LIBERI,
+            ZEPHYRUM) : NIHIL;
+        CREDO_NON_NIHIL (elementum);
+        elementum = elementum ? _liber(elementum, HTML_ELEMENTUM_LIBERI,
+            ZEPHYRUM) : NIHIL;
+        CREDO_NON_NIHIL (elementum);
+        si (elementum != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_numerus(elementum,
+                HTML_ELEMENTUM_LIBERI), I);
+        }
+
         imprimere("\n--- Probans tabulam: tr/td implicite ---\n");
         documentum = _parsare(piscina,
             "<table><tr><td>1<td>2<tr><td>3</table>");

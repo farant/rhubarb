@@ -1,6 +1,7 @@
 /* html_coctum.c - Vide html_coctum.h. */
 
 #include "html_coctum.h"
+#include "html_alienum.h"
 #include "html_registrum.h"
 #include "html_lexema.h"
 #include "materia_token.h"
@@ -30,51 +31,6 @@ nomen enumeratio {
     DECOCTIO_TEXTUS,
     DECOCTIO_ATTRIBUTI
 } Decoctio;
-
-/* Tituli svg quorum litterae maiusculae in DOM restituuntur (WHATWG
- * 'adjust SVG tag names'): minusculus -> accommodatus. */
-hic_manens constans character* constans SVG_ACCOMMODATI[][2] = {
-    { "altglyph",            "altGlyph" },
-    { "altglyphdef",         "altGlyphDef" },
-    { "altglyphitem",        "altGlyphItem" },
-    { "animatecolor",        "animateColor" },
-    { "animatemotion",       "animateMotion" },
-    { "animatetransform",    "animateTransform" },
-    { "clippath",            "clipPath" },
-    { "feblend",             "feBlend" },
-    { "fecolormatrix",       "feColorMatrix" },
-    { "fecomponenttransfer", "feComponentTransfer" },
-    { "fecomposite",         "feComposite" },
-    { "feconvolvematrix",    "feConvolveMatrix" },
-    { "fediffuselighting",   "feDiffuseLighting" },
-    { "fedisplacementmap",   "feDisplacementMap" },
-    { "fedistantlight",      "feDistantLight" },
-    { "fedropshadow",        "feDropShadow" },
-    { "feflood",             "feFlood" },
-    { "fefunca",             "feFuncA" },
-    { "fefuncb",             "feFuncB" },
-    { "fefuncg",             "feFuncG" },
-    { "fefuncr",             "feFuncR" },
-    { "fegaussianblur",      "feGaussianBlur" },
-    { "feimage",             "feImage" },
-    { "femerge",             "feMerge" },
-    { "femergenode",         "feMergeNode" },
-    { "femorphology",        "feMorphology" },
-    { "feoffset",            "feOffset" },
-    { "fepointlight",        "fePointLight" },
-    { "fespecularlighting",  "feSpecularLighting" },
-    { "fespotlight",         "feSpotLight" },
-    { "fetile",              "feTile" },
-    { "feturbulence",        "feTurbulence" },
-    { "foreignobject",       "foreignObject" },
-    { "glyphref",            "glyphRef" },
-    { "lineargradient",      "linearGradient" },
-    { "radialgradient",      "radialGradient" },
-    { "textpath",            "textPath" }
-};
-
-#define SVG_ACCOMMODATI_NUMERUS \
-    ((i32)(magnitudo(SVG_ACCOMMODATI) / magnitudo(SVG_ACCOMMODATI[0])))
 
 
 /* ==================================================
@@ -314,178 +270,19 @@ _valor_coctus (
 
 
 /* ==================================================
- * Tituli et contentum alienum
+ * Tituli et contentum alienum: html_alienum (O2b-6)
  * ================================================== */
 
-chorda
-html_coctum_titulus (
-       Piscina* piscina,
-        chorda  crudus,
-    HtmlAlienum  alienum)
-{
-    chorda titulus = _copia_minuscula(piscina, crudus);
-       i32 k;
-
-    si (alienum != HTML_ALIENUM_SVG || titulus.datum == NIHIL)
-    {
-        redde titulus;
-    }
-    per (k = ZEPHYRUM; k < SVG_ACCOMMODATI_NUMERUS; k++)
-    {
-        si (chorda_aequalis_literis(titulus,
-            SVG_ACCOMMODATI[k][ZEPHYRUM]))
-        {
-            redde _copia_literis(piscina, SVG_ACCOMMODATI[k][I]);
-        }
-    }
-    redde titulus;
-}
-
-/* chorda == litterae litteris neglectis (ASCII) */
-interior b32
-_aequalis_neglectis (
-                 chorda  c,
-     constans character* litterae)
-{
-    i32 n = (i32)strlen(litterae);
-    i32 i;
-
-    si (c.mensura != n)
-    {
-        redde FALSUM;
-    }
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        si ((character)_minuscula(c.datum[i]) != litterae[i])
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
-}
-
-/* attributum 'encoding' annotation-xml: text/html |
- * application/xhtml+xml (citationes exutae, sine copia) */
-interior b32
-_encoding_html (
-    constans MateriaNodus* elementum)
-{
-    i32 n = _numerus(elementum, (i32)HTML_ELEMENTUM_ATTRIBUTA);
-    i32 i;
-
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        MateriaNodus* a = _liber(elementum,
-            (i32)HTML_ELEMENTUM_ATTRIBUTA,
-            i);
-        MateriaToken* titulus;
-        MateriaToken* valor;
-              chorda  v;
-
-        si (a == NIHIL)
-        {
-            perge;
-        }
-        titulus  = _tok(a, (i32)HTML_ATTRIBUTUM_TOK_NOMEN);
-        valor    = _tok(a, (i32)HTML_ATTRIBUTUM_TOK_VALOR);
-        si (   titulus == NIHIL || valor == NIHIL
-            || !_aequalis_neglectis(titulus->valor, "encoding"))
-        {
-            perge;
-        }
-        v = valor->valor;
-        si (   v.mensura              >= II
-            && (v.datum[ZEPHYRUM] == '"' || v.datum[ZEPHYRUM] == '\'')
-            && v.datum[v.mensura - I] == v.datum[ZEPHYRUM])
-        {
-            v.datum    = v.datum + I;
-            v.mensura  = v.mensura - II;
-        }
-        redde (b32)(_aequalis_neglectis(v, "text/html")
-            || _aequalis_neglectis(v, "application/xhtml+xml"));
-    }
-    redde FALSUM;
-}
-
-HtmlAlienum
-html_coctum_alienum_liberorum (
-              HtmlAlienum  parentis,
-                   chorda  titulus,
-    constans MateriaNodus* elementum)
-{
-    si (parentis == HTML_ALIENUM_NULLUM)
-    {
-        si (chorda_aequalis_literis(titulus, "svg"))
-        {
-            redde HTML_ALIENUM_SVG;
-        }
-        si (chorda_aequalis_literis(titulus, "math"))
-        {
-            redde HTML_ALIENUM_MATHEMATICA;
-        }
-        redde HTML_ALIENUM_NULLUM;
-    }
-    si (parentis == HTML_ALIENUM_SVG)
-    {
-        si (   chorda_aequalis_literis(titulus, "foreignObject")
-            || chorda_aequalis_literis(titulus, "desc")
-            || chorda_aequalis_literis(titulus, "title"))
-        {
-            redde HTML_ALIENUM_NULLUM;
-        }
-        redde HTML_ALIENUM_SVG;
-    }
-    si (   chorda_aequalis_literis(titulus, "mi")
-        || chorda_aequalis_literis(titulus, "mo")
-        || chorda_aequalis_literis(titulus, "mn")
-        || chorda_aequalis_literis(titulus, "ms")
-        || chorda_aequalis_literis(titulus, "mtext"))
-    {
-        redde HTML_ALIENUM_NULLUM;
-    }
-    si (   chorda_aequalis_literis(titulus, "annotation-xml")
-        && elementum != NIHIL && _encoding_html(elementum))
-    {
-        redde HTML_ALIENUM_NULLUM;
-    }
-    redde HTML_ALIENUM_MATHEMATICA;
-}
-
-/* Titulus attributi coctus: minusculus; in alienis praefixa
- * 'xlink:' 'xml:' 'xmlns:' in spatia nominum ('xlink href'), 'xmlns'
- * nudum 'xmlns xmlns'. */
+/* Titulus attributi coctus: minusculus, in alienis accommodatus
+ * (svg camelCase, definitionURL, praefixa spatiorum). */
 interior chorda
 _titulus_attributi (
         Piscina* piscina,
          chorda  crudus,
-    HtmlAlienum  alienum)
+    HtmlAlienum  proprium)
 {
-    chorda minusculus = _copia_minuscula(piscina, crudus);
-
-    si (alienum == HTML_ALIENUM_NULLUM || minusculus.datum == NIHIL)
-    {
-        redde minusculus;
-    }
-    si (chorda_aequalis_literis(minusculus, "xmlns"))
-    {
-        redde _copia_literis(piscina, "xmlns xmlns");
-    }
-    si (   _incipit_literis(minusculus, "xlink:")
-        || _incipit_literis(minusculus, "xml:")
-        || _incipit_literis(minusculus, "xmlns:"))
-    {
-        i32 i;
-
-        per (i = ZEPHYRUM; i < minusculus.mensura; i++)
-        {
-            si (minusculus.datum[i] == ':')
-            {
-                minusculus.datum[i] = ' ';
-                frange;
-            }
-        }
-    }
-    redde minusculus;
+    redde html_alienum_attributum(piscina, _copia_minuscula(piscina,
+        crudus), proprium);
 }
 
 
@@ -834,6 +631,7 @@ _liberos_scribere (
     constans MateriaNodus* nodus,
                       i32  locus,
                       i32  gradus,
+              HtmlAlienum  parentis,
               HtmlAlienum  alienum,
                       b32  lf_demendum,
                       b32  decoquendum);
@@ -843,6 +641,7 @@ _elementum_scribere (
                  Scriptor* s,
     constans MateriaNodus* e,
                       i32  gradus,
+              HtmlAlienum  parentis,
               HtmlAlienum  alienum)
 {
     MateriaToken* apertura = _tok(e, (i32)HTML_ELEMENTUM_TOK_APERTURA);
@@ -863,21 +662,11 @@ _elementum_scribere (
         crudus.datum    = crudus.datum + I;
         crudus.mensura  = crudus.mensura - I;
     }
-    titulus = html_coctum_titulus(s->piscina, crudus, alienum);
-    /* spatium nominum PROPRIUM: svg/math ipsa alieni sunt, non solum
-     * liberi eorum ('<svg svg>') */
-    proprium = alienum;
-    si (alienum == HTML_ALIENUM_NULLUM)
-    {
-        si (chorda_aequalis_literis(titulus, "svg"))
-        {
-            proprium = HTML_ALIENUM_SVG;
-        }
-        alioquin si (chorda_aequalis_literis(titulus, "math"))
-        {
-            proprium = HTML_ALIENUM_MATHEMATICA;
-        }
-    }
+    /* spatium PROPRIUM ex parente (svg/math ipsa aliena: '<svg svg>';
+     * mglyph in mi MathML), titulus svg accommodatus in eo */
+    titulus   = _copia_minuscula(s->piscina, crudus);
+    proprium  = html_alienum_proprium(parentis, alienum, titulus);
+    titulus   = html_alienum_titulus(s->piscina, titulus, proprium);
     _lineam_incipere(s, gradus);
     chorda_aedificator_appendere_character(s->aed, '<');
     si (proprium == HTML_ALIENUM_SVG)
@@ -892,7 +681,7 @@ _elementum_scribere (
     chorda_aedificator_appendere_character(s->aed, '>');
     _attributa_scribere(s, e, gradus + I, proprium);
 
-    liberorum = html_coctum_alienum_liberorum(alienum, titulus, e);
+    liberorum = html_alienum_liberorum(proprium, titulus, e);
     lf =(b32)(alienum == HTML_ALIENUM_NULLUM
                && (chorda_aequalis_literis(titulus, "pre")
                    || chorda_aequalis_literis(titulus, "listing")
@@ -909,7 +698,7 @@ _elementum_scribere (
         gradus = gradus + I;
     }
     _liberos_scribere(s, e, (i32)HTML_ELEMENTUM_LIBERI, gradus + I,
-        liberorum, lf, decoquendum);
+        proprium, liberorum, lf, decoquendum);
 }
 
 interior vacuum
@@ -918,6 +707,7 @@ _liberos_scribere (
     constans MateriaNodus* nodus,
                       i32  locus,
                       i32  gradus,
+              HtmlAlienum  parentis,
               HtmlAlienum  alienum,
                       b32  lf_demendum,
                       b32  decoquendum)
@@ -991,7 +781,8 @@ _liberos_scribere (
                 (b32)(lf_demendum && cumulus_primus));
             si (liber->genus == (s32)HTML_GENUS_ELEMENTUM)
             {
-                _elementum_scribere(s, liber, gradus, alienum);
+                _elementum_scribere(s, liber, gradus, parentis,
+                    alienum);
             }
             alioquin si (   liber->genus == (s32)HTML_GENUS_COMMENTARIUM
                          && tok          != NIHIL)
@@ -1034,6 +825,7 @@ chorda
 html_coctum_scribere (
                   Piscina* piscina,
     constans MateriaNodus* radix,
+              HtmlAlienum  parentis,
               HtmlAlienum  alienum)
 {
     Scriptor s;
@@ -1053,7 +845,7 @@ html_coctum_scribere (
     }
     locus = (radix->genus == (s32)HTML_GENUS_DOCUMENTUM)
           ? (i32)HTML_DOCUMENTUM_LIBERI : (i32)HTML_ELEMENTUM_LIBERI;
-    _liberos_scribere(&s, radix, locus, ZEPHYRUM, alienum, FALSUM,
-        FALSUM);
+    _liberos_scribere(&s, radix, locus, ZEPHYRUM, parentis, alienum,
+        FALSUM, FALSUM);
     redde chorda_aedificator_finire(s.aed);
 }

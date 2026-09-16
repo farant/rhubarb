@@ -28,40 +28,18 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "materia_nodus.h"
-
-/* Contentum alienum (HTML5 'foreign content') in quo elementum vivit */
-nomen enumeratio {
-    HTML_ALIENUM_NULLUM = 0,
-    HTML_ALIENUM_SVG,
-    HTML_ALIENUM_MATHEMATICA
-} HtmlAlienum;
-
-/* Contentum liberorum elementi 'titulus' (minusculus, svg accommodatus)
- * in contento 'parentis': svg/math aperiunt, puncta integrationis
- * HTML claudunt (annotation-xml cum encoding text/html aut
- * application/xhtml+xml; elementum NIHIL = sine attributis). */
-HtmlAlienum
-html_coctum_alienum_liberorum (
-              HtmlAlienum  parentis,
-                   chorda  titulus,
-    constans MateriaNodus* elementum);
-
-/* Titulus tagi minusculus (svg camelCase accommodatus si alienum
- * SVG); copia in piscina. */
-chorda
-html_coctum_titulus (
-        Piscina* piscina,
-         chorda  crudus,
-    HtmlAlienum  alienum);
+#include "html_alienum.h"
 
 /* Liberos radicis (documentum aut elementum) gradu ZEPHYRUM scribere;
- * alienum = contentum contextus (fragmentum in 'svg path' etc.).
+ * parentis/alienum = spatium proprium et liberorum contextus
+ * (fragmentum in 'svg path': SVG, SVG; 'math mi': MATHEMATICA, NULLUM).
  * Chorda lineis '\n' separatis, sine '\n' ultimo; vacua si nulli
  * liberi. datum NIHIL = memoria deficit. */
 chorda
 html_coctum_scribere (
                   Piscina* piscina,
     constans MateriaNodus* radix,
+              HtmlAlienum  parentis,
               HtmlAlienum  alienum);
 
 #endif /* HTML_COCTUM_H */
