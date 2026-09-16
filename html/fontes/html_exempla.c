@@ -301,3 +301,39 @@ html_exempla_legere (
     }
     redde exitus;
 }
+
+vacuum
+html_exempla_contextus (
+        Piscina* piscina,
+         chorda  contextus,
+    HtmlAlienum* spatium,
+         chorda* titulus)
+{
+    HtmlAlienum s = HTML_ALIENUM_NULLUM;
+         chorda t = contextus;
+            i32 i;
+
+    per (i = ZEPHYRUM; i < contextus.mensura; i++)
+    {
+        si (contextus.datum[i] == ' ')
+        {
+            chorda primum;
+
+            primum.datum    = contextus.datum;
+            primum.mensura  = i;
+            si (chorda_aequalis_literis(primum, "svg"))
+            {
+                s = HTML_ALIENUM_SVG;
+            }
+            alioquin si (chorda_aequalis_literis(primum, "math"))
+            {
+                s = HTML_ALIENUM_MATHEMATICA;
+            }
+            t.datum    = contextus.datum + i + I;
+            t.mensura  = contextus.mensura - i - I;
+            frange;
+        }
+    }
+    *spatium = s;
+    *titulus = html_alienum_titulus(piscina, t, s);
+}

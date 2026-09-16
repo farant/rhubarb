@@ -21,6 +21,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "html_alienum.h"
 
 /* '#script-on' / '#script-off'; sine sectione script-off valet */
 enumeratio {
@@ -61,5 +62,18 @@ html_exempla_legere (
                Piscina* piscina,
     constans character* fons,
                    i32  mensura);
+
+/* Contextus fragmenti html5lib ('td', 'svg desc', 'math ms') in
+ * spatium (svg/math/nullum) et titulum elementi scindere; titulus
+ * svg accommodatus (html_alienum_titulus: 'foreignobject' ->
+ * 'foreignObject'), in piscina copiatus. Pro aedificatore
+ * (html_arbor_parsare_fragmentum) et visione cocta (liberorum ex
+ * html_alienum_liberorum). */
+vacuum
+html_exempla_contextus (
+        Piscina* piscina,
+         chorda  contextus,
+    HtmlAlienum* spatium,
+         chorda* titulus);
 
 #endif /* HTML_EXEMPLA_H */

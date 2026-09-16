@@ -204,33 +204,10 @@ _alienum_contextus (
     HtmlAlienum* liberorum,
          chorda* titulus_contextus)
 {
-    HtmlAlienum spatium = HTML_ALIENUM_NULLUM;
-         chorda titulus = contextus;
-            i32 i;
+    HtmlAlienum spatium;
+         chorda titulus;
 
-    per (i = ZEPHYRUM; i < contextus.mensura; i++)
-    {
-        si (contextus.datum[i] == ' ')
-        {
-            chorda primum;
-
-            primum.datum    = contextus.datum;
-            primum.mensura  = i;
-            si (chorda_aequalis_literis(primum, "svg"))
-            {
-                spatium = HTML_ALIENUM_SVG;
-            }
-            alioquin si (chorda_aequalis_literis(primum, "math"))
-            {
-                spatium = HTML_ALIENUM_MATHEMATICA;
-            }
-            titulus.datum    = contextus.datum + i + I;
-            titulus.mensura  = contextus.mensura - i - I;
-            frange;
-        }
-    }
-    titulus = html_alienum_titulus(piscina, titulus,
-        spatium);
+    html_exempla_contextus(piscina, contextus, &spatium, &titulus);
     *parentis = spatium;
     *liberorum = html_alienum_liberorum(spatium, titulus,
         NIHIL);

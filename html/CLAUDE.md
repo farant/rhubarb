@@ -27,7 +27,7 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   (54 rules, seal `a69b019f` pinned — moved from `0ae63151` by O7a);
   `html_computus` + `./html/computus.sh` + `./html/arbor.sh`; pythonica
   `PORTAE['html']`, `silva.metiri('.html')`.
-- **Gates (10, `./html/compile_probationes.sh`, every one born red):**
+- **Gates (14, `./html/compile_probationes.sh`, every one born red):**
   registrum · adaptare (byte coverage) · arbor (byte oracle + absent-slot
   rows; structure cases run as a `body` FRAGMENT, wrappers and
   synthesis in document mode) · corpus (14 files, 162,775 bytes,
@@ -48,9 +48,16 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   1,112 after O4, 1,189 after O5, 1,195 after O6, 1,299 after O7a — of
   1,700, fragments 131/184; `ORACULUM_OMNIA=1`,
   `ORACULUM_EXEMPLUM=tests1.dat:20`) · alienum (the shared SVG/MathML
-  namespace tables `html_alienum`, 28). The runner compiles
-  `materia/fontes` and `md/fontes` into `html/build/` — consumed,
-  never contained.
+  namespace tables `html_alienum`, 28) · **circuitus** (Fran's
+  question, 2026-09-15: the WHOLE html5lib corpus through the byte law
+  and the STML cycle — every one of the 1,708 cases, script-on
+  included, fragments through the fragment entry: direct emission
+  byte-identical to the input for ALL; the two-cycle STML round trip
+  with comparator and re-read emission identical for 1,672, the 36
+  others refused by the STML writer for NUL bytes — pinned BY CAUSE,
+  the raw-form limit 01M2KPJ0HW; any other cause is a failure). The
+  runner compiles `materia/fontes` and `md/fontes` into `html/build/`
+  — consumed, never contained.
 - **What it found:** in itself, one byte-order bug (a pending close
   taking a later `>`; totality, H8). In the substrate, ZERO changes
   forced (css 4, oratio 5) and two measurements: the raw-form limit

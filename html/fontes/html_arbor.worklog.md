@@ -468,3 +468,19 @@ What the first run taught, in order:
 Numbers: 1,195 → 1,299 of 1,700 (76 %), fragments 85 → 131; 106 rises,
 2 named regressions. Zero substrate changes, again. Next: O7b — table
 modes and `sedes`.
+
+## 2026-09-15 — the whole corpus through the round trip
+
+Fran asked whether the html5lib corpus was going through the byte
+round trip. It was not: the oracle compared cooked views only, and the
+byte law and the STML cycle ran on fourteen pages and thirty inline
+cases. `probatio_html_circuitus` now pushes all 1,708 cases (fragments
+through the fragment entry with their context, script-on included)
+through direct emission and then the full STML cycle. First run: 1,708
+of 1,708 byte-identical; 1,672 STML-identical; the 36 others are the
+NUL-bearing cases the STML writer refuses (`valor lexematis NUL fert`),
+pinned by cause against the raw-form limit 01M2KPJ0HW — when materia
+grows its escaped fallback, that pin goes red and the cases promote.
+No closing-sequence refusal in the corpus, no other cause. 0.3 s. The
+O7b and O7c annotations will be proven here rather than on cases I
+chose.

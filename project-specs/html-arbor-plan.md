@@ -1039,6 +1039,18 @@ tasks, one commit each, under the same Global Constraints.
     131.** Two named regressions (both `sedes`, O7b): comment after
     `</body>` (tests18 #34), head content after `</head>` (tests7 #4).
     Plant: `tbody` synthesis removed → arbor red.
+  - [x] **Corpus round-trip gate `probatio_html_circuitus`**
+    (2026-09-15, Fran's question after O7a): the whole html5lib
+    corpus through the byte law and the STML cycle — 1,708 of 1,708
+    byte-identical on direct emission (fragments through the fragment
+    entry, script-on included); STML cycle identical for 1,672, the 36
+    NUL-bearing cases refused by the STML writer and pinned BY CAUSE
+    (raw-form limit 01M2KPJ0HW; when materia falls back, the pin goes
+    red and they promote), 0 closing-sequence refusals, any other
+    cause red. `html_exempla_contextus` shared by oracle and gate.
+    Every later annotation (`sedes`, `exemplar`) is proven here, not on
+    hand-picked cases. Plant: an invented element pushed but not
+    appended → red.
   - [ ] **O7b — table modes + `sedes`** (foster parenting, table scope,
     the two O7a regressions, `<table><div>` before the table, text in
     tables, `</body>` comments to html, head content after `</head>`
