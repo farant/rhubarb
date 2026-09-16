@@ -16,6 +16,7 @@
 
 #include "crusta_arbor.h"
 #include "crusta_lector.h"
+#include "crusta_arithmetica.h"
 #include "crusta_lexicon.h"
 #include "materia_lexicon.h"
 #include "materia_token.h"
@@ -40,6 +41,15 @@ nomen structura {
              s32 divisor;
     /* substitutio backtick: regio aperta */
              b32 gravis;
+    /* arithmetica ($((, ((, inclusa): machina; folia ei dantur */
+    CrustaArithmetica* machina;
+    /* variabilis ultima (subscriptum sequens) */
+    MateriaNodus* variabile;
+    /* $((: lexema aperturae, situs ante id, prior ligatoris
+     * (reversio) */
+     MateriaToken* apertura;
+      CrustaSitus  situs_initii;
+     MateriaToken* prior_antea;
 } Gradus;
 
 nomen structura {
@@ -49,6 +59,7 @@ nomen structura {
                          Xar* gradus;       /* Gradus per valorem */
                          Xar* pendentia;    /* MateriaToken* trivia */
                 MateriaToken* prior;
+                MateriaToken* prior_antea;   /* prior ante prior */
     constans CrustaDialectus* dialectus;
                CrustaParsura* relatio;
                          b32  memoria_defecit;
@@ -223,7 +234,8 @@ _solvere (
 
     si (numerus == ZEPHYRUM)
     {
-        p->prior = sequens;
+        p->prior_antea  = p->prior;
+        p->prior        = sequens;
         redde VERUM;
     }
     plana = (MateriaToken**)piscina_allocare_ordinatum(p->piscina,
@@ -270,7 +282,8 @@ _solvere (
         }
     }
     xar_vacare(p->pendentia);
-    p->prior = sequens;
+    p->prior_antea  = p->prior;
+    p->prior        = sequens;
     redde VERUM;
 }
 
@@ -294,7 +307,17 @@ _sententia_est (
 {
     redde genus == (s32)CRUSTA_GENUS_IMPERIUM
         || genus == (s32)CRUSTA_GENUS_PIPA
-        || genus == (s32)CRUSTA_GENUS_CATENA;
+        || genus == (s32)CRUSTA_GENUS_CATENA
+        || genus == (s32)CRUSTA_GENUS_ARITHMETICA;
+}
+
+/* compositum clausum (post lexema clausurae): redirectiones
+ * exspectat */
+interior b32
+_compositum_clausum (
+    constans Gradus* g)
+{
+    redde g->genus == (s32)CRUSTA_GENUS_ARITHMETICA && g->status == II;
 }
 
 /* genera quorum clausura absens numeranda est: locus clausurae */
@@ -316,9 +339,41 @@ _locus_clausurae (
             redde (s32)CRUSTA_TABULATUM_TOK_CLAUSURA;
         casus CRUSTA_GENUS_PARS_PARAMETRUM:
             redde (s32)CRUSTA_PARAMETRUM_TOK_TITULUS;
+        casus CRUSTA_GENUS_PARS_ARITHMETICA:
+            redde (s32)CRUSTA_PARS_ARITHMETICA_TOK_CLAUSURA;
+        casus CRUSTA_GENUS_ARITHMETICA:
+            redde (s32)CRUSTA_ARITHMETICA_TOK_CLAUSURA;
+        casus CRUSTA_GENUS_INCLUSA:
+            redde (s32)CRUSTA_INCLUSA_TOK_CLAUSURA;
         ordinarius:
             redde (s32)-I;
     }
+}
+
+/* machinam gradus finire: expressio in locum, mala numerata */
+interior b32
+_machinam_finire (
+    Aedificatio* p,
+         Gradus* g)
+{
+    MateriaNodus* e = crusta_arithmetica_finire(g->machina);
+             i32  locus = g->genus == (s32)CRUSTA_GENUS_INCLUSA
+                 ? (i32)CRUSTA_INCLUSA_EXPRESSIO
+                 : g->genus == (s32)CRUSTA_GENUS_PARS_ARITHMETICA
+                 ? (i32)CRUSTA_PARS_ARITHMETICA_EXPRESSIO
+                 : (i32)CRUSTA_ARITHMETICA_EXPRESSIO;
+
+    si (p->relatio != NIHIL)
+    {
+        p->relatio->mala += g->machina->mala;
+    }
+    g->machina = NIHIL;
+    si (e == NIHIL)
+    {
+        redde VERUM;   /* expressio vacua: locus absens */
+    }
+    redde materia_nodus_ponere(g->nodus, locus, materia_valor_nodus(e),
+        MATERIA_LOCUS_NODUS);
 }
 
 /* gradum verticis claudere: nodum gradui infra dare */
@@ -341,12 +396,25 @@ _claudere (
     {
         p->relatio->clausurae_absentes++;
     }
+    si (g->machina != NIHIL && !_machinam_finire(p, g))
+    {
+        redde FALSUM;
+    }
     parens = _infra(p, I);
     si (parens == NIHIL)
     {
         redde FALSUM;   /* programma numquam clauditur hac via */
     }
-    si (!_nodum_dare(p, parens->nodus, parens->locus, g->nodus))
+    si (parens->machina != NIHIL)
+    {
+        /* folium arithmeticae: operandum machinae parentis */
+        si (!crusta_arithmetica_operandum(parens->machina, g->nodus))
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (!_nodum_dare(p, parens->nodus, parens->locus,
+                 g->nodus))
     {
         redde FALSUM;
     }
@@ -672,7 +740,8 @@ _catena (
         redde FALSUM;
     }
     g = _vertex(p);
-    si (g->genus == (s32)CRUSTA_GENUS_IMPERIUM)
+    si (   g->genus == (s32)CRUSTA_GENUS_IMPERIUM
+        || _compositum_clausum(g))
     {
         res  = _tollere(p);
         g    = _vertex(p);
@@ -719,7 +788,8 @@ _pipa (
         redde FALSUM;
     }
     g = _vertex(p);
-    si (g->genus == (s32)CRUSTA_GENUS_IMPERIUM)
+    si (   g->genus == (s32)CRUSTA_GENUS_IMPERIUM
+        || _compositum_clausum(g))
     {
         res  = _tollere(p);
         g    = _vertex(p);
@@ -910,8 +980,9 @@ _redirectio_incipere (
         {
             redde FALSUM;
         }
+        g = _vertex(p);
     }
-    si (!_imperium_aperire(p))
+    si (!_compositum_clausum(g) && !_imperium_aperire(p))
     {
         redde FALSUM;
     }
@@ -944,8 +1015,6 @@ _pars_simplex (
     commutatio (genus_lexematis)
     {
         casus CRUSTA_LEX_LITTERALIS:
-        /* P3: litteralis (intermedium nominatum) */
-        casus CRUSTA_LEX_ARITHMETICA_PARTIS_APERTURA:
             *genus_partis = (s32)CRUSTA_GENUS_PARS_LITTERALIS;
             redde VERUM;
         casus CRUSTA_LEX_EFFUGIUM:
@@ -981,6 +1050,8 @@ _pars_est (
         || genus_lexematis == (s32)CRUSTA_LEX_SUBSTITUTIO_APERTURA
         || genus_lexematis == (s32)CRUSTA_LEX_GRAVIS
         || genus_lexematis == (s32)CRUSTA_LEX_PROCESSUS_APERTURA
+        || genus_lexematis
+            == (s32)CRUSTA_LEX_ARITHMETICA_PARTIS_APERTURA
         || genus_lexematis == (s32)CRUSTA_LEX_PARAMETRUM_SIGILLUM;
 }
 
@@ -1015,7 +1086,7 @@ _verbum_parare (
         }
         g = _vertex(p);
     }
-    si (_partes_directe(g->genus))
+    si (_partes_directe(g->genus) || g->machina != NIHIL)
     {
         redde VERUM;
     }
@@ -1082,7 +1153,14 @@ _partem_recipere (
         redde !p->memoria_defecit;
     }
     g = _vertex(p);
+    /* finis verbi = finis huius partis (pars composita eum in clausura
+     * renovat) */
+    _verbi_finem_ponere(p, _token_finis(t));
 
+    si (g->machina != NIHIL && _pars_simplex(t->genus, &genus_partis))
+    {
+        redde _malum(p, t);   /* octetus alienus in arithmetica */
+    }
     si (_pars_simplex(t->genus, &genus_partis))
     {
         pars = _nodus(p, genus_partis);
@@ -1146,6 +1224,35 @@ _partem_recipere (
             }
             redde _pellere(p, pars, (i32)CRUSTA_SUBSTITUTIO_LIBERI,
                 CRUSTA_MODUS_INITIUM) != NIHIL;
+        casus CRUSTA_LEX_ARITHMETICA_PARTIS_APERTURA:
+        {
+                       Gradus* novus;
+            CrustaArithmetica* m;
+
+            pars = _nodus(p, (s32)CRUSTA_GENUS_PARS_ARITHMETICA);
+            m = (CrustaArithmetica*)piscina_allocare(p->piscina,
+                (memoriae_index)magnitudo(CrustaArithmetica));
+            si (   pars == NIHIL || m == NIHIL
+                || !_token_ponere(pars,
+                    (i32)CRUSTA_PARS_ARITHMETICA_TOK_APERTURA, t))
+            {
+                redde FALSUM;
+            }
+            crusta_arithmetica_incipere(m, p->piscina, p->dialectus);
+            novus = _pellere(p, pars,
+                (i32)CRUSTA_PARS_ARITHMETICA_EXPRESSIO,
+                CRUSTA_MODUS_ARITHMETICA_SUMMA);
+            si (novus == NIHIL)
+            {
+                redde FALSUM;
+            }
+            novus->machina = m;
+            novus->apertura = t;
+            novus->prior_antea = p->prior_antea;
+            novus->situs_initii = crusta_lector_situs(&p->lector);
+            novus->situs_initii.cursor = t->byte_offset;
+            redde VERUM;
+        }
         casus CRUSTA_LEX_GRAVIS:
         {
                s32  finis;
@@ -1275,6 +1382,189 @@ _expansio (
 
 
 /* ==================================================
+ * Arithmetica in aedificatore
+ * ================================================== */
+
+/* '$((' recusatum (bash: substitutio imperii temptatur): gradus ad
+ * partem arithmeticam sublati, situs repositus, lexema '$((' ut '$('
+ * '(' relegendum; trivia aperturae in pendentia redeunt */
+interior b32
+_arithmeticam_recusare (
+    Aedificatio* p)
+{
+         Gradus* g;
+    CrustaSitus  s;
+            i32  j;
+
+    dum (   (g = _vertex(p)) != NIHIL
+         && g->genus         != (s32)CRUSTA_GENUS_PARS_ARITHMETICA)
+    {
+        xar_removere_ultimum(p->gradus);
+    }
+    si (g == NIHIL)
+    {
+        redde FALSUM;
+    }
+    s                       = g->situs_initii;
+    s.arithmetica_recusata  = g->apertura->byte_offset;
+    crusta_lector_situm_reponere(&p->lector, s);
+    xar_vacare(p->pendentia);
+    per (j = ZEPHYRUM; j < g->apertura->numerus_ante; j++)
+    {
+        si (!_cumulare(p, g->apertura->spatia_ante[j]))
+        {
+            redde FALSUM;
+        }
+    }
+    p->prior = g->prior_antea;
+    {
+        MateriaToken* apertura = g->apertura;
+
+        xar_removere_ultimum(p->gradus);
+        /* verbum infra: '$(' relectum ei adiacens */
+        g = _vertex(p);
+        si (g != NIHIL && g->genus == (s32)CRUSTA_GENUS_VERBUM)
+        {
+            g->verbi_finis = apertura->byte_offset;
+        }
+    }
+    redde VERUM;
+}
+
+/* '))' : machina finita, clausura posita */
+interior b32
+_arithmeticam_claudere (
+     Aedificatio* p,
+          Gradus* g,
+    MateriaToken* t)
+{
+    si (!_machinam_finire(p, g))
+    {
+        redde FALSUM;
+    }
+    si (g->genus == (s32)CRUSTA_GENUS_PARS_ARITHMETICA)
+    {
+        si (!_token_ponere(g->nodus,
+                (i32)CRUSTA_PARS_ARITHMETICA_TOK_CLAUSURA, t))
+        {
+            redde FALSUM;
+        }
+        redde _partem_claudere(p, t);
+    }
+    /* imperium (( )): clausum, redirectiones exspectat, sententia
+     * pendens manet */
+    si (!_token_ponere(g->nodus, (i32)CRUSTA_ARITHMETICA_TOK_CLAUSURA,
+        t))
+    {
+        redde FALSUM;
+    }
+    g->status  = II;
+    g->locus   = (i32)CRUSTA_ARITHMETICA_REDIRECTIONES;
+    g->modus   = CRUSTA_MODUS_VERBA;
+    redde VERUM;
+}
+
+/* lexemata in gradu cum machina; *tractatum FALSUM = lexema
+ * aedificatori communi relinquitur (partes) */
+interior b32
+_arithmeticam_tractare (
+     Aedificatio* p,
+          Gradus* g,
+    MateriaToken* t,
+             b32* tractatum)
+{
+    MateriaNodus* n;
+
+    *tractatum = VERUM;
+    commutatio (t->genus)
+    {
+        casus CRUSTA_LEX_NUMERUS:
+            n = _nodus(p, (s32)CRUSTA_GENUS_NUMERUS);
+            si (   n == NIHIL
+                || !_token_ponere(n, (i32)CRUSTA_NUMERUS_TOK, t))
+            {
+                redde FALSUM;
+            }
+            g->variabile = NIHIL;
+            redde crusta_arithmetica_operandum(g->machina, n);
+        casus CRUSTA_LEX_VARIABILIS:
+            n = _nodus(p, (s32)CRUSTA_GENUS_VARIABILIS);
+            si (   n == NIHIL
+                || !_token_ponere(n, (i32)CRUSTA_VARIABILIS_TOK_TITULUS,
+                t))
+            {
+                redde FALSUM;
+            }
+            g->variabile = n;
+            redde crusta_arithmetica_operandum(g->machina, n);
+        casus CRUSTA_LEX_SUBSCRIPTUM:
+            si (   g->variabile != NIHIL
+                && _absens(g->variabile,
+                (i32)CRUSTA_VARIABILIS_TOK_SUBSCRIPTUM))
+            {
+                redde _token_ponere(g->variabile,
+                    (i32)CRUSTA_VARIABILIS_TOK_SUBSCRIPTUM, t);
+            }
+            redde _malum(p, t);
+        casus CRUSTA_LEX_ARITHMETICA_OPERATOR:
+            g->variabile = NIHIL;
+            redde crusta_arithmetica_operator(g->machina, t);
+        casus CRUSTA_LEX_PARENTHESIS:
+        {
+            CrustaArithmetica* m;
+                       Gradus* novus;
+
+            n = _nodus(p, (s32)CRUSTA_GENUS_INCLUSA);
+            m = (CrustaArithmetica*)piscina_allocare(p->piscina,
+                (memoriae_index)magnitudo(CrustaArithmetica));
+            si (   n == NIHIL || m == NIHIL
+                || !_token_ponere(n, (i32)CRUSTA_INCLUSA_TOK_APERTURA,
+                t))
+            {
+                redde FALSUM;
+            }
+            crusta_arithmetica_incipere(m, p->piscina, p->dialectus);
+            novus = _pellere(p, n, (i32)CRUSTA_INCLUSA_EXPRESSIO,
+                CRUSTA_MODUS_ARITHMETICA_INTRA);
+            si (novus == NIHIL)
+            {
+                redde FALSUM;
+            }
+            novus->machina = m;
+            redde VERUM;
+        }
+        casus CRUSTA_LEX_PARENTHESIS_CLAUSURA:
+            si (g->genus == (s32)CRUSTA_GENUS_INCLUSA)
+            {
+                si (!_token_ponere(g->nodus,
+                    (i32)CRUSTA_INCLUSA_TOK_CLAUSURA,
+                        t))
+                {
+                    redde FALSUM;
+                }
+                redde _claudere(p);
+            }
+            si (g->genus == (s32)CRUSTA_GENUS_PARS_ARITHMETICA)
+            {
+                redde _arithmeticam_recusare(p);
+            }
+            redde _malum(p, t);
+        casus CRUSTA_LEX_ARITHMETICA_CLAUSURA:
+            redde _arithmeticam_claudere(p, g, t);
+        casus CRUSTA_LEX_ARITHMETICA_SEPARATOR:
+            si (g->genus == (s32)CRUSTA_GENUS_PARS_ARITHMETICA)
+            {
+                redde _arithmeticam_recusare(p);
+            }
+            redde _malum(p, t);   /* cyclus: P5 */
+        ordinarius:
+            *tractatum = FALSUM;
+            redde VERUM;
+    }
+}
+
+
+/* ==================================================
  * Dispensatio
  * ================================================== */
 
@@ -1332,6 +1622,20 @@ _tractare (
         redde _partem_claudere(p, t);
     }
 
+    si (g->machina != NIHIL)
+    {
+        b32 tractatum;
+
+        si (!_arithmeticam_tractare(p, g, t, &tractatum))
+        {
+            redde FALSUM;
+        }
+        si (tractatum)
+        {
+            redde VERUM;
+        }
+    }
+
     si (_pars_est(t->genus))
     {
         redde _partem_recipere(p, t);
@@ -1339,6 +1643,37 @@ _tractare (
 
     commutatio (t->genus)
     {
+        casus CRUSTA_LEX_ARITHMETICA_APERTURA:
+        {
+            MateriaNodus* a;
+            CrustaArithmetica* m;
+            Gradus* novus;
+
+            si (   !_lista_est(g->genus)
+                && g->genus != (s32)CRUSTA_GENUS_CATENA
+                && g->genus != (s32)CRUSTA_GENUS_PIPA)
+            {
+                redde _malum(p, t);
+            }
+            a = _nodus(p, (s32)CRUSTA_GENUS_ARITHMETICA);
+            m = (CrustaArithmetica*)piscina_allocare(p->piscina,
+                (memoriae_index)magnitudo(CrustaArithmetica));
+            si (   a == NIHIL || m == NIHIL
+                || !_token_ponere(a,
+                (i32)CRUSTA_ARITHMETICA_TOK_APERTURA, t))
+            {
+                redde FALSUM;
+            }
+            crusta_arithmetica_incipere(m, p->piscina, p->dialectus);
+            novus = _pellere(p, a, (i32)CRUSTA_ARITHMETICA_EXPRESSIO,
+                CRUSTA_MODUS_ARITHMETICA_SUMMA);
+            si (novus == NIHIL)
+            {
+                redde FALSUM;
+            }
+            novus->machina = m;
+            redde VERUM;
+        }
         casus CRUSTA_LEX_SEPARATOR:
         casus CRUSTA_LEX_SEPARATOR_LINEAE:
             si (   g->genus == (s32)CRUSTA_GENUS_TABULATUM

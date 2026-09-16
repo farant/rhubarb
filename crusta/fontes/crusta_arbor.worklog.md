@@ -54,3 +54,37 @@ put `#define`s between functions.
 **Named intermediates in P3** (replaced by P4/P5): `$((` is a literal
 part and its `))` become mala; reserved words other than `!` and `time`
 are mala; `(` at command position is a malum; `[[`, `((` are mala.
+
+## 2026-09-16 — P4 (arithmetic)
+
+**A missing operand is the one the machine was expecting.** `$((1 +))`
+first came out as `binaria(∅, +, 1)` and emitted `$(( +1))`: the
+reduction popped the only operand as the RIGHT one. Now a reduction
+forced while an operand is still expected (a trailing operator, or an
+operator arriving right after another) takes its right operand as
+absent, so `1 + * 2` becomes `binaria(binaria(1,+,∅), *, 2)` and the
+bytes stay in order. Totality and the byte law together decide which
+side is missing; validity is a separate count (`mala`).
+
+**A completed ternary reduces when the outer colon arrives.**
+`1?0?4:5:6`: after `4:5` the inner ternary holds its colon and waits
+for a right operand; the second `:` belongs to the outer `?`, so the
+loop reduces a colon-bearing ternary on top before attaching. A `?`
+arriving over a completed ternary is NOT reduced (right-assoc:
+`a ? b : c ? d : e`).
+
+**`$((` refused = rewind, not repair.** bash tries arithmetic and, on
+failure, re-parses as `$( (`. The builder drops the frames above and
+including the `pars-arithmetica`, rewinds the lector to the opener's
+offset with `situs.arithmetica_recusata` set (the lector then emits
+`$(` for those bytes), pushes the opener's `ante` trivia back into the
+ligator's pending list, restores `prior`, and sets the enclosing
+word's adjacency to the opener's offset so the re-lexed `$(` joins the
+same word. Tokens lexed inside the abandoned attempt are garbage in
+the piscina; their bytes are re-read.
+
+**`(( ))` stays pending after `))`.** A compound command must still
+take redirections and be wrappable by `&&`/`|`, so its frame keeps
+status II ("clausum") with mode VERBA and its receiving locus set to
+`redirectiones`; the sentence-closing logic treats it like an
+imperium. P5 gives the same shape to every compound.

@@ -86,6 +86,9 @@ nomen structura {
     b32 titulus_exspectatur;   /* post PARAMETRUM_SIGILLUM */
     /* I post titulum, II post subscriptum */
     i32 assignationis_gradus;
+    /* offset '$((' ab aedificatore RECUSATI (reversio: ut '$(' '('
+     * relegendum); -I nullus */
+    s32 arithmetica_recusata;
 } CrustaSitus;
 
 nomen structura {

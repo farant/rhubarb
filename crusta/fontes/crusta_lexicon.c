@@ -162,9 +162,53 @@ hic_manens constans character* constans OPTIONUM_TERMINI_BASH[] = {
     ";;", ";&", ";;&", NIHIL
 };
 
-/* impletur in P4 (crusta_arithmetica): tabula vacua interim */
+/* operatores arithmetici bash 5.2 (spec par. VI): XVI gradus,
+ * praecedentia maior artius ligat; praeposita ARTIUS quam '**'
+ * (-2**2 = 4, mensuratum); '**', ternaria, assignationes dextrae.
+ * XLI ordines, titulo NIHIL terminati. */
 hic_manens constans CrustaOperator ARITHMETICI_BASH[] = {
-    { NIHIL, ZEPHYRUM, FALSUM, CRUSTA_OPERATOR_BINARIUS }
+    { "++",  (i32)XVI,  FALSUM, CRUSTA_OPERATOR_POSTPOSITUS },
+    { "--",  (i32)XVI,  FALSUM, CRUSTA_OPERATOR_POSTPOSITUS },
+    { "++",  (i32)XV,   VERUM,  CRUSTA_OPERATOR_PRAEPOSITUS },
+    { "--",  (i32)XV,   VERUM,  CRUSTA_OPERATOR_PRAEPOSITUS },
+    { "!",   (i32)XV,   VERUM,  CRUSTA_OPERATOR_PRAEPOSITUS },
+    { "~",   (i32)XV,   VERUM,  CRUSTA_OPERATOR_PRAEPOSITUS },
+    { "+",   (i32)XV,   VERUM,  CRUSTA_OPERATOR_PRAEPOSITUS },
+    { "-",   (i32)XV,   VERUM,  CRUSTA_OPERATOR_PRAEPOSITUS },
+    { "**",  (i32)XIV,  VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "*",   (i32)XIII, FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "/",   (i32)XIII, FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "%",   (i32)XIII, FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "+",   (i32)XII,  FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "-",   (i32)XII,  FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "<<",  (i32)XI,   FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { ">>",  (i32)XI,   FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "<",   (i32)X,    FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "<=",  (i32)X,    FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { ">",   (i32)X,    FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { ">=",  (i32)X,    FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "==",  (i32)IX,   FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "!=",  (i32)IX,   FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "&",   (i32)VIII, FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "^",   (i32)VII,  FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "|",   (i32)VI,   FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "&&",  (i32)V,    FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "||",  (i32)IV,   FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { "?",   (i32)III,  VERUM,  CRUSTA_OPERATOR_TERNARIUS },
+    { ":",   (i32)III,  VERUM,  CRUSTA_OPERATOR_TERNARIUS },
+    { "=",   (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "*=",  (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "/=",  (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "%=",  (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "+=",  (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "-=",  (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "<<=", (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { ">>=", (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "&=",  (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "^=",  (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { "|=",  (i32)II,   VERUM,  CRUSTA_OPERATOR_BINARIUS },
+    { ",",   (i32)I,    FALSUM, CRUSTA_OPERATOR_BINARIUS },
+    { NIHIL, ZEPHYRUM,  FALSUM, CRUSTA_OPERATOR_BINARIUS }
 };
 
 hic_manens constans character* constans IUDICII_PRAEPOSITA_BASH[] = {

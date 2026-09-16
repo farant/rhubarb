@@ -789,7 +789,7 @@ constans CrustaOperator* crusta_arithmetica_quaerere (constans CrustaDialectus*,
                                                       CrustaOperatorSpecies species);
 ```
 
-- [ ] **Step 1: The operator table** (`CRUSTA_BASH.arithmetici`, measured on
+- [x] **Step 1: The operator table** (`CRUSTA_BASH.arithmetici`, measured on
   bash 5.2 — unary binds TIGHTER than `**`: `-2**2` is 4; `**` is right):
 
 | praecedentia | operators | species | dextra |
@@ -811,7 +811,7 @@ constans CrustaOperator* crusta_arithmetica_quaerere (constans CrustaDialectus*,
 | 2 | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` | BINARIUS | VERUM |
 | 1 | `,` | BINARIUS | |
 
-- [ ] **Step 2: Write the failing arithmetica gate** — (a) structure through
+- [x] **Step 2: Write the failing arithmetica gate** — (a) structure through
   `crusta_arbor_parsare` on `$(( … ))` sources: `1+2*3` → binaria(+, 1,
   binaria(*, 2, 3)); `2**3**2` right-nested; `-2**2` → binaria(**,
   praeposita(-, 2), 2); `a++ + ++b`; `x = y += 2` right; `1,2`; `c ? a :
@@ -844,9 +844,9 @@ hic_manens constans struct { constans character* fons; s64 valor; } AESTIMANDA[]
   `1/0`, `1%0`, `2**-1` → `aestimare` FALSUM; `$x+1` → FALSUM (not
   constant). Self-measure: rows evaluated == 43.
 
-- [ ] **Step 3: Run and verify it fails.**
+- [x] **Step 3: Run and verify it fails.**
 
-- [ ] **Step 4: Implement** — the machine: `operandum` pushes (and, when
+- [x] **Step 4: Implement** — the machine: `operandum` pushes (and, when
   the previous entry was a POSTPOSITUS candidate, nothing special: postfix
   is decided at `operator` time by `operandum_exspectatur == FALSUM`);
   `operator` looks the token up by species (`operandum_exspectatur` ? PRAEPOSITUS
@@ -870,12 +870,12 @@ hic_manens constans struct { constans character* fons; s64 valor; } AESTIMANDA[]
   P9), 64-bit wrapping arithmetic via `i64`/`s64` with explicit casts,
   division/modulo by zero and negative exponents refused.
 
-- [ ] **Step 5: Run and verify** — green; then the whole suite.
+- [x] **Step 5: Run and verify** — green; then the whole suite.
 
-- [ ] **Step 6: Plant** — swap the precedence of `*` and `+` in the table →
+- [x] **Step 6: Plant** — swap the precedence of `*` and `+` in the table →
   `1+2*3` red; revert.
 
-- [ ] **Step 7: Words, format, commit**
+- [x] **Step 7: Words, format, commit**
 
 ```python
 silva.commissio("crusta: arithmetica - machina praecedentiae (shunting-yard, XVI gradus bash: praeposita artius quam **), aestimator constans contra bash 5.2 (XLIII valores), $(( )) et (( )) in aedificatore, ambiguitas $(( per reversionem cursoris; porta arithmeticae (rubra nata: praecedentia * et + permutata)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",

@@ -446,7 +446,8 @@ _sigillum (
 {
     s32 c = _octetus(l, dollar + I);
 
-    si (c == '(' && _octetus(l, dollar + II) == '(')
+    si (   c      == '(' && _octetus(l, dollar + II) == '('
+        && dollar != l->situs.arithmetica_recusata)
     {
         redde _facere(l, (s32)CRUSTA_LEX_ARITHMETICA_PARTIS_APERTURA,
             dollar + III);
@@ -1363,6 +1364,7 @@ crusta_lector_incipere (
     lector->mensura = mensura;
     lector->dialectus = dialectus;
     lector->situs.linea = (i32)I;
+    lector->situs.arithmetica_recusata = (s32)-I;
     lector->delimitator_ab = (s32)-I;
     lector->delimitator_ad = (s32)-I;
     lector->forma.mensura_caudae = (i32)magnitudo(CrustaCauda);

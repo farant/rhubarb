@@ -18,7 +18,33 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P3 done)
+## Praesens status (2026-09-16 — P4 done)
+
+- **P4, arithmetic (`crusta_arithmetica.{h,c}`):** the precedence
+  machine (shunting-yard over two explicit stacks) that the BUILDER
+  drives: every frame with a `machina` (`pars-arithmetica`,
+  `arithmetica`, `inclusa`) hands leaves (`numerus`, `variabilis` with
+  a raw subscript, word parts `$x` `${…}` `$( )`) to it as operands
+  and `ARITHMETICA_OPERATOR` tokens as operators; closing a frame
+  gives its node to the parent's machine when the parent has one.
+  Table `CRUSTA_BASH.arithmetici`: 41 rows, 16 levels measured on
+  bash 5.2 (prefix binds TIGHTER than `**`: `-2**2` is 4; `**`,
+  ternary and assignments right-assoc). Totality: a missing operand
+  is an absent locus (`1 +`), `?` without `:` a ternary without colon,
+  `:` without `?` a binary. `$((` follows bash's rule: arithmetic
+  first, and on a `)` at depth zero or a `;` the frames are dropped,
+  the lector is rewound to the `$((` with `situs.arithmetica_recusata`
+  set so it re-lexes as `$(` + `(`, and the opener's trivia return to
+  the ligator. `(( ))` as a command is a sentence that stays pending
+  after `))` for redirections (`_compositum_clausum`), so `&&`/`|`
+  wrap it like an imperium. `crusta_arithmetica_aestimare` folds
+  constant trees with 64-bit wrapping. Gate `arithmetica`: structure
+  cases, the ambiguity both ways, 43 values from bash 5.2.15, six
+  refusals; born red by swapping the precedence of `*` and `+`.
+  Remaining intermediates for P5: `(` at command position, reserved
+  words other than `!`/`time`, `[[`, `;` inside `for ((`.
+
+## P3 (2026-09-16)
 
 - **P3, the builder part one (`crusta_arbor.{h,c}`):**
   `crusta_arbor_parsare(piscina, fons, mensura, dialectus, &relatio)` —

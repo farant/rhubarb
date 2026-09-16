@@ -670,8 +670,20 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (_tabula_habet(CRUSTA_BASH.redirectiones, "&>>"));
         CREDO_VERUM (_tabula_habet(CRUSTA_BASH.aedificatores, "local"));
         CREDO_VERUM (_tabula_habet(CRUSTA_BASH.iudicii_binaria, "=~"));
-        /* arithmetici: vacui usque ad P4 (tunc XLI) */
-        CREDO_NIHIL (CRUSTA_BASH.arithmetici[ZEPHYRUM].titulus);
+        /* arithmetici: XLI ordines (P4), praecedentiae in [I, XVI] */
+        {
+            s32 n = ZEPHYRUM;
+
+            dum (CRUSTA_BASH.arithmetici[n].titulus != NIHIL)
+            {
+                CREDO_VERUM (CRUSTA_BASH.arithmetici[n].praecedentia
+                    >= (i32)I);
+                CREDO_VERUM (CRUSTA_BASH.arithmetici[n].praecedentia
+                    <= (i32)XVI);
+                n++;
+            }
+            CREDO_AEQUALIS_S32 (n, (s32)XLI);
+        }
     }
 
 

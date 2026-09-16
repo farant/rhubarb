@@ -670,10 +670,9 @@ principale (vacuum)
     p = _casus(piscina, "`a", &r);
     CREDO_AEQUALIS_I32 (r.clausurae_absentes, (i32)I);
 
-    /* $ solus litteralis; '$((' interim pars litteralis, '))' mala
-     * (intermedium nominatum: P4 arithmeticam dat) */
+    /* $ solus litteralis; '$((1+1))' pars arithmetica (P4) */
     p = _casus(piscina, "echo $ $((1+1))", &r);
-    CREDO_AEQUALIS_I32 (r.mala, (i32)I);
+    CREDO_VERUM (r.sana);
 
 
     /* ==================================================
