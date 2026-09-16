@@ -174,3 +174,46 @@ suffix match on `plain-text-unsafe.dat` also caught the
 `pending-spec-changes-` file (fixed with a leading `/`), and twice I
 recorded the line of the content rather than the line of the `#data`
 heading above it. The reader passed first time.
+
+## 2026-09-15 — O2: the oracle's first number, 887 of 1,700
+
+`probatio_html_oraculum` parses every html5lib case, writes our tree
+through the cooked view (`html_coctum`) into html5lib's `| ` format,
+unwraps the synthesized html/head/body from the expected tree when
+the input never names them as start tags, and compares bytes. First
+honest number: 887/1,700 (52 %); fragments 77/184. Eight `#script-on`
+cases are skipped (the builder is scripting-off). Pinned rising at
+887, in 0.19 s.
+
+Two of my own bugs came out before pinning, both oracle-side: the
+`svg`/`math` element itself prints in its own namespace (`<svg svg>`),
+not only its descendants; and NUL is cooked (U+FFFD in raw text,
+foreign content, attributes and comments; dropped in ordinary body
+text, which is what "in body" does with it). 778 → 887.
+
+The unwrap rule held on inspection: `<b><table><td><i></table>`
+expects `b > table > tbody > tr > td > i` after unwrapping; ours is
+`b > table > td > i`. What is missing is exactly the `tbody`/`tr` that
+HTML5 invents, never the wrapper.
+
+The 813 failures by the shape of the first differing line:
+
+| class | cases | what it is |
+|---|---|---|
+| element differs | 242 | HTML5 synthesis the simple builder never does: `tbody`/`tr` in tables, adoption agency reopening formatting elements, `</p>` creating an empty `p` |
+| text differs | 127 | script-data escaping states (`<!--<script>…</script>` inside a script), legacy entities without `;` (`&gt`, `&notit;`), NUL in modes other than body |
+| same node, other depth | 118 | implied closes the builder's tables lack: `<head>` closed by `<body>` (tests1 #13), p-closers `dir listing summary center dialog search xmp plaintext` (blocks.dat #15/#33/#45) |
+| foreign | 81 | SVG/MathML attribute adjustments (`viewBox`, `definitionURL`), HTML elements breaking out of foreign content, CDATA at integration points |
+| other | 68 | mixed |
+| entities | 28 | md's 57-entry named table against HTML's 2,231 |
+| comments | 17 | `--!>` closing, bogus comments cut at EOF |
+| attributes | 13 | legacy entities in values |
+| (unclassified rest) | 119 | printed only with `ORACULUM_OMNIA=1` |
+
+What the table says: the cheapest rises are BUILDER TABLE entries
+(`head` closed by `body`; the full p-closing list) and LEXER states
+(`--!>`, script escaping), each a named change that moves the pin.
+The expensive ones are the mechanisms spec §6.1 deferred by H1
+(table synthesis, adoption agency, foreign breakout): those are the
+distance the oracle was built to measure, and 887 is that distance's
+first mark.

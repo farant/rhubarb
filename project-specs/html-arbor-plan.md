@@ -856,24 +856,39 @@ tasks, one commit each, under the same Global Constraints.
   name (plain `grep` counted them as zero — the first tally said
   1,625), six fixture edge cases. Born red by a plant (the separator
   rule).
-- [ ] **O2 — cooked view, serializer, comparison, rising pin.**
-  `probatio_html_oraculum`: parse `datum` with `html_arbor_parsare`,
-  serialize our tree into the `| ` format through a COOKED view
-  (lowercase ASCII tag names; numeric + a small named entity table for
-  text and attribute values; attribute quotes stripped; attributes
-  sorted by name; text printed raw, newlines included — a node may span
-  lines, tests3 #7), compare with `documentum`. Fragment cases first
-  (no html/head/body synthesis; the context is the parent, two words
-  for foreign contexts `svg desc` / `math mi`), then document cases
-  through the UNWRAP rule: when the input names none of html/head/body,
-  the expected `head` children + `body` children are compared against
-  our top-level children (doctype and top-level comments stay in
-  place). Failures counted per HTML5 mechanism (spec §6.1: button
-  scope, adoption agency, foster parenting, foreign content, template,
-  script-on) and printed as a table; `ORACULUM_OMNIA=1`,
-  `ORACULUM_EXEMPLUM=<file>:<n>`. Pin = whatever the simple builder
-  scores at birth, RISING only — that first number is the measurement
-  Fran asked for.
+- [x] **O2 — cooked view, serializer, comparison, rising pin**
+  (2026-09-15). `html/fontes/html_coctum.{h,c}`: `html_coctum_scribere`
+  writes our tree in html5lib's `| ` format through a COOKED view
+  (lowercase ASCII names, svg camelCase table, `<svg svg>`/`<math
+  math>` namespaces with the HTML integration points, attributes
+  lowercased/unquoted/entity-decoded/sorted/deduplicated (first wins),
+  adjacent text coalesced with CR→LF and NUL cooked, the first newline
+  after pre/listing/textarea dropped, RCDATA decoded in title/textarea,
+  comments and bogus comments as `<!-- data -->`, doctype name + ids,
+  template `content` pseudo-node, CDATA text in foreign content,
+  elementum-malum dropped); `html_coctum_alienum_liberorum` and
+  `html_coctum_titulus` exported for the fragment context.
+  `probatio_html_oraculum`: every case parsed, serialized, compared
+  byte for byte with the expected tree after the UNWRAP rule (html,
+  head, body each removed from the expected tree when the input has no
+  such start tag; their subtrees dedented one level; fragments never
+  unwrapped, the context's namespace applied); `#script-on` skipped.
+  **First number: 887/1,700 (52 %), fragments 77/184, 0.19 s**, pinned
+  RISING; total judged pinned at 1,700. Per-file table printed (the
+  html5lib files already partition the mechanisms); `ORACULUM_OMNIA=1`,
+  `ORACULUM_EXEMPLUM=tests1.dat:20`. Failure classes by the first
+  differing line in the worklog (element differs 242, text 127, depth
+  118, foreign 81, entities 28, comments 17, attributes 13). Born red
+  by a plant in the builder's void table (`br` removed → below the
+  pin). Two oracle-side bugs fixed before pinning (svg/math self
+  namespace; NUL cooking): 778 → 887.
+- [ ] **O2b — the oracle-named cheap rises (Fran to order):** builder
+  tables — `head` closed by `body` and the full HTML5 p-closing list
+  (`center dialog dir listing plaintext search summary xmp`); lexer
+  states — `--!>` closing a comment, script-data escaping
+  (`<!--<script>…</script>`), legacy entities without `;`; the 2,231
+  named entities as a generated table. Each a named change with the
+  pin moving in the same commit.
 - [ ] **O3 — wild fixtures.** Five to ten pages under
   `probationes/fixa/html/silvestria/` with their rows in `FONTES.md`;
   each fetch listed and asked. They feed totality, computus and the

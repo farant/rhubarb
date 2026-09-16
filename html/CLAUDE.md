@@ -31,7 +31,11 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   `fixa/computus/basis.tsv`) · md (md's rendered HTML through the whole
   chain, 7 inputs) · exempla (the html5lib `.dat` reader over the
   vendored corpus: 54 files, 428,448 bytes, 1,708 cases, 184 fragments
-  PINNED; `probationes/fixa/html/FONTES.md`). The runner compiles
+  PINNED; `probationes/fixa/html/FONTES.md`) · oraculum (our tree
+  through the cooked view `html_coctum` against html5lib's expected
+  trees, html/head/body unwrapped when the input never names them;
+  RISING pin 887/1,700, fragments 77/184; `ORACULUM_OMNIA=1`,
+  `ORACULUM_EXEMPLUM=tests1.dat:20`). The runner compiles
   `materia/fontes` and `md/fontes` into `html/build/` — consumed,
   never contained.
 - **What it found:** in itself, one byte-order bug (a pending close
@@ -50,13 +54,18 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   LOCAL Go module cache (`probationes/fixa/html/html5lib/`, WebKit BSD,
   no network; Fran's choice), reader `html/fontes/html_exempla.{h,c}`
   mirroring html5lib's own `support.py` TestData rules, gate
-  `probatio_html_exempla`. **O2 next:** the cooked-view serializer of
-  our tree into the `| ` format + comparison + `probatio_html_oraculum`
-  with a RISING pin (fragment cases first, then documents through the
-  unwrap rule; failures counted per HTML5 mechanism). Then O3 wild
-  fixtures (one ask per page), O4 the lexer's raw-text set (xmp, iframe,
-  noembed, noframes, plaintext) if the oracle shows it. Then JS.
-  Design: ledger desideratum 01M2KPNTT0.
+  `probatio_html_exempla`. **O2 DONE 2026-09-15:** `html_coctum` (the
+  COOKED VIEW: lowercase names, decoded entities, unquoted sorted
+  attributes, coalesced text, CR/NUL cooked, `<svg svg>` namespaces,
+  template `content`, mala dropped) + `probatio_html_oraculum`, first
+  number **887/1,700 (52 %)**, fragments 77/184, pinned rising. The
+  failure classes are in the worklog: cheap rises are builder TABLE
+  entries (`head` closed by `body`, the full p-closing list) and lexer
+  states (`--!>`, script escaping); the expensive ones are the §6.1
+  mechanisms (table synthesis, adoption agency, foreign breakout).
+  **Next (Fran decides):** O3 wild fixtures (one ask per page) and/or
+  the oracle-named fixes with the pin moving each time; O4 the lexer's
+  raw-text set. Then JS. Design: ledger desideratum 01M2KPNTT0.
 
 ## Laws (spec §11)
 
