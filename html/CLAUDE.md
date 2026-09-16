@@ -36,7 +36,8 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   trees, html/head/body unwrapped when the input never names them;
   RISING pin — 887 at birth, 930 after O2b-1, 985 after O2b-3, 1,047
   after O2b-4, 1,054 after O2b-5, 1,086 after O2b-6, 1,112 after O4,
-  1,189 after O5 — of 1,700, fragments 85/184; `ORACULUM_OMNIA=1`,
+  1,189 after O5, 1,195 after O6 — of 1,700, fragments 85/184;
+  `ORACULUM_OMNIA=1`,
   `ORACULUM_EXEMPLUM=tests1.dat:20`) · alienum (the shared SVG/MathML
   namespace tables `html_alienum`, 28). The runner compiles
   `materia/fontes` and `md/fontes` into `html/build/` — consumed,
@@ -79,9 +80,13 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   lexer raw-text set (→ 1,112) and O5 tokens the DOM ignores
   (frameset/select modes, doctype after content, repeated
   html/head/body, `</body>`/`</html>` → `elementum-malum`; → 1,189)
-  DONE; next O6 template, then the design turn on
-  `clonatum`/`reinserendum` for the adoption agency and table
-  synthesis. O3 wild fixtures after. Candidate next
+  and O6 end tags in three classes (own rule / in scope / stop at
+  "special"; → 1,195) DONE. **The cheap chunks are exhausted.** Next is
+  O7, the design turn on `clonatum` (adoption agency, 75 cases) and
+  `reinserendum` (table synthesis + foster parenting, ~130 with
+  template's remainder) — talk it through with Fran first; then the
+  foreign tail (SVG `title` not raw, `font` breakout), then O3 wild
+  fixtures. O3 wild fixtures after. Candidate next
   parser after html (Fran's research): bash scripts, before JS. Then O3 wild fixtures (one ask per
   page), O4 the lexer's raw-text set. Then JS. Design: ledger
   desideratum 01M2KPNTT0.

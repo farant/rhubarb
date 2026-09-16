@@ -672,7 +672,14 @@ parity needs no new genus.
   and its `>` become one `elementum-malum`. **O5:** `</body>` and
   `</html>` never pop (malum); inside a `select` only `option optgroup
   select template` end tags act; `input`/`keygen`/`textarea` start tags
-  close an open `select` first.
+  close an open `select` first. **O6 (2026-09-15) — three classes:**
+  end tags with their own WHATWG rule (`CLAUSURAE_PROPRIAE`) keep the
+  nearest-open rule anywhere; block end tags (`CLAUSURAE_SCOPI`:
+  address … ul, applet marquee object) find the nearest open element
+  IN SCOPE (`LIMITES_SCOPI` stop the walk); every other end tag walks
+  from the top and stops at the first "special" element (`SPECIALIA`),
+  so `</div>` inside `<template>` and `</span>` inside `<td>` are
+  ignored (malum). Oracle 1,189 → 1,195.
 - **Modes that ignore (O5, 2026-09-15):** document flags `html_visum
   head_visum body_visum compages_visa contentum_visum compages_licet`
   and per-frame `selectum`/`intra_compagem` decide which start tags,

@@ -68,7 +68,7 @@ nomen structura {
     /* O5 (2026-09-15) - modi neglegendi: lexemata quae DOM nodo non
      * retinet in elementum-malum eunt (octeti manent, visio cocta ea
      * omittit). html/head/body iterata, frameset post contentum,
-     * doctype post contentum. compages_licet = vexillum 'frameset-ok'. */
+     * doctype post contentum. compages_licet = 'frameset-ok'. */
                      b32 html_visum;
                      b32 head_visum;
                      b32 body_visum;
@@ -830,6 +830,101 @@ _claudit (
  * Lexemata singula
  * ================================================== */
 
+interior chorda
+_titulus_aperti (
+    constans HtmlParsura* p,
+                     i32  k)
+{
+    MateriaToken* apertura = _apertum(p, k)
+        ->loci[HTML_ELEMENTUM_TOK_APERTURA].datum.token;
+          chorda vacua;
+
+    si (apertura != NIHIL)
+    {
+        redde _tag_titulus(apertura);
+    }
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    redde vacua;
+}
+
+/* Tags clausurae in tres classes (WHATWG 'in body', O6):
+ * PROPRIAE - regula sua, hic elementum apertum proximum eiusdem
+ * tituli UBIQUE (approximatio H3: p, li, dd/dt, capita, formae per
+ * adoption, partes tabularum, select, template, cruda ...);
+ * SCOPI - tags blocorum: elementum proximum IN SCOPO (limites
+ * LIMITES_SCOPI sistunt: '<div><table><td></div>' </div> neglectum);
+ * ceterae ('any other end tag'): ambulatio ab vertice, titulus par
+ * claudit, elementum 'special' ante id sistit -> neglectum (malum):
+ * '</div>' intra template, '</span>' intra td. */
+hic_manens constans character* constans CLAUSURAE_PROPRIAE[] = {
+    "html", "body", "br", "p", "li", "dd", "dt", "h1", "h2", "h3", "h4",
+    "h5", "h6", "a", "b", "big", "code", "em", "font", "i", "nobr", "s",
+    "small", "strike", "strong", "tt", "u", "table", "caption", "col",
+    "colgroup", "tbody", "tfoot", "thead", "tr", "td", "th", "select",
+    "optgroup", "option", "template", "form", "frameset", "frame",
+    "head", "noscript", "script", "style", "title", "textarea", "svg",
+    "math"
+};
+hic_manens constans character* constans CLAUSURAE_SCOPI[] = {
+    "address", "article", "aside", "blockquote", "button", "center",
+    "details", "dialog", "dir", "div", "dl", "fieldset", "figcaption",
+    "figure", "footer", "header", "hgroup", "listing", "main", "menu",
+    "nav", "ol", "pre", "search", "section", "summary", "ul", "applet",
+    "marquee", "object"
+};
+
+/* Index elementi aperti proximi eiusdem tituli IN SCOPO; -I si limes
+ * prius occurrit. */
+interior s32
+_apertum_in_scopo_invenire (
+    constans HtmlParsura* p,
+                  chorda  titulus)
+{
+    i32 k;
+
+    per (k = p->profunditas; k > ZEPHYRUM; k--)
+    {
+        chorda apertum = _titulus_aperti(p, k - I);
+
+        si (_tituli_pares(apertum, titulus))
+        {
+            redde (s32)(k - I);
+        }
+        si (_limes_scopi_est(apertum))
+        {
+            redde (s32)-I;
+        }
+    }
+    redde (s32)-I;
+}
+
+
+/* Index elementi aperti pro tag clausurae 'any other end tag': -I si
+ * elementum 'special' prius occurrit (aut nullum par). */
+interior s32
+_apertum_generale_invenire (
+    constans HtmlParsura* p,
+                  chorda  titulus)
+{
+    i32 k;
+
+    per (k = p->profunditas; k > ZEPHYRUM; k--)
+    {
+        chorda apertum = _titulus_aperti(p, k - I);
+
+        si (_tituli_pares(apertum, titulus))
+        {
+            redde (s32)(k - I);
+        }
+        si (_in_tabula(apertum, SPECIALIA, TABULAE_NUMERUS(SPECIALIA)))
+        {
+            redde (s32)-I;
+        }
+    }
+    redde (s32)-I;
+}
+
 
 /* ==================================================
  * Modi neglegendi (O5): quae DOM nodo non retinet
@@ -875,8 +970,9 @@ _tag_neglegendum (
                   chorda  titulus)
 {
     constans ScopiGradus* vertex = _vertex_gradus(p);
-                     b32  intra_compagem = (b32)(vertex != NIHIL
-                                                 && vertex->intra_compagem);
+                     b32  intra_compagem;
+
+    intra_compagem = (b32)(vertex != NIHIL && vertex->intra_compagem);
 
     si (_titulus_est(titulus, "html"))
     {
@@ -1175,7 +1271,24 @@ _clausuram_tractare (
             redde _malum_addere(p, token);
         }
     }
-    k = _apertum_invenire(p, _tag_titulus(token));
+    {
+        chorda titulus = _tag_titulus(token);
+
+        si (_in_tabula(titulus, CLAUSURAE_PROPRIAE,
+                TABULAE_NUMERUS(CLAUSURAE_PROPRIAE)))
+        {
+            k = _apertum_invenire(p, titulus);
+        }
+        alioquin si (_in_tabula(titulus, CLAUSURAE_SCOPI,
+                         TABULAE_NUMERUS(CLAUSURAE_SCOPI)))
+        {
+            k = _apertum_in_scopo_invenire(p, titulus);
+        }
+        alioquin
+        {
+            k = _apertum_generale_invenire(p, titulus);
+        }
+    }
     si (k < ZEPHYRUM)
     {
         redde _malum_addere(p, token);

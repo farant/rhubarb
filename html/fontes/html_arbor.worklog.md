@@ -385,3 +385,25 @@ the body element from the DOM, and a node whose bytes must stay
 cannot be removed — those few cases stay red by design.
 
 Seventy-seven cases rose: frameset, select, domjs-unsafe, tests1.
+
+## 2026-09-15 — O6: end tags in three classes; 1,189 → 1,195
+
+`<div><template></div>Hello` expects Hello INSIDE the template: the
+`</div>` is ignored because HTML5's "any other end tag" walks the
+stack and gives up at the first "special" element, and `template` is
+one. So the template chunk was really an end-tag rule. First cut: I
+sent every end tag without a named rule to that walk, and `</ul>`
+died at `li`, because the block end tags (address … ul) have their
+own rule — pop to the element if it is IN SCOPE — and I had left
+them out of the named list. −23 before the split. Three classes now:
+tags with their own rule (nearest open anywhere, the H3
+approximation), block tags (nearest open within scope boundaries),
+the rest (stop at special). Six cases rose, and the remaining
+template failures are the table's: `<table><div><template>` wants
+the div foster-parented before the table. That is `reinserendum`.
+
+With this the cheap chunks are spent. Every remaining class of size
+reaches something the v1 registry deliberately left out: a node
+without bytes (`clonatum`, the adoption agency) or a node whose bytes
+lie elsewhere than its tree position (`reinserendum`, tables). The
+worklog stops here and the design conversation starts.

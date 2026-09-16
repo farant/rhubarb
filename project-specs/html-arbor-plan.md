@@ -978,7 +978,27 @@ tasks, one commit each, under the same Global Constraints.
   golden regenerated with that cause. **1,112 → 1,189**, fragments
   83 → 85. Plant: a repeated `<html>` accepted → arbor red. §11.3
   wording: the malum is "tokens the DOM keeps no node for".
-- [ ] **O6 — template** (39): `content` model, table interplay.
+- [x] **O6 — end tags in three classes** (2026-09-15; the template
+  chunk's non-table half): WHATWG "in body" end tags fall into tags
+  with their OWN rule (`CLAUSURAE_PROPRIAE`: nearest open element of
+  the name anywhere — p, li, dd/dt, headings, formatting, table
+  parts, select, template, raw-text elements), block end tags
+  (`CLAUSURAE_SCOPI`: nearest open element IN SCOPE, the
+  `LIMITES_SCOPI` boundaries stop it) and "any other end tag"
+  (`_apertum_generale_invenire`: the walk stops at the first
+  "special" element, so `</div>` inside `<template>` and `</span>`
+  inside `<td>` are ignored, into a malum). First cut handed the block
+  tags to the special-stop walk and `</ul>` died at `li`: −23 before
+  the split. Arbor gate: three cases. **1,189 → 1,195.** Plant: the
+  special stop removed → arbor red. The rest of template.dat (and of
+  the tail) is table interplay — foster parenting — and joins the
+  tables mechanism.
+- [ ] **O7 — the design turn:** `clonatum` (adoption agency, 75) and
+  `reinserendum` (table synthesis + foster parenting, 97 + template's
+  remainder). Spec §2.4 named the shape in 2026-08; the registry's
+  header names the extension points. To be talked through with Fran
+  before a line is written: a node with no bytes of its own, and a
+  node whose bytes live elsewhere than its tree position.
 
 ## Self-Review
 

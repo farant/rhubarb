@@ -669,6 +669,33 @@ principale (vacuum)
             HTML_DOCUMENTUM_LIBERI),
             II);
 
+        /* O6: 'any other end tag' ad elementum 'special' sistit -
+         * '</div>' intra template neglectum (malum), Hello intra
+         * template manet; '</span>' per b claudit (b non special) */
+        imprimere("\n--- Probans '<div><template></div>Hello' ---\n");
+        CREDO_VERUM (_octetos_probare(piscina,
+            "<div><template></div>Hello", XXVI));
+        documentum = _parsare(piscina, "<div><template></div>Hello");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        elementum = _liber(elementum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_NON_NIHIL (elementum);
+        si (elementum != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_numerus(elementum,
+                HTML_ELEMENTUM_LIBERI), II);
+        }
+        documentum = _parsare(piscina, "<span><b>x</span>y");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        /* '</span>' per td (special) NON claudit */
+        documentum = _parsare(piscina, "<span><td>x</span>y");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+
         imprimere("\n--- Probans tabulam: tr/td implicite ---\n");
         documentum = _parsare(piscina,
             "<table><tr><td>1<td>2<tr><td>3</table>");
