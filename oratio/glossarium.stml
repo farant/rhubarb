@@ -742,6 +742,10 @@
   <vocabulum lemma="json" lingua="anglica" classis="ignotum-permissum" nota="sedes 3327"/>
   <vocabulum lemma="utf8" lingua="anglica" classis="ignotum-permissum" nota="sedes 167"/>
   <vocabulum lemma="html" lingua="anglica" classis="ignotum-permissum" nota="sedes 860"/>
+  <vocabulum lemma="heredoc" lingua="anglica" classis="ignotum-permissum" nota="shell; sedes crusta (2026-09-16)">
+    <forma textus="heredoca"/>
+  </vocabulum>
+  <vocabulum lemma="bash" lingua="anglica" classis="ignotum-permissum" nota="dialectus crustae; CRUSTA_BASH (2026-09-16)"/>
   <vocabulum lemma="stml" lingua="anglica" classis="ignotum-permissum" nota="sedes 10918"/>
   <vocabulum lemma="xml" lingua="anglica" classis="ignotum-permissum" nota="sedes 187"/>
   <vocabulum lemma="url" lingua="anglica" classis="ignotum-permissum" nota="sedes 187"/>
@@ -982,6 +986,8 @@
   <vocabulum lemma="quibuscum" lingua="latina" classis="pronomen" nota="pronomen qui cum adhaerente (lemma aureum qui)"><forma textus="quibuscum" casus="ablativus"/></vocabulum>
   <!-- T26 (2026-09-08): ligatio - umbra impleta socio (mensura oraculi) -->
   <vocabulum lemma="ligatio" lingua="latina" classis="substantivum" nota="Latina sera: ligatio, -onis f. - umbra socio impleta (arcus resolutionis, contra capita aurea mensurata)"><forma textus="ligatio" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="ligationis" casus="genitivus" numerus="singularis" genus="femininum"/><forma textus="ligationem" casus="accusativus" numerus="singularis" genus="femininum"/><forma textus="ligationes" casus="nominativus" numerus="pluralis" genus="femininum"/><forma textus="ligationum" casus="genitivus" numerus="pluralis" genus="femininum"/></vocabulum>
+  <!-- crusta P1 (2026-09-16): redirectio - genus arboris crustae (2>file, <<A) -->
+  <vocabulum lemma="redirectio" lingua="latina" classis="substantivum" nota="Latina nova: redirectio, -onis f. (re + directio) - conversio fluxus in plagulam aut descriptorem, crustae redirect; genus arboris crustae et locus redirectiones"><forma textus="redirectio" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="redirectionis" casus="genitivus" numerus="singularis" genus="femininum"/><forma textus="redirectionem" casus="accusativus" numerus="singularis" genus="femininum"/><forma textus="redirectione" casus="ablativus" numerus="singularis" genus="femininum"/><forma textus="redirectiones" casus="nominativus" numerus="pluralis" genus="femininum"/><forma textus="redirectionum" casus="genitivus" numerus="pluralis" genus="femininum"/></vocabulum>
   <!-- T30 d (2026-09-09): tabula raritatum flexionum annotatoris -->
   <vocabulum lemma="raritas" lingua="latina" classis="substantivum" nota="raritas, -atis f. (Cicero, Plinius) - res rara; in annotatore flexio rara cuius lectio post ceteras stirpis ordinatur (tabula RARITATES)"><forma textus="raritas" casus="nominativus" numerus="singularis" genus="femininum"/><forma textus="raritatis" casus="genitivus" numerus="singularis" genus="femininum"/><forma textus="raritatem" casus="accusativus" numerus="singularis" genus="femininum"/><forma textus="raritate" casus="ablativus" numerus="singularis" genus="femininum"/><forma textus="raritates" casus="nominativus" numerus="pluralis" genus="femininum"/><forma textus="raritatum" casus="genitivus" numerus="pluralis" genus="femininum"/></vocabulum>
   <!-- T30 a (2026-09-09): errata notarum oraculi - valor aureus attingibilis (lectio classis eum fert) | absens -->

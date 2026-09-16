@@ -1519,6 +1519,8 @@ PORTAE = {
                 r'MATERIA PROBATIONES: \d+/\d+'),
     'md': (['./md/compile_probationes.sh'], r'MD PROBATIONES: \d+/\d+'),
     'html': (['./html/compile_probationes.sh'], r'HTML PROBATIONES: \d+/\d+'),
+    'crusta': (['./crusta/compile_probationes.sh'],
+               r'CRUSTA PROBATIONES: \d+/\d+'),
     'briar': (['./briar/compile_probationes.sh'],
               r'BRIAR PROBATIONES: \d+/\d+'),
     'oratio': (['./oratio/compile_probationes.sh'],
@@ -1562,7 +1564,7 @@ _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 # aliter 'generica' (porta tota = fractura una)
 FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
           'materia': 'suita', 'md': 'suita', 'oratio': 'suita',
-          'html': 'suita', 'briar': 'suita',
+          'html': 'suita', 'crusta': 'suita', 'briar': 'suita',
           'officina': 'suita', 'gesta': 'suita',
           'tessera': 'suita', 'saltuarius': 'suita', 'aedilis': 'suita'}
 _RELATIO_RE = re.compile(r'FRACTA|FRACTUM|FATALE|Speratus|Receptus|Totalis|'
@@ -2639,6 +2641,7 @@ SUITAE = {
     'materia': ('materia/probationes', 'materia/build/%s'),
     'md': ('md/probationes', 'md/build/%s'),
     'html': ('html/probationes', 'html/build/%s'),
+    'crusta': ('crusta/probationes', 'crusta/build/%s'),
     'briar': ('briar/probationes', 'briar/build/%s'),
     'oratio': ('oratio/probationes', 'oratio/build/%s'),
     'officina': ('officina/probationes', 'officina/build/%s'),
