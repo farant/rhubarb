@@ -653,7 +653,7 @@ nomen structura {
 } CrustaParsatura;
 ```
 
-- [ ] **Step 1: Write the failing arbor gate** — every case is a source
+- [x] **Step 1: Write the failing arbor gate** — every case is a source
   string allocated from the piscina, parsed, emitted through
   `materia_scribere_nodum`, `memcmp` against the source, plus structural
   assertions through helpers `_liberi(nodus, locus)`, `_genus(nodus)`,
@@ -702,9 +702,9 @@ nomen structura {
   named intermediate; no case here uses it). `[[`, `((`, compound keywords
   and heredoc bodies are P4/P5.
 
-- [ ] **Step 2: Run and verify it fails** — `./crusta/compile_probationes.sh arbor`.
+- [x] **Step 2: Run and verify it fails** — `./crusta/compile_probationes.sh arbor`.
 
-- [ ] **Step 3: Implement** — the loop:
+- [x] **Step 3: Implement** — the loop:
 
 ```c
     dum (VERUM)
@@ -746,13 +746,13 @@ nomen structura {
   The mala: `_malum(p, t)` appends a `malum` with the token to the innermost
   list frame (or extends the previous malum when adjacent).
 
-- [ ] **Step 4: Run and verify** — green.
+- [x] **Step 4: Run and verify** — green.
 
-- [ ] **Step 5: Plant** — in `_ligator_solvere`, divide after the FIRST
+- [x] **Step 5: Plant** — in `_ligator_solvere`, divide after the FIRST
   newline instead of the last → the `a &&\n\n  b` case red (post count);
   revert.
 
-- [ ] **Step 6: Words, format, commit**
+- [x] **Step 6: Words, format, commit**
 
 ```python
 silva.commissio("crusta: aedificator I - programma, imperia simplicia (assignationes positionales, verba ut partes, redirectiones), catena/pipa cum operatore solo, separatores, mala totalitatis, ligator regulae inversae (trivia retro per lineam novam ultimam); porta arboris (rubra nata: divisio post lineam primam)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",

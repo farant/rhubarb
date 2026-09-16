@@ -18,7 +18,32 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P2 done)
+## Praesens status (2026-09-16 — P3 done)
+
+- **P3, the builder part one (`crusta_arbor.{h,c}`):**
+  `crusta_arbor_parsare(piscina, fons, mensura, dialectus, &relatio)` —
+  iterative over a frame stack that IS the mode stack; `programma`,
+  `imperium` (assignments positional, words as parts, redirections
+  with the heredoc petition at the delimiter word), `catena`/`pipa`
+  only when their operator is present (`!` and `time -p` open a pipa
+  with `praefixa`), separators, `malum` for what the grammar cannot
+  place (a separator with nothing pending is one too), EOF closes
+  every frame with absent tokens and counts them. A SENTENCE NODE IS
+  APPENDED TO ITS LIST WHEN ITS FRAME CLOSES, not when it opens (see
+  the worklog: materia lists only append, so `&&`/`|` wrap the finished
+  item instead of moving it). The ligator binds trivia backward through
+  the last newline (C7). `CrustaParsura` reports mala, absent closures,
+  max depth, heredoc petitions, `sana`. Accessors
+  `crusta_verbum_staticum` (decodes quotes, escapes with backtick
+  depth, `$'…'`), `crusta_verbum_citatum`, `crusta_imperium_titulus`,
+  `crusta_imperium_argumenta`. Gate `arbor`: 39 cases through the byte
+  emitter and structural asserts; born red by the ligator dividing
+  after the first newline instead of the last. Intermediates until
+  P4/P5: `$((` is a literal part (its `))` mala), reserved words other
+  than `!`/`time`, `(`, `[[`, `((` are mala.
+- Findings: `crusta/fontes/crusta_arbor.worklog.md`.
+
+## P2 (2026-09-16)
 
 - **P2, the lector (`crusta_lector.{h,c}`):** `crusta_lector_proximum(lector,
   modus)` — a function of mode and position (decree 01M2NJ1JR7);
