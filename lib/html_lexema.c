@@ -105,7 +105,8 @@ _chorda_ex_fonte (
 nomen enumeratio {
     MODUS_DATA,        /* textus, tags, commentaria */
     MODUS_INTRA_TAG,   /* attributa, '>' aut '/>' */
-    MODUS_CRUDUS       /* script/style/title/textarea contentum */
+    MODUS_CRUDUS,      /* contentum elementorum crudorum */
+    MODUS_PLANUS       /* post <plaintext>: reliquum omne textus */
 } HtmlModus;
 
 nomen structura {
@@ -177,8 +178,10 @@ _titulus_aequat (
     redde literis[mensura] == '\0';
 }
 
-/* elementa cruda: RAWTEXT (script, style) + RCDATA (title,
- * textarea) - hic idem lexata, distinctio decoctionis = arbor */
+/* elementa cruda: RAWTEXT (script, style, xmp, iframe, noembed,
+ * noframes) + RCDATA (title, textarea) - hic idem lexata, distinctio
+ * decoctionis = arbor. O4 (2026-09-15): tabula WHATWG plena; ante
+ * quattuor sola (oraculum html5lib id ostendit). */
 interior b32
 _est_crudum (
     constans character* datum,
@@ -192,7 +195,11 @@ _est_crudum (
     redde _titulus_aequat(datum, mensura, "script")
         || _titulus_aequat(datum, mensura, "style")
         || _titulus_aequat(datum, mensura, "title")
-        || _titulus_aequat(datum, mensura, "textarea");
+        || _titulus_aequat(datum, mensura, "textarea")
+        || _titulus_aequat(datum, mensura, "xmp")
+        || _titulus_aequat(datum, mensura, "iframe")
+        || _titulus_aequat(datum, mensura, "noembed")
+        || _titulus_aequat(datum, mensura, "noframes");
 }
 
 
@@ -457,6 +464,15 @@ interior vacuum
 _tag_finitum (
     HtmlLexator* lx)
 {
+    lx->post_aequale = FALSUM;
+    si (   !lx->tag_clausura
+        && _titulus_aequat(lx->tag_datum, lx->tag_mensura, "plaintext"))
+    {
+        /* PLAINTEXT (spec): reliquum fontis totum textus, clausura
+         * nulla umquam - lexema crudum unum PERFECTUM ad EOF (O4) */
+        lx->modus = MODUS_PLANUS;
+        redde;
+    }
     lx->post_aequale = FALSUM;
     si (   !lx->tag_clausura
         && _est_crudum(lx->tag_datum, lx->tag_mensura))
@@ -735,6 +751,11 @@ _lexema_consumere (
 {
     character c;
 
+    si (lx->modus == MODUS_PLANUS)
+    {
+        lx->k = lx->mensura;
+        redde HTML_LEX_TEXTUS_CRUDUS;
+    }
     si (lx->modus == MODUS_CRUDUS)
     {
         si (!_clausura_cruda_hic(lx))

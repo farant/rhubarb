@@ -434,6 +434,32 @@ principale (vacuum)
         _valorem_probare(piscina, "<style><!--<style></style>", (i32)2,
             "<!--<style>");
     }
+    {
+        /* O4 (oraculum html5lib): tabula RAWTEXT plena - xmp, iframe,
+         * noembed, noframes crudi ut style; plaintext reliquum totum
+         * lexema crudum unum perfectum (clausura nulla umquam). */
+        interior constans HtmlLexemaGenus exspectata[] = {
+            HTML_LEX_TAG_APERTURA, HTML_LEX_TAG_FINIS,
+            HTML_LEX_TEXTUS_CRUDUS, HTML_LEX_TAG_CLAUSURA,
+            HTML_LEX_TAG_FINIS };
+        interior constans HtmlLexemaGenus plana[] = {
+            HTML_LEX_TAG_APERTURA, HTML_LEX_TAG_FINIS,
+            HTML_LEX_TEXTUS_CRUDUS };
+
+        _seriem_probare(piscina, "<xmp><b>x</b></xmp>", exspectata, 5);
+        _valorem_probare(piscina, "<xmp><b>x</b></xmp>", (i32)2,
+            "<b>x</b>");
+        _seriem_probare(piscina, "<iframe><p></iframe>", exspectata, 5);
+        _seriem_probare(piscina, "<noembed><p></noembed>", exspectata,
+            5);
+        _seriem_probare(piscina, "<noframes><p></noframes>", exspectata,
+            5);
+        _seriem_probare(piscina, "<plaintext>a</plaintext>b", plana, 3);
+        _valorem_probare(piscina, "<plaintext>a</plaintext>b", (i32)2,
+            "a</plaintext>b");
+        /* plaintext vacuum ad EOF: lexema nullum (progressus) */
+        _seriem_probare(piscina, "<plaintext>", plana, 2);
+    }
 
     imprimere("\n--- Margines '<' et truncationes ---\n");
     {

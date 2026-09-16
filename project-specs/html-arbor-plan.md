@@ -956,8 +956,19 @@ tasks, one commit each, under the same Global Constraints.
   `probationes/fixa/html/silvestria/` with their rows in `FONTES.md`;
   each fetch listed and asked. They feed totality, computus and the
   STML size ratio.
-- [ ] **O4 — the lexer's raw-text set** (xmp, iframe, noembed,
-  noframes, plaintext), when O2's table shows cases falling to it.
+- [x] **O4 — the lexer's raw-text set** (2026-09-15): `xmp iframe
+  noembed noframes` joined `_est_crudum` (RAWTEXT, lexed like
+  `style`); `plaintext` is its own mode — the rest of the file is one
+  PERFECT raw token (no closing tag can be missing). Eight root-suite
+  lexer cases. **1,086 → 1,112**, fragments 82 → 83. Plant: `xmp`
+  removed → root lexer test red.
+- [ ] **O5 — tokens the DOM ignores** (Fran, 2026-09-15: keep pushing
+  conformance — the cheap chunks first): one mechanism for frameset
+  modes (58), select modes (33), a doctype after content (5),
+  duplicate `html`/`head`/`body` and content after `</body>` (23):
+  the ignored token goes into an `elementum-malum`, which becomes
+  by wording "tokens the DOM keeps no node for" (§11.3); the cooked
+  view already drops it. Then template (39).
 
 ## Self-Review
 

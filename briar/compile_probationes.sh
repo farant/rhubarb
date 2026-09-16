@@ -71,6 +71,8 @@ declare -a RADIX_FONTES=(
     "stml_macros"
     "stml_html"
     "html_lexema"
+    "entitates_html"
+    "entitates_html_tabula"
     "similitudo"
     "canon"
     "credo"

@@ -68,3 +68,18 @@ carries a three-valued flag; `<!-->` returns at once; style, title and
 textarea are untouched. Seven cases in `probatio_html_lexema`; born
 red by disabling the double-escape transition. The token shape did
 not change, so no consumer moved.
+
+## 2026-09-15 — the raw-text set completed, and plaintext (O4)
+
+WHATWG's RAWTEXT elements are `style xmp iframe noembed noframes`
+(and `noscript` with scripting on, which is not our flag), RCDATA
+`title textarea`, script data `script`, and `plaintext` swallows the
+rest of the file. The lexer had four of the nine; the html5lib oracle
+counted 49 cases on the missing ones. Four names joined `_est_crudum`;
+`plaintext` is a mode of its own (`MODUS_PLANUS`): after its start
+tag the remaining bytes are ONE raw token, deliberately PERFECT rather
+than IMPERFECTUM, because there is no closing tag to be missing — a
+clean page with `<plaintext>` must not count as truncated. Eight
+root-suite cases; the corpus pages carry no iframe, so no golden
+moved. A real page with an `<iframe>` fallback body used to parse its
+inner text as tags — byte-identical either way, wrong tree.

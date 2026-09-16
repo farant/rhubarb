@@ -662,6 +662,10 @@ parity needs no new genus.
   and its `>` become one `elementum-malum`.
 - **Raw text**: nothing — the lexer emits `TEXTUS_CRUDUS` after
   `script style title textarea`; the builder appends `textus-crudus`.
+  **O4 (2026-09-15):** the lexer's set is WHATWG's whole RAWTEXT list
+  (`+ xmp iframe noembed noframes`) and `plaintext` swallows the rest
+  of the file as ONE raw token that is perfect, not truncated (no
+  closing tag exists to be missing). Oracle 1,086 → 1,112.
 - **EOF**: every open element closes with absent `tok_clausura*`; a
   tag cut off mid-attributes keeps its `elementum` with `tok_finis`
   absent (the model expresses truncation; §4.2 last column).

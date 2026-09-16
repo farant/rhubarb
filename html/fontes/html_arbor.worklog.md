@@ -339,3 +339,22 @@ and `<textarea>` as raw text everywhere, but inside SVG `title` is an
 ordinary element; `<font>` breaks out only with color/face/size,
 which arrive after the tag; `annotation-xml`'s encoding is likewise
 unseen at push.
+
+## 2026-09-15 — the shape of what remains, and O4; 1,086 → 1,112
+
+Fran asked whether the rest is chunks or a tail. Measured over the
+551 of 614 failures the first-diff line could be attributed: tables
+97 (`tbody`/`tr` synthesis, foster parenting), foreign rest 90,
+adoption agency 75, frameset modes 58, lexer raw-text set 49,
+template 39, select 33, doctype and html/head/body out of place 61,
+a tail of 48. Chunks, then: seven mechanisms are four fifths. Three
+are cheap and self-contained (raw text, frameset, select), the
+"ignored tokens" family is one mechanism across four of the chunks,
+and only tables, the adoption agency and one foreign rule reach the
+registry, the byte law or the lexer boundary. Fran chose to keep
+pushing, cheap chunks first, with bash scripts as a candidate next
+parser after html.
+
+O4 was the lexer's: four RAWTEXT names and a `plaintext` mode (see
+`lib/html_lexema.worklog.md`). Twenty-six cases rose; nothing in the
+builder or the cooked view moved.

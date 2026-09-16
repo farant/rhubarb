@@ -31,12 +31,13 @@
  * HTML statum fert quod CSS non fert: post '<div' modus
  * intra-tag est (attributa), post '<script...>' modus
  * crudus (textus ad '</script' solum). Lexator modum
- * trans lexemata servat; elementa cruda: script, style
- * (RAWTEXT), title, textarea (RCDATA - hic idem lexatum,
- * distinctio decoctionis = arbor). Script praeterea status
- * effugii HTML5 servat (O2b-3, 2026-09-15): '<!--' intra
- * script effugium aperit, in quo '<script' effugium duplex
- * aperit ubi '</script' textus manet; '-->' redit - textus
+ * trans lexemata servat; elementa cruda: script, style, xmp,
+ * iframe, noembed, noframes (RAWTEXT), title, textarea (RCDATA -
+ * hic idem lexatum, distinctio decoctionis = arbor); plaintext =
+ * reliquum totum lexema crudum unum (O4, 2026-09-15). Script
+ * praeterea status effugii HTML5 servat (O2b-3, 2026-09-15):
+ * '<!--' intra script effugium aperit, in quo '<script' effugium
+ * duplex aperit ubi '</script' textus manet; '-->' redit - textus
  * crudus unus manet, clausura sola alibi cadit.
  *
  * Deviationes a spec, omnes pro fidelitate aut clamore:
