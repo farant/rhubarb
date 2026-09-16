@@ -922,10 +922,19 @@ tasks, one commit each, under the same Global Constraints.
     binary search stepped by two → root gate red. Found on the way:
     `silva.Editio` reflows `.sh` files by width and breaks bash
     (ledger quaestio filed).
-  - [ ] **O2b-5 button scope for `p`** (mechanism 1): a `p` anywhere
-    in button scope is closed by a p-closer, not only at the top of
-    the stack — a change to the H1 top-of-stack LAW, to be explained
-    to Fran with the number before it lands.
+  - [x] **O2b-5 scope** (2026-09-15, mechanism 1): a p-closer closes
+    a `p` in BUTTON SCOPE; `li` and `dd`/`dt` close the nearest of
+    their kind unless a "special" element other than `address div p`
+    intervenes; `button` closes a `button` in scope (tables
+    `LIMITES_SCOPI`, `SPECIALIA`). First cut walked the stack per
+    start tag: totality's 100,000-deep pins died (489 s) — the H1
+    top-of-stack law existed for that reason. Second cut: per-frame
+    visibility indices (`ScopiGradus`, computed at push from the frame
+    below), O(1) per token, totality back to 1.3 s. Arbor gate: the
+    "vertex solus" case inverted with its cause, five new cases.
+    **1,047 → 1,054** (small: the remaining depth failures are
+    adoption agency and table synthesis). Law text updated in
+    `html/CLAUDE.md` and spec §11.7.
   - [ ] **O2b-6 foreign attributes**: SVG attribute case table
     (`viewBox` …), MathML `definitionURL`, and the breakout of HTML
     elements from foreign content (a stack walk to the nearest

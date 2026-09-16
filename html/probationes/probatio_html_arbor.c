@@ -9,8 +9,9 @@
  * II. STRUCTURA - tabula locorum absentium spec par. IV.2 ordine
  *                 per ordinem asserta; parentela; clausura litteris
  *                 neglectis; malum sine pari.
-  * H4: elementa vacua (tabula XIII) et clausurae implicitae (tabula,
- * vertex acervi solus) - tabulae par. IV.2 ordines ceteri.
+ * H4: elementa vacua (tabula XIII) et clausurae implicitae (tabula,
+ * vertex acervi) - tabulae par. IV.2 ordines ceteri. O2b-5: scopus
+ * (p per b, li per div non per pre, button per b, object limes).
  */
 
 #include "latina.h"
@@ -501,22 +502,53 @@ principale (vacuum)
         elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);
         CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
 
-        imprimere("\n--- Probans '<p>a<b>x<div>y': vertex solus ---\n");
-        /* b in vertice: p NON clauditur (aedificator simplex) - div
-         * intra b intra p. Nominatum, non celatum. */
+        imprimere("\n--- Probans '<p>a<b>x<div>y': scopus ---\n");
+        /* O2b-5 (2026-09-15): p in scopo 'button' a div clauditur
+         * PER b - lex verticis solius (H1) relicta; b et p sine
+         * clausura (loci absentes), div frater. Olim I liber. */
         documentum = _parsare(piscina, "<p>a<b>x<div>y");
         CREDO_AEQUALIS_I32 (_numerus(documentum,
             HTML_DOCUMENTUM_LIBERI),
-            I);
+            II);
         elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
             ZEPHYRUM);
         CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
             II);
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
         liber = _liber(elementum, HTML_ELEMENTUM_LIBERI, I);
-        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), II);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
+        CREDO_VERUM (_absens(liber, HTML_ELEMENTUM_TOK_CLAUSURA));
         CREDO_AEQUALIS_S32 (
-            _liber(liber, HTML_ELEMENTUM_LIBERI, I)->genus,
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, I)->genus,
             (s32)HTML_GENUS_ELEMENTUM);
+        /* limes scopi: object p non tradit - p intra p manet */
+        documentum = _parsare(piscina, "<p><object><p>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        /* li per b (non 'special'), non per div ('special') */
+        documentum = _parsare(piscina, "<ul><li>a<b>b<li>c</ul>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        /* div EXCEPTUM a 'special' (spec: address/div/p) - li per div
+         * quoque clauditur; pre 'special' sistit */
+        documentum = _parsare(piscina, "<ul><li>a<div><li>c</ul>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            II);
+        documentum = _parsare(piscina, "<ul><li>a<pre><li>c</ul>");
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(elementum, HTML_ELEMENTUM_LIBERI),
+            I);
+        /* button in scopo per b */
+        documentum = _parsare(piscina, "<button><b>x<button>y");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
 
         imprimere("\n--- Probans tabulam: tr/td implicite ---\n");
         documentum = _parsare(piscina,

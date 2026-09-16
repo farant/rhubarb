@@ -624,8 +624,22 @@ parity needs no new genus.
   select` ← themselves (row with `claudentia` NIHIL); `head` and
   `colgroup` ← EVERY start tag except their permitted set (`nisi`
   rows: `base basefont bgsound link meta title noscript noframes style
-  script template head`; `col template`). Still top-of-stack only
-  (button scope = mechanism 1, deferred). Oracle 887 → 930.
+  script template head`; `col template`). Oracle 887 → 930.
+  **Scope (O2b-5, 2026-09-15 — mechanism 1 of §6.1, the H1
+  top-of-stack law relaxed):** a p-closer closes a `p` anywhere in
+  BUTTON SCOPE (hidden by `applet caption html table td th marquee
+  object template`, the MathML/SVG integration points, and `button`);
+  `li` closes the nearest open `li`, `dd`/`dt` the nearest `dd`/`dt`,
+  unless a "special" element other than `address div p` lies between;
+  `button` closes a `button` in scope. Everything above the closed
+  element closes with absent `tok_clausura*`. Implemented as
+  VISIBILITY INDICES per stack frame (`ScopiGradus`: nearest visible
+  `p`/`li`/`dd|dt`/`button` computed at push from the frame below),
+  O(1) per token — a plain stack walk per start tag was quadratic in
+  depth and killed the 100,000-deep totality pins on its first run
+  (489 s). The other rows stay top-of-stack (h1–h6, table parts,
+  options, self-closers: their HTML5 rules are top-of-stack or belong
+  to the table machinery). Oracle 1,047 → 1,054.
 - **End-tag rule**: an end tag pops the stack to the nearest open
   element of the same name (ASCII case-insensitive, H1), implicitly
   closing everything above it (`<div><p>x</div>` closes `p` with

@@ -2,7 +2,9 @@
   * H3: documentum, elementa, attributa, contentum; clausura per tag
  * congruentem (litteris neglectis) ad elementum apertum proximum,
  * superiora implicite clausa. H4: elementa vacua et clausurae
- * implicitae per TABULAS (M7), vertice acervi solo.
+ * implicitae per TABULAS (M7), vertice acervi solo; O2b-5 (2026-09-15):
+ * p/li/dd/dt/button per SCOPUM (gradus visibilitatis per gradum
+ * acervi, O(I) per lexema - vide _scopi_gradus).
  *
  * STATUS PENDENS. Lexator tag in lexemata plura scindit ('<div',
  * spatia, attributa, '>'); aedificator ergo tres res 'pendentes'
@@ -34,6 +36,14 @@
  * elementum cuius tag legitur, attributum = attributum eius apertum;
  * clausura = elementum cuius '</x' visum est ('>' exspectat); malum =
  * elementum-malum '>' exspectans. */
+/* Scopi visibiles per gradum acervi (O2b-5; vide _scopi_gradus) */
+nomen structura {
+    s32 p;
+    s32 membri;
+    s32 definitionis;
+    s32 bullae;
+} ScopiGradus;
+
 nomen structura {
                  Piscina* piscina;
      MateriaLexiconRatum  lexicon;
@@ -42,6 +52,7 @@ nomen structura {
              HtmlLigator  ligator;
             MateriaNodus* documentum;
                      Xar* acervus;
+                     Xar* scopi;
                      i32  profunditas;
             MateriaNodus* tag_apertum;
             MateriaNodus* attributum;
@@ -105,27 +116,46 @@ _parens (
     redde p->documentum;
 }
 
+interior ScopiGradus
+_scopi_gradus (
+    constans HtmlParsura* p,
+                     i32  k,
+                  chorda  titulus);
+
+interior chorda
+_tag_titulus (
+    constans MateriaToken* token);
+
+/* Elementum (et gradum scoporum eius) impellere - loci acervorum
+ * reusi sub profunditate. */
 interior b32
 _impellere (
      HtmlParsura* p,
     MateriaNodus* elementum)
 {
+    ScopiGradus gradus = _scopi_gradus(p, p->profunditas,
+        _tag_titulus(elementum->loci[HTML_ELEMENTUM_TOK_APERTURA]
+            .datum.token));
+
     si (p->profunditas < xar_numerus(p->acervus))
     {
-        si (!xar_ponere(p->acervus, p->profunditas, &elementum))
+        si (   !xar_ponere(p->acervus, p->profunditas, &elementum)
+            || !xar_ponere(p->scopi, p->profunditas, &gradus))
         {
             redde FALSUM;
         }
     }
     alioquin
     {
-        MateriaNodus** locus = (MateriaNodus**)xar_addere(p->acervus);
+         MateriaNodus** locus = (MateriaNodus**)xar_addere(p->acervus);
+          ScopiGradus*  sedes = (ScopiGradus*)xar_addere(p->scopi);
 
-        si (locus == NIHIL)
+        si (locus == NIHIL || sedes == NIHIL)
         {
             redde FALSUM;
         }
         *locus = elementum;
+        *sedes = gradus;
     }
     p->profunditas = p->profunditas + I;
     redde VERUM;
@@ -373,10 +403,12 @@ hic_manens constans character* constans VACUA[] = {
 
 /* Clausurae implicitae (spec par. XI.7): elementum apertum in
  * VERTICE acervi clauditur cum tag apertionis nominatum advenit,
- * iterum dum vertex novus quoque clauditur. Vertex solus
- * (aedificator simplex, H1): '<p><b>x<div>' p NON claudit quia b in
- * vertice est - algorithmus plenus HTML5 scopum 'button' quaereret
- * (mechanismus I, spec par. VI.1). Tabulae ex oraculo html5lib
+ * iterum dum vertex novus quoque clauditur. Vertex solus erat lex H1
+ * ('<p><b>x<div>' p non claudebat); O2b-5 scopum HTML5 addidit
+ * (mechanismus I, spec par. VI.1) ante hanc tabulam: p in scopo
+ * 'button', li/dd/dt per ambulationem 'special', button in scopo -
+ * per gradus visibilitatis, non per ambulationem (_scopi_gradus).
+ * Tabulae ex oraculo html5lib
  * (O2b, 2026-09-15) impletae: tabula p plena WHATWG 'in body'
  * (center dialog dir search summary listing plaintext xmp li dd dt),
  * sectiones tabularum a caption/col/colgroup, annotationes ruby,
@@ -538,6 +570,181 @@ _vacuum_est (
     redde _in_tabula(titulus, VACUA, TABULAE_NUMERUS(VACUA));
 }
 
+/* SCOPUS (WHATWG 'has an element in scope', O2b-5 2026-09-15 - lex
+ * verticis solius pro p/li/dd/dt/button relicta). Limites scopi
+ * elementum quaesitum CELANT (etiam puncta integrationis MathML/SVG -
+ * aedificator spatia nominum nescit, tituli sufficiunt). Scopus
+ * 'button' = limites + button. */
+hic_manens constans character* constans LIMITES_SCOPI[] = {
+    "applet", "caption", "html", "table", "td", "th", "marquee",
+    "object", "template", "mi", "mo", "mn", "ms", "mtext",
+    "annotation-xml", "foreignObject", "desc", "title"
+};
+
+/* WHATWG categoria 'special': ambulatio li/dd/dt hic sistit (praeter
+ * address, div, p - spec) */
+hic_manens constans character* constans SPECIALIA[] = {
+    "address", "applet", "area", "article", "aside", "base", "basefont",
+    "bgsound", "blockquote", "body", "br", "button", "caption",
+    "center", "col", "colgroup", "dd", "details", "dir", "div", "dl",
+    "dt", "embed", "fieldset", "figcaption", "figure", "footer", "form",
+    "frame", "frameset", "h1", "h2", "h3", "h4", "h5", "h6", "head",
+    "header", "hgroup", "hr", "html", "iframe", "img", "input",
+    "keygen", "li", "link", "listing", "main", "marquee", "menu",
+    "meta", "nav", "noembed", "noframes", "noscript", "object", "ol",
+    "p", "param", "plaintext", "pre", "script", "search", "section",
+    "select", "source", "style", "summary", "table", "tbody", "td",
+    "template", "textarea", "tfoot", "th", "thead", "title", "tr",
+    "track", "ul", "wbr", "xmp", "mi", "mo", "mn", "ms", "mtext",
+    "annotation-xml", "foreignObject", "desc"
+};
+
+interior b32
+_limes_scopi_est (
+    chorda titulus)
+{
+    redde _in_tabula(titulus, LIMITES_SCOPI,
+        TABULAE_NUMERUS(LIMITES_SCOPI));
+}
+
+/* 'special' praeter address/div/p: ambulationem li/dd/dt sistit */
+interior b32
+_sistit_membrum (
+    chorda titulus)
+{
+    redde (b32)(_in_tabula(titulus, SPECIALIA,
+        TABULAE_NUMERUS(SPECIALIA))
+                && !_titulus_est(titulus, "address")
+                && !_titulus_est(titulus, "div")
+                && !_titulus_est(titulus, "p"));
+}
+
+/* Gradus scoporum pro elemento impellendo (index k, titulus eius):
+ * quisque campus = index elementi proximi VISIBILIS ab hoc gradu, aut
+ * -I. Computatus in impulsu ex gradu inferiore - O(I) per lexema, ut
+ * aedificator C milia gradus profundus iterativus et linearis maneat
+ * (lex H1): ambulatio acervi per tag quadratica erat, porta
+ * totalitatis id primo cursu monuit (CDLXXXIX s, pinnae profunditatis
+ * mortuae). */
+interior ScopiGradus
+_scopi_gradus (
+    constans HtmlParsura* p,
+                     i32  k,
+                  chorda  titulus)
+{
+    ScopiGradus g;
+    ScopiGradus infra;
+
+    si (k > ZEPHYRUM)
+    {
+        infra = *(ScopiGradus*)xar_obtinere(p->scopi, k - I);
+    }
+    alioquin
+    {
+        infra.p             = (s32)-I;
+        infra.membri        = (s32)-I;
+        infra.definitionis  = (s32)-I;
+        infra.bullae        = (s32)-I;
+    }
+    si (_titulus_est(titulus, "p"))
+    {
+        g.p = (s32)k;
+    }
+    alioquin si (   _limes_scopi_est(titulus)
+                 || _titulus_est(titulus, "button"))
+    {
+        g.p = (s32)-I;
+    }
+    alioquin
+    {
+        g.p = infra.p;
+    }
+    si (_titulus_est(titulus, "li"))
+    {
+        g.membri = (s32)k;
+    }
+    alioquin si (_sistit_membrum(titulus))
+    {
+        g.membri = (s32)-I;
+    }
+    alioquin
+    {
+        g.membri = infra.membri;
+    }
+    si (_titulus_est(titulus, "dd") || _titulus_est(titulus, "dt"))
+    {
+        g.definitionis = (s32)k;
+    }
+    alioquin si (_sistit_membrum(titulus))
+    {
+        g.definitionis = (s32)-I;
+    }
+    alioquin
+    {
+        g.definitionis = infra.definitionis;
+    }
+    si (_titulus_est(titulus, "button"))
+    {
+        g.bullae = (s32)k;
+    }
+    alioquin si (_limes_scopi_est(titulus))
+    {
+        g.bullae = (s32)-I;
+    }
+    alioquin
+    {
+        g.bullae = infra.bullae;
+    }
+    redde g;
+}
+
+/* Clausurae per scopum ante tabulam verticis: li/dd/dt per gradum
+ * membri, button in scopo, deinde p in scopo 'button' a claudentibus
+ * p. Omnia supra clauduntur locis clausurae absentibus (lex H4). */
+interior vacuum
+_scopos_claudere (
+    HtmlParsura* p,
+         chorda  titulus)
+{
+    constans ScopiGradus* vertex;
+                     s32  k = (s32)-I;
+
+    si (p->profunditas == ZEPHYRUM)
+    {
+        redde;
+    }
+    vertex = (constans ScopiGradus*)xar_obtinere(p->scopi,
+        p->profunditas - I);
+    si (_titulus_est(titulus, "li"))
+    {
+        k = vertex->membri;
+    }
+    alioquin si (   _titulus_est(titulus, "dd")
+                 || _titulus_est(titulus, "dt"))
+    {
+        k = vertex->definitionis;
+    }
+    alioquin si (_titulus_est(titulus, "button"))
+    {
+        k = vertex->bullae;
+    }
+    si (k >= ZEPHYRUM)
+    {
+        p->profunditas = (i32)k;
+    }
+    si (   p->profunditas > ZEPHYRUM
+        && _in_tabula(titulus, CLAUDENTIA_PARAGRAPHI,
+            TABULAE_NUMERUS(CLAUDENTIA_PARAGRAPHI)))
+    {
+        vertex = (constans ScopiGradus*)xar_obtinere(p->scopi,
+            p->profunditas - I);
+        si (vertex->p >= ZEPHYRUM)
+        {
+            p->profunditas = (i32)vertex->p;
+        }
+    }
+}
+
 /* An tag apertionis 'novum' elementum apertum 'apertum' implicite
  * claudat. */
 interior b32
@@ -583,7 +790,9 @@ _aperturam_tractare (
     _pendentia_claudere(p);
     titulus = _tag_titulus(token);
 
-    /* clausurae implicitae: vertex acervi dum tabula id iubet */
+    /* clausurae per scopum (O2b-5), deinde vertex acervi dum tabula
+     * id iubet */
+    _scopos_claudere(p, titulus);
     dum (p->profunditas > ZEPHYRUM)
     {
         MateriaNodus* vertex = _apertum(p, p->profunditas - I);
@@ -824,10 +1033,11 @@ html_arbor_parsare (
     }
     html_ligator_incipere(&p.ligator, piscina, &p.lexicon);
 
-    p.acervus = xar_creare(piscina, magnitudo(MateriaNodus*));
+    p.acervus  = xar_creare(piscina, magnitudo(MateriaNodus*));
+    p.scopi    = xar_creare(piscina, magnitudo(ScopiGradus));
     p.documentum = materia_nodus_creare(piscina,
         (s32)HTML_GENUS_DOCUMENTUM, (i32)II);
-    si (p.acervus == NIHIL || p.documentum == NIHIL)
+    si (p.acervus == NIHIL || p.scopi == NIHIL || p.documentum == NIHIL)
     {
         redde NIHIL;
     }

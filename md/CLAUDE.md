@@ -17,8 +17,9 @@ polish list desideratum 01M1NBEVM0.
   slot enums), `md_lexicon` (27 token genera, `md-` prefix, LINEA is the
   terminator), `md_lexema` (line table, scanners, token factory),
   `md_arbor` (blocks: containers, leaves, tables, definitions),
-  `md_inlinea` (inline tree owning its bytes), `md_decoctum` (entity and
-  escape decoding, url encoding), `md_exempla` (spec.txt reader).
+  `md_inlinea` (inline tree owning its bytes), `md_decoctum` (entity and escape decoding over the SHARED generated
+  HTML5 table `lib/entitates_html`, 2,231 names, CommonMark keeping the
+  strict `name;` rule; url encoding), `md_exempla` (spec.txt reader).
 - **Projection + html**: `md_stml` (consilium with the origin hook for
   derived tokens), `md/grammatica/md.canon` (hand-written, seal pinned),
   `md_html` (parse → project → compose with `md/html/md-html.stml` →
@@ -45,8 +46,8 @@ spec inputs byte-exact) · inlinea (§6 rules) · stml (STRUCTURALIS +
 FIDELIS round trip) · canon (drift guard both ways, seal, corpus judged)
 · totalitas (random/mutated/nested to 50k) · computus (golden
 `fixa/computus/basis.tsv`, `COMPUTUS_SCRIBERE=1` + a named cause) ·
-html (twelve inputs byte-exact) · oraculum (1,270/1,324 pinned, only
-rising; `ORACULUM_OMNIA=1`, `ORACULUM_EXEMPLUM=N`) · extenta (57) ·
+html (twelve inputs byte-exact) · oraculum (1,272/1,324 pinned, only rising — 1,270 at birth, +2
+from the full entity table 2026-09-15; `ORACULUM_OMNIA=1`, `ORACULUM_EXEMPLUM=N`) · extenta (57) ·
 census (41). Every gate was born red by a planted fault.
 
 ## The registry is generated (2026-09-15)

@@ -283,3 +283,26 @@ and 6 out (two code points); the buffer is now twice the input.
 Sixty-two html cases rose (entities01/02, tests with `&nbsp` and
 friends in text and attributes). md rose by two: the polish list had
 called the table "cheapest", and it was, but its gain was small.
+
+## 2026-09-15 — O2b-5: scope, and why H1 chose the top of the stack
+
+HTML5 closes a `p` that is anywhere in "button scope" when a block
+start tag arrives, closes the nearest `li` (or `dd`/`dt`) unless a
+"special" element other than `address`, `div` or `p` lies between,
+and closes a `button` in scope. H1 chose top-of-stack only, and the
+first cut of this change showed exactly why: I wrote the scope query
+as a stack walk per start tag, and the totality gate's 100,000-deep
+`<div>` chain — every `<div>` is a p-closer — became quadratic. The
+gate ran 489 s and reported its depth pins as crashes (the forked
+probes were killed). The byte oracle and the html5lib oracle were
+both green the whole time; only the depth pin saw it. That is the
+totality gate paying for itself a second time.
+
+Second cut: every stack frame records at push time the index of the
+nearest VISIBLE `p`, `li`, `dd|dt` and `button` below it (a scope
+boundary or a special element writes −1), computed from the frame
+below in O(1). A query reads the top frame. Totality is back to
+1.3 s, the tables are still tables (two more: `LIMITES_SCOPI`,
+`SPECIALIA`), and the arbor gate's "vertex solus" case is inverted
+with its cause. Seven cases rose. The depth class is now mostly the
+adoption agency and table synthesis, which are not closes at all.

@@ -35,7 +35,8 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   through the cooked view `html_coctum` against html5lib's expected
   trees, html/head/body unwrapped when the input never names them;
   RISING pin — 887 at birth, 930 after O2b-1, 985 after O2b-3, 1,047
-  after O2b-4 — of 1,700, fragments 77/184; `ORACULUM_OMNIA=1`,
+  after O2b-4, 1,054 after O2b-5 — of 1,700, fragments 77/184;
+  `ORACULUM_OMNIA=1`,
   `ORACULUM_EXEMPLUM=tests1.dat:20`). The runner compiles
   `materia/fontes` and `md/fontes` into `html/build/` — consumed,
   never contained.
@@ -68,8 +69,9 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   moving):** O2b-1 builder tables (887 → 930), O2b-2/3 `--!>` cooking
   + script-data escaping in `lib/html_lexema.c` (→ 985), O2b-4 the
   shared generated entity table `lib/entitates_html` (→ 1,047; md
-  consumes it too) DONE; next button scope for `p` (a law change,
-  explained first), foreign attributes. Then O3 wild fixtures (one ask per
+  consumes it too), O2b-5 scope for p/li/dd/dt/button as per-frame
+  visibility indices (→ 1,054) DONE; next foreign attributes and the
+  breakout (O2b-6). Then O3 wild fixtures (one ask per
   page), O4 the lexer's raw-text set. Then JS. Design: ledger
   desideratum 01M2KPNTT0.
 
@@ -85,9 +87,14 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   recursion. Every PENDING state (tag, clausura, malum) is closed by the
   first token that is not its own — the H8 bug was a state that
   survived a token it did not own.
-- **Implied closes look at the top of the stack only** and repeat:
-  `<p><b>x<div>` does NOT close p (HTML5's "button scope" = mechanism 1
-  of spec §6.1, deferred by H1).
+- **Implied closes: scope for `p`/`li`/`dd`/`dt`/`button`, top of the
+  stack for the rest** (O2b-5, 2026-09-15; was top-only under H1):
+  `<p><b>x<div>` closes p through b (button scope), `<li>a<div><li>`
+  closes the li through div but `<li>a<pre><li>` does not (`pre` is
+  "special", `div` is excepted). Scope is answered from PER-FRAME
+  visibility indices set at push (`ScopiGradus`), never by walking
+  the stack: a walk per start tag was quadratic and killed the
+  100,000-deep pins on its first run. Keep it O(1) per token.
 - **Nothing reserved in v1** (§11.6): the reader refuses unknown
   elements with a named cause and IGNORES unknown attributes (measured,
   pinned); extension points are named in the declaration's header.
