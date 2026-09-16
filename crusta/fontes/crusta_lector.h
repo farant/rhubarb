@@ -20,10 +20,11 @@
  * sententiam aut listam verborum terminant (VERBA ASSIGNATIONES
  * IN_VERBIS), LINEA (trivium) alibi.
  *
- * MODI XVIII (spec XV + TABULATUM pro valore tabulae '( )', et
+ * MODI XIX (spec XV + TABULATUM pro valore tabulae '( )', et
  * EXPANSIO_EXEMPLAR / EXPANSIO_SECTIO pro verbis argumentorum
  * expansionis quae '/' aut ':' terminat - lector modum non scit nisi
- * parsator dicit).
+ * parsator dicit; et POST_COMPOSITUM post lexema clausurae compositi,
+ * ubi bash verba reservata iterum agnoscit sed assignationes non).
  */
 
 #ifndef CRUSTA_LECTOR_H
@@ -73,6 +74,10 @@ nomen enumeratio {
     CRUSTA_MODUS_HEREDOC,
     /* corpus heredoc, delimitator citatus */
     CRUSTA_MODUS_HEREDOC_LITTERALE,
+    /* post lexema clausurae compositi ('}' ')' '))' ']]' 'fi' 'done'
+     * 'esac'): verba reservata agnoscuntur (bash: 'if ((x)) then',
+     * '{ { a; } }'), assignationes non, linea nova terminat */
+    CRUSTA_MODUS_POST_COMPOSITUM,
     CRUSTA_MODUS_NUMERUS_MODORUM
 } CrustaModus;
 

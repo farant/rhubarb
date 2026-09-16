@@ -199,6 +199,15 @@ _exemplar (
 }
 
 interior MateriaToken*
+_post_compositum (
+                Cursus* c,
+        CrustaLexGenus  genus,
+    constans character* textus)
+{
+    redde _pulsare(c, CRUSTA_MODUS_POST_COMPOSITUM, genus, textus);
+}
+
+interior MateriaToken*
 _gemina (
                 Cursus* c,
         CrustaLexGenus  genus,
@@ -812,6 +821,19 @@ _heredoc_litterale (
     _post_titulum(&c, CRUSTA_LEX_ARITHMETICA_APERTURA,
         "((");
     _finire(&c, CRUSTA_MODUS_ARITHMETICA_SUMMA);
+
+    /* post clausuram compositi: '}' 'fi' reservata, linea nova
+     * terminat, 'x=1' verbum nudum, '((' non arithmetica */
+    _incipere(&c, piscina, "} fi\nx=1 ((");
+    _post_compositum(&c, CRUSTA_LEX_RESERVATUM, "}");
+    _post_compositum(&c, CRUSTA_LEX_SPATIUM, " ");
+    _post_compositum(&c, CRUSTA_LEX_RESERVATUM, "fi");
+    _post_compositum(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    _post_compositum(&c, CRUSTA_LEX_LITTERALIS, "x=1");
+    _post_compositum(&c, CRUSTA_LEX_SPATIUM, " ");
+    _post_compositum(&c, CRUSTA_LEX_PARENTHESIS, "(");
+    _post_compositum(&c, CRUSTA_LEX_PARENTHESIS, "(");
+    _finire(&c, CRUSTA_MODUS_POST_COMPOSITUM);
 
 
     /* ==================================================

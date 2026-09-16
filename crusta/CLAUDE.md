@@ -18,8 +18,35 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P4 done)
+## Praesens status (2026-09-16 — P5 done)
 
+- **P5, the builder part two:** every compound command (`grex`,
+  `crustula`, `conditio`/`ramus`, `iteratio`/`cyclus`/`repetitio`
+  with `cursus`, `electio`/`optio`), the three function forms (`f()`,
+  `function f`, `function f ()` — `name()` converts the one-word
+  imperium in place, free because of the delayed append), `coproc`
+  (`socius`, first word held as a candidate until the next token
+  says title or command), `[[ ]]` (`iudicium` with its own four-level
+  machine; `=~` pulls one REGULA token into a literal part), and the
+  heredoc placement of decree 01M2NJ16RG: a body opens at the first
+  newline token after its redirection (separator or trivium), the
+  `heredoc` node is appended at once to the innermost SENTENCE LIST
+  (programma, substitution, pipa/catena, a compound's list), the
+  redirection gets `corpus` by referentia. Measured on bash 5.2:
+  `$(cat <<A)` + newline reads the body OUTSIDE, a backtick never
+  reads past its closing quote (empty body inside, closure absent).
+  A frame's ROLE is (genus, locus, status): list / expecting / closed
+  (status II = redirections, wrappable by `&&` `|`); a closing keyword
+  finds the nearest open frame of its genus and closes everything
+  above it absent (html's end-tag rule). Nineteenth lector mode
+  `POST_COMPOSITUM` (bash recognises reserved words after `))` `]]`
+  `}` `)`: `if ((x)) then`, `{ { a; } }`). `A=1 if` is a command named
+  `if` (RESERVATUM as a literal part). Gate `arbor`: 87 cases, 752
+  assertions; born red for P5 by sending every heredoc body to the
+  program list (the two bodies after `cat <<A <<B |` then emit before
+  the pipe). Known `sana` vs `bash -n` divergences: heredoc cut off by
+  EOF and `[[ a b ]]` (bash warns, exits 0). Named corner: a heredoc
+  whose newline lands in `iteratio.tok_separator` (P6 pathology).
 - **P4, arithmetic (`crusta_arithmetica.{h,c}`):** the precedence
   machine (shunting-yard over two explicit stacks) that the BUILDER
   drives: every frame with a `machina` (`pars-arithmetica`,
@@ -41,8 +68,6 @@ P3 on).
   constant trees with 64-bit wrapping. Gate `arithmetica`: structure
   cases, the ambiguity both ways, 43 values from bash 5.2.15, six
   refusals; born red by swapping the precedence of `*` and `+`.
-  Remaining intermediates for P5: `(` at command position, reserved
-  words other than `!`/`time`, `[[`, `;` inside `for ((`.
 
 ## P3 (2026-09-16)
 

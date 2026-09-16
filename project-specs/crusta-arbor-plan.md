@@ -895,7 +895,7 @@ silva.commissio("crusta: arithmetica - machina praecedentiae (shunting-yard, XVI
 **Interfaces:** none new; `RESERVATA_TRACTATIO[]` rows filled; the heredoc
 placement (decree 01M2NJ16RG) implemented.
 
-- [ ] **Step 1: Add the failing cases** to the arbor gate:
+- [x] **Step 1: Add the failing cases** to the arbor gate:
   - `if a; then b; elif c; then d; else e; fi` → conditio(probatio [imperium,
     separator], tok_deinde, liberi, rami [ramus elif, ramus else], tok_clausura);
     `if a\nthen\n b\nfi` (newlines: the one after `a` is a separator in
@@ -942,9 +942,9 @@ placement (decree 01M2NJ16RG) implemented.
     case byte-exact and `relatio.heredoca` counted.
   - the remaining absent-slot rows of spec §4.
 
-- [ ] **Step 2: Run and verify it fails.**
+- [x] **Step 2: Run and verify it fails.**
 
-- [ ] **Step 3: Implement** — `RESERVATA_TRACTATIO[]` rows: `if` → conditio
+- [x] **Step 3: Implement** — `RESERVATA_TRACTATIO[]` rows: `if` → conditio
   frame (locus probatio, mode INITIUM), `then` → the nearest conditio/ramus
   frame with probatio open: tok_deinde, locus liberi (a `then` elsewhere →
   malum), `elif`/`else` → close the conditio's liberi, push a ramus into
@@ -979,18 +979,30 @@ placement (decree 01M2NJ16RG) implemented.
   into the node, `materia_nodus_ponere(redirectio, CORPUS,
   materia_valor_referentia(heredoc), MATERIA_LOCUS_REFERENTIA)`.
 
-- [ ] **Step 4: Run and verify** — green; whole suite.
+- [x] **Step 4: Run and verify** — green; whole suite.
 
-- [ ] **Step 5: Plant** — append the heredoc node to the imperium frame
+- [x] **Step 5: Plant** — append the heredoc node to the imperium frame
   instead of the list frame → `cat <<A <<B | wc` emits the bodies before
   ` | wc` → byte red; revert.
 
-- [ ] **Step 6: Words, format, commit**
+- [x] **Step 6: Words, format, commit**
 
 ```python
 silva.commissio("crusta: aedificator II - imperia composita (conditio/rami, iteratio/cyclus/repetitio/cursus, electio/optiones, grex, crustula, functio, socius), iudicium [[ ]] cum regula, praefixa pipae, corpora heredoc ubi octeti iacent cum referentia (decretum 01M2NJ16RG); porta arboris aucta (rubra nata: corpus sub imperio)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",
     ["crusta/fontes/crusta_arbor.c", "crusta/probationes/probatio_crusta_arbor.c"], ["crusta"])
 ```
+
+**Executed 2026-09-16.** Deviations from the text above: the case
+`cat <<A <<B | wc\n1\nA\n2\nB\n` puts both bodies in the PROGRAM list
+after the separator (the newline follows `wc`); the shape "bodies after
+the operator node" is the case `cat <<A <<B |\n1\nA\n2\nB\nwc`, where
+the newline is a trivium after `|` — both are asserted. `` `cat <<A` ``
+never reads past the closing backtick (bash 5.2 measured): the body is
+empty inside the substitution, closure absent. A nineteenth lector mode
+`POST_COMPOSITUM` was needed (reserved words after `))` `]]` `}` `)`).
+`A=1 if` is a command named `if` (the P3 malum case rewritten). The
+absent-closure count includes a heredoc cut off by EOF and a functio
+without a body. Plant: every heredoc body sent to the program list.
 
 ---
 

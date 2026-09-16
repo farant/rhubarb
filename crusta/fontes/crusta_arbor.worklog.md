@@ -88,3 +88,71 @@ take redirections and be wrappable by `&&`/`|`, so its frame keeps
 status II ("clausum") with mode VERBA and its receiving locus set to
 `redirectiones`; the sentence-closing logic treats it like an
 imperium. P5 gives the same shape to every compound.
+
+## 2026-09-16 — P5 (builder, part two: compounds, functions, `[[ ]]`, heredocs)
+
+**A frame's role comes from (genus, locus, status), not from genus
+alone.** A `conditio` is a LIST while its `probatio` or `liberi` locus
+receives sentences, EXPECTING between (`then`/`elif` due), and a
+SENTENCE (status II) after `fi`, when it takes redirections and `&&`
+or `|` wrap it like an imperium. `_lista_est`, `_sententia_est`,
+`_compositum_clausum` and `_sententiam_admittit` read the frame, so
+every closing keyword is one call: find the nearest open frame of its
+genus, close everything above it with absent tokens (html's end-tag
+rule, `_claudere_usque`), put the token, flip to status II. Status
+numbers are per genus; the iteratio uses 0/I/III/IV (name, name seen,
+verba, separator seen) so that II always means "closed".
+
+**bash recognises reserved words right after `))`, `]]`, `}` and `)`**
+(`if ((x)) then`, `until [[ a ]] do`, `{ { a; } }`, all measured) but
+not after a plain word (`while true do` is an error). That is a
+nineteenth lector mode, `POST_COMPOSITUM`: reserved words and
+redirections on, assignments off (`[[ a ]] x=1` is an error), newline
+terminates. `coproc` asks the same mode for its first word, because
+`coproc a` followed by a newline must end there.
+
+**`name()` costs nothing because of the delayed append.** When `(`
+arrives on an imperium of exactly one literal word, the imperium node
+is simply forgotten (it was never appended) and the frame becomes a
+`functio` with `tok_titulus` = that word's token. `coproc NAME cmd`
+versus `coproc cmd`: the first literal word is held as a candidate;
+the next token decides (a compound opener makes it the title, anything
+else makes it the command's first word, materialised as an imperium
+whose word frame stays open so an adjacent part can still join).
+
+**Heredoc bodies and the two substitutions (bash 5.2 measured, refines
+decree 01M2NJ16RG).** `echo $(cat <<A)` + newline + body: bash warns
+"unterminated here-document" for the substitution and then reads the
+body from the OUTER text after the newline — so the petition stays
+queued and the body lands in the outer list. `` echo `cat <<A` `` +
+newline + body: bash never reads past the closing backtick; the body
+is empty inside the substitution and the following lines run as
+commands. The builder closes petitions made inside a backtick region
+at the region's end (`heredoca_ante` on the substitution frame marks
+which petitions are its own).
+
+**A newline that is trivia still starts a body.** After `cat <<A |`
+the newline is a `LINEA` trivium (INITIUM mode). The pending trivia
+are bound `post` of the `|` at once (`_solvere_retro`, the same C7
+division since the newline is last) and the body is opened; the
+`heredoc` node goes to the innermost frame that holds a sentence list
+— the pipa — right after the operator. Named corner: a newline that
+lands in `iteratio.tok_separator` (only reachable through `$( )` in
+the word list) has no following list, so that body would be appended
+to the enclosing list BEFORE the loop; bash refuses a bare `<<` in
+that position, the `$( )` route is left as a pathology for P6.
+
+**`[[ ]]` machine.** Four levels: unary and binary tests (IV, reduced
+as soon as their operand arrives — they take one word, never an
+expression), `!` (III, lazy: `! a == b` is `!(a == b)`), `&&` (II),
+`||` (I); parens are frames with their own machine. Two juxtaposed
+operands (`[[ a b ]]`) become an `iudicium-binaria` with the operator
+absent and count as a malum; bash prints "conditional binary operator
+expected" but `bash -n` still exits 0 — a known `sana`/`bash -n`
+divergence for P11's sanitas oracle, like a heredoc cut off by EOF
+(bash: warning, exit 0; crusta: closure absent).
+
+**`A=1 if` is a command named `if`** (bash measured), so a
+`RESERVATUM` token arriving on an imperium becomes a `pars-litteralis`
+whose token keeps genus RESERVATUM. The P3 case that pinned it as a
+malum was an intermediate and is rewritten.

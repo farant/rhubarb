@@ -646,6 +646,12 @@ hic_manens constans Ratio RATIONES[] = {
     { FALSUM, VERUM,  FALSUM, FALSUM, FALSUM, FALSUM }    /* EXEMPLAR */
 };
 
+/* post clausuram compositi: reservata et redirectiones, linea nova
+ * terminat, assignationes verba nuda */
+hic_manens constans Ratio RATIO_POST_COMPOSITUM = {
+    VERUM, FALSUM, FALSUM, FALSUM, VERUM, FALSUM
+};
+
 /* operatores redirectionis ordine longitudinis (praefixum longius
  * primum) */
 hic_manens constans character* constans REDIRECTIONES_ORDINE[] = {
@@ -1395,6 +1401,8 @@ crusta_lector_proximum (
         casus CRUSTA_MODUS_IN_VERBIS:
         casus CRUSTA_MODUS_EXEMPLAR:
             redde _imperium(lector, &RATIONES[(i32)modus]);
+        casus CRUSTA_MODUS_POST_COMPOSITUM:
+            redde _imperium(lector, &RATIO_POST_COMPOSITUM);
         casus CRUSTA_MODUS_GEMINA:
             si (lector->situs.titulus_exspectatur)
             {
