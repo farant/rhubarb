@@ -574,6 +574,10 @@ _commentarium_scribere (
         {
             datum.mensura = ZEPHYRUM;
         }
+        alioquin si (_terminatur_literis(datum, "--!>"))
+        {
+            datum.mensura = datum.mensura - IV;   /* clausura prava */
+        }
         alioquin si (_terminatur_literis(datum, "-->"))
         {
             datum.mensura = datum.mensura - III;

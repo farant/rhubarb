@@ -31,7 +31,7 @@
 #include <string.h>
 
 /* pinna: praeterita minima (nativitas: valor post cursum primum) */
-#define PINNA_PRAETERITA   ((s32)930)
+#define PINNA_PRAETERITA   ((s32)985)
 /* exempla iudicata = MDCCVIII - VIII script-on */
 #define TOTALIS_PINNATUS   ((i32)1700)
 #define LINEAE_MAXIMAE     ((i32)8192)

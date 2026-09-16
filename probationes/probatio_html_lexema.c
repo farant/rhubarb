@@ -331,7 +331,8 @@ principale (vacuum)
         _seriem_probare(piscina, "<![CDATA[apertum", exspectata, 1);
     }
 
-    imprimere("\n--- Textus crudus (script/style/title/textarea) ---\n");
+    imprimere("\n--- Textus crudus (script/style/title/textarea) "
+        "---\n");
     {
         interior constans HtmlLexemaGenus exspectata[] = {
             HTML_LEX_TAG_APERTURA, HTML_LEX_TAG_FINIS,
@@ -397,6 +398,41 @@ principale (vacuum)
         /* '</script' + EOF clausura non est - crudus manet */
         _seriem_probare(piscina, "<script>x</script",
             exspectata, 3);
+    }
+    {
+        /* effugium script-data HTML5 (oraculum html5lib, O2b-3):
+         * '<!--' effugium aperit, in quo '<script' duplex aperit ubi
+         * '</script' textus manet; '-->' redit; '<!-->' statim redit;
+         * style effugium nescit. Crudus UNUS manet. */
+        interior constans HtmlLexemaGenus exspectata[] = {
+            HTML_LEX_TAG_APERTURA, HTML_LEX_TAG_FINIS,
+            HTML_LEX_TEXTUS_CRUDUS, HTML_LEX_TAG_CLAUSURA,
+            HTML_LEX_TAG_FINIS };
+
+        _seriem_probare(piscina,
+            "<script><!--<script></script></script>", exspectata, 5);
+        _valorem_probare(piscina,
+            "<script><!--<script></script></script>", (i32)2,
+            "<!--<script></script>");
+        /* effugium simplex: '</script' claudit */
+        _seriem_probare(piscina, "<script><!--x</script>",
+            exspectata, 5);
+        _valorem_probare(piscina, "<script><!--x</script>", (i32)2,
+            "<!--x");
+        /* '-->' ex duplici redit: clausura sequens claudit */
+        _valorem_probare(piscina,
+            "<script><!--<script>--></script>", (i32)2,
+            "<!--<script>-->");
+        /* '<!-->' statim redit */
+        _valorem_probare(piscina, "<script><!--></script>", (i32)2,
+            "<!-->");
+        /* '</SCRIPT>' intra duplex casu neglecto textus */
+        _valorem_probare(piscina,
+            "<script><!--<script></SCRIPT>x</script>", (i32)2,
+            "<!--<script></SCRIPT>x");
+        /* style effugium nescit */
+        _valorem_probare(piscina, "<style><!--<style></style>", (i32)2,
+            "<!--<style>");
     }
 
     imprimere("\n--- Margines '<' et truncationes ---\n");

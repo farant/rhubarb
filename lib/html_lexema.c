@@ -314,9 +314,114 @@ _clausura_cruda_hic (
 }
 
 
+/* stat apertura '<script' ad cursorem? '<' + 'script' (casu neglecto)
+ * + (spatium | '/' | '>') - effugium duplex script-data (spec) */
+interior b32
+_apertura_scripti_hic (
+    HtmlLexator* lx);
+
+interior b32
+_apertura_scripti_hic (
+    HtmlLexator* lx)
+{
+    interior constans character* titulus = "script";
+                            i32  j;
+                      character  c;
+
+    si (_ad(lx, 0) != '<')
+    {
+        redde FALSUM;
+    }
+    per (j = 0; titulus[j] != '\0'; j = j + 1)
+    {
+        si (_minuscula(_ad(lx, j + 1)) != titulus[j])
+        {
+            redde FALSUM;
+        }
+    }
+    c = _ad(lx, 7);
+    redde _est_spatium(c) || c == '/' || c == '>';
+}
+
+
 /* ==================================================
  * consumptores
  * ================================================== */
+
+/* textus crudus consumere (cursor post tag crudum; clausura cruda non
+ * hic stat). SCRIPT solum status effugii HTML5 fert: '<!--' effugium
+ * aperit ('<!-->' statim redit); in effugio '<script' effugium DUPLEX
+ * aperit, ubi '</script' textus manet et ad effugium simplex redit;
+ * '-->' (aut '--->' ...) ad statum datorum redit. Style/title/
+ * textarea ad clausuram suam nudam. Oraculum html5lib id ostendit
+ * (O2b-3, 2026-09-15): paginae verae '<!--' intra script ferunt. */
+interior HtmlLexemaGenus
+_crudum_consumere (
+    HtmlLexator* lx);
+
+interior HtmlLexemaGenus
+_crudum_consumere (
+    HtmlLexator* lx)
+{
+    b32 scriptum = _titulus_aequat(lx->crudus_datum, lx->crudus_mensura,
+        "script");
+    i32 effugium = 0;   /* 0 datorum, 1 simplex, 2 duplex */
+
+    dum (_intra(lx, 0))
+    {
+        character c = _ad(lx, 0);
+
+        si (c == '<')
+        {
+            si (effugium != 2 && _clausura_cruda_hic(lx))
+            {
+                redde HTML_LEX_TEXTUS_CRUDUS;
+            }
+            si (scriptum)
+            {
+                si (   effugium   == 0 && _ad(lx, 1) == '!'
+                    && _ad(lx, 2) == '-' && _ad(lx, 3) == '-')
+                {
+                    lx->k = lx->k + 4;
+                    dum (_ad(lx, 0) == '-')
+                    {
+                        lx->k = lx->k + 1;
+                    }
+                    si (_ad(lx, 0) == '>')
+                    {
+                        lx->k = lx->k + 1;   /* '<!-->' : redit */
+                    }
+                    alioquin
+                    {
+                        effugium = 1;
+                    }
+                    perge;
+                }
+                si (effugium == 1 && _apertura_scripti_hic(lx))
+                {
+                    effugium  = 2;
+                    lx->k     = lx->k + 7;
+                    perge;
+                }
+                si (effugium == 2 && _clausura_cruda_hic(lx))
+                {
+                    effugium  = 1;
+                    lx->k     = lx->k + 8;
+                    perge;
+                }
+            }
+        }
+        alioquin si (   scriptum && effugium != 0 && c == '-'
+                     && _ad(lx, 1) == '-' && _ad(lx, 2) == '>')
+        {
+            effugium  = 0;
+            lx->k     = lx->k + 3;
+            perge;
+        }
+        lx->k = lx->k + 1;
+    }
+    redde HTML_LEX_TEXTUS_CRUDUS_IMPERFECTUS;
+}
 
 /* titulum tagi consumere (cursor post '<' aut '</'); statum
  * intra-tag instituit */
@@ -634,15 +739,7 @@ _lexema_consumere (
     {
         si (!_clausura_cruda_hic(lx))
         {
-            dum (_intra(lx, 0))
-            {
-                si (_ad(lx, 0) == '<' && _clausura_cruda_hic(lx))
-                {
-                    redde HTML_LEX_TEXTUS_CRUDUS;
-                }
-                lx->k = lx->k + 1;
-            }
-            redde HTML_LEX_TEXTUS_CRUDUS_IMPERFECTUS;
+            redde _crudum_consumere(lx);
         }
         lx->modus = MODUS_DATA;
         /* clausura infra via datorum lexatur */

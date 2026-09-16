@@ -602,7 +602,8 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
 
         /* O2b (oraculum html5lib): tabulae impletae */
-        imprimere("\n--- Probans '<head><body>': head ab omni nisi ---\n");
+        imprimere("\n--- Probans '<head><body>': head ab omni "
+            "nisi ---\n");
         CREDO_VERUM (_octetos_probare(piscina, "<head><body>", XII));
         documentum = _parsare(piscina, "<head><body>");
         CREDO_AEQUALIS_I32 (_numerus(documentum,

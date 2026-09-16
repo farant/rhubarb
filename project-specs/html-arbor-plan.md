@@ -893,12 +893,15 @@ tasks, one commit each, under the same Global Constraints.
     closed by every start tag except a permitted set (`nisi` rows — the
     table gained one flag, no program). Arbor gate: six new cases.
     **887 → 930.** Plant: `dir` removed from the p-closers.
-  - [ ] **O2b-2 lexer: `--!>`** closes a comment (WHATWG "comment end
-    bang state"); bogus comment forms at EOF.
-  - [ ] **O2b-3 lexer: script-data escaping** (`<!--` inside script
-    opens the escaped states; `<script>` there opens double-escaped;
-    `</script>` closes only outside; `-->` returns) — real pages carry
-    `<!--` in scripts.
+  - [x] **O2b-2 `--!>`** (2026-09-15): the lexer already closed on it;
+    the cooked view now strips it too. Oracle-side, one line.
+  - [x] **O2b-3 lexer: script-data escaping** (2026-09-15): `<!--`
+    inside `script` opens the escaped state, `<script` there opens
+    double-escaped where `</script>` is text, `-->` returns, `<!-->`
+    returns at once; style/title/textarea untouched
+    (`_crudum_consumere` in `lib/html_lexema.c`, header note). Seven
+    root-suite lexer cases. **930 → 985.** Plant: the double-escape
+    transition disabled → root lexer test red.
   - [ ] **O2b-4 named entities** — DESIGN: one generated table of the
     2,231 HTML5 names (+ the legacy no-semicolon forms) at root tier
     (`lib/`), generated OFFLINE from Python's stdlib `html.entities`

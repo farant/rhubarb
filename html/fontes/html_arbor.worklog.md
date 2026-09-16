@@ -234,3 +234,25 @@ Forty-three cases rose. The remaining depth failures are the real
 mechanism: `<a>1<p>2</a>3</p>` wants the adoption agency to reopen `a`
 inside `p`, and `<p><b>x<div>` wants button scope, which O2b-5 will
 ask about before changing the top-of-stack law.
+
+## 2026-09-15 — O2b-2/3: `--!>` was mine, script escaping the lexer's; 930 → 985
+
+The comment failures were not the lexer's: it already closes a
+comment on `--!>` (the "comment end bang" state) and my cooked view
+only stripped `-->`. One line.
+
+Script-data escaping was real. HTML5 keeps three states inside a
+`<script>`: after `<!--` the content is "escaped"; there a `<script`
+start opens "double escaped", inside which `</script>` is TEXT and
+only `-->` returns; outside the double state `</script>` closes. Real
+pages carry `<!--` in scripts (the old browser-hiding idiom), so
+without this the lexer cut such scripts short — and the byte gate
+could not see it, since both halves still concatenate to the source.
+Implemented in `lib/html_lexema.c` as `_crudum_consumere`, a
+three-valued flag over the existing raw-text scan; style, title and
+textarea untouched. Seven new lexer cases in the root suite. The
+raw-text token stays ONE token, so nothing downstream changed shape:
+the byte gate, the STML gate and the totality gate never noticed.
+
+Fifty-five cases rose, all from `scriptdata01`, `domjs-unsafe`,
+`comments01`, `tests16`.

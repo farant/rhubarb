@@ -52,3 +52,19 @@ larger token (cooking is the arbor's job, per the trio contract).
 script/style differ only in cooking (char refs), not in boundaries,
 so one `MODUS_CRUDUS` serves all four. The distinction is recorded
 here for the future html_arbor.
+
+## 2026-09-15 — script-data escaping (O2b-3, from the html5lib oracle)
+
+The html5lib oracle (`html/probationes/probatio_html_oraculum`) showed
+scripts cut short: `<script><!--<script></script></script>` must be
+ONE raw-text token ending at the last `</script>`. HTML5 keeps three
+states inside `script`: after `<!--` the content is escaped; there a
+`<script` start opens double-escaped, where `</script>` is text and
+only `-->` returns; outside the double state `</script>` closes. Real
+pages carry `<!--` in scripts (the browser-hiding idiom), and the
+byte-fidelity oracle cannot see this class at all, because a script
+cut short still concatenates to the source. `_crudum_consumere` now
+carries a three-valued flag; `<!-->` returns at once; style, title and
+textarea are untouched. Seven cases in `probatio_html_lexema`; born
+red by disabling the double-escape transition. The token shape did
+not change, so no consumer moved.
