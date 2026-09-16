@@ -230,6 +230,32 @@ _involutum (
     redde _liber(html, HTML_ELEMENTUM_LIBERI, i);
 }
 
+/* Originale exemplaris (O7c): scopus loci exemplar, aut NIHIL */
+hic_manens MateriaNodus*
+_exemplar (
+    constans MateriaNodus* nodus)
+{
+    si (   nodus == NIHIL || nodus->genus != (s32)HTML_GENUS_ELEMENTUM
+        || nodus->loci[HTML_ELEMENTUM_EXEMPLAR].genus
+               != MATERIA_VALOR_REFERENTIA)
+    { redde NIHIL;
+    }
+    redde nodus->loci[HTML_ELEMENTUM_EXEMPLAR].datum.nodus;
+}
+
+/* Praecedens (O7c): frater DOM prior nodi moti, aut NIHIL */
+hic_manens MateriaNodus*
+_praecedens (
+    constans MateriaNodus* nodus)
+{
+    si (   nodus == NIHIL || nodus->genus != (s32)HTML_GENUS_ELEMENTUM
+        || nodus->loci[HTML_ELEMENTUM_PRAECEDENS].genus
+               != MATERIA_VALOR_REFERENTIA)
+    { redde NIHIL;
+    }
+    redde nodus->loci[HTML_ELEMENTUM_PRAECEDENS].datum.nodus;
+}
+
 integer
 principale (vacuum)
 {
@@ -888,18 +914,37 @@ principale (vacuum)
             (s32)HTML_GENUS_TEXTUS_CRUDUS);
         CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
 
-        imprimere("\n--- Probans '</br>' et '<br></br>': malum ---\n");
+        imprimere("\n--- Probans '</br>' et '<br></br>': br fictum "
+            "(O7c) ---\n");
+        /* spec: '</br>' ut '<br>' - elementum br FICTUM (synthesis),
+         * clausura vera in ficto; deviatio 'malum' H4 retirata */
         documentum = _parsare(piscina, "</br>");
-        CREDO_AEQUALIS_S32 (
-            _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
-            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (elementum->genus,
+            (s32)HTML_GENUS_ELEMENTUM);
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_FRACTURA);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_NON_NIHIL (_tok(elementum,
+            HTML_ELEMENTUM_TOK_CLAUSURA_FINIS));
         documentum = _parsare(piscina, "<br></br>");
         CREDO_AEQUALIS_I32 (_numerus(documentum,
             HTML_DOCUMENTUM_LIBERI),
             II);
         CREDO_AEQUALIS_S32 (
-            _liber(documentum, HTML_DOCUMENTUM_LIBERI, I)->genus,
-            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+            _synthesis(_liber(documentum, HTML_DOCUMENTUM_LIBERI, I)),
+            (s32)HTML_SYNTHESIS_FRACTURA);
+        /* '</p>' sine p in scopo: p fictum clausum (spec) */
+        documentum = _parsare(piscina, "x</p>y");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            III);
+        elementum = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_S32 (_synthesis(elementum),
+            (s32)HTML_SYNTHESIS_PARAGRAPHUS);
+        CREDO_NON_NIHIL (_tok(elementum, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_VERUM (_absens(elementum, HTML_ELEMENTUM_LIBERI));
 
         imprimere("\n--- Probans '</h3 x=y>' clausura attributa ---\n");
         /* Porta totalitatis H8 invenit: '>' post '</h3' mutatum,
@@ -1371,6 +1416,167 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (
             _liber(documentum, HTML_DOCUMENTUM_LIBERI, I)->genus,
             (s32)HTML_GENUS_ELEMENTUM_MALUM);
+    }
+
+
+    /* ==================================================
+     * STRUCTURA O7c: adoption agency - exemplar, praecedens,
+     * involutio, reconstructio, arca Noe, signa
+     * ================================================== */
+
+    {
+        MateriaNodus* documentum;
+        MateriaNodus* formans;
+        MateriaNodus* bloccum;
+        MateriaNodus* exemplar;
+        MateriaNodus* liber;
+
+        imprimere("\n--- Probans '<a>1<p>2</a>3</p>': adoptio simplex "
+            "---\n");
+        /* octeti: a{1, p{2}}, '3', malum '</p>'; DOM: p in radicem
+         * post a (sedes + praecedens), exemplar a in p liberos p
+         * involvit, '3' in p per sedem (p octetis clausum) */
+        CREDO_VERUM (_octetos_probare(piscina, "<a>1<p>2</a>3</p>",
+            XVII));
+        documentum = _parsare(piscina, "<a>1<p>2</a>3</p>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            III);
+        formans = _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(formans, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_I32 (_numerus(formans, HTML_ELEMENTUM_LIBERI),
+            II);
+        bloccum = _liber(formans, HTML_ELEMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_PTR (_sedes(bloccum), documentum);
+        CREDO_AEQUALIS_PTR (_praecedens(bloccum), formans);
+        CREDO_AEQUALIS_I32 (_numerus(bloccum, HTML_ELEMENTUM_LIBERI),
+            I);
+        exemplar = _liber(bloccum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_PTR (_exemplar(exemplar), formans);
+        CREDO_VERUM (_absens(exemplar, HTML_ELEMENTUM_TOK_APERTURA));
+        CREDO_AEQUALIS_I32 (_numerus(exemplar, HTML_ELEMENTUM_LIBERI),
+            I);
+        liber = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);   /* 3 */
+        CREDO_AEQUALIS_S32 (liber->genus, (s32)HTML_GENUS_TEXTUS);
+        CREDO_AEQUALIS_PTR (_sedes(liber), bloccum);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, II)->genus,
+            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+
+        imprimere("\n--- Probans '<b><a><div>x</b>y</a>': catena et "
+            "praecedens ---\n");
+        /* '</b>': div in exemplar a' (catena) in radicem; b' liberos
+         * div involvit. 'y' in a' per octetos, sedes div. '</a>':
+         * clausura in a' (octetis apertum), div in radicem POST a'
+         * (praecedens - ordo octetorum id non daret), a'' liberos div
+         * (b' et y) involvit */
+        CREDO_VERUM (_octetos_probare(piscina, "<b><a><div>x</b>y</a>",
+            XXI));
+        documentum = _parsare(piscina, "<b><a><div>x</b>y</a>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        formans = _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_NON_NIHIL (_tok(formans, HTML_ELEMENTUM_TOK_CLAUSURA));
+        /* liber = a, bloccum = div, exemplar = a' */
+        liber     = _liber(formans, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        bloccum   = _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        exemplar  = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_PTR (_exemplar(exemplar), liber);
+        CREDO_NON_NIHIL (_tok(exemplar, HTML_ELEMENTUM_TOK_CLAUSURA));
+        CREDO_AEQUALIS_PTR (_sedes(bloccum), documentum);
+        CREDO_AEQUALIS_PTR (_praecedens(bloccum), exemplar);
+        CREDO_AEQUALIS_I32 (_numerus(exemplar, HTML_ELEMENTUM_LIBERI),
+            I);
+        /* liber = y (in a' per octetos) */
+        liber = _liber(exemplar, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (liber->genus, (s32)HTML_GENUS_TEXTUS);
+        CREDO_AEQUALIS_I32 (_numerus(bloccum, HTML_ELEMENTUM_LIBERI),
+            I);
+        /* exemplar = a'' (liber div), y in a'' per sedem */
+        exemplar = _liber(bloccum, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_PTR (_exemplar(exemplar),
+            _liber(formans, HTML_ELEMENTUM_LIBERI, ZEPHYRUM));
+        CREDO_AEQUALIS_PTR (_sedes(liber), exemplar);
+        /* liber = b' (liber a'') */
+        liber = _liber(exemplar, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_PTR (_exemplar(liber), formans);
+        CREDO_AEQUALIS_S32 (
+            _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_TEXTUS);
+
+        imprimere("\n--- Probans '<p><b>x</p>y': reconstructio ---\n");
+        /* b per '</p>' cadit, in lista manet: 'y' exemplar b aperit */
+        documentum = _parsare(piscina, "<p><b>x</p>y");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        formans = _liber(_liber(documentum, HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM), HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        exemplar = _liber(documentum, HTML_DOCUMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_PTR (_exemplar(exemplar), formans);
+        CREDO_NIHIL (_sedes(exemplar));
+        CREDO_AEQUALIS_S32 (
+            _liber(exemplar, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_TEXTUS);
+
+        imprimere("\n--- Probans arcam Noe et signum ---\n");
+        /* quartum b primum e lista tollit: '</b>' quater b omnia
+         * claudit, exemplar nullum, 'y' in radice */
+        documentum = _parsare(piscina,
+            "<b><b><b><b>x</b></b></b></b>y");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, I)->genus,
+            (s32)HTML_GENUS_TEXTUS);
+        /* td signum impellit: b intra cellam post '</td>' e lista cadit
+         * (signum lapsum purgat) - 'y' fotum sine exemplari */
+        documentum = _parsare(piscina, "<table><td><b>x</td>y");
+        /* table > tbody > tr: liberi td et y */
+        liber = _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM);
+        liber = _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        liber = _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), II);
+        liber = _liber(liber, HTML_ELEMENTUM_LIBERI, I);
+        CREDO_AEQUALIS_S32 (liber->genus, (s32)HTML_GENUS_TEXTUS);
+        CREDO_AEQUALIS_PTR (_sedes(liber), documentum);
+
+        imprimere("\n--- Probans '<a>' iteratum et '<nobr>' ---\n");
+        /* a in lista: adoptio a prioris (sine blocco: clausura
+         * implicita), deinde a novum frater */
+        documentum = _parsare(piscina, "<a href=x>1<a href=y>2");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            II);
+        CREDO_AEQUALIS_I32 (_numerus(_liber(documentum,
+            HTML_DOCUMENTUM_LIBERI, ZEPHYRUM), HTML_ELEMENTUM_LIBERI),
+            I);
+        /* a non in scopo ('<table>' limes): e lista et acervo remotum,
+         * a novum fotum in a prius (parens DOM tabulae) */
+        documentum = _parsare(piscina, "<a><table><a>x");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            I);
+        /* formans = a prius, liber = a novum (liber tabulae) */
+        formans  = _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM);
+        liber    = _liber(formans, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        liber    = _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM);
+        CREDO_NON_NIHIL (liber);
+        CREDO_AEQUALIS_PTR (_sedes(liber), formans);
+        CREDO_AEQUALIS_S32 (
+            _liber(liber, HTML_ELEMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_TEXTUS);
+        /* nobr in scopo: adoptio, deinde nobr novum - tres fratres,
+         * exemplar nullum (tests3 #21) */
+        documentum = _parsare(piscina, "<nobr><nobr><nobr>");
+        CREDO_AEQUALIS_I32 (_numerus(documentum,
+            HTML_DOCUMENTUM_LIBERI),
+            III);
+        CREDO_NIHIL (_exemplar(_liber(documentum,
+            HTML_DOCUMENTUM_LIBERI,
+            II)));
     }
 
 

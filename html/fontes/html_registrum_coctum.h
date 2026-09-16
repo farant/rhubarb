@@ -2,7 +2,7 @@
  *
  * Registrum generum COCTUM grammaticae 'html' - GENERATUM, NE MANU
  * EDITES. Fons: html/grammatica/html.registrum.stml
- * (materia/coquere.sh). Genera X, loci XXIII.
+ * (materia/coquere.sh). Genera X, loci XXV.
  */
 
 #ifndef HTML_REGISTRUM_COCTUM_H
@@ -22,9 +22,14 @@ nomen enumeratio {
      * implicita, apertum ad EOF, se-claudens = loci absentes,
      * numquam lexemata ficta. synthesis (O7a, 2026-09-15): elementum
      * a spec HTML5 FICTUM - lexemata nulla, index in tabulam
-     * html_arbor (html head body tbody tr colgroup; ZEPHYRUM numquam
-     * scriptus, locus absens = elementum verum); visio cocta id
-     * imprimit, emissor nihil */
+     * html_arbor (html head body tbody tr colgroup p br; ZEPHYRUM
+     * numquam scriptus, locus absens = elementum verum); visio cocta
+     * id imprimit, emissor nihil. exemplar (O7c, 2026-09-16):
+     * elementum formans iterum apertum (adoption agency,
+     * reconstructio) - lexemata nulla, titulus et attributa elementi
+     * originalis referentia lecti. praecedens (O7c): frater DOM
+     * prior elementi ab adoption agency moti (post elementum formans
+     * clausum) */
     HTML_GENUS_ELEMENTUM,
     HTML_GENUS_ATTRIBUTUM,
     /* Contentum: nodi, non trivia (H6). Spatia extra tags textus
@@ -38,9 +43,9 @@ nomen enumeratio {
      * body rediit (spec 'after body' -> 'in body') */
     HTML_GENUS_COMMENTARIUM,
     HTML_GENUS_CDATA,
-    /* Robustitas: tag clausurae sine pari aperto (etiam
-     * '&lt;/br&gt;', quod HTML5 in '&lt;br&gt;' vertit - deviatio
-     * nominata) */
+    /* Robustitas: tag clausurae sine pari aperto ('&lt;/br&gt;' et
+     * '&lt;/p&gt;' sine p aperto elementa FICTA dant, O7c - deviatio
+     * '&lt;/br&gt;' malum' H4 retirata) */
     HTML_GENUS_ELEMENTUM_MALUM,
 
     HTML_GENUS_NUMERUS_GENERUM

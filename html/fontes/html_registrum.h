@@ -50,8 +50,26 @@ nomen enumeratio {
     HTML_ELEMENTUM_TOK_CLAUSURA,
     HTML_ELEMENTUM_TOK_CLAUSURA_FINIS,
     HTML_ELEMENTUM_SYNTHESIS,
-    HTML_ELEMENTUM_SEDES
+    HTML_ELEMENTUM_SEDES,
+    HTML_ELEMENTUM_EXEMPLAR,
+    HTML_ELEMENTUM_PRAECEDENS
 } HtmlLocusElementi;
+
+/* Locus 'exemplar' (O7c, 2026-09-16; in elementum): REFERENTIA ad
+ * elementum ORIGINALE cuius hoc elementum iterum apertum est (WHATWG
+ * 'create an element for the token for which node was created' -
+ * adoption agency, reconstructio listae formantium activorum).
+ * Lexemata nulla; titulus et attributa per referentiam leguntur;
+ * emissor nihil scribit, visio cocta elementum ut originale imprimit.
+ * Referentia semper ad originale VERUM (exemplar exemplaris nusquam).
+ *
+ * Locus 'praecedens' (O7c; in elementum): REFERENTIA ad fratrem DOM
+ * PRIOREM nodi ab adoption agency in avum communem moti (spec gradus
+ * XIV: post elementum formans clausum appenditur). Cum sede solum;
+ * visio cocta nodum post praecedentem in liberis sedis ponit - ordo
+ * octetorum id dare non potest (frater prior serius natus esse potest,
+ * '<b><a><div>x</b>y</a>'). Absens = regula sedis sola (ante tabulam
+ * continentem, aliter post omnes). */
 
 /* Locus 'sedes' (O7b, 2026-09-15; in elementum, textus, referentia,
  * commentarium):
@@ -67,9 +85,11 @@ nomen enumeratio {
 
 /* Valores loci 'synthesis' (O7a, 2026-09-15): elementum a spec HTML5
  * FICTUM, lexemata nulla - involucra html/head/body et partes
- * tabulae tbody/tr/colgroup. Titulus per html_arbor_synthesis_titulus
- * (html_arbor.h). NULLA numquam scribitur: locus absens = elementum
- * verum (tok_apertura eius). */
+ * tabulae tbody/tr/colgroup; O7c (2026-09-16): p quod '</p>' sine p
+ * in scopo fingit et br quod '</br>' fingit (clausura vera in ficto
+ * cadit). Titulus per html_arbor_synthesis_titulus (html_arbor.h).
+ * NULLA numquam scribitur: locus absens = elementum verum
+ * (tok_apertura eius). APPENDUNTUR solum (index in STML scriptus). */
 nomen enumeratio {
     HTML_SYNTHESIS_NULLA = 0,
     HTML_SYNTHESIS_RADIX,             /* html */
@@ -78,6 +98,8 @@ nomen enumeratio {
     HTML_SYNTHESIS_CORPUS_TABULAE,    /* tbody */
     HTML_SYNTHESIS_ORDO,              /* tr */
     HTML_SYNTHESIS_COLUMNAE,          /* colgroup */
+    HTML_SYNTHESIS_PARAGRAPHUS,       /* p  (O7c) */
+    HTML_SYNTHESIS_FRACTURA,          /* br (O7c) */
     HTML_SYNTHESIS_NUMERUS
 } HtmlSynthesis;
 

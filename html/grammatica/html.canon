@@ -42,7 +42,11 @@
   post body, caput post head); textus '#nodN', ancora id="nodN" in
   scopo (materia: elementum aut documentum) - 'id' ergo NUNC
   declaratur in ambobus; sigillum a69b019f -> 5bf2be5d, loci XIX ->
-  XXIII. Nominatum nondum declaratum: 'exemplar' (O7c).
+  XXIII. O7c (2026-09-16): loci 'exemplar' et 'praecedens'
+  (referentiae) in elementum APPENSI - elementum formans iterum
+  apertum (adoption agency, reconstructio: titulus et attributa per
+  originale) et frater DOM prior nodi ab adoption agency moti; loci
+  XXIII -> XXV, sigillum 5bf2be5d -> b307882e.
 -->
 <canon dialectus="html" versio="1">
 
@@ -134,11 +138,13 @@
             (ex html.registrum.stml; H1: X genera, XVIII loci; O7a
             2026-09-15: XIX loci, synthesis appensus, 0ae63151 ->
             a69b019f; O7b 2026-09-16: XXIII loci, sedes quater
-            appensus, a69b019f -> 5bf2be5d). Tabula mutata sine hac
+            appensus, a69b019f -> 5bf2be5d; O7c 2026-09-16: XXV
+            loci, exemplar et praecedens appensi, 5bf2be5d ->
+            b307882e). Tabula mutata sine hac
             optione mutata rubet in iudicio ET in custode derivae
             (probatio_html_canon optionem contra materia_arbor_sigillum
             vivum confert). Manu movenda cum causa.">
-      <optio>5bf2be5d</optio>
+      <optio>b307882e</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -205,10 +211,12 @@
     nota="sex loci lexematum OMNES optionales (H4): vacuum, clausura
           implicita, apertum ad EOF, tag scissum = loci absentes;
           synthesis (O7a) = elementum fictum sine lexematibus; sedes
-          (O7b) = parens DOM alibi">
+          (O7b) = parens DOM alibi; exemplar (O7c) = elementum formans
+          iterum apertum, praecedens (O7c) = frater DOM prior">
     <attributum nomen="id" genus="textus"
       nota="O7b: ancora referentiae (nodN) - materia scribit ubi sedes
-            alicuius nodi in hoc elementum spectat"/>
+            (O7c: exemplar, praecedens) alicuius nodi in hoc elementum
+            spectat"/>
     <liberum nomen="tok_apertura"       maximum="1"/>
     <liberum nomen="attributa"          maximum="1"/>
     <liberum nomen="tok_finis"          maximum="1"/>
@@ -217,6 +225,8 @@
     <liberum nomen="tok_clausura_finis" maximum="1"/>
     <liberum nomen="synthesis"          maximum="1"/>
     <liberum nomen="sedes"              maximum="1"/>
+    <liberum nomen="exemplar"           maximum="1"/>
+    <liberum nomen="praecedens"         maximum="1"/>
   </elementum>
 
   <elementum nomen="tok_apertura" intra="elementum">
@@ -255,7 +265,19 @@
   <elementum nomen="sedes" intra="elementum" textus="verum"
     nota="O7b: REFERENTIA '#nodN' ad parentem DOM (elementum aut
           documentum cum id) - foster parenting, contentum post body,
-          caput post head; absens = parens octetorum"/>
+          caput post head, adoption agency (O7c); absens = parens
+          octetorum"/>
+
+  <elementum nomen="exemplar" intra="elementum" textus="verum"
+    nota="O7c: REFERENTIA '#nodN' ad elementum ORIGINALE - hoc
+          elementum formans iterum apertum est (adoption agency,
+          reconstructio listae formantium activorum), lexemata nulla,
+          titulus et attributa originalis"/>
+
+  <elementum nomen="praecedens" intra="elementum" textus="verum"
+    nota="O7c: REFERENTIA '#nodN' ad fratrem DOM priorem - nodus ab
+          adoption agency in avum communem motus post elementum
+          formans clausum sedet (cum sede semper)"/>
 
   <elementum nomen="attributum"
     nota="'=' aut valor sine titulo attributum anonymum dat (loci

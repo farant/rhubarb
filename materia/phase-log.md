@@ -2391,3 +2391,41 @@ had reset it to "in body" and silently lost the post-body sedes.
 (6) A gate that pins REFUSALS by cause turns a substrate limit into a
 rising pin instead of a hidden skip. Next: O7c, the adoption agency
 and `exemplar`.
+
+**RELATIO, sequela III (2026-09-16): O7c, the adoption agency.** The
+third annotation and a fourth the decree had not named. `exemplar:
+referentia` on `elementum`: a formatting element reopened by the
+adoption agency or by the reconstruction of the active formatting
+list — no tokens, name and attributes read through the reference to
+the original. `praecedens:referentia`: the moved block's DOM previous
+sibling, because byte order cannot place a block after a clone born
+after the block's bytes (`<b><a><div>x</b>y</a>`); the spec appends
+the block right after the formatting element being closed and the
+builder knows that element exactly. The builder's stack became the
+spec's DOM stack with byte-open frames and receptors — O7b's
+`sedes_posterior` dissolved into the general rule, and `</body>` no
+longer pops. WHATWG's agency runs as written on that stack; the clone
+wrapping the block's children is byte-tree surgery and byte-safe (a
+token-less wrapper emits nothing). `</p>` with no `p` in scope and
+`</br>` now yield synthesized elements. 1,398 → 1,504 (88 %),
+fragments 152 → 155, zero regressions; adoption01 and adoption02 pass
+whole. Substrate changes: none — `materia_nodus_reponere` (rewriting
+a written locus) and the list value's append served the wrap and the
+re-pointing of `sedes` unchanged. Twenty-five loci, seal `b307882e`.
+
+Instrument debrief III: (1) a diff of failing sets must strip the
+fragment-context suffix on BOTH sides — thirteen "regressions" were
+cases that had never passed. (2) When a mechanism takes over a tag
+(`a`, `nobr`), the old table entry for that tag must go, or two
+mechanisms compose into something neither specifies (five `nobr`s
+from three). (3) A test string's declared length is a claim the byte
+gate cannot check — it round-tripped the terminating NUL happily; the
+STML writer refused it with its named cause. (4) `renominare.sh`
+refuses a dirty tree; the rename comes before the edits or by hand.
+(5) A hand count of loci in a probatio rots the day the registry
+grows — size from the registry, as the builder already does. (6) The
+spec's "remove from the stack" can remove a byte-open frame from the
+MIDDLE of the stack; anything that read "the frame below X" as "the
+parent of X" (the foster parent) had to switch to the node's own
+`pater`/`sedes`. Next: the foreign tail (SVG `title` lexed raw, `font`
+breakout by attributes), then O3 wild fixtures.

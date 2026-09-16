@@ -219,7 +219,7 @@ stated invariant, not an accident.** v1 exercises it immediately:
 | `<p>a<p>b` (implied close) | first `p`'s `tok_clausura`, `tok_clausura_finis` |
 | `<div>` at EOF (unclosed) | same |
 | `<img/>` | `tok_clausura*`; `tok_finis` holds `/>` |
-| *(future)* an adoption-agency clone | `tok_apertura`, `attributa`, `tok_finis` too |
+| an adoption-agency clone (O7c, 2026-09-16: `exemplar`) | `tok_apertura`, `attributa`, `tok_finis` too |
 
 The last row is the point: a clone is *"an element whose tags are
 elsewhere"*, which the model already expresses. Full parity's
@@ -557,6 +557,28 @@ all children (content after `</body>`, head content after `</head>`,
 fragments in a table context — the spec appends there). Twenty-three
 loci, seal `5bf2be5d`. The corpus round-trip gate carried every
 reference on its first run.
+
+**Appended by O7c (2026-09-16): `exemplar:referentia` and
+`praecedens:referentia` on `elementum`** — the adoption agency. An
+`exemplar` is a formatting element reopened by the adoption agency or
+by the reconstruction of the active formatting list: no tokens, the
+reference names the ORIGINAL element (always a real one, never a
+clone of a clone), and the cooked view reads its name and attributes
+through the reference. A `praecedens` is the DOM previous sibling of
+a node the adoption agency moved into the common ancestor: the spec
+appends it right after the formatting element being closed, and byte
+order cannot give that position (`<b><a><div>x</b>y</a>` puts `div`
+after the clone `a'` that was born after `div`'s bytes). The cooked
+view places a sedes-node after its `praecedens` when it has one,
+before the containing table otherwise (O7b), after all children when
+neither applies. Wrapping a block's children in the clone (steps
+15–17 of the spec) is byte-tree surgery and byte-safe: the clone
+emits nothing and the children keep their order; fostered
+byte-children stay outside it, nodes whose `sedes` was the block now
+point at the clone. Twenty-five loci, seal `b307882e`. The `</br>`
+deviation of §4.2 is retired: `</br>` and a `</p>` with no `p` in
+scope produce synthesized `br`/`p` elements whose only token is the
+closing tag (as `</head>` on a synthesized head).
 Everything else the lexer emits maps to a content genus by lexer
 genus: `TEXTUS` → `textus`; `REFERENTIA` → `referentia`;
 `TEXTUS_CRUDUS` and `_IMPERFECTUS` → `textus-crudus`; `COMMENTARIUM`,
@@ -648,11 +670,15 @@ untouched (§2.4's substrate mechanism is NOT built): `synthesis:index`
 (O7a, DECLARED — the first append, seal `0ae63151` → `a69b019f`, the
 reservation gate's rows unchanged), `sedes:referentia` (O7b, DECLARED
 on four genera, seal → `5bf2be5d`: the node stays at its bytes, the
-annotation names its DOM parent) and `exemplar:referentia` (O7c, the
-adoption agency's
-reopened element: no tokens, name and attributes through the
-reference). Acceptance for all three (Fran's condition): the STML
-round trip stays whole — §11.8 gate 5 runs every annotated case.
+annotation names its DOM parent) and `exemplar:referentia` (O7c,
+2026-09-16, DECLARED with `praecedens:referentia`, seal → `b307882e`:
+the adoption agency's reopened element — no tokens, name and
+attributes through the reference — and the moved node's DOM previous
+sibling, the one addition beyond the decree, because byte order
+cannot give that position). Acceptance for all three (Fran's
+condition): the STML round trip stays whole — §11.8 gate 5 runs every
+annotated case, and the corpus round-trip gate (row 3b) every
+html5lib case.
 
 ### 11.7 Builder rules as tables (M7)
 
@@ -799,7 +825,45 @@ round trip stays whole — §11.8 gate 5 runs every annotated case.
   HEAD: head content after `</head>` carries `sedes` to head. Oracle
   1,299 → 1,398, fragments 131 → 152, zero regressions. Named
   deviations: `</html>` inside an open `frameset` closes it (spec
-  ignores); `<b>x</body>y` closes `b` (spec keeps it open).
+  ignores); `<b>x</body>y` closes `b` (spec keeps it open — resolved
+  by O7c, below).
+- **The adoption agency (O7c, 2026-09-16 — mechanisms 2 and 3):** the
+  open-element stack IS the spec's DOM stack now; each frame carries
+  `octeti` (byte-open: it receives byte-children) and `receptor` (the
+  nearest byte-open frame at or below it). A node is appended to the
+  receptor and, when the DOM current node is another frame, gets
+  `sedes` = that node — this generalises O7b's `sedes_posterior`
+  (retired): `</body>` and `</html>` no longer pop, they mark the
+  frames byte-closed, so `<b>x</body>y` keeps `b` open as the spec
+  does. The list of active formatting elements (`Formans`: element,
+  stack index validated on use, marker flag; markers for `applet
+  object marquee template td th caption`, purged lazily when their
+  element leaves the stack; Noah's Ark on title and attributes)
+  drives RECONSTRUCTION before text and before every start tag the
+  spec reconstructs for (`NON_RESTITUENTIA` lists the others), never
+  in `select`, in foreign content or in a frameset. The ADOPTION
+  AGENCY runs WHATWG's steps on the DOM stack for a formatting end
+  tag, for `<a>` with an `a` in the list (then the old `a` leaves list
+  and stack, even from the middle of the stack) and for `<nobr>` in
+  scope (`a` and `nobr` left the implied-close table): the closing
+  tag goes to the formatting element's closure when it is byte-open
+  (the frames above it are cut), to a malum otherwise; the furthest
+  block and the clone chain are as in the spec, each clone an
+  `exemplar`; "append last node to X" is `sedes` = X (with
+  `praecedens` = the formatting element when X is the common
+  ancestor, the foster rule when the ancestor is a table part), the
+  chain top a byte-child of the receptor; "take the block's children
+  into the clone" is the byte-safe wrap; the stack segment is
+  replaced in one pass (`_acervum_reponere`, scope indices and list
+  indices recomputed), eight outer iterations at most. The foster
+  parent is now the table's DOM parent (`sedes` or `pater`), not the
+  frame below it. `</p>` with no `p` in button scope makes a
+  synthesized `p` (body modes and templates only — the head and
+  frameset modes ignore it), `</br>` a synthesized `br`. Oracle 1,398
+  → 1,504 (88 %), fragments 152 → 155, zero regressions; adoption01
+  and adoption02 pass whole. Costs: a clone inserted below the block
+  shifts the frames above it (bounded by eight per closing tag); the
+  wrap scans the parse's sedes-nodes once.
 - **Raw text**: nothing — the lexer emits `TEXTUS_CRUDUS` after
   `script style title textarea`; the builder appends `textus-crudus`.
   **O4 (2026-09-15):** the lexer's set is WHATWG's whole RAWTEXT list

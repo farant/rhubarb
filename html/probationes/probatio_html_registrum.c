@@ -107,6 +107,10 @@ hic_manens constans LocusNominatus LOCI_NOMINATI[] = {
         "synthesis" },
     { (s32)HTML_GENUS_ELEMENTUM,  (i32)HTML_ELEMENTUM_SEDES,
         "sedes" },
+    { (s32)HTML_GENUS_ELEMENTUM,  (i32)HTML_ELEMENTUM_EXEMPLAR,
+        "exemplar" },
+    { (s32)HTML_GENUS_ELEMENTUM,  (i32)HTML_ELEMENTUM_PRAECEDENS,
+        "praecedens" },
     { (s32)HTML_GENUS_ATTRIBUTUM, (i32)HTML_ATTRIBUTUM_TOK_NOMEN,
         "tok_nomen" },
     { (s32)HTML_GENUS_ATTRIBUTUM, (i32)HTML_ATTRIBUTUM_TOK_AEQUALE,
@@ -341,8 +345,9 @@ MateriaLexiconRatum  ratum;
         }
 
         /* LOCI NOMINATI: enumeratio cuiusque generis contra titulos,
-         * et numerus nominatorum == numerus locorum (XXIII: synthesis
-         * O7a, sedes quater O7b) - ne locus ullus innominatus maneat */
+         * et numerus nominatorum == numerus locorum (XXV: synthesis
+         * O7a, sedes quater O7b, exemplar et praecedens O7c) - ne
+         * locus ullus innominatus maneat */
         numerus_nominatorum = (i32)(magnitudo(LOCI_NOMINATI)
             / magnitudo(LOCI_NOMINATI[0]));
         CREDO_AEQUALIS_I32 (numerus_nominatorum,
@@ -378,9 +383,12 @@ MateriaLexiconRatum  ratum;
         imprimere("\n--- Probans circuitum HTML per materiam ---\n");
 
         /* '<br>' - elementum vacuum: apertura et finis soli, clausura
-         * ABSENS (H4) */
+         * ABSENS (H4); numerus locorum ex registro (O7c: manu VIII
+         * scriptus a declaratione lapsus est - scriptor fenestram
+         * registri ambulat) */
         elementum = materia_nodus_creare(piscina,
-            (s32)HTML_GENUS_ELEMENTUM, (i32)VIII);
+            (s32)HTML_GENUS_ELEMENTUM,
+            HTML_REGISTRUM.genera[HTML_GENUS_ELEMENTUM].loci_numerus);
         CREDO_VERUM (materia_nodus_ponere(elementum,
             (i32)HTML_ELEMENTUM_TOK_APERTURA,
             materia_valor_token(materia_token_creare(piscina, &FORMA,

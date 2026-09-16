@@ -283,6 +283,66 @@ _liber_continens (
     redde n;
 }
 
+/* Praecedens nodi (O7c): frater DOM prior nodi ab adoption agency
+ * moti, aut NIHIL (elementa sola). */
+interior MateriaNodus*
+_praecedens (
+    constans MateriaNodus* nodus)
+{
+    si (   nodus->genus                   != (s32)HTML_GENUS_ELEMENTUM
+        || (i32)HTML_ELEMENTUM_PRAECEDENS >= nodus->numerus_locorum
+        || nodus->loci[HTML_ELEMENTUM_PRAECEDENS].genus
+               != MATERIA_VALOR_REFERENTIA)
+    {
+        redde NIHIL;
+    }
+    redde nodus->loci[HTML_ELEMENTUM_PRAECEDENS].datum.nodus;
+}
+
+/* Index nodi in ordine; -I si abest */
+interior s32
+_ordinis_index (
+             constans Xar* ordo,
+    constans MateriaNodus* nodus)
+{
+    i32 i;
+    i32 n = xar_numerus(ordo);
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (*(constans MateriaNodus* constans*)xar_obtinere(ordo, i)
+                == nodus)
+        {
+            redde (s32)i;
+        }
+    }
+    redde (s32)-I;
+}
+
+/* Nodum in ordinem ad indicem inserere (superiora moventur) */
+interior vacuum
+_ordini_inserere (
+                      Xar* ordo,
+                      i32  index,
+    constans MateriaNodus* nodus)
+{
+    constans MateriaNodus** l =
+        (constans MateriaNodus**)xar_addere(ordo);
+                       i32 n = xar_numerus(ordo);
+                       i32 i;
+
+    si (l == NIHIL)
+    {
+        redde;
+    }
+    per (i = n - I; i > index; i--)
+    {
+        *(constans MateriaNodus**)xar_obtinere(ordo, i) =
+            *(constans MateriaNodus**)xar_obtinere(ordo, i - I);
+    }
+    *(constans MateriaNodus**)xar_obtinere(ordo, index) = nodus;
+}
+
 /* Elementum verum 'table' (litteris neglectis)? */
 interior b32
 _tabula_est (
@@ -784,14 +844,25 @@ _elementum_scribere (
               HtmlAlienum  parentis,
               HtmlAlienum  alienum)
 {
-    MateriaToken* apertura = _tok(e, (i32)HTML_ELEMENTUM_TOK_APERTURA);
-          chorda  crudus;
-          chorda  titulus;
-     HtmlAlienum  proprium;
-     HtmlAlienum  liberorum;
-             b32  lf;
-             b32  decoquendum;
+    constans MateriaNodus* originale = e;
+             MateriaToken* apertura;
+                   chorda  crudus;
+                   chorda  titulus;
+              HtmlAlienum  proprium;
+              HtmlAlienum  liberorum;
+                      b32  lf;
+                      b32  decoquendum;
 
+    /* EXEMPLAR (O7c): elementum formans iterum apertum - titulus et
+     * attributa originalis per referentiam */
+    si (   e->numerus_locorum > (i32)HTML_ELEMENTUM_EXEMPLAR
+        && e->loci[HTML_ELEMENTUM_EXEMPLAR].genus
+               == MATERIA_VALOR_REFERENTIA
+        && e->loci[HTML_ELEMENTUM_EXEMPLAR].datum.nodus != NIHIL)
+    {
+        originale = e->loci[HTML_ELEMENTUM_EXEMPLAR].datum.nodus;
+    }
+    apertura = _tok(originale, (i32)HTML_ELEMENTUM_TOK_APERTURA);
     si (apertura == NIHIL)
     {
         /* elementum FICTUM (O7a): titulus ex loco synthesis, attributa
@@ -837,7 +908,7 @@ _elementum_scribere (
     }
     chorda_aedificator_appendere_chorda(s->aed, titulus);
     chorda_aedificator_appendere_character(s->aed, '>');
-    _attributa_scribere(s, e, gradus + I, proprium);
+    _attributa_scribere(s, originale, gradus + I, proprium);
 
     liberorum = html_alienum_liberorum(proprium, titulus, e);
     lf =(b32)(alienum == HTML_ALIENUM_NULLUM
@@ -884,7 +955,11 @@ _liberos_scribere (
      * sedentes huius parentis ANTE liberum tabulam quae eos continet
      * (foster parenting: 'ante tabulam in parente eius'), aliter POST
      * omnes (contentum post body, caput post head, fragmentum contextu
-     * tabulae - spec: appenditur). Ordo inter sedentes = documenti. */
+     * tabulae - spec: appenditur). Ordo inter sedentes = documenti.
+     * O7c: sedens cum PRAECEDENTE (adoption agency) post praecedentem
+     * suum in ordine - inseritur cum praecedens iam adest (rotae usque
+     * ad quietem: praecedens ipse sedens esse potest), post sedentes
+     * eiusdem praecedentis priores. */
     ordo = xar_creare(s->piscina, magnitudo(constans MateriaNodus*));
     si (ordo == NIHIL)
     {
@@ -908,6 +983,7 @@ _liberos_scribere (
                         j);
 
                 si (   _sedes(sedens)                  == nodus
+                    && _praecedens(sedens)             == NIHIL
                     && _liber_continens(nodus, sedens) == liber)
                 {
                     l = (constans MateriaNodus**)xar_addere(ordo);
@@ -930,7 +1006,7 @@ _liberos_scribere (
             *(constans MateriaNodus**)xar_obtinere(s->sedentes, j);
         constans MateriaNodus* continens;
 
-        si (_sedes(sedens) != nodus)
+        si (_sedes(sedens) != nodus || _praecedens(sedens) != NIHIL)
         {
             perge;
         }
@@ -943,6 +1019,61 @@ _liberos_scribere (
             si (l != NIHIL)
             {
                 *l = sedens;
+            }
+        }
+    }
+    {
+        b32 motum = VERUM;
+
+        dum (motum)
+        {
+            motum = FALSUM;
+            per (j = ZEPHYRUM; j < m; j++)
+            {
+                constans MateriaNodus* sedens =
+                    *(constans MateriaNodus**)xar_obtinere(s->sedentes,
+                        j);
+                constans MateriaNodus* prior = _praecedens(sedens);
+                                  s32  q;
+
+                si (   _sedes(sedens) != nodus || prior == NIHIL
+                    || _ordinis_index(ordo, sedens) >= ZEPHYRUM)
+                {
+                    perge;
+                }
+                q = _ordinis_index(ordo, prior);
+                si (q < ZEPHYRUM)
+                {
+                    perge;   /* praecedens nondum in ordine */
+                }
+                /* post sedentes priores eiusdem praecedentis */
+                dum (   (i32)q + I < xar_numerus(ordo)
+                     && _praecedens(*(constans MateriaNodus* constans*)
+                            xar_obtinere(ordo, (i32)q + I)) == prior)
+                {
+                    q = q + I;
+                }
+                _ordini_inserere(ordo, (i32)q + I, sedens);
+                motum = VERUM;
+            }
+        }
+        /* praecedens numquam inventus (extra parentem): post omnes */
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            constans MateriaNodus* sedens =
+                *(constans MateriaNodus**)xar_obtinere(s->sedentes, j);
+
+            si (   _sedes(sedens)      == nodus
+                && _praecedens(sedens) != NIHIL
+                && _ordinis_index(ordo, sedens) < ZEPHYRUM)
+            {
+                constans MateriaNodus** l =
+                    (constans MateriaNodus**)xar_addere(ordo);
+
+                si (l != NIHIL)
+                {
+                    *l = sedens;
+                }
             }
         }
     }

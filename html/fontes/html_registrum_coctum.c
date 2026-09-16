@@ -3,7 +3,7 @@
  * Registrum generum COCTUM grammaticae 'html' - GENERATUM, NE MANU
  * EDITES. Fons: html/grammatica/html.registrum.stml
  * (materia/coquere.sh). Series LOCORUM plana; quodque genus fenestram
- * suam per loci_offset + loci_numerus nominat. Genera X, loci XXIII.
+ * suam per loci_offset + loci_numerus nominat. Genera X, loci XXV.
  */
 
 #include "html_registrum_coctum.h"
@@ -17,7 +17,7 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
     /* doctype (2..2) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* elementum (3..10) */
+    /* elementum (3..12) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "attributa", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_finis", (s32)MATERIA_LOCUS_TOKEN },
@@ -26,31 +26,33 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
     { "tok_clausura_finis", (s32)MATERIA_LOCUS_TOKEN },
     { "synthesis", (s32)MATERIA_LOCUS_INDEX },
     { "sedes", (s32)MATERIA_LOCUS_REFERENTIA },
+    { "exemplar", (s32)MATERIA_LOCUS_REFERENTIA },
+    { "praecedens", (s32)MATERIA_LOCUS_REFERENTIA },
 
-    /* attributum (11..13) */
+    /* attributum (13..15) */
     { "tok_nomen", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_aequale", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_valor", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* textus (14..15) */
+    /* textus (16..17) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
     { "sedes", (s32)MATERIA_LOCUS_REFERENTIA },
 
-    /* referentia (16..17) */
+    /* referentia (18..19) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
     { "sedes", (s32)MATERIA_LOCUS_REFERENTIA },
 
-    /* textus-crudus (18..18) */
+    /* textus-crudus (20..20) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* commentarium (19..20) */
+    /* commentarium (21..22) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
     { "sedes", (s32)MATERIA_LOCUS_REFERENTIA },
 
-    /* cdata (21..21) */
+    /* cdata (23..23) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* elementum-malum (22..22) */
+    /* elementum-malum (24..24) */
     { "tokens", (s32)MATERIA_LOCUS_LISTA_TOKEN },
 };
 
@@ -58,14 +60,14 @@ hic_manens constans MateriaTabGenus GENERA_COCTA[] = {
     /* titulus, offset, numerus */
     { "documentum", (i32)0, (i32)2 },
     { "doctype", (i32)2, (i32)1 },
-    { "elementum", (i32)3, (i32)8 },
-    { "attributum", (i32)11, (i32)3 },
-    { "textus", (i32)14, (i32)2 },
-    { "referentia", (i32)16, (i32)2 },
-    { "textus-crudus", (i32)18, (i32)1 },
-    { "commentarium", (i32)19, (i32)2 },
-    { "cdata", (i32)21, (i32)1 },
-    { "elementum-malum", (i32)22, (i32)1 },
+    { "elementum", (i32)3, (i32)10 },
+    { "attributum", (i32)13, (i32)3 },
+    { "textus", (i32)16, (i32)2 },
+    { "referentia", (i32)18, (i32)2 },
+    { "textus-crudus", (i32)20, (i32)1 },
+    { "commentarium", (i32)21, (i32)2 },
+    { "cdata", (i32)23, (i32)1 },
+    { "elementum-malum", (i32)24, (i32)1 },
 };
 
 constans MateriaRegistrumCoctum HTML_REGISTRUM = {

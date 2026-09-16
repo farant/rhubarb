@@ -110,7 +110,16 @@ hic_manens constans character* CASUS[] = {
     "<body></body><!--c--><p>x",
     "<html><body></body></html>x<!--c-->",
     "<head></head><title>t</title><p>x",
-    "<bdy></body><br>"
+    "<bdy></body><br>",
+    /* O7c: adoption agency - exemplaria, praecedens, involutio;
+     * reconstructio; arca Noe; '</p>' et '</br>' ficta */
+    "<a>1<p>2</a>3</p>",
+    "<b><a><div>x</b>y</a>",
+    "<p><b>x</p>y",
+    "<b><b><b><b>x</b></b></b></b>y",
+    "<a href=x>1<a href=y>2",
+    "<table><a>1<td>2</td>3</table>",
+    "x</p>y</br>z"
 };
 
 #define NUMERUS_CASUUM ((i32)(magnitudo(CASUS)/magnitudo(CASUS[0])))
@@ -129,7 +138,10 @@ hic_manens constans Fragmentum FRAGMENTA[] = {
     { "frameset", "<p><frame>" },
     /* O7b: sedes in radicem (referentia ad documentum) */
     { "table", "<tr><div>x" },
-    { "tbody", "a<caption>x" }
+    { "tbody", "a<caption>x" },
+    /* O7c: adoptio et reconstructio in fragmentis (exemplar fotum) */
+    { "body",  "<b><p>x</b>y" },
+    { "table", "<a>1<td>2</td>3" }
 };
 
 #define NUMERUS_FRAGMENTORUM \
@@ -225,6 +237,19 @@ _synthesis (
     { redde (s32)HTML_SYNTHESIS_NULLA;
     }
     redde nodus->loci[HTML_ELEMENTUM_SYNTHESIS].datum.index;
+}
+
+/* Referentia loci elementi (O7c: exemplar, praecedens), aut NIHIL */
+hic_manens MateriaNodus*
+_referentia_elementi (
+    constans MateriaNodus* nodus,
+                      i32  locus)
+{
+    si (   nodus == NIHIL || nodus->genus != (s32)HTML_GENUS_ELEMENTUM
+        || nodus->loci[locus].genus != MATERIA_VALOR_REFERENTIA)
+    { redde NIHIL;
+    }
+    redde nodus->loci[locus].datum.nodus;
 }
 
 /* Sedes nodi (O7b): parens DOM alibi, aut NIHIL */
@@ -605,6 +630,56 @@ principale (vacuum)
         CREDO_NON_NIHIL (corpus);
         CREDO_AEQUALIS_PTR (_sedes(fotum), corpus);
         CREDO_NIHIL (_sedes(tabula));
+    }
+
+
+    /* ==================================================
+     * PORTA: annotationes exemplar et praecedens per circuitum VIVUNT
+     * (O7c)
+     * ================================================== */
+
+    {
+        MateriaNodus* radix;
+        MateriaNodus* relecta;
+        MateriaNodus* html;
+        MateriaNodus* corpus;
+        MateriaNodus* formans;
+        MateriaNodus* exemplar;
+        MateriaNodus* bloccum;
+        MateriaArborScriptura s;
+        MateriaArborVitium vitium;
+
+        imprimere("\n--- PORTA: annotationes exemplar et praecedens "
+            "relectae ---\n");
+        /* '<b><a><div>x</b>y</a>': a' (exemplar a) liber corporis post
+         * b; div (liber a) sedem corpus et praecedentem a' fert - post
+         * relectionem referentiae in nodos RELECTOS spectant */
+        radix = html_arbor_parsare(piscina, "<b><a><div>x</b>y</a>",
+            (i32)XXI);
+        CREDO_NON_NIHIL (radix);
+        s = materia_arbor_scribere_nodum(piscina, radix, &consilium);
+        CREDO_VERUM (s.successus);
+        CREDO_VERUM (_textus_continet(s.textus, "<exemplar(> #nod"));
+        CREDO_VERUM (_textus_continet(s.textus, "<praecedens(> #nod"));
+        relecta = s.successus ? materia_arbor_legere(piscina, NIHIL,
+            s.textus, &consilium, &vitium) : NIHIL;
+        CREDO_NON_NIHIL (relecta);
+        html = _liber(relecta, (i32)HTML_DOCUMENTUM_LIBERI,
+            ZEPHYRUM);
+        corpus = _liber(html, (i32)HTML_ELEMENTUM_LIBERI, (i32)I);
+        formans  = _liber(_liber(corpus, (i32)HTML_ELEMENTUM_LIBERI,
+            ZEPHYRUM), (i32)HTML_ELEMENTUM_LIBERI, ZEPHYRUM);   /* a */
+        exemplar = _liber(corpus, (i32)HTML_ELEMENTUM_LIBERI, (i32)I);
+        bloccum = _liber(formans, (i32)HTML_ELEMENTUM_LIBERI,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (formans);
+        CREDO_NON_NIHIL (exemplar);
+        CREDO_NON_NIHIL (bloccum);
+        CREDO_AEQUALIS_PTR (_referentia_elementi(exemplar,
+            (i32)HTML_ELEMENTUM_EXEMPLAR), formans);
+        CREDO_AEQUALIS_PTR (_sedes(bloccum), corpus);
+        CREDO_AEQUALIS_PTR (_referentia_elementi(bloccum,
+            (i32)HTML_ELEMENTUM_PRAECEDENS), exemplar);
     }
     CREDO_MAIOR_I32 (octeti_fontis, (i32)(C * M));
     CREDO_MAIOR_I32 (octeti_stml, octeti_fontis);

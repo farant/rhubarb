@@ -1069,7 +1069,28 @@ tasks, one commit each, under the same Global Constraints.
     corpus round-trip gate carried every reference and caught the one
     byte loss of the first cut.** Plant: foster parent = the table
     itself → arbor red.
-  - [ ] **O7c — adoption agency + `exemplar`** (active formatting list).
+  - [x] **O7c — adoption agency + `exemplar`** (2026-09-16):
+    `exemplar:referentia` AND `praecedens:referentia` appended on
+    `elementum` (25 loci, seal `5bf2be5d` → `b307882e`; `praecedens`
+    = the moved node's DOM previous sibling, the one addition beyond
+    the decree — byte order cannot place `div` after a clone born
+    after its bytes). Builder: the stack is the spec's DOM stack with
+    byte-open frames and receptors (O7b's `sedes_posterior` retired,
+    `</body>` no longer pops), the active formatting list with
+    markers, Noah's Ark and lazy purge, reconstruction, WHATWG's
+    adoption agency on the DOM stack (clone chain, byte-safe wrap of
+    the block's children, one-pass stack segment replacement), `<a>`
+    and `<nobr>` start-tag rules, `</p>`/`</br>` synthesized `p`/`br`
+    (the `</br>`-is-malum deviation retired), foster parent = the
+    table's DOM parent. Cooked view reads name/attributes through
+    `exemplar` and places after `praecedens`. Gates: arbor (7 new
+    cases), stml (7 documents, 2 fragments, exemplar and praecedens
+    read back), registrum (+2 rows, the hand-built node sized from
+    the registry), oracle pin **1,398 → 1,504 (88 %), fragments 152 →
+    155, zero regressions** (adoption01 18/18, adoption02 2/2, tests1
+    108/114, tricky01 8/9), computus golden (+2 loci per element, a
+    few synthesized nodes). Plant: the wrap skipping the block's
+    children → arbor red.
 
 ## Self-Review
 

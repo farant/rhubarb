@@ -32,9 +32,15 @@
   nodi cuius octeti alibi iacent - foster parenting (nodus intra
   tabulam manet, DOM ante tabulam in parente eius), contentum post
   '</body>' aut '</html>' (in body), contentum capitis post '</head>'
-  (in head). Nominatum, nondum declaratum: 'exemplar' (referentia;
-  adoption agency, O7c). Sigillum canonis motum cum causa in
-  html.canon.
+  (in head). O7c 'exemplar' (referentia, in elementum) DECLARATUS:
+  elementum FORMANS ab adoption agency (aut reconstructione listae
+  formantium activorum) iterum apertum - lexemata nulla, titulus et
+  attributa per referentiam ad elementum originale leguntur; et
+  'praecedens' (referentia, in elementum): frater DOM prior nodi ab
+  adoption agency in avum motum (spec: 'insert last node ... using
+  common ancestor as override target' - post elementum formans
+  appenditur; ordo octetorum id dare non potest). Sigillum canonis
+  motum cum causa in html.canon.
 -->
 <registrum grammatica="html" praefixum="HTML" typus="HtmlGenus"
   sedes="html/fontes">
@@ -50,7 +56,7 @@
   </genus>
 
   <genus titulus="elementum"
-    nota="Sex loci lexematum OMNES optionales (H4): vacuum, clausura implicita, apertum ad EOF, se-claudens = loci absentes, numquam lexemata ficta. synthesis (O7a, 2026-09-15): elementum a spec HTML5 FICTUM - lexemata nulla, index in tabulam html_arbor (html head body tbody tr colgroup; ZEPHYRUM numquam scriptus, locus absens = elementum verum); visio cocta id imprimit, emissor nihil">
+    nota="Sex loci lexematum OMNES optionales (H4): vacuum, clausura implicita, apertum ad EOF, se-claudens = loci absentes, numquam lexemata ficta. synthesis (O7a, 2026-09-15): elementum a spec HTML5 FICTUM - lexemata nulla, index in tabulam html_arbor (html head body tbody tr colgroup p br; ZEPHYRUM numquam scriptus, locus absens = elementum verum); visio cocta id imprimit, emissor nihil. exemplar (O7c, 2026-09-16): elementum formans iterum apertum (adoption agency, reconstructio) - lexemata nulla, titulus et attributa elementi originalis referentia lecti. praecedens (O7c): frater DOM prior elementi ab adoption agency moti (post elementum formans clausum)">
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="attributa" species="lista-nodus"/>
     <locus titulus="tok_finis" species="token"/>
@@ -59,6 +65,8 @@
     <locus titulus="tok_clausura_finis" species="token"/>
     <locus titulus="synthesis" species="index"/>
     <locus titulus="sedes" species="referentia"/>
+    <locus titulus="exemplar" species="referentia"/>
+    <locus titulus="praecedens" species="referentia"/>
   </genus>
 
   <genus titulus="attributum">
@@ -94,7 +102,7 @@
   </genus>
 
   <genus titulus="elementum-malum"
-    nota="Robustitas: tag clausurae sine pari aperto (etiam '&lt;/br&gt;', quod HTML5 in '&lt;br&gt;' vertit - deviatio nominata)">
+    nota="Robustitas: tag clausurae sine pari aperto ('&lt;/br&gt;' et '&lt;/p&gt;' sine p aperto elementa FICTA dant, O7c - deviatio '&lt;/br&gt;' malum' H4 retirata)">
     <locus titulus="tokens" species="lista-token"/>
   </genus>
 </registrum>

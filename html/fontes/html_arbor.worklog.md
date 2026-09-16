@@ -537,3 +537,89 @@ What the runs taught:
 Numbers: 1,299 → 1,398 of 1,700 (82 %), fragments 131 → 152, 99
 rises, zero regressions. Next: O7c, the adoption agency and
 `exemplar`.
+
+## 2026-09-16 — O7c: the adoption agency; 1,398 → 1,504
+
+The third annotation, and a fourth the decree had not named. An
+`exemplar` is a formatting element reopened by the adoption agency
+or by the reconstruction of the active formatting list: no tokens,
+a reference to the original (always the real one), name and
+attributes read through it. That much was the plan. What the plan
+could not know: where a moved block sits among its new siblings.
+`<b><a><div>x</b>y</a>` ends with body{ b{a}, a', div{...} } and the
+clone `a'` was born AFTER `div`'s bytes, so no rule over byte order
+puts `div` after it. The spec appends the block right after the
+formatting element being closed, and the builder knows that element
+exactly — so `praecedens:referentia`, the DOM previous sibling, one
+locus beyond the decree, and the cooked view inserts a sedes-node
+after its praecedens before it falls back to the O7b rules.
+
+The stack changed nature. Until now it was the byte stack, and O7b
+had bolted a single remembered node (`sedes_posterior`) on the side
+for content after `</body>`. The adoption agency needs the spec's
+DOM stack: after `</a>` closes `a`, the `div` above it is still open
+in the DOM but its bytes are done. So every frame now carries
+`octeti` (byte-open) and `receptor` (the nearest byte-open frame at
+or below); a node goes to the receptor and, when the DOM current
+node is a different frame, gets `sedes` = that node. `</body>` no
+longer pops anything, it marks frames byte-closed, and O7b's special
+case disappeared into the general rule — with it the "`<b>x</body>y`
+closes b" deviation. The closing tag itself lands in the formatting
+element's closure when that element is byte-open (the frames above
+are cut), in a malum otherwise.
+
+The agency runs WHATWG's steps as written, on that stack: furthest
+block, the inner loop over the elements between, a clone per
+formatting element in the chain (the chain top is a byte-child of
+the receptor; each lower clone a byte-child of the one above; the
+block hangs off the innermost by `sedes`), then the wrap: the clone
+of the formatting element takes the block's DOM children. The wrap
+is byte-tree surgery and it is byte-safe, because the clone emits
+nothing and the children keep their order — fostered byte-children
+stay outside it, and the nodes elsewhere whose `sedes` was the block
+are re-pointed at the clone (one scan of the parse's sedes-nodes).
+The stack segment from the formatting element to the block is
+replaced in one pass, scope indices and list indices recomputed;
+eight outer iterations at most. Markers, Noah's Ark and
+reconstruction as in the spec; markers are purged lazily, when the
+list is next used and the marker's element is no longer on the
+stack — no pop site had to learn about them.
+
+What the runs taught:
+
+- The first cut lost 21 cases against O7b and 13 of them were not
+  regressions at all: my diff kept the fragment-context suffix
+  (`svg.dat #1 [td]`) on one side and stripped it on the other.
+  Strip both before trusting a diff of failing sets.
+- `<nobr><nobr><nobr>` produced FIVE nobr elements: `a` and `nobr`
+  were still in the implied-close table ("closed by itself"), so the
+  second `<nobr>` popped the first, reconstruction cloned it back,
+  and only then did the agency close the clone. The agency owns
+  those two tags now; the table lost them.
+- `</p>` with no `p` in scope makes a synthesized `p` — but only in
+  the body modes and inside a template. Before the head is closed,
+  and in a frameset, the spec IGNORES it (noscript01 #15, tests19 #2,
+  #3, #44 said so).
+- The foster parent is the table's DOM parent, not the frame below
+  the table: `<a><table><a>` runs the agency for the first `a`,
+  finds it out of scope, and removes it from the list AND THE STACK
+  even though it is still byte-open; the second `a` is then fostered
+  into the first, which is no longer on the stack at all.
+- A 21-byte string declared as 22 bytes: the parser read the
+  terminating NUL, the byte gate happily round-tripped it, and the
+  STML writer refused it ("valor lexematis NUL fert"). Count.
+- `renominare.sh` refuses a dirty tree; the two-letter locals the
+  lint forbids were renamed by hand within their functions.
+- The registrum probatio's hand-built element (`(i32)VIII` loci)
+  went red the moment the registry grew: the writer walks the
+  registry's window. It now sizes itself from the registry.
+
+Numbers: 1,398 → 1,504 of 1,700 (88 %), fragments 152 → 155, 106
+rises, zero regressions; adoption01 18/18, adoption02 2/2, tests1
+108/114, tricky01 8/9, tests26 9/16. Zero substrate changes. The
+corpus round trip: 1,708 of 1,708 byte-identical, 1,672 STML, the 36
+NUL refusals unchanged. Left on the table: template interplay (22),
+frameset after content (plain-text-unsafe, tests19), the foreign tail
+(svg.dat 0/8 — SVG `title` is lexed raw; `font` breakout wants
+attributes), raw-text fragment contexts (tests4: the lexer would need
+the context's tokenizer state), `<image>` → `img`.
