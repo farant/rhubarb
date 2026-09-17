@@ -2,7 +2,7 @@
  *
  * Registrum generum COCTUM grammaticae 'crusta' - GENERATUM, NE MANU
  * EDITES. Fons: crusta/grammatica/crusta.registrum.stml
- * (materia/coquere.sh). Genera L, loci CLII.
+ * (materia/coquere.sh). Genera L, loci CLXXVI.
  */
 
 #ifndef CRUSTA_REGISTRUM_COCTUM_H
@@ -49,8 +49,10 @@ nomen enumeratio {
     /* fd (digiti aut {titulus}, optionale) operator scopus(verbum);
      * corpus = referentia ad heredoc pro operatoribus heredoc solis */
     CRUSTA_GENUS_REDIRECTIO,
-    /* ['function'] titulus ['(' ')'] corpus (imperium compositum,
-     * redirectiones suas fert) */
+    /* ['function'] titulus ['(' ')'] [interiecta] corpus (imperium
+     * compositum, redirectiones suas fert); interiecta = corpora
+     * heredoc post titulum aut ')' ante corpus (linea nova ibi
+     * valida) */
     CRUSTA_GENUS_FUNCTIO,
     /* '{' lista '}' [redirectiones] (C9) */
     CRUSTA_GENUS_GREX,
@@ -87,10 +89,12 @@ nomen enumeratio {
      * bash]; exemplaria = verbum, operator(|), verbum; terminator
      * absens ante esac */
     CRUSTA_GENUS_OPTIO,
-    /* (( expressio )) ut imperium [redirectiones] */
+    /* (( expressio )) ut imperium [redirectiones]; post_* = corpora
+     * heredoc in lacunis */
     CRUSTA_GENUS_ARITHMETICA,
     /* [[ expressio ]] ut imperium [redirectiones]; expressio =
-     * iudicium-* aut verbum nudum */
+     * iudicium-* aut verbum nudum; post_* = corpora heredoc in
+     * lacunis */
     CRUSTA_GENUS_IUDICIUM,
     /* coproc [TITULUS] imperium (titulus solum cum imperio
      * composito) */
@@ -135,7 +139,8 @@ nomen enumeratio {
     CRUSTA_GENUS_PRAEPOSITA,
     /* x++ x-- */
     CRUSTA_GENUS_POSTPOSITA,
-    /* sinister operator dexter; etiam assignationes et comma */
+    /* sinister operator dexter; etiam assignationes et comma;
+     * operator absens = iuxtapositio */
     CRUSTA_GENUS_BINARIA,
     /* probatio ? sinister : dexter */
     CRUSTA_GENUS_TERNARIA,
@@ -143,7 +148,8 @@ nomen enumeratio {
     CRUSTA_GENUS_INCLUSA,
     /* [[ ]]: -f x ; ! c (operanda verba) */
     CRUSTA_GENUS_IUDICIUM_PRAEPOSITA,
-    /* a == b ; a =~ re (dexter: verbum partis unius REGULA) */
+    /* a == b ; a =~ re (dexter: verbum partis unius REGULA);
+     * operator absens = iuxtapositio */
     CRUSTA_GENUS_IUDICIUM_BINARIA,
     /* coniunctio ET aut AUT (ET artius ligat) */
     CRUSTA_GENUS_IUDICIUM_CONIUNCTA,

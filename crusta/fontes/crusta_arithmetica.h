@@ -16,7 +16,9 @@
  * gignat: praeposita, postposita, binaria, ternaria.
  *
  * TOTALITAS: operandum absens = locus absens (mala++), '?' sine ':' =
- * ternaria sine colon, ':' sine '?' = binaria ':' (mala++).
+ * ternaria sine colon, ':' sine '?' = binaria ':' (mala++); operanda
+ * iuxta posita = binaria operatore absenti (mala++); corpora heredoc
+ * intra expressionem in listis post_* ubi octeti iacent (P9b).
  */
 
 #ifndef CRUSTA_ARITHMETICA_H
@@ -33,11 +35,17 @@
 nomen structura {
                      Piscina* piscina;
     constans CrustaDialectus* dialectus;
-                         Xar* operanda;      /* MateriaNodus* */
+    /* Operandum per valorem (privatum): nodus + corpora post */
+                         Xar* operanda;
     /* Signum per valorem (privatum) */
-                        Xar* signa;
-                        b32  operandum_exspectatur;
-                        i32  mala;
+                         Xar* signa;
+                         b32  operandum_exspectatur;
+                         i32  mala;
+    /* corpora heredoc ante lexema primum (Xar de MateriaNodus*, NIHIL
+     * = nulla) */
+                         Xar* corpora_initii;
+    /* quid ultimum pulsum (privatum): corpus interpositum ei sequitur */
+                         i32 ultimum;
 } CrustaArithmetica;
 
 vacuum
@@ -57,10 +65,27 @@ crusta_arithmetica_operator (
     CrustaArithmetica* machina,
          MateriaToken* signum);
 
-/* Reductio finalis: expressio (NIHIL = vacua). */
+/* CORPUS INTERPOSITUM (P9b): nodus (corpus heredoc cuius linea nova
+ * intra expressionem cecidit) post lexema ultimum acceptum ponitur -
+ * in lista post_* nodi quem reductio format (post_sinistrum,
+ * post_signum, post_operandum, post_probationem, post_quaestionem,
+ * post_colon); post filium ULTIMUM nodi ad parentem ascendit; ante
+ * lexema primum aut post expressionem totam finire reddit. FALSUM =
+ * memoria deficit. */
+b32
+crusta_arithmetica_interponere (
+    CrustaArithmetica* machina,
+         MateriaNodus* corpus);
+
+/* Reductio finalis: expressio (NIHIL = vacua); *corpora_initii et
+ * *corpora_post (Xar de MateriaNodus*, NIHIL = nulla) = corpora ante
+ * lexema primum et post expressionem (gradus ea in listas
+ * post_aperturam / post_expressionem ponit). */
 MateriaNodus*
 crusta_arithmetica_finire (
-    CrustaArithmetica* machina);
+    CrustaArithmetica*  machina,
+                  Xar** corpora_initii,
+                  Xar** corpora_post);
 
 /* Aestimatio CONSTANS: arbor sine variabili et sine parte; LXIV bits
  * circumvolventes ut bash; divisio per zephyrum, exponens negativus,

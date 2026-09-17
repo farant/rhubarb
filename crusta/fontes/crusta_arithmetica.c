@@ -5,12 +5,31 @@
 #include <string.h>
 
 /* Signum in acervo operatorum: lexema + operator tabulae; ternaria
- * '?' signum secundum ':' cum advenit recipit. */
+ * '?' signum secundum ':' cum advenit recipit. corpora = corpora
+ * heredoc post lexema signi, corpora_coli post ':' (P9b; NIHIL =
+ * nulla). */
 nomen structura {
                MateriaToken* tok;
                MateriaToken* colon;   /* ternaria: ':' aut NIHIL */
     constans CrustaOperator* op;
+                        Xar* corpora;
+                        Xar* corpora_coli;
 } Signum;
+
+/* Operandum in acervo: nodus (NIHIL = absens) + corpora heredoc post
+ * lexema eius ultimum (P9b) */
+nomen structura {
+    MateriaNodus* nodus;
+             Xar* corpora;
+} Operandum;
+
+/* quid ultimum pulsum: corpus interpositum ei sequitur */
+nomen enumeratio {
+    ULTIMUM_NIHIL = 0,
+    ULTIMUM_OPERANDUM,
+    ULTIMUM_SIGNUM,
+    ULTIMUM_COLON
+} Ultimum;
 
 interior i32
 _loci_numerus (
@@ -53,37 +72,62 @@ crusta_arithmetica_incipere (
     machina->piscina    = piscina;
     machina->dialectus  = dialectus;
     machina->operanda = xar_creare(piscina,
-        (i32)magnitudo(MateriaNodus*));
+        (i32)magnitudo(Operandum));
     machina->signa = xar_creare(piscina, (i32)magnitudo(Signum));
     machina->operandum_exspectatur = VERUM;
+    machina->ultimum = (i32)ULTIMUM_NIHIL;
 }
 
-interior MateriaNodus*
+interior Operandum
 _operandum_tollere (
     CrustaArithmetica* m)
 {
-    MateriaNodus* n = NIHIL;
+    Operandum o;
 
-    si (!xar_tollere(m->operanda, &n))
+    si (!xar_tollere(m->operanda, &o))
     {
         m->mala++;
-        redde NIHIL;
+        o.nodus    = NIHIL;
+        o.corpora  = NIHIL;
     }
-    redde n;
+    redde o;
 }
 
 interior b32
 _operandum_pellere (
     CrustaArithmetica* m,
-         MateriaNodus* n)
+         MateriaNodus* n,
+                  Xar* corpora)
 {
-    MateriaNodus** sedes = (MateriaNodus**)xar_addere(m->operanda);
+    Operandum* sedes = (Operandum*)xar_addere(m->operanda);
 
     si (sedes == NIHIL)
     {
         redde FALSUM;
     }
-    *sedes = n;
+    sedes->nodus    = n;
+    sedes->corpora  = corpora;
+    redde VERUM;
+}
+
+interior b32
+_signum_pellere (
+          CrustaArithmetica* m,
+               MateriaToken* tok,
+    constans CrustaOperator* op)
+{
+    Signum* sedes = (Signum*)xar_addere(m->signa);
+
+    si (sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sedes->tok           = tok;
+    sedes->colon         = NIHIL;
+    sedes->op            = op;
+    sedes->corpora       = NIHIL;
+    sedes->corpora_coli  = NIHIL;
+    m->ultimum           = (i32)ULTIMUM_SIGNUM;
     redde VERUM;
 }
 
@@ -116,20 +160,75 @@ _tok_ponere (
         MATERIA_LOCUS_TOKEN);
 }
 
-/* signum verticis reducere in nodum */
-/* dexter_absens: operandum dextrum numquam venit (operator caudalis,
- * aut operator post operatorem) - locus absens, ordo octetorum
- * servatus */
+/* corpora in listam loci appendere (NIHIL = nulla) */
+interior b32
+_corpora_ponere (
+    CrustaArithmetica* m,
+         MateriaNodus* nodus,
+                  i32  locus,
+                  Xar* corpora)
+{
+    i32 i;
+
+    si (corpora == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(corpora); i++)
+    {
+        MateriaNodus* c = *(MateriaNodus**)xar_obtinere(corpora, i);
+
+        si (!materia_nodus_appendere(m->piscina, nodus, locus,
+                materia_valor_nodus(c), MATERIA_LOCUS_LISTA_NODUS))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* corpus in corpora (Xar creata si NIHIL) addere */
+interior b32
+_corpus_addere (
+    CrustaArithmetica*  m,
+                  Xar** corpora,
+         MateriaNodus*  corpus)
+{
+    MateriaNodus** sedes;
+
+    si (*corpora == NIHIL)
+    {
+        *corpora = xar_creare(m->piscina,
+            (i32)magnitudo(MateriaNodus*));
+        si (*corpora == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    sedes = (MateriaNodus**)xar_addere(*corpora);
+    si (sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *sedes = corpus;
+    redde VERUM;
+}
+
+/* signum verticis reducere in nodum. dexter_absens: operandum dextrum
+ * numquam venit (operator caudalis, aut operator post operatorem) -
+ * locus absens, ordo octetorum servatus. CORPORA (P9b): post operandum
+ * et post signum in listas post_* nodi novi; post operandum ULTIMUM
+ * (dextrum) cum nodo novo ascendunt. */
 interior b32
 _reducere (
     CrustaArithmetica* m,
                   b32  dexter_absens)
 {
-    Signum s;
+       Signum s;
     MateriaNodus* n;
-    MateriaNodus* dexter;
-    MateriaNodus* sinister;
-    MateriaNodus* probatio;
+    Operandum  dexter;
+    Operandum  sinister;
+    Operandum  probatio;
 
     si (!xar_tollere(m->signa, &s))
     {
@@ -139,58 +238,94 @@ _reducere (
     {
         m->mala++;
     }
+    dexter.nodus    = NIHIL;
+    dexter.corpora  = NIHIL;
     commutatio (s.op->species)
     {
         casus CRUSTA_OPERATOR_PRAEPOSITUS:
+            si (!dexter_absens)
+            {
+                dexter = _operandum_tollere(m);
+            }
             n = materia_nodus_creare(m->piscina,
                 (s32)CRUSTA_GENUS_PRAEPOSITA,
                 _loci_numerus((s32)CRUSTA_GENUS_PRAEPOSITA));
             si (   n == NIHIL
                 || !_tok_ponere(n, (i32)CRUSTA_PRAEPOSITA_TOK_OPERATOR,
-                s.tok)
+                    s.tok)
+                || !_corpora_ponere(m, n,
+                (i32)CRUSTA_PRAEPOSITA_POST_SIGNUM,
+                    s.corpora)
                 || !_ponere(n, (i32)CRUSTA_PRAEPOSITA_OPERANDUM,
-                    dexter_absens ? NIHIL : _operandum_tollere(m)))
+                    dexter.nodus))
             {
                 redde FALSUM;
             }
             frange;
         casus CRUSTA_OPERATOR_TERNARIUS:
-            dexter   = (s.colon != NIHIL && !dexter_absens)
-                ? _operandum_tollere(m) : NIHIL;
+            si (s.colon != NIHIL && !dexter_absens)
+            {
+                dexter = _operandum_tollere(m);
+            }
             sinister = _operandum_tollere(m);
             probatio = _operandum_tollere(m);
             n = materia_nodus_creare(m->piscina,
                 (s32)CRUSTA_GENUS_TERNARIA,
                 _loci_numerus((s32)CRUSTA_GENUS_TERNARIA));
             si (   n == NIHIL
-                || !_ponere(n, (i32)CRUSTA_TERNARIA_PROBATIO, probatio)
+                || !_ponere(n, (i32)CRUSTA_TERNARIA_PROBATIO,
+                    probatio.nodus)
+                || !_corpora_ponere(m, n,
+                    (i32)CRUSTA_TERNARIA_POST_PROBATIONEM,
+                    probatio.corpora)
                 || !_tok_ponere(n, (i32)CRUSTA_TERNARIA_TOK_QUAESTIO,
-                s.tok)
-                || !_ponere(n, (i32)CRUSTA_TERNARIA_SINISTER, sinister)
+                    s.tok)
+                || !_corpora_ponere(m, n,
+                    (i32)CRUSTA_TERNARIA_POST_QUAESTIONEM, s.corpora)
+                || !_ponere(n, (i32)CRUSTA_TERNARIA_SINISTER,
+                    sinister.nodus)
+                || !_corpora_ponere(m, n,
+                    (i32)CRUSTA_TERNARIA_POST_SINISTRUM,
+                    sinister.corpora)
                 || !_tok_ponere(n, (i32)CRUSTA_TERNARIA_TOK_COLON,
-                s.colon)
-                || !_ponere(n, (i32)CRUSTA_TERNARIA_DEXTER, dexter))
+                    s.colon)
+                || !_corpora_ponere(m, n,
+                (i32)CRUSTA_TERNARIA_POST_COLON,
+                    s.corpora_coli)
+                || !_ponere(n, (i32)CRUSTA_TERNARIA_DEXTER,
+                dexter.nodus))
             {
                 redde FALSUM;
             }
             frange;
-        ordinarius:   /* BINARIUS (et ':' orphanum) */
-            dexter   = dexter_absens ? NIHIL : _operandum_tollere(m);
+        ordinarius:   /* BINARIUS (et ':' orphanum, iuxtapositio) */
+            si (!dexter_absens)
+            {
+                dexter = _operandum_tollere(m);
+            }
             sinister = _operandum_tollere(m);
             n = materia_nodus_creare(m->piscina,
                 (s32)CRUSTA_GENUS_BINARIA,
                 _loci_numerus((s32)CRUSTA_GENUS_BINARIA));
             si (   n == NIHIL
-                || !_ponere(n, (i32)CRUSTA_BINARIA_SINISTER, sinister)
+                || !_ponere(n, (i32)CRUSTA_BINARIA_SINISTER,
+                    sinister.nodus)
+                || !_corpora_ponere(m, n,
+                (i32)CRUSTA_BINARIA_POST_SINISTRUM,
+                    sinister.corpora)
                 || !_tok_ponere(n, (i32)CRUSTA_BINARIA_TOK_OPERATOR,
-                s.tok)
-                || !_ponere(n, (i32)CRUSTA_BINARIA_DEXTER, dexter))
+                    s.tok)
+                || !_corpora_ponere(m, n,
+                (i32)CRUSTA_BINARIA_POST_SIGNUM,
+                    s.corpora)
+                || !_ponere(n, (i32)CRUSTA_BINARIA_DEXTER,
+                dexter.nodus))
             {
                 redde FALSUM;
             }
             frange;
     }
-    redde _operandum_pellere(m, n);
+    redde _operandum_pellere(m, n, dexter.corpora);
 }
 
 interior constans Signum*
@@ -219,8 +354,6 @@ crusta_arithmetica_operandum (
 {
     si (!machina->operandum_exspectatur)
     {
-        Signum* sedes;
-
         machina->mala++;
         dum (_vertex(machina) != NIHIL)
         {
@@ -229,17 +362,49 @@ crusta_arithmetica_operandum (
                 redde FALSUM;
             }
         }
-        sedes = (Signum*)xar_addere(machina->signa);
-        si (sedes == NIHIL)
+        si (!_signum_pellere(machina, NIHIL, &IUXTAPOSITIO))
         {
             redde FALSUM;
         }
-        sedes->tok    = NIHIL;
-        sedes->colon  = NIHIL;
-        sedes->op     = &IUXTAPOSITIO;
     }
-    machina->operandum_exspectatur = FALSUM;
-    redde _operandum_pellere(machina, nodus);
+    machina->operandum_exspectatur  = FALSUM;
+    machina->ultimum                = (i32)ULTIMUM_OPERANDUM;
+    redde _operandum_pellere(machina, nodus, NIHIL);
+}
+
+b32
+crusta_arithmetica_interponere (
+    CrustaArithmetica* machina,
+         MateriaNodus* corpus)
+{
+    i32 n;
+
+    si (machina->ultimum == (i32)ULTIMUM_OPERANDUM)
+    {
+        n = xar_numerus(machina->operanda);
+        si (n > ZEPHYRUM)
+        {
+            Operandum* o = (Operandum*)xar_obtinere(machina->operanda,
+                n - I);
+
+            redde _corpus_addere(machina, &o->corpora, corpus);
+        }
+    }
+    alioquin si (   machina->ultimum == (i32)ULTIMUM_SIGNUM
+                 || machina->ultimum == (i32)ULTIMUM_COLON)
+    {
+        n = xar_numerus(machina->signa);
+        si (n > ZEPHYRUM)
+        {
+            Signum* s = (Signum*)xar_obtinere(machina->signa, n - I);
+
+            redde _corpus_addere(machina,
+                machina->ultimum == (i32)ULTIMUM_COLON
+                    ? &s->corpora_coli : &s->corpora,
+                corpus);
+        }
+    }
+    redde _corpus_addere(machina, &machina->corpora_initii, corpus);
 }
 
 /* colon orphanum ut binaria (totalitas) */
@@ -253,8 +418,6 @@ crusta_arithmetica_operator (
          MateriaToken* signum)
 {
     constans CrustaOperator* o;
-                     Signum  s;
-                     Signum* sedes;
 
     si (machina->operandum_exspectatur)
     {
@@ -292,16 +455,7 @@ crusta_arithmetica_operator (
         }
         alioquin
         {
-            s.tok    = signum;
-            s.colon  = NIHIL;
-            s.op     = o;
-            sedes    = (Signum*)xar_addere(machina->signa);
-            si (sedes == NIHIL)
-            {
-                redde FALSUM;
-            }
-            *sedes = s;
-            redde VERUM;
+            redde _signum_pellere(machina, signum, o);
         }
     }
     alioquin
@@ -314,16 +468,21 @@ crusta_arithmetica_operator (
             MateriaNodus* n = materia_nodus_creare(machina->piscina,
                 (s32)CRUSTA_GENUS_POSTPOSITA,
                 _loci_numerus((s32)CRUSTA_GENUS_POSTPOSITA));
+                Operandum operandum = _operandum_tollere(machina);
 
             si (   n == NIHIL
                 || !_ponere(n, (i32)CRUSTA_POSTPOSITA_OPERANDUM,
-                    _operandum_tollere(machina))
+                    operandum.nodus)
+                || !_corpora_ponere(machina, n,
+                    (i32)CRUSTA_POSTPOSITA_POST_OPERANDUM,
+                    operandum.corpora)
                 || !_tok_ponere(n, (i32)CRUSTA_POSTPOSITA_TOK_OPERATOR,
-                signum))
+                    signum))
             {
                 redde FALSUM;
             }
-            redde _operandum_pellere(machina, n);
+            machina->ultimum = (i32)ULTIMUM_OPERANDUM;
+            redde _operandum_pellere(machina, n, NIHIL);
         }
         o = crusta_arithmetica_quaerere(machina->dialectus,
             signum->valor,
@@ -369,6 +528,7 @@ crusta_arithmetica_operator (
 
             mutandum->colon                 = signum;
             machina->operandum_exspectatur  = VERUM;
+            machina->ultimum                = (i32)ULTIMUM_COLON;
             redde VERUM;
         }
         si (!reducendum)
@@ -387,25 +547,24 @@ crusta_arithmetica_operator (
         machina->mala++;
         o = &COLON_ORPHANUM;
     }
-    s.tok    = signum;
-    s.colon  = NIHIL;
-    s.op     = o;
-    sedes    = (Signum*)xar_addere(machina->signa);
-    si (sedes == NIHIL)
+    si (!_signum_pellere(machina, signum, o))
     {
         redde FALSUM;
     }
-    *sedes                          = s;
-    machina->operandum_exspectatur  = VERUM;
+    machina->operandum_exspectatur = VERUM;
     redde VERUM;
 }
 
 MateriaNodus*
 crusta_arithmetica_finire (
-    CrustaArithmetica* machina)
+    CrustaArithmetica*  machina,
+                  Xar** corpora_initii,
+                  Xar** corpora_post)
 {
-    MateriaNodus* n = NIHIL;
+    Operandum o;
 
+    *corpora_initii  = machina->corpora_initii;
+    *corpora_post    = NIHIL;
     /* operator caudalis: dextrum absens */
     si (   machina->operandum_exspectatur && xar_numerus(machina->signa)
         > ZEPHYRUM)
@@ -431,8 +590,9 @@ crusta_arithmetica_finire (
     {
         machina->mala++;
     }
-    xar_tollere(machina->operanda, &n);
-    redde n;
+    xar_tollere(machina->operanda, &o);
+    *corpora_post = o.corpora;
+    redde o.nodus;
 }
 
 

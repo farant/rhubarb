@@ -181,7 +181,19 @@ hic_manens constans character* CASUS[] = {
     "(( i += 1 )) > f && x",
     "echo $((1+1)) $((echo a); b)",
     "$((1 +))",
-    "$((1+1"
+    "$((1+1",
+    /* P9b: corpora heredoc in lacunis (listae post_*,
+     * functio.interiecta, gradus absens clausus) */
+    "cat <<A; [[ a ==\nx\nA\nb ]]\n",
+    "[[ -n $(cat <<A)\nx\nA\n]]\n",
+    "cat <<A; [[ ( a\nx\nA\n) ]]\n",
+    "cat <<A; (( a ? 1 :\nx\nA\n2 ))\n",
+    "cat <<A; (( i\nx\nA\n++ ))\n",
+    "cat <<A; (( -\nx\nA\n1 ))\n",
+    "echo $(( $(cat <<A) +\nx\nA\n1))\n",
+    "cat <<A; for ((i=0\nx\nA\n;;)); do :; done\n",
+    "cat <<A; function f\nx\nA\n{ :; }\n",
+    "cat <<A; for\nx\nA\ni in a; do :; done\n"
 };
 
 #define NUMERUS_CASUUM ((i32)(magnitudo(CASUS)/magnitudo(CASUS[0])))
@@ -202,7 +214,16 @@ hic_manens constans character* CASUS_HEREDOC[] = {
     "read x <<EOF; for i in \"$x\"\nvalue\nEOF\ndo\n :\ndone\n",
     "read x <<EOF; for i\nvalue\nEOF\ndo :; done\n",
     "read x <<EOF; case $x\nvalue\nEOF\nin a) ;; esac\n",
-    "if cat <<A\nx\nA\nthen :; fi"
+    "if cat <<A\nx\nA\nthen :; fi",
+    "cat <<A; [[ a ==\nx\nA\nb ]]\n",
+    "[[ -n $(cat <<A)\nx\nA\n]]\n",
+    "cat <<A; [[ ( a\nx\nA\n) ]]\n",
+    "cat <<A; (( a ? 1 :\nx\nA\n2 ))\n",
+    "cat <<A; (( i\nx\nA\n++ ))\n",
+    "cat <<A; (( -\nx\nA\n1 ))\n",
+    "echo $(( $(cat <<A) +\nx\nA\n1))\n",
+    "cat <<A; for ((i=0\nx\nA\n;;)); do :; done\n",
+    "cat <<A; function f\nx\nA\n{ :; }\n"
 };
 
 #define NUMERUS_CASUUM_HEREDOC \

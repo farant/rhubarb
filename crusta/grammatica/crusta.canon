@@ -38,8 +38,12 @@
   verbo lector ipse recusat, ut attributum canon (porta reservationis
   P9).
 
-  Sigillum 0ad54dc6: L genera, CLII loci (P6: iteratio.interiecta,
-  electio.interiecta, separator iterationis et cycli listae).
+  Sigillum 873ce8f4: L genera, CLXXVI loci (P6: iteratio.interiecta,
+  electio.interiecta, separator iterationis et cycli listae, 0ad54dc6;
+  P9b: listae post_* in lacunis expressionum - arithmetica, iudicium,
+  pars-arithmetica, inclusae, praepositae, postposita, binariae,
+  ternaria - et functio.interiecta: corpus heredoc ubi linea nova
+  intra expressionem aut ante corpus functionis cadit).
 -->
 <canon dialectus="crusta" versio="1">
 
@@ -286,11 +290,12 @@
       necessarium="verum"
       nota="PINNA: sigillum FNV-1a tabularum crusta_registrum_coctum.c
             (ex crusta.registrum.stml; P1: L genera, CL loci; P6: CLII
-            loci). Declaratio mutata sine hac optione mutata rubet in
+            loci, 0ad54dc6; P9b: CLXXVI loci, listae post_* lacunarum
+            expressionis et functio.interiecta, 0ad54dc6 -> 873ce8f4). Declaratio mutata sine hac optione mutata rubet in
             iudicio ET in custode derivae (probatio_crusta_canon
             optionem contra materia_arbor_sigillum vivum confert).
             Manu movenda cum causa.">
-      <optio>0ad54dc6</optio>
+      <optio>873ce8f4</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -549,6 +554,7 @@
     <liberum nomen="tok_titulus" maximum="1"/>
     <liberum nomen="tok_apertura" maximum="1"/>
     <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="interiecta" maximum="1"/>
     <liberum nomen="corpus" maximum="1"/>
   </elementum>
 
@@ -566,6 +572,11 @@
 
   <elementum nomen="tok_clausura" intra="functio">
     <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="interiecta" intra="functio"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="corpus" intra="functio">
@@ -896,7 +907,9 @@
   <elementum nomen="arithmetica"
     nota="(( expressio )) ut imperium [redirectiones]">
     <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="post_aperturam" maximum="1"/>
     <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="post_expressionem" maximum="1"/>
     <liberum nomen="tok_clausura" maximum="1"/>
     <liberum nomen="redirectiones" maximum="1"/>
   </elementum>
@@ -905,8 +918,18 @@
     <liberum nomen="crusta-arithmetica-apertura" maximum="1"/>
   </elementum>
 
+  <elementum nomen="post_aperturam" intra="arithmetica"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="expressio" intra="arithmetica">
     <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="post_expressionem" intra="arithmetica"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="tok_clausura" intra="arithmetica">
@@ -920,7 +943,9 @@
   <elementum nomen="iudicium"
     nota="[[ expressio ]] ut imperium [redirectiones]; '[[' ut verbum reservatum lexatur">
     <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="post_aperturam" maximum="1"/>
     <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="post_expressionem" maximum="1"/>
     <liberum nomen="tok_clausura" maximum="1"/>
     <liberum nomen="redirectiones" maximum="1"/>
   </elementum>
@@ -930,8 +955,18 @@
     <liberum nomen="crusta-iudicium-apertura" maximum="1"/>
   </elementum>
 
+  <elementum nomen="post_aperturam" intra="iudicium"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="expressio" intra="iudicium">
     <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="post_expressionem" intra="iudicium"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="tok_clausura" intra="iudicium">
@@ -1142,7 +1177,9 @@
   <elementum nomen="pars-arithmetica"
     nota="$(( expressio ))">
     <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="post_aperturam" maximum="1"/>
     <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="post_expressionem" maximum="1"/>
     <liberum nomen="tok_clausura" maximum="1"/>
   </elementum>
 
@@ -1150,8 +1187,18 @@
     <liberum nomen="crusta-arithmetica-partis-apertura" maximum="1"/>
   </elementum>
 
+  <elementum nomen="post_aperturam" intra="pars-arithmetica"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="expressio" intra="pars-arithmetica">
     <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="post_expressionem" intra="pars-arithmetica"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="tok_clausura" intra="pars-arithmetica">
@@ -1212,11 +1259,17 @@
   <elementum nomen="praeposita"
     nota="-x !x ~x ++x --x +x">
     <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="post_signum" maximum="1"/>
     <liberum nomen="operandum" maximum="1"/>
   </elementum>
 
   <elementum nomen="tok_operator" intra="praeposita">
     <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="post_signum" intra="praeposita"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="operandum" intra="praeposita">
@@ -1226,11 +1279,17 @@
   <elementum nomen="postposita"
     nota="x++ x--">
     <liberum nomen="operandum" maximum="1"/>
+    <liberum nomen="post_operandum" maximum="1"/>
     <liberum nomen="tok_operator" maximum="1"/>
   </elementum>
 
   <elementum nomen="operandum" intra="postposita">
     <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="post_operandum" intra="postposita"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="tok_operator" intra="postposita">
@@ -1240,7 +1299,9 @@
   <elementum nomen="binaria"
     nota="sinister operator dexter">
     <liberum nomen="sinister" maximum="1"/>
+    <liberum nomen="post_sinistrum" maximum="1"/>
     <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="post_signum" maximum="1"/>
     <liberum nomen="dexter" maximum="1"/>
   </elementum>
 
@@ -1248,8 +1309,18 @@
     <<#expressio-una>>
   </elementum>
 
+  <elementum nomen="post_sinistrum" intra="binaria"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="tok_operator" intra="binaria">
     <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="post_signum" intra="binaria"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="dexter" intra="binaria">
@@ -1259,9 +1330,13 @@
   <elementum nomen="ternaria"
     nota="probatio ? sinister : dexter">
     <liberum nomen="probatio" maximum="1"/>
+    <liberum nomen="post_probationem" maximum="1"/>
     <liberum nomen="tok_quaestio" maximum="1"/>
+    <liberum nomen="post_quaestionem" maximum="1"/>
     <liberum nomen="sinister" maximum="1"/>
+    <liberum nomen="post_sinistrum" maximum="1"/>
     <liberum nomen="tok_colon" maximum="1"/>
+    <liberum nomen="post_colon" maximum="1"/>
     <liberum nomen="dexter" maximum="1"/>
   </elementum>
 
@@ -1269,16 +1344,36 @@
     <<#expressio-una>>
   </elementum>
 
+  <elementum nomen="post_probationem" intra="ternaria"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="tok_quaestio" intra="ternaria">
     <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="post_quaestionem" intra="ternaria"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="sinister" intra="ternaria">
     <<#expressio-una>>
   </elementum>
 
+  <elementum nomen="post_sinistrum" intra="ternaria"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="tok_colon" intra="ternaria">
     <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="post_colon" intra="ternaria"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="dexter" intra="ternaria">
@@ -1288,7 +1383,9 @@
   <elementum nomen="inclusa"
     nota="( expressio )">
     <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="post_aperturam" maximum="1"/>
     <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="post_expressionem" maximum="1"/>
     <liberum nomen="tok_clausura" maximum="1"/>
   </elementum>
 
@@ -1296,8 +1393,18 @@
     <liberum nomen="crusta-parenthesis" maximum="1"/>
   </elementum>
 
+  <elementum nomen="post_aperturam" intra="inclusa"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="expressio" intra="inclusa">
     <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="post_expressionem" intra="inclusa"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="tok_clausura" intra="inclusa">
@@ -1307,11 +1414,17 @@
   <elementum nomen="iudicium-praeposita"
     nota="[[ ]]: -f x, ! c">
     <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="post_signum" maximum="1"/>
     <liberum nomen="operandum" maximum="1"/>
   </elementum>
 
   <elementum nomen="tok_operator" intra="iudicium-praeposita">
     <liberum nomen="crusta-iudicium-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="post_signum" intra="iudicium-praeposita"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="operandum" intra="iudicium-praeposita">
@@ -1321,7 +1434,9 @@
   <elementum nomen="iudicium-binaria"
     nota="[[ ]]: a == b, a =~ re">
     <liberum nomen="sinister" maximum="1"/>
+    <liberum nomen="post_sinistrum" maximum="1"/>
     <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="post_signum" maximum="1"/>
     <liberum nomen="dexter" maximum="1"/>
   </elementum>
 
@@ -1329,8 +1444,18 @@
     <<#iudicium-una>>
   </elementum>
 
+  <elementum nomen="post_sinistrum" intra="iudicium-binaria"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="tok_operator" intra="iudicium-binaria">
     <liberum nomen="crusta-iudicium-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="post_signum" intra="iudicium-binaria"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="dexter" intra="iudicium-binaria">
@@ -1340,7 +1465,9 @@
   <elementum nomen="iudicium-coniuncta"
     nota="[[ ]]: && aut ||">
     <liberum nomen="sinister" maximum="1"/>
+    <liberum nomen="post_sinistrum" maximum="1"/>
     <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="post_signum" maximum="1"/>
     <liberum nomen="dexter" maximum="1"/>
   </elementum>
 
@@ -1348,8 +1475,18 @@
     <<#iudicium-una>>
   </elementum>
 
+  <elementum nomen="post_sinistrum" intra="iudicium-coniuncta"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="tok_operator" intra="iudicium-coniuncta">
     <liberum nomen="crusta-iudicium-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="post_signum" intra="iudicium-coniuncta"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="dexter" intra="iudicium-coniuncta">
@@ -1359,7 +1496,9 @@
   <elementum nomen="iudicium-inclusa"
     nota="[[ ]]: ( c )">
     <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="post_aperturam" maximum="1"/>
     <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="post_expressionem" maximum="1"/>
     <liberum nomen="tok_clausura" maximum="1"/>
   </elementum>
 
@@ -1367,8 +1506,18 @@
     <liberum nomen="crusta-parenthesis" maximum="1"/>
   </elementum>
 
+  <elementum nomen="post_aperturam" intra="iudicium-inclusa"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
   <elementum nomen="expressio" intra="iudicium-inclusa">
     <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="post_expressionem" intra="iudicium-inclusa"
+    nota="corpora heredoc in lacuna (P9b): linea nova hic cadit">
+    <liberum nomen="heredoc"/>
   </elementum>
 
   <elementum nomen="tok_clausura" intra="iudicium-inclusa">

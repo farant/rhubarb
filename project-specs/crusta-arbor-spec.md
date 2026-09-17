@@ -246,10 +246,14 @@ ends inside a still-open quote waits for the next unquoted newline
 Loci in byte order (`materia_scribere_nodum` walks loci in registry
 order). An absent slot is meaning (html's H4): no synthetic tokens,
 ever. Genera are appended, never reordered; the seal in `crusta.canon`
-moves by hand with a cause. 50 genera, 152 loci (150 at P1; P6 added
+moves by hand with a cause. 50 genera, 176 loci (150 at P1; P6 added
 `iteratio.interiecta` and `electio.interiecta` and turned the two
 `tok_separator` tokens into `separator` lists — the FreeBSD corpus put
-heredoc bodies in those gaps).
+heredoc bodies in those gaps; P9b added 24 `post_*` / `interiecta`
+lists so a body whose newline falls inside an expression — `[[ ]]`,
+`(( ))`, `$(( ))`, a `for ((` clause — or before a function body sits
+where its bytes are; the body shown below predates P9b, the declaration
+file is authoritative).
 
 ```xml
 <registrum grammatica="crusta" praefixum="CRUSTA" typus="CrustaGenus"

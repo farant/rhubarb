@@ -3,7 +3,7 @@
  * Registrum generum COCTUM grammaticae 'crusta' - GENERATUM, NE MANU
  * EDITES. Fons: crusta/grammatica/crusta.registrum.stml
  * (materia/coquere.sh). Series LOCORUM plana; quodque genus fenestram
- * suam per loci_offset + loci_numerus nominat. Genera L, loci CLII.
+ * suam per loci_offset + loci_numerus nominat. Genera L, loci CLXXVI.
  */
 
 #include "crusta_registrum_coctum.h"
@@ -55,26 +55,27 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
     { "scopus", (s32)MATERIA_LOCUS_NODUS },
     { "corpus", (s32)MATERIA_LOCUS_REFERENTIA },
 
-    /* functio (23..27) */
+    /* functio (23..28) */
     { "tok_verbum", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_titulus", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
+    { "interiecta", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "corpus", (s32)MATERIA_LOCUS_NODUS },
 
-    /* grex (28..31) */
+    /* grex (29..32) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "liberi", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* crustula (32..35) */
+    /* crustula (33..36) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "liberi", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* conditio (36..42) */
+    /* conditio (37..43) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "probatio", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_deinde", (s32)MATERIA_LOCUS_TOKEN },
@@ -83,13 +84,13 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* ramus (43..46) */
+    /* ramus (44..47) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "probatio", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_deinde", (s32)MATERIA_LOCUS_TOKEN },
     { "liberi", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* iteratio (47..54) */
+    /* iteratio (48..55) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_titulus", (s32)MATERIA_LOCUS_TOKEN },
     { "interiecta", (s32)MATERIA_LOCUS_LISTA_NODUS },
@@ -99,7 +100,7 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
     { "cursus", (s32)MATERIA_LOCUS_NODUS },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* cyclus (55..61) */
+    /* cyclus (56..62) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_parenthesis", (s32)MATERIA_LOCUS_TOKEN },
     { "liberi", (s32)MATERIA_LOCUS_LISTA_NODUS },
@@ -108,18 +109,18 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
     { "cursus", (s32)MATERIA_LOCUS_NODUS },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* repetitio (62..65) */
+    /* repetitio (63..66) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "probatio", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "cursus", (s32)MATERIA_LOCUS_NODUS },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* cursus (66..68) */
+    /* cursus (67..69) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "liberi", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* electio (69..75) */
+    /* electio (70..76) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "verbum", (s32)MATERIA_LOCUS_NODUS },
     { "interiecta", (s32)MATERIA_LOCUS_LISTA_NODUS },
@@ -128,63 +129,67 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* optio (76..80) */
+    /* optio (77..81) */
     { "tok_parenthesis", (s32)MATERIA_LOCUS_TOKEN },
     { "exemplaria", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_parenthesis_clausura", (s32)MATERIA_LOCUS_TOKEN },
     { "liberi", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_terminator", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* arithmetica (81..84) */
+    /* arithmetica (82..87) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_aperturam", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "expressio", (s32)MATERIA_LOCUS_NODUS },
+    { "post_expressionem", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* iudicium (85..88) */
+    /* iudicium (88..93) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_aperturam", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "expressio", (s32)MATERIA_LOCUS_NODUS },
+    { "post_expressionem", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
     { "redirectiones", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* socius (89..91) */
+    /* socius (94..96) */
     { "tok_verbum", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_titulus", (s32)MATERIA_LOCUS_TOKEN },
     { "imperium", (s32)MATERIA_LOCUS_NODUS },
 
-    /* verbum (92..92) */
+    /* verbum (97..97) */
     { "partes", (s32)MATERIA_LOCUS_LISTA_NODUS },
 
-    /* pars-litteralis (93..93) */
+    /* pars-litteralis (98..98) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-effugium (94..94) */
+    /* pars-effugium (99..99) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-continuatio (95..95) */
+    /* pars-continuatio (100..100) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-simplex (96..96) */
+    /* pars-simplex (101..101) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-gemina (97..99) */
+    /* pars-gemina (102..104) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "partes", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-effugia (100..100) */
+    /* pars-effugia (105..105) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-versa (101..103) */
+    /* pars-versa (106..108) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "partes", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-parametrum (104..105) */
+    /* pars-parametrum (109..110) */
     { "tok_sigillum", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_titulus", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-expansio (106..112) */
+    /* pars-expansio (111..117) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_praefixum", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_titulus", (s32)MATERIA_LOCUS_TOKEN },
@@ -193,73 +198,92 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
     { "argumenta", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-substitutio (113..115) */
+    /* pars-substitutio (118..120) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "liberi", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-arithmetica (116..118) */
+    /* pars-arithmetica (121..125) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_aperturam", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "expressio", (s32)MATERIA_LOCUS_NODUS },
+    { "post_expressionem", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-processus (119..121) */
+    /* pars-processus (126..128) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
     { "liberi", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* pars-domus (122..122) */
+    /* pars-domus (129..129) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* numerus (123..123) */
+    /* numerus (130..130) */
     { "tok", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* variabilis (124..125) */
+    /* variabilis (131..132) */
     { "tok_titulus", (s32)MATERIA_LOCUS_TOKEN },
     { "tok_subscriptum", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* praeposita (126..127) */
+    /* praeposita (133..135) */
     { "tok_operator", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_signum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "operandum", (s32)MATERIA_LOCUS_NODUS },
 
-    /* postposita (128..129) */
+    /* postposita (136..138) */
     { "operandum", (s32)MATERIA_LOCUS_NODUS },
+    { "post_operandum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_operator", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* binaria (130..132) */
+    /* binaria (139..143) */
     { "sinister", (s32)MATERIA_LOCUS_NODUS },
+    { "post_sinistrum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_operator", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_signum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "dexter", (s32)MATERIA_LOCUS_NODUS },
 
-    /* ternaria (133..137) */
+    /* ternaria (144..152) */
     { "probatio", (s32)MATERIA_LOCUS_NODUS },
+    { "post_probationem", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_quaestio", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_quaestionem", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "sinister", (s32)MATERIA_LOCUS_NODUS },
+    { "post_sinistrum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_colon", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_colon", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "dexter", (s32)MATERIA_LOCUS_NODUS },
 
-    /* inclusa (138..140) */
+    /* inclusa (153..157) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_aperturam", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "expressio", (s32)MATERIA_LOCUS_NODUS },
+    { "post_expressionem", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 
-    /* iudicium-praeposita (141..142) */
+    /* iudicium-praeposita (158..160) */
     { "tok_operator", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_signum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "operandum", (s32)MATERIA_LOCUS_NODUS },
 
-    /* iudicium-binaria (143..145) */
+    /* iudicium-binaria (161..165) */
     { "sinister", (s32)MATERIA_LOCUS_NODUS },
+    { "post_sinistrum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_operator", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_signum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "dexter", (s32)MATERIA_LOCUS_NODUS },
 
-    /* iudicium-coniuncta (146..148) */
+    /* iudicium-coniuncta (166..170) */
     { "sinister", (s32)MATERIA_LOCUS_NODUS },
+    { "post_sinistrum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_operator", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_signum", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "dexter", (s32)MATERIA_LOCUS_NODUS },
 
-    /* iudicium-inclusa (149..151) */
+    /* iudicium-inclusa (171..175) */
     { "tok_apertura", (s32)MATERIA_LOCUS_TOKEN },
+    { "post_aperturam", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "expressio", (s32)MATERIA_LOCUS_NODUS },
+    { "post_expressionem", (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "tok_clausura", (s32)MATERIA_LOCUS_TOKEN },
 };
 
@@ -276,45 +300,45 @@ hic_manens constans MateriaTabGenus GENERA_COCTA[] = {
     { "assignatio", (i32)12, (i32)4 },
     { "tabulatum", (i32)16, (i32)3 },
     { "redirectio", (i32)19, (i32)4 },
-    { "functio", (i32)23, (i32)5 },
-    { "grex", (i32)28, (i32)4 },
-    { "crustula", (i32)32, (i32)4 },
-    { "conditio", (i32)36, (i32)7 },
-    { "ramus", (i32)43, (i32)4 },
-    { "iteratio", (i32)47, (i32)8 },
-    { "cyclus", (i32)55, (i32)7 },
-    { "repetitio", (i32)62, (i32)4 },
-    { "cursus", (i32)66, (i32)3 },
-    { "electio", (i32)69, (i32)7 },
-    { "optio", (i32)76, (i32)5 },
-    { "arithmetica", (i32)81, (i32)4 },
-    { "iudicium", (i32)85, (i32)4 },
-    { "socius", (i32)89, (i32)3 },
-    { "verbum", (i32)92, (i32)1 },
-    { "pars-litteralis", (i32)93, (i32)1 },
-    { "pars-effugium", (i32)94, (i32)1 },
-    { "pars-continuatio", (i32)95, (i32)1 },
-    { "pars-simplex", (i32)96, (i32)1 },
-    { "pars-gemina", (i32)97, (i32)3 },
-    { "pars-effugia", (i32)100, (i32)1 },
-    { "pars-versa", (i32)101, (i32)3 },
-    { "pars-parametrum", (i32)104, (i32)2 },
-    { "pars-expansio", (i32)106, (i32)7 },
-    { "pars-substitutio", (i32)113, (i32)3 },
-    { "pars-arithmetica", (i32)116, (i32)3 },
-    { "pars-processus", (i32)119, (i32)3 },
-    { "pars-domus", (i32)122, (i32)1 },
-    { "numerus", (i32)123, (i32)1 },
-    { "variabilis", (i32)124, (i32)2 },
-    { "praeposita", (i32)126, (i32)2 },
-    { "postposita", (i32)128, (i32)2 },
-    { "binaria", (i32)130, (i32)3 },
-    { "ternaria", (i32)133, (i32)5 },
-    { "inclusa", (i32)138, (i32)3 },
-    { "iudicium-praeposita", (i32)141, (i32)2 },
-    { "iudicium-binaria", (i32)143, (i32)3 },
-    { "iudicium-coniuncta", (i32)146, (i32)3 },
-    { "iudicium-inclusa", (i32)149, (i32)3 },
+    { "functio", (i32)23, (i32)6 },
+    { "grex", (i32)29, (i32)4 },
+    { "crustula", (i32)33, (i32)4 },
+    { "conditio", (i32)37, (i32)7 },
+    { "ramus", (i32)44, (i32)4 },
+    { "iteratio", (i32)48, (i32)8 },
+    { "cyclus", (i32)56, (i32)7 },
+    { "repetitio", (i32)63, (i32)4 },
+    { "cursus", (i32)67, (i32)3 },
+    { "electio", (i32)70, (i32)7 },
+    { "optio", (i32)77, (i32)5 },
+    { "arithmetica", (i32)82, (i32)6 },
+    { "iudicium", (i32)88, (i32)6 },
+    { "socius", (i32)94, (i32)3 },
+    { "verbum", (i32)97, (i32)1 },
+    { "pars-litteralis", (i32)98, (i32)1 },
+    { "pars-effugium", (i32)99, (i32)1 },
+    { "pars-continuatio", (i32)100, (i32)1 },
+    { "pars-simplex", (i32)101, (i32)1 },
+    { "pars-gemina", (i32)102, (i32)3 },
+    { "pars-effugia", (i32)105, (i32)1 },
+    { "pars-versa", (i32)106, (i32)3 },
+    { "pars-parametrum", (i32)109, (i32)2 },
+    { "pars-expansio", (i32)111, (i32)7 },
+    { "pars-substitutio", (i32)118, (i32)3 },
+    { "pars-arithmetica", (i32)121, (i32)5 },
+    { "pars-processus", (i32)126, (i32)3 },
+    { "pars-domus", (i32)129, (i32)1 },
+    { "numerus", (i32)130, (i32)1 },
+    { "variabilis", (i32)131, (i32)2 },
+    { "praeposita", (i32)133, (i32)3 },
+    { "postposita", (i32)136, (i32)3 },
+    { "binaria", (i32)139, (i32)5 },
+    { "ternaria", (i32)144, (i32)9 },
+    { "inclusa", (i32)153, (i32)5 },
+    { "iudicium-praeposita", (i32)158, (i32)3 },
+    { "iudicium-binaria", (i32)161, (i32)5 },
+    { "iudicium-coniuncta", (i32)166, (i32)5 },
+    { "iudicium-inclusa", (i32)171, (i32)5 },
 };
 
 constans MateriaRegistrumCoctum CRUSTA_REGISTRUM = {

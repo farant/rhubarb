@@ -380,3 +380,63 @@ call under -O2 — so the pin uses the non-tail form.
 the same `(`), then `a|b` is an ordinary pipa and `)` a second malum.
 `alias x=…` parses `x=…` as an assignment because `alias` is in the
 assignment-builtin table.
+
+## 2026-09-16 — P9b (heredoc bodies in every gap)
+
+**Inventory before design.** A probe (`lacuna_probe.c` in the
+scratchpad: parse, emit, report transpositions and byte identity) over
+~45 hand-built gap positions, each also checked with `bash -n`, sorted
+the gaps: bash READS bodies inside `[[ ]]` (after `[[`, operand,
+operator, `!`, `(`, `)`), inside `(( ))`/`$(( ))` (after opener,
+operand, operator, `?`, `:`, `(`), in `for ((` clauses, and after
+`function f` / `f()` / `function f ()`; it REJECTS a newline right after
+`for`, `select`, `function`, `case`, and inside `f(`. One gap was never
+counted: `for ((i=0` + newline appended the body to `cyclus.liberi`
+before the pending expression — the machine only appends at `;`.
+
+**A body lives in the list right after the token its newline follows.**
+For fixed-shape frames a slot does it (`functio.interiecta`). For
+expressions the node that will own the gap does not exist yet (the sign
+is still on the stack), so the machines record bodies against the LAST
+thing pushed — top operand, top sign, the ternary's colon, or the start
+— and place them when the node is built: `binaria(sinister,
+post_sinistrum, op, post_signum, dexter)`. Bodies after the LAST child
+cannot go inside the node (they'd precede nothing) so they travel up
+with the new node on the operand stack, and at `finire` whatever trails
+the root goes to `post_expressionem`; bodies before any token go to
+`post_aperturam`. The slot is always adjacent to its token, so emission
+order equals byte order by construction. `_machinam_finire` relies on
+`post_aperturam = expressio - 1` and `post_expressionem = expressio + 1`
+in all three arithmetic containers (and in `iudicium`/`iudicium-
+inclusa`), documented at the call.
+
+**Where bash errors, degrade the tree, not the bytes.** For `for` +
+newline and friends there is no bash reading to follow; closing the open
+frame absent (`_claudere_usque`) puts the construct in its list, then the
+body after it — byte order kept, `clausurae_absentes` makes `sana`
+FALSUM exactly where bash says syntax error. A function that already
+has its name takes a body into `interiecta` and switches to "expecting
+body": bash rejects `function f` + newline + `()`, so a later `(` opens
+a subshell body instead of the name's parens (which would emit before
+`interiecta`).
+
+**The strict fuzz found the next one immediately.** With transposition
+gone the pathology mutation that had been "explained" by the limit was
+still different: `[[ !()-a` emitted `[[() !-a`. A prefix operator (`-a`)
+arriving after a complete operand was pushed above the pending `!`
+without the implied juxtaposition sign, so the end-of-expression join
+reordered bytes. Same rule as P9's operand case: insert the implied
+binary sign first. Lesson: a named exemption in a fuzz gate hides the
+next bug behind it; removing the exemption was worth more than the
+count it printed.
+
+**Tool slip, recovered.** A shell line meant for inspection contained a
+stray `git stash push crusta/fontes/crusta_arbor.c`; it stashed the whole
+uncommitted builder change. `git stash show` confirmed one file, `git
+stash pop` restored it, the new functions were verified present. Never
+put git state commands in exploratory one-liners.
+
+**`$((` rewind with a body inside** (`echo $(( $(cat <<A)` + newline
+… `) )`) round-trips byte-identically: the refused attempt's frames and
+machine vanish with the lector rewind and the re-parse reads the body
+again.

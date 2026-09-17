@@ -41,15 +41,14 @@
  * octeti non per positionem ('${@E}', '${x[1][2]}' locum bis
  * scribebant - parsator NIHIL).
  *
- * LIMES NOMINATUS (P6, heredoca_transposita): corpus heredoc cuius
- * linea nova in gradu sine lista cadit (intra [[ ]], (( )), ${ }, post
- * 'for'/'function' ante titulum) listae proximae infra appenditur,
- * ORDO OCTETORUM RUPTUS. bash 5.2 MENSURATUM: intra [[ ]] et ${ }
- * corpus post lineam novam LEGIT (cum monitione, exitus 0); post
- * 'for'/'select'/'function'/'f(' linea nova error syntaxis est. Casus
- * hic admittitur SOLUM si relatio id nominat ET mensura emissionis
- * fontis est (octeti moti, nulli perditi); numerus impressus.
- * Quaestio in tabulario.
+ * HEREDOC IN LACUNIS (P9b): corpus cuius linea nova intra [[ ]],
+ * (( )), $(( )) aut ante corpus functionis cadit in lista post_* ubi
+ * octeti iacent ponitur (bash 5.2 ea legit); lacunae ubi bash errat
+ * gradum absentem claudunt. Limes P6 (heredoca_transposita) sublatus:
+ * emissio == fons SINE exceptione, et relatio quae corpus transpositum
+ * numerat ipsa fractura est. Porta haec limitem invenit (I casus ex
+ * MMCMXXXIV) et eius sublationem custodit; inventum sub eo: praepositum
+ * post operandum ('[[ !()-a') ordinem rumpebat, emendatum.
  *
  * IN FRACTURA: fons peccans in crusta/build/totalitas_fractum.sh.
  */
@@ -102,12 +101,8 @@ hic_manens constans character* CAUSAE[] = {
     "parsator NIHIL reddidit",
     "emissio fracta",
     "emissio a fonte dispar",
-    "heredoc transpositum (limes nominatus)"
+    "heredoc transpositum (relatio.heredoca_transposita)"
 };
-
-/* casus limitis nominati: emissio a fonte dispar SED mensura eadem
- * (octeti moti, nulli perditi) ET relatio.heredoca_transposita > 0 */
-hic_manens i32 casus_transposita = ZEPHYRUM;
 
 hic_manens constans character* RADIX_VIAE = ".";
 
@@ -184,9 +179,12 @@ _totum (
                      && memcmp(emissa.textus.datum, fons,
                             (size_t)mensura) != ZEPHYRUM))
     {
-        fructus = (   emissa.textus.mensura == mensura
-                   && relatio.heredoca_transposita > ZEPHYRUM)
-            ? (i32)TOTUM_TRANSPOSITUM : (i32)TOTUM_DISPAR;
+        fructus = (i32)TOTUM_DISPAR;
+    }
+    alioquin si (relatio.heredoca_transposita > ZEPHYRUM)
+    {
+        /* P9b: nulla lacuna sine lista - numeratio ipsa fractura */
+        fructus = (i32)TOTUM_TRANSPOSITUM;
     }
     alioquin
     {
@@ -332,13 +330,6 @@ _casum_probare (
     CREDO_NON_RUIT (_totum(fons, mensura));
 
     fructus = _totum(fons, mensura);
-    si (fructus == (i32)TOTUM_TRANSPOSITUM)
-    {
-        imprimere("  transpositum %s (%d octeti)\n", titulus,
-            (integer)mensura);
-        casus_transposita  = casus_transposita + I;
-        fructus            = (i32)TOTUM_IDEM;
-    }
     si (fructus != (i32)TOTUM_IDEM)
     {
         imprimere("  FRACTUM %s (%d octeti): %s\n", titulus,
@@ -823,10 +814,8 @@ principale (vacuum)
     CREDO_MAIOR_I32 (casus_mutati, ZEPHYRUM);
     CREDO_MAIOR_I32 (casus_truncati, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (casus_nidorum, NUMERUS_FORMARUM * (i32)VIII);
-    imprimere("\n  summa casuum: %d (transpositi, limes nominatus: "
-        "%d)\n",
-        (integer)(casus_fortuiti + casus_mutati + casus_truncati
-            + casus_nidorum + casus_crlf), (integer)casus_transposita);
+    imprimere("\n  summa casuum: %d\n", (integer)(casus_fortuiti
+        + casus_mutati + casus_truncati + casus_nidorum + casus_crlf));
     CREDO_MAIOR_I32 (casus_fortuiti + casus_mutati + casus_truncati
         + casus_nidorum + casus_crlf, (i32)MM);
 

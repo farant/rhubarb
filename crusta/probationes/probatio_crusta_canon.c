@@ -10,7 +10,7 @@
  *  I.  CUSTOS DERIVAE (bidirectionalis): canon ut STML legitur et
  *      regulae eius contra TRES tabulas retiuntur - registrum
  *      generum (genus quodque regulam globalem UNAM), loci (locus
- *      quisque regulam intra= genus suum UNAM: CLII), lexicon (genus
+ *      quisque regulam intra= genus suum UNAM: CLXXVI), lexicon (genus
  *      lexematis quodque regulam 'crusta-' UNAM: L) - et involucrum
  *      (arbor, ante, post). REVERSUM: regula omnis canonis uni
  *      tabularum congruere debet, ne regula rancida taceat.
@@ -183,7 +183,19 @@ hic_manens constans character* CASUS[] = {
     "case x in a b) ;; ) esac",
     "for if in a; do :; done",
     "[[ ! ( a ) && ( b == c ) || -f d ]]",
-    "x=1 ((1)); x=1 [[ a ]]"
+    "x=1 ((1)); x=1 [[ a ]]",
+    /* P9b: corpora heredoc in lacunis (listae post_*,
+     * functio.interiecta, gradus absens clausus) */
+    "cat <<A; [[ a ==\nx\nA\nb ]]\n",
+    "[[ -n $(cat <<A)\nx\nA\n]]\n",
+    "cat <<A; [[ ( a\nx\nA\n) ]]\n",
+    "cat <<A; (( a ? 1 :\nx\nA\n2 ))\n",
+    "cat <<A; (( i\nx\nA\n++ ))\n",
+    "cat <<A; (( -\nx\nA\n1 ))\n",
+    "echo $(( $(cat <<A) +\nx\nA\n1))\n",
+    "cat <<A; for ((i=0\nx\nA\n;;)); do :; done\n",
+    "cat <<A; function f\nx\nA\n{ :; }\n",
+    "cat <<A; for\nx\nA\ni in a; do :; done\n"
 };
 
 #define NUMERUS_CASUUM ((i32)(magnitudo(CASUS)/magnitudo(CASUS[0])))
@@ -745,7 +757,7 @@ principale (vacuum)
                 loci++;
             }
         }
-        CREDO_AEQUALIS_I32 (loci, (i32)CLII);
+        CREDO_AEQUALIS_I32 (loci, (i32)CLXXVI);
     }
 
     /* (c) lexemata: regula 'crusta-' una quaeque */

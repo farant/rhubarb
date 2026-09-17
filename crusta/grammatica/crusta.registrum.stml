@@ -24,6 +24,16 @@
   locum 'corpus:referentia' ad eum scribit. Materia in scopo
   id="nodN" scribit: canon 'id' in heredoc solo declarat.
 
+  LACUNAE (P9b, 2026-09-16): linea nova intra expressionem ([[ ]], (( )),
+  $(( )), 'for ((') aut post titulum functionis corpus legit (bash 5.2
+  mensuratum) - listae 'post_*' post QUODQUE lexema post quod linea
+  nova cadere potest (post_aperturam, post_expressionem, post_sinistrum,
+  post_signum, post_operandum, post_probationem, post_quaestionem,
+  post_colon; functio.interiecta). Corpus post filium ULTIMUM nodi in
+  listam parentis ascendit. Lacunae ubi bash errat ('for', 'select',
+  'function', 'case' + linea nova; 'f(' + linea nova) gradum absentem
+  claudunt. Nulla lacuna sine lista: heredoca_transposita numquam.
+
   NIHIL RESERVATUM (C13): sub-parsatores super verba (spec par. IX -
   grammaticae argumentorum, sublinguae super valorem decodatum,
   'derivatum:nodus' in verbo forte postea) appensione locorum cum
@@ -100,11 +110,12 @@
   </genus>
 
   <genus titulus="functio"
-    nota="['function'] titulus ['(' ')'] corpus (imperium compositum, redirectiones suas fert)">
+    nota="['function'] titulus ['(' ')'] [interiecta] corpus (imperium compositum, redirectiones suas fert); interiecta = corpora heredoc post titulum aut ')' ante corpus (linea nova ibi valida)">
     <locus titulus="tok_verbum"   species="token"/>
     <locus titulus="tok_titulus"  species="token"/>
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="interiecta"   species="lista-nodus"/>
     <locus titulus="corpus"       species="nodus"/>
   </genus>
 
@@ -196,17 +207,21 @@
     <locus titulus="tok_terminator"           species="token"/>
   </genus>
 
-  <genus titulus="arithmetica" nota="(( expressio )) ut imperium [redirectiones]">
-    <locus titulus="tok_apertura"  species="token"/>
-    <locus titulus="expressio"     species="nodus"/>
-    <locus titulus="tok_clausura"  species="token"/>
+  <genus titulus="arithmetica" nota="(( expressio )) ut imperium [redirectiones]; post_* = corpora heredoc in lacunis">
+    <locus titulus="tok_apertura"      species="token"/>
+    <locus titulus="post_aperturam"    species="lista-nodus"/>
+    <locus titulus="expressio"         species="nodus"/>
+    <locus titulus="post_expressionem" species="lista-nodus"/>
+    <locus titulus="tok_clausura"      species="token"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
-  <genus titulus="iudicium" nota="[[ expressio ]] ut imperium [redirectiones]; expressio = iudicium-* aut verbum nudum">
-    <locus titulus="tok_apertura"  species="token"/>
-    <locus titulus="expressio"     species="nodus"/>
-    <locus titulus="tok_clausura"  species="token"/>
+  <genus titulus="iudicium" nota="[[ expressio ]] ut imperium [redirectiones]; expressio = iudicium-* aut verbum nudum; post_* = corpora heredoc in lacunis">
+    <locus titulus="tok_apertura"      species="token"/>
+    <locus titulus="post_aperturam"    species="lista-nodus"/>
+    <locus titulus="expressio"         species="nodus"/>
+    <locus titulus="post_expressionem" species="lista-nodus"/>
+    <locus titulus="tok_clausura"      species="token"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
@@ -266,9 +281,11 @@
     <locus titulus="tok_clausura" species="token"/>
   </genus>
   <genus titulus="pars-arithmetica" nota="$(( expressio ))">
-    <locus titulus="tok_apertura" species="token"/>
-    <locus titulus="expressio"    species="nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_apertura"      species="token"/>
+    <locus titulus="post_aperturam"    species="lista-nodus"/>
+    <locus titulus="expressio"         species="nodus"/>
+    <locus titulus="post_expressionem" species="lista-nodus"/>
+    <locus titulus="tok_clausura"      species="token"/>
   </genus>
   <genus titulus="pars-processus" nota="Substitutio processus: parenthesis post signum minoris aut maioris, lista intra">
     <locus titulus="tok_apertura" species="token"/>
@@ -288,47 +305,64 @@
   </genus>
   <genus titulus="praeposita" nota="-x !x ~x ++x --x +x">
     <locus titulus="tok_operator" species="token"/>
+    <locus titulus="post_signum"  species="lista-nodus"/>
     <locus titulus="operandum"    species="nodus"/>
   </genus>
   <genus titulus="postposita" nota="x++ x--">
-    <locus titulus="operandum"    species="nodus"/>
-    <locus titulus="tok_operator" species="token"/>
+    <locus titulus="operandum"      species="nodus"/>
+    <locus titulus="post_operandum" species="lista-nodus"/>
+    <locus titulus="tok_operator"   species="token"/>
   </genus>
-  <genus titulus="binaria" nota="sinister operator dexter; etiam assignationes et comma">
-    <locus titulus="sinister"     species="nodus"/>
-    <locus titulus="tok_operator" species="token"/>
-    <locus titulus="dexter"       species="nodus"/>
+  <genus titulus="binaria" nota="sinister operator dexter; etiam assignationes et comma; operator absens = iuxtapositio">
+    <locus titulus="sinister"       species="nodus"/>
+    <locus titulus="post_sinistrum" species="lista-nodus"/>
+    <locus titulus="tok_operator"   species="token"/>
+    <locus titulus="post_signum"    species="lista-nodus"/>
+    <locus titulus="dexter"         species="nodus"/>
   </genus>
   <genus titulus="ternaria" nota="probatio ? sinister : dexter">
-    <locus titulus="probatio"     species="nodus"/>
-    <locus titulus="tok_quaestio" species="token"/>
-    <locus titulus="sinister"     species="nodus"/>
-    <locus titulus="tok_colon"    species="token"/>
-    <locus titulus="dexter"       species="nodus"/>
+    <locus titulus="probatio"         species="nodus"/>
+    <locus titulus="post_probationem" species="lista-nodus"/>
+    <locus titulus="tok_quaestio"     species="token"/>
+    <locus titulus="post_quaestionem" species="lista-nodus"/>
+    <locus titulus="sinister"         species="nodus"/>
+    <locus titulus="post_sinistrum"   species="lista-nodus"/>
+    <locus titulus="tok_colon"        species="token"/>
+    <locus titulus="post_colon"       species="lista-nodus"/>
+    <locus titulus="dexter"           species="nodus"/>
   </genus>
   <genus titulus="inclusa" nota="( expressio )">
-    <locus titulus="tok_apertura" species="token"/>
-    <locus titulus="expressio"    species="nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_apertura"      species="token"/>
+    <locus titulus="post_aperturam"    species="lista-nodus"/>
+    <locus titulus="expressio"         species="nodus"/>
+    <locus titulus="post_expressionem" species="lista-nodus"/>
+    <locus titulus="tok_clausura"      species="token"/>
   </genus>
 
   <genus titulus="iudicium-praeposita" nota="[[ ]]: -f x ; ! c (operanda verba)">
     <locus titulus="tok_operator" species="token"/>
+    <locus titulus="post_signum"  species="lista-nodus"/>
     <locus titulus="operandum"    species="nodus"/>
   </genus>
-  <genus titulus="iudicium-binaria" nota="a == b ; a =~ re (dexter: verbum partis unius REGULA)">
-    <locus titulus="sinister"     species="nodus"/>
-    <locus titulus="tok_operator" species="token"/>
-    <locus titulus="dexter"       species="nodus"/>
+  <genus titulus="iudicium-binaria" nota="a == b ; a =~ re (dexter: verbum partis unius REGULA); operator absens = iuxtapositio">
+    <locus titulus="sinister"       species="nodus"/>
+    <locus titulus="post_sinistrum" species="lista-nodus"/>
+    <locus titulus="tok_operator"   species="token"/>
+    <locus titulus="post_signum"    species="lista-nodus"/>
+    <locus titulus="dexter"         species="nodus"/>
   </genus>
   <genus titulus="iudicium-coniuncta" nota="coniunctio ET aut AUT (ET artius ligat)">
-    <locus titulus="sinister"     species="nodus"/>
-    <locus titulus="tok_operator" species="token"/>
-    <locus titulus="dexter"       species="nodus"/>
+    <locus titulus="sinister"       species="nodus"/>
+    <locus titulus="post_sinistrum" species="lista-nodus"/>
+    <locus titulus="tok_operator"   species="token"/>
+    <locus titulus="post_signum"    species="lista-nodus"/>
+    <locus titulus="dexter"         species="nodus"/>
   </genus>
   <genus titulus="iudicium-inclusa" nota="( c )">
-    <locus titulus="tok_apertura" species="token"/>
-    <locus titulus="expressio"    species="nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_apertura"      species="token"/>
+    <locus titulus="post_aperturam"    species="lista-nodus"/>
+    <locus titulus="expressio"         species="nodus"/>
+    <locus titulus="post_expressionem" species="lista-nodus"/>
+    <locus titulus="tok_clausura"      species="token"/>
   </genus>
 </registrum>

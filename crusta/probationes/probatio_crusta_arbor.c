@@ -1370,6 +1370,14 @@ principale (vacuum)
     p = _casus(piscina, "[[ \"\" ! \"\" P ]]", &r);
     p = _casus(piscina, "[[ ! { a", &r);
     p = _casus(piscina, "[[ a && b c || ! d e ]]", &r);
+    /* praepositum post operandum: iuxtapositio (INVENTUM P9b) */
+    p = _casus(piscina, "[[ !()-a", &r);
+    p = _casus(piscina, "[[ ! a -f b ]]", &r);
+    n = _filius(_sententia(p, ZEPHYRUM), (i32)CRUSTA_IUDICIUM_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_IUDICIUM_PRAEPOSITA));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_PRAEPOSITA_OPERANDUM,
+        ZEPHYRUM), CRUSTA_GENUS_IUDICIUM_BINARIA));
 
 
     /* ==================================================
@@ -1580,17 +1588,9 @@ principale (vacuum)
      * omnes, ordo ruptus, nominatum (heredoca_transposita), sana
      * FALSUM; emissio hic NON octetim idem - _casus id asserit, ergo
      * parsatur directe */
-    {
-                       i32  mensura;
-        constans character* fons = _copia(piscina,
-            "cat <<A; for\nx\nA\ni in a; do :; done\n", &mensura);
-
-        p = crusta_arbor_parsare(piscina, fons, mensura, &CRUSTA_BASH,
-            &r);
-        CREDO_NON_NIHIL (p);
-        CREDO_AEQUALIS_I32 (r.heredoca_transposita, (i32)I);
-        CREDO_FALSUM (r.sana);
-    }
+    p = _casus(piscina, "cat <<A; for\nx\nA\ni in a; do :; done\n", &r);
+    CREDO_AEQUALIS_I32 (r.heredoca_transposita, ZEPHYRUM);
+    CREDO_FALSUM (r.sana);
 
     /* heredoc in probatione conditionis */
     p = _casus(piscina, "if cat <<A\nx\nA\nthen :; fi", &r);
@@ -1621,6 +1621,195 @@ principale (vacuum)
     p = _casus(piscina, "\"a$'x'\"b c", &r);
     CREDO_VERUM (_staticum_est(piscina, _filius(_sententia(p,
         ZEPHYRUM), (i32)CRUSTA_IMPERIUM_LIBERI, ZEPHYRUM), "a$'x'b"));
+
+
+    /* ==================================================
+     * PROBARE: corpora heredoc in lacunis (P9b)
+     * ================================================== */
+
+    /* Linea nova intra expressionem ([[ ]], (( )), $(( )), 'for ((')
+     * aut ante corpus functionis corpus legit (bash 5.2 mensuratum,
+     * exitus 0): corpus in lista post_* ubi octeti iacent. Lacunae ubi
+     * bash errat ('for'/'select'/'function'/'case' + linea nova, 'f('
+     * + linea nova) gradum absentem claudunt. Olim limes P6
+     * (heredoca_transposita): corpus listae proximae infra, ordo
+     * octetorum ruptus; 'for ((i=0' + linea nova ne numeratus
+     * quidem. */
+    imprimere("\n--- Probans corpora heredoc in lacunis ---\n");
+    {
+        nomen structura {
+            constans character* fons;
+                           b32  sana;
+        } Lacuna;
+        hic_manens constans Lacuna LACUNAE[] = {
+            { "cat <<A; [[\nx\nA\na ]]\n", VERUM },
+            { "cat <<A; [[ a ==\nx\nA\nb ]]\n", VERUM },
+            { "cat <<A; [[ a\nx\nA\n== b ]]\n", VERUM },
+            { "cat <<A; [[ !\nx\nA\na ]]\n", VERUM },
+            { "cat <<A; [[ ( a\nx\nA\n) ]]\n", VERUM },
+            { "cat <<A; [[ (\nx\nA\na ) ]]\n", VERUM },
+            { "[[ -n $(cat <<A)\nx\nA\n]]\n", VERUM },
+            { "[[ -n $(cat <<A) &&\nx\nA\n-z b ]]\n", VERUM },
+            { "cat <<A; (( 1 +\nx\nA\n2 ))\n", VERUM },
+            { "cat <<A; ((\nx\nA\n1 ))\n", VERUM },
+            { "cat <<A; (( 1\nx\nA\n))\n", VERUM },
+            { "cat <<A; (( a ?\nx\nA\n1 : 2 ))\n", VERUM },
+            { "cat <<A; (( a ? 1 :\nx\nA\n2 ))\n", VERUM },
+            { "cat <<A; (( a\nx\nA\n? 1 : 2 ))\n", VERUM },
+            { "cat <<A; (( a ? 1\nx\nA\n: 2 ))\n", VERUM },
+            { "cat <<A; (( -\nx\nA\n1 ))\n", VERUM },
+            { "cat <<A; (( i++\nx\nA\n))\n", VERUM },
+            { "cat <<A; (( i\nx\nA\n++ ))\n", VERUM },
+            { "echo $(( $(cat <<A) +\nx\nA\n1))\n", VERUM },
+            { "cat <<A; for ((i=0\nx\nA\n;;)); do :; done\n", VERUM },
+            { "cat <<A; (( (\nx\nA\n1) ))\n", VERUM },
+            { "cat <<A; function f\nx\nA\n{ :; }\n", VERUM },
+            { "cat <<A; f()\nx\nA\n{ :; }\n", VERUM },
+            { "cat <<A; function f ()\nx\nA\n{ :; }\n", VERUM },
+            /* bash errat: gradus absens clauditur, octeti ordine */
+            { "cat <<A; select\nx\nA\ni in a; do :; done\n", FALSUM },
+            { "cat <<A; function\nx\nA\nf { :; }\n", FALSUM },
+            { "cat <<A; f(\nx\nA\n) { :; }\n", FALSUM },
+            { "cat <<A; case\nx\nA\nx in a) ;; esac\n", FALSUM },
+            { "cat <<A; function f\nx\nA\n() { :; }\n", FALSUM }
+        };
+        i32 k;
+
+        per (k = ZEPHYRUM;
+             k < (i32)(magnitudo(LACUNAE) / magnitudo(LACUNAE[0])); k++)
+        {
+            p = _casus(piscina, LACUNAE[k].fons, &r);
+            CREDO_AEQUALIS_I32 (r.heredoca_transposita, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (r.heredoca, (i32)I);
+            si (LACUNAE[k].sana)
+            {
+                CREDO_VERUM (r.sana);
+            }
+            alioquin
+            {
+                CREDO_FALSUM (r.sana);
+            }
+        }
+    }
+
+    /* sedes corporum: nodus in lista post lexema quod lineam novam
+     * praecedit */
+    p = _casus(piscina, "cat <<A; [[\nx\nA\na ]]\n", &r);
+    n = _sententia(p, II);
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_IUDICIUM_POST_APERTURAM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; [[ a ==\nx\nA\nb ]]\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_IUDICIUM_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_IUDICIUM_BINARIA));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_BINARIA_POST_SIGNUM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; [[ a\nx\nA\n== b ]]\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_IUDICIUM_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_BINARIA_POST_SINISTRUM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; [[ !\nx\nA\na ]]\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_IUDICIUM_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_IUDICIUM_PRAEPOSITA));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_PRAEPOSITA_POST_SIGNUM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; [[ ( a\nx\nA\n) ]]\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_IUDICIUM_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_IUDICIUM_INCLUSA));
+    CREDO_VERUM (_genus(_filius(n,
+        (i32)CRUSTA_INCLUSA_POST_EXPRESSIONEM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    /* post operandum ultimum: ascendit ad post_expressionem iudicii */
+    p = _casus(piscina, "[[ -n $(cat <<A)\nx\nA\n]]\n", &r);
+    CREDO_VERUM (_genus(_filius(_sententia(p, ZEPHYRUM),
+        (i32)CRUSTA_IUDICIUM_POST_EXPRESSIONEM, ZEPHYRUM),
+        CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "[[ -n $(cat <<A) &&\nx\nA\n-z b ]]\n", &r);
+    n = _filius(_sententia(p, ZEPHYRUM), (i32)CRUSTA_IUDICIUM_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_IUDICIUM_CONIUNCTA));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_BINARIA_POST_SIGNUM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; (( 1 +\nx\nA\n2 ))\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_ARITHMETICA_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_BINARIA));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_BINARIA_POST_SIGNUM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; ((\nx\nA\n1 ))\n", &r);
+    CREDO_VERUM (_genus(_filius(_sententia(p, II),
+        (i32)CRUSTA_ARITHMETICA_POST_APERTURAM, ZEPHYRUM),
+        CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; (( 1\nx\nA\n))\n", &r);
+    CREDO_VERUM (_genus(_filius(_sententia(p, II),
+        (i32)CRUSTA_ARITHMETICA_POST_EXPRESSIONEM, ZEPHYRUM),
+        CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; (( a ?\nx\nA\n1 : 2 ))\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_ARITHMETICA_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_TERNARIA));
+    CREDO_VERUM (_genus(_filius(n,
+        (i32)CRUSTA_TERNARIA_POST_QUAESTIONEM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; (( a ? 1 :\nx\nA\n2 ))\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_ARITHMETICA_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_TERNARIA_POST_COLON,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; (( a\nx\nA\n? 1 : 2 ))\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_ARITHMETICA_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(_filius(n,
+        (i32)CRUSTA_TERNARIA_POST_PROBATIONEM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; (( a ? 1\nx\nA\n: 2 ))\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_ARITHMETICA_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_TERNARIA_POST_SINISTRUM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; (( i\nx\nA\n++ ))\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_ARITHMETICA_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_POSTPOSITA));
+    CREDO_VERUM (_genus(_filius(n,
+        (i32)CRUSTA_POSTPOSITA_POST_OPERANDUM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    p = _casus(piscina, "cat <<A; (( (\nx\nA\n1) ))\n", &r);
+    n = _filius(_sententia(p, II), (i32)CRUSTA_ARITHMETICA_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_INCLUSA));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_INCLUSA_POST_APERTURAM,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    /* cyclus: corpus inter expressionem et ';' in liberis */
+    p = _casus(piscina, "cat <<A; for ((i=0\nx\nA\n;;)); do :; done\n",
+        &r);
+    n = _sententia(p, II);
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_CYCLUS_LIBERI, ZEPHYRUM),
+        CRUSTA_GENUS_BINARIA));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_CYCLUS_LIBERI, I),
+        CRUSTA_GENUS_HEREDOC));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_CYCLUS_LIBERI, II),
+        CRUSTA_GENUS_OPERATOR));
+    /* functio: corpus ante corpus functionis */
+    p = _casus(piscina, "cat <<A; function f\nx\nA\n{ :; }\n", &r);
+    n = _sententia(p, II);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_FUNCTIO));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_FUNCTIO_INTERIECTA,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_FUNCTIO_CORPUS,
+        ZEPHYRUM),
+        CRUSTA_GENUS_GREX));
+    p = _casus(piscina, "cat <<A; f()\nx\nA\n{ :; }\n", &r);
+    n = _sententia(p, II);
+    CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_FUNCTIO_INTERIECTA,
+        ZEPHYRUM), CRUSTA_GENUS_HEREDOC));
+    /* 'for' + linea nova: iteratio clausa, corpus in lista sequitur */
+    p = _casus(piscina, "cat <<A; for\nx\nA\ni in a; do :; done\n", &r);
+    CREDO_VERUM (_genus(_sententia(p, II), CRUSTA_GENUS_ITERATIO));
+    CREDO_VERUM (_genus(_sententia(p, III), CRUSTA_GENUS_HEREDOC));
 
 
     imprimere("\n    casus %d\n", (integer)casus_numerus);

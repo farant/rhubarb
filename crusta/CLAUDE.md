@@ -18,8 +18,48 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P9 done)
+## Praesens status (2026-09-16 — P9b done)
 
+- **P9b, heredoc bodies in every gap (Fran chose "fix it properly",
+  2026-09-16):** the byte law now holds for every input — no heredoc
+  body is ever transposed. Inventory first (a probe over ~45 gap
+  positions plus `bash -n`): bash 5.2 READS a body whose newline falls
+  inside `[[ ]]`, `(( ))`, `$(( ))`, a `for ((` clause, or before a
+  function body (`function f`, `f()`, `function f ()` + newline); it
+  rejects a newline right after `for`, `select`, `function`, `case`, or
+  inside `f(`. Also found: `for ((i=0` + newline put the body before
+  the pending expression WITHOUT counting a transposition. Declaration
+  150→152→**176 loci** (seal `0ad54dc6` → `873ce8f4`): `post_*` lists
+  right after every token a newline can follow — `post_aperturam` /
+  `post_expressionem` on `arithmetica`, `iudicium`, `pars-arithmetica`,
+  `inclusa`, `iudicium-inclusa`; `post_sinistrum` / `post_signum` on
+  `binaria`, `iudicium-binaria`, `iudicium-coniuncta`; `post_signum` on
+  both prefix genera; `post_operandum` on `postposita`;
+  `post_probationem`, `post_quaestionem`, `post_sinistrum`,
+  `post_colon` on `ternaria`; `functio.interiecta` before the body.
+  Both operator machines carry bodies: every operand and sign on their
+  stacks has a body list, a body is recorded against the LAST thing
+  pushed (operand, sign, ternary colon, or the start), a reduction
+  places bodies into the new node's `post_*` slots, and bodies after a
+  node's last child travel up with it; `finire` returns the start and
+  trailing bodies, which the frame puts into `post_aperturam` /
+  `post_expressionem` (a `for ((` clause appends them to `liberi` in
+  order). `_corpus_collocare` replaces `_lista_recipiens`: a machine or
+  `[[ ]]` frame interposes, a function after its name or `)` takes the
+  body into `interiecta` (and then expects its body, so a later `(` is
+  a subshell body, as bash rejects `function f` + newline + `()`), and
+  the gaps bash rejects close the open frame absent so the body lands
+  in the list below in byte order (sana FALSUM, like bash). Also fixed,
+  found by the fuzz under the old limit: a prefix test operator after a
+  complete operand (`[[ !()-a`) now inserts the implied juxtaposition
+  sign first. Gates: arbor +29 gap cases (byte identity, zero
+  transpositions, sana as bash) and 18 slot assertions (1,100+
+  assertions); canon and stml +10 cases each; totalitas STRICT again
+  (a reported transposition is itself a failure). Plant: arithmetic
+  interposition disabled → arbor red. Not byte law, left for P11: a
+  newline inside `${ … }` arguments is a literal part, so there the body
+  opens at the next real newline, while bash reads it right after
+  `$(cat <<A)` inside the expansion (tree shape, not bytes).
 - **P9, reservation and totality:** two gates. `reservatio`
   (`probatio_crusta_reservatio.c`, 55 assertions) pins each named
   deviation by its MEASURED effect, with bash 5.2's own `-n` verdict
@@ -60,20 +100,14 @@ P3 on).
   letter inside `${` a name, so `${@E}`, `${E[]t}`, `${x[1][2]}` wrote a
   slot twice and the parse returned NIHIL — a name is now positional
   (right after `${` or a `#`/`!` prefix) and `[` after `]` is not a
-  subscript; `${#@}` now lexes `@` as the name. **Named limit, still
-  open (quaestio in the ledger):** a heredoc body whose newline falls in
-  a list-less gap (inside `[[ ]]`, `(( ))`, `${ }`, or between `for`/
-  `function` and the name) lands in the nearest list below, out of byte
-  order; bash 5.2 READS such bodies inside `[[ ]]` and `${ }` (warning,
-  exit 0) and rejects the keyword gaps. The totality gate admits a
-  differing emission ONLY when the parser reports `heredoca_transposita`
-  and the length equals the source (1 case of 2,934, printed). Plants:
+  subscript; `${#@}` now lexes `@` as the name. The P6 limit it exposed
+  (heredoc bodies in list-less gaps) was REMOVED in P9b, below. Plants:
   reservatio — the extglob pin 2 → 3; totalitas — the whole-subtree
   recursive walk put back into `_longitudo_statica`.
 - **P8, the canon:** `crusta/grammatica/crusta.canon`, HAND-WRITTEN
   on html's model (255 rules: the `<arbor>` envelope with
   `grammatica="crusta"` and the registry seal `0ad54dc6` pinned, 50
-  genus rules, 152 locus rules at SPECIES level, 50 lexeme rules
+  genus rules, 152 locus rules at SPECIES level (176 after P9b), 50 lexeme rules
   `crusta-*`, `ante`/`post`). The species tables were MEASURED, not
   read from the builder: a scratch probe walked every tree of P7's 473
   documents plus ~200 corner cases and tallied the child genera of
@@ -86,7 +120,7 @@ P3 on).
   `linea-initium` as an electio of `true` (silva's form). Gate `canon`
   (`probatio_crusta_canon.c`): the drift guard both ways (every genus,
   locus and lexeme has exactly one rule; every rule names a live one;
-  counts pinned 50/152/50) and the seal pin against the live
+  counts pinned 50/152/50, 50/176/50 after P9b) and the seal pin against the live
   `materia_arbor_sigillum`; the judgment over 122 inline cases (P7's
   102 + 20 corner cases), 47 fixture cases (the two P7 refusals counted
   by cause) and all 322 corpus files: ZERO violations, 491 documents.

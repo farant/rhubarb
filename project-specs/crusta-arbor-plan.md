@@ -1340,6 +1340,42 @@ the whole-subtree recursive walk put back into `_longitudo_statica`
 
 ---
 
+## Task P9b: Heredoc bodies in every gap (added 2026-09-16, Fran: "fix it properly")
+
+P9's totality gate showed that P6's named limit (`heredoca_transposita`:
+a body whose newline falls where the tree has no list lands in the nearest
+list below) breaks the byte law, and bash 5.2 reads such bodies inside
+`[[ ]]` and `(( ))`. Fran chose option (a): give the bodies a place.
+
+- [x] **Inventory** — probe ~45 gap positions (transposition, byte identity,
+  `bash -n`). Valid in bash: inside `[[ ]]`, `(( ))`, `$(( ))`, `for ((`
+  clauses; before a function body. Rejected: newline right after `for`,
+  `select`, `function`, `case`, inside `f(`. Silent: `for ((i=0` +
+  newline broke order without counting.
+- [x] **Declaration** — 24 lists (`post_aperturam`, `post_expressionem`,
+  `post_sinistrum`, `post_signum`, `post_operandum`, `post_probationem`,
+  `post_quaestionem`, `post_colon`, `functio.interiecta`); 152 → 176 loci;
+  enums, LOCI_NOMINATI, pins, canon rules, seal `0ad54dc6` → `873ce8f4`.
+  Suite green with no behaviour change.
+- [x] **Failing cases** — arbor gate: 29 gaps (byte identity, zero
+  transpositions, sana as bash) + 18 slot assertions; red.
+- [x] **Machines** — operands and signs carry body lists; a body attaches to
+  the last thing pushed; reductions place bodies in `post_*`; trailing
+  bodies travel up; `finire` returns start and trailing bodies.
+- [x] **Placement** — `_corpus_collocare`: machine/`[[ ]]` interposition,
+  `functio.interiecta`, bash-rejected gaps close the frame absent.
+- [x] **Totality strict** — exemption removed; a reported transposition
+  fails. The fuzz found one more order break under the old limit
+  (`[[ !()-a`: prefix operator after an operand) — fixed with a case.
+- [x] **Coverage** — canon and stml gates +10 gap cases each.
+- [x] **Plant** — arithmetic interposition disabled → arbor red; revert.
+
+**Executed 2026-09-16.** Left for P11 (tree shape, not bytes): inside
+`${ … }` arguments a newline is a literal part, so the body opens at the
+next real newline while bash reads it inside the expansion.
+
+---
+
 ## Task P10: Computus twin, instruments, pythonica
 
 **Files:**

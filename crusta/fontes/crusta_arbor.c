@@ -53,16 +53,30 @@
  * '-f x' et binaria 'a == b'), III ('!'), II ('&&'), I ('||');
  * operanda verba aut inclusae; operandum absens NIHIL in acervo. */
 nomen structura {
+    /* NIHIL = signum implicitum (iuxtapositio) */
     MateriaToken* tok;
              i32  praecedentia;
              b32  praeposita;
+    /* corpora heredoc post lexema signi (P9b; NIHIL = nulla) */
+             Xar* corpora;
 } IudiciiSignum;
 
+/* operandum in acervo: nodus (NIHIL = absens) + corpora heredoc post
+ * lexema eius ultimum (P9b) */
 nomen structura {
-    Xar* operanda;   /* MateriaNodus* (NIHIL = absens) */
-    Xar* signa;      /* IudiciiSignum */
+    MateriaNodus* nodus;
+             Xar* corpora;
+} OperandumIudicii;
+
+nomen structura {
+    Xar* operanda;          /* OperandumIudicii */
+    Xar* signa;             /* IudiciiSignum */
     b32  operandum_exspectatur;
     i32  mala;
+    /* corpora heredoc ante lexema primum (P9b) */
+    Xar* corpora_initii;
+    /* ultimum pulsum: ZEPHYRUM nihil, I operandum, II signum */
+    i32 ultimum;
 } Iudicatio;
 
 nomen structura {
@@ -537,15 +551,46 @@ _locus_clausurae (
     }
 }
 
+/* corpora (Xar de MateriaNodus*, NIHIL = nulla) in locum dare */
+interior b32
+_corpora_dare (
+     Aedificatio* p,
+    MateriaNodus* parens,
+             i32  locus,
+             Xar* corpora)
+{
+    i32 i;
+
+    si (corpora == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(corpora); i++)
+    {
+        si (!_nodum_dare(p, parens, locus,
+                *(MateriaNodus**)xar_obtinere(corpora, i)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* machinam gradus finire: expressio in locum (cyclus: liberis
- * appenditur), mala numerata */
+ * appenditur), mala numerata; corpora heredoc ante lexema primum in
+ * post_aperturam, post expressionem in post_expressionem (cyclus:
+ * liberis ordine) - P9b. Loci inclusae, partis arithmeticae et
+ * arithmeticae eodem ordine (I, II, III). */
 interior b32
 _machinam_finire (
     Aedificatio* p,
          Gradus* g)
 {
-    MateriaNodus* e = crusta_arithmetica_finire(g->machina);
-             i32  locus = g->genus == (s32)CRUSTA_GENUS_INCLUSA
+             Xar* initii;
+             Xar* post;
+    MateriaNodus* e = crusta_arithmetica_finire(g->machina, &initii,
+        &post);
+             i32 locus = g->genus == (s32)CRUSTA_GENUS_INCLUSA
                  ? (i32)CRUSTA_INCLUSA_EXPRESSIO
                  : g->genus == (s32)CRUSTA_GENUS_PARS_ARITHMETICA
                  ? (i32)CRUSTA_PARS_ARITHMETICA_EXPRESSIO
@@ -556,16 +601,28 @@ _machinam_finire (
         p->relatio->mala += g->machina->mala;
     }
     g->machina = NIHIL;
-    si (e == NIHIL)
-    {
-        redde VERUM;   /* expressio vacua: locus absens */
-    }
     si (g->genus == (s32)CRUSTA_GENUS_CYCLUS)
     {
-        redde _nodum_dare(p, g->nodus, (i32)CRUSTA_CYCLUS_LIBERI, e);
+        redde _corpora_dare(p, g->nodus, (i32)CRUSTA_CYCLUS_LIBERI,
+            initii)
+            && (   e == NIHIL
+                || _nodum_dare(p, g->nodus, (i32)CRUSTA_CYCLUS_LIBERI,
+                e))
+            && _corpora_dare(p, g->nodus, (i32)CRUSTA_CYCLUS_LIBERI,
+            post);
     }
-    redde materia_nodus_ponere(g->nodus, locus, materia_valor_nodus(e),
-        MATERIA_LOCUS_NODUS);
+    si (!_corpora_dare(p, g->nodus, locus - I, initii))
+    {
+        redde FALSUM;
+    }
+    si (   e != NIHIL
+        && !materia_nodus_ponere(g->nodus, locus,
+        materia_valor_nodus(e),
+            MATERIA_LOCUS_NODUS))
+    {
+        redde FALSUM;
+    }
+    redde _corpora_dare(p, g->nodus, locus + I, post);
 }
 
 interior b32
@@ -2730,7 +2787,7 @@ _iudicatio_creare (
     }
     memset(iud, ZEPHYRUM, magnitudo(*iud));
     iud->operanda = xar_creare(p->piscina,
-        (i32)magnitudo(MateriaNodus*));
+        (i32)magnitudo(OperandumIudicii));
     iud->signa = xar_creare(p->piscina,
         (i32)magnitudo(IudiciiSignum));
     iud->operandum_exspectatur = VERUM;
@@ -2744,30 +2801,35 @@ _iudicatio_creare (
 interior b32
 _iudicatio_operandum_pellere (
        Iudicatio* iud,
-    MateriaNodus* n)
+    MateriaNodus* n,
+             Xar* corpora)
 {
-    MateriaNodus** sedes = (MateriaNodus**)xar_addere(iud->operanda);
+    OperandumIudicii* sedes =
+        (OperandumIudicii*)xar_addere(iud->operanda);
 
     si (sedes == NIHIL)
     {
         redde FALSUM;
     }
-    *sedes = n;
+    sedes->nodus    = n;
+    sedes->corpora  = corpora;
     redde VERUM;
 }
 
-interior MateriaNodus*
+interior OperandumIudicii
 _iudicatio_operandum_tollere (
     Iudicatio* iud)
 {
-    i32 n = xar_numerus(iud->operanda);
-    MateriaNodus* res;
+                 i32 n = xar_numerus(iud->operanda);
+    OperandumIudicii res;
 
+    res.nodus    = NIHIL;
+    res.corpora  = NIHIL;
     si (n == ZEPHYRUM)
     {
-        redde NIHIL;
+        redde res;
     }
-    res = *(MateriaNodus**)xar_obtinere(iud->operanda, n - I);
+    res = *(OperandumIudicii*)xar_obtinere(iud->operanda, n - I);
     xar_removere_ultimum(iud->operanda);
     redde res;
 }
@@ -2787,18 +2849,47 @@ _nodum_ponere_si (
         MATERIA_LOCUS_NODUS);
 }
 
+/* corpus in corpora (Xar creata si NIHIL) addere (P9b) */
+interior b32
+_corpus_addere (
+     Aedificatio*  p,
+             Xar** corpora,
+    MateriaNodus*  corpus)
+{
+    MateriaNodus** sedes;
+
+    si (*corpora == NIHIL)
+    {
+        *corpora = xar_creare(p->piscina,
+            (i32)magnitudo(MateriaNodus*));
+        si (*corpora == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    sedes = (MateriaNodus**)xar_addere(*corpora);
+    si (sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *sedes = corpus;
+    redde VERUM;
+}
+
 /* signum summum reducere: praeposita (operandum unum), binaria aut
- * coniuncta (duo); operanda absentia NIHIL */
+ * coniuncta (duo); operanda absentia NIHIL. CORPORA (P9b): post
+ * operandum sinistrum et post signum in listas post_* nodi novi; post
+ * operandum ultimum cum nodo novo ascendunt. */
 interior b32
 _iudicatio_reducere (
     Aedificatio* p,
       Iudicatio* iud)
 {
-              i32 n = xar_numerus(iud->signa);
-    IudiciiSignum s;
-    MateriaNodus* res;
-    MateriaNodus* dexter;
-    MateriaNodus* sinister;
+                 i32 n = xar_numerus(iud->signa);
+       IudiciiSignum s;
+       MateriaNodus* res;
+    OperandumIudicii dexter;
+    OperandumIudicii sinister;
 
     si (n == ZEPHYRUM)
     {
@@ -2808,16 +2899,20 @@ _iudicatio_reducere (
     xar_removere_ultimum(iud->signa);
     si (s.praeposita)
     {
-        res = _nodus(p, (s32)CRUSTA_GENUS_IUDICIUM_PRAEPOSITA);
+        dexter  = _iudicatio_operandum_tollere(iud);
+        res     = _nodus(p, (s32)CRUSTA_GENUS_IUDICIUM_PRAEPOSITA);
         si (   res == NIHIL
             || !_token_ponere(res, (i32)CRUSTA_PRAEPOSITA_TOK_OPERATOR,
                 s.tok)
+            || !_corpora_dare(p, res,
+            (i32)CRUSTA_PRAEPOSITA_POST_SIGNUM,
+                s.corpora)
             || !_nodum_ponere_si(res, (i32)CRUSTA_PRAEPOSITA_OPERANDUM,
-                _iudicatio_operandum_tollere(iud)))
+                dexter.nodus))
         {
             redde FALSUM;
         }
-        redde _iudicatio_operandum_pellere(iud, res);
+        redde _iudicatio_operandum_pellere(iud, res, dexter.corpora);
     }
     dexter    = _iudicatio_operandum_tollere(iud);
     sinister  = _iudicatio_operandum_tollere(iud);
@@ -2826,15 +2921,20 @@ _iudicatio_reducere (
         : (s32)CRUSTA_GENUS_IUDICIUM_BINARIA);
     si (   res == NIHIL
         || !_nodum_ponere_si(res, (i32)CRUSTA_BINARIA_SINISTER,
-        sinister)
+            sinister.nodus)
+        || !_corpora_dare(p, res, (i32)CRUSTA_BINARIA_POST_SINISTRUM,
+            sinister.corpora)
         || (   s.tok != NIHIL
             && !_token_ponere(res, (i32)CRUSTA_BINARIA_TOK_OPERATOR,
                 s.tok))
-        || !_nodum_ponere_si(res, (i32)CRUSTA_BINARIA_DEXTER, dexter))
+        || !_corpora_dare(p, res, (i32)CRUSTA_BINARIA_POST_SIGNUM,
+            s.corpora)
+        || !_nodum_ponere_si(res, (i32)CRUSTA_BINARIA_DEXTER,
+            dexter.nodus))
     {
         redde FALSUM;
     }
-    redde _iudicatio_operandum_pellere(iud, res);
+    redde _iudicatio_operandum_pellere(iud, res, dexter.corpora);
 }
 
 /* operandum (verbum aut inclusa): pellitur; probatio unaria aut
@@ -2881,12 +2981,14 @@ _iudicatio_operandum (
         implicitum->tok           = NIHIL;
         implicitum->praeposita    = FALSUM;
         implicitum->praecedentia  = (i32)IV;
+        implicitum->corpora       = NIHIL;
     }
-    si (!_iudicatio_operandum_pellere(iud, n))
+    si (!_iudicatio_operandum_pellere(iud, n, NIHIL))
     {
         redde FALSUM;
     }
     iud->operandum_exspectatur  = FALSUM;
+    iud->ultimum                = I;
     numerus                     = xar_numerus(iud->signa);
     si (numerus > ZEPHYRUM)
     {
@@ -2897,6 +2999,41 @@ _iudicatio_operandum (
         }
     }
     redde VERUM;
+}
+
+/* CORPUS INTERPOSITUM (P9b): post lexema ultimum acceptum - operandum
+ * summum, signum summum, aut initium */
+interior b32
+_iudicatio_interponere (
+     Aedificatio* p,
+       Iudicatio* iud,
+    MateriaNodus* corpus)
+{
+    i32 n;
+
+    si (iud->ultimum == I)
+    {
+        n = xar_numerus(iud->operanda);
+        si (n > ZEPHYRUM)
+        {
+            OperandumIudicii* o = (OperandumIudicii*)xar_obtinere(
+                iud->operanda, n - I);
+
+            redde _corpus_addere(p, &o->corpora, corpus);
+        }
+    }
+    alioquin si (iud->ultimum == II)
+    {
+        n = xar_numerus(iud->signa);
+        si (n > ZEPHYRUM)
+        {
+            IudiciiSignum* s = (IudiciiSignum*)xar_obtinere(iud->signa,
+                n - I);
+
+            redde _corpus_addere(p, &s->corpora, corpus);
+        }
+    }
+    redde _corpus_addere(p, &iud->corpora_initii, corpus);
 }
 
 interior b32
@@ -2913,6 +3050,7 @@ _iudicatio_signum (
     s.tok           = t;
     s.praeposita    = FALSUM;
     s.praecedentia  = (i32)IV;
+    s.corpora       = NIHIL;
     si (t->valor.mensura == (i32)I && t->valor.datum[ZEPHYRUM] == '!')
     {
         s.praeposita    = VERUM;
@@ -2951,9 +3089,39 @@ _iudicatio_signum (
     }
     si (s.praeposita)
     {
+        /* praepositum post operandum ('a -f b', '() ! x'):
+         * iuxtapositio - signum binarium implicitum prius (ut in
+         * _iudicatio_operandum), ne signum praepositum super signa
+         * inferiora pulsum operandum prius transiliat. INVENTUM P9b
+         * (porta totalitatis): '[[ !()-a' emittebat '[[() !-a'. */
         si (!iud->operandum_exspectatur)
         {
-            iud->mala++;   /* 'a -f b' */
+            IudiciiSignum* implicitum;
+
+            iud->mala++;
+            dum (xar_numerus(iud->signa) > ZEPHYRUM)
+            {
+                IudiciiSignum* summum = (IudiciiSignum*)xar_obtinere(
+                    iud->signa, xar_numerus(iud->signa) - I);
+
+                si (summum->praecedentia < (i32)IV)
+                {
+                    frange;
+                }
+                si (!_iudicatio_reducere(p, iud))
+                {
+                    redde FALSUM;
+                }
+            }
+            implicitum = (IudiciiSignum*)xar_addere(iud->signa);
+            si (implicitum == NIHIL)
+            {
+                redde FALSUM;
+            }
+            implicitum->tok           = NIHIL;
+            implicitum->praeposita    = FALSUM;
+            implicitum->praecedentia  = (i32)IV;
+            implicitum->corpora       = NIHIL;
         }
         iud->operandum_exspectatur = VERUM;
     }
@@ -2962,7 +3130,7 @@ _iudicatio_signum (
         si (iud->operandum_exspectatur)
         {
             /* operandum sinistrum absens */
-            si (!_iudicatio_operandum_pellere(iud, NIHIL))
+            si (!_iudicatio_operandum_pellere(iud, NIHIL, NIHIL))
             {
                 redde FALSUM;
             }
@@ -2989,28 +3157,32 @@ _iudicatio_signum (
     {
         redde FALSUM;
     }
-    *sedes = s;
+    *sedes        = s;
+    iud->ultimum  = II;
     redde VERUM;
 }
 
 /* expressio finita in locum gradus; operanda superflua (sine
- * operatore) in binarias cum operatore absenti ordine coniunguntur */
+ * operatore) in binarias cum operatore absenti ordine coniunguntur.
+ * Corpora initii in post_aperturam, post expressionem in
+ * post_expressionem (P9b; iudicium et iudicium-inclusa: loci I, II,
+ * III). */
 interior b32
 _iudicationem_finire (
     Aedificatio* p,
          Gradus* g)
 {
-    Iudicatio* iud = g->iudicatio;
-    MateriaNodus* e;
-    i32 locus = g->genus == (s32)CRUSTA_GENUS_IUDICIUM
-        ? (i32)CRUSTA_IUDICIUM_EXPRESSIO
-        : (i32)CRUSTA_INCLUSA_EXPRESSIO;
+           Iudicatio* iud = g->iudicatio;
+    OperandumIudicii  e;
+                 i32  locus = g->genus == (s32)CRUSTA_GENUS_IUDICIUM
+                     ? (i32)CRUSTA_IUDICIUM_EXPRESSIO
+                     : (i32)CRUSTA_INCLUSA_EXPRESSIO;
 
     g->iudicatio = NIHIL;
     si (   iud->operandum_exspectatur
         && xar_numerus(iud->signa) > ZEPHYRUM)
     {
-        si (!_iudicatio_operandum_pellere(iud, NIHIL))
+        si (!_iudicatio_operandum_pellere(iud, NIHIL, NIHIL))
         {
             redde FALSUM;
         }
@@ -3024,15 +3196,22 @@ _iudicationem_finire (
     }
     dum (xar_numerus(iud->operanda) > (i32)I)
     {
-        MateriaNodus* dexter = _iudicatio_operandum_tollere(iud);
-        MateriaNodus* sinister = _iudicatio_operandum_tollere(iud);
-        MateriaNodus* b = _nodus(p, (s32)CRUSTA_GENUS_IUDICIUM_BINARIA);
+        OperandumIudicii dexter;
+        OperandumIudicii sinister;
+           MateriaNodus* b;
+
+        dexter    = _iudicatio_operandum_tollere(iud);
+        sinister  = _iudicatio_operandum_tollere(iud);
+        b         = _nodus(p, (s32)CRUSTA_GENUS_IUDICIUM_BINARIA);
 
         si (   b == NIHIL
             || !_nodum_ponere_si(b, (i32)CRUSTA_BINARIA_SINISTER,
-                sinister)
-            || !_nodum_ponere_si(b, (i32)CRUSTA_BINARIA_DEXTER, dexter)
-            || !_iudicatio_operandum_pellere(iud, b))
+                sinister.nodus)
+            || !_corpora_dare(p, b, (i32)CRUSTA_BINARIA_POST_SINISTRUM,
+                sinister.corpora)
+            || !_nodum_ponere_si(b, (i32)CRUSTA_BINARIA_DEXTER,
+                dexter.nodus)
+            || !_iudicatio_operandum_pellere(iud, b, dexter.corpora))
         {
             redde FALSUM;
         }
@@ -3042,7 +3221,9 @@ _iudicationem_finire (
         p->relatio->mala += iud->mala;
     }
     e = _iudicatio_operandum_tollere(iud);
-    redde _nodum_ponere_si(g->nodus, locus, e);
+    redde _corpora_dare(p, g->nodus, locus - I, iud->corpora_initii)
+        && _nodum_ponere_si(g->nodus, locus, e.nodus)
+        && _corpora_dare(p, g->nodus, locus + I, e.corpora);
 }
 
 /* lexemata in gradu iudicii (verbum in vertice iam clausum) */
@@ -3136,19 +3317,27 @@ _iudicium_tractare (
  * Heredoca (decretum 01M2NJ16RG)
  * ================================================== */
 
-/* gradus intimus qui corpus heredoc recipit, et locus eius: lista
- * sententiarum (programma, substitutio, compositum apertum, catena,
- * pipa) aut lacuna compositi cum lista (iteratio: interiecta post
- * nomen, separator post separatorem; cyclus: separator, liberi intra
- * '(('; electio: interiecta post verbum; optio: exemplaria;
- * tabulatum: liberi; expansio: argumenta). Gradus sine lista ('for'
- * ante nomen, functio, socius, arithmetica, iudicium) transitur et
- * corpus TRANSPOSITUM numeratur: ordo octetorum ruptus, limes
- * nominatus (relatio.heredoca_transposita, sana FALSUM). */
-interior Gradus*
-_lista_recipiens (
-    Aedificatio* p,
-            i32* locus)
+/* CORPUS COLLOCARE ubi octeti iacent (decretum 01M2NJ16RG; P9b):
+ * gradus a vertice quaeritur -
+ *  - lista sententiarum (programma, substitutio, compositum apertum,
+ *    catena, pipa) aut lacuna compositi cum lista (iteratio:
+ *    interiecta post nomen, separator post separatorem; cyclus
+ *    separator; electio: interiecta post verbum; optio: exemplaria;
+ *    tabulatum: liberi; expansio: argumenta): corpus appenditur;
+ *  - machina (arithmetica, pars-arithmetica, inclusa, cyclus intra
+ *    '((') aut iudicatio ([[ ]], iudicium-inclusa): corpus post
+ *    lexema ultimum interponitur, in listas post_* reductione ponitur;
+ *  - functio post titulum aut ')' (linea nova valida): interiecta,
+ *    corpus deinde exspectatur;
+ *  - lacunae ubi bash errat ('for'/'select'/'case'/'function' ante
+ *    titulum, 'f(' ante ')'): gradus absens clauditur, quaestio a
+ *    vertice novo iterum.
+ * Gradus alius transitus = limes (heredoca_transposita) - nullus
+ * notus post P9b. */
+interior b32
+_corpus_collocare (
+     Aedificatio* p,
+    MateriaNodus* corpus)
 {
     s32 i;
     b32 transitum = FALSUM;
@@ -3158,9 +3347,39 @@ _lista_recipiens (
         Gradus* h = (Gradus*)xar_obtinere(p->gradus, (i32)i);
            s32  l = (s32)-I;
 
-        si (   _lista_est(h)
-            || h->genus == (s32)CRUSTA_GENUS_CATENA
-            || h->genus == (s32)CRUSTA_GENUS_PIPA)
+        si (h->machina != NIHIL)
+        {
+            redde crusta_arithmetica_interponere(h->machina, corpus);
+        }
+        si (h->iudicatio != NIHIL)
+        {
+            redde _iudicatio_interponere(p, h->iudicatio, corpus);
+        }
+        si (   (h->genus == (s32)CRUSTA_GENUS_ITERATIO
+                && h->status == ZEPHYRUM)
+            || (h->genus == (s32)CRUSTA_GENUS_ELECTIO
+                && h->status == ZEPHYRUM)
+            || (h->genus == (s32)CRUSTA_GENUS_FUNCTIO
+                && (h->status == ZEPHYRUM || h->status == II)))
+        {
+            si (!_claudere_usque(p, (i32)i))
+            {
+                redde FALSUM;
+            }
+            i          = (s32)xar_numerus(p->gradus);
+            transitum  = FALSUM;
+            perge;
+        }
+        si (   h->genus == (s32)CRUSTA_GENUS_FUNCTIO
+            && (h->status == I || h->status == III))
+        {
+            h->status  = III;
+            h->modus   = CRUSTA_MODUS_INITIUM;
+            l          = (s32)CRUSTA_FUNCTIO_INTERIECTA;
+        }
+        alioquin si (   _lista_est(h)
+                     || h->genus == (s32)CRUSTA_GENUS_CATENA
+                     || h->genus == (s32)CRUSTA_GENUS_PIPA)
         {
             l = (s32)h->locus;
         }
@@ -3177,11 +3396,7 @@ _lista_recipiens (
                 }
                 frange;
             casus CRUSTA_GENUS_CYCLUS:
-                si (h->machina != NIHIL)
-                {
-                    l = (s32)CRUSTA_CYCLUS_LIBERI;
-                }
-                alioquin si (h->status == I || h->status == III)
+                si (h->status == I || h->status == III)
                 {
                     l = (s32)CRUSTA_CYCLUS_SEPARATOR;
                 }
@@ -3211,13 +3426,13 @@ _lista_recipiens (
             {
                 p->relatio->heredoca_transposita++;
             }
-            *locus = (i32)l;
-            redde h;
+            redde _nodum_dare(p, h->nodus, (i32)l, corpus);
         }
         transitum = VERUM;
     }
-    *locus = (i32)CRUSTA_PROGRAMMA_LIBERI;
-    redde (Gradus*)xar_obtinere(p->gradus, ZEPHYRUM);
+    redde _nodum_dare(p,
+        ((Gradus*)xar_obtinere(p->gradus, ZEPHYRUM))->nodus,
+        (i32)CRUSTA_PROGRAMMA_LIBERI, corpus);
 }
 
 /* petitionem proximam aperire: nodus heredoc listae intimae statim
@@ -3229,8 +3444,6 @@ _heredoc_aperire_proximum (
 {
         CrustaHeredocPetitio petitio;
     MateriaNodus* h;
-    Gradus* lista;
-    i32 locus;
     MateriaNodus* redirectio = NIHIL;
 
     si (!crusta_lector_heredoca_pendent(&p->lector))
@@ -3246,8 +3459,7 @@ _heredoc_aperire_proximum (
     {
         redde FALSUM;
     }
-        lista = _lista_recipiens(p, &locus);
-    si (!_nodum_dare(p, lista->nodus, locus, h))
+    si (!_corpus_collocare(p, h))
     {
         redde FALSUM;
     }
