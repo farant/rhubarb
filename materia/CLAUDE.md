@@ -96,6 +96,20 @@ tradita); it never becomes a file. The mask is the client's table
 (oratio derives it from the element names its rules use). Plan:
 `project-specs/proiectio-macrior-plan.md`.
 
+## Sedes (2026-09-17)
+
+**A positioned projection is a view.** `consilium.sedes_scribere` stamps
+`sedes="L:C-L:C"` (1-based lines, byte columns, end exclusive) and
+`octeti="B-B"` on every node, token and trivium element; locus wrappers
+never. A node's range runs over its loci tokens (trivia are not loci),
+accumulated bottom-up in the writer's one walk. A DERIVED token (md,
+oratio) is a zero-width point. The envelope says `visio="sedes"` (or
+`"partialis sedes"`), the reader refuses it, canons never see it. Range
+API: `materia_tractus_lexematis` / `_nodi` / `_conferre`
+(`materia_nodus.h`). Spec `project-specs/materia-sedes-spec.md`, plan
+`project-specs/materia-sedes-plan.md`, worklog
+`fontes/materia_arbor.worklog.md`.
+
 ## The whitespace contract (2026-08-28)
 
 **A `VERBATIM` trivium whose value is whitespace-only projects to

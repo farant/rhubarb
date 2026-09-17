@@ -10,6 +10,7 @@
 #include "materia_nodus.h"
 
 #include <stdio.h>
+#include <string.h>
 
 
 /* ==================================================
@@ -49,6 +50,162 @@ materia_sedes_tokeni (
     sedes->columna      = token->columna;
     sedes->fons_index   = token->fons_index;
     sedes->est_fons     = VERUM;
+}
+
+
+/* ==================================================
+ * Tractus
+ * ================================================== */
+
+vacuum
+materia_tractus_lexematis (
+    constans MateriaOrigoUncus* uncus,
+         constans MateriaToken* token,
+                MateriaTractus* tractus)
+{
+    MateriaSedes sedes;
+             i32 i;
+
+    si (tractus == NIHIL)
+    {
+        redde;
+    }
+    materia_sedes_tokeni(uncus, token, &sedes);
+    tractus->initium        = sedes.byte_offset;
+    tractus->finis          = sedes.byte_offset;
+    tractus->linea          = sedes.linea;
+    tractus->columna        = sedes.columna;
+    tractus->linea_finis    = sedes.linea;
+    tractus->columna_finis  = sedes.columna;
+    tractus->fons_index     = sedes.fons_index;
+    tractus->est_fons       = sedes.est_fons;
+    si (   token == NIHIL || sedes.byte_offset < ZEPHYRUM
+        || !sedes.est_fons)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < token->valor.mensura; i++)
+    {
+        si (token->valor.datum[i] == (i8)'\n')
+        {
+            tractus->linea_finis++;
+            tractus->columna_finis = I;
+        }
+        alioquin
+        {
+            tractus->columna_finis++;
+        }
+    }
+    tractus->finis = sedes.byte_offset + (s32)token->valor.mensura;
+}
+
+vacuum
+materia_tractus_conferre (
+             MateriaTractus* summa,
+                        b32* inventum,
+    constans MateriaTractus* pars)
+{
+    si (   summa == NIHIL || inventum == NIHIL || pars == NIHIL
+        || pars->initium < ZEPHYRUM)
+    {
+        redde;
+    }
+    si (!*inventum)
+    {
+        *summa     = *pars;
+        *inventum  = VERUM;
+        redde;
+    }
+    si (pars->fons_index != summa->fons_index)
+    {
+        redde;
+    }
+    si (pars->initium < summa->initium)
+    {
+        summa->initium  = pars->initium;
+        summa->linea    = pars->linea;
+        summa->columna  = pars->columna;
+    }
+    si (pars->finis > summa->finis)
+    {
+        summa->finis          = pars->finis;
+        summa->linea_finis    = pars->linea_finis;
+        summa->columna_finis  = pars->columna_finis;
+    }
+}
+
+interior vacuum
+_tractum_valoris_conferre (
+    constans MateriaOrigoUncus* uncus,
+         constans MateriaValor* valor,
+                MateriaTractus* summa,
+                           b32* inventum)
+{
+    MateriaTractus pars;
+               i32 k;
+
+    commutatio (valor->genus)
+    {
+    casus MATERIA_VALOR_TOKEN:
+        materia_tractus_lexematis(uncus, valor->datum.token, &pars);
+        materia_tractus_conferre(summa, inventum, &pars);
+        frange;
+    casus MATERIA_VALOR_NODUS:
+        si (valor->datum.nodus != NIHIL)
+        {
+            per (k = ZEPHYRUM;
+                 k < valor->datum.nodus->numerus_locorum; k++)
+            {
+                _tractum_valoris_conferre(uncus,
+                    &valor->datum.nodus->loci[k], summa, inventum);
+            }
+        }
+        frange;
+    casus MATERIA_VALOR_LISTA:
+        per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*valor); k++)
+        {
+            constans MateriaValor* e =
+                materia_valor_lista_obtinere(*valor, k);
+
+            si (e != NIHIL)
+            {
+                _tractum_valoris_conferre(uncus, e, summa, inventum);
+            }
+        }
+        frange;
+    ordinarius:
+        /* NIHIL, INDEX, REFERENTIA (scopus alibi possidetur) */
+        frange;
+    }
+}
+
+b32
+materia_tractus_nodi (
+    constans MateriaOrigoUncus* uncus,
+         constans MateriaNodus* nodus,
+                MateriaTractus* tractus)
+{
+    b32 inventum = FALSUM;
+    i32 k;
+
+    si (tractus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(tractus, ZEPHYRUM, magnitudo(*tractus));
+    tractus->initium     = (s32)-I;
+    tractus->finis       = (s32)-I;
+    tractus->fons_index  = (s32)-I;
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
+    {
+        _tractum_valoris_conferre(uncus, &nodus->loci[k], tractus,
+            &inventum);
+    }
+    redde inventum;
 }
 
 

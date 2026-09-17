@@ -65,6 +65,11 @@ structura MateriaArborScriptor {
                                 s32 ancora_fons;
                                 b32 ancora_initium_lineae;
 
+    /* SEDES (visio): tractus nodi currentis per ambulationem cumulatus
+     * - nodus quisque parentis suum servat et suum in eum confert */
+                     MateriaTractus tractus;
+                                b32 tractus_inventus;
+
                  MateriaArborCensus  census;
                  constans character* causa;
               constans MateriaNodus* sedes;
@@ -880,6 +885,52 @@ _cr_exuere (
  * Trivia - forma per SPECIEM lexici, non per genus notum
  * ================================================== */
 
+/* Attributa visionis sedium (materia-sedes-spec par. III): tractus
+ * sine sede nihil scribit. */
+interior b32
+_tractum_scribere (
+       MateriaArborScriptor* st,
+                  StmlNodus* elementum,
+    constans MateriaTractus* tractus)
+{
+    ChordaAedificator* sedes;
+    ChordaAedificator* octeti;
+
+    si (tractus->initium < ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    sedes   = chorda_aedificator_creare(st->piscina,
+        (memoriae_index)XLVIII);
+    octeti  = chorda_aedificator_creare(st->piscina,
+        (memoriae_index)XXXII);
+    si (sedes == NIHIL || octeti == NIHIL)
+    {
+        st->causa = "sedes scribi non potuerunt";
+        redde FALSUM;
+    }
+    chorda_aedificator_appendere_i32(sedes, tractus->linea);
+    chorda_aedificator_appendere_character(sedes, ':');
+    chorda_aedificator_appendere_i32(sedes, tractus->columna);
+    chorda_aedificator_appendere_character(sedes, '-');
+    chorda_aedificator_appendere_i32(sedes, tractus->linea_finis);
+    chorda_aedificator_appendere_character(sedes, ':');
+    chorda_aedificator_appendere_i32(sedes, tractus->columna_finis);
+    chorda_aedificator_appendere_i32(octeti, (i32)tractus->initium);
+    chorda_aedificator_appendere_character(octeti, '-');
+    chorda_aedificator_appendere_i32(octeti, (i32)tractus->finis);
+    si (   !stml_attributum_addere_chorda(elementum, st->piscina,
+                st->intern, "sedes", chorda_aedificator_finire(sedes))
+        || !stml_attributum_addere_chorda(elementum, st->piscina,
+                st->intern, "octeti",
+                chorda_aedificator_finire(octeti)))
+    {
+        st->causa = "sedes scribi non potuerunt";
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 interior StmlNodus*
 _trivium_scribere (
      MateriaArborScriptor* st,
@@ -990,6 +1041,16 @@ _trivium_scribere (
             }
         }
         frange;
+    }
+    si (st->consilium->sedes_scribere)
+    {
+        MateriaTractus t;
+
+        materia_tractus_lexematis(st->consilium->origo, trivium, &t);
+        si (!_tractum_scribere(st, elementum, &t))
+        {
+            redde NIHIL;
+        }
     }
     redde elementum;
 }
@@ -1184,6 +1245,17 @@ _scribere_lexema (
     frons  = st->consilium->frons;
     nota   = _nota_lexematis(st, lexema);
 
+    /* SEDES (visio): usus quisque tractum nodi possidentis auget -
+     * transclusio quoque, quia nodus lexema possidet */
+    si (st->consilium->sedes_scribere)
+    {
+        MateriaTractus t;
+
+        materia_tractus_lexematis(st->consilium->origo, lexema, &t);
+        materia_tractus_conferre(&st->tractus, &st->tractus_inventus,
+            &t);
+    }
+
     /* Usus secundus et sequentes: TRANSCLUSIO. Identitas res est -
      * duplicatio mentiretur (bracchia ambigua lexemata EADEM ferunt). */
     si (nota != NIHIL && nota->usus > I && nota->emissum)
@@ -1368,6 +1440,18 @@ _scribere_lexema (
         {
             stml_attributum_boolean_addere(elementum, st->piscina,
                 st->intern, "linea-initium");
+        }
+    }
+
+    /* SEDES (visio): tractus lexematis in elemento eius */
+    si (st->consilium->sedes_scribere)
+    {
+        MateriaTractus t;
+
+        materia_tractus_lexematis(st->consilium->origo, lexema, &t);
+        si (!_tractum_scribere(st, elementum, &t))
+        {
+            redde NIHIL;
         }
     }
 
@@ -1645,9 +1729,11 @@ _scribere_nodum_internum (
                            MateriaArborScriptor* st,
                           constans MateriaNodus* nodus)
 {
-    constans MateriaTabGenus* genus;
-                   StmlNodus* elementum;
-                         i32  i;
+     constans MateriaTabGenus* genus;
+                    StmlNodus* elementum;
+               MateriaTractus  tractus_parentis;
+                          b32  inventus_parentis;
+                          i32  i;
 
     si (nodus == NIHIL)
     { st->causa = "nodus nihil"; redde NIHIL;
@@ -1735,6 +1821,10 @@ _scribere_nodum_internum (
         redde NIHIL;
     }
 
+    tractus_parentis      = st->tractus;
+    inventus_parentis     = st->tractus_inventus;
+    st->tractus_inventus  = FALSUM;
+
     per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
     {
         constans MateriaTabLocus* locus;
@@ -1790,6 +1880,18 @@ _scribere_nodum_internum (
             redde NIHIL;
         }
     }
+    si (st->consilium->sedes_scribere && st->tractus_inventus)
+    {
+        si (!_tractum_scribere(st, elementum, &st->tractus))
+        {
+            st->sedes = nodus;
+            redde NIHIL;
+        }
+        materia_tractus_conferre(&tractus_parentis, &inventus_parentis,
+            &st->tractus);
+    }
+    st->tractus           = tractus_parentis;
+    st->tractus_inventus  = inventus_parentis;
     redde elementum;
 }
 
@@ -1873,16 +1975,19 @@ _arborem_struere (
         }
     }
 
-    st.piscina = piscina;
-    st.intern = intern;
-    st.consilium = consilium;
-    st.numerus_notarum = ZEPHYRUM;
-    st.ancora_nota = FALSUM;
-    st.ancora_offset = (s32)-I;
-    st.ancora_linea = ZEPHYRUM;
-    st.ancora_columna = ZEPHYRUM;
-    st.ancora_fons = ZEPHYRUM;
-    st.ancora_initium_lineae = FALSUM;
+    st.piscina                = piscina;
+    st.intern                 = intern;
+    st.consilium              = consilium;
+    st.numerus_notarum        = ZEPHYRUM;
+    st.ancora_nota            = FALSUM;
+    st.ancora_offset          = (s32)-I;
+    st.ancora_linea           = ZEPHYRUM;
+    st.ancora_columna         = ZEPHYRUM;
+    st.ancora_fons            = ZEPHYRUM;
+    st.ancora_initium_lineae  = FALSUM;
+    memset(&st.tractus, ZEPHYRUM, magnitudo(st.tractus));
+    st.tractus.initium = (s32)-I;
+    st.tractus_inventus = FALSUM;
     st.causa = NIHIL;
     st.sedes = NIHIL;
     st.census.spatia_vocationes = ZEPHYRUM;
@@ -1920,47 +2025,61 @@ _arborem_struere (
     }
     stml_attributum_addere_chorda(involucrum, piscina, intern,
         "registrum-sigillum", sigillum);
-    /* VISIO: proiectio filtrata se ipsam profitetur - lector recusat */
-    si (consilium->loci_admissi != NIHIL)
+    /* VISIO: proiectio filtrata aut sedibus ornata se ipsam profitetur
+     * - lector recusat. Ordo attributorum idem ('visio', 'omissi'):
+     * visio partialis sola octetim ut antea. */
+    si (consilium->loci_admissi != NIHIL || consilium->sedes_scribere)
     {
-        ChordaAedificator* omissi = chorda_aedificator_creare(piscina,
-            (memoriae_index)CCLVI);
-        i32 g;
+         ChordaAedificator* omissi = NIHIL;
+        constans character* visio  = consilium->loci_admissi == NIHIL
+            ? "sedes"
+            : (consilium->sedes_scribere ? "partialis sedes"
+                                         : "partialis");
+                        i32 g;
 
-        si (omissi == NIHIL)
+        si (consilium->loci_admissi != NIHIL)
         {
-            fructus.causa = "omissi scribi non potuerunt";
-            redde fructus;
-        }
-        per (g = ZEPHYRUM; g < consilium->tabularium->numerus_generum;
-             g++)
-        {
-            constans MateriaTabGenus* genus =
-                &consilium->tabularium->genera[g];
-            i32 k;
-
-            per (k = ZEPHYRUM; k < genus->loci_numerus; k++)
+            omissi = chorda_aedificator_creare(piscina,
+                (memoriae_index)CCLVI);
+            si (omissi == NIHIL)
             {
-                si (consilium->loci_admissi[genus->loci_offset + k])
+                fructus.causa = "omissi scribi non potuerunt";
+                redde fructus;
+            }
+            per (g = ZEPHYRUM;
+                 g < consilium->tabularium->numerus_generum; g++)
+            {
+                constans MateriaTabGenus* genus =
+                    &consilium->tabularium->genera[g];
+                i32 k;
+
+                per (k = ZEPHYRUM; k < genus->loci_numerus; k++)
                 {
-                    perge;
+                    si (consilium->loci_admissi[genus->loci_offset + k])
+                    {
+                        perge;
+                    }
+                    si (chorda_aedificator_longitudo(omissi) > ZEPHYRUM)
+                    {
+                        chorda_aedificator_appendere_character(omissi,
+                            ' ');
+                    }
+                    chorda_aedificator_appendere_literis(omissi,
+                        genus->titulus);
+                    chorda_aedificator_appendere_character(omissi, '/');
+                    chorda_aedificator_appendere_literis(omissi,
+                        consilium->tabularium->loci[
+                            genus->loci_offset + k].titulus);
                 }
-                si (chorda_aedificator_longitudo(omissi) > ZEPHYRUM)
-                {
-                    chorda_aedificator_appendere_character(omissi, ' ');
-                }
-                chorda_aedificator_appendere_literis(omissi,
-                    genus->titulus);
-                chorda_aedificator_appendere_character(omissi, '/');
-                chorda_aedificator_appendere_literis(omissi,
-                    consilium->tabularium->loci[genus->loci_offset + k]
-                        .titulus);
             }
         }
         stml_attributum_addere(involucrum, piscina, intern, "visio",
-            "partialis");
-        stml_attributum_addere_chorda(involucrum, piscina, intern,
-            "omissi", chorda_aedificator_finire(omissi));
+            visio);
+        si (omissi != NIHIL)
+        {
+            stml_attributum_addere_chorda(involucrum, piscina, intern,
+                "omissi", chorda_aedificator_finire(omissi));
+        }
     }
 
     /* ANCORA sola - positiones ceterae ambulatione derivantur.
@@ -3638,12 +3757,29 @@ materia_arbor_legere (
         redde NIHIL;
     }
 
-    /* VISIO: proiectio filtrata documentum canonicum non est - lector
-     * eam numquam in arborem legit (locus omissus formam alienam daret) */
-    si (stml_attributum_capere(involucrum, "visio") != NIHIL)
+    /* VISIO: proiectio filtrata aut sedibus ornata documentum canonicum
+     * non est - lector eam numquam in arborem legit (locus omissus
+     * formam alienam daret; sedes secundus fons veritatis essent) */
+    attributum = stml_attributum_capere(involucrum, "visio");
+    si (attributum != NIHIL)
     {
-        materia_arbor_lector_recusare(&lector,
-            "visio partialis: non arbor", involucrum->linea);
+        constans character* causa = "visio ignota: non arbor";
+
+        si (chorda_aequalis_literis(*attributum, "partialis"))
+        {
+            causa = "visio partialis: non arbor";
+        }
+        alioquin si (chorda_aequalis_literis(*attributum, "sedes"))
+        {
+            causa = "visio sedes: non arbor";
+        }
+        alioquin si (chorda_aequalis_literis(*attributum,
+                     "partialis sedes"))
+        {
+            causa = "visio partialis sedes: non arbor";
+        }
+        materia_arbor_lector_recusare(&lector, causa,
+            involucrum->linea);
         redde NIHIL;
     }
     attributum = stml_attributum_capere(involucrum, "grammatica");

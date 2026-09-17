@@ -176,6 +176,53 @@ materia_sedes_tokeni (
 
 
 /* ==================================================
+ * Tractus - extensio lexematis aut nodi in fonte
+ * (materia-sedes-spec par. II)
+ * ================================================== */
+
+nomen structura {
+    s32 initium;         /* octetus primus; -I = nulla sedes */
+    s32 finis;           /* post octetum ultimum (EXCLUSIVUS) */
+    i32 linea;           /* initii, I-basata */
+    i32 columna;         /* initii, I-basata, octetis */
+    i32 linea_finis;
+    i32 columna_finis;   /* post octetum ultimum */
+    s32 fons_index;
+    b32 est_fons;        /* FALSUM = derivatum: punctum */
+} MateriaTractus;
+
+/* Tractus lexematis. Initium = sedes efficax (materia_sedes_tokeni).
+ * Lexema FONTIS per octetos valoris promovetur (lex cursoris
+ * lectoris: '\n' lineam novam columna I incipit, octetus alius
+ * columnam addit). DERIVATUM punctum est (finis == initium): octeti
+ * eius hic non iacent. Syntheticum (byte_offset -I): initium -I. */
+vacuum
+materia_tractus_lexematis (
+    constans MateriaOrigoUncus* uncus,
+         constans MateriaToken* token,
+                MateriaTractus* tractus);
+
+/* Tractum partis in summam conferre: minimum initii, maximum finis;
+ * pars sine sede aut alius fontis quam summa praeteritur. inventum
+ * FALSUM = summa nondum posita (pars eam ponit). */
+vacuum
+materia_tractus_conferre (
+             MateriaTractus* summa,
+                        b32* inventum,
+    constans MateriaTractus* pars);
+
+/* Tractus nodi: lexemata locorum (listae ordine; REFERENTIA non
+ * descensa; trivia loci non sunt, ergo commentum ducens numquam
+ * includitur), per materia_tractus_conferre. FALSUM = nullum lexema
+ * cum sede (tractus->initium -I). */
+b32
+materia_tractus_nodi (
+    constans MateriaOrigoUncus* uncus,
+         constans MateriaNodus* nodus,
+                MateriaTractus* tractus);
+
+
+/* ==================================================
  * Constructores valorum
  * ================================================== */
 

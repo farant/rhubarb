@@ -318,6 +318,12 @@ nomen structura {
      * Hiatus API inventus dum shim C89 scriberetur: probatio quae
      * unum latus solum exercet eum non ostendisset. */
                   MateriaTokenForma forma;
+
+    /* SEDES (2026-09-17, materia-sedes-spec par. III): VERUM = VISIO
+     * sedium - elementum quodque nodi, lexematis et trivii attributa
+     * sedes="L:C-L:C" et octeti="B-B" fert, involucrum visio="sedes";
+     * lector eam recusat, canones numquam iudicant. Campus ULTIMUS. */
+                                b32 sedes_scribere;
 } MateriaArborConsilium;
 
 vacuum
