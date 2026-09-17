@@ -70,7 +70,7 @@ Every task's requirements implicitly include these.
 `.relata`, `.numerus_relatorum`; constants `MATERIA_NOTA_COEPIT`,
 `MATERIA_NOTA_EXSPECTATUR`.
 
-- [ ] **Step 1: find a fixture that PROVABLY yields an `absentia`.**
+- [x] **Step 1: find a fixture that PROVABLY yields an `absentia`.**
 
 Do not assume a shape produces one. Run the instrument and read the
 codices:
@@ -87,7 +87,7 @@ start offset in the worklog — Step 6 pins that offset.
 *This step exists because the three green plants in the parent arc were
 all the same mistake: a gate over a corpus that lacked the case.*
 
-- [ ] **Step 2: the header.**
+- [x] **Step 2: the header.**
 
 ```c
 /* Sedes cognata: locus alter quem diagnosticum nominat, cum nota sua.
@@ -115,7 +115,7 @@ plus the two label constants beside the existing `MATERIA_CODEX_*`:
 #define MATERIA_NOTA_EXSPECTATUR  "hic exspectatur"
 ```
 
-- [ ] **Step 3: `_addere` zeroes the new fields.**
+- [x] **Step 3: `_addere` zeroes the new fields.**
 
 `_addere` (`:44`) writes every field today; add the three so a
 diagnostic never carries stack garbage:
@@ -127,7 +127,7 @@ diagnostic never carries stack garbage:
     r->numerus_relatorum  = ZEPHYRUM;
 ```
 
-- [ ] **Step 4: the `ABSENTIA` arm fills them.**
+- [x] **Step 4: the `ABSENTIA` arm fills them.**
 
 Replace the `_addere` call in the `ABSENTIA` case (`:307`) with a
 helper that also allocates one `MateriaSedesRelata` from `d->piscina`:
@@ -152,14 +152,14 @@ NIHIL, allocates one `MateriaSedesRelata` holding it with
 `MATERIA_NOTA_COEPIT`. **`GENUS` and `VACUA` are untouched** — neither
 has a second position in hand.
 
-- [ ] **Step 5: `emissa` passes related spans through unchanged.**
+- [x] **Step 5: `emissa` passes related spans through unchanged.**
 
 In the `emissa` loop (`:534`), copy `nota`, `relata` and
 `numerus_relatorum` from the client's record. **The `initium == -I`
 auto-compute stays primary-only** — it derives from `nodus`, and a
 related span points elsewhere by definition.
 
-- [ ] **Step 6: the gate, then its plant.**
+- [x] **Step 6: the gate, then its plant.**
 
 In `probatio_materia_diagnostica.c`, over the Step 1 fixture, assert
 **both**:
@@ -177,14 +177,14 @@ Also assert the negative: a `GENUS` or `VACUA` diagnostic still has
 `numerus_relatorum == 0` and `nota == NIHIL`, so §1's byte-identity
 claim is measured, not asserted in prose.
 
-- [ ] **Step 7: run the plant.** Delete the `relata` assignment inside
+- [x] **Step 7: run the plant.** Delete the `relata` assignment inside
 `_absentiam_addere`. The gate must go **red on the count**. Then break
 only the offset (point the span at `finis` instead of `t`) and confirm
 it goes red on the offset too. Restore.
 
 *Two plants, because one assertion can hide behind the other.*
 
-- [ ] **Step 8: format, audit, commit.**
+- [x] **Step 8: format, audit, commit.**
 
 ```bash
 ./silva/formator.sh materia/fontes/materia_diagnostica.h \
@@ -195,6 +195,28 @@ it goes red on the offset too. Restore.
 ```
 
 Then all six client suites, then commit.
+
+**Executed 2026-09-17.** Step 1 measured first, as written: the
+instrument on `if true; then\n  echo x\n` gives codex
+`conditio/tok_clausura` at 3:1, bytes 23-23, and `./crusta/arbor.sh
+-sedes` shows `<conditio sedes="1:1-3:1" octeti="0-23">` — so the
+derived opening span is 0-23 at line 1, and the fixture is the spec's
+own motivating example on the real grammar.
+
+`_addere` now RETURNS the written cell (NIHIL on failure) so
+`_absentiam_addere` attaches the span without re-fetching it.
+Two gates, three plants: `_apertura_congruit` (materia, synthetic
+registry) pins count AND start AND end AND both labels — plant I
+(count to ZEPHYRUM) goes red on the count; **plant II (span filled
+with `*punctum` instead of `*apertura`) keeps the count at 1 and goes
+red on the offset**, which is the whole reason the count assertion
+could not carry the gate alone. The crusta gate pins the same thing
+over crusta's real declarations and goes red under the same plant.
+`_sedes_unica` pins the negative on a GENUS and a VACUA case, so §1's
+byte-identity claim is measured rather than asserted in prose.
+
+Audited: shim 398/398; materia 9/9, css 10/10, md 14/14, html 14/14,
+oratio 19/19, crusta 15/15; vocabula NOVA 0.
 
 ---
 

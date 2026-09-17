@@ -178,6 +178,73 @@ _ordo_congruit (
     redde FALSUM;
 }
 
+/* Apertura DERIVATA (ABSENTIA sola): tractus nodi ipsius cum nota
+ * MATERIA_NOTA_COEPIT, et primaria notam MATERIA_NOTA_EXSPECTATUR
+ * accipit. NUMERUS SOLUS NON SUFFICIT - sedes tractu falso plena
+ * numerum transire sinit, ergo initium et finis quoque figuntur. */
+hic_manens b32
+_apertura_congruit (
+    Xar* exitus,
+    i32  indicium,
+    s32  initium,
+    s32  finis)
+{
+    constans MateriaDiagnosticum* r;
+
+    si (exitus == NIHIL || indicium >= xar_numerus(exitus))
+    {
+        imprimere("    ordo %u abest\n", indicium);
+        redde FALSUM;
+    }
+    r = (constans MateriaDiagnosticum*)xar_obtinere(exitus, indicium);
+    si (   r->numerus_relatorum                      == (i32)I
+        && r->relata                                 != NIHIL
+        && r->relata[ZEPHYRUM].tractus.initium       == initium
+        && r->relata[ZEPHYRUM].tractus.finis         == finis
+        && r->nota                                   != NIHIL
+        && strcmp(r->nota, MATERIA_NOTA_EXSPECTATUR) == ZEPHYRUM
+        && r->relata[ZEPHYRUM].nota                  != NIHIL
+        && strcmp(r->relata[ZEPHYRUM].nota, MATERIA_NOTA_COEPIT)
+               == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    imprimere("    apertura %u: relata %u, tractus %d-%d (exspectatum "
+        "1, %d-%d)\n", indicium, r->numerus_relatorum,
+        (integer)(r->relata != NIHIL
+            ? r->relata[ZEPHYRUM].tractus.initium : (s32)-I),
+        (integer)(r->relata != NIHIL
+            ? r->relata[ZEPHYRUM].tractus.finis : (s32)-I),
+        (integer)initium, (integer)finis);
+    redde FALSUM;
+}
+
+/* Sedes UNA: nihil relatum, nulla nota - exitus talis diagnostici
+ * octetim idem manet ac ante sedes multiplices (GENUS, VACUA). */
+hic_manens b32
+_sedes_unica (
+    Xar* exitus,
+    i32  indicium)
+{
+    constans MateriaDiagnosticum* r;
+
+    si (exitus == NIHIL || indicium >= xar_numerus(exitus))
+    {
+        imprimere("    ordo %u abest\n", indicium);
+        redde FALSUM;
+    }
+    r = (constans MateriaDiagnosticum*)xar_obtinere(exitus, indicium);
+    si (   r->numerus_relatorum == ZEPHYRUM
+        && r->relata            == NIHIL
+        && r->nota              == NIHIL)
+    {
+        redde VERUM;
+    }
+    imprimere("    ordo %u sedes plures inopinatas fert: %u\n",
+        indicium, r->numerus_relatorum);
+    redde FALSUM;
+}
+
 s32
 principale (vacuum)
 {
@@ -250,6 +317,9 @@ principale (vacuum)
         CREDO_VERUM (_ordo_congruit(exitus, ZEPHYRUM,
             "par/tok_clausura", (s32)MATERIA_GRAVITAS_ERRATUM,
             (s32)III, (s32)III, (i32)I, (i32)IV));
+        /* apertura derivata: tractus nodi "( x" = 0-3 */
+        CREDO_VERUM (_apertura_congruit(exitus, ZEPHYRUM, ZEPHYRUM,
+            (s32)III));
 
         /* IX. emissa parsatoris: tractus ex nodo computatus, ordo
          * per initium */
@@ -302,6 +372,7 @@ principale (vacuum)
         CREDO_VERUM (_ordo_congruit(exitus, ZEPHYRUM, "par/liberi",
             (s32)MATERIA_GRAVITAS_ERRATUM, ZEPHYRUM, (s32)III,
             (i32)I, (i32)I));
+        CREDO_VERUM (_sedes_unica(exitus, ZEPHYRUM));
     }
 
     {
@@ -351,6 +422,7 @@ principale (vacuum)
         CREDO_VERUM (_ordo_congruit(exitus, ZEPHYRUM, "malum",
             (s32)MATERIA_GRAVITAS_MONITUM, ZEPHYRUM, (s32)I, (i32)I,
             (i32)I));
+        CREDO_VERUM (_sedes_unica(exitus, ZEPHYRUM));
     }
 
     {

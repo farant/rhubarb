@@ -41,7 +41,9 @@ nomen structura {
                                  b32 memoria_defecit;
 } Derivatio;
 
-interior vacuum
+/* Reddit cellam scriptam (NIHIL si memoria defecit), ut vocans sedes
+ * relatas addere possit sine cella iterum quaesita. */
+interior MateriaDiagnosticum*
 _addere (
                  Derivatio* d,
                        s32  gravitas,
@@ -57,14 +59,59 @@ _addere (
     si (r == NIHIL)
     {
         d->memoria_defecit = VERUM;
+        redde NIHIL;
+    }
+    r->gravitas           = gravitas;
+    r->codex              = codex;
+    r->causa              = causa;
+    r->nodus              = nodus;
+    r->lexema             = lexema;
+    r->tractus            = *tractus;
+    r->nota               = NIHIL;
+    r->relata             = NIHIL;
+    r->numerus_relatorum  = ZEPHYRUM;
+    redde r;
+}
+
+/* ABSENTIA sola sedem alteram GRATIS habet: tractus nodi ipsius
+ * aperturam tegit, et ambulator eum iam computatum tenet (punctum ex
+ * eo sumitur). Nulla declaratio nova: quod adest datur. 'apertura'
+ * NIHIL = nullum lexema inventum, ergo sedes una manet.
+ *
+ * GENUS et VACUA nihil accipiunt: neutrum sedem alteram in manu
+ * habet, et eam fingere programma esset, non tabula. */
+interior vacuum
+_absentiam_addere (
+                          Derivatio* d,
+    constans MateriaTabDiagnosticum* r,
+              constans MateriaNodus* nodus,
+            constans MateriaTractus* punctum,
+            constans MateriaTractus* apertura)
+{
+    MateriaDiagnosticum* cella = _addere(d, r->gravitas, r->codex,
+        r->causa, nodus, NIHIL, punctum);
+     MateriaSedesRelata* sedes;
+
+    si (cella == NIHIL)
+    {
         redde;
     }
-    r->gravitas  = gravitas;
-    r->codex     = codex;
-    r->causa     = causa;
-    r->nodus     = nodus;
-    r->lexema    = lexema;
-    r->tractus   = *tractus;
+    cella->nota = MATERIA_NOTA_EXSPECTATUR;
+    si (apertura == NIHIL)
+    {
+        redde;
+    }
+    sedes = (MateriaSedesRelata*)piscina_allocare(d->piscina,
+        magnitudo(MateriaSedesRelata));
+    si (sedes == NIHIL)
+    {
+        d->memoria_defecit = VERUM;
+        redde;
+    }
+    sedes->tractus            = *apertura;
+    sedes->nota               = MATERIA_NOTA_COEPIT;
+    cella->relata             = sedes;
+    cella->numerus_relatorum  = (i32)I;
 }
 
 /* punctum in fine tractus (latitudo nulla: '}' exspectata HIC) */
@@ -283,6 +330,7 @@ _nodum_notare (
             &d->diagnostica->tabula[k];
                constans MateriaValor* valor;
                       MateriaTractus  finis;
+             constans MateriaTractus* apertura;
 
         si (   r->genus != nodus->genus
             || (   r->species != (s32)MATERIA_DIAGNOSTICUM_GENUS
@@ -303,9 +351,9 @@ _nodum_notare (
                 || (   valor->genus == MATERIA_VALOR_REFERENTIA
                     && valor->datum.nodus == NIHIL))
             {
-                finis = habet ? _punctum_finis(&t) : punctum;
-                _addere(d, r->gravitas, r->codex, r->causa, nodus,
-                    NIHIL, &finis);
+                finis     = habet ? _punctum_finis(&t) : punctum;
+                apertura  = habet ? &t : NIHIL;
+                _absentiam_addere(d, r, nodus, &finis, apertura);
             }
             frange;
         casus MATERIA_DIAGNOSTICUM_VACUA:
@@ -535,7 +583,8 @@ materia_diagnostica_derivare (
     {
         constans MateriaDiagnosticum* e =
             (constans MateriaDiagnosticum*)xar_obtinere(emissa, k);
-                       MateriaTractus t;
+                       MateriaTractus  t;
+                  MateriaDiagnosticum* cella;
 
         si (e == NIHIL)
         {
@@ -546,8 +595,18 @@ materia_diagnostica_derivare (
         {
             (vacuum)materia_tractus_nodi(uncus, e->nodus, &t);
         }
-        _addere(&d, e->gravitas, e->codex, e->causa, e->nodus,
+        cella = _addere(&d, e->gravitas, e->codex, e->causa, e->nodus,
             e->lexema, &t);
+        /* Sedes relatae parsatoris transeunt intactae; computatio
+         * 'initium -I' PRIMARIAM solam tangit, quia ex nodo derivatur
+         * et sedes relata aliunde per definitionem spectat. Series
+         * relatorum clientis eandem piscinam vivere debet. */
+        si (cella != NIHIL)
+        {
+            cella->nota               = e->nota;
+            cella->relata             = e->relata;
+            cella->numerus_relatorum  = e->numerus_relatorum;
+        }
     }
     si (d.memoria_defecit)
     {

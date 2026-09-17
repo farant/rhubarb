@@ -146,6 +146,39 @@ principale (vacuum)
     memset(&oraculi, ZEPHYRUM, magnitudo(oraculi));
     memset(&adversarii, ZEPHYRUM, magnitudo(adversarii));
 
+    /* APERTURA DERIVATA super grammaticam VERAM (sedes multiplices,
+     * opus I): 'if' non clausum. Sedes primaria punctum in fine est
+     * (linea III), sedes relata tractum nodi 'conditio' tegit, cuius
+     * initium ZEPHYRUM est - ubi 'if' incipit. Porta materiae eundem
+     * mechanismum super registrum fictum figit; haec eum super
+     * declarationes crustae veras figit. */
+    imprimere("\n--- Apertura derivata: 'if' non clausum ---\n");
+    {
+        hic_manens constans character* constans FONS =
+            "if true; then\n  echo x\n";
+                        CrustaParsura relatio;
+                         MateriaNodus* arbor;
+                                  Xar* derivata;
+        constans MateriaDiagnosticum*  primum;
+
+        memset(&relatio, ZEPHYRUM, magnitudo(relatio));
+        arbor = crusta_arbor_parsare(piscina, FONS,
+            (i32)strlen(FONS), &CRUSTA_BASH, &relatio);
+        CREDO_NON_NIHIL (arbor);
+        derivata = crusta_diagnostica(piscina, arbor, &relatio);
+        CREDO_NON_NIHIL (derivata);
+        CREDO_AEQUALIS_I32 (xar_numerus(derivata), (i32)I);
+        primum = (constans MateriaDiagnosticum*)xar_obtinere(
+            derivata, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (primum->tractus.linea, (i32)III);
+        CREDO_AEQUALIS_I32 (primum->numerus_relatorum, (i32)I);
+        CREDO_NON_NIHIL (primum->relata);
+        CREDO_AEQUALIS_S32 (primum->relata[ZEPHYRUM].tractus.initium,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (primum->relata[ZEPHYRUM].tractus.linea,
+            (i32)I);
+    }
+
     /* FORMAE PROPRIAE: quas corpora non ferunt (planta
      * 'inanis' viridis mansit donec hi adessent - lista separatore
      * sola, lista vacua, clausura absens, malum) */
