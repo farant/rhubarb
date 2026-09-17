@@ -442,11 +442,11 @@ principale (vacuum)
     {
         MateriaArborConsilium consilium;
         MateriaArborScriptura scriptura;
-                MateriaNodus* radix;
-                MateriaNodus* verbum;
-                MateriaToken* lexema;
-                       chorda valor;
-                    character memoria[3];
+                 MateriaNodus* radix;
+                 MateriaNodus* verbum;
+                 MateriaToken* lexema;
+                       chorda  valor;
+                    character  memoria[3];
 
         imprimere("\n--- X. Tractus refutationis scriptoris ---\n");
         /* littera constans esset (-Wcast-qual): series propria */
@@ -472,6 +472,52 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (scriptura.tractus.initium, (s32)VI);
         CREDO_AEQUALIS_I32 (scriptura.tractus.linea, (i32)II);
         CREDO_AEQUALIS_I32 (scriptura.tractus.columna, (i32)III);
+    }
+
+    {
+         MateriaNodus* radix;
+         MateriaNodus* imus;
+                  Xar* exitus;
+                  i32  k;
+
+        imprimere("\n--- XI. Profunditas: ambulatio iterativa ---\n");
+        /* catena par{liberi:[par{...}]} L milia profunda: ambulatio
+         * recursiva acervum frangeret, et tractus per nodum computatus
+         * quadraticus esset (quaestio 01M2R9MKFQ). Imus sine clausura:
+         * ordo unus exspectatur. */
+        radix  = _radix_creare(piscina);
+        imus   = materia_nodus_creare(piscina, (s32)GR_PAR, (i32)III);
+        CREDO_VERUM (materia_nodus_ponere(imus, (i32)LP_APERTURA,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, "(",
+                ZEPHYRUM, (i32)I)), MATERIA_LOCUS_TOKEN));
+        CREDO_VERUM (materia_nodus_appendere(piscina, imus,
+            (i32)LP_LIBERI, materia_valor_nodus(_nodus_lexematis(
+                piscina, (s32)GR_VERBUM, "x", (s32)I, (i32)II)),
+            MATERIA_LOCUS_LISTA_NODUS));
+        per (k = ZEPHYRUM; k < (i32)50000; k++)
+        {
+            MateriaNodus* supra = materia_nodus_creare(piscina,
+                (s32)GR_PAR, (i32)III);
+
+            si (supra == NIHIL)
+            {
+                frange;
+            }
+            si (!materia_nodus_appendere(piscina, supra,
+                    (i32)LP_LIBERI, materia_valor_nodus(imus),
+                    MATERIA_LOCUS_LISTA_NODUS))
+            {
+                frange;
+            }
+            imus = supra;
+        }
+        CREDO_VERUM (_radici_addere(piscina, radix, imus));
+        exitus = materia_diagnostica_derivare(piscina, radix, &REG,
+            &DIAGNOSTICA, NIHIL, NIHIL);
+        CREDO_NON_NIHIL (exitus);
+        /* imus: clausura absens et lista plena; supra L milia: lista
+         * plena, clausura absens quoque - ergo L milia + I ordines */
+        CREDO_AEQUALIS_I32 (xar_numerus(exitus), (i32)50001);
     }
 
     imprimere("\n");

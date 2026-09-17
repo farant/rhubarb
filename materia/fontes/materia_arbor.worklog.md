@@ -204,3 +204,40 @@ the seen-set disabled (the twice-used token case) — each red at its own
 assertion, green on revert. Two more plants did not compile and ran
 nothing, which `silva.planta` reported instead of pretending: removing
 a call left a helper unused under `-Werror`.
+
+## 2026-09-17 — the derivation walk: iterative AND linear (B3 found it)
+
+B2's walker was recursive, and its header claimed "the walk has the
+writer's depth limits, no worse". Wiring crusta's agreement check into
+the fuzz gate disproved both halves at once (quaestio 01M2R9MKFQ).
+
+First fault: two mutually recursive functions, two frames per level.
+Measured with a crusta nest: 20,000 deep lives, 40,000 SIGSEGV — while
+the writer lives at 40,000 (a pinned fuzz case) and dies at 45,000. So
+the walk was SHALLOWER than the writer it claimed to match. Fixed with
+an explicit stack.
+
+Second fault, hiding behind the first: the fuzz gate still failed, and
+not by crashing. `_nodum_notare` asked `materia_tractus_nodi` for each
+node's range, and that function walks the node's whole subtree — so a
+deep chain re-walked it per level, O(n²). Timings with the check on:
+10,000 → 1.6 s, 20,000 → 7.0 s, 40,000 → 31.6 s (0.02 s without).
+credo kills a child past 5 s and reports it as a crash, which is what
+"CREDO_NON_RUIT failed" actually meant. The lesson is old and worth
+re-learning: a timeout and a crash look identical from the outside.
+
+Now the walk accumulates each node's range bottom-up exactly as A1's
+writer does (`d->tractus` / `tractus_inventus` saved per node on the
+stack, every locus token merged, trivia never), and records a node's
+rows when its subtree is finished. Post-order is equivalent for the
+"point" rule: a node with no range has no source token anywhere
+beneath it, so "the last token seen before it" is the same either way,
+and the output is sorted by (initium, codex) regardless. A token used
+twice still merges into both parents (the seen-set now guards only the
+order check, not the range accumulation) — that matches
+`materia_tractus_nodi`, which visits each parent independently.
+
+After: 10,000 → 0.18 s, 40,000 → 0.06 s (500×), and at 100,000 the
+walk survives while the writer's recursion dies (01M1FAD8) — the
+header's claim is now true. Pinned in materia's own gate: a 50,000-deep
+chain yielding 50,001 diagnostics.

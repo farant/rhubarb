@@ -42,6 +42,7 @@
 #include "crusta_lexicon.h"
 #include "materia_lexicon.h"
 #include "materia_token.h"
+#include "materia_diagnostica.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -669,6 +670,47 @@ _lista_plena (
     redde FALSUM;
 }
 
+/* diagnosticum EMISSUM (B3 plani materia-sedes): classis sine
+ * vestigio declarabili in arbore - 'ramus/probatio' vacua condicioni
+ * 'elif' subiacet (else eam non fert), quam declaratio dicere nequit.
+ * Tractus hic -I: materia_diagnostica_derivare eum ex nodo computat. */
+interior vacuum
+_diagnosticum_emittere (
+              Aedificatio* p,
+    constans MateriaNodus* nodus,
+       constans character* codex,
+       constans character* causa)
+{
+    MateriaDiagnosticum* d;
+
+    si (p->relatio == NIHIL)
+    {
+        redde;
+    }
+    si (p->relatio->diagnostica == NIHIL)
+    {
+        p->relatio->diagnostica = xar_creare(p->piscina,
+            (i32)magnitudo(MateriaDiagnosticum));
+        si (p->relatio->diagnostica == NIHIL)
+        {
+            p->memoria_defecit = VERUM;
+            redde;
+        }
+    }
+    d = (MateriaDiagnosticum*)xar_addere(p->relatio->diagnostica);
+    si (d == NIHIL)
+    {
+        p->memoria_defecit = VERUM;
+        redde;
+    }
+    memset(d, ZEPHYRUM, magnitudo(*d));
+    d->gravitas         = (s32)MATERIA_GRAVITAS_ERRATUM;
+    d->codex            = codex;
+    d->causa            = causa;
+    d->nodus            = nodus;
+    d->tractus.initium  = (s32)-I;
+}
+
 /* listae compositi quas bash non vacuas poscit (P11b, 'bash -n' 5.2.15
  * mensuratum): grex, crustula, cursus; probatio et corpus conditionis
  * et rami 'elif' (else: corpus); probatio repetitionis. Optio et
@@ -714,6 +756,8 @@ _vacuas_numerare (
                 si (!_lista_plena(&nodus->loci[CRUSTA_RAMUS_PROBATIO]))
                 {
                     vacuae++;
+                    _diagnosticum_emittere(p, nodus, "ramus/probatio",
+                        "probatio 'elif' vacua");
                 }
             }
             si (!_lista_plena(&nodus->loci[CRUSTA_RAMUS_LIBERI]))

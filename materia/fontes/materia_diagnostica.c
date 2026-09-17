@@ -1,11 +1,17 @@
 /* materia_diagnostica.c - Vide materia_diagnostica.h.
  *
- * Ambulatio UNA praeordine: nodus ANTE liberos notatur (ergo 'lexema
- * fontis ultimum visum' illud ante nodum est - punctum nodi sine
- * lexemate); loci ordine, listae ordine, REFERENTIA non descensa
- * (scopus, non possessio). Lexema quodque ordine OCTETORUM visitatur
- * (trivia ante, lexema, trivia post) - idem ordo quo scriptor
- * octetos emittit, quem probatio ordinis poscit.
+ * Ambulatio UNA, ITERATIVA (acervus explicitus, numquam recursio) et
+ * LINEARIS: tractus nodi cuiusque ab imo cumulatur ut in scriptore
+ * (A1), non per materia_tractus_nodi in quoque nodo - illud
+ * subarborem suam iterum ambulat, ergo catena profunda quadratica
+ * fit (XL milia: XXXI s, porta fuzz per moram occisa; quaestio
+ * 01M2R9MKFQ). Nodus notatur cum subarbor eius PERACTA est; ordo
+ * idem manet quia ordines per (initium, codex) ordinantur et nodus
+ * sine tractu lexema idem prius habet (subarbor eius lexema nullum
+ * fert). Loci ordine, listae ordine, REFERENTIA non descensa.
+ * Lexema quodque ordine OCTETORUM visitatur (trivia ante, lexema,
+ * trivia post) - idem ordo quo scriptor octetos emittit, quem
+ * probatio ordinis poscit.
  */
 
 #include "materia_diagnostica.h"
@@ -28,7 +34,11 @@ nomen structura {
                                  s32  finis_maximus;
                       MateriaTractus  ultimum;
                                  b32  ultimum_notum;
-                                 b32  memoria_defecit;
+    /* cumulatio tractus nodi currentis ab imo (ut scriptor, A1):
+     * materia_tractus_nodi in quoque nodo quadraticum esset */
+                      MateriaTractus tractus;
+                                 b32 tractus_inventus;
+                                 b32 memoria_defecit;
 } Derivatio;
 
 interior vacuum
@@ -221,9 +231,19 @@ _lexema_ambulare (
                 Derivatio* d,
     constans MateriaToken* lexema)
 {
-    i32 k;
+    MateriaTractus t;
+               i32 k;
 
-    si (lexema == NIHIL || _visum(d, lexema))
+    si (lexema == NIHIL)
+    {
+        redde;
+    }
+    /* tractus nodi possidentis: lexema locorum quodque confert,
+     * etiam usus iteratus (materia_tractus_nodi idem facit) -
+     * trivia numquam */
+    materia_tractus_lexematis(d->uncus, lexema, &t);
+    materia_tractus_conferre(&d->tractus, &d->tractus_inventus, &t);
+    si (_visum(d, lexema))
     {
         redde;
     }
@@ -238,26 +258,24 @@ _lexema_ambulare (
     }
 }
 
+/* nodus notatur (ordines eius), liberi NON descenduntur - descensum
+ * acervus agit */
 interior vacuum
-_valorem_ambulare (
-                Derivatio* d,
-    constans MateriaValor* valor);
-
-interior vacuum
-_nodum_ambulare (
-                Derivatio* d,
-    constans MateriaNodus* nodus)
+_nodum_notare (
+                  Derivatio* d,
+      constans MateriaNodus* nodus,
+                        b32  habet,
+    constans MateriaTractus* cumulatus)
 {
     MateriaTractus t;
     MateriaTractus punctum;
-               b32 habet;
                i32 k;
 
     si (nodus == NIHIL)
     {
         redde;
     }
-    habet    = materia_tractus_nodi(d->uncus, nodus, &t);
+    t        = *cumulatus;
     punctum  = _punctum_prius(d);
     per (k = ZEPHYRUM; k < d->diagnostica->numerus; k++)
     {
@@ -301,42 +319,169 @@ _nodum_ambulare (
             frange;
         }
     }
-    per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
-    {
-        _valorem_ambulare(d, &nodus->loci[k]);
-    }
 }
 
-interior vacuum
-_valorem_ambulare (
-                Derivatio* d,
-    constans MateriaValor* valor)
+/* opus acervi: valor ambulandus, aut EXITUS nodi (valor NIHIL) cum
+ * cumulo parentis servato */
+nomen structura {
+    constans MateriaValor* valor;
+    constans MateriaNodus* nodus;
+           MateriaTractus  tractus_parentis;
+                      b32  inventus_parentis;
+} Opus;
+
+interior b32
+_opus_premere (
+        Derivatio* d,
+              Xar* acervus,
+    constans Opus* opus)
+{
+    Opus* cella = (Opus*)xar_addere(acervus);
+
+    si (cella == NIHIL)
+    {
+        d->memoria_defecit = VERUM;
+        redde FALSUM;
+    }
+    *cella = *opus;
+    redde VERUM;
+}
+
+interior b32
+_valorem_premere (
+                 Derivatio* d,
+                       Xar* acervus,
+     constans MateriaValor* valor)
+{
+    Opus opus;
+
+    memset(&opus, ZEPHYRUM, magnitudo(opus));
+    opus.valor = valor;
+    redde _opus_premere(d, acervus, &opus);
+}
+
+/* nodum intrare: exitus eius premitur (cumulus parentis servatus),
+ * deinde loci eius; cumulus novus vacuus incipit */
+interior b32
+_nodum_intrare (
+                 Derivatio* d,
+                       Xar* acervus,
+     constans MateriaNodus* nodus)
+{
+    Opus opus;
+
+    memset(&opus, ZEPHYRUM, magnitudo(opus));
+    opus.nodus              = nodus;
+    opus.tractus_parentis   = d->tractus;
+    opus.inventus_parentis  = d->tractus_inventus;
+    si (!_opus_premere(d, acervus, &opus))
+    {
+        redde FALSUM;
+    }
+    d->tractus_inventus = FALSUM;
+    redde VERUM;
+}
+
+/* loci nodi in acervum ordine INVERSO (summus primus eruitur, ergo
+ * ordo locorum servatur) */
+interior b32
+_locos_premere (
+                 Derivatio* d,
+                       Xar* acervus,
+     constans MateriaNodus* nodus)
 {
     i32 k;
 
-    commutatio (valor->genus)
+    per (k = nodus->numerus_locorum; k > ZEPHYRUM; k--)
     {
-    casus MATERIA_VALOR_TOKEN:
-        _lexema_ambulare(d, valor->datum.token);
-        frange;
-    casus MATERIA_VALOR_NODUS:
-        _nodum_ambulare(d, valor->datum.nodus);
-        frange;
-    casus MATERIA_VALOR_LISTA:
-        per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*valor);
-             k++)
+        si (!_valorem_premere(d, acervus, &nodus->loci[k - I]))
         {
-            constans MateriaValor* e = materia_valor_lista_obtinere(
-                *valor, k);
-
-            si (e != NIHIL)
-            {
-                _valorem_ambulare(d, e);
-            }
+            redde FALSUM;
         }
-        frange;
-    ordinarius:
-        frange;
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_ambulare (
+                 Derivatio* d,
+     constans MateriaNodus* radix)
+{
+    Xar* acervus;
+
+    si (radix == NIHIL)
+    {
+        redde;
+    }
+    acervus = xar_creare(d->piscina, (i32)magnitudo(Opus));
+    si (acervus == NIHIL)
+    {
+        d->memoria_defecit = VERUM;
+        redde;
+    }
+    si (   !_nodum_intrare(d, acervus, radix)
+        || !_locos_premere(d, acervus, radix))
+    {
+        redde;
+    }
+    dum (xar_numerus(acervus) > ZEPHYRUM)
+    {
+        Opus opus;
+         i32 ultimus = xar_numerus(acervus) - I;
+         i32 k;
+
+        opus = *(Opus*)xar_obtinere(acervus, ultimus);
+        xar_truncare(acervus, ultimus);
+        si (opus.valor == NIHIL)
+        {
+            /* exitus nodi: subarbor peracta, tractus cumulatus */
+            MateriaTractus cumulatus  = d->tractus;
+                       b32 habet      = d->tractus_inventus;
+
+            _nodum_notare(d, opus.nodus, habet, &cumulatus);
+            d->tractus           = opus.tractus_parentis;
+            d->tractus_inventus  = opus.inventus_parentis;
+            si (habet)
+            {
+                materia_tractus_conferre(&d->tractus,
+                    &d->tractus_inventus, &cumulatus);
+            }
+            perge;
+        }
+        commutatio (opus.valor->genus)
+        {
+        casus MATERIA_VALOR_TOKEN:
+            _lexema_ambulare(d, opus.valor->datum.token);
+            frange;
+        casus MATERIA_VALOR_NODUS:
+            si (opus.valor->datum.nodus != NIHIL)
+            {
+                si (   !_nodum_intrare(d, acervus,
+                           opus.valor->datum.nodus)
+                    || !_locos_premere(d, acervus,
+                           opus.valor->datum.nodus))
+                {
+                    redde;
+                }
+            }
+            frange;
+        casus MATERIA_VALOR_LISTA:
+            per (k = materia_valor_lista_numerus(*opus.valor);
+                 k > ZEPHYRUM; k--)
+            {
+                constans MateriaValor* elementum =
+                    materia_valor_lista_obtinere(*opus.valor, k - I);
+
+                si (   elementum != NIHIL
+                    && !_valorem_premere(d, acervus, elementum))
+                {
+                    redde;
+                }
+            }
+            frange;
+        ordinarius:
+            frange;
+        }
     }
 }
 
@@ -385,7 +530,7 @@ materia_diagnostica_derivare (
     {
         redde NIHIL;
     }
-    _nodum_ambulare(&d, radix);
+    _ambulare(&d, radix);
     per (k = ZEPHYRUM; emissa != NIHIL && k < xar_numerus(emissa); k++)
     {
         constans MateriaDiagnosticum* e =

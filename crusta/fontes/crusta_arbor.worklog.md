@@ -607,3 +607,39 @@ commit, and run the shim then.
 This worklog stays the find-time record for `crusta_arbor.c` and its
 neighbours; new entries go below this one when crusta is touched again
 (the tail desideratum 01M2PN1VYH, a formatter, a lint).
+
+## 2026-09-17 — diagnostics: declared, derived, and checked against the counters (B3)
+
+crusta declares its error shapes in the registry (39 attributes: 35
+loci with `absentia`/`vacua`, `malum` with `diagnosticum`, three
+genera `inanis`), and `materia_diagnostica_derivare` turns them into
+located records. No new genus or locus, so the seal did not move:
+`873ce8f4` before and after, which is the B1 design claim measured on
+a real client. One class has no declarable trace — an `elif` with an
+empty condition depends on `tok_deinde` — so the builder emits it
+(`_diagnosticum_emittere` → `CrustaParsura.diagnostica`, delta D6).
+
+The four counters stay as an INDEPENDENT oracle
+(`crusta_diagnostica_concordia`): per class, presence must agree
+(the arithmetic machine counts one trace several times, D7), and
+`sana` must be exactly "no diagnostics at all". First run, zero
+disagreements: house 235 files (0 errors, 0 warnings — the corpus is
+clean and pinned so), oracle cases 121 (mala 13/13, closures 5/5,
+empty lists 3/3), adversarial 17 (mala 3/3, closures 10/10), and all
+2,934 fuzz cases in the totality gate.
+
+**A green plant is a finding.** Removing `inanis="verum"` from
+`separator` left the gate GREEN: no corpus anywhere holds a list of
+only separators. Adding sixteen inline shapes (`{ ; }`, `{ }`, `( )`,
+`if a; then fi`, `while; do a; done`, `[[ a b ]]`, `(( 1 2 ))`,
+unterminated quote and backtick, …) gave the gate its own teeth —
+mala 7/7, closures 4/4, empty 7/7, 4 warnings — and then the plant on
+`malum`'s `inanis` went red exactly on `{ ; }` and `while; do a; done`.
+`{ ; }` holds a `malum`, not a separator (D5 measured this), so
+`malum`'s `inanis` is the rule that carries; `separator`'s and
+`heredoc`'s mirror `_lista_plena`'s ignore-list and remain
+UNEXERCISED by any corpus — kept so the two implementations agree by
+construction, named here so nobody mistakes them for tested.
+
+Plants: VACUA counted as a closure → red; `malum` `inanis` removed →
+red on the two inline shapes; both green on revert.

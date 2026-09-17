@@ -49,19 +49,23 @@
   </genus>
 
   <genus titulus="separator"
-    nota="';', signum et, aut linea nova quae sententiam terminat (C6: linea nova alibi trivium est)">
+    nota="';', signum et, aut linea nova quae sententiam terminat (C6: linea nova alibi trivium est)"
+    inanis="verum">
     <locus titulus="tok" species="token"/>
   </genus>
 
   <genus titulus="malum"
-    nota="Totalitas (C12): lexemata quae grammatica ponere non potuit (fi sine if, ')' vaga, ';;' extra case) - octeti manent, sanitas negatur">
+    nota="Totalitas (C12): lexemata quae grammatica ponere non potuit (fi sine if, ')' vaga, ';;' extra case) - octeti manent, sanitas negatur"
+    diagnosticum="lexemata quae grammatica ponere non potuit"
+    inanis="verum">
     <locus titulus="tokens" species="lista-token"/>
   </genus>
 
   <genus titulus="heredoc"
-    nota="Corpus heredoc ubi octeti iacent (C5): partes ut in gemina, aut pars litteralis una si delimitator citatus; linea delimitatoris; linea nova post eam. Ambo lexemata absentia ad EOF">
+    nota="Corpus heredoc ubi octeti iacent (C5): partes ut in gemina, aut pars litteralis una si delimitator citatus; linea delimitatoris; linea nova post eam. Ambo lexemata absentia ad EOF"
+    inanis="verum">
     <locus titulus="partes"          species="lista-nodus"/>
-    <locus titulus="tok_delimitator" species="token"/>
+    <locus titulus="tok_delimitator" species="token" absentia="heredoc sine delimitatore ad finem" gravitas="monitum"/>
     <locus titulus="tok_finis"       species="token"/>
   </genus>
 
@@ -98,7 +102,7 @@
     nota="Valor tabulae '( verbum ... )'; elementum '[i]=v' = assignatio filia">
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="liberi"       species="lista-nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_clausura" species="token" absentia="')' exspectata"/>
   </genus>
 
   <genus titulus="redirectio"
@@ -116,31 +120,31 @@
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="tok_clausura" species="token"/>
     <locus titulus="interiecta"   species="lista-nodus"/>
-    <locus titulus="corpus"       species="nodus"/>
+    <locus titulus="corpus"       species="nodus" absentia="corpus functionis exspectatum"/>
   </genus>
 
   <genus titulus="grex" nota="'{' lista '}' [redirectiones] (C9)">
     <locus titulus="tok_apertura"  species="token"/>
-    <locus titulus="liberi"        species="lista-nodus"/>
-    <locus titulus="tok_clausura"  species="token"/>
+    <locus titulus="liberi"        species="lista-nodus" vacua="lista mandatorum vacua"/>
+    <locus titulus="tok_clausura"  species="token" absentia="'}' exspectata"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
   <genus titulus="crustula" nota="'(' lista ')' subcrusta [redirectiones]">
     <locus titulus="tok_apertura"  species="token"/>
-    <locus titulus="liberi"        species="lista-nodus"/>
-    <locus titulus="tok_clausura"  species="token"/>
+    <locus titulus="liberi"        species="lista-nodus" vacua="lista mandatorum vacua"/>
+    <locus titulus="tok_clausura"  species="token" absentia="')' exspectata"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
   <genus titulus="conditio"
     nota="if probatio then liberi rami fi [redirectiones]; rami = elif/else">
     <locus titulus="tok_apertura"  species="token"/>
-    <locus titulus="probatio"      species="lista-nodus"/>
+    <locus titulus="probatio"      species="lista-nodus" vacua="probatio vacua"/>
     <locus titulus="tok_deinde"    species="token"/>
-    <locus titulus="liberi"        species="lista-nodus"/>
+    <locus titulus="liberi"        species="lista-nodus" vacua="lista mandatorum vacua"/>
     <locus titulus="rami"          species="lista-nodus"/>
-    <locus titulus="tok_clausura"  species="token"/>
+    <locus titulus="tok_clausura"  species="token" absentia="'fi' exspectatum"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
@@ -149,7 +153,7 @@
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="probatio"     species="lista-nodus"/>
     <locus titulus="tok_deinde"   species="token"/>
-    <locus titulus="liberi"       species="lista-nodus"/>
+    <locus titulus="liberi"       species="lista-nodus" vacua="lista mandatorum vacua"/>
   </genus>
 
   <genus titulus="iteratio"
@@ -160,7 +164,7 @@
     <locus titulus="tok_in"        species="token"/>
     <locus titulus="verba"         species="lista-nodus"/>
     <locus titulus="separator"     species="lista-nodus"/>
-    <locus titulus="cursus"        species="nodus"/>
+    <locus titulus="cursus"        species="nodus" absentia="'do ... done' exspectatum"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
@@ -171,21 +175,21 @@
     <locus titulus="liberi"                   species="lista-nodus"/>
     <locus titulus="tok_parenthesis_clausura" species="token"/>
     <locus titulus="separator"                species="lista-nodus"/>
-    <locus titulus="cursus"                   species="nodus"/>
+    <locus titulus="cursus"                   species="nodus" absentia="'do ... done' exspectatum"/>
     <locus titulus="redirectiones"            species="lista-nodus"/>
   </genus>
 
   <genus titulus="repetitio" nota="while/until probatio cursus [redirectiones]">
     <locus titulus="tok_apertura"  species="token"/>
-    <locus titulus="probatio"      species="lista-nodus"/>
-    <locus titulus="cursus"        species="nodus"/>
+    <locus titulus="probatio"      species="lista-nodus" vacua="probatio vacua"/>
+    <locus titulus="cursus"        species="nodus" absentia="'do ... done' exspectatum"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
   <genus titulus="cursus" nota="do lista done">
     <locus titulus="tok_apertura" species="token"/>
-    <locus titulus="liberi"       species="lista-nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="liberi"       species="lista-nodus" vacua="lista mandatorum vacua"/>
+    <locus titulus="tok_clausura" species="token" absentia="'done' exspectatum"/>
   </genus>
 
   <genus titulus="electio" nota="case verbum [interiecta] in optiones esac [redirectiones]; interiecta = corpora heredoc post verbum ante in (linea nova ibi trivium est) - P6: corpus FreeBSD 'read x <<EOF; case $x' + linea nova">
@@ -194,7 +198,7 @@
     <locus titulus="interiecta"    species="lista-nodus"/>
     <locus titulus="tok_in"        species="token"/>
     <locus titulus="liberi"        species="lista-nodus"/>
-    <locus titulus="tok_clausura"  species="token"/>
+    <locus titulus="tok_clausura"  species="token" absentia="'esac' exspectatum"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
@@ -202,7 +206,7 @@
     nota="['('] exemplar | exemplar ')' lista [terminator: ;; aut formae bash]; exemplaria = verbum, operator(|), verbum; terminator absens ante esac">
     <locus titulus="tok_parenthesis"          species="token"/>
     <locus titulus="exemplaria"               species="lista-nodus"/>
-    <locus titulus="tok_parenthesis_clausura" species="token"/>
+    <locus titulus="tok_parenthesis_clausura" species="token" absentia="')' exemplaris exspectata"/>
     <locus titulus="liberi"                   species="lista-nodus"/>
     <locus titulus="tok_terminator"           species="token"/>
   </genus>
@@ -212,7 +216,7 @@
     <locus titulus="post_aperturam"    species="lista-nodus"/>
     <locus titulus="expressio"         species="nodus"/>
     <locus titulus="post_expressionem" species="lista-nodus"/>
-    <locus titulus="tok_clausura"      species="token"/>
+    <locus titulus="tok_clausura"      species="token" absentia="'))' exspectatum"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
@@ -221,14 +225,14 @@
     <locus titulus="post_aperturam"    species="lista-nodus"/>
     <locus titulus="expressio"         species="nodus"/>
     <locus titulus="post_expressionem" species="lista-nodus"/>
-    <locus titulus="tok_clausura"      species="token"/>
+    <locus titulus="tok_clausura"      species="token" absentia="']]' exspectatum"/>
     <locus titulus="redirectiones" species="lista-nodus"/>
   </genus>
 
   <genus titulus="socius" nota="coproc [TITULUS] imperium (titulus solum cum imperio composito)">
     <locus titulus="tok_verbum"  species="token"/>
     <locus titulus="tok_titulus" species="token"/>
-    <locus titulus="imperium"    species="nodus"/>
+    <locus titulus="imperium"    species="nodus" absentia="imperium coprocessus exspectatum"/>
   </genus>
 
   <genus titulus="verbum"
@@ -251,7 +255,7 @@
   <genus titulus="pars-gemina" nota="Apices gemini cum partibus intra">
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="partes"       species="lista-nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_clausura" species="token" absentia="apex geminus exspectatus"/>
   </genus>
   <genus titulus="pars-effugia" nota="$'...' totum (effugia ANSI-C), numquam decodatum in arbore">
     <locus titulus="tok" species="token"/>
@@ -259,11 +263,11 @@
   <genus titulus="pars-versa" nota="Sigillum et apices gemini: chorda vertenda, cum partibus ut gemina; numquam versa in arbore">
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="partes"       species="lista-nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_clausura" species="token" absentia="'`' exspectatum"/>
   </genus>
   <genus titulus="pars-parametrum" nota="$x $1 $? $@ ... : sigillum (intra backtick '\$') et titulus">
     <locus titulus="tok_sigillum" species="token"/>
-    <locus titulus="tok_titulus"  species="token"/>
+    <locus titulus="tok_titulus"  species="token" absentia="titulus parametri exspectatus"/>
   </genus>
   <genus titulus="pars-expansio"
     nota="${ [#|!] titulus [subscriptum] [operator] argumenta }; argumenta = verbum, operator(/ aut :), verbum">
@@ -273,24 +277,24 @@
     <locus titulus="tok_subscriptum" species="token"/>
     <locus titulus="tok_operator"    species="token"/>
     <locus titulus="argumenta"       species="lista-nodus"/>
-    <locus titulus="tok_clausura"    species="token"/>
+    <locus titulus="tok_clausura"    species="token" absentia="'}' exspectata"/>
   </genus>
   <genus titulus="pars-substitutio" nota="$( lista ) aut `lista`; liberi = lista programmatis">
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="liberi"       species="lista-nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_clausura" species="token" absentia="')' exspectata"/>
   </genus>
   <genus titulus="pars-arithmetica" nota="$(( expressio ))">
     <locus titulus="tok_apertura"      species="token"/>
     <locus titulus="post_aperturam"    species="lista-nodus"/>
     <locus titulus="expressio"         species="nodus"/>
     <locus titulus="post_expressionem" species="lista-nodus"/>
-    <locus titulus="tok_clausura"      species="token"/>
+    <locus titulus="tok_clausura"      species="token" absentia="'))' exspectatum"/>
   </genus>
   <genus titulus="pars-processus" nota="Substitutio processus: parenthesis post signum minoris aut maioris, lista intra">
     <locus titulus="tok_apertura" species="token"/>
     <locus titulus="liberi"       species="lista-nodus"/>
-    <locus titulus="tok_clausura" species="token"/>
+    <locus titulus="tok_clausura" species="token" absentia="')' exspectata"/>
   </genus>
   <genus titulus="pars-domus" nota="~ aut ~user in initio verbi (praefixum tildae)">
     <locus titulus="tok" species="token"/>
@@ -314,11 +318,11 @@
     <locus titulus="tok_operator"   species="token"/>
   </genus>
   <genus titulus="binaria" nota="sinister operator dexter; etiam assignationes et comma; operator absens = iuxtapositio">
-    <locus titulus="sinister"       species="nodus"/>
+    <locus titulus="sinister"       species="nodus" absentia="operandum exspectatum" gravitas="monitum"/>
     <locus titulus="post_sinistrum" species="lista-nodus"/>
-    <locus titulus="tok_operator"   species="token"/>
+    <locus titulus="tok_operator"   species="token" absentia="operator arithmeticus exspectatus" gravitas="monitum"/>
     <locus titulus="post_signum"    species="lista-nodus"/>
-    <locus titulus="dexter"         species="nodus"/>
+    <locus titulus="dexter"         species="nodus" absentia="operandum exspectatum" gravitas="monitum"/>
   </genus>
   <genus titulus="ternaria" nota="probatio ? sinister : dexter">
     <locus titulus="probatio"         species="nodus"/>
@@ -336,7 +340,7 @@
     <locus titulus="post_aperturam"    species="lista-nodus"/>
     <locus titulus="expressio"         species="nodus"/>
     <locus titulus="post_expressionem" species="lista-nodus"/>
-    <locus titulus="tok_clausura"      species="token"/>
+    <locus titulus="tok_clausura"      species="token" absentia="')' exspectata"/>
   </genus>
 
   <genus titulus="iudicium-praeposita" nota="[[ ]]: -f x ; ! c (operanda verba)">
@@ -347,7 +351,7 @@
   <genus titulus="iudicium-binaria" nota="a == b ; a =~ re (dexter: verbum partis unius REGULA); operator absens = iuxtapositio">
     <locus titulus="sinister"       species="nodus"/>
     <locus titulus="post_sinistrum" species="lista-nodus"/>
-    <locus titulus="tok_operator"   species="token"/>
+    <locus titulus="tok_operator"   species="token" absentia="operator condicionis exspectatus" gravitas="monitum"/>
     <locus titulus="post_signum"    species="lista-nodus"/>
     <locus titulus="dexter"         species="nodus"/>
   </genus>
@@ -363,6 +367,6 @@
     <locus titulus="post_aperturam"    species="lista-nodus"/>
     <locus titulus="expressio"         species="nodus"/>
     <locus titulus="post_expressionem" species="lista-nodus"/>
-    <locus titulus="tok_clausura"      species="token"/>
+    <locus titulus="tok_clausura"      species="token" absentia="')' exspectata"/>
   </genus>
 </registrum>

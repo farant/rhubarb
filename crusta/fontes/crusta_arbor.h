@@ -51,6 +51,12 @@ nomen structura {
     i32 listae_vacuae;
     /* mala nulla, clausurae omnes, heredoca in sede, listae plenae */
     b32 sana;
+    /* diagnostica a parsatore EMISSA (classes sine vestigio
+     * declarabili in arbore: probatio 'elif' vacua - condicio in
+     * tok_deinde pendet, delta D6): Xar de MateriaDiagnosticum,
+     * NIHIL = nulla. crusta_diagnostica ea cum derivatis miscet.
+     * Campus ULTIMUS. */
+    Xar* diagnostica;
 } CrustaParsura;
 
 /* relatio NIHIL licet. NIHIL = memoria deficit. */

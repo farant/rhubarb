@@ -3274,6 +3274,8 @@ _tractum_refutationis (
 
 ## Task B3: crusta — declarations, the emitted class, agreement, bash's lines
 
+**Executed 2026-09-17 (steps 1-5, 7; step 6 deferred to its own commit).** 39 declarations, seal unmoved (`873ce8f4` both sides). Agreement gate green at first run: house 235 (0 errata, 0 monita), oracle 121 (mala 13/13, clausurae 5/5, vacuae 3/3), adversarial 17, all 2,934 fuzz cases. TWO defects found in B2's walker by wiring it into the fuzz gate (quaestio 01M2R9MKFQ): it recursed (20k lives, 40k SIGSEGV — shallower than the writer it claimed to match) and it was QUADRATIC (`materia_tractus_nodi` per node: 40k = 31.6 s, killed by credo's 5 s limit and reported as a crash). Now iterative with ranges accumulated bottom-up like A1's writer: 40k = 0.06 s, 100k survives while the writer dies; pinned by a 50,000-deep case in materia's gate. The plan's plant (`separator` `inanis`) stayed GREEN — no corpus holds a separator-only list; 16 inline shapes were added and the plant moved to `malum`'s `inanis`, which goes red on `{ ; }` and `while; do a; done`. `separator`/`heredoc` `inanis` remain unexercised, named.
+
 **Files:**
 - Modify: `crusta/grammatica/crusta.registrum.stml` (attributes only;
   no genus or locus added — the seal must not move)
@@ -3298,7 +3300,7 @@ _tractum_refutationis (
   `b32 crusta_diagnostica_concordia(Piscina*, constans MateriaNodus*,
   constans CrustaParsura*, CrustaConcordia*)`.
 
-- [ ] **Step 1: Declarations.** Attribute additions (Latin causes; `"`
+- [x] **Step 1: Declarations.** Attribute additions (Latin causes; `"`
   as `&quot;`):
 
 | where | attribute | gravitas |
@@ -3333,7 +3335,7 @@ _tractum_refutationis (
   and confirm the canon gate's seal `873ce8f4` is unchanged
   (`./crusta/compile_probationes.sh canon`).
 
-- [ ] **Step 2: The emitted class.** `crusta_arbor.h`, append to
+- [x] **Step 2: The emitted class.** `crusta_arbor.h`, append to
   `CrustaParsura` after `sana`:
 
 ```c
@@ -3394,7 +3396,7 @@ _diagnosticum_emittere (
   memsets, nothing more; if it assigns fields one by one, add
   `relatio->diagnostica = NIHIL;` there.
 
-- [ ] **Step 3: `crusta_diagnostica.{h,c}`** (`./silva/scribe.sh`).
+- [x] **Step 3: `crusta_diagnostica.{h,c}`** (`./silva/scribe.sh`).
 
 ```c
 /* crusta_diagnostica.h - Diagnostica crustae: derivata ex
@@ -3574,7 +3576,7 @@ crusta_diagnostica_concordia (
   ABSENTIA / VACUA record carries the table row's own `codex` pointer;
   the two substrate and parser codices are matched by `strcmp`.)
 
-- [ ] **Step 4: The agreement gate** `probatio_crusta_diagnostica.c`
+- [x] **Step 4: The agreement gate** `probatio_crusta_diagnostica.c`
   (`./silva/scribe.sh`). Sources: (a) the house corpus
   (`build/crusta_corpus.lst` minus the two pathology fixtures, the
   differentia gate's rule), (b) every oracle case (`crusta_oraculum_casus`:
@@ -3855,7 +3857,7 @@ principale (vacuum)
   (read them first). Add `materia_diagnostica` to
   `crusta/compile_probationes.sh`'s module list.
 
-- [ ] **Step 5: Measure until concordant.** Run
+- [x] **Step 5: Measure until concordant.** Run
   `./crusta/compile_probationes.sh diagnostica` and `totalitas`. Every
   printed disagreement is resolved in this order: (1) a missing
   declaration (add the attribute; regenerate); (2) a class with no tree
@@ -3966,7 +3968,7 @@ _linea_bash (
   (i32)PINNA_LINEARUM);`. Birth: set both pins to 0, run, read the
   printed values, set the pins to them with the cause in the commit.
 
-- [ ] **Step 7: Plant, docs, commit.** Plant by hand in the declaration:
+- [x] **Step 7: Plant, docs, commit.** Plant by hand in the declaration:
   remove `inanis="verum"` from `separator`, regenerate → the agreement
   gate goes red on `{ ; }`-shaped cases (vacuae); restore, regenerate →
   green. `silva.planta` for the C side: in `crusta_diagnostica.c`, map

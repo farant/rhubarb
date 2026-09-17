@@ -56,6 +56,7 @@
 #include "latina.h"
 #include "credo.h"
 #include "crusta_arbor.h"
+#include "crusta_diagnostica.h"
 #include "crusta_arithmetica.h"
 #include "crusta_exempla.h"
 #include "crusta_lector.h"
@@ -152,12 +153,12 @@ _totum (
     constans character* fons,
                    i32  mensura)
 {
-    Piscina* piscina;
-    MateriaNodus* radix;
-    MateriaScriptura emissa;
-    MateriaScripturaConsilium consilium;
-    CrustaParsura relatio;
-    i32 fructus;
+                      Piscina* piscina;
+                 MateriaNodus* radix;
+             MateriaScriptura  emissa;
+    MateriaScripturaConsilium  consilium;
+                CrustaParsura  relatio;
+                          i32  fructus;
 
     piscina  = piscina_generare_dynamicum("totalitas_casus", 65536);
     radix    = crusta_arbor_parsare(piscina, fons, mensura,
@@ -167,6 +168,21 @@ _totum (
     {
         piscina_destruere(piscina);
         redde (i32)TOTUM_NIHIL;
+    }
+    /* concordia diagnosticorum (B3 plani materia-sedes): casus
+     * generatus quisque numeros parsatoris et diagnostica derivata
+     * congruentia habeat - sine exemptione nominata */
+    {
+        CrustaConcordia concordia;
+
+        (vacuum)crusta_diagnostica_concordia(piscina, radix, &relatio,
+            &concordia);
+        CREDO_VERUM (concordia.concordat);
+        si (!concordia.concordat)
+        {
+            imprimere("    DISCORS diagnosticorum (%s)\n",
+                concordia.causa != NIHIL ? concordia.causa : "-");
+        }
     }
     materia_scriptura_consilium_nudum(&consilium, &CRUSTA_REGISTRUM);
     emissa = materia_scribere_nodum(piscina, radix, &consilium);
@@ -200,9 +216,9 @@ _parsura_sola (
     constans character* fons,
                    i32  mensura)
 {
-    Piscina* piscina;
+         Piscina* piscina;
     MateriaNodus* radix;
-    i32 fructus;
+             i32  fructus;
 
     piscina  = piscina_generare_dynamicum("totalitas_parsura", 1048576);
     radix    = crusta_arbor_parsare(piscina, fons, mensura,
@@ -219,13 +235,13 @@ _proiectio (
     constans character* fons,
                    i32  mensura)
 {
-    Piscina* piscina;
-    MateriaNodus* radix;
-    MateriaLexiconRatum ratum;
-    MateriaLexIudicium iudicium;
-    MateriaArborConsilium consilium;
-    MateriaArborScriptura s;
-    b32 fructus = FALSUM;
+                  Piscina* piscina;
+             MateriaNodus* radix;
+      MateriaLexiconRatum  ratum;
+       MateriaLexIudicium  iudicium;
+    MateriaArborConsilium  consilium;
+    MateriaArborScriptura  s;
+                      b32  fructus = FALSUM;
 
     piscina = piscina_generare_dynamicum("totalitas_stml", 1048576);
     radix   = crusta_arbor_parsare(piscina, fons, mensura, &CRUSTA_BASH,
@@ -252,13 +268,13 @@ _aestimatio (
     Piscina* piscina =
         piscina_generare_dynamicum("totalitas_aestimatio",
         1048576);
-          i32  mensura = profunditas * IV + V;
-    character* fons;
-          i32  i;
+               i32  mensura = profunditas * IV + V;
+         character* fons;
+               i32  i;
       MateriaNodus* radix;
       MateriaNodus* arithmetica;
-             s64  valor = ZEPHYRUM;
-             b32  fructus = FALSUM;
+               s64  valor    = ZEPHYRUM;
+               b32  fructus  = FALSUM;
 
     fons = (character*)piscina_allocare(piscina,
         (memoriae_index)mensura + I);
@@ -683,8 +699,8 @@ principale (vacuum)
             &ratum, "crusta");
         per (k = ZEPHYRUM; k < III; k++)
         {
-            MateriaNodus* radix;
-            MateriaArborScriptura s;
+                     MateriaNodus* radix;
+            MateriaArborScriptura  s;
 
             CREDO_NON_RUIT (_totum(NULLA[k].fons, NULLA[k].mensura));
             CREDO_AEQUALIS_I32 (_totum(NULLA[k].fons, NULLA[k].mensura),

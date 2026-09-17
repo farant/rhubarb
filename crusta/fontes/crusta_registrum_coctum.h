@@ -161,4 +161,6 @@ nomen enumeratio {
 
 externus constans MateriaRegistrumCoctum CRUSTA_REGISTRUM;
 
+externus constans MateriaDiagnosticaCocta CRUSTA_DIAGNOSTICA;
+
 #endif /* CRUSTA_REGISTRUM_COCTUM_H */
