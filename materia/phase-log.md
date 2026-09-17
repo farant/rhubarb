@@ -2534,3 +2534,54 @@ DESIDERATA: examen naming a latina macro used as an identifier; a
 comment-reflow (or report-only) mode in the formator; a planting helper
 for non-C files (goldens, TSV); the vocabula check over untracked files
 without `quaere.sh` by hand.
+
+## 2026-09-17 — sedes: positions in the projection, diagnostics from declarations (materia-sedes-spec, materia-sedes-plan A1–C)
+
+INTENTIO (filed with the plan commit, before A1). Fran, 2026-09-17: "a
+line number thing for materia is a great idea", widened the same day
+to "polish the quality" of line, column and substring results "with
+all errors", once in materia so every client benefits. Desideratum
+01M2PSWHM0. Spec `855589fb` (two parts, one spec); plan
+`project-specs/materia-sedes-plan.md` (nine tranches + closure).
+
+PART A, the positioned view. `consilium.sedes_scribere` stamps
+`sedes="L:C-L:C"` and `octeti="B-B"` on every node, token and trivium
+element; the envelope says `visio="sedes"`; the reader refuses it;
+canons never see it (the VISIO precedent). A shared library gate
+(`materia_sedes_verificare`) checks it in every client's STML gate
+against an oracle disjoint from the writer (line table from the source
+bytes, source slices, document order). The STML engine's repeated
+captures learn TRANSPARENTIA (measured: a position attribute made two
+captures of one identifier unequal even under `attributa=`). pythonica
+rows gain `linea`, `columna`, `textus_fontis`.
+
+PART B, diagnostics. A client DECLARES problems in its registry
+(`diagnosticum` on a genus, `absentia` / `vacua` on a locus, `gravitas`,
+`inanis`); `materia_coctor` bakes a separate table (no seal moves, no
+hand table touched); one walker (`materia_diagnostica_derivare`) derives
+located records plus a generic byte-order check; the writer's refusals
+gain a source range. crusta (counters kept as the independent oracle;
+presence per class, sana exact; two new differentia pins: severity
+against bash's exit, first-error line against bash's line) and css
+first; `lib/excerptum` prints the compiler format with a `^~~~`
+underline; `./tools/diagnostica.sh` routes by suffix;
+`silva.diagnostica` wraps it.
+
+MEASURED WHILE PLANNING (the plan's Deltas D1–D10): md and oratio
+already carry derived tokens (points, not ranges); the writer's
+`sedes_valorum` was never filled (a dead half-port, left alone); strict
+matching has no TRANSPARENTIA by design (unchanged); `{ }` leaves
+crusta's list unwritten and `_lista_plena` ignores separators, heredocs
+and mala (`vacua` redefined, new `inanis`); `elif`'s empty test is a
+conditional (parser-emitted, merged); the arithmetic machine counts one
+trace at several sites (presence, not counts); `bash -n` exits 0 for
+`[[ a b ]]`, `(( 1 2 ))`, `(( 3 ! ))`, `$(( 1 + ))` and a heredoc at
+EOF (those classes are `monitum`); crusta's and css's object sets
+collide when linked together (the instrument builds its own).
+
+SUBSTRATE: changes expected in `materia_nodus` (range), `materia_arbor`
+(view, envelope, reader message, refusal range), `materia_coctor`
+(table), new `materia_sedes` and `materia_diagnostica`; root lib
+`stml_macros` (equality) and new `excerptum`. Every materia
+writer/reader commit runs `./materia/shim_probare.sh` and all client
+suites.
