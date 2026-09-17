@@ -4025,13 +4025,13 @@ Gates: crusta 15/15.
 **Interfaces:**
 - Produces: `CSS_DIAGNOSTICA`.
 
-- [ ] **Step 1: Declarations** (erratum): `regula-mala`
+- [x] **Step 1: Declarations** (erratum): `regula-mala`
   `diagnosticum="regula legi non potuit"`; `declaratio-mala`
   `diagnosticum="declaratio legi non potuit"`; `selector-malus`
   `diagnosticum="selector legi non potuit"`. Regenerate; canon check;
   natura; css canon seal unchanged.
 
-- [ ] **Step 2: Gate** `probatio_css_diagnostica.c` (`./silva/scribe.sh`).
+- [x] **Step 2: Gate** `probatio_css_diagnostica.c` (`./silva/scribe.sh`).
 
 ```c
 /* probatio_css_diagnostica.c - Diagnostica css ex declaratione (plan
@@ -4116,10 +4116,34 @@ _mala_numerare (
   `_maiusculum` rule). Add `materia_diagnostica` to
   `css/compile_probationes.sh`'s module list.
 
-- [ ] **Step 3: Plant, commit.** Plant: delete one `diagnosticum`
+- [x] **Step 3: Plant, commit.** Plant: delete one `diagnosticum`
   attribute by hand, regenerate → red; restore → green. Commit via
   `silva.commissio` with portae `['css']`.
 
+**Executed 2026-09-17.** Declarations and the corpus half as planned;
+seal unmoved, all nine existing css gates green through the
+regeneration. TWO plan errors, both found by running it:
+
+1. **`selector-malus` is unreachable from the stylesheet tree.** It is
+   built only by `css_selector.c`, in the ANALYSIS tree that shares
+   tokens but never nodes (B9, deliberate). A walk over
+   `css_arbor_parsare`'s result can never find one, so as planned a
+   THIRD of the declarations would have been untested and its plant
+   would have stayed green — the dead-gate shape B3 step 6 hit the same
+   day. Added a selector section using the `_selectorem_parsare` helper
+   from `probatio_css_selector.c`; the plant now fires.
+2. **`{ }` produces no diagnostic**, so the planned third fixture's
+   assertion was false. An empty prelude is valid to "consume a
+   qualified rule"; the SELECTOR grammar is what objects. Replaced by
+   the selector section.
+
+Pinned after Fran's inspection (byte ends exclusive): `a { color: red;
+} }` → regula-mala 1:19, 18–19; `a { : x; }` → declaratio-mala 1:5,
+4–8; `1` → selector-malus 1:1, 0–1; `a, 1` → selector-malus 1:4, 3–4
+(the `1`, not the `a`); `..` → TWO selector-malus, 1:1 and 1:2. Gate
+70/70. Named honestly: five of six corpus files yield zero diagnostics,
+so that half asserts `0 == 0` — the fixtures carry the gate. Three
+plants (one per declaration), each red, all green on revert.
 ---
 
 ## Task B5: The printer, the instrument, pythonica

@@ -129,3 +129,30 @@ constans MateriaRegistrumCoctum CSS_REGISTRUM = {
     LOCI_COCTI,
     (i32)(magnitudo(LOCI_COCTI) / magnitudo(LOCI_COCTI[0]))
 };
+
+hic_manens constans MateriaTabDiagnosticum DIAGNOSTICA_COCTA[] = {
+    /* genus, locus, species, gravitas, codex, causa */
+    { (s32)CSS_GENUS_REGULA_MALA, (s32)-1,
+      (s32)MATERIA_DIAGNOSTICUM_GENUS,
+      (s32)MATERIA_GRAVITAS_ERRATUM,
+      "regula-mala",
+      "regula legi non potuit" },
+    { (s32)CSS_GENUS_DECLARATIO_MALA, (s32)-1,
+      (s32)MATERIA_DIAGNOSTICUM_GENUS,
+      (s32)MATERIA_GRAVITAS_ERRATUM,
+      "declaratio-mala",
+      "declaratio legi non potuit" },
+    { (s32)CSS_GENUS_SELECTOR_MALUS, (s32)-1,
+      (s32)MATERIA_DIAGNOSTICUM_GENUS,
+      (s32)MATERIA_GRAVITAS_ERRATUM,
+      "selector-malus",
+      "selector legi non potuit" },
+};
+
+constans MateriaDiagnosticaCocta CSS_DIAGNOSTICA = {
+    DIAGNOSTICA_COCTA,
+    (i32)(magnitudo(DIAGNOSTICA_COCTA) /
+        magnitudo(DIAGNOSTICA_COCTA[0])),
+    NIHIL,
+    (i32)0
+};

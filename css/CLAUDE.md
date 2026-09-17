@@ -10,9 +10,10 @@ its T1–T9 are the historical record.
 
 ## Praesens status (2026-09-02, post B10 — PLAN B CLOSED)
 
-B1-B10 COMPLETE; `css-arbor-plan-B.md` is finished. Suites: css 8/8
+B1-B10 COMPLETE; `css-arbor-plan-B.md` is finished. Suites: css 10/10
 (registrum, adaptare, arbor, corpus, stml, totalitas, canon,
-selector). Gates in pythonica's table: `css`, `materia`,
+selector, computus, diagnostica — the last added 2026-09-17 by the
+materia-sedes plan's B4). Gates in pythonica's table: `css`, `materia`,
 `materia-shim` (348/348, three oracles). B10 found the shim runner
 SILENTLY BROKEN: silva's two-step test compile (2026-09-02) left
 `probatio_*.o` in `silva/build`, the shim's object glob linked them,
@@ -122,6 +123,32 @@ hand in `css_registrum.h`, then move the seal in `css.canon` and any
 count pin by hand with a cause. `probatio_css_registrum` regenerates
 in-process and compares bytes; a hand edit of a `_coctum` file goes
 red with the first divergent line.
+
+## Diagnostica are declared, never coded (2026-09-17, materia-sedes B4)
+
+Three genera carry `diagnosticum` in `css.registrum.stml` —
+`regula-mala`, `declaratio-mala`, `selector-malus` — and bake into
+`CSS_DIAGNOSTICA`. materia's `materia_diagnostica_derivare` walks any
+tree and returns located records (severity, codex, cause,
+`MateriaTractus`). css writes no error-reporting code at all.
+**Diagnostics move no seal**, so `css.canon` is untouched and the
+existing gates pass straight through a regeneration.
+
+`probatio_css_diagnostica` (the tenth gate) checks the derived count
+against a walk written inside the probatio — two implementations over
+disjoint code. Positions on five fixtures are pinned after inspection.
+
+**`selector-malus` lives in a tree the stylesheet walk never sees.**
+`css_selector.c` builds it in the ANALYSIS tree, which shares tokens
+with the stylesheet tree but never nodes (B9, by design). So deriving
+over `css_arbor_parsare`'s result can never find one — the gate has to
+build selector trees separately, and does. This nearly shipped as a
+dead third of the gate. If you add a genus to the selector tree and
+declare it, **check which tree your gate actually walks.**
+
+Coverage note: five of the six corpus files yield zero diagnostics, so
+that half of the gate asserts `0 == 0` five times. The fixtures carry
+it.
 
 ## Named slot indices — use them, never bare numbers
 

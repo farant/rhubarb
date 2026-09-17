@@ -59,11 +59,13 @@
   </genus>
 
   <genus titulus="regula-mala"
-    nota="Robustitas: recuperatio spec-definita">
+    nota="Robustitas: recuperatio spec-definita"
+    diagnosticum="regula legi non potuit">
     <locus titulus="tokens" species="lista-token"/>
   </genus>
 
-  <genus titulus="declaratio-mala">
+  <genus titulus="declaratio-mala"
+    diagnosticum="declaratio legi non potuit">
     <locus titulus="tokens" species="lista-token"/>
   </genus>
 
@@ -118,7 +120,8 @@
     <locus titulus="tok_nomen" species="token"/>
   </genus>
 
-  <genus titulus="selector-malus">
+  <genus titulus="selector-malus"
+    diagnosticum="selector legi non potuit">
     <locus titulus="tokens" species="lista-token"/>
   </genus>
 </registrum>

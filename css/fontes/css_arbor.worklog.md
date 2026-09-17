@@ -86,3 +86,58 @@ STML write 2.3, read 3.2, compare 0.07 — the projection round trip is
 thirty times the parse. That is the same shape the silva corpus tests
 showed, now measured on the client whose parser has no preprocessor to
 blame, which makes it a materia_arbor question rather than a silva one.
+
+## 2026-09-17 — diagnostics declared, and the tree they do not live in
+
+B4 of the materia-sedes plan. Three genera carry `diagnosticum` in
+`css.registrum.stml` — `regula-mala`, `declaratio-mala`,
+`selector-malus` — and materia's one walker derives located records
+from them. css writes no error-reporting code. The seal did not move
+(diagnostics hash nothing), so `css.canon` is untouched and all nine
+existing gates stayed green through the regeneration.
+
+`probatio_css_diagnostica` is the tenth gate. Its corpus half compares
+the derived count against a walk written HERE, in this file, over the
+same tree — an independent implementation, so the two cover each other.
+
+**`selector-malus` cannot be reached from the stylesheet tree, and the
+plan did not know that.** It is built only in `css_selector.c`, in the
+ANALYSIS tree, which shares tokens with the stylesheet tree but never
+nodes (`css_selector.h` says so in its header, and B9's design made it
+deliberate). So a walk over what `css_arbor_parsare` returns can never
+find one. Had the gate shipped as planned, one of the three
+declarations would have been completely untested and the plant on it
+would have stayed green — the same dead-gate shape B3 step 6 hit in
+crusta on the same day, caught here before committing. The gate now
+builds selector trees too, via the `_selectorem_parsare` helper the
+selector gate already uses, and the plant on `selector-malus` does
+fire.
+
+**The plan's third fixture was wrong as well.** `{ }` was expected to
+produce a diagnostic and produces none: an empty prelude is valid to
+"consume a qualified rule", and it is the SELECTOR grammar that
+objects, not the stylesheet grammar. Replaced with the selector
+section, where the objection actually lives.
+
+**The corpus half proves agreement but exercises almost nothing.**
+Five of the six files yield zero diagnostics, so the assertion is
+`0 == 0` five times; only `adversarius_2.css` carries one. The gate's
+teeth are the five pinned fixtures. Worth saying plainly, because a
+row of green `0 == 0` reads exactly like coverage and is not.
+
+Pinned by eye (Fran, 2026-09-17), byte ends EXCLUSIVE:
+
+| source | records | codex | line:col | bytes |
+|---|---|---|---|---|
+| `a { color: red; } }` | 1 | regula-mala | 1:19 | 18–19 |
+| `a { : x; }` | 1 | declaratio-mala | 1:5 | 4–8 |
+| `1` | 1 | selector-malus | 1:1 | 0–1 |
+| `a, 1` | 1 | selector-malus | 1:4 | 3–4 |
+| `..` | 2 | selector-malus | 1:1, 1:2 | 0–1, 1–2 |
+
+`a, 1` blames the `1` and not the `a`; `..` gives one record per bad
+`.`. Selector sources are wrapped as `<selector>{}`, so byte 0 is the
+selector's first byte.
+
+Plants: each of the three `diagnosticum` attributes deleted in turn,
+regenerated → red each time; restored → green.
