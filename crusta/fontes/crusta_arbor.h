@@ -45,7 +45,11 @@ nomen structura {
      * functionis): listae proximae appensa, ORDO OCTETORUM RUPTUS -
      * limes nominatus; sana FALSUM */
     i32 heredoca_transposita;
-    /* mala nulla, clausurae omnes, heredoca in sede */
+    /* listae compositorum vacuae quas bash recusat ('{ }', '( )', 'if
+     * then', 'do done', probatio vacua; optio et '$( )' vacuae licent -
+     * P11b mensuratum): arbor intacta, sana FALSUM */
+    i32 listae_vacuae;
+    /* mala nulla, clausurae omnes, heredoca in sede, listae plenae */
     b32 sana;
 } CrustaParsura;
 

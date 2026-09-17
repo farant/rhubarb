@@ -508,3 +508,84 @@ macro name. `op`/`fd` are two-letter locals the lint refuses; the
 dictionary does not know `asyncus`, `penultimum`, `numeralis`,
 `separatores`, `indentare` (renamed before staging). The formator does
 not reflow comments: long comment lines are rewrapped by hand.
+
+## 2026-09-16 — P11b (the oracles)
+
+**The environment is part of the golden.** The instrument runs
+`env -i LC_ALL=C PATH=/nonexistent /opt/homebrew/bin/bash -r`: a fixed
+locale, and a restricted shell with no PATH, because the wrapper only
+DEFINES the case — a case that closes the wrapper's `}` early would run
+the rest at top level. The header records the version line and this
+environment. Probing `\u` escapes from zsh lied twice: zsh's own
+`printf` decoded the escapes before bash saw them. The golden written
+by the instrument (processus_exsequi, no shell in between) is the
+authority: under C, `\u`/`\U` below 0x80 is a byte, anything else is
+re-spelled `\uXXXX`/`\UXXXXXXXX` (`\u80` → ``, `\UFFFF` →
+`￿`, `ሴ5` → `ሴ` + `5`). Re-spelling can LENGTHEN the
+text, so both buffer bounds for `$'…'` (the static-value length walk and
+`crusta_effugia_decoquere`) doubled.
+
+**One case list, three consumers.** `crusta_oraculum.{h,c}` enumerates
+pathologiae (by title) and FreeBSD (whole file), wraps, and looks up a
+golden section by key — the instrument writes with it, the two gates
+read with it, so a key can never drift between writer and reader. The
+golden format is the case reader's: a `declare -f` output containing a
+line `## END` would close the section early, so the instrument refuses
+it by name (zero today).
+
+**Numbers.** Birth: oraculum 92/112, differentia 115/121, house mala 7 —
+all seven from `pathologiae.sh`, a tracked `.sh`; the corpus gate
+already excluded the two fixtures by name, differentia now uses the same
+rule (birth 0). After the loop: oraculum 103, differentia 118, house
+234/234 `declare -f` exact live (the two without a golden are the
+fixtures), sanity 236/236.
+
+**What the classes were.**
+- `$( (a) )` prints `$( ( a ))` (a space when the reprinted text starts
+  with `(`), but `$((d); e)` stays VERBATIM: bash tried arithmetic,
+  refused, and kept the text. Detected in the tree by adjacency (the
+  first token of the substitution starts at the byte after `$(`).
+- Backticks: backslash-newline removed everywhere inside, even in single
+  quotes, when the backslash run is odd.
+- A function definition clears the heredoc `;`-flag; a group does not
+  (`g() { cat <<A && b … }; c` prints `};`, `{ cat <<A; }; b` prints `}`).
+- Assignment builtins after prefixes: `A=1 declare c=(z)`, `>o declare`,
+  `>o A=1 declare` fine; `A=1 >o declare`, `declare -a >o c=(z)`,
+  `declare c=(z) >o d=(y)` errors. The builder required the builtin to be
+  the ONLY child; now the only verbum, last, with no redirection after an
+  assignment, and a redirection after the builtin word switches the mode
+  back to VERBA.
+- Case patterns: `esac` closes the case only as a clause's first word
+  without `(`; bash rejects a newline anywhere inside a begun clause. The
+  optio frame now lexes in IN_VERBIS (no reserved words, newline a
+  separator) instead of EXEMPLAR, which stays for the electio frame. The
+  old pin `case x in a esac` moved from 1 to 2 absent closures (both
+  invalid in bash; no mode reserves `esac` with newline as separator, and
+  the newline rule is worth more).
+- Empty compound lists (`{ }`, `( )`, `if then`, `do done`, empty
+  tests, `coproc { }`) are bash errors; `case` bodies and `$( )` may be
+  empty. New `CrustaParsura.listae_vacuae`, counted when the node closes;
+  the tree is unchanged, `sana` FALSUM. (Cases and rule written in one
+  edit — the red evidence is the differentia run before: `{ }` sana 1.)
+
+**Left, named (desideratum):** bash removes backslash-newline BEFORE it
+tokenises — `i\`+newline+`f` is `if`, `$(\`+newline+`(` is `$((`,
+`${v\`+newline+`#…}` is `${v#…}`. Our lector treats the pair as a word
+part or trivium, so reserved words, operators and expansion syntax split
+across it are not recognised (FreeBSD line-cont1/4/5/6/7/8/9/10). A
+lector-level join is a redesign of recognition in every mode. And
+heredoc5.0: a heredoc inside a backtick that spans lines, whose outer
+body follows the backtick's closing line.
+
+**Tool finding, fixed separately (`c4acd7b0`):** `silva.planta` treated
+`error:` ANYWHERE in the gate output as a build break; the differentia
+gate prints bash's `syntax error: unexpected end of file` for each
+disagreement, so a true red was refused twice (two compiling plants —
+compiling the planted copy by hand proved it). Now it matches diagnostic
+line shapes.
+
+**computus golden regenerated (cause):** pathologiae.sh's `tabulata`
+now parses as an assignment (tokens 396 → 400, nodes 540 → 539, STML
+61,897 → 62,525); the two house runners show +1 allocation and +8 pool
+bytes (the builtin check now runs after prefixes; the doubled decoder
+bound). Trees of house files unchanged.

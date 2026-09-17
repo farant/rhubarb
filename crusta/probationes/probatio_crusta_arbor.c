@@ -355,6 +355,133 @@ principale (vacuum)
         ")"));
     CREDO_VERUM (r.sana);
 
+    /* aedificator post praefixa (P11b, 'bash -n' 5.2.15 mensuratum):
+     * assignationes aut redirectiones ANTE titulum 'x=(' admittunt;
+     * redirectio POST assignationem aut post titulum aedificatoris id
+     * tollit (oraculum: pathologiae:tabulata) */
+    {
+        hic_manens constans character* constans ACCEPTA[] = {
+            "A=1 declare c=(z)", ">o declare c=(z)",
+            "a=(1) declare c=(z)", "A=1 B=2 declare c=(z)",
+            ">o A=1 declare c=(z)", ">o >p declare c=(z)",
+            "A=1 local -a c=(z)",
+            "a=(1 [2]=x) b+=(y) declare -a c=([0]=z)", NIHIL
+        };
+        hic_manens constans character* constans RECUSATA[] = {
+            "A=1 >o declare c=(z)", "declare >o c=(z)",
+            "A=1 >o B=2 declare c=(z)", ">o A=1 >p declare c=(z)",
+            "declare -a >o c=(z)", "declare c=(z) >o d=(y)",
+            "x declare c=(z)", NIHIL
+        };
+        s32 k;
+
+        per (k = ZEPHYRUM; ACCEPTA[k] != NIHIL; k++)
+        {
+            (vacuum)_casus(piscina, ACCEPTA[k], &r);
+            si (!r.sana)
+            {
+                imprimere("    aedificator acceptum non sanum: '%s'\n",
+                    ACCEPTA[k]);
+            }
+            CREDO_VERUM (r.sana);
+        }
+        per (k = ZEPHYRUM; RECUSATA[k] != NIHIL; k++)
+        {
+            (vacuum)_casus(piscina, RECUSATA[k], &r);
+            si (r.sana)
+            {
+                imprimere("    aedificator recusatum sanum: '%s'\n",
+                    RECUSATA[k]);
+            }
+            CREDO_FALSUM (r.sana);
+        }
+    }
+
+    /* exemplaria optionis (P11b, 'bash -n' 5.2.15 mensuratum; oraculum
+     * freebsd:case2.0): 'esac' clausura solum ut verbum primum optionis
+     * sine '('; post '(' aut '|' verbum est; linea nova intra optionem
+     * incohatam (post '(', '|', verbum) errat, ante eam trivium */
+    {
+        hic_manens constans character* constans ACCEPTA[] = {
+            "case x in (esac) ;; esac", "case x in x|esac) ;; esac",
+            "case x in (x|esac|in) ;; esac", "case x in (if) ;; esac",
+            "case x in x|if) ;; esac", "case x in if) ;; esac",
+            "case x in a) ;; (esac) ;; esac",
+            "case x in\n(a) ;; esac", "case x in\n\na ) ;; esac", NIHIL
+        };
+        hic_manens constans character* constans RECUSATA[] = {
+            "case x in esac) ;; esac",
+            "case x in a) ;; esac|b) ;; esac",
+            "case x in (\na) ;; esac", "case x in a|\nb) ;; esac",
+            "case x in (a\n) ;; esac", "case x in a\n) ;; esac", NIHIL
+        };
+        s32 k;
+
+        per (k = ZEPHYRUM; ACCEPTA[k] != NIHIL; k++)
+        {
+            (vacuum)_casus(piscina, ACCEPTA[k], &r);
+            si (!r.sana)
+            {
+                imprimere("    exemplar acceptum non sanum: '%s'\n",
+                    ACCEPTA[k]);
+            }
+            CREDO_VERUM (r.sana);
+        }
+        per (k = ZEPHYRUM; RECUSATA[k] != NIHIL; k++)
+        {
+            (vacuum)_casus(piscina, RECUSATA[k], &r);
+            si (r.sana)
+            {
+                imprimere("    exemplar recusatum sanum: '%s'\n",
+                    RECUSATA[k]);
+            }
+            CREDO_FALSUM (r.sana);
+        }
+    }
+
+    /* listae vacuae (P11b, 'bash -n' 5.2.15 mensuratum; oraculum
+     * freebsd:empty-braces1.0): compositum cum lista vacua non sanum,
+     * arbor octetim eadem; optio et substitutio vacuae licent */
+    {
+        hic_manens constans character* constans ACCEPTA[] = {
+            "case x in a) esac", "x=$( )", "if :; then :; else :; fi",
+            NIHIL
+        };
+        hic_manens constans character* constans RECUSATA[] = {
+            "{ }", "( )", "if then :; fi", "if :; then fi",
+            "if :; then :; else fi", "if :; then :; elif then :; fi",
+            "while do :; done", "while :; do done", "until :; do done",
+            "for i in a; do done", "select i in a; do done",
+            "for ((;;)); do done", "f() { }", "coproc { }",
+            "{ # c\n}", "{\n}", NIHIL
+        };
+        s32 k;
+
+        per (k = ZEPHYRUM; ACCEPTA[k] != NIHIL; k++)
+        {
+            (vacuum)_casus(piscina, ACCEPTA[k], &r);
+            si (!r.sana)
+            {
+                imprimere("    vacua accepta non sana: '%s'\n",
+                    ACCEPTA[k]);
+            }
+            CREDO_VERUM (r.sana);
+        }
+        per (k = ZEPHYRUM; RECUSATA[k] != NIHIL; k++)
+        {
+            (vacuum)_casus(piscina, RECUSATA[k], &r);
+            si (r.sana || r.listae_vacuae == ZEPHYRUM)
+            {
+                imprimere("    vacua recusata: '%s' sana %d vacuae "
+                    "%d\n",
+                    RECUSATA[k], (integer)r.sana,
+                    (integer)r.listae_vacuae);
+            }
+            CREDO_FALSUM (r.sana);
+            CREDO_VERUM (r.listae_vacuae > ZEPHYRUM);
+        }
+    }
+
     /* a= valor absens; a+=b; a[i]=v */
     p = _casus(piscina, "a= b+=c d[i]=v", &r);
     imperium = _sententia(p, ZEPHYRUM);
@@ -1110,9 +1237,13 @@ principale (vacuum)
         CRUSTA_GENUS_PARS_PARAMETRUM));
     CREDO_VERUM (r.sana);
 
-    /* 'esac' cum exemplari aperto: ')' absens numeratur */
+    /* 'esac' post verbum exemplaris: optio incohata (P11b) modum
+     * IN_VERBIS habet, ergo 'esac' verbum est - ')' et 'esac' absentes
+     * (olim I: 'esac' electionem claudebat). bash utrimque errat; modus
+     * qui 'esac' reservat et lineam novam separatorem facit non exstat,
+     * et regula lineae novae (mensurata) plus sanitati valet */
     p = _casus(piscina, "case x in a esac", &r);
-    CREDO_AEQUALIS_I32 (r.clausurae_absentes, (i32)I);
+    CREDO_AEQUALIS_I32 (r.clausurae_absentes, (i32)II);
     CREDO_FALSUM (r.sana);
 
 

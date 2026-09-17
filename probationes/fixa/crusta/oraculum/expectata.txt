@@ -1,0 +1,1721 @@
+# expectata.txt - aurum oraculi crustae (P11b): 'declare -f f' super 'f() {' casus '}'
+# bash: GNU bash, version 5.2.15(1)-release (aarch64-apple-darwin22.1.0)
+# ambitus: env -i LC_ALL=C PATH=/nonexistent /opt/homebrew/bin/bash -r
+# scriptum 2026-09-16 per ./crusta/oraculum.sh -scribere; numquam manu
+#### pathologiae:positio-verba
+## EXSPECTATUM:
+f () 
+{ 
+    echo if;
+    x=if;
+    A=1 echo B=2
+}
+## END
+#### pathologiae:heredoc-bini
+## EXSPECTATUM:
+f () 
+{ 
+    cat <<A <<B |
+one
+A
+two
+B
+  wc -l
+}
+## END
+#### pathologiae:substitutio-commentum
+## EXSPECTATUM:
+f () 
+{ 
+    echo $(echo ")"
+echo "x")
+}
+## END
+#### pathologiae:arith-subcrusta
+## EXSPECTATUM:
+f () 
+{ 
+    echo $((1+1));
+    ( echo $( ( echo nested )) )
+}
+## END
+#### pathologiae:sublinguae
+## EXSPECTATUM:
+f () 
+{ 
+    [[ abc =~ ^a.c$ ]];
+    case x in 
+        a | b)
+
+        ;;
+    esac;
+    echo '	';
+    echo ${x:-d}
+}
+## END
+#### pathologiae:fd-glutinatio
+## EXSPECTATUM:
+f () 
+{ 
+    exec 2> /dev/null;
+    echo 2 > /dev/null;
+    echo x2 > /dev/null
+}
+## END
+#### pathologiae:gravis-nidus
+## EXSPECTATUM:
+f () 
+{ 
+    echo `echo \`echo deep\``
+}
+## END
+#### pathologiae:processus-substitutio
+## EXSPECTATUM:
+f () 
+{ 
+    diff <(a) >(b)
+}
+## END
+#### pathologiae:pipa-erroris
+## EXSPECTATUM:
+f () 
+{ 
+    a 2>&1 | b
+}
+## END
+#### pathologiae:redirectio-ambo
+## EXSPECTATUM:
+f () 
+{ 
+    a &> f;
+    b &>> g
+}
+## END
+#### pathologiae:fd-variabilis
+## EXSPECTATUM:
+f () 
+{ 
+    exec {fd}> f;
+    echo x >&$fd;
+    exec {fd}>&-
+}
+## END
+#### pathologiae:optio-termini
+## EXSPECTATUM:
+f () 
+{ 
+    case x in 
+        a)
+
+        ;&
+        b)
+
+        ;;&
+        c)
+
+        ;;
+    esac
+}
+## END
+#### pathologiae:heredoc-tabulae
+## EXSPECTATUM:
+f () 
+{ 
+    cat <<-E
+one
+two
+E
+
+}
+## END
+#### pathologiae:herestring
+## EXSPECTATUM:
+f () 
+{ 
+    cat <<< "a b"
+}
+## END
+#### pathologiae:regula
+## EXSPECTATUM:
+f () 
+{ 
+    [[ a =~ ^a(b|c)$ ]] && [[ $x =~ a|b'c d'$v ]]
+}
+## END
+#### pathologiae:socius
+## EXSPECTATUM:
+f () 
+{ 
+    coproc c { 
+        :
+    };
+    coproc COPROC cmd a b
+}
+## END
+#### pathologiae:electio-select
+## EXSPECTATUM:
+f () 
+{ 
+    select x in a b;
+    do
+        echo $x;
+    done
+}
+## END
+#### pathologiae:tempus
+## EXSPECTATUM:
+f () 
+{ 
+    time -p ls | wc;
+    ! true;
+    time { 
+        a
+    }
+}
+## END
+#### pathologiae:cyclus
+## EXSPECTATUM:
+f () 
+{ 
+    for ((i=0; i<3; i++))
+    do
+        :;
+    done;
+    for ((1; 1; 1))
+    do
+        break;
+    done
+}
+## END
+#### pathologiae:tabulata
+## EXSPECTATUM:
+f () 
+{ 
+    a=(1 [2]=x) b+=(y) declare -a c=([0]=z)
+}
+## END
+#### pathologiae:versa
+## EXSPECTATUM:
+f () 
+{ 
+    echo "x" 'y
+'
+}
+## END
+#### pathologiae:arith-ambiguum
+## EXSPECTATUM:
+f () 
+{ 
+    echo $((1+1));
+    echo $((echo a); b)
+}
+## END
+#### pathologiae:heredoc-in-substitutione
+## EXSPECTATUM:
+f () 
+{ 
+    echo $(cat <<A
+x
+A
+);
+    echo $(cat <<A
+y
+A
+)
+}
+## END
+#### pathologiae:continuatio
+## EXSPECTATUM:
+f () 
+{ 
+    abcd ef
+}
+## END
+#### pathologiae:functio-formae
+## EXSPECTATUM:
+f () 
+{ 
+    function f () 
+    { 
+        :
+    };
+    function g () 
+    { 
+        :
+    };
+    function h () 
+    { 
+        ( : )
+    }
+}
+## END
+#### freebsd:alias1.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias alias0=exit;
+    eval 'alias0 0';
+    exit 1
+}
+## END
+#### freebsd:alias10.0
+## EXSPECTATUM:
+f () 
+{ 
+    ulimit -t 5 2> /dev/null;
+    ulimit -v 100000 2> /dev/null;
+    alias echo='echo';
+    alias echo='echo';
+    [ "`eval echo b`" = b ]
+}
+## END
+#### freebsd:alias11.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias alias0=alias1;
+    alias alias1=exit;
+    eval 'alias0 0';
+    exit 3
+}
+## END
+#### freebsd:alias12.0
+## EXSPECTATUM:
+f () 
+{ 
+    unalias -a;
+    alias alias0=command;
+    alias true='echo bad';
+    eval 'alias0 true'
+}
+## END
+#### freebsd:alias13.0
+## EXSPECTATUM:
+f () 
+{ 
+    unalias -a;
+    alias command=command;
+    alias true='echo bad';
+    eval 'command true'
+}
+## END
+#### freebsd:alias14.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias command='command ';
+    alias alias0=exit;
+    eval 'command alias0 0';
+    exit 3
+}
+## END
+#### freebsd:alias15.0
+## EXSPECTATUM:
+f () 
+{ 
+    function f_echoanddo () 
+    { 
+        printf '%s\n' "$*";
+        "$@"
+    };
+    alias echoanddo='f_echoanddo ';
+    alias alias0='echo test2';
+    eval 'echoanddo echo test1';
+    eval 'echoanddo alias0';
+    exit 0
+}
+## END
+#### freebsd:alias16.0
+## EXSPECTATUM:
+f () 
+{ 
+    v=1;
+    alias a='unalias a
+v=2';
+    eval a;
+    [ "$v" = 2 ]
+}
+## END
+#### freebsd:alias17.0
+## EXSPECTATUM:
+f () 
+{ 
+    v=1;
+    alias a='unalias -a
+v=2';
+    eval a;
+    [ "$v" = 2 ]
+}
+## END
+#### freebsd:alias18.0
+## EXSPECTATUM:
+f () 
+{ 
+    v=1;
+    alias a='alias a=v=2
+v=3
+a';
+    eval a;
+    [ "$v" = 2 ]
+}
+## END
+#### freebsd:alias19.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias begin={ end=};
+    begin;
+    cat <<EOF
+$(echo ok)
+EOF
+
+    end
+}
+## END
+#### freebsd:alias2.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias alias0=exit;
+    x=alias0;
+    eval 'case $x in alias0) exit 0;; esac';
+    exit 1
+}
+## END
+#### freebsd:alias20.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias begin={ end=};
+    : <<EOF && 
+$(echo bad1)
+EOF
+ begin
+    echo ok;
+    end
+}
+## END
+#### freebsd:alias3.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias alias0=exit;
+    x=alias0;
+    eval 'case $x in "alias0") alias0 0;; esac';
+    exit 1
+}
+## END
+#### freebsd:alias4.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias alias0=exit;
+    eval 'x=1 alias0 0';
+    exit 1
+}
+## END
+#### freebsd:alias5.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias alias0=exit;
+    eval '</dev/null alias0 0';
+    exit 1
+}
+## END
+#### freebsd:alias6.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias alias0='| cat >/dev/null';
+    eval '{ echo bad; } alias0';
+    eval '(echo bad)alias0'
+}
+## END
+#### freebsd:alias7.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias echo='echo a';
+    [ "`eval echo b`" = "a b" ]
+}
+## END
+#### freebsd:alias8.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias echo='echo';
+    [ "`eval echo b`" = b ]
+}
+## END
+#### freebsd:alias9.0
+## EXSPECTATUM:
+f () 
+{ 
+    alias alias0=:;
+    alias alias0=exit;
+    eval 'alias0 0';
+    exit 1
+}
+## END
+#### freebsd:and-pipe-not.0
+## EXSPECTATUM:
+f () 
+{ 
+    true && ! true | false
+}
+## END
+#### freebsd:case1.0
+## EXSPECTATUM:
+f () 
+{ 
+    keywords='if then else elif fi while until for do done { } case esac ! in';
+    for k in $keywords;
+    do
+        eval "case $k in (foo|$k) ;; *) echo bad ;; esac";
+        eval "case $k in ($k) ;; *) echo bad ;; esac";
+        eval "case $k in foo|$k) ;; *) echo bad ;; esac";
+        [ "$k" = esac ] && continue;
+        eval "case $k in $k) ;; *) echo bad ;; esac";
+    done
+}
+## END
+#### freebsd:case2.0
+## EXSPECTATUM:
+f () 
+{ 
+    function f1 () 
+    { 
+        x=$(case x in 
+    x | esac)
+
+    ;;
+    *)
+        echo bad 1>&2
+    ;;
+esac)
+    };
+    f1;
+    function f2 () 
+    { 
+        x=$(case x in 
+    x | esac)
+
+    ;;
+    *)
+        echo bad 1>&2
+    ;;
+esac)
+    };
+    f2;
+    function f3 () 
+    { 
+        x=$(case x in 
+    x | esac)
+
+    ;;
+    *)
+        echo bad 1>&2
+    ;;
+esac)
+    };
+    f3;
+    function f4 () 
+    { 
+        x=$(case x in 
+    x | esac)
+
+    ;;
+    *)
+        echo bad 1>&2
+    ;;
+esac)
+    };
+    f4
+}
+## END
+#### freebsd:comment1.0
+## EXSPECTATUM:
+f () 
+{ 
+    ${SH} -c '#'
+}
+## END
+#### freebsd:comment2.42
+## EXSPECTATUM:
+f () 
+{ 
+    ${SH} -c '#
+exit 42'
+}
+## END
+#### freebsd:dollar-quote1.0
+## EXSPECTATUM:
+f () 
+{ 
+    set -e;
+    [ 'hi' = hi ];
+    [ 'hi
+there' = 'hi
+there' ];
+    [ '"'\''\	' = "\"'\\$(printf "\a\b\f\t\v")" ];
+    [ 'hi
+there' = 'hi
+there' ];
+    [ 'ab' = "$(printf "a\rb")" ]
+}
+## END
+#### freebsd:dollar-quote10.0
+## EXSPECTATUM:
+f () 
+{ 
+    s=$(printf '\303\244');
+    s=$s$(printf '\342\202\254');
+    ss="$(LC_ALL=en_US.UTF-8 ${SH} -c "printf %s \$'\u00e4\u20ac'")";
+    [ "$s" = "$ss" ]
+}
+## END
+#### freebsd:dollar-quote11.0
+## EXSPECTATUM:
+f () 
+{ 
+    s=$s$(printf '\360\235\225\245');
+    ss="$(LC_ALL=en_US.UTF-8 ${SH} -c "printf %s \$'\U0001d565'")";
+    [ "$s" = "$ss" ]
+}
+## END
+#### freebsd:dollar-quote12.0
+## EXSPECTATUM:
+f () 
+{ 
+    v=$( ( eval ": \$'\u'" ) 2>&1 > /dev/null);
+    [ $? -ne 0 ] && [ -n "$v" ]
+}
+## END
+#### freebsd:dollar-quote13.0
+## EXSPECTATUM:
+f () 
+{ 
+    c=$(eval printf %s \$\'\\Uffffff41\' 2> /dev/null);
+    r=$(($? != 0));
+    [ "$r.$c" = '1.' ] || [ "$r.$c" = '0.?' ] || [ "$r.$c" = '0.\u2222' ]
+}
+## END
+#### freebsd:dollar-quote2.0
+## EXSPECTATUM:
+f () 
+{ 
+    [ '' = "$(printf "\033")" ]
+}
+## END
+#### freebsd:dollar-quote3.0
+## EXSPECTATUM:
+f () 
+{ 
+    unset LC_ALL;
+    LC_CTYPE=en_US.ISO8859-1;
+    export LC_CTYPE;
+    e=;
+    for i in 0 1 2 3;
+    do
+        for j in 0 1 2 3 4 5 6 7;
+        do
+            for k in 0 1 2 3 4 5 6 7;
+            do
+                case $i$j$k in 
+                    000)
+                        continue
+                    ;;
+                esac;
+                e="$e\\$i$j$k";
+            done;
+        done;
+    done;
+    ee=`printf "$e"`;
+    [ "${#ee}" = 255 ] || echo length bad;
+    [ "$(${SH} -c "printf %s \$'$e'")" = "$ee" ]
+}
+## END
+#### freebsd:dollar-quote4.0
+## EXSPECTATUM:
+f () 
+{ 
+    unset LC_ALL;
+    LC_CTYPE=en_US.ISO8859-1;
+    export LC_CTYPE;
+    e=;
+    for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f;
+    do
+        for j in 0 1 2 3 4 5 6 7 8 9 a b c d e f;
+        do
+            case $i$j in 
+                00)
+                    continue
+                ;;
+            esac;
+            e="$e\x$i$j";
+        done;
+    done;
+    ee="$(${SH} -c "printf %s \$'$e'")";
+    [ "${#ee}" = 255 ] || echo length bad
+}
+## END
+#### freebsd:dollar-quote5.0
+## EXSPECTATUM:
+f () 
+{ 
+    set -e;
+    [ '	
+' = '	
+' ];
+    [ '	
+' = '	
+' ];
+    [ '' = '' ];
+    [ '' = '' ];
+    [ '' = '' ];
+    [ '' = '' ]
+}
+## END
+#### freebsd:dollar-quote6.0
+## EXSPECTATUM:
+f () 
+{ 
+    [ '' = '' ]
+}
+## END
+#### freebsd:dollar-quote7.0
+## EXSPECTATUM:
+f () 
+{ 
+    set -e;
+    [ '$@`' = '$@`' ];
+    [ '$@`' = '$@`' ]
+}
+## END
+#### freebsd:dollar-quote8.0
+## EXSPECTATUM:
+f () 
+{ 
+    [ 'hello' = hello ];
+    [ 'hello' = hello ];
+    [ 'hello''world' = helloworld ];
+    [ 'hello' = hello ];
+    [ 'hello' = hello ];
+    [ 'hello''world' = helloworld ];
+    [ 'hello' = hello ];
+    [ 'hello' = hello ];
+    [ 'hello''world' = helloworld ]
+}
+## END
+#### freebsd:dollar-quote9.0
+## EXSPECTATUM:
+f () 
+{ 
+    v=$( ( eval ": \$'\uD800'" ) 2>&1 > /dev/null);
+    [ $? -ne 0 ] && [ -n "$v" ]
+}
+## END
+#### freebsd:empty-cmd1.0
+## EXSPECTATUM:
+f () 
+{ 
+    ! ( eval ': || f()' ) 2> /dev/null
+}
+## END
+#### freebsd:for1.0
+## EXSPECTATUM:
+f () 
+{ 
+    nl='
+';
+    list=' a b c';
+    for s1 in "$nl" " ";
+    do
+        for s2 in "$nl" ";" ";$nl";
+        do
+            for s3 in "$nl" " ";
+            do
+                r='';
+                eval "for i${s1}in ${list}${s2}do${s3}r=\"\$r \$i\"; done";
+                [ "$r" = "$list" ] || exit 1;
+            done;
+        done;
+    done;
+    set -- $list;
+    for s2 in "$nl" " ";
+    do
+        for s3 in "$nl" " ";
+        do
+            r='';
+            eval "for i${s2}do${s3}r=\"\$r \$i\"; done";
+            [ "$r" = "$list" ] || exit 1;
+        done;
+    done;
+    for s1 in "$nl" " ";
+    do
+        for s2 in "$nl" ";" ";$nl";
+        do
+            for s3 in "$nl" " ";
+            do
+                eval "for i${s1}in${s2}do${s3}exit 1; done";
+            done;
+        done;
+    done
+}
+## END
+#### freebsd:for2.0
+## EXSPECTATUM:
+f () 
+{ 
+    nl='
+';
+    list=' a b c';
+    set -- $list;
+    for s2 in ";" ";$nl";
+    do
+        for s3 in "$nl" " ";
+        do
+            r='';
+            eval "for i${s2}do${s3}r=\"\$r \$i\"; done";
+            [ "$r" = "$list" ] || exit 1;
+        done;
+    done
+}
+## END
+#### freebsd:func1.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    unset LC_ALL;
+    export LC_CTYPE=en_US.ISO8859-1;
+    i=128;
+    set -f;
+    while [ "$i" -le 255 ]; do
+        c=$(printf \\"$(printf %o "$i")");
+        ok=0;
+        eval "$c() { ok=1; }";
+        $c;
+        ok1=$ok;
+        ok=0;
+        "$c";
+        if [ "$ok" != 1 ] || [ "$ok1" != 1 ]; then
+            echo "Bad results for character $i" 1>&2;
+            : $((failures += 1));
+        fi;
+        unset -f $c;
+        i=$((i+1));
+    done;
+    exit $((failures > 0))
+}
+## END
+#### freebsd:func2.0
+## EXSPECTATUM:
+f () 
+{ 
+    function f () 
+    { 
+        return 42
+    };
+    function f () 
+    { 
+        return 3
+    } & f;
+    [ $? -eq 42 ]
+}
+## END
+#### freebsd:func3.0
+## EXSPECTATUM:
+f () 
+{ 
+    name=/var/empty/nosuch;
+    function f () 
+    { 
+        true
+    } < $name;
+    name=/dev/null;
+    f
+}
+## END
+#### freebsd:heredoc1.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    check '"$(cat <<EOF
+hi
+EOF
+)" = hi';
+    check '"$(cat <<EOF
+${$+hi}
+EOF
+)" = hi';
+    unset yy;
+    check '"$(cat <<EOF
+${yy-hi}
+EOF
+)" = hi';
+    check '"$(cat <<EOF
+${$+hi
+there}
+EOF
+)" = "hi
+there"';
+    check '"$(cat <<EOF
+$((1+1))
+EOF
+)" = 2';
+    check '"$(cat <<EOF
+$(echo hi)
+EOF
+)" = hi';
+    check '"$(cat <<EOF
+`echo hi`
+EOF
+)" = hi';
+    check '"$(cat <<\EOF
+${$+hi}
+EOF
+)" = "\${\$+hi}"';
+    check '"$(cat <<\EOF
+$(
+EOF
+)" = \$\(';
+    check '"$(cat <<\EOF
+`
+EOF
+)" = \`';
+    check '"$(cat <<EOF
+"
+EOF
+)" = \"';
+    check '"$(cat <<\EOF
+"
+EOF
+)" = \"';
+    check '"$(cat <<esac
+'"'"'
+esac
+)" = "'"'"'"';
+    check '"$(cat <<\)
+'"'"'
+)
+)" = "'"'"'"';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:heredoc10.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    check '"$(cat <<EOF # (
+EOF )
+EOF
+)" = "EOF )"';
+    check '"$({ cat <<EOF # (
+EOF)
+EOF
+})" = "EOF)"';
+    check '"$(if :; then cat <<EOF # (
+EOF)
+EOF
+fi)" = "EOF)"';
+    check '"$( (cat <<EOF # (
+EOF)
+EOF
+))" = "EOF)"';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:heredoc11.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures='';
+    function check () 
+    { 
+        if eval "[ $* ]"; then
+            :;
+        else
+            echo "Failed: $*";
+            failures=x$failures;
+        fi
+    };
+    check '`cat <<EOF
+foo
+EOF` = foo';
+    check '"`cat <<EOF
+foo
+EOF`" = foo';
+    check '`eval "cat <<EOF
+foo
+EOF"` = foo';
+    test "x$failures" = x
+}
+## END
+#### freebsd:heredoc12.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    longmark=`printf %01000d 4`;
+    longmarkstripped=`printf %0999d 0`;
+    check '"$(cat <<'"$longmark
+$longmark"'
+echo yes)" = "yes"';
+    check '"$(cat <<\'"$longmark
+$longmark"'
+echo yes)" = "yes"';
+    check '"$(cat <<'"$longmark
+yes
+$longmark"'
+)" = "yes"';
+    check '"$(cat <<\'"$longmark
+yes
+$longmark"'
+)" = "yes"';
+    check '"$(cat <<'"$longmark
+$longmarkstripped
+$longmark.
+$longmark"'
+)" = "'"$longmarkstripped
+$longmark."'"';
+    check '"$(cat <<\'"$longmark
+$longmarkstripped
+$longmark.
+$longmark"'
+)" = "'"$longmarkstripped
+$longmark."'"';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:heredoc13.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    check '"$(cat <<""
+
+echo yes)" = "yes"';
+    check '"$(cat <<""
+yes
+
+)" = "yes"';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:heredoc14.0
+## EXSPECTATUM:
+f () 
+{ 
+    read x <<EOF
+value
+EOF
+
+    for i in "$x";
+    do
+        x=$x.$i;
+    done
+    [ "$x" = value.value ]
+}
+## END
+#### freebsd:heredoc15.0
+## EXSPECTATUM:
+f () 
+{ 
+    set -- dummy;
+    read x <<EOF
+value
+EOF
+
+    for i in "$@";
+    do
+        x=$x.$i;
+    done;
+    [ "$x" = value.dummy ]
+}
+## END
+#### freebsd:heredoc16.0
+## EXSPECTATUM:
+f () 
+{ 
+    read x <<EOF
+value
+EOF
+
+    case $x in 
+        value)
+            x=$x.extended
+        ;;
+    esac
+    [ "$x" = value.extended ]
+}
+## END
+#### freebsd:heredoc2.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    s='ast*que?non' sq=\' dq=\";
+    check '"$(cat <<EOF
+${s}
+EOF
+)" = "ast*que?non"';
+    check '"$(cat <<EOF
+${s+'$sq'x'$sq'}
+EOF
+)" = ${sq}x${sq}';
+    check '"$(cat <<EOF
+${s#ast}
+EOF
+)" = "*que?non"';
+    check '"$(cat <<EOF
+${s##"ast"}
+EOF
+)" = "*que?non"';
+    check '"$(cat <<EOF
+${s##'$sq'ast'$sq'}
+EOF
+)" = "*que?non"';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:heredoc3.0
+## EXSPECTATUM:
+f () 
+{ 
+    test "$(cat <<EOF
+hi there
+EOF
+)" = "hi there"
+}
+## END
+#### freebsd:heredoc4.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    function f () 
+    { 
+        cat <<EOF && 
+foo
+EOF
+ echo `echo bar`
+    };
+    check '"`f`" = "foo
+bar"';
+    function f () 
+    { 
+        cat <<EOF && 
+foo
+EOF
+ echo $(echo bar)
+    };
+    check '"$(f)" = "foo
+bar"';
+    function f () 
+    { 
+        echo `echo bar` && cat <<EOF
+foo
+EOF
+
+    };
+    check '"`f`" = "bar
+foo"';
+    function f () 
+    { 
+        echo $(echo bar) && cat <<EOF
+foo
+EOF
+
+    };
+    check '"$(f)" = "bar
+foo"';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:heredoc5.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    function f () 
+    { 
+        cat <<EOF && 
+foo
+EOF
+ echo `cat <<EOF
+bar
+EOF
+`
+    };
+    check '"`f`" = "foo
+bar"';
+    function f () 
+    { 
+        cat <<EOF && 
+foo
+EOF
+ echo $(cat <<EOF
+bar
+EOF
+)
+    };
+    check '"$(f)" = "foo
+bar"';
+    function f () 
+    { 
+        echo `cat <<EOF
+bar
+EOF
+` && cat <<EOF
+foo
+EOF
+
+    };
+    check '"`f`" = "bar
+foo"';
+    function f () 
+    { 
+        echo $(cat <<EOF
+bar
+EOF
+) && cat <<EOF
+foo
+EOF
+
+    };
+    check '"$(f)" = "bar
+foo"';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:heredoc6.0
+## EXSPECTATUM:
+f () 
+{ 
+    r=;
+    ! command eval ": <<EOF; )" 2> /dev/null;
+    command eval : hi \${r:=0};
+    exit ${r:-3}
+}
+## END
+#### freebsd:heredoc7.0
+## EXSPECTATUM:
+f () 
+{ 
+    eval ': <<EOF';
+    eval ': <<EOF;';
+    eval '`: <<EOF`';
+    eval '`: <<EOF;`';
+    eval '`: <<EOF`;';
+    eval '`: <<EOF;`;';
+    eval ': <<\EOF';
+    eval ': <<\EOF;';
+    eval '`: <<\EOF`';
+    eval '`: <<\EOF;`';
+    eval '`: <<\EOF`;';
+    eval '`: <<\EOF;`;'
+}
+## END
+#### freebsd:heredoc8.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    s='ast*que?non' sq=\' dq=\";
+    check '"$(cat <<EOF
+${s+"x"}
+EOF
+)" = ${dq}x${dq}';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:heredoc9.0
+## EXSPECTATUM:
+f () 
+{ 
+    failures=0;
+    function check () 
+    { 
+        if ! eval "[ $* ]"; then
+            echo "Failed: $*";
+            : $((failures += 1));
+        fi
+    };
+    check '`${SH} -c "cat <<EOF
+EOF)
+EOF
+"` = "EOF)"';
+    check '`${SH} -c "(cat <<EOF
+EOF)
+EOF
+)"` = "EOF)"';
+    check '"`cat <<EOF
+EOF x
+EOF
+`" = "EOF x"';
+    check '"`cat <<EOF
+EOF )
+EOF
+`" = "EOF )"';
+    check '"`cat <<EOF
+EOF)
+EOF
+`" = "EOF)"';
+    check '"$(cat <<EOF
+EOF x
+EOF
+)" = "EOF x"';
+    exit $((failures != 0))
+}
+## END
+#### freebsd:line-cont1.0
+## EXSPECTATUM:
+f () 
+{ 
+    if true; then
+        :;
+    fi
+}
+## END
+#### freebsd:line-cont10.0
+## EXSPECTATUM:
+f () 
+{ 
+    v=XaaaXbbbX;
+    [ "${v#*a}.${v##*a}.${v%b*}.${v%%b*}" = aaXbbbX.XbbbX.XaaaXbb.XaaaX ]
+}
+## END
+#### freebsd:line-cont11.0
+## EXSPECTATUM:
+f () 
+{ 
+    T=$(mktemp "${TMPDIR:-/tmp}/sh-test.XXXXXXXX") || exit;
+    trap 'rm -f -- "$T"' 0;
+    w='#A';
+    c='${w#\#}';
+    c=$c$c$c$c;
+    c=$c$c$c$c;
+    c=$c$c$c$c;
+    c=$c$c$c$c;
+    c=$c$c$c$c;
+    c=$c$c$c$c;
+    printf 'v=%s\n' "$c" > "$T";
+    . "$T";
+    if [ "${#v}" != 4096 ]; then
+        echo "Length is bad (${#v})";
+        exit 3;
+    fi;
+    case $v in 
+        *[!A]*)
+            echo "Content is bad";
+            exit 3
+        ;;
+    esac
+}
+## END
+#### freebsd:line-cont12.0
+## EXSPECTATUM:
+f () 
+{ 
+    [ '\
+' = "\\
+" ]
+}
+## END
+#### freebsd:line-cont2.0
+## EXSPECTATUM:
+f () 
+{ 
+    [ "ab" = ab ]
+}
+## END
+#### freebsd:line-cont3.0
+## EXSPECTATUM:
+f () 
+{ 
+    v=`printf %s 'ab'`;
+    w="`printf %s 'cd'`";
+    [ "$v$w" = abcd ]
+}
+## END
+#### freebsd:line-cont4.0
+## EXSPECTATUM:
+f () 
+{ 
+    v=abcd;
+    [ "$v.${v}.${v}.${v}" = abcd.abcd.abcd.abcd ]
+}
+## END
+#### freebsd:line-cont5.0
+## EXSPECTATUM:
+f () 
+{ 
+    bad=1;
+    case x in 
+        x)
+
+        ;;
+        *)
+            exit 7
+        ;;
+    esac && bad= && : >> /dev/null;
+    false || [ -z "$bad" ]
+}
+## END
+#### freebsd:line-cont6.0
+## EXSPECTATUM:
+f () 
+{ 
+    v0=abc;
+    v=$(cat <<EOF
+${v0}d
+EOF
+);
+    w=$(cat <<-EOF
+efgh
+EOF
+);
+    [ "$v.$w" = "abcd.efgh" ]
+}
+## END
+#### freebsd:line-cont7.0
+## EXSPECTATUM:
+f () 
+{ 
+    [ "$((
+1+ 1))" = 2 ]
+}
+## END
+#### freebsd:line-cont8.0
+## EXSPECTATUM:
+f () 
+{ 
+    set -- a b c d e f g h i j;
+    [ "${10}" = j ]
+}
+## END
+#### freebsd:line-cont9.0
+## EXSPECTATUM:
+f () 
+{ 
+    [ "${$:+xyz}" = xyz ]
+}
+## END
+#### freebsd:no-space1.0
+## EXSPECTATUM:
+f () 
+{ 
+    set -e;
+    while ( false ); do
+        ( : );
+    done;
+    if ( false ); then
+        ( : );
+    fi;
+    if ( false ); then
+        ( : );
+    else
+        ( : );
+    fi;
+    ( : && : ) || :;
+    until ( : ); do
+        ( : );
+    done;
+    case x in 
+        x)
+
+        ;;
+        *)
+            exit 1;
+            ( : )
+        ;;
+    esac;
+    case x in 
+        x)
+
+        ;;
+        *)
+            exit 1
+        ;;
+    esac;
+    for i in "$@";
+    do
+        ( : );
+    done;
+    { 
+        ( : )
+    };
+    function f () 
+    { 
+        ( : )
+    };
+    : | :;
+    ( : ) | ( : )
+}
+## END
+#### freebsd:no-space2.0
+## EXSPECTATUM:
+f () 
+{ 
+    set -e;
+    ! ( false )
+}
+## END
+#### freebsd:nul1.0
+## EXSPECTATUM:
+f () 
+{ 
+    { 
+        printf 'v=%03000d\0%02000d' 7 2;
+        dd if=/dev/zero bs=1000 count=1 status=none;
+        printf '1 w=%03000d%02000d1\0\n' 7 2;
+        printf '\0l\0v\0=\0$\0{\0#\0v\0}\n';
+        printf '\0l\0w\0=\0\0$\0{\0#\0w}\0\0\0\n';
+        printf '[ "$lv.$lw.$v" = "5001.5001.$w" ]\n'
+    } | ${SH}
+}
+## END
+#### freebsd:only-redir1.0
+## EXSPECTATUM:
+f () 
+{ 
+    < /dev/null & wait $!
+}
+## END
+#### freebsd:only-redir2.0
+## EXSPECTATUM:
+f () 
+{ 
+    < /dev/null | :
+}
+## END
+#### freebsd:only-redir3.0
+## EXSPECTATUM:
+f () 
+{ 
+    case x in 
+        x)
+            < /dev/null
+        ;;
+    esac
+}
+## END
+#### freebsd:only-redir4.0
+## EXSPECTATUM:
+f () 
+{ 
+    case x in 
+        x)
+            < /dev/null
+        ;&
+    esac
+}
+## END
+#### freebsd:ps1-expand1.0
+## EXSPECTATUM:
+f () 
+{ 
+    testvar=abcdef;
+    output=$(testvar=abcdef PS1='$testvar:' ENV=/dev/null ${SH} +m -i < /dev/null 2>&1);
+    case $output in 
+        *abcdef*)
+            exit 0
+        ;;
+        *)
+            echo "Expected 'abcdef' in prompt output";
+            exit 1
+        ;;
+    esac
+}
+## END
+#### freebsd:ps1-expand2.0
+## EXSPECTATUM:
+f () 
+{ 
+    testvar=xyz123;
+    output=$(testvar=xyz123 PS1='prefix-${testvar}-suffix:' ENV=/dev/null ${SH} +m -i < /dev/null 2>&1);
+    case $output in 
+        *xyz123*)
+            exit 0
+        ;;
+        *)
+            echo "Expected 'xyz123' in prompt output";
+            exit 1
+        ;;
+    esac
+}
+## END
+#### freebsd:ps1-expand3.0
+## EXSPECTATUM:
+f () 
+{ 
+    output=$(PS1='pid:$$:' ENV=/dev/null ${SH} +m -i < /dev/null 2>&1);
+    case $output in 
+        *pid:\$\$:*)
+            echo "PID not expanded, got literal \$\$";
+            exit 1
+        ;;
+        *pid:[0-9]*)
+            exit 0
+        ;;
+        *)
+            echo "Expected PID after 'pid:' in output";
+            exit 1
+        ;;
+    esac
+}
+## END
+#### freebsd:ps1-expand4.0
+## EXSPECTATUM:
+f () 
+{ 
+    output=$(PS1='status:$?:' ENV=/dev/null ${SH} +m -i < /dev/null 2>&1);
+    case $output in 
+        *status:\$?:*)
+            echo "Exit status not expanded, got literal \$?";
+            exit 1
+        ;;
+        *status:0:*)
+            exit 0
+        ;;
+        *)
+            echo "Expected 'status:0:' in initial prompt";
+            exit 1
+        ;;
+    esac
+}
+## END
+#### freebsd:ps1-expand5.0
+## EXSPECTATUM:
+f () 
+{ 
+    output=$(PS1='shell:$0:' ENV=/dev/null ${SH} +m -i < /dev/null 2>&1);
+    case $output in 
+        *shell:\$0:*)
+            echo "Positional parameter not expanded, got literal \$0";
+            exit 1
+        ;;
+        *shell:*sh*:*)
+            exit 0
+        ;;
+        *)
+            echo "Expected shell name after 'shell:' in output";
+            exit 1
+        ;;
+    esac
+}
+## END
+#### freebsd:ps2-expand1.0
+## EXSPECTATUM:
+f () 
+{ 
+    testvar=continue;
+    output=$(testvar=continue PS2='$testvar>' ENV=/dev/null ${SH} +m -i <<EOF 2>&1
+echo \\
+done
+EOF
+);
+    case $output in 
+        *continue\>*)
+            exit 0
+        ;;
+        *)
+            echo "Expected 'continue>' in PS2 output";
+            exit 1
+        ;;
+    esac
+}
+## END
+#### freebsd:set-v1.0
+## EXSPECTATUM:
+f () 
+{ 
+    ${SH} <<'EOF'
+echo one >&2
+set -v
+echo two >&2
+echo three >&2
+EOF
+
+}
+## END
+#### freebsd:var-assign1.0
+## EXSPECTATUM:
+f () 
+{ 
+    abc=0;
+    \abc=1 2> /dev/null;
+    a\bc=2 2> /dev/null;
+    abc\=3 2> /dev/null;
+    a\bc\=4 2> /dev/null;
+    'abc'=5 2> /dev/null;
+    a'b'c=6 2> /dev/null;
+    abc'='7 2> /dev/null;
+    'abc=8' 2> /dev/null;
+    "abc"=9 2> /dev/null;
+    a"b"c=10 2> /dev/null;
+    abc"="11 2> /dev/null;
+    "abc=12" 2> /dev/null;
+    [ "$abc" = 0 ]
+}
+## END

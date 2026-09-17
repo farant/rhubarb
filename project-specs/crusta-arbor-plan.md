@@ -1554,12 +1554,21 @@ the normal form of a file.
   cases bash accepts already equal (9 without a golden) — the 21 are
   P11b's opening inventory (worklog).
 
-- [ ] **Step 3: The instrument** — `oraculum.c` as above; `crusta/oraculum.sh`
+- [x] **Step 3: The instrument** (P11b) — `oraculum.c` as above; `crusta/oraculum.sh`
   in `arbor.sh`'s shape passing `-scribere`/`-probare`/`-domus` through
   (`-domus` with no files = `$(git ls-files '*.sh')`). Generate both
   goldens over `pathologiae.sh` and the FreeBSD files; read the headers.
+  *Executed 2026-09-16 (P11b):* bash runs as `env -i LC_ALL=C
+  PATH=/nonexistent /opt/homebrew/bin/bash -r` (deterministic locale;
+  a case closing the wrapper's `}` early cannot reach external commands
+  or write files); the case list, wrapper and golden lookup are a shared
+  module `crusta_oraculum.{h,c}` (instrument + both gates). A block needs
+  exit 0, output starting `f () ` and no `## END` line (the reader would
+  close the section there); causes counted by name. 121 cases → 112
+  `declare -f` blocks (9 bash rejects), 121 sanity blocks; `-probare`
+  IDEM on a rerun. `-domus` names each file without a golden.
 
-- [ ] **Step 4: Write the failing oraculum and differentia gates** —
+- [x] **Step 4: Write the failing oraculum and differentia gates** (P11b) —
   oraculum: for every case of `pathologiae.sh` + FreeBSD with a golden
   block: parse the wrapped text, cook, compare; count `pares / dispares /
   sine auro`; `PINNA_PRAETERITA` = the count at birth (printed first, then
@@ -1570,19 +1579,49 @@ the normal form of a file.
   listed by key with both verdicts; plus the house-corpus pin: parse every
   file of `build/crusta_corpus.lst`, sum `relatio.mala` — pinned at the
   birth value, FALLING only, and zero is the goal.
+  *Executed:* both gates also pin the case count, the golden count and
+  (oraculum) no orphan golden block. The house pin excludes the two
+  pathological fixtures by the corpus gate's own rule (their mala are
+  pinned elsewhere; with them the sum was 7): birth value 0. Birth:
+  oraculum 92/112, differentia 115/121.
 
-- [ ] **Step 5: Run, read the failure classes, fix the cooked view** (never
+- [x] **Step 5: Run, read the failure classes, fix the cooked view** (P11b) (never
   the parser unless the parser is wrong — a parser fix goes to the arbor
   gate first) until the numbers stop rising cheaply; pin.
+  *Executed:* oraculum 92 → **103**/112, differentia 115 → **118**/121,
+  pinned. Printer: a space after `$(` when the reprinted text starts
+  with `(`, but a source `$((` (the refused-arithmetic path) is kept
+  verbatim; `\`+newline removed inside backticks by backslash-run
+  parity; a function definition clears the heredoc flag (a group does
+  not). Decoder (`$'…'`): `\cX`, `\c?`, `\c\\`, `\?`, `\x` without
+  digits verbatim, `\u`/`\U` → byte below 0x80 else re-spelled
+  `\uXXXX`/`\UXXXXXXXX` (C locale; the length bound doubled). Parser,
+  arbor gate first: an assignment builtin after prefix assignments or
+  redirections (a redirection AFTER an assignment, or after the builtin
+  word, turns compound assignment off — all measured); a case clause
+  once begun lexes in IN_VERBIS (`esac` after `(`/`|` is a word, a
+  newline before `)` is an error); empty compound lists bash rejects
+  (`{ }`, `( )`, `do done`, empty tests) counted `listae_vacuae`, sana
+  FALSUM. Coctum gate 36 → 40 cases (bash-generated, same environment).
+  House corpus live (`-domus`): 234/234 `declare -f` exact, 236/236
+  sanity. Left, NOT cheap (ledger desideratum): bash removes
+  `\`+newline before tokenising (`i\`+newline+`f` is `if`, `${v\`+
+  newline+`#…}`, `$(\`+newline+`(`) — 8 oracle and 2 sanity cases, a
+  lector redesign; a heredoc inside a multi-line backtick (heredoc5.0).
 
-- [ ] **Step 6: Plant** — oraculum: the pin raised above the count → red;
+- [x] **Step 6: Plant** — oraculum: the pin raised above the count → red;
   differentia: `sana` inverted for the zero-mala class → red; coctum: the
   redirect reorder disabled → red; revert all. *coctum done in P11a*
   (`silva.planta`: redirections printed inline in byte order → 13 cases
   red, `redirectio-ordo` first plus every heredoc case, whose deferral
-  rides on the reorder; reverted green).
+  rides on the reorder; reverted green). *oraculum and differentia done
+  in P11b:* pin 103 → 104 red; sana inverted for zero-mala parses →
+  concordes 6, red; both reverted green. The differentia plant first
+  hit a TOOL false positive — `silva.planta` took bash's `syntax error:`
+  in the gate output for a build break; fixed and committed separately
+  (`c4acd7b0`, pythonica gate + test).
 
-- [ ] **Step 7: `crusta/CLAUDE.md`** — the oracle numbers and how to move
+- [x] **Step 7: `crusta/CLAUDE.md`** (P11b) — the oracle numbers and how to move
   them; the instrument's three modes.
 
 - [ ] **Step 8: Commit** (P11a committed its half separately: printer,

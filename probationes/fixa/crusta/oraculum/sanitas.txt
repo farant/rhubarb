@@ -1,0 +1,367 @@
+# sanitas.txt - aurum oraculi crustae (P11b): 'bash -n -c casus'
+# bash: GNU bash, version 5.2.15(1)-release (aarch64-apple-darwin22.1.0)
+# ambitus: env -i LC_ALL=C PATH=/nonexistent /opt/homebrew/bin/bash -r
+# scriptum 2026-09-16 per ./crusta/oraculum.sh -scribere; numquam manu
+#### pathologiae:positio-verba
+## status: 0
+## ERRATUM: -
+#### pathologiae:heredoc-bini
+## status: 0
+## ERRATUM: -
+#### pathologiae:substitutio-commentum
+## status: 0
+## ERRATUM: -
+#### pathologiae:arith-subcrusta
+## status: 0
+## ERRATUM: -
+#### pathologiae:sublinguae
+## status: 0
+## ERRATUM: -
+#### pathologiae:fd-glutinatio
+## status: 0
+## ERRATUM: -
+#### pathologiae:gravis-nidus
+## status: 0
+## ERRATUM: -
+#### pathologiae:extglob
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 1: syntax error near unexpected token `('
+#### pathologiae:alias
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 1: syntax error near unexpected token `fi'
+#### pathologiae:processus-substitutio
+## status: 0
+## ERRATUM: -
+#### pathologiae:pipa-erroris
+## status: 0
+## ERRATUM: -
+#### pathologiae:redirectio-ambo
+## status: 0
+## ERRATUM: -
+#### pathologiae:fd-variabilis
+## status: 0
+## ERRATUM: -
+#### pathologiae:optio-termini
+## status: 0
+## ERRATUM: -
+#### pathologiae:heredoc-tabulae
+## status: 0
+## ERRATUM: -
+#### pathologiae:herestring
+## status: 0
+## ERRATUM: -
+#### pathologiae:regula
+## status: 0
+## ERRATUM: -
+#### pathologiae:socius
+## status: 0
+## ERRATUM: -
+#### pathologiae:electio-select
+## status: 0
+## ERRATUM: -
+#### pathologiae:tempus
+## status: 0
+## ERRATUM: -
+#### pathologiae:cyclus
+## status: 0
+## ERRATUM: -
+#### pathologiae:tabulata
+## status: 0
+## ERRATUM: -
+#### pathologiae:versa
+## status: 0
+## ERRATUM: -
+#### pathologiae:crlf
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 5: syntax error: unexpected end of file
+#### pathologiae:arith-ambiguum
+## status: 0
+## ERRATUM: -
+#### pathologiae:heredoc-in-substitutione
+## status: 0
+## ERRATUM: /opt/homebrew/bin/bash: line 4: warning: command substitution: 1 unterminated here-document
+#### pathologiae:continuatio
+## status: 0
+## ERRATUM: -
+#### pathologiae:functio-formae
+## status: 0
+## ERRATUM: -
+#### pathologiae:grex-sine-separatore
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 2: syntax error: unexpected end of file
+#### pathologiae:si-apertum
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 2: syntax error: unexpected end of file
+#### pathologiae:esac-solum
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 1: syntax error near unexpected token `esac'
+#### pathologiae:parenthesis-vaga
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 1: syntax error near unexpected token `)'
+#### freebsd:alias1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias10.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias11.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias12.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias13.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias14.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias15.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias16.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias17.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias18.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias19.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias20.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias3.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias4.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias5.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias6.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias7.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias8.0
+## status: 0
+## ERRATUM: -
+#### freebsd:alias9.0
+## status: 0
+## ERRATUM: -
+#### freebsd:and-pipe-not.0
+## status: 0
+## ERRATUM: -
+#### freebsd:case1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:case2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:comment1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:comment2.42
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote10.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote11.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote12.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote13.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote3.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote4.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote5.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote6.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote7.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote8.0
+## status: 0
+## ERRATUM: -
+#### freebsd:dollar-quote9.0
+## status: 0
+## ERRATUM: -
+#### freebsd:empty-braces1.0
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 5: syntax error near unexpected token `}'
+#### freebsd:empty-cmd1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:for1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:for2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:func1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:func2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:func3.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc10.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc11.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc12.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc13.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc14.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc15.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc16.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc3.0
+## status: 0
+## ERRATUM: /opt/homebrew/bin/bash: line 4: warning: command substitution: 1 unterminated here-document
+#### freebsd:heredoc4.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc5.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc6.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc7.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc8.0
+## status: 0
+## ERRATUM: -
+#### freebsd:heredoc9.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont10.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont11.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont12.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont3.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont4.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont5.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont6.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont7.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont8.0
+## status: 0
+## ERRATUM: -
+#### freebsd:line-cont9.0
+## status: 0
+## ERRATUM: -
+#### freebsd:no-space1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:no-space2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:nul1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:only-redir1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:only-redir2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:only-redir3.0
+## status: 0
+## ERRATUM: -
+#### freebsd:only-redir4.0
+## status: 0
+## ERRATUM: -
+#### freebsd:pipe-not1.0
+## status: 2
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 2: syntax error near unexpected token `!'
+#### freebsd:ps1-expand1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:ps1-expand2.0
+## status: 0
+## ERRATUM: -
+#### freebsd:ps1-expand3.0
+## status: 0
+## ERRATUM: -
+#### freebsd:ps1-expand4.0
+## status: 0
+## ERRATUM: -
+#### freebsd:ps1-expand5.0
+## status: 0
+## ERRATUM: -
+#### freebsd:ps2-expand1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:set-v1.0
+## status: 0
+## ERRATUM: -
+#### freebsd:var-assign1.0
+## status: 0
+## ERRATUM: -

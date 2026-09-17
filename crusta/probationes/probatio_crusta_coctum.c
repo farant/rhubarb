@@ -4,7 +4,8 @@
  * quisque casus lineis 'f() {' et '}' involvitur (forma oraculi P11b),
  * parsatur, per emissorem octetim idem probatur, coquitur et cum
  * 'declare -f f' comparatur. Textus exspectati MENSURATI sunt
- * (2026-09-16, '/opt/homebrew/bin/bash -c', generator in scratch P11a),
+ * (2026-09-16, 'env -i LC_ALL=C PATH=/nonexistent bash -r -c' - ambitus
+ * auri oraculi - generator in scratch P11a/P11b),
  * numquam ex impressore nostro scripti.
  *
  * Familiae regularum (plan P11a, 'measured mechanics'): ordo
@@ -16,7 +17,9 @@
  * delimitator citatus, '<<-'), formae fd redirectionum, verba ('$'...''
  * decoctum, continuationes abiectae).
  *
- * Mensura sui: CASUS_NUMERUS pinnatum (XXXVI, >= XII planum poscit).
+ * Mensura sui: CASUS_NUMERUS pinnatum (XL, >= XII planum poscit;
+ * P11b addidit IV: spatium post '$(', continuatio in backtick,
+ * vexillum heredoc post functionem, regulae '$'...'' sub LC_ALL=C).
  */
 
 #include "latina.h"
@@ -490,10 +493,48 @@ hic_manens constans CasusCoctus CASUS[] = {
       "    if ((a)) > o; then\n"
       "        :;\n"
       "    fi\n"
+      "}\n" },
+    { "substitutio-spatium",
+      "echo $( (a) ) $(  (b);c ) $((d); e) $((echo  a);   b)",
+      "f () \n"
+      "{ \n"
+      "    echo $( ( a )) $( ( b ); c) $((d); e) $((echo  a);   b)\n"
+      "}\n" },
+    { "gravis-continuatio",
+      "v=`printf %s 'a\\\n"
+      "b'` w=\"`a \\\\\\\n"
+      "b`\"",
+      "f () \n"
+      "{ \n"
+      "    v=`printf %s 'ab'` w=\"`a \\\\b`\"\n"
+      "}\n" },
+    { "functio-vexillum",
+      "g() { cat <<A && b\n"
+      "x\n"
+      "A\n"
+      "}; c",
+      "f () \n"
+      "{ \n"
+      "    function g () \n"
+      "    { \n"
+      "        cat <<A && \n"
+      "x\n"
+      "A\n"
+      " b\n"
+      "    };\n"
+      "    c\n"
+      "}\n" },
+    { "effugia-regulae",
+      "x=$'\\ca\\cA\\c\?\\x41\\x4g\\xg\\101\\8\\\?\\z' y=$'\\u0024\\u"
+      "2222\\u80\\U0001F600\\U41\\u'",
+      "f () \n"
+      "{ \n"
+      "    x='\001\001\177A\004g\\xgA\\8\?\\z' y='$\\u2222\\u0080\\U0"
+      "001F600A\\u'\n"
       "}\n" }
 };
 
-#define CASUS_NUMERUS 36
+#define CASUS_NUMERUS 40
 
 /* lineam primam differentem imprimere (diagnostica) */
 interior vacuum

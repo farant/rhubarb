@@ -42,6 +42,7 @@
 #include "crusta_lexicon.h"
 #include "materia_lexicon.h"
 #include "materia_token.h"
+#include <stdio.h>
 #include <string.h>
 
 
@@ -641,6 +642,97 @@ _socium_imperare (
     Aedificatio* p,
          Gradus* g);
 
+/* an lista sententiam habeat (separator, heredoc, malum non sunt) */
+interior b32
+_lista_plena (
+    constans MateriaValor* lista)
+{
+    i32 k;
+
+    si (lista->genus != MATERIA_VALOR_LISTA)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*lista); k++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(*lista,
+            k);
+
+        si (   e->genus              == MATERIA_VALOR_NODUS
+            && e->datum.nodus->genus != (s32)CRUSTA_GENUS_SEPARATOR
+            && e->datum.nodus->genus != (s32)CRUSTA_GENUS_HEREDOC
+            && e->datum.nodus->genus != (s32)CRUSTA_GENUS_MALUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* listae compositi quas bash non vacuas poscit (P11b, 'bash -n' 5.2.15
+ * mensuratum): grex, crustula, cursus; probatio et corpus conditionis
+ * et rami 'elif' (else: corpus); probatio repetitionis. Optio et
+ * substitutio vacuae licent. */
+interior vacuum
+_vacuas_numerare (
+              Aedificatio* p,
+    constans MateriaNodus* nodus)
+{
+    i32 vacuae = ZEPHYRUM;
+
+    si (p->relatio == NIHIL)
+    {
+        redde;
+    }
+    commutatio (nodus->genus)
+    {
+        casus CRUSTA_GENUS_GREX:
+        casus CRUSTA_GENUS_CRUSTULA:
+        casus CRUSTA_GENUS_CURSUS:
+            /* liberi: locus I in omnibus tribus */
+            si (!_lista_plena(&nodus->loci[CRUSTA_GREX_LIBERI]))
+            {
+                vacuae++;
+            }
+            frange;
+        casus CRUSTA_GENUS_CONDITIO:
+            si (!_lista_plena(&nodus->loci[CRUSTA_CONDITIO_PROBATIO]))
+            {
+                vacuae++;
+            }
+            si (!_lista_plena(&nodus->loci[CRUSTA_CONDITIO_LIBERI]))
+            {
+                vacuae++;
+            }
+            frange;
+        casus CRUSTA_GENUS_RAMUS:
+            si (   nodus->loci[CRUSTA_RAMUS_TOK_DEINDE].genus
+                    == MATERIA_VALOR_TOKEN
+                || nodus->loci[CRUSTA_RAMUS_PROBATIO].genus
+                    == MATERIA_VALOR_LISTA)
+            {
+                si (!_lista_plena(&nodus->loci[CRUSTA_RAMUS_PROBATIO]))
+                {
+                    vacuae++;
+                }
+            }
+            si (!_lista_plena(&nodus->loci[CRUSTA_RAMUS_LIBERI]))
+            {
+                vacuae++;
+            }
+            frange;
+        casus CRUSTA_GENUS_REPETITIO:
+            si (!_lista_plena(&nodus->loci[CRUSTA_REPETITIO_PROBATIO]))
+            {
+                vacuae++;
+            }
+            frange;
+        ordinarius:
+            frange;
+    }
+    p->relatio->listae_vacuae += vacuae;
+}
+
 /* gradum verticis claudere: nodum gradui infra dare */
 interior b32
 _claudere (
@@ -668,6 +760,7 @@ _claudere (
     {
         redde FALSUM;
     }
+    _vacuas_numerare(p, g->nodus);
     locus_clausurae = _locus_clausurae(g->genus);
     si (   locus_clausurae >= ZEPHYRUM
         && _absens(g->nodus, (i32)locus_clausurae)
@@ -706,6 +799,14 @@ _claudere (
         && parens->status == ZEPHYRUM)
     {
         parens->modus = CRUSTA_MODUS_ASSIGNATIONES;
+    }
+    /* redirectio post titulum aedificatoris 'x=(' tollit ('declare -a
+     * >o c=(z)' bash errat; P11b mensuratum) */
+    si (   parens->genus  == (s32)CRUSTA_GENUS_IMPERIUM
+        && parens->status == II
+        && g->genus       == (s32)CRUSTA_GENUS_REDIRECTIO)
+    {
+        parens->modus = CRUSTA_MODUS_VERBA;
     }
     xar_removere_ultimum(p->gradus);
     redde VERUM;
@@ -934,23 +1035,62 @@ _post_verbum (
             g->modus = CRUSTA_MODUS_IUDICIUM;
             redde VERUM;
         casus CRUSTA_GENUS_IMPERIUM:
-            si (g->status == I)
+            /* titulus aedificatoris (declare, local, ...): verbum
+             * unum et ultimum; praefixa assignationes aut redirectiones
+             * licent, sed redirectio POST assignationem 'x=(' tollit
+             * ('A=1 >o declare c=(z)' bash errat, '>o A=1 declare'
+             * non - P11b mensuratum) */
+            si (   g->status == I
+                && g->nodus->loci[CRUSTA_IMPERIUM_LIBERI].genus
+                   == MATERIA_VALOR_LISTA)
             {
                 MateriaValor* liberi =
                     &g->nodus->loci[CRUSTA_IMPERIUM_LIBERI];
+                          i32 n      = materia_valor_lista_numerus(
+                              *liberi);
+                          i32 verba   = ZEPHYRUM;
+                          b32 visa    = FALSUM;
+                          b32 obstat  = FALSUM;
+                          i32 k;
+                MateriaValor* ultimus;
 
-                si (   liberi->genus == MATERIA_VALOR_LISTA
-                    && materia_valor_lista_numerus(*liberi) == (i32)I)
+                per (k = ZEPHYRUM; k < n; k++)
                 {
-                    MateriaValor* primus =
-                        materia_valor_lista_obtinere(*liberi, ZEPHYRUM);
+                    MateriaValor* e = materia_valor_lista_obtinere(
+                        *liberi, k);
 
-                    si (   primus->genus == MATERIA_VALOR_NODUS
-                        && _aedificator_est(p, primus->datum.nodus))
+                    si (e->genus != MATERIA_VALOR_NODUS)
                     {
-                        g->status  = II;
-                        g->modus   = CRUSTA_MODUS_ASSIGNATIONES;
+                        perge;
                     }
+                    si (e->datum.nodus->genus
+                        == (s32)CRUSTA_GENUS_VERBUM)
+                    {
+                        verba++;
+                    }
+                    alioquin si (e->datum.nodus->genus
+                                 == (s32)CRUSTA_GENUS_ASSIGNATIO)
+                    {
+                        visa = VERUM;
+                    }
+                    alioquin si (   visa
+                                 && e->datum.nodus->genus
+                                 == (s32)CRUSTA_GENUS_REDIRECTIO)
+                    {
+                        obstat = VERUM;
+                    }
+                }
+                ultimus = n > ZEPHYRUM
+                    ? materia_valor_lista_obtinere(*liberi, n
+                        - I) : NIHIL;
+                si (   verba == (i32)I && !obstat && ultimus != NIHIL
+                    && ultimus->genus == MATERIA_VALOR_NODUS
+                    && ultimus->datum.nodus->genus
+                       == (s32)CRUSTA_GENUS_VERBUM
+                    && _aedificator_est(p, ultimus->datum.nodus))
+                {
+                    g->status  = II;
+                    g->modus   = CRUSTA_MODUS_ASSIGNATIONES;
                 }
             }
             redde VERUM;
@@ -1697,13 +1837,13 @@ _verbum_parare (
         }
         alioquin si (g->locus == (i32)CRUSTA_ELECTIO_LIBERI)
         {
-            /* exemplar sine '(' : optio nova */
+            /* exemplar sine '(' : optio nova (incohata: IN_VERBIS) */
             si (!_optio_aperire(p, NIHIL))
             {
                 redde FALSUM;
             }
             g      = _vertex(p);
-            modus  = CRUSTA_MODUS_EXEMPLAR;
+            modus  = CRUSTA_MODUS_IN_VERBIS;
         }
         alioquin
         {
@@ -1713,7 +1853,7 @@ _verbum_parare (
     alioquin si (   g->genus == (s32)CRUSTA_GENUS_OPTIO
                  && g->locus == (i32)CRUSTA_OPTIO_EXEMPLARIA)
     {
-        modus = CRUSTA_MODUS_EXEMPLAR;
+        modus = CRUSTA_MODUS_IN_VERBIS;
     }
     alioquin si (g->genus == (s32)CRUSTA_GENUS_PARS_EXPANSIO)
     {
@@ -2577,8 +2717,12 @@ _optio_aperire (
     {
         redde FALSUM;
     }
+    /* optio incohata (P11b, bash 5.2 mensuratum): 'esac' post '(' aut
+     * '|' verbum est, linea nova ante ')' errat - IN_VERBIS (nulla
+     * reservata, linea nova separator). EXEMPLAR solum ante optionem
+     * (gradus electionis) */
     redde _pellere(p, optio, (i32)CRUSTA_OPTIO_EXEMPLARIA,
-        CRUSTA_MODUS_EXEMPLAR) != NIHIL;
+        CRUSTA_MODUS_IN_VERBIS) != NIHIL;
 }
 
 /* ';;' ';&' ';;&': optio proxima clauditur */
@@ -4321,7 +4465,8 @@ crusta_arbor_parsare_cum_lexematis (
     }
         p.relatio->sana = p.relatio->mala == ZEPHYRUM
                    && p.relatio->clausurae_absentes == ZEPHYRUM
-                   && p.relatio->heredoca_transposita == ZEPHYRUM;
+                   && p.relatio->heredoca_transposita == ZEPHYRUM
+                   && p.relatio->listae_vacuae == ZEPHYRUM;
     redde programma;
 }
 
@@ -4382,7 +4527,10 @@ _longitudo_statica (
                     constans MateriaToken* t =
                         pars->loci[CRUSTA_PARS_TOK].datum.token;
 
-                    summa += (s32)t->valor.mensura;
+                    /* effugia: '\u80' -> '\u0080' longius crudo */
+                    summa += (s32)t->valor.mensura
+                        * (pars->genus
+                            == (s32)CRUSTA_GENUS_PARS_EFFUGIA ? II : I);
                 }
                 frange;
             casus CRUSTA_GENUS_PARS_GEMINA:
@@ -4500,12 +4648,58 @@ _effugia_decoquere (
             casus '\\': exitus[scripti++] = '\\'; frange;
             casus '\'': exitus[scripti++] = '\''; frange;
             casus '"':  exitus[scripti++] = '"'; frange;
-            casus 'x':
-            {
-                i32 v = ZEPHYRUM;
-                i32 d = ZEPHYRUM;
+            casus '?':  exitus[scripti++] = '?'; frange;
+            casus 'c':
+                /* control: \cX = X & 31 ('?' = DEL; '\c\\' duos
+                 * octetos consumit); in fine verbatim (P11b, bash
+                 * 5.2 mensuratum) */
+                si (i >= finis)
+                {
+                    exitus[scripti++] = '\\';
+                    exitus[scripti++] = 'c';
+                    frange;
+                }
+                {
+                    character k = (character)t->valor.datum[i];
 
-                dum (d < (i32)II && i < finis)
+                    si (   k == '\\' && i + I < finis
+                        && t->valor.datum[i + I] == '\\')
+                    {
+                        i++;
+                    }
+                    i++;
+                    si (k == '?')
+                    {
+                        exitus[scripti++] = (character)127;
+                    }
+                    alioquin
+                    {
+                        si (k >= 'a' && k <= 'z')
+                        {
+                            k = (character)(k - ('a' - 'A'));
+                        }
+                        exitus[scripti++] = (character)(k & 31);
+                    }
+                }
+                frange;
+            casus 'x':
+            casus 'u':
+            casus 'U':
+            {
+                /* hex: \x II digiti, \u IV, \U VIII; nulli digiti ->
+                 * verbatim. Unicode sub LC_ALL=C (aurum oraculi):
+                 * < 0x80 octetus, aliter effugium normalizatum \uXXXX
+                 * aut \UXXXXXXXX (bash 5.2 in macOS mensuratum; tectum
+                 * longitudinis = crudum x II) */
+                longus insignatus v;
+                              i32 d;
+                              i32 maximum;
+
+                v = 0UL;
+                d = ZEPHYRUM;
+                maximum = c == 'x' ? (i32)II
+                    : c == 'u' ? (i32)IV : (i32)VIII;
+                dum (d < maximum && i < finis)
                 {
                     character h = (character)t->valor.datum[i];
                           i32 valor;
@@ -4526,11 +4720,31 @@ _effugia_decoquere (
                     {
                         frange;
                     }
-                    v = v * (i32)XVI + valor;
+                    v = v * 16UL + (longus insignatus)valor;
                     i++;
                     d++;
                 }
-                exitus[scripti++] = (character)v;
+                si (d == ZEPHYRUM)
+                {
+                    exitus[scripti++] = '\\';
+                    exitus[scripti++] = c;
+                }
+                alioquin si (c == 'x' || v < 128UL)
+                {
+                    exitus[scripti++] = (character)v;
+                }
+                alioquin si (v <= 65535UL)
+                {
+                    scripti += (i32)sprintf(exitus + scripti,
+                        "\\u%04lX",
+                        v);
+                }
+                alioquin
+                {
+                    scripti += (i32)sprintf(exitus + scripti,
+                        "\\U%08lX",
+                        v);
+                }
                 frange;
             }
             ordinarius:
@@ -4692,9 +4906,9 @@ crusta_effugia_decoquere (
         redde FALSUM;
     }
     t    = pars->loci[CRUSTA_PARS_TOK].datum.token;
-    /* decoctio numquam longior quam cruda */
+    /* decoctio numquam longior quam crudum x II ('\u80' -> '\u0080') */
     area = (character*)piscina_allocare(piscina,
-        (memoriae_index)t->valor.mensura + I);
+        (memoriae_index)t->valor.mensura * II + I);
     si (area == NIHIL)
     {
         redde FALSUM;

@@ -261,6 +261,11 @@ _substitutio (
     constans MateriaValor* liberi);
 
 interior vacuum
+_substitutionem_scribere (
+                   Coctor* c,
+    constans MateriaNodus* pars);
+
+interior vacuum
 _lexema (
                   Coctor* c,
     constans MateriaToken* t,
@@ -324,9 +329,7 @@ _crudum_nodus (
                 && _token(nodus, (i32)CRUSTA_SUBSTITUTIO_TOK_APERTURA)
                    ->genus != (s32)CRUSTA_LEX_GRAVIS)))
     {
-        _valor(c, _token(nodus, (i32)CRUSTA_SUBSTITUTIO_TOK_APERTURA));
-        _substitutio(c, &nodus->loci[CRUSTA_SUBSTITUTIO_LIBERI]);
-        _valor(c, _token(nodus, (i32)CRUSTA_SUBSTITUTIO_TOK_CLAUSURA));
+        _substitutionem_scribere(c, nodus);
         redde;
     }
     per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
@@ -400,6 +403,153 @@ interior vacuum
 _partes (
                    Coctor* c,
     constans MateriaValor* partes);
+
+/* lexema primum valoris (ordine locorum; heredoc omissa) */
+interior constans MateriaToken*
+_lexema_primum (
+    constans MateriaValor* valor)
+{
+    constans MateriaToken* t = NIHIL;
+                      i32  k;
+
+    commutatio (valor->genus)
+    {
+        casus MATERIA_VALOR_TOKEN:
+            redde valor->datum.token;
+        casus MATERIA_VALOR_NODUS:
+            si (   valor->datum.nodus == NIHIL
+                || valor->datum.nodus->genus
+                    == (s32)CRUSTA_GENUS_HEREDOC)
+            {
+                redde NIHIL;
+            }
+            per (k = ZEPHYRUM; k < valor->datum.nodus->numerus_locorum
+                && t == NIHIL; k++)
+            {
+                t = _lexema_primum(&valor->datum.nodus->loci[k]);
+            }
+            redde t;
+        casus MATERIA_VALOR_LISTA:
+            per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*valor)
+                && t == NIHIL; k++)
+            {
+                t = _lexema_primum(materia_valor_lista_obtinere(*valor,
+                    k));
+            }
+            redde t;
+        ordinarius:
+            redde NIHIL;
+    }
+}
+
+/* aedificator seorsum: textus ante scripturam inspiciendus */
+interior ChordaAedificator*
+_seorsum_incipere (
+    Coctor* c)
+{
+    ChordaAedificator* seorsum = chorda_aedificator_creare(c->piscina,
+        (memoriae_index)256);
+
+    si (seorsum == NIHIL)
+    {
+        c->deficit = VERUM;
+    }
+    redde seorsum;
+}
+
+/* '$( )' aut '<( )' '>( )': textus reimpressus; si a '(' incipit
+ * spatium post aperturam ('$( ( a ))'). Fons '$((' (arithmetica
+ * recusata, lector retro): bash textum VERBATIM servat ('$((a); b)'
+ * idem) - P11b mensuratum */
+interior vacuum
+_substitutionem_scribere (
+                   Coctor* c,
+    constans MateriaNodus* pars)
+{
+    constans MateriaToken* apertura    = _token(pars,
+        (i32)CRUSTA_SUBSTITUTIO_TOK_APERTURA);
+    constans MateriaToken* primum      = _lexema_primum(
+        &pars->loci[CRUSTA_SUBSTITUTIO_LIBERI]);
+         ChordaAedificator* principalis = c->aedificator;
+         ChordaAedificator* seorsum;
+                    chorda  textus;
+
+    si (   pars->genus == (s32)CRUSTA_GENUS_PARS_SUBSTITUTIO
+        && apertura != NIHIL && primum != NIHIL
+        && primum->byte_offset
+           == apertura->byte_offset + (s32)apertura->valor.mensura
+        && primum->valor.mensura > ZEPHYRUM
+        && primum->valor.datum[ZEPHYRUM] == '(')
+    {
+        _crudum_interius(c, pars, ZEPHYRUM);
+        redde;
+    }
+    seorsum = _seorsum_incipere(c);
+    si (seorsum == NIHIL)
+    {
+        redde;
+    }
+    c->aedificator = seorsum;
+    _substitutio(c, &pars->loci[CRUSTA_SUBSTITUTIO_LIBERI]);
+    c->aedificator  = principalis;
+    textus          = chorda_aedificator_spectare(seorsum);
+    _valor(c, apertura);
+    si (textus.mensura > ZEPHYRUM && textus.datum[ZEPHYRUM] == '(')
+    {
+        _litterae(c, " ");
+    }
+    _chorda(c, textus);
+    _valor(c, _token(pars, (i32)CRUSTA_SUBSTITUTIO_TOK_CLAUSURA));
+}
+
+/* backtick verbatim sed '\' + linea nova abiecta ubique (etiam intra
+ * apices simplices) ubi cursus backslash impar est - bash ea legendo
+ * tollit (P11b mensuratum; cursus par manet) */
+interior vacuum
+_gravem_scribere (
+                   Coctor* c,
+    constans MateriaNodus* pars)
+{
+     ChordaAedificator* principalis  = c->aedificator;
+     ChordaAedificator* seorsum      = _seorsum_incipere(c);
+                chorda  s;
+                   i32  k = ZEPHYRUM;
+
+    si (seorsum == NIHIL)
+    {
+        redde;
+    }
+    c->aedificator = seorsum;
+    _crudum_interius(c, pars, ZEPHYRUM);
+    c->aedificator  = principalis;
+    s               = chorda_aedificator_spectare(seorsum);
+    dum (k < s.mensura)
+    {
+        i32 cursus = ZEPHYRUM;
+
+        si (s.datum[k] != '\\')
+        {
+            _octeti(c, s.datum + k, I);
+            k++;
+            perge;
+        }
+        dum (k + cursus < s.mensura && s.datum[k + cursus] == '\\')
+        {
+            cursus++;
+        }
+        si (   k + cursus < s.mensura && s.datum[k + cursus] == '\n'
+            && (cursus % (i32)II) == (i32)I)
+        {
+            _octeti(c, s.datum + k, cursus - I);
+            k += cursus + I;
+        }
+        alioquin
+        {
+            _octeti(c, s.datum + k, cursus);
+            k += cursus;
+        }
+    }
+}
 
 /* '$'...'' decoctum, apicibus simplicibus reimpressum ('\'' pro ') */
 interior vacuum
@@ -482,20 +632,13 @@ _pars (
             si (   apertura        != NIHIL
                 && apertura->genus == (s32)CRUSTA_LEX_GRAVIS)
             {
-                _crudum_interius(c, pars, ZEPHYRUM);
+                _gravem_scribere(c, pars);
                 frange;
             }
-            _litterae(c, "$(");
-            _substitutio(c, &pars->loci[CRUSTA_SUBSTITUTIO_LIBERI]);
-            _valor(c, _token(pars,
-                (i32)CRUSTA_SUBSTITUTIO_TOK_CLAUSURA));
+            _substitutionem_scribere(c, pars);
             frange;
         casus CRUSTA_GENUS_PARS_PROCESSUS:
-            _valor(c, _token(pars,
-                (i32)CRUSTA_SUBSTITUTIO_TOK_APERTURA));
-            _substitutio(c, &pars->loci[CRUSTA_SUBSTITUTIO_LIBERI]);
-            _valor(c, _token(pars,
-                (i32)CRUSTA_SUBSTITUTIO_TOK_CLAUSURA));
+            _substitutionem_scribere(c, pars);
             frange;
         ordinarius:
             /* pars-arithmetica et ignota: verbatim */
@@ -1373,6 +1516,9 @@ _functio (
     _litterae(c, "\n");
     _spatia(c, c->indentatio);
     _litterae(c, "}");
+    /* definitio functionis vexillum heredoc tollit ('};' post corpus
+     * effusum; grex non tollit - P11b mensuratum) */
+    c->post_heredoc = FALSUM;
     si (   grex && _redirectiones_adsunt(&corpus->loci[
         CRUSTA_GREX_REDIRECTIONES]))
     {

@@ -18,8 +18,49 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P11a done; P11 split with Fran)
+## Praesens status (2026-09-16 — P11b done; P12 closure next)
 
+- **P11b, the oracles:** instrument `./crusta/oraculum.sh -scribere |
+  -probare | -domus [files]` (`crusta/instrumenta/oraculum.c`). It runs
+  bash as `env -i LC_ALL=C PATH=/nonexistent /opt/homebrew/bin/bash -r`
+  (fixed locale; a case that closes the wrapper early cannot run
+  commands or write files) through `processus_exsequi`, refuses a bash
+  without `5.2`, and writes two goldens in the case reader's format:
+  `probationes/fixa/crusta/oraculum/expectata.txt` (`declare -f f` over
+  `f() {` case `}`; a block needs exit 0, output starting `f () ` and no
+  `## END` line) and `sanitas.txt` (`bash -n -c case`: status + first
+  error line). Shared module `crusta_oraculum.{h,c}`: the case list
+  (pathologiae by title, FreeBSD whole files), the wrapper, golden
+  lookup by key. `-probare` reruns and diffs; `-domus` checks the house
+  scripts live and names disagreements and files without a golden.
+  Gates: **oraculum** (`probatio_crusta_oraculum.c`, reads the golden
+  only): pares pinned RISING, now **103/112** (birth 92), case and
+  golden counts pinned, no orphan golden; `ORACULUM_OMNIA=1` prints each
+  mismatch's first differing line, `ORACULUM_EXEMPLUM=<key>` one case in
+  full. **differentia** (`probatio_crusta_differentia.c`): `bash -n`
+  verdict vs `relatio.sana` on the raw case, concordes pinned RISING,
+  now **118/121** (birth 115), every disagreement printed with both
+  verdicts; house corpus mala (excluding the two fixtures, as the corpus
+  gate does) pinned FALLING at **0**. Live: house 234/234 `declare -f`
+  exact, sanity 236/236. **How to move the numbers:** `ORACULUM_OMNIA=1
+  ./crusta/compile_probationes.sh oraculum`, probe the rule with bash
+  (`env -i LC_ALL=C … bash -r -c 'f() {…}; declare -f f'`), fix the
+  printer (coctum gate case first, bash-generated) or the parser (arbor
+  gate case first), raise the pin. The loop fixed: `$( (` spacing and
+  verbatim `$((` fallbacks, backslash-newline in backticks, functions
+  clear the heredoc flag, `$'…'` `\c`/`\?`/`\u`/`\U` (C locale;
+  non-ASCII re-spelled, length bound doubled), assignment builtins after
+  prefix assignments/redirections (with bash's redirection quirks),
+  case clauses in IN_VERBIS once begun (`esac` a word after `(`/`|`,
+  newline an error), empty compound lists → new
+  `CrustaParsura.listae_vacuae`, sana FALSUM. Coctum gate 40 cases.
+  **Left (desideratum):** bash removes backslash-newline before
+  tokenising (`i\`+newline+`f` = `if`; 8 oracle + 2 sanity FreeBSD
+  cases — a lector redesign), and a heredoc inside a multi-line backtick
+  (heredoc5.0). Plants: oraculum pin +1 → red; differentia sana inverted
+  for zero-mala parses → concordes 6, red. Tool fix on the way:
+  `silva.planta` took bash's `syntax error:` in gate output for a build
+  break (`c4acd7b0`).
 - **P11a, the cooked view:** `crusta_coctum_scribere(piscina, radix)`
   prints bash 5.2.15's `declare -f` normal form (spec §7). It is a
   STREAM MACHINE copied from measurement, not a per-genus printer:
@@ -411,6 +452,11 @@ generated C comments: write notes in words, never XML entities.
 ./crusta/compile_probationes.sh registrum  # filtrum substringae
 ./crusta/arbor.sh <x.sh> [-tacitus]        # proiectio STML in stdout
 ./crusta/coctum.sh <x.sh>                  # forma normalis 'declare -f'
+./crusta/oraculum.sh -probare              # bash vivum contra aura
+./crusta/oraculum.sh -scribere             # aura renovare (causa nominata)
+./crusta/oraculum.sh -domus [plagulae]     # domus viva (sine: git ls-files)
+ORACULUM_OMNIA=1 ./crusta/compile_probationes.sh oraculum
+ORACULUM_EXEMPLUM=freebsd:case2.0 ./crusta/compile_probationes.sh oraculum
 ./crusta/computus.sh <x.sh> [-machina] [-iter N]
 COMPUTUS_SCRIBERE=1 ./crusta/compile_probationes.sh computus  # aurum
 ```
