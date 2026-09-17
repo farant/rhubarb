@@ -563,3 +563,102 @@ its INTENTIO never was). Every materia writer/reader commit runs
   asserted from the house flag set, not compiled.
 - IX. html's parse-error sites were counted by grep (63 lines of
   `html_arbor.c` mention errors), not audited.
+
+## 16. As built (2026-09-17)
+
+*Written at closure. Where this section and §§1–14 differ, this
+section governs — it records what shipped, not what was designed.*
+
+Twelve commits `325180d5` → `45e0eb3b` in one day, plus three side
+fixes (`6e679497`, `3728f590`, `e12c1f46`). 95 files, +7,390/−434.
+
+### The deltas, as executed
+
+| | measured while planning | as built |
+|---|---|---|
+| D1 | md/oratio carry derived tokens | held — derived tokens are zero-width points in all five clients, 0 divergences |
+| D2 | `sedes_valorum` never filled (dead half-port) | left alone, as planned; still dead |
+| D3 | strict matching has no TRANSPARENTIA by design | unchanged |
+| D4 | an empty table is not C89 | the diagnostics table is generated ONLY when something is declared; the four silent clients regenerate byte-identical |
+| D5 | `{ }` leaves the list unwritten; `_lista_plena` ignores separators/heredocs/mala | `vacua` redefined + new `inanis`; **the planted fault stayed GREEN** — no corpus holds a separator-only list, so 16 inline shapes were written before the rule had a case |
+| D6 | `ramus/probatio` has no declarable trace | emitted by the parser through `emissa`, as designed |
+| D7 | the arithmetic machine counts one trace at several sites | held exactly — the gate asserts PRESENCE per class, never counts |
+| D8 | AUDIENDA II: the operator locus is unwritten | held; declarable |
+| D9 | `bash -n` exits 0 for four shapes + heredoc-at-EOF | statuses confirmed by probe, but **the prediction attached to it was wrong**: those classes did NOT resolve the three known discordes. All three are desideratum 01M2PN1VYH. The four shapes were not in the oracle corpus at all, so the pin they were written for could not fail until they were added |
+| D10 | crusta's and css's object sets collide | held — the instrument builds its own objects in `build/diagnostica/` |
+| D11 | repeated node captures compare forests byte-wise | widened with Fran: `_nodum_comparandum` drops ALL authored form always (layout, `</>`, `(>`, multiline `indentatio`), not only TRANSPARENTIA parts, and re-parents children |
+
+### Numbers
+
+Positions verified over **5,501,210 elements**, zero divergences at
+first run: crusta 339,503 · css 9,679 · html 16,439 · md 2,491,843 ·
+oratio 2,643,746. View size **×2.47** the plain projection (237 house
+`.sh`: 57,459,770 vs 23,264,631 bytes) — answers AUDIENDA VII.
+
+Declarations: crusta 1 genus + 28 `absentia` + 7 `vacua` + 3 `inanis`
++ 5 `gravitas`; css 3 genera; md, html, oratio none. **No seal moved**
+(crusta `873ce8f4` before and after 39 declarations).
+
+New gate assertions: materia sedes 63, materia diagnostica 63, crusta
+diagnostica 800, css diagnostica 70, excerptum 21. Gate counts crusta
+14 → 15, css 9 → 10. `./tools/diagnostica.sh` over the house: 235
+`.sh`, **0.22 s**, zero diagnostics.
+
+### What the pins say
+
+- **crusta gravitas 122/125** — the three misses are ALL desideratum
+  01M2PN1VYH, so the number measures that desideratum's price and
+  reaches 125 the day it is fulfilled.
+- **crusta lineae 7/9** — a complete law, not a residue: every case
+  where bash names a TOKEN agrees; two of the three where bash says
+  `unexpected end of file` differ, because bash reports the EOF line
+  and we report the end of the unfinished construct. Kept deliberately.
+- **`declare -f` 103 → 106**, `bash -n` concordes 118 (unmoved) —
+  the corpus grew by four cases and the sanity pin did not rise,
+  which is the point: those four are exactly the warn-but-exit-0 class.
+
+### Two errors this spec made, found by building it
+
+1. **`selector-malus` is unreachable from the stylesheet tree.** It is
+   built only in `css_selector.c`'s ANALYSIS tree, which shares tokens
+   with the stylesheet tree but never nodes (B9, deliberate). §9 assumed
+   one walk over the parsed sheet would reach all three css classes; it
+   reaches two. The gate builds selector trees separately.
+2. **`{ }` produces no diagnostic.** An empty prelude is valid to
+   "consume a qualified rule"; the SELECTOR grammar objects, not the
+   stylesheet grammar. §12's third fixture asserted a diagnostic that
+   does not exist.
+
+### AUDIENDA, resolved
+
+I held (aliases carry `sedes`). II, III, IV, V all confirmed by B3's
+measurement. VI and VII measured above (rows byte-identical, 45.24 →
+45.07 s; ×2.47). VIII still asserted, not compiled.
+
+**IX was WRONG, and auditing it at closure said so.** §15 recorded "63
+lines of `html_arbor.c` mention errors, counted by grep, not audited".
+The real count is **2**, both inside comments quoting the spec
+(`parse error, ignore the token`) — html tracks no parse errors at all.
+Where 63 came from is unknown and does not reproduce.
+
+Auditing it also found the better fact: **the html5lib corpus already
+on disk carries 1,625 `#errors` sections over 1,708 cases, 5,548 error
+lines, and we read none of them.** The same `.dat` files the oracle
+gate already parses for `#document` (pinned 1,504/1,700). So html's
+diagnostics need no new corpus and no fetch — the oracle is sitting in
+a section of a file we already read. Filed as 01M2RJG728.
+
+The lesson is about this document, not about html: **a number counted
+by grep and labelled "not audited" still migrates into the spec and
+acquires authority.** AUDIENDA are to be heard.
+
+### The finding this spec could not have predicted
+
+**Three planted faults came back green, and each time the green was
+measuring the TEST rather than the code** — D5's separator rule (no
+corpus case), the gravitas pin (no bash golden for the shapes it
+watched), and `lib/excerptum`'s UTF-8 fixture (`é` is two bytes, and
+the fault it was written to catch is invisible below three). A fourth
+was caught before it shipped (css's unreachable third declaration).
+A pin that cannot fail is measuring its neighbour, not the world; the
+cheapest check is to break the thing it watches and confirm it notices.

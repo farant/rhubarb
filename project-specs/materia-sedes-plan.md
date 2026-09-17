@@ -1,8 +1,22 @@
 # materia sedes Plan — positions in the projection, diagnostics from declarations
 
-**STATUS: OPEN 2026-09-17** — written the day the spec was approved;
-nothing executed. INTENTIO filed in `materia/phase-log.md` with this
-plan's commit.
+**STATUS: CLOSED 2026-09-17** — written and executed the same day,
+twelve commits `325180d5` → `45e0eb3b` plus three side fixes. Each
+task's "Executed" note is the history; the deltas AS EXECUTED are
+`materia-sedes-spec.md` §16 (which governs where it differs from
+§§1–14), and the RELATIO with the instrument debrief is in
+`materia/phase-log.md`. INTENTIO was filed with this plan's commit,
+before A1.
+
+Two of this plan's own steps were WRONG and only running them said so:
+B4's `selector-malus` cannot be reached from the stylesheet tree (it
+lives in `css_selector.c`'s analysis tree), and B4's `{ }` fixture
+asserts a diagnostic that does not exist. Both are recorded in the
+task's Executed note and in spec §16.
+
+`silva.diagnostica` (named here and in the spec) was ALREADY TAKEN by
+the legati C89 verdict; the function shipped as
+`silva.diagnostica_materiae`.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans
 > (inline, per house convention — no subagents) to implement this plan
@@ -4821,22 +4835,22 @@ build — every client suite belongs in that commit's gates.**
 - Modify: `materia/phase-log.md` (RELATIO + debrief)
 - Modify: `materia/CLAUDE.md`, `crusta/CLAUDE.md` (final state)
 
-- [ ] **Step 1: Records.** RELATIO in `materia/phase-log.md` (commits,
+- [x] **Step 1: Records.** RELATIO in `materia/phase-log.md` (commits,
   per-client `sedes` element counts, size growth, A3 row deltas and
   timing, crusta class totals and the two new pins, the instrument's
   house run), with the house instrument debrief (ADHIBITA / FRUCTUS /
   ASPERITATES / DESIDERATA).
-- [ ] **Step 2: Ledger.** Desideratum `01M2PSWHM0` → `impletum` with a
+- [x] **Step 2: Ledger.** Desideratum `01M2PSWHM0` → `impletum` with a
   note naming the commits. New desiderata (only those still true):
   html parse-error emission (html5lib positions pinned rising); legatus
   LSP publishing diagnostics for `.sh`/`.css`; character and UTF-16
   columns at the edges; `-sedes` on `briar/arbor.sh`; diagnostics as
   elements of the view. Quaestio `01M2NT4CDD` gets a note with the
   gravity pin's value.
-- [ ] **Step 3: Memory.** `materia-fork.md` (Sedes + Diagnostica
+- [x] **Step 3: Memory.** `materia-fork.md` (Sedes + Diagnostica
   paragraph); `bash-parser-project.md` NEXT pointer → the crusta lint
   over `silva.exemplaria` with rows that now carry lines; `MEMORY.md`
   crusta and materia lines; the bench: "where is the problem in this
   `.sh`/`.css`?" → `./tools/diagnostica.sh`.
-- [ ] **Step 4: Commit** docs via `silva.commissio` with no portae (all
+- [x] **Step 4: Commit** docs via `silva.commissio` with no portae (all
   gates already green on the unchanged tree).

@@ -135,6 +135,27 @@ the refused token when known, else the `sedes` node; `initium` −1 =
 none. Printing (excerpt, caret) is NOT materia's: the substrate gives
 the place, `lib/excerptum` and `./tools/diagnostica.sh` give the form.
 
+**ARC CLOSED 2026-09-17** (twelve commits `325180d5` → `45e0eb3b`;
+spec §16 "As built" governs, RELATIO + instrument debrief in the
+phase-log). Positions verified over 5,501,210 elements across five
+clients, zero divergences at first run; the view costs ×2.47 the plain
+projection. Declarations today: crusta 1 genus + 28 `absentia` + 7
+`vacua` + 3 `inanis` + 5 `gravitas`, css 3 genera, md/html/oratio none
+— and **no seal moved**. Reach for it with
+`./tools/diagnostica.sh <file…> [-machina] [-sine-excerpto]` (exit 0
+clean / 1 error / 2 nothing judged; the whole house, 235 `.sh`, in
+0.22 s) or `silva.diagnostica_materiae(viae)` in Python — **NOT**
+`silva.diagnostica`, which is the legati C89 verdict and a different
+thing entirely.
+
+**If you add a diagnostic and its plant stays green, the gate is dead.**
+This arc hit that three times, each time because the corpus lacked the
+case rather than because the rule was wrong (a rule with no corpus
+shape, a pin with no bash golden, a UTF-8 fixture too narrow to
+discriminate), and a fourth time because a walk could not reach the
+tree the class lives in. Ask what the gate would print if the thing it
+watches never happened — and ask WHICH TREE the walk actually walks.
+
 ## The whitespace contract (2026-08-28)
 
 **A `VERBATIM` trivium whose value is whitespace-only projects to

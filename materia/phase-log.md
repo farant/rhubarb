@@ -2585,3 +2585,169 @@ SUBSTRATE: changes expected in `materia_nodus` (range), `materia_arbor`
 `stml_macros` (equality) and new `excerptum`. Every materia
 writer/reader commit runs `./materia/shim_probare.sh` and all client
 suites.
+
+RELATIO (2026-09-17, one day, twelve commits `325180d5` → `45e0eb3b`
+plus three side fixes). 95 files, +7,390/−434. Four new sources:
+`materia_sedes.c` 713, `materia_diagnostica.c` 591, `tools/diagnostica.c`
+291, `lib/excerptum.c` 122.
+
+PART A, as built. `sedes="L:C-L:C" octeti="B-B"` on every node, token
+and trivium element; locus wrappers never; the envelope says
+`visio="sedes"` (or `"partialis sedes"`) and the reader refuses it by
+name. Node ranges accumulate BOTTOM-UP in the writer's single walk —
+O(n), not O(n·depth) — a decision that paid twice: B2's walker was
+written recursively and per-node, and had to be rebuilt to this same
+shape after the fuzz gate killed it.
+
+`materia_sedes_verificare` is the load-bearing piece: one library gate
+called from all five clients' STML gates, checking against an oracle
+DISJOINT from the writer (line table rebuilt from source bytes by
+binary search, source slices compared to token values, document order
+independently walked), and also proving the view equals the plain
+projection minus its three attributes, and that the reader refuses it.
+Zero divergences at first run over **5,501,210 elements**: crusta
+339,503 · css 9,679 · html 16,439 · md 2,491,843 · oratio 2,643,746.
+Derived tokens are points everywhere (D1 held). The view costs **×2.47**
+the plain projection over 237 house `.sh` (57,459,770 vs 23,264,631
+bytes; source 826,532) — pretty breaks long attribute runs onto aligned
+lines. Not pinned; a view is never a file.
+
+A3 was the surprise. Repeated NODE captures compared bytes, so a
+position attribute made two captures of the same identifier unequal even
+under `attributa=`. The fix was never a regression: the trivia model
+(`b4ce0559`, 08-24) predates regula V (`f7439242`, 08-31). Scanning
+every tracked rule — 42 text captures, 10 attribute, 6 node — showed
+the six node captures were all A3's own fixtures, so **no production
+rule changed behaviour**. With Fran the copy became `_nodum_comparandum`:
+authored form dropped ALWAYS (layout `spatia_*`, `</>`, `(>`, multiline
+`indentatio`), TRANSPARENTIA parts when active, children re-parented —
+because the writer reads a text's multiline prefix from its parent. A
+live probe over real tool output found what literal fixtures hid (the
+first child owns the newline). Exemplaria 392 → 414 assertions; oracle
+rows byte-identical, 45.24 → 45.07 s.
+
+PART B, as built. Declarations bake into a SEPARATE table
+(`<P>_DIAGNOSTICA`), generated only when something is declared, so the
+four silent clients regenerate byte-identical and **no seal moves** —
+verified on a real client: crusta's `873ce8f4` before and after 39
+declarations. Current declarations: crusta 1 genus + 28 `absentia` +
+7 `vacua` + 3 `inanis` + 5 `gravitas`; css 3 genera; md, html and oratio
+none.
+
+One walker derives them, plus `materia:ordo-octetorum` free for every
+client, plus `emissa` for classes with no tree trace. New gates and
+their assertions: materia sedes 63, materia diagnostica 63, crusta
+diagnostica 800, css diagnostica 70, excerptum 21. Gate counts: crusta
+14 → 15, css 9 → 10.
+
+crusta keeps its four counters as an INDEPENDENT oracle (presence per
+class, `sana` exact): zero disagreements over house 235 / oracle 125 /
+adversarial 17 / 16 inline shapes / 2,934 fuzz cases. The two
+differentia pins read **gravitas 122/125** and **lineae 7/9**.
+
+`./tools/diagnostica.sh` runs the whole house — 235 `.sh` — in **0.22 s**
+with zero diagnostics.
+
+WHAT THE PINS SAY, which is not what the plan predicted. D9 expected
+its four monitum classes to resolve the three known `bash -n` discordes;
+they did not, and the reason is better than the guess: all three are
+desideratum 01M2PN1VYH (backslash-newline before lexing, twice; a
+heredoc in a multi-line substitution, once), so **the gravitas pin now
+measures that desideratum's price** and reaches 125 the day it is
+fulfilled. The line pin's two misses are a complete law rather than a
+residue: every case where bash names a TOKEN agrees; two of the three
+where bash says `unexpected end of file` differ, because bash reports
+the EOF line and we report the end of the unfinished construct. That
+divergence is kept deliberately — the construct's place serves a reader
+better than the end of the file.
+
+THE FINDING THAT REPEATED, and the reason it gets its own paragraph:
+**three separate planted faults came back GREEN, and each time the green
+was measuring the TEST, not the code.** (i) crusta's `separator`
+`inanis` rule: no corpus anywhere holds a list of only separators, so
+sixteen inline shapes had to be written before the rule had a case at
+all. (ii) The gravitas pin: it read 118, identical to `relatio.sana`'s
+own pin case for case, and removing EVERY `gravitas="monitum"` in the
+declaration could not move it — because no oracle case carried a
+monitum without also carrying an erratum; D9's four shapes existed only
+as inline shapes with no bash golden, and had to be added to
+`pathologiae.sh` before the pin could ever fail. (iii) `lib/excerptum`'s
+UTF-8 fixture used `é`: flipping the continuation mask leaves the
+character-start count unchanged in a TWO-byte sequence (1 either way)
+and only differs at THREE (1 vs 2), so the fixture covered UTF-8 and
+still could not see the fault. Widened to `€`. **A pin that cannot fail
+is measuring its neighbour, not the world** — and the cheapest way to
+find out is to break the thing it watches and check that it notices.
+
+A fourth, same family, caught before it shipped: css's `selector-malus`
+is built ONLY in `css_selector.c`'s analysis tree, which shares tokens
+with the stylesheet tree but never nodes, so a walk over
+`css_arbor_parsare`'s result can never reach it. As the plan was
+written, a third of css's declarations would have been untested and its
+plant green. Ask which TREE a walk actually walks.
+
+CLIENT BUILDS: B1 and B2 changed materia sources but ran only the crusta
+and materia gates, so oratio's, md's and html's build directories held
+objects older than those sources. `oratio/oraculum.sh` refused them —
+the guard added in `e12c1f46` the same day, doing exactly its job — and
+the PYTHONICA gate is where it surfaced, three commits later. A
+materia-substrate edit invalidates every client's build; every client
+suite belongs in that commit's gates. Rebuilt: oratio 19/19, md 14/14,
+html 14/14.
+
+SIDE FIXES the arc forced. Silva's lib count pin was already red at
+baseline on an unchanged tree (176 vs 180); the first fix was incomplete
+because it was gated on the `exemplaria` filter, and two more pin sites
+lived elsewhere — **a count pin lives in many files; a filtered gate
+proves one site, not the class** (`6e679497`, `3728f590`). And
+`e12c1f46`: client runners never watched `materia/fontes` headers and
+instruments relinked only on their own-prefix objects, so a stale object
+could hold an older struct on its stack while fresh code wrote past it
+(traced to a concrete UB path at `oratio_resolutio.c:2043`). Guards
+widened, a post-build `excubitor.sh` check added to five runners, 16
+instruments moved to `*.o`, both oracles now refuse stale objects.
+
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: `coquere.sh` (six regenerations across two clients, all
+byte-identical on revert); `scribe.sh` for every new C file;
+`silva.planta` for gate births (C only — see below); `silva.commissio`
+and `commissio_umbra` with explicit paths; formator `-scribere`/`-vitia`
+before every commit; `./oratio/quaere.sh` before staging;
+`./crusta/oraculum.sh -scribere` with bash 5.2.15 in the golden's own
+environment (`env -i LC_ALL=C PATH=/nonexistent bash -r`);
+`COMPUTUS_SCRIBERE=1` with a named cause; `excubitor.sh` (which caught
+the stale client builds); `silva.porta` for every gate; the tabularium
+for every note, desideratum and quaestio; and bash itself as the oracle
+for four shapes D9 had measured.
+FRUCTUS: the shared verifier (five clients, one gate, zero divergences
+over 5.5M elements at first run); the independent-counter design in
+crusta (two implementations over disjoint code, so each covers the
+other); declarations instead of code (css got located errors with THREE
+attributes and no C at all); the instrument over the whole house in
+0.22 s; and the fuzz gate, which is the only reason B2's walker was
+found to be both recursive and quadratic before it shipped.
+ASPERITATES: `silva.planta` cannot plant in a `.py` — its anchors are C
+token sequences — and reports `ancora 0 vicibus inventa` against
+perfectly present text; it also correctly REFUSED a plant that would not
+compile (`-Wunused-parameter`), running nothing rather than reporting an
+unearned red. **The Edit tool NORMALIZES line endings**: editing
+`pathologiae.sh` through it stripped all four CR bytes from the `crlf`
+case, and the regenerated golden duly recorded bash accepting the file
+(status 2 → 0) — a fixture quietly neutered, caught only because the
+golden diff showed a case I had not touched. C hex escapes are GREEDY
+(`"a\xE2\x82\xACb"` is one out-of-range escape). `registrum` as a
+parameter name parses as an error node (latina macro for `register`).
+`i32` is UNSIGNED, so a negative sentinel and a `>= 0` assertion are
+both silent bugs. The STML reader does not decode entities in attribute
+values. And `silva.diagnostica` was ALREADY TAKEN — Python shadows a
+duplicate `def` silently, so the new function was defined, shadowed and
+dead, and the only symptom was a hand call returning the wrong TYPE.
+DESIDERATA: a planting helper for non-C files (`.py`, `.sh`, goldens,
+declarations — every plant in this arc outside C was written by hand);
+a byte-preserving edit path for fixtures whose bytes are the point;
+examen naming a latina macro used as an identifier; the vocabula check
+over untracked files without `quaere.sh` by hand (01M2Q0MMVH, met
+again); a `utf8_latitudo` table, because codepoints are not columns
+(01M2RHXBWP — the excerpt's caret misses CJK by one column short and
+combining marks by one long, and tessera says "latitudo 1 praesumpta").

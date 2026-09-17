@@ -105,6 +105,14 @@ builder owns the mode stack, iteratively). Findings at find-time:
   identical plant now fires. **A pin you cannot make fail is measuring
   its neighbour, not the world.**
 
+  The sedes arc CLOSED the same day (materia spec §16, phase-log
+  RELATIO). crusta's part: 39 declarations, the four counters kept as
+  an independent oracle, and the two `bash -n` pins above. Diagnostics
+  are reachable from the command line —
+  `./tools/diagnostica.sh <file.sh>` prints the compiler format with a
+  `^~~~` excerpt, and the whole house (235 `.sh`) runs in 0.22 s with
+  zero diagnostics.
+
 - **Numbers:** fontes 19 files / 12,328 lines (`crusta_arbor.c`
   5,035, `crusta_coctum.c` 2,151, `crusta_lector.c` 1,655); gates 15 /
   10,200; instruments 5 / 1,223; declaration + canon 2,181. STML ≈ 28×
