@@ -1,14 +1,7 @@
 /* excerptum.c - Vide excerptum.h. */
 
 #include "excerptum.h"
-
-/* octetus continuationis UTF-8 (10xxxxxx): characterem non incipit */
-interior b32
-_continuatio (
-    character c)
-{
-    redde (b32)((((i32)(insignatus character)c) & 0xC0) == 0x80);
-}
+#include "utf8.h"
 
 /* margo: figurae (minimum IV latitudinis) aut spatia, deinde " | " */
 interior vacuum
@@ -101,7 +94,7 @@ excerptum_scribere (
         {
             chorda_aedificator_appendere_character(exitus, '\t');
         }
-        alioquin si (!_continuatio(fons[i]))
+        alioquin si (!utf8_est_continuatio((i8)fons[i]))
         {
             chorda_aedificator_appendere_character(exitus, ' ');
         }
@@ -112,14 +105,14 @@ excerptum_scribere (
     si (i < finis_lineae)
     {
         i++;
-        dum (i < finis_lineae && _continuatio(fons[i]))
+        dum (i < finis_lineae && utf8_est_continuatio((i8)fons[i]))
         {
             i++;
         }
     }
     per (; i < finis_lineae; i++)
     {
-        si (!_continuatio(fons[i]))
+        si (!utf8_est_continuatio((i8)fons[i]))
         {
             chorda_aedificator_appendere_character(exitus, '~');
         }
