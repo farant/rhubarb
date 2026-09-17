@@ -606,6 +606,15 @@ try:
     credo(False, 'aedificatio fracta levat')
 except silva.SilvaError as ex:
     credo('AEDIFICATIONEM' in str(ex) and open(via).read() == FONS, 'planta: aedificatio fracta nominata ET reversa')
+def porta_errata_aliena(v):
+    t = open(v).read()
+    return silva.Porta('aliena', True, 'PLANTATUM' not in t, 'aliena', 0 if 'PLANTATUM' not in t else 1,
+                       "discors x: bash: -c: line 3: syntax error: unexpected end of file")
+try:
+    silva.planta(via, ANC, PLA, porta_errata_aliena)
+    credo(open(via).read() == FONS, 'planta: erratum alienum in actis (non compilatoris) rubra vera, reversa')
+except silva.SilvaError as ex:
+    credo(False, 'planta: erratum alienum pro fractura aedificationis habitum (%s)' % ex)
 
 print('--- umbra: receptum sigillo ligatum ---')
 via_r = silva.porta_umbra('formator-intra')

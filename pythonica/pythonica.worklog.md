@@ -509,3 +509,21 @@ and is on the ledger. Two refusals got their missing half from the
 residual list: an ambiguous anchor after earlier edits now names the
 file's lines beside the in-memory ones, and the staging-file refusal
 says whose files they are and what to do.
+
+## 2026-09-16 — planta: 'error:' anywhere was a false build break
+
+`silva.planta` refused a genuine red as "planta AEDIFICATIONEM fregit"
+because its build-break check was `\berror:` anywhere in the gate's
+output. crusta's differentia gate (P11b) prints bash's own diagnostics
+for every disagreement (`bash: -c: line 3: syntax error: unexpected end
+of file`), so a sanity plant that turned the gate red was reported as a
+compile failure — twice, with two different (compiling) plants, until
+the plant was compiled by hand and came back clean. The check now
+anchors on diagnostic LINE shapes: `file:line:col: [fatal ]error:`,
+`clang|cc|gcc|ld: error:`, or the runners' `FRACTA (compilatio)`.
+Test `porta_errata_aliena`: a red gate whose acta carry a foreign
+`syntax error:` line is a true red and the file is reverted; the old
+pattern matched that line (shown in the session), the existing
+`porta_fracta` (`x.c:1:1: error:`) still names the build break. Lesson:
+a heuristic over another program's output must match that program's
+line format, not a word.

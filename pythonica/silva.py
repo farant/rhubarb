@@ -2476,7 +2476,15 @@ def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
         f.write(plantata)
     try:
         rubra = currere()
-        if re.search(r'\berror:', rubra.acta or ''):
+        # fractura aedificationis = linea diagnostica compilatoris aut
+        # nexoris, aut 'FRACTA (compilatio)' cursoris - NON 'error:'
+        # ubicumque: porta quae erratum alienum imprimit (crusta
+        # differentia: 'bash: ... syntax error: unexpected ...') rubra
+        # vera est (2026-09-16, P11b)
+        if re.search(r'^(?:\S+:\d+:\d+: (?:fatal )?error:'
+                     r'|(?:clang|cc|gcc|ld): error:)'
+                     r'|FRACTA \(compilatio\)',
+                     rubra.acta or '', re.M):
             raise SilvaError('planta AEDIFICATIONEM fregit (error:) - '
                              'nihil probat; planta compilans quaeritur')
         if not rubra.cucurrit:
