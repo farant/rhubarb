@@ -589,3 +589,21 @@ now parses as an assignment (tokens 396 → 400, nodes 540 → 539, STML
 61,897 → 62,525); the two house runners show +1 allocation and +8 pool
 bytes (the builtin check now runs after prefixes; the doubled decoder
 bound). Trees of house files unchanged.
+
+## 2026-09-16 — P12 (closure)
+
+Plan CLOSED. Nothing was built in P12; the records were reshaped. The
+orientation file had grown into a per-task diary (466 lines) and is now
+html's shape; the diary's content is not lost — each task's detail is in
+the plan's "Executed" notes and in the entries above. Spec §11 records
+where the build left the design (19 modes, 176 loci, 16 arithmetic
+levels, the cooked view as a stream machine, the oracle environment) and
+answers §10 with measurements. The phase-log carries an INTENTIO written
+at closure that says so: none was filed before P1. The shim audit ran
+396/396 at closure; there was no before-count because there was no
+INTENTIO — a lesson for the next client: file the INTENTIO with the plan
+commit, and run the shim then.
+
+This worklog stays the find-time record for `crusta_arbor.c` and its
+neighbours; new entries go below this one when crusta is touched again
+(the tail desideratum 01M2PN1VYH, a formatter, a lint).

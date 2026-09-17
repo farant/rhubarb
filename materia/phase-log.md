@@ -2429,3 +2429,108 @@ MIDDLE of the stack; anything that read "the frame below X" as "the
 parent of X" (the foster parent) had to switch to the node's own
 `pater`/`sedes`. Next: the foreign tail (SVG `title` lexed raw, `font`
 breakout by attributes), then O3 wild fixtures.
+
+## 2026-09-16 — phase 4: the shell client (crusta-arbor-spec §11, crusta-arbor-plan P1–P12)
+
+INTENTIO (NOT FILED IN TIME — written at closure, and it says so). The
+plan assumed an INTENTIO here before P1; none was written. What stands
+in for it is the spec commit `34b38c36` and the plan commit `87938365`
+(2026-09-16), whose §10 named the substrate questions before a line of
+`crusta/` existed: a `referentia` to a later sibling; the same newline
+bytes as two genera by mode in a language with a `LINEA` munus (what
+FIDELITAS makes of it); trivia bound backward as the common case;
+`lista-token` loci in daily use; token values with newlines through the
+STML raw form; an iterative builder under materia's recursive walkers.
+Fran's order of 2026-09-16: bash before JS (the mode questions JS needs,
+rehearsed on a smaller grammar). Deliverable = library + oracles (C1);
+dialect = bash 5.2.15's default-option grammar, whole (C2); corpus =
+the house scripts + FreeBSD `bin/sh/tests/parser` vendored (C3, fetch
+asked); decrees 01M2NJ16RG (heredoc body where its bytes are) and
+01M2NJ1JR7 (lector = f(mode, position), builder iterative) filed at
+approval against desideratum 01M2MC9M29.
+
+RELATIO (2026-09-16, one day, sixteen commits `34b38c36` → P12):
+P1 `ab660117` declaration (50 genera, 150 loci) → generated registry,
+lexicon, runner, registrum gate; P2 `6b90aa6d` the lector (18 modes,
+regions, heredoc queue, backtick depth in the token tail); P3
+`4c3bbfef` builder I (frames = mode stack, delayed sentence append,
+backward ligator, totality); P4 `bb52bfd8` arithmetic (the machine the
+builder drives, 41 operators in 16 measured levels, `$((` rewind,
+evaluator vs 43 bash values); P5 `0da4c53b` builder II (every compound,
+function forms, `coproc`, `[[ ]]`, heredoc placement, the
+POST_COMPOSITUM mode = 19); P6 `ab50f68b` case reader + corpus (231
+house scripts and 89 FreeBSD byte-identical; the corpus found the one
+bug behind ~150 insane scripts; loci 152); P7 `48b2a5ca` STML round
+trip (two cycles, FIDELITAS measured then asserted, heredoc references
+carried; SUBSTRATE CHANGE ONE, below); P8 `978f66fe` hand canon (species
+tables MEASURED over every tree; zero violations first run); P9
+`064107fb` reservation + totality (2,934 fuzz cases; four builder/lector
+defects found and fixed; depth pins); P9b `f1eb6c9d` (Fran: "fix it
+properly") heredoc bodies in every byte gap, 176 loci, seal `873ce8f4`,
+totality strict; P10 `f28d5fae` computus twin + instruments +
+pythonica; P11a `91bf20ba` the cooked view (`declare -f` measured as a
+stream machine; 36 bash-generated gate cases, 36/36 first compile);
+P11b `93d55ea6` the oracle instrument, goldens and gates (`declare -f`
+92 → 103/112, `bash -n` 115 → 118/121, pinned rising; parser fixes each
+through the arbor gate first); P12 this. Side commits: `c4acd7b0`
+(pythonica: `silva.planta` false build-break), `3c8ae321` (html's
+computus gate header, a copy slip noticed while transcribing).
+
+NUMBERS: fontes 19 files / 12,328 lines; 14 gates / 10,200 lines /
+12,567 assertions, every gate born red by a plant; instruments 5 /
+1,223; declaration + canon 2,181 (279 rules). House corpus 234 scripts,
+821,533 bytes: byte-identical, ZERO insane, mala pinned at zero; live
+oracle 234/234 `declare -f` exact, 236/236 `bash -n`. STML 486 documents
+round-trip (≈ 28× the source), FIDELITAS on every one; canon 504
+documents clean. Depth at -O2: parse 100,000 lives; emission dies 40–45k
+nodes; STML write quadratic, dies at 100,000; evaluator dies 130–160k.
+
+SUBSTRATE: ONE CHANGE (the spec expected none). `_textus_tutus` refuses
+a mixed element whose leading or trailing whitespace run holds a newline
+— two bytes were silently dropped by the trivia ownership law on a quote
+open to EOF (nota 01M2P8H0EA; materia/css/md/html/oratio green). One
+LAW surfaced, not a change: the STML reader DERIVES `initium_lineae`
+from LINEA trivia, so a client with a LINEA munus must set the flag by
+the same rule (315 of 322 files differed until crusta did; nota
+01M2P8H7VS). The raw-form limit (01M2KPJ0HW) and the depth crash
+(01M1FAD8) reached again and pinned by cause. The §10 answers are in the
+spec's §11.2.
+
+AUDIT: `./materia/shim_probare.sh` 396/396, 0 fractae (14.5 s), at
+closure. crusta 14/14.
+
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: `coquere.sh` (three regenerations, 150 → 152 → 176 loci);
+`scribe.sh` for every new C file; `silva.planta` for every gate birth;
+`silva.commissio` with explicit paths and the crusta gate; formator
+`-scribere`/`-vitia` before every commit; `./oratio/quaere.sh` before
+staging; `./silva/nexus.sh` for new symbols; `crusta/arbor.sh` (after
+P10 it replaced every scratch probe); `crusta/coctum.sh` and
+`crusta/oraculum.sh -domus`; bash itself as a probe (`cat -e` over
+`declare -f`, `bash -n` for every sanity verdict); a scratch
+delta-debugger (`minuere.py`: shrink a fuzz failure while its class
+holds) and `sample <pid>` (named the quadratic static walk in one shot);
+the tabularium for every note, quaestio and desideratum.
+FRUCTUS: the corpus gate (one bug behind 150 files); the fuzz gate
+(five defects in P9/P9b, each hiding behind the previous exemption);
+measured canon tables (clean first run); oracle-generated expectations
+(no expected text in the P11 gates was typed by hand; 36/36 at first
+compile); `-domus` (the whole house through two oracles in five
+seconds).
+ASPERITATES: `silva.planta` read `error:` anywhere in gate output as a
+build break — bash's own diagnostics made a true red look broken
+(fixed, `c4acd7b0`); zsh quoting and `printf` decoded escapes before
+bash saw them (probes lied twice); latina macro names as locals
+(`casus`, `interior`) give examen a syntax-node verdict that names
+nothing; two-letter locals and dictionary gaps (`asyncus`, `penultimum`,
+`numeralis`, `separatores`, `indentare`, `nul`) refused only at staging
+time; the formator never reflows comments (hand rewraps every task);
+`silva.Editio` refuses comment anchors and line-shape changes, and must
+never touch a `.sh`; the vocabula lint could not link until oratio's
+runner compiled `entitates_html` (P7); a stray `git stash` in an
+exploratory line stashed the uncommitted builder (popped, verified).
+DESIDERATA: examen naming a latina macro used as an identifier; a
+comment-reflow (or report-only) mode in the formator; a planting helper
+for non-C files (goldens, TSV); the vocabula check over untracked files
+without `quaere.sh` by hand.

@@ -1,5 +1,11 @@
 # crusta_arbor Plan — the shell parser on materia (sixth client)
 
+**STATUS: CLOSED 2026-09-16** — P1–P12 executed in one day (P9b and
+P11a/P11b added with Fran). As built: spec §11; orientation:
+`crusta/CLAUDE.md`; RELATIO: `materia/phase-log.md` (2026-09-16,
+phase 4: the shell client). Oracle `declare -f` 103/112, `bash -n`
+118/121, house corpus 234/234 live; tail = desideratum 01M2PN1VYH.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans
 > (inline, per house convention — no subagents) to implement this plan
 > task-by-task, ONE TASK PER TURN with Fran's approval. Steps use checkbox
@@ -1648,31 +1654,43 @@ silva.commissio("crusta: visio cocta (forma normalis 'declare -f' bash 5.2), ins
 - Modify: `crusta/CLAUDE.md` (full orientation: built, gates, numbers, laws, the two decrees, what remains), `project-specs/crusta-arbor-spec.md` (§11 "As built", the numbers), `project-specs/crusta-arbor-plan.md` (STATUS: CLOSED), `crusta/fontes/crusta_arbor.worklog.md` (created at the first find-time during P3–P11; closed here), `materia/phase-log.md` (INTENTIO written before P1; RELATIO + instrument debrief here)
 - Run: `./materia/shim_probare.sh` (the phase-boundary audit; count in the phase-log)
 
-- [ ] **Step 1: `crusta/CLAUDE.md`** in html's shape: Praesens status
+- [x] **Step 1: `crusta/CLAUDE.md`** in html's shape: Praesens status
   (built, the 14 gates and what each asserts, the oracle numbers and pins),
   Laws (C5–C8, C12 in one line each, with the decree ids), "The registry is
   generated", Birth lessons (whatever P1–P11 taught), Currere.
 
-- [ ] **Step 2: Spec §11 "As built"** — the deltas from §§2–8 (anything the
+- [x] **Step 2: Spec §11 "As built"** — the deltas from §§2–8 (anything the
   build changed), the measured answers to §10, the oracle tail classes.
 
-- [ ] **Step 3: Phase-log RELATIO** — numbers (files, lines, gates, pins,
+- [x] **Step 3: Phase-log RELATIO** — numbers (files, lines, gates, pins,
   house-corpus mala, oracle agreement, FIDELITAS answer, depth pins), the
   instrument debrief (what the tools did and refused), the substrate
   changes (expected: none) and the shim audit count.
 
-- [ ] **Step 4: Ledger** — desideratum 01M2MC9M29 → status `impletum` with
+- [x] **Step 4: Ledger** — desideratum 01M2MC9M29 → status `impletum` with
   a closing note (numbers, commits); notes on the two decrees (as built);
   new items for anything parked (the oracle tail classes as ONE desideratum
   with the class list; any substrate finding as a quaestio).
 
-- [ ] **Step 5: Memory** — `bash-parser-project.md` rewritten as the crusta
+- [x] **Step 5: Memory** — `bash-parser-project.md` rewritten as the crusta
   topic file (name, numbers, pins, the reflexes: newline by mode, trivia
   backward, heredoc after the newline's holder, `-domus` for the house
   corpus, the oracle binary), `MEMORY.md` line updated; `materia-fork.md`
   gains the sixth client's line.
 
-- [ ] **Step 6: Commit**
+*Executed 2026-09-16 (P12):* `crusta/CLAUDE.md` rewritten from the
+per-task diary into html's shape (status with the 14-gate table, numbers,
+findings, what remains; laws with decree ids; registry; birth lessons;
+Currere) — the diary's content lives in the plan's Executed notes and
+the worklog. Spec §11 as built (deltas, §10 answered, the tail). Phase-log
+entry with an INTENTIO that says it was never filed before P1 (the spec
+and plan commits stand in), RELATIO, one substrate change named, shim
+audit 396/396. Ledger: desideratum 01M2MC9M29 impletum; notes on both
+decrees as built; quaestio 01M2NT4CDD closed (its three divergences occur
+in no fixture or house script; the differentia gate names any that
+appear); the tail desideratum 01M2PN1VYH already filed in P11b.
+
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("crusta: clausura plani - CLAUDE.md, spec XI ut aedificatum, phase-log RELATIO + debrief, worklog, planum CLAUSUM; audit shim materiae\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",

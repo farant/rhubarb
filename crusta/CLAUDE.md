@@ -8,426 +8,125 @@ syntax, total, byte-exact through the emitter, projected to STML,
 judged by a canon, proven against bash's own deparse (`declare -f`)
 and `bash -n`. "crusta" = shell (Latin; the legati doctrine's
 "instrumentum crustae"). Design: `project-specs/crusta-arbor-spec.md`
-(decisions C1–C15; §3 lexer, §4 declaration, §5 builder, §6
-arithmetic, §7 cooked view and oracles, §8 gates; Fran's research
-notes as Appendix A). Plan: `project-specs/crusta-arbor-plan.md`
-(P1–P12, one commit each, every gate born red). Decrees: 01M2NJ16RG
-(the heredoc body sits where its bytes are; the redirection names it
-by `corpus:referentia`) and 01M2NJ1JR7 (the lector is a function of
-mode and position; the builder owns the mode stack, iteratively).
-Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
-P3 on).
+(decisions C1–C15; **§11 = as built, governs where the body differs**).
+Plan: `project-specs/crusta-arbor-plan.md` (P1–P12 with P9b and
+P11a/P11b added, CLOSED 2026-09-16; every task's "Executed" note is the
+build history). Decrees: **01M2NJ16RG** (the heredoc body sits where
+its bytes are; the redirection names it by `corpus:referentia`) and
+**01M2NJ1JR7** (the lector is a function of mode and position; the
+builder owns the mode stack, iteratively). Findings at find-time:
+`crusta/fontes/crusta_arbor.worklog.md`. Phase-log:
+`materia/phase-log.md`, 2026-09-16 crusta entry.
 
-## Praesens status (2026-09-16 — P11b done; P12 closure next)
+## Praesens status (2026-09-16 — PLAN CLOSED)
 
-- **P11b, the oracles:** instrument `./crusta/oraculum.sh -scribere |
-  -probare | -domus [files]` (`crusta/instrumenta/oraculum.c`). It runs
-  bash as `env -i LC_ALL=C PATH=/nonexistent /opt/homebrew/bin/bash -r`
-  (fixed locale; a case that closes the wrapper early cannot run
-  commands or write files) through `processus_exsequi`, refuses a bash
-  without `5.2`, and writes two goldens in the case reader's format:
-  `probationes/fixa/crusta/oraculum/expectata.txt` (`declare -f f` over
-  `f() {` case `}`; a block needs exit 0, output starting `f () ` and no
-  `## END` line) and `sanitas.txt` (`bash -n -c case`: status + first
-  error line). Shared module `crusta_oraculum.{h,c}`: the case list
-  (pathologiae by title, FreeBSD whole files), the wrapper, golden
-  lookup by key. `-probare` reruns and diffs; `-domus` checks the house
-  scripts live and names disagreements and files without a golden.
-  Gates: **oraculum** (`probatio_crusta_oraculum.c`, reads the golden
-  only): pares pinned RISING, now **103/112** (birth 92), case and
-  golden counts pinned, no orphan golden; `ORACULUM_OMNIA=1` prints each
-  mismatch's first differing line, `ORACULUM_EXEMPLUM=<key>` one case in
-  full. **differentia** (`probatio_crusta_differentia.c`): `bash -n`
-  verdict vs `relatio.sana` on the raw case, concordes pinned RISING,
-  now **118/121** (birth 115), every disagreement printed with both
-  verdicts; house corpus mala (excluding the two fixtures, as the corpus
-  gate does) pinned FALLING at **0**. Live: house 234/234 `declare -f`
-  exact, sanity 236/236. **How to move the numbers:** `ORACULUM_OMNIA=1
-  ./crusta/compile_probationes.sh oraculum`, probe the rule with bash
-  (`env -i LC_ALL=C … bash -r -c 'f() {…}; declare -f f'`), fix the
-  printer (coctum gate case first, bash-generated) or the parser (arbor
-  gate case first), raise the pin. The loop fixed: `$( (` spacing and
-  verbatim `$((` fallbacks, backslash-newline in backticks, functions
-  clear the heredoc flag, `$'…'` `\c`/`\?`/`\u`/`\U` (C locale;
-  non-ASCII re-spelled, length bound doubled), assignment builtins after
-  prefix assignments/redirections (with bash's redirection quirks),
-  case clauses in IN_VERBIS once begun (`esac` a word after `(`/`|`,
-  newline an error), empty compound lists → new
-  `CrustaParsura.listae_vacuae`, sana FALSUM. Coctum gate 40 cases.
-  **Left (desideratum):** bash removes backslash-newline before
-  tokenising (`i\`+newline+`f` = `if`; 8 oracle + 2 sanity FreeBSD
-  cases — a lector redesign), and a heredoc inside a multi-line backtick
-  (heredoc5.0). Plants: oraculum pin +1 → red; differentia sana inverted
-  for zero-mala parses → concordes 6, red. Tool fix on the way:
-  `silva.planta` took bash's `syntax error:` in gate output for a build
-  break (`c4acd7b0`).
-- **P11a, the cooked view:** `crusta_coctum_scribere(piscina, radix)`
-  prints bash 5.2.15's `declare -f` normal form (spec §7). It is a
-  STREAM MACHINE copied from measurement, not a per-genus printer:
-  indentation, a skip-indent counter, connection depth, two modes
-  (function body: `;` + newline, multi-line groups; reparsed `$( )`
-  `<( )` `>( )`: `; `, bare newline, `{ a; b; }`, indentation from 0 —
-  bash 5.2 reprints substitutions at parse time, backticks stay
-  verbatim), deferred heredoc redirections flushed at the next
-  connector, and a flag that swallows the next `;` after a flush. The
-  printer rebuilds bash's connection nesting as it walks: lists and
-  `&&`/`||` nest LEFT, pipes RIGHT (`|&` = `2>&1` on the left command);
-  a trailing `&` after `;` binds to the last command. The measured rule
-  list is in the plan (P11a "measured mechanics") and the worklog. The
-  whole program prints in function mode at level zero; a function at
-  the program root prints `name () ` (declare -f), elsewhere `function
-  name () `. Gate `coctum` (`probatio_crusta_coctum.c`): 36 cases whose
-  expected texts were GENERATED by running bash (never typed), each
-  wrapped `f() {`/`}` and also held to the byte law, plus the contract
-  (NIHIL root, empty and comment-only programs, a bare program, a root
-  function, a sentence node). Plant: redirections printed inline in
-  byte order → 13 cases red (`redirectio-ordo` and every heredoc case).
-  New accessor `crusta_effugia_decoquere` (the `$'…'` decoder was
-  private). Instrument `./crusta/coctum.sh <x.sh>`. Scratch cross-check
-  over the fixtures wrapped as the oracle will: 91 of 112 equal before
-  any tuning; the 21 (printer: `$( (` spacing, continuations in `${ }`,
-  backticks, `$((`; decoder: `\c`, `\u`; parser: `declare -a c=([0]=z)`,
-  `esac` as a pattern, `i\`+newline+`f`) open P11b. **P11b next:** the
-  oracle instrument (`-scribere`/`-probare`/`-domus`), goldens
-  `expectata.txt` + `sanitas.txt`, gates oraculum (pinned rising) and
-  differentia (house-corpus mala pinned falling), the failure-class
-  loop.
-- **P10, measurement and instruments:** `crusta_computus.{h,c}` (html's
-  twin: one call parses in its own pool, emits, writes and re-reads the
-  STML with the same token-tail `forma`, compares — nodes, tokens, STML
-  bytes, pool usage/commit/peak, allocations, per-phase ms; TRUE only if
-  bytes and tree both round-trip). Instruments: `./crusta/computus.sh
-  <x.sh> [-machina] [-iter N]` and `./crusta/arbor.sh <x.sh> [-tacitus]`
-  (the STML tree — replaces the scratch probes of P7–P9); both build
-  themselves from `crusta/build/*.o`. Gate `computus`: golden
-  `crusta/probationes/fixa/computus/basis.tsv` over the two fixtures and
-  three house scripts (`silva/compile_probationes.sh`, `tools/vexilla.sh`,
-  `html/compile_probationes.sh`), deterministic columns pinned, times
-  printed only; `COMPUTUS_SCRIBERE=1` regenerates (name the cause in the
-  commit). Born numbers: pathologiae 1,735 B → 540 nodes, 61,897 B STML;
-  adversarius 1,303 B → 799,850 B STML (the 200-deep `$(` case — STML
-  size is quadratic in depth); silva's runner 11,276 B → 2,008 nodes in
-  0.36 ms. Pythonica: mensor prefix `crusta.` and `silva.metiri('x.sh')`
-  → `crusta/computus.sh` (the suite gate `PORTAE['crusta']` already
-  existed). Plant: one node count in the golden edited → red.
-- **P9b, heredoc bodies in every gap (Fran chose "fix it properly",
-  2026-09-16):** the byte law now holds for every input — no heredoc
-  body is ever transposed. Inventory first (a probe over ~45 gap
-  positions plus `bash -n`): bash 5.2 READS a body whose newline falls
-  inside `[[ ]]`, `(( ))`, `$(( ))`, a `for ((` clause, or before a
-  function body (`function f`, `f()`, `function f ()` + newline); it
-  rejects a newline right after `for`, `select`, `function`, `case`, or
-  inside `f(`. Also found: `for ((i=0` + newline put the body before
-  the pending expression WITHOUT counting a transposition. Declaration
-  150→152→**176 loci** (seal `0ad54dc6` → `873ce8f4`): `post_*` lists
-  right after every token a newline can follow — `post_aperturam` /
-  `post_expressionem` on `arithmetica`, `iudicium`, `pars-arithmetica`,
-  `inclusa`, `iudicium-inclusa`; `post_sinistrum` / `post_signum` on
-  `binaria`, `iudicium-binaria`, `iudicium-coniuncta`; `post_signum` on
-  both prefix genera; `post_operandum` on `postposita`;
-  `post_probationem`, `post_quaestionem`, `post_sinistrum`,
-  `post_colon` on `ternaria`; `functio.interiecta` before the body.
-  Both operator machines carry bodies: every operand and sign on their
-  stacks has a body list, a body is recorded against the LAST thing
-  pushed (operand, sign, ternary colon, or the start), a reduction
-  places bodies into the new node's `post_*` slots, and bodies after a
-  node's last child travel up with it; `finire` returns the start and
-  trailing bodies, which the frame puts into `post_aperturam` /
-  `post_expressionem` (a `for ((` clause appends them to `liberi` in
-  order). `_corpus_collocare` replaces `_lista_recipiens`: a machine or
-  `[[ ]]` frame interposes, a function after its name or `)` takes the
-  body into `interiecta` (and then expects its body, so a later `(` is
-  a subshell body, as bash rejects `function f` + newline + `()`), and
-  the gaps bash rejects close the open frame absent so the body lands
-  in the list below in byte order (sana FALSUM, like bash). Also fixed,
-  found by the fuzz under the old limit: a prefix test operator after a
-  complete operand (`[[ !()-a`) now inserts the implied juxtaposition
-  sign first. Gates: arbor +29 gap cases (byte identity, zero
-  transpositions, sana as bash) and 18 slot assertions (1,100+
-  assertions); canon and stml +10 cases each; totalitas STRICT again
-  (a reported transposition is itself a failure). Plant: arithmetic
-  interposition disabled → arbor red. Not byte law, left for P11: a
-  newline inside `${ … }` arguments is a literal part, so there the body
-  opens at the next real newline, while bash reads it right after
-  `$(cat <<A)` inside the expansion (tree shape, not bytes).
-- **P9, reservation and totality:** two gates. `reservatio`
-  (`probatio_crusta_reservatio.c`, 55 assertions) pins each named
-  deviation by its MEASURED effect, with bash 5.2's own `-n` verdict
-  beside it: extglob `echo @(a|b)` = verbum `@`, malum `(`, pipa `a|b`,
-  malum `)` — 2 mala (the plan expected a `crustula`; bash also errors
-  at `(`); `alias x='if…'; x echo hi; fi` = command `x`, `fi` a malum;
-  `eval 'if'` one opaque simple part; `set -o posix` / `shopt -s` plain
-  commands, reserved words unchanged after them; `$"x"` a pars-versa
-  with static value `x`, `$'\x41'` static `A`. Reader side as in html:
-  `<derivatum/>` under `<verbum>` refused (`locus generi ignotus`), an
-  unknown attribute or a stray `id` on `<verbum>` ACCEPTED by the reader
-  (pinned) and refused by the canon (`attributum extra canonem`).
-  `totalitas` (`probatio_crusta_totalitas.c`, html's model): 32 random
-  byte runs, the fixtures + 89 FreeBSD + 12 house scripts each mutated
-  ×4 and truncated ×23, 11 nesting forms × open/closed × 1..1000, CRLF
-  (adversarius whole + 32 converted pathology cases), NUL in a word, a
-  heredoc body and a comment (parse + emit exact, STML refusal by name)
-  — 2,934 cases under `CREDO_NON_RUIT`, emission byte-identical. Depth
-  pins, measured at `-O2`: parse alone 100,000 deep in six forms
-  NON_RUIT; emission 40,000 nodes NON_RUIT, `$(` ×100,000 RUIT_CUM
-  SIGSEGV (materia's recursive emitter, 01M1FAD8); STML write 500 deep
-  NON_RUIT, 100,000 RUIT_CUM SIGSEGV (10,000 is not a crash but minutes:
-  2,000 deep = 56 MB in 5 s, 4,000 = 225 MB in 43 s — not pinned); the
-  constant evaluator `1+(` ×100,000 NON_RUIT, ×200,000 RUIT_CUM SIGSEGV
-  (dies between 130k and 160k). **What it found, four builder/lector
-  defects, each fixed with a case in the arbor or arithmetic gate
-  first:** (1) `crusta_verbum_staticum` measured a word by walking its
-  WHOLE subtree recursively, into every `$( )`; the builder asks for
-  the static value of every command's first word, so `$(` ×100,000 took
-  80 s (quadratic) and then overflowed the stack — now
-  `_longitudo_statica` measures only the parts the decoder accepts and
-  stops at the first non-static part; (2) arithmetic juxtaposition
-  `(( a b ))` silently dropped `a` (the machine kept the top operand at
-  finish) — now an implied tokenless binary sign at the lowest
-  precedence, mala++; (3) `[[ ! a b` emitted `[[ a ! b` (juxtaposed
-  operands were joined at the end, after `!` had bound the last one) —
-  now an implied sign at level IV on arrival; (4) the lector made ANY
-  letter inside `${` a name, so `${@E}`, `${E[]t}`, `${x[1][2]}` wrote a
-  slot twice and the parse returned NIHIL — a name is now positional
-  (right after `${` or a `#`/`!` prefix) and `[` after `]` is not a
-  subscript; `${#@}` now lexes `@` as the name. The P6 limit it exposed
-  (heredoc bodies in list-less gaps) was REMOVED in P9b, below. Plants:
-  reservatio — the extglob pin 2 → 3; totalitas — the whole-subtree
-  recursive walk put back into `_longitudo_statica`.
-- **P8, the canon:** `crusta/grammatica/crusta.canon`, HAND-WRITTEN
-  on html's model (255 rules: the `<arbor>` envelope with
-  `grammatica="crusta"` and the registry seal `0ad54dc6` pinned, 50
-  genus rules, 152 locus rules at SPECIES level (176 after P9b), 50 lexeme rules
-  `crusta-*`, `ante`/`post`). The species tables were MEASURED, not
-  read from the builder: a scratch probe walked every tree of P7's 473
-  documents plus ~200 corner cases and tallied the child genera of
-  every slot (unions: `#sententia` 17 for every sentence list;
-  `#membrum` 16 for catena/pipa — never a catena, never a separator,
-  pipa in pipa; `#partes-omnes` 13 / `#partes-citatae` 7; `#expressio`
-  12 for arithmetic slots, parts included; `#iudicium` 5). `id`
-  declared on `heredoc` only (the `corpus` reference target); `cr` and
-  `textus="verum"` on the 29 VERBATIM lexemes only; the envelope's
-  `linea-initium` as an electio of `true` (silva's form). Gate `canon`
-  (`probatio_crusta_canon.c`): the drift guard both ways (every genus,
-  locus and lexeme has exactly one rule; every rule names a live one;
-  counts pinned 50/152/50, 50/176/50 after P9b) and the seal pin against the live
-  `materia_arbor_sigillum`; the judgment over 122 inline cases (P7's
-  102 + 20 corner cases), 47 fixture cases (the two P7 refusals counted
-  by cause) and all 322 corpus files: ZERO violations, 491 documents.
-  Green on its first run; plants: the `verbum` rule deleted → guard and
-  every judgment red; a false seal → guard and every judgment red.
-  The plan's `./tools/natura_struere.sh` step was not needed (client
-  canons are not enumerated there).
-- **P7, the STML projection:** gate `stml` (`probatio_crusta_stml.c`):
-  every inline case of the arbor and arithmetic gates (102), every
-  fixture case through the case reader (49) and the whole P6 corpus
-  (231 house + 2 fixtures + 89 FreeBSD = 322 files) through write →
-  read → write: the two STML texts byte-identical, the re-read tree
-  equal to the parsed one under the comparator, the re-read tree's
-  direct emission equal to the source — 473 documents, 838 KB of
-  source → 23.7 MB of STML (≈ 28×). FIDELITAS (spec §10) MEASURED:
-  it holds on every document, so it is ASSERTED (the reader's cursor
-  counts the newlines inside substantive values, so the newline
-  separator and heredoc bodies keep line and column). Heredoc
-  references carried: `<corpus(> #nodN` and `id="nodN"` in the text;
-  the re-read redirection's `corpus` is a REFERENTIA to the re-read
-  `heredoc` (14 cases, count = petitions). What it found: (1) the
-  `initium_lineae` flag — the STML reader DERIVES it (a lexeme begins
-  a line iff a LINEA-munus trivium intervened since the previous
-  lexeme; LAMINA and the substantive newline separator do not count);
-  crusta never set it, so 315 of 322 corpus files differed on the
-  envelope's `linea-initium` and eight inline cases structurally. The
-  builder now sets it by the same rule in `_lexema_recordare` (the
-  `$((` rewind restores it from the opener). (2) A SUBSTRATE find: a
-  token value whose leading or trailing whitespace run contains a
-  newline, in a MIXED element (one carrying trivia), was written in
-  the escaped form and the reader dropped the run by STML's trivia
-  ownership law — two bytes silently lost on `a 'b ` + newline (the
-  adversarial `simplex-apertus`, a quote open to EOF). materia's
-  `_textus_tutus` now REFUSES it (`valor lexematis textui non tutus
-  (mixtum)`); materia, css, md, html and oratio suites unchanged.
-  (3) The raw-form limit (01M2KPJ0HW) as in html: a comment trivium or
-  a heredoc body line carrying its own `</crusta-…>` closing tag is
-  refused by name — pinned inline and by the fixture case
-  `forma-cruda` (corrected: the tag prefix is `crusta-`, not `lex-`;
-  a bare `</…>` lexes as redirections and a single-quoted one passes
-  in the escaped form, so the case now carries a comment). The whole
-  `adversarius.sh` transits: its open constructs change the lexing
-  context downstream (measured, pinned as measured). Named limit: the
-  token tail (`CrustaCauda.gravis`, backtick depth) is not projected
-  (no frons); the consilium hands the reader the same forma so re-read
-  tokens carry a zeroed tail. Oracle-separation pin: the re-read
-  program's `cauda` removed → comparator red while the texts stay
-  equal. Plant: that mutation made unconditional.
-- **P6, cases and corpus:** `crusta_exempla.{h,c}` reads the Oils
-  `#### titulus` / `## SECTIO:` … `## END` case format (copies into the
-  piscina; CRLF kept in data) and carries the manifest
-  `CRUSTA_FREEBSD_PLAGULAE` (89 scripts of FreeBSD `bin/sh/tests/
-  parser`, BSD-2, `probationes/fixa/crusta/FONTES.md`, fetch approved by
-  Fran). Fixtures `probationes/fixa/crusta/pathologiae.sh` (32 blocks:
-  spec A.9 plus P6's additions) and `adversarius.sh` (17, CRLF
-  throughout, everything left open, a 200-deep `$( )`, a backslash at
-  EOF). Gate `exempla` (reader contract, both fixtures, the manifest
-  pinned: 89 files, 17,297 bytes). Gate `corpus`: every tracked `.sh`
-  (the RUNNER writes `build/crusta_corpus.lst` with `git ls-files`
-  before the loop; a missing list is CREDO_CULPA) + fixtures + FreeBSD
-  through parse → emit → memcmp, plus LECTOR COVERAGE through the
-  builder's own pulls (`crusta_arbor_parsare_cum_lexematis` records
-  every received token; the gate concatenates them): 231 house files,
-  817,646 bytes, and 91 fixtures, all byte-identical, coverage clean,
-  house corpus ZERO mala. What it found: (1) a command with only
-  assignments kept INITIUM mode, where a newline is trivia, so the
-  next line joined it — ~150 house files had mala at `then`/`do`/`(`
-  until the mode after a first non-word child became ASSIGNATIONES;
-  (2) FreeBSD heredoc14–16.0 put heredoc bodies after a loop's
-  separator, a loop name and a case word: the declaration grew
-  `iteratio.interiecta`, `electio.interiecta`, and the two
-  `tok_separator` tokens became `separator` LISTS (separator node,
-  then bodies; 152 loci, LOCI_NOMINATI regenerated, pin CLII); bodies
-  in the gaps that keep no list (`for` before its name, a function's
-  title/parens, inside `(( ))`/`[[ ]]`) land in the nearest list below
-  out of byte order and are counted `heredoca_transposita` (sana FALSUM,
-  a named limit, one case pinned). Plants: corpus — separator nodes
-  dropped; exempla — `## END` kept in the section.
-- **P5, the builder part two:** every compound command (`grex`,
-  `crustula`, `conditio`/`ramus`, `iteratio`/`cyclus`/`repetitio`
-  with `cursus`, `electio`/`optio`), the three function forms (`f()`,
-  `function f`, `function f ()` — `name()` converts the one-word
-  imperium in place, free because of the delayed append), `coproc`
-  (`socius`, first word held as a candidate until the next token
-  says title or command), `[[ ]]` (`iudicium` with its own four-level
-  machine; `=~` pulls one REGULA token into a literal part), and the
-  heredoc placement of decree 01M2NJ16RG: a body opens at the first
-  newline token after its redirection (separator or trivium), the
-  `heredoc` node is appended at once to the innermost SENTENCE LIST
-  (programma, substitution, pipa/catena, a compound's list), the
-  redirection gets `corpus` by referentia. Measured on bash 5.2:
-  `$(cat <<A)` + newline reads the body OUTSIDE, a backtick never
-  reads past its closing quote (empty body inside, closure absent).
-  A frame's ROLE is (genus, locus, status): list / expecting / closed
-  (status II = redirections, wrappable by `&&` `|`); a closing keyword
-  finds the nearest open frame of its genus and closes everything
-  above it absent (html's end-tag rule). Nineteenth lector mode
-  `POST_COMPOSITUM` (bash recognises reserved words after `))` `]]`
-  `}` `)`: `if ((x)) then`, `{ { a; } }`). `A=1 if` is a command named
-  `if` (RESERVATUM as a literal part). Gate `arbor`: 87 cases, 752
-  assertions; born red for P5 by sending every heredoc body to the
-  program list (the two bodies after `cat <<A <<B |` then emit before
-  the pipe). Known `sana` vs `bash -n` divergences: heredoc cut off by
-  EOF and `[[ a b ]]` (bash warns, exits 0). Named corner: a heredoc
-  whose newline lands in a loop separator or after a loop name or case word — RESOLVED in P6 by declaration.
-- **P4, arithmetic (`crusta_arithmetica.{h,c}`):** the precedence
-  machine (shunting-yard over two explicit stacks) that the BUILDER
-  drives: every frame with a `machina` (`pars-arithmetica`,
-  `arithmetica`, `inclusa`) hands leaves (`numerus`, `variabilis` with
-  a raw subscript, word parts `$x` `${…}` `$( )`) to it as operands
-  and `ARITHMETICA_OPERATOR` tokens as operators; closing a frame
-  gives its node to the parent's machine when the parent has one.
-  Table `CRUSTA_BASH.arithmetici`: 41 rows, 16 levels measured on
-  bash 5.2 (prefix binds TIGHTER than `**`: `-2**2` is 4; `**`,
-  ternary and assignments right-assoc). Totality: a missing operand
-  is an absent locus (`1 +`), `?` without `:` a ternary without colon,
-  `:` without `?` a binary. `$((` follows bash's rule: arithmetic
-  first, and on a `)` at depth zero or a `;` the frames are dropped,
-  the lector is rewound to the `$((` with `situs.arithmetica_recusata`
-  set so it re-lexes as `$(` + `(`, and the opener's trivia return to
-  the ligator. `(( ))` as a command is a sentence that stays pending
-  after `))` for redirections (`_compositum_clausum`), so `&&`/`|`
-  wrap it like an imperium. `crusta_arithmetica_aestimare` folds
-  constant trees with 64-bit wrapping. Gate `arithmetica`: structure
-  cases, the ambiguity both ways, 43 values from bash 5.2.15, six
-  refusals; born red by swapping the precedence of `*` and `+`.
+- **Built:** declaration `grammatica/crusta.registrum.stml` → GENERATED
+  `crusta_registrum_coctum.{h,c}` (50 genera, 176 loci, one
+  `referentia` locus `redirectio.corpus`); hand slot enums and the
+  dialect tables `CRUSTA_BASH` in `crusta_registrum.h` (reserved words,
+  assignment builtins, redirection operators, case terminators, 41
+  arithmetic operators in 16 levels, `[[ ]]` operator sets);
+  `crusta_lexicon` (50 token genera, prefix `crusta-`, the newline two
+  genera by mode); `crusta_lector` (19 modes, regions for heredoc and
+  backtick bodies, the heredoc queue, backtick depth in the token tail);
+  `crusta_arbor` (the iterative builder: frame stack = mode stack,
+  sentence nodes appended when their frame closes, the backward ligator,
+  every compound command, three function forms, `coproc`, `[[ ]]` with a
+  four-level machine, heredoc bodies in every byte gap, `$((` tried
+  first then rewound, totality with `CrustaParsura`: mala, absent
+  closures, empty compound lists, `sana`; accessors
+  `crusta_verbum_staticum`/`_citatum`, `crusta_effugia_decoquere`,
+  `crusta_imperium_titulus`/`_argumenta`); `crusta_arithmetica` (the
+  shunting-yard the builder drives, heredoc bodies in `post_*` slots,
+  the constant evaluator); `crusta_exempla` (the Oils `#### title` case
+  reader + the FreeBSD manifest); `crusta_computus` (bench twin);
+  `crusta_coctum` (the cooked view = `declare -f` normal form, a stream
+  machine); `crusta_oraculum` (the oracle's case list, wrapper and golden
+  lookup); `grammatica/crusta.canon` (hand-written, 279 rules, seal
+  `873ce8f4` pinned). Instruments `arbor.sh`, `coctum.sh`,
+  `computus.sh`, `oraculum.sh`; pythonica `PORTAE['crusta']`, mensor
+  prefix `crusta.`, `silva.metiri('x.sh')`.
+- **Gates (14, `./crusta/compile_probationes.sh`, every one born red by
+  a planted fault; 12,567 assertions):**
 
-## P3 (2026-09-16)
+  | gate | asserts | born red by |
+  |---|---|---|
+  | registrum | generated tables byte-equal to a fresh render, lexicon rows by title, 176 named loci (table generated by `instrumenta/loci_nominati_generare.py`), dialect tables NIHIL-terminated and duplicate-free, one tree through writer → reader → writer | two lexicon rows swapped |
+  | lector | 48 cases pulled by explicit mode sequences, byte coverage per case, heredoc queue order, fd gluing | a LAMINA one byte short |
+  | arbor | 205 inline cases through the emitter + structure: positional rules, every compound, `$((` both ways, backticks by depth, heredoc placement and 29 gap cases, assignment builtins after prefixes, case patterns, empty lists (sana as `bash -n`) | ligator at the first newline (P3); every body to the program list (P5); arithmetic interposition off (P9b) |
+  | arithmetica | structure (precedence, associativity, prefix tighter than `**`, ternary, bases, juxtaposition) + 43 values from bash 5.2 | `*` and `+` precedence swapped |
+  | exempla | the case reader contract; both fixtures and the FreeBSD manifest pinned (89 files, 17,297 bytes) | `## END` kept in the section |
+  | corpus | every tracked `.sh` (234 house files, 821,533 bytes, ZERO insane) + fixtures + FreeBSD: parse → emit byte-identical; lector coverage through the builder's own pulls | separator nodes dropped |
+  | stml | 486 documents (112 inline, 49 fixture cases, 325 files) through two cycles: texts byte-equal, comparator STRUCTURALIS and FIDELITAS (asserted), heredoc references carried, re-read emission = source; raw-form and mixed-edge refusals pinned by cause | the re-read program's `cauda` removed |
+  | canon | drift guard both ways (50/176/50 rules), seal vs live `materia_arbor_sigillum`, 504 documents judged, zero violations | a genus rule deleted; a false seal |
+  | reservatio | named deviations by measured effect beside `bash -n`: extglob (2 mala), alias never expanded, `eval` opaque, `set -o posix`/`shopt` plain, `$"x"` and `$'\x41'`; reader refusals vs canon refusals | the extglob pin 2 → 3 |
+  | totalitas | 2,934 fuzz cases (random, mutated and truncated corpus, eleven nesting forms, CRLF, NUL) emit byte-identical under `CREDO_NON_RUIT`, a transposition is a failure; depth pins at -O2 | the recursive static walk restored |
+  | computus | golden `probationes/fixa/computus/basis.tsv` (two fixtures, three house runners; deterministic columns) | one node count edited |
+  | coctum | 40 cases whose expected text was GENERATED by bash (`env -i LC_ALL=C … bash -r`), byte law on each wrapped case, the contract (NIHIL root, empty program, root function, sentence node) | redirections printed inline in byte order (13 red) |
+  | oraculum | our cooked view vs golden `declare -f` over 112 cases: pares ≥ **103** (rising pin; birth 92), counts pinned, no orphan golden | pin raised one above the count |
+  | differentia | `relatio.sana` vs golden `bash -n` over 121 cases: concordes ≥ **118** (rising; birth 115), every disagreement named; house-corpus mala ≤ **0** (falling pin; fixtures excluded as in corpus) | sana inverted for zero-mala parses (concordes 6) |
 
-- **P3, the builder part one (`crusta_arbor.{h,c}`):**
-  `crusta_arbor_parsare(piscina, fons, mensura, dialectus, &relatio)` —
-  iterative over a frame stack that IS the mode stack; `programma`,
-  `imperium` (assignments positional, words as parts, redirections
-  with the heredoc petition at the delimiter word), `catena`/`pipa`
-  only when their operator is present (`!` and `time -p` open a pipa
-  with `praefixa`), separators, `malum` for what the grammar cannot
-  place (a separator with nothing pending is one too), EOF closes
-  every frame with absent tokens and counts them. A SENTENCE NODE IS
-  APPENDED TO ITS LIST WHEN ITS FRAME CLOSES, not when it opens (see
-  the worklog: materia lists only append, so `&&`/`|` wrap the finished
-  item instead of moving it). The ligator binds trivia backward through
-  the last newline (C7). `CrustaParsura` reports mala, absent closures,
-  max depth, heredoc petitions, `sana`. Accessors
-  `crusta_verbum_staticum` (decodes quotes, escapes with backtick
-  depth, `$'…'`), `crusta_verbum_citatum`, `crusta_imperium_titulus`,
-  `crusta_imperium_argumenta`. Gate `arbor`: 39 cases through the byte
-  emitter and structural asserts; born red by the ligator dividing
-  after the first newline instead of the last. Intermediates until
-  P4/P5: `$((` is a literal part (its `))` mala), reserved words other
-  than `!`/`time`, `(`, `[[`, `((` are mala.
-- Findings: `crusta/fontes/crusta_arbor.worklog.md`.
+- **Numbers:** fontes 19 files / 12,328 lines (`crusta_arbor.c`
+  5,035, `crusta_coctum.c` 2,151, `crusta_lector.c` 1,655); gates 14 /
+  10,200; instruments 5 / 1,223; declaration + canon 2,181. STML ≈ 28×
+  the source (the 200-deep `$(` fixture case 614×: quadratic in depth).
+  silva's runner 11,276 B → 2,008 nodes in 0.34 ms. Oracle live over the
+  house (`oraculum.sh -domus`): `declare -f` 234/234 exact, `bash -n`
+  236/236. Depth at -O2: parse 100,000 deep in six forms lives; emission
+  40,000 nodes lives, `$(` ×100,000 SIGSEGV (materia's recursive
+  emitter, 01M1FAD8); STML write 500 lives, 100,000 SIGSEGV (10,000 =
+  minutes); the evaluator `1+(` dies between 130k and 160k.
+- **What it found.** In itself: the assignment-only command that kept
+  newline as trivia (~150 house scripts at once, P6); a static-value walk
+  that recursed into every `$(` (P9); juxtaposed operands that lost or
+  reordered bytes (P9, P9b); positional expansion names (P9); heredoc
+  bodies in gaps with no list (P9b, declaration 150 → 176 loci); the
+  oracle's parser classes (assignment builtins after prefixes, `esac` as
+  a pattern, empty lists — P11b). In the substrate ONE change: materia's
+  `_textus_tutus` now refuses a mixed element whose edge whitespace run
+  holds a newline (two bytes were silently lost; P7, nota 01M2P8H0EA),
+  and a law surfaced: the STML reader DERIVES `initium_lineae`, so a
+  client with a LINEA munus must set it by the same rule (P7, 01M2P8H7VS).
+  In the tools: `silva.planta` took `error:` in any gate output for a
+  build break (`c4acd7b0`); oratio's runner lacked `entitates_html` so
+  the commit lint could not link (P7).
+- **What remains:** desideratum **01M2PN1VYH** — bash removes
+  backslash-newline BEFORE tokenising (`i\`+newline+`f` is `if`; 8
+  oracle + 2 sanity FreeBSD cases, a lector redesign) and a heredoc
+  inside a multi-line backtick (heredoc5.0). Tree shape, not bytes: a
+  heredoc body whose newline is inside `${ … }` arguments opens at the
+  next real newline (bash reads it inside). Substrate: the raw-form limit
+  (01M2KPJ0HW, a value carrying `</crusta-…>`), depth (01M1FAD8). Tools:
+  formator and `#define`s between functions (01M2NNE6WS); registry
+  `nota` copied verbatim into C comments (01M2NPN6YC); generic node read
+  accessors (01M2NPNER4). Named futures (spec §9): the `.sh` formatter,
+  a lint, argument grammars and sub-parsers over words, POSIX/zsh
+  dialect tables, Oils `spec/` as a fourth case source.
 
-## P2 (2026-09-16)
-
-- **P2, the lector (`crusta_lector.{h,c}`):** `crusta_lector_proximum(lector,
-  modus)` — a function of mode and position (decree 01M2NJ1JR7);
-  **18 modes** (the spec's 15 plus `TABULATUM` for the inside of an
-  array literal `( … )`, and `EXPANSIO_EXEMPLAR` / `EXPANSIO_SECTIO`
-  for the argument words of `${x/a/b}` and `${x:1:2}`, where `/` or `:`
-  ends the word — the lector cannot know which operator opened the
-  argument, the builder can). Tokens are raw-byte slices; the token's
-  private tail `CrustaCauda.gravis` carries the backtick depth so a
-  decoder can strip the backslashes bash strips (rule in the source
-  header: toward `$` and `` ` `` a run halves per level, toward
-  anything else it rounds up). Regions delimit heredoc and backtick
-  bodies first; `crusta_lector_gravem_quaerere` finds a closing
-  backtick at a depth; the heredoc queue is fed by the builder
-  (`heredoc_petere`) after the delimiter word closes. Three
-  continuation flags survive exactly one pull (`titulus_exspectatur`
-  after `$`, `assignationis_gradus` after an assignment name or
-  subscript). Named deviations found here: `\r` is an ordinary byte
-  (bash's own behaviour: a CRLF script has words ending in `\r`; the
-  newline token is always `\n` alone), and a `~` after `:` in an
-  assignment value is literal bytes, not a `pars-domus`. Lexicon
-  genus `ASSIGNATIO_SUBSCRIPTUM` renamed `SUBSCRIPTUM` (it serves
-  expansions and arithmetic variables too). Gate `lector`: 47 cases
-  pulled by explicit mode sequences, byte coverage per case; born red
-  by a LAMINA one byte short.
-- **Formator finding (quaestio 01M2NNE6WS):** a run of `#define`s
-  between functions makes the formator indent the following function
-  definition as a declaration group. Never put `#define`s between
-  functions; the lector gate uses wrapper functions per mode instead.
-- The named-slot table of the registrum gate is generated by
-  `crusta/instrumenta/loci_nominati_generare.py` (`-genera` for the
-  title list).
-
-## P1 (2026-09-16)
-
-- **Built:** declaration `crusta/grammatica/crusta.registrum.stml` →
-  GENERATED `crusta_registrum_coctum.{h,c}` (50 genera, 150 loci; one
-  `referentia` locus, `redirectio.corpus`); hand slot enums and the
-  dialect tables `CrustaDialectus` / `CRUSTA_BASH` in
-  `crusta_registrum.h` (reserved words, assignment builtins, redirect
-  operators, case terminators, `[[ ]]` operator sets; the arithmetic
-  operator table is EMPTY until P4); `crusta_lexicon` (50 token genera,
-  prefix `crusta-`; the newline is TWO genera, `SEPARATOR_LINEAE`
-  substantive and `LINEA` trivium, chosen by the lector's mode; the
-  `LINEA` munus is PRESENT, md's answer, not html's); the runner.
-- **Gates (1 of 14, `./crusta/compile_probationes.sh`):** registrum
-  (generated tables byte-equal to a fresh render, lexicon order by
-  title, 150 named slots against the table, dialect tables
-  NIHIL-terminated and duplicate-free, one minimal tree through
-  writer → reader → writer). Born red: two lexicon rows swapped.
-- **Next:** P2 the lector (`crusta_lector`, 15 modes, regions, the
-  heredoc queue).
-
-## Laws (spec §0)
+## Laws (spec §0, as built)
 
 - **Absent slots are meaning** (html's H4): no synthetic tokens, ever.
+- **The lector is a function of (mode, position); the builder owns the
+  mode stack and never recurses** (C4, decree 01M2NJ1JR7) — that covers
+  the functions it calls (P9).
 - **Newline by mode** (C6): separator where it terminates something,
-  trivium elsewhere; the lector's mode decides, never a relabelling.
-- **Trivia bind backward through the last newline** (C7): a trailing
-  comment belongs to its line; a heredoc body follows the newline.
-- **Totality** (C12): every byte lands in the tree; a token the
-  grammar cannot place is a `malum`; validity is a later judgment.
-- **Nothing reserved** (C13): extension = declaration append + seal
-  move; sub-parsers over words are a named future (spec §9).
+  trivium elsewhere; the lector's mode decides, never a relabelling
+  (P11b kept this law: a case clause got the right mode, not a
+  retagged token).
+- **Trivia bind backward through the last newline** (C7).
+- **The heredoc body sits where its bytes are** (C5, decree 01M2NJ16RG):
+  in a list slot right after the token its newline follows; operator
+  machines record bodies against the last thing pushed; gaps bash
+  rejects close the frame absent. No transposition exists.
+- **`catena` and `pipa` only with their operator** (C8); a sentence node
+  is appended to its list when its frame CLOSES (materia lists only
+  append).
+- **Totality** (C12): every byte lands in the tree; what the grammar
+  cannot place is a `malum`; `sana` = no mala, no absent closures, no
+  empty compound lists — a judgment, never a parser mode.
+- **Nothing reserved** (C13): extension = declaration append + seal move.
+- **Oracle goldens for fixed cases; the house corpus is judged live**
+  (C14): the gates spawn nothing; `oraculum.sh -domus` runs bash.
 
 ## The registry is generated
 
@@ -435,32 +134,68 @@ P3 on).
 from `crusta/grammatica/crusta.registrum.stml` via `./materia/coquere.sh
 crusta/grammatica/crusta.registrum.stml -scribere`. To add a genus or
 locus: append to the declaration (locus order = emission order = byte
-order), run `-scribere`, add the slot enum in `crusta_registrum.h`, the
-row in `LOCI_NOMINATI` (registrum probatio, generated from the
-declaration by the P1 script — regenerate it the same way), the rule in
-`crusta.canon` (P8: a genus rule plus one `intra=` rule per locus —
-the drift guard fails on a missing or stale one), and move the seal
-there by hand with a cause (the canon gate prints the live seal). Node
-sizes come from `CRUSTA_REGISTRUM.genera[g].loci_numerus`, never a hand
-count. A `nota` in the declaration is copied VERBATIM into the
-generated C comments: write notes in words, never XML entities.
+order), run `-scribere`, add the slot enum in `crusta_registrum.h`,
+regenerate `LOCI_NOMINATI` (registrum probatio) with
+`python3 crusta/instrumenta/loci_nominati_generare.py` and splice it,
+add the rules in `crusta.canon` (a genus rule plus one `intra=` rule per
+locus — the drift guard fails on a missing or stale one), and move the
+seal there by hand with a cause (the canon gate prints the live seal;
+`0ad54dc6` → `873ce8f4` in P9b). Node sizes come from
+`CRUSTA_REGISTRUM.genera[g].loci_numerus`, never a hand count. A `nota`
+in the declaration is copied VERBATIM into generated C comments: write
+notes in words, never XML entities.
+
+## Birth lessons
+
+- **The corpus finds the one bug behind hundreds.** 150 insane house
+  scripts had one cause; bisect a script to its shortest failing suffix
+  to name the line (P6).
+- **Measure, never read, a canon's species tables** — a probe tallying
+  child genera per slot over every tree judged 491 documents clean on
+  the first run (P8). A first-run green is proven by its plants.
+- **A named exemption in a fuzz gate hides the next bug**: removing the
+  transposition limit exposed `[[ !()-a` at once (P9b).
+- **`declare -f` is a stream machine; probe the SHAPE before writing a
+  printer** (`f() {`+case+`}` + `declare -f f`, `cat -e`), and GENERATE
+  gate expectations by running the oracle, never by typing them (P11a).
+- **The oracle's environment is part of the golden** (locale, a
+  restricted shell with no PATH — the wrapper only defines the case).
+  Never probe escapes through zsh: its quoting and `printf` decoded `\u`
+  before bash saw it (P11b).
+- **A heuristic over another program's output must match that program's
+  line format**, not a word (`silva.planta` and `error:`).
+- **One STML cycle is not evidence**; FIDELITAS was measured on every
+  document before it was asserted (P7). The reader derives
+  `initium_lineae`: set it by its rule.
+- **House traps met again:** `casus`, `interior`, `nomen` are latina
+  macros (examen reports a syntax node, not the name); two-letter locals
+  (`op`, `fd`) and words outside the dictionary are refused at commit
+  (`./oratio/quaere.sh` before staging); the formator never reflows
+  comments; never `#define`s between functions; zsh needs `${=VAR}`;
+  never put `git stash` or other state commands in exploratory shell
+  lines.
 
 ## Currere
 
 ```
-./crusta/compile_probationes.sh            # omnes
-./crusta/compile_probationes.sh registrum  # filtrum substringae
+./crusta/compile_probationes.sh            # omnes (totalitas ≈ 7 s)
+./crusta/compile_probationes.sh arbor      # filtrum substringae
 ./crusta/arbor.sh <x.sh> [-tacitus]        # proiectio STML in stdout
 ./crusta/coctum.sh <x.sh>                  # forma normalis 'declare -f'
+./crusta/computus.sh <x.sh> [-machina] [-iter N]
+COMPUTUS_SCRIBERE=1 ./crusta/compile_probationes.sh computus  # aurum
 ./crusta/oraculum.sh -probare              # bash vivum contra aura
 ./crusta/oraculum.sh -scribere             # aura renovare (causa nominata)
 ./crusta/oraculum.sh -domus [plagulae]     # domus viva (sine: git ls-files)
 ORACULUM_OMNIA=1 ./crusta/compile_probationes.sh oraculum
 ORACULUM_EXEMPLUM=freebsd:case2.0 ./crusta/compile_probationes.sh oraculum
-./crusta/computus.sh <x.sh> [-machina] [-iter N]
-COMPUTUS_SCRIBERE=1 ./crusta/compile_probationes.sh computus  # aurum
 ```
 
 0 sanum / 1 fractae / **2 = NULLA CURSA**. Log: `build/test_logs/crusta.log`.
 The oracle binary is `/opt/homebrew/bin/bash` (5.2.15); Apple's
-`/bin/bash` is 3.2 and prints a different deparse.
+`/bin/bash` is 3.2 and prints a different deparse. **To move the oracle
+numbers:** `ORACULUM_OMNIA=1` lists each mismatch's first differing
+line; probe the rule with bash in the golden's environment; fix the
+cooked view (a coctum case first, bash-generated) or the parser (an
+arbor case first, verdict from `bash -n`); raise the pin in the same
+commit.

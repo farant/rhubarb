@@ -842,6 +842,133 @@ is rehearsed here fifteen times on a grammar a tenth the size.
 
 ---
 
+## 11. As built (2026-09-16, plan closed)
+
+*Written at P12. Where this section and §§2–8 differ, this section
+governs. The build history is the plan's "Executed" notes and the
+worklog; the numbers are `crusta/CLAUDE.md`'s.*
+
+### 11.1 Deltas from §§2–8
+
+- **§2 files.** Added `fontes/crusta_oraculum.{h,c}` (the oracle's case
+  list, wrapper and golden lookup, shared by the instrument and both
+  oracle gates so a key cannot drift between writer and reader) and
+  `instrumenta/loci_nominati_generare.py`. The `bash -n` golden is
+  `oraculum/sanitas.txt`, not `validitas.txt`. The declaration comment
+  and `pathologiae.sh`/`adversarius.sh` are as described.
+- **§3 lexer.** 19 modes, not 15: `TABULATUM` (inside an array literal),
+  `EXPANSIO_EXEMPLAR` and `EXPANSIO_SECTIO` (argument words of `${x/a/b}`
+  and `${x:1:2}`, where `/` or `:` ends the word — only the builder
+  knows which operator opened it), `POST_COMPOSITUM` (after `}` `)` `))`
+  `]]` `fi` `done` `esac`: reserved words recognised, assignments not,
+  newline terminates — bash accepts `if ((x)) then` and `{ { a; } }`).
+  50 token genera: `ASSIGNATIO_SUBSCRIPTUM` became `SUBSCRIPTUM` (it
+  also serves expansions and arithmetic variables); there are no
+  `UNCUS`/`SUBSTITUTIO_CLAUSURA` genera (`)` is `PARENTHESIS_CLAUSURA`,
+  a backtick is `GRAVIS` at both ends). Named deviations found in the
+  lexer: `\r` is an ordinary byte (bash's own reading of a CRLF script);
+  a `~` after `:` in an assignment value is literal bytes. A name inside
+  `${` is positional (right after `${`, `${#`, `${!`), not by byte class.
+  A case clause lexes in `EXEMPLAR` only before it begins; once begun
+  (`(`, a first word, `|`) it lexes in `IN_VERBIS` — `esac` after `(` or
+  `|` is a word, a newline before `)` is an error (bash measured).
+- **§4 declaration.** 176 loci (150 at P1): P6 added
+  `iteratio.interiecta`, `electio.interiecta` and made the separators of
+  `iteratio`/`cyclus` lists; P9b added the `post_*` lists after every
+  token a newline can follow inside an expression (`post_aperturam`,
+  `post_expressionem`, `post_sinistrum`, `post_signum`,
+  `post_operandum`, `post_probationem`, `post_quaestionem`, `post_colon`)
+  and `functio.interiecta`. Seal `873ce8f4`.
+- **§5 builder.** A frame's role is (genus, locus, status). A sentence
+  node is appended to its list when its frame CLOSES. Decree I
+  generalised (P9b): a body lands in the list slot right after the token
+  its newline follows, including inside `[[ ]]`, `(( ))`, `$(( ))`,
+  `for ((` and before a function body; the operator machines carry body
+  lists on operands and signs; gaps bash rejects (`for`/`select`/
+  `function`/`case` + newline, `f(` + newline) close the frame absent.
+  An assignment builtin is recognised after prefix assignments and
+  redirections, and loses `x=(` after a redirection that follows an
+  assignment or the builtin word (bash measured, P11b). `CrustaParsura`
+  gained `heredoca_transposita` (always zero since P9b) and
+  `listae_vacuae` (empty compound lists bash rejects; the tree is
+  unchanged). The builder sets `initium_lineae` on every token by the
+  STML reader's rule; the `$((` rewind restores it.
+- **§6 arithmetic.** The measured table has 41 rows in 16 levels, and a
+  prefix operator binds tighter than `**` (`-2**2` is 4). The machine is
+  driven by the builder's frames (operands and signs pushed as tokens
+  arrive), not a `crusta_arithmetica_parsare(lector, frame)` call.
+  Juxtaposed operands (`(( a b ))`, `[[ ! a b ]]`, `[[ !()-a`) insert a
+  tokenless implied operator ON ARRIVAL (precedence 0 in arithmetic,
+  level IV in `[[ ]]`) — joining them at the end lost or reordered bytes.
+- **§7 cooked view and oracles.** `declare -f` is a stream machine, not a
+  per-node printer, and the cooked view copies it: two modes (function
+  body; substitution text, which bash 5.2 REPARSES and stores reprinted —
+  `$( )`, `<( )`, `>( )`, never backticks), connections nested left
+  (lists, `&&`/`||`) and right (pipes), heredoc bodies deferred to the
+  next connector, a flag that swallows the next `;` after a flush (a
+  function definition clears it, a group does not), `elif` as a nested
+  `if`, `for ((;;))` as `((1; 1; 1))`, redirections after words with
+  fd rules, `$'…'` decoded and re-quoted (under C: `\u` below 0x80 a
+  byte, above re-spelled), a space after `$(` when the text starts with
+  `(` but a refused-`$((` substitution verbatim. The full rule list is
+  the plan's P11a "measured mechanics". The oracle runs bash as
+  `env -i LC_ALL=C PATH=/nonexistent /opt/homebrew/bin/bash -r`; the
+  golden headers record it. The differentia house pin excludes the two
+  pathological fixtures (the corpus gate's rule) and was ZERO at birth.
+- **§8 gates.** Fourteen, as tabled; plants as named there except
+  `arbor` (born red three times: the ligator, heredoc placement, the
+  arithmetic interposition) and `canon` (a deleted genus rule and a false
+  seal).
+
+### 11.2 §10 answered (measured)
+
+- **A `referentia` to a later sibling** is free: the reader resolves
+  after the whole tree; every heredoc reference in 486 STML documents
+  was carried, the re-read `corpus` pointing at the re-read `heredoc`.
+- **Two genera for the newline and a `LINEA` munus:** FIDELITAS holds on
+  every document and is ASSERTED (the reader counts newlines inside
+  substantive values). The cost was a law the substrate had not written
+  down: the STML reader DERIVES `initium_lineae` (a lexeme begins a line
+  iff a LINEA trivium intervened since the previous lexeme; LAMINA and a
+  substantive newline do not count), so a client with a LINEA munus must
+  set the flag by the same rule — 315 of 322 corpus files differed until
+  crusta did (nota 01M2P8H7VS).
+- **Trivia bound backward:** no substrate issue; the ligator is the
+  client's.
+- **`lista-token` loci in daily use** (`pipa.praefixa`, `malum.tokens`):
+  writer, reader, comparator and canon all fine.
+- **Token values with newlines through the STML raw form:** the one
+  SUBSTRATE CHANGE. A token value whose leading or trailing whitespace
+  run contains a newline, in a mixed element, was written escaped and
+  the reader dropped the run by the trivia ownership law — two bytes
+  silently lost on a quote open to EOF. `_textus_tutus` now refuses it
+  by name (nota 01M2P8H0EA; materia, css, md, html, oratio suites green
+  in that commit). The raw-form limit (01M2KPJ0HW) is reached by a
+  comment or heredoc line carrying `</crusta-…>` and refused by name,
+  pinned.
+- **An iterative builder under recursive walkers:** parse lives 100,000
+  deep in six forms; `materia_scribere_nodum` lives at 40,000 nodes and
+  dies by 45,000; the STML writer is quadratic (2,000 deep = 56 MB) and
+  dies at 100,000; the constant evaluator dies between 130,000 and
+  160,000 (01M1FAD8).
+
+### 11.3 The oracle tail
+
+`declare -f` 103/112 (birth 92), `bash -n` 118/121 (birth 115), both
+pinned rising; the house corpus live 234/234 and 236/236. The rest is
+two classes, desideratum 01M2PN1VYH: (i) bash removes backslash-newline
+BEFORE tokenising, so `i\`+newline+`f` is `if`, `$(\`+newline+`(` is
+`$((` and `${v\`+newline+`#…}` is `${v#…}` — our lector keeps the pair
+as a word part or trivium and does not recognise syntax split across it
+(FreeBSD line-cont1/4/5/6/7/8/9/10); (ii) a heredoc inside a backtick
+spanning lines (heredoc5.0). Known and unseen by any fixture: a heredoc
+body whose newline lies inside `${ … }` arguments opens at the next
+real newline (tree shape; bash reads it inside); the `bash -n`
+divergences of ledger 01M2NT4CDD (heredoc at EOF, `[[ a b ]]`,
+`$((cat <<A`), which occur in no fixture or house script.
+
+---
+
 ## Appendix A — Fran's research notes (2026-09-15), verbatim
 
 *Status: research notes, not yet doctrine. Exploratory — claims here
