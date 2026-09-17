@@ -191,7 +191,7 @@ Rules:
 2. **The gutter is sized once**, from the largest `linea` in the
    array: `latitudo = max(IV, digits(linea_maxima))`. Today's
    `_marginem` takes a minimum of IV, so blocks align for free up to
-   line 999 and go ragged at the 999/1000 boundary — that pair is the
+   line 9999 and go ragged at the 9999/10000 boundary — that pair is the
    gate in §6.
 3. **Each distinct line prints its source once**, followed by one
    caret row per span on that line. Sorted-by-`initium` makes
@@ -267,7 +267,7 @@ its plant removes and the assertion that must go red.
 |---|---|---|
 | I | delete the `relata` assignment in the `absentia` arm | a crusta fixture that **provably** yields an `absentia`: `numerus_relatorum == 1` **and** the related span's `initium` equal to the node start. Both, because the count alone passes if the span is filled with the wrong range. |
 | II | remove same-line grouping | two spans on one line must print **one** source line and two caret rows; the plant prints two source lines |
-| III | revert to a per-block gutter width | a span pair on lines 999 and 1000 must share width V; the plant makes them ragged. Its own gate precisely because nothing else would ever notice. |
+| III | revert to a per-block gutter width | a span pair on lines **9999 and 10000** must share width V; the plant makes them ragged. Its own gate precisely because nothing else would ever notice. |
 | IV | accept unsorted input instead of refusing | `excerptum_scribere_multa` on a descending array must return FALSUM |
 | V | drop the label escape | a label containing `;` must not produce a TSV field that parses as two spans |
 
@@ -308,6 +308,14 @@ grouping pass assumes sorted-by-`initium` puts same-line spans next to
 each other. That holds when every span's `linea` matches its offset.
 The sortedness refusal is the only thing guarding it; a caller passing
 a wrong `linea` gets wrong output, not a refusal.
+
+**VI. CORRECTED IN BUILD (Task 2).** This spec twice named 999/1000
+as the width boundary. It is **9999/10000**: `_latitudo` takes a
+minimum of IV, so 999 (three digits) and 1000 (four) both render at
+width IV and a per-line gutter would look identical there. A gate
+written at 999/1000 would have been a fourth green plant — it could
+never have failed. Measured and fixed while building; the gate is at
+9999/10000.
 
 **V. The first client to want a declared second span forces a real
 decision.** Either the registry names a second locus — a table entry,

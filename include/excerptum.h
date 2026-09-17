@@ -24,4 +24,35 @@ excerptum_scribere (
                    s32  finis,
                    i32  linea);
 
+/* Sedes una in serie sedium multiplicium. */
+nomen structura {
+                    s32  initium;
+                    s32  finis;
+                    i32  linea;
+     constans character* nota;      /* NIHIL licet */
+} ExcerptumSedes;
+
+/* Sedes plures in saepto UNO: ordine fontis, margo semel mensuratus
+ * ex linea maxima, linea fontis quaeque SEMEL impressa cum signo uno
+ * per sedem infra eam. Sine elisione: linea quaeque numerum suum
+ * fert, ergo hiatus numquam ambiguus est.
+ *
+ * Sedes ORDINATAE esse debent (initium non decrescens); aliter
+ * FALSUM. Recusatio clara, non ordinatio tacita: series CONSTANS
+ * est, ergo eam hic ordinare sine memoria non possumus, et exitus
+ * tacite permutatus peior est quam refutatio nominata.
+ *
+ * FALSUM etiam si numerus ZEPHYRUM, aut sedes ulla lineam ZEPHYRUM
+ * aut initium extra [0, mensura] fert.
+ *
+ * Cum numero I et nota NIHIL exitus OCTETIM idem est ac
+ * excerptum_scribere super eandem sedem. */
+b32
+excerptum_scribere_multa (
+          ChordaAedificator* exitus,
+         constans character* fons,
+                        i32  mensura,
+    constans ExcerptumSedes* sedes,
+                        i32  numerus);
+
 #endif /* EXCERPTUM_H */

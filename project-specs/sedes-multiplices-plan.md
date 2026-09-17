@@ -232,7 +232,7 @@ oratio 19/19, crusta 15/15; vocabula NOVA 0.
 **Consumes:** nothing from Task 1 — this file knows nothing about
 trees and can be done first or in parallel.
 
-- [ ] **Step 1: extract the width, which is currently hidden.**
+- [x] **Step 1: extract the width, which is currently hidden.**
 
 `_marginem` (`lib/excerptum.c:7`) computes its own width from `linea`
 via `latitudo = n < IV ? (i32)IV : n`. Multi-span needs one width for
@@ -253,7 +253,7 @@ _marginem (ChordaAedificator* exitus, i32 linea, b32 numerus,
 `excerptum_scribere` passes `_latitudo(linea)` and is otherwise
 unchanged.
 
-- [ ] **Step 2: split the two rows out of `excerptum_scribere`.**
+- [x] **Step 2: split the two rows out of `excerptum_scribere`.**
 
 Extract `_lineam_scribere` (the source line, `:78-89`) and
 `_signum_scribere` (the caret row, `:90-120`), both taking
@@ -264,13 +264,13 @@ newline when it is not NIHIL.
 `excerptum_scribere` becomes: compute bounds, call both with
 `nota = NIHIL`. **No behaviour change** — Step 3 measures that.
 
-- [ ] **Step 3: pin the identity BEFORE adding the new entry point.**
+- [x] **Step 3: pin the identity BEFORE adding the new entry point.**
 
 In `probatio_excerptum.c`, assert the existing outputs are unchanged
 by the refactor. Run the suite. If anything moved, the split is wrong
 and the rest of this task is built on sand.
 
-- [ ] **Step 4: the new entry point.**
+- [x] **Step 4: the new entry point.**
 
 ```c
 nomen structura {
@@ -299,21 +299,53 @@ over the array. Walk the array; for each run of equal `linea`, call
 a const array, and a loud refusal instead of silently reordered
 output.
 
-- [ ] **Step 5: four gates.**
+- [x] **Step 5: four gates.**
 
 | gate | asserts |
 |---|---|
 | identity | `numerus == I` and `nota == NIHIL` ⇒ byte-identical to `excerptum_scribere` on the same span |
 | same line | two spans on one line ⇒ **one** source line, two caret rows |
-| gutter | spans on lines 999 and 1000 ⇒ both rows width V |
+| gutter | spans on lines **9999 and 10000** ⇒ both rows width V (NOT 999/1000: `_latitudo` has a minimum of IV, so those two are identical and the gate could never fail) |
 | refusal | a descending array ⇒ FALSUM |
 
-- [ ] **Step 6: plants.** Remove same-line grouping → the same-line
+- [x] **Step 6: plants.** Remove same-line grouping → the same-line
 gate goes red with two source lines. Revert `latitudo` to per-line →
-the 999/1000 gate goes ragged. Drop the sortedness check → the refusal
+the 9999/10000 gate goes ragged. Drop the sortedness check → the refusal
 gate goes red. Restore each.
 
-- [ ] **Step 7: format, run the root suite, commit.**
+- [x] **Step 7: format, run the root suite, commit.**
+
+**Executed 2026-09-17.** The refactor was pinned before anything was
+added: `probatio_excerptum`'s expected strings are declared by its own
+header to BE the contract, so the split into `_figurae` / `_latitudo`
+/ `_lineae_fines` / `_lineam_scribere` / `_signum_scribere` was proven
+byte-identical by the existing 21 assertions before
+`excerptum_scribere_multa` existed.
+
+Three corrections the build forced:
+1. **The gutter boundary is 9999/10000, not 999/1000** (see above). A
+   gate at 999/1000 could never have failed.
+2. `_marginem` takes `latitudo` from the caller now, and **i32 is
+   UNSIGNED** — `latitudo - n` would wrap if a caller passed a width
+   below the digit count, so the function clamps. The old code was
+   safe only because it computed both itself.
+3. `CREDO_CHORDAE_AEQUALES` (plural) takes `constans character*`;
+   the chorda-to-chorda macro is `CREDO_CHORDA_AEQUALIS` (singular).
+   The names invite exactly the wrong one; the examen caught it.
+
+Four gates (identity, same-line, shared gutter, sortedness refusal)
+plus the spec's own motivating example rendered end to end. Three
+plants: grouping removed → two source lines where one belongs; the max
+dropped → ragged gutter; the sortedness check dropped → no refusal.
+All three red, file restored identical.
+
+**The expectation was wrong, not the code**: the `if true; then` case
+wanted 12 tildes and I wrote 11. Caret + 12 = 13 glyphs under a
+13-character line. Fixed the expectation, per this gate's own rule —
+amend the code to the strings, never the strings to the code.
+
+Audited: root suite exit 0, `./tools/diagnostica_fumus.sh` sanum,
+vocabula NOVA 0.
 
 ---
 
