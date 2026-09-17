@@ -1221,7 +1221,7 @@ every `liberi`/`probatio` rule; `<ante>`/`<post>` allow `crusta-spatium`,
 `heredoc` (the `corpus` target) — and on nothing else, so a stray `id` is
 a refusal. NOT in `canones.registrum`.
 
-- [ ] **Step 1: Write the failing gate** — `canon_legere(chorda fons,
+- [x] **Step 1: Write the failing gate** — `canon_legere(chorda fons,
   piscina, intern, &causa)`; for every P7 document (inline + corpus):
   `stml_legere` the projected text, `canon_iudicare(canon, radix,
   piscina)`, assert non-NIHIL and `xar_numerus(vitia) == 0`; self-measure
@@ -1233,21 +1233,34 @@ a refusal. NOT in `canones.registrum`.
   `materia_arbor_sigillum(piscina, &CRUSTA_REGISTRUM)` live (the gate
   prints the live seal so the pin can be written).
 
-- [ ] **Step 2: Run and verify it fails** — no canon yet.
+- [x] **Step 2: Run and verify it fails** — no canon yet.
 
-- [ ] **Step 3: Write the canon**; `./tools/natura_struere.sh`.
+- [x] **Step 3: Write the canon**; `./tools/natura_struere.sh`.
 
-- [ ] **Step 4: Run the whole suite** — exit 0.
+- [x] **Step 4: Run the whole suite** — exit 0.
 
-- [ ] **Step 5: Plant** — delete the `verbum` genus rule → the guard AND the
+- [x] **Step 5: Plant** — delete the `verbum` genus rule → the guard AND the
   judgment must both fire; revert. Second plant: a false sigillum → guard red.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("crusta: canon manu scriptum (L genera, loci ad gradum speciei, lexemata L, unio sententiae, id in heredoc solo) - custos derivae utrimque, sigillum pinnatum, corpus iudicatum (rubra nata: regula verbi deleta)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",
     ["crusta/grammatica/crusta.canon", "crusta/probationes/probatio_crusta_canon.c"], ["crusta"])
 ```
+
+**Executed 2026-09-16.** Deviations from the text above: the species
+tables were MEASURED with a scratch probe over every P7 document plus
+~200 corner cases (child genera per slot), not read from the builder's
+source; 20 of those corner cases joined the gate's inline set (122).
+Fragments: `#sententia` (17), `#membrum` (16: catena/pipa never hold a
+catena or a separator; pipa holds pipa), `#partes-omnes`/`-citatae`,
+`#expressio-una`/`-multa` (12, the `$`-parts are operands directly),
+`#iudicium-una` (5). The envelope declares `linea-initium` as an electio
+of `true` (silva's form). `./tools/natura_struere.sh` was not run:
+client canons are not enumerated there. Green on the first run; both
+plants red as specified (the deleted rule fires the guard and every
+judgment; the false seal fires the guard and every judgment).
 
 ---
 

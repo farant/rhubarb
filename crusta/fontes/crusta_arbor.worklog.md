@@ -268,3 +268,35 @@ depth) lives in the token's private tail, which materia does not write
 tokens have a zeroed tail; `crusta_verbum_staticum` on a re-read tree
 would decode backtick-nested words at depth 0. No consumer yet; the
 seam is materia's frons.
+
+## 2026-09-16 — P8 (canon)
+
+**Measure the species tables, do not read them.** The canon must say
+which genera each slot may hold. html read that by hand out of its
+builder; for crusta's 152 slots I wrote a scratch probe that walks every
+parsed tree (P7's 473 documents plus ~200 corner cases written for the
+purpose) and tallies, per (genus, locus), the child node genera, token
+genera and reference targets. Two runs, one merge, and the tables were
+right on the first judgment — 491 documents, zero violations. Where the
+corpus never produced a shape (ternaries, prefix operators, a loop with
+redirections) the corner cases did, and those joined the gate's inline
+set so the canon stays falsified there too. Lessons from the table: a
+catena never nests a catena and never holds a separator (flat by
+construction); a pipa may hold a pipa (`a | time b`); `$`-parts sit
+directly as arithmetic operands (`$((a + ${b} + $(c)))`), not wrapped in
+a verbum; `[[` lexes as a reserved word (tok_apertura of iudicium is
+`crusta-reservatum`); a loop name may be a reserved word (`for if in
+a`); `electio.liberi` can hold a malum (a stray `;;`); `iudicium-binaria`
+can sit in a binaria's dexter (`[[ a == ]]`, totality).
+
+**A first-run green is proven by its plants.** Both plants went red the
+way the plan required: the deleted `verbum` rule fired the drift guard
+(0 rules) and every document's judgment (`elementum extra canonem
+<verbum>`); the false seal fired the guard (pinna vs vivum) and every
+document (`valor generi attributi non congruit 'registrum-sigillum'`).
+
+**`linea-initium` on the envelope is an electio.** STML interns a bare
+attribute as `true`, so silva's canon declares it `genus="electio"`
+with the one option; `veritas` would demand `verum|falsum`. crusta's
+envelope carries it whenever the first lexeme begins a line, which
+after P7's flag rule is nearly always.

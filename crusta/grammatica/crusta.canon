@@ -1,0 +1,1664 @@
+<!--
+  crusta.canon
+  MANU SCRIPTUM (exemplar html.canon; decretum Frani 2026-09-01; P8).
+
+  Registrum ex crusta.registrum.stml GENERATUR
+  (crusta_registrum_coctum.c), canon manu: custos derivae
+  (probatio_crusta_canon) regulas huius plagulae contra registrum
+  generum (L), loci (CLII), lexicon (L) et involucrum UTRIMQUE retiret
+  (regula absens ET regula rancida rubent); sigillum registri infra
+  PINNATUM contra vivum conferitur.
+
+  SPECIES LOCORUM (G3): quae liberi cuique loco licent MENSURATAE sunt
+  (2026-09-16: probe super documenta omnia portae P7 - casus inlinei,
+  fixa, corpus domus + FreeBSD - et casus angulares), non ex fonte
+  aedificatoris lectae; aedificator mutatus canonem mutare debet -
+  porta corporis id falsificat. Unio sententiarum (#sententia, XVII
+  genera) listis sententiarum omnibus; catena et pipa membra sola
+  ferunt (#membrum: numquam catenam, numquam separatorem). Locus TOKEN
+  liberum unum fert; canon 'unum ex his' dicere non potest,
+  maximum="1" per nomen solum - debilitas nominata.
+
+  INVOLUCRUM: <arbor>. Consulto NON in canones.registrum. Iudicium
+  manuale:
+    bin/canon_examen -canon crusta/grammatica/crusta.canon <doc.stml>
+  Attributa positionis lexematum (b/linea/columna/linea-initium)
+  ABSUNT in lexematibus (materia ea lexematibus DERIVATIS solis
+  scribit); involucrum 'linea-initium' fert cum lexema primum lineam
+  incipit (P7: vexillum per regulam lectoris STML ab aedificatore
+  positum). 'cr': offsets '\r' in valore VERBATIM (scripta CRLF -
+  adversarius). 'id' in heredoc SOLO declaratur: scopus referentiae
+  'corpus' redirectionis (decretum 01M2NJ16RG); 'id' alibi =
+  'attributum ignotum'.
+
+  TRIVIA (#trivia): spatium, commentum, linea, lamina - in <ante> et
+  <post> cuiusque lexematis.
+
+  RESERVATIONES (C13): nihil declaratum; 'derivatum' ut elementum sub
+  verbo lector ipse recusat, ut attributum canon (porta reservationis
+  P9).
+
+  Sigillum 0ad54dc6: L genera, CLII loci (P6: iteratio.interiecta,
+  electio.interiecta, separator iterationis et cycli listae).
+-->
+<canon dialectus="crusta" versio="1">
+
+  <!-- =============== FRAGMENTA =============== -->
+
+  <!-- lexema unum quodlibet (locus TOKEN) -->
+  <#lexema-unum>
+    <liberum nomen="crusta-finis" maximum="1"/>
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+    <liberum nomen="crusta-assignatio-titulus" maximum="1"/>
+    <liberum nomen="crusta-subscriptum" maximum="1"/>
+    <liberum nomen="crusta-assignatio-operator" maximum="1"/>
+    <liberum nomen="crusta-redirectio-fd" maximum="1"/>
+    <liberum nomen="crusta-redirectio-operator" maximum="1"/>
+    <liberum nomen="crusta-pipa" maximum="1"/>
+    <liberum nomen="crusta-pipa-erroris" maximum="1"/>
+    <liberum nomen="crusta-et" maximum="1"/>
+    <liberum nomen="crusta-aut" maximum="1"/>
+    <liberum nomen="crusta-separator" maximum="1"/>
+    <liberum nomen="crusta-separator-lineae" maximum="1"/>
+    <liberum nomen="crusta-terminator-optionis" maximum="1"/>
+    <liberum nomen="crusta-parenthesis" maximum="1"/>
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+    <liberum nomen="crusta-arithmetica-apertura" maximum="1"/>
+    <liberum nomen="crusta-arithmetica-clausura" maximum="1"/>
+    <liberum nomen="crusta-iudicium-apertura" maximum="1"/>
+    <liberum nomen="crusta-iudicium-clausura" maximum="1"/>
+    <liberum nomen="crusta-litteralis" maximum="1"/>
+    <liberum nomen="crusta-effugium" maximum="1"/>
+    <liberum nomen="crusta-continuatio" maximum="1"/>
+    <liberum nomen="crusta-simplex" maximum="1"/>
+    <liberum nomen="crusta-gemina-apertura" maximum="1"/>
+    <liberum nomen="crusta-gemina-clausura" maximum="1"/>
+    <liberum nomen="crusta-effugia" maximum="1"/>
+    <liberum nomen="crusta-versa-apertura" maximum="1"/>
+    <liberum nomen="crusta-parametrum-sigillum" maximum="1"/>
+    <liberum nomen="crusta-parametrum-titulus" maximum="1"/>
+    <liberum nomen="crusta-expansio-apertura" maximum="1"/>
+    <liberum nomen="crusta-expansio-praefixum" maximum="1"/>
+    <liberum nomen="crusta-expansio-operator" maximum="1"/>
+    <liberum nomen="crusta-expansio-clausura" maximum="1"/>
+    <liberum nomen="crusta-substitutio-apertura" maximum="1"/>
+    <liberum nomen="crusta-gravis" maximum="1"/>
+    <liberum nomen="crusta-arithmetica-partis-apertura" maximum="1"/>
+    <liberum nomen="crusta-processus-apertura" maximum="1"/>
+    <liberum nomen="crusta-domus" maximum="1"/>
+    <liberum nomen="crusta-heredoc-delimitator" maximum="1"/>
+    <liberum nomen="crusta-numerus" maximum="1"/>
+    <liberum nomen="crusta-variabilis" maximum="1"/>
+    <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+    <liberum nomen="crusta-arithmetica-separator" maximum="1"/>
+    <liberum nomen="crusta-iudicium-operator" maximum="1"/>
+    <liberum nomen="crusta-regula" maximum="1"/>
+    <liberum nomen="crusta-spatium" maximum="1"/>
+    <liberum nomen="crusta-commentum" maximum="1"/>
+    <liberum nomen="crusta-linea" maximum="1"/>
+    <liberum nomen="crusta-lamina" maximum="1"/>
+  </#>
+
+  <!-- lexemata quotlibet (locus LISTA_TOKEN: malum.tokens) -->
+  <#lexemata-multa>
+    <liberum nomen="crusta-finis"/>
+    <liberum nomen="crusta-reservatum"/>
+    <liberum nomen="crusta-assignatio-titulus"/>
+    <liberum nomen="crusta-subscriptum"/>
+    <liberum nomen="crusta-assignatio-operator"/>
+    <liberum nomen="crusta-redirectio-fd"/>
+    <liberum nomen="crusta-redirectio-operator"/>
+    <liberum nomen="crusta-pipa"/>
+    <liberum nomen="crusta-pipa-erroris"/>
+    <liberum nomen="crusta-et"/>
+    <liberum nomen="crusta-aut"/>
+    <liberum nomen="crusta-separator"/>
+    <liberum nomen="crusta-separator-lineae"/>
+    <liberum nomen="crusta-terminator-optionis"/>
+    <liberum nomen="crusta-parenthesis"/>
+    <liberum nomen="crusta-parenthesis-clausura"/>
+    <liberum nomen="crusta-arithmetica-apertura"/>
+    <liberum nomen="crusta-arithmetica-clausura"/>
+    <liberum nomen="crusta-iudicium-apertura"/>
+    <liberum nomen="crusta-iudicium-clausura"/>
+    <liberum nomen="crusta-litteralis"/>
+    <liberum nomen="crusta-effugium"/>
+    <liberum nomen="crusta-continuatio"/>
+    <liberum nomen="crusta-simplex"/>
+    <liberum nomen="crusta-gemina-apertura"/>
+    <liberum nomen="crusta-gemina-clausura"/>
+    <liberum nomen="crusta-effugia"/>
+    <liberum nomen="crusta-versa-apertura"/>
+    <liberum nomen="crusta-parametrum-sigillum"/>
+    <liberum nomen="crusta-parametrum-titulus"/>
+    <liberum nomen="crusta-expansio-apertura"/>
+    <liberum nomen="crusta-expansio-praefixum"/>
+    <liberum nomen="crusta-expansio-operator"/>
+    <liberum nomen="crusta-expansio-clausura"/>
+    <liberum nomen="crusta-substitutio-apertura"/>
+    <liberum nomen="crusta-gravis"/>
+    <liberum nomen="crusta-arithmetica-partis-apertura"/>
+    <liberum nomen="crusta-processus-apertura"/>
+    <liberum nomen="crusta-domus"/>
+    <liberum nomen="crusta-heredoc-delimitator"/>
+    <liberum nomen="crusta-numerus"/>
+    <liberum nomen="crusta-variabilis"/>
+    <liberum nomen="crusta-arithmetica-operator"/>
+    <liberum nomen="crusta-arithmetica-separator"/>
+    <liberum nomen="crusta-iudicium-operator"/>
+    <liberum nomen="crusta-regula"/>
+    <liberum nomen="crusta-spatium"/>
+    <liberum nomen="crusta-commentum"/>
+    <liberum nomen="crusta-linea"/>
+    <liberum nomen="crusta-lamina"/>
+  </#>
+
+  <!-- sententia: quidquid in lista sententiarum stat (XVII) -->
+  <#sententia>
+    <liberum nomen="imperium"/>
+    <liberum nomen="pipa"/>
+    <liberum nomen="catena"/>
+    <liberum nomen="separator"/>
+    <liberum nomen="heredoc"/>
+    <liberum nomen="malum"/>
+    <liberum nomen="grex"/>
+    <liberum nomen="crustula"/>
+    <liberum nomen="conditio"/>
+    <liberum nomen="iteratio"/>
+    <liberum nomen="cyclus"/>
+    <liberum nomen="repetitio"/>
+    <liberum nomen="electio"/>
+    <liberum nomen="functio"/>
+    <liberum nomen="socius"/>
+    <liberum nomen="arithmetica"/>
+    <liberum nomen="iudicium"/>
+  </#>
+
+  <!-- membrum catenae aut pipae (operator, sententia praeter
+       catenam et separatorem; pipa in pipa) -->
+  <#membrum>
+    <liberum nomen="operator"/>
+    <liberum nomen="malum"/>
+    <liberum nomen="heredoc"/>
+    <liberum nomen="pipa"/>
+    <liberum nomen="imperium"/>
+    <liberum nomen="functio"/>
+    <liberum nomen="socius"/>
+    <liberum nomen="grex"/>
+    <liberum nomen="crustula"/>
+    <liberum nomen="conditio"/>
+    <liberum nomen="iteratio"/>
+    <liberum nomen="cyclus"/>
+    <liberum nomen="repetitio"/>
+    <liberum nomen="electio"/>
+    <liberum nomen="arithmetica"/>
+    <liberum nomen="iudicium"/>
+  </#>
+
+  <!-- partes verbi (XIII) -->
+  <#partes-omnes>
+    <liberum nomen="pars-litteralis"/>
+    <liberum nomen="pars-effugium"/>
+    <liberum nomen="pars-continuatio"/>
+    <liberum nomen="pars-simplex"/>
+    <liberum nomen="pars-gemina"/>
+    <liberum nomen="pars-effugia"/>
+    <liberum nomen="pars-versa"/>
+    <liberum nomen="pars-parametrum"/>
+    <liberum nomen="pars-expansio"/>
+    <liberum nomen="pars-substitutio"/>
+    <liberum nomen="pars-arithmetica"/>
+    <liberum nomen="pars-processus"/>
+    <liberum nomen="pars-domus"/>
+  </#>
+
+  <!-- partes intra apices geminos, versos et corpora heredoc (VII) -->
+  <#partes-citatae>
+    <liberum nomen="pars-litteralis"/>
+    <liberum nomen="pars-effugium"/>
+    <liberum nomen="pars-continuatio"/>
+    <liberum nomen="pars-parametrum"/>
+    <liberum nomen="pars-expansio"/>
+    <liberum nomen="pars-substitutio"/>
+    <liberum nomen="pars-arithmetica"/>
+  </#>
+
+  <!-- expressio arithmetica: locus NODUS unus -->
+  <#expressio-una>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="variabilis" maximum="1"/>
+    <liberum nomen="praeposita" maximum="1"/>
+    <liberum nomen="postposita" maximum="1"/>
+    <liberum nomen="binaria" maximum="1"/>
+    <liberum nomen="ternaria" maximum="1"/>
+    <liberum nomen="inclusa" maximum="1"/>
+    <liberum nomen="pars-parametrum" maximum="1"/>
+    <liberum nomen="pars-expansio" maximum="1"/>
+    <liberum nomen="pars-substitutio" maximum="1"/>
+    <liberum nomen="pars-arithmetica" maximum="1"/>
+    <liberum nomen="pars-gemina" maximum="1"/>
+  </#>
+
+  <!-- expressiones arithmeticae in lista (cyclus.liberi) -->
+  <#expressio-multa>
+    <liberum nomen="numerus"/>
+    <liberum nomen="variabilis"/>
+    <liberum nomen="praeposita"/>
+    <liberum nomen="postposita"/>
+    <liberum nomen="binaria"/>
+    <liberum nomen="ternaria"/>
+    <liberum nomen="inclusa"/>
+    <liberum nomen="pars-parametrum"/>
+    <liberum nomen="pars-expansio"/>
+    <liberum nomen="pars-substitutio"/>
+    <liberum nomen="pars-arithmetica"/>
+    <liberum nomen="pars-gemina"/>
+  </#>
+
+  <!-- expressio iudicii [[ ]]: locus NODUS unus -->
+  <#iudicium-una>
+    <liberum nomen="verbum" maximum="1"/>
+    <liberum nomen="iudicium-praeposita" maximum="1"/>
+    <liberum nomen="iudicium-binaria" maximum="1"/>
+    <liberum nomen="iudicium-coniuncta" maximum="1"/>
+    <liberum nomen="iudicium-inclusa" maximum="1"/>
+  </#>
+
+  <!-- trivia: ante/post lexematis cuiusque -->
+  <#trivia>
+    <liberum nomen="crusta-spatium"/>
+    <liberum nomen="crusta-commentum"/>
+    <liberum nomen="crusta-linea"/>
+    <liberum nomen="crusta-lamina"/>
+  </#>
+
+  <!-- =============== INVOLUCRUM =============== -->
+
+  <elementum nomen="arbor" radix="verum"
+    nota="documentum subarboris (arbor M1): liberum unum, genus
+          quodlibet - documentum ex aedificatore (programma), aliud ex
+          proiectione subarboris">
+    <attributum nomen="grammatica" genus="electio"
+      necessarium="verum">
+      <optio>crusta</optio>
+    </attributum>
+    <attributum nomen="registrum-sigillum" genus="electio"
+      necessarium="verum"
+      nota="PINNA: sigillum FNV-1a tabularum crusta_registrum_coctum.c
+            (ex crusta.registrum.stml; P1: L genera, CL loci; P6: CLII
+            loci). Declaratio mutata sine hac optione mutata rubet in
+            iudicio ET in custode derivae (probatio_crusta_canon
+            optionem contra materia_arbor_sigillum vivum confert).
+            Manu movenda cum causa.">
+      <optio>0ad54dc6</optio>
+    </attributum>
+    <attributum nomen="fons"    genus="numerus"/>
+    <attributum nomen="b"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+    <attributum nomen="linea-initium" genus="electio"
+      nota="attributum NUDUM - stml praesentiam ut 'true' internat;
+            lexema primum lineam incipit (P7)">
+      <optio>true</optio>
+    </attributum>
+    <liberum nomen="programma" maximum="1"/>
+    <liberum nomen="separator" maximum="1"/>
+    <liberum nomen="malum" maximum="1"/>
+    <liberum nomen="heredoc" maximum="1"/>
+    <liberum nomen="catena" maximum="1"/>
+    <liberum nomen="pipa" maximum="1"/>
+    <liberum nomen="operator" maximum="1"/>
+    <liberum nomen="imperium" maximum="1"/>
+    <liberum nomen="assignatio" maximum="1"/>
+    <liberum nomen="tabulatum" maximum="1"/>
+    <liberum nomen="redirectio" maximum="1"/>
+    <liberum nomen="functio" maximum="1"/>
+    <liberum nomen="grex" maximum="1"/>
+    <liberum nomen="crustula" maximum="1"/>
+    <liberum nomen="conditio" maximum="1"/>
+    <liberum nomen="ramus" maximum="1"/>
+    <liberum nomen="iteratio" maximum="1"/>
+    <liberum nomen="cyclus" maximum="1"/>
+    <liberum nomen="repetitio" maximum="1"/>
+    <liberum nomen="cursus" maximum="1"/>
+    <liberum nomen="electio" maximum="1"/>
+    <liberum nomen="optio" maximum="1"/>
+    <liberum nomen="arithmetica" maximum="1"/>
+    <liberum nomen="iudicium" maximum="1"/>
+    <liberum nomen="socius" maximum="1"/>
+    <liberum nomen="verbum" maximum="1"/>
+    <liberum nomen="pars-litteralis" maximum="1"/>
+    <liberum nomen="pars-effugium" maximum="1"/>
+    <liberum nomen="pars-continuatio" maximum="1"/>
+    <liberum nomen="pars-simplex" maximum="1"/>
+    <liberum nomen="pars-gemina" maximum="1"/>
+    <liberum nomen="pars-effugia" maximum="1"/>
+    <liberum nomen="pars-versa" maximum="1"/>
+    <liberum nomen="pars-parametrum" maximum="1"/>
+    <liberum nomen="pars-expansio" maximum="1"/>
+    <liberum nomen="pars-substitutio" maximum="1"/>
+    <liberum nomen="pars-arithmetica" maximum="1"/>
+    <liberum nomen="pars-processus" maximum="1"/>
+    <liberum nomen="pars-domus" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="variabilis" maximum="1"/>
+    <liberum nomen="praeposita" maximum="1"/>
+    <liberum nomen="postposita" maximum="1"/>
+    <liberum nomen="binaria" maximum="1"/>
+    <liberum nomen="ternaria" maximum="1"/>
+    <liberum nomen="inclusa" maximum="1"/>
+    <liberum nomen="iudicium-praeposita" maximum="1"/>
+    <liberum nomen="iudicium-binaria" maximum="1"/>
+    <liberum nomen="iudicium-coniuncta" maximum="1"/>
+    <liberum nomen="iudicium-inclusa" maximum="1"/>
+  </elementum>
+
+  <!-- TRIVIA: unius domini semper (invariatum circuitus) -->
+
+  <elementum nomen="ante">
+    <<#trivia>>
+  </elementum>
+
+  <elementum nomen="post">
+    <<#trivia>>
+  </elementum>
+
+  <!-- =============== GENERA ET LOCI ===============
+       Ordo registri (crusta.registrum.stml). Locus quisque SEMEL aut
+       nusquam: absentia canonica (locus NIHIL non scribitur; lista in
+       primo appendendo nascitur).
+       -->
+
+  <elementum nomen="programma"
+    nota="radix: lista sententiarum ordine octetorum + lexema FINIS">
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="cauda" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="programma">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="cauda" intra="programma">
+    <liberum nomen="crusta-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="separator"
+    nota="';', '&' aut linea nova quae sententiam terminat (C6)">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="separator">
+    <liberum nomen="crusta-separator" maximum="1"/>
+    <liberum nomen="crusta-separator-lineae" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="malum"
+    nota="totalitas (C12): lexemata quaelibet quae grammatica ponere non potuit">
+    <liberum nomen="tokens" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tokens" intra="malum">
+    <<#lexemata-multa>>
+  </elementum>
+
+  <elementum nomen="heredoc"
+    nota="corpus heredoc ubi octeti iacent (decretum 01M2NJ16RG); partes ut in gemina; 'id' = ancora referentiae 'corpus' redirectionis - in hoc genere SOLO">
+    <attributum nomen="id" genus="textus"
+      nota="ancora referentiae corpus (nodN) - in hoc genere SOLO"/>
+    <liberum nomen="partes" maximum="1"/>
+    <liberum nomen="tok_delimitator" maximum="1"/>
+    <liberum nomen="tok_finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="partes" intra="heredoc">
+    <<#partes-citatae>>
+  </elementum>
+
+  <elementum nomen="tok_delimitator" intra="heredoc">
+    <liberum nomen="crusta-heredoc-delimitator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_finis" intra="heredoc">
+    <liberum nomen="crusta-separator-lineae" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="catena"
+    nota="'&&' / '||': membra et operatores; catena numquam catenam aut separatorem fert (plana)">
+    <liberum nomen="liberi" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="catena">
+    <<#membrum>>
+  </elementum>
+
+  <elementum nomen="pipa"
+    nota="'|' '|&' '!' 'time': praefixa lexemata, membra et operatores; pipa in pipa ('a | time b')">
+    <liberum nomen="praefixa" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="praefixa" intra="pipa">
+    <liberum nomen="crusta-reservatum"/>
+    <liberum nomen="crusta-litteralis"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="pipa">
+    <<#membrum>>
+  </elementum>
+
+  <elementum nomen="operator"
+    nota="operator nudus intra listam: et/aut, pipae, '|' inter exemplaria, '/' ':' in argumentis expansionis, ';' in cyclo">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="operator">
+    <liberum nomen="crusta-pipa" maximum="1"/>
+    <liberum nomen="crusta-pipa-erroris" maximum="1"/>
+    <liberum nomen="crusta-et" maximum="1"/>
+    <liberum nomen="crusta-aut" maximum="1"/>
+    <liberum nomen="crusta-expansio-operator" maximum="1"/>
+    <liberum nomen="crusta-arithmetica-separator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="imperium"
+    nota="imperium simplex: assignationes, verba, redirectiones ordine octetorum">
+    <liberum nomen="liberi" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="imperium">
+    <liberum nomen="assignatio"/>
+    <liberum nomen="verbum"/>
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="assignatio"
+    nota="titulus [subscriptum] operator [valor]">
+    <liberum nomen="tok_titulus" maximum="1"/>
+    <liberum nomen="tok_subscriptum" maximum="1"/>
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="valor" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="assignatio">
+    <liberum nomen="crusta-assignatio-titulus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_subscriptum" intra="assignatio">
+    <liberum nomen="crusta-subscriptum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="assignatio">
+    <liberum nomen="crusta-assignatio-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="valor" intra="assignatio">
+    <liberum nomen="verbum" maximum="1"/>
+    <liberum nomen="tabulatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tabulatum"
+    nota="'( ... )' valor tabulae; '[i]=v' assignatio filia">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="tabulatum">
+    <liberum nomen="crusta-parenthesis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="tabulatum">
+    <liberum nomen="verbum"/>
+    <liberum nomen="assignatio"/>
+    <liberum nomen="heredoc"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="tabulatum">
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectio"
+    nota="[fd] operator scopus; corpus = referentia ad heredoc pro operatoribus heredoc">
+    <liberum nomen="tok_fd" maximum="1"/>
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="scopus" maximum="1"/>
+    <liberum nomen="corpus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_fd" intra="redirectio">
+    <liberum nomen="crusta-redirectio-fd" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="redirectio">
+    <liberum nomen="crusta-redirectio-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="scopus" intra="redirectio">
+    <liberum nomen="verbum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="corpus" intra="redirectio" textus="verum"
+    nota="REFERENTIA #nodN ad nodum heredoc (id) - corpus ubi octeti
+          iacent; absens = petitio sine corpore (EOF)"/>
+
+  <elementum nomen="functio"
+    nota="['function'] titulus ['(' ')'] corpus compositum">
+    <liberum nomen="tok_verbum" maximum="1"/>
+    <liberum nomen="tok_titulus" maximum="1"/>
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="corpus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_verbum" intra="functio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="functio">
+    <liberum nomen="crusta-litteralis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="functio">
+    <liberum nomen="crusta-parenthesis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="functio">
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="corpus" intra="functio">
+    <liberum nomen="grex" maximum="1"/>
+    <liberum nomen="crustula" maximum="1"/>
+    <liberum nomen="conditio" maximum="1"/>
+    <liberum nomen="iteratio" maximum="1"/>
+    <liberum nomen="cyclus" maximum="1"/>
+    <liberum nomen="repetitio" maximum="1"/>
+    <liberum nomen="electio" maximum="1"/>
+    <liberum nomen="arithmetica" maximum="1"/>
+    <liberum nomen="iudicium" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="grex"
+    nota="'{' lista '}' [redirectiones]">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="grex">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="grex">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="grex">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="grex">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="crustula"
+    nota="'(' lista ')' [redirectiones]">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="crustula">
+    <liberum nomen="crusta-parenthesis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="crustula">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="crustula">
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="crustula">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="conditio"
+    nota="if probatio then liberi rami fi [redirectiones]">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="probatio" maximum="1"/>
+    <liberum nomen="tok_deinde" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="rami" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="conditio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="probatio" intra="conditio">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="tok_deinde" intra="conditio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="conditio">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="rami" intra="conditio">
+    <liberum nomen="ramus"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="conditio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="conditio">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="ramus"
+    nota="elif probatio then liberi | else liberi">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="probatio" maximum="1"/>
+    <liberum nomen="tok_deinde" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="ramus">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="probatio" intra="ramus">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="tok_deinde" intra="ramus">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="ramus">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="iteratio"
+    nota="for/select titulus [interiecta] [in verba] separator cursus [redirectiones]; titulus verbum reservatum esse potest ('for if in a')">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="tok_titulus" maximum="1"/>
+    <liberum nomen="interiecta" maximum="1"/>
+    <liberum nomen="tok_in" maximum="1"/>
+    <liberum nomen="verba" maximum="1"/>
+    <liberum nomen="separator" maximum="1"/>
+    <liberum nomen="cursus" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="iteratio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="iteratio">
+    <liberum nomen="crusta-litteralis" maximum="1"/>
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="interiecta" intra="iteratio">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
+  <elementum nomen="tok_in" intra="iteratio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="verba" intra="iteratio">
+    <liberum nomen="verbum"/>
+  </elementum>
+
+  <elementum nomen="separator" intra="iteratio">
+    <liberum nomen="separator"/>
+    <liberum nomen="heredoc"/>
+  </elementum>
+
+  <elementum nomen="cursus" intra="iteratio">
+    <liberum nomen="cursus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="iteratio">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="cyclus"
+    nota="for (( a; b; c )) separator cursus [redirectiones]; liberi = expressiones et operatores ';' (corpora heredoc in lacuna)">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="tok_parenthesis" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_parenthesis_clausura" maximum="1"/>
+    <liberum nomen="separator" maximum="1"/>
+    <liberum nomen="cursus" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="cyclus">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_parenthesis" intra="cyclus">
+    <liberum nomen="crusta-arithmetica-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="cyclus">
+    <<#expressio-multa>>
+    <liberum nomen="operator"/>
+    <liberum nomen="heredoc"/>
+  </elementum>
+
+  <elementum nomen="tok_parenthesis_clausura" intra="cyclus">
+    <liberum nomen="crusta-arithmetica-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="separator" intra="cyclus">
+    <liberum nomen="separator"/>
+    <liberum nomen="heredoc"/>
+  </elementum>
+
+  <elementum nomen="cursus" intra="cyclus">
+    <liberum nomen="cursus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="cyclus">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="repetitio"
+    nota="while/until probatio cursus [redirectiones]">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="probatio" maximum="1"/>
+    <liberum nomen="cursus" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="repetitio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="probatio" intra="repetitio">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="cursus" intra="repetitio">
+    <liberum nomen="cursus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="repetitio">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="cursus"
+    nota="do lista done">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="cursus">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="cursus">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="cursus">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="electio"
+    nota="case verbum [interiecta] in optiones esac [redirectiones]; malum inter optiones (';;' vagum)">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="verbum" maximum="1"/>
+    <liberum nomen="interiecta" maximum="1"/>
+    <liberum nomen="tok_in" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="electio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="verbum" intra="electio">
+    <liberum nomen="verbum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="interiecta" intra="electio">
+    <liberum nomen="heredoc"/>
+  </elementum>
+
+  <elementum nomen="tok_in" intra="electio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="electio">
+    <liberum nomen="optio"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="electio">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="electio">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="optio"
+    nota="['('] exemplaria ')' lista [terminator]">
+    <liberum nomen="tok_parenthesis" maximum="1"/>
+    <liberum nomen="exemplaria" maximum="1"/>
+    <liberum nomen="tok_parenthesis_clausura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_terminator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_parenthesis" intra="optio">
+    <liberum nomen="crusta-parenthesis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="exemplaria" intra="optio">
+    <liberum nomen="verbum"/>
+    <liberum nomen="operator"/>
+    <liberum nomen="heredoc"/>
+  </elementum>
+
+  <elementum nomen="tok_parenthesis_clausura" intra="optio">
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="optio">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="tok_terminator" intra="optio">
+    <liberum nomen="crusta-terminator-optionis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="arithmetica"
+    nota="(( expressio )) ut imperium [redirectiones]">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="arithmetica">
+    <liberum nomen="crusta-arithmetica-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="expressio" intra="arithmetica">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="arithmetica">
+    <liberum nomen="crusta-arithmetica-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="arithmetica">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="iudicium"
+    nota="[[ expressio ]] ut imperium [redirectiones]; '[[' ut verbum reservatum lexatur">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="redirectiones" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="iudicium">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+    <liberum nomen="crusta-iudicium-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="expressio" intra="iudicium">
+    <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="iudicium">
+    <liberum nomen="crusta-iudicium-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="redirectiones" intra="iudicium">
+    <liberum nomen="redirectio"/>
+  </elementum>
+
+  <elementum nomen="socius"
+    nota="coproc [titulus] imperium (simplex aut compositum)">
+    <liberum nomen="tok_verbum" maximum="1"/>
+    <liberum nomen="tok_titulus" maximum="1"/>
+    <liberum nomen="imperium" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_verbum" intra="socius">
+    <liberum nomen="crusta-reservatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="socius">
+    <liberum nomen="crusta-litteralis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="imperium" intra="socius">
+    <liberum nomen="imperium" maximum="1"/>
+    <liberum nomen="grex" maximum="1"/>
+    <liberum nomen="crustula" maximum="1"/>
+    <liberum nomen="conditio" maximum="1"/>
+    <liberum nomen="iteratio" maximum="1"/>
+    <liberum nomen="cyclus" maximum="1"/>
+    <liberum nomen="repetitio" maximum="1"/>
+    <liberum nomen="electio" maximum="1"/>
+    <liberum nomen="arithmetica" maximum="1"/>
+    <liberum nomen="iudicium" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="verbum"
+    nota="cursus partium adiacentium (C10)">
+    <liberum nomen="partes" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="partes" intra="verbum">
+    <<#partes-omnes>>
+  </elementum>
+
+  <elementum nomen="pars-litteralis"
+    nota="octeti nudi; REGULA post '=~' in iudicio">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="pars-litteralis">
+    <liberum nomen="crusta-litteralis" maximum="1"/>
+    <liberum nomen="crusta-regula" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-effugium"
+    nota="'\x'">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="pars-effugium">
+    <liberum nomen="crusta-effugium" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-continuatio"
+    nota="'\' + linea nova intra verbum">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="pars-continuatio">
+    <liberum nomen="crusta-continuatio" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-simplex"
+    nota="'...' totum">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="pars-simplex">
+    <liberum nomen="crusta-simplex" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-gemina"
+    nota=""..." cum partibus">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="partes" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="pars-gemina">
+    <liberum nomen="crusta-gemina-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="partes" intra="pars-gemina">
+    <<#partes-citatae>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="pars-gemina">
+    <liberum nomen="crusta-gemina-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-effugia"
+    nota="$'...' totum">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="pars-effugia">
+    <liberum nomen="crusta-effugia" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-versa"
+    nota="$"..." cum partibus">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="partes" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="pars-versa">
+    <liberum nomen="crusta-versa-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="partes" intra="pars-versa">
+    <<#partes-citatae>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="pars-versa">
+    <liberum nomen="crusta-gemina-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-parametrum"
+    nota="$x $1 $? ...">
+    <liberum nomen="tok_sigillum" maximum="1"/>
+    <liberum nomen="tok_titulus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_sigillum" intra="pars-parametrum">
+    <liberum nomen="crusta-parametrum-sigillum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="pars-parametrum">
+    <liberum nomen="crusta-parametrum-titulus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-expansio"
+    nota="${ [praefixum] titulus [subscriptum] [operator argumenta] }">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="tok_praefixum" maximum="1"/>
+    <liberum nomen="tok_titulus" maximum="1"/>
+    <liberum nomen="tok_subscriptum" maximum="1"/>
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="argumenta" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="pars-expansio">
+    <liberum nomen="crusta-expansio-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_praefixum" intra="pars-expansio">
+    <liberum nomen="crusta-expansio-praefixum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="pars-expansio">
+    <liberum nomen="crusta-parametrum-titulus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_subscriptum" intra="pars-expansio">
+    <liberum nomen="crusta-subscriptum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="pars-expansio">
+    <liberum nomen="crusta-expansio-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="argumenta" intra="pars-expansio">
+    <liberum nomen="verbum"/>
+    <liberum nomen="operator"/>
+    <liberum nomen="heredoc"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="pars-expansio">
+    <liberum nomen="crusta-expansio-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-substitutio"
+    nota="$( lista ) aut `lista`">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="pars-substitutio">
+    <liberum nomen="crusta-substitutio-apertura" maximum="1"/>
+    <liberum nomen="crusta-gravis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="pars-substitutio">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="pars-substitutio">
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+    <liberum nomen="crusta-gravis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-arithmetica"
+    nota="$(( expressio ))">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="pars-arithmetica">
+    <liberum nomen="crusta-arithmetica-partis-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="expressio" intra="pars-arithmetica">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="pars-arithmetica">
+    <liberum nomen="crusta-arithmetica-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-processus"
+    nota="<( lista ) aut >( lista )">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="pars-processus">
+    <liberum nomen="crusta-processus-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="pars-processus">
+    <<#sententia>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="pars-processus">
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-domus"
+    nota="~ aut ~user">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="pars-domus">
+    <liberum nomen="crusta-domus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="numerus"
+    nota="arithmetica: numerus">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="numerus">
+    <liberum nomen="crusta-numerus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="variabilis"
+    nota="arithmetica: titulus [subscriptum]">
+    <liberum nomen="tok_titulus" maximum="1"/>
+    <liberum nomen="tok_subscriptum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="variabilis">
+    <liberum nomen="crusta-variabilis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_subscriptum" intra="variabilis">
+    <liberum nomen="crusta-subscriptum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="praeposita"
+    nota="-x !x ~x ++x --x +x">
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="operandum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="praeposita">
+    <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="operandum" intra="praeposita">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="postposita"
+    nota="x++ x--">
+    <liberum nomen="operandum" maximum="1"/>
+    <liberum nomen="tok_operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="operandum" intra="postposita">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="postposita">
+    <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="binaria"
+    nota="sinister operator dexter">
+    <liberum nomen="sinister" maximum="1"/>
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="dexter" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="sinister" intra="binaria">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="binaria">
+    <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="dexter" intra="binaria">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="ternaria"
+    nota="probatio ? sinister : dexter">
+    <liberum nomen="probatio" maximum="1"/>
+    <liberum nomen="tok_quaestio" maximum="1"/>
+    <liberum nomen="sinister" maximum="1"/>
+    <liberum nomen="tok_colon" maximum="1"/>
+    <liberum nomen="dexter" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="probatio" intra="ternaria">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="tok_quaestio" intra="ternaria">
+    <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="sinister" intra="ternaria">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="tok_colon" intra="ternaria">
+    <liberum nomen="crusta-arithmetica-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="dexter" intra="ternaria">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="inclusa"
+    nota="( expressio )">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="inclusa">
+    <liberum nomen="crusta-parenthesis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="expressio" intra="inclusa">
+    <<#expressio-una>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="inclusa">
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="iudicium-praeposita"
+    nota="[[ ]]: -f x, ! c">
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="operandum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="iudicium-praeposita">
+    <liberum nomen="crusta-iudicium-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="operandum" intra="iudicium-praeposita">
+    <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="iudicium-binaria"
+    nota="[[ ]]: a == b, a =~ re">
+    <liberum nomen="sinister" maximum="1"/>
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="dexter" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="sinister" intra="iudicium-binaria">
+    <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="iudicium-binaria">
+    <liberum nomen="crusta-iudicium-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="dexter" intra="iudicium-binaria">
+    <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="iudicium-coniuncta"
+    nota="[[ ]]: && aut ||">
+    <liberum nomen="sinister" maximum="1"/>
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="dexter" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="sinister" intra="iudicium-coniuncta">
+    <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="iudicium-coniuncta">
+    <liberum nomen="crusta-iudicium-operator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="dexter" intra="iudicium-coniuncta">
+    <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="iudicium-inclusa"
+    nota="[[ ]]: ( c )">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="expressio" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="iudicium-inclusa">
+    <liberum nomen="crusta-parenthesis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="expressio" intra="iudicium-inclusa">
+    <<#iudicium-una>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="iudicium-inclusa">
+    <liberum nomen="crusta-parenthesis-clausura" maximum="1"/>
+  </elementum>
+
+  <!-- =============== LEXEMATA ===============
+       Ex CrustaLexGenus (crusta_lexicon.h) per crusta_lexicon.c:
+       VERBATIM textum fert (+ 'cr'), FIXUM et TERMINATOR orthographiam
+       in genere ipso habent (elementum vacuum). Trivia ante/post
+       omnibus licent.
+       -->
+
+  <elementum nomen="crusta-finis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-reservatum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-assignatio-titulus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-subscriptum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-assignatio-operator" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-redirectio-fd" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-redirectio-operator" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-pipa">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-pipa-erroris">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-et">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-aut">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-separator" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-separator-lineae">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-terminator-optionis" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-parenthesis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-parenthesis-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-arithmetica-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-arithmetica-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-iudicium-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-iudicium-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-litteralis" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-effugium" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-continuatio" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-simplex" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-gemina-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-gemina-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-effugia" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-versa-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-parametrum-sigillum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-parametrum-titulus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-expansio-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-expansio-praefixum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-expansio-operator" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-expansio-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-substitutio-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-gravis" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-arithmetica-partis-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-processus-apertura" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-domus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-heredoc-delimitator" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-numerus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-variabilis" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-arithmetica-operator" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-arithmetica-separator">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-iudicium-operator" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-regula" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-spatium" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-commentum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-linea">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="crusta-lamina" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+</canon>

@@ -18,8 +18,32 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P7 done)
+## Praesens status (2026-09-16 — P8 done)
 
+- **P8, the canon:** `crusta/grammatica/crusta.canon`, HAND-WRITTEN
+  on html's model (255 rules: the `<arbor>` envelope with
+  `grammatica="crusta"` and the registry seal `0ad54dc6` pinned, 50
+  genus rules, 152 locus rules at SPECIES level, 50 lexeme rules
+  `crusta-*`, `ante`/`post`). The species tables were MEASURED, not
+  read from the builder: a scratch probe walked every tree of P7's 473
+  documents plus ~200 corner cases and tallied the child genera of
+  every slot (unions: `#sententia` 17 for every sentence list;
+  `#membrum` 16 for catena/pipa — never a catena, never a separator,
+  pipa in pipa; `#partes-omnes` 13 / `#partes-citatae` 7; `#expressio`
+  12 for arithmetic slots, parts included; `#iudicium` 5). `id`
+  declared on `heredoc` only (the `corpus` reference target); `cr` and
+  `textus="verum"` on the 29 VERBATIM lexemes only; the envelope's
+  `linea-initium` as an electio of `true` (silva's form). Gate `canon`
+  (`probatio_crusta_canon.c`): the drift guard both ways (every genus,
+  locus and lexeme has exactly one rule; every rule names a live one;
+  counts pinned 50/152/50) and the seal pin against the live
+  `materia_arbor_sigillum`; the judgment over 122 inline cases (P7's
+  102 + 20 corner cases), 47 fixture cases (the two P7 refusals counted
+  by cause) and all 322 corpus files: ZERO violations, 491 documents.
+  Green on its first run; plants: the `verbum` rule deleted → guard and
+  every judgment red; a false seal → guard and every judgment red.
+  The plan's `./tools/natura_struere.sh` step was not needed (client
+  canons are not enumerated there).
 - **P7, the STML projection:** gate `stml` (`probatio_crusta_stml.c`):
   every inline case of the arbor and arithmetic gates (102), every
   fixture case through the case reader (49) and the whole P6 corpus
@@ -240,7 +264,9 @@ locus: append to the declaration (locus order = emission order = byte
 order), run `-scribere`, add the slot enum in `crusta_registrum.h`, the
 row in `LOCI_NOMINATI` (registrum probatio, generated from the
 declaration by the P1 script — regenerate it the same way), the rule in
-`crusta.canon` (P8), and move the seal there by hand with a cause. Node
+`crusta.canon` (P8: a genus rule plus one `intra=` rule per locus —
+the drift guard fails on a missing or stale one), and move the seal
+there by hand with a cause (the canon gate prints the live seal). Node
 sizes come from `CRUSTA_REGISTRUM.genera[g].loci_numerus`, never a hand
 count. A `nota` in the declaration is copied VERBATIM into the
 generated C comments: write notes in words, never XML entities.
