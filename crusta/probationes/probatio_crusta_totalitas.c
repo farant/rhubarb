@@ -667,7 +667,7 @@ principale (vacuum)
             _casum_probare(titulus, conversum, n, &casus_crlf);
         }
         imprimere("  casus %d\n", (integer)casus_crlf);
-        CREDO_AEQUALIS_I32 (casus_crlf, (i32)XXXIII);
+        CREDO_AEQUALIS_I32 (casus_crlf, (i32)XXXVII);
     }
 
 

@@ -896,10 +896,10 @@ principale (vacuum)
         "probationes/fixa/crusta/adversarius.sh", &fixa,
         &titulus_recusati);
     _summam_imprimere("fixa", &fixa);
-    /* XXXII + XVII casus; recusatio una sola: 'forma-cruda' per
+    /* XXXVI + XVII casus; recusatio una sola: 'forma-cruda' per
      * sequentiam claudentem (limes 01M2KPJ0HW) */
-    CREDO_AEQUALIS_I32 (fixa.plagulae, (i32)XLIX);
-    CREDO_AEQUALIS_I32 (fixa.per_causam[CIRCUITUS_IDEM], (i32)XLVII);
+    CREDO_AEQUALIS_I32 (fixa.plagulae, (i32)LIII);
+    CREDO_AEQUALIS_I32 (fixa.per_causam[CIRCUITUS_IDEM], (i32)LI);
     CREDO_AEQUALIS_I32 (
         fixa.per_causam[CIRCUITUS_SCRIPTURA_RECUSATA_SEQUENTIA],
         (i32)I);

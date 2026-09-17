@@ -3865,7 +3865,7 @@ principale (vacuum)
   worklog and in the header comment of `CrustaParsura.diagnostica`); (3)
   anything else — STOP and bring it to Fran. No exemptions.
 
-- [ ] **Step 6: bash's lines and verdicts** in
+- [x] **Step 6: bash's lines and verdicts** in
   `probatio_crusta_differentia.c`. Two new RISING pins, both born at the
   measured value: `PINNA_GRAVITATIS` (cases where "no erratum" agrees
   with bash's exit 0 — the expectation, not a promise, is that the three
@@ -3968,6 +3968,39 @@ _linea_bash (
   (i32)PINNA_LINEARUM);`. Birth: set both pins to 0, run, read the
   printed values, set the pins to them with the cause in the commit.
 
+**Executed 2026-09-17.** As planned for the line pin, which was born at
+7/9 and is a complete law, not a residue: all six cases where bash names
+a TOKEN agree; two of the three where bash says `unexpected end of file`
+differ because bash reports the EOF line and we report the end of the
+unfinished construct (`crlf` bash 5 / us 2, `si-apertum` bash 2 / us 1)
+— kept deliberately, the construct's place serves a reader better.
+Plant: ABSENTIA's point moved from the node's end to its start → red on
+`lineae_concordes`.
+
+The gravitas pin was **born dead and had to be earned.** It first read
+118, identical to `concordes` case for case, and NO plant could move it
+— not demoting the heredoc-at-EOF warning (that case was already
+discordant for another reason), not removing every `gravitas="monitum"`
+in the declaration. Cause: no oracle case carried a monitum without also
+carrying an erratum. D9's four shapes (`[[ a b ]]`, `(( 1 2 ))`,
+`(( 3 ! ))`, `$(( 1 + ))` — bash exit 0, the first with a message)
+existed only as inline shapes in the `diagnostica` gate, with no bash
+golden, so `differentia` could not see them. With Fran: appended to
+`pathologiae.sh`, goldens regenerated → gravitas 122 while `concordes`
+stays 118, the gap of four being exactly the monita, and the identical
+plant now fires. The three remaining discordes are all desideratum
+01M2PN1VYH, so the pin reaches 125 when that is fulfilled.
+
+Widening the corpus moved pins in six gates plus one computus row, each
+with its cause (exempla 32→36 and its tail assertion, stml 49→53 and
+47→51, canon 47→51, totalitas 33→37, oraculum 121→125 / 112→115 /
+`declare -f` 103→106, differentia 121→125; `pathologiae.sh` 1,735→1,883
+bytes with the other four computus rows byte-identical). Trap: the Edit
+tool NORMALIZES line endings — editing the fixture through it stripped
+all four CR bytes from the `crlf` case and the regenerated golden
+recorded bash accepting it (status 2 → 0); caught only by a golden diff
+line I had not intended. Restored and re-appended with `printf >>`.
+Gates: crusta 15/15.
 - [x] **Step 7: Plant, docs, commit.** Plant by hand in the declaration:
   remove `inanis="verum"` from `separator`, regenerate → the agreement
   gate goes red on `{ ; }`-shaped cases (vacuae); restore, regenerate →

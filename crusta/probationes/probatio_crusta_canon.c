@@ -922,8 +922,8 @@ principale (vacuum)
         }
     }
     _summam_imprimere("fixa", &fixorum);
-    /* XXXII + XVII casus; duo a scriptore recusati (limites P7) */
-    CREDO_AEQUALIS_I32 (fixorum.iudicata, (i32)XLVII);
+    /* XXXVI + XVII casus; duo a scriptore recusati (limites P7) */
+    CREDO_AEQUALIS_I32 (fixorum.iudicata, (i32)LI);
     CREDO_AEQUALIS_I32 (fixorum.vitiosa, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (fixorum.recusata_sequentia, (i32)I);
     CREDO_AEQUALIS_I32 (fixorum.recusata_mixtum, (i32)I);

@@ -1,7 +1,7 @@
 # expectata.txt - aurum oraculi crustae (P11b): 'declare -f f' super 'f() {' casus '}'
 # bash: GNU bash, version 5.2.15(1)-release (aarch64-apple-darwin22.1.0)
 # ambitus: env -i LC_ALL=C PATH=/nonexistent /opt/homebrew/bin/bash -r
-# scriptum 2026-09-16 per ./crusta/oraculum.sh -scribere; numquam manu
+# scriptum 2026-09-17 per ./crusta/oraculum.sh -scribere; numquam manu
 #### pathologiae:positio-verba
 ## EXSPECTATUM:
 f () 
@@ -247,6 +247,27 @@ f ()
     { 
         ( : )
     }
+}
+## END
+#### pathologiae:arith-sine-operatore
+## EXSPECTATUM:
+f () 
+{ 
+    (( 1 2 ))
+}
+## END
+#### pathologiae:arith-negatio-vaga
+## EXSPECTATUM:
+f () 
+{ 
+    (( 3 ! ))
+}
+## END
+#### pathologiae:arith-operandum-absens
+## EXSPECTATUM:
+f () 
+{ 
+    $(( 1 + ))
 }
 ## END
 #### freebsd:alias1.0

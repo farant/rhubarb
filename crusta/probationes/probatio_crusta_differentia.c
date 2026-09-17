@@ -7,11 +7,41 @@
  *     status == 0. CONCORDES pinnati ASCENDENTES; discordes SEMPER
  *     nominantur cum verdictis ambobus - divergentiae notae (quaestio
  *     01M2NT4CDD): bash monet sed exitus 0 (heredoc ad EOF, '[[ a b
- *     ]]', arithmetica tempore parsurae non iudicata).
+ *     ]]', arithmetica tempore parsurae non iudicata). Discordes VII:
+ *     IV formae D9 (vide (c) infra) et III desiderati 01M2PN1VYH.
  * (b) Corpus domus: omnis plagula build/crusta_corpus.lst (cursor eam
  *     scribit) praeter fixa pathologiae.sh et adversarius.sh
  *     parsatur, mala summantur - pinna DESCENDENS tantum, finis
  *     ZEPHYRUM.
+ * (c) Gravitas et linea super eosdem casus (planum materia-sedes B3,
+ *     passus VI), ex diagnosticis DERIVATIS - via ALIA quam (a), quae
+ *     numeros parsatoris legit: 'erratum nullum' contra bash exitum 0
+ *     (monitum exitum non movet - delta D9), et linea errati primi
+ *     contra numerum post 'line ' in textu erroris bash. Pinnae ambae
+ *     ASCENDENTES; discordes SEMPER nominantur.
+ *
+ *     Mensa nativitatis (2026-09-17): gravitas CXXII/CXXV contra
+ *     CONCORDES CXVIII eiusdem cursus - HIATUS QUATTUOR est ratio
+ *     huius pinnae. Formae D9 ('[[ a b ]]', '(( 1 2 ))', '(( 3 ! ))',
+ *     '$(( 1 + ))') bash exitu ZEPHYRUM accipit; relatio.sana eas
+ *     negat, sed diagnostica derivata eas MONITA vocant, non errata.
+ *     Ergo (c) concordat ubi (a) discordat: gravitas quod numeri
+ *     parsatoris non possunt mensurat. Casus appensi in pathologiae.sh
+ *     hoc passu ipso, quia corpus eos non ferebat (planta viridis
+ *     mansit donec adessent - lectio eadem quam passus III dedit).
+ *     Discordes tres reliqui iidem sunt quos (a) videt, OMNES
+ *     desiderati 01M2PN1VYH (bash '\'+nova-linea ANTE lexin tollit:
+ *     line-cont5.0, line-cont6.0; heredocum in substitutione
+ *     multi-lineari: heredoc5.0) - pinna ad CXXV ascendet cum illud
+ *     impletum erit.
+ *
+ *     Linea VII/IX: casus omnes quibus bash LEXEMA nominat ('near
+ *     unexpected token', VI) concordant; discordant duo ex tribus
+ *     quibus bash FINEM PLAGULAE nominat ('unexpected end of file'),
+ *     ubi bash lineam EOF dat et crusta finem constructionis
+ *     imperfectae (crlf: bash V, crusta II; si-apertum: bash II,
+ *     crusta I). Ea divergentia CONSILIUM est, non vitium: sedes
+ *     constructionis lectori plus valet quam sedes EOF.
  *
  * Mensura sui: casus, aura et plagulae domus numerantur et pinnantur.
  */
@@ -19,17 +49,21 @@
 #include "latina.h"
 #include "credo.h"
 #include "crusta_arbor.h"
+#include "crusta_diagnostica.h"
 #include "crusta_exempla.h"
 #include "crusta_oraculum.h"
 #include "crusta_registrum.h"
+#include "materia_diagnostica.h"
 #include "piscina.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define CASUS_NUMERUS      121
-#define AURA_NUMERUS       121
+#define CASUS_NUMERUS      125
+#define AURA_NUMERUS       125
 #define PINNA_CONCORDIUM   118
+#define PINNA_GRAVITATIS   122
+#define PINNA_LINEARUM     7
 #define MALA_DOMUS_PINNA   0
 #define DOMUS_MINIMUM      200
 
@@ -51,6 +85,33 @@ _status (
     redde textus.mensura > ZEPHYRUM ? v : (i32)CCLV;
 }
 
+/* numerus post 'line ' primum in textu erroris bash; ZEPHYRUM =
+ * nullus */
+interior i32
+_linea_bash (
+    chorda textus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k + V < textus.mensura; k++)
+    {
+        si (memcmp(textus.datum + k, "line ", (size_t)V) == ZEPHYRUM)
+        {
+            i32 v = ZEPHYRUM;
+            i32 j = k + V;
+
+            dum (   j < textus.mensura && textus.datum[j] >= '0'
+                 && textus.datum[j] <= '9')
+            {
+                v = v * (i32)X + (i32)(textus.datum[j] - '0');
+                j++;
+            }
+            redde v;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
 s32
 principale (vacuum)
 {
@@ -69,6 +130,9 @@ principale (vacuum)
                    i32  plagulae   = ZEPHYRUM;
                    i32  mala       = ZEPHYRUM;
                    i32  k;
+                   i32  gravitas_concordes  = ZEPHYRUM;
+                   i32  lineae_comparatae   = ZEPHYRUM;
+                   i32  lineae_concordes    = ZEPHYRUM;
 
     piscina = piscina_generare_dynamicum("probatio_crusta_differentia",
         4194304);
@@ -149,6 +213,58 @@ principale (vacuum)
                 (integer)sana, (integer)relatio.mala,
                 (integer)relatio.clausurae_absentes);
         }
+        si (arbor != NIHIL)
+        {
+                                   Xar* diagnostica;
+            constans MateriaDiagnosticum* primum = NIHIL;
+                                   i32  j;
+
+            diagnostica = crusta_diagnostica(piscina, arbor, &relatio);
+            per (j = ZEPHYRUM; diagnostica != NIHIL
+                 && j < xar_numerus(diagnostica); j++)
+            {
+                constans MateriaDiagnosticum* d =
+                    (constans MateriaDiagnosticum*)xar_obtinere(
+                        diagnostica, j);
+
+                si (d->gravitas == (s32)MATERIA_GRAVITAS_ERRATUM)
+                {
+                    primum = d;
+                    frange;
+                }
+            }
+            si ((primum == NIHIL) == (accepta ? VERUM : FALSUM))
+            {
+                gravitas_concordes++;
+            }
+            alioquin
+            {
+                imprimere("    gravitas discors %.*s: bash status "
+                    "%.*s, erratum primum %s\n",
+                    (integer)c->clavis.mensura,
+                    (constans character*)c->clavis.datum,
+                    (integer)status.mensura,
+                    (constans character*)status.datum,
+                    primum != NIHIL ? primum->codex : "-");
+            }
+            si (   !accepta && erratum.datum != NIHIL
+                && _linea_bash(erratum) > ZEPHYRUM && primum != NIHIL)
+            {
+                lineae_comparatae++;
+                si (primum->tractus.linea == _linea_bash(erratum))
+                {
+                    lineae_concordes++;
+                }
+                alioquin
+                {
+                    imprimere("    linea discors %.*s: bash %d, "
+                        "crusta %d (%s)\n", (integer)c->clavis.mensura,
+                        (constans character*)c->clavis.datum,
+                        (integer)_linea_bash(erratum),
+                        (integer)primum->tractus.linea, primum->codex);
+                }
+            }
+        }
     }
     imprimere("    casus %d, aura %d: concordes %d, discordes %d, sine "
         "auro %d (pinna concordium %d)\n",
@@ -161,10 +277,28 @@ principale (vacuum)
             "attolle\n",
             (integer)concordes, (integer)PINNA_CONCORDIUM);
     }
+    imprimere("    gravitas concordes %d (pinna %d), lineae %d/%d "
+        "(pinna %d)\n", (integer)gravitas_concordes,
+        (integer)PINNA_GRAVITATIS, (integer)lineae_concordes,
+        (integer)lineae_comparatae, (integer)PINNA_LINEARUM);
+    si (gravitas_concordes > (i32)PINNA_GRAVITATIS)
+    {
+        imprimere("    NOTA: gravitas concordes %d > pinna %d - "
+            "pinnam attolle\n",
+            (integer)gravitas_concordes, (integer)PINNA_GRAVITATIS);
+    }
+    si (lineae_concordes > (i32)PINNA_LINEARUM)
+    {
+        imprimere("    NOTA: lineae concordes %d > pinna %d - pinnam "
+            "attolle\n",
+            (integer)lineae_concordes, (integer)PINNA_LINEARUM);
+    }
     CREDO_AEQUALIS_I32 (xar_numerus(collectio), (i32)CASUS_NUMERUS);
     CREDO_AEQUALIS_I32 (xar_numerus(aurum), (i32)AURA_NUMERUS);
     CREDO_AEQUALIS_I32 (concordes + discordes, (i32)AURA_NUMERUS);
     CREDO_VERUM (concordes >= (i32)PINNA_CONCORDIUM);
+    CREDO_VERUM (gravitas_concordes >= (i32)PINNA_GRAVITATIS);
+    CREDO_VERUM (lineae_concordes >= (i32)PINNA_LINEARUM);
 
 
     /* ==================================================

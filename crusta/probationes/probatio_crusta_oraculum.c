@@ -31,9 +31,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define CASUS_NUMERUS  121
-#define AURA_NUMERUS   112
-#define PINNA_PARIUM   103
+#define CASUS_NUMERUS  125
+#define AURA_NUMERUS   115
+#define PINNA_PARIUM   106
 
 interior vacuum
 _differentiam_imprimere (

@@ -643,3 +643,72 @@ construction, named here so nobody mistakes them for tested.
 
 Plants: VACUA counted as a closure → red; `malum` `inanis` removed →
 red on the two inline shapes; both green on revert.
+
+## 2026-09-17 — step 6: the derived diagnostics beside bash's own verdict
+
+Two rising pins in `probatio_crusta_differentia.c`, both reading the
+DERIVED diagnostics rather than `CrustaParsura`'s counters, so they are
+a third path over the same cases: `PINNA_GRAVITATIS` ("no erratum"
+agrees with bash's exit 0) and `PINNA_LINEARUM` (the first erratum's
+`tractus.linea` equals the `line N` in bash's own error text).
+
+**The line pin, 7/9, and why the two misses are a law rather than a
+residue.** All six cases where bash names a token (`syntax error near
+unexpected token`) agree on the line. Of the three where bash says
+`unexpected end of file`, one agrees and two do not: `crlf` (bash 5, us
+2) and `si-apertum` (bash 2, us 1). In both, bash reports the line it
+gave up on — the end of the file — and we report the end of the
+unfinished construct. Keeping ours is deliberate: pointing at the `if`
+that never closed helps a reader more than pointing at EOF. Planting
+against it (ABSENTIA's zero-width point moved from the node's end to
+its start, in `materia_diagnostica.c`) turns the gate red on exactly
+`lineae_concordes` and green on revert.
+
+**The gravitas pin was DEAD when first measured, and finding that out
+was the work.** It read 118 — the same number `concordes` read, case
+for case. Two plants could not move it: demoting the heredoc-at-EOF
+warning to an error did nothing (that case was already discordant for
+another reason, so the count never changed), and then removing EVERY
+`gravitas="monitum"` from the whole declaration also did nothing. The
+reason is exact: no oracle case carried a monitum without also carrying
+an erratum, so "no erratum" and "sana" could not disagree anywhere.
+
+The four shapes D9 measured for precisely this purpose — `[[ a b ]]`,
+`(( 1 2 ))`, `(( 3 ! ))`, `$(( 1 + ))`, all of which bash accepts with
+exit 0 (the first with a message, the rest silently, since bash does
+not evaluate arithmetic at parse time) — lived only as inline shapes in
+the `diagnostica` gate. They had no bash golden, so `differentia` could
+not see them. Appended to `pathologiae.sh` and the goldens regenerated,
+gravitas rises to 122 while `concordes` stays at 118: the gap of four
+IS the monita, which is what D9 designed the pin to show. The identical
+plant — every `gravitas="monitum"` removed — now goes red on exactly
+those four cases, and leaves `concordes` at 118 untouched.
+
+**A pin you cannot make fail is measuring its neighbour, not the
+world.** This is the same lesson step 3 learned from the green
+`separator` plant, met from the other side: there the rule had no case,
+here the case had no golden. Both times the fix was to widen the
+corpus, and both times the gate was worthless until it was.
+
+**Widening a corpus moves pins in six files.** The four cases moved:
+`exempla` 32 → 36 cases and 32 → 36 newline-terminated, plus the tail
+assertion (index 31 `parenthesis-vaga` → 35 `arith-operandum-absens`);
+`stml` 49 → 53 fixture documents and 47 → 51 identical round trips;
+`canon` 47 → 51 judged; `totalitas` 33 → 37 CRLF cases; `oraculum`
+121 → 125 cases, 112 → 115 goldens, `declare -f` pares 103 → 106;
+`differentia` 121 → 125; and one row of the computus golden
+(`pathologiae.sh` 1,735 → 1,883 bytes, 400 → 420 tokens, 539 → 561
+nodes — the other four rows byte-identical, which is the check that the
+change was local). Regenerated with `COMPUTUS_SCRIBERE=1`.
+
+**The Edit tool normalizes line endings; `pathologiae.sh` carries CR on
+purpose.** Editing the fixture through it to change one appended line
+silently stripped all four CR bytes from the `crlf` case, and the next
+golden regeneration duly recorded bash accepting the file (status 2 → 0)
+— a fixture quietly neutered, visible only because the golden diff
+showed a case I had not touched. Restored from git and re-appended with
+`printf >>`, which is a pure append: 8 insertions, 0 deletions. Same
+family as "never `silva.Editio` on a `.sh`" — for a fixture whose BYTES
+are the point, only append or write the bytes; never round-trip it
+through a tool that may reflow or normalize. **A diff line you did not
+intend is the finding, even when the gate that follows is green.**

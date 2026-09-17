@@ -1,7 +1,7 @@
 # sanitas.txt - aurum oraculi crustae (P11b): 'bash -n -c casus'
 # bash: GNU bash, version 5.2.15(1)-release (aarch64-apple-darwin22.1.0)
 # ambitus: env -i LC_ALL=C PATH=/nonexistent /opt/homebrew/bin/bash -r
-# scriptum 2026-09-16 per ./crusta/oraculum.sh -scribere; numquam manu
+# scriptum 2026-09-17 per ./crusta/oraculum.sh -scribere; numquam manu
 #### pathologiae:positio-verba
 ## status: 0
 ## ERRATUM: -
@@ -98,6 +98,18 @@
 #### pathologiae:parenthesis-vaga
 ## status: 2
 ## ERRATUM: /opt/homebrew/bin/bash: -c: line 1: syntax error near unexpected token `)'
+#### pathologiae:iudicium-sine-operatore
+## status: 0
+## ERRATUM: /opt/homebrew/bin/bash: -c: line 1: conditional binary operator expected
+#### pathologiae:arith-sine-operatore
+## status: 0
+## ERRATUM: -
+#### pathologiae:arith-negatio-vaga
+## status: 0
+## ERRATUM: -
+#### pathologiae:arith-operandum-absens
+## status: 0
+## ERRATUM: -
 #### freebsd:alias1.0
 ## status: 0
 ## ERRATUM: -

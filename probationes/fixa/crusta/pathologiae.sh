@@ -83,3 +83,11 @@ if true; then
 esac
 #### parenthesis-vaga
 a ) b
+#### iudicium-sine-operatore
+[[ a b ]]
+#### arith-sine-operatore
+(( 1 2 ))
+#### arith-negatio-vaga
+(( 3 ! ))
+#### arith-operandum-absens
+$(( 1 + ))

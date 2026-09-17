@@ -199,13 +199,13 @@ principale (vacuum)
         CREDO_NON_NIHIL (fons);
         exempla = crusta_exempla_legere(piscina, fons, mensura);
         CREDO_NON_NIHIL (exempla);
-        CREDO_AEQUALIS_I32 (xar_numerus(exempla), (i32)XXXII);
+        CREDO_AEQUALIS_I32 (xar_numerus(exempla), (i32)XXXVI);
         CREDO_VERUM (_chorda_est(_exemplum(exempla, ZEPHYRUM)->titulus,
             "positio-verba"));
         CREDO_VERUM (_chorda_est(_exemplum(exempla, I)->datum,
             "cat <<A <<B | wc -l\none\nA\ntwo\nB\n"));
-        CREDO_VERUM (_chorda_est(_exemplum(exempla, (i32)XXXI)->titulus,
-            "parenthesis-vaga"));
+        CREDO_VERUM (_chorda_est(_exemplum(exempla, (i32)XXXV)->titulus,
+            "arith-operandum-absens"));
         per (i = ZEPHYRUM; i < xar_numerus(exempla); i++)
         {
             e = _exemplum(exempla, i);
@@ -215,7 +215,7 @@ principale (vacuum)
                 cum_linea++;
             }
         }
-        CREDO_AEQUALIS_I32 (cum_linea, (i32)XXXII);
+        CREDO_AEQUALIS_I32 (cum_linea, (i32)XXXVI);
     }
 
     {
