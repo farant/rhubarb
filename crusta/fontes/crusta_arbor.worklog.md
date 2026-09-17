@@ -440,3 +440,15 @@ put git state commands in exploratory one-liners.
 … `) )`) round-trips byte-identically: the refused attempt's frames and
 machine vanish with the lector rewind and the re-parse reads the body
 again.
+
+## 2026-09-16 — P10 (computus, instruments)
+
+Mechanical transcription from html: `html` → `crusta`, `.html` → `.sh`,
+the parse call gains the dialect and report arguments, and the STML
+read-back gets `consilium.forma.mensura_caudae = sizeof(CrustaCauda)`
+(P7's rule: the reader must create tokens with the same tail). html's
+gate header said "PORTA COMPUTI CSS" (a copy slip from css) — corrected
+in the crusta twin; html's own header is left for its owner. Numbers
+worth remembering: the adversarial fixture's STML is 614× its source
+because of one 200-deep `$(` case — the projection's size grows with
+depth squared (P9 measured the curve); every other file is 25–35×.

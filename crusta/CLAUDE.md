@@ -18,8 +18,26 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P9b done)
+## Praesens status (2026-09-16 — P10 done)
 
+- **P10, measurement and instruments:** `crusta_computus.{h,c}` (html's
+  twin: one call parses in its own pool, emits, writes and re-reads the
+  STML with the same token-tail `forma`, compares — nodes, tokens, STML
+  bytes, pool usage/commit/peak, allocations, per-phase ms; TRUE only if
+  bytes and tree both round-trip). Instruments: `./crusta/computus.sh
+  <x.sh> [-machina] [-iter N]` and `./crusta/arbor.sh <x.sh> [-tacitus]`
+  (the STML tree — replaces the scratch probes of P7–P9); both build
+  themselves from `crusta/build/*.o`. Gate `computus`: golden
+  `crusta/probationes/fixa/computus/basis.tsv` over the two fixtures and
+  three house scripts (`silva/compile_probationes.sh`, `tools/vexilla.sh`,
+  `html/compile_probationes.sh`), deterministic columns pinned, times
+  printed only; `COMPUTUS_SCRIBERE=1` regenerates (name the cause in the
+  commit). Born numbers: pathologiae 1,735 B → 540 nodes, 61,897 B STML;
+  adversarius 1,303 B → 799,850 B STML (the 200-deep `$(` case — STML
+  size is quadratic in depth); silva's runner 11,276 B → 2,008 nodes in
+  0.36 ms. Pythonica: mensor prefix `crusta.` and `silva.metiri('x.sh')`
+  → `crusta/computus.sh` (the suite gate `PORTAE['crusta']` already
+  existed). Plant: one node count in the golden edited → red.
 - **P9b, heredoc bodies in every gap (Fran chose "fix it properly",
   2026-09-16):** the byte law now holds for every input — no heredoc
   body is ever transposed. Inventory first (a probe over ~45 gap
@@ -360,6 +378,9 @@ generated C comments: write notes in words, never XML entities.
 ```
 ./crusta/compile_probationes.sh            # omnes
 ./crusta/compile_probationes.sh registrum  # filtrum substringae
+./crusta/arbor.sh <x.sh> [-tacitus]        # proiectio STML in stdout
+./crusta/computus.sh <x.sh> [-machina] [-iter N]
+COMPUTUS_SCRIBERE=1 ./crusta/compile_probationes.sh computus  # aurum
 ```
 
 0 sanum / 1 fractae / **2 = NULLA CURSA**. Log: `build/test_logs/crusta.log`.

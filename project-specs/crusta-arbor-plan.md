@@ -1386,16 +1386,16 @@ next real newline while bash reads it inside the expansion.
 - Modify: `pythonica/silva.py` (the mensor `praef` dict, `metiri`'s
   client-by-suffix `.sh` → `crusta/computus.sh`), `crusta/CLAUDE.md`
 
-- [ ] **Step 1: Write the failing computus gate** — transcribe
+- [x] **Step 1: Write the failing computus gate** — transcribe
   `html/probationes/probatio_html_computus.c`: corpus = `pathologiae.sh`,
   `adversarius.sh`, and three house scripts by path (`silva/compile_probationes.sh`,
   `tools/vexilla.sh`, `html/compile_probationes.sh`), the same deterministic
   columns, golden `basis.tsv`, `COMPUTUS_SCRIBERE=1` regenerates (a named
   cause in the commit).
 
-- [ ] **Step 2: Run and verify it fails** — no `crusta_computus` yet.
+- [x] **Step 2: Run and verify it fails** — no `crusta_computus` yet.
 
-- [ ] **Step 3: Implement** — `crusta_computus_metiri(fons, mensura,
+- [x] **Step 3: Implement** — `crusta_computus_metiri(fons, mensura,
   &exitus)` = html's twin (`CrustaComputus` with the same fields; parse in
   its own piscina; emit; STML write / read / compare in a second piscina;
   `clock()` ms). `crusta/computus.sh`, `crusta/arbor.sh <x.sh> [-tacitus]`
@@ -1404,17 +1404,17 @@ next real newline while bash reads it inside the expansion.
   textus, mensura, &CRUSTA_BASH, NIHIL)`. Generate the golden once, read
   it, commit it.
 
-- [ ] **Step 4: Register in pythonica** — the mensor `praef` dict gains
+- [x] **Step 4: Register in pythonica** — the mensor `praef` dict gains
   `'crusta': 'crusta.'`; `metiri`: `.sh` → `crusta/computus.sh`. Then
   `silva.porta('crusta')` from Python runs the suite and parses the banner;
   `./pythonica/probare.sh` stays green.
 
-- [ ] **Step 5: Plant** — edit one `nodi` count in `basis.tsv` → red; revert.
+- [x] **Step 5: Plant** — edit one `nodi` count in `basis.tsv` → red; revert.
 
-- [ ] **Step 6: `crusta/CLAUDE.md`** — the "Currere" section with the three
+- [x] **Step 6: `crusta/CLAUDE.md`** — the "Currere" section with the three
   scripts, the gate list so far.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```python
 silva.commissio("crusta: computus gemellus (aurum fixa/computus/basis.tsv), instrumenta computus.sh/arbor.sh, registratio pythonica (praef mensoris, metiri .sh) (rubra nata: aurum mutatum)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",
@@ -1425,6 +1425,13 @@ silva.commissio("crusta: computus gemellus (aurum fixa/computus/basis.tsv), inst
      "crusta/probationes/fixa/computus/basis.tsv", "pythonica/silva.py",
      "crusta/CLAUDE.md"], ["crusta", "pythonica"])
 ```
+
+**Executed 2026-09-16.** As written. The suite gate `PORTAE['crusta']`
+already existed in pythonica; P10 added the mensor prefix and the `.sh`
+dispatch in `metiri`. The golden's `via` column holds repo-relative paths
+(the corpus spans directories). Born: pathologiae 540 nodes / 61,897 B
+STML; adversarius 799,850 B STML from 1,303 B (200-deep `$(`); silva's
+runner 2,008 nodes, 0.36 ms parse.
 
 ---
 
