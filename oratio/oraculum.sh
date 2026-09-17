@@ -26,12 +26,28 @@ if [ ! -d "$BUILD_DIR" ] || [ -z "$(ls "$BUILD_DIR"/oratio_*.o 2>/dev/null)" ]; 
     echo "arbor: obiecta absunt - ./oratio/compile_probationes.sh registrum primum" >&2
     exit 2
 fi
+# Obiecta stala = instrumentum contra codicem veterem (2026-09-17:
+# post mutationem lib/stml_macros.c 'ordines idem' ex binario pridiano
+# venerunt; post A1 plani materia-sedes obiecta cum MateriaArborConsilium
+# minore). Excubitor graphum inclusionum derivatum legit: stala =
+# refusio nominata (cursor primum), iudicium absens = CAUTIO clamata.
+excubitor_exitus=0
+excubitor_relatio="$("$RADIX_DIR/excubitor.sh" oratio/build/ -tacitus 2>&1)" \
+    || excubitor_exitus=$?
+if [ "$excubitor_exitus" -eq 1 ]; then
+    echo "$excubitor_relatio" >&2
+    echo "oraculum: obiecta stala - ./oratio/compile_probationes.sh registrum primum" >&2
+    exit 2
+elif [ "$excubitor_exitus" -ne 0 ]; then
+    echo "$excubitor_relatio" >&2
+    echo "CAUTIO: excubitor exitus $excubitor_exitus - vetustas obiectorum NON iudicata" >&2
+fi
 OBJ=""
 for o in "$BUILD_DIR"/*.o; do
     case "$(basename "$o")" in probatio_*) continue ;; esac
     OBJ="$OBJ $o"
 done
-if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$(find "$BUILD_DIR" -name 'oratio_*.o' -newer "$BIN" 2>/dev/null)" ]; then
+if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$(find "$BUILD_DIR" -name '*.o' -newer "$BIN" 2>/dev/null)" ]; then
     rm -f "$BIN"
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SRC" $OBJ -o "$BIN" || exit 1
 fi

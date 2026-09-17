@@ -90,12 +90,15 @@ fi
 # spectantur - id est ipsum quod falsum viride 2026-08-27 in silva
 # peperit (L/L contra obiecta sex horarum). Ergo caput
 # recentissimum contra omne obiectum retiratur.
+# materia/fontes (et md/fontes ubi md compilatur) additi 2026-09-17:
+# substratum quod cliens compilat, olim ab indice absens.
 CAPUT_RECENS=""
 while IFS= read -r caput_via; do
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi
-done < <(find "$RADIX_DIR/include" "$CSS_DIR/fontes" "$CSS_DIR/probationes" \
+done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" \
+             "$CSS_DIR/fontes" "$CSS_DIR/probationes" \
              -name "*.h" 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
@@ -168,6 +171,27 @@ for src in "$CSS_DIR"/probationes/*.c; do
     fi
     obj_files="$obj_files $obj"
 done
+
+# ---- custodia post constructionem (2026-09-17) ----
+# Custodia capitum supra per indicem MANU scriptum iudicat; excubitor
+# graphum inclusionum DERIVATUM legit (build/inclusiones.tsv). Obiectum
+# post constructionem stalum = index supra caput ignoravit: olim
+# materia/fontes deerat, et mutatio MateriaArborConsilium (A1 plani
+# materia-sedes, campus ultimus additus) obiecta vetera cum structura
+# minore in acervo reliquit - probationes et instrumenta contra ea
+# currebant. Stala = nihil curritur (exitus II); graphus absens aut
+# excubitor fractus = CAUTIO clamata, numquam tacita.
+excubitor_exitus=0
+excubitor_relatio="$("$RADIX_DIR/excubitor.sh" "${BUILD_DIR#"$RADIX_DIR"/}/" -tacitus 2>&1)" \
+    || excubitor_exitus=$?
+if [ "$excubitor_exitus" -eq 1 ]; then
+    echo "$excubitor_relatio"
+    echo "FRACTA: obiecta stala post constructionem - custodia capitum caput ignoravit; NIHIL CURSUM (exitus II)"
+    exit 2
+elif [ "$excubitor_exitus" -ne 0 ]; then
+    echo "$excubitor_relatio" >&2
+    echo "CAUTIO: excubitor exitus $excubitor_exitus - custodia post constructionem NON iudicavit" >&2
+fi
 
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "css." - silva.mensurae('css.', n) eas legit); numquam suitam frangit

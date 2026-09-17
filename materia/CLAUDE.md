@@ -176,6 +176,21 @@ guard fires.** materia's runner carries that guard from birth; it
 exists because a header-only edit in silva reported 50/50 against
 six-hour-stale objects on 2026-08-27.
 
+**Every CLIENT runner must list `materia/fontes` in its guard, and
+now checks itself (2026-09-17).** css, md, html, oratio and crusta
+listed only `include/` and their own directories, so A1's new last
+field in `MateriaArborConsilium` rebuilt nothing that merely included
+`materia_arbor.h`: `oratio_resolutio.o` kept the smaller struct on its
+stack while the fresh `consilium_nudum` wrote the new field past it.
+Their guards now list `materia/fontes` (plus `md/fontes` where md is
+compiled), and after building each runs `./excubitor.sh
+<cliens>/build/ -tacitus`, which reads the DERIVED include graph: a
+stale object after the build means the hand list missed a header, and
+the runner exits 2 before any test compiles. Instruments relink on any
+newer `*.o`; both `oraculum.sh` refuse stale objects the same way.
+Adding a substrate header directory therefore needs no runner edit to
+be noticed — the check names the object and the header.
+
 ## Generata
 
 **Registrum coctum (2026-09-15).** A client's genus enum and baked
