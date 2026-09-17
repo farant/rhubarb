@@ -73,6 +73,9 @@ structura MateriaArborScriptor {
                  MateriaArborCensus  census;
                  constans character* causa;
               constans MateriaNodus* sedes;
+    /* lexema refutatum (B2 plani materia-sedes): sedes nodi locum
+     * dat, hoc OCTETOS - refutatio valoris lexematis eum servat */
+              constans MateriaToken* lexema_refutatum;
 };
 
 
@@ -1627,7 +1630,10 @@ _scribere_valorem_in (
         }
         liberum = _scribere_lexema(st, valor.datum.token);
         si (liberum == NIHIL)
-        { st->sedes = sedes; redde FALSUM;
+        {
+            st->sedes             = sedes;
+            st->lexema_refutatum  = valor.datum.token;
+            redde FALSUM;
         }
         redde stml_liberum_addere(parens, liberum);
 
@@ -1694,6 +1700,10 @@ _scribere_valorem_in (
                     redde FALSUM;
                 }
                 liberum = _scribere_lexema(st, e->datum.token);
+                si (liberum == NIHIL && st->lexema_refutatum == NIHIL)
+                {
+                    st->lexema_refutatum = e->datum.token;
+                }
             }
             alioquin
             {
@@ -1924,6 +1934,26 @@ materia_arbor_consilium_nudum (
 /* Corpus commune scriptoris: ambulatio, involucrum, custodiae; arbor
  * in fructus.arbor, textus NON scriptus (scribere_nodum eum addit,
  * proicere_nodum non). */
+/* tractus refutationis: lexema refutatum si notum (octeti eius),
+ * aliter nodus sedis; intactus si neutrum (initium -I) */
+interior vacuum
+_tractum_refutationis (
+             MateriaArborScriptura* fructus,
+     constans MateriaArborScriptor* st,
+    constans MateriaArborConsilium* consilium)
+{
+    si (st->lexema_refutatum != NIHIL)
+    {
+        materia_tractus_lexematis(consilium->origo,
+            st->lexema_refutatum, &fructus->tractus);
+    }
+    alioquin si (fructus->sedes != NIHIL)
+    {
+        (vacuum)materia_tractus_nodi(consilium->origo, fructus->sedes,
+            &fructus->tractus);
+    }
+}
+
 interior MateriaArborScriptura
 _arborem_struere (
                            Piscina* piscina,
@@ -1945,6 +1975,8 @@ _arborem_struere (
     fructus.sedes_valorum             = NIHIL;
     fructus.census.spatia_vocationes  = ZEPHYRUM;
     fructus.arbor                     = NIHIL;
+    memset(&fructus.tractus, ZEPHYRUM, magnitudo(fructus.tractus));
+    fructus.tractus.initium           = (s32)-I;
 
     si (   piscina == NIHIL || nodus == NIHIL || consilium == NIHIL
         || consilium->tabularium == NIHIL
@@ -1990,6 +2022,7 @@ _arborem_struere (
     st.tractus_inventus = FALSUM;
     st.causa = NIHIL;
     st.sedes = NIHIL;
+    st.lexema_refutatum = NIHIL;
     st.census.spatia_vocationes = ZEPHYRUM;
     st.lexemata = tabula_dispersa_creare_chorda(piscina, 256);
     st.paria    = consilium->sedes_colligere
@@ -2107,6 +2140,7 @@ _arborem_struere (
     {
         fructus.causa = st.causa ? st.causa : "scriptura fracta";
         fructus.sedes = st.sedes;
+        _tractum_refutationis(&fructus, &st, consilium);
         redde fructus;
     }
     si (!stml_liberum_addere(involucrum, radix))
@@ -2133,6 +2167,7 @@ _arborem_struere (
                 fructus.causa =
                     "referentia ad nodum extra arborem scriptam";
                 fructus.sedes = r->nodus;
+                _tractum_refutationis(&fructus, &st, consilium);
                 redde fructus;
             }
         }

@@ -95,6 +95,12 @@ nomen structura {
      * Campus ULTIMUS. Per materia_arbor_proicere_nodum textus vacuus
      * manet. */
                 StmlNodus* arbor;
+
+    /* TRACTUS REFUTATIONIS (2026-09-17, materia-sedes par. VIII, B2):
+     * refutatio sedem in FONTE fert - lexema refutatum si notum,
+     * aliter nodus 'sedes'; initium -I = nulla sedes (refutatio ante
+     * arborem). Campus ULTIMUS. */
+            MateriaTractus tractus;
 } MateriaArborScriptura;
 
 

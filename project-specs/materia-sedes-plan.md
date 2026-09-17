@@ -2662,6 +2662,8 @@ _diagnostica_reddere (
 
 ## Task B2: Derivation, the order check, writer refusals with a place
 
+**Executed 2026-09-17.** Gate `probatio_materia_diagnostica` 58/58 (all ten cases as planned), materia 9/9, shim 396/396. Changes to the plan's code, each measured: the parameter `registrum` is a latina macro (`register`) — the header parsed into an error node and `scribe` refused it, so it is `genera`; the seen-set stores the address of a file-scope `PRAESENS` instead of `(vacuum*)VERUM` (int-to-pointer cast); the NUL fixture builds a local array (`-Wwrite-strings` + `-Wcast-qual` reject `(i8*)"a\0b"`). Plants: `inanis` never matching, `_punctum_prius` always the file start, the order check disabled, the seen-set disabled — each red at its own case; two further plants did not compile (a helper left unused under `-Werror`) and `silva.planta` refused them without running the gate.
+
 **Files:**
 - Create: `materia/fontes/materia_diagnostica.h`, `materia/fontes/materia_diagnostica.c`
 - Modify: `materia/fontes/materia_arbor.h` (`MateriaArborScriptura`, new
@@ -2707,7 +2709,7 @@ materia_diagnostica_derivare (
   and `MateriaArborScriptura.tractus` (`initium` −1 when the refusal
   names no place).
 
-- [ ] **Step 1: Failing gate** (`./silva/scribe.sh
+- [x] **Step 1: Failing gate** (`./silva/scribe.sh
   materia/probationes/probatio_materia_diagnostica.c`). Registry by hand:
   genera `radix {liberi lista-nodus}`, `par {tok_apertura token, liberi
   lista-nodus, tok_clausura token}`, `verbum {tok token}`, `separator
@@ -2751,7 +2753,7 @@ hic_manens constans MateriaDiagnosticaCocta DIAGNOSTICA = {
       `'\0'` at @6 line 2 col 3 → `materia_arbor_scribere_nodum` fails;
       `s.tractus.initium == 6`, `linea == 2`, `columna == 3`.
 
-- [ ] **Step 2: Implementation.** `materia_diagnostica.c` walks the tree
+- [x] **Step 2: Implementation.** `materia_diagnostica.c` walks the tree
   pre-order (loci in order, lists in order, REFERENTIA not descended);
   node rows are recorded BEFORE descending, so "the last source token
   seen" is the one before the node; tokens are visited in BYTE order
@@ -3255,13 +3257,13 @@ _tractum_refutationis (
      (reference guard) add `_tractum_refutationis(&fructus, &st,
      consilium);`.
 
-- [ ] **Step 3: Green; plant.** `./materia/compile_probationes.sh
+- [x] **Step 3: Green; plant.** `./materia/compile_probationes.sh
   diagnostica` green. Plant: `silva.planta(
   'materia/fontes/materia_diagnostica.c', '&& !_inane(d,
   e->datum.nodus->genus))', '&& VERUM)', 'materia', 'diagnostica')` →
   case 4 red (a separator fills the list); revert → green.
 
-- [ ] **Step 4: Docs, audit, commit.** `materia/CLAUDE.md` new section
+- [x] **Step 4: Docs, audit, commit.** `materia/CLAUDE.md` new section
   "Diagnostica (2026-09-17)" (declared + derived, the three species, the
   order check, `emissa`, writer refusal tractus, printing is not
   materia's). Formator; `./oratio/quaere.sh` on new words; nexus;

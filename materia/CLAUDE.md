@@ -115,6 +115,26 @@ Instruments: `<cliens>/arbor.sh -sedes`. Spec `project-specs/materia-sedes-spec.
 `project-specs/materia-sedes-plan.md`, worklog
 `fontes/materia_arbor.worklog.md`.
 
+## Diagnostica (2026-09-17)
+
+**Declared in the registry, derived by ONE walker.** A client writes no
+error-reporting code: its declaration marks tree shapes
+(`diagnosticum` / `absentia` / `vacua`, above), and
+`materia_diagnostica_derivare` (`materia_diagnostica.h`) walks any tree
+— parsed, read back, or a view — returning `MateriaDiagnosticum` rows
+(severity, codex `genus/locus`, cause, node or token, `MateriaTractus`),
+sorted by (start, codex). GENUS and VACUA point at the node's range;
+ABSENTIA at a ZERO-WIDTH point at its end; a node with no source token
+of its own at a point after the last token seen before it. Every client
+also gets `materia:ordo-octetorum` free: a source token starting before
+the greatest end already seen (crusta's transposed heredoc,
+generalised). What a parser must report itself — a class leaving no
+trace in the tree — arrives through `emissa`. **The writer's refusal
+carries a place**: `MateriaArborScriptura.tractus` (last field), from
+the refused token when known, else the `sedes` node; `initium` −1 =
+none. Printing (excerpt, caret) is NOT materia's: the substrate gives
+the place, `lib/excerptum` and `./tools/diagnostica.sh` give the form.
+
 ## The whitespace contract (2026-08-28)
 
 **A `VERBATIM` trivium whose value is whitespace-only projects to

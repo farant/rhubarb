@@ -154,3 +154,53 @@ of its measured house files.
 Lesson: a guard built from a hand list of directories drifts the day
 the dependency graph grows; a guard that reads the derived graph does
 not. Check with the derived one, keep the hand list as the fast path.
+
+## 2026-09-17 — one walker derives the declared diagnostics (B2)
+
+`materia_diagnostica_derivare` (`materia/fontes/materia_diagnostica.c`)
+turns B1's baked declarations into located records over ANY tree —
+parsed, read back from STML, or a view. One pre-order walk: a node's
+rows are recorded BEFORE descending, so "the last source token seen"
+is the one before the node, which is what a node with no tokens of its
+own points at (`x (` → both of the empty `par`'s rows sit just after
+`x`). Tokens are visited in BYTE order (ante trivia, token, post
+trivia) — the emitter's order, which is what the byte-order check
+needs. A token used twice (transclusion) is counted once, through a
+hash of the pointer's bytes.
+
+Three species, and where each points: GENUS at the node's range,
+VACUA at the node's range, ABSENTIA at a ZERO-WIDTH point at the
+node's end ("`)` expected HERE", after the last token, not on it).
+`vacua` is true for an unwritten list as well as one holding only
+nodes of `inanis` genera (D5). Every client also gets one check with
+no declaration at all: `materia:ordo-octetorum`, a source token that
+starts before the greatest end already seen in the same fons — crusta's
+`heredoca_transposita`, generalised. `emissa` carries what a parser
+must report itself (a class that leaves no trace in the tree, D6);
+a record with `initium` −1 and a node gets its range computed here.
+Output is sorted by (initium, codex), stable.
+
+The writer's refusals now carry a place: `MateriaArborScriptura` gains
+a last field `tractus`, filled from the refused TOKEN when the refusal
+knows one (the scriptor remembers it in `lexema_refutatum`) and from
+the `sedes` node otherwise; `initium` −1 means no place at all. A NUL
+inside a token value now reports `6`, `2:3` instead of just "scriptura
+fracta".
+
+Traps met while building:
+- **`registrum` is a latina macro** (`register`). The plan's signature
+  named a parameter `registrum`; the header parsed into an error node
+  and `scribe` refused it. The parameter is `genera`.
+- A `(vacuum*)VERUM` sentinel would be an int-to-pointer cast; the
+  seen-set stores the address of a file-scope `PRAESENS` instead.
+- The NUL fixture cannot use a string literal: `-Wwrite-strings` plus
+  `-Wcast-qual` reject `(i8*)"a\0b"`. It builds a local array.
+
+Gate `probatio_materia_diagnostica` 58/58, green at first run and
+therefore proven only by its plants: the `inanis` list never matching
+(the separator case), `_punctum_prius` always returning the file start
+(the no-token case), the order check disabled (the transposed case),
+the seen-set disabled (the twice-used token case) — each red at its own
+assertion, green on revert. Two more plants did not compile and ran
+nothing, which `silva.planta` reported instead of pretending: removing
+a call left a helper unused under `-Werror`.
