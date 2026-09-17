@@ -1,7 +1,7 @@
-/* probatio_html_computus.c - PORTA COMPUTI CSS: numeri deterministici
+/* probatio_html_computus.c - PORTA COMPUTI HTML: numeri deterministici
  * corporis fixi (fixa/html; H9) contra aurum pinnati (nodi, lexemata,
  * octeti STML, memoria piscinae parsurae, allocationes); tempora
- * imprimuntur, non pinnantur. Gemellus probatio_html_computus.
+ * imprimuntur, non pinnantur. Gemellus probatio_css_computus.
  *
  * COMPUTUS_SCRIBERE=1 aurum rescribit - AUDI: regeneratio sine causa
  * nominata portam in numerum vacuum vertit. Causa in commissione.
