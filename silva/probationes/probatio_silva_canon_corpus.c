@@ -584,16 +584,22 @@ principale (vacuum)
      * 173 -> 176 (2026-09-14): plist, fasciculum, icones
      * (2026-09-11/12) - omnes latinizatae, purae, exactae; commissiones
      * eorum portam radicis solam cucurrerunt, pinna a commissione
-     * systema_posix inventa. */
-    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)176);
-    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)176);
+     * systema_posix inventa.
+     *
+     * 176 -> 180 (2026-09-17): partitio, partitio_aestimatio
+     * (2026-09-14), entitates_html, entitates_html_tabula
+     * (2026-09-15) - omnes latinizatae, purae, exactae; pinna non
+     * mota, a commissione A3 plani materia-sedes inventa (6e679497
+     * portas exemplariorum solas moverat). */
+    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)180);
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)180);
     CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.parsura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.vitia_summa, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)176);
-    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)176);
+    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)180);
+    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)180);
 
 
     /* ============================================================

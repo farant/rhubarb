@@ -621,14 +621,20 @@ principale (vacuum)
      * 173 -> 176 (2026-09-14): plist, fasciculum, icones
      * (2026-09-11/12) - omnes latinizatae, purae, exactae; commissiones
      * eorum portam radicis solam cucurrerunt, pinna a commissione
-     * systema_posix inventa. */
-    CREDO_AEQUALIS_I32 (census_latinus.plagulae, 176);
+     * systema_posix inventa.
+     *
+     * 176 -> 180 (2026-09-17): partitio, partitio_aestimatio
+     * (2026-09-14), entitates_html, entitates_html_tabula
+     * (2026-09-15) - omnes latinizatae, purae, exactae; pinna non
+     * mota, a commissione A3 plani materia-sedes inventa (6e679497
+     * portas exemplariorum solas moverat). */
+    CREDO_AEQUALIS_I32 (census_latinus.plagulae, 180);
 
     /* Clausura vere praebita. Si porta apparatus incendit, numerus
      * circuitus NIHIL mensurat - vide _lexemata_ex_fonte_numerare:
      * numerare expansiones OMNES LIX plagulas falso transire
      * sinebat dum latina.h numquam aperiretur. */
-    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, 176);
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, 180);
     CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.clausurae_truncatae, ZEPHYRUM);
 
@@ -640,12 +646,12 @@ principale (vacuum)
      * addito, silva plagulas OMNES emittit.
      * Si HIC numerus cadit, vitium silvae est; si OCTETIM EXACTAE
      * solae cadunt, nostrum. */
-    CREDO_AEQUALIS_I32 (census_latinus.directa_exacta, 176);
+    CREDO_AEQUALIS_I32 (census_latinus.directa_exacta, 180);
 
     /* PROIECTIO NIHIL AMITTIT: circuitus STML numerum silvae
      * AEQUAT - CLIV/CLIV utrobique. Quidquid silva emittere potest,
      * per STML circuit, ET NIHIL RECUSATUR. */
-    CREDO_AEQUALIS_I32 (census_latinus.octetim_exactae, 176);
+    CREDO_AEQUALIS_I32 (census_latinus.octetim_exactae, 180);
     CREDO_AEQUALIS_I32 (census_latinus.octeti_divergentes, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.emissio_recusata, ZEPHYRUM);
