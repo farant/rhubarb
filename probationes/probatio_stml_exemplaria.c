@@ -179,6 +179,170 @@ principale (
         }
     }
 
+    /* --- captura iterata SUB TRANSPARENTIA (materia-sedes A3) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- captura iterata sub TRANSPARENTIA ---\n");
+        /* attributa perspicua: valores diversi, nodi aequales */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p><x s=\"1\">a</x><y><x s=\"2\">a</x></y></p>"
+            "<TRANSPARENTIA tags=\"nihil\" attributa=\"s\"/>"
+            "<EXEMPLAR output=\"$m\"><p><x $n/><y><x $n/></y></p>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p><x s=\"1\">a</x><y><x s=\"2\">a</x></y></p>"
+                "<r/></radix>");
+        }
+        /* tagi perspicui: subarbor diversa, nodi aequales */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p><x><t>1</t>a</x><y><x>a</x></y></p>"
+            "<TRANSPARENTIA tags=\"t\"/>"
+            "<EXEMPLAR output=\"$m\"><p><x $n/><y><x $n/></y></p>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p><x><t>1</t>a</x><y><x>a</x></y></p>"
+                "<r/></radix>");
+        }
+        /* sine TRANSPARENTIA: attributa diversa non congruunt */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p><x s=\"1\">a</x><y><x s=\"2\">a</x></y></p>"
+            "<EXEMPLAR output=\"$m\"><p><x $n/><y><x $n/></y></p>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p><x s=\"1\">a</x><y><x s=\"2\">a</x></y></p>"
+                "</radix>");
+        }
+    }
+
+    /* --- captura iterata: FORMA AUCTORIS neglecta (materia-sedes A3,
+     * quaestio 01M2Q2BDH4) - dispositio, '</>', formae capturae,
+     * indentatio multilineae; contentum manet --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- captura iterata: forma auctoris ---\n");
+        /* spatia inter nodos: liberum primum lineam novam possidet */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><l>\n  <i>x</i>\n  <i>x</i>\n</l>"
+            "<EXEMPLAR output=\"$m\"><l><i $n/><i $n/></l></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><l>\n  <i>x</i>\n  <i>x</i>\n</l><r/></radix>");
+        }
+        /* profunditas diversa sub TRANSPARENTIA attributorum */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p>\n  <x s=\"1\">a</x>\n  <y>\n"
+            "    <x s=\"2\">a</x>\n  </y>\n</p>"
+            "<TRANSPARENTIA tags=\"nihil\" attributa=\"s\"/>"
+            "<EXEMPLAR output=\"$m\"><p><x $n/><y><x $n/></y></p>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p>\n  <x s=\"1\">a</x>\n  <y>\n"
+                "    <x s=\"2\">a</x>\n  </y>\n</p><r/></radix>");
+        }
+        /* clausura anonyma contra nominatam */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><l><i>x</i><i>x</></l>"
+            "<EXEMPLAR output=\"$m\"><l><i $n/><i $n/></l></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><l><i>x</i><i>x</></l><r/></radix>");
+        }
+        /* forma capturae '(>' contra liberos expressos */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><l><i><j/></i><i(> <j/></l>"
+            "<EXEMPLAR output=\"$m\"><l><i $n/><i $n/></l></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><l><i><j/></i><i(> <j/></l><r/></radix>");
+        }
+        /* spatia intra tagum et ante attributum */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><l><i a=\"1\" >x</i><i  a=\"1\">x</i></l>"
+            "<EXEMPLAR output=\"$m\"><l><i $n/><i $n/></l></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><l><i a=\"1\" >x</i><i  a=\"1\">x</i></l>"
+                "<r/></radix>");
+        }
+        /* indentatio multilineae: lineae eaedem, praefixum diversum */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><l><t\\>\n  a\n  b\n</t>"
+            "<k><t\\>\n      a\n      b\n</t></k></l>"
+            "<EXEMPLAR output=\"$m\"><l><t $n/><k><t $n/></k></l>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><l><t\\>\n  a\n  b\n</t>"
+                "<k><t\\>\n      a\n      b\n</t></k></l><r/></radix>");
+        }
+        /* CONTENTUM manet: spatia intra crudum textus sunt */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><l><s!> </s><s!>  </s></l>"
+            "<EXEMPLAR output=\"$m\"><l><s $n/><s $n/></l></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><l><s!> </s><s!>  </s></l></radix>");
+        }
+        /* ... et crudum aequale congruit (contra-probatio) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><l><s!> </s><s!> </s></l>"
+            "<EXEMPLAR output=\"$m\"><l><s $n/><s $n/></l></EXEMPLAR>"
+            "<PER congruentia=\"$m\"><r/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><l><s!> </s><s!> </s></l><r/></radix>");
+        }
+    }
+
     /* --- ancorata: radix scopi sola --- */
     {
         StmlExpansioResultus e;

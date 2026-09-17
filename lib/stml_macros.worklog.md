@@ -886,3 +886,87 @@ agreeing word in the whole sentence is not the head often enough. So
 the value is not "more rows are better" but "rows plus a policy in C
 beat a first match chosen by search order", and only where the policy
 has something true to say — adjacency.
+
+## 2026-09-17 — repeated node captures compare content (materia-sedes A3)
+
+Task A3 of `project-specs/materia-sedes-plan.md` asked for one thing:
+under TRANSPARENTIA, a repeated node capture should ignore the
+transparent tags and attributes, so a positioned view (`sedes=`,
+`octeti=` on every element) can still say "the same command twice".
+That part went as planned: `_ligamen_ponere` compares copies built
+by a new helper instead of the captured nodes themselves.
+
+Re-measuring over a real crusta view showed that it was not enough.
+`./crusta/arbor.sh` on `echo a⏎echo a` gives two `imperium` elements
+that are identical in content, and they still never matched — with
+or without TRANSPARENTIA, with or without `-sedes`. A C probe over
+the plain view printed the two `stml_scribere(node, FALSUM)` strings:
+330 and 329 bytes. The first `imperium` is the first child after
+`<liberi>` and owns the whole whitespace run (`spatia_ante` =
+"\n      "); the second one's newline went to the separator before it
+(`spatia_post` = "\n", `spatia_ante` = "      "). The trivia model's
+ownership law does exactly what it says; the equality check simply
+wrote the author's layout and compared it. Nodes at different depths
+differ by indentation as well. Every literal-string fixture in the
+suite has no layout, which is why it never showed.
+
+Dating it: the trivia model landed 2026-08-24 (`b4ce0559`), regula V
+in EXEMPLAR on 2026-08-31 (`f7439242`). So not a regression — the
+byte-wise rule came over from the parametrum matcher, whose
+candidates are writer-built trees with no layout, and nobody used a
+repeated node capture over a parsed document since. A scan of every
+tracked file with EXEMPLAR (58 repeated names) found 42 text
+captures (oratio's agreement rules: `$cas`/`$num`/`$gen`), 10
+attribute captures, and 6 node captures — all six in the new A3
+fixtures. Scalars compare interned values and were never affected.
+
+The rule now: a repeated node capture compares CONTENT, never the
+author's spelling. `_nodum_comparandum` copies the subtree and drops
+what the reader keeps only to give the author's bytes back: the four
+`spatia_*` fields, each attribute's `spatia_ante`, `clausura_anonyma`
+(`</>`), `captio_directio`/`captio_numerus` (`(>` — the children are
+already in `liberi`, reference §8.1), and a `<t\>` element's
+`indentatio`; under TRANSPARENTIA also the transparent attributes and
+transparent child elements with their whole subtree. Kept: titles,
+values, text including whitespace inside raw elements, `crudus`,
+`multilinea`, fragments, comments. Measured red first, one fixture
+per field (six), plus two raw controls (`<s!> </s>` vs `<s!>  </s>`
+must NOT match; equal raw must).
+
+One trap on the way: the multiline fixture stayed red after clearing
+`indentatio`. The writer takes a text node's prefix from
+`nodus->parens->indentatio` (`stml.c`, text branch), and the copied
+children still pointed at the ORIGINAL parent. Copies now re-parent
+their children. A struct copy is a shallow copy; any back-pointer in
+it is a lie until you fix it.
+
+Not normalized, named: attribute-elements (`<@a=>` vs `a=""`),
+content fragments and `<<#id>>` aliases (the matcher's effective
+children dissolve them; equality does not), comments. The strict
+matcher `stml_congruere_strictum` (`_congruentia_silvae_aequales`)
+still compares repeated forest slots byte-wise; its only outside
+caller is silva's writer (in-memory trees, no layout) and none of its
+three templates repeats a slot.
+
+Measured (before → after): root `stml_exemplaria` 392 → 414 (22 new
+assertions), `stml_macros` 197 → 197; `./oratio/oraculum.sh -machina`
+873 rows byte-identical, 45.24 s → 45.07/44.65 s; crusta survey over
+237 house `.sh` (20 rules) identical; silva exemplaria rows identical
+except latinum lint sites 4159 → 4175, which is exactly the 16 `NIHIL`
+comparisons this diff adds to `lib/stml_macros.c` (that rule has no
+repeated captures). Live over crusta views: `-sedes` with
+`attributa="sedes octeti"` finds the duplicate with a row carrying
+`sedes="1:1-1:7"`; with positions visible, no row (correct); the plain
+view finds it without TRANSPARENTIA; `echo a⏎echo b`, no row.
+
+Measurement trap, worth repeating: `oratio/oraculum.sh` links
+`oratio/build/*.o` built by oratio's runner and relinks only when an
+`oratio_*.o` is newer, so after a `lib/` change its first "rows
+identical" came from the 2026-09-16 binary (quaestio 01M2Q2BJXD).
+Refresh with `./oratio/compile_probationes.sh registrum` and
+`rm oratio/build/oraculum`, then check `nm` for the new symbol.
+
+Planted faults, each red at its own fixture and green on revert:
+layout not cleared (indented list), children keep the original
+parent (multiline), `_ligamen_ponere` bypasses the copy (TRANSPARENTIA
+attributes), copy clears text values (raw-whitespace control).

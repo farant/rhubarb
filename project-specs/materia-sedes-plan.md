@@ -97,6 +97,7 @@ the spec's "as built" section.
 | D8 | AUDIENDA II (§15) | `[[ a b ]]` → `iudicium-binaria/tok_operator` absent; `(( 1 2 ))` → `binaria/tok_operator` absent; `(( 3 ! ))`, `$(( 1 + ))` → `binaria/dexter` absent; unterminated heredoc → `heredoc/tok_delimitator` absent (probes via `crusta/arbor.sh`) | declared `absentia`; the rest measured in B3 |
 | D9 | AUDIENDA IV (§15) | `bash -n` exit 0 for `[[ a b ]]` (with a message), `(( 1 2 ))`, `(( 3 ! ))`, `$(( 1 + ))`, and a heredoc at EOF (warning); exit 2 for `{ }` | those four classes are `gravitas="monitum"`; a new differentia pin "no erratum ⇔ bash exit 0" |
 | D10 | the instrument routes and links clients (§11) | crusta's and css's builds each carry their own materia/lib objects; linking both collides | `tools/diagnostica.sh` compiles its own object set into `build/diagnostica/`; its TSV adds `initium finis` so pythonica can cut `textus` |
+| D11 | repeated node captures compare their forests byte-wise; only TRANSPARENTIA needs removing (§4) | measured during A3: the byte-wise write carries the AUTHOR'S FORM — layout `spatia_*` (the first child after an open tag owns the newline, deeper nodes carry deeper indentation), `</>`, `(>`, `<t\>` `indentatio`. Two identical `imperium` in `crusta/arbor.sh` output: 330 vs 329 bytes, never equal, with or without TRANSPARENTIA (quaestio 01M2Q2BDH4). Scan: 58 repeated names in tracked rules, 0 node captures outside the A3 fixtures | with Fran: equality compares CONTENT always (`_nodum_comparandum` drops author form, plus TRANSPARENTIA parts when active); strict matcher untouched |
 
 ---
 
@@ -1716,6 +1717,8 @@ materia_sedes_verificare (
 
 ## Task A3: The engine compares repeated captures under TRANSPARENTIA
 
+**Executed 2026-09-17.** Baseline first: root exemplaria 392, macros 197; oratio oracle 873 rows 45.24 s; crusta survey 20 counts; silva exemplaria already RED on the unchanged tree (lib pin 176 vs 180, fixed first in `6e679497`). The planned fix went green, but a live probe over a crusta view exposed D11; with Fran the copy became `_nodum_comparandum` (author form dropped always, TRANSPARENTIA parts when active, children re-parented — the writer reads a text's multiline prefix from `parens`). Exemplaria 414/414, macros 197/197; oracle rows byte-identical (45.07/44.65 s, after forcing the stale oracle binary to relink, quaestio 01M2Q2BJXD); survey identical; silva latinum sites 4159 → 4175 = the 16 `NIHIL` comparisons added. Four plants, each red at its own fixture. Worklog `lib/stml_macros.worklog.md`.
+
 **Files:**
 - Modify: `lib/stml_macros.c` (`_ligamen_ponere`, 3632-3673; new helper
   before it)
@@ -1734,7 +1737,7 @@ materia_sedes_verificare (
   after removing TRANSPARENTIA tags (whole subtrees) and attributes;
   without TRANSPARENTIA, byte-exact as before.
 
-- [ ] **Step 1: Baseline the row corpora on the unchanged tree.**
+- [x] **Step 1: Baseline the row corpora on the unchanged tree.**
   - `./compile_tests.sh stml_exemplaria` and `./compile_tests.sh
     stml_macros` (record pass counts).
   - `./silva/compile_probationes.sh exemplaria` (record).
@@ -1746,7 +1749,7 @@ materia_sedes_verificare (
     the scratchpad; otherwise use pythonica's `REGULA_NT` from
     `pythonica/probatio_silva.py`. Save the printed summae.
 
-- [ ] **Step 2: Write the failing test.**
+- [x] **Step 2: Write the failing test.**
 
 ```c
     /* --- captura iterata SUB TRANSPARENTIA (materia-sedes A3) --- */
@@ -1804,7 +1807,7 @@ materia_sedes_verificare (
   Run `./compile_tests.sh stml_exemplaria` → the first two blocks red
   (no `<r/>`), the third green.
 
-- [ ] **Step 3: The fix.** Before `_ligamen_ponere`:
+- [x] **Step 3: The fix.** Before `_ligamen_ponere`:
 
 ```c
 /* Copia nodi SINE perspicuis (regula V sub TRANSPARENTIA, spec
@@ -1924,17 +1927,17 @@ _perspicua_exuere (
   `_ligamen_ponere`, add forward declarations; they are at 3323-3337,
   before it.)
 
-- [ ] **Step 4: Run green; re-measure Step 1.** Tests green; silva
+- [x] **Step 4: Run green; re-measure Step 1.** Tests green; silva
   exemplaria green unchanged; `./oratio/oraculum.sh -machina` diffed
   against the baseline — MUST be byte-identical (any row change: stop,
   name it, bring it to Fran); time recorded; crusta survey summae
   recorded before/after (a rise is the fix working: name the rows).
 
-- [ ] **Step 5: Plant.** `silva.planta('lib/stml_macros.c', 'na =
+- [x] **Step 5: Plant.** `silva.planta('lib/stml_macros.c', 'na =
   _perspicua_exuere(ctx, lig->nodus);', 'na = lig->nodus;', 'radix',
   'stml_exemplaria')` → red; green on revert.
 
-- [ ] **Step 6: Docs and commit.** `docs/stml-reference.md` §19.2 row:
+- [x] **Step 6: Docs and commit.** `docs/stml-reference.md` §19.2 row:
   `| repeated \`$x\` | equality constraint; forests compared byte-wise
   after removing TRANSPARENTIA tags and attributes (strict mode:
   byte-wise) |`; §19.4 last sentence: "Affects matching and repeated

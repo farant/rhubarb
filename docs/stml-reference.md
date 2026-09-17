@@ -859,10 +859,23 @@ Floating bodies must be single-rooted (XV `CORPUS_SILVESTRE`).
 | `attr="$x"` | the attribute value (scalar); `a=""` never satisfies it |
 | `<t>$x</t>` | the whole text (scalar) |
 | `<t $x/>` (bare attribute) | the node (forest of one) |
-| repeated `$x` | equality constraint; forests compared byte-wise |
+| repeated `$x` | equality constraint; scalars by value, nodes by content (below) |
 
 Every row implicitly binds its root. Capturing a name the row already
 carries is XXII `CAPTURA_COLLISA`.
+
+A repeated node capture compares CONTENT, never the author's spelling.
+Both nodes are copied without what the reader keeps only to
+reproduce the author's bytes (the four layout `spatia_*` fields and
+each attribute's `spatia_ante`, `</>` versus `</t>`, the `(>` capture
+forms, a `<t\>` text's stripped `indentatio`) and, under
+TRANSPARENTIA, without its tags and attributes; the copies are then
+written and compared byte-wise. Titles, values, text (whitespace
+inside raw elements included), `crudus`, `multilinea`, fragments and
+comments still count. So `<l>⏎  <i>x</i>⏎  <i>x</i>⏎</l>` matches
+`<l><i $c/><i $c/></l>` even though the first `<i>` owns the newline
+after `<l>`. The strict matcher (`stml_congruere_strictum`) still
+compares repeated forest slots byte-wise, layout included.
 
 ### 19.3 Matching (loose)
 
@@ -896,7 +909,8 @@ Document level, strata-scoped. Matching does not see into the listed
 tags (subtree blindness: listing a token wrapper prunes everything
 inside it) and ignores the listed attributes on both sides. Missing
 or empty `tags=`, or a present but empty `attributa=`, is XIX.
-Affects matching only, never emission or canon.
+Affects matching and repeated captures only (§19.2), never emission
+or canon.
 
 ### 19.5 PER
 

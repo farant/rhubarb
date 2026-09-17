@@ -3629,8 +3629,117 @@ _exemplar_attributum (
     redde NIHIL;
 }
 
+/* Copia nodi COMPARANDA (regula V, spec materia-sedes par. IV;
+ * quaestio 01M2Q2BDH4). Aequalitas capturae iteratae CONTENTUM
+ * confert, non formam auctoris: omissa sunt quae lector solum ad
+ * octetos auctoris reddendos servat - spatia quattuor nodi et
+ * spatia ante attributum (dispositio, quam congruentia numquam
+ * legit), clausura anonyma '</>', forma capturae '(>' (liberi iam
+ * in 'liberi'), indentatio multilineae. Sub TRANSPARENTIA etiam
+ * attributa perspicua et liberi elementa tagi perspicui cum
+ * subarbore tota (reference par. 19.4 'on both sides'). Manent:
+ * tituli, valores, textus (spatia intra crudum incl.), crudus,
+ * multilinea, fragmenta, commenta. Scriptura copiae non-pulchra
+ * octetim confertur. */
+interior StmlNodus*
+_nodum_comparandum (
+    StmlMacroContextus* ctx,
+             StmlNodus* nodus)
+{
+    StmlNodus* copia;
+          i32  i;
+
+    copia = (StmlNodus*)piscina_allocare(ctx->piscina,
+        magnitudo(StmlNodus));
+    si (copia == NIHIL)
+    {
+        redde NIHIL;
+    }
+    *copia                     = *nodus;
+    copia->spatia_ante         = NIHIL;
+    copia->spatia_post         = NIHIL;
+    copia->spatia_clausurae    = NIHIL;
+    copia->spatia_intra_tagum  = NIHIL;
+    copia->clausura_anonyma    = FALSUM;
+    copia->captio_directio     = STML_CAPTIO_NIHIL;
+    copia->captio_numerus      = ZEPHYRUM;
+    copia->indentatio          = NIHIL;
+    si (nodus->attributa != NIHIL)
+    {
+        copia->attributa = xar_creare(ctx->piscina,
+            (i32)magnitudo(StmlAttributum));
+        si (copia->attributa == NIHIL)
+        {
+            redde NIHIL;
+        }
+        per (i = ZEPHYRUM; i < xar_numerus(nodus->attributa); i++)
+        {
+            StmlAttributum* attributum = (StmlAttributum*)xar_obtinere(
+                nodus->attributa, i);
+            StmlAttributum* cella;
+
+            si (   attributum == NIHIL
+                || _est_perspicuum_attributum(ctx, attributum->titulus))
+            {
+                perge;
+            }
+            cella = (StmlAttributum*)xar_addere(copia->attributa);
+            si (cella == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *cella              = *attributum;
+            cella->spatia_ante  = NIHIL;
+        }
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        copia->liberi = xar_creare(ctx->piscina,
+            (i32)magnitudo(StmlNodus*));
+        si (copia->liberi == NIHIL)
+        {
+            redde NIHIL;
+        }
+        per (i = ZEPHYRUM; i < xar_numerus(nodus->liberi); i++)
+        {
+            StmlNodus* liberum = *(StmlNodus**)xar_obtinere(
+                nodus->liberi, i);
+            StmlNodus*  exutum;
+            StmlNodus** cella;
+
+            si (   liberum          != NIHIL
+                && liberum->genus   == STML_NODUS_ELEMENTUM
+                && liberum->titulus != NIHIL
+                && _est_perspicuum(ctx, liberum->titulus))
+            {
+                perge;
+            }
+            exutum = liberum != NIHIL ? _nodum_comparandum(ctx, liberum)
+                                      : NIHIL;
+            si (liberum != NIHIL && exutum == NIHIL)
+            {
+                redde NIHIL;
+            }
+            /* parens copiae: scriptor textus indentationem
+             * multilineae ex parente legit (stml.c) */
+            si (exutum != NIHIL)
+            {
+                exutum->parens = copia;
+            }
+            cella = (StmlNodus**)xar_addere(copia->liberi);
+            si (cella == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *cella = exutum;
+        }
+    }
+    redde copia;
+}
+
 /* Ligamen ponere; nomen ITERATUM = aequalitas (regula V), numquam
- * re-ligatio. Gradus mixti (nodus contra valorem) = discrepantia. */
+ * re-ligatio. Gradus mixti (nodus contra valorem) = discrepantia.
+ * Nodi per copias comparandas conferuntur (_nodum_comparandum). */
 interior b32
 _ligamen_ponere (
     StmlMacroContextus* ctx,
@@ -3651,11 +3760,23 @@ _ligamen_ponere (
         }
         si (nodus != NIHIL && lig->nodus != NIHIL)
         {
-            chorda sa = stml_scribere(lig->nodus, ctx->piscina,
-                                      FALSUM);
-            chorda sb = stml_scribere(nodus, ctx->piscina, FALSUM);
+            StmlNodus* prior;
+            StmlNodus* posterior;
+               chorda  scriptura_prior;
+               chorda  scriptura_posterior;
 
-            redde chorda_aequalis(sa, sb);
+            prior      = _nodum_comparandum(ctx, lig->nodus);
+            posterior  = _nodum_comparandum(ctx, nodus);
+            si (prior == NIHIL || posterior == NIHIL)
+            {
+                redde FALSUM;
+            }
+            scriptura_prior = stml_scribere(prior, ctx->piscina,
+                                            FALSUM);
+            scriptura_posterior = stml_scribere(posterior,
+                                                ctx->piscina, FALSUM);
+            redde chorda_aequalis(scriptura_prior,
+                                  scriptura_posterior);
         }
         si (valor != NIHIL && lig->valor != NIHIL)
         {
