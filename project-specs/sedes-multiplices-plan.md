@@ -380,15 +380,30 @@ space before writing. Lossy, never corrupting.
 rows would inflate every count that greps the file, including
 `diagnostica_fumus.sh` gate I.
 
-- [ ] **Step 3: extend the smoke test.** Add a gate asserting a label
-containing `;` produces **one** parseable span in field 11, not two.
-Verify gates I–IV still pass unchanged — they grep mid-line, so
-appended columns must not disturb them.
+- [x] **Step 3: extend the smoke test.**
 
-- [ ] **Step 4: plant.** Drop the escape. The new gate goes red.
-Restore.
+- [x] **Step 4: plant.**
 
-- [ ] **Step 5: run `./tools/diagnostica_fumus.sh`, format, commit.**
+- [x] **Step 5: run `./tools/diagnostica_fumus.sh`, format, commit.**
+
+**Executed 2026-09-17.** The smoke test caught the deliberate output
+change before I did: gate II pinned line 4 of the plantata output, and
+`{ echo a` is an `absentia`, so line 4 became the opening span's caret
+row and the primary moved to line 5. Both spans are on line 1, so the
+real-data case exercises same-line grouping — one source line, two
+caret rows. Gate II now pins all three lines plus a total line count,
+so a repeated source line fails it.
+
+New gate V pins twelve fields, field 11 `1:1-1:9|hic coepit`, field 12
+`hic exspectatur`, and **one row** — the invariant that keeps anything
+counting the TSV honest.
+
+Three plants. Sort made a no-op → **13** assertions red, because an
+unsorted pair is refused by the printer and every excerpt vanishes.
+Field 11 suppressed → gate V red. **Escape removed → GREEN**, which is
+the finding, not a pass: no label today contains an escaped byte. See
+spec AUDIENDA VII — verified by measurement instead, and the gate
+belongs to the commit that first lets a rule write a label.
 
 ---
 

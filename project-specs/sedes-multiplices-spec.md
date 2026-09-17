@@ -269,7 +269,7 @@ its plant removes and the assertion that must go red.
 | II | remove same-line grouping | two spans on one line must print **one** source line and two caret rows; the plant prints two source lines |
 | III | revert to a per-block gutter width | a span pair on lines **9999 and 10000** must share width V; the plant makes them ragged. Its own gate precisely because nothing else would ever notice. |
 | IV | accept unsorted input instead of refusing | `excerptum_scribere_multa` on a descending array must return FALSUM |
-| V | drop the label escape | a label containing `;` must not produce a TSV field that parses as two spans |
+| V | drop the label escape | ~~a label containing `;` must not produce a TSV field that parses as two spans~~ **NOT GATEABLE — see AUDIENDA VII.** No label today contains any escaped byte, so this plant stays GREEN. Verified by measurement instead, not by a gate that cannot fail. |
 
 Gate I's fixture must be chosen by **reading crusta's derived output
 first**, not by assuming a shape produces an `absentia`. The three
@@ -308,6 +308,20 @@ grouping pass assumes sorted-by-`initium` puts same-line spans next to
 each other. That holds when every span's `linea` matches its offset.
 The sortedness refusal is the only thing guarding it; a caller passing
 a wrong `linea` gets wrong output, not a refusal.
+
+**VII. THE LABEL ESCAPE HAS NO PRODUCER (Task 3).** Gate V as written
+here could not be built: the escape replaces `|`, `;`, TAB and NEWLINE
+in a label, and the substrate's only two labels contain none of them,
+so removing the escape leaves every gate green. Rather than write a
+gate that cannot fail — the failure this spec warns about in §6 — the
+escape was verified by MEASUREMENT: with `MATERIA_NOTA_COEPIT`
+temporarily set to `"hic; coepit"`, field 11 reads
+`1:1-1:9|hic  coepit` with the escape and `1:1-1:9|hic; coepit`
+without it, so without the escape the field parses as two spans
+instead of one. The escape is correct and unexercised, exactly like
+crusta's `separator`/`heredoc` `inanis` rows. **It becomes gateable
+the moment a lint rule can write its own label** (`01M2RNJ9XN`), and
+the gate should be added in that commit, not before.
 
 **VI. CORRECTED IN BUILD (Task 2).** This spec twice named 999/1000
 as the width boundary. It is **9999/10000**: `_latitudo` takes a

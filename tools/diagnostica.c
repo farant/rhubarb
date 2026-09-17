@@ -7,8 +7,12 @@
  * refutatio scriptoris ut materia:scriptura. Exitus: 0 nullum
  * erratum, 1 erratum, 2 nihil iudicatum.
  *
- * Ordo TSV: via linea columna linea_finis columna_finis initium
- * finis gravitas codex causa. Codex CRUDUS in machina; linea humana
+ * Ordo TSV (XII campi): via linea columna linea_finis columna_finis
+ * initium finis gravitas codex causa | sedes_relatae nota_primaria.
+ * Campus XI sedes relatas fert ut 'L:C-L:C|nota' per ';' iunctas
+ * (vacuus si nullae); campus XII notam sedis primariae (vacuus si
+ * NIHIL). Campi ADDITI sunt, numquam ordines novi: ordo unus
+ * diagnosticum unum manet. Codex CRUDUS in machina; linea humana
  * '<grammatica>:' praefigit codici sine ':' (codices substrati eum
  * iam ferunt).
  */
@@ -89,6 +93,57 @@ _suffixum (
                        suffixum) == ZEPHYRUM);
 }
 
+/* Nota in TSV: '|', ';', TAB et NOVA LINEA spatio uno mutantur.
+ * Damnosum quidem (nota mutilatur), corrumpens numquam: campus
+ * numquam in duos scinditur. Notae substrati nihil horum ferunt; nota
+ * a regula lintris data quidlibet ferre potest. */
+interior vacuum
+_notam_scribere (
+    constans character* nota)
+{
+    i32 i;
+
+    si (nota == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; nota[i] != '\0'; i++)
+    {
+        character c = nota[i];
+
+        si (   c == '|' || c == ';' || c == '\t' || c == '\n'
+            || c == '\r')
+        {
+            c = ' ';
+        }
+        putchar((integer)c);
+    }
+}
+
+/* Pictor seriem ORDINATAM poscit et eam non ordinat; recordum sedem
+ * primariam seorsum a relatis servat, ergo ordo per constructionem
+ * non datur. Numerus minimus est (hodie II), ergo insertio. */
+interior vacuum
+_sedes_ordinare (
+    ExcerptumSedes* sedes,
+               i32  numerus)
+{
+    i32 i;
+
+    per (i = I; i < numerus; i++)
+    {
+        ExcerptumSedes cella  = sedes[i];
+                   i32 j      = i;
+
+        dum (j > ZEPHYRUM && sedes[j - I].initium > cella.initium)
+        {
+            sedes[j] = sedes[j - I];
+            j--;
+        }
+        sedes[j] = cella;
+    }
+}
+
 interior vacuum
 _diagnosticum_imprimere (
                      Piscina* piscina,
@@ -114,12 +169,38 @@ constans MateriaDiagnosticum* d,
     }
     si (machina)
     {
-        imprimere("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s\t%s\n", via,
+        i32 r;
+
+        imprimere("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t", via,
             (integer)d->tractus.linea, (integer)d->tractus.columna,
             (integer)d->tractus.linea_finis,
             (integer)d->tractus.columna_finis,
             (integer)d->tractus.initium, (integer)d->tractus.finis,
             monitum ? "monitum" : "erratum", d->codex, d->causa);
+        /* XI: sedes relatae, 'L:C-L:C|nota' per ';' iunctae. ORDINES
+         * NOVI NON: ordo unus diagnosticum unum manet, aliter numerus
+         * quisque qui TSV quaerit tacite cresceret. */
+        per (r = ZEPHYRUM; r < d->numerus_relatorum; r++)
+        {
+            constans MateriaTractus* t = &d->relata[r].tractus;
+
+            si (r > ZEPHYRUM)
+            {
+                putchar((integer)';');
+            }
+            imprimere("%d:%d-%d:%d", (integer)t->linea,
+                (integer)t->columna, (integer)t->linea_finis,
+                (integer)t->columna_finis);
+            si (d->relata[r].nota != NIHIL)
+            {
+                putchar((integer)'|');
+                _notam_scribere(d->relata[r].nota);
+            }
+        }
+        /* XII: nota sedis primariae */
+        putchar((integer)'\t');
+        _notam_scribere(d->nota);
+        putchar((integer)'\n');
         redde;
     }
     imprimere("%s:%d:%d: [%s] %s%s%s\n  %s\n", via,
@@ -129,13 +210,46 @@ constans MateriaDiagnosticum* d,
         d->causa);
     si (excerptum && d->tractus.initium >= ZEPHYRUM)
     {
-        ChordaAedificator* aedificator = chorda_aedificator_creare(
-            piscina, (memoriae_index)CCLVI);
+        ChordaAedificator* aedificator;
+           ExcerptumSedes* sedes;
+                      i32  numerus = I;
+                      i32  r;
 
+        sedes = (ExcerptumSedes*)piscina_allocare(piscina,
+            (memoriae_index)(d->numerus_relatorum + I)
+                * magnitudo(ExcerptumSedes));
+        si (sedes == NIHIL)
+        {
+            redde;
+        }
+        sedes[ZEPHYRUM].initium  = d->tractus.initium;
+        sedes[ZEPHYRUM].finis    = d->tractus.finis;
+        sedes[ZEPHYRUM].linea    = d->tractus.linea;
+        sedes[ZEPHYRUM].nota     = d->nota;
+        per (r = ZEPHYRUM; r < d->numerus_relatorum; r++)
+        {
+            constans MateriaTractus* t = &d->relata[r].tractus;
+
+            /* Sedes relata insana excerptum TOTUM perderet, quia
+             * pictor seriem totam recusat - ergo praetermittitur et
+             * primaria superest, ut ante hoc opus. */
+            si (   t->initium < ZEPHYRUM || t->initium > (s32)mensura
+                || t->linea == ZEPHYRUM)
+            {
+                perge;
+            }
+            sedes[numerus].initium  = t->initium;
+            sedes[numerus].finis    = t->finis;
+            sedes[numerus].linea    = t->linea;
+            sedes[numerus].nota     = d->relata[r].nota;
+            numerus++;
+        }
+        _sedes_ordinare(sedes, numerus);
+        aedificator = chorda_aedificator_creare(piscina,
+            (memoriae_index)CCLVI);
         si (   aedificator != NIHIL
-            && excerptum_scribere(aedificator, fons, mensura,
-                   d->tractus.initium, d->tractus.finis,
-                   d->tractus.linea))
+            && excerptum_scribere_multa(aedificator, fons, mensura,
+                   sedes, numerus))
         {
             chorda textus = chorda_aedificator_finire(aedificator);
 
