@@ -1,7 +1,7 @@
 #!/bin/bash
 # crusta/arbor.sh - proiectio STML plagulae crustae
 #
-# Usage:  ./crusta/arbor.sh <plagula.sh> [-tacitus]
+# Usage:  ./crusta/arbor.sh <plagula.sh> [-tacitus] [-sedes]
 # Exit:   0 sanum | 1 fractum | 2 usus/plagula absens
 # Obiecta crusta/build/*.o poscit (cursor crusta/compile_probationes.sh ea
 # struit); instrumentum in crusta/build/arbor.

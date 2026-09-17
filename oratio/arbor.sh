@@ -1,7 +1,7 @@
 #!/bin/bash
 # oratio/arbor.sh - proiectio STML plagulae orationis
 #
-# Usage:  ./oratio/arbor.sh <plagula.txt> [-tacitus]
+# Usage:  ./oratio/arbor.sh <plagula.txt> [-tacitus] [-sedes]
 # Exit:   0 sanum | 1 fractum | 2 usus/plagula absens
 # Obiecta oratio/build/*.o poscit (cursor oratio/compile_probationes.sh ea
 # struit); instrumentum in oratio/build/arbor.

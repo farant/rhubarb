@@ -44,3 +44,55 @@ sees (only C89 includes can mix fontes).
 - Gate `probatio_materia_sedes`: 63/63 at first compile; planted
   `finis + I` in `materia_tractus_lexematis` → red at `t.finis == 13`,
   reverted → green.
+
+## 2026-09-17 — sedes A2: the shared verifier, five client gates, instruments
+
+**`materia_sedes_verificare` (new `materia/fontes/materia_sedes.{h,c}`).**
+One library call every client STML gate makes per corpus file, like
+`materia_registrum_recens`. Its oracle is disjoint from the writer's
+arithmetic: it builds a LINE TABLE from the source bytes (binary search
+for line/column), computes expected ranges by its own walk (writer
+order: node pre-order; a first-use token, then its `ante`, then its
+`post` trivia; a repeated use adds no element but still counts toward
+the node), pairs them with the STML elements carrying `octeti` in
+document pre-order, checks `octeti`, `sedes`, and for source tokens the
+source slice against the value. It also checks the view equals the
+plain projection minus `sedes`/`octeti`/`visio` (structural walk over
+both arbor-tradita trees, two interns so titles compare by content),
+and that the reader refuses the view. It refuses by name what it cannot
+pair: `loci_admissi`, `templa_activa`, a frons with `liberos_ornare`.
+
+**Measured over the corpora (all green at first run):** crusta 339,503
+elements; css 9,679; html 16,439; md 2,491,843; oratio 2,643,746 — zero
+divergences. **Zero derived points anywhere:** md's and oratio's derived
+tokens carry `byte_offset` −1 (synthetic), so they get no attributes at
+all. D1's point rule is exercised only by materia's own gate today.
+
+**Size.** Over the 237 house `.sh` files the view is 57,459,770 bytes
+against 23,264,631 for the plain projection (×2.47; the source is
+826,532 bytes). Most of the growth is the pretty writer breaking an
+element with two long attributes onto aligned lines. Opt-in; not pinned.
+
+**Instruments.** `-sedes` on `crusta/`, `html/`, `md/`, `oratio/arbor.sh`
+(`consilium.sedes_scribere = sedes` right before the write).
+
+**Plant.** Writer column `+ I` → `probatio_crusta_stml` red at
+`sedes.sana`; reverted → green.
+
+**First commit attempt refused (the gate working).** The oratio
+identifier lint in the shadow clone saw the untracked file for the first
+time and named `verificatio` (the struct `Verificatio`) as a new unknown
+word — `quaere.sh` had been run on `verificare`, not on the noun. Renamed
+`Collatio`; the two-letter locals of the structural compare (`ia`/`ib`,
+`na`/`nb`, `sn`/`so`) became full words before the retry. Lesson: run
+`quaere.sh` on EVERY identifier word of a new file (a regex split of the
+file's identifiers), not on the words remembered as new.
+
+**Second refusal: crusta's computus golden.** `crusta/probationes/fixa/computus/basis.tsv`
+measures five FIXED house files, one of them `html/compile_probationes.sh`,
+which A2 edits (its materia module list gained `materia_sedes`). The
+row moved by exactly that edit (+25 bytes, +1 token, +2 nodes, +13
+allocations); regenerated with `COMPUTUS_SCRIBERE=1`, the other four
+rows unchanged. A runner edit is a corpus edit for crusta's computus
+gate — run `crusta ... computus` before committing any change to those
+five files.

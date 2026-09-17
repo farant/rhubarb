@@ -1,13 +1,14 @@
 /* arbor.c - Proiectio STML plagulae orationis (oratio/arbor.sh)
  *
- * Usus: arbor <plagula.txt> [-tacitus] [-partes]
+ * Usus: arbor <plagula.txt> [-tacitus] [-partes] [-sedes]
  * Legit plagulam, parsat (oratio_arbor), scribit documentum STML
  * (materia_arbor_scribere_nodum cum consilio oratio) in stdout.
  * -partes (T12): tabula Latina la.bin et glossarium ex RHUBARB_RADIX
  * onerantur et arbor annotatur (analyses, classes, linguae) ante
  * scripturam; cum -tacitus census annotationis. -tacitus: numerum
- * octetorum solum. Exitus: 0 sanum, 1 fractum, 2 usus/plagula/tabula
- * absens.
+ * octetorum solum. -sedes: VISIO sedium (sedes="L:C-L:C"
+ * octeti="B-B" in elementis; lector eam recusat) - materia-sedes-spec
+ * par. III. Exitus: 0 sanum, 1 fractum, 2 usus/plagula/tabula absens.
  */
 
 #include "latina.h"
@@ -75,14 +76,15 @@ principale (
                character* textus;
                      i32  mensura = ZEPHYRUM;
             MateriaNodus* radix;
-      MateriaLexiconRatum ratum;
-       MateriaLexIudicium iudicium;
-    MateriaArborConsilium consilium;
-    MateriaArborScriptura s;
-                                          b32 tacitus = FALSUM;
-                     b32  partes  = FALSUM;
-                     b32  crudus  = FALSUM;
-                  integer i;
+      MateriaLexiconRatum  ratum;
+       MateriaLexIudicium  iudicium;
+    MateriaArborConsilium  consilium;
+    MateriaArborScriptura  s;
+                     b32  tacitus  = FALSUM;
+                     b32  sedes    = FALSUM;
+                     b32  partes   = FALSUM;
+                     b32  crudus   = FALSUM;
+                 integer  i;
       constans character* via = NIHIL;
 
     per (i = I; i < argc; i++)
@@ -90,6 +92,10 @@ principale (
         si (strcmp(argv[i], "-tacitus") == ZEPHYRUM)
         {
             tacitus = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-sedes") == ZEPHYRUM)
+        {
+            sedes = VERUM;   /* visio sedium (materia-sedes) */
         }
         alioquin si (strcmp(argv[i], "-partes") == ZEPHYRUM)
         {
@@ -108,7 +114,7 @@ principale (
     {
         fprintf(stderr,
             "usus: arbor <plagula.txt> [-tacitus] [-partes]"
-            " [-crudus]\n");
+            " [-crudus] [-sedes]\n");
         redde II;
     }
     piscina = piscina_generare_dynamicum("oratio_arbor_instrumentum",
@@ -198,6 +204,7 @@ principale (
                 (integer)census.linguae[ORATIO_LINGUA_ANGLICA]);
         }
     }
+    consilium.sedes_scribere = sedes;
     s = materia_arbor_scribere_nodum(piscina, radix, &consilium);
     si (!s.successus)
     {

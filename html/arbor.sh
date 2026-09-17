@@ -1,7 +1,7 @@
 #!/bin/bash
 # html/arbor.sh - proiectio STML plagulae HTML
 #
-# Usage:  ./html/arbor.sh <plagula.html> [-tacitus]
+# Usage:  ./html/arbor.sh <plagula.html> [-tacitus] [-sedes]
 # Exit:   0 sanum | 1 fractum | 2 usus/plagula absens
 # Obiecta html/build/*.o poscit (cursor html/compile_probationes.sh ea
 # struit); instrumentum in html/build/arbor.

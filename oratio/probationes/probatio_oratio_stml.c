@@ -17,6 +17,7 @@
 #include "oratio_registrum.h"
 #include "oratio_lexicon.h"
 #include "materia_arbor.h"
+#include "materia_sedes.h"
 #include "materia_nodus.h"
 #include "materia_scribere.h"
 #include "materia_lexicon.h"
@@ -26,6 +27,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* VISIO SEDIUM (materia-sedes A2): elementa verificata per corpus -
+ * porta quae nihil verificavit mortua est */
+hic_manens i32 SEDES_ELEMENTA = ZEPHYRUM;
+hic_manens i32 SEDES_DERIVATA = ZEPHYRUM;
 
 interior character*
 _plagulam_legere (
@@ -71,19 +77,32 @@ _circuitum_arboris (
                                i32  mensura,
                                b32  fidelis)
 {
-    MateriaNodus* lecta;
-    MateriaNodus* relecta;
-    MateriaArborScriptura s1;
-    MateriaArborScriptura s2;
-    MateriaArborScriptura s3;
-    MateriaArborVitium vitium;
-    MateriaArborDifferentia d;
+               MateriaNodus* lecta;
+               MateriaNodus* relecta;
+      MateriaArborScriptura  s1;
+      MateriaArborScriptura  s2;
+      MateriaArborScriptura  s3;
+         MateriaArborVitium  vitium;
+    MateriaArborDifferentia  d;
 
     s1 = materia_arbor_scribere_nodum(piscina, radix, consilium);
     si (!s1.successus)
     {
         imprimere("    (scriptura I: %s)\n", s1.causa ? s1.causa : "-");
         redde FALSUM;
+    }
+    {
+        MateriaSedesRelatio sedes;
+
+        si (!materia_sedes_verificare(piscina, radix, consilium, fons,
+                mensura, &sedes))
+        {
+            imprimere("    (sedes: %s, elementum %d)\n",
+                sedes.causa ? sedes.causa : "-", (integer)sedes.index);
+        }
+        CREDO_VERUM (sedes.sana);
+        SEDES_ELEMENTA += sedes.elementa;
+        SEDES_DERIVATA += sedes.derivata;
     }
     lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, consilium,
         &vitium);
@@ -227,12 +246,12 @@ principale (vacuum)
         constans character* f = "Rosa alba.\n";
               MateriaNodus* radix = oratio_arbor_parsare(piscina, f,
                   (i32)strlen(f));
-        MateriaNodus* par;
-        MateriaNodus* sen;
-        MateriaNodus* voc;
-        MateriaToken* origo;
-        MateriaToken* classes;
-        MateriaArborScriptura s;
+                 MateriaNodus* par;
+                 MateriaNodus* sen;
+                 MateriaNodus* voc;
+                 MateriaToken* origo;
+                 MateriaToken* classes;
+        MateriaArborScriptura  s;
 
         CREDO_NON_NIHIL (radix);
         par =
@@ -344,6 +363,9 @@ principale (vacuum)
     }
 
     imprimere("\n");
+    imprimere("\n--- sedes (visio): %d elementa verificata, %d derivata"
+        " ---\n", (integer)SEDES_ELEMENTA, (integer)SEDES_DERIVATA);
+    CREDO_VERUM (SEDES_ELEMENTA > ZEPHYRUM);
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

@@ -106,7 +106,12 @@ accumulated bottom-up in the writer's one walk. A DERIVED token (md,
 oratio) is a zero-width point. The envelope says `visio="sedes"` (or
 `"partialis sedes"`), the reader refuses it, canons never see it. Range
 API: `materia_tractus_lexematis` / `_nodi` / `_conferre`
-(`materia_nodus.h`). Spec `project-specs/materia-sedes-spec.md`, plan
+(`materia_nodus.h`). Every client STML gate calls
+`materia_sedes_verificare` (`materia_sedes.h`) per corpus file: an
+oracle disjoint from the writer (line table from the source bytes,
+source slices, document order) that also proves the view equals the
+plain projection minus its attributes and that the reader refuses it.
+Instruments: `<cliens>/arbor.sh -sedes`. Spec `project-specs/materia-sedes-spec.md`, plan
 `project-specs/materia-sedes-plan.md`, worklog
 `fontes/materia_arbor.worklog.md`.
 

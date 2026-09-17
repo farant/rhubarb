@@ -64,6 +64,7 @@
 #include "crusta_lexicon.h"
 #include "crusta_registrum.h"
 #include "materia_arbor.h"
+#include "materia_sedes.h"
 #include "materia_lexicon.h"
 #include "materia_nodus.h"
 #include "materia_scribere.h"
@@ -74,6 +75,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* VISIO SEDIUM (materia-sedes A2): elementa verificata per corpus -
+ * porta quae nihil verificavit mortua est */
+hic_manens i32 SEDES_ELEMENTA = ZEPHYRUM;
+hic_manens i32 SEDES_DERIVATA = ZEPHYRUM;
 
 /* casus inlinei: porta arboris (P3/P5: XC casus + mala VII) et porta
  * arithmeticae (P4: V) verbatim */
@@ -442,12 +448,12 @@ _circuitum_probare (
                                i32  mensura,
                                b32  mutare)
 {
-    Circuitus c;
-    MateriaNodus* radix;
-    MateriaNodus* relecta;
-    MateriaArborScriptura s1;
-    MateriaArborScriptura s2;
-    MateriaArborVitium vitium;
+                Circuitus c;
+             MateriaNodus* radix;
+             MateriaNodus* relecta;
+    MateriaArborScriptura  s1;
+    MateriaArborScriptura  s2;
+       MateriaArborVitium  vitium;
 
     memset(&c, ZEPHYRUM, magnitudo(Circuitus));
     c.causa = CIRCUITUS_IDEM;
@@ -487,6 +493,19 @@ _circuitum_probare (
         redde c;
     }
     c.octeti_stml = s1.textus.mensura;
+    {
+        MateriaSedesRelatio sedes;
+
+        si (!materia_sedes_verificare(piscina, radix, consilium, fons,
+                mensura, &sedes))
+        {
+            imprimere("    (sedes: %s, elementum %d)\n",
+                sedes.causa ? sedes.causa : "-", (integer)sedes.index);
+        }
+        CREDO_VERUM (sedes.sana);
+        SEDES_ELEMENTA += sedes.elementa;
+        SEDES_DERIVATA += sedes.derivata;
+    }
 
     relecta = materia_arbor_legere(piscina, NIHIL, s1.textus, consilium,
         &vitium);
@@ -832,10 +851,10 @@ principale (vacuum)
             (i32)strlen(CASUS_HEREDOC[0]), &CRUSTA_BASH, NIHIL);
         MateriaArborScriptura s;
            MateriaArborVitium vitium;
-        MateriaNodus* relecta;
-        MateriaNodus* imperium;
-        MateriaNodus* redirectio;
-        MateriaNodus* heredoc;
+                 MateriaNodus* relecta;
+                 MateriaNodus* imperium;
+                 MateriaNodus* redirectio;
+                 MateriaNodus* heredoc;
 
         CREDO_NON_NIHIL (r);
         s = materia_arbor_scribere_nodum(piscina, r, &consilium);
@@ -1054,6 +1073,9 @@ principale (vacuum)
     }
 
     imprimere("\n");
+    imprimere("\n--- sedes (visio): %d elementa verificata, %d derivata"
+        " ---\n", (integer)SEDES_ELEMENTA, (integer)SEDES_DERIVATA);
+    CREDO_VERUM (SEDES_ELEMENTA > ZEPHYRUM);
     credo_imprimere_compendium();
 
     praeteritus = credo_omnia_praeterierunt();

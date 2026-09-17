@@ -1,7 +1,7 @@
 #!/bin/bash
 # md/arbor.sh - proiectio STML plagulae markdown
 #
-# Usage:  ./md/arbor.sh <plagula.md> [-tacitus]
+# Usage:  ./md/arbor.sh <plagula.md> [-tacitus] [-sedes]
 # Exit:   0 sanum | 1 fractum | 2 usus/plagula absens
 # Obiecta md/build/*.o poscit (cursor md/compile_probationes.sh ea
 # struit); instrumentum in md/build/arbor.

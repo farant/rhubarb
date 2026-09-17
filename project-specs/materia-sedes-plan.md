@@ -102,6 +102,8 @@ the spec's "as built" section.
 
 ## Task A1: The range, the view in the writer, the materia gate
 
+**Executed 2026-09-17 (`325180d5`).** Gate 63/63 at first compile; plant `finis + I` red at `t.finis == 13`; shim 396/396; all seven client suites green. Every consilium goes through `nudum` (Step 1 clean).
+
 **Files:**
 - Modify: `materia/fontes/materia_nodus.h` (after `materia_sedes_tokeni`,
   line 175), `materia/fontes/materia_nodus.c` (after
@@ -132,7 +134,7 @@ the spec's "as built" section.
   `"visio sedes: non arbor"`, `"visio partialis sedes: non arbor"`
   (`"visio partialis: non arbor"` unchanged).
 
-- [ ] **Step 1: Confirm no hand-built consilium escapes `nudum`.**
+- [x] **Step 1: Confirm no hand-built consilium escapes `nudum`.**
   Run `grep -rn 'MateriaArborConsilium' --include='*.c' . | grep -v
   '^./build'` and check that every variable is filled by
   `materia_arbor_consilium_nudum` (which memsets) or a client helper that
@@ -140,7 +142,7 @@ the spec's "as built" section.
   initializer or a missing `nudum` gets its fix in this commit (a garbage
   `sedes_scribere` would stamp views silently).
 
-- [ ] **Step 2: Write the failing gate** with `./silva/scribe.sh
+- [x] **Step 2: Write the failing gate** with `./silva/scribe.sh
   materia/probationes/probatio_materia_sedes.c`. Its lexicon and
   registry are `probatio_materia_arbor.c`'s (copy lines 25-67: `FORMA`,
   `G_*`, `GENERA`, `LEXICON`, `LOCI`, `GEN`, `REG`) plus `_lex`
@@ -411,11 +413,11 @@ MateriaLexiconRatum  ratum;
   the tail of `probatio_materia_arbor.c` exactly as that file ends it —
   the names above are the pattern, the file's own tail is the truth.
 
-- [ ] **Step 3: Run it red.** `./materia/compile_probationes.sh sedes` →
+- [x] **Step 3: Run it red.** `./materia/compile_probationes.sh sedes` →
   build error (no `MateriaTractus`). Expected; the plant in Step 7 is the
   real red.
 
-- [ ] **Step 4: The range functions.** In `materia_nodus.h` after
+- [x] **Step 4: The range functions.** In `materia_nodus.h` after
   `materia_sedes_tokeni`:
 
 ```c
@@ -624,7 +626,7 @@ materia_tractus_nodi (
   (`materia_nodus.c` needs `#include <string.h>` for `memset` if it
   lacks it.)
 
-- [ ] **Step 5: The consilium field.** In `materia_arbor.h`, after
+- [x] **Step 5: The consilium field.** In `materia_arbor.h`, after
   `MateriaTokenForma forma;` (line 320):
 
 ```c
@@ -635,7 +637,7 @@ materia_tractus_nodi (
                                  b32  sedes_scribere;
 ```
 
-- [ ] **Step 6: The writer.**
+- [x] **Step 6: The writer.**
   1. `structura MateriaArborScriptor` (after `ancora_initium_lineae`,
      line 66):
 
@@ -847,14 +849,14 @@ _tractum_scribere (
     }
 ```
 
-- [ ] **Step 7: Run green, then plant.** `./materia/compile_probationes.sh
+- [x] **Step 7: Run green, then plant.** `./materia/compile_probationes.sh
   sedes` → all pass. Plant:
   `silva.planta('materia/fontes/materia_nodus.c', 'tractus->finis =
   sedes.byte_offset + (s32)token->valor.mensura;', 'tractus->finis =
   sedes.byte_offset + (s32)token->valor.mensura + (s32)I;', 'materia',
   'sedes')` → red (range asserts), then green on revert.
 
-- [ ] **Step 8: Docs.** `materia/fontes/materia_arbor.worklog.md` (new,
+- [x] **Step 8: Docs.** `materia/fontes/materia_arbor.worklog.md` (new,
   dated entry: the view, the bottom-up range accumulator, D1, D2).
   `materia/CLAUDE.md`, new section after "Visio":
 
@@ -872,7 +874,7 @@ API: `materia_tractus_lexematis` / `_nodi` / `_conferre`
 (`materia_nodus.h`). Spec `project-specs/materia-sedes-spec.md`.
 ```
 
-- [ ] **Step 9: Format, words, audit, commit.** `./silva/formator.sh`
+- [x] **Step 9: Format, words, audit, commit.** `./silva/formator.sh`
   on the four C files and the probatio (`-scribere`, then `-vitia`);
   `./oratio/quaere.sh tractus conferre inventum octeti visio numerare`;
   `./silva/nexus.sh materia_tractus_nodi`; `./materia/shim_probare.sh`
@@ -884,6 +886,8 @@ API: `materia_tractus_lexematis` / `_nodi` / `_conferre`
 ---
 
 ## Task A2: The shared verifier, five client gates, `-sedes` instruments
+
+**Executed 2026-09-17.** Verifier green at first run on every client: crusta 339,503 elements, css 9,679, html 16,439, md 2,491,843, oratio 2,643,746; zero derived points (md/oratio derived tokens are synthetic, offset −1). View ×2.47 the plain projection over 237 house `.sh`. Plant writer column `+ I` → crusta stml red at `sedes.sana`.
 
 **Files:**
 - Create: `materia/fontes/materia_sedes.h`, `materia/fontes/materia_sedes.c`
@@ -909,7 +913,7 @@ API: `materia_tractus_lexematis` / `_nodi` / `_conferre`
   constans MateriaArborConsilium*, constans character* fons, i32 mensura,
   MateriaSedesRelatio*)`.
 
-- [ ] **Step 1: The verifier** (`./silva/scribe.sh`). The oracle is
+- [x] **Step 1: The verifier** (`./silva/scribe.sh`). The oracle is
   independent of the writer's arithmetic: lines and columns come from a
   LINE TABLE the verifier builds from the source bytes; token ranges are
   checked against the source slice; node ranges come from the verifier's
@@ -1654,7 +1658,7 @@ materia_sedes_verificare (
   (`_numeros_legere` must treat a NIHIL chorda as zero numbers. The
   `numeri` values are `i32`; offsets fit, since sources are < 2 GiB.)
 
-- [ ] **Step 2: Wire the five gates.** In each function named above,
+- [x] **Step 2: Wire the five gates.** In each function named above,
   immediately after the FIRST successful `materia_arbor_scribere_nodum`
   (the `s1` check) insert, adapting only the tree variable (`radix` in
   crusta/css/md/html/oratio — oratio receives it as a parameter):
@@ -1683,12 +1687,12 @@ materia_sedes_verificare (
   nothing is dead). If a client fails with a named class, STOP and bring
   the class to Fran — never exempt.
 
-- [ ] **Step 3: Instruments.** In each of the four `arbor.c`, parse
+- [x] **Step 3: Instruments.** In each of the four `arbor.c`, parse
   `-sedes` beside `-tacitus` into `b32 sedes = FALSUM;`, extend the usage
   line with `[-sedes]`, and after the consilium is built:
   `consilium.sedes_scribere = sedes;`. Update each `.sh` usage comment.
 
-- [ ] **Step 4: Run each client STML gate green**
+- [x] **Step 4: Run each client STML gate green**
   (`./crusta/compile_probationes.sh stml`, `./css/compile_probationes.sh
   stml`, `./md/… stml`, `./html/… stml`, `./oratio/… stml`) and record
   the `sedes:` lines. Measure the view's size over the house corpus:
@@ -1696,12 +1700,12 @@ materia_sedes_verificare (
   ./crusta/arbor.sh -sedes -tacitus "$f"; done` summed (record in the
   worklog; no pin).
 
-- [ ] **Step 5: Plant.** `silva.planta('materia/fontes/materia_arbor.c',
+- [x] **Step 5: Plant.** `silva.planta('materia/fontes/materia_arbor.c',
   'chorda_aedificator_appendere_i32(sedes, tractus->columna);',
   'chorda_aedificator_appendere_i32(sedes, tractus->columna + I);',
   'crusta', 'stml')` → red with `sedes dispares`; green on revert.
 
-- [ ] **Step 6: Docs, format, words, audit, commit.** Worklog entry (the
+- [x] **Step 6: Docs, format, words, audit, commit.** Worklog entry (the
   verifier's independence, per-client element counts, size growth);
   formator; `./oratio/quaere.sh verificare exspectatum exspectata visa
   acta summa ima media`; `./materia/shim_probare.sh`; commit via

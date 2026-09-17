@@ -1,10 +1,12 @@
 /* arbor.c - Proiectio STML plagulae crustae (crusta/arbor.sh)
  *
- * Usus: arbor <plagula.sh> [-tacitus]
+ * Usus: arbor <plagula.sh> [-tacitus] [-sedes]
  * Legit plagulam, parsat (crusta_arbor), scribit documentum STML
  * (materia_arbor_scribere_nodum cum consilio crustae) in stdout.
  * -tacitus: numerum octetorum solum. Exitus: 0 sanum, 1 fractum,
  * 2 usus/plagula absens.
+ * -sedes: VISIO sedium (sedes="L:C-L:C" octeti="B-B" in elementis;
+ * lector eam recusat) - materia-sedes-spec par. III.
  */
 
 #include "latina.h"
@@ -63,23 +65,28 @@ principale (
       integer   argc,
     character** argv)
 {
-                 Piscina* piscina;
-               character* textus;
-                     i32  mensura = ZEPHYRUM;
-            MateriaNodus* radix;
-      MateriaLexiconRatum ratum;
-       MateriaLexIudicium iudicium;
-    MateriaArborConsilium consilium;
-    MateriaArborScriptura s;
-                     b32  tacitus = FALSUM;
-                  integer i;
-      constans character* via = NIHIL;
+                  Piscina* piscina;
+                character* textus;
+                      i32  mensura = ZEPHYRUM;
+             MateriaNodus* radix;
+      MateriaLexiconRatum  ratum;
+       MateriaLexIudicium  iudicium;
+    MateriaArborConsilium  consilium;
+    MateriaArborScriptura  s;
+                      b32  tacitus  = FALSUM;
+                      b32  sedes    = FALSUM;
+                  integer  i;
+       constans character* via = NIHIL;
 
     per (i = I; i < argc; i++)
     {
         si (strcmp(argv[i], "-tacitus") == ZEPHYRUM)
         {
             tacitus = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-sedes") == ZEPHYRUM)
+        {
+            sedes = VERUM;   /* visio sedium (materia-sedes) */
         }
         alioquin
         {
@@ -88,7 +95,8 @@ principale (
     }
     si (via == NIHIL)
     {
-        fprintf(stderr, "usus: arbor <plagula.sh> [-tacitus]\n");
+        fprintf(stderr,
+            "usus: arbor <plagula.sh> [-tacitus] [-sedes]\n");
         redde II;
     }
     piscina = piscina_generare_dynamicum("crusta_arbor_instrumentum",
@@ -114,6 +122,7 @@ principale (
         fprintf(stderr, "arbor: parsura fracta\n");
         redde I;
     }
+    consilium.sedes_scribere = sedes;
     s = materia_arbor_scribere_nodum(piscina, radix, &consilium);
     si (!s.successus)
     {

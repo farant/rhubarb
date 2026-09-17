@@ -139,7 +139,8 @@ done
 shopt -s nullglob
 # materia sub-fontes: md eam CONSUMIT, non continet
 for m in materia_lexicon materia_token materia_nodus materia_scribere \
-         materia_arbor materia_arbor_aequalitas materia_coctor; do
+         materia_arbor materia_arbor_aequalitas materia_coctor \
+         materia_sedes; do
     src="$MATERIA_DIR/fontes/$m.c"
     obj="$BUILD_DIR/$m.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
