@@ -2751,3 +2751,59 @@ over untracked files without `quaere.sh` by hand (01M2Q0MMVH, met
 again); a `utf8_latitudo` table, because codepoints are not columns
 (01M2RHXBWP — the excerpt's caret misses CJK by one column short and
 combining marks by one long, and tessera says "latitudo 1 praesumpta").
+
+## 2026-09-17 — sedes multiplices: a diagnostic that points at two places (sedes-multiplices-spec, sedes-multiplices-plan 1–4)
+
+INTENTIO (filed with the plan commit, before task 1). Desideratum
+01M2RKYA4Z, ordered FIRST by decree 01M2RNK5MG — before the
+`Congruentia` adapter (01M2RNJ9XN) and before any lint rule, because
+both change `MateriaDiagnosticum` and an adapter written against the
+one-span record gets written twice. Fran's reason for the whole line
+of work: diagnostics are the agent's interface to a parser. Spec
+`69f06895`; plan `project-specs/sedes-multiplices-plan.md`, four
+tasks.
+
+THE MEASUREMENT THAT MAKES IT CHEAP. The second span is already
+computed and thrown away: the `ABSENTIA` arm
+(`materia_diagnostica.c:306`) takes the endpoint of the node's
+accumulated range `t` and lets `t` itself fall off the stack. 28 of
+crusta's 36 declarations are `absentia`, so the free span lands on
+roughly four fifths of them the day it ships; css declares zero, so no
+css output moves.
+
+THE SHAPE, settled with Fran in a design conversation and not open
+(SM1–SM8). The primary span stays a plain field — the header line and
+the pinned sort key `(tractus.initium, codex)` both need exactly one
+position, and a flat array would still need a "sedes[0] is primary"
+law, the same privilege with an indirection in front of it and an
+empty case the type allows and the facts forbid. Related spans carry a
+LABEL, never a role enum: LSP's `DiagnosticRelatedInformation` is
+`{location, message}` and clang's notes are a location and a sentence,
+so a role would only ever pick a default label and would be discarded
+on the way out. Labels are FINITE VERBS and never participles — a
+participle agrees with its subject and the subject varies by node
+genus (`grex` masculine, `redirectio` feminine), so one fixed
+participle is quietly wrong most of the time it is shown; hence `hic
+coepit` and `hic exspectatur`. Printing is rustc-shaped: one block,
+source order, gutter sized once, no elision and no inline multi-caret
+interleaving.
+
+WHAT IT DOES NOT TOUCH, which is most of why it is cheap. No registry
+vocabulary, so `MateriaTabDiagnosticum` is unchanged and NO SEAL
+MOVES. No STML projection change, so no writer, no reader, no
+round-trip gate, and `materia_sedes_verificare`'s law survives.
+`excerptum_scribere` and all its callers unchanged. Every pinned
+assertion in the existing gates reads `codex`, `gravitas` and the
+PRIMARY tractus.
+
+DELIBERATE OUTPUT CHANGE, stated so nobody reads the negative space as
+"nothing moves": an `absentia` primary gains the label `hic
+exspectatur` even when no opening span is found. Nothing pins the
+human text — the gates read struct fields, the smoke test greps TSV
+columns — so no gate moves, but the change is intended and visible.
+
+CORRECTION CARRIED IN. The desideratum's own body claimed multi-span
+would make crusta's `bash -n` line divergence evaporate. It does not:
+it adds a THIRD position, and the divergence resolves only if someone
+chooses a span set that includes bash's EOF line. Corrected in spec §8
+AUDIENDA I and noted on the ticket.
