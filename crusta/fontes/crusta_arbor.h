@@ -88,6 +88,16 @@ b32
 crusta_verbum_citatum (
     constans MateriaNodus* verbum);
 
+/* Valor decoctus partis '$'...'' (pars-effugia): effugia ANSI-C ut
+ * lector ea legit (visio cocta ea ut bash in apices simplices
+ * reimprimit). FALSUM si pars alia aut memoria deficit. Chorda in
+ * piscina. */
+b32
+crusta_effugia_decoquere (
+                  Piscina* piscina,
+    constans MateriaNodus* pars,
+                   chorda* valor);
+
 /* Verbum primum imperii (titulus imperii); NIHIL si nullum. */
 constans MateriaNodus*
 crusta_imperium_titulus (

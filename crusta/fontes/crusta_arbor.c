@@ -4677,6 +4677,34 @@ crusta_verbum_staticum (
 }
 
 b32
+crusta_effugia_decoquere (
+                  Piscina* piscina,
+    constans MateriaNodus* pars,
+                   chorda* valor)
+{
+    constans MateriaToken* t;
+                character* area;
+
+    si (   pars == NIHIL
+        || pars->genus != (s32)CRUSTA_GENUS_PARS_EFFUGIA
+        || pars->loci[CRUSTA_PARS_TOK].genus != MATERIA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    t    = pars->loci[CRUSTA_PARS_TOK].datum.token;
+    /* decoctio numquam longior quam cruda */
+    area = (character*)piscina_allocare(piscina,
+        (memoriae_index)t->valor.mensura + I);
+    si (area == NIHIL)
+    {
+        redde FALSUM;
+    }
+    valor->mensura  = _effugia_decoquere(t, area);
+    valor->datum    = (i8*)area;
+    redde VERUM;
+}
+
+b32
 crusta_verbum_citatum (
     constans MateriaNodus* verbum)
 {
