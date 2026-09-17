@@ -113,6 +113,21 @@ plica pendet — veritas in C manet.
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 
+- **clientes materiae (2026-09-17):** `silva.arbor(via)` instrumentum ex
+  suffixo (`.sh` crusta, `.html`, `.md`, `.txt` oratio; aliter silva C);
+  `silva.coctum(via)` — forma normalis `.sh` (`declare -f` bash 5.2) ->
+  Coctum(textus, sana, mala, clausurae_absentes): duae plagulae eodem
+  textu = bash eas idem legit; `silva.exemplaria(viae, regula,
+  paralleli=6)` — REGULA EXEMPLARIUM STML (modus lint silvae: EXEMPLAR/
+  CATENA/SINE/PER + `<relatum lint=...>`) super plagulas: viae = via,
+  lista aut forma git (`'*.sh'`); regula = via aut textus (TRANSPARENTIA
+  ordinaria clientis addita si deest); -> Exemplaria(summae, plagulae,
+  congruentiae [Congruentia(via, lint, textus, attributa)], fracturae).
+  Refutat regulam sine relato et omnes plagulas fractas (vitium machinae
+  nominatum). Domus tota (CCXXXVII .sh, XXI regulae) ~ IV s. Limites:
+  ordines sine linea (exemplaria v1 VIII.6); C per silvam = forest cum
+  `<ambiguus>` sine expansione examinis (lint C in silva manet)
+
 Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
 
 ## 2026-09-03 — additiones post B1 (recensio Franis)

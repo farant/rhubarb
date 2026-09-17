@@ -1451,6 +1451,86 @@ f4 = r.applicare()
 credo(f4.sana and 'One sentence here. Second one here.\n\n- item' in open(via_s).read() and f4.ancorae.get('sententia') == 4, 'Prosa.sententia + substituere + applicare: sanum, ancorae numeratae')
 
 
+print('--- clientes materiae: arbor ex suffixo, coctum, exemplaria (2026-09-17) ---')
+via_sh = os.path.join(T, 'proba_crusta.sh')
+open(via_sh, 'w').write('if a; then b; fi # c\n\n')
+arb_sh = silva.arbor(via_sh)
+credo('grammatica="crusta"' in arb_sh and '<conditio' in arb_sh,
+      'arbor .sh: proiectio crustae per suffixum (tota, non -tacitus)')
+try:
+    silva.arbor(via_sh, nudum=True)
+    credo(False, 'arbor .sh nudum refutatur')
+except silva.SilvaError as ex:
+    credo('nudum' in str(ex), 'arbor .sh nudum refutatur (solius silvae)')
+cc = silva.coctum(via_sh)
+credo(cc == silva.Coctum('if a; then\n    b;\nfi\n', True, 0, 0),
+      'coctum: forma declare -f, commentum abiectum, sana: %r' % (cc,))
+via_malum = os.path.join(T, 'proba_malum.sh')
+open(via_malum, 'w').write('fi\n')
+cm = silva.coctum(via_malum)
+credo(not cm.sana and cm.mala == 1 and cm.clausurae_absentes == 0,
+      'coctum: parsura non sana nominata (mala 1): %r' % (cm,))
+try:
+    silva.coctum(via)
+    credo(False, 'coctum .c refutatur')
+except silva.SilvaError:
+    credo(True, 'coctum .c refutatur (solum .sh)')
+
+# relata: ordines = elementa filia (vacuum HTML sine clausura quoque),
+# relatum vacuum = nulli ordines, attributa praeter lint servata
+rl = silva._relata(silva._vertere(
+    '<relatum lint="vacuum"/>\n<relatum lint="x" pro="y"><situs>a &amp; b'
+    '</situs><situs><crusta-linea/><br/>c</situs><br/></relatum>\n'))
+credo(rl == [('vacuum', {}, []), ('x', {'pro': 'y'}, ['a & b', 'c', ''])],
+      'relata: ordines, textus decoctus, vacuum sine clausura: %r' % (rl,))
+
+via_nt1 = os.path.join(T, 'proba_nt1.sh')
+via_nt2 = os.path.join(T, 'proba_nt2.sh')
+open(via_nt1, 'w').write('[ "$a" -nt "$b" ] && x # -nt in commento\n'
+                         'cat <<E\n-nt\nE\n')
+open(via_nt2, 'w').write('! [ "$o" -nt "$s" ] || y\n')
+REGULA_NT = (
+    '<EXEMPLAR output="$nt"><crusta-litteralis $n>-nt</crusta-litteralis>'
+    '</EXEMPLAR>\n'
+    '<relatum lint="nt-omnes" pro="! [ obj -nt src ]"><PER congruentia="$nt">'
+    '<situs>&@n;</situs></PER></relatum>\n'
+    '<EXEMPLAR output="$neg"><pipa><praefixa><crusta-reservatum>!'
+    '</crusta-reservatum></praefixa><liberi><**><crusta-litteralis $n>-nt'
+    '</crusta-litteralis></**></liberi></pipa></EXEMPLAR>\n'
+    '<relatum lint="nt-negata"><PER congruentia="$neg"><situs>&@n;</situs>'
+    '</PER></relatum>\n')
+ex_nt = silva.exemplaria([via_nt1, via_nt2], REGULA_NT)
+credo(ex_nt.summae == {'nt-omnes': 2, 'nt-negata': 1}
+      and ex_nt.plagulae[via_nt1] == {'nt-omnes': 1, 'nt-negata': 0}
+      and ex_nt.plagulae[via_nt2] == {'nt-omnes': 1, 'nt-negata': 1}
+      and ex_nt.fracturae == {},
+      'exemplaria: numeri per plagulam, commentum et corpus heredoc '
+      'non congruunt: %r / %r' % (ex_nt.summae, ex_nt.plagulae))
+credo(len(ex_nt.congruentiae) == 3
+      and all(c.textus == '-nt' for c in ex_nt.congruentiae)
+      and ex_nt.congruentiae[0].attributa == {'pro': '! [ obj -nt src ]'},
+      'exemplaria: congruentiae cum textu et attributis relati')
+ex_forma = silva.exemplaria('crusta/*.sh', REGULA_NT)
+credo('crusta/compile_probationes.sh' in ex_forma.plagulae
+      and ex_forma.plagulae['crusta/compile_probationes.sh']['nt-omnes'] >= 1
+      and not ex_forma.fracturae,
+      'exemplaria: forma git crusta/*.sh (%d plagulae)'
+      % len(ex_forma.plagulae))
+try:
+    silva.exemplaria(via_nt1, '<EXEMPLAR output="$x"><imperium/></EXEMPLAR>')
+    credo(False, 'exemplaria: regula sine relato refutatur')
+except silva.SilvaError as ex:
+    credo('relatum' in str(ex), 'exemplaria: regula sine relato refutatur')
+try:
+    silva.exemplaria(via_nt1, '<EXEMPLAR output="$x"><imperium $n/></EXEMPLAR>'
+                     '<relatum lint="i"><PER congruentia="$y"><situs/></PER>'
+                     '</relatum>')
+    credo(False, 'exemplaria: regula fracta refutatur')
+except silva.SilvaError as ex:
+    credo('SCOPUS_IGNOTUS' in str(ex),
+          'exemplaria: omnes fractae - vitium machinae nominatum: %s' % ex)
+
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))

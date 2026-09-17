@@ -527,3 +527,35 @@ pattern matched that line (shown in the session), the existing
 `porta_fracta` (`x.c:1:1: error:`) still names the build break. Lesson:
 a heuristic over another program's output must match that program's
 line format, not a word.
+
+## 2026-09-17 — query tools for materia clients: arbor by suffix, coctum, exemplaria
+
+Asked by Fran after the crusta census (nota 01M2PRPGBC), which ran the
+house scripts through silva-style pattern documents by a scratch shell
+harness. The harness became `silva.exemplaria(viae, regula)`: projection
+per file (`arbor`, routed by suffix like `metiri`), the regula appended
+after a sentinel element, `stml expandere`, then `stml vertere` on the
+text AFTER the sentinel only and stdlib `html.parser` over the HTML form
+(explicit closing tags; STML's pretty form has implicit closes that no
+regex should parse). Findings while building:
+- `stml vertere` refuses the arbor envelope (`ATTRIBUTUM_VERUM` on the
+  valueless `linea-initium`), so the whole expanded document cannot be
+  converted: the sentinel `<exemplaria-limes-relatorum/>` splits the
+  relata from the tree. The refusal surfaced as "omnes 237 plagulae
+  fractae" — the all-fractured refusal paid for itself on its first run.
+- `vertere` writes HTML void elements (`br`, `input`, …) without a close
+  tag; the relata reader treats that set as depth-neutral.
+- The client `arbor.sh` instruments print only a byte count under
+  `-tacitus` (silva's prints the tree without a summary): routing must
+  not reuse silva's flags.
+- For C, `silva/arbor.sh` writes the `<parsura>` forest (`<ambiguus>`
+  alternatives repeat a definition per reading: 8 matches for 2
+  definitions) WITHOUT examen's system expansion (`NIHIL` never becomes
+  `NULL`), so silva's own lint documents find zero there — their gates
+  build the document inside examen's recipe. Documented as a limit; C
+  lint stays in silva's harnesses (silva is frozen).
+- Testing a section of probatio_silva.py by `exec` from stdin imported
+  the repo's `silva/` DIRECTORY as a namespace package (`__file__` absent
+  → wrong RADIX): give the exec globals a `__file__`.
+Result on the house: 237 `.sh` files, 21 rules, 3.9 s, numbers identical
+to the scratch census.

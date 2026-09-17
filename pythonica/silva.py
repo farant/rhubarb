@@ -3224,8 +3224,33 @@ def origo (via, linea, columna=None):
                    '-omnia']).stdout
 
 
+def _cliens_materiae(via):
+    """cliens materiae ex suffixo (instrumenta <cliens>/arbor.sh); None =
+    C per silvam"""
+    for suffixum, cliens in (('.sh', 'crusta'), ('.html', 'html'),
+                             ('.md', 'md'), ('.txt', 'oratio')):
+        if via.endswith(suffixum):
+            return cliens
+    return None
+
+
 def arbor(via, nudum=False):
-    """documentum STML canonicum plagulae (arbor.sh) - textus"""
+    """documentum STML canonicum plagulae - textus. Instrumentum ex
+    suffixo (ut metiri): .sh -> crusta/arbor.sh, .html -> html, .md -> md,
+    .txt -> oratio (clientes materiae; proiectio tota, '-tacitus' eorum
+    solum numerum octetorum imprimeret), aliter silva/arbor.sh (C;
+    'nudum' solius silvae)."""
+    cliens = _cliens_materiae(via)
+    if cliens:
+        if nudum:
+            raise SilvaError('arbor: nudum solius silvae (C), non %s'
+                             % cliens)
+        r = _curre(['./%s/arbor.sh' % cliens, _absoluta(via)])
+        if r.returncode != 0:
+            raise SilvaError('arbor %s fractus (rc %d): %s'
+                             % (cliens, r.returncode,
+                                r.stderr.strip()[-200:]))
+        return r.stdout
     args = ['./silva/arbor.sh', _absoluta(via), '-tacitus']
     if nudum:
         args.append('-nudum')
@@ -3233,6 +3258,235 @@ def arbor(via, nudum=False):
     if r.returncode != 0 and not r.stdout:
         raise SilvaError('arbor fractus: %s' % r.stderr.strip()[-200:])
     return r.stdout
+
+
+# ---------------------------------------------------------------- crusta: coctum
+
+Coctum = namedtuple('Coctum', 'textus sana mala clausurae_absentes')
+
+
+def coctum(via):
+    """forma normalis plagulae .sh (crusta/coctum.sh = 'declare -f' bash
+    5.2: commentaria et lineae vacuae abiectae, redirectiones post verba,
+    substitutiones reimpressae) -> Coctum(textus, sana, mala,
+    clausurae_absentes). Parsura non sana textum tamen reddit (sana
+    False, numeri ex nuntio instrumenti). Duae plagulae eodem textu =
+    bash eas idem legit: differentia semantica sine commentis."""
+    if not via.endswith('.sh'):
+        raise SilvaError('coctum: solum plagulae .sh (crusta): %s' % via)
+    r = _curre(['./crusta/coctum.sh', _absoluta(via)])
+    if r.returncode != 0:
+        raise SilvaError('coctum fractum (rc %d): %s'
+                         % (r.returncode, r.stderr.strip()[-200:]))
+    m = re.search(r'mala (\d+), clausurae absentes (\d+)', r.stderr or '')
+    if m:
+        return Coctum(r.stdout, False, int(m.group(1)), int(m.group(2)))
+    return Coctum(r.stdout, True, 0, 0)
+
+
+# ---------------------------------------------------------------- exemplaria
+
+# TRANSPARENTIA ordinaria si regula nullam declarat: involucra triviae
+# clientium materiae; silva (C) etiam involucra originis (regulae lint
+# silvae, silva/probationes/fixa/exemplaria)
+_TRANSPARENTIA = {
+    'materia': 'ante post',
+    'silva': 'expansio pasta stringificatio api extentum ante post '
+             'regio-cruda',
+}
+
+# elementa vacua HTML quae 'stml vertere' sine clausura scribit
+_VACUA_HTML = frozenset('area base br col embed hr img input keygen link '
+                        'meta param source track wbr'.split())
+
+# elementum vacuum inter arborem et regulam: effusio post eum = relata
+_LIMES_RELATORUM = '<exemplaria-limes-relatorum/>'
+
+Congruentia = namedtuple('Congruentia', 'via lint textus attributa')
+Exemplaria = namedtuple('Exemplaria',
+                        'summae plagulae congruentiae fracturae')
+
+
+def _stml_binarium():
+    binarium = os.path.join(RADIX, 'bin', 'stml')
+    if not os.path.exists(binarium):
+        binarium = os.path.expanduser('~/.bin/stml')
+    if not os.path.exists(binarium):
+        raise SilvaError('stml absens - strue: ./tools/stml_struere.sh')
+    return binarium
+
+
+def _vertere(textus):
+    """STML (textus) -> forma HTML ('stml vertere': clausurae explicitae,
+    quas html.parser legit)"""
+    d = os.path.join(RADIX, 'build', 'pythonica')
+    os.makedirs(d, exist_ok=True)
+    fd, via = tempfile.mkstemp(prefix='vertere_', suffix='.stml', dir=d)
+    with os.fdopen(fd, 'w') as f:
+        f.write(textus)
+    try:
+        r = _curre([_stml_binarium(), 'vertere', via])
+    finally:
+        os.unlink(via)
+    if r.returncode != 0:
+        raise SilvaError('stml vertere rc %d: %s'
+                         % (r.returncode, (r.stderr or '').strip()[-200:]))
+    return r.stdout
+
+
+def _relata(html_textus):
+    """[(lint, attributa, [textus ordinis])] ex elementis <relatum>
+    summis: ordo = elementum filium quodque (PER emissio una), textus =
+    textus totus subarboris (trivia inclusa, detonsus)"""
+    from html.parser import HTMLParser
+
+    class _Lector(HTMLParser):
+        def __init__(self):
+            HTMLParser.__init__(self, convert_charrefs=True)
+            self.relata = []
+            self.gradus = 0          # profunditas intra relatum (0 = extra)
+            self.ordo = None
+
+        def handle_starttag(self, tag, attrs):
+            vacuum = tag in _VACUA_HTML
+            if self.gradus == 0:
+                if tag == 'relatum':
+                    a = dict(attrs)
+                    self.relata.append((a.pop('lint', ''), a, []))
+                    self.gradus = 1
+                return
+            if self.gradus == 1 and vacuum:
+                self.relata[-1][2].append('')      # ordo vacuus sine clausura
+                return
+            if self.gradus == 1 and self.ordo is None:
+                self.ordo = []
+            if not vacuum:
+                self.gradus += 1
+
+        def handle_startendtag(self, tag, attrs):
+            if self.gradus == 1:
+                self.relata[-1][2].append('')
+            elif self.gradus == 0 and tag == 'relatum':
+                a = dict(attrs)
+                self.relata.append((a.pop('lint', ''), a, []))
+
+        def handle_endtag(self, tag):
+            if self.gradus == 0 or tag in _VACUA_HTML:
+                return
+            self.gradus -= 1
+            if self.gradus == 1 and self.ordo is not None:
+                self.relata[-1][2].append(''.join(self.ordo).strip())
+                self.ordo = None
+
+        def handle_data(self, data):
+            if self.ordo is not None:
+                self.ordo.append(data)
+
+    lector = _Lector()
+    lector.feed(html_textus)
+    lector.close()
+    return lector.relata
+
+
+def _viae_expandere(viae):
+    """via una, lista, aut forma git ('*.sh', 'crusta/**/*.sh': plagulae
+    TRACTAE per git ls-files, ordine)"""
+    if isinstance(viae, str):
+        if any(c in viae for c in '*?['):
+            r = _curre(['git', 'ls-files', viae])
+            return [l for l in r.stdout.splitlines() if l]
+        return [viae]
+    return list(viae)
+
+
+def exemplaria(viae, regula, paralleli=6):
+    """REGULA EXEMPLARIUM STML super plagulas (modus lint silvae:
+    EXEMPLAR/CATENA/SINE/PER + <relatum lint=...>) - quaestio structuralis
+    trans corpus. viae: via, lista, aut forma git ('*.sh'). regula: via
+    .stml aut TEXTUS; sine <TRANSPARENTIA> praefatio ordinaria clientis
+    additur (materia 'ante post'; C silvae involucra originis). Quaeque
+    plagula: arbor(via) (instrumentum ex suffixo) + regula -> stml
+    expandere -> stml vertere -> <relatum> summa lecta. Reddit
+    Exemplaria(summae {lint: ordines} ordine primi visus, plagulae {via:
+    {lint: ordines}}, congruentiae [Congruentia(via, lint, textus,
+    attributa)], fracturae {via: causa}). REFUSIO: omnes plagulae fractae,
+    aut regula quae nullum <relatum> gignit (numeri ZEPHYRUM mentirentur).
+    Limes (v1 exemplarium par. VIII.6): ordines lineam non ferunt - textus
+    congruentiae + via; linea per grep/selecta in plagula nominata. C:
+    arbor silvae = silva forest parsurae cum <ambiguus> (lectiones plures -
+    numeri per lectionem repeti possunt) et SINE expansione systematis
+    examinis (NIHIL -> NULL non adest): regulae lint silvae quae lexemata
+    expansa quaerunt hic nihil inveniunt - lint C in armamentis silvae
+    manet; haec via clientibus materiae (crusta, html, md, oratio) apta."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    lista = _viae_expandere(viae)
+    if not lista:
+        raise SilvaError('exemplaria: nullae plagulae (%r)' % (viae,))
+    if '<' not in regula and os.path.exists(_absoluta(regula)):
+        with open(_absoluta(regula)) as f:
+            regula_textus = f.read()
+    else:
+        regula_textus = regula
+    if '<relatum' not in regula_textus:
+        raise SilvaError('exemplaria: regula sine <relatum lint=...> - '
+                         'nihil numerari potest')
+
+    def unum(via):
+        try:
+            documentum = arbor(via)
+        except SilvaError as ex:
+            return via, None, 'arbor: %s' % ex
+        praefatio = ''
+        if '<TRANSPARENTIA' not in regula_textus:
+            clavis = 'materia' if _cliens_materiae(via) else 'silva'
+            praefatio = ('<TRANSPARENTIA tags="%s"/>\n'
+                         % _TRANSPARENTIA[clavis])
+        e = expandere(documentum + '\n' + _LIMES_RELATORUM + '\n'
+                      + praefatio + regula_textus)
+        if not e.successus:
+            return via, None, ('expandere: %s (linea %d%s)'
+                               % (e.vitium, e.linea,
+                                  ', loculus %s' % e.loculus
+                                  if e.loculus else ''))
+        # solum post limitem vertitur: arbor ipsa attributa sine valore
+        # fert ('linea-initium') quae forma HTML recusat (ATTRIBUTUM_VERUM)
+        pars = e.textus.split(_LIMES_RELATORUM, 1)
+        if len(pars) != 2:
+            return via, None, 'limes relatorum absens in effusione'
+        try:
+            return via, _relata(_vertere(pars[1])), None
+        except SilvaError as ex:
+            return via, None, 'vertere: %s' % ex
+
+    with ThreadPoolExecutor(max_workers=max(1, paralleli)) as ex:
+        eventus = list(ex.map(unum, lista))
+
+    summae = {}
+    plagulae = {}
+    congruentiae = []
+    fracturae = {}
+    relata_visa = False
+    for via, relata, causa in eventus:
+        if causa is not None:
+            fracturae[via] = causa
+            continue
+        numeri = {}
+        for lint, attributa, ordines in relata:
+            relata_visa = True
+            numeri[lint] = numeri.get(lint, 0) + len(ordines)
+            summae[lint] = summae.get(lint, 0) + len(ordines)
+            for textus in ordines:
+                congruentiae.append(Congruentia(via, lint, textus,
+                                                attributa))
+        plagulae[via] = numeri
+    if not plagulae:
+        raise SilvaError('exemplaria: omnes %d plagulae fractae (prima: %s)'
+                         % (len(lista), next(iter(fracturae.values()))))
+    if not relata_visa:
+        raise SilvaError('exemplaria: nullum <relatum> in effusione - '
+                         'regula non expansa? (%d plagulae)' % len(plagulae))
+    return Exemplaria(summae, plagulae, congruentiae, fracturae)
 
 
 def differre_git(via, ref_vetus='HEAD', ref_novum=None,
