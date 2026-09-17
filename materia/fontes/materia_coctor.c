@@ -19,6 +19,9 @@ nomen structura {
     chorda titulus;
        s32 species;
     chorda nota;
+    chorda absentia;      /* causa diagnostici: locus non scriptus */
+    chorda vacua;         /* causa diagnostici: lista sine pleno */
+    chorda gravitas;      /* "erratum" | "monitum" | vacua */
 } Locus;
 
 nomen structura {
@@ -26,6 +29,9 @@ nomen structura {
     chorda nota;
        i32 offset;
        i32 numerus;
+    chorda diagnosticum;  /* causa diagnostici: nodus generis ipse */
+    chorda gravitas;
+    chorda inanis;        /* "verum" | vacua */
 } Genus;
 
 /* index = MateriaLocusSpecies (porta: numerus == NUMERUS_SPECIERUM) */
@@ -205,6 +211,53 @@ _identificator_sanus (
     redde VERUM;
 }
 
+/* gravitas diagnostici: vacua (= erratum), "erratum", "monitum" */
+interior b32
+_gravitas_sana (
+           Piscina* piscina,
+     MateriaCoctio* coctio,
+         StmlNodus* nodus,
+            chorda  gravitas)
+{
+    si (   gravitas.mensura == ZEPHYRUM
+        || chorda_aequalis_literis(gravitas, "erratum")
+        || chorda_aequalis_literis(gravitas, "monitum"))
+    {
+        redde VERUM;
+    }
+    redde _recusare(piscina, coctio, nodus->linea, "gravitas ignota:",
+        gravitas);
+}
+
+/* causa diagnostici in littera C brevi scribitur: longitudo <= LX
+ * (lineae generatae <= LXXII), nullus character moderationis (linea
+ * nova litteram C frangeret; octeti UTF-8 licent) */
+interior b32
+_causa_sana (
+           Piscina* piscina,
+     MateriaCoctio* coctio,
+         StmlNodus* nodus,
+            chorda  causa)
+{
+    i32 i;
+
+    si (causa.mensura > (i32)LX)
+    {
+        redde _recusare(piscina, coctio, nodus->linea,
+            "causa longior LX:", causa);
+    }
+    per (i = ZEPHYRUM; i < causa.mensura; i++)
+    {
+        /* i8 insignatus: octeti UTF-8 (>= 0x80) supra ' ' stant */
+        si (causa.datum[i] < (i8)' ' || causa.datum[i] == (i8)127)
+        {
+            redde _recusare(piscina, coctio, nodus->linea,
+                "causa cum charactere moderationis:", causa);
+        }
+    }
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Lectio declarationis
@@ -297,6 +350,33 @@ _locum_legere (
         redde _recusare(piscina, coctio, nodus->linea,
             "species loci ignota:", species);
     }
+    l->absentia  = _attributum(nodus, "absentia");
+    l->vacua     = _attributum(nodus, "vacua");
+    l->gravitas  = _attributum(nodus, "gravitas");
+    /* 'vacua' de specie pendet: canon id dicere nequit (nulla lingua
+     * expressionum), coctor nominatim recusat */
+    si (   l->vacua.mensura > ZEPHYRUM
+        && l->species != (s32)MATERIA_LOCUS_LISTA_NODUS
+        && l->species != (s32)MATERIA_LOCUS_LISTA_TOKEN
+        && l->species != (s32)MATERIA_LOCUS_LISTA_MIXTA)
+    {
+        redde _recusare(piscina, coctio, nodus->linea,
+            "vacua in loco non listae:", l->titulus);
+    }
+    si (   !_gravitas_sana(piscina, coctio, nodus, l->gravitas)
+        || !_causa_sana(piscina, coctio, nodus, l->absentia)
+        || !_causa_sana(piscina, coctio, nodus, l->vacua))
+    {
+        redde FALSUM;
+    }
+    si (l->absentia.mensura > ZEPHYRUM)
+    {
+        coctio->numerus_diagnosticorum++;
+    }
+    si (l->vacua.mensura > ZEPHYRUM)
+    {
+        coctio->numerus_diagnosticorum++;
+    }
     /* titulus unicus intra genus (offset = primus huius generis);
      * limes sine subtractione (i32 insignatus) */
     per (k = offset; k + I < xar_numerus(loci); k++)
@@ -342,6 +422,28 @@ _genus_legere (
     {
         redde _recusare(piscina, coctio, nodus->linea,
             "titulus generis non kebab:", g->titulus);
+    }
+    g->diagnosticum  = _attributum(nodus, "diagnosticum");
+    g->gravitas      = _attributum(nodus, "gravitas");
+    g->inanis        = _attributum(nodus, "inanis");
+    si (   g->inanis.mensura > ZEPHYRUM
+        && !chorda_aequalis_literis(g->inanis, "verum"))
+    {
+        redde _recusare(piscina, coctio, nodus->linea,
+            "inanis non 'verum':", g->inanis);
+    }
+    si (   !_gravitas_sana(piscina, coctio, nodus, g->gravitas)
+        || !_causa_sana(piscina, coctio, nodus, g->diagnosticum))
+    {
+        redde FALSUM;
+    }
+    si (g->diagnosticum.mensura > ZEPHYRUM)
+    {
+        coctio->numerus_diagnosticorum++;
+    }
+    si (g->inanis.mensura > ZEPHYRUM)
+    {
+        coctio->numerus_inanium++;
     }
     per (k = ZEPHYRUM; k + I < xar_numerus(genera); k++)
     {
@@ -712,11 +814,223 @@ _caput_reddere (
     _literis(a, "_REGISTRUM;");
     _linea_nova(a);
     _linea_nova(a);
+    si (   coctio->numerus_diagnosticorum > ZEPHYRUM
+        || coctio->numerus_inanium > ZEPHYRUM)
+    {
+        _literis(a, "externus constans MateriaDiagnosticaCocta ");
+        _chordam(a, coctio->praefixum);
+        _literis(a, "_DIAGNOSTICA;");
+        _linea_nova(a);
+        _linea_nova(a);
+    }
     _literis(a, "#endif /* ");
     _chordam(a, coctio->praefixum);
     _literis(a, "_REGISTRUM_COCTUM_H */");
     _linea_nova(a);
     redde chorda_aedificator_finire(a);
+}
+
+/* chorda in litteram C: '\\' et '"' effugiuntur; '?' ante '?' ut
+ * '?\?' scribitur (trigraphus '??)' aliter ']' fieret) */
+interior vacuum
+_chordam_litteralem (
+    ChordaAedificator* a,
+               chorda  s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < s.mensura; i++)
+    {
+        si (s.datum[i] == (i8)'\\' || s.datum[i] == (i8)'"')
+        {
+            chorda_aedificator_appendere_character(a, '\\');
+        }
+        chorda_aedificator_appendere_character(a,
+            (character)s.datum[i]);
+        si (   s.datum[i]     == (i8)'?' && i + I < s.mensura
+            && s.datum[i + I] == (i8)'?')
+        {
+            chorda_aedificator_appendere_character(a, '\\');
+        }
+    }
+}
+
+/* ordo unus tabulae diagnosticorum: genus, locus (-1 pro GENUS),
+ * species, gravitas, codex ("genus" aut "genus/locus"), causa */
+interior vacuum
+_ordinem_diagnostici (
+         ChordaAedificator* a,
+    constans MateriaCoctio* coctio,
+            constans Genus* g,
+                       s32  locus,
+        constans character* species,
+                    chorda  gravitas,
+                    chorda  titulus_loci,
+                    chorda  causa)
+{
+    _literis(a, "    { (s32)");
+    _chordam(a, coctio->praefixum);
+    _literis(a, "_GENUS_");
+    _maiusculum(a, g->titulus);
+    _literis(a, ", (s32)");
+    si (locus < ZEPHYRUM)
+    {
+        _literis(a, "-1");
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_i32(a, (i32)locus);
+    }
+    _literis(a, ",");
+    _linea_nova(a);
+    _literis(a, "      (s32)MATERIA_DIAGNOSTICUM_");
+    _literis(a, species);
+    _literis(a, ",");
+    _linea_nova(a);
+    _literis(a, chorda_aequalis_literis(gravitas, "monitum")
+        ? "      (s32)MATERIA_GRAVITAS_MONITUM,"
+        : "      (s32)MATERIA_GRAVITAS_ERRATUM,");
+    _linea_nova(a);
+    _literis(a, "      \"");
+    _chordam(a, g->titulus);
+    si (titulus_loci.mensura > ZEPHYRUM)
+    {
+        _literis(a, "/");
+        _chordam(a, titulus_loci);
+    }
+    _literis(a, "\",");
+    _linea_nova(a);
+    _literis(a, "      \"");
+    _chordam_litteralem(a, causa);
+    _literis(a, "\" },");
+    _linea_nova(a);
+}
+
+/* tabulae diagnosticorum et generum inanium + MateriaDiagnosticaCocta;
+ * NIHIL scribitur si declaratio nihil declarat (clientes ceteri
+ * octetim idem) */
+interior vacuum
+_diagnostica_reddere (
+         ChordaAedificator* a,
+    constans MateriaCoctio* coctio,
+              constans Xar* genera,
+              constans Xar* loci)
+{
+    i32 k;
+    i32 j;
+
+    si (   coctio->numerus_diagnosticorum == ZEPHYRUM
+        && coctio->numerus_inanium        == ZEPHYRUM)
+    {
+        redde;
+    }
+    _linea_nova(a);
+    si (coctio->numerus_diagnosticorum > ZEPHYRUM)
+    {
+        _literis(a, "hic_manens constans MateriaTabDiagnosticum "
+            "DIAGNOSTICA_COCTA[] = {");
+        _linea_nova(a);
+        _literis(a, "    /* genus, locus, species, gravitas, codex, "
+            "causa */");
+        _linea_nova(a);
+        per (k = ZEPHYRUM; k < xar_numerus(genera); k++)
+        {
+            constans Genus* g = (constans Genus*)xar_obtinere(genera,
+                k);
+
+            si (g->diagnosticum.mensura > ZEPHYRUM)
+            {
+                _ordinem_diagnostici(a, coctio, g, (s32)-I, "GENUS",
+                    g->gravitas, _vacua(), g->diagnosticum);
+            }
+            per (j = g->offset; j < g->offset + g->numerus; j++)
+            {
+                constans Locus* l = (constans Locus*)xar_obtinere(loci,
+                    j);
+
+                si (l == NIHIL)
+                {
+                    perge;
+                }
+                si (l->absentia.mensura > ZEPHYRUM)
+                {
+                    _ordinem_diagnostici(a, coctio, g,
+                        (s32)(j - g->offset), "ABSENTIA", l->gravitas,
+                        l->titulus, l->absentia);
+                }
+                si (l->vacua.mensura > ZEPHYRUM)
+                {
+                    _ordinem_diagnostici(a, coctio, g,
+                        (s32)(j - g->offset), "VACUA", l->gravitas,
+                        l->titulus, l->vacua);
+                }
+            }
+        }
+        _literis(a, "};");
+        _linea_nova(a);
+        _linea_nova(a);
+    }
+    si (coctio->numerus_inanium > ZEPHYRUM)
+    {
+        _literis(a, "hic_manens constans s32 INANIA_COCTA[] = {");
+        _linea_nova(a);
+        per (k = ZEPHYRUM; k < xar_numerus(genera); k++)
+        {
+            constans Genus* g = (constans Genus*)xar_obtinere(genera,
+                k);
+
+            si (g->inanis.mensura > ZEPHYRUM)
+            {
+                _literis(a, "    (s32)");
+                _chordam(a, coctio->praefixum);
+                _literis(a, "_GENUS_");
+                _maiusculum(a, g->titulus);
+                _literis(a, ",");
+                _linea_nova(a);
+            }
+        }
+        _literis(a, "};");
+        _linea_nova(a);
+        _linea_nova(a);
+    }
+    _literis(a, "constans MateriaDiagnosticaCocta ");
+    _chordam(a, coctio->praefixum);
+    _literis(a, "_DIAGNOSTICA = {");
+    _linea_nova(a);
+    si (coctio->numerus_diagnosticorum > ZEPHYRUM)
+    {
+        _literis(a, "    DIAGNOSTICA_COCTA,");
+        _linea_nova(a);
+        _literis(a, "    (i32)(magnitudo(DIAGNOSTICA_COCTA) /");
+        _linea_nova(a);
+        _literis(a, "        magnitudo(DIAGNOSTICA_COCTA[0])),");
+        _linea_nova(a);
+    }
+    alioquin
+    {
+        _literis(a, "    NIHIL,");
+        _linea_nova(a);
+        _literis(a, "    (i32)0,");
+        _linea_nova(a);
+    }
+    si (coctio->numerus_inanium > ZEPHYRUM)
+    {
+        _literis(a, "    INANIA_COCTA,");
+        _linea_nova(a);
+        _literis(a, "    (i32)(magnitudo(INANIA_COCTA) /");
+        _linea_nova(a);
+        _literis(a, "        magnitudo(INANIA_COCTA[0]))");
+        _linea_nova(a);
+    }
+    alioquin
+    {
+        _literis(a, "    NIHIL,");
+        _linea_nova(a);
+        _literis(a, "    (i32)0");
+        _linea_nova(a);
+    }
+    _literis(a, "};");
+    _linea_nova(a);
 }
 
 interior chorda
@@ -840,6 +1154,7 @@ _fontem_reddere (
     _linea_nova(a);
     _literis(a, "};");
     _linea_nova(a);
+    _diagnostica_reddere(a, coctio, genera, loci);
     redde chorda_aedificator_finire(a);
 }
 

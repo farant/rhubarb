@@ -2214,6 +2214,8 @@ def _relata(html_textus):
 
 ## Task B1: Declarations — attributes, canon, the baked table
 
+**Executed 2026-09-17.** As planned, with measured changes: the STML reader does NOT decode `&quot;` in attribute values (the cause stayed literal), so the quote fixture uses the attribute-element form `<@absentia=>'}' "exspectata" \ a??)</>`; the emitter also escapes `??` as `?\?` (a trigraph — the first test draft's own `"quid??)"` became `]`); `_causa_sana` also refuses control bytes; the helper is `_chordam_litteralem` (a one-letter word in an identifier). Gate coctor 106/106; the five client declarations pass the widened canon; all five registrum gates green with generated files byte-identical (no client declares yet, so no seal can move). Rendered proba tables compile under the house flags and are formator-clean. `./tools/natura_struere.sh` not run: the registry canon is read at runtime, nothing bakes it. Plants: quote escaping off, `??` escaping off, table emitted with nothing declared — each red at its own assertion.
+
 **Files:**
 - Modify: `materia/fontes/materia_registrum.h` (new enums + structs, no
   includes)
@@ -2262,7 +2264,7 @@ nomen structura {
   MateriaDiagnosticaCocta <P>_DIAGNOSTICA;` in the `.h`; the tables in
   the `.c`.
 
-- [ ] **Step 1: Failing coctor tests.** In `probatio_materia_coctor.c`
+- [x] **Step 1: Failing coctor tests.** In `probatio_materia_coctor.c`
   add a declaration with every attribute and assert pieces of the
   rendered text; add four refusals:
 
@@ -2300,7 +2302,7 @@ hic_manens constans character DECLARATIO_DIAGNOSTICA[] =
   renders exactly the text the existing expected strings already pin
   (the existing assertions stay untouched and green).
 
-- [ ] **Step 2: Implementation.**
+- [x] **Step 2: Implementation.**
   1. `materia_coctor.h`, `MateriaCoctio` after `numerus_locorum`:
      `i32 numerus_diagnosticorum;` and `i32 numerus_inanium;`.
   2. `materia_coctor.c` structs: `Locus` gains `chorda absentia; chorda
@@ -2608,7 +2610,7 @@ _diagnostica_reddere (
      `./silva/formator.sh <scratch> -vitia`, and adjust the emitter until
      CONFORMIS (the generated files must already be in house format).
 
-- [ ] **Step 3: Canon.** In `registrum.canon`, on `<elementum
+- [x] **Step 3: Canon.** In `registrum.canon`, on `<elementum
   nomen="genus">` add
 
 ```xml
@@ -2642,7 +2644,7 @@ _diagnostica_reddere (
   Then `bin/canon_examen` on each existing `*.registrum.stml` (clean) and
   `./tools/natura_struere.sh`.
 
-- [ ] **Step 4: Green; plant.** `./materia/compile_probationes.sh coctor`
+- [x] **Step 4: Green; plant.** `./materia/compile_probationes.sh coctor`
   green; every client registrum gate green and unchanged
   (`silva.porta('crusta', 'registrum')` and the same for `css`, `md`,
   `html`, `oratio`). Plant: `silva.planta(
@@ -2650,7 +2652,7 @@ _diagnostica_reddere (
   '_chordam(a, causa);', 'materia', 'coctor')` → red on the
   escaped-quote assertion; green on revert.
 
-- [ ] **Step 5: Docs and commit.** `materia/CLAUDE.md` "Generata": the
+- [x] **Step 5: Docs and commit.** `materia/CLAUDE.md` "Generata": the
   second table, its attributes, "diagnostics move no seal", D4. Worklog.
   Commit via `silva.commissio` with portae `[('materia', 'coctor'),
   ('crusta', 'registrum'), ('css', 'registrum'), ('md', 'registrum'),

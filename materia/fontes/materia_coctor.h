@@ -41,6 +41,8 @@ nomen structura {
     chorda via_fontis;    /* sedes/grammatica_registrum_coctum.c */
        i32 numerus_generum;
        i32 numerus_locorum;
+       i32 numerus_diagnosticorum;  /* genus + absentia + vacua */
+       i32 numerus_inanium;         /* genera 'inanis' */
     chorda causa;         /* recusationis (FALSUM); vacua aliter */
        i32 linea;         /* declarationis, cum causa nodum nominat */
 } MateriaCoctio;

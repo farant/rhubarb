@@ -40,6 +40,17 @@
       nota="titulus generis (kebab): documentum, analysis-verbi"/>
     <attributum nomen="nota" genus="textus"
       nota="in commentarium enumerationis generatae transit"/>
+    <attributum nomen="diagnosticum" genus="textus"
+      nota="causa diagnostici: omnis nodus huius generis (malum); tabula separata <PRAEFIXUM>_DIAGNOSTICA, materia_diagnostica_derivare"/>
+    <attributum nomen="inanis" genus="electio"
+      nota="nodi huius generis listam 'vacua' non implent (separator, heredoc)">
+      <optio>verum</optio>
+    </attributum>
+    <attributum nomen="gravitas" genus="electio"
+      nota="gravitas diagnostici generis (absens = erratum)">
+      <optio>erratum</optio>
+      <optio>monitum</optio>
+    </attributum>
     <liberum nomen="locus"/>
   </elementum>
 
@@ -59,6 +70,15 @@
     </attributum>
     <attributum nomen="nota" genus="textus"
       nota="in commentarium ordinis tabulae generatae transit"/>
+    <attributum nomen="absentia" genus="textus"
+      nota="causa diagnostici: locus non scriptus (clausura absens)"/>
+    <attributum nomen="vacua" genus="textus"
+      nota="causa diagnostici: lista non scripta aut elementis generum 'inanis' solis (coctor speciem listae poscit - canon id dicere nequit)"/>
+    <attributum nomen="gravitas" genus="electio"
+      nota="gravitas diagnosticorum loci (absens = erratum)">
+      <optio>erratum</optio>
+      <optio>monitum</optio>
+    </attributum>
   </elementum>
 
 </canon>

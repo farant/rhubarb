@@ -48,6 +48,26 @@ hic_manens constans character* constans DECLARATIO_AEDIFICATA =
     "  </genus>\n"
     "</registrum>\n";
 
+/* diagnostica declarata (materia-sedes B1): genus diagnosticum, genus
+ * inanis, locus 'vacua' et locus 'absentia' cum gravitate monitum.
+ * Causa cum '"', '\' et '??)' per elementum attributi (lector STML
+ * entitates in valoribus attributorum NON decodit - '&quot;' verbatim
+ * transiret): omnia in littera C effugienda */
+hic_manens constans character* constans DECLARATIO_DIAGNOSTICA =
+    "<registrum grammatica=\"proba\" praefixum=\"PROBA\""
+    " typus=\"ProbaGenus\" sedes=\"x\">"
+    "<genus titulus=\"malum\" diagnosticum=\"malum lectum\">"
+    "<locus titulus=\"tokens\" species=\"lista-token\"/></genus>"
+    "<genus titulus=\"separator\" inanis=\"verum\">"
+    "<locus titulus=\"tok\" species=\"token\"/></genus>"
+    "<genus titulus=\"grex\">"
+    "<locus titulus=\"liberi\" species=\"lista-nodus\""
+    " vacua=\"lista vacua\"/>"
+    "<locus titulus=\"tok_clausura\" species=\"token\""
+    " gravitas=\"monitum\"><@absentia=>'}' \"exspectata\" \\ a?\?)"
+    "</></locus>"
+    "</genus></registrum>";
+
 hic_manens constans character* constans VIA_DECLARATIONIS =
     "proba/grammatica/proba.registrum.stml";
 
@@ -488,6 +508,95 @@ principale (vacuum)
             "materia/build/absens.registrum.stml", &rancor));
         CREDO_CHORDA_CONTINET (rancor.causa,
             chorda_ex_literis("absens", piscina));
+    }
+
+    {
+        MateriaCoctio  coctio;
+            character* fons;
+
+        imprimere("\n--- VII. Diagnostica declarata (sedes B1) ---\n");
+        CREDO_VERUM (_coquere(piscina, DECLARATIO_DIAGNOSTICA,
+            &coctio));
+        CREDO_AEQUALIS_I32 (coctio.numerus_diagnosticorum, (i32)III);
+        CREDO_AEQUALIS_I32 (coctio.numerus_inanium, (i32)I);
+        CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.caput, piscina),
+            "externus constans MateriaDiagnosticaCocta "
+            "PROBA_DIAGNOSTICA;\n\n#endif"));
+        fons = chorda_ut_cstr(coctio.fons, piscina);
+        CREDO_NON_NIHIL (strstr(fons,
+            "    { (s32)PROBA_GENUS_MALUM, (s32)-1,\n"
+            "      (s32)MATERIA_DIAGNOSTICUM_GENUS,\n"
+            "      (s32)MATERIA_GRAVITAS_ERRATUM,\n"
+            "      \"malum\",\n"
+            "      \"malum lectum\" },\n"));
+        CREDO_NON_NIHIL (strstr(fons,
+            "    { (s32)PROBA_GENUS_GREX, (s32)0,\n"
+            "      (s32)MATERIA_DIAGNOSTICUM_VACUA,\n"
+            "      (s32)MATERIA_GRAVITAS_ERRATUM,\n"
+            "      \"grex/liberi\",\n"));
+        CREDO_NON_NIHIL (strstr(fons,
+            "    { (s32)PROBA_GENUS_GREX, (s32)1,\n"
+            "      (s32)MATERIA_DIAGNOSTICUM_ABSENTIA,\n"
+            "      (s32)MATERIA_GRAVITAS_MONITUM,\n"
+            "      \"grex/tok_clausura\",\n"
+            "      \"'}' \\\"exspectata\\\" \\\\ a?\\?)\" },\n"));
+        CREDO_NON_NIHIL (strstr(fons,
+            "hic_manens constans s32 INANIA_COCTA[] = {\n"
+            "    (s32)PROBA_GENUS_SEPARATOR,\n"
+            "};\n"));
+        CREDO_NON_NIHIL (strstr(fons,
+            "constans MateriaDiagnosticaCocta PROBA_DIAGNOSTICA = {\n"
+            "    DIAGNOSTICA_COCTA,\n"));
+        /* '??' in causa: trigraphus in littera C nisi effugitur */
+        CREDO_VERUM (_coquere(piscina,
+            "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\""
+            " sedes=\"p\">"
+            "<genus titulus=\"g\" diagnosticum=\"quid?\?)\">"
+            "<locus titulus=\"a\" species=\"token\"/></genus>"
+            "</registrum>", &coctio));
+        CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.fons, piscina),
+            "      \"quid?\\?)\" },\n"));
+        CREDO_AEQUALIS_I32 (coctio.numerus_inanium, ZEPHYRUM);
+        CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.fons, piscina),
+            "    NIHIL,\n    (i32)0\n};\n"));
+        /* recusationes nominatae */
+        CREDO_FALSUM (_coquere(piscina,
+            "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\""
+            " sedes=\"p\"><genus titulus=\"g\">"
+            "<locus titulus=\"a\" species=\"token\" vacua=\"x\"/>"
+            "</genus></registrum>", &coctio));
+        CREDO_CHORDA_CONTINET (coctio.causa,
+            chorda_ex_literis("vacua in loco non listae:", piscina));
+        CREDO_FALSUM (_coquere(piscina,
+            "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\""
+            " sedes=\"p\"><genus titulus=\"g\">"
+            "<locus titulus=\"a\" species=\"token\" absentia=\"x\""
+            " gravitas=\"gravis\"/></genus></registrum>", &coctio));
+        CREDO_CHORDA_CONTINET (coctio.causa,
+            chorda_ex_literis("gravitas ignota:", piscina));
+        CREDO_FALSUM (_coquere(piscina,
+            "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\""
+            " sedes=\"p\"><genus titulus=\"g\" inanis=\"falsum\">"
+            "<locus titulus=\"a\" species=\"token\"/>"
+            "</genus></registrum>", &coctio));
+        CREDO_CHORDA_CONTINET (coctio.causa,
+            chorda_ex_literis("inanis non 'verum':", piscina));
+        CREDO_FALSUM (_coquere(piscina,
+            "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\""
+            " sedes=\"p\"><genus titulus=\"g\">"
+            "<locus titulus=\"a\" species=\"token\" absentia=\""
+            "causa longissima quae sexaginta characteres excedit et "
+            "ideo recusatur\"/></genus></registrum>", &coctio));
+        CREDO_CHORDA_CONTINET (coctio.causa,
+            chorda_ex_literis("causa longior LX:", piscina));
+        CREDO_FALSUM (_coquere(piscina,
+            "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\""
+            " sedes=\"p\"><genus titulus=\"g\" diagnosticum=\"a\tb\">"
+            "<locus titulus=\"a\" species=\"token\"/>"
+            "</genus></registrum>", &coctio));
+        CREDO_CHORDA_CONTINET (coctio.causa,
+            chorda_ex_literis("causa cum charactere moderationis:",
+                piscina));
     }
 
     imprimere("\n");
