@@ -334,6 +334,32 @@ principale (vacuum)
     CREDO_VERUM (_genus(e, CRUSTA_GENUS_BINARIA));
     CREDO_NIHIL (_filius(e, (i32)CRUSTA_BINARIA_DEXTER, ZEPHYRUM));
 
+    /* iuxtapositio: 'a b' -> binaria operatore ABSENTE, malum; signa
+     * priora ante reducuntur ('-a b' = binaria(praeposita, _, b)).
+     * INVENTUM P9 (porta totalitatis): operandum prius in finire olim
+     * perdebatur - emissio '$(( b))' */
+    p = _casus(piscina, "$((a b))", &r);
+    CREDO_AEQUALIS_I32 (r.mala, (i32)I);
+    e = _expressio(p);
+    CREDO_VERUM (_genus(e, CRUSTA_GENUS_BINARIA));
+    CREDO_VERUM (_genus(_filius(e, (i32)CRUSTA_BINARIA_SINISTER,
+        ZEPHYRUM), CRUSTA_GENUS_VARIABILIS));
+    CREDO_VERUM (e != NIHIL
+        && e->loci[CRUSTA_BINARIA_TOK_OPERATOR].genus
+        == MATERIA_VALOR_NIHIL);
+    CREDO_VERUM (_genus(_filius(e, (i32)CRUSTA_BINARIA_DEXTER,
+        ZEPHYRUM), CRUSTA_GENUS_VARIABILIS));
+    p = _casus(piscina, "$((-a b c))", &r);
+    e = _expressio(p);
+    CREDO_VERUM (_genus(e, CRUSTA_GENUS_BINARIA));
+    CREDO_VERUM (_genus(_filius(e, (i32)CRUSTA_BINARIA_SINISTER,
+        ZEPHYRUM), CRUSTA_GENUS_BINARIA));
+    CREDO_VERUM (_genus(_filius(_filius(e, (i32)CRUSTA_BINARIA_SINISTER,
+        ZEPHYRUM), (i32)CRUSTA_BINARIA_SINISTER, ZEPHYRUM),
+        CRUSTA_GENUS_PRAEPOSITA));
+    p = _casus(piscina, "(( a b ))", &r);
+    p = _casus(piscina, "((a\ti))", &r);
+
     /* $(( ad EOF: clausura absens */
     p = _casus(piscina, "$((1+1", &r);
     CREDO_AEQUALIS_I32 (r.clausurae_absentes, (i32)I);

@@ -178,6 +178,38 @@ _staticum_est (
         && memcmp(v.datum, litterae, strlen(litterae)) == ZEPHYRUM;
 }
 
+/* nidus 'apertura' x profunditas apertus ad EOF, parsatus in piscina
+ * sua (tempus sub CREDO_NON_PENDET mensuratur) */
+interior vacuum
+_nidum_parsare (
+    constans character* apertura,
+                   i32  profunditas)
+{
+    Piscina* piscina = piscina_generare_dynamicum("crusta_nidus",
+        1048576);
+                   i32  la       = (i32)strlen(apertura);
+                   i32  mensura  = la * profunditas;
+             character* fons;
+         CrustaParsura  r;
+                   i32  i;
+
+    si (piscina == NIHIL)
+    {
+        redde;
+    }
+    fons = (character*)piscina_allocare(piscina,
+        (memoriae_index)mensura + I);
+    si (fons != NIHIL)
+    {
+        per (i = ZEPHYRUM; i < profunditas; i++)
+        {
+            memcpy(fons + i * la, apertura, (size_t)la);
+        }
+        crusta_arbor_parsare(piscina, fons, mensura, &CRUSTA_BASH, &r);
+    }
+    piscina_destruere(piscina);
+}
+
 s32
 principale (vacuum)
 {
@@ -421,6 +453,35 @@ principale (vacuum)
     CREDO_VERUM (_absens(n, (i32)CRUSTA_EXPANSIO_ARGUMENTA));
     CREDO_FALSUM (_staticum_est(piscina, verbum, ""));
     CREDO_VERUM (r.sana);
+
+    /* titulus solum post '${' aut praefixum; '[' post ']' non
+     * subscriptum. INVENTUM P9 (porta totalitatis): littera quaelibet
+     * titulus erat - '${@E}', '${E[]t}', '${x[1][2]}' locum bis
+     * scribebant (parsator NIHIL). bash -n omnia accipit: 'bad
+     * substitution' tempore currendi. */
+    p = _casus(piscina, "echo ${@E} ${E[]t} ${x[1]y} ${x[1][2]} ${#@}",
+        &r);
+    CREDO_AEQUALIS_I32 (r.mala, ZEPHYRUM);
+    imperium = _sententia(p, ZEPHYRUM);
+    n = _pars(_filius(imperium, (i32)CRUSTA_IMPERIUM_LIBERI, I),
+        ZEPHYRUM);
+    CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_EXPANSIO_TOK_TITULUS),
+        "@"));
+    CREDO_VERUM (_staticum_est(piscina,
+        _filius(n, (i32)CRUSTA_EXPANSIO_ARGUMENTA, ZEPHYRUM), "E"));
+    n = _pars(_filius(imperium, (i32)CRUSTA_IMPERIUM_LIBERI, IV),
+        ZEPHYRUM);
+    CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_EXPANSIO_TOK_SUBSCRIPTUM),
+        "[1]"));
+    CREDO_VERUM (_staticum_est(piscina,
+        _filius(n, (i32)CRUSTA_EXPANSIO_ARGUMENTA, ZEPHYRUM), "[2]"));
+    n = _pars(_filius(imperium, (i32)CRUSTA_IMPERIUM_LIBERI, V),
+        ZEPHYRUM);
+    CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_EXPANSIO_TOK_PRAEFIXUM),
+        "#"));
+    CREDO_VERUM (_tok_est(_tok(n, (i32)CRUSTA_EXPANSIO_TOK_TITULUS),
+        "@"));
+    CREDO_VERUM (_absens(n, (i32)CRUSTA_EXPANSIO_TOK_OPERATOR));
 
     /* ${x:-}: operator praesens, argumenta absentia */
     p = _casus(piscina, "${x:-}", &r);
@@ -1294,6 +1355,22 @@ principale (vacuum)
     CREDO_VERUM (_absens(n, (i32)CRUSTA_BINARIA_TOK_OPERATOR));
     CREDO_FALSUM (r.sana);
 
+    /* iuxtapositio sub '!': binaria implicita in adventu formatur,
+     * '!' eam totam capit - ordo octetorum. INVENTUM P9 (porta
+     * totalitatis): iuxtapositio olim in fine iungebatur, post '!'
+     * reductum - emissio '[[ a ! b ]]' */
+    p = _casus(piscina, "[[ ! a b ]]", &r);
+    n = _filius(_sententia(p, ZEPHYRUM), (i32)CRUSTA_IUDICIUM_EXPRESSIO,
+        ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_IUDICIUM_PRAEPOSITA));
+    n = _filius(n, (i32)CRUSTA_PRAEPOSITA_OPERANDUM, ZEPHYRUM);
+    CREDO_VERUM (_genus(n, CRUSTA_GENUS_IUDICIUM_BINARIA));
+    CREDO_VERUM (_absens(n, (i32)CRUSTA_BINARIA_TOK_OPERATOR));
+    CREDO_AEQUALIS_I32 (r.mala, (i32)I);
+    p = _casus(piscina, "[[ \"\" ! \"\" P ]]", &r);
+    p = _casus(piscina, "[[ ! { a", &r);
+    p = _casus(piscina, "[[ a && b c || ! d e ]]", &r);
+
 
     /* ==================================================
      * PROBARE: heredoca (decretum 01M2NJ16RG: corpus ubi octeti
@@ -1524,6 +1601,26 @@ principale (vacuum)
     CREDO_VERUM (_genus(_filius(n, (i32)CRUSTA_CONDITIO_PROBATIO, II),
         CRUSTA_GENUS_HEREDOC));
     CREDO_VERUM (r.sana);
+
+
+    /* ==================================================
+     * PROBARE: valor staticus in nido - tempus lineare (P9)
+     * ================================================== */
+
+    /* INVENTUM P9 (porta totalitatis): verbum primum imperii clausum
+     * valorem staticum petit (_aedificator_est); longitudo cruda
+     * subarborem TOTAM recursive ambulabat, substitutiones intra -
+     * '$(' x C milia: tempus quadraticum (LXXX s) et SIGSEGV. XX milia
+     * olim ~XXIV s. */
+    imprimere("\n--- Probans valorem staticum in nido ---\n");
+    CREDO_NON_PENDET (_nidum_parsare("$(", (i32)20000), (i32)MM);
+    CREDO_NON_PENDET (_nidum_parsare("$(\"", (i32)20000), (i32)MM);
+    p = _casus(piscina, "$(a)b c", &r);
+    CREDO_FALSUM (_staticum_est(piscina, _filius(_sententia(p,
+        ZEPHYRUM), (i32)CRUSTA_IMPERIUM_LIBERI, ZEPHYRUM), "b"));
+    p = _casus(piscina, "\"a$'x'\"b c", &r);
+    CREDO_VERUM (_staticum_est(piscina, _filius(_sententia(p,
+        ZEPHYRUM), (i32)CRUSTA_IMPERIUM_LIBERI, ZEPHYRUM), "a$'x'b"));
 
 
     imprimere("\n    casus %d\n", (integer)casus_numerus);

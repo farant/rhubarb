@@ -970,7 +970,21 @@ _expansio (
     s32 c       = _octetus(l, cursor);
     b32 initio = cursor >= II && l->fons[cursor - I] == '{'
               && l->fons[cursor - II] == '$';
+    b32 locus_tituli;
     s32 i;
+
+    /* TITULUS solum post '${' aut post praefixum ('${#', '${!'); '['
+     * post ']' non subscriptum. Positio decernit, non genus octeti:
+     * INVENTUM P9 (porta totalitatis) - littera quaelibet titulus erat,
+     * ergo '${@E}', '${E[]t}', '${x[1][2]}' locum aedificatoris bis
+     * scribebant (parsator NIHIL). Reliquum litteralis fit (argumenta,
+     * ut '${xy z}'). */
+    locus_tituli = initio
+        || (   cursor >= III
+            && (l->fons[cursor - I] == '#'
+            || l->fons[cursor - I] == '!')
+            && l->fons[cursor - II] == '{'
+            && l->fons[cursor - III] == '$');
 
     si (initio && (c == '#' || c == '!'))
     {
@@ -984,7 +998,7 @@ _expansio (
         redde _facere(l, (s32)CRUSTA_LEX_PARAMETRUM_TITULUS, cursor
             + I);
     }
-    si (_littera(c))
+    si (locus_tituli && _littera(c))
     {
         i = cursor;
         dum (_nominis(_octetus(l, i)))
@@ -993,7 +1007,7 @@ _expansio (
         }
         redde _facere(l, (s32)CRUSTA_LEX_PARAMETRUM_TITULUS, i);
     }
-    si (_digitus(c))
+    si (locus_tituli && _digitus(c))
     {
         i = cursor;
         dum (_digitus(_octetus(l, i)))
@@ -1002,12 +1016,12 @@ _expansio (
         }
         redde _facere(l, (s32)CRUSTA_LEX_PARAMETRUM_TITULUS, i);
     }
-    si (initio && _specialis(c))
+    si (locus_tituli && _specialis(c))
     {
         redde _facere(l, (s32)CRUSTA_LEX_PARAMETRUM_TITULUS, cursor
             + I);
     }
-    si (c == '[')
+    si (c == '[' && !(cursor >= I && l->fons[cursor - I] == ']'))
     {
         redde _facere(l, (s32)CRUSTA_LEX_SUBSCRIPTUM,
             _subscriptum_finis(l, cursor));

@@ -300,3 +300,83 @@ attribute as `true`, so silva's canon declares it `genus="electio"`
 with the one option; `veritas` would demand `verum|falsum`. crusta's
 envelope carries it whenever the first lexeme begins a line, which
 after P7's flag rule is nearly always.
+
+## 2026-09-16 — P9 (reservation and totality)
+
+**An "iterative builder" can still recurse through a helper.** The frame
+stack never recursed, but `crusta_verbum_staticum` measured the word's
+byte length with `_longitudo_cruda`, a recursive walk of the entire
+subtree — including every `$( )` inside the word — before decoding,
+which stops at the first substitution anyway. The builder asks for the
+static value of every command's first word (`_aedificator_est`: is it
+`declare`/`local`/…?). In `$($($(…` each first word closes around the
+whole nest below it, so the walk ran once per level over everything
+below: `$(` ×16,000 took 15 s, ×100,000 took 80 s and then overflowed
+the stack. Found by the depth probe before the totality gate existed;
+`sample` pointed straight at it. `_longitudo_statica` now measures only
+what the decoder accepts (token parts, and gemina/versa one level down)
+and returns -1 at the first non-static part. Pinned twice: the arbor
+gate's `CREDO_NON_PENDET` at 20,000 deep (2 s; it was ~24 s), and the
+totality gate's six 100,000-deep parse pins. The planted fault is this
+walk put back. Lesson: when a pin says "the builder never recurses",
+the probe must cover every function the builder CALLS, not the loop.
+
+**The mutation corpus found three more (8 failures in 2,934 cases).**
+Delta debugging (`minuere.py` in the scratchpad: drop chunks while the
+failure class holds) reduced each to 4–12 bytes:
+- `((a\ti`, `((t"`, `((g n` → arithmetic juxtaposition. The machine
+  pushed an operand while none was expected and `crusta_arithmetica_
+  finire` returned only the top operand: bytes lost. Now a juxtaposed
+  operand first reduces every pending sign, then pushes an implied
+  binary sign with NO token and precedence 0 (`IUXTAPOSITIO`), so the
+  tree is `binaria(a, _, b)` in byte order; mala++; the evaluator refuses
+  it (operator slot not a token).
+- `[[ ! { a`, `[[ "" ! "" P` → `[[ ]]` juxtaposition was counted on
+  arrival but JOINED at the end, after the signs were reduced, so a
+  pending `!` bound the last operand: emission `[[ a ! b`. Now the
+  implied sign (level IV, tokenless; `_iudicatio_reducere` skips the
+  operator slot when the token is NIHIL) goes on the stack at arrival,
+  the binaria forms at once, and `!` later takes the whole of it. Traced
+  by hand before coding: `! a b`, `"" ! "" P`, `a && b c`, `a -f b c`
+  all keep byte order.
+- `${@E`, `${E[]t` (and `${x[1][2]}`) → the lector classified by byte
+  class alone: any letter inside `${` was a PARAMETRUM_TITULUS, so a
+  second name (after the special `@`, after a subscript) wrote the
+  builder's name slot twice and materia refused (`dominus duplex`,
+  parse NIHIL). bash -n accepts all three (bad substitution is a runtime
+  error). Now position decides: a name only right after `${` or after a
+  `#`/`!` prefix; `[` right after `]` is not a subscript. The rest lexes
+  as the literal the builder already sends into `argumenta`, as `${xy z}`
+  always did. Side effect, correct: `${#@}` now has `@` as the name
+  (it was an operator token).
+
+**The transposed-heredoc limit is a byte-law hole, and bash disagrees
+with it inside expressions.** A mutated pathology file reduced to
+`[[ $(<<A)` + newline + `y`: the body's newline sits inside `[[ ]]`, a
+frame with no list, so P6's rule appends the body to the nearest list
+below — before the `[[` in byte order. bash 5.2 measured: inside
+`[[ ]]` and `${ }` it READS the body after the newline (`[[ -n $(cat
+<<A)` / hello / A / `]]` prints yes; `${x:-$(cat <<A)` prints hello),
+warning "unterminated here-document" and exiting 0; after `for`,
+`select`, `function` or `f(` the newline is a syntax error. A real fix
+needs a body node INSIDE expression trees (declaration + canon + seal),
+a design call, so the totality gate names the class instead: a
+differing emission passes only if `relatio.heredoca_transposita > 0`
+and the length equals the source (bytes moved, none lost), and the
+count is printed (1). Filed as a quaestio.
+
+**Depth, measured at -O2 (the house flags).** Emission dies between
+40,000 and 45,000 NODES (grex nesting: 1 node per level; `$(`: 3 per
+level, alive at 13,000, dead at 16,000) — materia's recursive emitter,
+same as html. The STML writer does not die at 10,000; it runs for
+minutes (size quadratic: 500 deep 3.6 MB, 1,000 14 MB, 2,000 56 MB in
+5 s, 4,000 225 MB in 43 s) and at 100,000 it overflows in 0.07 s.
+The constant evaluator survives `1+(` ×130,000 and dies by 160,000;
+nested bare parentheses survive any depth because `inclusa` is a tail
+call under -O2 — so the pin uses the non-tail form.
+
+**Reservatio shapes differ from the plan's guess.** extglob is not a
+`crustula`: in VERBA mode `(` after words is a malum (bash errors at
+the same `(`), then `a|b` is an ordinary pipa and `)` a second malum.
+`alias x=…` parses `x=…` as an assignment because `alias` is in the
+assignment-builtin table.

@@ -1270,7 +1270,7 @@ judgment; the false seal fires the guard and every judgment).
 - Create: `crusta/probationes/probatio_crusta_reservatio.c`
 - Create: `crusta/probationes/probatio_crusta_totalitas.c`
 
-- [ ] **Step 1: Reservatio — write the failing gate** — the deviation table
+- [x] **Step 1: Reservatio — write the failing gate** — the deviation table
   of spec §5, each row measured: `shopt -s extglob; echo @(a|b)` → exactly
   the mala the parser produces today (count pinned, printed; a verbum `@`,
   a `crustula` holding `a|b`, and the mala for what does not fit);
@@ -1284,7 +1284,7 @@ judgment; the false seal fires the guard and every judgment).
   `derivatum="x"` as an attribute on `<verbum>` → the reader accepts, the
   canon refuses with ≥ 1 vitium naming it. Every message by `strcmp`.
 
-- [ ] **Step 2: Totalitas — write the failing gate** — transcribe
+- [x] **Step 2: Totalitas — write the failing gate** — transcribe
   `html/probationes/probatio_html_totalitas.c` (LCG random bytes, mutation
   1/40, 23 truncation steps, nesting forms) over the crusta corpus with
   `crusta_arbor_parsare` + `materia_scribere_nodum` under `CREDO_NON_RUIT`;
@@ -1301,23 +1301,42 @@ judgment; the false seal fires the guard and every judgment).
   refusal is a NAMED refusal, not a crash. CRLF: `adversarius.sh` whole
   and every pathology case with `\n` → `\r\n`.
 
-- [ ] **Step 3: Run both and verify they fail.**
+- [x] **Step 3: Run both and verify they fail.**
 
-- [ ] **Step 4: Implement nothing unless red names a defect** — a builder
+- [x] **Step 4: Implement nothing unless red names a defect** — a builder
   crash found here is fixed in `crusta_arbor.c` with the failing source
   added as a case in the arbor gate.
 
-- [ ] **Step 5: Plant** — reservatio: the extglob malum count edited → red.
+- [x] **Step 5: Plant** — reservatio: the extglob malum count edited → red.
   Totalitas: replace the `inclusa` frame push with a recursive call for
   one construct → the `((((` pin red; revert both.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```python
 silva.commissio("crusta: porta reservationis (deviationes nominatae mensuratae: extglob, alias, eval, posix, $\"\", lector elementa ignota RECUSAT attributa IGNORAT) + porta totalitatis (fortuiti, mutati, truncati, CRLF, NUL, nidificatio C milium sine recursione; scriptor/proiectio/aestimator ad profunditatem mensurati, 01M1FAD8)\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",
     ["crusta/probationes/probatio_crusta_reservatio.c",
      "crusta/probationes/probatio_crusta_totalitas.c"], ["crusta"])
 ```
+
+**Executed 2026-09-16.** Deviations from the text above: extglob parses
+as verbum `@`, malum `(`, pipa `a|b`, malum `)` (2 mala, no `crustula`
+— bash 5.2 also errors at `(`), pinned as measured; the reservatio gate
+adds a stray `id` on `<verbum>` (canon refuses it). The totality corpus
+is the fixtures, the 89 FreeBSD files and 12 house scripts (2,934 cases,
+~7 s). Depths measured at -O2: STML write pinned NON_RUIT at 500 and
+RUIT_CUM at 100,000 (10,000 runs for minutes, quadratic size); the
+evaluator pin uses `1+(` nesting (bare `((((` is a tail call and never
+dies), NON_RUIT at 100,000 and RUIT_CUM at 200,000. Step 4 was not empty:
+four defects fixed, each with a failing case added first — the static
+value walked whole subtrees (`$(` ×100,000 = 80 s + SIGSEGV), arithmetic
+juxtaposition lost bytes, `[[ ]]` juxtaposition under `!` reordered
+them, the lector's `${` name rule wrote a slot twice. The P6 named limit
+(`heredoca_transposita`) breaks byte order and bash reads such bodies
+inside `[[ ]]`/`${ }`; the totality gate admits it only when the parser
+names it and the length is kept (quaestio filed). Plant for totalitas:
+the whole-subtree recursive walk put back into `_longitudo_statica`
+(the frame stack has no single push to swap for recursion).
 
 ---
 

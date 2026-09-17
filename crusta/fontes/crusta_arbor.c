@@ -2827,7 +2827,9 @@ _iudicatio_reducere (
     si (   res == NIHIL
         || !_nodum_ponere_si(res, (i32)CRUSTA_BINARIA_SINISTER,
         sinister)
-        || !_token_ponere(res, (i32)CRUSTA_BINARIA_TOK_OPERATOR, s.tok)
+        || (   s.tok != NIHIL
+            && !_token_ponere(res, (i32)CRUSTA_BINARIA_TOK_OPERATOR,
+                s.tok))
         || !_nodum_ponere_si(res, (i32)CRUSTA_BINARIA_DEXTER, dexter))
     {
         redde FALSUM;
@@ -2846,9 +2848,39 @@ _iudicatio_operandum (
     IudiciiSignum* s;
               i32  numerus;
 
+    /* IUXTAPOSITIO ('a b'): signum binarium IMPLICITUM sine lexemate
+     * (gradus IV) in adventu ponitur, ut binaria statim formetur et
+     * signa inferiora ('!', '&&') eam totam capiant. INVENTUM P9
+     * (porta totalitatis): operanda superflua olim in fine iungebantur,
+     * post signa reducta - '[[ ! a b' '!' ad 'b' ligabat, emissio
+     * '[[ a ! b'. */
     si (!iud->operandum_exspectatur)
     {
-        iud->mala++;   /* verba iuxta posita: 'a b' */
+        IudiciiSignum* implicitum;
+
+        iud->mala++;
+        dum (xar_numerus(iud->signa) > ZEPHYRUM)
+        {
+            IudiciiSignum* summum = (IudiciiSignum*)xar_obtinere(
+                iud->signa, xar_numerus(iud->signa) - I);
+
+            si (summum->praecedentia < (i32)IV)
+            {
+                frange;
+            }
+            si (!_iudicatio_reducere(p, iud))
+            {
+                redde FALSUM;
+            }
+        }
+        implicitum = (IudiciiSignum*)xar_addere(iud->signa);
+        si (implicitum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        implicitum->tok           = NIHIL;
+        implicitum->praeposita    = FALSUM;
+        implicitum->praecedentia  = (i32)IV;
     }
     si (!_iudicatio_operandum_pellere(iud, n))
     {
@@ -4086,45 +4118,77 @@ crusta_arbor_parsare_cum_lexematis (
  * Valor staticus verbi
  * ================================================== */
 
-/* longitudo cruda subarboris (summa lexematum) */
-interior i32
-_longitudo_cruda (
-    constans MateriaNodus* n)
+/* longitudo partium staticarum (summa octetorum crudorum = tectum
+ * valoris decocti); gemina et versa per partes suas UNO gradu (apices
+ * intra apices non nidificant); -I si pars non statica adest -
+ * decoctio ibi desinit, ergo longitudo quoque.
+ *
+ * INVENTUM P9 (porta totalitatis): forma prior subarborem TOTAM
+ * recursive ambulabat, substitutiones intra. Verbum primum imperii
+ * clausum valorem staticum petit (_aedificator_est), ergo in '$(' x N
+ * quodque verbum clausum nidum totum infra se ambulabat: tempus
+ * quadraticum (XVI milia = XV s) et recursio CCC milium graduum
+ * (C milia = SIGSEGV post LXXX s). Nunc numquam in substitutionem
+ * descendit. */
+interior s32
+_longitudo_statica (
+    constans MateriaNodus* nodus,
+                      i32  locus,
+                      b32  intra_apices)
 {
-    i32 summa = ZEPHYRUM;
-    i32 i;
+    constans MateriaValor* partes  = &nodus->loci[locus];
+                      s32  summa   = ZEPHYRUM;
+                      i32  k;
 
-    per (i = ZEPHYRUM; i < n->numerus_locorum; i++)
+    si (partes->genus != MATERIA_VALOR_LISTA)
     {
-        constans MateriaValor* v = &n->loci[i];
+        redde ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*partes); k++)
+    {
+        constans MateriaValor* e = materia_valor_lista_obtinere(*partes,
+            k);
+        constans MateriaNodus* pars;
+                          s32  citata;
 
-        si (v->genus == MATERIA_VALOR_TOKEN)
+        si (e->genus != MATERIA_VALOR_NODUS)
         {
-            summa += v->datum.token->valor.mensura;
+            perge;
         }
-        alioquin si (v->genus == MATERIA_VALOR_NODUS)
+        pars = e->datum.nodus;
+        commutatio (pars->genus)
         {
-            summa += _longitudo_cruda(v->datum.nodus);
-        }
-        alioquin si (v->genus == MATERIA_VALOR_LISTA)
-        {
-            i32 k;
-
-            per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*v); k++)
-            {
-                constans MateriaValor* e =
-                    materia_valor_lista_obtinere(*v,
-                    k);
-
-                si (e->genus == MATERIA_VALOR_NODUS)
+            casus CRUSTA_GENUS_PARS_LITTERALIS:
+            casus CRUSTA_GENUS_PARS_DOMUS:
+            casus CRUSTA_GENUS_PARS_EFFUGIUM:
+            casus CRUSTA_GENUS_PARS_CONTINUATIO:
+            casus CRUSTA_GENUS_PARS_SIMPLEX:
+            casus CRUSTA_GENUS_PARS_EFFUGIA:
+                si (pars->loci[CRUSTA_PARS_TOK].genus
+                    == MATERIA_VALOR_TOKEN)
                 {
-                    summa += _longitudo_cruda(e->datum.nodus);
+                    constans MateriaToken* t =
+                        pars->loci[CRUSTA_PARS_TOK].datum.token;
+
+                    summa += (s32)t->valor.mensura;
                 }
-                alioquin si (e->genus == MATERIA_VALOR_TOKEN)
+                frange;
+            casus CRUSTA_GENUS_PARS_GEMINA:
+            casus CRUSTA_GENUS_PARS_VERSA:
+                si (intra_apices)
                 {
-                    summa += e->datum.token->valor.mensura;
+                    redde (s32)-I;
                 }
-            }
+                citata = _longitudo_statica(pars,
+                    (i32)CRUSTA_GEMINA_PARTES, VERUM);
+                si (citata < ZEPHYRUM)
+                {
+                    redde citata;
+                }
+                summa += citata;
+                frange;
+            ordinarius:
+                redde (s32)-I;
         }
     }
     redde summa;
@@ -4370,7 +4434,7 @@ crusta_verbum_staticum (
     constans MateriaNodus* verbum,
                    chorda* valor)
 {
-          i32  longitudo;
+          s32  longitudo;
     character* area;
           i32  scripti = ZEPHYRUM;
 
@@ -4378,7 +4442,12 @@ crusta_verbum_staticum (
     {
         redde FALSUM;
     }
-    longitudo = _longitudo_cruda(verbum);
+    longitudo = _longitudo_statica(verbum, (i32)CRUSTA_VERBUM_PARTES,
+        FALSUM);
+    si (longitudo < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
     area = (character*)piscina_allocare(piscina,
         (memoriae_index)longitudo + I);
     si (area == NIHIL)

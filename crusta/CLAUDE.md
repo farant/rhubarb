@@ -18,8 +18,58 @@ mode and position; the builder owns the mode stack, iteratively).
 Findings at find-time: `crusta/fontes/crusta_arbor.worklog.md` (from
 P3 on).
 
-## Praesens status (2026-09-16 — P8 done)
+## Praesens status (2026-09-16 — P9 done)
 
+- **P9, reservation and totality:** two gates. `reservatio`
+  (`probatio_crusta_reservatio.c`, 55 assertions) pins each named
+  deviation by its MEASURED effect, with bash 5.2's own `-n` verdict
+  beside it: extglob `echo @(a|b)` = verbum `@`, malum `(`, pipa `a|b`,
+  malum `)` — 2 mala (the plan expected a `crustula`; bash also errors
+  at `(`); `alias x='if…'; x echo hi; fi` = command `x`, `fi` a malum;
+  `eval 'if'` one opaque simple part; `set -o posix` / `shopt -s` plain
+  commands, reserved words unchanged after them; `$"x"` a pars-versa
+  with static value `x`, `$'\x41'` static `A`. Reader side as in html:
+  `<derivatum/>` under `<verbum>` refused (`locus generi ignotus`), an
+  unknown attribute or a stray `id` on `<verbum>` ACCEPTED by the reader
+  (pinned) and refused by the canon (`attributum extra canonem`).
+  `totalitas` (`probatio_crusta_totalitas.c`, html's model): 32 random
+  byte runs, the fixtures + 89 FreeBSD + 12 house scripts each mutated
+  ×4 and truncated ×23, 11 nesting forms × open/closed × 1..1000, CRLF
+  (adversarius whole + 32 converted pathology cases), NUL in a word, a
+  heredoc body and a comment (parse + emit exact, STML refusal by name)
+  — 2,934 cases under `CREDO_NON_RUIT`, emission byte-identical. Depth
+  pins, measured at `-O2`: parse alone 100,000 deep in six forms
+  NON_RUIT; emission 40,000 nodes NON_RUIT, `$(` ×100,000 RUIT_CUM
+  SIGSEGV (materia's recursive emitter, 01M1FAD8); STML write 500 deep
+  NON_RUIT, 100,000 RUIT_CUM SIGSEGV (10,000 is not a crash but minutes:
+  2,000 deep = 56 MB in 5 s, 4,000 = 225 MB in 43 s — not pinned); the
+  constant evaluator `1+(` ×100,000 NON_RUIT, ×200,000 RUIT_CUM SIGSEGV
+  (dies between 130k and 160k). **What it found, four builder/lector
+  defects, each fixed with a case in the arbor or arithmetic gate
+  first:** (1) `crusta_verbum_staticum` measured a word by walking its
+  WHOLE subtree recursively, into every `$( )`; the builder asks for
+  the static value of every command's first word, so `$(` ×100,000 took
+  80 s (quadratic) and then overflowed the stack — now
+  `_longitudo_statica` measures only the parts the decoder accepts and
+  stops at the first non-static part; (2) arithmetic juxtaposition
+  `(( a b ))` silently dropped `a` (the machine kept the top operand at
+  finish) — now an implied tokenless binary sign at the lowest
+  precedence, mala++; (3) `[[ ! a b` emitted `[[ a ! b` (juxtaposed
+  operands were joined at the end, after `!` had bound the last one) —
+  now an implied sign at level IV on arrival; (4) the lector made ANY
+  letter inside `${` a name, so `${@E}`, `${E[]t}`, `${x[1][2]}` wrote a
+  slot twice and the parse returned NIHIL — a name is now positional
+  (right after `${` or a `#`/`!` prefix) and `[` after `]` is not a
+  subscript; `${#@}` now lexes `@` as the name. **Named limit, still
+  open (quaestio in the ledger):** a heredoc body whose newline falls in
+  a list-less gap (inside `[[ ]]`, `(( ))`, `${ }`, or between `for`/
+  `function` and the name) lands in the nearest list below, out of byte
+  order; bash 5.2 READS such bodies inside `[[ ]]` and `${ }` (warning,
+  exit 0) and rejects the keyword gaps. The totality gate admits a
+  differing emission ONLY when the parser reports `heredoca_transposita`
+  and the length equals the source (1 case of 2,934, printed). Plants:
+  reservatio — the extglob pin 2 → 3; totalitas — the whole-subtree
+  recursive walk put back into `_longitudo_statica`.
 - **P8, the canon:** `crusta/grammatica/crusta.canon`, HAND-WRITTEN
   on html's model (255 rules: the `<arbor>` envelope with
   `grammatica="crusta"` and the registry seal `0ad54dc6` pinned, 50

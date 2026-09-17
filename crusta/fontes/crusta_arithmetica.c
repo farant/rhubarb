@@ -203,11 +203,41 @@ _vertex (
         : NIHIL;
 }
 
+/* IUXTAPOSITIO ('a b'): operator binarius IMPLICITUS sine lexemate,
+ * praecedentia infima et sinistra - signa omnia priora reducuntur,
+ * deinde binaria cum operatore absenti formatur (ordo octetorum
+ * servatus, mala++). INVENTUM P9 (porta totalitatis): operandum prius
+ * in finire olim perdebatur - '(( a b ))' emittebat '(( b ))'. */
+hic_manens constans CrustaOperator IUXTAPOSITIO = {
+    "", ZEPHYRUM, FALSUM, CRUSTA_OPERATOR_BINARIUS
+};
+
 b32
 crusta_arithmetica_operandum (
     CrustaArithmetica* machina,
          MateriaNodus* nodus)
 {
+    si (!machina->operandum_exspectatur)
+    {
+        Signum* sedes;
+
+        machina->mala++;
+        dum (_vertex(machina) != NIHIL)
+        {
+            si (!_reducere(machina, FALSUM))
+            {
+                redde FALSUM;
+            }
+        }
+        sedes = (Signum*)xar_addere(machina->signa);
+        si (sedes == NIHIL)
+        {
+            redde FALSUM;
+        }
+        sedes->tok    = NIHIL;
+        sedes->colon  = NIHIL;
+        sedes->op     = &IUXTAPOSITIO;
+    }
     machina->operandum_exspectatur = FALSUM;
     redde _operandum_pellere(machina, nodus);
 }
