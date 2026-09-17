@@ -59,6 +59,7 @@ declare -a SOURCE_FILES=(
     "lib/entitates_html.c"
     "lib/entitates_html_tabula.c"
     "lib/eventus_stml.c"
+    "lib/excerptum.c"
     "lib/exemplar.c"
     "lib/fasciculum.c"
     "lib/fasti.c"
