@@ -135,6 +135,26 @@ plica pendet — veritas in C manet.
   ~ IV.VI s. Limites: C per silvam = forest cum `<ambiguus>` sine
   expansione examinis (lint C in silva manet), ordines C sine sede
 
+- **diagnostica clientium (2026-09-17):**
+  `silva.diagnostica_materiae(viae)` — errores DECLARATI in registro
+  clientis et DERIVATI per ambulatorem materiae unum, plus refutatio
+  scriptoris (`materia:scriptura`), per `./tools/diagnostica.sh
+  -machina`. viae = via, lista aut forma git; suffixum clientem eligit
+  (`.sh` crusta, `.css` css). Reddit `[Diagnosticum(via, linea,
+  columna, linea_finis, columna_finis, gravitas, codex, causa,
+  textus)]` ordine plagularum et octetorum; `textus` = SEGMENTUM
+  fontis (vacuum pro absentia, quae punctum sine latitudine est);
+  `codex` CRUDUS (`grex/tok_clausura`), sine praefixo grammaticae.
+  Refutat si nihil iudicatum (suffixum sine cliente, exitus 2).
+  **NOMEN:** `silva.diagnostica(via)` SIMPLEX est aliud omnino —
+  verdictum legati super plagulam C89 (unum, non lista locata). Duae
+  functiones, numquam una.
+  Instrumentum ipsum: `./tools/diagnostica.sh <plagulae...> [-machina]
+  [-sine-excerpto]`, exitus 0 sine errato / 1 erratum / 2 nihil
+  iudicatum; sine `-machina` forma compilatorum cum excerpto et signo
+  `^~~~` (`lib/excerptum`). Porta natalis `tools/diagnostica_fumus.sh`
+  (PORTAE `'diagnostica'`).
+
 Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
 
 ## 2026-09-03 — additiones post B1 (recensio Franis)

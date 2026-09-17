@@ -1541,6 +1541,8 @@ PORTAE = {
     'differre': (['./silva/differre_fumus.sh'],
                  r'fumus differre: (sanum|FRACTUM)'),
     'unci': (['./tools/unci-git/fumus.sh'], r'fumus unci: (sanum|FRACTUM)'),
+    'diagnostica': (['./tools/diagnostica_fumus.sh'],
+                    r'fumus diagnostica: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],
                       r'fumus mensor_suitae: (sanum|FRACTUM)'),
     'vexilla': (['./tools/vexilla_fumus.sh'], r'fumus vexilla: (sanum|FRACTUM)'),
@@ -3428,6 +3430,53 @@ def _viae_expandere(viae):
             return [l for l in r.stdout.splitlines() if l]
         return [viae]
     return list(viae)
+
+
+Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
+                          'columna_finis gravitas codex causa textus')
+
+
+def diagnostica_materiae(viae):
+    """diagnostica plagularum CLIENTIUM MATERIAE (.sh crusta, .css css) per
+    ./tools/diagnostica.sh -machina: declarata in registro clientis et
+    per materiam derivata, plus refutatio scriptoris
+    (materia:scriptura). viae: via, lista, aut forma git. Reddit
+    [Diagnosticum] ordine plagularum et octetorum; textus = segmentum
+    fontis. Refutat si nihil iudicatum (exit 2).
+
+    NOMEN: 'diagnostica' SIMPLEX iam capta est (verdictum legati super
+    plagulam C89 - aliud genus omnino: verdictum unum, non lista
+    locata). Planum et spec nomen captum petiverunt; Python
+    definitionem priorem TACITE obumbrat, ergo probatio manualis sola
+    id invenit."""
+    lista = _viae_expandere(viae)
+    if not lista:
+        raise SilvaError('diagnostica: nullae plagulae (%r)' % (viae,))
+    absolutae = {_absoluta(v): v for v in lista}
+    r = _curre(['./tools/diagnostica.sh', '-machina']
+               + list(absolutae))
+    if r.returncode == 2:
+        raise SilvaError('diagnostica: nihil iudicatum: %s'
+                         % (r.stderr or '').strip()[-200:])
+    fontes = {}
+    exitus = []
+    for linea in r.stdout.splitlines():
+        campi = linea.split('\t')
+        if len(campi) != 10:
+            raise SilvaError('diagnostica: linea TSV prava: %r' % linea)
+        via = campi[0]
+        initium, finis = int(campi[5]), int(campi[6])
+        textus = ''
+        if initium >= 0:
+            if via not in fontes:
+                with open(via, 'rb') as f:
+                    fontes[via] = f.read()
+            textus = fontes[via][initium:finis].decode('utf-8', 'replace')
+        exitus.append(Diagnosticum(absolutae.get(via, via), int(campi[1]),
+                                   int(campi[2]), int(campi[3]),
+                                   int(campi[4]), campi[7], campi[8],
+                                   campi[9], textus))
+    return exitus
 
 
 def exemplaria(viae, regula, paralleli=6):

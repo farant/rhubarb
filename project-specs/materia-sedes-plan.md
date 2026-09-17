@@ -4166,7 +4166,7 @@ plants (one per declaration), each red, all green on revert.
   `[Diagnosticum(via, linea, columna, linea_finis, columna_finis,
   gravitas, codex, causa, textus)]`; `PORTAE['diagnostica']`.
 
-- [ ] **Step 1: Failing printer test** (root probatio; `probatio_piscina.c`
+- [x] **Step 1: Failing printer test** (root probatio; `probatio_piscina.c`
   pattern). Expected strings (gutter = digits of the line, at least 4;
   then `" | "`):
 
@@ -4193,7 +4193,7 @@ plants (one per declaration), each red, all green on revert.
   `excerptum_scribere`, and compares the result with
   `CREDO_CHORDA_AEQUALIS_LITERIS`.
 
-- [ ] **Step 2: The printer.**
+- [x] **Step 2: The printer.**
 
 ```c
 /* excerptum.h - Excerptum fontis cum signo sub tractu (forma
@@ -4356,7 +4356,7 @@ excerptum_scribere (
   `./tools/compile_tests_fontes_generare.sh` and `./compile_tests.sh
   excerptum` green; plant `'^'` → `'*'` via `silva.planta` → red.)
 
-- [ ] **Step 3: The instrument** `tools/diagnostica.c`
+- [x] **Step 3: The instrument** `tools/diagnostica.c`
   (`./silva/scribe.sh`). The machine TSV carries the RAW codex; the human
   line prefixes `<grammatica>:` to a codex without `:`.
 
@@ -4663,7 +4663,7 @@ exec "$BIN" "$@"
   means a list names something a client file already defines — remove
   it. Run it on `crusta/arbor.sh` and on a temp `{ echo a` by eye.
 
-- [ ] **Step 4: The fumus** `tools/diagnostica_fumus.sh`:
+- [x] **Step 4: The fumus** `tools/diagnostica_fumus.sh`:
 
 ```bash
 #!/bin/bash
@@ -4716,7 +4716,7 @@ echo "fumus diagnostica: FRACTUM ($fracta)"; exit 1
   diagnostica: (sanum|FRACTUM)')` to `PORTAE`. Plant by hand: change II's
   expected column to `1:8` → FRACTUM; revert → sanum.
 
-- [ ] **Step 5: pythonica.**
+- [x] **Step 5: pythonica.**
 
 ```python
 Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
@@ -4766,11 +4766,49 @@ def diagnostica(viae):
   SilvaError. `./pythonica/probare.sh` green; plant by hand (swap
   `campi[1]`/`campi[2]`) → red; revert.
 
-- [ ] **Step 6: Docs and commit.** `pythonica/README.md`; the root
+- [x] **Step 6: Docs and commit.** `pythonica/README.md`; the root
   `CLAUDE.md` is Fran's — do not edit; the bench line goes into memory
   at closure. Commit via `silva.commissio` with portae `[('radix',
   'excerptum'), 'diagnostica', 'pythonica']`.
 
+**Executed 2026-09-17, in TWO commits.** The printer landed alone
+(`a789a5aa`) because it is a complete gated library; the instrument,
+fumus and pythonica followed.
+
+Printer: every contract string in step 1 held as written, traced by
+hand before the code was run. Two findings. **The UTF-8 fixture could
+not detect a broken continuation mask**: `é` is two bytes, and flipping
+`== 0x80` to `== 0xC0` leaves the count of character-starts unchanged
+in a TWO-byte sequence (1 either way) — only a THREE-byte sequence
+separates them (1 vs 2). Added `€` in both the prefix and the underline
+position; the plant is red now. A green plant measures the TEST. And
+`"a\xE2\x82\xACb\n"` does not compile — **hex escapes are greedy**, so
+`\xACb` is one out-of-range escape; ended it with adjacent-literal
+concatenation. Four plants red. A fifth was REFUSED by `silva.planta`
+for not compiling (`-Wunused-parameter`) — the tool running nothing
+rather than reporting an unearned red.
+
+Instrument and fumus: as planned. The plan's predicted first line for
+`{ echo a` (`1:9`, `crusta:grex/tok_clausura`) was exact. House sweep
+235 files in 0.2 s, zero errors. Six plants in the instrument, each
+red on its own assertion; the fumus also pins the excerpt's caret
+column and that the TSV codex stays RAW.
+
+pythonica: **the plan and the spec both named `silva.diagnostica`, and
+that name was already taken** by the legati C89 verdict — which
+`probatio_silva.py` calls and `README.md` documents. Python shadows a
+duplicate `def` silently, so the new function was defined and dead; a
+hand call returned the wrong TYPE, which is how it surfaced. Renamed
+to `silva.diagnostica_materiae`; a test now asserts the two are
+distinct objects. Also: **`silva.planta` cannot plant in a `.py`** (its
+anchors are C tokens) — planted by hand.
+
+One more, found by the pythonica gate rather than by this task: B1 and
+B2 edited materia sources but ran only the crusta and materia gates, so
+oratio's, md's and html's build directories held stale objects and
+`oratio/oraculum.sh` refused them. Rebuilt: oratio 19/19, md 14/14,
+html 14/14. **A materia-substrate edit invalidates every client's
+build — every client suite belongs in that commit's gates.**
 ---
 
 ## Task C: Closure

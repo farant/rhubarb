@@ -598,3 +598,57 @@ The "same command twice" rule, the case A3 was for, is now a gate:
 greedy search binds the first `imperium` (`x=1`) and never retries, so
 the plain rule returns zero rows — measured, and worth remembering when
 a structural rule "finds nothing".
+
+## 2026-09-17 — `diagnostica_materiae`, and a name that was already taken
+
+B5 of the materia-sedes plan gives pythonica the client-diagnostics
+face: `silva.diagnostica_materiae(viae)` shells to
+`./tools/diagnostica.sh -machina` and returns
+`[Diagnosticum(via, linea, columna, linea_finis, columna_finis,
+gravitas, codex, causa, textus)]`, with `textus` sliced out of the
+source by byte offsets.
+
+**The plan and the spec both specified `silva.diagnostica`, and that
+name was already taken** — by `diagnostica(via)`, the legati verdict on
+a C89 file, which `probatio_silva.py` calls and `README.md` documents.
+Python does not complain about a duplicate `def`: the later definition
+silently wins. So the new function was defined, shadowed, and dead, and
+the only symptom was that a hand call returned the wrong TYPE — a
+verdict string being iterated character by character instead of a list
+of records.
+
+Renamed the NEW one, because the old name is documented and has a
+caller; the new one had neither. The two are different in kind, not
+just in scope — one returns a single verdict for one C file, the other
+a located list over many documents — so merging them under one name
+and dispatching on suffix would have handed callers two different
+return shapes from one call. A test now asserts they are distinct
+objects, so a future re-collision goes red instead of silent.
+
+**Reflex to keep:** before adding a name to `silva.py`, grep for it.
+`def` is not a declaration here; it is an assignment, and assignments
+overwrite.
+
+### `silva.planta` cannot plant in a `.py`
+
+Its anchors are C token sequences (it is built on `silva.Editio`), so
+every attempt reported `ancora 0 vicibus inventa` against perfectly
+present Python text. Planted by hand instead — read, substitute, run,
+restore in a `finally`. Same family as the standing rule **never
+`silva.Editio` on a `.sh`**: the C editor is for C.
+
+### The gate that caught a stale build three commits later
+
+The pythonica suite went red at an `oratio/oraculum.sh` call — not
+because of anything in this task, but because B1 and B2 changed
+`materia/fontes/materia_coctor.c` and `materia_arbor.c` while their
+commits ran only the crusta and materia gates. oratio's, md's and
+html's build directories were left holding objects older than those
+sources, and `oraculum.sh` refused them (the guard added in
+`e12c1f46`, doing exactly its job).
+
+The lesson is about the commit's `portae` list, not about the guard:
+**a materia-substrate edit invalidates every client's build, so every
+client suite belongs in that commit's gates** — the house rule already
+says so, and B1/B2 ran the shim plus two suites instead of all of
+them. Rebuilt and re-ran: oratio 19/19, md 14/14, html 14/14.

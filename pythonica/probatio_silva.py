@@ -1586,6 +1586,58 @@ except silva.SilvaError as ex:
           'exemplaria: omnes fractae - vitium machinae nominatum: %s' % ex)
 
 
+print('--- diagnostica_materiae (clientes materiae) ---')
+import tempfile
+_d = tempfile.mkdtemp(prefix='probatio_diagnostica_')
+try:
+    _fractum = os.path.join(_d, 'plantatum.sh')
+    with open(_fractum, 'w') as f:
+        f.write('{ echo a')
+    _r = silva.diagnostica_materiae(_fractum)
+    credo(len(_r) == 1, 'diagnostica_materiae: unum diagnosticum (%d)' % len(_r))
+    if _r:
+        credo(_r[0].linea == 1 and _r[0].columna == 9,
+              'diagnostica_materiae: sedes 1:9 (%d:%d)'
+              % (_r[0].linea, _r[0].columna))
+        credo(_r[0].gravitas == 'erratum' and _r[0].codex == 'grex/tok_clausura',
+              'diagnostica_materiae: gravitas et codex CRUDUS (%s %s)'
+              % (_r[0].gravitas, _r[0].codex))
+        credo(_r[0].textus == '', 'diagnostica_materiae: absentia textum vacuum fert')
+        credo(_r[0].via == _fractum, 'diagnostica_materiae: via ut data reddita')
+
+    _sanum = os.path.join(_d, 'sanum.sh')
+    with open(_sanum, 'w') as f:
+        f.write('echo a\n')
+    credo(silva.diagnostica_materiae(_sanum) == [],
+          'diagnostica_materiae: plagula sana lista vacua')
+
+    # textus SEGMENTUM fontis fert (css: '}' vagum)
+    _css = os.path.join(_d, 'plantatum.css')
+    with open(_css, 'w') as f:
+        f.write('a { color: red; } }')
+    _c = silva.diagnostica_materiae(_css)
+    credo(len(_c) == 1 and _c[0].textus == '}',
+          'diagnostica_materiae: textus segmentum fontis (%r)'
+          % (_c[0].textus if _c else None))
+
+    _ignotum = os.path.join(_d, 'x.txt')
+    with open(_ignotum, 'w') as f:
+        f.write('x\n')
+    try:
+        silva.diagnostica_materiae(_ignotum)
+        credo(False, 'diagnostica_materiae: suffixum ignotum levat')
+    except silva.SilvaError:
+        credo(True, 'diagnostica_materiae: suffixum ignotum levat SilvaError')
+
+    # NOMEN: 'diagnostica' simplex verdictum legati C89 manet - functiones
+    # DUAE sunt, non una (Python definitionem priorem tacite obumbrat)
+    credo(silva.diagnostica is not silva.diagnostica_materiae,
+          'diagnostica et diagnostica_materiae functiones diversae')
+finally:
+    import shutil
+    shutil.rmtree(_d, ignore_errors=True)
+
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))
