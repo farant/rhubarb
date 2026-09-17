@@ -113,20 +113,27 @@ plica pendet — veritas in C manet.
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 
-- **clientes materiae (2026-09-17):** `silva.arbor(via)` instrumentum ex
-  suffixo (`.sh` crusta, `.html`, `.md`, `.txt` oratio; aliter silva C);
+- **clientes materiae (2026-09-17):** `silva.arbor(via, nudum=False,
+  sedes=False)` instrumentum ex suffixo (`.sh` crusta, `.html`, `.md`,
+  `.txt` oratio; aliter silva C); `sedes=True` = visio sedium clientis
+  (`sedes="L:C-L:C" octeti="B-B"` in omni elemento; C refutat);
   `silva.coctum(via)` — forma normalis `.sh` (`declare -f` bash 5.2) ->
   Coctum(textus, sana, mala, clausurae_absentes): duae plagulae eodem
   textu = bash eas idem legit; `silva.exemplaria(viae, regula,
   paralleli=6)` — REGULA EXEMPLARIUM STML (modus lint silvae: EXEMPLAR/
   CATENA/SINE/PER + `<relatum lint=...>`) super plagulas: viae = via,
   lista aut forma git (`'*.sh'`); regula = via aut textus (TRANSPARENTIA
-  ordinaria clientis addita si deest); -> Exemplaria(summae, plagulae,
-  congruentiae [Congruentia(via, lint, textus, attributa)], fracturae).
-  Refutat regulam sine relato et omnes plagulas fractas (vitium machinae
-  nominatum). Domus tota (CCXXXVII .sh, XXI regulae) ~ IV s. Limites:
-  ordines sine linea (exemplaria v1 VIII.6); C per silvam = forest cum
-  `<ambiguus>` sine expansione examinis (lint C in silva manet)
+  ordinaria clientis addita si deest: tags `ante post`, attributa
+  `sedes octeti`); clientes per visionem sedium -> Exemplaria(summae,
+  plagulae, congruentiae [Congruentia(via, lint, textus, attributa,
+  linea, columna, textus_fontis)], fracturae, sine_sede {via: ordines
+  sine sede}). Ordo sedem fert ordinis ipsius aut nodi primi inserti
+  (`<situs>&@n;</situs>`); `<situs/>` sine nodo = sine sede. Refutat
+  regulam sine relato, omnes plagulas fractas (vitium machinae
+  nominatum), et regulam clientium cum TRANSPARENTIA propria sine
+  `attributa="sedes octeti"`. Domus tota (CCXXXVII .sh, XX regulae)
+  ~ IV.VI s. Limites: C per silvam = forest cum `<ambiguus>` sine
+  expansione examinis (lint C in silva manet), ordines C sine sede
 
 Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
 

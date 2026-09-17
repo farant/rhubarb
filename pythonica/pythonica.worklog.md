@@ -559,3 +559,42 @@ regex should parse). Findings while building:
   → wrong RADIX): give the exec globals a `__file__`.
 Result on the house: 237 `.sh` files, 21 rules, 3.9 s, numbers identical
 to the scratch census.
+
+## 2026-09-17 — exemplaria rows carry lines (materia-sedes A4)
+
+`silva.exemplaria` now runs every materia client file through the
+positioned view (`arbor(via, sedes=True)` → `<cliens>/arbor.sh -sedes`),
+so a matched node arrives with `sedes="L:C-L:C" octeti="B-B"`. The relata
+reader takes a row's position from the row element itself or from the
+first descendant that carries one — in practice the node spliced in by
+`<situs>&@n;</situs>`. Each `Congruentia` gains `linea`, `columna`
+(1-based, byte columns) and `textus_fontis` (the source slice by the
+octets, read once per file); `Exemplaria` gains `sine_sede` per file.
+A row without a spliced node (`<situs/>`) has no position — honest,
+and counted.
+
+Two consequences of positions being attributes:
+- The default prelude for clients is now `tags="ante post"
+  attributa="sedes octeti"`. Without attribute transparency a repeated
+  capture compares two nodes with different positions (never equal),
+  and a node carried across a bridge becomes a literal pattern whose
+  `sedes=` pins it to its own place.
+- A client rule that declares its own TRANSPARENTIA without
+  `attributa="sedes octeti"` is REFUSED with that cause, instead of
+  quietly returning zero rows. The scratch census rule met it on the
+  first run (it declares `tags="ante post"` only).
+
+Measured over the house (237 `.sh`, 20 rules, the census rule with the
+attributes added): 4.6 s (was ~4 s on the plain view); every count
+identical to the morning's plain-view census except `exit-2` 263 → 270,
+which is the seven `exit 2` lines commit `e12c1f46` added to runners
+and oracles. 1,227 of 2,002 rows carry a position; the 775 without are
+exactly the rules whose rows are `<situs/>`; every `-nt` row's source
+slice reads `-nt`.
+
+The "same command twice" rule, the case A3 was for, is now a gate:
+`x=1⏎echo a⏎echo a` gives one row at line 2 column 1 reading `echo a`,
+`echo a⏎echo b` gives none. It needs `cursus="fratrum"`: the default
+greedy search binds the first `imperium` (`x=1`) and never retries, so
+the plain rule returns zero rows — measured, and worth remembering when
+a structural rule "finds nothing".

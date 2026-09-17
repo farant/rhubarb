@@ -1951,6 +1951,8 @@ _perspicua_exuere (
 
 ## Task A4: pythonica — `arbor(sedes)`, rows with lines, TRANSPARENTIA refusal
 
+**Executed 2026-09-17.** As planned, plus one gate: the A3 case end to end (`x=1⏎echo a⏎echo a` → one row, line 2 column 1, `echo a`; `echo a⏎echo b` → none). It needs `cursus="fratrum"`: greedy binds `x=1` and never retries (0 rows, measured). Gate `PYTHONICA: sana`. Plant I (row closes without its position) → 3 red (relata, exemplaria lines, the twice rule); plant II (prelude without `attributa="sedes octeti"`) → 1 red (the twice rule, 0 rows). House census over the view, 237 `.sh` / 20 rules, 4.6 s: counts identical to the plain-view baseline except `exit-2` 263 → 270 = the seven `exit 2` lines `e12c1f46` added; 1,227 of 2,002 rows positioned, the 775 without are exactly the `<situs/>` rules; every `-nt` row's source slice reads `-nt`. The scratch census rule declared `tags="ante post"` alone and met the new refusal at once.
+
 **Files:**
 - Modify: `pythonica/silva.py` (`arbor` 3237-3260; `_TRANSPARENTIA`
   3292-3296; `Congruentia`/`Exemplaria` 3305-3307; `_relata` 3337-3388;
@@ -1966,7 +1968,7 @@ _perspicua_exuere (
   textus_fontis)`; `Exemplaria(summae, plagulae, congruentiae,
   fracturae, sine_sede)`; `_relata` rows are `(textus, sedes, octeti)`.
 
-- [ ] **Step 1: Failing tests.** In `probatio_silva.py`, the existing
+- [x] **Step 1: Failing tests.** In `probatio_silva.py`, the existing
   `rl ==` assertion becomes rows of triples, and new checks follow the
   exemplaria block:
 
@@ -2015,7 +2017,7 @@ except silva.SilvaError as ex:
   0–16, `if` 0–2. `via_nt1` has `-nt` at byte 7, `via_nt2` at byte 9.)
   Run `./pythonica/probare.sh` → red.
 
-- [ ] **Step 2: Implementation.**
+- [x] **Step 2: Implementation.**
 
 ```python
 def arbor(via, nudum=False, sedes=False):
@@ -2200,12 +2202,12 @@ def _relata(html_textus):
   sine_sede)`. Docstring: drop "ordines lineam non ferunt"; name the
   view, the new fields and the TRANSPARENTIA refusal.
 
-- [ ] **Step 3: Green; plant by hand.** `./pythonica/probare.sh` →
+- [x] **Step 3: Green; plant by hand.** `./pythonica/probare.sh` →
   `PYTHONICA: sana`. Plant: in `_relata` make the row close with
   `(textus, None, None)` → red on the row and exemplaria checks; revert →
   green.
 
-- [ ] **Step 4: Docs and commit.** README (the new parameters and
+- [x] **Step 4: Docs and commit.** README (the new parameters and
   fields), worklog. `silva.commissio` with portae `['pythonica']`.
 
 ---

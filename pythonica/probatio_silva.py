@@ -1462,6 +1462,15 @@ try:
     credo(False, 'arbor .sh nudum refutatur')
 except silva.SilvaError as ex:
     credo('nudum' in str(ex), 'arbor .sh nudum refutatur (solius silvae)')
+arb_sedes = silva.arbor(via_sh, sedes=True)
+credo('visio="sedes"' in arb_sedes and 'octeti="0-16"' in arb_sedes
+      and 'sedes="1:1-1:3"' in arb_sedes,
+      'arbor .sh sedes: visio, tractus conditionis et lexematis if')
+try:
+    silva.arbor(via, sedes=True)
+    credo(False, 'arbor .c sedes refutatur')
+except silva.SilvaError as ex:
+    credo('sedes' in str(ex), 'arbor .c sedes refutatur (clientium solum)')
 cc = silva.coctum(via_sh)
 credo(cc == silva.Coctum('if a; then\n    b;\nfi\n', True, 0, 0),
       'coctum: forma declare -f, commentum abiectum, sana: %r' % (cc,))
@@ -1477,12 +1486,19 @@ except silva.SilvaError:
     credo(True, 'coctum .c refutatur (solum .sh)')
 
 # relata: ordines = elementa filia (vacuum HTML sine clausura quoque),
-# relatum vacuum = nulli ordines, attributa praeter lint servata
+# relatum vacuum = nulli ordines, attributa praeter lint servata; ordo
+# (textus, sedes, octeti) - sedes ordinis ipsius aut descendentis primi
 rl = silva._relata(silva._vertere(
     '<relatum lint="vacuum"/>\n<relatum lint="x" pro="y"><situs>a &amp; b'
-    '</situs><situs><crusta-linea/><br/>c</situs><br/></relatum>\n'))
-credo(rl == [('vacuum', {}, []), ('x', {'pro': 'y'}, ['a & b', 'c', ''])],
-      'relata: ordines, textus decoctus, vacuum sine clausura: %r' % (rl,))
+    '</situs><situs sedes="2:1-2:4" octeti="5-8"><crusta-linea/><br/>c'
+    '</situs><situs><q sedes="3:3-3:4" octeti="9-10">d</q></situs>'
+    '<br/></relatum>\n'))
+credo(rl == [('vacuum', {}, []),
+             ('x', {'pro': 'y'}, [('a & b', None, None),
+                                  ('c', '2:1-2:4', '5-8'),
+                                  ('d', '3:3-3:4', '9-10'),
+                                  ('', None, None)])],
+      'relata: ordines cum sede propria aut prima descendentis: %r' % (rl,))
 
 via_nt1 = os.path.join(T, 'proba_nt1.sh')
 via_nt2 = os.path.join(T, 'proba_nt2.sh')
@@ -1510,6 +1526,36 @@ credo(len(ex_nt.congruentiae) == 3
       and all(c.textus == '-nt' for c in ex_nt.congruentiae)
       and ex_nt.congruentiae[0].attributa == {'pro': '! [ obj -nt src ]'},
       'exemplaria: congruentiae cum textu et attributis relati')
+credo({(c.via, c.linea, c.columna, c.textus_fontis)
+       for c in ex_nt.congruentiae}
+      == {(via_nt1, 1, 8, '-nt'), (via_nt2, 1, 10, '-nt')}
+      and ex_nt.sine_sede == {via_nt1: 0, via_nt2: 0},
+      'exemplaria: ordines cum linea, columna, textu fontis: %r'
+      % ([(c.via, c.linea, c.columna, c.textus_fontis)
+          for c in ex_nt.congruentiae],))
+# captura iterata sub visione sedium: imperium idem bis (A3 contentum +
+# praefatio attributorum sedium); imperium diversum nihil. cursus
+# fratrum: initium quodque temptatur (avida 'x=1' ligaret et numquam
+# retentaret - ZEPHYRUM ordines)
+via_bis = os.path.join(T, 'proba_bis.sh')
+via_non_bis = os.path.join(T, 'proba_non_bis.sh')
+open(via_bis, 'w').write('x=1\necho a\necho a\n')
+open(via_non_bis, 'w').write('echo a\necho b\n')
+ex_bis = silva.exemplaria(
+    [via_bis, via_non_bis],
+    '<EXEMPLAR cursus="fratrum" output="$b"><liberi><imperium $c/>'
+    '<separator/>'
+    '<imperium $c/></liberi></EXEMPLAR>\n'
+    '<relatum lint="imperium-bis"><PER congruentia="$b"><situs>&@c;'
+    '</situs></PER></relatum>\n')
+credo(ex_bis.plagulae == {via_bis: {'imperium-bis': 1},
+                          via_non_bis: {'imperium-bis': 0}}
+      and [(c.linea, c.columna, c.textus_fontis)
+           for c in ex_bis.congruentiae] == [(2, 1, 'echo a')],
+      'exemplaria: captura iterata sub visione sedium (imperium idem '
+      'bis, linea II): %r / %r'
+      % (ex_bis.plagulae, [(c.linea, c.columna, c.textus_fontis)
+                           for c in ex_bis.congruentiae]))
 ex_forma = silva.exemplaria('crusta/*.sh', REGULA_NT)
 credo('crusta/compile_probationes.sh' in ex_forma.plagulae
       and ex_forma.plagulae['crusta/compile_probationes.sh']['nt-omnes'] >= 1
@@ -1521,6 +1567,15 @@ try:
     credo(False, 'exemplaria: regula sine relato refutatur')
 except silva.SilvaError as ex:
     credo('relatum' in str(ex), 'exemplaria: regula sine relato refutatur')
+try:
+    silva.exemplaria(via_nt1, '<TRANSPARENTIA tags="ante post"/>\n'
+                     + REGULA_NT)
+    credo(False, 'exemplaria: TRANSPARENTIA sine attributis sedium '
+          'refutatur')
+except silva.SilvaError as ex:
+    credo('attributa' in str(ex),
+          'exemplaria: TRANSPARENTIA sine attributa="sedes octeti" '
+          'refutatur: %s' % ex)
 try:
     silva.exemplaria(via_nt1, '<EXEMPLAR output="$x"><imperium $n/></EXEMPLAR>'
                      '<relatum lint="i"><PER congruentia="$y"><situs/></PER>'
