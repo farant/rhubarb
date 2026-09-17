@@ -852,8 +852,14 @@ principale (vacuum)
      * 173 -> 176 (2026-09-14): plist, fasciculum, icones
      * (2026-09-11/12) - omnes latinizatae, purae, exactae; commissiones
      * eorum portam radicis solam cucurrerunt, pinna a commissione
-     * systema_posix inventa. */
-    CREDO_AEQUALIS_I32 (census_bibliothecae.plagulae, 176);
+     * systema_posix inventa.
+     *
+     * 176 -> 180 (2026-09-17): partitio, partitio_aestimatio
+     * (2026-09-14), entitates_html, entitates_html_tabula
+     * (2026-09-15) - omnes latinizatae, purae, exactae; pinna non
+     * mota, porta rubra a linea basis A3 plani materia-sedes inventa
+     * (quaestio 01M2Q1D2CB). */
+    CREDO_AEQUALIS_I32 (census_bibliothecae.plagulae, 180);
     CREDO_AEQUALIS_I32 (census_bibliothecae.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.recusae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.divergentes, ZEPHYRUM);
