@@ -271,29 +271,6 @@ _relata_legere (
 }
 
 interior vacuum
-_notam_scribere (
-    constans character* nota)
-{
-    i32 i;
-
-    si (nota == NIHIL)
-    {
-        redde;
-    }
-    per (i = ZEPHYRUM; nota[i] != '\0'; i++)
-    {
-        character c = nota[i];
-
-        si (   c == '|' || c == ';' || c == '\t' || c == '\n'
-            || c == '\r')
-        {
-            c = ' ';
-        }
-        putchar((integer)c);
-    }
-}
-
-interior vacuum
 _diagnosticum_imprimere (
                      Piscina* piscina,
           constans character* via,
@@ -318,39 +295,16 @@ constans MateriaDiagnosticum* d,
     }
     si (machina)
     {
-        i32 r;
+        /* SCRIPTOR UNUS: forma XII camporum in materia_pictor vivit,
+         * quia instrumenta DUO eam scribunt (hoc et crusta/facies) et
+         * porta quae ea comparat differentiam inter scriptores non
+         * videret. */
+        chorda linea = materia_pictor_machina(piscina, d, via);
 
-        imprimere("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t", via,
-            (integer)d->tractus.linea, (integer)d->tractus.columna,
-            (integer)d->tractus.linea_finis,
-            (integer)d->tractus.columna_finis,
-            (integer)d->tractus.initium, (integer)d->tractus.finis,
-            monitum ? "monitum" : "erratum", d->codex, d->causa);
-        /* XI: sedes relatae, 'L:C-L:C|nota' per ';' iunctae. ORDINES
-         * NOVI NON: ordo unus diagnosticum unum manet, aliter numerus
-         * quisque qui TSV quaerit tacite cresceret. */
-        per (r = ZEPHYRUM; r < d->numerus_relatorum; r++)
+        si (linea.mensura > ZEPHYRUM)
         {
-            constans MateriaTractus* t = &d->relata[r].tractus;
-
-            si (r > ZEPHYRUM)
-            {
-                putchar((integer)';');
-            }
-            imprimere("%d:%d-%d:%d@%d-%d", (integer)t->linea,
-                (integer)t->columna, (integer)t->linea_finis,
-                (integer)t->columna_finis, (integer)t->initium,
-                (integer)t->finis);
-            si (d->relata[r].nota != NIHIL)
-            {
-                putchar((integer)'|');
-                _notam_scribere(d->relata[r].nota);
-            }
+            fwrite(linea.datum, I, (size_t)linea.mensura, stdout);
         }
-        /* XII: nota sedis primariae */
-        putchar((integer)'\t');
-        _notam_scribere(d->nota);
-        putchar((integer)'\n');
         redde;
     }
     {

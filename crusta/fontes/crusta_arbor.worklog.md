@@ -712,3 +712,70 @@ family as "never `silva.Editio` on a `.sh`" — for a fixture whose BYTES
 are the point, only append or write the bytes; never round-trip it
 through a tool that may reflow or normalize. **A diff line you did not
 intend is the finding, even when the gate that follows is green.**
+
+## 2026-09-18 — crusta_facies: the facade, and the differential that governs it
+
+Task 4 of `project-specs/exemplaria-c-plan.md`. Three levels
+(`crusta_diagnostica_textus` / `_omnia` / `crusta_arbor_parsare`), an
+instrument (`crusta/facies.sh`), and the gate that decides whether any
+Python may be deleted.
+
+**The plan had a hole, and it was load-bearing.** Rule 1 is two
+`<relatum>` arms because SINE searches *downward* while the negation
+(`!`) sits *above* — Python did `A − B` by hand in
+`congruentiae_minus`. Neither spec nor plan said where that subtraction
+lives in C, and the extractor from Task 1 just emits rows per arm.
+Without it the facade reports **568 findings instead of 14**, and every
+one of the fourteen `<tolera codex="lint:nt-aequalitas">` annotations in
+the house misses its target.
+
+Fran's call: **declare it in the rule, perform it in materia.** The
+auxiliary arm carries `minuit="nt-aequalitas"`;
+`materia_exemplaria_minuere` subtracts by `initium` within one expanded
+document, never emits the auxiliary arm's own rows, and REFUSES with a
+named cause when the auxiliary arm is not a subset of its target — a
+number quietly too small is the failure worth preventing. materia reads
+an attribute, not a rule name, so it still knows nothing about clients.
+
+Consequence worth recording: `nt-omnes` was renamed to `nt-aequalitas`.
+The fourteen annotations already said `lint:nt-aequalitas`, so the arm
+names were internal all along; now the rule's public name is its
+filename and nobody renames rows downstream.
+
+**The `-cruda` flag is not a convenience.** Two consumers need the arms
+unsubtracted: this gate's wide comparison, and (Task 6) `exemplaria`'s
+Python face, whose 291/277 pins are per-arm.
+
+**The differential, and why it is two comparisons.** Comparing only the
+surviving rows would compare **14 rows over 232 files** — a defect in
+any of the 277 subtracted rows could never show. So the gate runs both:
+raw arms (568) gates the extractor, post-subtraction (14) gates the
+subtraction. Both sides are counted and both counts are pinned, because
+two empty files diff clean and that is how this house last shipped a
+gate that measured nothing.
+
+Green at first run, 232 files, zero divergences either way — which
+proves nothing until planted. Two plants:
+
+| plant | result |
+|---|---|
+| descent into captured subtrees restored | `cruda` red, 1136 rows, files named |
+| subtraction guard inverted | `plena` red — and `cruda`/`plena` counts swap, 14/568 |
+
+**The gate was flaky, and the flakiness taught something.** Run
+immediately after a rebuild, `silva.exemplaria`'s six parallel workers
+raced the not-yet-linked crusta instrument and returned "2 plagulae
+fractae"; separately, `facies.sh`'s staleness guard refused on a
+same-second tie. Both exited 2 — *refusing to measure* rather than
+measuring wrong, which is the contract working. Fixed by warming the
+instrument with one serial `silva.arbor` call before the parallel map.
+A gate that intermittently refuses is still a gate you stop trusting.
+
+**One TSV writer, not two.** `crusta/facies.sh -machina` and
+`tools/diagnostica -machina` both emit the 12-field table, and a
+divergence between two writers would fool the very gate that compares
+them. The body moved to `materia_pictor_machina`; the fumus gate's
+byte-reversal checks stayed green, which is the proof no byte moved.
+It also fixed a latent asymmetry: the tool printed `causa` unescaped
+while Python escaped it — harmless today (causes are ≤ LX bytes without
+control characters) but a tab in a cause would have split a row.

@@ -118,17 +118,29 @@ nomen structura {
      * ordines ZERO reddebat, proiectione et regula ambabus rectis.
      * NIHIL licet si 'regulae' NIHIL est. */
              InternamentumChorda* intern;
+    /* VERUM = subtractiones DECLARATAS ('<relatum minuit="X">', vide
+     * materia_exemplaria.h) NON applicare: bracchia CRUDA reddit, ut
+     * auctor regulae ea scripsit. Numeri per bracchium et differentia
+     * contra extractorem priorem hoc poscunt; via ordinaria FALSUM. */
+                                 b32 crudum;
 } MateriaDiagnosticaRatio;
 
 /* Xar NOVUM de MateriaDiagnosticum, ordine (initium, codex).
  * 'emissa' (NIHIL licet) diagnostica a parsatore nata fert - quod
  * arbor non servat, solus parsator scit.
- * NIHIL = argumentum necessarium abest aut memoria defecit. */
+ *
+ * 'causa' (NIHIL licet) refutationem NOMINAT ubi una est - hodie sola
+ * bracchia vaga (materia_exemplaria_minuere). NIHIL tacitum refutatio
+ * muta esset, et regula fracta numerum minorem tacite redderet.
+ *
+ * NIHIL = argumentum necessarium abest, memoria defecit, aut regula
+ * refutata est ('causa' posita). */
 Xar*
 materia_diagnostica_plena (
-                             Piscina* piscina,
-               constans MateriaNodus* radix,
-    constans MateriaDiagnosticaRatio* ratio,
-                                 Xar* emissa);
+                             Piscina*  piscina,
+               constans MateriaNodus*  radix,
+    constans MateriaDiagnosticaRatio*  ratio,
+                                 Xar*  emissa,
+                  constans character** causa);
 
 #endif /* MATERIA_DIAGNOSTICA_H */

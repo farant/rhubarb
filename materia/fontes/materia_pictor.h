@@ -68,4 +68,37 @@ constans MateriaDiagnosticum* d,
                          i32  mensura,
                          b32  excerptum);
 
+
+/* ==================================================
+ * Forma machinae (XII campi)
+ * ==================================================
+ *
+ * Ordo unus, tabulatis separatus, linea nova terminatus:
+ *
+ *   via  linea  columna  linea_finis  columna_finis  initium  finis
+ *   gravitas  codex  causa  relata  nota
+ *
+ * 'relata' sedes relatas 'L:C-L:C@B-B|nota' per ';' iunctas fert.
+ * ORDINES NOVI NON: ordo unus diagnosticum unum manet, aliter numerus
+ * quisque qui hanc tabulam legit tacite cresceret.
+ *
+ * '|', ';', tabulatum, linea nova in campis spatia fiunt - aliter
+ * nota una tabulam frangeret.
+ *
+ * CODEX CRUDUS: grammatica NON praefigitur. Forma humana eam
+ * praefigit quia usor eam legit; haec machinis est, et lector
+ * ('-lege') eam ita relegit.
+ *
+ * HIC, NON IN INSTRUMENTO: instrumenta DUO hanc tabulam iam scribunt
+ * (tools/diagnostica, crusta/facies) et differentia inter ea eandem
+ * portam falleret quae eos comparat.
+ *
+ * Chorda vacua = argumentum abest aut memoria defecit. */
+
+chorda
+materia_pictor_machina (
+                     Piscina* piscina,
+constans MateriaDiagnosticum* d,
+          constans character* via);
+
 #endif /* MATERIA_PICTOR_H */

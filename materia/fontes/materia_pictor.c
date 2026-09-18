@@ -165,3 +165,142 @@ constans MateriaDiagnosticum* d,
     (vacuum)excerptum_scribere_multa(a, fons, mensura, sedes, numerus);
     redde chorda_aedificator_finire(a);
 }
+
+
+/* ==================================================
+ * Forma machinae
+ * ================================================== */
+
+/* '|', ';', tabulatum, linea nova campum frangerent: spatia fiunt */
+interior b32
+_notam_addere (
+      ChordaAedificator* a,
+     constans character* nota)
+{
+    i32 i;
+
+    si (nota == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; nota[i] != '\0'; i++)
+    {
+        character c = nota[i];
+
+        si (   c == '|' || c == ';' || c == '\t' || c == '\n'
+            || c == '\r')
+        {
+            c = ' ';
+        }
+        si (!chorda_aedificator_appendere_character(a, c))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_tractum_addere (
+          ChordaAedificator* a,
+    constans MateriaTractus* t)
+{
+    redde (b32)(
+           chorda_aedificator_appendere_i32(a, t->linea)
+        && chorda_aedificator_appendere_character(a, ':')
+        && chorda_aedificator_appendere_i32(a, t->columna)
+        && chorda_aedificator_appendere_character(a, '-')
+        && chorda_aedificator_appendere_i32(a, t->linea_finis)
+        && chorda_aedificator_appendere_character(a, ':')
+        && chorda_aedificator_appendere_i32(a, t->columna_finis)
+        && chorda_aedificator_appendere_character(a, '@')
+        && chorda_aedificator_appendere_s32(a, t->initium)
+        && chorda_aedificator_appendere_character(a, '-')
+        && chorda_aedificator_appendere_s32(a, t->finis));
+}
+
+chorda
+materia_pictor_machina (
+                     Piscina* piscina,
+constans MateriaDiagnosticum* d,
+          constans character* via)
+{
+    ChordaAedificator* a;
+                  b32  monitum;
+                  i32  r;
+               chorda  vacua;
+
+    memset(&vacua, ZEPHYRUM, magnitudo(vacua));
+    si (piscina == NIHIL || d == NIHIL || via == NIHIL)
+    {
+        redde vacua;
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    si (a == NIHIL)
+    {
+        redde vacua;
+    }
+    monitum = (b32)(d->gravitas == (s32)MATERIA_GRAVITAS_MONITUM);
+    si (!(   chorda_aedificator_appendere_literis(a, via)
+          && chorda_aedificator_appendere_character(a, '\t')
+          && chorda_aedificator_appendere_i32(a, d->tractus.linea)
+          && chorda_aedificator_appendere_character(a, '\t')
+          && chorda_aedificator_appendere_i32(a, d->tractus.columna)
+          && chorda_aedificator_appendere_character(a, '\t')
+          && chorda_aedificator_appendere_i32(a,
+                 d->tractus.linea_finis)
+          && chorda_aedificator_appendere_character(a, '\t')
+          && chorda_aedificator_appendere_i32(a,
+                 d->tractus.columna_finis)
+          && chorda_aedificator_appendere_character(a, '\t')
+          && chorda_aedificator_appendere_s32(a, d->tractus.initium)
+          && chorda_aedificator_appendere_character(a, '\t')
+          && chorda_aedificator_appendere_s32(a, d->tractus.finis)
+          && chorda_aedificator_appendere_character(a, '\t')
+          && chorda_aedificator_appendere_literis(a,
+                 monitum ? "monitum" : "erratum")
+          && chorda_aedificator_appendere_character(a, '\t')
+          && chorda_aedificator_appendere_literis(a, d->codex)
+          && chorda_aedificator_appendere_character(a, '\t')))
+    {
+        redde vacua;
+    }
+    si (!_notam_addere(a, d->causa))
+    {
+        redde vacua;
+    }
+    si (!chorda_aedificator_appendere_character(a, '\t'))
+    {
+        redde vacua;
+    }
+    per (r = ZEPHYRUM; r < d->numerus_relatorum; r++)
+    {
+        si (   r > ZEPHYRUM
+            && !chorda_aedificator_appendere_character(a, ';'))
+        {
+            redde vacua;
+        }
+        si (!_tractum_addere(a, &d->relata[r].tractus))
+        {
+            redde vacua;
+        }
+        si (d->relata[r].nota != NIHIL)
+        {
+            si (   !chorda_aedificator_appendere_character(a, '|')
+                || !_notam_addere(a, d->relata[r].nota))
+            {
+                redde vacua;
+            }
+        }
+    }
+    si (!chorda_aedificator_appendere_character(a, '\t'))
+    {
+        redde vacua;
+    }
+    si (   !_notam_addere(a, d->nota)
+        || !chorda_aedificator_appendere_character(a, '\n'))
+    {
+        redde vacua;
+    }
+    redde chorda_aedificator_finire(a);
+}

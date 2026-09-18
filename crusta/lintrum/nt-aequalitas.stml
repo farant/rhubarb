@@ -17,6 +17,12 @@
   LEX C8: 'pipa' SOLUM cum '|', '!' aut 'time' exsistit. Ergo probatio
   nuda pipam OMNINO non habet, et 'negatum esse' est exacte 'in pipa
   sedere cuius praefixa "!" ferunt'. Nulla forma tertia.
+
+  DIFFERENTIA DECLARATUR, NON COMPUTATUR ALIUNDE. Bracchium negativum
+  'minuit' fert: extractor ordines eius ex lintre nominata per SEDEM
+  tollit, et bracchium ipsum numquam emittitur - inventum non est,
+  conditio est. Ita arithmetica in REGULA vivit, ubi auctor eam legit,
+  non in cliente qui bracchia nominare deberet.
 -->
 <EXEMPLAR output="$omnes">
   <crusta-litteralis $t>-nt</crusta-litteralis>
@@ -28,7 +34,7 @@
   </pipa>
 </EXEMPLAR>
 
-<relatum lint="nt-omnes" gravitas="erratum"
+<relatum lint="nt-aequalitas" gravitas="erratum"
          causa="'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur">
   <PER congruentia="$omnes"><situs>&@t;</situs></PER></relatum>
-<relatum lint="nt-negata"><PER congruentia="$negata"><situs>&@n;</situs></PER></relatum>
+<relatum lint="nt-negata" minuit="nt-aequalitas"><PER congruentia="$negata"><situs>&@n;</situs></PER></relatum>

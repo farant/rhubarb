@@ -29,7 +29,8 @@ compilare () {
 }
 for f in piscina chorda chorda_aedificator xar friatio tabula_dispersa \
          internamentum stml stml_macros selectio similitudo canon credo \
-         processus_posix css_lexema excerptum utf8; do
+         processus_posix css_lexema excerptum utf8 \
+         iter_directoria via; do
     compilare "$RADIX_DIR/lib/$f.c" "$BUILD_DIR/$f.o"
 done
 for m in materia_lexicon materia_token materia_nodus materia_scribere \

@@ -691,11 +691,12 @@ _transferre (
  * regulis omnibus servit: parsura una, proiectio una. */
 interior b32
 _gradus_secundus (
-                          Piscina* piscina,
-            constans MateriaNodus* radix,
- constans MateriaDiagnosticaRatio* ratio,
-              InternamentumChorda* intern,
-                              Xar* exitus)
+                          Piscina*  piscina,
+            constans MateriaNodus*  radix,
+ constans MateriaDiagnosticaRatio*  ratio,
+              InternamentumChorda*  intern,
+                              Xar*  exitus,
+               constans character** causa)
 {
     MateriaArborConsilium consilium;
     MateriaArborScriptura scriptura;
@@ -734,11 +735,22 @@ StmlExpansioResultus  expansio;
         {
             redde FALSUM;
         }
-        si (!_transferre(exitus,
-                materia_exemplaria_extrahere(piscina,
-                expansio.radix_expansa)))
         {
-            redde FALSUM;
+            Xar* ordines = materia_exemplaria_extrahere(piscina,
+                               expansio.radix_expansa);
+
+            /* SUBTRACTIO PER REGULAM, non per acervum totum:
+             * bracchia in documento UNO vivunt, et sedes clavis est -
+             * ordines regulae alterius sedes easdem ferre possunt. */
+            si (ordines != NIHIL && !ratio->crudum)
+            {
+                ordines = materia_exemplaria_minuere(piscina,
+                    expansio.radix_expansa, ordines, causa);
+            }
+            si (ordines == NIHIL || !_transferre(exitus, ordines))
+            {
+                redde FALSUM;
+            }
         }
     }
     redde VERUM;
@@ -746,15 +758,20 @@ StmlExpansioResultus  expansio;
 
 Xar*
 materia_diagnostica_plena (
-                          Piscina* piscina,
-            constans MateriaNodus* radix,
- constans MateriaDiagnosticaRatio* ratio,
-                              Xar* emissa)
+                          Piscina*  piscina,
+            constans MateriaNodus*  radix,
+ constans MateriaDiagnosticaRatio*  ratio,
+                              Xar*  emissa,
+               constans character** causa)
 {
     InternamentumChorda* intern;
                     Xar* exitus;
                     Xar* annotationes = NIHIL;
 
+    si (causa != NIHIL)
+    {
+        *causa = NIHIL;
+    }
     si (   piscina == NIHIL || radix == NIHIL || ratio == NIHIL
         || ratio->tabularium == NIHIL || ratio->lexicon == NIHIL)
     {
@@ -779,7 +796,8 @@ materia_diagnostica_plena (
     {
         redde NIHIL;
     }
-    si (!_gradus_secundus(piscina, radix, ratio, intern, exitus))
+    si (!_gradus_secundus(piscina, radix, ratio, intern, exitus,
+            causa))
     {
         redde NIHIL;
     }

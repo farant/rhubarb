@@ -1765,8 +1765,13 @@ print('--- regula I crustae: nt-aequalitas (bracchium negativum) ---')
 # aut corpus crevit aut regula mutata est - utrumque nominandum.
 _REG_NT = 'crusta/lintrum/nt-aequalitas.stml'
 _ex_nt = silva.exemplaria('*.sh', _REG_NT)
+# BRACCHIUM POSITIVUM NOMEN REGULAE IPSIUS FERT (2026-09-18):
+# 'nt-omnes' nomen internum erat, et annotationes domus omnes
+# 'lint:nt-aequalitas' iam nominabant. Bracchium negativum se
+# AUXILIARE declarat ('minuit'), ergo extractor C differentiam sumit
+# et nomen novum nemo dat.
 _omnes = {(c.via, c.initium) for c in _ex_nt.congruentiae
-          if c.lint == 'nt-omnes'}
+          if c.lint == 'nt-aequalitas'}
 _negata = {(c.via, c.initium) for c in _ex_nt.congruentiae
            if c.lint == 'nt-negata'}
 credo(len(_omnes) == 291 and len(_negata) == 277,
@@ -1777,8 +1782,8 @@ credo(len(_omnes) == 291 and len(_negata) == 277,
 credo(_negata <= _omnes,
       'regula nt: bracchium negativum subset positivi (%d vagae)'
       % len(_negata - _omnes))
-_cand = silva.congruentiae_minus(_ex_nt.congruentiae, 'nt-omnes',
-                                 'nt-negata', lint='nt-aequalitas')
+_cand = silva.congruentiae_minus(_ex_nt.congruentiae,
+                                 'nt-aequalitas', 'nt-negata')
 credo(len(_cand) == 14,
       'regula nt: A-B = XIV candidati (%d)' % len(_cand))
 credo(all(c.lint == 'nt-aequalitas' for c in _cand),
@@ -1787,7 +1792,7 @@ credo(all(c.lint == 'nt-aequalitas' for c in _cand),
 # numerum falsum reddunt.
 try:
     silva.congruentiae_minus(_ex_nt.congruentiae, 'nt-negata',
-                             'nt-omnes')
+                             'nt-aequalitas')
     credo(False, 'congruentiae_minus: bracchia vaga refutantur')
 except silva.SilvaError as _ex:
     credo('sedes diversas' in str(_ex),

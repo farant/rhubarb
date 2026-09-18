@@ -86,6 +86,90 @@ hic_manens constans character* REGULA_TEXTUS =
       "<PER congruentia=\"$v\"><situs>&@t;</situs></PER>"
     "</relatum>";
 
+/* gradus II, DUO BRACCHIA: 'omne-verbum' verbum quodque capit,
+ * 'verbum-alpha' ea quorum lexema 'alpha' est et se AUXILIARE
+ * declarat. III - II = I superest.
+ *
+ * NUMERI DISPARES CONSULTO (III capta, II subtracta, I superstes):
+ * fixtura cuius bracchia numeros AEQUALES ferrent subtractionem a
+ * supressione tota discernere non posset. */
+hic_manens constans character* REGULA_BRACCHIORUM =
+    "<EXEMPLAR output=\"$v\"><verbum $t/></EXEMPLAR>"
+    "<EXEMPLAR output=\"$a\">"
+      "<verbum $n><**><lex-ident>alpha</lex-ident></**></verbum>"
+    "</EXEMPLAR>"
+    "<relatum lint=\"omne-verbum\">"
+      "<PER congruentia=\"$v\"><situs>&@t;</situs></PER>"
+    "</relatum>"
+    "<relatum lint=\"verbum-alpha\" minuit=\"omne-verbum\">"
+      "<PER congruentia=\"$a\"><situs>&@n;</situs></PER>"
+    "</relatum>";
+
+/* Bracchium auxiliare quod sedes EXTRA destinatum capit ('malum'
+ * nusquam in 'omne-verbum' est): differentia nihil significaret, ergo
+ * REFUTATIO NOMINATA. */
+hic_manens constans character* REGULA_VAGA =
+    "<EXEMPLAR output=\"$v\"><verbum $t/></EXEMPLAR>"
+    "<EXEMPLAR output=\"$m\"><malum $n/></EXEMPLAR>"
+    "<relatum lint=\"omne-verbum\">"
+      "<PER congruentia=\"$v\"><situs>&@t;</situs></PER>"
+    "</relatum>"
+    "<relatum lint=\"malum-vagum\" minuit=\"omne-verbum\">"
+      "<PER congruentia=\"$m\"><situs>&@n;</situs></PER>"
+    "</relatum>";
+
+/* Regulam unam legere et in Xar ponere; NIHIL = lectio fracta. */
+hic_manens Xar*
+_regulae (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* textus)
+{
+    StmlResultus   r;
+             Xar*  exitus;
+       StmlNodus** cella;
+
+    r = stml_legere_ex_literis(textus, piscina, intern);
+    si (!r.successus)
+    {
+        redde NIHIL;
+    }
+    exitus = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    cella = (StmlNodus**)xar_addere(exitus);
+    si (cella == NIHIL)
+    {
+        redde NIHIL;
+    }
+    *cella = r.radix;
+    redde exitus;
+}
+
+/* Quot ordines lintrem hanc ferant. */
+hic_manens i32
+_quot (
+      constans Xar* d,
+constans character* codex)
+{
+    i32 k;
+    i32 summa = ZEPHYRUM;
+
+    per (k = ZEPHYRUM; k < xar_numerus(d); k++)
+    {
+        constans MateriaDiagnosticum* x =
+            (constans MateriaDiagnosticum*)xar_obtinere(d, k);
+
+        si (strcmp(x->codex, codex) == ZEPHYRUM)
+        {
+            summa++;
+        }
+    }
+    redde summa;
+}
+
 hic_manens MateriaToken*
 _lex (
                Piscina* piscina,
@@ -197,7 +281,8 @@ MateriaDiagnosticaRatio  ratio;
             materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
                 (s32)110, NIHIL, ZEPHYRUM)),
             MATERIA_LOCUS_LISTA_NODUS));
-        d = materia_diagnostica_plena(piscina, radix, &ratio, NIHIL);
+        d = materia_diagnostica_plena(piscina, radix, &ratio, NIHIL,
+            NIHIL);
         CREDO_NON_NIHIL (d);
         /* gradus I 'malum' + gradus II 'omne-verbum' = DUO */
         CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)II);
@@ -222,7 +307,8 @@ MateriaDiagnosticaRatio  ratio;
                 "# <tolera codex=\"lint:omne-verbum\" (>consulto",
                 (s32)103)),
             MATERIA_LOCUS_LISTA_NODUS));
-        d = materia_diagnostica_plena(piscina, radix, &ratio, NIHIL);
+        d = materia_diagnostica_plena(piscina, radix, &ratio, NIHIL,
+            NIHIL);
         CREDO_NON_NIHIL (d);
         per (k = ZEPHYRUM; k < xar_numerus(d); k++)
         {
@@ -255,11 +341,108 @@ MateriaDiagnosticaRatio  sine;
             materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
                 (s32)110, NIHIL, ZEPHYRUM)),
             MATERIA_LOCUS_LISTA_NODUS));
-        sine = ratio;
-        sine.regulae = NIHIL;
-        d = materia_diagnostica_plena(piscina, radix, &sine, NIHIL);
+        sine          = ratio;
+        sine.regulae  = NIHIL;
+        d = materia_diagnostica_plena(piscina, radix, &sine, NIHIL,
+            NIHIL);
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_I32 (xar_numerus(d), ZEPHYRUM);
+    }
+
+    {
+        MateriaNodus* radix = materia_nodus_creare(piscina,
+                                  (s32)GR_RADIX, (i32)I);
+MateriaDiagnosticaRatio  duo;
+                    Xar* d;
+     constans character* causa = NIHIL;
+
+        imprimere("\n--- IV. Subtractio declarata: III - II = I ---\n");
+        CREDO_NON_NIHIL (radix);
+        CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+            materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
+                (s32)110, NIHIL, ZEPHYRUM)),
+            MATERIA_LOCUS_LISTA_NODUS));
+        CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+            materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "beta",
+                (s32)120, NIHIL, ZEPHYRUM)),
+            MATERIA_LOCUS_LISTA_NODUS));
+        CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+            materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
+                (s32)130, NIHIL, ZEPHYRUM)),
+            MATERIA_LOCUS_LISTA_NODUS));
+        duo          = ratio;
+        duo.regulae  = _regulae(piscina, intern, REGULA_BRACCHIORUM);
+        CREDO_NON_NIHIL (duo.regulae);
+        d = materia_diagnostica_plena(piscina, radix, &duo, NIHIL,
+                &causa);
+        CREDO_NON_NIHIL (d);
+        CREDO_NIHIL (causa);
+        si (d != NIHIL)
+        {
+            /* SEDES SUPERSTITIS, non numerus solus: 'beta' superesse
+             * DEBET. Numerus solus subtractionem rectam a subtractione
+             * inversa non discerneret. */
+            CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)I);
+            CREDO_AEQUALIS_I32 (_quot(d, "lint:omne-verbum"), (i32)I);
+            /* bracchium auxiliare inventum non est:
+             * NUMQUAM emittitur */
+            CREDO_AEQUALIS_I32 (_quot(d, "lint:verbum-alpha"),
+                ZEPHYRUM);
+            si (xar_numerus(d) == (i32)I)
+            {
+                constans MateriaDiagnosticum* x =
+                    (constans MateriaDiagnosticum*)xar_obtinere(d,
+                        ZEPHYRUM);
+
+                CREDO_AEQUALIS_S32 (x->tractus.initium, (s32)120);
+            }
+        }
+
+        imprimere("\n--- V. 'crudum': bracchia INTACTA ---\n");
+        duo.crudum  = VERUM;
+        causa       = NIHIL;
+        d = materia_diagnostica_plena(piscina, radix, &duo, NIHIL,
+                &causa);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_quot(d, "lint:omne-verbum"), (i32)III);
+            CREDO_AEQUALIS_I32 (_quot(d, "lint:verbum-alpha"), (i32)II);
+            CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)V);
+        }
+    }
+
+    {
+        MateriaNodus* radix = materia_nodus_creare(piscina,
+                                  (s32)GR_RADIX, (i32)I);
+MateriaDiagnosticaRatio  vaga;
+                    Xar* d;
+     constans character* causa = NIHIL;
+
+        imprimere("\n--- VI. Bracchium vagum REFUTATUR ---\n");
+        CREDO_NON_NIHIL (radix);
+        CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+            materia_valor_nodus(_nodus(piscina, (s32)GR_MALUM, "@@",
+                (s32)100, NIHIL, ZEPHYRUM)),
+            MATERIA_LOCUS_LISTA_NODUS));
+        CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+            materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
+                (s32)110, NIHIL, ZEPHYRUM)),
+            MATERIA_LOCUS_LISTA_NODUS));
+        vaga          = ratio;
+        vaga.regulae  = _regulae(piscina, intern, REGULA_VAGA);
+        CREDO_NON_NIHIL (vaga.regulae);
+        d = materia_diagnostica_plena(piscina, radix, &vaga, NIHIL,
+                &causa);
+        /* NUMERUS MINOR TACITUS PERNICIES ESSET: sedes bracchii
+         * auxiliaris extra destinatum iacens regulam FRACTAM
+         * nominat. */
+        CREDO_NIHIL (d);
+        CREDO_NON_NIHIL (causa);
+        si (causa != NIHIL)
+        {
+            CREDO_VERUM (strstr(causa, "sedes diversas") != NIHIL);
+        }
     }
 
     imprimere("\n");

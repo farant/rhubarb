@@ -431,3 +431,206 @@ materia_exemplaria_extrahere (
     _quaerere(piscina, exitus, expansum);
     redde exitus;
 }
+
+
+/* ==================================================
+ * Subtractio declarata
+ * ================================================== */
+
+nomen structura {
+    constans character* auxiliaris;   /* lint bracchii ipsius */
+    constans character* destinatum;   /* quod 'minuit' nominat */
+} SubtractioDeclarata;
+
+/* an codex ('lint:X') lintrem nominatam ferat */
+interior b32
+_codex_lintris (
+    constans character* codex,
+    constans character* lint)
+{
+    si (codex == NIHIL || lint == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (strncmp(codex, "lint:", V) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde (b32)(strcmp(codex + V, lint) == ZEPHYRUM);
+}
+
+/* an ordo ullus lintris nominatae sedem hanc teneat */
+interior b32
+_sedes_adest (
+        constans Xar* ordines,
+  constans character* lint,
+                 s32  initium)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(ordines); k++)
+    {
+        constans MateriaDiagnosticum* d =
+            (constans MateriaDiagnosticum*)xar_obtinere(ordines, k);
+
+        si (   _codex_lintris(d->codex, lint)
+            && d->tractus.initium == initium)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Bracchia auxiliaria declarata colligere ('<relatum minuit="X">'). */
+interior vacuum
+_subtractiones_quaerere (
+       Piscina* piscina,
+           Xar* exitus,
+     StmlNodus* n)
+{
+    i32 k;
+
+    si (!_elementum_est(n) && n->genus != STML_NODUS_DOCUMENTUM)
+    {
+        redde;
+    }
+    si (   _elementum_est(n) && n->titulus != NIHIL
+        && chorda_aequalis_literis(*n->titulus, "relatum"))
+    {
+        constans character* lint    = _attributum(piscina, n, "lint");
+        constans character* minuit  = _attributum(piscina, n, "minuit");
+
+        si (lint != NIHIL && minuit != NIHIL)
+        {
+            SubtractioDeclarata* s =
+                (SubtractioDeclarata*)xar_addere(exitus);
+
+            si (s != NIHIL)
+            {
+                s->auxiliaris = lint;
+                s->destinatum = minuit;
+            }
+        }
+        redde;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(n->liberi); k++)
+    {
+        _subtractiones_quaerere(piscina, exitus,
+            *(StmlNodus**)xar_obtinere(n->liberi, k));
+    }
+}
+
+/* Causa refutationis, sede prima vaga nominata. */
+interior constans character*
+_causa_vaga (
+                      Piscina* piscina,
+ constans SubtractioDeclarata* s,
+                          s32  initium)
+{
+    character* c = (character*)piscina_allocare(piscina, CCLVI);
+
+    si (c == NIHIL)
+    {
+        redde NIHIL;
+    }
+    sprintf(c, "bracchium '%s' sedem %d extra '%s' tenet - bracchia "
+        "sedes diversas capiunt, differentia nihil significat",
+        s->auxiliaris, (integer)initium, s->destinatum);
+    redde c;
+}
+
+Xar*
+materia_exemplaria_minuere (
+               Piscina*  piscina,
+             StmlNodus*  expansum,
+          constans Xar*  ordines,
+    constans character** causa)
+{
+    Xar* subtractiones;
+    Xar* exitus;
+    i32  k;
+
+    si (causa != NIHIL)
+    {
+        *causa = NIHIL;
+    }
+    si (piscina == NIHIL || expansum == NIHIL || ordines == NIHIL)
+    {
+        redde NIHIL;
+    }
+    subtractiones = xar_creare(piscina,
+        (i32)magnitudo(SubtractioDeclarata));
+    exitus = xar_creare(piscina, (i32)magnitudo(MateriaDiagnosticum));
+    si (subtractiones == NIHIL || exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    _subtractiones_quaerere(piscina, subtractiones, expansum);
+    /* CUSTODIA ANTE OMNIA: sedes bracchii auxiliaris quae in destinato
+     * non est regulam FRACTAM nominat, non numerum minorem. */
+    per (k = ZEPHYRUM; k < xar_numerus(subtractiones); k++)
+    {
+        constans SubtractioDeclarata* s =
+            (constans SubtractioDeclarata*)xar_obtinere(subtractiones,
+                k);
+        i32 j;
+
+        per (j = ZEPHYRUM; j < xar_numerus(ordines); j++)
+        {
+            constans MateriaDiagnosticum* d =
+                (constans MateriaDiagnosticum*)xar_obtinere(ordines, j);
+
+            si (   _codex_lintris(d->codex, s->auxiliaris)
+                && !_sedes_adest(ordines, s->destinatum,
+                       d->tractus.initium))
+            {
+                si (causa != NIHIL)
+                {
+                    *causa = _causa_vaga(piscina, s,
+                                 d->tractus.initium);
+                }
+                redde NIHIL;
+            }
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(ordines); k++)
+    {
+        constans MateriaDiagnosticum* d =
+            (constans MateriaDiagnosticum*)xar_obtinere(ordines, k);
+        b32 tollendus = FALSUM;
+        i32 j;
+
+        per (j = ZEPHYRUM;
+             j < xar_numerus(subtractiones) && !tollendus; j++)
+        {
+            constans SubtractioDeclarata* s =
+                (constans SubtractioDeclarata*)xar_obtinere(
+                    subtractiones, j);
+
+            si (_codex_lintris(d->codex, s->auxiliaris))
+            {
+                /* bracchium auxiliare inventum non est */
+                tollendus = VERUM;
+            }
+            alioquin si (   _codex_lintris(d->codex, s->destinatum)
+                         && _sedes_adest(ordines, s->auxiliaris,
+                                d->tractus.initium))
+            {
+                tollendus = VERUM;
+            }
+        }
+        si (!tollendus)
+        {
+            MateriaDiagnosticum* cella =
+                (MateriaDiagnosticum*)xar_addere(exitus);
+
+            si (cella == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *cella = *d;
+        }
+    }
+    redde exitus;
+}

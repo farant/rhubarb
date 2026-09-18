@@ -98,4 +98,41 @@ materia_exemplaria_extrahere (
     Piscina* piscina,
   StmlNodus* expansum);
 
+
+/* ==================================================
+ * Subtractio declarata
+ * ==================================================
+ *
+ * CUR OMNINO: exemplar DEORSUM quaerit, et conditio quaedam SUPRA
+ * inventum sedet. Ordo ad inventum radicatus conditionem suam videre
+ * NON potest; ordo ad documentum radicatus eam NIMIS LATE videt, et
+ * inventa OMNIA necaret. Ergo auctor regulae bracchia DUO scribit et
+ * differentiam DECLARAT:
+ *
+ *     <relatum lint="nt-aequalitas" gravitas="erratum">...</relatum>
+ *     <relatum lint="nt-negata" minuit="nt-aequalitas">...</relatum>
+ *
+ * Bracchium cum 'minuit' AUXILIARE est: ordines suos ex lintre nominata
+ * per SEDEM tollit, et ipse numquam emittitur - inventum non est,
+ * conditio est. Nomina lintrium AUCTORIS sunt; hoc nullum novit.
+ *
+ * SEDES clavis est (initium), non textus: inventa duo eiusdem textus
+ * in plagula una communia sunt. Documentum unum plagula una est, ergo
+ * via clavem non intrat (Python, quae plagulas multas simul tractabat,
+ * '(via, initium)' poscebat).
+ *
+ * CUSTODIA: si bracchium auxiliare subset positivi non est, bracchia
+ * sedes DIVERSAS capiunt et differentia nihil significat - NIHIL cum
+ * causa nominata, numquam numerus tacite falsus.
+ *
+ * Xar NOVUM reddit; 'ordines' immotum manet. NIHIL = memoria defecit
+ * aut bracchia vaga ('causa' posita si datur). */
+
+Xar*
+materia_exemplaria_minuere (
+               Piscina*  piscina,
+             StmlNodus*  expansum,
+          constans Xar*  ordines,
+    constans character** causa);      /* NIHIL licet */
+
 #endif /* MATERIA_EXEMPLARIA_H */
