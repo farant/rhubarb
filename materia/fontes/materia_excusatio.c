@@ -59,6 +59,48 @@ _causam_habet (
     redde FALSUM;
 }
 
+/* An codex petitus huic codici congruat, forma NUDA aut PICTA.
+ *
+ * Pictor '<grammatica>:' codici sine ':' praefigit
+ * (tools/diagnostica.c), ergo usor 'crusta:grex/tok_clausura' legit
+ * dum codex ipse 'grex/tok_clausura' est. EX1 promittit id quod usor
+ * VIDIT sufficere; ergo ambae formae congruunt. Codices substrati et
+ * lintris ':' iam ferunt et per viam primam solam eunt. */
+interior b32
+_codex_congruit (
+    constans chorda* petitus,
+ constans character* codex,
+ constans character* grammatica)
+{
+    i32 g;
+    i32 n;
+
+    si (petitus == NIHIL || codex == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(*petitus, codex))
+    {
+        redde VERUM;
+    }
+    si (grammatica == NIHIL || strchr(codex, ':') != NIHIL)
+    {
+        redde FALSUM;
+    }
+    g = (i32)strlen(grammatica);
+    n = (i32)strlen(codex);
+    si (petitus->mensura != g + (i32)I + n)
+    {
+        redde FALSUM;
+    }
+    redde (b32)(
+           memcmp(petitus->datum, grammatica, (memoriae_index)g)
+               == ZEPHYRUM
+        && petitus->datum[g] == (i8)':'
+        && memcmp(petitus->datum + g + I, codex, (memoriae_index)n)
+               == ZEPHYRUM);
+}
+
 /* An codex in tabula declaratorum sit. Praefixum 'lint:' SEMPER
  * transit: registrum regularum nondum exsistit (EX8; signum = cursor
  * regularum), ergo iudicare esset RESPONSUM FALSUM FIDENTER DATUM. */
@@ -66,7 +108,8 @@ interior b32
 _codex_notus (
                              Piscina* piscina,
     constans MateriaDiagnosticaCocta* declarata,
-                     constans chorda* codex)
+                     constans chorda* codex,
+                  constans character* grammatica)
 {
     i32 k;
 
@@ -80,8 +123,8 @@ _codex_notus (
     }
     per (k = ZEPHYRUM; k < declarata->numerus; k++)
     {
-        si (chorda_aequalis_literis(*codex,
-                declarata->tabula[k].codex))
+        si (_codex_congruit(codex, declarata->tabula[k].codex,
+                grammatica))
         {
             redde VERUM;
         }
@@ -89,15 +132,52 @@ _codex_notus (
     redde FALSUM;
 }
 
+/* Tag TEXTUALIS, sine parsura: an commentarium 'tolera' esse CONETUR.
+ *
+ * CUR NECESSARIUM, ET MENSURATUM: commentarium fractum tag suum dicere
+ * non potest, et domus '# <via>' '# <dir>' '# <nomen> <secunda>' pro
+ * SIGNATURA argumentorum scribit - prosa quae '<' incipit et parsari
+ * nequit (excubitor.sh:21, tools/sera.sh:39/45/61,
+ * silva/aequivalentia.sh:44, tools/mensor_suitae.sh:76/81, et
+ * ceterae: XIII in domo). Sine hac porta signatura quaeque excusatio
+ * FRACTA fieret, et regula prima domum totam rubram redderet.
+ *
+ * Lex silvae ('quod tag aperit et cadit INVENTUM est') pro C recta
+ * est, ubi '<foo>' in commentario rarum est; in crusta IDIOMA DOMUS
+ * est. Ergo nomen SPECTATUR, non sola apertura. Pretium: 'tolerra'
+ * scriptum tacite prosa fit - idem ac familia quaevis ignota. */
+interior b32
+_tolera_videtur (
+    chorda textus)
+{
+     constans character* t = MATERIA_EXCUSATIO_TAG;
+                    i32  n = (i32)strlen(t);
+
+    si (   textus.mensura < n + (i32)I
+        || textus.datum[ZEPHYRUM]                         != (i8)'<'
+        || memcmp(textus.datum + I, t, (memoriae_index)n) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (textus.mensura == n + (i32)I)
+    {
+        redde VERUM;
+    }
+    redde (b32)(   textus.datum[n + I] == (i8)' '
+                || textus.datum[n + I] == (i8)'\t'
+                || textus.datum[n + I] == (i8)'/'
+                || textus.datum[n + I] == (i8)'>');
+}
+
 /* Annotationes -> excusationes. Familiae ALIAE (nid, intentio)
  * TACITE praetereuntur: annotatio inconsumpta excusatio mortua non
- * est. Sed annotatio FRACTA nominatur quaecumque familia futura
- * erat - tag aperuit et cecidit, quod vitium est cuiuscumque. */
+ * est. Annotatio FRACTA nominatur SI 'tolera' esse conabatur. */
 interior Xar*
 _excusationes_legere (
                              Piscina* piscina,
                         constans Xar* annotationes,
-    constans MateriaDiagnosticaCocta* declarata)
+    constans MateriaDiagnosticaCocta* declarata,
+                  constans character* grammatica)
 {
     Xar* exitus = xar_creare(piscina, (i32)magnitudo(Excusatio));
     i32  k;
@@ -112,11 +192,17 @@ _excusationes_legere (
             (constans MateriaAnnotatio*)xar_obtinere(annotationes, k);
         Excusatio* e;
 
-        si (   a->parsata
-            && (   a->arbor == NIHIL
+        si (a->parsata)
+        {
+            si (   a->arbor          == NIHIL
                 || a->arbor->titulus == NIHIL
                 || !chorda_aequalis_literis(*a->arbor->titulus,
-                       MATERIA_EXCUSATIO_TAG)))
+                       MATERIA_EXCUSATIO_TAG))
+            {
+                perge;
+            }
+        }
+        alioquin si (!_tolera_videtur(a->textus))
         {
             perge;
         }
@@ -137,7 +223,8 @@ _excusationes_legere (
         {
             e->status = EX_SINE_CAUSA;
         }
-        alioquin si (!_codex_notus(piscina, declarata, e->codex))
+        alioquin si (!_codex_notus(piscina, declarata, e->codex,
+                       grammatica))
         {
             e->status = EX_IGNOTA;
         }
@@ -155,7 +242,8 @@ _excusationes_legere (
 interior b32
 _tegit (
           constans Excusatio* e,
-constans MateriaDiagnosticum* d)
+constans MateriaDiagnosticum* d,
+          constans character* grammatica)
 {
     constans MateriaTractus* s;
 
@@ -175,7 +263,7 @@ constans MateriaDiagnosticum* d)
     {
         redde FALSUM;
     }
-    redde chorda_aequalis_literis(*e->codex, d->codex);
+    redde _codex_congruit(e->codex, d->codex, grammatica);
 }
 
 interior b32
@@ -260,7 +348,8 @@ materia_excusatio_applicare (
                              Piscina* piscina,
                         constans Xar* diagnostica,
                         constans Xar* annotationes,
-    constans MateriaDiagnosticaCocta* declarata)
+    constans MateriaDiagnosticaCocta* declarata,
+                  constans character* grammatica)
 {
     Xar* exitus;
     Xar* excusationes;
@@ -283,7 +372,7 @@ materia_excusatio_applicare (
     alioquin
     {
         excusationes = _excusationes_legere(piscina, annotationes,
-            declarata);
+            declarata, grammatica);
     }
     si (excusationes == NIHIL)
     {
@@ -300,7 +389,7 @@ materia_excusatio_applicare (
         {
             Excusatio* e = (Excusatio*)xar_obtinere(excusationes, j);
 
-            si (_tegit(e, d))
+            si (_tegit(e, d, grammatica))
             {
                 e->usus    = VERUM;
                 excusatum  = VERUM;

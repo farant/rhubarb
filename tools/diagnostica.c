@@ -22,14 +22,27 @@
  * inventa ALIUNDE nata (regulae lintris per pythonica) eundem
  * pictorem adeant. REVERSIO OCTETIM: 'diagnostica x' idem est ac
  * 'diagnostica -machina x | diagnostica -lege'.
+ *
+ * '-excusa' (cum '-lege' solo): excusationes declaratae applicantur.
+ * OPTIO EST, NON MOS, et hoc MENSURATUM est: via ordinaria eas iam
+ * applicat, ergo tabula ex '-machina' CRIBRATA venit. Applicatio
+ * ALTERA falsum pareret - excusatio cuius victima primo transitu iam
+ * cecidit SECUNDO mortua videtur. Mensuratum 2026-09-18: reversio
+ * excusationis mortuae ordines BINOS reddebat, et plagula cum
+ * invento uno excusato et uno vivo excusationem vivam MORTUAM
+ * nominasset. Ergo pictor quod datur pingit; cribratio rogatur.
+ * Regulae lintris (pythonica) '-excusa' dant, quia earum tabula
+ * numquam cribrata est.
  */
 
 #include "latina.h"
 #include "piscina.h"
 #include "chorda_aedificator.h"
 #include "excerptum.h"
+#include "materia_annotationes.h"
 #include "materia_arbor.h"
 #include "materia_diagnostica.h"
+#include "materia_excusatio.h"
 #include "materia_lexicon.h"
 #include "crusta_arbor.h"
 #include "crusta_diagnostica.h"
@@ -51,6 +64,26 @@ nomen structura {
     i32 monita;
     i32 plagulae;
 } Summa;
+
+/* Cliens unus parsatus. Campi ratum/consilium/relatio HIC vivunt quia
+ * 'radix' eos superstites poscit - in acervo vocantis positi dum radix
+ * adhibetur evanescerent.
+ *
+ * 'praefixum' NIHIL = cliens annotationes nondum fert. CSS ita stat:
+ * commentaria eius BLOCI sunt (delimitatoribus binis) et collector
+ * clausuram nondum exuit - signum nominatum divergentiae B plani.
+ * Crusta '#' fert, ergo praefixum solum sufficit. */
+nomen structura {
+                    MateriaNodus* radix;
+             MateriaLexiconRatum  ratum;
+              MateriaLexIudicium  iudicium;
+           MateriaArborConsilium  consilium;
+                   CrustaParsura  relatio;
+constans MateriaDiagnosticaCocta* declarata;
+              constans character* grammatica;
+              constans character* praefixum;
+                             Xar* diagnostica;
+} Cliens;
 
 interior character*
 _plagulam_legere (
@@ -398,6 +431,82 @@ constans MateriaDiagnosticum* d,
     }
 }
 
+/* Suffixum clientem eligit; parsura et diagnostica derivata in
+ * 'cliens' reponuntur. FALSUM = suffixum sine cliente (causa iam
+ * nominata) aut parsura fracta.
+ *
+ * AMBO ITINERA HINC PENDENT: via ordinaria arborem et diagnostica
+ * poscit, modus -lege arborem SOLAM (diagnostica ex TSV venerunt).
+ * Dispositio cliens-eligendi semel scripta est, ne itinera divergant
+ * - id est porta X. */
+interior b32
+_clientem_parsare (
+           Piscina* piscina,
+constans character* via,
+         character* fons,
+               i32  mensura,
+            Cliens* cliens)
+{
+    memset(cliens, ZEPHYRUM, magnitudo(*cliens));
+    si (_suffixum(via, ".sh"))
+    {
+        cliens->grammatica  = "crusta";
+        cliens->praefixum   = "#";
+        cliens->declarata   = &CRUSTA_DIAGNOSTICA;
+        si (materia_lexicon_ratum_facere(&cliens->ratum,
+                &CRUSTA_LEXICON, &cliens->iudicium))
+        {
+            materia_arbor_consilium_nudum(&cliens->consilium,
+                &CRUSTA_REGISTRUM, &cliens->ratum, cliens->grammatica);
+            cliens->radix = crusta_arbor_parsare(piscina, fons,
+                mensura, &CRUSTA_BASH, &cliens->relatio);
+            cliens->diagnostica = cliens->radix != NIHIL
+                ? crusta_diagnostica(piscina, cliens->radix,
+                      &cliens->relatio)
+                : NIHIL;
+        }
+    }
+    alioquin si (_suffixum(via, ".css"))
+    {
+        cliens->grammatica  = "css";
+        cliens->praefixum   = NIHIL;
+        cliens->declarata   = &CSS_DIAGNOSTICA;
+        si (materia_lexicon_ratum_facere(&cliens->ratum, &CSS_LEXICON,
+                &cliens->iudicium))
+        {
+            materia_arbor_consilium_nudum(&cliens->consilium,
+                &CSS_REGISTRUM, &cliens->ratum, cliens->grammatica);
+            cliens->radix = css_arbor_parsare(piscina, fons, mensura);
+            cliens->diagnostica = cliens->radix != NIHIL
+                ? materia_diagnostica_derivare(piscina, cliens->radix,
+                      &CSS_REGISTRUM, &CSS_DIAGNOSTICA, NIHIL, NIHIL)
+                : NIHIL;
+        }
+    }
+    alioquin
+    {
+        fprintf(stderr, "diagnostica: suffixum sine cliente: %s\n",
+            via);
+        redde FALSUM;
+    }
+    redde (b32)(cliens->radix != NIHIL);
+}
+
+/* Annotationes clientis, si eas fert. NIHIL = nullae (cliens sine
+ * praefixo, aut arbor absens): diagnostica omnia supersunt. */
+interior Xar*
+_annotationes_clientis (
+    Piscina* piscina,
+     Cliens* cliens)
+{
+    si (cliens->radix == NIHIL || cliens->praefixum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde materia_annotationes_colligere(piscina, cliens->radix,
+        &cliens->ratum, cliens->praefixum, NIHIL, NIHIL);
+}
+
 interior b32
 _plagulam_iudicare (
     constans character* via,
@@ -408,14 +517,9 @@ _plagulam_iudicare (
                    Piscina* piscina;
                  character* fons;
                        i32  mensura = ZEPHYRUM;
-       MateriaLexiconRatum  ratum;
-        MateriaLexIudicium  iudicium;
-     MateriaArborConsilium  consilium;
      MateriaArborScriptura  scriptura;
-             CrustaParsura  relatio;
-              MateriaNodus* radix        = NIHIL;
-                       Xar* diagnostica  = NIHIL;
-        constans character* grammatica   = NIHIL;
+                    Cliens  cliens;
+                       Xar* diagnostica;
                        i32  k;
 
     piscina = piscina_generare_dynamicum("diagnostica", 4194304);
@@ -430,59 +534,37 @@ _plagulam_iudicare (
         piscina_destruere(piscina);
         redde FALSUM;
     }
-    si (_suffixum(via, ".sh"))
+    si (!_clientem_parsare(piscina, via, fons, mensura, &cliens))
     {
-        grammatica = "crusta";
-        si (materia_lexicon_ratum_facere(&ratum, &CRUSTA_LEXICON,
-                &iudicium))
-        {
-            materia_arbor_consilium_nudum(&consilium,
-                &CRUSTA_REGISTRUM, &ratum, grammatica);
-            memset(&relatio, ZEPHYRUM, magnitudo(relatio));
-            radix = crusta_arbor_parsare(piscina, fons, mensura,
-                &CRUSTA_BASH, &relatio);
-            diagnostica = radix != NIHIL
-                ? crusta_diagnostica(piscina, radix, &relatio) : NIHIL;
-        }
-    }
-    alioquin si (_suffixum(via, ".css"))
-    {
-        grammatica = "css";
-        si (materia_lexicon_ratum_facere(&ratum, &CSS_LEXICON,
-                &iudicium))
-        {
-            materia_arbor_consilium_nudum(&consilium, &CSS_REGISTRUM,
-                &ratum, grammatica);
-            radix = css_arbor_parsare(piscina, fons, mensura);
-            diagnostica = radix != NIHIL
-                ? materia_diagnostica_derivare(piscina, radix,
-                      &CSS_REGISTRUM, &CSS_DIAGNOSTICA, NIHIL, NIHIL)
-                : NIHIL;
-        }
-    }
-    alioquin
-    {
-        fprintf(stderr, "diagnostica: suffixum sine cliente: %s\n",
-            via);
         piscina_destruere(piscina);
         redde FALSUM;
     }
-    si (radix == NIHIL || diagnostica == NIHIL)
+    si (cliens.radix == NIHIL || cliens.diagnostica == NIHIL)
     {
         fprintf(stderr,
             "diagnostica: parsura aut derivatio fracta: %s\n", via);
         piscina_destruere(piscina);
         redde FALSUM;
     }
+    /* EXCUSATIO ANTE NUMEROS: si post eos curreret, plagula tota
+     * excusata exitum I nihilominus redderet et excusatio nihil
+     * valeret. Porta VII hoc figit. */
+    diagnostica = materia_excusatio_applicare(piscina,
+        cliens.diagnostica, _annotationes_clientis(piscina, &cliens),
+        cliens.declarata, cliens.grammatica);
+    si (diagnostica == NIHIL)
+    {
+        diagnostica = cliens.diagnostica;
+    }
     per (k = ZEPHYRUM; k < xar_numerus(diagnostica); k++)
     {
-        _diagnosticum_imprimere(piscina, via, grammatica, fons,
+        _diagnosticum_imprimere(piscina, via, cliens.grammatica, fons,
             mensura,
             (constans MateriaDiagnosticum*)xar_obtinere(diagnostica,
                 k), machina, excerptum, summa);
     }
-    scriptura = materia_arbor_proicere_nodum(piscina, radix,
-        &consilium);
+    scriptura = materia_arbor_proicere_nodum(piscina, cliens.radix,
+        &cliens.consilium);
     si (!scriptura.successus)
     {
         MateriaDiagnosticum refutatio;
@@ -493,12 +575,69 @@ _plagulam_iudicare (
         refutatio.causa     = scriptura.causa != NIHIL
             ? scriptura.causa : "scriptura fracta";
         refutatio.tractus   = scriptura.tractus;
-        _diagnosticum_imprimere(piscina, via, grammatica, fons,
+        _diagnosticum_imprimere(piscina, via, cliens.grammatica, fons,
             mensura, &refutatio, machina, excerptum, summa);
     }
     summa->plagulae++;
     piscina_destruere(piscina);
     redde VERUM;
+}
+
+/* Cumulum unius plagulae effundere: plagula semel parsatur, eius
+ * annotationes colliguntur, excusatio applicatur, deinde ordines
+ * pinguntur.
+ *
+ * CUR CUMULUS OMNINO: pictor ante hunc arcum ordinem quemque statim
+ * pingebat. Excusatio autem ordines PLAGULAE TOTIUS contra
+ * annotationes eiusdem plagulae cribrat, ergo ordines sciri debent
+ * antequam ullus pingatur. Ordo servatur quia cumulus per CURSUS
+ * contiguos effunditur, non per plagulas collectas - ergo effusio
+ * eundem ordinem reddit quem lectio dedit.
+ *
+ * Plagula illegibilis aut cliens ignotus: excusatio nulla, ordines
+ * omnes supersunt. Inventum numquam tacite cadit. */
+interior vacuum
+_cumulum_effundere (
+             Piscina* piscina,
+  constans character* via,
+                 Xar* cumulus,
+                 b32  excerptum,
+                 b32  excusa,
+               Summa* summa)
+{
+      character* fons     = NIHIL;
+            i32  mensura  = ZEPHYRUM;
+         Cliens  cliens;
+            Xar* exitus   = cumulus;
+            i32  k;
+
+    si (xar_numerus(cumulus) == ZEPHYRUM)
+    {
+        redde;
+    }
+    fons = _plagulam_legere(piscina, via, &mensura);
+    si (   excusa
+        && fons != NIHIL
+        && _clientem_parsare(piscina, via, fons, mensura, &cliens))
+    {
+        Xar* cribrata = materia_excusatio_applicare(piscina, cumulus,
+            _annotationes_clientis(piscina, &cliens),
+            cliens.declarata, cliens.grammatica);
+
+        si (cribrata != NIHIL)
+        {
+            exitus = cribrata;
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(exitus); k++)
+    {
+        /* grammatica ex suffixo, ut in via ordinaria: TSV codicem
+         * CRUDUM fert, linea humana praefixum addit */
+        _diagnosticum_imprimere(piscina, via,
+            _suffixum(via, ".css") ? "css" : "crusta", fons, mensura,
+            (constans MateriaDiagnosticum*)xar_obtinere(exitus, k),
+            FALSUM, excerptum, summa);
+    }
 }
 
 /* Modus -lege: TSV ex stdin in formam humanam. Inventa ALIUNDE nata
@@ -511,15 +650,15 @@ _plagulam_iudicare (
 interior b32
 _tabulam_legere (
       b32  excerptum,
+      b32  excusa,
     Summa* summa)
 {
                Piscina* piscina;
              character* tabula;
              character* p;
-             character* via_lecta      = NIHIL;
-             character* fons_lectus    = NIHIL;
-                   i32  mensura_lecta  = ZEPHYRUM;
-                   b32  sanum          = VERUM;
+             character* via_lecta  = NIHIL;
+                   Xar* cumulus;
+                   b32  sanum      = VERUM;
                 size_t  legenda;
 
     piscina = piscina_generare_dynamicum("diagnostica-lege", 8388608);
@@ -529,7 +668,9 @@ _tabulam_legere (
     }
     tabula = (character*)piscina_allocare(piscina,
         (memoriae_index)TABULA_MAXIMA);
-    si (tabula == NIHIL)
+    cumulus = xar_creare(piscina,
+        (i32)magnitudo(MateriaDiagnosticum));
+    si (tabula == NIHIL || cumulus == NIHIL)
     {
         piscina_destruere(piscina);
         redde FALSUM;
@@ -553,7 +694,6 @@ _tabulam_legere (
                        i32  numerus;
        MateriaDiagnosticum  d;
         MateriaSedesRelata* relata_lecta = NIHIL;
-        constans character* grammatica;
 
         si (nova != NIHIL)
         {
@@ -600,19 +740,30 @@ _tabulam_legere (
             perge;
         }
         d.relata = relata_lecta;
-        si (   via_lecta                   == NIHIL
-            || strcmp(via_lecta, campi[0]) != ZEPHYRUM)
+        si (   via_lecta                   != NIHIL
+            && strcmp(via_lecta, campi[0]) != ZEPHYRUM)
         {
-            via_lecta      = campi[0];
-            mensura_lecta  = ZEPHYRUM;
-            fons_lectus  = _plagulam_legere(piscina, campi[0],
-                &mensura_lecta);
+            _cumulum_effundere(piscina, via_lecta, cumulus, excerptum,
+                excusa, summa);
+            xar_truncare(cumulus, ZEPHYRUM);
         }
-        /* grammatica ex suffixo, ut in via ordinaria: TSV codicem
-         * CRUDUM fert, linea humana praefixum addit */
-        grammatica = _suffixum(campi[0], ".css") ? "css" : "crusta";
-        _diagnosticum_imprimere(piscina, campi[0], grammatica,
-            fons_lectus, mensura_lecta, &d, FALSUM, excerptum, summa);
+        via_lecta = campi[0];
+        {
+            MateriaDiagnosticum* cella =
+                (MateriaDiagnosticum*)xar_addere(cumulus);
+
+            si (cella == NIHIL)
+            {
+                sanum = FALSUM;
+                frange;
+            }
+            *cella = d;
+        }
+    }
+    si (via_lecta != NIHIL)
+    {
+        _cumulum_effundere(piscina, via_lecta, cumulus, excerptum,
+            excusa, summa);
     }
     summa->plagulae++;
     piscina_destruere(piscina);
@@ -628,6 +779,7 @@ principale (
         b32 machina    = FALSUM;
         b32 excerptum  = VERUM;
         b32 legere     = FALSUM;
+        b32 excusa     = FALSUM;
     integer i;
 
     memset(&summa, ZEPHYRUM, magnitudo(summa));
@@ -645,10 +797,14 @@ principale (
         {
             legere = VERUM;
         }
+        alioquin si (strcmp(argv[i], "-excusa") == ZEPHYRUM)
+        {
+            excusa = VERUM;
+        }
     }
     si (legere)
     {
-        si (!_tabulam_legere(excerptum, &summa))
+        si (!_tabulam_legere(excerptum, excusa, &summa))
         {
             fprintf(stderr, "%d diagnostica (erratum %d, monitum %d)\n",
                 (integer)(summa.errata + summa.monita),

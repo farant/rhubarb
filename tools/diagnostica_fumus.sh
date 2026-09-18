@@ -96,6 +96,73 @@ rc=$?
 [ "$rc" -eq 2 ] && grep -q 'ordo TSV pravus' "$T/pravus.err"
 credo $? "VI. ordo camporum pravorum: exitus 2 nominatus (rc $rc)"
 
+# VII. EXCUSATIO DECLARATA: inventum gradus I excusatum CADIT, et
+# exitus id sequitur. Forma codicis PICTA ('crusta:grex/tok_clausura')
+# adhibetur consulto: id est quod usor in nuntio VIDIT, et codex nudus
+# in TSV solo apparet. Si excusatio post numeros curreret, plagula
+# tota excusata exitum 1 nihilominus redderet.
+printf '# <tolera codex="crusta:grex/tok_clausura" (>consulto\n{ echo a\n' \
+    > "$T/excusata.sh"
+./tools/diagnostica.sh "$T/excusata.sh" > "$T/excusata.out" 2>/dev/null
+rc=$?
+[ "$rc" -eq 0 ]; credo $? "VII. plagula excusata: exitus 0 (rc $rc)"
+[ ! -s "$T/excusata.out" ]
+credo $? "VII. plagula excusata: nihil pictum ($(wc -l < "$T/excusata.out" | tr -d ' ') lineae)"
+
+# VIII. EXCUSATIO MORTUA: quae nihil absorbuit se ipsam nominat.
+# Aliter exemptio consulta a rancida distingui non potest.
+printf '# <tolera codex="crusta:grex/tok_clausura" (>nihil hic\necho ok\n' \
+    > "$T/mortua.sh"
+./tools/diagnostica.sh -machina "$T/mortua.sh" > "$T/mortua.tsv" 2>/dev/null
+rc=$?
+[ "$rc" -eq 1 ] && grep -q 'materia:excusatio-mortua' "$T/mortua.tsv"
+credo $? "VIII. excusatio mortua nominatur, exitus 1 (rc $rc)"
+
+# IX. PROSA NON EST ANNOTATIO. Domus '# <via>' pro SIGNATURA scribit
+# (excubitor.sh:21, tools/sera.sh:39). Sine hac porta signatura
+# quaeque 'excusatio fracta' fieret: XIII in domo mensuratae
+# 2026-09-18, et porta I tota rubuit donec regula angustata est.
+printf 'f () {   # <via> -> pid\n  echo x\n}\n' > "$T/prosa.sh"
+./tools/diagnostica.sh -machina "$T/prosa.sh" > "$T/prosa.tsv" 2>/dev/null
+rc=$?
+[ "$rc" -eq 0 ] && ! grep -q 'excusatio' "$T/prosa.tsv"
+credo $? "IX. '# <via>' prosa manet, non excusatio fracta (rc $rc)"
+
+# X. '-excusa' OPTIO EST, NON MOS. Tabula ex '-machina' iam cribrata
+# venit; applicatio altera excusationem VIVAM mortuam nominaret (eius
+# victima primo transitu cecidit). Ergo pictor quod datur pingit.
+# Tabula lintris hic FINGITUR ex plagula sine annotatione, sedibus ad
+# annotationem (LIV octeti, linea una) motis - id est quod pythonica
+# regulae emittit: numquam cribratum.
+printf '{ echo a\n' > "$T/nuda.sh"
+./tools/diagnostica.sh -machina "$T/nuda.sh" 2>/dev/null \
+    | awk -F'\t' -v v="$T/excusata.sh" 'BEGIN{OFS="\t"}
+        {$1=v; $2=$2+1; $4=$4+1; $6=$6+54; $7=$7+54; print}' \
+    > "$T/lintris.tsv"
+[ -s "$T/lintris.tsv" ]; credo $? "X. tabula lintris ficta non vacua"
+./tools/diagnostica.sh -lege -excusa < "$T/lintris.tsv" \
+    > "$T/cum.out" 2>/dev/null
+rc_cum=$?
+./tools/diagnostica.sh -lege < "$T/lintris.tsv" \
+    > "$T/sine.out" 2>/dev/null
+rc_sine=$?
+[ "$rc_cum" -eq 0 ] && [ ! -s "$T/cum.out" ]
+credo $? "X. '-lege -excusa' cribrat (rc $rc_cum)"
+[ "$rc_sine" -eq 1 ] && [ -s "$T/sine.out" ]
+credo $? "X. '-lege' solum PINGIT quod datur (rc $rc_sine)"
+
+# XI. REVERSIO cum annotatione. Excusatio mortua transitum utrumque
+# fert, ergo ordines BINOS pareret si '-lege' eam iterum applicaret -
+# hoc exacte accidit antequam '-excusa' optio fieret (mensuratum
+# 2026-09-18: I ordo recte, II per reversionem).
+for f in excusata mortua; do
+    ./tools/diagnostica.sh "$T/$f.sh" > "$T/$f.recta" 2>/dev/null
+    ./tools/diagnostica.sh -machina "$T/$f.sh" 2>/dev/null \
+        | ./tools/diagnostica.sh -lege > "$T/$f.pertsv" 2>/dev/null
+    diff -q "$T/$f.recta" "$T/$f.pertsv" >/dev/null
+    credo $? "XI. $f: REVERSIO octetim cum annotatione"
+done
+
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus diagnostica: sanum"; exit 0; fi
 echo "fumus diagnostica: FRACTUM ($fracta)"; exit 1

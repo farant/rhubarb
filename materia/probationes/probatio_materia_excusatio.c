@@ -55,6 +55,8 @@ enumeratio { LP_APERTURA = 0, LP_LIBERI, LP_CLAUSURA };
 #define NOTA_FRACTA    "# <tolera codex=\"lint:x\""
 #define NOTA_NOTA      "# <tolera codex=\"par/notus\" (>causa vera"
 #define NOTA_IGNOTA    "# <tolera codex=\"par/ignotus\" (>causa vera"
+#define NOTA_PICTA \
+    "# <tolera codex=\"crusta:grex/tok_clausura\" (>causa vera"
 
 /* tabula declaratorum: codex UNUS notus. Par 'notus'/'ignotus'
  * DISCERNIT - probatio quae ignotum solum ferret ab excusatione
@@ -250,7 +252,8 @@ principale (
         CREDO_VERUM (_diag(d, "lint:x", (s32)38, (s32)43));
         CREDO_VERUM (_diag(d, "lint:x", (s32)46, (s32)50));
         CREDO_VERUM (_diag(d, "lint:y", (s32)39, (s32)42));
-        e = materia_excusatio_applicare(piscina, d, a, NIHIL);
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL,
+                NIHIL);
         CREDO_NON_NIHIL (e);
         /* excusatum unum cadit; frater EXTRA scopum superest; codex
          * alius intra scopum superest quoque */
@@ -269,7 +272,8 @@ principale (
         imprimere("\n--- II. Excusatio MORTUA nominatur ---\n");
         /* nihil intra scopum: tolera nihil absorbet */
         CREDO_VERUM (_diag(d, "lint:x", (s32)46, (s32)50));
-        e = materia_excusatio_applicare(piscina, d, a, NIHIL);
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL,
+                NIHIL);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));
@@ -292,7 +296,8 @@ principale (
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         CREDO_VERUM (_diag(d, "lint:x", (s32)38, (s32)43));
-        e = materia_excusatio_applicare(piscina, d, a, NIHIL);
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL,
+                NIHIL);
         CREDO_NON_NIHIL (e);
         /* inventum SUPEREST, et excusatio ipsa nominatur */
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
@@ -310,7 +315,8 @@ principale (
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         CREDO_VERUM (_diag(d, "lint:x", (s32)38, (s32)43));
-        e = materia_excusatio_applicare(piscina, d, a, NIHIL);
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL,
+                NIHIL);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
         CREDO_VERUM (_habet(e, "lint:x"));
@@ -325,7 +331,8 @@ principale (
 
         imprimere("\n--- V. Codex non declaratus nominatur ---\n");
         CREDO_VERUM (_diag(d, "par/notus", (s32)38, (s32)43));
-        e = materia_excusatio_applicare(piscina, d, a, &DECLARATA);
+        e = materia_excusatio_applicare(piscina, d, a, &DECLARATA,
+                NIHIL);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_IGNOTA));
@@ -343,9 +350,45 @@ principale (
          * discernit, non semper IGNOTA reddit. Et hoc ostendit
          * diagnostica DECLARATA excusari, non lintris sola. */
         CREDO_VERUM (_diag(d, "par/notus", (s32)38, (s32)43));
-        e = materia_excusatio_applicare(piscina, d, a, &DECLARATA);
+        e = materia_excusatio_applicare(piscina, d, a, &DECLARATA,
+                NIHIL);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), ZEPHYRUM);
+    }
+
+    {
+        Xar* a = _annotationes(piscina, &ratum, NOTA_PICTA);
+        Xar* d = xar_creare(piscina,
+                     (i32)magnitudo(MateriaDiagnosticum));
+        Xar* e;
+
+        imprimere("\n--- VII. Forma PICTA codicis excusat ---\n");
+        /* Pictor 'crusta:' codici sine ':' praefigit, ergo usor
+         * 'crusta:grex/tok_clausura' LEGIT dum codex ipse nudus est.
+         * EX1 promittit id quod usor VIDIT sufficere. */
+        CREDO_VERUM (_diag(d, "grex/tok_clausura", (s32)38, (s32)43));
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL,
+                "crusta");
+        CREDO_NON_NIHIL (e);
+        CREDO_AEQUALIS_I32 (xar_numerus(e), ZEPHYRUM);
+    }
+
+    {
+        Xar* a = _annotationes(piscina, &ratum, NOTA_PICTA);
+        Xar* d = xar_creare(piscina,
+                     (i32)magnitudo(MateriaDiagnosticum));
+        Xar* e;
+
+        imprimere("\n--- VIII. Sine grammatica: picta CADIT ---\n");
+        /* Par cum VII: sine grammatica congruentia fieri NON potest,
+         * ergo probatio VII grammaticam REVERA adhibet et non forte
+         * viridis est. */
+        CREDO_VERUM (_diag(d, "grex/tok_clausura", (s32)38, (s32)43));
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL, NIHIL);
+        CREDO_NON_NIHIL (e);
+        CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
+        CREDO_VERUM (_habet(e, "grex/tok_clausura"));
+        CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));
     }
 
     imprimere("\n");

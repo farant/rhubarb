@@ -74,6 +74,13 @@
 
 /* Diagnostica per annotationes excusare.
  *
+ * 'grammatica' (NIHIL licet) nomen clientis est ("crusta", "css"):
+ * PICTOR id codici sine ':' praefigit, ergo auctor
+ * 'crusta:grex/tok_clausura' VIDIT et id scribit. Sine hoc EX1
+ * ('codex quem pictor pingit') pro codicibus gradus I FALSUM esset -
+ * inventa a codicibus nudis excusarentur solum, et forma quam usor
+ * legit tacite non congrueret. Ambae formae accipiuntur.
+ *
  * 'declarata' (NIHIL licet) codices gradus I novit; cum adest, codex
  * qui ':' fert sed in tabula non est IGNOTUS nominatur. Praefixum
  * 'lint:' semper praeteritur (vide supra).
@@ -88,6 +95,7 @@ materia_excusatio_applicare (
                              Piscina* piscina,
                         constans Xar* diagnostica,
                         constans Xar* annotationes,
-    constans MateriaDiagnosticaCocta* declarata);
+    constans MateriaDiagnosticaCocta* declarata,
+                  constans character* grammatica);
 
 #endif /* MATERIA_EXCUSATIO_H */

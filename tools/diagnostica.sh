@@ -34,7 +34,7 @@ for f in piscina chorda chorda_aedificator xar friatio tabula_dispersa \
 done
 for m in materia_lexicon materia_token materia_nodus materia_scribere \
          materia_arbor materia_arbor_aequalitas materia_coctor \
-         materia_diagnostica; do
+         materia_diagnostica materia_annotationes materia_excusatio; do
     compilare "$RADIX_DIR/materia/fontes/$m.c" "$BUILD_DIR/$m.o"
 done
 for src in "$RADIX_DIR"/crusta/fontes/*.c "$RADIX_DIR"/css/fontes/*.c; do
