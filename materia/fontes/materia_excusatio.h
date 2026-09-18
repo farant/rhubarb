@@ -1,0 +1,93 @@
+/* materia_excusatio.h - Excusationes declaratae super diagnostica
+ * (project-specs/excusatio-declarata-spec.md par. V; desideratum
+ * 01M2SD93PV)
+ *
+ * Auctor intentionem DECLARAT, lintrum eam non infert:
+ *
+ *   # <tolera codex="lint:nt-aequalitas" (>caput recentissimum
+ *   if [ -n "$X" -a "$X" -nt "$bin" ]; then
+ *
+ * Inventum EXCUSATUR si sedes PRIMARIA eius intra 'scopus'
+ * annotationis iacet ET codices AEQUALES sunt. Sedes relatae non
+ * participant: inventum uno loco EST (SM1 specificationis sedium
+ * multiplicium), et sedes relata locus alter eiusdem inventi est,
+ * non inventum alterum.
+ *
+ * CLAVIS EST CODEX QUEM PICTOR PINGIT. Arcus adaptatoris codicem
+ * 'lint:<nomen>' omni invento lintris dedit, et declarata
+ * '<grammatica>:<codex>' iam ferebant - ergo auctor id scribit quod
+ * in nuntio erroris VIDIT. Nihil novum inventum est.
+ *
+ * ==================================================
+ * CUR CAPUT SEPARATUM, NON materia_diagnostica.h
+ * ==================================================
+ *
+ * materia_diagnostica.h latina + piscina + xar + nodus + registrum
+ * solum includit. Excusationes stml (per annotationes) poscunt, ergo
+ * functio illic posita stml in CONTRACTUM DIAGNOSTICORUM traheret -
+ * cliens qui diagnostica derivat et annotationes non vult parsatorem
+ * STML nihilominus ferret. materia_registrum.h paupertatem suam
+ * MERITUM vocat ('NIHIL INCLUDIT PRAETER latina.h'); eadem ratio hic.
+ * Specificatio 'materia_diagnostica_excusare' nominabat; divergentia
+ * C plani, in par. IX specificationis notanda.
+ *
+ * ==================================================
+ * EXCUSATIO MORTUA VITIUM EST
+ * ==================================================
+ *
+ * Lectio eslint, quam silva_c89_semantica.c:1084 iam aedificavit:
+ * suppressiones putrescunt. Excusatio quae NIHIL absorbuit, aut sine
+ * causa est, aut parsari nequit, diagnosticum SUUM parit, super
+ * COMMENTARIO positum - aliter exemptio consulta a rancida distingui
+ * non potest.
+ *
+ * QUOD NONDUM IUDICATUR: codex 'lint:...' ignotus. Registrum codices
+ * gradus I omnes novit (MateriaTabDiagnosticum.codex), ergo
+ * '<tolera codex="crusta:grex/tok_clausura">' HODIE probatur; nomina
+ * lintris registrum nullum habent donec cursor regularum exsistat.
+ * Signum nominatum: ille cursor (EX8).
+ */
+
+#ifndef MATERIA_EXCUSATIO_H
+#define MATERIA_EXCUSATIO_H
+
+#include "latina.h"
+#include "piscina.h"
+#include "xar.h"
+#include "materia_annotationes.h"
+#include "materia_diagnostica.h"
+#include "materia_registrum.h"
+
+/* Elementum quod excusat. Familiae aliae (nid, intentio, contractus)
+ * per idem collectorum veniunt et hic TACITE praetereuntur - annotatio
+ * inconsumpta excusatio mortua NON est. */
+#define MATERIA_EXCUSATIO_TAG  "tolera"
+
+#define MATERIA_CODEX_EXCUSATIO_MORTUA \
+    "materia:excusatio-mortua"
+#define MATERIA_CODEX_EXCUSATIO_SINE_CAUSA \
+    "materia:excusatio-sine-causa"
+#define MATERIA_CODEX_EXCUSATIO_FRACTA \
+    "materia:excusatio-fracta"
+#define MATERIA_CODEX_EXCUSATIO_IGNOTA \
+    "materia:excusatio-ignota"
+
+/* Diagnostica per annotationes excusare.
+ *
+ * 'declarata' (NIHIL licet) codices gradus I novit; cum adest, codex
+ * qui ':' fert sed in tabula non est IGNOTUS nominatur. Praefixum
+ * 'lint:' semper praeteritur (vide supra).
+ *
+ * Xar NOVUM reddit, ordine (tractus.initium, codex) ut derivare -
+ * diagnostica excusationum ipsarum in commentario sedent, ergo ante
+ * inventa quae excusarent plerumque cadunt et ordo servandus est.
+ * Argumentum non mutatur. NIHIL si argumentum necessarium abest aut
+ * memoria defecit. */
+Xar*
+materia_excusatio_applicare (
+                             Piscina* piscina,
+                        constans Xar* diagnostica,
+                        constans Xar* annotationes,
+    constans MateriaDiagnosticaCocta* declarata);
+
+#endif /* MATERIA_EXCUSATIO_H */
