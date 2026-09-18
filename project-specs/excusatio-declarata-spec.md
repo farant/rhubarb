@@ -310,3 +310,122 @@ failure mode.
    set of rules that *ran*, or a declared registry of rule names? The
    second is stricter and is probably where `lint:` codices should have
    come from all along.
+
+---
+
+## 11. As built (2026-09-18) — GOVERNS where it differs from §§1–10
+
+*Seven commits, `d23be3c9` → `068a8737`. Plan
+`project-specs/excusatio-declarata-plan.md`. Every number below was
+measured, and where a §§1–10 claim was wrong the measurement is kept
+beside it — the wrong claims are the useful part.*
+
+**Result.** Rule 1 runs as an `erratum` and reports nothing: 291 `-nt`
+occurrences, 277 negated, 14 candidates, all declared. Fifteen defects
+fixed. A tier-1 declared diagnostic can be exempted too, which the
+motivating rule never needed.
+
+### A — the registry table mostly evaporated (EX5)
+
+`MATERIA_MUNUS_COMMENTUM` already exists (`materia_lexicon.h:80`) and
+every client already declares which lexeme genera are comments. Only
+the decoration was undeclared.
+
+### B — and decoration is an argument, not a baked table (EX5)
+
+One string per client, so the collector takes `praefixum` and the
+caller supplies it. The entire coctor change is deleted: no
+`<PRAEFIXUM>_ANNOTATIONES`, no regenerating every client's tables.
+**Named trigger for building it anyway:** a second client wanting
+annotations, or one whose comments are blocks (css — its comments are
+delimited pairs and the collector strips no closing delimiter, so a
+`tolera` in css silently does nothing today).
+
+### C — `excusare` lives in its own header (EX6)
+
+`materia_diagnostica.h` includes only latina/piscina/xar/nodus/
+registrum. Putting exemptions there drags the STML parser into the
+diagnostics contract, which every client deriving diagnostics would
+then carry. `materia_excusatio.{h,c}` instead.
+
+### D — the codex needed the grammar (EX1)
+
+**§1's headline promise was false as specified.** The printer prefixes
+the grammar onto any codex lacking `:`, so an author reads
+`crusta:grex/tok_clausura` while the stored codex is the bare
+`grex/tok_clausura`. "Suppress with the code you saw" would have
+matched nothing — silently. Found only by trying to write the gate.
+`materia_excusatio_applicare` takes `grammatica`; both forms match.
+
+### E — ATTACHMENT: §2 AND §9 WERE BOTH WRONG
+
+§2 chose "scope = the owning node of the token the trivia hangs on"
+and argued the case against line-adjacency. **The rollout refuted it.**
+Crusta binds trivia BACKWARD (law C7, `crusta_lexicon.h:19`), so the
+scope came from whatever *preceded* the comment:
+
+| placement | owner | effect |
+|---|---|---|
+| after `fi` | `<separator>`, bytes 57–58 | scope empty — annotation DEAD, reports mortua |
+| after `do` | the whole `iteratio` | one annotation silenced TWO findings, one a real defect |
+
+Thirteen of fourteen sites were the second kind: they looked like they
+worked. **Silencing real defects is worse than not having the
+feature.**
+
+§2's evidence was one measurement — an `if` at the start of a file,
+the single position where leading trivia has nothing behind it to bind
+to, and therefore the one case that cannot exhibit the bug.
+
+**As built**, following silva, which solves this with
+SUPRA/INTERIOR/PLAGULA:
+
+1. **Forward positional attachment** — the first token *after* the
+   comment supplies the owner. Leading trivia resolves as before.
+2. **Same line or preceding** (`silva_c89_semantica.c:1077`) — a
+   trailing comment annotates its own line. Without this, forward
+   attachment sends end-of-line comments to the next line.
+3. **Widest node at that offset, root excluded** — a comment before
+   `if` covers the whole `if`; nothing can ever scope to a file.
+
+### F — `-excusa` is opt-in on `-lege` (EX9)
+
+Exemptions apply in both instrument paths, so a `-machina | -lege`
+round trip filters twice. Worse than double-reporting: a live
+exemption whose finding was dropped in pass 1 looks DEAD in pass 2.
+Measured: a dead-tolera round trip returned 2 rows where direct
+returned 1. `-lege` renders what it is handed; filtering is requested,
+and only the pythonica lint path requests it.
+
+### G — `lint:` codices are never judged dead (EX8)
+
+EX8 says an exemption for a rule that did not run cannot be judged. As
+first built, only the *unknown-codex* half honoured that; the
+*absorbed-nothing* half did not. Every `lint:` exemption was therefore
+reported dead during a tier-1 run — 14 real annotations turned all 237
+house files red. Cause and parse validity are still judged: the
+instrument can see those.
+
+### H — AUDIENDUM 10.1, answered by the rollout
+
+The natural site is the line above, at the construct's indentation —
+that is what all 14 annotations used, written before the question was
+reconsidered. With the §11-E rules, a trailing comment on the same
+line resolves to the *same* node, so both forms work and neither is a
+special case. **No "nearest node that starts a line" rule is needed.**
+
+### I — a comment is not free where bytes are measured
+
+`probatio_crusta_computus` pins exact byte counts for five files, two
+of them annotated here. One comment line moved `octeti` 11276 → 11399
+and six sibling columns. Golden regenerated with the cause in
+`068a8737`. The `html` twin measures only `.html` files — checked, not
+assumed.
+
+### What did NOT change
+
+Tier 1 keeps its three predicates. No registry vocabulary was added,
+no seal moved, no file-wide disable is expressible. §§3–6 stand as
+written apart from the above, and §6's `probatio`-rooted sketch was
+replaced wholesale — see the plan's Task 4 and `01M2PRPGBC` for why
+`SINE` cannot see a negation that lives above the finding.

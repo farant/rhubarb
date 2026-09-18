@@ -401,3 +401,57 @@ scripts the whole house runs).
   annotation capability as a thing that now exists on BOTH sides
   (silva and materia).
 - [ ] Phase-log RELATIO with the instrument debrief.
+
+---
+
+## PLANUM CLAUSUM (2026-09-18)
+
+Seven commits, `d23be3c9` → `068a8737`. All five tasks executed; the
+spec's §11 "As built" GOVERNS and records nine divergences (A–I).
+
+| task | commit | evidence |
+|---|---|---|
+| 1 collector | `d23be3c9` | 24 assertions, 1 plant |
+| 2 exemption semantics | `989843c5` | 46 assertions, 6 plants |
+| 3 instrument | `14451c2d` | fumus I–XI, 4 plants |
+| 4 rule 1 | `498ddf7f` | A−B closes at 29, pin + plant |
+| 5a defects fixed | `4626079a` | 15 sites, `bash -n` ×13, 3 gates by hand |
+| — machinery repairs | `40427238` | 3 new plants, 7 old ones re-run |
+| 5b sites declared | `068a8737` | 14 sites, closing plant on RENDERED output |
+
+**Final: 291 / 277 / 14, all declared, rule silent.**
+
+### What the plan got right, and what it could not
+
+Task 4 step 1 ("read the corpus BEFORE writing the pattern") paid: the
+spec's §6 sketch could not work, for a reason only the tree shows.
+
+Task 5 step 3 paid far more than intended. It was written to answer a
+wording question and instead found **three defects no unit test could
+reach** — attachment scope (the fixture had the comment at the start
+of the tree, the one place the bug cannot appear), dead-suppression
+for `lint:` codices (needs a real tier-1 run over real annotated
+files), and a pinned byte count (needs a file something else
+measures). Two of the three were in code already committed and gated.
+
+**The transferable part: a capability is not proven by its own tests
+until something real uses it.** Both Task 1 and Task 2 were green,
+planted, and wrong.
+
+### Self-inflicted, kept because the shape repeats
+
+- A closing plant used `grep -v … > tmp && mv tmp file`; `mv` replaced
+  the file and stripped its executable bit (100755 → 100644). Edit in
+  place; never `mv` over a tracked script.
+- Two scripted exact-match replaces silently matched NOTHING after the
+  formator reindented their targets. Both were caught by gates, not by
+  the script. **Assert the replacement count every time** — as the
+  `.sh` edits did and the C edits did not.
+
+### Doors left open, each with its trigger
+
+- css annotations — its comments are delimited pairs; the collector
+  strips no closing delimiter (divergence B).
+- `lint:` dead-suppression judging — the rule runner (EX8).
+- The rule runner and CI gate — deferred by Fran; rules stay invoked
+  by hand until there are two or three to generalise from.
