@@ -48,13 +48,24 @@ uncaught.
 
 ## 1. Decisions
 
-**E1 — materia provides VERBS, never a client registry.** No
-`MateriaCliens`, no suffix table, no iteration over clients. materia
-must not learn that crusta exists. This is M8 restated:
+**E1 — materia RECEIVES a client's configuration; it never HOLDS one.**
+An earlier draft proposed `MateriaCliens`, a table of all clients
+inside materia, dispatched by suffix. Fran rejected it and M8 says why:
 *"Language-specific code sits BESIDE materia, never inside. Every
-'just one convenience that knows about a language' is the rot."* An
-earlier draft of this design proposed exactly that table; it was
-wrong.
+'just one convenience that knows about a language' is the rot."*
+
+The struct survives; its OWNERSHIP inverts. **The test, and it is the
+one that matters:**
+
+| | rejected | as specified |
+|---|---|---|
+| who holds it | materia, as a table | the client, per call |
+| who dispatches | materia, by suffix | nobody — the client knows who it is |
+| **adding a client** | **edit materia** | **edit nothing in materia** |
+
+If adding JS means touching a file under `materia/`, the design has
+failed. If JS fills in a struct and calls, materia never learned JS
+exists.
 
 **E2 — the extractor is CLIENT-BLIND.** It takes an expanded STML
 tree and a rule, and returns `MateriaDiagnosticum` rows. It reads
@@ -62,19 +73,37 @@ tree and a rule, and returns `MateriaDiagnosticum` rows. It reads
 `lint` / `gravitas` / `causa` / `nota` (which the rule author writes).
 It never sees a file, a suffix, or a grammar.
 
-**E3 — each client owns its own lint instrument.** `crusta` writes
-`crusta/instrumenta/lintrum.c`: its dialect, its registry, its `"#"`,
-its rule directory. css writes its own and never touches crusta's.
-~70 lines of glue per client.
+**E3 — each client owns a FACADE, and there is no separate lint
+instrument.** A consumer of crusta must not orchestrate materia. It
+calls crusta; crusta calls materia. Tier 2 therefore arrives INSIDE
+an existing entry point rather than beside it — adding rule 2 changes
+no caller and no signature.
 
-**E4 — the printer leaves the tool, and does NOT go into materia.**
-`materia_diagnostica.h:11` and `materia/CLAUDE.md:135` both state the
-rule: *pictura (excerptum, caret) is NOT materia's — the substrate
-gives the place, not the form.* The printer goes to the INSTRUMENT
-layer as `tools/diagnostica_pictor.{h,c}` (precedent:
-`tools/natura_canones.h`). Without this extraction, every client
-instrument copy-pastes the printer — the `recentius_ex` failure this
-house just spent a commit fixing.
+**Orchestration is hidden; VOCABULARY is shared.** Consumers receive
+`MateriaDiagnosticum` but never call a materia function — the way one
+receives a `chorda` without knowing chorda's internals. Were crusta to
+invent `CrustaDiagnosticum`, every client would reinvent the record,
+cross-client tools would need N translations, the printer N overloads,
+and `tools/diagnostica` could not be a thin dispatcher at all.
+
+**E4 — the printer leaves the tool; its home is an INTERNAL choice.**
+`_diagnosticum_imprimere` is `interior` in `tools/diagnostica.c` and
+takes nothing client-specific, so every facade would otherwise
+copy-paste it.
+
+The rule at `materia_diagnostica.h:11` and `materia/CLAUDE.md:135` is
+narrower than it first reads: `include/excerptum.h` states the reason —
+*"sedem materia dat, formam haec; ergo nihil de arboribus scit et A
+QUOLIBET FONTE vocari potest"*. The rule forbids REIMPLEMENTING form
+in materia, not composing it. `lib/excerptum` already produces a
+string into a `ChordaAedificator` and is tree-free.
+
+What is missing is the layer above — `MateriaDiagnosticum` → full
+diagnostic text — which needs a materia type and so cannot live in
+`lib/`. Because E3 puts rendering behind the facade, this becomes an
+internal placement decision rather than a public commitment: the plan
+picks it, the spec does not bind it. **Generation returns a `chorda`;
+only the instrument writes to stdout.**
 
 **E5 — one parse serves both tiers.** The client instrument parses
 once and runs tier 1 (registry) and tier 2 (rules) over the same tree,
@@ -150,40 +179,85 @@ and means nothing.
 
 **Total ~250–290 new C.**
 
-## 3. The boundary
+## 3. The shared sequence, and who owns it
 
-| materia provides | the client owns |
-|---|---|
-| `materia_diagnostica_derivare` | its parse call and dialect |
-| `materia_exemplaria_applicare` | its registry + lexicon |
-| `materia_annotationes_colligere` | its comment prefix (`"#"`) |
-| `materia_excusatio_applicare` | where its rules live |
-| — | its `main`, its exit codes |
-
-`tools/diagnostica_pictor` provides the form. materia provides the
-place. Neither knows a client's name.
-
-## 4. The client instrument
-
-`crusta/instrumenta/lintrum.c`, ~70 lines:
+Every client would otherwise copy the same hundred lines: derive tier 1,
+extract tier 2 per rule, collect annotations, apply exemptions, sort.
+That sequence is written ONCE, parameterised by a configuration the
+CLIENT constructs (E1):
 
 ```c
-radix     = crusta_arbor_parsare(piscina, fons, mensura,
-                &CRUSTA_BASH, &relatio);
-scriptura = materia_arbor_proicere_nodum(piscina, radix, &consilium);
+nomen structura {
+    constans character*               grammatica;   /* "crusta" */
+    constans MateriaRegistrumCoctum*  registrum;
+    constans MateriaLexiconRatum*     lexicon;
+    constans MateriaDiagnosticaCocta* declarata;
+    constans character*               praefixum;    /* "#" */
+    Xar*                              regulae;      /* StmlNodus* IAM lecta */
+} MateriaDiagnosticaRatio;
 
-d = crusta_diagnostica(piscina, radix, &relatio);            /* I  */
-xar_extendere(d, materia_exemplaria_applicare(piscina,
-        scriptura.arbor, &ratum, regula, intern));           /* II */
-
-a = materia_annotationes_colligere(piscina, radix, &ratum, "#",
-        NIHIL, intern);
-d = materia_excusatio_applicare(piscina, d, a, &CRUSTA_DIAGNOSTICA,
-        "crusta");
-
-diagnostica_pictor_imprimere(piscina, via, "crusta", fons, mensura,
-        d, ...);
+Xar*
+materia_diagnostica_plena (
+                          Piscina* piscina,
+            constans MateriaNodus* radix,
+constans MateriaDiagnosticaRatio* ratio);
 ```
+
+`regulae` are already-parsed trees, so materia performs no rule
+discovery and reads no file. Which directory holds the rules is client
+policy; glob-and-parse is a shared helper the client calls with its own
+path.
+
+## 4. The client facade
+
+Three levels, each a legitimate stopping point. A consumer picks one
+and never sees materia's machinery:
+
+```c
+/* I - textus solus: qui errores videre vult */
+chorda crusta_diagnostica_textus (Piscina*, constans character* via,
+                                  constans character* fons, i32 mensura);
+
+/* II - recorda: vocabularium commune, orchestratio abscondita */
+Xar*   crusta_diagnostica_omnia  (Piscina*, constans character* fons,
+                                  i32 mensura,
+                                  constans CrustaOptiones*);
+
+/* III - arbor, pro eo qui plus vult (IAM EXSTAT, immota) */
+MateriaNodus* crusta_arbor_parsare (...);
+```
+
+`optiones == NIHIL` runs **everything in `crusta/lintrum/`** — the
+default. A caller wanting named rules fills `optiones->regulae`
+(Fran, 2026-09-18). Level II is where both tiers, annotations and
+exemptions happen; the LSP stops there and gets structured ranges, a
+CLI stops at level I.
+
+The facade itself is ~20 lines:
+
+```c
+Xar*
+crusta_diagnostica_omnia (piscina, fons, mensura, opt)
+{
+    radix = crusta_arbor_parsare(piscina, fons, mensura,
+                &CRUSTA_BASH, &relatio);        /* crustae proprium */
+    ratio = { "crusta", &CRUSTA_REGISTRUM, &ratum, &CRUSTA_DIAGNOSTICA,
+              "#", opt ? opt->regulae : _regulae_ordinariae() };
+    d = materia_diagnostica_plena(piscina, radix, &ratio);
+    xar_extendere(d, crusta_diagnostica_emissa(piscina, radix,
+                         &relatio));  /* quod parsator SOLUS scit */
+    redde d;
+}
+```
+
+**Dependency direction: consumer → crusta → materia → lib.** crusta
+always depended on materia; what changes is that the consumer no longer
+does.
+
+**Porcelain — globs, file lists, exit codes, counters — stays at the
+INSTRUMENT layer** (`tools/`), where `git ls-files` and exit contracts
+already live. One call per file is the library shape; iterating is tool
+policy.
 
 ## 5. What Python loses
 
@@ -228,14 +302,23 @@ method the sedes arc used for 5,501,210 elements.
 
 ## 8. AUDIENDA
 
-1. Does the client instrument subsume tier 1 entirely, or does
-   `tools/diagnostica` keep its own derive path for clients with no
-   instrument? E7 says dispatcher; the fallback is unspecified.
+1. ~~Does the client instrument subsume tier 1?~~ **ANSWERED by E3:**
+   yes, by construction — the facade runs both tiers, so there is no
+   separate lint instrument and no fallback to specify.
 2. `exemplaria`'s Python face still shells out per file. Once the
    instrument takes a file LIST, is the face one call or N?
-3. Rule loading is client policy (E3), so two clients could disagree
-   about rule-file discovery. Worth a convention before the second
-   client, not after.
+3. ~~Rule-file discovery convention?~~ **PARTLY ANSWERED:** the
+   default is "everything in `<cliens>/lintrum/`" and the explicit API
+   takes parsed trees. What is still open is whether the shared
+   glob-and-parse helper lives in materia (which reads files only in
+   `materia_coctor` today) or at the instrument layer.
 4. EX8 of the excusatio spec (dead `lint:` exemptions) becomes
-   judgeable once an instrument knows its full rule set. That check
-   belongs in the client instrument, and this arc is its trigger.
+   judgeable once a facade knows its full rule set — `ratio->regulae`
+   IS that set. This arc is its named trigger.
+5. **Six near-identical facades is the `recentius_ex` shape** (one
+   defect, four files, the hand census found one). Fran's position
+   (2026-09-18): not a long-term worry, because this is exactly what
+   a structural lint catches once the machinery exists — the thing
+   being built polices the thing being risked. Recorded as a NAMED
+   FUTURE, not an architectural guard: a rule over facade shape, at
+   whatever granularity silva/materia make cheap.
