@@ -115,6 +115,44 @@ _lintris_est (
                        chorda_ex_literis("lint:", piscina)));
 }
 
+/* An lintris huius codicis ('lint:X') REVERA CUCURRERIT, id est an X
+ * inter nomina a regulis declarata sit. FALSUM cum 'lintres' abest:
+ * nihil cucurrit quod sciamus, ergo nihil mortuum nominatur. */
+interior b32
+_lintris_cucurrit (
+             Piscina* piscina,
+        constans Xar* lintres,
+     constans chorda* codex)
+{
+    i32 k;
+
+    si (lintres == NIHIL || codex == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(lintres); k++)
+    {
+        constans character* nomen_lintris =
+            *(constans character**)xar_obtinere(lintres, k);
+        chorda plenum;
+
+        si (nomen_lintris == NIHIL)
+        {
+            perge;
+        }
+        /* 'lint:' + nomen, ut codex scriptus est */
+        plenum = chorda_ex_literis(nomen_lintris, piscina);
+        si (   codex->mensura                   == plenum.mensura + V
+            && memcmp(codex->datum, "lint:", V) == ZEPHYRUM
+            && memcmp(codex->datum + V, plenum.datum,
+                   (memoriae_index)plenum.mensura) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* An codex in tabula declaratorum sit. Praefixum 'lint:' SEMPER
  * transit: registrum regularum nondum exsistit (EX8; signum = cursor
  * regularum), ergo iudicare esset RESPONSUM FALSUM FIDENTER DATUM. */
@@ -364,7 +402,7 @@ materia_excusatio_applicare (
                         constans Xar* annotationes,
     constans MateriaDiagnosticaCocta* declarata,
                   constans character* grammatica,
-                                 b32  lint_iudicandus)
+                        constans Xar* lintres)
 {
     Xar* exitus;
     Xar* excusationes;
@@ -443,8 +481,9 @@ materia_excusatio_applicare (
          * falsum factum erat. */
         si (   e->status == EX_VALIDA
             && (   e->usus
-                || (!lint_iudicandus
-                    && _lintris_est(piscina, e->codex))))
+                || (   _lintris_est(piscina, e->codex)
+                    && !_lintris_cucurrit(piscina, lintres,
+                           e->codex))))
         {
             perge;
         }

@@ -890,11 +890,11 @@ materia_diagnostica_plena (
         annotationes = materia_annotationes_colligere(piscina, radix,
             ratio->lexicon, ratio->praefixum, NIHIL, intern);
     }
-    /* IUDICABILIS SOLUM SI GRADUS II REVERA CUCURRIT: copia plena
-     * DECLARATA nihil valet si regula nulla adfuit. */
+    /* NOMINA LINTRIUM QUAE CUCURRERUNT, non vexillum 'copiae plenae':
+     * excusatio mortua nominatur solum si regula eius revera cucurrit.
+     * Gradus I solus (regulae nullae) nomina nulla dat, ergo nihil
+     * lintris iudicatur - quod rectum est. */
     redde materia_excusatio_applicare(piscina, exitus, annotationes,
         ratio->declarata, ratio->grammatica,
-        (b32)(   ratio->regulae_plenae
-              && ratio->regulae != NIHIL
-              && xar_numerus(ratio->regulae) > ZEPHYRUM));
+        materia_exemplaria_lintres(piscina, ratio->regulae));
 }

@@ -200,8 +200,6 @@ principale (
         redde (integer)II;
     }
     optiones.intern   = intern;
-    /* lintrum ordinarium TOTUM lectum: excusatio lintris iudicanda */
-    optiones.regulae_plenae = VERUM;
     /* ELECTIO, NON MACRO: vocans explicitus, deinde ambitus, deinde
      * mos. Forma prior macronem ipsum adhibebat, ergo hoc instrumentum
      * CRUSTA_LINTRUM tacite neglegebat dum tools/diagnostica eum

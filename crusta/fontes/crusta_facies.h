@@ -85,12 +85,6 @@ nomen structura {
     /* VERUM = subtractiones declaratas ('<relatum minuit=>') NON
      * applicare: bracchia CRUDA, ut auctor regulae ea scripsit. */
                     b32 crudum;
-    /* VERUM = 'regulae' datae COPIA PLENA crustae sunt (instrumentum
-     * quod lintrum ipsum legit hoc dicit). Sine eo excusatio lintris
-     * mortua NON iudicatur, quia regula eius fortasse non cucurrit.
-     * Cum 'regulae' NIHIL est facies lintrum ipsa legit, et tunc hoc
-     * SPONTE verum est. */
-                    b32 regulae_plenae;
 } CrustaOptiones;
 
 /* GRADUS II - recorda, ordine (initium, codex).

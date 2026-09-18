@@ -331,13 +331,6 @@ constans CrustaOptiones*  optiones,
     ratio.regulae  = regulae;
     ratio.intern   = intern;
     ratio.crudum   = optiones != NIHIL && optiones->crudum;
-    /* COPIA PLENA: aut nos eam ex lintro legimus, aut vocans eam
-     * plenam esse DECLARAT. Vocans qui regulas nominatas dat sine
-     * declaratione hoc non obtinet - excusatio regulae NON CURSAE
-     * aliter mortua falso nominaretur. */
-    ratio.regulae_plenae = (b32)(   optiones == NIHIL
-                                 || optiones->regulae == NIHIL
-                                 || optiones->regulae_plenae);
     /* 'emissa': quod arbor non servat, solus parsator scit */
     redde materia_diagnostica_plena(piscina, radix, &ratio,
         relatio.diagnostica, causa);

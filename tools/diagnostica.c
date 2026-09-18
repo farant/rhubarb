@@ -488,9 +488,6 @@ _optiones_crustae (
         alioquin
         {
             optiones.intern   = intern;
-            /* LINTRUM ORDINARIUM TOTUM legimus, ergo excusatio
-             * lintris quae nihil absorbuit VERE mortua est. */
-            optiones.regulae_plenae = VERUM;
             optiones.regulae  = crusta_regulae_legere(piscina,
                 crusta_lintrum_eligere(NIHIL), intern, &causa_prior);
             si (optiones.regulae == NIHIL)

@@ -1044,3 +1044,43 @@ discriminates, and that is what fumus XX uses.
 
 Gate XX pairs with XVII: the same question asked of both instruments,
 so neither can go quiet while the other speaks.
+
+## 2026-09-18 — EX8's flag was the wrong shape, found by using it
+
+The dead-lint check shipped in `f8adfc08` gated on
+`regulae_plenae` — a boolean meaning *"the caller ran the complete rule
+set"*. Running the rule-2 survey against a custom lintrum produced **14
+`materia:excusatio-mortua` rows**: every legitimate rule-1 annotation in
+the house, called dead because rule 1 was not in that directory.
+
+```
+house lintrum (rule 1 present):  0 dead
+custom lintrum (rule 1 absent): 14 dead   ← all false
+```
+
+The boolean was true and useless. "Complete" was complete *relative to
+the configured directory*, while the annotations name codices — and
+`optiones.regulae` exists precisely so a caller can run a named subset,
+which makes this a false-positive machine rather than an edge case.
+It is the same wrong answer the original code's comment was protecting
+against; I replaced its guard with a flag that could not tell the two
+cases apart.
+
+**NAMES, NOT A FLAG.** `materia_exemplaria_lintres` collects the
+`lint=` values the rules DECLARE, and an exemption is judged dead only
+when its own lint is among them. *Dead* now means "its rule ran and
+absorbed nothing", never "its rule did not run". The name set subsumes
+`regulae_plenae` entirely — the flag is gone from `MateriaDiagnosticaRatio`,
+`CrustaOptiones` and both instruments, and the `-lege` path simply
+passes NIHIL.
+
+Gate XXI pairs with XIX: same file, same annotation, only the rule set
+differing — XIX proves it speaks when the rule is present, XXI that it
+stays quiet when absent. A fixture where both returned the same thing
+would discriminate nothing, which is how the flag survived its own
+gate in the first place.
+
+**The law, which this session earned twice in one day:** a capability
+is not proven by its own tests until something real uses it. XIX passed,
+planted red, and shipped — and the first genuine use, an hour later,
+broke it.

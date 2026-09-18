@@ -123,11 +123,6 @@ nomen structura {
      * auctor regulae ea scripsit. Numeri per bracchium et differentia
      * contra extractorem priorem hoc poscunt; via ordinaria FALSUM. */
                                  b32 crudum;
-    /* VERUM = 'regulae' COPIA PLENA clientis sunt (non submissa
-     * nominata), ergo excusatio lintris quae nihil absorbuit VERE
-     * mortua est. Cliens hoc scit; materia non - ideo hic iacet et non
-     * inferitur. Vide materia_excusatio.h 'lint_iudicandus' (EX8). */
-                                 b32 regulae_plenae;
 } MateriaDiagnosticaRatio;
 
 /* Xar NOVUM de MateriaDiagnosticum, ordine (initium, codex).

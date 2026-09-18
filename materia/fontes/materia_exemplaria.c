@@ -643,3 +643,83 @@ materia_exemplaria_minuere (
     }
     redde exitus;
 }
+
+
+/* ==================================================
+ * Nomina lintrium declaratarum
+ * ================================================== */
+
+interior vacuum
+_lintres_quaerere (
+       Piscina* piscina,
+           Xar* exitus,
+     StmlNodus* n)
+{
+    i32 k;
+
+    si (!_elementum_est(n) && n->genus != STML_NODUS_DOCUMENTUM)
+    {
+        redde;
+    }
+    si (   _elementum_est(n) && n->titulus != NIHIL
+        && chorda_aequalis_literis(*n->titulus, "relatum"))
+    {
+        constans character* lint = _attributum(piscina, n, "lint");
+
+        si (lint != NIHIL)
+        {
+            i32 j;
+            b32 iam = FALSUM;
+
+            per (j = ZEPHYRUM; j < xar_numerus(exitus) && !iam; j++)
+            {
+                si (strcmp(*(constans character**)xar_obtinere(exitus,
+                        j), lint) == ZEPHYRUM)
+                {
+                    iam = VERUM;
+                }
+            }
+            si (!iam)
+            {
+                constans character** cella =
+                    (constans character**)xar_addere(exitus);
+
+                si (cella != NIHIL)
+                {
+                    *cella = lint;
+                }
+            }
+        }
+        redde;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(n->liberi); k++)
+    {
+        _lintres_quaerere(piscina, exitus,
+            *(StmlNodus**)xar_obtinere(n->liberi, k));
+    }
+}
+
+Xar*
+materia_exemplaria_lintres (
+         Piscina* piscina,
+    constans Xar* regulae)
+{
+    Xar* exitus;
+    i32  k;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    exitus = xar_creare(piscina, (i32)magnitudo(constans character*));
+    si (exitus == NIHIL || regulae == NIHIL)
+    {
+        redde exitus;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(regulae); k++)
+    {
+        _lintres_quaerere(piscina, exitus,
+            *(StmlNodus**)xar_obtinere(regulae, k));
+    }
+    redde exitus;
+}

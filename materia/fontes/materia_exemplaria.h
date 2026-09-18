@@ -135,4 +135,26 @@ materia_exemplaria_minuere (
           constans Xar*  ordines,
     constans character** causa);      /* NIHIL licet */
 
+/* Nomina lintrium quae regulae DECLARANT ('<relatum lint="X">'), ex
+ * arboribus regularum IAM LECTIS ('regulae': Xar de StmlNodus*).
+ * Xar de 'constans character*', ordine primi visus.
+ *
+ * CUR EXSISTIT: excusatio lintris mortua nominari potest SOLUM si
+ * regula eius REVERA CUCURRIT. Vexillum 'copia plena' id non
+ * praestat - copia plena DIRECTORII ALTERIUS regulam nominatam non
+ * continet, et excusationes eius omnes falso mortuae viderentur.
+ * MENSURATUM 2026-09-18: XIV annotationes domus verae sub lintro
+ * alieno mortuae nominatae sunt, quod est ipsum responsum falsum
+ * fidenter datum quod EX8 vitare volebat.
+ *
+ * Bracchia auxiliaria ('minuit') NUMERANTUR quoque: nomen suum
+ * declarant, et excusatio eorum vere numquam absorbere potest.
+ *
+ * NIHIL = argumentum abest aut memoria defecit; Xar vacuum = regula
+ * nulla lintrem declarat. */
+Xar*
+materia_exemplaria_lintres (
+         Piscina* piscina,
+    constans Xar* regulae);
+
 #endif /* MATERIA_EXEMPLARIA_H */

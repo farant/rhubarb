@@ -23,7 +23,8 @@
 #      extractore priore);
 # XIX. excusatio LINTRIS mortua nominatur (EX8 clausum);
 # XX.  crusta/facies.sh ambitum CRUSTA_LINTRUM honorat, ut
-#      tools/diagnostica (instrumenta duo, mos unus).
+#      tools/diagnostica (instrumenta duo, mos unus);
+# XXI. excusatio cuius regula NON cucurrit mortua NON est (par cum XIX).
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -299,6 +300,31 @@ mkdir -p "$T/lintrum_vacuum2"
     ./crusta/facies.sh "$T/lint.sh" ) > "$T/facies_vac.out" 2>&1
 rc=$?
 [ "$rc" -eq 2 ]; credo $? "XX. facies.sh ambitum HONORAT (lintrum vacuum -> 2, rc $rc)"
+
+# XXI. EXCUSATIO CUIUS REGULA NON CUCURRIT MORTUA NON EST. Forma prior
+# 'copiam plenam' per vexillum nuntiabat, et vexillum fallebat: copia
+# plena DIRECTORII ALTERIUS regulam nominatam non continet. Mensuratum
+# 2026-09-18, eodem die quo scripta est: sub lintro alieno XIV
+# annotationes domus VERAE mortuae nominatae sunt. 'Mortua' significat
+# 'regula eius CUCURRIT et nihil absorbuit', numquam 'regula eius non
+# cucurrit'.
+#
+# PAR CUM XIX: eadem plagula, eadem annotatio, sola COPIA REGULARUM
+# differens. XIX mortuam clamare probat (regula adest), XXI tacere
+# (regula abest). Fixtura ubi utraque idem redderet nihil discerneret.
+mkdir -p "$T/lintrum_alienum"
+cat > "$T/lintrum_alienum/alia.stml" <<'STML'
+<EXEMPLAR output="$z"><crusta-litteralis $t/></EXEMPLAR>
+<relatum lint="alia-regula" gravitas="monitum" causa="regula aliena">
+  <PER congruentia="$z"><situs>&@t;</situs></PER></relatum>
+STML
+( cd "$RADIX" && CRUSTA_LINTRUM="$T/lintrum_alienum" \
+    ./tools/diagnostica.sh -machina "$T/lint_mortua.sh" ) \
+    > "$T/aliena.out" 2>/dev/null
+! grep -q 'materia:excusatio-mortua' "$T/aliena.out"
+credo $? "XXI. regula ABSENS: excusatio NON mortua nominatur"
+grep -q 'lint:alia-regula' "$T/aliena.out"
+credo $? "XXI. regula aliena revera cucurrit (fixtura non muta)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus diagnostica: sanum"; exit 0; fi

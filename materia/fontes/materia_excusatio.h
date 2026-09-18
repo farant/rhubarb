@@ -97,19 +97,24 @@ materia_excusatio_applicare (
                         constans Xar* annotationes,
     constans MateriaDiagnosticaCocta* declarata,
                   constans character* grammatica,
-                                 b32  lint_iudicandus);
+                        constans Xar* lintres);
 
-/* 'lint_iudicandus' (EX8, apertum usque ad 2026-09-18): VERUM =
- * vocans gradum II cum REGULARUM COPIA PLENA cucurrit, ergo excusatio
- * lintris quae nihil absorbuit VERE mortua est et ita nominatur.
+/* 'lintres' (EX8; NIHIL licet): NOMINA lintrium quae REVERA
+ * CUCURRERUNT (materia_exemplaria_lintres). Excusatio cuius codex
+ * 'lint:X' est mortua nominatur SOLUM si X inter ea est.
  *
- * FALSUM ubi copia incerta est: cursus gradus I solus, aut vocans qui
- * regulas NOMINATAS dedit (excusatio regulae ALTERIUS tunc mortua
- * falso videretur), aut tabula aliunde lecta et iam cribrata ('-lege').
- * Iudicare ibi esset RESPONSUM FALSUM FIDENTER DATUM.
+ * NOMINA, NON VEXILLUM. Forma prior 'copiam plenam' per b32 nuntiabat,
+ * et fallebat: copia plena DIRECTORII ALTERII regulam nominatam non
+ * continet. Mensuratum 2026-09-18, eodem die quo scripta est: sub
+ * lintro alieno XIV annotationes domus VERAE mortuae nominatae sunt.
+ * 'Mortua' significare debet 'regula eius CUCURRIT et nihil absorbuit',
+ * numquam 'regula eius non cucurrit' - quod est ipsum responsum falsum
+ * fidenter datum quod EX8 vitare volebat.
  *
- * Mensuratum 2026-09-18 ante aedificationem: excusationes lintris
- * mortuae in domo ZERO - ergo custodia haec nihil frangit, et fixtura
- * eam probare debet, non corpus. */
+ * NIHIL aut vacuum = nulla lintris iudicatur: cursus gradus I solus,
+ * aut tabula aliunde lecta et iam cribrata ('-lege').
+ *
+ * Causa et parsura excusationis NIHILOMINUS semper iudicantur: eas
+ * vocans quisque VIDET, regulis nullis opus est. */
 
 #endif /* MATERIA_EXCUSATIO_H */
