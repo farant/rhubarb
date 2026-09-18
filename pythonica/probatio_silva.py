@@ -1487,18 +1487,39 @@ except silva.SilvaError:
 
 # relata: ordines = elementa filia (vacuum HTML sine clausura quoque),
 # relatum vacuum = nulli ordines, attributa praeter lint servata; ordo
-# (textus, sedes, octeti) - sedes ordinis ipsius aut descendentis primi
+# (textus, [(sedes, octeti, nota)]) - sedes OMNES quas ordo fert
 rl = silva._relata(silva._vertere(
     '<relatum lint="vacuum"/>\n<relatum lint="x" pro="y"><situs>a &amp; b'
     '</situs><situs sedes="2:1-2:4" octeti="5-8"><crusta-linea/><br/>c'
     '</situs><situs><q sedes="3:3-3:4" octeti="9-10">d</q></situs>'
     '<br/></relatum>\n'))
 credo(rl == [('vacuum', {}, []),
-             ('x', {'pro': 'y'}, [('a & b', None, None),
-                                  ('c', '2:1-2:4', '5-8'),
-                                  ('d', '3:3-3:4', '9-10'),
-                                  ('', None, None)])],
-      'relata: ordines cum sede propria aut prima descendentis: %r' % (rl,))
+             ('x', {'pro': 'y'}, [('a & b', []),
+                                  ('c', [('2:1-2:4', '5-8', None)]),
+                                  ('d', [('3:3-3:4', '9-10', None)]),
+                                  ('', [])])],
+      'relata: ordines cum sedibus suis: %r' % (rl,))
+
+# SEDES PLURES in ordine UNO, quaeque nota involucri proximi nominata.
+# Haec forma MENSURATA est (2026-09-17): duae insertiones in elemento
+# uno ARGUMENTUM_ARBOREUM reddunt, ergo involucrum quodque unam fert.
+rp = silva._relata(silva._vertere(
+    '<relatum lint="duo"><situs>'
+    '<a nota="hic adhibetur"><q sedes="1:8-1:11" octeti="7-10">x</q></a>'
+    '<b nota="in hoc imperio"><r sedes="1:1-1:13" octeti="0-12">y</r></b>'
+    '</situs></relatum>\n'))
+credo(rp == [('duo', {}, [('xy', [('1:8-1:11', '7-10', 'hic adhibetur'),
+                                  ('1:1-1:13', '0-12',
+                                   'in hoc imperio')])])],
+      'relata: sedes plures in ordine uno, notis involucrorum: %r' % (rp,))
+
+# ordo SINE nota: sedes fertur, nota None - involucrum notam ferre non
+# tenetur
+rn = silva._relata(silva._vertere(
+    '<relatum lint="sine"><situs><a><q sedes="4:2-4:5" octeti="20-23">z'
+    '</q></a></situs></relatum>\n'))
+credo(rn == [('sine', {}, [('z', [('4:2-4:5', '20-23', None)])])],
+      'relata: sedes sine nota: %r' % (rn,))
 
 via_nt1 = os.path.join(T, 'proba_nt1.sh')
 via_nt2 = os.path.join(T, 'proba_nt2.sh')
@@ -1533,6 +1554,46 @@ credo({(c.via, c.linea, c.columna, c.textus_fontis)
       'exemplaria: ordines cum linea, columna, textu fontis: %r'
       % ([(c.via, c.linea, c.columna, c.textus_fontis)
           for c in ex_nt.congruentiae],))
+# FINIS ET OCTETI quoque servantur (ante hoc opus abiciebantur). Fixa
+# ASYMMETRICA sunt de industria: linea I, columna VIII/X, initium !=
+# finis - ergo permutatio cuiusque paris VIDETUR. Fixum symmetricum
+# quattuor plantas virides per arcus duos costitit.
+credo({(c.linea, c.columna, c.linea_finis, c.columna_finis,
+        c.initium, c.finis) for c in ex_nt.congruentiae}
+      == {(1, 8, 1, 11, 7, 10), (1, 10, 1, 13, 9, 12)},
+      'exemplaria: finis et octeti servati: %r'
+      % ([(c.linea, c.columna, c.linea_finis, c.columna_finis,
+           c.initium, c.finis) for c in ex_nt.congruentiae],))
+credo(all(c.relata == () and c.nota is None for c in ex_nt.congruentiae),
+      'exemplaria: sedes una => relata vacua, nota None')
+
+# SEDES PLURES per regulam: involucra bina intra situm unum, notis suis.
+# Forma MENSURATA, non ficta (2026-09-17).
+ex_duo = silva.exemplaria(
+    via_nt1,
+    '<TRANSPARENTIA tags="ante post" attributa="sedes octeti"/>'
+    '<EXEMPLAR output="$imp"><imperium $i/></EXEMPLAR>'
+    '<EXEMPLAR de="$imp" output="$nt">'
+    '<crusta-litteralis $t>-nt</crusta-litteralis></EXEMPLAR>'
+    '<relatum lint="duo"><PER congruentia="$nt"><situs>'
+    '<hic nota="hic adhibetur">&@t;</hic>'
+    '<ibi nota="in hoc imperio">&@i;</ibi>'
+    '</situs></PER></relatum>')
+_cd = ex_duo.congruentiae
+credo(len(_cd) == 1 and len(_cd[0].relata) == 1,
+      'exemplaria: sedes plures - una primaria, una relata (%d ordines, '
+      '%d relatae)' % (len(_cd), len(_cd[0].relata) if _cd else -1))
+if _cd and _cd[0].relata:
+    credo(_cd[0].nota == 'hic adhibetur'
+          and _cd[0].linea == 1 and _cd[0].columna == 8,
+          'exemplaria: primaria = sedes prima cum nota sua (%r %d:%d)'
+          % (_cd[0].nota, _cd[0].linea, _cd[0].columna))
+    credo(_cd[0].relata[0].nota == 'in hoc imperio'
+          and _cd[0].relata[0].columna == 1
+          and _cd[0].relata[0].initium == 0,
+          'exemplaria: relata = imperium totum cum nota sua (%r %d:%d @%d)'
+          % (_cd[0].relata[0].nota, _cd[0].relata[0].linea,
+             _cd[0].relata[0].columna, _cd[0].relata[0].initium))
 # captura iterata sub visione sedium: imperium idem bis (A3 contentum +
 # praefatio attributorum sedium); imperium diversum nihil. cursus
 # fratrum: initium quodque temptatur (avida 'x=1' ligaret et numquam

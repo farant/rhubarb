@@ -3315,8 +3315,9 @@ _VACUA_HTML = frozenset('area base br col embed hr img input keygen link '
 # elementum vacuum inter arborem et regulam: effusio post eum = relata
 _LIMES_RELATORUM = '<exemplaria-limes-relatorum/>'
 
-Congruentia = namedtuple('Congruentia', 'via lint textus attributa linea '
-                         'columna textus_fontis')
+Congruentia = namedtuple('Congruentia', 'via lint textus attributa '
+                         'linea columna linea_finis columna_finis '
+                         'initium finis textus_fontis nota relata')
 Exemplaria = namedtuple('Exemplaria',
                         'summae plagulae congruentiae fracturae sine_sede')
 
@@ -3349,11 +3350,19 @@ def _vertere(textus):
 
 
 def _relata(html_textus):
-    """[(lint, attributa, [(textus, sedes, octeti)])] ex elementis
-    <relatum> summis: ordo = elementum filium quodque (PER emissio una),
-    textus = textus totus subarboris (trivia inclusa, detonsus), sedes/
-    octeti = attributa ordinis ipsius aut descendentis primi qui ea fert
-    (visio sedium; nodus captus per '&@n;' insertus); None si nulla"""
+    """[(lint, attributa, [(textus, [(sedes, octeti, nota)])])] ex
+    elementis <relatum> summis: ordo = elementum filium quodque (PER
+    emissio una), textus = textus totus subarboris (trivia inclusa,
+    detonsus), et SEDES OMNES quas ordo fert, ordine documenti.
+
+    SEDES PLURES (mensuratum 2026-09-17, non fictum): regula duas ponit
+    involucris binis intra ordinem UNUM -
+    '<situs><x nota="...">&@a;</x><y nota="...">&@b;</y></situs>'.
+    Insertiones DUAE in elemento uno ARGUMENTUM_ARBOREUM reddunt, ergo
+    involucrum quodque unam fert; 'nota' involucri proximi sedem infra
+    se nominat. Prima sedes PRIMARIA est. Filii BINI ipsius <relatum>
+    inventa DUO sunt, non inventum unum sedibus binis - electio
+    auctoris regulae, quae ex structura ipsa fluit."""
     from html.parser import HTMLParser
 
     class _Lector(HTMLParser):
@@ -3362,13 +3371,31 @@ def _relata(html_textus):
             self.relata = []
             self.gradus = 0          # profunditas intra relatum (0 = extra)
             self.ordo = None
-            self.sedes = None
-            self.octeti = None
+            self.sedes_omnes = None
+            self.notae = []          # pila, gradibus intra ordinem parallela
+            self.gradus_capti = None  # intra subarborem iam captam
+
+        def _nota_proxima(self):
+            for n in reversed(self.notae):
+                if n:
+                    return n
+            return None
 
         def _sedem_capere(self, a):
-            if self.sedes is None and 'sedes' in a:
-                self.sedes = a.get('sedes')
-                self.octeti = a.get('octeti')
+            """SEDES SUMMA per involucrum, non omnis descendentis: nodus
+            insertus subarborem totam fert et elementum quodque in ea
+            sedem suam (imperium unum XXIX dedit), ergo post capturam
+            descensus tacet donec subarbor capta exeatur."""
+            if (self.gradus_capti is not None or 'sedes' not in a
+                    or self.sedes_omnes is None):
+                return False
+            self.sedes_omnes.append((a.get('sedes'), a.get('octeti'),
+                                     self._nota_proxima()))
+            return True
+
+        def _ordo_vacuus(self, a):
+            return ('', [(a.get('sedes'), a.get('octeti'), a.get('nota'))]
+                        if 'sedes' in a else [])
 
         def handle_starttag(self, tag, attrs):
             vacuum = tag in _VACUA_HTML
@@ -3380,22 +3407,24 @@ def _relata(html_textus):
                     self.gradus = 1
                 return
             if self.gradus == 1 and vacuum:     # ordo vacuus sine clausura
-                self.relata[-1][2].append(('', a.get('sedes'),
-                                           a.get('octeti')))
+                self.relata[-1][2].append(self._ordo_vacuus(a))
                 return
             if self.gradus == 1 and self.ordo is None:
                 self.ordo = []
-                self.sedes = None
-                self.octeti = None
-            self._sedem_capere(a)
+                self.sedes_omnes = []
+                self.notae = []
+                self.gradus_capti = None
+            captum = self._sedem_capere(a)
             if not vacuum:
+                if captum:
+                    self.gradus_capti = self.gradus
+                self.notae.append(a.get('nota'))
                 self.gradus += 1
 
         def handle_startendtag(self, tag, attrs):
             a = dict(attrs)
             if self.gradus == 1:
-                self.relata[-1][2].append(('', a.get('sedes'),
-                                           a.get('octeti')))
+                self.relata[-1][2].append(self._ordo_vacuus(a))
             elif self.gradus > 1:
                 self._sedem_capere(a)
             elif self.gradus == 0 and tag == 'relatum':
@@ -3406,10 +3435,18 @@ def _relata(html_textus):
             if self.gradus == 0 or tag in _VACUA_HTML:
                 return
             self.gradus -= 1
+            if self.notae:
+                self.notae.pop()
+            if (self.gradus_capti is not None
+                    and self.gradus <= self.gradus_capti):
+                self.gradus_capti = None
             if self.gradus == 1 and self.ordo is not None:
                 self.relata[-1][2].append((''.join(self.ordo).strip(),
-                                           self.sedes, self.octeti))
+                                           self.sedes_omnes))
                 self.ordo = None
+                self.sedes_omnes = None
+                self.notae = []
+                self.gradus_capti = None
 
         def handle_data(self, data):
             if self.ordo is not None:
@@ -3439,6 +3476,20 @@ SedesRelata = namedtuple('SedesRelata',
 Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
                           'columna_finis gravitas codex causa textus '
                           'nota relata')
+
+
+def _sedem_ordinis(sedes, octeti, nota):
+    """('L:C-L:C', 'B-B', nota) -> SedesRelata; None si sedes abest aut
+    formam non servat. Octeti absentes -1 reddunt (sedes sine octetis in
+    visione sedium non fit, sed forma id non vetat)."""
+    m = re.match(r'(\d+):(\d+)-(\d+):(\d+)$', sedes or '')
+    if not m:
+        return None
+    n = re.match(r'(\d+)-(\d+)$', octeti or '')
+    return SedesRelata(int(m.group(1)), int(m.group(2)),
+                       int(m.group(3)), int(m.group(4)),
+                       int(n.group(1)) if n else -1,
+                       int(n.group(2)) if n else -1, nota)
 
 
 def _sedem_relatam(frustum):
@@ -3526,11 +3577,23 @@ def exemplaria(viae, regula, paralleli=6):
     summa lecta. Reddit Exemplaria(summae {lint: ordines} ordine primi
     visus, plagulae {via: {lint: ordines}}, congruentiae
     [Congruentia(via, lint, textus, attributa, linea, columna,
-    textus_fontis)], fracturae {via: causa}, sine_sede {via: ordines
-    sine sede}). Ordo sedem fert ordinis ipsius aut nodi primi inserti
-    ('&@n;'): linea et columna (1-basatae, columna octetorum) et
-    textus_fontis (segmentum fontis per octetos); None si ordo sine
-    sede (C semper; clientes: ordo sine nodo inserto, e.g. '<situs/>').
+    linea_finis, columna_finis, initium, finis, textus_fontis, nota,
+    relata)], fracturae {via: causa}, sine_sede {via: ordines sine
+    sede}). Sedes PRIMARIA campos planos tenet (ut MateriaDiagnosticum,
+    SM1 specificationis sedium multiplicium): lineae et columnae
+    1-basatae, columna OCTETORUM, initium/finis octeti, textus_fontis
+    segmentum fontis; omnia None si ordo sine sede (C semper; clientes:
+    ordo sine nodo inserto, e.g. '<situs/>').
+
+    SEDES PLURES: 'relata' tupla SedesRelata est, vacua plerumque.
+    Regula duas ponit involucris binis intra ordinem UNUM -
+    '<situs><x nota="hic">&@a;</x><y nota="ibi">&@b;</y></situs>' -
+    et 'nota' involucri sedem infra se nominat ('nota' ordinis ipsius
+    primariam). Filii BINI ipsius <relatum> inventa DUO sunt, non
+    inventum unum sedibus binis. Involucrum quodque sedem UNAM confert:
+    nodus insertus subarborem totam fert et elementum quodque in ea
+    sedem suam (imperium unum XXIX dedit), ergo post capturam descensus
+    tacet donec subarbor capta exeatur.
     REFUSIO: omnes plagulae fractae; regula quae nullum <relatum> gignit
     (numeri ZEPHYRUM mentirentur); regula clientium cum TRANSPARENTIA
     propria sine attributa="sedes octeti" (capturae iteratae et nodi per
@@ -3613,24 +3676,31 @@ def exemplaria(viae, regula, paralleli=6):
             relata_visa = True
             numeri[lint] = numeri.get(lint, 0) + len(ordines)
             summae[lint] = summae.get(lint, 0) + len(ordines)
-            for textus, sedes, octeti in ordines:
-                linea = columna = textus_fontis = None
-                m = re.match(r'(\d+):(\d+)-', sedes or '')
-                if m:
-                    linea, columna = int(m.group(1)), int(m.group(2))
-                else:
+            for textus, positiones in ordines:
+                lectae = [s for s in (_sedem_ordinis(sd, oc, nt)
+                                      for sd, oc, nt in positiones)
+                          if s is not None]
+                prima = lectae[0] if lectae else None
+                textus_fontis = None
+                if prima is None:
                     sine += 1
-                n = re.match(r'(\d+)-(\d+)$', octeti or '')
-                if n:
+                elif prima.initium >= 0:
                     if via not in fontes:
                         with open(_absoluta(via), 'rb') as f:
                             fontes[via] = f.read()
                     textus_fontis = fontes[via][
-                        int(n.group(1)):int(n.group(2))].decode(
-                            'utf-8', 'replace')
+                        prima.initium:prima.finis].decode('utf-8', 'replace')
                 congruentiae.append(Congruentia(
-                    via, lint, textus, attributa, linea, columna,
-                    textus_fontis))
+                    via, lint, textus, attributa,
+                    prima.linea if prima else None,
+                    prima.columna if prima else None,
+                    prima.linea_finis if prima else None,
+                    prima.columna_finis if prima else None,
+                    prima.initium if prima else None,
+                    prima.finis if prima else None,
+                    textus_fontis,
+                    prima.nota if prima else None,
+                    tuple(lectae[1:])))
         plagulae[via] = numeri
         sine_sede[via] = sine
     if not plagulae:

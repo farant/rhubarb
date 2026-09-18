@@ -115,11 +115,11 @@ confirm it is *not* silently accepted.
 **Produces:** `Congruentia` carrying `linea_finis columna_finis
 initium finis`, and **every** position in a row rather than the first.
 
-- [ ] **Step 1: keep the end.** Match the full
+- [x] **Step 1: keep the end.** Match the full
 `(\d+):(\d+)-(\d+):(\d+)` from `sedes` and keep both byte offsets from
 `octeti` instead of discarding them after the slice.
 
-- [ ] **Step 2: MEASURE how a rule expresses two positions, before
+- [x] **Step 2: MEASURE how a rule expresses two positions, before
 specifying anything.** Write a rule that captures two nodes in one
 finding, run it, and read the expanded output. The open question is
 where a second position can even live: `<PER>` emits one row per
@@ -134,22 +134,63 @@ fixture it needed already existed and the shape was not what the
 ticket assumed. Record what the output actually looks like, then
 write Step 3 against it.
 
-- [ ] **Step 3: collect every position in the row**, per Step 2's
+- [x] **Step 3: collect every position in the row**, per Step 2's
 measurement; the first is the primary. Labels for the related spans
 come from whatever Step 2 shows is available to a rule author — do not
 invent an attribute convention before seeing the output.
 
-- [ ] **Step 4: the gate.** Assert the end position and byte offsets
+- [x] **Step 4: the gate.** Assert the end position and byte offsets
 on a fixture where **line ≠ column and start ≠ end** — the
 symmetric-fixture trap that cost two green plants last arc. Plus the
 two-position case from Step 2, if Step 2 shows one exists.
 
-- [ ] **Step 5: plant by hand** (`silva.planta` cannot anchor `.py`):
+- [x] **Step 5: plant by hand** (`silva.planta` cannot anchor `.py`):
 keep only the first position → the two-position assertion goes red;
 swap `linea_finis`/`columna_finis` → the end assertion goes red on the
 asymmetric fixture.
 
-- [ ] **Step 6:** `probatio_silva.py`, commit.
+- [x] **Step 6:** `probatio_silva.py`, commit.
+
+**Executed 2026-09-17.**
+
+**Step 2's measurement settled the convention by running it, and the
+answer was not what reading suggested.** Three shapes, three results:
+two insertions side by side in one element are **refused**
+(`ARGUMENTUM_ARBOREUM` — a captured tree must be the sole content of
+its element); two `<situs>` children of `<relatum>` give **two rows**,
+i.e. two findings; one `<situs>` holding two wrapper elements gives
+**one row with two positions**, and the wrappers can carry `nota=`.
+So the convention already existed and needed no engine change:
+
+```xml
+<situs><hic nota="hic adhibetur">&@t;</hic>
+       <ibi nota="in hoc imperio">&@i;</ibi></situs>
+```
+
+One child of `<relatum>` = one finding; each wrapper = one position;
+`nota=` labels it; first is primary. The two shapes give the rule
+author a real choice — two findings, or one finding pointing twice —
+that falls out of the existing structure. `nota=` appears 0× in client
+trees, so no collision.
+
+**A bug I introduced and caught inside the task.** The first version
+collected *every* `sedes`-bearing descendant, and an inserted node
+carries its whole subtree — one command yielded **29** positions, and
+the "second" span was trivia nested inside the first. Fixed by
+suppressing descent once a position is captured, so each wrapper
+contributes exactly one. Plant 3 now pins it.
+
+**`Congruentia` mirrors `Diagnosticum`** (SM1 one layer up): flat
+primary fields plus a `relata` tuple of `SedesRelata`. 7 fields → 13.
+No consumer outside `silva.py` and its own gate.
+
+Three plants: keep only the first position → 1 red; swap
+`linea_finis`/`columna_finis` → 1 red, caught because the fixtures are
+asymmetric (line 1, column 8/10; start ≠ end); remove the descent
+suppression → **3** red including `(1 ordines, 29 relatae)`.
+
+Audited: `probatio_silva` exit 0; `diagnostica_fumus` sanum; vocabula
+NOVA 0.
 
 ---
 
