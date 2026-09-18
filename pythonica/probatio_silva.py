@@ -1754,6 +1754,41 @@ except silva.SilvaError as ex:
     credo('sine sede' in str(ex),
           'diagnostica_lintris: ordo sine sede REFUTATUR, non tacet: %s' % ex)
 
+print('--- regula I crustae: nt-aequalitas (bracchium negativum) ---')
+# NUMERI MENSURATI 2026-09-18 super domo tota. Census originalis
+# (01M2PRPGBC, 2026-09-17) CCLXXXIX/CCLX dedit; corpus per formas
+# quattuor crevit. Si hic numerus MOVETUR sine causa, aut corpus
+# crevit aut regula mutata est - utrumque nominandum.
+_REG_NT = 'crusta/lintrum/nt-aequalitas.stml'
+_ex_nt = silva.exemplaria('*.sh', _REG_NT)
+_omnes = {(c.via, c.initium) for c in _ex_nt.congruentiae
+          if c.lint == 'nt-omnes'}
+_negata = {(c.via, c.initium) for c in _ex_nt.congruentiae
+           if c.lint == 'nt-negata'}
+credo(len(_omnes) == 291 and len(_negata) == 262,
+      'regula nt: A=CCXCI occurrentiae, B=CCLXII negatae (%d/%d)'
+      % (len(_omnes), len(_negata)))
+# B SUBSET A: bracchia sedem EANDEM capiunt. Sine hoc differentia
+# numerum redderet qui nihil significat.
+credo(_negata <= _omnes,
+      'regula nt: bracchium negativum subset positivi (%d vagae)'
+      % len(_negata - _omnes))
+_cand = silva.congruentiae_minus(_ex_nt.congruentiae, 'nt-omnes',
+                                 'nt-negata', lint='nt-aequalitas')
+credo(len(_cand) == 29,
+      'regula nt: A-B = XXIX candidati (%d)' % len(_cand))
+credo(all(c.lint == 'nt-aequalitas' for c in _cand),
+      'congruentiae_minus: lint novum ordinibus datur')
+# CUSTODIA: bracchia sedes diversas capientia REFUTANTUR, non tacite
+# numerum falsum reddunt.
+try:
+    silva.congruentiae_minus(_ex_nt.congruentiae, 'nt-negata',
+                             'nt-omnes')
+    credo(False, 'congruentiae_minus: bracchia vaga refutantur')
+except silva.SilvaError as _ex:
+    credo('sedes diversas' in str(_ex),
+          'congruentiae_minus: bracchia vaga refutantur nominatim')
+
 print('--- diagnostica_materiae (clientes materiae) ---')
 import tempfile
 _d = tempfile.mkdtemp(prefix='probatio_diagnostica_')

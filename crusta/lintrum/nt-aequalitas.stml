@@ -1,0 +1,34 @@
+<!--
+  nt-aequalitas - '-nt' ubi aequalitas momenti est (regula I crustae)
+
+  DOCTRINA (2026-08-27): '$src -nt $obj' AEQUALITATEM PERDIT. Tempora
+  mutationis SECUNDO mensurantur, ergo fons et obiectum eodem secundo
+  scripta 'non novius' reddunt et opus TACITE omittitur. Remedium:
+  '! [ $obj -nt $src ]' - in aequalitate DENUO COMPILA.
+
+  DUO BRACCHIA, QUIA NEGATIO SUPRA SEDET. '!' in 'pipa > praefixa'
+  iacet, '-nt' in 'pipa > liberi > imperium'; SINE autem DEORSUM
+  quaerit ab radice ordinis. Ordo ad litterale radicatus negationem
+  suam videre NON potest (supra est), ordo ad documentum radicatus eam
+  NIMIS LATE videt (pipa negata quaelibet ordines omnes necaret).
+  Ergo bracchia duo et DIFFERENTIA per sedem - eadem arithmetica quam
+  census originalis probavit (CCLXXXIX - CCLX = XXIX).
+
+  LEX C8: 'pipa' SOLUM cum '|', '!' aut 'time' exsistit. Ergo probatio
+  nuda pipam OMNINO non habet, et 'negatum esse' est exacte 'in pipa
+  sedere cuius praefixa "!" ferunt'. Nulla forma tertia.
+-->
+<EXEMPLAR output="$omnes">
+  <crusta-litteralis $t>-nt</crusta-litteralis>
+</EXEMPLAR>
+
+<EXEMPLAR output="$negata">
+  <pipa><praefixa><crusta-reservatum>!</crusta-reservatum></praefixa>
+    <**><crusta-litteralis $n>-nt</crusta-litteralis></**>
+  </pipa>
+</EXEMPLAR>
+
+<relatum lint="nt-omnes" gravitas="erratum"
+         causa="'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur">
+  <PER congruentia="$omnes"><situs>&@t;</situs></PER></relatum>
+<relatum lint="nt-negata"><PER congruentia="$negata"><situs>&@n;</situs></PER></relatum>

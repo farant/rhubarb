@@ -3602,8 +3602,16 @@ def diagnostica_lintris(viae, regula, paralleli=6):
             'diagnostica_lintris: %d ordines sine sede (lint %s) - '
             'inventum sine sede locari non potest; regula nodum capiat'
             % (len(sine), ', '.join(sorted({c.lint for c in sine}))))
+    return diagnostica_ex_congruentiis(ex.congruentiae)
+
+
+def diagnostica_ex_congruentiis(congruentiae):
+    """[Congruentia] -> [Diagnosticum], sine cursu novo. Regula cuius
+    inventa CRIBRANDA sunt (bracchium negativum, vide
+    congruentiae_minus) hanc adit; 'diagnostica_lintris' eam vocat cum
+    cribratione nulla opus est."""
     exitus = []
-    for c in ex.congruentiae:
+    for c in congruentiae:
         a = c.attributa
         exitus.append(Diagnosticum(
             c.via, c.linea, c.columna, c.linea_finis, c.columna_finis,
@@ -3617,6 +3625,40 @@ def diagnostica_lintris(viae, regula, paralleli=6):
     return exitus
 
 
+def congruentiae_minus(congruentiae, positivum, negativum, lint=None):
+    """Ordines lintris 'positivum' MINUS eos qui sedem EANDEM ac ordo
+    lintris 'negativum' tenent. Reddit [Congruentia] cum 'lint' ad
+    'lint' argumentum mutato (ordinarie 'positivum').
+
+    CUR OMNINO: exemplar DEORSUM quaerit, et conditio quaedam SUPRA
+    inventum sedet - '!' crustae in 'pipa > praefixa', dum '-nt' in
+    'pipa > liberi > imperium' iacet. Ordo ad inventum radicatus
+    negationem suam videre non potest; ordo ad documentum radicatus
+    (radix="fontis") eam nimis late videt, et SINE ordines OMNES
+    necaret. Ergo regula bracchia DUO scribit et differentia hic
+    sumitur - eadem arithmetica quam census originalis probavit.
+
+    SEDES clavis est (via, initium), non textus: duo inventa eiusdem
+    textus in plagula una communia sunt.
+
+    CUSTODIA: si bracchium negativum bracchii positivi SUBSET non est,
+    regula sedes DIVERSAS capit et differentia nihil significat -
+    refutatio nominata, quia numerus tacite falsus pernicies esset."""
+    pos = [c for c in congruentiae if c.lint == positivum]
+    neg = {(c.via, c.initium) for c in congruentiae
+           if c.lint == negativum}
+    sedes_pos = {(c.via, c.initium) for c in pos}
+    vagae = neg - sedes_pos
+    if vagae:
+        raise SilvaError(
+            'congruentiae_minus: %d sedes lintris %r extra %r - '
+            'bracchia sedes diversas capiunt, differentia nihil '
+            'significat (prima: %s)'
+            % (len(vagae), negativum, positivum, sorted(vagae)[0]))
+    return [c._replace(lint=lint or positivum)
+            for c in pos if (c.via, c.initium) not in neg]
+
+
 def diagnostica_pingere(diagnostica):
     """[Diagnosticum] -> forma humana (caput, causa, excerptum '^~~~')
     per './tools/diagnostica.sh -lege'.
@@ -3624,10 +3666,16 @@ def diagnostica_pingere(diagnostica):
     PICTOR UNUS in domo: idem qui diagnostica DECLARATA pingit, in
     lingua una. Ergo inventa lintris quidquid postea pictori additur -
     color, sedes plures, LSP - GRATIS heredant, et via altera pictorem
-    suum gignere non potest."""
+    suum gignere non potest.
+
+    '-excusa' DATUR, et hic SOLUS eam dat: tabula lintris a regulis
+    nascitur et numquam cribrata est. Tabula ex 'diagnostica -machina'
+    contra IAM cribrata venit, ergo instrumentum eam non iterum cribrat
+    (applicatio altera excusationem VIVAM mortuam nominaret, quia
+    victima eius primo transitu cecidit). Vide tools/diagnostica.c."""
     if not diagnostica:
         return ''
-    r = _curre(['./tools/diagnostica.sh', '-lege'],
+    r = _curre(['./tools/diagnostica.sh', '-lege', '-excusa'],
                stdin=diagnostica_tsv(diagnostica))
     if r.returncode == 2:
         raise SilvaError('diagnostica_pingere: tabula recusata: %s'
