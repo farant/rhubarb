@@ -453,8 +453,14 @@ No consumer outside `silva.py` and its own gate reads `Diagnosticum`.
 
 ## Closing
 
-- [ ] `materia/phase-log.md`: RELATIO + DEBRIEF INSTRUMENTORUM.
-- [ ] Spec §16-style "As built" section if anything diverged.
-- [ ] `01M2RKYA4Z` → `impletum`; note the commits.
-- [ ] Unblock `01M2RNJ9XN` (the `Congruentia` adapter) — the shape it
-  was waiting on now exists.
+- [x] `materia/phase-log.md`: RELATIO + DEBRIEF INSTRUMENTORUM.
+- [x] Spec §9 "As built" — four divergences, all recorded.
+- [x] `01M2RKYA4Z` → `impletum`, commits noted.
+- [x] `01M2RNJ9XN` unblocked, with the label-escape gate named as a
+  debt it now owes.
+
+**PLANUM CLAUSUM 2026-09-17.** Six commits `69f06895` → `e04cc0b0`,
+14 files, +1631/-73. Audited at close: shim 398/398; materia 9/9,
+css 10/10, md 14/14, html 14/14, oratio 19/19, crusta 15/15; root
+suite exit 0; `probatio_silva` exit 0; `diagnostica_fumus` sanum;
+vocabula NOVA 0.

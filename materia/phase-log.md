@@ -2807,3 +2807,78 @@ would make crusta's `bash -n` line divergence evaporate. It does not:
 it adds a THIRD position, and the divergence resolves only if someone
 chooses a span set that includes bash's EOF line. Corrected in spec §8
 AUDIENDA I and noted on the ticket.
+
+RELATIO (arcus CLAUSUS 2026-09-17, sex commissa `69f06895` ->
+`e04cc0b0`: consilium, planum + INTENTIO, deinde opera I-IV). XIV
+plagulae, +1631/-73.
+
+QUOD AEDIFICATUM EST. `MateriaDiagnosticum` sedes plures fert:
+`MateriaSedesRelata {tractus, nota}` plus `nota` sedis primariae.
+Primaria campus planus MANET — caput lineae unam sedem poscit et
+clavis ordinis `(tractus.initium, codex)` eam recta legit. Sedes
+secunda GRATIS venit: bracchium `ABSENTIA` punctum ex tractu nodi `t`
+sumebat et `t` ipsum cadere sinebat; nunc servatur. `lib/excerptum`
+`excerptum_scribere_multa` accepit (unum saeptum, ordo fontis, margo
+semel mensuratus, linea fontis semel cum signo uno per sedem);
+`tools/diagnostica` per eum it et TSV campos XI-XII addit; pythonica
+`SedesRelata` et campos `nota`/`relata` accepit.
+
+PRETIUM: nullum vocabularium registri, NULLUM SIGILLUM MOTUM, nulla
+proiectio STML tacta, `excerptum_scribere` et vocantes eius intacti.
+XXVIII ex XXXVI declarationibus crustae `absentia` sunt, ergo quattuor
+quintae earum aperturam suam sine ulla declaratione nova acceperunt;
+css ZERO declarat, ergo exitus eius non motus est.
+
+TRES ERRORES SPECIFICATIONIS QUOS AEDIFICATIO INVENIT — omnes a me
+scripti, omnes per mensuram inventi, non per lectionem:
+I.   Limes marginis 999/1000 esse dicebatur. FALSUM: `_latitudo`
+     minimum IV habet, ergo 999 et 1000 ambo latitudinem IV reddunt.
+     Porta ibi scripta RUBERE NUMQUAM POTUISSET. Verus limes
+     9999/10000 est.
+II.  Porta effugii notae (porta V) aedificari non potuit: nulla nota
+     hodie `|` `;` TAB aut NOVAM LINEAM fert, ergo planta viridis
+     manet. Mensura pro porta: nota `hic; coepit` temporaria campum XI
+     scindit sine effugio, non scindit cum eo. AUDIENDA VII.
+III. Res 01M2RKYA4Z dicebat pinnam linearum bashi multi-sede
+     'evanescere'. Non evanescit: sedem TERTIAM addit.
+
+DUAE PLANTAE VIRIDES, AMBAE EADEM FORMA. Effugium notae (supra), et —
+gravius — permutatio lineae et columnae in parsatore pythonico:
+fixum `{ echo a` aperturam ad **1:1** habet, ubi linea et columna
+AEQUALES sunt, ergo permutatio invariabilis est. Fixum discriminans
+`echo a; { echo b` (apertura ad **1:9**) additum; planta nunc rubet.
+Eadem forma ac planta 'e acuti' arcus prioris (character duorum
+octetorum numerum octetorum a numero characterum non discernebat) et
+ac pinna gravitatis (118, vicinam suam mensurans). **LEX: fixum in quo
+duo campi AEQUALES sunt eos discernere non potest.** Haec forma iam
+saepius nocuit quam assertio falsa.
+
+TRUNCUS RUBER INTER OPUS III ET IV. `diagnostica_materiae` numerum
+camporum exacte figit, ergo columnae duae operis III lineam quamque
+recusabant — clare et ordine nominato, ut refutatio debet. Sed audita
+operis III effectores solos cucurrerunt (shim, crusta, css, fumus),
+consumptorem alterum TSV numquam. LEX: cum formam mutas, CONSUMPTORES
+eius curre.
+
+MUTATIO EXITUS CONSULTA: primaria cuiusque `absentia` notam `hic
+exspectatur` accipit, et fumus eam prior me invenit (porta II lineam
+IV figebat; linea IV nunc aperturam fert). Casus verus `{ echo a`
+sedes AMBAS in linea I habet, ergo glomerationem per lineam exercet:
+linea fontis SEMEL, signa BINA.
+
+AUDITA: shim 398/398; materia 9/9, css 10/10, md 14/14, html 14/14,
+oratio 19/19, crusta 15/15; suita radicis exitus 0; probatio_silva
+exitus 0; fumus diagnostica sanum; vocabula NOVA 0.
+
+DEBRIEF INSTRUMENTORUM. `silva.examen` inventum verum dedit quod
+compilator non dedisset: `CREDO_CHORDAE_AEQUALES` (plurale) `constans
+character*` poscit, dum macro chordam-contra-chordam
+`CREDO_CHORDA_AEQUALIS` (singulare) est — nomina ad falsum invitant.
+Uncus post-editionem bis in statu MEDIO inter duas editiones
+parallelas incidit et 'variabilis inutilis' nuntiavit de variabili
+quam editio proxima usura erat; `./silva/examen.sh` manu cursum verum
+dedit. `silva.planta` in `.py` ancoras figere non potest (ancorae
+lexemata C sunt), ergo plantae pythonicae manu positae — ut in arcu
+priore. `silva.commissio` sex commissa sine querela egit. Formator bis
+lineam LXXII excedentem post latiorem ordinationem structurae
+nuntiavit; commentarium breviare satis fuit.

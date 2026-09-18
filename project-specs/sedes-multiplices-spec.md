@@ -336,3 +336,47 @@ decision.** Either the registry names a second locus — a table entry,
 survivable — or the diagnostic names a *relationship* between slots,
 which is the expression language M7 forbids. Decide that when it
 arrives, not before.
+
+
+---
+
+## 9. As built (2026-09-17) — GOVERNS where it differs from §§1–8
+
+Arc closed in six commits, `69f06895` → `e04cc0b0`. Everything in
+§§1–8 shipped as designed except the four items below.
+
+**A. The gutter boundary is 9999/10000, not 999/1000.** `_latitudo`
+takes a minimum of IV, so three- and four-digit line numbers render
+identically. Stated wrongly twice in this spec; corrected in §3, in
+§6's gate III, and in AUDIENDA VI. The gate as originally specified
+could never have failed.
+
+**B. Gate V (the label escape) was NOT built** — it cannot fail today,
+because no label contains an escaped byte. Verified by measurement
+instead; see AUDIENDA VII. It becomes gateable in the commit that
+first lets a lint rule write its own label (`01M2RNJ9XN`), and belongs
+there.
+
+**C. `_addere` returns the written cell.** §2 described
+`_absentiam_addere` as calling `_addere` and then setting fields; it
+does, but `_addere` now returns `MateriaDiagnosticum*` (NIHIL on
+failure) so the caller attaches the span directly instead of
+re-fetching the last `Xar` element. No behavioural difference; less
+index arithmetic to get wrong.
+
+**D. The instrument skips an insane related span rather than passing
+it through.** `excerptum_scribere_multa` refuses the whole array on a
+bad entry (§3 rule 1), so without the skip a single malformed related
+span would suppress an excerpt that printed fine before this arc. The
+primary always survives. The refusal itself is unchanged — it still
+fires for a caller that hands over an unsorted or out-of-range array.
+
+**Sorting is the instrument's job, as §3 rule 1 requires.** Worth
+restating because it is not obvious: the record stores the primary
+separately from `relata`, so the span array is never sorted by
+construction, and the printer will not sort a `constans` array without
+memory. `tools/diagnostica.c` sorts by insertion before calling.
+
+**Measured at close:** shim 398/398; materia 9/9, css 10/10, md 14/14,
+html 14/14, oratio 19/19, crusta 15/15; root suite exit 0;
+`probatio_silva` exit 0; `diagnostica_fumus` sanum; vocabula NOVA 0.
