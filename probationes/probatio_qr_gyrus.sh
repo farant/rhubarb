@@ -32,6 +32,7 @@ command -v osascript >/dev/null 2>&1 || {
     exit 0
 }
 
+# <tolera codex="lint:vexilla-domus" (>clang ORACULUM est hic: vexilla EXPERIMENTI sunt, non aedificationis domus - tabulam domus fontare oraculum cum domo fluere faceret et comparationem ipsam perderet
 clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion \
     -Wsign-conversion -Wcast-qual -Wstrict-prototypes \
     -Wmissing-prototypes -Wwrite-strings -Wno-long-long \

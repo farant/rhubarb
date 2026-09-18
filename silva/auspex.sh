@@ -64,6 +64,7 @@ cd "$RADIX_DIR"
 # Gradus II: compilatio est iudicium (C99 - vide caput)
 # -Wno-constant-logical-operand: "(T)1 && (T)1" consulto constans
 # -Wno-sizeof-array-decay: "sizeof(ga + 1)" - lapsus IPSE mensuratur
+# <tolera codex="lint:vexilla-domus" (>clang ORACULUM est hic: vexilla EXPERIMENTI sunt, non aedificationis domus - tabulam domus fontare oraculum cum domo fluere faceret et comparationem ipsam perderet
 if ! clang -std=c99 -pedantic -Wall -Wextra -Werror \
         -Wno-constant-logical-operand \
         -Wno-sizeof-array-decay \

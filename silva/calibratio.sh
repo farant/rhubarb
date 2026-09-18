@@ -54,6 +54,7 @@ if [ ${#COPIAE[@]} -eq 0 ]; then
     COPIAE=("-Wsign-conversion" "-Wtype-limits" "-Wtautological-compare" "-Wextra")
 fi
 
+# <tolera codex="lint:vexilla-domus" (>clang ORACULUM est hic: vexilla EXPERIMENTI sunt, non aedificationis domus - tabulam domus fontare oraculum cum domo fluere faceret et comparationem ipsam perderet
 declare -a BASIS=(
     clang -x c -std=c89 -pedantic -Wno-long-long
     -fno-caret-diagnostics -fsyntax-only

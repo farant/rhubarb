@@ -13,6 +13,10 @@
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD="$RADIX/materia/build"
+# VEXILLA EX UNA SEDE (tools/vexilla.sh): tabula hic scripta ante
+# 2026-09-18 ter exscripta erat, et regula II lintris eam invenit.
+source "$RADIX/tools/vexilla.sh"
+declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 mkdir -p "$BUILD"
 
 # amalgama_verificatio.o = silva TOTA in obiecto uno (359 symbola
@@ -36,9 +40,7 @@ for m in materia_token materia_nodus materia_scribere materia_arbor \
     obj="$BUILD/$m.o"
     # in aequalitate temporum RECOMPILA (vitium falsi rubri I.3b)
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
-        clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion \
-              -Wsign-conversion -Wcast-qual -Wstrict-prototypes \
-              -Wmissing-prototypes -Wwrite-strings -Wno-long-long \
+        clang "${GCC_FLAGS[@]}" \
               -I"$RADIX/include" -I"$RADIX/materia/fontes" \
               -c "$src" -o "$obj" || { echo "FRACTA: $m.c" >&2; exit 1; }
     fi
@@ -46,9 +48,7 @@ done
 
 if [ ! -f "$BUILD/lexicon_c89.o" ] \
    || ! [ "$BUILD/lexicon_c89.o" -nt "$RADIX/materia/probationes/lexicon_c89.c" ]; then
-    clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion \
-          -Wsign-conversion -Wcast-qual -Wstrict-prototypes \
-          -Wmissing-prototypes -Wwrite-strings -Wno-long-long \
+    clang "${GCC_FLAGS[@]}" \
           -I"$RADIX/include" -I"$RADIX/materia/fontes" \
           -I"$RADIX/materia/probationes" \
           -c "$RADIX/materia/probationes/lexicon_c89.c" \
@@ -56,6 +56,7 @@ if [ ! -f "$BUILD/lexicon_c89.o" ] \
 fi
 
 BIN="$BUILD/shim_c89"
+# <tolera codex="lint:vexilla-domus" (>REMISSIO CONSULTA: shim_c89.c barram domus non implet (-Wextra 'missing field initializer' in tabula ornatorum), ergo vexilla HIC angustiora sunt consulto, non exemplar tabulae domesticae
 clang -std=c89 -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 \
   -I"$RADIX/include" -I"$RADIX/silva/fontes" -I"$RADIX/silva/instrumenta" \
   -I"$RADIX/materia/fontes" -I"$RADIX/materia/probationes" \

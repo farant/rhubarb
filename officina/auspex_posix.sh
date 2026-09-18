@@ -220,6 +220,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
 
 BENE=1
 for tu in verum nostrum; do
+    # <tolera codex="lint:vexilla-domus" (>clang ORACULUM est hic: vexilla EXPERIMENTI sunt, non aedificationis domus - tabulam domus fontare oraculum cum domo fluere faceret et comparationem ipsam perderet
     if clang -std=c99 -Wall -Wextra -Werror -Wno-long-long -c \
         -I"$RADIX_DIR" "$GEN_DIR/$tu.c" -o /dev/null 2>"$GEN_DIR/$tu.error"; then
         echo "auspex_posix: TU $tu CONSENTIT"

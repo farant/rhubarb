@@ -158,10 +158,10 @@ materia/coquere.sh	53	34	53	37	2076	2079	erratum	lint:nt-aequalitas	'-nt' aequal
 materia/coquere.sh	53	34	53	37	2076	2079	erratum	lint:nt-negata	nt-negata		
 materia/coquere.sh	60	34	60	37	2360	2363	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 materia/coquere.sh	60	34	60	37	2360	2363	erratum	lint:nt-negata	nt-negata		
-materia/shim_probare.sh	38	38	38	41	1648	1651	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
-materia/shim_probare.sh	38	38	38	41	1648	1651	erratum	lint:nt-negata	nt-negata		
-materia/shim_probare.sh	48	34	48	37	2089	2092	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
-materia/shim_probare.sh	48	34	48	37	2089	2092	erratum	lint:nt-negata	nt-negata		
+materia/shim_probare.sh	42	38	42	41	1857	1860	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+materia/shim_probare.sh	42	38	42	41	1857	1860	erratum	lint:nt-negata	nt-negata		
+materia/shim_probare.sh	50	34	50	37	2128	2131	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+materia/shim_probare.sh	50	34	50	37	2128	2131	erratum	lint:nt-negata	nt-negata		
 md/arbor.sh	27	34	27	37	1022	1025	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 md/arbor.sh	27	34	27	37	1022	1025	erratum	lint:nt-negata	nt-negata		
 md/census.sh	36	34	36	37	1495	1498	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		

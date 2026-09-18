@@ -1084,3 +1084,92 @@ gate in the first place.
 is not proven by its own tests until something real uses it. XIX passed,
 planted red, and shipped — and the first genuine use, an hour later,
 broke it.
+
+## 2026-09-18 — rule 2: vexilla-domus, and what the survey changed
+
+`crusta/lintrum/vexilla-domus.stml` — the house's second lint rule.
+Flags that `tools/vexilla.sh` owns, written literally instead of
+sourced. The doctrine is vexilla.sh's own: before 2026-09-02, 57
+scripts carried their own table and had drifted into three silent
+variants.
+
+**The survey overturned the design twice before a line was written.**
+
+*"Any literal flag" was wrong by two orders of magnitude.* Of 755
+literal `-` arguments across the corpus, the commonest are `-o` (305),
+`-c` (190), `-I` (64) — all legitimate, present in every canonical
+invocation. That rule would have flagged 110 of 111 files. The
+discriminator is the flags vexilla OWNS, and `-O2`/`-g`/`-Wno-*` are
+excluded because vexilla's own header sanctions appending them.
+
+*The discriminator is per-INVOCATION, not per-file.* `compile_tests.sh`
+and `silva/auspex.sh` both source vexilla.sh, so a document-level
+negative arm exempts both — but auspex's invocation is wholly literal
+while compile_tests' is canonical-plus-one-with-a-reason. Same file,
+different sites.
+
+**And the subtraction arm turned out to be unnecessary.** The two-arm
+form I validated in the survey matched ZERO over the corpus once the
+flag set was narrowed: no invocation mixes a contract flag with the
+array. A dead arm is worse than none, so the rule ships without one —
+and if anyone writes `clang "${GCC_FLAGS[@]}" -Wall`, it flags, which
+is correct.
+
+**Rows per flag, annotations per invocation.** 70 rows looked alarming
+until measured: one `<tolera>` above an invocation suppresses all its
+flag rows, because exemption filters by the owning node's range. Burden
+was 8 annotations, not 70.
+
+Result: 2 files fixed (`materia/shim_probare.sh`, `run_lint.sh` — both
+verbatim copies of the table), 8 sites annotated, rule SILENT.
+
+**Three categories, not two.** Rule 1 had defect/legitimate. Rule 2
+found a third: `materia/shim_probare.sh:59` compiles `shim_c89.c` with
+a DELIBERATELY REDUCED set (no `-Wall/-Wextra/-Werror`) because that
+file does not meet the bar. I "fixed" it to the house table and broke
+the gate — `-Wmissing-field-initializers` fired. Reverted and
+annotated. The rule found something real; the answer was a declared
+relaxation, not a fix.
+
+The legitimate cases split cleanly by reason, and both are worth
+stating:
+- **six oracle scripts** — clang is the ORACLE there, so its flags are
+  the experiment, not the build. Sourcing the house table would make
+  the oracle drift with the house and destroy the comparison.
+- **`tools/census_recensere.sh`** — `#!/bin/sh`, no arrays, so
+  `VEXILLA_C89` *cannot* be sourced. Structural, not a choice.
+
+**Annotation placement inside a multi-line construct.** Four sites kept
+firing after annotation: the invocations live inside
+`declare -a X=( … )`, so a comment inside the parens scopes to the
+array element, not the command. Moved above the `declare` and they
+attached. Worth knowing: annotate the CONSTRUCT, not the line.
+
+### Gates
+
+The differential now runs **rule 1 only**, from a temp lintrum holding
+just `nt-aequalitas.stml`. The golden came from Python, and Python only
+ever ran rule 1 — mixing C-generated rule-2 rows in would make one file
+part evidence and part self-portrait with nothing marking which.
+
+Rule 2 gets what it can honestly have:
+- a **regression pin** (37 raw sites) — from C, so it proves stability,
+  never correctness;
+- an **independent oracle**: `grep`. Different mechanism, different
+  failure modes. The assertion is `rule ⊆ grep`, because grep
+  over-counts on strings and comments — it flagged
+  `.claude/hooks/examen-custos.sh` (flags inside a JSON message) and
+  `tools/vexilla_fumus.sh` (whose real invocation is the canonical
+  form). Both are grep being wrong in the one direction that keeps the
+  assertion sound, and they are the structural-linting argument in
+  miniature.
+
+grep joins lines before matching: a multi-line invocation would
+otherwise escape it and the rule would exceed grep with no defect
+present — a gate crying wolf. The looser superset is the right
+direction for a subset assertion.
+
+Golden regenerated once, cause named: annotating `shim_probare.sh`
+shifted 4 rule-1 rows by 209 and 39 bytes. Counts unmoved
+(570/14, 292/278) — content moved, set unchanged, which is the shape a
+healthy regeneration has.

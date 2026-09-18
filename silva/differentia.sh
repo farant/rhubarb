@@ -57,6 +57,7 @@ if [ -z "$effusum" ]; then
 fi
 
 # ---- latus oraculi (NB: monita clang in STDERR - 2>&1!) ----
+# <tolera codex="lint:vexilla-domus" (>clang ORACULUM est hic: vexilla EXPERIMENTI sunt, non aedificationis domus - tabulam domus fontare oraculum cum domo fluere faceret et comparationem ipsam perderet
 declare -a ORACULUM_BASIS=(
     clang -x c -std=c89 -pedantic
     -Wno-long-long -Wno-overlength-strings

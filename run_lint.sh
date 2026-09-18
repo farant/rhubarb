@@ -1,6 +1,12 @@
 #!/bin/bash
 
 # Compile lint tool
+# VEXILLA EX UNA SEDE (tools/vexilla.sh): tabula hic scripta erat, et
+# regula II lintris eam invenit (2026-09-18).
+RADIX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$RADIX_DIR/tools/vexilla.sh"
+declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
+
 echo "Compiling lint_probatio..."
 
 # Just compile libraries (not run tests) - check if .o files exist
@@ -9,12 +15,7 @@ if [ ! -f "build/piscina.o" ]; then
     ./compile_tests.sh > /dev/null 2>&1
 fi
 
-clang -std=c89 -pedantic \
-    -Wall -Wextra -Werror \
-    -Wconversion -Wsign-conversion \
-    -Wcast-qual -Wstrict-prototypes \
-    -Wmissing-prototypes -Wwrite-strings \
-    -Wno-long-long \
+clang "${GCC_FLAGS[@]}" \
     -Iinclude -Ilib \
     lint/lint_probatio.c \
     build/*.o \

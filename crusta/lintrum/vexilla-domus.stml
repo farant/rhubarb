@@ -1,0 +1,127 @@
+<!--
+  vexilla-domus - vexilla contractus scripta, non fontana (regula II)
+
+  DOCTRINA (tools/vexilla.sh, 2026-09-02): vexilla C89 domus UNAM
+  sedem habent. Ante eam LVII scripta tabulam suam ferebant, et in
+  tres variantes TACITE diffluxerant - quaedam sine -fbracket-depth,
+  quaedam sine -Wno-overlength-strings. Receptum LVII vicibus copiatum
+  classis videbatur et non erat. Forma recta:
+
+      source "$RADIX_DIR/tools/vexilla.sh"
+      declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
+
+  Vitium quod vitat TACITE fallit: scriptum quod vexillis PAENE
+  domesticis compilat transit ubi porta vera recusaret, aut recusat ubi
+  domus non recusaret - et utrumque in partem fiduciae falsae cadit.
+
+  QUAE VEXILLA HIC NOMINENTUR, ET CUR NON OMNIA. Sola vexilla
+  CONTRACTUS (norma et monita). Consulto ABSUNT:
+    -O2, -g            gradus, quos vexilla.sh ipsum seorsum appendi
+                       docet ('GCC_FLAGS=("${VEXILLA_C89[@]}" "-O2")')
+    -Wno-*             suppressiones, quas vocatio legitime addit cum
+                       causa (compile_tests.sh:341 ita facit)
+    -fbracket-depth    limes, non monitum
+  Mensuratum 2026-09-18: his inclusis compile_tests.sh et
+  tools/aedilis_struere.sh falso flagrarent, ambo formam canonicam
+  ferentia.
+
+  ORDO PER VEXILLUM, NON PER VOCATIONEM - et hoc CONSULTO. Vocatio una
+  vexilla multa fert, ergo ordines multos gignit; sed EXCUSATIO SEMEL
+  scripta eos omnes tegit (mensuratum: annotatio una super vocatione
+  quinque vexillorum ordines quinque tollit), quia excusatio per SEDEM
+  nodi possidentis cribrat. Ergo onus annotationum per VOCATIONEM est,
+  non per vexillum.
+
+  BRACCHIUM NEGATIVUM DESUNT CONSULTO. Forma prior subtractionem
+  declaratam ferebat ('vocatio quae et vexillum contractus et
+  expansionem fert'), sed super corpore domus ZERO vicibus congruit:
+  nulla vocatio vexillum contractus literale cum array miscet. Porta
+  quae flagrare non potest peior est quam nulla, ergo abest. Si quis
+  'clang "${GCC_FLAGS[@]}" -Wall' scribat, FLAGRABIT - et recte, quia
+  -Wall in array iam est.
+
+  gcc NON QUAERITUR: mensuratum 2026-09-18, nulla vocatio gcc vexillum
+  contractus fert (gcc solum in probationibus Linux apparet, ubi
+  vexilla domus consulto non valent). Si quis gcc ita scribat, regula
+  eum non videbit - limes NOMINATUS.
+-->
+<EXEMPLAR output="$v0">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f0>-std=c89</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v1">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f1>-pedantic</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v2">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f2>-Wall</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v3">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f3>-Wextra</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v4">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f4>-Werror</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v5">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f5>-Wconversion</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v6">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f6>-Wsign-conversion</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v7">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f7>-Wcast-qual</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v8">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f8>-Wstrict-prototypes</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v9">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f9>-Wmissing-prototypes</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+<EXEMPLAR output="$v10">
+  <imperium>
+    <**><crusta-litteralis>clang</crusta-litteralis></**>
+    <**><crusta-litteralis $f10>-Wwrite-strings</crusta-litteralis></**>
+  </imperium>
+</EXEMPLAR>
+
+<relatum lint="vexilla-domus" gravitas="erratum"
+         causa="vexilla contractus scripta, non ex tools/vexilla.sh fontana">
+  <PER congruentia="$v0"><situs>&@f0;</situs></PER>
+  <PER congruentia="$v1"><situs>&@f1;</situs></PER>
+  <PER congruentia="$v2"><situs>&@f2;</situs></PER>
+  <PER congruentia="$v3"><situs>&@f3;</situs></PER>
+  <PER congruentia="$v4"><situs>&@f4;</situs></PER>
+  <PER congruentia="$v5"><situs>&@f5;</situs></PER>
+  <PER congruentia="$v6"><situs>&@f6;</situs></PER>
+  <PER congruentia="$v7"><situs>&@f7;</situs></PER>
+  <PER congruentia="$v8"><situs>&@f8;</situs></PER>
+  <PER congruentia="$v9"><situs>&@f9;</situs></PER>
+  <PER congruentia="$v10"><situs>&@f10;</situs></PER></relatum>

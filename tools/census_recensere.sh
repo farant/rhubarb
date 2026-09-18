@@ -35,6 +35,7 @@ if [ ! -x "$binarium" ] || ! [ "$binarium" -nt "$fons_c" ]; then
         exit 2
     fi
     # shellcheck disable=SC2086
+    # <tolera codex="lint:vexilla-domus" (>'#!/bin/sh': copiae bash desunt, ergo VEXILLA_C89 (copia bash) fontari NON POTEST - impedimentum structurale, non electio
     clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion \
         -Wsign-conversion -Wcast-qual -Wstrict-prototypes \
         -Wmissing-prototypes -Wwrite-strings -Wno-long-long \

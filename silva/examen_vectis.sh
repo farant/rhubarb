@@ -30,6 +30,7 @@ RADIX_DIR="$(cd "$SILVA_DIR/.." && pwd)"
 cd "$RADIX_DIR"
 
 FIXA="$SILVA_DIR/probationes/fixa/examinis"
+# <tolera codex="lint:vexilla-domus" (>clang ORACULUM est hic: vexilla EXPERIMENTI sunt, non aedificationis domus - tabulam domus fontare oraculum cum domo fluere faceret et comparationem ipsam perderet
 declare -a ORACULUM=(
     clang -x c -std=c89 -pedantic-errors
     -Wno-long-long -Wno-overlength-strings
@@ -124,6 +125,7 @@ done
 #   Vexillum oraculi per fixturam: directivum "ORACULUM -W..." in
 #   commentario; ordinarius -Wsign-conversion.
 echo "--- corpus domesticum (pinnae EXSPECTA + oraculum) ---"
+# <tolera codex="lint:vexilla-domus" (>clang ORACULUM est hic: vexilla EXPERIMENTI sunt, non aedificationis domus - tabulam domus fontare oraculum cum domo fluere faceret et comparationem ipsam perderet
 declare -a ORACULUM_BASIS_D=(
     clang -x c -std=c89 -pedantic
     -Wno-long-long -fno-caret-diagnostics -fsyntax-only

@@ -68,9 +68,21 @@ echo "differentia: ${#VIAE[@]} plagulae contra aurum in $AURUM_DIR"
 # solum fert. Campus IX codicem fert.
 cribrare () { awk -F'\t' '$9 ~ /^lint:/' ; }
 
-./crusta/facies.sh "${VIAE[@]}" -machina -sine-excusatione -cruda \
+# LINTRUM REGULAE I SOLIUS. Aurum quod hic iacet ex PYTHONE natum est,
+# et Python regulam I SOLAM umquam cucurrit - deletus est antequam
+# regula II scripta esset. Lintro pleno adhibito ordines regulae II
+# admiscerentur, quos C SOLUS peperit, et plagula una partim TESTIMONIUM
+# partim IMAGO SUI fieret sine ulla nota quae utrum sit distingueret.
+# Auctoritas auri tanta maneat quanta est.
+REG_I="$TEMP/lintrum_i"
+mkdir -p "$REG_I"
+cp crusta/lintrum/nt-aequalitas.stml "$REG_I/" || exit 2
+
+CRUSTA_LINTRUM="$REG_I" ./crusta/facies.sh "${VIAE[@]}" \
+    -machina -sine-excusatione -cruda \
     | cribrare | LC_ALL=C sort > "$TEMP/c.cruda.tsv" || true
-./crusta/facies.sh "${VIAE[@]}" -machina -sine-excusatione \
+CRUSTA_LINTRUM="$REG_I" ./crusta/facies.sh "${VIAE[@]}" \
+    -machina -sine-excusatione \
     | cribrare | LC_ALL=C sort > "$TEMP/c.plena.tsv" || true
 
 if [ "${EXEMPLARIA_SCRIBERE:-}" = "1" ]; then
@@ -127,7 +139,63 @@ else
     exitus=1
 fi
 
+# ==================================================
+# PARS B: REGULA II (vexilla-domus) - PINNA, NON AURUM
+# ==================================================
+#
+# DISTINCTIO QUAE SERVANDA EST. Aurum supra ex implementatione ALTERA
+# venit, ergo RECTITUDINEM probat. Hic numeri ex C ipso veniunt, ergo
+# STABILITATEM solam probant - motum sine causa capiunt, rectitudinem
+# numquam. Domus utrumque genus iam habet (oraculum crustae = bash
+# ipse, rectitudo; computus = numeri nostri, stabilitas), et ea
+# confundere esset auctoritatem sumere quam numerus non habet.
+#
+# ORACULUM INDEPENDENS TAMEN ADEST, crudum sed vere alienum: grep.
+# Mechanismus alius, vitia alia. Regula SUBMISSA grep esse debet -
+# grep enim vexilla in CHORDIS et COMMENTARIIS numerat quae vocatio
+# nulla sunt (mensuratum: .claude/hooks/examen-custos.sh nuntium
+# hominis fert, tools/vexilla_fumus.sh formam CANONICAM cum nuntio
+# credonis). Si regula grep EXCEDAT, regula plus videt quam textus
+# fert - quod fieri non potest, ergo vitium.
+PIN_VEX_CRUDA=37
+VEX_CONTRACTUS='-std=c89|-pedantic|-Wall|-Wextra|-Werror|-Wconversion|-Wsign-conversion|-Wcast-qual|-Wstrict-prototypes|-Wmissing-prototypes|-Wwrite-strings'
+
+./crusta/facies.sh "${VIAE[@]}" -machina -sine-excusatione -cruda 2>/dev/null \
+    | awk -F'\t' '$9 == "lint:vexilla-domus"' > "$TEMP/vex.cruda.tsv" || true
+n_vex=$(wc -l < "$TEMP/vex.cruda.tsv" | tr -d ' ')
+if [ "$n_vex" -eq 0 ]; then
+    echo "  FRACTA vexilla: ZERO sedes - regula muta, nihil mensuratum" >&2
+    exitus=1
+elif [ "$n_vex" -ne "$PIN_VEX_CRUDA" ]; then
+    echo "  FRACTA vexilla: $n_vex sedes, pinna $PIN_VEX_CRUDA - corpus aut regula mutata, causam nomina" >&2
+    exitus=1
+else
+    echo "  ok   vexilla: $n_vex sedes (pinna), regula post excusationes TACET"
+fi
+
+# REGULA SUBMISSA GREP (oraculum independens)
+awk -F'\t' '{print $1}' "$TEMP/vex.cruda.tsv" | LC_ALL=C sort -u > "$TEMP/vex.regula.txt"
+# LINEAE IUNCTAE: vocatio clang per lineas plures distendi potest, et
+# grep linea-basatus eam non videret - regula tunc grep EXCEDERET sine
+# ullo vitio, et porta lupum clamaret. Iunctio superset LAXIOREM facit,
+# quod est direptio recta pro assertione 'regula submissa grep'
+# (mensuratum: XI plagulae iunctim contra X lineatim - adhuc artum).
+: > "$TEMP/vex.grep.txt"
+for f in "${VIAE[@]}"; do
+    tr '\n' ' ' < "$f" | grep -qE "clang[^|]*($VEX_CONTRACTUS)" \
+        && echo "$f" >> "$TEMP/vex.grep.txt"
+done
+LC_ALL=C sort -u -o "$TEMP/vex.grep.txt" "$TEMP/vex.grep.txt"
+extra=$(comm -23 "$TEMP/vex.regula.txt" "$TEMP/vex.grep.txt")
+if [ -n "$extra" ]; then
+    echo "  FRACTA vexilla: regula grep EXCEDIT (plus videt quam textus fert):" >&2
+    printf '%s\n' "$extra" >&2
+    exitus=1
+else
+    echo "  ok   vexilla: regula submissa grep ($(wc -l < "$TEMP/vex.regula.txt" | tr -d ' ') plagulae contra $(wc -l < "$TEMP/vex.grep.txt" | tr -d ' ') grep)"
+fi
+
 if [ "$exitus" -eq 0 ]; then
-    echo "differentia exemplariorum: CONCORDES (${#VIAE[@]} plagulae, $PIN_CRUDA cruda, $PIN_PLENA plena)"
+    echo "differentia exemplariorum: CONCORDES (${#VIAE[@]} plagulae, $PIN_CRUDA cruda, $PIN_PLENA plena, $PIN_VEX_CRUDA vexilla)"
 fi
 exit "$exitus"
