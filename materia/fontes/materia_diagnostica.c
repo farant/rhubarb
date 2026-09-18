@@ -21,6 +21,7 @@
 #include "materia_excusatio.h"
 #include "stml_macros.h"
 #include "tabula_dispersa.h"
+#include <stdio.h>
 #include <string.h>
 
 /* valor praesentiae in tabula lexematum visorum: sedes sola refert
@@ -687,6 +688,55 @@ _transferre (
     redde VERUM;
 }
 
+/* Ordines sine sede nominare. VERUM = omnes locati. */
+interior b32
+_sedes_omnes_adsunt (
+             Piscina*  piscina,
+        constans Xar*  ordines,
+  constans character** causa)
+{
+                   i32  k;
+                   i32  sine    = ZEPHYRUM;
+    constans character* primus  = NIHIL;
+
+    per (k = ZEPHYRUM; k < xar_numerus(ordines); k++)
+    {
+        constans MateriaDiagnosticum* d =
+            (constans MateriaDiagnosticum*)xar_obtinere(ordines, k);
+
+        si (d->tractus.initium < ZEPHYRUM)
+        {
+            sine++;
+            si (primus == NIHIL)
+            {
+                primus = d->codex;
+            }
+        }
+    }
+    si (sine == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (causa != NIHIL)
+    {
+        character* c = (character*)piscina_allocare(piscina, CCLVI);
+
+        si (c == NIHIL)
+        {
+            *causa = "ordines sine sede";
+        }
+        alioquin
+        {
+            sprintf(c, "regula '%s' ordines %d sine sede peperit - "
+                "inventum sine sede locari non potest; regula nodum "
+                "capiat", primus != NIHIL ? primus : "?",
+                (integer)sine);
+            *causa = c;
+        }
+    }
+    redde FALSUM;
+}
+
 /* Gradum II per regulam quamque currere. Proiectio SEMEL fit et
  * regulis omnibus servit: parsura una, proiectio una. */
 interior b32
@@ -765,7 +815,19 @@ StmlExpansioResultus  expansio;
                 ordines = materia_exemplaria_minuere(piscina,
                     expansio.radix_expansa, ordines, causa);
             }
-            si (ordines == NIHIL || !_transferre(exitus, ordines))
+            si (ordines == NIHIL)
+            {
+                redde FALSUM;
+            }
+            /* ORDO SINE SEDE REFUTATIO EST. Regula quae congruit sed
+             * nodum non capit ('<situs/>') inventum LOCARI non potest,
+             * et numerus tacite minor a sanitate non differt. Extractor
+             * prior (pythonica) idem recusabat, nominatim. */
+            si (!_sedes_omnes_adsunt(piscina, ordines, causa))
+            {
+                redde FALSUM;
+            }
+            si (!_transferre(exitus, ordines))
             {
                 redde FALSUM;
             }

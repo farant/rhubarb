@@ -118,6 +118,14 @@ hic_manens constans character* REGULA_VAGA =
       "<PER congruentia=\"$m\"><situs>&@n;</situs></PER>"
     "</relatum>";
 
+/* Regula quae CONGRUIT sed nodum non capit ('<situs/>' vacuum): ordo
+ * sine sede nascitur, et sequentia plena eum RECUSAT nominatim. */
+hic_manens constans character* REGULA_SINE_SEDE =
+    "<EXEMPLAR output=\"$v\"><verbum $t/></EXEMPLAR>"
+    "<relatum lint=\"vacuum\">"
+      "<PER congruentia=\"$v\"><situs/></PER>"
+    "</relatum>";
+
 /* Regulam unam legere et in Xar ponere; NIHIL = lectio fracta. */
 hic_manens Xar*
 _regulae (
@@ -442,6 +450,36 @@ MateriaDiagnosticaRatio  vaga;
         si (causa != NIHIL)
         {
             CREDO_VERUM (strstr(causa, "sedes diversas") != NIHIL);
+        }
+    }
+
+    {
+        MateriaNodus* radix = materia_nodus_creare(piscina,
+                                  (s32)GR_RADIX, (i32)I);
+MateriaDiagnosticaRatio  vacua;
+                    Xar* d;
+     constans character* causa = NIHIL;
+
+        imprimere("\n--- VII. Ordo SINE SEDE refutatur ---\n");
+        CREDO_NON_NIHIL (radix);
+        CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+            materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
+                (s32)110, NIHIL, ZEPHYRUM)),
+            MATERIA_LOCUS_LISTA_NODUS));
+        vacua          = ratio;
+        vacua.regulae  = _regulae(piscina, intern, REGULA_SINE_SEDE);
+        CREDO_NON_NIHIL (vacua.regulae);
+        d = materia_diagnostica_plena(piscina, radix, &vacua, NIHIL,
+                &causa);
+        /* NUMERUS TACITE MINOR PERNICIES: regula quae congruit et
+         * inventum sine sede reddit a regula quae nihil invenit non
+         * differret. */
+        CREDO_NIHIL (d);
+        CREDO_NON_NIHIL (causa);
+        si (causa != NIHIL)
+        {
+            CREDO_VERUM (strstr(causa, "sine sede") != NIHIL);
+            CREDO_VERUM (strstr(causa, "lint:vacuum") != NIHIL);
         }
     }
 

@@ -171,6 +171,32 @@ principale (
         CREDO_VERUM (p->nota == NIHIL);
     }
 
+    {
+                                 Xar* d;
+        constans MateriaDiagnosticum* p;
+
+        /* Regula quae CONGRUIT sed nodum non capit: '<situs/>' vacuum.
+         * Sedes nulla, ergo inventum locari non potest - sed TACITE
+         * CADERE id ipsum est quod hic arcus prohibet, quia regula quae
+         * congruit et nihil reddit a regula quae nihil invenit non
+         * differret. Ordo TRANSIT tractu vacuo; recusatio consumptoris
+         * est (materia_diagnostica_plena). */
+        d = _extrahere(piscina,
+                "<relatum lint=\"vacuum\"><situs/></relatum>");
+
+        imprimere("\n--- VI. Ordo SINE SEDE transit ---\n");
+        CREDO_NON_NIHIL (d);
+        CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)I);
+        si (xar_numerus(d) == (i32)I)
+        {
+            p = (constans MateriaDiagnosticum*)xar_obtinere(d,
+                    ZEPHYRUM);
+            CREDO_AEQUALIS_S32 (p->tractus.initium, (s32)-I);
+            CREDO_AEQUALIS_S32 (p->tractus.finis, (s32)-I);
+            CREDO_VERUM (strcmp(p->codex, "lint:vacuum") == ZEPHYRUM);
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

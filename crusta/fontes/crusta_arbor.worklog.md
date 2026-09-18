@@ -876,3 +876,58 @@ The rule this earns, which is a sharper form of one the house already
 has: *a wrapper carries its own time.* Measure the binary, or exclude
 the build from both sides — and when a number is going into a comment,
 re-derive it rather than reuse the one already on screen.
+
+## 2026-09-18 — the row that was dropped, and the comment that promised otherwise
+
+Found while writing an overview for Fran before the Python deletions,
+not by a gate. A `<relatum>` whose child captures no position — a rule
+that CONGRUIT but takes no node, e.g. `<situs/>` — was silently
+dropped:
+
+```
+Python:  summae {'sine-sede': 2}, sine_sede {…: 2}
+         diagnostica_lintris → REFUSES, named cause
+C:       0 diagnostica … in 1 plagulis, rc 0
+```
+
+A rule that matched twice reported nothing and exited clean —
+indistinguishable from a healthy file. The exact class this whole arc
+exists to prevent, and the same shape as the empty-`lintrum` bug fixed
+the day before, one layer down.
+
+**The comment already described the correct behaviour.** It said the
+row "passes with an empty tractus so the consumer can NAME it," and
+then the code said `redde`. I wrote both in Task 1. The comment
+recorded the intent; the code never implemented it, and nothing
+measured the difference — there was no assertion anywhere for a
+position-less row, which is why it survived three commits.
+
+Now: the extractor emits the row with `tractus.initium = -I` (the
+convention `materia_diagnostica.h` already documents), and
+`materia_diagnostica_plena` REFUSES with a cause naming the lint and
+the count. Two layers, matching Python exactly — the exploration path
+can count them, the diagnostics path refuses them.
+
+The differential could never have caught this: rule 1's arms always
+capture a positioned literal, so no corpus shape exercises it. **A
+differential over one rule measures that rule's shapes, not the
+extractor's contract.**
+
+Three gates, each born red: the extractor emits (materia exemplaria
+VI), `plena` refuses (materia plena VII), the tool exits 2 with a named
+cause (diagnostica fumus XVIII).
+
+**Two traps hit while building the gates, both worth keeping:**
+
+*A plant that breaks the build proves nothing.* Stubbing the refusal to
+`si (FALSUM)` left the helper unused, `-Werror` refused, and the runner
+reported FRACTA — which looks exactly like a red gate. The assertion
+was never reached. Plant so the code still COMPILES (`FALSUM &&` inside
+the live condition), then check the failure names an assertion.
+
+*The fixture broke the corpus.* The heredoc holding the test rule
+contained `</crusta-litteralis>`, so this very script became
+unprojectable (raw-form limit 01M2KPJ0HW) and fumus gate I went red
+with `materia:scriptura` — the row made a row in Task 5, catching the
+gate that was added to catch something else. Self-closing form gives
+the same rule with no closing sequence in a value.

@@ -18,7 +18,9 @@
 # XV.  scriptura fracta ORDO est (materia:scriptura cum sede), non
 #      refutatio muta;
 # XVI. instrumentum ex QUOVIS cwd regulas invenit;
-# XVII. lintrum VACUUM refutatio est (exitus 2 nominatus), non exitus 0.
+# XVII. lintrum VACUUM refutatio est (exitus 2 nominatus), non exitus 0;
+# XVIII. ordo SINE SEDE refutatio est, non silentium (paritas cum
+#      extractore priore).
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -242,6 +244,29 @@ rc=$?
 [ "$rc" -eq 2 ]; credo $? "XVII. lintrum vacuum: exitus 2, non 0 (rc $rc)"
 grep -q 'regula nulla' "$T/vacuum.out"
 credo $? "XVII. causa NOMINATA, non silentium"
+
+# XVIII. ORDO SINE SEDE REFUTATIO EST. Regula quae CONGRUIT sed nodum
+# non capit ('<situs/>') inventum locari non potest. Forma prior eum
+# TACITE DEPONEBAT: regula bis congruens 'nihil inventum, exitus 0'
+# reddebat - a plagula vere sana indistinguibile, et commentarium
+# extractoris contrarium promittebat. Extractor prior (pythonica) id
+# semper recusabat, ergo haec est PARITAS, non mos novus.
+mkdir -p "$T/lintrum_sine"
+# FORMA CLAUDENS VITATUR: elementum 'crusta-' clausum in valore huius
+# plagulae ipsius sederet, et scriptor talem valorem RECUSAT (limes
+# formae crudae, 01M2KPJ0HW) - id est, haec porta plagulam suam
+# inproiectabilem redderet et porta I rubra fieret. Mensuratum
+# 2026-09-18; forma se ipsam claudens eandem regulam dat sine valore.
+cat > "$T/lintrum_sine/sine.stml" <<'STML'
+<EXEMPLAR output="$c"><crusta-litteralis $t/></EXEMPLAR>
+<relatum lint="sine-sede"><PER congruentia="$c"><situs/></PER></relatum>
+STML
+( cd "$RADIX" && CRUSTA_LINTRUM="$T/lintrum_sine" \
+    ./tools/diagnostica.sh "$T/lint.sh" ) > "$T/sine.out" 2>&1
+rc=$?
+[ "$rc" -eq 2 ]; credo $? "XVIII. ordo sine sede: exitus 2, non 0 (rc $rc)"
+grep -q 'sine sede' "$T/sine.out"
+credo $? "XVIII. causa NOMINATA cum lintre"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus diagnostica: sanum"; exit 0; fi

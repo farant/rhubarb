@@ -170,14 +170,6 @@ _ordinem_addere (
         redde;
     }
     _sedes_colligere(piscina, liberum, NIHIL, series);
-    si (xar_numerus(series) == ZEPHYRUM)
-    {
-        /* ordo sine sede: inventum LOCATUM fieri non potest. Tacite
-         * cadere id est quod arcus diagnosticorum prohibere vult,
-         * ergo ordo cum tractu vacuo transit et consumptor eum
-         * NOMINARE potest. */
-        redde;
-    }
     d = (MateriaDiagnosticum*)xar_addere(exitus);
     si (d == NIHIL)
     {
@@ -198,6 +190,23 @@ _ordinem_addere (
                     && strcmp(gravitas, "monitum") == ZEPHYRUM)
         ? (s32)MATERIA_GRAVITAS_MONITUM
         : (s32)MATERIA_GRAVITAS_ERRATUM;
+    si (xar_numerus(series) == ZEPHYRUM)
+    {
+        /* ORDO SINE SEDE TRANSIT, TRACTU VACUO. Inventum locari non
+         * potest (regula nodum nullum cepit, e.g. '<situs/>'), sed
+         * TACITE CADERE id ipsum est quod hic arcus prohibere vult:
+         * regula quae bis congruit et nihil reddit a regula quae nihil
+         * invenit non differret. Ergo ordo superest et consumptor eum
+         * NOMINAT - materia_diagnostica_plena eum RECUSAT, ut
+         * extractor prior faciebat.
+         *
+         * Mensuratum 2026-09-18: forma prior hic 'redde' habebat dum
+         * commentarium hoc ipsum promittebat - commentarium consilium
+         * servavit quod codex numquam accepit. */
+        d->tractus.initium  = (s32)-I;
+        d->tractus.finis    = (s32)-I;
+        redde;
+    }
     d->tractus   = ((SedesLecta*)xar_obtinere(series,
                         ZEPHYRUM))->tractus;
     d->nota      = ((SedesLecta*)xar_obtinere(series,
