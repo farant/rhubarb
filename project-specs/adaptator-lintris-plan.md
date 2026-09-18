@@ -316,11 +316,22 @@ quickly around a real assertion.
 
 ## Closing
 
-- [ ] Worklog or phase-log note — this is not a materia change, so a
-  `pythonica` note plus the ticket record may be enough; decide by
-  what a cold session would need.
-- [ ] `01M2RNJ9XN` → `impletum`, commits noted.
-- [ ] Update `01M2RYR3JJ` with what the TSV seam actually cost, so the
-  C-extractor decision is informed when it arrives.
+- [x] RELATIO written to `materia/phase-log.md` — **even though no
+  materia source changed**, because that is where the diagnostics story
+  lives and a cold session should read it in one place. The entry says
+  so in its first line.
+- [x] `01M2RNJ9XN` → `impletum`, commits noted.
+- [x] `01M2RYR3JJ` updated with what the seam **actually** cost: a C
+  extractor would delete `_relata`, `_vertere` and `_sedem_ordinis` —
+  and **nothing built in this arc**. The tool, the TSV shape, the rule
+  vocabulary, the span labels and the `lint:` codex all survive,
+  because the C side never learned what a `Congruentia` is. The
+  prediction held.
 - [ ] Then, and only then: **write lint rules** (decree step 3).
   crusta has none.
+
+**PLANUM CLAUSUM 2026-09-17.** Five commits `0ff0c5e2` → `94329ca3`,
+6 files, +1080/-72. Audited at close: root suite exit 0; materia 9/9,
+css 10/10, md 14/14, html 14/14, oratio 19/19, crusta 15/15; shim
+398/398; `probatio_silva` exit 0; `diagnostica_fumus` sanum; vocabula
+NOVA 0.

@@ -2882,3 +2882,81 @@ lexemata C sunt), ergo plantae pythonicae manu positae — ut in arcu
 priore. `silva.commissio` sex commissa sine querela egit. Formator bis
 lineam LXXII excedentem post latiorem ordinationem structurae
 nuntiavit; commentarium breviare satis fuit.
+
+## 2026-09-17 — adaptator lintris: inventa gradus II diagnostica fiunt (adaptator-lintris-plan I-IV)
+
+*NULLUS FONS MATERIAE HOC ARCU MUTATUS EST.* Scribitur hic quia arcus
+sedium multiplicium supra eum continuat et sessio frigida fabulam
+diagnosticorum uno loco legere debet; codex ipse in `tools/` et
+`pythonica/` iacet.
+
+RELATIO (arcus CLAUSUS, quinque commissa `0ff0c5e2` -> `94329ca3`, sex
+plagulae, +1080/-72). Res 01M2RNJ9XN IMPLETA.
+
+QUOD FACTUM EST. Inventum lintris (gradus II, `silva.exemplaria`)
+diagnosticum fit et EODEM pictore pingitur quo diagnostica declarata:
+
+  lint.sh:1:8: [monitum] lint:nt-aequalitas
+    '-nt' pro aequalitate adhibitum
+     1 | test a -nt b
+       | ^~~~~~~~~~~~ in hoc imperio
+       |        ^~~ hic adhibetur
+
+Instrumentum modum `-lege` accepit (TSV ex stdin -> forma humana), ergo
+PICTOR UNUS in domo est et in lingua una; `Congruentia` sedes suas
+servat (VII campi -> XIII) et sedes PLURES per ordinem fert;
+`diagnostica_lintris` + `diagnostica_tsv` + `diagnostica_pingere`
+faciem complent.
+
+TRIA QUAE MENSURA ANTE SCRIPTIONEM STATUIT, ET LECTIO ALITER SUASISSET.
+(I) Vocabularium regulae IAM OPERABATUR: attributa `<relatum>` praeter
+`lint` iam transibant, ergo `gravitas=` et `causa=` LEGUNTUR, non
+inventa sunt. (II) Sedes plures in ordine uno involucris binis
+exprimuntur - insertiones duae in elemento uno ARGUMENTUM_ARBOREUM
+reddunt, et filii bini ipsius `<relatum>` inventa DUO sunt, non unum
+sedibus binis; conventio ex structura ipsa fluit. (III) Sedes iam
+aderant et abiciebantur: `sedes` totum "L:C-L:C", `octeti` totum "B-B",
+DUO ex SEX servata - tertia vice hoc arcu remedium fuit 'desine
+abicere', non 'deriva'.
+
+QUOD PORTA REVERSIONIS INVENIT ANTE QUAM LECTOR EXSTITIT: campus XI
+lineas et columnas solas ferebat, sed pictor OCTETIS pingit, ergo
+sedes relata ex ordine TSV pingi omnino non poterat. `@B-B` additum.
+Vitium formae numquam vilius capitur quam a POSTULATIS portae.
+
+DEBITUM ARCUS PRIORIS SOLUTUM. Porta effugii notae aedificari non
+potuerat quia nulla nota octetum effugiendum ferebat; dilata est cum
+TRIGGER NOMINATO ('cum regula notam suam scribere poterit'). Trigger
+incidit, porta stat, planta quae viridis manserat RUBET. Et eadem
+disciplina gradu inferiore servata: effugium C adhuc inexercitum
+manet (notae lateris C constantes substrati sunt), ergo porta ei NON
+scripta est - trigger eius nominatus (cliens notam per `emissa` dans).
+
+LEGES QUAS ARCUS CONFIRMAVIT. 'Exitus 2 = nihil cursum' ad probationes
+SUBITAS pertinet, non ad cursores solos: reversio prima viridis fuit
+et nihil mensuravit, quia aedificatio fracta erat et exitus ambo vacui
+(porta commissa exitum et numerum linearum iuxta 'diff' figit).
+'Fixum in quo duo campi aequales sunt eos discernere non potest' -
+fixa huius arcus de industria asymmetrica (linea I, columna VIII/X;
+initium != finis), ergo plantae permutationum rubuerunt. 'Cum formam
+mutas, consumptores curre' - opus I `probatio_silva.py` eodem gyro
+sanavit, ubi arcus prior truncum rubrum commisso integro traxerat.
+
+VITIUM A ME INTRODUCTUM ET INTRA IDEM OPUS CAPTUM: collectio sedium
+descendentem QUEMQUE capiebat, sed nodus insertus subarborem totam
+fert - imperium unum XXIX sedes dedit. Sanatum descensu tacente post
+capturam; planta id nunc figit.
+
+DEBRIEF INSTRUMENTORUM. `silva.planta` in `.py` ancoras figere non
+potest, ergo plantae pythonicae manu positae (ut in arcu priore);
+probatio_silva ~XC secundis currit, ergo cyclus plantarum carus est -
+exitum SEMEL capere et bis quaerere, non suitam bis currere (erratum
+meum in opere II). `silva.examen` inventum verum iterum dedit
+(`-Wcast-qual` super `&d.relata`). DUAE expressiones inanes a me
+scriptae in recensione captae ("'lint' in d.codex and d.codex or
+d.codex"; "silva._relata and _tsp[10].split(';')") - ambae in glutine
+circa assertionem veram celeriter scripto.
+
+AUDITA: suita radicis exitus 0; materia 9/9, css 10/10, md 14/14, html
+14/14, oratio 19/19, crusta 15/15; shim 398/398; probatio_silva exitus
+0; fumus diagnostica sanum; vocabula NOVA 0.
