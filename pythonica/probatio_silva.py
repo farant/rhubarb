@@ -1760,6 +1760,10 @@ print('--- regula I crustae: nt-aequalitas (bracchium negativum) ---')
 #   census originalis (01M2PRPGBC, 2026-09-17)  CCLXXXIX / CCLX / XXIX
 #   regula scripta (opus IV)                    CCXCI / CCLXII / XXIX
 #   vitia emendata (opus V.a)                   CCXCI / CCLXXVII / XIV
+#   arcus exemplariorum in C (opus V plani)     CCXCII / CCLXXVIII / XIV
+# Ultimus motus: crusta/facies.sh ipsa, quae '! [ "$BIN" -nt "$SRC" ]'
+# fert - '-nt' RECTE negatum, ergo bracchia AMBO uno crescunt et
+# differentia IMMOTA manet. Id est forma quam motus sanus habet.
 # A immotum manet: '-nt' totidem vicibus apparet, sed XV occurrentiae
 # in pipam NEGATAM migraverunt. Si hic numerus MOVETUR sine causa,
 # aut corpus crevit aut regula mutata est - utrumque nominandum.
@@ -1774,8 +1778,8 @@ _omnes = {(c.via, c.initium) for c in _ex_nt.congruentiae
           if c.lint == 'nt-aequalitas'}
 _negata = {(c.via, c.initium) for c in _ex_nt.congruentiae
            if c.lint == 'nt-negata'}
-credo(len(_omnes) == 291 and len(_negata) == 277,
-      'regula nt: A=CCXCI occurrentiae, B=CCLXXVII negatae (%d/%d)'
+credo(len(_omnes) == 292 and len(_negata) == 278,
+      'regula nt: A=CCXCII occurrentiae, B=CCLXXVIII negatae (%d/%d)'
       % (len(_omnes), len(_negata)))
 # B SUBSET A: bracchia sedem EANDEM capiunt. Sine hoc differentia
 # numerum redderet qui nihil significat.

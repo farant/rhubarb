@@ -715,7 +715,25 @@ _gradus_secundus (
         &consilium);
     si (!scriptura.successus || scriptura.arbor == NIHIL)
     {
-        redde FALSUM;
+        /* SCRIPTURA FRACTA ORDO EST, NON SILENTIUM. Refutatio muta
+         * plagulam vitiosam a plagula sana non distingueret (utraque
+         * 'nihil iudicatum'), et scriptor sedem suam IAM fert
+         * (MateriaArborScriptura.tractus). Gradus II tacet - sine
+         * proiectione exemplar nihil videt - sed gradus I superest. */
+        MateriaDiagnosticum* cella =
+            (MateriaDiagnosticum*)xar_addere(exitus);
+
+        si (cella == NIHIL)
+        {
+            redde FALSUM;
+        }
+        memset(cella, ZEPHYRUM, magnitudo(*cella));
+        cella->gravitas  = (s32)MATERIA_GRAVITAS_ERRATUM;
+        cella->codex     = MATERIA_CODEX_SCRIPTURA;
+        cella->causa     = scriptura.causa != NIHIL
+            ? scriptura.causa : "scriptura fracta";
+        cella->tractus   = scriptura.tractus;
+        redde VERUM;
     }
     per (k = ZEPHYRUM; k < xar_numerus(ratio->regulae); k++)
     {

@@ -10,6 +10,8 @@
 #   IX-XI lint Latinus identificatorum (2026-09-07): verbum ignotum
 #       in plagula nova tracta -> obstat cum exitibus; Latina sola -> 0;
 #       pre-merge-commit item obstat
+#   XV-XVI gradus II (regulae lintris) ad commissionem (2026-09-18):
+#     '-nt' nudum OBSTAT, idem annotatus TRANSIT;
 #   XII-XIV diagnostica materiae (.sh .css, 2026-09-18): plagula .sh
 #       malformata OBSTAT; sana transit; FIXTURA PATHOLOGICA
 #       (probationes/fixa/) NON obstat - per INDICEM probata, quia
@@ -146,6 +148,21 @@ if [ "$rc" -eq 0 ] && ! grep -q 'DIAGNOSTICA MATERIAE' "$T/fixa.out"; then echo 
 unset GIT_INDEX_FILE
 rm -f "$T/index_fixa" "$FIXA_MALA"
 
+# XV-XVI - GRADUS II (regulae lintris) AD COMMISSIONEM, 2026-09-18.
+# Ante hunc arcum regula lintris nusquam automatice currebat: catena
+# eius per pythonica ibat et via commissionis Pythone carere debet.
+# ASYMMETRIA EST PORTA: eadem plagula, annotatione sola differens -
+# aliter porta 'obstat semper' a 'obstat recte' non distingueretur.
+printf '#!/bin/bash\n[ $a -nt $b ]\n' > "$T/lint_mala.sh"
+printf '#!/bin/bash\n# <tolera codex="lint:nt-aequalitas" (>consulto\n[ $a -nt $b ]\n' \
+    > "$T/lint_sana.sh"
+
+UNCUS_VIAE="$T/lint_mala.sh" "$UNCUS" > "$T/lint_mala.out" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q 'lint:nt-aequalitas' "$T/lint_mala.out"; then echo "  XV   .sh '-nt' nudum -> 1 (OBSTAT)       OK"; else echo "  XV   FRACTUM (rc=$rc)"; cat "$T/lint_mala.out"; fracta=1; fi
+
+UNCUS_VIAE="$T/lint_sana.sh" "$UNCUS" > "$T/lint_sana.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && ! grep -q 'lint:nt-aequalitas' "$T/lint_sana.out"; then echo "  XVI  .sh '-nt' excusatum -> 0            OK"; else echo "  XVI  FRACTUM (rc=$rc)"; cat "$T/lint_sana.out"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (XIV/XIV)"
+echo "fumus unci: sanum (XVI/XVI)"
 exit 0

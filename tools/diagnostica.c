@@ -2,10 +2,27 @@
  * (tools/diagnostica.sh; materia-sedes-spec par. XI)
  *
  * Usus: diagnostica <plagula...> [-machina] [-sine-excerpto]
- * Suffixum clientem eligit (.sh crusta, .css css). Quaeque plagula:
- * parsura, diagnostica derivata (et emissa), deinde proiectio una -
- * refutatio scriptoris ut materia:scriptura. Exitus: 0 nullum
+ * Suffixum clientem eligit (.sh crusta, .css css). Exitus: 0 nullum
  * erratum, 1 erratum, 2 nihil iudicatum.
+ *
+ * ==================================================
+ * DISPOSITOR, NON MODERATOR (E7, 2026-09-18)
+ * ==================================================
+ *
+ * Cliens qui FACIEM habet per eam it: '.sh' ad
+ * crusta_diagnostica_omnia, quae gradum I (registrum) et gradum II
+ * (regulae in crusta/lintrum/), annotationes et excusationes intus
+ * tenet - parsura una. Instrumentum gradus non enumerat, regulas non
+ * invenit, excusationes non applicat.
+ *
+ * PROBATIO QUAE SOLA REFERT: gradus II huc additus hanc plagulam NON
+ * emendavit praeter dispositionem ipsam. Si crusta postea gradum III
+ * addat, nihil hic mutabitur.
+ *
+ * css faciem nondum habet (regulas nullas habet), ergo via DERIVATA
+ * infra manet: parsura, diagnostica derivata, proiectio una cum
+ * refutatione scriptoris ut materia:scriptura. Ea via est seam per
+ * quam css faciem suam scribet, non lacuna.
  *
  * Ordo TSV (XII campi): via linea columna linea_finis columna_finis
  * initium finis gravitas codex causa | sedes_relatae nota_primaria.
@@ -46,6 +63,7 @@
 #include "materia_lexicon.h"
 #include "materia_pictor.h"
 #include "crusta_arbor.h"
+#include "crusta_facies.h"
 #include "crusta_diagnostica.h"
 #include "crusta_lexicon.h"
 #include "crusta_registrum.h"
@@ -397,6 +415,50 @@ _annotationes_clientis (
         &cliens->ratum, cliens->praefixum, NIHIL, NIHIL);
 }
 
+/* Cliens cum FACIE: instrumentum regulas non invenit, gradus non
+ * numerat, excusationes non applicat - facies omnia tenet, et
+ * 'optiones' NIHIL morem ordinarium poscit (regulae omnes in
+ * crusta/lintrum/).
+ *
+ * PARSURA UNA: facies intus parsat et proicit, ergo instrumentum
+ * arborem suam NON aedificat. Scriptura fracta ordinem
+ * 'materia:scriptura' per gradum plenum reddit, ut via derivata infra
+ * eum reddebat.
+ *
+ * FALSUM = refutatio (causa nominata), non 'inventa nulla'. */
+interior b32
+_plagulam_crustae_iudicare (
+             Piscina* piscina,
+  constans character* via,
+  constans character* fons,
+                 i32  mensura,
+                 b32  machina,
+                 b32  excerptum,
+               Summa* summa)
+{
+                  Xar* d;
+   constans character* causa = NIHIL;
+                   i32  k;
+
+    d = crusta_diagnostica_omnia(piscina, fons, mensura, NIHIL,
+            &causa);
+    si (d == NIHIL)
+    {
+        fprintf(stderr, "diagnostica: %s: %s\n", via,
+            causa
+                != NIHIL ? causa : "diagnostica derivari non possunt");
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(d); k++)
+    {
+        _diagnosticum_imprimere(piscina, via, "crusta", fons, mensura,
+            (constans MateriaDiagnosticum*)xar_obtinere(d, k), machina,
+            excerptum, summa);
+    }
+    summa->plagulae++;
+    redde VERUM;
+}
+
 interior b32
 _plagulam_iudicare (
     constans character* via,
@@ -423,6 +485,19 @@ _plagulam_iudicare (
         fprintf(stderr, "diagnostica: plagula illegibilis: %s\n", via);
         piscina_destruere(piscina);
         redde FALSUM;
+    }
+    /* DISPOSITIO: quod cliens FACIEM habet per eam it, et instrumentum
+     * gradus, regulas, excusationes non enumerat - facies ea tenet.
+     * Ergo gradus II additus hic NIHIL emendat, quod est ipsum quod
+     * facies promittit (E3/E7). css faciem nondum habet: via derivata
+     * infra manet, et ea est seam per quam css suam scribet. */
+    si (_suffixum(via, ".sh"))
+    {
+        b32 sanum = _plagulam_crustae_iudicare(piscina, via, fons,
+                        mensura, machina, excerptum, summa);
+
+        piscina_destruere(piscina);
+        redde sanum;
     }
     si (!_clientem_parsare(piscina, via, fons, mensura, &cliens))
     {

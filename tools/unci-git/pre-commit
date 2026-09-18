@@ -56,10 +56,14 @@ fi
 # posita porta MORTUA esset pro usu suo primario.
 #
 # QUID: tools/diagnostica.sh iudicat quod crusta et css in registris
-# suis DECLARANT (gradus I: arbor malformata). Gradus II (regulae
-# lintris, crusta/lintrum/) NONDUM hic est - catena eius per pythonica
-# it, et via commissionis Pythone carere debet; vide 01M2RYR3JJ
-# (extractor C) et decretum 01M2S9GR5W.
+# suis DECLARANT (gradus I: arbor malformata) ET quod regulae lintris
+# in crusta/lintrum/ inveniunt (gradus II). Gradus II hic ADEST ex
+# 2026-09-18: extractor in C vivit (01M2RYR3JJ), ergo catena
+# commissionis Pythone caret, quod erat condicio.
+#
+# INSTRUMENTUM IDEM, SECTIO IMMOTA: facies crustae utrumque gradum
+# fert, ergo haec sectio gradum secundum sine emendatione cepit. Id
+# non est coniectura - portae XII-XIII fumi eam plantatam probant.
 #
 # EXCLUSIO probationes/fixa/: pathologiae CONSULTO malae sunt
 # (adversarius.sh, pathologiae.sh, corpus freebsd, adversarius_2.css).

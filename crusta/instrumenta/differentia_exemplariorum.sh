@@ -38,7 +38,12 @@ trap 'rm -rf "$TEMP"' EXIT
 # NUMERI PANGUNTUR (mensurati 2026-09-18, post transitum). Si moventur
 # sine causa, aut corpus crevit aut regula mutata est - utrumque
 # nominandum. Historia in pythonica/probatio_silva.py.
-PIN_CRUDA=568
+#
+# DLXVIII -> DLXX (opus V): arcus ipse crusta/facies.sh peperit, quae
+# '! [ "$BIN" -nt "$SRC" ]' fert - '-nt' RECTE negatum, ergo bracchium
+# utrumque uno crescit et PLENA IMMOTA manet. Porta hoc ipsa invenit:
+# numerus motus causam poposcit et causam habuit.
+PIN_CRUDA=570
 PIN_PLENA=14
 
 VIAE=()

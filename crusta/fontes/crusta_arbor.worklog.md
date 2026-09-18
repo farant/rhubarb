@@ -779,3 +779,51 @@ byte-reversal checks stayed green, which is the proof no byte moved.
 It also fixed a latent asymmetry: the tool printed `causa` unescaped
 while Python escaped it — harmless today (causes are ≤ LX bytes without
 control characters) but a tab in a cause would have split a row.
+
+## 2026-09-18 — the dispatcher, and tier 2 at the commit
+
+Task 5. `tools/diagnostica` routes `.sh` through the facade; css keeps
+its derive path (E7's named fallback, and the seam css writes its own
+facade through). Rule 1 now runs automatically for the first time —
+until today its only path was Python, and the commit path must be
+Python-free.
+
+**The test that mattered was what did NOT change.** Adding tier 2 to
+the tool touched the dispatch and nothing else: no gate enumeration, no
+rule discovery, no exemption logic. `tools/unci-git/pre-commit` needed
+*no code change at all* — it already shelled to `diagnostica.sh`. The
+plan said to verify that rather than assume it, which was right:
+staging a bare `-nt` OBSTAT (rc 1), the same file annotated passes
+(rc 0).
+
+**One real behaviour gap, found by asking what the dispatch would
+lose.** The tool used to project every file separately and report a
+writer refusal as `materia:scriptura`; `materia_diagnostica_plena`
+refused outright instead, returning NIHIL. Routing `.sh` through the
+facade would have turned a located erratum into "nothing judged" —
+exit 2, indistinguishable from a healthy file. `plena` now emits the
+row and skips tier 2, which is both the old behaviour and the better
+one. It is reachable: `a 'b ` + newline trips `_textus_tutus` (P7), and
+that is fumus XV.
+
+Gates, each born red:
+
+| # | asserts | plant |
+|---|---|---|
+| diagnostica XII | tier 2 reaches the tool; the negated `-nt` TACET | dispatch bypassed |
+| diagnostica XIII | `<tolera>` covers tier 2 | facade ignores exemptions |
+| diagnostica XIV | `lint:` row survives the TSV round trip | — regression guard |
+| diagnostica XV | writer refusal is a ROW, not silence | restore the mute refusal |
+| unci XV | staged bare `-nt` OBSTAT | dispatch bypassed |
+| unci XVI | staged annotated `-nt` passes | — asymmetry partner |
+
+Fumus gate I (whole house, 239 files, exit 0, zero errata) passed
+unchanged with tier 2 live — which is the fourteen annotations proving
+themselves over the real corpus rather than over a fixture.
+
+**The differential's pin moved, and the pin is why we know why.** 568 →
+570 raw, because this arc's own `crusta/facies.sh` carries
+`! [ "$BIN" -nt "$SRC" ]` — a *correctly negated* `-nt`, so both arms
+grow by one and the difference stays 14. A count that moves with a
+cause is the gate working; the pin demanded the cause and got it.
+Python's pins moved the same way, 291/277 → 292/278.

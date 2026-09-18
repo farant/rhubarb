@@ -10,7 +10,13 @@
 # V.   TSV XII campos fert (XI sedes relatae, XII nota primariae),
 #      ordine UNO per diagnosticum;
 # VI.  REVERSIO: 'x' == '-machina x | -lege', octetim, exitibus et
-#      numero linearum quoque fixis; ordo pravus recusatus.
+#      numero linearum quoque fixis; ordo pravus recusatus;
+# XII.  gradus II per dispositorem (codex lintris, subtractio
+#      declarata: '-nt' negatum TACET);
+# XIII. excusatio declarata gradum II tegit;
+# XIV. REVERSIO ordinis lintris (codex 'lint:' praefixum suum fert);
+# XV.  scriptura fracta ORDO est (materia:scriptura cum sede), non
+#      refutatio muta.
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -162,6 +168,52 @@ for f in excusata mortua; do
     diff -q "$T/$f.recta" "$T/$f.pertsv" >/dev/null
     credo $? "XI. $f: REVERSIO octetim cum annotatione"
 done
+
+# XII-XIV. GRADUS II PER DISPOSITOREM. Ante hunc arcum regula lintris
+# nusquam automatice currebat: instrumentum gradum I solum sciebat, et
+# inventa gradus II per pythonica sola veniebant. Hae portae probant
+# quod dispositor utrumque gradum fert, quod excusatio eum tegit, et
+# quod subtractio declarata per instrumentum pervenit.
+printf '#!/bin/bash\n[ $a -nt $b ]\n! [ $c -nt $d ]\n' > "$T/lint.sh"
+./tools/diagnostica.sh "$T/lint.sh" > "$T/lint.out" 2>/dev/null
+rc=$?
+[ "$rc" -eq 1 ]; credo $? "XII. gradus II ad instrumentum pervenit (rc $rc)"
+grep -q 'lint:nt-aequalitas' "$T/lint.out"
+credo $? "XII. codex lintris in forma humana"
+# SUBTRACTIO: '-nt' NEGATUM inventum non est. Sine hac assertione
+# porta duo inventa pro uno acciperet et differentiam declaratam
+# nemo probaret.
+[ "$(grep -c 'lint:nt-aequalitas' "$T/lint.out")" = "1" ]
+credo $? "XII. subtractio declarata: negatum TACET ($(grep -c 'lint:nt-aequalitas' "$T/lint.out") inventum)"
+
+printf '#!/bin/bash\n# <tolera codex="lint:nt-aequalitas" (>consulto\n[ $a -nt $b ]\n' \
+    > "$T/lint_excusatus.sh"
+./tools/diagnostica.sh "$T/lint_excusatus.sh" > "$T/lint_exc.out" 2>/dev/null
+rc=$?
+[ "$rc" -eq 0 ] && [ ! -s "$T/lint_exc.out" ]
+credo $? "XIII. excusatio declarata gradum II tegit (rc $rc)"
+
+# XIV. REVERSIO ordinis lintris. Codex 'lint:' praefixum SUUM fert,
+# ergo pictor grammaticam ei non praefigit - res quam ordo gradus I
+# (qui 'crusta:' accipit) probare non potest.
+./tools/diagnostica.sh -machina "$T/lint.sh" 2>/dev/null \
+    | ./tools/diagnostica.sh -lege > "$T/lint.pertsv" 2>/dev/null
+diff -q "$T/lint.out" "$T/lint.pertsv" >/dev/null
+credo $? "XIV. lint: REVERSIO octetim"
+
+# XV. SCRIPTURA FRACTA ORDO EST, NON SILENTIUM. Valor cuius spatium
+# extremum lineam novam fert in elemento mixto a scriptore RECUSATUR
+# (crusta P7). Per faciem ea recusatio ordinem 'materia:scriptura' cum
+# sede reddit; refutatio muta plagulam vitiosam a plagula sana non
+# distingueret, quia utraque 'nihil iudicatum' esset.
+printf "a 'b \n" > "$T/scriptura.sh"
+./tools/diagnostica.sh "$T/scriptura.sh" > "$T/scriptura.out" 2>/dev/null
+rc=$?
+[ "$rc" -eq 1 ]; credo $? "XV. scriptura fracta: exitus 1, non 2 (rc $rc)"
+grep -q 'materia:scriptura' "$T/scriptura.out"
+credo $? "XV. codex materia:scriptura in exitu"
+[ "$(head -1 "$T/scriptura.out")" = "$T/scriptura.sh:1:3: [erratum] materia:scriptura" ]
+credo $? "XV. sede sua nominata: $(head -1 "$T/scriptura.out")"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus diagnostica: sanum"; exit 0; fi
