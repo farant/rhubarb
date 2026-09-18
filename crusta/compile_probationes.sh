@@ -55,6 +55,8 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "stml"
     "stml_macros"
+    "excerptum"
+    "utf8"
     "selectio"
     "similitudo"
     "canon"
@@ -134,7 +136,8 @@ shopt -s nullglob
 # materia sub-fontes: crusta eam CONSUMIT, non continet
 for m in materia_lexicon materia_token materia_nodus materia_scribere \
          materia_arbor materia_arbor_aequalitas materia_coctor \
-         materia_sedes materia_diagnostica; do
+         materia_sedes materia_diagnostica materia_annotationes \
+         materia_excusatio materia_exemplaria materia_pictor; do
     src="$MATERIA_DIR/fontes/$m.c"
     obj="$BUILD_DIR/$m.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then

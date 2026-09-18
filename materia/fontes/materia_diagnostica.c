@@ -15,6 +15,11 @@
  */
 
 #include "materia_diagnostica.h"
+#include "materia_annotationes.h"
+#include "materia_arbor.h"
+#include "materia_exemplaria.h"
+#include "materia_excusatio.h"
+#include "stml_macros.h"
 #include "tabula_dispersa.h"
 #include <string.h>
 
@@ -647,4 +652,146 @@ materia_diagnostica_derivare (
         *cella = series[k];
     }
     redde ordinata;
+}
+
+
+/* ==================================================
+ * Sequentia plena (specificatio exemplariorum par. III)
+ * ================================================== */
+
+/* Ordines unius Xar in alterum transferre. 'xar_extendere' NON
+ * EXSTAT - pseudocodex specificationis eam finxit, et ansa haec est
+ * quod revera scribitur. */
+interior b32
+_transferre (
+          Xar* ad,
+ constans Xar* ex)
+{
+    i32 k;
+
+    si (ex == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(ex); k++)
+    {
+        MateriaDiagnosticum* cella =
+            (MateriaDiagnosticum*)xar_addere(ad);
+
+        si (cella == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *cella = *(constans MateriaDiagnosticum*)xar_obtinere(ex, k);
+    }
+    redde VERUM;
+}
+
+/* Gradum II per regulam quamque currere. Proiectio SEMEL fit et
+ * regulis omnibus servit: parsura una, proiectio una. */
+interior b32
+_gradus_secundus (
+                          Piscina* piscina,
+            constans MateriaNodus* radix,
+ constans MateriaDiagnosticaRatio* ratio,
+              InternamentumChorda* intern,
+                              Xar* exitus)
+{
+    MateriaArborConsilium consilium;
+    MateriaArborScriptura scriptura;
+                      i32 k;
+
+    si (   ratio->regulae              == NIHIL
+        || xar_numerus(ratio->regulae) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    materia_arbor_consilium_nudum(&consilium, ratio->tabularium,
+        ratio->lexicon, ratio->grammatica);
+    consilium.intern          = intern;
+    consilium.sedes_scribere  = VERUM;
+    scriptura = materia_arbor_proicere_nodum(piscina, radix,
+        &consilium);
+    si (!scriptura.successus || scriptura.arbor == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(ratio->regulae); k++)
+    {
+        StmlNodus* regula = *(StmlNodus**)xar_obtinere(ratio->regulae,
+                                k);
+           StmlNodus* documentum;
+StmlExpansioResultus  expansio;
+
+        documentum = materia_exemplaria_componere(piscina,
+            scriptura.arbor, regula, intern);
+        si (documentum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        expansio = stml_expandere(documentum, piscina, intern);
+        si (!expansio.successus || expansio.radix_expansa == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (!_transferre(exitus,
+                materia_exemplaria_extrahere(piscina,
+                expansio.radix_expansa)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+Xar*
+materia_diagnostica_plena (
+                          Piscina* piscina,
+            constans MateriaNodus* radix,
+ constans MateriaDiagnosticaRatio* ratio,
+                              Xar* emissa)
+{
+    InternamentumChorda* intern;
+                    Xar* exitus;
+                    Xar* annotationes = NIHIL;
+
+    si (   piscina == NIHIL || radix == NIHIL || ratio == NIHIL
+        || ratio->tabularium == NIHIL || ratio->lexicon == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* INTERNAMENTUM CLIENTIS, non nostrum: regulae eo lectae sunt,
+     * et exemplaria identitatem internatam conferunt. */
+    intern = ratio->intern != NIHIL
+        ? ratio->intern : internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde NIHIL;
+    }
+    exitus = xar_creare(piscina, (i32)magnitudo(MateriaDiagnosticum));
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!_transferre(exitus, materia_diagnostica_derivare(piscina,
+            radix, ratio->tabularium, ratio->declarata, NIHIL,
+            emissa)))
+    {
+        redde NIHIL;
+    }
+    si (!_gradus_secundus(piscina, radix, ratio, intern, exitus))
+    {
+        redde NIHIL;
+    }
+    /* ANNOTATIONES SEMEL: excusatio una gradus AMBOS tegit, ergo
+     * '<tolera>' utrumvis genus supprimit. Bis collectae essent si
+     * gradus quisque suam vocationem haberet - et arbor bis
+     * ambularetur sine causa. */
+    si (ratio->praefixum != NIHIL)
+    {
+        annotationes = materia_annotationes_colligere(piscina, radix,
+            ratio->lexicon, ratio->praefixum, NIHIL, intern);
+    }
+    redde materia_excusatio_applicare(piscina, exitus, annotationes,
+        ratio->declarata, ratio->grammatica);
 }

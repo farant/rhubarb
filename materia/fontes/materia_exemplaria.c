@@ -226,6 +226,133 @@ _ordinem_addere (
 
 
 /* ==================================================
+ * Compositio documenti
+ * ================================================== */
+
+/* TRANSPARENTIA ordinaria clientium materiae. Per SUBSTRATUM est, non
+ * per clientem: involucra triviae ('ante' 'post') et attributa
+ * visionis sedium ('sedes' 'octeti') littera congruentiae fierent
+ * aliter, et capturae iteratae sub visione sedium numquam
+ * congruerent. */
+#define TRANS_TAGS       "ante post"
+#define TRANS_ATTRIBUTA  "sedes octeti"
+
+interior b32
+_transparentiam_habet (
+    StmlNodus* regula)
+{
+    i32 k;
+
+    si (regula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (   _elementum_est(regula) && regula->titulus != NIHIL
+        && chorda_aequalis_literis(*regula->titulus, "TRANSPARENTIA"))
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(regula->liberi); k++)
+    {
+        si (_transparentiam_habet(
+                *(StmlNodus**)xar_obtinere(regula->liberi, k)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+_liberos_transferre (
+    StmlNodus* ad,
+    StmlNodus* ex)
+{
+    i32 k;
+
+    si (ex == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(ex->liberi); k++)
+    {
+        si (!stml_liberum_addere(ad,
+                *(StmlNodus**)xar_obtinere(ex->liberi, k)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+StmlNodus*
+materia_exemplaria_componere (
+              Piscina* piscina,
+            StmlNodus* proiectio,
+            StmlNodus* regula,
+  InternamentumChorda* intern)
+{
+    StmlNodus* documentum;
+
+    si (   piscina == NIHIL || proiectio == NIHIL || regula == NIHIL
+        || intern  == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* NODUS DOCUMENTI, non elementum: EXEMPLAR/CATENA/relatum GRADU
+     * DOCUMENTI agnoscuntur (documenta stml par. XIX), ergo intra
+     * elementum inclusa expansori INVISIBILIA sunt et regula nihil
+     * invenit. Constructor documenti non exstat, ergo documentum
+     * VACUUM parsatur - via una quae nodum recti generis dat.
+     * (Mensuratum: prima forma elementum 'documentum' creabat et
+     * gradus II ordines ZERO reddebat, proiectione recta.) */
+    {
+        StmlResultus r = stml_legere_ex_literis("<!--documentum-->",
+            piscina, intern);
+
+        si (!r.successus || r.radix == NIHIL)
+        {
+            redde NIHIL;
+        }
+        documentum = r.radix;
+    }
+    /* PROIECTIO PRIMA, deinde regula - ordo quem expansor poscit:
+     * regula proiectionem SUPRA se quaerit.
+     *
+     * LIMES RELATORUM HIC NON EST: Python marcam
+     * '<exemplaria-limes-relatorum/>' interponit quia textum EXPANSUM
+     * scindit et partem posteriorem solam ad HTML vertit (arbor ipsa
+     * attributa sine valore fert quae forma HTML recusat). Extractio
+     * ex ARBORE elementa <relatum> directe invenit, ergo marca cum
+     * causa sua evanescit. */
+    si (!_liberos_transferre(documentum, proiectio))
+    {
+        redde NIHIL;
+    }
+    si (!_transparentiam_habet(regula))
+    {
+        StmlNodus* t = stml_elementum_creare(piscina, intern,
+                           "TRANSPARENTIA");
+
+        si (   t == NIHIL
+            || !stml_attributum_addere(t, piscina, intern, "tags",
+                   TRANS_TAGS)
+            || !stml_attributum_addere(t, piscina, intern,
+                   "attributa", TRANS_ATTRIBUTA)
+            || !stml_liberum_addere(documentum, t))
+        {
+            redde NIHIL;
+        }
+    }
+    si (!_liberos_transferre(documentum, regula))
+    {
+        redde NIHIL;
+    }
+    redde documentum;
+}
+
+
+/* ==================================================
  * Extractio
  * ================================================== */
 

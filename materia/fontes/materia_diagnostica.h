@@ -19,6 +19,8 @@
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"
+#include "internamentum.h"
+#include "materia_lexicon.h"
 #include "materia_nodus.h"
 #include "materia_registrum.h"
 
@@ -72,5 +74,61 @@ materia_diagnostica_derivare (
    constans MateriaDiagnosticaCocta* diagnostica,
          constans MateriaOrigoUncus* uncus,
                                 Xar* emissa);
+
+
+/* ==================================================
+ * Sequentia plena - quod cliens quisque aliter exscriberet
+ * ==================================================
+ *
+ * Gradus I derivatus, gradus II per regulam quamque extractus,
+ * annotationes semel collectae, excusationes applicatae, ordo. Centum
+ * lineae quas facies quaeque repeteret, SEMEL scriptae.
+ *
+ * ==================================================
+ * 'ratio' A CLIENTE DATUR - MATERIA EAM NON TENET
+ * ==================================================
+ *
+ * Adumbratio prior tabulam clientium INTRA materiam posuit, suffixo
+ * dispositam. Ea putredo est quam M8 nominat, et Fran eam recusavit.
+ * Structura superest, dominium invertitur, et probatio quae sola
+ * refert haec est: CLIENTEM ADDERE HOC CAPUT NON EMENDAT. materia
+ * nihil enumerat, nihil disponit, nomen nullius clientis novit -
+ * cliens se ipsum nominat cum vocat.
+ *
+ * STML HIC NON APPARET consulto: 'regulae' Xar OPACUM est (arbores
+ * StmlNodus* iam lectae), ergo contractus diagnosticorum parsatorem
+ * STML non trahit. Cliens regulas ipse invenit et legit - quae
+ * plagulae, ubi sitae, res clientis est.
+ */
+
+nomen structura {
+                  constans character* grammatica;  /* "crusta" */
+     /* 'registrum' macro latinae est (= register) */
+     constans MateriaRegistrumCoctum* tabularium;
+        constans MateriaLexiconRatum* lexicon;
+    constans MateriaDiagnosticaCocta* declarata;
+                  /* "#"; NIHIL = annotationes nullae */
+                  constans character* praefixum;
+                  /* NIHIL = gradus I solus */
+                                 Xar* regulae;
+    /* INTERNAMENTUM QUO REGULAE LECTAE SUNT. Lex domus
+     * (materia/CLAUDE.md): proiectio in EODEM internamento ac
+     * exemplaria aedificetur, aliter comparatio identitatis internatae
+     * exemplaria OMNIA MUTA reddit. Mensuratum 2026-09-18: gradus II
+     * ordines ZERO reddebat, proiectione et regula ambabus rectis.
+     * NIHIL licet si 'regulae' NIHIL est. */
+             InternamentumChorda* intern;
+} MateriaDiagnosticaRatio;
+
+/* Xar NOVUM de MateriaDiagnosticum, ordine (initium, codex).
+ * 'emissa' (NIHIL licet) diagnostica a parsatore nata fert - quod
+ * arbor non servat, solus parsator scit.
+ * NIHIL = argumentum necessarium abest aut memoria defecit. */
+Xar*
+materia_diagnostica_plena (
+                             Piscina* piscina,
+               constans MateriaNodus* radix,
+    constans MateriaDiagnosticaRatio* ratio,
+                                 Xar* emissa);
 
 #endif /* MATERIA_DIAGNOSTICA_H */
