@@ -54,6 +54,8 @@ declare -a RADIX_FONTES=(
     "selectio"
     "stml"
     "stml_macros"
+    "excerptum"
+    "utf8"
     "credo"
 )
 

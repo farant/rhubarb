@@ -1,0 +1,6 @@
+g.sh:2:1: [erratum] crusta:grex/tok_clausura
+  '}' exspectata
+   1 | echo a; { echo b
+     |         ^~~~~~~~ hic coepit
+   2 | 
+     | ^ hic exspectatur

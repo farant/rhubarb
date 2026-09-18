@@ -44,6 +44,7 @@
 #include "materia_diagnostica.h"
 #include "materia_excusatio.h"
 #include "materia_lexicon.h"
+#include "materia_pictor.h"
 #include "crusta_arbor.h"
 #include "crusta_diagnostica.h"
 #include "crusta_lexicon.h"
@@ -224,8 +225,8 @@ _relata_legere (
      MateriaSedesRelata** exitus,
                     i32*  numerus)
 {
-    MateriaSedesRelata* series;
-             character* p;
+     MateriaSedesRelata* series;
+              character* p;
                     i32  quot = ZEPHYRUM;
                     i32  k;
 
@@ -292,30 +293,6 @@ _notam_scribere (
     }
 }
 
-/* Pictor seriem ORDINATAM poscit et eam non ordinat; recordum sedem
- * primariam seorsum a relatis servat, ergo ordo per constructionem
- * non datur. Numerus minimus est (hodie II), ergo insertio. */
-interior vacuum
-_sedes_ordinare (
-    ExcerptumSedes* sedes,
-               i32  numerus)
-{
-    i32 i;
-
-    per (i = I; i < numerus; i++)
-    {
-        ExcerptumSedes cella  = sedes[i];
-                   i32 j      = i;
-
-        dum (j > ZEPHYRUM && sedes[j - I].initium > cella.initium)
-        {
-            sedes[j] = sedes[j - I];
-            j--;
-        }
-        sedes[j] = cella;
-    }
-}
-
 interior vacuum
 _diagnosticum_imprimere (
                      Piscina* piscina,
@@ -328,8 +305,8 @@ constans MateriaDiagnosticum* d,
                          b32  excerptum,
                        Summa* summa)
 {
+    /* praefixum grammaticae in materia_pictor nunc vivit */
     b32 monitum = (b32)(d->gravitas == (s32)MATERIA_GRAVITAS_MONITUM);
-    b32 substrati = (b32)(strchr(d->codex, ':') != NIHIL);
 
     si (monitum)
     {
@@ -376,56 +353,15 @@ constans MateriaDiagnosticum* d,
         putchar((integer)'\n');
         redde;
     }
-    imprimere("%s:%d:%d: [%s] %s%s%s\n  %s\n", via,
-        (integer)d->tractus.linea, (integer)d->tractus.columna,
-        monitum ? "monitum" : "erratum",
-        substrati ? "" : grammatica, substrati ? "" : ":", d->codex,
-        d->causa);
-    si (excerptum && d->tractus.initium >= ZEPHYRUM)
     {
-        ChordaAedificator* aedificator;
-           ExcerptumSedes* sedes;
-                      i32  numerus = I;
-                      i32  r;
+        /* FORMA in materia_pictor vivit (E4): illic chorda componitur,
+         * hic sola scriptura fit. Numeri et forma TSV supra manent -
+         * officium instrumenti sunt, non forma. */
+        chorda textus = materia_pictor_scribere(piscina, d, via,
+                            grammatica, fons, mensura, excerptum);
 
-        sedes = (ExcerptumSedes*)piscina_allocare(piscina,
-            (memoriae_index)(d->numerus_relatorum + I)
-                * magnitudo(ExcerptumSedes));
-        si (sedes == NIHIL)
+        si (textus.mensura > ZEPHYRUM)
         {
-            redde;
-        }
-        sedes[ZEPHYRUM].initium  = d->tractus.initium;
-        sedes[ZEPHYRUM].finis    = d->tractus.finis;
-        sedes[ZEPHYRUM].linea    = d->tractus.linea;
-        sedes[ZEPHYRUM].nota     = d->nota;
-        per (r = ZEPHYRUM; r < d->numerus_relatorum; r++)
-        {
-            constans MateriaTractus* t = &d->relata[r].tractus;
-
-            /* Sedes relata insana excerptum TOTUM perderet, quia
-             * pictor seriem totam recusat - ergo praetermittitur et
-             * primaria superest, ut ante hoc opus. */
-            si (   t->initium < ZEPHYRUM || t->initium > (s32)mensura
-                || t->linea == ZEPHYRUM)
-            {
-                perge;
-            }
-            sedes[numerus].initium  = t->initium;
-            sedes[numerus].finis    = t->finis;
-            sedes[numerus].linea    = t->linea;
-            sedes[numerus].nota     = d->relata[r].nota;
-            numerus++;
-        }
-        _sedes_ordinare(sedes, numerus);
-        aedificator = chorda_aedificator_creare(piscina,
-            (memoriae_index)CCLVI);
-        si (   aedificator != NIHIL
-            && excerptum_scribere_multa(aedificator, fons, mensura,
-                   sedes, numerus))
-        {
-            chorda textus = chorda_aedificator_finire(aedificator);
-
             fwrite(textus.datum, I, (size_t)textus.mensura, stdout);
         }
     }
