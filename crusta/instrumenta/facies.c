@@ -202,8 +202,13 @@ principale (
     optiones.intern   = intern;
     /* lintrum ordinarium TOTUM lectum: excusatio lintris iudicanda */
     optiones.regulae_plenae = VERUM;
+    /* ELECTIO, NON MACRO: vocans explicitus, deinde ambitus, deinde
+     * mos. Forma prior macronem ipsum adhibebat, ergo hoc instrumentum
+     * CRUSTA_LINTRUM tacite neglegebat dum tools/diagnostica eum
+     * honorabat - instrumenta duo, mores duo, quod porta XX capit. */
     optiones.regulae  = crusta_regulae_legere(regularum,
-                            CRUSTA_LINTRUM, intern, &causa);
+                            crusta_lintrum_eligere(NIHIL), intern,
+                            &causa);
     si (optiones.regulae == NIHIL)
     {
         fprintf(stderr, "facies: %s\n",
@@ -215,7 +220,7 @@ principale (
     si (xar_numerus(optiones.regulae) == ZEPHYRUM)
     {
         fprintf(stderr, "facies: regula nulla in %s\n",
-            CRUSTA_LINTRUM);
+            crusta_lintrum_eligere(NIHIL));
         redde (integer)II;
     }
     per (i = I; i < argc; i++)

@@ -1019,3 +1019,28 @@ The commit lint earned its keep too: `iudicabilis` is not a word
 Whitaker knows, and `tools/unci-git/fumus.sh` refused the commit and
 named the identifier and its one site. Renamed to `lint_iudicandus`
 (gerundive — "to be judged"), which resolves.
+
+## 2026-09-18 — an override that only one of two instruments honoured
+
+Found while answering Fran's question about the rule 2/3 blockers, by
+probing rather than reading. `crusta/instrumenta/facies.c` passed the
+MACRO `CRUSTA_LINTRUM` to `crusta_regulae_legere` instead of calling
+`crusta_lintrum_eligere(NIHIL)` — so `crusta/facies.sh` silently ignored
+the environment override while `tools/diagnostica.sh` honoured it. I
+added the chooser in `101e8ae5` and updated one of the two callers.
+
+**Two instruments, two behaviours — the third time this exact class
+appeared in two days** (the TSV writer, "regula nulla", now this). The
+pattern is always the same: a capability added to the shared layer,
+wired into the instrument I happened to be testing, and not the
+sibling.
+
+**And my first attempt to verify it was a false positive of the kind
+this arc keeps naming.** I pointed `CRUSTA_LINTRUM` at a directory
+holding a COPY of rule 1 and got rule-1 output — which is what BOTH
+"override honoured" and "override ignored" produce. *A fixture where
+two fields are equal cannot discriminate them.* The empty directory
+discriminates, and that is what fumus XX uses.
+
+Gate XX pairs with XVII: the same question asked of both instruments,
+so neither can go quiet while the other speaks.

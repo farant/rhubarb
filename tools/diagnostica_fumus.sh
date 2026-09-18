@@ -21,7 +21,9 @@
 # XVII. lintrum VACUUM refutatio est (exitus 2 nominatus), non exitus 0;
 # XVIII. ordo SINE SEDE refutatio est, non silentium (paritas cum
 #      extractore priore);
-# XIX. excusatio LINTRIS mortua nominatur (EX8 clausum).
+# XIX. excusatio LINTRIS mortua nominatur (EX8 clausum);
+# XX.  crusta/facies.sh ambitum CRUSTA_LINTRUM honorat, ut
+#      tools/diagnostica (instrumenta duo, mos unus).
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -284,6 +286,19 @@ rc=$?
 [ "$rc" -eq 1 ]; credo $? "XIX. excusatio lintris mortua: exitus 1 (rc $rc)"
 grep -q 'materia:excusatio-mortua' "$T/lint_mortua.out"
 credo $? "XIX. codex excusatio-mortua nominatus"
+
+# XX. INSTRUMENTA DUO, MOS UNUS de lintro. crusta/facies.sh macronem
+# CRUSTA_LINTRUM ipsum adhibebat dum tools/diagnostica
+# 'crusta_lintrum_eligere' vocabat, ergo ambitum TACITE neglegebat -
+# inventum 2026-09-18 probando, non legendo, et forma eadem quae
+# 'regula nulla' bis iam momordit. Porta XVII idem de instrumento
+# altero probat; par hoc facit ut alterum tacere non possit dum
+# alterum clamat.
+mkdir -p "$T/lintrum_vacuum2"
+( cd "$RADIX" && CRUSTA_LINTRUM="$T/lintrum_vacuum2" \
+    ./crusta/facies.sh "$T/lint.sh" ) > "$T/facies_vac.out" 2>&1
+rc=$?
+[ "$rc" -eq 2 ]; credo $? "XX. facies.sh ambitum HONORAT (lintrum vacuum -> 2, rc $rc)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus diagnostica: sanum"; exit 0; fi
