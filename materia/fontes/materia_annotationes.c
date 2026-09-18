@@ -86,12 +86,15 @@ _purgare (
 
 /* Commentarium ad annotationem vertere, si annotatio est. PROSA
  * (primum non-spatium non '<') omittitur TACITE; quod '<' fert sed
- * parsari nequit RETINETUR - lex silva_annotationes.h. */
+ * parsari nequit RETINETUR - lex silva_annotationes.h.
+ *
+ * 'nodus' HIC NON PONITUR: annotatio PENDENS nascitur et lexemate
+ * SEQUENTE solvitur (vide _pendentes_solvere). */
 interior vacuum
 _commentarium_tractare (
                 Collectio* c,
-    constans MateriaNodus* possessor,
-    constans MateriaToken* lexema)
+    constans MateriaToken* lexema,
+    constans MateriaNodus* hospes)
 {
               chorda  purgatum;
     MateriaAnnotatio* a;
@@ -116,23 +119,73 @@ _commentarium_tractare (
         redde;
     }
     memset(a, ZEPHYRUM, magnitudo(*a));
-    a->textus  = purgatum;
-    a->crudum  = lexema->valor;
-    a->nodus   = possessor;
+    a->textus = purgatum;
+    a->crudum = lexema->valor;
+    /* NIHIL = pendens, antrorsum solvenda */
+    a->nodus           = hospes;
+    a->scopus.initium  = -I;
     materia_tractus_lexematis(c->origo, lexema, &a->commentarium);
-    si (!materia_tractus_nodi(c->origo, possessor, &a->scopus))
-    {
-        /* nodus sine lexemate cum sede: ambitus nullus, ergo nihil
-         * excusare potest. Retinetur ut consumptor id NOMINARE
-         * possit - tacite cadere est quod hic arcus prohibet. */
-        a->scopus.initium = -I;
-    }
     r                   = stml_legere(purgatum, c->piscina, c->intern);
     a->parsata          = r.successus;
     a->arbor            = r.elementum_radix;
     a->status           = r.status;
     a->linea_erroris    = r.linea_erroris;
     a->columna_erroris  = r.columna_erroris;
+}
+
+
+/* Annotationes PENDENTES lexemate hoc solvere: quaeque cuius
+ * commentarium ANTE hoc lexema finit nodum eius possessorem accipit.
+ *
+ * ==================================================
+ * CUR ADNEXIO ANTRORSUM, ET QUID MENSURA DOCUIT
+ * ==================================================
+ *
+ * Opus I nodum POSSESSOREM TRIVII adhibebat. Crusta autem trivia
+ * RETRO ligat (lex C7, crusta_lexicon.h:19), ergo ambitus ab eo quod
+ * commentarium PRAECEDIT pendebat, non ab eo quod annotat. Mensuratum
+ * 2026-09-18 in transitu operis V:
+ *
+ *   post 'fi': commentarium in <post> SEPARATORIS sedet (octeti
+ *   57-58) - ambitus NIHIL continet, excusatio MORTUA nascitur;
+ *
+ *   post 'do': possessor est ITERATIO TOTA - una excusatio inventa
+ *   DUO tacere fecit, alterum vitium VERUM alienum.
+ *
+ * Utrumque idem vitium: nimis angustum aut nimis latum, numquam id
+ * quod auctor scripsit. Silva hoc ipsum per SUPRA/INTERIOR/PLAGULA
+ * solvit; opus I id divergentia deposuit, quia mensura prima
+ * ('if' in initio plagulae) casus SPECIALIS erat - trivium ducens
+ * nihil habet cui retro ligetur.
+ *
+ * REMEDIUM: adnexio POSITIONALIS antrorsum. Lexemata ordine fontis
+ * visitantur, ergo lexema PRIMUM post commentarium possessorem dat.
+ * Trivium ducens eundem nodum reddit ac prius (lexema sequens est
+ * lexema ipsum), ergo casus qui operabantur immoti manent. */
+
+interior vacuum
+_pendentes_solvere (
+                Collectio* c,
+    constans MateriaNodus* possessor,
+    constans MateriaToken* lexema)
+{
+    i32 k;
+
+    si (lexema->byte_offset < ZEPHYRUM)
+    {
+        redde;   /* syntheticum: sedem non dat */
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(c->exitus); k++)
+    {
+        MateriaAnnotatio* a =
+            (MateriaAnnotatio*)xar_obtinere(c->exitus, k);
+
+        si (   a->nodus              == NIHIL
+            && a->commentarium.finis <= lexema->byte_offset)
+        {
+            a->nodus = possessor;
+        }
+    }
 }
 
 interior vacuum
@@ -147,13 +200,70 @@ _lexema_tractare (
     {
         redde;
     }
+    /* ORDO MOMENTI EST: trivia ANTE hoc lexema praecedunt, ergo hoc
+     * lexema ea solvit; trivia POST id sequuntur, ergo lexema
+     * PROXIMUM ea solvet. */
     per (k = ZEPHYRUM; k < lexema->numerus_ante; k++)
     {
-        _commentarium_tractare(c, possessor, lexema->spatia_ante[k]);
+        _commentarium_tractare(c, lexema->spatia_ante[k], NIHIL);
     }
+    _pendentes_solvere(c, possessor, lexema);
     per (k = ZEPHYRUM; k < lexema->numerus_post; k++)
     {
-        _commentarium_tractare(c, possessor, lexema->spatia_post[k]);
+        /* LINEA EADEM AUT PRAECEDENS (lex silvae,
+         * silva_c89_semantica.c:1077): commentarium in CAUDA lineae
+         * id annotat quod in ea linea iacet, non quod sequitur -
+         * ita auctor scribit, et ita silva iam iudicat. Commentarium
+         * in linea PROPRIA antrorsum solvitur ut cetera. */
+        constans MateriaToken* nota = lexema->spatia_post[k];
+
+        _commentarium_tractare(c, nota,
+            nota->linea == lexema->linea ? possessor : NIHIL);
+    }
+}
+
+/* Ambitus cuiusque annotationis: nodus LATISSIMUS qui eodem octeto
+ * incipit ac possessor inventus, RADICE EXCEPTA.
+ *
+ * Cur latissimus: commentarium ante 'if' totam conditionem tegere
+ * debet, non lexema 'if' solum. Cur radice excepta: radix plagulam
+ * TOTAM tegit, et exclusio per plagulam est id quod haec ratio
+ * consulto vetat (par. II specificationis). */
+interior vacuum
+_ambitus_ponere (
+                Collectio* c,
+    constans MateriaNodus* radix)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(c->exitus); k++)
+    {
+        MateriaAnnotatio* a =
+            (MateriaAnnotatio*)xar_obtinere(c->exitus, k);
+        constans MateriaNodus* nodus = a->nodus;
+               MateriaTractus  t;
+
+        si (   nodus == NIHIL
+            || !materia_tractus_nodi(c->origo, nodus, &t))
+        {
+            perge;
+        }
+        dum (   nodus->pater != NIHIL
+             && nodus->pater != radix)
+        {
+            MateriaTractus supra;
+
+            si (   !materia_tractus_nodi(c->origo, nodus->pater,
+                       &supra)
+                || supra.initium != t.initium)
+            {
+                frange;
+            }
+            nodus  = nodus->pater;
+            t      = supra;
+        }
+        a->nodus   = nodus;
+        a->scopus  = t;
     }
 }
 
@@ -295,5 +405,6 @@ materia_annotationes_colligere (
     {
         redde NIHIL;
     }
+    _ambitus_ponere(&c, radix);
     redde c.exitus;
 }

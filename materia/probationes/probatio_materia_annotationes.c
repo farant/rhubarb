@@ -59,15 +59,26 @@ enumeratio { LP_APERTURA = 0, LP_LIBERI, LP_CLAUSURA };
 #define NOTA_BONA  "# <tolera codex=\"lint:x\" (>causa vera"
 
 hic_manens MateriaToken*
+_lex_linea (
+               Piscina* piscina,
+                   s32  genus,
+    constans character* valor,
+                   s32  offset,
+                   i32  linea)
+{
+    redde materia_token_creare(piscina, &FORMA, genus,
+        chorda_ex_literis(valor, piscina), offset, linea,
+        (i32)(offset + I), ZEPHYRUM);
+}
+
+hic_manens MateriaToken*
 _lex (
                Piscina* piscina,
                    s32  genus,
     constans character* valor,
                    s32  offset)
 {
-    redde materia_token_creare(piscina, &FORMA, genus,
-        chorda_ex_literis(valor, piscina), offset, (i32)I,
-        (i32)(offset + I), ZEPHYRUM);
+    redde _lex_linea(piscina, genus, valor, offset, (i32)I);
 }
 
 /* par{apertura '(' , liberi[verbum], clausura ')'} ab offset dato */
@@ -161,6 +172,69 @@ _arbor (
         redde NIHIL;
     }
     redde radix;
+}
+
+/* Arbor cauda: par(XXXVII) commentarium in trivio POST clausurae
+ * suae fert, in linea data; par(XLV) sequitur. Linea I = cauda
+ * lineae clausurae (adnexio RETRO); linea II = linea propria
+ * (adnexio ANTRORSUM). */
+hic_manens Xar*
+_arbor_cauda (
+                          Piscina* piscina,
+     constans MateriaLexiconRatum* ratum,
+               constans character* commentarium,
+                              i32  linea)
+{
+    MateriaNodus* radix = materia_nodus_creare(piscina,
+                              (s32)GR_RADIX, (i32)I);
+    MateriaNodus* prius;
+    MateriaNodus* alterum;
+    MateriaToken* clausura;
+    MateriaToken* nota;
+
+    si (radix == NIHIL)
+    {
+        redde NIHIL;
+    }
+    prius = materia_nodus_creare(piscina, (s32)GR_PAR, (i32)III);
+    si (prius == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!materia_nodus_ponere(prius, (i32)LP_APERTURA,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, "(",
+                (s32)37)), MATERIA_LOCUS_TOKEN))
+    {
+        redde NIHIL;
+    }
+    clausura = _lex(piscina, (s32)G_IDENT, ")", (s32)43);
+    nota     = _lex_linea(piscina, (s32)G_COMMENTUM, commentarium,
+                   (s32)45, linea);
+    si (!materia_token_trivia_post_ponere(clausura, piscina, &nota,
+            (i32)I))
+    {
+        redde NIHIL;
+    }
+    si (!materia_nodus_ponere(prius, (i32)LP_CLAUSURA,
+            materia_valor_token(clausura), MATERIA_LOCUS_TOKEN))
+    {
+        redde NIHIL;
+    }
+    alterum = _par(piscina, "beta", (s32)90, NIHIL);
+    si (alterum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (   !materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+               materia_valor_nodus(prius), MATERIA_LOCUS_LISTA_NODUS)
+        || !materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+               materia_valor_nodus(alterum),
+               MATERIA_LOCUS_LISTA_NODUS))
+    {
+        redde NIHIL;
+    }
+    redde materia_annotationes_colligere(piscina, radix, ratum, "#",
+        NIHIL, NIHIL);
 }
 
 integer
@@ -257,6 +331,40 @@ principale (
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
         CREDO_VERUM (prima->parsata);
+    }
+
+    {
+                 Xar* a;
+    MateriaAnnotatio* prima;
+
+        imprimere("\n--- VII. Cauda: linea PROPRIA -> antrorsum ---\n");
+        /* Commentarium post ')' paris prioris sed in linea PROPRIA
+         * id annotat quod SEQUITUR - par alterum (XLV-LI). Ante
+         * emendationem operis V possessorem TRIVII accipiebat (par
+         * prius, aut separatorem) et excusatio aut mortua erat aut
+         * nimis lata. */
+        a = _arbor_cauda(piscina, &ratum, NOTA_BONA, (i32)II);
+        CREDO_NON_NIHIL (a);
+        CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
+        prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (prima->scopus.initium, (s32)90);
+        CREDO_AEQUALIS_S32 (prima->scopus.finis, (s32)96);
+    }
+
+    {
+                 Xar* a;
+    MateriaAnnotatio* prima;
+
+        imprimere("\n--- VIII. Cauda: linea EADEM -> retro ---\n");
+        /* Lex silvae 'linea eadem aut praecedens': commentarium in
+         * cauda lineae id annotat quod in EA linea iacet. Par cum
+         * VII - eadem arbor, linea sola mutata, sedes DIVERSA. */
+        a = _arbor_cauda(piscina, &ratum, NOTA_BONA, (i32)I);
+        CREDO_NON_NIHIL (a);
+        CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
+        prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (prima->scopus.initium, (s32)37);
+        CREDO_AEQUALIS_S32 (prima->scopus.finis, (s32)44);
     }
 
     imprimere("\n");

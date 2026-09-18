@@ -101,6 +101,20 @@ _codex_congruit (
                == ZEPHYRUM);
 }
 
+/* An codex REGULAM LINTRIS nominet. Tales codices a regulis gradus II
+ * nascuntur, quas instrumentum NON currit - ergo quod eas tangit
+ * IUDICARI NON POTEST hic (EX8; signum nominatum = cursor regularum,
+ * qui regulas omnes noverit). */
+interior b32
+_lintris_est (
+             Piscina* piscina,
+     constans chorda* codex)
+{
+    redde (b32)(   codex != NIHIL
+                && chorda_incipit(*codex,
+                       chorda_ex_literis("lint:", piscina)));
+}
+
 /* An codex in tabula declaratorum sit. Praefixum 'lint:' SEMPER
  * transit: registrum regularum nondum exsistit (EX8; signum = cursor
  * regularum), ergo iudicare esset RESPONSUM FALSUM FIDENTER DATUM. */
@@ -117,7 +131,7 @@ _codex_notus (
     {
         redde VERUM;
     }
-    si (chorda_incipit(*codex, chorda_ex_literis("lint:", piscina)))
+    si (_lintris_est(piscina, codex))
     {
         redde VERUM;
     }
@@ -413,7 +427,14 @@ materia_excusatio_applicare (
             (constans Excusatio*)xar_obtinere(excusationes, j);
         MateriaDiagnosticum* c;
 
-        si (e->status == EX_VALIDA && e->usus)
+        /* MORTUA NON IUDICATUR pro codice lintris: victima eius a
+         * regula gradus II nascitur, quam instrumentum non currit.
+         * Sine hac porta excusatio quaeque lintris in cursu gradus I
+         * MORTUA nominaretur - mensuratum in transitu operis V, ubi
+         * XIV excusationes verae domum totam rubram fecerunt. Causa
+         * et parsura NIHILOMINUS iudicantur: ea instrumentum VIDET. */
+        si (   e->status == EX_VALIDA
+            && (e->usus || _lintris_est(piscina, e->codex)))
         {
             perge;
         }

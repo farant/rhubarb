@@ -2,9 +2,17 @@
  * (project-specs/excusatio-declarata-spec.md par. V)
  *
  * Arbor eadem forma ac probatio_materia_annotationes: par prius
- * octetos XXXVII-XLIV tenet et annotationem fert; par alterum
- * XLV-LI tenet et nullam. Sedes DISPARES consulto - porta 'frater
- * extra scopum superest' fixturam symmetricam transire sineret.
+ * annotationem fert, par alterum nullam. Sedes DISPARES consulto -
+ * porta 'frater extra scopum superest' fixturam symmetricam transire
+ * sineret.
+ *
+ * OCTETI COHAERENT: commentarium ab octeto 0 incipit, pares ab C et
+ * CX - id est POST notam LONGISSIMAM (LV octeti). Ante emendationem
+ * adnexionis (opus V) pares ab XXXVII sedebant et notae longiores eos
+ * TEGEBANT; adnexio tunc possessorem TRIVII adhibebat, ergo sedes
+ * incohaerentes nihil nocebant. Adnexio POSITIONALIS eas curat, et
+ * fixtura incohaerens statim rubuit - fixtura per accidens sana
+ * numquam diu manet.
  *
  * Diagnostica MANU aedificantur: probatio iuncturam probat (sedes
  * contra scopum, codex contra codicem), non derivationem.
@@ -156,8 +164,8 @@ _annotationes (
     {
         redde NIHIL;
     }
-    prius    = _par(piscina, "alpha", (s32)37, commentarium);
-    alterum  = _par(piscina, "beta",  (s32)45, NIHIL);
+    prius    = _par(piscina, "alpha", (s32)100, commentarium);
+    alterum  = _par(piscina, "beta",  (s32)110, NIHIL);
     si (prius == NIHIL || alterum == NIHIL)
     {
         redde NIHIL;
@@ -249,9 +257,9 @@ principale (
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         /* XXXVIII-XLIII intra par prius; XLVI-L intra alterum */
-        CREDO_VERUM (_diag(d, "lint:x", (s32)38, (s32)43));
-        CREDO_VERUM (_diag(d, "lint:x", (s32)46, (s32)50));
-        CREDO_VERUM (_diag(d, "lint:y", (s32)39, (s32)42));
+        CREDO_VERUM (_diag(d, "lint:x", (s32)101, (s32)106));
+        CREDO_VERUM (_diag(d, "lint:x", (s32)111, (s32)115));
+        CREDO_VERUM (_diag(d, "lint:y", (s32)102, (s32)105));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
                 NIHIL);
         CREDO_NON_NIHIL (e);
@@ -263,15 +271,16 @@ principale (
     }
 
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_BONA);
+        Xar* a = _annotationes(piscina, &ratum, NOTA_NOTA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
                                  Xar* e;
         constans MateriaDiagnosticum* primum;
 
         imprimere("\n--- II. Excusatio MORTUA nominatur ---\n");
-        /* nihil intra scopum: tolera nihil absorbet */
-        CREDO_VERUM (_diag(d, "lint:x", (s32)46, (s32)50));
+        /* nihil intra scopum: tolera nihil absorbet. CODEX
+         * NON-LINTRIS consulto (porta IX par est). */
+        CREDO_VERUM (_diag(d, "lint:x", (s32)111, (s32)115));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
                 NIHIL);
         CREDO_NON_NIHIL (e);
@@ -295,7 +304,7 @@ principale (
         imprimere("\n--- III. Sine causa: NON excusat ---\n");
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
-        CREDO_VERUM (_diag(d, "lint:x", (s32)38, (s32)43));
+        CREDO_VERUM (_diag(d, "lint:x", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
                 NIHIL);
         CREDO_NON_NIHIL (e);
@@ -314,7 +323,7 @@ principale (
         imprimere("\n--- IV. Fractum nominatur, non tacet ---\n");
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
-        CREDO_VERUM (_diag(d, "lint:x", (s32)38, (s32)43));
+        CREDO_VERUM (_diag(d, "lint:x", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
                 NIHIL);
         CREDO_NON_NIHIL (e);
@@ -330,7 +339,7 @@ principale (
         Xar* e;
 
         imprimere("\n--- V. Codex non declaratus nominatur ---\n");
-        CREDO_VERUM (_diag(d, "par/notus", (s32)38, (s32)43));
+        CREDO_VERUM (_diag(d, "par/notus", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, &DECLARATA,
                 NIHIL);
         CREDO_NON_NIHIL (e);
@@ -349,7 +358,7 @@ principale (
         /* par cum V: eadem tabula, codex notus - ergo probatio
          * discernit, non semper IGNOTA reddit. Et hoc ostendit
          * diagnostica DECLARATA excusari, non lintris sola. */
-        CREDO_VERUM (_diag(d, "par/notus", (s32)38, (s32)43));
+        CREDO_VERUM (_diag(d, "par/notus", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, &DECLARATA,
                 NIHIL);
         CREDO_NON_NIHIL (e);
@@ -366,7 +375,7 @@ principale (
         /* Pictor 'crusta:' codici sine ':' praefigit, ergo usor
          * 'crusta:grex/tok_clausura' LEGIT dum codex ipse nudus est.
          * EX1 promittit id quod usor VIDIT sufficere. */
-        CREDO_VERUM (_diag(d, "grex/tok_clausura", (s32)38, (s32)43));
+        CREDO_VERUM (_diag(d, "grex/tok_clausura", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
                 "crusta");
         CREDO_NON_NIHIL (e);
@@ -383,12 +392,31 @@ principale (
         /* Par cum VII: sine grammatica congruentia fieri NON potest,
          * ergo probatio VII grammaticam REVERA adhibet et non forte
          * viridis est. */
-        CREDO_VERUM (_diag(d, "grex/tok_clausura", (s32)38, (s32)43));
+        CREDO_VERUM (_diag(d, "grex/tok_clausura", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL, NIHIL);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
         CREDO_VERUM (_habet(e, "grex/tok_clausura"));
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));
+    }
+
+    {
+        Xar* a = _annotationes(piscina, &ratum, NOTA_BONA);
+        Xar* d = xar_creare(piscina,
+                     (i32)magnitudo(MateriaDiagnosticum));
+        Xar* e;
+
+        imprimere("\n--- IX. Codex LINTRIS: mortua NON iudicata ---\n");
+        /* Par cum II: eadem arbor, eadem sedes, codex SOLUS mutatus.
+         * Regula gradus II quae victimam pareret non cucurrit, ergo
+         * 'nihil absorbuit' nihil probat. Mensuratum in transitu
+         * operis V: sine hac porta XIV excusationes VERAE domum
+         * totam rubram fecerunt (EX8). */
+        CREDO_VERUM (_diag(d, "lint:x", (s32)111, (s32)115));
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL, NIHIL);
+        CREDO_NON_NIHIL (e);
+        CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)I);
+        CREDO_FALSUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));
     }
 
     imprimere("\n");
