@@ -269,7 +269,7 @@ its plant removes and the assertion that must go red.
 | II | remove same-line grouping | two spans on one line must print **one** source line and two caret rows; the plant prints two source lines |
 | III | revert to a per-block gutter width | a span pair on lines **9999 and 10000** must share width V; the plant makes them ragged. Its own gate precisely because nothing else would ever notice. |
 | IV | accept unsorted input instead of refusing | `excerptum_scribere_multa` on a descending array must return FALSUM |
-| V | drop the label escape | ~~a label containing `;` must not produce a TSV field that parses as two spans~~ **NOT GATEABLE — see AUDIENDA VII.** No label today contains any escaped byte, so this plant stays GREEN. Verified by measurement instead, not by a gate that cannot fail. |
+| V | drop the label escape | a label containing `;` must not produce a TSV field that parses as two spans. **Deferred at spec time (no producer), BUILT in the adapter arc** when a rule could first write its own label — see §9 B. The C-side escape remains unexercised, with its own named trigger. |
 
 Gate I's fixture must be chosen by **reading crusta's derived output
 first**, not by assuming a shape produces an `absentia`. The three
@@ -309,7 +309,11 @@ each other. That holds when every span's `linea` matches its offset.
 The sortedness refusal is the only thing guarding it; a caller passing
 a wrong `linea` gets wrong output, not a refusal.
 
-**VII. THE LABEL ESCAPE HAS NO PRODUCER (Task 3).** Gate V as written
+**VII. THE LABEL ESCAPE — RESOLVED ON THE PYTHON SIDE, see §9 B. The
+original finding follows, kept because the deferral pattern is the
+point: a gate that cannot fail is not written, it is deferred with a
+NAMED TRIGGER, and the trigger is honoured when it fires.** Gate V as
+written
 here could not be built: the escape replaces `|`, `;`, TAB and NEWLINE
 in a label, and the substrate's only two labels contain none of them,
 so removing the escape leaves every gate green. Rather than write a
@@ -351,11 +355,25 @@ identically. Stated wrongly twice in this spec; corrected in §3, in
 §6's gate III, and in AUDIENDA VI. The gate as originally specified
 could never have failed.
 
-**B. Gate V (the label escape) was NOT built** — it cannot fail today,
-because no label contains an escaped byte. Verified by measurement
-instead; see AUDIENDA VII. It becomes gateable in the commit that
-first lets a lint rule write its own label (`01M2RNJ9XN`), and belongs
-there.
+**B. Gate V (the label escape) — DEFERRED, THEN BUILT `e0d1ef8f`+.**
+When this spec was written the escape could not be gated: no label
+contained an escaped byte, so removing it broke nothing and the plant
+stayed green. It was verified by measurement and deferred **with a
+named trigger** — "gateable the moment a lint rule can write its own
+label." That trigger fired in the adapter arc (`01M2RNJ9XN`), and the
+gate now stands in `probatio_silva.py`: a rule writing
+`nota="a;b|c"` must yield a field 11 that parses as ONE span. The
+plant that stayed green last arc now goes **red**, showing
+`1:1-1:13@0-12|a;b|c` surviving unescaped.
+
+**The escape exists in TWO places and only one has a producer.**
+Python's `_notam_mundare` (rule-supplied labels) is now gated. The C
+`_notam_scribere` in `tools/diagnostica.c` is still unexercised,
+because every label the C side writes is a substrate constant
+(`hic coepit`, `hic exspectatur`) containing no escapable byte. Its
+trigger: **a client supplying a label through `emissa`.** No client
+does today. Do not write a gate for it until one does — that is the
+same mistake, one layer down.
 
 **C. `_addere` returns the written cell.** §2 described
 `_absentiam_addere` as calling `_addere` and then setting fields; it

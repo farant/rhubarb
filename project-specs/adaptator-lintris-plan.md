@@ -264,21 +264,53 @@ dropped → 3 red; the sine-sede refusal disabled → 1 red.
 **Files:** Modify `pythonica/probatio_silva.py`,
 `tools/diagnostica_fumus.sh`.
 
-- [ ] **Step 1: the whole chain, once.** A rule over a `.sh` fixture →
+- [x] **Step 1: the whole chain, once.** A rule over a `.sh` fixture →
 `diagnostica_lintris` → TSV → `./tools/diagnostica.sh -lege` → the
 compiler format with `^~~~`. Assert the rendered text. This is the
 first time a lint finding has ever reached the printer.
 
-- [ ] **Step 2: THE LABEL ESCAPE GATE, now buildable.** Spec §9 B and
+- [x] **Step 2: THE LABEL ESCAPE GATE, now buildable.** Spec §9 B and
 AUDIENDA VII deferred it because no label contained an escaped byte.
 A rule can now write `nota="a;b"`, so write the gate the spec owes:
 field 11 must parse as **one** span, not two.
 
-- [ ] **Step 3: plant** — drop the escape. The gate must go red. This
+- [x] **Step 3: plant** — drop the escape. The gate must go red. This
 is the plant that stayed green in the last arc; it must not now.
 
-- [ ] **Step 4:** remove the deferral from the spec (§9 B and AUDIENDA
+- [x] **Step 4:** remove the deferral from the spec (§9 B and AUDIENDA
 VII become "built, and here"), run everything, commit.
+
+**Executed 2026-09-17. THE DEFERRED GATE CAME DUE AND WAS PAID.**
+
+Last arc Gate V could not be built: no label contained an escaped
+byte, so removing the escape broke nothing and the plant stayed green.
+Rather than ship a gate that could never fail, it was verified by
+measurement and deferred **with a named trigger** — "gateable the
+moment a lint rule can write its own label." The trigger fired here.
+The gate now stands, and the plant that stayed green last arc goes
+**red**, showing `1:1-1:13@0-12|a;b|c` surviving unescaped.
+
+That is the pattern worth keeping: a gate that cannot fail is not
+written and is not forgotten — it is deferred with a trigger, and the
+trigger is honoured.
+
+**The escape exists in TWO places and only one has a producer.**
+Python's `_notam_mundare` is now gated. C's `_notam_scribere` is still
+unexercised — every label the C side writes is a substrate constant.
+Its trigger is named in spec §9 B: a client supplying a label through
+`emissa`. Writing a gate for it now would be the same mistake one
+layer down.
+
+`diagnostica_pingere` completes the API
+(`diagnostica_lintris` → `diagnostica_tsv` → `diagnostica_pingere`),
+and the chain is asserted end to end: five lines, header carrying
+`lint:nt-aequalitas`, and the excerpt block with both spans on one
+source line.
+
+**Caught in review again:** `len(silva._relata and _tsp[10].split(';'))`
+— an expression that works by accident because a function object is
+truthy. Second one this arc; both were mine, both in code I wrote
+quickly around a real assertion.
 
 ---
 

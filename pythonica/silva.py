@@ -3617,6 +3617,24 @@ def diagnostica_lintris(viae, regula, paralleli=6):
     return exitus
 
 
+def diagnostica_pingere(diagnostica):
+    """[Diagnosticum] -> forma humana (caput, causa, excerptum '^~~~')
+    per './tools/diagnostica.sh -lege'.
+
+    PICTOR UNUS in domo: idem qui diagnostica DECLARATA pingit, in
+    lingua una. Ergo inventa lintris quidquid postea pictori additur -
+    color, sedes plures, LSP - GRATIS heredant, et via altera pictorem
+    suum gignere non potest."""
+    if not diagnostica:
+        return ''
+    r = _curre(['./tools/diagnostica.sh', '-lege'],
+               stdin=diagnostica_tsv(diagnostica))
+    if r.returncode == 2:
+        raise SilvaError('diagnostica_pingere: tabula recusata: %s'
+                         % (r.stderr or '').strip()[-200:])
+    return r.stdout
+
+
 def diagnostica_tsv(diagnostica):
     """[Diagnosticum] -> forma XII camporum instrumenti, ut
     './tools/diagnostica.sh -lege' eam pingat.

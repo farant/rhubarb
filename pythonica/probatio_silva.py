@@ -1691,6 +1691,41 @@ if _dl:
           'diagnostica_lintris: TSV codex, sedes relata, nota (%r %r %r)'
           % (_tsv[8], _tsv[10], _tsv[11]))
 
+    # CATENA TOTA: inventum lintris per pictorem C. Prima vice inventum
+    # gradus II excerptum '^~~~' attingit.
+    _pictum = silva.diagnostica_pingere(_dl)
+    _lineae = _pictum.splitlines()
+    credo(len(_lineae) == 5 and _lineae[0].endswith(
+              ':1:8: [monitum] lint:nt-aequalitas'),
+          'diagnostica_pingere: caput cum codice lintris (%r)'
+          % (_lineae[0] if _lineae else None,))
+    credo(_lineae[2:5] == ['   1 | test a -nt b',
+                           '     | ^~~~~~~~~~~~ in hoc imperio',
+                           '     |        ^~~ hic adhibetur'],
+          'diagnostica_pingere: excerptum sedium AMBARUM, linea fontis '
+          'semel: %r' % (_lineae[2:5],))
+
+# EFFUGIUM NOTAE: DEBITUM specificationis par. IX B / AUDIENDA VII.
+# Arcus prior eam aedificare non potuit quia nulla nota octetum
+# effugiendum ferebat et planta VIRIDIS manebat; regula nunc notam
+# ARBITRARIAM scribit, ergo trigger nominatus incidit et porta stat.
+_dsp = silva.diagnostica_lintris(
+    via_lint,
+    '<TRANSPARENTIA tags="ante post" attributa="sedes octeti"/>'
+    '<EXEMPLAR output="$imp"><imperium $i/></EXEMPLAR>'
+    '<EXEMPLAR de="$imp" output="$nt">'
+    '<crusta-litteralis $t>-nt</crusta-litteralis></EXEMPLAR>'
+    '<relatum lint="punctum"><PER congruentia="$nt"><situs>'
+    '<hic>&@t;</hic><ibi nota="a;b|c">&@i;</ibi>'
+    '</situs></PER></relatum>')
+_tsp = silva.diagnostica_tsv(_dsp).rstrip('\n').split('\t')
+credo(len(_tsp) == 12 and _tsp[10].count(';') == 0
+      and _tsp[10].count('|') == 1,
+      'diagnostica_tsv: nota cum ";" et "|" campum XI NON scindit (%r)'
+      % (_tsp[10] if len(_tsp) > 10 else _tsp,))
+credo(len(_tsp[10].split(';')) == 1 and _tsp[10].endswith('|a b c'),
+      'diagnostica_tsv: nota mutilata, non corrumpens (%r)' % (_tsp[10],))
+
 # ORDINARIA: regula nihil declarans erratum et causam = nomen lintris
 _dd = silva.diagnostica_lintris(
     via_lint,
