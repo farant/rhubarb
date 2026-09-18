@@ -104,6 +104,7 @@ fi
 # substratum quod cliens compilat, olim ab indice absens.
 CAPUT_RECENS=""
 while IFS= read -r caput_via; do
+    # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi

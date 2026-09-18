@@ -176,6 +176,7 @@ compile_libraries() {
     # recentius obiecto <=> caput RECENTISSIMUM recentius obiecto.
     CAPUT_RECENS=""
     for header in include/*.h; do
+        # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
         if [ -z "$CAPUT_RECENS" ] || [ "$header" -nt "$CAPUT_RECENS" ]; then
             CAPUT_RECENS="$header"
         fi
@@ -480,6 +481,7 @@ compile_tool_if_needed() {
         return 0
     fi
 
+    # <tolera codex="lint:nt-aequalitas" (>in aequalitate DENUO COMPILAT: cautum iam
     if [ -f "$tool_binary" ] && [ "$tool_binary" -nt "$tool_source" ]; then
         return 0
     fi
