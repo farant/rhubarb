@@ -322,3 +322,91 @@ method the sedes arc used for 5,501,210 elements.
    being built polices the thing being risked. Recorded as a NAMED
    FUTURE, not an architectural guard: a rule over facade shape, at
    whatever granularity silva/materia make cheap.
+
+## 9. As built (2026-09-18) — GOVERNS where the body above differs
+
+Six tasks, six commits: `ad182791` extractor, `289a90b9` pictor,
+`e7120f0e` shared sequence, `3d5668af` facade + governing gate,
+`8d1ccb28` dispatcher + tier 2 at the commit, `ad73f539` deletions.
+Plus three that the arc earned on the way: `101e8ae5` (cwd + empty
+lintrum), `c798d1fe` (position-less rows), and this one (EX8).
+
+**Ratio today: 100 % C on the commit path.** `html.parser` no longer
+appears in `pythonica/silva.py`; `stml vertere` has no in-house caller
+(its library half stays gated by `probationes/probatio_stml_html.c`).
+754 lines of Python deleted.
+
+### Divergences from the body above
+
+**A. The declared subtraction — the spec's largest gap.** §6 listed
+"A − B closes" as gate III but never said where it lives in C, and the
+plan inherited the hole. Rule 1 is two arms because SINE searches
+DOWNWARD while the negation sits ABOVE; without a C-side subtraction
+the facade reports 568 findings instead of 14 and every one of the
+fourteen house annotations misses. Resolved (Fran) by DECLARING it:
+the auxiliary arm carries `minuit="<lint>"`, `materia_exemplaria_minuere`
+subtracts by `initium` within one expanded document, never emits the
+auxiliary arm's own rows, and REFUSES with a named cause when the
+auxiliary arm is not a subset. materia reads an attribute, never a
+rule name. `nt-omnes` was renamed `nt-aequalitas` — the fourteen
+annotations already said so, making the arm names internal all along.
+
+**B. `-cruda` exists**, unforeseen: two consumers need the arms
+unsubtracted — the wide half of the differential, and the per-arm
+census (292/278).
+
+**C. The composer also writes the machine form.** §E4 anticipated only
+the human form. Two instruments emit the 12-field TSV, and a
+divergence between two writers would fool the very gate comparing
+them, so `materia_pictor_machina` is the single writer. It fixed a
+latent asymmetry: the tool printed `causa` unescaped while Python
+escaped it.
+
+**D. AUDIENDUM 3 answered differently.** The glob-and-parse helper
+went to neither materia nor the instrument but to the CLIENT FACADE
+(`crusta_regulae_legere`), because materia would have needed POSIX
+directory iteration — `postulata_posix.h` in the substrate for one
+convenience is the M8 rot. `CRUSTA_LINTRUM` (caller → env → default)
+is the dev seam and the fix for a cwd regression the dispatcher
+introduced.
+
+**E. AUDIENDUM 2 is moot.** `exemplaria` was deleted rather than made
+one call or N.
+
+**F. AUDIENDUM 4 BUILT, not filed** (`regulae_plenae`): a `lint:`
+exemption absorbing nothing is now `materia:excusatio-mortua`, but
+only when the caller declares the rule set COMPLETE. Measured zero
+dead in the house before building.
+
+**G. The differential became a GOLDEN.** The plan had `exemplaria`
+become a shell over the C — which would have made the gate diff the C
+against itself, 570 rows against 570, forever green. What the
+independent extractor last said is frozen in
+`crusta/probationes/fixa/exemplaria/` instead, and the gate now runs
+from `crusta/compile_probationes.sh` rather than by hand — it never
+ran automatically before, through three tasks.
+
+### What the gates caught that the unit tests could not
+
+Planting the descent suppression with the golden wired in:
+**16/16 probationes passed** while the differential went red with 1140
+divergent rows over 234 files. That one line is the corpus gate's
+whole argument, and the reason the golden was frozen rather than
+deleted with the Python.
+
+### Laws earned
+
+- **A differential is worth exactly the INDEPENDENCE of its two
+  sides.** Derive one from the other and it becomes a tautology that
+  still prints "ok" — worse than no gate.
+- **A plant that breaks the BUILD proves nothing.** `-Werror` on an
+  unused static or parameter reports FRACTA, which looks identical to
+  a red gate while the assertion never ran. Plant so it compiles, then
+  check the failure names the gate you planted. (Hit twice in one day,
+  the second time after writing the lesson down.)
+- **A wrapper carries its own time.** A 3.3× "regression" was a
+  rebuild compared against a cache; measured properly it was 8 %.
+  Re-derive a number before it goes into a comment.
+- **A comment that records intent the code never implemented survives
+  every test that does not exist.** Both the position-less row and the
+  expired `lint:` premise were correct in prose and wrong in code.

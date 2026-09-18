@@ -261,7 +261,7 @@ principale (
         CREDO_VERUM (_diag(d, "lint:x", (s32)111, (s32)115));
         CREDO_VERUM (_diag(d, "lint:y", (s32)102, (s32)105));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
-                NIHIL);
+                NIHIL, FALSUM);
         CREDO_NON_NIHIL (e);
         /* excusatum unum cadit; frater EXTRA scopum superest; codex
          * alius intra scopum superest quoque */
@@ -282,7 +282,7 @@ principale (
          * NON-LINTRIS consulto (porta IX par est). */
         CREDO_VERUM (_diag(d, "lint:x", (s32)111, (s32)115));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
-                NIHIL);
+                NIHIL, FALSUM);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));
@@ -306,7 +306,7 @@ principale (
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         CREDO_VERUM (_diag(d, "lint:x", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
-                NIHIL);
+                NIHIL, FALSUM);
         CREDO_NON_NIHIL (e);
         /* inventum SUPEREST, et excusatio ipsa nominatur */
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
@@ -325,7 +325,7 @@ principale (
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         CREDO_VERUM (_diag(d, "lint:x", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
-                NIHIL);
+                NIHIL, FALSUM);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
         CREDO_VERUM (_habet(e, "lint:x"));
@@ -341,7 +341,7 @@ principale (
         imprimere("\n--- V. Codex non declaratus nominatur ---\n");
         CREDO_VERUM (_diag(d, "par/notus", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, &DECLARATA,
-                NIHIL);
+                NIHIL, FALSUM);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_IGNOTA));
@@ -360,7 +360,7 @@ principale (
          * diagnostica DECLARATA excusari, non lintris sola. */
         CREDO_VERUM (_diag(d, "par/notus", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, &DECLARATA,
-                NIHIL);
+                NIHIL, FALSUM);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), ZEPHYRUM);
     }
@@ -377,7 +377,7 @@ principale (
          * EX1 promittit id quod usor VIDIT sufficere. */
         CREDO_VERUM (_diag(d, "grex/tok_clausura", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, NIHIL,
-                "crusta");
+                "crusta", FALSUM);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), ZEPHYRUM);
     }
@@ -393,7 +393,8 @@ principale (
          * ergo probatio VII grammaticam REVERA adhibet et non forte
          * viridis est. */
         CREDO_VERUM (_diag(d, "grex/tok_clausura", (s32)101, (s32)106));
-        e = materia_excusatio_applicare(piscina, d, a, NIHIL, NIHIL);
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL, NIHIL,
+            FALSUM);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)II);
         CREDO_VERUM (_habet(e, "grex/tok_clausura"));
@@ -413,7 +414,8 @@ principale (
          * operis V: sine hac porta XIV excusationes VERAE domum
          * totam rubram fecerunt (EX8). */
         CREDO_VERUM (_diag(d, "lint:x", (s32)111, (s32)115));
-        e = materia_excusatio_applicare(piscina, d, a, NIHIL, NIHIL);
+        e = materia_excusatio_applicare(piscina, d, a, NIHIL, NIHIL,
+            FALSUM);
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)I);
         CREDO_FALSUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));

@@ -984,3 +984,38 @@ suite, blind to a change that moves 1140 rows across 234 real files.
 That is the corpus gate's entire argument in one line, and it is the
 reason the golden was worth freezing rather than deleting along with
 the Python.
+
+## 2026-09-18 — EX8 closed: a dead lint exemption is now a defect
+
+AUDIENDUM 4, whose named trigger was this arc. Until today
+`materia_excusatio` never judged a `lint:` exemption dead, and the
+comment said why: *"victima eius a regula gradus II nascitur, quam
+instrumentum non currit."* Task 5 made the instrument run it. The
+premise expired and the comment became false — the same shape that let
+the sine-sede drop live through three commits this morning.
+
+`MateriaDiagnosticaRatio.regulae_plenae` / `CrustaOptiones.regulae_plenae`
+say *these rules are the client's COMPLETE set*, and only then is a
+`lint:` exemption that absorbed nothing reported as
+`materia:excusatio-mortua`. The distinction matters: a caller running
+NAMED rules must not have exemptions for the rules it skipped declared
+dead, and the `-lege` path (a table from elsewhere, already filtered)
+passes FALSUM for the same reason.
+
+**Measured before building, not after:** zero dead lint exemptions in
+the house. All fourteen annotations are live, so the check breaks
+nothing — and it also means the corpus cannot prove the gate works, so
+fumus XIX carries its own fixture.
+
+**The plant trap caught me a second time in one day.** Removing the
+guard left `lint_iudicandus` unused, `-Werror` refused, and gates I and
+II failed with rc 2 — which looks like a red gate and is not: XIX never
+ran. I wrote this exact lesson into this worklog a few hours earlier
+and still walked into it. The reliable form: plant so the code
+COMPILES (`lint_iudicandus && FALSUM` keeps the parameter live), then
+assert the failing gate is *the one you planted*, by name.
+
+The commit lint earned its keep too: `iudicabilis` is not a word
+Whitaker knows, and `tools/unci-git/fumus.sh` refused the commit and
+named the identifier and its one site. Renamed to `lint_iudicandus`
+(gerundive — "to be judged"), which resolves.

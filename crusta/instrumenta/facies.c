@@ -200,6 +200,8 @@ principale (
         redde (integer)II;
     }
     optiones.intern   = intern;
+    /* lintrum ordinarium TOTUM lectum: excusatio lintris iudicanda */
+    optiones.regulae_plenae = VERUM;
     optiones.regulae  = crusta_regulae_legere(regularum,
                             CRUSTA_LINTRUM, intern, &causa);
     si (optiones.regulae == NIHIL)

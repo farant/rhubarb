@@ -488,6 +488,9 @@ _optiones_crustae (
         alioquin
         {
             optiones.intern   = intern;
+            /* LINTRUM ORDINARIUM TOTUM legimus, ergo excusatio
+             * lintris quae nihil absorbuit VERE mortua est. */
+            optiones.regulae_plenae = VERUM;
             optiones.regulae  = crusta_regulae_legere(piscina,
                 crusta_lintrum_eligere(NIHIL), intern, &causa_prior);
             si (optiones.regulae == NIHIL)
@@ -524,8 +527,8 @@ _plagulam_crustae_iudicare (
                  b32  excerptum,
                Summa* summa)
 {
-                       Xar* d;
-        constans character* causa = NIHIL;
+                        Xar* d;
+         constans character* causa = NIHIL;
     constans CrustaOptiones* optiones;
                         i32  k;
 
@@ -612,7 +615,7 @@ _plagulam_iudicare (
      * valeret. Porta VII hoc figit. */
     diagnostica = materia_excusatio_applicare(piscina,
         cliens.diagnostica, _annotationes_clientis(piscina, &cliens),
-        cliens.declarata, cliens.grammatica);
+        cliens.declarata, cliens.grammatica, FALSUM);
     si (diagnostica == NIHIL)
     {
         diagnostica = cliens.diagnostica;
@@ -681,9 +684,12 @@ _cumulum_effundere (
         && fons != NIHIL
         && _clientem_parsare(piscina, via, fons, mensura, &cliens))
     {
+        /* FALSUM: tabula ALIUNDE venit et regulas quae eam pepererunt
+         * ignoramus - excusatio lintris ibi mortua nominari non
+         * potest sine responso falso fidenter dato. */
         Xar* cribrata = materia_excusatio_applicare(piscina, cumulus,
             _annotationes_clientis(piscina, &cliens),
-            cliens.declarata, cliens.grammatica);
+            cliens.declarata, cliens.grammatica, FALSUM);
 
         si (cribrata != NIHIL)
         {

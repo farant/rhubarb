@@ -363,7 +363,8 @@ materia_excusatio_applicare (
                         constans Xar* diagnostica,
                         constans Xar* annotationes,
     constans MateriaDiagnosticaCocta* declarata,
-                  constans character* grammatica)
+                  constans character* grammatica,
+                                 b32  lint_iudicandus)
 {
     Xar* exitus;
     Xar* excusationes;
@@ -427,14 +428,23 @@ materia_excusatio_applicare (
             (constans Excusatio*)xar_obtinere(excusationes, j);
         MateriaDiagnosticum* c;
 
-        /* MORTUA NON IUDICATUR pro codice lintris: victima eius a
-         * regula gradus II nascitur, quam instrumentum non currit.
-         * Sine hac porta excusatio quaeque lintris in cursu gradus I
-         * MORTUA nominaretur - mensuratum in transitu operis V, ubi
-         * XIV excusationes verae domum totam rubram fecerunt. Causa
-         * et parsura NIHILOMINUS iudicantur: ea instrumentum VIDET. */
+        /* MORTUA pro codice lintris iudicatur SOLUM cum vocans
+         * copiam regularum PLENAM cucurrit ('lint_iudicandus').
+         *
+         * Aliter victima excusationis a regula nascitur quam vocans
+         * fortasse non cucurrit, et excusatio VERA mortua nominaretur -
+         * mensuratum in transitu operis V, ubi XIV excusationes verae
+         * domum totam rubram fecerunt. Causa et parsura NIHILOMINUS
+         * semper iudicantur: eas vocans quisque VIDET.
+         *
+         * Usque ad 2026-09-18 hoc SEMPER omittebatur, quia instrumentum
+         * gradum II non currebat. Facies eum nunc currit (opus V), ergo
+         * praemissa ipsa expiravit - et commentarium quod eam nominabat
+         * falsum factum erat. */
         si (   e->status == EX_VALIDA
-            && (e->usus || _lintris_est(piscina, e->codex)))
+            && (   e->usus
+                || (!lint_iudicandus
+                    && _lintris_est(piscina, e->codex))))
         {
             perge;
         }

@@ -96,6 +96,20 @@ materia_excusatio_applicare (
                         constans Xar* diagnostica,
                         constans Xar* annotationes,
     constans MateriaDiagnosticaCocta* declarata,
-                  constans character* grammatica);
+                  constans character* grammatica,
+                                 b32  lint_iudicandus);
+
+/* 'lint_iudicandus' (EX8, apertum usque ad 2026-09-18): VERUM =
+ * vocans gradum II cum REGULARUM COPIA PLENA cucurrit, ergo excusatio
+ * lintris quae nihil absorbuit VERE mortua est et ita nominatur.
+ *
+ * FALSUM ubi copia incerta est: cursus gradus I solus, aut vocans qui
+ * regulas NOMINATAS dedit (excusatio regulae ALTERIUS tunc mortua
+ * falso videretur), aut tabula aliunde lecta et iam cribrata ('-lege').
+ * Iudicare ibi esset RESPONSUM FALSUM FIDENTER DATUM.
+ *
+ * Mensuratum 2026-09-18 ante aedificationem: excusationes lintris
+ * mortuae in domo ZERO - ergo custodia haec nihil frangit, et fixtura
+ * eam probare debet, non corpus. */
 
 #endif /* MATERIA_EXCUSATIO_H */

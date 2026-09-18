@@ -20,7 +20,8 @@
 # XVI. instrumentum ex QUOVIS cwd regulas invenit;
 # XVII. lintrum VACUUM refutatio est (exitus 2 nominatus), non exitus 0;
 # XVIII. ordo SINE SEDE refutatio est, non silentium (paritas cum
-#      extractore priore).
+#      extractore priore);
+# XIX. excusatio LINTRIS mortua nominatur (EX8 clausum).
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -267,6 +268,22 @@ rc=$?
 [ "$rc" -eq 2 ]; credo $? "XVIII. ordo sine sede: exitus 2, non 0 (rc $rc)"
 grep -q 'sine sede' "$T/sine.out"
 credo $? "XVIII. causa NOMINATA cum lintre"
+
+# XIX. EXCUSATIO LINTRIS MORTUA NOMINATUR (EX8, apertum usque ad
+# 2026-09-18). Antea codex 'lint:' a iudicio MORTUAE semper excipiebatur,
+# quia instrumentum gradum II non currebat et excusationes verae OMNES
+# mortuae videbantur (XIV domus rubram fecerunt). Facies gradum II nunc
+# currit cum copia PLENA, ergo praemissa expiravit.
+#
+# ASYMMETRIA: eadem excusatio, sola VICTIMA differens. Porta XIII
+# excusationem VIVAM tacere probat; haec MORTUAM clamare.
+printf '#!/bin/bash\n# <tolera codex="lint:nt-aequalitas" (>nihil hic est\necho ok\n' \
+    > "$T/lint_mortua.sh"
+./tools/diagnostica.sh "$T/lint_mortua.sh" > "$T/lint_mortua.out" 2>/dev/null
+rc=$?
+[ "$rc" -eq 1 ]; credo $? "XIX. excusatio lintris mortua: exitus 1 (rc $rc)"
+grep -q 'materia:excusatio-mortua' "$T/lint_mortua.out"
+credo $? "XIX. codex excusatio-mortua nominatus"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus diagnostica: sanum"; exit 0; fi
