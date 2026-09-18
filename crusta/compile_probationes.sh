@@ -252,4 +252,18 @@ if [ "$total" -eq 0 ]; then
     echo "NULLA PROBATIO CURSA (filtrum sine paribus?) - exitus II"
     exit 2
 fi
+
+# PORTA REGENS gradus II super corpore domus: extractor C contra AURUM
+# quod extractor pythonicus ultimo dixit (vide
+# probationes/fixa/exemplaria/README.md). HIC CURRIT, non manu: porta
+# quam nemo currit porta non est, et haec per opera III manu sola
+# cucurrit - quod ipsum est quod domus 'porta muta = porta mortua'
+# nominat. Cum filtro omittitur (cursus angustus eam non poscit).
+if [ -z "${FILTRUM_DATUM:-}" ]; then
+    echo ""
+    if ! "$CRUSTA_DIR/instrumenta/differentia_exemplariorum.sh"; then
+        echo "CRUSTA: differentia exemplariorum FRACTA"
+        exit 1
+    fi
+fi
 exit 0

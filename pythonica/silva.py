@@ -3295,31 +3295,7 @@ def coctum(via):
     return Coctum(r.stdout, True, 0, 0)
 
 
-# ---------------------------------------------------------------- exemplaria
 
-# TRANSPARENTIA ordinaria si regula nullam declarat: (tags, attributa).
-# Clientes materiae: involucra triviae et attributa visionis sedium
-# (capturae iteratae et nodi per pontem inserti sedem propriam ferunt -
-# littera congruentiae fierent); silva (C): involucra originis (regulae
-# lint silvae, silva/probationes/fixa/exemplaria), sine visione sedium
-_TRANSPARENTIA = {
-    'materia': ('ante post', 'sedes octeti'),
-    'silva': ('expansio pasta stringificatio api extentum ante post '
-              'regio-cruda', None),
-}
-
-# elementa vacua HTML quae 'stml vertere' sine clausura scribit
-_VACUA_HTML = frozenset('area base br col embed hr img input keygen link '
-                        'meta param source track wbr'.split())
-
-# elementum vacuum inter arborem et regulam: effusio post eum = relata
-_LIMES_RELATORUM = '<exemplaria-limes-relatorum/>'
-
-Congruentia = namedtuple('Congruentia', 'via lint textus attributa '
-                         'linea columna linea_finis columna_finis '
-                         'initium finis textus_fontis nota relata')
-Exemplaria = namedtuple('Exemplaria',
-                        'summae plagulae congruentiae fracturae sine_sede')
 
 
 def _stml_binarium():
@@ -3331,131 +3307,8 @@ def _stml_binarium():
     return binarium
 
 
-def _vertere(textus):
-    """STML (textus) -> forma HTML ('stml vertere': clausurae explicitae,
-    quas html.parser legit)"""
-    d = os.path.join(RADIX, 'build', 'pythonica')
-    os.makedirs(d, exist_ok=True)
-    fd, via = tempfile.mkstemp(prefix='vertere_', suffix='.stml', dir=d)
-    with os.fdopen(fd, 'w') as f:
-        f.write(textus)
-    try:
-        r = _curre([_stml_binarium(), 'vertere', via])
-    finally:
-        os.unlink(via)
-    if r.returncode != 0:
-        raise SilvaError('stml vertere rc %d: %s'
-                         % (r.returncode, (r.stderr or '').strip()[-200:]))
-    return r.stdout
 
 
-def _relata(html_textus):
-    """[(lint, attributa, [(textus, [(sedes, octeti, nota)])])] ex
-    elementis <relatum> summis: ordo = elementum filium quodque (PER
-    emissio una), textus = textus totus subarboris (trivia inclusa,
-    detonsus), et SEDES OMNES quas ordo fert, ordine documenti.
-
-    SEDES PLURES (mensuratum 2026-09-17, non fictum): regula duas ponit
-    involucris binis intra ordinem UNUM -
-    '<situs><x nota="...">&@a;</x><y nota="...">&@b;</y></situs>'.
-    Insertiones DUAE in elemento uno ARGUMENTUM_ARBOREUM reddunt, ergo
-    involucrum quodque unam fert; 'nota' involucri proximi sedem infra
-    se nominat. Prima sedes PRIMARIA est. Filii BINI ipsius <relatum>
-    inventa DUO sunt, non inventum unum sedibus binis - electio
-    auctoris regulae, quae ex structura ipsa fluit."""
-    from html.parser import HTMLParser
-
-    class _Lector(HTMLParser):
-        def __init__(self):
-            HTMLParser.__init__(self, convert_charrefs=True)
-            self.relata = []
-            self.gradus = 0          # profunditas intra relatum (0 = extra)
-            self.ordo = None
-            self.sedes_omnes = None
-            self.notae = []          # pila, gradibus intra ordinem parallela
-            self.gradus_capti = None  # intra subarborem iam captam
-
-        def _nota_proxima(self):
-            for n in reversed(self.notae):
-                if n:
-                    return n
-            return None
-
-        def _sedem_capere(self, a):
-            """SEDES SUMMA per involucrum, non omnis descendentis: nodus
-            insertus subarborem totam fert et elementum quodque in ea
-            sedem suam (imperium unum XXIX dedit), ergo post capturam
-            descensus tacet donec subarbor capta exeatur."""
-            if (self.gradus_capti is not None or 'sedes' not in a
-                    or self.sedes_omnes is None):
-                return False
-            self.sedes_omnes.append((a.get('sedes'), a.get('octeti'),
-                                     self._nota_proxima()))
-            return True
-
-        def _ordo_vacuus(self, a):
-            return ('', [(a.get('sedes'), a.get('octeti'), a.get('nota'))]
-                        if 'sedes' in a else [])
-
-        def handle_starttag(self, tag, attrs):
-            vacuum = tag in _VACUA_HTML
-            a = dict(attrs)
-            if self.gradus == 0:
-                if tag == 'relatum':
-                    lint = a.pop('lint', '')
-                    self.relata.append((lint, a, []))
-                    self.gradus = 1
-                return
-            if self.gradus == 1 and vacuum:     # ordo vacuus sine clausura
-                self.relata[-1][2].append(self._ordo_vacuus(a))
-                return
-            if self.gradus == 1 and self.ordo is None:
-                self.ordo = []
-                self.sedes_omnes = []
-                self.notae = []
-                self.gradus_capti = None
-            captum = self._sedem_capere(a)
-            if not vacuum:
-                if captum:
-                    self.gradus_capti = self.gradus
-                self.notae.append(a.get('nota'))
-                self.gradus += 1
-
-        def handle_startendtag(self, tag, attrs):
-            a = dict(attrs)
-            if self.gradus == 1:
-                self.relata[-1][2].append(self._ordo_vacuus(a))
-            elif self.gradus > 1:
-                self._sedem_capere(a)
-            elif self.gradus == 0 and tag == 'relatum':
-                lint = a.pop('lint', '')
-                self.relata.append((lint, a, []))
-
-        def handle_endtag(self, tag):
-            if self.gradus == 0 or tag in _VACUA_HTML:
-                return
-            self.gradus -= 1
-            if self.notae:
-                self.notae.pop()
-            if (self.gradus_capti is not None
-                    and self.gradus <= self.gradus_capti):
-                self.gradus_capti = None
-            if self.gradus == 1 and self.ordo is not None:
-                self.relata[-1][2].append((''.join(self.ordo).strip(),
-                                           self.sedes_omnes))
-                self.ordo = None
-                self.sedes_omnes = None
-                self.notae = []
-                self.gradus_capti = None
-
-        def handle_data(self, data):
-            if self.ordo is not None:
-                self.ordo.append(data)
-
-    lector = _Lector()
-    lector.feed(html_textus)
-    lector.close()
-    return lector.relata
 
 
 def _viae_expandere(viae):
@@ -3478,18 +3331,8 @@ Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
                           'causa textus nota relata')
 
 
-def _sedem_ordinis(sedes, octeti, nota):
-    """('L:C-L:C', 'B-B', nota) -> SedesRelata; None si sedes abest aut
-    formam non servat. Octeti absentes -1 reddunt (sedes sine octetis in
-    visione sedium non fit, sed forma id non vetat)."""
-    m = re.match(r'(\d+):(\d+)-(\d+):(\d+)$', sedes or '')
-    if not m:
-        return None
-    n = re.match(r'(\d+)-(\d+)$', octeti or '')
-    return SedesRelata(int(m.group(1)), int(m.group(2)),
-                       int(m.group(3)), int(m.group(4)),
-                       int(n.group(1)) if n else -1,
-                       int(n.group(2)) if n else -1, nota)
+
+
 
 
 def _sedem_relatam(frustum):
@@ -3512,6 +3355,7 @@ def _sedem_relatam(frustum):
     return SedesRelata(int(linea), int(columna), int(linea_finis),
                        int(columna_finis), int(octetus_primus),
                        int(octetus_ultimus), nota or None)
+
 
 
 def diagnostica_materiae(viae):
@@ -3565,293 +3409,18 @@ def diagnostica_materiae(viae):
     return exitus
 
 
-def _notam_mundare(textus):
-    """'|' ';' TAB NOVA LINEA -> spatium unum, ut instrumentum C facit
-    antequam TSV scribit. Damnosum, corrumpens numquam: campus in duos
-    scindi non potest."""
-    for c in '|;\t\n\r':
-        textus = textus.replace(c, ' ')
-    return textus
 
 
-def diagnostica_lintris(viae, regula, paralleli=6):
-    """INVENTA LINTRIS (gradus II, exemplaria) ut DIAGNOSTICA - eadem
-    forma ac diagnostica declarata (gradus I), ergo excerptum '^~~~',
-    conventio codicum, ./tools/diagnostica.sh, exitus et TSV omnia
-    GRATIS heredantur.
-
-    Regula tria quae desunt DECLARAT, more registri; attributa
-    <relatum> praeter 'lint' iam transeunt, ergo machina non mutatur:
-
-      <relatum lint="nt-aequalitas" gravitas="monitum"
-               causa="'-nt' pro aequalitate adhibitum">
-
-    codex = 'lint:<lint>' - praefixum SUUM fert, ut codices substrati
-    ('materia:...'), ergo pictor grammaticam non praefigit et gradus in
-    linea quaque apparet. gravitas ordinaria 'erratum'; causa ordinaria
-    nomen lintris ipsum. Nota primariae = nota sedis eius (involucrum)
-    si adest, aliter 'nota' ipsius <relatum>.
-
-    REFUSIO si ordo ULLUS sede caret: inventum sine sede diagnosticum
-    LOCATUM fieri non potest, et tacite cadere id quod hic arcus totus
-    prohibere vult esset. Regula id sanat nodum capiendo."""
-    ex = exemplaria(viae, regula, paralleli=paralleli)
-    sine = [c for c in ex.congruentiae if c.linea is None]
-    if sine:
-        raise SilvaError(
-            'diagnostica_lintris: %d ordines sine sede (lint %s) - '
-            'inventum sine sede locari non potest; regula nodum capiat'
-            % (len(sine), ', '.join(sorted({c.lint for c in sine}))))
-    return diagnostica_ex_congruentiis(ex.congruentiae)
 
 
-def diagnostica_ex_congruentiis(congruentiae):
-    """[Congruentia] -> [Diagnosticum], sine cursu novo. Regula cuius
-    inventa CRIBRANDA sunt (bracchium negativum, vide
-    congruentiae_minus) hanc adit; 'diagnostica_lintris' eam vocat cum
-    cribratione nulla opus est."""
-    exitus = []
-    for c in congruentiae:
-        a = c.attributa
-        exitus.append(Diagnosticum(
-            c.via, c.linea, c.columna, c.linea_finis, c.columna_finis,
-            c.initium, c.finis,
-            a.get('gravitas', 'erratum'),
-            'lint:' + c.lint,
-            a.get('causa', c.lint),
-            c.textus_fontis or '',
-            c.nota or a.get('nota'),
-            c.relata))
-    return exitus
 
 
-def congruentiae_minus(congruentiae, positivum, negativum, lint=None):
-    """Ordines lintris 'positivum' MINUS eos qui sedem EANDEM ac ordo
-    lintris 'negativum' tenent. Reddit [Congruentia] cum 'lint' ad
-    'lint' argumentum mutato (ordinarie 'positivum').
-
-    CUR OMNINO: exemplar DEORSUM quaerit, et conditio quaedam SUPRA
-    inventum sedet - '!' crustae in 'pipa > praefixa', dum '-nt' in
-    'pipa > liberi > imperium' iacet. Ordo ad inventum radicatus
-    negationem suam videre non potest; ordo ad documentum radicatus
-    (radix="fontis") eam nimis late videt, et SINE ordines OMNES
-    necaret. Ergo regula bracchia DUO scribit et differentia hic
-    sumitur - eadem arithmetica quam census originalis probavit.
-
-    SEDES clavis est (via, initium), non textus: duo inventa eiusdem
-    textus in plagula una communia sunt.
-
-    CUSTODIA: si bracchium negativum bracchii positivi SUBSET non est,
-    regula sedes DIVERSAS capit et differentia nihil significat -
-    refutatio nominata, quia numerus tacite falsus pernicies esset."""
-    pos = [c for c in congruentiae if c.lint == positivum]
-    neg = {(c.via, c.initium) for c in congruentiae
-           if c.lint == negativum}
-    sedes_pos = {(c.via, c.initium) for c in pos}
-    vagae = neg - sedes_pos
-    if vagae:
-        raise SilvaError(
-            'congruentiae_minus: %d sedes lintris %r extra %r - '
-            'bracchia sedes diversas capiunt, differentia nihil '
-            'significat (prima: %s)'
-            % (len(vagae), negativum, positivum, sorted(vagae)[0]))
-    return [c._replace(lint=lint or positivum)
-            for c in pos if (c.via, c.initium) not in neg]
 
 
-def diagnostica_pingere(diagnostica):
-    """[Diagnosticum] -> forma humana (caput, causa, excerptum '^~~~')
-    per './tools/diagnostica.sh -lege'.
-
-    PICTOR UNUS in domo: idem qui diagnostica DECLARATA pingit, in
-    lingua una. Ergo inventa lintris quidquid postea pictori additur -
-    color, sedes plures, LSP - GRATIS heredant, et via altera pictorem
-    suum gignere non potest.
-
-    '-excusa' DATUR, et hic SOLUS eam dat: tabula lintris a regulis
-    nascitur et numquam cribrata est. Tabula ex 'diagnostica -machina'
-    contra IAM cribrata venit, ergo instrumentum eam non iterum cribrat
-    (applicatio altera excusationem VIVAM mortuam nominaret, quia
-    victima eius primo transitu cecidit). Vide tools/diagnostica.c."""
-    if not diagnostica:
-        return ''
-    r = _curre(['./tools/diagnostica.sh', '-lege', '-excusa'],
-               stdin=diagnostica_tsv(diagnostica))
-    if r.returncode == 2:
-        raise SilvaError('diagnostica_pingere: tabula recusata: %s'
-                         % (r.stderr or '').strip()[-200:])
-    return r.stdout
 
 
-def diagnostica_tsv(diagnostica):
-    """[Diagnosticum] -> forma XII camporum instrumenti, ut
-    './tools/diagnostica.sh -lege' eam pingat.
-
-    HAEC EST SEAM inter gradus: latus C 'Congruentiam' numquam novit,
-    ergo extractio ordinum in C postea mota (01M2RYR3JJ) eundem TSV
-    effundet et nihil bis scribetur."""
-    lineae = []
-    for d in diagnostica:
-        relata = ';'.join(
-            '%d:%d-%d:%d@%d-%d%s'
-            % (s.linea, s.columna, s.linea_finis, s.columna_finis,
-               s.initium, s.finis,
-               '|' + _notam_mundare(s.nota) if s.nota else '')
-            for s in d.relata)
-        lineae.append('\t'.join((
-            d.via, str(d.linea), str(d.columna), str(d.linea_finis),
-            str(d.columna_finis), str(d.initium), str(d.finis),
-            d.gravitas, d.codex, _notam_mundare(d.causa), relata,
-            _notam_mundare(d.nota) if d.nota else '')))
-    return ''.join(l + '\n' for l in lineae)
 
 
-def exemplaria(viae, regula, paralleli=6):
-    """REGULA EXEMPLARIUM STML super plagulas (modus lint silvae:
-    EXEMPLAR/CATENA/SINE/PER + <relatum lint=...>) - quaestio structuralis
-    trans corpus. viae: via, lista, aut forma git ('*.sh'). regula: via
-    .stml aut TEXTUS; sine <TRANSPARENTIA> praefatio ordinaria clientis
-    additur (materia tags 'ante post' + attributa 'sedes octeti'; C silvae
-    involucra originis). Quaeque plagula: arbor(via) (instrumentum ex
-    suffixo; clientes materiae per VISIONEM SEDIUM, arbor(via,
-    sedes=True)) + regula -> stml expandere -> stml vertere -> <relatum>
-    summa lecta. Reddit Exemplaria(summae {lint: ordines} ordine primi
-    visus, plagulae {via: {lint: ordines}}, congruentiae
-    [Congruentia(via, lint, textus, attributa, linea, columna,
-    linea_finis, columna_finis, initium, finis, textus_fontis, nota,
-    relata)], fracturae {via: causa}, sine_sede {via: ordines sine
-    sede}). Sedes PRIMARIA campos planos tenet (ut MateriaDiagnosticum,
-    SM1 specificationis sedium multiplicium): lineae et columnae
-    1-basatae, columna OCTETORUM, initium/finis octeti, textus_fontis
-    segmentum fontis; omnia None si ordo sine sede (C semper; clientes:
-    ordo sine nodo inserto, e.g. '<situs/>').
-
-    SEDES PLURES: 'relata' tupla SedesRelata est, vacua plerumque.
-    Regula duas ponit involucris binis intra ordinem UNUM -
-    '<situs><x nota="hic">&@a;</x><y nota="ibi">&@b;</y></situs>' -
-    et 'nota' involucri sedem infra se nominat ('nota' ordinis ipsius
-    primariam). Filii BINI ipsius <relatum> inventa DUO sunt, non
-    inventum unum sedibus binis. Involucrum quodque sedem UNAM confert:
-    nodus insertus subarborem totam fert et elementum quodque in ea
-    sedem suam (imperium unum XXIX dedit), ergo post capturam descensus
-    tacet donec subarbor capta exeatur.
-    REFUSIO: omnes plagulae fractae; regula quae nullum <relatum> gignit
-    (numeri ZEPHYRUM mentirentur); regula clientium cum TRANSPARENTIA
-    propria sine attributa="sedes octeti" (capturae iteratae et nodi per
-    pontem inserti sedem diversam ferunt - numquam congruerent). C:
-    arbor silvae = silva forest parsurae cum <ambiguus> (lectiones plures -
-    numeri per lectionem repeti possunt) et SINE expansione systematis
-    examinis (NIHIL -> NULL non adest): regulae lint silvae quae lexemata
-    expansa quaerunt hic nihil inveniunt - lint C in armamentis silvae
-    manet; haec via clientibus materiae (crusta, html, md, oratio) apta."""
-    from concurrent.futures import ThreadPoolExecutor
-
-    lista = _viae_expandere(viae)
-    if not lista:
-        raise SilvaError('exemplaria: nullae plagulae (%r)' % (viae,))
-    if '<' not in regula and os.path.exists(_absoluta(regula)):
-        with open(_absoluta(regula)) as f:
-            regula_textus = f.read()
-    else:
-        regula_textus = regula
-    if '<relatum' not in regula_textus:
-        raise SilvaError('exemplaria: regula sine <relatum lint=...> - '
-                         'nihil numerari potest')
-    if (any(_cliens_materiae(v) for v in lista)
-            and '<TRANSPARENTIA' in regula_textus):
-        m = re.search(r'<TRANSPARENTIA\b[^>]*\battributa="([^"]*)"',
-                      regula_textus)
-        if not {'sedes', 'octeti'} <= set(m.group(1).split() if m else ()):
-            raise SilvaError('exemplaria: TRANSPARENTIA regulae sine '
-                             'attributa="sedes octeti" - capturae '
-                             'iteratae sub visione sedium numquam '
-                             'congruerent')
-
-    def unum(via):
-        cliens = _cliens_materiae(via)
-        try:
-            documentum = arbor(via, sedes=bool(cliens))
-        except SilvaError as ex:
-            return via, None, 'arbor: %s' % ex
-        praefatio = ''
-        if '<TRANSPARENTIA' not in regula_textus:
-            tags, attributa = _TRANSPARENTIA['materia' if cliens
-                                             else 'silva']
-            praefatio = ('<TRANSPARENTIA tags="%s"%s/>\n'
-                         % (tags, ' attributa="%s"' % attributa
-                            if attributa else ''))
-        e = expandere(documentum + '\n' + _LIMES_RELATORUM + '\n'
-                      + praefatio + regula_textus)
-        if not e.successus:
-            return via, None, ('expandere: %s (linea %d%s)'
-                               % (e.vitium, e.linea,
-                                  ', loculus %s' % e.loculus
-                                  if e.loculus else ''))
-        # solum post limitem vertitur: arbor ipsa attributa sine valore
-        # fert ('linea-initium') quae forma HTML recusat (ATTRIBUTUM_VERUM)
-        pars = e.textus.split(_LIMES_RELATORUM, 1)
-        if len(pars) != 2:
-            return via, None, 'limes relatorum absens in effusione'
-        try:
-            return via, _relata(_vertere(pars[1])), None
-        except SilvaError as ex:
-            return via, None, 'vertere: %s' % ex
-
-    with ThreadPoolExecutor(max_workers=max(1, paralleli)) as ex:
-        eventus = list(ex.map(unum, lista))
-
-    summae = {}
-    plagulae = {}
-    congruentiae = []
-    fracturae = {}
-    sine_sede = {}
-    fontes = {}
-    relata_visa = False
-    for via, relata, causa in eventus:
-        if causa is not None:
-            fracturae[via] = causa
-            continue
-        numeri = {}
-        sine = 0
-        for lint, attributa, ordines in relata:
-            relata_visa = True
-            numeri[lint] = numeri.get(lint, 0) + len(ordines)
-            summae[lint] = summae.get(lint, 0) + len(ordines)
-            for textus, positiones in ordines:
-                lectae = [s for s in (_sedem_ordinis(sd, oc, nt)
-                                      for sd, oc, nt in positiones)
-                          if s is not None]
-                prima = lectae[0] if lectae else None
-                textus_fontis = None
-                if prima is None:
-                    sine += 1
-                elif prima.initium >= 0:
-                    if via not in fontes:
-                        with open(_absoluta(via), 'rb') as f:
-                            fontes[via] = f.read()
-                    textus_fontis = fontes[via][
-                        prima.initium:prima.finis].decode('utf-8', 'replace')
-                congruentiae.append(Congruentia(
-                    via, lint, textus, attributa,
-                    prima.linea if prima else None,
-                    prima.columna if prima else None,
-                    prima.linea_finis if prima else None,
-                    prima.columna_finis if prima else None,
-                    prima.initium if prima else None,
-                    prima.finis if prima else None,
-                    textus_fontis,
-                    prima.nota if prima else None,
-                    tuple(lectae[1:])))
-        plagulae[via] = numeri
-        sine_sede[via] = sine
-    if not plagulae:
-        raise SilvaError('exemplaria: omnes %d plagulae fractae (prima: %s)'
-                         % (len(lista), next(iter(fracturae.values()))))
-    if not relata_visa:
-        raise SilvaError('exemplaria: nullum <relatum> in effusione - '
-                         'regula non expansa? (%d plagulae)' % len(plagulae))
-    return Exemplaria(summae, plagulae, congruentiae, fracturae,
-                      sine_sede)
 
 
 def differre_git(via, ref_vetus='HEAD', ref_novum=None,

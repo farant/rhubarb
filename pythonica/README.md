@@ -119,21 +119,16 @@ plica pendet — veritas in C manet.
   (`sedes="L:C-L:C" octeti="B-B"` in omni elemento; C refutat);
   `silva.coctum(via)` — forma normalis `.sh` (`declare -f` bash 5.2) ->
   Coctum(textus, sana, mala, clausurae_absentes): duae plagulae eodem
-  textu = bash eas idem legit; `silva.exemplaria(viae, regula,
-  paralleli=6)` — REGULA EXEMPLARIUM STML (modus lint silvae: EXEMPLAR/
-  CATENA/SINE/PER + `<relatum lint=...>`) super plagulas: viae = via,
-  lista aut forma git (`'*.sh'`); regula = via aut textus (TRANSPARENTIA
-  ordinaria clientis addita si deest: tags `ante post`, attributa
-  `sedes octeti`); clientes per visionem sedium -> Exemplaria(summae,
-  plagulae, congruentiae [Congruentia(via, lint, textus, attributa,
-  linea, columna, textus_fontis)], fracturae, sine_sede {via: ordines
-  sine sede}). Ordo sedem fert ordinis ipsius aut nodi primi inserti
-  (`<situs>&@n;</situs>`); `<situs/>` sine nodo = sine sede. Refutat
-  regulam sine relato, omnes plagulas fractas (vitium machinae
-  nominatum), et regulam clientium cum TRANSPARENTIA propria sine
-  `attributa="sedes octeti"`. Domus tota (CCXXXVII .sh, XX regulae)
-  ~ IV.VI s. Limites: C per silvam = forest cum `<ambiguus>` sine
-  expansione examinis (lint C in silva manet), ordines C sine sede
+  textu = bash eas idem legit.
+
+  `silva.exemplaria` DELETA est (2026-09-18, arcus exemplariorum opus
+  VI): extractio gradus II in C vivit (`materia_exemplaria`), et haec
+  facies latus pythonicum ferebat quod `stml vertere` + `html.parser`
+  poscebat — parsatorem ALIENUM in media catena instrumentorum
+  nostrorum. Quod eam succedit: `./crusta/facies.sh <plagulae>
+  [-machina] [-cruda] [-sine-excusatione]` (gradus UTERQUE, regulae ex
+  `crusta/lintrum/`), et `silva.diagnostica_materiae(viae)` infra, quae
+  gradum utrumque IAM fert.
 
 - **diagnostica clientium (2026-09-17):**
   `silva.diagnostica_materiae(viae)` — errores DECLARATI in registro

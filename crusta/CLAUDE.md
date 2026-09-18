@@ -239,10 +239,14 @@ ORACULUM_EXEMPLUM=freebsd:case2.0 ./crusta/compile_probationes.sh oraculum
 ```
 
 Pythonica (2026-09-17): `silva.arbor('x.sh')`, `silva.coctum('x.sh')`
-and `silva.exemplaria('*.sh', regula)` — a pattern document (EXEMPLAR /
-CATENA / SINE / PER + `<relatum lint=…>`, silva's lint shape) over every
-tracked script in ~4 s; rows per file, no line numbers yet (census nota
-01M2PRPGBC).
+and — until 2026-09-18 — `silva.exemplaria`, now DELETED: tier-2
+extraction lives in C (`materia_exemplaria`), reached through
+`./crusta/facies.sh` or `./tools/diagnostica.sh`. What that Python
+half left behind is the GOLDEN in
+`crusta/probationes/fixa/exemplaria/` — the last thing the independent
+extractor ever said (570 rows raw, 14 after the declared subtraction,
+census 292/278) — which `crusta/instrumenta/differentia_exemplariorum.sh`
+checks the C against on every full runner pass.
 
 0 sanum / 1 fractae / **2 = NULLA CURSA**. Log: `build/test_logs/crusta.log`.
 The oracle binary is `/opt/homebrew/bin/bash` (5.2.15); Apple's

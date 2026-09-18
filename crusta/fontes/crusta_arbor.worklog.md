@@ -931,3 +931,56 @@ unprojectable (raw-form limit 01M2KPJ0HW) and fumus gate I went red
 with `materia:scriptura` — the row made a row in Task 5, catching the
 gate that was added to catch something else. Self-closing form gives
 the same rule with no closing sequence in a value.
+
+## 2026-09-18 — the Python goes, and the gate that almost went with it
+
+Task 6. 438 lines deleted from `pythonica/silva.py`, 316 from
+`probatio_silva.py`: `_relata`, `_vertere`, `_sedem_ordinis`,
+`_notam_mundare`, `diagnostica_tsv`, `diagnostica_ex_congruentiis`,
+`congruentiae_minus`, `diagnostica_lintris`, `diagnostica_pingere` and
+`exemplaria` itself, plus `Congruentia`, `Exemplaria`,
+`_TRANSPARENTIA`, `_LIMES_RELATORUM`. **`html.parser` no longer appears
+in `silva.py` at all**, and `stml vertere` has zero in-house callers —
+its library half stays gated by `probationes/probatio_stml_html.c`, so
+what was lost is the usage, not the coverage.
+
+`_sedem_relatam` was deleted and had to come back: `diagnostica_materiae`
+calls it, and that function stays. Caught by running the caller, not by
+reading — the module imported cleanly with the reference dangling,
+because Python resolves names at call time.
+
+**The deletion nearly killed the gate that authorised it.** The plan
+said `exemplaria` should become a shell over `crusta/facies.sh`. But
+`differentia_exemplariorum.sh` called `silva.exemplaria` for its
+Python side — so that change would have made the gate diff the C
+extractor against *itself*, 570 rows against 570 rows, forever green.
+A tautology that still prints "ok" is worse than no gate.
+
+Fran's call: freeze what the independent implementation last said.
+`crusta/probationes/fixa/exemplaria/domus.{cruda,plena}.tsv`, produced
+by Python the day before it was deleted, with a README stating what
+they are and the circularity that *would* apply if they were ever
+regenerated carelessly. `EXEMPLARIA_SCRIBERE=1` prints the full diff
+before overwriting and demands a named cause.
+
+**And the gate turned out never to have run automatically.** Three
+tasks, three commits, and every single run was me typing it by hand —
+which masked the fact that nothing in the tree invoked it. By the
+house's own rule that is a dead gate. It now runs at the end of
+`crusta/compile_probationes.sh` (skipped under a filter, so narrow runs
+stay fast).
+
+Wiring it in immediately paid for itself. Planting the descent
+suppression again:
+
+```
+CRUSTA PROBATIONES: 16/16 praeteritae
+  FRACTA cruda: aurum 570 / c 570, 1140 lineae discordes
+  FRACTA plena: aurum  14 / c  14,   28 lineae discordes
+```
+
+**All sixteen probationes passed.** Every unit test, the whole crusta
+suite, blind to a change that moves 1140 rows across 234 real files.
+That is the corpus gate's entire argument in one line, and it is the
+reason the golden was worth freezing rather than deleting along with
+the Python.
