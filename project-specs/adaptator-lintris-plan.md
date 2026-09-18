@@ -202,7 +202,7 @@ NOVA 0.
 `[Diagnosticum]`, and TSV emission so the result can be piped to
 `./tools/diagnostica.sh -lege`.
 
-- [ ] **Step 1: the mapping.**
+- [x] **Step 1: the mapping.**
 
 | `Diagnosticum` | from |
 |---|---|
@@ -214,18 +214,48 @@ NOVA 0.
 | `nota` | `attributa['nota']` or None |
 | `relata` | the row's remaining positions (Task 2 Step 2 decides how a rule labels them; if Task 2 finds no way to express a second position, `relata` is empty and that becomes a named gap, not an invented attribute) |
 
-- [ ] **Step 2: TSV emission** — the same 12 fields, same escaping
+- [x] **Step 2: TSV emission** — the same 12 fields, same escaping
 rule (`|`, `;`, TAB, NEWLINE → space). This is the seam; keep it
 byte-compatible with what `tools/diagnostica -machina` writes.
 
-- [ ] **Step 3: the gate.** A rule over a crusta fixture produces a
+- [x] **Step 3: the gate.** A rule over a crusta fixture produces a
 `Diagnosticum` with the declared gravitas, `lint:` codex, cause and
 label; a rule declaring none of them gets the defaults.
 
-- [ ] **Step 4: plant by hand** — read `attributa` but ignore
+- [x] **Step 4: plant by hand** — read `attributa` but ignore
 `gravitas` → the declared-severity assertion goes red.
 
-- [ ] **Step 5:** `probatio_silva.py`, commit.
+- [x] **Step 5:** `probatio_silva.py`, commit.
+
+**Executed 2026-09-17. A lint finding reached the printer for the
+first time:**
+
+```
+lint.sh:1:8: [monitum] lint:nt-aequalitas
+  '-nt' pro aequalitate adhibitum
+   1 | test a -nt b
+     | ^~~~~~~~~~~~ in hoc imperio
+     |        ^~~ hic adhibetur
+```
+
+**`Diagnosticum` needed byte offsets.** It carried line/column only, so
+the adapter could not emit a renderable TSV row — the printer works in
+bytes. 11 fields → 13, mirroring the C `tractus`, which carries both.
+`diagnostica_materiae` fills them from fields 6–7 it was already
+parsing and discarding.
+
+**Unlocatable findings are REFUSED, not dropped.** A row with no
+captured node cannot become a located diagnostic, and letting it
+vanish silently is the exact failure this whole arc exists to prevent.
+`diagnostica_lintris` raises, naming the count and the lint. A rule
+fixes it by capturing a node.
+
+**Caught in review before running:** I had written
+`'lint' in d.codex and d.codex or d.codex` in the TSV emitter — an
+expression that always evaluates to `d.codex`. Removed.
+
+Three plants: declared `gravitas` ignored → 1 red; `lint:` prefix
+dropped → 3 red; the sine-sede refusal disabled → 1 red.
 
 ---
 

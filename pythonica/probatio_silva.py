@@ -1647,6 +1647,78 @@ except silva.SilvaError as ex:
           'exemplaria: omnes fractae - vitium machinae nominatum: %s' % ex)
 
 
+print('--- diagnostica_lintris (gradus II ut gradus I) ---')
+via_lint = os.path.join(T, 'proba_lint.sh')
+open(via_lint, 'w').write('test a -nt b\n')
+_REG_DUO = ('<TRANSPARENTIA tags="ante post" attributa="sedes octeti"/>'
+            '<EXEMPLAR output="$imp"><imperium $i/></EXEMPLAR>'
+            '<EXEMPLAR de="$imp" output="$nt">'
+            '<crusta-litteralis $t>-nt</crusta-litteralis></EXEMPLAR>'
+            '<relatum lint="nt-aequalitas" gravitas="monitum"'
+            ' causa="\'-nt\' pro aequalitate adhibitum">'
+            '<PER congruentia="$nt"><situs>'
+            '<hic nota="hic adhibetur">&@t;</hic>'
+            '<ibi nota="in hoc imperio">&@i;</ibi>'
+            '</situs></PER></relatum>')
+_dl = silva.diagnostica_lintris(via_lint, _REG_DUO)
+credo(len(_dl) == 1, 'diagnostica_lintris: unum diagnosticum (%d)' % len(_dl))
+if _dl:
+    _d0 = _dl[0]
+    credo(_d0.codex == 'lint:nt-aequalitas',
+          'diagnostica_lintris: codex praefixum SUUM fert (%s)' % _d0.codex)
+    credo(_d0.gravitas == 'monitum'
+          and _d0.causa == "'-nt' pro aequalitate adhibitum",
+          'diagnostica_lintris: gravitas et causa DECLARATAE (%s / %s)'
+          % (_d0.gravitas, _d0.causa))
+    credo((_d0.linea, _d0.columna, _d0.linea_finis, _d0.columna_finis,
+           _d0.initium, _d0.finis) == (1, 8, 1, 11, 7, 10),
+          'diagnostica_lintris: sedes primaria cum octetis (%d:%d-%d:%d @%d-%d)'
+          % (_d0.linea, _d0.columna, _d0.linea_finis, _d0.columna_finis,
+             _d0.initium, _d0.finis))
+    credo(_d0.textus == '-nt',
+          'diagnostica_lintris: textus segmentum fontis (%r)' % (_d0.textus,))
+    credo(_d0.nota == 'hic adhibetur' and len(_d0.relata) == 1
+          and _d0.relata[0].nota == 'in hoc imperio',
+          'diagnostica_lintris: notae sedium ex involucris (%r / %r)'
+          % (_d0.nota, _d0.relata[0].nota if _d0.relata else None))
+    # TSV: XII campi, forma instrumenti EADEM - haec est seam graduum
+    _tsv = silva.diagnostica_tsv(_dl).rstrip('\n').split('\t')
+    credo(len(_tsv) == 12,
+          'diagnostica_lintris: TSV XII campos fert (%d)' % len(_tsv))
+    credo(_tsv[8] == 'lint:nt-aequalitas'
+          and _tsv[10] == '1:1-1:13@0-12|in hoc imperio'
+          and _tsv[11] == 'hic adhibetur',
+          'diagnostica_lintris: TSV codex, sedes relata, nota (%r %r %r)'
+          % (_tsv[8], _tsv[10], _tsv[11]))
+
+# ORDINARIA: regula nihil declarans erratum et causam = nomen lintris
+_dd = silva.diagnostica_lintris(
+    via_lint,
+    '<TRANSPARENTIA tags="ante post" attributa="sedes octeti"/>'
+    '<EXEMPLAR output="$imp"><imperium $i/></EXEMPLAR>'
+    '<EXEMPLAR de="$imp" output="$nt">'
+    '<crusta-litteralis $t>-nt</crusta-litteralis></EXEMPLAR>'
+    '<relatum lint="nudum"><PER congruentia="$nt"><situs>&@t;</situs>'
+    '</PER></relatum>')
+credo(len(_dd) == 1 and _dd[0].gravitas == 'erratum'
+      and _dd[0].causa == 'nudum' and _dd[0].codex == 'lint:nudum'
+      and _dd[0].nota is None and _dd[0].relata == (),
+      'diagnostica_lintris: ordinaria - erratum, causa = nomen lintris '
+      '(%r)' % (_dd[0] if _dd else None,))
+
+# REFUSIO: inventum sine sede locari non potest, ergo non tacet
+try:
+    silva.diagnostica_lintris(
+        via_lint,
+        '<TRANSPARENTIA tags="ante post" attributa="sedes octeti"/>'
+        '<EXEMPLAR output="$imp"><imperium $i/></EXEMPLAR>'
+        '<relatum lint="vagum"><PER congruentia="$imp"><situs/></PER>'
+        '</relatum>')
+    credo(False, 'diagnostica_lintris: ordo sine sede refutatur')
+except silva.SilvaError as ex:
+    credo('sine sede' in str(ex),
+          'diagnostica_lintris: ordo sine sede REFUTATUR, non tacet: %s' % ex)
+
 print('--- diagnostica_materiae (clientes materiae) ---')
 import tempfile
 _d = tempfile.mkdtemp(prefix='probatio_diagnostica_')

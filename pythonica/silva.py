@@ -3474,8 +3474,8 @@ SedesRelata = namedtuple('SedesRelata',
                          'initium finis nota')
 
 Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
-                          'columna_finis gravitas codex causa textus '
-                          'nota relata')
+                          'columna_finis initium finis gravitas codex '
+                          'causa textus nota relata')
 
 
 def _sedem_ordinis(sedes, octeti, nota):
@@ -3559,10 +3559,85 @@ def diagnostica_materiae(viae):
                        for f in campi[10].split(';') if f)
         exitus.append(Diagnosticum(absolutae.get(via, via), int(campi[1]),
                                    int(campi[2]), int(campi[3]),
-                                   int(campi[4]), campi[7], campi[8],
-                                   campi[9], textus, campi[11] or None,
-                                   relata))
+                                   int(campi[4]), initium, finis,
+                                   campi[7], campi[8], campi[9], textus,
+                                   campi[11] or None, relata))
     return exitus
+
+
+def _notam_mundare(textus):
+    """'|' ';' TAB NOVA LINEA -> spatium unum, ut instrumentum C facit
+    antequam TSV scribit. Damnosum, corrumpens numquam: campus in duos
+    scindi non potest."""
+    for c in '|;\t\n\r':
+        textus = textus.replace(c, ' ')
+    return textus
+
+
+def diagnostica_lintris(viae, regula, paralleli=6):
+    """INVENTA LINTRIS (gradus II, exemplaria) ut DIAGNOSTICA - eadem
+    forma ac diagnostica declarata (gradus I), ergo excerptum '^~~~',
+    conventio codicum, ./tools/diagnostica.sh, exitus et TSV omnia
+    GRATIS heredantur.
+
+    Regula tria quae desunt DECLARAT, more registri; attributa
+    <relatum> praeter 'lint' iam transeunt, ergo machina non mutatur:
+
+      <relatum lint="nt-aequalitas" gravitas="monitum"
+               causa="'-nt' pro aequalitate adhibitum">
+
+    codex = 'lint:<lint>' - praefixum SUUM fert, ut codices substrati
+    ('materia:...'), ergo pictor grammaticam non praefigit et gradus in
+    linea quaque apparet. gravitas ordinaria 'erratum'; causa ordinaria
+    nomen lintris ipsum. Nota primariae = nota sedis eius (involucrum)
+    si adest, aliter 'nota' ipsius <relatum>.
+
+    REFUSIO si ordo ULLUS sede caret: inventum sine sede diagnosticum
+    LOCATUM fieri non potest, et tacite cadere id quod hic arcus totus
+    prohibere vult esset. Regula id sanat nodum capiendo."""
+    ex = exemplaria(viae, regula, paralleli=paralleli)
+    sine = [c for c in ex.congruentiae if c.linea is None]
+    if sine:
+        raise SilvaError(
+            'diagnostica_lintris: %d ordines sine sede (lint %s) - '
+            'inventum sine sede locari non potest; regula nodum capiat'
+            % (len(sine), ', '.join(sorted({c.lint for c in sine}))))
+    exitus = []
+    for c in ex.congruentiae:
+        a = c.attributa
+        exitus.append(Diagnosticum(
+            c.via, c.linea, c.columna, c.linea_finis, c.columna_finis,
+            c.initium, c.finis,
+            a.get('gravitas', 'erratum'),
+            'lint:' + c.lint,
+            a.get('causa', c.lint),
+            c.textus_fontis or '',
+            c.nota or a.get('nota'),
+            c.relata))
+    return exitus
+
+
+def diagnostica_tsv(diagnostica):
+    """[Diagnosticum] -> forma XII camporum instrumenti, ut
+    './tools/diagnostica.sh -lege' eam pingat.
+
+    HAEC EST SEAM inter gradus: latus C 'Congruentiam' numquam novit,
+    ergo extractio ordinum in C postea mota (01M2RYR3JJ) eundem TSV
+    effundet et nihil bis scribetur."""
+    lineae = []
+    for d in diagnostica:
+        relata = ';'.join(
+            '%d:%d-%d:%d@%d-%d%s'
+            % (s.linea, s.columna, s.linea_finis, s.columna_finis,
+               s.initium, s.finis,
+               '|' + _notam_mundare(s.nota) if s.nota else '')
+            for s in d.relata)
+        lineae.append('\t'.join((
+            d.via, str(d.linea), str(d.columna), str(d.linea_finis),
+            str(d.columna_finis), str(d.initium), str(d.finis),
+            d.gravitas, d.codex, _notam_mundare(d.causa), relata,
+            _notam_mundare(d.nota) if d.nota else '')))
+    return ''.join(l + '\n' for l in lineae)
 
 
 def exemplaria(viae, regula, paralleli=6):
