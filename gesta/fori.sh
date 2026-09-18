@@ -41,7 +41,7 @@ deps_obiecti () {
 }
 recentius_ex () {
     while IFS= read -r via; do
-        [ -n "$via" ] && [ "$via" -nt "$1" ] && { echo "$via"; return 0; }
+        [ -n "$via" ] && ! [ "$1" -nt "$via" ] && { echo "$via"; return 0; }
     done
     return 0
 }

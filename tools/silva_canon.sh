@@ -91,7 +91,7 @@ for _f in silva/instrumenta/silva_canon_coquere.c \
         echo "silva_canon: custos '$_f' ABEST - index custodum fontem nominat qui non est" >&2
         exit 2
     fi
-    if [ "$_f" -nt "$GENERATOR" ]; then
+    if ! [ "$GENERATOR" -nt "$_f" ]; then
         echo "silva_canon: $GENERATOR STALUS ($_f recentior) - strue: $STRUCTOR" >&2
         exit 2
     fi

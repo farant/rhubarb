@@ -20,7 +20,7 @@ briar_facies_capsula_regenerare () {
     if [ -f "$TABULA" ]; then
         local RECENS=""
         for v in $VESTIS; do
-            if [ "$v" -nt "$TABULA" ]; then RECENS="$v"; break; fi
+            if ! [ "$TABULA" -nt "$v" ]; then RECENS="$v"; break; fi
         done
         if [ -z "$RECENS" ]; then
             return 0

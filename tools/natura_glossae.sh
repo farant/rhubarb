@@ -26,7 +26,7 @@ for _f in tools/natura_glossae.c lib/natura.c include/natura.h \
         echo "natura_glossae: custos '$_f' ABEST" >&2
         exit 2
     fi
-    if [ "$_f" -nt "$PORTA" ]; then
+    if ! [ "$PORTA" -nt "$_f" ]; then
         echo "natura_glossae: $PORTA STALUS ($_f recentior) - strue: $STRUCTOR" >&2
         exit 2
     fi

@@ -81,7 +81,7 @@ for _f in lib/natura.c include/natura.h lib/stml.c include/stml.h \
         echo "natura_canones: custos '$_f' ABEST - index custodum fontem nominat qui non est" >&2
         exit 2
     fi
-    if [ "$_f" -nt "$PORTA" ]; then
+    if ! [ "$PORTA" -nt "$_f" ]; then
         echo "natura_canones: $PORTA STALUS ($_f recentior) - strue: $STRUCTOR" >&2
         exit 2
     fi

@@ -25,7 +25,7 @@ if [ ! -x "$PORTA" ]; then
     exit 2
 fi
 for _f in lib/canon.c include/canon.h tools/canon_examen.c lib/stml.c; do
-    if [ "$_f" -nt "$PORTA" ]; then
+    if ! [ "$PORTA" -nt "$_f" ]; then
         echo "natura_metamodulus: $PORTA STALUS - strue: ./tools/canon_struere.sh" >&2
         exit 2
     fi

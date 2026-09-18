@@ -165,8 +165,8 @@ while IFS= read -r via; do
 
     # nectere (si fons OPPURE obiectum quodvis binario novius)
     if [ ! -x "$bin" ] || ! [ "$bin" -nt "$via" ] \
-        || [ -n "$NOVISSIMUM_OBIECTUM" -a \
-             "$NOVISSIMUM_OBIECTUM" -nt "$bin" ]; then
+        || ! [ -z "$NOVISSIMUM_OBIECTUM" -o \
+               "$bin" -nt "$NOVISSIMUM_OBIECTUM" ]; then
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$via" \
             $OBJS "${COMPAGES[@]}" \
             -o "$bin" 2>"$CAP_DIR/$titulus.nexus_error"; then

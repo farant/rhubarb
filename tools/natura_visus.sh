@@ -62,7 +62,7 @@ fi
 
 # porta STALA idem mentitur ac porta absens (lectio legati)
 for _f in lib/natura.c include/natura.h tools/natura_examen.c; do
-    if [ "$_f" -nt "$PORTA" ]; then
+    if ! [ "$PORTA" -nt "$_f" ]; then
         echo "natura_visus: $PORTA STALUS est ($_f recentior)." >&2
         echo "  Strue: ./tools/natura_struere.sh" >&2
         exit 2

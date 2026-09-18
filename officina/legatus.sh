@@ -74,7 +74,7 @@ deps_obiecti () {   # $1 = basis (sine .c); lineae plures = unio tuta
 }
 recentius_ex () {   # $1 = scopus; stdin = viae; prima recentior imprimitur
     while IFS= read -r via; do
-        [ -n "$via" ] && [ "$via" -nt "$1" ] && { echo "$via"; return 0; }
+        [ -n "$via" ] && ! [ "$1" -nt "$via" ] && { echo "$via"; return 0; }
     done
     return 0
 }

@@ -32,7 +32,7 @@ for _f in lib/canon.c include/canon.h tools/canon_coquere.c \
         echo "canon_coquere: custos '$_f' ABEST - index custodum fontem nominat qui non est" >&2
         exit 2
     fi
-    if [ "$_f" -nt "$PORTA" ]; then
+    if ! [ "$PORTA" -nt "$_f" ]; then
         echo "canon_coquere: $PORTA STALUS ($_f recentior) - strue: ./tools/canon_struere.sh" >&2
         exit 2
     fi
