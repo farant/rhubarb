@@ -45,5 +45,6 @@ if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$(find "$BUILD_DIR" -name
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SRC" $OBJ -o "$BIN" >&2 || {
         echo "facies: ligatio fracta" >&2; exit 2; }
 fi
+export CRUSTA_LINTRUM="${CRUSTA_LINTRUM:-$RADIX_DIR/crusta/lintrum}"
 cd "$RADIX_DIR" || exit 2
 exec "$BIN" "$@"

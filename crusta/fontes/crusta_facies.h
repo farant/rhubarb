@@ -51,7 +51,19 @@
 #include "materia_diagnostica.h"
 
 /* Directorium regularum ordinarium, ad radicem repositorii relatum.
- * Consumptor qui aliunde currit 'optiones.lintrum' ponat. */
+ *
+ * TRES FONTES, ORDINE: 'optiones.lintrum' (vocans explicitus), deinde
+ * ambitus 'CRUSTA_LINTRUM', deinde hoc. Via RELATIVA est, ergo
+ * instrumentum quod aliunde curritur eam invenire non potest -
+ * involucra ambitum ABSOLUTE ponunt, et ita instrumentum ex quovis
+ * cwd currit.
+ *
+ * SEAM NOMINATA: cum regulae in binarium per capsulam infixae erunt
+ * (fossa nominata, Fran 2026-09-18), infixae mos erunt et hic
+ * ambitus MODUS EVOLUTIONIS manebit - id est unica differentia inter
+ * rem vectam et mensam evolutionis, ut capsula.h ipsa docet. Ergo
+ * hoc non est emplastrum sed pars consilii posterioris. */
+#define CRUSTA_LINTRUM_AMBITUS "CRUSTA_LINTRUM"
 #define CRUSTA_LINTRUM "crusta/lintrum"
 
 /* Omnia NIHIL/ZEPHYRUM (aut 'optiones' ipsum NIHIL) = mos ordinarius:
@@ -61,7 +73,7 @@ nomen structura {
     /* Xar de StmlNodus* IAM LECTARUM; NIHIL = quidquid in 'lintrum'
      * iacet. Regulas dare significat materiam nihil legere. */
                     Xar* regulae;
-    /* Directorium regularum; NIHIL = CRUSTA_LINTRUM. */
+    /* Directorium regularum; NIHIL = ambitus, deinde CRUSTA_LINTRUM. */
      constans character* lintrum;
     /* LEX INTERNAMENTI (materia/CLAUDE.md): si 'regulae' datae sunt,
      * hoc internamentum IDEM esse debet quo lectae sunt, aliter
@@ -106,6 +118,23 @@ crusta_diagnostica_textus (
                     b32   excerptum,
 constans CrustaOptiones*  optiones,
      constans character** causa);
+
+/* Directorium regularum quod facies eligeret: 'optiones->lintrum',
+ * deinde ambitus CRUSTA_LINTRUM, deinde mos. 'optiones' NIHIL licet.
+ *
+ * INSTRUMENTO QUI REGULAS SEMEL LEGIT: facies cum 'optiones' NIHIL
+ * directorium OMNI VOCATIONE relegit et parsat. Pro plagula una recte;
+ * pro corpore toto supervacuum. Mensuratum 2026-09-18 super domo
+ * (CCXXXIX plagulae, binarium solum): 0.503 s relectis contra 0.462 s
+ * semel lectis - VIII centesimae, non plus. Ergo instrumentum hoc
+ * vocat, regulas semel legit, et eas per 'optiones.regulae' reddit.
+ *
+ * LUCRUM VERUM NON EST CELERITAS sed quod numerus regularum SCIRI
+ * potest antequam plagula ulla iudicetur: lintrum vacuum refutationem
+ * meretur, non exitum 0 tacitum. */
+constans character*
+crusta_lintrum_eligere (
+    constans CrustaOptiones* optiones);
 
 /* Regulas ex directorio legere: '*.stml', ORDINE TITULORUM (ordo quem
  * systema fert non est ordo stabilis). Xar de StmlNodus*.

@@ -64,6 +64,7 @@
 #include "materia_pictor.h"
 #include "crusta_arbor.h"
 #include "crusta_facies.h"
+#include "internamentum.h"
 #include "crusta_diagnostica.h"
 #include "crusta_lexicon.h"
 #include "crusta_registrum.h"
@@ -426,6 +427,93 @@ _annotationes_clientis (
  * eum reddebat.
  *
  * FALSUM = refutatio (causa nominata), non 'inventa nulla'. */
+/* Regulae SEMEL PER CURSUM, non per plagulam.
+ *
+ * Facies cum 'optiones' NIHIL directorium omni vocatione relegit et
+ * parsat. Mensuratum 2026-09-18 super domo (CCXXXIX plagulae, binarium
+ * solum): 0.503 s relectis contra 0.462 s semel lectis - VIII
+ * centesimae. Modicum; causa vera infra est.
+ *
+ * MENSURA PRIOR FALSA FUIT, et modus falsitatis notandus: cursus
+ * involucri post editionem (qui obiecta RECOMPILAT) cum cursu
+ * photographato comparatus est, et differentia aedificationis pro
+ * differentia binarii habita. Involucrum tempus suum fert; ad
+ * binarium metire, aut aedificationem utrimque exclude.
+ *
+ * Piscina regularum cursum TOTUM superstes est (piscina plagulae post
+ * quamque deletur) et internamentum idem manet - LEX INTERNAMENTI
+ * (materia/CLAUDE.md): regulae et proiectio internamentum unum petunt,
+ * aliter exemplaria OMNIA MUTA fiunt.
+ *
+ * REGULA NULLA REFUTATIO EST: lintrum vacuum gradum II tacite
+ * deponeret et exitum 0 redderet - a plagula sana indistinguibile.
+ * crusta/facies.sh idem recusat; instrumenta DUO idem de 'regulis
+ * nullis' dicant, aliter alterum tacet ubi alterum clamat.
+ *
+ * NIHIL = refutatio ('causa' posita); temptatio SEMEL fit. */
+interior constans CrustaOptiones*
+_optiones_crustae (
+    constans character** causa)
+{
+        hic_manens CrustaOptiones  optiones;
+       hic_manens             b32  temptata     = FALSUM;
+       hic_manens             b32  sana         = FALSUM;
+    hic_manens constans character* causa_prior  = NIHIL;
+                          Piscina* piscina;
+              InternamentumChorda* intern;
+
+    si (temptata)
+    {
+        si (!sana && causa != NIHIL)
+        {
+            *causa = causa_prior;
+        }
+        redde sana ? &optiones : NIHIL;
+    }
+    temptata = VERUM;
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    piscina = piscina_generare_dynamicum("diagnostica_regulae",
+                  4194304);
+    si (piscina == NIHIL)
+    {
+        causa_prior = "piscina regularum deficit";
+    }
+    alioquin
+    {
+        intern = internamentum_creare(piscina);
+        si (intern == NIHIL)
+        {
+            causa_prior = "internamentum regularum deficit";
+        }
+        alioquin
+        {
+            optiones.intern   = intern;
+            optiones.regulae  = crusta_regulae_legere(piscina,
+                crusta_lintrum_eligere(NIHIL), intern, &causa_prior);
+            si (optiones.regulae == NIHIL)
+            {
+                si (causa_prior == NIHIL)
+                {
+                    causa_prior = "regulae legi non possunt";
+                }
+            }
+            alioquin si (xar_numerus(optiones.regulae) == ZEPHYRUM)
+            {
+                causa_prior = "regula nulla in lintro";
+            }
+            alioquin
+            {
+                sana = VERUM;
+            }
+        }
+    }
+    si (!sana && causa != NIHIL)
+    {
+        *causa = causa_prior;
+    }
+    redde sana ? &optiones : NIHIL;
+}
+
 interior b32
 _plagulam_crustae_iudicare (
              Piscina* piscina,
@@ -436,11 +524,19 @@ _plagulam_crustae_iudicare (
                  b32  excerptum,
                Summa* summa)
 {
-                  Xar* d;
-   constans character* causa = NIHIL;
-                   i32  k;
+                       Xar* d;
+        constans character* causa = NIHIL;
+    constans CrustaOptiones* optiones;
+                        i32  k;
 
-    d = crusta_diagnostica_omnia(piscina, fons, mensura, NIHIL,
+    optiones = _optiones_crustae(&causa);
+    si (optiones == NIHIL)
+    {
+        fprintf(stderr, "diagnostica: %s: %s\n", via,
+            causa != NIHIL ? causa : "regulae absunt");
+        redde FALSUM;
+    }
+    d = crusta_diagnostica_omnia(piscina, fons, mensura, optiones,
             &causa);
     si (d == NIHIL)
     {

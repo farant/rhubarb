@@ -48,4 +48,8 @@ if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$RADIX_DIR/tools/diagnostica.c" ] \
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$RADIX_DIR/tools/diagnostica.c" $OBJ -o "$BIN" >&2 || {
         echo "diagnostica: ligatio fracta" >&2; exit 2; }
 fi
+# REGULAE ABSOLUTE: via ordinaria regularum RELATIVA est (crusta/lintrum),
+# ergo instrumentum ex alio cwd curritur eas invenire non posset - exitus 2
+# pro plagula quaque .sh. Involucrum radicem novit; instrumentum non.
+export CRUSTA_LINTRUM="${CRUSTA_LINTRUM:-$RADIX_DIR/crusta/lintrum}"
 exec "$BIN" "$@"

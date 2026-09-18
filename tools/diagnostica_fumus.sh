@@ -16,7 +16,9 @@
 # XIII. excusatio declarata gradum II tegit;
 # XIV. REVERSIO ordinis lintris (codex 'lint:' praefixum suum fert);
 # XV.  scriptura fracta ORDO est (materia:scriptura cum sede), non
-#      refutatio muta.
+#      refutatio muta;
+# XVI. instrumentum ex QUOVIS cwd regulas invenit;
+# XVII. lintrum VACUUM refutatio est (exitus 2 nominatus), non exitus 0.
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -214,6 +216,32 @@ grep -q 'materia:scriptura' "$T/scriptura.out"
 credo $? "XV. codex materia:scriptura in exitu"
 [ "$(head -1 "$T/scriptura.out")" = "$T/scriptura.sh:1:3: [erratum] materia:scriptura" ]
 credo $? "XV. sede sua nominata: $(head -1 "$T/scriptura.out")"
+
+# XVI. EX QUOVIS CWD. Via regularum ordinaria RELATIVA est
+# (crusta/lintrum), ergo instrumentum ALIUNDE curritum eas invenire non
+# poterat - exitus 2 pro plagula quaque .sh (regressio mensurata
+# 2026-09-18, post dispositorem: ante eum instrumentum ex quovis cwd
+# currebat). Involucrum ambitum CRUSTA_LINTRUM ABSOLUTE ponit; vocans
+# qui eum ipse ponit vincit (modus evolutionis).
+printf '#!/bin/bash\n[ $a -nt $b ]\n' > "$T/alibi.sh"
+( cd "$T" && unset CRUSTA_LINTRUM && "$RADIX/tools/diagnostica.sh" "$T/alibi.sh" ) \
+    > "$T/alibi.out" 2>&1
+rc=$?
+[ "$rc" -eq 1 ] && grep -q 'lint:nt-aequalitas' "$T/alibi.out"
+credo $? "XVI. ex cwd alieno: regulae inventae (rc $rc)"
+
+# XVII. LINTRUM VACUUM REFUTATIO EST, NON SANITAS. Directorium quod
+# exstat sed regulam nullam fert gradum II tacite deponeret et exitum 0
+# redderet - a plagula vere sana INDISTINGUIBILE. Id est ipsa forma
+# quam Fran timuit (regulae additae quae non currunt), et causa propter
+# quam numerus regularum ante iudicium ullum sciendus est.
+mkdir -p "$T/lintrum_vacuum"
+( cd "$RADIX" && CRUSTA_LINTRUM="$T/lintrum_vacuum" \
+    ./tools/diagnostica.sh "$T/lint.sh" ) > "$T/vacuum.out" 2>&1
+rc=$?
+[ "$rc" -eq 2 ]; credo $? "XVII. lintrum vacuum: exitus 2, non 0 (rc $rc)"
+grep -q 'regula nulla' "$T/vacuum.out"
+credo $? "XVII. causa NOMINATA, non silentium"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus diagnostica: sanum"; exit 0; fi

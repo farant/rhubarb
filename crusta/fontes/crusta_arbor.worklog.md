@@ -827,3 +827,52 @@ themselves over the real corpus rather than over a fixture.
 grow by one and the difference stays 14. A count that moves with a
 cause is the gate working; the pin demanded the cause and got it.
 Python's pins moved the same way, 291/277 → 292/278.
+
+## 2026-09-18 — what the dispatch left behind, and a measurement I got wrong
+
+Fran asked whether the dispatch gap was fully closed. It was not. Three
+things, found by looking rather than remembering.
+
+**The tool stopped working outside the repo root.** `CRUSTA_LINTRUM` is
+a relative path and `tools/diagnostica.sh` never `cd`s. Blast radius
+was zero — Python's `_curre` always passes `cwd=RADIX`, shadow gates
+pass the clone root, pre-commit runs from the root — and it refused
+loudly rather than reporting a false zero. But before Task 5 the tool
+ran from anywhere, and hand and LSP invocation are exactly the cases
+nothing automated covers. Fixed with an env override the runners set
+absolutely; `optiones.lintrum` still wins for a library caller. Gate
+XVI, planted.
+
+**An empty rule directory was silent.** Zero rules meant tier 2 quietly
+vanished and the tool exited 0 — indistinguishable from a healthy file.
+`crusta/instrumenta/facies.c` already refused this; `tools/diagnostica`
+did not. **Two instruments, two answers to the same question** — the
+inconsistency was mine, written a day apart. Both now refuse with a
+named cause. Gate XVII, planted.
+
+Fran's answer to the underlying problem is better than the guard: bake
+the rules into the binary with capsula, and make staleness a BUILD
+failure rather than a runtime warning — filed as `01M2TZW7Q4`. A
+runtime warning fires on every run while you edit a rule, which is the
+normal case, so people learn to ignore it and the gate is dead by the
+house's own definition. The env seam added here is the dev-mode half of
+that design, not a patch to be undone.
+
+**And a measurement I made up without noticing.** I claimed the tool
+was 3.3× slower than the crusta instrument because it re-read the rule
+directory per file (5.85 s vs 1.76 s). Both numbers were real; the
+comparison was garbage. The 5.85 s run **recompiled objects** because I
+had just edited a source file; the 1.76 s run did not. I had compared a
+build to a cache and called the difference a regression — then wrote
+the number into two source comments as if it were measured.
+
+Measured properly, against the binaries with nothing to rebuild:
+**0.503 s → 0.462 s over 239 files, about 8 %.** Real, small, and not
+the reason to make the change. The reason is that the rule COUNT can be
+known before any file is judged, which is what makes the empty-lintrum
+refusal possible at all.
+
+The rule this earns, which is a sharper form of one the house already
+has: *a wrapper carries its own time.* Measure the binary, or exclude
+the build from both sides — and when a number is going into a comment,
+re-derive it rather than reuse the one already on screen.

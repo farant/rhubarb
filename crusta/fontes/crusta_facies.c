@@ -10,6 +10,7 @@
 #include "stml.h"
 #include "chorda_aedificator.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -109,6 +110,27 @@ _viam_iungere (
         (memoriae_index)titulus->mensura);
     via[nd + I + (memoriae_index)titulus->mensura] = '\0';
     redde via;
+}
+
+/* Vocans explicitus, deinde ambitus, deinde mos. Vide crusta_facies.h:
+ * via ordinaria RELATIVA est, ergo instrumentum aliunde curritur
+ * regulas invenire non posset sine ambitu. */
+constans character*
+crusta_lintrum_eligere (
+    constans CrustaOptiones* optiones)
+{
+    constans character* ambitus;
+
+    si (optiones != NIHIL && optiones->lintrum != NIHIL)
+    {
+        redde optiones->lintrum;
+    }
+    ambitus = getenv(CRUSTA_LINTRUM_AMBITUS);
+    si (ambitus != NIHIL && ambitus[ZEPHYRUM] != '\0')
+    {
+        redde ambitus;
+    }
+    redde CRUSTA_LINTRUM;
 }
 
 Xar*
@@ -283,9 +305,7 @@ constans CrustaOptiones*  optiones,
     regulae = optiones != NIHIL && optiones->regulae != NIHIL
         ? optiones->regulae
         : crusta_regulae_legere(piscina,
-              optiones != NIHIL && optiones->lintrum != NIHIL
-                  ? optiones->lintrum : CRUSTA_LINTRUM,
-              intern, causa);
+              crusta_lintrum_eligere(optiones), intern, causa);
     si (regulae == NIHIL)
     {
         redde NIHIL;
