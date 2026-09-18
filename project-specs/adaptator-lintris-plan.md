@@ -73,18 +73,18 @@ human format (header, causa, multi-span excerpt) by re-reading each
 `via`. This is what lets a Python-produced finding reach `lib/excerptum`
 without a second implementation of the caret.
 
-- [ ] **Step 1: parse a TSV row back into a `MateriaDiagnosticum`.**
+- [x] **Step 1: parse a TSV row back into a `MateriaDiagnosticum`.**
 Split on TAB, refuse a row without exactly 12 fields naming the row.
 Field 11 splits on `;` then on the first `|`; related spans allocate a
 `MateriaSedesRelata` array from the piscina. `nodus`/`lexema` stay
 NIHIL — the renderer never needs them.
 
-- [ ] **Step 2: route.** `-lege` reads stdin instead of iterating
+- [x] **Step 2: route.** `-lege` reads stdin instead of iterating
 files; everything downstream is the existing
 `_diagnosticum_imprimere`, unchanged. The grammar prefix comes from
 the codex itself (a codex containing `:` is already printed bare).
 
-- [ ] **Step 3: the gate — ROUND TRIP, byte for byte.**
+- [x] **Step 3: the gate — ROUND TRIP, byte for byte.**
 
 ```bash
 ./tools/diagnostica.sh "$T/plantata.sh" > direct.out
@@ -97,12 +97,12 @@ convergence: if the two paths ever diverge, one of them has grown its
 own printer. Use a fixture with **two spans on different lines** so
 the multi-span path is exercised, not just the single-span one.
 
-- [ ] **Step 4: plants.** (a) Drop field 11 on read → the excerpt loses
+- [x] **Step 4: plants.** (a) Drop field 11 on read → the excerpt loses
 its second caret row → round trip differs. (b) Accept a row with the
 wrong field count instead of refusing → feed a 10-field row and
 confirm it is *not* silently accepted.
 
-- [ ] **Step 5:** formator, examen, `./tools/diagnostica_fumus.sh`,
+- [x] **Step 5:** formator, examen, `./tools/diagnostica_fumus.sh`,
 `probatio_silva.py` (it reads this TSV), commit.
 
 ---

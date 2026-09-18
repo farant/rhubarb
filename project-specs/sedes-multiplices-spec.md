@@ -215,7 +215,7 @@ mid-line grep survives.
 
 | # | field |
 |---|---|
-| 11 | related spans, `L:C-L:C\|nota` entries joined by `;`; empty when none |
+| 11 | related spans, `L:C-L:C@B-B\|nota` entries joined by `;`; empty when none |
 | 12 | the primary's own `nota`; empty when NIHIL |
 
 A vertical bar, a semicolon, a TAB or a NEWLINE inside a label is
@@ -376,6 +376,16 @@ restating because it is not obvious: the record stores the primary
 separately from `relata`, so the span array is never sorted by
 construction, and the printer will not sort a `constans` array without
 memory. `tools/diagnostica.c` sorts by insertion before calling.
+
+**E. Field 11 carries BYTE OFFSETS too (`@B-B`), added 2026-09-17 by
+the adapter arc's Task 1.** As first shipped it held only
+`L:C-L:C`, but `ExcerptumSedes` renders from **byte offsets**, not
+line/column — so the format was lossy for exactly what the printer
+consumes, and a related span could not be drawn from a TSV row. The
+primary already carried both representations (fields 2–5 and 6–7);
+related spans now match it. Found by the round-trip gate's
+*requirements* before a line of the reader was written, which is the
+cheapest a format bug ever gets caught.
 
 **Measured at close:** shim 398/398; materia 9/9, css 10/10, md 14/14,
 html 14/14, oratio 19/19, crusta 15/15; root suite exit 0;

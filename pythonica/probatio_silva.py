@@ -1619,6 +1619,10 @@ try:
                      _ap.columna_finis))
             credo(_ap.nota == 'hic coepit',
                   'diagnostica_materiae: nota aperturae (%r)' % (_ap.nota,))
+            # OCTETI sedis relatae: pictor eis pingit, non lineis
+            credo(_ap.initium == 0 and _ap.finis == 8,
+                  'diagnostica_materiae: octeti aperturae 0-8 (%d-%d)'
+                  % (_ap.initium, _ap.finis))
 
     # FIXUM DISCRIMINANS: apertura ad 1:9, ubi linea et columna DIFFERUNT.
     # Fixum superius ('{ echo a') aperturam ad 1:1 habet, ergo permutationem
@@ -1638,6 +1642,9 @@ try:
               'diagnostica_materiae: apertura 1:9-1:17, linea != columna '
               '(%d:%d-%d:%d)' % (_ap2.linea, _ap2.columna, _ap2.linea_finis,
                                  _ap2.columna_finis))
+        credo(_ap2.initium == 8 and _ap2.finis == 16,
+              'diagnostica_materiae: octeti aperturae 8-16 (%d-%d)'
+              % (_ap2.initium, _ap2.finis))
 
     _sanum = os.path.join(_d, 'sanum.sh')
     with open(_sanum, 'w') as f:

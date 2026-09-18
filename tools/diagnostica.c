@@ -9,12 +9,19 @@
  *
  * Ordo TSV (XII campi): via linea columna linea_finis columna_finis
  * initium finis gravitas codex causa | sedes_relatae nota_primaria.
- * Campus XI sedes relatas fert ut 'L:C-L:C|nota' per ';' iunctas
+ * Campus XI sedes relatas fert ut 'L:C-L:C@B-B|nota' per ';' iunctas
  * (vacuus si nullae); campus XII notam sedis primariae (vacuus si
- * NIHIL). Campi ADDITI sunt, numquam ordines novi: ordo unus
- * diagnosticum unum manet. Codex CRUDUS in machina; linea humana
- * '<grammatica>:' praefigit codici sine ':' (codices substrati eum
- * iam ferunt).
+ * NIHIL). Sedes relata OCTETOS quoque fert, sicut primaria campis
+ * VI-VII: pictor octetis pingit, non lineis, ergo forma sine eis
+ * excerptum reddere non posset. Campi ADDITI sunt, numquam ordines
+ * novi: ordo unus diagnosticum unum manet. Codex CRUDUS in machina;
+ * linea humana '<grammatica>:' praefigit codici sine ':' (codices
+ * substrati eum iam ferunt).
+ *
+ * Modus '-lege': TSV ex stdin legit et formam humanam pingit, ut
+ * inventa ALIUNDE nata (regulae lintris per pythonica) eundem
+ * pictorem adeant. REVERSIO OCTETIM: 'diagnostica x' idem est ac
+ * 'diagnostica -machina x | diagnostica -lege'.
  */
 
 #include "latina.h"
@@ -32,7 +39,12 @@
 #include "css_lexicon.h"
 #include "css_registrum.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+/* Tabula tota in memoriam semel legitur, ne linea nimis longa tacite
+ * truncetur; supra hunc limitem refutatio NOMINATA. */
+#define TABULA_MAXIMA 4194304
 
 nomen structura {
     i32 errata;
@@ -97,6 +109,133 @@ _suffixum (
  * Damnosum quidem (nota mutilatur), corrumpens numquam: campus
  * numquam in duos scinditur. Notae substrati nihil horum ferunt; nota
  * a regula lintris data quidlibet ferre potest. */
+/* Lineam in campos per TAB scindere (in loco: TAB -> NUL). Reddit
+ * numerum camporum TOTUM, etiam supra 'maximum', ut vocans formam
+ * pravam agnoscat potius quam truncatam accipiat. */
+interior i32
+_campos_scindere (
+      character*  linea,
+      character** campi,
+            i32   maximum)
+{
+           i32  numerus  = ZEPHYRUM;
+     character* initium  = linea;
+     character* p        = linea;
+
+    dum (VERUM)
+    {
+        si (*p == '\t' || *p == '\0')
+        {
+            b32 ultimus = (b32)(*p == '\0');
+
+            si (numerus < maximum)
+            {
+                campi[numerus] = initium;
+            }
+            numerus++;
+            si (ultimus)
+            {
+                frange;
+            }
+            *p       = '\0';
+            initium  = p + I;
+        }
+        p++;
+    }
+    redde numerus;
+}
+
+/* 'L:C-L:C@B-B|nota' -> tractus + nota. Nota post '|' manet, ergo
+ * quidlibet ferre potest praeter ';' quod scriptor iam mutavit. */
+interior b32
+_sedem_legere (
+              character*  frustum,
+         MateriaTractus*  tractus,
+     constans character** nota)
+{
+     character* barra          = strchr(frustum, '|');
+       integer  linea          = 0;
+       integer  columna        = 0;
+       integer  linea_finis    = 0;
+       integer  columna_finis  = 0;
+       integer  initium        = 0;
+       integer  finis          = 0;
+
+    *nota = NIHIL;
+    si (barra != NIHIL)
+    {
+        *barra  = '\0';
+        *nota   = barra + I;
+    }
+    si (sscanf(frustum, "%d:%d-%d:%d@%d-%d", &linea, &columna,
+            &linea_finis, &columna_finis, &initium, &finis) != VI)
+    {
+        redde FALSUM;
+    }
+    memset(tractus, ZEPHYRUM, magnitudo(*tractus));
+    tractus->linea          = (i32)linea;
+    tractus->columna        = (i32)columna;
+    tractus->linea_finis    = (i32)linea_finis;
+    tractus->columna_finis  = (i32)columna_finis;
+    tractus->initium        = (s32)initium;
+    tractus->finis          = (s32)finis;
+    tractus->est_fons       = VERUM;
+    redde VERUM;
+}
+
+/* campum XI in seriem MateriaSedesRelata solvere */
+interior b32
+_relata_legere (
+                Piscina*  piscina,
+              character*  campus,
+     MateriaSedesRelata** exitus,
+                    i32*  numerus)
+{
+    MateriaSedesRelata* series;
+             character* p;
+                    i32  quot = ZEPHYRUM;
+                    i32  k;
+
+    *exitus   = NIHIL;
+    *numerus  = ZEPHYRUM;
+    si (campus[0] == '\0')
+    {
+        redde VERUM;
+    }
+    quot = (i32)I;
+    per (p = campus; *p != '\0'; p++)
+    {
+        si (*p == ';')
+        {
+            quot++;
+        }
+    }
+    series = (MateriaSedesRelata*)piscina_allocare(piscina,
+        (memoriae_index)quot * magnitudo(MateriaSedesRelata));
+    si (series == NIHIL)
+    {
+        redde FALSUM;
+    }
+    p = campus;
+    per (k = ZEPHYRUM; k < quot; k++)
+    {
+        character* punctum = strchr(p, ';');
+
+        si (punctum != NIHIL)
+        {
+            *punctum = '\0';
+        }
+        si (!_sedem_legere(p, &series[k].tractus, &series[k].nota))
+        {
+            redde FALSUM;
+        }
+        p = punctum != NIHIL ? punctum + I : p + strlen(p);
+    }
+    *exitus   = series;
+    *numerus  = quot;
+    redde VERUM;
+}
+
 interior vacuum
 _notam_scribere (
     constans character* nota)
@@ -188,9 +327,10 @@ constans MateriaDiagnosticum* d,
             {
                 putchar((integer)';');
             }
-            imprimere("%d:%d-%d:%d", (integer)t->linea,
+            imprimere("%d:%d-%d:%d@%d-%d", (integer)t->linea,
                 (integer)t->columna, (integer)t->linea_finis,
-                (integer)t->columna_finis);
+                (integer)t->columna_finis, (integer)t->initium,
+                (integer)t->finis);
             si (d->relata[r].nota != NIHIL)
             {
                 putchar((integer)'|');
@@ -361,6 +501,124 @@ _plagulam_iudicare (
     redde VERUM;
 }
 
+/* Modus -lege: TSV ex stdin in formam humanam. Inventa ALIUNDE nata
+ * (regulae lintris per pythonica) eundem pictorem adeunt, ergo caret
+ * unus in domo est, non duo. Plagulae fontium semel lectae et
+ * servatae (ordines eiusdem plagulae contigui esse solent).
+ *
+ * Numerus camporum EXACTE poscitur: forma tacite mutata pernicies
+ * esset, et lector qui campos ignotos praetermittit eam celaret. */
+interior b32
+_tabulam_legere (
+      b32  excerptum,
+    Summa* summa)
+{
+               Piscina* piscina;
+             character* tabula;
+             character* p;
+             character* via_lecta      = NIHIL;
+             character* fons_lectus    = NIHIL;
+                   i32  mensura_lecta  = ZEPHYRUM;
+                   b32  sanum          = VERUM;
+                size_t  legenda;
+
+    piscina = piscina_generare_dynamicum("diagnostica-lege", 8388608);
+    si (piscina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    tabula = (character*)piscina_allocare(piscina,
+        (memoriae_index)TABULA_MAXIMA);
+    si (tabula == NIHIL)
+    {
+        piscina_destruere(piscina);
+        redde FALSUM;
+    }
+    legenda = fread(tabula, I, (size_t)(TABULA_MAXIMA - I), stdin);
+    tabula[legenda] = '\0';
+    si (legenda == (size_t)(TABULA_MAXIMA - I))
+    {
+        fprintf(stderr,
+            "diagnostica: tabula nimis magna (> %d octeti)\n",
+            (integer)(TABULA_MAXIMA - I));
+        piscina_destruere(piscina);
+        redde FALSUM;
+    }
+    p = tabula;
+    dum (*p != '\0')
+    {
+                 character* linea  = p;
+                 character* nova   = strchr(p, '\n');
+                 character* campi[XVI];
+                       i32  numerus;
+       MateriaDiagnosticum  d;
+        MateriaSedesRelata* relata_lecta = NIHIL;
+        constans character* grammatica;
+
+        si (nova != NIHIL)
+        {
+            *nova  = '\0';
+            p      = nova + I;
+        }
+        alioquin
+        {
+            p = linea + strlen(linea);
+        }
+        si (linea[0] == '\0')
+        {
+            perge;
+        }
+        numerus = _campos_scindere(linea, campi, (i32)XVI);
+        si (numerus != (i32)XII)
+        {
+            fprintf(stderr,
+                "diagnostica: ordo TSV pravus (%d campi pro "
+                "XII): %s\n", (integer)numerus, campi[0]);
+            sanum = FALSUM;
+            perge;
+        }
+        memset(&d, ZEPHYRUM, magnitudo(d));
+        d.gravitas = strcmp(campi[7], "monitum") == ZEPHYRUM
+            ? (s32)MATERIA_GRAVITAS_MONITUM
+            : (s32)MATERIA_GRAVITAS_ERRATUM;
+        d.codex = campi[8];
+        d.causa = campi[9];
+        d.nota = campi[11][0] != '\0' ? campi[11] : NIHIL;
+        d.tractus.linea = (i32)atoi(campi[1]);
+        d.tractus.columna = (i32)atoi(campi[2]);
+        d.tractus.linea_finis = (i32)atoi(campi[3]);
+        d.tractus.columna_finis = (i32)atoi(campi[4]);
+        d.tractus.initium = (s32)atoi(campi[5]);
+        d.tractus.finis = (s32)atoi(campi[6]);
+        d.tractus.est_fons = VERUM;
+        si (!_relata_legere(piscina, campi[10], &relata_lecta,
+                &d.numerus_relatorum))
+        {
+            fprintf(stderr, "diagnostica: sedes relatae pravae: %s\n",
+                campi[10]);
+            sanum = FALSUM;
+            perge;
+        }
+        d.relata = relata_lecta;
+        si (   via_lecta                   == NIHIL
+            || strcmp(via_lecta, campi[0]) != ZEPHYRUM)
+        {
+            via_lecta      = campi[0];
+            mensura_lecta  = ZEPHYRUM;
+            fons_lectus  = _plagulam_legere(piscina, campi[0],
+                &mensura_lecta);
+        }
+        /* grammatica ex suffixo, ut in via ordinaria: TSV codicem
+         * CRUDUM fert, linea humana praefixum addit */
+        grammatica = _suffixum(campi[0], ".css") ? "css" : "crusta";
+        _diagnosticum_imprimere(piscina, campi[0], grammatica,
+            fons_lectus, mensura_lecta, &d, FALSUM, excerptum, summa);
+    }
+    summa->plagulae++;
+    piscina_destruere(piscina);
+    redde sanum;
+}
+
 integer
 principale (
       integer   argc,
@@ -369,6 +627,7 @@ principale (
       Summa summa;
         b32 machina    = FALSUM;
         b32 excerptum  = VERUM;
+        b32 legere     = FALSUM;
     integer i;
 
     memset(&summa, ZEPHYRUM, magnitudo(summa));
@@ -382,6 +641,24 @@ principale (
         {
             excerptum = FALSUM;
         }
+        alioquin si (strcmp(argv[i], "-lege") == ZEPHYRUM)
+        {
+            legere = VERUM;
+        }
+    }
+    si (legere)
+    {
+        si (!_tabulam_legere(excerptum, &summa))
+        {
+            fprintf(stderr, "%d diagnostica (erratum %d, monitum %d)\n",
+                (integer)(summa.errata + summa.monita),
+                (integer)summa.errata, (integer)summa.monita);
+            redde II;
+        }
+        fprintf(stderr, "%d diagnostica (erratum %d, monitum %d) ex "
+            "tabula\n", (integer)(summa.errata + summa.monita),
+            (integer)summa.errata, (integer)summa.monita);
+        redde summa.errata > ZEPHYRUM ? I : ZEPHYRUM;
     }
     per (i = I; i < argc; i++)
     {

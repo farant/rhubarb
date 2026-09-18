@@ -3433,7 +3433,8 @@ def _viae_expandere(viae):
 
 
 SedesRelata = namedtuple('SedesRelata',
-                         'linea columna linea_finis columna_finis nota')
+                         'linea columna linea_finis columna_finis '
+                         'initium finis nota')
 
 Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
                           'columna_finis gravitas codex causa textus '
@@ -3441,17 +3442,25 @@ Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
 
 
 def _sedem_relatam(frustum):
-    """'L:C-L:C|nota' -> SedesRelata (nota optionalis -> None).
+    """'L:C-L:C@B-B|nota' -> SedesRelata (nota optionalis -> None).
+
+    OCTETI quoque feruntur, sicut sedes primaria eos campis VI-VII
+    fert: pictor (lib/excerptum) OCTETIS pingit, non lineis, ergo forma
+    sine eis excerptum reddere non posset - quod porta reversionis
+    instrumenti invenit.
 
     Scissio per ';' et '|' tuta est quia instrumentum utrumque (et TAB
     et NOVAM LINEAM) in nota spatio mutat antequam scribit: nota
     mutilari potest, campum scindere non potest."""
     sedes, _, nota = frustum.partition('|')
-    initium, _, finis = sedes.partition('-')
-    linea, _, columna = initium.partition(':')
-    linea_finis, _, columna_finis = finis.partition(':')
+    sedes, _, octeti = sedes.partition('@')
+    principium, _, terminus = sedes.partition('-')
+    linea, _, columna = principium.partition(':')
+    linea_finis, _, columna_finis = terminus.partition(':')
+    octetus_primus, _, octetus_ultimus = octeti.partition('-')
     return SedesRelata(int(linea), int(columna), int(linea_finis),
-                       int(columna_finis), nota or None)
+                       int(columna_finis), int(octetus_primus),
+                       int(octetus_ultimus), nota or None)
 
 
 def diagnostica_materiae(viae):
