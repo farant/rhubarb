@@ -49,8 +49,53 @@ if [ -z "${UNCUS_VIAE:-}" ]; then
     lint_latinus || exit 1
 fi
 
+# ---- DIAGNOSTICA MATERIAE (.sh .css; 2026-09-18, decisio Frani: OBSTAT) ----
+# CUR HIC, ANTE EXAMEN: sectio examinis 'exit 0' facit si nulla plagula
+# .c/.m tracta est - et commissio quae SOLAS plagulas .sh tangit exacte
+# talis est, id est casus pro quo haec porta exsistit. Post examen
+# posita porta MORTUA esset pro usu suo primario.
+#
+# QUID: tools/diagnostica.sh iudicat quod crusta et css in registris
+# suis DECLARANT (gradus I: arbor malformata). Gradus II (regulae
+# lintris, crusta/lintrum/) NONDUM hic est - catena eius per pythonica
+# it, et via commissionis Pythone carere debet; vide 01M2RYR3JJ
+# (extractor C) et decretum 01M2S9GR5W.
+#
+# EXCLUSIO probationes/fixa/: pathologiae CONSULTO malae sunt
+# (adversarius.sh, pathologiae.sh, corpus freebsd, adversarius_2.css).
+# Sine ea corpus fixturarum totum incommissibile fieret - porta XIV
+# fumus.sh id figit.
+#
+# Exitus 2 OBSTAT quoque: 'nihil iudicatum' significat portam non
+# cucurrisse, et porta quae currere non potest CLAMET (lex domus).
 if [ -n "${UNCUS_VIAE:-}" ]; then
-    VIAE="$UNCUS_VIAE"
+    DVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(sh|css)$' || true)"
+else
+    DVIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.sh' '*.css' 2>/dev/null \
+        | grep -vE '(^|/)(scratchpad|build|amalgama|archivum)/' \
+        | grep -v '^probationes/fixa/' || true)"
+fi
+if [ -n "$DVIAE" ]; then
+    dviae_exstantes=""
+    for via in $DVIAE; do
+        [ -f "$via" ] && dviae_exstantes="$dviae_exstantes $via"
+    done
+    if [ -n "$dviae_exstantes" ]; then
+        dout=$(./tools/diagnostica.sh $dviae_exstantes 2>&1); drc=$?
+        case "$drc" in
+            0) echo "diagnostica (pre-commit): $(printf '%s\n' $dviae_exstantes | wc -l | tr -d ' ') plagulae .sh/.css sanae" >&2 ;;
+            1) { echo "DIAGNOSTICA MATERIAE (pre-commit) OBSTANT:"; printf '%s\n' "$dout"; } >&2; exit 1 ;;
+            *) { echo "diagnostica (pre-commit): OBSTAT - nihil iudicatum (exitus $drc), porta currere non potuit:";
+                 printf '%s\n' "$dout" | tail -5; } >&2; exit 1 ;;
+        esac
+    fi
+fi
+
+if [ -n "${UNCUS_VIAE:-}" ]; then
+    # suffixo CRIBRATUR ut in via vera: illic VIAE ex '*.c' '*.m' solis
+    # venit, ergo modus probationis idem praestet - aliter plagula .sh
+    # explicita examini C89 traderetur et REICE fictum pareret.
+    VIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|m)$' || true)"
 else
     VIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.m' 2>/dev/null \
         | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum)/')"

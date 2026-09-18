@@ -10,6 +10,10 @@
 #   IX-XI lint Latinus identificatorum (2026-09-07): verbum ignotum
 #       in plagula nova tracta -> obstat cum exitibus; Latina sola -> 0;
 #       pre-merge-commit item obstat
+#   XII-XIV diagnostica materiae (.sh .css, 2026-09-18): plagula .sh
+#       malformata OBSTAT; sana transit; FIXTURA PATHOLOGICA
+#       (probationes/fixa/) NON obstat - per INDICEM probata, quia
+#       UNCUS_VIAE consulto 'sine filtro' est
 #   VI-VIII scriptura automatica formae: functio appensa formatur et
 #       index reponitur; commissio partialis intacta + monitum; plagula
 #       nova tota formata (fixum tractum fumus_formae.c, checkout)
@@ -115,6 +119,33 @@ git add -f -- "$LINTF"
 if [ "$rc" -eq 0 ] && grep -q 'nihil novi' "$T/lint_sanum.out"; then echo "  XI  lint: plagula Latina -> 0            OK"; else echo "  XI  FRACTUM (rc=$rc)"; tail -12 "$T/lint_sanum.out"; fracta=1; fi
 rm -f "$LINTF" "$T/index3"
 unset GIT_INDEX_FILE
+# XII-XIV - DIAGNOSTICA MATERIAE (.sh .css, 2026-09-18)
+printf '#!/bin/bash\necho ok\n' > "$T/sana.sh"
+printf '#!/bin/bash\n{ echo a\n' > "$T/mala.sh"
+
+UNCUS_VIAE="$T/sana.sh" "$UNCUS" > "$T/sana.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -q 'plagulae .sh/.css sanae' "$T/sana.out"; then echo "  XII  .sh sana -> 0                       OK"; else echo "  XII  FRACTUM (rc=$rc)"; cat "$T/sana.out"; fracta=1; fi
+
+UNCUS_VIAE="$T/mala.sh" "$UNCUS" > "$T/mala.out" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q 'DIAGNOSTICA MATERIAE' "$T/mala.out"; then echo "  XIII .sh mala -> 1 (OBSTAT)              OK"; else echo "  XIII FRACTUM (rc=$rc)"; cat "$T/mala.out"; fracta=1; fi
+
+# XIV - FIXTURA PATHOLOGICA per INDICEM: probationes/fixa/ consulto mala
+# est. Sine exclusione corpus fixturarum totum incommissibile fieret.
+# Per indicem probatur, NON per UNCUS_VIAE: ille modus 'sine filtro' est.
+# Plagula NOVA sub via excepta: fixtura EXSTANS ab HEAD non differt,
+# ergo in 'diff --cached' NUMQUAM apparet et porta nihil probaret
+# (mensuratum 2026-09-18: planta exclusionem removens VIRIDIS mansit).
+FIXA_MALA="probationes/fixa/crusta/.fumus_mala.sh"
+printf '#!/bin/bash\n{ echo a\n' > "$FIXA_MALA"
+export GIT_INDEX_FILE="$T/index_fixa"
+rm -f "$GIT_INDEX_FILE"
+git read-tree HEAD
+git add -f -- "$FIXA_MALA" 2>/dev/null
+"$UNCUS" > "$T/fixa.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && ! grep -q 'DIAGNOSTICA MATERIAE' "$T/fixa.out"; then echo "  XIV  fixtura pathologica excepta -> 0    OK"; else echo "  XIV  FRACTUM (rc=$rc)"; cat "$T/fixa.out"; fracta=1; fi
+unset GIT_INDEX_FILE
+rm -f "$T/index_fixa" "$FIXA_MALA"
+
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (XI/XI)"
+echo "fumus unci: sanum (XIV/XIV)"
 exit 0
