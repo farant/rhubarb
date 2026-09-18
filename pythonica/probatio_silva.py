@@ -1604,6 +1604,40 @@ try:
               % (_r[0].gravitas, _r[0].codex))
         credo(_r[0].textus == '', 'diagnostica_materiae: absentia textum vacuum fert')
         credo(_r[0].via == _fractum, 'diagnostica_materiae: via ut data reddita')
+        # SEDES MULTIPLICES: absentia aperturam suam GRATIS fert
+        credo(_r[0].nota == 'hic exspectatur',
+              'diagnostica_materiae: nota primariae (%r)' % (_r[0].nota,))
+        credo(len(_r[0].relata) == 1,
+              'diagnostica_materiae: apertura una relata (%d)'
+              % len(_r[0].relata))
+        if _r[0].relata:
+            _ap = _r[0].relata[0]
+            credo(_ap.linea == 1 and _ap.columna == 1
+                  and _ap.linea_finis == 1 and _ap.columna_finis == 9,
+                  'diagnostica_materiae: apertura 1:1-1:9 (%d:%d-%d:%d)'
+                  % (_ap.linea, _ap.columna, _ap.linea_finis,
+                     _ap.columna_finis))
+            credo(_ap.nota == 'hic coepit',
+                  'diagnostica_materiae: nota aperturae (%r)' % (_ap.nota,))
+
+    # FIXUM DISCRIMINANS: apertura ad 1:9, ubi linea et columna DIFFERUNT.
+    # Fixum superius ('{ echo a') aperturam ad 1:1 habet, ergo permutationem
+    # lineae et columnae videre NON POTEST - planta manualis id invenit,
+    # sicut 'e acutum' in arcu priore duos octetos non discernebat.
+    _columna = os.path.join(_d, 'columna.sh')
+    with open(_columna, 'w') as f:
+        f.write('echo a; { echo b')
+    _cl = silva.diagnostica_materiae(_columna)
+    credo(len(_cl) == 1 and len(_cl[0].relata) == 1,
+          'diagnostica_materiae: fixum discriminans unum diagnosticum (%d)'
+          % len(_cl))
+    if _cl and _cl[0].relata:
+        _ap2 = _cl[0].relata[0]
+        credo(_ap2.linea == 1 and _ap2.columna == 9
+              and _ap2.linea_finis == 1 and _ap2.columna_finis == 17,
+              'diagnostica_materiae: apertura 1:9-1:17, linea != columna '
+              '(%d:%d-%d:%d)' % (_ap2.linea, _ap2.columna, _ap2.linea_finis,
+                                 _ap2.columna_finis))
 
     _sanum = os.path.join(_d, 'sanum.sh')
     with open(_sanum, 'w') as f:
@@ -1619,6 +1653,11 @@ try:
     credo(len(_c) == 1 and _c[0].textus == '}',
           'diagnostica_materiae: textus segmentum fontis (%r)'
           % (_c[0].textus if _c else None))
+    # NEGATIVUM: genus (non absentia) sedem UNAM fert, ergo exitus eius
+    # octetim idem manet ac ante sedes multiplices
+    credo(len(_c) == 1 and _c[0].relata == () and _c[0].nota is None,
+          'diagnostica_materiae: genus css sedem unam fert (relata %r, nota %r)'
+          % (_c[0].relata if _c else None, _c[0].nota if _c else None))
 
     _ignotum = os.path.join(_d, 'x.txt')
     with open(_ignotum, 'w') as f:

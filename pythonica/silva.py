@@ -3432,8 +3432,26 @@ def _viae_expandere(viae):
     return list(viae)
 
 
+SedesRelata = namedtuple('SedesRelata',
+                         'linea columna linea_finis columna_finis nota')
+
 Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
-                          'columna_finis gravitas codex causa textus')
+                          'columna_finis gravitas codex causa textus '
+                          'nota relata')
+
+
+def _sedem_relatam(frustum):
+    """'L:C-L:C|nota' -> SedesRelata (nota optionalis -> None).
+
+    Scissio per ';' et '|' tuta est quia instrumentum utrumque (et TAB
+    et NOVAM LINEAM) in nota spatio mutat antequam scribit: nota
+    mutilari potest, campum scindere non potest."""
+    sedes, _, nota = frustum.partition('|')
+    initium, _, finis = sedes.partition('-')
+    linea, _, columna = initium.partition(':')
+    linea_finis, _, columna_finis = finis.partition(':')
+    return SedesRelata(int(linea), int(columna), int(linea_finis),
+                       int(columna_finis), nota or None)
 
 
 def diagnostica_materiae(viae):
@@ -3443,6 +3461,11 @@ def diagnostica_materiae(viae):
     (materia:scriptura). viae: via, lista, aut forma git. Reddit
     [Diagnosticum] ordine plagularum et octetorum; textus = segmentum
     fontis. Refutat si nihil iudicatum (exit 2).
+
+    SEDES MULTIPLICES: 'relata' tupla SedesRelata est (vacua si nulla),
+    'nota' nota sedis primariae aut None. Diagnosticum 'absentia'
+    aperturam suam GRATIS fert - tractus nodi ipsius, nota 'hic
+    coepit', primaria 'hic exspectatur'.
 
     NOMEN: 'diagnostica' SIMPLEX iam capta est (verdictum legati super
     plagulam C89 - aliud genus omnino: verdictum unum, non lista
@@ -3462,7 +3485,7 @@ def diagnostica_materiae(viae):
     exitus = []
     for linea in r.stdout.splitlines():
         campi = linea.split('\t')
-        if len(campi) != 10:
+        if len(campi) != 12:
             raise SilvaError('diagnostica: linea TSV prava: %r' % linea)
         via = campi[0]
         initium, finis = int(campi[5]), int(campi[6])
@@ -3472,10 +3495,13 @@ def diagnostica_materiae(viae):
                 with open(via, 'rb') as f:
                     fontes[via] = f.read()
             textus = fontes[via][initium:finis].decode('utf-8', 'replace')
+        relata = tuple(_sedem_relatam(f)
+                       for f in campi[10].split(';') if f)
         exitus.append(Diagnosticum(absolutae.get(via, via), int(campi[1]),
                                    int(campi[2]), int(campi[3]),
                                    int(campi[4]), campi[7], campi[8],
-                                   campi[9], textus))
+                                   campi[9], textus, campi[11] or None,
+                                   relata))
     return exitus
 
 

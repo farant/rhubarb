@@ -416,34 +416,40 @@ belongs to the commit that first lets a rule write a label.
 
 **Consumes:** the twelve-field TSV (Task 3).
 
-- [ ] **Step 1: the shape.**
+- [x] **Step 1: the shape.**
+- [x] **Step 2: parse fields 11 and 12.**
+- [x] **Step 3: the gate.**
+- [x] **Step 4: plant (by hand).**
+- [x] **Step 5: run `probatio_silva.py`, commit.**
 
-```python
-SedesRelata = namedtuple('SedesRelata',
-                         'linea columna linea_finis columna_finis nota')
+**Executed 2026-09-17.**
 
-Diagnosticum = namedtuple('Diagnosticum', 'via linea columna linea_finis '
-                          'columna_finis gravitas codex causa textus '
-                          'nota relata')
-```
+**Main was RED between Task 3 and Task 4**, and the plan should have
+said so. `diagnostica_materiae` pins the field count exactly
+(`len(campi) != 10`), so Task 3's two appended columns made it refuse
+every line — loudly, naming the offending TSV row, which is the
+refusal working as designed. But Task 3's audit ran the shim, crusta,
+css and the smoke test and never ran the TSV's *other consumer*. The
+lesson is general: **when you change a format, run its consumers, not
+only its producers.** Either task 3 and 4 belong in one commit, or
+task 3's step list must name `probatio_silva.py`.
 
-`relata` is a tuple, empty when field 11 is empty. `nota` is `None`
-when field 12 is empty.
+Two hand plants (`silva.planta` cannot anchor in `.py`).
+Plant 1, field 11 never parsed → `apertura una relata (0)`, red.
+**Plant 2, line and column swapped in `_sedem_relatam` → GREEN**, and
+that was a real hole in the gate, not a pass: the `{ echo a` fixture's
+opening span is at **1:1**, so line and column are equal and swapping
+them is invariant — the same shape as the `é` plant in the parent arc,
+where a two-byte character could not discriminate a byte count from a
+character count. Fixed by adding a discriminating fixture,
+`echo a; { echo b`, whose opening span is at **1:9**. Plant 2 now
+fails with `(9:1-1:17)`.
 
-- [ ] **Step 2: parse fields 11 and 12.** Split on `;`, then on the
-first `|`. An entry without a `|` has no label.
+The negative is pinned too: the css `GENUS` diagnostic comes back with
+`relata == ()` and `nota is None`, so the byte-identity claim holds on
+the Python side as well.
 
-- [ ] **Step 3: the gate.** Extend the block at `:1589` over a fixture
-with an `absentia`: assert one related span, its line and column, and
-that `nota` is the expected string.
-
-- [ ] **Step 4: plant.** `silva.planta` cannot plant in `.py` (its
-anchors are C tokens) — **plant by hand**, as in the parent arc: drop
-the field-11 parse, confirm red, restore.
-
-- [ ] **Step 5: run `probatio_silva.py`, commit.**
-
----
+No consumer outside `silva.py` and its own gate reads `Diagnosticum`.
 
 ## Closing
 
