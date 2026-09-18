@@ -1173,3 +1173,50 @@ Golden regenerated once, cause named: annotating `shim_probare.sh`
 shifted 4 rule-1 rows by 209 and 39 bytes. Counts unmoved
 (570/14, 292/278) — content moved, set unchanged, which is the shape a
 healthy regeneration has.
+
+## 2026-09-18 — rule 3 measured, and declined
+
+The `/tmp` rule was the next one queued. The survey says don't build
+it, and the number is stark: **34 sites, one real defect** — in a
+script nothing calls.
+
+| category | sites | |
+|---|---|---|
+| `mktemp` | 7 | safe — atomic, unique, no name/create race |
+| `tools/linux/*` | 16 | the repo is mounted `:ro` in docker (`probatio.sh:59`); `build/` is **not writable there** |
+| `$$` suffix | 6 | safe against separate invocations |
+| `silva/scribe_fumus.sh` | 2 | the `/tmp`-ness IS the test ("absolute path outside the repository → 4") |
+| `silva/differre.sh` | 1 | inside a COMMENT — not a site; grep counted it, the structural rule would not |
+| `compile_library.sh` | 2 | one dead variable, one real collision |
+
+Against rule 1's 15 defects and rule 2's two files, one defect does not
+buy ~10 annotations.
+
+**My framing was wrong and the measurement corrected it.** I proposed
+"most of these are build artifacts that belong in `build/`". Fran
+doubted it, and the doubt was right: the largest group physically
+cannot use `build/` (read-only mount), and the sharpest case is a test
+whose whole point is a path outside the repo. Moving those to `build/`
+would have broken them.
+
+The corpus had already converged on safe practice by itself — 7
+`mktemp` plus 6 `$$` — without a rule telling it to.
+
+**`$$` is weaker than it reads**, worth recording since it looks like
+the obvious fix: it is identical in every subshell (measured: 50009 in
+both parent and `( … )`, only `$BASHPID` differs), PIDs recycle, and
+`> /tmp/f.$$` still follows a planted symlink. It protects against two
+invocations of a script and nothing finer.
+
+Fixed the one defect anyway, since the script can be run by hand:
+`compile_library.sh` wrote objects to `/tmp/<basename>.o` — fixed per
+LIBRARY, not per RUN — so two runs checking the same library collided.
+Now one `mktemp -d` with a trap; the dead `output_obj` is gone.
+
+**The uncomfortable part, recorded on both tickets.** `SPLIT`
+(01M2VE5HFG) was designed to unblock rule 3 by making the prefix gap
+irrelevant. Rule 3 then failed to justify itself — so SPLIT's trigger
+weakened the same day its design was written. The design stands; its
+reason has to come from somewhere else now (awk inside quotes is the
+strongest survivor). Better to notice that before building it than
+after.

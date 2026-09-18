@@ -5,6 +5,14 @@
 source "$(dirname "$0")/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
+# AREA TEMPORARIA UNICA PER CURSUM. Forma prior obiecta in '/tmp/<lib>.o'
+# scribebat - via FIXA per bibliothecam, non per cursum: duo cursus eandem
+# bibliothecam simul examinantes eandem plagulam scriberent. mktemp
+# ATOMICE creat (unicitas et nulla cursio inter 'nomen elige' et 'crea'),
+# et area tota in exitu tollitur, ergo obiecta singula deleri non debent.
+AREA="$(mktemp -d)" || { echo "mktemp fracta" >&2; exit 1; }
+trap 'rm -rf "$AREA"' EXIT
+
 # Include paths
 declare -a INCLUDE_FLAGS=(
     "-Iinclude"
@@ -80,7 +88,6 @@ compile_library() {
     local lib_name="$1"
     local lib_files=""
     local header_file="include/${lib_name}.h"
-    local output_obj="/tmp/${lib_name}.o"
     local compiler="gcc"
     local extra_flags=""
 
@@ -121,7 +128,7 @@ compile_library() {
     # Compile each source file
     local all_ok=true
     for lib_file in $lib_files; do
-        local obj_name="/tmp/$(basename "$lib_file" | sed 's/\.[cm]$/.o/')"
+        local obj_name="$AREA/$(basename "$lib_file" | sed 's/\.[cm]$/.o/')"
         COMPILE_CMD="$compiler ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} -c $lib_file -o $obj_name"
 
         if ! eval $COMPILE_CMD 2>&1; then
