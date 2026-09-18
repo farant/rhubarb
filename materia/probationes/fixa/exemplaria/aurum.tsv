@@ -1,0 +1,4 @@
+compile_tests.sh	180	50	180	53	6278	6281	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+compile_tests.sh	485	50	485	53	18564	18567	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+crusta/compile_probationes.sh	98	49	98	52	3423	3426	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+gesta/compile_probationes.sh	91	49	91	52	3324	3327	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
