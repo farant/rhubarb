@@ -2,7 +2,7 @@
  *
  * Registrum generum COCTUM grammaticae 'html' - GENERATUM, NE MANU
  * EDITES. Fons: html/grammatica/html.registrum.stml
- * (materia/coquere.sh). Genera X, loci XXV.
+ * (materia/coquere.sh). Genera XI, loci XXVI.
  */
 
 #ifndef HTML_REGISTRUM_COCTUM_H
@@ -47,6 +47,20 @@ nomen enumeratio {
      * '&lt;/p&gt;' sine p aperto elementa FICTA dant, O7c - deviatio
      * '&lt;/br&gt;' malum' H4 retirata) */
     HTML_GENUS_ELEMENTUM_MALUM,
+    /* Spatia sola quae DOM abicit in modis involucri (ante 'html',
+     * ante 'head', post 'head'): octeti in arbore manent et nodus
+     * DOM nullus est, ut in elementum-malum, sed CULPA NULLA -
+     * auctor nihil peccavit. Genus seorsum quia diagnostica per
+     * GENUS sola declarari possunt (materia_diagnostica:
+     * 'diagnosticum' generis est, 'absentia' et 'vacua' loci;
+     * conditio super lexemata intra nodum nulla est). Sine hac
+     * divisione diagnosticum in elementum-malum positum DXVIII falsa
+     * pro XIII veris in domo daret, et in corpore lapidis DCLXXXVI
+     * falsa pro II veris (mensuratum 2026-09-19). Nec genus
+     * lexematis discernit: spatium ante 'head' innocens est, sed
+     * textus idem intra 'frameset' erratum - modus aedificatoris
+     * solus id scit */
+    HTML_GENUS_SPATIUM_OMISSUM,
 
     HTML_GENUS_NUMERUS_GENERUM
 } HtmlGenus;

@@ -623,3 +623,68 @@ frameset after content (plain-text-unsafe, tests19), the foreign tail
 (svg.dat 0/8 — SVG `title` is lexed raw; `font` breakout wants
 attributes), raw-text fragment contexts (tests4: the lexer would need
 the context's tokenizer state), `<image>` → `img`.
+
+## 2026-09-19 — `spatium-omissum`: the split tier 1 needed
+
+Task 1 of the html diagnostics arc (declaration only; the builder still
+creates nothing of this genus — that is Task 2).
+
+**Why a genus at all.** The plan started as "declare a `diagnosticum` on
+`elementum-malum` and be done" — declaration-only, no C. That was
+wrong twice over, and measuring said so before a line was written:
+
+1. **materia can only key a diagnostic on a GENUS.** `diagnosticum` is a
+   genus attribute; `absentia` and `vacua` are locus attributes
+   (`materia/grammatica/registrum.canon`). There is no condition on what
+   lies *inside* a node. So a `diagnosticum` on `elementum-malum` fires
+   on every instance without exception.
+2. **And the population is overwhelmingly innocent.** Over the 260 house
+   pages: 531 `elementum-malum` nodes, **every file carrying at least
+   one**, of which 518 are a newline between `<!DOCTYPE html>` and
+   `<html>` or between `<html>` and `<head>` — whitespace the DOM
+   drops, correctly recorded, nobody's mistake. Only 13 are real
+   (unmatched
+   `</em>`, all in generated `knotapel/atlas/web/` pages). A bare
+   declaration would have shipped at a **97.6 % false-positive rate**.
+   The sibling corpus `../lapide` agrees: 651 files sampled, 686 benign
+   against 2 real.
+
+**The discriminator is not the token genus.** The obvious cheap fix —
+"a `lex-textus` malum is benign, the rest are errors" — is false. Two
+probes settle it: a newline before `<head>` is a `lex-textus` malum and
+innocent; the `x` in `<frameset>x</frameset>` is a `lex-textus` malum
+and a genuine error. Same genus, same token kind, opposite verdict. The
+predicate is *whitespace-only text dropped while in a wrapper mode*,
+which only the builder knows at the moment it drops it. Hence a genus:
+the tree has to carry the distinction, because nothing downstream can
+recover it.
+
+This is worth doing on its own terms. O5 widened `elementum-malum` into
+the catch-all for everything HTML5 ignores; the genus answers "does the
+DOM keep a node for this?", while a diagnostic must answer "did the
+author make a mistake?" Those two predicates disagree 518 times out of
+531. The split walks O5 back one step and narrows the genus toward what
+its own nota always said it was for.
+
+**Classes 2 and 3 stay together, deliberately.** There are arguably
+three populations: whitespace the DOM drops (split off), tokens HTML5
+explicitly ignores (repeated `<html>`, doctype after content, table
+parts outside a table, tags in select/frameset), and unmatched end tags.
+The middle class has **zero instances in either corpus** — 260 house
+pages and 651 lapide files. Splitting it would be designing against a
+population of nothing. If it ever proves noisy, another declaration
+append plus a seal move is the documented ritual and it is cheap twice.
+
+**Seal `b307882e` → `1ebf2676`**, 10 genera → 11, 25 loci → 26.
+
+Both drift guards did their job unprompted: the canon gate went red on
+the seal, and the registrum gate went red on `GENERA_EXSPECTATA` (10 vs
+11) and then *segfaulted* — the loop walks the registry's window, so a
+hand table one row short reads past its end. That is the third time this
+probatio's hand-written tables have rotted the moment the registry grew,
+and the third time they caught it.
+
+Oracle pin verified UNMOVED at 1,504/1,700 — the genus is inert until
+Task 2, so every tree is byte-for-byte what it was. That was checked
+first rather than last, because the cooked view drops mala and a second
+genus it does not drop would regress the pin silently.

@@ -136,4 +136,8 @@ nomen enumeratio {
     HTML_MALUM_TOKENS = 0
 } HtmlLocusMali;
 
+nomen enumeratio {
+    HTML_SPATII_OMISSI_TOKENS = 0
+} HtmlLocusSpatiiOmissi;
+
 #endif /* HTML_REGISTRUM_H */

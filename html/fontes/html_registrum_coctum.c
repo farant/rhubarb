@@ -3,7 +3,7 @@
  * Registrum generum COCTUM grammaticae 'html' - GENERATUM, NE MANU
  * EDITES. Fons: html/grammatica/html.registrum.stml
  * (materia/coquere.sh). Series LOCORUM plana; quodque genus fenestram
- * suam per loci_offset + loci_numerus nominat. Genera X, loci XXV.
+ * suam per loci_offset + loci_numerus nominat. Genera XI, loci XXVI.
  */
 
 #include "html_registrum_coctum.h"
@@ -54,6 +54,9 @@ hic_manens constans MateriaTabLocus LOCI_COCTI[] = {
 
     /* elementum-malum (24..24) */
     { "tokens", (s32)MATERIA_LOCUS_LISTA_TOKEN },
+
+    /* spatium-omissum (25..25) */
+    { "tokens", (s32)MATERIA_LOCUS_LISTA_TOKEN },
 };
 
 hic_manens constans MateriaTabGenus GENERA_COCTA[] = {
@@ -68,6 +71,7 @@ hic_manens constans MateriaTabGenus GENERA_COCTA[] = {
     { "commentarium", (i32)21, (i32)2 },
     { "cdata", (i32)23, (i32)1 },
     { "elementum-malum", (i32)24, (i32)1 },
+    { "spatium-omissum", (i32)25, (i32)1 },
 };
 
 constans MateriaRegistrumCoctum HTML_REGISTRUM = {

@@ -114,6 +114,7 @@
     <liberum nomen="doctype"/>
     <liberum nomen="cdata"/>
     <liberum nomen="elementum-malum"/>
+    <liberum nomen="spatium-omissum"/>
   </#>
 
   <!-- trivia liberi: intra tag sola - spatia et '/' solivagus -->
@@ -140,11 +141,13 @@
             a69b019f; O7b 2026-09-16: XXIII loci, sedes quater
             appensus, a69b019f -> 5bf2be5d; O7c 2026-09-16: XXV
             loci, exemplar et praecedens appensi, 5bf2be5d ->
-            b307882e). Tabula mutata sine hac
+            b307882e; 2026-09-19: XI genera, XXVI loci,
+            spatium-omissum appensum ut diagnostica per genus
+            declarari possint, b307882e -> 1ebf2676). Tabula mutata sine hac
             optione mutata rubet in iudicio ET in custode derivae
             (probatio_html_canon optionem contra materia_arbor_sigillum
             vivum confert). Manu movenda cum causa.">
-      <optio>b307882e</optio>
+      <optio>1ebf2676</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -160,6 +163,7 @@
     <liberum nomen="commentarium"    maximum="1"/>
     <liberum nomen="cdata"           maximum="1"/>
     <liberum nomen="elementum-malum" maximum="1"/>
+    <liberum nomen="spatium-omissum" maximum="1"/>
   </elementum>
 
   <!-- TRIVIA: unius domini semper (invariatum circuitus) -->
@@ -369,6 +373,17 @@
   </elementum>
 
   <elementum nomen="tokens" intra="elementum-malum">
+    <<#lexemata-multa>>
+  </elementum>
+
+  <elementum nomen="spatium-omissum"
+    nota="spatia sola quae DOM in modis involucri abicit (ante 'html',
+          ante 'head', post 'head'); culpa nulla - vide notam generis
+          in html.registrum.stml">
+    <liberum nomen="tokens" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tokens" intra="spatium-omissum">
     <<#lexemata-multa>>
   </elementum>
 

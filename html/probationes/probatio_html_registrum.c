@@ -72,7 +72,7 @@ hic_manens constans character* ORDO_EXSPECTATUS[] = {
 hic_manens constans character* GENERA_EXSPECTATA[] = {
     "documentum", "doctype", "elementum", "attributum", "textus",
     "referentia", "textus-crudus", "commentarium", "cdata",
-    "elementum-malum"
+    "elementum-malum", "spatium-omissum"
 };
 
 /* Locus NOMINATUS: enumeratio html_registrum.h contra TITULOS
@@ -134,6 +134,8 @@ hic_manens constans LocusNominatus LOCI_NOMINATI[] = {
     { (s32)HTML_GENUS_CDATA,         (i32)HTML_CDATA_TOK,
         "tok" },
     { (s32)HTML_GENUS_ELEMENTUM_MALUM, (i32)HTML_MALUM_TOKENS,
+        "tokens" },
+    { (s32)HTML_GENUS_SPATIUM_OMISSUM, (i32)HTML_SPATII_OMISSI_TOKENS,
         "tokens" }
 };
 
