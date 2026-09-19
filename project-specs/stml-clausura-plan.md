@@ -9,7 +9,9 @@ bash comments.*
 (2026-09-18) carries the syntax, the ladder rule and the rejected
 alternatives. That note governs; this plan is how it gets built.
 
-**Status:** Step 0 SHIPPED (`a3f7c6e5`). Steps 1–4 unbuilt.
+**Status:** Step 0 SHIPPED (`a3f7c6e5`). **Task 1 SHIPPED
+2026-09-19** — the predicate reports the ladder depth; behaviour
+unchanged, nothing decodes yet. Tasks 2–4 unbuilt.
 
 ---
 
@@ -113,38 +115,49 @@ this plan must plant against first.
 
 ## 5. Where the code goes
 
-Measured during the design pass, and the reservation UNDER-COUNTED
-this: it says the reader change is "local to one scanner". True for
-FINDING the terminator; false for DECODING.
+**Corrected 2026-09-19 (Task 1), against the source.** This section
+and the reservation both claimed `StmlTokenContext` has no piscina,
+and on that basis routed decoding through the parser. It has one
+(`Piscina* piscina` + `InternamentumChorda* intern`), and the
+tokenizer already allocates from it (`xar_creare(ctx->piscina, …)`
+while reading attributes). **There is no parser-layer change.**
 
 | site | file | change |
 |---|---|---|
-| terminator scan | `lib/stml.c` `_tok_legere_contentus_crudus` | count the `\` run before `/`; run > 0 = content. Local, NO allocation. |
-| **decode** | `lib/stml.c`, parser layer | the raw token value is a ZERO-COPY slice (`token.valor.datum = ctx->input.datum + initium`) and `StmlTokenContext` has NO piscina by design. Decoding needs a copy. Its home is the PARSER, which has `ctx->piscina` and already copies conditionally for CRLF (`_crlf_canonicalizare`). |
+| predicate | `lib/stml.c` | ✅ Task 1: `stml_crudi_sequentia_est` reports the backslash-run depth; `stml_crudi_terminator_est` IS that function at depth 0. ONE definition — Step 0's whole point. |
+| terminator scan | `lib/stml.c` `_tok_legere_contentus_crudus` | stop only at depth 0. Local, NO allocation. |
+| **decode** | `lib/stml.c` `_tok_legere_contentus_crudus` | SAME function that counts the run. Allocate a decoded copy from `ctx->piscina` only when depth > 0 is seen; otherwise the zero-copy slice is untouched. |
 | escape on write | `materia/fontes/materia_arbor.c` `_valorem_crudum_notare` | escape instead of refusing; allocate from `st->piscina`. |
-| predicate | `lib/stml.c` | extend `stml_crudi_terminator_est` with the backslash-run count, or add a sibling. ONE definition — Step 0's whole point. |
 
 ---
 
 ## 6. Tasks
 
-### Task 1 — the predicate learns the ladder
+### Task 1 — the predicate learns the ladder ✅ SHIPPED 2026-09-19
 
 **Files:** `lib/stml.c`, `include/stml.h`, `probationes/probatio_stml.c`
 
-Teach the shared predicate to report the backslash-run length before
-`/`, so callers can distinguish terminator (0) from escaped content
-(> 0). Keep ONE definition.
+`stml_crudi_sequentia_est(textus, positus, titulus, longitudo, &fuga)`
+recognises the whole form and reports the depth; `fuga` may be NIHIL.
+`stml_crudi_terminator_est` is now *defined as* that call with
+`fuga == ZEPHYRUM`, so the two questions cannot drift apart.
 
-Gate: unit cases for N = 0, 1, 2, 3 against each of the three
-delimiters. Born red by returning a constant run length.
+**Behaviour is unchanged by this task** — `<\/T>` was already not a
+terminator, and still isn't. The step adds a question the code can
+answer; nothing acts on the answer until Task 2.
+
+Gate: 12 ladder cases (N = 0..3 × three delimiters), five non-ladder
+shapes, and Fran's actual bash trigger against the writer's guard with
+a multi-byte tag. Born red by returning a constant depth — 19
+assertions fired.
 
 ### Task 2 — the reader decodes
 
 **Files:** `lib/stml.c`, `probationes/probatio_stml.c`
 
-Scanner: stop only at run = 0. Parser: when the raw slice contains any
-escaped sequence, allocate a decoded copy from `ctx->piscina`;
+All in `_tok_legere_contentus_crudus` (see the §5 correction — no
+parser change): stop only at depth 0, and when the raw region contains
+any escaped sequence, allocate a decoded copy from `ctx->piscina`;
 otherwise keep the zero-copy slice untouched.
 
 Gate: a document containing `<\/T>` reads back as `</T>`; a document
@@ -189,9 +202,16 @@ catch a CHANGED VALUE, not a refusal.
 2. **`lib/stml.c` is THE one parser** (law VIII.3). Everything
    depends on it; the blast radius is every client plus briar, silex
    and natura.
-3. **Zero-copy becomes conditional-copy.** Verify the no-escape path
-   allocates nothing — a regression here is invisible to correctness
-   gates and shows only in `computus`.
+3. **Zero-copy becomes conditional-copy** — smaller than it looked
+   (measured 2026-09-19). The TREE path already copies: the parser
+   interns the raw text value (`chorda_internare`), so no node ever
+   held the slice. Only `stml_lexemata_colligere` hands out the slice
+   itself, and its sole consumer is `probatio_stml`. And value-vs-
+   extent divergence is already the documented contract —
+   `include/stml.h` on `StmlLexema` says the value is SEMANTIC
+   (entities resolved) and a byte consumer must use the extent, which
+   is exactly the shape a decoded value has. Still verify the
+   no-escape path allocates nothing; the rest needs no new contract.
 4. **Documents already on disk.** A value containing a literal `<\/T>`
    written BEFORE this change decodes differently after it. Zero known
    instances (corpora report `sequentia 0`), but it is a real

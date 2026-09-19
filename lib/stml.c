@@ -56,7 +56,85 @@ _est_spatium (
  *
  * Forma eadem ac contractus albi (materia/CLAUDE.md): partes duae
  * quae idem dicere debent, quarum altera alteram citat, et lente
- * discrepent. Remedium idem: unam fac, non ambas emenda. */
+ * discrepent. Remedium idem: unam fac, non ambas emenda.
+ *
+ * SCALA FUGAE (2026-09-19, planum clausurae gradus I): forma plena
+ * est '<' + solidi inversi N + '/T' + delimitator. N == ZEPHYRUM
+ * TERMINATOR est; N > ZEPHYRUM contentum FUGATUM est, quod lector
+ * ad N - I solidos inversos solvet. Ergo scansor et custos GRADUM
+ * petere possunt, non solam sententiam booleanam - sed DEFINITIO
+ * UNA manet: _terminator_est nihil aliud est quam _sequentia_est
+ * cum gradu ZEPHYRUM. Scala delimitatores TRES eosdem tenet:
+ * angustior facta eandem rimam pareret quam gradus nullus ante
+ * emendationem superiorem. */
+
+b32
+stml_crudi_sequentia_est (
+                 chorda  textus,
+                    i32  positus,
+     constans character* titulus,
+                    i32  titulus_longitudo,
+                    i32* fuga)
+{
+    character post;
+          i32 i;
+          i32 gradus;
+          i32 solidus;
+
+    si (fuga != NIHIL)
+    {
+        *fuga = ZEPHYRUM;
+    }
+
+    /* 'positus < ZEPHYRUM' NON scribitur: i32 INSIGNATUS est, ergo
+     * comparatio illa semper falsa (custos mortuus qui legentem
+     * fallit). */
+    si (   titulus               == NIHIL
+        || positus               >= textus.mensura
+        || textus.datum[positus] != (i8)'<')
+    {
+        redde FALSUM;
+    }
+
+    /* Solidos inversos numerare: gradus scalae. */
+    gradus = ZEPHYRUM;
+    dum (   positus + I + gradus < textus.mensura
+         && textus.datum[positus + I + gradus] == (i8)'\\')
+    {
+        gradus++;
+    }
+
+    solidus = positus + I + gradus;
+    si (   solidus               >= textus.mensura
+        || textus.datum[solidus] != (i8)'/')
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < titulus_longitudo; i++)
+    {
+        i32 k = solidus + I + i;
+
+        si (k >= textus.mensura || textus.datum[k] != (i8)titulus[i])
+        {
+            redde FALSUM;
+        }
+    }
+    {
+        i32 k = solidus + I + titulus_longitudo;
+
+        post = (k < textus.mensura)
+            ? (character)textus.datum[k] : '\0';
+    }
+    si (!(post == '>' || post == '!' || _est_spatium(post)))
+    {
+        redde FALSUM;
+    }
+    si (fuga != NIHIL)
+    {
+        *fuga = gradus;
+    }
+    redde VERUM;
+}
 
 b32
 stml_crudi_terminator_est (
@@ -65,35 +143,16 @@ stml_crudi_terminator_est (
      constans character* titulus,
                     i32  titulus_longitudo)
 {
-    character post;
-          i32 i;
+    i32 fuga;
 
-    /* 'positus < ZEPHYRUM' NON scribitur: i32 INSIGNATUS est, ergo
-     * comparatio illa semper falsa (custos mortuus qui legentem
-     * fallit). */
-    si (   titulus                   == NIHIL
-        || positus + I               >= textus.mensura
-        || textus.datum[positus]     != (i8)'<'
-        || textus.datum[positus + I] != (i8)'/')
+    si (!stml_crudi_sequentia_est(textus, positus, titulus,
+            titulus_longitudo, &fuga))
     {
         redde FALSUM;
     }
-    per (i = ZEPHYRUM; i < titulus_longitudo; i++)
-    {
-        i32 k = positus + II + i;
-
-        si (k >= textus.mensura || textus.datum[k] != (i8)titulus[i])
-        {
-            redde FALSUM;
-        }
-    }
-    {
-        i32 k = positus + II + titulus_longitudo;
-
-        post = (k < textus.mensura)
-            ? (character)textus.datum[k] : '\0';
-    }
-    redde (b32)(post == '>' || post == '!' || _est_spatium(post));
+    /* GRADUS ZEPHYRUM SOLUS terminat: '<' cum solido inverso ante
+     * '/T' contentum est, non clausura. */
+    redde (b32)(fuga == ZEPHYRUM);
 }
 
 b32

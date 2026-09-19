@@ -586,7 +586,22 @@ stml_elementum_crudum_creare (
  * Mensuratum 2026-09-19; casus '!' et spatii ambo fracti.
  *
  * _est: positus 'positus' terminatorem INCIPIT?
- * _fert: valor terminatorem ALICUBI fert? (custodis quaestio) */
+ * _fert: valor terminatorem ALICUBI fert? (custodis quaestio)
+ *
+ * SCALA FUGAE: forma plena est '<' + solidi inversi N + '/T' +
+ * delimitator. _sequentia_est formam TOTAM agnoscit et gradum N
+ * per 'fuga' reddit (NIHIL licet si gradus non quaeritur);
+ * _terminator_est illa utitur et gradum ZEPHYRUM SOLUM accipit,
+ * quia gradus maior contentum fugatum signat, non clausuram.
+ * Definitio UNA manet - vitium superius duas habuit. */
+
+b32
+stml_crudi_sequentia_est (
+                 chorda  textus,
+                    i32  positus,
+     constans character* titulus,
+                    i32  titulus_longitudo,
+                    i32* fuga);
 
 b32
 stml_crudi_terminator_est (

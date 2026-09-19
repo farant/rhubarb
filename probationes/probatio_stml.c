@@ -5593,6 +5593,109 @@ s32 principale(vacuum)
     }
 
 
+    imprimere("\n--- Probans scalam fugae clausurae crudae ---\n");
+
+    {
+        /* SCALA FUGAE: '<' + solidi inversi N + '/T' +
+         * delimitator. Gradus ZEPHYRUM TERMINAT; gradus maior
+         * contentum FUGATUM signat.
+         *
+         * Tres delimitatores ('>', '!', spatium) quia gradus
+         * nullus tres habet. Scala uno delimitatore angustior
+         * eandem rimam pareret quam custos angustior superior:
+         * scriptorem documentum emittentem quod lector suus
+         * recusat. */
+        hic_manens constans structura {
+             constans character* textus;
+                            i32  gradus;
+        } SCALA[] = {
+            { "</T>",       ZEPHYRUM },
+            { "</T!",       ZEPHYRUM },
+            { "</T ",       ZEPHYRUM },
+            { "<\\/T>",     I        },
+            { "<\\/T!",     I        },
+            { "<\\/T ",     I        },
+            { "<\\\\/T>",   II       },
+            { "<\\\\/T!",   II       },
+            { "<\\\\/T ",   II       },
+            { "<\\\\\\/T>", III      },
+            { "<\\\\\\/T!", III      },
+            { "<\\\\\\/T ", III      }
+        };
+        i32 k;
+        i32 numerus;
+
+        numerus = (i32)(magnitudo(SCALA)
+                      / magnitudo(SCALA[ZEPHYRUM]));
+
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            chorda textus;
+               i32 fuga;
+               i32 terminat;
+               i32 optatum;
+
+            textus = chorda_ex_literis(SCALA[k].textus, piscina);
+
+            /* VII = valor alienus ante vocationem: gradum RE
+             * scriptum esse probat, ne ZEPHYRUM fortuitus pro
+             * responso habeatur */
+            fuga = VII;
+            CREDO_VERUM(stml_crudi_sequentia_est(textus, ZEPHYRUM,
+                "T", I, &fuga));
+            CREDO_AEQUALIS_I32(fuga, SCALA[k].gradus);
+
+            /* TERMINATOR = GRADUS ZEPHYRUM SOLUS */
+            terminat = stml_crudi_terminator_est(textus, ZEPHYRUM,
+                "T", I) ? I : ZEPHYRUM;
+            optatum  = (SCALA[k].gradus == ZEPHYRUM)
+                ? I : ZEPHYRUM;
+            CREDO_AEQUALIS_I32(terminat, optatum);
+        }
+
+        /* Formae quae scalam NON sunt */
+        {
+            hic_manens constans character* ALIENA[] = {
+                "</X>",     /* titulus alius */
+                "</TT>",    /* delimitator abest (titulus longior) */
+                "</T",      /* delimitator abest (finis textus) */
+                "<x/T>",    /* farcimen non est solidus inversus */
+                "<\\x/T>"   /* solidus inversus, deinde farcimen */
+            };
+            i32 j;
+            i32 aliena_numerus;
+
+            aliena_numerus = (i32)(magnitudo(ALIENA)
+                                 / magnitudo(ALIENA[ZEPHYRUM]));
+
+            per (j = ZEPHYRUM; j < aliena_numerus; j++)
+            {
+                i32 fuga;
+
+                CREDO_FALSUM(stml_crudi_sequentia_est(
+                    chorda_ex_literis(ALIENA[j], piscina),
+                    ZEPHYRUM, "T", I, &fuga));
+            }
+        }
+
+        /* CUSTOS idem iudicat: valor fugatus terminatorem NON
+         * fert. Casus Franis ipse (commentum bash de tago suo) -
+         * titulus multorum octetorum, ne gyrus tituli post solidos
+         * inversos aberret. */
+        CREDO_VERUM(stml_crudi_terminatorem_fert(
+            chorda_ex_literis("# vide </crusta-commentum> hic",
+                piscina),
+            "crusta-commentum", (i32)strlen("crusta-commentum")));
+        CREDO_FALSUM(stml_crudi_terminatorem_fert(
+            chorda_ex_literis("# vide <\\/crusta-commentum> hic",
+                piscina),
+            "crusta-commentum", (i32)strlen("crusta-commentum")));
+
+        imprimere("  scala fugae: gradus ZEPHYRUM-III per "
+            "delimitatores III\n");
+    }
+
+
     /* ==================================================
      * Compendium
      * ================================================== */

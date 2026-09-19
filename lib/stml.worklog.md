@@ -1531,3 +1531,52 @@ and its home is the PARSER, which does have `ctx->piscina` and already
 copies conditionally for CRLF (`_crlf_canonicalizare`). Cost is
 bounded and the precedent exists — but it is not free, and the
 reservation under-counted it.
+
+## 2026-09-19 — the escape ladder, step 1 (the predicate learns depth)
+
+`stml_crudi_sequentia_est` recognises the whole form
+`<` + backslash×N + `/T` + delim and reports N through an out-param.
+`stml_crudi_terminator_est` is now *defined as* that function with
+N == 0, so the two questions ("is this the end of the raw region?"
+and "how deep is this escape?") cannot drift apart. That is the same
+one-definition remedy step 0 applied, kept rather than re-derived.
+
+Behaviour is unchanged this step. `<\/T>` was already not a
+terminator (the old scanner saw `\` where it wanted `/` and moved on);
+it still isn't. Nothing decodes yet. This is deliberate — the step
+adds a *question the code can answer*, and no answer is acted on until
+step 2.
+
+Gate: `probatio_stml`, 12 ladder cases (N = 0..3 × three delimiters),
+five non-ladder shapes, and Fran's actual trigger — a bash comment
+containing `</crusta-commentum>` — asserted against the writer's
+guard with a multi-byte tag, so the title loop is exercised past the
+backslash run. Planted by returning a constant depth: 19 assertions
+fired, including the guard one.
+
+**Correction to the note above (2026-09-19).** That note says
+`StmlTokenContext` "has no piscina by design" and concludes decoding
+belongs in the parser. **Both halves are wrong.** The context carries
+`Piscina* piscina` and `InternamentumChorda* intern`
+(`lib/stml.c`, the `StmlTokenContext` fields), and the tokenizer
+already allocates from them — `xar_creare(ctx->piscina, …)` while
+reading attributes. Decoding therefore belongs in
+`_tok_legere_contentus_crudus`, the same function that counts the run,
+and no parser-layer change is needed.
+
+Two further things that note missed, both of which make step 2 cheaper
+than it feared:
+
+- The tree path **already copies**. `_parser_legere_crudum` interns
+  the raw text value (`chorda_internare(ctx->intern, …)`), so the
+  zero-copy slice never reaches a node. Only
+  `stml_lexemata_colligere` hands out the slice itself, and its only
+  consumer in the tree is `probatio_stml`.
+- Value and extent are **already allowed to disagree**, and it is
+  written down: `include/stml.h` on `StmlLexema` says the value
+  carries the SEMANTIC content (entities resolved) and that a consumer
+  wanting bytes must use the extent. A decoded raw value is exactly
+  that shape, so it needs no new contract.
+
+I checked the claim only because I was about to build on it. It had
+been sitting in this file looking authoritative since this morning.
