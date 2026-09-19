@@ -1220,3 +1220,47 @@ weakened the same day its design was written. The design stands; its
 reason has to come from somewhere else now (awk inside quotes is the
 strongest survivor). Better to notice that before building it than
 after.
+
+## 2026-09-19 — the oracle NAMES its discordant cases
+
+Came out of giving html's oracle a pinned failing SET. The obvious
+move was to do the same here; measuring said not to, and said
+something better.
+
+**Measured before building:**
+
+| | html | crusta |
+|---|---|---|
+| failing cases | 190 | **9** |
+| live vs pin | 1510 / 1510 | 106 / 106 |
+| names printed by default | up to 40 | **zero** |
+| pin movements in the gate's life | ~12 | ~1 |
+
+And the 9 are not a tail — they are ONE documented cause:
+`freebsd:line-cont{1,4,5,6,7,8,9,10}.0` plus `freebsd:heredoc5.0`,
+which is desideratum **01M2PN1VYH** exactly (bash removes
+backslash-newline before tokenising; heredoc inside a multi-line
+backtick). A golden here would add a regeneration ritual to a gate
+nobody moves, guarding nine cases from a single known root. That is
+the rule-3 shape: real, measurable, low yield.
+
+**But the measurement found a different weakness, and a worse one.**
+This gate printed NO case names without `ORACULUM_OMNIA=1` — strictly
+worse than html's pre-change behaviour, which printed forty. So a
+regression among the nine was invisible twice over: a swap leaves the
+count unmoved, and nothing is named either way.
+
+So: every dispar is NAMED on every run; `ORACULUM_OMNIA` still adds
+the first differing line. Nine short lines, no golden, no ritual, no
+churn — and a swap shows up because the NAMES change even when the
+count does not.
+
+**The printing is PINNED, not decorative**: `nominati == dispares`.
+Without that assertion the naming is ornament someone can quietly wrap
+in a condition, and the gate goes blind again with everything still
+green. Planted (`si (FALSUM) { nominati++; }`): red, naming the
+assertion.
+
+`differentia` never had this problem — it has always named every
+discordance on every run, which is why it was the gate that actually
+told me things during the exemplaria arc.

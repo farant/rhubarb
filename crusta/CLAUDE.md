@@ -281,3 +281,13 @@ line; probe the rule with bash in the golden's environment; fix the
 cooked view (a coctum case first, bash-generated) or the parser (an
 arbor case first, verdict from `bash -n`); raise the pin in the same
 commit.
+
+**Every dispar is NAMED on every run** (2026-09-19), and the naming is
+pinned (`nominati == dispares`) so it cannot quietly become ornament.
+Reason: a rising pin is a FLOOR, and a change that fixes as many as it
+breaks leaves the count unmoved — without names, nothing looks
+different. The nine standing dispares are one cause,
+**01M2PN1VYH** (`line-cont*` ×8 + `heredoc5.0`); if that list ever
+reads differently, something moved. html's oracle needed a pinned
+failing SET for this (190 cases, active work); nine cases from one
+known root did not — measured, not assumed.

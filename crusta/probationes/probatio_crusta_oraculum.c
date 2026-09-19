@@ -14,6 +14,9 @@
  * (lector exemplorum fractus aut aurum truncatum viride mentiretur),
  * aurum orbum (clavis sine casu) nullum.
  *
+ * Dispar quisque NOMINATUR semper (permutatio quae tot sanat quot
+ * frangit summam immotam relinquit - nomina eam nudant; impressio
+ * ipsa pinnata, 'nominati == dispares').
  * ORACULUM_OMNIA=1: lineam primam differentem cuiusque dispari
  * imprimit. ORACULUM_EXEMPLUM=<clavis>: casum unum totum (fons,
  * exspectatum, habitum).
@@ -102,6 +105,7 @@ principale (vacuum)
                    i32  mensura    = ZEPHYRUM;
                    i32  pares      = ZEPHYRUM;
                    i32  dispares   = ZEPHYRUM;
+                   i32  nominati   = ZEPHYRUM;
                    i32  sine_auro  = ZEPHYRUM;
                    i32  orbi       = ZEPHYRUM;
                    i32  k;
@@ -180,10 +184,26 @@ principale (vacuum)
         alioquin
         {
             dispares++;
+            /* NOMEN SEMPER, non sub ORACULUM_OMNIA solo.
+             *
+             * Pinna parium SOLUM est: permutatio (tot sanata quot
+             * fracta) numerum IMMOTUM relinquit, et sine nomine
+             * impresso nihil omnino mutari videtur. Nomina impressa
+             * permutationem nudant quamvis summa taceat - quod
+             * aurum seriei html praestat, hic pretio nullo, quia
+             * dispares IX solae sunt et causam unam notam ferunt
+             * (01M2PN1VYH: backslash ante lineam novam). */
             si (omnia != NIHIL && coctum.datum != NIHIL)
             {
                 _differentiam_imprimere(c->clavis, exspectatum, coctum);
             }
+            alioquin
+            {
+                imprimere("    dispar: %.*s\n",
+                    (integer)c->clavis.mensura,
+                    (constans character*)c->clavis.datum);
+            }
+            nominati++;
         }
         si (_clavis_est(c->clavis, exemplum))
         {
@@ -241,6 +261,10 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (xar_numerus(collectio), (i32)CASUS_NUMERUS);
     CREDO_AEQUALIS_I32 (xar_numerus(aurum), (i32)AURA_NUMERUS);
     CREDO_AEQUALIS_I32 (pares + dispares, (i32)AURA_NUMERUS);
+    /* IMPRESSIO IPSA PINNATA: dispar quisque nominatus esse debet.
+     * Sine hac assertione impressio ornamentum est quod quis tacite
+     * sub condicione claudere potest, et porta caeca redit. */
+    CREDO_AEQUALIS_I32 (nominati, dispares);
     CREDO_AEQUALIS_I32 (orbi, ZEPHYRUM);
     CREDO_VERUM (pares >= (i32)PINNA_PARIUM);
 
