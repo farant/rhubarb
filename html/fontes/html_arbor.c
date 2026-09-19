@@ -545,6 +545,42 @@ _malum_addere (
         MATERIA_LOCUS_LISTA_TOKEN);
 }
 
+/* Textus ex spatiis et NUL SOLIS constans, NUL uno saltem praesente.
+ *
+ * HTML5 lexema characteris NUL in modis involucri NEGLEGIT (vitium
+ * parsurae: 'Parse error. Ignore the token'), sicut spatium. Sed
+ * lector noster cursum octetorum unum lexema facit, ergo ' NUL '
+ * lexema UNUM est quod scindi non potest sine lexemate ficto (lex
+ * H4). Ergo cursus TOTUS neglegitur cum nihil praeter spatia et NUL
+ * ferat - quod casus omnes corporis html5lib tegit.
+ *
+ * Genus DIVERSUM a spatio omisso consulto: spatium quod DOM abicit
+ * culpa caret, NUL vitium parsurae EST. Ergo elementum-malum, quod
+ * diagnosticum fert. */
+interior b32
+_textus_albus_cum_nullo (
+    constans MateriaToken* token)
+{
+    i32 i;
+    b32 nullum_visum = FALSUM;
+
+    per (i = ZEPHYRUM; i < token->valor.mensura; i++)
+    {
+        i8 c = token->valor.datum[i];
+
+        si (c == ZEPHYRUM)
+        {
+            nullum_visum = VERUM;
+        }
+        alioquin si (   c != ' ' && c != '\t' && c != '\n'
+                     && c != '\r' && c != '\f')
+        {
+            redde FALSUM;
+        }
+    }
+    redde nullum_visum;
+}
+
 /* Spatium quod DOM in modo involucri abicit: nodus SUUS, culpa nulla
  * (genus 'spatium-omissum'). Non accumulat, quia vocans unum lexema
  * solum dat et nodum statim claudit - sicut status 'malum' pendens,
@@ -1459,7 +1495,21 @@ _apertum_generale_invenire (
  * Modi neglegendi (O5): quae DOM nodo non retinet
  * ================================================== */
 
-/* WHATWG: tags quae vexillum 'frameset-ok' NON exstinguunt */
+/* WHATWG 'in body': tags quae vexillum 'frameset-ok' EXSTINGUUNT.
+ *
+ * POLARITAS INVERSA erat (2026-09-19): tabula 'COMPAGIS_INNOCUA'
+ * sedecim tags capitis nominabat et CETERA OMNIA vexillum
+ * exstinguebant. Spec contrarium dicit - index 'not ok' brevis et
+ * nominatus est, cetera vexillum INTACTUM relinquunt. Ergo '<svg>',
+ * '<p>', '<div>', '<path>' id exstinguebant cum non deberent, et
+ * '<svg><path></path></svg><frameset>' corpus pro compage dabat
+ * (casus html5lib quattuor, quorum DUO NUL omnino carent - id
+ * ostendit hunc errorem a NUL seiunctum esse).
+ *
+ * 'input' hic sine condicione stat: spec eum solum cum
+ * 'type=hidden' absente exstinguere iubet, sed attributa hic nondum
+ * lecta sunt (vide pattern 'fovens'). Casus mensuratus nullus id
+ * poscit; cum poscat, huc condicio venit. */
 hic_manens constans character* constans COMPAGIS_INNOCUA[] = {
     "html", "head", "body", "frameset", "frame", "noframes", "base",
     "basefont", "bgsound", "link", "meta", "title", "style", "script",
@@ -3750,6 +3800,18 @@ _contentum_tractare (
                          || p->modus == MODUS_ANTE_CAPUT))
         {
             omissum = VERUM;
+        }
+        /* NUL in modis involucri: spec eum NEGLEGIT ut spatium, sed
+         * vitium parsurae est - ergo malum, non spatium omissum.
+         * Sine hoc cursus corpus FINGIT, et '<frameset>' sequens
+         * reicitur: octo casus html5lib (plain-text-unsafe) ita
+         * '<body>' pro '<frameset>' dabant. */
+        alioquin si (   genus == (s32)HTML_GENUS_TEXTUS
+                     && _textus_albus_cum_nullo(token)
+                     && (p->modus == MODUS_ANTE_RADICEM
+                         || p->modus == MODUS_ANTE_CAPUT))
+        {
+            neglectum = VERUM;
         }
         si (omissum)
         {

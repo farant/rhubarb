@@ -33,8 +33,11 @@
 
 /* pinna: praeterita minima (nativitas: valor post cursum primum; O7a
  * 2026-09-15: 1195 -> 1299, involucra et partes tabulae fictae; O7b
- * 2026-09-16: 1299 -> 1398, modi tabularum et sedes) */
-#define PINNA_PRAETERITA   ((s32)1504)
+ * 2026-09-16: 1299 -> 1398, modi tabularum et sedes; 2026-09-19:
+ * 1504 -> 1509, NUL in modis involucri NEGLECTUS ut spec iubet -
+ * contentum erat, ergo corpus fingebatur et '<frameset>' sequens
+ * peribat) */
+#define PINNA_PRAETERITA   ((s32)1509)
 /* exempla iudicata = MDCCVIII - VIII script-on */
 #define TOTALIS_PINNATUS   ((i32)1700)
 #define LINEAE_MAXIMAE     ((i32)8192)

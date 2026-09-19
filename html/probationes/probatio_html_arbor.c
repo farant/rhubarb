@@ -1141,6 +1141,42 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (
             _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
             (s32)HTML_GENUS_ELEMENTUM);
+
+        /* NUL in modo involucri: spec eum NEGLEGIT (vitium parsurae),
+         * ergo MALUM - non spatium omissum (culpa adest) neque
+         * contentum. Contentum erat, et corpus fictum '<frameset>'
+         * sequentem reiciebat: octo casus html5lib. */
+        imprimere("\n--- Probans NUL ante html: malum ---\n");
+        {
+            hic_manens constans character NUL_ANTE[] =
+                "<html>\0<frameset></frameset>";
+            constans MateriaNodus* radix_nul;
+            constans MateriaNodus* html_nul;
+
+            radix_nul = html_arbor_parsare(piscina, NUL_ANTE,
+                (i32)XXVIII);
+            CREDO_NON_NIHIL (radix_nul);
+            html_nul = _liber(radix_nul, HTML_DOCUMENTUM_LIBERI,
+                ZEPHYRUM);
+            CREDO_NON_NIHIL (html_nul);
+            si (html_nul != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (_numerus(html_nul,
+                    HTML_ELEMENTUM_LIBERI), (i32)III);
+                /* I. NUL ipse MALUM est, non textus (culpa adest) */
+                CREDO_AEQUALIS_S32 (_liber(html_nul,
+                    HTML_ELEMENTUM_LIBERI, ZEPHYRUM)->genus,
+                    (s32)HTML_GENUS_ELEMENTUM_MALUM);
+                /* II. EFFECTUS qui refert: corpus NON fingitur, ergo
+                 * frameset VERUM superest. Cum NUL contentum erat,
+                 * corpus fictum hic stabat et frameset peribat -
+                 * octo casus html5lib. Synthesis NULLA = elementum
+                 * verum, non fictum. */
+                CREDO_AEQUALIS_S32 (_synthesis(_liber(html_nul,
+                    HTML_ELEMENTUM_LIBERI, (i32)II)),
+                    (s32)HTML_SYNTHESIS_NULLA);
+            }
+        }
         /* commentarium ante html non fingit: sub documento manet */
         documentum = _parsare_documentum(piscina, "<!--c--><p>x");
         CREDO_AEQUALIS_I32 (_numerus(documentum,

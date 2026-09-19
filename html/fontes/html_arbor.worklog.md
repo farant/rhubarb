@@ -784,3 +784,82 @@ constructs, new offsets. Regenerated with that cause.
 
 That README earned its keep today: it turned "the gate is red, is that
 bad?" into a three-line check with a yes/no answer.
+
+## 2026-09-19 — the NUL tail: one label, three bugs
+
+Fran asked whether the `nul` attribute had helped the html5lib oracle.
+Measured: **1504/1700, unmoved** — exactly as predicted, because the
+oracle compares cooked trees and STML is not in that path. NUL
+*representation* and NUL *handling* are different problems that happen
+to share a byte.
+
+Then the handling. The orientation doc called `plain-text-unsafe`'s 14
+failures "frameset-after-content", and the arithmetic matched exactly
+(33 − 19 = 14), so I had repeated it twice. **The match was a
+coincidence of totals.** Categorising all 14 gave THREE bugs:
+
+| n | bug |
+|---|---|
+| 8 | NUL treated as content in wrapper modes |
+| 4 | `frameset-ok` cleared by tags that must not clear it |
+| ~2 | `<frameset>` inside foreign content vanishes |
+
+### Fixed: NUL as content (1504 → 1509)
+
+HTML5 IGNORES a NUL character token in the wrapper modes (parse
+error). We made it content, which forged a body, which made the
+following `<frameset>` a malum — `<body>` where html5lib expects
+`<frameset>`. `_textus_albus_cum_nullo` routes a whitespace-and-NUL run
+to `elementum-malum`: a MALUM, not the `spatium-omissum` added two
+commits ago, because dropped whitespace is faultless and NUL is a
+parse error. The two genera stay honest.
+
+The lexer makes one token per byte run, so ` NUL ` is ONE token and is
+ignored whole. Splitting it would need a synthetic token, which H4
+forbids. Every failing corpus case is whitespace-and-NUL only, so the
+whole-run rule covers them.
+
+Gate case in `probatio_html_arbor`, planted: neutering the condition
+fails two assertions AND drops the oracle straight back to 1504, which
+is the evidence that the +5 is this change and nothing else.
+
+### Not fixed, and the measurement is the finding
+
+**`frameset-ok` polarity is inverted.** `COMPAGIS_INNOCUA` lists 16
+head-ish tags and clears the flag for everything else; the spec's "not
+ok" list is short and specific. So `<svg>`, `<p>`, `<div>`, `<path>`
+clear it when they must not — and two of the four cases
+(`<svg><path></path></svg><frameset>`, `<svg><p><frameset>`) contain no
+NUL at all, which is how you know this bug is separate.
+
+I replaced the table with the spec's list and measured: **1509 →
+1503.** A net regression of six. The reason is that `_vexilla_renovare`
+fires for every accepted start tag in EVERY mode, while the spec's list
+governs "in body" only; the hook is mode-blind, so the old over-clearing
+happens to match more cases than correct under-clearing does. Reverted.
+A real fix has to make the flag update mode-aware. **Being right about
+the spec is not the same as being right about this code.**
+
+**`<frameset>` in foreign content** should be an ordinary foreign
+element — `frameset` is correctly absent from `RUMPENTIA` — but the
+node vanishes. I guarded the body-removal branch on
+`proprium == HTML_ALIENUM_NULLUM`, which is spec-correct reasoning, and
+it changed the number by exactly zero. Reverted rather than shipped: a
+change with no measured effect is a future reader's false lead.
+
+### Two traps worth keeping
+
+**A build break is not a measurement.** Reverting the polarity
+experiment, I left both tables in the file; `-Werror
+-Wunused-const-variable` refused, and I captured a "before" failure set
+from a stale binary and diffed it against a real one. The diff looked
+like a catastrophic regression. Same family as "a plant that breaks the
+BUILD proves nothing" — check the build succeeded before believing the
+number.
+
+**The oracle diff prints the first differing LINE, so a shorter tree
+flags its last common line.** `<svg>NUL<frameset>` reported line 5
+the replacement character against the replacement
+character — visually identical, and I nearly filed it as a
+cooking bug. The real difference was a missing line 6 (`<svg
+frameset>`). When both sides of a diff look the same, compare lengths.

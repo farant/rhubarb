@@ -138,13 +138,57 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   the stack as the spec's DOM stack with byte-open frames (O7b's
   `sedes_posterior` retired), the active formatting list, `</p>`/
   `</br>` synthesized elements. What remains is a long tail: template
-  interplay (22), frameset-after-content (plain-text-unsafe 14,
-  tests19), the foreign tail (svg.dat 0/8: SVG `title` is not raw;
+  interplay (22), ~~frameset-after-content (plain-text-unsafe 14)~~
+  **— that label was WRONG, see "The NUL tail" below —**
+  tests19, the foreign tail (svg.dat 0/8: SVG `title` is not raw;
   `font` breakout needs attributes — readable at `>` via the fovens
   pattern), raw-text fragment contexts (tests4). Next: the foreign
   tail, then O3 wild fixtures (one ask per page). Candidate next
   parser after html (Fran's research): bash scripts, before JS.
   Ledger desideratum 01M2KPNTT0.
+
+## The NUL tail — the label was wrong (2026-09-19)
+
+`html/CLAUDE.md` called `plain-text-unsafe`'s 14 failures
+"frameset-after-content", and the arithmetic matched exactly
+(33 − 19 = 14), which made it look settled. **It was a coincidence of
+totals, not evidence.** Measured, those 14 are THREE separate bugs:
+
+| n | bug | state |
+|---|---|---|
+| 8 | **NUL treated as content** in wrapper modes | ✅ FIXED, pin 1504 → **1509** |
+| 4 | `frameset-ok` cleared by tags that must not clear it | open, see below |
+| ~2 | `<frameset>` inside foreign content vanishes | open |
+
+**Fixed.** HTML5 IGNORES a NUL character token in the wrapper modes
+(parse error). We made it content, which forged a body and made the
+following `<frameset>` a malum. `_textus_albus_cum_nullo` now routes a
+whitespace-and-NUL run to `elementum-malum` — **malum, not
+`spatium-omissum`**, because NUL is a fault and dropped whitespace is
+not. The lexer makes one token per byte run, so a run is ignored whole;
+splitting it would need a synthetic token (H4 forbids).
+
+**`frameset-ok` polarity is INVERTED, and flipping it alone is a
+REGRESSION.** `COMPAGIS_INNOCUA` names 16 head-ish tags and clears the
+flag for everything else; the spec's "not ok" list is short and
+specific, so `<svg>`, `<p>`, `<div>` clear it when they must not
+(2 of the 4 cases contain no NUL at all — that is how you know this bug
+is separate). Replacing it with the spec list measured **1509 → 1503**,
+because `_vexilla_renovare` fires for every start tag in EVERY mode
+while the spec's list is "in body" only. A correct fix must be
+mode-aware. Do not flip the table alone.
+
+**`<frameset>` in foreign content** should be an ordinary foreign
+element (`frameset` is correctly absent from `RUMPENTIA`), but the node
+vanishes entirely. Guarding the body-removal branch on
+`proprium == HTML_ALIENUM_NULLUM` changed nothing, so the loss happens
+elsewhere — that guard was reverted rather than shipped unmeasured.
+
+**Reading the oracle diff:** it prints the first differing line, so when
+our tree is SHORTER the last common line gets flagged and the two sides
+look identical. `<svg>NUL<frameset>` reported line 5 `"�"` on both
+sides; the real difference was a missing line 6. Check the lengths
+before believing an "identical" diff.
 
 ## Diagnostica — TIER 1 only, declared (2026-09-19)
 
