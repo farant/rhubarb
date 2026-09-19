@@ -1510,10 +1510,11 @@ _apertum_generale_invenire (
  * 'type=hidden' absente exstinguere iubet, sed attributa hic nondum
  * lecta sunt (vide pattern 'fovens'). Casus mensuratus nullus id
  * poscit; cum poscat, huc condicio venit. */
-hic_manens constans character* constans COMPAGIS_INNOCUA[] = {
-    "html", "head", "body", "frameset", "frame", "noframes", "base",
-    "basefont", "bgsound", "link", "meta", "title", "style", "script",
-    "noscript", "template"
+hic_manens constans character* constans COMPAGIS_NOCENTIA[] = {
+    "pre", "listing", "button", "table", "area", "br", "embed",
+    "img", "keygen", "wbr", "input", "hr", "textarea", "xmp",
+    "iframe", "noembed", "select", "applet", "marquee", "object",
+    "li", "dd", "dt", "body"
 };
 /* in frameset / post frameset: tags apertionis permissa */
 hic_manens constans character* constans COMPAGIS_PERMISSA[] = {
@@ -1576,6 +1577,14 @@ _tag_neglegendum (
     }
     si (_titulus_est(titulus, "frameset") && !intra_compagem)
     {
+        /* Spec: 'if the second element on the stack of open elements
+         * is not a body element ... ignore'. Intra template corpus
+         * secundum non est, ergo compages NEGLEGITUR quamvis
+         * vexillum 'ok' maneat - condicio ALTERA a vexillo. */
+        si (vertex != NIHIL && vertex->templi >= ZEPHYRUM)
+        {
+            redde VERUM;
+        }
         redde (b32)!p->compages_licet;
     }
     si (intra_compagem || p->compages_visa)
@@ -1676,8 +1685,8 @@ _vexilla_renovare (
     {
         p->corpus_iterum = VERUM;
     }
-    si (!_in_tabula(titulus, COMPAGIS_INNOCUA,
-            TABULAE_NUMERUS(COMPAGIS_INNOCUA)))
+    si (_in_tabula(titulus, COMPAGIS_NOCENTIA,
+            TABULAE_NUMERUS(COMPAGIS_NOCENTIA)))
     {
         p->compages_licet = FALSUM;
     }
@@ -3319,6 +3328,17 @@ _aperturam_tractare (
      * H8 sequuntur; tag_apertum NIHIL manet) */
     si (_tag_neglegendum(p, titulus))
     {
+        /* LEXEMA NEGLECTUM EFFECTUM TAMEN HABERE POTEST: '<body>'
+         * iteratum nodum non dat, sed spec vexillum 'frameset-ok'
+         * NIHILOMINUS exstinguit ('Otherwise, set the frameset-ok
+         * flag to not ok' - pars quae attributa quoque miscet).
+         * Ergo '<div><body><frameset>' compagem NEGLEGIT.
+         * 'neglectum' ad NODUM pertinet, non ad effectus omnes. */
+        si (   _titulus_est(titulus, "body")
+            && p->body_visum && !p->compages_visa)
+        {
+            p->compages_licet = FALSUM;
+        }
         redde _malum_addere(p, token);
     }
     /* 'in select': input/keygen/textarea select claudunt (spec), deinde

@@ -133,6 +133,52 @@ _numerus (
     redde materia_valor_lista_numerus(nodus->loci[locus]);
 }
 
+/* Mala TOTIUS arboris numerare (vexillum 'frameset-ok': compages
+ * neglecta malum unum dat, accepta nullum - ergo numerus verdictum
+ * simplex et totum fert) */
+hic_manens i32
+_mala_numerare (
+    constans MateriaNodus* nodus)
+{
+    i32 summa = ZEPHYRUM;
+    i32 locus;
+
+    si (nodus == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    si (nodus->genus == (s32)HTML_GENUS_ELEMENTUM_MALUM)
+    {
+        summa = I;
+    }
+    per (locus = ZEPHYRUM; locus < nodus->numerus_locorum; locus++)
+    {
+        si (nodus->loci[locus].genus == MATERIA_VALOR_LISTA)
+        {
+            i32 n = materia_valor_lista_numerus(nodus->loci[locus]);
+            i32 k;
+
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                MateriaValor* v = materia_valor_lista_obtinere(
+                    nodus->loci[locus], k);
+
+                si (   v        != NIHIL
+                    && v->genus == MATERIA_VALOR_NODUS)
+                {
+                    summa = summa + _mala_numerare(v->datum.nodus);
+                }
+            }
+        }
+        alioquin si (nodus->loci[locus].genus == MATERIA_VALOR_NODUS)
+        {
+            summa = summa
+                + _mala_numerare(nodus->loci[locus].datum.nodus);
+        }
+    }
+    redde summa;
+}
+
 hic_manens MateriaNodus*
 _liber (
     constans MateriaNodus* nodus,
@@ -1146,6 +1192,34 @@ principale (vacuum)
          * ergo MALUM - non spatium omissum (culpa adest) neque
          * contentum. Contentum erat, et corpus fictum '<frameset>'
          * sequentem reiciebat: octo casus html5lib. */
+        /* VEXILLUM 'frameset-ok': index spec BREVIS est et nominatus
+         * ('not ok' ponunt li/dd/dt/pre/button/table/input/...),
+         * cetera vexillum INTACTUM relinquunt. Tabula olim inversa
+         * erat - sedecim tags capitis innocua, CETERA omnia
+         * exstinguentia - ergo '<p>' et '<div>' id exstinguebant cum
+         * non deberent. Casus tres polum utrumque tenent. */
+        imprimere("\n--- Probans vexillum frameset-ok ---\n");
+        {
+            /* 'p' vexillum NON exstinguit: compages ACCEPTA, malum
+             * nullum. Sub tabula vetere hic malum unum stabat. */
+            documentum = _parsare_documentum(piscina, "<p><frameset>");
+            CREDO_AEQUALIS_I32 (_mala_numerare(documentum), ZEPHYRUM);
+            /* 'li' vexillum EXSTINGUIT (spec nominatim): compages
+             * NEGLECTA, ergo malum unum */
+            documentum = _parsare_documentum(piscina, "<li><frameset>");
+            CREDO_AEQUALIS_I32 (_mala_numerare(documentum), (i32)I);
+            /* '<body>' iteratum nodum non dat sed vexillum tamen
+             * exstinguit - effectus lexematis NEGLECTI */
+            documentum = _parsare_documentum(piscina,
+                "<div><body><frameset>");
+            CREDO_AEQUALIS_I32 (_mala_numerare(documentum), (i32)II);
+            /* intra template compages NEGLECTA quamvis vexillum
+             * 'ok' maneat: condicio acervi, non vexilli */
+            documentum = _parsare_documentum(piscina,
+                "<template><div><frameset></div></template>");
+            CREDO_VERUM (_mala_numerare(documentum) > ZEPHYRUM);
+        }
+
         imprimere("\n--- Probans NUL ante html: malum ---\n");
         {
             hic_manens constans character NUL_ANTE[] =

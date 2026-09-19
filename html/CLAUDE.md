@@ -157,7 +157,7 @@ totals, not evidence.** Measured, those 14 are THREE separate bugs:
 | n | bug | state |
 |---|---|---|
 | 8 | **NUL treated as content** in wrapper modes | ✅ FIXED, pin 1504 → **1509** |
-| 4 | `frameset-ok` cleared by tags that must not clear it | open, see below |
+| 4 | `frameset-ok` polarity | ✅ table FIXED (→ **1510**); the 4 cases need the body-removal law, below |
 | ~2 | `<frameset>` inside foreign content vanishes | open |
 
 **Fixed.** HTML5 IGNORES a NUL character token in the wrapper modes
@@ -168,15 +168,32 @@ whitespace-and-NUL run to `elementum-malum` — **malum, not
 not. The lexer makes one token per byte run, so a run is ignored whole;
 splitting it would need a synthetic token (H4 forbids).
 
-**`frameset-ok` polarity is INVERTED, and flipping it alone is a
-REGRESSION.** `COMPAGIS_INNOCUA` names 16 head-ish tags and clears the
-flag for everything else; the spec's "not ok" list is short and
-specific, so `<svg>`, `<p>`, `<div>` clear it when they must not
-(2 of the 4 cases contain no NUL at all — that is how you know this bug
-is separate). Replacing it with the spec list measured **1509 → 1503**,
-because `_vexilla_renovare` fires for every start tag in EVERY mode
-while the spec's list is "in body" only. A correct fix must be
-mode-aware. Do not flip the table alone.
+**`frameset-ok` — table now the spec's own list** (`COMPAGIS_NOCENTIA`,
+2026-09-19). It was inverted: 16 head-ish tags innocuous, everything
+else clearing, so `<p>` and `<div>` cleared the flag when they must
+not. Flipping it *alone* measured **1509 → 1503** — because my first
+list was incomplete, not because the hook is mode-blind (my earlier
+note said that; it was wrong). The spec sets "not ok" for `li`, `dd`,
+`dt` too, and for `<body>`. Two further rules landed with it:
+
+- **An IGNORED token can still have effects.** A repeated `<body>`
+  creates no node, but the spec still sets frameset-ok from it. So
+  `<div><body><frameset>` ignores the frameset. "Ignored" means no
+  NODE, not no consequence.
+- **Inside a `template` the frameset is ignored** regardless of the
+  flag — the spec's condition is the stack shape ("second element is
+  not a body"), a different question from frameset-ok.
+
+Net 1509 → 1510 with ZERO regressions, verified by diffing the whole
+failure set, not by the total alone.
+
+**Why the remaining 4 are NOT a frameset-ok problem.**
+`<svg><path></path></svg><frameset>` expects the body and all its
+content REPLACED by the frameset (expected tree is 3 lines; ours is 6).
+`_corpus_fictum_removere` refuses when the body has non-malum children
+— and that is the **O5 law working**: a node with bytes can never be
+removed. Expressing "present in bytes, absent from the DOM" needs a new
+annotation, the same shape as O7a/O7b/O7c. A decree, not a patch.
 
 **`<frameset>` in foreign content** should be an ordinary foreign
 element (`frameset` is correctly absent from `RUMPENTIA`), but the node

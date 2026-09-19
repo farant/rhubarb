@@ -863,3 +863,82 @@ the replacement character against the replacement
 character — visually identical, and I nearly filed it as a
 cooking bug. The real difference was a missing line 6 (`<svg
 frameset>`). When both sides of a diff look the same, compare lengths.
+
+## 2026-09-19 — frameset-ok, and making the oracle diff tell the truth
+
+Two things, in that order deliberately: the diff first, because the
+frameset work leans on it.
+
+### The diff was lying by omission
+
+`_differentiam_imprimere` found the first differing BYTE, converted it
+to a line, and printed that line from both sides. When our tree is a
+PREFIX of the expected one, the first differing byte lands at the END
+of ours — so both sides printed the same last common line and the real
+difference (a MISSING line) was invisible. That is what made me file
+`<svg>NUL<frameset>` as a "cooking" bug for an hour.
+
+Now: line counts always, plus an explicit PRAEFIXUM verdict naming
+which side stops and printing the first line the other side has.
+Off-by-one caught while building it — a shorter side that does not end
+in a newline has a complete-but-uncounted last line, so the naive
+"first missing = its line count" reports the last COMMON line, i.e.
+reintroduces the exact bug the function is meant to cure. Also a
+guard for the inverse case: if the two printed lines are byte-equal
+the difference is an invisible byte, and it says so with the column.
+
+Immediate payoff. `<svg><path></path></svg><frameset>` now reads
+`lineae: sperata 2, nostra 5` — which says at a glance that html5lib
+expects the body and ALL its content replaced, not a line edited.
+
+### frameset-ok: the table was inverted, and my first list was wrong
+
+`COMPAGIS_INNOCUA` named 16 head-ish tags and cleared frameset-ok for
+everything else. The spec's "not ok" list is short and named, so `<p>`
+and `<div>` cleared the flag when they must not.
+
+Flipping it alone measured **1509 → 1503**, and yesterday's note
+attributed that to the hook being mode-blind (`_vexilla_renovare` runs
+in every mode while the spec's list is "in body"). **That was wrong.**
+Diffing the failure SETS instead of comparing totals named all six
+regressions at once, and they said something simpler: my list was
+incomplete. The spec sets "not ok" for `li`, `dd`, `dt` as well, and
+for `<body>`. Adding them: 1503 → 1508, two regressions left, and each
+named a real rule:
+
+- **`<div><body><frameset>`.** A repeated `<body>` creates no node, so
+  it never reached the flag update. But the spec still sets frameset-ok
+  from it. **"Ignored" means no NODE, not no consequence** — an easy
+  thing to get wrong in a builder that routes ignored tokens straight
+  to a malum.
+- **`<template><div><frameset>`.** The spec ignores a frameset when the
+  second element on the stack is not a body, which inside a template it
+  never is. That is a stack-shape condition, a DIFFERENT question from
+  frameset-ok, and the old over-clearing had been answering it by
+  accident.
+
+Final: **1509 → 1510, zero regressions**, verified by set diff. Only
++1 net, but the rule is now the spec's rule rather than a coincidence
+that happened to score well.
+
+**The method is the lesson.** Comparing totals told me "worse, must be
+mode-blindness" and I believed a plausible story. Comparing SETS told
+me which six cases and let each one name its own rule. When a change
+regresses, diff what failed, not how many.
+
+### Why the original four were never frameset-ok
+
+`<svg><path></path></svg><frameset>` expects the body AND its contents
+replaced by the frameset. `_corpus_fictum_removere` refuses when the
+body has non-malum children — and that is **O5 working as
+designed**: a node with bytes can never be removed. Expressing
+"present in the bytes, absent from the DOM" needs a new
+annotation, the same shape as O7a (`synthesis`), O7b (`sedes`) and
+O7c (`exemplar`). That is a decree,
+not a patch, so it stays filed.
+
+Gate: four shapes in `probatio_html_arbor` holding both poles —
+`<p><frameset>` accepted (0 mala; under the old table this was 1),
+`<li><frameset>` ignored, `<div><body><frameset>` ignored, template
+ignored. Planted by restoring the old polarity: 3 assertions red and
+the oracle falls to 1473.

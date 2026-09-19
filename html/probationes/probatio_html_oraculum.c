@@ -36,8 +36,9 @@
  * 2026-09-16: 1299 -> 1398, modi tabularum et sedes; 2026-09-19:
  * 1504 -> 1509, NUL in modis involucri NEGLECTUS ut spec iubet -
  * contentum erat, ergo corpus fingebatur et '<frameset>' sequens
- * peribat) */
-#define PINNA_PRAETERITA   ((s32)1509)
+ * peribat; 1509 -> 1510, vexillum 'frameset-ok' per indicem spec
+ * BREVEM, non per negationem tabulae capitis) */
+#define PINNA_PRAETERITA   ((s32)1510)
 /* exempla iudicata = MDCCVIII - VIII script-on */
 #define TOTALIS_PINNATUS   ((i32)1700)
 #define LINEAE_MAXIMAE     ((i32)8192)
@@ -250,7 +251,33 @@ _linea_k (
     redde l;
 }
 
-/* Linea prima divergens utriusque imprimere */
+hic_manens i32
+_lineas_numerare (
+    chorda c)
+{
+    i32 n = ZEPHYRUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        si (c.datum[i] == '\n')
+        {
+            n = n + I;
+        }
+    }
+    redde n;
+}
+
+/* Linea prima divergens utriusque imprimere.
+ *
+ * NUMERI LINEARUM SEMPER, ET PRAEFIXUM NOMINATUM. Olim linea sola
+ * imprimebatur: cum arbor nostra PRAEFIXUM speratae esset, octetus
+ * primus divergens ad FINEM nostrae cadebat, ergo utraque pars
+ * lineam communem ULTIMAM ostendebat - latera IDEM videbantur et
+ * differentia vera (linea ABSENS) invisibilis erat. Mensuratum
+ * 2026-09-19 in '<svg>NUL<frameset>': linea V utrimque eadem, dum
+ * linea VI ('<svg frameset>') omnino deerat - quod inventum
+ * 'coctionis' falsum per horam finxit. Numeri id statim nudant. */
 hic_manens vacuum
 _differentiam_imprimere (
     chorda sperata,
@@ -259,6 +286,8 @@ _differentiam_imprimere (
        i32 d = ZEPHYRUM;
        i32 k = ZEPHYRUM;
        i32 i;
+       i32 numerus_speratae  = _lineas_numerare(sperata);
+       i32 numerus_nostrae   = _lineas_numerare(nostra);
     chorda a;
     chorda b;
 
@@ -274,14 +303,61 @@ _differentiam_imprimere (
             k = k + I;
         }
     }
+    imprimere("\n    lineae: sperata %d, nostra %d\n",
+        (integer)numerus_speratae, (integer)numerus_nostrae);
+
+    /* PRAEFIXUM: latus alterum in altero desinit - differentia non
+     * in linea sed in lineis ABSENTIBUS aut SUPERFLUIS */
+    si (d == sperata.mensura || d == nostra.mensura)
+    {
+           b32 nostra_brevior  = (b32)(d == nostra.mensura);
+        chorda brevior         = nostra_brevior ? nostra : sperata;
+        chorda longior         = nostra_brevior ? sperata : nostra;
+           i32 prima_absens  = nostra_brevior
+               ? numerus_nostrae : numerus_speratae;
+
+        /* Si brevior linea nova NON terminatur, ultima eius linea
+         * COMPLETA est sed innumerata - ergo prima absens una
+         * ulterior. Sine hoc ultima linea COMMUNIS pro absente
+         * nominaretur, id est error idem quem haec functio sanat. */
+        si (   brevior.mensura > ZEPHYRUM
+            && brevior.datum[brevior.mensura - I] != '\n')
+        {
+            prima_absens = prima_absens + I;
+        }
+
+        imprimere("    PRAEFIXUM: %s desinit ubi altera pergit -"
+            " lineae %s ab %d\n",
+            nostra_brevior ? "nostra" : "sperata",
+            nostra_brevior ? "ABSENTES" : "SUPERFLUAE",
+            (integer)(prima_absens + I));
+        a = _linea_k(longior, prima_absens);
+        imprimere("    linea %d  %s: %.*s\n",
+            (integer)(prima_absens + I),
+            nostra_brevior ? "sperata" : "nostra ",
+            (integer)(a.mensura < C ? a.mensura : C),
+            (constans character*)a.datum);
+        redde;
+    }
+
     a = _linea_k(sperata, k);
     b = _linea_k(nostra, k);
-    imprimere("\n    linea %d  sperata: %.*s\n"
+    imprimere("    linea %d  sperata: %.*s\n"
               "    linea %d  nostra:  %.*s\n",
         (integer)(k + I), (integer)(a.mensura < C ? a.mensura : C),
         (constans character*)a.datum,
         (integer)(k + I), (integer)(b.mensura < C ? b.mensura : C),
         (constans character*)b.datum);
+    /* LINEAE IDEM sed octeti dispares: differentia invisibilis
+     * (octetus moderator, spatium finale). Nomina eam. */
+    si (   a.mensura == b.mensura
+        && (a.mensura == ZEPHYRUM
+            || memcmp(a.datum, b.datum, (size_t)a.mensura) == ZEPHYRUM))
+    {
+        imprimere("    (lineae OCTETIM IDEM - differentia in octeto"
+            " invisibili ad columnam %d)\n",
+            (integer)(d - (a.datum - sperata.datum) + I));
+    }
 }
 
 integer
