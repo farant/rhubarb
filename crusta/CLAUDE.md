@@ -147,8 +147,33 @@ builder owns the mode stack, iteratively). Findings at find-time:
   formator and `#define`s between functions (01M2NNE6WS); registry
   `nota` copied verbatim into C comments (01M2NPN6YC); generic node read
   accessors (01M2NPNER4). Named futures (spec §9): the `.sh` formatter,
-  a lint, argument grammars and sub-parsers over words, POSIX/zsh
+  argument grammars and sub-parsers over words, POSIX/zsh
   dialect tables, Oils `spec/` as a fourth case source.
+
+## Lintrum — TWO RULES, both SILENT (2026-09-18)
+
+`crusta/lintrum/*.stml`, run at COMMIT time in pure C through
+`crusta_facies` → `tools/diagnostica` (and `./crusta/facies.sh`). A bare
+violation OBSTAT; the same line annotated passes.
+
+| rule | finds | state |
+|---|---|---|
+| `nt-aequalitas` | `-nt` where equality matters (a same-second tie skips work) | 292 sites / 278 negated / 14 declared |
+| `vexilla-domus` | flags `tools/vexilla.sh` owns, written literally | 2 files fixed, 8 annotated |
+
+**Reflexes.** `<tolera codex="lint:X" (>causa` in a comment exempts —
+one annotation covers a whole INVOCATION (exemption filters by the
+owning node's range), and inside `declare -a X=( … )` it must go above
+the CONSTRUCT, not inside the parens. A `<relatum minuit="Y">` arm is
+AUXILIARY: it subtracts from Y by `initium` and is never emitted. A dead
+exemption is a defect — judged only when its rule actually ran.
+
+**Gate:** `crusta/instrumenta/differentia_exemplariorum.sh`, run by the
+full runner. Rule 1 against a GOLDEN with Python provenance; rule 2
+against a PIN plus `grep` as an independent oracle (`rule ⊆ grep`).
+**A C-generated golden proves stability, never correctness** — keep the
+two kinds apart. Rule 3 (`/tmp`) was measured and DECLINED: 34 sites,
+one defect.
 
 ## Laws (spec §0, as built)
 
