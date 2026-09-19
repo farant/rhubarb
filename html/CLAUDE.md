@@ -147,6 +147,27 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   parser after html (Fran's research): bash scripts, before JS.
   Ledger desideratum 01M2KPNTT0.
 
+## The oracle pins the SET, not just the total (2026-09-19)
+
+`fixa/oraculum/recusata.tsv` (190 lines, read its README) lists every
+failing case. The gate merge-diffs the live set against it and reports
+**REGRESSA** (new failure — fails) and **SANATA** (now passing — ALSO
+fails, so an improvement cannot be absorbed silently). Move it with
+`ORACULUM_SCRIBERE=1` and a named cause.
+
+**Why, when a rising pin exists: the pin is a FLOOR.** It is raised by
+hand, so it lags the live number, and in that window every regression
+above it is invisible. Measured: pin 1504, live 1509, remove a real
+rule — the number assertion still PASSED. Worse, a change that fixes
+as many as it breaks does not move the total at all; that happened the
+same day (template rule: 1509 vs a 1509 baseline, `tests19 #46` fixed
+and `#82` broken).
+
+**When a change regresses, read REGRESSA — never reason from the
+total.** Comparing totals produced a confident wrong diagnosis in this
+very arc ("the hook is mode-blind"); the set named six cases and each
+one named its own rule.
+
 ## The NUL tail — the label was wrong (2026-09-19)
 
 `html/CLAUDE.md` called `plain-text-unsafe`'s 14 failures

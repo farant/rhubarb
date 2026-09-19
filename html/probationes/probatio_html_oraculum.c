@@ -268,6 +268,47 @@ _lineas_numerare (
     redde n;
 }
 
+/* Index principalis lineae recusatorum (clavis ordinis) */
+hic_manens s32
+_index_lineae (
+    chorda linea)
+{
+    s32 valor = ZEPHYRUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < linea.mensura; i++)
+    {
+        si (linea.datum[i] < (i8)'0' || linea.datum[i] > (i8)'9')
+        {
+            frange;
+        }
+        valor = valor * (s32)X + (s32)(linea.datum[i] - (i8)'0');
+    }
+    redde valor;
+}
+
+/* Linea recusatorum SINE indice (pars legibilis: plagula et numerus) */
+hic_manens chorda
+_nomen_lineae (
+    chorda linea)
+{
+    chorda n;
+       i32 i = ZEPHYRUM;
+
+    dum (   i < linea.mensura
+         && linea.datum[i] >= (i8)'0' && linea.datum[i] <= (i8)'9')
+    {
+        i = i + I;
+    }
+    si (i < linea.mensura && linea.datum[i] == (i8)'\t')
+    {
+        i = i + I;
+    }
+    n.datum    = linea.datum + i;
+    n.mensura  = linea.mensura - i;
+    redde n;
+}
+
 /* Linea prima divergens utriusque imprimere.
  *
  * NUMERI LINEARUM SEMPER, ET PRAEFIXUM NOMINATUM. Olim linea sola
@@ -372,9 +413,10 @@ principale (vacuum)
                     i32  praeterita            = ZEPHYRUM;
                     i32  fragmenta             = ZEPHYRUM;
                     i32  fragmenta_praeterita  = ZEPHYRUM;
-                    i32  omissa                = ZEPHYRUM;
-                    i32  nihil_reddita         = ZEPHYRUM;
-                    i32  fractae_impressae     = ZEPHYRUM;
+      ChordaAedificator* recusata_aed;
+                    i32  omissa             = ZEPHYRUM;
+                    i32  nihil_reddita      = ZEPHYRUM;
+                    i32  fractae_impressae  = ZEPHYRUM;
      constans character* exemplum_petitum =
          getenv("ORACULUM_EXEMPLUM");
                     b32 omnia             =
@@ -391,6 +433,9 @@ principale (vacuum)
     }
     credo_aperire(piscina);
     summae = (Summa*)piscina_allocare(piscina, magnitudo(Summa) * LXIV);
+    recusata_aed = chorda_aedificator_creare(piscina,
+        (memoriae_index)16384);
+    CREDO_NON_NIHIL (recusata_aed);
     radix = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
@@ -552,8 +597,22 @@ principale (vacuum)
                         + I;
                 }
             }
-            alioquin si (fractae_impressae < XL || omnia)
+            alioquin
             {
+                /* COLLIGERE SEMPER, imprimere sub limite: series
+                 * recusatorum omnes ferre debet, aliter differentia
+                 * serierum ultra quadragesimum casum caeca esset. */
+                character linea_recusata[CCLVI];
+
+                sprintf(linea_recusata, "%d\t%s #%d\n",
+                    (integer)totalis, s->plagula, (integer)e->numerus);
+                chorda_aedificator_appendere_literis(recusata_aed,
+                    linea_recusata);
+                si (fractae_impressae >= XL && !omnia)
+                {
+                    piscina_destruere(p);
+                    perge;
+                }
                 fractae_impressae = fractae_impressae + I;
                 imprimere("  %s #%d", s->plagula, (integer)e->numerus);
                 si (e->fragmentum)
@@ -605,6 +664,110 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (totalis, TOTALIS_PINNATUS);
     CREDO_AEQUALIS_I32 (nihil_reddita, ZEPHYRUM);
     CREDO_MAIOR_AUT_AEQUALIS_S32 ((s32)praeterita, PINNA_PRAETERITA);
+
+
+    /* ==================================================
+     * SERIES RECUSATORUM (2026-09-19)
+     * ==================================================
+     *
+     * Pinna CRESCENS sola PERMUTATIONEM non videt: mutatio quae tot
+     * sanat quot frangit numerum IMMOTUM relinquit. Mensuratum eodem
+     * die: regula templi MDIX -> MDIX dedit dum #46 sanabatur et #82
+     * frangebatur - porta 'nihil mutatum' dixisset et regressio
+     * missa esset. Ergo series ipsa pinnatur, non summa sola.
+     *
+     * AURUM HOC STABILITATEM PROBAT, NUMQUAM RECTITUDINEM - a nobis
+     * generatur, ergo nostra dicit. Rectitudo ab html5lib venit, quae
+     * infra stat; hoc regressionem solam custodit. */
+
+    {
+        character via_auri[DXII];
+        character* aurum_textus;
+        i32  aurum_mensura = ZEPHYRUM;
+        chorda recusata_viva = chorda_aedificator_finire(recusata_aed);
+        constans character* scribere = getenv("ORACULUM_SCRIBERE");
+
+        sprintf(via_auri, "%s/html/probationes/fixa/oraculum/"
+            "recusata.tsv", radix);
+        si (scribere != NIHIL && strcmp(scribere, "1") == ZEPHYRUM)
+        {
+            FILE* f = fopen(via_auri, "wb");
+
+            CREDO_NON_NIHIL (f);
+            si (f != NIHIL)
+            {
+                fwrite(recusata_viva.datum, I,
+                    (size_t)recusata_viva.mensura, f);
+                fclose(f);
+                imprimere("--- AURUM recusatorum scriptum (%d) -"
+                    " CAUSAM in commissione NOMINA ---\n",
+                    (integer)_lineas_numerare(recusata_viva));
+            }
+        }
+        alioquin
+        {
+            aurum_textus = _plagulam_legere(piscina, via_auri,
+                &aurum_mensura);
+            CREDO_NON_NIHIL (aurum_textus);
+            si (aurum_textus != NIHIL)
+            {
+                chorda aurum;
+                   i32 n_viva;
+                   i32 n_auri;
+                   i32 a         = ZEPHYRUM;
+                   i32 b         = ZEPHYRUM;
+                   i32 regressa  = ZEPHYRUM;
+                   i32 sanata    = ZEPHYRUM;
+
+                aurum.datum    = (i8*)aurum_textus;
+                aurum.mensura  = aurum_mensura;
+                n_viva         = _lineas_numerare(recusata_viva);
+                n_auri         = _lineas_numerare(aurum);
+                dum (a < n_viva || b < n_auri)
+                {
+                    chorda lv = _linea_k(recusata_viva, a);
+                    chorda la = _linea_k(aurum, b);
+                    s32 iv = (a < n_viva) ? _index_lineae(lv) : (s32)-I;
+                    s32 ia = (b < n_auri) ? _index_lineae(la) : (s32)-I;
+
+                    si (a < n_viva && b < n_auri && iv == ia)
+                    {
+                        a = a + I;
+                        b = b + I;
+                    }
+                    alioquin si (b >= n_auri || (a < n_viva && iv < ia))
+                    {
+                        chorda pars = _nomen_lineae(lv);
+
+                        imprimere("  REGRESSA: %.*s\n",
+                            (integer)pars.mensura,
+                            (constans character*)pars.datum);
+                        regressa  = regressa + I;
+                        a         = a + I;
+                    }
+                    alioquin
+                    {
+                        chorda pars = _nomen_lineae(la);
+
+                        imprimere("  SANATA:   %.*s\n",
+                            (integer)pars.mensura,
+                            (constans character*)pars.datum);
+                        sanata  = sanata + I;
+                        b       = b + I;
+                    }
+                }
+                imprimere("--- SERIES: recusata %d (aurum %d);"
+                    " regressa %d, sanata %d ---\n",
+                    (integer)n_viva, (integer)n_auri,
+                    (integer)regressa, (integer)sanata);
+                /* REGRESSA = fractura. SANATA = aurum movendum
+                 * (ORACULUM_SCRIBERE=1 cum causa) - bonum quidem,
+                 * sed TACITE accipi non debet. */
+                CREDO_AEQUALIS_I32 (regressa, ZEPHYRUM);
+                CREDO_AEQUALIS_I32 (sanata, ZEPHYRUM);
+            }
+        }
+    }
 
     credo_imprimere_compendium();
     {

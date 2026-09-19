@@ -942,3 +942,46 @@ Gate: four shapes in `probatio_html_arbor` holding both poles —
 `<li><frameset>` ignored, `<div><body><frameset>` ignored, template
 ignored. Planted by restoring the old polarity: 3 assertions red and
 the oracle falls to 1473.
+
+## 2026-09-19 — the oracle pins the SET, not just the total
+
+Fran's question: could the oracle print the set diff itself? Yes, and
+the argument is not convenience.
+
+**A rising pin is a FLOOR, so every regression above it is invisible.**
+The pin is raised by hand and therefore usually lags the live number;
+in that window the gate is simply blind. Demonstrated by plant: pin at
+1504 (where it stood this morning), live 1509, remove a real rule —
+one case regresses, and `CREDO_MAIOR_AUT_AEQUALIS(1509, 1504)` still
+PASSES. The whole failure count came from the new set assertion.
+
+**The sharper case is a swap, where the total does not move at all.**
+That happened earlier the same day: adding the template rule read 1509
+against a 1509 baseline while `tests19 #46` was fixed and `#82` broken.
+I caught it only because I was diffing sets by hand at the time. A gate
+on the number would have said "no change" and I would have shipped it.
+
+`fixa/oraculum/recusata.tsv`, 190 lines (= 1700 − 1510, checked), each
+`<index><TAB><plagula> #<numerus>`. The index is the case's position in
+the JUDGED corpus, and exists so the two sets merge-diff in one pass —
+both are subsequences of the same ordered universe, so no sort is ever
+needed. `REGRESSA` fails; `SANATA` also fails, deliberately: an
+improvement must not be absorbed silently, so it forces
+`ORACULUM_SCRIBERE=1` and a named cause, the house ritual for goldens.
+
+Two things worth noting in the build:
+
+- **The collector had to move out of the print branch.** Failures were
+  only printed under a cap of 40 (unless `ORACULUM_OMNIA`), so
+  collecting where the printing happened would have produced a set
+  silently truncated at 40 — a golden that looks complete and is not.
+  Collect always, print under the cap.
+- **`nomen` bit again.** I named a local `chorda nomen` for the
+  readable half of a line; it is the `typedef` macro, and the error
+  surfaced as "expected identifier" pointing at a perfectly ordinary
+  declaration. Third house trap of the session after `iidem` (absent
+  from the dictionary) and the `-Werror` unused table.
+
+The file's README says plainly that it proves stability and never
+correctness — it is OUR output, so it says what we say. html5lib is
+the correctness oracle underneath; this only catches drift.
