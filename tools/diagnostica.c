@@ -2,7 +2,8 @@
  * (tools/diagnostica.sh; materia-sedes-spec par. XI)
  *
  * Usus: diagnostica <plagula...> [-machina] [-sine-excerpto]
- * Suffixum clientem eligit (.sh crusta, .css css). Exitus: 0 nullum
+ * Suffixum clientem eligit (.sh crusta, .css css, .html/.htm html) -
+ * per _grammatica_ex_suffixo, fontem unum. Exitus: 0 nullum
  * erratum, 1 erratum, 2 nihil iudicatum.
  *
  * ==================================================
@@ -19,10 +20,15 @@
  * emendavit praeter dispositionem ipsam. Si crusta postea gradum III
  * addat, nihil hic mutabitur.
  *
- * css faciem nondum habet (regulas nullas habet), ergo via DERIVATA
- * infra manet: parsura, diagnostica derivata, proiectio una cum
- * refutatione scriptoris ut materia:scriptura. Ea via est seam per
+ * css et html faciem nondum habent (regulas nullas habent), ergo via
+ * DERIVATA infra manet: parsura, diagnostica derivata, proiectio una
+ * cum refutatione scriptoris ut materia:scriptura. Ea via est seam per
  * quam css faciem suam scribet, non lacuna.
+ *
+ * html gradum I solum fert (2026-09-19): genus 'elementum-malum'
+ * diagnosticum DECLARATUM habet, et spatia quae DOM abicit genus suum
+ * 'spatium-omissum' accepere, ne diagnosticum in DXVIII innocentia
+ * caderet pro XIII veris (mensuratum super CCLX paginas domus).
  *
  * Ordo TSV (XII campi): via linea columna linea_finis columna_finis
  * initium finis gravitas codex causa | sedes_relatae nota_primaria.
@@ -71,6 +77,9 @@
 #include "css_arbor.h"
 #include "css_lexicon.h"
 #include "css_registrum.h"
+#include "html_arbor.h"
+#include "html_lexicon.h"
+#include "html_registrum.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -156,6 +165,31 @@ _suffixum (
     redde (b32)(   longitudo_viae >= longitudo_suff
                 && strcmp(via + longitudo_viae - longitudo_suff,
                        suffixum) == ZEPHYRUM);
+}
+
+/* Grammatica ex suffixo - FONS UNUS (porta X). Ambae semitae hinc
+ * pendent: via ordinaria per _clientem_parsare, modus '-lege' pro
+ * praefixo codicis. Antequam html tertius accederet hic ternarius
+ * duorum clientium erat ('.css' ? css : crusta), qui clientem tertium
+ * TACITE crustae adscripsisset - eadem forma quae facies.sh ambitum
+ * neglegere fecit. NIHIL = suffixum sine cliente. */
+interior constans character*
+_grammatica_ex_suffixo (
+    constans character* via)
+{
+    si (_suffixum(via, ".sh"))
+    {
+        redde "crusta";
+    }
+    si (_suffixum(via, ".css"))
+    {
+        redde "css";
+    }
+    si (_suffixum(via, ".html") || _suffixum(via, ".htm"))
+    {
+        redde "html";
+    }
+    redde NIHIL;
 }
 
 /* Nota in TSV: '|', ';', TAB et NOVA LINEA spatio uno mutantur.
@@ -357,11 +391,11 @@ constans character* via,
             Cliens* cliens)
 {
     memset(cliens, ZEPHYRUM, magnitudo(*cliens));
+    cliens->grammatica = _grammatica_ex_suffixo(via);
     si (_suffixum(via, ".sh"))
     {
-        cliens->grammatica  = "crusta";
-        cliens->praefixum   = "#";
-        cliens->declarata   = &CRUSTA_DIAGNOSTICA;
+        cliens->praefixum = "#";
+        cliens->declarata = &CRUSTA_DIAGNOSTICA;
         si (materia_lexicon_ratum_facere(&cliens->ratum,
                 &CRUSTA_LEXICON, &cliens->iudicium))
         {
@@ -377,9 +411,8 @@ constans character* via,
     }
     alioquin si (_suffixum(via, ".css"))
     {
-        cliens->grammatica  = "css";
-        cliens->praefixum   = NIHIL;
-        cliens->declarata   = &CSS_DIAGNOSTICA;
+        cliens->praefixum = NIHIL;
+        cliens->declarata = &CSS_DIAGNOSTICA;
         si (materia_lexicon_ratum_facere(&cliens->ratum, &CSS_LEXICON,
                 &cliens->iudicium))
         {
@@ -389,6 +422,22 @@ constans character* via,
             cliens->diagnostica = cliens->radix != NIHIL
                 ? materia_diagnostica_derivare(piscina, cliens->radix,
                       &CSS_REGISTRUM, &CSS_DIAGNOSTICA, NIHIL, NIHIL)
+                : NIHIL;
+        }
+    }
+    alioquin si (_suffixum(via, ".html") || _suffixum(via, ".htm"))
+    {
+        cliens->praefixum = NIHIL;
+        cliens->declarata = &HTML_DIAGNOSTICA;
+        si (materia_lexicon_ratum_facere(&cliens->ratum, &HTML_LEXICON,
+                &cliens->iudicium))
+        {
+            materia_arbor_consilium_nudum(&cliens->consilium,
+                &HTML_REGISTRUM, &cliens->ratum, cliens->grammatica);
+            cliens->radix = html_arbor_parsare(piscina, fons, mensura);
+            cliens->diagnostica = cliens->radix != NIHIL
+                ? materia_diagnostica_derivare(piscina, cliens->radix,
+                      &HTML_REGISTRUM, &HTML_DIAGNOSTICA, NIHIL, NIHIL)
                 : NIHIL;
         }
     }
@@ -698,7 +747,7 @@ _cumulum_effundere (
         /* grammatica ex suffixo, ut in via ordinaria: TSV codicem
          * CRUDUM fert, linea humana praefixum addit */
         _diagnosticum_imprimere(piscina, via,
-            _suffixum(via, ".css") ? "css" : "crusta", fons, mensura,
+            _grammatica_ex_suffixo(via), fons, mensura,
             (constans MateriaDiagnosticum*)xar_obtinere(exitus, k),
             FALSUM, excerptum, summa);
     }

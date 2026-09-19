@@ -741,3 +741,46 @@ moved by exactly that one number with the cause recorded here.
 What the experiment was worth: it turned "probably alignment" into a
 measurement, and it took one perl substitution and one rebuild. A
 golden moved on a hunch is a golden that stops meaning anything.
+
+## 2026-09-19 — Task 3: the diagnostic declared
+
+`diagnosticum` on `elementum-malum`, `.html`/`.htm` in
+`tools/diagnostica`, and `./tools/diagnostica.sh page.html` now prints
+the compiler form with a caret. No C was written for the diagnostic
+itself: the declaration is the whole of it, materia's one walker does
+the rest, and the seal did not move (diagnostics never move it — css
+and crusta both proved that before us).
+
+The cause is capped at 60 bytes by the coctor, which refused the first
+draft at 61. A good guard: these strings are printed beside a caret,
+not read as prose.
+
+**What it found, immediately:** 13 errata over the 260 house pages, in
+10 generated `knotapel/atlas/web/` files, every one a stray `</em>`.
+The cause is visible in the excerpt — the atlas generator ran a
+markdown emphasis pass over text using `*` as multiplication, so
+`2*6+1=13 ... 2*6+1=13` became `2<em>6+1=13 ... 2</em>6+1=13`, pairing
+asterisks across half a paragraph and leaving the tail unmatched. One
+generator, one pass, ten files. Filed for Fran; not this arc's to fix.
+
+**A two-client ternary was about to swallow the third.** The `-lege`
+path derived the grammar name as `_suffixum(via, ".css") ? "css" :
+"crusta"` — correct for exactly two clients, and it would have
+labelled
+every html finding `crusta:` without failing anything. Replaced with
+`_grammatica_ex_suffixo`, one function both paths call, which is what
+the file's own comment already said the design was ("dispositio
+cliens-eligendi semel scripta est, ne itinera divergant"). The comment
+was right and the code had drifted from it by one client.
+
+**The corpus golden moved, and the README predicted the shape.** Editing
+`tools/diagnostica.sh` (html's sources into the runner) shifted four
+rows in `domus.cruda.tsv` — the frozen Python-provenance golden. Its
+README names the audit: a legitimate move keeps the arms equal and
+`plena` fixed. Measured: one hunk, four rows, one file — the file I
+edited — with `cruda` 570, `plena` 14, census 292/278 all unchanged,
+and the line shift 45 to 47 matching the net +2 lines exactly. Same
+constructs, new offsets. Regenerated with that cause.
+
+That README earned its keep today: it turned "the gate is red, is that
+bad?" into a three-line check with a yes/no answer.

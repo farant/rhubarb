@@ -11,11 +11,11 @@ BUILD_DIR="$RADIX_DIR/build/diagnostica"
 BIN="$BUILD_DIR/diagnostica"
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
-declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$RADIX_DIR/crusta/fontes" "-I$RADIX_DIR/css/fontes")
+declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$RADIX_DIR/crusta/fontes" "-I$RADIX_DIR/css/fontes" "-I$RADIX_DIR/html/fontes")
 mkdir -p "$BUILD_DIR" || exit 2
 CAPITA_NOVA=""
 if [ -f "$BIN" ]; then
-    CAPITA_NOVA="$(find "$RADIX_DIR/include" "$RADIX_DIR/materia/fontes" "$RADIX_DIR/crusta/fontes" "$RADIX_DIR/css/fontes" -name '*.h' -newer "$BIN" 2>/dev/null | head -1)"
+    CAPITA_NOVA="$(find "$RADIX_DIR/include" "$RADIX_DIR/materia/fontes" "$RADIX_DIR/crusta/fontes" "$RADIX_DIR/css/fontes" "$RADIX_DIR/html/fontes" -name '*.h' -newer "$BIN" 2>/dev/null | head -1)"
 fi
 OBJ=""
 compilare () {
@@ -29,7 +29,8 @@ compilare () {
 }
 for f in piscina chorda chorda_aedificator xar friatio tabula_dispersa \
          internamentum stml stml_macros selectio similitudo canon credo \
-         processus_posix css_lexema excerptum utf8 \
+         processus_posix css_lexema html_lexema entitates_html \
+         entitates_html_tabula excerptum utf8 \
          iter_directoria via; do
     compilare "$RADIX_DIR/lib/$f.c" "$BUILD_DIR/$f.o"
 done
@@ -39,7 +40,8 @@ for m in materia_lexicon materia_token materia_nodus materia_scribere \
          materia_pictor materia_exemplaria; do
     compilare "$RADIX_DIR/materia/fontes/$m.c" "$BUILD_DIR/$m.o"
 done
-for src in "$RADIX_DIR"/crusta/fontes/*.c "$RADIX_DIR"/css/fontes/*.c; do
+for src in "$RADIX_DIR"/crusta/fontes/*.c "$RADIX_DIR"/css/fontes/*.c \
+           "$RADIX_DIR"/html/fontes/*.c; do
     compilare "$src" "$BUILD_DIR/$(basename "$src" .c).o"
 done
 if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$RADIX_DIR/tools/diagnostica.c" ] \

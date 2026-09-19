@@ -45,6 +45,108 @@ _probare (
     CREDO_CHORDA_AEQUALIS_LITERIS (fructus, expectatum);
 }
 
+/* Fenestra lineae longissimae (html minutum, css unius lineae).
+ *
+ * Probatio STRUCTURALIS consulto, non chorda expectata: indicem '^'
+ * in linea signi quaerimus et characterem EIUSDEM indicis in linea
+ * contenti inspicimus. Ita calculus ALTER quam ille qui in codice
+ * vivit - chorda expectata manu computata eandem arithmeticam
+ * repeteret quam probare volumus, et error trium columnarum ('...'
+ * columnas praeripit) in ambobus pariter lateret.
+ *
+ * Fons: 'a' per totam lineam praeter 'X' unum ad 'sedes_tractus'.
+ * Ergo character sub signo 'X' esse DEBET, ubicumque fenestra
+ * inciderit. */
+interior vacuum
+_probare_fenestram (
+    Piscina* piscina,
+        s32  longitudo,
+        s32  sedes_tractus,
+        b32  fenestra_speranda)
+{
+     ChordaAedificator* aedificator;
+                chorda  fructus;
+             character* fons;
+                   s32  index;
+                   s32  divisio;
+                   s32  caret;
+                   b32  elisa;
+
+    fons = (character*)piscina_allocare(piscina,
+        (memoriae_index)longitudo + II);
+    si (fons == NIHIL)
+    {
+        CREDO_CULPA ("fons");
+        redde;
+    }
+    per (index = ZEPHYRUM; index < longitudo; index++)
+    {
+        fons[index] = 'a';
+    }
+    fons[sedes_tractus]  = 'X';
+    fons[longitudo]      = '\n';
+    fons[longitudo + I]  = '\0';
+
+    aedificator = chorda_aedificator_creare(piscina,
+        (memoriae_index)MM);
+    si (aedificator == NIHIL)
+    {
+        CREDO_CULPA ("aedificator");
+        redde;
+    }
+    CREDO_VERUM (excerptum_scribere(aedificator, fons,
+        (i32)longitudo + I, sedes_tractus, sedes_tractus + I, I));
+    fructus = chorda_aedificator_finire(aedificator);
+
+    /* divisio = nova linea inter lineam contenti et lineam signi */
+    divisio = (s32)-I;
+    per (index = ZEPHYRUM; index < (s32)fructus.mensura; index++)
+    {
+        si (fructus.datum[index] == '\n')
+        {
+            divisio = index;
+            frange;
+        }
+    }
+    CREDO_VERUM (divisio > ZEPHYRUM);
+
+    /* puncta adsunt? */
+    elisa = FALSUM;
+    per (index = ZEPHYRUM; index + II < divisio; index++)
+    {
+        si (   fructus.datum[index]      == '.'
+            && fructus.datum[index + I]  == '.'
+            && fructus.datum[index + II] == '.')
+        {
+            elisa = VERUM;
+            frange;
+        }
+    }
+    CREDO_AEQUALIS_S32 ((s32)elisa, (s32)fenestra_speranda);
+
+    /* linea contenti sub limite manere debet cum fenestra adhibita
+     * est (margo et '...' pauca addunt) */
+    si (fenestra_speranda)
+    {
+        CREDO_VERUM (divisio < (s32)CC);
+    }
+
+    /* signum: '^' post divisionem; character eiusdem indicis in
+     * linea contenti 'X' esse debet */
+    caret = (s32)-I;
+    per (index = divisio + I; index < (s32)fructus.mensura; index++)
+    {
+        si (fructus.datum[index] == '^')
+        {
+            caret = index - (divisio + I);
+            frange;
+        }
+    }
+    CREDO_VERUM (caret > ZEPHYRUM);
+    CREDO_VERUM (caret < divisio);
+    CREDO_AEQUALIS_S32 ((s32)fructus.datum[caret], (s32)'X');
+}
+
 interior vacuum
 _probare_multa (
                  Piscina* piscina,
@@ -120,6 +222,19 @@ principale (vacuum)
     /* margo crescit cum numero lineae */
     _probare(piscina, "q\n", ZEPHYRUM, (s32)I, (i32)12345,
         "12345 | q\n      | ^\n");
+
+    imprimere("\n--- Fenestra lineae longae ---\n");
+    /* ad limitem IPSUM nihil mutatur: clientes priores (C89, bash,
+     * css ordinarium) octetim iidem manere debent */
+    _probare_fenestram(piscina, (s32)CLX, (s32)LXXX, FALSUM);
+    /* supra limitem: puncta utrimque, signum sub 'X' manet */
+    _probare_fenestram(piscina, (s32)CD, (s32)CC, VERUM);
+    /* tractus PROPE INITIUM: puncta DEXTRA sola, ergo '...' nullum
+     * ante signum - casus qui errorem trium columnarum nudaret si
+     * spatia punctorum semper adderentur */
+    _probare_fenestram(piscina, (s32)CD, (s32)V, VERUM);
+    /* tractus PROPE FINEM: puncta SINISTRA sola */
+    _probare_fenestram(piscina, (s32)CD, (s32)CD - (s32)V, VERUM);
 
     imprimere("\n--- Sedes multiplices ---\n");
 

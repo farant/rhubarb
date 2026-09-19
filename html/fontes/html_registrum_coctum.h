@@ -68,4 +68,6 @@ nomen enumeratio {
 
 externus constans MateriaRegistrumCoctum HTML_REGISTRUM;
 
+externus constans MateriaDiagnosticaCocta HTML_DIAGNOSTICA;
+
 #endif /* HTML_REGISTRUM_COCTUM_H */

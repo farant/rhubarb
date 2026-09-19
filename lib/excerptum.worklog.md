@@ -65,3 +65,59 @@ disabled; the CR-stripping disabled; the continuation mask flipped
 return `FALSUM` outright — was REFUSED by `silva.planta` because it
 would not compile (`-Wunused-parameter`), which is the tool working:
 it ran nothing rather than reporting a red it had not earned.
+
+## 2026-09-19 — fenestra: the excerpt had to learn about long lines
+
+html tier-1 diagnostics landed and the printing was unusable. Not
+inelegant — unusable: all 13 findings over the house's 260 pages sit
+on lines of 453 to 20,030 bytes (median 1,049), so every excerpt
+dumped the whole line and one of them would have thrown 20 KB at the
+terminal. C and bash never exposed this because their lines are short
+by convention; html and minified css have no such convention.
+
+`_fenestra` narrows `principium`/`terminus` around the tract when the
+line exceeds 160 bytes, marking elision with `...` on each side. Both
+writers already walk from `principium`, so the caret follows for
+free — the only arithmetic is the three columns `...` steals on the
+left, added back in `_signum_scribere`.
+
+Under the limit NOTHING changes, which is what keeps the older clients
+safe: crusta's and css's output is byte-identical, verified by running
+their suites and by eye on a real `fi exspectatum` two-sede excerpt.
+
+**The first version was dead code, and only running it said so.**
+
+I put the window in `excerptum_scribere`, gated it, watched 63/63 go
+green, and then ran the actual tool: output unchanged, full line still
+dumped. `materia_pictor` calls `excerptum_scribere_multa` and NOTHING
+else — the single-sede entry I had just gated is not on the diagnostic
+path at all. I had even written a comment in `_multa` explaining why
+skipping the window there was acceptable ("gradus I html sedes relatas
+nullas dat"), which was wrong on the only fact that mattered: the
+painter always goes through `_multa`, one sede or twenty.
+
+So: a capability that passed its own tests, shipped, and did nothing.
+That is the third time this class has bitten in a week (EX8's
+`regulae_plenae`, the facade's `CRUSTA_LINTRUM`, this). The gate was
+not wrong — it tested what it said it tested. It just tested a
+function the product does not call. **Ask which entry point the
+PRODUCT uses before gating the one you happened to edit.**
+
+The fix wanted the thing the old comment claimed was hard, and it was
+not: `_multa` computes ONE window spanning every sede on the line
+(first initium to max finis — sedes are sorted, so the minimum is
+free) and hands the same window to the line and to every caret.
+
+**Born red twice.** Neutering the three-column offset
+(`elisa_ante && FALSUM`) fails 2 of 4 window cases — precisely the two
+with left elision, while the near-start case stays green, which is the
+evidence that the test discriminates rather than just noticing change.
+Disabling the window outright fails 6. Both compile, so both are red
+gates and not build breaks.
+
+The window cases assert STRUCTURALLY, not against an expected string:
+the source is `a` everywhere except one `X` at the tract, and the test
+finds the `^` column and checks that the content line carries `X`
+there. An expected string hand-computed by me would have repeated the
+same arithmetic the code does, and a three-column error would have sat
+in both halves agreeing with itself.

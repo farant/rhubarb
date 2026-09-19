@@ -80,3 +80,20 @@ constans MateriaRegistrumCoctum HTML_REGISTRUM = {
     LOCI_COCTI,
     (i32)(magnitudo(LOCI_COCTI) / magnitudo(LOCI_COCTI[0]))
 };
+
+hic_manens constans MateriaTabDiagnosticum DIAGNOSTICA_COCTA[] = {
+    /* genus, locus, species, gravitas, codex, causa */
+    { (s32)HTML_GENUS_ELEMENTUM_MALUM, (s32)-1,
+      (s32)MATERIA_DIAGNOSTICUM_GENUS,
+      (s32)MATERIA_GRAVITAS_ERRATUM,
+      "elementum-malum",
+      "tag clausurae sine pari, aut lexema quod HTML5 neglegit" },
+};
+
+constans MateriaDiagnosticaCocta HTML_DIAGNOSTICA = {
+    DIAGNOSTICA_COCTA,
+    (i32)(magnitudo(DIAGNOSTICA_COCTA) /
+        magnitudo(DIAGNOSTICA_COCTA[0])),
+    NIHIL,
+    (i32)0
+};

@@ -540,10 +540,10 @@ tools/canon_struere.sh	37	38	37	41	1053	1056	erratum	lint:nt-aequalitas	'-nt' ae
 tools/canon_struere.sh	37	38	37	41	1053	1056	erratum	lint:nt-negata	nt-negata		
 tools/census_recensere.sh	29	44	29	47	1068	1071	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 tools/census_recensere.sh	29	44	29	47	1068	1071	erratum	lint:nt-negata	nt-negata		
-tools/diagnostica.sh	23	34	23	37	1098	1101	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
-tools/diagnostica.sh	23	34	23	37	1098	1101	erratum	lint:nt-negata	nt-negata		
-tools/diagnostica.sh	45	34	45	37	2120	2123	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
-tools/diagnostica.sh	45	34	45	37	2120	2123	erratum	lint:nt-negata	nt-negata		
+tools/diagnostica.sh	23	34	23	37	1150	1153	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+tools/diagnostica.sh	23	34	23	37	1150	1153	erratum	lint:nt-negata	nt-negata		
+tools/diagnostica.sh	47	34	47	37	2274	2277	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+tools/diagnostica.sh	47	34	47	37	2274	2277	erratum	lint:nt-negata	nt-negata		
 tools/natura_canones.sh	84	21	84	24	3186	3189	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 tools/natura_canones.sh	84	21	84	24	3186	3189	erratum	lint:nt-negata	nt-negata		
 tools/natura_glossae.sh	29	21	29	24	896	899	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		

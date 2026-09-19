@@ -102,6 +102,7 @@
   </genus>
 
   <genus titulus="elementum-malum"
+    diagnosticum="tag clausurae sine pari, aut lexema quod HTML5 neglegit"
     nota="Robustitas: tag clausurae sine pari aperto ('&lt;/br&gt;' et '&lt;/p&gt;' sine p aperto elementa FICTA dant, O7c - deviatio '&lt;/br&gt;' malum' H4 retirata)">
     <locus titulus="tokens" species="lista-token"/>
   </genus>

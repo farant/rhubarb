@@ -146,6 +146,40 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   parser after html (Fran's research): bash scripts, before JS.
   Ledger desideratum 01M2KPNTT0.
 
+## Diagnostica — TIER 1 only, declared (2026-09-19)
+
+`./tools/diagnostica.sh <x.html>` prints the compiler form with a
+caret. One genus carries `diagnosticum`: **`elementum-malum`**. No C
+was written for it, and **diagnostics move no seal**.
+
+**Why a genus split had to come first.** materia keys a diagnostic on a
+GENUS only (`diagnosticum` is a genus attribute; `absentia`/`vacua` are
+locus attributes — there is no condition on a node's contents). And
+`elementum-malum`, which O5 widened into the catch-all for everything
+HTML5 ignores, answers *"does the DOM keep a node?"* while a diagnostic
+must answer *"did the author err?"* Those disagree **518 times out of
+531** over the house. So the benign half moved to its own genus
+**`spatium-omissum`** (whitespace the DOM drops in the two wrapper
+modes `ANTE_RADICEM`/`ANTE_CAPUT` — NOT after `head`, where the spec
+inserts it as real text). Result: 531 → **13**, pages 260 → 10.
+
+**Do not port crusta's `absentia` declarations here.** html's absences
+are LEGAL — void elements, implied closes, self-closing, synthesized
+wrappers all leave NIHIL token slots (H4). `tok_finis` absent fires on
+every synthesized `html`/`head`/`body`. crusta's work because a missing
+`fi` is always wrong; html has no such slot.
+
+**The token genus is not the predicate either**: a newline before
+`<head>` is a benign `lex-textus` malum; `x` inside `<frameset>` is an
+erroneous one. Only the builder's mode knows, at the moment it drops.
+
+Classes kept TOGETHER deliberately: "HTML5 ignores this" (repeated
+`<html>`, doctype after content, table parts outside a table,
+select/frameset) and "unmatched end tag". The first has **zero
+instances** in the house *and* in `../lapide` (651 files sampled), so
+splitting it would design against nothing. Another append + seal move
+is cheap if it ever gets noisy.
+
 ## Laws (spec §11)
 
 - **Absent slots are meaning** (H4): void, implied close, unclosed at

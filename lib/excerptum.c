@@ -3,6 +3,23 @@
 #include "excerptum.h"
 #include "utf8.h"
 
+/* FENESTRA lineae longissimae. Excerptum plenum terminale INUNDAT
+ * potius quam illustret ubi linea milia octetorum fert: html minutum
+ * et css unius lineae ita scribuntur. Mensuratum 2026-09-19: inventa
+ * html domus XIII omnia in lineis CDLIII ad XX_XXX octetorum sedent,
+ * ergo forma plena ibi inutilis est, non modo inelegans.
+ *
+ * Supra LATITUDO_MAXIMA fenestra circa tractum servatur (MARGO
+ * utrimque pro contextu) et puncta tria '...' notantur. SIGNUM eandem
+ * fenestram accipit - ambo scriptores ab eodem 'principium' ambulant
+ * - ergo columna vera manet sine calculo altero.
+ *
+ * SUB limite nihil mutatur: lineae C89, bash et css ordinariae
+ * OCTETIM eaedem manent. Ergo clientes priores immoti. */
+#define LATITUDO_MAXIMA  ((s32)160)
+#define MARGO_FENESTRAE  ((s32)40)
+#define LATITUDO_PUNCTORUM  ((s32)3)
+
 /* figurae lineae, ordine INVERSO (unitates primae); reddit numerum */
 interior i32
 _figurae (
@@ -95,6 +112,56 @@ _lineae_fines (
     *terminus    = t;
 }
 
+/* Fenestram circa tractum angustare cum linea limitem excedit.
+ * 'principium' et 'terminus' IN LOCO mutantur; puncta utrimque
+ * reddita. Sub limite nihil mutatur. */
+interior vacuum
+_fenestra (
+    constans character* fons,
+                   s32  initium,
+                   s32  finis,
+                   s32* principium,
+                   s32* terminus,
+                   b32* elisa_ante,
+                   b32* elisa_post)
+{
+    s32 p = *principium;
+    s32 t = *terminus;
+
+    *elisa_ante = FALSUM;
+    *elisa_post = FALSUM;
+    si (t - p <= LATITUDO_MAXIMA)
+    {
+        redde;
+    }
+    si (initium - p > MARGO_FENESTRAE)
+    {
+        p            = initium - MARGO_FENESTRAE;
+        *elisa_ante  = VERUM;
+    }
+    si (t - p > LATITUDO_MAXIMA)
+    {
+        s32 terminus_novus = finis + MARGO_FENESTRAE;
+
+        si (terminus_novus < p + LATITUDO_MAXIMA)
+        {
+            terminus_novus = p + LATITUDO_MAXIMA;
+        }
+        si (terminus_novus < t)
+        {
+            t            = terminus_novus;
+            *elisa_post  = VERUM;
+        }
+    }
+    /* octetus continuationis UTF-8 numquam fenestram incipiat */
+    dum (p > *principium && utf8_est_continuatio((i8)fons[p]))
+    {
+        p--;
+    }
+    *principium  = p;
+    *terminus    = t;
+}
+
 /* linea fontis ipsa: moderatores praeter tabulam ut spatium */
 interior vacuum
 _lineam_scribere (
@@ -103,11 +170,17 @@ _lineam_scribere (
                    s32  principium,
                    s32  terminus,
                    i32  linea,
-                   i32  latitudo)
+                   i32  latitudo,
+                   b32  elisa_ante,
+                   b32  elisa_post)
 {
     s32 i;
 
     _marginem(exitus, linea, VERUM, latitudo);
+    si (elisa_ante)
+    {
+        chorda_aedificator_appendere_literis(exitus, "...");
+    }
     per (i = principium; i < terminus; i++)
     {
         character c = fons[i];
@@ -117,6 +190,10 @@ _lineam_scribere (
             c = ' ';
         }
         chorda_aedificator_appendere_character(exitus, c);
+    }
+    si (elisa_post)
+    {
+        chorda_aedificator_appendere_literis(exitus, "...");
     }
     chorda_aedificator_appendere_character(exitus, '\n');
 }
@@ -134,12 +211,22 @@ _signum_scribere (
                    s32  finis,
                    i32  linea,
                    i32  latitudo,
+                   b32  elisa_ante,
     constans character* nota)
 {
     s32 finis_lineae;
     s32 i;
 
     _marginem(exitus, linea, FALSUM, latitudo);
+    /* '...' spatium columnae occupat: signum idem accipiat, aliter
+     * caret tribus columnis aberrat */
+    si (elisa_ante)
+    {
+        per (i = ZEPHYRUM; i < LATITUDO_PUNCTORUM; i++)
+        {
+            chorda_aedificator_appendere_character(exitus, ' ');
+        }
+    }
     per (i = principium; i < initium && i < terminus; i++)
     {
         si (fons[i] == '\t')
@@ -189,6 +276,8 @@ excerptum_scribere (
     s32 principium;
     s32 terminus;
     i32 latitudo;
+    b32 elisa_ante;
+    b32 elisa_post;
 
     si (   exitus == NIHIL || fons == NIHIL || linea == ZEPHYRUM
         || initium < ZEPHYRUM || initium > (s32)mensura)
@@ -201,10 +290,12 @@ excerptum_scribere (
     }
     latitudo = _latitudo(linea);
     _lineae_fines(fons, mensura, initium, &principium, &terminus);
+    _fenestra(fons, initium, finis, &principium, &terminus,
+        &elisa_ante, &elisa_post);
     _lineam_scribere(exitus, fons, principium, terminus, linea,
-        latitudo);
+        latitudo, elisa_ante, elisa_post);
     _signum_scribere(exitus, fons, principium, terminus, initium,
-        finis, linea, latitudo, NIHIL);
+        finis, linea, latitudo, elisa_ante, NIHIL);
     redde VERUM;
 }
 
@@ -250,12 +341,39 @@ excerptum_scribere_multa (
     {
         s32 principium;
         s32 terminus;
+        s32 tractus_initium;
+        s32 tractus_finis;
+        b32 elisa_ante;
+        b32 elisa_post;
         i32 j;
 
         _lineae_fines(fons, mensura, sedes[k].initium, &principium,
             &terminus);
+        /* FENESTRA UNA PRO OMNIBUS sedibus lineae huius: sedes
+         * plures lineam participant, ergo fenestra tractum ab prima
+         * ad ultimam capere debet, aliter signum extra eam caderet.
+         * Sedes ORDINATAE sunt (supra probatum), ergo prima initium
+         * minimum dat; finem maximum quaerimus, quia tractus
+         * longitudine differunt. */
+        tractus_initium  = sedes[k].initium;
+        tractus_finis    = sedes[k].finis < sedes[k].initium
+            ? sedes[k].initium : sedes[k].finis;
+        j = k;
+        dum (j < numerus && sedes[j].linea == sedes[k].linea)
+        {
+            s32 finis_huius = sedes[j].finis < sedes[j].initium
+                ? sedes[j].initium : sedes[j].finis;
+
+            si (finis_huius > tractus_finis)
+            {
+                tractus_finis = finis_huius;
+            }
+            j++;
+        }
+        _fenestra(fons, tractus_initium, tractus_finis, &principium,
+            &terminus, &elisa_ante, &elisa_post);
         _lineam_scribere(exitus, fons, principium, terminus,
-            sedes[k].linea, latitudo);
+            sedes[k].linea, latitudo, elisa_ante, elisa_post);
         j = k;
         dum (j < numerus && sedes[j].linea == sedes[k].linea)
         {
@@ -264,7 +382,7 @@ excerptum_scribere_multa (
 
             _signum_scribere(exitus, fons, principium, terminus,
                 sedes[j].initium, finis, sedes[j].linea, latitudo,
-                sedes[j].nota);
+                elisa_ante, sedes[j].nota);
             j++;
         }
         k = j;
