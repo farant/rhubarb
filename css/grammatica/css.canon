@@ -564,66 +564,77 @@
 
   <elementum nomen="lex-identificator" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-functio" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-apud-verbum" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-cancellum" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-chorda" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-chorda-imperfecta" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-url" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-url-imperfecta" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-numerus" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-centesima" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-dimensio" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
@@ -633,18 +644,21 @@
           in uno cursu (css_lexema.c) - ergo compressio templorum
           nulla, 'cr' possibile">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-commentarium" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-commentarium-imperfectum" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
@@ -708,6 +722,7 @@
     nota="octetus unus quilibet, NUL inclusus - proiectio STML NUL
           recusat (textus non est), quod porta STML nominat">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>

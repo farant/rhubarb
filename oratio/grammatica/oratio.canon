@@ -1112,24 +1112,28 @@
   </elementum>
   <elementum nomen="or-linea-cr" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="or-spatium" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="or-litterae" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="or-digiti" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
@@ -1141,6 +1145,7 @@
   </elementum>
   <elementum nomen="or-apostrophus" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
@@ -1152,12 +1157,14 @@
   </elementum>
   <elementum nomen="or-interpunctio" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="or-signum" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
@@ -1165,6 +1172,7 @@
   <elementum nomen="or-derivatum" textus="verum"
     nota="fons I: classes, linguae, lemma, sensus; f=1, linea/columna portatae, b numquam">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>

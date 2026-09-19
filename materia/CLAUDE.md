@@ -167,10 +167,36 @@ inside raw the bytes are verbatim. Measured, not argued:
 <lex-spatia>\n\n  </>              pretty  ->  TEXT LOST
 ```
 
-The writer refuses only **NUL** (`_nul_fert`) for trivia — NUL is
-unrepresentable raw or not. The reader (`_textus_directus`) skips
-whitespace-only text **unless `elementum->crudus`**. Both halves are
-load-bearing; both were verified by planting.
+The reader (`_textus_directus`) skips whitespace-only text **unless
+`elementum->crudus`**. Both halves are load-bearing; both were
+verified by planting.
+
+**NUL was the last unrepresentable byte, and is no longer one
+(2026-09-19).** The writer used to refuse it (`_nul_fert`) on the
+grounds that raw could not carry it — true, and the wrong conclusion.
+A byte the *form* cannot carry can be **stripped and its offsets kept
+in an attribute**, which is what `cr` had already done for CR twelve
+lines away. So `_cr_exuere`/`_cr_induere` became
+`_octetum_exuere`/`_octetum_induere`, parameterised by (byte,
+attribute), and `nul` joined `cr`. Neither `&null;` nor a `<byte/>`
+element can work here: entities are not resolved inside raw (that is
+what raw *means*), and an element would make the value MIXED, which
+cannot be raw — both would trade raw away to keep NUL and lose the
+whitespace and closing-tag cases with it.
+
+**ORDER IS LAW.** Write strips CR first (offsets in the TRUE value,
+the old contract, so every existing `cr` document stays byte-identical)
+then NUL (offsets in the CR-stripped value); the reader restores NUL
+first, CR second. **Swapping the read order passed every suite** until
+a case carrying BOTH bytes was added to `probatio_materia_arbor` — a
+pin you cannot make fail is measuring its neighbour, not the world.
+
+Measured: html's `circuitus` gate went 1,672/1,708 → **1,708/1,708**;
+NUL refusals across the html5lib corpus 36 → 0. `nul` is declared
+beside `cr` in all six canons. NB `_textus_tutus` still carries a
+`_nul_fert` check that its only caller can no longer reach (the value
+is stripped before it); kept as a cheap guard, revisit if a second
+caller appears.
 
 *How it was wrong before, and why that shape is worth recognising:*
 the writer refused whitespace-only and the reader skipped it, and the

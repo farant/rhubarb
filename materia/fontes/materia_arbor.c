@@ -798,13 +798,29 @@ _valorem_crudum_notare (
  * QUAEQUE opus est. Ergo: textus SINE '\r' scribitur, attributum
  * 'cr' offsets in valore VERO fert (decimales, spatiis separati),
  * lector reinserit. Attributum abest = valor sine '\r' - casus
- * communis, pretium nullum. */
+ * communis, pretium nullum.
+ *
+ * NUL EANDEM VIAM IT (2026-09-19, attributum 'nul'). Causa eadem
+ * est: octetus quem forma textualis ferre NON potest, neque cruda
+ * (crudum nihil interpretatur - id ipsum crudum esse significat).
+ * Ergo '&null;' viam non habet: entitates intra crudum non
+ * resolvuntur, et '<byte>' elementum MIXTUM faceret, quod crudum
+ * esse nequit - ambae viae crudum perderent ut NUL servarent, et
+ * album cum apice claudente redderent. Exuere et offsets servare
+ * mechanismus PROBATUS est, hic iam per CR.
+ *
+ * ORDO NUMQUAM MUTANDUS: CR primum exuitur (offsets in valore VERO,
+ * ut contractus vetus dicit), NUL secundum (offsets in valore SINE
+ * CR). Lector ordine INVERSO induit: NUL primum, CR deinde. Ita
+ * documenta priora quae 'cr' solum ferunt OCTETIM immota manent. */
 interior b32
-_cr_exuere (
-    MateriaArborScriptor* st,
-               StmlNodus* elementum,
-         constans chorda* valor,
-                  chorda* nudus)
+_octetum_exuere (
+     MateriaArborScriptor* st,
+                StmlNodus* elementum,
+          constans chorda* valor,
+                   chorda* nudus,
+                       i8  octetus,
+       constans character* titulus)
 {
     i32 numerus_cr;
     i32 i;
@@ -812,7 +828,7 @@ _cr_exuere (
     numerus_cr = ZEPHYRUM;
     per (i = ZEPHYRUM; i < valor->mensura; i++)
     {
-        si (valor->datum[i] == (i8)'\r')
+        si (valor->datum[i] == octetus)
         {
             numerus_cr = numerus_cr + I;
         }
@@ -838,7 +854,7 @@ _cr_exuere (
         }
         per (i = ZEPHYRUM; i < valor->mensura; i++)
         {
-            si (valor->datum[i] == (i8)'\r')
+            si (valor->datum[i] == octetus)
             {
                 i32 longitudo = _numerus_ad_literas(i, buffer,
                     (i32)magnitudo(buffer));
@@ -858,7 +874,7 @@ _cr_exuere (
         }
         littera[scriptum] = '\0';
         si (!stml_attributum_addere(elementum, st->piscina,
-                st->intern, "cr", littera))
+                st->intern, titulus, littera))
         {
             redde FALSUM;
         }
@@ -871,7 +887,7 @@ _cr_exuere (
         }
         per (i = ZEPHYRUM; i < valor->mensura; i++)
         {
-            si (valor->datum[i] != (i8)'\r')
+            si (valor->datum[i] != octetus)
             {
                 datum[j]  = valor->datum[i];
                 j         = j + I;
@@ -1007,17 +1023,20 @@ _trivium_scribere (
          * Si notatio cruda FALLAT (valor sequentiam claudentem fert),
          * scriptor infra NIHIL reddit - ergo textus albus numquam
          * sine cruditate emittitur. */
-        si (_nul_fert(&trivium->valor))
-        {
-            st->causa = "valor trivii NUL fert";
-            redde NIHIL;
-        }
         {
             chorda nudus;
+            chorda sine_nul;
 
-            si (!_cr_exuere(st, elementum, &trivium->valor, &nudus))
+            si (!_octetum_exuere(st, elementum, &trivium->valor,
+                    &sine_nul, (i8)'\r', "cr"))
             {
                 st->causa = "attributum 'cr' trivii scribi non potuit";
+                redde NIHIL;
+            }
+            si (!_octetum_exuere(st, elementum, &sine_nul, &nudus,
+                    (i8)'\0', "nul"))
+            {
+                st->causa = "attributum 'nul' trivii scribi non potuit";
                 redde NIHIL;
             }
             si (nudus.mensura > ZEPHYRUM)
@@ -1368,14 +1387,18 @@ _scribere_lexema (
     si (materia_lexicon_textum_fert(st->consilium->lexicon,
         lexema->genus))
     {
-        si (_nul_fert(&lexema->valor))
-        {
-            st->causa = "valor lexematis NUL fert";
-            redde NIHIL;
-        }
-        si (!_cr_exuere(st, elementum, &lexema->valor, &valor_nudus))
+        chorda sine_nul;
+
+        si (!_octetum_exuere(st, elementum, &lexema->valor, &sine_nul,
+                (i8)'\r', "cr"))
         {
             st->causa = "attributum 'cr' lexematis scribi non potuit";
+            redde NIHIL;
+        }
+        si (!_octetum_exuere(st, elementum, &sine_nul, &valor_nudus,
+                (i8)'\0', "nul"))
+        {
+            st->causa = "attributum 'nul' lexematis scribi non potuit";
             redde NIHIL;
         }
         si (valor_nudus.mensura > ZEPHYRUM)
@@ -2331,14 +2354,38 @@ _textus_directus (
     redde chorda_aedificator_finire(aed);
 }
 
-/* Inversum _cr_exuere: '\r' reinsertum ad offsets attributi 'cr'
- * (decimales ascendentes, in valore VERO). Attributum abest =
- * valor ut lectus. Pravum = recusatio, numquam silentium. */
+/* Causa NOMINATA per titulum attributi. Duo sola sunt, ergo electio
+ * brevis; chordae CONSTANTES manent, quod lector poscit (causa eius
+ * superstes esse debet). */
+interior constans character*
+_causa_attributi (
+     constans character* titulus,
+                    b32  memoria)
+{
+    si (titulus[ZEPHYRUM] == 'n')
+    {
+        redde memoria ? "memoria pro 'nul' deficit"
+                      : "attributum 'nul' pravum";
+    }
+    redde memoria ? "memoria pro 'cr' deficit"
+                  : "attributum 'cr' pravum";
+}
+
+/* Inversum _octetum_exuere: octetus reinsertus ad offsets attributi
+ * NOMINATI (decimales ascendentes). Attributum abest = valor ut
+ * lectus. Pravum = recusatio, numquam silentium.
+ *
+ * VOCANDUM ORDINE INVERSO scriptoris: 'nul' PRIMUM (offsets eius in
+ * valore sine CR computati sunt), 'cr' DEINDE (offsets in valore
+ * VERO). Ordo permutatus offsets CR uno loco per NUL quemque
+ * moveret - circuitus tacite corruptus, non recusatio. */
 interior chorda
-_cr_induere (
+_octetum_induere (
     MateriaArborLector* lector,
              StmlNodus* elementum,
-                chorda  nuda)
+                chorda  nuda,
+                    i8  octetus,
+    constans character* titulus)
 {
        chorda* attributum;
        chorda  plena;
@@ -2347,7 +2394,7 @@ _cr_induere (
           i32  i;
           b32  in_numero;
 
-    attributum = stml_attributum_capere(elementum, "cr");
+    attributum = stml_attributum_capere(elementum, titulus);
     si (attributum == NIHIL)
     {
         redde nuda;
@@ -2377,7 +2424,7 @@ _cr_induere (
     si (datum == NIHIL)
     {
         materia_arbor_lector_recusare(lector,
-            "memoria pro 'cr' deficit", elementum->linea);
+            _causa_attributi(titulus, VERUM), elementum->linea);
         redde nuda;
     }
 
@@ -2413,7 +2460,7 @@ _cr_induere (
             }
             si (proximus >= ZEPHYRUM && (s32)exitus == proximus)
             {
-                datum[exitus]  = (i8)'\r';
+                datum[exitus]  = octetus;
                 proximus       = -I;
             }
             alioquin
@@ -2421,7 +2468,8 @@ _cr_induere (
                 si (fons >= nuda.mensura)
                 {
                     materia_arbor_lector_recusare(lector,
-                        "attributum 'cr' pravum", elementum->linea);
+                        _causa_attributi(titulus, FALSUM),
+                        elementum->linea);
                     redde nuda;
                 }
                 datum[exitus]  = nuda.datum[fons];
@@ -2598,8 +2646,11 @@ _trivium_legere (
         frange;
 
     ordinarius:
-        valor = _cr_induere(lector, elementum,
-            _textus_directus(lector, elementum));
+        valor = _octetum_induere(lector, elementum,
+            _octetum_induere(lector, elementum,
+                _textus_directus(lector, elementum),
+                (i8)'\0', "nul"),
+            (i8)'\r', "cr");
         frange;
     }
 
@@ -2796,8 +2847,10 @@ _lexema_legere (
     }
 
     /* VALOR adesse debet si et solum si species VERBATIM est */
-    valor       = _cr_induere(lector, elementum,
-        _textus_directus(lector, elementum));
+    valor       = _octetum_induere(lector, elementum,
+        _octetum_induere(lector, elementum,
+            _textus_directus(lector, elementum), (i8)'\0', "nul"),
+        (i8)'\r', "cr");
     valor_visus = (b32)(valor.mensura > ZEPHYRUM);
 
     si (valor_visus && !materia_lexicon_textum_fert(lex, genus))

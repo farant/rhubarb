@@ -9,7 +9,9 @@
  * punctum POST lexema prius (ordo praeordinis); ordo octetorum ruptus
  * (lexema post lexema posterius) cum lexemate suo; usus iteratus
  * semel; 'emissa' parsatoris cum tractu ex nodo computato; tractus
- * refutationis scriptoris (lexema cum NUL).
+ * refutationis scriptoris (lexema cuius valor sequentiam claudentem
+ * propriam fert - NUL id olim faciebat, sed attributum 'nul' eum nunc
+ * fert, 2026-09-19).
  */
 
 #include "latina.h"
@@ -518,15 +520,20 @@ principale (vacuum)
                  MateriaNodus* verbum;
                  MateriaToken* lexema;
                        chorda  valor;
-                    character  memoria[3];
+                    character  memoria[XVI];
 
         imprimere("\n--- X. Tractus refutationis scriptoris ---\n");
-        /* littera constans esset (-Wcast-qual): series propria */
-        memoria[0]     = 'a';
-        memoria[1]     = (character)ZEPHYRUM;
-        memoria[2]     = 'b';
+        /* VEHICULUM REFUTATIONIS, non subiectum: hic tractum
+         * refutationis probamus, non causam eius. Olim NUL vehiculum
+         * erat; ex quo attributum 'nul' eum fert (2026-09-19) NUL non
+         * amplius refutat, ergo vehiculum mutatum est ad limitem qui
+         * MANET - valor sequentiam claudentem elementi sui ferens,
+         * quem forma cruda ferre non potest (01M2KPJ0HW).
+         *
+         * littera constans esset (-Wcast-qual): series propria */
+        memcpy(memoria, "a</lex-ident>b", (size_t)XIV);
         valor.datum    = (i8*)memoria;
-        valor.mensura  = (i32)III;
+        valor.mensura  = (i32)XIV;
         lexema = materia_token_creare(piscina, &FORMA, (s32)G_IDENT,
             valor, (s32)VI, (i32)II, (i32)III, ZEPHYRUM);
         CREDO_NON_NIHIL (lexema);

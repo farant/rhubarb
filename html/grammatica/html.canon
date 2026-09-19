@@ -401,36 +401,42 @@
 
   <elementum nomen="lex-textus" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-referentia" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-textus-crudus" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-textus-crudus-imperfectus" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-tag-apertura" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-tag-clausura" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
@@ -447,6 +453,7 @@
 
   <elementum nomen="lex-attributum-nomen" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
@@ -458,66 +465,77 @@
 
   <elementum nomen="lex-attributum-valor" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-attributum-valor-imperfectus" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-commentarium" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-commentarium-imperfectum" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-commentarium-pravum" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-doctype" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-doctype-imperfectum" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-cdata" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-cdata-imperfecta" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-spatia" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>
 
   <elementum nomen="lex-delim" textus="verum">
     <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
     <liberum nomen="ante" maximum="1"/>
     <liberum nomen="post" maximum="1"/>
   </elementum>

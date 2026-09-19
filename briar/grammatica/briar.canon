@@ -31,6 +31,7 @@
   <!-- lexema verbatim: attributa quae materia scribit -->
   <#attributa-lexematis>
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>

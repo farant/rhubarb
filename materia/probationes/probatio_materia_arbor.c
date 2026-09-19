@@ -694,14 +694,27 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
             (size_t)s1.textus.mensura) == ZEPHYRUM);
 
-        /* NUL ADHUC REFUTATUR - cruditas eum sanare non potest,
-         * quia chorda longitudinem fert et textus terminatore
-         * legitur. Relaxatio albi hoc NON tetigit. */
+        /* NUL CIRCUMIT (2026-09-19, attributum 'nul').
+         *
+         * OLIM refutabatur, et commentarium causam dabat: 'cruditas
+         * eum sanare non potest, quia chorda longitudinem fert et
+         * textus terminatore legitur'. Prior pars vera manet - crudum
+         * NUL ferre non potest - sed conclusio falsa erat: octetus
+         * quem forma ferre nequit EXUI potest et offsets in
+         * attributo servari, quod CR iam per annum faciebat duodecim
+         * lineis supra. Limes non erat in cruditate sed in eo quod
+         * nemo mechanismum vicinum ad NUL extenderat.
+         *
+         * Circuitus PLENUS asseritur, non successus solus: scribere,
+         * legere, octetos conferre. Successus solus mentiretur si
+         * NUL tacite periisset. */
         {
-                     MateriaToken* malum;
+                     MateriaToken* cum_nul_lex;
                      MateriaNodus* r2;
+                     MateriaNodus* r2_lecta;
                            chorda  cum_nul;
             MateriaArborScriptura  s3;
+               MateriaArborVitium  v3;
 
             cum_nul.mensura = (i32)II;
             cum_nul.datum   = (i8*)piscina_allocare(piscina,
@@ -709,13 +722,113 @@ MateriaLexiconRatum  ratum;
             cum_nul.datum[ZEPHYRUM]  = (i8)' ';
             cum_nul.datum[I]         = (i8)'\0';
 
-            malum = materia_token_creare(piscina, &FORMA, (s32)G_ALBUM,
-                cum_nul, ZEPHYRUM, (i32)I, (i32)I, ZEPHYRUM);
+            cum_nul_lex = materia_token_creare(piscina, &FORMA,
+                (s32)G_ALBUM, cum_nul, ZEPHYRUM, (i32)I, (i32)I,
+                ZEPHYRUM);
             r2 = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
             CREDO_VERUM (materia_nodus_appendere(piscina, r2, ZEPHYRUM,
-                materia_valor_token(malum), MATERIA_LOCUS_LISTA_MIXTA));
+                materia_valor_token(cum_nul_lex),
+                MATERIA_LOCUS_LISTA_MIXTA));
             s3 = materia_arbor_scribere_nodum(piscina, r2, &c);
-            CREDO_FALSUM (s3.successus);
+            CREDO_VERUM (s3.successus);
+            si (!s3.successus)
+            {
+                imprimere("  causa: %s\n",
+                    s3.causa ? s3.causa : "(nulla)");
+            }
+            /* MECHANISMUS, non modo successus */
+            CREDO_NON_NIHIL (strstr((character*)s3.textus.datum,
+                "nul="));
+
+            r2_lecta = materia_arbor_legere(piscina, NIHIL, s3.textus,
+                &c, &v3);
+            CREDO_NON_NIHIL (r2_lecta);
+            CREDO_NIHIL (v3.causa);
+            si (r2_lecta != NIHIL)
+            {
+                MateriaValor* e2 = materia_valor_lista_obtinere(
+                    r2_lecta->loci[ZEPHYRUM], ZEPHYRUM);
+
+                CREDO_NON_NIHIL (e2);
+                si (e2 != NIHIL)
+                {
+                    MateriaToken* t2 = e2->datum.token;
+
+                    CREDO_NON_NIHIL (t2);
+                    CREDO_AEQUALIS_I32 (t2->valor.mensura, (i32)II);
+                    CREDO_AEQUALIS_S32 ((s32)t2->valor.datum[I],
+                        ZEPHYRUM);
+                }
+            }
+        }
+
+        /* CR ET NUL SIMUL - lex ORDINIS, quae aliter INEXPERTA esset.
+         *
+         * Scriptor CR primum exuit (offsets in valore VERO) et NUL
+         * secundum (offsets in valore SINE CR); lector ordine
+         * INVERSO induit. Cum alteruter solus adsit ordo nihil
+         * mutat, ergo casus alter nullus hanc legem tangit: planta
+         * quae ordinem lectoris permutat portas OMNES virides
+         * relinquebat (mensuratum 2026-09-19) donec hic casus
+         * accessit. Pinna quam frangere non potes vicinum metitur,
+         * non mundum. */
+        {
+                     MateriaToken* ambo_lex;
+                     MateriaNodus* r3;
+                     MateriaNodus* r3_lecta;
+                           chorda  ambo;
+            MateriaArborScriptura  s4;
+               MateriaArborVitium  v4;
+
+            ambo.mensura = (i32)IV;
+            ambo.datum   = (i8*)piscina_allocare(piscina,
+                (memoriae_index)IV);
+            ambo.datum[ZEPHYRUM]  = (i8)'a';
+            ambo.datum[I]         = (i8)'\r';
+            ambo.datum[II]        = (i8)'\0';
+            ambo.datum[III]       = (i8)'b';
+
+            ambo_lex = materia_token_creare(piscina, &FORMA,
+                (s32)G_IDENT, ambo, ZEPHYRUM, (i32)I, (i32)I,
+                ZEPHYRUM);
+            r3 = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+            CREDO_VERUM (materia_nodus_appendere(piscina, r3, ZEPHYRUM,
+                materia_valor_token(ambo_lex),
+                MATERIA_LOCUS_LISTA_MIXTA));
+            s4 = materia_arbor_scribere_nodum(piscina, r3, &c);
+            CREDO_VERUM (s4.successus);
+            si (s4.successus)
+            {
+                CREDO_NON_NIHIL (strstr((character*)s4.textus.datum,
+                    "cr="));
+                CREDO_NON_NIHIL (strstr((character*)s4.textus.datum,
+                    "nul="));
+
+                r3_lecta = materia_arbor_legere(piscina, NIHIL,
+                    s4.textus, &c, &v4);
+                CREDO_NON_NIHIL (r3_lecta);
+                CREDO_NIHIL (v4.causa);
+                si (r3_lecta != NIHIL)
+                {
+                    MateriaValor* e3 = materia_valor_lista_obtinere(
+                        r3_lecta->loci[ZEPHYRUM], ZEPHYRUM);
+
+                    CREDO_NON_NIHIL (e3);
+                    si (e3 != NIHIL && e3->datum.token != NIHIL)
+                    {
+                        MateriaToken* t3 = e3->datum.token;
+
+                        /* OCTETI, non modo mensura: ordo permutatus
+                         * mensuram eandem sed sedes permutatas dat */
+                        CREDO_AEQUALIS_I32 (t3->valor.mensura, (i32)IV);
+                        si (t3->valor.mensura == (i32)IV)
+                        {
+                            CREDO_VERUM (memcmp(t3->valor.datum,
+                                ambo.datum, (size_t)IV) == ZEPHYRUM);
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -669,144 +669,168 @@
   </elementum>
   <elementum nomen="md-linea-cr" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-indentatio" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-indentatio-codicis" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-marca-citationis" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-marca-puncti" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-marca-numeri" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-marca-officii" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-marca-atx" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-clausura-atx" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-subductio" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-saeptum" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-info" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-divisio" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-pipa" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-textus" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-delimitator" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-gravis" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-effugium" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-ens" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-nexus-apertum" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-nexus-cauda" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-autonexus" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-html" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-spatia-finalia" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>
@@ -814,6 +838,7 @@
   <elementum nomen="md-derivatum" textus="verum"
     nota="fons I: valor decoctus/solutus; f=1, linea/columna portatae, b numquam">
     <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="nul"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>
     <attributum nomen="columna" genus="numerus"/>

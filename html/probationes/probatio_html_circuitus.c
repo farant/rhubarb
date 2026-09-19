@@ -48,8 +48,13 @@
 /* recusationes STML per causam, cursus primus 2026-09-15: NUL XXXVI
  * (plagulae 'unsafe' III; limes formae crudae 01M2KPJ0HW - cum
  * materia recidat, hae rubent et casus in circuitum promoventur),
- * sequentia claudens NULLA (corpus eam non fert), aliae NULLAE */
-#define RECUSATA_NUL         ((i32)36)
+ * sequentia claudens NULLA (corpus eam non fert), aliae NULLAE
+ *
+ * MATERIA RECESSIT 2026-09-19: attributum 'nul' offsets fert, ut 'cr'
+ * ante eum - ergo XXXVI -> ZEPHYRUM, et casus omnes MDCCVIII per
+ * circuitum plenum eunt. Quod commentarium supra praedixit factum
+ * est; pinna PROMOTIONEM notat, non relaxationem. */
+#define RECUSATA_NUL         ((i32)0)
 #define RECUSATA_SEQUENTIA   ((i32)0)
 #define FRACTAE_IMPRESSAE    ((i32)40)
 

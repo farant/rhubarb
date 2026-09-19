@@ -30,9 +30,9 @@
  * (_longitudo_statica), casus in porta arboris.
  *
  * NUL: fons cum octeto NUL (in verbo, in corpore heredoc, in
- * commentario) parsatur et octetim emittitur; scriptor STML eum
- * NOMINATIM recusat ('valor lexematis NUL fert', 'valor trivii NUL
- * fert') - refusio, non ruina.
+ * commentario) parsatur et octetim emittitur; ex 2026-09-19 per STML
+ * quoque CIRCUIT, quia attributum 'nul' offsets eius fert (ut 'cr'
+ * ante eum). Olim scriptor eum nominatim recusabat.
  *
  * INVENTA (porta ipsa, 2026-09-16: MMCMXXXIV casus, VIII fracti, omnes
  * emendati cum casu in porta arboris aut arithmeticae): iuxtapositio
@@ -672,7 +672,13 @@ principale (vacuum)
 
 
     /* ==================================================
-     * NUL: parsatur, emittitur; STML nominatim recusat
+     * NUL: parsatur, emittitur, et per STML CIRCUIT
+     *
+     * Olim STML eum nominatim recusabat. Ex 2026-09-19 attributum
+     * 'nul' offsets fert (ut 'cr' ante eum), ergo circuitus PLENUS
+     * hic asseritur - scribere, legere, emittere, octetos conferre.
+     * Casus tertius trivium tangit (commentarium), semita altera a
+     * duobus prioribus quae lexema tangunt.
      * ================================================== */
 
     imprimere("\n--- Probans NUL ---\n");
@@ -680,12 +686,11 @@ principale (vacuum)
         nomen structura {
             constans character* fons;
                            i32  mensura;
-            constans character* causa;
         } CasusOcteti;
         hic_manens constans CasusOcteti NULLA[] = {
-            { "echo a\0b\n", 9, "valor lexematis NUL fert" },
-            { "cat <<A\nx\0y\nA\n", 14, "valor lexematis NUL fert" },
-            { "a # c\0d\n", 8, "valor trivii NUL fert" }
+            { "echo a\0b\n", 9 },
+            { "cat <<A\nx\0y\nA\n", 14 },
+            { "a # c\0d\n", 8 }
         };
           MateriaLexiconRatum ratum;
            MateriaLexIudicium iud;
@@ -714,13 +719,45 @@ principale (vacuum)
             }
             s = materia_arbor_scribere_nodum(piscina, radix,
                 &consilium);
-            CREDO_FALSUM (s.successus);
-            CREDO_NON_NIHIL (s.causa);
-            si (s.causa != NIHIL)
+            CREDO_VERUM (s.successus);
+            si (!s.successus)
             {
-                imprimere("  refusio nominata: %s\n", s.causa);
-                CREDO_VERUM (strcmp(s.causa, NULLA[k].causa)
-                    == ZEPHYRUM);
+                imprimere("  refusio: %s\n",
+                    s.causa != NIHIL ? s.causa : "(nulla)");
+                perge;
+            }
+            /* MECHANISMUS, non modo successus: sine hac assertione
+             * NUL tacite perditus probationem transiret */
+            CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
+                "nul="));
+            /* CIRCUITUS PLENUS: legere et octetos conferre */
+            {
+                        MateriaNodus* relecta;
+                  MateriaArborVitium  vitium;
+                    MateriaScriptura  emissa;
+           MateriaScripturaConsilium  consilium_emissionis;
+
+                relecta = materia_arbor_legere(piscina, NIHIL,
+                    s.textus, &consilium, &vitium);
+                CREDO_NON_NIHIL (relecta);
+                CREDO_NIHIL (vitium.causa);
+                si (relecta == NIHIL)
+                {
+                    perge;
+                }
+                materia_scriptura_consilium_nudum(
+                    &consilium_emissionis, &CRUSTA_REGISTRUM);
+                emissa = materia_scribere_nodum(piscina, relecta,
+                    &consilium_emissionis);
+                CREDO_VERUM (emissa.successus);
+                CREDO_AEQUALIS_I32 (emissa.textus.mensura,
+                    NULLA[k].mensura);
+                si (emissa.successus)
+                {
+                    CREDO_VERUM (memcmp(emissa.textus.datum,
+                        NULLA[k].fons,
+                        (size_t)NULLA[k].mensura) == ZEPHYRUM);
+                }
             }
         }
     }

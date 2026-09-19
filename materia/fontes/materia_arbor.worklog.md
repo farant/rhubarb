@@ -241,3 +241,79 @@ After: 10,000 → 0.18 s, 40,000 → 0.06 s (500×), and at 100,000 the
 walk survives while the writer's recursion dies (01M1FAD8) — the
 header's claim is now true. Pinned in materia's own gate: a 50,000-deep
 chain yielding 50,001 diagnostics.
+
+## 2026-09-19 — `nul`: the option that was already there
+
+Fran asked whether `&null;` or `<byte value="0000_0000"/>` would be a
+reasonable way to carry NUL through STML. Neither can work, and the
+reason is the same for both: **the values that need it are RAW.**
+
+- `&null;` — entities are not resolved inside raw content. That is
+  what raw means. Making raw resolve exactly one entity is the same
+  bargain that was rejected for `<\/crusta-litteralis>`: half-raw is
+  not raw.
+- `<byte/>` — an element makes the value MIXED, and `elementum mixtum
+  crudum esse NON potest`. You would trade raw away to keep NUL, and
+  lose the whitespace case and the closing-tag case with it — solving
+  one problem by un-solving two neighbours.
+
+The option already in the file, twelve lines above the refusal, was
+`_cr_exuere`: **strip the byte, keep its offsets in an attribute,
+reinsert on read.** CR needs it because STML normalises CRLF even
+inside raw. NUL needs it for the same reason and in the same place.
+So the pair became `_octetum_exuere`/`_octetum_induere`, parameterised
+by (byte, attribute name), with `cr` and `nul` as the two call sites.
+
+It is worth naming why the old refusal looked principled. Its comment
+said NUL is unrepresentable "quia chorda longitudinem fert et textus
+terminatore legitur" — the first half true, the conclusion false. The
+limit was never in rawness; it was that nobody had extended the
+neighbouring mechanism. A guard citing a true fact for a false
+conclusion reads exactly like a law.
+
+**Measured:** html `circuitus` 1,672/1,708 → **1,708/1,708**, NUL
+refusals 36 → 0. Every client suite green (materia 14, css 10, md 14,
+html 14, crusta 16, oratio 19, shim 398). `nul` declared beside `cr`
+in all six canons.
+
+### The plant that did not fire, and what it cost to find out
+
+Write strips CR first (offsets in the TRUE value — the old contract,
+so existing `cr` documents stay byte-identical) then NUL (offsets in
+the CR-stripped value); read restores NUL first, CR second. I wrote a
+paragraph of comment about that ordering.
+
+Then I planted it: swapped the read order. **Every suite stayed
+green** — materia 14/14, html 14/14, crusta 16/16. The law was
+entirely untested, because order only matters when ONE value carries
+BOTH bytes, and no corpus case does: html5lib's NUL files have no CR
+in the same token, and crusta's three fixtures are NUL-only.
+
+Added a case to `probatio_materia_arbor` carrying `a\r\0b`, asserting
+the bytes and not merely the length — the swapped order returns the
+right LENGTH with the positions exchanged, so a `mensura` check passes
+and a `memcmp` fails. With the case in place the same plant fires, on
+the memcmp, exactly as it should.
+
+Three plants total: order swap (fires only after the new case — the
+finding), NUL strip disabled (materia, html and crusta each go red),
+and the earlier refusal pins, which went red on their own the moment
+the mechanism landed and were promoted to round-trip assertions rather
+than flipped.
+
+### Gates promoted, not relaxed
+
+Four gates asserted the old refusal. None was merely inverted:
+
+- `probatio_html_circuitus` — its comment had PREDICTED this ("cum
+  materia recidat, hae rubent et casus in circuitum promoventur"). Pin
+  36 → 0.
+- `probatio_html_totalitas`, `probatio_crusta_totalitas` — now assert
+  the full round trip and that `nul=` is actually present. Asserting
+  success alone would pass if NUL were silently dropped.
+- `probatio_materia_diagnostica` — NUL there was only the VEHICLE for
+  triggering a writer refusal; the subject is that refusals carry a
+  position. Vehicle swapped to a value carrying its own closing
+  sequence, which still refuses. Worth recognising the shape: a test
+  that uses a limitation as scaffolding breaks when the limitation is
+  lifted, and the fix is a new trigger, not a weaker assertion.

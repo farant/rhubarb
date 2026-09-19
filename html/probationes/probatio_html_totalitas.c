@@ -123,11 +123,11 @@ _totum (
     constans character* fons,
                    i32  mensura)
 {
-    Piscina* piscina;
-    MateriaNodus* radix;
-    MateriaScriptura emissa;
-    MateriaScripturaConsilium consilium;
-    i32 fructus;
+                      Piscina* piscina;
+                 MateriaNodus* radix;
+             MateriaScriptura  emissa;
+    MateriaScripturaConsilium  consilium;
+                          i32  fructus;
 
     piscina  = piscina_generare_dynamicum("totalitas_casus", 65536);
     radix    = html_arbor_parsare(piscina, fons, mensura);
@@ -163,9 +163,9 @@ _parsura_sola (
     constans character* fons,
                    i32  mensura)
 {
-    Piscina* piscina;
+         Piscina* piscina;
     MateriaNodus* radix;
-    i32 fructus;
+             i32  fructus;
 
     piscina  = piscina_generare_dynamicum("totalitas_parsura", 1048576);
     radix    = html_arbor_parsare(piscina, fons, mensura);
@@ -457,7 +457,7 @@ principale (vacuum)
                    MateriaLexIudicium iud;
                 MateriaArborConsilium consilium;
                 MateriaArborScriptura s;
-        MateriaNodus* radix;
+                         MateriaNodus* radix;
 
         CREDO_NON_RUIT (_totum(NUL_FONS, mensura));
         CREDO_AEQUALIS_I32 (_totum(NUL_FONS, mensura), (i32)TOTUM_IDEM);
@@ -469,11 +469,31 @@ principale (vacuum)
         radix = html_arbor_parsare(piscina, NUL_FONS, mensura);
         CREDO_NON_NIHIL (radix);
         s = materia_arbor_scribere_nodum(piscina, radix, &consilium);
-        CREDO_FALSUM (s.successus);
-        CREDO_NON_NIHIL (s.causa);
-        si (s.causa != NIHIL)
+        /* OLIM recusatio nominata: NUL neque textui neque crudo
+         * aptus erat. 2026-09-19: attributum 'nul' offsets fert, ut
+         * 'cr' ante eum, ergo scriptura SUCCEDIT. Non solum
+         * successum asserimus sed MECHANISMUM: attributum ipsum in
+         * proiectione adesse debet, aliter successus casu venisset
+         * (exempli gratia si NUL tacite periisset). */
+        CREDO_VERUM (s.successus);
+        CREDO_NIHIL (s.causa);
+        CREDO_VERUM (s.textus.mensura > ZEPHYRUM);
         {
-            imprimere("  refusio nominata: %s\n", s.causa);
+            b32 nul_visum = FALSUM;
+            i32 k;
+
+            per (k = ZEPHYRUM; k + IV < s.textus.mensura; k++)
+            {
+                si (   s.textus.datum[k]       == (i8)'n'
+                    && s.textus.datum[k + I]   == (i8)'u'
+                    && s.textus.datum[k + II]  == (i8)'l'
+                    && s.textus.datum[k + III] == (i8)'=')
+                {
+                    nul_visum = VERUM;
+                    frange;
+                }
+            }
+            CREDO_VERUM (nul_visum);
         }
     }
 
