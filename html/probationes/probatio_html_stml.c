@@ -712,14 +712,24 @@ principale (vacuum)
      * ================================================== */
 
     {
+        /* TRES FORMAE TERMINATORIS, non una. Lector STML '</T'
+         * cum '>', '!' AUT SPATIO sequente terminat; custos
+         * scriptoris olim '</T>' SOLUM quaerebat, ergo formae duae
+         * posteriores eum transibant et documentum dabant quod
+         * lector noster parsare NON poterat ('STML parsari non
+         * potuit', mensuratum 2026-09-19). Casus '!' et spatii hic
+         * sunt ne custos iterum angustior lectore fiat. */
         hic_manens constans character* LIMITES[] = {
             "<script>var t = '</lex-textus-crudus>';</script>",
-            "<!-- </lex-commentarium> -->"
+            "<!-- </lex-commentarium> -->",
+            "<script>var t = '</lex-textus-crudus x';</script>",
+            "<script>var t = '</lex-textus-crudus!';</script>",
+            "<!-- </lex-commentarium -->"
         };
         i32 k;
 
         imprimere("\n--- Pinna: sequentia claudens propria ---\n");
-        per (k = ZEPHYRUM; k < II; k++)
+        per (k = ZEPHYRUM; k < V; k++)
         {
             Circuitus c = _circuitum_probare(piscina, &consilium,
                 LIMITES[k], (i32)strlen(LIMITES[k]), NIHIL, FALSUM);

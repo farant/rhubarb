@@ -198,6 +198,15 @@ beside `cr` in all six canons. NB `_textus_tutus` still carries a
 is stripped before it); kept as a cheap guard, revisit if a second
 caller appears.
 
+**THIRD INSTANCE, 2026-09-19** — same shape, different pair: the STML
+raw-region TERMINATOR was defined twice. The scanner stopped at `</T`
+followed by `>`, `!` **or whitespace**; `_valorem_crudum_notare`
+refused only `</T>`. So a value carrying `</T ` passed the guard, was
+written raw, and the reader could not parse our own document
+(`STML parsari non potuit`). Loud only by luck. Fixed by EXPORTING one
+predicate (`stml_crudi_terminator_est`) that both call — not by making
+the guard agree, since a guard that merely agrees today drifts again.
+
 *How it was wrong before, and why that shape is worth recognising:*
 the writer refused whitespace-only and the reader skipped it, and the
 reader's comment cited the writer as its justification — "contractus

@@ -569,6 +569,38 @@ stml_elementum_crudum_creare (
     InternamentumChorda* intern,
      constans character* titulus);
 
+
+/* ==================================================
+ * Terminator formae crudae - FONS UNUS
+ * ==================================================
+ *
+ * Quid regionem crudam '<T!>' TERMINET: '</T' cum '>', '!' aut
+ * spatio sequente. SCANSOR et quisquis valorem ANTE scripturam
+ * iudicat hinc AMBO pendere debent.
+ *
+ * Exportatum quia custos scriptoris (materia_arbor.c,
+ * _valorem_crudum_notare) suam definitionem angustiorem ferebat
+ * ('</T>' solum), ergo valor '</T ' custodem transibat et
+ * documentum dabat quod lector STML parsare non poterat -
+ * scriptor documentum emittens quod lector suus recusat.
+ * Mensuratum 2026-09-19; casus '!' et spatii ambo fracti.
+ *
+ * _est: positus 'positus' terminatorem INCIPIT?
+ * _fert: valor terminatorem ALICUBI fert? (custodis quaestio) */
+
+b32
+stml_crudi_terminator_est (
+                 chorda  textus,
+                    i32  positus,
+     constans character* titulus,
+                    i32  titulus_longitudo);
+
+b32
+stml_crudi_terminatorem_fert (
+                 chorda  valor,
+     constans character* titulus,
+                    i32  titulus_longitudo);
+
 /* Creare transclusionem ('<<valor>>') - constructio manualis pro
  * scriptoribus qui vocationes templi (macros v1) aut relationes
  * contenti auctorant; antea nodi transclusionis a parsatore solo

@@ -41,6 +41,80 @@ _est_spatium (
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
+
+/* ==================================================
+ * Terminator formae crudae - FONS UNUS
+ * ==================================================
+ *
+ * Quid regionem crudam TERMINET uno loco nunc definitur, quia olim
+ * DUOBUS definiebatur et illa discordabant: lector '</T' cum '>',
+ * '!' aut spatio sequente accipiebat, custos scriptoris
+ * (_valorem_crudum_notare) '</T>' SOLUM quaerebat. Ergo valor
+ * '</T ' custodem transibat, crudus scribebatur, et lector
+ * documentum SUUM parsare non poterat ('STML parsari non potuit',
+ * mensuratum 2026-09-19).
+ *
+ * Forma eadem ac contractus albi (materia/CLAUDE.md): partes duae
+ * quae idem dicere debent, quarum altera alteram citat, et lente
+ * discrepent. Remedium idem: unam fac, non ambas emenda. */
+
+b32
+stml_crudi_terminator_est (
+                 chorda  textus,
+                    i32  positus,
+     constans character* titulus,
+                    i32  titulus_longitudo)
+{
+    character post;
+          i32 i;
+
+    /* 'positus < ZEPHYRUM' NON scribitur: i32 INSIGNATUS est, ergo
+     * comparatio illa semper falsa (custos mortuus qui legentem
+     * fallit). */
+    si (   titulus                   == NIHIL
+        || positus + I               >= textus.mensura
+        || textus.datum[positus]     != (i8)'<'
+        || textus.datum[positus + I] != (i8)'/')
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < titulus_longitudo; i++)
+    {
+        i32 k = positus + II + i;
+
+        si (k >= textus.mensura || textus.datum[k] != (i8)titulus[i])
+        {
+            redde FALSUM;
+        }
+    }
+    {
+        i32 k = positus + II + titulus_longitudo;
+
+        post = (k < textus.mensura)
+            ? (character)textus.datum[k] : '\0';
+    }
+    redde (b32)(post == '>' || post == '!' || _est_spatium(post));
+}
+
+b32
+stml_crudi_terminatorem_fert (
+                 chorda  valor,
+     constans character* titulus,
+                    i32  titulus_longitudo)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < valor.mensura; i++)
+    {
+        si (stml_crudi_terminator_est(valor, i, titulus,
+                titulus_longitudo))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* Character valid for fragment ID: alphanumeric, underscore, hyphen */
 interior b32
 _est_fragmentum_id_character (
@@ -159,7 +233,8 @@ _tok_progredi (
                  i32  numerus)
 {
     i32 i;
-    per (i = ZEPHYRUM; i < numerus && ctx->positus < ctx->input.mensura; i++)
+    per (i = ZEPHYRUM; i < numerus
+        && ctx->positus < ctx->input.mensura; i++)
     {
         si ((character)ctx->input.datum[ctx->positus] == '\n')
         {
@@ -463,7 +538,8 @@ _tok_legere_attributa (
         {
             /* Boolean attribute - no value, use "true" */
             titulus_ptr = chorda_internare(ctx->intern, titulus_ch);
-            valor_ptr = chorda_internare_ex_literis(ctx->intern, "true");
+            valor_ptr = chorda_internare_ex_literis(ctx->intern,
+                "true");
 
             attr = xar_addere(attributa);
             si (attr)
@@ -1463,7 +1539,8 @@ _tok_legere_transclusio (
 
     /* Trim trailing whitespace from selector */
     dum (   selector_finis > selector_initium
-         && _est_spatium((character)ctx->input.datum[selector_finis - I]))
+         && _est_spatium((character)ctx->input.datum[selector_finis
+             - I]))
     {
         selector_finis--;
     }
@@ -1495,41 +1572,23 @@ _tok_legere_contentus_crudus (
           i32 initium;
           i32 initium_linea;
           i32 initium_columna;
-          i32 i;
           b32 inventum;
 
     initium          = ctx->positus;
     initium_linea    = ctx->linea;
     initium_columna  = ctx->columna;
 
-    /* Search for </tagname> */
+    /* Terminatorem quaerere - PER PRAEDICATUM COMMUNE, ne definitio
+     * hic iterum scripta a custode scriptoris discrepet (vide
+     * stml_crudi_terminator_est). */
     inventum = FALSUM;
     dum (ctx->positus < ctx->input.mensura && !inventum)
     {
-        si (   _tok_aspicere(ctx, ZEPHYRUM) == '<'
-            && _tok_aspicere(ctx, I)        == '/')
+        si (stml_crudi_terminator_est(ctx->input, ctx->positus,
+                (constans character*)titulus.datum, titulus.mensura))
         {
-            /* Check if this is our closing tag */
-            b32 aequalis;
-            aequalis = VERUM;
-
-            per (i = ZEPHYRUM; i < titulus.mensura; i++)
-            {
-                si (_tok_aspicere(ctx, II + i) != (character)titulus.datum[i])
-                {
-                    aequalis = FALSUM;
-                    frange;
-                }
-            }
-
-            si (   aequalis
-                && (_tok_aspicere(ctx, II + titulus.mensura) == '>'
-                || _tok_aspicere(ctx, II + titulus.mensura) == '!'
-                || _est_spatium(_tok_aspicere(ctx, II + titulus.mensura))))
-            {
-                inventum = VERUM;
-                frange;
-            }
+            inventum = VERUM;
+            frange;
         }
         _tok_progredi(ctx, I);
     }
@@ -1632,7 +1691,8 @@ _tok_proximus (
 
             per (i = ZEPHYRUM; i < ctx->crudus_titulus.mensura; i++)
             {
-                si (_tok_aspicere(ctx, II + i) != (character)ctx->crudus_titulus.datum[i])
+                si (_tok_aspicere(ctx, II + i)
+                    != (character)ctx->crudus_titulus.datum[i])
                 {
                     aequalis = FALSUM;
                     frange;
@@ -1742,7 +1802,8 @@ _tok_proximus (
         token = _tok_legere_tag(ctx);
 
         /* Check if entering raw content mode */
-        si (token.genus == STML_TOKEN_CRUDUS && token.captio_numerus == ZEPHYRUM)
+        si (   token.genus          == STML_TOKEN_CRUDUS
+            && token.captio_numerus == ZEPHYRUM)
         {
             ctx->in_crudus       = VERUM;
             ctx->crudus_titulus  = token.valor;
@@ -1993,7 +2054,8 @@ _parser_creare_nodus (
 {
     StmlNodus* nodus;
 
-    nodus = (StmlNodus*)piscina_allocare(ctx->piscina, magnitudo(StmlNodus));
+    nodus = (StmlNodus*)piscina_allocare(ctx->piscina,
+        magnitudo(StmlNodus));
     si (!nodus)
     {
         redde NIHIL;
@@ -2616,7 +2678,8 @@ _unescape_entities (
         }
         alioquin
         {
-            chorda_aedificator_appendere_character(aed, (character)textus.datum[i]);
+            chorda_aedificator_appendere_character(aed,
+                (character)textus.datum[i]);
             i++;
         }
     }
@@ -2949,7 +3012,8 @@ _liberos_legere (
         /* Clausura anonyma '</>' fragmentum quoque claudit (par
          * formae apertae '<>' - saccharum DISTRIBUTIONIS; clausura
          * nominata falsa vitium clarum manet, infra) */
-        si (   terminator                 == STML_TOKEN_FRAGMENTUM_CLAUDERE
+        si (   terminator
+            == STML_TOKEN_FRAGMENTUM_CLAUDERE
             && ctx->current.genus         == STML_TOKEN_CLAUDERE
             && ctx->current.valor.mensura == ZEPHYRUM)
         {
@@ -3063,7 +3127,8 @@ _attributa_elementa_probare (
                 i32 j;
                 i32 n2;
 
-                si (   parens->genus              != STML_NODUS_ELEMENTUM
+                si (   parens->genus
+                    != STML_NODUS_ELEMENTUM
                     || parens->augmentum_clavis   != NIHIL
                     || parens->attributum_titulus != NIHIL)
                 {
@@ -3136,10 +3201,10 @@ _attributa_elementa_probare (
              * machina expansionis (par. 6.1) ea iudicabit */
         }
         alioquin si (   liberum->genus == STML_NODUS_TRANSCLUSIO
-                     && liberum->valor                  != NIHIL
+                     && liberum->valor != NIHIL
                      && liberum->valor->mensura > II
                      && liberum->valor->datum[ZEPHYRUM] == '#'
-                     && liberum->valor->datum[I]        == '@')
+                     && liberum->valor->datum[I] == '@')
         {
             modus = I;
         }
@@ -3474,7 +3539,8 @@ _normalizare_spatium_album (
     /* Only apply smart trim if starts with newline or whitespace */
     {
         character primus = (character)textus.datum[ZEPHYRUM];
-        si (primus != '\n' && primus != ' ' && primus != '\t' && primus != '\r')
+        si (   primus != '\n' && primus != ' ' && primus != '\t'
+            && primus != '\r')
         {
             /* Inline text - just trim ends */
             redde chorda_praecidere(textus);
@@ -3562,7 +3628,8 @@ _normalizare_spatium_album (
             /* Remove min_indent characters from start */
             si (min_indent > ZEPHYRUM && min_indent <= linea.mensura)
             {
-                chorda dedented = chorda_sectio(linea, min_indent, linea.mensura);
+                chorda dedented = chorda_sectio(linea, min_indent,
+                    linea.mensura);
                 chorda_aedificator_appendere_chorda(aed, dedented);
             }
             alioquin
@@ -3701,7 +3768,8 @@ _parser_legere_fragmentum (
     /* Store fragment ID if present */
     si (ctx->current.valor.mensura > ZEPHYRUM)
     {
-        fragmentum_id_ptr = chorda_internare(ctx->intern, ctx->current.valor);
+        fragmentum_id_ptr = chorda_internare(ctx->intern,
+            ctx->current.valor);
         nodus->fragmentum_id = fragmentum_id_ptr;
     }
     alioquin
@@ -3760,7 +3828,8 @@ _parser_legere_fragmentum_auto (
     /* Store fragment ID if present */
     si (ctx->current.valor.mensura > ZEPHYRUM)
     {
-        fragmentum_id_ptr = chorda_internare(ctx->intern, ctx->current.valor);
+        fragmentum_id_ptr = chorda_internare(ctx->intern,
+            ctx->current.valor);
         nodus->fragmentum_id = fragmentum_id_ptr;
     }
     alioquin
@@ -4161,7 +4230,8 @@ _processare_captiones (
                 k = (s32)xar_numerus(novi_liberi) - I;
                 dum (k >= ZEPHYRUM && captured_count < captio_count)
                 {
-                    captus = *((StmlNodus**)xar_obtinere(novi_liberi, (i32)k));
+                    captus = *((StmlNodus**)xar_obtinere(novi_liberi,
+                        (i32)k));
                     si (captus && !_est_commentum(captus))
                     {
                         /* Insert at beginning of liberum's children */
@@ -4170,7 +4240,8 @@ _processare_captiones (
                               i32   temp_num;
                         StmlNodus** slot_t;
 
-                        temp = xar_creare(piscina, magnitudo(StmlNodus*));
+                        temp = xar_creare(piscina,
+                            magnitudo(StmlNodus*));
                         slot_t = xar_addere(temp);
                         si (slot_t) *slot_t = captus;
 
@@ -4178,7 +4249,9 @@ _processare_captiones (
                         per (m = ZEPHYRUM; m < temp_num; m++)
                         {
                             StmlNodus* temp_elem;
-                            temp_elem = _xar_liberum_obtinere(liberum->liberi, m);
+                            temp_elem =
+                                _xar_liberum_obtinere(liberum->liberi,
+                                m);
                             slot_t = xar_addere(temp);
                             si (slot_t) *slot_t = temp_elem;
                         }
@@ -4188,7 +4261,8 @@ _processare_captiones (
 
                         /* Remove from novi_liberi */
                         /* For simplicity, mark as null and skip later */
-                        *((StmlNodus**)xar_obtinere(novi_liberi, (i32)k)) = NIHIL;
+                        *((StmlNodus**)xar_obtinere(novi_liberi,
+                            (i32)k)) = NIHIL;
 
                         captured_count++;
                     }
@@ -4211,13 +4285,15 @@ _processare_captiones (
                 k = (s32)xar_numerus(novi_liberi) - I;
                 dum (k >= ZEPHYRUM)
                 {
-                    captus = *((StmlNodus**)xar_obtinere(novi_liberi, (i32)k));
+                    captus = *((StmlNodus**)xar_obtinere(novi_liberi,
+                        (i32)k));
                     si (captus && !_est_commentum(captus))
                     {
                         captus->parens  = liberum;
                         slot_c          = xar_addere(liberum->liberi);
                         si (slot_c) *slot_c = captus;
-                        *((StmlNodus**)xar_obtinere(novi_liberi, (i32)k)) = NIHIL;
+                        *((StmlNodus**)xar_obtinere(novi_liberi,
+                            (i32)k)) = NIHIL;
                         frange;
                     }
                     k--;
@@ -5256,7 +5332,8 @@ stml_index_inter_fratres (
     num = xar_numerus(nodus->parens->liberi);
     per (i = ZEPHYRUM; i < num; i++)
     {
-        liberum = *((StmlNodus**)xar_obtinere(nodus->parens->liberi, i));
+        liberum = *((StmlNodus**)xar_obtinere(nodus->parens->liberi,
+            i));
         si (liberum == nodus)
         {
             redde (s32)i;
@@ -5290,7 +5367,8 @@ stml_frater_proximus (
         redde NIHIL;  /* Iam ultimus */
     }
 
-    redde *((StmlNodus**)xar_obtinere(nodus->parens->liberi, (i32)(index + I)));
+    redde *((StmlNodus**)xar_obtinere(nodus->parens->liberi, (i32)(index
+        + I)));
 }
 
 StmlNodus*
@@ -5310,14 +5388,16 @@ stml_frater_prior (
         redde NIHIL;  /* Iam primus vel non inventus */
     }
 
-    redde *((StmlNodus**)xar_obtinere(nodus->parens->liberi, (i32)(index - I)));
+    redde *((StmlNodus**)xar_obtinere(nodus->parens->liberi, (i32)(index
+        - I)));
 }
 
 StmlNodus*
 stml_primus_liberum (
     StmlNodus* nodus)
 {
-    si (!nodus || !nodus->liberi || xar_numerus(nodus->liberi) == ZEPHYRUM)
+    si (   !nodus || !nodus->liberi
+        || xar_numerus(nodus->liberi) == ZEPHYRUM)
     {
         redde NIHIL;
     }
@@ -5370,7 +5450,8 @@ stml_fratres (
     num = xar_numerus(nodus->parens->liberi);
     per (i = ZEPHYRUM; i < num; i++)
     {
-        liberum = *((StmlNodus**)xar_obtinere(nodus->parens->liberi, i));
+        liberum = *((StmlNodus**)xar_obtinere(nodus->parens->liberi,
+            i));
         si (liberum != nodus)
         {
             slot = xar_addere(result);
@@ -5568,7 +5649,8 @@ stml_praeponere (
         }
     }
 
-    novi_liberi = _liberi_inserere_ad(parens->liberi, ZEPHYRUM, liberum, piscina);
+    novi_liberi = _liberi_inserere_ad(parens->liberi, ZEPHYRUM, liberum,
+        piscina);
     si (!novi_liberi)
     {
         redde FALSUM;
@@ -5601,7 +5683,8 @@ stml_removere (
         redde FALSUM;
     }
 
-    novi_liberi = _liberi_removere_ad(parens->liberi, (i32)index, piscina);
+    novi_liberi = _liberi_removere_ad(parens->liberi, (i32)index,
+        piscina);
     si (!novi_liberi)
     {
         redde FALSUM;
@@ -5663,7 +5746,8 @@ stml_inserere_ante (
         redde FALSUM;
     }
 
-    novi_liberi = _liberi_inserere_ad(parens->liberi, (i32)index, novum, piscina);
+    novi_liberi = _liberi_inserere_ad(parens->liberi, (i32)index, novum,
+        piscina);
     si (!novi_liberi)
     {
         redde FALSUM;
@@ -5697,7 +5781,8 @@ stml_inserere_post (
         redde FALSUM;
     }
 
-    novi_liberi = _liberi_inserere_ad(parens->liberi, (i32)(index + I), novum, piscina);
+    novi_liberi = _liberi_inserere_ad(parens->liberi, (i32)(index + I),
+        novum, piscina);
     si (!novi_liberi)
     {
         redde FALSUM;
@@ -5807,7 +5892,8 @@ _duplicare_recursivum (
     /* Copiare attributa */
     si (nodus->attributa && xar_numerus(nodus->attributa) > ZEPHYRUM)
     {
-        novum->attributa = xar_creare(piscina, magnitudo(StmlAttributum));
+        novum->attributa = xar_creare(piscina,
+            magnitudo(StmlAttributum));
         si (novum->attributa)
         {
             num = xar_numerus(nodus->attributa);
@@ -5816,8 +5902,10 @@ _duplicare_recursivum (
                 StmlAttributum* attr_orig;
                 StmlAttributum* attr_new;
 
-                attr_orig = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
-                attr_new = (StmlAttributum*)xar_addere(novum->attributa);
+                attr_orig =
+                    (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+                attr_new =
+                    (StmlAttributum*)xar_addere(novum->attributa);
                 si (attr_new && attr_orig)
                 {
                     attr_new->titulus      = attr_orig->titulus;  /* Internatum */
@@ -5833,7 +5921,8 @@ _duplicare_recursivum (
     }
 
     /* Copiare liberos (si profundum) */
-    si (profundum && nodus->liberi && xar_numerus(nodus->liberi) > ZEPHYRUM)
+    si (   profundum && nodus->liberi
+        && xar_numerus(nodus->liberi) > ZEPHYRUM)
     {
         novum->liberi = xar_creare(piscina, magnitudo(StmlNodus*));
         si (novum->liberi)
@@ -5845,8 +5934,10 @@ _duplicare_recursivum (
                 StmlNodus*  liberum_novum;
                 StmlNodus** slot;
 
-                liberum_orig = *((StmlNodus**)xar_obtinere(nodus->liberi, i));
-                liberum_novum = _duplicare_recursivum(liberum_orig, piscina, intern, VERUM);
+                liberum_orig =
+                    *((StmlNodus**)xar_obtinere(nodus->liberi, i));
+                liberum_novum = _duplicare_recursivum(liberum_orig,
+                    piscina, intern, VERUM);
                 si (liberum_novum)
                 {
                     liberum_novum->parens  = novum;
@@ -6150,7 +6241,8 @@ stml_attributum_boolean_addere (
     InternamentumChorda* intern,
      constans character* titulus)
 {
-    redde stml_attributum_addere(nodus, piscina, intern, titulus, "true");
+    redde stml_attributum_addere(nodus, piscina, intern, titulus,
+        "true");
 }
 
 b32
@@ -7852,7 +7944,8 @@ _scribere_nucleus (
                                      liberum->spatia_ante, ZEPHYRUM);
                                  vacuae > ZEPHYRUM; vacuae--)
                             {
-                                chorda_aedificator_appendere_character(aedificator, '\n');
+                                chorda_aedificator_appendere_character(aedificator,
+                                    '\n');
                             }
                         }
                         _scribere_nucleus(liberum, aedificator,
@@ -7860,7 +7953,8 @@ _scribere_nucleus (
                             indentatio, sedes);
                         si (pulchrum && !in_linea && i < num - I)
                         {
-                            chorda_aedificator_appendere_character(aedificator, '\n');
+                            chorda_aedificator_appendere_character(aedificator,
+                                '\n');
                         }
                     }
                 }
@@ -7934,7 +8028,8 @@ _scribere_nucleus (
                         si (liberum)
                         {
                             _scribere_nucleus(liberum,
-                                aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
+                                aedificator, FALSUM, fidelitas,
+                                ZEPHYRUM, sedes);
                         }
                     }
                 }
@@ -7950,13 +8045,16 @@ _scribere_nucleus (
                 chorda_aedificator_appendere_literis(aedificator, "<#");
 
                 /* Fragment ID if present */
-                si (nodus->fragmentum_id && nodus->fragmentum_id->mensura > ZEPHYRUM)
+                si (   nodus->fragmentum_id
+                    && nodus->fragmentum_id->mensura > ZEPHYRUM)
                 {
-                    chorda_aedificator_appendere_chorda(aedificator, *nodus->fragmentum_id);
+                    chorda_aedificator_appendere_chorda(aedificator,
+                        *nodus->fragmentum_id);
                 }
 
                 /* Attributes */
-                                _attributa_scribere(aedificator, nodus, fidelitas);
+                                _attributa_scribere(aedificator, nodus,
+                                    fidelitas);
 
                 /* trivia intra tagum ante finem (§1.6) */
                 si (fidelitas && nodus->spatia_intra_tagum != NIHIL)
@@ -7978,13 +8076,16 @@ _scribere_nucleus (
                         && nodus->attributa != NIHIL
                         && xar_numerus(nodus->attributa) > ZEPHYRUM)
                     {
-                        chorda_aedificator_appendere_character(aedificator, ' ');
+                        chorda_aedificator_appendere_character(aedificator,
+                            ' ');
                     }
                     per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
                     {
-                        chorda_aedificator_appendere_character(aedificator, '(');
+                        chorda_aedificator_appendere_character(aedificator,
+                            '(');
                     }
-                    chorda_aedificator_appendere_character(aedificator, '>');
+                    chorda_aedificator_appendere_character(aedificator,
+                        '>');
                     finis_tagi =
                         (i32)chorda_aedificator_longitudo(aedificator);
                     /* post captoris inter tagum et captos (§6) */
@@ -8002,10 +8103,12 @@ _scribere_nucleus (
                         num = xar_numerus(nodus->liberi);
                         per (i = ZEPHYRUM; i < num; i++)
                         {
-                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            liberum =
+                                _xar_liberum_obtinere(nodus->liberi, i);
                             si (liberum)
                             {
-                                _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
+                                _scribere_nucleus(liberum, aedificator,
+                                    FALSUM, fidelitas, ZEPHYRUM, sedes);
                             }
                         }
                     }
@@ -8018,30 +8121,36 @@ _scribere_nucleus (
                 }
 
                 /* Check if has children (self-closing vs content) */
-                habet_liberos = nodus->liberi && xar_numerus(nodus->liberi) > ZEPHYRUM;
+                habet_liberos = nodus->liberi
+                    && xar_numerus(nodus->liberi) > ZEPHYRUM;
 
                 si (!habet_liberos)
                 {
                     /* Self-closing fragment: <#/> or <#id/> */
-                    chorda_aedificator_appendere_literis(aedificator, "/>");
+                    chorda_aedificator_appendere_literis(aedificator,
+                        "/>");
                 }
                 alioquin
                 {
-                    chorda_aedificator_appendere_character(aedificator, '>');
+                    chorda_aedificator_appendere_character(aedificator,
+                        '>');
 
                     /* Serialize children */
                     num = xar_numerus(nodus->liberi);
                     per (i = ZEPHYRUM; i < num; i++)
                     {
-                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                        liberum = _xar_liberum_obtinere(nodus->liberi,
+                            i);
                         si (liberum)
                         {
-                            _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
+                            _scribere_nucleus(liberum, aedificator,
+                                FALSUM, fidelitas, ZEPHYRUM, sedes);
                         }
                     }
 
                     /* Closing tag: always </#> */
-                    chorda_aedificator_appendere_literis(aedificator, "</#>");
+                    chorda_aedificator_appendere_literis(aedificator,
+                        "</#>");
                 }
                 frange;
             }
@@ -8065,28 +8174,36 @@ _scribere_nucleus (
                     num = xar_numerus(nodus->liberi);
                     per (i = ZEPHYRUM; i < num; i++)
                     {
-                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                        liberum = _xar_liberum_obtinere(nodus->liberi,
+                            i);
                         si (liberum)
                         {
-                            _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
+                            _scribere_nucleus(liberum, aedificator,
+                                FALSUM, fidelitas, ZEPHYRUM, sedes);
                         }
                     }
                 }
                 initium_tagi =
                     (i32)chorda_aedificator_longitudo(aedificator);
-                chorda_aedificator_appendere_character(aedificator, '<');
+                chorda_aedificator_appendere_character(aedificator,
+                    '<');
                 per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
                 {
-                    chorda_aedificator_appendere_character(aedificator, ')');
+                    chorda_aedificator_appendere_character(aedificator,
+                        ')');
                 }
-                chorda_aedificator_appendere_character(aedificator, ' ');
+                chorda_aedificator_appendere_character(aedificator,
+                    ' ');
                 si (nodus->titulus)
                 {
-                    chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                    chorda_aedificator_appendere_chorda(aedificator,
+                        *nodus->titulus);
                 }
                 /* Attributes */
-                                _attributa_scribere(aedificator, nodus, fidelitas);
-                chorda_aedificator_appendere_character(aedificator, '>');
+                                _attributa_scribere(aedificator, nodus,
+                                    fidelitas);
+                chorda_aedificator_appendere_character(aedificator,
+                    '>');
                 /* extensio: tagum solum, quod POST captos in fonte
                  * stat - captis iam notatis post-ordo tenet
                  * (01M0X12PWS) */
@@ -8117,14 +8234,18 @@ _scribere_nucleus (
                 }
                 initium_tagi =
                     (i32)chorda_aedificator_longitudo(aedificator);
-                chorda_aedificator_appendere_literis(aedificator, "<= ");
+                chorda_aedificator_appendere_literis(aedificator,
+                    "<= ");
                 si (nodus->titulus)
                 {
-                    chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                    chorda_aedificator_appendere_chorda(aedificator,
+                        *nodus->titulus);
                 }
                 /* Attributes */
-                                _attributa_scribere(aedificator, nodus, fidelitas);
-                chorda_aedificator_appendere_literis(aedificator, " =>");
+                                _attributa_scribere(aedificator, nodus,
+                                    fidelitas);
+                chorda_aedificator_appendere_literis(aedificator,
+                    " =>");
                 finis_tagi =
                     (i32)chorda_aedificator_longitudo(aedificator);
                 /* Liberi reliqui ab indice I (liberum 0 iam ante
@@ -8134,10 +8255,12 @@ _scribere_nucleus (
                     num = xar_numerus(nodus->liberi);
                     per (i = I; i < num; i++)
                     {
-                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                        liberum = _xar_liberum_obtinere(nodus->liberi,
+                            i);
                         si (liberum)
                         {
-                            _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
+                            _scribere_nucleus(liberum, aedificator,
+                                FALSUM, fidelitas, ZEPHYRUM, sedes);
                         }
                     }
                 }
@@ -8153,10 +8276,12 @@ _scribere_nucleus (
                 /* Forward capture: <tag (> or <tag ((> */
                 i32 j;
                 i32 finis_tagi;
-                chorda_aedificator_appendere_character(aedificator, '<');
+                chorda_aedificator_appendere_character(aedificator,
+                    '<');
                 si (nodus->titulus)
                 {
-                    chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                    chorda_aedificator_appendere_chorda(aedificator,
+                        *nodus->titulus);
                 }
                 /* Elementum attributi: nomen + '=' titulum '@'
                  * sequuntur - '<@m=(' (par. 6.3) */
@@ -8169,7 +8294,8 @@ _scribere_nucleus (
                 }
                 si (nodus->crudus)
                 {
-                    chorda_aedificator_appendere_character(aedificator, '!');
+                    chorda_aedificator_appendere_character(aedificator,
+                        '!');
                 }
                 /* Attributes (§0.2 decretum quintum: positione
                  * bloci ultra tectum - attributa stackata,
@@ -8201,15 +8327,19 @@ _scribere_nucleus (
                     }
                 }
                 alioquin si (   nodus->attributa != NIHIL
-                             && xar_numerus(nodus->attributa) > ZEPHYRUM)
+                             && xar_numerus(nodus->attributa)
+                                 > ZEPHYRUM)
                 {
-                    chorda_aedificator_appendere_character(aedificator, ' ');
+                    chorda_aedificator_appendere_character(aedificator,
+                        ' ');
                 }
                 per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
                 {
-                    chorda_aedificator_appendere_character(aedificator, '(');
+                    chorda_aedificator_appendere_character(aedificator,
+                        '(');
                 }
-                chorda_aedificator_appendere_character(aedificator, '>');
+                chorda_aedificator_appendere_character(aedificator,
+                    '>');
                 }
                 finis_tagi =
                     (i32)chorda_aedificator_longitudo(aedificator);
@@ -8254,10 +8384,13 @@ _scribere_nucleus (
                     num = xar_numerus(nodus->liberi);
                     per (i = ZEPHYRUM; i < num; i++)
                     {
-                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                        liberum = _xar_liberum_obtinere(nodus->liberi,
+                            i);
                         si (liberum)
                         {
-                            si (nodus->crudus && liberum->genus == STML_NODUS_TEXTUS && liberum->valor)
+                            si (   nodus->crudus
+                                && liberum->genus == STML_NODUS_TEXTUS
+                                && liberum->valor)
                             {
                                 /* Raw content - non evasus; interius '!\'
                                  * trivia sua et praefixum secum fert */
@@ -8265,22 +8398,30 @@ _scribere_nucleus (
                                 {
                                     si (liberum->spatia_ante != NIHIL)
                                     {
-                                        chorda_aedificator_appendere_chorda(aedificator, *liberum->spatia_ante);
+                                        chorda_aedificator_appendere_chorda(aedificator,
+                                            *liberum->spatia_ante);
                                     }
-                                    _valorem_praefixo_scribere(aedificator, *liberum->valor, nodus->indentatio, FALSUM, liberum->spatia_ante != NIHIL ? VERUM : FALSUM);
+                                    _valorem_praefixo_scribere(aedificator,
+                                        *liberum->valor,
+                                        nodus->indentatio, FALSUM,
+                                        liberum->spatia_ante
+                                            != NIHIL ? VERUM : FALSUM);
                                     si (liberum->spatia_post != NIHIL)
                                     {
-                                        chorda_aedificator_appendere_chorda(aedificator, *liberum->spatia_post);
+                                        chorda_aedificator_appendere_chorda(aedificator,
+                                            *liberum->spatia_post);
                                     }
                                 }
                                 alioquin
                                 {
-                                    chorda_aedificator_appendere_chorda(aedificator, *liberum->valor);
+                                    chorda_aedificator_appendere_chorda(aedificator,
+                                        *liberum->valor);
                                 }
                             }
                             alioquin
                             {
-                                _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
+                                _scribere_nucleus(liberum, aedificator,
+                                    FALSUM, fidelitas, ZEPHYRUM, sedes);
                             }
                         }
                     }
@@ -8319,10 +8460,12 @@ _scribere_nucleus (
             alioquin
             {
                 /* Normal element (no capture) */
-                chorda_aedificator_appendere_character(aedificator, '<');
+                chorda_aedificator_appendere_character(aedificator,
+                    '<');
                 si (nodus->titulus)
                 {
-                    chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                    chorda_aedificator_appendere_chorda(aedificator,
+                        *nodus->titulus);
                 }
 
                 /* Elementum attributi: nomen + '=' titulum '@'
@@ -8338,13 +8481,15 @@ _scribere_nucleus (
                 /* Raw content marker */
                 si (nodus->crudus)
                 {
-                    chorda_aedificator_appendere_character(aedificator, '!');
+                    chorda_aedificator_appendere_character(aedificator,
+                        '!');
                 }
 
                 /* Signum multilineae (§1.4) - post '!' si adest */
                 si (nodus->multilinea)
                 {
-                    chorda_aedificator_appendere_character(aedificator, '\\');
+                    chorda_aedificator_appendere_character(aedificator,
+                        '\\');
                 }
 
                 /* Attributes (§0.2 decretum quintum: positione
@@ -8379,7 +8524,8 @@ _scribere_nucleus (
                  * ad trivia migravit, §1.3) formam apertam tenet in
                  * modo non-pulchro - '/>' octetos interiores
                  * perderet. */
-                habet_liberos = nodus->liberi && xar_numerus(nodus->liberi) > ZEPHYRUM;
+                habet_liberos = nodus->liberi
+                    && xar_numerus(nodus->liberi) > ZEPHYRUM;
                 si (fidelitas && nodus->spatia_clausurae != NIHIL)
                 {
                     habet_liberos = VERUM;
@@ -8387,15 +8533,18 @@ _scribere_nucleus (
 
                 si (!habet_liberos)
                 {
-                    chorda_aedificator_appendere_literis(aedificator, "/>");
+                    chorda_aedificator_appendere_literis(aedificator,
+                        "/>");
                 }
                 alioquin
                 {
                     memoriae_index initium_contenti;
                                b32 clausura_tacita;
 
-                    chorda_aedificator_appendere_character(aedificator, '>');
-                    initium_contenti = chorda_aedificator_longitudo(aedificator);
+                    chorda_aedificator_appendere_character(aedificator,
+                        '>');
+                    initium_contenti =
+                        chorda_aedificator_longitudo(aedificator);
 
                     num = nodus->liberi
                         ? xar_numerus(nodus->liberi) : ZEPHYRUM;
@@ -8421,7 +8570,8 @@ _scribere_nucleus (
                          * refluit. */
                         per (i = ZEPHYRUM; i < num; i++)
                         {
-                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            liberum =
+                                _xar_liberum_obtinere(nodus->liberi, i);
                             si (   liberum
                                 && liberum->genus == STML_NODUS_TEXTUS
                                 && liberum->valor)
@@ -8435,7 +8585,8 @@ _scribere_nucleus (
                                         ? VERUM : FALSUM);
                             }
                         }
-                        chorda_aedificator_appendere_character(aedificator, '\n');
+                        chorda_aedificator_appendere_character(aedificator,
+                            '\n');
                         _scribere_indentatio(aedificator, indentatio);
                     }
                     alioquin si (nodus->crudus)
@@ -8443,48 +8594,64 @@ _scribere_nucleus (
                         /* crudus: interior verbatim, numquam tactus */
                         per (i = ZEPHYRUM; i < num; i++)
                         {
-                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            liberum =
+                                _xar_liberum_obtinere(nodus->liberi, i);
                             si (liberum)
                             {
-                                si (liberum->genus == STML_NODUS_TEXTUS && liberum->valor)
+                                si (liberum->genus == STML_NODUS_TEXTUS
+                                    && liberum->valor)
                                 {
                                     /* Raw content - non evasus; interius '!\'
                                      * trivia sua et praefixum secum fert */
                                     si (nodus->multilinea)
                                     {
-                                        si (liberum->spatia_ante != NIHIL)
+                                        si (liberum->spatia_ante
+                                            != NIHIL)
                                         {
-                                            chorda_aedificator_appendere_chorda(aedificator, *liberum->spatia_ante);
+                                            chorda_aedificator_appendere_chorda(aedificator,
+                                                *liberum->spatia_ante);
                                         }
-                                        _valorem_praefixo_scribere(aedificator, *liberum->valor, nodus->indentatio, FALSUM, liberum->spatia_ante != NIHIL ? VERUM : FALSUM);
-                                        si (liberum->spatia_post != NIHIL)
+                                        _valorem_praefixo_scribere(aedificator,
+                                            *liberum->valor,
+                                            nodus->indentatio, FALSUM,
+                                            liberum->spatia_ante
+                                                != NIHIL ? VERUM : FALSUM);
+                                        si (liberum->spatia_post
+                                            != NIHIL)
                                         {
-                                            chorda_aedificator_appendere_chorda(aedificator, *liberum->spatia_post);
+                                            chorda_aedificator_appendere_chorda(aedificator,
+                                                *liberum->spatia_post);
                                         }
                                     }
                                     alioquin
                                     {
-                                        chorda_aedificator_appendere_chorda(aedificator, *liberum->valor);
+                                        chorda_aedificator_appendere_chorda(aedificator,
+                                            *liberum->valor);
                                     }
                                 }
                                 alioquin
                                 {
-                                    _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
+                                    _scribere_nucleus(liberum,
+                                        aedificator, FALSUM, fidelitas,
+                                        ZEPHYRUM, sedes);
                                 }
                             }
                         }
                     }
-                    alioquin si (!pulchrum || _habet_liberum_textus(nodus))
+                    alioquin si (   !pulchrum
+                                 || _habet_liberum_textus(nodus))
                     {
                         /* series plana: fidelitas semper (liberi
                          * trivia sua ordine ferunt); pulcher INLINE
                          * quia textus adest */
                         per (i = ZEPHYRUM; i < num; i++)
                         {
-                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            liberum =
+                                _xar_liberum_obtinere(nodus->liberi, i);
                             si (liberum)
                             {
-                                _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
+                                _scribere_nucleus(liberum, aedificator,
+                                    FALSUM, fidelitas, ZEPHYRUM, sedes);
                             }
                         }
                     }
@@ -8496,34 +8663,43 @@ _scribere_nucleus (
                          * cursum totum ei dat) */
                         per (i = ZEPHYRUM; i < num; i++)
                         {
-                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            liberum =
+                                _xar_liberum_obtinere(nodus->liberi, i);
                             si (liberum)
                             {
                                 i32 vacuae;
 
-                                chorda_aedificator_appendere_character(aedificator, '\n');
+                                chorda_aedificator_appendere_character(aedificator,
+                                    '\n');
                                 per (vacuae = _lineae_vacuae(
                                          liberum->spatia_ante,
-                                         (i == ZEPHYRUM) ? I : ZEPHYRUM);
+                                         (i
+                                             == ZEPHYRUM) ? I : ZEPHYRUM);
                                      vacuae > ZEPHYRUM; vacuae--)
                                 {
-                                    chorda_aedificator_appendere_character(aedificator, '\n');
+                                    chorda_aedificator_appendere_character(aedificator,
+                                        '\n');
                                 }
-                                _scribere_nucleus(liberum, aedificator, VERUM, fidelitas, indentatio + I, sedes);
+                                _scribere_nucleus(liberum, aedificator,
+                                    VERUM, fidelitas, indentatio + I,
+                                    sedes);
                             }
                         }
                         {
                             i32 vacuae;
 
-                            chorda_aedificator_appendere_character(aedificator, '\n');
+                            chorda_aedificator_appendere_character(aedificator,
+                                '\n');
                             per (vacuae = _lineae_vacuae(
                                      nodus->spatia_clausurae,
                                      ZEPHYRUM);
                                  vacuae > ZEPHYRUM; vacuae--)
                             {
-                                chorda_aedificator_appendere_character(aedificator, '\n');
+                                chorda_aedificator_appendere_character(aedificator,
+                                    '\n');
                             }
-                            _scribere_indentatio(aedificator, indentatio);
+                            _scribere_indentatio(aedificator,
+                                indentatio);
                         }
                     }
 
@@ -8540,7 +8716,8 @@ _scribere_nucleus (
                     si (pulchrum && !nodus->crudus)
                     {
                         clausura_tacita =
-                            (_lineae_contenti(aedificator, initium_contenti)
+                            (_lineae_contenti(aedificator,
+                            initium_contenti)
                                 <= STML_CLAUSURA_TACITA_LINEAE)
                             ? VERUM : FALSUM;
                     }
@@ -8559,12 +8736,15 @@ _scribere_nucleus (
                             aedificator, *nodus->spatia_clausurae);
                     }
 
-                    chorda_aedificator_appendere_literis(aedificator, "</");
+                    chorda_aedificator_appendere_literis(aedificator,
+                        "</");
                     si (nodus->titulus && !clausura_tacita)
                     {
-                        chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                        chorda_aedificator_appendere_chorda(aedificator,
+                            *nodus->titulus);
                     }
-                    chorda_aedificator_appendere_character(aedificator, '>');
+                    chorda_aedificator_appendere_character(aedificator,
+                        '>');
                 }
             }
             frange;
@@ -8605,7 +8785,8 @@ _scribere_nucleus (
             chorda_aedificator_appendere_literis(aedificator, "<!--");
             si (nodus->valor)
             {
-                chorda_aedificator_appendere_chorda(aedificator, *nodus->valor);
+                chorda_aedificator_appendere_chorda(aedificator,
+                    *nodus->valor);
             }
             chorda_aedificator_appendere_literis(aedificator, "-->");
             frange;
@@ -8618,7 +8799,8 @@ _scribere_nucleus (
             chorda_aedificator_appendere_literis(aedificator, "<?");
             si (nodus->valor)
             {
-                chorda_aedificator_appendere_chorda(aedificator, *nodus->valor);
+                chorda_aedificator_appendere_chorda(aedificator,
+                    *nodus->valor);
             }
             chorda_aedificator_appendere_literis(aedificator, "?>");
             frange;
@@ -8628,10 +8810,12 @@ _scribere_nucleus (
             {
                 _scribere_indentatio(aedificator, indentatio);
             }
-            chorda_aedificator_appendere_literis(aedificator, "<!DOCTYPE ");
+            chorda_aedificator_appendere_literis(aedificator,
+                "<!DOCTYPE ");
             si (nodus->valor)
             {
-                chorda_aedificator_appendere_chorda(aedificator, *nodus->valor);
+                chorda_aedificator_appendere_chorda(aedificator,
+                    *nodus->valor);
             }
             chorda_aedificator_appendere_character(aedificator, '>');
             frange;
@@ -8647,7 +8831,8 @@ _scribere_nucleus (
             chorda_aedificator_appendere_literis(aedificator, "<<");
             si (nodus->valor)
             {
-                chorda_aedificator_appendere_chorda(aedificator, *nodus->valor);
+                chorda_aedificator_appendere_chorda(aedificator,
+                    *nodus->valor);
             }
             chorda_aedificator_appendere_literis(aedificator, ">>");
             frange;
@@ -8852,7 +9037,8 @@ stml_titulum_habet (
             match = VERUM;
             per (j = ZEPHYRUM; j < target_len; j++)
             {
-                si ((character)labels_valor->datum[start + j] != titulum[j])
+                si ((character)labels_valor->datum[start + j]
+                    != titulum[j])
                 {
                     match = FALSUM;
                     frange;
@@ -8895,7 +9081,8 @@ stml_titulos_numerus (
 
     per (i = ZEPHYRUM; i < labels_valor->mensura; i++)
     {
-        si (labels_valor->datum[i] == ' ' || labels_valor->datum[i] == '\t')
+        si (   labels_valor->datum[i] == ' '
+            || labels_valor->datum[i] == '\t')
         {
             in_token = FALSUM;
         }
@@ -8995,7 +9182,8 @@ stml_titulum_addere (
     si (!labels_valor)
     {
         /* No labels attribute exists - add a new one */
-        redde stml_attributum_addere(nodus, piscina, intern, "labels", titulum);
+        redde stml_attributum_addere(nodus, piscina, intern, "labels",
+            titulum);
     }
 
     si (labels_valor->mensura == ZEPHYRUM)
@@ -9009,10 +9197,12 @@ stml_titulum_addere (
 
         si (attr_index >= ZEPHYRUM)
         {
-            attr = (StmlAttributum*)xar_obtinere(nodus->attributa, (i32)attr_index);
+            attr = (StmlAttributum*)xar_obtinere(nodus->attributa,
+                (i32)attr_index);
             si (attr)
             {
-                attr->valor = chorda_internare_ex_literis(intern, titulum);
+                attr->valor = chorda_internare_ex_literis(intern,
+                    titulum);
                 redde attr->valor != NIHIL;
             }
         }
@@ -9046,7 +9236,8 @@ stml_titulum_addere (
 
     si (attr_index >= ZEPHYRUM)
     {
-        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, (i32)attr_index);
+        attr = (StmlAttributum*)xar_obtinere(nodus->attributa,
+            (i32)attr_index);
         si (attr)
         {
             attr->valor = interned;
@@ -9144,7 +9335,8 @@ stml_titulum_removere (
         redde FALSUM;  /* Attribute not found */
     }
 
-    attr = (StmlAttributum*)xar_obtinere(nodus->attributa, (i32)attr_index);
+    attr = (StmlAttributum*)xar_obtinere(nodus->attributa,
+        (i32)attr_index);
     si (!attr)
     {
         redde FALSUM;
@@ -9154,7 +9346,8 @@ stml_titulum_removere (
     si (new_valor.mensura == ZEPHYRUM)
     {
         /* Create an empty chorda - allocate space for the chorda struct */
-        interned = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        interned = (chorda*)piscina_allocare(piscina,
+            magnitudo(chorda));
         si (!interned)
         {
             redde FALSUM;

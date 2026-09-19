@@ -762,28 +762,19 @@ _valorem_crudum_notare (
       constans character* tag,
          constans chorda* valor)
 {
-    character clausura[MATERIA_ARBOR_TAG_CAPACITAS + IV];
-          i32 longitudo;
-          i32 i;
-
-    longitudo           = (i32)strlen(tag);
-    clausura[ZEPHYRUM]  = '<';
-    clausura[I]         = '/';
-    memcpy(clausura + II, tag, (size_t)longitudo);
-    clausura[II + longitudo]  = '>';
-    longitudo                 += III;
-
-    si (valor->mensura >= longitudo)
+    /* CUSTOS ET SCANSOR IDEM PRAEDICATUM ADHIBENT.
+     *
+     * Olim hic '</tag>' SOLUM quaerebatur dum lector STML '</tag'
+     * cum '>', '!' AUT SPATIO sequente terminatorem habebat. Ergo
+     * valor '</tag ' custodem transibat, crudus scribebatur, et
+     * lector documentum nostrum parsare non poterat - scriptor
+     * documentum emittens quod lector suus recusat. Mensuratum
+     * 2026-09-19: casus '!' et spatii ambo fracti, casus '>' solus
+     * custoditus. Nunc stml_crudi_terminatorem_fert unus iudicat. */
+    si (stml_crudi_terminatorem_fert(*valor, tag, (i32)strlen(tag)))
     {
-        per (i = ZEPHYRUM; i <= valor->mensura - longitudo; i++)
-        {
-            si (memcmp(valor->datum + i, clausura,
-                    (size_t)longitudo) == ZEPHYRUM)
-            {
-                st->causa = "valor sequentiam claudentem fert";
-                redde FALSUM;
-            }
-        }
+        st->causa = "valor sequentiam claudentem fert";
+        redde FALSUM;
     }
     elementum->crudus = VERUM;
     redde VERUM;

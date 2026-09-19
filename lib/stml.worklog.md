@@ -1473,3 +1473,61 @@ correctly demanding a `natura_struere` rebuild after the later parser
 edits. Lesson shape: a corpus sweep measures ITS OWN corpus — name
 what it cannot see (in-code fixtures, generated-at-runtime documents)
 before calling a migration done.
+
+## 2026-09-19 — what terminates a raw region, said ONCE
+
+Found during a design pass for the reserved `<\/T>` escape
+(01M2KPJ0HW), before writing any of that feature. Reading the two
+sides side by side was enough.
+
+**The scanner and the writer's guard disagreed about the terminator.**
+
+- `_tok_legere_contentus_crudus` stops at `</T` followed by `>`, `!`
+  **or whitespace** — three forms.
+- `materia_arbor.c`'s `_valorem_crudum_notare` refused only on `</T>`
+  — one form.
+
+So two of the three were unguarded. Measured, round-tripping
+`<script>var t = '…';</script>`:
+
+| value contains | writer | reader |
+|---|---|---|
+| `</T>` | refuses | — (the known limit) |
+| `</T` + space | **accepts raw** | `STML parsari non potuit` |
+| `</T!` | **accepts raw** | `STML parsari non potuit` |
+| `</T` + anything else | accepts raw | fine |
+
+**The writer emitted a document its own reader rejects.** Loud rather
+than silent, which is luck: the truncated remainder happened not to
+parse. A remainder that did parse would have been quiet corruption.
+
+Fix: `stml_crudi_terminator_est` / `_terminatorem_fert` exported from
+`lib/stml.c`; the scanner and the guard both call it. Not "fix the
+guard to match" — **make it one thing**, because a guard that merely
+agrees today is a guard that drifts again.
+
+This is the third instance in this substrate of the shape
+`materia/CLAUDE.md` already names under the whitespace contract: two
+halves that must say the same thing, each written separately, quietly
+diverging. The first cost every CSS file containing whitespace; the
+second lost two bytes at a quote open to EOF; this one emitted
+unreadable documents. **The remedy is always the same — one
+definition, not two that agree.**
+
+Incidental: silva's diagnostics caught `positus < ZEPHYRUM` in the new
+predicate as always-false — `i32` is UNSIGNED. A dead guard that reads
+like a real one, removed with the reason written down.
+
+Gate: `probatio_html_stml`'s closing-sequence pin went from 2 cases to
+5, covering all three terminator forms. Planted by narrowing the guard
+back to the `>` form: red on the `!` and whitespace cases.
+
+**Note for whoever builds the escape.** The reservation says the reader
+change is "local to one scanner". That is true for FINDING the
+terminator and false for DECODING: the raw token value is a zero-copy
+slice (`token.valor.datum = ctx->input.datum + initium`) and
+`StmlTokenContext` has no piscina by design. Unescaping needs a copy,
+and its home is the PARSER, which does have `ctx->piscina` and already
+copies conditionally for CRLF (`_crlf_canonicalizare`). Cost is
+bounded and the precedent exists — but it is not free, and the
+reservation under-counted it.
