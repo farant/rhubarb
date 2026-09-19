@@ -688,3 +688,56 @@ Oracle pin verified UNMOVED at 1,504/1,700 — the genus is inert until
 Task 2, so every tree is byte-for-byte what it was. That was checked
 first rather than last, because the cooked view drops mala and a second
 genus it does not drop would regress the pin silently.
+
+## 2026-09-19 — Task 2: the split becomes real in the tree
+
+`_spatium_omissum_addere` beside `_malum_addere`, one call site
+rerouted (`html_arbor.c`, the text handler's `neglectum` block), and
+`html_coctum.c` drops the new genus alongside the old.
+
+**Result over the 260 house pages: `elementum-malum` 531 -> 13, and
+the files carrying any 260 -> 10.** The 13 are the real ones — stray
+`</em>` in generated `knotapel/atlas/web/` pages. Oracle pin
+**1,504/1,700 UNMOVED**, which was the risk worth naming: the cooked
+view drops mala, so a second genus it did not drop would have
+regressed the pin silently.
+
+**The nota I wrote in Task 1 was wrong, and the code said so.** It
+claimed the benign modes were "before html, before head, post head".
+The builder only ever ignored the first two, and a four-newline probe
+confirmed it: two mala, not four. After `</head>` the spec INSERTS the
+character, so it becomes a real text node. Both notas corrected. A
+comment recording intent the code never implemented survives every test
+that does not exist — this one lived about forty minutes.
+
+**Two gates went red for the right reason and one taught something.**
+
+`probatio_html_arbor` failed on the one inline case that asserts this
+exact behaviour (`"\n<p>x"`), reporting genus 9 against 10. That is the
+inverse of a plant: the change made a true assertion false and the gate
+named the genus numerically. Updated, and a companion case added — a
+NON-white text before html stays content, so the split cannot quietly
+widen to swallow it.
+
+`probatio_html_computus` diverged by **4 bytes** on one fixture
+(`adversarius_2`, `allocationes_arboris` 46840 -> 46844) with `nodi`
+unchanged at 370. Goldens are not regenerated without an audit, so:
+
+- A controlled experiment (same new code path, old genus constant)
+  returned 46840 exactly. So the delta is GENUS-dependent, not
+  code-path dependent.
+- Both genera carry `(i32)1` loci in the generated table — identical
+  node size and arity.
+- Three of the four fixtures contain the new genus (3, 2, 2 nodes) and
+  match the golden to the byte. Only `adversarius_2` moves, and it has
+  the same count (2) as two files that do not.
+
+Same count, same size, three files unmoved: an arena alignment
+artifact, where three fixtures absorb it in existing padding and one
+crosses a boundary. Every semantic gate is green — byte corpus
+identical, STML two-cycle with comparator, totalitas, oracle. Golden
+moved by exactly that one number with the cause recorded here.
+
+What the experiment was worth: it turned "probably alignment" into a
+measurement, and it took one perl substitution and one rebuild. A
+golden moved on a hunch is a golden that stops meaning anything.

@@ -1085,7 +1085,8 @@ _liberos_scribere (
             *(constans MateriaNodus**)xar_obtinere(ordo, i);
               MateriaToken* tok;
 
-        si (liber->genus == (s32)HTML_GENUS_ELEMENTUM_MALUM)
+        si (   liber->genus == (s32)HTML_GENUS_ELEMENTUM_MALUM
+            || liber->genus == (s32)HTML_GENUS_SPATIUM_OMISSUM)
         {
             perge;   /* DOM nihil retinet; textus circa coniungitur */
         }

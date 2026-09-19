@@ -545,6 +545,32 @@ _malum_addere (
         MATERIA_LOCUS_LISTA_TOKEN);
 }
 
+/* Spatium quod DOM in modo involucri abicit: nodus SUUS, culpa nulla
+ * (genus 'spatium-omissum'). Non accumulat, quia vocans unum lexema
+ * solum dat et nodum statim claudit - sicut status 'malum' pendens,
+ * qui post lexema quodque neglectum ad NIHIL ponebatur. */
+interior b32
+_spatium_omissum_addere (
+     HtmlParsura* p,
+    MateriaToken* token)
+{
+    MateriaNodus* nodus;
+
+    nodus = materia_nodus_creare(p->piscina,
+        (s32)HTML_GENUS_SPATIUM_OMISSUM, (i32)I);
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_liberum_appendere(p, nodus))
+    {
+        redde FALSUM;
+    }
+    redde materia_nodus_appendere(p->piscina, nodus,
+        (i32)HTML_SPATII_OMISSI_TOKENS, materia_valor_token(token),
+        MATERIA_LOCUS_LISTA_TOKEN);
+}
+
 /* Attributum novum in tag apertum. */
 interior MateriaNodus*
 _attributum_novum (
@@ -3698,6 +3724,7 @@ _contentum_tractare (
     {
         constans ScopiGradus* vertex     = _vertex_gradus(p);
                          b32  neglectum  = FALSUM;
+                         b32  omissum    = FALSUM;
 
         si (genus == (s32)HTML_GENUS_DOCTYPE && p->contentum_visum)
         {
@@ -3713,12 +3740,20 @@ _contentum_tractare (
             neglectum = VERUM;
         }
         /* O7a: textus albus ante html/head (spec 'before html' et
-         * 'before head' eum neglegunt) */
+         * 'before head' eum neglegunt). CULPA NULLA: genus proprium
+         * 'spatium-omissum', non elementum-malum - diagnostica per
+         * genus sola declarantur, et hic casus DXVIII ex DXXXI nodis
+         * domus est (2026-09-19). Modi hi DUO soli: post 'head'
+         * spec spatium INSERIT, nodus textus verus fit. */
         alioquin si (   genus == (s32)HTML_GENUS_TEXTUS && albus
                      && (p->modus == MODUS_ANTE_RADICEM
                          || p->modus == MODUS_ANTE_CAPUT))
         {
-            neglectum = VERUM;
+            omissum = VERUM;
+        }
+        si (omissum)
+        {
+            redde _spatium_omissum_addere(p, token);
         }
         si (neglectum)
         {

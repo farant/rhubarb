@@ -1124,15 +1124,23 @@ principale (vacuum)
             (s32)HTML_SYNTHESIS_CORPUS);
         CREDO_AEQUALIS_I32 (_numerus(liber, HTML_ELEMENTUM_LIBERI), I);
 
-        imprimere("\n--- Probans textum album ante html: malum ---\n");
+        imprimere("\n--- Probans album ante html: omissum ---\n");
         CREDO_VERUM (_octetos_probare(piscina, "\n<p>x", V));
         documentum = _parsare_documentum(piscina, "\n<p>x");
         CREDO_AEQUALIS_I32 (_numerus(documentum,
             HTML_DOCUMENTUM_LIBERI),
             II);
+        /* NON elementum-malum: DOM id abicit, sed auctor nihil
+         * peccavit - genus 'spatium-omissum' distinctionem fert ut
+         * diagnosticum in elementum-malum solum cadat (2026-09-19) */
         CREDO_AEQUALIS_S32 (
             _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
-            (s32)HTML_GENUS_ELEMENTUM_MALUM);
+            (s32)HTML_GENUS_SPATIUM_OMISSUM);
+        /* textus NON albus ante html manet contentum, non omissum */
+        documentum = _parsare_documentum(piscina, "z<p>x");
+        CREDO_AEQUALIS_S32 (
+            _liber(documentum, HTML_DOCUMENTUM_LIBERI, ZEPHYRUM)->genus,
+            (s32)HTML_GENUS_ELEMENTUM);
         /* commentarium ante html non fingit: sub documento manet */
         documentum = _parsare_documentum(piscina, "<!--c--><p>x");
         CREDO_AEQUALIS_I32 (_numerus(documentum,

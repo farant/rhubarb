@@ -377,9 +377,9 @@
   </elementum>
 
   <elementum nomen="spatium-omissum"
-    nota="spatia sola quae DOM in modis involucri abicit (ante 'html',
-          ante 'head', post 'head'); culpa nulla - vide notam generis
-          in html.registrum.stml">
+    nota="spatia sola quae DOM in modis involucri duobus abicit (ante
+          'html', ante 'head'); culpa nulla - vide notam generis in
+          html.registrum.stml">
     <liberum nomen="tokens" maximum="1"/>
   </elementum>
 
