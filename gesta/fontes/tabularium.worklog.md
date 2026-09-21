@@ -469,3 +469,53 @@ Live proof on Fran's data (42 Lunar Men chapters, via the HTTP
 bridge): filtered read = 42, all one book; unfiltered `pipatum` read
 still returns 30 link-less entities out of 40; a book with no
 chapters returns 0 rather than everything.
+
+## 2026-09-21 — the compact view shows links, with the other side's status
+
+**What changed.** `res {breviter:"verum"}` now carries the `nexus:`
+section, and in BOTH views each row ends with the other item's genus
+and status: `--impeditur-a--> Cache calida (parcum, clausum)`. One
+shared function, `_vincula_reddere`, serves the full view and the
+compact one (the K4.2 rule: a shared renderer so the two forms cannot
+drift). Rows are capped at `VINCULA_OSTENSA_MAXIMA` (XII) and the
+remainder is COUNTED — `(et alia N)` — never dropped silently.
+
+**Why.** K4.2 left `socii` out of the compact view on purpose, to keep
+it cheap. But the compact view is the one an agent actually uses (the
+full view prints the raw datum — the context trap of 01KYCMQMED), so
+in practice blockers were never seen by the reader they exist for.
+Found 2026-09-21 by opening an item I had linked three ways an hour
+earlier and seeing none of them. And a title alone does not answer
+the real question — *is my blocker still open?* — without a second
+call. Measured on the live store the same day: of nine live blocking
+links, in FOUR the blocker had already closed while the dependent sat
+open, and nothing said so.
+
+**A genus without a lifecycle prints no comma.** `decretum` and `nota`
+have an empty status column; the row reads `(nota)`, not `(nota, )`.
+A member that is not a `res` at all (tolerant members carry raw text)
+is printed bare, as `_titulus_membri` always did.
+
+**Two plants, because one would have verified half.** (A) dropping the
+call from `_breviarium_reddere` reddens `strstr(r, "nexus:")` — the
+compact half. (B) blanking the status in the SQL reddens the
+`(parcum, parcatum)` assertion — the status half, which the full view
+shares. Plant A alone would have left a title-only renderer green.
+Both went red naming a different assertion, both restored green
+(`silva.planta`, gate `gesta`, 430 assertions).
+
+**Anchoring note for the next plant here.** `si (status.mensura >
+ZEPHYRUM)` occurs four times in this file and
+`chorda_aedificator_appendere_chorda(aed, status);` six; the SQL
+literal in `_socium_describere` is the unique anchor. And a multi-line
+anchor replaced by a flat `novus` with a different token count is
+refused by `Editio` ("forma perderetur") — give the replacement the
+same number of lines.
+
+**Doctrine and schema text updated** (the auto-loaded doctrine string
+and the `breviter` parameter description), because that text is how a
+fresh session learns what the compact view contains.
+
+NEXT in this arc (decree 01M32TEK3K, park 01KY57P2WD): declare the five
+canonical link verbs in the seed, refuse known near-synonyms loudly,
+migrate eight links, then the PARATA view.

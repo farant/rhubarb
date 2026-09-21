@@ -43,8 +43,11 @@ interior constans character* constans TABULARII_DOCTRINA =
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
     "Latinum: praefixa 'parsur*' - stemmata Anglica sola). res "
     "{res, breviter?} = status + ancorae (CAUTIO si inresolutae) + "
-    "actiones affordatae + annales; breviter \"verum\" = compendium "
-    "(corpus + notae ultimae III + actiones, sine dato crudo). "
+    "nexus + actiones affordatae + annales; breviter \"verum\" = "
+    "compendium (corpus + notae ultimae III + nexus + actiones, "
+    "sine dato crudo). Nexus in utroque: sagitta, verbum, titulus "
+    "socii CUM GENERE ET STATU - 'estne impediens adhuc apertum' "
+    "sine apertione altera legitur. "
     "census {} = genera x status + tags + res saepissime ICTAE "
     "(apertae, ordine ictuum - pretium MENSURATUM, non "
     "aestimatum). ictus: gerere {actus:ictus, textus?} = "
@@ -4809,11 +4812,143 @@ _actiones_reddere (
     }
 }
 
+/* Tectum ordinum in sectione vinculorum. Res centralis (parcum
+ * magnum, propositum cum gradibus) vincula multa trahit, et
+ * breviarium lectori context-budgetato servit: reliqua NUMERANTUR,
+ * numquam tacite cadunt. */
+#define VINCULA_OSTENSA_MAXIMA XII
+
+/* socius ad ostensionem: titulus + " (genus, status)". Status
+ * vacuus (genera sine vita: decretum, nota) omittitur cum commate
+ * suo. Membrum quod res non est (membra tolerantia textum crudum
+ * ferunt) NUDUM redditur - idem ac _titulus_membri. */
+interior vacuum
+_socium_describere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  membrum,
+              Piscina* pn)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT titulus, genus, status FROM res WHERE res_id = ?");
+
+    si (e == NIHIL)
+    {
+        chorda_aedificator_appendere_chorda(aed, membrum);
+        redde;
+    }
+    scrinium_ligare_textum(e, I, membrum);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda titulus  = scrinium_columna_textus(e, 0, pn);
+        chorda genus    = scrinium_columna_textus(e, I, pn);
+        chorda status   = scrinium_columna_textus(e, II, pn);
+
+        chorda_aedificator_appendere_chorda(aed,
+            titulus.mensura > ZEPHYRUM ? titulus : membrum);
+        si (genus.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, " (");
+            chorda_aedificator_appendere_chorda(aed, genus);
+            si (status.mensura > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(aed, ", ");
+                chorda_aedificator_appendere_chorda(aed, status);
+            }
+            chorda_aedificator_appendere_literis(aed, ")");
+        }
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_chorda(aed, membrum);
+    }
+    scrinium_finire(e);
+}
+
+/* vincula rei (superficies passiva K2 - socii per membra; sagitta
+ * ex parte socii: b = exiens, a = iniens). COMMUNE redditioni plenae
+ * et breviario, ne formae divergant.
+ *
+ * CUR STATUS SOCII (2026-09-21, parcum K4.5): titulus solus
+ * quaestionem quam lector vere habet non solvit - 'estne impediens
+ * meum adhuc apertum?' apertionem alteram poscebat. Mensuratum in
+ * conditorio vivo: ex IX vinculis impediendi, in IV impediens IAM
+ * CLAUSUM erat dum dependens apertum manebat, et nemo sciebat. */
+interior vacuum
+_vincula_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  res_id,
+              Piscina* pn)
+{
+    Xar* socii = gesta_socii_rei(t->mundus, _litterae(pn, res_id),
+        pn);
+    i32 ostensa = ZEPHYRUM;
+    i32 reliqua = ZEPHYRUM;
+    i32 i;
+
+    si (socii == NIHIL || xar_numerus(socii) == ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed, "\nnexus:");
+    per (i = ZEPHYRUM; i < xar_numerus(socii); i++)
+    {
+        GestaSocius* s = (GestaSocius*)xar_obtinere(socii, i);
+             chorda  verbum;
+
+        si (s == NIHIL)
+        {
+            perge;
+        }
+        si (ostensa >= VINCULA_OSTENSA_MAXIMA)
+        {
+            reliqua++;
+            perge;
+        }
+        ostensa++;
+        verbum = _verbum_vinculi(t, s->nexus_res, pn);
+        chorda_aedificator_appendere_literis(aed, "\n  ");
+        si (_chorda_est(s->pars, "b"))
+        {
+            chorda_aedificator_appendere_literis(aed, "--");
+            chorda_aedificator_appendere_chorda(aed, verbum);
+            chorda_aedificator_appendere_literis(aed, "--> ");
+        }
+        alioquin si (_chorda_est(s->pars, "a"))
+        {
+            chorda_aedificator_appendere_literis(aed, "<--");
+            chorda_aedificator_appendere_chorda(aed, verbum);
+            chorda_aedificator_appendere_literis(aed, "-- ");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(aed, "(pars ");
+            chorda_aedificator_appendere_chorda(aed, s->pars);
+            chorda_aedificator_appendere_literis(aed, ") ");
+        }
+        _socium_describere(t, aed, s->membrum, pn);
+    }
+    si (reliqua > ZEPHYRUM)
+    {
+        character numeri[LXIV];
+
+        sprintf(numeri, "\n  (et alia %d)", (int)reliqua);
+        chorda_aedificator_appendere_literis(aed, numeri);
+    }
+}
+
 /* compendium rei (K4.2 'breviter'): corpus ut textus purus + notae
- * ultimae III (plicatura eas in statum iam fert) + affordantiae.
- * OMISSA: datum crudum, ancorae (IO plagularum + sigilla), socii,
- * salus, annales - lectio parcorum vili pro lectore
- * context-budgetato. */
+ * ultimae III (plicatura eas in statum iam fert) + vincula +
+ * affordantiae.
+ * OMISSA: datum crudum, ancorae (IO plagularum + sigilla), salus,
+ * annales - lectio parcorum vili pro lectore context-budgetato.
+ *
+ * VINCULA olim hic omissa erant (K4.2); 2026-09-21 REDDITA: lector
+ * qui breviario solo utitur impedientia NUMQUAM videbat, et
+ * dependentiae quas nemo videt inutiles sunt. Sumptus tectus
+ * (VINCULA_OSTENSA_MAXIMA ordines, linea una quisque). */
 interior vacuum
 _breviarium_reddere (
            Tabularium* t,
@@ -4912,6 +5047,7 @@ _breviarium_reddere (
             }
         }
     }
+    _vincula_reddere(t, aed, res_id, pn);
     _actiones_reddere(t, aed, res_id, pn);
 }
 
@@ -5258,61 +5394,8 @@ _tab_res (
         _ancoras_reddere(t, aed, st, pn);
     }
     _citationes_reddere(t, aed, res_id);
-    /* vincula (superficies passiva K2 - socii per membra; sagitta
-     * ex parte socii: b = exiens, a = iniens) */
-    {
-        Xar* socii = gesta_socii_rei(t->mundus,
-            _litterae(pn, res_id), pn);
-
-        si (socii != NIHIL && xar_numerus(socii) > ZEPHYRUM)
-        {
-            i32 i;
-
-            chorda_aedificator_appendere_literis(aed, "\nnexus:");
-            per (i = ZEPHYRUM; i < xar_numerus(socii); i++)
-            {
-                GestaSocius* s = (GestaSocius*)xar_obtinere(socii,
-                    i);
-                chorda verbum;
-
-                si (s == NIHIL)
-                {
-                    perge;
-                }
-                verbum = _verbum_vinculi(t, s->nexus_res, pn);
-                chorda_aedificator_appendere_literis(aed, "\n  ");
-                si (_chorda_est(s->pars, "b"))
-                {
-                    chorda_aedificator_appendere_literis(aed,
-                        "--");
-                    chorda_aedificator_appendere_chorda(aed,
-                        verbum);
-                    chorda_aedificator_appendere_literis(aed,
-                        "--> ");
-                }
-                alioquin si (_chorda_est(s->pars, "a"))
-                {
-                    chorda_aedificator_appendere_literis(aed,
-                        "<--");
-                    chorda_aedificator_appendere_chorda(aed,
-                        verbum);
-                    chorda_aedificator_appendere_literis(aed,
-                        "-- ");
-                }
-                alioquin
-                {
-                    chorda_aedificator_appendere_literis(aed,
-                        "(pars ");
-                    chorda_aedificator_appendere_chorda(aed,
-                        s->pars);
-                    chorda_aedificator_appendere_literis(aed,
-                        ") ");
-                }
-                chorda_aedificator_appendere_chorda(aed,
-                    _titulus_membri(t, s->membrum, pn));
-            }
-        }
-    }
+    /* vincula: functio COMMUNIS cum breviario (2026-09-21) */
+    _vincula_reddere(t, aed, res_id, pn);
     /* salus (superficies passiva K2 - querelae si insana) */
     {
         GestaSalus salus;
@@ -7142,8 +7225,8 @@ _toolslist_tractare (
         { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
           " aut titulus exactus (in ramo: res_id SOLUM)", VERUM },
         { "breviter", "\"verum\" = compendium (corpus + notae"
-          " ultimae III + actiones; sine dato crudo/ancoris/"
-          "annalibus)", FALSUM },
+          " ultimae III + nexus cum statu socii + actiones; sine"
+          " dato crudo/ancoris/annalibus)", FALSUM },
         { "ramus", "titulus rami - lectio plicaturae ramalis",
           FALSUM }
     };

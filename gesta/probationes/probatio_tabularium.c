@@ -1355,6 +1355,134 @@ principale (vacuum)
     }
 
 
+    /* ==================================================
+     * XXII bis. breviarium VINCULA monstrat, cum statu socii
+     * (2026-09-21; parcum K4.5 01KY57P2WD). Antea breviarium
+     * socios OMITTEBAT: lector qui breviario solo utitur
+     * impedientia NUMQUAM videbat. Et redditio plena titulum socii
+     * sine statu dabat - 'estne impediens adhuc apertum?' sine
+     * apertione altera sciri non poterat.
+     * ================================================== */
+
+    {
+        character nuntius[DXII];
+              i32 k;
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":140,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Vinculum dependens\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":141,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Vinculum impediens\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":142,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Vinculum dependens\",\"actus\":\"nexus\","
+            "\"verbum\":\"impeditur-a\",\"alterum\":"
+            "\"Vinculum impediens\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* breviarium dependentis: sagitta EXIENS + genus et status
+         * socii; breviarium manet (datum crudum abest) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":143,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Vinculum dependens\",\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "nexus:") != NIHIL);
+        CREDO_VERUM (strstr(r, "--impeditur-a--> Vinculum impediens"
+            " (parcum, parcatum)") != NIHIL);
+        CREDO_VERUM (strstr(r, "datum") == NIHIL);
+
+        /* latus alterum: sagitta INIENS */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":144,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Vinculum impediens\",\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "<--impeditur-a-- Vinculum dependens"
+            " (quaestio, apertum)") != NIHIL);
+
+        /* impediens clauditur: status in breviario DEPENDENTIS
+         * sequitur - hoc est quod lector scire vult */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":145,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Vinculum impediens\",\"actus\":\"status\","
+            "\"novus\":\"clausum\"}}}");
+        CREDO_VERUM (strstr(r, "status clausum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":146,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Vinculum dependens\",\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "Vinculum impediens (parcum, clausum)")
+            != NIHIL);
+
+        /* redditio PLENA eandem sectionem fert (functio communis -
+         * ne formae divergant) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":147,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Vinculum dependens\"}}}");
+        CREDO_VERUM (strstr(r, "Vinculum impediens (parcum, clausum)")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "annales") != NIHIL);
+
+        /* genus SINE VITA: status vacuus omittitur, comma nullum */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":148,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Vinculum notatum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":149,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Vinculum dependens\",\"actus\":\"nexus\","
+            "\"verbum\":\"sequitur\",\"alterum\":"
+            "\"Vinculum notatum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":150,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Vinculum dependens\",\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "--sequitur--> Vinculum notatum (nota)")
+            != NIHIL);
+
+        /* TECTUM: res centralis XIII vincula trahit - XII ostensa,
+         * reliqua NUMERATA (numquam tacite cadunt) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":151,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Vinculum centrale\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        per (k = ZEPHYRUM; k < XIII; k++)
+        {
+            sprintf(nuntius, "{\"jsonrpc\":\"2.0\",\"id\":%d,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"addere\",\"arguments\":{\"genus\":\"nota\","
+                "\"titulus\":\"Vinculum radius %d\"}}}",
+                (int)(160 + k), (int)k);
+            r = _mitte(t, piscina, nuntius);
+            sprintf(nuntius, "{\"jsonrpc\":\"2.0\",\"id\":%d,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"gerere\",\"arguments\":{\"res\":"
+                "\"Vinculum centrale\",\"actus\":\"nexus\","
+                "\"verbum\":\"sequitur\",\"alterum\":"
+                "\"Vinculum radius %d\"}}}",
+                (int)(180 + k), (int)k);
+            r = _mitte(t, piscina, nuntius);
+            CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        }
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":199,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Vinculum centrale\",\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "(et alia 1)") != NIHIL);
+    }
+
+
     /* ================================================
      * XXIII. proiectio entitatum (per rem, per tag) - vita
      * completa: creatio cum duobus tags, nota, mutatio status,
