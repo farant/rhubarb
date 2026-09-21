@@ -218,6 +218,33 @@ _quoties_continet (
     redde numerus;
 }
 
+/* estne acus INTER signum initii et signum finis (finis NIHIL =
+ * usque ad finem)? Sectiones responsi discernit - 'adest alicubi'
+ * non sufficit cum quaeritur IN QUA sectione res stet. */
+interior b32
+_inter (
+    constans character* textus,
+    constans character* initium,
+    constans character* finis,
+    constans character* acus)
+{
+    constans character* a = strstr(textus, initium);
+    constans character* b;
+    constans character* locus;
+
+    si (a == NIHIL)
+    {
+        redde FALSUM;
+    }
+    b = finis != NIHIL ? strstr(a + strlen(initium), finis) : NIHIL;
+    locus = strstr(a, acus);
+    si (locus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde b == NIHIL || locus < b;
+}
+
 /* lineam mittere, responsum totum (litterae) recipere */
 interior constans character*
 _mitte (
@@ -3194,6 +3221,319 @@ principale (vacuum)
             CREDO_VERUM (strstr(r, "exeo") != NIHIL);
             CREDO_VERUM (tabularium_renovandum(tr));
         }
+    }
+
+
+    /* ==================================================
+     * XXXI. VISUS PARATA (2026-09-21, parcum K4.5): quid NUNC agi
+     * potest, ex grapho DERIVATUM (impeditur-a + intra), numquam
+     * status declaratus. Mensuratum ante: ex IX vinculis impediendi
+     * in IV impediens iam clausum erat dum dependens apertum manebat,
+     * et nemo sciebat.
+     * Mundus: propositum -> gradus unus (opera I.1, I.2 <- I.1, I.3
+     * Frano assignatum), gradus duo <- gradus unus (opus II.1 nepos);
+     * res solitaria (extra graphum); res extra scopum cuius impediens
+     * clausum est.
+     * ================================================== */
+
+    {
+        constans character* sectio;
+
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":301,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"parcum\",\"titulus\":\"Pa propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":302,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"parcum\",\"titulus\":\"Pa gradus unus\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":303,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"parcum\",\"titulus\":\"Pa gradus duo\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":304,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"opus\",\"titulus\":\"Pa I.1 primum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":305,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"opus\",\"titulus\":\"Pa I.2 secundum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":306,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"opus\",\"titulus\":\"Pa I.3 Frani\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":307,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"opus\",\"titulus\":\"Pa II.1 nepos\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":308,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"desideratum\",\"titulus\":\"Pa solitarium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":309,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"desideratum\",\"titulus\":\"Pa extra scopum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":310,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"quaestio\",\"titulus\":\"Pa quaestio clausa\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":311,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa gradus unus\",\"actus\":\"nexus\",\"verbum\":\"int"
+            "ra\",\"alterum\":\"Pa propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":312,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa gradus duo\",\"actus\":\"nexus\",\"verbum\":\"intr"
+            "a\",\"alterum\":\"Pa propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":313,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa gradus duo\",\"actus\":\"nexus\",\"verbum\":\"impe"
+            "ditur-a\",\"alterum\":\"Pa gradus unus\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":314,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa I.1 primum\",\"actus\":\"nexus\",\"verbum\":\"intr"
+            "a\",\"alterum\":\"Pa gradus unus\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":315,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa I.2 secundum\",\"actus\":\"nexus\",\"verbum\":\"in"
+            "tra\",\"alterum\":\"Pa gradus unus\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":316,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa I.3 Frani\",\"actus\":\"nexus\",\"verbum\":\"intra"
+            "\",\"alterum\":\"Pa gradus unus\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":317,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa II.1 nepos\",\"actus\":\"nexus\",\"verbum\":\"intr"
+            "a\",\"alterum\":\"Pa gradus duo\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":318,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa I.2 secundum\",\"actus\":\"nexus\",\"verbum\":\"im"
+            "peditur-a\",\"alterum\":\"Pa I.1 primum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":319,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa extra scopum\",\"actus\":\"nexus\",\"verbum\":\"im"
+            "peditur-a\",\"alterum\":\"Pa quaestio clausa\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":320,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa quaestio clausa\",\"actus\":\"status\",\"novus\":"
+            "\"clausum\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":321,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa I.3 Frani\",\"actus\":\"mutatio\",\"clavis\":\"ass"
+            "ignatum\",\"valor\":\"fran\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+
+        /* STATUS I: sectiones per classem */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":322,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "AD LABOREM") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pa I.1 primum") != NIHIL);
+        CREDO_VERUM (strstr(r, "EXSPECTANT FRANUM") != NIHIL);
+        CREDO_VERUM (strstr(r, "AD CONSILIUM") != NIHIL);
+        CREDO_VERUM (strstr(r, "IMPEDITA") != NIHIL);
+
+        /* opus paratum in AD LABOREM; potentia eius nominatur */
+        sectio = strstr(r, "AD LABOREM");
+        CREDO_NON_NIHIL (sectio);
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Pa I.1 primum"));
+        CREDO_VERUM (strstr(r, "impedit 1") != NIHIL);
+        /* opus impeditum NON in AD LABOREM, sed in IMPEDITA cum
+         * impediente nominato */
+        CREDO_FALSUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Pa I.2 secundum"));
+        CREDO_VERUM (_inter(r, "IMPEDITA", NIHIL,
+            "Pa I.2 secundum"));
+        /* HEREDITAS: nepos gradus IMPEDITI paratus non est, etsi
+         * ipse impedientia nulla habet */
+        CREDO_FALSUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Pa II.1 nepos"));
+        CREDO_VERUM (_inter(r, "IMPEDITA", NIHIL, "Pa II.1 nepos"));
+        CREDO_VERUM (strstr(r, "parens") != NIHIL);
+        /* assignatum fran: EXSPECTANT FRANUM, non AD LABOREM */
+        CREDO_FALSUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Pa I.3 Frani"));
+        CREDO_VERUM (_inter(r, "EXSPECTANT FRANUM", "IMPEDITA",
+            "Pa I.3 Frani"));
+        /* impediens clausum: res in AD CONSILIUM cum CAUSA */
+        CREDO_VERUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
+            "Pa extra scopum"));
+        CREDO_VERUM (strstr(r, "Pa quaestio clausa") != NIHIL);
+        /* res EXTRA GRAPHUM numquam: tabularium basis scientiae est,
+         * catena = quod in graphum positum est */
+        CREDO_VERUM (strstr(r, "Pa solitarium") == NIHIL);
+        /* gradus cum filiis apertis = continens: in NULLA classe
+         * (nec consilio nec - quod planta ostendit - clausurae) */
+        CREDO_FALSUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
+            "parcum/parcatum  Pa gradus unus"));
+        CREDO_FALSUM (_inter(r, "AD CLAUSURAM", "EXSPECTANT FRANUM",
+            "parcum/parcatum  Pa gradus unus"));
+
+        /* SCOPUS: intra propositum - res extra id abest */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":323,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"parata\",\"arguments\":{\"intra"
+            "\":\"Pa propositum\"}}}");
+        CREDO_VERUM (strstr(r, "Pa I.1 primum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pa extra scopum") == NIHIL);
+
+        /* STATUS II: I.1 perficitur -> I.2 paratum, causa nominata */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":324,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa I.1 primum\",\"actus\":\"status\",\"novus\":\"perf"
+            "ectum\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":325,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"parata\",\"arguments\":{\"intra"
+            "\":\"Pa propositum\"}}}");
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Pa I.2 secundum"));
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "clausa"));
+        /* opus PERFECTUM ordinem non habet (titulus eius in CAUSA
+         * successoris legitime stat - ergo ordo per statum
+         * quaeritur, non per titulum nudum) */
+        CREDO_FALSUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "opus/perfectum"));
+        /* tabula.md: sectio PARATA adest; opus PERFECTUM e sectione
+         * OPERA abest (status finales ex MACHINA generis derivati,
+         * non index manu scriptus qui 'perfectum' nesciebat) */
+        {
+            constans character* tabula = _plagula_litterae(piscina,
+                VIA_TB);
+
+            CREDO_VERUM (strstr(tabula, "## PARATA") != NIHIL);
+            CREDO_VERUM (strstr(tabula, "Pa I.2 secundum") != NIHIL);
+            CREDO_VERUM (strstr(tabula,
+                "[perfectum] Pa I.1 primum") == NIHIL);
+        }
+
+        /* STATUS III: omnia opera gradus unius perfecta -> gradus AD
+         * CLAUSURAM (parens probationem exitus SUAM poscit: index
+         * filiorum numquam completus scitur) */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":326,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa I.2 secundum\",\"actus\":\"status\",\"novus\":\"pe"
+            "rfectum\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":327,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa I.3 Frani\",\"actus\":\"status\",\"novus\":\"perfe"
+            "ctum\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":328,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"parata\",\"arguments\":{\"intra"
+            "\":\"Pa propositum\"}}}");
+        CREDO_VERUM (_inter(r, "AD CLAUSURAM", "EXSPECTANT FRANUM",
+            "Pa gradus unus"));
+
+        /* STATUS IV: gradus unus clauditur -> hereditas solvitur,
+         * nepos paratus */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":329,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa gradus unus\",\"actus\":\"status\",\"novus\":\"cla"
+            "usum\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":330,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"parata\",\"arguments\":{\"intra"
+            "\":\"Pa propositum\"}}}");
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Pa II.1 nepos"));
+
+        /* impediens RELICTUM: solutum sed SIGNATUM (decretum
+         * 01M32TEK3K) - dependens recogitandum, non tacite paratum */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":331,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"desideratum\",\"titulus\":\"Pa post relictum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":332,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"addere\",\"arguments\":{\"genus"
+            "\":\"quaestio\",\"titulus\":\"Pa quaestio relicta\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":333,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa post relictum\",\"actus\":\"nexus\",\"verbum\":\"i"
+            "mpeditur-a\",\"alterum\":\"Pa quaestio relicta\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":334,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"gerere\",\"arguments\":{\"res\""
+            ":\"Pa quaestio relicta\",\"actus\":\"status\",\"novus\":"
+            "\"relictum\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":335,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "Pa post relictum") != NIHIL);
+        CREDO_VERUM (strstr(r, "RELICTUM") != NIHIL);
+
+        /* TITULUS LONGUS decurtatur IN LIMITE CHARACTERIS: titulus
+         * XCV octetorum ASCII + 'é' (II octeti, 0xC3 0xA9) limitem
+         * XCVI in MEDIO characteris ponit - sectio ingenua octetum
+         * 0xC3 nudum relinqueret (UTF-8 fractum in responso JSON) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":390,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"opus\","
+            "\"titulus\":\"Pa longum aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "\xc3\xa9 cauda quae abesse debet\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":391,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "Pa longum aaaa") != NIHIL);
+        CREDO_VERUM (strstr(r, "cauda quae abesse debet") == NIHIL);
+        CREDO_VERUM (strstr(r, "a...") != NIHIL);
+        CREDO_VERUM (strstr(r, "\xc3...") == NIHIL);
+
+        /* schema instrumentum nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":399,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "\"parata\"") != NIHIL);
     }
 
     credo_imprimere_compendium();

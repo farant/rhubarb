@@ -707,3 +707,78 @@ guard shows tasks · v8 adds nothing · v8 version guard `<=` (caught by
 the older tabula idempotence assertion).
 
 Gesta 687 · tabularium 488 · frigida 50.
+
+## 2026-09-21 — `parata`: the ready view, derived from the link graph
+
+**What it answers.** "What can be done NOW?" — computed at read time
+from the two canonical verbs (`impeditur-a`, `intra`). Nothing is
+stored: a stored derived status would go stale, and this ledger has
+seen enough hand-kept indexes lie.
+
+**Who is in the view.** Open items that stand IN THE GRAPH (carry any
+canonical link) plus every `opus`. A lone open item is NOT listed. The
+ledger is a knowledge base — 100 open wishes — and the queue is what
+someone deliberately placed in the graph. A ready list of 100 stale
+wishes would be noise, not a queue.
+
+**Five classes, one per open item in scope:**
+`AD LABOREM` (a task with no open blocker) · `AD CONSILIUM` (any other
+kind with no children and no open blocker — the next step is to EXPAND
+it into a sub-plan) · `AD CLAUSURAM` (all children closed, item still
+open: a parent needs its OWN exit test, because under rolling-wave
+planning the child list is never known to be complete) · `EXSPECTANT
+FRANUM` (explicit `assignatum: fran`) · `IMPEDITA` (open blocker
+named). A container with open children is in NO class — its children
+tell the story.
+
+**Decisions worth remembering.**
+- *Blocked-ness is inherited.* A task under a blocked stage is not
+  ready even with no blocker of its own; the cause names the parent.
+- *"Waiting on Fran" is never guessed from the genus.* A `quaestio` is
+  a bug, a question AND a decision; only an explicit assignment counts.
+- *An abandoned blocker unblocks LOUDLY* (`IMPEDIENS RELICTUM … -
+  recogita`), per decree 01M32TEK3K. A blocker whose genus has no
+  lifecycle can never close, so it does not block.
+- *Final states are DERIVED from the genus machine* (entered, never
+  left), not listed by hand. The board's hand list
+  `clausum/relictum/impletum` did not know a task's `perfectum`, so
+  finished tasks sat on `tabula.md` as open. Same function now filters
+  the board.
+- *Every row says WHY*: blockers closed (naming the last), how many
+  open items it blocks (leverage — those sort first), its parent.
+- *Deterministic order, no clock* — dependents descending, then
+  `res_id` — because `tabula.md` must stay content-deterministic.
+- *Titles are capped at 96 bytes ON A UTF-8 CHARACTER BOUNDARY.*
+  Ledger titles are sentences (some 200+ bytes) and the first live run
+  was unreadably wide. A naive byte cut would leave a bare lead byte
+  and emit invalid UTF-8 inside a JSON response; pinned with a title
+  whose 96th byte falls inside an `é`.
+
+**`tabula.md` opens with `## PARATA`** (empty classes omitted, ten
+rows each), so Fran sees the queue and his own list without a tool.
+
+**First live run (2026-09-21):** 0 tasks · 7 to plan — the two
+highest-leverage items first, and the FOUR whose blocker had quietly
+closed, each naming it · 1 to close (the K4.5 park: its one recorded
+child is done — true of the GRAPH; its remaining steps still live in
+prose, which is the very thing this arc is replacing) · 3 blocked.
+
+**Tests lied twice, both times by substring.** (1) "T1 is gone from AD
+LABOREM" failed on a correct view: T1's title rightly appears in T2's
+reason ("blockers closed, last: T1"). Look for the ROW
+(`opus/perfectum`), not the bare title. (2) "the container is in no
+class" only checked AD CONSILIUM; plant J showed a container with open
+children would have been offered for CLOSING and the test stayed
+green. Now checks both, by row.
+
+**Ten plants, ten different assertions** (finality · inheritance ·
+scope · out-of-graph items · assignment · closure class · abandoned
+flag · UTF-8 boundary · board filter · container). The first finality
+plant did not COMPILE (`-Wunused-but-set-variable`); `planta` refused
+it, correctly — a plant that breaks the build proves nothing. Replaced
+with one that compiles.
+
+Not done: `sequitur` does not yet order the list; `quantum` caps per
+section only; no `census` counts yet.
+
+Tabularium 555.
