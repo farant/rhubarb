@@ -1543,6 +1543,8 @@ _verbum_iudicare (
     redde FALSUM;
 }
 
+#define CENSUS_TAGORUM_TECTUM XX
+
 /* tabula verborum canonicorum in responsum: "a | b | c" - ut
  * scriptor verbum eligere possit SINE vocatione altera */
 interior vacuum
@@ -6980,10 +6982,13 @@ interior vacuum
 _tab_census (
     Tabularium* t,
        Piscina* pn,
+     JsonValor* argumenta,
      JsonValor* id,
           FILE* effusio)
 {
     ChordaAedificator* aed  = chorda_aedificator_creare(pn, 4096);
+                  b32  tags_omnia = _chorda_est(
+                      _arg(argumenta, "tags"), "omnia");
                   Xar* cg   =
                       gesta_census_generum(t->mundus, pn);
                   Xar* ct   =
@@ -7011,9 +7016,58 @@ _tab_census (
             chorda_aedificator_appendere_literis(aed, numeri);
         }
     }
+    /* NUMERI VISUS PARATA: fons IDEM ac instrumentum parata
+     * (_parata_computare), non numeratio altera quae discrepare
+     * posset. Census = tabula instrumentorum; singula parata dat. */
+    {
+        chorda  scopus_nullus;
+           Xar* nodi;
+           i32  classes[VI];
+
+        scopus_nullus.mensura  = ZEPHYRUM;
+        scopus_nullus.datum    = NIHIL;
+        per (i = ZEPHYRUM; i < VI; i++)
+        {
+            classes[i] = ZEPHYRUM;
+        }
+        nodi = _parata_computare(t, scopus_nullus, pn);
+        si (nodi != NIHIL)
+        {
+            character linea[CCLVI];
+
+            per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
+            {
+                ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi,
+                    i);
+
+                si (n != NIHIL && (i32)n->classis < VI)
+                {
+                    classes[(i32)n->classis]++;
+                }
+            }
+            sprintf(linea, "\nparata: ad laborem %d, ad consilium"
+                " %d, ad clausuram %d, exspectant Franum %d,"
+                " impedita %d  (singula: parata {})",
+                (int)classes[PARATUM_LABORI],
+                (int)classes[PARATUM_CONSILIO],
+                (int)classes[PARATUM_CLAUSURAE],
+                (int)classes[PARATUM_HOMINI],
+                (int)classes[PARATUM_IMPEDITUM]);
+            chorda_aedificator_appendere_literis(aed, linea);
+        }
+    }
+    /* TAGS: summa CENSUS_TAGORUM_TECTUM ordinarie (ingenium ea iam
+     * numero descendente ordinat). Mensuratum 2026-09-21 in
+     * conditorio vivo: DXI tags distincta, CCLII SEMEL usa - cauda
+     * quae nihil orientat ~CDL lineas per vocationem constabat, eo
+     * momento quo contextus carissimus est. Truncatio NUMERATUR et
+     * viam ad omnia nominat - numquam tacita. */
     chorda_aedificator_appendere_literis(aed, "\ntags:");
     si (ct != NIHIL)
     {
+        i32 reliqua  = ZEPHYRUM;
+        i32 semel    = ZEPHYRUM;
+
         per (i = ZEPHYRUM; i < xar_numerus(ct); i++)
         {
             GestaTagNumerus* tn = (GestaTagNumerus*)xar_obtinere(
@@ -7023,10 +7077,29 @@ _tab_census (
             {
                 perge;
             }
+            si (!tags_omnia && i >= CENSUS_TAGORUM_TECTUM)
+            {
+                reliqua++;
+                si (tn->numerus == (s64)I)
+                {
+                    semel++;
+                }
+                perge;
+            }
             chorda_aedificator_appendere_literis(aed, "\n  ");
             chorda_aedificator_appendere_chorda(aed, tn->tag);
             sprintf(numeri, "  %d", (int)tn->numerus);
             chorda_aedificator_appendere_literis(aed, numeri);
+        }
+        si (reliqua > ZEPHYRUM)
+        {
+            character linea[CCLVI];
+
+            sprintf(linea, "\n  (et alia %d tags, quorum %d semel"
+                " usa - census {tags: \"omnia\"} omnia dat;"
+                " quaerere {tag} unum sequitur)",
+                (int)reliqua, (int)semel);
+            chorda_aedificator_appendere_literis(aed, linea);
         }
     }
     /* RES SAEPISSIME ICTAE: pretium MENSURATUM (quotiens res
@@ -8572,6 +8645,11 @@ _toolslist_tractare (
           " primum; cursor claude-lectum provehitur (optime sine"
           " filtris - provectio filtra ignorat)", FALSUM }
     };
+    interior constans TabArgumentum ARG_CENSUS[] = {
+        { "tags", "\"omnia\" = tags omnia (ordinarie summa XX numero"
+          " descendente; cauda semel usorum numeratur, non"
+          " effunditur)", FALSUM }
+    };
     interior constans TabArgumentum ARG_PARATA[] = {
         { "intra", "scopus: res (id, praefixum, titulus) - ipsa et"
           " quae sub ea per 'intra' stant; sine eo tabularium"
@@ -8646,8 +8724,9 @@ _toolslist_tractare (
         " annales recentes. breviter \"verum\" = compendium.",
         ARG_RES, III));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "census",
-        "Census: genera x status, tags, seq/hwm.",
-        NIHIL, ZEPHYRUM));
+        "Census: genera x status, numeri visus PARATA, tags (summa"
+        " XX; reliqua numerantur), res saepissime ictae, seq/hwm.",
+        ARG_CENSUS, I));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "acta",
         "Cauda fluminis eventuum globalis trans res omnes"
         " (truncus, recentissima primum) - superficies recensionis"
@@ -9083,7 +9162,7 @@ _toolscall_tractare (
     }
     alioquin si (_chorda_est(titulus, "census"))
     {
-        _tab_census(t, pn, id, effusio);
+        _tab_census(t, pn, argumenta, id, effusio);
     }
     alioquin si (_chorda_est(titulus, "acta"))
     {

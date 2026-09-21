@@ -3559,6 +3559,100 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "\"parata\"") != NIHIL);
     }
 
+
+    /* ==================================================
+     * XXXII. CENSUS: numeri visus PARATA + tags TRUNCATA
+     * (2026-09-21, opus 01M335DSK5). Mensuratum in conditorio vivo:
+     * DXI tags distincta, CCLII semel usa - ~CDL lineae per
+     * vocationem census, eo ipso momento (orientatio post
+     * compactionem) quo contextus carissimus est.
+     * ================================================== */
+
+    {
+        constans character* nomina[V];
+                       i32  numeri_visus[V];
+                 character  speratum[CCLVI];
+                       i32  k;
+
+        nomina[ZEPHYRUM]  = "AD LABOREM (";
+        nomina[I]         = "AD CONSILIUM (";
+        nomina[II]        = "AD CLAUSURAM (";
+        nomina[III]       = "EXSPECTANT FRANUM (";
+        nomina[IV]        = "IMPEDITA (";
+
+        /* XXV tags singularia + unum FREQUENS quod alphabetice
+         * ULTIMUM est (ordo per numerum id servare debet) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":400,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Census tagorum multorum\",\"tags\":"
+            "\"tg01,tg02,tg03,tg04,tg05,tg06,tg07,tg08,tg09,tg10,tg11,tg12,tg13,tg14,tg15,tg16,tg17,tg18,tg19,tg20,tg21,tg22,tg23,tg24,tg25,zzfrequens\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":401,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Census frequens alter\",\"tags\":"
+            "\"zzfrequens\"}}}");
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":402,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Census frequens tertius\",\"tags\":"
+            "\"zzfrequens\"}}}");
+
+        /* numeri visus ex INSTRUMENTO parata ipso sumuntur: census
+         * eosdem ferre debet (fons unus, non numeratio altera) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":403,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        per (k = ZEPHYRUM; k < V; k++)
+        {
+            constans character* locus = strstr(r, nomina[k]);
+
+            CREDO_NON_NIHIL (locus);
+            numeri_visus[k] = locus != NIHIL
+                ? (i32)atoi(locus + strlen(nomina[k])) : ZEPHYRUM;
+        }
+        CREDO_VERUM (numeri_visus[ZEPHYRUM] > ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (numeri_visus[III], I);
+
+        /* census ORDINARIUS */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":404,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"census\",\"arguments\":{}}}");
+        sprintf(speratum, "parata: ad laborem %d, ad consilium %d,"
+            " ad clausuram %d, exspectant Franum %d, impedita %d",
+            (int)numeri_visus[ZEPHYRUM], (int)numeri_visus[I],
+            (int)numeri_visus[II], (int)numeri_visus[III],
+            (int)numeri_visus[IV]);
+        CREDO_VERUM (strstr(r, speratum) != NIHIL);
+        /* tag FREQUENS adest etsi alphabetice ultimum */
+        CREDO_VERUM (strstr(r, "zzfrequens  3") != NIHIL);
+        /* singulare XXV-um truncatum est, et truncatio NUMERATUR
+         * cum via ad omnia videnda */
+        CREDO_VERUM (strstr(r, "tg25") == NIHIL);
+        CREDO_VERUM (strstr(r, "et alia ") != NIHIL);
+        CREDO_VERUM (strstr(r, "semel usa") != NIHIL);
+        CREDO_VERUM (strstr(r, "omnia") != NIHIL);
+        /* sectiones ceterae intactae */
+        CREDO_VERUM (strstr(r, "genera x status:") != NIHIL);
+        CREDO_VERUM (strstr(r, "seq ultima") != NIHIL);
+
+        /* tags: "omnia" - nihil truncatur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":405,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"census\",\"arguments\":{\"tags\":\"omnia\"}}}");
+        CREDO_VERUM (strstr(r, "tg25") != NIHIL);
+        CREDO_VERUM (strstr(r, "tg01") != NIHIL);
+        CREDO_VERUM (strstr(r, "et alia ") == NIHIL);
+
+        /* schema parametrum nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":406,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "semel usa") != NIHIL
+            || strstr(r, "tags omnia") != NIHIL
+            || strstr(r, "\\\"omnia\\\"") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

@@ -793,3 +793,34 @@ what was placed in the graph" rule is about deliberate placement, not
 about links as such. Items with `assignatum = 'fran'` are now loaded
 too; an unassigned lone item still stays out (pinned both ways).
 Plant K reddens the new assertion. Tabularium 559.
+
+## 2026-09-21 — `census`: ready-view counts, and the tag tail is counted instead of printed
+
+Task 01M335DSK5 (arcus VII). Two changes to the dashboard an agent
+reads first after a compaction.
+
+**Counts line.** `parata: ad laborem N, ad consilium M, ad clausuram K,
+exspectant Franum J, impedita I  (singula: parata {})`. It comes from
+`_parata_computare` — the SAME function the `parata` tool uses — not a
+second count that could drift. The test reads the five numbers out of
+the tool's own section headers and requires the census line to match
+them exactly.
+
+**Tags: top twenty, the rest counted.** Measured on the live store the
+morning this arc began: 511 distinct tags, 252 of them used ONCE —
+about 450 lines per `census` call, paid at exactly the moment context
+is dearest. The engine already sorts by count descending, so the head
+of the list is the part that orients. The tail is now one line:
+`(et alia N tags, quorum M semel usa - census {tags: "omnia"} omnia
+dat; quaerere {tag} unum sequitur)`. Never silent, and it names both
+ways out. `tags: "omnia"` prints everything as before.
+
+Pinned with 25 singleton tags plus one FREQUENT tag that sorts last
+alphabetically (`zzfrequens`): it must survive the cut, which proves
+the cut follows count, not name.
+
+Nothing parses the census text (checked: the `census` hits under
+`apps/forum` are the unrelated `rhubarb.census` format).
+
+Four plants, four assertions: counts doubled · no trim · `omnia`
+ignored · silent trim (remainder not reported). Tabularium 579.
