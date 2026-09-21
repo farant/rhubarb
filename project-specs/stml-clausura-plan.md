@@ -10,8 +10,10 @@ bash comments.*
 alternatives. That note governs; this plan is how it gets built.
 
 **Status:** Step 0 SHIPPED (`a3f7c6e5`). **Task 1 SHIPPED
-2026-09-19** — the predicate reports the ladder depth; behaviour
-unchanged, nothing decodes yet. Tasks 2–4 unbuilt.
+2026-09-19** — the predicate reports the ladder depth. **Task 2
+SHIPPED 2026-09-21** — reader decodes and writer encodes, merged
+because neither half is safe alone. `lib/stml.c` now carries these
+values end to end. Tasks 3–4 unbuilt.
 
 ---
 
@@ -151,35 +153,63 @@ shapes, and Fran's actual bash trigger against the writer's guard with
 a multi-byte tag. Born red by returning a constant depth — 19
 assertions fired.
 
-### Task 2 — the reader decodes
+### Task 2 — the reader decodes AND the writer encodes ✅ SHIPPED 2026-09-21
 
 **Files:** `lib/stml.c`, `probationes/probatio_stml.c`
 
-All in `_tok_legere_contentus_crudus` (see the §5 correction — no
-parser change): stop only at depth 0, and when the raw region contains
-any escaped sequence, allocate a decoded copy from `ctx->piscina`;
-otherwise keep the zero-copy slice untouched.
+**The plan's split was wrong and was merged on measurement** (Fran
+approved). Neither half is safe alone:
 
-Gate: a document containing `<\/T>` reads back as `</T>`; a document
-containing `<\\/T>` reads back as `<\/T>`. **Plant the ladder
-specifically**: make the decoder strip unconditionally and assert the
-second case goes wrong.
+| | reader decodes | writer encodes | `<T!><\/T></T>` round trip |
+|---|---|---|---|
+| before | no | no | stable |
+| reader only | yes | no | `<T!></T></T>` — unparseable |
+| writer only | no | yes | value silently changed |
+| both | yes | yes | stable |
 
-Measure and record: the projection cost delta when no escape is
-present must be ZERO (the zero-copy path is untouched).
+Each broken case is a **silently changed or unparseable value** (risk
+1), and no gate would catch it — corpus population is zero, so every
+suite stays green through the window.
 
-### Task 3 — the writer escapes
+Built: `_crudum_solvere` (peel one rung, only when the region carries
+an escape — the no-escape path keeps its zero-copy slice) and
+`_crudum_fugatum_scribere` (add one rung, at all FOUR raw emission
+sites: normal form and capture form, each flat and multiline; those
+two blocks are verbatim copies, so fixing one alone would recreate the
+two-halves defect inside one function).
+
+**`stml_textus_internus` does NOT escape**, on measurement: its header
+claims it returns source bytes, but `<a>x&amp;y</a>` yields `x&y` — it
+already resolves entities, so its exactness is trivia and layout, not
+character encoding. Raw escaping follows the entity precedent. This is
+what kept the change out of the golden pins.
+
+**Escape before line splitting**: a delimiter may be any whitespace,
+newline included, so a sequence can straddle a line end.
+
+Gates, each half planted separately: reader plant (strip every
+backslash) fires the VALUE assertion at depths 2 and 3; writer plant
+(escape only bare sequences) fires the BYTE assertion. **Depth 1 alone
+would not have caught either** — stripping all and stripping one agree
+there.
+
+Cost: no-escape path allocates nothing and now makes one call FEWER
+per byte (direct `sequentia_est` instead of the `_terminator_est`
+wrapper). html's computus golden did not move.
+
+### Task 3 — materia stops refusing
 
 **Files:** `materia/fontes/materia_arbor.c`,
 `html/probationes/probatio_html_stml.c`
 
-Replace the refusal with the escape. The five pinned cases in
-`probatio_html_stml` promote from REFUSAL to round-trip.
+`lib/stml.c` can now carry these values, so `_valorem_crudum_notare`'s
+refusal is obsolete — drop it and let the value through. The five
+pinned cases in `probatio_html_stml` promote from REFUSAL to
+round-trip.
 
-Gate: all five round-trip byte-identically. **Plant the silent
-corruption**: escape only `</T>` (not the ladder) and assert that a
-value already containing `<\/T>` comes back changed — the gate must
-catch a CHANGED VALUE, not a refusal.
+Gate: all five round-trip byte-identically. The ladder itself is
+already gated in `probatio_stml` (Task 2); what is new here is that
+the materia layer no longer rejects.
 
 ### Task 4 — the corpora and the clients
 

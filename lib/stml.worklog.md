@@ -1580,3 +1580,61 @@ than it feared:
 
 I checked the claim only because I was about to build on it. It had
 been sitting in this file looking authoritative since this morning.
+
+## 2026-09-21 — the escape ladder, step 2 (reader decodes, writer encodes)
+
+The law: **decode once on the way in, encode at every boundary on the
+way out.** `_crudum_solvere` peels one rung when the region carries an
+escape; `_crudum_fugatum_scribere` adds one at each raw emission site.
+
+**Task 2 could not ship alone, and neither could Task 3.** Measured
+before writing any code:
+
+| | reader decodes | writer encodes | `<T!><\/T></T>` round trip |
+|---|---|---|---|
+| before | no | no | stable |
+| reader only | yes | no | `<T!></T></T>` — unparseable |
+| writer only | no | yes | value silently changed |
+| both | yes | yes | stable |
+
+Each half alone produces a *silently changed or unparseable value*,
+and **no gate would have caught it**: corpus population is zero, so
+html `circuitus`, crusta and the rest stay green through the whole
+window. The plan's task split was wrong; Fran approved merging.
+
+**Where the escape had to go, and where it did not.** The value→bytes
+boundary appears six times, but only four needed it — the two raw
+emission blocks in the writer (normal form and capture form), each
+with a flat and a multiline path. Those two blocks are *verbatim
+copies of each other*; fixing one and not the other would have
+recreated the two-halves defect inside a single function. They are
+now both calls to one helper.
+
+The sixth boundary, `stml_textus_internus`, was the interesting one.
+Its header says it returns "octetos contenti interioris quales in
+fonte stabant" — the bytes as they stood in the source — which would
+oblige it to re-escape. **The header over-claims.** Measured:
+`<a>x&amp;y</a>` yields `x&y`, not `x&amp;y`. `internus` already
+resolves entities, so its exactness is about trivia and layout
+reassembly, not character-level encoding. Raw escaping follows the
+entity precedent: internus returns the decoded value. That measurement
+is what kept this change from spreading into the golden pins.
+
+**Escaping happens before line splitting, not after.** A terminator's
+delimiter may be any whitespace, newline included, so a sequence can
+straddle a line end (`</T` then `\n`). `_valorem_praefixo_scribere`
+splits first, which would hide such a sequence in two pieces and let
+the escape miss it. So the raw helper emits the per-line prefix itself
+rather than delegating.
+
+**Cost.** The no-escape path still allocates nothing — the token keeps
+its zero-copy slice, and the scan now calls `stml_crudi_sequentia_est`
+directly instead of through the `_terminator_est` wrapper, so it is
+one call *fewer* per byte. html's computus golden did not move.
+
+Gates, each half planted separately: reader plant (strip every
+backslash) fires the VALUE assertion on depths 2 and 3; writer plant
+(escape only bare sequences) fires the BYTE assertion. Depth 1 is
+deliberately not sufficient as a test case — stripping all and
+stripping one agree there, which is exactly why the ladder needs
+depths 2 and 3 to be pinned.

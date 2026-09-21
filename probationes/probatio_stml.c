@@ -5696,6 +5696,100 @@ s32 principale(vacuum)
     }
 
 
+    imprimere("\n--- Probans circuitum scalae fugae ---\n");
+
+    {
+        /* CIRCUITUS SOLUS NON SATIS EST: probat lectorem et
+         * scriptorem INVERSOS esse, non verum dicere - ambo eodem
+         * modo errantes circuitum sanum darent. Ergo octeti MEDII
+         * asseruntur quoque, utraque via seorsum:
+         *   documentum -> valor  (lector solvit)
+         *   valor -> documentum  (scriptor fugat)
+         */
+        hic_manens constans structura {
+             constans character* documentum;
+             constans character* valor;
+        } CIRCUITUS[] = {
+            /* sine fuga: tenor intactus, nulla copia */
+            { "<T!>abc</T>",        "abc"      },
+            /* gradus I -> valor sequentiam NUDAM fert */
+            { "<T!><\\/T></T>",     "</T>"     },
+            /* SCALA: gradus II -> gradus I, NON ad nudum */
+            { "<T!><\\\\/T></T>",   "<\\/T>"   },
+            { "<T!><\\\\\\/T></T>", "<\\\\/T>" },
+            /* delimitator '!' quoque, non solum '>' */
+            { "<T!>a<\\/T!b</T>",   "a</T!b"   }
+        };
+        i32 k;
+        i32 numerus;
+
+        numerus = (i32)(magnitudo(CIRCUITUS)
+                      / magnitudo(CIRCUITUS[ZEPHYRUM]));
+
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            StmlResultus  res;
+               StmlNodus* elementum;
+               StmlNodus* textus;
+                  chorda  rescriptum;
+
+            res = stml_legere_ex_literis(CIRCUITUS[k].documentum,
+                piscina, intern);
+            CREDO_VERUM(res.successus);
+            si (!res.successus)
+            {
+                perge;
+            }
+            elementum = *(StmlNodus**)xar_obtinere(
+                res.radix->liberi, ZEPHYRUM);
+            textus = *(StmlNodus**)xar_obtinere(elementum->liberi,
+                ZEPHYRUM);
+
+            /* VIA PRIMA: lector solvit - VALOR asseritur.
+             * Periculum primum plani est valor TACITE mutatus,
+             * ergo porta aequalitatem valoris petit, numquam
+             * 'an recusatum sit'. */
+            CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+                CIRCUITUS[k].valor));
+
+            /* VIA ALTERA: scriptor fugat - OCTETI asseruntur */
+            rescriptum = stml_scribere(res.radix, piscina, FALSUM);
+            CREDO_CHORDA_AEQUALIS_LITERIS(rescriptum,
+                CIRCUITUS[k].documentum);
+        }
+
+        /* SCRIPTOR SOLUS, arbore manu structa: casus qui olim
+         * documentum INPARSABILE dabat ('<T!></T></T>' - scriptor
+         * emittens quod lector suus recusat, forma vitii gradus 0).
+         * Hic nullus lector adest, ergo scriptor per se iudicatur. */
+        {
+             StmlNodus* radix_manus;
+             StmlNodus* crudum;
+             StmlNodus* textus;
+                chorda  scriptum;
+          StmlResultus  relecta;
+
+            radix_manus = stml_elementum_creare(piscina, intern, "r");
+            crudum = stml_elementum_crudum_creare(piscina, intern,
+                "T");
+            textus = stml_textum_creare(piscina, intern, "</T>");
+            stml_liberum_addere(crudum, textus);
+            stml_liberum_addere(radix_manus, crudum);
+
+            scriptum = stml_scribere(radix_manus, piscina, FALSUM);
+            CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+                "<r><T!><\\/T></T></r>");
+
+            /* et documentum emissum lector SUUS accipit */
+            relecta = stml_legere(scriptum, piscina, intern);
+            CREDO_VERUM(relecta.successus);
+        }
+
+        imprimere("  circuitus scalae: valor ET octeti, utraque "
+            "via\n");
+    }
+
+
     /* ==================================================
      * Compendium
      * ================================================== */

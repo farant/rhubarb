@@ -155,6 +155,65 @@ stml_crudi_terminator_est (
     redde (b32)(fuga == ZEPHYRUM);
 }
 
+/* Regionem crudam SOLVERE (directio lectionis): gradum quemque uno
+ * solido inverso minuit -
+ *   '<' + solidi N + '/T' + delim  ->  '<' + solidi N-I + '/T' + delim
+ * pro N >= I. Gradus ZEPHYRUM huc non venit: ille terminator est et
+ * regionem iam clausit.
+ *
+ * SCALA EST, NON DETRACTIO SIMPLEX. Valor qui '<' + solidum unum +
+ * '/T>' fert ad '</T>' solvitur; valor qui duos fert ad unum, non
+ * ad nullum. Solidos omnes detrahere valorem TACITE mutaret, et
+ * nulla recusatio id proderet - periculum primum plani, ideo portae
+ * AEQUALITATEM VALORIS asserunt, non 'an recusatum sit'. */
+interior chorda
+_crudum_solvere (
+     Piscina* piscina,
+      chorda  valor,
+      chorda  titulus)
+{
+    chorda exitus;
+       i32 i;
+       i32 scriptum;
+
+    exitus.datum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)valor.mensura);
+    si (exitus.datum == NIHIL)
+    {
+        redde valor;
+    }
+    scriptum  = ZEPHYRUM;
+    i         = ZEPHYRUM;
+    dum (i < valor.mensura)
+    {
+        i32 gradus;
+
+        si (   stml_crudi_sequentia_est(valor, i,
+                   (constans character*)titulus.datum,
+                   titulus.mensura, &gradus)
+            && gradus > ZEPHYRUM)
+        {
+            i32 j;
+
+            exitus.datum[scriptum] = (i8)'<';
+            scriptum++;
+            per (j = I; j < gradus; j++)
+            {
+                exitus.datum[scriptum] = (i8)'\\';
+                scriptum++;
+            }
+            /* ad solidum saltare: '/T' + delimitator manent */
+            i = i + I + gradus;
+            perge;
+        }
+        exitus.datum[scriptum] = valor.datum[i];
+        scriptum++;
+        i++;
+    }
+    exitus.mensura = scriptum;
+    redde exitus;
+}
+
 b32
 stml_crudi_terminatorem_fert (
                  chorda  valor,
@@ -1632,6 +1691,7 @@ _tok_legere_contentus_crudus (
           i32 initium_linea;
           i32 initium_columna;
           b32 inventum;
+          b32 fugata;
 
     initium          = ctx->positus;
     initium_linea    = ctx->linea;
@@ -1639,22 +1699,43 @@ _tok_legere_contentus_crudus (
 
     /* Terminatorem quaerere - PER PRAEDICATUM COMMUNE, ne definitio
      * hic iterum scripta a custode scriptoris discrepet (vide
-     * stml_crudi_terminator_est). */
-    inventum = FALSUM;
+     * stml_crudi_terminator_est).
+     *
+     * Praedicatum gradum quoque dicit, ergo gyrus IDEM utrumque
+     * respondet: gradus ZEPHYRUM terminat, gradus maior sequentiam
+     * FUGATAM notat. Nullum pretium additum - custos vetus idem
+     * praedicatum per involucrum vocabat. */
+    inventum  = FALSUM;
+    fugata    = FALSUM;
     dum (ctx->positus < ctx->input.mensura && !inventum)
     {
-        si (stml_crudi_terminator_est(ctx->input, ctx->positus,
-                (constans character*)titulus.datum, titulus.mensura))
+        i32 gradus;
+
+        si (stml_crudi_sequentia_est(ctx->input, ctx->positus,
+                (constans character*)titulus.datum, titulus.mensura,
+                &gradus))
         {
-            inventum = VERUM;
-            frange;
+            si (gradus == ZEPHYRUM)
+            {
+                inventum = VERUM;
+                frange;
+            }
+            fugata = VERUM;
         }
         _tok_progredi(ctx, I);
     }
 
-    token.genus                      = STML_TOKEN_TEXTUS;
-    token.valor.datum                = ctx->input.datum + initium;
-    token.valor.mensura              = ctx->positus - initium;
+    token.genus          = STML_TOKEN_TEXTUS;
+    token.valor.datum    = ctx->input.datum + initium;
+    token.valor.mensura  = ctx->positus - initium;
+
+    /* Regio fugata SOLA transcribitur; sine fuga tenor sine copia
+     * manet (sectio cum nulla allocatione, ut ante). */
+    si (fugata)
+    {
+        token.valor = _crudum_solvere(ctx->piscina, token.valor,
+            titulus);
+    }
     token.positus_initium            = initium;
     token.positus_finis              = ctx->positus;
     token.linea                      = initium_linea;
@@ -4986,6 +5067,74 @@ _valorem_praefixo_scribere (
             }
             initium = i + I;
         }
+    }
+}
+
+/* Valorem CRUDUM emittere, sequentia claudente propria FUGATA
+ * (directio scriptionis, inversa _crudum_solvere):
+ *   '<' + solidi N + '/T' + delim  ->  '<' + solidi N+I + '/T' + delim
+ * pro N >= ZEPHYRUM - ergo '</T>' nudum quoque fugatur, et lector
+ * gradum unum demens valorem ORIGINALEM reddit.
+ *
+ * FUGA ANTE FISSIONEM LINEARUM fit, non post. Delimitator
+ * terminatoris spatium album esse potest, linea nova inclusa, ergo
+ * sequentia finem lineae transire potest; fissio prior eam duabus
+ * in partibus absconderet et fuga aberraret. Ideo praefixum hic
+ * ipse emittitur potius quam _valorem_praefixo_scribere vocando.
+ * Praefixum lineis NON VACUIS solis praeponitur, ut ibi. */
+interior vacuum
+_crudum_fugatum_scribere (
+    ChordaAedificator* aed,
+               chorda  valor,
+      constans chorda* titulus,
+      constans chorda* praefixum,
+                  b32  prima_quoque)
+{
+    i32 i;
+    b32 linea_nova;
+
+    si (titulus == NIHIL || titulus->datum == NIHIL)
+    {
+        chorda_aedificator_appendere_chorda(aed, valor);
+        redde;
+    }
+
+    linea_nova  = prima_quoque;
+    i           = ZEPHYRUM;
+    dum (i < valor.mensura)
+    {
+        i32 gradus;
+
+        si (   linea_nova
+            && praefixum                 != NIHIL
+            && (character)valor.datum[i] != '\n')
+        {
+            chorda_aedificator_appendere_chorda(aed, *praefixum);
+        }
+        linea_nova = FALSUM;
+
+        si (stml_crudi_sequentia_est(valor, i,
+                (constans character*)titulus->datum,
+                titulus->mensura, &gradus))
+        {
+            i32 j;
+
+            chorda_aedificator_appendere_character(aed, '<');
+            per (j = ZEPHYRUM; j <= gradus; j++)
+            {
+                chorda_aedificator_appendere_character(aed, '\\');
+            }
+            /* ad solidum saltare: '/T' + delimitator manent */
+            i = i + I + gradus;
+            perge;
+        }
+        chorda_aedificator_appendere_character(aed,
+            (character)valor.datum[i]);
+        si ((character)valor.datum[i] == '\n')
+        {
+            linea_nova = VERUM;
+        }
+        i++;
     }
 }
 
@@ -8460,9 +8609,10 @@ _scribere_nucleus (
                                         chorda_aedificator_appendere_chorda(aedificator,
                                             *liberum->spatia_ante);
                                     }
-                                    _valorem_praefixo_scribere(aedificator,
+                                    _crudum_fugatum_scribere(aedificator,
                                         *liberum->valor,
-                                        nodus->indentatio, FALSUM,
+                                        nodus->titulus,
+                                        nodus->indentatio,
                                         liberum->spatia_ante
                                             != NIHIL ? VERUM : FALSUM);
                                     si (liberum->spatia_post != NIHIL)
@@ -8473,8 +8623,9 @@ _scribere_nucleus (
                                 }
                                 alioquin
                                 {
-                                    chorda_aedificator_appendere_chorda(aedificator,
-                                        *liberum->valor);
+                                    _crudum_fugatum_scribere(aedificator,
+                                        *liberum->valor,
+                                        nodus->titulus, NIHIL, FALSUM);
                                 }
                             }
                             alioquin
@@ -8670,9 +8821,10 @@ _scribere_nucleus (
                                             chorda_aedificator_appendere_chorda(aedificator,
                                                 *liberum->spatia_ante);
                                         }
-                                        _valorem_praefixo_scribere(aedificator,
+                                        _crudum_fugatum_scribere(aedificator,
                                             *liberum->valor,
-                                            nodus->indentatio, FALSUM,
+                                            nodus->titulus,
+                                            nodus->indentatio,
                                             liberum->spatia_ante
                                                 != NIHIL ? VERUM : FALSUM);
                                         si (liberum->spatia_post
@@ -8684,8 +8836,10 @@ _scribere_nucleus (
                                     }
                                     alioquin
                                     {
-                                        chorda_aedificator_appendere_chorda(aedificator,
-                                            *liberum->valor);
+                                        _crudum_fugatum_scribere(aedificator,
+                                            *liberum->valor,
+                                            nodus->titulus, NIHIL,
+                                            FALSUM);
                                     }
                                 }
                                 alioquin
