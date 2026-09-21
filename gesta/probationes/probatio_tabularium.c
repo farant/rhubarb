@@ -196,6 +196,28 @@ _ulla_plagula_continet (
         != '\0';
 }
 
+/* quoties acus in textu occurrit (occurrentiae non superpositae) */
+interior i32
+_quoties_continet (
+    constans character* textus,
+    constans character* acus)
+{
+    constans character* cursor   = textus;
+                   i32  numerus  = ZEPHYRUM;
+        memoriae_index  passus   = strlen(acus);
+
+    si (passus == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    dum ((cursor = strstr(cursor, acus)) != NIHIL)
+    {
+        numerus++;
+        cursor += passus;
+    }
+    redde numerus;
+}
+
 /* lineam mittere, responsum totum (litterae) recipere */
 interior constans character*
 _mitte (
@@ -683,6 +705,17 @@ principale (vacuum)
 
                 CREDO_VERUM (strcmp(tabula_ante, tabula_post)
                     == ZEPHYRUM);
+            }
+            /* semen v7 (verba canonica) IDEMPOTENS: ortus alter
+             * emendationem alteram NON scribit - versio monotona
+             * custodit (binaria duo seminibus diversis mundum
+             * eundem servientia genus alternatim reverterent) */
+            {
+                constans character* an = _plagula_litterae(piscina,
+                    VIA_AN);
+
+                CREDO_AEQUALIS_I32 (_quoties_continet(an,
+                    "\"verba_versio\""), I);
             }
         }
     }
@@ -1480,6 +1513,102 @@ principale (vacuum)
             "\"res\",\"arguments\":{\"res\":"
             "\"Vinculum centrale\",\"breviter\":\"verum\"}}}");
         CREDO_VERUM (strstr(r, "(et alia 1)") != NIHIL);
+    }
+
+
+    /* ==================================================
+     * XXII ter. VERBA NEXUS CANONICA (decretum 01M32TEK3K,
+     * 2026-09-21): quinque verba a machina lecta, directio una (a
+     * dependente ad id cui innititur). Synonymum NOTUM recusatur
+     * CLARE canonicum nominans; verba cetera LIBERA transeunt.
+     * Mensuratum ante decretum: XXXVII verba in CIII vinculis, et
+     * impedimentum tribus orthographiis duabus directionibus
+     * scriptum - visus PARATA super id aedificari non poterat.
+     * ================================================== */
+
+    {
+        /* semen: genus nexus verba canonica ut DATUM fert */
+        {
+            constans character* an = _plagula_litterae(piscina,
+                VIA_AN);
+
+            CREDO_VERUM (strstr(an, "\"verba_canonica\"") != NIHIL);
+            /* clavis 'titulus' discernit: verbum nudum iam a
+             * vinculis probationis X in annalibus stat */
+            CREDO_VERUM (strstr(an,
+                "\"titulus\":\"impeditur-a\"") != NIHIL);
+        }
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":210,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Verbum propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":211,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Verbum gradus\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+
+        /* SYNONYMUM directionis EIUSDEM: recusatur, canonicum
+         * nominatur, NIHIL scribitur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":212,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum gradus\",\"actus\":\"nexus\","
+            "\"verbum\":\"pendet-ex\",\"alterum\":"
+            "\"Verbum propositum\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "synonymum") != NIHIL);
+        CREDO_VERUM (strstr(r, "impeditur-a") != NIHIL);
+        CREDO_VERUM (strstr(r, "creatum") == NIHIL);
+
+        /* verbum INVERSUM: recusatur et directionem docet */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":213,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum propositum\",\"actus\":\"nexus\","
+            "\"verbum\":\"impedit\",\"alterum\":"
+            "\"Verbum gradus\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "inversum") != NIHIL);
+        CREDO_VERUM (strstr(r, "impeditur-a") != NIHIL);
+        CREDO_VERUM (strstr(r, "creatum") == NIHIL);
+
+        /* nihil scriptum: breviarium vincula nulla monstrat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":214,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Verbum gradus\",\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "nexus:") == NIHIL);
+
+        /* CANONICUM transit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":215,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum gradus\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":"
+            "\"Verbum propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        CREDO_VERUM (strstr(r, "--intra-->") != NIHIL);
+
+        /* verbum LIBERUM transit (decretum: canonicum fit solum
+         * cum machina id legit; cetera libera manent) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":216,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum gradus\",\"actus\":\"nexus\","
+            "\"verbum\":\"cognatum\",\"alterum\":"
+            "\"Verbum propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* schema verba canonica DOCET (doctrina auto-onerata ab
+         * hospite ad MMXLVIII characteres truncatur - mensuratum
+         * 2026-09-21; schema est ubi scriptor ea videt) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":217,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "impeditur-a") != NIHIL);
+        CREDO_VERUM (strstr(r, "e.g. impedit)") == NIHIL);
     }
 
 

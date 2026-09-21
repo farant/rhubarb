@@ -519,3 +519,74 @@ fresh session learns what the compact view contains.
 NEXT in this arc (decree 01M32TEK3K, park 01KY57P2WD): declare the five
 canonical link verbs in the seed, refuse known near-synonyms loudly,
 migrate eight links, then the PARATA view.
+
+## 2026-09-21 — five canonical link verbs, declared as data and enforced at the door
+
+Decree 01M32TEK3K (Fran). Five verbs a machine reads, ONE direction
+rule — the arrow runs from the dependent item to the one it leans on:
+`impeditur-a` (blocked → blocker, hard), `intra` (child → parent),
+`natum-de` (new → origin), `sequitur` (later → earlier, soft),
+`respondet-ad`. Everything else stays free: a verb becomes canonical
+only when a view reads it.
+
+**Why it was needed, measured.** 37 distinct verbs across 103 live
+links; blocking was spelled three ways (`impeditur-a`, `pendet-ex`,
+`impedit`) in TWO directions. No ready view can be built on that.
+
+**Where the table lives.** In the `nexus` genus as DATA
+(`verba_canonica` + `verba_versio`), written by seed v7 as an
+`emendatio-generis` in the manner of seed v2 — so it is visible in the
+ledger and rides the event log like every other genus fact. The
+handler reads the table from the genus datum, never from the C
+constant: a world whose seed predates this refuses nothing, which is
+the progressive law working.
+
+**The version guard is monotonic on purpose.** "Emit when the stored
+table differs from mine" would be simpler and is WRONG here: five
+residents are routinely alive at once, plus worktrees with their own
+binaries. Two binaries with different seed tables serving one world
+would revert the genus back and forth, one event per start. `condita <
+VERSIO` cannot flip-flop. To change the table: edit `VERBA_CANONICA`
+AND bump `VERBA_CANONICA_VERSIO`.
+
+**A fresh world takes the upgrade path too** (definitio, then
+emendatio) rather than carrying the table in `SEMINA_GENERUM`. One
+extra event per new world, and in exchange the upgrade path runs in
+every test run instead of only on Fran's live store.
+
+**Refusal, not normalisation.** A known near-synonym is refused
+loudly, names the canonical verb, and for an inverse spelling says to
+swap `res` and `alterum`. Silent rewriting would teach the writer
+nothing and would hide direction mistakes — and direction is the part
+that matters. Only link CREATION is judged: `denexus` is untouched, so
+links written under the old spellings can still be dissolved (the
+migration needs exactly that).
+
+**Synonym lists are evidence, not a thesaurus.** Only spellings that
+were actually written in the live store. `pertinet-ad` is deliberately
+NOT a synonym of `intra`: two of its four live uses mean "is about",
+which is a legitimate free verb.
+
+**THE DOCTRINE IS TRUNCATED AT 2048 CHARACTERS.** Measured while
+deciding where to document the verbs: the copy this session received
+ends mid-word at character 2048 of a 4017-character string. A session
+sees 51 % — the whole MORES section (pull → `tractum` at once, finish
+→ `clausum`, "tabula mendax peior prosa"), the cold path, `renovare`
+and the forum contract are NEVER seen. So the verbs are documented in
+the `gerere.verbum` SCHEMA text (loaded with the tool, not truncated)
+plus one short early clause in the doctrine, and a test asserts the
+schema carries them. Restructuring the doctrine so the habits come
+before the grammar (which the schemas already repeat) is its own step
+and needs Fran's eye — it is his contract text. Filed as a question.
+
+**Three plants, three different assertions.** (A) judge cannot find
+the table → the synonym refusal reddens. (B) `<` → `<=` in the version
+guard → the pre-existing tabula idempotence assertion reddens first
+(my `verba_versio` count would redden too). (C) `inversa` not read →
+`impedit` slips through as a free verb and the inverse refusal
+reddens. A weak assertion was caught before it shipped: checking for
+`"impeditur-a"` in the annals passed BEFORE the implementation,
+because section X's links already write that verb; it now checks
+`"titulus":"impeditur-a"`, which only the seed writes.
+
+Gesta 680 · tabularium 449 · tabulariumd 12 · fori 18.

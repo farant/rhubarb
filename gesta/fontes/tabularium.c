@@ -39,15 +39,15 @@ interior constans character* constans TABULARII_DOCTRINA =
     "actus: nota|ictus|status|nexus|denexus|mutatio|remotio, "
     "textus?/"
     "novus?/verbum?/alterum?/clavis?/valor?/datum?/origo?} = "
-    "eventus unus. "
+    "eventus unus; nexus: verba CANONICA impeditur-a|intra|natum-de|"
+    "sequitur|respondet-ad, a dependente ad id cui innititur "
+    "(schema gerere.verbum). "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
     "Latinum: praefixa 'parsur*' - stemmata Anglica sola). res "
     "{res, breviter?} = status + ancorae (CAUTIO si inresolutae) + "
     "nexus + actiones affordatae + annales; breviter \"verum\" = "
     "compendium (corpus + notae ultimae III + nexus + actiones, "
-    "sine dato crudo). Nexus in utroque: sagitta, verbum, titulus "
-    "socii CUM GENERE ET STATU - 'estne impediens adhuc apertum' "
-    "sine apertione altera legitur. "
+    "sine dato crudo); nexus socium CUM GENERE ET STATU dant. "
     "census {} = genera x status + tags + res saepissime ICTAE "
     "(apertae, ordine ictuum - pretium MENSURATUM, non "
     "aestimatum). ictus: gerere {actus:ictus, textus?} = "
@@ -288,6 +288,47 @@ interior constans character* constans ATTRIBUTA_V2 =
     "{\"titulus\":\"corpus\",\"typus\":\"textus\"},"
     "{\"titulus\":\"tags\",\"typus\":\"tabulatum\"},"
     "{\"titulus\":\"ancorae\",\"typus\":\"tabulatum\"}]";
+
+/* semen v7 (decretum 01M32TEK3K, 2026-09-21): VERBA NEXUS CANONICA
+ * in genere 'nexus' ut DATUM - quinque verba quae machina legit,
+ * directio UNA (a re dependente ad id cui innititur). Verba cetera
+ * LIBERA manent: canonicum fit solum cum visus id legit.
+ *
+ *   titulus    verbum ipsum (sagitta a -> b)
+ *   inversum   titulus ostensionis ex parte b (nondum lectus)
+ *   lector     visus qui verbum legit
+ *   synonyma   orthographiae directionis EIUSDEM - recusantur
+ *   inversa    orthographiae directionis CONTRARIAE - recusantur
+ *              et partes commutandas docent
+ *
+ * Synonyma ex ERRORIBUS MENSURATIS sumpta (XXXVII verba in CIII
+ * vinculis vivis): ea sola quae scriptor re vera scripsit, non
+ * thesaurus. 'pertinet-ad' CONSULTO abest - 'de hoc agit' verbum
+ * liberum legitimum est, non pars-totius.
+ *
+ * VERSIO MONOTONA: emendatio scribitur solum cum versio condita
+ * MINOR est. Comparatio contenti sola non sufficeret - binaria duo
+ * seminibus diversis mundum eundem servientia (arbores laboris,
+ * residentes stali) genus alternatim reverterent, eventu per ortum. */
+#define VERBA_CANONICA_VERSIO I
+
+interior constans character* constans VERBA_CANONICA =
+    "[{\"titulus\":\"impeditur-a\",\"inversum\":\"impedit\","
+    "\"lector\":\"parata\",\"synonyma\":[\"pendet-ex\","
+    "\"dependet-ex\"],\"inversa\":[\"impedit\",\"obstat\"]},"
+    "{\"titulus\":\"intra\",\"inversum\":\"continet\","
+    "\"lector\":\"arbor\",\"synonyma\":[\"pars-de\",\"pars-est\"],"
+    "\"inversa\":[\"complectitur\",\"continet\"]},"
+    "{\"titulus\":\"natum-de\",\"inversum\":\"genuit\","
+    "\"lector\":\"reditus\",\"synonyma\":[\"natum-ex\","
+    "\"oritur-ex\",\"ortum-ex\",\"inventum-ex\",\"sequitur-ex\"],"
+    "\"inversa\":[\"seminat\",\"gignit\"]},"
+    "{\"titulus\":\"sequitur\",\"inversum\":\"praecedit\","
+    "\"lector\":\"ordo\",\"synonyma\":[],"
+    "\"inversa\":[\"praecedit\",\"antecedit\"]},"
+    "{\"titulus\":\"respondet-ad\",\"inversum\":\"responsum-habet\","
+    "\"lector\":\"fila\",\"synonyma\":[\"respondet\"],"
+    "\"inversa\":[]}]";
 
 interior constans character* constans VOCABULARIUM_TAGORUM =
     "{\"genus\":\"nota\",\"titulus\":\"vocabularium tagorum\","
@@ -1359,6 +1400,124 @@ _verbum_vinculi (
         redde vacua;
     }
     redde json_ad_chorda(v);
+}
+
+/* estne verbum in tabulato chordarum JSON? */
+interior b32
+_verbum_in_tabulato (
+    JsonValor* tabulatum,
+       chorda  verbum)
+{
+    i32 i;
+
+    si (tabulatum == NIHIL || !json_est_tabulatum(tabulatum))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(tabulatum); i++)
+    {
+        JsonValor* v = json_tabulatum_obtinere(tabulatum, i);
+           chorda  c;
+
+        si (v == NIHIL || !json_est_chorda(v))
+        {
+            perge;
+        }
+        c = json_ad_chorda(v);
+        si (   c.mensura == verbum.mensura
+            && (   c.mensura == ZEPHYRUM
+                || memcmp(c.datum, verbum.datum,
+                       (memoriae_index)c.mensura) == ZEPHYRUM))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Verbum vinculi contra VERBA CANONICA generis 'nexus' iudicare
+ * (decretum 01M32TEK3K). NIHIL = licet scribere (canonicum ipsum
+ * AUT verbum liberum). Aliter causa recusationis CLARA: synonymum
+ * directionis eiusdem canonicum nominat; verbum inversum insuper
+ * partes commutandas docet. Tabula ex DATO generis legitur, non ex
+ * constante - mundus seminis veteris (verba nondum seminata) nihil
+ * recusat, quod rectum est: lex progressiva.
+ *
+ * SOLA creatio vinculi iudicatur. 'denexus' INTACTUS manet: vincula
+ * vetera orthographiis pristinis solvi debent posse (migratio). */
+interior constans character*
+_verbum_iudicare (
+    Tabularium* t,
+        chorda  verbum,
+       Piscina* pn)
+{
+          chorda  gd = gesta_genus_datum(t->mundus, "nexus", pn);
+    JsonResultus  r;
+       JsonValor* tabula;
+             i32  i;
+
+    si (gd.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    r = json_legere(gd, pn);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde NIHIL;
+    }
+    tabula = json_objectum_capere(r.radix, "verba_canonica");
+    si (tabula == NIHIL || !json_est_tabulatum(tabula))
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(tabula); i++)
+    {
+        JsonValor* ordo = json_tabulatum_obtinere(tabula, i);
+        JsonValor* titulus_ordinis;
+           chorda  canonicum;
+              b32  inversum;
+
+        si (ordo == NIHIL || !json_est_objectum(ordo))
+        {
+            perge;
+        }
+        titulus_ordinis = json_objectum_capere(ordo, "titulus");
+        si (   titulus_ordinis == NIHIL
+            || !json_est_chorda(titulus_ordinis))
+        {
+            perge;
+        }
+        canonicum = json_ad_chorda(titulus_ordinis);
+        inversum  = _verbum_in_tabulato(
+            json_objectum_capere(ordo, "inversa"), verbum);
+        si (   inversum
+            || _verbum_in_tabulato(
+                   json_objectum_capere(ordo, "synonyma"), verbum))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "nexus RECUSATUS: verbum '");
+            chorda_aedificator_appendere_chorda(aed, verbum);
+            chorda_aedificator_appendere_literis(aed, inversum
+                ? "' inversum verbi canonici '"
+                : "' synonymum verbi canonici '");
+            chorda_aedificator_appendere_chorda(aed, canonicum);
+            chorda_aedificator_appendere_literis(aed, inversum
+                ? "' est - scribe '"
+                : "' est - eo utere: '");
+            chorda_aedificator_appendere_chorda(aed, canonicum);
+            chorda_aedificator_appendere_literis(aed, inversum
+                ? "' PARTIBUS COMMUTATIS (res <-> alterum)."
+                : "', partibus iisdem.");
+            chorda_aedificator_appendere_literis(aed,
+                " Canonica sagittam a re DEPENDENTE ad id cui"
+                " innititur ducunt; nihil scriptum.");
+            redde _litterae(pn, chorda_aedificator_finire(aed));
+        }
+    }
+    redde NIHIL;
 }
 
 interior b32
@@ -4265,6 +4424,19 @@ _tab_gerere (
                 _ch("nexus: verbum et alterum requiruntur"),
                 VERUM);
             redde;
+        }
+        /* verba canonica: synonymum notum recusatur CLARE ante
+         * scripturam ullam (decretum 01M32TEK3K) */
+        {
+            constans character* causa = _verbum_iudicare(t, verbum,
+                pn);
+
+            si (causa != NIHIL)
+            {
+                _textum_respondere(t, pn, effusio, id, _ch(causa),
+                    VERUM);
+                redde;
+            }
         }
         alterum_id = _res_solvere(t, alterum, pn, NIHIL);
         membrum_b = alterum_id.mensura > ZEPHYRUM
@@ -7199,7 +7371,15 @@ _toolslist_tractare (
           VERUM },
         { "textus", "pro nota", FALSUM },
         { "novus", "pro statu (status novus)", FALSUM },
-        { "verbum", "pro nexu (e.g. impedit)", FALSUM },
+        { "verbum", "pro nexu. CANONICA (sagitta a re DEPENDENTE ad"
+          " id cui innititur): impeditur-a (impeditum -> impediens;"
+          " DURUM, visus PARATA legit; impediens genus cum vita sit -"
+          " decisio exspectata = quaestio) | intra (filius -> parens)"
+          " | natum-de (novum -> origo; etiam 'inventum dum in X"
+          " laborabam') | sequitur (posterius -> prius; ordo MOLLIS,"
+          " numquam obstat) | respondet-ad. Cetera verba LIBERA;"
+          " synonyma nota (pendet-ex, impedit, oritur-ex, pars-de...)"
+          " RECUSANTUR canonicum nominantia", FALSUM },
         { "alterum", "pro nexu (res altera: id aut titulus)",
           FALSUM },
         { "clavis", "pro mutatione/remotione", FALSUM },
@@ -7426,6 +7606,56 @@ _seminare (
             e.actor = "machina";
             e.origo = "seminatio";
             (vacuum)gesta_scribere(t->mundus, &e, NIHIL);
+        }
+    }
+    /* semen v7: VERBA CANONICA in genus 'nexus' VIVUM (emendatio
+     * integra ex definitione currenti, more seminis v2). VERSIO
+     * MONOTONA custodit - vide commentum VERBA_CANONICA. Mundus
+     * recens quoque hac via it (definitio, deinde emendatio): sic
+     * semita emendationis omni cursu probationum exercetur. */
+    {
+        chorda gd = gesta_genus_datum(t->mundus, "nexus", pn);
+
+        si (gd.mensura > ZEPHYRUM)
+        {
+            JsonResultus r = json_legere(gd, pn);
+
+            si (r.successus && json_est_objectum(r.radix))
+            {
+                JsonValor* versio_valor = json_objectum_capere(
+                    r.radix, "verba_versio");
+                      s64 condita = (s64)ZEPHYRUM;
+
+                si (   versio_valor != NIHIL
+                    && json_est_integer(versio_valor))
+                {
+                    condita = json_ad_integer(versio_valor);
+                }
+                si (condita < (s64)VERBA_CANONICA_VERSIO)
+                {
+                    JsonResultus verba = json_legere_literis(
+                        VERBA_CANONICA, pn);
+
+                    si (verba.successus)
+                    {
+                        GestaEventum e;
+
+                        json_objectum_ponere(r.radix,
+                            "verba_canonica", verba.radix);
+                        json_objectum_ponere(r.radix,
+                            "verba_versio", json_integer_creare(pn,
+                                (s64)VERBA_CANONICA_VERSIO));
+                        e.res_id         = NIHIL;
+                        e.genus_eventus  = "emendatio-generis";
+                        e.datum          = _litterae(pn,
+                            json_scribere(r.radix, pn));
+                        e.actor = "machina";
+                        e.origo = "seminatio";
+                        (vacuum)gesta_scribere(t->mundus, &e,
+                            NIHIL);
+                    }
+                }
+            }
         }
     }
     {
