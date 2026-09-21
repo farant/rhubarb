@@ -3511,6 +3511,29 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "Pa post relictum") != NIHIL);
         CREDO_VERUM (strstr(r, "RELICTUM") != NIHIL);
 
+        /* ASSIGNATIO EXPRESSA rem in catenam ponit, ut vinculum:
+         * quaestio SOLITARIA Frano assignata in EXSPECTANT FRANUM
+         * stat (cursus vivus primus: quaestio doctrinae Frano
+         * assignata ABERAT quia vinculum nullum ferebat) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":380,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Pa decisio solitaria\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":381,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Pa decisio solitaria\",\"actus\":\"mutatio\","
+            "\"clavis\":\"assignatum\",\"valor\":\"fran\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":382,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (_inter(r, "EXSPECTANT FRANUM", "IMPEDITA",
+            "quaestio/apertum  Pa decisio solitaria"));
+        /* res solitaria NON assignata adhuc abest */
+        CREDO_VERUM (strstr(r, "Pa solitarium") == NIHIL);
+
         /* TITULUS LONGUS decurtatur IN LIMITE CHARACTERIS: titulus
          * XCV octetorum ASCII + 'é' (II octeti, 0xC3 0xA9) limitem
          * XCVI in MEDIO characteris ponit - sectio ingenua octetum

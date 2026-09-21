@@ -782,3 +782,14 @@ Not done: `sequitur` does not yet order the list; `quantum` caps per
 section only; no `census` counts yet.
 
 Tabularium 555.
+
+## 2026-09-21 — `parata`: an explicit assignment puts an item in the queue, like a link
+
+Found by the first live use, minutes after shipping: I assigned the
+doctrine question to Fran (`assignatum: fran`) and `EXSPECTANT FRANUM`
+stayed empty — a lone item carries no canonical link, so it was never
+loaded. But assigning is as deliberate an act as linking; the "only
+what was placed in the graph" rule is about deliberate placement, not
+about links as such. Items with `assignatum = 'fran'` are now loaded
+too; an unassigned lone item still stays out (pinned both ways).
+Plant K reddens the new assertion. Tabularium 559.

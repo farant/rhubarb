@@ -1839,7 +1839,8 @@ _membrum_scribere (
  * indicum manu tentorum qui mentiti sunt.
  *
  * QUID IN VISUM INTRAT: res APERTAE quae in GRAPHO stant (vinculum
- * canonicum ullum ferunt) et OPERA omnia. Res solitaria aperta NON
+ * canonicum ullum ferunt), OPERA omnia, et res Frano EXPRESSE
+ * assignatae. Res solitaria aperta NON
  * intrat: tabularium basis scientiae est (C desiderata aperta), et
  * catena laboris = quod quis in graphum POSUIT. Index C desideratorum
  * veterum strepitus esset, non catena.
@@ -2218,6 +2219,23 @@ _parata_computare (
     si (e != NIHIL)
     {
         scrinium_ligare_textum(e, I, _ch(GENUS_OPERIS));
+        dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            (vacuum)_parati_nodum(t, nodi,
+                scrinium_columna_textus(e, 0, pn), pn);
+        }
+        scrinium_finire(e);
+    }
+    /* res Frano EXPRESSE assignatae (etiam solitariae): assignatio
+     * rem in catenam ponit ut vinculum - actus consultus, non
+     * coniectura. Cursus vivus primus id docuit: quaestio Frano
+     * assignata aberat quia vinculum canonicum nullum ferebat. */
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT res_id FROM res"
+        " WHERE json_extract(datum, '$.assignatum') = 'fran'"
+        " ORDER BY res_id");
+    si (e != NIHIL)
+    {
         dum (scrinium_gradi(e) == SCRINIUM_ORDO)
         {
             (vacuum)_parati_nodum(t, nodi,
