@@ -590,3 +590,57 @@ because section X's links already write that verb; it now checks
 `"titulus":"impeditur-a"`, which only the seed writes.
 
 Gesta 680 · tabularium 449 · tabulariumd 12 · fori 18.
+
+## 2026-09-21 — a refusal TEACHES, and reports every cause at once
+
+Fran, reviewing the verb refusal the same day it shipped: does the
+error say what a VALID write looks like? And when there is more than
+one rule, show all the errors together — no drip feed where you fix
+one thing and are stopped by the next.
+
+Honest answer to the first: only half. The message named the canonical
+verb and said "swap the ends", but never showed the call. And the link
+path checked its rules in sequence with early returns (branch →
+missing args → verb), so a caller could be stopped three times in a
+row.
+
+**Two laws, now in `_nexum_praeiudicare`'s header comment:**
+
+1. **NEVER DRIP.** No check returns early. All run, all are reported,
+   numbered, under one count: `nexus RECUSATUS (2 causae)`.
+2. **A REFUSAL TEACHES.** The response ends with the corrected call,
+   filled with the caller's own values (res_ids where they resolve,
+   `<alterum>` placeholders where something is missing), then a gloss
+   in titles — `A --impeditur-a--> B` — so direction can be checked at
+   a glance, then the list of canonical verbs so a verb can be chosen
+   without another call.
+
+**The hidden drip.** A check can be BORN from a correction. An inverse
+verb swaps the ends, so `alterum` becomes `res` — and `res` must
+resolve, whereas `alterum` is tolerated as raw text. A naive "valid
+call" would have handed the caller a second failure one step later.
+That check now runs inside the same pass. When adding a rule, ask what
+the CORRECTED call newly requires.
+
+**Where new link rules go:** in `_nexum_praeiudicare`, never as an
+early return in `_tab_gerere`. `_verbum_iudicare` now returns
+structure (canonical verb + inverse flag) rather than a finished
+sentence, so the collector owns the wording.
+
+**Plants (three, three different assertions):** (A) suppress "alterum
+deest" when another cause is already present — the drip behaviour
+itself — reddens `(2 causae)`; (B) do not swap the ends in the valid
+call → the titled gloss reddens (and the test also asserts the
+UNSWAPPED form is absent); (C) skip the resolvability check born from
+the swap → `(2 causae)` reddens on the inverse-plus-unknown case.
+
+The pre-existing branch test (`nondum sustentus`) still passes
+unchanged — it was already a three-cause input (branch + inverse verb
++ unresolvable `x`) and now gets all three in one response.
+
+Scope note: this covers the LINK path only. `addere`, status changes
+and the engine's fascis validation (`gesta_error` is a single string)
+still report their first failure. The command-line write path, next,
+is to be born under both laws.
+
+Tabularium 466 · gesta 680 · tabulariumd 12 · fori 18.

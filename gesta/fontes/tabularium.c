@@ -1436,20 +1436,22 @@ _verbum_in_tabulato (
 }
 
 /* Verbum vinculi contra VERBA CANONICA generis 'nexus' iudicare
- * (decretum 01M32TEK3K). NIHIL = licet scribere (canonicum ipsum
- * AUT verbum liberum). Aliter causa recusationis CLARA: synonymum
- * directionis eiusdem canonicum nominat; verbum inversum insuper
- * partes commutandas docet. Tabula ex DATO generis legitur, non ex
- * constante - mundus seminis veteris (verba nondum seminata) nihil
- * recusat, quod rectum est: lex progressiva.
+ * (decretum 01M32TEK3K). FALSUM = licet scribere (canonicum ipsum
+ * AUT verbum liberum). VERUM = recusandum: *canonicum verbum rectum
+ * accipit et *inversum dicit an partes commutandae sint. Tabula ex
+ * DATO generis legitur, non ex constante - mundus seminis veteris
+ * (verba nondum seminata) nihil recusat, quod rectum est: lex
+ * progressiva.
  *
  * SOLA creatio vinculi iudicatur. 'denexus' INTACTUS manet: vincula
  * vetera orthographiis pristinis solvi debent posse (migratio). */
-interior constans character*
+interior b32
 _verbum_iudicare (
     Tabularium* t,
         chorda  verbum,
-       Piscina* pn)
+       Piscina* pn,
+        chorda* canonicum,
+           b32* inversum)
 {
           chorda  gd = gesta_genus_datum(t->mundus, "nexus", pn);
     JsonResultus  r;
@@ -1458,24 +1460,23 @@ _verbum_iudicare (
 
     si (gd.mensura == ZEPHYRUM)
     {
-        redde NIHIL;
+        redde FALSUM;
     }
     r = json_legere(gd, pn);
     si (!r.successus || !json_est_objectum(r.radix))
     {
-        redde NIHIL;
+        redde FALSUM;
     }
     tabula = json_objectum_capere(r.radix, "verba_canonica");
     si (tabula == NIHIL || !json_est_tabulatum(tabula))
     {
-        redde NIHIL;
+        redde FALSUM;
     }
     per (i = ZEPHYRUM; i < json_tabulatum_numerus(tabula); i++)
     {
         JsonValor* ordo = json_tabulatum_obtinere(tabula, i);
         JsonValor* titulus_ordinis;
-           chorda  canonicum;
-              b32  inversum;
+              b32  est_inversum;
 
         si (ordo == NIHIL || !json_est_objectum(ordo))
         {
@@ -1487,37 +1488,249 @@ _verbum_iudicare (
         {
             perge;
         }
-        canonicum = json_ad_chorda(titulus_ordinis);
-        inversum  = _verbum_in_tabulato(
+        est_inversum = _verbum_in_tabulato(
             json_objectum_capere(ordo, "inversa"), verbum);
-        si (   inversum
+        si (   est_inversum
             || _verbum_in_tabulato(
                    json_objectum_capere(ordo, "synonyma"), verbum))
         {
-            ChordaAedificator* aed = chorda_aedificator_creare(pn,
-                CCLVI);
-
-            chorda_aedificator_appendere_literis(aed,
-                "nexus RECUSATUS: verbum '");
-            chorda_aedificator_appendere_chorda(aed, verbum);
-            chorda_aedificator_appendere_literis(aed, inversum
-                ? "' inversum verbi canonici '"
-                : "' synonymum verbi canonici '");
-            chorda_aedificator_appendere_chorda(aed, canonicum);
-            chorda_aedificator_appendere_literis(aed, inversum
-                ? "' est - scribe '"
-                : "' est - eo utere: '");
-            chorda_aedificator_appendere_chorda(aed, canonicum);
-            chorda_aedificator_appendere_literis(aed, inversum
-                ? "' PARTIBUS COMMUTATIS (res <-> alterum)."
-                : "', partibus iisdem.");
-            chorda_aedificator_appendere_literis(aed,
-                " Canonica sagittam a re DEPENDENTE ad id cui"
-                " innititur ducunt; nihil scriptum.");
-            redde _litterae(pn, chorda_aedificator_finire(aed));
+            *canonicum  = json_ad_chorda(titulus_ordinis);
+            *inversum   = est_inversum;
+            redde VERUM;
         }
     }
-    redde NIHIL;
+    redde FALSUM;
+}
+
+/* tabula verborum canonicorum in responsum: "a | b | c" - ut
+ * scriptor verbum eligere possit SINE vocatione altera */
+interior vacuum
+_verba_canonica_enumerare (
+           Tabularium* t,
+    ChordaAedificator* aed,
+              Piscina* pn)
+{
+          chorda  gd = gesta_genus_datum(t->mundus, "nexus", pn);
+    JsonResultus  r;
+       JsonValor* tabula;
+             i32  i;
+             i32  scripta = ZEPHYRUM;
+
+    si (gd.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    r = json_legere(gd, pn);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde;
+    }
+    tabula = json_objectum_capere(r.radix, "verba_canonica");
+    si (tabula == NIHIL || !json_est_tabulatum(tabula))
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(tabula); i++)
+    {
+        JsonValor* ordo = json_tabulatum_obtinere(tabula, i);
+        JsonValor* titulus_ordinis;
+
+        si (ordo == NIHIL || !json_est_objectum(ordo))
+        {
+            perge;
+        }
+        titulus_ordinis = json_objectum_capere(ordo, "titulus");
+        si (   titulus_ordinis == NIHIL
+            || !json_est_chorda(titulus_ordinis))
+        {
+            perge;
+        }
+        si (scripta > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, " | ");
+        }
+        chorda_aedificator_appendere_chorda(aed,
+            json_ad_chorda(titulus_ordinis));
+        scripta++;
+    }
+}
+
+/* querelam novam in indice incipere: "\n  N. " */
+interior vacuum
+_querelam_incipere (
+    ChordaAedificator* aed,
+                  i32* numerus)
+{
+    character caput[XXXII];
+
+    (*numerus)++;
+    sprintf(caput, "\n  %d. ", (int)*numerus);
+    chorda_aedificator_appendere_literis(aed, caput);
+}
+
+/* PRAEIUDICIUM VINCULI: omnes causae recusationis SIMUL, deinde
+ * SCRIPTURA VALIDA (Fran 2026-09-21). Duae leges:
+ *
+ *   I.  NUMQUAM GUTTATIM. Scriptor qui vitium unum sanat et altero
+ *       statim obstatur tempus et contextum bis solvit. Ergo nulla
+ *       probatio mature redit: omnes currunt, omnes referuntur.
+ *   II. RECUSATIO DOCET. Vitium nominare non sufficit - responsum
+ *       vocationem RECTAM ostendit, valoribus scriptoris ipsius
+ *       impletam (res_id ubi solvuntur), et glossam titulis
+ *       'A --verbum--> B' ut directio uno aspectu probetur.
+ *
+ * Probatio quae ex correctione ALIA nascitur hic quoque currit:
+ * verbum inversum partes commutat, ergo 'alterum' fit 'res' et
+ * SOLVI debet - aliter scriptura 'valida' ingenua vitium secundum
+ * demum post emendationem ostenderet (gutta occulta).
+ *
+ * NIHIL = licet scribere. Regula nova vinculi HIC additur, numquam
+ * ut reditus maturus in tractatore. */
+interior constans character*
+_nexum_praeiudicare (
+    Tabularium* t,
+       Piscina* pn,
+        chorda  res_id,
+        chorda  ramus_id,
+        chorda  verbum,
+        chorda  alterum)
+{
+    ChordaAedificator* index = chorda_aedificator_creare(pn, DXII);
+    ChordaAedificator* aed;
+                  i32  numerus   = ZEPHYRUM;
+               chorda  canonicum;
+                  b32  inversum   = FALSUM;
+                  b32  synonymum  = FALSUM;
+               chorda  alterum_id;
+               chorda  pars_a;
+               chorda  pars_b;
+               chorda  verbum_rectum;
+            character  caput[LXIV];
+
+    canonicum.mensura   = ZEPHYRUM;
+    canonicum.datum     = NIHIL;
+    alterum_id.mensura  = ZEPHYRUM;
+    alterum_id.datum    = NIHIL;
+    si (ramus_id.mensura > ZEPHYRUM)
+    {
+        /* saccharum vinculi = scripturae plures + resolutio
+         * alterius truncalis (fovea E2-B1) - in ramo nondum */
+        _querelam_incipere(index, &numerus);
+        chorda_aedificator_appendere_literis(index,
+            "nexus/denexus in ramo nondum sustentus (parcum) -"
+            " parametrum 'ramus' omitte");
+    }
+    si (verbum.mensura == ZEPHYRUM)
+    {
+        _querelam_incipere(index, &numerus);
+        chorda_aedificator_appendere_literis(index, "verbum deest");
+    }
+    alioquin
+    {
+        synonymum = _verbum_iudicare(t, verbum, pn, &canonicum,
+            &inversum);
+        si (synonymum)
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index, "verbum '");
+            chorda_aedificator_appendere_chorda(index, verbum);
+            chorda_aedificator_appendere_literis(index, inversum
+                ? "' inversum verbi canonici '"
+                : "' synonymum verbi canonici '");
+            chorda_aedificator_appendere_chorda(index, canonicum);
+            chorda_aedificator_appendere_literis(index, inversum
+                ? "' est: partes COMMUTANDAE (res <-> alterum)"
+                : "' est: partes eaedem manent");
+        }
+    }
+    si (alterum.mensura == ZEPHYRUM)
+    {
+        _querelam_incipere(index, &numerus);
+        chorda_aedificator_appendere_literis(index, "alterum deest");
+    }
+    alioquin
+    {
+        alterum_id = _res_solvere(t, alterum, pn, NIHIL);
+        si (inversum && alterum_id.mensura == ZEPHYRUM)
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index, "alterum '");
+            chorda_aedificator_appendere_chorda(index, alterum);
+            chorda_aedificator_appendere_literis(index,
+                "' rem non solvit: post commutationem 'res' fiet,"
+                " et res solvi DEBET (res_id aut titulus exactus)");
+        }
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    /* scriptura valida: valores scriptoris, correcti */
+    pars_a = res_id;
+    pars_b = alterum_id.mensura > ZEPHYRUM ? alterum_id : alterum;
+    si (inversum)
+    {
+        chorda commutanda = pars_a;
+
+        pars_a = pars_b;
+        pars_b = commutanda;
+    }
+    verbum_rectum  = synonymum ? canonicum : verbum;
+    aed            = chorda_aedificator_creare(pn, M);
+    sprintf(caput, "nexus RECUSATUS (%d %s) - nihil scriptum:",
+        (int)numerus, numerus == I ? "causa" : "causae");
+    chorda_aedificator_appendere_literis(aed, caput);
+    chorda_aedificator_appendere_chorda(aed,
+        chorda_aedificator_finire(index));
+    chorda_aedificator_appendere_literis(aed,
+        "\nSCRIPTURA VALIDA: gerere {res: \"");
+    si (pars_a.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_chorda(aed, pars_a);
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(aed, "<res>");
+    }
+    chorda_aedificator_appendere_literis(aed,
+        "\", actus: \"nexus\", verbum: \"");
+    si (verbum_rectum.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_chorda(aed, verbum_rectum);
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(aed, "<verbum>");
+    }
+    chorda_aedificator_appendere_literis(aed, "\", alterum: \"");
+    si (pars_b.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_chorda(aed, pars_b);
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(aed, "<alterum>");
+    }
+    chorda_aedificator_appendere_literis(aed, "\"}");
+    si (   pars_a.mensura > ZEPHYRUM && pars_b.mensura > ZEPHYRUM
+        && verbum_rectum.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed, "\n  = ");
+        chorda_aedificator_appendere_chorda(aed,
+            _titulus_membri(t, pars_a, pn));
+        chorda_aedificator_appendere_literis(aed, " --");
+        chorda_aedificator_appendere_chorda(aed, verbum_rectum);
+        chorda_aedificator_appendere_literis(aed, "--> ");
+        chorda_aedificator_appendere_chorda(aed,
+            _titulus_membri(t, pars_b, pn));
+    }
+    chorda_aedificator_appendere_literis(aed,
+        "\nCANONICA (sagitta a re DEPENDENTE ad id cui innititur): ");
+    _verba_canonica_enumerare(t, aed, pn);
+    chorda_aedificator_appendere_literis(aed,
+        ". Cetera verba LIBERA.");
+    redde _litterae(pn, chorda_aedificator_finire(aed));
 }
 
 interior b32
@@ -4408,28 +4621,13 @@ _tab_gerere (
                  JsonValor* d;
               GestaEventum  ev;
 
-        si (ramus_id.mensura > ZEPHYRUM)
+        /* PRAEIUDICIUM: causae OMNES simul + scriptura valida
+         * (ramus, verbum, alterum, verba canonica). Regula nova
+         * in _nexum_praeiudicare additur, numquam hic ut reditus
+         * maturus - ne scriptor guttatim obstetur. */
         {
-            /* saccharum vinculi = scripturae plures + resolutio
-             * alterius truncalis (fovea E2-B1) - in ramo nondum */
-            _textum_respondere(t, pn, effusio, id,
-                _ch("nexus/denexus in ramo nondum sustentus"
-                    " (parcum)"), VERUM);
-            redde;
-        }
-        si (   verbum.mensura  == ZEPHYRUM
-            || alterum.mensura == ZEPHYRUM)
-        {
-            _textum_respondere(t, pn, effusio, id,
-                _ch("nexus: verbum et alterum requiruntur"),
-                VERUM);
-            redde;
-        }
-        /* verba canonica: synonymum notum recusatur CLARE ante
-         * scripturam ullam (decretum 01M32TEK3K) */
-        {
-            constans character* causa = _verbum_iudicare(t, verbum,
-                pn);
+            constans character* causa = _nexum_praeiudicare(t, pn,
+                res_id, ramus_id, verbum, alterum);
 
             si (causa != NIHIL)
             {

@@ -1575,6 +1575,59 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "impeditur-a") != NIHIL);
         CREDO_VERUM (strstr(r, "creatum") == NIHIL);
 
+        /* RECUSATIO DOCET (Fran 2026-09-21): scripturam VALIDAM
+         * ostendit, non solum vitium nominat. Glossa titulis
+         * partes COMMUTATAS probat: initus erat 'propositum impedit
+         * gradus', scriptura valida 'gradus impeditur-a propositum'
+         * - et forma non commutata ABESSE debet. */
+        CREDO_VERUM (strstr(r, "SCRIPTURA VALIDA") != NIHIL);
+        CREDO_VERUM (strstr(r, "Verbum gradus --impeditur-a-->"
+            " Verbum propositum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Verbum propositum --impeditur-a-->")
+            == NIHIL);
+        CREDO_VERUM (strstr(r, "verbum: \\\"impeditur-a\\\"")
+            != NIHIL);
+
+        /* CAUSAE OMNES SIMUL, numquam guttatim (Fran 2026-09-21):
+         * synonymum ET alterum absens - ambo in responso uno, ne
+         * scriptor vitium unum sanet et altero statim obstetur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":220,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum gradus\",\"actus\":\"nexus\","
+            "\"verbum\":\"pendet-ex\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "(2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "synonymum") != NIHIL);
+        CREDO_VERUM (strstr(r, "alterum deest") != NIHIL);
+        CREDO_VERUM (strstr(r, "SCRIPTURA VALIDA") != NIHIL);
+
+        /* utrumque absens: duae causae + tabula canonicorum, ut
+         * scriptor verbum eligere possit sine vocatione altera */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":221,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum gradus\",\"actus\":\"nexus\"}}}");
+        CREDO_VERUM (strstr(r, "(2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "verbum deest") != NIHIL);
+        CREDO_VERUM (strstr(r, "alterum deest") != NIHIL);
+        CREDO_VERUM (strstr(r, "impeditur-a | intra | natum-de |"
+            " sequitur | respondet-ad") != NIHIL);
+
+        /* inversum CUM altero insolubili: post commutationem
+         * alterum 'res' fieret, et res solvi DEBET - vitium quod
+         * scriptura 'valida' ingenua postea demum ostenderet */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":222,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum propositum\",\"actus\":\"nexus\","
+            "\"verbum\":\"impedit\",\"alterum\":"
+            "\"Res nusquam inventa\"}}}");
+        CREDO_VERUM (strstr(r, "(2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "inversum") != NIHIL);
+        CREDO_VERUM (strstr(r, "rem non solvit") != NIHIL);
+        CREDO_VERUM (strstr(r, "creatum") == NIHIL);
+
         /* nihil scriptum: breviarium vincula nulla monstrat */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":214,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
