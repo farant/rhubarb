@@ -61,16 +61,20 @@ anything). Findings at find-time: `html/fontes/html_arbor.worklog.md`.
   and the STML cycle — every one of the 1,708 cases, script-on
   included, fragments through the fragment entry: direct emission
   byte-identical to the input for ALL; the two-cycle STML round trip
-  with comparator and re-read emission identical for 1,672, the 36
-  others refused by the STML writer for NUL bytes — pinned BY CAUSE,
-  the raw-form limit 01M2KPJ0HW; any other cause is a failure). The
+  with comparator and re-read emission identical for **all 1,708**
+  since 2026-09-21 — the 36 NUL refusals went first (the `nul`
+  attribute, `e84c33e7`) and the closing-sequence refusal followed
+  (the escape ladder, `771fa413`/`8a9d8ad8`). Both counters are pinned
+  at ZERO by cause; any refusal at all is now a failure). The
   runner compiles `materia/fontes` and `md/fontes` into `html/build/`
   — consumed, never contained.
 - **What it found:** in itself, one byte-order bug (a pending close
   taking a later `>`; totality, H8). In the substrate, ZERO changes
   forced (css 4, oratio 5) and two measurements: the raw-form limit
-  (a token value containing its own `</lex-…>` is REFUSED, not escaped
-  — ledger 01M2KJ3PK2, pinned in the stml gate) and the depth (parse
+  (a token value containing its own `</lex-…>` was REFUSED, not
+  escaped — ledger 01M2KJ3PK2; **SOLVED 2026-09-21**, the substrate
+  escapes it now and the five pinned cases in the stml gate were
+  promoted from refusal to byte-identical round trip) and the depth (parse
   survives 100,000 levels; `materia_scribere_nodum` dies at 50,000,
   pinned RUIT_CUM; STML projection quadratic in depth, 2,000 deep =
   56 MB — 01M1FAD8). In md, sabaw's `<if⟨c⟩>…</if⟨⟩>` notation passed

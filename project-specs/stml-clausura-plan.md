@@ -14,7 +14,16 @@ alternatives. That note governs; this plan is how it gets built.
 SHIPPED 2026-09-21** — reader decodes and writer encodes, merged
 because neither half is safe alone. **Task 3 SHIPPED 2026-09-21** —
 materia's refusal deleted; **the trigger that started this plan now
-lints clean.** Task 4 (corpora + the crusta gate case) remains.
+lints clean.** **Task 4 SHIPPED 2026-09-21** — the symptom itself
+gated, docs corrected. **PLAN CLOSED.**
+
+**§9's open question was answered by building it.** The honest case
+was never defect pressure — population in real corpora is still ZERO.
+It was that the format should be able to describe itself, and Fran hit
+the limit by doing exactly that. What the work actually bought, beyond
+the escape: three wrong beliefs in these very documents were corrected
+against the source, and a test that had been scheduled to break since
+the day it was written was rebuilt on a contract instead of a limit.
 
 ---
 
@@ -236,16 +245,34 @@ from a limit.** The cause is now pinned too; both earlier vehicles
 changed silently under an assertion that checked only *that* it
 refused, never *why*.
 
-### Task 4 — the corpora and the clients
+### Task 4 — the corpora and the clients ✅ SHIPPED 2026-09-21
 
-**Files:** `html/probationes/probatio_html_circuitus.c`,
-`crusta/probationes/*`, worklogs, `materia/CLAUDE.md`
+**Files:** `crusta/probationes/probatio_crusta_facies.c`,
+`crusta/fontes/crusta_arbor.worklog.md`, `materia/CLAUDE.md`,
+`crusta/CLAUDE.md`, `html/CLAUDE.md`
 
-- `circuitus`: `RECUSATA_SEQUENTIA` stays 0 and the total stays 1,708.
-- crusta: a gate case for Fran's actual trigger — a bash comment
-  containing `</crusta-commentum>` round-trips and the file lints
-  clean.
-- The `materia:scriptura` erratum for that file disappears.
+**`circuitus` needed nothing, and that was worth checking rather than
+asserting.** It already pins `RECUSATA_SEQUENTIA` at 0 and
+`IDEM = TOTALIS − RECUSATA_NUL − RECUSATA_SEQUENTIA`, and it is green
+at 1,708/1,708. The counter was always 0 because the html5lib corpus
+contains no such case — population is zero, which is the whole reason
+this class needed finding by hand.
+
+**The real gap was that no gate held Fran's symptom.** The round-trip
+gates prove bytes; none proved the file LINTS CLEAN.
+`probatio_crusta_facies` VII now runs `crusta_diagnostica_omnia` —
+the path `./tools/diagnostica.sh` walks — over his exact script.
+
+It asserts THREE things, because "zero findings" does not differ from
+"nothing ran" (case VI in the same file taught that with a missing
+lintrum): the Xar present, `causa` absent, count zero. And the plant
+corrected the comment: the failure arrives as a **diagnostic**, not a
+`causa` — `causa` stays NIHIL and `materia:scriptura` sits inside the
+Xar. The gate now prints each finding's code, so a future red NAMES
+it.
+
+Docs: the limit was still described as open in three orientation
+files; all three now record it as solved, with the reflexes.
 
 ---
 

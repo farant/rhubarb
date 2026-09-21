@@ -40,6 +40,18 @@ hic_manens constans character* FONS_NEGATUS =
     "#!/bin/bash\n"
     "! [ $a -nt $b ]\n";
 
+/* CASUS FRANIS - causa totius arcus clausurae. Commentum bash
+ * sequentiam claudentem elementi SUI ferens. Ante gradum III
+ * proiectio STML RECUSABATUR ('valor sequentiam claudentem fert'),
+ * ergo plagula bash VALIDA lintrum frangebat (exitus I), et regulae
+ * gradus II super eam currere omnino non poterant quia proiectione
+ * carebant - vitium de causa sua TACENS. Scala fugae eam nunc fert
+ * (gradus I-II), materia recusationem deposuit (gradus III). */
+hic_manens constans character* FONS_CLAUSURA =
+    "#!/bin/bash\n"
+    "# vide </crusta-commentum> hic\n"
+    "echo hi\n";
+
 /* -I = Xar abest: numerus ZEPHYRUM a 'nihil inventum' differt */
 hic_manens s32
 _quot (
@@ -209,6 +221,53 @@ principale (
             CREDO_VERUM (strstr(causa, "lintrum-quod-non-est")
                 != NIHIL);
         }
+    }
+
+    {
+        Xar* d;
+
+        imprimere("\n--- VII. Clausura propria: lintrum MUNDUM ---\n");
+        causa  = NIHIL;
+        d      = crusta_diagnostica_omnia(piscina, FONS_CLAUSURA,
+                     (i32)strlen(FONS_CLAUSURA), NIHIL, &causa);
+        si (causa != NIHIL)
+        {
+            imprimere("causa: %s\n", causa);
+        }
+        /* TRIA asserenda, non unum - casus VI supra causam docet:
+         * 'inventa ZEPHYRUM' a 'nihil cucurrit' NON differt. Ergo
+         * Xar ADESSE debet et causa ABESSE, et tunc demum numerus
+         * ZEPHYRUM 'plagula munda' significat.
+         *
+         * QUID OLIM RUBEBAT - mensuratum planta, non coniectatum:
+         * NON causa. Custode vetere reddito, causa NIHIL MANET et
+         * Xar ADEST; inventum 'materia:scriptura' intus sedet, quia
+         * scriptura fracta DIAGNOSTICUM fit, non defectus
+         * instrumenti. Id ipsum Fran vidit:
+         * 'c2.sh:3:1: [erratum] materia:scriptura'. Ergo NUMERUS
+         * hanc portam tenet, non causa - quae tamen manet, quia
+         * defectum instrumenti a plagula munda distinguit.
+         *
+         * Haec porta symptoma Franis ipsum tenet: non circuitum
+         * octetorum (quem probatio_crusta_stml tenet) sed LINTRUM,
+         * quod ille re vera fractum vidit. */
+        CREDO_NON_NIHIL (d);
+        CREDO_NIHIL (causa);
+        si (d != NIHIL && xar_numerus(d) > ZEPHYRUM)
+        {
+            i32 k;
+
+            /* NOMINARE, non solum numerare: pinna quae numerum dicit
+             * infirmior est quam quae rem NOMINAT */
+            per (k = ZEPHYRUM; k < xar_numerus(d); k++)
+            {
+                constans MateriaDiagnosticum* x =
+                    (constans MateriaDiagnosticum*)xar_obtinere(d, k);
+
+                imprimere("  INVENTUM %s\n", x->codex);
+            }
+        }
+        CREDO_AEQUALIS_I32 (xar_numerus(d), ZEPHYRUM);
     }
 
     imprimere("\n");

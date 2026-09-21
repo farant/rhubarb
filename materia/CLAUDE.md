@@ -207,6 +207,42 @@ written raw, and the reader could not parse our own document
 predicate (`stml_crudi_terminator_est`) that both call — not by making
 the guard agree, since a guard that merely agrees today drifts again.
 
+**And then the refusal itself went (2026-09-21).** A value colliding
+with its own delimiter is not an unrepresentable byte — it is an
+ENCODING problem, and encodings have escapes. `lib/stml.c` now carries
+an escape ladder: `<` + N backslashes + `/T` + delim, where the reader
+peels one rung and the writer adds one, and **depth 0 alone
+terminates**. So `_valorem_crudum_notare` no longer refuses anything,
+and materia needed no escaping code at all — it builds an `StmlNodus`
+tree and `stml_scribere` does the work.
+
+**The law: decode ONCE on the way in, encode at EVERY boundary on the
+way out.** There are four raw emission sites in the writer (normal
+form and capture form, each flat and multiline) and they are verbatim
+copies of one another — fixing one alone recreates the two-halves
+defect *inside a single function*.
+
+Three things measurement overturned here, each of which would have
+been wrong if assumed:
+
+- **`StmlTokenContext` DOES have a piscina.** The plan and a worklog
+  both said it did not, and routed decoding through the parser on that
+  basis. Decoding belongs in the scanner, beside the depth count.
+- **`stml_textus_internus` does NOT re-escape.** Its header promises
+  "octetos… quales in fonte stabant", which would oblige it to — but
+  `<a>x&amp;y</a>` yields `x&y`. It already resolves entities, so its
+  exactness is trivia and layout, not character encoding. Believing
+  the header would have dragged the golden pins in. *The header still
+  over-claims; correcting it is a decision about what `internus`
+  means, not a typo.*
+- **Neither half is shippable alone.** Reader-only gives an
+  unparseable document, writer-only a silently changed value, and no
+  gate catches either — population is ZERO, so every suite stays
+  green. Plants must assert VALUE equality, never "it refused".
+- **Depth 1 is not a sufficient test case.** Stripping every backslash
+  and stripping one agree at depth 1; the ladder needs depths 2 and 3
+  pinned or the plant does not fire.
+
 *How it was wrong before, and why that shape is worth recognising:*
 the writer refused whitespace-only and the reader skipped it, and the
 reader's comment cited the writer as its justification — "contractus

@@ -142,8 +142,9 @@ builder owns the mode stack, iteratively). Findings at find-time:
   oracle + 2 sanity FreeBSD cases, a lector redesign) and a heredoc
   inside a multi-line backtick (heredoc5.0). Tree shape, not bytes: a
   heredoc body whose newline is inside `${ … }` arguments opens at the
-  next real newline (bash reads it inside). Substrate: the raw-form limit
-  (01M2KPJ0HW, a value carrying `</crusta-…>`), depth (01M1FAD8). Tools:
+  next real newline (bash reads it inside). Substrate: ~~the raw-form
+  limit (01M2KPJ0HW, a value carrying `</crusta-…>`)~~ **SOLVED
+  2026-09-21** — see "The closing sequence" below; depth (01M1FAD8). Tools:
   formator and `#define`s between functions (01M2NNE6WS); registry
   `nota` copied verbatim into C comments (01M2NPN6YC); generic node read
   accessors (01M2NPNER4). Named futures (spec §9): the `.sh` formatter,
@@ -174,6 +175,49 @@ against a PIN plus `grep` as an independent oracle (`rule ⊆ grep`).
 **A C-generated golden proves stability, never correctness** — keep the
 two kinds apart. Rule 3 (`/tmp`) was measured and DECLINED: 34 sites,
 one defect.
+
+## The closing sequence — solved (2026-09-21)
+
+A bash comment containing `</crusta-commentum>` used to fail the
+commit lint:
+
+```
+# vide </crusta-commentum> hic
+→ c2.sh:3:1: [erratum] materia:scriptura
+  valor sequentiam claudentem fert          exit 1
+```
+
+**Fran found it by writing about the format inside the format**, which
+is how this class is always found — real-corpus population is ZERO.
+The consequence was worse than the message suggests: tier-2 rules
+could not run on such a file at all, because they need the STML
+projection and the projection was refused. The file was silent about
+that.
+
+Fixed in `lib/stml.c` by an escape ladder — `<` + N backslashes +
+`/T` + delim; the reader peels one rung, the writer adds one, and
+depth 0 alone terminates. materia's refusal was then deleted
+(`8a9d8ad8`); crusta needed no code, because it builds an `StmlNodus`
+tree that `stml_scribere` emits.
+
+**Reflexes this left:**
+
+- **Reader and writer must change together.** Either half alone gives
+  a silently changed value or an unparseable document, and NO gate
+  catches it — corpus population is zero, so every suite stays green
+  through the window. Plan `project-specs/stml-clausura-plan.md` had
+  them as separate tasks; that was wrong and was merged.
+- **The raw mark is set from TWO call sites** in materia, the lexeme
+  path and the TRIVIA path. crusta's own case is a *comment*, so it
+  travels the trivia path — planting only the lexeme path left
+  `probatio_crusta_canon` green while `probatio_crusta_stml` reddened.
+- **`probatio_crusta_facies` VII holds the actual symptom.** The
+  round-trip gates prove bytes; only that one proves the file LINTS
+  CLEAN, which is what Fran saw broken. It asserts three things,
+  because "zero findings" alone does not differ from "nothing ran"
+  (the lesson case VI already taught). Under the plant it prints
+  `INVENTUM materia:scriptura` — the erratum arrives as a DIAGNOSTIC,
+  not as a `causa`, measured rather than assumed.
 
 ## Laws (spec §0, as built)
 

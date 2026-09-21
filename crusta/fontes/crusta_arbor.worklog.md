@@ -1264,3 +1264,36 @@ assertion.
 `differentia` never had this problem — it has always named every
 discordance on every run, which is why it was the gate that actually
 told me things during the exemplaria arc.
+
+## 2026-09-21 — the closing sequence, and the gate that holds the symptom
+
+`# vide </crusta-commentum> hic` now lints clean (exit 0). crusta
+needed no code: it builds an `StmlNodus` tree and `stml_scribere`
+escapes the sequence (`lib/stml.c` escape ladder), materia's refusal
+having been deleted.
+
+What crusta DID need was a gate for the right thing. The round-trip
+gates prove bytes; none of them proved the file **lints clean**, which
+is the symptom Fran actually hit. `probatio_crusta_facies` VII runs
+`crusta_diagnostica_omnia` — the same path `./tools/diagnostica.sh`
+walks — over his exact three-line script.
+
+Two things that gate had to get right:
+
+- **Three assertions, not one.** "Zero findings" does not differ from
+  "nothing ran"; case VI in the same file already taught this with a
+  missing lintrum directory. So: the Xar must be PRESENT, `causa` must
+  be ABSENT, and only then does a count of zero mean a clean file.
+- **The failure is a DIAGNOSTIC, not a `causa`** — measured by
+  planting the old refusal back, not assumed. `causa` stays NIHIL and
+  the Xar is returned; `materia:scriptura` sits inside it. My first
+  version of the comment said the opposite, and the plant corrected
+  it. The gate now prints each finding's code, so a future red names
+  `materia:scriptura` instead of only saying 1 ≠ 0.
+
+The plant also caught something about the substrate worth recording
+here: the raw mark is set from **two** call sites in materia, the
+lexeme path and the TRIVIA path. A comment travels the trivia path, so
+restoring the guard on the lexeme path alone reddened
+`probatio_crusta_stml` while leaving `probatio_crusta_canon` GREEN.
+Both had to be planted to verify both halves of the deletion.
