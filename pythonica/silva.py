@@ -1736,6 +1736,100 @@ def _trailer():
     return 'Co-Authored-By: Claude <noreply@anthropic.com>'
 
 
+def _nuntium_cum_trailer(nuntius):
+    """nuntius commissionis cum linea auctoris - SEMEL. Nuntius qui
+    'Co-Authored-By:' IAM fert intactus manet: olim commissio suam
+    caece appendebat, et nuntius lineam propriam ferens DUAS accepit
+    (2026-09-21: quinque commissa, unum cum exemplaribus DIVERSIS -
+    linea ex historia sumpta exemplar prius nominabat)."""
+    corpus = nuntius.rstrip('\n')
+    if re.search(r'^Co-Authored-By:', corpus, re.M):
+        return corpus + '\n'
+    return corpus + '\n\n' + _trailer() + '\n'
+
+
+# ---------------------------------------------------------------- opus
+
+# via frigida tabularii (substituibilis in probationibus: porta
+# pythonica NUMQUAM in tabularium vivum scribat)
+FRIGIDA_IMPERIUM = ['./gesta/frigida.sh']
+OPERIS_STATUS_APERTI = ('pendens', 'susceptum')
+
+
+class SilvaOpusError(SilvaError):
+    """COMMISSUM FACTUM EST, sed opus in tabulario claudi non potuit.
+    .hash = commissum. Numquam causa commissionis iterandae."""
+
+    def __init__(self, hash_commissi, nuntius):
+        SilvaError.__init__(self, nuntius)
+        self.hash = hash_commissi
+
+
+def _frigida_imperium(argumenta):
+    """linea imperii pasta-parata (pro nuntiis erroris)"""
+    partes = []
+    for a in list(FRIGIDA_IMPERIUM) + list(argumenta):
+        partes.append(a if re.match(r'^[A-Za-z0-9_./:-]+$', a)
+                      else '"%s"' % a.replace('"', '\\"'))
+    return ' '.join(partes)
+
+
+def opus_praeiudicare(opus):
+    """causae cur OPUS claudi non possit ([] = licet). LECTIO SOLA
+    (via frigida -res). Ante portas vocatur: vitium identificatoris
+    post commissum demum apparens = commissum sine clausura."""
+    r = _curre(list(FRIGIDA_IMPERIUM) + ['-res', opus])
+    if r.returncode != 0:
+        return ["opus '%s' non solvitur (%s) - res_id aut titulus"
+                " exactus" % (opus, (r.stderr or r.stdout).strip()
+                              .splitlines()[-1] if (r.stderr or r.stdout)
+                              .strip() else 'via frigida rc=%d'
+                              % r.returncode)]
+    lineae = [l for l in r.stdout.splitlines()
+              if l.strip() and not l.lstrip().startswith('[')]
+    m = re.search(r'\(([^(),]+), ?([^(),]*)\)\s*$',
+                  lineae[0]) if lineae else None
+    if m is None:
+        return ["opus '%s': linea prima breviarii non intellecta: %r"
+                % (opus, lineae[0] if lineae else '')]
+    genus, status = m.group(1).strip(), m.group(2).strip()
+    causae = []
+    if genus != 'opus':
+        causae.append("'%s' genus '%s' est, non 'opus' - commissio"
+                      " OPERA sola claudit (parcum/desideratum manu:"
+                      " gerere status)" % (opus, genus))
+    elif status not in OPERIS_STATUS_APERTI:
+        causae.append("opus '%s' statum '%s' habet - 'perfectum' solum"
+                      " ex %s fit" % (opus, status,
+                                      ' | '.join(OPERIS_STATUS_APERTI)))
+    return causae
+
+
+def opus_claudere(opus, hash_commissi, nuntius, actor='claude'):
+    """'effectus' (commissum + linea prima nuntii) et status
+    'perfectum' per viam frigidam. Ritus perfectionis domus idem
+    (mutatio {effectus} + status perfectum). Defectus: SilvaOpusError
+    CLARE - commissum STAT - cum imperio ad clausuram manu finiendam."""
+    linea = (nuntius.strip().splitlines() or [''])[0][:160]
+    effectus = '%s: %s' % (hash_commissi, linea)
+    caput = ['-actor', actor, '-origo', 'commissum:' + hash_commissi]
+    gradus = [caput + ['-mutatio', opus, 'effectus', effectus],
+              caput + ['-status', opus, 'perfectum']]
+    for k, args in enumerate(gradus):
+        r = _curre(list(FRIGIDA_IMPERIUM) + args)
+        if r.returncode != 0:
+            restant = '\n  '.join(_frigida_imperium(g) for g in gradus[k:])
+            raise SilvaOpusError(hash_commissi,
+                'COMMISSUM %s FACTUM EST et stat - NOLI iterare. Sed opus'
+                ' %s claudi non potuit (gradus %d ex %d, rc=%d):\n%s\n'
+                'Ad finiendum manu:\n  %s'
+                % (hash_commissi, opus, k + 1, len(gradus),
+                   r.returncode, (r.stderr or r.stdout).strip()[-600:],
+                   restant))
+    return effectus
+
+
+
 def _sigilla_viarum(viae):
     """{via: hash blob praesentis (None si absens)} - plagulae
     commissionis ante et post portam rancidam conferuntur"""
@@ -1749,7 +1843,8 @@ def _sigilla_viarum(viae):
     return exitus
 
 
-def commissio(nuntius, viae, portae=(), verificare=True, recepta=True):
+def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
+              opus=None, actor='claude'):
     """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
     non honorat; pipestatus fallit). portae: nomina aut (nomen,
     filtrum) aut via recepti umbrae (.json); OMNES sanae esse debent
@@ -1763,13 +1858,29 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True):
     Viae explicitae solae (numquam -A); VETITAE (plagulae Frani in
     cursu) refutantur. verificare=False = --no-verify (commissiones
     formae solae). Reddit hash brevem; recepta viva omnia post
-    commissionem deleta (HEAD mutatum = sigilla rancida)."""
+    commissionem deleta (HEAD mutatum = sigilla rancida).
+    opus=ID: OPUS tabularii quod haec commissio PERFICIT. ANTE portas
+    praeiudicatur (exstat, genus opus, status pendens|susceptum);
+    POST commissionem successam 'effectus' + status 'perfectum' per
+    viam frigidam scribuntur (actor). Clausura fracta = SilvaOpusError
+    cum .hash - commissum STAT, numquam iterandum.
+    CAUSAE PRAEVIAE OMNES SIMUL (viae vetitae OMNES + opus), ne
+    vocans unam sanet et altera statim obstetur."""
+    causae = []
     for v in viae:
         if v in VETITAE:
-            raise SilvaError('via VETITA commissioni: %s - plagula Frani in'
-                             ' cursu (FAQ, tabula, tabularium, c89-formatted,'
-                             ' legatus.worklog): Fran ipse eam committit,'
-                             ' numquam agens - e viis remove' % v)
+            causae.append('via VETITA commissioni: %s - plagula Frani in'
+                          ' cursu (FAQ, tabula, tabularium, c89-formatted,'
+                          ' legatus.worklog): Fran ipse eam committit,'
+                          ' numquam agens - e viis remove' % v)
+    if opus:
+        causae.extend(opus_praeiudicare(opus))
+    if causae:
+        raise SilvaError(
+            causae[0] if len(causae) == 1 else
+            'commissio RECUSATA (%d causae) - nihil cursum, nihil'
+            ' commissum:\n  %s' % (len(causae), '\n  '.join(
+                '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
     ante = _sigilla_viarum(viae)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):
@@ -1824,12 +1935,15 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True):
     if not verificare:
         args.append('--no-verify')
     args += ['-F', '-']
-    r = _curre(args, stdin=nuntius.rstrip('\n') + '\n\n' + _trailer() + '\n')
+    r = _curre(args, stdin=_nuntium_cum_trailer(nuntius))
     if r.returncode != 0:
         raise SilvaError('git commit rc=%d: %s'
                          % (r.returncode, (r.stdout + r.stderr).strip()[-600:]))
     h = _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
     recepta_viva_delere()
+    if opus:
+        print('opus %s: perfectum - %s'
+              % (opus, opus_claudere(opus, h, nuntius, actor)))
     return h
 
 

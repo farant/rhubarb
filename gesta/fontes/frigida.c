@@ -13,20 +13,30 @@
  * operandum primum SEMPER res est. */
 nomen structura {
     constans character* vexillum;
-    constans character* actus;        /* actus instrumenti gerere */
+    constans character* instrumentum; /* instrumentum machinae */
+    constans character* actus;        /* actus gerere; NIHIL = lectio */
     constans character* operanda[IV]; /* claves argumentorum */
                    b32  citanda[IV];  /* in imperio valido "citata" */
 } FrigidaForma;
 
 interior constans FrigidaForma FORMAE[] = {
-    { "-status",  "status",  { "res", "novus", NIHIL, NIHIL },
+    { "-status",  "gerere", "status",
+      { "res", "novus", NIHIL, NIHIL },
       { VERUM, FALSUM, FALSUM, FALSUM } },
-    { "-mutatio", "mutatio", { "res", "clavis", "valor", NIHIL },
+    { "-mutatio", "gerere", "mutatio",
+      { "res", "clavis", "valor", NIHIL },
       { VERUM, FALSUM, VERUM, FALSUM } },
-    { "-nexus",   "nexus",   { "res", "verbum", "alterum", NIHIL },
-      { VERUM, FALSUM, VERUM, FALSUM } }
+    { "-nexus",   "gerere", "nexus",
+      { "res", "verbum", "alterum", NIHIL },
+      { VERUM, FALSUM, VERUM, FALSUM } },
+    /* LECTIO (nihil scribit): breviarium rei - linea prima
+     * 'Titulus (genus, status)' contractus lectorum est
+     * (silva.commissio opus ante portas praeiudicat) */
+    { "-res",     "res",    NIHIL,
+      { "res", NIHIL, NIHIL, NIHIL },
+      { VERUM, FALSUM, FALSUM, FALSUM } }
 };
-#define FORMAE_NUMERUS III
+#define FORMAE_NUMERUS IV
 
 interior constans FrigidaForma*
 _formam_invenire (
@@ -46,6 +56,14 @@ _formam_invenire (
         }
     }
     redde NIHIL;
+}
+
+interior b32
+_forma_est_nexus (
+    constans FrigidaForma* forma)
+{
+    redde forma != NIHIL && forma->actus != NIHIL
+        && strcmp(forma->actus, "nexus") == ZEPHYRUM;
 }
 
 b32
@@ -206,19 +224,31 @@ _gerere_mittere (
     {
         redde VERUM;
     }
-    json_objectum_ponere(argumenta, "actus",
-        json_chorda_creare_literis(pn, forma->actus));
+    si (forma->actus != NIHIL)
+    {
+        json_objectum_ponere(argumenta, "actus",
+            json_chorda_creare_literis(pn, forma->actus));
+    }
+    alioquin
+    {
+        /* lectio: breviarium (forma plena datum crudum effundit) */
+        json_objectum_ponere(argumenta, "breviter",
+            json_chorda_creare_literis(pn, "verum"));
+    }
     per (i = ZEPHYRUM; i < IV && forma->operanda[i] != NIHIL; i++)
     {
         json_objectum_ponere(argumenta, forma->operanda[i],
             json_chorda_creare_literis(pn, operanda[i]));
     }
-    json_objectum_ponere(argumenta, "actor",
-        json_chorda_creare_literis(pn, actor));
-    json_objectum_ponere(argumenta, "origo",
-        json_chorda_creare_literis(pn, origo));
+    si (forma->actus != NIHIL)
+    {
+        json_objectum_ponere(argumenta, "actor",
+            json_chorda_creare_literis(pn, actor));
+        json_objectum_ponere(argumenta, "origo",
+            json_chorda_creare_literis(pn, origo));
+    }
     json_objectum_ponere(parametra, "name",
-        json_chorda_creare_literis(pn, "gerere"));
+        json_chorda_creare_literis(pn, forma->instrumentum));
     json_objectum_ponere(parametra, "arguments", argumenta);
     json_objectum_ponere(radix, "jsonrpc",
         json_chorda_creare_literis(pn, "2.0"));
@@ -385,7 +415,7 @@ frigida_currere (
     {
         _causam_incipere(index, &causae);
         chorda_aedificator_appendere_literis(index,
-            "verbum deest (-status | -mutatio | -nexus)");
+            "verbum deest (-status | -mutatio | -nexus | -res)");
     }
     alioquin si (forma == NIHIL)
     {
@@ -394,7 +424,7 @@ frigida_currere (
             "vexillum ignotum '");
         chorda_aedificator_appendere_literis(index, vexillum);
         chorda_aedificator_appendere_literis(index,
-            "' (nota: -status | -mutatio | -nexus)");
+            "' (nota: -status | -mutatio | -nexus | -res)");
     }
 
     /* operanda */
@@ -416,7 +446,7 @@ frigida_currere (
          * duplicentur. Formae ceterae hic totae iudicantur. */
         per (i = data; i < expectata; i++)
         {
-            si (   strcmp(forma->actus, "nexus") == ZEPHYRUM
+            si (   _forma_est_nexus(forma)
                 && i > ZEPHYRUM)
             {
                 perge;
@@ -457,7 +487,7 @@ frigida_currere (
             piscina_destruere(pn);
             redde FRIGIDA_EXITUS_RECUSATUM;
         }
-        si (strcmp(forma->actus, "nexus") == ZEPHYRUM)
+        si (_forma_est_nexus(forma))
         {
             textus_machinae = tabularium_nexum_praeiudicare(t, pn,
                 _ch(operanda[ZEPHYRUM]), _ch(operanda[I]),
@@ -512,7 +542,9 @@ frigida_currere (
                 "\n  " FRIGIDA_IMPERIUM " [-actor A] [-origo O]"
                 " -mutatio \"<res>\" <clavis> \"<valor>\""
                 "\n  " FRIGIDA_IMPERIUM " [-actor A] [-origo O]"
-                " -nexus \"<res>\" <verbum> \"<alterum>\"");
+                " -nexus \"<res>\" <verbum> \"<alterum>\""
+                "\n  " FRIGIDA_IMPERIUM " -res \"<res>\""
+                "   (lectio - nihil scribit)");
         }
         {
             chorda nuntius = chorda_aedificator_finire(aed);

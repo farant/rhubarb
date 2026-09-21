@@ -1600,6 +1600,96 @@ finally:
     shutil.rmtree(_d, ignore_errors=True)
 
 
+print('--- opus: commissio opus tabularii claudit (via frigida FICTA) ---')
+# Via frigida SUBSTITUITUR stipula quae argumenta sua in plagulam
+# scribit: porta pythonica NUMQUAM in tabularium vivum scribat.
+# Stipula: '-res X' -> lineam primam breviarii ex ambitu reddit;
+# aliter argumenta notat et rc ex ambitu reddit.
+_od = tempfile.mkdtemp(prefix='silva_opus_')
+_stip = os.path.join(_od, 'frigida_ficta.sh')
+_acta = os.path.join(_od, 'acta.txt')
+open(_stip, 'w').write(
+    '#!/bin/bash\n'
+    'printf "%s\\n" "$*" >> "' + _acta + '"\n'
+    'if [ "$1" = "-res" ]; then\n'
+    '  [ -n "${FICTA_RES_RC:-}" ] && { echo "res ignota" >&2; exit "$FICTA_RES_RC"; }\n'
+    '  echo "  [nexus] strepitus launcheri"\n'
+    '  echo "${FICTA_LINEA:-Opus fictum (opus, susceptum)}"\n'
+    '  exit 0\n'
+    'fi\n'
+    'n=$(grep -c -- "-mutatio\\|-status" "' + _acta + '")\n'
+    'if [ -n "${FICTA_FRANGE_AD:-}" ] && [ "$n" -ge "$FICTA_FRANGE_AD" ]; then echo "machina recusat" >&2; exit 1; fi\n'
+    'echo scriptum\n')
+os.chmod(_stip, 0o755)
+_fr_vera = silva.FRIGIDA_IMPERIUM
+silva.FRIGIDA_IMPERIUM = [_stip]
+try:
+    # praeiudicium: opus apertum licet; strepitus launcheri ('  [nexus]') toleratur
+    credo(silva.opus_praeiudicare('X') == [], 'opus apertum (susceptum): nulla causa')
+    os.environ['FICTA_LINEA'] = 'Parcum quoddam (parcum, tractum)'
+    c = silva.opus_praeiudicare('X')
+    credo(len(c) == 1 and "genus 'parcum'" in c[0] and 'OPERA sola' in c[0], 'genus non-opus: causa genus nominat')
+    os.environ['FICTA_LINEA'] = 'Opus vetus (opus, perfectum)'
+    c = silva.opus_praeiudicare('X')
+    credo(len(c) == 1 and "'perfectum'" in c[0] and 'pendens | susceptum' in c[0], 'opus iam perfectum: causa status legales nominat')
+    os.environ['FICTA_LINEA'] = 'Titulus (cum parenthesi) intus (opus, pendens)'
+    credo(silva.opus_praeiudicare('X') == [], 'titulus parentheses ferens: genus et status ex fine lineae')
+    del os.environ['FICTA_LINEA']
+    os.environ['FICTA_RES_RC'] = '1'
+    c = silva.opus_praeiudicare('nusquam')
+    credo(len(c) == 1 and 'non solvitur' in c[0] and 'res ignota' in c[0], 'opus ignotum: causa machinae transit')
+
+    # CAUSAE OMNES SIMUL: via vetita ET opus ignotum responso UNO, ANTE portam ullam
+    try:
+        silva.commissio('nihil', ['FAQ.md'], portae=['ficta-quae-non-est'], opus='nusquam')
+        credo(False, 'commissio cum causis duabus')
+    except silva.SilvaError as ex:
+        credo('(2 causae)' in str(ex) and 'VETITA' in str(ex) and 'non solvitur' in str(ex),
+              'commissio: via vetita ET opus ignotum SIMUL relata (non guttatim)')
+        credo('nihil cursum' in str(ex), 'commissio: causae praeviae ante portas (nihil cursum)')
+    # causa UNA formam pristinam servat (probatio 'VETITA ... remove' supra id tenet)
+    del os.environ['FICTA_RES_RC']
+
+    # clausura: gradus duo, argumenta recta, provenientia commissi
+    open(_acta, 'w').close()
+    eff = silva.opus_claudere('01OPUSFICTUM', 'abc1234', 'titulus commissi: res gesta\n\ncorpus longum\n')
+    credo(eff == 'abc1234: titulus commissi: res gesta', 'effectus = commissum + linea PRIMA nuntii')
+    lin = open(_acta).read().splitlines()
+    credo(len(lin) == 2, 'clausura: vocationes duae (mutatio, status)')
+    credo(lin[0] == '-actor claude -origo commissum:abc1234 -mutatio 01OPUSFICTUM effectus abc1234: titulus commissi: res gesta',
+          'gradus I: -mutatio effectus cum provenientia commissi')
+    credo(lin[1] == '-actor claude -origo commissum:abc1234 -status 01OPUSFICTUM perfectum',
+          'gradus II: -status perfectum')
+
+    # clausura FRACTA in gradu II: error CLARUS, hash fertur, NOLI iterare, imperium ad finiendum
+    open(_acta, 'w').close()
+    os.environ['FICTA_FRANGE_AD'] = '2'
+    try:
+        silva.opus_claudere('01OPUSFICTUM', 'abc1234', 'titulus\n')
+        credo(False, 'clausura fracta')
+    except silva.SilvaOpusError as ex:
+        credo(ex.hash == 'abc1234', 'SilvaOpusError hash commissi fert')
+        credo('FACTUM EST' in str(ex) and 'NOLI iterare' in str(ex), 'error dicit commissum STARE')
+        credo('gradus 2 ex 2' in str(ex), 'error gradum fractum nominat')
+        credo('-status 01OPUSFICTUM perfectum' in str(ex) and '-mutatio' not in str(ex).split('Ad finiendum manu:')[1],
+              'error imperium RESIDUUM solum dat (gradus I iam factus non iteratur)')
+    del os.environ['FICTA_FRANGE_AD']
+finally:
+    silva.FRIGIDA_IMPERIUM = _fr_vera
+    for _k in ('FICTA_LINEA', 'FICTA_RES_RC', 'FICTA_FRANGE_AD'):
+        os.environ.pop(_k, None)
+    import shutil
+    shutil.rmtree(_od, ignore_errors=True)
+
+print('--- linea auctoris: SEMEL ---')
+_n1 = silva._nuntium_cum_trailer('titulus\n\ncorpus\n\nCo-Authored-By: Exemplar X <x@y>\n')
+credo(_n1.count('Co-Authored-By:') == 1 and 'Exemplar X' in _n1, 'nuntius lineam auctoris iam ferens: nulla altera appenditur')
+_n2 = silva._nuntium_cum_trailer('titulus\n\ncorpus\n')
+credo(_n2.count('Co-Authored-By:') == 1 and _n2.endswith('\n'), 'nuntius sine linea: una appenditur')
+_n3 = silva._nuntium_cum_trailer('titulus: de Co-Authored-By: in media linea loquitur\n')
+credo(_n3.count('\nCo-Authored-By:') == 1, 'mentio in MEDIA linea non est linea auctoris')
+
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))

@@ -153,7 +153,8 @@ principale (
             " [-origo O] -status <res> <novus>\n     aut:"
             " nota_frigida [-actor A] [-origo O] -mutatio <res>"
             " <clavis> <valor>\n     aut: nota_frigida [-actor A]"
-            " [-origo O] -nexus <res> <verbum> <alterum>\n");
+            " [-origo O] -nexus <res> <verbum> <alterum>\n     aut:"
+            " nota_frigida -res <res>   (lectio, nihil scribit)\n");
         redde II;
     }
     m = gesta_aperire(piscina, VIA_DB, VIA_AN);

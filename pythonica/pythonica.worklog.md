@@ -652,3 +652,45 @@ The lesson is about the commit's `portae` list, not about the guard:
 client suite belongs in that commit's gates** — the house rule already
 says so, and B1/B2 ran the shim plus two suites instead of all of
 them. Rebuilt and re-ran: oratio 19/19, md 14/14, html 14/14.
+
+## 2026-09-21 — `commissio(opus=…)`: the commit closes its ledger task
+
+Park 01KY57P2WD. The commit is the one step an agent never forgets, so
+task closure rides on it instead of on discipline (measured the same
+day: three days of work with nothing filed in the ledger).
+
+**Pre-check BEFORE the gates, closure AFTER the commit.** A typo in the
+task id discovered after the commit means a commit with no closure, so
+`opus_praeiudicare` runs first, read-only, through `./gesta/frigida.sh
+-res`. All preliminary causes are reported together — every forbidden
+path plus the task's causes — per Fran's no-drip rule.
+
+**A failed closure must never look like a failed commit.** It raises
+`SilvaOpusError` carrying `.hash`; the message opens with "COMMISSUM …
+FACTUM EST et stat - NOLI iterare", names the failed step, and prints
+only the REMAINING commands, paste-ready. A caller that retried the
+whole commit would find nothing to commit; one that re-ran step one
+would write the effect twice.
+
+**The launcher is noisy on stdout** (`  [nexus] nota_frigida` when it
+relinks). The reader skips lines starting with `[` and takes genus and
+status from the END of the first real line, because a title may itself
+contain parentheses — pinned with such a title.
+
+**The gate never writes to the live ledger:** `FRIGIDA_IMPERIUM` is
+swapped for a stub that logs its arguments.
+
+**I had been doubling the author trailer all day.** `commissio`
+appended its own line (copied from recent history) and I also wrote
+one in each message: five commits with two trailers, the first naming
+two DIFFERENT models. Found only because I read `commissio` to extend
+it. Now a message that already carries the line is left alone.
+
+**Plants by hand** (`planta` is C-only): four, each reddening its own
+assertion — preliminary causes not collected · trailer always appended
+· closure error lists ALL steps, not the residual · pre-check accepts
+any genus. The gate takes ~170 s, so five runs outlast one Bash call;
+run them in the background and do not touch the tree meanwhile (the
+gate seals the working tree). The final "restored" run hit the
+previous run's build lock and did NOT run — verify a restore with
+`cmp` against the backup, not with a gate that may not have started.

@@ -423,6 +423,32 @@ principale (vacuum)
         CREDO_VERUM (strstr(c.errores, "res ignota") != NIHIL);
     }
 
+    /* XII. -res: LECTIO per ianuam eandem (breviarium). Causa:
+     * silva.commissio(opus=ID) opus ANTE portas praeiudicat - ne
+     * vitium identificatoris post commissum demum appareat. Linea
+     * prima 'Titulus (genus, status)' contractus lectoris est. */
+    {
+        constans character* a[] = { "frigida", "-res",
+            "Frigida parcum" };
+        constans character* b[] = { "frigida", "-res",
+            "Res nusquam" };
+        constans character* an_ante;
+        constans character* an_post;
+
+        CREDO_VERUM (frigida_verbum_novit("-res"));
+        an_ante  = _plagula_litterae(piscina, VIA_AN);
+        c        = _curre(&cfg, piscina, III, a);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(c.effusio, "Frigida parcum (parcum, ")
+            == c.effusio);
+        CREDO_VERUM (strstr(c.effusio, "res_id ") != NIHIL);
+        /* lectio NIHIL scribit */
+        an_post = _plagula_litterae(piscina, VIA_AN);
+        CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
+        c = _curre(&cfg, piscina, III, b);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

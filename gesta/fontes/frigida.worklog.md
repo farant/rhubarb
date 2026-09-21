@@ -84,3 +84,13 @@ machine still report their first failure only.
 
 Exit codes: 0 written · 1 refused, nothing written · 2 usage, nothing
 attempted.
+
+## 2026-09-21 — `-res`: a read verb, because a pre-check needs one
+
+`silva.commissio(opus=ID)` must check the task BEFORE the gates run,
+and pythonica cannot speak MCP. `-res <res>` returns the compact view
+through the same machine and writes nothing (pinned: the annals are
+byte-identical before and after). The first line, `Title (genus,
+status)`, is now a contract with that reader. `FrigidaForma` gained an
+`instrumentum` field; a form with `actus == NIHIL` is a read and
+carries no actor or origin.

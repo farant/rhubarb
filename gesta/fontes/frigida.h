@@ -46,6 +46,7 @@ frigida_verbum_novit (
  *   [-actor A] [-origo O] -status  <res> <novus>
  *   [-actor A] [-origo O] -mutatio <res> <clavis> <valor>
  *   [-actor A] [-origo O] -nexus   <res> <verbum> <alterum>
+ *   -res <res>            (LECTIO: breviarium; nihil scribit)
  * actor ordinarius "fran", origo ordinaria "frigida".
  * effusio = responsum machinae (successus); errores = recusationes
  * et usus. Reddit FRIGIDA_EXITUS_*. */

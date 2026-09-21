@@ -8,6 +8,7 @@
 #   ./gesta/frigida.sh [-actor A] [-origo O] -status  <res> <novus>
 #   ./gesta/frigida.sh [-actor A] [-origo O] -mutatio <res> <clavis> <valor>
 #   ./gesta/frigida.sh [-actor A] [-origo O] -nexus   <res> <verbum> <alterum>
+#   ./gesta/frigida.sh -res <res>          (LECTIO: breviarium, nihil scribit)
 # Exitus: 0 scriptum | 1 recusatum (nihil scriptum) | 2 usus
 
 set -u

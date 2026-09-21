@@ -332,3 +332,32 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
 - **`planta` acta rubra servat**: `build/portae/<porta>.planta_rubra.acta`
   (cursus viridis receptum et acta obterit; compendium lineae unius
   assertionem fractam non semper nominat) - via in linea 'planta rubra:'.
+
+## 2026-09-21 — opus: commissio opus tabularii claudit
+
+- **`silva.commissio(nuntius, viae, portae, opus=ID[, actor='claude'])`** —
+  OPUS tabularii (genus `opus`) quod haec commissio perficit. ANTE portas
+  praeiudicatur (`opus_praeiudicare`: exstat, genus `opus`, status
+  `pendens`|`susceptum`) — vitium identificatoris post commissum demum
+  apparens = commissum sine clausura. POST commissionem successam
+  `opus_claudere` ritum perfectionis domus agit per viam frigidam:
+  `-mutatio ID effectus "<hash>: <linea prima nuntii>"`, deinde `-status ID
+  perfectum`, actor datus, origo `commissum:<hash>`.
+- **CAUSAE PRAEVIAE OMNES SIMUL** (decretum 01M32X21NR): viae VETITAE
+  *omnes* + causae operis in errore UNO numeratae (`commissio RECUSATA (N
+  causae) - nihil cursum, nihil commissum`). Causa una formam pristinam
+  servat.
+- **`SilvaOpusError`** (`.hash`) — clausura fracta POST commissum:
+  nuntius dicit `COMMISSUM <hash> FACTUM EST et stat - NOLI iterare`,
+  gradum fractum nominat (`gradus 2 ex 2`) et imperia RESIDUA sola dat
+  pasta-parata (gradus iam factus non iteratur).
+- **`silva.FRIGIDA_IMPERIUM`** — via frigida substituibilis; porta
+  pythonica stipulam adhibet et NUMQUAM in tabularium vivum scribit.
+  Launcher strepitum in stdout mittit (`  [nexus] ...`): lector lineas
+  `[`-incipientes praeterit et genus/statum ex FINE lineae primae sumit
+  (titulus parentheses ferre potest).
+- **Linea auctoris SEMEL** (`_nuntium_cum_trailer`): nuntius
+  `Co-Authored-By:` iam ferens intactus manet. Olim commissio suam caece
+  appendebat; quinque commissa 2026-09-21 lineas DUAS acceperunt, unum
+  exemplaribus DIVERSIS (linea ex historia sumpta exemplar prius
+  nominabat).
