@@ -805,8 +805,30 @@ principale (vacuum)
                     buf[c.mensura] = '\0';
                     CREDO_VERUM (strstr(buf, "\"assignatum\"")
                         != NIHIL);
+                    /* OLIM hic: 'ancorae ABSUNT' ut custos E2-B2.
+                     * Assertio illa VACUA erat a natu: fusio v2
+                     * genera solum SINE clave 'attributa' tangit,
+                     * et opus attributa SUA semper habuit - ergo
+                     * fusio caeca opus numquam tetigisset, custode
+                     * aut sine. Custodes veri E2-B2 sunt actio et
+                     * processus supra (attributis carent), et
+                     * manent. 2026-09-21 semen v8 ancoras in opus
+                     * CONSULTO declarat; quod nunc custodiendum est:
+                     * emendatio definitionem TOTAM rescribit, ergo
+                     * NIHIL pristinum amittere debet. */
                     CREDO_VERUM (strstr(buf, "\"ancorae\"")
-                        == NIHIL);
+                        != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"corpus\"")
+                        != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"tags\"") != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"prioritas\"")
+                        != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"effectus\"")
+                        != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"pendens\"")
+                        != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"omissum\"")
+                        != NIHIL);
                 }
             }
             gesta_claudere(sonda);
@@ -1676,6 +1698,79 @@ principale (vacuum)
             "\"method\":\"tools/list\"}");
         CREDO_VERUM (strstr(r, "impeditur-a") != NIHIL);
         CREDO_VERUM (strstr(r, "e.g. impedit)") == NIHIL);
+    }
+
+
+    /* ==================================================
+     * XXII quater. OPERA PLANORUM (2026-09-21, parcum K4.5):
+     * genus 'opus' corpus/tags/ancoras DECLARAT (semen v8), et
+     * quaesitio opera ORDINARIE excludit - numquam tacite.
+     * MENSURATUM: res exsistentes ~CCL verba scientiae ferunt,
+     * opera ZEPHYRUM (tituli IX characterum: 'spec'). Basis
+     * scientiae a catena operum non polluatur.
+     * ================================================== */
+
+    {
+        /* semen v8: declaratio in annalibus, semel */
+        {
+            constans character* an = _plagula_litterae(piscina,
+                VIA_AN);
+
+            CREDO_AEQUALIS_I32 (_quoties_continet(an,
+                "\"attributa_versio\""), I);
+        }
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":230,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Harundo scientiae vera\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":231,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"opus\","
+            "\"titulus\":\"planum I.1: harundo secanda\","
+            "\"corpus\":\"Perfectum cum porta transit.\","
+            "\"tags\":\"planum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        /* custos duplicationum: opus NOVUM scientiam non monstrat
+         * ut 'simile' (opus alterius operis simile esse potest,
+         * non quaestionis) */
+        CREDO_VERUM (strstr(r, "Harundo scientiae vera") == NIHIL);
+
+        /* quaerere ORDINARIE: scientia adest, opus ABEST, et
+         * exclusio NUMERATA nominatur cum via ad eam tollendam */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":232,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"harund*\"}}}");
+        CREDO_VERUM (strstr(r, "Harundo scientiae vera") != NIHIL);
+        CREDO_VERUM (strstr(r, "harundo secanda") == NIHIL);
+        CREDO_VERUM (strstr(r, "opera exclusa: 1") != NIHIL);
+        CREDO_VERUM (strstr(r, "genus") != NIHIL);
+
+        /* genus expresse petitum: opus redditur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":233,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"harund*\",\"genus\":\"opus\"}}}");
+        CREDO_VERUM (strstr(r, "harundo secanda") != NIHIL);
+        CREDO_VERUM (strstr(r, "opera exclusa") == NIHIL);
+
+        /* OPERA SOLA congruunt: 'nihil inventum' MENTIRETUR -
+         * responsum exclusionem nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":234,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"secand*\"}}}");
+        CREDO_VERUM (strstr(r, "opera exclusa: 1") != NIHIL);
+
+        /* scientia NOVA opus ut 'simile' non accipit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":235,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Harundo secanda altera\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "planum I.1") == NIHIL);
     }
 
 

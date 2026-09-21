@@ -95,3 +95,14 @@ at least one POSITIVE through-the-seam assert (trunk nota through
 branch fold, FTS finding trunk titles, archaeology reads after
 abicere) — the all-negative-section trap from the chunk-A NULL-bind
 bug informed the whole golden set.
+
+## 2026-09-21 — `gesta_quaerere_excluso`: leave one genus out, inside the query, and count it
+
+`gesta_quaerere` is now that call with no exclusion (one definition,
+not two). The exclusion is a `WHERE` clause, not a post-filter: the
+50-row cap would otherwise let a numerous low-value genus push real
+hits out. `*exclusa` reports how many items of the excluded genus
+WOULD have matched (status filter kept), so a caller can never exclude
+silently. An explicit `genus` filter beats the exclusion and reports
+zero. Policy (which genus, when) stays in tabularium; the engine only
+offers the mechanism. See tabularium.worklog.md same date.

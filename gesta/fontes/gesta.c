@@ -3919,18 +3919,31 @@ gesta_fts_exhaurire (
 }
 
 Xar*
-gesta_quaerere (
+gesta_quaerere_excluso (
            GestaMundus* mundus,
     constans character* textus,
     constans character* genus,
     constans character* status,
+    constans character* genus_exclusum,
+                   s64* exclusa,
                Piscina* piscina)
 {
                    Xar* inventa;
     ScriniumEnuntiatum* e;
                    b32  solum_spatia = VERUM;
         memoriae_index  i;
+    constans character* exclusum_l = genus_exclusum != NIHIL
+        ? genus_exclusum : "";
 
+    si (exclusa != NIHIL)
+    {
+        *exclusa = (s64)ZEPHYRUM;
+    }
+    /* genus expresse petitum exclusionem VINCIT */
+    si (genus != NIHIL && genus[0] != '\0')
+    {
+        exclusum_l = "";
+    }
     si (mundus == NIHIL || piscina == NIHIL)
     {
         redde NIHIL;
@@ -3967,6 +3980,7 @@ gesta_quaerere (
         " WHERE res_fts MATCH ?"
         " AND (?2 = '' OR r.genus = ?2)"
         " AND (?3 = '' OR r.status = ?3)"
+        " AND (?4 = '' OR r.genus != ?4)"
         " ORDER BY bm25(res_fts) LIMIT 50");
     si (e == NIHIL)
     {
@@ -3977,6 +3991,7 @@ gesta_quaerere (
         _ch(genus != NIHIL ? genus : ""));
     scrinium_ligare_textum(e, III,
         _ch(status != NIHIL ? status : ""));
+    scrinium_ligare_textum(e, IV, _ch(exclusum_l));
     /* error syntaxis MATCH -> gradi ERROR -> fructus vacuus
      * (honestum; citatio = stratum MCP) */
     dum (scrinium_gradi(e) == SCRINIUM_ORDO)
@@ -3992,7 +4007,43 @@ gesta_quaerere (
         }
     }
     scrinium_finire(e);
+    /* exclusio NUMQUAM tacita: quot res exclusi generis congruerunt */
+    si (exclusa != NIHIL && exclusum_l[0] != '\0')
+    {
+        ScriniumEnuntiatum* n = scrinium_praeparare(
+            mundus->scrinium,
+            "SELECT COUNT(*)"
+            " FROM res_fts f JOIN res r ON r.res_id = f.res_id"
+            " WHERE res_fts MATCH ?"
+            " AND r.genus = ?2"
+            " AND (?3 = '' OR r.status = ?3)");
+
+        si (n != NIHIL)
+        {
+            scrinium_ligare_textum(n, I, _ch(textus));
+            scrinium_ligare_textum(n, II, _ch(exclusum_l));
+            scrinium_ligare_textum(n, III,
+                _ch(status != NIHIL ? status : ""));
+            si (scrinium_gradi(n) == SCRINIUM_ORDO)
+            {
+                *exclusa = scrinium_columna_numerus(n, 0);
+            }
+            scrinium_finire(n);
+        }
+    }
     redde inventa;
+}
+
+Xar*
+gesta_quaerere (
+           GestaMundus* mundus,
+    constans character* textus,
+    constans character* genus,
+    constans character* status,
+               Piscina* piscina)
+{
+    redde gesta_quaerere_excluso(mundus, textus, genus, status,
+        NIHIL, NIHIL, piscina);
 }
 
 Xar*

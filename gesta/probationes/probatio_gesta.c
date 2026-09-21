@@ -88,8 +88,8 @@ _ramo_insere (
     constans character* datum,
                Piscina* piscina)
 {
-    hic_manens integer  numerator = ZEPHYRUM;
-             character  id_ev[XVI];
+    hic_manens integer numerator = ZEPHYRUM;
+             character id_ev[XVI];
     ScriniumEnuntiatum* e;
 
     numerator++;
@@ -1020,6 +1020,46 @@ principale (vacuum)
         inv = gesta_quaerere(m, "praeparatore", NIHIL, NIHIL,
             piscina);
         CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+
+        /* GENUS EXCLUSUM (2026-09-21): exclusio IN QUAESTIONE SQL
+         * fit, non post eam - tectum L ordinum aliter a genere
+         * numeroso impleretur et inventa vera EXTRUDERENTUR. Et
+         * numquam TACITA: *exclusa numerat quot res exclusi generis
+         * congruerint. gesta_quaerere = vocatio eadem sine
+         * exclusione (definitio una, non duae). */
+        {
+            character id_x[GESTA_RES_ID_MENSURA];
+                  s64 exclusa = (s64)-I;
+                  i32 ante;
+
+            inv = gesta_quaerere(m, "parsur*", NIHIL, NIHIL,
+                piscina);
+            ante             = (i32)xar_numerus(inv);
+            e.res_id         = NIHIL;
+            e.genus_eventus  = "creatio";
+            e.datum = "{\"genus\":\"parcum\",\"titulus\":"
+                "\"Parsura parcata\"}";
+            e.actor = "fran";
+            e.origo = "probatio";
+            CREDO_VERUM (gesta_scribere(m, &e, id_x));
+            inv = gesta_quaerere(m, "parsur*", NIHIL, NIHIL,
+                piscina);
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(inv), ante + I);
+            inv = gesta_quaerere_excluso(m, "parsur*", NIHIL, NIHIL,
+                "parcum", &exclusa, piscina);
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(inv), ante);
+            CREDO_AEQUALIS_S64 (exclusa, (s64)I);
+            /* genus expresse petitum exclusionem VINCIT */
+            exclusa = (s64)-I;
+            inv = gesta_quaerere_excluso(m, "parsur*", "parcum",
+                NIHIL, "parcum", &exclusa, piscina);
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(inv), I);
+            CREDO_AEQUALIS_S64 (exclusa, (s64)ZEPHYRUM);
+            /* numerator NIHIL toleratur */
+            inv = gesta_quaerere_excluso(m, "parsur*", NIHIL, NIHIL,
+                "parcum", NIHIL, piscina);
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(inv), ante);
+        }
     }
 
 

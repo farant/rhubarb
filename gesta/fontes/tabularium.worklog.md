@@ -653,3 +653,57 @@ Tabularium 466 · gesta 680 · tabulariumd 12 · fori 18.
 an unknown or ambiguous item is one cause among the others instead of
 an early return ahead of them. `_candidatos_appendere` factored out
 of `_ambiguitatem_respondere` and shared. Tabularium 469.
+
+## 2026-09-21 — plan tasks: the task genus declares a body, and search leaves tasks out by default
+
+**Decision (Fran).** Plan tasks at commit grain use the existing `opus`
+genus rather than a new one: a unit of work with a done state,
+whatever created it. Processes and plans become two sources feeding
+one future ready view. The engine wakes on MEMBERSHIP of a running
+instance, not on genus, so a hand-made task is inert to the motor.
+
+**Seed v8 declares `corpus`, `tags`, `ancorae` on `opus`.** Not a new
+permission — undeclared keys already passed silently, and the compact
+view, census, FTS and anchor resolver already read those keys on ANY
+genus (probed in a throwaway world first: create, link `intra`, start;
+zero guard notes). Declaring is schema honesty. Same rule as the
+verbs: an attribute is declared when a machine READS it, so measured
+`progressus` is deliberately not declared yet. Monotonic version guard
+(`attributa_versio`), same reasoning as the verb seed.
+
+**"E2-B2: board attributes are never stamped into opus" was a scoping
+fix, not a principle** (`gesta-k3-exploratio-2.md:61`): the v2 fusion
+was unscoped and would have blindly stamped action and process
+definitions.
+
+**A vacuous assertion, found by breaking it.** Section XVI asserted
+`opus` has no `ancorae` as an E2-B2 guard. It could never have failed:
+v2 only touches genera WITHOUT an `attributa` key, and `opus` always
+had its own. The real guards are the action and process assertions
+beside it (they have no attribute list), and they stand. Replaced with
+what now needs guarding: v8 rewrites the WHOLE definition, so nothing
+original may be lost (`assignatum`, `prioritas`, `effectus`, the
+machine's `pendens`/`omissum`).
+
+**Search excludes tasks by default, and says so.** Measured the same
+day: every other genus carries ~200–275 words of written knowledge per
+item (body + notes) and 100 % have a body; the four existing tasks
+carry zero, with nine-character titles ("spec"). A few hundred of those
+would bury the knowledge base. So `quaerere` without a `genus` leaves
+`opus` out — IN THE SQL (`gesta_quaerere_excluso`), not afterwards,
+because the engine caps at 50 rows and a numerous genus would crowd
+real hits out before any post-filter ran. NEVER SILENT: the response
+ends `(opera exclusa: N congruunt - adde genus: "opus" …)`, including
+when tasks are the ONLY matches (a bare "nihil inventum" would lie).
+An explicit `genus` beats the exclusion.
+
+**The duplicate guard follows the same split.** A new knowledge item
+is not shown tasks as "similar"; a new task is compared only with
+other tasks.
+
+**Six plants, six different assertions:** SQL exclusion neutralised ·
+count not computed (the silent form) · server default off · duplicate
+guard shows tasks · v8 adds nothing · v8 version guard `<=` (caught by
+the older tabula idempotence assertion).
+
+Gesta 687 · tabularium 488 · frigida 50.

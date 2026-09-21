@@ -330,6 +330,34 @@ interior constans character* constans VERBA_CANONICA =
     "\"lector\":\"fila\",\"synonyma\":[\"respondet\"],"
     "\"inversa\":[]}]";
 
+/* GENUS OPERUM PLANORUM et semen v8 (2026-09-21, parcum K4.5).
+ *
+ * 'opus' = unitas laboris cum statu perfectionis, QUIDQUID eam
+ * creavit: gradus processus (motor) aut opus plani (manu, gradu
+ * commissi). Motor per MEMBRA instantiae excitatur, non per genus -
+ * opus manu factum ei iners est.
+ *
+ * SEMEN v8 tria attributa DECLARAT (corpus, tags, ancorae). Non
+ * permissio nova: claves non declaratae iam tacite transibant, et
+ * breviarium/census/FTS/solutor ancorarum eas in QUOVIS genere iam
+ * legunt. Declaratio = honestas schematis. Lex eadem ac verborum:
+ * attributum declaratur cum machina id LEGIT - 'progressus' nondum.
+ * (E2-B2 'attributa tabulae numquam in opus stampantur' emendatio
+ * SCOPI erat contra fusionem caecam seminis v2, non principium.)
+ * Versio MONOTONA, ratione eadem ac VERBA_CANONICA.
+ *
+ * QUAESITIO opera ORDINARIE EXCLUDIT, numerata numquam tacite.
+ * Mensuratum: res ceterae ~CCL verba scientiae ferunt (corpus +
+ * notae), opera ZEPHYRUM - tituli IX characterum ('spec'). Catena
+ * operum basim scientiae ne polluat. */
+#define GENUS_OPERIS "opus"
+#define OPERIS_ATTRIBUTA_VERSIO I
+
+interior constans character* constans OPERIS_ATTRIBUTA_ADDENDA =
+    "[{\"titulus\":\"corpus\",\"typus\":\"textus\"},"
+    "{\"titulus\":\"tags\",\"typus\":\"tabulatum\"},"
+    "{\"titulus\":\"ancorae\",\"typus\":\"tabulatum\"}]";
+
 interior constans character* constans VOCABULARIUM_TAGORUM =
     "{\"genus\":\"nota\",\"titulus\":\"vocabularium tagorum\","
     "\"corpus\":\"semina: silva officina gesta tessera legatus "
@@ -3010,6 +3038,7 @@ _similia_reddere (
             Tabularium* t,
      ChordaAedificator* aed,
                 chorda  titulus,
+                chorda  genus_novi,
     constans character* res_id_nova,
                Piscina* pn)
 {
@@ -3057,9 +3086,15 @@ _similia_reddere (
     {
         redde;
     }
-    inventa = gesta_quaerere(t->mundus,
-        _litterae(pn, chorda_aedificator_finire(qa)), NIHIL, NIHIL,
-        pn);
+    /* opus NOVUM: simile ei solum OPUS alterum esse potest;
+     * scientia NOVA: opera ei similia non sunt (genus exclusum) */
+    inventa = _chorda_est(genus_novi, GENUS_OPERIS)
+        ? gesta_quaerere_excluso(t->mundus,
+              _litterae(pn, chorda_aedificator_finire(qa)),
+              GENUS_OPERIS, NIHIL, NIHIL, NIHIL, pn)
+        : gesta_quaerere_excluso(t->mundus,
+              _litterae(pn, chorda_aedificator_finire(qa)),
+              NIHIL, NIHIL, GENUS_OPERIS, NIHIL, pn);
     si (inventa == NIHIL)
     {
         redde;
@@ -4523,7 +4558,7 @@ _tab_addere (
             chorda_aedificator_appendere_literis(aed, cautio);
         }
         _capturae_summarium(aed, &captura);
-        _similia_reddere(t, aed, titulus, res_id, pn);
+        _similia_reddere(t, aed, titulus, genus, res_id, pn);
         _textum_respondere(t, pn, effusio, id,
             chorda_aedificator_finire(aed), FALSUM);
     }
@@ -5087,6 +5122,8 @@ _tab_quaerere (
     constans character* quaestio;
                    Xar* inventa;
      ChordaAedificator* aed;
+                   s64  exclusa = (s64)ZEPHYRUM;
+             character  nota_exclusionis[CCLVI];
                    i32  i;
 
     si (textus.mensura == ZEPHYRUM && tag.mensura == ZEPHYRUM)
@@ -5111,21 +5148,39 @@ _tab_quaerere (
         }
         quaestio = _litterae(pn, chorda_aedificator_finire(qa));
     }
-    inventa = gesta_quaerere(t->mundus, quaestio,
+    /* opera ORDINARIE exclusa (genus petitum exclusionem vincit);
+     * numerus exclusorum SEMPER nominatur cum via ad ea videnda */
+    inventa = gesta_quaerere_excluso(t->mundus, quaestio,
         genus.mensura > ZEPHYRUM ? _litterae(pn, genus) : NIHIL,
         status.mensura > ZEPHYRUM ? _litterae(pn, status) : NIHIL,
-        pn);
+        GENUS_OPERIS, &exclusa, pn);
     si (inventa == NIHIL)
     {
         _textum_respondere(t, pn, effusio, id,
             _ch("apparatus quaestionis fractus"), VERUM);
         redde;
     }
+    nota_exclusionis[0] = '\0';
+    si (exclusa > (s64)ZEPHYRUM)
+    {
+        sprintf(nota_exclusionis, "(opera exclusa: %d congruunt -"
+            " adde genus: \"" GENUS_OPERIS "\" ut ea videas)",
+            (int)exclusa);
+    }
     si (xar_numerus(inventa) == ZEPHYRUM)
     {
+        aed = chorda_aedificator_creare(pn, DXII);
+        chorda_aedificator_appendere_literis(aed,
+            "nihil inventum (praefixa 'termin*' adiuvant -"
+            " stemmata Latina absunt)");
+        si (nota_exclusionis[0] != '\0')
+        {
+            chorda_aedificator_appendere_literis(aed, "\n");
+            chorda_aedificator_appendere_literis(aed,
+                nota_exclusionis);
+        }
         _textum_respondere(t, pn, effusio, id,
-            _ch("nihil inventum (praefixa 'termin*' adiuvant -"
-                " stemmata Latina absunt)"), FALSUM);
+            chorda_aedificator_finire(aed), FALSUM);
         redde;
     }
     aed = chorda_aedificator_creare(pn, 4096);
@@ -5149,6 +5204,11 @@ _tab_quaerere (
         chorda_aedificator_appendere_chorda(aed, inv->status);
         chorda_aedificator_appendere_literis(aed, "  ");
         chorda_aedificator_appendere_chorda(aed, inv->titulus);
+    }
+    si (nota_exclusionis[0] != '\0')
+    {
+        chorda_aedificator_appendere_literis(aed, "\n");
+        chorda_aedificator_appendere_literis(aed, nota_exclusionis);
     }
     _textum_respondere(t, pn, effusio, id,
         chorda_aedificator_finire(aed), FALSUM);
@@ -7585,8 +7645,12 @@ _toolslist_tractare (
     JsonValor* resultatum   = json_objectum_creare(pn);
     JsonValor* instrumenta  = json_tabulatum_creare(pn);
     interior constans TabArgumentum ARG_ADDERE[] = {
-        { "genus", "quaestio|parcum|decretum|nota|desideratum",
-          VERUM },
+        { "genus", "quaestio|parcum|decretum|nota|desideratum|opus."
+          " opus = OPUS PLANI gradu commissi (pendens -> susceptum ->"
+          " perfectum|omissum): titulus praefixo plani ('acervus"
+          " I.2: ...'), corpus = SENTENTIA UNA 'quid perfectum"
+          " significat' + ancora ad sectionem plani (numquam copia"
+          " plani), nexus 'intra' ad parcum parentem", VERUM },
         { "titulus", "titulus brevis entis", VERUM },
         { "corpus", "textus corporis (quaesibilis)", FALSUM },
         { "tags", "tags commatibus separata", FALSUM },
@@ -7643,7 +7707,10 @@ _toolslist_tractare (
     };
     interior constans TabArgumentum ARG_QUAERERE[] = {
         { "textus", "quaestio FTS (praefixa 'termin*')", VERUM },
-        { "genus", "filtrum generis", FALSUM },
+        { "genus", "filtrum generis. SINE eo OPERA (genus \"opus\""
+          " - catena laboris, scientia pauper) EXCLUDUNTUR et"
+          " numerus exclusorum nominatur; genus: \"opus\" ea"
+          " reddit", FALSUM },
         { "status", "filtrum statûs", FALSUM },
         { "tag", "filtrum tagi (terminus FTS additus)", FALSUM }
     };
@@ -7891,6 +7958,99 @@ _seminare (
                         json_objectum_ponere(r.radix,
                             "verba_versio", json_integer_creare(pn,
                                 (s64)VERBA_CANONICA_VERSIO));
+                        e.res_id         = NIHIL;
+                        e.genus_eventus  = "emendatio-generis";
+                        e.datum          = _litterae(pn,
+                            json_scribere(r.radix, pn));
+                        e.actor = "machina";
+                        e.origo = "seminatio";
+                        (vacuum)gesta_scribere(t->mundus, &e,
+                            NIHIL);
+                    }
+                }
+            }
+        }
+    }
+    /* semen v8: attributa operis DECLARATA (vide GENUS_OPERIS).
+     * Quodque addendum solum si titulus eius abest; versio monotona
+     * more seminis v7. */
+    {
+        chorda gd = gesta_genus_datum(t->mundus, GENUS_OPERIS, pn);
+
+        si (gd.mensura > ZEPHYRUM)
+        {
+            JsonResultus r = json_legere(gd, pn);
+
+            si (r.successus && json_est_objectum(r.radix))
+            {
+                JsonValor* versio_valor = json_objectum_capere(
+                    r.radix, "attributa_versio");
+                JsonValor* attributa = json_objectum_capere(
+                    r.radix, "attributa");
+                      s64 condita = (s64)ZEPHYRUM;
+
+                si (   versio_valor != NIHIL
+                    && json_est_integer(versio_valor))
+                {
+                    condita = json_ad_integer(versio_valor);
+                }
+                si (   condita < (s64)OPERIS_ATTRIBUTA_VERSIO
+                    && attributa != NIHIL
+                    && json_est_tabulatum(attributa))
+                {
+                    JsonResultus addenda = json_legere_literis(
+                        OPERIS_ATTRIBUTA_ADDENDA, pn);
+
+                    si (   addenda.successus
+                        && json_est_tabulatum(addenda.radix))
+                    {
+                        GestaEventum e;
+                                 i32 a;
+
+                        per (a = ZEPHYRUM;
+                             a < json_tabulatum_numerus(
+                                     addenda.radix); a++)
+                        {
+                            JsonValor* novum =
+                                json_tabulatum_obtinere(
+                                    addenda.radix, a);
+                            JsonValor* titulus_novi =
+                                json_objectum_capere(novum,
+                                    "titulus");
+                                  b32 adest = FALSUM;
+                                  i32 b;
+
+                            per (b = ZEPHYRUM;
+                                 b < json_tabulatum_numerus(
+                                         attributa); b++)
+                            {
+                                JsonValor* vetus =
+                                    json_objectum_capere(
+                                        json_tabulatum_obtinere(
+                                            attributa, b),
+                                        "titulus");
+
+                                si (   vetus        != NIHIL
+                                    && titulus_novi != NIHIL
+                                    && json_est_chorda(vetus)
+                                    && json_est_chorda(titulus_novi)
+                                    && chorda_aequalis(
+                                           json_ad_chorda(vetus),
+                                           json_ad_chorda(
+                                               titulus_novi)))
+                                {
+                                    adest = VERUM;
+                                }
+                            }
+                            si (!adest)
+                            {
+                                json_tabulatum_addere(attributa,
+                                    novum);
+                            }
+                        }
+                        json_objectum_ponere(r.radix,
+                            "attributa_versio", json_integer_creare(
+                                pn, (s64)OPERIS_ATTRIBUTA_VERSIO));
                         e.res_id         = NIHIL;
                         e.genus_eventus  = "emendatio-generis";
                         e.datum          = _litterae(pn,

@@ -188,6 +188,23 @@ gesta_quaerere (
     constans character* status,
                Piscina* piscina);
 
+/* Ut gesta_quaerere, sed genus UNUM excluditur (genus_exclusum
+ * NIHIL/"" = nullum). EXCLUSIO IN SQL fit, non post: tectum L
+ * ordinum aliter a genere numeroso impleretur et inventa vera
+ * extruderentur. NUMQUAM TACITA: *exclusa (NIHIL licet) accipit
+ * quot res exclusi generis ALIOQUIN congruissent (filtro statûs
+ * servato). Genus expresse petitum exclusionem vincit (exclusa 0).
+ * gesta_quaerere = haec vocatio sine exclusione - definitio UNA. */
+Xar*
+gesta_quaerere_excluso (
+           GestaMundus* mundus,
+    constans character* textus,
+    constans character* genus,
+    constans character* status,
+    constans character* genus_exclusum,
+                   s64* exclusa,
+               Piscina* piscina);
+
 /* Census generum x statuum (ex plicatura res) */
 Xar*
 gesta_census_generum (
