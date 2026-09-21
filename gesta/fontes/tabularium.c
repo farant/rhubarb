@@ -1285,18 +1285,18 @@ _res_solvere (
     redde per_titulum;
 }
 
-/* candidatos ambiguitatis nominare (res_id discernit). Modus per
- * fontem: titulus pluribus rebus = quaestio tituli; alioquin
- * praefixum ULID pluribus congruens = quaestio praefixi. */
+/* candidatos ambiguitatis in aedificatorem appendere (res_id
+ * discernit). Modus per fontem: titulus pluribus rebus = quaestio
+ * tituli; alioquin praefixum ULID pluribus congruens = quaestio
+ * praefixi. COMMUNE responso ambiguitatis et praeiudicio vinculi -
+ * recusatio OPTIONES ostendit, non solum vitium nominat. */
 interior vacuum
-_ambiguitatem_respondere (
-    Tabularium* t,
-       Piscina* pn,
-     JsonValor* id,
-        chorda  titulus,
-          FILE* effusio)
+_candidatos_appendere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  titulus,
+              Piscina* pn)
 {
-    ChordaAedificator* aed = chorda_aedificator_creare(pn, CCLVI);
     b32 per_praefixum = _tituli_numerus(t, titulus) <= (s64)I
         && _ulid_praefixus_est(titulus);
     ScriniumEnuntiatum* e = scrinium_praeparare(
@@ -1330,6 +1330,19 @@ _ambiguitatem_respondere (
         }
         scrinium_finire(e);
     }
+}
+
+interior vacuum
+_ambiguitatem_respondere (
+    Tabularium* t,
+       Piscina* pn,
+     JsonValor* id,
+        chorda  titulus,
+          FILE* effusio)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(pn, CCLVI);
+
+    _candidatos_appendere(t, aed, titulus, pn);
     _textum_respondere(t, pn, effusio, id,
         chorda_aedificator_finire(aed), VERUM);
 }
@@ -1590,7 +1603,7 @@ interior constans character*
 _nexum_praeiudicare (
     Tabularium* t,
        Piscina* pn,
-        chorda  res_id,
+        chorda  clavis,
         chorda  ramus_id,
         chorda  verbum,
         chorda  alterum)
@@ -1601,6 +1614,7 @@ _nexum_praeiudicare (
                chorda  canonicum;
                   b32  inversum   = FALSUM;
                   b32  synonymum  = FALSUM;
+               chorda  res_id;
                chorda  alterum_id;
                chorda  pars_a;
                chorda  pars_b;
@@ -1611,6 +1625,7 @@ _nexum_praeiudicare (
     canonicum.datum     = NIHIL;
     alterum_id.mensura  = ZEPHYRUM;
     alterum_id.datum    = NIHIL;
+    res_id              = clavis;
     si (ramus_id.mensura > ZEPHYRUM)
     {
         /* saccharum vinculi = scripturae plures + resolutio
@@ -1619,6 +1634,34 @@ _nexum_praeiudicare (
         chorda_aedificator_appendere_literis(index,
             "nexus/denexus in ramo nondum sustentus (parcum) -"
             " parametrum 'ramus' omitte");
+    }
+    alioquin
+    {
+        /* res insolubilis aut ambigua = causa INTER CETERAS, non
+         * reditus maturus ante eas (olim tractator hic primum
+         * redibat: res ignota + verbum pravum = itinera duo) */
+        b32 ambiguum = FALSUM;
+
+        res_id = _res_solvere(t, clavis, pn, &ambiguum);
+        si (ambiguum)
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index, "res: ");
+            _candidatos_appendere(t, index, clavis, pn);
+        }
+        alioquin si (res_id.mensura == ZEPHYRUM)
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index, "res '");
+            chorda_aedificator_appendere_chorda(index, clavis);
+            chorda_aedificator_appendere_literis(index,
+                "' ignota (id, praefixum inambiguum, aut titulus"
+                " exactus)");
+        }
+        si (res_id.mensura == ZEPHYRUM)
+        {
+            res_id = clavis;   /* in scriptura valida ut datum */
+        }
     }
     si (verbum.mensura == ZEPHYRUM)
     {
@@ -4529,6 +4572,24 @@ _tab_gerere (
             redde;
         }
     }
+    si (_chorda_est(actus, "nexus"))
+    {
+        /* PRAEIUDICIUM VINCULI ante resolutionem rei generalem:
+         * causae OMNES simul + scriptura valida (res, ramus,
+         * verbum, alterum, verba canonica). Regula nova in
+         * _nexum_praeiudicare additur, numquam hic ut reditus
+         * maturus - ne scriptor guttatim obstetur. */
+        constans character* causa = _nexum_praeiudicare(t, pn,
+            clavis, ramus_id, _arg(argumenta, "verbum"),
+            _arg(argumenta, "alterum"));
+
+        si (causa != NIHIL)
+        {
+            _textum_respondere(t, pn, effusio, id, _ch(causa),
+                VERUM);
+            redde;
+        }
+    }
     si (ramus_id.mensura > ZEPHYRUM)
     {
         /* LEX E2-B1: in ramo res_id requiritur - resolutio tituli
@@ -4621,21 +4682,8 @@ _tab_gerere (
                  JsonValor* d;
               GestaEventum  ev;
 
-        /* PRAEIUDICIUM: causae OMNES simul + scriptura valida
-         * (ramus, verbum, alterum, verba canonica). Regula nova
-         * in _nexum_praeiudicare additur, numquam hic ut reditus
-         * maturus - ne scriptor guttatim obstetur. */
-        {
-            constans character* causa = _nexum_praeiudicare(t, pn,
-                res_id, ramus_id, verbum, alterum);
-
-            si (causa != NIHIL)
-            {
-                _textum_respondere(t, pn, effusio, id, _ch(causa),
-                    VERUM);
-                redde;
-            }
-        }
+        /* praeiudicium vinculi IAM supra cucurrit (ante
+         * resolutionem rei generalem) - hic nihil recusandum */
         alterum_id = _res_solvere(t, alterum, pn, NIHIL);
         membrum_b = alterum_id.mensura > ZEPHYRUM
             ? alterum_id : alterum;
@@ -8267,6 +8315,37 @@ tabularium_currere (
     }
     piscina_destruere(piscina);
     redde exitus;
+}
+
+constans character*
+tabularium_nexum_praeiudicare (
+    Tabularium* t,
+       Piscina* pn,
+        chorda  res,
+        chorda  verbum,
+        chorda  alterum)
+{
+    chorda ramus_nullus;
+
+    ramus_nullus.mensura  = ZEPHYRUM;
+    ramus_nullus.datum    = NIHIL;
+    si (t == NIHIL)
+    {
+        redde "tabularium non apertum";
+    }
+    redde _nexum_praeiudicare(t, pn, res, ramus_nullus, verbum,
+        alterum);
+}
+
+vacuum
+tabularium_claudere (
+    Tabularium* t)
+{
+    si (t != NIHIL && t->mundus != NIHIL)
+    {
+        gesta_claudere(t->mundus);
+        t->mundus = NIHIL;
+    }
 }
 
 /* initiatio synthetica per tractare - machina intacta manet

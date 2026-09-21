@@ -1628,6 +1628,20 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "rem non solvit") != NIHIL);
         CREDO_VERUM (strstr(r, "creatum") == NIHIL);
 
+        /* RES IGNOTA inter ceteras causas: olim tractator ad rem
+         * insolubilem PRIMUM redibat, ergo 'res ignota + verbum
+         * pravum' itinera duo poscebat. Nunc praeiudicium rem
+         * ipsum solvit et causam INTER ceteras refert. */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":223,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Res nusquam inventa\",\"actus\":\"nexus\","
+            "\"verbum\":\"pendet-ex\",\"alterum\":"
+            "\"Verbum propositum\"}}}");
+        CREDO_VERUM (strstr(r, "(2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "ignota") != NIHIL);
+        CREDO_VERUM (strstr(r, "synonymum") != NIHIL);
+
         /* nihil scriptum: breviarium vincula nulla monstrat */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":214,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"

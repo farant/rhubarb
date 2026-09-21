@@ -644,3 +644,12 @@ still report their first failure. The command-line write path, next,
 is to be born under both laws.
 
 Tabularium 466 · gesta 680 · tabulariumd 12 · fori 18.
+
+## 2026-09-21 — link pre-check made public and given `res`; see frigida.worklog.md
+
+`tabularium_nexum_praeiudicare` (public, READ-ONLY) and
+`tabularium_claudere` (public) added for the command-line write path.
+`_nexum_praeiudicare` now takes the RAW `res` key and resolves it, so
+an unknown or ambiguous item is one cause among the others instead of
+an early return ahead of them. `_candidatos_appendere` factored out
+of `_ambiguitatem_respondere` and shared. Tabularium 469.

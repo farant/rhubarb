@@ -101,6 +101,28 @@ b32
 tabularium_se_initiare (
     Tabularium* tabularium);
 
+/* PRAEIUDICIUM VINCULI publicum - LECTIO SOLA, nihil scribit.
+ * NIHIL = vinculum scribi licet; aliter textus recusationis: causae
+ * OMNES numeratae + SCRIPTURA VALIDA (decretum 01M32X21NR). Claves
+ * crudae (id, praefixum, titulus exactus). Pro vocantibus qui causas
+ * SUAS cum causis machinae in responsum UNUM iungere volunt ante
+ * scripturam ullam (via frigida: operanda superflua + verbum
+ * synonymum simul referuntur, non guttatim). */
+constans character*
+tabularium_nexum_praeiudicare (
+    Tabularium* tabularium,
+       Piscina* pn,
+        chorda  res,
+        chorda  verbum,
+        chorda  alterum);
+
+/* mundum claudere (scrinium WAL ordinate finitur). Piscina
+ * VOCANTIS manet - eam vocans destruit. Pro vocantibus qui machinam
+ * sine tabularium_currere agunt (via frigida). NIHIL toleratur. */
+vacuum
+tabularium_claudere (
+    Tabularium* tabularium);
+
 /* renovatio petita est? (post tractare consulendum: stdio = exec
  * in currere; daemon = exitus post connexionem clausam) */
 b32

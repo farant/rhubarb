@@ -1558,6 +1558,8 @@ PORTAE = {
     'materia-shim': (['./materia/shim_probare.sh'],
                      r'probatae \d+, fractae \d+'),
     'sera': (['./tools/sera_fumus.sh'], r'fumus sera: (sanum|FRACTUM)'),
+    'frigida': (['./gesta/frigida_fumus.sh'],
+                r'fumus frigida: (sanum|FRACTUM)'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 

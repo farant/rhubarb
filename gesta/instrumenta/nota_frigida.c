@@ -4,10 +4,20 @@
  * bibliothecis puris manet). Usus:
  *   nota_frigida <res_id|titulus> <textus...>       nota
  *   nota_frigida -crea <genus> <titulus> [textus]   res nova
- * Actor fran, origo frigida. Currendum ex radice (frigida.sh). */
+ *   nota_frigida [-actor A] [-origo O] -status <res> <novus>
+ *   nota_frigida [...] -mutatio <res> <clavis> <valor>
+ *   nota_frigida [...] -nexus <res> <verbum> <alterum>
+ * Actor fran, origo frigida. Currendum ex radice (frigida.sh).
+ *
+ * DUAE IANUAE, CONSULTO (2026-09-21): formae VETERES (nota, -crea)
+ * per gesta_scribere DIRECTE eunt - ianua tumultuaria muta et
+ * robusta manet cum machina tabularii ipsa aegrotat. Formae NOVAE
+ * per MACHINAM eunt (fontes/frigida.c): regulae eaedem ac MCP (verba
+ * canonica), proiectiones eaedem, recusationes eaedem. */
 
 #include "gesta.h"
 #include "scrinium.h"
+#include "frigida.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -103,11 +113,47 @@ principale (
     {
         redde I;
     }
+    /* OMNE vexillum praeter '-crea' ad machinam it - etiam IGNOTUM,
+     * ut recusationem claram cum formis validis accipiat. Olim
+     * solum vexilla NOTA eo ibant, et typographum ('-statum') in
+     * formam veterem cadebat ubi ut TITULUS REI legebatur: 'res
+     * ignota -statum'. Porta fumi id primo cursu cepit. */
+    si (   argc >= II
+        && (   frigida_verbum_novit(argv[I])
+            || (   argv[I][0] == '-'
+                && strcmp(argv[I], "-crea") != ZEPHYRUM)))
+    {
+        /* formae novae: machina tabularii (viae eaedem ac
+         * tabularium_principale.c; vigilia quieta) */
+        TabulariumConfiguratio cfg;
+
+        cfg.radix             = ".";
+        cfg.via_scrinii       = VIA_DB;
+        cfg.via_annalium      = VIA_AN;
+        cfg.via_nexus         = "build/nexus.tsv";
+        cfg.via_identitatum   = "build/identitates.tsv";
+        cfg.via_citationum    = "build/citationes.tsv";
+        cfg.via_tabulae       = "gesta/annales/tabula.md";
+        cfg.via_entitatum     = "gesta/annales/entities";
+        cfg.signum            = NIHIL;
+        cfg.via_binarii       = NIHIL;
+        cfg.via_manifesti     = NIHIL;
+        cfg.via_renovatoris   = NIHIL;
+        cfg.renovatio_exitus  = FALSUM;
+        cfg.renatus           = FALSUM;
+        piscina_destruere(piscina);
+        redde (s32)frigida_currere(&cfg, argc, argv, stdout,
+            stderr);
+    }
     si (argc < III)
     {
         fprintf(stderr, "usus: nota_frigida <res|titulus>"
             " <textus...>\n     aut: nota_frigida -crea <genus>"
-            " <titulus> [textus]\n");
+            " <titulus> [textus]\n     aut: nota_frigida [-actor A]"
+            " [-origo O] -status <res> <novus>\n     aut:"
+            " nota_frigida [-actor A] [-origo O] -mutatio <res>"
+            " <clavis> <valor>\n     aut: nota_frigida [-actor A]"
+            " [-origo O] -nexus <res> <verbum> <alterum>\n");
         redde II;
     }
     m = gesta_aperire(piscina, VIA_DB, VIA_AN);

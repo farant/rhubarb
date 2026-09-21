@@ -1,9 +1,14 @@
 #!/bin/bash
 
-# gesta/frigida.sh - via scripturae frigida (residens absens):
+# gesta/frigida.sh - via scripturae frigida (residens absens, aut
+# vocans qui MCP loqui nequit: uncus commissi, pythonica).
 # nota_frigida construit et currit. Usus:
 #   ./gesta/frigida.sh <res|titulus> <textus...>
 #   ./gesta/frigida.sh -crea <genus> <titulus> [textus]
+#   ./gesta/frigida.sh [-actor A] [-origo O] -status  <res> <novus>
+#   ./gesta/frigida.sh [-actor A] [-origo O] -mutatio <res> <clavis> <valor>
+#   ./gesta/frigida.sh [-actor A] [-origo O] -nexus   <res> <verbum> <alterum>
+# Exitus: 0 scriptum | 1 recusatum (nihil scriptum) | 2 usus
 
 set -u
 
@@ -22,9 +27,21 @@ source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
 main_src="$GESTA_DIR/instrumenta/nota_frigida.c"
+
+# INDEX OBIECTORUM DERIVATUS (2026-09-21; desideratum 01KYPZ4T6J).
+# Olim hic index MANU scriptus stabat, et MENTITUS EST: tabularium.c
+# 'processus' adhibere coepit (renovare, 2026-07-29), index id
+# nescivit, et via frigida NEXU FRACTO iacuit duos menses - nemine
+# sciente, quia porta nulla eam currebat. Nunc: index fontium radicis
+# AB AEDILE generatus (idem quem launcher servi legit) + omnes fontes
+# gestae. Clausura huius instrumenti intra clausuram servi iacet.
+source "$GESTA_DIR/tabularium_fontes_generata.sh"
 obj_files="$BUILD_DIR/sqlite3.o"
-for o in piscina chorda chorda_aedificator xar friatio tabula_dispersa internamentum utf8 json similitudo sigillum scrinium moneta tabellarius vigilia filum via iter_directoria gesta tabularium; do
-    obj_files="$obj_files $BUILD_DIR/$o.o"
+for f in "${RADIX_FONTES[@]}"; do
+    obj_files="$obj_files $BUILD_DIR/$(basename "$f").o"
+done
+for f in "$GESTA_DIR"/fontes/*.c; do
+    obj_files="$obj_files $BUILD_DIR/$(basename "$f" .c).o"
 done
 
 obj_recentius=""
