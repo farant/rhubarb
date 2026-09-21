@@ -185,6 +185,26 @@ totals, not evidence.** Measured, those 14 are THREE separate bugs:
 | 4 | `frameset-ok` polarity | ✅ table FIXED (→ **1510**); the 4 cases need the body-removal law, below |
 | ~2 | `<frameset>` inside foreign content vanishes | open |
 
+**THE ROW ABOVE IS WRONG — remeasured 2026-09-21.** Nine cases remain,
+in THREE groups of **4 + 3 + 2**, and the last two are not frameset
+cases at all. The `~2` guess was low, and two failures (`#7`, `#9`) are
+a NUL-cooking bug in `<body>`/`<select>` that this table never
+accounted for. `<frameset>` in foreign content does NOT vanish — it is
+classified `elementum-malum` and the cooked view drops it by design
+(one `grep` of the STML projection shows the node).
+
+The correction is itself the lesson this section already teaches: the
+33 − 19 = 14 arithmetic matched exactly, which is what made the old
+split look settled. **A coincidence of totals is not evidence — read
+the SET.**
+
+Full measurement, exact bytes, and the three fixes ranked:
+**`project-specs/html-frameset-plan.md`**. Tasks 1–2 there are
+ordinary bugs (7 cases, no seal move); Task 3 is a decree for Fran
+(§VII) because the O5 law and HTML5 genuinely disagree, and the cheap
+workaround — re-genus the discarded subtree as malum — was closed by
+tier-1 diagnostics giving `elementum-malum` a `diagnosticum`.
+
 **Fixed.** HTML5 IGNORES a NUL character token in the wrapper modes
 (parse error). We made it content, which forged a body and made the
 following `<frameset>` a malum. `_textus_albus_cum_nullo` now routes a
