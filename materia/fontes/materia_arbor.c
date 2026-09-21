@@ -753,31 +753,28 @@ _textus_tutus (
 }
 
 /* Valorem genere CRUDO notare: valores arboris OCTETI CODICIS sunt,
- * non prosa - pulcher crudum numquam tangit. Custos CLARUS: valor
- * sequentiam claudentem propriam ferre non potest. */
-interior b32
+ * non prosa - pulcher crudum numquam tangit.
+ *
+ * CUSTOS ABIIT (2026-09-21, planum clausurae gradus III). Olim hic
+ * valor sequentiam claudentem PROPRIAM ferens recusabatur, causa
+ * nominata 'valor sequentiam claudentem fert', quia forma cruda eum
+ * ferre non poterat: scriptor documentum emisisset quod lector suus
+ * recusat.
+ *
+ * SUBSTRATUM NUNC EUM FERT. stml_scribere sequentiam fugat,
+ * stml_legere eam solvit (scala solidorum inversorum, gradus I-II
+ * plani, lib/stml.c). Materia arborem StmlNodus struit quam
+ * stml_scribere ipse emittit, ergo fuga SPONTE sequitur: nullus
+ * codex fugae huc pertinet, sola recusatio abit.
+ *
+ * Quod Fran in commento bash invenit - '# vide </crusta-commentum>
+ * hic', plagulam validam lintrum frangentem - hac remotione
+ * sanatur. */
+interior vacuum
 _valorem_crudum_notare (
-    MateriaArborScriptor* st,
-               StmlNodus* elementum,
-      constans character* tag,
-         constans chorda* valor)
+    StmlNodus* elementum)
 {
-    /* CUSTOS ET SCANSOR IDEM PRAEDICATUM ADHIBENT.
-     *
-     * Olim hic '</tag>' SOLUM quaerebatur dum lector STML '</tag'
-     * cum '>', '!' AUT SPATIO sequente terminatorem habebat. Ergo
-     * valor '</tag ' custodem transibat, crudus scribebatur, et
-     * lector documentum nostrum parsare non poterat - scriptor
-     * documentum emittens quod lector suus recusat. Mensuratum
-     * 2026-09-19: casus '!' et spatii ambo fracti, casus '>' solus
-     * custoditus. Nunc stml_crudi_terminatorem_fert unus iudicat. */
-    si (stml_crudi_terminatorem_fert(*valor, tag, (i32)strlen(tag)))
-    {
-        st->causa = "valor sequentiam claudentem fert";
-        redde FALSUM;
-    }
     elementum->crudus = VERUM;
-    redde VERUM;
 }
 
 /* '\r' IN TEXTU STML NON VIVIT: lector documenti CRLF ad LF normat,
@@ -1011,9 +1008,10 @@ _trivium_scribere (
          * veri. Inventum a CSS T9, MENSURATUM per probam stml
          * directam (vide _textus_tutus supra), non coniectatum.
          *
-         * Si notatio cruda FALLAT (valor sequentiam claudentem fert),
-         * scriptor infra NIHIL reddit - ergo textus albus numquam
-         * sine cruditate emittitur. */
+         * Notatio cruda FALLERE NON POTEST (2026-09-21): olim valor
+         * sequentiam claudentem ferens eam recusabat, nunc
+         * substratum eam fugat. Ergo textus albus semper cruditatem
+         * accipit, et custodia sequens sola de mixtis agit. */
         {
             chorda nudus;
             chorda sine_nul;
@@ -1046,11 +1044,7 @@ _trivium_scribere (
                  * crudum id prohibet. Silva id agit et ego portans
                  * OMISI - shim differentiam cepit, quod est ipsum
                  * officium oraculi separantis. */
-                si (!_valorem_crudum_notare(st, elementum, tag,
-                         &nudus))
-                {
-                    redde NIHIL;
-                }
+                _valorem_crudum_notare(elementum);
             }
         }
         frange;
@@ -1488,10 +1482,9 @@ _scribere_lexema (
     si (   materia_lexicon_textum_fert(st->consilium->lexicon,
                lexema->genus)
         && valor_nudus.mensura > ZEPHYRUM
-        && stml_numerus_liberorum(elementum) == I
-        && !_valorem_crudum_notare(st, elementum, tag, &valor_nudus))
+        && stml_numerus_liberorum(elementum) == I)
     {
-        redde NIHIL;
+        _valorem_crudum_notare(elementum);
     }
 
     /* CUSTODIA LOCO RECTO (constrictum T9 nominatum): valor textui

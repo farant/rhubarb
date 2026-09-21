@@ -14,17 +14,17 @@
  *
  * CENSUS COMPRESSIONIS: spatia_vocationes ZEPHYRUM - SPATIA VERBATIM
  * est, compressio templorum mortua (praesentia, non pinnae).
-  * LIMES SUBSTRATI NOMINATUS (inventus H6, 2026-09-15): valor
- * lexematis qui sequentiam claudentem elementi SUI continet
- * ('</lex-textus-crudus>' intra textum crudum scripti,
- * '</lex-commentarium>' intra commentarium) a scriptore RECUSATUR
- * ('valor sequentiam claudentem fert'): forma cruda eum ferre nequit
- * et scriptor ad textum fugatum NON recidit. In textu nudo idem
- * '</lex-textus>' innocuus est quia lexator HTML eum in tag clausurae
- * scindit. md valores manu scidit; html lexema scindere nequit
- * (dominus unus). PINNA infra: recusatio ipsa asseritur - cum
- * materia recidat, pinna rubet et in circuitum promovetur. Ledger
- * quaestio materiae.
+  * LIMES SUBSTRATI SOLUTUS (inventus H6 2026-09-15, solutus
+ * 2026-09-21): valor lexematis qui sequentiam claudentem elementi
+ * SUI continet ('</lex-textus-crudus>' intra textum crudum scripti,
+ * '</lex-commentarium>' intra commentarium) olim a scriptore
+ * RECUSABATUR ('valor sequentiam claudentem fert'), quia forma cruda
+ * eum ferre nequibat. Nunc FERT: substratum scalam fugae habet
+ * (planum clausurae gradus I-II) et materia recusationem deposuit
+ * (gradus III). In textu nudo idem '</lex-textus>' semper innocuus
+ * fuit quia lexator HTML eum in tag clausurae scindit. PINNA infra
+ * PROMOTA: quinque casus, olim recusationem asserentes, nunc
+ * circuitum OCTETIM INTEGRUM.
  *
  * ACCEPTATIO O7 (Fran 2026-09-15): annotationes visionis derivatae
  * (synthesis O7a; sedes O7b; exemplar O7c) circuitum INTEGRUM servant
@@ -708,7 +708,7 @@ principale (vacuum)
 
 
     /* ==================================================
-     * PINNA LIMITIS SUBSTRATI: valor sequentiam claudentem fert
+     * PROMOTUM: sequentia claudens propria (olim limes substrati)
      * ================================================== */
 
     {
@@ -718,8 +718,15 @@ principale (vacuum)
          * posteriores eum transibant et documentum dabant quod
          * lector noster parsare NON poterat ('STML parsari non
          * potuit', mensuratum 2026-09-19). Casus '!' et spatii hic
-         * sunt ne custos iterum angustior lectore fiat. */
-        hic_manens constans character* LIMITES[] = {
+         * MANENT: scala fugae easdem tres formas ferre debet, et
+         * scala uno delimitatore angustior eandem rimam pareret.
+         *
+         * Olim recusatio ipsa asserebatur cum nota 'RUBET CUM
+         * MATERIA RECIDAT'. Recidit 2026-09-21; ergo circuitus
+         * OCTETIM INTEGER asseritur - valor tacite mutatus
+         * periculum primum plani est, ideo octeti, non sola
+         * successio. */
+        hic_manens constans character* PROMOTA[] = {
             "<script>var t = '</lex-textus-crudus>';</script>",
             "<!-- </lex-commentarium> -->",
             "<script>var t = '</lex-textus-crudus x';</script>",
@@ -728,21 +735,13 @@ principale (vacuum)
         };
         i32 k;
 
-        imprimere("\n--- Pinna: sequentia claudens propria ---\n");
+        imprimere("\n--- Sequentia claudens propria: circuitus ---\n");
         per (k = ZEPHYRUM; k < V; k++)
         {
             Circuitus c = _circuitum_probare(piscina, &consilium,
-                LIMITES[k], (i32)strlen(LIMITES[k]), NIHIL, FALSUM);
+                PROMOTA[k], (i32)strlen(PROMOTA[k]), NIHIL, FALSUM);
 
-            /* RUBET CUM MATERIA RECIDAT - tunc in CASUS promovendi */
-            CREDO_AEQUALIS_S32 ((s32)c.causa,
-                (s32)CIRCUITUS_SCRIPTURA_RECUSATA);
-            CREDO_NON_NIHIL (c.nuntius);
-            si (c.nuntius != NIHIL)
-            {
-                CREDO_VERUM (strcmp(c.nuntius,
-                    "valor sequentiam claudentem fert") == ZEPHYRUM);
-            }
+            CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
         }
     }
 

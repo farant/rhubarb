@@ -922,10 +922,15 @@ principale (vacuum)
         }
     }
     _summam_imprimere("fixa", &fixorum);
-    /* XXXVI + XVII casus; duo a scriptore recusati (limites P7) */
-    CREDO_AEQUALIS_I32 (fixorum.iudicata, (i32)LI);
+    /* XXXVI + XVII casus; UNUS a scriptore recusatus (limes P7,
+     * mixtum). Recusatio per sequentiam claudentem EXSTINCTA est
+     * (2026-09-21, planum clausurae gradus III): casus ille nunc
+     * IUDICATUR, ergo iudicata LI -> LII et sequentia I ->
+     * ZEPHYRUM. Iudicatum esse plus est quam non recusatum -
+     * documentum canonem quoque transit. */
+    CREDO_AEQUALIS_I32 (fixorum.iudicata, (i32)LII);
     CREDO_AEQUALIS_I32 (fixorum.vitiosa, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (fixorum.recusata_sequentia, (i32)I);
+    CREDO_AEQUALIS_I32 (fixorum.recusata_sequentia, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (fixorum.recusata_mixtum, (i32)I);
     CREDO_AEQUALIS_I32 (fixorum.recusata_alia, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (fixorum.fracta, ZEPHYRUM);

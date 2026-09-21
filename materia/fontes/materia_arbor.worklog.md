@@ -317,3 +317,50 @@ Four gates asserted the old refusal. None was merely inverted:
   sequence, which still refuses. Worth recognising the shape: a test
   that uses a limitation as scaffolding breaks when the limitation is
   lifted, and the fix is a new trigger, not a weaker assertion.
+
+## 2026-09-21 — the closing-sequence refusal is gone
+
+`_valorem_crudum_notare` no longer refuses a value carrying its own
+closing sequence; it just marks the element raw. `lib/stml.c` carries
+these values now (escape ladder, plan steps 1–2), and materia builds
+an `StmlNodus` tree that `stml_scribere` emits — so the escape follows
+automatically and **no escaping code belongs here at all**. The task
+was a deletion.
+
+Fran's original trigger now lints clean:
+`# vide </crusta-commentum> hic` → `0 diagnostica`, exit 0.
+
+**The gates named it, in the shape they were built for.** crusta's pin
+carried the note `RUBET CUM MATERIA RECIDAT - tunc in CASUS
+promovendi`; it went red on the first run after the deletion and was
+promoted. Same for html's five. Counters moved with causes: crusta stml
+`IDEM` 51 → 52 and `RECUSATA_SEQUENTIA` 1 → 0; crusta canon `iudicata`
+51 → 52 (judged is stronger than not-refused — the document also passes
+the canon).
+
+**Two call sites, and only one of them is where you'd look.** The raw
+mark is set from the lexeme path AND the trivia path. Planting the old
+guard back on the lexeme path alone reddened `probatio_crusta_stml` but
+left `probatio_crusta_canon` GREEN — because crusta's case is a
+*comment*, which travels the trivia path. Planting both reddened both.
+A single plant would have left half the change unverified.
+
+**`probatio_materia_diagnostica` lost its refusal vehicle for the
+SECOND time**, and that is the finding worth keeping. It asserts the
+*tractus* of a refusal, so it needs some refusal to ride on. NUL was
+the first vehicle until the `nul` attribute carried NUL (2026-09-19);
+the closing sequence was the second until today. Both were **limits the
+house intended to remove** — so the test was scheduled to break from
+the day it was written.
+
+The third vehicle is an unknown token genus: a genus the lexicon does
+not contain cannot be written *by definition*. That is a violated
+contract, not a missing capability, so nothing will ever "fix" it.
+**Rule: choose a refusal vehicle from the contract, never from a
+limit.** The cause is now pinned too (`genus lexematis ignotum`) — the
+two previous vehicles each changed silently underneath an assertion
+that only checked *that* it refused, never *why*.
+
+`stml_crudi_terminatorem_fert` now has no production caller; only the
+gates use it. Left in place — it is a legitimate public predicate — but
+worth a look if it is still caller-less in a month.

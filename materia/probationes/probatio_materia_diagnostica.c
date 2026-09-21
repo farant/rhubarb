@@ -523,19 +523,30 @@ principale (vacuum)
                     character  memoria[XVI];
 
         imprimere("\n--- X. Tractus refutationis scriptoris ---\n");
-        /* VEHICULUM REFUTATIONIS, non subiectum: hic tractum
-         * refutationis probamus, non causam eius. Olim NUL vehiculum
-         * erat; ex quo attributum 'nul' eum fert (2026-09-19) NUL non
-         * amplius refutat, ergo vehiculum mutatum est ad limitem qui
-         * MANET - valor sequentiam claudentem elementi sui ferens,
-         * quem forma cruda ferre non potest (01M2KPJ0HW).
+        /* VEHICULUM REFUTATIONIS, non subiectum: hic TRACTUM
+         * refutationis probamus, non causam eius.
+         *
+         * VEHICULUM TERTIUM, et causa cur duo priora ceciderint.
+         * Primum NUL erat - attributum 'nul' eum ferre coepit
+         * (2026-09-19) et haec probatio rubuit. Secundum valor
+         * sequentiam claudentem ferens erat - scala fugae eum ferre
+         * coepit (2026-09-21) et rubuit iterum. Utrumque LIMES erat
+         * quem domus tollere VOLEBAT: vehiculum male electum, non
+         * probatio fracta.
+         *
+         * Hoc tertium tolli non potest. Genus lexematis quod
+         * lexicon NON HABET scribi nequit EX DEFINITIONE - id
+         * contractus violatus est, non facultas quae deest. Regula:
+         * vehiculum refutationis eligatur ex contractu, numquam ex
+         * limite.
          *
          * littera constans esset (-Wcast-qual): series propria */
-        memcpy(memoria, "a</lex-ident>b", (size_t)XIV);
+        memcpy(memoria, "ab", (size_t)II);
         valor.datum    = (i8*)memoria;
-        valor.mensura  = (i32)XIV;
-        lexema = materia_token_creare(piscina, &FORMA, (s32)G_IDENT,
-            valor, (s32)VI, (i32)II, (i32)III, ZEPHYRUM);
+        valor.mensura  = (i32)II;
+        lexema = materia_token_creare(piscina, &FORMA,
+            (s32)G_NUMERUS_GENERUM, valor, (s32)VI, (i32)II,
+            (i32)III, ZEPHYRUM);
         CREDO_NON_NIHIL (lexema);
         radix   = _radix_creare(piscina);
         verbum  = materia_nodus_creare(piscina, (s32)GR_VERBUM,
@@ -548,6 +559,16 @@ principale (vacuum)
         scriptura = materia_arbor_scribere_nodum(piscina, radix,
             &consilium);
         CREDO_FALSUM (scriptura.successus);
+        /* CAUSA PINNATA: sine hac, vehiculum tacite aliud fieri
+         * potest et probatio viridis manere dum tractum non iam
+         * per refutationem quam putamus probat. Duo vehicula
+         * priora sic ceciderunt - causa mutata, nemine vidente. */
+        CREDO_NON_NIHIL (scriptura.causa);
+        si (scriptura.causa != NIHIL)
+        {
+            CREDO_VERUM (strcmp(scriptura.causa,
+                "genus lexematis ignotum") == ZEPHYRUM);
+        }
         CREDO_AEQUALIS_S32 (scriptura.tractus.initium, (s32)VI);
         CREDO_AEQUALIS_I32 (scriptura.tractus.linea, (i32)II);
         CREDO_AEQUALIS_I32 (scriptura.tractus.columna, (i32)III);

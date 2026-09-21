@@ -896,23 +896,24 @@ principale (vacuum)
         "probationes/fixa/crusta/adversarius.sh", &fixa,
         &titulus_recusati);
     _summam_imprimere("fixa", &fixa);
-    /* XXXVI + XVII casus; recusatio una sola: 'forma-cruda' per
-     * sequentiam claudentem (limes 01M2KPJ0HW) */
+    /* XXXVI + XVII casus. Recusatio per sequentiam claudentem
+     * EXSTINCTA est (2026-09-21, planum clausurae gradus III):
+     * 'forma-cruda' olim sola recusabatur, nunc circuitum integrum
+     * facit - ergo IDEM LI -> LII et sequentia I -> ZEPHYRUM.
+     * Pinna ZEPHYRUM viva manet: si quis recusationem reducat,
+     * haec rubet et titulus infra eam NOMINAT. */
     CREDO_AEQUALIS_I32 (fixa.plagulae, (i32)LIII);
-    CREDO_AEQUALIS_I32 (fixa.per_causam[CIRCUITUS_IDEM], (i32)LI);
+    CREDO_AEQUALIS_I32 (fixa.per_causam[CIRCUITUS_IDEM], (i32)LII);
     CREDO_AEQUALIS_I32 (
         fixa.per_causam[CIRCUITUS_SCRIPTURA_RECUSATA_SEQUENTIA],
-        (i32)I);
+        (i32)ZEPHYRUM);
     /* 'simplex-apertus': apex apertus ad finem, valor linea nova
      * terminatus in elemento mixto - recusatio nominata (vide caput) */
     CREDO_AEQUALIS_I32 (
         fixa.per_causam[CIRCUITUS_SCRIPTURA_RECUSATA_MIXTUM], (i32)I);
-    CREDO_AEQUALIS_I32 (titulus_recusati.mensura, (i32)XI);
-    si (titulus_recusati.datum != NIHIL)
-    {
-        CREDO_VERUM (memcmp(titulus_recusati.datum, "forma-cruda",
-            (size_t)XI) == ZEPHYRUM);
-    }
+    /* Nullus casus per sequentiam recusatur, ergo titulus VACUUS -
+     * sed lectio manet, ut recusatio reducta nomen suum ferat. */
+    CREDO_AEQUALIS_I32 (titulus_recusati.mensura, (i32)ZEPHYRUM);
 
 
     /* ==================================================
@@ -1023,34 +1024,35 @@ principale (vacuum)
 
 
     /* ==================================================
-     * PINNA LIMITIS SUBSTRATI: sequentia claudens propria (inlinea)
+     * PROMOTUM: sequentia claudens propria (olim limes substrati)
      * ================================================== */
 
     {
-        /* commentarium (trivium crudum) et corpus heredoc (pars
-         * litteralis cruda); apices ('</crusta-litteralis>') forma
-         * fugata scribuntur et transeunt */
-        hic_manens constans character* LIMITES[] = {
+        /* Commentarium (trivium crudum) et corpus heredoc (pars
+         * litteralis cruda). Olim AMBO recusabantur, causa
+         * 'valor sequentiam claudentem fert' (limes 01M2KPJ0HW), et
+         * pinna illa recusationem ipsam asserebat cum nota 'RUBET
+         * CUM MATERIA RECIDAT'. Recidit 2026-09-21: substratum
+         * scalam fugae fert (planum clausurae gradus I-II), ergo
+         * circuitus INTEGER est.
+         *
+         * Casus primus est ipse quem Fran in commento bash invenit.
+         * Circuitus IDEM hic octetos fontis asserit, non solam
+         * successionem - valor tacite mutatus periculum primum
+         * plani est. */
+        hic_manens constans character* PROMOTA[] = {
             "a # </crusta-commentum>",
             "cat <<X\n</crusta-litteralis>\nX\n"
         };
         Circuitus c;
               i32 k;
 
-        imprimere("\n--- Pinna: sequentia claudens propria ---\n");
+        imprimere("\n--- Sequentia claudens propria: circuitus ---\n");
         per (k = ZEPHYRUM; k < II; k++)
         {
-            c = _circuitum_probare(piscina, &consilium, LIMITES[k],
-                (i32)strlen(LIMITES[k]), FALSUM);
-            /* RUBET CUM MATERIA RECIDAT - tunc in CASUS promovendi */
-            CREDO_AEQUALIS_S32 ((s32)c.causa,
-                (s32)CIRCUITUS_SCRIPTURA_RECUSATA_SEQUENTIA);
-            CREDO_NON_NIHIL (c.nuntius);
-            si (c.nuntius != NIHIL)
-            {
-                CREDO_VERUM (strcmp(c.nuntius, SEQUENTIA_CLAUDENS)
-                    == ZEPHYRUM);
-            }
+            c = _circuitum_probare(piscina, &consilium, PROMOTA[k],
+                (i32)strlen(PROMOTA[k]), FALSUM);
+            CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
         }
     }
 

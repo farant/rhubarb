@@ -12,8 +12,9 @@ alternatives. That note governs; this plan is how it gets built.
 **Status:** Step 0 SHIPPED (`a3f7c6e5`). **Task 1 SHIPPED
 2026-09-19** — the predicate reports the ladder depth. **Task 2
 SHIPPED 2026-09-21** — reader decodes and writer encodes, merged
-because neither half is safe alone. `lib/stml.c` now carries these
-values end to end. Tasks 3–4 unbuilt.
+because neither half is safe alone. **Task 3 SHIPPED 2026-09-21** —
+materia's refusal deleted; **the trigger that started this plan now
+lints clean.** Task 4 (corpora + the crusta gate case) remains.
 
 ---
 
@@ -197,19 +198,43 @@ Cost: no-escape path allocates nothing and now makes one call FEWER
 per byte (direct `sequentia_est` instead of the `_terminator_est`
 wrapper). html's computus golden did not move.
 
-### Task 3 — materia stops refusing
+### Task 3 — materia stops refusing ✅ SHIPPED 2026-09-21
 
 **Files:** `materia/fontes/materia_arbor.c`,
+`materia/probationes/probatio_materia_diagnostica.c`,
+`crusta/probationes/probatio_crusta_{stml,canon}.c`,
 `html/probationes/probatio_html_stml.c`
 
-`lib/stml.c` can now carry these values, so `_valorem_crudum_notare`'s
-refusal is obsolete — drop it and let the value through. The five
-pinned cases in `probatio_html_stml` promote from REFUSAL to
-round-trip.
+`_valorem_crudum_notare` no longer refuses; it just marks the element
+raw. materia builds an `StmlNodus` tree that `stml_scribere` emits, so
+the escape follows automatically — **no escaping code belongs in
+materia at all.** The task was a deletion.
 
-Gate: all five round-trip byte-identically. The ladder itself is
-already gated in `probatio_stml` (Task 2); what is new here is that
-the materia layer no longer rejects.
+**Fran's original trigger lints clean**: `# vide </crusta-commentum>
+hic` → `0 diagnostica`, exit 0.
+
+Promoted, each gate having gone red on the first run after the
+deletion, exactly as its own note predicted (`RUBET CUM MATERIA
+RECIDAT`): html's five cases and crusta's two, from REFUSAL to
+byte-identical round trip; crusta stml `IDEM` 51 → 52 and
+`RECUSATA_SEQUENTIA` 1 → 0; crusta canon `iudicata` 51 → 52.
+
+**Two call sites, and only one is where you would look.** The raw mark
+is set from the lexeme path AND the trivia path. Planting the old
+guard back on the lexeme path alone reddened `probatio_crusta_stml`
+but left `probatio_crusta_canon` green — crusta's case is a *comment*,
+which travels the trivia path. Both were planted; both reddened.
+
+**`probatio_materia_diagnostica` lost its refusal vehicle for the
+second time.** It asserts the *tractus* of a refusal, so it needs one
+to ride on; NUL was the first vehicle (until the `nul` attribute),
+this was the second. Both were limits the house *intended* to remove,
+so the test was scheduled to break from the day it was written. Third
+vehicle: an unknown token genus — a violated contract, not a missing
+capability. **Rule: choose a refusal vehicle from the contract, never
+from a limit.** The cause is now pinned too; both earlier vehicles
+changed silently under an assertion that checked only *that* it
+refused, never *why*.
 
 ### Task 4 — the corpora and the clients
 
