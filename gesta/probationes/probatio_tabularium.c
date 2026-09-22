@@ -3871,6 +3871,104 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "nihil paratum") != NIHIL);
     }
 
+
+    /* ==================================================
+     * XXXV. QUAERERE 'intra' (opus 01M335DW3M): quaesitio FTS intra
+     * subarborem rei (ipsa + quae sub ea per 'intra' stant, ad
+     * profunditatem). Mundus XXXI: Pa propositum > gradus unus/duo >
+     * opera; 'Pa extra scopum' EXTRA. Verbum commune in corpore
+     * ubique ponitur ut FTS omnes inveniat sine scopo.
+     * ================================================== */
+
+    {
+        constans character* tituli[] = { "Pa propositum",
+            "Pa gradus unus", "Pa I.1 primum", "Pa II.1 nepos",
+            "Pa extra scopum" };
+                 character nuntius[DXII];
+                       i32 k;
+
+        per (k = ZEPHYRUM; k < V; k++)
+        {
+            sprintf(nuntius, "{\"jsonrpc\":\"2.0\",\"id\":%d,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"gerere\",\"arguments\":{\"res\":\"%s\","
+                "\"actus\":\"nota\",\"textus\":\"verbum xylophonum"
+                " hic\"}}}", (int)(450 + k), tituli[k]);
+            r = _mitte(t, piscina, nuntius);
+            CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        }
+
+        /* sine scopo: omnes V (opera quoque, quia genus petitur
+         * ... non: sine genere opera EXCLUDUNTUR - ergo III res
+         * non-opera + numerus operum exclusorum) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":460,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"xylophonum\"}}}");
+        CREDO_VERUM (strstr(r, "Pa propositum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pa extra scopum") != NIHIL);
+        CREDO_VERUM (strstr(r, "opera exclusa: 2") != NIHIL);
+
+        /* INTRA propositum: res extra scopum ABEST; gradus (filius)
+         * et res ipsa ADSUNT; opera sub ea numerantur ut exclusa
+         * (exclusio operum servatur intra scopum quoque) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":461,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"xylophonum\",\"intra\":\"Pa propositum\"}}}");
+        CREDO_VERUM (strstr(r, "Pa propositum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pa gradus unus") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pa extra scopum") == NIHIL);
+        CREDO_VERUM (strstr(r, "opera exclusa: 2") != NIHIL);
+        CREDO_VERUM (strstr(r, "intra '") != NIHIL);
+
+        /* intra + genus opus: opera sub propositum, PROFUNDITAS II
+         * (nepos sub gradu duo) - opus extra scopum nullum */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":462,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"xylophonum\",\"intra\":\"Pa propositum\","
+            "\"genus\":\"opus\"}}}");
+        CREDO_VERUM (strstr(r, "Pa I.1 primum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pa II.1 nepos") != NIHIL);
+        /* caput scopum nominat ('intra ...') - ORDO propositi
+         * abesse debet, non titulus */
+        CREDO_VERUM (strstr(r, "parcum/parcatum  Pa propositum")
+            == NIHIL);
+
+        /* scopus angustior: intra gradus unus - nepos (sub gradu
+         * DUO) abest */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":463,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"xylophonum\",\"intra\":\"Pa gradus unus\","
+            "\"genus\":\"opus\"}}}");
+        CREDO_VERUM (strstr(r, "Pa I.1 primum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pa II.1 nepos") == NIHIL);
+
+        /* nihil in scopo: responsum scopum nominat (ne 'nihil
+         * inventum' nudum de tabulario toto legatur) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":464,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"xylophonum\",\"intra\":\"Pa solitarium\"}}}");
+        CREDO_VERUM (strstr(r, "nihil inventum") != NIHIL);
+        CREDO_VERUM (strstr(r, "intra '") != NIHIL);
+
+        /* intra ignotum: recusatio clara */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":465,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"xylophonum\",\"intra\":\"Res nusquam\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "intra") != NIHIL);
+
+        /* schema parametrum nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":466,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "SUBARBOREM") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

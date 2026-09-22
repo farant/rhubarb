@@ -6320,6 +6320,58 @@ _tab_gerere (
     }
 }
 
+/* estne res in SCOPO (ipsa aut sub ea per 'intra', ad
+ * profunditatem PARATA_PROFUNDITAS)? Catena parentum per vincula
+ * viva legitur; parens PRIMUS valet (ut in _parata_computare).
+ * Pro quaerere {intra}: quaesitio FTS in propositum unum. */
+interior b32
+_rei_in_scopo_est (
+    Tabularium* t,
+        chorda  res_id,
+        chorda  scopus_id,
+       Piscina* pn)
+{
+    chorda currens = res_id;
+       i32 gradus;
+
+    per (gradus = ZEPHYRUM; gradus < PARATA_PROFUNDITAS; gradus++)
+    {
+        ScriniumEnuntiatum* e;
+                    chorda  parens;
+
+        si (chorda_aequalis(currens, scopus_id))
+        {
+            redde VERUM;
+        }
+        e = scrinium_praeparare(gesta_scrinium(t->mundus),
+            "SELECT b.membrum FROM res n"
+            " JOIN membra a ON a.res_id = n.res_id AND a.pars = 'a'"
+            " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
+            " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+            " AND json_extract(n.datum, '$.verbum') = ?1"
+            " AND a.membrum = ?2 ORDER BY n.res_id LIMIT 1");
+        si (e == NIHIL)
+        {
+            redde FALSUM;
+        }
+        scrinium_ligare_textum(e, I, _ch(VERBUM_INTRA));
+        scrinium_ligare_textum(e, II, currens);
+        parens.mensura  = ZEPHYRUM;
+        parens.datum    = NIHIL;
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            parens = scrinium_columna_textus(e, 0, pn);
+        }
+        scrinium_finire(e);
+        si (parens.mensura == ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        currens = parens;
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _tab_quaerere (
     Tabularium* t,
@@ -6332,18 +6384,50 @@ _tab_quaerere (
                 chorda  genus   = _arg(argumenta, "genus");
                 chorda  status  = _arg(argumenta, "status");
                 chorda  tag     = _arg(argumenta, "tag");
+                chorda  intra   = _arg(argumenta, "intra");
+                chorda  scopus_id;
     constans character* quaestio;
                    Xar* inventa;
      ChordaAedificator* aed;
                    s64  exclusa = (s64)ZEPHYRUM;
              character  nota_exclusionis[CCLVI];
                    i32  i;
+                   i32  redditae = ZEPHYRUM;
 
+    scopus_id.mensura  = ZEPHYRUM;
+    scopus_id.datum    = NIHIL;
     si (textus.mensura == ZEPHYRUM && tag.mensura == ZEPHYRUM)
     {
         _textum_respondere(t, pn, effusio, id,
             _ch("textus (aut tag) requiritur"), VERUM);
         redde;
+    }
+    /* scopus 'intra': subarbor rei (ipsa + sub ea per 'intra') -
+     * quaesitio in propositum unum; res ignota recusatur clare */
+    si (intra.mensura > ZEPHYRUM)
+    {
+        b32 ambiguum = FALSUM;
+
+        scopus_id = _res_solvere(t, intra, pn, &ambiguum);
+        si (ambiguum)
+        {
+            ChordaAedificator* q = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(q, "intra: ");
+            _candidatos_appendere(t, q, intra, pn);
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(q), VERUM);
+            redde;
+        }
+        si (scopus_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("intra: res ignota (id, praefixum inambiguum,"
+                    " aut titulus exactus) - omitte 'intra' pro"
+                    " tabulario toto"), VERUM);
+            redde;
+        }
     }
     /* tag = terminus FTS additus (columna corpus tags fert) */
     {
@@ -6380,12 +6464,45 @@ _tab_quaerere (
             " adde genus: \"" GENUS_OPERIS "\" ut ea videas)",
             (int)exclusa);
     }
-    si (xar_numerus(inventa) == ZEPHYRUM)
+    /* filtrum scopi: inventa extra subarborem cadunt (post FTS -
+     * tectum L ordinum hic tolerabile: scopus angustus, non genus
+     * numerosum) */
+    si (scopus_id.mensura > ZEPHYRUM)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(inventa); i++)
+        {
+            GestaInventum* inv = (GestaInventum*)xar_obtinere(
+                inventa, i);
+
+            si (   inv != NIHIL
+                && _rei_in_scopo_est(t, inv->res_id, scopus_id, pn))
+            {
+                redditae++;
+            }
+            alioquin si (inv != NIHIL)
+            {
+                inv->res_id.mensura = ZEPHYRUM;   /* signum: omitte */
+            }
+        }
+    }
+    alioquin
+    {
+        redditae = (i32)xar_numerus(inventa);
+    }
+    si (redditae == ZEPHYRUM)
     {
         aed = chorda_aedificator_creare(pn, DXII);
         chorda_aedificator_appendere_literis(aed,
             "nihil inventum (praefixa 'termin*' adiuvant -"
             " stemmata Latina absunt)");
+        si (scopus_id.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, " intra '");
+            _titulum_decurtatum_appendere(aed,
+                _titulus_membri(t, scopus_id, pn));
+            chorda_aedificator_appendere_literis(aed,
+                "' - omitte 'intra' pro tabulario toto");
+        }
         si (nota_exclusionis[0] != '\0')
         {
             chorda_aedificator_appendere_literis(aed, "\n");
@@ -6397,16 +6514,23 @@ _tab_quaerere (
         redde;
     }
     aed = chorda_aedificator_creare(pn, 4096);
+    si (scopus_id.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed, "intra '");
+        _titulum_decurtatum_appendere(aed,
+            _titulus_membri(t, scopus_id, pn));
+        chorda_aedificator_appendere_literis(aed, "':");
+    }
     per (i = ZEPHYRUM; i < xar_numerus(inventa); i++)
     {
         GestaInventum* inv = (GestaInventum*)xar_obtinere(inventa,
             i);
 
-        si (inv == NIHIL)
+        si (inv == NIHIL || inv->res_id.mensura == ZEPHYRUM)
         {
             perge;
         }
-        si (i > ZEPHYRUM)
+        si (i > ZEPHYRUM || scopus_id.mensura > ZEPHYRUM)
         {
             chorda_aedificator_appendere_literis(aed, "\n");
         }
@@ -9123,6 +9247,9 @@ _toolslist_tractare (
           " (custodia contra statum rami)", FALSUM }
     };
     interior constans TabArgumentum ARG_QUAERERE[] = {
+        { "intra", "scopus: res (id, praefixum, titulus) - quaesitio"
+          " in SUBARBOREM eius (ipsa + quae sub ea per 'intra'"
+          " stant); propositum unum, non tabularium totum", FALSUM },
         { "textus", "quaestio FTS (praefixa 'termin*')", VERUM },
         { "genus", "filtrum generis. SINE eo OPERA (genus \"opus\""
           " - catena laboris, scientia pauper) EXCLUDUNTUR et"
@@ -9227,7 +9354,7 @@ _toolslist_tractare (
         "quaerere",
         "Quaestio FTS super statum materializatum (titulus/corpus/"
         "tags/notae). Idioma Latinum: praefixa 'parsur*'.",
-        ARG_QUAERERE, IV));
+        ARG_QUAERERE, V));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "res",
         "Rem unam reddere: status + datum + ancorae (resolutae per"
         " indicem; CAUTIO si inresolutae) + actiones affordatae +"

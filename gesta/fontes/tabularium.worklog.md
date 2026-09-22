@@ -915,3 +915,34 @@ that cannot fire on the fixtures is not a plant. Replaced with one
 that bites (`>= ZEPHYRUM`).
 
 Five plants, five assertions. Tabularium 623.
+
+## 2026-09-22 — `quaerere {intra}`: full-text search inside one project
+
+Task 01M335DW3M (arcus VIII). `intra` takes an item (id, prefix or
+title) and restricts the search to its SUBTREE — the item itself and
+everything under it through `intra` links, to the same depth the
+ready view walks. `_rei_in_scopo_est` climbs the parent chain through
+live links (first parent wins, as in the ready view).
+
+**The filter runs AFTER the FTS query, which is the opposite choice
+from the task exclusion.** The task exclusion had to be in the SQL
+because a numerous genus would crowd the 50-row cap before any
+post-filter ran. A subtree filter is the other way round: the scope
+is small and specific, so post-filtering the 50 hits loses little,
+and pushing a recursive parent walk into SQL would be real work for
+no measured need. Recorded here so the asymmetry does not look like
+an oversight.
+
+**Named in every response.** The result header says `intra '<title>'`;
+the empty case says it too, with "omit intra for the whole ledger" —
+a bare "nothing found" would read as a verdict on the whole store.
+An unknown or ambiguous scope is refused with candidates. Task
+exclusion still applies inside a scope, still counted.
+
+**Plants.** Four: parent chain cut at the first hop · filter bypassed
+· empty message without the scope · unknown scope silently widened
+to the whole ledger. The last needed a by-hand line edit: the guard
+is byte-identical to the ready view's, so `planta` rightly refused
+the ambiguous anchor. Restored by `cmp` against a backup.
+
+Tabularium 646.
