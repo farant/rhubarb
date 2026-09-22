@@ -1170,3 +1170,36 @@ corpore).
 
 Plants: tree numbers silent; sine regione not counted; recurring tag
 not named.
+
+## 2026-09-22 — stage IV.a: the region's leading edge (frons)
+
+Task 01M35P4EFV. Fran named the pattern: a compact map, then a
+drill-down on one region that shows the LEADING EDGE of every activity
+— what can be picked up and continued right now. The classes of the
+ready view are that edge for building and thinking; what was missing
+was the ordering edge, and the map's menu form of it.
+
+**Three more health lines**: regions with no vision (nobody has said
+the purpose), no open design question (nothing being thought about),
+no pending task (nothing in flight). Today five of six roots sit on
+all three, which is honest.
+
+**The tree row** now carries the shape of activity, not only its size:
+cumulative `(decisae N)` after design questions and `(perfecta N)`
+after tasks — how much has been decided and built here, with no clock
+— and the non-zero ready classes of the subtree (`ad laborem 1 ·
+impedita 3`), computed by the same `_parata_computare` the ready view
+uses, scoped at the region.
+
+**The region page** gains ORDINANDA after "parata sub hac re": dormant
+parks named (the ones with no handle — give them a question or close
+them), `visio nulla`, `quaestio consilii nulla`; and an `impedita N`
+line pointing at the scoped ready view, which is the only place the
+blocked items were visible before.
+
+**AD CLAUSURAM** reworded: "proba exitum et claude, aut gradum proximum
+file" — a park whose questions are all decided and whose tasks are all
+done is as often ready for its NEXT stage as for closing; the class
+prompts the judgement, it does not make it.
+
+Plants: sine-visione line skipped; ORDINANDA silent; row classes silent.

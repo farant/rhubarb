@@ -2325,7 +2325,9 @@ _membrum_scribere (
  *              proximus est eam EXPANDERE (sub-planum)
  *   CLAUSURAE  filii omnes clausi, res ipsa aperta: parens
  *              probationem exitus SUAM poscit, quia index filiorum
- *              numquam completus scitur
+ *              numquam completus scitur - AUT gradum proximum
+ *              (parcum decisis omnibus saepe planari paratum est,
+ *              non claudi; classis iudicium poscit, non facit)
  *   HOMINI     'assignatum: fran' EXPRESSUM (nulla coniectura ex
  *              genere: quaestio et vitium et decisio est)
  *   IMPEDITUM  impediens apertum - SUUM aut PARENTIS (hereditas:
@@ -2952,7 +2954,8 @@ _parata_computare (
         si (n->classis == PARATUM_CLAUSURAE)
         {
             chorda_aedificator_appendere_literis(causa,
-                "filii omnes clausi - proba exitum et claude");
+                "filii omnes clausi - proba exitum et claude, aut"
+                " gradum proximum file");
         }
         si (ultimum.mensura > ZEPHYRUM)
         {
@@ -7334,6 +7337,31 @@ _filios_paratos_reddere (
             " nihil paratum (filii clausi aut impediti - parata"
             " {intra} impedita nominat)");
     }
+    /* impedita numerata: frons quae moveri nequit - parata {intra}
+     * causas nominat */
+    si (nodi != NIHIL)
+    {
+        i32 i;
+        i32 impedita = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
+        {
+            ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, i);
+
+            si (n != NIHIL && n->classis == PARATUM_IMPEDITUM)
+            {
+                impedita++;
+            }
+        }
+        si (impedita > ZEPHYRUM)
+        {
+            character linea[LXIV];
+
+            sprintf(linea, "\nimpedita %d (parata {intra} ea nominat"
+                " cum causis)", (int)impedita);
+            chorda_aedificator_appendere_literis(aed, linea);
+        }
+    }
 }
 
 #define DESCENDENTES_TECTUM 4096
@@ -7420,8 +7448,12 @@ nomen structura {
                   i32  opera;
                   i32  visiones;
                   i32  parca_directa;
+                  i32  decisae;     /* quaestiones consilii clausae */
+                  i32  perfecta;    /* opera perfecta */
                chorda  tactus;
     ChordaAedificator* vis;       /* lineae visionum aut NIHIL */
+    ChordaAedificator* dorm;      /* lineae parcorum dormientium aut
+                                   * NIHIL */
 } RegionisNumeri;
 
 interior vacuum
@@ -7441,6 +7473,8 @@ _regionis_numeros_computare (
     rn->opera           = ZEPHYRUM;
     rn->visiones        = ZEPHYRUM;
     rn->parca_directa   = ZEPHYRUM;
+    rn->decisae         = ZEPHYRUM;
+    rn->perfecta        = ZEPHYRUM;
     rn->tactus.mensura  = ZEPHYRUM;
     rn->tactus.datum    = NIHIL;
     desc                = _descendentes_colligere(t, res_id, pn);
@@ -7505,7 +7539,27 @@ _regionis_numeros_computare (
             si (_parca_visa_numerare(t, d) > (s64)ZEPHYRUM)
             {
                 rn->dormientia++;
+                si (rn->dorm != NIHIL)
+                {
+                    chorda_aedificator_appendere_literis(rn->dorm,
+                        "\n    ");
+                    chorda_aedificator_appendere_chorda(rn->dorm, d);
+                    chorda_aedificator_appendere_literis(rn->dorm,
+                        "  ");
+                    _titulum_decurtatum_appendere(rn->dorm, titulus);
+                }
             }
+        }
+        alioquin si (   _chorda_est(genus, "quaestio")
+                     && _chorda_est(natura, NATURA_CONSILII)
+                     && _chorda_est(status, "clausum"))
+        {
+            rn->decisae++;
+        }
+        alioquin si (   _chorda_est(genus, GENUS_OPERIS)
+                     && _chorda_est(status, "perfectum"))
+        {
+            rn->perfecta++;
         }
         alioquin si (   _chorda_est(genus, "quaestio")
                      && (   _chorda_est(status, "apertum")
@@ -7566,10 +7620,11 @@ _regionis_numeros_appendere (
        chorda tactus = rn->tactus;
 
     sprintf(linea, "parca %d (dormientia %d) \xc2\xb7 quaestiones"
-        " consilii %d \xc2\xb7 vitia %d \xc2\xb7 opera %d \xc2\xb7"
-        " visiones %d \xc2\xb7 tactus ", (int)rn->parca,
-        (int)rn->dormientia, (int)rn->consilia, (int)rn->vitia,
-        (int)rn->opera, (int)rn->visiones);
+        " consilii %d (decisae %d) \xc2\xb7 vitia %d \xc2\xb7 opera %d"
+        " (perfecta %d) \xc2\xb7 visiones %d \xc2\xb7 tactus ",
+        (int)rn->parca, (int)rn->dormientia, (int)rn->consilia,
+        (int)rn->decisae, (int)rn->vitia, (int)rn->opera,
+        (int)rn->perfecta, (int)rn->visiones);
     chorda_aedificator_appendere_literis(aed, linea);
     si (tactus.mensura >= X)
     {
@@ -7579,6 +7634,60 @@ _regionis_numeros_appendere (
     alioquin
     {
         chorda_aedificator_appendere_literis(aed, "-");
+    }
+}
+
+/* classes paratae subarboris (frons aedificandi et deliberandi):
+ * eadem derivatio ac instrumentum parata, scopo = res; numerat per
+ * classem; res ipsa non numeratur */
+interior vacuum
+_classes_scopi_computare (
+    Tabularium* t,
+        chorda  res_id,
+       Piscina* pn,
+           i32  classes[VII])
+{
+    Xar* nodi = _parata_computare(t, res_id, pn);
+    i32  i;
+
+    per (i = ZEPHYRUM; i < VII; i++)
+    {
+        classes[i] = ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; nodi != NIHIL && i < xar_numerus(nodi); i++)
+    {
+        ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, i);
+
+        si (   n != NIHIL && n->classis != PARATUM_NULLUM
+            && !chorda_aequalis(n->res_id, res_id))
+        {
+            classes[n->classis]++;
+        }
+    }
+}
+
+/* classes non-nullas appendere: ' \xc2\xb7 ad laborem N \xc2\xb7
+ * impedita N' */
+interior vacuum
+_classes_appendere (
+    ChordaAedificator* aed,
+         constans i32  classes[VII])
+{
+    interior constans character* constans NOMINA[VII] = {
+        "", "ad laborem", "ad consilium", "ad clausuram",
+        "exspectant Franum", "impedita", "ad colloquium"
+    };
+    character linea[LXIV];
+          i32 c;
+
+    per (c = I; c < VII; c++)
+    {
+        si (classes[c] > ZEPHYRUM)
+        {
+            sprintf(linea, " \xc2\xb7 %s %d", NOMINA[c],
+                (int)classes[c]);
+            chorda_aedificator_appendere_literis(aed, linea);
+        }
     }
 }
 
@@ -7600,7 +7709,8 @@ _regionem_reddere (
     {
         redde;
     }
-    rn.vis = chorda_aedificator_creare(pn, DXII);
+    rn.vis   = chorda_aedificator_creare(pn, DXII);
+    rn.dorm  = NIHIL;
     _regionis_numeros_computare(t, res_id, pn, &rn);
     si (rn.visiones > ZEPHYRUM)
     {
@@ -7612,6 +7722,59 @@ _regionem_reddere (
     chorda_aedificator_appendere_literis(aed,
         "\nnumeri intra regionem: ");
     _regionis_numeros_appendere(aed, &rn);
+}
+
+/* ORDINANDA regionis (frons ordinandi, decretum 01M35656PV): parca
+ * dormientia nominata (ansa nulla - quaestionem da aut claude),
+ * 'visio nulla', 'quaestio consilii nulla'. Tacet si res regio non
+ * est; 'nihil' dicit si frons vacua. */
+interior vacuum
+_regionis_ordinanda_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  res_id,
+              Piscina* pn)
+{
+    RegionisNumeri rn;
+         character linea[LXIV];
+               b32 aliquid = FALSUM;
+
+    si (!_chorda_est(_cap_genus_rei(t, res_id, pn), GENUS_REGIONIS))
+    {
+        redde;
+    }
+    rn.vis   = NIHIL;
+    rn.dorm  = chorda_aedificator_creare(pn, DXII);
+    _regionis_numeros_computare(t, res_id, pn, &rn);
+    chorda_aedificator_appendere_literis(aed,
+        "\nordinanda (frons ordinandi):");
+    si (rn.dormientia > ZEPHYRUM)
+    {
+        sprintf(linea, "\n  parca dormientia (%d) - ansa nulla:"
+            " quaestionem da aut claude", (int)rn.dormientia);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(rn.dorm));
+        aliquid = VERUM;
+    }
+    si (rn.visiones == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "\n  visio nulla - quid haec area velit nondum dictum");
+        aliquid = VERUM;
+    }
+    si (rn.consilia == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "\n  quaestio consilii nulla - nihil hic cogitatur");
+        aliquid = VERUM;
+    }
+    si (!aliquid)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            " nihil (visio adest, quaestio aperta adest, parca omnia"
+            " fixa)");
+    }
 }
 
 /* DECISIO PARCI: quaestiones consilii filiae (intra hanc rem) per
@@ -7781,9 +7944,17 @@ _mappae_nodum_reddere (
     _titulum_decurtatum_appendere(aed, _titulus_membri(t, res_id,
         pn));
     chorda_aedificator_appendere_literis(aed, "  ");
-    rn.vis = NIHIL;
+    rn.vis   = NIHIL;
+    rn.dorm  = NIHIL;
     _regionis_numeros_computare(t, res_id, pn, &rn);
     _regionis_numeros_appendere(aed, &rn);
+    /* frons: classes paratae subarboris (non-nullae) */
+    {
+        i32 classes[VII];
+
+        _classes_scopi_computare(t, res_id, pn, classes);
+        _classes_appendere(aed, classes);
+    }
     si (gradus >= MAPPA_PROFUNDITAS)
     {
         redde;
@@ -7900,6 +8071,27 @@ _mappae_arborem_reddere (
         }
     }
     redde scriptae;
+}
+
+/* nomen regionis lineae salutis appendere (prima MAPPA_NOMINATA
+ * nominata, ceterae numeratae) */
+interior vacuum
+_mappae_nomen_appendere (
+    ChordaAedificator* nomina,
+                  i32* numerus,
+               chorda  res_id,
+               chorda  titulus)
+{
+    si (*numerus < MAPPA_NOMINATA)
+    {
+        chorda_aedificator_appendere_literis(nomina,
+            *numerus > ZEPHYRUM ? ", " : " ");
+        chorda_aedificator_appendere_chorda(nomina, res_id);
+        chorda_aedificator_appendere_literis(nomina, " '");
+        _titulum_decurtatum_appendere(nomina, titulus);
+        chorda_aedificator_appendere_literis(nomina, "'");
+    }
+    (*numerus)++;
 }
 
 /* lineam salutis 'caput: id titulus, ...' ex quaestione SQL cuius
@@ -8061,8 +8253,17 @@ _mappae_salutem_reddere (
             DXII);
         ChordaAedificator* vacuae  = chorda_aedificator_creare(pn,
             DXII);
-                      i32 n_supra   = ZEPHYRUM;
-                      i32 n_vacuae  = ZEPHYRUM;
+        ChordaAedificator* sine_visione  = chorda_aedificator_creare(
+            pn, DXII);
+        ChordaAedificator* sine_consilio = chorda_aedificator_creare(
+            pn, DXII);
+        ChordaAedificator* sine_opere    = chorda_aedificator_creare(
+            pn, DXII);
+                      i32 n_supra     = ZEPHYRUM;
+                      i32 n_vacuae    = ZEPHYRUM;
+                      i32 n_visione   = ZEPHYRUM;
+                      i32 n_consilio  = ZEPHYRUM;
+                      i32 n_opere     = ZEPHYRUM;
 
         e = scrinium_praeparare(gesta_scrinium(t->mundus),
             "SELECT res_id, titulus FROM res WHERE genus = ?1"
@@ -8076,8 +8277,24 @@ _mappae_salutem_reddere (
                 chorda titulus  = scrinium_columna_textus(e, I, pn);
                 RegionisNumeri rn;
 
-                rn.vis = NIHIL;
+                rn.vis   = NIHIL;
+                rn.dorm  = NIHIL;
                 _regionis_numeros_computare(t, rid, pn, &rn);
+                si (rn.visiones == ZEPHYRUM)
+                {
+                    _mappae_nomen_appendere(sine_visione, &n_visione,
+                        rid, titulus);
+                }
+                si (rn.consilia == ZEPHYRUM)
+                {
+                    _mappae_nomen_appendere(sine_consilio, &n_consilio,
+                        rid, titulus);
+                }
+                si (rn.opera == ZEPHYRUM)
+                {
+                    _mappae_nomen_appendere(sine_opere, &n_opere, rid,
+                        titulus);
+                }
                 si (rn.parca_directa > MAPPA_LIMEN)
                 {
                     chorda_aedificator_appendere_literis(supra,
@@ -8116,6 +8333,23 @@ _mappae_salutem_reddere (
         chorda_aedificator_appendere_literis(aed, linea);
         chorda_aedificator_appendere_chorda(aed,
             chorda_aedificator_finire(vacuae));
+        /* frons ordinandi per activitatem: quid nemo voluit, quid
+         * nemo cogitat, quid nemo aedificat */
+        sprintf(linea, "\nregiones sine visione (quid area velit nondum"
+            " dictum): %d", (int)n_visione);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(sine_visione));
+        sprintf(linea, "\nregiones sine consilio (nulla quaestio"
+            " consilii aperta): %d", (int)n_consilio);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(sine_consilio));
+        sprintf(linea, "\nregiones sine opere (nihil in cursu): %d",
+            (int)n_opere);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(sine_opere));
     }
     /* TAGS RECURRENTES SINE REGIONE: regiones candidatae */
     {
@@ -8447,6 +8681,7 @@ _breviarium_reddere (
     _effectum_reddere(aed, st);
     _vincula_reddere(t, aed, res_id, pn);
     _filios_paratos_reddere(t, aed, res_id, pn);
+    _regionis_ordinanda_reddere(t, aed, res_id, pn);
     _actiones_reddere(t, aed, res_id, pn);
 }
 
@@ -8800,6 +9035,7 @@ _tab_res (
     _effectum_reddere(aed, st);
     /* vincula: functio COMMUNIS cum breviario (2026-09-21) */
     _vincula_reddere(t, aed, res_id, pn);
+    _regionis_ordinanda_reddere(t, aed, res_id, pn);
     /* salus (superficies passiva K2 - querelae si insana) */
     {
         GestaSalus salus;
@@ -10858,7 +11094,8 @@ _toolslist_tractare (
         " declaratus. Sectiones: AD LABOREM (opera sine impediente"
         " aperto) | AD CONSILIUM (res sine filiis, impedientibus"
         " clausis: gradus proximus = eam expandere) | AD CLAUSURAM"
-        " (filii omnes clausi: proba exitum) | EXSPECTANT FRANUM"
+        " (filii omnes clausi: proba exitum et claude, aut gradum"
+        " proximum file) | EXSPECTANT FRANUM"
         " (assignatum fran) | IMPEDITA (cum impediente nominato;"
         " impedimentum PARENTIS hereditatur). Quaeque linea CUR"
         " dicit. Res extra graphum non intrant. Orientatio post"

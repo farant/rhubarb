@@ -4809,10 +4809,10 @@ principale (vacuum)
         CREDO_FALSUM (_inter(r, "regiones sine corpore",
             "regiones supra limen", "Rg textus"));
         /* regiones vacuae: horizon sola */
-        CREDO_VERUM (_inter(r, "regiones vacuae", "tags recurrentes",
-            "Rg horizon vacuus"));
-        CREDO_FALSUM (_inter(r, "regiones vacuae", "tags recurrentes",
-            "Rg textus"));
+        CREDO_VERUM (_inter(r, "regiones vacuae",
+            "regiones sine visione", "Rg horizon vacuus"));
+        CREDO_FALSUM (_inter(r, "regiones vacuae",
+            "regiones sine visione", "Rg textus"));
         /* tag recurrens nullam regionem nominans */
         CREDO_VERUM (strstr(r, "typographia (10)") != NIHIL);
         /* parca quietissima: caput et tactus */
@@ -4873,6 +4873,171 @@ principale (vacuum)
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":586,"
             "\"method\":\"tools/list\"}");
         CREDO_VERUM (strstr(r, "\"mappa\"") != NIHIL);
+    }
+
+
+    /* ==================================================
+     * XLII. FRONS REGIONIS (opus 01M35P4EFV, mappa IV): salus 'sine
+     * visione / sine consilio / sine opere'; linea arboris cum
+     * classibus paratis et numeris cumulativis (decisae, perfecta);
+     * pagina regionis ORDINANDA + impedita; AD CLAUSURAM 'aut gradum
+     * proximum file'. Fixtura ex XXXIX-XLI.
+     * ================================================== */
+
+    {
+        constans character* locus;
+        constans character* finis_lineae;
+        constans character* classis;
+
+        /* parcum DORMIENS intra Rg fontes (sine filio, sine
+         * impedimento, sine quaestione); quaestio consilii aperta
+         * intra Typographia */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":590,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Fr parcum dormiens\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":591,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Fr parcum dormiens\","
+            "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
+            "\"Rg fontes\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":592,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Fr quaestio typographiae?\",\"natura\":"
+            "\"consilium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":593,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Fr quaestio typographiae?\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":\"Typographia\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* MAPPA: linea Rg textus - cumulativa et classes non-nullae.
+         * Finis lineae = sequentia '\\n' DUORUM characterum (responsum
+         * JSON lineas novas ita fert - laqueus notus) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":594,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{}}}");
+        locus = strstr(r, "Rg textus");
+        CREDO_NON_NIHIL (locus);
+        finis_lineae = locus != NIHIL ? strstr(locus, "\\n") : NIHIL;
+        CREDO_NON_NIHIL (finis_lineae);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "quaestiones consilii 0 (decisae 1)")
+                != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "opera 1 (perfecta 0)") != NIHIL);
+        classis = locus != NIHIL ? strstr(locus,
+            "ad laborem 1") : NIHIL;
+        CREDO_VERUM (classis != NIHIL && classis < finis_lineae);
+        /* regio vacua: nulla classis in linea */
+        locus = strstr(r, "Rg horizon vacuus");
+        CREDO_NON_NIHIL (locus);
+        finis_lineae  = locus != NIHIL ? strstr(locus, "\\n") : NIHIL;
+        classis       = locus != NIHIL ? strstr(locus, "ad ") : NIHIL;
+        CREDO_VERUM (classis == NIHIL || finis_lineae == NIHIL
+            || classis > finis_lineae);
+
+        /* SALUS: tres lineae novae */
+        CREDO_VERUM (_inter(r, "regiones sine visione",
+            "regiones sine consilio", "Rg horizon vacuus"));
+        CREDO_FALSUM (_inter(r, "regiones sine visione",
+            "regiones sine consilio", "Rg textus"));
+        CREDO_VERUM (_inter(r, "regiones sine consilio",
+            "regiones sine opere", "Rg textus"));
+        CREDO_FALSUM (_inter(r, "regiones sine consilio",
+            "regiones sine opere", "Typographia"));
+        CREDO_VERUM (_inter(r, "regiones sine opere",
+            "tags recurrentes", "Typographia"));
+        CREDO_FALSUM (_inter(r, "regiones sine opere",
+            "tags recurrentes", "Rg textus"));
+
+        /* PAGINA REGIONIS: ORDINANDA post 'parata sub hac re' */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":595,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"breviter\":\"verum\"}}}");
+        locus = strstr(r, "ordinanda");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "parca dormientia (1)") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "Fr parcum dormiens") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "quaestio consilii nulla") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "visio nulla") == NIHIL);
+        CREDO_VERUM (strstr(r, "parata sub hac re") != NIHIL
+            && strstr(r, "parata sub hac re") < locus);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":596,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg horizon vacuus\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "visio nulla") != NIHIL);
+        CREDO_VERUM (strstr(r, "quaestio consilii nulla") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":597,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Typographia\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "quaestio consilii nulla") == NIHIL);
+
+        /* IMPEDITA in pagina et in linea: opus impeditur a vitio */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":598,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Rg opus tabulae cmap\",\"actus\":\"nexus\",\"verbum\":"
+            "\"impeditur-a\",\"alterum\":\"Rq vitium cmap ruit\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":599,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "impedita 1 (parata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":600,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{\"breviter\":\"verum\"}}}");
+        locus = strstr(r, "Rg textus");
+        CREDO_NON_NIHIL (locus);
+        finis_lineae = locus != NIHIL ? strstr(locus, "\\n") : NIHIL;
+        classis = locus != NIHIL ? strstr(locus, "impedita 1") : NIHIL;
+        CREDO_VERUM (classis != NIHIL && finis_lineae != NIHIL
+            && classis < finis_lineae);
+        classis = locus != NIHIL ? strstr(locus, "ad laborem") : NIHIL;
+        CREDO_VERUM (classis == NIHIL || finis_lineae == NIHIL
+            || classis > finis_lineae);
+
+        /* AD CLAUSURAM: causa gradum proximum quoque nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":601,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Fr parcum decisum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":602,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Fr decisa?\",\"natura\":\"consilium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":603,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Fr decisa?\","
+            "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
+            "\"Fr parcum decisum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":604,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Fr decisa?\","
+            "\"actus\":\"status\",\"novus\":\"clausum\"}}}");
+        CREDO_VERUM (strstr(r, "status clausum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":605,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        locus = _inter_locus(r, "AD CLAUSURAM", "Fr parcum decisum");
+        CREDO_VERUM (locus[0] != '\0');
+        CREDO_VERUM (strstr(locus, "gradum proximum") != NIHIL);
     }
 
     credo_imprimere_compendium();
