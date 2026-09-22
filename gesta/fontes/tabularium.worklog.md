@@ -1210,3 +1210,23 @@ For the hand-run cold form (`./gesta/frigida.sh -mappa`) and for
 anyone who wants the shape without the numbers: indent + title per
 region, nothing else, no health. The node renderer takes a
 `nomina_sola` flag; the board form and the tool form are unchanged.
+
+## 2026-09-22 — principia: the bets a vision rests on
+
+Task 01M35QWCWQ. Fran: a vision is what he wants to realize; a
+PRINCIPLE or prior is a bet or assumption the vision is built on. Same
+pattern as design questions and visions — a mark on an existing genus,
+never a new one: `decretum natura:principium`, because a prior is a
+point reached and held until superseded, with no lifecycle. New field
+`refutatio`: what would overturn it. A prior that cannot say what
+would refute it is a slogan; the field is optional at the door and
+printed wherever the prior is shown.
+
+Region page: `principia (N)` right after `visiones (N)`, one per line,
+refutation on the line when given. A prior without a region is
+house-wide by definition (decrees are never flagged "sine regione").
+The ready view never sees a decree, so nothing to skip. The verb from
+a vision to its priors (`nititur`) is deferred like the purpose verb.
+
+First priors filed AFTER the commit, lifted verbatim from CLAUDE.md
+with Fran as actor: they are his words, not mine.

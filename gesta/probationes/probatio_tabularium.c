@@ -5051,6 +5051,92 @@ principale (vacuum)
         CREDO_VERUM (strstr(locus, "gradum proximum") != NIHIL);
     }
 
+
+    /* ==================================================
+     * XLIII. PRINCIPIA (opus 01M35QWCWQ, mappa V): decretum natura:
+     * principium = prior cui visio nititur, cum campo 'refutatio'
+     * (quid id everteret). Pagina regionis: 'principia (N)' post
+     * visiones, ante numeros; refutatio in linea. Decretum sine
+     * regione = domus totius (non 'sine regione' flagatum).
+     * ================================================== */
+
+    {
+        constans character* locus;
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":610,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"decretum\","
+            "\"titulus\":\"Pr fontes variabiles rari sunt\","
+            "\"natura\":\"principium\",\"refutatio\":\"si corpus"
+            " Lapidis fontem variabilem poscit\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":611,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Pr fontes variabiles rari sunt\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":\"Rg fontes\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        /* principium DOMUS: sine regione */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":612,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"decretum\","
+            "\"titulus\":\"Pr programmata non senescunt\","
+            "\"natura\":\"principium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+
+        /* pagina regionis (subarbor: principium in Rg fontes sub Rg
+         * textus): principia post visiones, ante numeros; refutatio
+         * in linea; principium domus ABEST */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":613,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"breviter\":\"verum\"}}}");
+        locus = strstr(r, "principia (1)");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "Pr fontes variabiles rari sunt")
+                != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "refutatio: si corpus Lapidis") != NIHIL);
+        CREDO_VERUM (strstr(r, "visiones (1)") != NIHIL
+            && locus != NIHIL && strstr(r, "visiones (1)") < locus);
+        CREDO_VERUM (locus != NIHIL
+            && locus < strstr(r, "numeri intra regionem"));
+        CREDO_VERUM (strstr(r, "Pr programmata non senescunt")
+            == NIHIL);
+        /* forma plena quoque */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":614,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg fontes\"}}}");
+        CREDO_VERUM (strstr(r, "principia (1)") != NIHIL);
+
+        /* res decreti: natura et refutatio lineis suis */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":615,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Pr fontes variabiles rari sunt\",\"breviter\":"
+            "\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "natura principium") != NIHIL);
+        CREDO_VERUM (strstr(r, "\\nrefutatio si corpus Lapidis")
+            != NIHIL);
+
+        /* visus parata principia numquam videt; salus mappae
+         * decretum sine regione non flagat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":616,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "Pr fontes variabiles") == NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":617,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "Pr programmata") == NIHIL);
+
+        /* schema refutationem nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":618,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "\"refutatio\"") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

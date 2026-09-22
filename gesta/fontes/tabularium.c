@@ -47,7 +47,9 @@ interior constans character* constans TABULARII_DOCTRINA =
     "intra parcum; silva.commissio(opus=ID) opus claudit. REGIO = "
     "locus mappae (genus regio, sine statu): res intra regionem "
     "collocantur, parata/quaerere {intra: regio}; mappa {} = arbor "
-    "regionum + salus (activitas ordinandi). "
+    "regionum + salus (activitas ordinandi). PRINCIPIUM = decretum "
+    "natura:principium (prior cui visio nititur; refutatio = quid id "
+    "everteret). "
     "QUAESTIO DESIGNI = quaestio natura:consilium (AD COLLOQUIUM); "
     "propositum ab ea impeditur-a. Via crustae: ./gesta/frigida.sh. "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
@@ -2369,6 +2371,12 @@ nomen enumeratio {
  * 'volo posse...' Frani, intra regionem collocatum; numquam 'parata'
  * (in nulla classe visus), in pagina regionis prima */
 #define NATURA_VISIONIS "visio"
+
+/* PRINCIPIUM (2026-09-22): decretum cum 'natura: principium' - prior
+ * cui visio nititur (Fran: 'bets/assumptions that i am building my
+ * vision on'); campus 'refutatio' = quid id everteret. Sine statu ut
+ * decretum quodlibet; sine regione = domus totius. */
+#define NATURA_PRINCIPII "principium"
 
 nomen structura {
            chorda res_id;
@@ -5813,6 +5821,7 @@ _tab_addere (
                 chorda  ramus_arg  = _arg(argumenta, "ramus");
                 chorda  datum_arg  = _arg(argumenta, "datum");
                 chorda  natura     = _arg(argumenta, "natura");
+                chorda  refutatio  = _arg(argumenta, "refutatio");
                 chorda  ramus_id;
              JsonValor* datum;
           GestaEventum  e;
@@ -5904,6 +5913,11 @@ _tab_addere (
     {
         json_objectum_ponere(datum, "natura",
             json_chorda_creare(pn, natura));
+    }
+    si (refutatio.mensura > ZEPHYRUM)
+    {
+        json_objectum_ponere(datum, "refutatio",
+            json_chorda_creare(pn, refutatio));
     }
     si (tags.mensura > ZEPHYRUM)
     {
@@ -7258,6 +7272,24 @@ _naturam_reddere (
     chorda_aedificator_appendere_chorda(aed, json_ad_chorda(v));
 }
 
+/* 'refutatio' principii - linea una cum posita (quid prior everteret) */
+interior vacuum
+_refutationem_reddere (
+    ChordaAedificator* aed,
+            JsonValor* st)
+{
+    JsonValor* v = st != NIHIL
+        ? json_objectum_capere(st, "refutatio") : NIHIL;
+
+    si (   v                         == NIHIL || !json_est_chorda(v)
+        || json_ad_chorda(v).mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed, "\nrefutatio ");
+    chorda_aedificator_appendere_chorda(aed, json_ad_chorda(v));
+}
+
 #define FILII_PARATI_TECTUM VIII
 
 /* filii PARATI rei: sectio 'parata sub hac re' ex _parata_computare
@@ -7450,11 +7482,25 @@ nomen structura {
                   i32  parca_directa;
                   i32  decisae;     /* quaestiones consilii clausae */
                   i32  perfecta;    /* opera perfecta */
+                  i32  principia;   /* decreta natura:principium */
                chorda  tactus;
     ChordaAedificator* vis;       /* lineae visionum aut NIHIL */
     ChordaAedificator* dorm;      /* lineae parcorum dormientium aut
                                    * NIHIL */
+    ChordaAedificator* prin;      /* lineae principiorum aut NIHIL */
 } RegionisNumeri;
+
+/* numeros PARARE: acies linearum omnes NIHIL - vocans quas vult
+ * deinde condit. (Segfault 2026-09-22: sedes quarta aciem tertiam
+ * non posuerat - initium unum, non quattuor.) */
+interior vacuum
+_regionis_numeros_parare (
+    RegionisNumeri* rn)
+{
+    rn->vis   = NIHIL;
+    rn->dorm  = NIHIL;
+    rn->prin  = NIHIL;
+}
 
 interior vacuum
 _regionis_numeros_computare (
@@ -7475,6 +7521,7 @@ _regionis_numeros_computare (
     rn->parca_directa   = ZEPHYRUM;
     rn->decisae         = ZEPHYRUM;
     rn->perfecta        = ZEPHYRUM;
+    rn->principia       = ZEPHYRUM;
     rn->tactus.mensura  = ZEPHYRUM;
     rn->tactus.datum    = NIHIL;
     desc                = _descendentes_colligere(t, res_id, pn);
@@ -7485,13 +7532,15 @@ _regionis_numeros_computare (
         ScriniumEnuntiatum* e = scrinium_praeparare(
             gesta_scrinium(t->mundus),
             "SELECT genus, status, mutatum,"
-            " COALESCE(json_extract(datum, '$.natura'), ''), titulus"
+            " COALESCE(json_extract(datum, '$.natura'), ''), titulus,"
+            " COALESCE(json_extract(datum, '$.refutatio'), '')"
             " FROM res WHERE res_id = ?");
         chorda genus;
         chorda status;
         chorda mutatum;
         chorda natura;
         chorda titulus;
+        chorda refutatio;
 
         si (e == NIHIL)
         {
@@ -7503,11 +7552,12 @@ _regionis_numeros_computare (
             scrinium_finire(e);
             perge;
         }
-        genus    = scrinium_columna_textus(e, 0, pn);
-        status   = scrinium_columna_textus(e, I, pn);
-        mutatum  = scrinium_columna_textus(e, II, pn);
-        natura   = scrinium_columna_textus(e, III, pn);
-        titulus  = scrinium_columna_textus(e, IV, pn);
+        genus      = scrinium_columna_textus(e, 0, pn);
+        status     = scrinium_columna_textus(e, I, pn);
+        mutatum    = scrinium_columna_textus(e, II, pn);
+        natura     = scrinium_columna_textus(e, III, pn);
+        titulus    = scrinium_columna_textus(e, IV, pn);
+        refutatio  = scrinium_columna_textus(e, V, pn);
         scrinium_finire(e);
         si (   rn->tactus.mensura == ZEPHYRUM
             || chorda_comparare(mutatum, rn->tactus) > ZEPHYRUM)
@@ -7555,6 +7605,24 @@ _regionis_numeros_computare (
                      && _chorda_est(status, "clausum"))
         {
             rn->decisae++;
+        }
+        alioquin si (   _chorda_est(genus, "decretum")
+                     && _chorda_est(natura, NATURA_PRINCIPII))
+        {
+            rn->principia++;
+            si (rn->prin != NIHIL)
+            {
+                chorda_aedificator_appendere_literis(rn->prin, "\n  ");
+                chorda_aedificator_appendere_chorda(rn->prin, d);
+                chorda_aedificator_appendere_literis(rn->prin, "  ");
+                _titulum_decurtatum_appendere(rn->prin, titulus);
+                si (refutatio.mensura > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_literis(rn->prin,
+                        " - refutatio: ");
+                    _titulum_decurtatum_appendere(rn->prin, refutatio);
+                }
+            }
         }
         alioquin si (   _chorda_est(genus, GENUS_OPERIS)
                      && _chorda_est(status, "perfectum"))
@@ -7709,8 +7777,9 @@ _regionem_reddere (
     {
         redde;
     }
+    _regionis_numeros_parare(&rn);
     rn.vis   = chorda_aedificator_creare(pn, DXII);
-    rn.dorm  = NIHIL;
+    rn.prin  = chorda_aedificator_creare(pn, DXII);
     _regionis_numeros_computare(t, res_id, pn, &rn);
     si (rn.visiones > ZEPHYRUM)
     {
@@ -7718,6 +7787,14 @@ _regionem_reddere (
         chorda_aedificator_appendere_literis(aed, linea);
         chorda_aedificator_appendere_chorda(aed,
             chorda_aedificator_finire(rn.vis));
+    }
+    /* principia post visiones: priores quibus visiones nituntur */
+    si (rn.principia > ZEPHYRUM)
+    {
+        sprintf(linea, "\nprincipia (%d):", (int)rn.principia);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(rn.prin));
     }
     chorda_aedificator_appendere_literis(aed,
         "\nnumeri intra regionem: ");
@@ -7743,7 +7820,7 @@ _regionis_ordinanda_reddere (
     {
         redde;
     }
-    rn.vis   = NIHIL;
+    _regionis_numeros_parare(&rn);
     rn.dorm  = chorda_aedificator_creare(pn, DXII);
     _regionis_numeros_computare(t, res_id, pn, &rn);
     chorda_aedificator_appendere_literis(aed,
@@ -7953,8 +8030,7 @@ _mappae_nodum_reddere (
         _titulum_decurtatum_appendere(aed, _titulus_membri(t, res_id,
             pn));
         chorda_aedificator_appendere_literis(aed, "  ");
-        rn.vis   = NIHIL;
-        rn.dorm  = NIHIL;
+        _regionis_numeros_parare(&rn);
         _regionis_numeros_computare(t, res_id, pn, &rn);
         _regionis_numeros_appendere(aed, &rn);
         /* frons: classes paratae subarboris (non-nullae) */
@@ -8288,8 +8364,7 @@ _mappae_salutem_reddere (
                 chorda titulus  = scrinium_columna_textus(e, I, pn);
                 RegionisNumeri rn;
 
-                rn.vis   = NIHIL;
-                rn.dorm  = NIHIL;
+                _regionis_numeros_parare(&rn);
                 _regionis_numeros_computare(t, rid, pn, &rn);
                 si (rn.visiones == ZEPHYRUM)
                 {
@@ -8700,6 +8775,7 @@ _breviarium_reddere (
     _regionem_reddere(t, aed, res_id, pn);
     _quaestiones_filias_reddere(t, aed, res_id, pn);
     _naturam_reddere(aed, st);
+    _refutationem_reddere(aed, st);
     _effectum_reddere(aed, st);
     _vincula_reddere(t, aed, res_id, pn);
     _filios_paratos_reddere(t, aed, res_id, pn);
@@ -9054,6 +9130,7 @@ _tab_res (
     _regionem_reddere(t, aed, res_id, pn);
     _quaestiones_filias_reddere(t, aed, res_id, pn);
     _naturam_reddere(aed, st);
+    _refutationem_reddere(aed, st);
     _effectum_reddere(aed, st);
     /* vincula: functio COMMUNIS cum breviario (2026-09-21) */
     _vincula_reddere(t, aed, res_id, pn);
@@ -10918,7 +10995,11 @@ _toolslist_tractare (
           " (non vitium): in visu parata AD COLLOQUIUM stat, ordine"
           " potentiae; propositum impedire potest (gerere nexus"
           " impeditur-a a proposito ad eam); clausa -> decretum"
-          " natum-de ea", FALSUM },
+          " natum-de ea. \"visio\" in DESIDERATO = visio Frani (numquam"
+          " parata). \"principium\" in DECRETO = prior cui visio"
+          " nititur (campus refutatio)", FALSUM },
+        { "refutatio", "principii: quid id everteret (prior sine"
+          " refutatione sententia est, non apostatio)", FALSUM },
         { "corpus", "textus corporis (quaesibilis)", FALSUM },
         { "tags", "tags commatibus separata", FALSUM },
         { "ancorae", "tabulatum JSON: [{\"genus\":\"symbolum|via"
