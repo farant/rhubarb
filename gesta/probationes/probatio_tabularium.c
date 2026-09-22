@@ -4570,6 +4570,179 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
     }
 
+
+    /* ==================================================
+     * XL. STAGE II MAPPAE (opus 01M35A3SSP, decretum 01M3565C2A):
+     * visio (desideratum natura:visio) intra regionem in NULLA
+     * classe visus parata; pagina regionis = corpus + visiones +
+     * numeri subarboris; breviarium parci 'quaestiones consilii:
+     * decisae N, apertae M'. Fixtura: Rg textus > Rg fontes > Rg
+     * parsator sfnt > Rg opus tabulae cmap (ex XXXIX).
+     * ================================================== */
+
+    {
+        constans character* locus;
+
+        /* visio Frani intra regionem */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":550,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"desideratum\","
+            "\"titulus\":\"Rv volo librum Lapidis in PDF\","
+            "\"natura\":\"visio\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":551,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Rv volo librum Lapidis in PDF\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":\"Rg textus\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* VISIO NUMQUAM PARATA: nec AD CONSILIUM nec usquam in visu
+         * (toto et intra regionem) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":552,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "Rv volo librum") == NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":553,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{\"intra\":\"Rg textus\"}}}");
+        CREDO_VERUM (strstr(r, "Rv volo librum") == NIHIL);
+        /* desideratum ORDINARIUM intra regionem paratum manet (AD
+         * CONSILIUM) - signum solum findit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":554,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"desideratum\","
+            "\"titulus\":\"Rv desideratum ordinarium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":555,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Rv desideratum ordinarium\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":\"Rg textus\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":556,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{\"intra\":\"Rg textus\"}}}");
+        CREDO_VERUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
+            "Rv desideratum ordinarium"));
+
+        /* quaestio consilii intra parcum (pro numeris et breviario) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":557,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Rq forma tabulae glypharum?\","
+            "\"natura\":\"consilium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":558,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Rq forma tabulae glypharum?\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":"
+            "\"Rg parsator sfnt\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        /* vitium ordinarium intra parcum */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":559,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Rq vitium cmap ruit\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":560,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Rq vitium cmap ruit\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":"
+            "\"Rg parsator sfnt\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* PAGINA REGIONIS (breviter): visiones primae, deinde numeri
+         * subarboris - parca aperta I (dormientia 0: parcum filios
+         * habet), quaestiones consilii apertae I, vitia aperta I,
+         * opera pendentia I, tactus ultimus hodie */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":561,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "visiones (1)") != NIHIL);
+        CREDO_VERUM (strstr(r, "Rv volo librum Lapidis in PDF")
+            != NIHIL);
+        /* visio ANTE numeros et ante nexus */
+        CREDO_VERUM (strstr(r, "numeri intra regionem") != NIHIL
+            && strstr(r, "visiones (1)")
+                < strstr(r, "numeri intra regionem"));
+        locus = strstr(r, "numeri intra regionem");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "parca aperta 1 (dormientia 0)") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "quaestiones consilii apertae 1")
+                != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "vitia aperta 1") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "opera pendentia 1") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "tactus ultimus 20") != NIHIL);
+        /* forma plena eadem fert */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":562,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg textus\"}}}");
+        CREDO_VERUM (strstr(r, "visiones (1)") != NIHIL);
+        CREDO_VERUM (strstr(r, "numeri intra regionem") != NIHIL);
+        /* sub-regio vacua: numeri cum nihilo (mappa 'nihil hic
+         * adhuc' dicit), visiones absunt */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":563,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"regio\","
+            "\"titulus\":\"Rg horizon vacuus\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":564,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg horizon vacuus\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "visiones (") == NIHIL);
+        CREDO_VERUM (strstr(r, "parca aperta 0 (dormientia 0)")
+            != NIHIL);
+        /* parcum non-regio: numeri regionis ABSUNT */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":565,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg parsator sfnt\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "numeri intra regionem") == NIHIL);
+
+        /* BREVIARIUM PARCI: quaestiones consilii decisae/apertae
+         * (vitium ordinarium NON numeratur) */
+        CREDO_VERUM (strstr(r, "quaestiones consilii: decisae 0,"
+            " apertae 1") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":566,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Rq forma tabulae glypharum?\",\"actus\":\"status\","
+            "\"novus\":\"clausum\"}}}");
+        CREDO_VERUM (strstr(r, "status clausum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":567,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg parsator sfnt\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "quaestiones consilii: decisae 1,"
+            " apertae 0") != NIHIL);
+        /* parcum sine quaestionibus consilii: linea TACET */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":568,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Qc parcum solitarium\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "quaestiones consilii:") == NIHIL);
+        /* regio post clausuram: quaestiones consilii apertae 0 */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":569,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"breviter\":\"verum\"}}}");
+        locus = strstr(r, "numeri intra regionem");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "quaestiones consilii apertae 0")
+                != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

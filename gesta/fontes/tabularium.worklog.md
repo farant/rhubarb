@@ -1109,3 +1109,33 @@ not count as fixation — location is not planning.
 Plants: seed entry absent → addere refuses the genus; region blockage
 allowed → refusal assertion fails; status on a region allowed; region
 placement counted as fixation → the counter assertion fails.
+
+## 2026-09-22 — stage II: visions out of the ready view, the region's page, a park's decidedness
+
+Task 01M35A3SSP (mappa II; decree 01M3565C2A). Three small things.
+
+**A vision is never "ready".** `desideratum natura:visio` placed
+inside a region would otherwise land in AD CONSILIUM as "no children,
+no blocker — expand it". The node gains a `visio` flag beside
+`consilii`, and the class loop skips it. Everything else about a vision
+is an ordinary wish.
+
+**The region's page** (`res <regio>`, both forms) after the corpus:
+`visiones` — open visions in the subtree, one per line — then `numeri
+intra regionem`: open parks with the dormant ones in parentheses
+(dormant = "visa, non fixa" evaluated per park; the counter grew an
+optional res_id so the two definitions cannot drift), open design
+questions, open bugs, pending tasks, last touch (max `mutatum` over the
+subtree). The subtree is a breadth-first walk down `intra` from the
+region, capped, cycle-safe — one small query per node. A region with
+nothing inside prints the line with zeros: "nothing here yet" is
+information on a map.
+
+**A park's decidedness** — `quaestiones consilii: decisae N, apertae M`
+(relictae K when any) — counts the park's own design-question children
+by status. It is the thinking-layer twin of task progress: a park with
+4 decided and 0 open is ready to be planned, whatever its notes say.
+Silent when the park has no design questions.
+
+Plants: vision not skipped → AD CONSILIUM assertion fails; region
+counts silent; decided questions not counted.

@@ -2355,6 +2355,11 @@ nomen enumeratio {
  * natura eam in graphum ponit ut assignatio (actus consultus). */
 #define NATURA_CONSILII "consilium"
 
+/* VISIO (decretum 01M3565C2A): desideratum cum 'natura: visio' -
+ * 'volo posse...' Frani, intra regionem collocatum; numquam 'parata'
+ * (in nulla classe visus), in pagina regionis prima */
+#define NATURA_VISIONIS "visio"
+
 nomen structura {
            chorda res_id;
            chorda genus;
@@ -2364,6 +2369,8 @@ nomen structura {
            chorda creatum;
            chorda assignatum;
               b32 consilii;     /* quaestio consilii (natura) */
+              b32 visio;        /* desideratum visio (natura) - numquam
+                                 * paratum */
               i32 post;         /* ordo mollis: quot res apertae
                                  * haec SEQUITUR (transitive) */
               b32 vitalis;      /* genus machinam status habet */
@@ -2534,8 +2541,14 @@ _parati_nodum (
     n->status      = scrinium_columna_textus(e, II, pn);
     n->mutatum     = scrinium_columna_textus(e, III, pn);
     n->assignatum  = scrinium_columna_textus(e, IV, pn);
-    n->consilii    = _chorda_est(scrinium_columna_textus(e, V, pn),
-        NATURA_CONSILII) && _chorda_est(n->genus, "quaestio");
+    {
+        chorda natura = scrinium_columna_textus(e, V, pn);
+
+        n->consilii  = _chorda_est(natura, NATURA_CONSILII)
+            && _chorda_est(n->genus, "quaestio");
+        n->visio     = _chorda_est(natura, NATURA_VISIONIS)
+            && _chorda_est(n->genus, "desideratum");
+    }
     n->creatum  = scrinium_columna_textus(e, VI, pn);
     n->post     = ZEPHYRUM;
     scrinium_finire(e);
@@ -2843,7 +2856,9 @@ _parata_computare (
                       s32  p;
                       i32  gradus;
 
-        si (   n == NIHIL || !n->apertus
+        /* visio numquam parata (decretum 01M3565C2A): in nulla
+         * classe - pagina regionis eam monstrat */
+        si (   n == NIHIL || !n->apertus || n->visio
             || !_parati_in_scopo(nodi, (s32)i, scopus)
             || n->filii_aperti > ZEPHYRUM)
         {
@@ -3180,7 +3195,8 @@ _parata_sectionem (
  * 'visa, non fixa' */
 interior s64
 _parca_visa_numerare (
-    Tabularium* t)
+    Tabularium* t,
+        chorda  res_id)
 {
     /* COLLOCATIO NON FIXAT (decretum 01M35650Z4): 'intra' cuius
      * parens (pars b) REGIO est locus est, non planum - parcum in
@@ -3203,7 +3219,8 @@ _parca_visa_numerare (
         "     AND EXISTS (SELECT 1 FROM membra mb"
         "       JOIN res rb ON rb.res_id = mb.membrum"
         "       WHERE mb.res_id = n.res_id AND mb.pars = 'b'"
-        "       AND rb.genus = ?3)))");
+        "       AND rb.genus = ?3)))"
+        " AND (?4 = '' OR p.res_id = ?4)");
     s64 numerus = (s64)ZEPHYRUM;
 
     si (e == NIHIL)
@@ -3213,6 +3230,8 @@ _parca_visa_numerare (
     scrinium_ligare_textum(e, I, _ch(VERBUM_IMPEDITUR));
     scrinium_ligare_textum(e, II, _ch(VERBUM_INTRA));
     scrinium_ligare_textum(e, III, _ch(GENUS_REGIONIS));
+    scrinium_ligare_textum(e, IV, res_id.mensura > ZEPHYRUM
+        ? res_id : _ch(""));
     si (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
         numerus = scrinium_columna_numerus(e, 0);
@@ -3291,7 +3310,7 @@ _parata_reddere (
      * sub nullo stat). */
     si (scopus_id.mensura == ZEPHYRUM)
     {
-        s64 visa = _parca_visa_numerare(t);
+        s64 visa = _parca_visa_numerare(t, _ch(""));
 
         si (visa > (s64)ZEPHYRUM)
         {
@@ -7307,6 +7326,283 @@ _filios_paratos_reddere (
     }
 }
 
+#define DESCENDENTES_TECTUM 4096
+
+/* descendentes rei per 'intra' (latitudine primum, cyclis tutum,
+ * tecto DESCENDENTES_TECTUM): acies res_id, radix NON inclusa.
+ * Quaestio parva una per nodum - pagina una, non index. */
+interior Xar*
+_descendentes_colligere (
+    Tabularium* t,
+        chorda  radix_id,
+       Piscina* pn)
+{
+       Xar* acies    = xar_creare(pn, (i32)magnitudo(chorda));
+       i32  caput    = ZEPHYRUM;
+    chorda  currens  = radix_id;
+
+    si (acies == NIHIL)
+    {
+        redde NIHIL;
+    }
+    dum (VERUM)
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT a.membrum FROM res n"
+            " JOIN membra a ON a.res_id = n.res_id AND a.pars = 'a'"
+            " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
+            " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+            " AND json_extract(n.datum, '$.verbum') = ?1"
+            " AND b.membrum = ?2 ORDER BY n.res_id");
+
+        si (e == NIHIL)
+        {
+            frange;
+        }
+        scrinium_ligare_textum(e, I, _ch(VERBUM_INTRA));
+        scrinium_ligare_textum(e, II, currens);
+        dum (   scrinium_gradi(e) == SCRINIUM_ORDO
+             && xar_numerus(acies) < DESCENDENTES_TECTUM)
+        {
+            chorda filius  = scrinium_columna_textus(e, 0, pn);
+               b32 notus   = chorda_aequalis(filius, radix_id);
+               i32 k;
+
+            per (k = ZEPHYRUM; !notus && k < xar_numerus(acies); k++)
+            {
+                notus = chorda_aequalis(
+                    *(chorda*)xar_obtinere(acies, k), filius);
+            }
+            si (!notus)
+            {
+                chorda* locus = (chorda*)xar_addere(acies);
+
+                si (locus != NIHIL)
+                {
+                    *locus = filius;
+                }
+            }
+        }
+        scrinium_finire(e);
+        si (caput >= xar_numerus(acies))
+        {
+            frange;
+        }
+        currens = *(chorda*)xar_obtinere(acies, caput);
+        caput++;
+    }
+    redde acies;
+}
+
+/* PAGINA REGIONIS (decretum 01M3565C2A): visiones apertae subarboris
+ * primae (una per lineam), deinde 'numeri intra regionem' - parca
+ * aperta (dormientia = visa non fixa, eodem numeratore ac visus
+ * parata ne definitiones duae discrepent), quaestiones consilii
+ * apertae, vitia aperta, opera pendentia, tactus ultimus (mutatum
+ * maximum subarboris et regionis). Regio vacua numeros cum nihilo
+ * dat: 'nihil hic adhuc' in mappa notitia est. Tacet si res regio
+ * non est. */
+interior vacuum
+_regionem_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  res_id,
+              Piscina* pn)
+{
+                   Xar* desc;
+     ChordaAedificator* vis;
+                   s32  i;          /* -I = regio ipsa */
+                   i32  visiones    = ZEPHYRUM;
+                   i32  parca       = ZEPHYRUM;
+                   i32  dormientia  = ZEPHYRUM;
+                   i32  consilia    = ZEPHYRUM;
+                   i32  vitia       = ZEPHYRUM;
+                   i32  opera       = ZEPHYRUM;
+                chorda  tactus;
+             character  linea[CCLVI];
+
+    si (!_chorda_est(_cap_genus_rei(t, res_id, pn), GENUS_REGIONIS))
+    {
+        redde;
+    }
+    vis             = chorda_aedificator_creare(pn, DXII);
+    tactus.mensura  = ZEPHYRUM;
+    tactus.datum    = NIHIL;
+    desc            = _descendentes_colligere(t, res_id, pn);
+    /* regio ipsa tactum suum fert (index -I = ipsa) */
+    per (i = -I; desc != NIHIL && i < (s32)xar_numerus(desc); i++)
+    {
+        chorda d = i < (s32)ZEPHYRUM
+            ? res_id : *(chorda*)xar_obtinere(desc, (i32)i);
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT genus, status, mutatum,"
+            " COALESCE(json_extract(datum, '$.natura'), ''), titulus"
+            " FROM res WHERE res_id = ?");
+        chorda genus;
+        chorda status;
+        chorda mutatum;
+        chorda natura;
+        chorda titulus;
+
+        si (e == NIHIL)
+        {
+            perge;
+        }
+        scrinium_ligare_textum(e, I, d);
+        si (scrinium_gradi(e) != SCRINIUM_ORDO)
+        {
+            scrinium_finire(e);
+            perge;
+        }
+        genus    = scrinium_columna_textus(e, 0, pn);
+        status   = scrinium_columna_textus(e, I, pn);
+        mutatum  = scrinium_columna_textus(e, II, pn);
+        natura   = scrinium_columna_textus(e, III, pn);
+        titulus  = scrinium_columna_textus(e, IV, pn);
+        scrinium_finire(e);
+        si (   tactus.mensura == ZEPHYRUM
+            || chorda_comparare(mutatum, tactus) > ZEPHYRUM)
+        {
+            tactus = mutatum;
+        }
+        si (i < (s32)ZEPHYRUM)
+        {
+            perge;
+        }
+        si (   _chorda_est(genus, "desideratum")
+            && _chorda_est(natura, NATURA_VISIONIS)
+            && _chorda_est(status, "apertum"))
+        {
+            visiones++;
+            chorda_aedificator_appendere_literis(vis, "\n  ");
+            chorda_aedificator_appendere_chorda(vis, d);
+            chorda_aedificator_appendere_literis(vis, "  ");
+            _titulum_decurtatum_appendere(vis, titulus);
+        }
+        alioquin si (   _chorda_est(genus, "parcum")
+                     && (   _chorda_est(status, "parcatum")
+                         || _chorda_est(status, "tractum")))
+        {
+            parca++;
+            si (_parca_visa_numerare(t, d) > (s64)ZEPHYRUM)
+            {
+                dormientia++;
+            }
+        }
+        alioquin si (   _chorda_est(genus, "quaestio")
+                     && (   _chorda_est(status, "apertum")
+                         || _chorda_est(status, "laborans")))
+        {
+            si (_chorda_est(natura, NATURA_CONSILII))
+            {
+                consilia++;
+            }
+            alioquin
+            {
+                vitia++;
+            }
+        }
+        alioquin si (   _chorda_est(genus, GENUS_OPERIS)
+                     && (   _chorda_est(status, "pendens")
+                         || _chorda_est(status, "susceptum")))
+        {
+            opera++;
+        }
+    }
+    si (visiones > ZEPHYRUM)
+    {
+        sprintf(linea, "\nvisiones (%d):", (int)visiones);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(vis));
+    }
+    sprintf(linea, "\nnumeri intra regionem: parca aperta %d"
+        " (dormientia %d), quaestiones consilii apertae %d, vitia"
+        " aperta %d, opera pendentia %d, tactus ultimus ",
+        (int)parca, (int)dormientia, (int)consilia, (int)vitia,
+        (int)opera);
+    chorda_aedificator_appendere_literis(aed, linea);
+    si (tactus.mensura >= X)
+    {
+        tactus.mensura = X;   /* YYYY-MM-DD ex ISO */
+        chorda_aedificator_appendere_chorda(aed, tactus);
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(aed, "-");
+    }
+}
+
+/* DECISIO PARCI: quaestiones consilii filiae (intra hanc rem) per
+ * statum - 'decisae N, apertae M' (relictae K si adsint). Gemellus
+ * progressus operum in strato cogitationis: parcum cum IV decisis et
+ * nulla aperta planari paratum est, quidquid notae dicunt. Tacet sine
+ * filiabus consilii. */
+interior vacuum
+_quaestiones_filias_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  res_id,
+              Piscina* pn)
+{
+    ScriniumEnuntiatum* e;
+                   i32  decisae   = ZEPHYRUM;
+                   i32  apertae   = ZEPHYRUM;
+                   i32  relictae  = ZEPHYRUM;
+             character  linea[CXXVIII];
+
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT q.status, COUNT(*) FROM res n"
+        " JOIN membra a ON a.res_id = n.res_id AND a.pars = 'a'"
+        " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
+        " JOIN res q ON q.res_id = a.membrum"
+        " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+        " AND json_extract(n.datum, '$.verbum') = ?1"
+        " AND b.membrum = ?2 AND q.genus = 'quaestio'"
+        " AND json_extract(q.datum, '$.natura') = ?3"
+        " GROUP BY q.status");
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    scrinium_ligare_textum(e, I, _ch(VERBUM_INTRA));
+    scrinium_ligare_textum(e, II, res_id);
+    scrinium_ligare_textum(e, III, _ch(NATURA_CONSILII));
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda status  = scrinium_columna_textus(e, 0, pn);
+           i32 n       = (i32)scrinium_columna_numerus(e, I);
+
+        si (_chorda_est(status, "clausum"))
+        {
+            decisae += n;
+        }
+        alioquin si (_chorda_est(status, "relictum"))
+        {
+            relictae += n;
+        }
+        alioquin
+        {
+            apertae += n;
+        }
+    }
+    scrinium_finire(e);
+    si (decisae + apertae + relictae == ZEPHYRUM)
+    {
+        redde;
+    }
+    sprintf(linea, "\nquaestiones consilii: decisae %d, apertae %d",
+        (int)decisae, (int)apertae);
+    chorda_aedificator_appendere_literis(aed, linea);
+    si (relictae > ZEPHYRUM)
+    {
+        sprintf(linea, ", relictae %d", (int)relictae);
+        chorda_aedificator_appendere_literis(aed, linea);
+    }
+}
+
 /* compendium rei (K4.2 'breviter'): corpus ut textus purus + notae
  * ultimae III (plicatura eas in statum iam fert) + vincula +
  * affordantiae.
@@ -7415,6 +7711,9 @@ _breviarium_reddere (
             }
         }
     }
+    /* pagina regionis + decisio parci (mappa II) ante naturam */
+    _regionem_reddere(t, aed, res_id, pn);
+    _quaestiones_filias_reddere(t, aed, res_id, pn);
     _naturam_reddere(aed, st);
     _effectum_reddere(aed, st);
     _vincula_reddere(t, aed, res_id, pn);
@@ -7765,6 +8064,9 @@ _tab_res (
         _ancoras_reddere(t, aed, st, pn);
     }
     _citationes_reddere(t, aed, res_id);
+    /* pagina regionis + decisio parci (mappa II) ante naturam */
+    _regionem_reddere(t, aed, res_id, pn);
+    _quaestiones_filias_reddere(t, aed, res_id, pn);
     _naturam_reddere(aed, st);
     _effectum_reddere(aed, st);
     /* vincula: functio COMMUNIS cum breviario (2026-09-21) */
