@@ -2240,7 +2240,11 @@ _membrum_scribere (
  *   HOMINI     'assignatum: fran' EXPRESSUM (nulla coniectura ex
  *              genere: quaestio et vitium et decisio est)
  *   IMPEDITUM  impediens apertum - SUUM aut PARENTIS (hereditas:
- *              opus gradus impediti paratum non est)
+ *              opus gradus impediti paratum non est). QUAESTIO
+ *              numquam hereditat: semper colloqui potest - et saepe
+ *              ipsa parentem impedit (vitium 01M350V79N: quaestiones
+ *              parci ab eo ipso 'impeditae'); impeditur-a EXPRESSUM
+ *              inter quaestiones manet
  *   (continens cum filiis apertis in nulla classe: filii narrant)
  *
  * Impediens RELICTUM/OMISSUM: solutum sed SIGNATUM (decretum
@@ -2777,8 +2781,10 @@ _parata_computare (
             "impeditur a: ");
         aperta = _parati_impedientia(nodi, margines, (s32)i, causa,
             &ultimum, &ultimum_dies, &relictum);
-        /* hereditas: parens impeditus filium impedit */
-        p = n->parens;
+        /* hereditas: parens impeditus filium impedit - OPUS et
+         * PARCUM; quaestio numquam (semper colloqui potest, et saepe
+         * ipsa impediens parentis est) */
+        p = _chorda_est(n->genus, "quaestio") ? -I : n->parens;
         per (gradus = ZEPHYRUM;
              aperta == ZEPHYRUM && p >= ZEPHYRUM
              && gradus < PARATA_PROFUNDITAS; gradus++)

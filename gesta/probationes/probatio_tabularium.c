@@ -4223,6 +4223,104 @@ principale (vacuum)
             && (locus - strstr(r, "TABULARIUM:")) < 2048);
     }
 
+
+    /* ==================================================
+     * XXXVIII. QUAESTIO IMPEDIMENTUM PARENTIS NON HEREDITAT (vitium
+     * 01M350V79N, usu primo inventum): parcum mappae cum quaestionibus
+     * consilii INTRA id ET id impedientibus - visus omnes ut IMPEDITA
+     * dabat ('parens impeditur a: <quaestio ipsa>'), AD COLLOQUIUM
+     * vacuum. Regula: quaestio semper colloqui potest; impeditur-a
+     * EXPRESSUM inter quaestiones manet; opus/parcum hereditant.
+     * ================================================== */
+
+    {
+        constans character* locus;
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":510,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Hq propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":511,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Hq impediens?\",\"natura\":"
+            "\"consilium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":512,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Hq soror?\",\"natura\":\"consilium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":513,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"opus\","
+            "\"titulus\":\"Hq opus sub proposito\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        /* ambae quaestiones et opus INTRA propositum; propositum
+         * impeditur-a 'Hq impediens?' */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":514,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Hq impediens?\","
+            "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
+            "\"Hq propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":515,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Hq soror?\","
+            "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
+            "\"Hq propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":516,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Hq opus sub proposito\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":\"Hq propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":517,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Hq propositum\","
+            "\"actus\":\"nexus\",\"verbum\":\"impeditur-a\","
+            "\"alterum\":\"Hq impediens?\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":518,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{\"intra\":"
+            "\"Hq propositum\"}}}");
+        /* impediens ipsa: AD COLLOQUIUM, numquam IMPEDITA (ORDO
+         * eius quaeritur - titulus nudus in causa operis legitime
+         * stat: 'parens ... impeditur a: Hq impediens?') */
+        CREDO_VERUM (_inter(r, "AD COLLOQUIUM", "IMPEDITA",
+            "quaestio/apertum  Hq impediens?"));
+        CREDO_FALSUM (_inter(r, "IMPEDITA", NIHIL,
+            "quaestio/apertum  Hq impediens?"));
+        /* soror sub eodem parente impedito: colloqui potest quoque
+         * (impeditur-a inter quaestiones expressum esset) */
+        CREDO_VERUM (_inter(r, "AD COLLOQUIUM", "IMPEDITA",
+            "Hq soror?"));
+        /* OPUS sub proposito impedito hereditat ut antea */
+        CREDO_VERUM (_inter(r, "IMPEDITA", NIHIL,
+            "Hq opus sub proposito"));
+        locus = _inter_locus(r, "IMPEDITA", "Hq opus sub proposito");
+        CREDO_VERUM (strstr(locus, "parens") != NIHIL);
+        /* impeditur-a EXPRESSUM inter quaestiones adhuc impedit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":519,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Hq soror?\","
+            "\"actus\":\"nexus\",\"verbum\":\"impeditur-a\","
+            "\"alterum\":\"Hq impediens?\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":520,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{\"intra\":"
+            "\"Hq propositum\"}}}");
+        CREDO_VERUM (_inter(r, "IMPEDITA", NIHIL,
+            "quaestio/apertum  Hq soror?"));
+        CREDO_FALSUM (_inter(r, "AD COLLOQUIUM", "IMPEDITA",
+            "quaestio/apertum  Hq soror?"));
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

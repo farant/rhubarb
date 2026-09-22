@@ -1028,3 +1028,23 @@ Seven plants, seven assertions: age silent · closure date silent ·
 rank not computed · rank not in the key · compact form not capped ·
 compact form with ages · orientation sentence moved past the cut.
 Tabularium 689.
+
+## 2026-09-22 — a question never inherits its parent's blockage
+
+Found by the first real use after the arc (bug 01M350V79N): I filed
+the map-layer park with four design questions `intra` it and three of
+them `impeditur-a` it — and `parata {intra}` listed all four as
+IMPEDITA, "parens … impeditur a: <the question itself>". AD COLLOQUIUM
+was empty. The text-stack questions had escaped only because they were
+never linked `intra` their park, which is the wrong structure and one
+the triage will fix — so the bug stood in the way of the right shape.
+
+The inheritance loop (`parens impeditus filium impedit`) had no
+exception by genus. The rule now: a QUESTION never inherits. A question
+is always talkable; an explicit `impeditur-a` between two questions
+still blocks (the loop over the node's OWN blockers is untouched). The
+class comment and the doctrine sentence say so. Work (opus, parcum)
+inherits as before — a task under a blocked stage is still not ready.
+
+Plant: inheritance applied to questions too → the new assertion fails
+with the question in IMPEDITA. Tabularium 689 → 693.
