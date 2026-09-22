@@ -1048,3 +1048,30 @@ inherits as before — a task under a blocked stage is still not ready.
 
 Plant: inheritance applied to questions too → the new assertion fails
 with the question in IMPEDITA. Tabularium 689 → 693.
+
+## 2026-09-22 — quaerere {tag} quotes the tag; an invalid query is named
+
+Bugs 01M350VEHA and 01M350VMNF, found together on the first hyphenated
+tag I ever filtered by (`regio-tabularii`, the provisional region
+marker). `_tab_quaerere` appended the tag RAW to the FTS query. FTS5
+bare terms are alphanumerics only, so any tag with a hyphen was a
+syntax error — and the kernel swallowed syntax errors as "no rows",
+so the answer was "nihil inventum" plus a helpful hint that was wrong.
+`messis-2026-07`, the K1 harvest tag on 53 items, has been
+unfilterable since July.
+
+Two changes. The tag is now a phrase restricted to the corpus column
+(`corpus:"…"`, inner `"` doubled) — tags are folded into that column
+joined by spaces, so a phrase is the precise match and a title that
+happens to contain the word no longer counts as a tag hit. And when
+the kernel returns NIHIL the response says `quaestio FTS invalida:
+<sqlite message>` with the advice to quote — never "nihil inventum".
+
+One existing assertion was a lying pin: it searched `nusquam-
+invenietur` (a syntax error) and asserted "nihil inventum". It now
+asserts the loud refusal, and a VALID absent word asserts "nihil
+inventum" beside it.
+
+Plants: tag appended raw → hyphenated tag not found; NIHIL from the
+kernel reported as "apparatus fractus" without the cause → the
+"invalida" assertion fails.

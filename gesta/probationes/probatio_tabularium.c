@@ -508,11 +508,56 @@ principale (vacuum)
         "\"quaerere\",\"arguments\":{\"textus\":\"pars*\","
         "\"tag\":\"perf\"}}}");
     CREDO_VERUM (strstr(r, "Parsura lenta") != NIHIL);
+    /* verbum VALIDUM absens: nihil inventum */
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":11,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"quaerere\",\"arguments\":{\"textus\":\"nusquam"
-        "-invenietur\"}}}");
+        "invenietur\"}}}");
     CREDO_VERUM (strstr(r, "nihil inventum") != NIHIL);
+    /* quaestio INVALIDA: 'nusquam-invenietur' FTS5 ut exclusionem
+     * columnae legit ('no such column: invenietur'; '(' nudum =
+     * 'syntax error') - causa SQLite nominatur, numquam 'nihil
+     * inventum'. Pinna prior hic 'nihil inventum' asserebat et
+     * viridis MENTIEBATUR (vitium 01M350VMNF). */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":611,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"quaerere\",\"arguments\":{\"textus\":\"nusquam"
+        "-invenietur\"}}}");
+    CREDO_VERUM (strstr(r, "quaestio FTS invalida") != NIHIL);
+    CREDO_VERUM (strstr(r, "no such column: invenietur") != NIHIL);
+    CREDO_VERUM (strstr(r, "nihil inventum") == NIHIL);
+    /* TAG CUM HYPHEN (vitium 01M350VEHA): 'messis-2026-07' LIII res
+     * ferebant et filtrum eum numquam invenit - tag crudus in
+     * quaestionem FTS ibat. Nunc phrasis citata in columna corpus. */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":612,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+        "\"titulus\":\"Tg parcum regionis\",\"tags\":"
+        "\"regio-probationis,perf\"}}}");
+    CREDO_VERUM (strstr(r, "creata") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":613,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"quaerere\",\"arguments\":{\"textus\":\"parcum\","
+        "\"tag\":\"regio-probationis\"}}}");
+    CREDO_VERUM (strstr(r, "Tg parcum regionis") != NIHIL);
+    CREDO_VERUM (strstr(r, "invalida") == NIHIL);
+    /* tag solus (textus vacuus) quoque */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":614,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"quaerere\",\"arguments\":{\"tag\":"
+        "\"regio-probationis\"}}}");
+    CREDO_VERUM (strstr(r, "Tg parcum regionis") != NIHIL);
+    /* tag in COLUMNA CORPUS quaeritur: titulus qui verbum tagi fert
+     * tag non est */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":615,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+        "\"titulus\":\"Tg titulus cum verbo lignum\"}}}");
+    CREDO_VERUM (strstr(r, "creata") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":616,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"quaerere\",\"arguments\":{\"tag\":\"lignum\"}}}");
+    CREDO_VERUM (strstr(r, "Tg titulus cum verbo lignum") == NIHIL);
 
     /* VIII. res ignota -> simillima ex titulis rerum (typus
      * deletionis - lex subsequentiae similitudinis) */

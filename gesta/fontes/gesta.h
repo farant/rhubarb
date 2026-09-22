@@ -178,8 +178,10 @@ gesta_fts_exhaurire (
  * praefixum = vocans '*' appendit (idioma Latinum); genus/status
  * NIHIL licent (filtra); fructus = Xar de GestaInventum (valore)
  * ordine bm25 (negativius = melius), tectum L ordinibus. Error
- * syntaxis MATCH = fructus vacuus (honestum; citatio = stratum
- * MCP). NIHIL = apparatus fractus. */
+ * syntaxis MATCH (terminus nudus cum '-' aut '(') = NIHIL cum causa
+ * in gesta_error - numquam fructus vacuus, qui 'nihil congruit'
+ * mentiretur (vitium 01M350VMNF). NIHIL = apparatus fractus;
+ * gesta_error consule. */
 Xar*
 gesta_quaerere (
            GestaMundus* mundus,

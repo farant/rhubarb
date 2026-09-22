@@ -6706,7 +6706,11 @@ _tab_quaerere (
             redde;
         }
     }
-    /* tag = terminus FTS additus (columna corpus tags fert) */
+    /* tag = phrasis CITATA in columna corpus (tags ibi spatiis
+     * iunctae stant): corpus:"tag" - '"' interna duplicata. Tag
+     * crudus olim appendebatur, et terminus nudus FTS5 hyphen ferre
+     * nequit: 'messis-2026-07' (LIII res) numquam inveniebatur,
+     * responsum 'nihil inventum' mentiebatur (vitium 01M350VEHA) */
     {
         ChordaAedificator* qa = chorda_aedificator_creare(pn,
             CXXVIII);
@@ -6714,11 +6718,23 @@ _tab_quaerere (
         chorda_aedificator_appendere_chorda(qa, textus);
         si (tag.mensura > ZEPHYRUM)
         {
+            i32 k;
+
             si (textus.mensura > ZEPHYRUM)
             {
                 chorda_aedificator_appendere_literis(qa, " ");
             }
-            chorda_aedificator_appendere_chorda(qa, tag);
+            chorda_aedificator_appendere_literis(qa, "corpus:\"");
+            per (k = ZEPHYRUM; k < tag.mensura; k++)
+            {
+                si (tag.datum[k] == '"')
+                {
+                    chorda_aedificator_appendere_literis(qa, "\"");
+                }
+                chorda_aedificator_appendere_character(qa,
+                    (character)tag.datum[k]);
+            }
+            chorda_aedificator_appendere_literis(qa, "\"");
         }
         quaestio = _litterae(pn, chorda_aedificator_finire(qa));
     }
@@ -6730,8 +6746,29 @@ _tab_quaerere (
         GENUS_OPERIS, &exclusa, pn);
     si (inventa == NIHIL)
     {
+        /* NIHIL = causa in gesta_error: quaestio FTS invalida
+         * (terminus nudus cum '-' aut '(') NOMINATUR, numquam 'nihil
+         * inventum' (vitium 01M350VMNF); causa vacua = apparatus */
+        constans character* causa = gesta_error(t->mundus);
+         ChordaAedificator* q = chorda_aedificator_creare(pn, CCLVI);
+
+        si (causa != NIHIL && causa[0] != '\0')
+        {
+            chorda_aedificator_appendere_literis(q,
+                "quaestio FTS invalida: ");
+            chorda_aedificator_appendere_literis(q, causa);
+            chorda_aedificator_appendere_literis(q,
+                " - terminus cum '-' aut signo cita (\"...\"), "
+                "praefixum 'termin*' licet; quaestio: ");
+            chorda_aedificator_appendere_literis(q, quaestio);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(q,
+                "apparatus quaestionis fractus");
+        }
         _textum_respondere(t, pn, effusio, id,
-            _ch("apparatus quaestionis fractus"), VERUM);
+            chorda_aedificator_finire(q), VERUM);
         redde;
     }
     nota_exclusionis[0] = '\0';
@@ -9563,7 +9600,8 @@ _toolslist_tractare (
           " numerus exclusorum nominatur; genus: \"opus\" ea"
           " reddit", FALSUM },
         { "status", "filtrum statûs", FALSUM },
-        { "tag", "filtrum tagi (terminus FTS additus)", FALSUM }
+        { "tag", "filtrum tagi (phrasis citata in columna corpus -"
+          " hyphen licet: messis-2026-07)", FALSUM }
     };
     interior constans TabArgumentum ARG_RES[] = {
         { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"

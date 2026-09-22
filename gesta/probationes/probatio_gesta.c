@@ -1060,6 +1060,25 @@ principale (vacuum)
                 "parcum", NIHIL, piscina);
             CREDO_AEQUALIS_I32 ((i32)xar_numerus(inv), ante);
         }
+
+        /* QUAESTIO INVALIDA (2026-09-22, vitium 01M350VMNF): NIHIL
+         * cum gesta_error causam nominante - non Xar vacuus, qui
+         * 'nihil congruit' mentiretur (transformatio tacita: fallit
+         * versus nimis pauca). '(' nudum = 'syntax error'; 'a-b' =
+         * exclusio columnae 'no such column: b'. */
+        inv = gesta_quaerere(m, "parsur(", NIHIL, NIHIL, piscina);
+        CREDO_NIHIL (inv);
+        CREDO_VERUM (strstr(gesta_error(m), "syntax") != NIHIL);
+        inv = gesta_quaerere(m, "nusquam-invenietur", NIHIL, NIHIL,
+            piscina);
+        CREDO_NIHIL (inv);
+        CREDO_VERUM (strstr(gesta_error(m), "no such column")
+            != NIHIL);
+        /* quaestio valida post errorem iterum fert (error per
+         * vocationem, non status mundi manens) */
+        inv = gesta_quaerere(m, "parsur*", NIHIL, NIHIL, piscina);
+        CREDO_NON_NIHIL (inv);
+        CREDO_VERUM (inv != NIHIL && (i32)xar_numerus(inv) >= I);
     }
 
 
@@ -3294,13 +3313,18 @@ principale (vacuum)
                 id_z));
 
             /* truncus caecus: sine clave rami, res ramalis absens,
-             * FTS eam non invenit */
+             * FTS eam non invenit. PINNA MENTIENS (2026-07 ad
+             * 2026-09-22): quaestio erat 'arcanum-ramale' - terminus
+             * nudus cum '-' = error syntaxis FTS5, quem kernel ut
+             * fructum vacuum reddebat; 'nihil inventum' caecitatem
+             * rami NON probabat. Nunc verbum validum quaeritur (et
+             * error NIHIL redderet - CREDO_NON_NIHIL id caperet). */
             st = _status_entis(m7, id_x, piscina);
             CREDO_VERUM (!json_objectum_habet(st, "ramo"));
             CREDO_VERUM (gesta_res_datum(m7, id_z,
                 piscina).mensura == ZEPHYRUM);
             {
-                Xar* inv = gesta_quaerere(m7, "arcanum-ramale",
+                Xar* inv = gesta_quaerere(m7, "arcanum",
                     NIHIL, NIHIL, piscina);
 
                 CREDO_NON_NIHIL (inv);

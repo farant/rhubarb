@@ -106,3 +106,23 @@ WOULD have matched (status filter kept), so a caller can never exclude
 silently. An explicit `genus` filter beats the exclusion and reports
 zero. Policy (which genus, when) stays in tabularium; the engine only
 offers the mechanism. See tabularium.worklog.md same date.
+
+## 2026-09-22 — an invalid FTS query is an error, not an empty result
+
+Bug 01M350VMNF. `gesta_quaerere_excluso` stepped the MATCH statement
+with `dum (gradi == ORDO)` and returned whatever had accumulated —
+on an FTS5 syntax error, an empty Xar, indistinguishable from "no
+match". The comment beside it said the MCP layer would name the
+error. The MCP layer never did (it printed "nihil inventum" with a
+prefix hint). Classic silent-transform shape: fails toward too few.
+
+Now the final step status is kept; `SCRINIUM_ERROR` records the
+SQLite message on the world (`gesta_error`) and returns NIHIL, which
+the header already documented as "apparatus fractus" — the caller
+reads the cause. A valid query afterwards works again (the error is
+per call). Found through its sibling: the tag filter pasted a
+hyphenated tag raw into the query, and FTS5 bare terms cannot carry
+`-`, so `messis-2026-07` (53 items) was never filterable.
+
+Plant: keep returning the empty Xar on ERROR → the new kernel
+assertion (NIHIL + error naming "syntax") fails.

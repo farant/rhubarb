@@ -3932,6 +3932,7 @@ gesta_quaerere_excluso (
     ScriniumEnuntiatum* e;
                    b32  solum_spatia = VERUM;
         memoriae_index  i;
+               integer  gradus;
     constans character* exclusum_l = genus_exclusum != NIHIL
         ? genus_exclusum : "";
 
@@ -3992,9 +3993,13 @@ gesta_quaerere_excluso (
     scrinium_ligare_textum(e, III,
         _ch(status != NIHIL ? status : ""));
     scrinium_ligare_textum(e, IV, _ch(exclusum_l));
-    /* error syntaxis MATCH -> gradi ERROR -> fructus vacuus
-     * (honestum; citatio = stratum MCP) */
-    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    /* error syntaxis MATCH (terminus nudus cum '-' aut '(') -> gradi
+     * ERROR -> NIHIL cum causa in gesta_error. Olim fructus vacuus
+     * 'honestus' cum citatione strato MCP delegata - quod numquam
+     * citavit: 'nihil inventum' pro quaestione invalida (vitium
+     * 01M350VMNF, transformatio tacita). */
+    gradus = scrinium_gradi(e);
+    dum (gradus == SCRINIUM_ORDO)
     {
         GestaInventum* inv = (GestaInventum*)xar_addere(inventa);
 
@@ -4005,6 +4010,15 @@ gesta_quaerere_excluso (
             inv->titulus  = scrinium_columna_textus(e, II, piscina);
             inv->status   = scrinium_columna_textus(e, III, piscina);
         }
+        gradus = scrinium_gradi(e);
+    }
+    si (gradus == SCRINIUM_ERROR)
+    {
+        constans character* causa = scrinium_error(mundus->scrinium);
+
+        scrinium_finire(e);
+        (vacuum)_fractum(mundus, causa);
+        redde NIHIL;
     }
     scrinium_finire(e);
     /* exclusio NUMQUAM tacita: quot res exclusi generis congruerunt */
