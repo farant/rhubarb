@@ -7924,6 +7924,7 @@ _mappae_nodum_reddere (
                chorda  res_id,
                   i32  gradus,
                   b32  forma_tabulae,
+                  b32  nomina_sola,
               Piscina* pn)
 {
         RegionisNumeri  rn;
@@ -7939,21 +7940,30 @@ _mappae_nodum_reddere (
     {
         chorda_aedificator_appendere_literis(aed, "- ");
     }
-    chorda_aedificator_appendere_chorda(aed, res_id);
-    chorda_aedificator_appendere_literis(aed, "  ");
-    _titulum_decurtatum_appendere(aed, _titulus_membri(t, res_id,
-        pn));
-    chorda_aedificator_appendere_literis(aed, "  ");
-    rn.vis   = NIHIL;
-    rn.dorm  = NIHIL;
-    _regionis_numeros_computare(t, res_id, pn, &rn);
-    _regionis_numeros_appendere(aed, &rn);
-    /* frons: classes paratae subarboris (non-nullae) */
+    si (nomina_sola)
     {
-        i32 classes[VII];
+        /* forma 'nomina' (ut 'tree'): titulus solus */
+        _titulum_decurtatum_appendere(aed, _titulus_membri(t, res_id,
+            pn));
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_chorda(aed, res_id);
+        chorda_aedificator_appendere_literis(aed, "  ");
+        _titulum_decurtatum_appendere(aed, _titulus_membri(t, res_id,
+            pn));
+        chorda_aedificator_appendere_literis(aed, "  ");
+        rn.vis   = NIHIL;
+        rn.dorm  = NIHIL;
+        _regionis_numeros_computare(t, res_id, pn, &rn);
+        _regionis_numeros_appendere(aed, &rn);
+        /* frons: classes paratae subarboris (non-nullae) */
+        {
+            i32 classes[VII];
 
-        _classes_scopi_computare(t, res_id, pn, classes);
-        _classes_appendere(aed, classes);
+            _classes_scopi_computare(t, res_id, pn, classes);
+            _classes_appendere(aed, classes);
+        }
     }
     si (gradus >= MAPPA_PROFUNDITAS)
     {
@@ -7993,7 +8003,7 @@ _mappae_nodum_reddere (
             si (!chorda_aequalis(filia, res_id))
             {
                 _mappae_nodum_reddere(t, aed, filia, gradus + I,
-                    forma_tabulae, pn);
+                    forma_tabulae, nomina_sola, pn);
             }
         }
     }
@@ -8007,6 +8017,7 @@ _mappae_arborem_reddere (
     ChordaAedificator* aed,
                chorda  radix_id,
                   b32  forma_tabulae,
+                  b32  nomina_sola,
               Piscina* pn)
 {
     ScriniumEnuntiatum* e;
@@ -8017,7 +8028,7 @@ _mappae_arborem_reddere (
     si (radix_id.mensura > ZEPHYRUM)
     {
         _mappae_nodum_reddere(t, aed, radix_id, ZEPHYRUM,
-            forma_tabulae, pn);
+            forma_tabulae, nomina_sola, pn);
         redde I;
     }
     radices = xar_creare(pn, (i32)magnitudo(chorda));
@@ -8066,7 +8077,7 @@ _mappae_arborem_reddere (
         si (radix_est)
         {
             _mappae_nodum_reddere(t, aed, r, ZEPHYRUM, forma_tabulae,
-                pn);
+                nomina_sola, pn);
             scriptae++;
         }
     }
@@ -8468,6 +8479,8 @@ _tab_mappa (
                chorda regio     = _arg(argumenta, "regio");
                   b32 breviter  = _chorda_est(_arg(argumenta,
                       "breviter"), "verum");
+                  b32 nomina    = _chorda_est(_arg(argumenta,
+                      "forma"), "nomina");
                chorda  radix_id;
     ChordaAedificator* aed = chorda_aedificator_creare(pn, 4096);
                   i32  radices;
@@ -8518,19 +8531,27 @@ _tab_mappa (
             redde;
         }
     }
-    chorda_aedificator_appendere_literis(aed,
-        "MAPPA - arbor regionum, numeri subarboris per nodum"
-        " (parca aperta (dormientia = visa non fixa) \xc2\xb7"
-        " quaestiones consilii \xc2\xb7 vitia \xc2\xb7 opera \xc2\xb7"
-        " visiones \xc2\xb7 tactus ultimus)");
-    radices = _mappae_arborem_reddere(t, aed, radix_id, FALSUM, pn);
+    si (nomina)
+    {
+        chorda_aedificator_appendere_literis(aed, "MAPPA (nomina)");
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "MAPPA - arbor regionum, numeri subarboris per nodum"
+            " (parca aperta (dormientia = visa non fixa) \xc2\xb7"
+            " quaestiones consilii \xc2\xb7 vitia \xc2\xb7 opera"
+            " \xc2\xb7 visiones \xc2\xb7 tactus ultimus)");
+    }
+    radices = _mappae_arborem_reddere(t, aed, radix_id, FALSUM, nomina,
+        pn);
     si (radices == ZEPHYRUM)
     {
         chorda_aedificator_appendere_literis(aed,
             "\n(regiones nullae - addere {genus: \"regio\", titulus,"
             " corpus} radicem primam condit)");
     }
-    si (!breviter && radix_id.mensura == ZEPHYRUM)
+    si (!breviter && !nomina && radix_id.mensura == ZEPHYRUM)
     {
         chorda_aedificator_appendere_literis(aed,
             "\n\nSALUS (menu ordinandi):");
@@ -8552,9 +8573,10 @@ _tabulae_mappam (
                   i32  radices;
     ChordaAedificator* sectio = chorda_aedificator_creare(pn, 2048);
 
-    nulla.mensura = ZEPHYRUM;
-    nulla.datum = NIHIL;
-    radices = _mappae_arborem_reddere(t, sectio, nulla, VERUM, pn);
+    nulla.mensura  = ZEPHYRUM;
+    nulla.datum    = NIHIL;
+    radices = _mappae_arborem_reddere(t, sectio, nulla, VERUM, FALSUM,
+        pn);
     si (radices == ZEPHYRUM)
     {
         redde;
@@ -11011,7 +11033,10 @@ _toolslist_tractare (
     interior constans TabArgumentum ARG_MAPPA[] = {
         { "regio", "subarbor regionis unius (id, praefixum, titulus);"
           " sine eo mappa tota", FALSUM },
-        { "breviter", "\"verum\" = arbor sola, sine salute", FALSUM }
+        { "breviter", "\"verum\" = arbor sola, sine salute", FALSUM },
+        { "forma", "\"nomina\" = arbor nominum sola, ut 'tree' (sine"
+          " id, numeris, salute) - eadem quam ./gesta/frigida.sh"
+          " -mappa imprimit", FALSUM }
     };
     interior constans TabArgumentum ARG_LEGERE[] = {
         { "genus", "filtrum generis rerum (e.g. pipatum|articulus|"
@@ -11111,7 +11136,7 @@ _toolslist_tractare (
         " nullam regionem nominantes (regiones candidatae), parca"
         " quietissima. Tertia activitas post aedificare (parata) et"
         " deliberare (AD COLLOQUIUM).",
-        ARG_MAPPA, II));
+        ARG_MAPPA, III));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "legere",
         "Lectio structurata pro apps: textus = tabulatum JSON"
         " rerum (recentissima primum) cum dato plicato inserto,"

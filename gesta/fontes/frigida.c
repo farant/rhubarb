@@ -34,9 +34,14 @@ interior constans FrigidaForma FORMAE[] = {
      * (silva.commissio opus ante portas praeiudicat) */
     { "-res",     "res",    NIHIL,
       { "res", NIHIL, NIHIL, NIHIL },
-      { VERUM, FALSUM, FALSUM, FALSUM } }
+      { VERUM, FALSUM, FALSUM, FALSUM } },
+    /* LECTIO SINE OPERANDO: arbor regionum nominibus solis (forma
+     * 'nomina' instrumenti mappa) - quod Fran manu currit */
+    { "-mappa",   "mappa",  NIHIL,
+      { NIHIL, NIHIL, NIHIL, NIHIL },
+      { FALSUM, FALSUM, FALSUM, FALSUM } }
 };
-#define FORMAE_NUMERUS IV
+#define FORMAE_NUMERUS V
 
 interior constans FrigidaForma*
 _formam_invenire (
@@ -245,6 +250,12 @@ _gerere_mittere (
                 json_chorda_creare_literis(pn, "verum"));
         }
     }
+    alioquin si (strcmp(forma->instrumentum, "mappa") == ZEPHYRUM)
+    {
+        /* lectio mappae: nomina sola (ut 'tree') */
+        json_objectum_ponere(argumenta, "forma",
+            json_chorda_creare_literis(pn, "nomina"));
+    }
     alioquin
     {
         /* lectio: breviarium (forma plena datum crudum effundit) */
@@ -440,7 +451,8 @@ frigida_currere (
     {
         _causam_incipere(index, &causae);
         chorda_aedificator_appendere_literis(index,
-            "verbum deest (-status | -mutatio | -nexus | -res)");
+            "verbum deest (-status | -mutatio | -nexus | -res |"
+            " -mappa)");
     }
     alioquin si (forma == NIHIL)
     {
@@ -449,7 +461,7 @@ frigida_currere (
             "vexillum ignotum '");
         chorda_aedificator_appendere_literis(index, vexillum);
         chorda_aedificator_appendere_literis(index,
-            "' (nota: -status | -mutatio | -nexus | -res)");
+            "' (nota: -status | -mutatio | -nexus | -res | -mappa)");
     }
 
     /* operanda */
@@ -596,7 +608,9 @@ frigida_currere (
                 "\n  " FRIGIDA_IMPERIUM " [-actor A] [-origo O]"
                 " -nexus \"<res>\" <verbum> \"<alterum>\""
                 "\n  " FRIGIDA_IMPERIUM " -res \"<res>\""
-                "   (lectio - nihil scribit)");
+                "   (lectio - nihil scribit)"
+                "\n  " FRIGIDA_IMPERIUM " -mappa"
+                "   (lectio - arbor regionum, nomina sola)");
         }
         {
             chorda nuntius = chorda_aedificator_finire(aed);
@@ -612,7 +626,20 @@ frigida_currere (
         redde exitus;
     }
 
-    /* scriptura per IANUAM UNAM */
+    /* scriptura (aut lectio) per IANUAM UNAM. Forma sine operando
+     * (-mappa) mundum supra non aperuit - hic aperitur. */
+    si (t == NIHIL)
+    {
+        t = tabularium_creare(pn, cfg);
+        si (t == NIHIL || !tabularium_se_initiare(t))
+        {
+            fprintf(errores, "frigida: tabularium aperiri non potuit"
+                " (ex radice repositorii curre)\n");
+            tabularium_claudere(t);
+            piscina_destruere(pn);
+            redde FRIGIDA_EXITUS_RECUSATUM;
+        }
+    }
     {
         constans character* textus = NIHIL;
                        b32  recusatum;

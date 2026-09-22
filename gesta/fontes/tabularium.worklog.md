@@ -1203,3 +1203,10 @@ done is as often ready for its NEXT stage as for closing; the class
 prompts the judgement, it does not make it.
 
 Plants: sine-visione line skipped; ORDINANDA silent; row classes silent.
+
+## 2026-09-22 — `mappa {forma: "nomina"}`: the tree as names
+
+For the hand-run cold form (`./gesta/frigida.sh -mappa`) and for
+anyone who wants the shape without the numbers: indent + title per
+region, nothing else, no health. The node renderer takes a
+`nomina_sola` flag; the board form and the tool form are unchanged.

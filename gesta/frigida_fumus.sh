@@ -37,6 +37,14 @@ eff=$(./gesta/frigida.sh -nexus vocabularium-tagorum pendet-ex vocabularium-tago
 # launcheri id ostendit - linea haec 'ok' manebat launchero fracto)
 [ "$rc" -eq 1 ] && echo "$eff" | grep -q 'frigida RECUSATA'; credo $? "synonymum per launcherum: exitus 1 (erat $rc) ET recusatio machinae"
 echo "$eff" | grep -q 'IMPERIUM VALIDUM: ./gesta/frigida.sh -nexus'; credo $? "imperium validum ostensum"
+# IV. -MAPPA per launcherum verum: lectio sine operando, arbor
+#      nominum ex tabulario VIVO (radices Frani), exitus 0, nihil scriptum
+eff=$(./gesta/frigida.sh -mappa 2>&1); rc=$?
+[ "$rc" -eq 0 ]; credo $? "-mappa: exitus 0 (erat $rc)"
+echo "$eff" | grep -q 'MAPPA (nomina)'; credo $? "-mappa: caput formae nominum"
+echo "$eff" | grep -q 'Tabularii project management'; credo $? "-mappa: radix viva nominata"
+echo "$eff" | grep -q 'parca '; [ $? -ne 0 ]; credo $? "-mappa: numeri absunt (nomina sola)"
+
 post=$(wc -l < "$AN" | tr -d ' ')
 [ "$ante" = "$post" ]; credo $? "annales vivi INTACTI ($ante -> $post lineae)"
 

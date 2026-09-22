@@ -106,3 +106,21 @@ machine as `vis: "verum"`. A placeholder the machine already shaped
 by `<novus>`. The item in the valid command is the RESOLVED id, not
 the title the caller typed — pinned. See tabularium.worklog.md same
 date.
+
+## 2026-09-22 — `-mappa`: the first READ form with no operand
+
+Fran wanted something to run by hand that prints the region tree like
+`tree`, names only. The tool grew `forma: "nomina"`; the cold path
+grew `-mappa`, which sends exactly that through the one door.
+
+The first zero-operand form exposed an assumption: the machine was
+opened only when an operand had been given (`data > 0`), because
+every earlier form needed a res to pre-judge. With no operand the
+send path would have handed a NIHIL tabularium to `tabularium_tractare`.
+The send block now opens the world itself when nothing opened it
+before. The read-form branch of `_gerere_mittere` chooses the argument
+by instrument: `breviter` for `res`, `forma: nomina` for `mappa`.
+
+Suite: region + sub-region in the fixture; `-mappa` exits 0, prints
+both with the child indented, annals byte-identical; `-mappa extra`
+is usage (exit 2). Smoke gate: the live launcher prints Fran's roots.

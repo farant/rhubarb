@@ -4833,6 +4833,17 @@ principale (vacuum)
             "\"mappa\",\"arguments\":{}}}");
         CREDO_VERUM (strstr(r, "typographia (10)") == NIHIL);
 
+        /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
+         * numeris, sine salute; filia indentata */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5821,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{\"forma\":\"nomina\"}}}");
+        CREDO_VERUM (strstr(r, "\\nRg textus") != NIHIL);
+        CREDO_VERUM (strstr(r, "\\n  Rg fontes") != NIHIL);
+        CREDO_VERUM (strstr(r, "parca ") == NIHIL);
+        CREDO_VERUM (strstr(r, "SALUS") == NIHIL);
+        CREDO_VERUM (strstr(r, "01M") == NIHIL);
+
         /* BREVITER: arbor sola */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":583,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"

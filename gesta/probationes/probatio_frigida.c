@@ -253,6 +253,20 @@ principale (vacuum)
         "\"titulus\":\"Frigida parcum\"}}}"), id_p);
     CREDO_VERUM (strlen(id_q) == (memoriae_index)XXVI);
     CREDO_VERUM (strlen(id_p) == (memoriae_index)XXVI);
+    /* regio et sub-regio pro -mappa (forma lectionis SINE operando) */
+    (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":3,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"addere\",\"arguments\":{\"genus\":\"regio\","
+        "\"titulus\":\"Frigida regio\"}}}");
+    (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":4,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"addere\",\"arguments\":{\"genus\":\"regio\","
+        "\"titulus\":\"Frigida sub-regio\"}}}");
+    (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Frigida sub-regio\","
+        "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
+        "\"Frigida regio\"}}}");
     tabularium_claudere(t);
 
     /* I. quae verba haec unitas novit (principale formas veteres
@@ -483,6 +497,30 @@ principale (vacuum)
         CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
         c = _curre(&cfg, piscina, III, b);
         CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
+    }
+
+    /* -MAPPA: forma lectionis SINE operando - arbor nominum per
+     * ianuam unam; filia indentata; nihil scribit; operanda
+     * superflua = usus */
+    {
+        constans character* a[] = { "frigida", "-mappa" };
+        constans character* b[] = { "frigida", "-mappa", "superfluum" };
+        constans character* an_ante;
+        constans character* an_post;
+
+        CREDO_VERUM (frigida_verbum_novit("-mappa"));
+        an_ante  = _plagula_litterae(piscina, VIA_AN);
+        c        = _curre(&cfg, piscina, II, a);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(c.effusio, "Frigida regio") != NIHIL);
+        CREDO_VERUM (strstr(c.effusio, "\n  Frigida sub-regio")
+            != NIHIL);
+        CREDO_VERUM (strstr(c.effusio, "parca ") == NIHIL);
+        an_post = _plagula_litterae(piscina, VIA_AN);
+        CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
+        c = _curre(&cfg, piscina, III, b);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
+        CREDO_VERUM (strstr(c.errores, "operanda superflua") != NIHIL);
     }
 
     credo_imprimere_compendium();
