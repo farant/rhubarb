@@ -2810,7 +2810,8 @@ _parata_sectionem (
         ParatiClassis  classis,
    constans character* titulus,
                   i32  tectum,
-                  b32  forma_tabulae)
+                  b32  forma_tabulae,
+                  b32  vacuae_omissae)
 {
        i32 numerus = ZEPHYRUM;
        i32 scripta = ZEPHYRUM;
@@ -2829,7 +2830,10 @@ _parata_sectionem (
             numerus++;
         }
     }
-    si (forma_tabulae && numerus == ZEPHYRUM)
+    /* tabula.md et sectio filiorum: classis vacua omittitur;
+     * instrumentum parata eam cum '(0)' scribit - lector tunc scit
+     * classem probatam esse, non omissam */
+    si (numerus == ZEPHYRUM && (forma_tabulae || vacuae_omissae))
     {
         redde ZEPHYRUM;
     }
@@ -2935,15 +2939,15 @@ _parata_reddere (
         redde;
     }
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_LABORI,
-        "AD LABOREM", tectum, forma_tabulae);
+        "AD LABOREM", tectum, forma_tabulae, FALSUM);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_CONSILIO,
-        "AD CONSILIUM", tectum, forma_tabulae);
+        "AD CONSILIUM", tectum, forma_tabulae, FALSUM);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_CLAUSURAE,
-        "AD CLAUSURAM", tectum, forma_tabulae);
+        "AD CLAUSURAM", tectum, forma_tabulae, FALSUM);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_HOMINI,
-        "EXSPECTANT FRANUM", tectum, forma_tabulae);
+        "EXSPECTANT FRANUM", tectum, forma_tabulae, FALSUM);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_IMPEDITUM,
-        "IMPEDITA", tectum, forma_tabulae);
+        "IMPEDITA", tectum, forma_tabulae, FALSUM);
 }
 
 interior vacuum
@@ -6626,6 +6630,131 @@ _vincula_reddere (
     }
 }
 
+#define EFFECTUS_OSTENSUS_MAXIMUS CXX
+
+/* 'effectus' rei (ritus perfectionis: commissum + linea prima
+ * nuntii) - linea una cum positus est, NIHIL cum abest; decurtata
+ * in limite characteris (breviarium lectori context-budgetato
+ * servit). COMMUNE breviario et redditioni plenae. Olim in dato solo
+ * iacebat: breviarium 'quid hoc clausit?' non respondebat. */
+interior vacuum
+_effectum_reddere (
+    ChordaAedificator* aed,
+            JsonValor* st)
+{
+    JsonValor* v;
+       chorda  effectus;
+       chorda  pars;
+
+    si (st == NIHIL)
+    {
+        redde;
+    }
+    v = json_objectum_capere(st, "effectus");
+    si (v == NIHIL || !json_est_chorda(v))
+    {
+        redde;
+    }
+    effectus = json_ad_chorda(v);
+    si (effectus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed, "\neffectus ");
+    si (effectus.mensura <= EFFECTUS_OSTENSUS_MAXIMUS)
+    {
+        chorda_aedificator_appendere_chorda(aed, effectus);
+        redde;
+    }
+    pars          = effectus;
+    pars.mensura  = EFFECTUS_OSTENSUS_MAXIMUS;
+    dum (   pars.mensura > ZEPHYRUM
+         && ((i32)(insignatus character)effectus.datum[pars.mensura]
+                & 0xC0) == 0x80)
+    {
+        pars.mensura--;
+    }
+    chorda_aedificator_appendere_chorda(aed, pars);
+    chorda_aedificator_appendere_literis(aed, "...");
+}
+
+#define FILII_PARATI_TECTUM VIII
+
+/* filii PARATI rei: sectio 'parata sub hac re' ex _parata_computare
+ * (derivatio EADEM ac instrumentum parata, scopo = res), classes
+ * quattuor, tecto et residuo numerato. Tacet omnino si res filios
+ * per 'intra' nullos habet (spatium nullum); 'nihil paratum' dicit
+ * si filios habet sed nullus paratus - ne 'nihil sub ea' cum 'omnia
+ * impedita' confundatur. Vocatio una in propositum arborem ET
+ * catenam dat (visus reditus post compactionem). */
+interior vacuum
+_filios_paratos_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  res_id,
+              Piscina* pn)
+{
+    ScriniumEnuntiatum* e;
+                   s64  filii = (s64)ZEPHYRUM;
+                   Xar* nodi;
+                   i32  scripti = ZEPHYRUM;
+
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT COUNT(*) FROM res n"
+        " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
+        " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+        " AND json_extract(n.datum, '$.verbum') = ?1"
+        " AND b.membrum = ?2");
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    scrinium_ligare_textum(e, I, _ch(VERBUM_INTRA));
+    scrinium_ligare_textum(e, II, res_id);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        filii = scrinium_columna_numerus(e, 0);
+    }
+    scrinium_finire(e);
+    si (filii == (s64)ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed,
+        "\nparata sub hac re:");
+    nodi = _parata_computare(t, res_id, pn);
+    si (nodi != NIHIL)
+    {
+        /* res ipsa in scopo stat - classem suam (e.g. AD CLAUSURAM)
+         * hic non repetimus: filii soli */
+        i32 i;
+
+        per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
+        {
+            ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, i);
+
+            si (n != NIHIL && chorda_aequalis(n->res_id, res_id))
+            {
+                n->classis = PARATUM_NULLUM;
+            }
+        }
+        scripti += _parata_sectionem(nodi, aed, PARATUM_LABORI,
+            "AD LABOREM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+        scripti += _parata_sectionem(nodi, aed, PARATUM_CONSILIO,
+            "AD CONSILIUM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+        scripti += _parata_sectionem(nodi, aed, PARATUM_CLAUSURAE,
+            "AD CLAUSURAM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+        scripti += _parata_sectionem(nodi, aed, PARATUM_HOMINI,
+            "EXSPECTANT FRANUM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+    }
+    si (scripti == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            " nihil paratum (filii clausi aut impediti - parata"
+            " {intra} impedita nominat)");
+    }
+}
+
 /* compendium rei (K4.2 'breviter'): corpus ut textus purus + notae
  * ultimae III (plicatura eas in statum iam fert) + vincula +
  * affordantiae.
@@ -6734,7 +6863,9 @@ _breviarium_reddere (
             }
         }
     }
+    _effectum_reddere(aed, st);
     _vincula_reddere(t, aed, res_id, pn);
+    _filios_paratos_reddere(t, aed, res_id, pn);
     _actiones_reddere(t, aed, res_id, pn);
 }
 
@@ -7081,6 +7212,7 @@ _tab_res (
         _ancoras_reddere(t, aed, st, pn);
     }
     _citationes_reddere(t, aed, res_id);
+    _effectum_reddere(aed, st);
     /* vincula: functio COMMUNIS cum breviario (2026-09-21) */
     _vincula_reddere(t, aed, res_id, pn);
     /* salus (superficies passiva K2 - querelae si insana) */

@@ -880,3 +880,38 @@ byte-exact (`tolerans=False`) because the token form crossed into a
 comment.
 
 Tabularium 608 · frigida 66.
+
+## 2026-09-22 — compact view: the closing commit, and a parent's ready children
+
+Task 01M34RACAD (arcus XI), from Fran asking what would help in use.
+
+**`effectus` line.** The commit wiring writes `effectus` ("hash: first
+line of the message") on every task it closes, but the value lived
+only in the raw datum, so the compact view could not answer "what
+closed this?". Now one line, `effectus <value>`, in both views, only
+when set, capped at 120 bytes on a UTF-8 boundary.
+
+**Ready children on a parent.** An item with children by `intra`
+shows `parata sub hac re:` — its children's ready classes from the
+SAME derivation as the `parata` tool, scoped to the item, empty
+classes omitted, eight rows per class with the remainder counted. So
+one `res` call on a project gives the tree AND the queue: the
+return-to-parent view. The item's own class is suppressed (a park in
+"ready to close" would otherwise list itself among its children). An
+item with no children prints nothing; one whose children are all
+closed or blocked says `nihil paratum` — silence would not tell
+"nothing under it" from "everything blocked".
+
+`_parata_sectionem` gained an omit-empty switch rather than a copy;
+the tool keeps printing `(0)` headers so a reader knows a class was
+checked, the board and the child section omit them.
+
+**Two things my own tests got wrong, worth remembering.** (1) The
+response is JSON text: a newline arrives as the two characters `\n`.
+Three assertions looked for a real newline and failed against correct
+output. (2) Plant A stayed GREEN and `planta` said so ("porta muta"):
+my fault threshold (`> M`) was never reached by the fixtures. A plant
+that cannot fire on the fixtures is not a plant. Replaced with one
+that bites (`>= ZEPHYRUM`).
+
+Five plants, five assertions. Tabularium 623.

@@ -3780,6 +3780,97 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "\"vis\"") != NIHIL);
     }
 
+
+    /* ==================================================
+     * XXXIV. BREVIARIUM: effectus operis + filii parati parentis
+     * (opus 01M34RACAD). Commissum effectum scribit ('hash: linea')
+     * sed breviarium eum non monstrabat (in dato solo). Et vocatio
+     * una in propositum arborem dabat, catenam non.
+     * ================================================== */
+
+    {
+        /* effectus absens: nulla linea. NB responsum textus JSON
+         * est: linea nova ut '\\n' (characteres duo) advenit -
+         * assertiones id spectant */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":440,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Pa I.1 primum\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "\\neffectus ") == NIHIL);
+
+        /* effectus positus (ritus perfectionis): linea adest */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":441,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Pa I.1 primum\","
+            "\"actus\":\"mutatio\",\"clavis\":\"effectus\","
+            "\"valor\":\"abc1234: res gesta est\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":442,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Pa I.1 primum\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "\\neffectus abc1234: res gesta est")
+            != NIHIL);
+        /* forma plena eandem lineam fert (functio communis) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":443,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Pa I.1 primum\"}}}");
+        CREDO_VERUM (strstr(r, "\\neffectus abc1234: res gesta est")
+            != NIHIL);
+
+        /* effectus LONGUS decurtatur (breviarium lectori
+         * context-budgetato servit) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":444,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Pa I.2 secundum\","
+            "\"actus\":\"mutatio\",\"clavis\":\"effectus\","
+            "\"valor\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}}");
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":445,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Pa I.2 secundum\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "\\neffectus aaaa") != NIHIL);
+        CREDO_VERUM (strstr(r, "a...") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                == NIHIL);
+
+        /* PARENS: breviarium filios PARATOS enumerat per classem -
+         * 'Pa propositum': gradus duo ('AD CLAUSURAM' non - gradus
+         * unus clausus est, nepos II.1 paratus, gradus duo filium
+         * apertum habet ergo continens); res extra propositum
+         * absunt */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":446,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Pa propositum\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "parata sub hac re") != NIHIL);
+        CREDO_VERUM (_inter(r, "parata sub hac re", "nexus:",
+            "AD LABOREM"));
+        CREDO_VERUM (_inter(r, "parata sub hac re", "nexus:",
+            "Pa II.1 nepos"));
+        CREDO_FALSUM (_inter(r, "parata sub hac re", "nexus:",
+            "Pa extra scopum"));
+        CREDO_FALSUM (_inter(r, "parata sub hac re", "nexus:",
+            "Pa I.1 primum"));
+
+        /* res SINE filiis: sectio abest omnino (spatium nullum) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":447,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Pa II.1 nepos\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "parata sub hac re") == NIHIL);
+
+        /* parens cuius filii OMNES clausi: sectio dicit id (non
+         * tacet - 'nihil paratum' a 'nihil sub ea' distinguitur) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":448,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Pa gradus unus\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "parata sub hac re") != NIHIL);
+        CREDO_VERUM (strstr(r, "nihil paratum") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
