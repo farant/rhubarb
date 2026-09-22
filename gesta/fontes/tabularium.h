@@ -116,6 +116,19 @@ tabularium_nexum_praeiudicare (
         chorda  verbum,
         chorda  alterum);
 
+/* PRAEIUDICIUM STATUS publicum - LECTIO SOLA. NIHIL = licet;
+ * aliter causae numeratae (res, novus, transitio contra machinam
+ * generis cum LEGALIBUS PROXIMIS) + SCRIPTURA VALIDA. vis = lex
+ * 'scribe, ne obsta' consulto invocata (transitio illegalis tunc
+ * licet). Pro via frigida. */
+constans character*
+tabularium_statum_praeiudicare (
+    Tabularium* tabularium,
+       Piscina* pn,
+        chorda  res,
+        chorda  novus,
+           b32  vis);
+
 /* mundum claudere (scrinium WAL ordinate finitur). Piscina
  * VOCANTIS manet - eam vocans destruit. Pro vocantibus qui machinam
  * sine tabularium_currere agunt (via frigida). NIHIL toleratur. */

@@ -824,3 +824,59 @@ Nothing parses the census text (checked: the `census` hits under
 
 Four plants, four assertions: counts doubled · no trim · `omnia`
 ignored · silent trim (remainder not reported). Tabularium 579.
+
+## 2026-09-22 — status and mutation refusals: all causes, legal next statuses, and an explicit override
+
+Task 01M335DZJM (arcus IX). The link path got Fran's two refusal laws
+on 2026-09-21; status and mutation now have them too.
+
+**What a bad status did before this.** Measured in a throwaway world:
+an illegal transition was WRITTEN. The engine's "record, don't block"
+law fired, a guard note landed on the item, and the tool answered
+"eventum status scriptum" with no error flag. The writer learned
+nothing, the item sat at a status its own machine does not allow, and
+`insalubres` read zero. Two writes in a row put a park at `apertum`
+without a whisper.
+
+**Now: refused at the door, with the way forward.** `_statum_praeiudicare`
+runs BEFORE the handler's general item resolution (so "unknown item"
+is one cause among the others, never a first stop) and collects:
+item unknown or ambiguous · `novus` missing (with the legal statuses,
+so the writer can choose without a second call) · same status (an
+empty event) · transition outside the genus machine, naming the
+current status and the LEGAL NEXT ones from the machine. A genus with
+no machine (`nota`, `decretum`) judges nothing — the progressive law.
+The valid call ends the message; with exactly one legal successor it
+is filled in, with several it shows `<a | b>`.
+
+**The override.** Fran's question was refuse-vs-warn; he chose refuse,
+and I argued the engine's law should stay reachable on purpose:
+`vis: "verum"` writes anyway, and the guard note follows as before. A
+fact worth recording must not be lost to a schema gap — but the
+writer has to say so.
+
+**Mutation.** `datum` must be a JSON object, or `clavis`+`valor`; and
+the key `status` is refused on this path (the machine judges status,
+mutation would bypass it), pointing at `actus: "status"`.
+
+**Cold path.** `-vis` flag (no value); `-status` runs the new public
+read-only `tabularium_statum_praeiudicare`, so the paste-ready command
+carries the legal statuses: `-status "<id>" <tractum | clausum>`, plus
+a line saying how to force. A machine placeholder like `<a | b>` is
+passed through verbatim (the old code would have re-wrapped it as
+`<novus>`).
+
+**Not changed:** the engine and batch effects keep "record, don't
+block"; only this door refuses. Health (`insalubres`) still does not
+flag an item at an unknown status — that is a history problem, not a
+write-time one, and belongs to a later task.
+
+**Seven plants, seven assertions:** illegal not refused · same status
+passes · `vis` ignored · in/out swapped when reading the machine
+(caught by the OLD section VI assertion — the legal list would have
+been wrong for every genus) · `status` via mutation passes · `-vis`
+not forwarded · cold-path pre-check skipped. One anchor had to be
+byte-exact (`tolerans=False`) because the token form crossed into a
+comment.
+
+Tabularium 608 · frigida 66.

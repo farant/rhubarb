@@ -420,7 +420,43 @@ principale (vacuum)
 
         c = _curre(&cfg, piscina, IV, a);
         CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
-        CREDO_VERUM (strstr(c.errores, "res ignota") != NIHIL);
+        CREDO_VERUM (strstr(c.errores, "ignota") != NIHIL);
+    }
+
+    /* XIII. -status ILLEGALIS per viam frigidam (opus 01M335DZJM):
+     * praeiudicium machinae currit, legales proximi nominantur,
+     * IMPERIUM VALIDUM statum legalem fert, nihil scriptum; -vis
+     * scribit tamen (nota custodiae). 'Frigida parcum' parcatum est:
+     * 'apertum' illegale, 'tractum' legale. */
+    {
+        constans character* a[] = { "frigida", "-status",
+            "Frigida parcum", "apertum" };
+        constans character* b[] = { "frigida", "-vis", "-status",
+            "Frigida parcum", "apertum" };
+        constans character* an_ante;
+        constans character* an_post;
+                 character  speratum[CCLVI];
+
+        an_ante  = _plagula_litterae(piscina, VIA_AN);
+        c        = _curre(&cfg, piscina, IV, a);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
+        CREDO_VERUM (strstr(c.errores, "tractum | clausum") != NIHIL);
+        CREDO_VERUM (strstr(c.errores, "IMPERIUM VALIDUM") != NIHIL);
+        /* res in imperio valido ut RES_ID (machina eam solvit -
+         * forma pasta-parata inambigua), legales ut locus-tenens */
+        sprintf(speratum, "-status \"%s\" <tractum | clausum>",
+            id_p);
+        CREDO_VERUM (strstr(c.errores, speratum) != NIHIL);
+        CREDO_VERUM (strstr(c.errores, "-vis") != NIHIL);
+        an_post = _plagula_litterae(piscina, VIA_AN);
+        CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
+
+        CREDO_VERUM (frigida_verbum_novit("-vis"));
+        c = _curre(&cfg, piscina, V, b);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(c.effusio, "status apertum") != NIHIL);
+        an_post = _plagula_litterae(piscina, VIA_AN);
+        CREDO_VERUM (strstr(an_post, "violatio machinae") != NIHIL);
     }
 
     /* XII. -res: LECTIO per ianuam eandem (breviarium). Causa:

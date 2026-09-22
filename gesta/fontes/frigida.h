@@ -43,7 +43,8 @@ frigida_verbum_novit (
     constans character* vexillum);
 
 /* Usus (argv[0] praeteritur):
- *   [-actor A] [-origo O] -status  <res> <novus>
+ *   [-actor A] [-origo O] [-vis] -status <res> <novus>
+ *       (-vis: statum extra machinam generis TAMEN scribere)
  *   [-actor A] [-origo O] -mutatio <res> <clavis> <valor>
  *   [-actor A] [-origo O] -nexus   <res> <verbum> <alterum>
  *   -res <res>            (LECTIO: breviarium; nihil scribit)

@@ -76,7 +76,8 @@ frigida_verbum_novit (
     }
     redde _formam_invenire(vexillum) != NIHIL
         || strcmp(vexillum, "-actor") == ZEPHYRUM
-        || strcmp(vexillum, "-origo") == ZEPHYRUM;
+        || strcmp(vexillum, "-origo") == ZEPHYRUM
+        || strcmp(vexillum, "-vis") == ZEPHYRUM;
 }
 
 interior chorda
@@ -154,6 +155,7 @@ _imperium_validum_appendere (
         ChordaAedificator*  aed,
        constans character*  actor,
        constans character*  origo,
+                      b32   vis,
     constans FrigidaForma*  forma,
        constans character** operanda)
 {
@@ -161,6 +163,10 @@ _imperium_validum_appendere (
 
     chorda_aedificator_appendere_literis(aed,
         "\nIMPERIUM VALIDUM: " FRIGIDA_IMPERIUM);
+    si (vis)
+    {
+        chorda_aedificator_appendere_literis(aed, " -vis");
+    }
     si (actor != NIHIL)
     {
         chorda_aedificator_appendere_literis(aed, " -actor \"");
@@ -178,13 +184,17 @@ _imperium_validum_appendere (
     per (i = ZEPHYRUM; i < IV && forma->operanda[i] != NIHIL; i++)
     {
         chorda_aedificator_appendere_literis(aed, " ");
-        si (   operanda[i]    == NIHIL || operanda[i][0] == '\0'
-            || operanda[i][0] == '<')
+        si (operanda[i] == NIHIL || operanda[i][0] == '\0')
         {
             chorda_aedificator_appendere_literis(aed, "<");
             chorda_aedificator_appendere_literis(aed,
                 forma->operanda[i]);
             chorda_aedificator_appendere_literis(aed, ">");
+        }
+        alioquin si (operanda[i][0] == '<')
+        {
+            /* locus-tenens machinae ('<a | b>') verbatim */
+            chorda_aedificator_appendere_literis(aed, operanda[i]);
         }
         alioquin si (forma->citanda[i])
         {
@@ -210,6 +220,7 @@ _gerere_mittere (
         constans character** operanda,
         constans character*  actor,
         constans character*  origo,
+                       b32   vis,
         constans character** textus)
 {
     JsonValor* radix      = json_objectum_creare(pn);
@@ -228,6 +239,11 @@ _gerere_mittere (
     {
         json_objectum_ponere(argumenta, "actus",
             json_chorda_creare_literis(pn, forma->actus));
+        si (vis)
+        {
+            json_objectum_ponere(argumenta, "vis",
+                json_chorda_creare_literis(pn, "verum"));
+        }
     }
     alioquin
     {
@@ -350,6 +366,7 @@ frigida_currere (
         ChordaAedificator* index;
        constans character* actor_datus  = NIHIL;
        constans character* origo_data   = NIHIL;
+                      b32  vis          = FALSUM;
        constans character* vexillum     = NIHIL;
     constans FrigidaForma* forma        = NIHIL;
        constans character* operanda[IV];
@@ -377,10 +394,18 @@ frigida_currere (
     /* optiones praeviae (-actor, -origo): valor deest = causa, et
      * pergimus - cetera quoque iudicanda sunt */
     dum (   k < argc && (   strcmp(argv[k], "-actor") == ZEPHYRUM
-                      || strcmp(argv[k], "-origo") == ZEPHYRUM))
+                      || strcmp(argv[k], "-origo") == ZEPHYRUM
+                      || strcmp(argv[k], "-vis") == ZEPHYRUM))
     {
         b32 est_actor = strcmp(argv[k], "-actor") == ZEPHYRUM;
 
+        si (strcmp(argv[k], "-vis") == ZEPHYRUM)
+        {
+            /* vexillum sine valore: lex 'scribe, ne obsta' */
+            vis  = VERUM;
+            k    += I;
+            perge;
+        }
         si (k + I < argc && argv[k + I][0] != '-')
         {
             si (est_actor)
@@ -493,6 +518,15 @@ frigida_currere (
                 _ch(operanda[ZEPHYRUM]), _ch(operanda[I]),
                 _ch(operanda[II]));
         }
+        alioquin si (   forma->actus                   != NIHIL
+                     && strcmp(forma->actus, "status") == ZEPHYRUM)
+        {
+            /* transitio contra machinam generis cum LEGALIBUS
+             * PROXIMIS - imperium validum eos fert; -vis scribit
+             * tamen */
+            textus_machinae = tabularium_statum_praeiudicare(t, pn,
+                _ch(operanda[ZEPHYRUM]), _ch(operanda[I]), vis);
+        }
     }
 
     si (causae > ZEPHYRUM || textus_machinae != NIHIL)
@@ -523,15 +557,33 @@ frigida_currere (
              * (partes iam commutatae, verbum iam canonicum) */
             recta[ZEPHYRUM] = _campum_extrahere(pn, textus_machinae,
                 "res: \"");
-            recta[I] = _campum_extrahere(pn, textus_machinae,
-                "verbum: \"");
-            recta[II] = _campum_extrahere(pn, textus_machinae,
-                "alterum: \"");
+            si (_forma_est_nexus(forma))
+            {
+                recta[I] = _campum_extrahere(pn, textus_machinae,
+                    "verbum: \"");
+                recta[II] = _campum_extrahere(pn, textus_machinae,
+                    "alterum: \"");
+            }
+            alioquin
+            {
+                /* status: '<a | b>' aut status unus legalis */
+                recta[I] = _campum_extrahere(pn, textus_machinae,
+                    "novus: \"");
+            }
         }
         si (forma != NIHIL)
         {
             _imperium_validum_appendere(aed, actor_datus, origo_data,
-                forma, recta);
+                vis, forma, recta);
+            si (   !vis && forma->actus != NIHIL
+                && strcmp(forma->actus, "status")            == ZEPHYRUM
+                && textus_machinae                           != NIHIL
+                && strstr(textus_machinae, "extra machinam") != NIHIL)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    "\n  aut, statum extra machinam TAMEN scribere:"
+                    " -vis ante verbum");
+            }
         }
         alioquin
         {
@@ -567,7 +619,8 @@ frigida_currere (
 
         recusatum = _gerere_mittere(t, pn, forma, operanda,
             actor_datus != NIHIL ? actor_datus : "fran",
-            origo_data != NIHIL ? origo_data : "frigida", &textus);
+            origo_data != NIHIL ? origo_data : "frigida", vis,
+            &textus);
 
         fprintf(recusatum ? errores : effusio, "%s\n", textus);
         exitus = recusatum

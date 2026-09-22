@@ -1611,6 +1611,379 @@ _querelam_incipere (
     chorda_aedificator_appendere_literis(aed, caput);
 }
 
+/* status legales PROXIMI ex machina generis in aedificatorem
+ * ("a | b"); reddit numerum. *machina_adest = genus machinam habet
+ * (sine ea nihil iudicatur - lex progressiva). */
+interior i32
+_status_legales_appendere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  genus,
+               chorda  currens,
+              Piscina* pn,
+                  b32* machina_adest)
+{
+    chorda gd = gesta_genus_datum(t->mundus, _litterae(pn, genus),
+        pn);
+    JsonResultus  r;
+       JsonValor* machina;
+             i32  scripti = ZEPHYRUM;
+             i32  i;
+
+    *machina_adest = FALSUM;
+    si (gd.mensura == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    r = json_legere(gd, pn);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde ZEPHYRUM;
+    }
+    machina = json_objectum_capere(r.radix, "machina");
+    si (   machina == NIHIL || !json_est_tabulatum(machina)
+        || json_tabulatum_numerus(machina) == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    *machina_adest = VERUM;
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(machina); i++)
+    {
+        JsonValor* par = json_tabulatum_obtinere(machina, i);
+        JsonValor* ex;
+        JsonValor* in;
+
+        si (   par == NIHIL || !json_est_tabulatum(par)
+            || json_tabulatum_numerus(par) < II)
+        {
+            perge;
+        }
+        ex = json_tabulatum_obtinere(par, ZEPHYRUM);
+        in = json_tabulatum_obtinere(par, I);
+        si (   ex == NIHIL || in == NIHIL || !json_est_chorda(ex)
+            || !json_est_chorda(in)
+            || !chorda_aequalis(json_ad_chorda(ex), currens))
+        {
+            perge;
+        }
+        si (scripti > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, " | ");
+        }
+        chorda_aedificator_appendere_chorda(aed, json_ad_chorda(in));
+        scripti++;
+    }
+    redde scripti;
+}
+
+/* PRAEIUDICIUM STATUS ET MUTATIONIS (decretum 01M32X21NR; opus
+ * 01M335DZJM). Leges eaedem ac vinculi: causae OMNES simul,
+ * SCRIPTURA VALIDA in fine. NIHIL = licet scribere.
+ *
+ * STATUS: olim transitio illegalis SCRIBEBATUR (nota custodiae in
+ * re, responsum 'scriptum' sine signo erroris) - scriptor nihil
+ * discebat et res in statu quem machina sua nescit sedebat. Nunc
+ * recusatur ad ianuam cum statu currente et LEGALIBUS PROXIMIS ex
+ * machina. Lex ingenii 'scribe, ne obsta' manet: 'vis: verum'
+ * eam CONSULTO invocat (scribitur, custodia notat ut olim). Genus
+ * sine machina nihil iudicat (lex progressiva). Status idem =
+ * eventus inanis = recusatur.
+ *
+ * MUTATIO: 'datum' obiectum JSON aut 'clavis'+'valor'; clavis
+ * 'status' per mutationem recusatur - via recta est actus status
+ * (machina eam iudicat, mutatio non).
+ *
+ * Res ipsa HIC solvitur (ante resolutionem generalem tractatoris)
+ * ut 'res ignota' causa INTER ceteras sit. In ramo status rami
+ * legitur. */
+interior constans character*
+_statum_praeiudicare (
+    Tabularium* t,
+       Piscina* pn,
+        chorda  clavis,
+        chorda  ramus_id,
+        chorda  actus,
+     JsonValor* argumenta)
+{
+    ChordaAedificator* index    = chorda_aedificator_creare(pn, DXII);
+    ChordaAedificator* legales  = chorda_aedificator_creare(pn,
+        CCLVI);
+    ChordaAedificator* aed;
+                  i32  numerus     = ZEPHYRUM;
+                  b32  est_status  = _chorda_est(actus, "status");
+               chorda  novus       = _arg(argumenta, "novus");
+               chorda  vis         = _arg(argumenta, "vis");
+               chorda  res_id;
+               chorda  genus;
+               chorda  currens;
+                  b32  machina_adest  = FALSUM;
+                  i32  n_legales      = ZEPHYRUM;
+            character  caput[LXIV];
+
+    res_id.mensura   = ZEPHYRUM;
+    res_id.datum     = NIHIL;
+    genus.mensura    = ZEPHYRUM;
+    genus.datum      = NIHIL;
+    currens.mensura  = ZEPHYRUM;
+    currens.datum    = NIHIL;
+
+    /* res: id, praefixum, titulus (in ramo res_id solum) */
+    si (ramus_id.mensura > ZEPHYRUM)
+    {
+        si (gesta_res_in_ramo_datum(t->mundus, _litterae(pn, clavis),
+                _litterae(pn, ramus_id), pn).mensura > ZEPHYRUM)
+        {
+            res_id   = clavis;
+            currens  = gesta_res_in_ramo_status(t->mundus,
+                _litterae(pn, clavis), _litterae(pn, ramus_id), pn);
+        }
+        alioquin
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index,
+                "res in ramo ignota (in ramo res_id requiritur -"
+                " resolutio tituli truncalis est)");
+        }
+    }
+    alioquin
+    {
+        b32 ambiguum = FALSUM;
+
+        res_id = _res_solvere(t, clavis, pn, &ambiguum);
+        si (ambiguum)
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index, "res: ");
+            _candidatos_appendere(t, index, clavis, pn);
+            res_id.mensura = ZEPHYRUM;
+        }
+        alioquin si (res_id.mensura == ZEPHYRUM)
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index, "res '");
+            chorda_aedificator_appendere_chorda(index, clavis);
+            chorda_aedificator_appendere_literis(index,
+                "' ignota (id, praefixum inambiguum, aut titulus"
+                " exactus)");
+        }
+        alioquin
+        {
+            currens = gesta_res_status(t->mundus,
+                _litterae(pn, res_id), pn);
+        }
+    }
+    si (res_id.mensura > ZEPHYRUM)
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT genus FROM res WHERE res_id = ?");
+
+        si (e != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, res_id);
+            si (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                genus = scrinium_columna_textus(e, 0, pn);
+            }
+            scrinium_finire(e);
+        }
+        si (est_status)
+        {
+            n_legales = _status_legales_appendere(t, legales, genus,
+                currens, pn, &machina_adest);
+        }
+    }
+
+    si (est_status)
+    {
+        si (novus.mensura == ZEPHYRUM)
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index,
+                "novus deest");
+            si (n_legales > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(index,
+                    " - ex '");
+                chorda_aedificator_appendere_chorda(index, currens);
+                chorda_aedificator_appendere_literis(index,
+                    "' licet: ");
+                chorda_aedificator_appendere_chorda(index,
+                    chorda_aedificator_spectare(legales));
+            }
+        }
+        alioquin si (res_id.mensura > ZEPHYRUM)
+        {
+            si (chorda_aequalis(novus, currens))
+            {
+                _querelam_incipere(index, &numerus);
+                chorda_aedificator_appendere_literis(index,
+                    "status '");
+                chorda_aedificator_appendere_chorda(index, novus);
+                chorda_aedificator_appendere_literis(index,
+                    "' iam est - eventus inanis");
+            }
+            alioquin si (   machina_adest
+                         && !_chorda_est(vis, "verum"))
+            {
+                /* transitio legalis? */
+                ChordaAedificator* sonda =
+                    chorda_aedificator_creare(pn, CCLVI);
+                chorda lista    = chorda_aedificator_spectare(legales);
+                   b32 legalis  = FALSUM;
+                   i32 i        = ZEPHYRUM;
+
+                (vacuum)sonda;
+                dum (i < lista.mensura)
+                {
+                    i32 initium = i;
+
+                    dum (   i < lista.mensura
+                         && lista.datum[i] != (i8)' ')
+                    {
+                        i++;
+                    }
+                    si (   i - initium == novus.mensura
+                        && memcmp(lista.datum + initium,
+                               novus.datum,
+                               (memoriae_index)novus.mensura)
+                            == ZEPHYRUM)
+                    {
+                        legalis = VERUM;
+                    }
+                    dum (   i < lista.mensura
+                         && (   lista.datum[i] == (i8)' '
+                             || lista.datum[i] == (i8)'|'))
+                    {
+                        i++;
+                    }
+                }
+                si (!legalis)
+                {
+                    _querelam_incipere(index, &numerus);
+                    chorda_aedificator_appendere_literis(index,
+                        "transitio '");
+                    chorda_aedificator_appendere_chorda(index,
+                        currens);
+                    chorda_aedificator_appendere_literis(index,
+                        "' -> '");
+                    chorda_aedificator_appendere_chorda(index,
+                        novus);
+                    chorda_aedificator_appendere_literis(index,
+                        "' extra machinam generis '");
+                    chorda_aedificator_appendere_chorda(index,
+                        genus);
+                    chorda_aedificator_appendere_literis(index,
+                        "'; ex '");
+                    chorda_aedificator_appendere_chorda(index,
+                        currens);
+                    chorda_aedificator_appendere_literis(index,
+                        "' licet: ");
+                    si (n_legales > ZEPHYRUM)
+                    {
+                        chorda_aedificator_appendere_chorda(index,
+                            lista);
+                    }
+                    alioquin
+                    {
+                        chorda_aedificator_appendere_literis(index,
+                            "NIHIL (status finalis)");
+                    }
+                    chorda_aedificator_appendere_literis(index,
+                        ". Scribere TAMEN (nota custodiae"
+                        " sequetur): vis: \"verum\"");
+                }
+            }
+        }
+    }
+    alioquin
+    {
+        /* mutatio */
+        chorda crudum    = _arg(argumenta, "datum");
+        chorda clavis_m  = _arg(argumenta, "clavis");
+
+        si (crudum.mensura > ZEPHYRUM)
+        {
+            JsonResultus r = json_legere(crudum, pn);
+
+            si (!r.successus || !json_est_objectum(r.radix))
+            {
+                _querelam_incipere(index, &numerus);
+                chorda_aedificator_appendere_literis(index,
+                    "datum: obiectum JSON requiritur (e.g."
+                    " {\"clavis\": \"valor\"})");
+            }
+            alioquin si (json_objectum_habet(r.radix, "status"))
+            {
+                _querelam_incipere(index, &numerus);
+                chorda_aedificator_appendere_literis(index,
+                    "clavis 'status' per mutationem non mutatur -"
+                    " actus: \"status\" (machina generis iudicat)");
+            }
+        }
+        alioquin si (clavis_m.mensura == ZEPHYRUM)
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index,
+                "datum (obiectum JSON) aut clavis + valor"
+                " requiritur");
+        }
+        alioquin si (_chorda_est(clavis_m, "status"))
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index,
+                "clavis 'status' per mutationem non mutatur -"
+                " actus: \"status\" (machina generis iudicat)");
+        }
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    aed = chorda_aedificator_creare(pn, M);
+    sprintf(caput, "%s RECUSATUS (%d %s) - nihil scriptum:",
+        est_status ? "status" : "mutatio", (int)numerus,
+        numerus == I ? "causa" : "causae");
+    chorda_aedificator_appendere_literis(aed, caput);
+    chorda_aedificator_appendere_chorda(aed,
+        chorda_aedificator_finire(index));
+    chorda_aedificator_appendere_literis(aed,
+        "\nSCRIPTURA VALIDA: gerere {res: \"");
+    chorda_aedificator_appendere_chorda(aed,
+        res_id.mensura > ZEPHYRUM ? res_id : clavis);
+    si (est_status)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "\", actus: \"status\", novus: \"");
+        si (n_legales == I)
+        {
+            chorda_aedificator_appendere_chorda(aed,
+                chorda_aedificator_spectare(legales));
+        }
+        alioquin si (n_legales > I)
+        {
+            chorda_aedificator_appendere_literis(aed, "<");
+            chorda_aedificator_appendere_chorda(aed,
+                chorda_aedificator_spectare(legales));
+            chorda_aedificator_appendere_literis(aed, ">");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(aed, "<novus>");
+        }
+        chorda_aedificator_appendere_literis(aed, "\"}");
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "\", actus: \"mutatio\", clavis: \"<clavis>\", valor:"
+            " \"<valor>\"}  aut  {..., datum: \"{\\\"clavis\\\":"
+            " \\\"valor\\\"}\"}");
+    }
+    redde _litterae(pn, chorda_aedificator_finire(aed));
+}
+
 /* PRAEIUDICIUM VINCULI: omnes causae recusationis SIMUL, deinde
  * SCRIPTURA VALIDA (Fran 2026-09-21). Duae leges:
  *
@@ -5443,6 +5816,21 @@ _tab_gerere (
             redde;
         }
     }
+    si (   _chorda_est(actus, "status")
+        || _chorda_est(actus, "mutatio"))
+    {
+        /* PRAEIUDICIUM STATUS/MUTATIONIS ante resolutionem rei
+         * generalem (causae omnes simul, scriptura valida) */
+        constans character* causa = _statum_praeiudicare(t, pn,
+            clavis, ramus_id, actus, argumenta);
+
+        si (causa != NIHIL)
+        {
+            _textum_respondere(t, pn, effusio, id, _ch(causa),
+                VERUM);
+            redde;
+        }
+    }
     si (_chorda_est(actus, "nexus"))
     {
         /* PRAEIUDICIUM VINCULI ante resolutionem rei generalem:
@@ -5528,12 +5916,8 @@ _tab_gerere (
     {
         chorda novus = _arg(argumenta, "novus");
 
-        si (novus.mensura == ZEPHYRUM)
-        {
-            _textum_respondere(t, pn, effusio, id,
-                _ch("status: novus requiritur"), VERUM);
-            redde;
-        }
+        /* praeiudicium supra cucurrit (novus adest, transitio
+         * legalis aut vis) */
         genus_eventus = "status";
         json_objectum_ponere(datum, "novus",
             json_chorda_creare(pn, novus));
@@ -5711,25 +6095,14 @@ _tab_gerere (
         {
             JsonResultus r = json_legere(crudum, pn);
 
-            si (!r.successus || !json_est_objectum(r.radix))
-            {
-                _textum_respondere(t, pn, effusio, id,
-                    _ch("mutatio: datum obiectum JSON"
-                        " requiritur"), VERUM);
-                redde;
-            }
-            datum = r.radix;
-        }
-        alioquin si (clavis_m.mensura > ZEPHYRUM)
-        {
-            json_objectum_ponere_chorda(datum, clavis_m,
-                json_chorda_creare(pn, valor));
+            /* praeiudicium supra: obiectum JSON validum */
+            datum = r.successus ? r.radix : datum;
         }
         alioquin
         {
-            _textum_respondere(t, pn, effusio, id,
-                _ch("mutatio: datum aut clavis+valor"), VERUM);
-            redde;
+            /* praeiudicium supra: clavis adest */
+            json_objectum_ponere_chorda(datum, clavis_m,
+                json_chorda_creare(pn, valor));
         }
         /* captura fragmentorum (genera capturabilia, trunci solum):
          * corpus mutatum -> lineae novae stampantur, tituli
@@ -8588,6 +8961,11 @@ _toolslist_tractare (
           VERUM },
         { "textus", "pro nota", FALSUM },
         { "novus", "pro statu (status novus)", FALSUM },
+        { "vis", "\"verum\" = statum extra machinam generis TAMEN"
+          " scribere (lex ingenii 'scribe, ne obsta' consulto"
+          " invocata; nota custodiae sequitur). Sine eo transitio"
+          " illegalis RECUSATUR cum statibus legalibus proximis",
+          FALSUM },
         { "verbum", "pro nexu. CANONICA (sagitta a re DEPENDENTE ad"
           " id cui innititur): impeditur-a (impeditum -> impediens;"
           " DURUM, visus PARATA legit; impediens genus cum vita sit -"
@@ -9431,6 +9809,34 @@ tabularium_nexum_praeiudicare (
     }
     redde _nexum_praeiudicare(t, pn, res, ramus_nullus, verbum,
         alterum);
+}
+
+constans character*
+tabularium_statum_praeiudicare (
+    Tabularium* t,
+       Piscina* pn,
+        chorda  res,
+        chorda  novus,
+           b32  vis)
+{
+    JsonValor* argumenta = json_objectum_creare(pn);
+       chorda  ramus_nullus;
+
+    ramus_nullus.mensura  = ZEPHYRUM;
+    ramus_nullus.datum    = NIHIL;
+    si (t == NIHIL)
+    {
+        redde "tabularium non apertum";
+    }
+    json_objectum_ponere(argumenta, "novus",
+        json_chorda_creare(pn, novus));
+    si (vis)
+    {
+        json_objectum_ponere(argumenta, "vis",
+            json_chorda_creare_literis(pn, "verum"));
+    }
+    redde _statum_praeiudicare(t, pn, res, ramus_nullus,
+        _ch("status"), argumenta);
 }
 
 vacuum

@@ -3653,6 +3653,133 @@ principale (vacuum)
             || strstr(r, "\\\"omnia\\\"") != NIHIL);
     }
 
+
+    /* ==================================================
+     * XXXIII. RECUSATIONES STATUS ET MUTATIONIS sub legibus decreti
+     * 01M32X21NR (opus 01M335DZJM). Mensuratum ante: transitio
+     * illegalis SCRIBEBATUR, nota custodiae in re, responsum
+     * 'eventum status scriptum' SINE signo erroris - scriptor nihil
+     * discebat, res in statu quem machina sua nescit sedebat,
+     * insalubres 0. Nunc: recusatio ad ianuam, status legales
+     * proximi ex MACHINA generis, scriptura valida, et 'vis' ut
+     * lex 'scribe, ne obsta' ingenii CONSULTO invocari possit.
+     * ================================================== */
+
+    {
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":420,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Status sonda\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+
+        /* TRANSITIO ILLEGALIS: recusata, nihil scriptum, status
+         * currens et LEGALES PROXIMI nominati, scriptura valida */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":421,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"actus\":\"status\",\"novus\":\"apertum\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        /* 'nihil scriptum' in recusatione legitime stat - forma
+         * successus quaeritur */
+        CREDO_VERUM (strstr(r, "eventum status scriptum") == NIHIL);
+        CREDO_VERUM (strstr(r, "'parcatum'") != NIHIL);
+        CREDO_VERUM (strstr(r, "tractum | clausum") != NIHIL);
+        CREDO_VERUM (strstr(r, "SCRIPTURA VALIDA") != NIHIL);
+        CREDO_VERUM (strstr(r, "vis") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":422,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "(parcum, parcatum)") != NIHIL);
+        CREDO_VERUM (strstr(r, "violatio machinae") == NIHIL);
+
+        /* STATUS IDEM: recusatur (eventus inanis) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":423,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"actus\":\"status\",\"novus\":\"parcatum\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "iam") != NIHIL);
+
+        /* NOVUS DEEST: causa cum legalibus (scriptor eligere potest
+         * sine vocatione altera) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":424,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"actus\":\"status\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "novus deest") != NIHIL);
+        CREDO_VERUM (strstr(r, "tractum | clausum") != NIHIL);
+
+        /* VIS: lex ingenii 'scribe, ne obsta' CONSULTO invocata -
+         * scribitur, nota custodiae ut olim */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":425,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"actus\":\"status\",\"novus\":\"apertum\","
+            "\"vis\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "status apertum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":426,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "violatio machinae") != NIHIL);
+
+        /* GENUS SINE MACHINA (nota): status quilibet transit ut
+         * olim - lex progressiva, nihil novi recusatur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":427,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Status nota sonda\"}}}");
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":428,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Status nota sonda\",\"actus\":\"status\","
+            "\"novus\":\"impletum\"}}}");
+        CREDO_VERUM (strstr(r, "status impletum") != NIHIL);
+
+        /* MUTATIO: causae omnes simul + scriptura valida */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":429,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"actus\":\"mutatio\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "SCRIPTURA VALIDA") != NIHIL);
+        CREDO_VERUM (strstr(r, "<clavis>") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":430,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"actus\":\"mutatio\",\"datum\":\"[1,2]\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "obiectum") != NIHIL);
+        CREDO_VERUM (strstr(r, "SCRIPTURA VALIDA") != NIHIL);
+        /* clavis reservata 'status' per mutationem: causa nominata
+         * (via recta = actus status) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":431,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Status sonda\","
+            "\"actus\":\"mutatio\",\"clavis\":\"status\","
+            "\"valor\":\"clausum\"}}}");
+        CREDO_VERUM (strstr(r, "\"isError\":true") != NIHIL);
+        CREDO_VERUM (strstr(r, "actus: \\\"status\\\"") != NIHIL);
+
+        /* RES IGNOTA + NOVUS ILLEGALIS: causae DUAE responso uno
+         * (numquam guttatim) - sine re nota legales dari nequeunt,
+         * sed res ignota et novus absens simul nominantur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":432,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Res nusquam\","
+            "\"actus\":\"status\"}}}");
+        CREDO_VERUM (strstr(r, "(2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "ignota") != NIHIL);
+        CREDO_VERUM (strstr(r, "novus deest") != NIHIL);
+
+        /* schema 'vis' nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":433,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "\"vis\"") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

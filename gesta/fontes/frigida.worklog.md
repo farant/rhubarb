@@ -94,3 +94,15 @@ byte-identical before and after). The first line, `Title (genus,
 status)`, is now a contract with that reader. `FrigidaForma` gained an
 `instrumentum` field; a form with `actus == NIHIL` is a read and
 carries no actor or origin.
+
+## 2026-09-22 — `-vis`, and legal statuses in the paste-ready command
+
+`-status` now runs the machine's read-only status pre-check, so an
+illegal transition is refused with the legal successors in the valid
+command (`-status "<id>" <tractum | clausum>`) and a line on how to
+force. `-vis` is a bare flag before the verb; it is forwarded to the
+machine as `vis: "verum"`. A placeholder the machine already shaped
+(`<a | b>`) is now passed through verbatim instead of being replaced
+by `<novus>`. The item in the valid command is the RESOLVED id, not
+the title the caller typed — pinned. See tabularium.worklog.md same
+date.
