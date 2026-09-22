@@ -4366,6 +4366,210 @@ principale (vacuum)
             "quaestio/apertum  Hq soror?"));
     }
 
+
+    /* ==================================================
+     * XXXIX. GENUS 'REGIO' (opus 01M3567242, mappa I; decreta
+     * 01M35650Z4 collocatio per intra, 01M35656PV regio sine statu):
+     * nodus mappae - locus, non res vitae. Semen v9; parata et
+     * quaerere {intra: regio} SINE codice novo; porta recusat
+     * impeditur-a cum regione utrimque et status in regione;
+     * collocatio in regione NON fixat ('parca visa, non fixa').
+     * ================================================== */
+
+    {
+        constans character* locus;
+                       s64  visa_ante;
+                       s64  visa_post;
+
+        /* SEMEN v9: genus DECLARATUM (lex progressiva rem generis
+         * ignoti creare sinit - declaratio = honestas schematis:
+         * corpus/tags nominata, machina NULLA) */
+        {
+            GestaMundus* sonda = gesta_aperire(piscina, VIA_DB,
+                VIA_AN);
+
+            CREDO_NON_NIHIL (sonda);
+            si (sonda != NIHIL)
+            {
+                chorda c = gesta_genus_datum(sonda, "regio", piscina);
+                character* buf = (character*)piscina_allocare(
+                    piscina, (memoriae_index)c.mensura + I);
+
+                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                {
+                    memcpy(buf, c.datum, (memoriae_index)c.mensura);
+                    buf[c.mensura] = '\0';
+                    CREDO_VERUM (strstr(buf, "\"corpus\"") != NIHIL);
+                    CREDO_VERUM (strstr(buf, "status_initialis")
+                        == NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"machina\"") == NIHIL);
+                }
+                gesta_claudere(sonda);
+            }
+        }
+        /* schema addere.genus regionem nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":529,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "|regio.") != NIHIL);
+
+        /* regio creatur SINE statu (ut decretum); census eam numerat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":530,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"regio\","
+            "\"titulus\":\"Rg textus\",\"corpus\":\"fontes, PDF,"
+            " Unicode - quid haec area sit\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "(regio") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":531,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"regio\","
+            "\"titulus\":\"Rg fontes\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":532,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"census\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "regio/  2") != NIHIL);
+
+        /* 'parca visa, non fixa' ANTE collocationem */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":533,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        locus = strstr(r, "parca visa, non fixa: ");
+        CREDO_NON_NIHIL (locus);
+        visa_ante = locus != NIHIL
+            ? (s64)atol(locus + strlen("parca visa, non fixa: "))
+            : (s64)-I;
+
+        /* arbor UNA: regio intra regionem, parcum intra regionem,
+         * opus intra parcum - omnia per 'intra' */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":534,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Rg fontes\","
+            "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
+            "\"Rg textus\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":535,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Rg parsator sfnt\",\"corpus\":"
+            "\"glyphae ex tabulis\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":536,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Rg parsator sfnt\","
+            "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
+            "\"Rg fontes\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* COLLOCATIO NON FIXAT: parcum intra regionem, sine filio,
+         * sine impedimento, adhuc 'visum, non fixum' (locus non est
+         * planum) - numerus crescit uno */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5361,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        locus = strstr(r, "parca visa, non fixa: ");
+        CREDO_NON_NIHIL (locus);
+        visa_post = locus != NIHIL
+            ? (s64)atol(locus + strlen("parca visa, non fixa: "))
+            : (s64)-II;
+        CREDO_AEQUALIS_S64 (visa_post, visa_ante + (s64)I);
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":537,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"opus\","
+            "\"titulus\":\"Rg opus tabulae cmap\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":538,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Rg opus tabulae cmap\",\"actus\":\"nexus\","
+            "\"verbum\":\"intra\",\"alterum\":"
+            "\"Rg parsator sfnt\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* FILIUS FIXAT: opus intra parcum = ansa - parcum iam
+         * fixum, numerus ad priorem redit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":539,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        locus = strstr(r, "parca visa, non fixa: ");
+        CREDO_NON_NIHIL (locus);
+        visa_post = locus != NIHIL
+            ? (s64)atol(locus + strlen("parca visa, non fixa: "))
+            : (s64)-II;
+        CREDO_AEQUALIS_S64 (visa_post, visa_ante);
+
+        /* parata {intra: REGIO} sine codice novo: opus sub parco sub
+         * regione AD LABOREM; regio ipsa in nulla classe */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":540,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{\"intra\":\"Rg textus\"}}}");
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Rg opus tabulae cmap"));
+        CREDO_VERUM (strstr(r, "regio/") == NIHIL);
+        CREDO_VERUM (strstr(r, "Hq opus sub proposito") == NIHIL);
+
+        /* quaerere {intra: REGIO} sine codice novo */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":541,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":\"glyph*\","
+            "\"intra\":\"Rg textus\"}}}");
+        CREDO_VERUM (strstr(r, "Rg parsator sfnt") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":542,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":\"glyph*\","
+            "\"intra\":\"Hq propositum\"}}}");
+        CREDO_VERUM (strstr(r, "Rg parsator sfnt") == NIHIL);
+
+        /* PORTA: impeditur-a cum regione UTRIMQUE recusatur, causis
+         * omnibus + scriptura valida (lex recusationis) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":543,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Rg parsator sfnt\","
+            "\"actus\":\"nexus\",\"verbum\":\"impeditur-a\","
+            "\"alterum\":\"Rg textus\"}}}");
+        CREDO_VERUM (strstr(r, "RECUSATUS") != NIHIL);
+        CREDO_VERUM (strstr(r, "regio") != NIHIL);
+        CREDO_VERUM (strstr(r, "locus") != NIHIL);
+        CREDO_VERUM (strstr(r, "creatum") == NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":544,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"actus\":\"nexus\",\"verbum\":\"impeditur-a\","
+            "\"alterum\":\"Rg parsator sfnt\"}}}");
+        CREDO_VERUM (strstr(r, "RECUSATUS") != NIHIL);
+        CREDO_VERUM (strstr(r, "creatum") == NIHIL);
+        /* verbum inversum + regio: AMBAE causae simul (numquam
+         * guttatim) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":545,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"actus\":\"nexus\",\"verbum\":\"impedit\","
+            "\"alterum\":\"Rg parsator sfnt\"}}}");
+        CREDO_VERUM (strstr(r, "RECUSATUS (2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "inversum") != NIHIL);
+        CREDO_VERUM (strstr(r, "locus") != NIHIL);
+
+        /* PORTA: status in regione recusatur (lex progressiva
+         * generibus sine machina statum sinit - regio EXCIPITUR:
+         * numquam clauditur) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":546,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"actus\":\"status\",\"novus\":\"clausum\"}}}");
+        CREDO_VERUM (strstr(r, "RECUSATUS") != NIHIL);
+        CREDO_VERUM (strstr(r, "regio statum non habet") != NIHIL);
+        CREDO_VERUM (strstr(r, "eventum status scriptum") == NIHIL);
+        /* mutatio corporis in regione LICET (synthesis viva) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":547,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Rg textus\","
+            "\"actus\":\"mutatio\",\"clavis\":\"corpus\",\"valor\":"
+            "\"fontes, PDF, Unicode, dispositio\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

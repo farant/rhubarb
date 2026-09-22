@@ -1075,3 +1075,37 @@ inventum" beside it.
 Plants: tag appended raw → hyphenated tag not found; NIHIL from the
 kernel reported as "apparatus fractus" without the cause → the
 "invalida" assertion fails.
+
+## 2026-09-22 — genus 'regio': the map's node, a place and not a thing with a life
+
+Task 01M3567242 (mappa I), first stage of park 01M350NBBN after the
+three decrees (01M35650Z4 placement by `intra`, 01M35656PV region as a
+statusless genus, 01M3565C2A visions as marked wishes).
+
+**Seed v9** adds `regio` to the genus table: title, corpus, tags, no
+status machine — like a decree, it never closes. The seeding loop is
+per-genus idempotent, so an existing world grows the genus on its next
+init without a version bump.
+
+**What needed NO code**: `parata {intra: <regio>}` and `quaerere
+{intra: <regio>}`. Nodes enter the ready view through their links, a
+region has no status so it is never `apertus` and never gets a class,
+and the scope walk is generic. Pinned by tests so the free lunch stays
+free.
+
+**Refusals**, both in the pre-checks so every cause arrives at once:
+`impeditur-a` with a region on EITHER side ("locus est, non res
+vitae"), and `status` on a region (the progressive law lets genera
+without a machine write any status silently — right for user-defined
+genera, wrong for a house genus whose whole meaning is "never closes").
+`_cap_genus_rei` gained a prototype; it was defined after both users.
+
+**The count that would have lied in stage IV**: "parca visa, non fixa"
+treated ANY `intra` link as placement in the plan. Placing 62 parks in
+regions would have driven it to zero without a single park gaining a
+question or a blocker. Now an `intra` whose parent is a region does
+not count as fixation — location is not planning.
+
+Plants: seed entry absent → addere refuses the genus; region blockage
+allowed → refusal assertion fails; status on a region allowed; region
+placement counted as fixation → the counter assertion fails.

@@ -44,7 +44,9 @@ interior constans character* constans TABULARII_DOCTRINA =
     "(schema gerere.verbum). ORIENTATIO: parata {breviter} "
     "primum (quid nunc agi potest, quid Franum exspectat), "
     "deinde parata {intra: propositum}. OPERA PLANI = genus opus "
-    "intra parcum; silva.commissio(opus=ID) opus claudit. "
+    "intra parcum; silva.commissio(opus=ID) opus claudit. REGIO = "
+    "locus mappae (genus regio, sine statu): res intra regionem "
+    "collocantur, parata/quaerere {intra: regio}. "
     "QUAESTIO DESIGNI = quaestio natura:consilium (AD COLLOQUIUM); "
     "propositum ab ea impeditur-a. Via crustae: ./gesta/frigida.sh. "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
@@ -115,6 +117,16 @@ nomen structura {
     constans character* titulus;
     constans character* datum;
 } TabulariumSemen;
+
+/* GENUS REGIONIS (semen v9): nodus mappae - vide commentum in
+ * SEMINA_GENERUM et decreta 01M35650Z4, 01M35656PV */
+#define GENUS_REGIONIS "regio"
+
+/* verba canonica quae machina LEGIT (visus parata, scopus 'intra',
+ * praeiudicia portae) - definitiones hic ut praeiudicia supra visum
+ * ea videant */
+#define VERBUM_IMPEDITUR "impeditur-a"
+#define VERBUM_INTRA "intra"
 
 /* semina generum (INTENTIO C decisio 2: ad initium, idempotens) */
 interior constans TabulariumSemen SEMINA_GENERUM[] = {
@@ -275,13 +287,28 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "\"necessarium\":true},{\"titulus\":\"campi\",\"typus\":"
       "\"tabulatum\"},{\"titulus\":\"campus_tituli\",\"typus\":"
       "\"textus\"},{\"titulus\":\"descriptio\",\"typus\":"
-      "\"area\"}],\"reducer\":\"ordinarius\"}" }
+      "\"area\"}],\"reducer\":\"ordinarius\"}" },
+    /* ---- semen v9 (mappa, decreta 01M35650Z4 + 01M35656PV,
+     * 2026-09-22): REGIO = nodus mappae - locus, non res vitae.
+     * Sine machina statuum (ut decretum: numquam clauditur); corpus
+     * = quid area sit (synthesis viva inter sessiones); notae =
+     * historia ordinandi. Res in regione per 'intra' collocantur
+     * (arbor UNA cum parcis et operibus); porta impeditur-a cum
+     * regione et status in regione recusat (_nexum_praeiudicare,
+     * _statum_praeiudicare). Lex progressiva rem generis ignoti
+     * creare sineret - declaratio = honestas schematis. ---- */
+    { GENUS_REGIONIS,
+      "{\"titulus\":\"regio\",\"attributa\":[{\"titulus\":"
+      "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
+      "{\"titulus\":\"corpus\",\"typus\":\"textus\"},{\"titulus\":"
+      "\"tags\",\"typus\":\"tabulatum\"}],"
+      "\"reducer\":\"ordinarius\"}" }
 };
 
 /* scopus fusionis v2 (genera tabulae + nexus); genera K3 infra
  * attributa propria ferunt (emendatio E2-B2) */
 #define SEMINA_BOARD_NUMERUS VI
-#define SEMINA_NUMERUS XV
+#define SEMINA_NUMERUS XVI
 
 /* semen v2 (K2 decisio Q9): attributa in genera VIVA - emendatio
  * integra-substitutio ex definitione currenti + attributa (fusio
@@ -463,6 +490,14 @@ _chorda_est (
         && (m == ZEPHYRUM
             || memcmp(c.datum, litterae, m) == ZEPHYRUM);
 }
+
+/* genus rei ex columna (definitio infra); praeiudicia ea ante
+ * definitionem utuntur */
+interior chorda
+_cap_genus_rei (
+    Tabularium* t,
+        chorda  res_id,
+       Piscina* pn);
 
 interior chorda
 _arg (
@@ -1801,6 +1836,19 @@ _statum_praeiudicare (
 
     si (est_status)
     {
+        /* REGIO statum non habet: locus, non res vitae - numquam
+         * clauditur (decretum 01M35656PV). Lex progressiva genera
+         * sine machina non iudicat; regio EXCIPITUR quia sensus eius
+         * totus est 'sine vita'. Causa INTER ceteras (numquam
+         * guttatim). */
+        si (_chorda_est(genus, GENUS_REGIONIS))
+        {
+            _querelam_incipere(index, &numerus);
+            chorda_aedificator_appendere_literis(index,
+                "regio statum non habet - locus est, non res vitae:"
+                " numquam clauditur (decretum 01M35656PV); corpus per"
+                " mutationem rescribe, notas adde");
+        }
         si (novus.mensura == ZEPHYRUM)
         {
             _querelam_incipere(index, &numerus);
@@ -2112,6 +2160,39 @@ _nexum_praeiudicare (
                 " et res solvi DEBET (res_id aut titulus exactus)");
         }
     }
+    /* REGIO numquam impeditur nec impedit (decretum 01M35656PV):
+     * locus, non res vitae. Utrimque iudicatur, verbo canonico aut
+     * synonymo/inverso eius - causa INTER ceteras. */
+    {
+        chorda effectivum = synonymum ? canonicum : verbum;
+
+        si (_chorda_est(effectivum, VERBUM_IMPEDITUR))
+        {
+            chorda partes[II];
+               i32 p;
+
+            partes[0] = res_id;
+            partes[I] = alterum_id;
+            per (p = ZEPHYRUM; p < II; p++)
+            {
+                si (   partes[p].mensura > ZEPHYRUM
+                    && _chorda_est(_cap_genus_rei(t, partes[p], pn),
+                           GENUS_REGIONIS))
+                {
+                    _querelam_incipere(index, &numerus);
+                    chorda_aedificator_appendere_literis(index,
+                        "regio '");
+                    chorda_aedificator_appendere_chorda(index,
+                        _titulus_membri(t, partes[p], pn));
+                    chorda_aedificator_appendere_literis(index,
+                        "' nec impeditur nec impedit - locus est, non"
+                        " res vitae (decretum 01M35656PV): res in ea"
+                        " colloca ('intra'), impedimentum inter res"
+                        " vitae scribe");
+                }
+            }
+        }
+    }
     si (numerus == ZEPHYRUM)
     {
         redde NIHIL;
@@ -2256,8 +2337,6 @@ _membrum_scribere (
  * creationis).
  * ================================================== */
 
-#define VERBUM_IMPEDITUR "impeditur-a"
-#define VERBUM_INTRA "intra"
 #define PARATA_TECTUM_ORDINARIUM XX
 #define PARATA_PROFUNDITAS XVI
 
@@ -3103,6 +3182,11 @@ interior s64
 _parca_visa_numerare (
     Tabularium* t)
 {
+    /* COLLOCATIO NON FIXAT (decretum 01M35650Z4): 'intra' cuius
+     * parens (pars b) REGIO est locus est, non planum - parcum in
+     * regione sine quaestione, sine impedimento, sine filio adhuc
+     * 'visum, non fixum'. Aliter collocatio LXII parcorum numerum
+     * ad nihil pelleret nullo parco fixo. */
     ScriniumEnuntiatum* e = scrinium_praeparare(
         gesta_scrinium(t->mundus),
         "SELECT COUNT(*) FROM res p WHERE p.genus = 'parcum'"
@@ -3113,7 +3197,13 @@ _parca_visa_numerare (
         "   JOIN membra m ON m.res_id = n.res_id"
         "   WHERE n.genus = 'nexus' AND n.status != 'solutum'"
         "   AND json_extract(n.datum, '$.verbum') IN (?1, ?2)"
-        "   AND m.membrum = p.res_id)");
+        "   AND m.membrum = p.res_id"
+        "   AND NOT (json_extract(n.datum, '$.verbum') = ?2"
+        "     AND m.pars = 'a'"
+        "     AND EXISTS (SELECT 1 FROM membra mb"
+        "       JOIN res rb ON rb.res_id = mb.membrum"
+        "       WHERE mb.res_id = n.res_id AND mb.pars = 'b'"
+        "       AND rb.genus = ?3)))");
     s64 numerus = (s64)ZEPHYRUM;
 
     si (e == NIHIL)
@@ -3122,6 +3212,7 @@ _parca_visa_numerare (
     }
     scrinium_ligare_textum(e, I, _ch(VERBUM_IMPEDITUR));
     scrinium_ligare_textum(e, II, _ch(VERBUM_INTRA));
+    scrinium_ligare_textum(e, III, _ch(GENUS_REGIONIS));
     si (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
         numerus = scrinium_columna_numerus(e, 0);
@@ -3204,15 +3295,16 @@ _parata_reddere (
 
         si (visa > (s64)ZEPHYRUM)
         {
-            character linea[CXXVIII];
+            character linea[CXCII];
 
             sprintf(linea, forma_tabulae
                 ? "\nparca visa, non fixa: %d (aperta, sine vinculo"
-                  " - fixa intra propositum aut impedita a quaestione"
-                  " fiunt)\n"
+                  " plani - fixa intra propositum aut impedita a"
+                  " quaestione fiunt; regio locus est, non planum)\n"
                 : "\nparca visa, non fixa: %d (aperta, sine vinculo"
-                  " - fixa intra propositum aut impedita a quaestione"
-                  " fiunt)", (int)visa);
+                  " plani - fixa intra propositum aut impedita a"
+                  " quaestione fiunt; regio locus est, non planum)",
+                (int)visa);
             chorda_aedificator_appendere_literis(aed, linea);
         }
     }
@@ -9520,12 +9612,18 @@ _toolslist_tractare (
     JsonValor* resultatum   = json_objectum_creare(pn);
     JsonValor* instrumenta  = json_tabulatum_creare(pn);
     interior constans TabArgumentum ARG_ADDERE[] = {
-        { "genus", "quaestio|parcum|decretum|nota|desideratum|opus."
-          " opus = OPUS PLANI gradu commissi (pendens -> susceptum ->"
-          " perfectum|omissum): titulus praefixo plani ('acervus"
-          " I.2: ...'), corpus = SENTENTIA UNA 'quid perfectum"
-          " significat' + ancora ad sectionem plani (numquam copia"
-          " plani), nexus 'intra' ad parcum parentem", VERUM },
+        { "genus", "quaestio|parcum|decretum|nota|desideratum|opus|"
+          "regio. opus = OPUS PLANI gradu commissi (pendens ->"
+          " susceptum -> perfectum|omissum): titulus praefixo plani"
+          " ('acervus I.2: ...'), corpus = SENTENTIA UNA 'quid"
+          " perfectum significat' + ancora ad sectionem plani (numquam"
+          " copia plani), nexus 'intra' ad parcum parentem. regio ="
+          " nodus MAPPAE (locus, sine statu - numquam clauditur, numquam"
+          " impeditur): corpus = quid area sit; res in regione per"
+          " 'intra' collocantur (regio intra regionem quoque), parata/"
+          "quaerere {intra: regio} eam ut scopum accipiunt; collocatio"
+          " NON fixat (parcum in regione sine quaestione adhuc 'visum,"
+          " non fixum')", VERUM },
         { "titulus", "titulus breviarium_est entis", VERUM },
         { "natura", "\"consilium\" in QUAESTIONE = quaestio DESIGNI"
           " (non vitium): in visu parata AD COLLOQUIUM stat, ordine"
