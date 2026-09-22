@@ -41,7 +41,9 @@ interior constans character* constans TABULARII_DOCTRINA =
     "novus?/verbum?/alterum?/clavis?/valor?/datum?/origo?} = "
     "eventus unus; nexus: verba CANONICA impeditur-a|intra|natum-de|"
     "sequitur|respondet-ad, a dependente ad id cui innititur "
-    "(schema gerere.verbum). "
+    "(schema gerere.verbum). ORIENTATIO: parata {breviter} "
+    "primum (quid nunc agi potest, quid Franum exspectat), "
+    "deinde parata {intra: propositum}. "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
     "Latinum: praefixa 'parsur*' - stemmata Anglica sola). res "
     "{res, breviter?} = status + ancorae (CAUTIO si inresolutae) + "
@@ -2273,8 +2275,11 @@ nomen structura {
            chorda titulus;
            chorda status;
            chorda mutatum;
+           chorda creatum;
            chorda assignatum;
               b32 consilii;     /* quaestio consilii (natura) */
+              i32 post;         /* ordo mollis: quot res apertae
+                                 * haec SEQUITUR (transitive) */
               b32 vitalis;      /* genus machinam status habet */
               b32 apertus;      /* vitalis, status non finalis */
               b32 derelictus;   /* relictum / omissum / abiectus */
@@ -2290,7 +2295,10 @@ nomen structura {
     s32 a;          /* dependens / filius */
     s32 b;          /* impediens / parens */
     b32 impedit;    /* VERUM impeditur-a, FALSUM intra */
+    b32 sequitur;   /* VERUM sequitur (ordo mollis, a post b) */
 } ParatiMargo;
+
+#define VERBUM_SEQUITUR "sequitur"
 
 #define PARATA_TITULUS_MAXIMUS XCVI
 
@@ -2416,7 +2424,7 @@ _parati_nodum (
     e = scrinium_praeparare(gesta_scrinium(t->mundus),
         "SELECT genus, titulus, status, mutatum,"
         " COALESCE(json_extract(datum, '$.assignatum'), ''),"
-        " COALESCE(json_extract(datum, '$.natura'), '')"
+        " COALESCE(json_extract(datum, '$.natura'), ''), creatum"
         " FROM res WHERE res_id = ?");
     si (e == NIHIL)
     {
@@ -2442,6 +2450,8 @@ _parati_nodum (
     n->assignatum  = scrinium_columna_textus(e, IV, pn);
     n->consilii    = _chorda_est(scrinium_columna_textus(e, V, pn),
         NATURA_CONSILII) && _chorda_est(n->genus, "quaestio");
+    n->creatum  = scrinium_columna_textus(e, VI, pn);
+    n->post     = ZEPHYRUM;
     scrinium_finire(e);
     n->apertus = !_status_finalis_est(t, n->genus, n->status, pn,
         &n->vitalis) && n->vitalis;
@@ -2467,6 +2477,7 @@ _parati_impedientia (
                   s32  i,
     ChordaAedificator* aed,
                chorda* ultimum_clausum,
+               chorda* ultimum_dies,
                chorda* relictum_out)
 {
     i32 aperta = ZEPHYRUM;
@@ -2509,6 +2520,10 @@ _parati_impedientia (
         si (ultimum_clausum != NIHIL)
         {
             *ultimum_clausum = b->titulus;
+        }
+        si (ultimum_dies != NIHIL)
+        {
+            *ultimum_dies = b->mutatum;
         }
     }
     redde aperta;
@@ -2568,12 +2583,13 @@ _parata_computare (
         " JOIN membra a ON a.res_id = n.res_id AND a.pars = 'a'"
         " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
         " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
-        " AND json_extract(n.datum, '$.verbum') IN (?1, ?2)"
+        " AND json_extract(n.datum, '$.verbum') IN (?1, ?2, ?3)"
         " ORDER BY n.res_id");
     si (e != NIHIL)
     {
         scrinium_ligare_textum(e, I, _ch(VERBUM_IMPEDITUR));
         scrinium_ligare_textum(e, II, _ch(VERBUM_INTRA));
+        scrinium_ligare_textum(e, III, _ch(VERBUM_SEQUITUR));
         dum (scrinium_gradi(e) == SCRINIUM_ORDO)
         {
             chorda verbum = scrinium_columna_textus(e, 0, pn);
@@ -2592,9 +2608,10 @@ _parata_computare (
             {
                 perge;
             }
-            g->a        = a;
-            g->b        = b;
-            g->impedit  = _chorda_est(verbum, VERBUM_IMPEDITUR);
+            g->a         = a;
+            g->b         = b;
+            g->impedit   = _chorda_est(verbum, VERBUM_IMPEDITUR);
+            g->sequitur  = _chorda_est(verbum, VERBUM_SEQUITUR);
         }
         scrinium_finire(e);
     }
@@ -2660,6 +2677,10 @@ _parata_computare (
         {
             perge;
         }
+        si (g->sequitur)
+        {
+            perge;   /* ordo mollis - infra, post arborem */
+        }
         si (g->impedit)
         {
             si (na->apertus)
@@ -2683,6 +2704,43 @@ _parata_computare (
             }
         }
     }
+    /* ORDO MOLLIS 'sequitur' (a post b): gradus 'post' = longitudo
+     * catenae maximae praedecessorum APERTORUM - ordinat intra
+     * sectionem, numquam obstat. Iteratio ad fixum (catenae breves;
+     * cyclus ad PARATA_PROFUNDITAS truncatur). */
+    {
+        i32 gradus;
+        b32 mutatum = VERUM;
+
+        per (gradus = ZEPHYRUM; mutatum && gradus < PARATA_PROFUNDITAS;
+             gradus++)
+        {
+            mutatum = FALSUM;
+            per (i = ZEPHYRUM; i < xar_numerus(margines); i++)
+            {
+                ParatiMargo* g = (ParatiMargo*)xar_obtinere(margines,
+                    i);
+                ParatiNodus* na;
+                ParatiNodus* nb;
+
+                si (g == NIHIL || !g->sequitur)
+                {
+                    perge;
+                }
+                na = (ParatiNodus*)xar_obtinere(nodi, (i32)g->a);
+                nb = (ParatiNodus*)xar_obtinere(nodi, (i32)g->b);
+                si (na == NIHIL || nb == NIHIL || !nb->apertus)
+                {
+                    perge;
+                }
+                si (na->post < nb->post + I)
+                {
+                    na->post  = nb->post + I;
+                    mutatum   = VERUM;
+                }
+            }
+        }
+    }
     si (scopus_id.mensura > ZEPHYRUM)
     {
         scopus = _parati_nodum(t, nodi, scopus_id, pn);
@@ -2693,6 +2751,7 @@ _parata_computare (
               ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, i);
         ChordaAedificator* causa;
                    chorda  ultimum;
+                   chorda  ultimum_dies;
                    chorda  relictum;
                       i32  aperta;
                       s32  p;
@@ -2704,15 +2763,17 @@ _parata_computare (
         {
             perge;
         }
-        causa             = chorda_aedificator_creare(pn, CCLVI);
-        ultimum.mensura   = ZEPHYRUM;
-        ultimum.datum     = NIHIL;
-        relictum.mensura  = ZEPHYRUM;
-        relictum.datum    = NIHIL;
+        causa                 = chorda_aedificator_creare(pn, CCLVI);
+        ultimum.mensura       = ZEPHYRUM;
+        ultimum.datum         = NIHIL;
+        ultimum_dies.mensura  = ZEPHYRUM;
+        ultimum_dies.datum    = NIHIL;
+        relictum.mensura      = ZEPHYRUM;
+        relictum.datum        = NIHIL;
         chorda_aedificator_appendere_literis(causa,
             "impeditur a: ");
         aperta = _parati_impedientia(nodi, margines, (s32)i, causa,
-            &ultimum, &relictum);
+            &ultimum, &ultimum_dies, &relictum);
         /* hereditas: parens impeditus filium impedit */
         p = n->parens;
         per (gradus = ZEPHYRUM;
@@ -2729,7 +2790,7 @@ _parata_computare (
                 frange;
             }
             si (_parati_impedientia(nodi, margines, p, heres,
-                    NIHIL, NIHIL) > ZEPHYRUM)
+                    NIHIL, NIHIL, NIHIL) > ZEPHYRUM)
             {
                 causa = chorda_aedificator_creare(pn, CCLVI);
                 chorda_aedificator_appendere_literis(causa,
@@ -2791,7 +2852,17 @@ _parata_computare (
             chorda_aedificator_appendere_literis(causa,
                 "impedientia clausa (ultimum: '");
             _titulum_decurtatum_appendere(causa, ultimum);
-            chorda_aedificator_appendere_literis(causa, "')");
+            chorda_aedificator_appendere_literis(causa, "'");
+            si (ultimum_dies.mensura >= X)
+            {
+                chorda dies = ultimum_dies;
+
+                dies.mensura = X;   /* YYYY-MM-DD ex ISO */
+                chorda_aedificator_appendere_literis(causa,
+                    ", clausum ");
+                chorda_aedificator_appendere_chorda(causa, dies);
+            }
+            chorda_aedificator_appendere_literis(causa, ")");
         }
         si (relictum.mensura > ZEPHYRUM)
         {
@@ -2809,6 +2880,30 @@ _parata_computare (
                 chorda_aedificator_longitudo(causa) > ZEPHYRUM
                     ? "; " : "", (int)n->dependentes);
             chorda_aedificator_appendere_literis(causa, numeri);
+        }
+        /* ordo mollis: quem sequitur (praedecessor apertus primus) */
+        per (gradus = ZEPHYRUM; gradus < xar_numerus(margines);
+             gradus++)
+        {
+            ParatiMargo* g = (ParatiMargo*)xar_obtinere(margines,
+                gradus);
+            ParatiNodus* nb;
+
+            si (g == NIHIL || !g->sequitur || g->a != (s32)i)
+            {
+                perge;
+            }
+            nb = (ParatiNodus*)xar_obtinere(nodi, (i32)g->b);
+            si (nb == NIHIL || !nb->apertus)
+            {
+                perge;
+            }
+            chorda_aedificator_appendere_literis(causa,
+                chorda_aedificator_longitudo(causa) > ZEPHYRUM
+                    ? "; sequitur '" : "sequitur '");
+            _titulum_decurtatum_appendere(causa, nb->titulus);
+            chorda_aedificator_appendere_literis(causa, "'");
+            frange;
         }
         si (n->parens >= ZEPHYRUM)
         {
@@ -2829,6 +2924,53 @@ _parata_computare (
     redde nodi;
 }
 
+/* CLAVIS ORDINIS sectionis: 'post' ascendens (ordo mollis
+ * 'sequitur': quod alterum sequitur post illud), deinde dependentes
+ * descendentes (potentia), deinde res_id ascendens (creatio) -
+ * determinatus sine horologio. Negativum = a ante b. */
+interior s32
+_parati_ordinem_conferre (
+    constans ParatiNodus* a,
+    constans ParatiNodus* b)
+{
+    si (a->post != b->post)
+    {
+        redde a->post < b->post ? -I : I;
+    }
+    si (a->dependentes != b->dependentes)
+    {
+        redde a->dependentes > b->dependentes ? -I : I;
+    }
+    redde chorda_comparare(a->res_id, b->res_id);
+}
+
+/* AETAS ordinis: 'natus YYYY-MM-DD, tactus YYYY-MM-DD' - ut lector
+ * 'vetus an recens' sine apertione iudicet (relatio cotidiana:
+ * iudicium lectori, evidentia in ordine) */
+interior vacuum
+_aetatem_appendere (
+       ChordaAedificator* aed,
+    constans ParatiNodus* n)
+{
+    chorda natus   = n->creatum;
+    chorda tactus  = n->mutatum;
+
+    si (natus.mensura < X)
+    {
+        redde;
+    }
+    natus.mensura = X;
+    chorda_aedificator_appendere_literis(aed, "  [natus ");
+    chorda_aedificator_appendere_chorda(aed, natus);
+    si (tactus.mensura >= X)
+    {
+        tactus.mensura = X;
+        chorda_aedificator_appendere_literis(aed, ", tactus ");
+        chorda_aedificator_appendere_chorda(aed, tactus);
+    }
+    chorda_aedificator_appendere_literis(aed, "]");
+}
+
 /* sectionem classis reddere: ordo determinatus (dependentes
  * descendentes, deinde res_id), tectum cum residuo NUMERATO.
  * forma_tabulae = markdown tabulae.md (sine res_id). Reddit numerum
@@ -2841,16 +2983,14 @@ _parata_sectionem (
    constans character* titulus,
                   i32  tectum,
                   b32  forma_tabulae,
-                  b32  vacuae_omissae)
+                  b32  vacuae_omissae,
+                  b32  cum_aetate)
 {
-       i32 numerus = ZEPHYRUM;
-       i32 scripta = ZEPHYRUM;
-       i32 i;
-       s32 ultimi_dependentes = (s32)0x7fffffff;
-    chorda ultimus_id;
+                     i32  numerus = ZEPHYRUM;
+                     i32  scripta = ZEPHYRUM;
+                     i32  i;
+    constans ParatiNodus* ultimus  = NIHIL;
 
-    ultimus_id.mensura  = ZEPHYRUM;
-    ultimus_id.datum    = NIHIL;
     per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
     {
         ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, i);
@@ -2882,26 +3022,19 @@ _parata_sectionem (
         per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
         {
             ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, i);
-                    b32  post_ultimum;
 
             si (n == NIHIL || n->classis != classis)
             {
                 perge;
             }
-            /* (dependentes desc, res_id asc) stricte post ultimum */
-            post_ultimum = (s32)n->dependentes < ultimi_dependentes
-                || (   (s32)n->dependentes == ultimi_dependentes
-                    && chorda_comparare(n->res_id, ultimus_id)
-                        > ZEPHYRUM);
-            si (!post_ultimum)
+            /* stricte post ultimum scriptum, minimus inter reliquos */
+            si (   ultimus                              != NIHIL
+                && _parati_ordinem_conferre(n, ultimus) <= ZEPHYRUM)
             {
                 perge;
             }
             si (   optimus == NIHIL
-                || n->dependentes > optimus->dependentes
-                || (   n->dependentes == optimus->dependentes
-                    && chorda_comparare(n->res_id, optimus->res_id)
-                        < ZEPHYRUM))
+                || _parati_ordinem_conferre(n, optimus) < ZEPHYRUM)
             {
                 optimus = n;
             }
@@ -2910,8 +3043,7 @@ _parata_sectionem (
         {
             frange;
         }
-        ultimi_dependentes  = (s32)optimus->dependentes;
-        ultimus_id          = optimus->res_id;
+        ultimus = optimus;
         si (forma_tabulae)
         {
             chorda_aedificator_appendere_literis(aed, "- [");
@@ -2934,6 +3066,10 @@ _parata_sectionem (
             chorda_aedificator_appendere_literis(aed, "  - ");
             chorda_aedificator_appendere_chorda(aed,
                 optimus->causa);
+        }
+        si (cum_aetate)
+        {
+            _aetatem_appendere(aed, optimus);
         }
         si (forma_tabulae)
         {
@@ -2993,26 +3129,61 @@ _parata_reddere (
                chorda  scopus_id,
                   i32  tectum,
                   b32  forma_tabulae,
+                  b32  breviarium_est,
               Piscina* pn)
 {
-    Xar* nodi = _parata_computare(t, scopus_id, pn);
+    Xar* nodi   = _parata_computare(t, scopus_id, pn);
+    b32  aetas  = !forma_tabulae && !breviarium_est;
 
     si (nodi == NIHIL)
     {
         redde;
     }
+    si (breviarium_est)
+    {
+        /* FORMA BREVIS (relatio cotidiana): numeri sex in capite,
+         * deinde summi tres per sectionem - sine aetate */
+              i32 classes[VIII];
+              i32 i;
+        character linea[CCLVI];
+
+        per (i = ZEPHYRUM; i < VIII; i++)
+        {
+            classes[i] = ZEPHYRUM;
+        }
+        per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
+        {
+            ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, i);
+
+            si (n != NIHIL && (i32)n->classis < VIII)
+            {
+                classes[(i32)n->classis]++;
+            }
+        }
+        sprintf(linea, "\nad laborem %d · ad consilium %d · ad"
+            " clausuram %d · exspectant Franum %d · ad colloquium %d"
+            " · impedita %d",
+            (int)classes[PARATUM_LABORI],
+            (int)classes[PARATUM_CONSILIO],
+            (int)classes[PARATUM_CLAUSURAE],
+            (int)classes[PARATUM_HOMINI],
+            (int)classes[PARATUM_COLLOQUIO],
+            (int)classes[PARATUM_IMPEDITUM]);
+        chorda_aedificator_appendere_literis(aed, linea);
+        tectum = III;
+    }
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_LABORI,
-        "AD LABOREM", tectum, forma_tabulae, FALSUM);
+        "AD LABOREM", tectum, forma_tabulae, FALSUM, aetas);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_CONSILIO,
-        "AD CONSILIUM", tectum, forma_tabulae, FALSUM);
+        "AD CONSILIUM", tectum, forma_tabulae, FALSUM, aetas);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_CLAUSURAE,
-        "AD CLAUSURAM", tectum, forma_tabulae, FALSUM);
+        "AD CLAUSURAM", tectum, forma_tabulae, FALSUM, aetas);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_HOMINI,
-        "EXSPECTANT FRANUM", tectum, forma_tabulae, FALSUM);
+        "EXSPECTANT FRANUM", tectum, forma_tabulae, FALSUM, aetas);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_COLLOQUIO,
-        "AD COLLOQUIUM", tectum, forma_tabulae, FALSUM);
+        "AD COLLOQUIUM", tectum, forma_tabulae, FALSUM, aetas);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_IMPEDITUM,
-        "IMPEDITA", tectum, forma_tabulae, FALSUM);
+        "IMPEDITA", tectum, forma_tabulae, FALSUM, aetas);
     /* VISA, NON FIXA: parca aperta sine vinculo canonico ullo -
      * visui invisibilia (extra graphum) sed numquam TACITE.
      * Fixatio = positio consulta (intra / impeditur-a / natura /
@@ -3046,8 +3217,10 @@ _tab_parata (
      JsonValor* id,
           FILE* effusio)
 {
-               chorda  intra    = _arg(argumenta, "intra");
-               chorda  quantum  = _arg(argumenta, "quantum");
+               chorda intra    = _arg(argumenta, "intra");
+               chorda quantum  = _arg(argumenta, "quantum");
+                  b32 breviarium_est   = _chorda_est(
+                      _arg(argumenta, "breviter"), "verum");
                chorda  scopus_id;
     ChordaAedificator* aed       = chorda_aedificator_creare(pn,
         4096);
@@ -3108,7 +3281,8 @@ _tab_parata (
     chorda_aedificator_appendere_literis(aed,
         " - derivata ex grapho (impeditur-a, intra); res extra"
         " graphum non intrant");
-    _parata_reddere(t, aed, scopus_id, tectum, FALSUM, pn);
+    _parata_reddere(t, aed, scopus_id, tectum, FALSUM, breviarium_est,
+        pn);
     _textum_respondere(t, pn, effusio, id,
         chorda_aedificator_finire(aed), FALSUM);
 }
@@ -3399,7 +3573,7 @@ _tabulam_scribere (
         scopus_nullus.mensura  = ZEPHYRUM;
         scopus_nullus.datum    = NIHIL;
         chorda_aedificator_appendere_literis(aed, "\n## PARATA\n");
-        _parata_reddere(t, aed, scopus_nullus, X, VERUM, pn);
+        _parata_reddere(t, aed, scopus_nullus, X, VERUM, FALSUM, pn);
     }
     _tabulae_sectionem(t, aed, "quaestio", "QUAESTIONES", VERUM,
         pn);
@@ -6975,15 +7149,17 @@ _filios_paratos_reddere (
             }
         }
         scripti += _parata_sectionem(nodi, aed, PARATUM_LABORI,
-            "AD LABOREM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+            "AD LABOREM", FILII_PARATI_TECTUM, FALSUM, VERUM, FALSUM);
         scripti += _parata_sectionem(nodi, aed, PARATUM_CONSILIO,
-            "AD CONSILIUM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+            "AD CONSILIUM", FILII_PARATI_TECTUM, FALSUM, VERUM, FALSUM);
         scripti += _parata_sectionem(nodi, aed, PARATUM_CLAUSURAE,
-            "AD CLAUSURAM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+            "AD CLAUSURAM", FILII_PARATI_TECTUM, FALSUM, VERUM, FALSUM);
         scripti += _parata_sectionem(nodi, aed, PARATUM_HOMINI,
-            "EXSPECTANT FRANUM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+            "EXSPECTANT FRANUM", FILII_PARATI_TECTUM, FALSUM, VERUM,
+            FALSUM);
         scripti += _parata_sectionem(nodi, aed, PARATUM_COLLOQUIO,
-            "AD COLLOQUIUM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+            "AD COLLOQUIUM", FILII_PARATI_TECTUM, FALSUM, VERUM,
+            FALSUM);
     }
     si (scripti == ZEPHYRUM)
     {
@@ -9304,7 +9480,7 @@ _toolslist_tractare (
           " I.2: ...'), corpus = SENTENTIA UNA 'quid perfectum"
           " significat' + ancora ad sectionem plani (numquam copia"
           " plani), nexus 'intra' ad parcum parentem", VERUM },
-        { "titulus", "titulus brevis entis", VERUM },
+        { "titulus", "titulus breviarium_est entis", VERUM },
         { "natura", "\"consilium\" in QUAESTIONE = quaestio DESIGNI"
           " (non vitium): in visu parata AD COLLOQUIUM stat, ordine"
           " potentiae; propositum impedire potest (gerere nexus"
@@ -9410,6 +9586,10 @@ _toolslist_tractare (
           " effunditur)", FALSUM }
     };
     interior constans TabArgumentum ARG_PARATA[] = {
+        { "breviter",
+            "\"verum\" = forma breviarium_est (relatio cotidiana):"
+          " numeri sex, summi tres per sectionem, parca visa non"
+          " fixa; sine aetate", FALSUM },
         { "intra", "scopus: res (id, praefixum, titulus) - ipsa et"
           " quae sub ea per 'intra' stant; sine eo tabularium"
           " totum", FALSUM },
@@ -9502,7 +9682,7 @@ _toolslist_tractare (
         " impedimentum PARENTIS hereditatur). Quaeque linea CUR"
         " dicit. Res extra graphum non intrant. Orientatio post"
         " compactionem in proposito: parata {intra: <propositum>}.",
-        ARG_PARATA, II));
+        ARG_PARATA, III));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "legere",
         "Lectio structurata pro apps: textus = tabulatum JSON"
         " rerum (recentissima primum) cum dato plicato inserto,"

@@ -989,3 +989,42 @@ section lists its design questions too.
 Five plants, five assertions: solitary design questions not loaded ·
 mark not read · class never assigned · unplaced count silenced ·
 `natura` line silent. Tabularium 670.
+
+## 2026-09-22 — the ready view as a daily report: age, closure dates, a compact form, soft order
+
+Task 01M335E2KY (arcus X, reshaped). Fran asked how hard the "state
+of things" report had been to produce. Gathering was one call; the
+work was interpretation — and most of that interpretation was reading
+evidence the view had but did not print. Now it prints it.
+
+**Age on every row** — `[natus YYYY-MM-DD, tactus YYYY-MM-DD]` in the
+tool form only (not the board, not the compact form). "Old park whose
+blocker closed months ago" now reads off the row; the judgement stays
+with the reader.
+
+**Closure date in the reason.** `impedientia clausa (ultimum: '…',
+clausum 2026-08-14)` — the blocker's `mutatum`, which is its closing
+event for anything that closed last.
+
+**`parata {breviter}`** — six counts on one line, then three rows per
+section, remainder counted, no ages. This is the daily size. The
+doctrine now says, INSIDE the 2048 characters the host keeps (measured
+at char 713): `ORIENTATIO: parata {breviter} primum, deinde parata
+{intra: propositum}`. A test asserts the sentence's offset from the
+doctrine's start, so a future edit that pushes it past the cut fails.
+
+**Soft order.** `sequitur` links (a follows b) now sort within a
+section: rank = length of the longest chain of OPEN predecessors,
+computed to a fixed point, then leverage, then id. Never blocks —
+pinned: the follower stays in AD LABOREM and its reason says
+`sequitur 'b'`. The order key lives in ONE comparator
+(`_parati_ordinem_conferre`); the old inline compound key was three
+copies waiting to disagree.
+
+**A latina landmine, again:** I named a parameter `brevis`. That is
+`short`. Seven compile errors, none of which said "macro". Renamed.
+
+Seven plants, seven assertions: age silent · closure date silent ·
+rank not computed · rank not in the key · compact form not capped ·
+compact form with ages · orientation sentence moved past the cut.
+Tabularium 689.

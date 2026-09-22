@@ -4120,6 +4120,109 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "\"natura\"") != NIHIL);
     }
 
+
+    /* ==================================================
+     * XXXVII. VISUS PARATA UT RELATIO COTIDIANA (opus 01M335E2KY):
+     * aetas per ordinem, dies clausurae impedientis, forma brevis,
+     * ordo 'sequitur', orientatio in doctrina. Ex colloquio
+     * 2026-09-22: relatio quam Claudius manu ex visu composuit uno
+     * vocamine dari debet - iudicium lectori, evidentia (aetas) in
+     * ordine.
+     * ================================================== */
+
+    {
+        constans character* locus;
+
+        /* AETAS: quisque ordo 'natus YYYY-MM-DD, tactus YYYY-MM-DD'
+         * fert (mundus probationis hodie natus - dies idem; forma
+         * probatur, non valor) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":490,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        locus = _inter_locus(r, "AD COLLOQUIUM", "Qc gamma?");
+        CREDO_VERUM (strstr(locus, "natus 20") != NIHIL);
+        CREDO_VERUM (strstr(locus, ", tactus 20") != NIHIL);
+
+        /* DIES CLAUSURAE impedientis in causa 'impedientia clausa':
+         * 'Pa I.2 secundum' impedientem 'Pa I.1 primum' habet
+         * (perfectum in XXXI) - causa diem fert */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":491,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Qc propositum\","
+            "\"breviter\":\"verum\"}}}");
+        /* Qc propositum: impediens 'Qc nomina stratorum?' clausum in
+         * XXXVI -> in visu toto AD CONSILIUM cum 'clausum 20..' */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":492,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        locus = _inter_locus(r, "AD CONSILIUM", "Qc propositum");
+        CREDO_VERUM (strstr(locus, "impedientia clausa") != NIHIL);
+        CREDO_VERUM (strstr(locus, "clausum 20") != NIHIL);
+
+        /* FORMA BREVIS: numeri sex in capite, summi TRES per
+         * sectionem, residuum numeratum, parca visa non fixa */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":493,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "ad laborem ") != NIHIL);
+        CREDO_VERUM (strstr(r, "ad colloquium ") != NIHIL);
+        CREDO_VERUM (strstr(r, "parca visa, non fixa") != NIHIL);
+        /* AD CONSILIUM in mundo probationis > III res: tres
+         * ostensae, reliquae numeratae */
+        locus = _inter_locus(r, "AD CONSILIUM (", "(et alia ");
+        CREDO_VERUM (locus[0] != '\0');
+        /* aetas in forma brevi ABEST (brevis = brevis) */
+        CREDO_VERUM (strstr(r, "natus 20") == NIHIL);
+
+        /* ORDO 'sequitur': in AD LABOREM opus quod alterum
+         * SEQUITUR post illud stat, quidquid res_id dicit. Opera
+         * duo nova sine impedientibus; 'Sq alpha' (res_id minor)
+         * sequitur 'Sq beta' -> beta ANTE alpha */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":494,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"opus\","
+            "\"titulus\":\"Sq alpha\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":495,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"opus\","
+            "\"titulus\":\"Sq beta\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":496,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "Sq alpha") < strstr(r, "Sq beta"));
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":497,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Sq alpha\","
+            "\"actus\":\"nexus\",\"verbum\":\"sequitur\","
+            "\"alterum\":\"Sq beta\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":498,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "Sq beta") < strstr(r, "Sq alpha"));
+        /* MOLLE: alpha adhuc AD LABOREM (sequitur numquam obstat),
+         * et causa ordinem nominat */
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Sq alpha"));
+        locus = _inter_locus(r, "AD LABOREM", "Sq alpha");
+        CREDO_VERUM (strstr(locus, "sequitur 'Sq beta'") != NIHIL);
+
+        /* DOCTRINA: orientatio in parte NON truncata (ante
+         * MMXLVIII characteres) - hospes id abscindit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":499,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Sq alpha\","
+            "\"breviter\":\"verum\"}}}");
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":500,"
+            "\"method\":\"initialize\",\"params\":{}}");
+        locus = strstr(r, "ORIENTATIO: parata");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && (locus - strstr(r, "TABULARIUM:")) < 2048);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
