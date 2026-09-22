@@ -46,7 +46,8 @@ interior constans character* constans TABULARII_DOCTRINA =
     "deinde parata {intra: propositum}. OPERA PLANI = genus opus "
     "intra parcum; silva.commissio(opus=ID) opus claudit. REGIO = "
     "locus mappae (genus regio, sine statu): res intra regionem "
-    "collocantur, parata/quaerere {intra: regio}. "
+    "collocantur, parata/quaerere {intra: regio}; mappa {} = arbor "
+    "regionum + salus (activitas ordinandi). "
     "QUAESTIO DESIGNI = quaestio natura:consilium (AD COLLOQUIUM); "
     "propositum ab ea impeditur-a. Via crustae: ./gesta/frigida.sh. "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
@@ -498,6 +499,13 @@ _cap_genus_rei (
     Tabularium* t,
         chorda  res_id,
        Piscina* pn);
+
+/* sectio MAPPA tabulae.md (definitio infra, apud instrumentum mappa) */
+interior vacuum
+_tabulae_mappam (
+           Tabularium* t,
+    ChordaAedificator* aed,
+              Piscina* pn);
 
 interior chorda
 _arg (
@@ -3695,6 +3703,8 @@ _tabulam_scribere (
         chorda_aedificator_appendere_literis(aed, "\n## PARATA\n");
         _parata_reddere(t, aed, scopus_nullus, X, VERUM, FALSUM, pn);
     }
+    /* MAPPA post PARATA: ubi res habitant (mappa III) */
+    _tabulae_mappam(t, aed, pn);
     _tabulae_sectionem(t, aed, "quaestio", "QUAESTIONES", VERUM,
         pn);
     _tabulae_sectionem(t, aed, "parcum", "PARCA", VERUM, pn);
@@ -7395,42 +7405,45 @@ _descendentes_colligere (
     redde acies;
 }
 
-/* PAGINA REGIONIS (decretum 01M3565C2A): visiones apertae subarboris
- * primae (una per lineam), deinde 'numeri intra regionem' - parca
- * aperta (dormientia = visa non fixa, eodem numeratore ac visus
- * parata ne definitiones duae discrepent), quaestiones consilii
- * apertae, vitia aperta, opera pendentia, tactus ultimus (mutatum
- * maximum subarboris et regionis). Regio vacua numeros cum nihilo
- * dat: 'nihil hic adhuc' in mappa notitia est. Tacet si res regio
- * non est. */
-interior vacuum
-_regionem_reddere (
-           Tabularium* t,
-    ChordaAedificator* aed,
-               chorda  res_id,
-              Piscina* pn)
-{
-                   Xar* desc;
-     ChordaAedificator* vis;
-                   s32  i;          /* -I = regio ipsa */
-                   i32  visiones    = ZEPHYRUM;
-                   i32  parca       = ZEPHYRUM;
-                   i32  dormientia  = ZEPHYRUM;
-                   i32  consilia    = ZEPHYRUM;
-                   i32  vitia       = ZEPHYRUM;
-                   i32  opera       = ZEPHYRUM;
-                chorda  tactus;
-             character  linea[CCLVI];
+/* NUMERI REGIONIS - numerator UNUS pro pagina regionis et mappa
+ * (ne definitiones duae discrepent): subarbor per 'intra' latitudine
+ * primum; parca aperta (dormientia = visa non fixa, numeratore eodem
+ * ac visus parata), quaestiones consilii apertae, vitia aperta,
+ * opera pendentia, visiones apertae (lineae in 'vis' si datum),
+ * parca directa (filii immediati - limen fissionis), tactus ultimus
+ * (mutatum maximum subarboris et regionis ipsius). */
+nomen structura {
+                  i32  parca;
+                  i32  dormientia;
+                  i32  consilia;
+                  i32  vitia;
+                  i32  opera;
+                  i32  visiones;
+                  i32  parca_directa;
+               chorda  tactus;
+    ChordaAedificator* vis;       /* lineae visionum aut NIHIL */
+} RegionisNumeri;
 
-    si (!_chorda_est(_cap_genus_rei(t, res_id, pn), GENUS_REGIONIS))
-    {
-        redde;
-    }
-    vis             = chorda_aedificator_creare(pn, DXII);
-    tactus.mensura  = ZEPHYRUM;
-    tactus.datum    = NIHIL;
-    desc            = _descendentes_colligere(t, res_id, pn);
-    /* regio ipsa tactum suum fert (index -I = ipsa) */
+interior vacuum
+_regionis_numeros_computare (
+        Tabularium* t,
+            chorda  res_id,
+           Piscina* pn,
+    RegionisNumeri* rn)
+{
+    Xar* desc;
+    s32  i;          /* -I = regio ipsa */
+
+    rn->parca           = ZEPHYRUM;
+    rn->dormientia      = ZEPHYRUM;
+    rn->consilia        = ZEPHYRUM;
+    rn->vitia           = ZEPHYRUM;
+    rn->opera           = ZEPHYRUM;
+    rn->visiones        = ZEPHYRUM;
+    rn->parca_directa   = ZEPHYRUM;
+    rn->tactus.mensura  = ZEPHYRUM;
+    rn->tactus.datum    = NIHIL;
+    desc                = _descendentes_colligere(t, res_id, pn);
     per (i = -I; desc != NIHIL && i < (s32)xar_numerus(desc); i++)
     {
         chorda d = i < (s32)ZEPHYRUM
@@ -7462,10 +7475,10 @@ _regionem_reddere (
         natura   = scrinium_columna_textus(e, III, pn);
         titulus  = scrinium_columna_textus(e, IV, pn);
         scrinium_finire(e);
-        si (   tactus.mensura == ZEPHYRUM
-            || chorda_comparare(mutatum, tactus) > ZEPHYRUM)
+        si (   rn->tactus.mensura == ZEPHYRUM
+            || chorda_comparare(mutatum, rn->tactus) > ZEPHYRUM)
         {
-            tactus = mutatum;
+            rn->tactus = mutatum;
         }
         si (i < (s32)ZEPHYRUM)
         {
@@ -7475,20 +7488,23 @@ _regionem_reddere (
             && _chorda_est(natura, NATURA_VISIONIS)
             && _chorda_est(status, "apertum"))
         {
-            visiones++;
-            chorda_aedificator_appendere_literis(vis, "\n  ");
-            chorda_aedificator_appendere_chorda(vis, d);
-            chorda_aedificator_appendere_literis(vis, "  ");
-            _titulum_decurtatum_appendere(vis, titulus);
+            rn->visiones++;
+            si (rn->vis != NIHIL)
+            {
+                chorda_aedificator_appendere_literis(rn->vis, "\n  ");
+                chorda_aedificator_appendere_chorda(rn->vis, d);
+                chorda_aedificator_appendere_literis(rn->vis, "  ");
+                _titulum_decurtatum_appendere(rn->vis, titulus);
+            }
         }
         alioquin si (   _chorda_est(genus, "parcum")
                      && (   _chorda_est(status, "parcatum")
                          || _chorda_est(status, "tractum")))
         {
-            parca++;
+            rn->parca++;
             si (_parca_visa_numerare(t, d) > (s64)ZEPHYRUM)
             {
-                dormientia++;
+                rn->dormientia++;
             }
         }
         alioquin si (   _chorda_est(genus, "quaestio")
@@ -7497,32 +7513,63 @@ _regionem_reddere (
         {
             si (_chorda_est(natura, NATURA_CONSILII))
             {
-                consilia++;
+                rn->consilia++;
             }
             alioquin
             {
-                vitia++;
+                rn->vitia++;
             }
         }
         alioquin si (   _chorda_est(genus, GENUS_OPERIS)
                      && (   _chorda_est(status, "pendens")
                          || _chorda_est(status, "susceptum")))
         {
-            opera++;
+            rn->opera++;
         }
     }
-    si (visiones > ZEPHYRUM)
+    /* parca directa: filii immediati aperti generis parcum */
     {
-        sprintf(linea, "\nvisiones (%d):", (int)visiones);
-        chorda_aedificator_appendere_literis(aed, linea);
-        chorda_aedificator_appendere_chorda(aed,
-            chorda_aedificator_finire(vis));
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT COUNT(*) FROM res n"
+            " JOIN membra a ON a.res_id = n.res_id AND a.pars = 'a'"
+            " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
+            " JOIN res p ON p.res_id = a.membrum"
+            " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+            " AND json_extract(n.datum, '$.verbum') = ?1"
+            " AND b.membrum = ?2 AND p.genus = 'parcum'"
+            " AND p.status IN ('parcatum', 'tractum')");
+
+        si (e != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, _ch(VERBUM_INTRA));
+            scrinium_ligare_textum(e, II, res_id);
+            si (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                rn->parca_directa = (i32)scrinium_columna_numerus(e,
+                    0);
+            }
+            scrinium_finire(e);
+        }
     }
-    sprintf(linea, "\nnumeri intra regionem: parca aperta %d"
-        " (dormientia %d), quaestiones consilii apertae %d, vitia"
-        " aperta %d, opera pendentia %d, tactus ultimus ",
-        (int)parca, (int)dormientia, (int)consilia, (int)vitia,
-        (int)opera);
+}
+
+/* numeros in lineam UNAM appendere (forma communis paginae et
+ * mappae): 'parca N (dormientia M) · quaestiones consilii N · vitia N
+ * · opera N · visiones N · tactus YYYY-MM-DD' */
+interior vacuum
+_regionis_numeros_appendere (
+          ChordaAedificator* aed,
+    constans RegionisNumeri* rn)
+{
+    character linea[CCLVI];
+       chorda tactus = rn->tactus;
+
+    sprintf(linea, "parca %d (dormientia %d) \xc2\xb7 quaestiones"
+        " consilii %d \xc2\xb7 vitia %d \xc2\xb7 opera %d \xc2\xb7"
+        " visiones %d \xc2\xb7 tactus ", (int)rn->parca,
+        (int)rn->dormientia, (int)rn->consilia, (int)rn->vitia,
+        (int)rn->opera, (int)rn->visiones);
     chorda_aedificator_appendere_literis(aed, linea);
     si (tactus.mensura >= X)
     {
@@ -7533,6 +7580,38 @@ _regionem_reddere (
     {
         chorda_aedificator_appendere_literis(aed, "-");
     }
+}
+
+/* PAGINA REGIONIS (decretum 01M3565C2A): visiones apertae subarboris
+ * primae (una per lineam), deinde 'numeri intra regionem'. Regio
+ * vacua numeros cum nihilo dat: 'nihil hic adhuc' in mappa notitia
+ * est. Tacet si res regio non est. */
+interior vacuum
+_regionem_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  res_id,
+              Piscina* pn)
+{
+    RegionisNumeri rn;
+         character linea[LXIV];
+
+    si (!_chorda_est(_cap_genus_rei(t, res_id, pn), GENUS_REGIONIS))
+    {
+        redde;
+    }
+    rn.vis = chorda_aedificator_creare(pn, DXII);
+    _regionis_numeros_computare(t, res_id, pn, &rn);
+    si (rn.visiones > ZEPHYRUM)
+    {
+        sprintf(linea, "\nvisiones (%d):", (int)rn.visiones);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(rn.vis));
+    }
+    chorda_aedificator_appendere_literis(aed,
+        "\nnumeri intra regionem: ");
+    _regionis_numeros_appendere(aed, &rn);
 }
 
 /* DECISIO PARCI: quaestiones consilii filiae (intra hanc rem) per
@@ -7601,6 +7680,656 @@ _quaestiones_filias_reddere (
         sprintf(linea, ", relictae %d", (int)relictae);
         chorda_aedificator_appendere_literis(aed, linea);
     }
+}
+
+
+/* ==================================================
+ * MAPPA (opus 01M35APSXM, mappa III): superficies activitatis
+ * ORDINANDI, ut 'parata' aedificandi et AD COLLOQUIUM deliberandi.
+ * Arbor regionum (radices = regiones quarum parens 'intra' regio non
+ * est) cum numeris SUBARBORIS per nodum, deinde SALUS = menu
+ * ordinandi: sine regione, sine corpore, supra limen, vacuae, tags
+ * recurrentes sine regione (regiones candidatae - DXIV tags plani
+ * mappa informalis sunt), parca quietissima. Sine horologio:
+ * 'quietissima' ordo est, non aetas - sectio tabulae.md
+ * content-deterministica manet.
+ * ================================================== */
+
+#define MAPPA_LIMEN XX          /* parca directa > limen = findenda */
+#define MAPPA_TAG_LIMEN X       /* tag >= limen usus = candidata */
+#define MAPPA_NOMINATA III      /* nominata per lineam salutis */
+#define MAPPA_PROFUNDITAS XVI
+
+/* regio proxima supra rem per catenam 'intra' (ipsa si regio);
+ * vacua si nulla */
+interior chorda
+_regionem_rei (
+    Tabularium* t,
+        chorda  res_id,
+       Piscina* pn)
+{
+    chorda currens = res_id;
+    chorda nulla;
+       i32 gradus;
+
+    nulla.mensura  = ZEPHYRUM;
+    nulla.datum    = NIHIL;
+    per (gradus = ZEPHYRUM; gradus < MAPPA_PROFUNDITAS; gradus++)
+    {
+        ScriniumEnuntiatum* e;
+                    chorda  parens;
+
+        si (_chorda_est(_cap_genus_rei(t, currens, pn),
+                GENUS_REGIONIS))
+        {
+            redde currens;
+        }
+        e = scrinium_praeparare(gesta_scrinium(t->mundus),
+            "SELECT b.membrum FROM res n"
+            " JOIN membra a ON a.res_id = n.res_id AND a.pars = 'a'"
+            " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
+            " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+            " AND json_extract(n.datum, '$.verbum') = ?1"
+            " AND a.membrum = ?2 ORDER BY n.res_id LIMIT 1");
+        si (e == NIHIL)
+        {
+            redde nulla;
+        }
+        scrinium_ligare_textum(e, I, _ch(VERBUM_INTRA));
+        scrinium_ligare_textum(e, II, currens);
+        parens.mensura  = ZEPHYRUM;
+        parens.datum    = NIHIL;
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            parens = scrinium_columna_textus(e, 0, pn);
+        }
+        scrinium_finire(e);
+        si (parens.mensura == ZEPHYRUM)
+        {
+            redde nulla;
+        }
+        currens = parens;
+    }
+    redde nulla;
+}
+
+/* nodum arboris + filias regiones (recursive, profunditate tecta) */
+interior vacuum
+_mappae_nodum_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  res_id,
+                  i32  gradus,
+                  b32  forma_tabulae,
+              Piscina* pn)
+{
+        RegionisNumeri  rn;
+                   i32  k;
+    ScriniumEnuntiatum* e;
+
+    chorda_aedificator_appendere_literis(aed, "\n");
+    per (k = ZEPHYRUM; k < gradus; k++)
+    {
+        chorda_aedificator_appendere_literis(aed, "  ");
+    }
+    si (forma_tabulae)
+    {
+        chorda_aedificator_appendere_literis(aed, "- ");
+    }
+    chorda_aedificator_appendere_chorda(aed, res_id);
+    chorda_aedificator_appendere_literis(aed, "  ");
+    _titulum_decurtatum_appendere(aed, _titulus_membri(t, res_id,
+        pn));
+    chorda_aedificator_appendere_literis(aed, "  ");
+    rn.vis = NIHIL;
+    _regionis_numeros_computare(t, res_id, pn, &rn);
+    _regionis_numeros_appendere(aed, &rn);
+    si (gradus >= MAPPA_PROFUNDITAS)
+    {
+        redde;
+    }
+    /* filiae regiones */
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT a.membrum FROM res n"
+        " JOIN membra a ON a.res_id = n.res_id AND a.pars = 'a'"
+        " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
+        " JOIN res f ON f.res_id = a.membrum"
+        " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+        " AND json_extract(n.datum, '$.verbum') = ?1"
+        " AND b.membrum = ?2 AND f.genus = ?3 ORDER BY n.res_id");
+    si (e != NIHIL)
+    {
+        Xar* filiae = xar_creare(pn, (i32)magnitudo(chorda));
+
+        scrinium_ligare_textum(e, I, _ch(VERBUM_INTRA));
+        scrinium_ligare_textum(e, II, res_id);
+        scrinium_ligare_textum(e, III, _ch(GENUS_REGIONIS));
+        dum (filiae != NIHIL && scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            chorda* locus = (chorda*)xar_addere(filiae);
+
+            si (locus != NIHIL)
+            {
+                *locus = scrinium_columna_textus(e, 0, pn);
+            }
+        }
+        scrinium_finire(e);
+        per (k = ZEPHYRUM; filiae != NIHIL && k < xar_numerus(filiae);
+             k++)
+        {
+            chorda filia = *(chorda*)xar_obtinere(filiae, k);
+
+            si (!chorda_aequalis(filia, res_id))
+            {
+                _mappae_nodum_reddere(t, aed, filia, gradus + I,
+                    forma_tabulae, pn);
+            }
+        }
+    }
+}
+
+/* arborem totam (radices) aut subarborem unam reddere; reddit
+ * numerum radicum scriptarum */
+interior i32
+_mappae_arborem_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+               chorda  radix_id,
+                  b32  forma_tabulae,
+              Piscina* pn)
+{
+    ScriniumEnuntiatum* e;
+                   Xar* radices;
+                   i32  k;
+                   i32  scriptae = ZEPHYRUM;
+
+    si (radix_id.mensura > ZEPHYRUM)
+    {
+        _mappae_nodum_reddere(t, aed, radix_id, ZEPHYRUM,
+            forma_tabulae, pn);
+        redde I;
+    }
+    radices = xar_creare(pn, (i32)magnitudo(chorda));
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT res_id FROM res WHERE genus = ?1 ORDER BY res_id");
+    si (e == NIHIL || radices == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    scrinium_ligare_textum(e, I, _ch(GENUS_REGIONIS));
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda* locus = (chorda*)xar_addere(radices);
+
+        si (locus != NIHIL)
+        {
+            *locus = scrinium_columna_textus(e, 0, pn);
+        }
+    }
+    scrinium_finire(e);
+    per (k = ZEPHYRUM; k < xar_numerus(radices); k++)
+    {
+                    chorda  r = *(chorda*)xar_obtinere(radices, k);
+        ScriniumEnuntiatum* q = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT p.genus FROM res n"
+            " JOIN membra a ON a.res_id = n.res_id AND a.pars = 'a'"
+            " JOIN membra b ON b.res_id = n.res_id AND b.pars = 'b'"
+            " JOIN res p ON p.res_id = b.membrum"
+            " WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+            " AND json_extract(n.datum, '$.verbum') = ?1"
+            " AND a.membrum = ?2 ORDER BY n.res_id LIMIT 1");
+        b32 radix_est = VERUM;
+
+        si (q != NIHIL)
+        {
+            scrinium_ligare_textum(q, I, _ch(VERBUM_INTRA));
+            scrinium_ligare_textum(q, II, r);
+            si (scrinium_gradi(q) == SCRINIUM_ORDO)
+            {
+                radix_est = !_chorda_est(
+                    scrinium_columna_textus(q, 0, pn), GENUS_REGIONIS);
+            }
+            scrinium_finire(q);
+        }
+        si (radix_est)
+        {
+            _mappae_nodum_reddere(t, aed, r, ZEPHYRUM, forma_tabulae,
+                pn);
+            scriptae++;
+        }
+    }
+    redde scriptae;
+}
+
+/* lineam salutis 'caput: id titulus, ...' ex quaestione SQL cuius
+ * columnae (res_id, titulus) sunt; numerata, prima MAPPA_NOMINATA
+ * nominata; tacet si nulla nisi semper_scribe */
+interior vacuum
+_mappae_lineam_regionum (
+            Tabularium* t,
+     ChordaAedificator* aed,
+    constans character* caput,
+    ScriniumEnuntiatum* e,
+                   b32  semper_scribe,
+               Piscina* pn)
+{
+    ChordaAedificator* nomina   = chorda_aedificator_creare(pn, DXII);
+                  i32  numerus  = ZEPHYRUM;
+            character  linea[LXIV];
+
+    (vacuum)t;
+    dum (e != NIHIL && scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        si (numerus < MAPPA_NOMINATA)
+        {
+            chorda_aedificator_appendere_literis(nomina,
+                numerus > ZEPHYRUM ? ", " : " ");
+            chorda_aedificator_appendere_chorda(nomina,
+                scrinium_columna_textus(e, 0, pn));
+            chorda_aedificator_appendere_literis(nomina, " '");
+            _titulum_decurtatum_appendere(nomina,
+                scrinium_columna_textus(e, I, pn));
+            chorda_aedificator_appendere_literis(nomina, "'");
+        }
+        numerus++;
+    }
+    si (e != NIHIL)
+    {
+        scrinium_finire(e);
+    }
+    si (numerus == ZEPHYRUM && !semper_scribe)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed, "\n");
+    chorda_aedificator_appendere_literis(aed, caput);
+    sprintf(linea, ": %d", (int)numerus);
+    chorda_aedificator_appendere_literis(aed, linea);
+    chorda_aedificator_appendere_chorda(aed,
+        chorda_aedificator_finire(nomina));
+    si (numerus > MAPPA_NOMINATA)
+    {
+        sprintf(linea, " (et alia %d)", (int)(numerus
+            - MAPPA_NOMINATA));
+        chorda_aedificator_appendere_literis(aed, linea);
+    }
+}
+
+/* SALUS MAPPAE. plena = lineae cum limine et ordine quoque (non in
+ * tabula.md: limina mutari possunt, ordo quietis strepitus
+ * diffs esset); sine ea: sine regione + sine corpore solae. */
+interior vacuum
+_mappae_salutem_reddere (
+           Tabularium* t,
+    ChordaAedificator* aed,
+                  b32  plena,
+              Piscina* pn)
+{
+    ScriniumEnuntiatum* e;
+             character  linea[CCLVI];
+
+    /* SINE REGIONE: res apertae strati plani sub nulla regione,
+     * numeratae per genus, prima nominata */
+    {
+        ChordaAedificator* nomina = chorda_aedificator_creare(pn,
+            DXII);
+                      i32 parca     = ZEPHYRUM;
+                      i32 consilia  = ZEPHYRUM;
+                      i32 opera     = ZEPHYRUM;
+                      i32 visiones  = ZEPHYRUM;
+                      i32 nominata  = ZEPHYRUM;
+
+        e = scrinium_praeparare(gesta_scrinium(t->mundus),
+            "SELECT res_id, genus, titulus FROM res WHERE"
+            " (genus = 'parcum' AND status IN ('parcatum', 'tractum'))"
+            " OR (genus = 'quaestio' AND status IN ('apertum',"
+            " 'laborans') AND json_extract(datum, '$.natura') = ?1)"
+            " OR (genus = ?2 AND status IN ('pendens', 'susceptum'))"
+            " OR (genus = 'desideratum' AND status = 'apertum'"
+            " AND json_extract(datum, '$.natura') = ?3)"
+            " ORDER BY genus, res_id");
+        si (e != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, _ch(NATURA_CONSILII));
+            scrinium_ligare_textum(e, II, _ch(GENUS_OPERIS));
+            scrinium_ligare_textum(e, III, _ch(NATURA_VISIONIS));
+            dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                chorda rid    = scrinium_columna_textus(e, 0, pn);
+                chorda genus  = scrinium_columna_textus(e, I, pn);
+
+                si (_regionem_rei(t, rid, pn).mensura > ZEPHYRUM)
+                {
+                    perge;
+                }
+                si (_chorda_est(genus, "parcum"))
+                {
+                    parca++;
+                }
+                alioquin si (_chorda_est(genus, "quaestio"))
+                {
+                    consilia++;
+                }
+                alioquin si (_chorda_est(genus, GENUS_OPERIS))
+                {
+                    opera++;
+                }
+                alioquin
+                {
+                    visiones++;
+                }
+                si (nominata < MAPPA_NOMINATA)
+                {
+                    chorda_aedificator_appendere_literis(nomina,
+                        nominata > ZEPHYRUM ? ", " : " - ");
+                    chorda_aedificator_appendere_chorda(nomina, rid);
+                    chorda_aedificator_appendere_literis(nomina, " '");
+                    _titulum_decurtatum_appendere(nomina,
+                        scrinium_columna_textus(e, II, pn));
+                    chorda_aedificator_appendere_literis(nomina, "'");
+                    nominata++;
+                }
+            }
+            scrinium_finire(e);
+        }
+        sprintf(linea, "\nsine regione: parca %d, quaestiones consilii"
+            " %d, opera %d, visiones %d", (int)parca, (int)consilia,
+            (int)opera, (int)visiones);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(nomina));
+    }
+    /* REGIONES SINE CORPORE */
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT res_id, titulus FROM res WHERE genus = ?1"
+        " AND COALESCE(json_extract(datum, '$.corpus'), '') = ''"
+        " ORDER BY res_id");
+    si (e != NIHIL)
+    {
+        scrinium_ligare_textum(e, I, _ch(GENUS_REGIONIS));
+    }
+    _mappae_lineam_regionum(t, aed, "regiones sine corpore", e, VERUM,
+        pn);
+    si (!plena)
+    {
+        redde;
+    }
+    /* SUPRA LIMEN et VACUAE: per numeros subarboris */
+    {
+        ChordaAedificator* supra   = chorda_aedificator_creare(pn,
+            DXII);
+        ChordaAedificator* vacuae  = chorda_aedificator_creare(pn,
+            DXII);
+                      i32 n_supra   = ZEPHYRUM;
+                      i32 n_vacuae  = ZEPHYRUM;
+
+        e = scrinium_praeparare(gesta_scrinium(t->mundus),
+            "SELECT res_id, titulus FROM res WHERE genus = ?1"
+            " ORDER BY res_id");
+        si (e != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, _ch(GENUS_REGIONIS));
+            dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                chorda rid      = scrinium_columna_textus(e, 0, pn);
+                chorda titulus  = scrinium_columna_textus(e, I, pn);
+                RegionisNumeri rn;
+
+                rn.vis = NIHIL;
+                _regionis_numeros_computare(t, rid, pn, &rn);
+                si (rn.parca_directa > MAPPA_LIMEN)
+                {
+                    chorda_aedificator_appendere_literis(supra,
+                        n_supra > ZEPHYRUM ? ", " : " ");
+                    chorda_aedificator_appendere_chorda(supra, rid);
+                    chorda_aedificator_appendere_literis(supra, " '");
+                    _titulum_decurtatum_appendere(supra, titulus);
+                    sprintf(linea, "' (parca directa %d)",
+                        (int)rn.parca_directa);
+                    chorda_aedificator_appendere_literis(supra, linea);
+                    n_supra++;
+                }
+                si (   rn.parca == ZEPHYRUM && rn.consilia == ZEPHYRUM
+                    && rn.vitia == ZEPHYRUM && rn.opera == ZEPHYRUM
+                    && rn.visiones == ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_literis(vacuae,
+                        n_vacuae > ZEPHYRUM ? ", " : " ");
+                    chorda_aedificator_appendere_chorda(vacuae, rid);
+                    chorda_aedificator_appendere_literis(vacuae, " '");
+                    _titulum_decurtatum_appendere(vacuae, titulus);
+                    chorda_aedificator_appendere_literis(vacuae, "'");
+                    n_vacuae++;
+                }
+            }
+            scrinium_finire(e);
+        }
+        sprintf(linea,
+            "\nregiones supra limen (parca directa > %d): %d",
+            (int)MAPPA_LIMEN, (int)n_supra);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(supra));
+        sprintf(linea, "\nregiones vacuae (nihil apertum, nulla"
+            " visio): %d", (int)n_vacuae);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(vacuae));
+    }
+    /* TAGS RECURRENTES SINE REGIONE: regiones candidatae */
+    {
+        Xar* tags    = gesta_census_tagorum(t->mundus, pn);
+        Xar* tituli  = xar_creare(pn, (i32)magnitudo(chorda));
+        i32  k;
+        i32  n_tags = ZEPHYRUM;
+        ChordaAedificator* nomina = chorda_aedificator_creare(pn,
+            DXII);
+
+        e = scrinium_praeparare(gesta_scrinium(t->mundus),
+            "SELECT titulus FROM res WHERE genus = ?1");
+        si (e != NIHIL && tituli != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, _ch(GENUS_REGIONIS));
+            dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                chorda* locus = (chorda*)xar_addere(tituli);
+
+                si (locus != NIHIL)
+                {
+                    *locus = scrinium_columna_textus(e, 0, pn);
+                }
+            }
+            scrinium_finire(e);
+        }
+        per (k = ZEPHYRUM; tags != NIHIL && k < xar_numerus(tags); k++)
+        {
+            GestaTagNumerus* tn = (GestaTagNumerus*)xar_obtinere(tags,
+                k);
+            b32 nominat = FALSUM;
+            i32 j;
+
+            si (tn == NIHIL || tn->numerus < (s64)MAPPA_TAG_LIMEN)
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; tituli != NIHIL
+                && j < xar_numerus(tituli);
+                 j++)
+            {
+                si (chorda_aequalis_case_insensitivus(tn->tag,
+                        *(chorda*)xar_obtinere(tituli, j)))
+                {
+                    nominat = VERUM;
+                    frange;
+                }
+            }
+            si (nominat)
+            {
+                perge;
+            }
+            si (n_tags < X)
+            {
+                chorda_aedificator_appendere_literis(nomina,
+                    n_tags > ZEPHYRUM ? ", " : " ");
+                chorda_aedificator_appendere_chorda(nomina, tn->tag);
+                sprintf(linea, " (%d)", (int)tn->numerus);
+                chorda_aedificator_appendere_literis(nomina, linea);
+            }
+            n_tags++;
+        }
+        sprintf(linea, "\ntags recurrentes (>= %d usus) nullam regionem"
+            " nominantes: %d", (int)MAPPA_TAG_LIMEN, (int)n_tags);
+        chorda_aedificator_appendere_literis(aed, linea);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(nomina));
+        si (n_tags > X)
+        {
+            sprintf(linea, " (et alia %d)", (int)(n_tags - X));
+            chorda_aedificator_appendere_literis(aed, linea);
+        }
+    }
+    /* PARCA QUIETISSIMA: tactus vetustissimus primus (ordo, non
+     * aetas - sine horologio) */
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT res_id, titulus, mutatum FROM res"
+        " WHERE genus = 'parcum' AND status IN ('parcatum', 'tractum')"
+        " ORDER BY mutatum ASC, res_id LIMIT ?1");
+    si (e != NIHIL)
+    {
+        scrinium_ligare_numerum(e, I, (s64)MAPPA_NOMINATA);
+        chorda_aedificator_appendere_literis(aed,
+            "\nparca quietissima (tactus vetustissimus primus):");
+        dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            chorda tactus = scrinium_columna_textus(e, II, pn);
+
+            chorda_aedificator_appendere_literis(aed, "\n  ");
+            chorda_aedificator_appendere_chorda(aed,
+                scrinium_columna_textus(e, 0, pn));
+            chorda_aedificator_appendere_literis(aed, "  ");
+            _titulum_decurtatum_appendere(aed,
+                scrinium_columna_textus(e, I, pn));
+            chorda_aedificator_appendere_literis(aed, "  (tactus ");
+            si (tactus.mensura >= X)
+            {
+                tactus.mensura = X;
+            }
+            chorda_aedificator_appendere_chorda(aed, tactus);
+            chorda_aedificator_appendere_literis(aed, ")");
+        }
+        scrinium_finire(e);
+    }
+}
+
+/* instrumentum 'mappa' */
+interior vacuum
+_tab_mappa (
+    Tabularium* t,
+       Piscina* pn,
+     JsonValor* argumenta,
+     JsonValor* id,
+          FILE* effusio)
+{
+               chorda regio     = _arg(argumenta, "regio");
+                  b32 breviter  = _chorda_est(_arg(argumenta,
+                      "breviter"), "verum");
+               chorda  radix_id;
+    ChordaAedificator* aed = chorda_aedificator_creare(pn, 4096);
+                  i32  radices;
+
+    radix_id.mensura  = ZEPHYRUM;
+    radix_id.datum    = NIHIL;
+    si (regio.mensura > ZEPHYRUM)
+    {
+        b32 ambiguum = FALSUM;
+
+        radix_id = _res_solvere(t, regio, pn, &ambiguum);
+        si (ambiguum)
+        {
+            ChordaAedificator* q = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(q, "regio: ");
+            _candidatos_appendere(t, q, regio, pn);
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(q), VERUM);
+            redde;
+        }
+        si (radix_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("regio: res ignota (id, praefixum inambiguum, aut"
+                    " titulus exactus) - omitte 'regio' pro mappa"
+                    " tota"), VERUM);
+            redde;
+        }
+        si (!_chorda_est(_cap_genus_rei(t, radix_id, pn),
+                GENUS_REGIONIS))
+        {
+            ChordaAedificator* q = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(q, "'");
+            chorda_aedificator_appendere_chorda(q, regio);
+            chorda_aedificator_appendere_literis(q,
+                "' regio non est (genus ");
+            chorda_aedificator_appendere_chorda(q,
+                _cap_genus_rei(t, radix_id, pn));
+            chorda_aedificator_appendere_literis(q,
+                ") - mappa regiones solas ambulat; pro re alia:"
+                " parata {intra: ...} aut res {res: ...}");
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(q), VERUM);
+            redde;
+        }
+    }
+    chorda_aedificator_appendere_literis(aed,
+        "MAPPA - arbor regionum, numeri subarboris per nodum"
+        " (parca aperta (dormientia = visa non fixa) \xc2\xb7"
+        " quaestiones consilii \xc2\xb7 vitia \xc2\xb7 opera \xc2\xb7"
+        " visiones \xc2\xb7 tactus ultimus)");
+    radices = _mappae_arborem_reddere(t, aed, radix_id, FALSUM, pn);
+    si (radices == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "\n(regiones nullae - addere {genus: \"regio\", titulus,"
+            " corpus} radicem primam condit)");
+    }
+    si (!breviter && radix_id.mensura == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "\n\nSALUS (menu ordinandi):");
+        _mappae_salutem_reddere(t, aed, VERUM, pn);
+    }
+    _textum_respondere(t, pn, effusio, id,
+        chorda_aedificator_finire(aed), FALSUM);
+}
+
+/* sectio '## MAPPA' tabulae.md: arbor + lineae sine limine (sine
+ * regione, sine corpore); solum cum regio ulla exsistit */
+interior vacuum
+_tabulae_mappam (
+           Tabularium* t,
+    ChordaAedificator* aed,
+              Piscina* pn)
+{
+               chorda  nulla;
+                  i32  radices;
+    ChordaAedificator* sectio = chorda_aedificator_creare(pn, 2048);
+
+    nulla.mensura = ZEPHYRUM;
+    nulla.datum = NIHIL;
+    radices = _mappae_arborem_reddere(t, sectio, nulla, VERUM, pn);
+    si (radices == ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed, "\n## MAPPA\n");
+    chorda_aedificator_appendere_chorda(aed,
+        chorda_aedificator_finire(sectio));
+    _mappae_salutem_reddere(t, aed, FALSUM, pn);
+    chorda_aedificator_appendere_literis(aed, "\n");
 }
 
 /* compendium rei (K4.2 'breviter'): corpus ut textus purus + notae
@@ -10043,6 +10772,11 @@ _toolslist_tractare (
         { "quantum", "ordines per sectionem (ordinarius XX, tectum"
           " CC); residuum numeratur", FALSUM }
     };
+    interior constans TabArgumentum ARG_MAPPA[] = {
+        { "regio", "subarbor regionis unius (id, praefixum, titulus);"
+          " sine eo mappa tota", FALSUM },
+        { "breviter", "\"verum\" = arbor sola, sine salute", FALSUM }
+    };
     interior constans TabArgumentum ARG_LEGERE[] = {
         { "genus", "filtrum generis rerum (e.g. pipatum|articulus|"
           "commentarium)", FALSUM },
@@ -10130,6 +10864,17 @@ _toolslist_tractare (
         " dicit. Res extra graphum non intrant. Orientatio post"
         " compactionem in proposito: parata {intra: <propositum>}.",
         ARG_PARATA, III));
+    json_tabulatum_addere(instrumenta, _instrumentum(pn, "mappa",
+        "UBI RES HABITANT - arbor regionum (genus regio, locus sine"
+        " statu) cum numeris SUBARBORIS per nodum (parca aperta,"
+        " dormientia, quaestiones consilii, vitia, opera, visiones,"
+        " tactus ultimus), deinde SALUS = menu activitatis ORDINANDI:"
+        " sine regione (res apertae sub nulla regione), regiones sine"
+        " corpore, supra limen (findendae), vacuae, tags recurrentes"
+        " nullam regionem nominantes (regiones candidatae), parca"
+        " quietissima. Tertia activitas post aedificare (parata) et"
+        " deliberare (AD COLLOQUIUM).",
+        ARG_MAPPA, II));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "legere",
         "Lectio structurata pro apps: textus = tabulatum JSON"
         " rerum (recentissima primum) cum dato plicato inserto,"
@@ -10557,6 +11302,10 @@ _toolscall_tractare (
     alioquin si (_chorda_est(titulus, "parata"))
     {
         _tab_parata(t, pn, argumenta, id, effusio);
+    }
+    alioquin si (_chorda_est(titulus, "mappa"))
+    {
+        _tab_mappa(t, pn, argumenta, id, effusio);
     }
     alioquin si (_chorda_est(titulus, "legere"))
     {

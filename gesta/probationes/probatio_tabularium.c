@@ -4655,9 +4655,9 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "creatum") != NIHIL);
 
         /* PAGINA REGIONIS (breviter): visiones primae, deinde numeri
-         * subarboris - parca aperta I (dormientia 0: parcum filios
-         * habet), quaestiones consilii apertae I, vitia aperta I,
-         * opera pendentia I, tactus ultimus hodie */
+         * subarboris (forma UNA cum mappa) - parca I (dormientia 0:
+         * parcum filios habet), quaestiones consilii I, vitia I,
+         * opera I, tactus hodie */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":561,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"res\",\"arguments\":{\"res\":\"Rg textus\","
@@ -4672,16 +4672,16 @@ principale (vacuum)
         locus = strstr(r, "numeri intra regionem");
         CREDO_NON_NIHIL (locus);
         CREDO_VERUM (locus != NIHIL
-            && strstr(locus, "parca aperta 1 (dormientia 0)") != NIHIL);
+            && strstr(locus, "parca 1 (dormientia 0)") != NIHIL);
         CREDO_VERUM (locus != NIHIL
-            && strstr(locus, "quaestiones consilii apertae 1")
+            && strstr(locus, "quaestiones consilii 1")
                 != NIHIL);
         CREDO_VERUM (locus != NIHIL
-            && strstr(locus, "vitia aperta 1") != NIHIL);
+            && strstr(locus, "vitia 1") != NIHIL);
         CREDO_VERUM (locus != NIHIL
-            && strstr(locus, "opera pendentia 1") != NIHIL);
+            && strstr(locus, "opera 1") != NIHIL);
         CREDO_VERUM (locus != NIHIL
-            && strstr(locus, "tactus ultimus 20") != NIHIL);
+            && strstr(locus, "tactus 20") != NIHIL);
         /* forma plena eadem fert */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":562,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
@@ -4700,7 +4700,7 @@ principale (vacuum)
             "\"res\",\"arguments\":{\"res\":\"Rg horizon vacuus\","
             "\"breviter\":\"verum\"}}}");
         CREDO_VERUM (strstr(r, "visiones (") == NIHIL);
-        CREDO_VERUM (strstr(r, "parca aperta 0 (dormientia 0)")
+        CREDO_VERUM (strstr(r, "parca 0 (dormientia 0)")
             != NIHIL);
         /* parcum non-regio: numeri regionis ABSUNT */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":565,"
@@ -4739,8 +4739,140 @@ principale (vacuum)
         locus = strstr(r, "numeri intra regionem");
         CREDO_NON_NIHIL (locus);
         CREDO_VERUM (locus != NIHIL
-            && strstr(locus, "quaestiones consilii apertae 0")
+            && strstr(locus, "quaestiones consilii 0")
                 != NIHIL);
+    }
+
+
+    /* ==================================================
+     * XLI. INSTRUMENTUM 'MAPPA' (opus 01M35APSXM, mappa III): arbor
+     * regionum cum numeris subarboris per nodum + SALUS mappae (menu
+     * activitatis ordinandi) + sectio '## MAPPA' in tabula.md.
+     * Fixtura ex XXXIX/XL: Rg textus > Rg fontes > Rg parsator sfnt;
+     * Rg horizon vacuus (sine corpore, sine re); visio Rv intra Rg
+     * textus.
+     * ================================================== */
+
+    {
+        constans character* locus;
+                       i32  k;
+
+        /* X notae cum tag 'typographia' - tag recurrens sine regione */
+        per (k = ZEPHYRUM; k < X; k++)
+        {
+            character petitio[CCLVI];
+
+            sprintf(petitio, "{\"jsonrpc\":\"2.0\",\"id\":%d,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"addere\",\"arguments\":{\"genus\":\"nota\","
+                "\"titulus\":\"Mt nota typographica %d\",\"tags\":"
+                "\"typographia\"}}}", (int)(570 + k), (int)k);
+            r = _mitte(t, piscina, petitio);
+            CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        }
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":580,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "MAPPA") != NIHIL);
+        /* ARBOR: radix ante filiam; numeri subarboris in linea */
+        CREDO_VERUM (strstr(r, "Rg textus") != NIHIL);
+        CREDO_VERUM (strstr(r, "Rg fontes") != NIHIL);
+        CREDO_VERUM (strstr(r, "Rg textus") < strstr(r, "Rg fontes"));
+        locus = strstr(r, "Rg textus");
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "parca 1 (dormientia 0)") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "visiones 1") != NIHIL);
+        locus = strstr(r, "Rg horizon vacuus");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "parca 0 (dormientia 0)") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "visiones 0") != NIHIL);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "tactus 20") != NIHIL);
+        /* parca ipsa in arbore NON enumerantur (regiones solae) */
+        CREDO_FALSUM (_inter(r, "MAPPA", "SALUS", "Rg parsator sfnt"));
+
+        /* SALUS: sine regione numerata per genus, prima nominata;
+         * parcum in regione ABSENS */
+        CREDO_VERUM (strstr(r, "SALUS") != NIHIL);
+        CREDO_VERUM (strstr(r, "sine regione: parca ") != NIHIL);
+        CREDO_FALSUM (_inter(r, "sine regione", "regiones sine corpore",
+            "Rg parsator sfnt"));
+        /* regiones sine corpore: horizon et fontes, non textus */
+        CREDO_VERUM (_inter(r, "regiones sine corpore",
+            "regiones supra limen", "Rg horizon vacuus"));
+        CREDO_VERUM (_inter(r, "regiones sine corpore",
+            "regiones supra limen", "Rg fontes"));
+        CREDO_FALSUM (_inter(r, "regiones sine corpore",
+            "regiones supra limen", "Rg textus"));
+        /* regiones vacuae: horizon sola */
+        CREDO_VERUM (_inter(r, "regiones vacuae", "tags recurrentes",
+            "Rg horizon vacuus"));
+        CREDO_FALSUM (_inter(r, "regiones vacuae", "tags recurrentes",
+            "Rg textus"));
+        /* tag recurrens nullam regionem nominans */
+        CREDO_VERUM (strstr(r, "typographia (10)") != NIHIL);
+        /* parca quietissima: caput et tactus */
+        locus = strstr(r, "parca quietissima");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus, "(tactus 20") != NIHIL);
+
+        /* regio cum titulo tagi: tag non amplius candidata */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":581,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"regio\","
+            "\"titulus\":\"Typographia\",\"corpus\":\"ars"
+            " litterarum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":582,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "typographia (10)") == NIHIL);
+
+        /* BREVITER: arbor sola */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":583,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "Rg textus") != NIHIL);
+        CREDO_VERUM (strstr(r, "SALUS") == NIHIL);
+        /* REGIO: subarbor sola */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":584,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{\"regio\":\"Rg fontes\"}}}");
+        CREDO_VERUM (strstr(r, "Rg fontes") != NIHIL);
+        CREDO_VERUM (strstr(r, "Rg textus") == NIHIL);
+        CREDO_VERUM (strstr(r, "Rg horizon vacuus") == NIHIL);
+        /* res quae regio non est: recusatio clara */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":585,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{\"regio\":"
+            "\"Rg parsator sfnt\"}}}");
+        CREDO_VERUM (strstr(r, "regio non est") != NIHIL);
+
+        /* tabula.md: sectio MAPPA post PARATA cum arbore et sine
+         * regione */
+        {
+            constans character* tabula = _plagula_litterae(piscina,
+                VIA_TB);
+
+            CREDO_VERUM (strstr(tabula, "## MAPPA") != NIHIL);
+            CREDO_VERUM (_inter(tabula, "## MAPPA", "## QUAESTIONES",
+                "Rg textus"));
+            CREDO_VERUM (_inter(tabula, "## MAPPA", "## QUAESTIONES",
+                "sine regione"));
+            CREDO_VERUM (strstr(tabula, "## MAPPA") != NIHIL
+                && strstr(tabula, "## PARATA")
+                    < strstr(tabula, "## MAPPA"));
+        }
+
+        /* schema instrumentum nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":586,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "\"mappa\"") != NIHIL);
     }
 
     credo_imprimere_compendium();

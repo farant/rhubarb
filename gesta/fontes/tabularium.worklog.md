@@ -1139,3 +1139,34 @@ Silent when the park has no design questions.
 
 Plants: vision not skipped → AD CONSILIUM assertion fails; region
 counts silent; decided questions not counted.
+
+## 2026-09-22 — stage III: the map tool, and the ordering activity's menu
+
+Task 01M35APSXM (mappa III). The map is the third activity's surface,
+as `parata` is building's and AD COLLOQUIUM is deliberating's.
+
+**`mappa {regio?, breviter?}`.** The region tree, roots = regions whose
+`intra` parent is not a region, indented two spaces per level, every
+line carrying the SUBTREE counts (parks with dormant in parentheses,
+design questions, bugs, tasks, visions, last touch). The counter was
+extracted from the region page into `_regionis_numeros_computare` so
+the page and the map cannot disagree. `regio:` = that subtree only,
+tree alone; `breviter` = tree alone.
+
+**Health, the activity's menu**, after the tree: `sine regione`
+(open parks, design questions, tasks and visions with no region
+ancestor — counted by genus, first three named); regions without a
+corpus; regions above the split threshold (direct open parks >
+MAPPA_LIMEN); empty regions (nothing open, no vision); recurring tags
+that name no region (>= MAPPA_TAG_LIMEN uses, title match
+case-insensitive — the 514 flat tags are the informal map, and this
+line is where candidates surface); and the three quietest open parks
+by last touch. No wall clock anywhere: "quietest" is an ordering, not
+an age, so the board section stays content-deterministic.
+
+**`## MAPPA` in tabula.md**, after PARATA, only when a region exists:
+tree + the two lines that need no threshold (sine regione, sine
+corpore).
+
+Plants: tree numbers silent; sine regione not counted; recurring tag
+not named.
