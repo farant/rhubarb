@@ -2258,8 +2258,14 @@ nomen enumeratio {
     PARATUM_CONSILIO,
     PARATUM_CLAUSURAE,
     PARATUM_HOMINI,
-    PARATUM_IMPEDITUM
+    PARATUM_IMPEDITUM,
+    PARATUM_COLLOQUIO     /* quaestio consilii aperta */
 } ParatiClassis;
+
+/* quaestio CONSILII: quaestio cum 'natura: consilium' - quaestio
+ * designi, non vitium; propositum impedire potest (impeditur-a);
+ * natura eam in graphum ponit ut assignatio (actus consultus). */
+#define NATURA_CONSILII "consilium"
 
 nomen structura {
            chorda res_id;
@@ -2268,6 +2274,7 @@ nomen structura {
            chorda status;
            chorda mutatum;
            chorda assignatum;
+              b32 consilii;     /* quaestio consilii (natura) */
               b32 vitalis;      /* genus machinam status habet */
               b32 apertus;      /* vitalis, status non finalis */
               b32 derelictus;   /* relictum / omissum / abiectus */
@@ -2408,7 +2415,8 @@ _parati_nodum (
     }
     e = scrinium_praeparare(gesta_scrinium(t->mundus),
         "SELECT genus, titulus, status, mutatum,"
-        " COALESCE(json_extract(datum, '$.assignatum'), '')"
+        " COALESCE(json_extract(datum, '$.assignatum'), ''),"
+        " COALESCE(json_extract(datum, '$.natura'), '')"
         " FROM res WHERE res_id = ?");
     si (e == NIHIL)
     {
@@ -2432,6 +2440,8 @@ _parati_nodum (
     n->status      = scrinium_columna_textus(e, II, pn);
     n->mutatum     = scrinium_columna_textus(e, III, pn);
     n->assignatum  = scrinium_columna_textus(e, IV, pn);
+    n->consilii    = _chorda_est(scrinium_columna_textus(e, V, pn),
+        NATURA_CONSILII) && _chorda_est(n->genus, "quaestio");
     scrinium_finire(e);
     n->apertus = !_status_finalis_est(t, n->genus, n->status, pn,
         &n->vitalis) && n->vitalis;
@@ -2601,6 +2611,21 @@ _parata_computare (
         }
         scrinium_finire(e);
     }
+    /* quaestiones CONSILII apertae (etiam solitariae): natura eas
+     * in graphum ponit ut assignatio - catena colloquiorum */
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT res_id FROM res WHERE genus = 'quaestio'"
+        " AND json_extract(datum, '$.natura') = ?1 ORDER BY res_id");
+    si (e != NIHIL)
+    {
+        scrinium_ligare_textum(e, I, _ch(NATURA_CONSILII));
+        dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            (vacuum)_parati_nodum(t, nodi,
+                scrinium_columna_textus(e, 0, pn), pn);
+        }
+        scrinium_finire(e);
+    }
     /* res Frano EXPRESSE assignatae (etiam solitariae): assignatio
      * rem in catenam ponit ut vinculum - actus consultus, non
      * coniectura. Cursus vivus primus id docuit: quaestio Frano
@@ -2724,7 +2749,12 @@ _parata_computare (
             n->causa    = chorda_aedificator_finire(causa);
             perge;
         }
-        si (_chorda_est(n->assignatum, "fran"))
+        si (n->consilii)
+        {
+            /* quaestio consilii: AD COLLOQUIUM, quidquid assignatum */
+            n->classis = PARATUM_COLLOQUIO;
+        }
+        alioquin si (_chorda_est(n->assignatum, "fran"))
         {
             n->classis = PARATUM_HOMINI;
         }
@@ -2922,6 +2952,39 @@ _parata_sectionem (
     redde numerus;
 }
 
+/* parca aperta SINE vinculo canonico vivo et sine assignatione:
+ * 'visa, non fixa' */
+interior s64
+_parca_visa_numerare (
+    Tabularium* t)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT COUNT(*) FROM res p WHERE p.genus = 'parcum'"
+        " AND p.status IN ('parcatum', 'tractum')"
+        " AND COALESCE(json_extract(p.datum, '$.assignatum'), '')"
+        " != 'fran'"
+        " AND NOT EXISTS (SELECT 1 FROM res n"
+        "   JOIN membra m ON m.res_id = n.res_id"
+        "   WHERE n.genus = 'nexus' AND n.status != 'solutum'"
+        "   AND json_extract(n.datum, '$.verbum') IN (?1, ?2)"
+        "   AND m.membrum = p.res_id)");
+    s64 numerus = (s64)ZEPHYRUM;
+
+    si (e == NIHIL)
+    {
+        redde numerus;
+    }
+    scrinium_ligare_textum(e, I, _ch(VERBUM_IMPEDITUR));
+    scrinium_ligare_textum(e, II, _ch(VERBUM_INTRA));
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        numerus = scrinium_columna_numerus(e, 0);
+    }
+    scrinium_finire(e);
+    redde numerus;
+}
+
 /* visum totum reddere (instrumentum et tabula.md communiter) */
 interior vacuum
 _parata_reddere (
@@ -2946,8 +3009,33 @@ _parata_reddere (
         "AD CLAUSURAM", tectum, forma_tabulae, FALSUM);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_HOMINI,
         "EXSPECTANT FRANUM", tectum, forma_tabulae, FALSUM);
+    (vacuum)_parata_sectionem(nodi, aed, PARATUM_COLLOQUIO,
+        "AD COLLOQUIUM", tectum, forma_tabulae, FALSUM);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_IMPEDITUM,
         "IMPEDITA", tectum, forma_tabulae, FALSUM);
+    /* VISA, NON FIXA: parca aperta sine vinculo canonico ullo -
+     * visui invisibilia (extra graphum) sed numquam TACITE.
+     * Fixatio = positio consulta (intra / impeditur-a / natura /
+     * assignatum). Scopo dato non pertinet (parcum extra graphum
+     * sub nullo stat). */
+    si (scopus_id.mensura == ZEPHYRUM)
+    {
+        s64 visa = _parca_visa_numerare(t);
+
+        si (visa > (s64)ZEPHYRUM)
+        {
+            character linea[CXXVIII];
+
+            sprintf(linea, forma_tabulae
+                ? "\nparca visa, non fixa: %d (aperta, sine vinculo"
+                  " - fixa intra propositum aut impedita a quaestione"
+                  " fiunt)\n"
+                : "\nparca visa, non fixa: %d (aperta, sine vinculo"
+                  " - fixa intra propositum aut impedita a quaestione"
+                  " fiunt)", (int)visa);
+            chorda_aedificator_appendere_literis(aed, linea);
+        }
+    }
 }
 
 interior vacuum
@@ -5417,6 +5505,7 @@ _tab_addere (
                 chorda  ad         = _arg(argumenta, "ad");
                 chorda  ramus_arg  = _arg(argumenta, "ramus");
                 chorda  datum_arg  = _arg(argumenta, "datum");
+                chorda  natura     = _arg(argumenta, "natura");
                 chorda  ramus_id;
              JsonValor* datum;
           GestaEventum  e;
@@ -5503,6 +5592,11 @@ _tab_addere (
     {
         json_objectum_ponere(datum, "corpus",
             json_chorda_creare(pn, corpus));
+    }
+    si (natura.mensura > ZEPHYRUM)
+    {
+        json_objectum_ponere(datum, "natura",
+            json_chorda_creare(pn, natura));
     }
     si (tags.mensura > ZEPHYRUM)
     {
@@ -6802,6 +6896,24 @@ _effectum_reddere (
     chorda_aedificator_appendere_literis(aed, "...");
 }
 
+/* 'natura' rei (quaestio consilii) - linea una cum posita */
+interior vacuum
+_naturam_reddere (
+    ChordaAedificator* aed,
+            JsonValor* st)
+{
+    JsonValor* v = st != NIHIL
+        ? json_objectum_capere(st, "natura") : NIHIL;
+
+    si (   v                         == NIHIL || !json_est_chorda(v)
+        || json_ad_chorda(v).mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed, "\nnatura ");
+    chorda_aedificator_appendere_chorda(aed, json_ad_chorda(v));
+}
+
 #define FILII_PARATI_TECTUM VIII
 
 /* filii PARATI rei: sectio 'parata sub hac re' ex _parata_computare
@@ -6870,6 +6982,8 @@ _filios_paratos_reddere (
             "AD CLAUSURAM", FILII_PARATI_TECTUM, FALSUM, VERUM);
         scripti += _parata_sectionem(nodi, aed, PARATUM_HOMINI,
             "EXSPECTANT FRANUM", FILII_PARATI_TECTUM, FALSUM, VERUM);
+        scripti += _parata_sectionem(nodi, aed, PARATUM_COLLOQUIO,
+            "AD COLLOQUIUM", FILII_PARATI_TECTUM, FALSUM, VERUM);
     }
     si (scripti == ZEPHYRUM)
     {
@@ -6987,6 +7101,7 @@ _breviarium_reddere (
             }
         }
     }
+    _naturam_reddere(aed, st);
     _effectum_reddere(aed, st);
     _vincula_reddere(t, aed, res_id, pn);
     _filios_paratos_reddere(t, aed, res_id, pn);
@@ -7336,6 +7451,7 @@ _tab_res (
         _ancoras_reddere(t, aed, st, pn);
     }
     _citationes_reddere(t, aed, res_id);
+    _naturam_reddere(aed, st);
     _effectum_reddere(aed, st);
     /* vincula: functio COMMUNIS cum breviario (2026-09-21) */
     _vincula_reddere(t, aed, res_id, pn);
@@ -7651,11 +7767,11 @@ _tab_census (
     {
         chorda  scopus_nullus;
            Xar* nodi;
-           i32  classes[VI];
+           i32  classes[VII];
 
         scopus_nullus.mensura  = ZEPHYRUM;
         scopus_nullus.datum    = NIHIL;
-        per (i = ZEPHYRUM; i < VI; i++)
+        per (i = ZEPHYRUM; i < VII; i++)
         {
             classes[i] = ZEPHYRUM;
         }
@@ -7669,18 +7785,19 @@ _tab_census (
                 ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi,
                     i);
 
-                si (n != NIHIL && (i32)n->classis < VI)
+                si (n != NIHIL && (i32)n->classis < VII)
                 {
                     classes[(i32)n->classis]++;
                 }
             }
             sprintf(linea, "\nparata: ad laborem %d, ad consilium"
                 " %d, ad clausuram %d, exspectant Franum %d,"
-                " impedita %d  (singula: parata {})",
+                " ad colloquium %d, impedita %d  (singula: parata {})",
                 (int)classes[PARATUM_LABORI],
                 (int)classes[PARATUM_CONSILIO],
                 (int)classes[PARATUM_CLAUSURAE],
                 (int)classes[PARATUM_HOMINI],
+                (int)classes[PARATUM_COLLOQUIO],
                 (int)classes[PARATUM_IMPEDITUM]);
             chorda_aedificator_appendere_literis(aed, linea);
         }
@@ -9188,6 +9305,11 @@ _toolslist_tractare (
           " significat' + ancora ad sectionem plani (numquam copia"
           " plani), nexus 'intra' ad parcum parentem", VERUM },
         { "titulus", "titulus brevis entis", VERUM },
+        { "natura", "\"consilium\" in QUAESTIONE = quaestio DESIGNI"
+          " (non vitium): in visu parata AD COLLOQUIUM stat, ordine"
+          " potentiae; propositum impedire potest (gerere nexus"
+          " impeditur-a a proposito ad eam); clausa -> decretum"
+          " natum-de ea", FALSUM },
         { "corpus", "textus corporis (quaesibilis)", FALSUM },
         { "tags", "tags commatibus separata", FALSUM },
         { "ancorae", "tabulatum JSON: [{\"genus\":\"symbolum|via"
@@ -9344,7 +9466,7 @@ _toolslist_tractare (
         "Rem novam creare (quaestio/parcum/decretum/nota/"
         "desideratum) cum tags et ancoris optionalibus; similia"
         " FTS in responso (custos duplicationum).",
-        ARG_ADDERE, XI));
+        ARG_ADDERE, XII));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "gerere",
         "Eventum unum in rem exsistentem scribere: nota, status,"
         " nexus/denexus (ligamina), mutatio, remotio. Violationes"

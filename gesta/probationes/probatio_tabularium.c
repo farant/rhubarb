@@ -245,6 +245,20 @@ _inter (
     redde b == NIHIL || locus < b;
 }
 
+/* locus ordinis: textus a titulo rei (intra sectionem) usque ad
+ * finem - ut causa EIUS ordinis probetur, non alterius */
+interior constans character*
+_inter_locus (
+    constans character* textus,
+    constans character* initium,
+    constans character* acus)
+{
+    constans character* a      = strstr(textus, initium);
+    constans character* locus  = a != NIHIL ? strstr(a, acus) : NIHIL;
+
+    redde locus != NIHIL ? locus : "";
+}
+
 /* lineam mittere, responsum totum (litterae) recipere */
 interior constans character*
 _mitte (
@@ -3569,8 +3583,8 @@ principale (vacuum)
      * ================================================== */
 
     {
-        constans character* nomina[V];
-                       i32  numeri_visus[V];
+        constans character* nomina[VI];
+                       i32  numeri_visus[VI];
                  character  speratum[CCLVI];
                        i32  k;
 
@@ -3578,7 +3592,8 @@ principale (vacuum)
         nomina[I]         = "AD CONSILIUM (";
         nomina[II]        = "AD CLAUSURAM (";
         nomina[III]       = "EXSPECTANT FRANUM (";
-        nomina[IV]        = "IMPEDITA (";
+        nomina[IV]        = "AD COLLOQUIUM (";
+        nomina[V]         = "IMPEDITA (";
 
         /* XXV tags singularia + unum FREQUENS quod alphabetice
          * ULTIMUM est (ordo per numerum id servare debet) */
@@ -3604,7 +3619,7 @@ principale (vacuum)
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":403,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"parata\",\"arguments\":{}}}");
-        per (k = ZEPHYRUM; k < V; k++)
+        per (k = ZEPHYRUM; k < VI; k++)
         {
             constans character* locus = strstr(r, nomina[k]);
 
@@ -3620,10 +3635,11 @@ principale (vacuum)
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"census\",\"arguments\":{}}}");
         sprintf(speratum, "parata: ad laborem %d, ad consilium %d,"
-            " ad clausuram %d, exspectant Franum %d, impedita %d",
+            " ad clausuram %d, exspectant Franum %d, ad colloquium"
+            " %d, impedita %d",
             (int)numeri_visus[ZEPHYRUM], (int)numeri_visus[I],
             (int)numeri_visus[II], (int)numeri_visus[III],
-            (int)numeri_visus[IV]);
+            (int)numeri_visus[IV], (int)numeri_visus[V]);
         CREDO_VERUM (strstr(r, speratum) != NIHIL);
         /* tag FREQUENS adest etsi alphabetice ultimum */
         CREDO_VERUM (strstr(r, "zzfrequens  3") != NIHIL);
@@ -3967,6 +3983,141 @@ principale (vacuum)
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":466,"
             "\"method\":\"tools/list\"}");
         CREDO_VERUM (strstr(r, "SUBARBOREM") != NIHIL);
+    }
+
+
+    /* ==================================================
+     * XXXVI. QUAESTIONES CONSILII (opus 01M34TE9Y5): quaestio cum
+     * 'natura: consilium' = quaestio DESIGNI (non vitium), quae
+     * propositum impedire potest. Visus parata sectionem AD
+     * COLLOQUIUM fert: quaestiones consilii apertae ordine
+     * potentiae, impeditis nominatis - catena colloquiorum, ut
+     * catena operum. Mensuratum ante: XL quaestiones apertae,
+     * XXXVIII vitia; quaestiones designi VERAE in prosa planorum
+     * (XXI sectiones AUDIENDA) - a nullo instrumento legibiles.
+     * Et parca aperta sine vinculo ullo (LXVIII) visui invisibilia
+     * erant - 'visa, non fixa' nunc numerantur.
+     * ================================================== */
+
+    {
+        /* propositum fictum + quaestio consilii quae id impedit +
+         * quaestio consilii SOLITARIA (impedit nihil) + vitium
+         * ordinarium (quaestio SINE natura) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":470,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Qc propositum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":471,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Qc nomina stratorum?\",\"natura\":"
+            "\"consilium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":472,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Qc gamma?\",\"natura\":"
+            "\"consilium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":473,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
+            "\"titulus\":\"Qc vitium ordinarium\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":474,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Qc propositum\","
+            "\"actus\":\"nexus\",\"verbum\":\"impeditur-a\","
+            "\"alterum\":\"Qc nomina stratorum?\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* natura in breviario visibilis */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":475,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Qc nomina stratorum?\",\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "natura consilium") != NIHIL);
+
+        /* AD COLLOQUIUM: ambae quaestiones consilii (solitaria
+         * quoque - natura eam in graphum ponit ut assignatio),
+         * impediens PRIMA (potentia), impedita nominata; vitium
+         * ordinarium ABEST; propositum in IMPEDITA cum quaestione
+         * nominata */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":476,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "AD COLLOQUIUM (") != NIHIL);
+        CREDO_VERUM (_inter(r, "AD COLLOQUIUM", "IMPEDITA",
+            "Qc nomina stratorum?"));
+        CREDO_VERUM (_inter(r, "AD COLLOQUIUM", "IMPEDITA",
+            "Qc gamma?"));
+        CREDO_VERUM (strstr(_inter_locus(r, "AD COLLOQUIUM",
+            "Qc nomina stratorum?"), "impedit 1") != NIHIL);
+        CREDO_VERUM (strstr(r, "Qc vitium ordinarium") == NIHIL);
+        CREDO_VERUM (_inter(r, "IMPEDITA", NIHIL, "Qc propositum"));
+        /* ORDO: impediens ante solitariam */
+        CREDO_VERUM (strstr(r, "Qc nomina stratorum?")
+            < strstr(r, "Qc gamma?"));
+
+        /* quaestio consilii in NULLA classe ALIA (non 'ad
+         * consilium' - illa classis parcis est) */
+        CREDO_FALSUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
+            "Qc gamma?"));
+
+        /* VISA NON FIXA: parca aperta sine vinculo numerantur, non
+         * enumerantur (LXVIII in conditorio vivo) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":477,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+            "\"titulus\":\"Qc parcum solitarium\"}}}");
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":478,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "parca visa, non fixa") != NIHIL);
+        CREDO_VERUM (strstr(r, "Qc parcum solitarium") == NIHIL);
+
+        /* colloquium CLAUSUM: quaestio clausa -> propositum AD
+         * CONSILIUM, causa nominata */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":479,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Qc nomina stratorum?\",\"actus\":\"status\","
+            "\"novus\":\"clausum\"}}}");
+        CREDO_VERUM (strstr(r, "status clausum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":480,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
+            "Qc propositum"));
+        CREDO_FALSUM (_inter(r, "AD COLLOQUIUM", "IMPEDITA",
+            "Qc nomina stratorum?"));
+
+        /* census numerum fert; tabula.md sectionem */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":481,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"census\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "ad colloquium 1") != NIHIL);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_TB),
+            "### AD COLLOQUIUM") != NIHIL);
+
+        /* natura per mutationem in quaestione exsistente */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":482,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Qc vitium ordinarium\",\"actus\":\"mutatio\","
+            "\"clavis\":\"natura\",\"valor\":\"consilium\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":483,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (_inter(r, "AD COLLOQUIUM", "IMPEDITA",
+            "Qc vitium ordinarium"));
+
+        /* schema natura nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":484,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "\"natura\"") != NIHIL);
     }
 
     credo_imprimere_compendium();

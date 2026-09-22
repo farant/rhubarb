@@ -946,3 +946,46 @@ is byte-identical to the ready view's, so `planta` rightly refused
 the ambiguous anchor. Restored by `cmp` against a backup.
 
 Tabularium 646.
+
+## 2026-09-22 — design questions: `natura: consilium`, AD COLLOQUIUM, and "seen, not pinned"
+
+Task 01M34TE9Y5 (arcus XII), from the planning conversation with
+Fran: the ledger had a queue for "what can I build" but none for
+"what is ripe to talk through", and no way to see the landscape of
+open design questions blocking a project.
+
+**Measured first.** 40 open `quaestio` items, 38 of them bugs. The
+real design questions lived in prose: 21 spec files carry an
+AUDIENDA section, and the text-stack park listed EIGHT decisions
+waiting on Fran in its body, none of them a ledger item. 68 open
+parks with no link at all — invisible to the ready view, silently.
+
+**The mark is `natura: "consilium"` on a `quaestio`**, not `species`:
+`species` already means "what kind of thing this GENUS is" (nexus,
+actio, processus), so a per-item `species` would overload it. The
+genus stays one genus — bugs and design questions share a lifecycle
+and both can block — the mark only splits the view.
+
+**AD COLLOQUIUM** is a sixth class: open design questions, ordered by
+how many open items they block (leverage), each row naming what it
+blocks. A design question enters the graph by its mark alone, like an
+assignment does — marking is a deliberate act of placement. It sits
+in this class whatever its assignment: a design question is a
+conversation, not a to-do for one person. Answering one closes it;
+the decree is born from it (`natum-de`); the blocked project moves
+to AD CONSILIUM on its own with the closure named.
+
+**"parca visa, non fixa: N."** Open parks with no canonical link and
+no assignment are now COUNTED at the foot of the unscoped view
+(never listed — they are outside the graph by definition). Pinning
+a project means placing it: under a parent, blocked by a question,
+or assigned. The count is what keeps a pin that never got placed
+from vanishing. 68 on the live store as of this commit.
+
+Also: `natura` shows in both item views; the census carries the
+sixth count; the board carries the section; a parent's ready-children
+section lists its design questions too.
+
+Five plants, five assertions: solitary design questions not loaded ·
+mark not read · class never assigned · unplaced count silenced ·
+`natura` line silent. Tabularium 670.
