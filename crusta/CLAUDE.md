@@ -170,10 +170,14 @@ AUXILIARY: it subtracts from Y by `initium` and is never emitted. A dead
 exemption is a defect — judged only when its rule actually ran.
 
 **Gate:** `crusta/instrumenta/differentia_exemplariorum.sh`, run by the
-full runner. Rule 1 against a GOLDEN with Python provenance; rule 2
-against a PIN plus `grep` as an independent oracle (`rule ⊆ grep`).
-**A C-generated golden proves stability, never correctness** — keep the
-two kinds apart. Rule 3 (`/tmp`) was measured and DECLINED: 34 sites,
+full runner, over a **FROZEN corpus** (the `.sh` files at `ad73f539`,
+`git archive` into a temp dir — read-only) since 2026-09-23: rule 1
+against a golden snapshot (570/14 rows), rule 2 by a count pinned over
+the same frozen corpus plus `rule ⊆ grep` over the LIVE tree. Live
+edits can no longer move it. **A snapshot needs a frozen input; a live
+corpus gets invariants only** (the golden used to be compared against
+the live tree and went red on every line shift — see the golden's
+README). Rule 3 (`/tmp`) was measured and DECLINED: 34 sites,
 one defect.
 
 ## The closing sequence — solved (2026-09-21)
@@ -312,10 +316,11 @@ and — until 2026-09-18 — `silva.exemplaria`, now DELETED: tier-2
 extraction lives in C (`materia_exemplaria`), reached through
 `./crusta/facies.sh` or `./tools/diagnostica.sh`. What that Python
 half left behind is the GOLDEN in
-`crusta/probationes/fixa/exemplaria/` — the last thing the independent
-extractor ever said (570 rows raw, 14 after the declared subtraction,
-census 292/278) — which `crusta/instrumenta/differentia_exemplariorum.sh`
-checks the C against on every full runner pass.
+`crusta/probationes/fixa/exemplaria/` (570 rows raw, 14 after the
+declared subtraction, census 292/278), which
+`crusta/instrumenta/differentia_exemplariorum.sh` checks the C against
+over the frozen corpus on every full runner pass; the C reproduces it
+byte for byte, so it is now simply the extractor's regression snapshot.
 
 0 sanum / 1 fractae / **2 = NULLA CURSA**. Log: `build/test_logs/crusta.log`.
 The oracle binary is `/opt/homebrew/bin/bash` (5.2.15); Apple's

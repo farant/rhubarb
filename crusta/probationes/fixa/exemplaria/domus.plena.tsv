@@ -1,4 +1,4 @@
-briar/compile_probationes.sh	141	49	141	52	4826	4829	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+briar/compile_probationes.sh	140	49	140	52	4766	4769	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 compile_tests.sh	180	50	180	53	6278	6281	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 compile_tests.sh	485	50	485	53	18564	18567	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 crusta/compile_probationes.sh	102	49	102	52	3482	3485	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
@@ -7,7 +7,7 @@ gesta/compile_probationes.sh	91	49	91	52	3324	3327	erratum	lint:nt-aequalitas	'-
 html/compile_probationes.sh	102	49	102	52	3489	3492	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 materia/compile_probationes.sh	93	49	93	52	3185	3188	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 md/compile_probationes.sh	101	49	101	52	3448	3451	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
-officina/compile_probationes.sh	98	49	98	52	3448	3451	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+officina/compile_probationes.sh	97	49	97	52	3388	3391	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 oratio/compile_probationes.sh	108	49	108	52	3643	3646	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 saltuarius/compile_probationes.sh	91	49	91	52	3201	3204	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 silva/compile_probationes.sh	105	49	105	52	3925	3928	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
