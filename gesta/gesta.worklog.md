@@ -145,3 +145,30 @@ the candidates as soon as any region carries it.
 Test: a second fixture tag `ligatura` on the ten typographia notes, then
 a region 'Rg glyphae' carrying it as a tag (not in its title); born red
 at probatio_tabularium.c:4911 before the fix.
+
+## 2026-09-23 — addere {intra}: placed at birth; and two tools lost their last parameter
+
+`addere` takes `intra` (a region or parent park). The parent is resolved
+BEFORE anything is written: unknown or ambiguous refuses the whole call
+("intra RECUSATUM - nihil scriptum", candidates listed when ambiguous).
+The item and its link are ONE batch (`gesta_fascis_scribere`: creatio
+with a pre-minted res_id, creatio of the nexus, members a and b) — both
+or neither. The capture path (articles with STML capture blocks) appends
+the same three events to its own batch. Deliberately unlike `ad`, which
+accepts an unresolvable target as raw text and writes item and link
+separately ("res creata sed nexus respondet-ad fractus" is reachable).
+Why it exists: placement used to be a second call that mostly didn't
+happen — 70 parks sat in no region until the ordering session.
+
+Found while wiring it: `ARG_ADDERE` had 13 entries registered as XII and
+`ARG_GERERE` 14 as XIII, so each tool's LAST parameter (`datum`,
+`ramus`) was missing from the published schema — the server read it,
+agents were never offered it. Every registration now uses
+`ARGUMENTORUM_NUMERUS(tabula)` (sizeof-derived). Gate: the tools/list
+test parses the schema and asserts the last-declared parameter of
+addere (`intra`, `datum`) and gerere (`ramus`) is published; planted
+by restoring gerere's hand count XIII -> red at probatio l.508.
+
+Also noticed: an unknown argument name is silently ignored by every
+tool (the intra test was red on BEHAVIOUR, not on a refusal). Not
+changed here.

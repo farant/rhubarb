@@ -285,6 +285,48 @@ _instructiones_mensura (
     redde json_ad_chorda(instructiones).mensura;
 }
 
+/* an instrumentum 'instrumentum' in responso tools/list
+ * proprietatem 'proprietas' in inputSchema publicet */
+interior b32
+_proprietas_publicata (
+    constans character* r,
+               Piscina* pn,
+    constans character* instrumentum,
+    constans character* proprietas)
+{
+    JsonResultus  res = json_legere_literis(r, pn);
+       JsonValor* resultatum;
+       JsonValor* tabula;
+             i32  k;
+
+    si (!res.successus)
+    {
+        redde FALSUM;
+    }
+    resultatum = json_objectum_capere(res.radix, "result");
+    tabula     = resultatum != NIHIL
+        ? json_objectum_capere(resultatum, "tools") : NIHIL;
+    per (k = ZEPHYRUM; tabula != NIHIL
+         && k < json_tabulatum_numerus(tabula); k++)
+    {
+        JsonValor* instr = json_tabulatum_obtinere(tabula, k);
+        JsonValor* schema;
+        JsonValor* proprietates;
+
+        si (!chorda_aequalis_literis(json_ad_chorda(
+                json_objectum_capere(instr, "name")), instrumentum))
+        {
+            perge;
+        }
+        schema       = json_objectum_capere(instr, "inputSchema");
+        proprietates = schema != NIHIL
+            ? json_objectum_capere(schema, "properties") : NIHIL;
+        redde proprietates != NIHIL
+            && json_objectum_capere(proprietates, proprietas) != NIHIL;
+    }
+    redde FALSUM;
+}
+
 /* lineam mittere, responsum totum (litterae) recipere */
 interior constans character*
 _mitte (
@@ -458,6 +500,12 @@ principale (vacuum)
     CREDO_VERUM (strstr(r, "\"quaerere\"") != NIHIL);
     CREDO_VERUM (strstr(r, "\"res\"") != NIHIL);
     CREDO_VERUM (strstr(r, "\"census\"") != NIHIL);
+    /* argumentum ULTIMUM tabulae publicatur: numerus olim manu
+     * scriptus (XII pro XIII, XIII pro XIV) 'datum' et 'ramus'
+     * tacite abscidebat (01M37AY25M) */
+    CREDO_VERUM (_proprietas_publicata(r, piscina, "addere", "intra"));
+    CREDO_VERUM (_proprietas_publicata(r, piscina, "addere", "datum"));
+    CREDO_VERUM (_proprietas_publicata(r, piscina, "gerere", "ramus"));
 
     /* IV. addere: quaestio cum tags et ancoris (una resoluta, una
      * inresoluta - fixtura nexus_specimen.tsv) */
@@ -4909,6 +4957,36 @@ principale (vacuum)
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"mappa\",\"arguments\":{}}}");
         CREDO_VERUM (strstr(r, "ligatura (") == NIHIL);
+
+        /* ADDERE {intra} (01M37AY25M): res ad ORTUM collocata -
+         * creatio et vinculum 'intra' uno fasce; parens ignotus
+         * totum recusat, nihil scriptum (olim collocatio vocatio
+         * altera erat, saepe omissa: LXX parca sine regione) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5825,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Mt nota collocata\",\"intra\":"
+            "\"Rg glyphae\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "--intra--> Rg glyphae") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5826,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Mt nota collocata\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "--intra--> Rg glyphae (regio)")
+            != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5827,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Mt nota orba\",\"intra\":"
+            "\"Rg regio nulla\"}}}");
+        CREDO_VERUM (strstr(r, "creata") == NIHIL);
+        CREDO_VERUM (strstr(r, "nihil scriptum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Rg regio nulla") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5828,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Mt nota orba\"}}}");
+        CREDO_VERUM (strstr(r, "res ignota") != NIHIL);
 
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */

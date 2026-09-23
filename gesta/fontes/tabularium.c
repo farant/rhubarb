@@ -44,7 +44,8 @@ interior constans character* constans TABULARII_DOCTRINA =
     "{breviter} primum (quid agi potest, quid Franum exspectat), "
     "deinde parata {intra: propositum}; mappa {} = arbor regionum (ubi "
     "res habitant). REGIO = locus mappae sine statu; res per nexum "
-    "intra in eam collocantur. MORES: quaere ANTE filationem (addere "
+    "intra in eam collocantur - ad ORTUM: addere {intra}. MORES: "
+    "quaere ANTE filationem (addere "
     "similia monstrat); res parcata cum trahitur status->tractum "
     "STATIM, cum perficitur ->clausum - tabula mendax peior prosa; "
     "'haec res me ITERUM momordit' = gerere {actus:ictus}; nexus a "
@@ -2222,9 +2223,10 @@ _nexum_praeiudicare (
     redde _litterae(pn, chorda_aedificator_finire(aed));
 }
 
-interior b32
-_membrum_scribere (
-            Tabularium* t,
+/* eventum 'membrum-additum' componere (non scribere) - commune
+ * scripturae singulae et fasci (addere {intra}) */
+interior GestaEventum
+_membrum_eventum (
                Piscina* pn,
     constans character* vinculum,
     constans character* pars,
@@ -2244,7 +2246,59 @@ _membrum_scribere (
     ev.datum          = _litterae(pn, json_scribere(d, pn));
     ev.actor          = actor_l;
     ev.origo          = origo_l;
+    redde ev;
+}
+
+interior b32
+_membrum_scribere (
+            Tabularium* t,
+               Piscina* pn,
+    constans character* vinculum,
+    constans character* pars,
+                chorda  membrum,
+    constans character* actor_l,
+    constans character* origo_l)
+{
+    GestaEventum ev = _membrum_eventum(pn, vinculum, pars, membrum,
+        actor_l, origo_l);
+
     redde gesta_scribere(t->mundus, &ev, NIHIL);
+}
+
+/* ADDERE {intra} (01M37AY25M): eventa III vinculi 'intra' in fascem
+ * creationis appendenda - creatio nexus (res_id praecusum) + membra
+ * a (res nova) et b (parens solutus). Res et vinculum uno fasce:
+ * aut ambo scripta aut neutrum (olim 'ad' duas scripturas faciebat -
+ * 'res creata sed nexus fractus' possibilis). */
+interior vacuum
+_intra_eventa_componere (
+                Piscina* pn,
+     constans character* res_id,
+     constans character* vinculum_id,
+                 chorda  parens_id,
+     constans character* actor_l,
+     constans character* origo_l,
+     GestaFascisEventum* tria)
+{
+    JsonValor* d = json_objectum_creare(pn);
+
+    json_objectum_ponere(d, "genus",
+        json_chorda_creare_literis(pn, "nexus"));
+    json_objectum_ponere(d, "verbum",
+        json_chorda_creare_literis(pn, VERBUM_INTRA));
+    tria[0].event_id               = NIHIL;
+    tria[0].eventum.res_id         = vinculum_id;
+    tria[0].eventum.genus_eventus  = "creatio";
+    tria[0].eventum.datum           = _litterae(pn,
+        json_scribere(d, pn));
+    tria[0].eventum.actor  = actor_l;
+    tria[0].eventum.origo  = origo_l;
+    tria[I].event_id       = NIHIL;
+    tria[I].eventum                 = _membrum_eventum(pn,
+        vinculum_id, "a", _ch(res_id), actor_l, origo_l);
+    tria[II].event_id               = NIHIL;
+    tria[II].eventum                = _membrum_eventum(pn,
+        vinculum_id, "b", parens_id, actor_l, origo_l);
 }
 
 
@@ -5765,6 +5819,9 @@ _tab_addere (
                 chorda  origo      = _arg(argumenta, "origo");
                 chorda  signatura  = _arg(argumenta, "signatura");
                 chorda  ad         = _arg(argumenta, "ad");
+                chorda  intra      = _arg(argumenta, "intra");
+                chorda  intra_id;
+             character  vinculum_intra[GESTA_RES_ID_MENSURA];
                 chorda  ramus_arg  = _arg(argumenta, "ramus");
                 chorda  datum_arg  = _arg(argumenta, "datum");
                 chorda  natura     = _arg(argumenta, "natura");
@@ -5806,6 +5863,14 @@ _tab_addere (
             _ch("ad in ramo nondum sustentum (parcum)"), VERUM);
         redde;
     }
+    intra_id.mensura  = ZEPHYRUM;
+    intra_id.datum    = NIHIL;
+    si (intra.mensura > ZEPHYRUM && ramus_arg.mensura > ZEPHYRUM)
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("intra in ramo nondum sustentum (parcum)"), VERUM);
+        redde;
+    }
     /* custos pipati (F0 forum): limes CCXL codicillorum DURUS -
      * limes ipse genus est; latus daemonis = MCP et app aequaliter
      * ligati (spec-v2 par III.2) */
@@ -5826,6 +5891,40 @@ _tab_addere (
                 _ch("ramus ignotus"), VERUM);
             redde;
         }
+    }
+    /* INTRA (01M37AY25M): parens solvitur ANTE scripturam ullam -
+     * ignotus aut ambiguus totum recusat, nihil scriptum (dissimile
+     * 'ad', cuius textus crudus ut membrum cadit) */
+    si (intra.mensura > ZEPHYRUM)
+    {
+        b32 ambiguum = FALSUM;
+
+        intra_id = _res_solvere(t, intra, pn, &ambiguum);
+        si (ambiguum || intra_id.mensura == ZEPHYRUM)
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                DXII);
+
+            chorda_aedificator_appendere_literis(aed,
+                "intra RECUSATUM - nihil scriptum: parens '");
+            chorda_aedificator_appendere_chorda(aed, intra);
+            si (ambiguum)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    "' ambiguus - ");
+                _candidatos_appendere(t, aed, intra, pn);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    "' ignotus (id, praefixum inambiguum, aut"
+                    " titulus exactus)");
+            }
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        moneta_ulid(vinculum_intra);
     }
     /* captura fragmentorum (genera capturabilia, trunci solum):
      * corpus stampatum ANTE constructionem dati - eventus creationis
@@ -6015,6 +6114,23 @@ _tab_addere (
         e.res_id = articulus_id;
         tabulatum = _capturas_fascis_componere(pn, captura.eventa,
             &e, &numerus_ev);
+        si (tabulatum != NIHIL && intra_id.mensura > ZEPHYRUM)
+        {
+            GestaFascisEventum* amplius = (GestaFascisEventum*)
+                piscina_allocare(pn, (memoriae_index)(numerus_ev + III)
+                    * (memoriae_index)magnitudo(GestaFascisEventum));
+
+            si (amplius != NIHIL)
+            {
+                memcpy(amplius, tabulatum, (size_t)numerus_ev
+                    * magnitudo(GestaFascisEventum));
+                _intra_eventa_componere(pn, articulus_id,
+                    vinculum_intra, intra_id, actor_l, e.origo,
+                    amplius + numerus_ev);
+                numerus_ev += III;
+            }
+            tabulatum = amplius;
+        }
         ids_effecti = tabulatum != NIHIL
             ? (character*)piscina_allocare(pn,
                   (memoriae_index)numerus_ev
@@ -6045,6 +6161,33 @@ _tab_addere (
                     ids_effecti + k * GESTA_RES_ID_MENSURA, pn);
             }
         }
+    }
+    alioquin si (intra_id.mensura > ZEPHYRUM)
+    {
+        /* res + vinculum 'intra' fasce UNO: res_id praecusum ut
+         * membrum 'a' eum nominet */
+        GestaFascisEventum fascis[IV];
+
+        moneta_ulid(res_id);
+        e.res_id            = res_id;
+        fascis[0].event_id  = NIHIL;
+        fascis[0].eventum   = e;
+        _intra_eventa_componere(pn, res_id, vinculum_intra, intra_id,
+            actor_l, e.origo, fascis + I);
+        si (!gesta_fascis_scribere(t->mundus, fascis, IV, NIHIL))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "scriptura fascis recusata (nihil scriptum): ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        _entitatem_reconciliare(t, vinculum_intra, pn);
     }
     alioquin si (!gesta_scribere(t->mundus, &e, res_id))
     {
@@ -6122,6 +6265,13 @@ _tab_addere (
             chorda_aedificator_appendere_literis(aed,
                 " --respondet-ad--> ");
             chorda_aedificator_appendere_chorda(aed, ad);
+        }
+        si (intra_id.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                " --intra--> ");
+            chorda_aedificator_appendere_chorda(aed,
+                _titulus_membri(t, intra_id, pn));
         }
         si (eodem_titulo > (s64)I)
         {
@@ -11009,6 +11159,14 @@ nomen structura {
                    b32  necessarium;
 } TabArgumentum;
 
+/* numerus argumentorum EX TABULA derivatus, numquam manu scriptus:
+ * olim 'ARG_ADDERE, XII' cum XIII argumentis et 'ARG_GERERE, XIII'
+ * cum XIV - argumentum ultimum ('datum', 'ramus') e schemate
+ * publicato tacite cadebat (servus id legebat, agens numquam
+ * videbat; inventum 2026-09-23, 01M37AY25M) */
+#define ARGUMENTORUM_NUMERUS(tabula) \
+    ((i32)(magnitudo(tabula) / magnitudo((tabula)[ZEPHYRUM])))
+
 interior JsonValor*
 _instrumentum (
                    Piscina* pn,
@@ -11104,7 +11262,11 @@ _toolslist_tractare (
           " invisibilis usque ad fusionem)", FALSUM },
         { "datum", "obiectum JSON camporum ut CHORDA escapata -"
           " entia generum per definitionem creata (claves contra"
-          " campos iudicatae, notae custodiae)", FALSUM }
+          " campos iudicatae, notae custodiae)", FALSUM },
+        { "intra", "parens rei (regio aut parcum: id, praefixum"
+          " inambiguum, aut titulus exactus) - res ad ORTUM collocata:"
+          " creatio et vinculum 'intra' fasce UNO; parens ignotus aut"
+          " ambiguus totum recusat (nihil scriptum)", FALSUM }
     };
     interior constans TabArgumentum ARG_GERERE[] = {
         { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
@@ -11270,33 +11432,40 @@ _toolslist_tractare (
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "addere",
         "Rem novam creare (quaestio/parcum/decretum/nota/"
         "desideratum) cum tags et ancoris optionalibus; similia"
-        " FTS in responso (custos duplicationum).",
-        ARG_ADDERE, XII));
+        " FTS in responso (custos duplicationum). intra = parens"
+        " (regio/parcum) ad ORTUM - res et vinculum fasce uno.",
+        ARG_ADDERE,
+        ARGUMENTORUM_NUMERUS(ARG_ADDERE)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "gerere",
         "Eventum unum in rem exsistentem scribere: nota, ictus,"
         " status, nexus/denexus (ligamina), mutatio, remotio."
         " Transitio status illegalis RECUSATUR (legales proximi"
         " nominantur) nisi vis.",
-        ARG_GERERE, XIII));
+        ARG_GERERE,
+        ARGUMENTORUM_NUMERUS(ARG_GERERE)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn,
         "quaerere",
         "Quaestio FTS super statum materializatum (titulus/corpus/"
         "tags/notae). Idioma Latinum: praefixa 'parsur*'.",
-        ARG_QUAERERE, V));
+        ARG_QUAERERE,
+        ARGUMENTORUM_NUMERUS(ARG_QUAERERE)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "res",
         "Rem unam reddere: status + datum + ancorae (resolutae per"
         " indicem; CAUTIO si inresolutae) + actiones affordatae +"
         " annales recentes. breviter \"verum\" = compendium.",
-        ARG_RES, III));
+        ARG_RES,
+        ARGUMENTORUM_NUMERUS(ARG_RES)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "census",
         "Census: genera x status, numeri visus PARATA, tags (summa"
         " XX; reliqua numerantur), res saepissime ictae, seq/hwm.",
-        ARG_CENSUS, I));
+        ARG_CENSUS,
+        ARGUMENTORUM_NUMERUS(ARG_CENSUS)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "acta",
         "Cauda fluminis eventuum globalis trans res omnes"
         " (truncus, recentissima primum) - superficies recensionis"
         " (quid hodie scriptum est).",
-        ARG_ACTA, IV));
+        ARG_ACTA,
+        ARGUMENTORUM_NUMERUS(ARG_ACTA)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "parata",
         "QUID NUNC AGI POTEST - derivatum ex grapho vinculorum"
         " canonicorum (impeditur-a, intra), numquam status"
@@ -11309,7 +11478,8 @@ _toolslist_tractare (
         " impedimentum PARENTIS hereditatur). Quaeque linea CUR"
         " dicit. Res extra graphum non intrant. Orientatio post"
         " compactionem in proposito: parata {intra: <propositum>}.",
-        ARG_PARATA, III));
+        ARG_PARATA,
+        ARGUMENTORUM_NUMERUS(ARG_PARATA)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "mappa",
         "UBI RES HABITANT - arbor regionum (genus regio, locus sine"
         " statu) cum numeris SUBARBORIS per nodum (parca aperta,"
@@ -11320,7 +11490,8 @@ _toolslist_tractare (
         " nullam regionem nominantes (regiones candidatae), parca"
         " quietissima. Tertia activitas post aedificare (parata) et"
         " deliberare (AD COLLOQUIUM).",
-        ARG_MAPPA, III));
+        ARG_MAPPA,
+        ARGUMENTORUM_NUMERUS(ARG_MAPPA)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "legere",
         "Lectio structurata pro apps: textus = tabulatum JSON"
         " rerum (recentissima primum) cum dato plicato inserto,"
@@ -11330,13 +11501,15 @@ _toolslist_tractare (
         " 'nexus_verbum'+'nexus_ad' res per nexum filtrant (e.g."
         " capitula UNIUS libri) - aliter tectum CC per genus TOTUM"
         " partitur.",
-        ARG_LEGERE, VII));
+        ARG_LEGERE,
+        ARGUMENTORUM_NUMERUS(ARG_LEGERE)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "tacere",
         "Cautionem vigiliae (residens obsoletus) per N responsa"
         " supprimere - agnitio explicita. Re-armatur: numero"
         " exhausto, quiete 300 s sine petitionibus, commissione"
         " git, causa staleness nova.",
-        ARG_TACERE, I));
+        ARG_TACERE,
+        ARGUMENTORUM_NUMERUS(ARG_TACERE)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "renovare",
         "Residentem stalum renovare (post CAUTIONEM VERIFICATAM"
         " voca): launcher ut explorator praevius agitur -"
@@ -11352,7 +11525,8 @@ _toolslist_tractare (
         " photographat; opera generantur; perfectio operum"
         " processum sponte provehit). Recepta sunt codex -"
         " definitiones per semen solum.",
-        ARG_AGERE, V));
+        ARG_AGERE,
+        ARGUMENTORUM_NUMERUS(ARG_AGERE)));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "ramus",
         "K4: lineae temporis parallelae. creare (furca a trunco"
         " aut parente), enumerare, comparare (res in trunco et"
@@ -11361,7 +11535,8 @@ _toolslist_tractare (
         " truncus = veritas, rami = hypothetica; fingere audacter."
         " Scripturae/lectiones in ramo: parametrum 'ramus' in"
         " addere/gerere/res (ibi res_id requiritur).",
-        ARG_RAMUS, VI));
+        ARG_RAMUS,
+        ARGUMENTORUM_NUMERUS(ARG_RAMUS)));
     json_objectum_ponere(resultatum, "tools", instrumenta);
     _respondere(effusio, tabellarius_responsum(pn, id,
         resultatum));
