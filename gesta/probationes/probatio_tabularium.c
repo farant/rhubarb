@@ -5268,9 +5268,12 @@ principale (vacuum)
         CREDO_VERUM (classis == NIHIL || finis_lineae == NIHIL
             || classis > finis_lineae);
 
-        /* SALUS: tres lineae novae */
-        CREDO_VERUM (_inter(r, "regiones sine visione",
-            "regiones sine consilio", "Rg horizon vacuus"));
+        /* SALUS: tres lineae novae. (Olim 'Rg horizon vacuus' hic
+         * NOMINATA asserebatur - ordine creationis inter tres primas
+         * cadebat. Ex 2026-09-23 linea per ACTIVITATEM ordinatur:
+         * regio vacua infra activas descendit et numerata manet.) */
+        CREDO_VERUM (strstr(r, "regiones sine visione (quid area velit"
+            " nondum dictum): ") != NIHIL);
         CREDO_FALSUM (_inter(r, "regiones sine visione",
             "regiones sine consilio", "Rg textus"));
         CREDO_VERUM (_inter(r, "regiones sine consilio",
@@ -5281,6 +5284,53 @@ principale (vacuum)
             "tags recurrentes", "Typographia"));
         CREDO_FALSUM (_inter(r, "regiones sine opere",
             "tags recurrentes", "Rg textus"));
+
+        /* FRONS ORDINANDI ORDINATA (2026-09-23): 'sine visione' per
+         * activitatem subarboris (parca + quaestiones consilii + vitia
+         * + opera aperta), non per ordinem creationis. Regio NOVISSIMA
+         * cum VI parcis: ordine creationis ultima (non nominata),
+         * activitate prima - pondere monstrato */
+        {
+            constans character* linea_visionis;
+            constans character* finis_visionis;
+                           i32  k;
+
+            r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":59360,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"addere\",\"arguments\":{\"genus\":\"regio\","
+                "\"titulus\":\"Rg activa sine visione\",\"corpus\":"
+                "\"multa sed nulla visio\"}}}");
+            CREDO_VERUM (strstr(r, "creata") != NIHIL);
+            per (k = ZEPHYRUM; k < VI; k++)
+            {
+                character petitio[CCLVI];
+
+                sprintf(petitio, "{\"jsonrpc\":\"2.0\",\"id\":%d,"
+                    "\"method\":\"tools/call\",\"params\":{\"name\":"
+                    "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+                    "\"titulus\":\"Ra parcum %d\",\"intra\":"
+                    "\"Rg activa sine visione\"}}}", (int)(59361 + k),
+                    (int)k);
+                r = _mitte(t, piscina, petitio);
+                CREDO_VERUM (strstr(r, "creata") != NIHIL);
+            }
+            r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":59369,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"mappa\",\"arguments\":{}}}");
+            linea_visionis = strstr(r, "regiones sine visione");
+            finis_visionis = linea_visionis != NIHIL
+                ? strstr(linea_visionis, "\\n") : NIHIL;
+            CREDO_NON_NIHIL (finis_visionis);
+            locus = linea_visionis != NIHIL
+                ? strstr(linea_visionis, "Rg activa sine visione")
+                : NIHIL;
+            CREDO_VERUM (locus != NIHIL && finis_visionis != NIHIL
+                && locus < finis_visionis);
+            locus = linea_visionis != NIHIL
+                ? strstr(linea_visionis, "(aperta 6)") : NIHIL;
+            CREDO_VERUM (locus != NIHIL && finis_visionis != NIHIL
+                && locus < finis_visionis);
+        }
 
         /* PAGINA REGIONIS: ORDINANDA post 'parata sub hac re' */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":595,"

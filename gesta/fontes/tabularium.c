@@ -8618,6 +8618,43 @@ _mappae_arborem_reddere (
     redde scriptae;
 }
 
+/* FRONS ORDINANDI ORDINATA (2026-09-23, Fran): 'regiones sine
+ * visione' olim ordine CREATIONIS nominabantur - tres primae erant
+ * vetustissimae (loca vacua ut 'Solarium'), non ubi visio plurimum
+ * valeret. Nunc pondus = res apertae subarboris (parca, etiam
+ * dormientia, + quaestiones consilii + vitia + opera), deinde tactus
+ * recentissimus, deinde res_id. Pondus in linea monstratur ut ordo se
+ * ipse explicet. Visio res CONTINUA est (decretum ...RYBYR4) - haec
+ * linea frons eius est, non opus. */
+nomen structura {
+    chorda res_id;
+    chorda titulus;
+       i32 pondus;
+    chorda tactus;
+} RegioOrdinanda;
+
+interior integer
+_regiones_ordinandas_comparare (
+    constans vacuum* prima,
+    constans vacuum* secunda)
+{
+    constans RegioOrdinanda* a = (constans RegioOrdinanda*)prima;
+    constans RegioOrdinanda* b = (constans RegioOrdinanda*)secunda;
+                        s32  c;
+
+    si (a->pondus != b->pondus)
+    {
+        redde a->pondus > b->pondus ? -I : I;
+    }
+    c = chorda_comparare(b->tactus, a->tactus);
+    si (c != ZEPHYRUM)
+    {
+        redde c < ZEPHYRUM ? -I : I;
+    }
+    c = chorda_comparare(a->res_id, b->res_id);
+    redde c < ZEPHYRUM ? -I : (c > ZEPHYRUM ? I : ZEPHYRUM);
+}
+
 /* nomen regionis lineae salutis appendere (prima MAPPA_NOMINATA
  * nominata, ceterae numeratae) */
 interior vacuum
@@ -8804,11 +8841,13 @@ _mappae_salutem_reddere (
             pn, DXII);
         ChordaAedificator* sine_opere    = chorda_aedificator_creare(
             pn, DXII);
-                      i32 n_supra     = ZEPHYRUM;
-                      i32 n_vacuae    = ZEPHYRUM;
-                      i32 n_visione   = ZEPHYRUM;
-                      i32 n_consilio  = ZEPHYRUM;
-                      i32 n_opere     = ZEPHYRUM;
+                      i32  n_supra     = ZEPHYRUM;
+                      i32  n_vacuae    = ZEPHYRUM;
+                      i32  n_visione   = ZEPHYRUM;
+                      i32  n_consilio  = ZEPHYRUM;
+                      i32  n_opere     = ZEPHYRUM;
+                      Xar* ordinandae = xar_creare(pn,
+                          (i32)magnitudo(RegioOrdinanda));
 
         e = scrinium_praeparare(gesta_scrinium(t->mundus),
             "SELECT res_id, titulus FROM res WHERE genus = ?1"
@@ -8824,10 +8863,19 @@ _mappae_salutem_reddere (
 
                 _regionis_numeros_parare(&rn);
                 _regionis_numeros_computare(t, rid, pn, &rn);
-                si (rn.visiones == ZEPHYRUM)
+                si (rn.visiones == ZEPHYRUM && ordinandae != NIHIL)
                 {
-                    _mappae_nomen_appendere(sine_visione, &n_visione,
-                        rid, titulus);
+                    RegioOrdinanda* ro = (RegioOrdinanda*)xar_addere(
+                        ordinandae);
+
+                    si (ro != NIHIL)
+                    {
+                        ro->res_id   = rid;
+                        ro->titulus  = titulus;
+                        ro->pondus   = rn.parca + rn.consilia + rn.vitia
+                            + rn.opera;
+                        ro->tactus   = rn.tactus;
+                    }
                 }
                 si (rn.consilia == ZEPHYRUM)
                 {
@@ -8865,6 +8913,44 @@ _mappae_salutem_reddere (
                 }
             }
             scrinium_finire(e);
+        }
+        si (ordinandae != NIHIL && xar_numerus(ordinandae) > ZEPHYRUM)
+        {
+                       i32  numerus = xar_numerus(ordinandae);
+            RegioOrdinanda* plana   = (RegioOrdinanda*)
+                piscina_allocare(pn, (memoriae_index)numerus
+                    * (memoriae_index)magnitudo(RegioOrdinanda));
+                       i32 k;
+
+            si (plana != NIHIL)
+            {
+                per (k = ZEPHYRUM; k < numerus; k++)
+                {
+                    plana[k] = *(RegioOrdinanda*)xar_obtinere(
+                        ordinandae, k);
+                }
+                qsort(plana, (size_t)numerus, magnitudo(RegioOrdinanda),
+                    _regiones_ordinandas_comparare);
+                per (k = ZEPHYRUM; k < numerus; k++)
+                {
+                    si (n_visione < MAPPA_NOMINATA)
+                    {
+                        character pondus[XXXII];
+
+                        _mappae_nomen_appendere(sine_visione,
+                            &n_visione,
+                            plana[k].res_id, plana[k].titulus);
+                        sprintf(pondus, " (aperta %d)",
+                            (int)plana[k].pondus);
+                        chorda_aedificator_appendere_literis(
+                            sine_visione, pondus);
+                    }
+                    alioquin
+                    {
+                        n_visione++;
+                    }
+                }
+            }
         }
         sprintf(linea,
             "\nregiones supra limen (parca directa > %d): %d",

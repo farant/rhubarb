@@ -270,3 +270,21 @@ A 09-22 map test asserted an ordinary desideratum placed in a region
 sits in AD CONSILIUM — it pinned the old reading. Its real point (only
 the vision flag hides visions) is kept: the ordinary one is asserted in
 the new section instead. New assertions born red (8 of 8).
+
+## 2026-09-23 — the organizing frontier is ordered by activity
+
+Fran's framing (decretum …RYBYR4): visions are ongoing, and a region
+without one is the organizing activity's leading edge — derived by
+mappa, never filed as a task. But the line named its first three
+regions in CREATION order, so the edge led with the oldest placeholders
+(Solarium, Brighton...). Now the no-vision candidates are sorted by
+subtree weight (open parks incl. dormant + design questions + defects +
+tasks), then most recent touch, then id, and each named region shows
+its weight "(aperta N)" so the order explains itself. Xar is segmented,
+so the candidates are copied to a flat arena array before qsort.
+
+Test: a region created LAST with six parks — unnamed under creation
+order (born red, 2 assertions), named with "(aperta 6)" after. The old
+assertion that the empty 'Rg horizon vacuus' is NAMED in this line
+pinned creation order; it now only asserts the line exists (the empty
+region is still counted, and 'regiones vacuae' still names it).
