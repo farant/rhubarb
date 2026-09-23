@@ -2532,7 +2532,9 @@ nomen enumeratio {
     PARATUM_CLAUSURAE,
     PARATUM_HOMINI,
     PARATUM_IMPEDITUM,
-    PARATUM_COLLOQUIO     /* quaestio consilii aperta */
+    PARATUM_COLLOQUIO,    /* quaestio consilii aperta */
+    PARATUM_DORMIENS      /* in regione collocata, NON fixa - in
+                           * visu scopi regionis solo (01M35650Z4) */
 } ParatiClassis;
 
 /* quaestio CONSILII: quaestio cum 'natura: consilium' - quaestio
@@ -2562,6 +2564,10 @@ nomen structura {
               b32 consilii;     /* quaestio consilii (natura) */
               b32 visio;        /* desideratum visio (natura) - numquam
                                  * paratum */
+              b32 fixus;        /* in catenam POSITUM: opus, quaestio
+                                 * consilii, assignatum, aut vinculum
+                                 * canonicum NON regionale (decretum
+                                 * 01M35650Z4: collocatio non fixat) */
               i32 post;         /* ordo mollis: quot res apertae
                                  * haec SEQUITUR (transitive) */
               b32 vitalis;      /* genus machinam status habet */
@@ -2748,10 +2754,13 @@ _parati_nodum (
     n->derelictus = _chorda_est(n->status, "relictum")
         || _chorda_est(n->status, "omissum")
         || _chorda_est(n->status, "abiectus");
-    n->parens         = -I;
-    n->filii_omnes    = ZEPHYRUM;
-    n->filii_aperti   = ZEPHYRUM;
-    n->dependentes    = ZEPHYRUM;
+    n->parens        = -I;
+    n->filii_omnes   = ZEPHYRUM;
+    n->filii_aperti  = ZEPHYRUM;
+    n->dependentes   = ZEPHYRUM;
+    n->fixus          = n->consilii
+        || _chorda_est(n->assignatum, "fran")
+        || _chorda_est(n->genus, GENUS_OPERIS);
     n->classis        = PARATUM_NULLUM;
     n->causa.mensura  = ZEPHYRUM;
     n->causa.datum    = NIHIL;
@@ -2902,6 +2911,26 @@ _parata_computare (
             g->b         = b;
             g->impedit   = _chorda_est(verbum, VERBUM_IMPEDITUR);
             g->sequitur  = _chorda_est(verbum, VERBUM_SEQUITUR);
+            /* FIXATIO: vinculum canonicum ambos fines in catenam
+             * ponit - PRAETER 'intra' ad REGIONEM, quod locus est, non
+             * planum (decretum 01M35650Z4). Olim hic omne vinculum
+             * fixabat dum pes solus regionem excludebat: regula una,
+             * sedes duae, altera omissa (2026-09-23) */
+            {
+                ParatiNodus* na = (ParatiNodus*)xar_obtinere(nodi,
+                    (i32)a);
+                ParatiNodus* nb = (ParatiNodus*)xar_obtinere(nodi,
+                    (i32)b);
+                b32 ad_regionem = !g->impedit && !g->sequitur
+                    && nb != NIHIL
+                    && _chorda_est(nb->genus, GENUS_REGIONIS);
+
+                si (!ad_regionem && na != NIHIL && nb != NIHIL)
+                {
+                    na->fixus = VERUM;
+                    nb->fixus = VERUM;
+                }
+            }
         }
         scrinium_finire(e);
     }
@@ -3053,6 +3082,21 @@ _parata_computare (
             || !_parati_in_scopo(nodi, (s32)i, scopus)
             || n->filii_aperti > ZEPHYRUM)
         {
+            perge;
+        }
+        /* COLLOCATA NON FIXA: in visu toto nulla classis (pes eas
+         * numerat); in scopo regionis sectio propria - sessio
+         * ordinandi eas videt et consulto promovet (quaestio, intra
+         * propositum, impedimentum) */
+        si (!n->fixus)
+        {
+            si (scopus >= ZEPHYRUM)
+            {
+                n->classis  = PARATUM_DORMIENS;
+                n->causa    = _ch("collocatum, nullum vinculum plani -"
+                    " quaestionem da, intra propositum pone, aut"
+                    " impedimentum");
+            }
             perge;
         }
         causa                 = chorda_aedificator_creare(pn, CCLVI);
@@ -3495,6 +3539,12 @@ _parata_reddere (
         "AD COLLOQUIUM", tectum, forma_tabulae, FALSUM, aetas);
     (vacuum)_parata_sectionem(nodi, aed, PARATUM_IMPEDITUM,
         "IMPEDITA", tectum, forma_tabulae, FALSUM, aetas);
+    si (scopus_id.mensura > ZEPHYRUM)
+    {
+        (vacuum)_parata_sectionem(nodi, aed, PARATUM_DORMIENS,
+            "VISA, NON FIXA (in hac regione)", tectum, forma_tabulae,
+            FALSUM, aetas);
+    }
     /* VISA, NON FIXA: parca aperta sine vinculo canonico ullo -
      * visui invisibilia (extra graphum) sed numquam TACITE.
      * Fixatio = positio consulta (intra / impeditur-a / natura /
@@ -3517,6 +3567,51 @@ _parata_reddere (
                   " quaestione fiunt; regio locus est, non planum)",
                 (int)visa);
             chorda_aedificator_appendere_literis(aed, linea);
+        }
+        /* ALIA collocata non fixa (desiderata, quaestiones...): res
+         * in regione posita sed nullo vinculo plani - numquam TACITE.
+         * Parca supra numerata (etiam extra graphum); hic genera
+         * cetera, per genus. Desiderata solitaria (sine regione) non
+         * numerantur: basis scientiae sunt, non catena. */
+        {
+            i32 desiderata   = ZEPHYRUM;
+            i32 quaestiones  = ZEPHYRUM;
+            i32 cetera       = ZEPHYRUM;
+            i32 k;
+
+            per (k = ZEPHYRUM; k < xar_numerus(nodi); k++)
+            {
+                ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, k);
+
+                si (   n == NIHIL || !n->apertus || n->fixus
+                    || n->visio || _chorda_est(n->genus, "parcum"))
+                {
+                    perge;
+                }
+                si (_chorda_est(n->genus, "desideratum"))
+                {
+                    desiderata++;
+                }
+                alioquin si (_chorda_est(n->genus, "quaestio"))
+                {
+                    quaestiones++;
+                }
+                alioquin
+                {
+                    cetera++;
+                }
+            }
+            si (desiderata + quaestiones + cetera > ZEPHYRUM)
+            {
+                character linea[CXCII];
+
+                sprintf(linea, "%salia in regionibus collocata, non"
+                    " fixa: desiderata %d · quaestiones %d · cetera %d"
+                    "%s", forma_tabulae ? "" : "\n", (int)desiderata,
+                    (int)quaestiones, (int)cetera,
+                    forma_tabulae ? "\n" : "");
+                chorda_aedificator_appendere_literis(aed, linea);
+            }
         }
     }
 }

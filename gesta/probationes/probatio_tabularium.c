@@ -4768,8 +4768,12 @@ principale (vacuum)
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"parata\",\"arguments\":{\"intra\":\"Rg textus\"}}}");
         CREDO_VERUM (strstr(r, "Rv volo librum") == NIHIL);
-        /* desideratum ORDINARIUM intra regionem paratum manet (AD
-         * CONSILIUM) - signum solum findit */
+        /* desideratum ORDINARIUM intra regionem VISIBILE manet -
+         * signum visionis solum findit (visio nusquam, ordinarium in
+         * scopo regionis). Sectio mutata 2026-09-23 (Fran, optio A):
+         * olim AD CONSILIUM, nunc 'VISA, NON FIXA (in hac regione)' -
+         * collocatio non fixat (decretum 01M35650Z4) etiam in
+         * sectionibus; haec assertio lectionem veterem pinnabat */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":554,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"addere\",\"arguments\":{\"genus\":\"desideratum\","
@@ -4784,7 +4788,11 @@ principale (vacuum)
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":556,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"parata\",\"arguments\":{\"intra\":\"Rg textus\"}}}");
-        CREDO_VERUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
+        CREDO_VERUM (strstr(r, "VISA, NON FIXA (in hac regione)")
+            != NIHIL
+            && strstr(strstr(r, "VISA, NON FIXA (in hac regione)"),
+                "Rv desideratum ordinarium") != NIHIL);
+        CREDO_FALSUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
             "Rv desideratum ordinarium"));
 
         /* quaestio consilii intra parcum (pro numeris et breviario) */
@@ -5193,6 +5201,46 @@ principale (vacuum)
             "\"Fr quaestio typographiae?\",\"actus\":\"nexus\","
             "\"verbum\":\"intra\",\"alterum\":\"Typographia\"}}}");
         CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
+        /* COLLOCATIO NON FIXAT - etiam in SECTIONIBUS parata (decretum
+         * 01M35650Z4; 2026-09-23): 'intra' ad regionem locus est, non
+         * planum. Olim sectiones omne 'intra' ut fixationem legebant
+         * (pes solus eum excludebat) - post sessionem ordinandi LXII
+         * parca dormientia AD CONSILIUM inundabant (XIII -> LXXVII) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":59350,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_FALSUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
+            "Fr parcum dormiens"));
+        CREDO_VERUM (strstr(r, "Fr parcum dormiens") == NIHIL);
+        /* scopo regionis: sectio propria, non AD CONSILIUM */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":59351,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{\"intra\":\"Rg fontes\"}}}");
+        CREDO_VERUM (strstr(r, "VISA, NON FIXA (in hac regione)")
+            != NIHIL);
+        CREDO_VERUM (_inter(r, "VISA, NON FIXA (in hac regione)",
+            "\\n\\n", "Fr parcum dormiens")
+            || (strstr(r, "VISA, NON FIXA (in hac regione)") != NIHIL
+                && strstr(strstr(r, "VISA, NON FIXA (in hac regione)"),
+                    "Fr parcum dormiens") != NIHIL));
+        CREDO_FALSUM (_inter(r, "AD CONSILIUM", "AD CLAUSURAM",
+            "Fr parcum dormiens"));
+        /* pes: alia genera in regionibus collocata numerantur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":59352,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"desideratum\","
+            "\"titulus\":\"Fr desideratum collocatum\",\"intra\":"
+            "\"Rg fontes\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":59353,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"parata\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "Fr desideratum collocatum") == NIHIL);
+        CREDO_VERUM (strstr(r,
+            "alia in regionibus collocata, non fixa:")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "desiderata ") != NIHIL);
 
         /* MAPPA: linea Rg textus - cumulativa et classes non-nullae.
          * Finis lineae = sequentia '\\n' DUORUM characterum (responsum

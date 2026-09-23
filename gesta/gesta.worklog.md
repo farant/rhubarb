@@ -242,3 +242,31 @@ failed on exactly that. Asserted the timing-free property instead (the
 item's 6-char suffix resolves to it); the deterministic ambiguity case
 lives in the prefix section. Plants: prefix-only + case-sensitive -> 5
 red; empty shortest-suffix -> the refusal-hint assertion red.
+
+## 2026-09-23 — parata: placing in a region no longer pins (decree 01M35650Z4, second site)
+
+After the ordering session parata's AD CONSILIUM went 13 -> 77: every
+dormant park placed in a region showed up as "ready to plan". Decree
+01M35650Z4 (placement does not pin) had been implemented in ONE of two
+places — the "parca visa, non fixa" footer's SQL excluded `intra`-to-
+region links, but `_parata_computare` let every live `intra` link admit
+both ends into the graph. One rule, two sites, one missed; invisible
+until regions actually held things. And `addere {intra}` (shipped the
+same day) would have made it grow with every filing.
+
+Fix (Fran chose option A): nodes carry `fixus`. Seeded for tasks,
+design questions and items assigned to Fran; set for both ends of any
+canonical link EXCEPT `intra` whose parent is a region. Region links
+still build the parent tree, so `parata {intra: <region>}` scoping is
+intact. Unpinned open items get no class in the top-level view; in a
+region-scoped view they get their own section "VISA, NON FIXA (in hac
+regione)" so an ordering session can promote one deliberately. The
+footer now also counts non-park kinds placed-but-unpinned ("alia in
+regionibus collocata, non fixa: desiderata N · quaestiones N · cetera
+N"); lone desiderata with no region stay uncounted (knowledge base, not
+chain).
+
+A 09-22 map test asserted an ordinary desideratum placed in a region
+sits in AD CONSILIUM — it pinned the old reading. Its real point (only
+the vision flag hides visions) is kept: the ordinary one is asserted in
+the new section instead. New assertions born red (8 of 8).
