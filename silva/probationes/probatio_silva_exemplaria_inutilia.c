@@ -788,26 +788,18 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_examinis.invariata_violata,
                         ZEPHYRUM);
 
-    /* 156 -> 173 (2026-09-07): plagulae lib XVII sessionis ludus/pictor
-     * (2026-09-04/05, mandatum .. ludus_fenestra) - omnes latinizatae,
-     * purae, exactae; suita silvae ab ea sessione non cursa, pinna a
-     * commissione orationis inventa.
-     *
-     * 173 -> 176 (2026-09-14): plist, fasciculum, icones
-     * (2026-09-11/12) - omnes latinizatae, purae, exactae; commissiones
-     * eorum portam radicis solam cucurrerunt, pinna a commissione
-     * systema_posix inventa.
-     *
-     * 176 -> 180 (2026-09-17): partitio, partitio_aestimatio
-     * (2026-09-14), entitates_html, entitates_html_tabula
-     * (2026-09-15) - omnes latinizatae, purae, exactae; pinna non
-     * mota, porta rubra a linea basis A3 plani materia-sedes inventa
-     * (quaestio 01M2Q1D2CB).
-     *
-     * 180 -> 181 (2026-09-22): excerptum (a789a5aa, 2026-09-17) -
-     * latinizata, pura, exacta; commissio eius portam radicis solam
-     * cucurrit, pinna a commissione audit json (gradus I) inventa. */
-    CREDO_AEQUALIS_I32 (census_bibliothecae.plagulae, 181);
+    /* NUMERUS PLAGULARUM = LIMES INFERIOR, non pinna (2026-09-23).
+     * Pinna exacta (156 -> 173 -> 176 -> 180 -> 181) omni bibliotheca
+     * NOVA rubebat quamvis pura: numerus domus est, non proprietas
+     * silvae, et commissiones portam radicis solam currentes eam non
+     * videbant - silva dies rubra stabat. Proprietas vera: OMNES
+     * plagulae transeunt, ergo numeri 'omnes' infra plagulis
+     * AEQUANTUR. Limes (CLXXXI, mensuratus 2026-09-23) ambulationem
+     * vacuam aut truncatam capit; demittitur solum bibliotheca CONSULTO
+     * remota. Doctrina: corpus VIVUM invariantia sola fert
+     * (quaestio 01M365VXAF). */
+    CREDO_MAIOR_AUT_AEQUALIS_I32 (census_bibliothecae.plagulae,
+        (i32)181);
     CREDO_AEQUALIS_I32 (census_bibliothecae.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.recusae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.excedentes, ZEPHYRUM);

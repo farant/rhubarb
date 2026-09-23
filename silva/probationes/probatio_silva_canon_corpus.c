@@ -150,6 +150,13 @@ _documentum_gignere (
     {
         census->latinizatae++;
     }
+    alioquin si (clausura != NIHIL)
+    {
+        /* NOMINATA, non numerata solum: 'latinizatae == plagulae'
+         * rubens plagulam ipsam dicere debet (2026-09-23) */
+        imprimere("  NON LATINIZATA (latina.h extra clausuram): %s\n",
+            via);
+    }
 
     origo = apparatus_parsare(opus, via, fons, mensura, radix,
                               clausura, VERUM, &fons_latina);
@@ -576,34 +583,27 @@ principale (vacuum)
      * post compressionem (arcus 2026-08-26) */
     CREDO_AEQUALIS_I32 (census_planus.purae_expansae, (i32)73);
 
-    /* 156 -> 173 (2026-09-07): plagulae lib XVII sessionis ludus/pictor
-     * (2026-09-04/05, mandatum .. ludus_fenestra) - omnes latinizatae,
-     * purae, exactae; suita silvae ab ea sessione non cursa, pinna a
-     * commissione orationis inventa.
-     *
-     * 173 -> 176 (2026-09-14): plist, fasciculum, icones
-     * (2026-09-11/12) - omnes latinizatae, purae, exactae; commissiones
-     * eorum portam radicis solam cucurrerunt, pinna a commissione
-     * systema_posix inventa.
-     *
-     * 176 -> 180 (2026-09-17): partitio, partitio_aestimatio
-     * (2026-09-14), entitates_html, entitates_html_tabula
-     * (2026-09-15) - omnes latinizatae, purae, exactae; pinna non
-     * mota, a commissione A3 plani materia-sedes inventa (6e679497
-     * portas exemplariorum solas moverat).
-     *
-     * 180 -> 181 (2026-09-22): excerptum (a789a5aa, 2026-09-17) -
-     * latinizata, pura, exacta; commissio eius portam radicis solam
-     * cucurrit, pinna a commissione audit json (gradus I) inventa. */
-    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)181);
-    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)181);
+    /* NUMERUS PLAGULARUM = LIMES INFERIOR, non pinna (2026-09-23).
+     * Pinna exacta (156 -> 173 -> 176 -> 180 -> 181) omni bibliotheca
+     * NOVA rubebat quamvis pura: numerus domus est, non proprietas
+     * silvae, et commissiones portam radicis solam currentes eam non
+     * videbant - silva dies rubra stabat. Proprietas vera: OMNES
+     * plagulae transeunt, ergo numeri 'omnes' infra plagulis
+     * AEQUANTUR. Limes (CLXXXI, mensuratus 2026-09-23) ambulationem
+     * vacuam aut truncatam capit; demittitur solum bibliotheca CONSULTO
+     * remota. Doctrina: corpus VIVUM invariantia sola fert
+     * (quaestio 01M365VXAF). */
+    CREDO_MAIOR_AUT_AEQUALIS_I32 (census_latinus.plagulae, (i32)181);
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae,
+        census_latinus.plagulae);
     CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.parsura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.vitia_summa, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)181);
-    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)181);
+    CREDO_AEQUALIS_I32 (census_latinus.purae, census_latinus.plagulae);
+    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae,
+        census_latinus.plagulae);
 
 
     /* ============================================================
