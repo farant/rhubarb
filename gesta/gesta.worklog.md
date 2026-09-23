@@ -128,3 +128,20 @@ in the F4 section. Born red on the old text (lines 442, 2459, 2461).
 Headroom today: 2048 - 1625 - 192 = 231. The limit is the HOST's,
 not ours — another host may cut elsewhere; the constant names the
 number so it can move.
+
+## 2026-09-23 — mappa health: a region's TAGS name it too
+
+The "tags recurrentes nullam regionem nominantes" line compared recurring
+tags against region TITLES only. Two faces of one gap (01M35C05AD):
+`silva` stayed a "candidate region" although 'C89 development stack'
+carries it as a tag, and after the first ordering session created ~45
+regions tagged `regio,regio-tabularii`, those two tags headed the list —
+tags carried by nothing BUT regions. Fix: the comparison list is region
+titles plus every tag in each region's datum.tags; one change covers
+both faces. Consequence worth knowing: tagging a region is now how you
+tell the map "this area covers that topic" — a topic tag disappears from
+the candidates as soon as any region carries it.
+
+Test: a second fixture tag `ligatura` on the ten typographia notes, then
+a region 'Rg glyphae' carrying it as a tag (not in its title); born red
+at probatio_tabularium.c:4911 before the fix.

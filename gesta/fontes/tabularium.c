@@ -8482,18 +8482,51 @@ _mappae_salutem_reddere (
         ChordaAedificator* nomina = chorda_aedificator_creare(pn,
             DXII);
 
+        /* nomina regionum = tituli ET tags earum (01M35C05AD): regio
+         * tagum gerens eum nominat ('C89 development stack' cum tag
+         * 'silva'), et tags quos regiones solae ferunt ('regio')
+         * candidatae non sunt - olim tituli soli conferebantur */
         e = scrinium_praeparare(gesta_scrinium(t->mundus),
-            "SELECT titulus FROM res WHERE genus = ?1");
+            "SELECT titulus, datum FROM res WHERE genus = ?1");
         si (e != NIHIL && tituli != NIHIL)
         {
             scrinium_ligare_textum(e, I, _ch(GENUS_REGIONIS));
             dum (scrinium_gradi(e) == SCRINIUM_ORDO)
             {
-                chorda* locus = (chorda*)xar_addere(tituli);
+                      chorda* locus = (chorda*)xar_addere(tituli);
+                JsonResultus  datum = json_legere(
+                    scrinium_columna_textus(e, I, pn), pn);
+                JsonValor* tags_regionis;
 
                 si (locus != NIHIL)
                 {
                     *locus = scrinium_columna_textus(e, 0, pn);
+                }
+                tags_regionis = datum.successus
+                    ? json_objectum_capere(datum.radix, "tags") : NIHIL;
+                si (   tags_regionis != NIHIL
+                    && json_est_tabulatum(tags_regionis))
+                {
+                    i32 m;
+
+                    per (m = ZEPHYRUM;
+                         m < json_tabulatum_numerus(tags_regionis);
+                         m++)
+                    {
+                        JsonValor* tg = json_tabulatum_obtinere(
+                            tags_regionis, m);
+                        chorda* sedes;
+
+                        si (tg == NIHIL || !json_est_chorda(tg))
+                        {
+                            perge;
+                        }
+                        sedes = (chorda*)xar_addere(tituli);
+                        si (sedes != NIHIL)
+                        {
+                            *sedes = json_ad_chorda(tg);
+                        }
+                    }
                 }
             }
             scrinium_finire(e);

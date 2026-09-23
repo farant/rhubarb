@@ -4816,7 +4816,9 @@ principale (vacuum)
         constans character* locus;
                        i32  k;
 
-        /* X notae cum tag 'typographia' - tag recurrens sine regione */
+        /* X notae cum tags 'typographia' et 'ligatura' - tags
+         * recurrentes sine regione (ligatura: regio eam TAGO solo
+         * nominabit, infra) */
         per (k = ZEPHYRUM; k < X; k++)
         {
             character petitio[CCLVI];
@@ -4825,7 +4827,7 @@ principale (vacuum)
                 "\"method\":\"tools/call\",\"params\":{\"name\":"
                 "\"addere\",\"arguments\":{\"genus\":\"nota\","
                 "\"titulus\":\"Mt nota typographica %d\",\"tags\":"
-                "\"typographia\"}}}", (int)(570 + k), (int)k);
+                "\"typographia,ligatura\"}}}", (int)(570 + k), (int)k);
             r = _mitte(t, piscina, petitio);
             CREDO_VERUM (strstr(r, "creata") != NIHIL);
         }
@@ -4874,6 +4876,7 @@ principale (vacuum)
             "regiones sine visione", "Rg textus"));
         /* tag recurrens nullam regionem nominans */
         CREDO_VERUM (strstr(r, "typographia (10)") != NIHIL);
+        CREDO_VERUM (strstr(r, "ligatura (10)") != NIHIL);
         /* parca quietissima: caput et tactus */
         locus = strstr(r, "parca quietissima");
         CREDO_NON_NIHIL (locus);
@@ -4891,6 +4894,21 @@ principale (vacuum)
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"mappa\",\"arguments\":{}}}");
         CREDO_VERUM (strstr(r, "typographia (10)") == NIHIL);
+
+        /* regio cum TAGO (non titulo) tagi: tag quoque non candidata
+         * (01M35C05AD) - olim tituli soli conferebantur, ergo 'silva'
+         * sub 'C89 development stack' tag gerente et 'regio' ipsum
+         * (tag quem regiones solae ferunt) candidatae manebant */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5823,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"regio\","
+            "\"titulus\":\"Rg glyphae\",\"corpus\":\"formae"
+            " litterarum\",\"tags\":\"ligatura\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5824,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "ligatura (") == NIHIL);
 
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */
