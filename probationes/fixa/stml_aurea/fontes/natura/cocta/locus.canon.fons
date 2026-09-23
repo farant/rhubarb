@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e locus - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="locus" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="locus"/>
+    <liberum nomen="inscriptio"/>
+    <liberum nomen="iurisdictio"/>
+    <liberum nomen="aedificium"/>
+  </elementum>
+
+  <elementum nomen="locus">
+    <glossa lingua="en">A place: a determinate part of space where
+    bodily things can be - a point or an area on the earth. It is
+    prior to all naming: the place remains even if its name
+    perishes.</glossa>
+    <glossa lingua="fr">Un lieu : une partie déterminée de
+    l'espace où des choses corporelles peuvent se trouver - un
+    point ou une aire sur la terre. Il est antérieur à toute
+    dénomination : le lieu demeure même si son nom
+    disparaît.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="latitudo" genus="numerus"/>
+    <attributum nomen="longitudo-geo" genus="numerus"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <liberum nomen="sub-iurisdictione"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="sub-iurisdictione" intra="locus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="locus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="inscriptio">
+    <glossa lingua="en">An address: the agreed name of a place,
+    used to find it - street, number, city, postal code. It is a
+    CONVENTION, not the place: streets are renamed, numbers
+    change, postal codes are invented, while the place itself
+    does not move.</glossa>
+    <glossa lingua="fr">Une adresse : le nom convenu d'un lieu,
+    servant à le trouver - rue, numéro, ville, code postal. C'est
+    une CONVENTION, non le lieu : les rues sont rebaptisées, les
+    numéros changent, les codes postaux sont inventés, alors que
+    le lieu ne bouge pas.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="codex-postalis" genus="textus"/>
+    <attributum nomen="designat" genus="referentia"/>
+    <liberum nomen="linea"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="linea" intra="inscriptio" textus="verum"/>
+  <elementum nomen="historia" intra="inscriptio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="iurisdictio">
+    <glossa lingua="en">A jurisdiction: the power to make and
+    enforce laws over a place - municipality, province, state.
+    Not a place but a POWER, which is why jurisdictions can
+    overlap (the same place under three at once), something
+    places themselves cannot do.</glossa>
+    <glossa lingua="fr">Une juridiction : le pouvoir de faire des
+    lois et de les faire appliquer sur un lieu - commune,
+    province, État. Non pas un lieu mais un POUVOIR, et c'est
+    pourquoi les juridictions peuvent se superposer (le même lieu
+    sous trois à la fois), ce que les lieux eux-mêmes ne peuvent
+    pas.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <liberum nomen="fert"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="fert" intra="iurisdictio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="iurisdictio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="aedificium">
+    <glossa lingua="en">A building: a structure fixed to a place
+    which people occupy - a bodily thing that cannot be moved.
+    Immobility is its essence, whence the legal term immovable
+    property.</glossa>
+    <glossa lingua="fr">Un bâtiment : une structure fixée à un
+    lieu et que des hommes occupent - une chose corporelle qui ne
+    peut être déplacée. L'immobilité est son essence, d'où le
+    terme juridique de biens immeubles.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="situm-in" genus="referentia"/>
+    <attributum nomen="inscriptio-eius" genus="referentia"/>
+    <liberum nomen="spatia" maximum="1"/>
+    <liberum nomen="occupatum-a"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="spatia" intra="aedificium">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="occupatum-a" intra="aedificium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="aedificium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="locus inscriptio iurisdictio aedificium"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="locus-intra" attributum="intra" ad="locus/nomen" super="locus"/>
+  <citatio nomen="locus-sub-iurisdictione" attributum="ad" ad="iurisdictio/nomen" super="locus/sub-iurisdictione"/>
+  <citatio nomen="inscriptio-designat" attributum="designat" ad="locus/nomen" super="inscriptio"/>
+  <citatio nomen="iurisdictio-intra" attributum="intra" ad="iurisdictio/nomen" super="iurisdictio"/>
+  <citatio nomen="aedificium-situm-in" attributum="situm-in" ad="locus/nomen" super="aedificium"/>
+  <citatio nomen="aedificium-inscriptio-eius" attributum="inscriptio-eius" ad="inscriptio/nomen" super="aedificium"/>
+
+</canon>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e schema - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="schema" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="schema"/>
+    <liberum nomen="campus"/>
+    <liberum nomen="genus-valoris"/>
+    <liberum nomen="textus"/>
+    <liberum nomen="numerus"/>
+    <liberum nomen="dies"/>
+    <liberum nomen="veritas"/>
+    <liberum nomen="electio"/>
+    <liberum nomen="citatio"/>
+  </elementum>
+
+  <elementum nomen="schema">
+    <glossa lingua="en">A schema: a declared form for data - the
+    shape that things of the same kind must fill out: named
+    fields, kinds of value, requirements. It is a promise about
+    FUTURE data: the schema is written today, the things arrive
+    tomorrow.</glossa>
+    <glossa lingua="fr">Un schéma : une forme de données déclarée
+    - la figure que doivent remplir les choses d'un même genre :
+    champs nommés, genres de valeurs, obligations. C'est une
+    promesse portant sur les données À VENIR : le schéma s'écrit
+    aujourd'hui, les choses arrivent demain.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="disciplina" genus="electio">
+      <optio>constringens</optio>
+      <optio>iudicans</optio>
+    </attributum>
+    <attributum nomen="describit" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="continet" intra="schema">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="schema">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="campus">
+    <glossa lingua="en">A field: a named place in a schema - a
+    name, a kind of value, a requirement. It is the atom of the
+    form: a schema is made of fields as a sentence is made of
+    words.</glossa>
+    <glossa lingua="fr">Un champ : un emplacement nommé dans un
+    schéma - un nom, un genre de valeur, une obligation. C'est
+    l'atome de la forme : un schéma est fait de champs comme une
+    phrase est faite de mots.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="necessarius" genus="veritas"/>
+    <attributum nomen="multiplex" genus="veritas"/>
+    <attributum nomen="ordinarius-valor" genus="textus"/>
+    <attributum nomen="campus-de" genus="referentia"/>
+    <attributum nomen="genus-eius" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="campus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="genus-valoris">
+    <glossa lingua="en">A kind of value: the kind of value a field
+    can hold - the INTENT of the value, not its machine
+    representation; s32 and char* are realizations (the language
+    type supplies the matter, the kind of value the form). A date
+    stays a date, whether a string or a number lies under
+    it.</glossa>
+    <glossa lingua="fr">Un genre de valeur : le genre de valeur
+    qu'un champ peut contenir - l'INTENTION de la valeur, non sa
+    représentation machine ; s32 et char* en sont des
+    réalisations (le type du langage fournit la matière, le genre
+    de valeur la forme). Une date reste une date, qu'une chaîne
+    ou un nombre se trouve dessous.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="genus-valoris">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="textus">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="textus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="numerus">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="numerus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="dies">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="dies">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="veritas">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="veritas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="electio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="electio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="citatio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="citatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="schema campus genus-valoris textus numerus dies veritas electio
+           citatio"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="schema-continet" attributum="ad" ad="campus/nomen" super="schema/continet"/>
+  <citatio nomen="campus-genus-eius" attributum="genus-eius" ad="genus-valoris textus numerus dies veritas electio citatio/nomen" super="campus"/>
+
+</canon>

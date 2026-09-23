@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e mensura - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="mensura" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="magnitudo-mensurabilis"/>
+    <liberum nomen="longitudo"/>
+    <liberum nomen="massa"/>
+    <liberum nomen="tempus-intervallum"/>
+    <liberum nomen="temperatura"/>
+    <liberum nomen="capacitas"/>
+    <liberum nomen="numerositas"/>
+    <liberum nomen="unitas-mensurae"/>
+    <liberum nomen="quantitas"/>
+    <liberum nomen="incertitudo"/>
+    <liberum nomen="instrumentum-mensurae"/>
+  </elementum>
+
+  <elementum nomen="magnitudo-mensurabilis">
+    <glossa lingua="en">A measurable magnitude: that which can be
+    measured - length, mass, time, temperature. The Aristotelian
+    category of quantity, prior to all units, which merely PARTITION
+    it: length is there even if no one had ever invented the
+    metre.</glossa>
+    <glossa lingua="fr">Une grandeur mesurable : ce qui peut être
+    mesuré - longueur, masse, temps, température. Le prédicament
+    aristotélicien de la quantité, antérieur à toutes les unités,
+    lesquelles ne font que la PARTAGER : la longueur est là même si
+    personne n'avait inventé le mètre.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="magnitudo-mensurabilis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="magnitudo-mensurabilis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="longitudo">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="longitudo">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="longitudo">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="massa">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="massa">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="massa">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="tempus-intervallum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="tempus-intervallum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="tempus-intervallum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="temperatura">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="temperatura">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="temperatura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="capacitas">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="capacitas">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="capacitas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="numerositas">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="numerositas">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="numerositas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="unitas-mensurae">
+    <glossa lingua="en">A unit of measure: an agreed partition of a
+    measurable magnitude, by which quantities can be counted. It is
+    a CONVENTION and not a nature - but a standardized convention,
+    publicly kept, and therefore a thing about which the truth can
+    be told.</glossa>
+    <glossa lingua="fr">Une unité de mesure : une partition convenue
+    d'une grandeur mesurable, par laquelle les quantités peuvent
+    être dénombrées. C'est une CONVENTION et non une nature - mais
+    une convention normalisée, gardée publiquement, et donc une
+    chose dont on peut dire le vrai.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="symbolum" genus="textus"/>
+    <attributum nomen="fundamentalis" genus="veritas"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="unitas-mensurae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="quantitas">
+    <glossa lingua="en">A quantity: a number WITH A UNIT, the settled
+    measure of a thing. A number by itself is no quantity - "500" is
+    nothing until "grams" is present. Addition is permitted only
+    between quantities of the same magnitude; attempting it across
+    magnitudes is a dimensional error, as the Mars Climate Orbiter
+    lost in 1999 showed, where pounds passed for newtons - a
+    quantity whose unit went unguarded.</glossa>
+    <glossa lingua="fr">Une quantité : un nombre AVEC UNE UNITÉ, la
+    mesure déterminée d'une chose. Un nombre seul n'est pas une
+    quantité - « 500 » n'est rien tant que « grammes » n'est pas là.
+    L'addition n'est permise qu'entre quantités de même grandeur ;
+    la tenter à travers des grandeurs est une erreur de dimensions,
+    comme l'a montré la perte du Mars Climate Orbiter en 1999, où
+    des livres ont été prises pour des newtons - une quantité dont
+    l'unité n'était pas gardée.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="valor" genus="numerus" fractio="verum"/>
+    <attributum nomen="minimum" genus="numerus" fractio="verum"/>
+    <attributum nomen="maximum" genus="numerus" fractio="verum"/>
+    <attributum nomen="praecisio" genus="numerus" fractio="verum"/>
+    <attributum nomen="in-unitate" genus="referentia"/>
+    <attributum nomen="cum-incertitudine" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="quantitas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="incertitudo">
+    <glossa lingua="en">An uncertainty: the measure of how much of the
+    true value we do not know - the interval around the measured
+    value within which the true value is believed to lie, at a
+    stated probability. It is ABOUT US, not about the thing: a range
+    says the thing itself varies, an uncertainty says the thing has
+    one value that we do not know exactly.</glossa>
+    <glossa lingua="fr">Une incertitude : la mesure de ce que nous
+    ignorons de la valeur vraie - l'intervalle, autour de la valeur
+    mesurée, dans lequel on croit que la valeur vraie se trouve,
+    avec une probabilité déclarée. Elle porte SUR NOUS et non sur la
+    chose : un intervalle dit que la chose elle-même varie, une
+    incertitude dit que la chose a une seule valeur que nous ne
+    connaissons pas exactement.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="magnitudo" genus="numerus"/>
+    <attributum nomen="factor-tegumenti" genus="numerus"/>
+    <attributum nomen="fiducia-stata" genus="numerus"/>
+    <attributum nomen="genus-aestimationis" genus="electio">
+      <optio>typus_a</optio>
+      <optio>typus_b</optio>
+    </attributum>
+    <attributum nomen="de-quantitate" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="componitur-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="componitur-ex" intra="incertitudo">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="incertitudo">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="instrumentum-mensurae">
+    <glossa lingua="en">A measuring instrument: a tool that does NOT
+    change its thing but characterizes it - an oven bakes the bread,
+    a balance leaves the bread as it was. And it is the only tool
+    that is ITSELF measured: calibration is the measure of the
+    measurer, which gives it a chain that exists nowhere
+    else.</glossa>
+    <glossa lingua="fr">Un instrument de mesure : un instrument qui ne
+    MODIFIE PAS sa chose mais la caractérise - le four cuit le pain,
+    la balance laisse le pain tel qu'il était. Et c'est le seul
+    instrument qui soit LUI-MÊME mesuré : l'étalonnage est la mesure
+    du mesureur, d'où une chaîne qui n'existe nulle part
+    ailleurs.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="error-systematicus" genus="numerus"/>
+    <attributum nomen="dispersio" genus="numerus"/>
+    <attributum nomen="resolutio" genus="numerus"/>
+    <attributum nomen="intervallum-calibrationis" genus="textus"/>
+    <attributum nomen="status-fides" genus="electio">
+      <optio>calibratum</optio>
+      <optio>in_usu</optio>
+      <optio>expiratum</optio>
+      <optio>extra_tolerantiam</optio>
+    </attributum>
+    <attributum nomen="calibratum-contra" genus="referentia"/>
+    <attributum nomen="attestatur-per" genus="referentia"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="referentia"/>
+    <attributum nomen="factum-a" genus="referentia"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="instrumentum-mensurae">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="instrumentum-mensurae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="instrumentum-mensurae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura
+           capacitas numerositas unitas-mensurae quantitas incertitudo instrumentum-mensurae"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="unitas-mensurae-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="unitas-mensurae"/>
+  <citatio nomen="quantitas-cum-incertitudine" attributum="cum-incertitudine" ad="incertitudo/nomen" super="quantitas"/>
+  <citatio nomen="incertitudo-de-quantitate" attributum="de-quantitate" ad="quantitas/nomen" super="incertitudo"/>
+  <citatio nomen="incertitudo-componitur-ex" attributum="ad" ad="incertitudo/nomen" super="incertitudo/componitur-ex"/>
+  <citatio nomen="instrumentum-mensurae-calibratum-contra" attributum="calibratum-contra" ad="instrumentum-mensurae/nomen" super="instrumentum-mensurae"/>
+
+</canon>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e praescriptum - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="praescriptum" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="procedura"/>
+    <liberum nomen="procedura-automata"/>
+    <liberum nomen="fistula-integrationis"/>
+    <liberum nomen="depositio"/>
+    <liberum nomen="praescriptum"/>
+    <liberum nomen="gradus-praescripti"/>
+    <liberum nomen="versio-praescripti"/>
+    <liberum nomen="index-verificationis"/>
+  </elementum>
+
+  <elementum nomen="procedura">
+    <glossa lingua="en">A procedure: an order of operations directed
+    to an end - declared inputs, ordered steps, an expected
+    outcome. It does not say who is to carry them out, and on that
+    silence the whole division below it rests.</glossa>
+    <glossa lingua="fr">Une procédure : un ordre d'opérations en vue
+    d'une fin - entrées déclarées, étapes ordonnées, résultat
+    attendu. Elle ne dit pas qui les exécute, et c'est sur ce
+    silence que repose toute la division qui suit.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="gradus-eius"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="gradus-eius" intra="procedura">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="procedura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="procedura-automata">
+    <glossa lingua="en">An automated procedure: one carried out by a
+    MACHINE, and therefore with NO tolerance for ambiguity. Where a
+    recipe may say "until it turns golden" because a person judges,
+    this must settle everything in numbers and conditions; what is
+    trust in a recipe would here be a defect. In exchange it can be
+    repeated endlessly with exactly the same effect, which no
+    person can promise.</glossa>
+    <glossa lingua="fr">Une procédure automatisée : exécutée par une
+    MACHINE, et donc SANS aucune tolérance à l'ambiguïté. Là où une
+    recette peut dire « jusqu'à ce que ce soit doré » parce qu'un
+    homme juge, celle-ci doit tout fixer en nombres et en
+    conditions ; ce qui est confiance dans la recette serait ici un
+    défaut. En revanche elle peut se répéter à l'infini avec
+    exactement le même effet, ce qu'aucun homme ne
+    garantit.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="reversibilis" genus="veritas"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>exspectans</optio>
+      <optio>currens</optio>
+      <optio>perfecta</optio>
+      <optio>lapsa</optio>
+      <optio>intercepta</optio>
+    </attributum>
+    <attributum nomen="porta-humana" genus="referentia"/>
+    <attributum nomen="agit-in" genus="referentia"/>
+    <liberum nomen="efficit"/>
+    <liberum nomen="gradus-eius"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="efficit" intra="procedura-automata">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="gradus-eius" intra="procedura-automata">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="procedura-automata">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fistula-integrationis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="reversibilis" genus="veritas"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>exspectans</optio>
+      <optio>currens</optio>
+      <optio>perfecta</optio>
+      <optio>lapsa</optio>
+      <optio>intercepta</optio>
+    </attributum>
+    <attributum nomen="porta-humana" genus="referentia"/>
+    <attributum nomen="agit-in" genus="referentia"/>
+    <liberum nomen="efficit"/>
+    <liberum nomen="gradus-eius"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="efficit" intra="fistula-integrationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="gradus-eius" intra="fistula-integrationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="fistula-integrationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="depositio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="reversibilis" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>exspectans</optio>
+      <optio>currens</optio>
+      <optio>perfecta</optio>
+      <optio>lapsa</optio>
+      <optio>intercepta</optio>
+    </attributum>
+    <attributum nomen="porta-humana" genus="referentia"/>
+    <attributum nomen="agit-in" genus="referentia"/>
+    <liberum nomen="efficit"/>
+    <liberum nomen="gradus-eius"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="efficit" intra="depositio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="gradus-eius" intra="depositio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="depositio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="praescriptum">
+    <glossa lingua="en">A recipe, or prescribed procedure: an order
+    of operations directed to an end and to be carried out BY A
+    PERSON - declared inputs (materials, tools), ordered steps, an
+    expected outcome. It is the human cousin of a function: the
+    same shape, a different executor.</glossa>
+    <glossa lingua="fr">Une recette, ou procédure prescrite : un ordre
+    d'opérations en vue d'une fin, à exécuter PAR UN HOMME -
+    entrées déclarées (matières, instruments), étapes ordonnées,
+    résultat attendu. C'est le parent humain de la fonction : même
+    forme, exécutant différent.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="peritia-postulata" genus="electio">
+      <optio>nulla</optio>
+      <optio>mediocris</optio>
+      <optio>magna</optio>
+    </attributum>
+    <attributum nomen="proventus" genus="textus"/>
+    <attributum nomen="mora" genus="textus"/>
+    <attributum nomen="status-observantia" genus="electio">
+      <optio>inceptum</optio>
+      <optio>in_cursu</optio>
+      <optio>perfectum</optio>
+      <optio>desertum</optio>
+    </attributum>
+    <attributum nomen="exsequitur" genus="referentia"/>
+    <attributum nomen="efficit" genus="referentia"/>
+    <attributum nomen="publicatum-in" genus="referentia"/>
+    <attributum nomen="auctor" genus="referentia"/>
+    <attributum nomen="ortum-ex" genus="referentia"/>
+    <liberum nomen="materiae" maximum="1"/>
+    <liberum nomen="gradus" maximum="1"/>
+    <liberum nomen="exitus" maximum="1"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="gradus-eius"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="materiae" intra="praescriptum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="gradus" intra="praescriptum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="exitus" intra="praescriptum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="postulat" intra="praescriptum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="gradus-eius" intra="praescriptum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="praescriptum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="gradus-praescripti">
+    <glossa lingua="en">A step of a recipe: one operation within the
+    order - an action, perhaps with a quantity, perhaps with a
+    duration, perhaps with a condition for stopping.</glossa>
+    <glossa lingua="fr">Une étape de la recette : une seule opération
+    dans l'ordre - une action, éventuellement avec une quantité,
+    éventuellement avec une durée, éventuellement avec une
+    condition d'arrêt.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="ordo" genus="numerus"/>
+    <attributum nomen="mora" genus="textus"/>
+    <attributum nomen="conditio-finis" genus="textus"/>
+    <attributum nomen="simultaneus" genus="veritas"/>
+    <attributum nomen="gradus-de" genus="referentia"/>
+    <liberum nomen="pendet-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="pendet-ex" intra="gradus-praescripti">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="gradus-praescripti">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="versio-praescripti">
+    <glossa lingua="en">A version of a recipe: a named and citable
+    issue of it - a recipe passes through revisions while its
+    identity remains ("grandmother's recipe, as revised in
+    1998").</glossa>
+    <glossa lingua="fr">Une version de la recette : une édition
+    nommée et citable - une recette traverse des révisions sans
+    que son identité change (« la recette de grand-mère, telle que
+    révisée en 1998 »).</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="versio-de" genus="referentia"/>
+    <attributum nomen="sequitur" genus="referentia"/>
+    <attributum nomen="emendata-a" genus="referentia"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="edita" genus="dies"/>
+    <attributum nomen="schema-numerandi" genus="electio">
+      <optio>semanticum</optio>
+      <optio>sequentiale</optio>
+      <optio>temporale</optio>
+      <optio>nominale</optio>
+      <optio>mixtum</optio>
+    </attributum>
+    <attributum nomen="retro-compatibilis" genus="veritas"/>
+    <attributum nomen="mutationes-fractoriae" genus="textus"/>
+    <attributum nomen="status-sustentatio" genus="electio">
+      <optio>praenuntiata</optio>
+      <optio>vigens</optio>
+      <optio>sustentata</optio>
+      <optio>deprecata</optio>
+      <optio>derelicta</optio>
+    </attributum>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
+    <liberum nomen="compatibilis-cum"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="compatibilis-cum" intra="versio-praescripti">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="versio-praescripti">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="index-verificationis">
+    <glossa lingua="en">A checklist: a procedure that CONFIRMS what
+    has been done; it does not teach how to do it. The one who runs
+    it already holds the art - the list exists because KNOWING IS
+    NOT DOING under burden, haste and fatigue. The failure it
+    prevents is therefore not ignorance but OMISSION.</glossa>
+    <glossa lingua="fr">Une liste de vérification : une procédure qui
+    CONFIRME ce qui a été fait ; elle n'enseigne pas comment le
+    faire. Celui qui l'exécute possède déjà l'art - la liste existe
+    parce que SAVOIR N'EST PAS FAIRE sous la charge, la hâte et la
+    fatigue. Le défaut qu'elle empêche n'est donc pas l'ignorance
+    mais l'OMISSION.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus" genus="electio">
+      <optio>facere_confirmare</optio>
+      <optio>legere_facere</optio>
+    </attributum>
+    <attributum nomen="pro-casu" genus="veritas"/>
+    <attributum nomen="confirmat" genus="referentia"/>
+    <liberum nomen="adhibetur-in"/>
+    <liberum nomen="gradus-eius"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="adhibetur-in" intra="index-verificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="gradus-eius" intra="index-verificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="index-verificationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>edi</optio>
+      <optio>deprecari</optio>
+      <optio>derelinqui</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="procedura procedura-automata fistula-integrationis depositio praescriptum
+           gradus-praescripti versio-praescripti index-verificationis"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="procedura-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="procedura/gradus-eius"/>
+  <citatio nomen="procedura-automata-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="procedura-automata/gradus-eius"/>
+  <citatio nomen="fistula-integrationis-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="fistula-integrationis/gradus-eius"/>
+  <citatio nomen="depositio-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="depositio/gradus-eius"/>
+  <citatio nomen="praescriptum-ortum-ex" attributum="ortum-ex" ad="praescriptum/nomen" super="praescriptum"/>
+  <citatio nomen="praescriptum-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="praescriptum/gradus-eius"/>
+  <citatio nomen="gradus-praescripti-pendet-ex" attributum="ad" ad="gradus-praescripti/nomen" super="gradus-praescripti/pendet-ex"/>
+  <citatio nomen="versio-praescripti-versio-de" attributum="versio-de" ad="praescriptum/nomen" super="versio-praescripti"/>
+  <citatio nomen="versio-praescripti-sequitur" attributum="sequitur" ad="versio-praescripti/nomen" super="versio-praescripti"/>
+  <citatio nomen="index-verificationis-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="index-verificationis/gradus-eius"/>
+
+</canon>

@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e tempus - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="tempus" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="momentum"/>
+    <liberum nomen="intervallum"/>
+    <liberum nomen="recurrentia"/>
+    <liberum nomen="recurrentia-computata"/>
+    <liberum nomen="pascha"/>
+    <liberum nomen="dies-negotiorum"/>
+    <liberum nomen="dies-ordinalis-mensis"/>
+    <liberum nomen="recurrentia-per-usum"/>
+    <liberum nomen="per-horas-operis"/>
+    <liberum nomen="per-cyclos"/>
+    <liberum nomen="per-spatium"/>
+    <liberum nomen="horarium"/>
+    <liberum nomen="calendarium"/>
+    <liberum nomen="reservatio"/>
+  </elementum>
+
+  <elementum nomen="momentum">
+    <glossa lingua="en">A moment: a point in time - when something
+    happens. It has no duration; what lasts is an interval. Every
+    event has its moment, and the histories in every model hang from
+    this.</glossa>
+    <glossa lingua="fr">Un moment : un point dans le temps - quand
+    quelque chose arrive. Il est sans durée ; ce qui dure est un
+    intervalle. Tout événement a son moment, et les histoires de
+    tous les modèles en dépendent.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="praecisio" genus="electio">
+      <optio>annus</optio>
+      <optio>mensis</optio>
+      <optio>dies</optio>
+      <optio>hora</optio>
+      <optio>secundum</optio>
+      <optio>minutia</optio>
+    </attributum>
+    <attributum nomen="zona-horaria" genus="textus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="momentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="intervallum">
+    <glossa lingua="en">An interval: the stretch of time between two
+    moments - a beginning, an end, and therefore a duration. What
+    has no duration is a moment; what has no end, being still
+    running, is an open interval, and that is a true state rather
+    than missing data.</glossa>
+    <glossa lingua="fr">Un intervalle : l'étendue de temps entre deux
+    moments - un début, une fin, et donc une durée. Ce qui est sans
+    durée est un moment ; ce qui est sans fin, parce qu'il court
+    encore, est un intervalle ouvert, et c'est là un état véritable
+    et non une donnée manquante.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="duratio" genus="textus"/>
+    <attributum nomen="initium" genus="referentia"/>
+    <attributum nomen="finis" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="intervallum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="recurrentia">
+    <glossa lingua="en">A recurrence: a rule that generates moments
+    (or intervals) - "every day at the fourth hour", "every Monday",
+    "the first day of each month". It is a rule and not a
+    collection, and the collection it yields is often infinite. Keep
+    it as a rule: whoever expands it into records cuts the future
+    off at some arbitrary bound.</glossa>
+    <glossa lingua="fr">Une récurrence : une règle qui engendre des
+    moments (ou des intervalles) - « chaque jour à la quatrième
+    heure », « chaque lundi », « le premier jour de chaque mois ».
+    C'est une règle et non une collection, et la collection qu'elle
+    produit est souvent infinie. Il faut la garder comme règle : qui
+    la déplie en enregistrements tronque l'avenir à une borne
+    arbitraire.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="recurrentia" textus="dies"/>
+  <elementum nomen="historia" intra="recurrentia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="recurrentia-computata">
+    <glossa lingua="en">A computed recurrence: a rule generating
+    moments whose moments arise not from a simple period but from an
+    algorithm - the rule itself contains a calculation, often
+    consulting the heavenly bodies or other recurrences. So "when
+    next?" cannot be answered without computing it, which a merely
+    periodic rule can always do.</glossa>
+    <glossa lingua="fr">Une récurrence calculée : une règle
+    engendrant des moments qui ne naissent pas d'une période simple
+    mais d'un algorithme - la règle contient elle-même un calcul,
+    consultant souvent les corps célestes ou d'autres récurrences.
+    Aussi la question « la prochaine, quand ? » ne peut-elle
+    recevoir de réponse sans calcul, ce qu'une règle simplement
+    périodique permet toujours.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="algorithmus" genus="textus"/>
+    <attributum nomen="pendet-ex-alia" genus="veritas"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="recurrentia-computata" textus="dies"/>
+  <elementum nomen="historia" intra="recurrentia-computata">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="pascha">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="algorithmus" genus="textus" ordinarius="computus lunisolaris"/>
+    <attributum nomen="pendet-ex-alia" genus="veritas"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="pascha" textus="dies"/>
+  <elementum nomen="historia" intra="pascha">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="dies-negotiorum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="algorithmus" genus="textus"/>
+    <attributum nomen="pendet-ex-alia" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="dies-negotiorum" textus="dies"/>
+  <elementum nomen="historia" intra="dies-negotiorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="dies-ordinalis-mensis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="algorithmus" genus="textus"/>
+    <attributum nomen="pendet-ex-alia" genus="veritas"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="dies-ordinalis-mensis" textus="dies"/>
+  <elementum nomen="historia" intra="dies-ordinalis-mensis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="recurrentia-per-usum">
+    <glossa lingua="en">A usage-based recurrence: a rule generating
+    moments that is governed not by time but by accumulated use -
+    hours of work, cycles, distance covered. An idle tool therefore
+    never comes due while a hard-worked one comes due often, which
+    time by itself could never say.</glossa>
+    <glossa lingua="fr">Une récurrence à l'usage : une règle
+    engendrant des moments qui est réglée non par le temps mais par
+    l'usage accumulé - heures de travail, cycles, distance
+    parcourue. Un outil au repos n'échoit donc jamais, un outil très
+    employé souvent, ce que le temps seul ne saurait dire.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="mensura-usus" genus="textus"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="recurrentia-per-usum" textus="dies"/>
+  <elementum nomen="historia" intra="recurrentia-per-usum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="per-horas-operis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="mensura-usus" genus="textus"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="per-horas-operis" textus="dies"/>
+  <elementum nomen="historia" intra="per-horas-operis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="per-cyclos">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="mensura-usus" genus="textus"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="per-cyclos" textus="dies"/>
+  <elementum nomen="historia" intra="per-cyclos">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="per-spatium">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="mensura-usus" genus="textus"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="per-spatium" textus="dies"/>
+  <elementum nomen="historia" intra="per-spatium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="horarium">
+    <glossa lingua="en">A schedule: recurrences composed into an
+    order by which work is governed - opening hours, worker shifts,
+    the sequence of baking. Not one rule but a system of rules that
+    agree with one another, or fail to, which is where shift
+    conflicts come from.</glossa>
+    <glossa lingua="fr">Un horaire : des récurrences composées en un
+    ordre qui régit le travail - heures d'ouverture, tours des
+    ouvriers, suite des cuissons. Non pas une règle unique mais un
+    système de règles qui s'accordent entre elles, ou ne s'accordent
+    pas, d'où les conflits de tours.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="regit" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="vinctum-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="continet" intra="horarium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="vinctum-per" intra="horarium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="horarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="calendarium">
+    <glossa lingua="en">A calendar: the system by which days are
+    named and ordered - months, weeks, years, feast days. It is a
+    convention that has a history: calendars change, and a change
+    really does delete days.</glossa>
+    <glossa lingua="fr">Un calendrier : le système par lequel les
+    jours sont nommés et ordonnés - mois, semaines, années, jours de
+    fête. C'est une convention pourvue d'une histoire : les
+    calendriers changent, et un changement supprime réellement des
+    jours.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="conditum-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="calendarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="reservatio">
+    <glossa lingua="en">A reservation: a claim on future capacity -
+    an interval together with a thing (a seat, a room, an hour with
+    the doctor) held for someone so that it is not given to another.
+    It brings two things to birth at once: a right in the one who
+    claims and an obligation in the one who holds.</glossa>
+    <glossa lingua="fr">Une réservation : la revendication d'une
+    capacité future - un intervalle et une chose (un siège, une
+    chambre, une heure chez le médecin) gardés pour quelqu'un afin
+    de n'être pas donnés à un autre. Elle fait naître deux choses à
+    la fois : un droit chez celui qui réserve et une obligation chez
+    celui qui garde.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>petita</optio>
+      <optio>confirmata</optio>
+      <optio>adhibita</optio>
+      <optio>deserta</optio>
+      <optio>cancellata</optio>
+    </attributum>
+    <attributum nomen="tempus-servatum" genus="referentia"/>
+    <attributum nomen="res-servata" genus="referentia"/>
+    <attributum nomen="vindicans" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="reservatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="momentum intervallum recurrentia recurrentia-computata pascha
+           dies-negotiorum dies-ordinalis-mensis recurrentia-per-usum per-horas-operis
+           per-cyclos per-spatium horarium calendarium reservatio"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="intervallum-initium" attributum="initium" ad="momentum/nomen" super="intervallum"/>
+  <citatio nomen="intervallum-finis" attributum="finis" ad="momentum/nomen" super="intervallum"/>
+  <citatio nomen="horarium-continet" attributum="ad" ad="recurrentia recurrentia-computata pascha dies-negotiorum dies-ordinalis-mensis recurrentia-per-usum per-horas-operis per-cyclos per-spatium/nomen" super="horarium/continet"/>
+  <citatio nomen="reservatio-tempus-servatum" attributum="tempus-servatum" ad="intervallum/nomen" super="reservatio"/>
+
+</canon>

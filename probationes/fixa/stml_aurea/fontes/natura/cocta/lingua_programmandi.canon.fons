@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e lingua_programmandi - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="lingua_programmandi" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="lingua-programmandi"/>
+    <liberum nomen="lingua-iussuum"/>
+    <liberum nomen="versio-linguae"/>
+    <liberum nomen="implementatio-linguae"/>
+    <liberum nomen="verbum-clavis"/>
+  </elementum>
+
+  <elementum nomen="lingua-programmandi">
+    <glossa lingua="en">A programming language: a formal system of
+    signs for expressing computations, with a defined grammar and a
+    prescribed semantics (more or less strictly). It is distinct
+    from its IMPLEMENTATIONS - the language is the form, while a
+    compiler or interpreter is the thing that carries the form out.
+    Many implementations, one language; editions pass by VERSIONS
+    while the identity remains.</glossa>
+    <glossa lingua="fr">Un langage de programmation : un système formel
+    de signes pour exprimer des calculs, à la grammaire définie et à
+    la sémantique prescrite (plus ou moins strictement). Il se
+    distingue de ses IMPLÉMENTATIONS - le langage est la forme,
+    tandis qu'un compilateur ou un interpréteur est la chose qui
+    exécute cette forme. Plusieurs implémentations, un seul langage ;
+    les éditions passent par des VERSIONS, l'identité
+    demeurant.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="typatio-tempus" genus="electio">
+      <optio>statica</optio>
+      <optio>dynamica</optio>
+      <optio>mixta</optio>
+    </attributum>
+    <attributum nomen="typatio-vis" genus="electio">
+      <optio>fortis</optio>
+      <optio>debilis</optio>
+    </attributum>
+    <attributum nomen="gestio-memoriae" genus="electio">
+      <optio>manualis</optio>
+      <optio>collecta</optio>
+      <optio>per_possessionem</optio>
+      <optio>mixta</optio>
+    </attributum>
+    <attributum nomen="completa-turing" genus="veritas"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>nascens</optio>
+      <optio>vigens</optio>
+      <optio>senescens</optio>
+      <optio>derelicta</optio>
+    </attributum>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
+    <liberum nomen="paradigmata"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="paradigmata" intra="lingua-programmandi" textus="verum"/>
+  <elementum nomen="auctor" intra="lingua-programmandi">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="lingua-programmandi">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="lingua-iussuum">
+    <glossa lingua="en">A command language: a programming language
+    whose first word calls an EXTERNAL PROCESS rather than a
+    function of its own. It is born for issuing commands
+    (interactive) and becomes scriptable afterwards; pipes,
+    redirection, and textual expansion come before all else.</glossa>
+    <glossa lingua="fr">Un langage de commandes : un langage de
+    programmation dont le premier mot appelle un PROCESSUS EXTERNE
+    plutôt qu'une fonction propre. Il naît pour donner des ordres
+    (de façon interactive) et devient scriptable ensuite ; les
+    tubes, la redirection et l'expansion textuelle passent avant
+    tout le reste.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="typatio-tempus" genus="electio">
+      <optio>statica</optio>
+      <optio>dynamica</optio>
+      <optio>mixta</optio>
+    </attributum>
+    <attributum nomen="typatio-vis" genus="electio">
+      <optio>fortis</optio>
+      <optio>debilis</optio>
+    </attributum>
+    <attributum nomen="gestio-memoriae" genus="electio">
+      <optio>manualis</optio>
+      <optio>collecta</optio>
+      <optio>per_possessionem</optio>
+      <optio>mixta</optio>
+    </attributum>
+    <attributum nomen="completa-turing" genus="veritas"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>nascens</optio>
+      <optio>vigens</optio>
+      <optio>senescens</optio>
+      <optio>derelicta</optio>
+    </attributum>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
+    <liberum nomen="paradigmata"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="paradigmata" intra="lingua-iussuum" textus="verum"/>
+  <elementum nomen="auctor" intra="lingua-iussuum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="lingua-iussuum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="versio-linguae">
+    <glossa lingua="en">A language version: a named and citable edition
+    of a language - the event of release turned into a thing. A
+    source file is written in a VERSION ("this is c89"), while the
+    language keeps its identity across versions.</glossa>
+    <glossa lingua="fr">Une version de langage : une édition nommée et
+    citable d'un langage - l'événement de publication converti en
+    chose. Un fichier source s'écrit dans une VERSION (« ceci est du
+    c89 »), tandis que le langage garde son identité à travers les
+    versions.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="edita" genus="dies"/>
+    <attributum nomen="versio-de" genus="referentia"/>
+    <attributum nomen="sequitur" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="schema-numerandi" genus="electio">
+      <optio>semanticum</optio>
+      <optio>sequentiale</optio>
+      <optio>temporale</optio>
+      <optio>nominale</optio>
+      <optio>mixtum</optio>
+    </attributum>
+    <attributum nomen="retro-compatibilis" genus="veritas"/>
+    <attributum nomen="mutationes-fractoriae" genus="textus"/>
+    <attributum nomen="status-sustentatio" genus="electio">
+      <optio>praenuntiata</optio>
+      <optio>vigens</optio>
+      <optio>sustentata</optio>
+      <optio>deprecata</optio>
+      <optio>derelicta</optio>
+    </attributum>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
+    <liberum nomen="compatibilis-cum"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="compatibilis-cum" intra="versio-linguae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="versio-linguae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="implementatio-linguae">
+    <glossa lingua="en">A language implementation: the program that
+    carries a language out - a compiler, an interpreter, or a
+    mixture of the two. It is a concrete thing with its own authors,
+    history, and faults: one language, many implementations, each
+    with a character of its own (added memory safety, speed, the
+    ports it has been given).</glossa>
+    <glossa lingua="fr">Une implémentation de langage : le programme
+    qui exécute un langage - compilateur, interpréteur, ou mélange
+    des deux. C'est une chose concrète, avec ses auteurs, son
+    histoire et ses défauts : un seul langage, de multiples
+    implémentations, chacune avec un caractère propre (protection
+    mémoire ajoutée, rapidité, portages).</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-exsecutionis" genus="electio">
+      <optio>compilans</optio>
+      <optio>interpretans</optio>
+      <optio>mixtus</optio>
+    </attributum>
+    <attributum nomen="tutela-memoriae-addita" genus="veritas"/>
+    <attributum nomen="implementat" genus="referentia"/>
+    <attributum nomen="implementat-versionem" genus="referentia"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="emittit-pro"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="auctor" intra="implementatio-linguae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="emittit-pro" intra="implementatio-linguae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="implementatio-linguae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="verbum-clavis">
+    <glossa lingua="en">A keyword: a word the language claims for
+    itself - it serves the grammar and is denied to identifiers. It
+    is the vocabulary of the language itself, not of the program: a
+    program coins its own words, but receives these already coined,
+    as grammar.</glossa>
+    <glossa lingua="fr">Un mot-clé : un mot que le langage se réserve -
+    il sert la grammaire et est refusé aux identificateurs. C'est le
+    vocabulaire du langage lui-même, non du programme : un programme
+    forge ses propres mots, mais reçoit ceux-ci déjà forgés, comme
+    grammaire.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="verbum-de" genus="referentia"/>
+    <attributum nomen="additum-in" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="verbum-clavis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>ortus</optio>
+      <optio>edi</optio>
+      <optio>normari</optio>
+      <optio>implementari</optio>
+      <optio>deprecari</optio>
+      <optio>derelinqui</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="lingua-programmandi lingua-iussuum versio-linguae implementatio-linguae
+           verbum-clavis"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="lingua-programmandi-orta-ex" attributum="orta-ex" ad="lingua-programmandi lingua-iussuum/nomen" super="lingua-programmandi"/>
+  <citatio nomen="lingua-programmandi-habet-versionem" attributum="habet-versionem" ad="versio-linguae/nomen" super="lingua-programmandi"/>
+  <citatio nomen="lingua-programmandi-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae/nomen" super="lingua-programmandi"/>
+  <citatio nomen="lingua-iussuum-orta-ex" attributum="orta-ex" ad="lingua-programmandi lingua-iussuum/nomen" super="lingua-iussuum"/>
+  <citatio nomen="lingua-iussuum-habet-versionem" attributum="habet-versionem" ad="versio-linguae/nomen" super="lingua-iussuum"/>
+  <citatio nomen="lingua-iussuum-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae/nomen" super="lingua-iussuum"/>
+  <citatio nomen="versio-linguae-versio-de" attributum="versio-de" ad="lingua-programmandi lingua-iussuum/nomen" super="versio-linguae"/>
+  <citatio nomen="versio-linguae-sequitur" attributum="sequitur" ad="versio-linguae/nomen" super="versio-linguae"/>
+  <citatio nomen="implementatio-linguae-implementat" attributum="implementat" ad="lingua-programmandi lingua-iussuum/nomen" super="implementatio-linguae"/>
+  <citatio nomen="implementatio-linguae-implementat-versionem" attributum="implementat-versionem" ad="versio-linguae/nomen" super="implementatio-linguae"/>
+  <citatio nomen="implementatio-linguae-scripta-in" attributum="scripta-in" ad="lingua-programmandi lingua-iussuum/nomen" super="implementatio-linguae"/>
+  <citatio nomen="verbum-clavis-verbum-de" attributum="verbum-de" ad="lingua-programmandi lingua-iussuum/nomen" super="verbum-clavis"/>
+  <citatio nomen="verbum-clavis-additum-in" attributum="additum-in" ad="versio-linguae/nomen" super="verbum-clavis"/>
+
+</canon>

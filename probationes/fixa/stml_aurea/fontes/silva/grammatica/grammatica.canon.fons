@@ -1,0 +1,159 @@
+<!--
+  silva/grammatica/grammatica.canon
+  Canon dialecti GRAMMATICA (grammaticae generatoris silvae) - gradus II
+
+  PONDUS: c89.stml parserem C ipsum agit - vitium schematis hic
+  ut morbus silvae tacitus emergit, non ut diagnosticum. Haec
+  plagula ante canonem nullam validationem habebat.
+
+  CORPUS DERIVATIONIS (IV plagulae): silva/grammatica/{c89, sceletum,
+  sceletum_imparilis}.stml + lib/lapifex_grammatica_test.stml
+  (fixtura generationis TERTIAE congelatae - subordo structuralis:
+  sine annotationibus, sine generibus; canon eam ut subordinem fert).
+
+  LECTOR INTERROGATUS (silva_generare.c + silva_coquere.c), non
+  corpus solum - et interrogatio solvit:
+
+  I. ATTRIBUTA DUO IN CORPORE NUSQUAM, IN LECTORE VIVA:
+       terminalis/exemplum=  (generare 269 - exemplar lexatoris)
+       productio/manu=       (generare 457 - effugium: functio C
+                              manu scripta, validatio locorum
+                              praetermittitur)
+     Canon ex corpore solo derivatus utrumque VETUISSET. Lex
+     aedilis iterum: absentia in exemplis non est absentia e
+     dialecto - lector est pars corporis.
+
+  II. DEGRADATIO TACITA MODI (coquere 841): valor modi quilibet
+     praeter 'lista-initium' UT lista-appendere tractatur - error
+     scripturae in 'lista-initium' codicem falsum TACITE generat.
+     Electio infra hoc foramen claudit ante generationem.
+
+  III. QUAE LECTOR POSCIT (errores clamantes, generare):
+       <terminalia>, <regulae>, <initium> necessaria (236/355/697);
+       terminalis/titulus (257), regula/titulus (374),
+       praelatio/terminalis + actio (317), genus/titulus (550).
+       Duplicatio <regulae> alterius TACITE invisibilis esset
+       (invenire_liberum primum solum capit) - maximum=1 infra.
+
+  IV. UNICITAS IDORUM lector iam tenet (606: 'id duplicatum') -
+     unicitas infra eandem legem ante generationem dicit.
+
+  SUPRA CANONEM (co-occurrentiae, lector solus tenet):
+    - genus= sine id= vetitum (generare 594)
+    - initium symbolum regulam exsistentem nominare debet
+    - symbola in textu productionum resolvi debent (gradus III)
+
+  GENUS COMPOSITUM: nomina huius dialecti lineolis iunguntur
+  ('definitio-functionis', 'genera-extra') - DECISUS 2026-07-04,
+  superficies quaestionum solarii. Dialectus tertius genus valoris
+  novum coegit (compositum = nomen + lineola), ut secundus intra=
+  coegit. Tituli terminalium contra maiusculi manent (genus nomen).
+-->
+<canon dialectus="grammatica" versio="1">
+
+  <elementum nomen="grammatica" radix="verum">
+    <liberum nomen="terminalia"   minimum="1" maximum="1"/>
+    <liberum nomen="praelationes" maximum="1"/>
+    <liberum nomen="regulae"      minimum="1" maximum="1"/>
+    <liberum nomen="genera-extra" maximum="1"/>
+    <liberum nomen="initium"      minimum="1" maximum="1"/>
+  </elementum>
+
+  <!-- ================= TERMINALIA ================= -->
+
+  <elementum nomen="terminalia">
+    <liberum nomen="terminalis" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="terminalis">
+    <attributum nomen="titulus" genus="nomen" necessarium="verum"
+      nota="maiusculum (IDENTIFICATOR, FLOAT_KW) - nomen, non
+            compositum"/>
+    <attributum nomen="genus" genus="nomen"
+      nota="genus lexematis (SILVA_LEX_*); lector absentiam
+            tolerat"/>
+    <attributum nomen="exemplum" genus="textus"
+      nota="exemplar lexatoris - in corpore NUSQUAM, in lectore
+            vivit (generare 269)"/>
+  </elementum>
+
+  <!-- ================= PRAELATIONES ================= -->
+
+  <elementum nomen="praelationes">
+    <liberum nomen="praelatio" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="praelatio">
+    <attributum nomen="terminalis" genus="nomen" necessarium="verum"
+      nota="terminalem declaratum nominat (resolutio = gradus III,
+            lector clamat)"/>
+    <attributum nomen="actio" genus="electio" necessarium="verum"
+      nota="sola actio nota (generare 332); electio hic novas
+            actiones consulto obstat donec lector eas discat">
+      <optio>transponere</optio>
+    </attributum>
+  </elementum>
+
+  <!-- ================= REGULAE ================= -->
+
+  <elementum nomen="regulae">
+    <liberum nomen="regula" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="regula">
+    <attributum nomen="titulus" genus="compositum"
+      necessarium="verum"/>
+    <liberum nomen="productio" minimum="1"
+      nota="regula sine productionibus symbolum sterile TACITE
+            crearet (lector eam praeterit sed symbolum manet)"/>
+  </elementum>
+
+  <elementum nomen="productio" textus="verum"
+    nota="textus = atoma symbolum@locus spatiis separata;
+          VACUUS = epsilon deliberata">
+    <attributum nomen="genus" genus="compositum"
+      nota="genus nodi emissi; genus sine id vetitum (generare
+            594) - co-occurrentia, supra canonem"/>
+    <attributum nomen="id" genus="compositum"/>
+    <attributum nomen="modus" genus="electio"
+      nota="DEGRADATIO TACITA in coquere 841: quodlibet praeter
+            lista-initium ut lista-appendere tractatur - electio
+            errores scripturae ante generationem capit">
+      <optio>lista-initium</optio>
+      <optio>lista-appendere</optio>
+    </attributum>
+    <attributum nomen="manu" genus="nomen"
+      nota="effugium: functio C manu scripta, validatio locorum
+            praetermissa - in corpore nusquam, in lectore vivit
+            (generare 457, coquere 815)"/>
+  </elementum>
+
+  <!-- ================= GENERA EXTRA ================= -->
+
+  <elementum nomen="genera-extra">
+    <liberum nomen="genus" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="genus">
+    <attributum nomen="titulus" genus="compositum"
+      necessarium="verum"/>
+    <attributum nomen="slots" genus="textus"
+      nota="paria titulus:genus spatiis separata - forma interior
+            supra canonem"/>
+  </elementum>
+
+  <!-- ================= INITIUM ================= -->
+
+  <elementum nomen="initium" textus="verum"
+    nota="textus regulam initialem nominat; resolutio gradus III
+          (lector clamat: 'initium symbolum non inventum')"/>
+
+  <!-- ================= UNICITAS ================= -->
+
+  <unicitas nomen="productionum-ida" attributum="id"
+    super="productio"
+    nota="lector eandem legem tenet (generare 606) - canon eam
+          ante generationem dicit; productio sine id sub unicitate
+          non cadit (attributum absens praeteritur)"/>
+
+</canon>

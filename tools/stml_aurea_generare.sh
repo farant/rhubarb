@@ -5,8 +5,15 @@
 # iudicio divergentiarum (diff .aurum .novum) contra spec
 # project-specs/stml-trivia-spec.md.
 #
-# PRIVATIO NOMINATA: monstra fontium >= 1MB exclusa (librarium bis,
-# gutenberg_index) - pretium suitae quaque cursione vincit.
+# CORPUS CONGELATUM (2026-09-23): fontes = COPIAE in
+# probationes/fixa/stml_aurea/fontes/ (via originalis + '.fons', ne
+# ambulatores domus '*.stml' eas videant). Olim 'find .' super arbore
+# VIVA: omnis editio fontis portam radicis rubebat, et XCIV e CXLVIII
+# fontibus NON TRACTATI erant (officina/build/census aedificata,
+# stml-parser-reference ignorata) - clonus recens rubebat. Aurum
+# instantanea est; instantanea input congelatum postulat (doctrina
+# 01M365VXAF). Corpus renovare = copias consulto renovare + aurum
+# regenerare, UNA commissione, causa nominata.
 set -e
 cd "$(dirname "$0")/.."
 
@@ -19,21 +26,12 @@ fi
 
 mkdir -p probationes/fixa/stml_aurea
 
-VIAE=$(find . \( -name '*.stml' -o -name '*.census' -o -name '*.canon' \) \
-    -not -path './build/*' -not -path './.git/*' \
-    -size -1000000c | LC_ALL=C sort)
+FONTES_DIR=probationes/fixa/stml_aurea/fontes
+VIAE=$(find "$FONTES_DIR" -name '*.fons' | LC_ALL=C sort)
 
 if [ -z "$VIAE" ]; then
-    echo "nullae viae fontium inventae - aliquid valde mali" >&2
+    echo "nullae copiae fontium in $FONTES_DIR - aliquid valde mali" >&2
     exit 2
-fi
-
-EXCLUSA=$(find . \( -name '*.stml' -o -name '*.census' -o -name '*.canon' \) \
-    -not -path './build/*' -not -path './.git/*' \
-    -size +999999c | LC_ALL=C sort)
-if [ -n "$EXCLUSA" ]; then
-    echo "monstra exclusa (>= 1MB):"
-    echo "$EXCLUSA" | sed 's/^/  /'
 fi
 
 # shellcheck disable=SC2086

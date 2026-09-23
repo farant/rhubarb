@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/natura.canon
+  Canon dialecti NATURA (plagulae *.genera) - gradus II
+
+  QUID HIC EST: vocabularium clausum, cardinalitas liberorum,
+  genera attributorum, unicitas nominum. Id est quod schema
+  praestare potest.
+
+  QUID HIC NON EST, CONSULTO:
+    - resolutio citationum trans exemplaria (regulae II-V)
+    - hereditas generum (regulae IX-XIII) - valor proprietatem
+      nominare debet IN GENERE AUT MAIORE QUOLIBET, quod graphum
+      computatum poscit, non descriptionem
+    - congruentia attributi cum prosa capitis (regula XVII)
+  Ea onerator (lib/natura.c) tenet et tenebit. Canon fundamentum
+  praestat, non sapientiam.
+
+  DERIVATUS ex corpore vero (33 exemplaria, 177 genera) et deinde
+  IUDICATUS. Discrimen momenti: numeri OBSERVATI non sunt numeri
+  POSTULATI. Exempla:
+    - cultivar semel solum apparet, ergo liberi eius {1,1} videntur;
+      re vera nihil eorum necessarium est
+    - fons/@verificatus in omnibus XIII instantiis adest, sed
+      METAMODULUS §3 'ordinarius falsum' dicit - ergo OPTIONALE
+  Canon ex uno exemplo generatus corpus fossilizat; ideo manu
+  scriptus est.
+-->
+<canon dialectus="natura" versio="1">
+
+  <!-- ================= RADIX ================= -->
+
+  <elementum nomen="natura" radix="verum">
+    <attributum nomen="modulus" genus="nomen" necessarium="verum"/>
+    <attributum nomen="versio"  genus="numerus" necessarium="verum"/>
+    <attributum nomen="lingua"  genus="textus"/>
+    <liberum nomen="fontes" maximum="1"/>
+    <liberum nomen=".genus"
+      nota="minimum sublatum 2026-08-10: modulus sine genere licet
+            si necessitudines fert - regula XXV oneratoris
+            (co-occurrentia supra canonem, ut 'ad AUT a')"/>
+    <liberum nomen="necessitudo"/>
+  </elementum>
+
+  <!-- ================= FONTES ================= -->
+
+  <elementum nomen="fontes">
+    <liberum nomen="fons" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="fons" textus="verum">
+    <attributum nomen="clavis"      genus="nomen" necessarium="verum"/>
+    <attributum nomen="genus"       genus="nomen" necessarium="verum"/>
+    <attributum nomen="modulus"     genus="nomen"/>
+    <attributum nomen="verificatus" genus="veritas"
+      ordinarius="falsum"
+      nota="optionale quamquam corpus praesens eum semper scribit -
+            praestitutum nunc DICTUM, non in nota latens"/>
+  </elementum>
+
+  <!-- ================= GENUS ================= -->
+
+  <!-- arbor porphyriana (2026-08-10, decretum 01KZPK4B7X): genus et
+       species MUNERA relativa sunt, non naturae - exemplar contenti
+       UNUM, orthographiae tres (.genus liberum, .species/.cultivar
+       nidificatione parentata). sub=/modulus= generi soli: species
+       parentem e positione derivat. -->
+  <elementum nomen=".genus">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="sub"       genus="nomen"/>
+    <attributum nomen="modulus"   genus="nomen"/>
+    <attributum nomen="gradus"    genus="textus"/>
+    <attributum nomen="etiam"     genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons"      genus="nomen"/>
+    <attributum nomen="nota"      genus="textus"/>
+    <liberum nomen="definitio"       maximum="1"/>
+    <liberum nomen="differentia"     maximum="1"/>
+    <liberum nomen="historia"        maximum="1"/>
+    <liberum nomen="glossa"/>
+    <liberum nomen="proprietates"    maximum="1"/>
+    <liberum nomen="partes"          maximum="1"/>
+    <liberum nomen="actiones"        maximum="1"/>
+    <liberum nomen="relationes"      maximum="1"/>
+    <liberum nomen="termini"         maximum="1"/>
+    <liberum nomen="machina_statuum"/>
+    <liberum nomen=".species"/>
+    <liberum nomen="individuum"/>
+    <liberum nomen=".genus"
+      nota="nidificatio = profunditas taxinomica (§3)"/>
+    <liberum nomen="valor"
+      nota="valor ad gradum GENERIS proprietatem hereditatam figit -
+            proprium generis subordinati (§3)"/>
+    <liberum nomen="relatum"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="dubium"/>
+  </elementum>
+
+  <!-- ================= DESCRIPTIVA ================= -->
+
+  <elementum nomen="definitio"   textus="verum"/>
+  <elementum nomen="differentia" textus="verum"/>
+  <elementum nomen="nota"        textus="verum"/>
+  <elementum nomen="dubium"      textus="verum"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="documentatio vernacula (spec glossae): lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet - glossa
+          explicat, numquam renominat. Copertura lintri est
+          (natura_glossae), non canonis">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <!-- ================= PROPRIETATES ================= -->
+
+  <elementum nomen="proprietates">
+    <liberum nomen="proprietas" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="proprietas">
+    <attributum nomen="nomen"      genus="nomen" necessarium="verum"/>
+    <attributum nomen="genus"      genus="nomen" necessarium="verum"/>
+    <attributum nomen="modulus"    genus="nomen"/>
+    <attributum nomen="multiplex"  genus="veritas"/>
+    <attributum nomen="ordinarius" genus="textus"/>
+    <attributum nomen="fractio" genus="veritas"
+      nota="FINES (spec fines), genus numerus solum: punctum
+            decimale licet. In canonem coctum transit verbatim"/>
+    <attributum nomen="minimum" genus="numerus" fractio="verum"/>
+    <attributum nomen="maximum" genus="numerus" fractio="verum"/>
+    <attributum nomen="nota"       genus="textus"/>
+    <liberum nomen="optio"
+      nota="cum genus='electio'; nexus ille CONDICIONALIS est,
+            ergo supra canonem (co-occurrentia)"/>
+  </elementum>
+
+  <elementum nomen="optio" textus="verum"/>
+
+  <!-- ================= PARTES ================= -->
+
+  <elementum nomen="partes">
+    <liberum nomen="pars" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="pars">
+    <attributum nomen="nomen"      genus="nomen" necessarium="verum"/>
+    <attributum nomen="necessaria" genus="veritas"/>
+    <attributum nomen="nota"       genus="textus"/>
+  </elementum>
+
+  <!-- ================= MACHINA STATUUM ================= -->
+
+  <elementum nomen="machina_statuum">
+    <attributum nomen="nomen"  genus="nomen" necessarium="verum"/>
+    <attributum nomen="gerens" genus="electio"
+      ordinarius="individuum"
+      nota="praestitutum DICTUM 2026-08-07: proiectio instantiarum
+            (natura_canones, spec par. 4.1) ab hoc PENDET - machina
+            gerens='genus' status GENERIS IPSIUS describit (macOS
+            genus 'vigens', CP/M 'derelictum') et attributum
+            instantiae fieri non debet. Valor olim 'species'
+            dictus; arbor porphyriana verbum uni ontologiae aptavit
+            (decretum Franis 2026-08-10). Dum praestitutum taceret,
+            generator pro omni machina quae gerens= omittit
+            CONIECTARE cogebatur. Coniectura tacita in canone
+            scripta est, non in generatore.">
+      <optio>genus</optio>
+      <optio>individuum</optio>
+    </attributum>
+    <attributum nomen="nota" genus="textus"/>
+    <liberum nomen="status"    minimum="1"/>
+    <liberum nomen="transitus"/>
+  </elementum>
+
+  <elementum nomen="status">
+    <attributum nomen="nomen" genus="nomen" necessarium="verum"/>
+    <attributum nomen="nota"  genus="textus"/>
+  </elementum>
+
+  <elementum nomen="transitus">
+    <attributum nomen="a"    genus="nomen" necessarium="verum"/>
+    <attributum nomen="ad"   genus="nomen" necessarium="verum"/>
+    <attributum nomen="per"  genus="nomen" necessarium="verum"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <!-- ================= ACTIONES ET RELATIONES ================= -->
+
+  <elementum nomen="actiones">
+    <liberum nomen="actio" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="actio">
+    <attributum nomen="nomen" genus="nomen" necessarium="verum"/>
+    <attributum nomen="nota"  genus="textus"/>
+  </elementum>
+
+  <elementum nomen="relationes">
+    <liberum nomen="relatio" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="relatio">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="ad"        genus="textus"
+      nota="NON necessarium: relatio inversa 'a=' pro 'ad=' fert.
+            'ad AUT a' co-occurrentia est, supra canonem"/>
+    <attributum nomen="a"         genus="nomen"/>
+    <attributum nomen="inversa"   genus="veritas"/>
+    <attributum nomen="necessitudo" genus="nomen"
+      nota="citatio identitatis declaratae (spec necessitudines):
+            absens = praesumptio per nomen/conversum/scripturam"/>
+    <attributum nomen="modulus"   genus="nomen"/>
+    <attributum nomen="multiplex" genus="veritas"/>
+    <attributum nomen="externum"  genus="veritas"/>
+    <attributum nomen="nota"      genus="textus"/>
+  </elementum>
+
+  <!-- ========= NECESSITUDINES (relationes primae classis) =========
+       2026-08-10, spec necessitudines: genus relationis SEMEL
+       declaratur (identitas), sedes usus leves manent (tituli).
+       Tres strata: identitas / titulus / scriptura. -->
+
+  <elementum nomen="necessitudo">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="conversum" genus="nomen"
+      nota="nomen directionis conversae - IDENTITAS UNA, scripturae
+            duae (vulnus inversae hac via moritur)"/>
+    <attributum nomen="sub"       genus="nomen"/>
+    <attributum nomen="modulus"   genus="nomen"/>
+    <attributum nomen="causa"     genus="nomen"
+      nota="STRATUM CAUSALE (decretum Franis 2026-08-11): genus
+            causae quod familia fert - finalis | formalis |
+            materialis | efficiens. ABSENS = non typata (relatio
+            operationalis aut ambigua: causat efficit ET census
+            fine adhibet - furca cum ambulatio iustificationis
+            eam poscat). Lens, non lex: nullum iudicium eam
+            legit hodie; instrumenta per eam graphum secare
+            possunt"/>
+    <attributum nomen="a"         genus="textus"
+      nota="finis gerentis: quod genus eam ferre potest ('*' apertum)"/>
+    <attributum nomen="ad"        genus="textus"
+      nota="finis petiti ('*' apertum)"/>
+    <attributum nomen="nota"      genus="textus"/>
+    <liberum nomen="definitio" maximum="1"/>
+    <liberum nomen="glossa"/>
+    <liberum nomen="scriptio"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="dubium"/>
+  </elementum>
+
+  <elementum nomen="scriptio" textus="verum"
+    nota="scriptura altera eiusdem necessitudinis (concordantia
+          grammatica: situm/sita/situs_in) - identitas una"/>
+
+  <elementum nomen="termini"
+    nota="compages actus: fines nominati qui actum una constituunt
+          (termini actus; munus = finis nominatus)">
+    <liberum nomen="terminus" minimum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+
+  <elementum nomen="terminus">
+    <attributum nomen="munus"       genus="nomen" necessarium="verum"/>
+    <attributum nomen="necessitudo" genus="nomen"/>
+    <attributum nomen="ad"          genus="textus"/>
+    <attributum nomen="modulus"     genus="nomen"/>
+    <attributum nomen="multiplex"   genus="veritas"/>
+    <attributum nomen="necessaria"  genus="veritas"
+      nota="apparatus solum - proiectio eam numquam legit
+            (necessitas ontologica obligatio documenti non est)"/>
+    <attributum nomen="nota"        genus="textus"/>
+    <liberum nomen="nota"/>
+  </elementum>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <!-- .species/.cultivar = exemplar contenti .generis totum (arbor
+       porphyriana), SINE sub=/modulus= (parens e nidificatione).
+       certitudo/fons = provenientia; etiam = membrum duplex. -->
+  <elementum nomen=".species">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="gradus"    genus="textus"/>
+    <attributum nomen="etiam"     genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons"      genus="nomen"/>
+    <attributum nomen="nota"      genus="textus"/>
+    <liberum nomen="definitio"   maximum="1"/>
+    <liberum nomen="differentia" maximum="1"/>
+    <liberum nomen="historia"    maximum="1"/>
+    <liberum nomen="glossa"/>
+    <liberum nomen="proprietates"    maximum="1"/>
+    <liberum nomen="partes"          maximum="1"/>
+    <liberum nomen="actiones"        maximum="1"/>
+    <liberum nomen="relationes"      maximum="1"/>
+    <liberum nomen="termini"         maximum="1"/>
+    <liberum nomen="machina_statuum"/>
+    <liberum nomen="valor"/>
+    <liberum nomen="relatum"/>
+    <liberum nomen=".species"/>
+    <liberum nomen=".cultivar"/>
+    <liberum nomen=".genus"/>
+    <liberum nomen="individuum"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="dubium"/>
+  </elementum>
+
+  <elementum nomen="individuum">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons"      genus="nomen"/>
+    <attributum nomen="nota"      genus="textus"/>
+    <liberum nomen="definitio"   maximum="1"/>
+    <liberum nomen="differentia" maximum="1"/>
+    <liberum nomen="historia"    maximum="1"/>
+    <liberum nomen="valor"/>
+    <liberum nomen="relatum"/>
+    <liberum nomen=".genus"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="dubium"/>
+  </elementum>
+
+  <elementum nomen=".cultivar">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="gradus"    genus="textus"/>
+    <attributum nomen="etiam"     genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons"      genus="nomen"/>
+    <attributum nomen="nota"      genus="textus"/>
+    <liberum nomen="definitio"   maximum="1"/>
+    <liberum nomen="differentia" maximum="1"/>
+    <liberum nomen="historia"    maximum="1"/>
+    <liberum nomen="glossa"/>
+    <liberum nomen="proprietates"    maximum="1"/>
+    <liberum nomen="partes"          maximum="1"/>
+    <liberum nomen="actiones"        maximum="1"/>
+    <liberum nomen="relationes"      maximum="1"/>
+    <liberum nomen="termini"         maximum="1"/>
+    <liberum nomen="machina_statuum"/>
+    <liberum nomen="valor"/>
+    <liberum nomen="relatum"/>
+    <liberum nomen=".cultivar"/>
+    <liberum nomen="individuum"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="dubium"/>
+  </elementum>
+
+  <elementum nomen="valor" textus="verum">
+    <attributum nomen="nomen"      genus="nomen" necessarium="verum"/>
+    <attributum nomen="certitudo"  genus="nomen"/>
+    <attributum nomen="fons"       genus="nomen"/>
+    <attributum nomen="valens_a"   genus="dies"/>
+    <attributum nomen="valens_ad"  genus="dies"/>
+    <attributum nomen="nota"       genus="textus"/>
+  </elementum>
+
+  <elementum nomen="relatum">
+    <attributum nomen="nomen"      genus="nomen" necessarium="verum"/>
+    <attributum nomen="ad"         genus="textus" necessarium="verum"/>
+    <attributum nomen="modulus"    genus="nomen"/>
+    <attributum nomen="externum"   genus="veritas"/>
+    <attributum nomen="certitudo"  genus="nomen"/>
+    <attributum nomen="fons"       genus="nomen"/>
+    <attributum nomen="valens_a"   genus="dies"/>
+    <attributum nomen="valens_ad"  genus="dies"/>
+    <attributum nomen="nota"       genus="textus"/>
+  </elementum>
+
+  <elementum nomen="historia">
+    <liberum nomen="eventum" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="eventum" textus="verum">
+    <attributum nomen="quando"    genus="dies" necessarium="verum"/>
+    <attributum nomen="actio"     genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons"      genus="nomen"/>
+    <attributum nomen="nota"      genus="textus"/>
+  </elementum>
+
+  <!-- ================= UNICITAS (regula XV) ================= -->
+
+  <unicitas nomen="entia" attributum="nomen"
+    super=".genus .species individuum .cultivar necessitudo"
+    nota="allocutio /modulus/nomen ab hac unicitate PENDET
+          (METAMODULUS §4b): genera et res unum spatium nominum
+          communicant, quia allocutio gradum non fert"/>
+
+  <!-- ========= CITATIONES (regulae V et XII migratae) =========
+       2026-08-06: post regulam VIII etiam hae duae ex oneratore
+       huc migrant - ambae INTRA documentum resolvuntur, ergo
+       gradus II sunt, non III. Onerator eas non iam tenet. -->
+
+  <citatio nomen="fontium" attributum="fons" ad="fons/clavis"
+    nota="regula V: fons= in elemento quolibet clavem in
+          bibliographia moduli declaratam citat"/>
+
+  <citatio nomen="transitus-a" attributum="a" ad="status/nomen"
+    super="transitus" intra="machina_statuum"
+    nota="regula XII: transitus statum machinae SUAE citat -
+          super='transitus' obligatorium ne relatio a= (res
+          gradus III trans plagulas) falso capiatur"/>
+
+  <citatio nomen="transitus-ad" attributum="ad" ad="status/nomen"
+    super="transitus" intra="machina_statuum"/>
+
+</canon>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e systema_operativum - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="systema_operativum" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="systema-operativum"/>
+    <liberum nomen="systema-unixiforme"/>
+    <liberum nomen="distributio-systematis"/>
+    <liberum nomen="versio-systematis"/>
+  </elementum>
+
+  <elementum nomen="systema-operativum">
+    <glossa lingua="en">An operating system: the primary program that
+    owns the machine and mediates between the hardware and other
+    programs - it hands out memory, guards and schedules processes,
+    gives names to files, and offers facilities. The program that
+    lets programs run.</glossa>
+    <glossa lingua="fr">Un système d'exploitation : le programme
+    primordial qui possède la machine et fait la médiation entre le
+    matériel et les autres programmes - il distribue la mémoire,
+    garde et ordonne les processus, donne des noms aux fichiers,
+    offre des facultés. Le programme qui permet aux programmes de
+    s'exécuter.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="genus-nuclei" genus="electio">
+      <optio>monolithicus</optio>
+      <optio>micronucleus</optio>
+      <optio>hybridus</optio>
+    </attributum>
+    <attributum nomen="fons-apertus" genus="veritas"/>
+    <attributum nomen="multiplex-processuum" genus="veritas"/>
+    <attributum nomen="multiplex-usorum" genus="veritas"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>exstinctum</optio>
+      <optio>initians</optio>
+      <optio>currens</optio>
+      <optio>dormiens</optio>
+    </attributum>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="ad-exemplum-facta" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="praebet-systema-plagularum" genus="referentia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="exsequitur-in"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="auctor" intra="systema-operativum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exsequitur-in" intra="systema-operativum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="systema-operativum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="systema-unixiforme">
+    <glossa lingua="en">A Unix-like system: an operating system shaped
+    on the Unix pattern - one file tree from a single root,
+    "everything is a file", small processes composed with pipes, the
+    shell as a program among the rest. This is FORM and not descent,
+    so both the true offspring (macOS) and the imitations (Linux)
+    belong here, and the relations orta_ex and ad_exemplum_facta
+    then tell the two apart.</glossa>
+    <glossa lingua="fr">Un système de type Unix : un système
+    d'exploitation formé sur le modèle Unix - un seul arbre de
+    fichiers depuis une racine unique, « tout est fichier », de
+    petits processus composés par des tubes, l'interpréteur de
+    commandes comme un programme parmi les autres. C'est la FORME et
+    non la descendance : la vraie progéniture (macOS) comme les
+    imitations (Linux) tiennent ici, et les relations orta_ex et
+    ad_exemplum_facta les distinguent ensuite.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="genus-nuclei" genus="electio">
+      <optio>monolithicus</optio>
+      <optio>micronucleus</optio>
+      <optio>hybridus</optio>
+    </attributum>
+    <attributum nomen="fons-apertus" genus="veritas"/>
+    <attributum nomen="multiplex-processuum" genus="veritas"/>
+    <attributum nomen="multiplex-usorum" genus="veritas"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>exstinctum</optio>
+      <optio>initians</optio>
+      <optio>currens</optio>
+      <optio>dormiens</optio>
+    </attributum>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="ad-exemplum-facta" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="praebet-systema-plagularum" genus="referentia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="exsequitur-in"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="auctor" intra="systema-unixiforme">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exsequitur-in" intra="systema-unixiforme">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="systema-unixiforme">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="distributio-systematis">
+    <glossa lingua="en">A system distribution: a curated collection -
+    kernel plus tools plus configurations plus a package manager -
+    chosen, tested, and released by one curator. The operating
+    system is the form; the distribution is the edition of that form
+    made fit to live in, and it is what you actually install.</glossa>
+    <glossa lingua="fr">Une distribution de système : une collection
+    curatée - noyau, outils, configurations et gestionnaire de
+    paquets - choisie, éprouvée et publiée par un seul curateur. Le
+    système d'exploitation est la forme ; la distribution en est
+    l'édition rendue habitable, et c'est elle que l'on installe
+    réellement.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gestor-fasciculorum" genus="textus"/>
+    <attributum nomen="cadentia-editionum" genus="electio">
+      <optio>statuta</optio>
+      <optio>volvens</optio>
+    </attributum>
+    <attributum nomen="distributio-de" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="distributio-systematis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="versio-systematis">
+    <glossa lingua="en">A system version: a named edition of an
+    operating system - the one an installation actually runs.
+    "Darwin 23.6" cites a version, not a species.</glossa>
+    <glossa lingua="fr">Une version de système : une édition nommée
+    d'un système d'exploitation - celle qu'une installation exécute
+    réellement. « Darwin 23.6 » cite une version, non une
+    espèce.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="edita" genus="dies"/>
+    <attributum nomen="versio-de" genus="referentia"/>
+    <attributum nomen="sequitur" genus="referentia"/>
+    <attributum nomen="schema-numerandi" genus="electio">
+      <optio>semanticum</optio>
+      <optio>sequentiale</optio>
+      <optio>temporale</optio>
+      <optio>nominale</optio>
+      <optio>mixtum</optio>
+    </attributum>
+    <attributum nomen="retro-compatibilis" genus="veritas"/>
+    <attributum nomen="mutationes-fractoriae" genus="textus"/>
+    <attributum nomen="status-sustentatio" genus="electio">
+      <optio>praenuntiata</optio>
+      <optio>vigens</optio>
+      <optio>sustentata</optio>
+      <optio>deprecata</optio>
+      <optio>derelicta</optio>
+    </attributum>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
+    <liberum nomen="compatibilis-cum"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="compatibilis-cum" intra="versio-systematis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="versio-systematis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>ortus</optio>
+      <optio>edi</optio>
+      <optio>instalari</optio>
+      <optio>renovari</optio>
+      <optio>deprecari</optio>
+      <optio>derelinqui</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="systema-operativum systema-unixiforme distributio-systematis versio-systematis"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="systema-operativum-orta-ex" attributum="orta-ex" ad="systema-operativum systema-unixiforme/nomen" super="systema-operativum"/>
+  <citatio nomen="systema-operativum-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum systema-unixiforme/nomen" super="systema-operativum"/>
+  <citatio nomen="systema-operativum-habet-versionem" attributum="habet-versionem" ad="versio-systematis/nomen" super="systema-operativum"/>
+  <citatio nomen="systema-unixiforme-orta-ex" attributum="orta-ex" ad="systema-operativum systema-unixiforme/nomen" super="systema-unixiforme"/>
+  <citatio nomen="systema-unixiforme-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum systema-unixiforme/nomen" super="systema-unixiforme"/>
+  <citatio nomen="systema-unixiforme-habet-versionem" attributum="habet-versionem" ad="versio-systematis/nomen" super="systema-unixiforme"/>
+  <citatio nomen="distributio-systematis-distributio-de" attributum="distributio-de" ad="systema-operativum systema-unixiforme/nomen" super="distributio-systematis"/>
+  <citatio nomen="distributio-systematis-orta-ex" attributum="orta-ex" ad="distributio-systematis/nomen" super="distributio-systematis"/>
+  <citatio nomen="versio-systematis-versio-de" attributum="versio-de" ad="systema-operativum systema-unixiforme/nomen" super="versio-systematis"/>
+  <citatio nomen="versio-systematis-sequitur" attributum="sequitur" ad="versio-systematis/nomen" super="versio-systematis"/>
+
+</canon>

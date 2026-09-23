@@ -1,0 +1,1153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e elementa_programmatis - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="elementa_programmatis" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="status"/>
+    <liberum nomen="proiectio"/>
+    <liberum nomen="artefactum-aedificationis"/>
+    <liberum nomen="obiectum-compilatum"/>
+    <liberum nomen="exsecutabile-ligatum"/>
+    <liberum nomen="promptuarium"/>
+    <liberum nomen="index"/>
+    <liberum nomen="index-inversus"/>
+    <liberum nomen="index-arboris"/>
+    <liberum nomen="lectio"/>
+    <liberum nomen="lectio-memoriae"/>
+    <liberum nomen="lectio-externa"/>
+    <liberum nomen="mutatio"/>
+    <liberum nomen="mutatio-memoriae"/>
+    <liberum nomen="scriptio-externa"/>
+    <liberum nomen="allocatio"/>
+    <liberum nomen="terminatio"/>
+    <liberum nomen="transactio"/>
+    <liberum nomen="functio"/>
+    <liberum nomen="functio-pura"/>
+    <liberum nomen="constans"/>
+    <liberum nomen="constans-numerica"/>
+    <liberum nomen="constans-textualis"/>
+    <liberum nomen="bibliotheca"/>
+    <liberum nomen="assertio"/>
+    <liberum nomen="praeconditio"/>
+    <liberum nomen="postconditio"/>
+    <liberum nomen="invarians"/>
+    <liberum nomen="assertio-statica"/>
+    <liberum nomen="assertio-probationis"/>
+    <liberum nomen="commentarium"/>
+    <liberum nomen="explicativum"/>
+    <liberum nomen="documentarium"/>
+    <liberum nomen="monitum-futuri"/>
+    <liberum nomen="titulus-iuris"/>
+    <liberum nomen="codex-sepultus"/>
+    <liberum nomen="annotatio-machinae"/>
+    <liberum nomen="identificator"/>
+    <liberum nomen="identificator-baptismalis"/>
+    <liberum nomen="sigillum-contenti"/>
+    <liberum nomen="programma"/>
+    <liberum nomen="instrumentum-lineae"/>
+    <liberum nomen="daemon"/>
+    <liberum nomen="applicatio"/>
+    <liberum nomen="instrumentum-aedificationis"/>
+  </elementum>
+
+  <elementum nomen="status">
+    <glossa lingua="en">State: a kept value that can change over time -
+    it persists between events and is changed by them. The present
+    state is the FOLD of all past changes (the log is the truth, the
+    state its projection). It is always carried by some BEARER, and
+    its lifetime follows the bearer's.</glossa>
+    <glossa lingua="fr">L'état : une valeur gardée qui peut changer
+    dans le temps - elle subsiste entre les événements et se trouve
+    modifiée par eux. L'état présent est le PLIAGE de toutes les
+    modifications passées (le journal est la vérité, l'état sa
+    projection). Il est toujours porté par un PORTEUR, et sa durée
+    de vie suit celle du porteur.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="status">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="proiectio">
+    <glossa lingua="en">A projection: state that can be recomputed in
+    full from another state, its TRUTH. Hence the LICENCE TO DELETE -
+    erasing a projection loses nothing that cannot be reborn, an
+    operational property of the first importance that no syntax
+    carries; intention alone declares it.</glossa>
+    <glossa lingua="fr">Une projection : un état qui peut être
+    entièrement recalculé à partir d'un autre état, sa VÉRITÉ. D'où
+    la LICENCE DE SUPPRIMER - effacer une projection ne perd rien qui
+    ne puisse renaître, propriété opératoire capitale qu'aucune
+    syntaxe ne porte ; seule l'intention la déclare.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="veritas-sua" genus="referentia"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="proiectio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="artefactum-aedificationis">
+    <glossa lingua="en">A build artifact: a projection of the sources
+    made by building - the source is the truth, the artifact the
+    projection. "make clean" is harmless BECAUSE the artifact is a
+    projection; the licence to delete lives in every builder's habits
+    and is rarely named.</glossa>
+    <glossa lingua="fr">Un artefact de construction : une projection
+    des sources produite par la compilation - la source est la
+    vérité, l'artefact la projection. « make clean » est inoffensif
+    PARCE QUE l'artefact est une projection ; la licence de supprimer
+    habite les habitudes de tout constructeur, rarement
+    nommée.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="per-instrumentum" genus="referentia"/>
+    <attributum nomen="veritas-sua" genus="referentia"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="ex-fontibus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="ex-fontibus" intra="artefactum-aedificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="artefactum-aedificationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="obiectum-compilatum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="per-instrumentum" genus="referentia"/>
+    <attributum nomen="veritas-sua" genus="referentia"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="ex-fontibus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="ex-fontibus" intra="obiectum-compilatum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="obiectum-compilatum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="exsecutabile-ligatum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="per-instrumentum" genus="referentia"/>
+    <attributum nomen="veritas-sua" genus="referentia"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="ex-fontibus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="ex-fontibus" intra="exsecutabile-ligatum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="exsecutabile-ligatum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="promptuarium">
+    <glossa lingua="en">A cache: a projection kept for speed - a value
+    computed once so that it need not be computed again. A corrupted
+    cache can be deleted, never repaired: deletion is harmless,
+    repair superfluous.</glossa>
+    <glossa lingua="fr">Un cache : une projection conservée pour la
+    vitesse - une valeur calculée une fois afin de ne pas la
+    recalculer. Un cache corrompu peut être supprimé, jamais réparé :
+    la suppression est inoffensive, la réparation superflue.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-fides" genus="electio">
+      <optio>congruens</optio>
+      <optio>rancidum</optio>
+    </attributum>
+    <attributum nomen="veritas-sua" genus="referentia"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="promptuarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="index">
+    <glossa lingua="en">An index: a projection arranged for searching -
+    the truth does not hold the order the searcher asks for, and the
+    index supplies it. ORDER is its essence: the same data, a new
+    arrangement.</glossa>
+    <glossa lingua="fr">Un index : une projection ordonnée pour la
+    recherche - la vérité ne possède pas l'ordre que réclame celui
+    qui cherche, et l'index le fournit. L'ORDRE en est l'essence :
+    les mêmes données, une disposition nouvelle.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="veritas-sua" genus="referentia"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="index">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="index-inversus">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="veritas-sua" genus="referentia"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="index-inversus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="index-arboris">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="veritas-sua" genus="referentia"/>
+    <attributum nomen="durabilitas" genus="electio">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </attributum>
+    <attributum nomen="congruentia" genus="electio">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </attributum>
+    <attributum nomen="geritur-a" genus="referentia"/>
+    <attributum nomen="legitur-a" genus="referentia"/>
+    <attributum nomen="mutatur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="index-arboris">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="lectio">
+    <glossa lingua="en">A read: the event in which state is observed
+    without being altered - the other half of a state's life, since
+    change writes it and reading draws its fruit. It leaves no trace
+    unless some guard deliberately records it (security regimes
+    reify reads too, as an access log).</glossa>
+    <glossa lingua="fr">Une lecture : l'événement par lequel un état
+    est observé sans être modifié - l'autre moitié de la vie d'un
+    état, car la modification l'écrit et la lecture en tire le fruit.
+    Elle ne laisse aucune trace, à moins qu'une surveillance ne
+    l'enregistre à dessein (les régimes de sécurité réifient aussi
+    les lectures, sous forme de journal d'accès).</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="hauritur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="lectio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="lectio-memoriae">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="hauritur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="lectio-memoriae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="lectio-externa">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="hauritur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="lectio-externa">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="mutatio">
+    <glossa lingua="en">A change: the event in which state is altered -
+    what the log records. Where changes are kept as things in their
+    own right, the whole history remains and any state can be
+    recomputed by folding them; its species divide by the bearer of
+    the state changed - what changes, not how. A change effected
+    outside the declared channel is commonly called a "side effect",
+    which is a position, not a kind.</glossa>
+    <glossa lingua="fr">Une modification : l'événement par lequel un
+    état change - ce que le journal enregistre. Là où les
+    modifications sont conservées comme des choses à part entière,
+    l'histoire entière subsiste et tout état peut être recalculé par
+    pliage ; ses espèces se divisent selon le porteur de l'état
+    modifié - ce qui change, non comment. Une modification effectuée
+    hors du canal déclaré s'appelle communément un « effet de bord »,
+    ce qui est une position et non un genre.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="declaratio" genus="electio">
+      <optio>apertus</optio>
+      <optio>occultus</optio>
+    </attributum>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="commutativa" genus="veritas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="efficitur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="mutatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="mutatio-memoriae">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="declaratio" genus="electio">
+      <optio>apertus</optio>
+      <optio>occultus</optio>
+    </attributum>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="commutativa" genus="veritas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="efficitur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="mutatio-memoriae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="scriptio-externa">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="declaratio" genus="electio">
+      <optio>apertus</optio>
+      <optio>occultus</optio>
+    </attributum>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="commutativa" genus="veritas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="efficitur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="scriptio-externa">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="allocatio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="declaratio" genus="electio">
+      <optio>apertus</optio>
+      <optio>occultus</optio>
+    </attributum>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="commutativa" genus="veritas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="efficitur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="allocatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="terminatio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="declaratio" genus="electio">
+      <optio>apertus</optio>
+      <optio>occultus</optio>
+    </attributum>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="commutativa" genus="veritas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="efficitur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="terminatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="transactio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="declaratio" genus="electio">
+      <optio>apertus</optio>
+      <optio>occultus</optio>
+    </attributum>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="commutativa" genus="veritas"/>
+    <attributum nomen="obiectum" genus="referentia"/>
+    <attributum nomen="efficitur-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="transactio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="functio">
+    <glossa lingua="en">A function: a named subprogram that takes
+    parameters, computes, and may return a value, effect changes, or
+    draw reads. It is called and it returns - the smallest named unit
+    of work a program can repeat.</glossa>
+    <glossa lingua="fr">Une fonction : un sous-programme nommé qui
+    reçoit des paramètres, calcule, et peut rendre une valeur,
+    effectuer des modifications ou puiser des lectures. On l'appelle
+    et elle revient - la plus petite unité de travail nommée qu'un
+    programme puisse répéter.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="reddit-valorem" genus="veritas"/>
+    <attributum nomen="parametra-varia" genus="veritas"/>
+    <attributum nomen="mortua" genus="veritas"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vigens</optio>
+      <optio>deprecata</optio>
+      <optio>remota</optio>
+    </attributum>
+    <attributum nomen="reddit" genus="referentia"/>
+    <attributum nomen="praebetur-a" genus="referentia"/>
+    <liberum nomen="accipit"/>
+    <liberum nomen="vocat"/>
+    <liberum nomen="legit"/>
+    <liberum nomen="mutat"/>
+    <liberum nomen="efficit"/>
+    <liberum nomen="haurit"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="accipit" intra="functio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="vocat" intra="functio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="legit" intra="functio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="mutat" intra="functio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="efficit" intra="functio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="haurit" intra="functio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="functio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="functio-pura">
+    <glossa lingua="en">A pure function: a function with no hidden
+    channels - it reads only through its parameters (pointed-to
+    memory included, as strlen shows) and makes NO changes at all,
+    not even through parameters, so its whole fruit is the returned
+    value. The same arguments always yield the same value and a call
+    leaves no trace; saying "without side effects" names only half of
+    it, since a function that merely reads global state is still not
+    pure. Referential transparency follows: a call may be replaced by
+    its value.</glossa>
+    <glossa lingua="fr">Une fonction pure : une fonction sans canaux
+    cachés - elle ne lit que par ses paramètres (mémoire pointée
+    comprise, comme le montre strlen) et n'effectue AUCUNE
+    modification, pas même par ses paramètres, si bien que tout son
+    fruit est la valeur rendue. Les mêmes arguments donnent toujours
+    la même valeur et un appel ne laisse aucune trace ; dire « sans
+    effets de bord » n'en nomme que la moitié, car une fonction qui
+    se borne à lire un état global n'est pas pure pour autant. La
+    transparence référentielle s'ensuit : un appel peut être remplacé
+    par sa valeur.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="reddit-valorem" genus="veritas"/>
+    <attributum nomen="parametra-varia" genus="veritas"/>
+    <attributum nomen="mortua" genus="veritas"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vigens</optio>
+      <optio>deprecata</optio>
+      <optio>remota</optio>
+    </attributum>
+    <attributum nomen="reddit" genus="referentia"/>
+    <attributum nomen="praebetur-a" genus="referentia"/>
+    <liberum nomen="accipit"/>
+    <liberum nomen="vocat"/>
+    <liberum nomen="legit"/>
+    <liberum nomen="mutat"/>
+    <liberum nomen="efficit"/>
+    <liberum nomen="haurit"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="accipit" intra="functio-pura">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="vocat" intra="functio-pura">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="legit" intra="functio-pura">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="mutat" intra="functio-pura">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="efficit" intra="functio-pura">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="haurit" intra="functio-pura">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="functio-pura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="constans">
+    <glossa lingua="en">A constant: a value whose INTENTION is never to
+    change once it has come to be - the opposite of state, which is
+    expected to change where this is forbidden to. The kind comes
+    from the intention, not from the construct: one and the same
+    constant may be dressed as a macro, an enumerator, a qualified
+    object, or bare discipline - four garments, one
+    constant.</glossa>
+    <glossa lingua="fr">Une constante : une valeur dont l'INTENTION est
+    de ne jamais changer une fois née - le contraire de l'état, qui
+    est censé changer là où celle-ci se l'interdit. Le genre vient de
+    l'intention, non du construit : une même constante peut se vêtir
+    en macro, en énumérateur, en objet qualifié ou en simple
+    discipline - quatre vêtements, une seule constante.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="realizatur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="realizatur-per" intra="constans">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="constans">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="constans-numerica">
+    <glossa lingua="en">A numeric constant: a constant that is a
+    quantity, so arithmetic is allowed on it. Left without a name it
+    is called a "magic number" - a constant whose intention stayed
+    unspoken, and the best known abuse of the kind, because a bare
+    number does not carry its own intention.</glossa>
+    <glossa lingua="fr">Une constante numérique : une constante qui est
+    une quantité, sur laquelle l'arithmétique est permise. Laissée
+    sans nom, on l'appelle « nombre magique » - une constante dont
+    l'intention est restée tue, et l'abus le plus célèbre du genre,
+    car un nombre nu ne porte pas son intention.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="realizatur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="realizatur-per" intra="constans-numerica">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="constans-numerica">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="constans-textualis">
+    <glossa lingua="en">A textual constant: a constant sequence of
+    characters, usually meant for a human reader - messages, titles,
+    formats.</glossa>
+    <glossa lingua="fr">Une constante textuelle : une suite constante
+    de caractères, destinée le plus souvent à un lecteur humain -
+    messages, titres, formats.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="realizatur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="realizatur-per" intra="constans-textualis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="constans-textualis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="bibliotheca">
+    <glossa lingua="en">A library: a collection of elements -
+    functions, constants, types - published for repeated use; it
+    offers an interface and hides its body. It differs from a program
+    in having no beginning of its own: it lives by being called and
+    never runs of its own accord.</glossa>
+    <glossa lingua="fr">Une bibliothèque : une collection d'éléments -
+    fonctions, constantes, types - publiée pour un usage répété ;
+    elle offre une interface et cache son corps. Elle diffère d'un
+    programme en ce qu'elle n'a pas de commencement propre : elle vit
+    d'être appelée et ne s'exécute jamais d'elle-même.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gradus" genus="numerus"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
+    <liberum nomen="interfacies" maximum="1"/>
+    <liberum nomen="corpus" maximum="1"/>
+    <liberum nomen="probationes" maximum="1"/>
+    <liberum nomen="documenta" maximum="1"/>
+    <liberum nomen="praebet"/>
+    <liberum nomen="dependet-ex"/>
+    <liberum nomen="realizat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="interfacies" intra="bibliotheca">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus" intra="bibliotheca">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="probationes" intra="bibliotheca">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="documenta" intra="bibliotheca">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="praebet" intra="bibliotheca">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="dependet-ex" intra="bibliotheca">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="realizat" intra="bibliotheca">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="bibliotheca">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="assertio">
+    <glossa lingua="en">An assertion: an executable proposition - a
+    claim about the state of the program at a point, which carries
+    its own oracle, so that the running program tests it itself. It
+    is documentation that cannot lie for long: when false, it cries
+    out.</glossa>
+    <glossa lingua="fr">Une assertion : une proposition exécutable -
+    une affirmation sur l'état du programme en un point, qui porte
+    son propre oracle, de sorte que le programme en cours
+    d'exécution la vérifie lui-même. C'est une documentation qui ne
+    peut mentir longtemps : fausse, elle crie.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="affirmat-de" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="assertio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="praeconditio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="affirmat-de" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="praeconditio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="postconditio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="affirmat-de" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="postconditio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="invarians">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="affirmat-de" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="invarians">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="assertio-statica">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="affirmat-de" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="assertio-statica">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="assertio-probationis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="affirmat-de" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="assertio-probationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="commentarium">
+    <glossa lingua="en">A comment: the part of the source that the
+    language does NOT promise to read - text inside the artifact,
+    addressed to readers other than the compiler. Its species divide
+    by addressee and intention: to whom it speaks, and about what
+    time.</glossa>
+    <glossa lingua="fr">Un commentaire : la partie du source que le
+    langage ne promet PAS de lire - un texte à l'intérieur de
+    l'artefact, adressé à d'autres lecteurs que le compilateur. Ses
+    espèces se divisent selon le destinataire et l'intention : à qui
+    il parle, et de quel temps.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="commentarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="explicativum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="explicativum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="documentarium">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="documentarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="monitum-futuri">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="monitum-futuri">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="titulus-iuris">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="titulus-iuris">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="codex-sepultus">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="codex-sepultus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="annotatio-machinae">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="annotatio-machinae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="identificator">
+    <glossa lingua="en">An identifier: a name whose essence is
+    REFERENCE and not meaning - a handle on a thing. What it tries to
+    grasp is what Scotus called "haecceity", the very this-ness of a
+    thing. Its species divide by the SOURCE of the identity: given or
+    derived.</glossa>
+    <glossa lingua="fr">Un identifiant : un nom dont l'essence est la
+    RÉFÉRENCE et non la signification - une poignée sur une chose. Ce
+    qu'il tente de saisir, Duns Scot l'appelait l'« heccéité » : le
+    fait, pour une chose, d'être celle-ci et nulle autre. Ses espèces
+    se divisent selon la SOURCE de l'identité : donnée ou
+    dérivée.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="identificator">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="identificator-baptismalis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="identificator-baptismalis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="sigillum-contenti">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="sigillum-contenti">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="programma">
+    <glossa lingua="en">A program: a collection of elements with a
+    BEGINNING OF ITS OWN - once invoked it runs and carries on by
+    itself, where a library only lives while it is being called. The
+    beginning (main) is not an ornament but the very difference: what
+    can begin has a destiny of its own.</glossa>
+    <glossa lingua="fr">Un programme : une collection d'éléments dotée
+    d'un COMMENCEMENT PROPRE - une fois lancé, il s'exécute et
+    poursuit de lui-même, là où une bibliothèque ne vit qu'appelée.
+    Le commencement (principale) n'est pas un ornement mais la
+    différence même : ce qui peut commencer a son propre
+    destin.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-finiendi" genus="electio">
+      <optio>terminans</optio>
+      <optio>perpetuum</optio>
+    </attributum>
+    <attributum nomen="interactivum" genus="veritas"/>
+    <attributum nomen="initium" genus="referentia"/>
+    <attributum nomen="currit-ut" genus="referentia"/>
+    <liberum nomen="adhibet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="adhibet" intra="programma">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="programma">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="instrumentum-lineae">
+    <glossa lingua="en">A command-line tool: invoked, it acts,
+      it exits - the shape that composes through pipes, one
+      small verb in a larger sentence.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-finiendi" genus="electio" ordinarius="terminans">
+      <optio>terminans</optio>
+      <optio>perpetuum</optio>
+    </attributum>
+    <attributum nomen="interactivum" genus="veritas"/>
+    <attributum nomen="initium" genus="referentia"/>
+    <attributum nomen="currit-ut" genus="referentia"/>
+    <liberum nomen="adhibet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="adhibet" intra="instrumentum-lineae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="instrumentum-lineae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="daemon">
+    <glossa lingua="en">A daemon: perpetual, terminal-less,
+      serving requests - it seeks no ending but keeps a state
+      alive.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-finiendi" genus="electio" ordinarius="perpetuum">
+      <optio>terminans</optio>
+      <optio>perpetuum</optio>
+    </attributum>
+    <attributum nomen="interactivum" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="initium" genus="referentia"/>
+    <attributum nomen="currit-ut" genus="referentia"/>
+    <liberum nomen="adhibet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="adhibet" intra="daemon">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="daemon">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="applicatio">
+    <glossa lingua="en">An application: present to a person,
+      through windows or a terminal - it runs while the human
+      is there.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-finiendi" genus="electio">
+      <optio>terminans</optio>
+      <optio>perpetuum</optio>
+    </attributum>
+    <attributum nomen="interactivum" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="initium" genus="referentia"/>
+    <attributum nomen="currit-ut" genus="referentia"/>
+    <liberum nomen="adhibet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="adhibet" intra="applicatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="applicatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="instrumentum-aedificationis">
+    <glossa lingua="en">A build tool: a program whose purpose is to
+    derive build artifacts from sources - it knows the dependency
+    graph (what comes from what), and from that graph comes its
+    power, since it rebuilds only what changed. It differs from a
+    language implementation as a commander differs from a soldier: it
+    orders the sequence and entrusts the work itself to
+    others.</glossa>
+    <glossa lingua="fr">Un outil de construction : un programme dont la
+    fin est de dériver les artefacts de construction à partir des
+    sources - il connaît le graphe des dépendances (ce qui vient de
+    quoi), et c'est de ce graphe que vient sa force, puisqu'il ne
+    reconstruit que ce qui a changé. Il diffère d'une implémentation
+    de langage comme le chef diffère du soldat : il commande l'ordre
+    et confie le travail lui-même à d'autres.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="incrementale" genus="veritas"/>
+    <attributum nomen="graphum-unde" genus="electio">
+      <optio>declaratum</optio>
+      <optio>derivatum</optio>
+    </attributum>
+    <attributum nomen="dirigitur-a" genus="referentia"/>
+    <attributum nomen="modus-finiendi" genus="electio">
+      <optio>terminans</optio>
+      <optio>perpetuum</optio>
+    </attributum>
+    <attributum nomen="interactivum" genus="veritas"/>
+    <attributum nomen="initium" genus="referentia"/>
+    <attributum nomen="currit-ut" genus="referentia"/>
+    <liberum nomen="invocat"/>
+    <liberum nomen="producit"/>
+    <liberum nomen="adhibet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="invocat" intra="instrumentum-aedificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="producit" intra="instrumentum-aedificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="adhibet" intra="instrumentum-aedificationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="instrumentum-aedificationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>vocari</optio>
+      <optio>definiri</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="status proiectio artefactum-aedificationis obiectum-compilatum
+           exsecutabile-ligatum promptuarium index index-inversus index-arboris
+           lectio lectio-memoriae lectio-externa mutatio mutatio-memoriae
+           scriptio-externa allocatio terminatio transactio functio functio-pura
+           constans constans-numerica constans-textualis bibliotheca assertio
+           praeconditio postconditio invarians assertio-statica assertio-probationis
+           commentarium explicativum documentarium monitum-futuri titulus-iuris
+           codex-sepultus annotatio-machinae identificator identificator-baptismalis
+           sigillum-contenti programma instrumentum-lineae daemon applicatio
+           instrumentum-aedificationis"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="artefactum-aedificationis-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="artefactum-aedificationis"/>
+  <citatio nomen="obiectum-compilatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="obiectum-compilatum"/>
+  <citatio nomen="exsecutabile-ligatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="exsecutabile-ligatum"/>
+  <citatio nomen="lectio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio"/>
+  <citatio nomen="lectio-memoriae-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-memoriae"/>
+  <citatio nomen="lectio-externa-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-externa"/>
+  <citatio nomen="mutatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio"/>
+  <citatio nomen="mutatio-memoriae-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio-memoriae"/>
+  <citatio nomen="scriptio-externa-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="scriptio-externa"/>
+  <citatio nomen="allocatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="allocatio"/>
+  <citatio nomen="terminatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="terminatio"/>
+  <citatio nomen="transactio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="transactio"/>
+  <citatio nomen="functio-vocat" attributum="ad" ad="functio functio-pura/nomen" super="functio/vocat"/>
+  <citatio nomen="functio-legit" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio/legit"/>
+  <citatio nomen="functio-mutat" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio/mutat"/>
+  <citatio nomen="functio-efficit" attributum="ad" ad="mutatio mutatio-memoriae scriptio-externa allocatio terminatio transactio/nomen" super="functio/efficit"/>
+  <citatio nomen="functio-haurit" attributum="ad" ad="lectio lectio-memoriae lectio-externa/nomen" super="functio/haurit"/>
+  <citatio nomen="functio-pura-vocat" attributum="ad" ad="functio functio-pura/nomen" super="functio-pura/vocat"/>
+  <citatio nomen="functio-pura-legit" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio-pura/legit"/>
+  <citatio nomen="functio-pura-mutat" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio-pura/mutat"/>
+  <citatio nomen="functio-pura-efficit" attributum="ad" ad="mutatio mutatio-memoriae scriptio-externa allocatio terminatio transactio/nomen" super="functio-pura/efficit"/>
+  <citatio nomen="functio-pura-haurit" attributum="ad" ad="lectio lectio-memoriae lectio-externa/nomen" super="functio-pura/haurit"/>
+  <citatio nomen="bibliotheca-dependet-ex" attributum="ad" ad="bibliotheca/nomen" super="bibliotheca/dependet-ex"/>
+  <citatio nomen="assertio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio"/>
+  <citatio nomen="praeconditio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="praeconditio"/>
+  <citatio nomen="postconditio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="postconditio"/>
+  <citatio nomen="invarians-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="invarians"/>
+  <citatio nomen="assertio-statica-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-statica"/>
+  <citatio nomen="assertio-probationis-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-probationis"/>
+  <citatio nomen="programma-initium" attributum="initium" ad="functio functio-pura/nomen" super="programma"/>
+  <citatio nomen="instrumentum-lineae-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-lineae"/>
+  <citatio nomen="daemon-initium" attributum="initium" ad="functio functio-pura/nomen" super="daemon"/>
+  <citatio nomen="applicatio-initium" attributum="initium" ad="functio functio-pura/nomen" super="applicatio"/>
+  <citatio nomen="instrumentum-aedificationis-producit" attributum="ad" ad="artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum/nomen" super="instrumentum-aedificationis/producit"/>
+  <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-aedificationis"/>
+
+</canon>

@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e corporalia - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="corporalia" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="res-corporea"/>
+    <liberum nomen="artefactum"/>
+    <liberum nomen="cibus"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="instrumentum"/>
+    <liberum nomen="res-sacra"/>
+    <liberum nomen="res-sacra-immobilis"/>
+    <liberum nomen="res-sacra-mobilis"/>
+    <liberum nomen="reliquiae"/>
+    <liberum nomen="damnum"/>
+    <liberum nomen="fractura"/>
+    <liberum nomen="corruptio"/>
+    <liberum nomen="contaminatio"/>
+    <liberum nomen="vivens"/>
+  </elementum>
+
+  <elementum nomen="res-corporea">
+    <glossa lingua="en">A bodily thing: what has matter, occupies a
+    place and is corrupted by time - a thing that can be touched
+    with the hands. It differs from digital things in that it
+    CANNOT be copied: a copy of a loaf demands another loaf, a copy
+    of a file demands nothing.</glossa>
+    <glossa lingua="fr">Une chose corporelle : ce qui a de la matière,
+    occupe un lieu et se corrompt avec le temps - une chose que
+    l'on peut toucher de la main. Elle diffère des choses
+    numériques en ce qu'elle ne peut PAS être copiée : copier un
+    pain exige un second pain, copier un fichier n'exige rien.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="res-corporea">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="artefactum">
+    <glossa lingua="en">An artefact: a bodily thing made by man for an
+    end. It is COUNTABLE and singular and has thisness - this loaf,
+    not another, even when its twin sits beside it. Its form is
+    imposed on it by the maker, it does not arise from
+    nature.</glossa>
+    <glossa lingua="fr">Un artefact : une chose corporelle faite par
+    l'homme en vue d'une fin. Il est DÉNOMBRABLE et singulier et
+    possède une eccéité - ce pain-ci, non un autre, même si son
+    jumeau est à côté. Sa forme lui est imposée par l'artisan, elle
+    ne naît pas de la nature.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="factum-per" genus="referentia"/>
+    <attributum nomen="factum-a" genus="referentia"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="artefactum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="artefactum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="artefactum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cibus">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="factum-per" genus="referentia"/>
+    <attributum nomen="factum-a" genus="referentia"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="cibus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="cibus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="cibus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="materia">
+    <glossa lingua="en">Matter, or stuff: a bodily thing that is
+    MEASURED and not counted - flour, water, oil; "three flours"
+    means nothing. Divided, it stays what it was (half a mass of
+    flour is flour), whereas a divided artefact perishes (half a
+    loaf is not a loaf but a part of one). Individual identity is
+    LACKING to it: its form alone constitutes it.</glossa>
+    <glossa lingua="fr">La matière : une chose corporelle que l'on
+    MESURE au lieu de la compter - farine, eau, huile ; « trois
+    farines » ne signifie rien. Divisée, elle reste ce qu'elle
+    était (la moitié d'une masse de farine est de la farine),
+    tandis qu'un artefact divisé périt (une moitié de pain n'est
+    pas un pain mais une partie de pain). L'identité individuelle
+    lui MANQUE : sa forme seule la constitue.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="quantitas-praesens" genus="textus"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="ingreditur"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="ingreditur" intra="materia">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="materia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="instrumentum">
+    <glossa lingua="en">A tool: an artefact made for making and not
+    for consuming. Use PRESERVES it (indeed use is its very end)
+    rather than destroying it: the oven bakes the bread and the
+    oven remains, which is what sets a tool apart from food and
+    from matter.</glossa>
+    <glossa lingua="fr">Un instrument : un artefact fait pour
+    produire, non pour être consommé. L'usage le CONSERVE (l'usage
+    est même sa fin) au lieu de le détruire : le four cuit le pain
+    et le four demeure, ce qui distingue l'instrument de l'aliment
+    et de la matière.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="referentia"/>
+    <attributum nomen="factum-a" genus="referentia"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="instrumentum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="instrumentum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="instrumentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="res-sacra">
+    <glossa lingua="en">A sacred thing: a bodily thing set apart for
+    divine worship by an ACT, not by its nature nor by its matter.
+    The same wood can be a table or an altar, and the whole
+    difference rests on the consecration. The kind is therefore a
+    pure test of the doctrine of the solemn act: the status of the
+    thing comes from the act, not from the material.</glossa>
+    <glossa lingua="fr">Une chose sacrée : une chose corporelle dédiée
+    au culte divin par un ACTE, non par sa nature ni par sa
+    matière. Le même bois peut être une table ou un autel, et toute
+    la différence tient à la consécration. Ce genre est donc une
+    épreuve pure de la doctrine de l'acte solennel : le statut de
+    la chose vient de l'acte, non du matériau.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="alienabilis" genus="veritas"/>
+    <attributum nomen="status-dedicatio" genus="electio">
+      <optio>profana</optio>
+      <optio>sacra</optio>
+      <optio>violata</optio>
+      <optio>reducta</optio>
+    </attributum>
+    <attributum nomen="consecrata-per" genus="referentia"/>
+    <attributum nomen="custoditur-ab" genus="referentia"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="res-sacra">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="res-sacra-immobilis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="alienabilis" genus="veritas"/>
+    <attributum nomen="status-dedicatio" genus="electio">
+      <optio>profana</optio>
+      <optio>sacra</optio>
+      <optio>violata</optio>
+      <optio>reducta</optio>
+    </attributum>
+    <attributum nomen="consecrata-per" genus="referentia"/>
+    <attributum nomen="custoditur-ab" genus="referentia"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="res-sacra-immobilis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="res-sacra-mobilis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="alienabilis" genus="veritas"/>
+    <attributum nomen="status-dedicatio" genus="electio">
+      <optio>profana</optio>
+      <optio>sacra</optio>
+      <optio>violata</optio>
+      <optio>reducta</optio>
+    </attributum>
+    <attributum nomen="consecrata-per" genus="referentia"/>
+    <attributum nomen="custoditur-ab" genus="referentia"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="res-sacra-mobilis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="reliquiae">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="alienabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="status-dedicatio" genus="electio">
+      <optio>profana</optio>
+      <optio>sacra</optio>
+      <optio>violata</optio>
+      <optio>reducta</optio>
+    </attributum>
+    <attributum nomen="consecrata-per" genus="referentia"/>
+    <attributum nomen="custoditur-ab" genus="referentia"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="reliquiae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="damnum">
+    <glossa lingua="en">Damage: an injury to the integrity of a bodily
+    thing inflicted by an outside force - what was one is divided,
+    what was whole is broken, what was pure is mixed. It is a
+    failing not of intention nor of nature but of INTEGRITY, and so
+    it can befall any body whatever, even one that has neither an
+    end nor a nature of its own.</glossa>
+    <glossa lingua="fr">Le dommage : une atteinte à l'intégrité d'une
+    chose corporelle infligée par une force extérieure - ce qui
+    était un est divisé, ce qui était entier est brisé, ce qui
+    était pur est mêlé. Ce n'est un défaut ni de l'intention ni de
+    la nature mais de l'INTÉGRITÉ ; aussi peut-il atteindre tout
+    corps, même celui qui n'a ni fin ni nature propre.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </attributum>
+    <attributum nomen="reparabile" genus="veritas"/>
+    <attributum nomen="status-integritas" genus="electio">
+      <optio>integrum</optio>
+      <optio>damnatum</optio>
+      <optio>refectum</optio>
+      <optio>perditum</optio>
+    </attributum>
+    <attributum nomen="affligit" genus="referentia"/>
+    <attributum nomen="illatum-per" genus="referentia"/>
+    <attributum nomen="praevisum-ut" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="damnum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fractura">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </attributum>
+    <attributum nomen="reparabile" genus="veritas"/>
+    <attributum nomen="status-integritas" genus="electio">
+      <optio>integrum</optio>
+      <optio>damnatum</optio>
+      <optio>refectum</optio>
+      <optio>perditum</optio>
+    </attributum>
+    <attributum nomen="affligit" genus="referentia"/>
+    <attributum nomen="illatum-per" genus="referentia"/>
+    <attributum nomen="praevisum-ut" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="fractura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="corruptio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </attributum>
+    <attributum nomen="reparabile" genus="veritas"/>
+    <attributum nomen="status-integritas" genus="electio">
+      <optio>integrum</optio>
+      <optio>damnatum</optio>
+      <optio>refectum</optio>
+      <optio>perditum</optio>
+    </attributum>
+    <attributum nomen="affligit" genus="referentia"/>
+    <attributum nomen="illatum-per" genus="referentia"/>
+    <attributum nomen="praevisum-ut" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="corruptio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="contaminatio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </attributum>
+    <attributum nomen="reparabile" genus="veritas"/>
+    <attributum nomen="status-integritas" genus="electio">
+      <optio>integrum</optio>
+      <optio>damnatum</optio>
+      <optio>refectum</optio>
+      <optio>perditum</optio>
+    </attributum>
+    <attributum nomen="affligit" genus="referentia"/>
+    <attributum nomen="illatum-per" genus="referentia"/>
+    <attributum nomen="praevisum-ut" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="contaminatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="vivens">
+    <glossa lingua="en">A living thing: a bodily thing that moves,
+    feeds and generates itself, holding the principle of its motion
+    WITHIN, where an artefact receives its motion from another and
+    matter has none. It is not made by man (though it may be tended
+    by him); being countable and having thisness, it is not
+    matter.</glossa>
+    <glossa lingua="fr">Un vivant : une chose corporelle qui se meut,
+    se nourrit et s'engendre elle-même, tenant EN elle-même le
+    principe de son mouvement, là où l'artefact reçoit son
+    mouvement d'autrui et où la matière n'en a aucun. Il n'est pas
+    fait par l'homme (même s'il est cultivé par lui) ; étant
+    dénombrable et doté d'une eccéité, il n'est pas de la
+    matière.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vivum</optio>
+      <optio>mortuum</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="generat" intra="vivens">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="laborat" intra="vivens">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="vivens">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="res-corporea artefactum cibus materia instrumentum res-sacra res-sacra-immobilis
+           res-sacra-mobilis reliquiae damnum fractura corruptio contaminatio
+           vivens"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="artefactum-ex-materia" attributum="ad" ad="materia/nomen" super="artefactum/ex-materia"/>
+  <citatio nomen="cibus-ex-materia" attributum="ad" ad="materia/nomen" super="cibus/ex-materia"/>
+  <citatio nomen="instrumentum-ex-materia" attributum="ad" ad="materia/nomen" super="instrumentum/ex-materia"/>
+
+</canon>

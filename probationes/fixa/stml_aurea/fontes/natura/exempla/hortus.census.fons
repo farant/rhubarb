@@ -1,0 +1,34 @@
+<!--
+  natura/exempla/hortus.census
+
+  Documentum verum sub monolitho (extensio .census -> individua.canon,
+  registrum). Non fixum probationis solum: TESTIMONIUM catenae -
+  genus semel descriptum tria parit, bibliothecam tagorum,
+  schema, structuram C.
+
+  SIGNA (spec canon-referentia): '#' nomen proprium individui -
+  in declaratione ET in referentia, congruentia verbatim; '.'
+  genus e vocabulario; valor nudus litteralis est.
+
+  CITATIO (librarium W1/W2): auctor-nominis="&carl_linnaeus;"
+  contra claves-externas canonis RESOLVITUR - Linnaeus in
+  bibliotheca cusus est (semina.census), ergo hic CITATUR, non
+  sedetur. Sedes propria ('census sodales suos sedet', ante W2)
+  hic collisio esset: 'cita aut auge, ne itera'.
+
+  Quae absunt PROBANT: habitus et altitudo-matura tacent, ergo
+  ordinarius= (ex <valor> naturae per catenam vectus) apparere
+  debet - et diversus per genus (frutex rosae, arbor mali).
+-->
+<individua>
+  <rosa-canina nomen="&rosa-ad-murum;"
+               status-vita="florens"
+               auctor-nominis="&carl_linnaeus;">
+    <radix nota="muro proxima"/>
+    <historia>
+      <eventum quando="2024-04" actio="nominari"/>
+    </historia>
+  </rosa-canina>
+
+  <granny-smith nomen="&malus-prima;" altitudo-matura="4"/>
+</individua>

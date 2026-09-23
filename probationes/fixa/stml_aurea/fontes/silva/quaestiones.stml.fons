@@ -1,0 +1,47 @@
+<!-- silva/quaestiones.stml - bibliotheca selectorum nominatorum
+     (parcum 01KXPV9FPK; INTENTIO silva/phase-log.md 2026-07-31)
+
+     Selectores quos re-typare solebamus, nominibus et causis
+     commissi. gradus="oculi" = quaestio; gradus="invarians" =
+     selector qui ZERO congruentias reddere debet (custodia
+     structuralis, v0 relatio sola - nulli unco inserta).
+
+     $titulus in valore attributi citato aut ut argumentum pseudo
+     integrum = parametrum (declarandum); $nomen post tagum =
+     captura machinae, numquam parametrum.
+
+     Plagula in suite pinnata (probatio_silva_quaestiones legit
+     hanc ex disco) - entrium invalidum suite rubram facit. -->
+<quaestiones>
+
+  <quaestio titulus="vocantes-continentes" gradus="oculi">
+    <selector>definitio-functionis:vocat($functio)</selector>
+    <parametrum titulus="functio"/>
+    <causa>functiones quae vocationem functionis datae continent -
+    quaestio saepissime re-typata (quis hoc vocat, forma
+    structuralis)</causa>
+  </quaestio>
+
+  <quaestio titulus="definitio-nominata" gradus="oculi">
+    <selector>definitio-functionis:definit($functio)</selector>
+    <parametrum titulus="functio"/>
+    <causa>subarbor definitionis functionis nominatae - zuccharum
+    -intra selectae, ancora editionum</causa>
+  </quaestio>
+
+  <quaestio titulus="declaratores-nominati" gradus="oculi">
+    <selector>declarator-titulus[tok_titulus="$titulus"]</selector>
+    <parametrum titulus="titulus"/>
+    <causa>declaratores nomine dato - definitiones et declarationes
+    symboli trans plagulam</causa>
+  </quaestio>
+
+  <quaestio titulus="exsequi-in-pulsatione" gradus="invarians">
+    <selector>definitio-functionis:habet(declarator-titulus[tok_titulus*="pulsare"]):vocat(processus_exsequi)</selector>
+    <causa>processus_exsequi OBSTAT - in tractatoribus tick
+    (functiones *pulsare*) numquam vocandum; via incrementalis
+    processus_incipere/pulsare/metere adhibenda (lectio villae
+    mensurata 2026-07-30, pins processus par. XX/XXI)</causa>
+  </quaestio>
+
+</quaestiones>

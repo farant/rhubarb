@@ -1,0 +1,26 @@
+<aedilis>
+  <inclusa>
+    <via (>include
+    <via (>vendor
+  </inclusa>
+  <vexilla>
+    <vexillum! (>-std=c89
+    <vexillum! (>-Wall
+  </vexilla>
+  <variantes praelatio="macos posix"/>
+  <nexus>
+    <regula obiectum="beta_macos">
+      <vexillum! (>-framework Cocoa
+    </regula>
+  </nexus>
+  <vendor>
+    <fons via="vendor/librum.c">
+      <vexillum! (>-O2 -DLIBRUM=1
+    </fons>
+  </vendor>
+  <irregularia>
+    <regula caput="include/delta.h">
+      <obiectum (>lib/delta_verum.c
+    </regula>
+  </irregularia>
+</aedilis>

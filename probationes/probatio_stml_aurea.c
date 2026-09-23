@@ -30,11 +30,13 @@
  * eodem memcmp cadunt - deriva fontis post capturam = RUBRUM
  * nominatum, non silentium.
  *
- * PRIVATIO NOMINATA: monstra fontium > 1MB (librarium bis,
- * gutenberg_index) EXCLUSA - pretium suitae quaque cursione;
- * exclusio in tools/stml_aurea_generare.sh vivit et in capite aurei
- * nominatur. Fidelitas eorum a probationibus circuitus non hic
- * tegitur.
+ * CORPUS CONGELATUM (2026-09-23): fontes sunt COPIAE LIV plagularum
+ * tractarum in probationes/fixa/stml_aurea/fontes/ ('.fons'), non
+ * arbor viva. Olim 'find .' vivum: editio fontis quaevis portam
+ * rubebat, et XCIV e CXLVIII fontibus non tractati erant (officina/
+ * build/census, stml-parser-reference ignorata) - clonus recens
+ * rubebat. Instantanea input congelatum postulat (doctrina
+ * 01M365VXAF); renovatio corporis consulta, una commissione.
  *
  * MODI: sine argumentis = iudicare (aurum abesse RUBET - aurum
  * absens ≡ porta mortua); '-generare via...' = aurum scribere
@@ -458,7 +460,7 @@ _aureum_generare (
 
     chorda_aedificator_appendere_literis(aed,
         "AUREA STML INTERNUS I\n"
-        "MONSTRA FONTIUM >1MB EXCLUSA"
+        "CORPUS CONGELATUM: probationes/fixa/stml_aurea/fontes"
         " (vide tools/stml_aurea_generare.sh)\n");
 
     sprintf(linea_buf, "LITTERAE %lu\n",

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e opus_scriptum - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="opus_scriptum" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="opus-scriptum"/>
+    <liberum nomen="expressio"/>
+    <liberum nomen="editio"/>
+    <liberum nomen="codex"/>
+    <liberum nomen="periodicum"/>
+    <liberum nomen="fasciculus"/>
+  </elementum>
+
+  <elementum nomen="opus-scriptum">
+    <glossa lingua="en">A written work: an intellectual creation made
+    of words, distinct from its expressions - Moby-Dick is one work
+    whether it is read in English or in Latin, on paper or on a
+    screen. It is the thing the author CONCEIVED.</glossa>
+    <glossa lingua="fr">Une œuvre écrite : une création
+    intellectuelle faite de mots, distincte de ses expressions -
+    Moby-Dick est une seule œuvre, qu'on la lise en anglais ou en
+    latin, sur papier ou sur écran. C'est la chose que l'auteur a
+    CONÇUE.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="materia" intra="opus-scriptum" textus="verum"/>
+  <elementum nomen="auctor" intra="opus-scriptum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="opus-scriptum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="opus-scriptum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="expressio">
+    <glossa lingua="en">An expression: the realization of a work in
+    determinate signs - this text and no other. A translation is a
+    NEW expression (other words, the same work), and a critical
+    recension is one likewise.</glossa>
+    <glossa lingua="fr">Une expression : la réalisation d'une œuvre en
+    signes déterminés - ce texte-ci et non un autre. Une traduction
+    est une expression NOUVELLE (d'autres mots, la même œuvre) ;
+    une recension critique de même.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="lingua" genus="textus"/>
+    <attributum nomen="auctoritativa" genus="veritas"/>
+    <attributum nomen="genus-expressionis" genus="electio">
+      <optio>originalis</optio>
+      <optio>translata</optio>
+      <optio>recensita</optio>
+      <optio>abbreviata</optio>
+    </attributum>
+    <attributum nomen="expressio-de" genus="referentia"/>
+    <attributum nomen="translata-ex" genus="referentia"/>
+    <liberum nomen="translator"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="translator" intra="expressio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="expressio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="editio">
+    <glossa lingua="en">An edition: the published body of an
+    expression - what the press actually brought forth: the paper,
+    the format, the pages, the ISBN. What you buy in a shop.</glossa>
+    <glossa lingua="fr">Une édition : le corps publié d'une expression
+    - ce que la presse a réellement produit : le papier, le format,
+    les pages, l'ISBN. Ce que vous achetez en librairie.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="index-isbn" genus="textus"/>
+    <attributum nomen="paginae" genus="numerus"/>
+    <attributum nomen="forma-corporis" genus="electio">
+      <optio>codex_duro_tegmine</optio>
+      <optio>codex_molli_tegmine</optio>
+      <optio>volumen_membranaceum</optio>
+      <optio>electronica</optio>
+    </attributum>
+    <attributum nomen="publicata" genus="dies"/>
+    <attributum nomen="edita-a" genus="referentia"/>
+    <attributum nomen="impressa-in" genus="referentia"/>
+    <liberum nomen="editio-de"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="editio-de" intra="editio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="editio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="codex">
+    <glossa lingua="en">A copy: one bodily exemplar of an edition -
+    the one you hold in your hand, with its stains, its marginal
+    notes and its own history of ownership. Its individuals do not
+    live in OUR library but in the owners' own volumes, which cite
+    this kind.</glossa>
+    <glossa lingua="fr">Un exemplaire : un seul exemplaire corporel
+    d'une édition - celui que vous tenez en main, avec ses taches,
+    ses notes marginales et son histoire de possession propre. Ses
+    individus ne vivent pas dans NOTRE bibliothèque mais dans les
+    volumes de leurs possesseurs, qui citent ce genre.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="conditio" genus="electio">
+      <optio>integer</optio>
+      <optio>usu_tritus</optio>
+      <optio>laesus</optio>
+    </attributum>
+    <attributum nomen="notae-marginales" genus="veritas"/>
+    <attributum nomen="status-possessio" genus="electio">
+      <optio>apud_dominum</optio>
+      <optio>commodatus</optio>
+      <optio>amissus</optio>
+    </attributum>
+    <attributum nomen="exemplar-de" genus="referentia"/>
+    <attributum nomen="possessor" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="codex">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="periodicum">
+    <glossa lingua="en">A periodical: a written work that does not
+    seek COMPLETION - it continues in issues for as long as those
+    who direct it wish. The parent's composition machine is nearly
+    foreign to it (never "finished", often "abandoned"): what rules
+    it is a cadence, not an end.</glossa>
+    <glossa lingua="fr">Un périodique : une œuvre écrite qui ne vise
+    pas l'ACHÈVEMENT - elle se poursuit en fascicules aussi
+    longtemps que ceux qui la dirigent le veulent. La machine à
+    états de composition du genre parent lui convient à peine
+    (jamais « achevée », souvent « abandonnée ») : ce qui la règle
+    est une cadence, non une fin.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="cadentia" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadalis</optio>
+      <optio>menstrua</optio>
+      <optio>trimestris</optio>
+      <optio>annua</optio>
+      <optio>irregularis</optio>
+    </attributum>
+    <attributum nomen="habet-fasciculum" genus="referentia"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="materia" intra="periodicum" textus="verum"/>
+  <elementum nomen="auctor" intra="periodicum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="periodicum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="periodicum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fasciculus">
+    <glossa lingua="en">An issue: a part of a periodical marked by its
+    time - one number, published on its own day. It resembles a
+    version, but it is foreseen by a CADENCE rather than born of an
+    event: the next issue is expected, the next version is
+    not.</glossa>
+    <glossa lingua="fr">Un fascicule : une partie d'un périodique
+    marquée par son temps - un numéro, publié à sa date. Il
+    ressemble à une version, mais il est prévu par une CADENCE au
+    lieu de naître d'un événement : le prochain fascicule est
+    attendu, la prochaine version ne l'est pas.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="numerus" genus="textus"/>
+    <attributum nomen="publicatus" genus="dies"/>
+    <attributum nomen="fasciculus-de" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="fasciculus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>componi</optio>
+      <optio>exprimi</optio>
+      <optio>edi</optio>
+      <optio>deseri</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="opus-scriptum expressio editio codex periodicum fasciculus"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="opus-scriptum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="opus-scriptum"/>
+  <citatio nomen="expressio-translata-ex" attributum="translata-ex" ad="expressio/nomen" super="expressio"/>
+  <citatio nomen="editio-editio-de" attributum="ad" ad="expressio/nomen" super="editio/editio-de"/>
+  <citatio nomen="codex-exemplar-de" attributum="exemplar-de" ad="editio/nomen" super="codex"/>
+  <citatio nomen="periodicum-habet-fasciculum" attributum="habet-fasciculum" ad="fasciculus/nomen" super="periodicum"/>
+  <citatio nomen="periodicum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="periodicum"/>
+  <citatio nomen="fasciculus-fasciculus-de" attributum="fasciculus-de" ad="periodicum/nomen" super="fasciculus"/>
+
+</canon>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e pharmacon - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="pharmacon" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="substantia-chemica"/>
+    <liberum nomen="medicamentum"/>
+    <liberum nomen="medicamentum-genericum"/>
+    <liberum nomen="medicamentum-nominatum"/>
+    <liberum nomen="medicamentum-compositum"/>
+    <liberum nomen="coctura"/>
+    <liberum nomen="interactio"/>
+    <liberum nomen="interactio-medicamentorum"/>
+    <liberum nomen="interactio-cum-cibo"/>
+    <liberum nomen="incompatibilitas-mercium"/>
+  </elementum>
+
+  <elementum nomen="substantia-chemica">
+    <glossa lingua="en">A chemical substance: a kind of matter
+    determined by its composition - what all samples of the same
+    substance share, wherever and whenever they were made. Not a
+    heap but the KIND of heaps: "aspirin" is one thing we speak of,
+    although the heaps of it are countless. It can be neither
+    weighed nor touched, whereas matter can.</glossa>
+    <glossa lingua="fr">Une substance chimique : un genre de matière
+    déterminé par sa composition - ce que partagent tous les
+    exemplaires d'une même substance, où et quand qu'ils aient été
+    faits. Non pas un tas mais le GENRE des tas : « l'aspirine » est
+    une seule chose dont nous parlons, quoique les tas en soient
+    innombrables. Elle ne peut être ni pesée ni touchée, alors que
+    la matière le peut.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="formula" genus="textus"/>
+    <attributum nomen="massa-molecularis" genus="textus"/>
+    <attributum nomen="solubilitas" genus="electio">
+      <optio>aquosa</optio>
+      <optio>lipidica</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="interagit" genus="referentia"/>
+    <liberum nomen="exemplatur-in"/>
+    <liberum nomen="classificata-ut"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="exemplatur-in" intra="substantia-chemica">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="classificata-ut" intra="substantia-chemica">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="substantia-chemica">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="medicamentum">
+    <glossa lingua="en">A drug: one substance (or several) prepared
+    with a determinate STRENGTH and FORM for treating illness -
+    what a prescription names and what a pharmacist dispenses.
+    "Amoxicillin 500 mg capsule" is not the substance alone, and is
+    not yet the thing in the hand.</glossa>
+    <glossa lingua="fr">Un médicament : une substance (ou plusieurs)
+    préparée avec une PUISSANCE et une FORME déterminées pour
+    traiter une maladie - ce que l'ordonnance nomme et ce que le
+    pharmacien délivre. « Amoxicilline 500 mg gélule » n'est pas la
+    substance seule, et n'est pas encore la chose que l'on tient en
+    main.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="vis" genus="textus"/>
+    <attributum nomen="forma-sumendi" genus="electio">
+      <optio>capsula</optio>
+      <optio>tabella</optio>
+      <optio>suspensio</optio>
+      <optio>unguentum</optio>
+      <optio>iniectio</optio>
+    </attributum>
+    <attributum nomen="via-sumendi" genus="electio">
+      <optio>oralis</optio>
+      <optio>topica</optio>
+      <optio>venosa</optio>
+      <optio>muscularis</optio>
+    </attributum>
+    <attributum nomen="sine-praescriptione" genus="veritas"/>
+    <attributum nomen="conservatio" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="aequivalens"/>
+    <liberum nomen="fabricatum-in"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="continet" intra="medicamentum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="aequivalens" intra="medicamentum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="fabricatum-in" intra="medicamentum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="medicamentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="medicamentum-genericum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="vis" genus="textus"/>
+    <attributum nomen="forma-sumendi" genus="electio">
+      <optio>capsula</optio>
+      <optio>tabella</optio>
+      <optio>suspensio</optio>
+      <optio>unguentum</optio>
+      <optio>iniectio</optio>
+    </attributum>
+    <attributum nomen="via-sumendi" genus="electio">
+      <optio>oralis</optio>
+      <optio>topica</optio>
+      <optio>venosa</optio>
+      <optio>muscularis</optio>
+    </attributum>
+    <attributum nomen="sine-praescriptione" genus="veritas"/>
+    <attributum nomen="conservatio" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="aequivalens"/>
+    <liberum nomen="fabricatum-in"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="continet" intra="medicamentum-genericum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="aequivalens" intra="medicamentum-genericum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="fabricatum-in" intra="medicamentum-genericum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="medicamentum-genericum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="medicamentum-nominatum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="vis" genus="textus"/>
+    <attributum nomen="forma-sumendi" genus="electio">
+      <optio>capsula</optio>
+      <optio>tabella</optio>
+      <optio>suspensio</optio>
+      <optio>unguentum</optio>
+      <optio>iniectio</optio>
+    </attributum>
+    <attributum nomen="via-sumendi" genus="electio">
+      <optio>oralis</optio>
+      <optio>topica</optio>
+      <optio>venosa</optio>
+      <optio>muscularis</optio>
+    </attributum>
+    <attributum nomen="sine-praescriptione" genus="veritas"/>
+    <attributum nomen="conservatio" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="aequivalens"/>
+    <liberum nomen="fabricatum-in"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="continet" intra="medicamentum-nominatum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="aequivalens" intra="medicamentum-nominatum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="fabricatum-in" intra="medicamentum-nominatum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="medicamentum-nominatum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="medicamentum-compositum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="vis" genus="textus"/>
+    <attributum nomen="forma-sumendi" genus="electio">
+      <optio>capsula</optio>
+      <optio>tabella</optio>
+      <optio>suspensio</optio>
+      <optio>unguentum</optio>
+      <optio>iniectio</optio>
+    </attributum>
+    <attributum nomen="via-sumendi" genus="electio">
+      <optio>oralis</optio>
+      <optio>topica</optio>
+      <optio>venosa</optio>
+      <optio>muscularis</optio>
+    </attributum>
+    <attributum nomen="sine-praescriptione" genus="veritas"/>
+    <attributum nomen="conservatio" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="aequivalens"/>
+    <liberum nomen="fabricatum-in"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="continet" intra="medicamentum-compositum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="aequivalens" intra="medicamentum-compositum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="fabricatum-in" intra="medicamentum-compositum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="medicamentum-compositum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="coctura">
+    <glossa lingua="en">A batch: everything made in one manufacturing
+    run, sharing a common provenance and therefore a COMMON FATE -
+    what is contaminated in one unit may be contaminated in all of
+    them, and so a recall addresses the batch and never the single
+    item.</glossa>
+    <glossa lingua="fr">Un lot : tout ce qui a été fait au cours d'une
+    même production, partageant une provenance commune et donc un
+    DESTIN COMMUN - ce qui est contaminé dans une unité peut l'être
+    dans toutes, et c'est pourquoi un rappel vise le lot et jamais
+    l'objet isolé.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="numerus-cocturae" genus="textus"/>
+    <attributum nomen="quantitas-facta" genus="textus"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="status" genus="electio">
+      <optio>fabricata</optio>
+      <optio>probata</optio>
+      <optio>dimissa</optio>
+      <optio>revocata</optio>
+      <optio>exhausta</optio>
+      <optio>elapsa</optio>
+    </attributum>
+    <attributum nomen="coquitur" genus="referentia"/>
+    <attributum nomen="fabricata-a" genus="referentia"/>
+    <attributum nomen="acta-sua" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="coctura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="interactio">
+    <glossa lingua="en">An interaction: a relation between two things
+    (or more) whose simultaneous presence changes the effect each
+    would have on its own. It is not a property of either one but of
+    a THIRD thing that arises from their conjunction.</glossa>
+    <glossa lingua="fr">Une interaction : une relation entre deux
+    choses (ou davantage) dont la présence simultanée modifie
+    l'effet que chacune aurait seule. Ce n'est pas une propriété de
+    l'une ou de l'autre, mais d'une TROISIÈME chose qui naît de leur
+    conjonction.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="inter" intra="interactio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="interactio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="interactio-medicamentorum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="inter" intra="interactio-medicamentorum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="interactio-medicamentorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="interactio-cum-cibo">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="inter" intra="interactio-cum-cibo">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="interactio-cum-cibo">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="incompatibilitas-mercium">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="inter" intra="incompatibilitas-mercium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="incompatibilitas-mercium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="substantia-chemica medicamentum medicamentum-genericum medicamentum-nominatum
+           medicamentum-compositum coctura interactio interactio-medicamentorum
+           interactio-cum-cibo incompatibilitas-mercium"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="medicamentum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum/continet"/>
+  <citatio nomen="medicamentum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum/aequivalens"/>
+  <citatio nomen="medicamentum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum/fabricatum-in"/>
+  <citatio nomen="medicamentum-genericum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-genericum/continet"/>
+  <citatio nomen="medicamentum-genericum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-genericum/aequivalens"/>
+  <citatio nomen="medicamentum-genericum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-genericum/fabricatum-in"/>
+  <citatio nomen="medicamentum-nominatum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-nominatum/continet"/>
+  <citatio nomen="medicamentum-nominatum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-nominatum/aequivalens"/>
+  <citatio nomen="medicamentum-nominatum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-nominatum/fabricatum-in"/>
+  <citatio nomen="medicamentum-compositum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-compositum/continet"/>
+  <citatio nomen="medicamentum-compositum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-compositum/aequivalens"/>
+  <citatio nomen="medicamentum-compositum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-compositum/fabricatum-in"/>
+
+</canon>
