@@ -3,7 +3,10 @@
  * Parser et aedificator JSON completus cum:
  * - Objecta imbricata
  * - Tabulata mixta
- * - Numeri integri (s64) et fluitantes (f64)
+ * - Numeri integri (s64) et fluitantes (f64) - integer extra s64 et
+ *   fluitans extra f64 (1e400) REFUTANTUR, numquam involvuntur;
+ *   scriptor NaN/infinita ut null scribit, fluitantem integrum
+ *   imitantem cum '.0' (genus redit), formam brevissimam exactam
  * - Chordae cum unicode escapes (\uXXXX)
  *
  * USUS PARSING:

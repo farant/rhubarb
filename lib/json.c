@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 
 /* ========================================================================
@@ -633,11 +634,18 @@ _numerus_est_fluitans (
     redde FALSUM;
 }
 
-interior s64
+/* integer ex lexemate (grammatica iam a lexemate probata: '-'?
+ * cifrae). Quantitas in i64 (INSIGNATO) cumulatur cum custode
+ * superfluxus: s64 = [-2^63, 2^63-1]. FALSUM = extra s64, vocans
+ * refutat - olim tacite involvebat (9223372036854775808 -> -2^63,
+ * superfluxus signatus = UB). */
+interior b32
 _parse_integer (
-    chorda valor)
+    chorda  valor,
+       s64* fructus)
 {
-    s64 result     = 0;
+    i64 quantitas  = 0;
+    i64 limes;
     i32 i          = 0;
     b32 negativus  = FALSUM;
 
@@ -647,17 +655,37 @@ _parse_integer (
         i          = I;
     }
 
+    /* 2^63 - 1 positivis, 2^63 negativis */
+    limes = ((i64)I << LXIII) - (negativus ? (i64)0 : (i64)I);
+
     dum (i < valor.mensura)
     {
         character c = (character)valor.datum[i];
-        si (_est_digitus(c))
+              i64 cifra;
+
+        si (!_est_digitus(c))
         {
-            result = result * X + (c - '0');
+            redde FALSUM;
         }
+        cifra = (i64)(c - '0');
+        si (quantitas > (limes - cifra) / X)
+        {
+            redde FALSUM;
+        }
+        quantitas = quantitas * X + cifra;
         i++;
     }
 
-    redde negativus ? -result : result;
+    si (negativus && quantitas > 0)
+    {
+        /* -(2^63) sine superfluxu: -(q - 1) - 1 */
+        *fructus = -(s64)(quantitas - I) - I;
+    }
+    alioquin
+    {
+        *fructus = (s64)quantitas;
+    }
+    redde VERUM;
 }
 
 interior f64
@@ -1004,16 +1032,30 @@ _parse_valor (
         casus JSON_TOK_NUMERUS:
         {
             chorda num_str = _parser_token_valor(parser);
-            si (_numerus_est_fluitans(num_str))
-            {
+                        si (_numerus_est_fluitans(num_str))
+                        {
                 f64 f  = _parse_fluitans(num_str, parser->piscina);
+                /* 1e400 -> infinitum (strtod superfluens HUGE_VAL reddit): JSON infinitum non habet, et
+                 * scriptor id 'null' scriberet - refutatur. Subfluxus
+                 * (1e-400 -> 0) licet: valor proximus, non falsus. */
+                si (f == HUGE_VAL || f == -HUGE_VAL)
+                {
+                    _parser_error(parser, "Numerus extra f64");
+                    redde NIHIL;
+                }
                 val    = json_fluitans_creare(parser->piscina, f);
-            }
+                        }
             alioquin
-            {
-                s64 n  = _parse_integer(num_str);
+                        {
+                s64 n;
+                si (!_parse_integer(num_str, &n))
+                {
+                    _parser_error(parser,
+                        "Integer extra s64 (-2^63 .. 2^63-1)");
+                    redde NIHIL;
+                }
                 val    = json_integer_creare(parser->piscina, n);
-            }
+                        }
             _parser_avanzare(parser);
             redde val;
         }
@@ -1798,6 +1840,54 @@ json_objectum_ponere_chorda (
  * FUNCTIONES INTERNAE - SERIALIZATION
  * ======================================================================== */
 
+/* fluitantem scribere (2026-09-22). NaN et infinita -> null: JSON ea
+ * non habet, scriptor viam erroris non habet, et 'nan'/'inf' textum
+ * invalidum dabant (JSON.stringify idem facit). Forma BREVISSIMA quae
+ * EXACTE redit (praecisio XV..XVII, strtod probat): 0.1, non
+ * 0.10000000000000001. Forma integrum imitans ('1', '-0',
+ * '-9007199254740992') '.0' accipit - aliter lectio iterata genus
+ * INTEGER dabat. */
+interior vacuum
+_fluitantem_scribere (
+    ChordaAedificator* aed,
+                  f64  valor)
+{
+    character buffer[LXIV];
+      integer praecisio;
+          i32 i;
+          b32 integrum_imitatur = VERUM;
+
+    si (valor != valor || valor == HUGE_VAL || valor == -HUGE_VAL)
+    {
+        chorda_aedificator_appendere_literis(aed, "null");
+        redde;
+    }
+
+    per (praecisio = XV; praecisio <= XVII; praecisio++)
+    {
+        sprintf(buffer, "%.*g", praecisio, valor);
+        si (strtod(buffer, NIHIL) == valor)
+        {
+            frange;
+        }
+    }
+
+    per (i = 0; buffer[i] != '\0'; i++)
+    {
+        si (buffer[i] == '.' || buffer[i] == 'e' || buffer[i] == 'E')
+        {
+            integrum_imitatur = FALSUM;
+            frange;
+        }
+    }
+
+    chorda_aedificator_appendere_literis(aed, buffer);
+    si (integrum_imitatur)
+    {
+        chorda_aedificator_appendere_literis(aed, ".0");
+    }
+}
+
 interior vacuum
 _scribere_valor (
             JsonValor* valor,
@@ -1970,13 +2060,9 @@ _scribere_valor (
             frange;
         }
 
-        casus JSON_FLUITANS:
-        {
-            character buffer[LXIV];
-            sprintf(buffer, "%.17g", valor->datum.fluitans_valor);
-            chorda_aedificator_appendere_literis(aed, buffer);
+                casus JSON_FLUITANS:
+            _fluitantem_scribere(aed, valor->datum.fluitans_valor);
             frange;
-        }
 
         casus JSON_CHORDA:
             chorda_aedificator_appendere_character(aed, '"');

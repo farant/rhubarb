@@ -80,3 +80,43 @@ input (a FRACTA inside a helper names only the helper's lines), a NUL
 byte after the value, and acceptance of all four whitespace kinds on
 both sides. Born red: every refusal case failed on all five assertions
 before the fix.
+
+## 2026-09-22 — audit, step III: numbers refuse instead of lying
+
+Fran approved all three recommendations.
+
+**Integers past s64** wrapped silently (signed overflow, UB):
+`9223372036854775808` → -2^63, 20 digits → garbage. `_parse_integer`
+now accumulates the MAGNITUDE in i64 (unsigned) against a limit of
+2^63-1 (positive) or 2^63 (negative), with the classic guard
+`q > (limes - cifra) / X`; -2^63 is produced as `-(s64)(q - 1) - 1`
+to avoid overflow in the negation. Past the limit: "Integer extra s64
+(-2^63 .. 2^63-1)" at the number's position. Refusal over float
+fallback: a ULID/id-sized integer silently rounded is worse than an
+error (refusal-loud).
+
+**Float overflow** (`1e400` → inf) is refused, "Numerus extra f64";
+underflow (`1e-400` → 0/denormal) is accepted — nearest value, not a
+false one. Detection is `f == ±HUGE_VAL` — the value strtod is
+DEFINED to return on overflow. First draft used DBL_MAX from
+<float.h>; examen REJECTED it (identificator ignotus): the ISO lexicon
+silva/fontes/systema_c89.h has no float.h section. HUGE_VAL is the more
+precise test anyway; the lexicon gap is a separate silva task.
+
+**Writer** (`_fluitantem_scribere`): NaN/±inf → `null` (JSON has
+neither; the writer has no error channel; JSON.stringify does the same).
+Shortest representation that round-trips EXACTLY: try %.15g, %.16g,
+%.17g, keep the first that strtod reads back ==, so 0.1 writes "0.1"
+not "0.10000000000000001". If the text looks like an integer (no '.',
+'e', 'E') append ".0" — `1.0` used to write "1" and re-read as an
+INTEGER; the round-trip test also caught -9007199254740992.0 doing the
+same. No house code produces floats today (grep: only gesta.c:4679
+tests est_fluitans), so no golden moved.
+
+Tests `probatio_numeri`: exact s64 limits both ways (plus writing
+-2^63), four integer refusals incl. one inside an array (column
+asserted), 1e400 / [-1e400] refused, 1e-400 accepted, NaN/±inf → null,
+nine exact writer forms, and seven doubles (0.1, 1/3, DBL_MIN,
+DBL_MAX, smallest denormal, 123456.789, -2^53) that must come back
+bitwise-equal and still fluitans. Helpers print each case. Born red:
+every refusal and every writer form except 2.5 and 1e+20 failed before.

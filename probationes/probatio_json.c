@@ -747,6 +747,136 @@ probatio_cauda(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - NUMERI (2026-09-22)
+ *
+ * Integri extra s64 tacite involvebantur (9223372036854775808 ->
+ * -2^63; XX cifrae -> quisquilia); 1e400 ut infinitum legebatur;
+ * scriptor 'nan'/'inf' (JSON invalidum) et 1.0 ut '1' (lectio iterata
+ * genus INTEGER) dabat.
+ * ======================================================================== */
+
+/* textum numeri refutatum esse, causa et locus nominati */
+interior vacuum
+_numerus_refutatus (
+               Piscina* piscina,
+    constans character* textus,
+    constans character* causa,
+                    i32  columna)
+{
+    JsonResultus res;
+
+    imprimere("  numerus refutandus: %s\n", textus);
+    res = json_legere_literis(textus, piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_CHORDA_CONTINET(res.error, chorda_ex_literis(causa, piscina));
+    CREDO_AEQUALIS_I32(res.linea, I);
+    CREDO_AEQUALIS_I32(res.columna, columna);
+}
+
+/* fluitantem scribere et formam exactam exspectare */
+interior vacuum
+_fluitans_scriptus (
+               Piscina* piscina,
+                    f64  valor,
+    constans character* exspectatum)
+{
+    chorda output;
+
+    output = json_scribere(json_fluitans_creare(piscina, valor),
+        piscina);
+    imprimere("  fluitans scriptus: [%.*s] (exspectatum %s)\n",
+        (integer)output.mensura, (character*)output.datum, exspectatum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, exspectatum);
+}
+
+interior vacuum
+probatio_numeri(Piscina* piscina)
+{
+    JsonResultus res;
+             s64 maximus;
+             s64 minimus;
+          chorda output;
+             f64 infinitum;
+             f64 non_numerus;
+             i32 i;
+             f64 redeuntes[VII];
+
+    imprimere("--- Probans numeros ---\n");
+
+    /* limites s64 ipsi: exacti */
+    maximus  = (s64)(((i64)I << LXIII) - I);
+    minimus  = -maximus - I;
+    res      = json_legere_literis("9223372036854775807", piscina);
+    CREDO_VERUM(res.successus);
+    CREDO_AEQUALIS_S64(json_ad_integer(res.radix), maximus);
+    res = json_legere_literis("-9223372036854775808", piscina);
+    CREDO_VERUM(res.successus);
+    CREDO_AEQUALIS_S64(json_ad_integer(res.radix), minimus);
+    output = json_scribere(res.radix, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "-9223372036854775808");
+
+    /* uno ultra: refutatur, non involvitur */
+    _numerus_refutatus(piscina, "9223372036854775808", "extra s64", I);
+    _numerus_refutatus(piscina, "-9223372036854775809", "extra s64", I);
+    _numerus_refutatus(piscina, "100000000000000000000", "extra s64",
+        I);
+    _numerus_refutatus(piscina, "[1, 99999999999999999999]",
+        "extra s64",
+        V);
+
+    /* fluitans extra f64: refutatur; infra (subfluxus) licet */
+    _numerus_refutatus(piscina, "1e400", "extra f64", I);
+    _numerus_refutatus(piscina, "[-1e400]", "extra f64", II);
+    res = json_legere_literis("1e-400", piscina);
+    CREDO_VERUM(res.successus);
+    CREDO_VERUM(json_est_fluitans(res.radix));
+
+    /* NaN et infinita: null (JSON ea non habet) */
+    infinitum    = HUGE_VAL;
+    non_numerus  = infinitum - infinitum;
+    _fluitans_scriptus(piscina, non_numerus, "null");
+    _fluitans_scriptus(piscina, infinitum, "null");
+    _fluitans_scriptus(piscina, -infinitum, "null");
+
+    /* fluitans integrum imitans genus servat */
+    _fluitans_scriptus(piscina, 1.0, "1.0");
+    _fluitans_scriptus(piscina, -0.0, "-0.0");
+    _fluitans_scriptus(piscina, 2.0, "2.0");
+    _fluitans_scriptus(piscina, 2.5, "2.5");
+    _fluitans_scriptus(piscina, 1e20, "1e+20");
+    /* forma brevissima quae redit */
+    _fluitans_scriptus(piscina, 0.1, "0.1");
+    _fluitans_scriptus(piscina, 3.14, "3.14");
+
+    res     = json_legere_literis("1.0", piscina);
+    output  = json_scribere(res.radix, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "1.0");
+    res = json_legere(output, piscina);
+    CREDO_VERUM(json_est_fluitans(res.radix));
+
+    /* reditus EXACTUS (bitwise ==) per scribere -> legere */
+    redeuntes[0]    = 0.1;
+    redeuntes[I]    = 1.0 / 3.0;
+    redeuntes[II]   = 2.2250738585072014e-308;
+    redeuntes[III]  = 1.7976931348623157e308;
+    redeuntes[IV]   = 4.9406564584124654e-324;
+    redeuntes[V]    = 123456.789;
+    redeuntes[VI]   = -9007199254740993.0;
+    per (i = 0; i < VII; i++)
+    {
+        output = json_scribere(json_fluitans_creare(piscina,
+            redeuntes[i]), piscina);
+        res = json_legere(output, piscina);
+        imprimere("  reditus: [%.*s]\n", (integer)output.mensura,
+            (character*)output.datum);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(json_est_fluitans(res.radix));
+        CREDO_VERUM(json_ad_fluitans(res.radix) == redeuntes[i]);
+    }
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -780,6 +910,7 @@ main (void)
     probatio_clavis_vacua(piscina);
     probatio_profunditas(piscina);
     probatio_cauda(piscina);
+    probatio_numeri(piscina);
 
     credo_imprimere_compendium();
 
