@@ -1191,34 +1191,145 @@ _tituli_numerus (
     redde n;
 }
 
-/* praefixum ULID validum? 6..25 characterum alphabeti Crockford
- * (0-9, A-Z sine I L O U) - reconstructio praefixi ex memoria post
- * compactionem 'res ignota' dabat (ergonomia 2026-07-17). Sub VI
- * characteribus periculum congruentiae fortuitae; XXVI = id plenum
- * (via directa iam tegit). */
-interior b32
-_ulid_praefixus_est (
-    chorda clavis)
+/* FRAGMENTUM ULID (01M37KBAWV): 6..26 characteres alphabeti Crockford
+ * (0-9, A-Z sine I L O U), litterae PARVAE licent (Crockford sine
+ * respectu litterarum legitur) - redditur copia MAIUSCULA, aut vacua
+ * si non fragmentum. Fragmentum INITIUM aut FINIS id congruit:
+ * initium = tempus (X characteres priores = millisecundum SOLUM - res
+ * eodem fasce natae ibi pares sunt), finis = entropia (fratres
+ * eiusdem ms ultimo charactere differunt, cusor monotonus). Ergo
+ * finis brevis = ansa naturaliter unica (ut praefixum hash in git).
+ * Sub VI characteribus periculum congruentiae fortuitae. Stampae
+ * capturarum et citationes codicis PRAEFIXA manent (_res_per_
+ * praefixum) - custodia earum praefixa sola numerat. */
+interior chorda
+_fragmentum_ulid (
+     chorda  clavis,
+    Piscina* pn)
 {
-    i32 i;
+    chorda  vacua;
+    chorda  maiuscula;
+        i8* scriptura;
+       i32  i;
 
-    si (clavis.mensura < VI || clavis.mensura >= XXVI)
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    si (clavis.mensura < VI || clavis.mensura > XXVI)
     {
-        redde FALSUM;
+        redde vacua;
+    }
+    scriptura = (i8*)piscina_allocare(pn,
+        (memoriae_index)clavis.mensura);
+    si (scriptura == NIHIL)
+    {
+        redde vacua;
     }
     per (i = ZEPHYRUM; i < clavis.mensura; i++)
     {
-        character c      = (character)clavis.datum[i];
-              b32 cifra  = c >= '0' && c <= '9';
-              b32 littera = c >= 'A' && c <= 'Z'
-                  && c != 'I' && c != 'L' && c != 'O' && c != 'U';
+        character c = (character)clavis.datum[i];
 
-        si (!cifra && !littera)
+        si (c >= 'a' && c <= 'z')
         {
-            redde FALSUM;
+            c = (character)(c - 'a' + 'A');
+        }
+        si (!(   (c >= '0' && c <= '9')
+              || (c >= 'A' && c <= 'Z' && c != 'I' && c != 'L'
+                  && c != 'O' && c != 'U')))
+        {
+            redde vacua;
+        }
+        scriptura[i] = (i8)c;
+    }
+    maiuscula.datum    = scriptura;
+    maiuscula.mensura  = clavis.mensura;
+    redde maiuscula;
+}
+
+/* res per fragmentum (initium AUT finis id): unicum resolvit, plura
+ * = ambiguum. Alphabetum ULID '%'/'_' non continet - LIKE tutum. */
+interior chorda
+_res_per_fragmentum (
+    Tabularium* t,
+        chorda  fragmentum,
+       Piscina* pn,
+           b32* ambiguum_out)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT res_id FROM res WHERE res_id LIKE ?1 || '%'"
+        " OR res_id LIKE '%' || ?1 ORDER BY res_id LIMIT 2");
+    chorda inventum;
+
+    inventum.mensura  = ZEPHYRUM;
+    inventum.datum    = NIHIL;
+    si (e == NIHIL)
+    {
+        redde inventum;
+    }
+    scrinium_ligare_textum(e, I, fragmentum);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        inventum = scrinium_columna_textus(e, 0, pn);
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            si (ambiguum_out != NIHIL)
+            {
+                *ambiguum_out = VERUM;
+            }
+            inventum.mensura  = ZEPHYRUM;
+            inventum.datum    = NIHIL;
         }
     }
-    redde VERUM;
+    scrinium_finire(e);
+    redde inventum;
+}
+
+/* finis brevissimus (>= VI) qui id unicum per fragmentum nominat -
+ * recusatio ambiguitatis eum OFFERT (ansa brevis vera, non
+ * praefixum commune); vacua si nullus (id ipsum tunc adhibe) */
+interior chorda
+_finis_brevis (
+    Tabularium* t,
+        chorda  id)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT COUNT(*) FROM res WHERE res_id LIKE ?1 || '%'"
+        " OR res_id LIKE '%' || ?1");
+    chorda finis;
+       i32 k;
+
+    finis.mensura  = ZEPHYRUM;
+    finis.datum    = NIHIL;
+    si (e == NIHIL || id.mensura != XXVI)
+    {
+        si (e != NIHIL)
+        {
+            scrinium_finire(e);
+        }
+        redde finis;
+    }
+    per (k = VI; k < XXVI; k++)
+    {
+        chorda candidatus;
+           s64 numerus = ZEPHYRUM;
+
+        candidatus.datum    = id.datum + (XXVI - k);
+        candidatus.mensura  = k;
+        scrinium_ligare_textum(e, I, candidatus);
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            numerus = scrinium_columna_numerus(e, 0);
+        }
+        scrinium_retexere(e);
+        si (numerus == (s64)I)
+        {
+            finis = candidatus;
+            frange;
+        }
+    }
+    scrinium_finire(e);
+    redde finis;
 }
 
 /* res per praefixum res_id: unicum resolvit, plura = ambiguum.
@@ -1300,13 +1411,19 @@ _res_solvere (
     {
         redde per_titulum;
     }
-    /* recessus ultimus: praefixum ULID inambiguum (ordo servatus -
+    /* recessus ultimus: fragmentum ULID inambiguum - initium aut finis
+     * (01M37KBAWV; ordo servatus -
      * id exactum, titulus exactus, TUM praefixum; semantica
      * exsistens intacta). Trunci solum - in ramo lex E2-B1 res_id
      * plenum tenet. */
-    si (_ulid_praefixus_est(clavis))
     {
-        redde _res_per_praefixum(t, clavis, pn, ambiguum_out);
+        chorda fragmentum = _fragmentum_ulid(clavis, pn);
+
+        si (fragmentum.mensura > ZEPHYRUM)
+        {
+            redde _res_per_fragmentum(t, fragmentum, pn,
+                ambiguum_out);
+        }
     }
     redde per_titulum;
 }
@@ -1323,29 +1440,41 @@ _candidatos_appendere (
                chorda  titulus,
               Piscina* pn)
 {
-    b32 per_praefixum = _tituli_numerus(t, titulus) <= (s64)I
-        && _ulid_praefixus_est(titulus);
+    chorda fragmentum = _fragmentum_ulid(titulus, pn);
+       b32 per_fragmentum = _tituli_numerus(t, titulus) <= (s64)I
+           && fragmentum.mensura > ZEPHYRUM;
     ScriniumEnuntiatum* e = scrinium_praeparare(
         gesta_scrinium(t->mundus),
-        per_praefixum
+        per_fragmentum
         ? "SELECT res_id, genus, status FROM res WHERE res_id"
-          " LIKE ? || '%' ORDER BY res_id LIMIT 5"
-        : "SELECT res_id, genus, status FROM res WHERE titulus = ?"
+          " LIKE ?1 || '%' OR res_id LIKE '%' || ?1"
+          " ORDER BY res_id LIMIT 5"
+        : "SELECT res_id, genus, status FROM res WHERE titulus = ?1"
           " ORDER BY res_id LIMIT 5");
 
-    chorda_aedificator_appendere_literis(aed, per_praefixum
-        ? "praefixum ambiguum '" : "titulus ambiguus '");
+    chorda_aedificator_appendere_literis(aed, per_fragmentum
+        ? "fragmentum ambiguum '" : "titulus ambiguus '");
     chorda_aedificator_appendere_chorda(aed, titulus);
-    chorda_aedificator_appendere_literis(aed,
-        "' - res_id adhibe:");
+    chorda_aedificator_appendere_literis(aed, per_fragmentum
+        ? "' - res_id aut finem brevem adhibe:"
+        : "' - res_id adhibe:");
     si (e != NIHIL)
     {
-        scrinium_ligare_textum(e, I, titulus);
+        scrinium_ligare_textum(e, I,
+            per_fragmentum ? fragmentum : titulus);
         dum (scrinium_gradi(e) == SCRINIUM_ORDO)
         {
+            chorda id     = scrinium_columna_textus(e, 0, pn);
+            chorda finis  = _finis_brevis(t, id);
+
             chorda_aedificator_appendere_literis(aed, "\n  ");
-            chorda_aedificator_appendere_chorda(aed,
-                scrinium_columna_textus(e, 0, pn));
+            chorda_aedificator_appendere_chorda(aed, id);
+            si (finis.mensura > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(aed, " [");
+                chorda_aedificator_appendere_chorda(aed, finis);
+                chorda_aedificator_appendere_literis(aed, "]");
+            }
             chorda_aedificator_appendere_literis(aed, " (");
             chorda_aedificator_appendere_chorda(aed,
                 scrinium_columna_textus(e, I, pn));
@@ -1761,7 +1890,7 @@ _statum_praeiudicare (
             chorda_aedificator_appendere_literis(index, "res '");
             chorda_aedificator_appendere_chorda(index, clavis);
             chorda_aedificator_appendere_literis(index,
-                "' ignota (id, praefixum inambiguum, aut titulus"
+                "' ignota (id, fragmentum inambiguum, aut titulus"
                 " exactus)");
         }
         alioquin
@@ -2069,7 +2198,7 @@ _nexum_praeiudicare (
             chorda_aedificator_appendere_literis(index, "res '");
             chorda_aedificator_appendere_chorda(index, clavis);
             chorda_aedificator_appendere_literis(index,
-                "' ignota (id, praefixum inambiguum, aut titulus"
+                "' ignota (id, fragmentum inambiguum, aut titulus"
                 " exactus)");
         }
         si (res_id.mensura == ZEPHYRUM)
@@ -2336,7 +2465,7 @@ _alterum_nati_solvere (
     alioquin
     {
         chorda_aedificator_appendere_literis(causae,
-            "' ignotum (id, praefixum inambiguum, aut titulus"
+            "' ignotum (id, fragmentum inambiguum, aut titulus"
             " exactus)");
     }
     id.mensura  = ZEPHYRUM;
@@ -3451,7 +3580,7 @@ _tab_parata (
         si (scopus_id.mensura == ZEPHYRUM)
         {
             _textum_respondere(t, pn, effusio, id,
-                _ch("intra: res ignota (id, praefixum inambiguum,"
+                _ch("intra: res ignota (id, fragmentum inambiguum,"
                     " aut titulus exactus) - omitte 'intra' pro"
                     " tabulario toto"), VERUM);
             redde;
@@ -6442,7 +6571,8 @@ _tab_gerere (
         si (res_id.mensura == ZEPHYRUM)
         {
             _textum_respondere(t, pn, effusio, id,
-                _ch("res ignota (id, praefixum inambiguum, aut titulus exactus)"),
+                _ch("res ignota (id, fragmentum inambiguum, aut"
+                    " titulus exactus)"),
                 VERUM);
             redde;
         }
@@ -6982,7 +7112,7 @@ _tab_quaerere (
         si (scopus_id.mensura == ZEPHYRUM)
         {
             _textum_respondere(t, pn, effusio, id,
-                _ch("intra: res ignota (id, praefixum inambiguum,"
+                _ch("intra: res ignota (id, fragmentum inambiguum,"
                     " aut titulus exactus) - omitte 'intra' pro"
                     " tabulario toto"), VERUM);
             redde;
@@ -8849,7 +8979,7 @@ _tab_mappa (
         si (radix_id.mensura == ZEPHYRUM)
         {
             _textum_respondere(t, pn, effusio, id,
-                _ch("regio: res ignota (id, praefixum inambiguum, aut"
+                _ch("regio: res ignota (id, fragmentum inambiguum, aut"
                     " titulus exactus) - omitte 'regio' pro mappa"
                     " tota"), VERUM);
             redde;
@@ -10339,9 +10469,10 @@ _tab_legere (
     /* praefixum ULID in 'nexus_ad' quoque resolvere: destinatio
      * eodem more nominatur quo 'res' (comitas eadem, aliter
      * praefixum TACITE nihil congrueret) */
-    si (_ulid_praefixus_est(nexus_ad))
+    si (_fragmentum_ulid(nexus_ad, pn).mensura > ZEPHYRUM)
     {
-        chorda plenum = _res_per_praefixum(t, nexus_ad, pn, NIHIL);
+        chorda plenum = _res_per_fragmentum(t,
+            _fragmentum_ulid(nexus_ad, pn), pn, NIHIL);
 
         si (plenum.mensura > ZEPHYRUM)
         {
@@ -10352,9 +10483,10 @@ _tab_legere (
      * praefixum antea [] TACITE reddebat): stampae capturarum
      * (XII+ signa) et praefixa manu data. Congruentia exacta
      * manet; ambiguum aut absens = tabulatum vacuum ut antea. */
-    si (_ulid_praefixus_est(res_f))
+    si (_fragmentum_ulid(res_f, pn).mensura > ZEPHYRUM)
     {
-        chorda plenum = _res_per_praefixum(t, res_f, pn, NIHIL);
+        chorda plenum = _res_per_fragmentum(t,
+            _fragmentum_ulid(res_f, pn), pn, NIHIL);
 
         si (plenum.mensura > ZEPHYRUM)
         {
@@ -11315,7 +11447,8 @@ _instrumenta_componere (
           " ambiguus totum recusat (nihil scriptum)", FALSUM }
     };
     interior constans TabArgumentum ARG_GERERE[] = {
-        { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
+        { "res",
+            "res_id aut fragmentum ULID (initium aut FINIS, >= 6)"
           " aut titulus exactus (in ramo: res_id SOLUM)", VERUM },
         { "actus", "nota|ictus|status|nexus|denexus|mutatio|"
           "remotio. ictus = 'haec res me ITERUM momordit' (textus? ="
@@ -11370,7 +11503,8 @@ _instrumenta_componere (
           " hyphen licet: messis-2026-07)", FALSUM }
     };
     interior constans TabArgumentum ARG_RES[] = {
-        { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
+        { "res",
+            "res_id aut fragmentum ULID (initium aut FINIS, >= 6)"
           " aut titulus exactus (in ramo: res_id SOLUM)", VERUM },
         { "breviter", "\"verum\" = compendium (corpus + notae"
           " ultimae III + nexus cum statu socii + actiones; sine"

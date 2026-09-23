@@ -1478,7 +1478,44 @@ principale (vacuum)
                 "\"res\",\"arguments\":{\"res\":\"%s\"}}}",
                 praefixum);
             r = _mitte(t, piscina, vocatio);
-            CREDO_VERUM (strstr(r, "praefixum ambiguum") != NIHIL);
+            CREDO_VERUM (strstr(r, "fragmentum ambiguum") != NIHIL);
+            /* recusatio finem BREVEM unicum offert (01M37KBAWV) */
+            sprintf(vocatio, "[%s]", id_a + XX);
+            CREDO_VERUM (strstr(r, vocatio) != NIHIL);
+        }
+
+        /* FINIS (01M37KBAWV): fragmentum finale VI characterum
+         * resolvit - entropia ULID in fine stat */
+        sprintf(vocatio, "{\"jsonrpc\":\"2.0\",\"id\":951,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
+            "\"arguments\":{\"res\":\"%s\"}}}", id_a + XX);
+        r = _mitte(t, piscina, vocatio);
+        CREDO_VERUM (strstr(r, id_a) != NIHIL);
+        CREDO_VERUM (strstr(r, "res ignota") == NIHIL);
+        /* litterae PARVAE (Crockford sine respectu litterarum):
+         * initium et id plenum */
+        {
+            character minuscula[27];
+
+            per (k = ZEPHYRUM; k < XXVI; k++)
+            {
+                minuscula[k] = (id_a[k] >= 'A' && id_a[k] <= 'Z')
+                    ? (character)(id_a[k] - 'A' + 'a') : id_a[k];
+            }
+            minuscula[XXVI] = '\0';
+            sprintf(vocatio, "{\"jsonrpc\":\"2.0\",\"id\":952,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"res\",\"arguments\":{\"res\":\"%s\"}}}",
+                minuscula);
+            r = _mitte(t, piscina, vocatio);
+            CREDO_VERUM (strstr(r, id_a) != NIHIL);
+            minuscula[XII] = '\0';
+            sprintf(vocatio, "{\"jsonrpc\":\"2.0\",\"id\":953,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"res\",\"arguments\":{\"res\":\"%s\"}}}",
+                minuscula);
+            r = _mitte(t, piscina, vocatio);
+            CREDO_VERUM (strstr(r, id_a) != NIHIL);
         }
 
         /* praefixum validum nulli congruens = res ignota */
@@ -4986,6 +5023,25 @@ principale (vacuum)
             "\"Rg glyphae\"}}}");
         CREDO_VERUM (strstr(r, "creata") != NIHIL);
         CREDO_VERUM (strstr(r, "--intra--> Rg glyphae") != NIHIL);
+        /* res nata cum vinculo per FINEM resolvitur (01M37KBAWV).
+         * Ambiguitas initii X characterum inter rem et vinculum eius
+         * a TEMPORE pendet (vinculum ad solutionem cuditur, res ad
+         * scripturam - millisecundum idem saepe, non semper), ergo hic
+         * non asseritur; ambiguitas initii certa in sectione
+         * 'praefixum ULID' probatur */
+        {
+            character nata[GESTA_RES_ID_MENSURA];
+            character vocatio_finis[CCLVI];
+
+            _res_id_ex_responso(r, nata);
+            CREDO_VERUM (strlen(nata) == XXVI);
+            sprintf(vocatio_finis, "{\"jsonrpc\":\"2.0\","
+                "\"id\":58252,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"res\",\"arguments\":{\"res\":\"%s\"}}}",
+                nata + XX);
+            r = _mitte(t, piscina, vocatio_finis);
+            CREDO_VERUM (strstr(r, "Mt nota collocata") != NIHIL);
+        }
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5826,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"res\",\"arguments\":{\"res\":\"Mt nota collocata\","

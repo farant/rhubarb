@@ -215,3 +215,30 @@ legere keys; pythonica goes through frigida (direct C, no tools/call);
 the linux smoke sends census {}. All five gesta suites green, so the
 fori/tabulariumd paths send nothing undeclared either. Tests written
 after the code, so planted (check short-circuited -> 8 red).
+
+## 2026-09-23 — ids resolve by their END too, case-insensitively (01M37KBAWV)
+
+A ULID's first 10 chars are the millisecond timestamp only; the house
+minter is monotonic, so ids minted in the same millisecond share 25
+chars and differ at the LAST one. Once addere {intra,ad} began creating
+item + link in one batch, a 10-char "short id" of such an item was
+ambiguous with its own link (seen live on 01M37JYNMT...P8J/P8K). Fran's
+idea: match the fragment against either END. The end is where a ULID's
+entropy lives — the git-short-hash equivalent. `_fragmentum_ulid`
+(6..26 Crockford chars, lowercase accepted and upper-cased per the
+Crockford spec) + `_res_per_fragmentum` (`LIKE f||'%' OR LIKE '%'||f`,
+a scan of ~3k rows; a reversed indexed column is the move if it ever
+needs to be fast). Ambiguity refusals now print each candidate's
+shortest unique suffix (`_finis_brevis`, >= 6), so the refusal hands
+you the short handle. User-facing sites only: `_res_solvere`, the
+candidate lister, legere's res/nexus_ad. Capture stamps and code
+citations stay PREFIX-only on purpose — their uniqueness guard
+(`_cap_praefixi_numerus`) counts prefixes.
+
+Test trap hit and avoided: "item and its link share the 10-char
+prefix" is TIMING-dependent (the link id is minted at resolution, the
+item's at write — usually the same ms, not always); the first run
+failed on exactly that. Asserted the timing-free property instead (the
+item's 6-char suffix resolves to it); the deterministic ambiguity case
+lives in the prefix section. Plants: prefix-only + case-sensitive -> 5
+red; empty shortest-suffix -> the refusal-hint assertion red.
