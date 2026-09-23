@@ -61,7 +61,7 @@ builder owns the mode stack, iteratively). Findings at find-time:
   | canon | drift guard both ways (50/176/50 rules), seal vs live `materia_arbor_sigillum`, 509 documents judged, zero violations | a genus rule deleted; a false seal |
   | reservatio | named deviations by measured effect beside `bash -n`: extglob (2 mala), alias never expanded, `eval` opaque, `set -o posix`/`shopt` plain, `$"x"` and `$'\x41'`; reader refusals vs canon refusals | the extglob pin 2 → 3 |
   | totalitas | 2,934 fuzz cases (random, mutated and truncated corpus, eleven nesting forms, CRLF, NUL) emit byte-identical under `CREDO_NON_RUIT`, a transposition is a failure; depth pins at -O2 | the recursive static walk restored |
-  | computus | golden `probationes/fixa/computus/basis.tsv` (two fixtures, three house runners; deterministic columns) | one node count edited |
+  | computus | golden `probationes/fixa/computus/basis.tsv` (two fixtures + three DATED COPIES of house runners in `probationes/fixa/crusta/computus/` since 2026-09-23 — the live runners used to move it; deterministic columns) | one node count edited |
 
   A corpus change moves several of these at once: the four cases added in
   B3 step 6 moved exempla (32 → 36), stml (49 → 53 fixture cases), canon

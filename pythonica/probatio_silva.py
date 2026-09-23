@@ -1215,7 +1215,9 @@ credo(o.ignoscentiae.get('inter', 0) > 0 and silva.oraculum().exempla == [], 'or
 
 print('--- Prosa: editio markdown per ancoras structurales (C1) ---')
 import shutil
-via_p = os.path.join(T, 'prosa.md'); shutil.copy(os.path.join(RADIX, 'project-specs/md-arbor-plan.md'), via_p)
+# COPIA DATATA, non planum vivum (2026-09-23): lineae capitulorum pinnatae
+# sunt - planum vivum omni editione portam rubebat (doctrina 01M365VXAF)
+via_p = os.path.join(T, 'prosa.md'); shutil.copy(os.path.join(RADIX, 'probationes/fixa/prosa/md-arbor-plan_2026-09-23.md'), via_p)
 p = silva.Prosa(via_p)
 credo(len(p.selecta('capitulum')) == 17, 'Prosa.selecta: capitula XVII')
 x = p.capitulum('C1 pythonica `Prosa`'); credo(x.linea == 143 and p.corpus(x).startswith('### C1 pythonica `Prosa`'), 'Prosa.capitulum: linea + corpus')

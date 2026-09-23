@@ -1,3 +1,9 @@
+> **ARCHIVUM (2026-09-23).** Nulla probatio hoc aurum legebat: munus eius
+> (extractor mensuratus ANTE differentiam latam) a
+> `crusta/instrumenta/differentia_exemplariorum.sh` (CCXXXIV plagulae,
+> corpus congelatum) impletum est. Et instantanea super TRIBUS plagulis
+> VIVIS erat (doctrina 01M365VXAF). Servatum, non deletum.
+
 # aurum.tsv — PHOTOGRAPHIA extractoris Pythonis, non specificatio
 
 Generatum 2026-09-18 ex `silva.exemplaria` + `congruentiae_minus`

@@ -22,9 +22,12 @@
 hic_manens constans character* CORPUS[NUMERUS_CORPORIS] = {
     "probationes/fixa/crusta/pathologiae.sh",
     "probationes/fixa/crusta/adversarius.sh",
-    "silva/compile_probationes.sh",
-    "tools/vexilla.sh",
-    "html/compile_probationes.sh"
+    /* COPIAE DATATAE, non plagulae vivae (2026-09-23): aurum
+     * instantanea est, input CONGELATUM postulat - plagulae vivae
+     * omni editione cursorum aurum movebant (doctrina 01M365VXAF) */
+    "probationes/fixa/crusta/computus/silva_cursor_2026-09-23.sh",
+    "probationes/fixa/crusta/computus/vexilla_2026-09-23.sh",
+    "probationes/fixa/crusta/computus/html_cursor_2026-09-23.sh"
 };
 
 hic_manens constans character* TITULI[COLUMNAE] = {
