@@ -602,6 +602,113 @@ s32 principale (vacuum)
     }
 
 
+        /* ==================================================
+     * Probare effugium JSON OMNIUM CCLVI octetorum (2026-09-22) -
+     * regula JSON per se (non ctype): < 0x20 et DEL -> \u00xx (\n
+     * \r \t formae breves), '"' et '\\' praefixo, ceteri (etiam
+     * >= 0x80, octeti UTF-8) crudi. Olim iscntrl((signed char)c):
+     * UB pro octetis >= 0x80 et a locale pendens.
+     * ================================================== */
+
+    {
+         constans character* hex = "0123456789abcdef";
+                        i32  b;
+                        i32  discordes = ZEPHYRUM;
+
+        imprimere("\n--- Probans effugium JSON octetorum CCLVI ---\n");
+
+        per (b = ZEPHYRUM; b < CCLVI; b++)
+        {
+            ChordaAedificator* aedificator;
+                           i8  octetus;
+                       chorda  input, result;
+                    character speratus[VIII];
+                          i32 n = ZEPHYRUM;
+
+            octetus        = (i8)b;
+            input.datum    = &octetus;
+            input.mensura  = I;
+
+            si (b == '"' || b == '\\')
+            {
+                speratus[n++] = '\\';
+                speratus[n++] = (character)b;
+            }
+            alioquin si (b == '\n' || b == '\r' || b == '\t')
+            {
+                speratus[n++] = '\\';
+                speratus[n++] = (b == '\n') ? 'n' : (b == '\r') ? 'r'
+                                                              : 't';
+            }
+            alioquin si (b < 0x20 || b == 0x7F)
+            {
+                speratus[n++] = '\\';
+                speratus[n++] = 'u';
+                speratus[n++] = '0';
+                speratus[n++] = '0';
+                speratus[n++] = hex[(b >> IV) & 0xF];
+                speratus[n++] = hex[b & 0xF];
+            }
+            alioquin
+            {
+                speratus[n++] = (character)b;
+            }
+
+            aedificator = chorda_aedificator_creare(piscina, XVI);
+            CREDO_VERUM(chorda_aedificator_appendere_evasus_json(
+                aedificator, input));
+            result = chorda_aedificator_finire(aedificator);
+            si (   result.mensura != n
+                || memcmp(result.datum, speratus,
+                          (memoriae_index)n) != ZEPHYRUM)
+            {
+                imprimere("  DISCORS octetus 0x%02x: [%.*s]\n",
+                    (insignatus integer)b, (integer)result.mensura,
+                    (character*)result.datum);
+                discordes++;
+            }
+        }
+        /* numerus discordium UNUS assertus - singuli supra nominati */
+        CREDO_AEQUALIS_I32(discordes, ZEPHYRUM);
+    }
+
+
+    /* ==================================================
+     * Chorda VACUA: successus, nihil additum (olim FALSUM - effugium
+     * nullorum octetorum 'defectus' habebatur)
+     * ================================================== */
+
+    {
+        ChordaAedificator* aedificator;
+                   chorda  vacua_sine_datis, vacua_cum_datis, result;
+
+        imprimere("\n--- Probans effugium JSON chordae vacuae ---\n");
+
+        vacua_sine_datis.datum    = NIHIL;
+        vacua_sine_datis.mensura  = ZEPHYRUM;
+        vacua_cum_datis           = chorda_ex_literis("x", piscina);
+        vacua_cum_datis.mensura   = ZEPHYRUM;
+
+        aedificator = chorda_aedificator_creare(piscina, XVI);
+        CREDO_VERUM(chorda_aedificator_appendere_character(aedificator,
+            '['));
+        CREDO_VERUM(chorda_aedificator_appendere_evasus_json(aedificator,
+            vacua_sine_datis));
+        CREDO_VERUM(chorda_aedificator_appendere_evasus_json(aedificator,
+            vacua_cum_datis));
+        CREDO_VERUM(chorda_aedificator_appendere_literis_evasus_json(
+            aedificator, ""));
+        CREDO_VERUM(chorda_aedificator_appendere_character(aedificator,
+            ']'));
+        result = chorda_aedificator_finire(aedificator);
+        CREDO_CHORDA_AEQUALIS(result, chorda_ex_literis("[]", piscina));
+
+        /* aedificator NIHIL manet FALSUM */
+        CREDO_FALSUM(chorda_aedificator_appendere_evasus_json(NIHIL,
+            vacua_cum_datis));
+    }
+
+
     /* ==================================================
 	 * Probare reset verum
 	 * ================================================== */

@@ -8974,7 +8974,8 @@ _crescere (
         capacitas_nova = _proxima_capacitas(capacitas_nova);
     }
 
-    buffer_novum = (i8*)silva_piscina_allocare(aedificator->piscina, capacitas_nova);
+    buffer_novum = (i8*)silva_piscina_allocare(aedificator->piscina,
+        capacitas_nova);
     si (!buffer_novum) redde FALSUM;
 
     si (aedificator->buffer && aedificator->offset > ZEPHYRUM)
@@ -8996,7 +8997,11 @@ _appendere_interna (
 {
     memoriae_index necessaria;
 
-    si (!aedificator || !datum || mensura == ZEPHYRUM) redde mensura == ZEPHYRUM; /* Appendix vacua bona est */
+    /* Appendix vacua bona est */
+    si (!aedificator || !datum || mensura == ZEPHYRUM)
+    {
+        redde mensura == ZEPHYRUM;
+    }
 
     necessaria = aedificator->offset + mensura;
 
@@ -9023,7 +9028,8 @@ _format_integer_s32 (
                   s32 mensura_signed;
        memoriae_index mensura;
 
-    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%d", n);
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr),
+        "%d", n);
     si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
 
     mensura = (memoriae_index)mensura_signed;
@@ -9043,7 +9049,8 @@ _format_integer_i32 (
                s32 mensura_signed;
     memoriae_index mensura;
 
-    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%u", n);
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr),
+        "%u", n);
     si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
 
     mensura = (memoriae_index)mensura_signed;

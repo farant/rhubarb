@@ -2,7 +2,6 @@
 #include "chorda_aedificator.h"
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
 
 /* ==================================================
@@ -44,7 +43,8 @@ _crescere (
         capacitas_nova = _proxima_capacitas(capacitas_nova);
     }
 
-    buffer_novum = (i8*)piscina_allocare(aedificator->piscina, capacitas_nova);
+    buffer_novum = (i8*)piscina_allocare(aedificator->piscina,
+        capacitas_nova);
     si (!buffer_novum) redde FALSUM;
 
     si (aedificator->buffer && aedificator->offset > ZEPHYRUM)
@@ -66,7 +66,11 @@ _appendere_interna (
 {
     memoriae_index necessaria;
 
-    si (!aedificator || !datum || mensura == ZEPHYRUM) redde mensura == ZEPHYRUM; /* Appendix vacua bona est */
+    /* Appendix vacua bona est */
+    si (!aedificator || !datum || mensura == ZEPHYRUM)
+    {
+        redde mensura == ZEPHYRUM;
+    }
 
     necessaria = aedificator->offset + mensura;
 
@@ -93,7 +97,8 @@ _format_integer_s32 (
                   s32 mensura_signed;
        memoriae_index mensura;
 
-    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%d", n);
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr),
+        "%d", n);
     si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
 
     mensura = (memoriae_index)mensura_signed;
@@ -113,7 +118,8 @@ _format_integer_i32 (
                s32 mensura_signed;
     memoriae_index mensura;
 
-    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%u", n);
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr),
+        "%u", n);
     si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
 
     mensura = (memoriae_index)mensura_signed;
@@ -135,8 +141,10 @@ _format_duplex (
                s32 mensura_signed;
     memoriae_index mensura;
 
-    snprintf(formatalis, (memoriae_index)magnitudo(formatalis), "%%.%df", decimales);
-    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), formatalis, n);
+    snprintf(formatalis, (memoriae_index)magnitudo(formatalis),
+        "%%.%df", decimales);
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr),
+        formatalis, n);
 
     si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
 
@@ -157,12 +165,11 @@ _evadere_json (
                 i8* output,
     memoriae_index  capacitas_output)
 {
-    memoriae_index index_input;
-    memoriae_index index_output;
-         character c;
-         character hex_buffer[VII];
-               s32 hex_len_signed;
-    memoriae_index hex_len;
+          memoriae_index  index_input;
+          memoriae_index  index_output;
+               character  c;
+    insignatus character  u;
+      constans character* hex = "0123456789abcdef";
 
     index_input   = ZEPHYRUM;
     index_output  = ZEPHYRUM;
@@ -201,17 +208,25 @@ _evadere_json (
             output[index_output++] = '\\';
             output[index_output++] = 't';
         }
-        alioquin si (iscntrl((signatus character)c))
+        alioquin si (   (insignatus character)c < 0x20
+                     || (insignatus character)c == 0x7F)
         {
-            /* Alii characteres imperantes ut \uXXXX */
-            hex_len_signed = snprintf(hex_buffer, VII, "\\u%04x", (signatus character)c);
-            si (hex_len_signed < ZEPHYRUM) redde ZEPHYRUM;
-
-            hex_len = (memoriae_index)hex_len_signed;
-            si (index_output + hex_len > capacitas_output) redde ZEPHYRUM;
-
-            memcpy(output + index_output, hex_buffer, hex_len);
-            index_output += hex_len;
+            /* Alii characteres imperantes ut \u00xx. REGULA JSON per
+             * se, non ctype (2026-09-22): iscntrl((signed char)c)
+             * erat UB pro octetis >= 0x80 (valor negativus non EOF)
+             * et a locale pendebat. DEL (0x7F) effugitur ut olim -
+             * scriptura immutata. */
+            u = (insignatus character)c;
+            si (index_output + VI > capacitas_output)
+            {
+                redde ZEPHYRUM;
+            }
+            output[index_output++] = '\\';
+            output[index_output++] = 'u';
+            output[index_output++] = '0';
+            output[index_output++] = '0';
+            output[index_output++] = (i8)hex[(u >> IV) & 0xF];
+            output[index_output++] = (i8)hex[u & 0xF];
         }
         alioquin
         {
@@ -361,7 +376,10 @@ chorda_aedificator_appendere_f64 (
                 i8 buffer[CXXXII];
     memoriae_index mensura;
 
-    si (!aedificator || decimales < ZEPHYRUM || decimales > XXX) redde FALSUM;
+    si (!aedificator || decimales < ZEPHYRUM || decimales > XXX)
+    {
+        redde FALSUM;
+    }
 
     mensura = _format_duplex(n, decimales, buffer, magnitudo(buffer));
     si (mensura == ZEPHYRUM) redde FALSUM;
@@ -385,7 +403,10 @@ chorda_aedificator_appendere_repetita (
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        si (!chorda_aedificator_appendere_character(aedificator, c)) redde FALSUM;
+        si (!chorda_aedificator_appendere_character(aedificator, c))
+        {
+            redde FALSUM;
+        }
     }
 
     redde VERUM;
@@ -425,7 +446,21 @@ chorda_aedificator_appendere_evasus_json (
     memoriae_index  mensura_evasus;
     memoriae_index  necessaria;
 
-    si (!aedificator || !s.datum) redde FALSUM;
+    si (!aedificator)
+    {
+        redde FALSUM;
+    }
+    /* chorda vacua (datum quodvis, etiam NIHIL - forma domus): nihil
+     * addendum, SUCCESSUS. Olim FALSUM: _evadere_json nullos octetos
+     * scriptos ut defectum reddebat (2026-09-22). */
+    si (s.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (!s.datum)
+    {
+        redde FALSUM;
+    }
 
     /* Pessimus casus: omnis character fit \uXXXX (6 bytes) */
     necessaria = s.mensura * VI;
@@ -436,17 +471,20 @@ chorda_aedificator_appendere_evasus_json (
     }
     alioquin
     {
-        output_buffer = (i8*)piscina_allocare(aedificator->piscina, necessaria);
+        output_buffer = (i8*)piscina_allocare(aedificator->piscina,
+            necessaria);
         si (!output_buffer) redde FALSUM;
     }
 
-    mensura_evasus = _evadere_json(s.datum, s.mensura, output_buffer, necessaria);
+    mensura_evasus = _evadere_json(s.datum, s.mensura, output_buffer,
+        necessaria);
     si (mensura_evasus == ZEPHYRUM)
     {
         redde FALSUM;
     }
 
-    redde _appendere_interna(aedificator, output_buffer, mensura_evasus);
+    redde _appendere_interna(aedificator, output_buffer,
+        mensura_evasus);
 }
 
 b32
@@ -462,7 +500,14 @@ chorda_aedificator_appendere_literis_evasus_json (
     si (!cstr || !aedificator) redde FALSUM;
 
     mensura = strlen(cstr);
-    buffer_temporalis = (i8*)piscina_allocare(aedificator->piscina, mensura);
+    /* "" = successus, nihil additum (piscina_allocare(0) NIHIL
+     * reddit - olim FALSUM, 2026-09-22) */
+    si (mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    buffer_temporalis = (i8*)piscina_allocare(aedificator->piscina,
+        mensura);
     si (!buffer_temporalis) redde FALSUM;
 
     memcpy(buffer_temporalis, cstr, mensura);
@@ -504,7 +549,10 @@ chorda_aedificator_appendere_indentationem (
 
     per (i = ZEPHYRUM; i < spatia; i++)
     {
-        si (!chorda_aedificator_appendere_character(aedificator, ' ')) redde FALSUM;
+        si (!chorda_aedificator_appendere_character(aedificator, ' '))
+        {
+            redde FALSUM;
+        }
     }
 
     redde VERUM;
