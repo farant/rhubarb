@@ -4266,6 +4266,21 @@ principale (vacuum)
         CREDO_NON_NIHIL (locus);
         CREDO_VERUM (locus != NIHIL
             && (locus - strstr(r, "TABULARIUM:")) < 2048);
+        /* stratum mappae quoque intra caput (mensuratum 2026-09-22:
+         * REGIO 910, mappa 1022, PRINCIPIUM 1079 ex 4790) - sessio
+         * recens regiones ex doctrina sola discat */
+        locus = strstr(r, "REGIO = locus");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && (locus - strstr(r, "TABULARIUM:")) < 2048);
+        locus = strstr(r, "mappa {} = arbor");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && (locus - strstr(r, "TABULARIUM:")) < 2048);
+        locus = strstr(r, "PRINCIPIUM = decretum");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && (locus - strstr(r, "TABULARIUM:")) < 2048);
     }
 
 
