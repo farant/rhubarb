@@ -45,6 +45,12 @@ echo "$eff" | grep -q 'MAPPA (nomina)'; credo $? "-mappa: caput formae nominum"
 echo "$eff" | grep -q 'Tabularii project management'; credo $? "-mappa: radix viva nominata"
 echo "$eff" | grep -q 'parca '; [ $? -ne 0 ]; credo $? "-mappa: numeri absunt (nomina sola)"
 
+# V. -MAPPA-PLENA: visiones et principia vivae ut lineae captae STML
+eff=$(./gesta/frigida.sh -mappa-plena 2>&1); rc=$?
+[ "$rc" -eq 0 ]; credo $? "-mappa-plena: exitus 0 (erat $rc)"
+echo "$eff" | grep -q '^<principium (> PRINCIPIUM'; credo $? "-mappa-plena: principium domus gradu 0"
+echo "$eff" | grep -q '^  <visio (> VISIO tabularii'; credo $? "-mappa-plena: visio sub regione sua"
+
 post=$(wc -l < "$AN" | tr -d ' ')
 [ "$ante" = "$post" ]; credo $? "annales vivi INTACTI ($ante -> $post lineae)"
 

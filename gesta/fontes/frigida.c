@@ -39,9 +39,13 @@ interior constans FrigidaForma FORMAE[] = {
      * 'nomina' instrumenti mappa) - quod Fran manu currit */
     { "-mappa",   "mappa",  NIHIL,
       { NIHIL, NIHIL, NIHIL, NIHIL },
+      { FALSUM, FALSUM, FALSUM, FALSUM } },
+    /* idem cum visionibus et principiis ut lineae captae STML */
+    { "-mappa-plena", "mappa", NIHIL,
+      { NIHIL, NIHIL, NIHIL, NIHIL },
       { FALSUM, FALSUM, FALSUM, FALSUM } }
 };
-#define FORMAE_NUMERUS V
+#define FORMAE_NUMERUS VI
 
 interior constans FrigidaForma*
 _formam_invenire (
@@ -252,9 +256,12 @@ _gerere_mittere (
     }
     alioquin si (strcmp(forma->instrumentum, "mappa") == ZEPHYRUM)
     {
-        /* lectio mappae: nomina sola (ut 'tree') */
+        /* lectio mappae: nomina sola (ut 'tree'), aut plena cum
+         * visionibus et principiis */
         json_objectum_ponere(argumenta, "forma",
-            json_chorda_creare_literis(pn, "nomina"));
+            json_chorda_creare_literis(pn,
+                strcmp(forma->vexillum, "-mappa-plena") == ZEPHYRUM
+                    ? "plena" : "nomina"));
     }
     alioquin
     {
@@ -452,7 +459,7 @@ frigida_currere (
         _causam_incipere(index, &causae);
         chorda_aedificator_appendere_literis(index,
             "verbum deest (-status | -mutatio | -nexus | -res |"
-            " -mappa)");
+            " -mappa | -mappa-plena)");
     }
     alioquin si (forma == NIHIL)
     {
@@ -461,7 +468,8 @@ frigida_currere (
             "vexillum ignotum '");
         chorda_aedificator_appendere_literis(index, vexillum);
         chorda_aedificator_appendere_literis(index,
-            "' (nota: -status | -mutatio | -nexus | -res | -mappa)");
+            "' (nota: -status | -mutatio | -nexus | -res | -mappa |"
+            " -mappa-plena)");
     }
 
     /* operanda */
@@ -610,7 +618,9 @@ frigida_currere (
                 "\n  " FRIGIDA_IMPERIUM " -res \"<res>\""
                 "   (lectio - nihil scribit)"
                 "\n  " FRIGIDA_IMPERIUM " -mappa"
-                "   (lectio - arbor regionum, nomina sola)");
+                "   (lectio - arbor regionum, nomina sola)"
+                "\n  " FRIGIDA_IMPERIUM " -mappa-plena"
+                "   (lectio - arbor cum visionibus et principiis)");
         }
         {
             chorda nuntius = chorda_aedificator_finire(aed);

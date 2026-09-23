@@ -5137,6 +5137,68 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "\"refutatio\"") != NIHIL);
     }
 
+
+    /* ==================================================
+     * XLIV. FORMA PLENA (opus mappa V.b): arbor nominum cum
+     * visionibus et principiis sub regione sua ut lineae captae STML
+     * ('<principium (> t', '<visio (> t'), filiae directae solae,
+     * gradu uno altius, ante sub-regiones; domus totius ante radices.
+     * Fixtura: Rg textus ⊃ visio Rv; Rg fontes ⊃ principium Pr fontes;
+     * Pr programmata sine regione.
+     * ================================================== */
+
+    {
+        constans character* locus;
+        constans character* filia;
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":620,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{\"forma\":\"plena\"}}}");
+        CREDO_VERUM (strstr(r, "MAPPA (plena)") != NIHIL);
+        /* domus totius ante radices, gradu 0 */
+        locus = strstr(r,
+            "\\n<principium (> Pr programmata non senescunt");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && locus < strstr(r, "\\nRg textus"));
+        /* visio sub Rg textus, gradu uno altius, ANTE filiam Rg fontes */
+        locus = strstr(r, "\\nRg textus");
+        CREDO_NON_NIHIL (locus);
+        CREDO_VERUM (locus != NIHIL
+            && strstr(locus,
+            "\\n  <visio (> Rv volo librum Lapidis in PDF")
+                != NIHIL);
+        filia = locus != NIHIL ? strstr(locus,
+            "\\n  Rg fontes") : NIHIL;
+        CREDO_NON_NIHIL (filia);
+        CREDO_VERUM (locus != NIHIL && filia != NIHIL
+            && strstr(locus, "\\n  <visio (> Rv volo") < filia);
+        /* principium sub Rg fontes, gradu duobus, NON sub Rg textus */
+        CREDO_VERUM (filia != NIHIL
+            && strstr(filia,
+            "\\n    <principium (> Pr fontes variabiles")
+                != NIHIL);
+        CREDO_VERUM (strstr(r, "\\n  <principium (> Pr fontes")
+            == NIHIL);
+        /* sine numeris, sine salute, sine id */
+        CREDO_VERUM (strstr(r, "parca ") == NIHIL);
+        CREDO_VERUM (strstr(r, "SALUS") == NIHIL);
+        CREDO_VERUM (strstr(r, "01M") == NIHIL);
+        /* forma nomina lineas captas NON fert */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":621,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{\"forma\":\"nomina\"}}}");
+        CREDO_VERUM (strstr(r, "<visio (>") == NIHIL);
+        CREDO_VERUM (strstr(r, "<principium (>") == NIHIL);
+        /* forma plena intra regionem unam: domus totius ABEST */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":622,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"mappa\",\"arguments\":{\"forma\":\"plena\",\"regio\":"
+            "\"Rg textus\"}}}");
+        CREDO_VERUM (strstr(r, "<visio (> Rv volo") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pr programmata") == NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

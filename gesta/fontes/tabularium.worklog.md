@@ -1230,3 +1230,18 @@ a vision to its priors (`nititur`) is deferred like the purpose verb.
 
 First priors filed AFTER the commit, lifted verbatim from CLAUDE.md
 with Fran as actor: they are his words, not mine.
+
+## 2026-09-22 — `mappa {forma: "plena"}`: the tree with its visions and priors
+
+Fran's sketch: `region / <principle (> something / <vision (> foo /
+some sub-region`. The angle form is an STML capture line, so the
+verbose tree is a document, not just a listing — the same shape the
+"articuli: STML capture blocks -> generated res" wish already wants.
+Tags are the Latin natura values (`<principium (>`, `<visio (>`) so a
+future reader maps a line to its mark with no table.
+
+Under each region, direct children only (a sub-region's items appear
+under the sub-region), priors before visions, one level deeper than
+the region, before the sub-regions. House-wide priors and visions —
+no region — come first at depth zero, only in the unscoped map. The
+cold path gets `-mappa-plena`; both forms stay names-only otherwise.

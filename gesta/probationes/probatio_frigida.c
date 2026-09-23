@@ -267,6 +267,16 @@ principale (vacuum)
         "\"gerere\",\"arguments\":{\"res\":\"Frigida sub-regio\","
         "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
         "\"Frigida regio\"}}}");
+    /* visio intra regionem pro -mappa-plena */
+    (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":6,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"addere\",\"arguments\":{\"genus\":\"desideratum\","
+        "\"titulus\":\"Frigida visio\",\"natura\":\"visio\"}}}");
+    (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":7,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Frigida visio\","
+        "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
+        "\"Frigida regio\"}}}");
     tabularium_claudere(t);
 
     /* I. quae verba haec unitas novit (principale formas veteres
@@ -521,6 +531,23 @@ principale (vacuum)
         c = _curre(&cfg, piscina, III, b);
         CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
         CREDO_VERUM (strstr(c.errores, "operanda superflua") != NIHIL);
+        /* -mappa lineas captas NON fert */
+        CREDO_VERUM (strstr(c.effusio, "<visio (>") == NIHIL);
+    }
+
+    /* -MAPPA-PLENA: visiones et principia sub regione sua ut lineae
+     * captae STML */
+    {
+        constans character* a[] = { "frigida", "-mappa-plena" };
+
+        CREDO_VERUM (frigida_verbum_novit("-mappa-plena"));
+        c = _curre(&cfg, piscina, II, a);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(c.effusio, "MAPPA (plena)") != NIHIL);
+        CREDO_VERUM (strstr(c.effusio, "\n  <visio (> Frigida visio")
+            != NIHIL);
+        CREDO_VERUM (strstr(c.effusio, "\n  Frigida sub-regio")
+            != NIHIL);
     }
 
     credo_imprimere_compendium();

@@ -10,6 +10,7 @@
 #   ./gesta/frigida.sh [-actor A] [-origo O] -nexus   <res> <verbum> <alterum>
 #   ./gesta/frigida.sh -res <res>          (LECTIO: breviarium, nihil scribit)
 #   ./gesta/frigida.sh -mappa               (LECTIO: arbor regionum, nomina sola - ut 'tree')
+#   ./gesta/frigida.sh -mappa-plena         (LECTIO: arbor cum '<visio (>' et '<principium (>' lineis)
 # Exitus: 0 scriptum | 1 recusatum (nihil scriptum) | 2 usus
 
 set -u

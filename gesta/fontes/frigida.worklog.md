@@ -124,3 +124,10 @@ by instrument: `breviter` for `res`, `forma: nomina` for `mappa`.
 Suite: region + sub-region in the fixture; `-mappa` exits 0, prints
 both with the child indented, annals byte-identical; `-mappa extra`
 is usage (exit 2). Smoke gate: the live launcher prints Fran's roots.
+
+## 2026-09-22 — `-mappa-plena`
+
+Second zero-operand read form. The read branch of `_gerere_mittere`
+now chooses the map's `forma` by the flag, `nomina` or `plena`. The
+fixture gained a vision inside the region so the two forms are told
+apart by content, not by exit code.
