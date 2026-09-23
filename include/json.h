@@ -31,6 +31,18 @@
 
 
 /* ========================================================================
+ * LIMITES
+ * ======================================================================== */
+
+/* Profunditas maxima nidificationis (objecta et tabulata) quam
+ * json_legere accipit. Parser recursivus est: sine limite textus
+ * hostilis ('[' repetitum) acervum exhauriret et processum necaret.
+ * Ultra limitem: successus FALSUM, error "Nidificatio nimis
+ * profunda", linea/columna ad aperientem excedentem. */
+#define JSON_PROFUNDITAS_MAXIMA CCLVI
+
+
+/* ========================================================================
  * GENERA VALORUM
  * ======================================================================== */
 
@@ -68,7 +80,8 @@ nomen structura JsonValor {
 } JsonValor;
 
 /* JsonPar - Par clavis-valor pro objectis
- * clavis est pointer ad chorda internata (via internamentum_globale)
+ * clavis est pointer ad chorda internata (via internamentum_globale),
+ * NUMQUAM NIHIL - etiam clavis "" canonicam habet (mensura 0)
  */
 nomen structura {
        chorda* clavis;    /* Pointer ad chorda internata */

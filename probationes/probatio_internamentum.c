@@ -261,6 +261,36 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+     * Probare chordam VACUAM - CONTRACTUS (2026-09-22): "" NON
+     * internatur, NIHIL redditur. actio, insula et stml (titulus
+     * '< >' = NIHIL) hoc ut recusationem adhibent; audit json id
+     * mutare tentavit et porta radix refutavit. Haec figura
+     * contractum tenet ne iterum tacite mutetur.
+     * ================================================== */
+
+    {
+        InternamentumChorda* intern;
+                     chorda  vacua_sine_datis;
+                     chorda  vacua_cum_datis;
+
+        imprimere("\n--- Probans chordam vacuam (recusatur) ---\n");
+
+        intern = internamentum_creare(piscina);
+
+        vacua_sine_datis.datum    = NIHIL;
+        vacua_sine_datis.mensura  = ZEPHYRUM;
+        vacua_cum_datis           = chorda_ex_literis("x", piscina);
+        vacua_cum_datis.mensura   = ZEPHYRUM;
+
+        CREDO_NIHIL(chorda_internare(intern, vacua_sine_datis));
+        CREDO_NIHIL(chorda_internare(intern, vacua_cum_datis));
+        CREDO_NIHIL(chorda_internare_ex_literis(intern, ""));
+        CREDO_FALSUM(chorda_est_internata(intern, vacua_cum_datis));
+        CREDO_AEQUALIS_I32(internamentum_numerus(intern), ZEPHYRUM);
+    }
+
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

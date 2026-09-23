@@ -526,6 +526,151 @@ probatio_iterator(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - CLAVIS VACUA (2026-09-22)
+ *
+ * {"":1} clavem NIHIL ponebat (internamentum "" recusabat): capere
+ * casu NIHIL == NIHIL inveniebat, scribere et iterator ruebant.
+ * ======================================================================== */
+
+interior vacuum
+probatio_clavis_vacua(Piscina* piscina)
+{
+            JsonResultus  res;
+    JsonObjectumIterator  iter;
+                  chorda  clavis;
+                  chorda  vacua;
+               JsonValor* valor;
+               JsonValor* obj;
+                  chorda  output;
+
+    imprimere("--- Probans clavem vacuam ---\n");
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
+
+    res = json_legere_literis("{\"\":1}", piscina);
+    CREDO_VERUM(res.successus);
+    CREDO_AEQUALIS_I32(json_objectum_numerus(res.radix), I);
+    CREDO_NON_NIHIL(json_objectum_par_obtinere(res.radix, 0)->clavis);
+    CREDO_AEQUALIS_S64(json_ad_integer(json_objectum_capere(res.radix,
+        "")), 1);
+    CREDO_AEQUALIS_S64(json_ad_integer(json_objectum_capere_chorda(
+        res.radix, vacua)), 1);
+
+    /* ruinae priores: scribere et iterator clavem NIHIL legebant */
+    CREDO_NON_RUIT(json_scribere(res.radix, piscina));
+    output = json_scribere(res.radix, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "{\"\":1}");
+
+    iter = json_objectum_iterator(res.radix);
+    CREDO_VERUM(json_objectum_iterator_proxima(&iter, &clavis, &valor));
+    CREDO_AEQUALIS_I32(clavis.mensura, 0);
+    CREDO_AEQUALIS_S64(json_ad_integer(valor), 1);
+
+    /* clavis vacua a "a" distinguitur, etiam imbricata */
+    res = json_legere_literis("{\"\":1,\"a\":{\"\":[]}}", piscina);
+    CREDO_VERUM(res.successus);
+    CREDO_AEQUALIS_I32(json_objectum_numerus(res.radix), II);
+    CREDO_AEQUALIS_S64(json_ad_integer(json_objectum_capere(res.radix,
+        "")), 1);
+    CREDO_VERUM(json_est_tabulatum(json_objectum_capere(
+        json_objectum_capere(res.radix, "a"), "")));
+    output = json_scribere(res.radix, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "{\"\":1,\"a\":{\"\":[]}}");
+
+    /* aedificator: ponere "" bis = una clavis, rescripta */
+    obj = json_objectum_creare(piscina);
+    json_objectum_ponere(obj, "", json_integer_creare(piscina, 1));
+    json_objectum_ponere_chorda(obj, vacua, json_integer_creare(piscina,
+        2));
+    CREDO_AEQUALIS_I32(json_objectum_numerus(obj), I);
+    output = json_scribere(obj, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "{\"\":2}");
+}
+
+
+/* ========================================================================
+ * PROBATIONES - PROFUNDITAS (2026-09-22)
+ *
+ * Recursio sine limite: II000000 '[' acervum exhauriebat (SIGSEGV) -
+ * cliens quivis residentem MCP necare poterat.
+ * ======================================================================== */
+
+/* n aperientes, "0", n claudentes; objecta ut {"a": ... } */
+interior chorda
+_nidum_facere (
+     Piscina* piscina,
+         i32  n,
+         b32  objecta)
+{
+    ChordaAedificator* aed;
+                  i32  i;
+
+    aed = chorda_aedificator_creare(piscina, n * VI + XVI);
+    per (i = 0; i < n; i++)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            objecta ? "{\"a\":" : "[");
+    }
+    chorda_aedificator_appendere_character(aed, '0');
+    per (i = 0; i < n; i++)
+    {
+        chorda_aedificator_appendere_character(aed,
+            objecta ? '}' : ']');
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+interior vacuum
+probatio_profunditas(Piscina* piscina)
+{
+    JsonResultus res;
+          chorda textus;
+
+    imprimere("--- Probans profunditatem ---\n");
+
+    /* ad limitem ipsum: licet */
+    res = json_legere(_nidum_facere(piscina, JSON_PROFUNDITAS_MAXIMA,
+        FALSUM), piscina);
+    CREDO_VERUM(res.successus);
+    res = json_legere(_nidum_facere(piscina, JSON_PROFUNDITAS_MAXIMA,
+        VERUM), piscina);
+    CREDO_VERUM(res.successus);
+
+    /* uno ultra: recusatur ad aperientem excedentem */
+    res = json_legere(_nidum_facere(piscina, JSON_PROFUNDITAS_MAXIMA
+        + I,
+        FALSUM), piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_CHORDA_CONTINET(res.error, chorda_ex_literis("profunda",
+        piscina));
+    CREDO_AEQUALIS_I32(res.linea, I);
+    CREDO_AEQUALIS_I32(res.columna, JSON_PROFUNDITAS_MAXIMA + I);
+
+    res = json_legere(_nidum_facere(piscina, JSON_PROFUNDITAS_MAXIMA
+        + I,
+        VERUM), piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_CHORDA_CONTINET(res.error, chorda_ex_literis("profunda",
+        piscina));
+
+    /* impetus: II000000 '[' sine claudentibus - non ruit */
+    {
+        i8* data;
+        data = (i8*)piscina_allocare(piscina, 2000000);
+        memset(data, '[', 2000000);
+        textus.datum    = data;
+        textus.mensura  = 2000000;
+    }
+    CREDO_NON_RUIT(json_legere(textus, piscina));
+    res = json_legere(textus, piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_CHORDA_CONTINET(res.error, chorda_ex_literis("profunda",
+        piscina));
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -556,6 +701,8 @@ main (void)
     probatio_round_trip(piscina);
     probatio_pretty_print(piscina);
     probatio_iterator(piscina);
+    probatio_clavis_vacua(piscina);
+    probatio_profunditas(piscina);
 
     credo_imprimere_compendium();
 

@@ -54,6 +54,48 @@ nomen structura {
 
 
 /* ========================================================================
+ * FUNCTIONES INTERNAE - CLAVES
+ * ======================================================================== */
+
+/* clavem internare. internamentum "" RECUSAT (NIHIL - contractus eius,
+ * actio/insula/stml eo nituntur; vide internamentum.h), sed "" clavis
+ * JSON valida est ({"":1}). Ergo json canonicam PROPRIAM tenet: sedes
+ * una statica, ut comparatio per pointer maneat. Ante 2026-09-22
+ * clavis NIHIL in objecto ponebatur -> json_scribere et iterator
+ * SIGSEGV. NIHIL hinc = allocatio defecit. */
+interior chorda*
+_clavem_internare (
+    chorda clavis)
+{
+    hic_manens     i8 octetus_vacuus = 0;
+    hic_manens chorda vacua;
+
+    si (clavis.mensura == ZEPHYRUM)
+    {
+        vacua.datum    = &octetus_vacuus;
+        vacua.mensura  = ZEPHYRUM;
+        redde &vacua;
+    }
+    redde chorda_internare(internamentum_globale(), clavis);
+}
+
+interior chorda*
+_clavem_internare_literis (
+    constans character* clavis)
+{
+    chorda vacua;
+
+    si (clavis != NIHIL && clavis[ZEPHYRUM] == '\0')
+    {
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        redde _clavem_internare(vacua);
+    }
+    redde chorda_internare_ex_literis(internamentum_globale(), clavis);
+}
+
+
+/* ========================================================================
  * FUNCTIONES INTERNAE - CHARACTERES
  * ======================================================================== */
 
@@ -238,7 +280,8 @@ _lex_chorda (
             _lex_avanzare(lex);
             si (lex->positio >= lex->mensura)
             {
-                redde _lex_error(lex, "Chorda non terminata post escape");
+                redde _lex_error(lex,
+                    "Chorda non terminata post escape");
             }
 
             c = _lex_currens(lex);
@@ -252,7 +295,8 @@ _lex_chorda (
                     si (   lex->positio >= lex->mensura
                         || !_est_hex_digitus(_lex_currens(lex)))
                     {
-                        redde _lex_error(lex, "Unicode escape invalidus");
+                        redde _lex_error(lex,
+                            "Unicode escape invalidus");
                     }
                 }
             }
@@ -516,7 +560,8 @@ _unescape_chorda (
                         per (j = 0; j < IV; j++)
                         {
                             codepoint = codepoint * XVI
-                                + _hex_valor((character)input.datum[i + II + j]);
+                                + _hex_valor((character)input.datum[i
+                                + II + j]);
                         }
 
                         /* Encode as UTF-8 */
@@ -526,14 +571,19 @@ _unescape_chorda (
                         }
                         alioquin si (codepoint < 0x800)
                         {
-                            buffer[out++] = (i8)(0xC0 | (codepoint >> VI));
-                            buffer[out++] = (i8)(0x80 | (codepoint & 0x3F));
+                            buffer[out++] = (i8)(0xC0 | (codepoint
+                                >> VI));
+                            buffer[out++] = (i8)(0x80
+                                | (codepoint & 0x3F));
                         }
                         alioquin
                         {
-                            buffer[out++] = (i8)(0xE0 | (codepoint >> XII));
-                            buffer[out++] = (i8)(0x80 | ((codepoint >> VI) & 0x3F));
-                            buffer[out++] = (i8)(0x80 | (codepoint & 0x3F));
+                            buffer[out++] = (i8)(0xE0 | (codepoint
+                                >> XII));
+                            buffer[out++] = (i8)(0x80 | ((codepoint
+                                >> VI) & 0x3F));
+                            buffer[out++] = (i8)(0x80
+                                | (codepoint & 0x3F));
                         }
                         i += VI;
                     }
@@ -619,7 +669,8 @@ _parse_fluitans (
           f64  result;
 
     /* Copiare ad null-terminated buffer pro strtod */
-    buffer = (character*)piscina_allocare(piscina, (i64)(valor.mensura + I));
+    buffer = (character*)piscina_allocare(piscina, (i64)(valor.mensura
+        + I));
     si (!buffer)
     {
         redde 0.0;
@@ -644,6 +695,7 @@ nomen structura {
         chorda  error_msg;
            i32  error_linea;
            i32  error_columna;
+           i32  profunditas;   /* objecta/tabulata aperta nunc */
 } JsonParser;
 
 /* Forward declarations */
@@ -664,6 +716,7 @@ _parser_initare (
     parser->error_msg.mensura  = 0;
     parser->error_linea        = 0;
     parser->error_columna      = 0;
+    parser->profunditas        = 0;
     parser->currens            = _lex_proxima(&parser->lex);
 }
 
@@ -726,7 +779,8 @@ _parser_token_valor (
         redde result;
     }
 
-    memcpy(buffer, parser->lex.datum + parser->currens.valor_initium, (size_t)len);
+    memcpy(buffer, parser->lex.datum + parser->currens.valor_initium,
+        (size_t)len);
     result.datum    = buffer;
     result.mensura  = len;
     redde result;
@@ -774,8 +828,15 @@ _parse_objectum (
         clavis_unesc  = _unescape_chorda(clavis_raw, parser->piscina);
         _parser_avanzare(parser);
 
-        /* Internare clavem */
-        clavis_intern = chorda_internare(internamentum_globale(), clavis_unesc);
+        /* Internare clavem - "" quoque canonicam habet; NIHIL =
+         * allocatio defecit, et clavis NIHIL in objecto scribere et
+         * iteratorem necaret */
+        clavis_intern = _clavem_internare(clavis_unesc);
+        si (!clavis_intern)
+        {
+            _parser_error(parser, "Allocatio fallita");
+            redde NIHIL;
+        }
 
         /* Expectare : */
         si (!_parser_expectare(parser, JSON_TOK_COLON))
@@ -916,10 +977,20 @@ _parse_valor (
     commutatio (parser->currens.genus)
     {
         casus JSON_TOK_LBRACE:
-            redde _parse_objectum(parser);
-
         casus JSON_TOK_LBRACKET:
-            redde _parse_tabulatum(parser);
+            /* limes recursionis: textus hostilis acervum non exhaurit
+             * (II000000 '[' = SIGSEGV ante 2026-09-22) */
+            si (parser->profunditas >= JSON_PROFUNDITAS_MAXIMA)
+            {
+                _parser_error(parser, "Nidificatio nimis profunda");
+                redde NIHIL;
+            }
+            parser->profunditas++;
+            val = (parser->currens.genus == JSON_TOK_LBRACE)
+                ? _parse_objectum(parser)
+                : _parse_tabulatum(parser);
+            parser->profunditas--;
+            redde val;
 
         casus JSON_TOK_CHORDA:
         {
@@ -1170,7 +1241,8 @@ i32
 json_tabulatum_numerus (
     JsonValor* valor)
 {
-    si (!valor || valor->genus != JSON_TABULATUM || !valor->datum.tabulatum)
+    si (   !valor || valor->genus != JSON_TABULATUM
+        || !valor->datum.tabulatum)
     {
         redde 0;
     }
@@ -1184,7 +1256,8 @@ json_tabulatum_obtinere (
 {
     JsonValor** ptr;
 
-    si (!valor || valor->genus != JSON_TABULATUM || !valor->datum.tabulatum)
+    si (   !valor || valor->genus != JSON_TABULATUM
+        || !valor->datum.tabulatum)
     {
         redde NIHIL;
     }
@@ -1211,7 +1284,8 @@ i32
 json_objectum_numerus (
     JsonValor* valor)
 {
-    si (!valor || valor->genus != JSON_OBJECTUM || !valor->datum.objectum)
+    si (   !valor || valor->genus != JSON_OBJECTUM
+        || !valor->datum.objectum)
     {
         redde 0;
     }
@@ -1238,7 +1312,11 @@ json_objectum_capere (
     }
 
     /* Internare clavem - nulla allocatio in piscina valor! */
-    clavis_intern = chorda_internare_ex_literis(internamentum_globale(), clavis);
+    clavis_intern = _clavem_internare_literis(clavis);
+    si (!clavis_intern)
+    {
+        redde NIHIL;
+    }
 
     num = (i32)xar_numerus(valor->datum.objectum);
 
@@ -1264,13 +1342,18 @@ json_objectum_capere_chorda (
        i32  i;
        i32  num;
 
-    si (!valor || valor->genus != JSON_OBJECTUM || !valor->datum.objectum)
+    si (   !valor || valor->genus != JSON_OBJECTUM
+        || !valor->datum.objectum)
     {
         redde NIHIL;
     }
 
     /* Internare clavem */
-    clavis_intern = chorda_internare(internamentum_globale(), clavis);
+    clavis_intern = _clavem_internare(clavis);
+    si (!clavis_intern)
+    {
+        redde NIHIL;
+    }
 
     num = (i32)xar_numerus(valor->datum.objectum);
 
@@ -1300,7 +1383,8 @@ json_objectum_par_obtinere (
     JsonValor* valor,
           i32  index)
 {
-    si (!valor || valor->genus != JSON_OBJECTUM || !valor->datum.objectum)
+    si (   !valor || valor->genus != JSON_OBJECTUM
+        || !valor->datum.objectum)
     {
         redde NIHIL;
     }
@@ -1377,7 +1461,8 @@ json_nullum_creare (
         redde NIHIL;
     }
 
-    val = (JsonValor*)piscina_allocare(piscina, (i64)magnitudo(JsonValor));
+    val = (JsonValor*)piscina_allocare(piscina,
+        (i64)magnitudo(JsonValor));
     si (!val)
     {
         redde NIHIL;
@@ -1400,7 +1485,8 @@ json_boolean_creare (
         redde NIHIL;
     }
 
-    val = (JsonValor*)piscina_allocare(piscina, (i64)magnitudo(JsonValor));
+    val = (JsonValor*)piscina_allocare(piscina,
+        (i64)magnitudo(JsonValor));
     si (!val)
     {
         redde NIHIL;
@@ -1424,7 +1510,8 @@ json_integer_creare (
         redde NIHIL;
     }
 
-    val = (JsonValor*)piscina_allocare(piscina, (i64)magnitudo(JsonValor));
+    val = (JsonValor*)piscina_allocare(piscina,
+        (i64)magnitudo(JsonValor));
     si (!val)
     {
         redde NIHIL;
@@ -1448,7 +1535,8 @@ json_fluitans_creare (
         redde NIHIL;
     }
 
-    val = (JsonValor*)piscina_allocare(piscina, (i64)magnitudo(JsonValor));
+    val = (JsonValor*)piscina_allocare(piscina,
+        (i64)magnitudo(JsonValor));
     si (!val)
     {
         redde NIHIL;
@@ -1472,7 +1560,8 @@ json_chorda_creare (
         redde NIHIL;
     }
 
-    val = (JsonValor*)piscina_allocare(piscina, (i64)magnitudo(JsonValor));
+    val = (JsonValor*)piscina_allocare(piscina,
+        (i64)magnitudo(JsonValor));
     si (!val)
     {
         redde NIHIL;
@@ -1523,14 +1612,16 @@ json_tabulatum_creare (
         redde NIHIL;
     }
 
-    val = (JsonValor*)piscina_allocare(piscina, (i64)magnitudo(JsonValor));
+    val = (JsonValor*)piscina_allocare(piscina,
+        (i64)magnitudo(JsonValor));
     si (!val)
     {
         redde NIHIL;
     }
 
     val->genus = JSON_TABULATUM;
-    val->datum.tabulatum = xar_creare(piscina, (i32)magnitudo(JsonValor*));
+    val->datum.tabulatum = xar_creare(piscina,
+        (i32)magnitudo(JsonValor*));
     val->piscina = piscina;
     redde val;
 }
@@ -1546,7 +1637,8 @@ json_objectum_creare (
         redde NIHIL;
     }
 
-    val = (JsonValor*)piscina_allocare(piscina, (i64)magnitudo(JsonValor));
+    val = (JsonValor*)piscina_allocare(piscina,
+        (i64)magnitudo(JsonValor));
     si (!val)
     {
         redde NIHIL;
@@ -1609,13 +1701,18 @@ json_objectum_ponere (
     }
 
     /* Internare clavem */
-    clavis_intern = chorda_internare_ex_literis(internamentum_globale(), clavis);
+    clavis_intern = _clavem_internare_literis(clavis);
+    si (!clavis_intern)
+    {
+        redde;
+    }
 
     /* Probare si clavis iam existit */
     num = (i32)xar_numerus(objectum->datum.objectum);
     per (i = 0; i < num; i++)
     {
-        JsonPar* par = (JsonPar*)xar_obtinere(objectum->datum.objectum, i);
+        JsonPar* par = (JsonPar*)xar_obtinere(objectum->datum.objectum,
+            i);
         si (par && par->clavis == clavis_intern)
         {
             /* Clavis existit - overwrite */
@@ -1655,13 +1752,18 @@ json_objectum_ponere_chorda (
     }
 
     /* Internare clavem */
-    clavis_intern = chorda_internare(internamentum_globale(), clavis);
+    clavis_intern = _clavem_internare(clavis);
+    si (!clavis_intern)
+    {
+        redde;
+    }
 
     /* Probare si clavis iam existit */
     num = (i32)xar_numerus(objectum->datum.objectum);
     per (i = 0; i < num; i++)
     {
-        JsonPar* par = (JsonPar*)xar_obtinere(objectum->datum.objectum, i);
+        JsonPar* par = (JsonPar*)xar_obtinere(objectum->datum.objectum,
+            i);
         si (par && par->clavis == clavis_intern)
         {
             /* Clavis existit - overwrite */
@@ -1850,7 +1952,8 @@ _scribere_valor (
         casus JSON_INTEGER:
         {
             character buffer[XXXII];
-            sprintf(buffer, "%lld", (long long)valor->datum.integer_valor);
+            sprintf(buffer, "%lld",
+                (long long)valor->datum.integer_valor);
             chorda_aedificator_appendere_literis(aed, buffer);
             frange;
         }
@@ -1865,7 +1968,8 @@ _scribere_valor (
 
         casus JSON_CHORDA:
             chorda_aedificator_appendere_character(aed, '"');
-            chorda_aedificator_appendere_evasus_json(aed, valor->datum.chorda_valor);
+            chorda_aedificator_appendere_evasus_json(aed,
+                valor->datum.chorda_valor);
             chorda_aedificator_appendere_character(aed, '"');
             frange;
 

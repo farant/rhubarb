@@ -52,13 +52,22 @@ internamentum_creare (
  * Internatio
  * ================================================== */
 
-/* Internare chordam - redde pointer ad copiam canonicam */
+/* Internare chordam - redde pointer ad copiam canonicam
+ *
+ * CONTRACTUS: chorda VACUA (mensura 0) NON internatur - NIHIL
+ * redditur (tabula dispersa claves vacuas recusat). Consumentes hoc
+ * UT RECUSATIONEM adhibent: actio (titulus vacuus), insula
+ * (attributum vacuum), stml (titulus '< >' = NIHIL = status vacuus
+ * modellatus, ~177 loci 'titulus == NIHIL'). Ne mutetur sine
+ * consumentibus omnibus recensitis - tentatum 2026-09-22 (audit json)
+ * et porta radix id refutavit. Qui "" ut clavem validam eget (json
+ * {"":1}) canonicam propriam tenet. */
 chorda*
 chorda_internare (
     InternamentumChorda* intern,
                  chorda  s);
 
-/* Convenientia: internare ex literis C */
+/* Convenientia: internare ex literis C ("" -> NIHIL, ut supra) */
 chorda*
 chorda_internare_ex_literis (
     InternamentumChorda* intern,

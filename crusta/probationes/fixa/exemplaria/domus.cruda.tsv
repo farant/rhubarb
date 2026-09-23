@@ -98,10 +98,10 @@ gesta/fori.sh	70	19	70	22	2179	2182	erratum	lint:nt-aequalitas	'-nt' aequalitate
 gesta/fori.sh	70	19	70	22	2179	2182	erratum	lint:nt-negata	nt-negata		
 gesta/fori.sh	72	34	72	37	2264	2267	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 gesta/fori.sh	72	34	72	37	2264	2267	erratum	lint:nt-negata	nt-negata		
-gesta/frigida.sh	32	19	32	22	1174	1177	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
-gesta/frigida.sh	32	19	32	22	1174	1177	erratum	lint:nt-negata	nt-negata		
-gesta/frigida.sh	34	34	34	37	1259	1262	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
-gesta/frigida.sh	34	34	34	37	1259	1262	erratum	lint:nt-negata	nt-negata		
+gesta/frigida.sh	52	19	52	22	2272	2275	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+gesta/frigida.sh	52	19	52	22	2272	2275	erratum	lint:nt-negata	nt-negata		
+gesta/frigida.sh	54	34	54	37	2357	2360	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
+gesta/frigida.sh	54	34	54	37	2357	2360	erratum	lint:nt-negata	nt-negata		
 gesta/tabularium.sh	104	19	104	22	4041	4044	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		
 gesta/tabularium.sh	104	19	104	22	4041	4044	erratum	lint:nt-negata	nt-negata		
 gesta/tabularium.sh	106	34	106	37	4126	4129	erratum	lint:nt-aequalitas	'-nt' aequalitatem perdit: in eodem secundo opus TACITE omittitur		

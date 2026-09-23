@@ -590,16 +590,20 @@ principale (vacuum)
      * (2026-09-14), entitates_html, entitates_html_tabula
      * (2026-09-15) - omnes latinizatae, purae, exactae; pinna non
      * mota, a commissione A3 plani materia-sedes inventa (6e679497
-     * portas exemplariorum solas moverat). */
-    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)180);
-    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)180);
+     * portas exemplariorum solas moverat).
+     *
+     * 180 -> 181 (2026-09-22): excerptum (a789a5aa, 2026-09-17) -
+     * latinizata, pura, exacta; commissio eius portam radicis solam
+     * cucurrit, pinna a commissione audit json (gradus I) inventa. */
+    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)181);
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)181);
     CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.parsura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.vitia_summa, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)180);
-    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)180);
+    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)181);
+    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)181);
 
 
     /* ============================================================

@@ -831,8 +831,12 @@ principale (vacuum)
      * (2026-09-14), entitates_html, entitates_html_tabula
      * (2026-09-15) - omnes latinizatae, purae, exactae; pinna non
      * mota, porta rubra a linea basis A3 plani materia-sedes inventa
-     * (quaestio 01M2Q1D2CB). */
-    CREDO_AEQUALIS_I32 (census_latinum.plagulae, 180);
+     * (quaestio 01M2Q1D2CB).
+     *
+     * 180 -> 181 (2026-09-22): excerptum (a789a5aa, 2026-09-17) -
+     * latinizata, pura, exacta; commissio eius portam radicis solam
+     * cucurrit, pinna a commissione audit json (gradus I) inventa. */
+    CREDO_AEQUALIS_I32 (census_latinum.plagulae, 181);
     CREDO_AEQUALIS_I32 (census_latinum.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.divergentes, ZEPHYRUM);
