@@ -66,6 +66,7 @@ declare -a RADIX_FONTES=(
     "credo"
     "internamentum"
     "json"
+    "utf8"         # json lexema UTF-8 validat (2026-09-22)
     "tabellarius"
     "similitudo"
     "sigillum"

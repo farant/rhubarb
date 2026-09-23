@@ -2,6 +2,7 @@
  */
 
 #include "json.h"
+#include "utf8.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -375,11 +376,38 @@ _lex_chorda (
             }
             _lex_avanzare(lex);
         }
-        alioquin si ((insignatus character)c < 0x20)
+                alioquin si ((insignatus character)c < 0x20)
         {
             redde _lex_error(lex,
                 "Character imperans crudus in chorda (< U+0020) -"
                 " effugium requiritur");
+        }
+        alioquin si ((insignatus character)c >= 0x80)
+        {
+            /* UTF-8 VALIDUM postulatur (RFC 8259; 2026-09-22 - olim
+             * FF, overlong C0 AF, surrogatum codatum ED A0 80
+             * transibant et scriptor ea iterum emittebat).
+             * utf8_decodere stricte iudicat: overlong, surrogata,
+             * > U+10FFFF, truncata, continuationes orphanae = -1.
+             * Locus = octetus principalis. Sequentia valida UNAM
+             * columnam capit (columnae = characteres, non octeti). */
+            constans i8* p              = lex->datum + lex->positio;
+            constans i8* initium_runae  = p;
+                    i32  n;
+                    i32  k;
+
+            si (utf8_decodere(&p, lex->datum + lex->mensura) < 0)
+            {
+                redde _lex_error(lex,
+                    "UTF-8 invalidum in chorda (overlong, surrogatum,"
+                    " truncatum aut octetus illicitus)");
+            }
+            n = (i32)(p - initium_runae);
+            per (k = 0; k < n; k++)
+            {
+                _lex_avanzare(lex);
+            }
+            lex->columna -= n - I;
         }
         alioquin
         {

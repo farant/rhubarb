@@ -1139,6 +1139,58 @@ probatio_claves_duplicatae(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - UTF-8 (2026-09-22)
+ *
+ * Octeti intra chordas non probabantur: FF FE, C0 AF (overlong),
+ * ED A0 80 (surrogatum codatum) transibant et scriptor eos iterum
+ * emittebat - JSON (RFC 8259) UTF-8 validum postulat. Columna olim
+ * octetos numerabat ('\xC3\xA9' = II columnae), nunc characteres.
+ * ======================================================================== */
+
+interior vacuum
+probatio_utf8(Piscina* piscina)
+{
+    JsonResultus res;
+
+    imprimere("--- Probans UTF-8 ---\n");
+
+    /* validi: II, III, IV octeti, limites */
+    _chorda_octeti(piscina, "\"caf\xC3\xA9\"", "caf\xC3\xA9", V);
+    _chorda_octeti(piscina, "\"\xE2\x82\xAC\"", "\xE2\x82\xAC", III);
+    _chorda_octeti(piscina, "\"\xF0\x9F\x98\x80\"", "\xF0\x9F\x98\x80",
+        IV);
+    _chorda_octeti(piscina, "\"\xF4\x8F\xBF\xBF\"", "\xF4\x8F\xBF\xBF",
+        IV);
+    _chorda_octeti(piscina, "\"\xEF\xBF\xBD\xC2\x80\"",
+        "\xEF\xBF\xBD\xC2\x80",
+        V);
+
+    /* invalidi: locus = octetus principalis sequentiae malae */
+    _chorda_refutata(piscina, "\"\xFF\"", "UTF-8", II);
+    _chorda_refutata(piscina, "\"\x80\"", "UTF-8", II);
+    _chorda_refutata(piscina, "\"a\xC0\xAF\"", "UTF-8", III);
+    _chorda_refutata(piscina, "\"\xED\xA0\x80\"", "UTF-8", II);
+    _chorda_refutata(piscina, "\"\xF4\x90\x80\x80\"", "UTF-8", II);
+    _chorda_refutata(piscina, "\"\xC3\"", "UTF-8", II);
+    _chorda_refutata(piscina, "\"\xE2\x82\"", "UTF-8", II);
+    _chorda_refutata(piscina, "\"\xF8\x88\x80\x80\x80\"", "UTF-8", II);
+    /* in clave quoque */
+    _chorda_refutata(piscina, "{\"\xFF\":1}", "UTF-8", III);
+
+    /* columna = characteres, non octeti: '"' e euro emoji '"' ' ' '@' */
+    _chorda_refutata(piscina,
+        "\"\xC3\xA9\xE2\x82\xAC\xF0\x9F\x98\x80\" @",
+        "post valorem", VII);
+    /* post chordam cum UTF-8, error in linea secunda: columna ibi */
+    res = json_legere_literis("[\"\xC3\xA9\",\n \"\xC3\xA9\" @]",
+        piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_AEQUALIS_I32(res.linea, II);
+    CREDO_AEQUALIS_I32(res.columna, VI);
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -1175,6 +1227,7 @@ main (void)
     probatio_numeri(piscina);
     probatio_chordae_strictae(piscina);
     probatio_claves_duplicatae(piscina);
+    probatio_utf8(piscina);
 
     credo_imprimere_compendium();
 

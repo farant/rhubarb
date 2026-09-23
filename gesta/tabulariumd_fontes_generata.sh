@@ -20,6 +20,7 @@ declare -a RADIX_FONTES=(
     "tabellarius"
     "tabula_dispersa"
     "tcp_posix"
+    "utf8"
     "via"
     "vigilia"
     "xar"

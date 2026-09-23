@@ -19,6 +19,7 @@ declare -a RADIX_FONTES=(
     "similitudo"
     "tabellarius"
     "tabula_dispersa"
+    "utf8"
     "via"
     "vigilia"
     "xar"

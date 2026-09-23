@@ -84,6 +84,7 @@ declare -a RADIX_FONTES=(
     "iter_directoria"
     "sigillum"
     "json"
+    "utf8"         # json lexema UTF-8 validat (2026-09-22)
     "capsula"
     "differentia"
     "scrinium"

@@ -3,6 +3,7 @@
 declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
+    "fasti"
     "friatio"
     "internamentum"
     "json"
@@ -12,6 +13,7 @@ declare -a RADIX_FONTES=(
     "similitudo"
     "tabellarius"
     "tabula_dispersa"
+    "utf8"
     "vigilia"
     "xar"
 )
