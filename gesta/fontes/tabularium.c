@@ -26,95 +26,42 @@
 #define TABULARII_PROTOCOLLUM_PINNATUM "2025-06-18"
 
 /* doctrina: in contextum agentis VERBATIM cadit (inventum legati) -
- * contractus scribae hic VIVIT ut sessiones futurae eum hereditent */
+ * contractus scribae hic VIVIT ut sessiones futurae eum hereditent.
+ * LIMES: hospes (Claude Code) instructions ad MMXLVIII characteres
+ * abscindit - olim 4790, sessio 43 % videbat, MORES et contractus
+ * fori numquam (01M32WHJ1Q, 2026-09-23). Hic ergo SOLUM quod nullum
+ * schema repetit: contractus, mores, orientatio, domus rerum.
+ * Grammatica in descriptionibus instrumentorum stat (non
+ * abscinduntur). Tectum: TABULARII_LIMES_INSTRUCTIONUM, probatio
+ * tenet. */
 interior constans character* constans TABULARII_DOCTRINA =
-    "TABULARIUM: acta rerum repositorii (quaestiones/parca/decreta/"
-    "notae/desiderata) super acta gestarum. CONTRACTUS SCRIBAE: "
-    "Claude notas/parca/decreta per debriefs SPONTE scribit (sine "
-    "confirmatione singula - recensio per quaestiones, non portas). "
-    "addere {genus, titulus, corpus?, tags? (commatibus), ancorae? "
-    "(JSON), actor?, origo?} = res nova (similia FTS in responso - "
-    "custos duplicationum). gerere {res (id, praefixum ULID"
-    " inambiguum, aut titulus), "
-    "actus: nota|ictus|status|nexus|denexus|mutatio|remotio, "
-    "textus?/"
-    "novus?/verbum?/alterum?/clavis?/valor?/datum?/origo?} = "
-    "eventus unus; nexus: verba CANONICA impeditur-a|intra|natum-de|"
-    "sequitur|respondet-ad, a dependente ad id cui innititur "
-    "(schema gerere.verbum). ORIENTATIO: parata {breviter} "
-    "primum (quid nunc agi potest, quid Franum exspectat), "
-    "deinde parata {intra: propositum}. OPERA PLANI = genus opus "
-    "intra parcum; silva.commissio(opus=ID) opus claudit. REGIO = "
-    "locus mappae (genus regio, sine statu): res intra regionem "
-    "collocantur, parata/quaerere {intra: regio}; mappa {} = arbor "
-    "regionum + salus (activitas ordinandi). PRINCIPIUM = decretum "
-    "natura:principium (prior cui visio nititur; refutatio = quid id "
-    "everteret). "
-    "QUAESTIO DESIGNI = quaestio natura:consilium (AD COLLOQUIUM); "
-    "propositum ab ea impeditur-a. Via crustae: ./gesta/frigida.sh. "
-    "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
-    "Latinum: praefixa 'parsur*' - stemmata Anglica sola). res "
-    "{res, breviter?} = status + ancorae (CAUTIO si inresolutae) + "
-    "nexus + actiones affordatae + annales; breviter \"verum\" = "
-    "compendium (corpus + notae ultimae III + nexus + actiones, "
-    "sine dato crudo); nexus socium CUM GENERE ET STATU dant. "
-    "census {} = genera x status + tags + res saepissime ICTAE "
-    "(apertae, ordine ictuum - pretium MENSURATUM, non "
-    "aestimatum). ictus: gerere {actus:ictus, textus?} = "
-    "'haec res me ITERUM momordit' - signum quod campum "
-    "prioritatis vincit quia a rebus ipsis ponitur. "
-    "acta {quantum? (XXV), genus?, actor?} = cauda fluminis"
-    " eventuum trans res omnes (truncus, recentissima primum) -"
-    " recensio scribae (quid hodie scriptum est). "
-    "agere {actio?|processus?, ligamina? (JSON: ops->res_id|"
-    "titulus), argumenta? (JSON), actor?} = K3: actionem exsequi "
-    "(porta obstat - recusata causam nominat; effectus atomice, "
-    "actio-facta in flumine actionis) AUT processum incipere "
-    "(instantia photographat, opera cursuum generantur). Opus "
-    "processus: susceptio = gerere status susceptum; perfectio = "
-    "gerere mutatio {effectus} + status perfectum -> provectio "
-    "SPONTE sequitur (gradus proximi/portae/actiones). RECEPTA "
-    "SUNT CODEX: definitiones actionum/processuum per semen aut "
-    "canalem solum - agere exsequitur, numquam definit. Genera: "
-    "quaestio (apertum->laborans->clausum|relictum), parcum "
-    "(parcatum->tractum->clausum), decretum, nota, desideratum "
-    "(apertum->impletum), opus (pendens->susceptum?->perfectum|"
-    "omissum), actiones (claudere-cum-decreto), processus "
-    "(ritus-signaculi). Violationes machinae NON obstant - nota "
-    "custodiae appenditur (iudicat, non obstat). "
-    "RAMI (K4): ramus {actus: creare|enumerare|comparare|fundere|"
-    "abicere, titulus?, parens?, res?, vis?} = lineae temporis "
-    "parallelae intra tabularium. truncus = veritas, rami = "
-    "hypothetica; ABICERE GRATIS - fingere audacter (fusio casus "
-    "rarus, non finis debitus). parametrum 'ramus' in addere/"
-    "gerere/res = scriptura/lectio in ramo; IN RAMO res_id "
-    "REQUIRITUR (resolutio tituli truncalis est). fusio = replay "
-    "in truncum attributione servata; confligentia obstat nisi "
-    "vis; nidificata nisi parens fusus recusatur. genera/census/"
-    "quaerere/motor truncalia manent. MORES: quaere ANTE "
-    "filationem (addere titulum duplicatum CAUTIONE monet; "
-    "resolutio tituli ambigui candidatos nominat - res_id "
-    "discernit); cum res parcata "
-    "trahitur, status->tractum statim, cum perficitur ->clausum "
-    "(tabula mendax peior prosa); orientatio post-compactionem = "
-    "census + quaerere in area laboris; divisio actorum: vita-"
-    "cyclica HIC, narratio aedificandi in phase-log, inventa "
-    "codicis in worklog, MEMORY.md = reflexus solum. Via frigida "
-    "(residente absente): ./gesta/frigida.sh. renovare {} = "
-    "residentem stalum renovat post CAUTIONEM (aedificatio probata "
-    "ANTE; defectus = residens vivus; recens = nihil agit). "
-    "CONTRACTUS CORRESPONDENTIS (mundi scriptorum - forum): "
-    "salutatio NOVA -> acta {ab_lecto} in calefactione; LECTUM "
-    "EST PROMISSUM - responde quod aperis, opera in tabulam "
-    "converte (cursor non iterum monebit); articulus adveniens = "
-    "epistula lectorio, lege totum et responde; pipa solum quod "
-    "LECTOREM vult, non retractorem - tacere licitum, plerumque "
-    "rectum; forum = stratum opinionum repositorii (codex = quid "
-    "EST, tabula = quid DECISUM, worklog = quid INVENTUM, forum = "
-    "quid PENSATUR) - quaere id in labore, noli percurrere in "
-    "calefactione; annales fori in fine sessionis committe; "
-    "signatura = vox tua propria (nomen exemplaris) - posteris "
-    "scribis.";
+    "TABULARIUM: acta rerum repositorii (quaestiones, parca, decreta, "
+    "notae, desiderata, opera, regiones) super acta gestarum; "
+    "grammatica in schematibus instrumentorum stat. CONTRACTUS "
+    "SCRIBAE: Claude notas/parca/decreta/quaestiones per debriefs "
+    "SPONTE scribit, sine confirmatione singula - Franus recenset "
+    "quaerendo (census, quaerere), non portis. ORIENTATIO: parata "
+    "{breviter} primum (quid agi potest, quid Franum exspectat), "
+    "deinde parata {intra: propositum}; mappa {} = arbor regionum (ubi "
+    "res habitant). REGIO = locus mappae sine statu; res per nexum "
+    "intra in eam collocantur. MORES: quaere ANTE filationem (addere "
+    "similia monstrat); res parcata cum trahitur status->tractum "
+    "STATIM, cum perficitur ->clausum - tabula mendax peior prosa; "
+    "'haec res me ITERUM momordit' = gerere {actus:ictus}; nexus a "
+    "dependente ad id cui innititur (verba canonica: schema "
+    "gerere.verbum). QUAESTIO DESIGNI = quaestio natura:consilium; "
+    "propositum ab ea impeditur-a. PRINCIPIUM = decretum "
+    "natura:principium (prior cui visio nititur). OPERA PLANI = genus "
+    "opus intra parcum; silva.commissio(opus=ID) opus claudit. RES "
+    "UNA, DOMUS UNA: vita-cyclica (aperta/clausa) HIC; narratio "
+    "aedificandi in phase-log; inventa codicis in worklog tempore "
+    "inventionis; MEMORY.md = reflexus et indices solum, numquam "
+    "tabula. CAUTIO VIGILIAE (residens stalus): verifica, deinde "
+    "renovare {} - numquam neglege. Residente absente: "
+    "./gesta/frigida.sh. FORUM: salutatio NOVA -> acta {ab_lecto} in "
+    "calefactione; LECTUM EST PROMISSUM - responde quod aperis; forum "
+    "= quid PENSATUR (codex quid EST, tabula quid DECISUM, worklog "
+    "quid INVENTUM); signatura = nomen exemplaris tui.";
 
 nomen structura {
     constans character* titulus;
@@ -11129,10 +11076,16 @@ _toolslist_tractare (
     interior constans TabArgumentum ARG_GERERE[] = {
         { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
           " aut titulus exactus (in ramo: res_id SOLUM)", VERUM },
-        { "actus", "nota|status|nexus|denexus|mutatio|remotio",
-          VERUM },
+        { "actus", "nota|ictus|status|nexus|denexus|mutatio|"
+          "remotio. ictus = 'haec res me ITERUM momordit' (textus? ="
+          " quomodo) - signum prioritatis a rebus ipsis positum;"
+          " census res apertas ordine ictuum reddit", VERUM },
         { "textus", "pro nota", FALSUM },
-        { "novus", "pro statu (status novus)", FALSUM },
+        { "novus", "pro statu (status novus). MACHINAE: quaestio"
+          " apertum->laborans->clausum|relictum; parcum parcatum->"
+          "tractum->clausum; desideratum apertum->impletum; opus"
+          " pendens->susceptum?->perfectum|omissum; decretum, nota,"
+          " regio sine statu", FALSUM },
         { "vis", "\"verum\" = statum extra machinam generis TAMEN"
           " scribere (lex ingenii 'scribe, ne obsta' consulto"
           " invocata; nota custodiae sequitur). Sine eo transitio"
@@ -11197,7 +11150,16 @@ _toolslist_tractare (
           FALSUM },
         { "ab_lecto", "\"verum\" = solum non lecta, vetustissima"
           " primum; cursor claude-lectum provehitur (optime sine"
-          " filtris - provectio filtra ignorat)", FALSUM }
+          " filtris - provectio filtra ignorat). CONTRACTUS"
+          " CORRESPONDENTIS (forum): LECTUM EST PROMISSUM - responde"
+          " quod aperis, opera in tabulam converte (cursor non"
+          " iterum monebit); articulus adveniens = epistula lectorio,"
+          " lege totum et responde; pipa solum quod LECTOREM vult,"
+          " non retractorem - tacere licitum, plerumque rectum; forum"
+          " quaere in labore, noli percurrere in calefactione;"
+          " annales fori in fine sessionis committe; signatura = vox"
+          " tua propria (nomen exemplaris) - posteris scribis.",
+          FALSUM }
     };
     interior constans TabArgumentum ARG_CENSUS[] = {
         { "tags", "\"omnia\" = tags omnia (ordinarie summa XX numero"
@@ -11278,9 +11240,10 @@ _toolslist_tractare (
         " FTS in responso (custos duplicationum).",
         ARG_ADDERE, XII));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "gerere",
-        "Eventum unum in rem exsistentem scribere: nota, status,"
-        " nexus/denexus (ligamina), mutatio, remotio. Violationes"
-        " machinae notantur, non obstant.",
+        "Eventum unum in rem exsistentem scribere: nota, ictus,"
+        " status, nexus/denexus (ligamina), mutatio, remotio."
+        " Transitio status illegalis RECUSATUR (legales proximi"
+        " nominantur) nisi vis.",
         ARG_GERERE, XIII));
     json_tabulatum_addere(instrumenta, _instrumentum(pn,
         "quaerere",
@@ -11675,15 +11638,17 @@ _initialize_tractare (
                 {
                     ChordaAedificator* aed =
                         chorda_aedificator_creare(pn, 8192);
-                    character buf[CXCII];
+                    character buf[TABULARII_NOVA_MAXIMA];
 
-                    chorda_aedificator_appendere_literis(aed,
-                        TABULARII_DOCTRINA);
-                    sprintf(buf, "\n\nNOVA: %ld eventa ab ultima"
+                    /* salutatio PRIMA: in fine abscindebatur (limes
+                     * hospitis) et numquam legebatur - 01M32WHJ1Q */
+                    sprintf(buf, "NOVA: %ld eventa ab ultima"
                         " lectione - acta {\"ab_lecto\":"
-                        "\"verum\"} legenda.", (longus)nova);
+                        "\"verum\"} legenda.\n\n", (longus)nova);
                     chorda_aedificator_appendere_literis(aed,
                         buf);
+                    chorda_aedificator_appendere_literis(aed,
+                        TABULARII_DOCTRINA);
                     instructiones = _litterae(pn,
                         chorda_aedificator_finire(aed));
                 }

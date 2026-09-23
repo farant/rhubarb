@@ -91,3 +91,40 @@ ignored it and the corpus happened to end there (fourth member of
 the silent-degenerate family). Filed as a real stml feature +
 scanner awareness: 01KYSPRF9R ("tagus claudens
 anonymus").
+
+## 2026-09-23 — the doctrine was 57 % invisible; the NOVA greeting never arrived
+
+Claude Code truncates an MCP server's `instructions` at 2048 characters
+(measured 2026-09-21, quaestio 01M32WHJ1Q). TABULARII_DOCTRINA had grown
+to 4790, so every session saw the first 43 %: mostly tool GRAMMAR that
+the tool schemas already carry (schemas are not truncated). Lost past
+the cut: all of MORES (search before filing, parcatum->tractum on
+pickup, lying table worse than prose, the one-home division), the
+renovare-after-CAUTIO rule, and the whole forum correspondent contract.
+
+Worse, found while fixing: the reader greeting (F4, "NOVA: n eventa...
+acta {ab_lecto} legenda") was APPENDED after the doctrine, i.e. always
+past the cut. The feature was dead since birth and nothing noticed,
+because the tests assert `strstr(r, "NOVA:")` on the raw response,
+which our server sends whole. The host is the component that drops it,
+and no test models the host.
+
+Fix: doctrine rewritten to 1625 chars carrying only what no schema
+repeats (contract, mores, orientation, the one-home rule, the stale
+warning rule, a forum pointer). NOVA goes FIRST. What moved: the state
+machines -> gerere.novus; ictus -> gerere.actus (it was missing from
+the schema's actus list; the doctrine was its only mention); the rest
+of the correspondent contract -> acta.ab_lecto, read at the moment the
+greeting is acted on. RAMI, agere/processes, renovare mechanics were
+already in their tool descriptions. Also corrected gerere's description,
+which still said machine violations "non obstant" — they have been
+refused since decision 01M32X21NR.
+
+Gate: `TABULARII_LIMES_INSTRUCTIONUM` (MM + XLVIII) and
+`TABULARII_NOVA_MAXIMA` (CXCII, now also the sprintf buffer, so the
+reservation is structural) in tabularium.h; probatio_tabularium asserts
+doctrine + NOVA_MAXIMA <= LIMES at initialize and NOVA-before-doctrine
+in the F4 section. Born red on the old text (lines 442, 2459, 2461).
+Headroom today: 2048 - 1625 - 192 = 231. The limit is the HOST's,
+not ours — another host may cut elsewhere; the constant names the
+number so it can move.

@@ -9,6 +9,7 @@
 #include "gesta.h"
 #include "sigillum.h"
 #include "credo.h"
+#include "json.h"
 #include "iter_directoria.h"
 #include <stdio.h>
 #include <string.h>
@@ -259,6 +260,31 @@ _inter_locus (
     redde locus != NIHIL ? locus : "";
 }
 
+/* longitudo 'instructions' in responso initialize (octeti; doctrina
+ * ASCII est, ergo et characteres) - ZEPHYRUM = non inventum */
+interior i32
+_instructiones_mensura (
+    constans character* r,
+               Piscina* pn)
+{
+    JsonResultus  res = json_legere_literis(r, pn);
+       JsonValor* resultatum;
+       JsonValor* instructiones;
+
+    si (!res.successus)
+    {
+        redde ZEPHYRUM;
+    }
+    resultatum    = json_objectum_capere(res.radix, "result");
+    instructiones = resultatum != NIHIL
+        ? json_objectum_capere(resultatum, "instructions") : NIHIL;
+    si (instructiones == NIHIL || !json_est_chorda(instructiones))
+    {
+        redde ZEPHYRUM;
+    }
+    redde json_ad_chorda(instructiones).mensura;
+}
+
 /* lineam mittere, responsum totum (litterae) recipere */
 interior constans character*
 _mitte (
@@ -403,6 +429,18 @@ principale (vacuum)
     CREDO_VERUM (strstr(r, "CONTRACTUS SCRIBAE") != NIHIL);
     CREDO_VERUM (strstr(r, "tabularii") != NIHIL);
     CREDO_VERUM (strstr(r, "2025-06-18") != NIHIL);
+    /* LIMES HOSPITIS (01M32WHJ1Q): hospes instructions ad
+     * TABULARII_LIMES_INSTRUCTIONUM abscindit - doctrina cum
+     * salutatione NOVA longissima TOTA legi debet (olim 4790 ex
+     * 2048: MORES, contractus fori et salutatio ipsa numquam visa) */
+    {
+        i32 mensura_instructionum = _instructiones_mensura(r, piscina);
+
+        CREDO_MAIOR_I32 (mensura_instructionum, ZEPHYRUM);
+        CREDO_MINOR_AUT_AEQUALIS_I32 (
+            mensura_instructionum + TABULARII_NOVA_MAXIMA,
+            TABULARII_LIMES_INSTRUCTIONUM);
+    }
 
     /* iterum initialize = IDEMPOTENS (F0 forum): responsum idem,
      * non recusatio - clientes daemonis per-petitionem innoxie
@@ -2415,6 +2453,12 @@ principale (vacuum)
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":964,"
             "\"method\":\"initialize\",\"params\":{}}");
         CREDO_VERUM (strstr(r, "NOVA:") != NIHIL);
+        /* salutatio PRIMA stat, ante doctrinam - in fine
+         * abscindebatur et numquam legebatur (01M32WHJ1Q) */
+        CREDO_NON_NIHIL (strstr(r, "TABULARIUM:"));
+        CREDO_VERUM (strstr(r, "NOVA:") < strstr(r, "TABULARIUM:"));
+        CREDO_MINOR_AUT_AEQUALIS_I32 (_instructiones_mensura(r,
+            piscina), TABULARII_LIMES_INSTRUCTIONUM);
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":965,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\","

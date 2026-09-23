@@ -26,6 +26,18 @@
 #include "gesta.h"
 #include <stdio.h>
 
+/* LIMES INSTRUCTIONUM HOSPITIS: Claude Code 'instructions' servi
+ * MCP ad MMXLVIII characteres abscindit (mensuratum 2026-09-21,
+ * quaestio 01M32WHJ1Q) - quod ultra stat NUMQUAM legitur. Doctrina
+ * cum salutatione NOVA longissima infra limitem stare debet;
+ * probatio_tabularium id tenet. Limes hospitis est, non noster:
+ * hospes alius aliter abscindere potest. */
+#define TABULARII_LIMES_INSTRUCTIONUM (MM + XLVIII)
+
+/* salutatio NOVA (lineae 'NOVA: n eventa...' + lineae vacuae) in
+ * hoc tecto scribitur - pars limitis ei reservata */
+#define TABULARII_NOVA_MAXIMA CXCII
+
 nomen structura {
     constans character* radix;         /* pro nuntiis */
     constans character* via_scrinii;   /* tabularium.db */
