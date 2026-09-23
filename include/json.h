@@ -7,7 +7,13 @@
  *   fluitans extra f64 (1e400) REFUTANTUR, numquam involvuntur;
  *   scriptor NaN/infinita ut null scribit, fluitantem integrum
  *   imitantem cum '.0' (genus redit), formam brevissimam exactam
- * - Chordae cum unicode escapes (\uXXXX)
+ * - Chordae cum unicode escapes (\uXXXX) - STRICTE (RFC 8259): effugia
+ *   sola licita, characteres < U+0020 crudi refutantur, par
+ *   surrogatum -> UTF-8 IV octetorum, surrogatum solitarium refutatur
+ * - Claves duplicatae in objecto uno REFUTANTUR ("Clavis duplicata");
+ *   json_objectum_ponere (aedificator) contra rescribit
+ * - Error lexematis intra continens causam suam nominat
+ *   ('Clavis chorda expectata: Chorda non terminata')
  *
  * USUS PARSING:
  *   JsonResultus res = json_legere_literis("{\"clavis\": 42}", piscina);

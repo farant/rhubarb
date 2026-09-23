@@ -877,6 +877,139 @@ probatio_numeri(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - CHORDAE STRICTAE ET CLAVES DUPLICATAE (2026-09-22)
+ *
+ * Par surrogatum (\uD83D\uDE00) in CESU-8 (sex octeti invalidi)
+ * vertebatur; effugia ignota ('\x') et characteres imperantes crudi
+ * accipiebantur (\x sensum mutabat per scripturam iteratam); errores
+ * lexematis intra continentia ('Token inexpectatum') causam celabant;
+ * clavis duplicata ambas servabat et capere PRIMAM reddebat.
+ * ======================================================================== */
+
+/* textum refutatum esse, causam (fragmentum) et columnam nominari */
+interior vacuum
+_chorda_refutata (
+               Piscina* piscina,
+    constans character* textus,
+    constans character* causa,
+                    i32  columna)
+{
+    JsonResultus res;
+
+    imprimere("  refutandum: %s\n", textus);
+    res = json_legere_literis(textus, piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_CHORDA_CONTINET(res.error, chorda_ex_literis(causa, piscina));
+    CREDO_AEQUALIS_I32(res.linea, I);
+    CREDO_AEQUALIS_I32(res.columna, columna);
+}
+
+/* chordam legi et octetos exactos reddere */
+interior vacuum
+_chorda_octeti (
+               Piscina* piscina,
+    constans character* textus,
+    constans character* octeti,
+                    i32  mensura)
+{
+    JsonResultus res;
+          chorda val;
+
+    imprimere("  legendum: %s\n", textus);
+    res = json_legere_literis(textus, piscina);
+    CREDO_VERUM(res.successus);
+    val = json_ad_chorda(res.radix);
+    CREDO_AEQUALIS_I32(val.mensura, mensura);
+    CREDO_VERUM(val.mensura == mensura
+        && memcmp(val.datum, octeti, (memoriae_index)mensura) == 0);
+}
+
+interior vacuum
+probatio_chordae_strictae(Piscina* piscina)
+{
+    JsonResultus res;
+          chorda output;
+
+    imprimere("--- Probans chordas strictas ---\n");
+
+    /* par surrogatum -> UTF-8 IV octetorum (U+1F600) */
+    _chorda_octeti(piscina, "\"\\uD83D\\uDE00\"", "\xF0\x9F\x98\x80",
+        IV);
+    _chorda_octeti(piscina, "\"\\ud83d\\ude00\"", "\xF0\x9F\x98\x80",
+        IV);
+    /* limites: U+10000 et U+10FFFF */
+    _chorda_octeti(piscina, "\"\\uD800\\uDC00\"", "\xF0\x90\x80\x80",
+        IV);
+    _chorda_octeti(piscina, "\"\\uDBFF\\uDFFF\"", "\xF4\x8F\xBF\xBF",
+        IV);
+    /* BMP immutata: U+0800, U+FFFF, U+0000 */
+    _chorda_octeti(piscina, "\"\\u0800\"", "\xE0\xA0\x80", III);
+    _chorda_octeti(piscina, "\"\\uFFFF\"", "\xEF\xBF\xBF", III);
+    _chorda_octeti(piscina, "\"a\\u0000b\"", "a\0b", III);
+    /* effugia valida omnia */
+    _chorda_octeti(piscina, "\"\\\"\\\\\\/\\b\\f\\n\\r\\t\"",
+        "\"\\/\b\f\n\r\t", VIII);
+    /* DEL et UTF-8 cruda licent */
+    _chorda_octeti(piscina, "\"\x7F caf\xC3\xA9\"", "\x7F caf\xC3\xA9",
+        VII);
+
+    /* reditus: emoji scriptum crudum, relectum idem */
+    res     = json_legere_literis("\"\\uD83D\\uDE00\"", piscina);
+    output  = json_scribere(res.radix, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "\"\xF0\x9F\x98\x80\"");
+
+    /* surrogata solitaria: locus = '\\' effugii */
+    _chorda_refutata(piscina, "\"\\uD83D\"", "Surrogatum", II);
+    _chorda_refutata(piscina, "\"\\uD83Dx\"", "Surrogatum", II);
+    _chorda_refutata(piscina, "\"\\uD83D\\uD83D\"", "Surrogatum", II);
+    _chorda_refutata(piscina, "\"\\uD83D\\n\"", "Surrogatum", II);
+    _chorda_refutata(piscina, "\"ab\\uDE00\"", "Surrogatum", IV);
+
+    /* effugia ignota */
+    _chorda_refutata(piscina, "\"a\\xb\"", "Effugium invalidum", III);
+    _chorda_refutata(piscina, "\"\\'\"", "Effugium invalidum", II);
+    _chorda_refutata(piscina, "\"\\a\"", "Effugium invalidum", II);
+    _chorda_refutata(piscina, "\"\\u12G4\"", "Unicode", II);
+
+    /* characteres imperantes crudi (< 0x20) */
+    _chorda_refutata(piscina, "\"a\x01b\"", "imperans", III);
+    _chorda_refutata(piscina, "\"a\tb\"", "imperans", III);
+    _chorda_refutata(piscina, "\"a\nb\"", "imperans", III);
+    _chorda_refutata(piscina, "\"\x1F\"", "imperans", II);
+
+    /* error lexematis intra continens: causa vera nominatur */
+    _chorda_refutata(piscina, "{\"abc", "non terminata", VI);
+    _chorda_refutata(piscina, "{\"abc", "Clavis chorda expectata", VI);
+    _chorda_refutata(piscina, "[1 @]", "Character ignotus", IV);
+    _chorda_refutata(piscina, "[1] @", "post valorem", V);
+    _chorda_refutata(piscina, "[1] @", "Character ignotus", V);
+}
+
+interior vacuum
+probatio_claves_duplicatae(Piscina* piscina)
+{
+    JsonResultus res;
+
+    imprimere("--- Probans claves duplicatas ---\n");
+
+    /* locus = clavis duplicata ipsa */
+    _chorda_refutata(piscina, "{\"a\":1,\"a\":2}", "Clavis duplicata",
+        VIII);
+    _chorda_refutata(piscina, "{\"\":1,\"\":2}", "Clavis duplicata",
+        VII);
+    /* aequales POST effugia */
+    _chorda_refutata(piscina, "{\"ab\":1,\"a\\u0062\":2}",
+        "Clavis duplicata",
+        IX);
+    /* eadem clavis in objectis diversis: licet */
+    res = json_legere_literis("{\"a\":1,\"b\":{\"a\":2}}", piscina);
+    CREDO_VERUM(res.successus);
+    res = json_legere_literis("[{\"a\":1},{\"a\":2}]", piscina);
+    CREDO_VERUM(res.successus);
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -911,6 +1044,8 @@ main (void)
     probatio_profunditas(piscina);
     probatio_cauda(piscina);
     probatio_numeri(piscina);
+    probatio_chordae_strictae(piscina);
+    probatio_claves_duplicatae(piscina);
 
     credo_imprimere_compendium();
 

@@ -215,18 +215,29 @@ _lex_saltare_spatium (
 }
 
 interior JsonToken
+_lex_error_ad (
+             JsonLexema* lex,
+     constans character* msg,
+                    i32  linea,
+                    i32  columna)
+{
+    JsonToken tok;
+    (vacuum)lex;
+    tok.genus          = JSON_TOK_ERROR;
+    tok.valor_initium  = 0;
+    tok.valor_mensura  = 0;
+    tok.linea          = linea;
+    tok.columna        = columna;
+    tok.error          = msg;
+    redde tok;
+}
+
+interior JsonToken
 _lex_error (
             JsonLexema* lex,
     constans character* msg)
 {
-    JsonToken tok;
-    tok.genus          = JSON_TOK_ERROR;
-    tok.valor_initium  = 0;
-    tok.valor_mensura  = 0;
-    tok.linea          = lex->linea;
-    tok.columna        = lex->columna;
-    tok.error          = msg;
-    redde tok;
+    redde _lex_error_ad(lex, msg, lex->linea, lex->columna);
 }
 
 interior JsonToken
@@ -246,6 +257,35 @@ _lex_simplex (
 }
 
 /* Legere chorda cum escape sequences */
+/* IV cifras hex post 'u' legere (currens = 'u'; post, currens =
+ * cifra ultima). FALSUM si non hex aut finis. */
+interior b32
+_lex_unitatem_legere (
+    JsonLexema* lex,
+           i32* unitas)
+{
+    i32 i;
+
+    *unitas = 0;
+    per (i = 0; i < IV; i++)
+    {
+        _lex_avanzare(lex);
+        si (   lex->positio >= lex->mensura
+            || !_est_hex_digitus(_lex_currens(lex)))
+        {
+            redde FALSUM;
+        }
+        *unitas = *unitas * XVI + _hex_valor(_lex_currens(lex));
+    }
+    redde VERUM;
+}
+
+/* Legere chordam (RFC 8259 stricte, 2026-09-22): effugia sola
+ * licita \" \\ \/ \b \f \n \r \t \uXXXX (olim '\x' accipiebatur
+ * et per scripturam iteratam sensum mutabat); characteres < U+0020
+ * crudi refutantur (olim tab et ceteri transibant); surrogatum altum
+ * humile sequens postulat, humile solitarium refutatur (olim CESU-8
+ * invalidum gignebatur). Locus erroris effugii = '\\' eius. */
 interior JsonToken
 _lex_chorda (
     JsonLexema* lex)
@@ -277,35 +317,69 @@ _lex_chorda (
 
         si (c == '\\')
         {
-            /* Escape sequence - saltare duo characteres */
+            i32 linea_eff    = lex->linea;
+            i32 columna_eff  = lex->columna;
+            i32 unitas;
+
             _lex_avanzare(lex);
             si (lex->positio >= lex->mensura)
             {
                 redde _lex_error(lex,
-                    "Chorda non terminata post escape");
+                    "Chorda non terminata post effugium");
             }
 
             c = _lex_currens(lex);
             si (c == 'u')
             {
-                /* Unicode escape \uXXXX */
-                i32 i;
-                per (i = 0; i < IV; i++)
+                si (!_lex_unitatem_legere(lex, &unitas))
                 {
-                    _lex_avanzare(lex);
-                    si (   lex->positio >= lex->mensura
-                        || !_est_hex_digitus(_lex_currens(lex)))
+                    redde _lex_error_ad(lex,
+                        "Unicode effugium invalidum (u + IV hex)",
+                        linea_eff, columna_eff);
+                }
+                si (unitas >= 0xDC00 && unitas <= 0xDFFF)
+                {
+                    redde _lex_error_ad(lex,
+                        "Surrogatum humile solitarium (sine alto)",
+                        linea_eff, columna_eff);
+                }
+                si (unitas >= 0xD800 && unitas <= 0xDBFF)
+                {
+                    i32 humile;
+
+                    si (   _lex_aspicere(lex, I)  != '\\'
+                        || _lex_aspicere(lex, II) != 'u')
                     {
-                        redde _lex_error(lex,
-                            "Unicode escape invalidus");
+                        redde _lex_error_ad(lex,
+                            "Surrogatum altum sine humili sequente",
+                            linea_eff, columna_eff);
+                    }
+                    _lex_avanzare(lex);
+                    _lex_avanzare(lex);
+                    si (   !_lex_unitatem_legere(lex, &humile)
+                        || humile < 0xDC00 || humile > 0xDFFF)
+                    {
+                        redde _lex_error_ad(lex,
+                            "Surrogatum altum sine humili sequente",
+                            linea_eff, columna_eff);
                     }
                 }
             }
+            alioquin si (   c != '"' && c != '\\' && c != '/'
+                         && c != 'b' && c != 'f' && c != 'n'
+                         && c != 'r' && c != 't')
+            {
+                redde _lex_error_ad(lex,
+                    "Effugium invalidum - licita: \" \\ / b f n r t u",
+                    linea_eff, columna_eff);
+            }
             _lex_avanzare(lex);
         }
-        alioquin si (c == '\n' || c == '\r')
+        alioquin si ((insignatus character)c < 0x20)
         {
-            redde _lex_error(lex, "Newline in chorda");
+            redde _lex_error(lex,
+                "Character imperans crudus in chorda (< U+0020) -"
+                " effugium requiritur");
         }
         alioquin
         {
@@ -505,6 +579,26 @@ _lex_proxima (
 /* Convertere escape sequences in chorda
  * Allocat nova chorda in piscina
  */
+/* IV cifras hex ad punctum codicis */
+interior i32
+_hex_quattuor (
+    constans i8* p)
+{
+    i32 valor = 0;
+    i32 j;
+
+    per (j = 0; j < IV; j++)
+    {
+        valor = valor * XVI + _hex_valor((character)p[j]);
+    }
+    redde valor;
+}
+
+/* Convertere escape sequences in chorda
+ * Allocat nova chorda in piscina. Grammatica iam a lexemate probata
+ * (effugia licita, surrogata paria); par surrogatum -> UTF-8 IV
+ * octetorum (olim CESU-8: VI octeti invalidi). Octeti <= input.
+ */
 interior chorda
 _unescape_chorda (
      chorda  input,
@@ -553,40 +647,54 @@ _unescape_chorda (
                 casus 't':  buffer[out++] = '\t'; i += II; frange;
                 casus 'u':
                 {
-                    /* Unicode escape \uXXXX */
                     si (i + V < input.mensura)
                     {
-                        i32 codepoint = 0;
-                        i32 j;
-                        per (j = 0; j < IV; j++)
+                        i32 cp         = _hex_quattuor(input.datum
+                                         + i + II);
+                        i32 consumpta  = VI;
+
+                        /* par surrogatum: \uD8xx\uDCxx -> U+10000.. */
+                        si (   cp >= 0xD800 && cp <= 0xDBFF
+                            && i + XI < input.mensura
+                            && (character)input.datum[i + VI] == '\\'
+                            && (character)input.datum[i + VII] == 'u')
                         {
-                            codepoint = codepoint * XVI
-                                + _hex_valor((character)input.datum[i
-                                + II + j]);
+                            i32 humile = _hex_quattuor(input.datum
+                                         + i + VIII);
+                            si (humile >= 0xDC00 && humile <= 0xDFFF)
+                            {
+                                cp = 0x10000 + ((cp - 0xD800) << X)
+                                    + (humile - 0xDC00);
+                                consumpta = XII;
+                            }
                         }
 
-                        /* Encode as UTF-8 */
-                        si (codepoint < 0x80)
+                        si (cp < 0x80)
                         {
-                            buffer[out++] = (i8)codepoint;
+                            buffer[out++] = (i8)cp;
                         }
-                        alioquin si (codepoint < 0x800)
+                        alioquin si (cp < 0x800)
                         {
-                            buffer[out++] = (i8)(0xC0 | (codepoint
-                                >> VI));
+                            buffer[out++] = (i8)(0xC0 | (cp >> VI));
+                            buffer[out++] = (i8)(0x80 | (cp & 0x3F));
+                        }
+                        alioquin si (cp < 0x10000)
+                        {
+                            buffer[out++] = (i8)(0xE0 | (cp >> XII));
                             buffer[out++] = (i8)(0x80
-                                | (codepoint & 0x3F));
+                                | ((cp >> VI) & 0x3F));
+                            buffer[out++] = (i8)(0x80 | (cp & 0x3F));
                         }
                         alioquin
                         {
-                            buffer[out++] = (i8)(0xE0 | (codepoint
-                                >> XII));
-                            buffer[out++] = (i8)(0x80 | ((codepoint
-                                >> VI) & 0x3F));
+                            buffer[out++] = (i8)(0xF0 | (cp >> XVIII));
                             buffer[out++] = (i8)(0x80
-                                | (codepoint & 0x3F));
+                                | ((cp >> XII) & 0x3F));
+                            buffer[out++] = (i8)(0x80
+                                | ((cp >> VI) & 0x3F));
+                            buffer[out++] = (i8)(0x80 | (cp & 0x3F));
                         }
-                        i += VI;
+                        i += consumpta;
                     }
                     alioquin
                     {
@@ -762,10 +870,27 @@ _parser_error (
 {
     si (!parser->error)
     {
-        parser->error = VERUM;
-        parser->error_msg = chorda_ex_literis(msg, parser->piscina);
-        parser->error_linea = parser->currens.linea;
-        parser->error_columna = parser->currens.columna;
+        parser->error      = VERUM;
+        parser->error_msg  = chorda_ex_literis(msg, parser->piscina);
+        /* lexema currens ERROR: causa vera lexematis addita
+         * ('Clavis chorda expectata: Chorda non terminata') - olim
+         * sub nuntio parsatoris celabatur (2026-09-22) */
+        si (   parser->currens.genus == JSON_TOK_ERROR
+            && parser->currens.error != NIHIL)
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(
+                parser->piscina, CXXVIII);
+            si (aed != NIHIL)
+            {
+                chorda_aedificator_appendere_literis(aed, msg);
+                chorda_aedificator_appendere_literis(aed, ": ");
+                chorda_aedificator_appendere_literis(aed,
+                    parser->currens.error);
+                parser->error_msg = chorda_aedificator_finire(aed);
+            }
+        }
+        parser->error_linea    = parser->currens.linea;
+        parser->error_columna  = parser->currens.columna;
     }
 }
 
@@ -854,7 +979,6 @@ _parse_objectum (
         }
         clavis_raw    = _parser_token_valor(parser);
         clavis_unesc  = _unescape_chorda(clavis_raw, parser->piscina);
-        _parser_avanzare(parser);
 
         /* Internare clavem - "" quoque canonicam habet; NIHIL =
          * allocatio defecit, et clavis NIHIL in objecto scribere et
@@ -865,6 +989,29 @@ _parse_objectum (
             _parser_error(parser, "Allocatio fallita");
             redde NIHIL;
         }
+
+        /* CLAVIS DUPLICATA refutatur (2026-09-22; olim ambae
+         * servabantur et capere PRIMAM reddebat - RFC 8259 'SHOULD
+         * be unique', eventus annalium cum duobus valoribus unius
+         * clavis corruptio est). Comparatio per pointer internatum
+         * (post effugia); locus = clavis duplicata, ideo ANTE
+         * progressum. Linearis ut capere. */
+        {
+            i32 k;
+            i32 num = (i32)xar_numerus(obj->datum.objectum);
+
+            per (k = 0; k < num; k++)
+            {
+                JsonPar* prior = (JsonPar*)xar_obtinere(
+                    obj->datum.objectum, k);
+                si (prior && prior->clavis == clavis_intern)
+                {
+                    _parser_error(parser, "Clavis duplicata");
+                    redde NIHIL;
+                }
+            }
+        }
+        _parser_avanzare(parser);
 
         /* Expectare : */
         si (!_parser_expectare(parser, JSON_TOK_COLON))

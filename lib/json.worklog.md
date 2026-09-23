@@ -120,3 +120,49 @@ nine exact writer forms, and seven doubles (0.1, 1/3, DBL_MIN,
 DBL_MAX, smallest denormal, 123456.789, -2^53) that must come back
 bitwise-equal and still fluitans. Helpers print each case. Born red:
 every refusal and every writer form except 2.5 and 1e+20 failed before.
+
+## 2026-09-22 — audit, step IV: strict strings, true causes, no duplicate keys
+
+**Surrogate pairs.** `😀` decoded each half separately into
+CESU-8 (ed a0 bd ed b8 80 — invalid UTF-8). The lexer now validates the
+pair (high must be followed by `\u` + a low; a lone low is refused),
+and `_unescape_chorda` combines it: 0x10000 + ((hi-0xD800) << 10) +
+(lo-0xDC00), encoded in four bytes. Output never exceeds input (12
+escaped bytes → 4), so the buffer bound holds. Errors: "Surrogatum
+altum sine humili sequente" / "Surrogatum humile solitarium".
+
+**Escapes and control characters.** Any character after `\` was
+accepted; the unescaper then kept an unknown escape verbatim (`\x` →
+backslash + x), which the writer re-escaped as `\\x` — the text's
+meaning changed on a round trip. Now only `\" \\ \/ \b \f \n \r \t
+\uXXXX`; anything else = "Effugium invalidum". Raw bytes < 0x20 inside
+a string (tab included; only \n and \r were refused before) = "Character
+imperans crudus in chorda". DEL and raw UTF-8 stay legal. Escape errors
+are located at the BACKSLASH (`_lex_error_ad` carries a saved position;
+the old errors pointed wherever the cursor happened to stop).
+
+**True causes.** When the current token is a lexer ERROR, `_parser_error`
+now appends the lexer's message: `{"abc` says "Clavis chorda expectata:
+Chorda non terminata", `[1 @]` says "Token inexpectatum: Character
+ignotus", `[1] @` says "Contentum post valorem radicis: Character
+ignotus" (step II's assertion on "post valorem" still holds). Nothing in
+the house matched on json error text (grepped first).
+
+**Duplicate keys** (Fran approved refusal): `{"a":1,"a":2}` kept both
+and `capere` returned the FIRST. Now "Clavis duplicata" at the duplicate
+key; comparison is by interned pointer, so `"ab"` and `"ab"`
+collide (tested). The key is interned BEFORE advancing so the error
+points at it. Linear scan per key (quadratic per object), same cost
+class as `capere`; objects in the house are small. The builder's
+`json_objectum_ponere` still overwrites — that is an API choice, not
+input.
+
+Consumer/data check: live forum.jsonl (3640) + tabularium.jsonl (2540)
+all parse under the strict rules; neither contains a surrogate escape.
+Tests `probatio_chordae_strictae` + `probatio_claves_duplicatae`
+(helpers print each case): pairs incl. U+10000 and U+10FFFF, BMP
+boundaries, \u0000 inside a string, every legal escape, DEL/UTF-8, a
+round trip of the emoji, five surrogate refusals, four escape refusals,
+four control-char refusals, five lexer-cause checks, three duplicate
+refusals and two legal same-key-different-object cases. Born red: every
+new refusal and every pair decode failed before.
