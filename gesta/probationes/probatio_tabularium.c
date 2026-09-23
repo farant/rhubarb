@@ -2469,6 +2469,23 @@ principale (vacuum)
             "\"legere\",\"arguments\":{\"genus\":\"pipatum\"}}}");
         CREDO_VERUM (strstr(r, pipi) != NIHIL);
         CREDO_VERUM (strstr(r, "respondet_ad") != NIHIL);
+        /* ad IGNOTUM: totum recusatur, nihil scriptum (01M37JYNMT) -
+         * olim textus crudus ut membrum cadebat et res sine vinculo
+         * vero nascebatur; LXXII vincula respondet-ad in annalibus
+         * (tabularium + forum) nullum textum crudum ferunt */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":9621,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"pipatum\","
+            "\"titulus\":\"Pp responsum orbum\",\"corpus\":"
+            "\"ad nihil.\",\"ad\":\"Pipatum nullum\"}}}");
+        CREDO_VERUM (strstr(r, "creata") == NIHIL);
+        CREDO_VERUM (strstr(r, "nihil scriptum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Pipatum nullum") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":9622,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":"
+            "\"Pp responsum orbum\"}}}");
+        CREDO_VERUM (strstr(r, "res ignota") != NIHIL);
 
         /* diurnum (acta diurna): genus SEMINATUM - creatio nullam
          * notam custodiae trahit. Regressio mensurata 2026-08-01:
@@ -4987,6 +5004,15 @@ principale (vacuum)
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"res\",\"arguments\":{\"res\":\"Mt nota orba\"}}}");
         CREDO_VERUM (strstr(r, "res ignota") != NIHIL);
+        /* intra ET ad ignota: causae AMBAE simul (numquam guttatim) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5829,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Mt nota bis orba\",\"intra\":"
+            "\"Rg regio nulla\",\"ad\":\"Res nulla\"}}}");
+        CREDO_VERUM (strstr(r, "(2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "intra: 'Rg regio nulla'") != NIHIL);
+        CREDO_VERUM (strstr(r, "ad: 'Res nulla'") != NIHIL);
 
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */

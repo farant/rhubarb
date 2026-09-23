@@ -172,3 +172,24 @@ by restoring gerere's hand count XIII -> red at probatio l.508.
 Also noticed: an unknown argument name is silently ignored by every
 tool (the intra test was red on BEHAVIOUR, not on a refusal). Not
 changed here.
+
+## 2026-09-23 — addere {ad} brought to the {intra} shape (01M37JYNMT)
+
+`ad` (reply-to) resolved its target AFTER writing the item, accepted an
+unresolvable target as the raw-text member b, and wrote item and link
+as separate writes ("res creata sed nexus respondet-ad fractus" was
+reachable). Before changing it I checked whether raw text was ever
+LEGITIMATE: 72 respondet-ad links across both logs (9 tabularium, 63
+forum), zero raw-text targets; the forum app's `mittere {ad}` replies
+to an item already on screen, so it always sends a res_id. So: same
+shape as intra. `_intra_eventa_componere` became
+`_vinculi_eventa_componere(verbum, ...)`; `_alterum_nati_solvere`
+resolves intra and ad TOGETHER and collects every cause, so a call with
+both bad refuses once naming both ("addere RECUSATUM (2 causae) -
+nihil scriptum"). Item + up to two links = one batch (VII events max;
+the capture path extends its own batch by up to VI). The response now
+names the reply target by title, like intra.
+
+Tests: unknown ad refused with nothing created (born red, 3 of 4);
+both-bad names both causes (written after the fix, so planted: skipping
+the ad resolution -> 7 failures incl. l.5013/5015).

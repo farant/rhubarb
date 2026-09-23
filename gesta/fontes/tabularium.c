@@ -2265,17 +2265,19 @@ _membrum_scribere (
     redde gesta_scribere(t->mundus, &ev, NIHIL);
 }
 
-/* ADDERE {intra} (01M37AY25M): eventa III vinculi 'intra' in fascem
- * creationis appendenda - creatio nexus (res_id praecusum) + membra
- * a (res nova) et b (parens solutus). Res et vinculum uno fasce:
- * aut ambo scripta aut neutrum (olim 'ad' duas scripturas faciebat -
- * 'res creata sed nexus fractus' possibilis). */
+/* ADDERE {intra, ad}: eventa III vinculi a re NOVA nati in fascem
+ * creationis appendenda - creatio nexus (res_id praecusum, verbum
+ * datum) + membra a (res nova) et b (alterum solutum). Res et vincula
+ * uno fasce: aut omnia scripta aut nihil (olim 'ad' scripturas
+ * separatas faciebat - 'res creata sed nexus fractus' possibilis;
+ * 01M37AY25M, 01M37JYNMT). */
 interior vacuum
-_intra_eventa_componere (
+_vinculi_eventa_componere (
                 Piscina* pn,
+     constans character* verbum,
      constans character* res_id,
      constans character* vinculum_id,
-                 chorda  parens_id,
+                 chorda  alterum_id,
      constans character* actor_l,
      constans character* origo_l,
      GestaFascisEventum* tria)
@@ -2285,20 +2287,61 @@ _intra_eventa_componere (
     json_objectum_ponere(d, "genus",
         json_chorda_creare_literis(pn, "nexus"));
     json_objectum_ponere(d, "verbum",
-        json_chorda_creare_literis(pn, VERBUM_INTRA));
+        json_chorda_creare_literis(pn, verbum));
     tria[0].event_id               = NIHIL;
     tria[0].eventum.res_id         = vinculum_id;
     tria[0].eventum.genus_eventus  = "creatio";
-    tria[0].eventum.datum           = _litterae(pn,
+    tria[0].eventum.datum          = _litterae(pn,
         json_scribere(d, pn));
     tria[0].eventum.actor  = actor_l;
     tria[0].eventum.origo  = origo_l;
     tria[I].event_id       = NIHIL;
-    tria[I].eventum                 = _membrum_eventum(pn,
+    tria[I].eventum                = _membrum_eventum(pn,
         vinculum_id, "a", _ch(res_id), actor_l, origo_l);
-    tria[II].event_id               = NIHIL;
-    tria[II].eventum                = _membrum_eventum(pn,
-        vinculum_id, "b", parens_id, actor_l, origo_l);
+    tria[II].event_id              = NIHIL;
+    tria[II].eventum               = _membrum_eventum(pn,
+        vinculum_id, "b", alterum_id, actor_l, origo_l);
+}
+
+/* alterum vinculi ab addere nati (intra, ad) solvere: ignotum aut
+ * ambiguum = causa in indicem - omnes simul referuntur, numquam
+ * guttatim (lex praeiudicii vinculi). Vacua = causa scripta. */
+interior chorda
+_alterum_nati_solvere (
+                Tabularium* t,
+                   Piscina* pn,
+        constans character* parametrum,
+                    chorda  clavis,
+         ChordaAedificator* causae,
+                       i32* numerus)
+{
+       b32 ambiguum  = FALSUM;
+    chorda id        = _res_solvere(t, clavis, pn, &ambiguum);
+
+    si (!ambiguum && id.mensura > ZEPHYRUM)
+    {
+        redde id;
+    }
+    (*numerus)++;
+    chorda_aedificator_appendere_literis(causae, "\n  - ");
+    chorda_aedificator_appendere_literis(causae, parametrum);
+    chorda_aedificator_appendere_literis(causae, ": '");
+    chorda_aedificator_appendere_chorda(causae, clavis);
+    si (ambiguum)
+    {
+        chorda_aedificator_appendere_literis(causae,
+            "' ambiguum - ");
+        _candidatos_appendere(t, causae, clavis, pn);
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(causae,
+            "' ignotum (id, praefixum inambiguum, aut titulus"
+            " exactus)");
+    }
+    id.mensura  = ZEPHYRUM;
+    id.datum    = NIHIL;
+    redde id;
 }
 
 
@@ -5822,6 +5865,8 @@ _tab_addere (
                 chorda  intra      = _arg(argumenta, "intra");
                 chorda  intra_id;
              character  vinculum_intra[GESTA_RES_ID_MENSURA];
+                chorda  ad_id;
+             character  vinculum_ad[GESTA_RES_ID_MENSURA];
                 chorda  ramus_arg  = _arg(argumenta, "ramus");
                 chorda  datum_arg  = _arg(argumenta, "datum");
                 chorda  natura     = _arg(argumenta, "natura");
@@ -5865,6 +5910,8 @@ _tab_addere (
     }
     intra_id.mensura  = ZEPHYRUM;
     intra_id.datum    = NIHIL;
+    ad_id.mensura     = ZEPHYRUM;
+    ad_id.datum       = NIHIL;
     si (intra.mensura > ZEPHYRUM && ramus_arg.mensura > ZEPHYRUM)
     {
         _textum_respondere(t, pn, effusio, id,
@@ -5892,39 +5939,45 @@ _tab_addere (
             redde;
         }
     }
-    /* INTRA (01M37AY25M): parens solvitur ANTE scripturam ullam -
-     * ignotus aut ambiguus totum recusat, nihil scriptum (dissimile
-     * 'ad', cuius textus crudus ut membrum cadit) */
-    si (intra.mensura > ZEPHYRUM)
+    /* VINCULA NATA (intra 01M37AY25M, ad 01M37JYNMT): altera
+     * solvuntur ANTE scripturam ullam - ignotum aut ambiguum totum
+     * recusat, nihil scriptum, causae OMNES simul. (Olim 'ad' textum
+     * crudum ut membrum accipiebat; LXXII vincula respondet-ad in
+     * annalibus tabularii et fori nullum textum crudum ferunt.) */
+    si (intra.mensura > ZEPHYRUM || ad.mensura > ZEPHYRUM)
     {
-        b32 ambiguum = FALSUM;
+        ChordaAedificator* causae = chorda_aedificator_creare(pn,
+            DXII);
+                      i32 numerus = ZEPHYRUM;
 
-        intra_id = _res_solvere(t, intra, pn, &ambiguum);
-        si (ambiguum || intra_id.mensura == ZEPHYRUM)
+        si (intra.mensura > ZEPHYRUM)
+        {
+            intra_id = _alterum_nati_solvere(t, pn, "intra", intra,
+                causae, &numerus);
+        }
+        si (ad.mensura > ZEPHYRUM)
+        {
+            ad_id = _alterum_nati_solvere(t, pn, "ad", ad, causae,
+                &numerus);
+        }
+        si (numerus > ZEPHYRUM)
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 DXII);
+                    character caput[LXIV];
 
-            chorda_aedificator_appendere_literis(aed,
-                "intra RECUSATUM - nihil scriptum: parens '");
-            chorda_aedificator_appendere_chorda(aed, intra);
-            si (ambiguum)
-            {
-                chorda_aedificator_appendere_literis(aed,
-                    "' ambiguus - ");
-                _candidatos_appendere(t, aed, intra, pn);
-            }
-            alioquin
-            {
-                chorda_aedificator_appendere_literis(aed,
-                    "' ignotus (id, praefixum inambiguum, aut"
-                    " titulus exactus)");
-            }
+            sprintf(caput, "addere RECUSATUM (%d %s) - nihil"
+                " scriptum:", (int)numerus,
+                numerus == I ? "causa" : "causae");
+            chorda_aedificator_appendere_literis(aed, caput);
+            chorda_aedificator_appendere_chorda(aed,
+                chorda_aedificator_finire(causae));
             _textum_respondere(t, pn, effusio, id,
                 chorda_aedificator_finire(aed), VERUM);
             redde;
         }
         moneta_ulid(vinculum_intra);
+        moneta_ulid(vinculum_ad);
     }
     /* captura fragmentorum (genera capturabilia, trunci solum):
      * corpus stampatum ANTE constructionem dati - eventus creationis
@@ -6114,20 +6167,32 @@ _tab_addere (
         e.res_id = articulus_id;
         tabulatum = _capturas_fascis_componere(pn, captura.eventa,
             &e, &numerus_ev);
-        si (tabulatum != NIHIL && intra_id.mensura > ZEPHYRUM)
+        si (   tabulatum != NIHIL
+            && (intra_id.mensura > ZEPHYRUM
+                || ad_id.mensura > ZEPHYRUM))
         {
             GestaFascisEventum* amplius = (GestaFascisEventum*)
-                piscina_allocare(pn, (memoriae_index)(numerus_ev + III)
+                piscina_allocare(pn, (memoriae_index)(numerus_ev + VI)
                     * (memoriae_index)magnitudo(GestaFascisEventum));
 
             si (amplius != NIHIL)
             {
                 memcpy(amplius, tabulatum, (size_t)numerus_ev
                     * magnitudo(GestaFascisEventum));
-                _intra_eventa_componere(pn, articulus_id,
-                    vinculum_intra, intra_id, actor_l, e.origo,
-                    amplius + numerus_ev);
-                numerus_ev += III;
+                si (intra_id.mensura > ZEPHYRUM)
+                {
+                    _vinculi_eventa_componere(pn, VERBUM_INTRA,
+                        articulus_id, vinculum_intra, intra_id,
+                        actor_l, e.origo, amplius + numerus_ev);
+                    numerus_ev += III;
+                }
+                si (ad_id.mensura > ZEPHYRUM)
+                {
+                    _vinculi_eventa_componere(pn, "respondet-ad",
+                        articulus_id, vinculum_ad, ad_id, actor_l,
+                        e.origo, amplius + numerus_ev);
+                    numerus_ev += III;
+                }
             }
             tabulatum = amplius;
         }
@@ -6162,19 +6227,31 @@ _tab_addere (
             }
         }
     }
-    alioquin si (intra_id.mensura > ZEPHYRUM)
+    alioquin si (   intra_id.mensura > ZEPHYRUM
+                 || ad_id.mensura > ZEPHYRUM)
     {
-        /* res + vinculum 'intra' fasce UNO: res_id praecusum ut
-         * membrum 'a' eum nominet */
-        GestaFascisEventum fascis[IV];
+        /* res + vincula nata fasce UNO: res_id praecusum ut membrum
+         * 'a' eam nominet */
+        GestaFascisEventum fascis[VII];
+                       i32 n = I;
 
         moneta_ulid(res_id);
         e.res_id            = res_id;
         fascis[0].event_id  = NIHIL;
         fascis[0].eventum   = e;
-        _intra_eventa_componere(pn, res_id, vinculum_intra, intra_id,
-            actor_l, e.origo, fascis + I);
-        si (!gesta_fascis_scribere(t->mundus, fascis, IV, NIHIL))
+        si (intra_id.mensura > ZEPHYRUM)
+        {
+            _vinculi_eventa_componere(pn, VERBUM_INTRA, res_id,
+                vinculum_intra, intra_id, actor_l, e.origo, fascis + n);
+            n += III;
+        }
+        si (ad_id.mensura > ZEPHYRUM)
+        {
+            _vinculi_eventa_componere(pn, "respondet-ad", res_id,
+                vinculum_ad, ad_id, actor_l, e.origo, fascis + n);
+            n += III;
+        }
+        si (!gesta_fascis_scribere(t->mundus, fascis, n, NIHIL))
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -6187,7 +6264,14 @@ _tab_addere (
                 chorda_aedificator_finire(aed), VERUM);
             redde;
         }
-        _entitatem_reconciliare(t, vinculum_intra, pn);
+        si (intra_id.mensura > ZEPHYRUM)
+        {
+            _entitatem_reconciliare(t, vinculum_intra, pn);
+        }
+        si (ad_id.mensura > ZEPHYRUM)
+        {
+            _entitatem_reconciliare(t, vinculum_ad, pn);
+        }
     }
     alioquin si (!gesta_scribere(t->mundus, &e, res_id))
     {
@@ -6204,44 +6288,6 @@ _tab_addere (
     }
     _tabulam_scribere(t, pn);
     _entitatem_reconciliare(t, res_id, pn);
-    /* ad (F4 ergonomia): nexus respondet-ad sponte - responsum
-     * filo uno vocamine, non duobus (exemplar bracchii nexus in
-     * _tab_gerere) */
-    si (ad.mensura > ZEPHYRUM)
-    {
-        chorda alterum_id = _res_solvere(t, ad, pn, NIHIL);
-        chorda membrum_b = alterum_id.mensura > ZEPHYRUM
-            ? alterum_id : ad;
-        constans character* actor_l = actor.mensura > ZEPHYRUM
-            ? _litterae(pn, actor) : "claude";
-        constans character* origo_l = origo.mensura > ZEPHYRUM
-            ? _litterae(pn, origo) : "mcp";
-           JsonValor* d = json_objectum_creare(pn);
-        GestaEventum  ev;
-           character  vinculum_id[GESTA_RES_ID_MENSURA];
-
-        json_objectum_ponere(d, "genus",
-            json_chorda_creare_literis(pn, "nexus"));
-        json_objectum_ponere(d, "verbum",
-            json_chorda_creare_literis(pn, "respondet-ad"));
-        ev.res_id         = NIHIL;
-        ev.genus_eventus  = "creatio";
-        ev.datum          = _litterae(pn, json_scribere(d, pn));
-        ev.actor          = actor_l;
-        ev.origo          = origo_l;
-        si (   !gesta_scribere(t->mundus, &ev, vinculum_id)
-            || !_membrum_scribere(t, pn, vinculum_id, "a",
-                   _ch(res_id), actor_l, origo_l)
-            || !_membrum_scribere(t, pn, vinculum_id, "b",
-                   membrum_b, actor_l, origo_l))
-        {
-            _textum_respondere(t, pn, effusio, id,
-                _ch("res creata sed nexus respondet-ad fractus"),
-                VERUM);
-            redde;
-        }
-        _entitatem_reconciliare(t, vinculum_id, pn);
-    }
     {
         ChordaAedificator* aed = chorda_aedificator_creare(pn,
             CCLVI);
@@ -6264,7 +6310,8 @@ _tab_addere (
         {
             chorda_aedificator_appendere_literis(aed,
                 " --respondet-ad--> ");
-            chorda_aedificator_appendere_chorda(aed, ad);
+            chorda_aedificator_appendere_chorda(aed,
+                _titulus_membri(t, ad_id, pn));
         }
         si (intra_id.mensura > ZEPHYRUM)
         {
