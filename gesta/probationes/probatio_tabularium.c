@@ -5014,6 +5014,36 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "intra: 'Rg regio nulla'") != NIHIL);
         CREDO_VERUM (strstr(r, "ad: 'Res nulla'") != NIHIL);
 
+        /* ARGUMENTA IGNOTA (01M37JYP2W): clavis non publicata
+         * recusatur, nihil actum, proxima suggeritur - olim tacite
+         * neglegebatur ('intr' -> res sine parente nascebatur) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5830,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Mt nota typo\",\"intr\":"
+            "\"Rg glyphae\"}}}");
+        CREDO_VERUM (strstr(r, "creata") == NIHIL);
+        CREDO_VERUM (strstr(r, "argumenta RECUSATA (1 causa)")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "'intr' ignotum - fortasse 'intra'?")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "ARGUMENTA 'addere':") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5831,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Mt nota typo\"}}}");
+        CREDO_VERUM (strstr(r, "res ignota") != NIHIL);
+        /* causae omnes simul; clavis longinqua sine suggestione */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5832,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Rg glyphae\","
+            "\"actus\":\"nota\",\"textum\":\"x\","
+            "\"zzzzzzzz\":\"y\"}}}");
+        CREDO_VERUM (strstr(r, "(2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "'textum' ignotum - fortasse 'textus'?")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "'zzzzzzzz' ignotum\\n") != NIHIL
+            || strstr(r, "'zzzzzzzz' ignotum\\nARGUMENTA") != NIHIL);
+
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5821,"

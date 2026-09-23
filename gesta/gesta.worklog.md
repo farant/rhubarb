@@ -193,3 +193,25 @@ names the reply target by title, like intra.
 Tests: unknown ad refused with nothing created (born red, 3 of 4);
 both-bad names both causes (written after the fix, so planted: skipping
 the ad resolution -> 7 failures incl. l.5013/5015).
+
+## 2026-09-23 — unknown argument keys are refused (01M37JYP2W)
+
+Every tool used to read only the keys it knew (`_arg`) and silently drop
+the rest, so a misspelled or unpublished parameter did nothing and said
+nothing — the addere {intra} test was red on BEHAVIOUR (item created,
+no link), not on a refusal. Now `_toolscall_tractare` first compares
+the argument keys with the tool's PUBLISHED schema and refuses:
+"argumenta RECUSATA (N causae) - nihil actum", one line per unknown key
+with the nearest known name when close enough (Levenshtein <= 2, or
+len/3 for keys over 6 chars), then "ARGUMENTA '<tool>': <all keys>".
+The schema construction moved out of tools/list into
+`_instrumenta_componere()` so both use one source (the same derived
+counts fixed in e6fdaaa5 — a hand-miscounted table would now refuse
+its own last parameter, loudly).
+
+Before turning it on, audited every caller: each handler's `_arg` reads
+vs its table (all read keys declared); the forum app's addere/gerere/
+legere keys; pythonica goes through frigida (direct C, no tools/call);
+the linux smoke sends census {}. All five gesta suites green, so the
+fori/tabulariumd paths send nothing undeclared either. Tests written
+after the code, so planted (check short-circuited -> 8 red).

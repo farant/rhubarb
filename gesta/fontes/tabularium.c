@@ -11258,14 +11258,13 @@ _instrumentum (
     redde instrumentum;
 }
 
-interior vacuum
-_toolslist_tractare (
-      Piscina* pn,
-    JsonValor* id,
-         FILE* effusio)
+/* instrumenta cum schematibus componere - una sedes: tools/list id
+ * reddit, tools/call eo argumenta ignota iudicat (01M37JYP2W) */
+interior JsonValor*
+_instrumenta_componere (
+    Piscina* pn)
 {
-    JsonValor* resultatum   = json_objectum_creare(pn);
-    JsonValor* instrumenta  = json_tabulatum_creare(pn);
+    JsonValor* instrumenta = json_tabulatum_creare(pn);
     interior constans TabArgumentum ARG_ADDERE[] = {
         { "genus", "quaestio|parcum|decretum|nota|desideratum|opus|"
           "regio. opus = OPUS PLANI gradu commissi (pendens ->"
@@ -11584,9 +11583,179 @@ _toolslist_tractare (
         " addere/gerere/res (ibi res_id requiritur).",
         ARG_RAMUS,
         ARGUMENTORUM_NUMERUS(ARG_RAMUS)));
-    json_objectum_ponere(resultatum, "tools", instrumenta);
+    redde instrumenta;
+}
+
+interior vacuum
+_toolslist_tractare (
+      Piscina* pn,
+    JsonValor* id,
+         FILE* effusio)
+{
+    JsonValor* resultatum = json_objectum_creare(pn);
+
+    json_objectum_ponere(resultatum, "tools",
+        _instrumenta_componere(pn));
     _respondere(effusio, tabellarius_responsum(pn, id,
         resultatum));
+}
+
+/* distantia editionis (Levenshtein) inter verba brevia - suggestio
+ * clavis proximae; verba > LXIV octetis non comparantur (M) */
+interior i32
+_distantia_verborum (
+    chorda a,
+    chorda b)
+{
+    i32 prior[LXV];
+    i32 currens[LXV];
+    i32 i;
+    i32 j;
+
+    si (a.mensura > LXIV || b.mensura > LXIV)
+    {
+        redde (i32)M;
+    }
+    per (j = ZEPHYRUM; j <= b.mensura; j++)
+    {
+        prior[j] = j;
+    }
+    per (i = I; i <= a.mensura; i++)
+    {
+        currens[0] = i;
+        per (j = I; j <= b.mensura; j++)
+        {
+            i32 substitutio = prior[j - I]
+                + (a.datum[i - I] == b.datum[j - I] ? ZEPHYRUM : I);
+            i32 deletio   = prior[j] + I;
+            i32 insertio  = currens[j - I] + I;
+            i32 minima      = substitutio < deletio
+                ? substitutio : deletio;
+
+            currens[j] = insertio < minima ? insertio : minima;
+        }
+        memcpy(prior, currens, (size_t)(b.mensura
+            + I) * magnitudo(i32));
+    }
+    redde prior[b.mensura];
+}
+
+/* ARGUMENTA IGNOTA (01M37JYP2W): clavis quam schema instrumenti non
+ * publicat RECUSATUR, nihil actum - olim tacite neglegebatur (agens
+ * 'intr' pro 'intra' mittens nihil discebat; probatio addere {intra}
+ * MORIBUS rubra erat, non recusatione). Causae OMNES simul; clavis
+ * proxima suggeritur; argumenta nota enumerantur (recusatio docet).
+ * Instrumentum ignotum hic non iudicatur - tractator suus respondet.
+ * VERUM = recusatum. */
+interior b32
+_argumenta_ignota_recusare (
+    Tabularium* t,
+       Piscina* pn,
+     JsonValor* id,
+        chorda  titulus,
+     JsonValor* argumenta,
+          FILE* effusio)
+{
+                    JsonValor* instrumenta;
+                    JsonValor* proprietates = NIHIL;
+         JsonObjectumIterator  iter;
+                       chorda  clavis;
+                    JsonValor* valor;
+            ChordaAedificator* causae;
+            ChordaAedificator* aed;
+                          i32  numerus = ZEPHYRUM;
+                          i32  k;
+                    character  caput[LXIV];
+
+    si (argumenta == NIHIL || !json_est_objectum(argumenta))
+    {
+        redde FALSUM;
+    }
+    instrumenta = _instrumenta_componere(pn);
+    per (k = ZEPHYRUM; k < json_tabulatum_numerus(instrumenta); k++)
+    {
+        JsonValor* instr = json_tabulatum_obtinere(instrumenta, k);
+
+        si (chorda_aequalis(json_ad_chorda(
+                json_objectum_capere(instr, "name")), titulus))
+        {
+            proprietates = json_objectum_capere(
+                json_objectum_capere(instr, "inputSchema"),
+                "properties");
+            frange;
+        }
+    }
+    si (proprietates == NIHIL)
+    {
+        redde FALSUM;
+    }
+    causae  = chorda_aedificator_creare(pn, DXII);
+    iter    = json_objectum_iterator(argumenta);
+    dum (json_objectum_iterator_proxima(&iter, &clavis, &valor))
+    {
+        JsonObjectumIterator  nota;
+                      chorda  proxima;
+                      chorda  nomen_notum;
+                   JsonValor* valor_notus;
+                         i32  optima = (i32)M;
+
+        si (json_objectum_capere_chorda(proprietates, clavis) != NIHIL)
+        {
+            perge;
+        }
+        numerus++;
+        proxima.mensura  = ZEPHYRUM;
+        proxima.datum    = NIHIL;
+        nota             = json_objectum_iterator(proprietates);
+        dum (json_objectum_iterator_proxima(&nota, &nomen_notum,
+                 &valor_notus))
+        {
+            i32 d = _distantia_verborum(clavis, nomen_notum);
+
+            si (d < optima)
+            {
+                optima   = d;
+                proxima  = nomen_notum;
+            }
+        }
+        chorda_aedificator_appendere_literis(causae, "\n  - '");
+        chorda_aedificator_appendere_chorda(causae, clavis);
+        chorda_aedificator_appendere_literis(causae, "' ignotum");
+        si (   proxima.mensura > ZEPHYRUM
+            && optima <= (clavis.mensura > VI
+                   ? clavis.mensura / III : II))
+        {
+            chorda_aedificator_appendere_literis(causae,
+                " - fortasse '");
+            chorda_aedificator_appendere_chorda(causae, proxima);
+            chorda_aedificator_appendere_literis(causae, "'?");
+        }
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    aed = chorda_aedificator_creare(pn, M);
+    sprintf(caput, "argumenta RECUSATA (%d %s) - nihil actum:",
+        (int)numerus, numerus == I ? "causa" : "causae");
+    chorda_aedificator_appendere_literis(aed, caput);
+    chorda_aedificator_appendere_chorda(aed,
+        chorda_aedificator_finire(causae));
+    chorda_aedificator_appendere_literis(aed, "\nARGUMENTA '");
+    chorda_aedificator_appendere_chorda(aed, titulus);
+    chorda_aedificator_appendere_literis(aed, "':");
+    iter  = json_objectum_iterator(proprietates);
+    k     = ZEPHYRUM;
+    dum (json_objectum_iterator_proxima(&iter, &clavis, &valor))
+    {
+        chorda_aedificator_appendere_literis(aed,
+            k == ZEPHYRUM ? " " : ", ");
+        chorda_aedificator_appendere_chorda(aed, clavis);
+        k++;
+    }
+    _textum_respondere(t, pn, effusio, id,
+        chorda_aedificator_finire(aed), VERUM);
+    redde VERUM;
 }
 
 /* seminatio idempotens (INTENTIO C decisio 2; semen v2 K2 Q9) */
@@ -11945,6 +12114,11 @@ _toolscall_tractare (
     (vacuum)vigilia_inspicere(t->vigilia, pn);
     titulus    = json_ad_chorda(json_objectum_capere(params, "name"));
     argumenta  = json_objectum_capere(params, "arguments");
+    si (_argumenta_ignota_recusare(t, pn, id, titulus, argumenta,
+            effusio))
+    {
+        redde;
+    }
     si (_chorda_est(titulus, "addere"))
     {
         _tab_addere(t, pn, id, argumenta, effusio);
