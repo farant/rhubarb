@@ -671,6 +671,82 @@ probatio_profunditas(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - CAUDA (2026-09-22)
+ *
+ * json_legere FINEM post valorem radicis non probabat: '{"a":1}
+ * garbage', '1 2', '{"a":1}}' successus erant, et '01' ut 0 legebatur.
+ * gesta_annales_verificare lineam quamque sic legit - duo eventus in
+ * linea una conglutinati ut unus transibant.
+ * ======================================================================== */
+
+/* textum refutatum esse et locum caudae nominari */
+interior vacuum
+_cauda_refutata (
+               Piscina* piscina,
+    constans character* textus,
+                    i32  linea,
+                    i32  columna)
+{
+    JsonResultus res;
+
+    /* nomen casus in effusu - FRACTA infra lineas adiutoris solum
+     * nominant */
+    imprimere("  cauda refutanda: %s\n", textus);
+    res = json_legere_literis(textus, piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_NIHIL(res.radix);
+    CREDO_CHORDA_CONTINET(res.error, chorda_ex_literis("post valorem",
+        piscina));
+    CREDO_AEQUALIS_I32(res.linea, linea);
+    CREDO_AEQUALIS_I32(res.columna, columna);
+}
+
+interior vacuum
+probatio_cauda(Piscina* piscina)
+{
+    JsonResultus res;
+          chorda cum_nullo;
+
+    imprimere("--- Probans caudam ---\n");
+
+    _cauda_refutata(piscina, "{\"a\":1} garbage", I, IX);
+    _cauda_refutata(piscina, "1 2", I, III);
+    _cauda_refutata(piscina, "{\"a\":1}}", I, VIII);
+    _cauda_refutata(piscina, "[1]]", I, IV);
+    _cauda_refutata(piscina, "\"a\" \"b\"", I, V);
+    _cauda_refutata(piscina, "null null", I, VI);
+    /* duo eventus annalium sine '\n' inter eos */
+    _cauda_refutata(piscina, "{\"seq\":1}{\"seq\":2}", I, X);
+    /* cifra praefixa: '0' valor est, '1' cauda */
+    _cauda_refutata(piscina, "01", I, II);
+    _cauda_refutata(piscina, "-01", I, III);
+    _cauda_refutata(piscina, "00", I, II);
+    /* verbum clavis cum cauda litterarum */
+    _cauda_refutata(piscina, "truex", I, V);
+    /* error lexematis post valorem (olim tacitus) */
+    _cauda_refutata(piscina, "[1] @", I, V);
+    /* locus per lineas */
+    _cauda_refutata(piscina, "{}\n\n  x", III, III);
+
+    /* octetus NUL post valorem: non spatium, refutatur */
+    cum_nullo            = chorda_ex_literis("{}?", piscina);
+    cum_nullo.datum[II]  = (i8)'\0';
+    res                  = json_legere(cum_nullo, piscina);
+    CREDO_FALSUM(res.successus);
+
+    /* spatium album (quattuor genera) ante et post: licet */
+    res = json_legere_literis(" \t\r\n{\"a\":1} \t\r\n", piscina);
+    CREDO_VERUM(res.successus);
+    CREDO_AEQUALIS_S64(json_ad_integer(json_objectum_capere(res.radix,
+        "a")), 1);
+    res = json_legere_literis("0", piscina);
+    CREDO_VERUM(res.successus);
+    res = json_legere_literis("-0.5e1\n", piscina);
+    CREDO_VERUM(res.successus);
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -703,6 +779,7 @@ main (void)
     probatio_iterator(piscina);
     probatio_clavis_vacua(piscina);
     probatio_profunditas(piscina);
+    probatio_cauda(piscina);
 
     credo_imprimere_compendium();
 

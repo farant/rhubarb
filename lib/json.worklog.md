@@ -49,3 +49,34 @@ after the fix.
 Note the formatter rewrapped ~20 over-long lines across json.c on the
 first structural edit (the file predates the 72-column rule) — cosmetic
 diff noise in this commit, not behaviour.
+
+## 2026-09-22 — audit, step II: the whole input is ONE value
+
+`json_legere` parsed the first value and returned success without
+looking at what followed: `{"a":1} garbage`, `1 2`, `{"a":1}}`, `[1] @`
+(a LEXER error after the root, silently dropped) and `01` (read as 0 —
+JSON forbids leading zeros, and this was the only thing standing in for
+that rule) all succeeded. The consumer that made it matter:
+`gesta_annales_verificare` parses each annal line with json_legere, so
+two events glued onto one line (a lost '\n') passed as the first event.
+
+Fix: after the root value, `parser.currens` must be `JSON_TOK_FINIS`;
+otherwise "Contentum post valorem radicis" at the first trailing token
+(line/column asserted, including a lexer-error token and a multi-line
+position). On any failure `res.radix` is now NIHIL (before, a failed
+parse could hand back a partial root beside successus FALSUM — no caller
+relied on it, all check successus).
+
+Consumer audit BEFORE the change (lesson of step I): every production
+call site parses a single value — DB columns written by json_scribere,
+MCP arguments, one Content-Length or newline-framed message
+(tabellarius, cliens_tabularii cuts at the first '\n', internuntius),
+HTTP bodies (manus), one captured response (frigida). Live data
+checked with the stricter parser: gesta/annales/forum.jsonl 3640 lines
+and tabularium.jsonl 2525 lines, zero refused.
+
+Tests: `probatio_cauda` — 13 refusals via a helper that prints each
+input (a FRACTA inside a helper names only the helper's lines), a NUL
+byte after the value, and acceptance of all four whitespace kinds on
+both sides. Born red: every refusal case failed on all five assertions
+before the fix.

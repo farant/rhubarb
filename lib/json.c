@@ -1075,9 +1075,21 @@ json_legere (
 
     res.radix = _parse_valor(&parser);
 
+    /* CAUDA: post valorem radicis nihil nisi spatium album. Sine hoc
+     * '{"a":1} garbage', '1 2', '{"a":1}}' successus erant et '01'
+     * ut 0 legebatur; lineae annalium duos eventus conglutinatos ut
+     * unum transmittebant (2026-09-22). Locus = lexema caudae
+     * primum (etiam error lexematis, olim tacitus). */
+    si (   !parser.error && res.radix
+        && parser.currens.genus != JSON_TOK_FINIS)
+    {
+        _parser_error(&parser, "Contentum post valorem radicis");
+    }
+
     si (parser.error || !res.radix)
     {
         res.successus  = FALSUM;
+        res.radix      = NIHIL;
         res.error      = parser.error_msg;
         res.linea      = parser.error_linea;
         res.columna    = parser.error_columna;

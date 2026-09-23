@@ -110,10 +110,13 @@ nomen structura {
 
 /* Legere JSON ex chorda
  *
- * input:   Textus JSON
+ * input:   Textus JSON - TOTUS: valor unus, spatium album (' ' \t
+ *          \r \n) ante et post licet, NIHIL aliud. Cauda quaevis
+ *          ('1 2', '{}}', '01', octetus NUL) = error "Contentum post
+ *          valorem radicis" ad lexema caudae primum.
  * piscina: Arena pro allocationibus
  *
- * Redde: Resultus cum radix valor vel error
+ * Redde: Resultus cum radix valor vel error (radix NIHIL si error)
  */
 JsonResultus
 json_legere (
