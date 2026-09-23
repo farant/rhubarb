@@ -1463,7 +1463,9 @@ json_tabulatum_obtinere (
         redde NIHIL;
     }
 
-    si (index < 0 || index >= (i32)xar_numerus(valor->datum.tabulatum))
+    /* index i32 INSIGNATUS: "negativus" = numerus magnus, limes
+     * superior solus sufficit (custos "index < 0" mortuus remotus) */
+    si (index >= (i32)xar_numerus(valor->datum.tabulatum))
     {
         redde NIHIL;
     }
@@ -1590,7 +1592,8 @@ json_objectum_par_obtinere (
         redde NIHIL;
     }
 
-    si (index < 0 || index >= (i32)xar_numerus(valor->datum.objectum))
+    /* index insignatus - vide json_tabulatum_obtinere */
+    si (index >= (i32)xar_numerus(valor->datum.objectum))
     {
         redde NIHIL;
     }

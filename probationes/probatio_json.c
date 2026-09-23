@@ -355,6 +355,15 @@ probatio_builder(Piscina* piscina)
     CREDO_VERUM(json_objectum_numerus(obj) == 3);
     CREDO_VERUM(json_ad_integer(json_objectum_capere(obj, "value"))
         == 42);
+    /* ordo insertionis servatur; ponere clavem exstantem rescribit
+     * IN LOCO (non in fine) */
+    output = json_scribere(obj, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output,
+        "{\"name\":\"Test\",\"value\":42,\"active\":true}");
+    json_objectum_ponere(obj, "name", json_nullum_creare(piscina));
+    output = json_scribere(obj, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output,
+        "{\"name\":null,\"value\":42,\"active\":true}");
 
     /* Build array */
     arr = json_tabulatum_creare(piscina);
@@ -369,10 +378,21 @@ probatio_builder(Piscina* piscina)
     json_objectum_ponere(nested, "items", arr);
     json_objectum_ponere(nested, "count", json_integer_creare(piscina,
         3));
+    json_objectum_ponere(nested, "empty_arr",
+        json_tabulatum_creare(piscina));
+    json_objectum_ponere(nested, "empty_obj",
+        json_objectum_creare(piscina));
 
     output = json_scribere(nested, piscina);
-    CREDO_VERUM(output.mensura > 0);
-    imprimere("  Output: %.*s\n", output.mensura, output.datum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output,
+        "{\"items\":[1,2,3],\"count\":3,\"empty_arr\":[],"
+        "\"empty_obj\":{}}");
+
+    /* valor NIHIL in continente = null (non ruina) */
+    arr = json_tabulatum_creare(piscina);
+    json_tabulatum_addere(arr, NIHIL);
+    output = json_scribere(arr, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "[null]");
 }
 
 
@@ -391,24 +411,47 @@ probatio_serialization(Piscina* piscina)
     /* Null */
     val     = json_nullum_creare(piscina);
     output  = json_scribere(val, piscina);
-    CREDO_VERUM(output.mensura == 4);
-    CREDO_VERUM(memcmp(output.datum, "null", 4) == 0);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "null");
 
     /* Boolean */
-    val     = json_boolean_creare(piscina, VERUM);
-    output  = json_scribere(val, piscina);
-    CREDO_VERUM(memcmp(output.datum, "true", 4) == 0);
+    output = json_scribere(json_boolean_creare(piscina, VERUM),
+        piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "true");
+    output = json_scribere(json_boolean_creare(piscina, FALSUM),
+        piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "false");
 
     /* Integer */
-    val     = json_integer_creare(piscina, -123);
-    output  = json_scribere(val, piscina);
-    CREDO_VERUM(memcmp(output.datum, "-123", 4) == 0);
+    output = json_scribere(json_integer_creare(piscina, -123), piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "-123");
+    output = json_scribere(json_integer_creare(piscina, 0), piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "0");
 
-    /* String with escapes */
+    /* String with escapes - olim imprimebatur solum, nihil
+     * asserebatur (2026-09-22) */
     val     = json_chorda_creare_literis(piscina, "hello\nworld");
     output  = json_scribere(val, piscina);
-    imprimere("  Escaped: %.*s\n", output.mensura, output.datum);
-    /* Should contain \n escape */
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "\"hello\\nworld\"");
+
+    val     = json_chorda_creare_literis(piscina,
+        "q\"b\\t\tr\rs/\x01\x1F");
+    output  = json_scribere(val, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output,
+        "\"q\\\"b\\\\t\\tr\\rs/\\u0001\\u001f\"");
+
+    /* UTF-8 crudum transit, chorda vacua = "" */
+    val     = json_chorda_creare_literis(piscina, "caf\xC3\xA9");
+    output  = json_scribere(val, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "\"caf\xC3\xA9\"");
+    output  = json_scribere(json_chorda_creare_literis(piscina, ""),
+        piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "\"\"");
+
+    /* clavis effugiis indigens */
+    val = json_objectum_creare(piscina);
+    json_objectum_ponere(val, "a\"b", json_integer_creare(piscina, 1));
+    output = json_scribere(val, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "{\"a\\\"b\":1}");
 }
 
 
@@ -416,14 +459,87 @@ probatio_serialization(Piscina* piscina)
  * PROBATIONES - ROUND TRIP
  * ======================================================================== */
 
+/* aequalitas STRUCTURALIS duorum valorum: genus, valores, tabulata per
+ * indicem, objecta per claves (numerus idem, quaeque clavis a in b
+ * cum valore aequali - ordo non requiritur) */
+interior b32
+_json_aequales (
+    JsonValor* a,
+    JsonValor* b)
+{
+    i32 i;
+    i32 n;
+
+    si (a == NIHIL || b == NIHIL)
+    {
+        redde a == b;
+    }
+    si (json_genus(a) != json_genus(b))
+    {
+        redde FALSUM;
+    }
+    commutatio (json_genus(a))
+    {
+        casus JSON_NULLUM:
+            redde VERUM;
+        casus JSON_BOOLEAN:
+            redde json_ad_boolean(a) == json_ad_boolean(b);
+        casus JSON_INTEGER:
+            redde json_ad_integer(a) == json_ad_integer(b);
+        casus JSON_FLUITANS:
+            redde json_ad_fluitans(a) == json_ad_fluitans(b);
+        casus JSON_CHORDA:
+            redde chorda_aequalis(json_ad_chorda(a), json_ad_chorda(b));
+        casus JSON_TABULATUM:
+            n = json_tabulatum_numerus(a);
+            si (n != json_tabulatum_numerus(b))
+            {
+                redde FALSUM;
+            }
+            per (i = 0; i < n; i++)
+            {
+                si (!_json_aequales(json_tabulatum_obtinere(a, i),
+                        json_tabulatum_obtinere(b, i)))
+                {
+                    redde FALSUM;
+                }
+            }
+            redde VERUM;
+        casus JSON_OBJECTUM:
+            n = json_objectum_numerus(a);
+            si (n != json_objectum_numerus(b))
+            {
+                redde FALSUM;
+            }
+            per (i = 0; i < n; i++)
+            {
+                JsonPar* par = json_objectum_par_obtinere(a, i);
+                si (!_json_aequales(par->valor,
+                        json_objectum_capere_chorda(b, *par->clavis)))
+                {
+                    redde FALSUM;
+                }
+            }
+            redde VERUM;
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 probatio_round_trip(Piscina* piscina)
 {
+    /* forma COMPACTA canonica: scriptura eam byte pro byte reddere
+     * debet. Omnia genera, effugia, vacua, imbricata, unicode. */
     constans character* original =
-        "{\"name\":\"Test\",\"values\":[1,2,3],\"nested\":{\"a\":true}}";
+        "{\"name\":\"Test\",\"values\":[1,2,3],\"nested\":{\"a\":true,"
+        "\"b\":false,\"c\":null},\"f\":-0.5,\"g\":1.0,\"big\":"
+        "-9223372036854775808,\"s\":\"q\\\"\\\\\\n\\u0001\",\"u\":"
+        "\"\xC3\xA9\xF0\x9F\x98\x80\",\"e\":[[],{},[[]]],\"\":\"\"}";
           JsonResultus res1;
           JsonResultus res2;
+          JsonResultus res_pulchra;
                 chorda serialized;
+                chorda pulchrum;
 
     imprimere("--- Probans round trip ---\n");
 
@@ -431,22 +547,30 @@ probatio_round_trip(Piscina* piscina)
     res1 = json_legere_literis(original, piscina);
     CREDO_VERUM(res1.successus);
 
-    /* Serialize */
+    /* Serialize - byte pro byte idem */
     serialized = json_scribere(res1.radix, piscina);
-    imprimere("  Original:   %s\n", original);
-    imprimere("  Serialized: %.*s\n", serialized.mensura,
-        serialized.datum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(serialized, original);
 
-    /* Parse again */
+    /* Parse again - structura tota aequalis (olim claves solae
+     * probabantur: 'true' in 'false' mutatum transibat) */
     res2 = json_legere(serialized, piscina);
     CREDO_VERUM(res2.successus);
+    CREDO_VERUM(_json_aequales(res1.radix, res2.radix));
 
-    /* Compare structure */
-    CREDO_VERUM(json_objectum_numerus(res2.radix)
-        == json_objectum_numerus(res1.radix));
-    CREDO_VERUM(json_objectum_habet(res2.radix, "name"));
-    CREDO_VERUM(json_objectum_habet(res2.radix, "values"));
-    CREDO_VERUM(json_objectum_habet(res2.radix, "nested"));
+    /* per formam pulchram quoque */
+    pulchrum     = json_scribere_pulchrum(res1.radix, piscina);
+    res_pulchra  = json_legere(pulchrum, piscina);
+    CREDO_VERUM(res_pulchra.successus);
+    CREDO_VERUM(_json_aequales(res1.radix, res_pulchra.radix));
+
+    /* aequalitas ipsa discernit (ne semper VERUM reddat) */
+    res2 = json_legere_literis("{\"name\":\"Test\",\"values\":[1,2,4]}",
+        piscina);
+    CREDO_FALSUM(_json_aequales(res1.radix, res2.radix));
+    CREDO_FALSUM(_json_aequales(json_legere_literis("[true]",
+        piscina).radix, json_legere_literis("[false]", piscina).radix));
+    CREDO_FALSUM(_json_aequales(json_legere_literis("1", piscina).radix,
+        json_legere_literis("1.0", piscina).radix));
 }
 
 
@@ -471,24 +595,29 @@ probatio_pretty_print(Piscina* piscina)
     json_tabulatum_addere(arr, json_integer_creare(piscina, 1));
     json_tabulatum_addere(arr, json_integer_creare(piscina, 2));
     json_objectum_ponere(obj, "items", arr);
+    json_objectum_ponere(obj, "vacuum", json_objectum_creare(piscina));
 
+    /* forma EXACTA (olim: 'aliqua linea nova adest') */
     output = json_scribere_pulchrum(obj, piscina);
-    imprimere("%.*s\n", output.mensura, output.datum);
+    imprimere("%.*s\n", (integer)output.mensura,
+        (character*)output.datum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output,
+        "{\n"
+        "  \"name\": \"Test\",\n"
+        "  \"items\": [\n"
+        "    1,\n"
+        "    2\n"
+        "  ],\n"
+        "  \"vacuum\": {}\n"
+        "}");
 
-    /* Should have newlines */
-    {
-        i32 i;
-        b32 has_newline = FALSUM;
-        per (i = 0; i < output.mensura; i++)
-        {
-            si (output.datum[i] == '\n')
-            {
-                has_newline = VERUM;
-                frange;
-            }
-        }
-        CREDO_VERUM(has_newline);
-    }
+    /* continentia vacua et scalaria in radice */
+    output = json_scribere_pulchrum(json_tabulatum_creare(piscina),
+        piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "[]");
+    output = json_scribere_pulchrum(json_integer_creare(piscina, 7),
+        piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(output, "7");
 }
 
 

@@ -166,3 +166,46 @@ round trip of the emoji, five surrogate refusals, four escape refusals,
 four control-char refusals, five lexer-cause checks, three duplicate
 refusals and two legal same-key-different-object cases. Born red: every
 new refusal and every pair decode failed before.
+
+## 2026-09-22 — audit, step V: the old tests now assert something
+
+Four original tests passed no matter what the writer did:
+serialization printed its escaped string and asserted nothing; builder
+checked `output.mensura > 0`; round trip checked only that three KEYS
+existed; pretty print checked that SOME newline existed. Rewritten:
+
+- **serialization**: exact output for null/true/false/-123/0, a string
+  with every escape class (\" \\ \t \r / \x01 \x1F → \u0001 \u001f), raw
+  UTF-8, "", and a key needing escapes.
+- **builder**: exact compact output, insertion order kept, `ponere` on an
+  existing key overwrites IN PLACE (not appended), empty containers,
+  and a NIHIL element written as `null`.
+- **round trip**: a canonical compact document covering every genus,
+  escapes, -2^63, 1.0, -0.5, emoji, nested empties and the empty key
+  must re-serialize BYTE FOR BYTE; a recursive `_json_aequales`
+  (genus + value + arrays by index + objects by key, order-free) must
+  hold for compact AND pretty re-parse; and `_json_aequales` itself is
+  shown to discriminate (1,2,4 vs 1,2,3; true vs false; 1 vs 1.0) so it
+  cannot be a constant VERUM.
+- **pretty print**: exact multi-line output incl. a nested array and an
+  empty object, plus `[]` and a root scalar.
+
+These pass on first run (the code works); their proof is PLANTS in the
+writer, each red then green on revert (silva.planta, radix/json):
+escapes omitted (appendere_chorda) → serialization :434; booleans
+inverted → builder, serialization AND the structural round trip
+(:558, :564 — the old key-presence round trip would have stayed green);
+indentation one space → pretty :612; trailing comma after the last
+object member → builder, serialization, round trip (both re-parses
+fail), empty-key tests.
+
+Also: the two `index < 0` guards (json_tabulatum_obtinere,
+json_objectum_par_obtinere) were dead — i32 is unsigned — and are
+removed with a comment; json.h now warns that the builder does not
+detect cycles (an object placed inside itself sends the writer into
+infinite recursion) and that JSON_PROFUNDITAS_MAXIMA guards READING
+only.
+
+Left open (not json.c): `_evadere_json` in chorda_aedificator.c calls
+`iscntrl((signed char)c)`, UB for bytes >= 0x80 (works on macOS);
+`strtod` is locale-dependent (house never calls setlocale).

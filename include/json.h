@@ -295,7 +295,13 @@ json_objectum_creare (
  * FUNCTIONES - MUTARE CONTAINERS
  * ======================================================================== */
 
-/* Addere elementum ad tabulatum */
+/* Addere elementum ad tabulatum
+ *
+ * CAUTIO (mutatores omnes): aedificator cyclos NON probat. Valor in se
+ * ipsum positus (directe aut per descendentem) scripturam in
+ * recursionem infinitam mittit (acervus exhaustus). Profunditas
+ * valorum AEDIFICATORUM non limitatur - JSON_PROFUNDITAS_MAXIMA solam
+ * lectionem custodit. */
 vacuum
 json_tabulatum_addere (
     JsonValor* tabulatum,
