@@ -662,6 +662,16 @@ for _n in ('css', 'materia', 'md', 'oratio'):
           'porta %s in PORTAE/FORMAE/SUITAE' % _n)
 credo(os.access(os.path.join(RADIX, silva.PORTAE['md'][0][0]), os.X_OK),
       'cursor md exsistit et exsecutabilis')
+# fumi sine oculis in PORTAE (2026-09-24): registratio + cursor
+# exsecutabilis + vexillum quod fenestram omittit
+for _n in ('villa', 'silex-semen'):
+    credo(_n in silva.PORTAE, 'porta %s in PORTAE' % _n)
+    credo(os.access(os.path.join(RADIX, silva.PORTAE[_n][0][0]), os.X_OK),
+          'cursor %s exsistit et exsecutabilis' % _n)
+credo(silva.PORTAE['villa'][0][1:] == ['-sine-facie'],
+      'porta villa crus faciei omittit (fenestra nulla in porta)')
+credo('-agere' not in silva.PORTAE['silex-semen'][0],
+      'porta silex-semen sine -agere (fenestra nulla in porta)')
 
 silva.PORTAE['ficta-octeti'] = (['printf', 'fictum: sanum \\246\\321\\n'],
                                 r'fictum: (sanum|FRACTUM)')

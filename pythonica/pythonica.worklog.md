@@ -694,3 +694,23 @@ run them in the background and do not touch the tree meanwhile (the
 gate seals the working tree). The final "restored" run hit the
 previous run's build lock and did NOT run — verify a restore with
 `cmp` against the backup, not with a gate that may not have started.
+
+## 2026-09-24 — PORTAE += villa, silex-semen (from the test-suite inventory)
+
+The inventory 'suitae probationum' (tabularium …EH76CR) named 7 runner-shaped
+scripts outside PORTAE; two of them are headless and belong in:
+
+- `villa` = `./apps/villa/fumus.sh -sine-facie` (the default run also opens a
+  real window for the FACIES leg; `-sine-facie` omits it). Signal
+  `FUMUS (PLENUS|FRACTUS)|FRACTUM:` - matches the pass line, the "villa.sh
+  failed" line and every shape assertion's failure line. ~3 s.
+- `silex-semen` = `./tools/silex_semen_fumus.sh` (no `-agere`, so no window).
+  Signal `FUMUS: FACTUM|FUMUS DEFECIT`. Its exit-2 paths (bin/silex absent)
+  print neither, so "nothing ran" reads as cucurrit=False, never green. ~13 s.
+
+Born red WITHOUT touching source: villa via `VILLA_STIPES_MODUS=hospes_ignotus`
+(the ssh stub fails, rc 1, FUMUS FRACTUS); silex via a `clang` stub that exits 1
+shadowed first on PATH (the generated project's build fails, FUMUS DEFECIT);
+and `bin/silex` moved aside gave cucurrit=False rc 2. probatio_silva.py pins
+the registration, the runners' executability, and that neither command opens a
+window (`-sine-facie` present, `-agere` absent). The GUI legs stay by hand.

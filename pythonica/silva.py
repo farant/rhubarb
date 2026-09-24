@@ -1536,6 +1536,12 @@ PORTAE = {
     'pythonica': (['./pythonica/probare.sh'], r'PYTHONICA: (sana|FRACTA)'),
     'formator-intra': (['./silva/formator_intra_fumus.sh'],
                        r'fumus intra: (sanum|FRACTUM)'),
+    # capita sine oculis (2026-09-24, inventarium 'suitae probationum'):
+    # villa crure faciei omisso; silex sine -agere (fenestra nulla)
+    'villa': (['./apps/villa/fumus.sh', '-sine-facie'],
+              r'FUMUS (PLENUS|FRACTUS)|FRACTUM:'),
+    'silex-semen': (['./tools/silex_semen_fumus.sh'],
+                    r'FUMUS: FACTUM|FUMUS DEFECIT'),
     'formator-delta': (['./silva/formator_delta_fumus.sh'],
                        r'fumus delta: (sanum|FRACTUM)'),
     'differre': (['./silva/differre_fumus.sh'],
@@ -1560,6 +1566,12 @@ PORTAE = {
     'sera': (['./tools/sera_fumus.sh'], r'fumus sera: (sanum|FRACTUM)'),
     'frigida': (['./gesta/frigida_fumus.sh'],
                 r'fumus frigida: (sanum|FRACTUM)'),
+    # fumi sine oculis (2026-09-24, ex inventario 'suitae
+    # probationum'): villa crure faciei omisso, silex sine -agere
+    'villa': (['./apps/villa/fumus.sh', '-sine-facie'],
+              r'FUMUS (PLENUS|FRACTUS)|FRACTUM:'),
+    'silex-semen': (['./tools/silex_semen_fumus.sh'],
+                    r'FUMUS: FACTUM|FUMUS DEFECIT'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 

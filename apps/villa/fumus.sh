@@ -2,11 +2,12 @@
 
 # apps/villa/fumus.sh - fumus villae: catena tota sine oculis.
 #
-# CAUTIO: hoc scriptum a NULLO cursore verritur (probationes/ apps/
-# non videt). Dimidium quod verri DEBET in probationes/
-# probatio_villa_agens.c habitat - hic sola catena APPLICATIONIS
-# manet (configuratio -> agens -> probatio -> effusio), quae
-# binarium verum postulat.
+# CAUTIO: nullus cursor probationum hoc scriptum verrit (probationes/
+# apps/ non videt); porta 'villa' in PORTAE (pythonica/silva.py,
+# 2026-09-24) id cum -sine-facie currit. Dimidium quod verri DEBET
+# in probationes/probatio_villa_agens.c habitat - hic sola catena
+# APPLICATIONIS manet (configuratio -> agens -> probatio ->
+# effusio), quae binarium verum postulat.
 #
 # ssh VERUS numquam vocatur: VILLA_SSH ad stipitem ponitur.
 
