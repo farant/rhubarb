@@ -672,6 +672,18 @@ credo(silva.PORTAE['villa'][0][1:] == ['-sine-facie'],
       'porta villa crus faciei omittit (fenestra nulla in porta)')
 credo('-agere' not in silva.PORTAE['silex-semen'][0],
       'porta silex-semen sine -agere (fenestra nulla in porta)')
+# clavis PORTAE duplicata in litterali tacite COLLABITUR (ultima
+# vincit): editio perl 2026-09-24 portas duas bis inseruit, et solum
+# derivatio inventarii 'suitae probationum' ('villa, villa') id vidit
+import ast as _ast
+_arbor = _ast.parse(open(os.path.join(RADIX, 'pythonica', 'silva.py')).read())
+_claves = [k.value for n in _arbor.body if isinstance(n, _ast.Assign)
+           and any(getattr(t, 'id', '') == 'PORTAE' for t in n.targets)
+           for k in n.value.keys]
+credo(len(_claves) > 20, 'PORTAE in fonte inventa (%d claves)' % len(_claves))
+credo(len(_claves) == len(set(_claves)),
+      'PORTAE sine clavibus duplicatis: %s'
+      % sorted(set(k for k in _claves if _claves.count(k) > 1)))
 
 silva.PORTAE['ficta-octeti'] = (['printf', 'fictum: sanum \\246\\321\\n'],
                                 r'fictum: (sanum|FRACTUM)')

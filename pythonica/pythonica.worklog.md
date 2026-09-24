@@ -714,3 +714,19 @@ shadowed first on PATH (the generated project's build fails, FUMUS DEFECIT);
 and `bin/silex` moved aside gave cucurrit=False rc 2. probatio_silva.py pins
 the registration, the runners' executability, and that neither command opens a
 window (`-sine-facie` present, `-agere` absent). The GUI legs stay by hand.
+
+## 2026-09-24 (later) — the registration went in TWICE; guard added
+
+4f889895 carried both entries twice. My first attempt was a `perl -0pi -e
+'s|…|…|'` whose `|` delimiter collided with the `\|` alternations in the
+pattern; I judged it "not applied" by printing the lines around 'frigida',
+where it hadn't landed - it had landed after 'formator-intra'. A Python
+replace then added the second copy. Behaviour was right (identical values, a
+dict literal keeps the last key), every gate green, and NOTHING noticed - until
+tools/inventarium_suitarum.py proposed porta = "villa, villa": the derivation,
+reading the source by regex rather than importing the dict, was the only
+reader that saw both copies. Fix: first copy removed; probatio_silva.py now
+parses silva.py with `ast` and asserts PORTAE's literal keys are unique
+(born red on 4f889895 itself: ['silex-semen', 'villa']). Lessons: a
+substitution is verified by `git diff`, never by eyeballing the place you
+expected it; and a dict literal swallows duplicate keys silently.
