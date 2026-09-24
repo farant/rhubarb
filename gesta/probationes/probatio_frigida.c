@@ -277,6 +277,28 @@ principale (vacuum)
         "\"gerere\",\"arguments\":{\"res\":\"Frigida visio\","
         "\"actus\":\"nexus\",\"verbum\":\"intra\",\"alterum\":"
         "\"Frigida regio\"}}}");
+    /* inventarium pro -inventarium (lectio formae machinae) */
+    (vacuum)_mitte(t, piscina,
+        "{\"jsonrpc\":\"2.0\",\"id\":8,\"method\":\"tools/call\",\""
+        "params\":{\"name\":\"addere\",\"arguments\":{\"genus\":\"i"
+        "nventarium\",\"titulus\":\"Frigida inventarium\"}}}");
+    (vacuum)_mitte(t, piscina,
+        "{\"jsonrpc\":\"2.0\",\"id\":9,\"method\":\"tools/call\",\""
+        "params\":{\"name\":\"inventarium\",\"arguments\":{\"res\":"
+        "\"Frigida inventarium\",\"actus\":\"ordines\",\"ordines\":"
+        "\"x.sh,y.sh\"}}}");
+    (vacuum)_mitte(t, piscina,
+        "{\"jsonrpc\":\"2.0\",\"id\":10,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"inventarium\",\"arguments\":{\"res"
+        "\":\"Frigida inventarium\",\"actus\":\"lens\",\"lens\":\"i"
+        "n PORTAE\",\"genus_valoris\":\"ita-non\"}}}");
+    (vacuum)_mitte(t, piscina,
+        "{\"jsonrpc\":\"2.0\",\"id\":11,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"inventarium\",\"arguments\":{\"res"
+        "\":\"Frigida inventarium\",\"actus\":\"cellae\",\"cellae\""
+        ":\"[{\\\"ordo\\\":\\\"x.sh\\\",\\\"lens\\\":\\\"in PORTAE"
+        "\\\",\\\"valor\\\":{\\\"genus\\\":\\\"ita-non\\\",\\\"valo"
+        "r\\\":\\\"ita\\\"}}]\"}}}");
     tabularium_claudere(t);
 
     /* I. quae verba haec unitas novit (principale formas veteres
@@ -548,6 +570,35 @@ principale (vacuum)
             != NIHIL);
         CREDO_VERUM (strstr(c.effusio, "\n  Frigida sub-regio")
             != NIHIL);
+    }
+
+    /* -INVENTARIUM: forma machina tabulae per ianuam unam - linea
+     * una per cellam PRAESENTEM (y.sh sine cella non apparet);
+     * nihil scribit; res ignota recusatur; operanda superflua = usus */
+    {
+        constans character* a[] = { "frigida", "-inventarium",
+            "Frigida inventarium" };
+        constans character* b[] = { "frigida", "-inventarium",
+            "Nullum inventarium" };
+        constans character* d[] = { "frigida", "-inventarium",
+            "Frigida inventarium", "superfluum" };
+        constans character* an_ante;
+        constans character* an_post;
+
+        CREDO_VERUM (frigida_verbum_novit("-inventarium"));
+        an_ante  = _plagula_litterae(piscina, VIA_AN);
+        c        = _curre(&cfg, piscina, III, a);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(c.effusio,
+            "x.sh\tin PORTAE\tita-non\tita\n")
+            != NIHIL);
+        CREDO_VERUM (strstr(c.effusio, "y.sh") == NIHIL);
+        an_post = _plagula_litterae(piscina, VIA_AN);
+        CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
+        c = _curre(&cfg, piscina, III, b);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
+        c = _curre(&cfg, piscina, IV, d);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
     }
 
     credo_imprimere_compendium();

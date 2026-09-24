@@ -87,7 +87,7 @@ Trunk only in v1 (a branch write is refused, as `ad`/`intra` are).
 
 | actus | does |
 |---|---|
-| `tabula` | render the table (rows × lenses, `ita`/`non`/`·`, `n.a.` for not applicable, text truncated) + footer: unknown cells per lens (the frontier), `n.a. N` when any, newest and oldest cell date per lens |
+| `tabula` | render the table (rows × lenses, `ita`/`non`/`·`, `n.a.` for not applicable, text truncated) + footer: unknown cells per lens (the frontier), `n.a. N` when any, newest and oldest cell date per lens. `forma: "machina"` = one TSV line per present cell, `ordo \t lens \t genus \t valor`, with `\\`, tab and newline escaped (read by `./gesta/frigida.sh -inventarium <res>`; added 2026-09-24 for portae debitae) |
 | `ordines` | add rows (JSON array or comma list); keys already present are REPORTED and skipped (a proposer can re-push its whole derivation), new ones written in one event |
 | `lens` | add a lens |
 | `cellae` | set cells (JSON array of {ordo, lens, valor}); `fons` defaults to `manu` |

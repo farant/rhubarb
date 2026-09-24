@@ -288,3 +288,27 @@ order (born red, 2 assertions), named with "(aperta 6)" after. The old
 assertion that the empty 'Rg horizon vacuus' is NAMED in this line
 pinned creation order; it now only asserts the line exists (the empty
 region is still counted, and 'regiones vacuae' still names it).
+
+## 2026-09-24 — inventarium {forma: machina} + frigida -inventarium (portae debitae T1)
+
+Python must read inventory cells (portae debitae, project-specs/
+portae-debitae-spec.md) without re-folding ledger events. The cold path
+already had read verbs that are just MCP tool calls (`-res`, `-mappa`), so
+`-inventarium <res>` = `inventarium {actus: tabula, forma: machina}`: one TSV
+line per PRESENT cell (`ordo \t lens \t genus \t valor`), rows then lenses in
+table order, no header; `\`, tab and newline escaped as `\\`, `\t`, `\n` so a
+reader splits lines and columns unambiguously. Unknown `forma` is refused
+naming the legal one. The escaping test sets a value holding a real tab, a
+backslash and a newline; the test literals were GENERATED (three escaping
+layers: machine text inside JSON inside a C literal) rather than hand-typed.
+
+frigida.c's `FORMAE_NUMERUS` was a hand-kept `VI`; a seventh form would have
+made it lie silently (the form simply unknown). Now derived from the array
+like `ARGUMENTORUM_NUMERUS`; planting the old `VI` back turns probatio_frigida
+red (4). frigida_fumus.sh VI checks the LIVE inventory by invariants (>= 30
+lines, four fields per line, a known row) - planted by making frigida send the
+human table: 43 malformed lines, red.
+
+Note on forma as an unknown key: before this change the machine-form request
+was REFUSED (unknown argument), so the "no INVENTARIUM header" assertion passed
+vacuously while red elsewhere - it only guards something now that forma exists.

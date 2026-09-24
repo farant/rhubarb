@@ -5263,6 +5263,37 @@ principale (vacuum)
             " \xc2\xb7 antiquissima 20")
                 != NIHIL);
 
+        /* FORMA MACHINA (portae debitae T1): linea una per cellam
+         * PRAESENTEM, ordines ordine tabulae, deinde lentes; in ordine
+         * et valore '\\' tabulatio et linea nova effugiuntur; sine
+         * capite */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59417,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"inventarium\",\"arguments\":{\"r"
+            "es\":\"Iv suitae\",\"actus\":\"cellae\",\"cellae\":\"[{\\"
+            "\"ordo\\\":\\\"c.sh\\\",\\\"lens\\\":\\\"tegit\\\",\\\"val"
+            "or\\\":{\\\"genus\\\":\\\"textus\\\",\\\"valor\\\":\\\"rad"
+            "ix\\\\tgesta\\\\\\\\x\\\\ny\\\"}}]\"}}}");
+        CREDO_VERUM (strstr(r, "cella-posita") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59418,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"inventarium\",\"arguments\":{\"r"
+            "es\":\"Iv suitae\",\"actus\":\"tabula\",\"forma\":\"machin"
+            "a\"}}}");
+        CREDO_VERUM (strstr(r,
+            "a.sh\\tin PORTAE\\tita-non\\tita\\na.sh\\ttegit\\tnon-appl"
+            "icabile\\tGUI solum\\nc.sh\\tin PORTAE\\tnon-applicabile\\"
+            "t\\nc.sh\\ttegit\\ttextus\\tradix\\\\tgesta\\\\\\\\x\\\\ny"
+            "\\n")
+                != NIHIL);
+        CREDO_VERUM (strstr(r, "INVENTARIUM '") == NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59419,\"method\":\"tools/call"
+            "\",\"params\":{\"name\":\"inventarium\",\"arguments\":{\"r"
+            "es\":\"Iv suitae\",\"actus\":\"tabula\",\"forma\":\"xml\"}"
+            "}}");
+        CREDO_VERUM (strstr(r, "forma 'xml' ignota") != NIHIL);
+
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5821,"

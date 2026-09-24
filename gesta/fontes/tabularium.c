@@ -12034,6 +12034,100 @@ _inventarii_tabulam_reddere (
     redde chorda_aedificator_finire(aed);
 }
 
+/* textum in formam machinae effugere: '\\' -> "\\\\", tabulatio ->
+ * "\\t", linea nova -> "\\n" (lector TSV lineas et columnas sine
+ * ambiguitate findit) */
+interior vacuum
+_inventarii_effugere (
+    ChordaAedificator* aed,
+               chorda  textus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < textus.mensura; k++)
+    {
+        character c = (character)textus.datum[k];
+
+        si (c == '\\')
+        {
+            chorda_aedificator_appendere_literis(aed, "\\\\");
+        }
+        alioquin si (c == '\t')
+        {
+            chorda_aedificator_appendere_literis(aed, "\\t");
+        }
+        alioquin si (c == '\n')
+        {
+            chorda_aedificator_appendere_literis(aed, "\\n");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_character(aed, c);
+        }
+    }
+}
+
+/* FORMA MACHINA tabulae (portae debitae T1): linea una per cellam
+ * PRAESENTEM - ordo \t lens \t genus \t valor - ordines ordine
+ * tabulae, intra ordinem lentes ordine tabulae; sine capite, sine
+ * pede. Lector: silva.inventarium per './gesta/frigida.sh
+ * -inventarium' */
+interior chorda
+_inventarii_machinam_reddere (
+    JsonValor* status,
+      Piscina* pn)
+{
+           JsonValor* ordines = json_objectum_capere(status,
+               "ordines");
+            JsonValor* lentes = json_objectum_capere(status, "lentes");
+            JsonValor* cellae = json_objectum_capere(status, "cellae");
+    ChordaAedificator* aed = chorda_aedificator_creare(pn,
+        MMMMXCVI);
+                  i32 i;
+                  i32 j;
+
+    si (   ordines == NIHIL || !json_est_tabulatum(ordines)
+        || lentes  == NIHIL || !json_est_tabulatum(lentes)
+        || cellae  == NIHIL || !json_est_objectum(cellae))
+    {
+        redde chorda_aedificator_finire(aed);
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(ordines); i++)
+    {
+           chorda clavis = json_ad_chorda(json_objectum_capere(
+               json_tabulatum_obtinere(ordines, i), "clavis"));
+        JsonValor* linea  = json_objectum_capere_chorda(cellae, clavis);
+
+        si (linea == NIHIL || !json_est_objectum(linea))
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < json_tabulatum_numerus(lentes); j++)
+        {
+               chorda lens   = json_ad_chorda(json_objectum_capere(
+                   json_tabulatum_obtinere(lentes, j), "nomen"));
+            JsonValor* cella  = json_objectum_capere_chorda(linea,
+                lens);
+
+            si (cella == NIHIL || !json_est_objectum(cella))
+            {
+                perge;
+            }
+            _inventarii_effugere(aed, clavis);
+            chorda_aedificator_appendere_character(aed, '\t');
+            _inventarii_effugere(aed, lens);
+            chorda_aedificator_appendere_character(aed, '\t');
+            _inventarii_effugere(aed, json_ad_chorda(
+                json_objectum_capere(cella, "genus")));
+            chorda_aedificator_appendere_character(aed, '\t');
+            _inventarii_effugere(aed, json_ad_chorda(
+                json_objectum_capere(cella, "valor")));
+            chorda_aedificator_appendere_character(aed, '\n');
+        }
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
 interior vacuum
 _tab_inventarium (
     Tabularium* t,
@@ -12112,11 +12206,34 @@ _tab_inventarium (
         }
     }
 
-    /* TABULA (T4): lectio sola */
+    /* TABULA (T4): lectio sola; forma 'machina' = TSV cellarum
+     * (portae debitae T1) */
     si (_chorda_est(actus, "tabula"))
     {
-        _textum_respondere(t, pn, effusio, id,
-            _inventarii_tabulam_reddere(status, titulus, pn), FALSUM);
+        chorda forma = _arg(argumenta, "forma");
+
+        si (forma.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _inventarii_tabulam_reddere(status, titulus, pn),
+                FALSUM);
+        }
+        alioquin si (_chorda_est(forma, "machina"))
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _inventarii_machinam_reddere(status, pn), FALSUM);
+        }
+        alioquin
+        {
+            aed = chorda_aedificator_creare(pn, CCLVI);
+            chorda_aedificator_appendere_literis(aed,
+                "inventarium RECUSATUM: forma '");
+            chorda_aedificator_appendere_chorda(aed, forma);
+            chorda_aedificator_appendere_literis(aed,
+                "' ignota (machina; sine forma = tabula legibilis)");
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+        }
         redde;
     }
 
@@ -12298,6 +12415,10 @@ _instrumenta_componere (
             VERUM },
         { "actus", "tabula (lectio: ordines x lentes + frons) | ordines"
           " | lens | cellae | removere", VERUM },
+        { "forma", "cum actu tabula: 'machina' = linea una per cellam"
+          " praesentem, ordo\\tlens\\tgenus\\tvalor ('\\\\' tabulatio"
+          " linea nova effugiuntur); sine forma = tabula legibilis",
+          FALSUM },
         { "ordines", "acies JSON aut index commatibus: ordines addendi"
           " (praesentes renuntiantur et praetermittuntur) aut"
           " removendi",

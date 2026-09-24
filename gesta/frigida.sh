@@ -11,6 +11,7 @@
 #   ./gesta/frigida.sh -res <res>          (LECTIO: breviarium, nihil scribit)
 #   ./gesta/frigida.sh -mappa               (LECTIO: arbor regionum, nomina sola - ut 'tree')
 #   ./gesta/frigida.sh -mappa-plena         (LECTIO: arbor cum '<visio (>' et '<principium (>' lineis)
+#   ./gesta/frigida.sh -inventarium <res>   (LECTIO: cellae in forma machinae - ordo\tlens\tgenus\tvalor)
 # Exitus: 0 scriptum | 1 recusatum (nihil scriptum) | 2 usus
 
 set -u

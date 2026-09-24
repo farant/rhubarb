@@ -43,9 +43,17 @@ interior constans FrigidaForma FORMAE[] = {
     /* idem cum visionibus et principiis ut lineae captae STML */
     { "-mappa-plena", "mappa", NIHIL,
       { NIHIL, NIHIL, NIHIL, NIHIL },
-      { FALSUM, FALSUM, FALSUM, FALSUM } }
+      { FALSUM, FALSUM, FALSUM, FALSUM } },
+    /* LECTIO: cellae inventarii in forma machinae (TSV) - lector
+     * silva.inventarium (portae debitae T1) */
+    { "-inventarium", "inventarium", NIHIL,
+      { "res", NIHIL, NIHIL, NIHIL },
+      { VERUM, FALSUM, FALSUM, FALSUM } }
 };
-#define FORMAE_NUMERUS VI
+/* numerus DERIVATUS ex acie (olim manu 'VI' - forma septima eum
+ * mendacem fecisset) */
+#define FORMAE_NUMERUS \
+    ((i32)(magnitudo(FORMAE) / magnitudo(FORMAE[ZEPHYRUM])))
 
 interior constans FrigidaForma*
 _formam_invenire (
@@ -263,6 +271,14 @@ _gerere_mittere (
                 strcmp(forma->vexillum, "-mappa-plena") == ZEPHYRUM
                     ? "plena" : "nomina"));
     }
+    alioquin si (strcmp(forma->instrumentum, "inventarium") == ZEPHYRUM)
+    {
+        /* lectio inventarii: tabula in forma machinae */
+        json_objectum_ponere(argumenta, "actus",
+            json_chorda_creare_literis(pn, "tabula"));
+        json_objectum_ponere(argumenta, "forma",
+            json_chorda_creare_literis(pn, "machina"));
+    }
     alioquin
     {
         /* lectio: breviarium (forma plena datum crudum effundit) */
@@ -459,7 +475,7 @@ frigida_currere (
         _causam_incipere(index, &causae);
         chorda_aedificator_appendere_literis(index,
             "verbum deest (-status | -mutatio | -nexus | -res |"
-            " -mappa | -mappa-plena)");
+            " -mappa | -mappa-plena | -inventarium)");
     }
     alioquin si (forma == NIHIL)
     {
@@ -469,7 +485,7 @@ frigida_currere (
         chorda_aedificator_appendere_literis(index, vexillum);
         chorda_aedificator_appendere_literis(index,
             "' (nota: -status | -mutatio | -nexus | -res | -mappa |"
-            " -mappa-plena)");
+            " -mappa-plena | -inventarium)");
     }
 
     /* operanda */
@@ -620,7 +636,9 @@ frigida_currere (
                 "\n  " FRIGIDA_IMPERIUM " -mappa"
                 "   (lectio - arbor regionum, nomina sola)"
                 "\n  " FRIGIDA_IMPERIUM " -mappa-plena"
-                "   (lectio - arbor cum visionibus et principiis)");
+                "   (lectio - arbor cum visionibus et principiis)"
+                "\n  " FRIGIDA_IMPERIUM " -inventarium \"<res>\""
+                "   (lectio - cellae in forma machinae, TSV)");
         }
         {
             chorda nuntius = chorda_aedificator_finire(aed);

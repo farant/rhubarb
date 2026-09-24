@@ -51,6 +51,17 @@ eff=$(./gesta/frigida.sh -mappa-plena 2>&1); rc=$?
 echo "$eff" | grep -q '^<principium (> PRINCIPIUM'; credo $? "-mappa-plena: principium domus gradu 0"
 echo "$eff" | grep -q '^  <visio (> VISIO tabularii'; credo $? "-mappa-plena: visio sub regione sua"
 
+# VI. -INVENTARIUM: cellae inventarii VIVI in forma machinae (lector
+#     silva.inventarium). Invariantes, non numeri fixi: area (>= XXX
+#     lineae), forma (quattuor campi per lineam), nomen ordinis notum
+eff=$(./gesta/frigida.sh -inventarium 'suitae probationum' 2>&1); rc=$?
+[ "$rc" -eq 0 ]; credo $? "-inventarium: exitus 0 (erat $rc)"
+n=$(printf '%s\n' "$eff" | grep -c .)
+[ "$n" -ge 30 ]; credo $? "-inventarium: lineae >= 30 (erant $n)"
+mali=$(printf '%s\n' "$eff" | awk -F'\t' 'NF && NF != 4' | wc -l | tr -d ' ')
+[ "$mali" -eq 0 ]; credo $? "-inventarium: quattuor campi per lineam ($mali malae)"
+printf '%s\n' "$eff" | grep -q "^compile_tests.sh	in PORTAE	ita-non	ita$"; credo $? "-inventarium: radix in PORTAE"
+
 post=$(wc -l < "$AN" | tr -d ' ')
 [ "$ante" = "$post" ]; credo $? "annales vivi INTACTI ($ante -> $post lineae)"
 
