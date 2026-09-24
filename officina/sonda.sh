@@ -72,7 +72,7 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
 fi
 obj_files="$obj_files $obj"
 
-for unit in praeparator legatus; do
+for unit in praeparator compendium legatus; do
     src="$OFF_DIR/instrumenta/$unit.c"
     obj="$BUILD_DIR/$unit.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \

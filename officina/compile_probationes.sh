@@ -207,6 +207,20 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
 fi
 obj_files="$obj_files $obj"
 
+# compendium capitis (communis legato et briar - 2026-09-24)
+src="$OFF_DIR/instrumenta/compendium.c"
+obj="$BUILD_DIR/compendium.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/compendium.h" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [compendium] compendium.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        -c "$src" -o "$obj"; then
+        echo "FRACTA: compendium" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
 src="$OFF_DIR/instrumenta/sessio.c"
 obj="$BUILD_DIR/sessio.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
@@ -226,6 +240,7 @@ obj="$BUILD_DIR/legatus.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || ! [ "$obj" -nt "$OFF_DIR/instrumenta/legatus.h" ] \
     || ! [ "$obj" -nt "$OFF_DIR/instrumenta/praeparator.h" ] \
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/compendium.h" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [legatus] legatus.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \

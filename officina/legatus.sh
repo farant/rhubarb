@@ -63,6 +63,7 @@ FONTES_OMNES+=("$RADIX_DIR/silva/amalgama/silva.c")
 FONTES_OMNES+=("$RADIX_DIR/silva/instrumenta/nexus_ordines.c")
 FONTES_OMNES+=("$RADIX_DIR/silva/instrumenta/silva_lexicon.c")
 FONTES_OMNES+=("$OFF_DIR/instrumenta/praeparator.c")
+FONTES_OMNES+=("$OFF_DIR/instrumenta/compendium.c")
 FONTES_OMNES+=("$OFF_DIR/instrumenta/legatus.c")
 FONTES_OMNES+=("$OFF_DIR/instrumenta/principalia/legatus.c")
 
@@ -126,7 +127,7 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || fons_stalus silva_lexicon "$obj
 fi
 obj_files="$obj_files $obj"
 
-for unit in praeparator legatus; do
+for unit in praeparator compendium legatus; do
     src="$OFF_DIR/instrumenta/$unit.c"
     obj="$BUILD_DIR/$unit.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || fons_stalus "$unit" "$obj"; then
@@ -169,6 +170,7 @@ MANIFEST="$BUILD_DIR/legatus.vigilia"
         echo "$RADIX_DIR/silva/instrumenta/nexus_ordines.h"
         echo "$RADIX_DIR/silva/instrumenta/silva_lexicon.h"
         echo "$OFF_DIR/instrumenta/praeparator.h"
+        echo "$OFF_DIR/instrumenta/compendium.h"
         echo "$OFF_DIR/instrumenta/legatus.h"
     fi
 } > "$MANIFEST" 2>/dev/null

@@ -22,6 +22,7 @@
 #include "chorda_aedificator.h"
 #include "silva.h"
 #include "praeparator.h"
+#include "compendium.h"
 #include "silva_lexicon.h"
 #include "nexus_ordines.h"
 #include "processus.h"   /* renovare: explorator praevius (exsequi)
@@ -3854,7 +3855,9 @@ _workspacesymbol_tractare (
 
 /* extenta functionum plagulae (vocantes includentes - EXACTUS):
  * documentum apertum -> analysis viva; clausum -> cache aut
- * analysis ad postulatum (praeparator, ~0.2s semel per plagulam) */
+ * analysis ad postulatum (praeparator, ~0.2s semel per plagulam).
+ * Extractio ipsa in compendium.c (communis cum briar, 2026-09-24);
+ * hic sola signatura legati additur. */
 interior Xar*
 _extenta_ex_semantica (
                     Legatus* l,
@@ -3862,200 +3865,44 @@ _extenta_ex_semantica (
     constans SilvaSemantica* sem,
                     Piscina* scopus)
 {
+    Xar* declarationes = compendium_declarationes(parsura, sem, scopus);
     Xar* extenta = xar_creare(scopus,
         (i32)magnitudo(LegatusFunctioExtentum));
-    insignatus integer n = silva_c89_symbola_numerus(sem);
-    insignatus integer i;
-                   s32 fons = parsura->fons_princeps;
+    i32 i;
 
     (vacuum)l;
-    si (extenta == NIHIL)
+    si (extenta == NIHIL || declarationes == NIHIL)
     {
         redde NIHIL;
     }
-    per (i = ZEPHYRUM; i < n; i++)
+    per (i = ZEPHYRUM; i < xar_numerus(declarationes); i++)
     {
-        constans SemanticaSymbolum* s =
-            silva_c89_symbolum_per_indicem(sem, i);
-        insignatus integer la;
-        insignatus integer ca;
-        insignatus integer lb;
-        insignatus integer cb;
+        constans CompendiumDeclaratio* d =
+            (constans CompendiumDeclaratio*)xar_obtinere(declarationes,
+                i);
+        LegatusFunctioExtentum* e = (LegatusFunctioExtentum*)
+            xar_addere(extenta);
+        character sig_b[DXII];
 
-        /* CHARTAE (pars 2): omnia genera profunditatis 0 - custos
-         * generis in _functio_continens variabiles arcet */
-        si (   s            == NIHIL || s->profunditas != ZEPHYRUM
-            || s->ex_systemate || s->est_implicitum
-            || s->declarans == NIHIL)
+        si (e == NIHIL)
         {
             perge;
         }
-        silva_nodus_extensionem_lineis(s->declarans, fons, &la,
-            &ca, &lb, &cb);
-        si (la == ZEPHYRUM)
+        e->titulus               = d->titulus;
+        e->linea_a               = d->linea_a;
+        e->linea_b               = d->linea_b;
+        e->genus                 = d->genus;
+        e->est_definitio         = d->est_definitio;
+        e->commentarium_initium  = d->commentarium_initium;
+        e->commentarium_finis    = d->commentarium_finis;
+        e->corpus_initium        = d->corpus_initium;
+        e->corpus_finis          = d->corpus_finis;
+        e->signatura.mensura     = ZEPHYRUM;
+        e->signatura.datum       = NIHIL;
+        si (_signaturam_scribere(d->symbolum, sig_b, magnitudo(sig_b))
+            > ZEPHYRUM)
         {
-            perge;
-        }
-        {
-            LegatusFunctioExtentum* e = (LegatusFunctioExtentum*)
-                xar_addere(extenta);
-               chorda fons_t;
-            character sig_b[DXII];
-
-            si (e == NIHIL)
-            {
-                perge;
-            }
-            fons_t.mensura  = (i32)s->titulus.mensura;
-            fons_t.datum    = (i8*)s->titulus.datum;
-            e->titulus      = _transcribere_nul(scopus, fons_t);
-            e->linea_a      = la;
-            e->linea_b      = lb;
-            e->genus        = (s32)s->genus;
-            /* definitio? accessor generis alieni SILVA_VALOR_NIHIL
-             * reddit (contractus silva.h) - probatio honesta */
-            e->est_definitio = (s->genus == (int)SYMBOLUM_FUNCTIO
-                && silva_c89_definitio_functionis_corpus(
-                       s->declarans).genus
-                       != SILVA_VALOR_NIHIL) ? VERUM : FALSUM;
-            e->signatura.mensura  = ZEPHYRUM;
-            e->signatura.datum    = NIHIL;
-            si (_signaturam_scribere(s, sig_b, magnitudo(sig_b))
-                > ZEPHYRUM)
-            {
-                e->signatura = chorda_ex_literis(sig_b, scopus);
-            }
-            /* commentarium ducens (pinna "commenta sunt contenta"
-             * - INTENTIO silva/phase-log 2026-07-14): extenta hic,
-             * octeti ad tempus reddendi. ASCENSUS PATRIS: declarans
-             * prototypi = nodus DECLARATORIS (a titulo incipit -
-             * trivia in specificatoribus EXTRA), definitionis =
-             * nodus totus; chartae profunditatis 0 solae, ergo
-             * ascensus ad radicem = declaratio continens semper. */
-            {
-                SilvaCommentariumVista  cv;
-                   constans SilvaNodus* radix_decl = s->declarans;
-
-                dum (radix_decl->pater != NIHIL)
-                {
-                    radix_decl = radix_decl->pater;
-                }
-                /* lineae ex RADICE, non declaratore (excussio
-                 * 2026-07-29): octeti corporis radicem iam
-                 * sequebantur, lineae declaratorem - typedef-
-                 * structura uni-declarationis extensionem unius
-                 * lineae mentiebatur. Continentia tuta: custos
-                 * generis in _functio_continens functiones solas
-                 * admittit. */
-                silva_nodus_extensionem_lineis(radix_decl, fons,
-                    &la, &ca, &lb, &cb);
-                si (la != ZEPHYRUM)
-                {
-                    e->linea_a = la;
-                    e->linea_b = lb;
-                }
-                e->commentarium_initium  = (s32)-I;
-                e->commentarium_finis    = (s32)-I;
-                si (silva_commentarium_ducens(radix_decl,
-                        (int)fons, &cv) == I)
-                {
-                    e->commentarium_initium  = (s32)cv.initium;
-                    e->commentarium_finis    = (s32)cv.finis;
-                }
-                /* extenta corporis (declaratio tota - instrumentum
-                 * corpus): octeti min/max nodi radicis */
-                {
-                    int min_c = -I;
-                    int max_c = ZEPHYRUM;
-
-                    silva_nodus_extensionem(radix_decl, (int)fons,
-                        &min_c, &max_c);
-                    e->corpus_initium = (s32)min_c;
-                    e->corpus_finis = (min_c >= ZEPHYRUM)
-                        ? (s32)max_c : (s32)-I;
-                }
-                /* idioma typedef-opacum (desideratum 01KXS3EXS6):
-                 * charta typedefi nudi ad radicem DEFINITIONIS tag
-                 * repungitur - corpus {titulus} corpus structurae
-                 * reddit, non lineam nominis. Directio per TYPUM
-                 * (non nomen - 'nomen structura Alia Mea;' quoque);
-                 * declarans tag post completionem in situ nodum
-                 * definientem monstrat (silva, eodem die). Radix
-                 * eadem = idioma uni-declarationis, intacta;
-                 * commentarium typedefi manet nisi definitio suum
-                 * fert. */
-                si (   s->genus == (int)SYMBOLUM_TYPEDEF
-                    && s->typus != NIHIL)
-                {
-                      constans TypusC89* t          = s->typus;
-                    constans SilvaNodus* definiens  = NIHIL;
-
-                    dum (   t        != NIHIL
-                         && t->genus == (s32)TYPUS_C89_QUALIFICATUS)
-                    {
-                        t = t->datum.qualificatus.internum;
-                    }
-                    si (   t != NIHIL
-                        && (t->genus == (s32)TYPUS_C89_STRUCTURA
-                            || t->genus == (s32)TYPUS_C89_UNIO)
-                        && t->datum.tag.completa)
-                    {
-                        definiens = t->datum.tag.declarans;
-                    }
-                    alioquin si (   t != NIHIL
-                                 && t->genus
-                                     == (s32)TYPUS_C89_ENUMERATUS
-                                 && t->datum.enumeratus.completa)
-                    {
-                        definiens = t->datum.enumeratus.declarans;
-                    }
-                    si (definiens != NIHIL)
-                    {
-                        constans SilvaNodus* radix_def = definiens;
-
-                        dum (radix_def->pater != NIHIL)
-                        {
-                            radix_def = radix_def->pater;
-                        }
-                        si (radix_def != radix_decl)
-                        {
-                            int min_d = -I;
-                            int max_d = ZEPHYRUM;
-
-                            silva_nodus_extensionem(radix_def,
-                                (int)fons, &min_d, &max_d);
-                            si (min_d >= ZEPHYRUM)
-                            {
-                                    insignatus integer dla;
-                                    insignatus integer dca;
-                                    insignatus integer dlb;
-                                    insignatus integer dcb;
-                                SilvaCommentariumVista cvd;
-
-                                silva_nodus_extensionem_lineis(
-                                    radix_def, fons, &dla, &dca,
-                                    &dlb, &dcb);
-                                si (dla != ZEPHYRUM)
-                                {
-                                    e->linea_a = dla;
-                                    e->linea_b = dlb;
-                                }
-                                e->corpus_initium  = (s32)min_d;
-                                e->corpus_finis    = (s32)max_d;
-                                si (silva_commentarium_ducens(
-                                        radix_def, (int)fons, &cvd)
-                                    == I)
-                                {
-                                    e->commentarium_initium =
-                                        (s32)cvd.initium;
-                                    e->commentarium_finis =
-                                        (s32)cvd.finis;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            e->signatura = chorda_ex_literis(sig_b, scopus);
         }
     }
     redde extenta;
@@ -6612,120 +6459,9 @@ _legati_corpus (
 #define LEGATI_CAPITIS_COMMENTARII_LINEAE 8
 #define LEGATI_CAPITIS_DECLARATIONIS_OCTETI 240
 
-/* linea contracta in buffer fixo: spatia alba in unum, tectum
- * octetorum (praecisa = VERUM ultra) - aedificator longitudinem
- * suam non reddit, ergo buffer localis */
-nomen structura {
-    character datum[LEGATI_CAPITIS_DECLARATIONIS_OCTETI + I];
-          i32 n;
-          b32 spatium;    /* ultimum scriptum spatium fuit */
-          b32 praecisa;
-} LegatiLinea;
-
-interior vacuum
-_lineae_contracte_appendere (
-    LegatiLinea* lin,
-         chorda  c)
-{
-    i32 k;
-
-    per (k = ZEPHYRUM; k < c.mensura; k++)
-    {
-        character ch = (character)c.datum[k];
-
-        si (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
-        {
-            si (lin->spatium || lin->n == ZEPHYRUM)
-            {
-                perge;
-            }
-            ch            = ' ';
-            lin->spatium  = VERUM;
-        }
-        alioquin
-        {
-            lin->spatium = FALSUM;
-        }
-        si (lin->n >= (i32)LEGATI_CAPITIS_DECLARATIONIS_OCTETI)
-        {
-            lin->praecisa = VERUM;
-            redde;
-        }
-        lin->datum[lin->n] = ch;
-        lin->n++;
-    }
-}
-
-/* Declarationem in lineam unam: si '{' adest (definitio functionis,
- * structura, enumeratio), caput ante '{' + " {...}" + cauda post
- * '}' ultimum (nomen typedefi); aliter tota. Ultra tectum: "...". */
-interior vacuum
-_declarationem_contrahere (
-    ChordaAedificator* aed,
-               chorda  c)
-{
-    LegatiLinea lin;
-            s32 a = (s32)-I;
-            s32 b = (s32)-I;
-            i32 k;
-
-    lin.n         = ZEPHYRUM;
-    lin.spatium   = FALSUM;
-    lin.praecisa  = FALSUM;
-    per (k = ZEPHYRUM; k < c.mensura; k++)
-    {
-        si (c.datum[k] == (i8)'{' && a < ZEPHYRUM)
-        {
-            a = (s32)k;
-        }
-        si (c.datum[k] == (i8)'}')
-        {
-            b = (s32)k;
-        }
-    }
-    si (a >= ZEPHYRUM && b > a)
-    {
-        chorda pars;
-
-        pars          = c;
-        pars.mensura  = (i32)a;
-        _lineae_contracte_appendere(&lin, pars);
-        {
-            hic_manens character SEPARATOR[] = " {...} ";
-                          chorda sep;
-
-            sep.datum    = (i8*)SEPARATOR;
-            sep.mensura  = (i32)(magnitudo(SEPARATOR) - I);
-            _lineae_contracte_appendere(&lin, sep);
-        }
-        pars.datum    = c.datum + (i32)b + I;
-        pars.mensura  = c.mensura - (i32)b - I;
-        _lineae_contracte_appendere(&lin, pars);
-    }
-    alioquin
-    {
-        _lineae_contracte_appendere(&lin, c);
-    }
-    dum (lin.n > ZEPHYRUM && lin.datum[lin.n - I] == ' ')
-    {
-        lin.n--;
-    }
-    {
-        chorda linea;
-
-        linea.datum    = (i8*)lin.datum;
-        linea.mensura  = lin.n;
-        (vacuum)chorda_aedificator_appendere_chorda(aed, linea);
-    }
-    si (lin.praecisa)
-    {
-        (vacuum)chorda_aedificator_appendere_literis(aed, " ...");
-    }
-}
-
 interior constans character*
-_genus_extenti_verbum (
-    constans LegatusFunctioExtentum* e)
+_genus_declarationis_verbum (
+    constans CompendiumDeclaratio* e)
 {
     si (e->est_definitio)
     {
@@ -6756,7 +6492,8 @@ _legati_caput (
                   Xar* extenta;
                   i32  n;
                   i32  i;
-                  i32* ordo;
+                  Xar* declarationes;
+                  Xar* ordo;
                   i32  numerus_ostensarum = ZEPHYRUM;
 
     si (!_legati_viam_normare(l, via_arg, &via_sine))
@@ -6782,12 +6519,12 @@ _legati_caput (
             chorda_ex_literis(linea_b, pn), VERUM);
         redde;
     }
+    /* ordo plagulae + declarationes unicae: compendium.c (communis
+     * cum briar -functiones) - extenta in declarationes versa */
     n = xar_numerus(extenta);
-    /* ordo plagulae per lineam - extenta semantica ordinem suum
-     * ferunt; ordinatio insertionis (n parvum) */
-    ordo = (i32*)piscina_allocare(pn,
-        (memoriae_index)magnitudo(i32) * (memoriae_index)(n + I));
-    si (ordo == NIHIL)
+    declarationes = xar_creare(pn,
+        (i32)magnitudo(CompendiumDeclaratio));
+    si (declarationes == NIHIL)
     {
         redde;
     }
@@ -6795,95 +6532,64 @@ _legati_caput (
     {
         constans LegatusFunctioExtentum* e =
             (constans LegatusFunctioExtentum*)xar_obtinere(extenta, i);
-        i32 j = i;
+        CompendiumDeclaratio* d = (CompendiumDeclaratio*)xar_addere(
+            declarationes);
 
-        dum (j > ZEPHYRUM)
+        si (d == NIHIL)
         {
-            constans LegatusFunctioExtentum* prior =
-                (constans LegatusFunctioExtentum*)xar_obtinere(extenta,
-                    ordo[j - I]);
-
-            /* linea prior aut eadem cum genere NON constantis:
-             * enumeratores (CONSTANS) eundem corpus quam typus
-             * enumerationis ferunt - typus primus, constantes
-             * deinde dedupe infra tacent */
-            si (   prior->linea_a < e->linea_a
-                || (   prior->linea_a == e->linea_a
-                    && (   prior->genus != (s32)SYMBOLUM_CONSTANS
-                        || e->genus == (s32)SYMBOLUM_CONSTANS)))
-            {
-                frange;
-            }
-            ordo[j] = ordo[j - I];
-            j--;
+            redde;
         }
-        ordo[j] = i;
+        d->symbolum              = NIHIL;
+        d->titulus               = e->titulus;
+        d->genus                 = e->genus;
+        d->est_definitio         = e->est_definitio;
+        d->linea_a               = e->linea_a;
+        d->linea_b               = e->linea_b;
+        d->commentarium_initium  = e->commentarium_initium;
+        d->commentarium_finis    = e->commentarium_finis;
+        d->corpus_initium        = e->corpus_initium;
+        d->corpus_finis          = e->corpus_finis;
     }
-    /* numerus declarationum UNICARUM (extenta eiusdem corporis =
-     * enumeratores) - transitus primus */
+    ordo = compendium_ordo(declarationes, pn);
+    si (ordo == NIHIL)
     {
-        s32 initium_prius  = (s32)-I;
-        i32 unicae         = ZEPHYRUM;
-
-        per (i = ZEPHYRUM; i < n; i++)
-        {
-            constans LegatusFunctioExtentum* e =
-                (constans LegatusFunctioExtentum*)xar_obtinere(extenta,
-                    ordo[i]);
-
-            si (   e                 != NIHIL
-                && e->corpus_initium >= ZEPHYRUM
-                && e->corpus_initium != initium_prius)
-            {
-                unicae++;
-                initium_prius = e->corpus_initium;
-            }
-        }
-        sprintf(linea_b, "caput %.*s (%d declarationes gradus"
-            " supremi; macra exclusa - symbolum/corpus)\n",
-            (int)via_sine.mensura,
-            (constans character*)via_sine.datum, (int)unicae);
-        (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
+        redde;
     }
+    sprintf(linea_b, "caput %.*s (%d declarationes gradus"
+        " supremi; macra exclusa - symbolum/corpus)\n",
+        (int)via_sine.mensura,
+        (constans character*)via_sine.datum, (int)xar_numerus(ordo));
+    (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
+    per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
     {
-    s32 initium_prius = (s32)-I;
-
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        constans LegatusFunctioExtentum* e =
-            (constans LegatusFunctioExtentum*)xar_obtinere(extenta,
-                ordo[i]);
+        constans CompendiumDeclaratio* d =
+            (constans CompendiumDeclaratio*)xar_obtinere(declarationes,
+                *(i32*)xar_obtinere(ordo, i));
         chorda commentarium;
         chorda corpus;
 
-        si (   e                 == NIHIL
-            || e->corpus_initium < ZEPHYRUM
-            || e->corpus_initium == initium_prius)
-        {
-            perge;
-        }
-        initium_prius = e->corpus_initium;
         corpus = _extentum_viae_capere(l, pn, via_sine,
-            e->corpus_initium, e->corpus_finis);
+            d->corpus_initium, d->corpus_finis);
         si (corpus.mensura == ZEPHYRUM)
         {
             perge;
         }
         (vacuum)chorda_aedificator_appendere_literis(aed, "\n");
         commentarium = _extentum_viae_capere(l, pn, via_sine,
-            e->commentarium_initium, e->commentarium_finis);
+            d->commentarium_initium, d->commentarium_finis);
         si (commentarium.mensura > ZEPHYRUM)
         {
             _verbatim_appendere(aed, commentarium,
                 (i32)LEGATI_CAPITIS_COMMENTARII_LINEAE);
         }
-        sprintf(linea_b, "L%u [%s] ", e->linea_a,
-            _genus_extenti_verbum(e));
+        sprintf(linea_b, "L%u [%s] ", d->linea_a,
+            _genus_declarationis_verbum(d));
         (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
-        _declarationem_contrahere(aed, corpus);
+        (vacuum)chorda_aedificator_appendere_chorda(aed,
+            compendium_contrahere(corpus,
+                (i32)LEGATI_CAPITIS_DECLARATIONIS_OCTETI, pn));
         (vacuum)chorda_aedificator_appendere_literis(aed, "\n");
         numerus_ostensarum++;
-    }
     }
     si (numerus_ostensarum == ZEPHYRUM)
     {
