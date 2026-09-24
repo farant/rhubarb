@@ -37,6 +37,14 @@ A **value** is always tagged: `{genus: "ita-non", valor: "ita"|"non"|"ignotum"}`
 or `{genus: "textus", valor: "…"}`. Tagging now means later kinds
 (enumeratio, numerus, dies, res) arrive without rewriting history.
 
+**Not applicable** (decided 2026-09-24, decretum …SD7JR, option 1): a
+third kind `{genus: "non-applicabile", valor?: "<reason>"}`, accepted in
+EVERY lens whatever its `genus_valoris`. It is an explicit value, so it
+counts as FILLED: the frontier stops reporting cells that could never be
+filled. Chosen over a per-lens applicability rule (which would need an
+expression language) and over a sentinel inside each kind (which would
+collide with real text in `textus` lenses).
+
 **Provenance per cell**, stored in the folded cell: the event's `actor`
 and `creatum`, plus `fons` (`manu` | `derivatum`) and optional `per`
 (the job, task or commit that set it — references live here, not in
@@ -57,7 +65,9 @@ Trunk only in v1 (a branch write is refused, as `ad`/`intra` are).
 - `ordo-remotus`: every key present; `causa` given;
 - `lens-addita`: name not already a lens; `genus_valoris` known (`ita-non`, `textus`);
 - `cella-posita`: row exists, lens exists, value's kind equals the lens's
-  kind, `ita-non` value ∈ {ita, non, ignotum}; `fons` ∈ {manu, derivatum}.
+  kind (except `non-applicabile`, legal in any lens; its optional `valor`
+  must be a string), `ita-non` value ∈ {ita, non, ignotum}; `fons` ∈
+  {manu, derivatum}.
 
 ## 4. Module layout
 
@@ -77,7 +87,7 @@ Trunk only in v1 (a branch write is refused, as `ad`/`intra` are).
 
 | actus | does |
 |---|---|
-| `tabula` | render the table (rows × lenses, `ita`/`non`/`·`, text truncated) + footer: unknown cells per lens (the frontier), newest and oldest cell date per lens |
+| `tabula` | render the table (rows × lenses, `ita`/`non`/`·`, `n.a.` for not applicable, text truncated) + footer: unknown cells per lens (the frontier), `n.a. N` when any, newest and oldest cell date per lens |
 | `ordines` | add rows (JSON array or comma list); keys already present are REPORTED and skipped (a proposer can re-push its whole derivation), new ones written in one event |
 | `lens` | add a lens |
 | `cellae` | set cells (JSON array of {ordo, lens, valor}); `fons` defaults to `manu` |

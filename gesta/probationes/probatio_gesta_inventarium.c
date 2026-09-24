@@ -223,6 +223,46 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (_causae(c), I);
     }
 
+
+    /* ==================================================
+     * NON APPLICABILE: valor expressus in OMNI lente (decretum
+     * ...SD7JR, optio 1) - genus tertium, causa optionalis in valore
+     * ================================================== */
+
+    {
+        constans character* c;
+                 JsonValor* cella;
+
+        imprimere("\n--- Probans non applicabile ---\n");
+        /* in lente ita-non ET in lente textus: genus lentis non
+         * obstat */
+        CREDO_NIHIL (_validare(status, "cella-posita",
+            "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"b.sh\","
+            "\"lens\":\"in PORTAE\",\"valor\":{\"genus\":"
+            "\"non-applicabile\"}},{\"ordo\":\"c.sh\",\"lens\":"
+            "\"tegit\",\"valor\":{\"genus\":\"non-applicabile\","
+            "\"valor\":\"GUI solum\"}}]}", pn));
+        /* causa non chorda recusatur */
+        c = _validare(status, "cella-posita",
+            "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"b.sh\","
+            "\"lens\":\"tegit\",\"valor\":{\"genus\":"
+            "\"non-applicabile\",\"valor\":7}}]}", pn);
+        CREDO_AEQUALIS_I32 (_causae(c), I);
+        CREDO_VERUM (c != NIHIL
+            && strstr(c, "non-applicabile") != NIHIL);
+        /* plicatura: genus et causa servantur */
+        CREDO_VERUM (_plicare(status, "cella-posita",
+            "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"c.sh\","
+            "\"lens\":\"tegit\",\"valor\":{\"genus\":"
+            "\"non-applicabile\",\"valor\":\"GUI solum\"}}]}", pn));
+        cella = json_objectum_capere(json_objectum_capere(
+            json_objectum_capere(status, "cellae"), "c.sh"), "tegit");
+        CREDO_CHORDA_AEQUALIS_LITERIS (json_ad_chorda(
+            json_objectum_capere(cella, "genus")), "non-applicabile");
+        CREDO_CHORDA_AEQUALIS_LITERIS (json_ad_chorda(
+            json_objectum_capere(cella, "valor")), "GUI solum");
+    }
+
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }

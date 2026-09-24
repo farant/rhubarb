@@ -23,6 +23,9 @@ lesson of e0988825).
 > (`67472c02`). **T5 built** (this commit): live inventory 'suitae
 > probationum' (35 rows, 5 lenses) via tools/inventarium_suitarum.py;
 > awaiting Fran's look. Finding: not-applicable cells count as unknown.
+> **T5 ACCEPTED** 2026-09-24 (Fran looked). Follow-up done: the
+> `non-applicabile` value kind (spec §2), so not-applicable cells count as
+> filled.
 
 ---
 

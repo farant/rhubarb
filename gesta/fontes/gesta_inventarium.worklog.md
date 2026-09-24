@@ -118,3 +118,22 @@ extra PORTAE` "28/35", but those cells are not unknown, they are NOT
 APPLICABLE. The frontier conflates the two, so it overstates what is left
 to fill. Candidate fixes (for Fran): an explicit "non applicabile" value,
 or a lens APPLICABILITY rule ("applies where in PORTAE = non").
+
+## 2026-09-24 — third value kind: non-applicabile
+
+Fran chose option 1 (decretum …SD7JR): "not applicable" is an explicit value
+that counts as filled, not a lens-level applicability rule. It is a third
+TAGGED kind, `{genus: "non-applicabile", valor?: reason}`, legal in every lens
+regardless of `genus_valoris` - the tags were chosen in v1 precisely so a new
+kind arrives without rewriting history, and a sentinel inside `textus` would
+collide with real text.
+
+- Fold: unchanged. It was already genus-agnostic (stores genus + valor as
+  given), which is why the fold assertions of the new probatio section passed
+  before any code changed; only the validator was red (3 of 39).
+- Validator: the kind skips the lens-congruence check; a present `valor` must
+  be a string (the reason). Unknown kinds now name all three in the cause.
+- tabularium.c: renders `n.a.`; `_inventarii_cella_ignota` treats it as filled
+  (its valor may be empty, which the old test would have called unknown); the
+  footer adds ` · n.a. N` only when N > 0, so every existing fixture and the
+  live table stay byte-identical until someone uses it. Born red: 4 of 999.

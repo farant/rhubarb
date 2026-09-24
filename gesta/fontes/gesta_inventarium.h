@@ -7,7 +7,9 @@
  *   lens-addita    {nomen, genus_valoris, corpus?}
  *   cella-posita   {cellae: [{ordo, lens, valor}...], fons, per?}
  * Valor semper TAGATUS: {genus: "ita-non", valor: ita|non|ignotum} aut
- * {genus: "textus", valor: "..."}. Provenientia cellae: actor et
+ * {genus: "textus", valor: "..."} aut, in OMNI lente, {genus:
+ * "non-applicabile", valor?: causa} - cella expresse vacua quae ut
+ * impleta numeratur (decretum ...SD7JR). Provenientia cellae: actor et
  * creatum eventus + fons (manu | derivatum) + per? (opus/commissio).
  *
  * Status plicatus:

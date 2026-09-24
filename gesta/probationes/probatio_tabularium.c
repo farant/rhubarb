@@ -5233,6 +5233,36 @@ principale (vacuum)
             " antiquissima 20")
                 != NIHIL);
 
+        /* NON APPLICABILE (decretum ...SD7JR): in lente ita-non ET
+         * textus; 'n.a.' redditur, ut impleta numeratur, pes numerum
+         * nominat */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59415,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"cellae\",\"cella"
+            "e\":\"[{\\\"ordo\\\":\\\"a.sh\\\",\\\"lens\\\":\\\"teg"
+            "it\\\",\\\"valor\\\":{\\\"genus\\\":\\\"non-applica"
+            "bile\\\",\\\"valor\\\":\\\"GUI solum\\\"}},{\\\"ord"
+            "o\\\":\\\"c.sh\\\",\\\"lens\\\":\\\"in PORTAE\\\",\\"
+            "\"valor\\\":{\\\"genus\\\":\\\"non-applicabile\\\"}}]"
+            "\"}}}");
+        CREDO_VERUM (strstr(r, "cella-posita") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59416,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"tabula\"}}}");
+        CREDO_VERUM (strstr(r, "a.sh  +          n.a.\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "c.sh  n.a.       radix et gesta\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "lens 'in PORTAE' (ita-non): ignotae 0/2 \xc2\xb7 n.a. 1"
+            " \xc2\xb7 antiquissima 20")
+                != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "lens 'tegit' (textus): ignotae 0/2 \xc2\xb7 n.a. 1"
+            " \xc2\xb7 antiquissima 20")
+                != NIHIL);
+
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5821,"

@@ -5,8 +5,11 @@
 #include "gesta_inventarium.h"
 #include "chorda_aedificator.h"
 
-#define GENUS_ITA_NON  "ita-non"
-#define GENUS_TEXTUS   "textus"
+#define GENUS_ITA_NON          "ita-non"
+#define GENUS_TEXTUS           "textus"
+/* in OMNI lente licet (decretum ...SD7JR): cella expresse vacua quae
+ * ut impleta numeratur; valor = causa optionalis */
+#define GENUS_NON_APPLICABILE  "non-applicabile"
 
 interior b32
 _est (
@@ -564,6 +567,18 @@ _cellas_validare (
         }
         genus  = _campus(valor, "genus");
         v      = _campus(valor, "valor");
+        si (_est(genus, GENUS_NON_APPLICABILE))
+        {
+            JsonValor* causa = json_objectum_capere(valor, "valor");
+
+            si (causa != NIHIL && !json_est_chorda(causa))
+            {
+                _causa(causae, numerus, "cella '", ordo,
+                    "': non-applicabile - valor (causa) chorda esse"
+                    " debet");
+            }
+            perge;
+        }
         si (   lens != NIHIL
             && !chorda_aequalis(genus, _campus(lens, "genus_valoris")))
         {
@@ -582,7 +597,8 @@ _cellas_validare (
         alioquin si (!_est(genus, GENUS_TEXTUS))
         {
             _causa(causae, numerus, "cella '", ordo,
-                "': genus valoris ignotum (ita-non | textus)");
+                "': genus valoris ignotum (ita-non | textus |"
+                " non-applicabile)");
         }
     }
 }

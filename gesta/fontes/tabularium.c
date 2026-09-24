@@ -11730,7 +11730,8 @@ _inventarii_decurtare (
     redde chorda_aedificator_finire(aed);
 }
 
-/* cella reddita: ita '+', non '-', ignota '·', textus decurtatus */
+/* cella reddita: ita '+', non '-', ignota '·', non applicabilis
+ * 'n.a.', textus decurtatus */
 interior chorda
 _inventarii_cella_reddita (
     JsonValor* cella,
@@ -11745,6 +11746,10 @@ _inventarii_cella_reddita (
     }
     g = json_ad_chorda(json_objectum_capere(cella, "genus"));
     v = json_ad_chorda(json_objectum_capere(cella, "valor"));
+    si (_chorda_est(g, "non-applicabile"))
+    {
+        redde _ch("n.a.");
+    }
     si (_chorda_est(g, "ita-non"))
     {
         redde _chorda_est(v, "ita") ? _ch("+")
@@ -11757,7 +11762,8 @@ _inventarii_cella_reddita (
     redde _inventarii_decurtare(v, XXXII, pn);
 }
 
-/* cellam ignotam esse (absens, 'ignotum', textus vacuus) */
+/* cellam ignotam esse (absens, 'ignotum', textus vacuus); non
+ * applicabilis IMPLETA est quamvis valore vacuo (decretum ...SD7JR) */
 interior b32
 _inventarii_cella_ignota (
     JsonValor* cella)
@@ -11767,6 +11773,12 @@ _inventarii_cella_ignota (
     si (cella == NIHIL || !json_est_objectum(cella))
     {
         redde VERUM;
+    }
+    si (_chorda_est(json_ad_chorda(json_objectum_capere(cella,
+        "genus")),
+        "non-applicabile"))
+    {
+        redde FALSUM;
     }
     v = json_ad_chorda(json_objectum_capere(cella, "valor"));
     redde v.mensura == ZEPHYRUM || _chorda_est(v, "ignotum");
@@ -11940,7 +11952,8 @@ _inventarii_tabulam_reddere (
            chorda  appellatio;
            chorda  antiquissima;
            chorda  novissima;
-              i32  ignotae = ZEPHYRUM;
+              i32  ignotae           = ZEPHYRUM;
+              i32  non_applicabiles  = ZEPHYRUM;
         character  numeri[LXIV];
 
         lens = json_tabulatum_obtinere(lentes, j);
@@ -11969,6 +11982,11 @@ _inventarii_tabulam_reddere (
             {
                 perge;
             }
+            si (_chorda_est(json_ad_chorda(json_objectum_capere(cella,
+                "genus")), "non-applicabile"))
+            {
+                non_applicabiles++;
+            }
             creatum = json_ad_chorda(json_objectum_capere(cella,
                 "creatum"));
             si (creatum.mensura == ZEPHYRUM)
@@ -11994,6 +12012,11 @@ _inventarii_tabulam_reddere (
         sprintf(numeri, "): ignotae %d/%d", (int)ignotae,
             (int)numerus_ordinum);
         chorda_aedificator_appendere_literis(aed, numeri);
+        si (non_applicabiles > ZEPHYRUM)
+        {
+            sprintf(numeri, " \xc2\xb7 n.a. %d", (int)non_applicabiles);
+            chorda_aedificator_appendere_literis(aed, numeri);
+        }
         si (antiquissima.mensura >= X)
         {
             antiquissima.mensura = X;
@@ -12283,7 +12306,9 @@ _instrumenta_componere (
         { "genus_valoris", "ita-non | textus (actus lens)", FALSUM },
         { "corpus", "quid lens metiatur (actus lens)", FALSUM },
         { "cellae", "acies JSON [{ordo, lens, valor: {genus, valor}}]"
-          " - ita-non: ita|non|ignotum; textus: chorda", FALSUM },
+          " - ita-non: ita|non|ignotum; textus: chorda;"
+          " non-applicabile (in OMNI lente, valor = causa optionalis):"
+          " impleta numeratur", FALSUM },
         { "fons", "manu (ordinarium) | derivatum - provenientia"
           " cellarum", FALSUM },
         { "per", "opus / commissio / cursus qui cellas posuit",
@@ -12616,8 +12641,8 @@ _instrumenta_componere (
         "INVENTARIUM: tabula ordinum (membra) x lentium (columnae)."
         " Creatur per addere {genus: inventarium, titulus, datum:"
         " '{\"ordo_genus\":\"via\"}', intra}. Actus: tabula (ordines x"
-        " lentes, + '-' '\xc2\xb7' ignota; pes = frons: ignotae per"
-        " lentem), ordines (addere;"
+        " lentes, + '-' '\xc2\xb7' ignota, 'n.a.' non applicabilis;"
+        " pes = frons: ignotae per lentem), ordines (addere;"
         " praesentes renuntiantur, nihil novi = nihil scriptum), lens,"
         " cellae (valores tagati; provenientia actor/tempus/fons/per),"
         " removere (causa). Recusatio ANTE scripturam, causae omnes."
