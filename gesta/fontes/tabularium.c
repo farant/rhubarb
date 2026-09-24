@@ -17,6 +17,7 @@
 #include "filum.h"
 #include "via.h"
 #include "iter_directoria.h"
+#include "gesta_inventarium.h"
 #include "moneta.h"   /* captura fragmentorum: minta fortuita
                        * (stampae linearum in articulis) */
 #include <string.h>
@@ -11592,6 +11593,333 @@ _instrumentum (
     redde instrumentum;
 }
 
+
+/* ==================================================
+ * INVENTARIUM (inventarium v1 T3): porta scripturae tabulae
+ * ordinum x lentium. PRAEIUDICIUM eodem validatore ac machina
+ * (gesta_inventarium_validare) - recusatio ANTE scripturam, causae
+ * omnes; machina ipsa iudicat non obstat (nota custodiae). Vide
+ * project-specs/inventarium-spec.md §5.
+ * ================================================== */
+
+/* ordines ex argumento: acies JSON ('[...]') aut index commatibus
+ * separatus (spatia marginum tonsa); NIHIL si fractum */
+interior JsonValor*
+_inventarii_ordines_legere (
+     chorda  textus,
+    Piscina* pn)
+{
+    JsonValor* acies;
+          i32  i = ZEPHYRUM;
+
+    si (textus.mensura > ZEPHYRUM && textus.datum[0] == (i8)'[')
+    {
+        JsonResultus r = json_legere(textus, pn);
+
+        redde (r.successus && json_est_tabulatum(r.radix))
+            ? r.radix : NIHIL;
+    }
+    acies = json_tabulatum_creare(pn);
+    dum (i < textus.mensura)
+    {
+           i32 initium = i;
+        chorda pars;
+
+        dum (i < textus.mensura && textus.datum[i] != (i8)',')
+        {
+            i++;
+        }
+        pars.datum    = textus.datum + initium;
+        pars.mensura  = i - initium;
+        dum (pars.mensura > ZEPHYRUM && pars.datum[0] == (i8)' ')
+        {
+            pars.datum++;
+            pars.mensura--;
+        }
+        dum (   pars.mensura > ZEPHYRUM
+             && pars.datum[pars.mensura - I] == (i8)' ')
+        {
+            pars.mensura--;
+        }
+        si (pars.mensura > ZEPHYRUM)
+        {
+            json_tabulatum_addere(acies, json_chorda_creare(pn, pars));
+        }
+        i++;
+    }
+    redde acies;
+}
+
+/* clavis in statu tabulae iam adest? */
+interior b32
+_inventarii_ordo_adest (
+     JsonValor* status,
+        chorda  clavis)
+{
+    JsonValor* ordines = json_objectum_capere(status, "ordines");
+          i32  k;
+
+    si (ordines == NIHIL || !json_est_tabulatum(ordines))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < json_tabulatum_numerus(ordines); k++)
+    {
+        JsonValor* c = json_objectum_capere(
+            json_tabulatum_obtinere(ordines, k), "clavis");
+
+        si (   c != NIHIL && json_est_chorda(c)
+            && chorda_aequalis(json_ad_chorda(c), clavis))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_tab_inventarium (
+    Tabularium* t,
+       Piscina* pn,
+     JsonValor* id,
+     JsonValor* argumenta,
+          FILE* effusio)
+{
+                 chorda  res    = _arg(argumenta, "res");
+                 chorda  actus  = _arg(argumenta, "actus");
+                 chorda  actor  = _arg(argumenta, "actor");
+                 chorda  origo  = _arg(argumenta, "origo");
+                 chorda  res_id;
+                 chorda  titulus;
+                    b32  ambiguum        = FALSUM;
+              JsonValor* status          = NIHIL;
+              JsonValor* datum           = json_objectum_creare(pn);
+     constans character* genus_eventus   = NIHIL;
+                    i32  iam_praesentes  = ZEPHYRUM;
+      ChordaAedificator* praesentes = chorda_aedificator_creare(pn,
+          CCLVI);
+      ChordaAedificator* aed;
+     constans character* causae;
+           GestaEventum  e;
+              character  scriptum_id[GESTA_RES_ID_MENSURA];
+
+    /* res: solvenda et inventarium esse debet */
+    res_id = _res_solvere(t, res, pn, &ambiguum);
+    si (ambiguum || res_id.mensura == ZEPHYRUM)
+    {
+        aed = chorda_aedificator_creare(pn, DXII);
+        chorda_aedificator_appendere_literis(aed,
+            "inventarium RECUSATUM - nihil scriptum: ");
+        si (ambiguum)
+        {
+            _candidatos_appendere(t, aed, res, pn);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(aed, "res '");
+            chorda_aedificator_appendere_chorda(aed, res);
+            chorda_aedificator_appendere_literis(aed,
+                "' ignota (id, fragmentum inambiguum, aut titulus"
+                " exactus)");
+        }
+        _textum_respondere(t, pn, effusio, id,
+            chorda_aedificator_finire(aed), VERUM);
+        redde;
+    }
+    si (!_chorda_est(_cap_genus_rei(t, res_id, pn), GENUS_INVENTARII))
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("inventarium RECUSATUM - nihil scriptum: res non est"
+                " inventarium (genus 'inventarium' creatur per"
+                " addere)"),
+            VERUM);
+        redde;
+    }
+    titulus = _titulus_membri(t, res_id, pn);
+    {
+        chorda d = gesta_res_datum(t->mundus, _litterae(pn, res_id),
+            pn);
+
+        si (d.mensura > ZEPHYRUM)
+        {
+            JsonResultus r = json_legere(d, pn);
+
+            si (r.successus && json_est_objectum(r.radix))
+            {
+                status = r.radix;
+            }
+        }
+        si (status == NIHIL)
+        {
+            status = json_objectum_creare(pn);
+        }
+    }
+
+    /* datum per actum componere */
+    si (_chorda_est(actus, "ordines") || _chorda_est(actus, "removere"))
+    {
+        JsonValor* lecti = _inventarii_ordines_legere(
+            _arg(argumenta, "ordines"), pn);
+         JsonValor* scribendi = json_tabulatum_creare(pn);
+               i32  k;
+
+        si (lecti == NIHIL)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("inventarium RECUSATUM - nihil scriptum: ordines:"
+                    " acies JSON aut index commatibus separatus"),
+                VERUM);
+            redde;
+        }
+        per (k = ZEPHYRUM; lecti != NIHIL
+             && k < json_tabulatum_numerus(lecti); k++)
+        {
+            JsonValor* v = json_tabulatum_obtinere(lecti, k);
+
+            /* ordines: praesentes RENUNTIANTUR et praetermittuntur
+             * (derivatio totam aciem iterum mittere potest) */
+            si (   _chorda_est(actus, "ordines")
+                && v != NIHIL && json_est_chorda(v)
+                && _inventarii_ordo_adest(status, json_ad_chorda(v)))
+            {
+                chorda_aedificator_appendere_literis(praesentes,
+                    iam_praesentes > ZEPHYRUM ? ", " : "");
+                chorda_aedificator_appendere_chorda(praesentes,
+                    json_ad_chorda(v));
+                iam_praesentes++;
+                perge;
+            }
+            json_tabulatum_addere(scribendi, v);
+        }
+        json_objectum_ponere(datum, "ordines", scribendi);
+        si (_chorda_est(actus, "ordines"))
+        {
+            genus_eventus = "ordo-additus";
+            si (   json_tabulatum_numerus(scribendi) == ZEPHYRUM
+                && iam_praesentes > ZEPHYRUM)
+            {
+                aed = chorda_aedificator_creare(pn, DXII);
+                chorda_aedificator_appendere_literis(aed,
+                    "nihil novi - nihil scriptum: ordines omnes iam"
+                    " adsunt (");
+                chorda_aedificator_appendere_chorda(aed,
+                    chorda_aedificator_finire(praesentes));
+                chorda_aedificator_appendere_literis(aed, ")");
+                _textum_respondere(t, pn, effusio, id,
+                    chorda_aedificator_finire(aed), FALSUM);
+                redde;
+            }
+        }
+        alioquin
+        {
+            genus_eventus = "ordo-remotus";
+            json_objectum_ponere(datum, "causa", json_chorda_creare(pn,
+                _arg(argumenta, "causa")));
+        }
+    }
+    alioquin si (_chorda_est(actus, "lens"))
+    {
+        chorda corpus = _arg(argumenta, "corpus");
+
+        genus_eventus = "lens-addita";
+        json_objectum_ponere(datum, "nomen",
+            json_chorda_creare(pn, _arg(argumenta, "lens")));
+        json_objectum_ponere(datum, "genus_valoris",
+            json_chorda_creare(pn, _arg(argumenta, "genus_valoris")));
+        si (corpus.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(datum, "corpus",
+                json_chorda_creare(pn, corpus));
+        }
+    }
+    alioquin si (_chorda_est(actus, "cellae"))
+    {
+              chorda fons      = _arg(argumenta, "fons");
+              chorda per_quid  = _arg(argumenta, "per");
+        JsonResultus r = json_legere(_arg(argumenta, "cellae"),
+            pn);
+
+        genus_eventus = "cella-posita";
+        json_objectum_ponere(datum, "cellae", r.successus
+            ? r.radix : json_tabulatum_creare(pn));
+        json_objectum_ponere(datum, "fons", json_chorda_creare(pn,
+            fons.mensura > ZEPHYRUM ? fons : _ch("manu")));
+        si (per_quid.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(datum, "per",
+                json_chorda_creare(pn, per_quid));
+        }
+    }
+    alioquin
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("inventarium RECUSATUM - nihil scriptum: actus ignotus"
+                " (ordines | lens | cellae | removere)"), VERUM);
+        redde;
+    }
+
+    /* PRAEIUDICIUM: validator idem ac machina - causae omnes */
+    causae = gesta_inventarium_validare(status, _ch(genus_eventus),
+        datum, pn);
+    si (causae != NIHIL)
+    {
+        aed = chorda_aedificator_creare(pn, DXII);
+        chorda_aedificator_appendere_literis(aed,
+            "inventarium RECUSATUM - nihil scriptum:\n");
+        chorda_aedificator_appendere_literis(aed, causae);
+        _textum_respondere(t, pn, effusio, id,
+            chorda_aedificator_finire(aed), VERUM);
+        redde;
+    }
+
+    e.res_id         = _litterae(pn, res_id);
+    e.genus_eventus  = genus_eventus;
+    e.datum          = _litterae(pn, json_scribere(datum, pn));
+    e.actor          = actor.mensura > ZEPHYRUM
+        ? _litterae(pn, actor) : "claude";
+    e.origo          = origo.mensura > ZEPHYRUM
+        ? _litterae(pn, origo) : "mcp";
+    si (!gesta_scribere(t->mundus, &e, scriptum_id))
+    {
+        aed = chorda_aedificator_creare(pn, CCLVI);
+        chorda_aedificator_appendere_literis(aed,
+            "scriptura recusata: ");
+        chorda_aedificator_appendere_literis(aed,
+            gesta_error(t->mundus));
+        _textum_respondere(t, pn, effusio, id,
+            chorda_aedificator_finire(aed), VERUM);
+        redde;
+    }
+    _tabulam_scribere(t, pn);
+    _entitatem_reconciliare(t, e.res_id, pn);
+
+    aed = chorda_aedificator_creare(pn, DXII);
+    chorda_aedificator_appendere_literis(aed, "inventarium '");
+    chorda_aedificator_appendere_chorda(aed, titulus);
+    chorda_aedificator_appendere_literis(aed, "': ");
+    chorda_aedificator_appendere_literis(aed, genus_eventus);
+    si (_chorda_est(actus, "ordines") || _chorda_est(actus, "removere"))
+    {
+        character numeri[LXIV];
+
+        sprintf(numeri, " - ordines %d", (int)json_tabulatum_numerus(
+            json_objectum_capere(datum, "ordines")));
+        chorda_aedificator_appendere_literis(aed, numeri);
+    }
+    si (iam_praesentes > ZEPHYRUM)
+    {
+        character numeri[LXIV];
+
+        sprintf(numeri, "; iam praesentes %d (praetermissi): ",
+            (int)iam_praesentes);
+        chorda_aedificator_appendere_literis(aed, numeri);
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(praesentes));
+    }
+    _textum_respondere(t, pn, effusio, id,
+        chorda_aedificator_finire(aed), FALSUM);
+}
+
 /* instrumenta cum schematibus componere - una sedes: tools/list id
  * reddit, tools/call eo argumenta ignota iudicat (01M37JYP2W) */
 interior JsonValor*
@@ -11599,6 +11927,27 @@ _instrumenta_componere (
     Piscina* pn)
 {
     JsonValor* instrumenta = json_tabulatum_creare(pn);
+    interior constans TabArgumentum ARG_INVENTARIUM[] = {
+        { "res", "inventarium (id, fragmentum, titulus exactus)",
+            VERUM },
+        { "actus", "ordines | lens | cellae | removere", VERUM },
+        { "ordines", "acies JSON aut index commatibus: ordines addendi"
+          " (praesentes renuntiantur et praetermittuntur) aut"
+          " removendi",
+          FALSUM },
+        { "lens", "nomen lentis (actus lens)", FALSUM },
+        { "genus_valoris", "ita-non | textus (actus lens)", FALSUM },
+        { "corpus", "quid lens metiatur (actus lens)", FALSUM },
+        { "cellae", "acies JSON [{ordo, lens, valor: {genus, valor}}]"
+          " - ita-non: ita|non|ignotum; textus: chorda", FALSUM },
+        { "fons", "manu (ordinarium) | derivatum - provenientia"
+          " cellarum", FALSUM },
+        { "per", "opus / commissio / cursus qui cellas posuit",
+            FALSUM },
+        { "causa", "causa remotionis (actus removere)", FALSUM },
+        { "actor", "fran|claude|machina (ordinarius claude)", FALSUM },
+        { "origo", "provenientia eventus (ordinarius mcp)", FALSUM }
+    };
     interior constans TabArgumentum ARG_ADDERE[] = {
         { "genus", "quaestio|parcum|decretum|nota|desideratum|opus|"
           "regio. opus = OPUS PLANI gradu commissi (pendens ->"
@@ -11919,6 +12268,16 @@ _instrumenta_componere (
         " addere/gerere/res (ibi res_id requiritur).",
         ARG_RAMUS,
         ARGUMENTORUM_NUMERUS(ARG_RAMUS)));
+    json_tabulatum_addere(instrumenta, _instrumentum(pn, "inventarium",
+        "INVENTARIUM: tabula ordinum (membra) x lentium (columnae)."
+        " Creatur per addere {genus: inventarium, titulus, datum:"
+        " '{\"ordo_genus\":\"via\"}', intra}. Actus: ordines (addere;"
+        " praesentes renuntiantur, nihil novi = nihil scriptum), lens,"
+        " cellae (valores tagati; provenientia actor/tempus/fons/per),"
+        " removere (causa). Recusatio ANTE scripturam, causae omnes."
+        " Manu aeque ac derivata: quod scriptum est servatur.",
+        ARG_INVENTARIUM,
+        ARGUMENTORUM_NUMERUS(ARG_INVENTARIUM)));
     redde instrumenta;
 }
 
@@ -12502,6 +12861,10 @@ _toolscall_tractare (
     alioquin si (_chorda_est(titulus, "agere"))
     {
         _tab_agere(t, pn, id, argumenta, effusio);
+    }
+    alioquin si (_chorda_est(titulus, "inventarium"))
+    {
+        _tab_inventarium(t, pn, id, argumenta, effusio);
     }
     alioquin si (_chorda_est(titulus, "ramus"))
     {

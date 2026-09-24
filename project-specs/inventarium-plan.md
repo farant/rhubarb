@@ -16,7 +16,9 @@ lesson of e0988825).
 > **STATUS 2026-09-23 — T1 DONE** `1396fb0f` (pure fold + validator, 33
 > assertions). **T2 DONE** (this commit): gesta fold + write-time
 > validation as custody notes, genus seeded (semen v10), SEMINA_NUMERUS
-> derived. Next: T3, the MCP tool (refusal at the door).
+> derived (`ccf4a8cd`). **T3 DONE** (this commit): tool `inventarium`
+> (ordines/lens/cellae/removere), pre-judgment with the engine's own
+> validator, idempotent row pushes. Next: T4, the `tabula` view.
 
 ---
 

@@ -506,6 +506,8 @@ principale (vacuum)
     CREDO_VERUM (_proprietas_publicata(r, piscina, "addere", "intra"));
     CREDO_VERUM (_proprietas_publicata(r, piscina, "addere", "datum"));
     CREDO_VERUM (_proprietas_publicata(r, piscina, "gerere", "ramus"));
+    CREDO_VERUM (_proprietas_publicata(r, piscina, "inventarium",
+        "origo"));
 
     /* IV. addere: quaestio cum tags et ancoris (una resoluta, una
      * inresoluta - fixtura nexus_specimen.tsv) */
@@ -5107,6 +5109,90 @@ principale (vacuum)
             != NIHIL);
         CREDO_VERUM (strstr(r, "'zzzzzzzz' ignotum\\n") != NIHIL
             || strstr(r, "'zzzzzzzz' ignotum\\nARGUMENTA") != NIHIL);
+
+        /* INSTRUMENTUM INVENTARIUM (inventarium v1 T3): porta
+         * scripturae - praesentes renuntiantur (nihil novi = nihil
+         * scriptum), recusatio ANTE scripturam causis omnibus,
+         * removere causam poscit, res non-inventarium recusatur */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59400,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"addere\",\"arguments\":{"
+            "\"genus\":\"inventarium\",\"titulus\":\"Iv suitae\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59401,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"ordines\",\"ordi"
+            "nes\":\"a.sh, b.sh\"}}}");
+        CREDO_VERUM (strstr(r, "ordo-additus - ordines 2") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59402,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"ordines\",\"ordi"
+            "nes\":\"[\\\"a.sh\\\",\\\"c.sh\\\"]\"}}}");
+        CREDO_VERUM (strstr(r, "ordines 1") != NIHIL);
+        CREDO_VERUM (strstr(r, "iam praesentes 1 (praetermissi): a.sh")
+            != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59403,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"ordines\",\"ordi"
+            "nes\":\"a.sh\"}}}");
+        CREDO_VERUM (strstr(r, "nihil novi - nihil scriptum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59404,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"lens\",\"lens\":"
+            "\"in PORTAE\",\"genus_valoris\":\"ita-non\"}}}");
+        CREDO_VERUM (strstr(r, "lens-addita") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59405,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"cellae\",\"cella"
+            "e\":\"[{\\\"ordo\\\":\\\"a.sh\\\",\\\"lens\\\":\\\"in "
+            "PORTAE\\\",\\\"valor\\\":{\\\"genus\\\":\\\"ita-non\\"
+            "\",\\\"valor\\\":\\\"ita\\\"}}]\"}}}");
+        CREDO_VERUM (strstr(r, "cella-posita") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59406,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"cellae\",\"cella"
+            "e\":\"[{\\\"ordo\\\":\\\"z.sh\\\",\\\"lens\\\":\\\"in "
+            "PORTAE\\\",\\\"valor\\\":{\\\"genus\\\":\\\"ita-non\\"
+            "\",\\\"valor\\\":\\\"fortasse\\\"}}]\"}}}");
+        CREDO_VERUM (strstr(r, "inventarium RECUSATUM - nihil scriptum")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "ordo 'z.sh' non adest") != NIHIL);
+        CREDO_VERUM (strstr(r, "ita | non | ignotum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59407,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"res\",\"arguments\":{\"re"
+            "s\":\"Iv suitae\"}}}");
+        CREDO_VERUM (strstr(r, "z.sh") == NIHIL);
+        CREDO_VERUM (strstr(r, "fortasse") == NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59408,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"removere\",\"ord"
+            "ines\":\"b.sh\"}}}");
+        CREDO_VERUM (strstr(r, "causa remotionis requiritur") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59409,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"removere\",\"ord"
+            "ines\":\"b.sh\",\"causa\":\"duplicatum\"}}}");
+        CREDO_VERUM (strstr(r, "ordo-remotus - ordines 1") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59410,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Rg glyphae\",\"actus\":\"ordines\",\"ord"
+            "ines\":\"x\"}}}");
+        CREDO_VERUM (strstr(r, "res non est inventarium") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59411,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"saltare\"}}}");
+        CREDO_VERUM (strstr(r, "actus ignotus") != NIHIL);
 
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */

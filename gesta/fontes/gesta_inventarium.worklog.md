@@ -54,3 +54,22 @@ the tool-schema miscount fixed in e6fdaaa5). Now derived from the array.
 Tests: probatio_gesta gains the inventory section (fold, provenance,
 custody notes for a missing row and for a non-inventory, replay
 byte-identical); planted dead fold -> 4 red, permissive validator -> 1 red.
+
+## 2026-09-23 — the door: MCP tool `inventarium` (T3)
+
+`_tab_inventarium` in tabularium.c, actions `ordines` / `lens` / `cellae` /
+`removere`. It PRE-JUDGES with the very validator the engine uses
+(`gesta_inventarium_validare`), so door and engine can't drift: a bad
+write is refused before anything is written, all causes named. Rows
+already present are REPORTED and skipped ("iam praesentes N
+(praetermissi)"), and a push with nothing new writes nothing ("nihil novi
+- nihil scriptum") — a derivation can re-push its whole list. Rows come as
+a JSON array or a comma list. `cellae` takes a JSON array of {ordo, lens,
+valor:{genus, valor}}; `fons` defaults to `manu`.
+
+Plants: pre-judgment off -> 5 red (and `res` then SHOWS the bad cell's
+row key: the engine wrote it with a custody note — the door is what keeps
+it out). Presence filter defeated -> 3 red. A first attempt at the second
+plant removed the only call to the presence helper and broke the BUILD
+(-Wunused-function); a plant that breaks the build proves nothing, so it
+was redone as a helper that always answers "absent".
