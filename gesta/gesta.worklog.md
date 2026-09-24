@@ -356,3 +356,28 @@ machine, so the red test was the missing `(expeditio, aperta)`, not creation.
 Formatter aside: -scribere realigned an untouched 'hic_manens integer'
 declaration in probatio_gesta.c and -delta then called it a NEW finding -
 writer and checker disagree (desideratum …HYFTF); the two lines were restored.
+
+## 2026-09-24 — MCP tool `expeditio` (expeditio v1 T3)
+
+`_tab_expeditio` + `_expeditionem_creare`. Every write is ONE
+gesta_fascis_scribere batch: creare = creation + snapshot + natum-de (3) +
+intra? (3); facere = tick + inventory cell; promovere = opus creation + intra
+(3) + promotion. Refusals go through the same validators the engine uses
+(gesta_expeditio_validare; for the cell, gesta_inventarium_validare against the
+inventory's CURRENT state) before anything is written, all causes at once.
+
+Decisions made while writing it:
+- A cell marked non-applicabile never matches a filter (neither = nor !=):
+  a row n.a. for the job's lens is outside the job (spec §3 updated).
+- Re-ticking a `factum` row is allowed and re-stamps the rubric version.
+- claudere counts a row open when it has no tick or was reopened; promoted rows
+  are not open (their opus carries the work). `vis: "verum"` overrides.
+
+Tests: all 41 were green on the first run, so I planted before believing
+them - (1) facere without the cell -> 2 red; (2) n.a. passes the filter -> 3
+red. That exposed a gap: my "atomicity" case only hit the expeditio's OWN
+validator. Added the real one - a row removed from the inventory after the
+snapshot: the tick is legal, the cell is not, so the WHOLE batch is refused and
+the row stays open (plant: skip the cell refusal -> 4 red, and the failures show
+the tick slipping through). Lint caught `validatoris` as a new word; renamed
+the parameter to `causae_machinae` instead of growing the glossary.

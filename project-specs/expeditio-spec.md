@@ -55,8 +55,12 @@ expeditio, folded by a PURE module `gesta/fontes/gesta_expeditio.{h,c}`
 | `ordines-additi` | `{ordines: [clavis…]}` | append rows (with their `additus` date) |
 
 `status` ∈ `factum | omissum | apertum` (apertum = reopen a tick).
+Ticking a row already `factum` is allowed: it re-stamps the CURRENT
+rubric version (how "redo under the new rubric" is recorded).
 `filtrum` = `{lens, op: "=" | "!=", valor}` (an absent cell is `!=` every
-value). `implenda` = `{lens, genus, valor}`.
+value; a cell marked **non-applicabile** matches NEITHER — a row that is
+n.a. for the job's lens is outside the job; decided in T3, 2026-09-24).
+`implenda` = `{lens, genus, valor}`.
 
 Folded state:
 
