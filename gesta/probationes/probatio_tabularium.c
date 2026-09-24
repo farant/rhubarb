@@ -1861,6 +1861,54 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "rem non solvit") != NIHIL);
         CREDO_VERUM (strstr(r, "creatum") == NIHIL);
 
+        /* VERBUM CANONICUM cum altero insolubili (2026-09-24): olim
+         * alterum ut chorda cruda scribebatur - 'impeditur-a' ad
+         * fragmentum mendosum rem in aeternum impediebat. Nunc
+         * recusatur; verbum LIBERUM ad chordam crudam manet licitum;
+         * titulus ambiguus candidatos nominat */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":2221,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum propositum\",\"actus\":\"nexus\","
+            "\"verbum\":\"impeditur-a\",\"alterum\":"
+            "\"RDRNYX6JB\"}}}");
+        CREDO_VERUM (strstr(r, "RECUSATUS") != NIHIL);
+        CREDO_VERUM (strstr(r, "'RDRNYX6JB' rem non solvit") != NIHIL);
+        CREDO_VERUM (strstr(r, "canonicum") != NIHIL);
+        CREDO_VERUM (strstr(r, "creatum") == NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":2222,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum propositum\",\"actus\":\"nexus\","
+            "\"verbum\":\"pendet-ex\",\"alterum\":"
+            "\"Res nusquam inventa\"}}}");
+        CREDO_VERUM (strstr(r, "(2 causae)") != NIHIL);
+        CREDO_VERUM (strstr(r, "rem non solvit") != NIHIL);
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":2223,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Titulus geminus\"}}}");
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":2224,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Titulus geminus\"}}}");
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":2225,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum propositum\",\"actus\":\"nexus\","
+            "\"verbum\":\"sequitur\",\"alterum\":"
+            "\"Titulus geminus\"}}}");
+        CREDO_VERUM (strstr(r, "RECUSATUS") != NIHIL);
+        CREDO_VERUM (strstr(r, "alterum: ") != NIHIL);
+        CREDO_VERUM (strstr(r, "creatum") == NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":2226,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":"
+            "\"Verbum propositum\",\"actus\":\"nexus\","
+            "\"verbum\":\"cognatum\",\"alterum\":"
+            "\"Res nusquam inventa\"}}}");
+        CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+
         /* RES IGNOTA inter ceteras causas: olim tractator ad rem
          * insolubilem PRIMUM redibat, ergo 'res ignota + verbum
          * pravum' itinera duo poscebat. Nunc praeiudicium rem

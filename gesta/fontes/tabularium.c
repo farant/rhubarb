@@ -1692,6 +1692,51 @@ _verbum_iudicare (
     redde FALSUM;
 }
 
+/* verbum ipsum CANONICUM (titulus ordinis in 'verba_canonica' generis
+ * 'nexus')? Tabula eadem ac _verbum_iudicare legit: mundus seminis
+ * veteris nihil canonicum habet (lex progressiva). */
+interior b32
+_verbum_canonicum_est (
+    Tabularium* t,
+        chorda  verbum,
+       Piscina* pn)
+{
+          chorda  gd = gesta_genus_datum(t->mundus, "nexus", pn);
+    JsonResultus  r;
+       JsonValor* tabula;
+             i32  i;
+
+    si (gd.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    r = json_legere(gd, pn);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde FALSUM;
+    }
+    tabula = json_objectum_capere(r.radix, "verba_canonica");
+    si (tabula == NIHIL || !json_est_tabulatum(tabula))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(tabula); i++)
+    {
+        JsonValor* ordo = json_tabulatum_obtinere(tabula, i);
+        JsonValor* titulus_ordinis = ordo != NIHIL
+            && json_est_objectum(ordo)
+            ? json_objectum_capere(ordo, "titulus") : NIHIL;
+
+        si (   titulus_ordinis != NIHIL
+            && json_est_chorda(titulus_ordinis)
+            && chorda_aequalis(json_ad_chorda(titulus_ordinis), verbum))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 #define CENSUS_TAGORUM_TECTUM XX
 
 /* tabula verborum canonicorum in responsum: "a | b | c" - ut
@@ -2162,6 +2207,11 @@ _statum_praeiudicare (
  * SOLVI debet - aliter scriptura 'valida' ingenua vitium secundum
  * demum post emendationem ostenderet (gutta occulta).
  *
+ * Verbum CANONICUM (aut synonymum) cum altero insolubili recusatur
+ * (2026-09-24): chorda cruda ut finis 'impeditur-a' rem in aeternum
+ * impediebat. Verba LIBERA chordam crudam retinent; 'denexus' quoque
+ * (vincula vetera solvi debent posse).
+ *
  * NIHIL = licet scribere. Regula nova vinculi HIC additur, numquam
  * ut reditus maturus in tractatore. */
 interior constans character*
@@ -2258,7 +2308,36 @@ _nexum_praeiudicare (
     }
     alioquin
     {
-        alterum_id = _res_solvere(t, alterum, pn, NIHIL);
+        b32 alterum_ambiguum = FALSUM;
+
+        alterum_id = _res_solvere(t, alterum, pn, &alterum_ambiguum);
+        /* VERBUM CANONICUM (aut synonymum eius) rem VERAM poscit:
+         * alterum insolubile olim ut chorda cruda scribebatur, et
+         * 'impeditur-a' ad nihil numquam clauditur (2026-09-24,
+         * fragmentum mendosum). Verba LIBERA chordam crudam
+         * retinent. */
+        si (   !inversum && alterum_id.mensura == ZEPHYRUM
+            && (synonymum || _verbum_canonicum_est(t, verbum, pn)))
+        {
+            _querelam_incipere(index, &numerus);
+            si (alterum_ambiguum)
+            {
+                chorda_aedificator_appendere_literis(index,
+                    "alterum: ");
+                _candidatos_appendere(t, index, alterum, pn);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(index,
+                    "alterum '");
+                chorda_aedificator_appendere_chorda(index, alterum);
+                chorda_aedificator_appendere_literis(index,
+                    "' rem non solvit: verbum canonicum rem VERAM"
+                    " poscit (id, fragmentum inambiguum, aut titulus"
+                    " exactus) - vinculum ad nihil numquam"
+                    " clauditur");
+            }
+        }
         si (inversum && alterum_id.mensura == ZEPHYRUM)
         {
             _querelam_incipere(index, &numerus);

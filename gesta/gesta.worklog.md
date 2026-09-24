@@ -312,3 +312,25 @@ human table: 43 malformed lines, red.
 Note on forma as an unknown key: before this change the machine-form request
 was REFUSED (unknown argument), so the "no INVENTARIUM header" assertion passed
 vacuously while red elsewhere - it only guards something now that forma exists.
+
+## 2026-09-24 — canonical link verbs refuse an unresolvable `alterum`
+
+`gerere nexus` resolved `alterum` and, finding nothing, wrote the literal string
+as the link's far end (refused only when the verb was an inverse, where the
+string would become `res`). Filing expeditio's tasks I miscopied a suffix (R for
+T) and got `T2 --impeditur-a--> "RDRNYX6JB"`: an impediment that can never
+close. The `res` side already refused ("res ignota") and caught two other
+miscopies the same day - only `alterum` let one through.
+
+Now `_nexum_praeiudicare` refuses, for a CANONICAL verb or a synonym of one,
+an `alterum` that does not resolve (cause "rem non solvit ... vinculum ad nihil
+numquam clauditur"), and lists candidates when it is ambiguous (the resolver
+used to be called with NIHIL for ambiguity, so an ambiguous title also became
+a literal). Free verbs keep literal targets (external references); `denexus`
+keeps its literal fallback (old links must stay dissolvable - it is how the bad
+one was removed). `_verbum_canonicum_est` reads the same genus table as
+`_verbum_iudicare`, so a world seeded before the canonical verbs refuses
+nothing (progressive law). Measured before changing: over the whole ledger
+exactly ONE canonical link ever had an unresolved end - this one - so no
+history is invalidated. Born red: 9 assertions (the free-verb one stayed green,
+as it must). Desideratum …607XVD.
