@@ -2643,6 +2643,144 @@ _alterum_nati_solvere (
  * creationis).
  * ================================================== */
 
+/* status plicatus rei ut obiectum JSON (vacuum si nullus) */
+interior JsonValor*
+_statum_rei_legere (
+     Tabularium* t,
+         chorda  res_id,
+        Piscina* pn)
+{
+    chorda d = gesta_res_datum(t->mundus, _litterae(pn, res_id), pn);
+
+    si (d.mensura > ZEPHYRUM)
+    {
+        JsonResultus r = json_legere(d, pn);
+
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            redde r.radix;
+        }
+    }
+    redde json_objectum_creare(pn);
+}
+
+/* NUMERI EXPEDITIONIS (expeditio v1 T4): una sedes pro tabula et
+ * parata. facta = gradus 'factum' AUT promotus cuius opus perfectum;
+ * promota = promotus cum opere nondum perfecto; aperti = sine gradu aut
+ * 'apertum'. Parata AD LABOREM dum aperti + promota > 0 (promotus cum
+ * opere aperto laborem poscit, quamvis 'apertum' non sit); claudere
+ * autem solos apertos numerat (spec §5). */
+nomen structura {
+    i32 ordines;
+    i32 facta;
+    i32 omissa;
+    i32 promota;
+    i32 aperti;
+} ExpeditionisNumeri;
+
+/* status operis promoti ex gradu (vacua si nullum) */
+interior chorda
+_expeditionis_opus_status (
+    Tabularium* t,
+     JsonValor* gradus,
+       Piscina* pn)
+{
+    chorda opus = json_ad_chorda(json_objectum_capere(gradus, "opus"));
+
+    si (opus.mensura == ZEPHYRUM)
+    {
+        redde opus;
+    }
+    redde gesta_res_status(t->mundus, _litterae(pn, opus), pn);
+}
+
+interior ExpeditionisNumeri
+_expeditionis_numeros (
+    Tabularium* t,
+     JsonValor* status,
+       Piscina* pn)
+{
+    ExpeditionisNumeri  nu;
+             JsonValor* ordines = json_objectum_capere(status,
+                 "ordines");
+             JsonValor* gradus = json_objectum_capere(status,
+                 "gradus");
+                   i32 k;
+
+    nu.ordines  = ZEPHYRUM;
+    nu.facta    = ZEPHYRUM;
+    nu.omissa   = ZEPHYRUM;
+    nu.promota  = ZEPHYRUM;
+    nu.aperti   = ZEPHYRUM;
+    per (k = ZEPHYRUM; ordines != NIHIL && json_est_tabulatum(ordines)
+         && k < json_tabulatum_numerus(ordines); k++)
+    {
+        chorda clavis = json_ad_chorda(json_objectum_capere(
+            json_tabulatum_obtinere(ordines, k), "clavis"));
+        JsonValor* g = gradus != NIHIL
+            ? json_objectum_capere_chorda(gradus, clavis) : NIHIL;
+        chorda st = g != NIHIL
+            ? json_ad_chorda(json_objectum_capere(g,
+            "status")) : _ch("");
+
+        nu.ordines++;
+        si (_chorda_est(st, "factum"))
+        {
+            nu.facta++;
+        }
+        alioquin si (_chorda_est(st, "omissum"))
+        {
+            nu.omissa++;
+        }
+        alioquin si (_chorda_est(st, "promotum"))
+        {
+            si (_chorda_est(_expeditionis_opus_status(t, g, pn),
+                    "perfectum"))
+            {
+                nu.facta++;
+            }
+            alioquin
+            {
+                nu.promota++;
+            }
+        }
+        alioquin
+        {
+            nu.aperti++;
+        }
+    }
+    redde nu;
+}
+
+/* '13/20 facta (omissa 1, promota 1)' - causa paratae */
+interior chorda
+_expeditionis_summa (
+    ExpeditionisNumeri  nu,
+               Piscina* pn)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(pn, CXXVIII);
+            character  numeri[LXIV];
+
+    sprintf(numeri, "%d/%d facta", (int)nu.facta, (int)nu.ordines);
+    chorda_aedificator_appendere_literis(aed, numeri);
+    numeri[0] = '\0';
+    si (nu.omissa > ZEPHYRUM && nu.promota > ZEPHYRUM)
+    {
+        sprintf(numeri, " (omissa %d, promota %d)", (int)nu.omissa,
+            (int)nu.promota);
+    }
+    alioquin si (nu.omissa > ZEPHYRUM)
+    {
+        sprintf(numeri, " (omissa %d)", (int)nu.omissa);
+    }
+    alioquin si (nu.promota > ZEPHYRUM)
+    {
+        sprintf(numeri, " (promota %d)", (int)nu.promota);
+    }
+    chorda_aedificator_appendere_literis(aed, numeri);
+    redde chorda_aedificator_finire(aed);
+}
+
 #define PARATA_TECTUM_ORDINARIUM XX
 #define PARATA_PROFUNDITAS XVI
 
@@ -2873,6 +3011,7 @@ _parati_nodum (
     n->apertus = !_status_finalis_est(t, n->genus, n->status, pn,
         &n->vitalis) && n->vitalis;
     n->derelictus = _chorda_est(n->status, "relictum")
+        || _chorda_est(n->status, "relicta")
         || _chorda_est(n->status, "omissum")
         || _chorda_est(n->status, "abiectus");
     n->parens        = -I;
@@ -2881,7 +3020,8 @@ _parati_nodum (
     n->dependentes   = ZEPHYRUM;
     n->fixus          = n->consilii
         || _chorda_est(n->assignatum, "fran")
-        || _chorda_est(n->genus, GENUS_OPERIS);
+        || _chorda_est(n->genus, GENUS_OPERIS)
+        || _chorda_est(n->genus, GENUS_EXPEDITIONIS);
     n->classis        = PARATUM_NULLUM;
     n->causa.mensura  = ZEPHYRUM;
     n->causa.datum    = NIHIL;
@@ -3190,6 +3330,7 @@ _parata_computare (
     {
               ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi, i);
         ChordaAedificator* causa;
+       ExpeditionisNumeri  nu_exp;
                    chorda  ultimum;
                    chorda  ultimum_dies;
                    chorda  relictum;
@@ -3201,8 +3342,11 @@ _parata_computare (
          * classe - pagina regionis eam monstrat */
         si (   n == NIHIL || !n->apertus || n->visio
             || !_parati_in_scopo(nodi, (s32)i, scopus)
-            || n->filii_aperti > ZEPHYRUM)
+            || (n->filii_aperti > ZEPHYRUM
+                && !_chorda_est(n->genus, GENUS_EXPEDITIONIS)))
         {
+            /* expeditio filiis apertis NON celatur: opera promota se
+             * ipsa monstrant, expeditio lineam N/M suam servat */
             perge;
         }
         /* COLLOCATA NON FIXA: in visu toto nulla classis (pes eas
@@ -3278,6 +3422,15 @@ _parata_computare (
         {
             n->classis = PARATUM_HOMINI;
         }
+        alioquin si (_chorda_est(n->genus, GENUS_EXPEDITIONIS))
+        {
+            /* expeditio: LABORI dum ordo laborem poscit (apertus aut
+             * promotus cum opere aperto), deinde CLAUSURAE */
+            nu_exp = _expeditionis_numeros(t, _statum_rei_legere(t,
+                n->res_id, pn), pn);
+            n->classis = nu_exp.aperti + nu_exp.promota > ZEPHYRUM
+                ? PARATUM_LABORI : PARATUM_CLAUSURAE;
+        }
         alioquin si (_chorda_est(n->genus, GENUS_OPERIS))
         {
             n->classis = PARATUM_LABORI;
@@ -3297,7 +3450,18 @@ _parata_computare (
             chorda_aedificator_appendere_literis(causa,
                 "assignatum fran");
         }
-        si (n->classis == PARATUM_CLAUSURAE)
+        si (_chorda_est(n->genus, GENUS_EXPEDITIONIS))
+        {
+            chorda_aedificator_appendere_chorda(causa,
+                _expeditionis_summa(nu_exp, pn));
+            si (n->classis == PARATUM_CLAUSURAE)
+            {
+                chorda_aedificator_appendere_literis(causa,
+                    " - ordines omnes tractati: claude (expeditio"
+                    " {actus: claudere})");
+            }
+        }
+        alioquin si (n->classis == PARATUM_CLAUSURAE)
         {
             chorda_aedificator_appendere_literis(causa,
                 "filii omnes clausi - proba exitum et claude, aut"
@@ -12507,27 +12671,6 @@ _tab_inventarium (
  * INSTRUMENTUM EXPEDITIO (expeditio v1 T3; spec expeditio §5)
  * ================================================== */
 
-/* status plicatus rei ut obiectum JSON (vacuum si nullus) */
-interior JsonValor*
-_statum_rei_legere (
-     Tabularium* t,
-         chorda  res_id,
-        Piscina* pn)
-{
-    chorda d = gesta_res_datum(t->mundus, _litterae(pn, res_id), pn);
-
-    si (d.mensura > ZEPHYRUM)
-    {
-        JsonResultus r = json_legere(d, pn);
-
-        si (r.successus && json_est_objectum(r.radix))
-        {
-            redde r.radix;
-        }
-    }
-    redde json_objectum_creare(pn);
-}
-
 /* par 'lens=valor' aut 'lens!=valor' legere; FALSUM si forma prava */
 interior b32
 _expeditionis_par_legere (
@@ -13002,6 +13145,157 @@ _expeditionis_aperti (
     redde n;
 }
 
+/* TABULA EXPEDITIONIS (spec §5): caput, numeri, rubrica currens,
+ * linea per ordinem ('+' factum, '-' omissum, '\xc2\xb7' apertus, '>'
+ * promotus; vN versio rubricae, '*' = sub rubrica vetere factum), pes
+ * incrementi (ordines inventarii post photographiam filtrum
+ * transeuntes). Determinata: nulla hora. */
+interior chorda
+_expeditionis_tabulam_reddere (
+     Tabularium* t,
+      JsonValor* status,
+         chorda  titulus,
+         chorda  status_rei,
+        Piscina* pn)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(pn,
+        MMMMXCVI);
+            JsonValor* ordines = json_objectum_capere(status,
+                "ordines");
+            JsonValor* gradus = json_objectum_capere(status, "gradus");
+               chorda  inv_id  = json_ad_chorda(json_objectum_capere(
+                   status, "inventarium"));
+                   s64 versio  = json_ad_integer(json_objectum_capere(
+                       json_objectum_capere(status, "rubrica"),
+                       "versio"));
+    ExpeditionisNumeri nu = _expeditionis_numeros(t, status,
+        pn);
+                   i32  latitudo  = ZEPHYRUM;
+                   b32  vetus     = FALSUM;
+             JsonValor* novi;
+             character  numeri[CXXVIII];
+                   i32  k;
+
+    chorda_aedificator_appendere_literis(aed, "EXPEDITIO '");
+    chorda_aedificator_appendere_chorda(aed, titulus);
+    chorda_aedificator_appendere_literis(aed, "' (");
+    chorda_aedificator_appendere_chorda(aed, status_rei);
+    chorda_aedificator_appendere_literis(aed, ") - inventarium '");
+    chorda_aedificator_appendere_chorda(aed, _titulus_membri(t, inv_id,
+        pn));
+    sprintf(numeri, "' \xc2\xb7 rubrica v%d\n", (int)versio);
+    chorda_aedificator_appendere_literis(aed, numeri);
+    sprintf(numeri, "facta %d/%d \xc2\xb7 omissa %d \xc2\xb7 promota %d"
+        " \xc2\xb7 aperti %d\n", (int)nu.facta, (int)nu.ordines,
+        (int)nu.omissa, (int)nu.promota, (int)nu.aperti);
+    chorda_aedificator_appendere_literis(aed, numeri);
+    sprintf(numeri, "RUBRICA v%d: ", (int)versio);
+    chorda_aedificator_appendere_literis(aed, numeri);
+    chorda_aedificator_appendere_chorda(aed, json_ad_chorda(
+        json_objectum_capere(json_objectum_capere(status, "rubrica"),
+        "textus")));
+    chorda_aedificator_appendere_literis(aed, "\n\n");
+    per (k = ZEPHYRUM; ordines != NIHIL && json_est_tabulatum(ordines)
+         && k < json_tabulatum_numerus(ordines); k++)
+    {
+        i32 l =
+            _inventarii_latitudo(json_ad_chorda(json_objectum_capere(
+            json_tabulatum_obtinere(ordines, k), "clavis")));
+
+        latitudo = l > latitudo ? l : latitudo;
+    }
+    per (k = ZEPHYRUM; ordines != NIHIL && json_est_tabulatum(ordines)
+         && k < json_tabulatum_numerus(ordines); k++)
+    {
+        chorda clavis = json_ad_chorda(json_objectum_capere(
+            json_tabulatum_obtinere(ordines, k), "clavis"));
+        JsonValor* g = gradus != NIHIL
+            ? json_objectum_capere_chorda(gradus, clavis) : NIHIL;
+        chorda st = g != NIHIL
+            ? json_ad_chorda(json_objectum_capere(g,
+            "status")) : _ch("");
+        ChordaAedificator* linea = chorda_aedificator_creare(pn, CCLVI);
+                      s64  v;
+                   chorda  per_quid;
+                   chorda  nota;
+
+        chorda_aedificator_appendere_literis(linea,
+            _chorda_est(st, "factum") ? "+ "
+            : _chorda_est(st, "omissum") ? "- "
+            : _chorda_est(st, "promotum") ? "> " : "\xc2\xb7 ");
+        si (g == NIHIL || _chorda_est(st, "apertum"))
+        {
+            chorda_aedificator_appendere_chorda(linea, clavis);
+            chorda_aedificator_appendere_chorda(aed,
+                chorda_aedificator_finire(linea));
+            chorda_aedificator_appendere_character(aed, '\n');
+            perge;
+        }
+        _inventarii_columna(linea, clavis, latitudo);
+        v = json_ad_integer(json_objectum_capere(g, "versio"));
+        sprintf(numeri, "  v%d%s", (int)v, v < versio ? "*" : "");
+        chorda_aedificator_appendere_literis(linea, numeri);
+        si (v < versio)
+        {
+            vetus = VERUM;
+        }
+        per_quid  = json_ad_chorda(json_objectum_capere(g, "per"));
+        nota      = json_ad_chorda(json_objectum_capere(g, "nota"));
+        si (per_quid.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(linea, "  per ");
+            chorda_aedificator_appendere_chorda(linea, per_quid);
+        }
+        si (nota.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(linea, "  nota: ");
+            chorda_aedificator_appendere_chorda(linea, nota);
+        }
+        si (_chorda_est(st, "promotum"))
+        {
+            chorda ops = _expeditionis_opus_status(t, g, pn);
+
+            chorda_aedificator_appendere_literis(linea, "  opus ");
+            chorda_aedificator_appendere_chorda(linea, json_ad_chorda(
+                json_objectum_capere(g, "opus")));
+            chorda_aedificator_appendere_literis(linea, " (");
+            chorda_aedificator_appendere_chorda(linea, ops);
+            chorda_aedificator_appendere_literis(linea, ")");
+            si (_chorda_est(ops, "perfectum"))
+            {
+                chorda_aedificator_appendere_literis(linea,
+                    " - gradus nondum factus");
+            }
+        }
+        chorda_aedificator_appendere_chorda(aed,
+            chorda_aedificator_finire(linea));
+        chorda_aedificator_appendere_character(aed, '\n');
+    }
+    si (vetus)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "* = sub rubrica vetere factum\n");
+    }
+    novi = _expeditionis_ordines_colligere(_statum_rei_legere(t, inv_id,
+        pn), json_objectum_capere(status, "filtrum"), ordines, pn);
+    si (json_tabulatum_numerus(novi) > ZEPHYRUM)
+    {
+        sprintf(numeri, "ordines novi post photographiam: %d (",
+            (int)json_tabulatum_numerus(novi));
+        chorda_aedificator_appendere_literis(aed, numeri);
+        per (k = ZEPHYRUM; k < json_tabulatum_numerus(novi); k++)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                k > ZEPHYRUM ? ", " : "");
+            chorda_aedificator_appendere_chorda(aed, json_ad_chorda(
+                json_tabulatum_obtinere(novi, k)));
+        }
+        chorda_aedificator_appendere_literis(aed,
+            ") - expeditio {actus: addere}\n");
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
 interior vacuum
 _tab_expeditio (
     Tabularium* t,
@@ -13069,6 +13363,15 @@ constans character* origo_l = origo.mensura > ZEPHYRUM
     rid      = _litterae(pn, res_id);
     titulus  = _titulus_membri(t, res_id, pn);
     status   = _statum_rei_legere(t, res_id, pn);
+
+    /* TABULA (T4): lectio sola */
+    si (_chorda_est(actus, "tabula"))
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _expeditionis_tabulam_reddere(t, status, titulus,
+                gesta_res_status(t->mundus, rid, pn), pn), FALSUM);
+        redde;
+    }
 
     si (   _chorda_est(actus, "facere")
         || _chorda_est(actus, "omittere")
@@ -13165,8 +13468,8 @@ constans character* origo_l = origo.mensura > ZEPHYRUM
     alioquin
     {
         _expeditionis_causa(index, &numerus, "actus '", actus,
-            "' ignotus (creare | facere | omittere | reaperire |"
-            " rubrica | addere | promovere | claudere)");
+            "' ignotus (creare | tabula | facere | omittere |"
+            " reaperire | rubrica | addere | promovere | claudere)");
         _expeditionem_recusare(t, pn, effusio, id, index, NIHIL);
         redde;
     }
@@ -13349,8 +13652,8 @@ _instrumenta_componere (
 {
     JsonValor* instrumenta = json_tabulatum_creare(pn);
     interior constans TabArgumentum ARG_EXPEDITIO[] = {
-        { "actus", "creare | facere | omittere | reaperire | rubrica |"
-          " addere | promovere | claudere", VERUM },
+        { "actus", "creare | tabula | facere | omittere | reaperire |"
+          " rubrica | addere | promovere | claudere", VERUM },
         { "res", "expeditio (id, fragmentum, titulus exactus) - omnibus"
           " actibus praeter creare", FALSUM },
         { "inventarium", "inventarium photographandum (creare)",
@@ -13727,7 +14030,9 @@ _instrumenta_componere (
         "EXPEDITIO: opus batch super inventarium - photographia"
         " ordinum (per filtrum) + rubrica versionata; gradus lentem"
         " 'implenda' in inventario EODEM FASCE scribunt (decretum"
-        " ...D59G3Z). Actus: creare {inventarium, titulus, rubrica,"
+        " ...D59G3Z). Actus: tabula (ordines: '+' '-' '\xc2\xb7' '>',"
+        " vN versio rubricae, '*' sub vetere; pes: novi post"
+        " photographiam), creare {inventarium, titulus, rubrica,"
         " filtrum? 'lens=valor'|'lens!=valor' (cella absens != omni;"
         " non applicabilis numquam congruit), implenda? 'lens=valor',"
         " intra?}, facere/omittere(nota)/reaperire {ordines, per?,"

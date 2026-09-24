@@ -381,3 +381,28 @@ snapshot: the tick is legal, the cell is not, so the WHOLE batch is refused and
 the row stays open (plant: skip the cell refusal -> 4 red, and the failures show
 the tick slipping through). Lint caught `validatoris` as a new word; renamed
 the parameter to `causae_machinae` instead of growing the glossary.
+
+## 2026-09-24 — expeditio `tabula` + parata lines (expeditio v1 T4)
+
+One counting routine (`_expeditionis_numeros`) serves both the tabula header
+and parata: facta = `factum` OR promoted-with-opus-`perfectum`; promota =
+promoted with the opus still open; aperti = untouched or reopened. Parata puts
+an expeditio in AD LABOREM while aperti + promota > 0 - a spec refinement: the
+first wording ("no apertum rows") would have filed a job under "ready to close"
+while its promoted opus was still pending. `_statum_rei_legere` moved up so
+parata can use it.
+
+Parata seams (all planted red): pinned like opus (`fixus`); EXEMPT from the
+"open children -> skip" rule (else a promoted opus hides its job - plant: 2
+red); classification by aperti alone (plant: 1 red). `relicta` joins the
+derelict statuses. The inventory never reaches parata by construction: it has
+no state machine, so it is never 'vitalis'/open - the natum-de pin worry was
+moot, but it is asserted.
+
+Two things met on the way: the formatter had re-aligned code committed in T3,
+so two anchor-based edit scripts failed their exact-match asserts (nothing
+written) and were redone from the current text. And ONE run of the tabularium
+runner failed 9 assertions, then 19 straight runs (4 forced rebuilds) passed;
+the logs were overwritten before I read them. Filed as quaestio …HGWJNC with
+the hypothesis (background build/ writer vs a live path) and what would settle
+it.

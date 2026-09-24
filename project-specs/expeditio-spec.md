@@ -89,16 +89,21 @@ Folded state:
 | `omittere` | `{ordines, nota}` — skipped with a cause |
 | `reaperire` | `{ordines}` — undo a tick (the lens is left as written) |
 | `promovere` | `{ordo}` — creates an `opus` intra the expeditio (title "<expeditio>: <ordo>", body = rubric + row) and the promotion event, one batch |
-| `rubrica` | `{textus}` — new rubric version |
+| `rubrica` | `{rubrica}` — new rubric version (the argument is named `rubrica`, the event field `textus`) |
 | `addere` | `{ordines?}` — append rows added since the snapshot (all new ones when omitted) |
 | `claudere` | status `clausa`; refused while rows are `apertum` (names them), `vis` overrides |
 
 ## 6. Views
 
-- **parata AD LABOREM**: one line per `aperta` expeditio with open rows —
-  `expeditio <titulus>: 13/20 facta (omissa 1, promota 1)`. Promoted
-  rows' opera appear on their own as usual.
-- **parata AD CLAUSURAM**: an `aperta` expeditio with no `apertum` rows.
+- **parata AD LABOREM**: one line per `aperta` expeditio while any row
+  still NEEDS WORK — untouched, reopened, or promoted with its opus not yet
+  `perfectum` — reason `13/20 facta (omissa 1, promota 1)`. Promoted rows'
+  opera appear on their own as usual, and do not hide the expeditio.
+- **parata AD CLAUSURAM**: an `aperta` expeditio with no row needing work
+  (reason adds "ordines omnes tractati: claude"). Refined in T4: the
+  spec's first wording ("no `apertum` rows") would have filed a job under
+  "ready to close" while a promoted opus was still pending. `claudere`
+  keeps its own rule (§5: refused while rows are untouched or reopened).
 - **Promoted rows** count as done in N/M when their opus is `perfectum`
   (derived); `facere` on a promoted row is still how its lens is written
   — the view says "opus perfectum, gradus nondum factus" until then.

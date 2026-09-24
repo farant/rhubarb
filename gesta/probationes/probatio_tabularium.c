@@ -5608,6 +5608,163 @@ principale (vacuum)
         CREDO_VERUM (strstr(r,
             "non est expeditio") != NIHIL);
 
+        /* EXPEDITIO VISA (expeditio v1 T4): tabula (signa, versio
+         * vetus '*', incrementum), parata scopo regionis: AD LABOREM
+         * dum ordo laborem poscit (etiam promotus cum opere aperto),
+         * AD CLAUSURAM postea; filii aperti eam non celant;
+         * inventarium numquam paratum */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59701,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"addere\",\"arguments\":{"
+            "\"genus\":\"regio\",\"titulus\":\"Rg tabulae\"}}}");
+        CREDO_VERUM (strstr(r,
+            "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59702,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"addere\",\"arguments\":{"
+            "\"genus\":\"inventarium\",\"titulus\":\"Iv tabulae\","
+            "\"intra\":\"Rg tabulae\"}}}");
+        CREDO_VERUM (strstr(r,
+            "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59703,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv tabulae\",\"actus\":\"ordines\",\"ord"
+            "ines\":\"a.c,b.c,c.c,d.c\"}}}");
+        CREDO_VERUM (strstr(r,
+            "ordo-additus") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59704,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv tabulae\",\"actus\":\"lens\",\"lens\""
+            ":\"migratum\",\"genus_valoris\":\"ita-non\"}}}");
+        CREDO_VERUM (strstr(r,
+            "lens-addita") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59705,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"expeditio\",\"arguments\""
+            ":{\"actus\":\"creare\",\"inventarium\":\"Iv tabulae\","
+            "\"titulus\":\"Ex tabula\",\"rubrica\":\"r1\",\"filtrum"
+            "\":\"migratum!=ita\",\"implenda\":\"migratum=ita\",\"i"
+            "ntra\":\"Rg tabulae\"}}}");
+        CREDO_VERUM (strstr(r,
+            "ordines 4") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59706,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"expeditio\",\"arguments\""
+            ":{\"res\":\"Ex tabula\",\"actus\":\"facere\",\"ordines"
+            "\":\"a.c\",\"per\":\"p1\"}}}");
+        CREDO_VERUM (strstr(r,
+            "gradus-positus") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59707,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"expeditio\",\"arguments\""
+            ":{\"res\":\"Ex tabula\",\"actus\":\"rubrica\",\"rubric"
+            "a\":\"r2\"}}}");
+        CREDO_VERUM (strstr(r,
+            "rubrica v2") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59708,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"expeditio\",\"arguments\""
+            ":{\"res\":\"Ex tabula\",\"actus\":\"facere\",\"ordines"
+            "\":\"b.c\"}}}");
+        CREDO_VERUM (strstr(r,
+            "gradus-positus") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59709,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"expeditio\",\"arguments\""
+            ":{\"res\":\"Ex tabula\",\"actus\":\"omittere\",\"ordin"
+            "es\":\"c.c\",\"nota\":\"nullus\"}}}");
+        CREDO_VERUM (strstr(r,
+            "gradus-positus") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59710,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv tabulae\",\"actus\":\"ordines\",\"ord"
+            "ines\":\"e.c\"}}}");
+        CREDO_VERUM (strstr(r,
+            "ordo-additus") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59711,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"expeditio\",\"arguments\""
+            ":{\"res\":\"Ex tabula\",\"actus\":\"tabula\"}}}");
+        CREDO_VERUM (strstr(r,
+            "EXPEDITIO 'Ex tabula' (aperta) - inventarium 'Iv tabul"
+            "ae' \xc2\xb7 rubrica v2\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "facta 2/4 \xc2\xb7 omissa 1 \xc2\xb7 promota 0"
+            " \xc2\xb7 aperti 1\\n")
+                != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "RUBRICA v2: r2\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "+ a.c  v1*  per p1\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "+ b.c  v2\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "- c.c  v2  nota: nullus\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "\xc2\xb7 d.c\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "* = sub rubrica vetere factum\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "ordines novi post photographiam: 1 (e.c) - expeditio {"
+            "actus: addere}\\n") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59712,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"parata\",\"arguments\":{"
+            "\"intra\":\"Rg tabulae\"}}}");
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Ex tabula"));
+        CREDO_VERUM (strstr(r,
+            "2/4 facta (omissa 1)") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "Iv tabulae") == NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59713,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"expeditio\",\"arguments\""
+            ":{\"res\":\"Ex tabula\",\"actus\":\"promovere\",\"ordo"
+            "\":\"d.c\"}}}");
+        CREDO_VERUM (strstr(r,
+            "gradus-promotus") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59714,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"parata\",\"arguments\":{"
+            "\"intra\":\"Rg tabulae\"}}}");
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "Ex tabula: d.c"));
+        CREDO_VERUM (strstr(r,
+            "2/4 facta (omissa 1, promota 1)") != NIHIL);
+        CREDO_VERUM (_inter(r, "AD LABOREM", "AD CONSILIUM",
+            "2/4 facta"));
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59715,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"gerere\",\"arguments\":{"
+            "\"res\":\"Ex tabula: d.c\",\"actus\":\"status\",\"novu"
+            "s\":\"perfectum\"}}}");
+        CREDO_VERUM (strstr(r,
+            "perfectum") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59716,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"parata\",\"arguments\":{"
+            "\"intra\":\"Rg tabulae\"}}}");
+        CREDO_VERUM (_inter(r, "AD CLAUSURAM", "EXSPECTANT FRANUM",
+            "Ex tabula"));
+        CREDO_VERUM (strstr(r,
+            "3/4 facta (omissa 1)") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59717,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"expeditio\",\"arguments\""
+            ":{\"res\":\"Ex tabula\",\"actus\":\"tabula\"}}}");
+        CREDO_VERUM (strstr(r,
+            "> d.c  v2  opus ") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "(perfectum) - gradus nondum factus\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "facta 3/4 \xc2\xb7 omissa 1 \xc2\xb7 promota 0"
+            " \xc2\xb7 aperti 0\\n")
+                != NIHIL);
+
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5821,"
