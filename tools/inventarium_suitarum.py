@@ -48,6 +48,14 @@ def cellae():
             fructus.append({'ordo': via, 'lens': 'porta',
                             'valor': {'genus': 'textus',
                                       'valor': ', '.join(nomina)}})
+        # lens complementaria NON APPLICABILIS (decretum ...SD7JR):
+        # porta registrata causam extra PORTAE non habet, et scriptum
+        # extra PORTAE nomen portae non habet
+        fructus.append({'ordo': via,
+                        'lens': 'cur extra PORTAE' if nomina else 'porta',
+                        'valor': {'genus': 'non-applicabile',
+                                  'valor': 'in PORTAE' if nomina
+                                  else 'extra PORTAE'}})
     return fructus
 
 
