@@ -2038,6 +2038,39 @@ def portae_debitae(viae, inventarium_res=INVENTARIUM_SUITARUM):
     return debita, [v for v in viae if v not in tecta]
 
 
+def viae_mutatae():
+    """viae arboris mutatae contra HEAD: mutatae (tractae et paratae),
+    deletae, et novae non ignoratae - quod 'portae_debitae.sh' sine
+    argumentis iudicat"""
+    mut = _curre(['git', 'diff', '--name-only', 'HEAD']).stdout.split('\n')
+    novae = _curre(['git', 'ls-files', '--others',
+                    '--exclude-standard']).stdout.split('\n')
+    return sorted(set(v for v in mut + novae if v))
+
+
+def portae_debitae_relatio(viae, inventarium_res=INVENTARIUM_SUITARUM):
+    """relatio legibilis portarum debitarum (tools/portae_debitae.sh):
+    PORTAE DEBITAE (porta, causa indentata), MANU (homo currit),
+    INTECTA (nulla porta). Porta nulla debita DICITUR '(nulla)'."""
+    debita, intecta = portae_debitae(viae, inventarium_res)
+    n = len(viae)
+    lineae = ['PORTAE DEBITAE (%d %s):' % (n, 'via' if n == 1 else 'viae')]
+    currendae = [d for d in debita if not d.manu]
+    manu = [d for d in debita if d.manu]
+    for d in currendae:
+        lineae += ['  ' + d.porta, '      ' + d.causa]
+    if not currendae:
+        lineae.append('  (nulla)')
+    if manu:
+        lineae.append('MANU (homo currit):')
+        for d in manu:
+            lineae += ['  ' + d.porta, '      ' + d.causa]
+    if intecta:
+        lineae.append('INTECTA (nulla porta):')
+        lineae += ['  ' + v for v in intecta]
+    return '\n'.join(lineae) + '\n'
+
+
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
               opus=None, actor='claude'):
     """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'

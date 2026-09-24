@@ -764,3 +764,13 @@ sweep each, so the manual-row case uses a .sh path (20 s for the section).
 
 First live run (lenses still empty): lib/json.c owes radix, briar, officina,
 gesta; pythonica/silva.py is uncovered until T3 fills `tegit viae`.
+
+## 2026-09-24 — tools/portae_debitae.sh (portae debitae T4)
+
+Thin script, logic in silva (`viae_mutatae`, `portae_debitae_relatio`) so it
+tests in-process. Exit 2 also for an EMPTY change set - the house rule "exit 2
+= nothing ran" beats "an empty answer is still an answer": a clean tree must
+never read as green. "(nulla)" is printed when no gate is owed, never silence.
+First real use was on its own commit: the working tree (pythonica/*.py edits +
+the new .sh) owed pythonica and vexilla, and Fran's four files came back
+INTECTA - so T4 was committed with exactly the gates the tool named.

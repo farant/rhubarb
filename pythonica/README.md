@@ -361,3 +361,27 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
   appendebat; quinque commissa 2026-09-21 lineas DUAS acceperunt, unum
   exemplaribus DIVERSIS (linea ex historia sumpta exemplar prius
   nominabat).
+
+## 2026-09-24 — portae debitae: quae portae mutationi debentur
+
+Spec `project-specs/portae-debitae-spec.md`, planum `-plan.md`.
+
+- **`./tools/portae_debitae.sh [viae…]`** — interrogatio pro homine:
+  sine viis viae mutatae contra HEAD + novae non ignoratae. Sectiones
+  `PORTAE DEBITAE` (porta + causa prima indentata), `MANU (homo currit)`
+  (scripta sine porta: GUI, consulto seorsum), `INTECTA (nulla porta)`.
+  Exitus 0 iudicatum, 2 nihil iudicatum (nulla via, inventarium
+  illegibile). `PORTAE_DEBITAE_INVENTARIUM=<titulus>` inventarium alterum.
+- **`silva.portae_debitae(viae)`** → `(debita, intecta)`,
+  `Debitum(porta, causa, manu)` ordine PORTAE. Tegumentum DERIVATUR:
+  clausurae `bin/aedilis --partes` probationum suitarum `SUITAE` (IV
+  Popen; sine suffixo C nulla verritio, ~18 s cum C), et lentes
+  inventarii 'suitae probationum' quas graphus non videt — `currit
+  binaria` (`.c` = fons introitus per clausuram, cetera ad litteram) et
+  `tegit viae` (fnmatch; `*` etiam `/` transit). Clausura ignota =
+  DEBETUR. `portae_debitae_relatio(viae)` = textus interrogationis;
+  `viae_mutatae()` = viae sine argumentis.
+- **`silva.inventarium(res)`** → `Inventarium(ordines, lentes, cellae)`
+  per `./gesta/frigida.sh -inventarium` (forma machinae; Python eventa
+  numquam replicat). Strepitus launcheri praetermittitur; linea
+  tabulationem ferens sine quattuor campis = `SilvaError`.

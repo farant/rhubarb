@@ -1799,6 +1799,15 @@ try:
     credo(silva.portae_debitae(['./gesta/../gesta/compile_probationes.sh'])[0][0].porta == 'gesta',
           'viae normalizantur')
 
+    # relatio (T4): sectiones PORTAE DEBITAE / MANU / INTECTA, causa sub porta
+    rel = silva.portae_debitae_relatio(['pythonica/silva.py', 'apps/forum/fumus.sh', 'README.md'])
+    credo(rel.startswith('PORTAE DEBITAE (3 viae):\n  pythonica\n      pythonica/silva.py congruit'),
+          'relatio: caput cum numero viarum, porta, causa indentata')
+    credo('\nMANU (homo currit):\n  apps/forum/fumus.sh\n' in rel, 'relatio: sectio MANU')
+    credo(rel.endswith('\nINTECTA (nulla porta):\n  README.md\n'), 'relatio: sectio INTECTA ultima')
+    rel = silva.portae_debitae_relatio(['README.md'])
+    credo(rel.startswith('PORTAE DEBITAE (1 via):\n  (nulla)\n'), 'relatio: nulla porta debita dicitur, non tacetur')
+
     # lectio fracta: SilvaError rc nominans
     os.environ['FICTA_INV_RC'] = '1'
     try:
@@ -1815,6 +1824,22 @@ finally:
         os.environ.pop(_k, None)
     import shutil
     shutil.rmtree(_pd, ignore_errors=True)
+
+print('--- portae debitae: tools/portae_debitae.sh (arbor et inventarium VIVA) ---')
+_pdcli = os.path.join(RADIX, 'tools', 'portae_debitae.sh')
+credo(os.access(_pdcli, os.X_OK), 'tools/portae_debitae.sh exsistit et exsecutabilis')
+if os.access(_pdcli, os.X_OK):
+    r = subprocess.run([_pdcli, 'gesta/fontes/tabularium.c', 'README.md'], cwd=RADIX,
+                       capture_output=True, text=True)
+    credo(r.returncode == 0, 'CLI: exitus 0 cum iudicavit (erat %d)' % r.returncode)
+    credo('\n  radix\n' in r.stdout and '\n  gesta\n' in r.stdout
+          and 'tabulariumd_principale.c' in r.stdout,
+          'CLI VIVUM: tabularium.c -> radix (per tabulariumd) et gesta')
+    credo('INTECTA (nulla porta):\n  README.md' in r.stdout, 'CLI VIVUM: README.md intectum')
+    e = dict(os.environ, PORTAE_DEBITAE_INVENTARIUM='inventarium nullum hic')
+    r = subprocess.run([_pdcli, 'README.md'], cwd=RADIX, capture_output=True, text=True, env=e)
+    credo(r.returncode == 2 and 'inventarium nullum hic' in r.stderr,
+          'CLI: inventarium illegibile -> exitus 2, causa nominata')
 
 print()
 if fracta:
