@@ -1743,6 +1743,8 @@ def _inv_scribere(currit_radix):
         'apps/forum/fumus.sh\tmanu tantum\tita-non\tita',
         'apps/forum/fumus.sh\ttegit viae\ttextus\tapps/forum/*',
         'tools/claves_codices_probare.sh\tcur extra PORTAE\ttextus\tuna\\tduae\\\\tres\\nquattuor',
+        'crusta/compile_probationes.sh\tporta\ttextus\tcrusta',
+        'crusta/compile_probationes.sh\ttegit fontes\ttextus\tcrusta/fontes/*, materia/fontes/*',
     ]
     if currit_radix:
         lineae.append('compile_tests.sh\tcurrit binaria\ttextus\t'
@@ -1807,6 +1809,15 @@ try:
     credo(rel.endswith('\nINTECTA (nulla porta):\n  README.md\n'), 'relatio: sectio INTECTA ultima')
     rel = silva.portae_debitae_relatio(['README.md'])
     credo(rel.startswith('PORTAE DEBITAE (1 via):\n  (nulla)\n'), 'relatio: nulla porta debita dicitur, non tacetur')
+
+    # TEGIT FONTES (lens derivata ex scripto cursoris): capita subsystematis
+    # aedili ignota ('S') - clausura fontes suos non videt; lens eos tegit
+    debita, intecta = silva.portae_debitae(['crusta/fontes/crusta_arbor.c'])
+    c = [d for d in debita if d.porta == 'crusta']
+    credo(len(c) == 1 and 'tegit fontes' in c[0].causa,
+          'tegit fontes: crusta/fontes/*.c -> crusta (clausura aedilis eum non videt)')
+    debita, intecta = silva.portae_debitae(['materia/fontes/materia_nodus.h'])
+    credo('crusta' in [d.porta for d in debita], 'tegit fontes: caput materiae -> cliens crusta')
 
     # lectio fracta: SilvaError rc nominans
     os.environ['FICTA_INV_RC'] = '1'

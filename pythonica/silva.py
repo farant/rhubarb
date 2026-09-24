@@ -1967,9 +1967,15 @@ def portae_debitae(viae, inventarium_res=INVENTARIUM_SUITARUM):
         c = inv.cellae[ordo]
         portae = [p for p in _index(_textus_cellae(c, 'porta'))
                   if p in PORTAE]
+        # tegit viae (manu) + tegit fontes (derivata ex scripto cursoris:
+        # directoria -I et fontes compilati, quae aedilis non videt)
+        tegit = ([(f, 'tegit viae') for f in
+                  _index(_textus_cellae(c, 'tegit viae'))]
+                 + [(f, 'tegit fontes') for f in
+                    _index(_textus_cellae(c, 'tegit fontes'))])
         ordines.append((ordo, portae, not portae,
                         _index(_textus_cellae(c, 'currit binaria')),
-                        _index(_textus_cellae(c, 'tegit viae'))))
+                        tegit))
 
     probationes = {}
     if any(v.endswith(_SUFFIXA_C) for v in viae):
@@ -2019,10 +2025,10 @@ def portae_debitae(viae, inventarium_res=INVENTARIUM_SUITARUM):
                                         ' %s' % (ordo, b, v,
                                                  'tenet' if cl is not None
                                                  else 'ignota est'))
-            for forma in tegit:
+            for forma, lens in tegit:
                 if fnmatch.fnmatch(v, forma):
-                    rationes.append("%s congruit '%s' (tegit viae %s)"
-                                    % (v, forma, ordo))
+                    rationes.append("%s congruit '%s' (%s %s)"
+                                    % (v, forma, lens, ordo))
             for clavis in claves:
                 for ratio in rationes:
                     notare((clavis, manu), v, ratio)

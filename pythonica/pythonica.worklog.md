@@ -798,3 +798,28 @@ Cost: the pythonica suite went 3:13 -> 4:39. ~40 s are the new sections'
 closure sweeps; ~33 s are the OLD commissio tests, each now reading the live
 inventory (3.3 s a read: 0.36 s launcher check, 2.65 s nota_frigida itself -
 probably loading build/nexus.tsv; desideratum filed).
+
+## 2026-09-24 — portae debitae: lens 'tegit fontes' (subsystem sources were invisible)
+
+Found while fixing the crusta heredoc bug: a change to crusta/fontes/crusta_arbor.c
+owed NO crusta gate (only the test file's change had pulled it in). Measured:
+for 10 of 12 compiled suites, the aedilis closure of a test holds NONE of the
+suite's own sources - 8 to 18 headers per test come back 'S' (unresolved),
+because aedilis.stml lists only the include dirs the APPS need (include,
+probationes, apps/*, vendor, gesta/fontes, silva/amalgama). gesta resolved by
+luck of that list, which is why the dcd516c7 replay worked.
+
+Fix chosen by Fran (option C of three - A: add subsystem dirs to aedilis.stml,
+risks app builds; B: aedilis --inclusa per call): a DERIVED lens 'tegit fontes'
+= every directory a runner compiles (glob/loop) or -I-includes, from the
+runner script itself (`tools/inventarium_suitarum.py fontes`; *_DIR variables
+resolved from the script's own assignments; include/ and lib/ left to aedilis).
+Kept separate from the hand lens 'tegit viae' so it can be re-derived freely.
+portae_debitae reads both, naming which lens matched. Live after: crusta_arbor.c
+-> crusta + diagnostica; a materia header -> all six materia clients + materia
++ diagnostica + materia-shim. The proposer's first run failed on every variable
+(nested quotes in `cd "$(dirname "${BASH_SOURCE[0]}")"` stopped `[^"]*`); it
+reported each unresolved variable instead of guessing, which is how it showed.
+Also patched by hand earlier: diagnostica's tegit viae (it globs crusta/css/
+html/materia fontes). Tests: the fake inventory gains a crusta row; crusta
+fontes and a materia header must owe crusta (born red, 2).

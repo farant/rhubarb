@@ -18,7 +18,14 @@ probationum suitae ipsius omissa). Binarium ad fontem introitus per
 nomen (<nomen>_principale.c aut <nomen>.c) mappatur; ambigua aut ignota
 in stderr pro homine nominantur.
 
-Usus: python3 tools/inventarium_suitarum.py [ordines|cellae|currit]
+Modus 'fontes' (portae debitae, 2026-09-24) proponit cellas lentis
+'tegit fontes': directoria quae cursor suitae COMPILAT (fontes per
+globum aut ansam) aut INCLUDIT (-I) - capita subsystematum aedili
+ignota sunt ('S'), ergo clausurae fontes suitae ipsius non vident.
+Variabiles *_DIR ex assignationibus scripti ipsius solvuntur; include/ et
+lib/ omittuntur (aedilis ea solvit).
+
+Usus: python3 tools/inventarium_suitarum.py [ordines|cellae|currit|fontes]
 """
 import html
 import os
@@ -137,8 +144,63 @@ def currit():
             for o, b in sorted(per_ordinem.items())]
 
 
+ASSIGNATIO = re.compile(r'^([A-Z_]+_DIR)="\$\(cd "(.*)" && pwd\)"\s*$', re.M)
+DIRECTORIUM_IPSUM = '$(dirname "${BASH_SOURCE[0]}")'
+INCLUSUM = re.compile(r'-I\$\{?([A-Z_]+_DIR)\}?/?([A-Za-z0-9_/]*)')
+FONS = re.compile(r'\$\{?([A-Z_]+_DIR)\}?"?/([A-Za-z0-9_/]+)/'
+                  r'(?:\*\.c|\$\{?[a-z_]+\}?\.c)')
+OMISSA = ('include', 'lib', '')
+
+
+def _directoria_cursoris(cursor):
+    """directoria (relativa radici) quae cursor compilat aut includit"""
+    textus = open(cursor).read()
+    ipse = os.path.dirname(cursor) or '.'
+    viae = {}
+    for _ in range(4):                      # assignationes per gradus
+        for nomen_var, expr in ASSIGNATIO.findall(textus):
+            if expr == DIRECTORIUM_IPSUM:
+                viae[nomen_var] = ipse
+                continue
+            m = re.match(r'\$\{?([A-Z_]+_DIR)\}?(/.*)?$', expr)
+            if m and m.group(1) in viae:
+                viae[nomen_var] = os.path.normpath(
+                    viae[m.group(1)] + (m.group(2) or ''))
+    fructus, ignota = set(), set()
+    for rx in (INCLUSUM, FONS):
+        for var, rel in rx.findall(textus):
+            if var not in viae:
+                ignota.add(var)
+                continue
+            d = os.path.normpath(os.path.join(viae[var], rel)) if rel \
+                else os.path.normpath(viae[var])
+            d = '' if d == '.' else d
+            if d not in OMISSA:
+                fructus.add(d)
+    for var in sorted(ignota):
+        print('homini: %s: %s non solvitur' % (cursor, var),
+              file=sys.stderr)
+    return sorted(fructus)
+
+
+def fontes():
+    sys.path.insert(0, 'pythonica')
+    import silva
+    fructus = []
+    for o, nomina in sorted(portae().items()):
+        if not any(n in silva.SUITAE for n in nomina):
+            continue
+        d = _directoria_cursoris(o)
+        if d:
+            fructus.append({'ordo': o, 'lens': 'tegit fontes',
+                            'valor': {'genus': 'textus', 'valor':
+                                      ', '.join(x + '/*' for x in d)}})
+    return fructus
+
+
 if __name__ == '__main__':
     modus = sys.argv[1] if len(sys.argv) > 1 else 'ordines'
     fructus = (ordines() if modus == 'ordines' else
-               currit() if modus == 'currit' else cellae())
+               currit() if modus == 'currit' else
+               fontes() if modus == 'fontes' else cellae())
     print(json.dumps(fructus, ensure_ascii=False, separators=(',', ':')))
