@@ -1015,3 +1015,15 @@ Two smaller things learned in passing:
 Recipe worth reusing on any hung house tool: `sample <pid> 5 -f out`
 then read the Call graph section. Five seconds, and it named the
 function and the ratio without a single hypothesis.
+
+## 2026-09-24 — extraction moved to compendium.c (49f49fc9)
+
+`_extenta_ex_semantica` is now a thin conversion over
+`compendium_declarationes` (legatus adds only its `signatura`);
+`caput` converts the cached extents to `CompendiumDeclaratio` and uses
+`compendium_ordo` + `compendium_contrahere`. `LegatiLinea`,
+`_lineae_contracte_appendere`, `_declarationem_contrahere` deleted
+(−367 lines). Output byte-identical over 10 files except the
+parenthesis spacing — details in compendium.worklog.md. (This note
+was held back from 49f49fc9 because this file was then in commissio's
+VETITAE; Fran released it the same day.)

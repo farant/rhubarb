@@ -1731,7 +1731,6 @@ def porta(nomen, filtrum=None, radix=None, receptum=True):
 
 VETITAE = ('FAQ.md', 'gesta/annales/tabula.md',
            'gesta/annales/tabularium.jsonl',
-           'officina/instrumenta/legatus.worklog.md',
            'silva/grammatica/c89-formatted.stml')
 
 
@@ -2138,8 +2137,8 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     for v in viae:
         if v in VETITAE:
             causae.append('via VETITA commissioni: %s - plagula Frani in'
-                          ' cursu (FAQ, tabula, tabularium, c89-formatted,'
-                          ' legatus.worklog): Fran ipse eam committit,'
+                          ' cursu (FAQ, tabula, tabularium,'
+                          ' c89-formatted): Fran ipse eam committit,'
                           ' numquam agens - e viis remove' % v)
     if opus:
         causae.extend(opus_praeiudicare(opus))
