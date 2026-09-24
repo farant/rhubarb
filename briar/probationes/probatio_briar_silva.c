@@ -12,6 +12,7 @@
 #include "briar_contextus.h"
 #include "briar_nexus.h"
 #include "briar_silva.h"
+#include "compendium.h"
 #include "internamentum.h"
 #include "piscina.h"
 #include "silex.h"
@@ -488,6 +489,72 @@ principale (vacuum)
         briar_silvam_solvere(nexus);
     }
 
+    imprimere("\n--- Probans caput corporis ut plagulam"
+        " principalem ---\n");
+    {
+             chorda  textus;
+         BriarSilva* s = briar_silvam_capitis_texere(piscina, fons,
+             "include/sors.h", &textus);
+
+        CREDO_NON_NIHIL (s);
+        si (s != NIHIL)
+        {
+             Xar* declarationes;
+             Xar* ordo;
+             i32  k;
+             b32  seminare_inventa  = FALSUM;
+             b32  ex_latina         = FALSUM;
+             b32  sors_typus        = FALSUM;
+
+            CREDO_AEQUALIS_I32 (s->parsura->numerus_errorum, ZEPHYRUM);
+            declarationes = compendium_declarationes(s->parsura,
+                s->semantica, piscina);
+            ordo = compendium_ordo(declarationes, piscina);
+            CREDO_NON_NIHIL (ordo);
+            per (k = ZEPHYRUM; ordo != NIHIL && k < xar_numerus(ordo);
+                k++)
+            {
+                constans CompendiumDeclaratio* d =
+                    (constans CompendiumDeclaratio*)xar_obtinere(
+                        declarationes, *(i32*)xar_obtinere(ordo, k));
+
+                /* 'nomen structura {...} Sors;' typedef est SOLUM si
+                 * latina.h praebita et expansa est (nomen -> typedef)
+                 * - probatio quod clausura silvae data est */
+                si (   chorda_aequalis_literis(d->titulus, "Sors")
+                    && d->genus == (s32)SYMBOLUM_TYPEDEF)
+                {
+                    sors_typus = VERUM;
+                }
+                /* typi latina.h (inclusa) non sunt caput ipsum */
+                si (chorda_aequalis_literis(d->titulus, "i32"))
+                {
+                    ex_latina = VERUM;
+                }
+                si (chorda_aequalis_literis(d->titulus,
+                    "sors_seminare"))
+                {
+                    chorda corpus;
+
+                    seminare_inventa = VERUM;
+                    corpus.datum = textus.datum
+                        + d->corpus_initium;
+                    corpus.mensura    = (i32)(d->corpus_finis
+                        - d->corpus_initium);
+                    CREDO_CHORDA_AEQUALIS_LITERIS (
+                        compendium_contrahere(corpus, CCXL, piscina),
+                        "vacuum sors_seminare (Sors* s, i64 semen,"
+                        " i64 series);");
+                }
+            }
+            CREDO_VERUM (seminare_inventa);
+            CREDO_VERUM (sors_typus);
+            CREDO_FALSUM (ex_latina);
+            briar_silvam_capitis_solvere(s);
+        }
+        CREDO_NIHIL (briar_silvam_capitis_texere(piscina, fons,
+            "include/nusquam.h", &textus));
+    }
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

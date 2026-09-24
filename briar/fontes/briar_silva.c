@@ -728,3 +728,91 @@ briar_silvam_solvere (
         r->silva = NIHIL;
     }
 }
+
+BriarSilva*
+briar_silvam_capitis_texere (
+               Piscina* piscina,
+    constans SilexFons* fons,
+    constans character* via,
+                chorda* textus)
+{
+              b32  inventum = FALSUM;
+           chorda  contentum;
+              Xar* clausura;
+    SilvaExpansio* exp;
+       BriarSilva* silva;
+              i32  k;
+
+    textus->datum    = NIHIL;
+    textus->mensura  = ZEPHYRUM;
+    contentum        = silex_fons_legere(fons, via, piscina, &inventum);
+    si (!inventum)
+    {
+        redde NIHIL;
+    }
+    /* clausura ex '#include "x.h"' capitis ipsius (e fonte silicis) */
+    clausura = silex_clausuram_e_contentis(piscina, fons, &contentum,
+        I);
+    si (clausura == NIHIL)
+    {
+        redde NIHIL;
+    }
+    silva = (BriarSilva*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(BriarSilva));
+    si (silva == NIHIL)
+    {
+        redde NIHIL;
+    }
+    silva->parsura           = NIHIL;
+    silva->semantica         = NIHIL;
+    silva->capita_derivata   = NIHIL;
+    silva->symbola_derivata  = NIHIL;
+    silva->piscina =
+        silva_piscina_generare_dynamicum("briar_silva_caput",
+        (size_t)8388608);
+    si (silva->piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    exp = silva_expansio_creare(silva->piscina);
+    per (k = ZEPHYRUM; k < xar_numerus(clausura); k++)
+    {
+        constans SilexRes* res = (constans SilexRes*)xar_obtinere(
+            clausura, k);
+
+        /* caput ipsum PRINCIPALE est, non includendum */
+        si (   !_suffixum_est(res->via, ".h")
+            || chorda_aequalis_literis(res->via, via))
+        {
+            perge;
+        }
+        silva_includendum_praebere(exp, chorda_ut_cstr(res->via,
+            piscina),
+            (constans character*)res->contentum.datum,
+            (insignatus integer)res->contentum.mensura);
+    }
+    silva->parsura = silva_parsare_cum_expansione(silva->piscina, exp,
+        via, (constans character*)contentum.datum,
+        (insignatus integer)contentum.mensura, &SILVA_C89_GRAMMATICA,
+        NIHIL, NIHIL, NIHIL);
+    si (silva->parsura == NIHIL || silva->parsura->commissio == NIHIL)
+    {
+        briar_silvam_capitis_solvere(silva);
+        redde NIHIL;
+    }
+    silva->semantica = silva_c89_semantica_analysare(silva->piscina,
+        silva->parsura);
+    *textus = contentum;
+    redde silva;
+}
+
+vacuum
+briar_silvam_capitis_solvere (
+    BriarSilva* silva)
+{
+    si (silva != NIHIL && silva->piscina != NIHIL)
+    {
+        silva_piscina_destruere(silva->piscina);
+        silva->piscina = NIHIL;
+    }
+}

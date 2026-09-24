@@ -35,6 +35,11 @@ Findings: `fontes/briar.worklog.md`.
   Derived from the corpus's latina.h + `briar_fabrica_vexilla`
   (`briar_dialectus_charta`); only the traps are hand-written. Fumus
   XVIII checks its flags == the clang line of `-amalgama`.
+- **Signatures:** `briar -bibliotheca <x> -functiones` = one line per
+  function, return types aligned. The header is parsed by silva as the
+  main file (`briar_silvam_capitis_texere`, closure from the corpus) and
+  read by `officina/instrumenta/compendium.c` — the SAME module legati
+  `caput` uses (briar's runner compiles it). Fumus XIX.
 - **`-amalgama`** = the escape hatch: ONE file `<t>.c` beside the
   thistle (+ `probatio_<t>.c` if a probatio region exists) that clang
   compiles ALONE — line 2 of the file's banner is the exact compile

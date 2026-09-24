@@ -54,6 +54,8 @@ nomen structura {
             constans character* icon;        /* -icon (cum -app) */
             constans character* bibliotheca; /* -bibliotheca <nomen> */
                            b32  fons_bibliothecae; /* -fons */
+    /* -functiones: signaturae solae (cum -bibliotheca) */
+                           b32 functiones_bibliothecae;
     constans character* constans* reliqua;   /* programmatis */
                            i32 numerus_reliquorum;
                         chorda causa;       /* recusatio si mensura */

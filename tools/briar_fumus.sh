@@ -81,6 +81,9 @@
 #        int; verba (si=if, nomen=typedef); laquei (argumenta[I] = via);
 #        vexilla chartae (plana) == vexilla ordinis clang lineae II
 #        salve.c ex VII, utrimque (derivata ex briar_fabrica_vexilla)
+#   XIX. -bibliotheca sors -functiones: signaturae exactae (sors_seminare,
+#        sors_intra), nomina in columna UNA; json sine '( ' / ' )';
+#        latina 'functiones 0'; -fons cum -functiones recusatum
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -454,8 +457,37 @@ V_ORDO="$(sed -n '2s/^ \* //p' "$AREA/salve.c" | tr ' ' '\n' \
     || deficere "-dialectus: vexilla chartae != ordo clang: [$(echo $V_CHARTA)] vs [$(echo $V_ORDO)]" "$AREA/dial.log"
 echo "FUMUS:    dialectus: $(echo "$V_CHARTA" | wc -l | tr -d ' ') vexilla == ordo clang, i32 insignatum, verba"
 
+# ---- XIX. signaturae: -bibliotheca <x> -functiones ----
+# per silvam (compendium capitis commune cum legati caput): linea una
+# per functionem, typi reditus in columna, nomina in columna EADEM
+echo "FUMUS: XIX. -bibliotheca sors/json/latina -functiones"
+( cd "$AREA" && "$BRIAR" -bibliotheca sors -functiones ) > "$AREA/func_sors.log" 2>&1 \
+    || deficere "-bibliotheca sors -functiones defecit" "$AREA/func_sors.log"
+grep -q '^==== include/sors.h (functiones [0-9]*) ====$' "$AREA/func_sors.log" \
+    || deficere "-functiones: titulus capitis deest" "$AREA/func_sors.log"
+grep -q '^vacuum  *sors_seminare (Sors\* s, i64 semen, i64 series);$' "$AREA/func_sors.log" \
+    && grep -q '^i32  *sors_intra (Sors\* s, i32 limes);$' "$AREA/func_sors.log" \
+    || deficere "-functiones: signaturae sors non exactae" "$AREA/func_sors.log"
+N_COLUMNAE="$(grep ' sors_[a-z0-9_]* (' "$AREA/func_sors.log" \
+    | awk '{ print index($0, " sors_") }' | sort -u | wc -l | tr -d ' ')"
+N_FUNC="$(grep -c ' sors_[a-z0-9_]* (' "$AREA/func_sors.log")"
+[ "$N_COLUMNAE" = 1 ] && [ "$N_FUNC" -ge 8 ] \
+    || deficere "-functiones: nomina non in columna una ($N_COLUMNAE columnae, $N_FUNC functiones)" "$AREA/func_sors.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca json -functiones ) > "$AREA/func_json.log" 2>&1 \
+    && grep -q ' json_legere (chorda input, Piscina\* piscina);$' "$AREA/func_json.log" \
+    && ! grep -q '( \| )' "$AREA/func_json.log" \
+    || deficere "-functiones json: signatura aut spatia parenthesium" "$AREA/func_json.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca latina -functiones ) > "$AREA/func_lat.log" 2>&1 \
+    && grep -q '(functiones 0)' "$AREA/func_lat.log" \
+    || deficere "-functiones latina: 'functiones 0' exspectatum" "$AREA/func_lat.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca sors -fons -functiones ) > "$AREA/func_amb.log" 2>&1
+RC_AMB=$?
+[ "$RC_AMB" -ne 0 ] && grep -q -- '-fons aut -functiones' "$AREA/func_amb.log" \
+    || deficere "-fons -functiones simul: recusatio exspectata (exitus $RC_AMB)" "$AREA/func_amb.log"
+echo "FUMUS:    functiones: sors $N_FUNC in columna una, json sine '( ', latina 0, -fons+-functiones recusatum"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"

@@ -59,6 +59,24 @@ briar_silvam_texere (
                     Xar* nexus,
      constans SilexFons* fons);
 
+/* Caput corporis (via e.g. "include/sors.h") ut plagulam
+ * PRINCIPALEM parsare: capita clausurae e fonte silicis praebita
+ * (numquam discus directe), expansio obligatoria. *textus = textus
+ * capitis ipse (extenta compendii in eum spectant). NIHIL si caput
+ * abest, clausura fracta aut parsura nulla; errores parsurae in
+ * parsura->numerus_errorum manent. Liberare:
+ * briar_silvam_capitis_solvere. */
+BriarSilva*
+briar_silvam_capitis_texere (
+               Piscina* piscina,
+    constans SilexFons* fons,
+    constans character* via,
+                chorda* textus);
+
+vacuum
+briar_silvam_capitis_solvere (
+    BriarSilva* silva);
+
 /* arenas silvae destruere (res->silva deinde NIHIL) */
 vacuum
 briar_silvam_solvere (

@@ -768,3 +768,36 @@ latina.h words).
 - latina.h still has no first-line description (it shows `—` in
   `-bibliothecae`); deliberately not added in this commit for the same
   gate-cost reason.
+
+## 2026-09-24 — `-bibliotheca <x> -functiones` (park …D4FPNX, step 2)
+
+One line per function, return types in a column (cap 24), from briar-user
+feedback: aligned multi-line parameters read well but defeat grep.
+
+- **Parser-backed, shared with legati.** `briar_silvam_capitis_texere`
+  parses a CORPUS header as the MAIN file: its `#include "x.h"`
+  closure comes from the SilexFons (`silex_clausuram_e_contentis`),
+  the header itself is not re-offered as an include, expansion is on.
+  Declarations come from `compendium_declarationes/_ordo/_contrahere`
+  (officina/instrumenta/compendium.c, step 1, 49f49fc9) — the same
+  code legati `caput` uses. Functions only (`SYMBOLUM_FUNCTIO`);
+  contraction cap 1000 bytes so nothing real is truncated.
+- **Alignment** is the pure `briar_bibliotheca_functiones`: the name
+  is found as a WHOLE word followed by `(` (so `numerus` does not split
+  `xar_numerus`); the type is the text before it; a line where the
+  name is not found prints whole.
+- **Sweep over the whole corpus:** 185 libraries, 0 non-zero exits, 0
+  parse warnings, 2,053 signatures all aligned, none truncated; 5
+  libraries with no functions (latina, postulata_posix,
+  entitates_html_tabula, fons_6x8, imago_typus) — expected.
+- **A test that could not see its subject.** The first briar_silva
+  test (sors.h, exact `sors_seminare` line) stayed GREEN with the
+  include closure planted OFF: silva parses sors.h unexpanded without
+  errors, and the line is source bytes anyway. What only expansion
+  gives is semantics — `nomen structura {...} Sors;` is a TYPEDEF only
+  if latina.h was offered (`nomen` → `typedef`). Asserting that made
+  the plant red.
+- Gates: imperium (`-functiones` only with `-bibliotheca`, not with
+  `-fons`); briar_silva (plant above); briar_bibliotheca (plant:
+  whole-word check off → the `xar_numerus` case red); fumus XIX
+  (plant: function filter off → `latina` no longer 'functiones 0').

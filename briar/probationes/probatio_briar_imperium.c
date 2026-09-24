@@ -219,6 +219,33 @@ principale (vacuum)
     CREDO_FALSUM (_legere(piscina, &imp, III, "-bibliothecae",
         "-bibliotheca", "sors"));
 
+    /* -functiones: cum -bibliotheca solum; cum -fons non */
+    CREDO_VERUM (_legere(piscina, &imp, III, "-bibliotheca", "json",
+        "-functiones"));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_BIBLIOTHECA);
+    CREDO_VERUM (imp.functiones_bibliothecae);
+    CREDO_FALSUM (imp.fons_bibliothecae);
+    CREDO_FALSUM (_legere(piscina, &imp, I, "-functiones", NIHIL,
+        NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("-functiones solum cum -bibliotheca",
+        piscina));
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-functiones",
+        "-bibliothecae", NIHIL));
+    {
+        constans character* argv[VI];
+
+        argv[ZEPHYRUM]  = "briar";
+        argv[I]         = "-bibliotheca";
+        argv[II]        = "json";
+        argv[III]       = "-fons";
+        argv[IV]        = "-functiones";
+        argv[V]         = NIHIL;
+        CREDO_FALSUM (briar_imperium_legere(piscina, V, argv, &imp));
+        CREDO_CHORDA_CONTINET (imp.causa,
+            chorda_ex_literis("-fons aut -functiones", piscina));
+    }
+
     /* -dialectus: charta dialecti, sine plagula; post plagulam
      * argumentum programmatis manet (non reservatum) */
     CREDO_VERUM (_legere(piscina, &imp, I, "-dialectus", NIHIL,

@@ -55,6 +55,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$BRIAR_DIR/fontes"
     "-I$BRIAR_DIR/probationes"
     "-I$RADIX_DIR/silva/amalgama"
+    # compendium capitis (communis cum legato; -functiones)
+    "-I$RADIX_DIR/officina/instrumenta"
 )
 
 # Fontes radicis quibus materia in evolutione nititur.
@@ -143,7 +145,7 @@ while IFS= read -r caput_via; do
         CAPUT_RECENS="$caput_via"
     fi
 done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" "$MD_DIR/fontes" "$BRIAR_DIR/fontes" "$BRIAR_DIR/probationes" "$RADIX_DIR/silva/amalgama" \
-             -name "*.h" 2>/dev/null)
+             "$RADIX_DIR/officina/instrumenta/compendium.h" -name "*.h" 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
@@ -195,6 +197,19 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
     echo "  [amalgama] silva.c"
     if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
         echo "FRACTA: amalgama silva" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# compendium capitis: declarationes gradus supremi per silvam -
+# COMMUNE cum legato (officina/instrumenta), ne duo de capite
+# dissentiant (briar -bibliotheca <x> -functiones)
+src="$RADIX_DIR/officina/instrumenta/compendium.c"
+obj="$BUILD_DIR/compendium.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [compendium] compendium.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
+        echo "FRACTA: compendium.c" ; exit 1
     fi
 fi
 obj_files="$obj_files $obj"

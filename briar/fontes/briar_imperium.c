@@ -144,6 +144,10 @@ briar_imperium_legere (
         {
             imp->fons_bibliothecae = VERUM;
         }
+        alioquin si (_est(a, "-functiones"))
+        {
+            imp->functiones_bibliothecae = VERUM;
+        }
         alioquin si (_est(a, "-iterum"))
         {
             imp->iterum = VERUM;
@@ -181,8 +185,8 @@ briar_imperium_legere (
             chorda_aedificator_appendere_literis(aed,
                 " (nota: -probatio -struere [-iterum] -arbor"
                 " -partes -amalgama -html -visio -app -versio"
-                " -bibliothecae -bibliotheca <nomen> [-fons]"
-                " -dialectus -f <radix> -icon <via>)");
+                " -bibliothecae -bibliotheca <nomen> [-fons |"
+                " -functiones] -dialectus -f <radix> -icon <via>)");
             imp->causa = chorda_aedificator_finire(aed);
             redde FALSUM;
         }
@@ -195,6 +199,19 @@ briar_imperium_legere (
         && imp->actio != BRIAR_ACTIO_BIBLIOTHECA)
     {
         _recusare(imp, piscina, "-fons solum cum -bibliotheca <nomen>");
+        redde FALSUM;
+    }
+    si (   imp->functiones_bibliothecae
+        && imp->actio != BRIAR_ACTIO_BIBLIOTHECA)
+    {
+        _recusare(imp, piscina,
+            "-functiones solum cum -bibliotheca <nomen>");
+        redde FALSUM;
+    }
+    si (imp->fons_bibliothecae && imp->functiones_bibliothecae)
+    {
+        _recusare(imp, piscina, "-fons aut -functiones: unum elige"
+            " (caput cum fontibus, aut signaturae solae)");
         redde FALSUM;
     }
     si (   imp->via != NIHIL

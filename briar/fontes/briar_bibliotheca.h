@@ -9,6 +9,7 @@
 
 #include "latina.h"
 #include "chorda.h"
+#include "piscina.h"
 
 /* Descriptio ex linea PRIMA capitis secundum conventionem domus:
  * '/' '*' ' ' <titulus> (e.g. "sors.h") deinde '-', '—' aut ':'
@@ -21,5 +22,18 @@ chorda
 briar_bibliotheca_descriptio (
     chorda textus,
     chorda titulus);
+
+/* Signaturae functionum in lineas alineatas (-bibliotheca <x>
+ * -functiones). lineae[i] = declaratio contracta ('T nomen (...);'),
+ * tituli[i] = nomen functionis. Typus reditus (textus ante nomen) in
+ * columna latitudinis typi longissimi, tectum XXIV (typus longior:
+ * spatium unum). Nomen verbum totum esse debet, '(' sequente; linea
+ * sine nomine invento tota imprimitur. Linea quaeque '\n' finitur. */
+chorda
+briar_bibliotheca_functiones (
+    constans chorda* lineae,
+    constans chorda* tituli,
+                i32  numerus,
+            Piscina* piscina);
 
 #endif /* BRIAR_BIBLIOTHECA_H */

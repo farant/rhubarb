@@ -52,6 +52,7 @@
 #include "briar_nexus.h"
 #include "briar_proiectio.h"
 #include "briar_silva.h"
+#include "compendium.h"
 #include "materia_nodus.h"
 #include "similitudo.h"
 #include <stdio.h>
@@ -157,7 +158,9 @@ _auxilium (vacuum)
         "  -bibliothecae         bibliothecas corporis enumerare"
         " (sine plagula)\n"
         "  -bibliotheca <nomen>  caput bibliothecae imprimere;"
-        " -fons = et fontes\n"
+        " -fons = et fontes;\n"
+        "                        -functiones = signaturae in lineam"
+        " unam\n"
         "  -dialectus  charta dialecti: typi, vexilla, verba latina.h,"
         " laquei C89\n"
         "  -f <radix>  arbor rhubarb (alioquin ascensus, alioquin"
@@ -352,6 +355,84 @@ _dialectum_ostendere (
     redde charta.mensura > ZEPHYRUM ? ZEPHYRUM : I;
 }
 
+/* -bibliotheca <appellatio> -functiones: signaturae functionum capitis
+ * in lineam unam, typi reditus alineati. Declarationes per silvam
+ * (compendium capitis - idem quod legati caput), caput ut plagula
+ * PRINCIPALIS cum clausura e fonte silicis. */
+interior s32
+_functiones_ostendere (
+               Piscina* piscina,
+    constans SilexFons* fons,
+    constans character* caput_via)
+{
+         chorda  textus;
+     BriarSilva* silva = briar_silvam_capitis_texere(piscina, fons,
+         caput_via, &textus);
+            Xar* declarationes;
+            Xar* ordo;
+         chorda* lineae;
+         chorda* tituli;
+            i32  numerus = ZEPHYRUM;
+            i32  i;
+         chorda  charta;
+
+    si (silva == NIHIL)
+    {
+        fprintf(stderr, "briar: %s parsari non potuit\n", caput_via);
+        redde I;
+    }
+    si (silva->parsura->numerus_errorum > ZEPHYRUM)
+    {
+        fprintf(stderr, "briar: %s: parsura cum %u erroribus -"
+            " signaturae fortasse incompletae\n", caput_via,
+            silva->parsura->numerus_errorum);
+    }
+    declarationes = compendium_declarationes(silva->parsura,
+        silva->semantica, piscina);
+    ordo = compendium_ordo(declarationes, piscina);
+    si (ordo == NIHIL)
+    {
+        briar_silvam_capitis_solvere(silva);
+        redde I;
+    }
+    lineae = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(chorda)
+        * (memoriae_index)(xar_numerus(ordo) + I));
+    tituli = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(chorda)
+        * (memoriae_index)(xar_numerus(ordo) + I));
+    si (lineae == NIHIL || tituli == NIHIL)
+    {
+        briar_silvam_capitis_solvere(silva);
+        redde I;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
+    {
+        constans CompendiumDeclaratio* d =
+            (constans CompendiumDeclaratio*)xar_obtinere(declarationes,
+                *(i32*)xar_obtinere(ordo, i));
+        chorda corpus;
+
+        si (d->genus != (s32)SYMBOLUM_FUNCTIO)
+        {
+            perge;
+        }
+        corpus.datum    = textus.datum + d->corpus_initium;
+        corpus.mensura  = (i32)(d->corpus_finis - d->corpus_initium);
+        lineae[numerus]   = compendium_contrahere(corpus, (i32)M,
+            piscina);
+        tituli[numerus]   = d->titulus;
+        numerus++;
+    }
+    briar_silvam_capitis_solvere(silva);
+    charta = briar_bibliotheca_functiones(lineae, tituli, numerus,
+        piscina);
+    imprimere("\n==== %s (functiones %d) ====\n", caput_via,
+        (integer)numerus);
+    fwrite(charta.datum, I, (size_t)charta.mensura, stdout);
+    redde ZEPHYRUM;
+}
+
 /* -bibliotheca <appellatio> [-fons]: caput (API cum commentariis) et,
  * cum -fons, implementatio; ignotum = proximi nominati */
 interior s32
@@ -360,7 +441,8 @@ _bibliothecam_ostendere (
     constans SilexFons* fons,
                     b32 e_disco,
     constans character* appellatio,
-                    b32 cum_fontibus)
+                    b32 cum_fontibus,
+                    b32 solae_functiones)
 {
     character* caput_via = (character*)piscina_allocare(piscina,
         (memoriae_index)strlen(appellatio) + XVI);
@@ -399,6 +481,10 @@ _bibliothecam_ostendere (
         redde I;
     }
     _corporis_caput(fons, e_disco);
+    si (solae_functiones)
+    {
+        redde _functiones_ostendere(piscina, fons, caput_via);
+    }
     (vacuum)_plagulam_ostendere(piscina, fons, caput_via);
     si (cum_fontibus)
     {
@@ -624,7 +710,8 @@ principale (
     si (imp.actio == BRIAR_ACTIO_BIBLIOTHECA)
     {
         redde _bibliothecam_ostendere(piscina, fons, e_disco,
-            imp.bibliotheca, imp.fons_bibliothecae);
+            imp.bibliotheca, imp.fons_bibliothecae,
+            imp.functiones_bibliothecae);
     }
     si (imp.actio == BRIAR_ACTIO_DIALECTUS)
     {
