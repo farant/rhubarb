@@ -774,3 +774,27 @@ never read as green. "(nulla)" is printed when no gate is owed, never silence.
 First real use was on its own commit: the working tree (pythonica/*.py edits +
 the new .sh) owed pythonica and vexilla, and Fran's four files came back
 INTECTA - so T4 was committed with exactly the gates the tool named.
+
+## 2026-09-24 — commissio adds and runs owed gates (portae debitae T5)
+
+`_portae_debitas_addere(viae, portae)` sits between the pre-check causes and
+the gates: requested first, owed-and-missing appended (PORTAE order), one
+printed line each; manual ones printed, never run; a requested name (with or
+without filter) satisfies its owed gate. `sine_debitis` joins the ALL-CAUSES
+pre-check when empty. commissio_umbra adds owed gates BEFORE its shadow runs
+(its inner commissio receives receipt paths, not names, so it passes
+`_debitae_additae=True` to avoid a second, name-blind computation).
+
+Tests never commit: a path that does not exist makes commissio refuse AFTER
+the gates, so "was the added gate RUN?" is observable through a marker file the
+fake gate touches. Two traps met while writing them: (1) a green fake gate
+leaves a LIVE RECEIPT, so a second commissio on the unchanged tree skips it and
+the marker never appears - the helper passes recepta=False; (2) a red run that
+raises (os.remove of a missing marker, TypeError of an unknown kwarg) kills the
+whole suite instead of reporting - removal made tolerant, guard widened.
+Plant: the addition turned into a no-op -> 4 red.
+
+Cost: the pythonica suite went 3:13 -> 4:39. ~40 s are the new sections'
+closure sweeps; ~33 s are the OLD commissio tests, each now reading the live
+inventory (3.3 s a read: 0.36 s launcher check, 2.65 s nota_frigida itself -
+probably loading build/nexus.tsv; desideratum filed).

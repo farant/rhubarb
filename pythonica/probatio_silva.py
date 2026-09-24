@@ -1841,6 +1841,92 @@ if os.access(_pdcli, os.X_OK):
     credo(r.returncode == 2 and 'inventarium nullum hic' in r.stderr,
           'CLI: inventarium illegibile -> exitus 2, causa nominata')
 
+print('--- portae debitae: commissio addit et currit (portae et debita FICTA) ---')
+# commissio NUMQUAM committit hic: via absens post portas refutatur ('via
+# nec in disco'). Porta ficta viridis signum plagulae tangit = CURSA EST.
+import contextlib
+import io
+_cd = tempfile.mkdtemp(prefix='silva_commissio_debitae_')
+_signum = os.path.join(_cd, 'cursa')
+_umbra_signum = os.path.join(_cd, 'cursa_umbra')
+_viridis = os.path.join(_cd, 'viridis.sh')
+open(_viridis, 'w').write('#!/bin/sh\ntouch "${1:-%s}"\necho "fictum: sanum"\n' % _signum)
+os.chmod(_viridis, 0o755)
+os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps({
+    'ficta-debita': [[_viridis], r'fictum: (sanum|FRACTUM)', 'generica'],
+    'ficta-petita': [[_viridis, _umbra_signum], r'fictum: (sanum|FRACTUM)', 'generica']})
+silva._portae_fictae()
+_pd_vera = silva.portae_debitae
+_debita_ficta = [silva.Debitum('ficta-debita', 'x.c in clausura probatio_y.c', False),
+                 silva.Debitum('apps/z/fumus.sh', 'apps/z/z.c congruit apps/z/*', True)]
+silva.portae_debitae = lambda viae, *a, **k: (list(_debita_ficta), [])
+
+
+def _signum_tollere():
+    if os.path.exists(_signum):
+        os.remove(_signum)
+
+
+def _commissio_capta(**k):
+    """commissio cum via ABSENTE: portae currunt, deinde refusio; effusio capta"""
+    buf = io.StringIO()
+    err = None
+    with contextlib.redirect_stdout(buf):
+        try:
+            # recepta=False: receptum vivum portae fictae prioris cursum iterum celaret
+            silva.commissio('nihil', ['pythonica/via_absens_debitae.txt'], recepta=False, **k)
+        except silva.SilvaError as ex:
+            err = str(ex)
+    return buf.getvalue(), err
+
+
+try:
+    # I. debita absens a petitis ADDITUR et CURRIT, linea cum causa; manu nominatur non currit
+    eff, err = _commissio_capta(portae=['ficta-petita'])
+    credo('porta debita addita: ficta-debita - x.c in clausura probatio_y.c' in eff,
+          'commissio: porta debita addita cum causa sua')
+    credo(os.path.exists(_signum), 'commissio: porta debita addita VERE cursa')
+    credo('manu debita: apps/z/fumus.sh - apps/z/z.c congruit apps/z/*' in eff,
+          'commissio: porta manu debita nominatur')
+    credo(err is not None and 'nec in disco' in err, 'commissio: pergit post portas (via absens refutata, nihil commissum)')
+    # II. debita iam petita: non bis
+    _signum_tollere()
+    eff, err = _commissio_capta(portae=['ficta-debita'])
+    credo('porta debita addita' not in eff and os.path.exists(_signum), 'commissio: debita iam petita non additur iterum')
+    # III. sine_debitis: causa impressa, debita NON cursa
+    _signum_tollere()
+    eff, err = _commissio_capta(portae=[], sine_debitis='probatio: debita consulto omissa')
+    credo('portae debitae OMISSAE: probatio: debita consulto omissa' in eff and not os.path.exists(_signum),
+          'commissio: sine_debitis causam imprimit et debitam non currit')
+    # IV. sine_debitis vacua: causa praevia, nihil cursum
+    eff, err = _commissio_capta(portae=[], sine_debitis='  ')
+    credo(err is not None and 'sine_debitis' in err and 'nihil cursum' in err and not os.path.exists(_signum),
+          'commissio: sine_debitis vacua refutatur ante portas')
+    # V. inventarium illegibile: MONITUM, commissio pergit cum petitis
+    def _fracta(viae, *a, **k):
+        raise silva.SilvaError("inventarium 'x' legi non potuit")
+    silva.portae_debitae = _fracta
+    eff, err = _commissio_capta(portae=[])
+    credo('MONITUM: portae debitae computari non potuerunt' in eff and "inventarium 'x'" in eff
+          and err is not None and 'nec in disco' in err,
+          'commissio: inventarium illegibile monet, non obstat')
+    silva.portae_debitae = lambda viae, *a, **k: (list(_debita_ficta), [])
+    # VI. commissio_umbra: debita in UMBRA additur et currit (siccum)
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        h, cursae = silva.commissio_umbra('nihil', ['pythonica/README.md'], ['ficta-petita'], siccum=True)
+    credo([n for n, _, _ in cursae] == ['ficta-petita', 'ficta-debita'],
+          'commissio_umbra: debita post petitas addita et cursa')
+    credo('porta debita addita: ficta-debita' in buf.getvalue(), 'commissio_umbra: linea additionis')
+except (AttributeError, TypeError) as ex:
+    credo(False, 'portae debitae in commissione absunt: %s' % ex)
+finally:
+    silva.portae_debitae = _pd_vera
+    os.environ.pop('PYTHONICA_PORTAE_FICTAE', None)
+    silva._portae_fictae()
+    import shutil
+    shutil.rmtree(_cd, ignore_errors=True)
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))

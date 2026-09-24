@@ -2071,8 +2071,37 @@ def portae_debitae_relatio(viae, inventarium_res=INVENTARIUM_SUITARUM):
     return '\n'.join(lineae) + '\n'
 
 
+def _portae_debitas_addere(viae, portae):
+    """portae petitae + DEBITAE absentes (portae_debitae), ordine: petitae,
+    deinde additae ordine PORTAE. Linea una per additam cum causa sua;
+    debitae manu nominantur, numquam curruntur. Inventarium illegibile =
+    MONITUM et petitae solae (v1 monet, numquam obstat: machina haec
+    commissionem nunquam impedit). Decretum 01M38VGAK8."""
+    try:
+        debita, _ = portae_debitae(viae)
+    except SilvaError as ex:
+        print('MONITUM: portae debitae computari non potuerunt (%s) -'
+              ' portae petitae solae' % ex)
+        return list(portae)
+    petitae = set()
+    for p in portae:
+        if isinstance(p, str) and not p.endswith('.json'):
+            petitae.add(p)
+        elif not isinstance(p, str):
+            petitae.add(p[0])
+    fructus = list(portae)
+    for d in debita:
+        if d.manu:
+            print('manu debita: %s - %s' % (d.porta, d.causa))
+        elif d.porta not in petitae:
+            print('porta debita addita: %s - %s' % (d.porta, d.causa))
+            fructus.append(d.porta)
+    return fructus
+
+
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
-              opus=None, actor='claude'):
+              opus=None, actor='claude', sine_debitis=None,
+              _debitae_additae=False):
     """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
     non honorat; pipestatus fallit). portae: nomina aut (nomen,
     filtrum) aut via recepti umbrae (.json); OMNES sanae esse debent
@@ -2093,7 +2122,12 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     viam frigidam scribuntur (actor). Clausura fracta = SilvaOpusError
     cum .hash - commissum STAT, numquam iterandum.
     CAUSAE PRAEVIAE OMNES SIMUL (viae vetitae OMNES + opus), ne
-    vocans unam sanet et altera statim obstetur."""
+    vocans unam sanet et altera statim obstetur.
+    PORTAE DEBITAE (project-specs/portae-debitae-spec.md): portae quas
+    viae debent (portae_debitae) petitis ADDUNTUR et CURRUNT, linea una
+    cum causa; manu debitae nominantur. sine_debitis='<causa>' eas
+    omittit (causa impressa; vacua = causa praevia). _debitae_additae:
+    commissio_umbra eas iam addidit."""
     causae = []
     for v in viae:
         if v in VETITAE:
@@ -2103,12 +2137,19 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                           ' numquam agens - e viis remove' % v)
     if opus:
         causae.extend(opus_praeiudicare(opus))
+    if sine_debitis is not None and not str(sine_debitis).strip():
+        causae.append('sine_debitis causam poscit (ut --no-verify): cur'
+                      ' portae debitae omittuntur? - nihil cursum')
     if causae:
         raise SilvaError(
             causae[0] if len(causae) == 1 else
             'commissio RECUSATA (%d causae) - nihil cursum, nihil'
             ' commissum:\n  %s' % (len(causae), '\n  '.join(
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
+    if sine_debitis is not None:
+        print('portae debitae OMISSAE: %s' % sine_debitis)
+    elif not _debitae_additae:
+        portae = _portae_debitas_addere(viae, portae)
     ante = _sigilla_viarum(viae)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):
@@ -2750,7 +2791,7 @@ def _totum_actorum(acta):
 
 
 def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
-                    siccum=False):
+                    siccum=False, sine_debitis=None):
     """Portae umbrae SERIATIM (tempora non contendunt - mensurae suitae
     fidae manent), quaeque in clone photographiae suae (editio pergit),
     deinde commissio contra recepta OMNIA (plagulae viae contra blobs
@@ -2759,7 +2800,16 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     receptum et clone servantur ad inspectionem (receptum_relatio,
     receptum_delere; umbrae_purgare orphanos). siccum: portae solae,
     nihil commissum. Reddit (hash | None, [(nomen, compendium,
-    totum_secunda)])."""
+    totum_secunda)]). Portae DEBITAE (vide commissio) hic ante umbras
+    adduntur, ut in umbra quoque currant; sine_debitis ut in commissio."""
+    if sine_debitis is not None:
+        if not str(sine_debitis).strip():
+            raise SilvaError('sine_debitis causam poscit (ut --no-verify):'
+                             ' cur portae debitae omittuntur? - nihil'
+                             ' cursum')
+        print('portae debitae OMISSAE: %s' % sine_debitis)
+    else:
+        portae = _portae_debitas_addere(viae, portae)
     recepta = []
     for p in portae:
         nomen, filtrum = (p, None) if isinstance(p, str) else p
@@ -2786,7 +2836,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     h = None
     if not siccum:
         h = commissio(nuntius, viae, portae=[v for v, _, _, _ in recepta],
-                      verificare=verificare)
+                      verificare=verificare, _debitae_additae=True)
     for v, _, _, _ in recepta:
         receptum_delere(v)
     return h, [(n, r.compendium, tot) for _, n, r, tot in recepta]

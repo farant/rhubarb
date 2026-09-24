@@ -385,3 +385,14 @@ Spec `project-specs/portae-debitae-spec.md`, planum `-plan.md`.
   per `./gesta/frigida.sh -inventarium` (forma machinae; Python eventa
   numquam replicat). Strepitus launcheri praetermittitur; linea
   tabulationem ferens sine quattuor campis = `SilvaError`.
+- **`silva.commissio(..., sine_debitis=None)`** — portae DEBITAE viarum
+  petitis ADDUNTUR et CURRUNT (petitae primum, additae ordine PORTAE):
+  linea una `porta debita addita: <porta> - <causa>`; portae sine PORTAE
+  `manu debita: <scriptum> - <causa>` (numquam curruntur). Debita iam
+  petita (etiam cum filtro) non iteratur. `sine_debitis='<causa>'`
+  omittit (causa impressa `portae debitae OMISSAE: ...`; vacua = causa
+  praevia, nihil cursum). Inventarium illegibile = `MONITUM` et petitae
+  solae — v1 monet, commissionem numquam impedit. `commissio_umbra` eas
+  ANTE umbras addit (ut in umbra currant), eodem `sine_debitis`.
+  Sumptus: lectio inventarii ~3 s (nota_frigida aperiendo), verritio
+  clausurarum ~18 s si via C adest.
