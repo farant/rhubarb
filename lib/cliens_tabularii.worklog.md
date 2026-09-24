@@ -67,3 +67,17 @@ cliens_tabularii_incipere); the test sets one step. Note for the
 examen: the first cut compared a signed `integer k` with the i32
 field, which clang -Wsign-compare rejects and examen accepted.
 6.5 → 1.4 s.
+
+## 2026-09-23 — actor only on writes (regression from dcd516c7)
+
+`cliens_tabularii_transmittere` injected `actor="fran"` into EVERY forwarded
+call, including `legere` and `quaerere`, which declare no `actor`. The
+server used to drop unknown keys silently; since dcd516c7 it refuses them
+("argumenta RECUSATA"), so reads through this forwarder — the forum and
+villa apps' generic path — were refused once tabulariumd restarted, and
+probatio_cliens_tabularii (ROOT suite) went red. My caller audit for
+dcd516c7 checked the forum app's own argument keys but missed this shared
+forwarder in lib/, and that commit was gated on the gesta suites only, so
+the root suite never ran. Fix: inject `actor` only for the writers
+(addere, gerere). The refusal was right; the client was sending a
+meaningless key.

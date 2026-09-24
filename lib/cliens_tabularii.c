@@ -376,9 +376,10 @@ cliens_tabularii_legere (
 /* transmittere {instrumentum, argumenta} (genera G2): tractator
  * generalis UNUS - IS instrumenta daemonis directe adhibet
  * (addere cum dato, gerere nexus/denexus/mutatio, quaerere).
- * Allowlist quattuor; actor="fran" SEMPER iniectus (app
- * instrumentum Franis). Post hoc genera/campi novi C numquam
- * reaperiunt. Fructus {bene, textus, res_id?}. */
+ * Allowlist quattuor; actor="fran" iniectus in SCRIPTURIS (addere,
+ * gerere - app instrumentum Franis), numquam in lectionibus. Post
+ * hoc genera/campi novi C numquam reaperiunt. Fructus {bene, textus,
+ * res_id?}. */
 JsonValor*
 cliens_tabularii_transmittere (
     JsonValor* argumenta,
@@ -414,8 +415,16 @@ cliens_tabularii_transmittere (
     {
         arg_obj = json_objectum_creare(piscina);
     }
-    json_objectum_ponere(arg_obj, "actor",
-        json_chorda_creare_literis(piscina, cliens->actor));
+    /* actor solis scriptoribus (addere, gerere) iniicitur: lectiones
+     * (legere, quaerere) actorem non ferunt, et servus argumenta
+     * ignota ex 2026-09-23 RECUSAT (dcd516c7) - olim iniectio
+     * universalis tacite neglegebatur */
+    si (   _chorda_est(instrumentum, "addere")
+        || _chorda_est(instrumentum, "gerere"))
+    {
+        json_objectum_ponere(arg_obj, "actor",
+            json_chorda_creare_literis(piscina, cliens->actor));
+    }
     textus = cliens_tabularii_vocare(cliens, piscina,
         cliens_tabularii_litterae(piscina, instrumentum), arg_obj,
         culpa);
