@@ -5158,6 +5158,19 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "'zzzzzzzz' ignotum\\n") != NIHIL
             || strstr(r, "'zzzzzzzz' ignotum\\nARGUMENTA") != NIHIL);
 
+        /* GENUS EXPEDITIO SEMINATUM (expeditio v1 T2, semen v11):
+         * creatio licet, status initialis 'aperta' ex machina */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59390,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"addere\",\"arguments\":{"
+            "\"genus\":\"expeditio\",\"titulus\":\"Ex semen\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59391,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"res\",\"arguments\":{"
+            "\"res\":\"Ex semen\",\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "(expeditio, aperta)") != NIHIL);
+
         /* INSTRUMENTUM INVENTARIUM (inventarium v1 T3): porta
          * scripturae - praesentes renuntiantur (nihil novi = nihil
          * scriptum), recusatio ANTE scripturam causis omnibus,

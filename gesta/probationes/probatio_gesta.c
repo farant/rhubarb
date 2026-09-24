@@ -3883,6 +3883,111 @@ principale (vacuum)
                    (memoriae_index)ante.mensura) == ZEPHYRUM);
     }
 
+
+    /* ==================================================
+     * EXPEDITIO (expeditio v1 T2): creatio + photographia FASCE
+     * UNO sine nota (obumbra: res eiusdem fascis videtur); gradus
+     * versionem rubricae currentem servant; violationes = notae
+     * custodiae; replicatio octetim eadem
+     * ================================================== */
+
+    {
+        GestaFascisEventum  fasciculus[II];
+                 character  prae[GESTA_RES_ID_MENSURA];
+                 character  id_alia[GESTA_RES_ID_MENSURA];
+              GestaEventum  e;
+                 JsonValor* st;
+                 JsonValor* g;
+                       s64  seq_ante;
+                    chorda  ante;
+                    chorda  post;
+
+        imprimere("\n--- Probans expeditionem in gesta ---\n");
+        _scribe(m, NIHIL, "definitio-generis",
+            "{\"titulus\":\"expeditio\",\"status_initialis\":\"aper"
+            "ta\",\"machina\":[[\"aperta\",\"clausa\"],[\"aperta\","
+            "\"relicta\"]],\"reducer\":\"ordinarius\"}");
+        scrinium_ulid(prae);
+        seq_ante = gesta_seq_ultima(m);
+        fasciculus[ZEPHYRUM].event_id = NIHIL;
+        fasciculus[ZEPHYRUM].eventum.res_id = prae;
+        fasciculus[ZEPHYRUM].eventum.genus_eventus = "creatio";
+        fasciculus[ZEPHYRUM].eventum.datum          =
+            "{\"genus\":\"expeditio\",\"titulus\":\"Migratio ad sor"
+            "s\"}";
+        fasciculus[ZEPHYRUM].eventum.actor   = "claude";
+        fasciculus[ZEPHYRUM].eventum.origo   = "probatio";
+        fasciculus[I].event_id               = NIHIL;
+        fasciculus[I].eventum.res_id         = prae;
+        fasciculus[I].eventum.genus_eventus  = "expeditio-photographia";
+        fasciculus[I].eventum.datum          =
+            "{\"inventarium\":\"01INVENTARIUMFICTUM\",\"ordines\":["
+            "\"a.sh\",\"b.sh\"],\"rubrica\":\"r1\",\"implenda\":{\""
+            "lens\":\"migratum\",\"genus\":\"ita-non\",\"valor\":\""
+            "ita\"}}";
+        fasciculus[I].eventum.actor = "claude";
+        fasciculus[I].eventum.origo = "probatio";
+        CREDO_VERUM (gesta_fascis_scribere(m, fasciculus, II, NIHIL));
+        /* II eventus, NULLA nota custodiae */
+        CREDO_VERUM (gesta_seq_ultima(m) == seq_ante + II);
+        st = _status_entis(m, prae, piscina);
+        CREDO_NON_NIHIL (st);
+        CREDO_VERUM (st != NIHIL && _clavis_est_chorda(st, "status",
+            "aperta"));
+        CREDO_AEQUALIS_I32 (json_tabulatum_numerus(
+            json_objectum_capere(st, "ordines")), II);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio expeditionis"), ZEPHYRUM);
+
+        /* rubrica mutata, deinde gradus: versio II in gradu */
+        _scribe(m, prae, "rubrica-mutata", "{\"textus\":\"r2\"}");
+        _scribe(m, prae, "gradus-positus",
+            "{\"ordines\":[\"a.sh\"],\"status\":\"factum\"}");
+        st = _status_entis(m, prae, piscina);
+        g = json_objectum_capere(json_objectum_capere(st, "gradus"),
+            "a.sh");
+        CREDO_VERUM (g != NIHIL && _clavis_est_chorda(g, "status",
+            "factum"));
+        CREDO_VERUM (g != NIHIL && json_ad_integer(json_objectum_capere(
+            g, "versio")) == (s64)II);
+
+        /* gradus ordinis ABSENTIS: nota custodiae, status intactus */
+        _scribe(m, prae, "gradus-positus",
+            "{\"ordines\":[\"z.sh\"],\"status\":\"factum\"}");
+        st = _status_entis(m, prae, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio expeditionis"), I);
+        CREDO_NIHIL (json_objectum_capere(json_objectum_capere(st,
+            "gradus"), "z.sh"));
+
+        /* eventum expeditionis in re NON expeditione */
+        e.res_id         = NIHIL;
+        e.genus_eventus  = "creatio";
+        e.datum          = "{\"genus\":\"quaestio\",\"titulus\":"
+            "\"Non expeditio\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_alia));
+        _scribe(m, id_alia, "rubrica-mutata", "{\"textus\":\"x\"}");
+        st = _status_entis(m, id_alia, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "res non est expeditio"), I);
+
+        /* machina: aperta -> clausa */
+        _scribe(m, prae, "status", "{\"novus\":\"clausa\"}");
+        st = _status_entis(m, prae, piscina);
+        CREDO_VERUM (_clavis_est_chorda(st, "status", "clausa"));
+
+        /* REPLICATIO: status octetim idem */
+        ante = gesta_res_datum(m, prae, piscina);
+        CREDO_VERUM (gesta_replicare(m));
+        post = gesta_res_datum(m, prae, piscina);
+        CREDO_VERUM (ante.mensura > ZEPHYRUM
+            && ante.mensura == post.mensura
+            && memcmp(ante.datum, post.datum,
+                   (memoriae_index)ante.mensura) == ZEPHYRUM);
+    }
+
     gesta_claudere(m);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

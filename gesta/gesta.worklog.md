@@ -334,3 +334,25 @@ nothing (progressive law). Measured before changing: over the whole ledger
 exactly ONE canonical link ever had an unresolved end - this one - so no
 history is invalidated. Born red: 9 assertions (the free-verb one stayed green,
 as it must). Desideratum …607XVD.
+
+## 2026-09-24 — state modules table; expeditio folded, judged, seeded (expeditio v1 T2)
+
+Wiring a second event-owning genus (expeditio) the inventarium way would have
+duplicated two branches (the fold in `_statum_transformare`, the custody check
+in `_eventum_validare`). Instead `MODULI_STATUS[]` in gesta.c: {genus,
+violation prefix, eventus_est, applicare, validare} per module, one lookup
+(`_modulum_status_invenire`), count derived from the array. Inventarium's
+existing assertions pass unchanged - the notes read the same ("violatio
+inventarii: res non est inventarium"). A third module is one line.
+
+The same-batch case is proven, not assumed: T3 writes creation + snapshot in
+ONE gesta_fascis_scribere batch, and validation reads the target through the
+batch overlay (obumbrae) - the test writes exactly that and asserts seq + 2 (no
+custody note). Seeded genus `expeditio` (semen v11): `aperta -> clausa |
+relicta`. Worth knowing: before the seed, `addere {genus: expeditio}` already
+SUCCEEDED (progressive law: unknown genera pass) - it just had no state
+machine, so the red test was the missing `(expeditio, aperta)`, not creation.
+
+Formatter aside: -scribere realigned an untouched 'hic_manens integer'
+declaration in probatio_gesta.c and -delta then called it a NEW finding -
+writer and checker disagree (desideratum …HYFTF); the two lines were restored.

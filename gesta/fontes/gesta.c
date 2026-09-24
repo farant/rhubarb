@@ -10,6 +10,7 @@
 #include "json.h"
 #include "paginatio.h"
 #include "gesta_inventarium.h"
+#include "gesta_expeditio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -918,6 +919,49 @@ _generum_applicare (
 #define GESTA_TRANSFORMATUM_INANE   I
 #define GESTA_TRANSFORMATUM_MUTATUM II
 
+/* MODULI STATUS: genera quorum status ex eventibus PROPRIIS plicatur
+ * per modulum purum (plicatura + validatio). Tabula UNA pro
+ * _statum_transformare et _eventum_validare - modulus novus = linea
+ * una (inventarium v1 T2, expeditio v1 T2). */
+nomen structura {
+    constans character* genus;      /* genus rei cuius eventa sunt */
+    constans character* violatio;   /* praefixum notae custodiae */
+    b32 (*eventus_est) (chorda genus_eventus);
+    b32 (*applicare) (JsonValor* status, chorda genus_eventus,
+        JsonValor* datum, chorda actor, chorda creatum, Piscina* pn);
+    constans character* (*validare) (JsonValor* status,
+        chorda genus_eventus, JsonValor* datum, Piscina* pn);
+} ModulusStatus;
+
+interior constans ModulusStatus MODULI_STATUS[] = {
+    { "inventarium", "violatio inventarii",
+      gesta_inventarium_eventus_est, gesta_inventarium_applicare,
+      gesta_inventarium_validare },
+    { "expeditio", "violatio expeditionis",
+      gesta_expeditio_eventus_est, gesta_expeditio_applicare,
+      gesta_expeditio_validare }
+};
+#define MODULORUM_STATUS_NUMERUS                         \
+    ((i32)(magnitudo(MODULI_STATUS)                      \
+        / magnitudo(MODULI_STATUS[ZEPHYRUM])))
+
+/* modulus cuius eventus est; NIHIL si nullius */
+interior constans ModulusStatus*
+_modulum_status_invenire (
+    chorda genus_eventus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < MODULORUM_STATUS_NUMERUS; i++)
+    {
+        si (MODULI_STATUS[i].eventus_est(genus_eventus))
+        {
+            redde &MODULI_STATUS[i];
+        }
+    }
+    redde NIHIL;
+}
+
 /* transformatio PURA status rei (K4 frustum A: decompositio
  * _rei_applicare, eadem ratio ac praeparare/validare/inserere K3):
  * obiectum status intra/extra, SINE scriptura tabulae - reductor
@@ -1251,13 +1295,14 @@ _statum_transformare (
             mutatum_est = VERUM;
         }
     }
-    alioquin si (gesta_inventarium_eventus_est(genus_eventus))
+    alioquin si (_modulum_status_invenire(genus_eventus) != NIHIL)
     {
-        /* INVENTARIUM (spec inventarium §2): tabula ordinum x
-         * lentium in statu rei - plicatura in modulo puro
-         * (gesta_inventarium.c), defensiva: replay numquam fallit */
-        si (gesta_inventarium_applicare(status_obiectum, genus_eventus,
-                datum_obiectum, actor, creatum, piscina))
+        /* MODULI STATUS (inventarium, expeditio): eventa propria in
+         * statu rei - plicatura in modulo puro, defensiva: replay
+         * numquam fallit */
+        si (_modulum_status_invenire(genus_eventus)->applicare(
+                status_obiectum, genus_eventus, datum_obiectum, actor,
+                creatum, piscina))
         {
             mutatum_est = VERUM;
         }
@@ -2488,12 +2533,16 @@ _eventum_validare (
                              Xar* obumbrae,
               constans character* ramus)
 {
-    /* INVENTARIUM (spec inventarium §3): rem inventarium esse et
-     * eventum contra tabulam currentem congruere - iudicat, non
-     * obstat (nota custodiae); porta tabularii ANTE scripturam
-     * recusat (instrumentum inventarium) */
-    si (gesta_inventarium_eventus_est(_ch(p->genus_eventus)))
+    /* MODULI STATUS (inventarium, expeditio): rem generis moduli
+     * esse et eventum contra statum currentem congruere - iudicat,
+     * non obstat (nota custodiae); porta tabularii ANTE scripturam
+     * recusat (instrumenta inventarium, expeditio). Obumbra: res
+     * eodem fasce creata videtur (expeditio: creatio + photographia
+     * fasce uno). */
+    si (_modulum_status_invenire(_ch(p->genus_eventus)) != NIHIL)
     {
+        constans ModulusStatus* mod = _modulum_status_invenire(
+            _ch(p->genus_eventus));
         GestaResOrdo ordo = _res_validationis_capere(m, p->res_id,
             obumbrae, ramus, m->piscina);
                  JsonValor* status = NIHIL;
@@ -2502,11 +2551,22 @@ _eventum_validare (
 
         si (!ordo.exsistit)
         {
-            redde "violatio inventarii: res non exsistit";
+            aed = chorda_aedificator_creare(m->piscina, CXXVIII);
+            chorda_aedificator_appendere_literis(aed, mod->violatio);
+            chorda_aedificator_appendere_literis(aed,
+                ": res non exsistit");
+            redde chorda_ut_cstr(chorda_aedificator_finire(aed),
+                m->piscina);
         }
-        si (!_chorda_est(ordo.genus, "inventarium"))
+        si (!_chorda_est(ordo.genus, mod->genus))
         {
-            redde "violatio inventarii: res non est inventarium";
+            aed = chorda_aedificator_creare(m->piscina, CXXVIII);
+            chorda_aedificator_appendere_literis(aed, mod->violatio);
+            chorda_aedificator_appendere_literis(aed,
+                ": res non est ");
+            chorda_aedificator_appendere_literis(aed, mod->genus);
+            redde chorda_ut_cstr(chorda_aedificator_finire(aed),
+                m->piscina);
         }
         si (ordo.datum.mensura > ZEPHYRUM)
         {
@@ -2521,15 +2581,15 @@ _eventum_validare (
         {
             status = json_objectum_creare(m->piscina);
         }
-        causae = gesta_inventarium_validare(status,
-            _ch(p->genus_eventus), p->datum_obiectum, m->piscina);
+        causae = mod->validare(status, _ch(p->genus_eventus),
+            p->datum_obiectum, m->piscina);
         si (causae == NIHIL)
         {
             redde NIHIL;
         }
         aed = chorda_aedificator_creare(m->piscina, DXII);
-        chorda_aedificator_appendere_literis(aed,
-            "violatio inventarii:\n");
+        chorda_aedificator_appendere_literis(aed, mod->violatio);
+        chorda_aedificator_appendere_literis(aed, ":\n");
         chorda_aedificator_appendere_literis(aed, causae);
         redde chorda_ut_cstr(chorda_aedificator_finire(aed),
             m->piscina);

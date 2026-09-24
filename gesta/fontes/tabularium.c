@@ -78,6 +78,11 @@ nomen structura {
  * gesta_inventarium.h et project-specs/inventarium-spec.md */
 #define GENUS_INVENTARII "inventarium"
 
+/* GENUS EXPEDITIONIS (semen v11): opus batch super inventarium -
+ * photographia ordinum + rubrica versionata + gradus (vide
+ * gesta_expeditio.h, project-specs/expeditio-spec.md) */
+#define GENUS_EXPEDITIONIS "expeditio"
+
 /* verba canonica quae machina LEGIT (visus parata, scopus 'intra',
  * praeiudicia portae) - definitiones hic ut praeiudicia supra visum
  * ea videant */
@@ -270,6 +275,20 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
       "{\"titulus\":\"corpus\",\"typus\":\"textus\"},{\"titulus\":"
       "\"ordo_genus\",\"typus\":\"textus\"},{\"titulus\":"
+      "\"tags\",\"typus\":\"tabulatum\"}],"
+      "\"reducer\":\"ordinarius\"}" },
+    /* ---- semen v11 (expeditio, decretum …D59G3Z, 2026-09-24):
+     * EXPEDITIO = opus batch super inventarium; eventa propria
+     * (expeditio-photographia, rubrica-mutata, gradus-positus,
+     * gradus-promotus, ordines-additi) in statu rei plicata.
+     * Machina: aperta -> clausa | relicta (opus finitur aut
+     * relinquitur; gradus ipsi in statu, non status rei). ---- */
+    { GENUS_EXPEDITIONIS,
+      "{\"titulus\":\"expeditio\",\"status_initialis\":"
+      "\"aperta\",\"machina\":[[\"aperta\",\"clausa\"],"
+      "[\"aperta\",\"relicta\"]],\"attributa\":[{\"titulus\":"
+      "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
+      "{\"titulus\":\"corpus\",\"typus\":\"textus\"},{\"titulus\":"
       "\"tags\",\"typus\":\"tabulatum\"}],"
       "\"reducer\":\"ordinarius\"}" }
 };
