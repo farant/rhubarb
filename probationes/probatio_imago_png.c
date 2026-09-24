@@ -372,6 +372,48 @@ s32 principale (vacuum)
     }
 
 
+    /* ==================================================
+     * IX. Mensurae SINE decodificatione (lapide feature-requests/
+     *     006): imago non quadrata, ut latitudo/altitudo permutata
+     *     appareant
+     * ================================================== */
+
+    imprimere("\n--- IX. Mensurae sine decodificatione ---\n");
+    {
+                     Imago  fons;
+                PngFructus  png;
+                       i32  latitudo = I;
+                       i32  altitudo = I;
+        constans character* via = "/tmp/probatio_imago_mensurae.png";
+                        i8  purgamentum[XVI];
+
+        fons  = _imago_ficta(piscina, XXXII, XVI, FALSUM);
+        png   = imago_png_scribere(&fons, via, piscina);
+        CREDO_VERUM(png.successus);
+        CREDO_VERUM(imago_mensuras_ex_file(via, &latitudo, &altitudo));
+        CREDO_AEQUALIS_I32(latitudo, (i32)XXXII);
+        CREDO_AEQUALIS_I32(altitudo, (i32)XVI);
+        remove(via);
+
+        png = imago_png_codificare(&fons, piscina);
+        CREDO_VERUM(png.successus);
+        CREDO_VERUM(imago_mensuras_ex_memoria(png.datum, png.mensura,
+            &latitudo, &altitudo));
+        CREDO_AEQUALIS_I32(latitudo, (i32)XXXII);
+        CREDO_AEQUALIS_I32(altitudo, (i32)XVI);
+
+        /* file absens, octeti non imago: FALSUM et mensurae nullae */
+        CREDO_FALSUM(imago_mensuras_ex_file("/nusquam/omnino/x.png",
+            &latitudo, &altitudo));
+        CREDO_AEQUALIS_I32(latitudo, ZEPHYRUM);
+        memset(purgamentum, 'x', magnitudo(purgamentum));
+        latitudo = I;
+        CREDO_FALSUM(imago_mensuras_ex_memoria(purgamentum,
+            (i32)magnitudo(purgamentum), &latitudo, &altitudo));
+        CREDO_AEQUALIS_I32(latitudo, ZEPHYRUM);
+    }
+
+
     /* ========================================================
      * IX. Summae contra ORACULUM EXTERNUM
      *

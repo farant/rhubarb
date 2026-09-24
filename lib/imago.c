@@ -65,6 +65,26 @@ _stbi_free (
     stbi_image_free(data);
 }
 
+/* mensurae ex capite solo (stbi_info: nulla pixela decodificantur) */
+static int
+_stbi_info_file (
+    const char* filename,
+           int* width,
+           int* height)
+{
+    return stbi_info(filename, width, height, NULL);
+}
+
+static int
+_stbi_info_mem (
+    const unsigned char* buffer,
+                    int  len,
+                    int* width,
+                    int* height)
+{
+    return stbi_info_from_memory(buffer, len, width, height, NULL);
+}
+
 static const char*
 _stbi_error (void)
 {
@@ -104,7 +124,8 @@ imago_caricare_ex_file (
 
     si (via == NIHIL || piscina == NIHIL)
     {
-        fructus.error = chorda_ex_literis("Argumenta invalida", piscina);
+        fructus.error = chorda_ex_literis("Argumenta invalida",
+            piscina);
         redde fructus;
     }
 
@@ -119,18 +140,22 @@ imago_caricare_ex_file (
         }
         alioquin
         {
-            fructus.error = chorda_ex_literis("Non possum caricare imaginem", piscina);
+            fructus.error =
+                chorda_ex_literis("Non possum caricare imaginem",
+                piscina);
         }
         redde fructus;
     }
 
     /* Copiare ad piscina */
     pixela_size = (i32)(lat * alt * 4);
-    fructus.imago.pixela = (i8*)piscina_allocare(piscina, (memoriae_index)pixela_size);
+    fructus.imago.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)pixela_size);
     si (fructus.imago.pixela == NIHIL)
     {
         _stbi_free(stbi_data);
-        fructus.error = chorda_ex_literis("Non possum allocare memoriam", piscina);
+        fructus.error =
+            chorda_ex_literis("Non possum allocare memoriam", piscina);
         redde fructus;
     }
 
@@ -166,12 +191,14 @@ imago_caricare_ex_memoria (
 
     si (datum == NIHIL || mensura <= 0 || piscina == NIHIL)
     {
-        fructus.error = chorda_ex_literis("Argumenta invalida", piscina);
+        fructus.error = chorda_ex_literis("Argumenta invalida",
+            piscina);
         redde fructus;
     }
 
     /* Caricare cum stb_image */
-    stbi_data = _stbi_load_mem((constans insignatus character*)datum, (integer)mensura, &lat, &alt);
+    stbi_data = _stbi_load_mem((constans insignatus character*)datum,
+        (integer)mensura, &lat, &alt);
     si (stbi_data == NIHIL)
     {
         err = _stbi_error();
@@ -181,18 +208,22 @@ imago_caricare_ex_memoria (
         }
         alioquin
         {
-            fructus.error = chorda_ex_literis("Non possum caricare imaginem", piscina);
+            fructus.error =
+                chorda_ex_literis("Non possum caricare imaginem",
+                piscina);
         }
         redde fructus;
     }
 
     /* Copiare ad piscina */
     pixela_size = (i32)(lat * alt * 4);
-    fructus.imago.pixela = (i8*)piscina_allocare(piscina, (memoriae_index)pixela_size);
+    fructus.imago.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)pixela_size);
     si (fructus.imago.pixela == NIHIL)
     {
         _stbi_free(stbi_data);
-        fructus.error = chorda_ex_literis("Non possum allocare memoriam", piscina);
+        fructus.error =
+            chorda_ex_literis("Non possum allocare memoriam", piscina);
         redde fructus;
     }
 
@@ -204,4 +235,49 @@ imago_caricare_ex_memoria (
     fructus.successus       = VERUM;
 
     redde fructus;
+}
+
+b32
+imago_mensuras_ex_file (
+    constans character* via,
+                   i32* latitudo,
+                   i32* altitudo)
+{
+    integer l = ZEPHYRUM;
+    integer a = ZEPHYRUM;
+
+    *latitudo = ZEPHYRUM;
+    *altitudo = ZEPHYRUM;
+    si (   via == NIHIL || !_stbi_info_file(via, &l, &a) || l <= 0
+        || a   <= 0)
+    {
+        redde FALSUM;
+    }
+    *latitudo = (i32)l;
+    *altitudo = (i32)a;
+    redde VERUM;
+}
+
+b32
+imago_mensuras_ex_memoria (
+    constans i8* datum,
+            i32  mensura,
+            i32* latitudo,
+            i32* altitudo)
+{
+    integer l = ZEPHYRUM;
+    integer a = ZEPHYRUM;
+
+    *latitudo = ZEPHYRUM;
+    *altitudo = ZEPHYRUM;
+    si (   datum == NIHIL || mensura == ZEPHYRUM
+        || !_stbi_info_mem((constans insignatus character*)datum,
+               (integer)mensura, &l, &a)
+        || l     <= 0 || a <= 0)
+    {
+        redde FALSUM;
+    }
+    *latitudo = (i32)l;
+    *altitudo = (i32)a;
+    redde VERUM;
 }

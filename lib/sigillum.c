@@ -218,6 +218,51 @@ sigillum_hex (
     effusio[SIGILLUM_OCTETI * 2] = '\0';
 }
 
+Sigillum
+sigillum_hmac (
+    constans vacuum* clavis,
+     memoriae_index  mensura_clavis,
+    constans vacuum* datum,
+     memoriae_index  mensura_datorum)
+{
+    /* RFC 2104: K0 = clavis (aut H(clavis) si longior bloco) zeris
+     * ad LXIV impleta; H((K0^opad) || H((K0^ipad) || datum)) */
+    SigillumContextus ctx;
+             Sigillum interius;
+                   i8 bloccus[LXIV];
+                   i8 pad[LXIV];
+                  i32 k;
+
+    memset(bloccus, 0, magnitudo(bloccus));
+    si (mensura_clavis > (memoriae_index)LXIV)
+    {
+        Sigillum h = sigillum_computare(clavis, mensura_clavis);
+
+        memcpy(bloccus, h.octeti, (memoriae_index)SIGILLUM_OCTETI);
+    }
+    alioquin si (mensura_clavis > 0)
+    {
+        memcpy(bloccus, clavis, mensura_clavis);
+    }
+    per (k = ZEPHYRUM; k < LXIV; k++)
+    {
+        pad[k] = (i8)(bloccus[k] ^ 0x36u);
+    }
+    sigillum_incipere(&ctx);
+    sigillum_addere(&ctx, pad, (memoriae_index)LXIV);
+    sigillum_addere(&ctx, datum, mensura_datorum);
+    interius = sigillum_finire(&ctx);
+    per (k = ZEPHYRUM; k < LXIV; k++)
+    {
+        pad[k] = (i8)(bloccus[k] ^ 0x5cu);
+    }
+    sigillum_incipere(&ctx);
+    sigillum_addere(&ctx, pad, (memoriae_index)LXIV);
+    sigillum_addere(&ctx, interius.octeti,
+        (memoriae_index)SIGILLUM_OCTETI);
+    redde sigillum_finire(&ctx);
+}
+
 b32
 sigillum_aequale (
     constans Sigillum* a,

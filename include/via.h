@@ -19,17 +19,19 @@
  * - Sequitur conventiones Unix pro casibus limitum
  * - API simplex et clara
  *
- * EXEMPLA:
- *   chorda partes[] = {
- *       chorda_ex_literis("/usr", p),
- *       chorda_ex_literis("local", p),
- *       chorda_ex_literis("bin", p)
- *   };
- *	 chorda via = via_inugere(partes, III, p);
- *	 // via = "/usr/local/bin"
+ * EXEMPLA (C89: initiator aggregati constantes solas accipit, ergo
+ * partes tempore cursus implentur):
+ *   chorda partes[III];
+ *   chorda via;
+ *   chorda dir;
+ *   chorda nom;
  *
- *	 chorda dir = via_directorium(via, p); // "/usr/local"
- *	 chorda nom = via_nomen(via, p);
+ *   partes[ZEPHYRUM] = chorda_ex_literis("/usr", p);
+ *   partes[I]        = chorda_ex_literis("local", p);
+ *   partes[II]       = chorda_ex_literis("bin", p);
+ *   via = via_iungere(partes, III, p);     (via = "/usr/local/bin")
+ *   dir = via_directorium(via, p);         (dir = "/usr/local")
+ *   nom = via_nomen(via, p);               (nom = "bin")
  *
  * ==================================================== */
 

@@ -116,3 +116,21 @@ obiectum_legere(sha) is self-proving: obiectum_legere recomputes
 the sha of what it reads, so a wrong sha from the walk either
 fails the lookup or the content mismatches disk. The chain IS the
 oracle.
+
+## 2026-09-24 — probatio_git: oracle is `git show HEAD:…`, not the disk
+
+The byte oracle for `git_massam_per_viam(HEAD, "include/latina.h")` was
+the working-tree file, justified in the test header by "latina.h never
+changes". The first commit that changed latina.h (a one-line description
+comment) was refused by its own pre-commit gate: the gate runs BEFORE the
+commit, so the disk is by definition ahead of HEAD for every file being
+committed. The comment had predicted it would "cry honestly" — it did,
+but crying made latina.h uncommittable. The oracle is now the git CLI
+(`processus_exsequi` of `git show HEAD:include/latina.h`): still external
+to the library under test, and independent of the working tree. Plant: the
+library returning the blob one byte short → both byte assertions red.
+(Postscript, same day: the latina.h description line itself was then
+dropped from the commit — silva embeds a generated copy of latina.h,
+`silva/fontes/silva_latina_datum.c`, pinned byte-equal to the disk by
+probatio_silva_contextus, so any latina.h edit means regenerating that
+copy inside frozen silva. The oracle fix above stands on its own.)

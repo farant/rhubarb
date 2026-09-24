@@ -18,3 +18,15 @@ errors on this lib's first compile because its praeparatio predates
 the new header (new-header judge-miss — known park, second and third
 firings today). censor + examen.sh + clang triple-oracle settled it
 in one command each.
+
+## 2026-09-24 — `sigillum_hmac` (lapide feature-requests/005)
+
+HMAC-SHA256 per RFC 2104 on the existing streaming SHA-256: key longer
+than the 64-byte block is hashed first, then zero-padded; inner pad 0x36,
+outer 0x5c. Expected values in the test were GENERATED with Python's
+`hmac` module (RFC 4231 cases 1, 2, 3, 6 + empty key/message + a key of
+exactly 64 bytes), never typed. Plant: the long-key branch disabled (key
+truncated to 64 instead of hashed) → exactly one case red (RFC case 6),
+which is the case that branch exists for. The word `hmac` joined `sha`,
+`sha1`, `sha256` in `oratio/glossarium.stml` as a permitted technical
+term (the tester searched for exactly that word).

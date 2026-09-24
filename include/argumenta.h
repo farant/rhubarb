@@ -186,8 +186,8 @@ argumenta_ponere_descriptionem (
  * exemplum: linea exempli (sine titulo "EXEMPLUM:")
  *
  * EXEMPLUM:
- *   argumenta_ponere_exemplum(p, "mytool -v input.txt");
- *   argumenta_ponere_exemplum(p, "mytool --output=out.txt input.txt");
+ *   argumenta_addere_exemplum(p, "mytool -v input.txt");
+ *   argumenta_addere_exemplum(p, "mytool --output=out.txt input.txt");
  */
 vacuum
 argumenta_addere_exemplum (

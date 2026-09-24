@@ -15,6 +15,9 @@
  * USUS:
  *   constans character* argumenta[] = {
  *       "ssh", "-o", "BatchMode=yes", "usor@hospes", "uptime", NIHIL };
+ *   (C89: hoc initiator valet QUIA omnia elementa literalia sunt;
+ *   variabilis inter ea recusatur - tunc tabulam tempore cursus
+ *   imple: argumenta[III] = hospes; ... vide briar -dialectus)
  *   ProcessusResultus r = processus_exsequi(argumenta, 5000, piscina);
  *   si (r.successus && r.codex_exitus == 0)
  *   {

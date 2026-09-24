@@ -381,6 +381,7 @@
   <vocabulum lemma="sha" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="sha1" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="sha256" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="hmac" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 2104; sigillum_hmac)"/>
   <vocabulum lemma="stbi" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="macho" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="sqlite" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>

@@ -19,6 +19,24 @@ _proba_vector (constans character* titulus, constans character* nuntius,
     CREDO_VERUM (strcmp(hex, speratum) == ZEPHYRUM);
 }
 
+interior vacuum
+_proba_hmac (
+    constans character* titulus,
+    constans character* clavis,
+                   i32  mensura_clavis,
+    constans character* datum,
+                   i32  mensura_datorum,
+    constans character* speratum)
+{
+     Sigillum s = sigillum_hmac(clavis, (memoriae_index)mensura_clavis,
+         datum, (memoriae_index)mensura_datorum);
+    character hex[SIGILLUM_HEX_MENSURA];
+
+    sigillum_hex(&s, hex);
+    imprimere("  %s\n", titulus);
+    CREDO_VERUM (strcmp(hex, speratum) == ZEPHYRUM);
+}
+
 s32 principale (vacuum)
 {
         b32  praeteritus;
@@ -115,6 +133,73 @@ s32 principale (vacuum)
         CREDO_VERUM (strcmp(hex,
             "cdc76e5c9914fb9281a1c7e284d73e67"
             "f1809a48a497200e046d39ccc7112cd0") == ZEPHYRUM);
+    }
+
+
+    /* ==================================================
+     * PROBARE: HMAC-SHA256 - speranda GENERATA per Python hmac
+     * (RFC 4231 casus + margines clavis); lapide feature-requests/005
+     * ================================================== */
+
+    {
+        imprimere("\n--- Probans HMAC-SHA256 ---\n");
+        _proba_hmac("RFC 4231 casus 1",
+            "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b"
+            "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b", 20,
+            "\x48\x69\x20\x54\x68\x65\x72\x65", 8,
+            "b0344c61d8db38535ca8afceaf0bf12b"
+            "881dc200c9833da726e9376c2e32cff7");
+        _proba_hmac("RFC 4231 casus 2",
+            "\x4a\x65\x66\x65", 4,
+            "\x77\x68\x61\x74\x20\x64\x6f\x20\x79\x61\x20\x77"
+            "\x61\x6e\x74\x20\x66\x6f\x72\x20\x6e\x6f\x74\x68"
+            "\x69\x6e\x67\x3f", 28,
+            "5bdcc146bf60754e6a042426089575c7"
+            "5a003f089d2739839dec58b964ec3843");
+        _proba_hmac("RFC 4231 casus 3",
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa", 20,
+            "\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd"
+            "\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd"
+            "\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd"
+            "\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd"
+            "\xdd\xdd", 50,
+            "773ea91e36800e46854db8ebd09181a7"
+            "2959098b3ef8c122d9635514ced565fe");
+        _proba_hmac("RFC 4231 casus 6: clavis longior bloco",
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
+            "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa", 131,
+            "\x54\x65\x73\x74\x20\x55\x73\x69\x6e\x67\x20\x4c"
+            "\x61\x72\x67\x65\x72\x20\x54\x68\x61\x6e\x20\x42"
+            "\x6c\x6f\x63\x6b\x2d\x53\x69\x7a\x65\x20\x4b\x65"
+            "\x79\x20\x2d\x20\x48\x61\x73\x68\x20\x4b\x65\x79"
+            "\x20\x46\x69\x72\x73\x74", 54,
+            "60e431591ee0b67f0d8a26aacbf5b77f"
+            "8e0bc6213728c5140546040f0ee37f54");
+        _proba_hmac("clavis vacua, datum vacuum",
+            "", 0,
+            "", 0,
+            "b613679a0814d9ec772f95d778c35fc5"
+            "ff1697c493715653c6c712144292c5ad");
+        _proba_hmac("clavis LXIV octetorum exacte",
+            "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b"
+            "\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17"
+            "\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20\x21\x22\x23"
+            "\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f"
+            "\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b"
+            "\x3c\x3d\x3e\x3f", 64,
+            "\x61\x62\x63", 3,
+            "6ab541b4869dca71c4ca11d8bb1b0253"
+            "3b789a557583161429292c7404bc21f6");
     }
 
 

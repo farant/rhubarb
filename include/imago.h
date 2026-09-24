@@ -60,4 +60,23 @@ imago_caricare_ex_memoria (
             i32  mensura,
         Piscina* piscina);
 
+/*
+ * imago_mensuras_ex_file / _ex_memoria - latitudo et altitudo SINE
+ * decodificatione: caput solum legitur (PNG IHDR, JPEG SOF...), nulla
+ * pixela allocantur. FALSUM si file abest aut forma ignota (tunc
+ * *latitudo = *altitudo = 0).
+ */
+b32
+imago_mensuras_ex_file (
+    constans character* via,
+                   i32* latitudo,
+                   i32* altitudo);
+
+b32
+imago_mensuras_ex_memoria (
+    constans i8* datum,
+            i32  mensura,
+            i32* latitudo,
+            i32* altitudo);
+
 #endif /* IMAGO_H */

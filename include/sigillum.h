@@ -65,6 +65,16 @@ sigillum_hex (
     constans Sigillum* sigillum,
             character* effusio);
 
+/* HMAC-SHA256 (RFC 2104 / 4231): clavis quaevis longitudinis (longior
+ * LXIV octetis prius sigillatur). E.g. subscriptio petitionum AWS
+ * SigV4. */
+Sigillum
+sigillum_hmac (
+    constans vacuum* clavis,
+     memoriae_index  mensura_clavis,
+    constans vacuum* datum,
+     memoriae_index  mensura_datorum);
+
 b32
 sigillum_aequale (
     constans Sigillum* a,

@@ -8,9 +8,11 @@
  * (sha recomputatum in git_obiectum_legere), ergo quisque
  * transitus = probatio SHA-1 contra obiecta vera.
  *
- * NB: latina.h electa quia numquam mutatur - discus == CAPUT
- * semper. Si umquam mutabitur in arbore laborante immunda,
- * assertio octetorum honeste clamabit.
+ * ORACULUM = 'git show HEAD:include/latina.h' (git ipsum, externum),
+ * NON discus. Olim discus: "latina.h numquam mutatur, ergo discus ==
+ * CAPUT" - sed porta ANTE commissionem currit, ergo omnis mutatio
+ * latina.h (2026-09-24: linea descriptionis) portam fregit et
+ * committi non poterat. Arbor laborans nihil ad caput pertinet.
  */
 
 #include "latina.h"
@@ -21,6 +23,7 @@
 #include "filum.h"
 #include "git.h"
 #include "credo.h"
+#include "processus.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -28,6 +31,30 @@
 interior b32
 _est_sha_hex (
     constans character* sha);
+
+/* massa include/latina.h in CAPITE per git ipsum (oraculum externum);
+ * chorda vacua si git deficit */
+interior chorda
+_massa_per_git (
+    Piscina* piscina)
+{
+     constans character* argumenta[IV];
+      ProcessusResultus  r;
+                 chorda  vacua;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+    argumenta[ZEPHYRUM] = "git";
+    argumenta[I] = "show";
+    argumenta[II] = "HEAD:include/latina.h";
+    argumenta[III] = NIHIL;
+    r = processus_exsequi(argumenta, (i32)10000, piscina);
+    si (!r.successus || r.codex_exitus != ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    redde r.effusio;
+}
 
 interior b32
 _est_sha_hex (
@@ -224,8 +251,7 @@ s32 principale (vacuum)
            b32 inventum = FALSUM;
         chorda massa = git_massam_per_viam(repositorium, caput,
             "include/latina.h", piscina, &inventum);
-        chorda discus = filum_legere_totum("include/latina.h",
-            piscina);
+        chorda discus = _massa_per_git(piscina);
 
         CREDO_VERUM(inventum);
         CREDO_VERUM(massa.mensura > (i32)0);
@@ -289,7 +315,7 @@ s32 principale (vacuum)
             piscina);
         CREDO_VERUM(obiectum.successus);
         CREDO_VERUM(obiectum.genus == GIT_OBIECTUM_MASSA);
-        discus = filum_legere_totum("include/latina.h", piscina);
+        discus = _massa_per_git(piscina);
         CREDO_AEQUALIS_I32(obiectum.datum.mensura, discus.mensura);
         CREDO_VERUM(obiectum.datum.mensura == discus.mensura
             && memcmp(obiectum.datum.datum, discus.datum,
