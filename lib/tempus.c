@@ -1,5 +1,6 @@
 #include "tempus.h"
 #include "piscina.h"
+#include "sors.h"
 #include <math.h>
 #include <string.h>
 
@@ -57,7 +58,8 @@ tempus_nunc (
     }
 
     currens = fenestra_tempus_obtinere_pulsus();
-    redde (f64)(currens - g_horologium.pulsus_initii) / g_horologium.frequentia;
+    redde (f64)(currens - g_horologium.pulsus_initii)
+        / g_horologium.frequentia;
 }
 
 f64
@@ -91,16 +93,20 @@ tempus_quadrum (
     elapsum = currens - g_horologium.pulsus_ultimi_quadri;
 
     g_horologium.delta_tempus = (f64)elapsum / g_horologium.frequentia;
-    g_horologium.tempus_totale = (f64)(currens - g_horologium.pulsus_initii) / g_horologium.frequentia;
-    g_horologium.pulsus_ultimi_quadri = currens;
-    g_horologium.pulsus_currentis = currens;
+    g_horologium.tempus_totale = (f64)(currens
+        - g_horologium.pulsus_initii) / g_horologium.frequentia;
+    g_horologium.pulsus_ultimi_quadri  = currens;
+    g_horologium.pulsus_currentis      = currens;
 
     /* Actualizare statisticas quadri */
     g_statisticae.numerus_quadrorum++;
-    g_statisticae.tempora_quadrorum[g_statisticae.index_temporis_quadri] = g_horologium.delta_tempus;
-    g_statisticae.index_temporis_quadri = (g_statisticae.index_temporis_quadri + I) % CXX;
+    g_statisticae.tempora_quadrorum[g_statisticae.index_temporis_quadri] =
+        g_horologium.delta_tempus;
+    g_statisticae.index_temporis_quadri =
+        (g_statisticae.index_temporis_quadri + I) % CXX;
 
-    si (g_horologium.delta_tempus < g_statisticae.tempus_minimum_quadri && g_horologium.delta_tempus > 0.0)
+    si (g_horologium.delta_tempus < g_statisticae.tempus_minimum_quadri
+        && g_horologium.delta_tempus > 0.0)
     {
         g_statisticae.tempus_minimum_quadri = g_horologium.delta_tempus;
     }
@@ -111,13 +117,17 @@ tempus_quadrum (
 
     /* Calculare medium quadrorum per secundum super ultimos 120 quadros */
     summa = 0.0;
-    numerus = g_statisticae.numerus_quadrorum < CXX ? g_statisticae.numerus_quadrorum : CXX;
+    numerus = g_statisticae.numerus_quadrorum
+        < CXX ? g_statisticae.numerus_quadrorum : CXX;
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         summa += g_statisticae.tempora_quadrorum[i];
     }
-    g_statisticae.quadra_media_per_secundum = numerus > ZEPHYRUM ? (f64)numerus / summa : 0.0;
-    g_statisticae.quadra_currentia_per_secundum = g_horologium.delta_tempus > 0.0 ? 1.0 / g_horologium.delta_tempus : 0.0;
+    g_statisticae.quadra_media_per_secundum = numerus
+        > ZEPHYRUM ? (f64)numerus / summa : 0.0;
+    g_statisticae.quadra_currentia_per_secundum =
+        g_horologium.delta_tempus > 0.0 ? 1.0
+            / g_horologium.delta_tempus : 0.0;
 }
 
 Tempus*
@@ -169,9 +179,11 @@ tempus_exspectare_quadrum (
         redde;
     }
 
-    tempus_destinatum_quadri = 1.0 / g_statisticae.quadra_destinata_per_secundum;
+    tempus_destinatum_quadri = 1.0
+        / g_statisticae.quadra_destinata_per_secundum;
     currens = fenestra_tempus_obtinere_pulsus();
-    elapsum = (f64)(currens - g_horologium.pulsus_ultimi_quadri) / g_horologium.frequentia;
+    elapsum = (f64)(currens - g_horologium.pulsus_ultimi_quadri)
+        / g_horologium.frequentia;
     remanens = tempus_destinatum_quadri - elapsum;
 
     /* Si habemus plus quam 2ms remanens, dormire pro maior parte eius */
@@ -185,7 +197,8 @@ tempus_exspectare_quadrum (
         }
 
         currens = fenestra_tempus_obtinere_pulsus();
-        elapsum = (f64)(currens - g_horologium.pulsus_ultimi_quadri) / g_horologium.frequentia;
+        elapsum = (f64)(currens - g_horologium.pulsus_ultimi_quadri)
+            / g_horologium.frequentia;
         remanens = tempus_destinatum_quadri - elapsum;
     }
 
@@ -195,7 +208,8 @@ tempus_exspectare_quadrum (
         /* Parvum dormire ut vitare consumere CPU etiam in fine */
         fenestra_dormire(C);  /* Dormire pro 100 microsecundae */
         currens = fenestra_tempus_obtinere_pulsus();
-        elapsum = (f64)(currens - g_horologium.pulsus_ultimi_quadri) / g_horologium.frequentia;
+        elapsum = (f64)(currens - g_horologium.pulsus_ultimi_quadri)
+            / g_horologium.frequentia;
     }
 }
 
@@ -288,12 +302,13 @@ tempus_actualizare (
         redde;
     }
 
-    currens = fenestra_tempus_obtinere_pulsus();
-    elapsum = currens - tempus->pulsus_ultimi_quadri;
-    tempus->delta_tempus = (f64)elapsum / tempus->frequentia;
-    tempus->tempus_totale = (f64)(currens - tempus->pulsus_initii) / tempus->frequentia;
-    tempus->pulsus_ultimi_quadri = currens;
-    tempus->pulsus_currentis = currens;
+    currens               = fenestra_tempus_obtinere_pulsus();
+    elapsum               = currens - tempus->pulsus_ultimi_quadri;
+    tempus->delta_tempus  = (f64)elapsum / tempus->frequentia;
+    tempus->tempus_totale = (f64)(currens - tempus->pulsus_initii)
+        / tempus->frequentia;
+    tempus->pulsus_ultimi_quadri  = currens;
+    tempus->pulsus_currentis      = currens;
 }
 
 
@@ -350,7 +365,8 @@ f32
 lenire_cubicus_ingressus_egressus (
     f32 t)
 {
-    redde t < 0.5f ? 4.0f * t * t * t : (t - 1.0f) * (2.0f * t - 2.0f) * (2.0f * t - 2.0f) + 1.0f;
+    redde t < 0.5f ? 4.0f * t * t * t : (t - 1.0f) * (2.0f * t
+        - 2.0f) * (2.0f * t - 2.0f) + 1.0f;
 }
 
 f32
@@ -429,9 +445,11 @@ lenire_retro_ingressus_egressus (
 
     si (t < 0.5f)
     {
-        redde ((f32)pow(2.0 * t, 2.0) * ((c2 + 1.0f) * 2.0f * t - c2)) / 2.0f;
+        redde ((f32)pow(2.0 * t, 2.0) * ((c2 + 1.0f) * 2.0f * t - c2))
+            / 2.0f;
     }
-    redde ((f32)pow(2.0 * t - 2.0, 2.0) * ((c2 + 1.0f) * (t * 2.0f - 2.0f) + c2) + 2.0f) / 2.0f;
+    redde ((f32)pow(2.0 * t - 2.0, 2.0) * ((c2 + 1.0f) * (t * 2.0f
+        - 2.0f) + c2) + 2.0f) / 2.0f;
 }
 
 f32
@@ -442,7 +460,8 @@ lenire_elasticus_ingressus (
 
     si (t == 0.0f) redde 0.0f;
     si (t == 1.0f) redde 1.0f;
-    redde -(f32)pow(2.0, 10.0 * t - 10.0) * (f32)sin((t * 10.0f - 10.75f) * c4);
+    redde -(f32)pow(2.0, 10.0 * t - 10.0) * (f32)sin((t * 10.0f
+        - 10.75f) * c4);
 }
 
 f32
@@ -453,7 +472,8 @@ lenire_elasticus_egressus (
 
     si (t == 0.0f) redde 0.0f;
     si (t == 1.0f) redde 1.0f;
-    redde (f32)pow(2.0, -10.0 * t) * (f32)sin((t * 10.0f - 0.75f) * c4) + 1.0f;
+    redde (f32)pow(2.0, -10.0 * t) * (f32)sin((t * 10.0f - 0.75f) * c4)
+        + 1.0f;
 }
 
 f32
@@ -467,9 +487,11 @@ lenire_elasticus_ingressus_egressus (
 
     si (t < 0.5f)
     {
-        redde -((f32)pow(2.0, 20.0 * t - 10.0) * (f32)sin((20.0f * t - 11.125f) * c5)) / 2.0f;
+        redde -((f32)pow(2.0, 20.0 * t - 10.0) * (f32)sin((20.0f * t
+            - 11.125f) * c5)) / 2.0f;
     }
-    redde ((f32)pow(2.0, -20.0 * t + 10.0) * (f32)sin((20.0f * t - 11.125f) * c5)) / 2.0f + 1.0f;
+    redde ((f32)pow(2.0, -20.0 * t + 10.0) * (f32)sin((20.0f * t
+        - 11.125f) * c5)) / 2.0f + 1.0f;
 }
 
 f32
@@ -513,7 +535,8 @@ lenire_resiliens_ingressus_egressus (
 {
     si (t < 0.5f)
     {
-        redde (1.0f - lenire_resiliens_egressus(1.0f - 2.0f * t)) / 2.0f;
+        redde (1.0f - lenire_resiliens_egressus(1.0f - 2.0f * t))
+            / 2.0f;
     }
     redde (1.0f + lenire_resiliens_egressus(2.0f * t - 1.0f)) / 2.0f;
 }
@@ -561,7 +584,8 @@ elastrum_ad (
     }
 
     vis = rigiditas * (destinatum - currens);
-    *velocitas = *velocitas * (1.0f - damnum * delta_tempus) + vis * delta_tempus;
+    *velocitas = *velocitas * (1.0f - damnum * delta_tempus)
+        + vis * delta_tempus;
     redde currens + *velocitas * delta_tempus;
 }
 
@@ -610,7 +634,8 @@ gradus_lenis (
 {
     f32 t;
 
-    t = cohibere((x - limen_infimum) / (limen_supremum - limen_infimum), 0.0f, 1.0f);
+    t = cohibere((x - limen_infimum) / (limen_supremum - limen_infimum),
+        0.0f, 1.0f);
     redde t * t * (3.0f - 2.0f * t);
 }
 
@@ -699,19 +724,43 @@ unda_quadratus (
     f32 frequentia,
     f32 amplitudo)
 {
-    redde (f32)fmod(t * frequentia, 1.0) < 0.5f ? amplitudo : -amplitudo;
+    redde (f32)fmod(t * frequentia, 1.0)
+        < 0.5f ? amplitudo : -amplitudo;
 }
 
+/* Tumultus 'albus' per SITULAS temporis: situla = floor(t *
+ * 12345.6789) (~81 us), valor ex sors (situla = semen, series 0) in
+ * [-1, 1) - intra situlam constans, trans situlas independens.
+ * Olim LCG in s32 SIGNATO (redundantia = mores indefiniti) et
+ * conversio f32 -> s32 sine tecto (t > ~174000 s indefinita): nunc
+ * NaN -> situla 0, magnitudo tecto 4e18 limitatur (migratio ad sors,
+ * 2026-09-24). */
 f32
 unda_tumultus (
     f32 t)
 {
-    s32 semen;
+    Sors s;
+     f64 locus = floor((f64)t * 12345.6789);
+     s64 situla;
 
-    /* Simplex tumultus pseudo-aleatorius basatus in tempore */
-    semen = (s32)(t * 12345.6789);
-    semen = (semen * 1103515245 + 12345) & 0x7fffffff;
-    redde ((f32)semen / (f32)0x7fffffff) * 2.0f - 1.0f;
+    si (locus != locus)
+    {
+        situla = ZEPHYRUM;
+    }
+    alioquin si (locus > 4.0e18)
+    {
+        situla = (s64)4.0e18;
+    }
+    alioquin si (locus < -4.0e18)
+    {
+        situla = -(s64)4.0e18;
+    }
+    alioquin
+    {
+        situla = (s64)locus;
+    }
+    sors_seminare(&s, (i64)situla, (i64)ZEPHYRUM);
+    redde sors_f32(&s) * 2.0f - 1.0f;
 }
 
 
