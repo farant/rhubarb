@@ -10,6 +10,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "flatura.h"
+#include "sors.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,15 +21,6 @@
 /* ========================================================================
  * DATUM GENERATIO
  * ======================================================================== */
-
-/* Simple pseudo-random generator (LCG) */
-interior i32
-_prng_proximus (
-    i32* semen)
-{
-    *semen = (*semen * 1103515245 + 12345) & 0x7FFFFFFF;
-    redde *semen;
-}
 
 /* Generare datum simile texto reali (variabilis patterns) */
 interior vacuum
@@ -67,13 +59,13 @@ generare_datum_textuale (
     i32 num_verba;
     i32 num_punct;
     i32 positus;
-    i32 semen;
+   Sors fortuna;
     i32 verbum_count;
 
-    num_verba     = (i32)(sizeof(verba) / sizeof(verba[0]));
-    num_punct     = (i32)(sizeof(punctuatio) / sizeof(punctuatio[0]));
-    positus       = 0;
-    semen         = 12345;
+    num_verba  = (i32)(sizeof(verba) / sizeof(verba[0]));
+    num_punct  = (i32)(sizeof(punctuatio) / sizeof(punctuatio[0]));
+    positus    = 0;
+    sors_seminare(&fortuna, (i64)12345, (i64)ZEPHYRUM);
     verbum_count  = 0;
 
     dum (positus < mensura)
@@ -82,16 +74,16 @@ generare_datum_textuale (
                        i32  len;
 
         /* Selectio verbum vel punctuatio */
-        si (verbum_count > 0 && (_prng_proximus(&semen) % XII) == 0)
+        si (verbum_count > 0 && sors_intra(&fortuna, XII) == 0)
         {
             /* Punctuatio */
-            s = punctuatio[_prng_proximus(&semen) % num_punct];
-            verbum_count = 0;
+            s             = punctuatio[sors_intra(&fortuna, num_punct)];
+            verbum_count  = 0;
         }
         alioquin
         {
             /* Verbum */
-            s = verba[_prng_proximus(&semen) % num_verba];
+            s = verba[sors_intra(&fortuna, num_verba)];
             verbum_count++;
         }
 

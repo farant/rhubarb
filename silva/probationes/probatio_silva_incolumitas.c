@@ -32,6 +32,7 @@
 #include "silva_parsare.h"
 #include "silva_scribere.h"
 #include "credo.h"
+#include "sors.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -66,20 +67,9 @@ hic_manens constans GrammaticaProbanda GRAMMATICAE[] = {
 #define ITERATIONES 200
 #define MENSURA_MAXIMA 512
 
-/* xorshift32 - deterministicum (semen fixum) */
-interior i32 semen_globale = 0x5EEDC0DEu;
-
-interior i32
-_fortuitum (vacuum)
-{
-    i32 x = semen_globale;
-
-    x              ^= x << 13;
-    x              ^= x >> 17;
-    x              ^= x << 5;
-    semen_globale  = x;
-    redde x;
-}
+/* rivus unus deterministicus (sors, semen fixum 0x5EEDC0DE) - in
+ * principale seminatur; ordo vocationum rivum definit */
+interior Sors fortuna_globalis;
 
 /* Buffonem implere octetis fortuitis */
 interior i32
@@ -87,12 +77,12 @@ _buffo_crudus (
      i8* buffo,
     i32  mensura_maxima)
 {
-    i32 mensura = _fortuitum() % (mensura_maxima + I);
+    i32 mensura = sors_intra(&fortuna_globalis, mensura_maxima + I);
     i32 i;
 
     per (i = ZEPHYRUM; i < mensura; i++)
     {
-        buffo[i] = (i8)(_fortuitum() & 0xFFu);
+        buffo[i] = (i8)sors_intra(&fortuna_globalis, CCLVI);
     }
     redde mensura;
 }
@@ -106,12 +96,14 @@ _buffo_c_formis (
     hic_manens constans character MATERIA[] =
         "abcdefgXYZ_0123456789 \t\n\r\\\"'#(){}[];,.*+-/<>=!&|?:";
     i32 numerus_materiae  = (i32)(magnitudo(MATERIA) - I);
-    i32 mensura           = _fortuitum() % (mensura_maxima + I);
+    i32 mensura           = sors_intra(&fortuna_globalis,
+        mensura_maxima + I);
     i32 i;
 
     per (i = ZEPHYRUM; i < mensura; i++)
     {
-        buffo[i] = (i8)MATERIA[_fortuitum() % numerus_materiae];
+        buffo[i] = (i8)MATERIA[sors_intra(&fortuna_globalis,
+            numerus_materiae)];
     }
     redde mensura;
 }
@@ -218,6 +210,7 @@ s32 principale (vacuum)
         redde I;
     }
     credo_aperire(piscina);
+    sors_seminare(&fortuna_globalis, (i64)0x5EEDC0DEu, (i64)ZEPHYRUM);
 
     imprimere("\n--- Probans incolumitatem (fuzzing deterministicum) ---\n");
 

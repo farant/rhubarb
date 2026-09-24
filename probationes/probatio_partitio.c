@@ -10,33 +10,26 @@
 #include "chorda.h"
 #include "partitio.h"
 #include "credo.h"
+#include "sors.h"
 #include <stdio.h>
 #include <string.h>
 
-/* generator congruentialis linearis - seminatus, deterministicus */
-interior i32
-_fortuitum (
-    i32* status)
-{
-    *status = *status * 1103515245U + 12345U;
-    redde (*status >> XVI) & 0x7FFFU;
-}
-
-/* partitio fortuita: notae in 0..modulus-1, modulus in 1..4 */
+/* partitio fortuita: notae in 0..modulus-1, modulus in 1..4 (sors:
+ * rivus seminatus, determinatus) */
 interior Partitio*
 _partitio_fortuita (
      Piscina* piscina,
-         i32* status,
+        Sors* s,
          i32  numerus)
 {
     i32 notae[XVI];
     i32 modulus;
     i32 i;
 
-    modulus = I + _fortuitum(status) % IV;
+    modulus = I + sors_intra(s, IV);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        notae[i] = _fortuitum(status) % modulus;
+        notae[i] = sors_intra(s, modulus);
     }
     redde partitio_ex_notis(piscina, numerus, notae);
 }
@@ -299,15 +292,16 @@ principale (vacuum)
      * ================================================== */
 
     {
-        i32 status                  = XLII;
-        i32 familia;
-        i32 paria                    = ZEPHYRUM;
-        i32 violationes_infimi       = ZEPHYRUM;
-        i32 violationes_supremi      = ZEPHYRUM;
-        i32 violationes_ordinis      = ZEPHYRUM;
-        i32 violationes_reticuli     = ZEPHYRUM;
-        i32 violationes_latitudinis  = ZEPHYRUM;
+        Sors s;
+         i32 familia;
+         i32 paria                    = ZEPHYRUM;
+         i32 violationes_infimi       = ZEPHYRUM;
+         i32 violationes_supremi      = ZEPHYRUM;
+         i32 violationes_ordinis      = ZEPHYRUM;
+         i32 violationes_reticuli     = ZEPHYRUM;
+         i32 violationes_latitudinis  = ZEPHYRUM;
 
+        sors_seminare(&s, (i64)XLII, (i64)ZEPHYRUM);
         imprimere("\n--- Probans leges super familias fortuitas ---\n");
         per (familia = ZEPHYRUM; familia < CC; familia++)
         {
@@ -320,10 +314,10 @@ principale (vacuum)
                            i32  m;
 
             nota  = piscina_notare(piscina);
-            k     = II + _fortuitum(&status) % XI;
+            k     = II + sors_intra(&s, XI);
             per (i = ZEPHYRUM; i < k; i++)
             {
-                partes[i] = _partitio_fortuita(piscina, &status, VII);
+                partes[i] = _partitio_fortuita(piscina, &s, VII);
             }
             per (i = ZEPHYRUM; i < k; i++)
             {

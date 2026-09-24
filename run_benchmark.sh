@@ -20,6 +20,7 @@ declare -a INCLUDE_FLAGS=(
 declare -a SOURCE_FILES=(
     "lib/piscina.c"
     "lib/flatura.c"
+    "lib/sors.c"
 )
 
 # Build directory
@@ -44,11 +45,15 @@ echo ""
 mkdir -p "$BUILD_DIR"
 mkdir -p bin
 
-# Compile source files
+# Compile source files (obiecta ex SOURCE_FILES derivata - index unus:
+# olim nexus binaria manu nominabat, et fons novus in indice sine
+# nexu 'Undefined symbols' dabat)
 echo -e "${BLUE}Compiling...${RESET}"
+declare -a OBJ_FILES=()
 for src_file in "${SOURCE_FILES[@]}"; do
     obj_name=$(basename "$src_file" .c).o
     obj_file="$BUILD_DIR/$obj_name"
+    OBJ_FILES+=("$obj_file")
 
     if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$src_file" ]; then
         echo "  $src_file"
@@ -63,8 +68,7 @@ done
 echo "  probationes/probatio_flatura_benchmark.c"
 if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} \
     probationes/probatio_flatura_benchmark.c \
-    $BUILD_DIR/piscina.o \
-    $BUILD_DIR/flatura.o \
+    "${OBJ_FILES[@]}" \
     -o bin/probatio_flatura_benchmark 2>&1; then
     echo -e "${RED}✗ FAILED: benchmark compilation${RESET}"
     exit 1

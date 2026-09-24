@@ -77,3 +77,20 @@ PROMOTED to an opus, the bug filed. Repro = re-apply the crusta half of the
 migration (saved: crusta/build/crusta_migratio_sors.patch, input
 crusta/build/heredoc7_semen4.sh) and run ./crusta/compile_probationes.sh
 totalitas - deterministic.
+
+## 2026-09-24 — rows partitio, flatura_benchmark, silva_incolumitas
+
+- partitio: `_partitio_fortuita` takes a `Sors*`; modulus/notae/k via
+  `sors_intra` (unbiased; the old `% n` on a 15-bit LCG output was biased),
+  same seed XLII. All 200 random families still satisfy every lattice law.
+- flatura_benchmark: `sors_intra(&fortuna, n)` for word/punctuation choice,
+  seed 12345 (the local is `fortuna` - the loop already has a string `s`).
+  Its corpus is NEW, so MB/s numbers before and after are NOT comparable.
+  The root runner SKIPS *_benchmark.c (run via ./run_benchmark.sh); that
+  script's link line hard-coded piscina.o + flatura.o - adding lib/sors.c to
+  SOURCE_FILES gave "Undefined symbols", so the link objects are now DERIVED
+  from SOURCE_FILES (one list, not two).
+- silva_incolumitas: global xorshift32 -> file-level `Sors fortuna_globalis`
+  seeded once in principale with the same 0x5EEDC0DE; the three `% n` draws
+  -> `sors_intra`. "sors" added to silva's RADIX_FONTES. 200/200 faithful in
+  both circuits.

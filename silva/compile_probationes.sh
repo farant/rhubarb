@@ -59,6 +59,7 @@ declare -a INCLUDE_FLAGS=(
 # amalgamation like the rest); the generator (instrumenta) also uses stml.
 declare -a RADIX_FONTES=(
     "piscina"
+    "sors"
     "chorda"
     "chorda_aedificator"
     "xar"
