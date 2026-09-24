@@ -42,6 +42,7 @@
 #include "xar.h"
 #include "briar_amalgama.h"
 #include "briar_bibliotheca.h"
+#include "briar_dialectus.h"
 #include "briar_facies.h"
 #include "briar_fasciculum.h"
 #include "briar_arbor.h"
@@ -157,6 +158,8 @@ _auxilium (vacuum)
         " (sine plagula)\n"
         "  -bibliotheca <nomen>  caput bibliothecae imprimere;"
         " -fons = et fontes\n"
+        "  -dialectus  charta dialecti: typi, vexilla, verba latina.h,"
+        " laquei C89\n"
         "  -f <radix>  arbor rhubarb (alioquin ascensus, alioquin"
         " corpus infixum)\n"
         "  --          post plagulam: vexilla programmati relinquere\n",
@@ -321,6 +324,32 @@ _plagulam_ostendere (
         fputc('\n', stdout);
     }
     redde VERUM;
+}
+
+/* -dialectus: charta dialecti ex latina.h CORPORIS et vexillis quae
+ * briar clang tradit (derivata - non putrescit) */
+interior s32
+_dialectum_ostendere (
+                Piscina* piscina,
+     constans SilexFons* fons,
+                    b32  e_disco)
+{
+       b32 inventum  = FALSUM;
+    chorda latina    = silex_fons_legere(fons, "include/latina.h",
+        piscina, &inventum);
+    chorda charta;
+
+    si (!inventum)
+    {
+        fprintf(stderr, "briar: include/latina.h in corpore abest\n");
+        redde I;
+    }
+    charta = briar_dialectus_charta(latina,
+        briar_fabrica_vexilla(BRIAR_FORMA_PLANA),
+        briar_fabrica_vexilla(BRIAR_FORMA_VITREA), piscina);
+    _corporis_caput(fons, e_disco);
+    fwrite(charta.datum, I, (size_t)charta.mensura, stdout);
+    redde charta.mensura > ZEPHYRUM ? ZEPHYRUM : I;
 }
 
 /* -bibliotheca <appellatio> [-fons]: caput (API cum commentariis) et,
@@ -596,6 +625,10 @@ principale (
     {
         redde _bibliothecam_ostendere(piscina, fons, e_disco,
             imp.bibliotheca, imp.fons_bibliothecae);
+    }
+    si (imp.actio == BRIAR_ACTIO_DIALECTUS)
+    {
+        redde _dialectum_ostendere(piscina, fons, e_disco);
     }
 
     /* plagula -> arbor -> nexus -> silva -> fabrica */

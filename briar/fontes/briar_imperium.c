@@ -102,6 +102,17 @@ briar_imperium_legere (
             imp->actio = (BriarActio)actio;
             actio_data = VERUM;
         }
+        alioquin si (_est(a, "-dialectus"))
+        {
+            si (actio_data)
+            {
+                _recusare(imp, piscina,
+                    "vexilla duo actionis: unum elige");
+                redde FALSUM;
+            }
+            actio_data = VERUM;
+            imp->actio = BRIAR_ACTIO_DIALECTUS;
+        }
         alioquin si (   _est(a, "-bibliothecae")
                      || _est(a, "-bibliotheca"))
         {
@@ -171,7 +182,7 @@ briar_imperium_legere (
                 " (nota: -probatio -struere [-iterum] -arbor"
                 " -partes -amalgama -html -visio -app -versio"
                 " -bibliothecae -bibliotheca <nomen> [-fons]"
-                " -f <radix> -icon <via>)");
+                " -dialectus -f <radix> -icon <via>)");
             imp->causa = chorda_aedificator_finire(aed);
             redde FALSUM;
         }
@@ -188,17 +199,20 @@ briar_imperium_legere (
     }
     si (   imp->via != NIHIL
         && (   imp->actio == BRIAR_ACTIO_BIBLIOTHECAE
-            || imp->actio == BRIAR_ACTIO_BIBLIOTHECA))
+            || imp->actio == BRIAR_ACTIO_BIBLIOTHECA
+            || imp->actio == BRIAR_ACTIO_DIALECTUS))
     {
-        _recusare(imp, piscina, "-bibliothecae / -bibliotheca sine"
-            " plagula currunt (documentatio corporis, non plagulae)");
+        _recusare(imp, piscina, "-bibliothecae / -bibliotheca /"
+            " -dialectus sine plagula currunt (documentatio corporis,"
+            " non plagulae)");
         redde FALSUM;
     }
     si (imp->via == NIHIL)
     {
         si (   imp->actio == BRIAR_ACTIO_VERSIO
             || imp->actio == BRIAR_ACTIO_BIBLIOTHECAE
-            || imp->actio == BRIAR_ACTIO_BIBLIOTHECA)
+            || imp->actio == BRIAR_ACTIO_BIBLIOTHECA
+            || imp->actio == BRIAR_ACTIO_DIALECTUS)
         {
             redde VERUM;   /* sine plagula; -f iam lectum */
         }

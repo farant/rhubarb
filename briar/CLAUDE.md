@@ -30,6 +30,11 @@ Findings: `fontes/briar.worklog.md`.
   sources). Same corpus precedence as a run. Descriptions come from the
   `/* x.h - …` convention (`briar_bibliotheca_descriptio`); enumeration
   is `silex_fons_enumerare`. Fumus XVII.
+- **Dialect card:** `briar -dialectus` = integer typedefs, clang flags
+  (plana; vitrea as a delta), the latina.h word table and the C89 traps.
+  Derived from the corpus's latina.h + `briar_fabrica_vexilla`
+  (`briar_dialectus_charta`); only the traps are hand-written. Fumus
+  XVIII checks its flags == the clang line of `-amalgama`.
 - **`-amalgama`** = the escape hatch: ONE file `<t>.c` beside the
   thistle (+ `probatio_<t>.c` if a probatio region exists) that clang
   compiles ALONE — line 2 of the file's banner is the exact compile

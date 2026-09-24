@@ -219,6 +219,29 @@ principale (vacuum)
     CREDO_FALSUM (_legere(piscina, &imp, III, "-bibliothecae",
         "-bibliotheca", "sors"));
 
+    /* -dialectus: charta dialecti, sine plagula; post plagulam
+     * argumentum programmatis manet (non reservatum) */
+    CREDO_VERUM (_legere(piscina, &imp, I, "-dialectus", NIHIL,
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_DIALECTUS);
+    CREDO_VERUM (_legere(piscina, &imp, III, "-dialectus", "-f",
+        "/tmp/r"));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_DIALECTUS);
+    CREDO_VERUM (imp.fabrica != NIHIL && strcmp(imp.fabrica, "/tmp/r")
+        == ZEPHYRUM);
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-dialectus", "x.thistle",
+        NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("sine plagula", piscina));
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-dialectus",
+        "-bibliothecae", NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("vexilla duo actionis", piscina));
+    CREDO_VERUM (_legere(piscina, &imp, II, "x.thistle", "-dialectus",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_CURRERE);
+    CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, I);
+
     imprimere("\n--- Probans recusationes ---\n");
     CREDO_FALSUM (_legere(piscina, &imp, II, "-ignotum", "x.thistle",
         NIHIL));

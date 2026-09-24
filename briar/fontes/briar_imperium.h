@@ -42,6 +42,7 @@ nomen enumeratio {
     BRIAR_ACTIO_VERSIO,        /* -versio (sine plagula) */
     BRIAR_ACTIO_BIBLIOTHECAE,  /* -bibliothecae (sine plagula) */
     BRIAR_ACTIO_BIBLIOTHECA,   /* -bibliotheca <nomen> [-fons] */
+    BRIAR_ACTIO_DIALECTUS,     /* -dialectus: charta dialecti */
     BRIAR_ACTIO_AUXILIUM       /* -auxilium / -h (sine plagula) */
 } BriarActio;
 

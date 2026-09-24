@@ -736,3 +736,35 @@ bundled libraries, at least as rudimentary initial documentation".
 - **Fumus XVII** holds the binary-level contract (the suite cannot see
   `tools/briar.c`). Plant: every description forced empty → XVII red
   ("linea sors (h c + descriptio) deest").
+
+## 2026-09-24 — `-dialectus`: the dialect card (park …6WAGKZ)
+
+From briar-user feedback D2: script authors learned the dialect only from
+compile errors (C89 constant aggregate initializers hitting the
+`processus` argv pattern; -Werror incl. -Wsign-conversion and
+-Wunused-function; i32 UNSIGNED; `principale` with `integer argc`; the
+latina.h words).
+
+- **Derived, so it cannot rot.** `briar_dialectus_charta(latina,
+  plana, vitrea, piscina)` (new pure module) parses the CORPUS's
+  latina.h: `#define` groups (blank lines separate them; label from the
+  group's first word via a small table, unknown → `cetera`), the
+  numeral group contracted (all-digit values, ≥ 10 entries: first four,
+  the maximum, the count), and the `nomen` typedefs resolved through the
+  defines (`insignatus integer` → `unsigned int`). Flags come from
+  `briar_fabrica_vexilla(PLANA/VITREA)`; vitrea is printed as
+  `plana + <delta>` and stops at `|` (after it: vendored sqlite flags,
+  nothing a script author needs). Only the C89 traps are hand-written
+  (C89 is frozen). Every card line ≤ 72 bytes, asserted.
+- **processus.h's own USUS example** is the trap: `{ "ssh", ..., NIHIL }`
+  compiles only because every element is a literal. The card shows the
+  fill-at-run-time idiom instead. (Not edited here: touching a lib/
+  header owes every gate.)
+- **Fumus XVIII** cross-checks the card's plana flags against the clang
+  line VII's `-amalgama` wrote into `salve.c` line 2 — both directions,
+  as sets. Plant: plana fed the vitrea flags → red, naming
+  `-Wno-overlength-strings`. Unit plants: numeral contraction off,
+  typedef resolution off, vitrea delta off → each red.
+- latina.h still has no first-line description (it shows `—` in
+  `-bibliothecae`); deliberately not added in this commit for the same
+  gate-cost reason.

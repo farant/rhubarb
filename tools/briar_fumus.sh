@@ -77,6 +77,10 @@
 #        lineam 'sors h c <descriptio>' fert; -bibliotheca sors caput
 #        SOLUM, -fons et lib/sors.c; 'sorss' exitu 1 cum 'fortasse:
 #        sors' (similitudo decurtata)
+#   XVIII. -dialectus: corpus INFIXUM; i32 = unsigned int, s32 = signed
+#        int; verba (si=if, nomen=typedef); laquei (argumenta[I] = via);
+#        vexilla chartae (plana) == vexilla ordinis clang lineae II
+#        salve.c ex VII, utrimque (derivata ex briar_fabrica_vexilla)
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -426,8 +430,32 @@ RC_IGN=$?
     || deficere "ignotum 'sorss': exitus $RC_IGN, 'fortasse: sors' exspectatum" "$AREA/bibl_ign.log"
 echo "FUMUS:    bibliothecae $N_BIBL (infixum), sors caput + fons, ignotum -> fortasse"
 
+# ---- XVIII. charta dialecti: -dialectus ----
+# vexilla chartae == vexilla ordinis clang quem -amalgama (VII) in
+# linea II salve.c scripsit - utrimque; typi et verba ex latina.h
+echo "FUMUS: XVIII. -dialectus (vexilla == ordo clang VII, typi, verba)"
+( cd "$AREA" && "$BRIAR" -dialectus ) > "$AREA/dial.log" 2>&1 \
+    || deficere "-dialectus defecit" "$AREA/dial.log"
+head -1 "$AREA/dial.log" | grep -q '(infixum)' \
+    || deficere "-dialectus corpus INFIXUM non nominat" "$AREA/dial.log"
+grep -q '^  i32  *= unsigned int$' "$AREA/dial.log" \
+    && grep -q '^  s32  *= signed int$' "$AREA/dial.log" \
+    || deficere "-dialectus: i32/s32 non recte" "$AREA/dial.log"
+grep -q ' si=if ' "$AREA/dial.log" && grep -q 'nomen=typedef' "$AREA/dial.log" \
+    || deficere "-dialectus: verba latina.h desunt" "$AREA/dial.log"
+grep -q 'argumenta\[I\]  *= via;' "$AREA/dial.log" \
+    || deficere "-dialectus: laquei C89 desunt" "$AREA/dial.log"
+V_CHARTA="$(awk '/^  plana:/{p=1} /^  vitrea:/{p=0} p' "$AREA/dial.log" \
+    | sed 's/^  plana://' | tr -s ' \n' '\n\n' | grep -v '^$' | sort -u)"
+V_ORDO="$(sed -n '2s/^ \* //p' "$AREA/salve.c" | tr ' ' '\n' \
+    | grep -E '^-(std|pedantic|W)' | sort -u)"
+[ -n "$V_ORDO" ] || deficere "linea II salve.c sine vexillis (VII?)"
+[ "$V_CHARTA" = "$V_ORDO" ] \
+    || deficere "-dialectus: vexilla chartae != ordo clang: [$(echo $V_CHARTA)] vs [$(echo $V_ORDO)]" "$AREA/dial.log"
+echo "FUMUS:    dialectus: $(echo "$V_CHARTA" | wc -l | tr -d ' ') vexilla == ordo clang, i32 insignatum, verba"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"
