@@ -86,7 +86,13 @@ briar_imperium_legere (
         constans character* a      = argv[i];
                        s32  actio  = _actio_vexilli(a);
 
-        si (_est(a, "-h") || _est(a, "-auxilium"))
+        /* --version: synonymum consuetudinis, ANTE plagulam solum
+         * (post eam argumentum programmatis manet) */
+        si (_est(a, "--version"))
+        {
+            actio = (s32)BRIAR_ACTIO_VERSIO;
+        }
+        si (_est(a, "-h") || _est(a, "-auxilium") || _est(a, "--help"))
         {
             imp->actio = BRIAR_ACTIO_AUXILIUM;
             redde VERUM;
@@ -184,7 +190,7 @@ briar_imperium_legere (
                 "vexillum ignotum: ");
             chorda_aedificator_appendere_literis(aed, a);
             chorda_aedificator_appendere_literis(aed,
-                " (nota: -probatio -struere [-iterum] -arbor"
+                " (nota: -h -probatio -struere [-iterum] -arbor"
                 " -partes -amalgama -html -visio -app -versio"
                 " -bibliothecae -bibliotheca <nomen> [-fons |"
                 " -functiones] -dialectus -mutationes -f <radix>"

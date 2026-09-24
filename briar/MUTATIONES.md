@@ -19,6 +19,14 @@ Leges chartae:
 
 ## inedita
 
+- `--help` et `--version` synonyma sunt `-h` et `-versio` (ante
+  plagulam solum; post eam argumenta programmatis manent); nota
+  vexilli ignoti `-h` nominat.
+- `-versio` lineam `aedificatum:` addit (tempus, sigillum fontium briar,
+  commissum; SORDIDUM si fontes mutationes non commissas ferunt) - duo
+  binaria eiusdem versionis nunc discernuntur. Mutationes ineditae in
+  charta: linea prima `briar vN+inedita(n) — dies`.
+
 ## v1 — 2026-09-24
 
 Versio prima numerata: status omnium quae ad hunc diem exstant (antea

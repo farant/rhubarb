@@ -64,6 +64,20 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (briar_mutationes_versio(chorda_ex_literis(
         "## v0\n", pn)), ZEPHYRUM);
 
+    imprimere("\n--- Probans mutationes ineditas ---\n");
+    /* CHARTA: una sub inedita */
+    CREDO_AEQUALIS_I32 (briar_mutationes_inedita(c), I);
+    CREDO_AEQUALIS_I32 (briar_mutationes_inedita(chorda_ex_literis(
+        "## inedita\n\n- a\n  continuata\n- b\n\n## v1\n- c\n", pn)),
+        II);
+    CREDO_AEQUALIS_I32 (briar_mutationes_inedita(chorda_ex_literis(
+        "## inedita\n\n## v1\n- c\n", pn)), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (briar_mutationes_inedita(chorda_ex_literis(
+        "## v1\n- c\n", pn)), ZEPHYRUM);
+    /* ad finem sine capite sequente */
+    CREDO_AEQUALIS_I32 (briar_mutationes_inedita(chorda_ex_literis(
+        "## inedita\n- a", pn)), I);
+
     imprimere("\n--- Probans ordinem ---\n");
     /* ascendens, aequalis, saltus sursum: pravi */
     CREDO_FALSUM (briar_mutationes_ordo_rectus(chorda_ex_literis(

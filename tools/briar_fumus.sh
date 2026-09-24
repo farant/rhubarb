@@ -85,7 +85,9 @@
 #        sors_intra), nomina in columna UNA; json sine '( ' / ' )';
 #        latina 'functiones 0'; -fons cum -functiones recusatum
 #   XX.  versio EX briar/MUTATIONES.md: -versio == 'briar ' + caput
-#        supremum '## vN ...', -h 'briar vN - ', -mutationes == charta
+#        supremum '## vN ...' (+inedita(n) si '## inedita' lineas '- '
+#        fert), linea 'aedificatum:' (tempus, fontes, commissum),
+#        --version == -versio, -h 'briar vN - ', -mutationes == charta
 #        octetis; capita vN stricte descendentia
 #
 # Usus:
@@ -501,15 +503,27 @@ ORDO_CAPITUM="$(sed -n 's/^## v\([0-9][0-9]*\)\( .*\)\{0,1\}$/\1/p' "$CHARTA_FON
     | awk 'NR > 1 && $1 >= prior { mala = 1 } { prior = $1 } END { print mala ? "pravus" : "rectus" }')"
 [ "$ORDO_CAPITUM" = rectus ] \
     || deficere "charta mutationum: capita vN non stricte descendunt"
+# mutationes ineditae ('- ' sub '## inedita') -> 'vN+inedita(n)'
+N_INED="$(awk '/^## /{ intra = ($0 ~ /^## inedita/) ; if (visa && !intra) exit; visa = visa || intra; next } intra && /^- /{ n++ } END { print n + 0 }' "$CHARTA_FONS")"
+if [ "$N_INED" -gt 0 ]; then
+    V_SPERATA="briar $(printf '%s' "$CAPUT_FONS" | sed "s/^\(v[0-9]*\)/\1+inedita($N_INED)/")"
+else
+    V_SPERATA="briar $CAPUT_FONS"
+fi
 V_LINEA="$( cd "$AREA" && "$BRIAR" -versio | head -1 )"
-[ "$V_LINEA" = "briar $CAPUT_FONS" ] \
-    || deficere "-versio [$V_LINEA] != caput chartae [briar $CAPUT_FONS] (capsula stala?)"
+[ "$V_LINEA" = "$V_SPERATA" ] \
+    || deficere "-versio [$V_LINEA] != charta [$V_SPERATA] (capsula stala?)"
+( cd "$AREA" && "$BRIAR" -versio | sed -n 2p ) \
+    | grep -Eq '^aedificatum: [0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:]{8}Z · fontes briar [0-9a-f]{8} \([0-9a-f]{8}( SORDIDUM)?\)$' \
+    || deficere "-versio: linea 'aedificatum:' prava: $( cd "$AREA" && "$BRIAR" -versio | sed -n 2p )"
+[ "$( cd "$AREA" && "$BRIAR" --version | head -1 )" = "$V_LINEA" ] \
+    || deficere "--version != -versio"
 ( cd "$AREA" && "$BRIAR" -h | head -1 ) | grep -q "^briar v$N_FONS - " \
     || deficere "-h versionem v$N_FONS non dicit"
 ( cd "$AREA" && "$BRIAR" -mutationes ) > "$AREA/mutationes.log" 2>&1 \
     && cmp -s "$AREA/mutationes.log" "$CHARTA_FONS" \
     || deficere "-mutationes != briar/MUTATIONES.md (octeti)" "$AREA/mutationes.log"
-echo "FUMUS:    versio v$N_FONS ex charta ($CAPUT_FONS), capita descendentia, -mutationes == fons"
+echo "FUMUS:    versio v$N_FONS ex charta ($V_LINEA), inedita $N_INED, aedificatum, --version, -mutationes == fons"
 
 if [ "$AGERE" = 0 ]; then
     echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes)"

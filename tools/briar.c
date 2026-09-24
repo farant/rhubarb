@@ -75,6 +75,11 @@ externus constans CapsulaEmbed capsula_icon_briar;
 /* charta mutationum (build/capsula_mutationes_briar.c): versio
  * binarii EX ea legitur - numerus alibi non scribitur */
 externus constans CapsulaEmbed capsula_mutationes_briar;
+/* identitas aedificationis (build/briar_aedificatio.c, generatum a
+ * tools/briar_struere.sh omni aedificatione) */
+externus constans character briar_aedificatio_tempus[];
+externus constans character briar_aedificatio_fontes[];
+externus constans character briar_aedificatio_commissum[];
 
 #define BRIAR_MORA_AEDIFICANDI_MS 600000
 
@@ -154,15 +159,44 @@ _mutationes_legere (
     redde lectum.datum;
 }
 
-/* "v3 — 2026-09-24" ex capite supremo chartae; "v0" si nullum */
+/* "v3 — 2026-09-24" ex capite supremo chartae; "v0" si nullum.
+ * Mutationes ineditae in charta: "v3+inedita(2) — 2026-09-24" -
+ * binarium inter editiones se ipsum nominat (bugs/011 lapidis) */
 interior chorda
 _versio (
     Piscina* piscina)
 {
-    chorda caput = briar_mutationes_caput(_mutationes_legere(piscina));
+               chorda charta =
+                   _mutationes_legere(piscina);
+               chorda caput =
+                   briar_mutationes_caput(charta);
+                  i32 n =
+                      briar_mutationes_inedita(charta);
+    ChordaAedificator* aed;
+            character  b[XXXII];
+                  i32  k      = ZEPHYRUM;
 
-    redde caput.mensura > ZEPHYRUM ? caput
-        : chorda_ex_literis("v0", piscina);
+    si (caput.mensura == ZEPHYRUM)
+    {
+        redde chorda_ex_literis("v0", piscina);
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde caput;
+    }
+    /* "vN" = praefixum usque ad spatium primum */
+    dum (k < caput.mensura && caput.datum[k] != (i8)' ')
+    {
+        k++;
+    }
+    aed = chorda_aedificator_creare(piscina, (memoriae_index)LXIV);
+    chorda_aedificator_appendere_chorda(aed, chorda_sectio(caput,
+        ZEPHYRUM, k));
+    sprintf(b, "+inedita(%u)", n);
+    chorda_aedificator_appendere_literis(aed, b);
+    chorda_aedificator_appendere_chorda(aed, chorda_sectio(caput, k,
+        caput.mensura));
+    redde chorda_aedificator_finire(aed);
 }
 
 interior vacuum
@@ -734,10 +768,12 @@ principale (
             hp);
         briar_vexilla_sigillum(
             briar_fabrica_vexilla(BRIAR_FORMA_VITREA), hv);
-        imprimere("briar %.*s\ncorpus: %s%s\nvexilla: plana %s"
-            " vitrea %s\n",
+        imprimere("briar %.*s\naedificatum: %s \xc2\xb7 fontes briar %s"
+            " (%s)\ncorpus: %s%s\nvexilla: plana %s vitrea %s\n",
             (integer)versio.mensura, (constans character*)versio.datum,
-            fons->titulus, e_disco ? " (discus)" : "", hp, hv);
+            briar_aedificatio_tempus, briar_aedificatio_fontes,
+            briar_aedificatio_commissum, fons->titulus,
+            e_disco ? " (discus)" : "", hp, hv);
         redde ZEPHYRUM;
     }
     si (imp.actio == BRIAR_ACTIO_MUTATIONES)

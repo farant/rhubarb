@@ -33,6 +33,29 @@ briar_icon_capsula_regenerare || exit 1
 # charta mutationum: versio binarii EX ea legitur (briar -versio)
 source "$SCRIPT_DIR/briar_mutationes_capsula.sh"
 briar_mutationes_capsula_regenerare || exit 1
+# identitas aedificationis (bugs/011 lapidis): tempus, sigillum
+# fontium briar IPSIUS (instrumentum, fontes, charta, compendium) et
+# commissum - SORDIDUM si hi fontes mutationes non commissas ferunt.
+# Stampa corporis (corpus_infixum.sh) corpus solum nominat; binaria
+# diversa eandem ferebant. Generatur OMNI aedificatione (tempus).
+FONTES_BRIAR=(tools/briar.c briar/fontes/*.c briar/fontes/*.h
+    briar/MUTATIONES.md officina/instrumenta/compendium.c
+    officina/instrumenta/compendium.h)
+AED_TEMPUS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+AED_FONTES="$(cat "${FONTES_BRIAR[@]}" | shasum -a 256 | cut -c1-8)"
+AED_COMMISSUM="$(git rev-parse --short=8 HEAD 2>/dev/null || echo ignotum)"
+if [ -n "$(git status --porcelain -- "${FONTES_BRIAR[@]}" 2>/dev/null)" ]; then
+    AED_COMMISSUM="$AED_COMMISSUM SORDIDUM"
+fi
+mkdir -p build
+cat > build/briar_aedificatio.c <<AEDIFICATIO
+/* build/briar_aedificatio.c - GENERATUM a tools/briar_struere.sh -
+ * NE MANU EDITES (briar -versio, linea 'aedificatum:') */
+const char briar_aedificatio_tempus[] = "$AED_TEMPUS";
+const char briar_aedificatio_fontes[] = "$AED_FONTES";
+const char briar_aedificatio_commissum[] = "$AED_COMMISSUM";
+AEDIFICATIO
+
 # decodificator (stb_image per lib/imago.c) SOLUM in binario (spec par.
 # 4.8 A1): nulla porta briar eum nectit, ergo obiectum RADICIS sumitur
 if [ ! -f build/imago.o ]; then
@@ -54,6 +77,7 @@ clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     -Ibriar/fontes -Isilva/amalgama -Iofficina/instrumenta \
     tools/briar.c build/capsula_corpus_silicis.c \
     build/capsula_icon_briar.c build/capsula_mutationes_briar.c \
+    build/briar_aedificatio.c \
     build/imago.o $OBJ \
     -o bin/briar || exit 1
 echo "aedificatum: bin/briar"

@@ -28,4 +28,11 @@ b32
 briar_mutationes_ordo_rectus (
     chorda textus);
 
+/* Numerus mutationum ineditarum: lineae '- ' sub capite '## inedita'
+ * usque ad caput '## ' proximum (lineae continuatae non numerantur);
+ * ZEPHYRUM si caput abest aut vacuum. */
+i32
+briar_mutationes_inedita (
+    chorda textus);
+
 #endif /* BRIAR_MUTATIONES_H */

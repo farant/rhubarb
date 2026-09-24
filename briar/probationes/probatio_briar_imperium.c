@@ -246,6 +246,21 @@ principale (vacuum)
             chorda_ex_literis("-fons aut -functiones", piscina));
     }
 
+    /* --help / --version: synonyma consuetudinis (bugs/008 lapidis)
+     * ANTE plagulam solum; post plagulam argumenta programmatis */
+    CREDO_VERUM (_legere(piscina, &imp, I, "--help", NIHIL, NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_AUXILIUM);
+    CREDO_VERUM (_legere(piscina, &imp, I, "--version", NIHIL, NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_VERSIO);
+    CREDO_VERUM (_legere(piscina, &imp, II, "x.thistle", "--help",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_CURRERE);
+    /* vexillum ignotum: nota nominat -h */
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-ignotum", "x.thistle",
+        NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis(" -h ", piscina));
+
     /* -mutationes: charta mutationum, sine plagula */
     CREDO_VERUM (_legere(piscina, &imp, I, "-mutationes", NIHIL,
         NIHIL));

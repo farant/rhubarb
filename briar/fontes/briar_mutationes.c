@@ -90,6 +90,58 @@ _capita_percurrere (
     redde inventa;
 }
 
+/* linea [a, b) cum praefixo incipit? */
+interior b32
+_incipit (
+                 chorda  textus,
+                    i32  a,
+                    i32  b,
+     constans character* praefixum)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; praefixum[k] != '\0'; k++)
+    {
+        si (a + k >= b || textus.datum[a + k] != (i8)praefixum[k])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+i32
+briar_mutationes_inedita (
+    chorda textus)
+{
+    i32 initium  = ZEPHYRUM;
+    i32 numerus  = ZEPHYRUM;
+    b32 intra    = FALSUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k <= (i32)textus.mensura; k++)
+    {
+        si (k < (i32)textus.mensura && textus.datum[k] != (i8)'\n')
+        {
+            perge;
+        }
+        si (_incipit(textus, initium, k, "## "))
+        {
+            si (intra)
+            {
+                frange;
+            }
+            intra = _incipit(textus, initium, k, "## inedita");
+        }
+        alioquin si (intra && _incipit(textus, initium, k, "- "))
+        {
+            numerus++;
+        }
+        initium = k + I;
+    }
+    redde numerus;
+}
+
 i32
 briar_mutationes_versio (
     chorda textus)
