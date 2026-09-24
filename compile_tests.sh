@@ -827,17 +827,23 @@ run_all_tests() {
     # est ubi id exsistit (circulus aliter, rc=2). Exitus 2 = NIHIL
     # CURSUM (binarium absens in cursu filtrato) - nominatim
     # praetermittitur, numquam ut viride tacitum.
+    # SINGULAE in ramo 'probationes inventae' SOLO ponitur: filtrum
+    # quod plagulas solas praetermissas (e.g. *_benchmark.c) invenit
+    # eam vacuam relinquebat -> '/plutil.log: Read-only file system' et
+    # 'plist plutil fractus' falsum (2026-09-24). Via acti derivata.
+    PLUTIL_ACTA="${SINGULAE:-build/test_logs/singulae}/plutil.log"
+    mkdir -p "$(dirname "$PLUTIL_ACTA")"
     if [ -x "probationes/probatio_plist_plutil.sh" ]; then
-        ./probationes/probatio_plist_plutil.sh > "$SINGULAE/plutil.log" 2>&1
+        ./probationes/probatio_plist_plutil.sh > "$PLUTIL_ACTA" 2>&1
         plutil_rc=$?
         if [ "$plutil_rc" = "0" ]; then
             echo -e "${BLUE}plist plutil: octeti ab Apple accepti${RESET}"
         elif [ "$plutil_rc" = "2" ]; then
             echo -e "${YELLOW}plist plutil: NIHIL CURSUM (praerequisita desunt)${RESET}"
-            head -3 "$SINGULAE/plutil.log" 2>/dev/null
+            head -3 "$PLUTIL_ACTA" 2>/dev/null
         else
             echo -e "${RED}✗ plist plutil fractus (curre: ./probationes/probatio_plist_plutil.sh)${RESET}"
-            head -10 "$SINGULAE/plutil.log" 2>/dev/null
+            head -10 "$PLUTIL_ACTA" 2>/dev/null
             TESTS_FAILED=$((TESTS_FAILED + 1))
             FAILED_TESTS="$FAILED_TESTS plist_plutil"
         fi
