@@ -21,3 +21,36 @@ skipped, never an error): folding happens on replay too, and replay must
 never fail. The validator is the strict side, at write time, and names
 every cause at once. Whether the target entity IS an inventarium is not
 visible here (genus is a column, not state) — T2 checks it.
+
+## 2026-09-23 — wired into gesta (inventarium v1 T2)
+
+`_statum_transformare` delegates the four kinds to
+`gesta_inventarium_applicare`; `_eventum_validare` checks the target
+exists and IS an inventarium, parses its current state (committed state
++ batch shadows, via `_res_validationis_capere`) and runs
+`gesta_inventarium_validare`. Genus `inventarium` seeded (semen v10, no
+state machine, like regio).
+
+Doctrine correction to the plan: at the ENGINE, a violation does not
+block — "iudicat, non obstat": the event is written and a custody note
+("violatio inventarii: ...") joins it in the same batch, exactly like a
+status-machine violation. Refusal-before-writing belongs at the
+tabularium's DOOR (T3's tool pre-judges with the same validator, as
+`_statum_praeiudicare`/`_nexum_praeiudicare` do). Consequence: an
+inventory event written straight through gesta onto a non-inventory
+still folds (rows appear in that entity's state) — with the note. The
+door makes that unreachable for agents.
+
+Limitation, stated: validation reads committed state plus shadows, and
+shadows carry existence and genus, not an inventory's rows. So two
+inventory events on the same entity in ONE batch (add rows, then set
+cells for them) would judge the second against the pre-batch table. T3
+writes one event per call, so it never arises; revisit if a batch ever
+needs both.
+
+Also: `SEMINA_NUMERUS` in tabularium.c was hand-counted (XVI) — adding
+this seed would have required remembering to bump it (the same class as
+the tool-schema miscount fixed in e6fdaaa5). Now derived from the array.
+Tests: probatio_gesta gains the inventory section (fold, provenance,
+custody notes for a missing row and for a non-inventory, replay
+byte-identical); planted dead fold -> 4 red, permissive validator -> 1 red.

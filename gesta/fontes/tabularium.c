@@ -73,6 +73,10 @@ nomen structura {
  * SEMINA_GENERUM et decreta 01M35650Z4, 01M35656PV */
 #define GENUS_REGIONIS "regio"
 
+/* GENUS INVENTARII (semen v10): tabula ordinum x lentium - vide
+ * gesta_inventarium.h et project-specs/inventarium-spec.md */
+#define GENUS_INVENTARII "inventarium"
+
 /* verba canonica quae machina LEGIT (visus parata, scopus 'intra',
  * praeiudicia portae) - definitiones hic ut praeiudicia supra visum
  * ea videant */
@@ -253,13 +257,30 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
       "{\"titulus\":\"corpus\",\"typus\":\"textus\"},{\"titulus\":"
       "\"tags\",\"typus\":\"tabulatum\"}],"
+      "\"reducer\":\"ordinarius\"}" },
+    /* ---- semen v10 (inventarium, decretum …FTB8XR3, 2026-09-23):
+     * INVENTARIUM = tabula ordinum x lentium, ex eventibus propriis
+     * (ordo-additus, ordo-remotus, lens-addita, cella-posita) in
+     * statu rei plicata. Sine machina statuum (ut regio): tabula
+     * crescit, non clauditur. ordo_genus = quid clavis ordinis sit
+     * (via | symbolum | res | textus). ---- */
+    { GENUS_INVENTARII,
+      "{\"titulus\":\"inventarium\",\"attributa\":[{\"titulus\":"
+      "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
+      "{\"titulus\":\"corpus\",\"typus\":\"textus\"},{\"titulus\":"
+      "\"ordo_genus\",\"typus\":\"textus\"},{\"titulus\":"
+      "\"tags\",\"typus\":\"tabulatum\"}],"
       "\"reducer\":\"ordinarius\"}" }
 };
 
 /* scopus fusionis v2 (genera tabulae + nexus); genera K3 infra
  * attributa propria ferunt (emendatio E2-B2) */
 #define SEMINA_BOARD_NUMERUS VI
-#define SEMINA_NUMERUS XVI
+/* numerus seminum EX TABULA derivatus (ut ARGUMENTORUM_NUMERUS):
+ * olim manu 'XVI' - semen novum sine eo tacite omissum esset */
+#define SEMINA_NUMERUS                                  \
+    ((i32)(magnitudo(SEMINA_GENERUM)                    \
+        / magnitudo(SEMINA_GENERUM[ZEPHYRUM])))
 
 /* semen v2 (K2 decisio Q9): attributa in genera VIVA - emendatio
  * integra-substitutio ex definitione currenti + attributa (fusio

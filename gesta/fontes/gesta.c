@@ -9,6 +9,7 @@
 #include "gesta.h"
 #include "json.h"
 #include "paginatio.h"
+#include "gesta_inventarium.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1250,6 +1251,17 @@ _statum_transformare (
             mutatum_est = VERUM;
         }
     }
+    alioquin si (gesta_inventarium_eventus_est(genus_eventus))
+    {
+        /* INVENTARIUM (spec inventarium §2): tabula ordinum x
+         * lentium in statu rei - plicatura in modulo puro
+         * (gesta_inventarium.c), defensiva: replay numquam fallit */
+        si (gesta_inventarium_applicare(status_obiectum, genus_eventus,
+                datum_obiectum, actor, creatum, piscina))
+        {
+            mutatum_est = VERUM;
+        }
+    }
     alioquin
     {
         /* genus_eventus ignotum = nihil agit (TS: smaragda.ts:
@@ -2476,6 +2488,52 @@ _eventum_validare (
                              Xar* obumbrae,
               constans character* ramus)
 {
+    /* INVENTARIUM (spec inventarium §3): rem inventarium esse et
+     * eventum contra tabulam currentem congruere - iudicat, non
+     * obstat (nota custodiae); porta tabularii ANTE scripturam
+     * recusat (instrumentum inventarium) */
+    si (gesta_inventarium_eventus_est(_ch(p->genus_eventus)))
+    {
+        GestaResOrdo ordo = _res_validationis_capere(m, p->res_id,
+            obumbrae, ramus, m->piscina);
+                 JsonValor* status = NIHIL;
+        constans character* causae;
+         ChordaAedificator* aed;
+
+        si (!ordo.exsistit)
+        {
+            redde "violatio inventarii: res non exsistit";
+        }
+        si (!_chorda_est(ordo.genus, "inventarium"))
+        {
+            redde "violatio inventarii: res non est inventarium";
+        }
+        si (ordo.datum.mensura > ZEPHYRUM)
+        {
+            JsonResultus r = json_legere(ordo.datum, m->piscina);
+
+            si (r.successus && json_est_objectum(r.radix))
+            {
+                status = r.radix;
+            }
+        }
+        si (status == NIHIL)
+        {
+            status = json_objectum_creare(m->piscina);
+        }
+        causae = gesta_inventarium_validare(status,
+            _ch(p->genus_eventus), p->datum_obiectum, m->piscina);
+        si (causae == NIHIL)
+        {
+            redde NIHIL;
+        }
+        aed = chorda_aedificator_creare(m->piscina, DXII);
+        chorda_aedificator_appendere_literis(aed,
+            "violatio inventarii:\n");
+        chorda_aedificator_appendere_literis(aed, causae);
+        redde chorda_ut_cstr(chorda_aedificator_finire(aed),
+            m->piscina);
+    }
     si (p->est_creatio)
     {
         JsonValor* g = json_objectum_capere(p->datum_obiectum,

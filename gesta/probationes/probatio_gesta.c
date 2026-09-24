@@ -3806,6 +3806,83 @@ principale (vacuum)
         gesta_claudere(m7);
     }
 
+
+    /* ==================================================
+     * INVENTARIUM (inventarium v1 T2): eventa propria in statu
+     * rei plicata; violationes = notae custodiae (iudicat, non
+     * obstat - porta tabularii ante scripturam recusat, T3);
+     * replicatio tabulam octetim reddit
+     * ================================================== */
+
+    {
+        GestaEventum  e;
+           character  id_inventarii[GESTA_RES_ID_MENSURA];
+           character  id_alia[GESTA_RES_ID_MENSURA];
+           JsonValor* st;
+           JsonValor* cella;
+              chorda  ante;
+              chorda  post;
+
+        imprimere("\n--- Probans inventarium in gesta ---\n");
+        _scribe(m, NIHIL, "definitio-generis",
+            "{\"titulus\":\"inventarium\",\"reducer\":\"ordinarius\"}");
+        e.res_id         = NIHIL;
+        e.genus_eventus  = "creatio";
+        e.datum          = "{\"genus\":\"inventarium\",\"titulus\":"
+            "\"Suitae\",\"ordo_genus\":\"via\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_inventarii));
+        _scribe(m, id_inventarii, "ordo-additus",
+            "{\"ordines\":[\"a.sh\",\"b.sh\"]}");
+        _scribe(m, id_inventarii, "lens-addita",
+            "{\"nomen\":\"in PORTAE\",\"genus_valoris\":\"ita-non\"}");
+        _scribe(m, id_inventarii, "cella-posita",
+            "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"a.sh\","
+            "\"lens\":\"in PORTAE\",\"valor\":{\"genus\":\"ita-non\","
+            "\"valor\":\"ita\"}}]}");
+        st = _status_entis(m, id_inventarii, piscina);
+        CREDO_NON_NIHIL (st);
+        CREDO_AEQUALIS_I32 (json_tabulatum_numerus(
+            json_objectum_capere(st, "ordines")), II);
+        cella = json_objectum_capere(json_objectum_capere(
+            json_objectum_capere(st, "cellae"), "a.sh"), "in PORTAE");
+        CREDO_VERUM (cella != NIHIL
+            && _clavis_est_chorda(cella, "valor", "ita"));
+        CREDO_VERUM (cella != NIHIL
+            && _clavis_est_chorda(cella, "actor", "fran"));
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio inventarii"), ZEPHYRUM);
+
+        /* cella ordinis ABSENTIS: nota custodiae, tabula intacta */
+        _scribe(m, id_inventarii, "cella-posita",
+            "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"z.sh\","
+            "\"lens\":\"in PORTAE\",\"valor\":{\"genus\":\"ita-non\","
+            "\"valor\":\"non\"}}]}");
+        st = _status_entis(m, id_inventarii, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio inventarii"), I);
+        CREDO_NIHIL (json_objectum_capere(json_objectum_capere(st,
+            "cellae"), "z.sh"));
+
+        /* eventum inventarii in re NON inventario */
+        e.datum = "{\"genus\":\"quaestio\",\"titulus\":\"Non tabula\"}";
+        CREDO_VERUM (gesta_scribere(m, &e, id_alia));
+        _scribe(m, id_alia, "ordo-additus", "{\"ordines\":[\"x\"]}");
+        st = _status_entis(m, id_alia, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "res non est inventarium"), I);
+
+        /* REPLICATIO: tabula octetim eadem */
+        ante = gesta_res_datum(m, id_inventarii, piscina);
+        CREDO_VERUM (gesta_replicare(m));
+        post = gesta_res_datum(m, id_inventarii, piscina);
+        CREDO_VERUM (ante.mensura > ZEPHYRUM
+            && ante.mensura == post.mensura
+            && memcmp(ante.datum, post.datum,
+                   (memoriae_index)ante.mensura) == ZEPHYRUM);
+    }
+
     gesta_claudere(m);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

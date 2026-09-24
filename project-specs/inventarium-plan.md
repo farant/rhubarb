@@ -13,7 +13,10 @@ new words checked with `./oratio/quaere.sh`. Gates for every task:
 **gesta AND radix** (probatio_cliens_tabularii lives in the root suite —
 lesson of e0988825).
 
-> **STATUS 2026-09-23 — planned.** Nothing built.
+> **STATUS 2026-09-23 — T1 DONE** `1396fb0f` (pure fold + validator, 33
+> assertions). **T2 DONE** (this commit): gesta fold + write-time
+> validation as custody notes, genus seeded (semen v10), SEMINA_NUMERUS
+> derived. Next: T3, the MCP tool (refusal at the door).
 
 ---
 
@@ -55,9 +58,10 @@ four kinds; the preparation/validation step calls
 `gesta/probationes/probatio_gesta.c`.
 
 **Done when** events written through `gesta_scribere` fold into the
-entity (read back via the state), a bad cell event is REFUSED with its
-causes and nothing written, and replay (rebuild from annales) reproduces
-the same table byte for byte.
+entity (read back via the state), a bad event gets a custody note with
+its causes (the engine judges, never blocks — house doctrine; refusal
+BEFORE writing is the tool's job in Task 3), and replay reproduces the
+same table byte for byte.
 
 ### Task 3: MCP tool `inventarium` (write actions)
 
