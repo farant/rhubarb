@@ -23,6 +23,13 @@ Findings: `fontes/briar.worklog.md`.
   (`-icon` only with `-app`); shebang form recognizes ONE reserved
   first argument after the file (`./x.thistle -probatio`), `--` ends
   flags.
+- **Library docs (no plagula):** `briar -bibliothecae` lists the
+  corpus's `include/*.h` (name, `h c m` sources, the header's first-line
+  description; last line counts those WITHOUT one = doc debt);
+  `briar -bibliotheca <nomen> [-fons]` prints the header (+ `lib/`
+  sources). Same corpus precedence as a run. Descriptions come from the
+  `/* x.h - …` convention (`briar_bibliotheca_descriptio`); enumeration
+  is `silex_fons_enumerare`. Fumus XVII.
 - **`-amalgama`** = the escape hatch: ONE file `<t>.c` beside the
   thistle (+ `probatio_<t>.c` if a probatio region exists) that clang
   compiles ALONE — line 2 of the file's banner is the exact compile

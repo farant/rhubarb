@@ -76,6 +76,19 @@ silex_fons_legere (
                Piscina* piscina,
                    b32* inventum);
 
+/* Nomina plagularum DIRECTE in 'directorium' (sine recursione) quarum
+ * titulus 'suffixo' finitur, ordine lexico: Xar de chorda (titulus
+ * solus, sine directorio). Directorium ignotum = Xar vacuus; NIHIL
+ * solum memoria deficiente. Discus: ambulatio directorii; corpus:
+ * index capsulae. Pro 'briar -bibliothecae' (documentatio ex fonte
+ * ipso quem scripta compilant). */
+Xar*
+silex_fons_enumerare (
+    constans SilexFons* fons,
+    constans character* directorium,
+    constans character* suffixum,
+               Piscina* piscina);
+
 /* plagula colligenda: via relativa proiecti + contentum + origo */
 nomen structura {
                 chorda  via;

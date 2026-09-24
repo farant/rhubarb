@@ -72,6 +72,11 @@
 #        manus ADHAERET (applicationem non gignit) et affordantias
 #        videt; finire sessionem SOLAM claudit, ergo processus per
 #        viam fasciculi necatur; icon in Dock oculo inspicitur
+#   XVII. documentatio corporis (sine fenestra, ante -agere): briar
+#        -bibliothecae corpus INFIXUM nominat, >= CL bibliothecas et
+#        lineam 'sors h c <descriptio>' fert; -bibliotheca sors caput
+#        SOLUM, -fons et lib/sors.c; 'sorss' exitu 1 cum 'fortasse:
+#        sors' (similitudo decurtata)
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -395,8 +400,34 @@ grep -q 'alienus' "$AREA/alienum_app.log" \
     || deficere "fasciculus alienus mutatus est" "$AREA/alienum_app.log"
 echo "FUMUS:    fasciculus: $ID, icon $N_ORD/$N_PROP plagulae, proprius repositus, alienus recusatus"
 
+# ---- XVII. documentatio corporis: -bibliothecae / -bibliotheca ----
+# (sine plagula; corpus INFIXUM quia area extra arborem iacet)
+echo "FUMUS: XVII. -bibliothecae, -bibliotheca sors [-fons], ignotum"
+( cd "$AREA" && "$BRIAR" -bibliothecae ) > "$AREA/bibl.log" 2>&1 \
+    || deficere "-bibliothecae defecit" "$AREA/bibl.log"
+head -1 "$AREA/bibl.log" | grep -q '(infixum)' \
+    || deficere "-bibliothecae corpus INFIXUM non nominat" "$AREA/bibl.log"
+N_BIBL="$(sed -n 's/^bibliothecae \([0-9]*\) .*/\1/p' "$AREA/bibl.log")"
+[ "${N_BIBL:-0}" -ge 150 ] \
+    || deficere "-bibliothecae: bibliothecae ${N_BIBL:-0} < 150" "$AREA/bibl.log"
+grep -q '^sors  *h c  *Numeri pseudo-fortuiti' "$AREA/bibl.log" \
+    || deficere "-bibliothecae: linea sors (h c + descriptio) deest" "$AREA/bibl.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca sors ) > "$AREA/bibl_sors.log" 2>&1 \
+    || deficere "-bibliotheca sors defecit" "$AREA/bibl_sors.log"
+grep -q '^==== include/sors.h ====' "$AREA/bibl_sors.log" \
+    && ! grep -q '^==== lib/sors.c' "$AREA/bibl_sors.log" \
+    || deficere "-bibliotheca sors: caput solum exspectatum" "$AREA/bibl_sors.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca sors -fons ) > "$AREA/bibl_fons.log" 2>&1 \
+    && grep -q '^==== lib/sors.c ====' "$AREA/bibl_fons.log" \
+    || deficere "-bibliotheca sors -fons: lib/sors.c deest" "$AREA/bibl_fons.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca sorss ) > "$AREA/bibl_ign.log" 2>&1
+RC_IGN=$?
+[ "$RC_IGN" -eq 1 ] && grep -q 'fortasse: sors' "$AREA/bibl_ign.log" \
+    || deficere "ignotum 'sorss': exitus $RC_IGN, 'fortasse: sors' exspectatum" "$AREA/bibl_ign.log"
+echo "FUMUS:    bibliothecae $N_BIBL (infixum), sors caput + fons, ignotum -> fortasse"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"

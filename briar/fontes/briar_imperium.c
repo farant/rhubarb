@@ -102,6 +102,37 @@ briar_imperium_legere (
             imp->actio = (BriarActio)actio;
             actio_data = VERUM;
         }
+        alioquin si (   _est(a, "-bibliothecae")
+                     || _est(a, "-bibliotheca"))
+        {
+            si (actio_data)
+            {
+                _recusare(imp, piscina,
+                    "vexilla duo actionis: unum elige");
+                redde FALSUM;
+            }
+            actio_data = VERUM;
+            si (_est(a, "-bibliothecae"))
+            {
+                imp->actio = BRIAR_ACTIO_BIBLIOTHECAE;
+            }
+            alioquin
+            {
+                si (i + I >= argc || argv[i + I][0] == '-')
+                {
+                    _recusare(imp, piscina, "-bibliotheca sine nomine"
+                        " (usus: briar -bibliotheca <nomen> [-fons])");
+                    redde FALSUM;
+                }
+                imp->actio        = BRIAR_ACTIO_BIBLIOTHECA;
+                imp->bibliotheca  = argv[i + I];
+                i                 = i + I;
+            }
+        }
+        alioquin si (_est(a, "-fons"))
+        {
+            imp->fons_bibliothecae = VERUM;
+        }
         alioquin si (_est(a, "-iterum"))
         {
             imp->iterum = VERUM;
@@ -139,6 +170,7 @@ briar_imperium_legere (
             chorda_aedificator_appendere_literis(aed,
                 " (nota: -probatio -struere [-iterum] -arbor"
                 " -partes -amalgama -html -visio -app -versio"
+                " -bibliothecae -bibliotheca <nomen> [-fons]"
                 " -f <radix> -icon <via>)");
             imp->causa = chorda_aedificator_finire(aed);
             redde FALSUM;
@@ -148,11 +180,27 @@ briar_imperium_legere (
             imp->via = a;
         }
     }
+    si (   imp->fons_bibliothecae
+        && imp->actio != BRIAR_ACTIO_BIBLIOTHECA)
+    {
+        _recusare(imp, piscina, "-fons solum cum -bibliotheca <nomen>");
+        redde FALSUM;
+    }
+    si (   imp->via != NIHIL
+        && (   imp->actio == BRIAR_ACTIO_BIBLIOTHECAE
+            || imp->actio == BRIAR_ACTIO_BIBLIOTHECA))
+    {
+        _recusare(imp, piscina, "-bibliothecae / -bibliotheca sine"
+            " plagula currunt (documentatio corporis, non plagulae)");
+        redde FALSUM;
+    }
     si (imp->via == NIHIL)
     {
-        si (imp->actio == BRIAR_ACTIO_VERSIO)
+        si (   imp->actio == BRIAR_ACTIO_VERSIO
+            || imp->actio == BRIAR_ACTIO_BIBLIOTHECAE
+            || imp->actio == BRIAR_ACTIO_BIBLIOTHECA)
         {
-            redde VERUM;   /* -versio sine plagula; -f iam lectum */
+            redde VERUM;   /* sine plagula; -f iam lectum */
         }
         _recusare(imp, piscina, "plagula .thistle deest (usus: briar"
             " [-vexillum] <x.thistle> [argumenta])");

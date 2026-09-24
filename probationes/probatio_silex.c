@@ -434,6 +434,48 @@ s32 principale (vacuum)
         CREDO_CHORDA_CONTINET(chorda_ex_literis(corpus->titulus,
             piscina), chorda_ex_literis("abc123", piscina));
 
+        /* ENUMERARE (briar -bibliothecae): discus == corpus, ordine
+         * lexico, directe in directorio, suffixo filtrata */
+        {
+            constans character* constans DIRS[] = { "include", "lib",
+                "vendor", "nusquam" };
+            constans character* constans SUFF[] = { ".h", ".c", ".h",
+                ".h" };
+            constans character* constans EXSP[] = {
+                "altera.h minima.h obiectiva.h", "altera.c minima.c",
+                "parva.h", "" };
+            i32 d;
+
+            per (d = ZEPHYRUM; d < IV; d++)
+            {
+                i32 f;
+
+                per (f = ZEPHYRUM; f < II; f++)
+                {
+                    Xar* l = silex_fons_enumerare(f == ZEPHYRUM ? discus
+                        : corpus, DIRS[d], SUFF[d], piscina);
+                    ChordaAedificator* aed = chorda_aedificator_creare(
+                        piscina, (memoriae_index)128);
+                    i32 k;
+
+                    CREDO_NON_NIHIL(l);
+                    per (k = ZEPHYRUM; l != NIHIL && k < xar_numerus(l);
+                         k++)
+                    {
+                        si (k > ZEPHYRUM)
+                        {
+                            chorda_aedificator_appendere_literis(aed,
+                                " ");
+                        }
+                        chorda_aedificator_appendere_chorda(aed,
+                            *(chorda*)xar_obtinere(l, k));
+                    }
+                    CREDO_CHORDA_AEQUALIS_LITERIS(
+                        chorda_aedificator_finire(aed), EXSP[d]);
+                }
+            }
+        }
+
         ex_disco = silex_clausuram_colligere(piscina, discus,
             SEMINA2, 2);
         ex_corpore = silex_clausuram_colligere(piscina, corpus,

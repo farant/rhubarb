@@ -613,3 +613,16 @@ shows that the NEW assertions, and only they, catch this defect.
 
 The closure walker is compiled into `bin/briar` and the silex CLI, so
 both need a rebuild before they see this.
+
+## 2026-09-24 — `silex_fons_enumerare`
+
+Added for briar's `-bibliothecae`: the basenames directly inside one
+directory of a SilexFons, filtered by suffix, SORTED (chorda order).
+CORPUS walks the capsula index and keeps entries whose path is exactly
+`<dir>/<name><suffix>` (no deeper `/`); DISCUS uses
+`directorium_iterator_aperire`. The sort is what makes the two modes
+comparable at all — directory order on disk and capsula order differ.
+The gate runs both modes over the same fixture and asserts the same
+text (include `.h`, lib `.c`, a vendor dir, a missing dir → empty).
+Plant: sorting removed → red. An empty/missing directory returns an
+empty Xar, not NIHIL; NIHIL only on allocation failure.

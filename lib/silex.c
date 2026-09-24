@@ -4945,3 +4945,102 @@ silex_partes (
     }
     redde fructus;
 }
+
+
+/* ==================================================
+ * Enumeratio fontis (briar -bibliothecae)
+ * ================================================== */
+
+interior s32
+_chordas_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde (s32)chorda_comparare(*(constans chorda*)a,
+        *(constans chorda*)b);
+}
+
+Xar*
+silex_fons_enumerare (
+    constans SilexFons* fons,
+    constans character* directorium,
+    constans character* suffixum,
+               Piscina* piscina)
+{
+    Xar* nomina    = xar_creare(piscina, (i32)magnitudo(chorda));
+    i32  praefixi  = (i32)strlen(directorium);
+
+    si (nomina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (fons->genus == SILEX_FONS_CORPUS)
+    {
+        i32 numerus = capsula_numerus(fons->capsula);
+        i32 i;
+
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            CapsulaIndexum* ix = capsula_indexum(fons->capsula, i);
+                    chorda  titulus;
+                       i32  k;
+                       b32  profundius = FALSUM;
+
+            si (   ix == NIHIL || ix->via.mensura <= praefixi + I
+                || memcmp(ix->via.datum, directorium,
+                       (memoriae_index)praefixi) != ZEPHYRUM
+                || ix->via.datum[praefixi] != '/')
+            {
+                perge;
+            }
+            titulus.datum    = ix->via.datum + praefixi + I;
+            titulus.mensura  = ix->via.mensura - praefixi - I;
+            per (k = ZEPHYRUM; k < titulus.mensura; k++)
+            {
+                si (titulus.datum[k] == '/')
+                {
+                    profundius = VERUM;
+                }
+            }
+            si (!profundius && _suffixum_habet(titulus, suffixum))
+            {
+                chorda* locus = (chorda*)xar_addere(nomina);
+
+                si (locus == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                *locus = titulus;
+            }
+        }
+    }
+    alioquin
+    {
+         DirectoriumIterator* iter;
+        DirectoriumIntroitus* e;
+
+        iter = directorium_iterator_aperire(_texere(piscina,
+            fons->fabrica, "/", directorium), piscina);
+        si (iter != NIHIL)
+        {
+            dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
+            {
+                si (   e->genus == INTROITUS_FILUM
+                    && _suffixum_habet(e->titulus, suffixum))
+                {
+                    chorda* locus = (chorda*)xar_addere(nomina);
+
+                    si (locus == NIHIL)
+                    {
+                        directorium_iterator_claudere(iter);
+                        redde NIHIL;
+                    }
+                    *locus = chorda_transcribere(e->titulus, piscina);
+                }
+            }
+            directorium_iterator_claudere(iter);
+        }
+    }
+    xar_ordinare(nomina, _chordas_comparare);
+    redde nomina;
+}

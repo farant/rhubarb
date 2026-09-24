@@ -184,6 +184,41 @@ principale (vacuum)
     CREDO_VERUM (_legere(piscina, &imp, I, "-h", NIHIL, NIHIL));
     CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_AUXILIUM);
 
+    /* -bibliothecae / -bibliotheca <nomen> [-fons]: sine plagula
+     * (documentatio corporis, 2026-09-24) */
+    CREDO_VERUM (_legere(piscina, &imp, I, "-bibliothecae", NIHIL,
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_BIBLIOTHECAE);
+    CREDO_VERUM (_legere(piscina, &imp, II, "-bibliotheca", "sors",
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_BIBLIOTHECA);
+    CREDO_VERUM (imp.bibliotheca != NIHIL
+        && strcmp(imp.bibliotheca, "sors") == ZEPHYRUM);
+    CREDO_FALSUM (imp.fons_bibliothecae);
+    CREDO_VERUM (_legere(piscina, &imp, III, "-bibliotheca", "sors",
+        "-fons"));
+    CREDO_VERUM (imp.fons_bibliothecae);
+    CREDO_VERUM (_legere(piscina, &imp, III, "-bibliothecae", "-f",
+        "/tmp/r"));
+    CREDO_VERUM (imp.fabrica != NIHIL && strcmp(imp.fabrica, "/tmp/r")
+        == ZEPHYRUM);
+    /* recusationes: nomen deest, -fons sine -bibliotheca, cum plagula,
+     * actiones duae */
+    CREDO_FALSUM (_legere(piscina, &imp, I, "-bibliotheca", NIHIL,
+        NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("-bibliotheca sine nomine", piscina));
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-fons", "x.thistle",
+        NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("-fons solum cum -bibliotheca", piscina));
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-bibliothecae",
+        "x.thistle", NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("sine plagula", piscina));
+    CREDO_FALSUM (_legere(piscina, &imp, III, "-bibliothecae",
+        "-bibliotheca", "sors"));
+
     imprimere("\n--- Probans recusationes ---\n");
     CREDO_FALSUM (_legere(piscina, &imp, II, "-ignotum", "x.thistle",
         NIHIL));

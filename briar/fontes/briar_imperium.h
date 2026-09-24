@@ -4,7 +4,9 @@
  * Forma: briar [-vexillum] [-f <radix>] <x.thistle> [argumenta...]
  * Ante plagulam: -probatio -struere [-iterum] -arbor -partes -amalgama
  * -html -visio -app -versio -auxilium/-h, -f <radix>, -icon <via> (cum
- * -app solo); aliud '-...' =
+ * -app solo); SINE plagula: -versio, -bibliothecae, -bibliotheca
+ * <nomen> [-fons] (documentatio corporis - NON reservata post plagulam,
+ * ne argumenta programmatis rapiant); aliud '-...' =
  * recusatio
  * (spiritus optionum declaratarum). Post plagulam argumentum PRIMUM
  * solum inspicitur: unum e septem vexillis actionis = actio (shebang
@@ -38,6 +40,8 @@ nomen enumeratio {
     BRIAR_ACTIO_VISIO,         /* -visio: spectator (par. 4.7) */
     BRIAR_ACTIO_APP,           /* -app: fasciculus .app (par. 4.8) */
     BRIAR_ACTIO_VERSIO,        /* -versio (sine plagula) */
+    BRIAR_ACTIO_BIBLIOTHECAE,  /* -bibliothecae (sine plagula) */
+    BRIAR_ACTIO_BIBLIOTHECA,   /* -bibliotheca <nomen> [-fons] */
     BRIAR_ACTIO_AUXILIUM       /* -auxilium / -h (sine plagula) */
 } BriarActio;
 
@@ -47,6 +51,8 @@ nomen structura {
             constans character* via;         /* plagula aut NIHIL */
             constans character* fabrica;     /* -f <radix> aut NIHIL */
             constans character* icon;        /* -icon (cum -app) */
+            constans character* bibliotheca; /* -bibliotheca <nomen> */
+                           b32  fons_bibliothecae; /* -fons */
     constans character* constans* reliqua;   /* programmatis */
                            i32 numerus_reliquorum;
                         chorda causa;       /* recusatio si mensura */

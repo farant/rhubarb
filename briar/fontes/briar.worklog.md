@@ -701,3 +701,38 @@ erat, ne identitas octetorum gradus XII falleret.
   mtime is enough — rebake every corpus-embedding binary before a fumus
   (briar, briar-spectator, silex). Otherwise XII goes red for a reason
   unrelated to the change under test.
+
+## 2026-09-24 — `-bibliothecae` / `-bibliotheca <nomen> [-fons]` (park …RX7K59)
+
+Fran asked for "some kind of tool that lists the bundled libraries and
+maybe something that lets you print out the source code for individual
+bundled libraries, at least as rudimentary initial documentation".
+
+- **Shape.** `briar -bibliothecae` lists every `include/*.h` in the
+  corpus briar would actually use (same precedence as a run: `-f` >
+  ascent > embedded; the first line says `(infixum)` or `(discus)`),
+  one line per library: name, sources present (`h c m`), and the
+  description. `briar -bibliotheca sors` prints the header;
+  `-fons` adds `lib/sors{,_posix,_macos}.c` / `_macos.m` when present.
+  An unknown name exits 1 with `fortasse:` suggestions.
+- **Descriptions are the header's own first line**, by the house
+  convention `/* sors.h - …` (also `:` and em dash):
+  `briar_bibliotheca_descriptio` (new pure module, own gate). No
+  separate documentation store to rot. Live: 185 libraries, **114 with
+  no description line** — that count IS the documentation debt, printed
+  on every run ("sine descriptione M").
+- **Enumeration moved into silex** (`silex_fons_enumerare`): the
+  corpus is a SilexFons, and briar must not know whether it reads disk
+  or capsula. Sorted by chorda so both modes print the same order —
+  the silex gate asserts disk == corpus on a fixture; plant (no sort) →
+  red.
+- **Parsing:** both words are handled in the pre-plagula loop only, so
+  they are NOT reserved after a script (`./x.thistle -bibliothecae`
+  stays an argument of the script). `-fons` without `-bibliotheca`
+  refused; either one with a plagula refused.
+- **`similitudo_optima` found nothing for `sorss`**: subsequence scoring
+  punishes the trailing typo. `similitudo_optima_decurtata` (prefix
+  scored) gives `sors` first.
+- **Fumus XVII** holds the binary-level contract (the suite cannot see
+  `tools/briar.c`). Plant: every description forced empty → XVII red
+  ("linea sors (h c + descriptio) deest").
