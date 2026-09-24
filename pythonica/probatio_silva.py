@@ -1714,6 +1714,108 @@ _n3 = silva._nuntium_cum_trailer('titulus: de Co-Authored-By: in media linea loq
 credo(_n3.count('\nCo-Authored-By:') == 1, 'mentio in MEDIA linea non est linea auctoris')
 
 
+print('--- portae debitae: quae portae mutationi debentur (inventarium FICTUM) ---')
+# Via frigida SUBSTITUITUR: '-inventarium X' plagulam TSV ex ambitu
+# reddit (FICTA_INV), aut rc FICTA_INV_RC. Clausurae aedilis VERAE
+# (arbor viva: invariantes, non numeri). Acceptio = replay dcd516c7.
+_pd = tempfile.mkdtemp(prefix='silva_debitae_')
+_pstip = os.path.join(_pd, 'frigida_ficta.sh')
+_pinv = os.path.join(_pd, 'inv.tsv')
+open(_pstip, 'w').write(
+    '#!/bin/bash\n'
+    'if [ "$1" = "-inventarium" ]; then\n'
+    '  [ -n "${FICTA_INV_RC:-}" ] && { echo "res ignota" >&2; exit "$FICTA_INV_RC"; }\n'
+    '  echo "  [nexus] strepitus launcheri"\n'
+    '  cat "$FICTA_INV"; exit 0\n'
+    'fi\n'
+    'exit 2\n')
+os.chmod(_pstip, 0o755)
+
+
+def _inv_scribere(currit_radix):
+    lineae = [
+        'compile_tests.sh\tporta\ttextus\tradix',
+        'compile_tests.sh\tmanu tantum\tita-non\tnon',
+        'gesta/compile_probationes.sh\tporta\ttextus\tgesta',
+        'pythonica/probare.sh\tporta\ttextus\tpythonica',
+        'pythonica/probare.sh\ttegit viae\ttextus\tpythonica/*, tools/inventarium_*.py',
+        'apps/forum/fumus.sh\tporta\tnon-applicabile\textra PORTAE',
+        'apps/forum/fumus.sh\tmanu tantum\tita-non\tita',
+        'apps/forum/fumus.sh\ttegit viae\ttextus\tapps/forum/*',
+        'tools/claves_codices_probare.sh\tcur extra PORTAE\ttextus\tuna\\tduae\\\\tres\\nquattuor',
+    ]
+    if currit_radix:
+        lineae.append('compile_tests.sh\tcurrit binaria\ttextus\t'
+                      'gesta/instrumenta/tabulariumd_principale.c, gesta/tabulariumd.sh')
+    open(_pinv, 'w').write('\n'.join(lineae) + '\n')
+
+
+_dcd = ['gesta/fontes/tabularium.c', 'gesta/gesta.worklog.md',
+        'gesta/probationes/probatio_tabularium.c']
+_fr_vera2 = silva.FRIGIDA_IMPERIUM
+silva.FRIGIDA_IMPERIUM = [_pstip]
+os.environ['FICTA_INV'] = _pinv
+try:
+    # lectio: strepitus launcheri praetermittitur; effugia solvuntur
+    _inv_scribere(False)
+    inv = silva.inventarium('suitae probationum')
+    credo(inv.ordines[0] == 'compile_tests.sh' and 'porta' in inv.lentes,
+          'inventarium: ordines et lentes ordine tabulae')
+    credo(inv.cellae['tools/claves_codices_probare.sh']['cur extra PORTAE']
+          == ('textus', 'una\tduae\\tres\nquattuor'),
+          'inventarium: \\t \\\\ \\n in valore soluta (tabulatio, vectis, linea nova)')
+
+    # ACCEPTIO I (nata rubra): sine cella 'currit binaria' radix DEEST
+    debita, intecta = silva.portae_debitae(_dcd)
+    nomina = [d.porta for d in debita]
+    credo('gesta' in nomina, 'dcd516c7 sine cella: gesta debetur (clausura compilandi)')
+    credo('radix' not in nomina, 'dcd516c7 sine cella: radix NON debetur (graphus eam non videt)')
+    credo('gesta/gesta.worklog.md' in intecta, 'worklog nullius portae: intectum')
+    g = [d for d in debita if d.porta == 'gesta'][0]
+    credo('gesta/fontes/tabularium.c' in g.causa and 'probatio_' in g.causa and not g.manu,
+          'causa gestae plagulam et probationem nominat')
+
+    # ACCEPTIO II: cum cella radix debetur, causa per tabulariumd_principale.c
+    _inv_scribere(True)
+    debita, intecta = silva.portae_debitae(_dcd)
+    r = [d for d in debita if d.porta == 'radix']
+    credo(len(r) == 1, 'dcd516c7 cum cella: radix debetur')
+    credo(r and 'tabulariumd_principale.c' in r[0].causa and 'gesta/fontes/tabularium.c' in r[0].causa,
+          'causa radicis catenam nominat (plagula -> tabulariumd_principale.c)')
+    credo([d.porta for d in debita if not d.manu] == [p for p in silva.PORTAE if p in ('gesta', 'radix')],
+          'ordo = ordo PORTAE')
+
+    # tegit viae (fnmatch), cursor ipse, manu, intecta
+    debita, intecta = silva.portae_debitae(['pythonica/silva.py', 'tools/inventarium_suitarum.py'])
+    credo([d.porta for d in debita] == ['pythonica'] and intecta == [],
+          'tegit viae: pythonica/* et tools/inventarium_*.py -> pythonica')
+    debita, intecta = silva.portae_debitae(['gesta/compile_probationes.sh'])
+    credo([d.porta for d in debita] == ['gesta'], 'cursor ipse mutatus: porta sua debetur')
+    debita, intecta = silva.portae_debitae(['apps/forum/fumus.sh', 'README.md'])
+    m = [d for d in debita if d.manu]
+    credo(len(m) == 1 and m[0].porta == 'apps/forum/fumus.sh',
+          'porta extra PORTAE (manu tantum): scriptum ipsum ut debitum MANU')
+    credo(intecta == ['README.md'], 'README.md nullius portae: intectum')
+    credo(silva.portae_debitae(['./gesta/../gesta/compile_probationes.sh'])[0][0].porta == 'gesta',
+          'viae normalizantur')
+
+    # lectio fracta: SilvaError rc nominans
+    os.environ['FICTA_INV_RC'] = '1'
+    try:
+        silva.inventarium('nusquam')
+        credo(False, 'inventarium ignotum')
+    except silva.SilvaError as ex:
+        credo('res ignota' in str(ex) and 'nusquam' in str(ex), 'inventarium ignotum: causa machinae transit')
+    del os.environ['FICTA_INV_RC']
+except AttributeError as ex:
+    credo(False, 'portae debitae absunt: %s' % ex)
+finally:
+    silva.FRIGIDA_IMPERIUM = _fr_vera2
+    for _k in ('FICTA_INV', 'FICTA_INV_RC'):
+        os.environ.pop(_k, None)
+    import shutil
+    shutil.rmtree(_pd, ignore_errors=True)
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))

@@ -730,3 +730,37 @@ parses silva.py with `ast` and asserts PORTAE's literal keys are unique
 (born red on 4f889895 itself: ['silex-semen', 'villa']). Lessons: a
 substitution is verified by `git diff`, never by eyeballing the place you
 expected it; and a dict literal swallows duplicate keys silently.
+
+## 2026-09-24 — silva.inventarium + silva.portae_debitae (portae debitae T2)
+
+`inventarium(res)` reads `./gesta/frigida.sh -inventarium` (T1's machine
+form): lines without a tab are launcher noise and skipped; a line WITH tabs but
+not four fields raises (never silently dropped); `\\ \t \n` unescaped. Rows
+with no cell do not appear - the machine form prints present cells only.
+
+`portae_debitae(viae)` -> (debita, intecta). Coverage is derived per call:
+(a) for each row whose `porta` names a SUITAE gate, `<dir>/probatio_*.c` and
+their `bin/aedilis --partes` closures (O/C/V), 4 Popen at a time - the house
+has no threads, and none are needed; (b) `currit binaria`: a `.c` entry counts
+through its closure, anything else literally; (c) `tegit viae`: fnmatch, whose
+`*` already crosses `/` (so `pythonica/*` means the whole tree below). Also:
+editing a runner script owes its own gate; a test file owes its suite.
+
+Decisions made while writing it:
+- Closures only hold .c/.h/.m, so when no changed path has those suffixes the
+  closure sweep is skipped entirely (non-C commits pay nothing).
+- A closure that cannot be computed (aedilis rc != 0) makes the suite OWED,
+  with that as the causa - over-running beats going silently blind.
+- `manu` means "the row has no gate" (GUI script or deliberately separate); I
+  first also read `manu tantum`, found it changed nothing, removed it.
+- One causa per gate (+N aliae); PORTAE order, then manual rows.
+
+Cost, measured: a C change sweeps all 14 compiled suites' 392 tests, ~18 s
+live. Tests: fake inventory via a frigida stub (as opus_praeiudicare's tests);
+the dcd516c7 replay both ways - without the `currit binaria` cell radix is NOT
+owed, with it radix is owed and the causa names tabulariumd_principale.c.
+Plant: the runtime-edge branch disabled -> 3 red. The section's C calls cost a
+sweep each, so the manual-row case uses a .sh path (20 s for the section).
+
+First live run (lenses still empty): lib/json.c owes radix, briar, officina,
+gesta; pythonica/silva.py is uncovered until T3 fills `tegit viae`.
