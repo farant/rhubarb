@@ -20,7 +20,9 @@ lesson of e0988825).
 > (ordines/lens/cellae/removere), pre-judgment with the engine's own
 > validator, idempotent row pushes (`a6e40893`). **T4 DONE** (this
 > commit): `tabula` view, character-width columns, frontier footer.
-> Next: T5, the test-suite inventory (acceptance, with Fran).
+> (`67472c02`). **T5 built** (this commit): live inventory 'suitae
+> probationum' (35 rows, 5 lenses) via tools/inventarium_suitarum.py;
+> awaiting Fran's look. Finding: not-applicable cells count as unknown.
 
 ---
 

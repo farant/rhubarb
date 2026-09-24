@@ -92,3 +92,29 @@ padding doesn't show); unknown-check inverted -> both frontier lines red.
 Two plant attempts broke the BUILD first (clang's
 -Wtautological-bitwise-compare caught an always-true mask) and were
 redone as compiling faults — same lesson as T3.
+
+## 2026-09-24 — first inventory: test suites (T5, acceptance)
+
+Live inventory 'suitae probationum' (…EH76CR) in region "inventory
+management for batch processes": 35 rows from tools/inventarium_suitarum.py
+(runner-shaped scripts via git ls-files), lenses `in PORTAE` + `porta`
+(derived from pythonica/silva.py PORTAE, fons derivatum), `manu tantum`
+(7 by hand from script headers, 28 derived: registered => commissio runs
+it unattended), `cur extra PORTAE` (the 7 unregistered, reasons read from
+each script's header), `tegit` (15 by hand). Re-pushing rows live: "nihil
+novi - nihil scriptum".
+
+Found while building it: my own regex for PORTAE names used [a-z_] and
+missed hyphenated gates (formator-intra, mensor-suitae, briar-fumus,
+materia-shim) — so the "24 registered gates" I reported earlier was an
+undercount; the true number is 29. The 7-unregistered figure was right
+(it came from a path match). Two unregistered scripts turn out to be
+headless CANDIDATES for PORTAE: apps/villa/fumus.sh ("sine oculis", swept
+by no runner) and tools/silex_semen_fumus.sh (a real gate).
+
+DESIGN GAP the acceptance test exposed: a lens that applies to only some
+rows counts the rest as UNKNOWN. `porta` shows "ignotae 7/35" and `cur
+extra PORTAE` "28/35", but those cells are not unknown, they are NOT
+APPLICABLE. The frontier conflates the two, so it overstates what is left
+to fill. Candidate fixes (for Fran): an explicit "non applicabile" value,
+or a lens APPLICABILITY rule ("applies where in PORTAE = non").
