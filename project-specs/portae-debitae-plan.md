@@ -5,6 +5,15 @@
 > debitae v1" in region "automatic calculation of relevant tests"; one
 > `opus` per task below, closed by `silva.commissio(opus=ID)`.
 
+> **STATUS 2026-09-24 — ALL FIVE TASKS DONE.** T1 `3f6dfa7d` (machine
+> form + `frigida -inventarium`), T2 `ce87f9b5` (`silva.inventarium`,
+> `portae_debitae`; dcd516c7 replay both ways), T3 `5f2d383e` (lenses
+> filled, Fran looked; live replay also found `frigida` owed), T4
+> `aaf1c843` (`tools/portae_debitae.sh`), T5 `deecd624` (commissio adds
+> and runs owed gates — committed with NO gates requested; it found
+> `pythonica` itself). Costs: aedilis covers lib/include (186 s);
+> inventory read 3.3 s (desideratum …JK3Y); pythonica suite 3:13 → 4:39.
+
 **Global constraints.** C89 in Latin via latina.h, house flags; `i32`/`i64`
 UNSIGNED; chorda not NUL-terminated; tests with credo (C) or the
 pythonica `credo` (Python), every new assertion born red; worklog first,
