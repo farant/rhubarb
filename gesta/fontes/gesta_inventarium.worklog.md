@@ -73,3 +73,22 @@ it out). Presence filter defeated -> 3 red. A first attempt at the second
 plant removed the only call to the presence helper and broke the BUILD
 (-Wunused-function); a plant that breaks the build proves nothing, so it
 was redone as a helper that always answers "absent".
+
+## 2026-09-23 — `tabula`: the table view and the frontier (T4)
+
+`inventarium {actus: tabula}` renders rows × lenses: `+` ita, `-` non,
+`·` unknown (absent, explicit `ignotum`, or empty text), text truncated
+at 32 characters with `~`, row keys at 48. Columns are sized by
+CHARACTERS, not bytes (`·` is two bytes of UTF-8; keys may be non-ASCII),
+and truncation never splits a UTF-8 sequence. Trailing spaces are trimmed.
+Footer, one line per lens: `ignotae N/M` (the frontier) plus the oldest
+and newest cell dates (first 10 chars of the cells' `creatum`). The body
+is deterministic; only the footer dates depend on when cells were written,
+so the test asserts the body exactly and the footer by structure.
+
+Plants: byte-counted widths -> the row with `·` in a padded column goes
+red (the `a.sh` row stays green: its `·` is last on the line, where
+padding doesn't show); unknown-check inverted -> both frontier lines red.
+Two plant attempts broke the BUILD first (clang's
+-Wtautological-bitwise-compare caught an always-true mask) and were
+redone as compiling faults — same lesson as T3.

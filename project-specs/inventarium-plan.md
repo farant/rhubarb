@@ -18,7 +18,9 @@ lesson of e0988825).
 > validation as custody notes, genus seeded (semen v10), SEMINA_NUMERUS
 > derived (`ccf4a8cd`). **T3 DONE** (this commit): tool `inventarium`
 > (ordines/lens/cellae/removere), pre-judgment with the engine's own
-> validator, idempotent row pushes. Next: T4, the `tabula` view.
+> validator, idempotent row pushes (`a6e40893`). **T4 DONE** (this
+> commit): `tabula` view, character-width columns, frontier footer.
+> Next: T5, the test-suite inventory (acceptance, with Fran).
 
 ---
 

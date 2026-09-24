@@ -5194,6 +5194,45 @@ principale (vacuum)
             "\":{\"res\":\"Iv suitae\",\"actus\":\"saltare\"}}}");
         CREDO_VERUM (strstr(r, "actus ignotus") != NIHIL);
 
+        /* TABULA (inventarium v1 T4): corpus exactum (determinatum),
+         * pes per structuram (dies ex creato cellarum) */
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59412,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"lens\",\"lens\":"
+            "\"tegit\",\"genus_valoris\":\"textus\"}}}");
+        CREDO_VERUM (strstr(r, "lens-addita") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59413,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"cellae\",\"cella"
+            "e\":\"[{\\\"ordo\\\":\\\"c.sh\\\",\\\"lens\\\":\\\"teg"
+            "it\\\",\\\"valor\\\":{\\\"genus\\\":\\\"textus\\\",\\"
+            "\"valor\\\":\\\"radix et gesta\\\"}}]\"}}}");
+        CREDO_VERUM (strstr(r, "cella-posita") != NIHIL);
+        r = _mitte(t, piscina,
+            "{\"jsonrpc\":\"2.0\",\"id\":59414,\"method\":\"tools/c"
+            "all\",\"params\":{\"name\":\"inventarium\",\"arguments"
+            "\":{\"res\":\"Iv suitae\",\"actus\":\"tabula\"}}}");
+        CREDO_VERUM (strstr(r,
+            "INVENTARIUM 'Iv suitae' - ordines 2 \xc2\xb7 lentes 2")
+                != NIHIL);
+        CREDO_VERUM (strstr(r, "ordo  in PORTAE  tegit\\n") != NIHIL);
+        CREDO_VERUM (strstr(r, "----  ---------  --------------\\n")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "a.sh  +          \xc2\xb7\\n")
+            != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "c.sh  \xc2\xb7          radix et gesta\\n") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "lens 'in PORTAE' (ita-non): ignotae 1/2 \xc2\xb7"
+            " antiquissima 20")
+                != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "lens 'tegit' (textus): ignotae 1/2 \xc2\xb7"
+            " antiquissima 20")
+                != NIHIL);
+
         /* FORMA NOMINA: arbor nominum sola, ut 'tree' - sine id, sine
          * numeris, sine salute; filia indentata */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5821,"

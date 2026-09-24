@@ -9775,7 +9775,7 @@ _tab_res (
     /* affordantiae (K3 - superficies passiva): actiones quae rem
      * NUNC ligare possunt */
     _actiones_reddere(t, aed, res_id, pn);
-    /* annales entis (XV eventa recentissima; truncalia sola - eadem
+    /* annales entis (XV eventa novissima; truncalia sola - eadem
      * puritas trunci ac proiectio entitatum, alias eventus ramales
      * et duplicata post-fusionem apparerent) */
     {
@@ -11677,6 +11677,340 @@ _inventarii_ordo_adest (
     redde FALSUM;
 }
 
+/* latitudo in CHARACTERIBUS (octeti continuationis UTF-8 non
+ * numerantur) - '·' duo octeti sed columna una */
+interior i32
+_inventarii_latitudo (
+    chorda c)
+{
+    i32 n = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < c.mensura; k++)
+    {
+        si (((i32)c.datum[k] & 0xC0U) != 0x80U)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* chorda ad maximum characterum decurtata ('~' in fine), numquam in
+ * medio characteris UTF-8 secta */
+interior chorda
+_inventarii_decurtare (
+     chorda  c,
+        i32  maximum,
+    Piscina* pn)
+{
+    ChordaAedificator* aed;
+                  i32  n = ZEPHYRUM;
+                  i32  k;
+
+    si (_inventarii_latitudo(c) <= maximum)
+    {
+        redde c;
+    }
+    aed = chorda_aedificator_creare(pn, (memoriae_index)c.mensura + II);
+    per (k = ZEPHYRUM; k < c.mensura; k++)
+    {
+        si (((i32)c.datum[k] & 0xC0U) != 0x80U)
+        {
+            si (n == maximum - I)
+            {
+                frange;
+            }
+            n++;
+        }
+        chorda_aedificator_appendere_character(aed,
+            (character)c.datum[k]);
+    }
+    chorda_aedificator_appendere_character(aed, '~');
+    redde chorda_aedificator_finire(aed);
+}
+
+/* cella reddita: ita '+', non '-', ignota '·', textus decurtatus */
+interior chorda
+_inventarii_cella_reddita (
+    JsonValor* cella,
+      Piscina* pn)
+{
+    chorda g;
+    chorda v;
+
+    si (cella == NIHIL || !json_est_objectum(cella))
+    {
+        redde _ch("\xc2\xb7");
+    }
+    g = json_ad_chorda(json_objectum_capere(cella, "genus"));
+    v = json_ad_chorda(json_objectum_capere(cella, "valor"));
+    si (_chorda_est(g, "ita-non"))
+    {
+        redde _chorda_est(v, "ita") ? _ch("+")
+            : _chorda_est(v, "non") ? _ch("-") : _ch("\xc2\xb7");
+    }
+    si (v.mensura == ZEPHYRUM)
+    {
+        redde _ch("\xc2\xb7");
+    }
+    redde _inventarii_decurtare(v, XXXII, pn);
+}
+
+/* cellam ignotam esse (absens, 'ignotum', textus vacuus) */
+interior b32
+_inventarii_cella_ignota (
+    JsonValor* cella)
+{
+    chorda v;
+
+    si (cella == NIHIL || !json_est_objectum(cella))
+    {
+        redde VERUM;
+    }
+    v = json_ad_chorda(json_objectum_capere(cella, "valor"));
+    redde v.mensura == ZEPHYRUM || _chorda_est(v, "ignotum");
+}
+
+/* columnam implere: textus + spatia ad latitudinem */
+interior vacuum
+_inventarii_columna (
+    ChordaAedificator* aed,
+               chorda  textus,
+                  i32  latitudo)
+{
+    i32 k;
+
+    chorda_aedificator_appendere_chorda(aed, textus);
+    per (k = _inventarii_latitudo(textus); k < latitudo; k++)
+    {
+        chorda_aedificator_appendere_character(aed, ' ');
+    }
+}
+
+/* spatia terminalia lineae tollere (ante '\n') */
+interior vacuum
+_inventarii_lineam_finire (
+    ChordaAedificator* aed,
+              Piscina* pn,
+    ChordaAedificator* linea)
+{
+    chorda l = chorda_aedificator_finire(linea);
+
+    (vacuum)pn;
+    dum (l.mensura > ZEPHYRUM && l.datum[l.mensura - I] == (i8)' ')
+    {
+        l.mensura--;
+    }
+    chorda_aedificator_appendere_chorda(aed, l);
+    chorda_aedificator_appendere_character(aed, '\n');
+}
+
+/* TABULA (inventarium v1 T4): ordines x lentes + pes (frons per
+ * lentem: ignotae N/M, cella antiquissima et novissima). Corpus
+ * determinatum (sine horologio); dies pedis ex creato cellarum. */
+interior chorda
+_inventarii_tabulam_reddere (
+     JsonValor* status,
+        chorda  titulus,
+       Piscina* pn)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(pn, M * IV);
+            JsonValor* ordines = json_objectum_capere(status,
+                "ordines");
+            JsonValor* lentes = json_objectum_capere(status, "lentes");
+            JsonValor* cellae = json_objectum_capere(status, "cellae");
+                  i32  numerus_ordinum    = (ordines != NIHIL
+                      && json_est_tabulatum(ordines))
+                      ? json_tabulatum_numerus(ordines) : ZEPHYRUM;
+                  i32 numerus_lentium   = (lentes != NIHIL
+                      && json_est_tabulatum(lentes))
+                      ? json_tabulatum_numerus(lentes) : ZEPHYRUM;
+                  i32* latitudines;
+                  i32  i;
+                  i32  j;
+            character  caput[CXXVIII];
+    ChordaAedificator* linea;
+
+    chorda_aedificator_appendere_literis(aed, "INVENTARIUM '");
+    chorda_aedificator_appendere_chorda(aed, titulus);
+    sprintf(caput, "' - ordines %d \xc2\xb7 lentes %d\n",
+        (int)numerus_ordinum,
+        (int)numerus_lentium);
+    chorda_aedificator_appendere_literis(aed, caput);
+    si (numerus_ordinum == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            "(nulli ordines - actus ordines eos addit)\n");
+        redde chorda_aedificator_finire(aed);
+    }
+    latitudines = (i32*)piscina_allocare(pn,
+        (memoriae_index)(numerus_lentium + I) * magnitudo(i32));
+    /* latitudines: caput vs cellae */
+    latitudines[0] = IV;   /* "ordo" */
+    per (i = ZEPHYRUM; i < numerus_ordinum; i++)
+    {
+        chorda k = _inventarii_decurtare(json_ad_chorda(
+            json_objectum_capere(json_tabulatum_obtinere(ordines, i),
+                "clavis")), XLVIII, pn);
+
+        si (_inventarii_latitudo(k) > latitudines[0])
+        {
+            latitudines[0] = _inventarii_latitudo(k);
+        }
+    }
+    per (j = ZEPHYRUM; j < numerus_lentium; j++)
+    {
+        chorda appellatio = json_ad_chorda(json_objectum_capere(
+            json_tabulatum_obtinere(lentes, j), "nomen"));
+
+        latitudines[j + I] = _inventarii_latitudo(appellatio);
+        per (i = ZEPHYRUM; i < numerus_ordinum; i++)
+        {
+            chorda clavis = json_ad_chorda(json_objectum_capere(
+                json_tabulatum_obtinere(ordines, i), "clavis"));
+            JsonValor* linea_cellarum = cellae != NIHIL
+                ? json_objectum_capere_chorda(cellae, clavis) : NIHIL;
+            chorda r = _inventarii_cella_reddita(linea_cellarum != NIHIL
+                ? json_objectum_capere_chorda(linea_cellarum,
+                appellatio) : NIHIL,
+                pn);
+
+            si (_inventarii_latitudo(r) > latitudines[j + I])
+            {
+                latitudines[j + I] = _inventarii_latitudo(r);
+            }
+        }
+    }
+    /* caput et lineola */
+    linea = chorda_aedificator_creare(pn, CCLVI);
+    _inventarii_columna(linea, _ch("ordo"), latitudines[0]);
+    per (j = ZEPHYRUM; j < numerus_lentium; j++)
+    {
+        chorda_aedificator_appendere_literis(linea, "  ");
+        _inventarii_columna(linea, json_ad_chorda(json_objectum_capere(
+            json_tabulatum_obtinere(lentes, j), "nomen")),
+            latitudines[j + I]);
+    }
+    _inventarii_lineam_finire(aed, pn, linea);
+    linea = chorda_aedificator_creare(pn, CCLVI);
+    per (j = ZEPHYRUM; j <= numerus_lentium; j++)
+    {
+        i32 k;
+
+        si (j > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(linea, "  ");
+        }
+        per (k = ZEPHYRUM; k < latitudines[j]; k++)
+        {
+            chorda_aedificator_appendere_character(linea, '-');
+        }
+    }
+    _inventarii_lineam_finire(aed, pn, linea);
+    /* ordines */
+    per (i = ZEPHYRUM; i < numerus_ordinum; i++)
+    {
+        chorda clavis = json_ad_chorda(json_objectum_capere(
+            json_tabulatum_obtinere(ordines, i), "clavis"));
+        JsonValor* linea_cellarum = cellae != NIHIL
+            ? json_objectum_capere_chorda(cellae, clavis) : NIHIL;
+
+        linea = chorda_aedificator_creare(pn, CCLVI);
+        _inventarii_columna(linea,
+            _inventarii_decurtare(clavis, XLVIII, pn), latitudines[0]);
+        per (j = ZEPHYRUM; j < numerus_lentium; j++)
+        {
+            chorda appellatio = json_ad_chorda(json_objectum_capere(
+                json_tabulatum_obtinere(lentes, j), "nomen"));
+
+            chorda_aedificator_appendere_literis(linea, "  ");
+            _inventarii_columna(linea, _inventarii_cella_reddita(
+                linea_cellarum != NIHIL
+                    ? json_objectum_capere_chorda(linea_cellarum,
+                    appellatio)
+                    : NIHIL, pn), latitudines[j + I]);
+        }
+        _inventarii_lineam_finire(aed, pn, linea);
+    }
+    /* pes: frons per lentem */
+    per (j = ZEPHYRUM; j < numerus_lentium; j++)
+    {
+        JsonValor* lens;
+           chorda  appellatio;
+           chorda  antiquissima;
+           chorda  novissima;
+              i32  ignotae = ZEPHYRUM;
+        character  numeri[LXIV];
+
+        lens = json_tabulatum_obtinere(lentes, j);
+        appellatio = json_ad_chorda(json_objectum_capere(lens,
+            "nomen"));
+        antiquissima.mensura  = ZEPHYRUM;
+        antiquissima.datum    = NIHIL;
+        novissima.mensura     = ZEPHYRUM;
+        novissima.datum       = NIHIL;
+        per (i = ZEPHYRUM; i < numerus_ordinum; i++)
+        {
+            chorda clavis = json_ad_chorda(json_objectum_capere(
+                json_tabulatum_obtinere(ordines, i), "clavis"));
+            JsonValor* linea_cellarum = cellae != NIHIL
+                ? json_objectum_capere_chorda(cellae, clavis) : NIHIL;
+            JsonValor* cella = linea_cellarum != NIHIL
+                ? json_objectum_capere_chorda(linea_cellarum,
+                appellatio) : NIHIL;
+            chorda creatum;
+
+            si (_inventarii_cella_ignota(cella))
+            {
+                ignotae++;
+            }
+            si (cella == NIHIL || !json_est_objectum(cella))
+            {
+                perge;
+            }
+            creatum = json_ad_chorda(json_objectum_capere(cella,
+                "creatum"));
+            si (creatum.mensura == ZEPHYRUM)
+            {
+                perge;
+            }
+            si (   antiquissima.mensura == ZEPHYRUM
+                || chorda_comparare(creatum, antiquissima) < ZEPHYRUM)
+            {
+                antiquissima = creatum;
+            }
+            si (   novissima.mensura == ZEPHYRUM
+                || chorda_comparare(creatum, novissima) > ZEPHYRUM)
+            {
+                novissima = creatum;
+            }
+        }
+        chorda_aedificator_appendere_literis(aed, "lens '");
+        chorda_aedificator_appendere_chorda(aed, appellatio);
+        chorda_aedificator_appendere_literis(aed, "' (");
+        chorda_aedificator_appendere_chorda(aed, json_ad_chorda(
+            json_objectum_capere(lens, "genus_valoris")));
+        sprintf(numeri, "): ignotae %d/%d", (int)ignotae,
+            (int)numerus_ordinum);
+        chorda_aedificator_appendere_literis(aed, numeri);
+        si (antiquissima.mensura >= X)
+        {
+            antiquissima.mensura = X;
+            novissima.mensura = novissima.mensura >= X
+                ? X : novissima.mensura;
+            chorda_aedificator_appendere_literis(aed,
+                " \xc2\xb7 antiquissima ");
+            chorda_aedificator_appendere_chorda(aed, antiquissima);
+            chorda_aedificator_appendere_literis(aed,
+                " \xc2\xb7 recentissima ");
+            chorda_aedificator_appendere_chorda(aed, novissima);
+        }
+        chorda_aedificator_appendere_character(aed, '\n');
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
 interior vacuum
 _tab_inventarium (
     Tabularium* t,
@@ -11753,6 +12087,14 @@ _tab_inventarium (
         {
             status = json_objectum_creare(pn);
         }
+    }
+
+    /* TABULA (T4): lectio sola */
+    si (_chorda_est(actus, "tabula"))
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _inventarii_tabulam_reddere(status, titulus, pn), FALSUM);
+        redde;
     }
 
     /* datum per actum componere */
@@ -11854,7 +12196,8 @@ _tab_inventarium (
     {
         _textum_respondere(t, pn, effusio, id,
             _ch("inventarium RECUSATUM - nihil scriptum: actus ignotus"
-                " (ordines | lens | cellae | removere)"), VERUM);
+                " (tabula | ordines | lens | cellae | removere)"),
+                VERUM);
         redde;
     }
 
@@ -11930,7 +12273,8 @@ _instrumenta_componere (
     interior constans TabArgumentum ARG_INVENTARIUM[] = {
         { "res", "inventarium (id, fragmentum, titulus exactus)",
             VERUM },
-        { "actus", "ordines | lens | cellae | removere", VERUM },
+        { "actus", "tabula (lectio: ordines x lentes + frons) | ordines"
+          " | lens | cellae | removere", VERUM },
         { "ordines", "acies JSON aut index commatibus: ordines addendi"
           " (praesentes renuntiantur et praetermittuntur) aut"
           " removendi",
@@ -12271,7 +12615,9 @@ _instrumenta_componere (
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "inventarium",
         "INVENTARIUM: tabula ordinum (membra) x lentium (columnae)."
         " Creatur per addere {genus: inventarium, titulus, datum:"
-        " '{\"ordo_genus\":\"via\"}', intra}. Actus: ordines (addere;"
+        " '{\"ordo_genus\":\"via\"}', intra}. Actus: tabula (ordines x"
+        " lentes, + '-' '\xc2\xb7' ignota; pes = frons: ignotae per"
+        " lentem), ordines (addere;"
         " praesentes renuntiantur, nihil novi = nihil scriptum), lens,"
         " cellae (valores tagati; provenientia actor/tempus/fons/per),"
         " removere (causa). Recusatio ANTE scripturam, causae omnes."
