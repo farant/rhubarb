@@ -1723,6 +1723,34 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (r.heredoca_transposita, ZEPHYRUM);
     CREDO_FALSUM (r.sana);
 
+    /* petitiones heredoc PENDENTES exhauriendae (2026-09-24, inventum
+     * migrationis ad sors): _heredoc_claudere petitionem proximam IPSE
+     * aperit, ansae exhauriendi (EOF, finis backtick) autem 'aperire;
+     * claudere' vocabant - petitio una BIS aperta, ultima numquam
+     * clausa. EOF: cauda in delimitatorem heredoc ultimi cadebat;
+     * III+ petitiones: corpus 'transpositum' falsum (N - II). */
+    p = _casus(piscina, "x <<a <<b", &r);
+    CREDO_AEQUALIS_I32 (r.heredoca_transposita, ZEPHYRUM);
+    CREDO_FALSUM (_absens(p, (i32)CRUSTA_PROGRAMMA_CAUDA));
+    CREDO_AEQUALIS_I32 (_numerus(p, (i32)CRUSTA_PROGRAMMA_LIBERI),
+        (i32)III);
+    p = _casus(piscina, "x <<a <<b <<c", &r);
+    CREDO_AEQUALIS_I32 (r.heredoca_transposita, ZEPHYRUM);
+    CREDO_FALSUM (_absens(p, (i32)CRUSTA_PROGRAMMA_CAUDA));
+    CREDO_AEQUALIS_I32 (_numerus(p, (i32)CRUSTA_PROGRAMMA_LIBERI),
+        (i32)IV);
+    /* backtick: 'y' extra substitutionem manet, heredoc 'b' semel */
+    p = _casus(piscina, "echo `cat <<a <<b` y\n", &r);
+    CREDO_AEQUALIS_I32 (r.heredoca_transposita, ZEPHYRUM);
+    n = _sententia(p, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_numerus(n, (i32)CRUSTA_IMPERIUM_LIBERI),
+        (i32)III);
+    CREDO_AEQUALIS_I32 (_numerus(_pars(_filius(n,
+        (i32)CRUSTA_IMPERIUM_LIBERI, I), ZEPHYRUM),
+        (i32)CRUSTA_SUBSTITUTIO_LIBERI), (i32)III);
+    p = _casus(piscina, "echo `cat <<a <<b <<c` y\n", &r);
+    CREDO_AEQUALIS_I32 (r.heredoca_transposita, ZEPHYRUM);
+
     /* heredoc in probatione conditionis */
     p = _casus(piscina, "if cat <<A\nx\nA\nthen :; fi", &r);
     n = _sententia(p, ZEPHYRUM);

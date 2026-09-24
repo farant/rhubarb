@@ -3669,10 +3669,14 @@ _heredoc_aperire_proximum (
         != NIHIL;
 }
 
-/* FINIS regionis heredoc: delimitator et finis in nodum, gradus
- * sublatus (nodus iam in lista), petitio proxima aperitur */
+/* FINIS regionis heredoc SOLUM: delimitator et finis in nodum,
+ * gradus sublatus (nodus iam in lista). Petitionem proximam NON
+ * aperit - ansae exhauriendi (EOF, finis backtick) 'aperire;
+ * claudere' ipsae alternant (olim claudere proximam aperiebat et ansa
+ * iterum: petitio BIS aperta, ultima numquam clausa - inventum
+ * migrationis ad sors, 2026-09-24) */
 interior b32
-_heredoc_claudere (
+_heredoc_claudere_solum (
     Aedificatio* p)
 {
     Gradus* g = _vertex(p);
@@ -3706,7 +3710,16 @@ _heredoc_claudere (
         p->relatio->clausurae_absentes++;
         }
     xar_removere_ultimum(p->gradus);
-    redde _heredoc_aperire_proximum(p);
+    redde VERUM;
+}
+
+/* FINIS regionis heredoc in fluxu ordinario: claudere, deinde petitio
+ * proxima aperitur (corpora post lineam novam deinceps sequuntur) */
+interior b32
+_heredoc_claudere (
+    Aedificatio* p)
+{
+    redde _heredoc_claudere_solum(p) && _heredoc_aperire_proximum(p);
 }
 
 /* trivia pendentia omnia 'post' prioris (linea nova trivium ante
@@ -4312,7 +4325,8 @@ _regionem_finire (
     dum (   crusta_lector_heredoca_pendent(&p->lector)
          && p->lector.heredoca_caput >= g->heredoca_ante)
     {
-        si (!_heredoc_aperire_proximum(p) || !_heredoc_claudere(p))
+        si (   !_heredoc_aperire_proximum(p)
+            || !_heredoc_claudere_solum(p))
         {
             redde FALSUM;
         }
@@ -4360,7 +4374,8 @@ _finem_tractare (
     }
     dum (crusta_lector_heredoca_pendent(&p->lector))
     {
-        si (!_heredoc_aperire_proximum(p) || !_heredoc_claudere(p))
+        si (   !_heredoc_aperire_proximum(p)
+            || !_heredoc_claudere_solum(p))
         {
             redde FALSUM;
         }

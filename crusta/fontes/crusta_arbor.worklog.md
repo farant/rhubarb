@@ -1297,3 +1297,35 @@ lexeme path and the TRIVIA path. A comment travels the trivia path, so
 restoring the guard on the lexeme path alone reddened
 `probatio_crusta_stml` while leaving `probatio_crusta_canon` GREEN.
 Both had to be planted to verify both halves of the deletion.
+
+## 2026-09-24 — pending heredoc requests drained twice-opened (found by the sors migration)
+
+Found when crusta_totalitas moved to sors (new fuzz cases): the seed-4 mutation
+of freebsd/heredoc7.0 gave concordance DISCORS 'transpositae' (parser 4,
+derived 0) and TOTUM_TRANSPOSITUM - with a byte-identical emission. ddmin to 11
+bytes (`<<''<<\ <<` ` ``), then by hand: `x <<a <<b <<c` (no newline) ->
+heredoca_transposita = 1; N pending requests at EOF -> N - 2.
+
+Root cause: `_heredoc_claudere` closed the heredoc AND opened the next pending
+request (right for the ordinary flow: bodies follow each other after a
+newline). But both drain loops - `_finem_tractare` (EOF) and the backtick
+branch of `_regionem_finire` - were written `aperire; claudere` per iteration,
+so each iteration opened one request too many: request k+1 was opened by the
+chain, then the loop opened k+2 ON TOP of it (its body walked past a
+non-list grade -> transitum -> the false count), and the last request opened
+was never closed. Silent consequences worse than the count, even with only TWO
+pending requests: at EOF the program's `<cauda>` vanished (`_finem_tractare`
+put the EOF token into slot CAUDA of the top grade - on a heredoc node that
+index is TOK_DELIMITATOR); in `` echo `cat <<a <<b` y `` heredoc b was attached
+twice and the CLOSING backtick read as an opening one, swallowing ` y` into a
+phantom substitution. The emission stayed byte-identical in all of these (the
+tokens are empty or in order), which is why no round-trip gate ever saw it.
+
+Fix at the root: `_heredoc_claudere_solum` (close only); `_heredoc_claudere` =
+close + open next, kept for the ordinary path (region FINIS, and the generic
+close-down loop, where chaining is harmless). The two drain loops use the
+close-only form - exactly what their `aperire; claudere` shape assumed.
+Regression tests in probatio_crusta_arbor (born red, 6): 2 and 3 pending at
+EOF keep `<cauda>` and one child per heredoc, count 0; the backtick line keeps
+3 words and a 3-child substitution; 3 heredocs in backticks count 0. All 16
+crusta suites green; the migrated totalitas passes the case that found it.
