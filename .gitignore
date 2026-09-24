@@ -67,3 +67,6 @@ facies_briar.toml
 capsula_icon_briar.h
 capsula_icon_briar.c
 icon_briar.toml
+capsula_mutationes_briar.h
+capsula_mutationes_briar.c
+mutationes_briar.toml

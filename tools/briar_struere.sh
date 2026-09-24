@@ -30,6 +30,9 @@ source "$SCRIPT_DIR/briar_facies_capsula.sh"
 briar_facies_capsula_regenerare || exit 1
 source "$SCRIPT_DIR/briar_icon_capsula.sh"
 briar_icon_capsula_regenerare || exit 1
+# charta mutationum: versio binarii EX ea legitur (briar -versio)
+source "$SCRIPT_DIR/briar_mutationes_capsula.sh"
+briar_mutationes_capsula_regenerare || exit 1
 # decodificator (stb_image per lib/imago.c) SOLUM in binario (spec par.
 # 4.8 A1): nulla porta briar eum nectit, ergo obiectum RADICIS sumitur
 if [ ! -f build/imago.o ]; then
@@ -50,7 +53,8 @@ echo "  [briar] tools/briar.c + corpus"
 clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     -Ibriar/fontes -Isilva/amalgama -Iofficina/instrumenta \
     tools/briar.c build/capsula_corpus_silicis.c \
-    build/capsula_icon_briar.c build/imago.o $OBJ \
+    build/capsula_icon_briar.c build/capsula_mutationes_briar.c \
+    build/imago.o $OBJ \
     -o bin/briar || exit 1
 echo "aedificatum: bin/briar"
 

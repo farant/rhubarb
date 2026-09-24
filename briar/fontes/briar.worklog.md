@@ -801,3 +801,29 @@ feedback: aligned multi-line parameters read well but defeat grep.
   `-fons`); briar_silva (plant above); briar_bibliotheca (plant:
   whole-word check off → the `xar_numerus` case red); fumus XIX
   (plant: function filter off → `latina` no longer 'functiones 0').
+
+## 2026-09-24 — version from the changelog: `briar/MUTATIONES.md`, `-mutationes`
+
+Fran: a real version number plus a hand-kept changelog, embedded and
+printable. Decided: plain `v1 v2 …` (integers + a date; semver would
+promise compatibility for an "API" that is the thistle format plus the
+whole corpus), Latin (like all of briar's output; localization later if
+ever), coverage = briar's own behaviour + corpus libraries added/removed
++ breaking library changes (the `corpus:` commit line covers the rest).
+
+- **One source.** The old `#define BRIAR_VERSIO "v0"` is gone; the
+  version is parsed at run time from the embedded changelog's top
+  `## vN` heading (`briar_mutationes_versio/_caput/_ordo_rectus`, pure).
+  So the number and the text cannot disagree inside one binary; what CAN
+  drift is binary vs source file (edit the changelog, forget to
+  rebuild) — fumus XX compares them and fails with "capsula stala?".
+  Plant: a `## v2` heading added without rebuilding → exactly that
+  failure. Unit plant: equal version numbers accepted → red.
+- **Embedding** = `tools/briar_mutationes_capsula.sh`, a copy of the
+  icon capsula pattern (regenerates when the file is newer OR the table
+  does not name it), linked by `briar_struere.sh` only — the suite
+  never needs it (the parser is pure).
+- `## inedita` sits above the newest version and collects one line per
+  change as it lands; releasing is renaming that heading.
+- `-visio` was missing from `-h` (it existed since plan 8); added while
+  there, and listed in v1.

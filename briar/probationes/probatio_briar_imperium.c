@@ -246,6 +246,17 @@ principale (vacuum)
             chorda_ex_literis("-fons aut -functiones", piscina));
     }
 
+    /* -mutationes: charta mutationum, sine plagula */
+    CREDO_VERUM (_legere(piscina, &imp, I, "-mutationes", NIHIL,
+        NIHIL));
+    CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_MUTATIONES);
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-mutationes", "x.thistle",
+        NIHIL));
+    CREDO_CHORDA_CONTINET (imp.causa,
+        chorda_ex_literis("sine plagula", piscina));
+    CREDO_FALSUM (_legere(piscina, &imp, II, "-mutationes",
+        "-dialectus", NIHIL));
+
     /* -dialectus: charta dialecti, sine plagula; post plagulam
      * argumentum programmatis manet (non reservatum) */
     CREDO_VERUM (_legere(piscina, &imp, I, "-dialectus", NIHIL,

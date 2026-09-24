@@ -40,6 +40,17 @@ Findings: `fontes/briar.worklog.md`.
   main file (`briar_silvam_capitis_texere`, closure from the corpus) and
   read by `officina/instrumenta/compendium.c` — the SAME module legati
   `caput` uses (briar's runner compiles it). Fumus XIX.
+- **Version + changelog: `briar/MUTATIONES.md` (Latin, embedded).**
+  The version is its top `## vN — date` heading; `-versio` and `-h`
+  read it from the embedded copy (`briar_mutationes_*`,
+  `tools/briar_mutationes_capsula.sh`) — there is no version constant
+  anywhere else. `-mutationes` prints the file. **When a commit changes
+  briar's behaviour** (a flag, an output, a corpus library added or
+  removed, a library change that breaks scripts), add ONE line under
+  `## inedita` in that same commit. Release = rename `## inedita` to the
+  next `## vN — date` and put a fresh `## inedita` above it. Fumus XX:
+  `-versio` == the file's top heading (a stale binary fails),
+  headings strictly descending, `-mutationes` == the file byte for byte.
 - **`-amalgama`** = the escape hatch: ONE file `<t>.c` beside the
   thistle (+ `probatio_<t>.c` if a probatio region exists) that clang
   compiles ALONE — line 2 of the file's banner is the exact compile

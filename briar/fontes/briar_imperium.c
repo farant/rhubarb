@@ -102,7 +102,7 @@ briar_imperium_legere (
             imp->actio = (BriarActio)actio;
             actio_data = VERUM;
         }
-        alioquin si (_est(a, "-dialectus"))
+        alioquin si (_est(a, "-dialectus") || _est(a, "-mutationes"))
         {
             si (actio_data)
             {
@@ -110,8 +110,9 @@ briar_imperium_legere (
                     "vexilla duo actionis: unum elige");
                 redde FALSUM;
             }
-            actio_data = VERUM;
-            imp->actio = BRIAR_ACTIO_DIALECTUS;
+            actio_data  = VERUM;
+            imp->actio  = _est(a, "-dialectus")
+                ? BRIAR_ACTIO_DIALECTUS : BRIAR_ACTIO_MUTATIONES;
         }
         alioquin si (   _est(a, "-bibliothecae")
                      || _est(a, "-bibliotheca"))
@@ -186,7 +187,8 @@ briar_imperium_legere (
                 " (nota: -probatio -struere [-iterum] -arbor"
                 " -partes -amalgama -html -visio -app -versio"
                 " -bibliothecae -bibliotheca <nomen> [-fons |"
-                " -functiones] -dialectus -f <radix> -icon <via>)");
+                " -functiones] -dialectus -mutationes -f <radix>"
+                " -icon <via>)");
             imp->causa = chorda_aedificator_finire(aed);
             redde FALSUM;
         }
@@ -217,11 +219,12 @@ briar_imperium_legere (
     si (   imp->via != NIHIL
         && (   imp->actio == BRIAR_ACTIO_BIBLIOTHECAE
             || imp->actio == BRIAR_ACTIO_BIBLIOTHECA
-            || imp->actio == BRIAR_ACTIO_DIALECTUS))
+            || imp->actio == BRIAR_ACTIO_DIALECTUS
+            || imp->actio == BRIAR_ACTIO_MUTATIONES))
     {
         _recusare(imp, piscina, "-bibliothecae / -bibliotheca /"
-            " -dialectus sine plagula currunt (documentatio corporis,"
-            " non plagulae)");
+            " -dialectus / -mutationes sine plagula currunt"
+            " (documentatio, non plagulae)");
         redde FALSUM;
     }
     si (imp->via == NIHIL)
@@ -229,7 +232,8 @@ briar_imperium_legere (
         si (   imp->actio == BRIAR_ACTIO_VERSIO
             || imp->actio == BRIAR_ACTIO_BIBLIOTHECAE
             || imp->actio == BRIAR_ACTIO_BIBLIOTHECA
-            || imp->actio == BRIAR_ACTIO_DIALECTUS)
+            || imp->actio == BRIAR_ACTIO_DIALECTUS
+            || imp->actio == BRIAR_ACTIO_MUTATIONES)
         {
             redde VERUM;   /* sine plagula; -f iam lectum */
         }

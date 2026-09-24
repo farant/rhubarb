@@ -49,6 +49,7 @@
 #include "briar_contextus.h"
 #include "briar_fabrica.h"
 #include "briar_imperium.h"
+#include "briar_mutationes.h"
 #include "briar_nexus.h"
 #include "briar_proiectio.h"
 #include "briar_silva.h"
@@ -71,8 +72,10 @@ externus constans CapsulaEmbed capsula_facies_briar;
 /* icon ordinarius '-app' (build/capsula_icon_briar.c, par. 4.8):
  * symbolum contractus est, caput genitum non includitur */
 externus constans CapsulaEmbed capsula_icon_briar;
+/* charta mutationum (build/capsula_mutationes_briar.c): versio
+ * binarii EX ea legitur - numerus alibi non scribitur */
+externus constans CapsulaEmbed capsula_mutationes_briar;
 
-#define BRIAR_VERSIO "v0"
 #define BRIAR_MORA_AEDIFICANDI_MS 600000
 
 interior character*
@@ -134,11 +137,42 @@ _texere (
     redde chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
 }
 
-interior vacuum
-_auxilium (vacuum)
+/* briar/MUTATIONES.md ex capsula (vacua si abest) */
+interior chorda
+_mutationes_legere (
+    Piscina* piscina)
 {
+           Capsula* capsula = capsula_aperire(&capsula_mutationes_briar,
+               piscina);
+    CapsulaFructus lectum;
+
+    si (capsula == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    lectum = capsula_legere(capsula, "briar/MUTATIONES.md", piscina);
+    redde lectum.datum;
+}
+
+/* "v3 — 2026-09-24" ex capite supremo chartae; "v0" si nullum */
+interior chorda
+_versio (
+    Piscina* piscina)
+{
+    chorda caput = briar_mutationes_caput(_mutationes_legere(piscina));
+
+    redde caput.mensura > ZEPHYRUM ? caput
+        : chorda_ex_literis("v0", piscina);
+}
+
+interior vacuum
+_auxilium (
+    Piscina* piscina)
+{
+    i32 versio = briar_mutationes_versio(_mutationes_legere(piscina));
+
     imprimere(
-        "briar %s - plagulas .thistle currere\n"
+        "briar v%u - plagulas .thistle currere\n"
         "usus: briar [-vexillum] [-f <radix>] <x.thistle>"
         " [argumenta...]\n"
         "      ./x.thistle [-vexillum] [argumenta...]\n"
@@ -148,6 +182,7 @@ _auxilium (vacuum)
         "  -struere    aedificare solum; -iterum = clavem neglegere\n"
         "  -arbor      proiectionem STML imprimere\n"
                 "  -partes     clausuram imprimere (via, origo)\n"
+        "  -visio      spectatorem (paginam litteratam) aperire\n"
         "  -html       paginam <t>.html iuxta thistle scribere"
         "\n"
         "  -amalgama   plagulam UNAM <t>.c iuxta thistle scribere"
@@ -163,10 +198,11 @@ _auxilium (vacuum)
         " unam\n"
         "  -dialectus  charta dialecti: typi, vexilla, verba latina.h,"
         " laquei C89\n"
+        "  -mutationes charta mutationum (quid in quaque versione)\n"
         "  -f <radix>  arbor rhubarb (alioquin ascensus, alioquin"
         " corpus infixum)\n"
         "  --          post plagulam: vexilla programmati relinquere\n",
-        BRIAR_VERSIO);
+        versio);
 }
 
 
@@ -679,7 +715,7 @@ principale (
     }
     si (imp.actio == BRIAR_ACTIO_AUXILIUM)
     {
-        _auxilium();
+        _auxilium(piscina);
         redde ZEPHYRUM;
     }
     silex_monitiones_tacere(VERUM);
@@ -692,15 +728,29 @@ principale (
     {
         character hp[17];
         character hv[17];
+           chorda versio = _versio(piscina);
 
         briar_vexilla_sigillum(briar_fabrica_vexilla(BRIAR_FORMA_PLANA),
             hp);
         briar_vexilla_sigillum(
             briar_fabrica_vexilla(BRIAR_FORMA_VITREA), hv);
-        imprimere("briar %s\ncorpus: %s%s\nvexilla: plana %s"
+        imprimere("briar %.*s\ncorpus: %s%s\nvexilla: plana %s"
             " vitrea %s\n",
-            BRIAR_VERSIO, fons->titulus, e_disco ? " (discus)" : "",
-            hp, hv);
+            (integer)versio.mensura, (constans character*)versio.datum,
+            fons->titulus, e_disco ? " (discus)" : "", hp, hv);
+        redde ZEPHYRUM;
+    }
+    si (imp.actio == BRIAR_ACTIO_MUTATIONES)
+    {
+        chorda charta = _mutationes_legere(piscina);
+
+        si (charta.mensura == ZEPHYRUM)
+        {
+            fprintf(stderr, "briar: charta mutationum in capsula"
+                " deest\n");
+            redde I;
+        }
+        fwrite(charta.datum, I, (size_t)charta.mensura, stdout);
         redde ZEPHYRUM;
     }
     si (imp.actio == BRIAR_ACTIO_BIBLIOTHECAE)

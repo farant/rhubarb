@@ -84,6 +84,9 @@
 #   XIX. -bibliotheca sors -functiones: signaturae exactae (sors_seminare,
 #        sors_intra), nomina in columna UNA; json sine '( ' / ' )';
 #        latina 'functiones 0'; -fons cum -functiones recusatum
+#   XX.  versio EX briar/MUTATIONES.md: -versio == 'briar ' + caput
+#        supremum '## vN ...', -h 'briar vN - ', -mutationes == charta
+#        octetis; capita vN stricte descendentia
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -486,8 +489,30 @@ RC_AMB=$?
     || deficere "-fons -functiones simul: recusatio exspectata (exitus $RC_AMB)" "$AREA/func_amb.log"
 echo "FUMUS:    functiones: sors $N_FUNC in columna una, json sine '( ', latina 0, -fons+-functiones recusatum"
 
+# ---- XX. versio ex charta mutationum: -versio, -h, -mutationes ----
+# charta FONTIS (briar/MUTATIONES.md) contra binarium: capsula stala
+# aut derivatio fracta hic cadit; capita vN stricte descendentia
+echo "FUMUS: XX. -versio / -h / -mutationes contra briar/MUTATIONES.md"
+CHARTA_FONS="$RADIX/briar/MUTATIONES.md"
+CAPUT_FONS="$(sed -n 's/^## \(v[0-9][0-9]*\( .*\)\{0,1\}\)$/\1/p' "$CHARTA_FONS" | head -1 | sed 's/ *$//')"
+N_FONS="$(printf '%s' "$CAPUT_FONS" | sed 's/^v\([0-9]*\).*/\1/')"
+[ -n "$CAPUT_FONS" ] || deficere "charta mutationum sine capite '## vN'"
+ORDO_CAPITUM="$(sed -n 's/^## v\([0-9][0-9]*\)\( .*\)\{0,1\}$/\1/p' "$CHARTA_FONS" \
+    | awk 'NR > 1 && $1 >= prior { mala = 1 } { prior = $1 } END { print mala ? "pravus" : "rectus" }')"
+[ "$ORDO_CAPITUM" = rectus ] \
+    || deficere "charta mutationum: capita vN non stricte descendunt"
+V_LINEA="$( cd "$AREA" && "$BRIAR" -versio | head -1 )"
+[ "$V_LINEA" = "briar $CAPUT_FONS" ] \
+    || deficere "-versio [$V_LINEA] != caput chartae [briar $CAPUT_FONS] (capsula stala?)"
+( cd "$AREA" && "$BRIAR" -h | head -1 ) | grep -q "^briar v$N_FONS - " \
+    || deficere "-h versionem v$N_FONS non dicit"
+( cd "$AREA" && "$BRIAR" -mutationes ) > "$AREA/mutationes.log" 2>&1 \
+    && cmp -s "$AREA/mutationes.log" "$CHARTA_FONS" \
+    || deficere "-mutationes != briar/MUTATIONES.md (octeti)" "$AREA/mutationes.log"
+echo "FUMUS:    versio v$N_FONS ex charta ($CAPUT_FONS), capita descendentia, -mutationes == fons"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"
