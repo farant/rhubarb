@@ -60,6 +60,7 @@ declare -a INCLUDE_FLAGS=(
 # Fontes radicis quibus materia in evolutione nititur.
 declare -a RADIX_FONTES=(
     "piscina"
+    "sors"
     "chorda"
     "chorda_aedificator"
     "xar"

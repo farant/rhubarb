@@ -4,7 +4,7 @@
  *   (a) NUMQUAM RUIT pro quolibet fonte - furca, WIFSIGNALED
  *   (b) SEMPER arborem reddit, et emissio == fons octetim
  * Oratio textum QUEMLIBET habet (octeti quilibet), ergo (b) contractus
- * totus est. GENERATORES (ut md): octeti fortuiti (LCG), mutatio
+ * totus est. GENERATORES (ut md): octeti fortuiti (sors), mutatio
  * corporis fixi (fixa/txt, I ex XL octetis), truncatio (XXIII gradus),
  * nidificatio formis orationis (parentheses, unci, citationes rectae et
  * curvae, abbreviationes catenatae, mixtum) profunditatibus I..M,
@@ -21,6 +21,7 @@
 #include "materia_nodus.h"
 #include "materia_scribere.h"
 #include "piscina.h"
+#include "sors.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -162,14 +163,6 @@ _casum_probare (
     *numerator = *numerator + I;
 }
 
-interior character
-_fortuitus (
-    i32* status)
-{
-    *status = *status * (i32)1103515245 + (i32)12345;
-    redde (character)((*status >> 16) & (i32)0xFF);
-}
-
 nomen structura {
     constans character* titulus;
     constans character* apertura;
@@ -288,16 +281,17 @@ principale (vacuum)
     imprimere("\n--- Probans octetos fortuitos ---\n");
     per (i = I; i <= XXXII; i++)
     {
-              i32  status   = i;
-              i32  mensura  = (i32)LXIV * i;
-        character* fons = (character*)piscina_allocare(piscina,
-            (memoriae_index)mensura);
+              Sors  s;
+               i32  mensura  = (i32)LXIV * i;
+         character* fons = (character*)piscina_allocare(piscina,
+             (memoriae_index)mensura);
         character titulus[LXIV];
               i32 j;
 
+        sors_seminare(&s, (i64)i, (i64)ZEPHYRUM);
         per (j = ZEPHYRUM; j < mensura; j++)
         {
-            fons[j] = _fortuitus(&status);
+            fons[j] = (character)sors_intra(&s, CCLVI);
         }
         sprintf(titulus, "fortuiti semen=%d", (integer)i);
         _casum_probare(titulus, fons, mensura, &casus_fortuiti);
@@ -324,21 +318,21 @@ principale (vacuum)
         plagulae_lectae = plagulae_lectae + I;
         per (semen = I; semen <= IV; semen++)
         {
-                  i32  status  = semen * (i32)7919;
-                  i32  ictus   = mensura / XL;
-            character* mutatum = (character*)piscina_allocare(piscina,
-                (memoriae_index)mensura + I);
+                  Sors  s;
+                   i32  ictus   = mensura / XL;
+             character* mutatum = (character*)piscina_allocare(piscina,
+                 (memoriae_index)mensura + I);
             i32 k;
 
+            sors_seminare(&s, (i64)semen, (i64)I);
             memcpy(mutatum, textus, (size_t)mensura);
             per (k = ZEPHYRUM; k < ictus; k++)
             {
                 i32 sedes;
 
-                _fortuitus(&status);
-                sedes = (status >> 8) % (i32)(mensura
+                sedes = sors_intra(&s, mensura
                     > ZEPHYRUM ? mensura : I);
-                mutatum[sedes] = _fortuitus(&status);
+                mutatum[sedes] = (character)sors_intra(&s, CCLVI);
             }
             sprintf(titulus, "mutatum %s semen=%d", CORPUS[i],
                 (integer)semen);

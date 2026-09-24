@@ -54,3 +54,26 @@ determinism, range, constant within a bucket, different across buckets
 every assertion except the wiring - its UB happened to land in range on clang,
 which is exactly why UB can't be caught by tests and has to be removed by
 construction. Plant (drop the *2-1 mapping) -> 3 red.
+
+## 2026-09-24 — five fuzz suites migrated; the sixth (crusta) found a real bug
+
+css, html, md, oratio, briar *_totalitas: `_fortuitus` (ANSI LCG, middle byte)
+removed; random bytes = `sors_intra(&s, 256)` from `sors_seminare(case, 0)`;
+mutations = `sors_intra(&s, mensura)` for the position and `sors_intra(&s,
+256)` for the byte from `sors_seminare(semen, 1)` (separate series, so byte and
+mutation streams are independent - the old code took the position from the raw
+LCG state >> 8). `"sors"` added to each runner's hand-kept RADIX_FONTES. Every
+generated case changed; all five verdicts stayed green.
+
+crusta_totalitas, same transform: a new case - the seed-4 mutation of
+probationes/fixa/crusta/freebsd/heredoc7.0 (467 bytes: a stray 0x9E replaces
+the closing quote of eval '`: <<EOF;`;', so an unterminated quote runs into the
+following heredoc lines) - fails TWICE: diagnostics concordance DISCORS
+("transpositae": the parser's count of transposed heredocs disagrees with the
+derived diagnostics) and the verdict TOTUM_TRANSPOSITUM instead of TOTUM_IDEM.
+A real crusta bug, found because the new generator explores other cases. Per
+the rubric it is NOT re-pinned: crusta was restored to HEAD (green), the row is
+PROMOTED to an opus, the bug filed. Repro = re-apply the crusta half of the
+migration (saved: crusta/build/crusta_migratio_sors.patch, input
+crusta/build/heredoc7_semen4.sh) and run ./crusta/compile_probationes.sh
+totalitas - deterministic.
