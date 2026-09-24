@@ -6,6 +6,16 @@
 > closed by `silva.commissio(opus=ID)` — which now adds the owed gates
 > itself (portae debitae); pass the gates below anyway.
 
+> **STATUS 2026-09-24 — ALL FIVE TASKS DONE.** T1 `5be5f34a` (pure fold +
+> validator, rubric version per tick), T2 `68cf6692` (MODULI_STATUS table;
+> genus seeded, semen v11), T3 `66cc8a6a` (tool; every write one batch;
+> n.a. never matches a filter), T4 `477e704e` (tabula + parata; promoted
+> row with open opus still "needs work"), T5 live: inventory 'generatores
+> aleatorii inline' (10 rows, knotapel excluded, casus fixi `non` for every
+> test site - laws not values) + expeditio 'migratio ad sors' (…J697T9,
+> 0/10), Fran looked. Open: intermittent tabularium test failure
+> (quaestio …HGWJNC).
+
 **Global constraints.** C89 in Latin via latina.h, house flags; `i32`/`i64`
 UNSIGNED; chorda not NUL-terminated; new C files via `scribe`; credo tests
 born red by a COMPILING plant; worklog first, gates last; formator
