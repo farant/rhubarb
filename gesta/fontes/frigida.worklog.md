@@ -131,3 +131,34 @@ Second zero-operand read form. The read branch of `_gerere_mittere`
 now chooses the map's `forma` by the flag, `nomina` or `plena`. The
 fixture gained a vision inside the region so the two forms are told
 apart by content, not by exit code.
+
+## 2026-09-24 — reads skip the projections: 2.9 s → 0.007 s (desideratum …JK3Y)
+
+Every cold read (`-res`, `-mappa`, `-mappa-plena`, `-inventarium`) cost
+~2.9 s, paid once per `silva.commissio`. The desideratum guessed
+`build/nexus.tsv` (1.2M lines) was being loaded; **refuted** — a run from
+a scratch root without it took the same time and printed the same bytes.
+
+`sample` on the live process: 100% of the time was inside the MCP
+`initialize` handler that `tabularium_se_initiare` replays for a cold
+open — `_entitates_reconciliare_omnes` (~75%: purge `entities/`, one
+SELECT + file write per entity, 614 entities) and `_tabulam_scribere`
+(~25%: render map + parata into `tabula.md`). The daemon pays that once
+per start; frigida paid it per call, and every READ therefore WROTE
+614 files plus `tabula.md` (likely why `tabula.md` is dirty in nearly
+every `git status`).
+
+Fix: for a form with `actus == NIHIL` frigida opens with a copy of the
+config whose `via_tabulae` / `via_entitatum` are NIHIL (both already
+meant "no projection"; the only users check it). No API change. Writes
+keep refreshing both. Measured after: `nota_frigida -inventarium` 0.007
+s (238 lines, byte-identical to before), `-res` 0.006 s;
+`./gesta/frigida.sh` 0.41 s — the launcher's build check is now >98% of
+a read.
+
+Gate: probatio_frigida's new block puts a sentinel in a tag subfolder of
+a fixture `entities/` and fixed text in the tabula, runs `-res` and
+`-inventarium`, asserts both untouched (RED before the fix on exactly
+those two assertions), then a `-mutatio` through the same config must
+rewrite the tabula and purge the sentinel (the write path still
+projects).

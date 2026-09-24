@@ -413,6 +413,9 @@ frigida_currere (
                   integer  exitus;
                       i32  i;
 
+             TabulariumConfiguratio  cfg_lectionis;
+    constans TabulariumConfiguratio* cfg_apertionis = cfg;
+
     pn = piscina_generare_dynamicum("frigida", 67108864);
     si (pn == NIHIL)
     {
@@ -534,12 +537,25 @@ frigida_currere (
         }
     }
 
+    /* LECTIO (actus NIHIL) proiectiones NON renovat: aperitio per
+     * 'initialize' tabulam.md regenerat et entities/ totam purgat
+     * ac rescribit - ~2 s ex ~3 s omnis lectionis, et lectio
+     * plagulas scribebat (desideratum 01M38YV4W4). Scriptura
+     * proxima aut residens surgens eas renovat. */
+    si (forma != NIHIL && forma->actus == NIHIL)
+    {
+        cfg_lectionis                = *cfg;
+        cfg_lectionis.via_tabulae    = NIHIL;
+        cfg_lectionis.via_entitatum  = NIHIL;
+        cfg_apertionis               = &cfg_lectionis;
+    }
+
     /* machina: pro VINCULO praeiudicium LECTIONIS SOLIUS semper
      * currit (si res data est), ut causae machinae cum causis
      * lineae imperii in responso UNO stent */
     si (forma != NIHIL && data > ZEPHYRUM)
     {
-        t = tabularium_creare(pn, cfg);
+        t = tabularium_creare(pn, cfg_apertionis);
         si (t == NIHIL || !tabularium_se_initiare(t))
         {
             fprintf(errores, "frigida: tabularium aperiri non potuit"
@@ -658,7 +674,7 @@ frigida_currere (
      * (-mappa) mundum supra non aperuit - hic aperitur. */
     si (t == NIHIL)
     {
-        t = tabularium_creare(pn, cfg);
+        t = tabularium_creare(pn, cfg_apertionis);
         si (t == NIHIL || !tabularium_se_initiare(t))
         {
             fprintf(errores, "frigida: tabularium aperiri non potuit"

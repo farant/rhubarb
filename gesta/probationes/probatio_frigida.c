@@ -10,12 +10,14 @@
 #include "tabularium.h"
 #include "frigida.h"
 #include "credo.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
 #define VIA_DB "gesta/build/probatio_frigida.db"
 #define VIA_AN "gesta/build/probatio_frigida.jsonl"
 #define VIA_TB "gesta/build/probatio_frigida_tabula.md"
+#define VIA_EN "gesta/build/probatio_frigida_entitates"
 
 interior vacuum
 _purgare (vacuum)
@@ -25,6 +27,7 @@ _purgare (vacuum)
     remove(VIA_DB "-shm");
     remove(VIA_AN);
     remove(VIA_TB);
+    (vacuum)filum_arborem_delere(VIA_EN);
 }
 
 /* plagulam totam in piscinam legere ("" si abest) */
@@ -599,6 +602,45 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
         c = _curre(&cfg, piscina, IV, d);
         CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
+    }
+
+    /* LECTIO PROIECTIONES NON TANGIT (desideratum 01M38YV4W4):
+     * aperitio frigida per 'initialize' tabulam.md regenerabat et
+     * entities/ TOTAM purgabat ac rescribebat - ~2 s ex ~3 s omnis
+     * lectionis (silva.commissio legit semel per commissum). Lectio
+     * nihil scribit: nec annales nec proiectiones. Scriptura eas
+     * TAMEN renovat (contra-probatio in fine). */
+    {
+        TabulariumConfiguratio  cfg_proiectionum = cfg;
+            constans character* a[] = { "frigida", "-res",
+            "Frigida parcum" };
+        constans character* b[] = { "frigida", "-inventarium",
+            "Frigida inventarium" };
+        constans character* d[] = { "frigida", "-mutatio",
+            "Frigida parcum", "progressus", "1/2" };
+
+        cfg_proiectionum.via_entitatum = VIA_EN;
+        (vacuum)filum_arborem_delere(VIA_EN);
+        CREDO_VERUM (filum_directorium_creare_cum_parentibus(
+            VIA_EN "/signum"));
+        CREDO_VERUM (filum_scribere_literis(VIA_EN "/signum/signum.md",
+            "signum\n"));
+        CREDO_VERUM (filum_scribere_literis(VIA_TB, "tabula ficta\n"));
+
+        c = _curre(&cfg_proiectionum, piscina, III, a);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        c = _curre(&cfg_proiectionum, piscina, III, b);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (filum_existit(VIA_EN "/signum/signum.md"));
+        CREDO_VERUM (strcmp(_plagula_litterae(piscina, VIA_TB),
+            "tabula ficta\n") == ZEPHYRUM);
+
+        /* contra-probatio: scriptura proiectiones renovat */
+        c = _curre(&cfg_proiectionum, piscina, V, d);
+        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_TB),
+            "Frigida parcum") != NIHIL);
+        CREDO_FALSUM (filum_existit(VIA_EN "/signum/signum.md"));
     }
 
     credo_imprimere_compendium();
