@@ -2996,3 +2996,19 @@ NEXT: the task plan `project-specs/silva-migratio-plan.md` (park
 01M3B19ND09DNK4KV6N3JXFE9E), step 0 first — re-measure the M3 bars,
 build oraculum_silvae + its diff gate (born red), replay and consumer
 inventories. No code moves before that.
+
+## 2026-09-24 — phase 5 task plan written (T1–T19)
+
+INTENTIO: `project-specs/silva-migratio-plan.md`, approved by Fran the
+same day. Step 0 in full (T1 M3 runner `silva/m3_probare.sh`; T2
+`oraculum_silvae` — ONE source built twice, pinned amalgam and live
+silva, the live build doubling as a consumer of the facade; T3 the
+oracle gate with a named-dispares file where a stale row is red; T4/T5
+replay and consumer inventories). Steps 1–4 at task level (T6
+`silva_frons`, T7–T11 token → nodus → scribere+CR → arbor+aequalitas
+→ annotationes, T12 quaestio, T13 seal); steps 5–6 sketched, re-issued
+as plan B after T13. Departures from the spec, approved: each switch
+deletes silva's copy in its own commit (step 4 only seals);
+`lexicon_c89` moves to `silva/fontes` at T6; the shim retires at T13.
+Open at birth: whether silva's and materia's STML TEXTS agree (T3
+measures; the hash column falls back to the comparator if not).
