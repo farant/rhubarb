@@ -49,6 +49,7 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"
+    "-I$RADIX_DIR/materia/fontes"
     "-I$SILVA_DIR/instrumenta"
     "-I$SILVA_DIR/probationes"
 )
@@ -106,7 +107,7 @@ while IFS= read -r caput_via; do
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi
-done < <(find "$RADIX_DIR/include" "$SILVA_DIR/fontes" -name '*.h' 2>/dev/null)
+done < <(find "$RADIX_DIR/include" "$SILVA_DIR/fontes" "$RADIX_DIR/materia/fontes" -name '*.h' 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi

@@ -29,7 +29,7 @@ set -eu
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 TOKEN_H="$RADIX/silva/fontes/silva_token.h"
 ARBOR_C="$RADIX/silva/fontes/silva_arbor.c"
-EXITUS_DIR="${1:-$RADIX/materia/probationes}"
+EXITUS_DIR="${1:-$RADIX/silva/fontes}"
 
 for f in "$TOKEN_H" "$ARBOR_C"; do
     [ -f "$f" ] || { echo "DEEST: $f" >&2; exit 1; }
@@ -75,9 +75,9 @@ fi
 # ---- caput: enumeratio indicum + declaratio ----
 {
 cat <<'HCAPUT'
-/* lexicon_c89.h - Indices generum lexicalium C89
+/* silva_lexicon_c89.h - Indices generum lexicalium C89
  *
- * GENERATUM per materia/instrumenta/lexicon_c89_generare.sh.
+ * GENERATUM per silva/instrumenta/lexicon_c89_generare.sh.
  * NOLI MANU EMENDARE.
  *
  * Ordo enumerationis ordinem SilvaLexemaGenus EXACTE sequitur -
@@ -85,8 +85,8 @@ cat <<'HCAPUT'
  * idem genus nominat, ergo conversione non opus est.
  */
 
-#ifndef LEXICON_C89_H
-#define LEXICON_C89_H
+#ifndef SILVA_LEXICON_C89_H
+#define SILVA_LEXICON_C89_H
 
 #include "materia_lexicon.h"
 
@@ -100,25 +100,25 @@ cat <<'HCAUDA'
 
 externus constans MateriaLexiconCoctum LEXICON_C89;
 
-#endif /* LEXICON_C89_H */
+#endif /* SILVA_LEXICON_C89_H */
 HCAUDA
-} > "$EXITUS_DIR/lexicon_c89.h"
+} > "$EXITUS_DIR/silva_lexicon_c89.h"
 
 {
 cat <<'CAPUT'
-/* lexicon_c89.c - Descriptor lexicalis C89 pro materia
+/* silva_lexicon_c89.c - Descriptor lexicalis C89 pro materia
  *
- * GENERATUM per materia/instrumenta/lexicon_c89_generare.sh.
+ * GENERATUM per silva/instrumenta/lexicon_c89_generare.sh.
  * NOLI MANU EMENDARE - fontes sunt silva_token.h (enumeratio) et
  * silva_arbor.c (ORTHOGRAPHIAE).
  *
- * SEDES TEMPORARIA. Hic descriptor ad frontem C89 pertinet, quae
- * in silva vivit; in probationibus materiae vivit dum phasis I
- * currit, quia vehiculum portae est (shim C89 -> materia). Phasis
- * V eum in silvam movet. Materia ipsa lingua CARERE debet (M8).
+ * SEDES: frons C89 (silva_frons). Ex materia/probationes huc motus
+ * phasi V (T6b, 2026-09-25): descriptor linguae ad frontem pertinet,
+ * materia ipsa lingua CARERE debet (M8). Materia eum in probatione
+ * lexici sui adhuc ut vehiculum adhibet.
  */
 
-#include "lexicon_c89.h"
+#include "silva_lexicon_c89.h"
 
 hic_manens constans MateriaLexGenus GENERA_C89[] = {
 CAPUT
@@ -169,7 +169,7 @@ constans MateriaLexiconCoctum LEXICON_C89 = {
     (s32)LEXICON_C89_GENUS_SPATIA
 };
 CAUDA
-} > "$EXITUS_DIR/lexicon_c89.c"
+} > "$EXITUS_DIR/silva_lexicon_c89.c"
 
 
 # ---- PORTA: praedictionem contra oraculum INDEPENDENS probare ----
@@ -182,7 +182,7 @@ CANON_C="$RADIX/silva/instrumenta/silva_canon_coquere.c"
 if [ -f "$CANON_C" ]; then
     awk '/^_textum_fert/,/^\}/' "$CANON_C" \
       | grep -o "SILVA_LEX_[A-Z_0-9]*" | sed 's/^SILVA_LEX_//' | sort > "$TMP/fert"
-    grep '^    {' "$EXITUS_DIR/lexicon_c89.c" | grep 'MATERIA_LEX_VERBATIM' \
+    grep '^    {' "$EXITUS_DIR/silva_lexicon_c89.c" | grep 'MATERIA_LEX_VERBATIM' \
       | sed 's/^    { "\([A-Z_0-9]*\)".*/\1/' | sort > "$TMP/verbatim"
     if diff -q "$TMP/fert" "$TMP/verbatim" >/dev/null; then
         echo "  porta: species==VERBATIM == _textum_fert ($(wc -l < "$TMP/verbatim" | tr -d ' ') genera) OK"
@@ -195,4 +195,4 @@ else
     echo "CAUTIO: $CANON_C deest - porta praedictionis MORTUA" >&2
 fi
 
-echo "generatum: $EXITUS_DIR/lexicon_c89.{h,c} ($(grep -c '^    {' "$EXITUS_DIR/lexicon_c89.c") genera)"
+echo "generatum: $EXITUS_DIR/silva_lexicon_c89.{h,c} ($(grep -c '^    {' "$EXITUS_DIR/silva_lexicon_c89.c") genera)"

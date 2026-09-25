@@ -69,10 +69,10 @@ corpus_infixum_regenerare || exit 1
 # (fontes silvae -Wno-overlength-strings poscunt)
 declare -a SILVA_FLAGS=("${GCC_FLAGS[@]}" "-Wno-overlength-strings")
 declare -a SILVA_INCLUDA=("-Iinclude" "-Isilva/fontes"
-    "-Isilva/instrumenta")
+    "-Isilva/instrumenta" "-Imateria/fontes")
 mkdir -p silva/build
 silva_recentior () {
-    find include silva/fontes silva/instrumenta -name '*.h' \
+    find include silva/fontes silva/instrumenta materia/fontes -name '*.h' \
         -newer "$1" 2>/dev/null | head -1
 }
 silva_obiecta=""

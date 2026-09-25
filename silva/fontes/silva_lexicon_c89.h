@@ -1,6 +1,6 @@
-/* lexicon_c89.h - Indices generum lexicalium C89
+/* silva_lexicon_c89.h - Indices generum lexicalium C89
  *
- * GENERATUM per materia/instrumenta/lexicon_c89_generare.sh.
+ * GENERATUM per silva/instrumenta/lexicon_c89_generare.sh.
  * NOLI MANU EMENDARE.
  *
  * Ordo enumerationis ordinem SilvaLexemaGenus EXACTE sequitur -
@@ -8,8 +8,8 @@
  * idem genus nominat, ergo conversione non opus est.
  */
 
-#ifndef LEXICON_C89_H
-#define LEXICON_C89_H
+#ifndef SILVA_LEXICON_C89_H
+#define SILVA_LEXICON_C89_H
 
 #include "materia_lexicon.h"
 
@@ -115,4 +115,4 @@ nomen enumeratio {
 
 externus constans MateriaLexiconCoctum LEXICON_C89;
 
-#endif /* LEXICON_C89_H */
+#endif /* SILVA_LEXICON_C89_H */

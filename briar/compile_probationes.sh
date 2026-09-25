@@ -264,8 +264,7 @@ for src in "$BRIAR_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
-# adiumenta probationum (probationes/*.c non probatio_*), e.g.
-# lexicon_c89.c - descriptor GENERATUS, vehiculum portae phasis I
+# adiumenta probationum (probationes/*.c non probatio_*)
 for src in "$BRIAR_DIR"/probationes/*.c; do
     base="$(basename "$src" .c)"
     case "$base" in probatio_*) continue ;; esac

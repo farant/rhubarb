@@ -23,12 +23,13 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"
+    "-I$RADIX_DIR/materia/fontes"
 )
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
 source "$SILVA_DIR/arbor_fontes_generata.sh"
 
 newest_header () {
-    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
+    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" "$RADIX_DIR/materia/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
 
 obj_files=""

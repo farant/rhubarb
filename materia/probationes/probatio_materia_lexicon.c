@@ -9,7 +9,7 @@
 #include "latina.h"
 #include "credo.h"
 #include "materia_lexicon.h"
-#include "lexicon_c89.h"
+#include "silva_lexicon_c89.h"
 #include "piscina.h"
 #include <stdio.h>
 #include <string.h>

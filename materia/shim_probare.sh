@@ -49,24 +49,18 @@ for m in materia_token materia_nodus materia_scribere materia_arbor \
     fi
 done
 
-if [ ! -f "$BUILD/lexicon_c89.o" ] \
-   || ! [ "$BUILD/lexicon_c89.o" -nt "$RADIX/materia/probationes/lexicon_c89.c" ]; then
-    clang "${GCC_FLAGS[@]}" \
-          -I"$RADIX/include" -I"$RADIX/materia/fontes" \
-          -I"$RADIX/materia/probationes" \
-          -c "$RADIX/materia/probationes/lexicon_c89.c" \
-          -o "$BUILD/lexicon_c89.o" || { echo "FRACTA: lexicon_c89.c" >&2; exit 1; }
-fi
-
 BIN="$BUILD/shim_c89"
-# <tolera codex="lint:vexilla-domus" (>REMISSIO CONSULTA: shim_c89.c barram domus non implet (-Wextra 'missing field initializer' in tabula ornatorum), ergo vexilla HIC angustiora sunt consulto, non exemplar tabulae domesticae
-clang -std=c89 -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 \
+# Vexilla DOMUS (ab phasi V T6b): remissio prior ('tabula ornatorum'
+# campos non implens) cum tabula ipsa in silva_frons migravit. Frons
+# (silva_frons.o) et descriptor (silva_lexicon_c89.o) ex silva/build
+# per OBIECTA veniunt - cursor silvae ea struit.
+clang "${GCC_FLAGS[@]}" \
   -I"$RADIX/include" -I"$RADIX/silva/fontes" -I"$RADIX/silva/instrumenta" \
-  -I"$RADIX/materia/fontes" -I"$RADIX/materia/probationes" \
+  -I"$RADIX/materia/fontes" \
   "$RADIX/materia/instrumenta/shim_c89.c" \
   "$BUILD/materia_token.o" "$BUILD/materia_nodus.o" "$BUILD/materia_scribere.o" \
   "$BUILD/materia_arbor.o" "$BUILD/materia_arbor_aequalitas.o" \
-  "$BUILD/materia_lexicon.o" "$BUILD/lexicon_c89.o" \
+  "$BUILD/materia_lexicon.o" \
   $OBIECTA -o "$BIN" || { echo "FRACTA: nexus shim" >&2; exit 1; }
 
 # Vexilla a plagulis SEPARANDA: '-stml' corpus ordinarium tollere

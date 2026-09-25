@@ -41,6 +41,10 @@ declare -a INCLUDE_FLAGS=(
     "-I$MATERIA_DIR/fontes"
     "-I$MATERIA_DIR/probationes"
 )
+# Probationes SOLAE silva/fontes vident (descriptor C89, vehiculum
+# probationis lexici): fontes materiae capita silvae numquam videre
+# debent (M8) - ergo tabula separata, non INCLUDE_FLAGS.
+declare -a PROBATIONUM_INCLUDA=("${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes")
 
 # Fontes radicis quibus materia in evolutione nititur.
 declare -a RADIX_FONTES=(
@@ -94,7 +98,7 @@ while IFS= read -r caput_via; do
         CAPUT_RECENS="$caput_via"
     fi
 done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" "$MATERIA_DIR/probationes" \
-             -name '*.h' 2>/dev/null)
+             "$RADIX_DIR/silva/fontes/silva_lexicon_c89.h" -name '*.h' 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
@@ -137,8 +141,19 @@ for src in "$MATERIA_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
-# adiumenta probationum (probationes/*.c non probatio_*), e.g.
-# lexicon_c89.c - descriptor GENERATUS, vehiculum portae phasis I
+# descriptor C89 (GENERATUS; silva/fontes ab phasi V T6b) - vehiculum
+# probationis lexici, non pars materiae
+src="$RADIX_DIR/silva/fontes/silva_lexicon_c89.c"
+obj="$BUILD_DIR/silva_lexicon_c89.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [adiumentum] silva_lexicon_c89.c"
+    if ! clang "${GCC_FLAGS[@]}" "${PROBATIONUM_INCLUDA[@]}" -c "$src" -o "$obj"; then
+        echo "FRACTA: silva_lexicon_c89.c" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# adiumenta probationum (probationes/*.c non probatio_*)
 for src in "$MATERIA_DIR"/probationes/*.c; do
     base="$(basename "$src" .c)"
     case "$base" in probatio_*) continue ;; esac
@@ -167,7 +182,7 @@ for test_file in "$MATERIA_DIR"/probationes/probatio_*.c; do
     echo ""
     echo "=== $name ==="
     t0=$(mensor_suitae_nunc)
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
+    if ! clang "${GCC_FLAGS[@]}" "${PROBATIONUM_INCLUDA[@]}" "$test_file" $obj_files -o "$bin"; then
         echo "FRACTA (compilatio): $name"
         failed_names="$failed_names $name"
         continue

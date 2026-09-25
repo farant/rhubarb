@@ -5,6 +5,8 @@
 #   source "$RADIX_DIR/silva/materia_substratum.sh"
 #   materia_substratum_struere "$BUILD_DIR" "${GCC_FLAGS[@]}" || exit 1
 #   obj_files="$obj_files $MATERIA_OBIECTA"
+# vexilla: tools/vexilla.sh (per vocantem - vexilla argumenta sunt,
+# hic nulla tabula declaratur)
 #
 # CUR. Cursor silvae et instrumenta eius XX (examen, formator, nexus,
 # renominare, selecta...) OMNEM silva/fontes/*.c compilant et nectunt -

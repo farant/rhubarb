@@ -22,6 +22,7 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"
+    "-I$RADIX_DIR/materia/fontes"
 )
 
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)

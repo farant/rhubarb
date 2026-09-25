@@ -38,6 +38,12 @@ radices() {
         case "$f" in
             */silva_tabulae_sceleti.c|*/silva_tabulae_imparilis.c)
                 continue ;;
+            # frons C89 super materiam (phasis V, T6b): capita materiae
+            # includit, quae amalgama nondum fert - intrat cum sigillo
+            # (T13: silva.h = frons + facies + materia). Ante id
+            # amalgama silvam GELATAM manet, oraculi pignus idem.
+            */silva_frons.c|*/silva_lexicon_c89.c)
+                continue ;;
         esac
         echo "$f"
     done
