@@ -66,7 +66,11 @@ to C89 for free.
 `materia/instrumenta/shim_c89.c` (1,462 lines) converts a silva tree to
 materia types, emits through `materia_scribere`, and compares against
 silva byte for byte, through STML twice, and by the tree comparator.
-Today: **400/400, fractae 0, 15 s** (392 at the HTML boundary). Its
+Today: **400/400, fractae 0, 15 s** (392 at the HTML boundary).
+*Correction 2026-09-24 (plan T3):* the registered gate ran the runner
+WITHOUT `-stml`, i.e. the byte comparison only; the STML, double round
+trip and comparator oracles run only under `-stml` (measured then:
+399/399 each, 17 s). The gate table now passes `-stml`. Its
 token tail ("cauda lexematis = datum frontis C89") is, in its own words,
 "the very shape the C89 frontend of phase 5 will have".
 

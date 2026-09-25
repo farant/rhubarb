@@ -3045,3 +3045,22 @@ only the live lines. Found on the way: `piscina_vacare` keeps its
 blocks, and after `lib/biblia_dr.c` (61 MB STML) that cost 8 min 47 s
 for the corpus — one arena per file now. No silva code changed; replay
 verdict: none owed.
+
+## 2026-09-24 — phase 5 T3: the oracle gate
+
+RELATIO: `materia/oraculum_probare.sh` (gate `oraculum-silvae`) judges
+live silva against silva at PIGNUS `7a4847b0` over 468 files (shim
+corpus + the M3 roundtrip fixtures) in 40 s: every column per file,
+plus the live reader over every pinned document. Intended divergences
+go in `materia/oraculum_silvae.dispares` by name; a named row that
+stops differing is STALE and red. Born green with the file empty.
+Plants: live emitter −1 byte → exit 1 (468 × three columns, stml and
+comparator unmoved); stale row → 1; missing pin → 2; positive control
+(the same emitter plant on one file, its columns named) → sanum.
+`portae_debitae` owes it for silva/fontes, silva/grammatica,
+materia/fontes. Birth measurement: silva's and materia's STML texts
+agree byte for byte (shim `-stml` 399/399), so the `stml` column
+stays. **Finding: the `materia-shim` gate had been running one oracle
+of three** — no `-stml` in pythonica's gate table, so STML, the double
+round trip and the comparator never ran in a gate. Fixed. Replay
+verdict: no silva code changed.

@@ -68,3 +68,43 @@ byte) → all five live lines `circuitus=dispar`, pinned lines unmoved.
 A trap on the way: zsh does not word-split `$FILES`, so the first
 "identical" diff compared two identical error messages — always count
 the lines before trusting a diff.
+
+## 2026-09-24 — the gate (silva-migratio-plan T3)
+
+**`materia/oraculum_probare.sh`, gate `oraculum-silvae`.** Builds live
+silva's objects itself (silva's runner with a filter no probatio
+matches: steps 1–2 compile, nothing runs — a gate over stale objects
+judges yesterday's code), builds both binaries, runs pinned `-stml`
+and live `-legere` over the corpus, and compares every column per
+file. Corpus = the shim's (`lib/*.c include/*.h silva/fontes/*.c`) +
+the M3 roundtrip fixtures (`probationes/fixa/roundtrip/*.{c,h}` — at
+the repo ROOT, not under silva/) = **468 files, 40 s**. Green at
+birth with an EMPTY `materia/oraculum_silvae.dispares`.
+
+**Named divergences, never counted.** `via<TAB>columna<TAB>causa`; a
+named row that no longer differs is STALE and red. Plants: live
+emitter shortened by a byte → 468 × {circuitus, emissio, lectio}
+unnamed, exit 1 (stml and comparator did not move — the writer was
+untouched, which is itself a check that the columns are independent);
+a named row for an agreeing file → STALE, exit 1; a pin that does not
+exist → `git show` fails, exit 2. Positive control (the half a
+negative probe cannot give): the same emitter plant on one file with
+its three columns named → `sanum (nominati 3)`, exit 0.
+
+**Birth measurement — do silva's and materia's STML TEXTS agree?**
+Yes: `shim_probare.sh -stml` = STML idem 399, circuitus (bis) idem
+399, comparator idem 399 (one file has no root node). So the `stml`
+hash column stays a byte column. NB this is the SUBTREE writer; the
+whole-file writer's frontend sections (`<fontes>`, regions,
+directives) meet materia for the first time at T6/T10 — if they
+diverge there, they are named then.
+
+**Finding on the way: the registered shim gate ran ONE oracle of
+three.** `STML_AGERE` defaults to FALSUM in `shim_c89.c`; the STML
+comparison, the double round trip and the tree comparator run only
+under `-stml`, and pythonica's `materia-shim` gate called the runner
+bare. Every document (materia-spec §10, the migration spec §2,
+memory) said "three oracles". Fixed in the gate table (`-stml`, 17 s
+vs 15 s). Lesson for the house doctrine "silent gate ≡ dead gate": a
+gate can be partly dead — read the COMMAND the gate table runs, not
+the runner's header.

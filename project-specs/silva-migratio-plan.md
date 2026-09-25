@@ -14,7 +14,10 @@
 > goes in the emitter (a byte dropped from an INPUT fixture still
 > round-trips). T2 DONE 2026-09-24: `oraculum_silvae` pinned at
 > `7a4847b0` + live, 390/390 identical over the shim corpus, pinned
-> 10 s / live `-legere` 29 s; as-built notes under T2.
+> 10 s / live `-legere` 29 s; as-built notes under T2. T3 DONE
+> 2026-09-24: gate `oraculum-silvae`, 468 files in 40 s, green with an
+> empty dispares file; the shim gate now runs `-stml` (it had run one
+> oracle of three).
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -249,6 +252,14 @@ the pinned build path → exit 2.
 (the pin is today's silva), the three plants went red, the wall time
 is recorded, and `portae_debitae.sh silva/fontes/silva_scribere.c`
 lists `oraculum-silvae`.
+
+*As built* (worklog `materia/instrumenta/oraculum_silvae.worklog.md`):
+corpus 468 (the roundtrip fixtures live at the repo root,
+`probationes/fixa/roundtrip/`); the gate builds silva's objects itself
+before judging; plus a POSITIVE control (a named divergence passes).
+STML texts measured byte-equal (shim `-stml` 399/399), so the `stml`
+column stays. Found: the registered `materia-shim` gate had run
+without `-stml` — byte oracle only; fixed in pythonica's gate table.
 
 ### Task 4: replay inventory
 
