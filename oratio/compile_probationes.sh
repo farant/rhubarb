@@ -162,7 +162,12 @@ done
 for m in silva_token silva_lexema; do
     src="$RADIX_DIR/silva/fontes/$m.c"
     obj="$BUILD_DIR/$m.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(find "$RADIX_DIR/silva/fontes" -name '*.h' -newer "$obj" 2>/dev/null | head -1)" ]; then
+    # capita silvae ET capita domus (newest_header: include/ etc.) -
+    # olim silva/fontes sola: latina.h mutatum obiecta stala relinquebat
+    # (excubitor 'STALA 2', 2026-09-24)
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+        || [ -n "$(find "$RADIX_DIR/silva/fontes" -name '*.h' -newer "$obj" 2>/dev/null | head -1)" ] \
+        || [ -n "$(newest_header "$obj")" ]; then
         echo "  [silva] $m.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || {
             echo "FRACTA: $m.c" ; exit 1
