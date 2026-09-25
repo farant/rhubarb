@@ -367,6 +367,95 @@ principale (
         CREDO_AEQUALIS_S32 (prima->scopus.finis, (s32)44);
     }
 
+    {
+        hic_manens constans MateriaDecoratio BLOCUS = {
+            "/" "*", "*" "/", '*'
+        };
+        hic_manens constans MateriaDecoratio LINEA = {
+            "#", NIHIL, '\0'
+        };
+        MateriaAnnotatio a;
+
+        imprimere("\n--- IX. Decoratio bloci: clausura exuitur ---\n");
+        memset(&a, ZEPHYRUM, magnitudo(a));
+        CREDO_VERUM (materia_annotationem_legere(piscina,
+            chorda_ex_literis("/" "* <tolera codex=\"x\" (>causa *" "/",
+                piscina), &BLOCUS, NIHIL, &a));
+        CREDO_VERUM (a.parsata);
+        CREDO_NON_NIHIL (a.arbor);
+        CREDO_VERUM (chorda_aequalis_literis(*a.arbor->titulus,
+            "tolera"));
+        CREDO_NON_NIHIL (a.documentum);
+        /* textus ab ANCORA, clausura exuta */
+        CREDO_AEQUALIS_I32 ((i32)a.textus.datum[ZEPHYRUM], (i32)'<');
+        CREDO_AEQUALIS_I32 ((i32)a.textus.datum[a.textus.mensura - I],
+            (i32)' ');
+
+        imprimere("\n--- X. Continuatio: linea erroris EXACTA ---\n");
+        /* linea I = linea commentarii; error in linea III. Si lineae
+         * ducentes aut continuationes lineas amitterent, linea hic
+         * moveretur. */
+        memset(&a, ZEPHYRUM, magnitudo(a));
+        CREDO_VERUM (materia_annotationem_legere(piscina,
+            chorda_ex_literis("/" "*\n * <tolera codex=\"x\">\n"
+                " * </alia>\n *" "/", piscina), &BLOCUS, NIHIL, &a));
+        CREDO_FALSUM (a.parsata);
+        CREDO_AEQUALIS_I32 (a.linea_erroris, (i32)III);
+        /* continuatio exuta: nullus '*' ante tag claudentem */
+        CREDO_FALSUM (chorda_continet(a.textus,
+            chorda_ex_literis("* </alia>", piscina)));
+
+        imprimere("\n--- XI. Ancora: '<' cum LITTERA ---\n");
+        memset(&a, ZEPHYRUM, magnitudo(a));
+        CREDO_FALSUM (materia_annotationem_legere(piscina,
+            chorda_ex_literis("# < 5 minor est", piscina), &LINEA,
+            NIHIL, &a));
+        /* probationes/fixa/crusta/adversarius.sh:35 - tag claudens in
+         * commentario prosa est, non annotatio malformata */
+        CREDO_FALSUM (materia_annotationem_legere(piscina,
+            chorda_ex_literis("# </crusta-commentum>", piscina), &LINEA,
+            NIHIL, &a));
+        CREDO_FALSUM (materia_annotationem_legere(piscina,
+            chorda_ex_literis("/" "*\n **\n * <x/> *" "/", piscina),
+            &BLOCUS, NIHIL, &a));
+        CREDO_VERUM (materia_annotationem_legere(piscina,
+            chorda_ex_literis("/" "*\n *\n * <x/> *" "/", piscina),
+            &BLOCUS, NIHIL, &a));
+        CREDO_VERUM (a.parsata);
+    }
+
+    {
+        hic_manens constans MateriaDecoratio BLOCUS = {
+            "/" "*", "*" "/", '*'
+        };
+                 Xar* a;
+    MateriaAnnotatio* prima;
+        constans character* nota =
+            "/" "* <tolera codex=\"lint:x\" (>causa *" "/";
+
+        imprimere("\n--- XII. Collector decoratus (css) ---\n");
+        /* Praefixo solo clausura in textu MANET: forma capturae
+         * '(>' eam in causam devorat - parsatio 'successus' et tamen
+         * causa mendax (spec excusatio par. IV: css). */
+        a = materia_annotationes_colligere(piscina,
+                _arbor(piscina, nota), &ratum, "/" "*", NIHIL, NIHIL);
+        CREDO_NON_NIHIL (a);
+        CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
+        prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
+        CREDO_VERUM (chorda_continet(prima->textus,
+            chorda_ex_literis("*" "/", piscina)));
+
+        a = materia_annotationes_decoratione_colligere(piscina,
+                _arbor(piscina, nota), &ratum, &BLOCUS, NIHIL, NIHIL);
+        CREDO_NON_NIHIL (a);
+        CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
+        prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
+        CREDO_VERUM (prima->parsata);
+        CREDO_FALSUM (chorda_continet(prima->textus,
+            chorda_ex_literis("*" "/", piscina)));
+        CREDO_AEQUALIS_S32 (prima->scopus.initium, (s32)37);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

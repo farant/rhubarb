@@ -82,9 +82,57 @@ nomen structura {
            b32  parsata;
      StmlNodus* arbor;    /* elementum primum; NIHIL si fractum */
     StmlStatus  status;
-           i32  linea_erroris;     /* intra textum purgatum, I-basata */
+           i32  linea_erroris;     /* a linea PRIMA commentarii, I-basata */
            i32  columna_erroris;
+
+    /* appensa (silva-migratio T11, 2026-09-25) */
+     StmlNodus* documentum;   /* radix documenti (liberi = elementa
+                               * omnia - commentarium unum plura ferre
+                               * potest) */
+        chorda error;        /* nuntius stml_legere; vacuus si parsata */
 } MateriaAnnotatio;
+
+
+/* ==================================================
+ * Decoratio commentarii (silva-migratio T11, 2026-09-25)
+ *
+ * Quod circa corpus annotationis stat, per formam commentarii:
+ * delimitator apertus (crusta '#', C89 bini aperientes), claudens
+ * (C89 bini claudentes; NIHIL = linearis) et nota continuationis
+ * quae post quamque lineam novam, spatiis ducentibus, exuitur cum
+ * spatio uno sequente (C89 '*'). Spec excusatio par. IV hoc ut
+ * 'signum nominatum' differebat - cliens cuius commentaria BLOCI
+ * sunt; silva is cliens est.
+ * ================================================== */
+
+nomen structura {
+     constans character* aperitio;     /* NIHIL = nullus */
+     constans character* clausura;     /* NIHIL = linearis */
+              character  continuatio;  /* '\0' = nulla */
+} MateriaDecoratio;
+
+/* Commentarium UNUM ad annotationem. ANCORA: primum non-spatium
+ * (spatia, tabulae, lineae novae, nota continuationis exutae) est
+ * '<' cum LITTERA sequente - prosa ut '< 5' numquam annotatio est
+ * (lex silvae, 2026-09-25 in materiam lata; in domo nullum
+ * commentarium aliter iudicatur).
+ *
+ * FALSUM = PROSA: 'annotatio' non tangitur. VERUM = annotatio
+ * (parsata aut non): textus (ab ancora, delimitatoribus et
+ * continuationibus exutis), crudum, parsata, arbor, documentum,
+ * status, linea_erroris/columna_erroris, error impleta; sedes et
+ * possessor VOCANTIS sunt. Parsatio super corpus purgatum TOTUM fit
+ * (spatiis et lineis ducentibus servatis), ergo linea fontis erroris
+ * = linea commentarii + linea_erroris - I; columnae sub decoratione
+ * exuta moventur. Memoria deficiente annotatio RETINETUR non parsata
+ * (numquam tacite prosa). 'intern' NIHIL licet (creatur). */
+b32
+materia_annotationem_legere (
+                      Piscina* piscina,
+                       chorda  valor,
+    constans MateriaDecoratio* decoratio,
+          InternamentumChorda* intern,
+             MateriaAnnotatio* annotatio);
 
 
 /* ==================================================
@@ -96,8 +144,8 @@ nomen structura {
  * et POST inspiciuntur; commentaria per MATERIA_MUNUS_COMMENTUM
  * inventa.
  *
- * 'praefixum' decoratio exuenda est ("#" crustae); NIHIL aut vacuum =
- * nulla. Spatia ante et post praefixum exuuntur.
+ * 'praefixum' delimitator apertus exuendus ("#" crustae); NIHIL aut
+ * vacuum = nullus. Purgatio et ancora: materia_annotationem_legere.
  *
  * 'origo' uncus sedium (NIHIL licet); 'intern' NIHIL licet (collector
  * suum creat).
@@ -111,6 +159,18 @@ materia_annotationes_colligere (
          constans MateriaNodus* radix,
   constans MateriaLexiconRatum* lexicon,
             constans character* praefixum,
+    constans MateriaOrigoUncus* origo,
+           InternamentumChorda* intern);
+
+/* Idem cum decoratione PLENA (commentaria bloci: css, C89).
+ * materia_annotationes_colligere = haec cum decoratione
+ * { praefixum, NIHIL, '\0' }. decoratio NIHIL = nulla. */
+Xar*
+materia_annotationes_decoratione_colligere (
+                       Piscina* piscina,
+         constans MateriaNodus* radix,
+  constans MateriaLexiconRatum* lexicon,
+     constans MateriaDecoratio* decoratio,
     constans MateriaOrigoUncus* origo,
            InternamentumChorda* intern);
 

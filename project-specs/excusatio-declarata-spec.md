@@ -205,6 +205,9 @@ crusta declares genus `crusta-commentum`, praefixum `#`. Continuation
 stripping (C's ` * ` on each line of a block comment, which
 `silva_annotationes` implements) is **deferred with a named trigger: a
 materia client whose comments are blocks.** None is.
+*(As built 2026-09-25, silva-migratio T11: the trigger fired — silva
+became that client. `MateriaDecoratio` {opening, closing, continuation}
++ `materia_annotationem_legere`; see materia_annotationes.worklog.md.)*
 
 ## 5. The consumer
 

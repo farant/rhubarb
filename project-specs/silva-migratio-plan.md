@@ -70,6 +70,12 @@
 > in full); materia gained `materia_arbor_lexemata_aequalia_fronte` for
 > the parsura comparator's loose tokens; porta M1 widened 281 → 492
 > subtrees (M3 pin moved). T10 complete; T11 (annotationes) next.
+> T11 DONE 2026-09-25 (Fran chose (C) after the measurement): the
+> per-comment kernel (decoration, `<`+letter anchor, parse) is materia's
+> (`materia_annotationem_legere`, `MateriaDecoratio`); collection from
+> C89 sources, unit attachment and nid identities stay in silva. Parity
+> 162/162 annotations over 1,545 files; crusta diagnostics identical
+> over 250 .sh. T12 (quaestio) next.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -772,6 +778,34 @@ Gates: silva 54/54, materia 14/14, oracle 470 clean, M3 6/6.
 annotations (`<tolera>`, `<contractus>`) read by examen and legatus
 are the consumers to watch.
 
+*Measured (2026-09-25).* Same name, different jobs. silva's collector
+(911) reads C89-only sources — token stream, invocation roots (origin
+chain), preprocessor-consumed directive lines, the EOF tail — and
+attaches to TOP-LEVEL UNITS (SUPRA/INTERIOR/PLAGULA), which examen's
+contractus pass, the nid index and hospes read; it also extracts nid
+identities and mint offsets (~360). materia's (410) descends the tree
+and attaches to the OWNING node + scope, with a one-string prefix. On
+C89 it would find nothing (first byte `/`; a `/*` prefix leaves `*/`),
+and descent cannot see directive/invocation/EOF comments at all.
+Options put to Fran: (A) full switch with a comment-source hook, (B) no
+change, (C) shared per-comment kernel.
+
+*As built (T11, option C).* materia: `MateriaDecoratio` (opening,
+closing, continuation mark), `materia_annotationem_legere`, anchor =
+`<` + letter (silva's rule; over 250 .sh one comment changes class,
+unreported either way), `materia_annotationes_decoratione_colligere`
+(the old entry wraps it) — which also closes the css block-comment gap
+the excusatio spec named (a prefix-only tolera parsed with `*/` in its
+cause). silva: block/line decorations declared, collector calls the
+kernel; collection, attachment and nids unchanged (`materia_annotationes`
+joins `silva/materia_substratum.sh`). Proof: a scratch dump of every
+annotation field over a HEAD snapshot (1,545 C files, 162 annotations)
+identical before/after, planted (continuation off → 28 rows);
+tools/diagnostica over all .sh identical; silva 54/54, materia 14/14,
+crusta 16/16, identitates -porta verified. `textus` now starts at the
+anchor in both (parse still over the whole purged body, so error lines
+stay exact).
+
 ---
 
 ## Step 3 — quaestio
@@ -807,7 +841,8 @@ the amalgam regenerates here.
 carry `silva_frons.c` (silva_arbor.c and silva_scribere's callers
 depend on it; `fontes_politica.sh radices()` still EXCLUDES it since
 T6b) and the materia substrate silva links (token, nodus, scribere,
-arbor, arbor_aequalitas, lexicon — `silva/materia_substratum.sh`).
+arbor, arbor_aequalitas, lexicon, annotationes (T11) —
+`silva/materia_substratum.sh`).
 Amalgam consumers (briar, saltuarius, aedilis — consumer inventory
 …WW34 rows still ignotum on 'per facadem transit') meet all of T7–T10
 at once here.

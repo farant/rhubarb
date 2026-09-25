@@ -14,6 +14,13 @@
  * spatia ducentia + asteriscum unum + spatium unum optionale
  * exuunt; linea prima intacta (post delimitatorem).
  *
+ * SUPER MATERIAM (silva-migratio T11, 2026-09-25): purgatio, ancora
+ * et parsatio commentarii unius = materia_annotationem_legere, cum
+ * decorationibus C89 in silva_annotationes.c declaratis. Hic manent
+ * quae C89 sunt: fontes commentariorum (fluxus lexematum, radices
+ * originis, lineae directivae, cauda EOF), affixio ad unitates
+ * (SUPRA/INTERIOR/PLAGULA), identitates nid.
+ *
  * Affixio (spec par 2.3, octetis per fontem): SUPRA = unitas
  * suprema proxima post commentarium (salta-vacua - lineae vacuae
  * numquam frangunt, praecedens EXSPECTA-PROXIMA); INTERIOR =
@@ -36,6 +43,7 @@
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_parsare.h"
+#include "materia_annotationes.h"
 
 
 /* ==================================================
@@ -55,7 +63,8 @@ nomen enumeratio {
 
 nomen structura {
     /* fons commentarii */
-    chorda textus;        /* corpus purgatum (praetransitus factus) */
+    chorda textus;        /* corpus purgatum AB ANCORA ('<'); T11 -
+                           * antea spatia ducentia servabat */
     chorda crudum;        /* octeti pleni delimitatoribus inclusis */
        s32 fons_index;
        i32 linea;         /* 1-basata (commentarii initium) */

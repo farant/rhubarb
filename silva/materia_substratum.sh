@@ -32,6 +32,7 @@ MATERIA_SUBSTRATUM=(
     materia_arbor
     materia_arbor_aequalitas
     materia_lexicon
+    materia_annotationes
 )
 
 materia_substratum_struere () {   # <directorium obiectorum> <vexilla...>

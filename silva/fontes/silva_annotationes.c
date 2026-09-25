@@ -29,128 +29,16 @@ _finis_contenti (
     redde fine;
 }
 
-/* index contenti primi post delimitatorem apertum, spatia, et
- * decorationem linearum continuationis; -1 = commentarium vacuum */
-interior s32
-_contentum_primum (
-    constans chorda* valor,
-                i32  fine)
-{
-    i32 i = II;   /* post delimitatorem apertum (ambo bini) */
-
-    dum (i < fine)
-    {
-        si (valor->datum[i] == ' ' || valor->datum[i] == '\t')
-        {
-            i++;
-            perge;
-        }
-        si (valor->datum[i] == '\n')
-        {
-            i++;
-            dum (   i < fine && (valor->datum[i] == ' '
-                || valor->datum[i] == '\t'))
-            {
-                i++;
-            }
-            si (i < fine && valor->datum[i] == '*')
-            {
-                i++;
-                si (i < fine && valor->datum[i] == ' ')
-                {
-                    i++;
-                }
-            }
-            perge;
-        }
-        redde (s32)i;
-    }
-    redde -I;
-}
-
-/* ancoratum = contentum primum '<' littera sequente (prosa numquam
- * fere tag incipit; "< 5" spatio non ancoratur) */
-interior b32
-_est_ancoratum (
-    constans chorda* valor,
-                s32  genus)
-{
-    i32 fine    = _finis_contenti(valor, genus);
-    s32 primus  = _contentum_primum(valor, fine);
-     i8 sequens;
-
-    si (primus < ZEPHYRUM || (i32)primus + I >= fine)
-    {
-        redde FALSUM;
-    }
-    si (valor->datum[primus] != '<')
-    {
-        redde FALSUM;
-    }
-    sequens = valor->datum[primus + I];
-    redde (sequens >= 'a' && sequens <= 'z')
-        || (sequens >= 'A' && sequens <= 'Z');
-}
-
-/* praetransitus decorationis (spec par 2.2): linea prima intacta;
- * post quamque lineam novam spatia ducentia + asteriscus unus +
- * spatium unum optionale exuuntur. Lineae novae servantur - linea
- * erroris stml in lineam fontis remappari potest. */
-interior chorda
-_purgare (
-            Piscina* piscina,
-    constans chorda* valor,
-                i32  fine)
-{
-    chorda  purgatum;
-        i8* d;
-       i32  i;
-       i32  n = ZEPHYRUM;
-
-    purgatum.mensura  = ZEPHYRUM;
-    purgatum.datum    = NIHIL;
-    si (fine <= II)
-    {
-        redde purgatum;
-    }
-    d = (i8*)piscina_allocare(piscina, (memoriae_index)(fine - II));
-    si (d == NIHIL)
-    {
-        redde purgatum;
-    }
-    i = II;
-    dum (i < fine)
-    {
-        si (valor->datum[i] == '\n')
-        {
-            d[n] = '\n';
-            n++;
-            i++;
-            dum (   i < fine && (valor->datum[i] == ' '
-                || valor->datum[i] == '\t'))
-            {
-                i++;
-            }
-            si (i < fine && valor->datum[i] == '*')
-            {
-                i++;
-                si (i < fine && valor->datum[i] == ' ')
-                {
-                    i++;
-                }
-            }
-        }
-        alioquin
-        {
-            d[n] = valor->datum[i];
-            n++;
-            i++;
-        }
-    }
-    purgatum.datum    = d;
-    purgatum.mensura  = n;
-    redde purgatum;
-}
+/* Decorationes C89 (T11): commentarium clausum delimitatores binos
+ * et continuationem '*' fert; lineare delimitatorem apertum solum.
+ * Purgatio, ancora ('<' cum littera) et parsatio materiae sunt
+ * (materia_annotationem_legere) - hic sola forma C89 declaratur. */
+hic_manens constans MateriaDecoratio DECORATIO_BLOCI = {
+    "/" "*", "*" "/", '*'
+};
+hic_manens constans MateriaDecoratio DECORATIO_LINEAE = {
+    "/" "/", NIHIL, '\0'
+};
 
 
 /* ==================================================
@@ -167,10 +55,9 @@ _annotationem_addere (
     InternamentumChorda* intern,
     constans SilvaToken* tr)
 {
-               i32  k;
-               i32  fine;
-    SilvaAnnotatio* a;
-      StmlResultus  resultus;
+                 i32  k;
+      SilvaAnnotatio* a;
+    MateriaAnnotatio  lecta;
 
     per (k = ZEPHYRUM; k < xar_numerus(fructus); k++)
     {
@@ -183,29 +70,34 @@ _annotationem_addere (
             redde;
         }
     }
-    fine  = _finis_contenti(&tr->valor, (s32)tr->genus);
-    a     = (SilvaAnnotatio*)xar_addere(fructus);
+    memset(&lecta, ZEPHYRUM, magnitudo(lecta));
+    si (!materia_annotationem_legere(piscina, tr->valor,
+            ((s32)tr->genus == SILVA_LEX_COMMENTUM_CLAUSUM)
+                ? &DECORATIO_BLOCI : &DECORATIO_LINEAE,
+            intern, &lecta))
+    {
+        redde;   /* prosa */
+    }
+    a = (SilvaAnnotatio*)xar_addere(fructus);
     si (a == NIHIL)
     {
         redde;
     }
-    a->crudum       = tr->valor;
-    a->fons_index   = tr->fons_index;
-    a->linea        = tr->linea;
-    a->columna      = tr->columna;
-    a->byte_offset  = tr->byte_offset;
-    a->modus        = SILVA_ANNOTATIO_PLAGULA;
-    a->unitas       = NIHIL;
-    a->textus       = _purgare(piscina, &tr->valor, fine);
-
-    resultus            = stml_legere(a->textus, piscina, intern);
-    a->parsata          = resultus.successus;
-    a->documentum       = resultus.radix;
-    a->arbor            = resultus.elementum_radix;
-    a->status           = resultus.status;
-    a->linea_erroris    = resultus.linea_erroris;
-    a->columna_erroris  = resultus.columna_erroris;
-    a->error            = resultus.error;
+    a->crudum           = tr->valor;
+    a->fons_index       = tr->fons_index;
+    a->linea            = tr->linea;
+    a->columna          = tr->columna;
+    a->byte_offset      = tr->byte_offset;
+    a->modus            = SILVA_ANNOTATIO_PLAGULA;
+    a->unitas           = NIHIL;
+    a->textus           = lecta.textus;
+    a->parsata          = lecta.parsata;
+    a->documentum       = lecta.documentum;
+    a->arbor            = lecta.arbor;
+    a->status           = lecta.status;
+    a->linea_erroris    = lecta.linea_erroris;
+    a->columna_erroris  = lecta.columna_erroris;
+    a->error            = lecta.error;
 }
 
 /* trivia lexematis unius (ambo latera): commenta ancorata sola */
@@ -239,10 +131,6 @@ _ex_lexemate (
             si (tr->byte_offset < ZEPHYRUM)
             {
                 perge;   /* synthetica - in fonte non exsistunt */
-            }
-            si (!_est_ancoratum(&tr->valor, (s32)tr->genus))
-            {
-                perge;
             }
             _annotationem_addere(fructus, piscina, intern, tr);
         }

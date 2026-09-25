@@ -230,3 +230,32 @@ and read it; the grammar anchors per-comment, so a pin embedded
 in prose is invisible BY DESIGN. Cure: the pin became its own
 annotation comment. This is the grammar teaching correct habits
 — annotations are comments, not lines.
+
+## 2026-09-25 — silva-migratio T11: the per-comment kernel moved to materia
+
+Measured first: the two collectors share a name, not a job. silva's
+collects from C89-only sources (token stream, invocation roots, consumed
+directive lines, EOF tail) and attaches to TOP-LEVEL UNITS
+(SUPRA/INTERIOR/PLAGULA — examen's contractus pass, the identity index
+and hospes read `unitas`/`modus`); materia's descends the tree and
+attaches to the OWNING node with a scope. On a C89 tree materia's would
+have found nothing (first byte `/`, and a `/*` prefix leaves `*/` in the
+text), and descent cannot see directive-line, invocation or EOF comments
+at all (the E1 swallow). Decision (C) (Fran): the per-comment kernel —
+decoration strip, anchor, `stml_legere` — is materia's
+(`materia_annotationem_legere` with a `MateriaDecoratio`); collection,
+attachment and nid identities stay here as C89.
+
+- Two C89 decorations declared here: block `{"/*", "*/", '*'}`, line
+  `{"//", NIHIL, '\0'}` (the old purge also stripped a `*` after a
+  newline inside a `//` comment — the corpus has no such case; parity
+  held with the principled line form).
+- `_finis_contenti` stays: the nid mint scanner reads raw bytes.
+- `textus` now starts AT THE ANCHOR (it used to keep leading
+  whitespace); nothing in silva reads it. Parsing still runs over the
+  whole purged body, so `linea + linea_erroris - 1` stays exact.
+- Parity: a scratch dumper (every field incl. placement, unit extent,
+  parse status, error line/col, element title, doc children, identity
+  offsets) over a HEAD snapshot of 1,545 C files — 162 annotations
+  (109 SUPRA, 53 INTERIOR, 16 malformed), identical before and after.
+  The comparison was planted: continuation off → 28 rows differ.

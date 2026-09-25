@@ -3304,3 +3304,19 @@ all-node sweep did. Oracle clean 470, M3 6/6 (pin moved with cause),
 silva 54/54, materia 14/14. Replay verdict: substrate module `arbor`
 (writer, reader, comparator) switched for silva; T10 closed. Next: T11
 annotationes.
+
+## 2026-09-25 — phase 5 T11: annotationes — the per-comment kernel
+
+RELATIO: measured before designing — silva's collector and materia's
+share a name, not a job (C89-only comment sources + unit attachment vs
+tree descent + owning-node scope). Fran chose the shared kernel: materia
+gained a declared comment decoration (opening, closing, continuation)
+and `materia_annotationem_legere` with silva's `<`+letter anchor; silva
+declares its two C89 decorations and keeps collection, attachment and
+nid identities. The excusatio spec's deferred trigger ("a client whose
+comments are blocks") fired and is built; css's latent lying-cause
+tolera is fixed at the substrate (wiring waits for css). Parity 162/162
+annotations over 1,545 C files (planted: 28 rows), crusta diagnostics
+identical over 250 .sh. Replay verdict: `annotationes` shares its
+kernel; the C89 collector is frontend by decision (C). Next: T12
+quaestio.

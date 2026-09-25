@@ -20,14 +20,13 @@
  * ================================================== */
 
 nomen structura {
-                         Piscina* piscina;
-                             Xar* exitus;
-    constans MateriaLexiconRatum* lexicon;
-              constans character* praefixum;
-                             i32  praefixum_mensura;
-      constans MateriaOrigoUncus* origo;
-             InternamentumChorda* intern;
-                             b32  memoria_defecit;
+                           Piscina* piscina;
+                               Xar* exitus;
+      constans MateriaLexiconRatum* lexicon;
+         constans MateriaDecoratio* decoratio;
+        constans MateriaOrigoUncus* origo;
+               InternamentumChorda* intern;
+                               b32  memoria_defecit;
 } Collectio;
 
 /* opus acervi: valor ambulandus cum nodo qui eum possidet */
@@ -38,7 +37,7 @@ nomen structura {
 
 
 /* ==================================================
- * Purgatio decorationis
+ * Commentarium unum - purgatio, ancora, parsatio
  * ================================================== */
 
 interior b32
@@ -48,45 +47,198 @@ _spatium_est (
     redde (b32)(c == (i8)' ' || c == (i8)'\t');
 }
 
-/* spatia ducentia, deinde praefixum si adest, deinde spatia iterum.
- * Chorda VISUS est, ergo nihil copiatur. */
-interior chorda
-_purgare (
-                 chorda  valor,
-     constans character* praefixum,
-                    i32  praefixum_mensura)
+interior b32
+_littera_est (
+    i8 c)
 {
-    chorda r = valor;
-       i32 k = ZEPHYRUM;
+    redde (b32)(   (c >= (i8)'a' && c <= (i8)'z')
+                || (c >= (i8)'A' && c <= (i8)'Z'));
+}
 
-    dum (k < r.mensura && _spatium_est(r.datum[k]))
+/* post lineam novam: spatia ducentia, nota continuationis, spatium
+ * unum sequens. Indicem primum post ea reddit. */
+interior i32
+_continuationem_saltare (
+    constans i8* d,
+            i32  k,
+            i32  finis,
+      character  continuatio)
+{
+    dum (k < finis && _spatium_est(d[k]))
     {
         k++;
     }
-    si (   praefixum_mensura > ZEPHYRUM
-        && r.mensura - k >= praefixum_mensura
-        && memcmp(r.datum + k, praefixum,
-               (memoriae_index)praefixum_mensura) == ZEPHYRUM)
+    si (continuatio != '\0' && k < finis && d[k] == (i8)continuatio)
     {
-        k += praefixum_mensura;
+        k++;
+        si (k < finis && d[k] == (i8)' ')
+        {
+            k++;
+        }
     }
-    dum (k < r.mensura && _spatium_est(r.datum[k]))
+    redde k;
+}
+
+b32
+materia_annotationem_legere (
+                      Piscina* piscina,
+                       chorda  valor,
+    constans MateriaDecoratio* decoratio,
+          InternamentumChorda* intern,
+             MateriaAnnotatio* annotatio)
+{
+     constans character* aperitio     = NIHIL;
+     constans character* clausura     = NIHIL;
+              character  continuatio  = '\0';
+                    i32  initium      = ZEPHYRUM;
+                    i32  finis        = valor.mensura;
+                    i32  k;
+                 chorda  corpus;
+           StmlResultus  r;
+
+    si (piscina == NIHIL || annotatio == NIHIL || valor.datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (decoratio != NIHIL)
+    {
+        aperitio     = decoratio->aperitio;
+        clausura     = decoratio->clausura;
+        continuatio  = decoratio->continuatio;
+    }
+
+    /* delimitatores: apertus post spatia ducentia, claudens in fine
+     * (commentarium ad EOF non terminatum eo caret - tunc manet) */
+    dum (initium < finis && _spatium_est(valor.datum[initium]))
+    {
+        initium++;
+    }
+    si (aperitio != NIHIL)
+    {
+        i32 m = (i32)strlen(aperitio);
+
+        si (   m > ZEPHYRUM && finis - initium >= m
+            && memcmp(valor.datum + initium, aperitio,
+                   (memoriae_index)m) == ZEPHYRUM)
+        {
+            initium += m;
+        }
+    }
+    si (clausura != NIHIL)
+    {
+        i32 m = (i32)strlen(clausura);
+
+        si (   m > ZEPHYRUM && finis - initium >= m
+            && memcmp(valor.datum + finis - m, clausura,
+                   (memoriae_index)m) == ZEPHYRUM)
+        {
+            finis -= m;
+        }
+    }
+
+    /* ANCORA super octetos crudos (nulla allocatio ante iudicium) */
+    k = initium;
+    dum (k < finis)
+    {
+        si (_spatium_est(valor.datum[k]))
+        {
+            k++;
+        }
+        alioquin si (valor.datum[k] == (i8)'\n')
+        {
+            k = _continuationem_saltare(valor.datum, k + I, finis,
+                continuatio);
+        }
+        alioquin
+        {
+            frange;
+        }
+    }
+    si (   k + I >= finis || valor.datum[k] != (i8)'<'
+        || !_littera_est(valor.datum[k + I]))
+    {
+        redde FALSUM;
+    }
+
+    /* PURGATIO: sine continuatione visus (nihil copiatur); cum ea
+     * copia, lineis novis servatis (linea erroris remappatur) */
+    corpus.datum    = valor.datum + initium;
+    corpus.mensura  = finis - initium;
+    si (continuatio != '\0')
+    {
+        i8* d = (i8*)piscina_allocare(piscina,
+            (memoriae_index)(corpus.mensura > ZEPHYRUM
+                ? corpus.mensura : I));
+        i32 n = ZEPHYRUM;
+
+        si (d == NIHIL)
+        {
+            /* RETINETUR non parsata - numquam tacite prosa */
+            annotatio->crudum   = valor;
+            annotatio->parsata  = FALSUM;
+            annotatio->arbor    = NIHIL;
+            redde VERUM;
+        }
+        k = initium;
+        dum (k < finis)
+        {
+            d[n] = valor.datum[k];
+            n++;
+            si (valor.datum[k] == (i8)'\n')
+            {
+                k = _continuationem_saltare(valor.datum, k + I, finis,
+                    continuatio);
+            }
+            alioquin
+            {
+                k++;
+            }
+        }
+        corpus.datum    = d;
+        corpus.mensura  = n;
+    }
+
+    /* SINE INTERNAMENTO titulus elementi NIHIL redit et consumptor
+     * tag nominare non potest - parsatio 'successus' manet, ergo
+     * casus TACITE fallit. */
+    si (intern == NIHIL)
+    {
+        intern = internamentum_creare(piscina);
+        si (intern == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    r                  = stml_legere(corpus, piscina, intern);
+    annotatio->crudum  = valor;
+    annotatio->textus  = corpus;
+    k                  = ZEPHYRUM;
+    dum (   k < annotatio->textus.mensura
+         && (   _spatium_est(annotatio->textus.datum[k])
+             || annotatio->textus.datum[k] == (i8)'\n'))
     {
         k++;
     }
-    r.datum    += k;
-    r.mensura  -= k;
-    redde r;
+    annotatio->textus.datum     += k;
+    annotatio->textus.mensura   -= k;
+    annotatio->parsata          = r.successus;
+    annotatio->arbor            = r.elementum_radix;
+    annotatio->documentum       = r.radix;
+    annotatio->status           = r.status;
+    annotatio->linea_erroris    = r.linea_erroris;
+    annotatio->columna_erroris  = r.columna_erroris;
+    annotatio->error            = r.error;
+    redde VERUM;
 }
 
 
 /* ==================================================
- * Commentarium unum
+ * Commentarium in arbore
  * ================================================== */
 
 /* Commentarium ad annotationem vertere, si annotatio est. PROSA
- * (primum non-spatium non '<') omittitur TACITE; quod '<' fert sed
- * parsari nequit RETINETUR - lex silva_annotationes.h.
+ * omittitur TACITE; quod ancoratum est sed parsari nequit
+ * RETINETUR - lex silva_annotationes.h.
  *
  * 'nodus' HIC NON PONITUR: annotatio PENDENS nascitur et lexemate
  * SEQUENTE solvitur (vide _pendentes_solvere). */
@@ -96,19 +248,17 @@ _commentarium_tractare (
     constans MateriaToken* lexema,
     constans MateriaNodus* hospes)
 {
-              chorda  purgatum;
+    MateriaAnnotatio  nova;
     MateriaAnnotatio* a;
-        StmlResultus  r;
 
     si (   materia_lexicon_munus(c->lexicon, lexema->genus)
         != MATERIA_MUNUS_COMMENTUM)
     {
         redde;
     }
-    purgatum = _purgare(lexema->valor, c->praefixum,
-        c->praefixum_mensura);
-    si (   purgatum.mensura == ZEPHYRUM || purgatum.datum[ZEPHYRUM]
-            != (i8)'<')
+    memset(&nova, ZEPHYRUM, magnitudo(nova));
+    si (!materia_annotationem_legere(c->piscina, lexema->valor,
+            c->decoratio, c->intern, &nova))
     {
         redde;
     }
@@ -118,19 +268,11 @@ _commentarium_tractare (
         c->memoria_defecit = VERUM;
         redde;
     }
-    memset(a, ZEPHYRUM, magnitudo(*a));
-    a->textus = purgatum;
-    a->crudum = lexema->valor;
+    *a = nova;
     /* NIHIL = pendens, antrorsum solvenda */
     a->nodus           = hospes;
     a->scopus.initium  = -I;
     materia_tractus_lexematis(c->origo, lexema, &a->commentarium);
-    r                   = stml_legere(purgatum, c->piscina, c->intern);
-    a->parsata          = r.successus;
-    a->arbor            = r.elementum_radix;
-    a->status           = r.status;
-    a->linea_erroris    = r.linea_erroris;
-    a->columna_erroris  = r.columna_erroris;
 }
 
 
@@ -320,6 +462,26 @@ materia_annotationes_colligere (
     constans MateriaOrigoUncus* origo,
            InternamentumChorda* intern)
 {
+    MateriaDecoratio decoratio;
+
+    decoratio.aperitio     = (praefixum != NIHIL
+        && praefixum[0] != '\0')
+                                 ? praefixum : NIHIL;
+    decoratio.clausura     = NIHIL;
+    decoratio.continuatio  = '\0';
+    redde materia_annotationes_decoratione_colligere(piscina, radix,
+        lexicon, &decoratio, origo, intern);
+}
+
+Xar*
+materia_annotationes_decoratione_colligere (
+                       Piscina* piscina,
+         constans MateriaNodus* radix,
+  constans MateriaLexiconRatum* lexicon,
+     constans MateriaDecoratio* decoratio,
+    constans MateriaOrigoUncus* origo,
+           InternamentumChorda* intern)
+{
     Collectio  c;
           Xar* acervus;
 
@@ -330,14 +492,10 @@ materia_annotationes_colligere (
     memset(&c, ZEPHYRUM, magnitudo(c));
     c.piscina    = piscina;
     c.lexicon    = lexicon;
-    c.praefixum  = praefixum;
+    c.decoratio  = decoratio;
     c.origo      = origo;
     c.intern     = intern;
-    c.praefixum_mensura = praefixum == NIHIL
-        ? ZEPHYRUM : (i32)strlen(praefixum);
-    /* SINE INTERNAMENTO titulus elementi NIHIL redit et consumptor
-     * tag nominare non potest - parsatio 'successus' manet, ergo
-     * casus TACITE fallit. Ut silva_annotationes.c:412. */
+    /* internamentum UNUM per collectionem (non per commentarium) */
     si (c.intern == NIHIL)
     {
         c.intern = internamentum_creare(piscina);
