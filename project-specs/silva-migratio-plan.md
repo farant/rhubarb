@@ -76,6 +76,10 @@
 > C89 sources, unit attachment and nid identities stay in silva. Parity
 > 162/162 annotations over 1,545 files; crusta diagnostics identical
 > over 250 .sh. T12 (quaestio) next.
+> T12 CLOSED 2026-09-25 without code (Fran): the measurement found the
+> port already done by the T8/T9 facade — silva_quaestio.o's only
+> external symbols are materia_valor_lista_*, xar, piscina, libc. Named
+> query before-rows recorded. T13 (seal) next.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -817,6 +821,22 @@ families T8 scheduled; it stays in silva. Gates as step 2, plus
 `probatio_silva_quaestio*`, `legati quaestio` over
 `silva/quaestiones.stml` (every named query returns the same rows
 before and after — record the before rows at the task's start).
+
+*Measured and closed (2026-09-25, no code).* Before-rows over a HEAD
+snapshot (982 files parsed, 25 skipped): `vocantes-continentes
+functio=piscina_allocare` 1,163; `declaratores-nominati titulus=piscina`
+3,344; `definitio-nominata` / `declaratores-nominati
+titulus=chorda_ex_literis` 1 each; invariant `exsequi-in-pulsatione`
+holds; `quaestio.sh -proba` tenet. The module already runs on
+`MateriaNodus`: its source touches only T8 aliases (`SilvaNodus`,
+`SilvaValor`, `silva_valor_lista_*`, `SILVA_VALOR_*`) and T9 registry
+typedefs, includes no C89 header, reads no token tail; the compiled
+object's undefined symbols are `materia_valor_lista_numerus/_obtinere`,
+`xar_*`, `piscina_*` and libc — nothing of silva. It was
+grammar-agnostic by design (takes any cooked registry). Nothing to port,
+so the rows cannot move; the nodus query families T8 deferred stay with
+desideratum 01M3BHHJQA (step 5). D3a stands: it stays in silva; a second
+client wanting queries reopens D3 (b).
 
 ---
 

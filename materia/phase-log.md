@@ -3320,3 +3320,13 @@ annotations over 1,545 C files (planted: 28 rows), crusta diagnostics
 identical over 250 .sh. Replay verdict: `annotationes` shares its
 kernel; the C89 collector is frontend by decision (C). Next: T12
 quaestio.
+
+## 2026-09-25 — phase 5 T12: quaestio — closed by measurement
+
+RELATIO: `silva_quaestio` was already on materia's nodes through the T8
+facade and T9 registry typedefs — link-level proof: its object needs
+only `materia_valor_lista_*`, xar, piscina and libc. Named-query rows
+recorded (1,163 / 3,344 / 1 / 1, invariant holds, native gate green)
+and nothing changed, so they cannot move. Closed without code (Fran).
+The nodus query families remain desideratum 01M3BHHJQA (step 5). Next:
+T13, the seal.
