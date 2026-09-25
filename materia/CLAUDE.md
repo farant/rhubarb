@@ -156,6 +156,22 @@ discriminate), and a fourth time because a walk could not reach the
 tree the class lives in. Ask what the gate would print if the thing it
 watches never happened — and ask WHICH TREE the walk actually walks.
 
+## Annotationes (2026-09-18; kernel 2026-09-25)
+
+**STML inside comments, collected by ONE per-comment kernel.**
+`materia_annotationem_legere(piscina, valor, &decoratio, intern, &a)`
+(`materia_annotationes.h`): a `MateriaDecoratio` declares the comment's
+form — opening, closing (NIHIL = line comment), continuation mark
+stripped after each newline (C89 `*`). Anchor = `<` + a LETTER (prose
+`< 5` never counts); an anchored comment that will not parse is KEPT
+(`parsata` FALSUM), never reclassified as prose. Parsing runs over the
+whole purged body, so `linea + linea_erroris - 1` is the source line;
+`textus` is a view from the anchor. The tree collector
+(`materia_annotationes_colligere` / `_decoratione_colligere`) attaches
+to the owning node with a scope (excusatio); silva's C89 collector uses
+the same kernel but its own sources and unit attachment. Worklog
+`fontes/materia_annotationes.worklog.md`.
+
 ## The whitespace contract (2026-08-28)
 
 **A `VERBATIM` trivium whose value is whitespace-only projects to

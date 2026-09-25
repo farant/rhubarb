@@ -14619,3 +14619,24 @@ ortu: ubi 'postea' scribitur, desideratum scribatur.
 **Freeze.** Silva fontes tacta (semantica.c/.h) = emendatio
 iudicis (defectus), extra subset materiae portatum — replicatio
 nulla debita (nota in materia/phase-log).
+
+## Addendum 2026-09-25: PHASE V (silva → materia) — where the narrative lives
+
+Re-entry pointer for anyone following this file's protocol: the phase V
+migration is narrated in **materia/phase-log.md** (entries T1–T12) and
+planned in **project-specs/silva-migratio-plan.md** (STATUS block at the
+top + an as-built note per task). State at this addendum:
+
+- DONE: T1–T5 (measure/freeze, oracle gate `./materia/oraculum_probare.sh`,
+  M3 runner `./silva/m3_probare.sh`), T6 (silva_frons promoted), T7
+  (SilvaToken IS MateriaToken + C89 tail), T8 (silva_nodus.h a facade),
+  T9 (byte writer on materia_scribere), T10a–d (STML writer/reader/
+  comparator on materia; shim retired; porta M1 now every subtree, 492),
+  T11 (annotation kernel `materia_annotationem_legere`; C89 collection
+  and unit attachment stay here), T12 (quaestio — already on MateriaNodus
+  via the facade; closed without code).
+- NEXT: T13, the seal — amalgam THAWS (frozen since T7b, decree …1BKY;
+  do NOT run amalgamare.sh before T13), gains silva_frons.c + the materia
+  substrate (`silva/materia_substratum.sh`), `-I materia/fontes` in the
+  two amalgama tools, substrate copies deleted, M3 acceptance, freeze
+  notices lifted.
