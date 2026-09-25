@@ -314,10 +314,14 @@ silva_arbor_scribere_nodum (
  * translationis propria est), et consumptor proximus iam visibilis
  * est - portae mutationis id ipsum rogant, 'an haec transformatio
  * arborem servaverit'.
+ *
+ * SUPER MATERIAM (silva-migratio T10d, 2026-09-25): ambulatio est
+ * materia_arbor_aequalis_fronte; silva uncum C89 praebet (cauda
+ * lexematis). Typi facies sunt typorum materiae.
  * ================================================== */
 
 /* Capacitas semitae diagnosticae (tags '>' iunctis) */
-#define SILVA_ARBOR_VIA_CAPACITAS 256
+#define SILVA_ARBOR_VIA_CAPACITAS MATERIA_ARBOR_VIA_CAPACITAS
 
 /* MODUS: quid POSITIO significet pendet ab eo unde arbor venerit.
  *
@@ -338,24 +342,18 @@ silva_arbor_scribere_nodum (
  * (vitium derivationis omnia ad -I ponens taceret). Provenientia
  * factum STRUCTURALE de lexemate est, non ordinata; nullus modus eam
  * celare debet. */
-nomen enumeratio {
-    SILVA_ARBOR_COMPARATIO_STRUCTURALIS = 0,
-    SILVA_ARBOR_COMPARATIO_FIDELITAS
-} SilvaArborComparatioModus;
+nomen MateriaArborComparatioModus SilvaArborComparatioModus;
+#define SILVA_ARBOR_COMPARATIO_STRUCTURALIS \
+    MATERIA_ARBOR_COMPARATIO_STRUCTURALIS
+#define SILVA_ARBOR_COMPARATIO_FIDELITAS \
+    MATERIA_ARBOR_COMPARATIO_FIDELITAS
 
 /* Divergentia PRIMA nominata. Booleanum solum in porta super LXXVIII
  * fixturas inutile est - 'inaequales' sine campo et sede bisectionem
- * manualem petit. */
-nomen structura {
-      constans character* campus;    /* nomen campi divergentis */
-     constans SilvaNodus* nodus_a;   /* nodi continentes */
-     constans SilvaNodus* nodus_b;
-     constans SilvaToken* lexema_a;  /* NIHIL nisi divergentia lexicalis */
-     constans SilvaToken* lexema_b;
-                     s32  locus;     /* index loci; -I si non pertinet */
-                     s32  index;     /* index in lista; -I si non pertinet */
-               character  via[SILVA_ARBOR_VIA_CAPACITAS];
-} SilvaArborDifferentia;
+ * manualem petit. Campi (materia_arbor.h): campus, nodus_a/b,
+ * lexema_a/b (NIHIL nisi divergentia lexicalis), locus, index (-I si
+ * non pertinent), via. */
+nomen MateriaArborDifferentia SilvaArborDifferentia;
 
 /* Arbores duas conferre. VERUM si aequales.
  *
@@ -367,8 +365,15 @@ nomen structura {
  * repositorii - repositorium inter furcas GLR commune et
  * append-only est, ergo longitudo eius statum MACHINAE reddit, non
  * visum huius arboris); lexemata per genus, octetos valoris,
- * standard, fons_index, initium_lineae, provenientiam, seriem
- * triviorum (genus + valor, ORDINE, ambae listae), scissuras.
+ * fons_index, initium_lineae, provenientiam, seriem triviorum
+ * (ORDINE, ambae listae; trivium quodque per comparationem PLENAM
+ * lexematis - non 'genus + valor' ut hic olim scriptum erat), et
+ * per uncum C89 standard, longitudinem (FIDELITATE), scissuras.
+ * ORDO: uncus post campos materiae et trivia vocatur - cum campi
+ * PLURES simul divergunt, primus nominatus a silva vetere differre
+ * potest ('standard' olim ante 'fons'); verdictum idem. Cauda
+ * abiens (lexema sine cauda C89 contra lexema cum ea) =
+ * 'lexema/cauda'.
  *
  * PATER: nullitas sola confertur (a->pater NIHIL si et solum si
  * b->pater NIHIL). Comparatio monstratorum trans arbores duas nihil

@@ -1270,6 +1270,88 @@ principale (vacuum)
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
         }
 
+        /* x-b. UNCUS C89 (T10d) - cauda lexematis per uncum quem
+         * silva materiae praebet. Trivium IPSUM quoque: materia
+         * uncum pro omni lexemate collato vocat, trivia inclusa. */
+        {
+            SilvaToken* trivium;
+                    i8  servatum;
+
+            CREDO_VERUM (silva_token_post_numerus(lexema) > ZEPHYRUM);
+            trivium   = silva_token_post(lexema, ZEPHYRUM);
+            servatum  = silva_token_standard(trivium);
+            silva_token_standard_ponere(trivium,
+                (i8)SILVA_STANDARD_C99);
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/standard")
+                    == ZEPHYRUM);
+            CREDO_AEQUALIS_PTR (differentia.lexema_b, trivium);
+            silva_token_standard_ponere(trivium, servatum);
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
+        /* x-c. lexema/longitudo - FIDELITATE sola */
+        {
+            i32 servata = silva_token_longitudo(lexema);
+
+            silva_token_longitudo_ponere(lexema, servata + V);
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/longitudo")
+                    == ZEPHYRUM);
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            silva_token_longitudo_ponere(lexema, servata);
+        }
+
+        /* x-d. scissurae - numerus, deinde offset */
+        {
+                      Xar* servatae = silva_token_scissurae(lexema);
+                      Xar* novae;
+            SilvaScissura* scissura;
+
+            novae     = xar_creare(piscina, magnitudo(SilvaScissura));
+            scissura  = (SilvaScissura*)xar_addere(novae);
+            CREDO_NON_NIHIL (scissura);
+            scissura->offset  = (s32)I;
+            scissura->crlf    = FALSUM;
+            silva_token_scissurae_ponere(lexema, novae);
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "scissurae/numerus")
+                    == ZEPHYRUM);
+            silva_token_scissurae_ponere(lexema, servatae);
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
+        /* x-e. lexema/cauda - trivium sine cauda C89 (forma NIHIL)
+         * accessores silvae frangeret; uncus id NOMINAT */
+        {
+            SilvaToken* trivium = silva_token_post(lexema, ZEPHYRUM);
+            SilvaToken* nudum;
+
+            nudum = materia_token_creare(piscina, NIHIL,
+                trivium->genus, trivium->valor, trivium->byte_offset,
+                trivium->linea, trivium->columna, trivium->fons_index);
+            CREDO_NON_NIHIL (nudum);
+            CREDO_NIHIL (materia_token_cauda(nudum));
+            lexema->spatia_post[ZEPHYRUM] = nudum;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/cauda")
+                    == ZEPHYRUM);
+            lexema->spatia_post[ZEPHYRUM] = trivium;
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
         /* xi. nodus/genus */
         {
             s32 servatum = b->genus;

@@ -613,13 +613,15 @@ materia_arbor_positiones_lexematis (
  * inter furcas est), lexemata per genus + octetos valoris +
  * fons_index + initium_lineae + PROVENIENTIAM (signum byte_offset,
  * utroque modo - custodia quae aliter transiret quia subiectum
- * abesset), seriem triviorum (genus + valor, ORDINE, ambae
- * series). FIDELITAS his addit: byte_offset, linea, columna.
+ * abesset), seriem triviorum (ORDINE, ambae series; numerus
+ * divergens = 'trivia/ante|post', trivium quodque per comparationem
+ * PLENAM lexematis - ergo trivium divergens campum SUUM nominat,
+ * positiones eius sub FIDELITATE conferuntur, uncus frontis eum
+ * quoque videt). FIDELITAS his addit: byte_offset, linea, columna.
  *
- * QUAE SILVA CONFERT ET HIC ABSUNT, CONSULTO: 'standard',
- * 'scissurae', 'longitudo' - in cauda frontis vivunt, cuius formam
- * materia non videt. Sedes descensus NOMINATA: uncus comparationis
- * frontis, phasis V (migratio C89 eum poscet; CSS et HTML numquam).
+ * CAUDA FRONTIS ('standard', 'scissurae', 'longitudo' in C89):
+ * materia formam eius non videt - uncus comparationis frontis infra
+ * (T10a) eam confert; silva_arbor_aequalis eum adhibet (T10d).
  *
  * PATER: nullitas sola, et INTERIORIBUS solis (profunditas > 0).
  * Radices conferre CIX divergentias falsas dedit - subarbor electa
@@ -665,7 +667,9 @@ materia_arbor_aequalis (
  * campi quos frons in cauda lexematis fert (C89: standard,
  * longitudo sub FIDELITATE, scissurae). Vocatur post comparationem
  * materiae lexematis cuiusque (genere, valore, provenientia,
- * triviis aequalibus). FALSUM + *campus = divergentia nominata. */
+ * triviis aequalibus) - et TRIVII cuiusque, quia trivia per
+ * eandem comparationem transeunt. FALSUM + *campus = divergentia
+ * nominata. */
 nomen structura {
     vacuum* datum;
     b32 (*lexemata_conferre)(
@@ -680,6 +684,19 @@ b32
 materia_arbor_aequalis_fronte (
                 constans MateriaNodus* a,
                 constans MateriaNodus* b,
+          MateriaArborComparatioModus  modus,
+ constans MateriaArborComparatioFrons* frons,
+              MateriaArborDifferentia* differentia);
+
+/* Lexemata duo EXTRA arborem conferre (T10d): laminae directivarum,
+ * lexema finis parsurae - lexemata quae nullo nodo tenentur.
+ * Comparatio eadem ac intra arborem (trivia, uncus). In
+ * inaequalitate nodi NIHIL, locus -I, index = index trivii si
+ * trivium divergit, alioquin -I; vocans sedem suam superponat. */
+b32
+materia_arbor_lexemata_aequalia_fronte (
+                constans MateriaToken* a,
+                constans MateriaToken* b,
           MateriaArborComparatioModus  modus,
  constans MateriaArborComparatioFrons* frons,
               MateriaArborDifferentia* differentia);

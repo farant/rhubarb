@@ -410,3 +410,23 @@ tokens with the FULL token comparison (positions under FIDELITAS,
 source, provenance, `standard`, continuations); materia compares trivia
 by genus and value only. silva's comparator cannot simply delegate
 until materia can compare trivia fully.
+
+## 2026-09-25 — silva-migratio T10d: the T10a trivia finding was WRONG
+
+**Correction.** The note above ("materia compares trivia by genus and
+value only") came from the header prose, not the code. `_arbor_trivia_
+aequalia` has always called the full `_arbor_lexemata_aequalia` on each
+trivium, so positions under FIDELITAS, provenance, source and the frons
+hook all reach trivia. The prose "genus + valor" was copied from silva's
+comparator, where it was equally wrong. The only test (trivium value)
+asserted `campus != NIHIL`; its own comment said `lexema/valor`. Lesson:
+a finding about behaviour needs the code or a probe, not the comment.
+Now pinned: trivium position under FIDELITAS → `lexema/linea` (red when
+trivia are planted back to genus+length), the hook reaching a trivium,
+`lexema/valor` + index for a trivium value. No full-trivia mode was owed.
+
+**New entry:** `materia_arbor_lexemata_aequalia_fronte` — tokens held by
+no node (silva's directive laminas and the parsura's EOF token). Same
+comparison as inside a tree; nodes NIHIL, locus -I, index = trivium index
+when a trivium diverged. The node and token entries share
+`_comparatorem_initiare`.

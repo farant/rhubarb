@@ -1445,3 +1445,35 @@ compression and the -legere read path): identical on the first run. M3
 6/6, silva 54/54. The escape case and CR now survive the whole-file
 round trip (tests in probatio_silva_arbor_parsura); wish 01M32TA81Z
 closes.
+
+## 2026-09-25 — silva-migratio T10d: comparator on materia
+
+`silva_arbor_aequalis` is now `materia_arbor_aequalis_fronte` plus one
+static C89 hook (`FRONS_C89` in silva_arbor_aequalitas.c) over the token
+tail: `standard`, `longitudo` (FIDELITAS only), continuations
+(`scissurae/numerus|nihil|offset|crlf`). A token WITHOUT a C89 tail
+(created with another form) against one with it is `lexema/cauda` —
+silva's accessors would read past the allocation otherwise.
+`SilvaArborComparatioModus` / `SilvaArborDifferentia` are typedefs of
+materia's (identical fields since SilvaToken IS MateriaToken).
+
+The parsura comparator stays (regions, branches, directive laminas are
+C89 shapes) with a two-field state; its nodes go through
+`silva_arbor_aequalis`, its loose tokens through materia's new
+`materia_arbor_lexemata_aequalia_fronte` (silva re-stamps locus and,
+when no trivium index was set, index — as the old code named them).
+1,026 → 638 lines.
+
+- **Order of the first named field** can differ from the old comparator
+  when several fields diverge at once: the hook runs after materia's
+  own fields and trivia (silva used to check `standard` before `fons`,
+  and continuations last). Every existing plant diverges in one field;
+  all passed unchanged.
+- **Hook plants (new):** standard on a trivium, longitudo FIDELITAS-only,
+  scissurae count, missing tail. An always-accepting hook reddened all
+  of them plus the old `lexema/standard` plant.
+- **Porta M1 widened:** every subtree of the three probed genera, not
+  four per genus (281 → 492 on the same 78-file corpus, both oracles,
+  same time); floor raised to 480, M3 pin moved 281 → 492 with cause.
+  This replaces what the retired shim's all-top-level-node sweep gave,
+  on the adversarial corpus.

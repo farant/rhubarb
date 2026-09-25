@@ -64,6 +64,12 @@
 > is now only the C89 hooks over silva's own tail) and the shim + gate
 > `materia-shim` (it would compare silva with itself; the oracle covers
 > bytes, STML, reading and comparison against pinned silva).
+> T10d DONE 2026-09-25: `silva_arbor_aequalis` = materia's walk + one
+> C89 hook (standard, longitudo, continuations, missing tail); the
+> owed "full-trivia mode" was a misread (materia always compared trivia
+> in full); materia gained `materia_arbor_lexemata_aequalia_fronte` for
+> the parsura comparator's loose tokens; porta M1 widened 281 → 492
+> subtrees (M3 pin moved). T10 complete; T11 (annotationes) next.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -724,7 +730,9 @@ TRIVIA tokens with the full token comparison (positions under
 FIDELITAS, source, provenance, standard, continuations); materia
 compares trivia by genus+value only. **T10d owes** a full-trivia mode
 in materia's comparator (or the hook extended to trivia) before
-`silva_arbor_aequalis` can delegate.
+`silva_arbor_aequalis` can delegate. **→ WRONG (found at T10d):** read
+from the header prose, not the code — materia's trivia comparison has
+always been the full token comparison, hook included. Nothing was owed.
 
 *As built (T10b).* The shim's parity became per-node (11,711 nodes) and
 gained two columns: silva's own subtree round-trip, and the new path
@@ -741,6 +749,22 @@ lexeme value carries a newline at its edge). **Owed to T10c:** the
 parsura path still uses the old internals (still refuses the escape
 case — wish 01M32TA81Z closes there); the old converted-tail hooks and
 the shim's frons columns retire with conversion.
+
+*As built (T10d).* `silva_arbor_aequalis` delegates to
+`materia_arbor_aequalis_fronte` with a static C89 hook (`standard`,
+`longitudo` under FIDELITAS, `scissurae/*`, and `lexema/cauda` for a
+token lacking the C89 tail); the modus and differentia types are
+typedefs of materia's. `parsurae_aequales` stays in silva (regions,
+branches, directive laminas), its nodes through `silva_arbor_aequalis`
+and its loose tokens (laminas, EOF token) through the new
+`materia_arbor_lexemata_aequalia_fronte` — decided (A) over a private
+token copy (Fran, 2026-09-25). silva_arbor_aequalitas.c 1,026 → 638.
+First-named field may differ from old silva when several diverge (hook
+runs after materia's fields); every plant diverges in one field and
+passed unchanged; new hook plants reddened by an always-accepting hook.
+Porta M1 now probes EVERY subtree of its genera (281 → 492, same time)
+in place of the retired shim's all-node sweep; M3 pin moved with cause.
+Gates: silva 54/54, materia 14/14, oracle 470 clean, M3 6/6.
 
 ### Task 11: annotationes
 

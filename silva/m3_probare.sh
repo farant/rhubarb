@@ -15,12 +15,16 @@
 # contra pignora infra confert. Mensura 2026-09-24:
 #
 #   porta        fons                                        2026-08  hodie
-#   subarbores   probatio_silva_arbor_circuitus (M1, A et B) 281      281
+#   subarbores   probatio_silva_arbor_circuitus (M1, A et B) 281      492*
 #   planae       probatio_silva_arbor_plagula (M2, planum)   78       78
 #   latinae      probatio_silva_arbor_plagula (lib/*.c)      154      182
 #   hospes       instrumenta/principalia/hospes.c + amalgama 39       40
 #   adversarii   probatio_silva_arbor_parsura (T7b)          24       24
 #   haruspex     silva/haruspex.sh (TU contra clang)         243      279
+#
+#   * 2026-09-25 (silva-migratio T10d): M1 subarbores OMNES generum
+#     probandorum confert, non IV per genus - shim (nodi supremi
+#     omnes) recessit. 281 -> 492, corpus idem, utroque oraculo.
 #
 # DUO GENERA PIGNORIS.
 #   fixum = corpus congelatum (fixa roundtrip, casus in codice): numerus
@@ -46,7 +50,7 @@ sera_capere "$BUILD/cursor.sera" || exit 2
 
 # ---- PIGNORA: titulus genus pignus ----
 PIGNORA="
-subarbores fixum 281
+subarbores fixum 492
 planae     fixum 78
 latinae    vivum 182
 hospes     fixum 40

@@ -39,6 +39,26 @@ _lexema (
         (s32)ZEPHYRUM);
 }
 
+/* Uncus frontis probationis: lexema b quod datum est recusat
+ * (campus 'frons/trivium'), cetera accipit. */
+interior b32
+_frons_trivium_recusans (
+                         vacuum*  datum,
+          constans MateriaToken*  a,
+          constans MateriaToken*  b,
+    MateriaArborComparatioModus   modus,
+             constans character** campus)
+{
+    (vacuum)a;
+    (vacuum)modus;
+    si ((constans vacuum*)b == (constans vacuum*)datum)
+    {
+        *campus = "frons/trivium";
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* Arbor exemplaris:
  *   radix (genus VII, loci III)
  *     [0] TOKEN  genus I "alfa" offset 0, trivium ante (genus III " ")
@@ -369,6 +389,77 @@ principale (vacuum)
         CREDO_FALSUM (materia_arbor_aequalis(a, b,
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
         CREDO_NON_NIHIL (d.campus);
+        CREDO_VERUM (strcmp(d.campus, "lexema/valor") == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (d.index, (s32)ZEPHYRUM);
+
+        /* COMPARATIO PLENA trivii (T10d): positio trivii sub
+         * FIDELITATE capitur, sub STRUCTURA non. Commentarium vetus
+         * 'genus + valor' dicebat; haec assertio factum figit. */
+        b = _arborem_struere(piscina);
+        _caput_arboris(b)->spatia_ante[ZEPHYRUM]->linea = (i32)VII;
+        CREDO_VERUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+        CREDO_FALSUM (materia_arbor_aequalis(a, b,
+            MATERIA_ARBOR_COMPARATIO_FIDELITAS, &d));
+        CREDO_VERUM (strcmp(d.campus, "lexema/linea") == ZEPHYRUM);
+        CREDO_AEQUALIS_PTR (d.lexema_b,
+            _caput_arboris(b)->spatia_ante[ZEPHYRUM]);
+
+        /* uncus frontis TRIVIA quoque videt */
+        {
+            MateriaArborComparatioFrons fr;
+
+            b                       = _arborem_struere(piscina);
+            fr.datum                = (vacuum*)_caput_arboris(b)
+                                          ->spatia_ante[ZEPHYRUM];
+            fr.lexemata_conferre    = _frons_trivium_recusans;
+            CREDO_FALSUM (materia_arbor_aequalis_fronte(a, b,
+                MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &fr, &d));
+            CREDO_VERUM (strcmp(d.campus, "frons/trivium")
+                == ZEPHYRUM);
+        }
+    }
+
+
+    /* ==================================================
+     * PROBARE: lexemata EXTRA arborem (T10d)
+     * ================================================== */
+
+    {
+        MateriaToken* x;
+        MateriaToken* y;
+        MateriaToken* t;
+
+        imprimere("\n--- Probans lexemata extra arborem ---\n");
+        x = _caput_arboris(_arborem_struere(piscina));
+        y = _caput_arboris(_arborem_struere(piscina));
+        CREDO_VERUM (materia_arbor_lexemata_aequalia_fronte(x, y,
+            MATERIA_ARBOR_COMPARATIO_FIDELITAS, NIHIL, &d));
+        CREDO_NIHIL (d.campus);
+        CREDO_VERUM (materia_arbor_lexemata_aequalia_fronte(NIHIL,
+            NIHIL, MATERIA_ARBOR_COMPARATIO_FIDELITAS, NIHIL, &d));
+
+        y->columna = (i32)III;
+        CREDO_FALSUM (materia_arbor_lexemata_aequalia_fronte(x, y,
+            MATERIA_ARBOR_COMPARATIO_FIDELITAS, NIHIL, &d));
+        CREDO_VERUM (strcmp(d.campus, "lexema/columna") == ZEPHYRUM);
+        CREDO_NIHIL (d.nodus_a);
+        CREDO_AEQUALIS_S32 (d.locus, (s32)-I);
+        CREDO_AEQUALIS_S32 (d.index, (s32)-I);
+        y->columna = x->columna;
+
+        /* trivium divergens: index = index trivii */
+        t         = y->spatia_ante[ZEPHYRUM];
+        t->valor  = chorda_ex_literis("\t", piscina);
+        CREDO_FALSUM (materia_arbor_lexemata_aequalia_fronte(x, y,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, NIHIL, &d));
+        CREDO_VERUM (strcmp(d.campus, "lexema/valor") == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (d.index, (s32)ZEPHYRUM);
+        CREDO_AEQUALIS_PTR (d.lexema_b, t);
+
+        CREDO_FALSUM (materia_arbor_lexemata_aequalia_fronte(x, NIHIL,
+            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, NIHIL, &d));
+        CREDO_VERUM (strcmp(d.campus, "lexema/nihil") == ZEPHYRUM);
     }
 
 

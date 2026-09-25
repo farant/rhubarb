@@ -243,10 +243,12 @@ _arbor_lexemata_aequalia (
     s32,
     s32);
 
-/* Series triviorum: genus + valor, ORDINE, ambae series. Materia
- * trivia in seriebus EXACTIS fert (punctator + numerus), non in
- * Xar ut silva. Trivia triviorum non habent, ergo recursio hic
- * finitur. */
+/* Series triviorum: ORDINE, ambae series; trivium quodque per
+ * comparationem PLENAM lexematis (positiones sub FIDELITATE,
+ * provenientia, uncus frontis) - non genus + valor solum, ut
+ * commentarium vetus dicebat (error inventus T10d, 2026-09-25).
+ * Materia trivia in seriebus EXACTIS fert (punctator + numerus).
+ * Trivia triviorum non habent, ergo recursio hic finitur. */
 interior b32
 _arbor_trivia_aequalia (
           ArborComparator* comparator,
@@ -625,16 +627,15 @@ materia_arbor_aequalis (
         differentia);
 }
 
-b32
-materia_arbor_aequalis_fronte (
-                constans MateriaNodus* a,
-                constans MateriaNodus* b,
+interior vacuum
+_comparatorem_initiare (
+                      ArborComparator* comparator,
+                constans MateriaNodus* radix_a,
+                constans MateriaNodus* radix_b,
           MateriaArborComparatioModus  modus,
  constans MateriaArborComparatioFrons* frons,
               MateriaArborDifferentia* differentia)
 {
-    ArborComparator comparator;
-
     si (differentia != NIHIL)
     {
         differentia->campus    = NIHIL;
@@ -647,14 +648,44 @@ materia_arbor_aequalis_fronte (
         differentia->via[0]    = '\0';
     }
 
-    comparator.modus          = modus;
-    comparator.differentia    = differentia;
-    comparator.via_longitudo  = ZEPHYRUM;
-    comparator.profunditas    = ZEPHYRUM;
-    comparator.via[0]         = '\0';
-    comparator.radix_a        = a;
-    comparator.radix_b        = b;
-    comparator.frons          = frons;
+    comparator->modus          = modus;
+    comparator->differentia    = differentia;
+    comparator->via_longitudo  = ZEPHYRUM;
+    comparator->profunditas    = ZEPHYRUM;
+    comparator->via[0]         = '\0';
+    comparator->radix_a        = radix_a;
+    comparator->radix_b        = radix_b;
+    comparator->frons          = frons;
+}
 
+b32
+materia_arbor_aequalis_fronte (
+                constans MateriaNodus* a,
+                constans MateriaNodus* b,
+          MateriaArborComparatioModus  modus,
+ constans MateriaArborComparatioFrons* frons,
+              MateriaArborDifferentia* differentia)
+{
+    ArborComparator comparator;
+
+    _comparatorem_initiare(&comparator, a, b, modus, frons,
+        differentia);
     redde _arbor_nodi_aequales(&comparator, a, b);
+}
+
+b32
+materia_arbor_lexemata_aequalia_fronte (
+                constans MateriaToken* a,
+                constans MateriaToken* b,
+          MateriaArborComparatioModus  modus,
+ constans MateriaArborComparatioFrons* frons,
+              MateriaArborDifferentia* differentia)
+{
+    ArborComparator comparator;
+
+    /* radices NIHIL: referentia ex lexemate numquam attingitur */
+    _comparatorem_initiare(&comparator, NIHIL, NIHIL, modus, frons,
+        differentia);
+    redde _arbor_lexemata_aequalia(&comparator, a, b, NIHIL, NIHIL,
+        -I, -I);
 }

@@ -3288,3 +3288,19 @@ gate `materia-shim` and its inventory row are retired: born in phase
 I to judge materia's emitter against silva, it served until silva
 itself became materia's client, and its last run (the per-node sweep,
 T10b) found a real bug. The oracle gate carries the proof from here.
+
+## 2026-09-25 — phase 5 T10d: comparator on materia (T10 complete)
+
+RELATIO: silva's tree comparator is materia's walk plus one C89 hook
+over the token tail; the parsura comparator (regions, branches,
+directive laminas) stays in silva and reaches materia for nodes and,
+through the new `materia_arbor_lexemata_aequalia_fronte`, for loose
+tokens. The "full-trivia mode" T10a said was owed did not exist to owe:
+both comparators' prose said "genus + valor" while both codes compared
+trivia in full — found by reading the code before designing, now pinned
+by a planted test. Porta M1 widened to every subtree of its genera
+(281 → 492) so the adversarial corpus carries what the retired shim's
+all-node sweep did. Oracle clean 470, M3 6/6 (pin moved with cause),
+silva 54/54, materia 14/14. Replay verdict: substrate module `arbor`
+(writer, reader, comparator) switched for silva; T10 closed. Next: T11
+annotationes.

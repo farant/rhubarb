@@ -5,11 +5,18 @@
  * transformatio arborem servaverit'), et comparator a scriptore
  * et lectore prorsus independens est - solas arbores tangit.
  *
+ * SUPER MATERIAM (silva-migratio T10d, 2026-09-25): ambulatio
+ * arboris et comparatio lexematis materiae sunt
+ * (materia_arbor_aequalis_fronte, materia_arbor_lexemata_aequalia_
+ * fronte); hic manent uncus C89 super caudam lexematis (standard,
+ * longitudo, scissurae) et comparator PARSURARUM (regiones, rami,
+ * directivae - formae C89).
+ *
  * Contractus plenus (modi, quid conferatur, quid CONSULTO non
- * videatur) in silva_arbor.h. Lege eum PRIUS quam quicquam hic
- * mutes - praesertim notam de dominio gemino triviorum, quae
- * explicat cur hunc comparatorem 'emendare' ut plus capiat
- * oraculum alterum T6 destrueret.
+ * videatur) in silva_arbor.h et materia_arbor.h. Lege eos PRIUS
+ * quam quicquam hic mutes - praesertim notam de dominio gemino
+ * triviorum, quae explicat cur comparatorem 'emendare' ut plus
+ * capiat oraculum alterum T6 destrueret.
  */
 
 #include "silva_arbor.h"
@@ -17,191 +24,48 @@
 #include <string.h>
 
 
-nomen structura {
-     SilvaArborComparatioModus  modus;
-         SilvaArborDifferentia* differentia;
-                     character  via[SILVA_ARBOR_VIA_CAPACITAS];
-                           i32  via_longitudo;
-                           i32  profunditas;
-} ArborComparator;
-
-
-/* Decimale in buffer; longitudinem scriptam reddit */
-interior i32
-_arbor_decimale (
-          i32  numerus,
-    character* buffer,
-          i32  capacitas)
-{
-    character inversa[XVI];
-          i32 longitudo;
-          i32 i;
-
-    si (capacitas < II)
-    {
-        redde ZEPHYRUM;
-    }
-    si (numerus == ZEPHYRUM)
-    {
-        buffer[0] = '0';
-        buffer[1] = '\0';
-        redde I;
-    }
-
-    longitudo = ZEPHYRUM;
-    dum (numerus > ZEPHYRUM && longitudo < (i32)magnitudo(inversa))
-    {
-        inversa[longitudo]  = (character)('0' + (numerus % X));
-        numerus             /= X;
-        longitudo++;
-    }
-    si (longitudo + I > capacitas)
-    {
-        redde ZEPHYRUM;
-    }
-    per (i = ZEPHYRUM; i < longitudo; i++)
-    {
-        buffer[i] = inversa[longitudo - I - i];
-    }
-    buffer[longitudo] = '\0';
-    redde longitudo;
-}
-
-/* Segmentum semitae: 'genus.locus'. Comparator grammatica CARET
- * consulto (arbores duas solas tangit, nullum tabularium accipit),
- * ergo genus numero nominatur, non titulo - vocans quaerere potest.
- * Semita XXXV.0>XII.2 sedem tamen sine ambiguitate figit. */
-interior vacuum
-_arbor_via_premere (
-     ArborComparator* comparator,
-                 s32  genus,
-                 i32  locus)
-{
-    character segmentum[XXXII];
-          i32 longitudo;
-          i32 prior;
-
-    longitudo = _arbor_decimale((i32)genus, segmentum,
-        (i32)magnitudo(segmentum));
-    si (   longitudo     == ZEPHYRUM
-        || longitudo + I >= (i32)magnitudo(segmentum))
-    {
-        redde;
-    }
-    segmentum[longitudo] = '.';
-    longitudo++;
-    longitudo += _arbor_decimale(locus, segmentum + longitudo,
-        (i32)magnitudo(segmentum) - longitudo);
-
-    prior = comparator->via_longitudo;
-
-    /* '>' + segmentum + terminator */
-    si (prior + longitudo + II >= SILVA_ARBOR_VIA_CAPACITAS)
-    {
-        redde;
-    }
-    si (prior > ZEPHYRUM)
-    {
-        comparator->via[prior] = '>';
-        prior++;
-    }
-    memcpy(comparator->via + prior, segmentum, (size_t)longitudo);
-    comparator->via_longitudo                   = prior + longitudo;
-    comparator->via[comparator->via_longitudo]  = '\0';
-}
-
-interior vacuum
-_arbor_via_restituere (
-    ArborComparator* comparator,
-                i32  longitudo)
-{
-    comparator->via_longitudo   = longitudo;
-    comparator->via[longitudo]  = '\0';
-}
-
-/* Divergentiam nominare. Semper FALSUM reddit, ut vocantes
- * 'redde _arbor_divergere(...)' scribere possint. */
-interior b32
-_arbor_divergere (
-        ArborComparator* comparator,
-     constans character* campus,
-    constans SilvaNodus* nodus_a,
-    constans SilvaNodus* nodus_b,
-    constans SilvaToken* lexema_a,
-    constans SilvaToken* lexema_b,
-                    s32  locus,
-                    s32  index)
-{
-    SilvaArborDifferentia* differentia = comparator->differentia;
-
-    si (differentia != NIHIL && differentia->campus == NIHIL)
-    {
-        differentia->campus    = campus;
-        differentia->nodus_a   = nodus_a;
-        differentia->nodus_b   = nodus_b;
-        differentia->lexema_a  = lexema_a;
-        differentia->lexema_b  = lexema_b;
-        differentia->locus     = locus;
-        differentia->index     = index;
-        memcpy(differentia->via, comparator->via,
-            (size_t)comparator->via_longitudo + I);
-    }
-    redde FALSUM;
-}
-
-
 /* ==================================================
- * Lexemata
+ * Uncus C89 - cauda lexematis
+ *
+ * Vocatur a materia pro OMNI lexemate collato, trivia inclusa
+ * (silva vetus scissuras et standard triviorum quoque conferebat).
  * ================================================== */
 
 interior b32
-_arbor_lexemata_aequalia (
-    ArborComparator*,
-    constans SilvaToken*,
-    constans SilvaToken*,
-    constans SilvaNodus*,
-    constans SilvaNodus*,
-    s32,
-    s32);
-
-/* Series triviorum: genus + valor, ORDINE, ambae listae.
- * Trivia triviorum non habent, ergo recursio hic finitur. */
-interior b32
-_arbor_trivia_aequalia (
-         ArborComparator* comparator,
-     constans SilvaToken* a,
-     constans SilvaToken* b,
-                     b32  post,
-      constans character* campus,
-     constans SilvaNodus* nodus_a,
-     constans SilvaNodus* nodus_b,
-                     s32  locus)
+_silvae_scissurae_aequales (
+      constans SilvaToken*  a,
+      constans SilvaToken*  b,
+       constans character** campus)
 {
-    i32 numerus_a;
-    i32 numerus_b;
-    i32 i;
-
-    numerus_a = post ? silva_token_post_numerus(a)
-                     : silva_token_ante_numerus(a);
-    numerus_b = post ? silva_token_post_numerus(b)
-                     : silva_token_ante_numerus(b);
+    Xar* xa         = silva_token_scissurae(a);
+    Xar* xb         = silva_token_scissurae(b);
+    i32  numerus_a  = xa != NIHIL ? xar_numerus(xa) : (i32)ZEPHYRUM;
+    i32  numerus_b  = xb != NIHIL ? xar_numerus(xb) : (i32)ZEPHYRUM;
+    i32  i;
 
     si (numerus_a != numerus_b)
     {
-        redde _arbor_divergere(comparator, campus, nodus_a, nodus_b,
-            NIHIL, NIHIL, locus, -I);
+        *campus = "scissurae/numerus";
+        redde FALSUM;
     }
-
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
-        SilvaToken* trivium_a = post ? silva_token_post(a, i)
-                                     : silva_token_ante(a, i);
-        SilvaToken* trivium_b = post ? silva_token_post(b, i)
-                                     : silva_token_ante(b, i);
+        SilvaScissura* sa = (SilvaScissura*)xar_obtinere(xa, i);
+        SilvaScissura* sb = (SilvaScissura*)xar_obtinere(xb, i);
 
-        si (!_arbor_lexemata_aequalia(comparator, trivium_a, trivium_b,
-                 nodus_a, nodus_b, locus, (s32)i))
+        si (sa == NIHIL || sb == NIHIL)
         {
+            *campus = "scissura/nihil";
+            redde FALSUM;
+        }
+        si (sa->offset != sb->offset)
+        {
+            *campus = "scissura/offset";
+            redde FALSUM;
+        }
+        si (sa->crlf != sb->crlf)
+        {
+            *campus = "scissura/crlf";
             redde FALSUM;
         }
     }
@@ -209,339 +73,47 @@ _arbor_trivia_aequalia (
 }
 
 interior b32
-_arbor_scissurae_aequales (
-        ArborComparator* comparator,
-    constans SilvaToken* a,
-    constans SilvaToken* b,
-    constans SilvaNodus* nodus_a,
-    constans SilvaNodus* nodus_b,
-                    s32  locus)
+_silvae_lexemata_conferre (
+                         vacuum*  datum,
+          constans MateriaToken*  a,
+          constans MateriaToken*  b,
+    MateriaArborComparatioModus   modus,
+             constans character** campus)
 {
-    i32 numerus_a;
-    i32 numerus_b;
-    i32 i;
+    b32 cauda_a = materia_token_cauda(a) != NIHIL;
+    b32 cauda_b = materia_token_cauda(b) != NIHIL;
 
-    numerus_a =
-        silva_token_scissurae(a) ? xar_numerus(silva_token_scissurae(a)) : (i32)ZEPHYRUM;
-    numerus_b =
-        silva_token_scissurae(b) ? xar_numerus(silva_token_scissurae(b)) : (i32)ZEPHYRUM;
+    (vacuum)datum;
 
-    si (numerus_a != numerus_b)
+    /* Lexema sine cauda C89 (forma alia creatum) accessores silvae
+     * frangeret - nominatur, non legitur. */
+    si (cauda_a != cauda_b)
     {
-        redde _arbor_divergere(comparator, "scissurae/numerus", nodus_a,
-            nodus_b, a, b, locus, -I);
+        *campus = "lexema/cauda";
+        redde FALSUM;
     }
-
-    per (i = ZEPHYRUM; i < numerus_a; i++)
+    si (!cauda_a)
     {
-        SilvaScissura* scissura_a =
-            (SilvaScissura*)xar_obtinere(silva_token_scissurae(a), i);
-        SilvaScissura* scissura_b =
-            (SilvaScissura*)xar_obtinere(silva_token_scissurae(b), i);
-
-        si (scissura_a == NIHIL || scissura_b == NIHIL)
-        {
-            redde _arbor_divergere(comparator, "scissura/nihil",
-                nodus_a,
-                nodus_b, a, b, locus, (s32)i);
-        }
-        si (scissura_a->offset != scissura_b->offset)
-        {
-            redde _arbor_divergere(comparator, "scissura/offset",
-                nodus_a,
-                nodus_b, a, b, locus, (s32)i);
-        }
-        si (scissura_a->crlf != scissura_b->crlf)
-        {
-            redde _arbor_divergere(comparator, "scissura/crlf", nodus_a,
-                nodus_b, a, b, locus, (s32)i);
-        }
-    }
-    redde VERUM;
-}
-
-interior b32
-_arbor_lexemata_aequalia (
-        ArborComparator* comparator,
-    constans SilvaToken* a,
-    constans SilvaToken* b,
-    constans SilvaNodus* nodus_a,
-    constans SilvaNodus* nodus_b,
-                    s32  locus,
-                    s32  index)
-{
-    si (a == NIHIL || b == NIHIL)
-    {
-        si (a == b)
-        {
-            redde VERUM;
-        }
-        redde _arbor_divergere(comparator, "lexema/nihil", nodus_a,
-            nodus_b,
-            a, b, locus, index);
-    }
-
-    si (a->genus != b->genus)
-    {
-        redde _arbor_divergere(comparator, "lexema/genus", nodus_a,
-            nodus_b,
-            a, b, locus, index);
-    }
-    si (   a->valor.mensura != b->valor.mensura
-        || (a->valor.mensura > ZEPHYRUM
-            && memcmp(a->valor.datum, b->valor.datum,
-                   (size_t)a->valor.mensura) != ZEPHYRUM))
-    {
-        redde _arbor_divergere(comparator, "lexema/valor", nodus_a,
-            nodus_b,
-            a, b, locus, index);
+        redde VERUM;
     }
     si (silva_token_standard(a) != silva_token_standard(b))
     {
-        redde _arbor_divergere(comparator, "lexema/standard", nodus_a,
-            nodus_b, a, b, locus, index);
-    }
-    si (a->fons_index != b->fons_index)
-    {
-        redde _arbor_divergere(comparator, "lexema/fons", nodus_a,
-            nodus_b,
-            a, b, locus, index);
-    }
-    si (silva_token_initium_lineae(a) != silva_token_initium_lineae(b))
-    {
-        redde _arbor_divergere(comparator, "lexema/initium-lineae",
-            nodus_a,
-            nodus_b, a, b, locus, index);
-    }
-
-    /* PROVENIENTIA - utroque modo. Vide notam in capite: haec est
-     * custodia quae aliter transiret quia subiectum eius abesset */
-    si ((a->byte_offset < ZEPHYRUM) != (b->byte_offset < ZEPHYRUM))
-    {
-        redde _arbor_divergere(comparator, "lexema/provenientia",
-            nodus_a,
-            nodus_b, a, b, locus, index);
-    }
-
-    si (comparator->modus == SILVA_ARBOR_COMPARATIO_FIDELITAS)
-    {
-        si (a->byte_offset != b->byte_offset)
-        {
-            redde _arbor_divergere(comparator, "lexema/offset", nodus_a,
-                nodus_b, a, b, locus, index);
-        }
-        si (a->linea != b->linea)
-        {
-            redde _arbor_divergere(comparator, "lexema/linea", nodus_a,
-                nodus_b, a, b, locus, index);
-        }
-        si (a->columna != b->columna)
-        {
-            redde _arbor_divergere(comparator, "lexema/columna",
-                nodus_a,
-                nodus_b, a, b, locus, index);
-        }
-        si (silva_token_longitudo(a) != silva_token_longitudo(b))
-        {
-            redde _arbor_divergere(comparator, "lexema/longitudo",
-                nodus_a,
-                nodus_b, a, b, locus, index);
-        }
-    }
-
-        si (!_arbor_trivia_aequalia(comparator, a, b, FALSUM,
-             "trivia/ante", nodus_a, nodus_b, locus))
-        {
+        *campus = "lexema/standard";
         redde FALSUM;
-        }
-        si (!_arbor_trivia_aequalia(comparator, a, b, VERUM,
-             "trivia/post", nodus_a, nodus_b, locus))
-        {
+    }
+    si (   modus == MATERIA_ARBOR_COMPARATIO_FIDELITAS
+        && silva_token_longitudo(a) != silva_token_longitudo(b))
+    {
+        *campus = "lexema/longitudo";
         redde FALSUM;
-        }
-    redde _arbor_scissurae_aequales(comparator, a, b, nodus_a, nodus_b,
-        locus);
+    }
+    redde _silvae_scissurae_aequales(a, b, campus);
 }
 
-
-/* ==================================================
- * Nodi et valores
- * ================================================== */
-
-interior b32
-_arbor_nodi_aequales (
-    ArborComparator*,
-    constans SilvaNodus*,
-    constans SilvaNodus*);
-
-interior b32
-_arbor_valores_aequales (
-      ArborComparator* comparator,
-           SilvaValor  a,
-           SilvaValor  b,
-  constans SilvaNodus* nodus_a,
-  constans SilvaNodus* nodus_b,
-                  s32  locus)
-{
-    i32 numerus_a;
-    i32 numerus_b;
-    i32 i;
-
-    si (a.genus != b.genus)
-    {
-        redde _arbor_divergere(comparator, "locus/genus-valoris",
-            nodus_a,
-            nodus_b, NIHIL, NIHIL, locus, -I);
-    }
-
-    commutatio (a.genus)
-    {
-        casus SILVA_VALOR_NIHIL:
-            redde VERUM;
-
-        casus SILVA_VALOR_NODUS:
-            redde _arbor_nodi_aequales(comparator, a.datum.nodus,
-                b.datum.nodus);
-
-        casus SILVA_VALOR_TOKEN:
-            redde _arbor_lexemata_aequalia(comparator, a.datum.token,
-                b.datum.token, nodus_a, nodus_b, locus, -I);
-
-        casus SILVA_VALOR_INDEX:
-            si (a.datum.index != b.datum.index)
-            {
-                redde _arbor_divergere(comparator, "locus/index",
-                    nodus_a,
-                    nodus_b, NIHIL, NIHIL, locus, -I);
-            }
-            redde VERUM;
-
-        casus SILVA_VALOR_LISTA:
-            /* Mensura PROSPECTUS, numquam xar_numerus repositorii:
-             * repositorium inter furcas GLR commune est */
-            numerus_a = silva_valor_lista_numerus(a);
-            numerus_b = silva_valor_lista_numerus(b);
-            si (numerus_a != numerus_b)
-            {
-                redde _arbor_divergere(comparator, "lista/numerus",
-                    nodus_a,
-                    nodus_b, NIHIL, NIHIL, locus, -I);
-            }
-            per (i = ZEPHYRUM; i < numerus_a; i++)
-            {
-                SilvaValor* elementum_a =
-                    silva_valor_lista_obtinere(a, i);
-                SilvaValor* elementum_b =
-                    silva_valor_lista_obtinere(b, i);
-
-                si (elementum_a == NIHIL || elementum_b == NIHIL)
-                {
-                    redde _arbor_divergere(comparator,
-                        "lista/elementum-nihil",
-                        nodus_a, nodus_b, NIHIL, NIHIL, locus, (s32)i);
-                }
-                si (elementum_a->genus != elementum_b->genus)
-                {
-                    redde _arbor_divergere(comparator,
-                        "lista/genus-elementi",
-                        nodus_a, nodus_b, NIHIL, NIHIL, locus, (s32)i);
-                }
-                si (elementum_a->genus == SILVA_VALOR_NODUS)
-                {
-                    si (!_arbor_nodi_aequales(comparator,
-                             elementum_a->datum.nodus,
-                             elementum_b->datum.nodus))
-                    {
-                        redde FALSUM;
-                    }
-                }
-                alioquin si (elementum_a->genus == SILVA_VALOR_TOKEN)
-                {
-                    si (!_arbor_lexemata_aequalia(comparator,
-                             elementum_a->datum.token,
-                             elementum_b->datum.token,
-                             nodus_a, nodus_b, locus, (s32)i))
-                    {
-                        redde FALSUM;
-                    }
-                }
-                alioquin
-                {
-                    si (!_arbor_valores_aequales(comparator,
-                        *elementum_a,
-                             *elementum_b, nodus_a, nodus_b, locus))
-                    {
-                        redde FALSUM;
-                    }
-                }
-            }
-            redde VERUM;
-
-        ordinarius:
-            redde _arbor_divergere(comparator, "locus/genus-ignotum",
-                nodus_a, nodus_b, NIHIL, NIHIL, locus, -I);
-    }
-}
-
-interior b32
-_arbor_nodi_aequales (
-     ArborComparator* comparator,
- constans SilvaNodus* a,
- constans SilvaNodus* b)
-{
-    i32 i;
-    i32 via_prior;
-    b32 fructus;
-
-    si (a == NIHIL || b == NIHIL)
-    {
-        si (a == b)
-        {
-            redde VERUM;
-        }
-        redde _arbor_divergere(comparator, "nodus/nihil", a, b, NIHIL,
-            NIHIL, -I, -I);
-    }
-
-    si (a->genus != b->genus)
-    {
-        redde _arbor_divergere(comparator, "nodus/genus", a, b, NIHIL,
-            NIHIL, -I, -I);
-    }
-    si (a->numerus_locorum != b->numerus_locorum)
-    {
-        redde _arbor_divergere(comparator, "nodus/numerus-locorum", a,
-            b,
-            NIHIL, NIHIL, -I, -I);
-    }
-
-    /* PATER: nullitas sola, et INTERIORIBUS solis. Parentela
-     * RADICUM comparationis EXTRA comparationem iacet: subarbor in
-     * arbore maiore electa patrem habet, arbor eadem seorsum lecta
-     * habere non potest. Radices conferre CIX divergentias falsas
-     * super corpus dedit - artificium comparationis, non defectus
-     * lectoris. */
-    si (   comparator->profunditas > ZEPHYRUM
-        && (a->pater == NIHIL) != (b->pater == NIHIL))
-    {
-        redde _arbor_divergere(comparator, "nodus/pater-nullitas", a, b,
-            NIHIL, NIHIL, -I, -I);
-    }
-
-    fructus = VERUM;
-    per (i = ZEPHYRUM; i < a->numerus_locorum && fructus; i++)
-    {
-        via_prior = comparator->via_longitudo;
-        _arbor_via_premere(comparator, a->genus, i);
-        comparator->profunditas++;
-        fructus = _arbor_valores_aequales(comparator, a->loci[i],
-            b->loci[i],
-            a, b, (s32)i);
-        comparator->profunditas--;
-        _arbor_via_restituere(comparator, via_prior);
-    }
-    redde fructus;
-}
+hic_manens constans MateriaArborComparatioFrons FRONS_C89 = {
+    NIHIL,
+    _silvae_lexemata_conferre
+};
 
 b32
 silva_arbor_aequalis (
@@ -550,27 +122,74 @@ silva_arbor_aequalis (
     SilvaArborComparatioModus  modus,
         SilvaArborDifferentia* differentia)
 {
-    ArborComparator comparator;
+    redde materia_arbor_aequalis_fronte(a, b, modus, &FRONS_C89,
+        differentia);
+}
 
-    si (differentia != NIHIL)
+
+/* ==================================================
+ * Status comparatoris parsurarum
+ * ================================================== */
+
+nomen structura {
+     SilvaArborComparatioModus  modus;
+         SilvaArborDifferentia* differentia;
+} ArborComparator;
+
+/* Divergentiam nominare. Semper FALSUM reddit, ut vocantes
+ * 'redde _arbor_divergere(...)' scribere possint. Nodi et lexemata
+ * hic semper NIHIL: divergentiae formae parsurae sunt; quae intra
+ * arborem aut lexema cadunt a materia nominantur. */
+interior b32
+_arbor_divergere (
+        ArborComparator* comparator,
+     constans character* campus,
+                    s32  locus,
+                    s32  index)
+{
+    SilvaArborDifferentia* differentia = comparator->differentia;
+
+    si (differentia != NIHIL && differentia->campus == NIHIL)
     {
-        differentia->campus    = NIHIL;
+        differentia->campus    = campus;
         differentia->nodus_a   = NIHIL;
         differentia->nodus_b   = NIHIL;
         differentia->lexema_a  = NIHIL;
         differentia->lexema_b  = NIHIL;
-        differentia->locus     = -I;
-        differentia->index     = -I;
+        differentia->locus     = locus;
+        differentia->index     = index;
         differentia->via[0]    = '\0';
     }
+    redde FALSUM;
+}
 
-    comparator.modus          = modus;
-    comparator.differentia    = differentia;
-    comparator.via_longitudo  = ZEPHYRUM;
-    comparator.profunditas    = ZEPHYRUM;
-    comparator.via[0]         = '\0';
+/* Lexemata extra arborem per materiam; sedes vocantis (locus,
+ * index) superponitur ut silva vetus eam nominabat - index trivii
+ * servatur ubi trivium divergit. */
+interior b32
+_arbor_lexemata_aequalia (
+        ArborComparator* comparator,
+    constans SilvaToken* a,
+    constans SilvaToken* b,
+                    s32  locus,
+                    s32  index)
+{
+    SilvaArborDifferentia* differentia = comparator->differentia;
 
-    redde _arbor_nodi_aequales(&comparator, a, b);
+    si (materia_arbor_lexemata_aequalia_fronte(a, b, comparator->modus,
+            &FRONS_C89, differentia))
+    {
+        redde VERUM;
+    }
+    si (differentia != NIHIL)
+    {
+        differentia->locus = locus;
+        si (differentia->index < ZEPHYRUM)
+        {
+            differentia->index = index;
+        }
+    }
+    redde FALSUM;
 }
 
 
@@ -598,15 +217,14 @@ _arbor_lamina_aequalis (
     numerus_b = b != NIHIL ? xar_numerus(b) : (i32)ZEPHYRUM;
     si (numerus_a != numerus_b)
     {
-        redde _arbor_divergere(comparator, campus, NIHIL, NIHIL,
-            NIHIL, NIHIL, -I, index);
+        redde _arbor_divergere(comparator, campus, -I, index);
     }
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
         si (!_arbor_lexemata_aequalia(comparator,
                  *(SilvaToken**)xar_obtinere(a, i),
                  *(SilvaToken**)xar_obtinere(b, i),
-                 NIHIL, NIHIL, index, (s32)i))
+                 index, (s32)i))
         {
             redde FALSUM;
         }
@@ -633,8 +251,7 @@ _arbor_regio_aequalis (
 
     si ((a == NIHIL) != (b == NIHIL))
     {
-        redde _arbor_divergere(comparator, "regio/nullitas", NIHIL,
-            NIHIL, NIHIL, NIHIL, -I, index);
+        redde _arbor_divergere(comparator, "regio/nullitas", -I, index);
     }
     si (a == NIHIL)
     {
@@ -642,15 +259,14 @@ _arbor_regio_aequalis (
     }
     si (a->est_texta != b->est_texta)
     {
-        redde _arbor_divergere(comparator, "regio/texta", NIHIL,
-            NIHIL, NIHIL, NIHIL, -I, index);
+        redde _arbor_divergere(comparator, "regio/texta", -I, index);
     }
     numerus_a = a->rami != NIHIL ? xar_numerus(a->rami) : (i32)ZEPHYRUM;
     numerus_b = b->rami != NIHIL ? xar_numerus(b->rami) : (i32)ZEPHYRUM;
     si (numerus_a != numerus_b)
     {
         redde _arbor_divergere(comparator, "regio/numerus-ramorum",
-            NIHIL, NIHIL, NIHIL, NIHIL, -I, index);
+            -I, index);
     }
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
@@ -662,7 +278,7 @@ _arbor_regio_aequalis (
         si ((ra == NIHIL) != (rb == NIHIL))
         {
             redde _arbor_divergere(comparator, "ramus/nullitas",
-                NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)i);
+                -I, (s32)i);
         }
         si (ra == NIHIL)
         {
@@ -670,13 +286,13 @@ _arbor_regio_aequalis (
         }
         si (ra->genus != rb->genus)
         {
-            redde _arbor_divergere(comparator, "ramus/genus", NIHIL,
-                NIHIL, NIHIL, NIHIL, -I, (s32)i);
+            redde _arbor_divergere(comparator, "ramus/genus", -I,
+                (s32)i);
         }
         si (ra->conditio_id != rb->conditio_id)
         {
             redde _arbor_divergere(comparator, "ramus/conditio",
-                NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)i);
+                -I, (s32)i);
         }
         /* est_sumptum NON confertur: structurale est (vide caput) */
         si (!_arbor_lamina_aequalis(comparator, ra->directiva,
@@ -783,8 +399,8 @@ _arbor_regiones_aequales (
     si (numerus_a != numerus_b)
     {
         piscina_destruere(piscina);
-        redde _arbor_divergere(comparator, "regiones/numerus", NIHIL,
-            NIHIL, NIHIL, NIHIL, -I, (s32)numerus_a);
+        redde _arbor_divergere(comparator, "regiones/numerus",
+            -I, (s32)numerus_a);
     }
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
@@ -900,16 +516,12 @@ silva_arbor_parsurae_aequales (
         differentia->via[0]    = '\0';
     }
 
-    comparator.modus          = modus;
-    comparator.differentia    = differentia;
-    comparator.via_longitudo  = ZEPHYRUM;
-    comparator.profunditas    = ZEPHYRUM;
-    comparator.via[0]         = '\0';
+    comparator.modus        = modus;
+    comparator.differentia  = differentia;
 
     si ((a == NIHIL) != (b == NIHIL))
     {
-        redde _arbor_divergere(&comparator, "parsura/nullitas",
-            NIHIL, NIHIL, NIHIL, NIHIL, -I, -I);
+        redde _arbor_divergere(&comparator, "parsura/nullitas", -I, -I);
     }
     si (a == NIHIL)
     {
@@ -917,8 +529,8 @@ silva_arbor_parsurae_aequales (
     }
     si ((a->commissio == NIHIL) != (b->commissio == NIHIL))
     {
-        redde _arbor_divergere(&comparator, "commissio/nullitas",
-            NIHIL, NIHIL, NIHIL, NIHIL, -I, -I);
+        redde _arbor_divergere(&comparator, "commissio/nullitas", -I,
+            -I);
     }
 
     /* ARBOR: per nodum supremum. Radix LISTA est, ergo profunditas
@@ -932,7 +544,7 @@ silva_arbor_parsurae_aequales (
         si (numerus_a != numerus_b)
         {
             redde _arbor_divergere(&comparator, "radix/numerus",
-                NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)numerus_a);
+                -I, (s32)numerus_a);
         }
         per (i = ZEPHYRUM; i < numerus_a; i++)
         {
@@ -948,17 +560,14 @@ silva_arbor_parsurae_aequales (
             si (ea->genus != eb->genus)
             {
                 redde _arbor_divergere(&comparator, "radix/genus",
-                    NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)i);
+                    -I, (s32)i);
             }
             si (ea->genus != SILVA_VALOR_NODUS)
             {
                 perge;
             }
-            comparator.via_longitudo  = ZEPHYRUM;
-            comparator.via[0]         = '\0';
-            comparator.profunditas    = ZEPHYRUM;
-            si (!_arbor_nodi_aequales(&comparator, ea->datum.nodus,
-                     eb->datum.nodus))
+            si (!silva_arbor_aequalis(ea->datum.nodus,
+                     eb->datum.nodus, modus, differentia))
             {
                 si (   differentia != NIHIL
                     && differentia->index < ZEPHYRUM)
@@ -993,7 +602,7 @@ silva_arbor_parsurae_aequales (
     si (numerus_a != numerus_b)
     {
         redde _arbor_divergere(&comparator, "directivae/numerus",
-            NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)numerus_a);
+            -I, (s32)numerus_a);
     }
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
@@ -1018,7 +627,7 @@ silva_arbor_parsurae_aequales (
 
     /* CAUDA: trivia caudae campus est qui tacite cadere solet */
     si (!_arbor_lexemata_aequalia(&comparator, a->lexema_finis,
-             b->lexema_finis, NIHIL, NIHIL, -I, -I))
+             b->lexema_finis, -I, -I))
     {
         redde FALSUM;
     }

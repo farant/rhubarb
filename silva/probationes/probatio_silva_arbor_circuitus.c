@@ -61,7 +61,6 @@
 #include <dirent.h>
 
 #define CAUSAE_MAXIMAE      32
-#define SUBARBORES_PER_GENUS 4
 
 /* Genera quae per corpus eliguntur. Selector IDEM tag est ac tag
  * STML - ergo porta ipsa vocabularium commune DEGUSTAT (spec §8). */
@@ -253,9 +252,9 @@ _subarborem_probare (
   constans SilvaParsura* parsura,
             ArborCensus* census)
 {
-      SilvaArborScriptura  scriptura;
-         SilvaArborVitium  vitium;
-    SilvaArborDifferentia  differentia;
+      SilvaArborScriptura scriptura;
+         SilvaArborVitium vitium;
+    SilvaArborDifferentia differentia;
                SilvaNodus* lecta;
            SilvaScriptura  octeti_originis;
            SilvaScriptura  octeti_lectae;
@@ -381,11 +380,11 @@ _plagulam_probare (
         {
             perge;
         }
+        /* OMNES, non IV per genus (silva-migratio T10d,
+         * 2026-09-25): shim qui nodos supremos omnes corporis
+         * conferebat recessit; CCLXXXI -> CDXCII subarbores, tempus
+         * idem. */
         numerus = xar_numerus(resultata);
-        si (numerus > SUBARBORES_PER_GENUS)
-        {
-            numerus = SUBARBORES_PER_GENUS;
-        }
         per (i = ZEPHYRUM; i < numerus; i++)
         {
             SilvaQuaestioResultatum* fructus =
@@ -499,7 +498,7 @@ principale (vacuum)
     /* Corpus vere ambulatum esse - porta quae nihil vidit viridis
      * esse NON debet */
     CREDO_VERUM (census.plagulae >= 70);
-    CREDO_VERUM (census.subarbores >= 100);
+    CREDO_VERUM (census.subarbores >= 480);   /* T10d: omnes, non IV per genus */
 
 
     /* ==========================================================
