@@ -542,9 +542,16 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (xar_numerus(liberi), II);
         }
 
-        /* pater NUMQUAM in constructione assignatus (S27) */
+        /* PATER (silva-migratio T8): S27 'pater numquam in
+         * constructione' cessit - materia_nodus_ponere patrem filii
+         * figit (aedificator ultimus vincit; furcae GLR communicantes
+         * patrem mortuum relinquere possunt). Nemo patrem ante
+         * commissionem legit (mensuratum T8: glr, tabulae, resolutor
+         * nullam lectionem habent); commissio omnem nodum attingibilem
+         * refigit. Radix sine patre manet. */
         CREDO_NIHIL (v_declaratio.datum.nodus->pater);
-        CREDO_NIHIL (v_typus.datum.nodus->pater);
+        CREDO_AEQUALIS_PTR (v_typus.datum.nodus->pater,
+            v_declaratio.datum.nodus);
     }
 
 

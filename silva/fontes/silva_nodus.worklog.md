@@ -42,3 +42,39 @@ Live confirmation the class is real: the new probatio file itself, being
 full of CREDO_* macro invocations, drew 46 FALSE spatium-definitionis
 rows from the formator's R2-call rule (gap −15) the moment the post-edit
 hook linted it — the first named adoption site for geometria_fida.
+
+## 2026-09-25 — T8: facade onto materia_nodus (silva-migratio)
+
+The core (valor constructors, prospectus lists, creare/ponere/
+appendere/congruit/liberi) is gone — silva_nodus.h aliases it to
+materia_nodus. Three non-obvious calls:
+
+1. **SilvaNodus is a `#define`, not a typedef.** officina names the
+   struct by TAG (`constans structura SilvaNodus*`, 13 sites incl. the
+   forward decl in officina_medulla.h) and the officina amalgam is
+   compiled against the FROZEN silva amalgam where `structura
+   SilvaNodus` is real. A typedef would make `structura SilvaNodus` a
+   fresh incomplete type under live headers (incompatible pointers);
+   the macro keeps both builds valid with zero officina edits.
+   `SilvaValor` is a typedef: MateriaValor is an anonymous-struct
+   typedef, and nothing uses `structura SilvaValor`.
+2. **Function macros keep the call graph honest.** nexus resolves a
+   call to `silva_nodus_liberi(...)` through the expansion to
+   `materia_nodus_liberi` (checked: silva call sites appear under
+   materia's name). The old name finds only the frozen amalgam.
+3. **S27 fell.** materia_nodus_ponere/appendere set the child's
+   `pater` at construction (materia 2026-09-10). Under GLR, a shared
+   subtree gets "last builder wins", possibly a dead fork. Harmless
+   because (a) no reader before commissio: silva_glr.c,
+   silva_tabulae_*.c, silva_c89_oraculum.c (the resolutor) have zero
+   `pater` reads; (b) commissio's `_valorem_committere` sets `pater`
+   top-down on every reachable node BEFORE descending, and
+   `_ambiguum_committere` sets non-canonical arm roots to NIHIL — so
+   post-commit parents are identical. Only probatio_silva_constructio
+   :547 and probatio_silva_glr :181-182 noticed; rewritten to assert
+   the builder is the parent (root stays NIHIL).
+
+Kept here: the five origin-chain families (extensionem, _lineis,
+est_fons_purus, geometria_fida, commentarium_ducens). Not moved onto
+materia's MateriaOrigoUncus/materia_tractus_nodi — the extents differ
+(see desideratum 01M3BHHJQA).

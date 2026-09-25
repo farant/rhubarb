@@ -36,6 +36,12 @@
 > SilvaToken IS MateriaToken + C89 tail; oracle clean over 470, M3
 > 6/6, shim unchanged; lexing bytes −29%; `genus`'s type (enum → s32)
 > needed `silva_token_genus` at 33 sites; amalgam FROZEN until T13.
+> T8 DONE 2026-09-25: `silva_nodus.h` is a facade (typedefs + macro
+> aliases; `SilvaNodus` a MACRO because officina uses the struct tag
+> against both live and frozen headers); ~7,000 sites untouched; S27
+> ("no parent at construction") fell harmlessly — commissio re-parents
+> everything; the five origin query families stay in silva, unifying
+> them with materia's uncus is desideratum 01M3BHHJQA (step 5).
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -532,6 +538,24 @@ tail access.
 unported in 2026-09 (~4.2k lines with quaestio) are measured here and
 either ported onto `MateriaNodus` inside silva or scheduled into T12.
 
+*As built (2026-09-25).* Measure: ~7,000 identifier sites (SilvaValor
+1,695, SilvaNodus 1,684, silva_valor_nihil 863, silva_nodus_ponere 432,
+…) — all pass by alias, no re-slice. Facade: `SilvaValor`,
+`SilvaValorGenus`, `SilvaLocusSpecies`, `SilvaListaProspectus` are
+typedefs; `SilvaNodus`, the 11 `SILVA_VALOR_*`/`SILVA_LOCUS_*` constants
+and 14 core functions are `#define`s (nexus follows the expansion, so
+callers show under materia's names). silva_nodus.c 990 → 646 lines. The
+one semantic change — materia parents at construction, silva's S27
+never did — is invisible after commissio (it re-parents every reachable
+node; nothing reads `pater` earlier); three S27 assertions rewritten.
+The query families are "ported onto MateriaNodus inside silva" in the
+facade sense only: their unification with `MateriaOrigoUncus` /
+`materia_tractus_nodi` changes extents consumers see, so it is
+desideratum 01M3BHHJQA, a step-5 candidate — not T12 (quaestio is a
+different module). The non-canonical-arm parent policy (silva NIHIL vs
+materia's reader parenting the whole tree, named in silva_frons.c)
+stays owed to T10.
+
 ### Task 9: scribere
 
 `silva_scribere` = `materia_scribere` + the frontend hooks. Byte
@@ -556,6 +580,12 @@ commits, arbor first, aequalitas second; both green.
   ladder (silva_arbor.c:985 still refuses; closes wish 01M32TA81Z; a
   C comment holding `</lex-commentarium>`), and crusta's P7
   mixed-edge-newline guard (whether C89 reaches it: MEASURE).
+- **Parent policy for non-canonical AMBIGUUS arms — DECISION
+  (named in silva_frons.c, re-confirmed at T8):** silva's commissio
+  leaves arm roots with `pater` NIHIL; materia's reader parents the
+  whole tree. Once silva reads through materia's reader, one policy
+  wins (78 header files diverged on this when the frons mirrored
+  silva).
 - **A silva feature materia lacks — DECISION before code:** the
   whole-file writer's STML COMPRESSION (spaces `<<#@post/ante-spatia>>`,
   macro leaves `@m-`, parameter families; census

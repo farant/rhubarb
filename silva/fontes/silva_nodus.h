@@ -1,185 +1,83 @@
 /* silva_nodus.h - Nodus uniformis + valor signatus (spec-v2 §9.1, S21)
  *
- * Nodus = caput fixum + series locorum signatorum per genus. NULLA
- * unio per genus (arbor2 cuique nodo pretium bracchi maximi imputabat
- * - R5). Accessores generati + children() tabulis ducti. Haec est
- * repraesentatio codex-ut-datorum quam solarium petit.
+ * FACIES MATERIAE (phasis V, silva-migratio T8, 2026-09-25): nodus et
+ * valor silvae SUNT MateriaNodus et MateriaValor - campi nominibus
+ * idem (genus numerus_locorum loci pater; genus datum.{nodus token
+ * lista index}), constructores et verba eadem semantica (materia ex
+ * hoc modulo portata est). Hic nomina silvae SOLA manent, ut
+ * sedes circa septem milia (silva et consumptores, mensuratae T8)
+ * intactae transeant; ea deleri possunt cum sigillo (T13) aut
+ * purgatione (gradus VI).
  *
- * PURITAS (S26/S27): constructiones GLR speculativae sunt - pater
- * NUMQUAM in constructione assignatur (furcae vivae communem subarborem
- * habere possunt); passus post-acceptum eum figit. Campi spatii/fontis
- * veniunt cum fluxu vero (Phase 4).
+ * SilvaNodus MACRO est, non nomen: officina 'structura SilvaNodus'
+ * ut tabulam opacam scribit (XIII sedes) et contra AMALGAMA GELATAM
+ * quoque compilat, ubi structura SilvaNodus vera est. Macro utrumque
+ * servat; nomen structuram novam incompletam crearet.
  *
- * S32: silva_nodus_ponere signum valoris contra speciem loci probat et
- * semel-tantum-scribere imponit - errores annotationum in prima parsura
- * apparent, non ut arbores corruptae.
+ * PATER (S26/S27): materia_nodus_ponere/appendere patrem filii in
+ * constructione figunt; silva numquam figebat (furcae GLR vivae
+ * subarbores communicant). Innocuum: silva_commissio omnem nodum
+ * attingibilem desuper refigit (radices bracchiorum non canonicorum
+ * ad NIHIL) - patres post commissionem idem sunt. Politica bracchii
+ * non canonici (silva NIHIL, lector materiae totam arborem parentat)
+ * ad T10 nominata manet (silva_frons.c).
+ *
+ * Quae silvae PROPRIA manent (infra): quinque familiae quaestionum
+ * quae catenam ORIGINIS C89 per silva_token_radix ambulant -
+ * extensio, extensio linearum, puritas fontis, geometria fida,
+ * commentarium ducens.
  */
 
 #ifndef SILVA_NODUS_H
 #define SILVA_NODUS_H
 
 #include "latina.h"
-#include "piscina.h"
-#include "xar.h"
+#include "materia_nodus.h"
 #include "silva_token.h"
 
 
 /* ==================================================
- * Species loci (vocabularium formae v0)
+ * Facies: nomina silvae -> materia
  * ================================================== */
 
-nomen enumeratio {
-    SILVA_LOCUS_NODUS = 0,
-    SILVA_LOCUS_TOKEN,
-    SILVA_LOCUS_LISTA_NODUS,
-    SILVA_LOCUS_LISTA_TOKEN,
-    SILVA_LOCUS_LISTA_MIXTA,
-    SILVA_LOCUS_INDEX
-} SilvaLocusSpecies;
+#define SilvaNodus               MateriaNodus
+nomen MateriaValor               SilvaValor;
+nomen MateriaValorGenus          SilvaValorGenus;
+nomen MateriaLocusSpecies        SilvaLocusSpecies;
+nomen MateriaListaProspectus     SilvaListaProspectus;
+
+#define SILVA_VALOR_NIHIL        MATERIA_VALOR_NIHIL
+#define SILVA_VALOR_NODUS        MATERIA_VALOR_NODUS
+#define SILVA_VALOR_TOKEN        MATERIA_VALOR_TOKEN
+#define SILVA_VALOR_LISTA        MATERIA_VALOR_LISTA
+#define SILVA_VALOR_INDEX        MATERIA_VALOR_INDEX
+
+#define SILVA_LOCUS_NODUS        MATERIA_LOCUS_NODUS
+#define SILVA_LOCUS_TOKEN        MATERIA_LOCUS_TOKEN
+#define SILVA_LOCUS_LISTA_NODUS  MATERIA_LOCUS_LISTA_NODUS
+#define SILVA_LOCUS_LISTA_TOKEN  MATERIA_LOCUS_LISTA_TOKEN
+#define SILVA_LOCUS_LISTA_MIXTA  MATERIA_LOCUS_LISTA_MIXTA
+#define SILVA_LOCUS_INDEX        MATERIA_LOCUS_INDEX
+
+#define silva_valor_nihil            materia_valor_nihil
+#define silva_valor_nodus            materia_valor_nodus
+#define silva_valor_token            materia_valor_token
+#define silva_valor_index            materia_valor_index
+#define silva_valor_lista            materia_valor_lista
+#define silva_valor_lista_nova       materia_valor_lista_nova
+#define silva_valor_lista_appendere  materia_valor_lista_appendere
+#define silva_valor_lista_numerus    materia_valor_lista_numerus
+#define silva_valor_lista_obtinere   materia_valor_lista_obtinere
+#define silva_nodus_creare           materia_nodus_creare
+#define silva_nodus_ponere           materia_nodus_ponere
+#define silva_nodus_appendere        materia_nodus_appendere
+#define silva_valor_congruit         materia_valor_congruit
+#define silva_nodus_liberi           materia_nodus_liberi
 
 
 /* ==================================================
- * Valor signatus (contractus reductionum GLR)
+ * Quaestiones originis C89 (silvae propriae)
  * ================================================== */
-
-nomen structura SilvaNodus SilvaNodus;
-
-nomen enumeratio {
-    SILVA_VALOR_NIHIL = 0,
-    SILVA_VALOR_NODUS,
-    SILVA_VALOR_TOKEN,
-    SILVA_VALOR_LISTA,    /* Xar de SilvaValor (per valorem) */
-    SILVA_VALOR_INDEX
-} SilvaValorGenus;
-
-nomen structura SilvaValor SilvaValor;
-
-/* Prospectus listae (A½, spec-v2 par 12.1): valor listae est PROSPECTUS
- * {repositorium, mensura} - forma chordae pro valoribus. Repositorium
- * append-only; prospectus mensuram SUAM fert, ergo furca quae ultra
- * prospectum meum scripsit me non laedit (appendere purum infra:
- * in-loco si prospectus ad finem vivum stat, alioquin copia-in-
- * divergentia). Numquam xar_numerus in repositorio lege - mensuram
- * prospectus semper adhibe (silva_valor_lista_numerus/obtinere). */
-nomen structura {
-    Xar* xar;       /* repositorium commune (append-only in usu) */
-    i32  mensura;   /* quot elementa HUIC prospectui pertinent */
-} SilvaListaProspectus;
-
-structura SilvaValor {
-    SilvaValorGenus genus;
-    unio {
-                  SilvaNodus* nodus;
-                  SilvaToken* token;
-        SilvaListaProspectus  lista;
-                         s32  index;
-    } datum;
-};
-
-
-/* ==================================================
- * Nodus uniformis
- * ================================================== */
-
-structura SilvaNodus {
-           s32  genus;            /* index in registro generum */
-           i32  numerus_locorum;
-    SilvaValor* loci;             /* series signata (layout per genus) */
-    SilvaNodus* pater;            /* post-acceptum SOLUM (S27) */
-};
-
-
-/* ==================================================
- * Constructores valorum
- * ================================================== */
-
-SilvaValor
-silva_valor_nihil (vacuum);
-SilvaValor
-silva_valor_nodus (
-    SilvaNodus* nodus);
-SilvaValor
-silva_valor_token (
-    SilvaToken* token);
-SilvaValor
-silva_valor_index (
-    s32 index);
-
-/* Prospectus super Xar existentem (mensura = numerus currens) */
-SilvaValor
-silva_valor_lista (
-    Xar* lista);
-
-/* Lista nova vacua (Xar de SilvaValor, prospectus 0) */
-SilvaValor
-silva_valor_lista_nova (
-    Piscina* piscina);
-
-/* Appendere PURUM (A½): prospectus alieni numquam laeduntur. Si
- * prospectus ad finem vivum repositorii stat, in loco appendit (O(1),
- * casus communis); alioquin furca divergens praefixum suum in
- * repositorium recens copiat. Prospectum NOVUM reddit (mensura + 1);
- * nihil-valorem in errore aut inputo non-lista. */
-SilvaValor
-silva_valor_lista_appendere (
-       Piscina* piscina,
-    SilvaValor  lista,
-    SilvaValor  elementum);
-
-/* Numerus elementorum PROSPECTUS (0 si non lista) */
-i32
-silva_valor_lista_numerus (
-    SilvaValor lista);
-
-/* Elementum intra prospectum (NIHIL extra mensuram prospectus) */
-SilvaValor*
-silva_valor_lista_obtinere (
-    SilvaValor lista,
-           i32 index);
-
-
-/* ==================================================
- * Nodus
- * ================================================== */
-
-/* Creare nodum: loci omnes SILVA_VALOR_NIHIL */
-SilvaNodus*
-silva_nodus_creare (
-    Piscina* piscina,
-        s32  genus,
-        i32  numerus_locorum);
-
-/* Ponere valorem in locum - S32: signum contra speciem probatur,
- * semel-tantum scribere imponitur. Reddit FALSUM in violatione
- * (et nihil scribit). */
-b32
-silva_nodus_ponere (
-           SilvaNodus* nodus,
-                  i32  locus,
-           SilvaValor  valor,
-    SilvaLocusSpecies  species);
-
-/* Appendere in locum listae (creat listam si NIHIL) */
-b32
-silva_nodus_appendere (
-              Piscina* piscina,
-           SilvaNodus* nodus,
-                  i32  locus,
-           SilvaValor  valor,
-    SilvaLocusSpecies  species);
-
-/* Congruitne signum valoris cum specie loci? */
-b32
-silva_valor_congruit (
-           SilvaValor valor,
-    SilvaLocusSpecies species);
-
-/* Liberi nodales: NODUS loci + elementa NODUS listarum, ordine locorum.
- * Tabulis non eget - valores signati sunt. Xar de SilvaNodus*. */
-Xar*
-silva_nodus_liberi (
-                Piscina* piscina,
-    constans SilvaNodus* nodus);
 
 /* Extensio fontis (LEGATUS chunk 0, ex sessione promota): min/max
  * octetorum super lexemata subarboris in fonte dato, per RADICEM

@@ -122,7 +122,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* declaratio;
              SilvaValor  typus;
              SilvaValor  declarator;
@@ -176,10 +176,13 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (terminator.datum.token->valor,
             ";");
 
-        /* S27: pater NIHIL ubique ante passum post-acceptum (Chunk C) */
+        /* PATER ante commissionem (silva-migratio T8): constructio
+         * patrem filii figit (materia_nodus_ponere); S27 'NIHIL
+         * ubique' cessit. Commissio auctoritas manet - vide
+         * probatio_silva_constructio. Radix in lista: sine patre. */
         CREDO_NIHIL (declaratio->pater);
-        CREDO_NIHIL (typus.datum.nodus->pater);
-        CREDO_NIHIL (declarator.datum.nodus->pater);
+        CREDO_AEQUALIS_PTR (typus.datum.nodus->pater, declaratio);
+        CREDO_AEQUALIS_PTR (declarator.datum.nodus->pater, declaratio);
     }
 
 
@@ -189,7 +192,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* declaratio;
              SilvaValor  declarator;
              SilvaValor  internum;
@@ -225,7 +228,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* sententia;
              SilvaValor  expressio;
              SilvaValor  sinister;
@@ -289,7 +292,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* sententia;
              SilvaValor  expressio;
              SilvaValor  sinister;
@@ -335,7 +338,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* primus;
              SilvaNodus* secundus;
 

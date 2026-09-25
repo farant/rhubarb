@@ -3171,3 +3171,29 @@ bytes −29%, allocations down (computus gold regenerated for this
 cause). The amalgam is FROZEN from here to T13 (note atop
 silva/CLAUDE.md). Replay verdict: substrate module `token` switched;
 nothing owed.
+
+## 2026-09-25 — phase 5 T8: silva's nodes are materia nodes
+
+RELATIO: `silva_nodus.h` is a facade — `SilvaValor`/`SilvaValorGenus`/
+`SilvaLocusSpecies`/`SilvaListaProspectus` typedef to materia's, the
+eleven enum constants and fourteen core functions are macro aliases,
+and `SilvaNodus` is a MACRO alias (officina writes `structura
+SilvaNodus` as an opaque tag at 13 sites and also compiles against the
+frozen amalgam, where that struct is real — a typedef would have made
+it a new incomplete type). silva_nodus.c lost its core (990 → 646
+lines); what stays is the five origin-chain query families, now over
+`MateriaNodus` through the facade. ~7,000 identifier sites passed
+untouched, as T5 predicted. One semantic change: materia's
+`ponere`/`appendere` parent the child at construction; silva's S27 said
+never. Measured harmless — nothing reads `pater` before commissio
+(glr, tables, resolutor: zero reads) and commissio re-parents every
+reachable node top-down, non-canonical arm roots back to NIHIL — so the
+only casualties were three test assertions pinning S27, rewritten to
+pin the new contract. No `-Wswitch` fallout from materia's extra
+REFERENTIA genus (every silva switch has a default). Oracle clean over
+470, M3 6/6, shim 402 + 401/401, silva 54/54, officina 15/15 with its
+amalgam byte-identical. The five query families were NOT unified with
+materia's uncus/tractus (their extents differ — `longitudo` vs value
+bytes, one-line approximation vs walked lines — and legatus/briar
+ranges would move): desideratum 01M3BHHJQA, a step-5 candidate.
+Replay verdict: substrate module `nodus` switched; nothing owed.
