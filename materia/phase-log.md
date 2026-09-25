@@ -2960,3 +2960,39 @@ circa assertionem veram celeriter scripto.
 AUDITA: suita radicis exitus 0; materia 9/9, css 10/10, md 14/14, html
 14/14, oratio 19/19, crusta 15/15; shim 398/398; probatio_silva exitus
 0; fumus diagnostica sanum; vocabula NOVA 0.
+
+## 2026-09-24 — phase 5 PLANNED: silva before JS (decree …XX0BZ)
+
+INTENTIO: Fran's order of 2026-09-24 (decree 01M3B19MGBK28KTAPFXCAXX0BZ,
+supersedes the HTML → JS → silva order of 01M2KC03NG): **silva
+(phase 5) next, JS after.** JS stood before silva as "the one-way lexer
+pipe's real test"; crusta paid that test on 2026-09-16 on a harder
+language (01M2NJ1JR7). The spec's own promotion trigger (§10: the freeze
+getting expensive) is met — lapide bugs/009-010 parser gaps, located C
+syntax errors (examen/legati/briar print `nodi erroris (syntaxis) 1`
+with no location), latina.h's embedded copy, format contracts.
+
+Spec: `project-specs/silva-migratio-spec.md` (18296f95) — replaces
+§10's phase 5/6 text (written against the never-built
+MateriaContextus). Measured the same day: shim 400/400 in 15 s; six
+substrate modules to replace (arbor 7,063 → 3,965; aequalitas; nodus;
+annotationes; scribere; token); replay debt since the fork = two
+substrate commits, both no-replay, plus the queued CR bug; consumer
+surface ≈24 functions (officina, briar, saltuarius). Decided D1-D5:
+incremental behind a facade (every commit green), quaestio ported onto
+MateriaNodus and kept in silva (MG3), frontend `silva_frons` (promoted
+from `instrumenta/shim_c89.c`), C89 declared diagnostics + death-token
+`emissa` inside the phase as 5.x.
+
+**The oracle problem, and its answer.** The shim's oracle is live silva
+— the very code phase 5 replaces. Fran: silva's amalgam is a snapshot.
+Measured: `silva/amalgama/silva.c` (90,292 lines) has only system
+includes and compiles alone out of tree. So step 0 builds
+`oraculum_silvae`, a separate program from `git show
+<pin>:silva/amalgama/silva.{c,h}`, and every migration step is diffed
+against it; intended divergences (CR fix, later 009/010) are named.
+
+NEXT: the task plan `project-specs/silva-migratio-plan.md` (park
+01M3B19ND09DNK4KV6N3JXFE9E), step 0 first — re-measure the M3 bars,
+build oraculum_silvae + its diff gate (born red), replay and consumer
+inventories. No code moves before that.
