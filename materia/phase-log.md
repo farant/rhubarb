@@ -3083,3 +3083,24 @@ at T10. CR moved there from T9: `cr` handling is in materia_arbor
 before code — port into materia's writer as a general option, or keep
 as a C89 post-pass in silva_frons — since the oracle's `stml` column
 hashes its output. No code changed.
+
+## 2026-09-25 — phase 5 T5: the consumer inventory — the surface is fields, not functions
+
+RELATIO: inventory 'phasis V: consumptores silvae' (01M3B7A8DG), 24
+files outside silva/materia (16 with uses, 8 naming types only).
+Functions: 10 (nexus over the 59 functions of the substrate headers,
+cross-checked by a word grep: the same 9 files) — the spec's "~24"
+had counted silva's own instruments and the shim. **The real surface
+is direct field access: ~894 sites**, measured semantically with
+`renominare -membrum` dry runs (same-named fields of other types
+rejected). Node and value fields are name-identical in materia, so
+`nomen MateriaNodus SilvaNodus;` really is a facade for 658 of them
+(plus aliasing `SILVA_VALOR_*`, same order). **Token fields are not**:
+78 sites need an accessor or an edit — `origo` 47 (C89 provenance,
+absent from MateriaToken: it becomes frontend-tail data),
+`longitudo` 16, `spatia_ante/_post` 12 (`Xar*` vs `MateriaToken**` +
+count), `initium_lineae` 3. saltuarius carries most of it
+(saltuarius_origo alone: 20 `origo`). So T7 (token) is the hardest
+switch for consumers as T10 is for silva itself. Surface written
+above plan T7. Build modes: briar, saltuarius, aedilis consume the
+AMALGAM. No code changed.

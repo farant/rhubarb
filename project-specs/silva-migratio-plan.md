@@ -19,7 +19,10 @@
 > empty dispares file; the shim gate now runs `-stml` (it had run one
 > oracle of three). T4 DONE 2026-09-25: replay inventory 01M3B6KRAH —
 > silva owes nothing; five items cross INTO silva at T10 (CR moved
-> there from T9; STML compression = a decision before code).
+> there from T9; STML compression = a decision before code). T5 DONE
+> 2026-09-25: consumer inventory 01M3B7A8DG — 10 functions but ~894
+> field sites; nodes/values pass by typedef, 78 token-field sites need
+> an accessor (47 of them `origo`). Surface written above T7.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -365,6 +368,48 @@ Every switch task has the same frame:
 4. **Consumer rows** of T5 touched by the module get `per facadem
    transit = ita`.
 5. Phase-log line; replay verdict.
+
+### The facade surface (measured by T5, 2026-09-25)
+
+Inventory 'phasis V: consumptores silvae' (01M3B7A8DG, 24 files outside
+silva/ and materia/: 16 with uses, 8 naming types only). Two halves,
+and the spec's "~24 functions" had the weight on the wrong one:
+
+**Functions: 10**, in 9 files (nexus, cross-checked by word grep — the
+same 9 files). Same-named in materia: `silva_valor_lista_obtinere` (48
+sites), `silva_valor_lista_numerus` (45), `silva_nodus_liberi` (1).
+Facade or `silva_frons` must supply: `silva_token_radix` (12 — the
+origin chain's root, C89 data), `silva_nodus_extensionem` (8),
+`silva_nodus_extensionem_lineis` (4), `silva_valor_extensionem` (1)
+(materia has `materia_tractus_nodi`/`_lexematis` — same question,
+different shape: measure at T8), `silva_commentarium_ducens` (1,
+compendium — C89 leading comment), `silva_quaestio_compilare` /
+`_exsequi` (1 each, legatus — T12).
+
+**Direct field access: ~894 sites** (`renominare -membrum` dry runs,
+semantic). Node and value fields are NAME-IDENTICAL in materia
+(`genus numerus_locorum loci pater`; `genus datum.{nodus token lista
+index}`) — 176 + 482 sites pass through `nomen Materia… Silva…;`
+untouched, given `SILVA_VALOR_*` aliased to `MATERIA_VALOR_*` (same
+order; materia appends REFERENTIA). **Token fields are NOT** — 236
+sites, of which **78 need an accessor or an edit**:
+
+| silva field | consumer sites | in materia |
+|---|---:|---|
+| `origo` | 47 (saltuarius_origo 20, officina.c 9, officina_indicium 9, saltuarius_liber 8, legatus 1) | absent — frontend tail |
+| `longitudo` | 16 | absent (= `valor.mensura`?) |
+| `spatia_ante` / `_post` | 12 (saltuarius_liber) | `MateriaToken**` + `numerus_*`, not `Xar*` |
+| `initium_lineae` | 3 | a bit in `vexilla` |
+| `standard`, `scissurae` | 0 | absent |
+
+plus `genus`: an enum in silva, a lexicon index in materia
+(`lexicon_c89` is generated from silva_token.h's enum — confirm the
+numbering is identical before relying on it). Silva's OWN uses of
+these fields are not counted here (T7's measure step).
+
+**Build modes** (lens `aedificatio`): briar, saltuarius, aedilis
+compile against the AMALGAM, oratio against live headers, officina
+both — amalgam consumers feel a switch when the amalgam regenerates.
 
 ### Task 7: token
 

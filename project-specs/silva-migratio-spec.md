@@ -81,8 +81,15 @@ phase-log). One latent silva bug is queued for the phase-5 replay: CR
 representation (found by the CSS client, fixed in materia via the `cr`
 attribute, B6).
 
-**Consumer surface: small.** Outside silva/materia, substrate API use
-is ~24 distinct functions — `silva_token_radix` 14, `silva_nodus_
+**Consumer surface — CORRECTED by plan T5 (2026-09-25, inventory
+01M3B7A8DG):** the functions are few (10, in 9 files — the scribere
+and arbor writers have NO consumer outside silva/materia; the count
+below included silva's own instruments and the shim), but consumers
+reach into the STRUCTS ~894 times. Node and value fields are
+name-identical in materia and pass through a typedef; 78 token-field
+sites (`origo` 47, `longitudo` 16, `spatia_*` 12, `initium_lineae` 3)
+do not. Full table above plan T7. *Original estimate, kept for the
+record:* ~24 distinct functions — `silva_token_radix` 14, `silva_nodus_
 extensionem` 10, `silva_scribere_nodum`/`_fontem` 10,
 `silva_nodus_extensionem_lineis` 4, `silva_arbor_*` a handful,
 `silva_quaestio_*` 5 — in officina (12 files: legatus, compendium,
