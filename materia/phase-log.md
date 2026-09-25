@@ -3012,3 +3012,20 @@ deletes silva's copy in its own commit (step 4 only seals);
 `lexicon_c89` moves to `silva/fontes` at T6; the shim retires at T13.
 Open at birth: whether silva's and materia's STML TEXTS agree (T3
 measures; the hash column falls back to the comparator if not).
+
+## 2026-09-24 — phase 5 T1: the M3 bars, re-measured behind one runner
+
+RELATIO: `silva/m3_probare.sh` (gate `silva-m3`, ~65 s) runs the six
+bars from their own sources and pins them: subtree 281 · plain-C 78 ·
+latinized **182** (was 154 — `lib/*.c` grew) · hospes **40** (was 39)
+· adversarial 24 · haruspex **279** TUs (was 243). Table with sources
+in the spec §2. Two kinds of pin: FIXED (frozen corpus, exact) and
+LIVE (grows with the tree: all pass, count ≥ floor) — the latinized
+and haruspex corpora would otherwise redden on every new library.
+Three plants red (pin +1 → 1; parse pattern renamed → 2, not 0;
+emitter skipping EOF trivia → plain 77/78, 1). Found on the way: the
+hospes bar judges the COMMITTED amalgam — never live silva — so it
+moves only when `amalgamare.sh` regenerates it; and `amalgamare.sh`
+itself must never be the runner's route (it rewrites the committed
+`silva.c`). Plan T1 text corrected in place (plant 3 as first written
+could not go red). Replay verdict: no substrate module touched.

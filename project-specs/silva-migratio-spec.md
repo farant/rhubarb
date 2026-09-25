@@ -87,10 +87,23 @@ directly (briar's `_errorem_quaerere`: `->loci`, `numerus_locorum`;
 compendium: `->pater`). silva's own instruments (examen, formator,
 nexus, renominare, selecta, censor…) are internal and migrate with it.
 
-**Acceptance bars (§7 M3), dated 2026-08:** subtree round trip
-281/281 · plain-C 78/78 · latinized 154/154 · hospes 39/39 ·
-adversarial 24/24 · haruspex 243 TUs. silva's suite has since grown (57
-probatio files; gate reads 54/54). **Stale: re-measure before step 1.**
+**Acceptance bars (§7 M3) — re-measured 2026-09-24 (plan T1), one
+runner `./silva/m3_probare.sh` (gate `silva-m3`, ~65 s):**
+
+| bar | source | 2026-08 | 2026-09-24 | pin |
+|---|---|---:|---:|---|
+| subtree round trip | `probatio_silva_arbor_circuitus` (M1, oracles A and B) | 281 | 281 | fixed |
+| plain-C | `probatio_silva_arbor_plagula` (M2, plain corpus) | 78 | 78 | fixed |
+| latinized | `probatio_silva_arbor_plagula` (`lib/*.c` + closures) | 154 | 182 | live ≥ 182 |
+| hospes | `instrumenta/principalia/hospes.c` over the COMMITTED amalgam | 39 | 40 | fixed |
+| adversarial | `probatio_silva_arbor_parsura` T7b | 24 | 24 | fixed |
+| haruspex | `silva/haruspex.sh` (TUs vs clang) | 243 | 279 | live ≥ 279 |
+
+Fixed = frozen corpus, exact count (a move is a commit with a cause).
+Live = corpus grows with the tree: all must pass AND the count must
+not fall below the floor; a rise is a note, not a failure. Hospes
+judges the committed amalgam, so it moves only when `amalgamare.sh`
+regenerates it (silva/CLAUDE.md: after ANY fontes edit).
 
 ## 3. The key risk the old plan does not name: the oracle disappears
 

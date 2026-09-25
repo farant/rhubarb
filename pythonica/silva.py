@@ -1558,6 +1558,10 @@ PORTAE = {
                     r'fumus briar: (sanum|FRACTUM)'),
     'materia-shim': (['./materia/shim_probare.sh'],
                      r'probatae \d+, fractae \d+'),
+    # portae M3 (acceptio phasis V, silva-migratio-plan T1): sex
+    # portae silvae contra pignora; 'NIHIL CURSUM' quoque verdictum est
+    'silva-m3': (['./silva/m3_probare.sh'],
+                 r'VERDICTUM: M3 (\d/6|NIHIL CURSUM)'),
     'sera': (['./tools/sera_fumus.sh'], r'fumus sera: (sanum|FRACTUM)'),
     'frigida': (['./gesta/frigida_fumus.sh'],
                 r'fumus frigida: (sanum|FRACTUM)'),

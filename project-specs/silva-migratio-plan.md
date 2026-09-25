@@ -7,6 +7,13 @@
 > `silva.commissio(opus=ID)`. Narrative: `materia/phase-log.md`
 > (INTENTIO with this plan's commit, RELATIO at each step boundary).
 
+> **STATUS.** T1 DONE 2026-09-24: `silva/m3_probare.sh`, gate
+> `silva-m3`, 6/6 in ~65 s (bars and sources in spec §2). Two
+> corrections to T1's text as written, both below in place: pins are
+> FIXED or LIVE (a live corpus rising is not a failure), and plant 3
+> goes in the emitter (a byte dropped from an INPUT fixture still
+> round-trips).
+
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
 > gate; every task opens with a measurement that may resize it. Steps
@@ -100,14 +107,21 @@ their logic), parses each script's own count line, prints
     VERDICTUM: M3 6/6
 
 and compares each count to a pin table at the top of the runner
-(today's numbers). Exit 0 all at pin · 1 a bar short OR above pin (a
-rise moves the pin by hand, like html's oracle) · 2 NOTHING RAN (a bar
-script missing, a count line not found — never read as zero).
+(today's numbers). Exit 0 all at pin · 1 a bar short, a FIXED bar off
+its pin in either direction, or a bar's probatio failing · 2 NOTHING
+RAN (a bar script missing, a count line not found — never read as
+zero). *As built:* pins are FIXED (frozen corpus: exact) or LIVE
+(`lib/*.c`, haruspex's headers: all pass and count ≥ floor; a rise is
+printed as a note — a new library must not break the gate).
 
 **Red.** Plant 1: pin one bar at N+1 → exit 1 naming it. Plant 2:
 rename a bar's count line in the parse pattern → exit 2, not a pass.
-Plant 3 (compiles): a one-byte drop in one roundtrip fixture read by
-the plain-C bar → that bar short, exit 1.
+Plant 3 (compiles): in the LIVE emitter, skip the EOF token's trivia
+in `silva_scribere_fontem` → plain-C short, exit 1. *As built:* the
+first text said "drop a byte from a roundtrip fixture" — that cannot
+go red (the fixture is the input; its round trip is still exact).
+Measured: 77/78 plain, 182/182 latin (a final newline rides on the
+last token, not EOF); hospes unmoved (it judges the committed amalgam).
 
 **Done when** the runner is green at today's numbers, the three plants
 went red, the spec §2 bar table is updated in place with dates and
