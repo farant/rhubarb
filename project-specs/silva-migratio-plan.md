@@ -47,6 +47,10 @@
 > `SilvaScriptura` are typedefs; materia gained `reinserenda_finire`
 > (trailing reinserts — a header guard's `#endif` — were unreachable on
 > materia's whole-file path, which the shim had never exercised).
+> T10 MEASURED + RE-SLICED 2026-09-25 (Fran, decree …MQF): T10a–d.
+> T10a DONE 2026-09-25: materia arbor writer/reader sessions, public
+> cursor (gap re-seek), template definitions, re-pointing, the
+> value-position join materia never did, comparator hook.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -621,6 +625,93 @@ commits, arbor first, aequalitas second; both green.
   templates are not C-specific — a general writer option) or keep it
   as a C89 post-pass in `silva_frons`. Measure the compressed vs
   uncompressed document size on the corpus first.
+
+*Measured (2026-09-25) — more than 2× the estimate; re-slice proposed
+to Fran before code.*
+
+- **Shape of silva_arbor.c (7,078):** vocabulary ~430 · node writer
+  ~1,740 · reader + position fixups ~1,810 · whole-file `parsura`
+  writer/reader (sources, directives, regions, gaps, anchors) ~2,170 ·
+  STML compression ~1,000 (macro leaves ~435, parameter families
+  ~485, space templates ~80). Roughly 3,700 lines have a materia
+  twin; ~3,300 are C89 (origin/extent/continuations, the parsura
+  document, compression).
+- **Consumers:** none outside silva/materia. Inside: arbor tool,
+  hospes, canon coquere, the exemplaria/canon suites (exact STML),
+  oracle, shim. The oracle's `stml` column is the gate.
+- **The shim's STML parity covered only each file's FIRST top-level
+  node** (`silva_frons_nodus_radicis`). Node-level parity over whole
+  files is unproven — the T9 lesson again (the byte shim never ran
+  `fontem`).
+- **materia's arbor writer/reader are one-shot** (`scribere_nodum`,
+  `proicere_nodum`, `legere`); silva's parsura writer runs ONE writer
+  session over the document (pass I counts the whole tree, then each
+  top-level node, directive reinsert and the EOF tail becomes its own
+  element with its own anchor). The lexeme seam
+  (`materia_arbor_lexema_scribere/legere`) is only reachable from
+  inside hooks. → materia needs a SESSION API (writer and reader).
+- **Compression:** materia has the space templates; it lacks macro
+  leaves and parameter families, both POST-PASSES over the finished
+  STML tree (they need the writer's piscina/intern and its sedes pairs
+  to re-point substituted elements). Parameter templates are C89
+  grammar, hard-coded; leaves are a general hoisting mechanism keyed on
+  `<expansio>`. Size on lib/*.c (182 files): compressed 466 MB vs
+  uncompressed 522 MB — saving 10.7% overall, median 15.3% per file
+  (4–23%); documents are ~34× source either way.
+- **Comparator:** silva's = materia's + three C89 token fields
+  (`standard`, `longitudo` under FIDELITAS, continuations) — materia's
+  header already names the missing "frons comparison hook". Whole-file
+  comparison (`parsurae_aequales` + regions, ~330) is C89.
+- **Arm-parent policy, by experiment:** commissio changed to parent
+  non-canonical arm roots (materia's policy) → oracle clean over 470
+  (all five columns), M3 6/6, officina 15/15, silva 53/54 — the only
+  failure was probatio_silva_commissio's assertions pinning the old
+  policy. Nothing else observes it. Reverted.
+- **Owed writer fixes:** the corpus reaches none (0 files with CR,
+  NUL, mixed endings; the one `</lex-` is `</lex-int>` inside a
+  comment, not a comment's closing sequence). Each needs its own test.
+
+*Re-sliced (Fran, 2026-09-25; decree …MQF: compression stays a C89
+post-pass in silva; materia's parent policy is adopted).*
+
+**T10a — materia arbor SESSIONS (substrate only).** Measured need:
+silva's parsura writer/reader drive ONE session per document; materia
+exposes only one-shot entries. Everything required already exists
+inside materia_arbor.c — T10a exposes it, and the one-shot entries are
+re-expressed on it (their output byte-identical: every materia client
+suite + shim are the proof).
+- Writer: `materia_arbor_scriptor_creare(piscina, consilium, &causa)`,
+  `_scriptor_numerare(sc, valor)` (pass I, whole document, before any
+  writing), `_scriptor_fontem_ponere(sc, fons)` (default source: `f`
+  omitted when equal — silva sets fons_princeps AFTER pass I),
+  `materia_arbor_nodum_scribere(sc, nodus)` → element,
+  `materia_arbor_lexema_scribere` (exists), `_templa_spatiorum_scribere
+  (sc, involucrum)` (the definitions of the `<<#@post/ante-spatia>>`
+  calls materia already writes), `_scriptor_repungere(sc, tabula)`
+  (compression's element substitutions re-point the value/element
+  pairs; key = old element pointer bytes), `_scriptor_finire(sc,
+  involucrum, textum)` → reference custody, census, text with value
+  positions (`sedes_valorum` — materia collected the pairs but never
+  joined them: the join is ported from silva).
+- Reader: `materia_arbor_lector_creare(piscina, intern, consilium,
+  vitium)`, `_lector_fontem_ponere`, `materia_arbor_fragmentum_aperire`,
+  `materia_arbor_nodum_legere`, `materia_arbor_lexema_legere` (exists),
+  `_lector_finire` (references). Positions: public `MateriaArborFixura`
+  + `_fixura_initiare(f, consilium, lacunae)`, `_fixura_ancoram_legere(f,
+  elementum)` (anchor attributes + gap-index RE-SEEK, silva's T7 fix),
+  `_positiones_nodi/_lexematis`. Envelope validation (tag, grammar,
+  seal, template expansion) stays with the client that owns the
+  envelope.
+- Comparator: `materia_arbor_aequalis_fronte(a, b, modus, frons,
+  differentia)` with a token-comparison hook (C89: standard,
+  longitudo, continuations); `materia_arbor_aequalis` = no hook.
+
+*As built (T10a).* As designed. Also found: silva's comparator compares
+TRIVIA tokens with the full token comparison (positions under
+FIDELITAS, source, provenance, standard, continuations); materia
+compares trivia by genus+value only. **T10d owes** a full-trivia mode
+in materia's comparator (or the hook extended to trivia) before
+`silva_arbor_aequalis` can delegate.
 
 ### Task 11: annotationes
 

@@ -143,6 +143,24 @@ _lex (
         chorda_ex_literis(v, p), offset, linea, columna, ZEPHYRUM);
 }
 
+/* Uncus comparationis frontis qui SEMPER dissentit - campum suum
+ * nominare debet, non materiae */
+hic_manens b32
+_frons_dissentiens (
+                         vacuum*  datum,
+          constans MateriaToken*  a,
+          constans MateriaToken*  b,
+    MateriaArborComparatioModus   modus,
+             constans character** campus)
+{
+    (vacuum)datum;
+    (vacuum)a;
+    (vacuum)b;
+    (vacuum)modus;
+    *campus = "lexema/frons-probatio";
+    redde FALSUM;
+}
+
 s32
 principale (vacuum)
 {
@@ -1138,6 +1156,360 @@ MateriaLexiconRatum  ratum;
                 }
             }
         }
+    }
+
+
+    /* ========================================================
+     * PROBARE: SESSIONES (silva-migratio T10a)
+     *
+     * Documentum cuius involucrum CLIENS componit - C89 <parsura>
+     * nodos supremos PLURES inter directivas fert. Tria portant:
+     *   1. numeratio fragmentorum DOCUMENTO-scopata: lexema in
+     *      nodis supremis DUOBUS communicatum semel definitur;
+     *   2. sedes valorum iunctae (materia paria colligebat sed
+     *      numquam iungebat) et REPUNCTAE post substitutionem;
+     *   3. lectio speculo: transclusio in nodo secundo OBIECTUM
+     *      nodi primi invenit.
+     * ======================================================== */
+
+    {
+        MateriaArborConsilium c;
+         MateriaArborScriptor* sc;
+        MateriaArborScriptura  s;
+          constans character* causa = NIHIL;
+          InternamentumChorda* intern;
+                 MateriaNodus* n1;
+                 MateriaNodus* n2;
+                 MateriaToken* commune;
+                 MateriaToken* d;
+                    StmlNodus* involucrum;
+                    StmlNodus* e1;
+                    StmlNodus* e2;
+                    StmlNodus* dir;
+                    StmlNodus* le;
+                    character  buf[4096];
+
+        imprimere("\n--- Probans sessionem scripturae ---\n");
+
+        intern  = internamentum_creare(piscina);
+        commune = _lex(piscina, (s32)G_IDENT, "c", ZEPHYRUM, (i32)I,
+            (i32)I);
+        n1 = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        n2 = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        CREDO_VERUM (materia_nodus_appendere(piscina, n1, ZEPHYRUM,
+            materia_valor_token(commune), MATERIA_LOCUS_LISTA_MIXTA));
+        CREDO_VERUM (materia_nodus_appendere(piscina, n1, ZEPHYRUM,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, "a",
+                (s32)2, (i32)I, (i32)3)), MATERIA_LOCUS_LISTA_MIXTA));
+        CREDO_VERUM (materia_nodus_appendere(piscina, n2, ZEPHYRUM,
+            materia_valor_token(commune), MATERIA_LOCUS_LISTA_MIXTA));
+        CREDO_VERUM (materia_nodus_appendere(piscina, n2, ZEPHYRUM,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, "b",
+                (s32)4, (i32)I, (i32)5)), MATERIA_LOCUS_LISTA_MIXTA));
+        /* lexema directivae: passu I NON numeratum */
+        d = _lex(piscina, (s32)G_COMMENTUM, "/*d*/", (s32)6, (i32)I,
+            (i32)7);
+
+        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+        c.intern           = intern;
+        c.sedes_colligere  = VERUM;
+
+        sc = materia_arbor_scriptor_creare(piscina, &c, &causa);
+        CREDO_NON_NIHIL (sc);
+        CREDO_NIHIL (causa);
+        materia_arbor_scriptor_numerare(sc, materia_valor_nodus(n1));
+        materia_arbor_scriptor_numerare(sc, materia_valor_nodus(n2));
+
+        involucrum = stml_elementum_creare(piscina, intern,
+            "documentum");
+        e1   = materia_arbor_nodum_scribere(sc, n1);
+        dir  = stml_elementum_creare(piscina, intern, "directiva");
+        le   = materia_arbor_lexema_scribere(sc, d);
+        e2   = materia_arbor_nodum_scribere(sc, n2);
+        CREDO_NON_NIHIL (e1);
+        CREDO_NON_NIHIL (le);
+        CREDO_NON_NIHIL (e2);
+        CREDO_VERUM (stml_liberum_addere(dir, le));
+        CREDO_VERUM (stml_liberum_addere(involucrum, e1));
+        CREDO_VERUM (stml_liberum_addere(involucrum, dir));
+        CREDO_VERUM (stml_liberum_addere(involucrum, e2));
+
+        s = materia_arbor_scriptor_finire(sc, involucrum, VERUM);
+        CREDO_VERUM (s.successus);
+        CREDO_AEQUALIS_PTR (s.arbor, involucrum);
+        CREDO_VERUM (s.textus.mensura > ZEPHYRUM
+            && s.textus.mensura < (i32)magnitudo(buf));
+        memcpy(buf, s.textus.datum, (size_t)s.textus.mensura);
+        buf[s.textus.mensura] = '\0';
+
+        /* 1. fragmentum SEMEL definitum, in nodo secundo transclusum */
+        CREDO_NON_NIHIL (strstr(buf, "<<#lex1>>"));
+        {
+            constans character* primus = strstr(buf, "#lex1");
+
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                constans character* secundus = strstr(primus + I,
+                    "#lex1");
+
+                CREDO_NON_NIHIL (secundus);
+                si (secundus != NIHIL)
+                {
+                    CREDO_NIHIL (strstr(secundus + I, "#lex1"));
+                }
+            }
+        }
+        CREDO_NON_NIHIL (strstr(buf, "/*d*/"));
+        CREDO_NIHIL (strstr(buf, "#lex2"));   /* 'd' fragmentum non est */
+
+        /* 2. sedes valorum iunctae: n1 ante n2, uterque ad '<radix' */
+        CREDO_NON_NIHIL (s.sedes_valorum);
+        si (s.sedes_valorum != NIHIL)
+        {
+            s32 initium_n1 = (s32)-I;
+            s32 initium_n2 = (s32)-I;
+            i32 k;
+
+            per (k = ZEPHYRUM; k < xar_numerus(s.sedes_valorum); k++)
+            {
+                MateriaArborSedes* sv = (MateriaArborSedes*)
+                    xar_obtinere(s.sedes_valorum, k);
+
+                CREDO_VERUM (sv->initium < sv->finis
+                    && sv->finis <= s.textus.mensura);
+                si (sv->clavis == (constans vacuum*)n1)
+                { initium_n1 = (s32)sv->initium;
+                }
+                si (sv->clavis == (constans vacuum*)n2)
+                { initium_n2 = (s32)sv->initium;
+                }
+            }
+            CREDO_VERUM (initium_n1 >= ZEPHYRUM);
+            CREDO_VERUM (initium_n2 > initium_n1);
+            si (initium_n2 > ZEPHYRUM)
+            {
+                CREDO_VERUM (strncmp(buf + initium_n2, "<radix",
+                    (size_t)6) == ZEPHYRUM);
+            }
+        }
+
+        /* 3. lectio speculo */
+        {
+             MateriaArborVitium vitium;
+            MateriaArborLector* lector;
+                  StmlResultus  r;
+                  MateriaNodus* r1;
+                  MateriaNodus* r2;
+                  MateriaToken* rd;
+
+            imprimere("\n--- Probans sessionem lectionis ---\n");
+            r = stml_legere(s.textus, piscina, intern);
+            CREDO_VERUM (r.successus);
+            lector = materia_arbor_lector_creare(piscina, intern, &c,
+                &vitium);
+            CREDO_NON_NIHIL (lector);
+            r1 = materia_arbor_nodum_legere(lector,
+                stml_liberum_ad_indicem(r.elementum_radix, ZEPHYRUM));
+            rd = materia_arbor_lexema_legere(lector,
+                stml_liberum_ad_indicem(
+                    stml_liberum_ad_indicem(r.elementum_radix, I),
+                    ZEPHYRUM), NIHIL);
+            r2 = materia_arbor_nodum_legere(lector,
+                stml_liberum_ad_indicem(r.elementum_radix, II));
+            CREDO_NON_NIHIL (r1);
+            CREDO_NON_NIHIL (rd);
+            CREDO_NON_NIHIL (r2);
+            CREDO_VERUM (materia_arbor_lector_finire(lector));
+            si (r1 != NIHIL && r2 != NIHIL && rd != NIHIL)
+            {
+                MateriaValor* c1 = materia_valor_lista_obtinere(
+                    r1->loci[ZEPHYRUM], ZEPHYRUM);
+                MateriaValor* c2 = materia_valor_lista_obtinere(
+                    r2->loci[ZEPHYRUM], ZEPHYRUM);
+
+                /* IDENTITAS trans nodos supremos */
+                CREDO_AEQUALIS_PTR (c1->datum.token, c2->datum.token);
+                CREDO_CHORDA_AEQUALIS_LITERIS (rd->valor, "/*d*/");
+            }
+        }
+
+        /* 2b. REPUNCTIO: e2 substituto, sedes n2 elementum NOVUM
+         * sequitur (sine repunctione n2 sedem nullam haberet - e2 in
+         * documento non iam est) */
+        {
+                StmlNodus* vicarius;
+            TabulaDispersa* tabula;
+                    chorda  clavis;
+                StmlNodus** cella;
+                       i32  k;
+                       b32  inventum = FALSUM;
+
+            imprimere("\n--- Probans repunctionem sedium ---\n");
+            sc = materia_arbor_scriptor_creare(piscina, &c, &causa);
+            materia_arbor_scriptor_numerare(sc,
+                materia_valor_nodus(n1));
+            materia_arbor_scriptor_numerare(sc,
+                materia_valor_nodus(n2));
+            involucrum = stml_elementum_creare(piscina, intern,
+                "documentum");
+            e1 = materia_arbor_nodum_scribere(sc, n1);
+            e2 = materia_arbor_nodum_scribere(sc, n2);
+            vicarius = stml_elementum_creare(piscina, intern,
+                "vicarius");
+            CREDO_VERUM (stml_liberum_addere(involucrum, e1));
+            CREDO_VERUM (stml_liberum_addere(involucrum, vicarius));
+
+            tabula = tabula_dispersa_creare_chorda(piscina, XVI);
+            cella  = (StmlNodus**)piscina_allocare(piscina,
+                magnitudo(StmlNodus*));
+            *cella          = e2;
+            clavis.datum    = (i8*)cella;
+            clavis.mensura  = (i32)magnitudo(StmlNodus*);
+            CREDO_VERUM (tabula_dispersa_inserere(tabula, clavis,
+                vicarius));
+            materia_arbor_scriptor_repungere(sc, tabula);
+
+            s = materia_arbor_scriptor_finire(sc, involucrum, VERUM);
+            CREDO_VERUM (s.successus);
+            CREDO_NON_NIHIL (s.sedes_valorum);
+            per (k = ZEPHYRUM; s.sedes_valorum != NIHIL
+                && k < xar_numerus(s.sedes_valorum); k++)
+            {
+                MateriaArborSedes* sv = (MateriaArborSedes*)
+                    xar_obtinere(s.sedes_valorum, k);
+
+                si (sv->clavis == (constans vacuum*)n2)
+                {
+                    inventum = VERUM;
+                    CREDO_VERUM (strncmp((constans character*)
+                        s.textus.datum + sv->initium, "<vicarius",
+                        (size_t)9) == ZEPHYRUM);
+                }
+            }
+            CREDO_VERUM (inventum);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: FIXURA publica - ancora per liberum, lacunae, et
+     * RE-QUAESITIO indicis lacunarum (silva T7: liberi supremi
+     * ordine ARBORIS, ancora cursorem RETRO ponit)
+     *
+     * Fons: "a#d\nb      c" - 'a' ad 0, lacuna directivae [1,4),
+     * 'b' ad 4 (linea II), 'c' ad XI. Ordo documenti: nodus 'c'
+     * PRIMUS (ut contentum capitis), deinde nodus 'a b'.
+     * ======================================================== */
+
+    {
+        MateriaArborConsilium c;
+           MateriaArborFixura fx;
+                          Xar* lacunae;
+                MateriaLacuna* lac;
+                 MateriaNodus* nc;
+                 MateriaNodus* nodus_ab;
+                 MateriaToken* ta;
+                 MateriaToken* tb;
+                 MateriaToken* tc;
+                    StmlNodus* ancora_c;
+                    StmlNodus* ancora_ab;
+          InternamentumChorda* intern = internamentum_creare(piscina);
+
+        imprimere("\n--- Probans fixuram publicam ---\n");
+        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+
+        ta = _lex(piscina, (s32)G_IDENT, "a", (s32)-I, ZEPHYRUM,
+            ZEPHYRUM);
+        tb = _lex(piscina, (s32)G_IDENT, "b", (s32)-I, ZEPHYRUM,
+            ZEPHYRUM);
+        tc = _lex(piscina, (s32)G_IDENT, "c", (s32)-I, ZEPHYRUM,
+            ZEPHYRUM);
+        nc        = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        nodus_ab  = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        CREDO_VERUM (materia_nodus_appendere(piscina, nc, ZEPHYRUM,
+            materia_valor_token(tc), MATERIA_LOCUS_LISTA_MIXTA));
+        CREDO_VERUM (materia_nodus_appendere(piscina, nodus_ab,
+            ZEPHYRUM,
+            materia_valor_token(ta), MATERIA_LOCUS_LISTA_MIXTA));
+        CREDO_VERUM (materia_nodus_appendere(piscina, nodus_ab,
+            ZEPHYRUM,
+            materia_valor_token(tb), MATERIA_LOCUS_LISTA_MIXTA));
+
+        lacunae = xar_creare(piscina, magnitudo(MateriaLacuna));
+        lac = (MateriaLacuna*)xar_addere(lacunae);
+        lac->offset = (s32)I;
+        lac->finis = (s32)IV;
+        lac->linea_finalis = (i32)II;
+        lac->columna_finalis = (i32)I;
+        lac->post_lineam_finalis = VERUM;
+        lac->fons = (s32)-I;
+
+        ancora_c = stml_elementum_creare(piscina, intern, "radix");
+        stml_attributum_addere(ancora_c, piscina, intern, "b", "11");
+        stml_attributum_addere(ancora_c, piscina, intern, "linea", "2");
+        stml_attributum_addere(ancora_c, piscina, intern, "columna",
+            "8");
+        ancora_ab = stml_elementum_creare(piscina, intern, "radix");
+        stml_attributum_addere(ancora_ab, piscina, intern, "b", "0");
+        stml_attributum_addere(ancora_ab, piscina, intern, "linea",
+            "1");
+        stml_attributum_addere(ancora_ab, piscina, intern, "columna",
+            "1");
+
+        materia_arbor_fixura_initiare(&fx, &c, lacunae);
+        materia_arbor_fixura_ancoram_legere(&fx, ancora_c);
+        materia_arbor_positiones_nodi(&fx, nc);
+        CREDO_AEQUALIS_S32 (tc->byte_offset, (s32)11);
+        materia_arbor_fixura_ancoram_legere(&fx, ancora_ab);
+        materia_arbor_positiones_nodi(&fx, nodus_ab);
+        CREDO_AEQUALIS_S32 (ta->byte_offset, ZEPHYRUM);
+        /* sine re-quaesitione 'b' sedem I acciperet (lacuna perdita) */
+        CREDO_AEQUALIS_S32 (tb->byte_offset, (s32)IV);
+        CREDO_AEQUALIS_I32 (tb->linea, (i32)II);
+        CREDO_AEQUALIS_I32 (tb->columna, (i32)I);
+    }
+
+
+    /* ========================================================
+     * PROBARE: uncus comparationis frontis
+     * ======================================================== */
+
+    {
+        MateriaArborComparatioFrons fr;
+            MateriaArborDifferentia df;
+                       MateriaNodus* na;
+                       MateriaNodus* nb;
+
+        imprimere("\n--- Probans uncum comparationis frontis ---\n");
+        na = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        nb = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        CREDO_VERUM (materia_nodus_appendere(piscina, na, ZEPHYRUM,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, "q",
+            ZEPHYRUM,
+                (i32)I, (i32)I)), MATERIA_LOCUS_LISTA_MIXTA));
+        CREDO_VERUM (materia_nodus_appendere(piscina, nb, ZEPHYRUM,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, "q",
+            ZEPHYRUM,
+                (i32)I, (i32)I)), MATERIA_LOCUS_LISTA_MIXTA));
+
+        /* sine unco aequales; uncus qui semper dissentit campum suum
+         * nominat */
+        CREDO_VERUM (materia_arbor_aequalis(na, nb,
+            MATERIA_ARBOR_COMPARATIO_FIDELITAS, &df));
+        fr.datum              = NIHIL;
+        fr.lexemata_conferre  = _frons_dissentiens;
+        CREDO_FALSUM (materia_arbor_aequalis_fronte(na, nb,
+            MATERIA_ARBOR_COMPARATIO_FIDELITAS, &fr, &df));
+        CREDO_NON_NIHIL (df.campus);
+        si (df.campus != NIHIL)
+        {
+            CREDO_VERUM (strcmp(df.campus, "lexema/frons-probatio")
+                == ZEPHYRUM);
+        }
+        fr.lexemata_conferre = NIHIL;
+        CREDO_VERUM (materia_arbor_aequalis_fronte(na, nb,
+            MATERIA_ARBOR_COMPARATIO_FIDELITAS, &fr, &df));
     }
 
     imprimere("\n");

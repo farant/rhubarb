@@ -3217,3 +3217,28 @@ appended after that tail, in silva's exact order. Oracle clean over 470
 402 + 401/401/401, silva 54/54, officina 15/15, amalgam byte-identical.
 Replay verdict: substrate modules `scribere` (switched; one additive
 option) and registry (facade); materia clients owe their suites.
+
+## 2026-09-25 — phase 5 T10 measured and re-sliced; T10a: arbor sessions
+
+INTENTIO (Fran; decree …MQF): T10 measured at over twice its estimate
+(silva_arbor.c 7,078: ~3,700 lines with a materia twin, ~3,300 C89),
+re-sliced into T10a (materia sessions) · T10b (node level) · T10c
+(whole file, compression as a C89 post-pass, frons conversion and shim
+retired) · T10d (comparator). Decisions: compression stays C89 (10.7%
+of bytes, median 15.3%, parameter templates are C89 grammar); materia's
+parent policy is adopted (experiment: nothing but the test pinning the
+old policy observes it). Findings: the shim's STML parity only ever
+covered each file's FIRST top-level node; no corpus file reaches the
+four owed writer fixes.
+
+RELATIO T10a: materia_arbor gained writer and reader SESSIONS, a
+public position cursor with the gap re-seek, template definitions, an
+element re-pointing entry for post-passes, the value-position join
+(materia had collected the pairs and never joined them), and a
+comparator hook for frontend token fields. The one-shot entries share
+the session's initialization and reference guard. Tests: 256
+assertions in probatio_materia_arbor (the re-seek test planted red:
+three failures without it). Found for T10d: silva compares trivia
+tokens in full, materia by genus+value only. Replay verdict: substrate
+module `arbor` extended (additive API); materia clients owe their
+suites.

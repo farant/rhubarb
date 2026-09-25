@@ -1961,6 +1961,107 @@ _tractum_refutationis (
     }
 }
 
+/* Status scriptoris initiare - COMMUNE ingressibus unius-ictus et
+ * sessioni (T10a), ne duae initiationes divergant. FALSUM + *causa
+ * in recusatione. */
+interior b32
+_scriptorem_initiare (
+                MateriaArborScriptor*  st,
+                             Piscina*  piscina,
+      constans MateriaArborConsilium*  consilium,
+                  constans character** causa)
+{
+    InternamentumChorda* intern;
+
+    si (   piscina               == NIHIL || consilium == NIHIL
+        || consilium->tabularium == NIHIL
+        || consilium->lexicon    == NIHIL)
+    {
+        *causa = "argumenta nihil";
+        redde FALSUM;
+    }
+    si (consilium->grammatica == NIHIL)
+    {
+        *causa = "grammatica innominata";
+        redde FALSUM;
+    }
+    si (!consilium->lexicon->ratum)
+    {
+        *causa = "lexicon non ratum (porta oneris non transita)";
+        redde FALSUM;
+    }
+
+    intern = consilium->intern;
+    si (intern == NIHIL)
+    {
+        intern = internamentum_creare(piscina);
+        si (intern == NIHIL)
+        {
+            *causa = "internamentum creari non potuit";
+            redde FALSUM;
+        }
+    }
+
+    st->piscina                = piscina;
+    st->intern                 = intern;
+    st->consilium              = consilium;
+    st->numerus_notarum        = ZEPHYRUM;
+    st->ancora_nota            = FALSUM;
+    st->ancora_offset          = (s32)-I;
+    st->ancora_linea           = ZEPHYRUM;
+    st->ancora_columna         = ZEPHYRUM;
+    st->ancora_fons            = ZEPHYRUM;
+    st->ancora_initium_lineae  = FALSUM;
+    memset(&st->tractus, ZEPHYRUM, magnitudo(st->tractus));
+    st->tractus.initium = (s32)-I;
+    st->tractus_inventus = FALSUM;
+    st->causa = NIHIL;
+    st->sedes = NIHIL;
+    st->lexema_refutatum = NIHIL;
+    st->census.spatia_vocationes = ZEPHYRUM;
+    st->lexemata = tabula_dispersa_creare_chorda(piscina, 256);
+    st->paria    = consilium->sedes_colligere
+        ? xar_creare(piscina, magnitudo(ArborPar)) : NIHIL;
+    st->referenda          = NIHIL;   /* pigre, in passu I */
+    st->referenda_series   = NIHIL;
+    st->numerus_ancorarum  = ZEPHYRUM;
+    si (st->lexemata == NIHIL)
+    {
+        *causa = "tabula lexematum creari non potuit";
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* CUSTODIA REFERENTIARUM: scopus quisque INTRA documentum scriptum
+ * emissus sit. Aliter '#nodN' sine ancora exiret - lector eam
+ * recusaret, sed sero, alibi, sine sede. FALSUM + fructus->causa/
+ * sedes in violatione. */
+interior b32
+_referentias_custodire (
+    constans MateriaArborScriptor* st,
+            MateriaArborScriptura* fructus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; st->referenda_series != NIHIL
+        && k < xar_numerus(st->referenda_series); k++)
+    {
+        ArborReferendum* r = *(ArborReferendum**)xar_obtinere(
+            st->referenda_series, k);
+
+        si (r != NIHIL && !r->emissum)
+        {
+            fructus->causa =
+                "referentia ad nodum extra arborem scriptam";
+            fructus->sedes = r->nodus;
+            _tractum_refutationis(fructus, st, st->consilium);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 interior MateriaArborScriptura
 _arborem_struere (
                            Piscina* piscina,
@@ -1985,63 +2086,16 @@ _arborem_struere (
     memset(&fructus.tractus, ZEPHYRUM, magnitudo(fructus.tractus));
     fructus.tractus.initium           = (s32)-I;
 
-    si (   piscina == NIHIL || nodus == NIHIL || consilium == NIHIL
-        || consilium->tabularium == NIHIL
-        || consilium->lexicon == NIHIL)
+    si (nodus == NIHIL)
     {
         fructus.causa = "argumenta nihil";
         redde fructus;
     }
-    si (consilium->grammatica == NIHIL)
+    si (!_scriptorem_initiare(&st, piscina, consilium, &fructus.causa))
     {
-        fructus.causa = "grammatica innominata";
         redde fructus;
     }
-    si (!consilium->lexicon->ratum)
-    {
-        fructus.causa = "lexicon non ratum (porta oneris non transita)";
-        redde fructus;
-    }
-
-    intern = consilium->intern;
-    si (intern == NIHIL)
-    {
-        intern = internamentum_creare(piscina);
-        si (intern == NIHIL)
-        {
-            fructus.causa = "internamentum creari non potuit";
-            redde fructus;
-        }
-    }
-
-    st.piscina                = piscina;
-    st.intern                 = intern;
-    st.consilium              = consilium;
-    st.numerus_notarum        = ZEPHYRUM;
-    st.ancora_nota            = FALSUM;
-    st.ancora_offset          = (s32)-I;
-    st.ancora_linea           = ZEPHYRUM;
-    st.ancora_columna         = ZEPHYRUM;
-    st.ancora_fons            = ZEPHYRUM;
-    st.ancora_initium_lineae  = FALSUM;
-    memset(&st.tractus, ZEPHYRUM, magnitudo(st.tractus));
-    st.tractus.initium = (s32)-I;
-    st.tractus_inventus = FALSUM;
-    st.causa = NIHIL;
-    st.sedes = NIHIL;
-    st.lexema_refutatum = NIHIL;
-    st.census.spatia_vocationes = ZEPHYRUM;
-    st.lexemata = tabula_dispersa_creare_chorda(piscina, 256);
-    st.paria    = consilium->sedes_colligere
-        ? xar_creare(piscina, magnitudo(ArborPar)) : NIHIL;
-    st.referenda          = NIHIL;   /* pigre, in passu I */
-    st.referenda_series   = NIHIL;
-    st.numerus_ancorarum  = ZEPHYRUM;
-    si (st.lexemata == NIHIL)
-    {
-        fructus.causa = "tabula lexematum creari non potuit";
-        redde fructus;
-    }
+    intern = st.intern;
 
     /* PASSUS I: usus numerare + ancoram capere. Sine hoc usus primus
      * scire non posset an fragmentum opus esset. */
@@ -2156,28 +2210,10 @@ _arborem_struere (
         redde fructus;
     }
 
-    /* CUSTODIA REFERENTIARUM: scopus quisque INTRA subarborem
-     * scriptam emissus sit. Aliter '#nodN' sine ancora exiret -
-     * lector eam recusaret, sed sero, alibi, sine sede. Contractus:
-     * subarbor cum referentia foras scribi NON potest. */
+    /* Contractus: subarbor cum referentia foras scribi NON potest. */
+    si (!_referentias_custodire(&st, &fructus))
     {
-        i32 k;
-
-        per (k = ZEPHYRUM; st.referenda_series != NIHIL
-            && k < xar_numerus(st.referenda_series); k++)
-        {
-            ArborReferendum* r = *(ArborReferendum**)xar_obtinere(
-                st.referenda_series, k);
-
-            si (r != NIHIL && !r->emissum)
-            {
-                fructus.causa =
-                    "referentia ad nodum extra arborem scriptam";
-                fructus.sedes = r->nodus;
-                _tractum_refutationis(&fructus, &st, consilium);
-                redde fructus;
-            }
-        }
+        redde fructus;
     }
 
     fructus.arbor      = involucrum;
@@ -2209,6 +2245,330 @@ materia_arbor_proicere_nodum (
     constans MateriaArborConsilium* consilium)
 {
     redde _arborem_struere(piscina, nodus, consilium);
+}
+
+
+/* ==================================================
+ * SESSIO SCRIPTURAE (silva-migratio T10a)
+ * ================================================== */
+
+MateriaArborScriptor*
+materia_arbor_scriptor_creare (
+                           Piscina*  piscina,
+    constans MateriaArborConsilium*  consilium,
+                constans character** causa)
+{
+     MateriaArborScriptor* st;
+       constans character* c = NIHIL;
+
+    si (piscina == NIHIL)
+    {
+        si (causa != NIHIL)
+        { *causa = "argumenta nihil";
+        }
+        redde NIHIL;
+    }
+    st = (MateriaArborScriptor*)piscina_allocare(piscina,
+        magnitudo(MateriaArborScriptor));
+    si (st == NIHIL)
+    {
+        si (causa != NIHIL)
+        { *causa = "scriptor allocari non potuit";
+        }
+        redde NIHIL;
+    }
+    si (!_scriptorem_initiare(st, piscina, consilium, &c))
+    {
+        si (causa != NIHIL)
+        { *causa = c;
+        }
+        redde NIHIL;
+    }
+    si (causa != NIHIL)
+    { *causa = NIHIL;
+    }
+    redde st;
+}
+
+vacuum
+materia_arbor_scriptor_numerare (
+     MateriaArborScriptor* scriptor,
+             MateriaValor  valor)
+{
+    si (scriptor != NIHIL)
+    {
+        _numerare_valorem(scriptor, valor);
+    }
+}
+
+vacuum
+materia_arbor_scriptor_fontem_ponere (
+    MateriaArborScriptor* scriptor,
+                     s32  fons)
+{
+    si (scriptor != NIHIL)
+    {
+        scriptor->ancora_fons = fons;
+    }
+}
+
+StmlNodus*
+materia_arbor_nodum_scribere (
+    MateriaArborScriptor* scriptor,
+   constans MateriaNodus* nodus)
+{
+    si (scriptor == NIHIL || scriptor->causa != NIHIL)
+    { redde NIHIL;
+    }
+    redde _scribere_nodum_internum(scriptor, nodus);
+}
+
+constans character*
+materia_arbor_scriptor_causa (
+    MateriaArborScriptor* scriptor)
+{
+    redde (scriptor == NIHIL) ? "scriptor nihil" : scriptor->causa;
+}
+
+/* Definitio templi unius: <#@titulus n="@n"><involucrum>
+ * <lex-spatia n="&@n;"/></involucrum></#> - speculum vocationis
+ * quam _involucrum_triviorum scribit. Portatum ex silva_arbor.c
+ * (_templum_spatiorum_scribere); tag ex LEXICO mangulatur. */
+interior b32
+_templum_spatiorum_scribere (
+    MateriaArborScriptor* st,
+               StmlNodus* involucrum,
+      constans character* id_templi,
+      constans character* titulus_involucri)
+{
+    StmlNodus* definitio;
+    StmlNodus* intus;
+    StmlNodus* spatia;
+    character  tag[MATERIA_ARBOR_TAG_CAPACITAS];
+          s32  gs = st->consilium->lexicon->lexicon->genus_spatii;
+
+    si (   gs < ZEPHYRUM
+        || materia_arbor_lexema_tag(st->consilium->lexicon, gs, tag,
+               (i32)magnitudo(tag)) == ZEPHYRUM)
+    {
+        st->causa = "tag spatiorum mangulari non potuit";
+        redde FALSUM;
+    }
+    definitio = stml_elementum_creare(st->piscina, st->intern,
+        "fragmentum");
+    intus     = stml_elementum_creare(st->piscina, st->intern,
+        titulus_involucri);
+    spatia    = stml_elementum_creare(st->piscina, st->intern, tag);
+    si (definitio == NIHIL || intus == NIHIL || spatia == NIHIL)
+    {
+        st->causa = "definitio templi creari non potuit";
+        redde FALSUM;
+    }
+    definitio->fragmentum    = VERUM;
+    definitio->fragmentum_id = chorda_internare_ex_literis(st->intern,
+        id_templi);
+    si (   definitio->fragmentum_id == NIHIL
+        || !stml_attributum_addere(definitio, st->piscina, st->intern,
+                "n", "@n")
+        || !stml_attributum_addere(spatia, st->piscina, st->intern,
+                "n", "&@n;")
+        || !stml_liberum_addere(intus, spatia)
+        || !stml_liberum_addere(definitio, intus)
+        || !stml_liberum_addere(involucrum, definitio))
+    {
+        st->causa = "definitio templi construi non potuit";
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
+materia_arbor_templa_spatiorum_scribere (
+    MateriaArborScriptor* scriptor,
+               StmlNodus* involucrum)
+{
+    si (scriptor == NIHIL || involucrum == NIHIL)
+    { redde FALSUM;
+    }
+    redde _templum_spatiorum_scribere(scriptor, involucrum,
+               "@post-spatia", MATERIA_ARBOR_TAG_POST)
+        && _templum_spatiorum_scribere(scriptor, involucrum,
+               "@ante-spatia", MATERIA_ARBOR_TAG_ANTE);
+}
+
+vacuum
+materia_arbor_scriptor_repungere (
+    MateriaArborScriptor* scriptor,
+          TabulaDispersa* tabula)
+{
+    i32 i;
+
+    si (   scriptor == NIHIL || scriptor->paria == NIHIL
+        || tabula   == NIHIL)
+    { redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(scriptor->paria); i++)
+    {
+                   ArborPar* par = (ArborPar*)xar_obtinere(
+                       scriptor->paria, i);
+         constans StmlNodus* elem;
+                     vacuum* novus;
+                     chorda  clavis;
+
+        si (par == NIHIL)
+        { perge;
+        }
+        elem            = par->elementum;
+        clavis.datum    = (i8*)&elem;
+        clavis.mensura  = (i32)magnitudo(elem);
+        si (tabula_dispersa_invenire(tabula, clavis, &novus))
+        {
+            par->elementum = (constans StmlNodus*)novus;
+        }
+    }
+}
+
+/* Paria (valor -> elementum) cum tabula sedium serializatoris
+ * (elementum -> octeti) iungere. Portatum ex silva_arbor.c
+ * (_sedes_valorum_iungere): materia paria COLLIGEBAT sed numquam
+ * iungebat - sedes_valorum semper NIHIL erat. */
+interior b32
+_sedes_valorum_iungere (
+    Piscina*  piscina,
+        Xar*  paria,
+        Xar*  tabula_sedium,
+        Xar** exitus)
+{
+    TabulaDispersa* index_parium;
+               i32  i;
+
+    *exitus = NIHIL;
+    si (paria == NIHIL)
+    { redde VERUM;
+    }
+    index_parium = tabula_dispersa_creare_chorda(piscina, 256);
+    si (index_parium == NIHIL)
+    { redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(paria); i++)
+    {
+         ArborPar* par = (ArborPar*)xar_obtinere(paria, i);
+           chorda  clavis;
+
+        si (par == NIHIL)
+        { redde FALSUM;
+        }
+        clavis = _clavis_monstratoris(piscina,
+            (constans vacuum*)par->elementum);
+        si (clavis.datum == NIHIL)
+        { redde FALSUM;
+        }
+        tabula_dispersa_inserere(index_parium, clavis, par);
+    }
+    *exitus = xar_creare(piscina, magnitudo(MateriaArborSedes));
+    si (*exitus == NIHIL)
+    { redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(tabula_sedium); i++)
+    {
+        StmlSedesNodi* nota = (StmlSedesNodi*)xar_obtinere(
+            tabula_sedium, i);
+               chorda  clavis;
+               vacuum* inventum;
+
+        si (nota == NIHIL)
+        { redde FALSUM;
+        }
+        clavis = _clavis_monstratoris(piscina,
+            (constans vacuum*)nota->nodus);
+        si (clavis.datum == NIHIL)
+        { redde FALSUM;
+        }
+        si (tabula_dispersa_invenire(index_parium, clavis, &inventum))
+        {
+                     ArborPar* par = (ArborPar*)inventum;
+            MateriaArborSedes* sv  = (MateriaArborSedes*)xar_addere(
+                *exitus);
+
+            si (sv == NIHIL)
+            { redde FALSUM;
+            }
+            sv->clavis      = par->clavis;
+            sv->est_lexema  = par->est_lexema;
+            sv->initium     = nota->initium;
+            sv->finis       = nota->finis;
+        }
+    }
+    redde VERUM;
+}
+
+MateriaArborScriptura
+materia_arbor_scriptor_finire (
+     MateriaArborScriptor* scriptor,
+                StmlNodus* involucrum,
+                      b32  textum)
+{
+    MateriaArborScriptura fructus;
+
+    fructus.successus                 = FALSUM;
+    fructus.textus.mensura            = ZEPHYRUM;
+    fructus.textus.datum              = NIHIL;
+    fructus.causa                     = NIHIL;
+    fructus.sedes                     = NIHIL;
+    fructus.sedes_valorum             = NIHIL;
+    fructus.census.spatia_vocationes  = ZEPHYRUM;
+    fructus.arbor                     = NIHIL;
+    memset(&fructus.tractus, ZEPHYRUM, magnitudo(fructus.tractus));
+    fructus.tractus.initium           = (s32)-I;
+
+    si (scriptor == NIHIL || involucrum == NIHIL)
+    {
+        fructus.causa = "argumenta nihil";
+        redde fructus;
+    }
+    si (scriptor->causa != NIHIL)
+    {
+        fructus.causa = scriptor->causa;
+        fructus.sedes = scriptor->sedes;
+        _tractum_refutationis(&fructus, scriptor, scriptor->consilium);
+        redde fructus;
+    }
+    si (!_referentias_custodire(scriptor, &fructus))
+    {
+        redde fructus;
+    }
+    si (textum)
+    {
+        si (scriptor->paria != NIHIL)
+        {
+            Xar* tabula_sedium = xar_creare(scriptor->piscina,
+                magnitudo(StmlSedesNodi));
+
+            si (tabula_sedium == NIHIL)
+            {
+                fructus.causa = "tabula sedium creari non potuit";
+                redde fructus;
+            }
+            fructus.textus = stml_scribere_sedibus(involucrum,
+                scriptor->piscina, VERUM, tabula_sedium);
+            si (!_sedes_valorum_iungere(scriptor->piscina,
+                    scriptor->paria, tabula_sedium,
+                    &fructus.sedes_valorum))
+            {
+                fructus.causa = "sedes valorum iungi non potuerunt";
+                redde fructus;
+            }
+        }
+        alioquin
+        {
+            fructus.textus = stml_scribere(involucrum,
+                scriptor->piscina, VERUM);
+        }
+    }
+    fructus.arbor      = involucrum;
+    fructus.census     = scriptor->census;
+    fructus.successus  = VERUM;
+    redde fructus;
 }
 
 
@@ -3453,12 +3813,9 @@ _referentias_solvere (
  * positio PORTATA cum contento dissentire potest, DERIVATA non.
  * ================================================== */
 
-nomen structura {
-                MateriaArborCursor  cursor;
-    constans MateriaArborConsilium* consilium;
-                               Xar* lacunae;
-                               i32  lacuna_proxima;
-} ArborFixura;
+/* Publica ab T10a (MateriaArborFixura, materia_arbor.h) - campi
+ * idem; nomen internum servatur ne ambulatio tota renominetur. */
+nomen MateriaArborFixura ArborFixura;
 
 interior vacuum
 _cursorem_promovere (
@@ -3744,6 +4101,226 @@ materia_arbor_patres_figere (
     MateriaNodus* radix)
 {
     _patres_figere(piscina, radix);
+}
+
+
+/* ==================================================
+ * SESSIO LECTIONIS + FIXURA publica (silva-migratio T10a)
+ * ================================================== */
+
+MateriaArborLector*
+materia_arbor_lector_creare (
+                           Piscina* piscina,
+               InternamentumChorda* intern,
+    constans MateriaArborConsilium* consilium,
+                MateriaArborVitium* vitium)
+{
+    MateriaArborLector* lector;
+
+    si (vitium != NIHIL)
+    { vitium->causa = NIHIL; vitium->linea = ZEPHYRUM;
+    }
+    si (   piscina               == NIHIL || consilium == NIHIL
+        || consilium->tabularium == NIHIL
+        || consilium->lexicon    == NIHIL)
+    {
+        si (vitium != NIHIL)
+        { vitium->causa = "argumenta nihil";
+        }
+        redde NIHIL;
+    }
+    si (!consilium->lexicon->ratum)
+    {
+        si (vitium != NIHIL)
+        {
+            vitium->causa =
+                "lexicon non ratum (porta oneris non transita)";
+        }
+        redde NIHIL;
+    }
+    lector = (MateriaArborLector*)piscina_allocare(piscina,
+        magnitudo(MateriaArborLector));
+    si (lector == NIHIL)
+    {
+        si (vitium != NIHIL)
+        { vitium->causa = "lector allocari non potuit";
+        }
+        redde NIHIL;
+    }
+    si (intern == NIHIL)
+    {
+        intern = internamentum_creare(piscina);
+    }
+    lector->piscina          = piscina;
+    lector->intern           = intern;
+    lector->consilium        = consilium;
+    lector->vitium           = vitium;
+    lector->ancorae          = NIHIL;   /* pigre */
+    lector->referentiae      = NIHIL;
+    lector->fons_ordinarius  = ZEPHYRUM;
+    lector->fragmenta = tabula_dispersa_creare_chorda(piscina,
+        64);
+    si (intern == NIHIL || lector->fragmenta == NIHIL)
+    {
+        materia_arbor_lector_recusare(lector,
+            "tabula fragmentorum creari non potuit", ZEPHYRUM);
+        redde NIHIL;
+    }
+    redde lector;
+}
+
+vacuum
+materia_arbor_lector_fontem_ponere (
+    MateriaArborLector* lector,
+                   s32  fons)
+{
+    si (lector != NIHIL)
+    {
+        lector->fons_ordinarius = fons;
+    }
+}
+
+StmlNodus*
+materia_arbor_fragmentum_aperire (
+    MateriaArborLector*  lector,
+             StmlNodus*  elementum,
+                chorda** id)
+{
+    si (lector == NIHIL || elementum == NIHIL)
+    { redde NIHIL;
+    }
+    redde _fragmentum_aperire(lector, elementum, id);
+}
+
+MateriaNodus*
+materia_arbor_nodum_legere (
+    MateriaArborLector* lector,
+             StmlNodus* elementum)
+{
+    si (lector == NIHIL || elementum == NIHIL)
+    { redde NIHIL;
+    }
+    elementum = _fragmentum_aperire(lector, elementum, NIHIL);
+    si (elementum == NIHIL)
+    { redde NIHIL;
+    }
+    redde _nodum_legere(lector, elementum);
+}
+
+b32
+materia_arbor_lector_finire (
+    MateriaArborLector* lector)
+{
+    si (lector == NIHIL)
+    { redde FALSUM;
+    }
+    redde _referentias_solvere(lector);
+}
+
+vacuum
+materia_arbor_fixura_initiare (
+                MateriaArborFixura* fixura,
+    constans MateriaArborConsilium* consilium,
+                               Xar* lacunae)
+{
+    si (fixura == NIHIL)
+    { redde;
+    }
+    fixura->consilium           = consilium;
+    fixura->lacunae             = lacunae;
+    fixura->lacuna_proxima      = ZEPHYRUM;
+    fixura->cursor.offset       = ZEPHYRUM;
+    fixura->cursor.linea        = I;
+    fixura->cursor.columna      = I;
+    fixura->cursor.post_lineam  = VERUM;
+    fixura->cursor.sedes_notae  = FALSUM;
+}
+
+/* Portatum ex silva_arbor.c (_parsura_ancoram_legere), cum
+ * RE-QUAESITIONE indicis lacunarum (vide caput). */
+vacuum
+materia_arbor_fixura_ancoram_legere (
+    MateriaArborFixura* fixura,
+    constans StmlNodus* elementum)
+{
+     StmlNodus* e = (StmlNodus*)(size_t)elementum;
+        chorda* attributum;
+           i32  numerus;
+
+    si (fixura == NIHIL || elementum == NIHIL)
+    { redde;
+    }
+    fixura->cursor.offset       = ZEPHYRUM;
+    fixura->cursor.linea        = I;
+    fixura->cursor.columna      = I;
+    fixura->cursor.post_lineam  = VERUM;
+    fixura->cursor.sedes_notae  = FALSUM;
+
+    attributum = stml_attributum_capere(e, "b");
+    si (   attributum != NIHIL
+        && materia_arbor_numerus_ex_chorda(attributum, &numerus))
+    {
+        fixura->cursor.offset       = (s32)numerus;
+        fixura->cursor.sedes_notae  = VERUM;
+        fixura->cursor.post_lineam  = stml_attributum_habet(e,
+            "linea-initium");
+    }
+    attributum = stml_attributum_capere(e, "linea");
+    si (   attributum != NIHIL
+        && materia_arbor_numerus_ex_chorda(attributum, &numerus))
+    {
+        fixura->cursor.linea = numerus;
+    }
+    attributum = stml_attributum_capere(e, "columna");
+    si (   attributum != NIHIL
+        && materia_arbor_numerus_ex_chorda(attributum, &numerus))
+    {
+        fixura->cursor.columna = numerus;
+    }
+
+    /* RE-QUAESITIO: index lacunarum monotonus est, sed ancora
+     * cursorem RETRO ponere potest - lacunae iam praeteritae aliter
+     * perduntur. */
+    si (fixura->lacunae != NIHIL)
+    {
+        i32 i;
+
+        fixura->lacuna_proxima = xar_numerus(fixura->lacunae);
+        per (i = ZEPHYRUM; i < xar_numerus(fixura->lacunae); i++)
+        {
+            constans MateriaLacuna* lacuna = (constans MateriaLacuna*)
+                xar_obtinere(fixura->lacunae, i);
+
+            si (   lacuna != NIHIL
+                && lacuna->finis > fixura->cursor.offset)
+            {
+                fixura->lacuna_proxima = i;
+                frange;
+            }
+        }
+    }
+}
+
+vacuum
+materia_arbor_positiones_nodi (
+    MateriaArborFixura* fixura,
+          MateriaNodus* nodus)
+{
+    si (fixura != NIHIL)
+    {
+        _positiones_nodi(fixura, nodus);
+    }
+}
+
+vacuum
+materia_arbor_positiones_lexematis (
+    MateriaArborFixura* fixura,
+          MateriaToken* lexema)
+{
+    si (fixura != NIHIL)
+    {
+        _positiones_lexematis(fixura, lexema);
+    }
 }
 
 

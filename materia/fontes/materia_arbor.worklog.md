@@ -364,3 +364,49 @@ that only checked *that* it refused, never *why*.
 `stml_crudi_terminatorem_fert` now has no production caller; only the
 gates use it. Left in place — it is a legitimate public predicate — but
 worth a look if it is still caller-less in a month.
+
+## 2026-09-25 — T10a: sessions (silva-migratio)
+
+silva's whole-file (`parsura`) writer and reader run ONE session per
+document: pass I counts the whole tree (fragment numbering is
+document-scoped), then top-level nodes, directive laminas and the EOF
+tail each become their own element with their own anchor. materia only
+had one-shot entries (`scribere_nodum`/`proicere_nodum`/`legere`), and
+the lexeme seam was reachable only from inside hooks. T10a exposes what
+already existed:
+
+- **Writer:** `materia_arbor_scriptor_creare/_numerare/_fontem_ponere/
+  _causa/_finire`, `materia_arbor_nodum_scribere`,
+  `materia_arbor_templa_spatiorum_scribere`,
+  `materia_arbor_scriptor_repungere`. The one-shot `_arborem_struere`
+  now shares `_scriptorem_initiare` and `_referentias_custodire` with
+  the session, so the two cannot drift; its output is unchanged
+  (materia clients + shim).
+- **`sedes_valorum` was never joined.** materia collected
+  value/element pairs under `sedes_colligere` but no path ever joined
+  them with the serializer's position table: `sedes_valorum` was always
+  NIHIL. `_finire` now joins them (ported `_sedes_valorum_iungere`). The
+  one-shot path still does not; nobody asks for it yet.
+- **Template definitions** (`<#@post-spatia n=...>`) moved here from
+  silva: materia already wrote the CALLS, so their definitions belong
+  to it too (tag mangled from the lexicon's `genus_spatii`).
+- **Reader:** `materia_arbor_lector_creare/_fontem_ponere/_finire`,
+  `materia_arbor_fragmentum_aperire`, `materia_arbor_nodum_legere`
+  (opens the fragment itself, like `materia_arbor_lexema_legere`).
+- **Cursor:** `ArborFixura` became the public `MateriaArborFixura`
+  (internal name kept as an alias). `materia_arbor_fixura_ancoram_legere`
+  carries silva's T7 lesson: the gap index is monotonic but anchors
+  can move the cursor BACKWARDS (top-level children are in tree order,
+  header content interleaves), so it re-seeks the gap index. The test
+  was planted: without the re-seek, 'b' lands at 1 instead of 4.
+- **Comparator hook:** `materia_arbor_aequalis_fronte` with
+  `MateriaArborComparatioFrons.lexemata_conferre`, called after
+  materia's own token checks. The first divergence it names may differ
+  from silva's when several fields diverge at once (silva checks
+  `standard` before `fons`); the verdict is the same.
+
+Found for T10d: silva's `_arbor_trivia_aequalia` compares trivia
+tokens with the FULL token comparison (positions under FIDELITAS,
+source, provenance, `standard`, continuations); materia compares trivia
+by genus and value only. silva's comparator cannot simply delegate
+until materia can compare trivia fully.

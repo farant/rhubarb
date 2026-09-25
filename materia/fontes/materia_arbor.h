@@ -50,6 +50,7 @@
 #include "xar.h"
 #include "stml.h"
 #include "internamentum.h"
+#include "tabula_dispersa.h"
 #include "materia_token.h"
 #include "materia_nodus.h"
 #include "materia_registrum.h"
@@ -360,6 +361,84 @@ materia_arbor_proicere_nodum (
 
 
 /* ==================================================
+ * SESSIO SCRIPTURAE (silva-migratio T10a, 2026-09-25)
+ *
+ * Documentum cuius INVOLUCRUM cliens ipse componit: C89 <parsura>
+ * fontes, directivas, regiones et caudam INTER nodos supremos fert,
+ * quisque liberum cum ancora SUA. Ingressus unius-ictus (supra)
+ * involucrum <arbor> et nodum unum scribunt - hae functiones sunt
+ * ex quibus illi componuntur.
+ *
+ * Ordo: creare -> numerare (passus I, documentum TOTUM, ante omnem
+ * scripturam: numeratio fragmentorum <#lexN> DOCUMENTO-scopata est)
+ * -> nodum_scribere / lexema_scribere (passus II) -> finire.
+ * Lexema passu I NON numeratum usum unum habet (nullum fragmentum).
+ * ================================================== */
+
+/* NIHIL + *causa in recusatione (argumenta, lexicon non ratum,
+ * grammatica innominata, memoria). */
+MateriaArborScriptor*
+materia_arbor_scriptor_creare (
+                           Piscina*  piscina,
+    constans MateriaArborConsilium*  consilium,
+                constans character** causa);
+
+/* Passus I: usus lexematum (et referentias) numerare; ancoram ex
+ * lexemate PRIMO capit (lex ancorae - vide caput). */
+vacuum
+materia_arbor_scriptor_numerare (
+     MateriaArborScriptor* scriptor,
+             MateriaValor  valor);
+
+/* Fons ORDINARIUS: attributum 'f' omittitur cum fons lexematis eum
+ * aequat. Passus I eum ex ancora ponit; C89 eum ad fontem PRINCIPEM
+ * POST passum I reponit (lexema primum latinizatum ex capite venit). */
+vacuum
+materia_arbor_scriptor_fontem_ponere (
+    MateriaArborScriptor* scriptor,
+                     s32  fons);
+
+/* Passus II: elementum nodi (cum sedibus/tractibus si consilium
+ * ea petit). NIHIL in fractura - causa per _finire aut
+ * materia_arbor_scriptor_causa. */
+StmlNodus*
+materia_arbor_nodum_scribere (
+    MateriaArborScriptor* scriptor,
+   constans MateriaNodus* nodus);
+
+constans character*
+materia_arbor_scriptor_causa (
+    MateriaArborScriptor* scriptor);
+
+/* Definitiones templorum spatiorum ('<#@post-spatia n=...>' et
+ * '<#@ante-spatia ...>') in involucrum - vocationes eorum scriptor
+ * ipse emittit cum consilium->templa_activa. Definitiones ANTE
+ * vocationes stare debent (ordo documenti). */
+b32
+materia_arbor_templa_spatiorum_scribere (
+    MateriaArborScriptor* scriptor,
+               StmlNodus* involucrum);
+
+/* Compressio post arborem constructam elementa SUBSTITUIT; paria
+ * valorum (sedes_valorum) ad elementa nova repunguntur. tabula:
+ * clavis = octeti monstratoris elementi VETERIS (StmlNodus*,
+ * magnitudo monstratoris), valor = StmlNodus* novus. */
+vacuum
+materia_arbor_scriptor_repungere (
+    MateriaArborScriptor* scriptor,
+          TabulaDispersa* tabula);
+
+/* Custodia referentiarum (scopus quisque emissus), census, et - si
+ * textum - textus (cum sedes_colligere: tabula sedium valorum,
+ * ordine scriptionis). fructus.arbor = involucrum. */
+MateriaArborScriptura
+materia_arbor_scriptor_finire (
+     MateriaArborScriptor* scriptor,
+                StmlNodus* involucrum,
+                      b32  textum);
+
+
+/* ==================================================
  * LECTOR: STML canonicum -> arbor
  * ================================================== */
 
@@ -435,6 +514,93 @@ materia_arbor_legere (
 
 
 /* ==================================================
+ * SESSIO LECTIONIS (silva-migratio T10a)
+ *
+ * Speculum sessionis scripturae: cliens involucrum SUUM validat
+ * (tag, grammatica, sigillum, expansio templorum) et liberos ordine
+ * suo legit; tabula fragmentorum DOCUMENTO-scopata est (transclusio
+ * in nodo secundo fragmentum primi invenit).
+ * ================================================== */
+
+MateriaArborLector*
+materia_arbor_lector_creare (
+                           Piscina* piscina,
+               InternamentumChorda* intern,
+    constans MateriaArborConsilium* consilium,
+                MateriaArborVitium* vitium);
+
+/* Fons ordinarius lexematum sine 'f' (speculum scriptoris). */
+vacuum
+materia_arbor_lector_fontem_ponere (
+    MateriaArborLector* lector,
+                   s32  fons);
+
+/* Fragmentum aperire ('<#lexN>' -> elementum, id in *id; transclusio
+ * '<<#lexN>>' manet). NIHIL + vitium in pravitate. */
+StmlNodus*
+materia_arbor_fragmentum_aperire (
+    MateriaArborLector*  lector,
+             StmlNodus*  elementum,
+                chorda** id);
+
+/* Nodum ex elemento legere (fragmentum aperit ipsa, ut
+ * materia_arbor_lexema_legere). Positiones NON derivat - vide
+ * fixuram infra. */
+MateriaNodus*
+materia_arbor_nodum_legere (
+    MateriaArborLector* lector,
+             StmlNodus* elementum);
+
+/* Referentias pendentes solvere (post documentum TOTUM). */
+b32
+materia_arbor_lector_finire (
+    MateriaArborLector* lector);
+
+
+/* ==================================================
+ * FIXURA - positiones ex ancora derivare (publica T10a)
+ *
+ * Cursor per liberum ex ANCORA ponitur (b/linea/columna/
+ * linea-initium elementi). LACUNAE (octeti non arboris - C89:
+ * directivae) cursorem trans se salire faciunt.
+ * ================================================== */
+
+nomen structura {
+                MateriaArborCursor  cursor;
+    constans MateriaArborConsilium* consilium;
+                               Xar* lacunae;  /* ordinatae */
+                               i32  lacuna_proxima;
+} MateriaArborFixura;
+
+/* Cursor ad initium (offset 0, linea I, columna I, post lineam). */
+vacuum
+materia_arbor_fixura_initiare (
+                MateriaArborFixura* fixura,
+    constans MateriaArborConsilium* consilium,
+                               Xar* lacunae);
+
+/* Ancoram elementi legere. Sine 'b' cursor ab initio, sedes
+ * ignotae (arbor auctorata). INDEX LACUNARUM RE-QUAERITUR: liberi
+ * supremi ordine ARBORIS stant, non octetorum, ergo ancora cursorem
+ * RETRO ponere potest (silva T7: '#endif' sedem '#define' accepit,
+ * delta XXXVI). */
+vacuum
+materia_arbor_fixura_ancoram_legere (
+    MateriaArborFixura* fixura,
+    constans StmlNodus* elementum);
+
+vacuum
+materia_arbor_positiones_nodi (
+    MateriaArborFixura* fixura,
+          MateriaNodus* nodus);
+
+vacuum
+materia_arbor_positiones_lexematis (
+    MateriaArborFixura* fixura,
+          MateriaToken* lexema);
+
+
+/* ==================================================
  * COMPARATOR ARBORUM (portatus ex silva_arbor_aequalitas.c)
  *
  * Oraculum SECUNDUM praeter octetos: dislocatio dominii triviorum
@@ -494,6 +660,29 @@ materia_arbor_aequalis (
           constans MateriaNodus* b,
     MateriaArborComparatioModus  modus,
         MateriaArborDifferentia* differentia);
+
+/* UNCUS COMPARATIONIS FRONTIS (T10a; caput supra eum nominabat):
+ * campi quos frons in cauda lexematis fert (C89: standard,
+ * longitudo sub FIDELITATE, scissurae). Vocatur post comparationem
+ * materiae lexematis cuiusque (genere, valore, provenientia,
+ * triviis aequalibus). FALSUM + *campus = divergentia nominata. */
+nomen structura {
+    vacuum* datum;
+    b32 (*lexemata_conferre)(
+        vacuum* datum,
+        constans MateriaToken* a,
+        constans MateriaToken* b,
+        MateriaArborComparatioModus modus,
+        constans character** campus);
+} MateriaArborComparatioFrons;
+
+b32
+materia_arbor_aequalis_fronte (
+                constans MateriaNodus* a,
+                constans MateriaNodus* b,
+          MateriaArborComparatioModus  modus,
+ constans MateriaArborComparatioFrons* frons,
+              MateriaArborDifferentia* differentia);
 
 /* Patres omnium filiorum interiorum ponere (ambulatio generalis).
  * Lector eam ipse adhibet; parsatores linguarum eam post

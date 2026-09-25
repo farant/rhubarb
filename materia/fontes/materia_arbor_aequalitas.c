@@ -24,6 +24,8 @@ nomen structura {
                             i32  profunditas;
           constans MateriaNodus* radix_a;   /* radices comparationis */
           constans MateriaNodus* radix_b;
+    /* uncus frontis (T10a); NIHIL licet */
+    constans MateriaArborComparatioFrons* frons;
 } ArborComparator;
 
 /* Semita scopi REFERENTIAE (2026-09-10): gradus (locus, index) a
@@ -367,7 +369,24 @@ _arbor_lexemata_aequalia (
     {
         redde FALSUM;
     }
-    /* scissurae hic in silva conferuntur - cauda frontis (caput). */
+    /* CAUDA FRONTIS (T10a): standard, longitudo, scissurae in C89 -
+     * uncus post campos materiae vocatur. Ordo divergentiae PRIMAE
+     * ergo a silva differre potest cum campi PLURES simul divergunt
+     * (silva 'standard' ante 'fons' confert); verdictum idem. */
+    si (   comparator->frons                    != NIHIL
+        && comparator->frons->lexemata_conferre != NIHIL)
+    {
+        constans character* campus = NIHIL;
+
+        si (!comparator->frons->lexemata_conferre(
+                comparator->frons->datum, a, b, comparator->modus,
+                &campus))
+        {
+            redde _arbor_divergere(comparator,
+                (campus != NIHIL) ? campus : "lexema/frons", nodus_a,
+                nodus_b, a, b, locus, index);
+        }
+    }
     redde VERUM;
 }
 
@@ -602,6 +621,18 @@ materia_arbor_aequalis (
     MateriaArborComparatioModus  modus,
         MateriaArborDifferentia* differentia)
 {
+    redde materia_arbor_aequalis_fronte(a, b, modus, NIHIL,
+        differentia);
+}
+
+b32
+materia_arbor_aequalis_fronte (
+                constans MateriaNodus* a,
+                constans MateriaNodus* b,
+          MateriaArborComparatioModus  modus,
+ constans MateriaArborComparatioFrons* frons,
+              MateriaArborDifferentia* differentia)
+{
     ArborComparator comparator;
 
     si (differentia != NIHIL)
@@ -623,6 +654,7 @@ materia_arbor_aequalis (
     comparator.via[0]         = '\0';
     comparator.radix_a        = a;
     comparator.radix_b        = b;
+    comparator.frons          = frons;
 
     redde _arbor_nodi_aequales(&comparator, a, b);
 }
