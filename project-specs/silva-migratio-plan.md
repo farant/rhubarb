@@ -17,7 +17,9 @@
 > 10 s / live `-legere` 29 s; as-built notes under T2. T3 DONE
 > 2026-09-24: gate `oraculum-silvae`, 468 files in 40 s, green with an
 > empty dispares file; the shim gate now runs `-stml` (it had run one
-> oracle of three).
+> oracle of three). T4 DONE 2026-09-25: replay inventory 01M3B6KRAH —
+> silva owes nothing; five items cross INTO silva at T10 (CR moved
+> there from T9; STML compression = a decision before code).
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -277,6 +279,19 @@ reading each diff (`git show --stat` then the substrate hunks).
 (expected: CR only) are each linked to the switch task that pays them
 (CR → T9).
 
+*As built* (inventory 01M3B6KRAH, 15 rows × 4 lenses: `modulus
+substrati`, `directio`, `replicatum`, `causa`): the 10 silva commits
+owe NOTHING — two touch substrate modules, `064635d2` (format pass:
+`differre_git` 150/150 symbols cosmetic) and `1373a3e8` (arbor
+refactor: none of its symbols exist in materia). The debt runs the
+OTHER way: four materia writer fixes silva lacks (CR, NUL, the escape
+ladder of wish 01M32TA81Z, crusta's P7 guard) and one silva feature
+materia lacks (STML compression). All five land in T10; CR moved
+there from T9 (the bug is in projection, not emission). Rows for the
+"other direction" were not in the plan's text — they are the same
+class ("what must cross at a switch") and were found by the
+duplicate check on filing.
+
 ### Task 5: consumer inventory — the facade surface
 
 **Data + one measurement.** Inventory 'phasis V: consumptores silvae'
@@ -365,13 +380,12 @@ tail access.
 unported in 2026-09 (~4.2k lines with quaestio) are measured here and
 either ported onto `MateriaNodus` inside silva or scheduled into T12.
 
-### Task 9: scribere (+ the CR fix)
+### Task 9: scribere
 
-`silva_scribere` = `materia_scribere` + the frontend hooks. The latent
-CR-comment bug is FIXED here, on purpose, with its own test
-(a C file whose comment holds `\r`: STML round trip keeps it); its
-oracle divergence is NAMED in the dispares file with this commit. The
-T4 row `CR` → `replicatum = ita`.
+`silva_scribere` = `materia_scribere` + the frontend hooks. Byte
+emission only. *(T4 moved the CR fix to T10: the bug is in the STML
+projection — `_octetum_exuere`/`cr` has 10 sites in `materia_arbor.c`
+and 0 in `materia_scribere.c`.)*
 
 ### Task 10: arbor + aequalitas
 
@@ -381,6 +395,23 @@ sections (`_parsura_*` functions — the layer boundary measured
 `materia_arbor_aequalitas` with the phase-5 hook named at the B1 port
 (frontend tail excluded from FIDELITAS). If the measure says two
 commits, arbor first, aequalitas second; both green.
+
+**Owed here by the T4 inventory** ('phasis V: replicatio silvae'):
+- **Materia writer fixes silva lacks** — arrive with the switch, each
+  with its OWN test and, if the corpus reaches it, a named oracle
+  divergence: CR (`cr` attribute; a C comment holding `\r`), NUL
+  (`nul`; a C file holding a NUL byte), the closing-sequence escape
+  ladder (silva_arbor.c:985 still refuses; closes wish 01M32TA81Z; a
+  C comment holding `</lex-commentarium>`), and crusta's P7
+  mixed-edge-newline guard (whether C89 reaches it: MEASURE).
+- **A silva feature materia lacks — DECISION before code:** the
+  whole-file writer's STML COMPRESSION (spaces `<<#@post/ante-spatia>>`,
+  macro leaves `@m-`, parameter families; census
+  `SilvaArborCensusCompressionis`). materia has none, and the oracle's
+  `stml` column hashes exactly this output. Port it into materia (STML
+  templates are not C-specific — a general writer option) or keep it
+  as a C89 post-pass in `silva_frons`. Measure the compressed vs
+  uncompressed document size on the corpus first.
 
 ### Task 11: annotationes
 

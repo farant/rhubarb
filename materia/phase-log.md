@@ -3064,3 +3064,22 @@ stays. **Finding: the `materia-shim` gate had been running one oracle
 of three** — no `-stml` in pythonica's gate table, so STML, the double
 round trip and the comparator never ran in a gate. Fixed. Replay
 verdict: no silva code changed.
+
+## 2026-09-25 — phase 5 T4: the replay inventory
+
+RELATIO: inventory 'phasis V: replicatio silvae' (01M3B6KRAH, intra
+"c89 parser"), 15 rows. The ten silva/fontes commits since the fork
+(8f189369) owe materia NOTHING: eight touch only frontend or LR files;
+`064635d2` (format pass) is 150/150 symbols cosmetic by `differre_git`;
+`1373a3e8` (arbor matcher refactor) changed only symbols materia never
+had. **The debt runs the other way.** Four fixes materia made to its
+writer that silva still lacks — CR, NUL (strip-and-attribute), the
+closing-sequence escape ladder (silva_arbor.c:985 still refuses; wish
+01M32TA81Z), crusta's P7 mixed-edge guard (reach from C89 unknown) —
+and one silva feature materia lacks: the whole-file writer's STML
+COMPRESSION (spaces, macro leaves, parameter families). All five land
+at T10. CR moved there from T9: `cr` handling is in materia_arbor
+(10 sites), not materia_scribere (0). Compression needs a decision
+before code — port into materia's writer as a general option, or keep
+as a C89 post-pass in silva_frons — since the oracle's `stml` column
+hashes its output. No code changed.

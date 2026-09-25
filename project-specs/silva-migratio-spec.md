@@ -172,8 +172,11 @@ token (C89 data moves into the frontend tail) → nodus → scribere →
 arbor + aequalitas (the big one: 7,063 → 3,965 + frontend sections) →
 annotationes. Each commit: silva suite + shim + snapshot comparison +
 consumer suites (officina/legatus, briar, saltuarius) + the M3 bars it
-touches. The CR latent bug is fixed at the scribere step, on purpose,
-with its own test.
+touches. The CR latent bug is fixed at the ARBOR step (T10), on
+purpose, with its own test. *(Corrected 2026-09-25, plan T4: the bug
+lives in the STML projection, not byte emission — and T4 found three
+more materia writer fixes silva lacks plus silva's STML compression,
+which materia lacks; see plan T10.)*
 
 **Step 3 — quaestio (MG3).** ◆ **D3.** Options: (a) port
 `silva_quaestio` onto `MateriaNodus` and keep it in silva (a query
