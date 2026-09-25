@@ -51,6 +51,11 @@
 > T10a DONE 2026-09-25: materia arbor writer/reader sessions, public
 > cursor (gap re-seek), template definitions, re-pointing, the
 > value-position join materia never did, comparator hook.
+> T10b DONE 2026-09-25: shim parity over ALL 11,711 top-level nodes
+> (found and fixed a read-side extent bug, 20 nodes); C89 hooks over
+> silva's own tail proven byte-identical, then silva's node writer and
+> reader switched; materia's parent policy in silva_commissio; CR/NUL/
+> escape fixed at node level with tests, P7 measured inert.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -712,6 +717,22 @@ FIDELITAS, source, provenance, standard, continuations); materia
 compares trivia by genus+value only. **T10d owes** a full-trivia mode
 in materia's comparator (or the hook extended to trivia) before
 `silva_arbor_aequalis` can delegate.
+
+*As built (T10b).* The shim's parity became per-node (11,711 nodes) and
+gained two columns: silva's own subtree round-trip, and the new path
+(materia + C89 hooks over silva's tail) against the old silva writer.
+Found on the way: read tokens never found their invocation's extent
+(frons searched a list only conversion fills) — 20 nodes lost
+`initium_lineae`; fixed in the frons, pinned. The new hooks live in
+silva_frons.c (`silva_frons_arborem_silvae_parare`); read extents live in
+the frons context, so subtree reads no longer need an expansion (silva's
+old reader refused 101 nodes). Parent policy: 806 arm divergences →
+silva_commissio adopted materia's; 0. Writer fixes at node level: CR,
+NUL, escape — each a round-trip test; P7 measured inert for C89 (no
+lexeme value carries a newline at its edge). **Owed to T10c:** the
+parsura path still uses the old internals (still refuses the escape
+case — wish 01M32TA81Z closes there); the old converted-tail hooks and
+the shim's frons columns retire with conversion.
 
 ### Task 11: annotationes
 

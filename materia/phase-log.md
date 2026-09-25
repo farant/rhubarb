@@ -3242,3 +3242,25 @@ three failures without it). Found for T10d: silva compares trivia
 tokens in full, materia by genus+value only. Replay verdict: substrate
 module `arbor` extended (additive API); materia clients owe their
 suites.
+
+## 2026-09-25 — phase 5 T10b: silva's node-level STML runs on materia
+
+RELATIO: first the proof, then the switch. The shim's STML parity now
+covers EVERY top-level node (11,711; it had only ever checked each file's
+first). Doing so found a real bug: tokens read back never found their
+function-like invocation's extent (the frons searched a list only
+conversion fills), so a token after a multi-line macro call lost its
+line start — 20 nodes in arbor2_glr_tabula.c; fixed and pinned. A silva
+parity column showed silva's OWN subtree reader refused 101 nodes and
+was never right where materia was wrong. New C89 hooks over silva's own
+token tail (no conversion) were proven byte-identical to the old silva
+writer on all 11,711 nodes, with identical round-trips; the only
+comparator difference was the parent policy (806 non-canonical arms),
+which silva_commissio then adopted (decree …MQF). silva_arbor_scribere_
+nodum/legere now delegate. silva's subtree reader reads all 11,711 nodes.
+The four owed writer fixes reach the node level with their own tests
+(CR, NUL, the escape ladder; P7 measured inert for C89). Oracle clean
+470, M3 6/6, officina 15/15, silva 54/54; shim gate now fails on the new
+columns (planted red: the old parent policy). Replay verdict: substrate
+module `arbor` switched at node level; parsura and comparator owed at
+T10c/T10d.

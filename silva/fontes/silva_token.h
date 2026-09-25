@@ -251,6 +251,13 @@ nomen structura {
  * (supra) SERVATUR: cauda allocationem unam cum lexemate communicat.
  * ================================================== */
 
+/* Forma caudae C89 (silva-migratio T10b): lector arboris materiae
+ * lexemata hac forma creat, ut lexemata LECTA vera SilvaToken sint
+ * (cauda zephyrata: origo FONS, standard C89, scissurae NIHIL;
+ * longitudinem frons ponit). */
+constans MateriaTokenForma*
+silva_token_forma (vacuum);
+
 
 /* ==================================================
  * Constructores (unus per genus originis)

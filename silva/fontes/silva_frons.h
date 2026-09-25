@@ -28,6 +28,7 @@
 #include "piscina.h"
 #include "silva_nodus.h"
 #include "silva_expandere.h"
+#include "silva_registrum.h"
 #include "materia_nodus.h"
 #include "materia_scribere.h"
 #include "materia_arbor.h"
@@ -67,6 +68,27 @@ b32
 silva_frons_arborem_parare (
                SilvaFrons* frons,
     MateriaArborConsilium* consilium);
+
+/* CONSILIUM ARBORIS SUPER LEXEMATA SILVAE (T10b): sine conversione -
+ * unci caudam silvae ipsam legunt (origo, standard, scissurae) et
+ * lector lexemata forma C89 creat (vera SilvaToken). Extenta lecta
+ * in frons vivunt (lectio subarboris sine expansione). FALSUM si
+ * lexicon C89 recusatur. */
+b32
+silva_frons_arborem_silvae_parare (
+                       SilvaFrons* frons,
+    constans SilvaRegistrumCoctum* tabularium,
+               constans character* grammatica,
+              InternamentumChorda* intern,
+            MateriaArborConsilium* consilium);
+
+/* Longitudines post lectionem: lexema quodque (trivia, catenae
+ * originis, extenta lecta) longitudinem = valor fert, sicut lector
+ * silvae vetus. Lector parsurae (T10c) eam super laminas vocat. */
+vacuum
+silva_frons_longitudines_figere (
+    SilvaFrons* frons,
+    SilvaValor  valor);
 
 /* Quot lexemata conversa (trivia et origines inclusa). */
 i32

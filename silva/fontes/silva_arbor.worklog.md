@@ -1384,3 +1384,32 @@ because the first failure was interrogated rather than accepted.
 
 Remaining in the arbor project: M2 §3 (canon projection, independent,
 blocked on canon-side `adstricta` uniqueness) and M3 (the explorer).
+
+## 2026-09-25 — T10b: node-level writer and reader run on materia
+
+`silva_arbor_scribere_nodum` and `silva_arbor_legere` now delegate to
+materia_arbor with the C89 hooks over silva's own tail
+(`silva_frons_arborem_silvae_parare`). The old walk
+(`_scribere_nodum_internum`, `_nodum_legere`, ...) still serves the
+parsura document until T10c.
+
+Proof before the switch: a new shim column, over EVERY top-level node
+(11,711, not the first node per file as before), compared materia plus
+the new hooks on silva's own tree against the OLD silva writer:
+bytes identical 11,711/11,711; read back with no expansion and
+rewritten: identical; silva's comparator against the parsed tree: 806
+divergences, ALL `nodus/pater-nullitas` at the children of `ambiguus`
+(genus 54), i.e. exactly the parent policy Fran decided (decree …MQF).
+After silva_commissio adopted it, 0.
+
+The reader still runs silva_committere on what it reads ('ambigui' are
+filled only by that walk). Failure strings the tests pin are the same in
+materia ("genus registro ignotum", "locus generi ignotus", ...).
+
+The four writer fixes owed from T4 now reach silva's node level, each
+with its own round-trip in probatio_silva_arbor: CR in a comment, NUL in
+a comment, and a comment holding its own closing sequence (the old path
+refused it; the whole-file path still does until T10c, so wish
+01M32TA81Z closes then). P7 was MEASURED instead: no C89 lexeme value
+carries a newline at its edge (an unterminated char literal stops at
+the newline), so materia's guard is inert for C89; the test pins that.

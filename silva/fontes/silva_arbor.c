@@ -4,6 +4,7 @@
  */
 
 #include "silva_arbor.h"
+#include "silva_frons.h"
 #include "silva_commissio.h"
 #include "chorda_aedificator.h"
 #include "friatio.h"
@@ -2056,11 +2057,16 @@ silva_arbor_scribere_nodum (
            constans SilvaExpansio* expansio,
               InternamentumChorda* intern)
 {
-    SilvaArborScriptura  fructus;
-          ArborScriptor  scriptor;
-              StmlNodus* involucrum;
-              StmlNodus* radix;
-                 chorda  sigillum;
+    /* SUPER MATERIAM (silva-migratio T10b, 2026-09-25): scriptor
+     * materiae cum unci C89 super caudam silvae (silva_frons_arborem_
+     * silvae_parare). Paritas ante switch probata: octeti idem super
+     * XI,DCCXI nodos supremos corporis shim (omnes, non primi soli),
+     * circuitus idem, comparator silvae aequalis. Ambulatio vetus
+     * (_scribere_nodum_internum) parsurae solae servit usque ad T10c. */
+     SilvaArborScriptura  fructus;
+              SilvaFrons* frons;
+   MateriaArborConsilium  consilium;
+   MateriaArborScriptura  ms;
 
     fructus.successus                   = FALSUM;
     fructus.textus.mensura              = ZEPHYRUM;
@@ -2079,106 +2085,21 @@ silva_arbor_scribere_nodum (
         fructus.causa = "argumenta nihil";
         redde fructus;
     }
-    si (grammatica == NIHIL)
+    frons = silva_frons_creare(piscina, expansio);
+    si (   frons == NIHIL
+        || !silva_frons_arborem_silvae_parare(frons, tabularium,
+               grammatica, intern, &consilium))
     {
-        fructus.causa = "grammatica innominata";
+        fructus.causa = (frons != NIHIL && silva_frons_causa(frons))
+            ? silva_frons_causa(frons) : "frons C89 parari non potuit";
         redde fructus;
     }
-
-    si (intern == NIHIL)
-    {
-        intern = internamentum_creare(piscina);
-        si (intern == NIHIL)
-        {
-            fructus.causa = "internamentum creari non potuit";
-            redde fructus;
-        }
-    }
-
-    scriptor.piscina          = piscina;
-    scriptor.intern           = intern;
-    scriptor.tabularium       = tabularium;
-    scriptor.expansio         = expansio;
-    scriptor.numerus_notarum  = ZEPHYRUM;
-    scriptor.templa_activa    = FALSUM;
-    scriptor.ancora_nota      = FALSUM;
-    scriptor.ancora_offset    = -I;
-    scriptor.ancora_linea     = ZEPHYRUM;
-    scriptor.ancora_columna   = ZEPHYRUM;
-    scriptor.ancora_fons      = ZEPHYRUM;
-    scriptor.causa            = NIHIL;
-    memset(&scriptor.census, 0, magnitudo(scriptor.census));
-    scriptor.sedes            = NIHIL;
-    scriptor.lexemata        = tabula_dispersa_creare_chorda(piscina,
-        256);
-    /* Scriptor subtaxi tabulam sedium NON fert (privatio nominata
-     * in silva_arbor.h ad sedes_valorum) */
-    scriptor.paria           = NIHIL;
-    si (scriptor.lexemata == NIHIL)
-    {
-        fructus.causa = "tabula lexematum creari non potuit";
-        redde fructus;
-    }
-
-    /* PASSUS I: usus numerare + ancoram capere. Sine hoc usus
-     * primus scire non posset an fragmentum opus esset */
-    _numerare_nodum(&scriptor, nodus);
-
-    involucrum = stml_elementum_creare(piscina, intern,
-        SILVA_ARBOR_TAG_ENVOLUCRI);
-    si (involucrum == NIHIL)
-    {
-        fructus.causa = "involucrum creari non potuit";
-        redde fructus;
-    }
-    stml_attributum_addere(involucrum, piscina, intern, "grammatica",
-        grammatica);
-
-    sigillum = silva_arbor_sigillum(piscina, tabularium);
-    si (sigillum.mensura == ZEPHYRUM)
-    {
-        fructus.causa = "sigillum computari non potuit";
-        redde fructus;
-    }
-    stml_attributum_addere_chorda(involucrum, piscina, intern,
-        "registrum-sigillum", sigillum);
-
-    /* ANCORA sola - positiones ceterae ambulatione derivantur.
-     * Lex: documentum canonicum mentiri non possit */
-    si (scriptor.ancora_nota && scriptor.ancora_offset >= ZEPHYRUM)
-    {
-        _attributum_numeri(&scriptor, involucrum, "fons",
-            (i32)scriptor.ancora_fons);
-        _attributum_numeri(&scriptor, involucrum, "b",
-            (i32)scriptor.ancora_offset);
-        _attributum_numeri(&scriptor, involucrum, "linea",
-            scriptor.ancora_linea);
-        _attributum_numeri(&scriptor, involucrum, "columna",
-            scriptor.ancora_columna);
-        si (scriptor.ancora_initium_lineae)
-        {
-            stml_attributum_boolean_addere(involucrum, piscina,
-                intern, "linea-initium");
-        }
-    }
-
-    /* PASSUS II */
-    radix = _scribere_nodum_internum(&scriptor, nodus);
-    si (radix == NIHIL)
-    {
-        fructus.causa = scriptor.causa
-            ? scriptor.causa : "scriptura fracta";
-        fructus.sedes = scriptor.sedes;
-        redde fructus;
-    }
-    si (!stml_liberum_addere(involucrum, radix))
-    {
-        fructus.causa = "radix in involucrum addi non potuit";
-        redde fructus;
-    }
-
-    fructus.textus     = stml_scribere(involucrum, piscina, VERUM);
-    fructus.successus  = VERUM;
+    ms = materia_arbor_scribere_nodum(piscina, nodus, &consilium);
+    fructus.successus = ms.successus;
+    fructus.textus = ms.textus;
+    fructus.causa = ms.causa;
+    fructus.sedes = ms.sedes;
+    fructus.census.spatia_vocationes = ms.census.spatia_vocationes;
     redde fructus;
 }
 
@@ -3827,169 +3748,64 @@ silva_arbor_legere (
                 constans character* grammatica,
                   SilvaArborVitium* vitium)
 {
-     ArborLector  lector;
-    StmlResultus  resultus;
-       StmlNodus* involucrum;
-       StmlNodus* radix;
-      SilvaNodus* arbor;
-     ArborCursor  sedes;
-          chorda* attributum;
-          chorda  sigillum;
-             i32  cursor;
-             i32  numerus;
-             b32  ancora_adest;
+    /* SUPER MATERIAM (T10b): lector materiae cum unci C89; extenta
+     * lecta in frons vivunt, ergo subarbor cum <extentum> IAM legitur
+     * (lector vetus 'extentum sine expansione' recusabat - CI nodi
+     * corporis). Patres: politica materiae (omnes; decretum …MQF). */
+            SilvaFrons* frons;
+ MateriaArborConsilium  consilium;
+    MateriaArborVitium  mv;
+          MateriaNodus* arbor;
 
     si (vitium != NIHIL)
     {
         vitium->causa = NIHIL;
         vitium->linea = ZEPHYRUM;
     }
-
-    lector.piscina          = piscina;
-    lector.intern           = intern;
-    lector.tabularium       = tabularium;
-    lector.vitium           = vitium;
-    lector.fragmenta        = NIHIL;
-    lector.fons_ordinarius  = ZEPHYRUM;
-    lector.expansio         = NIHIL;
-
     si (piscina == NIHIL || tabularium == NIHIL || grammatica == NIHIL)
     {
-        _recusare(&lector, "argumenta nihil", ZEPHYRUM);
-        redde NIHIL;
-    }
-    si (intern == NIHIL)
-    {
-        intern = internamentum_creare(piscina);
-        si (intern == NIHIL)
-        {
-            _recusare(&lector, "internamentum creari non potuit",
-                ZEPHYRUM);
-            redde NIHIL;
+        si (vitium != NIHIL)
+        { vitium->causa = "argumenta nihil";
         }
-        lector.intern = intern;
-    }
-
-    resultus = stml_legere(textus, piscina, intern);
-    si (!resultus.successus)
-    {
-        _recusare(&lector, "STML parsari non potuit",
-            resultus.linea_erroris);
         redde NIHIL;
     }
-
-    involucrum = resultus.elementum_radix;
-    si (   involucrum == NIHIL || involucrum->titulus == NIHIL
-        || !chorda_aequalis_literis(*involucrum->titulus,
-                SILVA_ARBOR_TAG_ENVOLUCRI))
+    frons = silva_frons_creare(piscina, NIHIL);
+    si (   frons == NIHIL
+        || !silva_frons_arborem_silvae_parare(frons, tabularium,
+               grammatica, intern, &consilium))
     {
-        _recusare(&lector, "involucrum <arbor> deest",
-            involucrum ? involucrum->linea : ZEPHYRUM);
+        si (vitium != NIHIL)
+        {
+            vitium->causa = (frons != NIHIL && silva_frons_causa(frons))
+                ? silva_frons_causa(frons) : "frons C89 parari non potuit";
+        }
         redde NIHIL;
     }
-
-    attributum = stml_attributum_capere(involucrum, "grammatica");
-    si (   attributum == NIHIL
-        || !chorda_aequalis_literis(*attributum, grammatica))
-    {
-        _recusare(&lector, "grammatica non congruit",
-            involucrum->linea);
-        redde NIHIL;
-    }
-
-    /* SIGILLUM: arbor vocabulario FALSO iudicata mendacium est */
-    sigillum   = silva_arbor_sigillum(piscina, tabularium);
-    attributum = stml_attributum_capere(involucrum,
-        "registrum-sigillum");
-    si (   attributum == NIHIL || sigillum.mensura == ZEPHYRUM
-        || !chorda_aequalis(*attributum, sigillum))
-    {
-        _recusare(&lector, "sigillum registri non congruit",
-            involucrum->linea);
-        redde NIHIL;
-    }
-
-    /* ANCORA: sedes lexematis PRIMI ordine ambulationis. Absens =
-     * arbor AUCTORATA (sine fonte) - positiones -I manent, quod
-     * legitimum est et quod comparator per provenientiam custodit. */
-    ancora_adest          = FALSUM;
-    sedes.offset          = ZEPHYRUM;
-    sedes.linea           = I;
-    sedes.columna         = I;
-    sedes.post_lineam     = VERUM;
-    sedes.lacunae         = NIHIL;
-    sedes.lacuna_proxima  = ZEPHYRUM;
-    sedes.expansio        = NIHIL;
-
-    attributum = stml_attributum_capere(involucrum, "b");
-    si (attributum != NIHIL && _numerus_ex_chorda(attributum, &numerus))
-    {
-        sedes.offset = (s32)numerus;
-        ancora_adest = VERUM;
-        sedes.post_lineam = stml_attributum_habet(involucrum,
-            "linea-initium");
-    }
-    attributum = stml_attributum_capere(involucrum, "linea");
-    si (attributum != NIHIL && _numerus_ex_chorda(attributum, &numerus))
-    {
-        sedes.linea = numerus;
-    }
-    attributum = stml_attributum_capere(involucrum, "columna");
-    si (attributum != NIHIL && _numerus_ex_chorda(attributum, &numerus))
-    {
-        sedes.columna = numerus;
-    }
-    attributum = stml_attributum_capere(involucrum, "fons");
-    si (attributum != NIHIL && _numerus_ex_chorda(attributum, &numerus))
-    {
-        lector.fons_ordinarius = (s32)numerus;
-    }
-
-    lector.fragmenta = tabula_dispersa_creare_chorda(piscina, 64);
-    si (lector.fragmenta == NIHIL)
-    {
-        _recusare(&lector, "tabula fragmentorum creari non potuit",
-            involucrum->linea);
-        redde NIHIL;
-    }
-
-    cursor  = ZEPHYRUM;
-    radix   = _elementum_proximum(&lector, involucrum, &cursor);
-    si (radix == NIHIL)
-    {
-        _recusare(&lector, "involucrum arborem non fert",
-            involucrum->linea);
-        redde NIHIL;
-    }
-    radix = _fragmentum_aperire(&lector, radix, NIHIL);
-    si (radix == NIHIL)
-    {
-        redde NIHIL;
-    }
-
-    arbor = _nodum_legere(&lector, radix);
+    mv.causa = NIHIL;
+    mv.linea = ZEPHYRUM;
+    arbor = materia_arbor_legere(piscina, intern, textus, &consilium,
+        &mv);
     si (arbor == NIHIL)
     {
+        si (vitium != NIHIL)
+        {
+            vitium->causa = mv.causa;
+            vitium->linea = mv.linea;
+        }
         redde NIHIL;
     }
 
-    /* FIXURAE (T5b) */
-    sedes.sedes_notae = ancora_adest;
-    _positiones_nodi(&sedes, arbor);
-
-    /* PATER: commissio eum figit (S27) - nulla ambulatio nostra.
-     * Praeterea arbor lecta NON interrogari NEQUE re-canonicari
-     * potest ante commissionem: 'ambigui' ab hac sola ambulatione
-     * impletur. Forma nuda (sine oraculo, sine resolutore) expresse
-     * sancta est - silva_commissio.h:163-165. */
+    /* Commissio ut antea: 'ambigui' ab hac sola ambulatione impletur,
+     * et arbor lecta NON re-canonicari potest ante eam
+     * (silva_commissio.h:163-165). */
     si (silva_committere(piscina, silva_valor_nodus(arbor), tabularium,
             NIHIL, NIHIL, NIHIL) == NIHIL)
     {
-        _recusare(&lector, "arbor committi non potuit",
-            involucrum->linea);
+        si (vitium != NIHIL)
+        { vitium->causa = "arbor committi non potuit";
+        }
         redde NIHIL;
     }
-
     redde arbor;
 }
 

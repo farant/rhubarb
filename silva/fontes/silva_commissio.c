@@ -388,7 +388,10 @@ _ambiguum_committere (
 
     /* Superstes: registratur; interpretationes normalizatae et
      * ambulatae - internis omnium pater intra subarborem, radicibus
-     * spina sola: canonica pater=ambiguum, aliae NIHIL. Canonica
+     * OMNIBUS pater=ambiguum (politica materiae, decretum …MQF,
+     * silva-migratio T10b; prius spina sola: canonica pater=ambiguum,
+     * aliae NIHIL - artificium ambulationis spinae, quod nemo
+     * observabat praeter probationem quae id figebat). Canonica
      * ULTIMA ambulatur - in subarbore communi parens spinae vincit. */
     {
         SilvaNodus** slot =
@@ -418,7 +421,7 @@ _ambiguum_committere (
             elem = silva_valor_lista_obtinere(interps, i);
             si (elem != NIHIL)
             {
-                *elem = _valorem_committere(ambulatio, *elem, NIHIL);
+                *elem = _valorem_committere(ambulatio, *elem, nodus);
             }
         }
         si (canonica >= ZEPHYRUM && (i32)canonica < numerus)
@@ -628,10 +631,11 @@ silva_recanonicare (
                 (i32)responsum.victor);
             SilvaResolutioEventum* eventum;
 
+            /* canonica vetus bracchium manet - pater ambiguum (T10b) */
             si (   vetus != NIHIL && vetus->genus == SILVA_VALOR_NODUS
                 && vetus->datum.nodus != NIHIL)
             {
-                vetus->datum.nodus->pater = NIHIL;
+                vetus->datum.nodus->pater = nodus;
             }
             si (   novus != NIHIL && novus->genus == SILVA_VALOR_NODUS
                 && novus->datum.nodus != NIHIL)

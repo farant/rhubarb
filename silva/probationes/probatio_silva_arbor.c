@@ -26,6 +26,7 @@
 #include "silva_quaestio.h"
 #include "silva_c89_oraculum.h"
 #include "silva_arbor.h"
+#include "silva_scribere.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -301,6 +302,84 @@ _genus_lexatum (
         redde SILVA_LEX_NUMERUS_GENERUM;
     }
     redde inventum;
+}
+
+/* Circuitus PLENUS unius declarationis (T10b): scribere, legere sine
+ * recusatione, aequalitas FIDELITATIS, scribere iterum idem, emissio
+ * octetorum eadem ex arbore parsata et lecta. */
+interior vacuum
+_circuitum_plenum_probare (
+               Piscina* piscina,
+    constans character* titulus,
+    constans character* fons,
+                   i32  mensura)
+{
+            SilvaParsura* parsura;
+     constans SilvaNodus* origo;
+             SilvaNodus* lecta;
+     SilvaArborScriptura  s1;
+     SilvaArborScriptura  s2;
+        SilvaArborVitium  vitium;
+   SilvaArborDifferentia  diff;
+          SilvaScriptura  o1;
+          SilvaScriptura  o2;
+
+    parsura = silva_c89_parsare(piscina, "fuga.c", fons, mensura,
+        NIHIL);
+    CREDO_NON_NIHIL (parsura);
+    si (parsura == NIHIL)
+    { redde;
+    }
+    origo = _primus_congruens(piscina, parsura, "declaratio");
+    CREDO_NON_NIHIL (origo);
+    si (origo == NIHIL)
+    { redde;
+    }
+    s1 = silva_arbor_scribere_nodum(piscina, origo,
+        &SILVA_C89_REGISTRUM,
+        "c89", parsura->expansio, NIHIL);
+    si (!s1.successus)
+    {
+        imprimere("  %s: scriptura recusata: %s\n", titulus,
+            s1.causa ? s1.causa : "(sine causa)");
+    }
+    CREDO_VERUM (s1.successus);
+    si (!s1.successus)
+    { redde;
+    }
+    lecta = silva_arbor_legere(piscina, NIHIL, s1.textus,
+        &SILVA_C89_REGISTRUM, "c89", &vitium);
+    si (lecta == NIHIL)
+    {
+        imprimere("  %s: lectio recusata: %s\n", titulus,
+            vitium.causa ? vitium.causa : "(sine causa)");
+    }
+    CREDO_NON_NIHIL (lecta);
+    si (lecta == NIHIL)
+    { redde;
+    }
+    si (!silva_arbor_aequalis(origo, lecta,
+            SILVA_ARBOR_COMPARATIO_FIDELITAS, &diff))
+    {
+        imprimere("  %s: arbor divergit: %s @ %s\n", titulus,
+            diff.campus ? diff.campus : "-", diff.via);
+        CREDO_VERUM (FALSUM);
+    }
+    s2 = silva_arbor_scribere_nodum(piscina, lecta,
+        &SILVA_C89_REGISTRUM,
+        "c89", NIHIL, NIHIL);
+    CREDO_VERUM (   s2.successus
+        && s2.textus.mensura == s1.textus.mensura
+                 && memcmp(s2.textus.datum, s1.textus.datum,
+                        (size_t)s1.textus.mensura) == ZEPHYRUM);
+    o1 = silva_scribere_nodum(piscina, origo, &SILVA_C89_REGISTRUM,
+        parsura->expansio);
+    o2 = silva_scribere_nodum(piscina, lecta, &SILVA_C89_REGISTRUM,
+        NIHIL);
+    CREDO_VERUM (   o1.successus && o2.successus
+                 && o1.textus.mensura == o2.textus.mensura
+                 && memcmp(o1.textus.datum, o2.textus.datum,
+                        (size_t)o1.textus.mensura) == ZEPHYRUM);
 }
 
 s32
@@ -1604,6 +1683,76 @@ principale (vacuum)
             && strcmp(vitium.causa,
                    "transclusio ad fragmentum ignotum") == ZEPHYRUM);
         CREDO_VERUM (vitium.linea > ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: emendationes scriptoris materiae quas silva heredit
+     * (silva-migratio T10b; inventarium T4 'phasis V: replicatio
+     * silvae'). Corpus NULLUM horum casuum attingit (mensuratum
+     * T10: CR 0, NUL 0, sequentia claudens 0 in CDLXX plagulis),
+     * ergo probatio PROPRIA quisque. Circuitus plenus: scribere,
+     * legere (sine recusatione), aequalitas FIDELITATIS, scribere
+     * iterum idem, emissio octetorum eadem.
+     * ======================================================== */
+
+    {
+        character fons_fugae[CXXVIII];
+        character tag[SILVA_ARBOR_TAG_CAPACITAS];
+              i32 lt;
+
+        imprimere("\n--- Probans emendationes scriptoris (T10b) ---\n");
+
+        _circuitum_plenum_probare(piscina, "cr in commento",
+            "int x /* a\rb */;\n", (i32)18);
+        /* NUL: mensura explicita, strlen eum truncaret */
+        _circuitum_plenum_probare(piscina, "nul in commento",
+            "int y /* a\0b */;\n", (i32)18);
+
+        /* SCALA FUGAE (desideratum 01M32TA81Z): commentum sequentiam
+         * claudentem elementi SUI ferens. Silva vetus recusabat
+         * ('valor sequentiam claudentem fert'); tag ex genere
+         * mangulatur, non litteris conjectatur. */
+        lt = silva_arbor_lexema_tag(SILVA_LEX_COMMENTUM_CLAUSUM, tag,
+            (i32)magnitudo(tag));
+        CREDO_VERUM (lt > ZEPHYRUM);
+        sprintf(fons_fugae, "int z /* </%s> */;\n", tag);
+        _circuitum_plenum_probare(piscina, "sequentia claudens",
+            fons_fugae, (i32)strlen(fons_fugae));
+
+        /* P7 (margo alba cum linea nova, crusta): MENSURA, non
+         * praesumptio - an lexator C89 valorem ferens album + lineam
+         * novam in margine umquam gignat. Characteris littera non
+         * terminata in fine lineae casus solus verisimilis est. */
+        {
+             constans character* fons = "int w = 'b \nint v;\n";
+                            Xar* lexemata;
+                            i32  k;
+                            i32  marginales = ZEPHYRUM;
+
+            lexemata = silva_lexare(piscina, fons, (i32)strlen(fons),
+                ZEPHYRUM);
+            CREDO_NON_NIHIL (lexemata);
+            per (k = ZEPHYRUM; lexemata != NIHIL
+                && k < xar_numerus(lexemata); k++)
+            {
+                SilvaToken* t = *(SilvaToken**)xar_obtinere(lexemata,
+                    k);
+
+                si (   t->valor.mensura > ZEPHYRUM
+                    && (   t->valor.datum[0] == (i8)'\n'
+                        || t->valor.datum[t->valor.mensura - I]
+                               == (i8)'\n'))
+                {
+                    marginales++;
+                }
+            }
+            /* Nullum valorem lexematis (non trivii) linea nova in
+             * margine claudit: custodia P7 materiae in C89 muta est,
+             * non necessaria. Si hoc cadit, lexator mutatus est et
+             * casus circuitu probandus. */
+            CREDO_AEQUALIS_I32 (marginales, ZEPHYRUM);
+        }
     }
 
     credo_imprimere_compendium();

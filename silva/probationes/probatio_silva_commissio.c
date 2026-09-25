@@ -294,9 +294,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (sententia->genus,
             (s32)SILVA_SCELETUM_GENUS_SENTENTIA_EXPRESSIONIS);
 
-        /* Spina: canonica (0 = declaratio) pater habet, altera NIHIL */
+        /* Bracchia OMNIA patrem ambiguum habent (politica materiae,
+         * decretum …MQF, silva-migratio T10b) - prius spina sola:
+         * canonica pater, altera NIHIL */
         CREDO_AEQUALIS_PTR (declaratio->pater, ambiguum);
-        CREDO_NIHIL (sententia->pater);
+        CREDO_AEQUALIS_PTR (sententia->pater, ambiguum);
 
         /* Interna AMBARUM interpretationum texta (quaestiones in
          * alternativas descendunt) */
@@ -421,7 +423,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (
             silva_sceletum_ambiguus_canonica(ambiguum).datum.index, I);
         CREDO_AEQUALIS_PTR (sententia->pater, ambiguum);
-        CREDO_NIHIL (declaratio->pater);
+        CREDO_AEQUALIS_PTR (declaratio->pater, ambiguum);
 
         /* Involucrum manet (immutabilitas post commissionem praeter
          * hanc op sanctionatam); iteratio eadem -> nulla versio */

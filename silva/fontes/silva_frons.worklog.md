@@ -53,3 +53,35 @@ lexicon probatio compiles it through a TEST-ONLY include list.
 `silva/fontes/*.c` among others — it gained exactly these two files,
 both pass); oracle clean; materia 14/14; all 20 tools build and carry
 `silva_frons_creare`.
+
+## 2026-09-25 — T10b: hooks over silva's own tokens; the read-side extent bug
+
+**Second hook set, no conversion.** `silva_frons_arborem_silvae_parare`
+builds a MateriaArborConsilium whose origin hook, frontend table and
+token form all work on silva's OWN tail (SilvaOrigo, standard,
+continuations) through the accessors. SilvaToken is a MateriaToken
+(T7b) and SilvaNodus a MateriaNodus (T8), so there is nothing to
+convert. The table lives inside SilvaFrons (not static) because the
+hooks need a context: extents READ from a document are registered in
+`frons->extenta_lecta`, so a subtree read no longer needs an expansion
+(silva's old reader refused 101 nodes with "extentum sine expansione").
+The old converted-tail hooks stay until T10c retires conversion.
+
+Ported semantics, deliberately identical to silva_arbor.c: extent lookup
+by identity only; `longitudo = valor` on every read token (the old reader
+created each token with silva_token_ex_fonte; materia creates trivia with
+no hook, so `perficere` walks the tree, trivia, origin chains and read
+extents; `silva_frons_longitudines_figere` is public for T10c's laminas);
+the def-site is a synthetic token built from the def-f/l/c reference.
+
+**The bug the all-nodes shim found (fixed in the old hooks too).** When
+tokens were read back, the extent landed in the DERIVED token's tail, but
+the extent hook searched `frons->lexemata`, which only CONVERSION fills.
+So the extent of a function-like invocation was never found on the read
+side, the cursor never walked `(3)\n`, and the token after the invocation
+lost `initium_lineae` (its byte offsets were off too; the structural
+comparator doesn't look at them). 20 nodes in lib/arbor2_glr_tabula.c,
+invisible while the shim checked only each file's FIRST node. Fix: the
+reader also records the extent on the invocation's own tail, and the hook
+checks the radix first. Pinned by the shim's inline case "invocatio ante
+lineam" (red without the fix).

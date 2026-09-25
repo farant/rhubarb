@@ -69,6 +69,12 @@ _chordae_pares (
  * Constructores
  * ================================================== */
 
+constans MateriaTokenForma*
+silva_token_forma (vacuum)
+{
+    redde &FORMA_C89;
+}
+
 SilvaToken*
 silva_token_ex_fonte (
              Piscina* piscina,
