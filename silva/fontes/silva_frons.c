@@ -1946,6 +1946,17 @@ _silvae_perficere (
     redde VERUM;
 }
 
+vacuum
+silva_frons_extenta_lecta_ponere (
+    SilvaFrons* frons,
+           Xar* extenta)
+{
+    si (frons != NIHIL)
+    {
+        frons->extenta_lecta = extenta;
+    }
+}
+
 b32
 silva_frons_arborem_silvae_parare (
                        SilvaFrons* frons,

@@ -1413,3 +1413,35 @@ refused it; the whole-file path still does until T10c, so wish
 01M32TA81Z closes then). P7 was MEASURED instead: no C89 lexeme value
 carries a newline at its edge (an unterminated char literal stops at
 the newline), so materia's guard is inert for C89; the test pins that.
+
+## 2026-09-25 — T10c (step 1): the parsura document runs on materia sessions
+
+`silva_arbor_scribere_parsuram` and `silva_arbor_legere_parsuram` now drive
+the T10a sessions (writer: create, count the whole document, set the
+default source to fons_princeps, write nodes/lexemes, finish with the
+value-position join; reader: one session per document + the public
+cursor with the gap re-seek). What remains in this file is C89: the
+vocabulary API, the sources section, per-top-element anchors (origin
+chain via `_parsura_lexema_emissionis`), directive/region/empty-
+invocation reinserts, gaps, region-tree rebuilding, and compression.
+7,078 → 3,832 lines; the old writer, reader and position walk are gone.
+
+- **Compression stays a C89 post-pass** (decree …MQF). Its two
+  pair-re-pointing loops already built a `substituti` table keyed by the
+  old element's pointer bytes, which is exactly what
+  `materia_arbor_scriptor_repungere` takes; each loop became one call.
+- **Read extents go into the NEW expansion** (`silva_frons_extenta_lecta_
+  ponere(frons, expansio->extenta)`), so `silva_scribere_fontem` finds
+  them on a read-back parsura, as the old reader arranged.
+- **Longitudes:** the frons walker covers the tree, the EOF tail,
+  directive laminas and region laminas (`_parsura_lamin*_longitudine`);
+  extents live in the same Xar the walker already covers.
+- `SilvaArborSedes` and `SilvaArborVitium` became typedefs of materia's
+  (identical fields), so the session's position table and the reader's
+  error struct pass straight through.
+
+Judged by the oracle's stml column (pinned silva, 470 files, including
+compression and the -legere read path): identical on the first run. M3
+6/6, silva 54/54. The escape case and CR now survive the whole-file
+round trip (tests in probatio_silva_arbor_parsura); wish 01M32TA81Z
+closes.

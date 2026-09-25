@@ -36,6 +36,7 @@
 #include "silva_registrum.h"
 #include "silva_expandere.h"
 #include "silva_parsare.h"   /* SilvaParsura - superficies parsurae (M2) */
+#include "materia_arbor.h"
 
 /* Praefixum tagorum lexematum (vide caput pro ratione) */
 #define SILVA_ARBOR_PRAEFIXUM "lex-"
@@ -211,12 +212,9 @@ silva_arbor_lexema_ex_tag (
  * tabula VALORES fert, non ornamenta documenti.
  *
  * CONSUMENS PRIMUS: inspector nexus (laboratorium 0032). */
-nomen structura {
-    constans vacuum* clavis;      /* SilvaNodus* aut SilvaToken* */
-                b32  est_lexema;
-                i32  initium;     /* offset octetorum, INCLUSIVUS */
-                i32  finis;       /* offset octetorum, EXCLUSIVUS */
-} SilvaArborSedes;
+/* Campi idem ac materiae (clavis, est_lexema, initium, finis) -
+ * sessio materiae tabulam implet (T10c). */
+nomen MateriaArborSedes SilvaArborSedes;
 
 /* Census compressionis - scriptor mensuram SUAM fert (doctrina:
  * ambulatio tegumentum suum metiatur; familia templorum mortua
@@ -404,10 +402,9 @@ silva_arbor_aequalis (
 /* Vitium lectionis: causa STATICA + LINEA documenti. Linea non
  * ornamentum est - vitium sine linea in documento magno venatio
  * est, non diagnosticum (StmlNodus.linea ob hoc ipsum exstat). */
-nomen structura {
-     constans character* causa;   /* NIHIL si bene */
-                    i32  linea;   /* 1-basata; ZEPHYRUM si ignota */
-} SilvaArborVitium;
+/* causa (NIHIL si bene), linea (1-basata; ZEPHYRUM si ignota) -
+ * lector materiae eam implet (T10b/c) */
+nomen MateriaArborVitium SilvaArborVitium;
 
 /* Documentum arboris in arborem silvae relegere.
  *

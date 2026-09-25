@@ -3264,3 +3264,17 @@ The four owed writer fixes reach the node level with their own tests
 columns (planted red: the old parent policy). Replay verdict: substrate
 module `arbor` switched at node level; parsura and comparator owed at
 T10c/T10d.
+
+## 2026-09-25 — phase 5 T10c (step 1): whole-file STML on materia sessions
+
+RELATIO: silva's parsura writer and reader now run on the T10a
+sessions. What remains in silva_arbor.c is C89 (sources, per-element
+anchors, directive/region/empty-invocation reinserts, gaps, regions,
+compression as a post-pass re-pointing pairs through the session);
+7,078 → 3,832 lines. Oracle stml column byte-identical to pinned silva
+over 470 files on the first run (writer, compression and the read
+path); M3 6/6; silva 54/54. The whole-file path gained the escape
+ladder and CR with tests; wish 01M32TA81Z closes. Replay verdict:
+substrate module `arbor` switched for silva (writer + reader);
+comparator (T10d) and the retirement of the frons conversion + shim
+remain.

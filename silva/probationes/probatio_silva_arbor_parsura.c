@@ -1016,6 +1016,41 @@ principale (vacuum)
         }
     }
 
+
+    /* ========================================================
+     * EMENDATIONES SCRIPTORIS IN PLAGULA TOTA (silva-migratio T10c):
+     * scriptor parsurae super sessionem materiae est, ergo CR in
+     * commento (attributum 'cr') et commentum sequentiam claudentem
+     * SUAM ferens (scala fugae) circuitum plenum supervivunt. Hic
+     * scriptor vetus 'valor sequentiam claudentem fert' recusabat
+     * (desideratum 01M32TA81Z) et CR tacite amittebat.
+     * ======================================================== */
+
+    {
+         constans character* causa = NIHIL;
+                  character  fons[CXXVIII];
+                  character  tag[SILVA_ARBOR_TAG_CAPACITAS];
+
+        imprimere("\n--- Probans emendationes in plagula tota ---\n");
+
+        CREDO_VERUM (_circuitus(piscina, "int x /* a\rb */;\n",
+            &causa));
+        si (causa != NIHIL)
+        {
+            imprimere("  cr: %s\n", causa);
+        }
+
+        CREDO_VERUM (silva_arbor_lexema_tag(SILVA_LEX_COMMENTUM_CLAUSUM,
+            tag, (i32)magnitudo(tag)) > ZEPHYRUM);
+        sprintf(fons, "/* </%s> */\nint z /* </%s> */;\n", tag, tag);
+        causa = NIHIL;
+        CREDO_VERUM (_circuitus(piscina, fons, &causa));
+        si (causa != NIHIL)
+        {
+            imprimere("  fuga: %s\n", causa);
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

@@ -82,6 +82,15 @@ silva_frons_arborem_silvae_parare (
               InternamentumChorda* intern,
             MateriaArborConsilium* consilium);
 
+/* Extenta LECTA in hanc seriem registrari (Xar de
+ * SilvaExtentumInvocationis). Lector parsurae (T10c) expansionem
+ * NOVAM reficit et extenta in expansio->extenta ponere debet, ut
+ * silva_scribere_fontem ea super parsuram lectam inveniat. */
+vacuum
+silva_frons_extenta_lecta_ponere (
+    SilvaFrons* frons,
+           Xar* extenta);
+
 /* Longitudines post lectionem: lexema quodque (trivia, catenae
  * originis, extenta lecta) longitudinem = valor fert, sicut lector
  * silvae vetus. Lector parsurae (T10c) eam super laminas vocat. */

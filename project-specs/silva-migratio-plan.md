@@ -56,6 +56,10 @@
 > silva's own tail proven byte-identical, then silva's node writer and
 > reader switched; materia's parent policy in silva_commissio; CR/NUL/
 > escape fixed at node level with tests, P7 measured inert.
+> T10c step 1 DONE 2026-09-25: parsura writer/reader on the sessions,
+> compression a C89 post-pass; silva_arbor.c 7,078 → 3,832; oracle stml
+> identical over 470 on the first run; wish 01M32TA81Z closes. Step 2
+> (retire frons conversion + shim) next.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
