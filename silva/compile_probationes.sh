@@ -153,6 +153,13 @@ for src in "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/instrumenta/*.c; do
     obj_files="$obj_files $obj"
 done
 
+# ---- 2a. substratum materiae (phasis V T6a: silva materiam nectit) ----
+source "$RADIX_DIR/silva/materia_substratum.sh"
+if ! materia_substratum_struere "$BUILD_DIR" "${GCC_FLAGS[@]}"; then
+    echo "FRACTA: substratum materiae" ; exit 1
+fi
+obj_files="$obj_files $MATERIA_OBIECTA"
+
 # ---- 2b. adiumenta probationum (probationes/*.c non probatio_*) ----
 # Porta apparatus BIS incendit et utroque numerum peperit qui datum
 # simulabat; exemplar eius SECUNDUM in probatione altera tertiam

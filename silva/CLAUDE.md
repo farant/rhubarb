@@ -31,7 +31,14 @@ Quid IAM factum est: `silva_tabulae.h` scissum (M4, `6b5ca0a3` et
 praeter `latina.h`. Phasis 0 peracta: chirurgia classificata.
 
 Gelatio finit cum phasis V peracta sit (silva materiam consumens,
-portis omnibus viridibus). Si hoc caput adhuc gelationem dicit et
+portis omnibus viridibus).
+
+**PHASIS V IN CURSU (2026-09-24):** planum
+`project-specs/silva-migratio-plan.md`; judex = `./materia/oraculum_probare.sh`
+(silva viva contra silvam ad pignus) + `./silva/m3_probare.sh`. Ab T6a
+silva substratum materiae NECTIT: cursor et instrumenta omnia
+`silva/materia_substratum.sh` fontant (tabula una modulorum) - mutatio
+materia/fontes cursorem silvae debet. Si hoc caput adhuc gelationem dicit et
 mensis abiit, ROGA — furca superstes esse debet, non pendere.
 
 ## Quid sit

@@ -3104,3 +3104,20 @@ count), `initium_lineae` 3. saltuarius carries most of it
 switch for consumers as T10 is for silva itself. Surface written
 above plan T7. Build modes: briar, saltuarius, aedilis consume the
 AMALGAM. No code changed.
+
+## 2026-09-25 — phase 5 T6a: materia joins silva's build
+
+INTENTIO (T6 split by its measurement, Fran): silva's runner and 22
+tools link EVERY `silva/fontes/*.c`, so the frontend could not land
+there before materia was linked everywhere. RELATIO: one table,
+`silva/materia_substratum.sh` (token, nodus, scribere, arbor,
+arbor_aequalitas, lexicon), sourced by 23 build sites; no silva code
+changed. Silva suite 54/54, shim `-stml` 400 + 399/399/399, oracle
+clean over 468, silex builds; every tool binary checked by `nm` for a
+materia symbol. That check found a pre-existing stale-binary bug:
+`renominare.sh` relinked only when its main source or a header was
+newer, so a rebuilt silva object never reached the binary — the
+rename tool could run yesterday's silva. Fixed. The shim now excludes
+materia objects from its silva/build glob (it links its own). The
+silva runner is owed for any materia/fontes change from now on.
+Replay verdict: no substrate module touched.

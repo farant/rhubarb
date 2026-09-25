@@ -55,6 +55,11 @@ for src in "$SILVA_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
+# substratum materiae (phasis V T6a: silva materiam nectit)
+source "$RADIX_DIR/silva/materia_substratum.sh"
+materia_substratum_struere "$BUILD_DIR" "${GCC_FLAGS[@]}" || exit 1
+obj_files="$obj_files $MATERIA_OBIECTA"
+
 EXAMEN_SRC="$SILVA_DIR/instrumenta/principalia/examen.c"
 EXAMEN_BIN="$BUILD_DIR/examen"
 # silva_lexicon.c in linea nectendi explicite (exemplar amalgamare:71

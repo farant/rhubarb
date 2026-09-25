@@ -99,6 +99,11 @@ for base in silva_unitates silva_differre; do
     silva_obiecta="$silva_obiecta $obj"
 done
 
+# substratum materiae (phasis V T6a: silva materiam nectit)
+source "silva/materia_substratum.sh"
+materia_substratum_struere "silva/build" "${SILVA_FLAGS[@]}" || exit 1
+silva_obiecta="$silva_obiecta $MATERIA_OBIECTA"
+
 # obiecta bibliothecarum: build/*.o SINE obiectis probationum
 # (probatio_*.o - reliquiae cursoris radicis ante 2026-09-04, cum
 # obiecta probationum in build/ cadebant; unum eorum symbolum capsulae

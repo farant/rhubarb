@@ -22,7 +22,10 @@
 > there from T9; STML compression = a decision before code). T5 DONE
 > 2026-09-25: consumer inventory 01M3B7A8DG — 10 functions but ~894
 > field sites; nodes/values pass by typedef, 78 token-field sites need
-> an accessor (47 of them `origo`). Surface written above T7.
+> an accessor (47 of them `origo`). Surface written above T7. T6
+> SPLIT (Fran). T6a DONE 2026-09-25: silva links materia's substrate
+> (`silva/materia_substratum.sh`, 23 build sites); found and fixed
+> renominare never relinking on object changes.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -321,7 +324,53 @@ the surface list is in the plan.
 
 ## Step 1 — the C89 frontend becomes production code
 
-### Task 6: `silva_frons` — promote the shim
+### Task 6 — SPLIT by its measurement (Fran, 2026-09-25)
+
+The measure step found that silva's runner and 22 silva tools compile
+and link EVERY `silva/fontes/*.c` (by design — `tools/silva_fontes_
+generare.sh`: a new module is never silently missed), while their
+generated dependency lists cover `lib/` only. So `silva_frons.c` in
+`silva/fontes` would break 23 builds. Materia joining silva's build is
+unavoidable (T7 cannot happen without it) — it gets its own commit,
+with no behaviour change, so any red is a build fault and nothing else.
+
+**T6a — materia joins silva's build.** One shared definition of the
+substrate modules silva links (token, nodus, scribere, arbor,
+arbor_aequalitas, lexicon), used by the silva runner and every tool
+that links all of `silva/fontes`; the shim runner's `silva/build/*.o`
+glob excludes those objects (else it links them twice). Gate: every
+affected tool builds and runs, silva suite, shim, oracle, M3 — all
+unchanged.
+
+*T6a as built:* helper `silva/materia_substratum.sh` (six modules,
+header guard over include/ and materia/fontes, equal-second recompiles)
+sourced by the silva runner (step 2a, `FRACTA:` on failure), the 20
+tools, and `tools/silex_struere.sh`; `amalgamare.sh` needs nothing yet
+(the amalgamator's own sources do not glob fontes — what goes INTO the
+amalgam is T6b's). Shim excludes `materia_*.o` from its silva/build
+glob; the live oracle keeps them. Every tool binary verified by `nm` to
+contain materia — which found `renominare` relinking only on its OWN
+source/headers: an object rebuilt from a changed silva `.c` never
+reached the binary. Fixed (relink when any object is not older).
+`suitae probationum`: the silva runner now covers `materia/fontes/*`.
+
+**T6b — the promotion** (below, as first written). Split measured
+2026-09-25: ~1,050 production lines (token tail, conversion, 12
+hooks, `FRONS_C89`, `_nodum_radicis`) · ~380 driver · 25 dead
+(`_radix_silvae`, never called — dropped). The global `SHIM` becomes
+an opaque context passed through the hooks' `datum`:
+
+    nomen structura SilvaFrons SilvaFrons;              /* opaca */
+    SilvaFrons*   silva_frons_creare (Piscina*, constans SilvaExpansio*);
+    MateriaValor  silva_frons_valorem_convertere (SilvaFrons*, SilvaValor);
+    MateriaNodus* silva_frons_nodum_convertere   (SilvaFrons*, SilvaNodus*);
+    vacuum silva_frons_scripturam_parare (SilvaFrons*, MateriaScripturaConsilium*);
+    b32    silva_frons_arborem_parare    (SilvaFrons*, MateriaArborConsilium*);
+    i32    silva_frons_lexemata_numerus  (constans SilvaFrons*);
+
+The generated lexicon moves to `silva/fontes/silva_lexicon_c89.{h,c}`.
+
+### Task 6b: `silva_frons` — promote the shim
 
 **Measure first:** which parts of `materia/instrumenta/shim_c89.c`
 (1,462 lines) are conversion + frontend hooks (production) and which

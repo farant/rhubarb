@@ -53,6 +53,11 @@ for src in "$SILVA_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
+# substratum materiae (phasis V T6a: silva materiam nectit)
+source "$RADIX_DIR/silva/materia_substratum.sh"
+materia_substratum_struere "$BUILD_DIR" "${GCC_FLAGS[@]}" || exit 1
+obj_files="$obj_files $MATERIA_OBIECTA"
+
 echo "  [auspex] auspex.c" >&2
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SILVA_DIR/instrumenta/principalia/auspex.c" $obj_files \

@@ -27,8 +27,11 @@ mkdir -p "$BUILD"
 # (cursor silvae compilat et nectit duobus gradibus ab 2026-09-02) -
 # principale duplex, nexus fractus; porta muta per diem quia in
 # tabula portarum pythonicae non stabat (B10 eam registrat).
+# materia_*.o = substratum materiae quod silva ab phasi V T6a ipsa
+# struit et nectit (silva/materia_substratum.sh); shim sua obiecta
+# materiae ex materia/build nectit - bis nexa symbola duplicarent.
 OBIECTA=$(ls "$RADIX"/silva/build/*.o 2>/dev/null \
-          | grep -v -E "/(fons_|nexus_|instr_|probatio_|silva_amalgama\.o|amalgama_verificatio\.o|apparatus\.o)")
+          | grep -v -E "/(fons_|nexus_|instr_|probatio_|materia_|silva_amalgama\.o|amalgama_verificatio\.o|apparatus\.o)")
 if [ -z "$OBIECTA" ]; then
     echo "DEEST: silva/build/*.o - curre ./silva/compile_probationes.sh primum" >&2
     exit 2
