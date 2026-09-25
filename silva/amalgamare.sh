@@ -28,6 +28,7 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"
+    "-I$RADIX_DIR/materia/fontes"
 )
 
 # ---- 0. PORTA VETUSTATIS: manifesta derivationi congruere ----
@@ -56,7 +57,7 @@ declare -a RADIX_FONTES=(
 # custos tesserae aequatus - desideratum 01KY2P5X)
 newest_header () {
     find "$RADIX_DIR/include" "$SILVA_DIR/fontes" \
-        "$SILVA_DIR/instrumenta" \
+        "$RADIX_DIR/materia/fontes" "$SILVA_DIR/instrumenta" \
         -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
 
@@ -70,6 +71,16 @@ for f in "${RADIX_FONTES[@]}"; do
     fi
     obj_files="$obj_files $obj"
 done
+# substratum materiae quod lexator silvae poscit (silva-migratio T7b:
+# SilvaToken = MateriaToken + cauda C89) - amalgamator ipse silva_token.o
+# nectit, ergo materia_token.o quoque (T13a)
+src="$RADIX_DIR/materia/fontes/materia_token.c"
+obj="$BUILD_DIR/materia_token.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [materia] materia_token.c"
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
 for f in "silva_token" "silva_lexema"; do
     src="$SILVA_DIR/fontes/$f.c"
     obj="$BUILD_DIR/$f.o"

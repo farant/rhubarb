@@ -80,6 +80,16 @@
 > port already done by the T8/T9 facade — silva_quaestio.o's only
 > external symbols are materia_valor_lista_*, xar, piscina, libc. Named
 > query before-rows recorded. T13 (seal) next.
+> T13 MEASURED + RE-SLICED 2026-09-25 (Fran): a dry run of the thaw
+> broke in three layers — aedilis blind to materia, the amalgamator's
+> own link + 7 same-named statics in one TU, and the hand-written
+> silva.h owning the public types — so T13a (derivation + tooling),
+> T13b (public header), T13c (consumers + acceptance). T13a DONE
+> 2026-09-25: aedilis root `materia/fontes` (+ corpus annotation for
+> the comparator body), silva manifest regenerated (42 capita, 39
+> corpora; 39 other manifests byte-identical), materia_token.o in the
+> three amalgam link lines, ligare revived (dead since fed3e78), 7
+> silva statics renamed. Amalgam still frozen.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -866,6 +876,46 @@ arbor, arbor_aequalitas, lexicon, annotationes (T11) —
 Amalgam consumers (briar, saltuarius, aedilis — consumer inventory
 …WW34 rows still ignotum on 'per facadem transit') meet all of T7–T10
 at once here.
+
+*Measured and re-sliced (2026-09-25, Fran).* Dry run on a scratch
+snapshot of HEAD (the real tree and the frozen amalgam untouched):
+
+- **T13a — derivation and tooling, no amalgam regenerated.** aedilis
+  learns `materia/fontes` (it classified every materia header `S`, so
+  the derivation would have dropped the substrate SILENTLY — true for
+  the materia clients too); `materia_arbor.h` declares its second body
+  (`<aedilis corpus=…materia_arbor_aequalitas.c/>`); fontes_politica
+  stops excluding silva_frons + silva_lexicon_c89; `-I materia/fontes`
+  and `materia_token.o` in amalgamare / excludenda harvest / ligare;
+  the 7 statics silva shares by name with materia renamed on silva's
+  side. Gates: silva, oracle, M3, materia clients (header touched).
+- **T13b — the public header.** `silva/amalgama/silva.h` is
+  hand-written and owns the public types (CADENDA); the facade's
+  `#define SilvaNodus MateriaNodus` contradicts it. The rename machinery
+  already fits: `Materia*` types → `Silva*` (TYPI_EXACTI), `materia_` →
+  `silva_materia_` (PRAEFIXA_FUNCTIONUM); public struct layouts
+  rewritten to materia's (the C89 tail stays internal, behind the
+  accessors consumers already use); CADENDA/NON_STATICA (three public
+  functions became facade macros: `silva_valor_lista_numerus`,
+  `_obtinere`, `silva_nodus_liberi`); the excludenda harvest's
+  classifier learns `materia/fontes` bases (it greps `lib/` only).
+  Regenerate; standalone + hospes + nm-intersection 0.
+- **T13c — consumers and acceptance.** briar, saltuarius, aedilis,
+  officina (its amalgam links silva's lexer objects) on the new
+  amalgam; M3 at T1's pins; oracle clean; freeze notices lifted;
+  RELATIO; plan B.
+
+*T13a as built (2026-09-25).* As above, plus: `amalgama_ligare.sh` was
+dead twice over — `materia_token.h` not found since T7b, and under that
+`_silva_lineam_finire` undefined since fed3e78 (it named
+`silva_amalgama.c` alone instead of the mechanism table); it now sources
+`tools/mechanismus_fontes.sh` and is green on a lib and a materia body.
+The 7 renames: `_parsurae_divergere`, `_parsurae_lexemata_aequalia`
+(aequalitas: the parsura comparator's), `_silvae_elementum_proximum`,
+`_silvae_est_tag_lexematis`, `_silvae_numerus_ad_literas`,
+`_silvae_spatium_solum` (arbor), `_silvae_scriptura_fracta`
+(scribere). Of the house's 40 aedilis manifests only silva's amalgam
+manifest moved. True-copy deduplication stays T19.
 
 ---
 

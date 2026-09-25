@@ -32,17 +32,14 @@ amalgamatoris_fontes() {
 
 # radices derivationis = corpora propria silvae; tabulae fixturarum
 # (sceletum/imparilis = grammaticae probationum generatoris) numquam
-# amalgamantur
+# amalgamantur. Frons C89 (silva_frons, silva_lexicon_c89) ab T6b ad
+# T13a exclusa erat (capita materiae includit, quae aedilis tum non
+# videbat); nunc radix ut ceterae - substratum materiae per clausuram
+# derivatur (aedilis.stml: materia/fontes; silva-migratio T13a).
 radices() {
     for f in silva/fontes/*.c; do
         case "$f" in
             */silva_tabulae_sceleti.c|*/silva_tabulae_imparilis.c)
-                continue ;;
-            # frons C89 super materiam (phasis V, T6b): capita materiae
-            # includit, quae amalgama nondum fert - intrat cum sigillo
-            # (T13: silva.h = frons + facies + materia). Ante id
-            # amalgama silvam GELATAM manet, oraculi pignus idem.
-            */silva_frons.c|*/silva_lexicon_c89.c)
                 continue ;;
         esac
         echo "$f"

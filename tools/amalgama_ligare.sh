@@ -107,16 +107,25 @@ awk -F'\t' '
 # ligator (mechanismus communis; obiecta silva/build a vecte silvae)
 # ------------------------------------------------------------------
 for o in piscina chorda chorda_aedificator xar tabula_dispersa \
-         friatio silva_token silva_lexema; do
+         friatio silva_token silva_lexema materia_token; do
     [ -f "silva/build/$o.o" ] \
         || si_fracta "silva/build/$o.o deest (curre ./silva/amalgamare.sh prius)"
 done
-clang "${VEXILLA[@]}" -Iinclude -Isilva/fontes -Isilva/instrumenta \
-    tools/amalgama_ligator.c silva/instrumenta/silva_amalgama.c \
+# mechanismus ex tabula COMMUNI (tools/mechanismus_fontes.sh), non hic
+# enumeratus: haec linea silva_amalgama.c solum nominabat, et cum
+# silva_unitates.c extractum est (fed3e78) ligator tacite fractus
+# iacuit ('_silva_lineam_finire') - nemo eum currebat (T13a, 2026-09-25)
+# shellcheck source=/dev/null
+. tools/mechanismus_fontes.sh
+# shellcheck disable=SC2046
+clang "${VEXILLA[@]}" -Iinclude -Isilva/fontes -Imateria/fontes \
+    -Isilva/instrumenta \
+    tools/amalgama_ligator.c $(mechanismus_silvae_fontes) \
     silva/build/piscina.o silva/build/chorda.o \
     silva/build/chorda_aedificator.o silva/build/xar.o \
     silva/build/tabula_dispersa.o silva/build/friatio.o \
     silva/build/silva_token.o silva/build/silva_lexema.o \
+    silva/build/materia_token.o \
     -o "$STATIO/ligator" || si_fracta "constructio ligatoris"
 
 "$STATIO/ligator" "$PWD" "$STATIO/lista.tsv" "$TITULUS" \

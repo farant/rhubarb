@@ -3330,3 +3330,18 @@ recorded (1,163 / 3,344 / 1 / 1, invariant holds, native gate green)
 and nothing changed, so they cannot move. Closed without code (Fran).
 The nodus query families remain desideratum 01M3BHHJQA (step 5). Next:
 T13, the seal.
+
+## 2026-09-25 — phase 5 T13a: the derivation layer learns materia
+
+INTENTIO/RELATIO (one task): T13's measurement was a dry run of the thaw
+in a scratch snapshot; it broke in three stacked layers, so Fran
+re-sliced T13 into a/b/c. T13a: aedilis gains the `materia/fontes` root
+(materia headers had been classified as system headers — the substrate
+would have been dropped silently) and a `corpus` annotation for the
+comparator body; silva's amalgam manifest regenerated (+ materia bodies,
+frons, lexicon_c89; the other 39 manifests unchanged); `materia_token.o`
+and `-I materia/fontes` in the three amalgam link lines; `amalgama_ligare`
+revived (dead since fed3e78, found by running it); 7 silva statics that
+share names with materia's renamed. The amalgam stays frozen. Replay
+verdict: no substrate module changes behaviour (renames of file-local
+statics). Next: T13b, the public header.

@@ -137,11 +137,11 @@ nomen structura {
 } ArborComparator;
 
 /* Divergentiam nominare. Semper FALSUM reddit, ut vocantes
- * 'redde _arbor_divergere(...)' scribere possint. Nodi et lexemata
+ * 'redde _parsurae_divergere(...)' scribere possint. Nodi et lexemata
  * hic semper NIHIL: divergentiae formae parsurae sunt; quae intra
  * arborem aut lexema cadunt a materia nominantur. */
 interior b32
-_arbor_divergere (
+_parsurae_divergere (
         ArborComparator* comparator,
      constans character* campus,
                     s32  locus,
@@ -167,7 +167,7 @@ _arbor_divergere (
  * index) superponitur ut silva vetus eam nominabat - index trivii
  * servatur ubi trivium divergit. */
 interior b32
-_arbor_lexemata_aequalia (
+_parsurae_lexemata_aequalia (
         ArborComparator* comparator,
     constans SilvaToken* a,
     constans SilvaToken* b,
@@ -217,11 +217,11 @@ _arbor_lamina_aequalis (
     numerus_b = b != NIHIL ? xar_numerus(b) : (i32)ZEPHYRUM;
     si (numerus_a != numerus_b)
     {
-        redde _arbor_divergere(comparator, campus, -I, index);
+        redde _parsurae_divergere(comparator, campus, -I, index);
     }
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
-        si (!_arbor_lexemata_aequalia(comparator,
+        si (!_parsurae_lexemata_aequalia(comparator,
                  *(SilvaToken**)xar_obtinere(a, i),
                  *(SilvaToken**)xar_obtinere(b, i),
                  index, (s32)i))
@@ -251,7 +251,8 @@ _arbor_regio_aequalis (
 
     si ((a == NIHIL) != (b == NIHIL))
     {
-        redde _arbor_divergere(comparator, "regio/nullitas", -I, index);
+        redde _parsurae_divergere(comparator, "regio/nullitas", -I,
+            index);
     }
     si (a == NIHIL)
     {
@@ -259,13 +260,13 @@ _arbor_regio_aequalis (
     }
     si (a->est_texta != b->est_texta)
     {
-        redde _arbor_divergere(comparator, "regio/texta", -I, index);
+        redde _parsurae_divergere(comparator, "regio/texta", -I, index);
     }
     numerus_a = a->rami != NIHIL ? xar_numerus(a->rami) : (i32)ZEPHYRUM;
     numerus_b = b->rami != NIHIL ? xar_numerus(b->rami) : (i32)ZEPHYRUM;
     si (numerus_a != numerus_b)
     {
-        redde _arbor_divergere(comparator, "regio/numerus-ramorum",
+        redde _parsurae_divergere(comparator, "regio/numerus-ramorum",
             -I, index);
     }
     per (i = ZEPHYRUM; i < numerus_a; i++)
@@ -277,7 +278,7 @@ _arbor_regio_aequalis (
         rb = *(SilvaRamus**)xar_obtinere(b->rami, i);
         si ((ra == NIHIL) != (rb == NIHIL))
         {
-            redde _arbor_divergere(comparator, "ramus/nullitas",
+            redde _parsurae_divergere(comparator, "ramus/nullitas",
                 -I, (s32)i);
         }
         si (ra == NIHIL)
@@ -286,12 +287,12 @@ _arbor_regio_aequalis (
         }
         si (ra->genus != rb->genus)
         {
-            redde _arbor_divergere(comparator, "ramus/genus", -I,
+            redde _parsurae_divergere(comparator, "ramus/genus", -I,
                 (s32)i);
         }
         si (ra->conditio_id != rb->conditio_id)
         {
-            redde _arbor_divergere(comparator, "ramus/conditio",
+            redde _parsurae_divergere(comparator, "ramus/conditio",
                 -I, (s32)i);
         }
         /* est_sumptum NON confertur: structurale est (vide caput) */
@@ -399,7 +400,7 @@ _arbor_regiones_aequales (
     si (numerus_a != numerus_b)
     {
         piscina_destruere(piscina);
-        redde _arbor_divergere(comparator, "regiones/numerus",
+        redde _parsurae_divergere(comparator, "regiones/numerus",
             -I, (s32)numerus_a);
     }
     per (i = ZEPHYRUM; i < numerus_a; i++)
@@ -521,7 +522,8 @@ silva_arbor_parsurae_aequales (
 
     si ((a == NIHIL) != (b == NIHIL))
     {
-        redde _arbor_divergere(&comparator, "parsura/nullitas", -I, -I);
+        redde _parsurae_divergere(&comparator, "parsura/nullitas", -I,
+            -I);
     }
     si (a == NIHIL)
     {
@@ -529,7 +531,7 @@ silva_arbor_parsurae_aequales (
     }
     si ((a->commissio == NIHIL) != (b->commissio == NIHIL))
     {
-        redde _arbor_divergere(&comparator, "commissio/nullitas", -I,
+        redde _parsurae_divergere(&comparator, "commissio/nullitas", -I,
             -I);
     }
 
@@ -543,7 +545,7 @@ silva_arbor_parsurae_aequales (
         numerus_b = silva_valor_lista_numerus(b->commissio->radix);
         si (numerus_a != numerus_b)
         {
-            redde _arbor_divergere(&comparator, "radix/numerus",
+            redde _parsurae_divergere(&comparator, "radix/numerus",
                 -I, (s32)numerus_a);
         }
         per (i = ZEPHYRUM; i < numerus_a; i++)
@@ -559,7 +561,7 @@ silva_arbor_parsurae_aequales (
             }
             si (ea->genus != eb->genus)
             {
-                redde _arbor_divergere(&comparator, "radix/genus",
+                redde _parsurae_divergere(&comparator, "radix/genus",
                     -I, (s32)i);
             }
             si (ea->genus != SILVA_VALOR_NODUS)
@@ -601,7 +603,7 @@ silva_arbor_parsurae_aequales (
     numerus_b = _directivae_fontis(b, b->fons_princeps);
     si (numerus_a != numerus_b)
     {
-        redde _arbor_divergere(&comparator, "directivae/numerus",
+        redde _parsurae_divergere(&comparator, "directivae/numerus",
             -I, (s32)numerus_a);
     }
     per (i = ZEPHYRUM; i < numerus_a; i++)
@@ -626,7 +628,7 @@ silva_arbor_parsurae_aequales (
     }
 
     /* CAUDA: trivia caudae campus est qui tacite cadere solet */
-    si (!_arbor_lexemata_aequalia(&comparator, a->lexema_finis,
+    si (!_parsurae_lexemata_aequalia(&comparator, a->lexema_finis,
              b->lexema_finis, -I, -I))
     {
         redde FALSUM;

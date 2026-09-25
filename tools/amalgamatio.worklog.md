@@ -110,3 +110,47 @@ yet.
 - The amalgamator build recipe is shared for silva's three sources and
   the two-file mechanism, but tessera/officina still name their own
   `amalgamator.c` inline. One source each, so drift risk is low.
+
+## 2026-09-25 — silva-migratio T13a: the derivation layer learns materia
+
+A dry run of the thaw (scratch snapshot of HEAD, the real tree and the
+frozen amalgam untouched) broke in three layers, each hidden by the one
+above:
+
+1. **aedilis could not see materia at all.** `aedilis.stml` listed no
+   `materia/fontes` root, so `materia_token.h` & co. were classified
+   `S` (system, like `string.h`) and dropped from every closure —
+   silently (fontes drift is the SILENT kind, per the 08-20 entry). The
+   same blindness held for css/md/crusta/html. Fix: one `<via>` line.
+   `materia_arbor_aequalitas.c` has no header of its own, so the probe
+   by name never finds it; `materia_arbor.h` now carries
+   `<aedilis corpus="materia/fontes/materia_arbor_aequalitas.c"/>`
+   (the arbor2_glr tabula precedent — annotations compose with the
+   probe). Measured blast radius of the new root: of the 40
+   aedilis-generated manifests in the house, ONE changed (silva's
+   amalgam manifest: 42 capita, 39 corpora, +7 materia bodies + frons
+   + lexicon_c89); the other 39 byte-identical.
+2. **The amalgamator binary links silva_token.o**, which since T7b is a
+   MateriaToken + C89 tail → `materia_token.o` needed in all three link
+   lines (amalgamare, excludenda harvest, ligare). Then the single TU
+   exposed 7 static helpers defined in both a materia body and its
+   silva counterpart (arbor 4, aequalitas 2, scribere 1) — some true
+   copies (`_scriptura_fracta`, `_spatium_solum` identical modulo the
+   typedef), some homonyms. Silva's side renamed (`_silvae_*`,
+   `_parsurae_*` for the parsura comparator). Deduplicating the true
+   copies is T19's.
+3. **silva.h is hand-written and owns the public types** (CADENDA) —
+   the facade's `#define SilvaNodus MateriaNodus` contradicts it
+   ("conflicting types" on silva's own functions). That is T13b.
+
+**ligare was dead twice over.** Baseline run before any edit: fatal
+`materia_token.h not found` (since T7b). After the include fix: undefined
+`_silva_lineam_finire` — it named `silva_amalgama.c` alone, never
+switched to `tools/mechanismus_fontes.sh` when silva_unitates.c was
+extracted (fed3e78). The exact class the mechanism table was built to
+end, one member missed, and nothing runs ligare so nothing knew. Now
+sources the table; green on lib/xar.c and on materia/fontes/materia_nodus.c.
+
+renominare refuses dirty files (git = its undo), so after the first
+write per file the remaining statics went by word-boundary replace,
+each gated on renominare's own plan count == occurrence count.

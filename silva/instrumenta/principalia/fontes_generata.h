@@ -18,7 +18,14 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/stml.h", NIHIL, EXCLUDENDA_STML, FALSUM, VERUM },
     { "include/selectio.h", NIHIL, EXCLUDENDA_SELECTIONIS, FALSUM, VERUM },
     { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "include/stml_macros.h", NIHIL, NIHIL, FALSUM, VERUM }
+    { "include/stml_macros.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "materia/fontes/materia_lexicon.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "materia/fontes/materia_registrum.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "materia/fontes/materia_token.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "materia/fontes/materia_nodus.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "materia/fontes/materia_scribere.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "materia/fontes/materia_annotationes.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "materia/fontes/materia_arbor.h", NIHIL, NIHIL, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -30,7 +37,14 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/xar.c", NIHIL, EXCLUDENDA_XARIS, VERUM, VERUM },
     { "lib/internamentum.c", NIHIL, EXCLUDENDA_INTERNAMENTI, VERUM, VERUM },
     { "lib/stml.c", NIHIL, EXCLUDENDA_STML, VERUM, VERUM },
-    { "lib/stml_macros.c", NIHIL, NIHIL, VERUM, VERUM }
+    { "lib/stml_macros.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "materia/fontes/materia_annotationes.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "materia/fontes/materia_arbor.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "materia/fontes/materia_arbor_aequalitas.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "materia/fontes/materia_lexicon.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "materia/fontes/materia_nodus.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "materia/fontes/materia_scribere.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "materia/fontes/materia_token.c", NIHIL, NIHIL, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
@@ -55,7 +69,9 @@ interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
     { "silva/fontes/silva_quaestio.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_annotationes.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_quaestiones.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "silva/fontes/silva_arbor.h", NIHIL, NIHIL, FALSUM, FALSUM }
+    { "silva/fontes/silva_arbor.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_frons.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_lexicon_c89.h", NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
@@ -79,5 +95,7 @@ interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
     { "silva/fontes/silva_annotationes.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_quaestiones.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_arbor.c", NIHIL, NIHIL, VERUM, FALSUM },
-    { "silva/fontes/silva_arbor_aequalitas.c", NIHIL, NIHIL, VERUM, FALSUM }
+    { "silva/fontes/silva_arbor_aequalitas.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_frons.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_lexicon_c89.c", NIHIL, NIHIL, VERUM, FALSUM }
 };

@@ -467,7 +467,7 @@ nomen structura {
 /* Decimale sine stdio (snprintf C99 est; postulata_posix hic
  * pretium non meretur pro numeris parvis) */
 interior i32
-_numerus_ad_literas (
+_silvae_numerus_ad_literas (
           i32  numerus,
     character* buffer,
           i32  capacitas)
@@ -515,7 +515,8 @@ constans character* titulus,
 {
     character buffer[XVI];
 
-    si (_numerus_ad_literas(numerus, buffer, (i32)magnitudo(buffer))
+    si (_silvae_numerus_ad_literas(numerus, buffer,
+        (i32)magnitudo(buffer))
         == ZEPHYRUM)
     {
         redde FALSUM;
@@ -615,7 +616,7 @@ _recusare (
 }
 
 interior b32
-_spatium_solum (
+_silvae_spatium_solum (
     constans chorda* valor)
 {
     i32 i;
@@ -668,7 +669,7 @@ _numerus_ex_chorda (
 /* Elementum liberum proximum (textum spatii albi solius praeteriens;
  * textus alius in sede structurali RECUSATUR). *cursor promovetur. */
 interior StmlNodus*
-_elementum_proximum (
+_silvae_elementum_proximum (
     ArborLector* lector,
       StmlNodus* parens,
             i32* cursor)
@@ -686,7 +687,7 @@ _elementum_proximum (
         }
         si (liberum->genus == STML_NODUS_TEXTUS)
         {
-            si (_spatium_solum(liberum->valor))
+            si (_silvae_spatium_solum(liberum->valor))
             {
                 perge;
             }
@@ -705,7 +706,7 @@ _elementum_proximum (
 
 /* An tag praefixum lexematis ferat */
 interior b32
-_est_tag_lexematis (
+_silvae_est_tag_lexematis (
     constans chorda* titulus)
 {
     i32 longitudo = (i32)strlen(SILVA_ARBOR_PRAEFIXUM);
@@ -1536,7 +1537,7 @@ _folium_candidatum (
 
     si (   n->genus != STML_NODUS_ELEMENTUM
         || n->fragmentum
-        || !_est_tag_lexematis(n->titulus))
+        || !_silvae_est_tag_lexematis(n->titulus))
     {
         redde FALSUM;
     }
@@ -1770,7 +1771,7 @@ _folia_macronum_comprimere (
                 character num_lit[XVI];
                       i32 ln;
 
-                si (_numerus_ad_literas((i32)(n + I), num_lit,
+                si (_silvae_numerus_ad_literas((i32)(n + I), num_lit,
                         (i32)magnitudo(num_lit)) == ZEPHYRUM)
                 {
                     redde FALSUM;
@@ -2801,7 +2802,7 @@ _parsura_fontes_legere (
           i32  intra;
 
     cursor = ZEPHYRUM;
-    sectio = _elementum_proximum(lector, involucrum, &cursor);
+    sectio = _silvae_elementum_proximum(lector, involucrum, &cursor);
     si (   sectio == NIHIL || sectio->titulus == NIHIL
         || !chorda_aequalis_literis(*sectio->titulus,
                SILVA_ARBOR_TAG_FONTES))
@@ -2812,7 +2813,7 @@ _parsura_fontes_legere (
     }
 
     intra = ZEPHYRUM;
-    dum ((elem = _elementum_proximum(lector, sectio, &intra))
+    dum ((elem = _silvae_elementum_proximum(lector, sectio, &intra))
              != NIHIL)
     {
            chorda* via;
@@ -2968,7 +2969,8 @@ _parsura_laminam_legere (
         redde NIHIL;
     }
     cursor = ZEPHYRUM;
-    dum ((liber = _elementum_proximum(lector, elementum, &cursor))
+    dum ((liber = _silvae_elementum_proximum(lector, elementum,
+        &cursor))
              != NIHIL)
     {
          SilvaToken*  lexema;
@@ -3382,7 +3384,8 @@ MateriaArborConsilium consilium;
             sedes.lacuna_proxima  = ZEPHYRUM;
         }
         cursor = ZEPHYRUM;
-        dum ((elem = _elementum_proximum(&lector, involucrum, &cursor))
+        dum ((elem = _silvae_elementum_proximum(&lector, involucrum,
+            &cursor))
                  != NIHIL)
         {
             SilvaNodus* nodus;
@@ -3670,8 +3673,9 @@ MateriaArborConsilium consilium;
                     perge;
                 }
 
-                intra     = ZEPHYRUM;
-                interius  = _elementum_proximum(&lector, elem, &intra);
+                intra = ZEPHYRUM;
+                interius = _silvae_elementum_proximum(&lector, elem,
+                    &intra);
                 si (interius == NIHIL)
                 {
                     _recusare(&lector, "<cauda> lexema non fert",

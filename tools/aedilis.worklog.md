@@ -747,3 +747,14 @@ snapshot; 2.6 s for the directory against 18 s as separate runs.
 Refusals: `--corpus` without `--partes`, a positional with `--corpus`,
 an unreadable directory. Consumer side: `apparatus_clausuras_petere`
 in silva/probationes/apparatus.c.
+
+## 2026-09-25 — materia/fontes becomes an include root (silva-migratio T13a)
+
+`aedilis.stml` never listed `materia/fontes`: every materia header was
+classified `S` (system) and its body never joined a closure — for silva's
+amalgam derivation and for every materia client alike. Added the root,
+and a `corpus` annotation on `materia_arbor.h` for the comparator body
+that has no header of its own. Of the 40 generated manifests in the
+house only silva's amalgam manifest moved; the rest are byte-identical
+(clients get materia through their own build scripts, not aedilis).
+`aedilis.stml` is still covered by no gate (portae_debitae: INTECTA).

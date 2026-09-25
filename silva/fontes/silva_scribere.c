@@ -351,7 +351,7 @@ _regiones_colligere (
  * ================================================== */
 
 interior SilvaScriptura
-_scriptura_fracta (
+_silvae_scriptura_fracta (
     constans character* causa)
 {
     SilvaScriptura s;
@@ -458,7 +458,7 @@ silva_scribere_fontem (
     si (   piscina == NIHIL || parsura == NIHIL || tabularium == NIHIL
         || parsura->commissio == NIHIL)
     {
-        redde _scriptura_fracta("argumenta nulla");
+        redde _silvae_scriptura_fracta("argumenta nulla");
     }
 
     /* Reinserenda: lineae directivae consumptae + rami non sumpti
@@ -530,7 +530,7 @@ silva_scribere_fontem (
 
         si (aed == NIHIL)
         {
-            redde _scriptura_fracta("memoria deficit");
+            redde _silvae_scriptura_fracta("memoria deficit");
         }
         chorda_aedificator_appendere_chorda(aed, s.textus);
         silva_lexema_emittere_in(aed, finis);

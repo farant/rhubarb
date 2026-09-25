@@ -44,6 +44,8 @@
 #ifndef MATERIA_ARBOR_H
 #define MATERIA_ARBOR_H
 
+/* <aedilis corpus="materia/fontes/materia_arbor_aequalitas.c"/> */
+
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

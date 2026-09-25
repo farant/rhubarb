@@ -1,6 +1,7 @@
 <aedilis>
   <inclusa>
     <via (>include
+    <via (>materia/fontes
     <via (>probationes
     <via (>book_assets
     <via (>probationes/vitrea_assets

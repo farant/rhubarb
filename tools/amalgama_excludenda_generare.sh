@@ -111,17 +111,18 @@ _amalgamatorem_struere() {
             # Obiecta hic CALEFACTA sumuntur; vectis ea recentia
             # struit - discrimen legitimum, ergo non communicatum.
             # shellcheck disable=SC2046
-            clang "${VEXILLA_PLENA[@]}" -Iinclude -Isilva/fontes \
+            clang "${VEXILLA_PLENA[@]}" -Iinclude -Isilva/fontes -Imateria/fontes \
                 -Isilva/instrumenta \
                 $(amalgamatoris_fontes) \
                 silva/build/piscina.o silva/build/chorda.o \
                 silva/build/chorda_aedificator.o silva/build/xar.o \
                 silva/build/tabula_dispersa.o silva/build/friatio.o \
                 silva/build/silva_token.o silva/build/silva_lexema.o \
+                silva/build/materia_token.o \
                 -o "$STATIO/amalgamator"
             ;;
         tessera|officina)
-            clang "${VEXILLA_PLENA[@]}" -Iinclude -Isilva/fontes \
+            clang "${VEXILLA_PLENA[@]}" -Iinclude -Isilva/fontes -Imateria/fontes \
                 -Isilva/instrumenta \
                 "$SEDES/amalgamator.c" \
                 "$PROIECTUM"/build/mech_*.o \
