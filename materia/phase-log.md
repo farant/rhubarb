@@ -3029,3 +3029,19 @@ moves only when `amalgamare.sh` regenerates it; and `amalgamare.sh`
 itself must never be the runner's route (it rewrites the committed
 `silva.c`). Plan T1 text corrected in place (plant 3 as first written
 could not go red). Replay verdict: no substrate module touched.
+
+## 2026-09-24 — phase 5 T2: oraculum_silvae, the frozen oracle as a program
+
+RELATIO: `materia/instrumenta/oraculum_silvae.c` built twice by
+`materia/oraculum_silvae_struere.sh`: against the amalgam at PIGNUS
+`7a4847b0` (extracted by `git show` into `build/`, compiled once, ~6 s;
+the tool object may need nothing but the amalgam's symbols and libc —
+asserted, and planted with a house call) and against live silva. Over
+the shim corpus (390 files): 390/390 identical lines, every file
+round-trips, every pinned STML document reads back through the LIVE
+reader byte-identical and compares equal loaded-vs-loaded. Pinned
+`-stml` 10 s, live `-legere` 29 s. A plant in the live emitter moved
+only the live lines. Found on the way: `piscina_vacare` keeps its
+blocks, and after `lib/biblia_dr.c` (61 MB STML) that cost 8 min 47 s
+for the corpus — one arena per file now. No silva code changed; replay
+verdict: none owed.

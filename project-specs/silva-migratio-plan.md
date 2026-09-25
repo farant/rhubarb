@@ -12,7 +12,9 @@
 > corrections to T1's text as written, both below in place: pins are
 > FIXED or LIVE (a live corpus rising is not a failure), and plant 3
 > goes in the emitter (a byte dropped from an INPUT fixture still
-> round-trips).
+> round-trips). T2 DONE 2026-09-24: `oraculum_silvae` pinned at
+> `7a4847b0` + live, 390/390 identical over the shim corpus, pinned
+> 10 s / live `-legere` 29 s; as-built notes under T2.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -196,6 +198,19 @@ really different programs. Remove the plant.
 **Done when** both builds print identical lines over the 5 files, the
 plant separated them, and the worklog records the pin, the build time
 and the per-file cost.
+
+*As built* (worklog `materia/instrumenta/oraculum_silvae.worklog.md`):
+live headers are `silva_contextus.h`, `silva_c89_oraculum.h`,
+`silva_scribere.h`, `silva_arbor.h`, `silva_c89_semantica.h`,
+`silva_tabulae_c89.h` (not `silva_parsare.h`); `errores` =
+`parsura->numerus_errorum`; default parse carries the latina.h
+lexicon, `-nudum` = the shim's bare mode; semantics hashed in INDEX
+order; `-legere` compares the pinned and live documents BOTH loaded by
+the live reader (a fresh parse vs a document was never measured
+equal); isolation = every symbol the pinned tool needs is defined by
+the amalgam or on a libc list, planted with a house call; one arena
+per file (`vacare` retained 4 GB after `lib/biblia_dr.c`: 8 min 47 s
+→ 29 s).
 
 ### Task 3: the oracle gate — live silva vs pinned silva
 
