@@ -421,7 +421,7 @@ _lexemata_parsare_interna (
                         confirmatum = VERUM;
                         frange;
                     }
-                    si (!_kr_plausibile(tok->genus)) frange;
+                    si (!_kr_plausibile(silva_token_genus(tok))) frange;
                 }
                 si (!confirmatum)
                 {
@@ -442,7 +442,7 @@ _lexemata_parsare_interna (
              * implausibile (operator, litera, ASSIGNATIO...)
              * clausam exstinguit - ")" ille declarator functionis
              * esse non potest ("int x = (a) + b;") */
-            si (_kr_plausibile(lexema->genus))
+            si (_kr_plausibile(silva_token_genus(lexema)))
             {
                 intervallum_post++;
             }

@@ -292,7 +292,7 @@ _genus_lexatum (
         {
             perge;
         }
-        inventum = lexema->genus;
+        inventum = silva_token_genus(lexema);
         reperta++;
     }
 
@@ -1002,7 +1002,7 @@ principale (vacuum)
 
         /* i. lexema/genus */
         {
-            SilvaLexemaGenus servatum = lexema->genus;
+            SilvaLexemaGenus servatum = silva_token_genus(lexema);
 
             lexema->genus = SILVA_LEX_LONG;
             CREDO_FALSUM (silva_arbor_aequalis(a, b,
@@ -1013,7 +1013,7 @@ principale (vacuum)
             CREDO_AEQUALIS_PTR (differentia.lexema_b, lexema);
             /* semita sedem nominat, non solum campum */
             CREDO_VERUM (differentia.via[0] != '\0');
-            lexema->genus = servatum;
+            lexema->genus = (s32)servatum;
             CREDO_VERUM (silva_arbor_aequalis(a, b,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
         }

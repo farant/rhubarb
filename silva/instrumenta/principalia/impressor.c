@@ -117,7 +117,8 @@ _valorem_imprimere (
         frange;
     casus SILVA_VALOR_TOKEN:
         imprimere("%s \"%.*s\"\n",
-            silva_lexema_genus_nomen(valor.datum.token->genus),
+            silva_lexema_genus_nomen(
+                silva_token_genus(valor.datum.token)),
             (int)valor.datum.token->valor.mensura,
             (constans character*)valor.datum.token->valor.datum);
         frange;

@@ -248,7 +248,7 @@ _fixturam_probare (
 
             lexemata_tabulae = lexemata_tabulae + I;
             lexema = (constans SilvaToken*)sedes_valoris->clavis;
-            si (silva_arbor_lexema_tag(lexema->genus, tag,
+            si (silva_arbor_lexema_tag(silva_token_genus(lexema), tag,
                     (i32)magnitudo(tag)) == ZEPHYRUM)
             {
                 CREDO_VERUM (FALSUM);

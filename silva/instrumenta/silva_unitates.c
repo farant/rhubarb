@@ -200,7 +200,7 @@ silva_unitatem_finire (
                 frange;
         }
         prius_prius  = prius;
-        prius        = t->genus;
+        prius        = silva_token_genus(t);
     }
     redde n;
 }

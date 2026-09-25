@@ -190,9 +190,9 @@ _oraculum_ambulare (
         {
             /* indago: NULL suppressum intra conditionem - situs
              * divergentiae candidatus (LINT_INDAGO=1) */
-            si (   getenv("LINT_INDAGO") != NIHIL
+            si (   getenv("LINT_INDAGO")  != NIHIL
                 && altitudo > ZEPHYRUM
-                && tok->genus            == g_lex_identificator
+                && silva_token_genus(tok) == g_lex_identificator
                 && chorda_aequalis_literis(tok->valor, "NULL"))
             {
                 imprimere("    SUPPRESSUM: b=%d linea=%d\n",
@@ -202,7 +202,7 @@ _oraculum_ambulare (
             redde;  /* iam visum - documentum transclusionem fert */
         }
         si (   altitudo > ZEPHYRUM
-            && tok->genus == g_lex_identificator
+            && silva_token_genus(tok) == g_lex_identificator
             && chorda_aequalis_literis(tok->valor, "NULL"))
         {
             si (getenv("LINT_INDAGO") != NIHIL && altitudo > I)

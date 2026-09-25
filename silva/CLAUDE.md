@@ -38,7 +38,17 @@ portis omnibus viridibus).
 (silva viva contra silvam ad pignus) + `./silva/m3_probare.sh`. Ab T6a
 silva substratum materiae NECTIT: cursor et instrumenta omnia
 `silva/materia_substratum.sh` fontant (tabula una modulorum) - mutatio
-materia/fontes cursorem silvae debet. Si hoc caput adhuc gelationem dicit et
+materia/fontes cursorem silvae debet.
+
+**AMALGAMA GELATA ab T7b usque ad T13 (decretum …1BKY, Fran
+2026-09-25): NOLI `./silva/amalgamare.sh` currere.** SilvaToken nunc
+MateriaToken est (+ cauda C89 in silva_token.c); amalgama commissa
+silvam ante migrationem fert (repraesentatio vetus) et consumptores
+eius (briar, saltuarius, aedilis, officina) per accessores silva_token_*
+solos lexemata tangunt, quos amalgama gelata super structuram veterem
+implet. Regula infra "amalgamare post OMNEM editionem fontium" interim
+SUSPENSA; hospes (porta M3) amalgama commissum iudicat. Sigillum (T13)
+amalgama cum materia regenerat. Si hoc caput adhuc gelationem dicit et
 mensis abiit, ROGA — furca superstes esse debet, non pendere.
 
 ## Quid sit

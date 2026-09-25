@@ -5,6 +5,30 @@
 
 
 /* ==================================================
+ * Cauda C89 (phasis V, T7b) - quod MateriaToken non fert
+ * ================================================== */
+
+nomen structura {
+    SilvaOrigo  origo;       /* INSERTA - numquam NIHIL */
+           i32  longitudo;   /* octeti FONTIS (laminae incl.) */
+            i8  standard;    /* SILVA_STANDARD_* */
+           Xar* scissurae;   /* SilvaScissura; NIHIL fere semper */
+} SilvaTokenCauda;
+
+hic_manens constans MateriaTokenForma FORMA_C89 =
+    { (i32)magnitudo(SilvaTokenCauda) };
+
+/* Cauda C89 lexematis - MUTABILIS etiam ex lexemate constanti (ut
+ * materia_token_cauda: datum frontis est, non lexematis) */
+interior SilvaTokenCauda*
+_cauda_c89 (
+    constans SilvaToken* token)
+{
+    redde (SilvaTokenCauda*)materia_token_cauda(token);
+}
+
+
+/* ==================================================
  * Auxiliares interni
  * ================================================== */
 
@@ -12,17 +36,14 @@ interior SilvaToken*
 _token_novum (
     Piscina* piscina)
 {
-    SilvaToken* token;
+    chorda vacua;
 
-    token = (SilvaToken*)piscina_allocare(piscina,
-        (memoriae_index)magnitudo(SilvaToken));
-    si (token != NIHIL)
-    {
-        memset(token, ZEPHYRUM, magnitudo(SilvaToken));
-        token->byte_offset  = -I;
-        token->fons_index   = -I;
-    }
-    redde token;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    /* Cauda ad zephyrum posita (materia_token_creare): origo FONS,
+     * standard C89, scissurae NIHIL - ut memset prior */
+    redde materia_token_creare(piscina, &FORMA_C89, ZEPHYRUM, vacua,
+        -I, ZEPHYRUM, ZEPHYRUM, -I);
 }
 
 interior b32
@@ -66,15 +87,15 @@ silva_token_ex_fonte (
         redde NIHIL;
     }
 
-    token->genus        = genus;
-    token->valor        = valor;
-    token->byte_offset  = byte_offset;
-    token->longitudo    = valor.mensura;
-    token->linea        = linea;
-    token->columna      = columna;
-    token->fons_index   = fons_index;
-    token->standard     = SILVA_STANDARD_C89;
-    token->origo.genus  = SILVA_ORIGO_FONS;
+    token->genus                    = (s32)genus;
+    token->valor                    = valor;
+    token->byte_offset              = byte_offset;
+    _cauda_c89(token)->longitudo    = valor.mensura;
+    token->linea                    = linea;
+    token->columna                  = columna;
+    token->fons_index               = fons_index;
+    _cauda_c89(token)->standard     = SILVA_STANDARD_C89;
+    _cauda_c89(token)->origo.genus  = SILVA_ORIGO_FONS;
 
     redde token;
 }
@@ -96,20 +117,21 @@ silva_token_ex_expansione (
     }
 
     /* Campi lexicales a corpore (def-site identitas lexicalis) */
-    token->genus        = corpus->genus;
-    token->valor        = corpus->valor;
-    token->byte_offset  = corpus->byte_offset;
-    token->longitudo    = corpus->longitudo;
-    token->linea        = corpus->linea;
-    token->columna      = corpus->columna;
-    token->fons_index   = corpus->fons_index;
-    token->standard     = corpus->standard;
+    token->genus                  = corpus->genus;
+    token->valor                  = corpus->valor;
+    token->byte_offset            = corpus->byte_offset;
+    _cauda_c89(token)->longitudo  = _cauda_c89(corpus)->longitudo;
+    token->linea                  = corpus->linea;
+    token->columna                = corpus->columna;
+    token->fons_index             = corpus->fons_index;
+    _cauda_c89(token)->standard   = _cauda_c89(corpus)->standard;
 
-    token->origo.genus                       = SILVA_ORIGO_EXPANSIO;
-    token->origo.datum.expansio.corpus       = corpus;
-    token->origo.datum.expansio.invocatio    = invocatio;
-    token->origo.datum.expansio.nomen_macro  = nomen_macro;
-    token->origo.datum.expansio.caecatio     = caecatio;
+    _cauda_c89(token)->origo.genus =
+        SILVA_ORIGO_EXPANSIO;
+    _cauda_c89(token)->origo.datum.expansio.corpus       = corpus;
+    _cauda_c89(token)->origo.datum.expansio.invocatio    = invocatio;
+    _cauda_c89(token)->origo.datum.expansio.nomen_macro  = nomen_macro;
+    _cauda_c89(token)->origo.datum.expansio.caecatio     = caecatio;
 
     redde token;
 }
@@ -133,9 +155,9 @@ silva_token_ex_pasta (
         redde NIHIL;
     }
 
-    token->genus      = genus;
-    token->valor      = valor;
-    token->longitudo  = valor.mensura;
+    token->genus                  = (s32)genus;
+    token->valor                  = valor;
+    _cauda_c89(token)->longitudo  = valor.mensura;
     si (sinister != NIHIL)
     {
         token->linea       = sinister->linea;
@@ -143,12 +165,13 @@ silva_token_ex_pasta (
         token->fons_index  = sinister->fons_index;
     }
 
-    token->origo.genus                    = SILVA_ORIGO_PASTA;
-    token->origo.datum.pasta.sinister     = sinister;
-    token->origo.datum.pasta.dexter       = dexter;
-    token->origo.datum.pasta.invocatio    = invocatio;
-    token->origo.datum.pasta.nomen_macro  = nomen_macro;
-    token->origo.datum.pasta.caecatio     = caecatio;
+    _cauda_c89(token)->origo.genus =
+        SILVA_ORIGO_PASTA;
+    _cauda_c89(token)->origo.datum.pasta.sinister     = sinister;
+    _cauda_c89(token)->origo.datum.pasta.dexter       = dexter;
+    _cauda_c89(token)->origo.datum.pasta.invocatio    = invocatio;
+    _cauda_c89(token)->origo.datum.pasta.nomen_macro  = nomen_macro;
+    _cauda_c89(token)->origo.datum.pasta.caecatio     = caecatio;
 
     redde token;
 }
@@ -168,9 +191,9 @@ silva_token_ex_stringificatione (
         redde NIHIL;
     }
 
-    token->genus      = SILVA_LEX_STRING_LIT;
-    token->valor      = valor;
-    token->longitudo  = valor.mensura;
+    token->genus                  = SILVA_LEX_STRING_LIT;
+    token->valor                  = valor;
+    _cauda_c89(token)->longitudo  = valor.mensura;
     si (primus != NIHIL)
     {
         token->linea       = primus->linea;
@@ -178,9 +201,11 @@ silva_token_ex_stringificatione (
         token->fons_index  = primus->fons_index;
     }
 
-    token->origo.genus                             = SILVA_ORIGO_CHORDA;
-    token->origo.datum.stringificatio.primus       = primus;
-    token->origo.datum.stringificatio.nomen_macro  = nomen_macro;
+    _cauda_c89(token)->origo.genus =
+        SILVA_ORIGO_CHORDA;
+    _cauda_c89(token)->origo.datum.stringificatio.primus = primus;
+    _cauda_c89(token)->origo.datum.stringificatio.nomen_macro =
+        nomen_macro;
 
     redde token;
 }
@@ -201,9 +226,9 @@ silva_token_ex_praedefinito (
         redde NIHIL;
     }
 
-    token->genus      = genus;
-    token->valor      = valor;
-    token->longitudo  = valor.mensura;
+    token->genus                  = (s32)genus;
+    token->valor                  = valor;
+    _cauda_c89(token)->longitudo  = valor.mensura;
     si (invocatio != NIHIL)
     {
         token->linea       = invocatio->linea;
@@ -211,9 +236,12 @@ silva_token_ex_praedefinito (
         token->fons_index  = invocatio->fons_index;
     }
 
-    token->origo.genus                             = SILVA_ORIGO_CHORDA;
-    token->origo.datum.stringificatio.primus       = invocatio;
-    token->origo.datum.stringificatio.nomen_macro  = nomen_macro;
+    _cauda_c89(token)->origo.genus =
+        SILVA_ORIGO_CHORDA;
+    _cauda_c89(token)->origo.datum.stringificatio.primus =
+        invocatio;
+    _cauda_c89(token)->origo.datum.stringificatio.nomen_macro =
+        nomen_macro;
 
     redde token;
 }
@@ -234,13 +262,13 @@ silva_token_ex_api (
         redde NIHIL;
     }
 
-    token->genus       = genus;
-    token->valor       = valor;
-    token->longitudo   = valor.mensura;
-    token->fons_index  = fons_index;
+    token->genus                  = (s32)genus;
+    token->valor                  = valor;
+    _cauda_c89(token)->longitudo  = valor.mensura;
+    token->fons_index             = fons_index;
 
-    token->origo.genus                  = SILVA_ORIGO_API;
-    token->origo.datum.api.nomen_macro  = nomen_macro;
+    _cauda_c89(token)->origo.genus                  = SILVA_ORIGO_API;
+    _cauda_c89(token)->origo.datum.api.nomen_macro  = nomen_macro;
 
     redde token;
 }
@@ -254,14 +282,14 @@ interior SilvaToken*
 _praedecessor_use_site (
     SilvaToken* token)
 {
-    commutatio (token->origo.genus)
+    commutatio (_cauda_c89(token)->origo.genus)
     {
         casus SILVA_ORIGO_EXPANSIO:
-            redde token->origo.datum.expansio.invocatio;
+            redde _cauda_c89(token)->origo.datum.expansio.invocatio;
         casus SILVA_ORIGO_PASTA:
-            redde token->origo.datum.pasta.sinister;
+            redde _cauda_c89(token)->origo.datum.pasta.sinister;
         casus SILVA_ORIGO_CHORDA:
-            redde token->origo.datum.stringificatio.primus;
+            redde _cauda_c89(token)->origo.datum.stringificatio.primus;
         casus SILVA_ORIGO_FONS:
         casus SILVA_ORIGO_API:
         ordinarius:
@@ -313,7 +341,8 @@ b32
 silva_token_est_fons (
     SilvaToken* token)
 {
-    redde (token->origo.genus == SILVA_ORIGO_FONS) ? VERUM : FALSUM;
+    redde (_cauda_c89(token)->origo.genus
+        == SILVA_ORIGO_FONS) ? VERUM : FALSUM;
 }
 
 
@@ -323,16 +352,21 @@ SilvaOrigo*
 silva_token_origo (
     constans SilvaToken* token)
 {
-    /* Origo MUTABILIS quamquam lexema constans traditur (ut
-     * materia_token_cauda): cast-qual hic consultus. */
-    redde (SilvaOrigo*)(size_t) & token->origo;
+    redde &_cauda_c89(token)->origo;
+}
+
+SilvaLexemaGenus
+silva_token_genus (
+    constans SilvaToken* token)
+{
+    redde (SilvaLexemaGenus)token->genus;
 }
 
 i32
 silva_token_longitudo (
     constans SilvaToken* token)
 {
-    redde token->longitudo;
+    redde _cauda_c89(token)->longitudo;
 }
 
 vacuum
@@ -340,14 +374,14 @@ silva_token_longitudo_ponere (
      SilvaToken* token,
             i32  longitudo)
 {
-    token->longitudo = longitudo;
+    _cauda_c89(token)->longitudo = longitudo;
 }
 
 i8
 silva_token_standard (
     constans SilvaToken* token)
 {
-    redde token->standard;
+    redde _cauda_c89(token)->standard;
 }
 
 vacuum
@@ -355,14 +389,14 @@ silva_token_standard_ponere (
      SilvaToken* token,
              i8  standard)
 {
-    token->standard = standard;
+    _cauda_c89(token)->standard = standard;
 }
 
 Xar*
 silva_token_scissurae (
     constans SilvaToken* token)
 {
-    redde token->scissurae;
+    redde _cauda_c89(token)->scissurae;
 }
 
 vacuum
@@ -370,14 +404,14 @@ silva_token_scissurae_ponere (
     SilvaToken* token,
            Xar* scissurae)
 {
-    token->scissurae = scissurae;
+    _cauda_c89(token)->scissurae = scissurae;
 }
 
 b32
 silva_token_initium_lineae (
     constans SilvaToken* token)
 {
-    redde token->initium_lineae;
+    redde materia_token_initium_lineae(token);
 }
 
 vacuum
@@ -385,15 +419,14 @@ silva_token_initium_lineae_ponere (
      SilvaToken* token,
             b32  valor)
 {
-    token->initium_lineae = valor;
+    materia_token_initium_lineae_ponere(token, valor);
 }
 
 i32
 silva_token_ante_numerus (
     constans SilvaToken* token)
 {
-    redde (token->spatia_ante != NIHIL)
-        ? xar_numerus(token->spatia_ante) : (i32)ZEPHYRUM;
+    redde token->numerus_ante;
 }
 
 SilvaToken*
@@ -401,20 +434,18 @@ silva_token_ante (
     constans SilvaToken* token,
                     i32  index)
 {
-    si (   token->spatia_ante == NIHIL
-        || index              >= xar_numerus(token->spatia_ante))
+    si (index >= token->numerus_ante)
     {
         redde NIHIL;
     }
-    redde *(SilvaToken**)xar_obtinere(token->spatia_ante, index);
+    redde token->spatia_ante[index];
 }
 
 i32
 silva_token_post_numerus (
     constans SilvaToken* token)
 {
-    redde (token->spatia_post != NIHIL)
-        ? xar_numerus(token->spatia_post) : (i32)ZEPHYRUM;
+    redde token->numerus_post;
 }
 
 SilvaToken*
@@ -422,12 +453,11 @@ silva_token_post (
     constans SilvaToken* token,
                     i32  index)
 {
-    si (   token->spatia_post == NIHIL
-        || index              >= xar_numerus(token->spatia_post))
+    si (index >= token->numerus_post)
     {
         redde NIHIL;
     }
-    redde *(SilvaToken**)xar_obtinere(token->spatia_post, index);
+    redde token->spatia_post[index];
 }
 
 b32
@@ -436,24 +466,27 @@ silva_token_ante_addere (
     SilvaToken* token,
     SilvaToken* trivium)
 {
-    SilvaToken** cella;
+    SilvaToken** series;
+           i32   n;
+           i32   i;
 
-    si (token->spatia_ante == NIHIL)
-    {
-        token->spatia_ante = xar_creare(piscina,
-            magnitudo(SilvaToken*));
-        si (token->spatia_ante == NIHIL)
-        {
-            redde FALSUM;
-        }
-    }
-    cella = (SilvaToken**)xar_addere(token->spatia_ante);
-    si (cella == NIHIL)
+    /* Materia trivia SEMEL ponit ut seriem exactam: series n+I
+     * construitur et iterum ponitur (ponere iterari licet). Numeri
+     * parvi - trivia per lexema pauca. */
+    n = token->numerus_ante;
+    series = (SilvaToken**)piscina_allocare(piscina,
+        (memoriae_index)(n + I) * magnitudo(SilvaToken*));
+    si (series == NIHIL)
     {
         redde FALSUM;
     }
-    *cella = trivium;
-    redde VERUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        series[i] = token->spatia_ante[i];
+    }
+    series[n] = trivium;
+    redde materia_token_trivia_ante_ponere(token, piscina, series, n
+        + I);
 }
 
 b32
@@ -462,38 +495,65 @@ silva_token_post_addere (
     SilvaToken* token,
     SilvaToken* trivium)
 {
-    SilvaToken** cella;
+    SilvaToken** series;
+           i32   n;
+           i32   i;
 
-    si (token->spatia_post == NIHIL)
-    {
-        token->spatia_post = xar_creare(piscina,
-            magnitudo(SilvaToken*));
-        si (token->spatia_post == NIHIL)
-        {
-            redde FALSUM;
-        }
-    }
-    cella = (SilvaToken**)xar_addere(token->spatia_post);
-    si (cella == NIHIL)
+    /* Materia trivia SEMEL ponit ut seriem exactam: series n+I
+     * construitur et iterum ponitur (ponere iterari licet). Numeri
+     * parvi - trivia per lexema pauca. */
+    n = token->numerus_post;
+    series = (SilvaToken**)piscina_allocare(piscina,
+        (memoriae_index)(n + I) * magnitudo(SilvaToken*));
+    si (series == NIHIL)
     {
         redde FALSUM;
     }
-    *cella = trivium;
-    redde VERUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        series[i] = token->spatia_post[i];
+    }
+    series[n] = trivium;
+    redde materia_token_trivia_post_ponere(token, piscina, series, n
+        + I);
+}
+
+b32
+silva_token_ante_ponere (
+        Piscina*  piscina,
+     SilvaToken*  token,
+     SilvaToken** series,
+            i32   numerus)
+{
+    redde materia_token_trivia_ante_ponere(token, piscina, series,
+        numerus);
+}
+
+b32
+silva_token_post_ponere (
+        Piscina*  piscina,
+     SilvaToken*  token,
+     SilvaToken** series,
+            i32   numerus)
+{
+    redde materia_token_trivia_post_ponere(token, piscina, series,
+        numerus);
 }
 
 vacuum
 silva_token_ante_vacare (
     SilvaToken* token)
 {
-    token->spatia_ante = NIHIL;
+    (vacuum)materia_token_trivia_ante_ponere(token, NIHIL, NIHIL,
+        ZEPHYRUM);
 }
 
 vacuum
 silva_token_post_vacare (
     SilvaToken* token)
 {
-    token->spatia_post = NIHIL;
+    (vacuum)materia_token_trivia_post_ponere(token, NIHIL, NIHIL,
+        ZEPHYRUM);
 }
 
 

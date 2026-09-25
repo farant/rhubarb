@@ -88,6 +88,7 @@ if [ -z "$OBIECTA" ]; then
 fi
 clang "${VEXILLA_C89[@]}" \
       -I"$RADIX/include" -I"$RADIX/silva/fontes" -I"$RADIX/silva/instrumenta" \
+      -I"$RADIX/materia/fontes" \
       -c "$FONS" -o "$BASIS/vivum.o" \
     || { echo "FRACTA: oraculum_silvae.c (vivum)" >&2; exit 1; }
 # shellcheck disable=SC2086

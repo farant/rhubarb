@@ -98,7 +98,7 @@ while IFS= read -r caput_via; do
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi
-done < <(find "$RADIX_DIR/include" "$OFF_DIR/fontes" "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" -name '*.h' 2>/dev/null)
+done < <(find "$RADIX_DIR/include" "$OFF_DIR/fontes" "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" "$RADIX_DIR/materia/fontes" -name '*.h' 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
@@ -186,7 +186,7 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || ! [ "$obj" -nt "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [lexicon] silva_lexicon.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" \
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" "-I$RADIX_DIR/materia/fontes" \
         -c "$src" -o "$obj"; then
         echo "FRACTA: silva_lexicon" ; exit 1
     fi

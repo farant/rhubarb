@@ -32,7 +32,10 @@
 > DONE 2026-09-25: ~430 token-field sites on accessors (321 driver,
 > ~43 hand, 63 inside macro arguments the census could not see);
 > zero direct uses by two angles; oracle, M3, shim unchanged; last
-> amalgam regeneration before the freeze.
+> amalgam regeneration before the freeze. T7b DONE 2026-09-25:
+> SilvaToken IS MateriaToken + C89 tail; oracle clean over 470, M3
+> 6/6, shim unchanged; lexing bytes −29%; `genus`'s type (enum → s32)
+> needed `silva_token_genus` at 33 sites; amalgam FROZEN until T13.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -594,7 +597,10 @@ materia with itself); its corpus lives on in the oracle gate. Freeze
 notice removed from `silva/CLAUDE.md`; `materia/CLAUDE.md` and the
 materia-spec §7/§10 marked as-built; phase-log RELATIO; park note.
 Then re-issue T14–T19 as `silva-migratio-plan-B.md` from what was
-learned.
+learned. *Owed from T7b:* `tools/amalgama_excludenda_generare.sh` and
+`tools/amalgama_ligare.sh` pass `silva/fontes` without `materia/fontes`
+— they only run inside silva's frozen `amalgamare.sh`; fix them when
+the amalgam regenerates here.
 
 ---
 

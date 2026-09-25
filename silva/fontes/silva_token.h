@@ -24,6 +24,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "materia_token.h"
 
 
 /* ==================================================
@@ -205,7 +206,12 @@ nomen enumeratio {
     SILVA_ORIGO_API           /* ex definitione per API iniecta */
 } SilvaOrigoGenus;
 
-nomen structura SilvaToken SilvaToken;
+/* SilvaToken EST MateriaToken (phasis V, T7b): campi communes
+ * (genus, valor, byte_offset, linea, columna, fons_index, trivia,
+ * vexilla) substrati sunt; origo, longitudo, standard, scissurae in
+ * CAUDA C89 eiusdem allocationis vivunt (silva_token.c,
+ * SilvaTokenCauda) - per accessores silva_token_* soli attinguntur. */
+nomen MateriaToken SilvaToken;
 
 nomen structura {
     SilvaOrigoGenus genus;
@@ -235,24 +241,15 @@ nomen structura {
 
 
 /* ==================================================
- * SilvaToken - lexema unificatum
+ * SilvaToken - lexema unificatum = MateriaToken + cauda C89
+ *
+ * Repraesentatio ab phasi V (T7b, 2026-09-25): corpus substrati
+ * (materia_token.h: genus s32, valor, byte_offset, linea, columna,
+ * fons_index; trivia ut SERIES exactae; initium_lineae in vexillis)
+ * et cauda C89 in eadem allocatione (origo INSERTA - numquam NIHIL,
+ * longitudo FONTIS, standard, scissurae). Decisio 'origo inserta'
+ * (supra) SERVATUR: cauda allocationem unam cum lexemate communicat.
  * ================================================== */
-
-structura SilvaToken {
-    SilvaLexemaGenus genus;
-    chorda           valor;          /* visus in textum fontis (vel synthesin) */
-    s32              byte_offset;    /* intra fontem; -1 si synthesitum */
-    i32              longitudo;      /* mensura in octetis */
-    i32              linea;          /* 1-basata */
-    i32              columna;        /* 1-basata */
-    s32              fons_index;     /* in tabulam fontium contextus */
-    i8               standard;       /* SILVA_STANDARD_* */
-    b32              initium_lineae; /* primum non-trivia lineae LOGICAE */
-    Xar*             spatia_ante;    /* Xar de SilvaToken* (trivia); NIHIL */
-    Xar*             spatia_post;    /* Xar de SilvaToken* (trivia); NIHIL */
-    Xar*             scissurae;      /* Xar de SilvaScissura; NIHIL fere semper */
-    SilvaOrigo       origo;          /* INSERTA - numquam NIHIL */
-};
 
 
 /* ==================================================
@@ -365,6 +362,13 @@ SilvaOrigo*
 silva_token_origo (
     constans SilvaToken* token);
 
+/* Genus ut enumeratio frontis: MateriaToken genus s32 fert (index in
+ * lexico; ordo idem ac SilvaLexemaGenus - lexicon C89 ex hac ipsa
+ * enumeratione generatur). Ubi typus enumerationis requiritur. */
+SilvaLexemaGenus
+silva_token_genus (
+    constans SilvaToken* token);
+
 /* Mensura in octetis FONTIS (laminis \<nl> inclusis) - NON
  * valor.mensura, qui laminas scissas omittit */
 i32
@@ -437,6 +441,23 @@ silva_token_post_addere (
     SilvaToken* token,
     SilvaToken* trivium);
 
+
+/* Trivia lateris TOTA ponere (series exacta a materia copiatur;
+ * numerus ZEPHYRUM = vacare). Aedificator lexatoris hac via seriem
+ * semel tradit (phasis V T7b), non per singula _addere. */
+b32
+silva_token_ante_ponere (
+        Piscina*  piscina,
+     SilvaToken*  token,
+     SilvaToken** series,
+            i32   numerus);
+
+b32
+silva_token_post_ponere (
+        Piscina*  piscina,
+     SilvaToken*  token,
+     SilvaToken** series,
+            i32   numerus);
 
 /* Trivia lateris vacare (probationes: plantae quae trivia movent aut
  * tollunt). Post id numerus ZEPHYRUM. */

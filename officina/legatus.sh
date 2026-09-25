@@ -55,7 +55,7 @@ source "$OFF_DIR/legatus_fontes_generata.sh"
 newest_header () {
     find "$RADIX_DIR/include" "$RADIX_DIR/silva/amalgama" \
          "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" "$OFF_DIR/instrumenta" \
-         -name '*.h' -newer "$1" 2>/dev/null | head -1
+         "$RADIX_DIR/materia/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
 FONTES_OMNES=()
 for f in "${RADIX_FONTES[@]}"; do FONTES_OMNES+=("$RADIX_DIR/lib/$f.c"); done
@@ -123,7 +123,7 @@ src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
 obj="$BUILD_DIR/silva_lexicon.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || fons_stalus silva_lexicon "$obj"; then
     echo "  [lexicon] silva_lexicon.c" >&2
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" -c "$src" -o "$obj" || exit 1
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" "-I$RADIX_DIR/materia/fontes" -c "$src" -o "$obj" || exit 1
 fi
 obj_files="$obj_files $obj"
 

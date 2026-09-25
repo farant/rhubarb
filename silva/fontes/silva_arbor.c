@@ -1008,7 +1008,7 @@ _trivium_scribere (
         scriptor->causa = "trivium nihil";
         redde NIHIL;
     }
-    si (silva_arbor_lexema_tag(trivium->genus, tag,
+    si (silva_arbor_lexema_tag(silva_token_genus(trivium), tag,
             (i32)magnitudo(tag)) == ZEPHYRUM)
     {
         scriptor->causa = "genus trivii ignotum";
@@ -1557,7 +1557,8 @@ _scribere_lexema (
         redde transclusio;
     }
 
-    si (silva_arbor_lexema_tag(lexema->genus, tag, (i32)magnitudo(tag))
+    si (silva_arbor_lexema_tag(silva_token_genus(lexema), tag,
+        (i32)magnitudo(tag))
         == ZEPHYRUM)
     {
         scriptor->causa = "genus lexematis ignotum";
@@ -1626,7 +1627,7 @@ _scribere_lexema (
     /* valor - SOLUM generibus orthographiae variae. Orthographia
      * fixa in genere IPSO vivit; eam scribere fontem veritatis
      * tertium faceret */
-    si (silva_arbor_valor_portandus(lexema->genus))
+    si (silva_arbor_valor_portandus(silva_token_genus(lexema)))
     {
         si (!_textus_tutus(&lexema->valor))
         {
@@ -1738,7 +1739,7 @@ _scribere_lexema (
      * mixtum crudum esse NON potest, scan crudus liberos
      * elementares ut textum voraret; ibi flumen manet, tutum quia
      * re-involutio contentum mixtum non tangit (ambitus v1). */
-    si (   silva_arbor_valor_portandus(lexema->genus)
+    si (   silva_arbor_valor_portandus(silva_token_genus(lexema))
         && lexema->valor.mensura > ZEPHYRUM
         && stml_numerus_liberorum(elementum) == I
         && !_valorem_crudum_notare(scriptor, elementum, tag,

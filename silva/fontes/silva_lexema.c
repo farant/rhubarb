@@ -1061,6 +1061,46 @@ silva_lexare_cruda (
  * Trivia ante lexema primum -> leading eius.
  * ================================================== */
 
+/* Pars pendentium [ab, ad) in latus lexematis SEMEL tradita. */
+#define TRIVIA_ACERVUS XXXII
+
+interior vacuum
+_trivia_tradere (
+        Piscina* piscina,
+     SilvaToken* token,
+            b32  post,
+            Xar* pendentia,
+            i32  ab,
+            i32  ad)
+{
+     SilvaToken*  acervus[TRIVIA_ACERVUS];
+     SilvaToken** series  = acervus;
+            i32   n       = ad - ab;
+            i32   j;
+
+    si (n > (i32)TRIVIA_ACERVUS)
+    {
+        series = (SilvaToken**)piscina_allocare(piscina,
+            (memoriae_index)n * magnitudo(SilvaToken*));
+        si (series == NIHIL)
+        {
+            redde;
+        }
+    }
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        series[j] = *(SilvaToken**)xar_obtinere(pendentia, ab + j);
+    }
+    si (post)
+    {
+        (vacuum)silva_token_post_ponere(piscina, token, series, n);
+    }
+    alioquin
+    {
+        (vacuum)silva_token_ante_ponere(piscina, token, series, n);
+    }
+}
+
 Xar*
 silva_spatia_attachere (
     Piscina* piscina,
@@ -1123,26 +1163,19 @@ silva_spatia_attachere (
                 }
             }
 
-            /* Trivia per accessores (phasis V T7a): vacare ante addere
-             * - olim Xar NOVUS assignabatur, ergo series priores
-             * substituebantur, non augebantur. */
+            /* Trivia SEMEL per latus traduntur (phasis V T7b): materia
+             * seriem exactam copiat - pars pendentium in alveo contiguo
+             * (acervus pro casu communi, piscina ultra). Latus totum
+             * ponitur, ut olim Xar novus assignabatur. */
             si (divisio > ZEPHYRUM && prior != NIHIL)
             {
-                silva_token_post_vacare(prior);
-                per (j = ZEPHYRUM; j < divisio; j++)
-                {
-                    silva_token_post_addere(piscina, prior,
-                        *(SilvaToken**)xar_obtinere(pendentia, j));
-                }
+                _trivia_tradere(piscina, prior, VERUM, pendentia,
+                    ZEPHYRUM, divisio);
             }
             si (divisio < xar_numerus(pendentia))
             {
-                silva_token_ante_vacare(token);
-                per (j = divisio; j < xar_numerus(pendentia); j++)
-                {
-                    silva_token_ante_addere(piscina, token,
-                        *(SilvaToken**)xar_obtinere(pendentia, j));
-                }
+                _trivia_tradere(piscina, token, FALSUM, pendentia,
+                    divisio, xar_numerus(pendentia));
             }
             pendentia = xar_creare(piscina, magnitudo(SilvaToken*));
         }

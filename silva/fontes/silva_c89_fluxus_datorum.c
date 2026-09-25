@@ -106,7 +106,7 @@ _operator_lexis (
     {
         redde SILVA_LEX_EOF;   /* sentinella: numquam operator */
     }
-    redde tok_v.datum.token->genus;
+    redde silva_token_genus(tok_v.datum.token);
 }
 
 /* Sectio brevis? (praetermissio - operanda iam granulata) */

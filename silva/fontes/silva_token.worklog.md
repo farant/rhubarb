@@ -50,3 +50,76 @@ T6b's two headers joined its live corpus — a note, not a failure),
 shim 402 + 401/401/401, silva amalgam (hospes 40/40) and officina
 amalgam (hospes 78/78) regenerated with the accessors — the last
 regeneration before the T7b→T13 freeze (decree …1BKY).
+
+## 2026-09-25 — the swap: SilvaToken IS MateriaToken (silva-migratio-plan T7b)
+
+**What changed.** `nomen MateriaToken SilvaToken;` — the struct body is
+gone. A private C89 tail `SilvaTokenCauda { origo, longitudo,
+standard, scissurae }` rides in the SAME allocation, declared through
+`MateriaTokenForma FORMA_C89`; `_cauda_c89(t)` reaches it (mutable
+from a const token, as `materia_token_cauda`). The allocator is
+`materia_token_creare(…, -I, 0, 0, -I)` (the old memset defaults:
+origo FONS, standard C89 = 0). `initium_lineae` lives in materia's
+`vexilla`; trivia are materia's EXACT series. Because of T7a's seam,
+outside this file only the lexer changed: it hands each side's
+trivia over ONCE (`silva_token_ante/post_ponere`, from a stack
+buffer of XXXII, arena beyond) — per-trivium `_addere` had raised
+allocations.
+
+**What the seam did not cover: `genus`'s TYPE.** Same name, but silva's
+field was the enum `SilvaLexemaGenus` and materia's is `s32`. 33 sites
+passing/returning/assigning it as the enum failed `-Wsign-conversion`
+(the T7 measurement had named the numbering, not the type). One
+accessor `silva_token_genus(t)` (enum view of materia's s32 — the
+lexicon is generated FROM this enum, so the numbering is identical by
+construction) at those reads; `(s32)` at the four constructor writes.
+The ~260 other `genus` uses compare against enum constants and needed
+nothing. A line-wide replacement also wrapped a `SilvaProspectus`
+field on the same line (`expandere.c:1800`) — caught by the compiler
+at once.
+
+**Tooling trap.** With silva not compiling, `silva.Editio`'s by-name
+operations fail (they need the formator, which is built from silva):
+the genus fix went in as plain writes, and formator + examen ran over
+every file once silva compiled again.
+
+**Two include lists missed `materia/fontes`**: the silva runner's
+per-test compile (`probatio_una`'s own `INC`, separate from
+`INCLUDE_FLAGS`) and the live oracle's compile line.
+
+**Cost, measured (computus gold regenerated for this cause):** on
+`arrays.c` lexing bytes 188,416 → 133,992 (−29%), allocations 8,661 →
+8,453, total use −5%; `base64.c` lexing −30%, allocations 18,696 →
+17,827. Arena slack rises (fewer bytes, same blocks).
+
+**Behaviour: unchanged.** Oracle clean over 470 files (emission, STML,
+errors, semantics identical to pinned silva; every pinned document
+reads back), M3 6/6, shim 402 + 401/401/401, silva 54/54. The amalgam
+is FROZEN from here to T13 (decree …1BKY; note atop silva/CLAUDE.md).
+
+**Where the bytes went (Fran asked; measured by a probe, 2026-09-25).**
+NOT the token: old `SilvaToken` 128 bytes; new `MateriaToken` 64 + C89
+tail 64 = 128 (`SilvaOrigo` alone is 48; `longitudo`, `standard`, the
+`scissurae` pointer and padding make the other 16 — `materia_token.h`'s
+own estimate of a 48-byte tail / 112 total was optimistic). The saving
+is TRIVIA storage: a `Xar` holding one trivium costs 272 bytes; materia's
+exact series costs 8. Nearly every token carries a trivium on some
+side, so that overhead was paid almost everywhere — hence lexing −29%
+and fewer allocations. A design choice ("set once, never appended")
+inherited for free, not faster code. The tail could be packed later
+(e.g. `standard` into materia's flag bits); not worth it next to this.
+
+**Include gaps, swept rather than met one by one.** After the per-test
+compile and the live oracle, officina's five scripts (colloquium,
+compile_probationes, legatus, sonda, vindex) compiled
+`silva_lexicon.c` without `-I materia/fontes` (the T7b commit's
+officina gate stopped it). A sweep of every tracked script that
+passes silva's source headers found no others outside the frozen
+amalgam tooling (`tools/amalgama_excludenda_generare.sh`,
+`tools/amalgama_ligare.sh` — they run only inside silva's
+`amalgamare.sh`; T13 owes them). And the SHARED amalgamation mechanism
+(`tools/mechanismus_fontes.sh`, header: "nobody knew because nobody
+ran them") broke exactly as its header warns: officina/ and
+tessera/amalgamare.sh compile silva's lexer, which now needs
+`materia_token`. Fixed (include + `mech_materia_token.o` + header
+guard); both regenerate their committed amalgams byte-identical.

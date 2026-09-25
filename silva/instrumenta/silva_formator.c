@@ -702,7 +702,7 @@ _proximum_verum (
     {
         SilvaLexemaGenus g;
 
-        g = _lexema(cruda, index)->genus;
+        g = silva_token_genus(_lexema(cruda, index));
         si (   g != SILVA_LEX_SPATIA && g != SILVA_LEX_TABULAE
             && g != SILVA_LEX_NOVA_LINEA
             && g != SILVA_LEX_CONTINUATIO
@@ -2440,7 +2440,7 @@ _catenam_colligere (
 
         op = _token_fons(
             silva_c89_binarium_tok_operator(nodus));
-        si (op && _operator_logicus(op->genus))
+        si (op && _operator_logicus(silva_token_genus(op)))
         {
             _catenam_colligere(_valor_nodus(
                 silva_c89_binarium_sinister(nodus)), collectio);
@@ -2499,7 +2499,7 @@ _catenam_censere (
     }
     radix_op = _token_fons(
         silva_c89_binarium_tok_operator(conditio));
-    si (!radix_op || !_operator_logicus(radix_op->genus))
+    si (!radix_op || !_operator_logicus(silva_token_genus(radix_op)))
     {
         redde;
     }
@@ -2598,7 +2598,7 @@ _catenam_censere (
             }
             op = _token_fons(
                 silva_c89_binarium_tok_operator(ramus));
-            si (   !op || !_comparatio_bichar(op->genus)
+            si (   !op || !_comparatio_bichar(silva_token_genus(op))
                 || !_principalis(ambitus, op))
             {
                 perge;
@@ -2776,7 +2776,7 @@ _binarium_operatorem_censere (
         &scb)
         && operator_tok->linea   == slb
         && operator_tok->columna != scb + I
-        && !(_comparatio_bichar(operator_tok->genus)
+        && !(_comparatio_bichar(silva_token_genus(operator_tok))
             && _catena_vindicata(ambitus, operator_tok->linea,
                 operator_tok->columna)))
     {
@@ -3428,7 +3428,7 @@ _continuationes_censere (
         }
 
         /* operator claudens lineam intra sententiam */
-        si (   _operator_ducibilis(lexema->genus)
+        si (   _operator_ducibilis(silva_token_genus(lexema))
             && i + I < numerus)
         {
             i32 j;
@@ -3472,7 +3472,7 @@ _continuationes_censere (
                     {
                         SilvaLexemaGenus g;
 
-                        g = _lexema(cruda, k)->genus;
+                        g = silva_token_genus(_lexema(cruda, k));
                         si (   g != SILVA_LEX_SPATIA
                             && g != SILVA_LEX_TABULAE
                             && g != SILVA_LEX_NOVA_LINEA)
@@ -3720,7 +3720,7 @@ _fracturas_censere (
             SilvaLexemaGenus  g;
 
             t = _lexema(cruda, i);
-            g = t->genus;
+            g = silva_token_genus(t);
             /* linea prior continuata ('\') = corpus macri */
             si (t->linea == linea - I && g == SILVA_LEX_CONTINUATIO)
             {
@@ -3754,7 +3754,7 @@ _fracturas_censere (
                 }
                 proximum = _lexema(cruda, i + I);
                 si (   proximum->linea != linea
-                    || _commentum_est(proximum->genus)
+                    || _commentum_est(silva_token_genus(proximum))
                     || proximum->genus == SILVA_LEX_NOVA_LINEA
                     || proximum->genus == SILVA_LEX_CONTINUATIO
                     || proximum->genus == SILVA_LEX_SPATIA
@@ -3766,14 +3766,17 @@ _fracturas_censere (
                 si (   prius->genus == SILVA_LEX_COMMA
                     || prius->genus == SILVA_LEX_ASSIGNATIO)
                 {
-                    candidati[n_cand].index          = i;
-                    candidati[n_cand].profunditas    = profunditas;
-                    candidati[n_cand].logicus        = FALSUM;
-                    candidati[n_cand].genus_proximi  = prius->genus;
-                    n_cand                           += I;
+                    candidati[n_cand].index        = i;
+                    candidati[n_cand].profunditas  = profunditas;
+                    candidati[n_cand].logicus      = FALSUM;
+                    candidati[n_cand].genus_proximi =
+                        silva_token_genus(prius);
+                    n_cand += I;
                 }
-                alioquin si (   _operator_ducibilis(proximum->genus)
-                             && _operandum_finiens(prius->genus))
+                alioquin si (   _operator_ducibilis(
+                                    silva_token_genus(proximum))
+                             && _operandum_finiens(
+                                    silva_token_genus(prius)))
                 {
                     candidati[n_cand].index        = i;
                     candidati[n_cand].profunditas  = profunditas;
@@ -3781,7 +3784,7 @@ _fracturas_censere (
                         proximum->genus == SILVA_LEX_ET_ET
                         || proximum->genus == SILVA_LEX_VEL_VEL;
                     candidati[n_cand].genus_proximi =
-                        proximum->genus;
+                        silva_token_genus(proximum);
                     n_cand += I;
                 }
                 perge;
@@ -4327,7 +4330,7 @@ formator_lint_intra (
             {
                 SilvaLexemaGenus g;
 
-                g = _lexema(cruda, i + I)->genus;
+                g = silva_token_genus(_lexema(cruda, i + I));
                 si (   g != SILVA_LEX_SPATIA
                     && g != SILVA_LEX_NOVA_LINEA
                     && g != SILVA_LEX_CONTINUATIO
@@ -5047,12 +5050,14 @@ _series_aequalis (
         SilvaToken* tb;
 
         dum (   ia < numerus_a
-             && _trivia_spatialis_est(_lexema(cruda_a, ia)->genus))
+             && _trivia_spatialis_est(silva_token_genus(_lexema(cruda_a,
+             ia))))
         {
             ia += I;
         }
         dum (   ib < numerus_b
-             && _trivia_spatialis_est(_lexema(cruda_b, ib)->genus))
+             && _trivia_spatialis_est(silva_token_genus(_lexema(cruda_b,
+             ib))))
         {
             ib += I;
         }

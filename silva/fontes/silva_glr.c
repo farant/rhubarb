@@ -1356,7 +1356,7 @@ silva_glr_parsare (
             si (passus.lexema != NIHIL)
             {
                 passus.terminale = silva_glr_terminale_ex_genere(
-                    glr->tabula, passus.lexema->genus);
+                    glr->tabula, silva_token_genus(passus.lexema));
                 si (passus.terminale == SILVA_GLR_TERMINALE_IGNOTUM)
                 {
                     fructus.est_error   = VERUM;

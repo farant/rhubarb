@@ -1797,7 +1797,7 @@ silva_expansio_prospectare (
         SilvaToken* primum;
 
         primum = *(SilvaToken**)xar_obtinere(def->corpus, ZEPHYRUM);
-        prospectus_out->genus = primum->genus;
+        prospectus_out->genus = silva_token_genus(primum);
         prospectus_out->est_vacuum = FALSUM;
         si (   _est_nomen_directivae(primum)
             && silva_expansio_quaerere(exp, primum->valor) != NIHIL)
@@ -2111,7 +2111,8 @@ _conglutinare (
     }
 
     t = *(SilvaToken**)xar_obtinere(relexata, ZEPHYRUM);
-    pasta = silva_token_ex_pasta(exp->piscina, t->genus, t->valor,
+    pasta = silva_token_ex_pasta(exp->piscina, silva_token_genus(t),
+        t->valor,
         sinister, dexter, invocatio, nomen_macro, hs);
     _lexema_addere(exitus, pasta);
 

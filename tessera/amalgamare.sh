@@ -28,6 +28,7 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"
+    "-I$RADIX_DIR/materia/fontes"
     "-I$SILVA_DIR/instrumenta"
 )
 
@@ -40,7 +41,7 @@ declare -a MECHANISMI_FONTES=(
 # capita mutata sine recompilo = corruptio ABI (excubitor: mech_*
 # stala post latina.h - eadem classis mixturae)
 newest_header () {
-    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" \
+    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" "$RADIX_DIR/materia/fontes" \
         "$SILVA_DIR/instrumenta" \
         -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
@@ -64,6 +65,15 @@ for f in "silva_token" "silva_lexema"; do
     fi
     obj_files="$obj_files $obj"
 done
+# lexema silvae = MateriaToken + cauda C89 (phasis V T7b): lexator
+# mechanismi materia_token nectere debet
+src="$RADIX_DIR/materia/fontes/materia_token.c"
+obj="$BUILD_DIR/mech_materia_token.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [materia] materia_token.c"
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
 # Mechanismus COMMUNIS ex lista communi - vide tools/
 # mechanismus_fontes.sh (lista ter descripta divergit semel iam et
 # amalgama huius proiecti per menses confici non potuit).

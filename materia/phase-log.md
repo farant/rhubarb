@@ -3155,3 +3155,19 @@ shim unchanged, silva 54/54; silva and officina amalgams regenerated
 (last time before the freeze). Replay verdict: substrate modules
 touched (token, arbor, aequalitas, annotationes, nodus, scribere) —
 refactor only, behaviour proven unchanged by the oracle; nothing owed.
+
+## 2026-09-25 — phase 5 T7b: silva's tokens are materia tokens
+
+RELATIO: `SilvaToken` is `MateriaToken` plus a C89 tail in the same
+allocation (origo, longitudo, standard, scissurae); trivia are
+materia's exact series (the lexer hands each side over once);
+`initium_lineae` is a materia flag. Behind T7a's seam only the accessor
+bodies, the allocator and the lexer changed — plus one thing the seam
+could not cover: `genus` is `s32` in materia, an enum in silva, and 33
+sites needed `silva_token_genus` (enum view; numbering identical by
+construction, the lexicon is generated from the enum). Oracle clean
+over 470 files, M3 6/6, shim unchanged, silva 54/54. Measured: lexing
+bytes −29%, allocations down (computus gold regenerated for this
+cause). The amalgam is FROZEN from here to T13 (note atop
+silva/CLAUDE.md). Replay verdict: substrate module `token` switched;
+nothing owed.

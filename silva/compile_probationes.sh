@@ -207,7 +207,7 @@ probatio_una () {   # <nomen> - in operario (bash filio); ambitus exportatus
     local t0 t1 tc tr rc obj_files
     local -a INC
     source "$RADIX_DIR/tools/vexilla.sh"
-    INC=("-I$RADIX_DIR/include" "-I$SILVA_DIR/fontes" "-I$SILVA_DIR/instrumenta" "-I$SILVA_DIR/probationes")
+    INC=("-I$RADIX_DIR/include" "-I$SILVA_DIR/fontes" "-I$RADIX_DIR/materia/fontes" "-I$SILVA_DIR/instrumenta" "-I$SILVA_DIR/probationes")
     obj_files="$(cat "$OBIECTA")"
     t0=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
     # compilatio et nexus seorsum (dsymutil vitatur - vide radicem)

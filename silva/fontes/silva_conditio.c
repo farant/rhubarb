@@ -90,7 +90,7 @@ _genus_currens (
     {
         redde SILVA_LEX_EOF;
     }
-    redde tok->genus;
+    redde silva_token_genus(tok);
 }
 
 interior vacuum
