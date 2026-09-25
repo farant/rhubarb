@@ -246,8 +246,9 @@ int main(void)
         summa++;
         if (primum != NULL
             && silva_lexema_genus_nomen(primum->genus) != NULL
-            && primum->origo.genus == SILVA_ORIGO_FONS
-            && silva_origo_genus_nomen(primum->origo.genus) != NULL)
+            && silva_token_origo(primum)->genus == SILVA_ORIGO_FONS
+            && silva_origo_genus_nomen(silva_token_origo(primum)->genus)
+                != NULL)
         {
             fideles++;
         }

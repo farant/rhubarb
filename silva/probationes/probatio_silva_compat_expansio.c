@@ -153,7 +153,7 @@ s32 principale (vacuum)
 
         tok = _ad(fructus, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_INTEGER);
-        CREDO_AEQUALIS_I32 ((i32)tok->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(tok)->genus,
             (i32)SILVA_ORIGO_EXPANSIO);
 
         radix = silva_token_radix(tok);

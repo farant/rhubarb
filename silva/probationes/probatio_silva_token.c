@@ -52,24 +52,24 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)token->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_AEQUALIS_S32 (token->byte_offset, XLII);
-        CREDO_AEQUALIS_I32 (token->longitudo, VII);
+        CREDO_AEQUALIS_I32 (silva_token_longitudo(token), VII);
         CREDO_AEQUALIS_I32 (token->linea, III);
         CREDO_AEQUALIS_I32 (token->columna, VII);
         CREDO_AEQUALIS_S32 (token->fons_index, ZEPHYRUM);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "piscina");
 
         /* Origo inserta: FONS, sine praedecessoribus */
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_FONS);
         CREDO_VERUM (silva_token_est_fons(token));
         CREDO_AEQUALIS_PTR (silva_token_radix(token), token);
         CREDO_AEQUALIS_I32 (silva_token_profunditas(token), ZEPHYRUM);
 
         /* Trivia et scissurae: NIHIL per defaltam */
-        CREDO_NIHIL (token->spatia_ante);
-        CREDO_NIHIL (token->spatia_post);
-        CREDO_NIHIL (token->scissurae);
-        CREDO_FALSUM (token->initium_lineae);
+        CREDO_AEQUALIS_I32 (silva_token_ante_numerus(token), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (silva_token_post_numerus(token), ZEPHYRUM);
+        CREDO_NIHIL (silva_token_scissurae(token));
+        CREDO_FALSUM (silva_token_initium_lineae(token));
     }
 
 
@@ -106,11 +106,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (gen1->fons_index, I);
 
         /* Catena use-site */
-        CREDO_AEQUALIS_I32 ((i32)gen1->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(gen1)->genus,
             (i32)SILVA_ORIGO_EXPANSIO);
-        CREDO_AEQUALIS_PTR (gen1->origo.datum.expansio.corpus,
+        CREDO_AEQUALIS_PTR (silva_token_origo(gen1)->datum.expansio.corpus,
             corpus_m);
-        CREDO_AEQUALIS_PTR (gen1->origo.datum.expansio.invocatio,
+        CREDO_AEQUALIS_PTR (silva_token_origo(gen1)->datum.expansio.invocatio,
             invocatio_m);
         CREDO_AEQUALIS_PTR (silva_token_radix(gen1), invocatio_m);
         CREDO_AEQUALIS_I32 (silva_token_profunditas(gen1), I);
@@ -152,13 +152,14 @@ s32 principale (vacuum)
             sinister, dexter, sinister, titulus, NIHIL);
 
         CREDO_CHORDA_AEQUALIS_LITERIS (pasta->valor, "silva_crescat");
-        CREDO_AEQUALIS_I32 ((i32)pasta->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(pasta)->genus,
             (i32)SILVA_ORIGO_PASTA);
-        CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.sinister,
+        CREDO_AEQUALIS_PTR (silva_token_origo(pasta)->datum.pasta.sinister,
             sinister);
-        CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.dexter, dexter);
+        CREDO_AEQUALIS_PTR (silva_token_origo(pasta)->datum.pasta.dexter,
+            dexter);
         /* ANCORA EMISSIONIS servata et a parentibus distincta */
-        CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.invocatio,
+        CREDO_AEQUALIS_PTR (silva_token_origo(pasta)->datum.pasta.invocatio,
             sinister);
 
         /* Radix sequitur sinistrum (catena primaria) */

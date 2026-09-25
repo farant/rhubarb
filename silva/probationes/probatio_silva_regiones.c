@@ -531,7 +531,8 @@ s32 principale (vacuum)
         /* int x = 42 ; EOF */
         CREDO_AEQUALIS_I32 (xar_numerus(expansa), VI);
         CREDO_CHORDA_AEQUALIS_LITERIS (_ad(expansa, III)->valor, "42");
-        CREDO_AEQUALIS_I32 ((i32)_ad(expansa, III)->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(_ad(expansa,
+            III))->genus,
             (i32)SILVA_ORIGO_EXPANSIO);
         CREDO_AEQUALIS_I32 (xar_numerus(exp->regiones), I);
     }

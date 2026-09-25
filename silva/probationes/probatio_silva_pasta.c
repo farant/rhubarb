@@ -66,7 +66,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)token->genus,
             (i32)SILVA_LEX_STRING_LIT);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "\"abc\"");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_CHORDA);
 
         /* cursus albi -> unum spatium */
@@ -106,12 +106,13 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)token->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "silva");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_PASTA);
         CREDO_CHORDA_AEQUALIS_LITERIS (
-            token->origo.datum.pasta.sinister->valor, "sil");
+            silva_token_origo(token)->datum.pasta.sinister->valor,
+            "sil");
         CREDO_CHORDA_AEQUALIS_LITERIS (
-            token->origo.datum.pasta.dexter->valor, "va");
+            silva_token_origo(token)->datum.pasta.dexter->valor, "va");
 
         /* operanda CRUDA: P(X) -> X7, non 57 */
         exitus = _expandere_fontem(piscina,
@@ -155,19 +156,19 @@ s32 principale (vacuum)
         /* n = a bc d ; EOF */
         token = _ad(exitus, II);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "a");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_EXPANSIO);
         token = _ad(exitus, III);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "bc");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_PASTA);
         CREDO_CHORDA_AEQUALIS_LITERIS (
-            token->origo.datum.pasta.sinister->valor, "b");
+            silva_token_origo(token)->datum.pasta.sinister->valor, "b");
         CREDO_CHORDA_AEQUALIS_LITERIS (
-            token->origo.datum.pasta.dexter->valor, "c");
+            silva_token_origo(token)->datum.pasta.dexter->valor, "c");
         token = _ad(exitus, IV);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "d");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_EXPANSIO);
         CREDO_AEQUALIS_I32 ((i32)_ad(exitus, V)->genus,
             (i32)SILVA_LEX_SEMICOLON);
@@ -210,10 +211,10 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_INTEGER);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "9");
         /* provenientia: 9 <- expansio AB <- pasta */
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_EXPANSIO);
         CREDO_AEQUALIS_I32 (
-            (i32)token->origo.datum.expansio.invocatio->origo.genus,
+            (i32)silva_token_origo(silva_token_origo(token)->datum.expansio.invocatio)->genus,
             (i32)SILVA_ORIGO_PASTA);
     }
 

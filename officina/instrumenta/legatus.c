@@ -2195,7 +2195,7 @@ _symbolum_declaratum_ad_byte (
             && radix_t->byte_offset                 >= ZEPHYRUM
             && (memoriae_index)radix_t->byte_offset <= octetum
             && octetum < (memoriae_index)radix_t->byte_offset
-                + radix_t->longitudo)
+                + silva_token_longitudo(radix_t))
         {
             redde s;
         }
@@ -2246,7 +2246,7 @@ _sedes_ex_symbolo (
                 (memoriae_index)radix_t->byte_offset, &l0, &c0);
             _byte_ad_positio(l, doc,
                 (memoriae_index)radix_t->byte_offset
-                    + radix_t->longitudo, &l1, &c1);
+                    + silva_token_longitudo(radix_t), &l1, &c1);
             regio = _regio_json(pn, l0, c0, l1, c1);
             json_objectum_ponere(sedes_v, "uri",
                 json_chorda_creare(pn, doc->uri));
@@ -2311,7 +2311,7 @@ _sedes_ex_symbolo (
                 c0,
                 radix_t->linea > ZEPHYRUM ? radix_t->linea - I
                                           : ZEPHYRUM,
-                c0 + radix_t->longitudo);
+                c0 + silva_token_longitudo(radix_t));
         }
         json_objectum_ponere(sedes_v, "range", regio);
         redde sedes_v;
@@ -2387,7 +2387,7 @@ _macro_ad_byte (
                 perge;
             }
             tok = *cella;
-            si (tok->origo.genus == SILVA_ORIGO_FONS)
+            si (silva_token_origo(tok)->genus == SILVA_ORIGO_FONS)
             {
                 perge;
             }
@@ -2401,7 +2401,7 @@ _macro_ad_byte (
             }
             si (   octetum < (memoriae_index)radix->byte_offset
                 || octetum >= (memoriae_index)radix->byte_offset
-                    + (memoriae_index)radix->longitudo)
+                    + (memoriae_index)silva_token_longitudo(radix))
             {
                 perge;
             }
@@ -2417,7 +2417,7 @@ _macro_ad_byte (
                 titulus_out->datum    = (i8*)t->datum;
                 *a_out                = radix->byte_offset;
                 *b_out = radix->byte_offset
-                    + (s32)radix->longitudo;
+                    + (s32)silva_token_longitudo(radix);
                 redde VERUM;
             }
         }
@@ -3174,7 +3174,8 @@ _hover_tractare (
             }
             inv.symbolum  = s;
             inv.a         = rt->byte_offset;
-            inv.b         = rt->byte_offset + (s32)rt->longitudo;
+            inv.b = rt->byte_offset
+                + (s32)silva_token_longitudo(rt);
         }
     }
     /* invocatio macronis sub positione VINCIT redditionem symboli/

@@ -150,22 +150,25 @@ _macrum_latinum (
             constans chorda* nm       = NIHIL;
         constans SilvaToken* sequens  = NIHIL;
 
-        commutatio (t->origo.genus)
+        commutatio (silva_token_origo(t)->genus)
         {
             casus SILVA_ORIGO_EXPANSIO:
-                nm = t->origo.datum.expansio.nomen_macro;
-                sequens = t->origo.datum.expansio.invocatio;
+                nm = silva_token_origo(t)->datum.expansio.nomen_macro;
+                sequens =
+                    silva_token_origo(t)->datum.expansio.invocatio;
                 frange;
             casus SILVA_ORIGO_PASTA:
-                nm = t->origo.datum.pasta.nomen_macro;
-                sequens = t->origo.datum.pasta.sinister;
+                nm = silva_token_origo(t)->datum.pasta.nomen_macro;
+                sequens = silva_token_origo(t)->datum.pasta.sinister;
                 frange;
             casus SILVA_ORIGO_CHORDA:
-                nm = t->origo.datum.stringificatio.nomen_macro;
-                sequens = t->origo.datum.stringificatio.primus;
+                nm =
+                    silva_token_origo(t)->datum.stringificatio.nomen_macro;
+                sequens =
+                    silva_token_origo(t)->datum.stringificatio.primus;
                 frange;
             casus SILVA_ORIGO_API:
-                nm = t->origo.datum.api.nomen_macro;
+                nm = silva_token_origo(t)->datum.api.nomen_macro;
                 sequens = NIHIL;
                 frange;
             ordinarius: /* FONS */

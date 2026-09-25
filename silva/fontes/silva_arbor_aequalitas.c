@@ -168,20 +168,23 @@ _arbor_lexemata_aequalia (
  * Trivia triviorum non habent, ergo recursio hic finitur. */
 interior b32
 _arbor_trivia_aequalia (
-        ArborComparator* comparator,
-                    Xar* a,
-                    Xar* b,
-     constans character* campus,
-    constans SilvaNodus* nodus_a,
-    constans SilvaNodus* nodus_b,
-                    s32  locus)
+         ArborComparator* comparator,
+     constans SilvaToken* a,
+     constans SilvaToken* b,
+                     b32  post,
+      constans character* campus,
+     constans SilvaNodus* nodus_a,
+     constans SilvaNodus* nodus_b,
+                     s32  locus)
 {
     i32 numerus_a;
     i32 numerus_b;
     i32 i;
 
-    numerus_a = a ? xar_numerus(a) : (i32)ZEPHYRUM;
-    numerus_b = b ? xar_numerus(b) : (i32)ZEPHYRUM;
+    numerus_a = post ? silva_token_post_numerus(a)
+                     : silva_token_ante_numerus(a);
+    numerus_b = post ? silva_token_post_numerus(b)
+                     : silva_token_ante_numerus(b);
 
     si (numerus_a != numerus_b)
     {
@@ -191,8 +194,10 @@ _arbor_trivia_aequalia (
 
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
-        SilvaToken* trivium_a = *(SilvaToken**)xar_obtinere(a, i);
-        SilvaToken* trivium_b = *(SilvaToken**)xar_obtinere(b, i);
+        SilvaToken* trivium_a = post ? silva_token_post(a, i)
+                                     : silva_token_ante(a, i);
+        SilvaToken* trivium_b = post ? silva_token_post(b, i)
+                                     : silva_token_ante(b, i);
 
         si (!_arbor_lexemata_aequalia(comparator, trivium_a, trivium_b,
                  nodus_a, nodus_b, locus, (s32)i))
@@ -217,9 +222,9 @@ _arbor_scissurae_aequales (
     i32 i;
 
     numerus_a =
-        a->scissurae ? xar_numerus(a->scissurae) : (i32)ZEPHYRUM;
+        silva_token_scissurae(a) ? xar_numerus(silva_token_scissurae(a)) : (i32)ZEPHYRUM;
     numerus_b =
-        b->scissurae ? xar_numerus(b->scissurae) : (i32)ZEPHYRUM;
+        silva_token_scissurae(b) ? xar_numerus(silva_token_scissurae(b)) : (i32)ZEPHYRUM;
 
     si (numerus_a != numerus_b)
     {
@@ -230,9 +235,9 @@ _arbor_scissurae_aequales (
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
         SilvaScissura* scissura_a =
-            (SilvaScissura*)xar_obtinere(a->scissurae, i);
+            (SilvaScissura*)xar_obtinere(silva_token_scissurae(a), i);
         SilvaScissura* scissura_b =
-            (SilvaScissura*)xar_obtinere(b->scissurae, i);
+            (SilvaScissura*)xar_obtinere(silva_token_scissurae(b), i);
 
         si (scissura_a == NIHIL || scissura_b == NIHIL)
         {
@@ -291,7 +296,7 @@ _arbor_lexemata_aequalia (
             nodus_b,
             a, b, locus, index);
     }
-    si (a->standard != b->standard)
+    si (silva_token_standard(a) != silva_token_standard(b))
     {
         redde _arbor_divergere(comparator, "lexema/standard", nodus_a,
             nodus_b, a, b, locus, index);
@@ -302,7 +307,7 @@ _arbor_lexemata_aequalia (
             nodus_b,
             a, b, locus, index);
     }
-    si (a->initium_lineae != b->initium_lineae)
+    si (silva_token_initium_lineae(a) != silva_token_initium_lineae(b))
     {
         redde _arbor_divergere(comparator, "lexema/initium-lineae",
             nodus_a,
@@ -336,7 +341,7 @@ _arbor_lexemata_aequalia (
                 nodus_a,
                 nodus_b, a, b, locus, index);
         }
-        si (a->longitudo != b->longitudo)
+        si (silva_token_longitudo(a) != silva_token_longitudo(b))
         {
             redde _arbor_divergere(comparator, "lexema/longitudo",
                 nodus_a,
@@ -344,18 +349,16 @@ _arbor_lexemata_aequalia (
         }
     }
 
-    si (!_arbor_trivia_aequalia(comparator, a->spatia_ante,
-        b->spatia_ante,
+        si (!_arbor_trivia_aequalia(comparator, a, b, FALSUM,
              "trivia/ante", nodus_a, nodus_b, locus))
-    {
+        {
         redde FALSUM;
-    }
-    si (!_arbor_trivia_aequalia(comparator, a->spatia_post,
-        b->spatia_post,
+        }
+        si (!_arbor_trivia_aequalia(comparator, a, b, VERUM,
              "trivia/post", nodus_a, nodus_b, locus))
-    {
+        {
         redde FALSUM;
-    }
+        }
     redde _arbor_scissurae_aequales(comparator, a, b, nodus_a, nodus_b,
         locus);
 }

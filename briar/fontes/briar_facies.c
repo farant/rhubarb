@@ -361,7 +361,8 @@ _tecta_computare (
         }
         /* CANCELLUM initio lineae: linea TOTA praeprocessor,
          * cetera lexemata eius lineae tacent */
-        si (t->genus == SILVA_LEX_CANCELLUM && t->initium_lineae)
+        si (   t->genus == SILVA_LEX_CANCELLUM
+            && silva_token_initium_lineae(t))
         {
             linea_directivi = (i32)t->linea;
             _tectum_addere(*(Xar**)xar_obtinere(tecta,
@@ -398,7 +399,7 @@ _tecta_computare (
                 sprintf(b, "#l%d", (integer)*(i32*)valor);
                 _tectum_addere(linea_tecta,
                     (i32)t->byte_offset - initia[t->linea - I],
-                    (i32)t->byte_offset + (i32)t->longitudo
+                    (i32)t->byte_offset + (i32)silva_token_longitudo(t)
                     - initia[t->linea - I], NIHIL);
                 tectum = _tectum_ultimum(linea_tecta);
                 si (tectum != NIHIL)
@@ -413,7 +414,7 @@ _tecta_computare (
             {
                 _tectum_addere(linea_tecta,
                     (i32)t->byte_offset - initia[t->linea - I],
-                    (i32)t->byte_offset + (i32)t->longitudo
+                    (i32)t->byte_offset + (i32)silva_token_longitudo(t)
                     - initia[t->linea - I], NIHIL);
                 tectum = _tectum_ultimum(linea_tecta);
                 si (tectum != NIHIL)
@@ -429,7 +430,7 @@ _tecta_computare (
         }
         _extensionem_addere(tecta, initia, numerus_linearum,
             (i32)t->linea, (i32)t->byte_offset,
-            (i32)t->byte_offset + (i32)t->longitudo, cl);
+            (i32)t->byte_offset + (i32)silva_token_longitudo(t), cl);
     }
     redde tecta;
 }

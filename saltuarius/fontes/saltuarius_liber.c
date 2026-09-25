@@ -301,14 +301,13 @@ _stratum_materializare (
         SilvaToken* t = *(SilvaToken**)silva_xar_obtinere(fluxus, k);
                i32  j;
 
-        si (t->spatia_ante != NIHIL)
+        si (silva_token_ante_numerus(t) > ZEPHYRUM)
         {
-            i32 m = silva_xar_numerus(t->spatia_ante);
+            i32 m = silva_token_ante_numerus(t);
 
             per (j = ZEPHYRUM; j < m; j++)
             {
-                summa_octetorum += (*(SilvaToken**)
-                    silva_xar_obtinere(t->spatia_ante, j))
+                summa_octetorum += (silva_token_ante(t, j))
                     ->valor.mensura;
             }
         }
@@ -317,14 +316,13 @@ _stratum_materializare (
             summa_octetorum += t->valor.mensura;
             numerus_positionum++;
         }
-        si (t->spatia_post != NIHIL)
+        si (silva_token_post_numerus(t) > ZEPHYRUM)
         {
-            i32 m = silva_xar_numerus(t->spatia_post);
+            i32 m = silva_token_post_numerus(t);
 
             per (j = ZEPHYRUM; j < m; j++)
             {
-                summa_octetorum += (*(SilvaToken**)
-                    silva_xar_obtinere(t->spatia_post, j))
+                summa_octetorum += (silva_token_post(t, j))
                     ->valor.mensura;
             }
         }
@@ -359,15 +357,14 @@ _stratum_materializare (
                 fluxus, k);
             i32 j;
 
-            si (t->spatia_ante != NIHIL)
+            si (silva_token_ante_numerus(t) > ZEPHYRUM)
             {
-                i32 m = silva_xar_numerus(t->spatia_ante);
+                i32 m = silva_token_ante_numerus(t);
 
                 per (j = ZEPHYRUM; j < m; j++)
                 {
-                    SilvaToken* trivium = *(SilvaToken**)
-                        silva_xar_obtinere(t->spatia_ante, j);
-                    i32 o;
+                    SilvaToken* trivium = silva_token_ante(t, j);
+                           i32  o;
 
                     per (o = ZEPHYRUM; o < trivium->valor.mensura;
                         o++)
@@ -409,15 +406,14 @@ _stratum_materializare (
                 visus->positiones[positio].finis  = cursor;
                 positio++;
             }
-            si (t->spatia_post != NIHIL)
+            si (silva_token_post_numerus(t) > ZEPHYRUM)
             {
-                i32 m = silva_xar_numerus(t->spatia_post);
+                i32 m = silva_token_post_numerus(t);
 
                 per (j = ZEPHYRUM; j < m; j++)
                 {
-                    SilvaToken* trivium = *(SilvaToken**)
-                        silva_xar_obtinere(t->spatia_post, j);
-                    i32 o;
+                    SilvaToken* trivium = silva_token_post(t, j);
+                           i32  o;
 
                     per (o = ZEPHYRUM; o < trivium->valor.mensura;
                         o++)
@@ -754,37 +750,38 @@ _fons_tegit (
 
     dum (t != NIHIL && gradus < XVI)
     {
-        si (t->origo.genus == SILVA_ORIGO_FONS)
+        si (silva_token_origo(t)->genus == SILVA_ORIGO_FONS)
         {
             redde (t->byte_offset >= ZEPHYRUM
                 && offset >= (s32)t->byte_offset
                 && offset < (s32)t->byte_offset
-                    + (s32)t->longitudo) ? VERUM : FALSUM;
+                    + (s32)silva_token_longitudo(t)) ? VERUM : FALSUM;
         }
-        si (t->origo.genus == SILVA_ORIGO_EXPANSIO)
+        si (silva_token_origo(t)->genus == SILVA_ORIGO_EXPANSIO)
         {
             /* invocatio = situs usus (latus fontis) */
-            constans SilvaToken* inv = t->origo.datum.expansio
+            constans SilvaToken* inv =
+                silva_token_origo(t)->datum.expansio
                 .invocatio;
 
-            si (   inv              != NIHIL
-                && inv->origo.genus == SILVA_ORIGO_FONS
+            si (   inv != NIHIL
+                && silva_token_origo(inv)->genus == SILVA_ORIGO_FONS
                 && inv->byte_offset >= ZEPHYRUM
-                && offset           >= (s32)inv->byte_offset
+                && offset >= (s32)inv->byte_offset
                 && offset < (s32)inv->byte_offset
-                    + (s32)inv->longitudo)
+                    + (s32)silva_token_longitudo(inv))
             {
                 redde VERUM;
             }
             t = inv;
         }
-        alioquin si (t->origo.genus == SILVA_ORIGO_PASTA)
+        alioquin si (silva_token_origo(t)->genus == SILVA_ORIGO_PASTA)
         {
-            t = t->origo.datum.pasta.sinister;
+            t = silva_token_origo(t)->datum.pasta.sinister;
         }
-        alioquin si (t->origo.genus == SILVA_ORIGO_CHORDA)
+        alioquin si (silva_token_origo(t)->genus == SILVA_ORIGO_CHORDA)
         {
-            t = t->origo.datum.stringificatio.primus;
+            t = silva_token_origo(t)->datum.stringificatio.primus;
         }
         alioquin
         {

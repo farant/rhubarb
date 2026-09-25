@@ -119,7 +119,7 @@ _extentum_metiri (
                 && radix_lex->byte_offset >= ZEPHYRUM)
             {
                 s32 finis_lex = radix_lex->byte_offset
-                    + (s32)radix_lex->longitudo;
+                    + (s32)silva_token_longitudo(radix_lex);
 
                 si (   !ext.validus
                     || radix_lex->byte_offset < ext.initium)

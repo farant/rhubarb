@@ -1138,16 +1138,16 @@ interior constans chorda*
 _macro_primum (
     SilvaToken* tok)
 {
-    commutatio (tok->origo.genus)
+    commutatio (silva_token_origo(tok)->genus)
     {
         casus SILVA_ORIGO_EXPANSIO:
-            redde tok->origo.datum.expansio.nomen_macro;
+            redde silva_token_origo(tok)->datum.expansio.nomen_macro;
         casus SILVA_ORIGO_PASTA:
-            redde tok->origo.datum.pasta.nomen_macro;
+            redde silva_token_origo(tok)->datum.pasta.nomen_macro;
         casus SILVA_ORIGO_CHORDA:
-            redde tok->origo.datum.stringificatio.nomen_macro;
+            redde silva_token_origo(tok)->datum.stringificatio.nomen_macro;
         casus SILVA_ORIGO_API:
-            redde tok->origo.datum.api.nomen_macro;
+            redde silva_token_origo(tok)->datum.api.nomen_macro;
         ordinarius:
             redde NIHIL;
     }

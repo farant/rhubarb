@@ -16328,14 +16328,14 @@ interior constans SilvaToken*
 _praedecessor_sedis_usus (
     constans SilvaToken* t)
 {
-    commutatio (t->origo.genus)
+    commutatio (silva_token_origo(t)->genus)
     {
     casus SILVA_ORIGO_EXPANSIO:
-        redde t->origo.datum.expansio.invocatio;
+        redde silva_token_origo(t)->datum.expansio.invocatio;
     casus SILVA_ORIGO_PASTA:
-        redde t->origo.datum.pasta.sinister;
+        redde silva_token_origo(t)->datum.pasta.sinister;
     casus SILVA_ORIGO_CHORDA:
-        redde t->origo.datum.stringificatio.primus;
+        redde silva_token_origo(t)->datum.stringificatio.primus;
     ordinarius:
         redde NIHIL;   /* FONS / API = radix */
     }
@@ -16345,16 +16345,16 @@ interior constans SilvaChorda*
 _nomen_brachii (
     constans SilvaToken* t)
 {
-    commutatio (t->origo.genus)
+    commutatio (silva_token_origo(t)->genus)
     {
     casus SILVA_ORIGO_EXPANSIO:
-        redde t->origo.datum.expansio.nomen_macro;
+        redde silva_token_origo(t)->datum.expansio.nomen_macro;
     casus SILVA_ORIGO_PASTA:
-        redde t->origo.datum.pasta.nomen_macro;
+        redde silva_token_origo(t)->datum.pasta.nomen_macro;
     casus SILVA_ORIGO_CHORDA:
-        redde t->origo.datum.stringificatio.nomen_macro;
+        redde silva_token_origo(t)->datum.stringificatio.nomen_macro;
     casus SILVA_ORIGO_API:
-        redde t->origo.datum.api.nomen_macro;
+        redde silva_token_origo(t)->datum.api.nomen_macro;
     ordinarius:
         redde NIHIL;
     }

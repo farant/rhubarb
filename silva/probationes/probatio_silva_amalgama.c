@@ -148,7 +148,7 @@ s32 principale (vacuum)
                     lexemata, i + II);
 
                 si (   t->genus         == SILVA_LEX_CANCELLUM
-                    && t->initium_lineae
+                    && silva_token_initium_lineae(t)
                     && d->genus         == SILVA_LEX_IDENTIFICATOR
                     && d->valor.mensura == VI
                     && memcmp(d->valor.datum, "define", VI)

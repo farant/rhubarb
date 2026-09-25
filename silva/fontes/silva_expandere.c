@@ -257,7 +257,8 @@ interior b32
 _est_initium_directivae (
     SilvaToken* token)
 {
-    redde (token->genus == SILVA_LEX_CANCELLUM && token->initium_lineae)
+    redde (token->genus == SILVA_LEX_CANCELLUM
+        && silva_token_initium_lineae(token))
         ? VERUM : FALSUM;
 }
 
@@ -275,7 +276,7 @@ _lineam_finire (
     dum (i_finis < n)
     {
         t = *(SilvaToken**)xar_obtinere(lexemata, i_finis);
-        si (t->initium_lineae || t->genus == SILVA_LEX_EOF)
+        si (silva_token_initium_lineae(t) || t->genus == SILVA_LEX_EOF)
         {
             frange;
         }
@@ -501,7 +502,7 @@ _definitionem_processare (
         paren = *(SilvaToken**)xar_obtinere(lexemata, i);
         si (   paren->genus == SILVA_LEX_PAREN_APERTA
             && paren->byte_offset == titulus_tok->byte_offset
-                + (s32)titulus_tok->longitudo)
+                + (s32)silva_token_longitudo(titulus_tok))
         {
             def->est_functio = VERUM;
             def->parametra = xar_creare(exp->piscina,
@@ -1835,12 +1836,12 @@ interior SilvaCaecatio*
 _caecatio_lexematis (
     SilvaToken* token)
 {
-    commutatio (token->origo.genus)
+    commutatio (silva_token_origo(token)->genus)
     {
         casus SILVA_ORIGO_EXPANSIO:
-            redde token->origo.datum.expansio.caecatio;
+            redde silva_token_origo(token)->datum.expansio.caecatio;
         casus SILVA_ORIGO_PASTA:
-            redde token->origo.datum.pasta.caecatio;
+            redde silva_token_origo(token)->datum.pasta.caecatio;
         casus SILVA_ORIGO_FONS:
         casus SILVA_ORIGO_CHORDA:
         casus SILVA_ORIGO_API:
@@ -1993,13 +1994,14 @@ _trivia_inter (
     SilvaToken* prius,
     SilvaToken* posterius)
 {
-    si (   prius != NIHIL && prius->spatia_post != NIHIL
-        && xar_numerus(prius->spatia_post) > ZEPHYRUM)
+    si (   prius != NIHIL && silva_token_post_numerus(prius) > ZEPHYRUM
+        && silva_token_post_numerus(prius) > ZEPHYRUM)
     {
         redde VERUM;
     }
-    si (   posterius != NIHIL && posterius->spatia_ante != NIHIL
-        && xar_numerus(posterius->spatia_ante) > ZEPHYRUM)
+    si (   posterius != NIHIL
+        && silva_token_ante_numerus(posterius) > ZEPHYRUM
+        && silva_token_ante_numerus(posterius) > ZEPHYRUM)
     {
         redde VERUM;
     }
@@ -2296,7 +2298,8 @@ _substituere (
                 per (j = ZEPHYRUM; j < xar_numerus(sinistra); j++)
                 {
                     t = *(SilvaToken**)xar_obtinere(sinistra, j);
-                    si (t->origo.genus == SILVA_ORIGO_PASTA)
+                    si (silva_token_origo(t)->genus
+                        == SILVA_ORIGO_PASTA)
                     {
                         _lexema_addere(exitus, t);
                     }
@@ -2548,7 +2551,8 @@ _generatio_interna (
 
                     _substituere(exp, def, token, NIHIL, NIHIL, exitus);
                     si (   xar_numerus(exitus) == ante_sub
-                        && token->origo.genus  == SILVA_ORIGO_FONS)
+                        && silva_token_origo(token)->genus
+                            == SILVA_ORIGO_FONS)
                     {
                         SilvaExtentumInvocationis* ext_vac;
 
@@ -2603,7 +2607,8 @@ _generatio_interna (
                              * sim ⑥ C5): reconstructio fontis octetos
                              * invocationis [nomen..')'] petit - solum
                              * cum nomen ipsum lexema FONTIS est */
-                            si (token->origo.genus == SILVA_ORIGO_FONS)
+                            si (silva_token_origo(token)->genus
+                                == SILVA_ORIGO_FONS)
                             {
                                 ext_huius = (SilvaExtentumInvocationis*)
                                     xar_addere(exp->extenta);
@@ -3125,7 +3130,7 @@ silva_macro_vista (
                     vista_out->corpus_initium =
                         primum->byte_offset;
                     vista_out->corpus_finis = ultimum->byte_offset
-                        + (s32)ultimum->longitudo;
+                        + (s32)silva_token_longitudo(ultimum);
                 }
             }
             redde VERUM;

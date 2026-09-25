@@ -148,12 +148,13 @@ _radix_probata (
 {
     dum (token != NIHIL)
     {
-        commutatio (token->origo.genus)
+        commutatio (silva_token_origo(token)->genus)
         {
             casus SILVA_ORIGO_FONS:
                 redde token;
             casus SILVA_ORIGO_EXPANSIO:
-                token = token->origo.datum.expansio.invocatio;
+                token =
+                    silva_token_origo(token)->datum.expansio.invocatio;
                 frange;
             casus SILVA_ORIGO_CHORDA:
                 /* stringificatio (#x): primus = lexema primum
@@ -161,7 +162,8 @@ _radix_probata (
                  * invocationis iacet; quaestio continentiae infra
                  * extentum invenit (Chunk C - corpus solarii
                  * deferral coegit, vectis maximalista) */
-                token = token->origo.datum.stringificatio.primus;
+                token =
+                    silva_token_origo(token)->datum.stringificatio.primus;
                 frange;
             casus SILVA_ORIGO_PASTA:
                 /* PASTA: invocationem sequi, NON parentes.
@@ -175,12 +177,13 @@ _radix_probata (
                  * (arma PASTAE additus) semitam rectam dat,
                  * sicut EXPANSIO iam habebat. Sine eo (lexema
                  * vetus) recusatio nominata manet. */
-                si (token->origo.datum.pasta.invocatio == NIHIL)
+                si (silva_token_origo(token)->datum.pasta.invocatio
+                    == NIHIL)
                 {
                     *impurum_out = VERUM;
                     redde token;
                 }
-                token = token->origo.datum.pasta.invocatio;
+                token = silva_token_origo(token)->datum.pasta.invocatio;
                 frange;
             ordinarius:
                 *impurum_out = VERUM;
@@ -226,7 +229,8 @@ _extentum_continens (
         si (   primum->fons_index == radix->fons_index
             && radix->byte_offset >= primum->byte_offset
             && radix->byte_offset
-                < ultimum->byte_offset + (s32)ultimum->longitudo)
+                < ultimum->byte_offset
+                    + (s32)silva_token_longitudo(ultimum))
         {
             redde extentum->lamina;
         }
@@ -317,7 +321,7 @@ _lexema_scribere (
         redde;
     }
 
-    si (token->origo.genus == SILVA_ORIGO_FONS)
+    si (silva_token_origo(token)->genus == SILVA_ORIGO_FONS)
     {
         si (   st->fons_index    >= ZEPHYRUM
             && token->fons_index != st->fons_index)
@@ -329,8 +333,9 @@ _lexema_scribere (
         }
         _reinserenda_fundere(st, token->byte_offset);
         silva_lexema_emittere_in(st->aed, token);
-        st->fons_ultimus   = token->fons_index;
-        st->emissum_usque  = token->byte_offset + (s32)token->longitudo;
+        st->fons_ultimus = token->fons_index;
+        st->emissum_usque = token->byte_offset
+            + (s32)silva_token_longitudo(token);
         redde;
     }
 
@@ -386,8 +391,9 @@ _lexema_scribere (
                 _reinserenda_fundere(st, t->byte_offset);
                 silva_lexema_emittere_in(st->aed, t);
             }
-            st->fons_ultimus   = radix->fons_index;
-            st->emissum_usque  = t->byte_offset + (s32)t->longitudo;
+            st->fons_ultimus = radix->fons_index;
+            st->emissum_usque = t->byte_offset
+                + (s32)silva_token_longitudo(t);
         }
         alioquin
         {
@@ -396,7 +402,7 @@ _lexema_scribere (
             silva_lexema_emittere_in(st->aed, radix);
             st->fons_ultimus = radix->fons_index;
             st->emissum_usque = radix->byte_offset
-                + (s32)radix->longitudo;
+                + (s32)silva_token_longitudo(radix);
         }
     }
 }

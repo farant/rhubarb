@@ -341,23 +341,26 @@ nexus_ordines_titulus_macronis (
     dum (cur != NIHIL && custos < LXIV)
     {
         custos++;
-        commutatio (cur->origo.genus)
+        commutatio (silva_token_origo(cur)->genus)
         {
             casus SILVA_ORIGO_EXPANSIO:
-                titulus = cur->origo.datum.expansio.nomen_macro;
-                cur = cur->origo.datum.expansio.invocatio;
+                titulus =
+                    silva_token_origo(cur)->datum.expansio.nomen_macro;
+                cur = silva_token_origo(cur)->datum.expansio.invocatio;
                 frange;
             casus SILVA_ORIGO_PASTA:
-                titulus = cur->origo.datum.pasta.nomen_macro;
-                cur = cur->origo.datum.pasta.sinister;
+                titulus =
+                    silva_token_origo(cur)->datum.pasta.nomen_macro;
+                cur = silva_token_origo(cur)->datum.pasta.sinister;
                 frange;
             casus SILVA_ORIGO_CHORDA:
                 titulus =
-                    cur->origo.datum.stringificatio.nomen_macro;
-                cur = cur->origo.datum.stringificatio.primus;
+                    silva_token_origo(cur)->datum.stringificatio.nomen_macro;
+                cur =
+                    silva_token_origo(cur)->datum.stringificatio.primus;
                 frange;
             casus SILVA_ORIGO_API:
-                redde cur->origo.datum.api.nomen_macro;
+                redde silva_token_origo(cur)->datum.api.nomen_macro;
             ordinarius:
                 redde titulus;   /* FONS - finis catenae */
         }
@@ -465,7 +468,7 @@ _macros_fundere (
                 perge;
             }
             tok = *cella;
-            si (tok->origo.genus == SILVA_ORIGO_FONS)
+            si (silva_token_origo(tok)->genus == SILVA_ORIGO_FONS)
             {
                 perge;
             }

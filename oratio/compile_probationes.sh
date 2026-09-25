@@ -109,9 +109,12 @@ while IFS= read -r caput_via; do
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi
+# silva/fontes: oratio_vocabula.c silva_token.h includit - sine eo
+# mutatio capitis lexematis obiectum stalum relinquebat (excubitor
+# cepit, phasis V T7a, 2026-09-25)
 done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" "$RADIX_DIR/md/fontes" \
              "$ORATIO_DIR/fontes" "$ORATIO_DIR/probationes" \
-             -name "*.h" 2>/dev/null)
+             "$RADIX_DIR/silva/fontes" -name "*.h" 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi

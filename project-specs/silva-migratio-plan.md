@@ -28,7 +28,11 @@
 > renominare never relinking on object changes. T6b DONE 2026-09-25:
 > `silva/fontes/silva_frons.{h,c}` (shim now a 372-line driver),
 > lexicon in `silva/fontes`, amalgam unchanged (frons excluded until
-> T13); shim 402 + 401/401/401, oracle clean.
+> T13); shim 402 + 401/401/401, oracle clean. T7 SPLIT (Fran). T7a
+> DONE 2026-09-25: ~430 token-field sites on accessors (321 driver,
+> ~43 hand, 63 inside macro arguments the census could not see);
+> zero direct uses by two angles; oracle, M3, shim unchanged; last
+> amalgam regeneration before the freeze.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -475,7 +479,43 @@ these fields are not counted here (T7's measure step).
 compile against the AMALGAM, oratio against live headers, officina
 both — amalgam consumers feel a switch when the amalgam regenerates.
 
-### Task 7: token
+### Task 7 — SPLIT by its measurement (Fran, 2026-09-25)
+
+Measured (`renominare -membrum` over silva's 156 files + T5): ~1,300
+compatible token-field uses (`valor genus linea columna byte_offset
+fons_index`) pass a typedef untouched; **~408 do not** — 330 inside
+silva (31 files; silva_arbor.c 74, silva_token.c 35, semantica 31) +
+78 outside: `origo` 142+47, `spatia_ante/_post` 91+12, `longitudo`
+33+16 (NOT `valor.mensura`: a token holding a line continuation has
+source bytes its value lacks), `initium_lineae`/`scissurae`/`standard`
+64. Favourable structure: ONE allocator (`silva_token.c`, no token
+ever held by value — materia's tail-after-token model fits) and ONE
+trivia builder (`silva_lexema.c`); everything else reads.
+
+**T7a — the accessor seam, no representation change.** Accessors
+(`silva_token_origo` → `SilvaOrigo*`, `_longitudo`, `_standard`,
+`_scissurae`, `_initium_lineae`, trivia `_ante_numerus`/`_ante`/
+`_post_numerus`/`_post`, setters for the ~30 writes); every one of the
+~408 sites rewritten onto them — a Python driver (sites from the
+semantic census, base expression by balanced back-scan, four shapes)
+applied through one `silva.Refactio`; unclassifiable sites refused and
+listed, done by hand. Nets: `-Werror`, a SECOND census reporting zero
+direct uses outside the accessor bodies, oracle + M3 byte-for-byte
+unchanged. The amalgam regenerates normally (accessors join
+`silva.h`) — its consumers move onto the accessors in this task.
+
+**T7b — the representation swap behind the seam.** `SilvaToken =
+MateriaToken` + C89 tail (`origo longitudo standard scissurae`); the
+allocator calls `materia_token_creare`; the lexer hands trivia over as
+finished arrays. Decisions (Fran): the amalgam is FROZEN at T7a's
+state from T7b until T13 (its consumers use only accessors, which the
+frozen amalgam implements over the old representation; hospes keeps
+judging the committed amalgam; silva/CLAUDE.md's "regenerate after
+every fontes edit" suspended with a note); the frontend's own token
+tail (`SilvaFronsCauda`) merges with silva's at T9/T10, when the
+writers consume silva's tokens directly — not at T7b.
+
+### Task 7a/7b: token (original text)
 
 C89 data (origin, expansion identity, …) leaves `SilvaToken` for the
 frontend tail (`silva_frons`); `SilvaToken` = `MateriaToken`. Expect

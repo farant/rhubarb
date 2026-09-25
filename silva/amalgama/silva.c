@@ -305,6 +305,71 @@ int
 silva_token_est_fons (
     SilvaToken* token);
 
+/* Accessores campi C89 (phasis V, T7a - sutura): omnis usus extra
+ * silvam per hos transit; repraesentatio lexematis mutari potest.
+ * Origo MUTABILIS per monstratorem quamquam lexema constans. */
+SilvaOrigo*
+silva_token_origo (
+    const SilvaToken* token);
+unsigned int
+silva_token_longitudo (
+    const SilvaToken* token);
+void
+silva_token_longitudo_ponere (
+      SilvaToken* token,
+    unsigned int  longitudo);
+unsigned char
+silva_token_standard (
+    const SilvaToken* token);
+void
+silva_token_standard_ponere (
+       SilvaToken* token,
+    unsigned char  standard);
+SilvaXar*
+silva_token_scissurae (
+    const SilvaToken* token);
+void
+silva_token_scissurae_ponere (
+    SilvaToken* token,
+      SilvaXar* scissurae);
+int
+silva_token_initium_lineae (
+    const SilvaToken* token);
+void
+silva_token_initium_lineae_ponere (
+    SilvaToken* token,
+            int  valor);
+unsigned int
+silva_token_ante_numerus (
+    const SilvaToken* token);
+SilvaToken*
+silva_token_ante (
+    const SilvaToken* token,
+         unsigned int  index);
+unsigned int
+silva_token_post_numerus (
+    const SilvaToken* token);
+SilvaToken*
+silva_token_post (
+    const SilvaToken* token,
+         unsigned int  index);
+int
+silva_token_ante_addere (
+    SilvaPiscina* piscina,
+      SilvaToken* token,
+      SilvaToken* trivium);
+int
+silva_token_post_addere (
+    SilvaPiscina* piscina,
+      SilvaToken* token,
+      SilvaToken* trivium);
+void
+silva_token_ante_vacare (
+    SilvaToken* token);
+void
+silva_token_post_vacare (
+    SilvaToken* token);
+
 /* Tituli generum (tabellae originis, debugging) */
 const char*
 silva_lexema_genus_nomen (
@@ -4612,6 +4677,106 @@ silva_token_profunditas (
 /* Estne lexema fontis (stratum 0)? */
 b32
 silva_token_est_fons (
+    SilvaToken* token);
+
+
+/* ==================================================
+ * Accessores campi C89 (phasis V, T7a - SUTURA)
+ *
+ * Hi campi in MateriaToken NON sunt: origo, longitudo, standard,
+ * scissurae in caudam C89 migrabunt (T7b), initium_lineae in
+ * vexilla materiae, trivia in series materiae. Omnis usus EXTRA
+ * silva_token.c per hos accessores transit, ut repraesentatio
+ * mutari possit sedibus vocantium intactis.
+ * ================================================== */
+
+/* Origo - MUTABILIS per monstratorem (scriptores originem per eum
+ * ponunt), quamquam lexema constans traditur: datum frontis est. */
+SilvaOrigo*
+silva_token_origo (
+    constans SilvaToken* token);
+
+/* Mensura in octetis FONTIS (laminis \<nl> inclusis) - NON
+ * valor.mensura, qui laminas scissas omittit */
+i32
+silva_token_longitudo (
+    constans SilvaToken* token);
+
+vacuum
+silva_token_longitudo_ponere (
+     SilvaToken* token,
+            i32  longitudo);
+
+i8
+silva_token_standard (
+    constans SilvaToken* token);
+
+vacuum
+silva_token_standard_ponere (
+     SilvaToken* token,
+             i8  standard);
+
+/* Xar de SilvaScissura; NIHIL fere semper */
+SilvaXar*
+silva_token_scissurae (
+    constans SilvaToken* token);
+
+vacuum
+silva_token_scissurae_ponere (
+    SilvaToken* token,
+           SilvaXar* scissurae);
+
+b32
+silva_token_initium_lineae (
+    constans SilvaToken* token);
+
+vacuum
+silva_token_initium_lineae_ponere (
+     SilvaToken* token,
+            b32  valor);
+
+/* Trivia ante/post: numerus (ZEPHYRUM si nulla) et lexema ad indicem
+ * (NIHIL extra fines). */
+i32
+silva_token_ante_numerus (
+    constans SilvaToken* token);
+
+SilvaToken*
+silva_token_ante (
+    constans SilvaToken* token,
+                    i32  index);
+
+i32
+silva_token_post_numerus (
+    constans SilvaToken* token);
+
+SilvaToken*
+silva_token_post (
+    constans SilvaToken* token,
+                    i32  index);
+
+/* Trivium appendere (solus aedificator: lexator) */
+b32
+silva_token_ante_addere (
+       SilvaPiscina* piscina,
+    SilvaToken* token,
+    SilvaToken* trivium);
+
+b32
+silva_token_post_addere (
+       SilvaPiscina* piscina,
+    SilvaToken* token,
+    SilvaToken* trivium);
+
+
+/* Trivia lateris vacare (probationes: plantae quae trivia movent aut
+ * tollunt). Post id numerus ZEPHYRUM. */
+vacuum
+silva_token_ante_vacare (
+    SilvaToken* token);
+
+vacuum
+silva_token_post_vacare (
     SilvaToken* token);
 
 
@@ -26621,6 +26786,186 @@ silva_token_est_fons (
 }
 
 
+/* ---------- accessores campi C89 (phasis V, T7a - sutura) ---------- */
+
+SilvaOrigo*
+silva_token_origo (
+    constans SilvaToken* token)
+{
+    /* Origo MUTABILIS quamquam lexema constans traditur (ut
+     * materia_token_cauda): cast-qual hic consultus. */
+    redde (SilvaOrigo*)(size_t) & token->origo;
+}
+
+i32
+silva_token_longitudo (
+    constans SilvaToken* token)
+{
+    redde token->longitudo;
+}
+
+vacuum
+silva_token_longitudo_ponere (
+     SilvaToken* token,
+            i32  longitudo)
+{
+    token->longitudo = longitudo;
+}
+
+i8
+silva_token_standard (
+    constans SilvaToken* token)
+{
+    redde token->standard;
+}
+
+vacuum
+silva_token_standard_ponere (
+     SilvaToken* token,
+             i8  standard)
+{
+    token->standard = standard;
+}
+
+SilvaXar*
+silva_token_scissurae (
+    constans SilvaToken* token)
+{
+    redde token->scissurae;
+}
+
+vacuum
+silva_token_scissurae_ponere (
+    SilvaToken* token,
+           SilvaXar* scissurae)
+{
+    token->scissurae = scissurae;
+}
+
+b32
+silva_token_initium_lineae (
+    constans SilvaToken* token)
+{
+    redde token->initium_lineae;
+}
+
+vacuum
+silva_token_initium_lineae_ponere (
+     SilvaToken* token,
+            b32  valor)
+{
+    token->initium_lineae = valor;
+}
+
+i32
+silva_token_ante_numerus (
+    constans SilvaToken* token)
+{
+    redde (token->spatia_ante != NIHIL)
+        ? silva_xar_numerus(token->spatia_ante) : (i32)ZEPHYRUM;
+}
+
+SilvaToken*
+silva_token_ante (
+    constans SilvaToken* token,
+                    i32  index)
+{
+    si (   token->spatia_ante == NIHIL
+        || index              >= silva_xar_numerus(token->spatia_ante))
+    {
+        redde NIHIL;
+    }
+    redde *(SilvaToken**)silva_xar_obtinere(token->spatia_ante, index);
+}
+
+i32
+silva_token_post_numerus (
+    constans SilvaToken* token)
+{
+    redde (token->spatia_post != NIHIL)
+        ? silva_xar_numerus(token->spatia_post) : (i32)ZEPHYRUM;
+}
+
+SilvaToken*
+silva_token_post (
+    constans SilvaToken* token,
+                    i32  index)
+{
+    si (   token->spatia_post == NIHIL
+        || index              >= silva_xar_numerus(token->spatia_post))
+    {
+        redde NIHIL;
+    }
+    redde *(SilvaToken**)silva_xar_obtinere(token->spatia_post, index);
+}
+
+b32
+silva_token_ante_addere (
+       SilvaPiscina* piscina,
+    SilvaToken* token,
+    SilvaToken* trivium)
+{
+    SilvaToken** cella;
+
+    si (token->spatia_ante == NIHIL)
+    {
+        token->spatia_ante = silva_xar_creare(piscina,
+            magnitudo(SilvaToken*));
+        si (token->spatia_ante == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    cella = (SilvaToken**)silva_xar_addere(token->spatia_ante);
+    si (cella == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *cella = trivium;
+    redde VERUM;
+}
+
+b32
+silva_token_post_addere (
+       SilvaPiscina* piscina,
+    SilvaToken* token,
+    SilvaToken* trivium)
+{
+    SilvaToken** cella;
+
+    si (token->spatia_post == NIHIL)
+    {
+        token->spatia_post = silva_xar_creare(piscina,
+            magnitudo(SilvaToken*));
+        si (token->spatia_post == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    cella = (SilvaToken**)silva_xar_addere(token->spatia_post);
+    si (cella == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *cella = trivium;
+    redde VERUM;
+}
+
+vacuum
+silva_token_ante_vacare (
+    SilvaToken* token)
+{
+    token->spatia_ante = NIHIL;
+}
+
+vacuum
+silva_token_post_vacare (
+    SilvaToken* token)
+{
+    token->spatia_post = NIHIL;
+}
+
+
 /* ==================================================
  * Caecatio
  * ================================================== */
@@ -27093,8 +27438,8 @@ _lexema_finire (
         lex->fons_index);
     si (token != NIHIL)
     {
-        token->longitudo = lex->positus - s->initium; /* longitudo CRUDA */
-        token->scissurae = s->scissurae;
+        silva_token_longitudo_ponere(token, lex->positus - s->initium); /* longitudo CRUDA */
+        silva_token_scissurae_ponere(token, s->scissurae);
     }
     redde token;
 }
@@ -27248,7 +27593,7 @@ _trivia_proxima (
             initium, linea_i, columna_i);
         si (trivia != NIHIL)
         {
-            trivia->standard = SILVA_STANDARD_C99;
+            silva_token_standard_ponere(trivia, SILVA_STANDARD_C99);
         }
         redde trivia;
     }
@@ -27299,8 +27644,8 @@ _legere_identificatorem (
         lex->fons_index);
     si (token != NIHIL)
     {
-        token->longitudo = lex->positus - s.initium;
-        token->scissurae = s.scissurae;
+        silva_token_longitudo_ponere(token, lex->positus - s.initium);
+        silva_token_scissurae_ponere(token, s.scissurae);
     }
     redde token;
 }
@@ -27752,9 +28097,9 @@ silva_lexare_cruda (
         {
             frange;  /* allocatio fracta - fluxum partialem reddere */
         }
-        token->initium_lineae  = in_initio_lineae;
-        in_initio_lineae       = FALSUM;
-        locus                  = (SilvaToken**)silva_xar_addere(cruda);
+        silva_token_initium_lineae_ponere(token, in_initio_lineae);
+        in_initio_lineae  = FALSUM;
+        locus             = (SilvaToken**)silva_xar_addere(cruda);
         si (locus != NIHIL)
         {
             *locus = token;
@@ -27838,34 +28183,25 @@ silva_spatia_attachere (
                 }
             }
 
+            /* Trivia per accessores (phasis V T7a): vacare ante addere
+             * - olim Xar NOVUS assignabatur, ergo series priores
+             * substituebantur, non augebantur. */
             si (divisio > ZEPHYRUM && prior != NIHIL)
             {
-                prior->spatia_post = silva_xar_creare(piscina,
-                    magnitudo(SilvaToken*));
+                silva_token_post_vacare(prior);
                 per (j = ZEPHYRUM; j < divisio; j++)
                 {
-                    locus =
-                        (SilvaToken**)silva_xar_addere(prior->spatia_post);
-                    si (locus != NIHIL)
-                    {
-                        *locus = *(SilvaToken**)silva_xar_obtinere(pendentia,
-                            j);
-                    }
+                    silva_token_post_addere(piscina, prior,
+                        *(SilvaToken**)silva_xar_obtinere(pendentia, j));
                 }
             }
             si (divisio < silva_xar_numerus(pendentia))
             {
-                token->spatia_ante = silva_xar_creare(piscina,
-                    magnitudo(SilvaToken*));
+                silva_token_ante_vacare(token);
                 per (j = divisio; j < silva_xar_numerus(pendentia); j++)
                 {
-                    locus =
-                        (SilvaToken**)silva_xar_addere(token->spatia_ante);
-                    si (locus != NIHIL)
-                    {
-                        *locus = *(SilvaToken**)silva_xar_obtinere(pendentia,
-                            j);
-                    }
+                    silva_token_ante_addere(piscina, token,
+                        *(SilvaToken**)silva_xar_obtinere(pendentia, j));
                 }
             }
             pendentia = silva_xar_creare(piscina, magnitudo(SilvaToken*));
@@ -27905,19 +28241,20 @@ silva_lexare (
 
 interior vacuum
 _emittere_trivia (
-    SilvaChordaAedificator* aed,
-                  SilvaXar* spatia)
+      SilvaChordaAedificator* aed,
+    constans SilvaToken* token,
+                    b32  post)
 {
            i32  i;
+           i32  n;
     SilvaToken* t;
 
-    si (spatia == NIHIL)
+    n = post ? silva_token_post_numerus(token)
+             : silva_token_ante_numerus(token);
+    per (i = ZEPHYRUM; i < n; i++)
     {
-        redde;
-    }
-    per (i = ZEPHYRUM; i < silva_xar_numerus(spatia); i++)
-    {
-        t = *(SilvaToken**)silva_xar_obtinere(spatia, i);
+        t = post ? silva_token_post(token, i) : silva_token_ante(token,
+            i);
         silva_chorda_aedificator_appendere_chorda(aed, t->valor);
     }
 }
@@ -27931,16 +28268,18 @@ _emittere_valorem (
               i32  prius;
     SilvaScissura* sc;
 
-    si (token->scissurae == NIHIL)
+    si (silva_token_scissurae(token) == NIHIL)
     {
         silva_chorda_aedificator_appendere_chorda(aed, token->valor);
         redde;
     }
 
     prius = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < silva_xar_numerus(token->scissurae); i++)
+    per (i = ZEPHYRUM; i
+        < silva_xar_numerus(silva_token_scissurae(token)); i++)
     {
-        sc = (SilvaScissura*)silva_xar_obtinere(token->scissurae, i);
+        sc = (SilvaScissura*)silva_xar_obtinere(silva_token_scissurae(token),
+            i);
         silva_chorda_aedificator_appendere_chorda(aed,
             _subchorda(token->valor, prius, (i32)sc->offset));
         silva_chorda_aedificator_appendere_literis(aed,
@@ -27960,9 +28299,9 @@ silva_lexema_emittere_in (
     {
         redde;
     }
-    _emittere_trivia(aed, token->spatia_ante);
+    _emittere_trivia(aed, token, FALSUM);
     _emittere_valorem(aed, token);
-    _emittere_trivia(aed, token->spatia_post);
+    _emittere_trivia(aed, token, VERUM);
 }
 
 SilvaChorda
@@ -28230,7 +28569,8 @@ interior b32
 _est_initium_directivae (
     SilvaToken* token)
 {
-    redde (token->genus == SILVA_LEX_CANCELLUM && token->initium_lineae)
+    redde (token->genus == SILVA_LEX_CANCELLUM
+        && silva_token_initium_lineae(token))
         ? VERUM : FALSUM;
 }
 
@@ -28248,7 +28588,7 @@ _lineam_finire (
     dum (i_finis < n)
     {
         t = *(SilvaToken**)silva_xar_obtinere(lexemata, i_finis);
-        si (t->initium_lineae || t->genus == SILVA_LEX_EOF)
+        si (silva_token_initium_lineae(t) || t->genus == SILVA_LEX_EOF)
         {
             frange;
         }
@@ -28474,7 +28814,7 @@ _definitionem_processare (
         paren = *(SilvaToken**)silva_xar_obtinere(lexemata, i);
         si (   paren->genus == SILVA_LEX_PAREN_APERTA
             && paren->byte_offset == titulus_tok->byte_offset
-                + (s32)titulus_tok->longitudo)
+                + (s32)silva_token_longitudo(titulus_tok))
         {
             def->est_functio = VERUM;
             def->parametra = silva_xar_creare(exp->piscina,
@@ -29808,12 +30148,12 @@ interior SilvaCaecatio*
 _caecatio_lexematis (
     SilvaToken* token)
 {
-    commutatio (token->origo.genus)
+    commutatio (silva_token_origo(token)->genus)
     {
         casus SILVA_ORIGO_EXPANSIO:
-            redde token->origo.datum.expansio.caecatio;
+            redde silva_token_origo(token)->datum.expansio.caecatio;
         casus SILVA_ORIGO_PASTA:
-            redde token->origo.datum.pasta.caecatio;
+            redde silva_token_origo(token)->datum.pasta.caecatio;
         casus SILVA_ORIGO_FONS:
         casus SILVA_ORIGO_CHORDA:
         casus SILVA_ORIGO_API:
@@ -29966,13 +30306,14 @@ _trivia_inter (
     SilvaToken* prius,
     SilvaToken* posterius)
 {
-    si (   prius != NIHIL && prius->spatia_post != NIHIL
-        && silva_xar_numerus(prius->spatia_post) > ZEPHYRUM)
+    si (   prius != NIHIL && silva_token_post_numerus(prius) > ZEPHYRUM
+        && silva_token_post_numerus(prius) > ZEPHYRUM)
     {
         redde VERUM;
     }
-    si (   posterius != NIHIL && posterius->spatia_ante != NIHIL
-        && silva_xar_numerus(posterius->spatia_ante) > ZEPHYRUM)
+    si (   posterius != NIHIL
+        && silva_token_ante_numerus(posterius) > ZEPHYRUM
+        && silva_token_ante_numerus(posterius) > ZEPHYRUM)
     {
         redde VERUM;
     }
@@ -30269,7 +30610,8 @@ _substituere (
                 per (j = ZEPHYRUM; j < silva_xar_numerus(sinistra); j++)
                 {
                     t = *(SilvaToken**)silva_xar_obtinere(sinistra, j);
-                    si (t->origo.genus == SILVA_ORIGO_PASTA)
+                    si (silva_token_origo(t)->genus
+                        == SILVA_ORIGO_PASTA)
                     {
                         _lexema_addere(exitus, t);
                     }
@@ -30521,7 +30863,8 @@ _generatio_interna (
 
                     _substituere(exp, def, token, NIHIL, NIHIL, exitus);
                     si (   silva_xar_numerus(exitus) == ante_sub
-                        && token->origo.genus  == SILVA_ORIGO_FONS)
+                        && silva_token_origo(token)->genus
+                            == SILVA_ORIGO_FONS)
                     {
                         SilvaExtentumInvocationis* ext_vac;
 
@@ -30576,7 +30919,8 @@ _generatio_interna (
                              * sim ⑥ C5): reconstructio fontis octetos
                              * invocationis [nomen..')'] petit - solum
                              * cum nomen ipsum lexema FONTIS est */
-                            si (token->origo.genus == SILVA_ORIGO_FONS)
+                            si (silva_token_origo(token)->genus
+                                == SILVA_ORIGO_FONS)
                             {
                                 ext_huius = (SilvaExtentumInvocationis*)
                                     silva_xar_addere(exp->extenta);
@@ -31098,7 +31442,7 @@ silva_macro_vista (
                     vista_out->corpus_initium =
                         primum->byte_offset;
                     vista_out->corpus_finis = ultimum->byte_offset
-                        + (s32)ultimum->longitudo;
+                        + (s32)silva_token_longitudo(ultimum);
                 }
             }
             redde VERUM;
@@ -32447,7 +32791,7 @@ silva_valor_extensionem (
                     && radix_t->byte_offset >= ZEPHYRUM)
                 {
                     s32 a = (s32)radix_t->byte_offset;
-                    s32 b = a + (s32)radix_t->longitudo;
+                    s32 b = a + (s32)silva_token_longitudo(radix_t);
 
                     si (*minimum < (s32)ZEPHYRUM || a < *minimum)
                     {
@@ -32512,7 +32856,7 @@ _extensionem_lineis_valoris (
                 {
                     i32 l   = radix_t->linea;
                     i32 c   = radix_t->columna;
-                    i32 cf  = c + radix_t->longitudo;
+                    i32 cf  = c + silva_token_longitudo(radix_t);
 
                     si (   *linea_a == ZEPHYRUM || l < *linea_a
                         || (l == *linea_a && c < *columna_a))
@@ -32966,7 +33310,7 @@ silva_commentarium_ducens (
         _lexema_primum_valoris(n->loci[k], fons_index, &primum,
             &minimum);
     }
-    si (primum == NIHIL || primum->spatia_ante == NIHIL)
+    si (primum == NIHIL || silva_token_ante_numerus(primum) == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
@@ -32981,14 +33325,13 @@ silva_commentarium_ducens (
     initium  = (s32)-I;
     finis    = (s32)-I;
     linea    = ZEPHYRUM;
-    k        = silva_xar_numerus(primum->spatia_ante);
+    k        = silva_token_ante_numerus(primum);
     dum (k > ZEPHYRUM)
     {
         SilvaToken* t;
 
         k--;
-        t = *(SilvaToken**)silva_xar_obtinere(primum->spatia_ante,
-            (i32)k);
+        t = silva_token_ante(primum, (i32)k);
         si (t == NIHIL)
         {
             perge;
@@ -33014,7 +33357,8 @@ silva_commentarium_ducens (
         {
             si (finis < ZEPHYRUM)
             {
-                finis = (s32)t->byte_offset + (s32)t->longitudo;
+                finis = (s32)t->byte_offset
+                    + (s32)silva_token_longitudo(t);
             }
             initium  = (s32)t->byte_offset;
             linea    = t->linea;
@@ -55002,14 +55346,17 @@ _extentum_valoris (
             SilvaToken* t = valor.datum.token;
 
             dum (   t != NIHIL
-                 && (t->origo.genus == SILVA_ORIGO_EXPANSIO
-                    || t->origo.genus == SILVA_ORIGO_CHORDA))
+                 && (silva_token_origo(t)->genus == SILVA_ORIGO_EXPANSIO
+                    || silva_token_origo(t)->genus
+                        == SILVA_ORIGO_CHORDA))
             {
-                t = (t->origo.genus == SILVA_ORIGO_EXPANSIO)
-                    ? t->origo.datum.expansio.invocatio
-                    : t->origo.datum.stringificatio.primus;
+                t = (silva_token_origo(t)->genus
+                    == SILVA_ORIGO_EXPANSIO)
+                    ? silva_token_origo(t)->datum.expansio.invocatio
+                    : silva_token_origo(t)->datum.stringificatio.primus;
             }
-            si (t == NIHIL || t->origo.genus != SILVA_ORIGO_FONS)
+            si (   t                           == NIHIL
+                || silva_token_origo(t)->genus != SILVA_ORIGO_FONS)
             {
                 extentum->fons = -II;  /* opacum */
                 redde;
@@ -55022,7 +55369,8 @@ _extentum_valoris (
             {
                 extentum->fons     = t->fons_index;
                 extentum->initium  = t->byte_offset;
-                extentum->finis    = t->byte_offset + (s32)t->longitudo;
+                extentum->finis = t->byte_offset
+                    + (s32)silva_token_longitudo(t);
             }
             alioquin si (extentum->fons != t->fons_index)
             {
@@ -55034,11 +55382,11 @@ _extentum_valoris (
                 {
                     extentum->initium = t->byte_offset;
                 }
-                si (t->byte_offset + (s32)t->longitudo
+                si (t->byte_offset + (s32)silva_token_longitudo(t)
                     > extentum->finis)
                 {
                     extentum->finis = t->byte_offset
-                        + (s32)t->longitudo;
+                        + (s32)silva_token_longitudo(t);
                 }
             }
             frange;
@@ -55235,7 +55583,8 @@ _regionem_texere (
             regio->directiva_finis,
             (i32)(silva_xar_numerus(regio->directiva_finis) - I));
 
-        regio_finis = ultimum->byte_offset + (s32)ultimum->longitudo;
+        regio_finis = ultimum->byte_offset
+            + (s32)silva_token_longitudo(ultimum);
     }
     alioquin
     {
@@ -55890,12 +56239,13 @@ _radix_probata (
 {
     dum (token != NIHIL)
     {
-        commutatio (token->origo.genus)
+        commutatio (silva_token_origo(token)->genus)
         {
             casus SILVA_ORIGO_FONS:
                 redde token;
             casus SILVA_ORIGO_EXPANSIO:
-                token = token->origo.datum.expansio.invocatio;
+                token =
+                    silva_token_origo(token)->datum.expansio.invocatio;
                 frange;
             casus SILVA_ORIGO_CHORDA:
                 /* stringificatio (#x): primus = lexema primum
@@ -55903,7 +56253,8 @@ _radix_probata (
                  * invocationis iacet; quaestio continentiae infra
                  * extentum invenit (Chunk C - corpus solarii
                  * deferral coegit, vectis maximalista) */
-                token = token->origo.datum.stringificatio.primus;
+                token =
+                    silva_token_origo(token)->datum.stringificatio.primus;
                 frange;
             casus SILVA_ORIGO_PASTA:
                 /* PASTA: invocationem sequi, NON parentes.
@@ -55917,12 +56268,13 @@ _radix_probata (
                  * (arma PASTAE additus) semitam rectam dat,
                  * sicut EXPANSIO iam habebat. Sine eo (lexema
                  * vetus) recusatio nominata manet. */
-                si (token->origo.datum.pasta.invocatio == NIHIL)
+                si (silva_token_origo(token)->datum.pasta.invocatio
+                    == NIHIL)
                 {
                     *impurum_out = VERUM;
                     redde token;
                 }
-                token = token->origo.datum.pasta.invocatio;
+                token = silva_token_origo(token)->datum.pasta.invocatio;
                 frange;
             ordinarius:
                 *impurum_out = VERUM;
@@ -55968,7 +56320,8 @@ _extentum_continens (
         si (   primum->fons_index == radix->fons_index
             && radix->byte_offset >= primum->byte_offset
             && radix->byte_offset
-                < ultimum->byte_offset + (s32)ultimum->longitudo)
+                < ultimum->byte_offset
+                    + (s32)silva_token_longitudo(ultimum))
         {
             redde extentum->lamina;
         }
@@ -56059,7 +56412,7 @@ _lexema_scribere (
         redde;
     }
 
-    si (token->origo.genus == SILVA_ORIGO_FONS)
+    si (silva_token_origo(token)->genus == SILVA_ORIGO_FONS)
     {
         si (   st->fons_index    >= ZEPHYRUM
             && token->fons_index != st->fons_index)
@@ -56071,8 +56424,9 @@ _lexema_scribere (
         }
         _reinserenda_fundere(st, token->byte_offset);
         silva_lexema_emittere_in(st->aed, token);
-        st->fons_ultimus   = token->fons_index;
-        st->emissum_usque  = token->byte_offset + (s32)token->longitudo;
+        st->fons_ultimus = token->fons_index;
+        st->emissum_usque = token->byte_offset
+            + (s32)silva_token_longitudo(token);
         redde;
     }
 
@@ -56128,8 +56482,9 @@ _lexema_scribere (
                 _reinserenda_fundere(st, t->byte_offset);
                 silva_lexema_emittere_in(st->aed, t);
             }
-            st->fons_ultimus   = radix->fons_index;
-            st->emissum_usque  = t->byte_offset + (s32)t->longitudo;
+            st->fons_ultimus = radix->fons_index;
+            st->emissum_usque = t->byte_offset
+                + (s32)silva_token_longitudo(t);
         }
         alioquin
         {
@@ -56138,7 +56493,7 @@ _lexema_scribere (
             silva_lexema_emittere_in(st->aed, radix);
             st->fons_ultimus = radix->fons_index;
             st->emissum_usque = radix->byte_offset
-                + (s32)radix->longitudo;
+                + (s32)silva_token_longitudo(radix);
         }
     }
 }
@@ -61822,7 +62177,7 @@ _diagnosticum_addere_plenum (
                 d->columna  = radix->columna;
                 /* longitudo radicis IN MANU hic - extensio gratis
                  * (LEGATUS chunk 0: computatum-tum-abiectum finitur) */
-                d->longitudo   = radix->longitudo;
+                d->longitudo   = silva_token_longitudo(radix);
                 d->fons_index  = radix->fons_index;
                 si (   sem->parsura_currens           != NIHIL
                     && sem->parsura_currens->expansio != NIHIL)
@@ -62109,8 +62464,8 @@ _macros_domestica_in_alienis_examinare (
                        b32  iam_emissum;
                        i32  j;
 
-        si (   tok              == NIHIL
-            || tok->origo.genus == SILVA_ORIGO_FONS)
+        si (   tok                           == NIHIL
+            || silva_token_origo(tok)->genus == SILVA_ORIGO_FONS)
         {
             perge;
         }
@@ -62118,30 +62473,35 @@ _macros_domestica_in_alienis_examinare (
          * scripto) sola iudicatur - macros intra corpora domestica
          * res definientis sunt, non vendoris */
         cur = tok;
-        dum (   cur              != NIHIL
-             && cur->origo.genus != SILVA_ORIGO_FONS
+        dum (   cur                           != NIHIL
+             && silva_token_origo(cur)->genus != SILVA_ORIGO_FONS
              && custos < LXIV)
         {
             custos++;
-            commutatio (cur->origo.genus)
+            commutatio (silva_token_origo(cur)->genus)
             {
                 casus SILVA_ORIGO_EXPANSIO:
-                    titulus = cur->origo.datum.expansio.nomen_macro;
-                    corpus = cur->origo.datum.expansio.corpus;
-                    cur = cur->origo.datum.expansio.invocatio;
+                    titulus =
+                        silva_token_origo(cur)->datum.expansio.nomen_macro;
+                    corpus =
+                        silva_token_origo(cur)->datum.expansio.corpus;
+                    cur =
+                        silva_token_origo(cur)->datum.expansio.invocatio;
                     frange;
                 casus SILVA_ORIGO_PASTA:
-                    cur = cur->origo.datum.pasta.sinister;
+                    cur = silva_token_origo(cur)->datum.pasta.sinister;
                     frange;
                 casus SILVA_ORIGO_CHORDA:
-                    cur = cur->origo.datum.stringificatio.primus;
+                    cur =
+                        silva_token_origo(cur)->datum.stringificatio.primus;
                     frange;
                 ordinarius:   /* API: sine sede invocationis */
                     cur = NIHIL;
                     frange;
             }
         }
-        si (   cur     == NIHIL || cur->origo.genus != SILVA_ORIGO_FONS
+        si (   cur == NIHIL
+            || silva_token_origo(cur)->genus != SILVA_ORIGO_FONS
             || titulus == NIHIL || corpus == NIHIL)
         {
             perge;
@@ -67475,22 +67835,20 @@ _portabilitas_trivia_omnia (
     {
         redde;
     }
-    si (t->spatia_ante != NIHIL)
+    si (silva_token_ante_numerus(t) > ZEPHYRUM)
     {
-        k = silva_xar_numerus(t->spatia_ante);
+        k = silva_token_ante_numerus(t);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _portabilitas_trivium(sem, *(SilvaToken**)silva_xar_obtinere(
-                t->spatia_ante, j));
+            _portabilitas_trivium(sem, silva_token_ante(t, j));
         }
     }
-    si (t->spatia_post != NIHIL)
+    si (silva_token_post_numerus(t) > ZEPHYRUM)
     {
-        k = silva_xar_numerus(t->spatia_post);
+        k = silva_token_post_numerus(t);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _portabilitas_trivium(sem, *(SilvaToken**)silva_xar_obtinere(
-                t->spatia_post, j));
+            _portabilitas_trivium(sem, silva_token_post(t, j));
         }
     }
 }
@@ -67569,7 +67927,7 @@ _portabilitatis_diagnosticum (
     d->via.datum     = NIHIL;
     d->linea         = sedes->linea;
     d->columna       = sedes->columna;
-    d->longitudo     = sedes->longitudo;
+    d->longitudo     = silva_token_longitudo(sedes);
     d->fons_index    = sedes->fons_index;
     si (parsura->expansio != NIHIL)
     {
@@ -67665,9 +68023,9 @@ _standardum_trivii (
     constans SilvaParsura* parsura,
       constans SilvaToken* trivium)
 {
-    si (   trivium             == NIHIL
-        || trivium->standard   == SILVA_STANDARD_C89
-        || trivium->fons_index != parsura->fons_princeps)
+    si (   trivium                       == NIHIL
+        || silva_token_standard(trivium) == SILVA_STANDARD_C89
+        || trivium->fons_index           != parsura->fons_princeps)
     {
         redde;
     }
@@ -67691,27 +68049,27 @@ _standarda_lexematis (
     {
         redde;
     }
-    si (   radix->standard   != SILVA_STANDARD_C89
-        && radix->fons_index == parsura->fons_princeps)
+    si (   silva_token_standard(radix) != SILVA_STANDARD_C89
+        && radix->fons_index           == parsura->fons_princeps)
     {
         _standardum_trivii(sem, parsura, radix);
     }
-    si (radix->spatia_ante != NIHIL)
+    si (silva_token_ante_numerus(radix) > ZEPHYRUM)
     {
-        k = silva_xar_numerus(radix->spatia_ante);
+        k = silva_token_ante_numerus(radix);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _standardum_trivii(sem, parsura, *(SilvaToken**)
-                silva_xar_obtinere(radix->spatia_ante, j));
+            _standardum_trivii(sem, parsura, silva_token_ante(radix,
+                j));
         }
     }
-    si (radix->spatia_post != NIHIL)
+    si (silva_token_post_numerus(radix) > ZEPHYRUM)
     {
-        k = silva_xar_numerus(radix->spatia_post);
+        k = silva_token_post_numerus(radix);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _standardum_trivii(sem, parsura, *(SilvaToken**)
-                silva_xar_obtinere(radix->spatia_post, j));
+            _standardum_trivii(sem, parsura, silva_token_post(radix,
+                j));
         }
     }
 }
@@ -68176,22 +68534,20 @@ _professionum_trivia_omnia (
     {
         redde;
     }
-    si (t->spatia_ante != NIHIL)
+    si (silva_token_ante_numerus(t) > ZEPHYRUM)
     {
-        k = silva_xar_numerus(t->spatia_ante);
+        k = silva_token_ante_numerus(t);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _professionem_trivium(sem, *(SilvaToken**)silva_xar_obtinere(
-                t->spatia_ante, j));
+            _professionem_trivium(sem, silva_token_ante(t, j));
         }
     }
-    si (t->spatia_post != NIHIL)
+    si (silva_token_post_numerus(t) > ZEPHYRUM)
     {
-        k = silva_xar_numerus(t->spatia_post);
+        k = silva_token_post_numerus(t);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _professionem_trivium(sem, *(SilvaToken**)silva_xar_obtinere(
-                t->spatia_post, j));
+            _professionem_trivium(sem, silva_token_post(t, j));
         }
     }
 }
@@ -80711,18 +81067,15 @@ _ex_lexemate (
 
     per (latus = ZEPHYRUM; latus < II; latus++)
     {
-        SilvaXar* trivia = (latus == ZEPHYRUM) ? tok->spatia_ante
-                                          : tok->spatia_post;
+                i32 numerus = (latus
+                    == ZEPHYRUM) ? silva_token_ante_numerus(tok)
+                                          : silva_token_post_numerus(tok);
         i32 j;
 
-        si (trivia == NIHIL)
+        per (j = ZEPHYRUM; j < numerus; j++)
         {
-            perge;
-        }
-        per (j = ZEPHYRUM; j < silva_xar_numerus(trivia); j++)
-        {
-            constans SilvaToken* tr = *(SilvaToken**)silva_xar_obtinere(
-                trivia, j);
+            constans SilvaToken* tr = (latus == ZEPHYRUM)
+                ? silva_token_ante(tok, j) : silva_token_post(tok, j);
 
             si (   tr == NIHIL
                 || ((s32)tr->genus != SILVA_LEX_COMMENTUM_CLAUSUM
@@ -82954,11 +83307,11 @@ _numerare_lexema (
         lexema   = _parsura_lexema_emissionis(lexema);
         initium  = lexema;
 
-        si (   lexema->spatia_ante != NIHIL
-            && silva_xar_numerus(lexema->spatia_ante) > ZEPHYRUM)
+        si (   silva_token_ante_numerus(lexema) > ZEPHYRUM
+            && silva_token_ante_numerus(lexema) > ZEPHYRUM)
         {
-            constans SilvaToken* trivium = *(SilvaToken**)
-                silva_xar_obtinere(lexema->spatia_ante, ZEPHYRUM);
+            constans SilvaToken* trivium = silva_token_ante(lexema,
+                ZEPHYRUM);
 
             si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
             {
@@ -82975,7 +83328,8 @@ _numerare_lexema (
          * incipiat pendet ab eo quod ANTE subarborem in plagula
          * stat. Contextus est, sicut ipsa ancora - ergo portandum.
          * (T6: X divergentiae 'lexema/initium-lineae' hinc.) */
-        scriptor->ancora_initium_lineae = lexema->initium_lineae;
+        scriptor->ancora_initium_lineae =
+            silva_token_initium_lineae(lexema);
     }
 
     /* LEXEMATA ORIGINIS quoque numeranda. Invocatio UNA plura
@@ -82987,20 +83341,23 @@ _numerare_lexema (
      *
      * Post creationem notae SOLUM: lexema bis visum originem
      * eandem habet, ergo bis numerare usus inflaret. */
-    commutatio (lexema->origo.genus)
+    commutatio (silva_token_origo(lexema)->genus)
     {
     casus SILVA_ORIGO_EXPANSIO:
         _numerare_lexema(scriptor,
-            lexema->origo.datum.expansio.invocatio);
+            silva_token_origo(lexema)->datum.expansio.invocatio);
         frange;
     casus SILVA_ORIGO_PASTA:
-        _numerare_lexema(scriptor, lexema->origo.datum.pasta.sinister);
-        _numerare_lexema(scriptor, lexema->origo.datum.pasta.dexter);
-        _numerare_lexema(scriptor, lexema->origo.datum.pasta.invocatio);
+        _numerare_lexema(scriptor,
+            silva_token_origo(lexema)->datum.pasta.sinister);
+        _numerare_lexema(scriptor,
+            silva_token_origo(lexema)->datum.pasta.dexter);
+        _numerare_lexema(scriptor,
+            silva_token_origo(lexema)->datum.pasta.invocatio);
         frange;
     casus SILVA_ORIGO_CHORDA:
         _numerare_lexema(scriptor,
-            lexema->origo.datum.stringificatio.primus);
+            silva_token_origo(lexema)->datum.stringificatio.primus);
         frange;
     ordinarius:
         frange;
@@ -83390,19 +83747,17 @@ constans character* titulus_involucri)
  * aut in fractura - vocans causam inspicit ut discernat. */
 interior SilvaStmlNodus*
 _involucrum_triviorum (
-     ArborScriptor* scriptor,
-               SilvaXar* trivia,
-constans character* titulus)
+          ArborScriptor* scriptor,
+    constans SilvaToken* lexema,
+                    b32  post,
+     constans character* titulus)
 {
     SilvaStmlNodus* involucrum;
           i32  numerus;
           i32  i;
 
-    si (trivia == NIHIL)
-    {
-        redde NIHIL;
-    }
-    numerus = silva_xar_numerus(trivia);
+    numerus = post ? silva_token_post_numerus(lexema)
+                   : silva_token_ante_numerus(lexema);
     si (numerus == ZEPHYRUM)
     {
         redde NIHIL;
@@ -83414,8 +83769,8 @@ constans character* titulus)
      * non fert. */
     si (scriptor->templa_activa && numerus == I)
     {
-        SilvaToken* trivium =
-            *(SilvaToken**)silva_xar_obtinere(trivia, ZEPHYRUM);
+        SilvaToken* trivium = post ? silva_token_post(lexema, ZEPHYRUM)
+                                   : silva_token_ante(lexema, ZEPHYRUM);
 
         si (trivium != NIHIL && trivium->genus == SILVA_LEX_SPATIA)
         {
@@ -83442,7 +83797,8 @@ constans character* titulus)
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        SilvaToken* trivium    = *(SilvaToken**)silva_xar_obtinere(trivia, i);
+        SilvaToken* trivium    = post ? silva_token_post(lexema, i)
+                                      : silva_token_ante(lexema, i);
          SilvaStmlNodus* elementum  = _trivium_scribere(scriptor, trivium);
 
         si (elementum == NIHIL)
@@ -83807,10 +84163,10 @@ _scribere_lexema (
     }
 
     /* 'standard' et 'f' SOLUM cum non-ordinaria */
-    si (lexema->standard != (i8)SILVA_STANDARD_C89)
+    si (silva_token_standard(lexema) != (i8)SILVA_STANDARD_C89)
     {
         si (!_attributum_numeri(scriptor, elementum, "standard",
-                 (i32)lexema->standard))
+                 (i32)silva_token_standard(lexema)))
         {
             scriptor->causa = "standard scribi non potuit";
             redde NIHIL;
@@ -83828,7 +84184,7 @@ _scribere_lexema (
     }
 
     /* ante */
-    involucrum = _involucrum_triviorum(scriptor, lexema->spatia_ante,
+    involucrum = _involucrum_triviorum(scriptor, lexema, FALSUM,
         SILVA_ARBOR_TAG_ANTE);
     si (involucrum == NIHIL && scriptor->causa != NIHIL)
     {
@@ -83866,7 +84222,7 @@ _scribere_lexema (
     }
 
     /* post */
-    involucrum = _involucrum_triviorum(scriptor, lexema->spatia_post,
+    involucrum = _involucrum_triviorum(scriptor, lexema, VERUM,
         SILVA_ARBOR_TAG_POST);
     si (involucrum == NIHIL && scriptor->causa != NIHIL)
     {
@@ -83880,12 +84236,13 @@ _scribere_lexema (
     }
 
     /* scissurae (laminae \<nl> INTRA lexema) */
-    numerus_scissurarum = lexema->scissurae
-        ? silva_xar_numerus(lexema->scissurae) : (i32)ZEPHYRUM;
+    numerus_scissurarum = silva_token_scissurae(lexema)
+        ? silva_xar_numerus(silva_token_scissurae(lexema)) : (i32)ZEPHYRUM;
     per (i = ZEPHYRUM; i < numerus_scissurarum; i++)
     {
         SilvaScissura* scissura =
-            (SilvaScissura*)silva_xar_obtinere(lexema->scissurae, i);
+            (SilvaScissura*)silva_xar_obtinere(silva_token_scissurae(lexema),
+            i);
         SilvaStmlNodus* elementum_scissurae;
 
         si (scissura == NIHIL || scissura->offset < ZEPHYRUM)
@@ -83922,7 +84279,7 @@ _scribere_lexema (
      * octetos hic invocatio tenet, non expansio. Lex 'sedes
      * derivatae' integra manet ubi derivatio POSSIBILIS est; ubi
      * non est, portare honestius quam fingere. */
-    si (lexema->origo.genus != SILVA_ORIGO_FONS)
+    si (silva_token_origo(lexema)->genus != SILVA_ORIGO_FONS)
     {
         si (lexema->byte_offset >= ZEPHYRUM)
         {
@@ -83933,7 +84290,7 @@ _scribere_lexema (
             lexema->linea);
         _attributum_numeri(scriptor, elementum, "columna",
             lexema->columna);
-        si (lexema->initium_lineae)
+        si (silva_token_initium_lineae(lexema))
         {
             silva_stml_attributum_boolean_addere(elementum,
                 scriptor->piscina, scriptor->intern,
@@ -83943,7 +84300,8 @@ _scribere_lexema (
 
     /* ORIGO nestata - post trivia, ante involucrum fragmenti (ut
      * fragmentum lexema TOTUM cum origine sua ferat) */
-    si (!_origo_scribere(scriptor, elementum, &lexema->origo))
+    si (!_origo_scribere(scriptor, elementum,
+        silva_token_origo(lexema)))
     {
         redde NIHIL;
     }
@@ -84717,20 +85075,24 @@ _trivium_legere (
 /* Involucrum <ante>/<post> -> Xar de SilvaToken* (NIHIL si vacuum) */
 interior b32
 _trivia_legere (
-    ArborLector*  lector,
-      SilvaStmlNodus*  involucrum,
-            SilvaXar** exitus)
+    ArborLector* lector,
+      SilvaStmlNodus* involucrum,
+     SilvaToken* lexema,
+            b32  post)
 {
-    SilvaXar* series;
-    i32  cursor;
+    i32 cursor;
 
-    series = silva_xar_creare(lector->piscina, magnitudo(SilvaToken*));
-    si (series == NIHIL)
+    /* Latus VACATUM deinde impletum (phasis V T7a): olim series nova
+     * assignabatur - idem status finalis; in fractura tota lectio
+     * recusatur, ergo latus semi-impletum non effugit. */
+    si (post)
     {
-        redde _recusare(lector, "series triviorum creari non potuit",
-            involucrum->linea);
+        silva_token_post_vacare(lexema);
     }
-
+    alioquin
+    {
+        silva_token_ante_vacare(lexema);
+    }
     cursor = ZEPHYRUM;
     per (;;)
     {
@@ -84752,44 +85114,42 @@ _trivia_legere (
         {
             redde FALSUM;
         }
+        si (!(post ? silva_token_post_addere(lector->piscina, lexema,
+            trivium)
+                   : silva_token_ante_addere(lector->piscina, lexema,
+                   trivium)))
         {
-            SilvaToken** cella = (SilvaToken**)silva_xar_addere(series);
-
-            si (cella == NIHIL)
-            {
-                redde _recusare(lector, "trivium addi non potuit",
-                    liberum->linea);
-            }
-            *cella = trivium;
+            redde _recusare(lector, "trivium addi non potuit",
+                liberum->linea);
         }
     }
-
-    *exitus = (silva_xar_numerus(series) > ZEPHYRUM) ? series : NIHIL;
     redde VERUM;
 }
 
 /* Fontem domini triviis imponere (vide vocationem in _lexema_legere) */
 interior vacuum
 _trivia_fontem_ponere (
-    SilvaXar* series,
-    s32  fons)
+    SilvaToken* lexema,
+           b32  post,
+           s32  fons)
 {
     i32 i;
     i32 quantum;
 
-    si (series == NIHIL || fons < ZEPHYRUM)
+    si (fons < ZEPHYRUM)
     {
         redde;
     }
-    quantum = silva_xar_numerus(series);
+    quantum = post ? silva_token_post_numerus(lexema)
+                   : silva_token_ante_numerus(lexema);
     per (i = ZEPHYRUM; i < quantum; i++)
     {
-        SilvaToken** sedes;
+        SilvaToken* trivium = post ? silva_token_post(lexema, i)
+                                   : silva_token_ante(lexema, i);
 
-        sedes = (SilvaToken**)silva_xar_obtinere(series, i);
-        si (sedes != NIHIL && *sedes != NIHIL)
+        si (trivium != NIHIL)
         {
-            (*sedes)->fons_index = fons;
+            trivium->fons_index = fons;
         }
     }
 }
@@ -85076,30 +85436,35 @@ _origo_legere (
             (s32)fons);
     }
 
-    lexema->origo.genus = genus;
+    silva_token_origo(lexema)->genus = genus;
     commutatio (genus)
     {
     casus SILVA_ORIGO_EXPANSIO:
-        lexema->origo.datum.expansio.invocatio    = primus;
-        lexema->origo.datum.expansio.corpus       = definitio;
-        lexema->origo.datum.expansio.nomen_macro  = titulus_macro;
+        silva_token_origo(lexema)->datum.expansio.invocatio    = primus;
+        silva_token_origo(lexema)->datum.expansio.corpus       =
+            definitio;
+        silva_token_origo(lexema)->datum.expansio.nomen_macro  =
+            titulus_macro;
         /* CAECATIO consulto NIHIL - vide _origo_scribere */
-        lexema->origo.datum.expansio.caecatio     = NIHIL;
+        silva_token_origo(lexema)->datum.expansio.caecatio     = NIHIL;
         frange;
     casus SILVA_ORIGO_PASTA:
-        lexema->origo.datum.pasta.sinister     = primus;
-        lexema->origo.datum.pasta.dexter       = secundus;
-        lexema->origo.datum.pasta.invocatio    = tertius;
-        lexema->origo.datum.pasta.nomen_macro  = titulus_macro;
-        lexema->origo.datum.pasta.caecatio     = NIHIL;
+        silva_token_origo(lexema)->datum.pasta.sinister     = primus;
+        silva_token_origo(lexema)->datum.pasta.dexter       = secundus;
+        silva_token_origo(lexema)->datum.pasta.invocatio    = tertius;
+        silva_token_origo(lexema)->datum.pasta.nomen_macro  =
+            titulus_macro;
+        silva_token_origo(lexema)->datum.pasta.caecatio     = NIHIL;
         frange;
     casus SILVA_ORIGO_CHORDA:
-        lexema->origo.datum.stringificatio.primus       = primus;
-        lexema->origo.datum.stringificatio.nomen_macro  =
+        silva_token_origo(lexema)->datum.stringificatio.primus       =
+            primus;
+        silva_token_origo(lexema)->datum.stringificatio.nomen_macro  =
             titulus_macro;
         frange;
     casus SILVA_ORIGO_API:
-        lexema->origo.datum.api.nomen_macro = titulus_macro;
+        silva_token_origo(lexema)->datum.api.nomen_macro =
+            titulus_macro;
         frange;
     ordinarius:
         frange;
@@ -85208,7 +85573,7 @@ _lexema_legere (
                 elementum->linea);
             redde NIHIL;
         }
-        lexema->standard = (i8)gradus;
+        silva_token_standard_ponere(lexema, (i8)gradus);
     }
     attributum = silva_stml_attributum_capere(elementum, "f");
     si (attributum != NIHIL)
@@ -85263,7 +85628,7 @@ _lexema_legere (
     }
     si (silva_stml_attributum_habet(elementum, "linea-initium"))
     {
-        lexema->initium_lineae = VERUM;
+        silva_token_initium_lineae_ponere(lexema, VERUM);
     }
 
     /* liberi: <ante>, <post>, <scissura> */
@@ -85289,7 +85654,7 @@ _lexema_legere (
         si (silva_chorda_aequalis_literis(*liberum->titulus,
                 SILVA_ARBOR_TAG_ANTE))
         {
-            si (!_trivia_legere(lector, liberum, &lexema->spatia_ante))
+            si (!_trivia_legere(lector, liberum, lexema, FALSUM))
             {
                 redde NIHIL;
             }
@@ -85297,7 +85662,7 @@ _lexema_legere (
         alioquin si (silva_chorda_aequalis_literis(*liberum->titulus,
                          SILVA_ARBOR_TAG_POST))
         {
-            si (!_trivia_legere(lector, liberum, &lexema->spatia_post))
+            si (!_trivia_legere(lector, liberum, lexema, VERUM))
             {
                 redde NIHIL;
             }
@@ -85332,12 +85697,13 @@ _lexema_legere (
             scissura.offset  = (s32)offset;
             scissura.crlf    = silva_stml_attributum_habet(liberum, "crlf");
 
-            si (lexema->scissurae == NIHIL)
+            si (silva_token_scissurae(lexema) == NIHIL)
             {
-                lexema->scissurae = silva_xar_creare(lector->piscina,
-                    magnitudo(SilvaScissura));
+                silva_token_scissurae_ponere(lexema,
+                    silva_xar_creare(lector->piscina,
+                    magnitudo(SilvaScissura)));
             }
-            si (lexema->scissurae == NIHIL)
+            si (silva_token_scissurae(lexema) == NIHIL)
             {
                 _recusare(lector, "scissurae creari non potuerunt",
                     liberum->linea);
@@ -85345,7 +85711,7 @@ _lexema_legere (
             }
             {
                 SilvaScissura* cella = (SilvaScissura*)
-                    silva_xar_addere(lexema->scissurae);
+                    silva_xar_addere(silva_token_scissurae(lexema));
 
                 si (cella == NIHIL)
                 {
@@ -85375,8 +85741,8 @@ _lexema_legere (
      * MENSURATUM (T7): VII plagulae latinae hinc divergebant, omnes
      * ad lexema NOVA_LINEA in regione degradata. Corpus planum id
      * capere NON potuit: uno fonte, ordinarius IPSE fons est. */
-    _trivia_fontem_ponere(lexema->spatia_ante, lexema->fons_index);
-    _trivia_fontem_ponere(lexema->spatia_post, lexema->fons_index);
+    _trivia_fontem_ponere(lexema, FALSUM, lexema->fons_index);
+    _trivia_fontem_ponere(lexema, VERUM, lexema->fons_index);
 
     /* Fragmentum: lexema sub ID suo deponere, ut transclusiones
      * sequentes HOC OBIECTUM inveniant */
@@ -85769,8 +86135,8 @@ _lexema_ponere (
      * tamen recte accipit. Ancora ORDINATAS solas regit: 'sine
      * ancora, sine ordinatis' rectum est; 'sine ancora, nihil
      * derivatum' non esset. */
-    lexema->initium_lineae  = cursor->post_lineam;
-    lexema->longitudo       = lexema->valor.mensura;
+    silva_token_initium_lineae_ponere(lexema, cursor->post_lineam);
+    silva_token_longitudo_ponere(lexema, lexema->valor.mensura);
     si (cursor->sedes_notae)
     {
         lexema->byte_offset  = cursor->offset;
@@ -85778,8 +86144,8 @@ _lexema_ponere (
         lexema->columna      = cursor->columna;
     }
 
-    numerus_scissurarum = lexema->scissurae
-        ? silva_xar_numerus(lexema->scissurae) : (i32)ZEPHYRUM;
+    numerus_scissurarum = silva_token_scissurae(lexema)
+        ? silva_xar_numerus(silva_token_scissurae(lexema)) : (i32)ZEPHYRUM;
     s = ZEPHYRUM;
 
     /* Valor MUNDUS est; laminae emissae reinseruntur, ergo sedes
@@ -85790,7 +86156,7 @@ _lexema_ponere (
         dum (s < numerus_scissurarum)
         {
             SilvaScissura* scissura = (SilvaScissura*)
-                silva_xar_obtinere(lexema->scissurae, s);
+                silva_xar_obtinere(silva_token_scissurae(lexema), s);
 
             si (scissura == NIHIL || scissura->offset != (s32)i)
             {
@@ -85847,26 +86213,28 @@ _positiones_lexematis (
      * Dedup 'semel per instantiam' custodia 'iam positum' supra
      * gratis venit: invocatio inter lexemata expansa COMMUNICATA
      * est, ergo secundo visu sedem iam habet. */
-    si (lexema->origo.genus != SILVA_ORIGO_FONS)
+    si (silva_token_origo(lexema)->genus != SILVA_ORIGO_FONS)
     {
         SilvaToken* invocatio;
 
         invocatio = NIHIL;
-        commutatio (lexema->origo.genus)
+        commutatio (silva_token_origo(lexema)->genus)
         {
         casus SILVA_ORIGO_EXPANSIO:
-            invocatio = lexema->origo.datum.expansio.invocatio;
+            invocatio =
+                silva_token_origo(lexema)->datum.expansio.invocatio;
             frange;
         casus SILVA_ORIGO_PASTA:
             /* Invocatio VERA, non sinister: parens ex CORPORE
              * venire potest, invocatio semper ex usu. Ante campum
              * 'invocatio' sinister proximum erat quod habebamus. */
-            invocatio = lexema->origo.datum.pasta.invocatio
-                      ? lexema->origo.datum.pasta.invocatio
-                      : lexema->origo.datum.pasta.sinister;
+            invocatio = silva_token_origo(lexema)->datum.pasta.invocatio
+                      ? silva_token_origo(lexema)->datum.pasta.invocatio
+                      : silva_token_origo(lexema)->datum.pasta.sinister;
             frange;
         casus SILVA_ORIGO_CHORDA:
-            invocatio = lexema->origo.datum.stringificatio.primus;
+            invocatio =
+                silva_token_origo(lexema)->datum.stringificatio.primus;
             frange;
         ordinarius:
             frange;
@@ -85955,22 +86323,20 @@ _positiones_lexematis (
         }
     }
 
-    numerus = lexema->spatia_ante
-        ? silva_xar_numerus(lexema->spatia_ante) : (i32)ZEPHYRUM;
+        numerus = silva_token_ante_numerus(lexema);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         _trivium_ponere(cursor,
-            *(SilvaToken**)silva_xar_obtinere(lexema->spatia_ante, i));
+            silva_token_ante(lexema, i));
     }
 
     _lexema_ponere(cursor, lexema);
 
-    numerus = lexema->spatia_post
-        ? silva_xar_numerus(lexema->spatia_post) : (i32)ZEPHYRUM;
+        numerus = silva_token_post_numerus(lexema);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         _trivium_ponere(cursor,
-            *(SilvaToken**)silva_xar_obtinere(lexema->spatia_post, i));
+            silva_token_post(lexema, i));
     }
 }
 
@@ -86385,18 +86751,20 @@ _parsura_lexema_emissionis (
         constans SilvaToken* proximum;
 
         proximum = NIHIL;
-        commutatio (lexema->origo.genus)
+        commutatio (silva_token_origo(lexema)->genus)
         {
         casus SILVA_ORIGO_EXPANSIO:
-            proximum = lexema->origo.datum.expansio.invocatio;
+            proximum =
+                silva_token_origo(lexema)->datum.expansio.invocatio;
             frange;
         casus SILVA_ORIGO_PASTA:
-            proximum = lexema->origo.datum.pasta.invocatio
-                     ? lexema->origo.datum.pasta.invocatio
-                     : lexema->origo.datum.pasta.sinister;
+            proximum = silva_token_origo(lexema)->datum.pasta.invocatio
+                     ? silva_token_origo(lexema)->datum.pasta.invocatio
+                     : silva_token_origo(lexema)->datum.pasta.sinister;
             frange;
         casus SILVA_ORIGO_CHORDA:
-            proximum = lexema->origo.datum.stringificatio.primus;
+            proximum =
+                silva_token_origo(lexema)->datum.stringificatio.primus;
             frange;
         ordinarius:
             frange;
@@ -86449,13 +86817,12 @@ _parsura_ancoram_scribere (
      * 0 incipit, non a lexemate expanso */
     lexema   = _parsura_lexema_emissionis(lexema);
     initium  = lexema;
-    si (   lexema->spatia_ante != NIHIL
-        && silva_xar_numerus(lexema->spatia_ante) > ZEPHYRUM)
+    si (   silva_token_ante_numerus(lexema) > ZEPHYRUM
+        && silva_token_ante_numerus(lexema) > ZEPHYRUM)
     {
         constans SilvaToken* trivium;
 
-        trivium = *(SilvaToken**)silva_xar_obtinere(lexema->spatia_ante,
-            ZEPHYRUM);
+        trivium = silva_token_ante(lexema, ZEPHYRUM);
         si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
         {
             initium = trivium;
@@ -86469,7 +86836,7 @@ _parsura_ancoram_scribere (
         initium->columna);
     /* initium_lineae LEXEMATIS, non trivii - proprietas lexematis
      * est (M1 idem facit) */
-    si (lexema->initium_lineae)
+    si (silva_token_initium_lineae(lexema))
     {
         silva_stml_attributum_boolean_addere(elementum, scriptor->piscina,
             scriptor->intern, "linea-initium");
@@ -86509,11 +86876,11 @@ _parsura_offset_emissionis (
     {
         redde -I;
     }
-    si (   initium->spatia_ante != NIHIL
-        && silva_xar_numerus(initium->spatia_ante) > ZEPHYRUM)
+    si (   silva_token_ante_numerus(initium) > ZEPHYRUM
+        && silva_token_ante_numerus(initium) > ZEPHYRUM)
     {
-        constans SilvaToken* trivium = *(SilvaToken**)
-            silva_xar_obtinere(initium->spatia_ante, ZEPHYRUM);
+        constans SilvaToken* trivium = silva_token_ante(initium,
+            ZEPHYRUM);
 
         si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
         {
@@ -89437,20 +89804,23 @@ _arbor_lexemata_aequalia (
  * Trivia triviorum non habent, ergo recursio hic finitur. */
 interior b32
 _arbor_trivia_aequalia (
-        ArborComparator* comparator,
-                    SilvaXar* a,
-                    SilvaXar* b,
-     constans character* campus,
-    constans SilvaNodus* nodus_a,
-    constans SilvaNodus* nodus_b,
-                    s32  locus)
+         ArborComparator* comparator,
+     constans SilvaToken* a,
+     constans SilvaToken* b,
+                     b32  post,
+      constans character* campus,
+     constans SilvaNodus* nodus_a,
+     constans SilvaNodus* nodus_b,
+                     s32  locus)
 {
     i32 numerus_a;
     i32 numerus_b;
     i32 i;
 
-    numerus_a = a ? silva_xar_numerus(a) : (i32)ZEPHYRUM;
-    numerus_b = b ? silva_xar_numerus(b) : (i32)ZEPHYRUM;
+    numerus_a = post ? silva_token_post_numerus(a)
+                     : silva_token_ante_numerus(a);
+    numerus_b = post ? silva_token_post_numerus(b)
+                     : silva_token_ante_numerus(b);
 
     si (numerus_a != numerus_b)
     {
@@ -89460,8 +89830,10 @@ _arbor_trivia_aequalia (
 
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
-        SilvaToken* trivium_a = *(SilvaToken**)silva_xar_obtinere(a, i);
-        SilvaToken* trivium_b = *(SilvaToken**)silva_xar_obtinere(b, i);
+        SilvaToken* trivium_a = post ? silva_token_post(a, i)
+                                     : silva_token_ante(a, i);
+        SilvaToken* trivium_b = post ? silva_token_post(b, i)
+                                     : silva_token_ante(b, i);
 
         si (!_arbor_lexemata_aequalia(comparator, trivium_a, trivium_b,
                  nodus_a, nodus_b, locus, (s32)i))
@@ -89486,9 +89858,9 @@ _arbor_scissurae_aequales (
     i32 i;
 
     numerus_a =
-        a->scissurae ? silva_xar_numerus(a->scissurae) : (i32)ZEPHYRUM;
+        silva_token_scissurae(a) ? silva_xar_numerus(silva_token_scissurae(a)) : (i32)ZEPHYRUM;
     numerus_b =
-        b->scissurae ? silva_xar_numerus(b->scissurae) : (i32)ZEPHYRUM;
+        silva_token_scissurae(b) ? silva_xar_numerus(silva_token_scissurae(b)) : (i32)ZEPHYRUM;
 
     si (numerus_a != numerus_b)
     {
@@ -89499,9 +89871,9 @@ _arbor_scissurae_aequales (
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
         SilvaScissura* scissura_a =
-            (SilvaScissura*)silva_xar_obtinere(a->scissurae, i);
+            (SilvaScissura*)silva_xar_obtinere(silva_token_scissurae(a), i);
         SilvaScissura* scissura_b =
-            (SilvaScissura*)silva_xar_obtinere(b->scissurae, i);
+            (SilvaScissura*)silva_xar_obtinere(silva_token_scissurae(b), i);
 
         si (scissura_a == NIHIL || scissura_b == NIHIL)
         {
@@ -89560,7 +89932,7 @@ _arbor_lexemata_aequalia (
             nodus_b,
             a, b, locus, index);
     }
-    si (a->standard != b->standard)
+    si (silva_token_standard(a) != silva_token_standard(b))
     {
         redde _arbor_divergere(comparator, "lexema/standard", nodus_a,
             nodus_b, a, b, locus, index);
@@ -89571,7 +89943,7 @@ _arbor_lexemata_aequalia (
             nodus_b,
             a, b, locus, index);
     }
-    si (a->initium_lineae != b->initium_lineae)
+    si (silva_token_initium_lineae(a) != silva_token_initium_lineae(b))
     {
         redde _arbor_divergere(comparator, "lexema/initium-lineae",
             nodus_a,
@@ -89605,7 +89977,7 @@ _arbor_lexemata_aequalia (
                 nodus_a,
                 nodus_b, a, b, locus, index);
         }
-        si (a->longitudo != b->longitudo)
+        si (silva_token_longitudo(a) != silva_token_longitudo(b))
         {
             redde _arbor_divergere(comparator, "lexema/longitudo",
                 nodus_a,
@@ -89613,18 +89985,16 @@ _arbor_lexemata_aequalia (
         }
     }
 
-    si (!_arbor_trivia_aequalia(comparator, a->spatia_ante,
-        b->spatia_ante,
+        si (!_arbor_trivia_aequalia(comparator, a, b, FALSUM,
              "trivia/ante", nodus_a, nodus_b, locus))
-    {
+        {
         redde FALSUM;
-    }
-    si (!_arbor_trivia_aequalia(comparator, a->spatia_post,
-        b->spatia_post,
+        }
+        si (!_arbor_trivia_aequalia(comparator, a, b, VERUM,
              "trivia/post", nodus_a, nodus_b, locus))
-    {
+        {
         redde FALSUM;
-    }
+        }
     redde _arbor_scissurae_aequales(comparator, a, b, nodus_a, nodus_b,
         locus);
 }

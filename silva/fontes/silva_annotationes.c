@@ -220,18 +220,15 @@ _ex_lexemate (
 
     per (latus = ZEPHYRUM; latus < II; latus++)
     {
-        Xar* trivia = (latus == ZEPHYRUM) ? tok->spatia_ante
-                                          : tok->spatia_post;
+                i32 numerus = (latus
+                    == ZEPHYRUM) ? silva_token_ante_numerus(tok)
+                                          : silva_token_post_numerus(tok);
         i32 j;
 
-        si (trivia == NIHIL)
+        per (j = ZEPHYRUM; j < numerus; j++)
         {
-            perge;
-        }
-        per (j = ZEPHYRUM; j < xar_numerus(trivia); j++)
-        {
-            constans SilvaToken* tr = *(SilvaToken**)xar_obtinere(
-                trivia, j);
+            constans SilvaToken* tr = (latus == ZEPHYRUM)
+                ? silva_token_ante(tok, j) : silva_token_post(tok, j);
 
             si (   tr == NIHIL
                 || ((s32)tr->genus != SILVA_LEX_COMMENTUM_CLAUSUM

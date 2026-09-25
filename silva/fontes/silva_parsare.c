@@ -677,14 +677,17 @@ _extentum_valoris (
             SilvaToken* t = valor.datum.token;
 
             dum (   t != NIHIL
-                 && (t->origo.genus == SILVA_ORIGO_EXPANSIO
-                    || t->origo.genus == SILVA_ORIGO_CHORDA))
+                 && (silva_token_origo(t)->genus == SILVA_ORIGO_EXPANSIO
+                    || silva_token_origo(t)->genus
+                        == SILVA_ORIGO_CHORDA))
             {
-                t = (t->origo.genus == SILVA_ORIGO_EXPANSIO)
-                    ? t->origo.datum.expansio.invocatio
-                    : t->origo.datum.stringificatio.primus;
+                t = (silva_token_origo(t)->genus
+                    == SILVA_ORIGO_EXPANSIO)
+                    ? silva_token_origo(t)->datum.expansio.invocatio
+                    : silva_token_origo(t)->datum.stringificatio.primus;
             }
-            si (t == NIHIL || t->origo.genus != SILVA_ORIGO_FONS)
+            si (   t                           == NIHIL
+                || silva_token_origo(t)->genus != SILVA_ORIGO_FONS)
             {
                 extentum->fons = -II;  /* opacum */
                 redde;
@@ -697,7 +700,8 @@ _extentum_valoris (
             {
                 extentum->fons     = t->fons_index;
                 extentum->initium  = t->byte_offset;
-                extentum->finis    = t->byte_offset + (s32)t->longitudo;
+                extentum->finis = t->byte_offset
+                    + (s32)silva_token_longitudo(t);
             }
             alioquin si (extentum->fons != t->fons_index)
             {
@@ -709,11 +713,11 @@ _extentum_valoris (
                 {
                     extentum->initium = t->byte_offset;
                 }
-                si (t->byte_offset + (s32)t->longitudo
+                si (t->byte_offset + (s32)silva_token_longitudo(t)
                     > extentum->finis)
                 {
                     extentum->finis = t->byte_offset
-                        + (s32)t->longitudo;
+                        + (s32)silva_token_longitudo(t);
                 }
             }
             frange;
@@ -910,7 +914,8 @@ _regionem_texere (
             regio->directiva_finis,
             (i32)(xar_numerus(regio->directiva_finis) - I));
 
-        regio_finis = ultimum->byte_offset + (s32)ultimum->longitudo;
+        regio_finis = ultimum->byte_offset
+            + (s32)silva_token_longitudo(ultimum);
     }
     alioquin
     {

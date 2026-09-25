@@ -3039,7 +3039,7 @@ sessio_turnum_offerre (
                                     chorda_aedificator_appendere_chorda(
                                     aed, chorda_sectio(candidatus,
                                         scissura
-                                        + (i32)op_radix->longitudo,
+                                        + (i32)silva_token_longitudo(op_radix),
                                         candidatus.mensura));
                                 pars_assign =
                                     chorda_aedificator_finire(aed);

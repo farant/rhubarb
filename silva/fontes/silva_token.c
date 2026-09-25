@@ -317,6 +317,186 @@ silva_token_est_fons (
 }
 
 
+/* ---------- accessores campi C89 (phasis V, T7a - sutura) ---------- */
+
+SilvaOrigo*
+silva_token_origo (
+    constans SilvaToken* token)
+{
+    /* Origo MUTABILIS quamquam lexema constans traditur (ut
+     * materia_token_cauda): cast-qual hic consultus. */
+    redde (SilvaOrigo*)(size_t) & token->origo;
+}
+
+i32
+silva_token_longitudo (
+    constans SilvaToken* token)
+{
+    redde token->longitudo;
+}
+
+vacuum
+silva_token_longitudo_ponere (
+     SilvaToken* token,
+            i32  longitudo)
+{
+    token->longitudo = longitudo;
+}
+
+i8
+silva_token_standard (
+    constans SilvaToken* token)
+{
+    redde token->standard;
+}
+
+vacuum
+silva_token_standard_ponere (
+     SilvaToken* token,
+             i8  standard)
+{
+    token->standard = standard;
+}
+
+Xar*
+silva_token_scissurae (
+    constans SilvaToken* token)
+{
+    redde token->scissurae;
+}
+
+vacuum
+silva_token_scissurae_ponere (
+    SilvaToken* token,
+           Xar* scissurae)
+{
+    token->scissurae = scissurae;
+}
+
+b32
+silva_token_initium_lineae (
+    constans SilvaToken* token)
+{
+    redde token->initium_lineae;
+}
+
+vacuum
+silva_token_initium_lineae_ponere (
+     SilvaToken* token,
+            b32  valor)
+{
+    token->initium_lineae = valor;
+}
+
+i32
+silva_token_ante_numerus (
+    constans SilvaToken* token)
+{
+    redde (token->spatia_ante != NIHIL)
+        ? xar_numerus(token->spatia_ante) : (i32)ZEPHYRUM;
+}
+
+SilvaToken*
+silva_token_ante (
+    constans SilvaToken* token,
+                    i32  index)
+{
+    si (   token->spatia_ante == NIHIL
+        || index              >= xar_numerus(token->spatia_ante))
+    {
+        redde NIHIL;
+    }
+    redde *(SilvaToken**)xar_obtinere(token->spatia_ante, index);
+}
+
+i32
+silva_token_post_numerus (
+    constans SilvaToken* token)
+{
+    redde (token->spatia_post != NIHIL)
+        ? xar_numerus(token->spatia_post) : (i32)ZEPHYRUM;
+}
+
+SilvaToken*
+silva_token_post (
+    constans SilvaToken* token,
+                    i32  index)
+{
+    si (   token->spatia_post == NIHIL
+        || index              >= xar_numerus(token->spatia_post))
+    {
+        redde NIHIL;
+    }
+    redde *(SilvaToken**)xar_obtinere(token->spatia_post, index);
+}
+
+b32
+silva_token_ante_addere (
+       Piscina* piscina,
+    SilvaToken* token,
+    SilvaToken* trivium)
+{
+    SilvaToken** cella;
+
+    si (token->spatia_ante == NIHIL)
+    {
+        token->spatia_ante = xar_creare(piscina,
+            magnitudo(SilvaToken*));
+        si (token->spatia_ante == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    cella = (SilvaToken**)xar_addere(token->spatia_ante);
+    si (cella == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *cella = trivium;
+    redde VERUM;
+}
+
+b32
+silva_token_post_addere (
+       Piscina* piscina,
+    SilvaToken* token,
+    SilvaToken* trivium)
+{
+    SilvaToken** cella;
+
+    si (token->spatia_post == NIHIL)
+    {
+        token->spatia_post = xar_creare(piscina,
+            magnitudo(SilvaToken*));
+        si (token->spatia_post == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    cella = (SilvaToken**)xar_addere(token->spatia_post);
+    si (cella == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *cella = trivium;
+    redde VERUM;
+}
+
+vacuum
+silva_token_ante_vacare (
+    SilvaToken* token)
+{
+    token->spatia_ante = NIHIL;
+}
+
+vacuum
+silva_token_post_vacare (
+    SilvaToken* token)
+{
+    token->spatia_post = NIHIL;
+}
+
+
 /* ==================================================
  * Caecatio
  * ================================================== */

@@ -677,7 +677,7 @@ _diagnosticum_addere_plenum (
                 d->columna  = radix->columna;
                 /* longitudo radicis IN MANU hic - extensio gratis
                  * (LEGATUS chunk 0: computatum-tum-abiectum finitur) */
-                d->longitudo   = radix->longitudo;
+                d->longitudo   = silva_token_longitudo(radix);
                 d->fons_index  = radix->fons_index;
                 si (   sem->parsura_currens           != NIHIL
                     && sem->parsura_currens->expansio != NIHIL)
@@ -964,8 +964,8 @@ _macros_domestica_in_alienis_examinare (
                        b32  iam_emissum;
                        i32  j;
 
-        si (   tok              == NIHIL
-            || tok->origo.genus == SILVA_ORIGO_FONS)
+        si (   tok                           == NIHIL
+            || silva_token_origo(tok)->genus == SILVA_ORIGO_FONS)
         {
             perge;
         }
@@ -973,30 +973,35 @@ _macros_domestica_in_alienis_examinare (
          * scripto) sola iudicatur - macros intra corpora domestica
          * res definientis sunt, non vendoris */
         cur = tok;
-        dum (   cur              != NIHIL
-             && cur->origo.genus != SILVA_ORIGO_FONS
+        dum (   cur                           != NIHIL
+             && silva_token_origo(cur)->genus != SILVA_ORIGO_FONS
              && custos < LXIV)
         {
             custos++;
-            commutatio (cur->origo.genus)
+            commutatio (silva_token_origo(cur)->genus)
             {
                 casus SILVA_ORIGO_EXPANSIO:
-                    titulus = cur->origo.datum.expansio.nomen_macro;
-                    corpus = cur->origo.datum.expansio.corpus;
-                    cur = cur->origo.datum.expansio.invocatio;
+                    titulus =
+                        silva_token_origo(cur)->datum.expansio.nomen_macro;
+                    corpus =
+                        silva_token_origo(cur)->datum.expansio.corpus;
+                    cur =
+                        silva_token_origo(cur)->datum.expansio.invocatio;
                     frange;
                 casus SILVA_ORIGO_PASTA:
-                    cur = cur->origo.datum.pasta.sinister;
+                    cur = silva_token_origo(cur)->datum.pasta.sinister;
                     frange;
                 casus SILVA_ORIGO_CHORDA:
-                    cur = cur->origo.datum.stringificatio.primus;
+                    cur =
+                        silva_token_origo(cur)->datum.stringificatio.primus;
                     frange;
                 ordinarius:   /* API: sine sede invocationis */
                     cur = NIHIL;
                     frange;
             }
         }
-        si (   cur     == NIHIL || cur->origo.genus != SILVA_ORIGO_FONS
+        si (   cur == NIHIL
+            || silva_token_origo(cur)->genus != SILVA_ORIGO_FONS
             || titulus == NIHIL || corpus == NIHIL)
         {
             perge;
@@ -6330,22 +6335,20 @@ _portabilitas_trivia_omnia (
     {
         redde;
     }
-    si (t->spatia_ante != NIHIL)
+    si (silva_token_ante_numerus(t) > ZEPHYRUM)
     {
-        k = xar_numerus(t->spatia_ante);
+        k = silva_token_ante_numerus(t);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _portabilitas_trivium(sem, *(SilvaToken**)xar_obtinere(
-                t->spatia_ante, j));
+            _portabilitas_trivium(sem, silva_token_ante(t, j));
         }
     }
-    si (t->spatia_post != NIHIL)
+    si (silva_token_post_numerus(t) > ZEPHYRUM)
     {
-        k = xar_numerus(t->spatia_post);
+        k = silva_token_post_numerus(t);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _portabilitas_trivium(sem, *(SilvaToken**)xar_obtinere(
-                t->spatia_post, j));
+            _portabilitas_trivium(sem, silva_token_post(t, j));
         }
     }
 }
@@ -6424,7 +6427,7 @@ _portabilitatis_diagnosticum (
     d->via.datum     = NIHIL;
     d->linea         = sedes->linea;
     d->columna       = sedes->columna;
-    d->longitudo     = sedes->longitudo;
+    d->longitudo     = silva_token_longitudo(sedes);
     d->fons_index    = sedes->fons_index;
     si (parsura->expansio != NIHIL)
     {
@@ -6520,9 +6523,9 @@ _standardum_trivii (
     constans SilvaParsura* parsura,
       constans SilvaToken* trivium)
 {
-    si (   trivium             == NIHIL
-        || trivium->standard   == SILVA_STANDARD_C89
-        || trivium->fons_index != parsura->fons_princeps)
+    si (   trivium                       == NIHIL
+        || silva_token_standard(trivium) == SILVA_STANDARD_C89
+        || trivium->fons_index           != parsura->fons_princeps)
     {
         redde;
     }
@@ -6546,27 +6549,27 @@ _standarda_lexematis (
     {
         redde;
     }
-    si (   radix->standard   != SILVA_STANDARD_C89
-        && radix->fons_index == parsura->fons_princeps)
+    si (   silva_token_standard(radix) != SILVA_STANDARD_C89
+        && radix->fons_index           == parsura->fons_princeps)
     {
         _standardum_trivii(sem, parsura, radix);
     }
-    si (radix->spatia_ante != NIHIL)
+    si (silva_token_ante_numerus(radix) > ZEPHYRUM)
     {
-        k = xar_numerus(radix->spatia_ante);
+        k = silva_token_ante_numerus(radix);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _standardum_trivii(sem, parsura, *(SilvaToken**)
-                xar_obtinere(radix->spatia_ante, j));
+            _standardum_trivii(sem, parsura, silva_token_ante(radix,
+                j));
         }
     }
-    si (radix->spatia_post != NIHIL)
+    si (silva_token_post_numerus(radix) > ZEPHYRUM)
     {
-        k = xar_numerus(radix->spatia_post);
+        k = silva_token_post_numerus(radix);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _standardum_trivii(sem, parsura, *(SilvaToken**)
-                xar_obtinere(radix->spatia_post, j));
+            _standardum_trivii(sem, parsura, silva_token_post(radix,
+                j));
         }
     }
 }
@@ -7031,22 +7034,20 @@ _professionum_trivia_omnia (
     {
         redde;
     }
-    si (t->spatia_ante != NIHIL)
+    si (silva_token_ante_numerus(t) > ZEPHYRUM)
     {
-        k = xar_numerus(t->spatia_ante);
+        k = silva_token_ante_numerus(t);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _professionem_trivium(sem, *(SilvaToken**)xar_obtinere(
-                t->spatia_ante, j));
+            _professionem_trivium(sem, silva_token_ante(t, j));
         }
     }
-    si (t->spatia_post != NIHIL)
+    si (silva_token_post_numerus(t) > ZEPHYRUM)
     {
-        k = xar_numerus(t->spatia_post);
+        k = silva_token_post_numerus(t);
         per (j = ZEPHYRUM; j < k; j++)
         {
-            _professionem_trivium(sem, *(SilvaToken**)xar_obtinere(
-                t->spatia_post, j));
+            _professionem_trivium(sem, silva_token_post(t, j));
         }
     }
 }

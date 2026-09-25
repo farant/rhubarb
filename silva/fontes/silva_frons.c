@@ -170,16 +170,18 @@ _token_convertere (
         SilvaFronsCauda* cd = CAUDA(m);
 
         cd->silva        = s;
-        cd->origo_genus  = (s32)s->origo.genus;
-        cd->standard     = s->standard;
-        cd->scissurae    = s->scissurae;
-        commutatio (s->origo.genus)
+        cd->origo_genus  = (s32)silva_token_origo(s)->genus;
+        cd->standard     = silva_token_standard(s);
+        cd->scissurae    = silva_token_scissurae(s);
+        commutatio (silva_token_origo(s)->genus)
         {
         casus SILVA_ORIGO_EXPANSIO:
-            cd->nomen_macro = s->origo.datum.expansio.nomen_macro;
-            si (s->origo.datum.expansio.corpus != NIHIL)
+            cd->nomen_macro =
+                silva_token_origo(s)->datum.expansio.nomen_macro;
+            si (silva_token_origo(s)->datum.expansio.corpus != NIHIL)
             {
-                SilvaToken* d = s->origo.datum.expansio.corpus;
+                SilvaToken* d =
+                    silva_token_origo(s)->datum.expansio.corpus;
 
                 cd->def_adest  = VERUM;
                 cd->def_f      = d->fons_index;
@@ -188,22 +190,26 @@ _token_convertere (
             }
             frange;
         casus SILVA_ORIGO_PASTA:
-            cd->nomen_macro = s->origo.datum.pasta.nomen_macro; frange;
+            cd->nomen_macro =
+                silva_token_origo(s)->datum.pasta.nomen_macro; frange;
         casus SILVA_ORIGO_CHORDA:
-            cd->nomen_macro = s->origo.datum.stringificatio.nomen_macro;
+            cd->nomen_macro =
+                silva_token_origo(s)->datum.stringificatio.nomen_macro;
             frange;
         casus SILVA_ORIGO_API:
-            cd->nomen_macro = s->origo.datum.api.nomen_macro; frange;
+            cd->nomen_macro =
+                silva_token_origo(s)->datum.api.nomen_macro; frange;
         ordinarius: frange;
         }
     }
-    materia_token_initium_lineae_ponere(m, s->initium_lineae);
+    materia_token_initium_lineae_ponere(m,
+        silva_token_initium_lineae(s));
     *(MateriaToken**)xar_addere(frons->lexemata) = m;
     tabula_dispersa_inserere(frons->index, _clavis(frons, s), m);
 
     /* trivia - exacta */
     {
-        i32 n = xar_numerus(s->spatia_ante);
+        i32 n = silva_token_ante_numerus(s);
 
         si (n > ZEPHYRUM)
         {
@@ -215,11 +221,11 @@ _token_convertere (
             per (i = ZEPHYRUM; i < n; i++)
             {
                 ser[i] = _token_convertere(frons,
-                    *(SilvaToken**)xar_obtinere(s->spatia_ante, i));
+                    silva_token_ante(s, i));
             }
             materia_token_trivia_ante_ponere(m, frons->piscina, ser, n);
         }
-        n = xar_numerus(s->spatia_post);
+        n = silva_token_post_numerus(s);
         si (n > ZEPHYRUM)
         {
             MateriaToken** ser =
@@ -230,7 +236,7 @@ _token_convertere (
             per (i = ZEPHYRUM; i < n; i++)
             {
                 ser[i] = _token_convertere(frons,
-                    *(SilvaToken**)xar_obtinere(s->spatia_post, i));
+                    silva_token_post(s, i));
             }
             materia_token_trivia_post_ponere(m, frons->piscina, ser, n);
         }
@@ -241,35 +247,38 @@ _token_convertere (
     {
         SilvaFronsCauda* cd = CAUDA(m);
 
-        commutatio (s->origo.genus)
+        commutatio (silva_token_origo(s)->genus)
         {
         casus SILVA_ORIGO_EXPANSIO:
             cd->primus =
                 _token_convertere(frons,
-                s->origo.datum.expansio.invocatio);
+                silva_token_origo(s)->datum.expansio.invocatio);
             frange;
         casus SILVA_ORIGO_PASTA:
             cd->primus   =
-                _token_convertere(frons, s->origo.datum.pasta.sinister);
+                _token_convertere(frons,
+                silva_token_origo(s)->datum.pasta.sinister);
             cd->secundus =
-                _token_convertere(frons, s->origo.datum.pasta.dexter);
+                _token_convertere(frons,
+                silva_token_origo(s)->datum.pasta.dexter);
             cd->tertius  =
                 _token_convertere(frons,
-                s->origo.datum.pasta.invocatio);
+                silva_token_origo(s)->datum.pasta.invocatio);
             frange;
         casus SILVA_ORIGO_CHORDA:
             cd->primus =
                 _token_convertere(frons,
-                s->origo.datum.stringificatio.primus);
+                silva_token_origo(s)->datum.stringificatio.primus);
             frange;
         ordinarius: frange;
         }
         si (cd->primus != NIHIL || cd->tertius != NIHIL)
         {
-            SilvaToken* anc = (s->origo.genus == SILVA_ORIGO_PASTA)
-                ? s->origo.datum.pasta.invocatio
-                : ((s->origo.genus == SILVA_ORIGO_EXPANSIO)
-                    ? s->origo.datum.expansio.invocatio : NIHIL);
+            SilvaToken* anc = (silva_token_origo(s)->genus
+                == SILVA_ORIGO_PASTA)
+                ? silva_token_origo(s)->datum.pasta.invocatio
+                : ((silva_token_origo(s)->genus == SILVA_ORIGO_EXPANSIO)
+                    ? silva_token_origo(s)->datum.expansio.invocatio : NIHIL);
             Xar* lam = _extentum_laminam_silvae(frons, anc);
 
             si (lam != NIHIL && xar_numerus(lam) > I)

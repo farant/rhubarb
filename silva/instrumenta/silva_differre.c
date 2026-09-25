@@ -56,11 +56,10 @@ _unitatis_initium (
 {
     SilvaToken* primum = _lexema_ad(lexemata, u->lexema_primum);
 
-    si (   primum->spatia_ante != NIHIL
-        && xar_numerus(primum->spatia_ante) > 0)
+    si (   silva_token_ante_numerus(primum) > ZEPHYRUM
+        && silva_token_ante_numerus(primum) > 0)
     {
-        SilvaToken* trivia = *(SilvaToken**)xar_obtinere(
-            primum->spatia_ante, 0);
+        SilvaToken* trivia = silva_token_ante(primum, 0);
 
         si (trivia->byte_offset >= 0)
         {
@@ -262,24 +261,25 @@ _lexemata_codicis_aequalia (
 
 interior vacuum
 _commenta_conserere (
-    ChordaAedificator* aed,
-                  Xar* spatia);
+      ChordaAedificator* aed,
+    constans SilvaToken* token,
+                    b32  post);
 
 interior vacuum
 _commenta_conserere (
-    ChordaAedificator* aed,
-                  Xar* spatia)
+      ChordaAedificator* aed,
+    constans SilvaToken* token,
+                    b32  post)
 {
     i32 k;
+    i32 n;
 
-    si (spatia == NIHIL)
+    n = post ? silva_token_post_numerus(token)
+             : silva_token_ante_numerus(token);
+    per (k = 0; k < n; k = k + 1)
     {
-        redde;
-    }
-    per (k = 0; k < xar_numerus(spatia); k = k + 1)
-    {
-        SilvaToken* trivia = *(SilvaToken**)xar_obtinere(spatia,
-            k);
+        SilvaToken* trivia = post ? silva_token_post(token, k)
+                                  : silva_token_ante(token, k);
 
         si (   trivia->genus == SILVA_LEX_COMMENTUM_CLAUSUM
             || trivia->genus == SILVA_LEX_COMMENTUM_LINEA)
@@ -311,8 +311,8 @@ _commenta_unitatis (
     {
         SilvaToken* t = _lexema_ad(l->lexemata, j);
 
-        _commenta_conserere(aed, t->spatia_ante);
-        _commenta_conserere(aed, t->spatia_post);
+        _commenta_conserere(aed, t, FALSUM);
+        _commenta_conserere(aed, t, VERUM);
     }
     redde chorda_aedificator_finire(aed);
 }
@@ -465,13 +465,13 @@ silva_differre_classificare_textus (
         }
         per (k = 0; k < xar_numerus(la); k = k + 1)
         {
-            _commenta_conserere(aa, _lexema_ad(la, k)->spatia_ante);
-            _commenta_conserere(aa, _lexema_ad(la, k)->spatia_post);
+            _commenta_conserere(aa, _lexema_ad(la, k), FALSUM);
+            _commenta_conserere(aa, _lexema_ad(la, k), VERUM);
         }
         per (k = 0; k < xar_numerus(lb); k = k + 1)
         {
-            _commenta_conserere(ab, _lexema_ad(lb, k)->spatia_ante);
-            _commenta_conserere(ab, _lexema_ad(lb, k)->spatia_post);
+            _commenta_conserere(ab, _lexema_ad(lb, k), FALSUM);
+            _commenta_conserere(ab, _lexema_ad(lb, k), VERUM);
         }
         si (!chorda_aequalis(chorda_aedificator_finire(aa),
             chorda_aedificator_finire(ab)))

@@ -733,11 +733,11 @@ _numerare_lexema (
         lexema   = _parsura_lexema_emissionis(lexema);
         initium  = lexema;
 
-        si (   lexema->spatia_ante != NIHIL
-            && xar_numerus(lexema->spatia_ante) > ZEPHYRUM)
+        si (   silva_token_ante_numerus(lexema) > ZEPHYRUM
+            && silva_token_ante_numerus(lexema) > ZEPHYRUM)
         {
-            constans SilvaToken* trivium = *(SilvaToken**)
-                xar_obtinere(lexema->spatia_ante, ZEPHYRUM);
+            constans SilvaToken* trivium = silva_token_ante(lexema,
+                ZEPHYRUM);
 
             si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
             {
@@ -754,7 +754,8 @@ _numerare_lexema (
          * incipiat pendet ab eo quod ANTE subarborem in plagula
          * stat. Contextus est, sicut ipsa ancora - ergo portandum.
          * (T6: X divergentiae 'lexema/initium-lineae' hinc.) */
-        scriptor->ancora_initium_lineae = lexema->initium_lineae;
+        scriptor->ancora_initium_lineae =
+            silva_token_initium_lineae(lexema);
     }
 
     /* LEXEMATA ORIGINIS quoque numeranda. Invocatio UNA plura
@@ -766,20 +767,23 @@ _numerare_lexema (
      *
      * Post creationem notae SOLUM: lexema bis visum originem
      * eandem habet, ergo bis numerare usus inflaret. */
-    commutatio (lexema->origo.genus)
+    commutatio (silva_token_origo(lexema)->genus)
     {
     casus SILVA_ORIGO_EXPANSIO:
         _numerare_lexema(scriptor,
-            lexema->origo.datum.expansio.invocatio);
+            silva_token_origo(lexema)->datum.expansio.invocatio);
         frange;
     casus SILVA_ORIGO_PASTA:
-        _numerare_lexema(scriptor, lexema->origo.datum.pasta.sinister);
-        _numerare_lexema(scriptor, lexema->origo.datum.pasta.dexter);
-        _numerare_lexema(scriptor, lexema->origo.datum.pasta.invocatio);
+        _numerare_lexema(scriptor,
+            silva_token_origo(lexema)->datum.pasta.sinister);
+        _numerare_lexema(scriptor,
+            silva_token_origo(lexema)->datum.pasta.dexter);
+        _numerare_lexema(scriptor,
+            silva_token_origo(lexema)->datum.pasta.invocatio);
         frange;
     casus SILVA_ORIGO_CHORDA:
         _numerare_lexema(scriptor,
-            lexema->origo.datum.stringificatio.primus);
+            silva_token_origo(lexema)->datum.stringificatio.primus);
         frange;
     ordinarius:
         frange;
@@ -1169,19 +1173,17 @@ constans character* titulus_involucri)
  * aut in fractura - vocans causam inspicit ut discernat. */
 interior StmlNodus*
 _involucrum_triviorum (
-     ArborScriptor* scriptor,
-               Xar* trivia,
-constans character* titulus)
+          ArborScriptor* scriptor,
+    constans SilvaToken* lexema,
+                    b32  post,
+     constans character* titulus)
 {
     StmlNodus* involucrum;
           i32  numerus;
           i32  i;
 
-    si (trivia == NIHIL)
-    {
-        redde NIHIL;
-    }
-    numerus = xar_numerus(trivia);
+    numerus = post ? silva_token_post_numerus(lexema)
+                   : silva_token_ante_numerus(lexema);
     si (numerus == ZEPHYRUM)
     {
         redde NIHIL;
@@ -1193,8 +1195,8 @@ constans character* titulus)
      * non fert. */
     si (scriptor->templa_activa && numerus == I)
     {
-        SilvaToken* trivium =
-            *(SilvaToken**)xar_obtinere(trivia, ZEPHYRUM);
+        SilvaToken* trivium = post ? silva_token_post(lexema, ZEPHYRUM)
+                                   : silva_token_ante(lexema, ZEPHYRUM);
 
         si (trivium != NIHIL && trivium->genus == SILVA_LEX_SPATIA)
         {
@@ -1221,7 +1223,8 @@ constans character* titulus)
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        SilvaToken* trivium    = *(SilvaToken**)xar_obtinere(trivia, i);
+        SilvaToken* trivium    = post ? silva_token_post(lexema, i)
+                                      : silva_token_ante(lexema, i);
          StmlNodus* elementum  = _trivium_scribere(scriptor, trivium);
 
         si (elementum == NIHIL)
@@ -1586,10 +1589,10 @@ _scribere_lexema (
     }
 
     /* 'standard' et 'f' SOLUM cum non-ordinaria */
-    si (lexema->standard != (i8)SILVA_STANDARD_C89)
+    si (silva_token_standard(lexema) != (i8)SILVA_STANDARD_C89)
     {
         si (!_attributum_numeri(scriptor, elementum, "standard",
-                 (i32)lexema->standard))
+                 (i32)silva_token_standard(lexema)))
         {
             scriptor->causa = "standard scribi non potuit";
             redde NIHIL;
@@ -1607,7 +1610,7 @@ _scribere_lexema (
     }
 
     /* ante */
-    involucrum = _involucrum_triviorum(scriptor, lexema->spatia_ante,
+    involucrum = _involucrum_triviorum(scriptor, lexema, FALSUM,
         SILVA_ARBOR_TAG_ANTE);
     si (involucrum == NIHIL && scriptor->causa != NIHIL)
     {
@@ -1645,7 +1648,7 @@ _scribere_lexema (
     }
 
     /* post */
-    involucrum = _involucrum_triviorum(scriptor, lexema->spatia_post,
+    involucrum = _involucrum_triviorum(scriptor, lexema, VERUM,
         SILVA_ARBOR_TAG_POST);
     si (involucrum == NIHIL && scriptor->causa != NIHIL)
     {
@@ -1659,12 +1662,13 @@ _scribere_lexema (
     }
 
     /* scissurae (laminae \<nl> INTRA lexema) */
-    numerus_scissurarum = lexema->scissurae
-        ? xar_numerus(lexema->scissurae) : (i32)ZEPHYRUM;
+    numerus_scissurarum = silva_token_scissurae(lexema)
+        ? xar_numerus(silva_token_scissurae(lexema)) : (i32)ZEPHYRUM;
     per (i = ZEPHYRUM; i < numerus_scissurarum; i++)
     {
         SilvaScissura* scissura =
-            (SilvaScissura*)xar_obtinere(lexema->scissurae, i);
+            (SilvaScissura*)xar_obtinere(silva_token_scissurae(lexema),
+            i);
         StmlNodus* elementum_scissurae;
 
         si (scissura == NIHIL || scissura->offset < ZEPHYRUM)
@@ -1701,7 +1705,7 @@ _scribere_lexema (
      * octetos hic invocatio tenet, non expansio. Lex 'sedes
      * derivatae' integra manet ubi derivatio POSSIBILIS est; ubi
      * non est, portare honestius quam fingere. */
-    si (lexema->origo.genus != SILVA_ORIGO_FONS)
+    si (silva_token_origo(lexema)->genus != SILVA_ORIGO_FONS)
     {
         si (lexema->byte_offset >= ZEPHYRUM)
         {
@@ -1712,7 +1716,7 @@ _scribere_lexema (
             lexema->linea);
         _attributum_numeri(scriptor, elementum, "columna",
             lexema->columna);
-        si (lexema->initium_lineae)
+        si (silva_token_initium_lineae(lexema))
         {
             stml_attributum_boolean_addere(elementum,
                 scriptor->piscina, scriptor->intern,
@@ -1722,7 +1726,8 @@ _scribere_lexema (
 
     /* ORIGO nestata - post trivia, ante involucrum fragmenti (ut
      * fragmentum lexema TOTUM cum origine sua ferat) */
-    si (!_origo_scribere(scriptor, elementum, &lexema->origo))
+    si (!_origo_scribere(scriptor, elementum,
+        silva_token_origo(lexema)))
     {
         redde NIHIL;
     }
@@ -2496,20 +2501,24 @@ _trivium_legere (
 /* Involucrum <ante>/<post> -> Xar de SilvaToken* (NIHIL si vacuum) */
 interior b32
 _trivia_legere (
-    ArborLector*  lector,
-      StmlNodus*  involucrum,
-            Xar** exitus)
+    ArborLector* lector,
+      StmlNodus* involucrum,
+     SilvaToken* lexema,
+            b32  post)
 {
-    Xar* series;
-    i32  cursor;
+    i32 cursor;
 
-    series = xar_creare(lector->piscina, magnitudo(SilvaToken*));
-    si (series == NIHIL)
+    /* Latus VACATUM deinde impletum (phasis V T7a): olim series nova
+     * assignabatur - idem status finalis; in fractura tota lectio
+     * recusatur, ergo latus semi-impletum non effugit. */
+    si (post)
     {
-        redde _recusare(lector, "series triviorum creari non potuit",
-            involucrum->linea);
+        silva_token_post_vacare(lexema);
     }
-
+    alioquin
+    {
+        silva_token_ante_vacare(lexema);
+    }
     cursor = ZEPHYRUM;
     per (;;)
     {
@@ -2531,44 +2540,42 @@ _trivia_legere (
         {
             redde FALSUM;
         }
+        si (!(post ? silva_token_post_addere(lector->piscina, lexema,
+            trivium)
+                   : silva_token_ante_addere(lector->piscina, lexema,
+                   trivium)))
         {
-            SilvaToken** cella = (SilvaToken**)xar_addere(series);
-
-            si (cella == NIHIL)
-            {
-                redde _recusare(lector, "trivium addi non potuit",
-                    liberum->linea);
-            }
-            *cella = trivium;
+            redde _recusare(lector, "trivium addi non potuit",
+                liberum->linea);
         }
     }
-
-    *exitus = (xar_numerus(series) > ZEPHYRUM) ? series : NIHIL;
     redde VERUM;
 }
 
 /* Fontem domini triviis imponere (vide vocationem in _lexema_legere) */
 interior vacuum
 _trivia_fontem_ponere (
-    Xar* series,
-    s32  fons)
+    SilvaToken* lexema,
+           b32  post,
+           s32  fons)
 {
     i32 i;
     i32 quantum;
 
-    si (series == NIHIL || fons < ZEPHYRUM)
+    si (fons < ZEPHYRUM)
     {
         redde;
     }
-    quantum = xar_numerus(series);
+    quantum = post ? silva_token_post_numerus(lexema)
+                   : silva_token_ante_numerus(lexema);
     per (i = ZEPHYRUM; i < quantum; i++)
     {
-        SilvaToken** sedes;
+        SilvaToken* trivium = post ? silva_token_post(lexema, i)
+                                   : silva_token_ante(lexema, i);
 
-        sedes = (SilvaToken**)xar_obtinere(series, i);
-        si (sedes != NIHIL && *sedes != NIHIL)
+        si (trivium != NIHIL)
         {
-            (*sedes)->fons_index = fons;
+            trivium->fons_index = fons;
         }
     }
 }
@@ -2855,30 +2862,35 @@ _origo_legere (
             (s32)fons);
     }
 
-    lexema->origo.genus = genus;
+    silva_token_origo(lexema)->genus = genus;
     commutatio (genus)
     {
     casus SILVA_ORIGO_EXPANSIO:
-        lexema->origo.datum.expansio.invocatio    = primus;
-        lexema->origo.datum.expansio.corpus       = definitio;
-        lexema->origo.datum.expansio.nomen_macro  = titulus_macro;
+        silva_token_origo(lexema)->datum.expansio.invocatio    = primus;
+        silva_token_origo(lexema)->datum.expansio.corpus       =
+            definitio;
+        silva_token_origo(lexema)->datum.expansio.nomen_macro  =
+            titulus_macro;
         /* CAECATIO consulto NIHIL - vide _origo_scribere */
-        lexema->origo.datum.expansio.caecatio     = NIHIL;
+        silva_token_origo(lexema)->datum.expansio.caecatio     = NIHIL;
         frange;
     casus SILVA_ORIGO_PASTA:
-        lexema->origo.datum.pasta.sinister     = primus;
-        lexema->origo.datum.pasta.dexter       = secundus;
-        lexema->origo.datum.pasta.invocatio    = tertius;
-        lexema->origo.datum.pasta.nomen_macro  = titulus_macro;
-        lexema->origo.datum.pasta.caecatio     = NIHIL;
+        silva_token_origo(lexema)->datum.pasta.sinister     = primus;
+        silva_token_origo(lexema)->datum.pasta.dexter       = secundus;
+        silva_token_origo(lexema)->datum.pasta.invocatio    = tertius;
+        silva_token_origo(lexema)->datum.pasta.nomen_macro  =
+            titulus_macro;
+        silva_token_origo(lexema)->datum.pasta.caecatio     = NIHIL;
         frange;
     casus SILVA_ORIGO_CHORDA:
-        lexema->origo.datum.stringificatio.primus       = primus;
-        lexema->origo.datum.stringificatio.nomen_macro  =
+        silva_token_origo(lexema)->datum.stringificatio.primus       =
+            primus;
+        silva_token_origo(lexema)->datum.stringificatio.nomen_macro  =
             titulus_macro;
         frange;
     casus SILVA_ORIGO_API:
-        lexema->origo.datum.api.nomen_macro = titulus_macro;
+        silva_token_origo(lexema)->datum.api.nomen_macro =
+            titulus_macro;
         frange;
     ordinarius:
         frange;
@@ -2987,7 +2999,7 @@ _lexema_legere (
                 elementum->linea);
             redde NIHIL;
         }
-        lexema->standard = (i8)gradus;
+        silva_token_standard_ponere(lexema, (i8)gradus);
     }
     attributum = stml_attributum_capere(elementum, "f");
     si (attributum != NIHIL)
@@ -3042,7 +3054,7 @@ _lexema_legere (
     }
     si (stml_attributum_habet(elementum, "linea-initium"))
     {
-        lexema->initium_lineae = VERUM;
+        silva_token_initium_lineae_ponere(lexema, VERUM);
     }
 
     /* liberi: <ante>, <post>, <scissura> */
@@ -3068,7 +3080,7 @@ _lexema_legere (
         si (chorda_aequalis_literis(*liberum->titulus,
                 SILVA_ARBOR_TAG_ANTE))
         {
-            si (!_trivia_legere(lector, liberum, &lexema->spatia_ante))
+            si (!_trivia_legere(lector, liberum, lexema, FALSUM))
             {
                 redde NIHIL;
             }
@@ -3076,7 +3088,7 @@ _lexema_legere (
         alioquin si (chorda_aequalis_literis(*liberum->titulus,
                          SILVA_ARBOR_TAG_POST))
         {
-            si (!_trivia_legere(lector, liberum, &lexema->spatia_post))
+            si (!_trivia_legere(lector, liberum, lexema, VERUM))
             {
                 redde NIHIL;
             }
@@ -3111,12 +3123,13 @@ _lexema_legere (
             scissura.offset  = (s32)offset;
             scissura.crlf    = stml_attributum_habet(liberum, "crlf");
 
-            si (lexema->scissurae == NIHIL)
+            si (silva_token_scissurae(lexema) == NIHIL)
             {
-                lexema->scissurae = xar_creare(lector->piscina,
-                    magnitudo(SilvaScissura));
+                silva_token_scissurae_ponere(lexema,
+                    xar_creare(lector->piscina,
+                    magnitudo(SilvaScissura)));
             }
-            si (lexema->scissurae == NIHIL)
+            si (silva_token_scissurae(lexema) == NIHIL)
             {
                 _recusare(lector, "scissurae creari non potuerunt",
                     liberum->linea);
@@ -3124,7 +3137,7 @@ _lexema_legere (
             }
             {
                 SilvaScissura* cella = (SilvaScissura*)
-                    xar_addere(lexema->scissurae);
+                    xar_addere(silva_token_scissurae(lexema));
 
                 si (cella == NIHIL)
                 {
@@ -3154,8 +3167,8 @@ _lexema_legere (
      * MENSURATUM (T7): VII plagulae latinae hinc divergebant, omnes
      * ad lexema NOVA_LINEA in regione degradata. Corpus planum id
      * capere NON potuit: uno fonte, ordinarius IPSE fons est. */
-    _trivia_fontem_ponere(lexema->spatia_ante, lexema->fons_index);
-    _trivia_fontem_ponere(lexema->spatia_post, lexema->fons_index);
+    _trivia_fontem_ponere(lexema, FALSUM, lexema->fons_index);
+    _trivia_fontem_ponere(lexema, VERUM, lexema->fons_index);
 
     /* Fragmentum: lexema sub ID suo deponere, ut transclusiones
      * sequentes HOC OBIECTUM inveniant */
@@ -3548,8 +3561,8 @@ _lexema_ponere (
      * tamen recte accipit. Ancora ORDINATAS solas regit: 'sine
      * ancora, sine ordinatis' rectum est; 'sine ancora, nihil
      * derivatum' non esset. */
-    lexema->initium_lineae  = cursor->post_lineam;
-    lexema->longitudo       = lexema->valor.mensura;
+    silva_token_initium_lineae_ponere(lexema, cursor->post_lineam);
+    silva_token_longitudo_ponere(lexema, lexema->valor.mensura);
     si (cursor->sedes_notae)
     {
         lexema->byte_offset  = cursor->offset;
@@ -3557,8 +3570,8 @@ _lexema_ponere (
         lexema->columna      = cursor->columna;
     }
 
-    numerus_scissurarum = lexema->scissurae
-        ? xar_numerus(lexema->scissurae) : (i32)ZEPHYRUM;
+    numerus_scissurarum = silva_token_scissurae(lexema)
+        ? xar_numerus(silva_token_scissurae(lexema)) : (i32)ZEPHYRUM;
     s = ZEPHYRUM;
 
     /* Valor MUNDUS est; laminae emissae reinseruntur, ergo sedes
@@ -3569,7 +3582,7 @@ _lexema_ponere (
         dum (s < numerus_scissurarum)
         {
             SilvaScissura* scissura = (SilvaScissura*)
-                xar_obtinere(lexema->scissurae, s);
+                xar_obtinere(silva_token_scissurae(lexema), s);
 
             si (scissura == NIHIL || scissura->offset != (s32)i)
             {
@@ -3626,26 +3639,28 @@ _positiones_lexematis (
      * Dedup 'semel per instantiam' custodia 'iam positum' supra
      * gratis venit: invocatio inter lexemata expansa COMMUNICATA
      * est, ergo secundo visu sedem iam habet. */
-    si (lexema->origo.genus != SILVA_ORIGO_FONS)
+    si (silva_token_origo(lexema)->genus != SILVA_ORIGO_FONS)
     {
         SilvaToken* invocatio;
 
         invocatio = NIHIL;
-        commutatio (lexema->origo.genus)
+        commutatio (silva_token_origo(lexema)->genus)
         {
         casus SILVA_ORIGO_EXPANSIO:
-            invocatio = lexema->origo.datum.expansio.invocatio;
+            invocatio =
+                silva_token_origo(lexema)->datum.expansio.invocatio;
             frange;
         casus SILVA_ORIGO_PASTA:
             /* Invocatio VERA, non sinister: parens ex CORPORE
              * venire potest, invocatio semper ex usu. Ante campum
              * 'invocatio' sinister proximum erat quod habebamus. */
-            invocatio = lexema->origo.datum.pasta.invocatio
-                      ? lexema->origo.datum.pasta.invocatio
-                      : lexema->origo.datum.pasta.sinister;
+            invocatio = silva_token_origo(lexema)->datum.pasta.invocatio
+                      ? silva_token_origo(lexema)->datum.pasta.invocatio
+                      : silva_token_origo(lexema)->datum.pasta.sinister;
             frange;
         casus SILVA_ORIGO_CHORDA:
-            invocatio = lexema->origo.datum.stringificatio.primus;
+            invocatio =
+                silva_token_origo(lexema)->datum.stringificatio.primus;
             frange;
         ordinarius:
             frange;
@@ -3734,22 +3749,20 @@ _positiones_lexematis (
         }
     }
 
-    numerus = lexema->spatia_ante
-        ? xar_numerus(lexema->spatia_ante) : (i32)ZEPHYRUM;
+        numerus = silva_token_ante_numerus(lexema);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         _trivium_ponere(cursor,
-            *(SilvaToken**)xar_obtinere(lexema->spatia_ante, i));
+            silva_token_ante(lexema, i));
     }
 
     _lexema_ponere(cursor, lexema);
 
-    numerus = lexema->spatia_post
-        ? xar_numerus(lexema->spatia_post) : (i32)ZEPHYRUM;
+        numerus = silva_token_post_numerus(lexema);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         _trivium_ponere(cursor,
-            *(SilvaToken**)xar_obtinere(lexema->spatia_post, i));
+            silva_token_post(lexema, i));
     }
 }
 
@@ -4164,18 +4177,20 @@ _parsura_lexema_emissionis (
         constans SilvaToken* proximum;
 
         proximum = NIHIL;
-        commutatio (lexema->origo.genus)
+        commutatio (silva_token_origo(lexema)->genus)
         {
         casus SILVA_ORIGO_EXPANSIO:
-            proximum = lexema->origo.datum.expansio.invocatio;
+            proximum =
+                silva_token_origo(lexema)->datum.expansio.invocatio;
             frange;
         casus SILVA_ORIGO_PASTA:
-            proximum = lexema->origo.datum.pasta.invocatio
-                     ? lexema->origo.datum.pasta.invocatio
-                     : lexema->origo.datum.pasta.sinister;
+            proximum = silva_token_origo(lexema)->datum.pasta.invocatio
+                     ? silva_token_origo(lexema)->datum.pasta.invocatio
+                     : silva_token_origo(lexema)->datum.pasta.sinister;
             frange;
         casus SILVA_ORIGO_CHORDA:
-            proximum = lexema->origo.datum.stringificatio.primus;
+            proximum =
+                silva_token_origo(lexema)->datum.stringificatio.primus;
             frange;
         ordinarius:
             frange;
@@ -4228,13 +4243,12 @@ _parsura_ancoram_scribere (
      * 0 incipit, non a lexemate expanso */
     lexema   = _parsura_lexema_emissionis(lexema);
     initium  = lexema;
-    si (   lexema->spatia_ante != NIHIL
-        && xar_numerus(lexema->spatia_ante) > ZEPHYRUM)
+    si (   silva_token_ante_numerus(lexema) > ZEPHYRUM
+        && silva_token_ante_numerus(lexema) > ZEPHYRUM)
     {
         constans SilvaToken* trivium;
 
-        trivium = *(SilvaToken**)xar_obtinere(lexema->spatia_ante,
-            ZEPHYRUM);
+        trivium = silva_token_ante(lexema, ZEPHYRUM);
         si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
         {
             initium = trivium;
@@ -4248,7 +4262,7 @@ _parsura_ancoram_scribere (
         initium->columna);
     /* initium_lineae LEXEMATIS, non trivii - proprietas lexematis
      * est (M1 idem facit) */
-    si (lexema->initium_lineae)
+    si (silva_token_initium_lineae(lexema))
     {
         stml_attributum_boolean_addere(elementum, scriptor->piscina,
             scriptor->intern, "linea-initium");
@@ -4288,11 +4302,11 @@ _parsura_offset_emissionis (
     {
         redde -I;
     }
-    si (   initium->spatia_ante != NIHIL
-        && xar_numerus(initium->spatia_ante) > ZEPHYRUM)
+    si (   silva_token_ante_numerus(initium) > ZEPHYRUM
+        && silva_token_ante_numerus(initium) > ZEPHYRUM)
     {
-        constans SilvaToken* trivium = *(SilvaToken**)
-            xar_obtinere(initium->spatia_ante, ZEPHYRUM);
+        constans SilvaToken* trivium = silva_token_ante(initium,
+            ZEPHYRUM);
 
         si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
         {

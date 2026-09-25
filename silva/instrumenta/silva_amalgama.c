@@ -127,19 +127,20 @@ _ad (
 
 interior vacuum
 _trivia_emittere (
-    Amalgamator* am,
-            Xar* spatia)
+            Amalgamator* am,
+    constans SilvaToken* token,
+                    b32  post)
 {
     i32 i;
+    i32 n;
 
-    si (spatia == NIHIL)
-    {
-        redde;
-    }
-    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
+    n = post ? silva_token_post_numerus(token)
+             : silva_token_ante_numerus(token);
+    per (i = ZEPHYRUM; i < n; i++)
     {
         chorda_aedificator_appendere_chorda(am->aed,
-            (*(SilvaToken**)xar_obtinere(spatia, i))->valor);
+            (post ? silva_token_post(token, i)
+                  : silva_token_ante(token, i))->valor);
     }
 }
 
@@ -157,7 +158,7 @@ _lexema_emittere (
 
     si (!sine_ante)
     {
-        _trivia_emittere(am, t->spatia_ante);
+        _trivia_emittere(am, t, FALSUM);
     }
 
     si (t->genus == SILVA_LEX_IDENTIFICATOR)
@@ -169,7 +170,7 @@ _lexema_emittere (
             {
                 chorda_aedificator_appendere_literis(am->aed,
                     am->manifestum->typi_exacti[k].novum);
-                _trivia_emittere(am, t->spatia_post);
+                _trivia_emittere(am, t, VERUM);
                 redde;
             }
         }
@@ -191,14 +192,14 @@ _lexema_emittere (
                 cauda.datum    = t->valor.datum + m;
                 cauda.mensura  = t->valor.mensura - m;
                 chorda_aedificator_appendere_chorda(am->aed, cauda);
-                _trivia_emittere(am, t->spatia_post);
+                _trivia_emittere(am, t, VERUM);
                 redde;
             }
         }
     }
 
     chorda_aedificator_appendere_chorda(am->aed, t->valor);
-    _trivia_emittere(am, t->spatia_post);
+    _trivia_emittere(am, t, VERUM);
 }
 
 
@@ -352,13 +353,14 @@ _plagulam_processare (
 
         si (t->genus == SILVA_LEX_EOF)
         {
-            _trivia_emittere(am, t->spatia_ante);
+            _trivia_emittere(am, t, FALSUM);
             frange;
         }
 
         /* Directivae: includenda systematis sublata, proiecti remota;
          * ceterae (custodiae, defines) verbatim renominatae */
-        si (t->genus == SILVA_LEX_CANCELLUM && t->initium_lineae)
+        si (   t->genus == SILVA_LEX_CANCELLUM
+            && silva_token_initium_lineae(t))
         {
             i32 lf               = silva_lineam_finire(lexemata, i, n);
             b32 est_includendum  = FALSUM;
@@ -483,7 +485,7 @@ _plagulam_processare (
             {
                 SilvaToken* primum = _ad(lexemata, i);
 
-                _trivia_emittere(am, primum->spatia_ante);
+                _trivia_emittere(am, primum, FALSUM);
                 chorda_aedificator_appendere_literis(am->aed,
                     "static ");
                 _lexema_emittere(am, primum, VERUM);

@@ -262,8 +262,9 @@ principale (
                 SilvaToken** sedes = (SilvaToken**)
                     xar_obtinere(parsura->lexemata, i);
 
-                si (   sedes                 != NIHIL && *sedes != NIHIL
-                    && (*sedes)->origo.genus != SILVA_ORIGO_FONS)
+                si (   sedes != NIHIL && *sedes != NIHIL
+                    && silva_token_origo((*sedes))->genus
+                        != SILVA_ORIGO_FONS)
                 {
                     expansa++;
                 }

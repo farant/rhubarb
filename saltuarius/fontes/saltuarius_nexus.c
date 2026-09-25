@@ -69,7 +69,7 @@ saltuarius_nexus_creare (
                     silva_xar_obtinere(lexemata, k + II);
 
                 si (   t->genus == SILVA_LEX_CANCELLUM
-                    && t->initium_lineae
+                    && silva_token_initium_lineae(t)
                     && d->genus == SILVA_LEX_IDENTIFICATOR
                     && d->valor.mensura == VI
                     && d->valor.datum[ZEPHYRUM] == 'd'
@@ -204,13 +204,15 @@ saltuarius_nexus_classificare (
         SaltuariusClassis classis;
         i32 o;
 
-        si (t->byte_offset < ZEPHYRUM || t->longitudo == ZEPHYRUM)
+        si (   t->byte_offset < ZEPHYRUM
+            || silva_token_longitudo(t) == ZEPHYRUM)
         {
             perge;   /* syntheticum aut EOF */
         }
 
         /* directiva: CANCELLUM initio lineae + verbum sequens */
-        si (t->genus == SILVA_LEX_CANCELLUM && t->initium_lineae)
+        si (   t->genus == SILVA_LEX_CANCELLUM
+            && silva_token_initium_lineae(t))
         {
             classis         = SALT_CLASSIS_DIRECTIVA;
             post_cancellum  = VERUM;
@@ -233,7 +235,7 @@ saltuarius_nexus_classificare (
 
         si (classis != SALT_CLASSIS_PLANUM)
         {
-            per (o = ZEPHYRUM; o < t->longitudo; o++)
+            per (o = ZEPHYRUM; o < silva_token_longitudo(t); o++)
             {
                 i32 index = (i32)t->byte_offset + o;
 

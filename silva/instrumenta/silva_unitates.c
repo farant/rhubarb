@@ -34,7 +34,7 @@ silva_lineam_finire (
     {
         SilvaToken* t = _ad(lexemata, j);
 
-        si (t->initium_lineae || t->genus == SILVA_LEX_EOF)
+        si (silva_token_initium_lineae(t) || t->genus == SILVA_LEX_EOF)
         {
             frange;
         }
@@ -318,7 +318,8 @@ silva_unitates_scandere (
         u->est_typedef      = FALSUM;
         u->est_tag_def      = FALSUM;
 
-        si (t->genus == SILVA_LEX_CANCELLUM && t->initium_lineae)
+        si (   t->genus == SILVA_LEX_CANCELLUM
+            && silva_token_initium_lineae(t))
         {
             i32 lf = silva_lineam_finire(lexemata, i, n);
 

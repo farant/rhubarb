@@ -31,20 +31,36 @@ _ad (
 }
 
 /* Habetne series triviarum NOVA_LINEA? */
+
+/* Trivia lateris per accessores (phasis V T7a) */
+interior i32
+_trivia_numerus (
+    constans SilvaToken* tok,
+                    b32  post)
+{
+    redde post ? silva_token_post_numerus(tok)
+               : silva_token_ante_numerus(tok);
+}
+
+interior SilvaToken*
+_trivium (
+    constans SilvaToken* tok,
+                    b32  post,
+                    i32  i)
+{
+    redde post ? silva_token_post(tok, i) : silva_token_ante(tok, i);
+}
+
 interior b32
 _habet_nova_linea (
-    Xar* spatia)
+    constans SilvaToken* tok,
+                    b32  post)
 {
     i32 i;
 
-    si (spatia == NIHIL)
+    per (i = ZEPHYRUM; i < _trivia_numerus(tok, post); i++)
     {
-        redde FALSUM;
-    }
-    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
-    {
-        si ((*(SilvaToken**)xar_obtinere(spatia, i))->genus
-            == SILVA_LEX_NOVA_LINEA)
+        si (_trivium(tok, post, i)->genus == SILVA_LEX_NOVA_LINEA)
         {
             redde VERUM;
         }
@@ -54,20 +70,16 @@ _habet_nova_linea (
 
 interior i32
 _numerare_nova_linea (
-    Xar* spatia)
+    constans SilvaToken* tok,
+                    b32  post)
 {
     i32 i;
     i32 numerus;
 
     numerus = ZEPHYRUM;
-    si (spatia == NIHIL)
+    per (i = ZEPHYRUM; i < _trivia_numerus(tok, post); i++)
     {
-        redde ZEPHYRUM;
-    }
-    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
-    {
-        si ((*(SilvaToken**)xar_obtinere(spatia, i))->genus
-            == SILVA_LEX_NOVA_LINEA)
+        si (_trivium(tok, post, i)->genus == SILVA_LEX_NOVA_LINEA)
         {
             numerus++;
         }
@@ -77,19 +89,16 @@ _numerare_nova_linea (
 
 interior SilvaToken*
 _obtinere_nova_linea (
-    Xar* spatia)
+    constans SilvaToken* tok,
+                    b32  post)
 {
     i32 i;
 
-    si (spatia == NIHIL)
-    {
-        redde NIHIL;
-    }
-    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
+    per (i = ZEPHYRUM; i < _trivia_numerus(tok, post); i++)
     {
         SilvaToken* t;
 
-        t = *(SilvaToken**)xar_obtinere(spatia, i);
+        t = _trivium(tok, post, i);
         si (t->genus == SILVA_LEX_NOVA_LINEA)
         {
             redde t;
@@ -100,18 +109,14 @@ _obtinere_nova_linea (
 
 interior b32
 _habet_continuationem (
-    Xar* spatia)
+    constans SilvaToken* tok,
+                    b32  post)
 {
     i32 i;
 
-    si (spatia == NIHIL)
+    per (i = ZEPHYRUM; i < _trivia_numerus(tok, post); i++)
     {
-        redde FALSUM;
-    }
-    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
-    {
-        si ((*(SilvaToken**)xar_obtinere(spatia, i))->genus
-            == SILVA_LEX_CONTINUATIO)
+        si (_trivium(tok, post, i)->genus == SILVA_LEX_CONTINUATIO)
         {
             redde VERUM;
         }
@@ -154,7 +159,7 @@ s32 principale (vacuum)
         /* ; - NOVA_LINEA in spatia_post */
         tok = _ad(lexemata, II);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_SEMICOLON);
-        CREDO_VERUM (_habet_nova_linea(tok->spatia_post));
+        CREDO_VERUM (_habet_nova_linea(tok, VERUM));
 
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, III)->genus,
             (i32)SILVA_LEX_INT);
@@ -183,13 +188,13 @@ s32 principale (vacuum)
         tok = _ad(lexemata, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
-        CREDO_AEQUALIS_I32 (_numerare_nova_linea(tok->spatia_post), I);
+        CREDO_AEQUALIS_I32 (_numerare_nova_linea(tok, VERUM), I);
 
         /* b: UNA in spatia_ante (secunda) */
         tok = _ad(lexemata, I);
         CREDO_AEQUALIS_I32 ((i32)tok->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
-        CREDO_AEQUALIS_I32 (_numerare_nova_linea(tok->spatia_ante), I);
+        CREDO_AEQUALIS_I32 (_numerare_nova_linea(tok, FALSUM), I);
 
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, II)->genus,
             (i32)SILVA_LEX_EOF);
@@ -231,8 +236,8 @@ s32 principale (vacuum)
 
         lexemata = _lexare(piscina, "a \\\n b");
 
-        inventa = _habet_continuationem(_ad(lexemata, 0)->spatia_post)
-            || _habet_continuationem(_ad(lexemata, I)->spatia_ante);
+        inventa = _habet_continuationem(_ad(lexemata, 0), VERUM)
+            || _habet_continuationem(_ad(lexemata, I), FALSUM);
 
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
@@ -256,14 +261,14 @@ s32 principale (vacuum)
         tok = _ad(lexemata, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
-        CREDO_VERUM (_habet_nova_linea(tok->spatia_post));
+        CREDO_VERUM (_habet_nova_linea(tok, VERUM));
 
         /* NOVA_LINEA longitudo II (\r\n) */
-        nl = _obtinere_nova_linea(tok->spatia_post);
+        nl = _obtinere_nova_linea(tok, VERUM);
         CREDO_NON_NIHIL (nl);
         si (nl != NIHIL)
         {
-            CREDO_AEQUALIS_I32 (nl->longitudo, II);
+            CREDO_AEQUALIS_I32 (silva_token_longitudo(nl), II);
         }
 
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus,
@@ -293,7 +298,7 @@ s32 principale (vacuum)
         /* 1: NOVA_LINEA in spatia_post (finis directivae) */
         tok = _ad(lexemata, III);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_INTEGER);
-        CREDO_VERUM (_habet_nova_linea(tok->spatia_post));
+        CREDO_VERUM (_habet_nova_linea(tok, VERUM));
 
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, IV)->genus,
             (i32)SILVA_LEX_INT);
@@ -318,7 +323,7 @@ s32 principale (vacuum)
         tok = _ad(lexemata, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
-        CREDO_VERUM (_habet_nova_linea(tok->spatia_post));
+        CREDO_VERUM (_habet_nova_linea(tok, VERUM));
 
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
@@ -360,7 +365,7 @@ s32 principale (vacuum)
         /* int: II NOVA_LINEA in spatia_ante */
         tok = _ad(lexemata, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_INT);
-        CREDO_AEQUALIS_I32 (_numerare_nova_linea(tok->spatia_ante), II);
+        CREDO_AEQUALIS_I32 (_numerare_nova_linea(tok, FALSUM), II);
     }
 
 

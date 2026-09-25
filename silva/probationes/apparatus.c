@@ -397,13 +397,15 @@ _lexemata_ex_fonte_numerare (
          SilvaToken*  corpus_macro;
 
         sedes = (SilvaToken**)xar_obtinere(parsura->lexemata, i);
-        si (   sedes                 == NIHIL
-            || *sedes                == NIHIL
-            || (*sedes)->origo.genus != SILVA_ORIGO_EXPANSIO)
+        si (   sedes  == NIHIL
+            || *sedes == NIHIL
+            || silva_token_origo((*sedes))->genus
+                != SILVA_ORIGO_EXPANSIO)
         {
             perge;
         }
-        corpus_macro = (*sedes)->origo.datum.expansio.corpus;
+        corpus_macro =
+            silva_token_origo((*sedes))->datum.expansio.corpus;
         si (corpus_macro != NIHIL && corpus_macro->fons_index == fons)
         {
             numerus++;

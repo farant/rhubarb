@@ -106,8 +106,8 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (_ad(lexemata, I)->valor, "x");
         CREDO_AEQUALIS_I32 (_ad(lexemata, 0)->linea, I);
         CREDO_AEQUALIS_I32 (_ad(lexemata, I)->columna, V);
-        CREDO_VERUM (_ad(lexemata, 0)->initium_lineae);
-        CREDO_FALSUM (_ad(lexemata, I)->initium_lineae);
+        CREDO_VERUM (silva_token_initium_lineae(_ad(lexemata, 0)));
+        CREDO_FALSUM (silva_token_initium_lineae(_ad(lexemata, I)));
     }
 
 
@@ -129,23 +129,21 @@ s32 principale (vacuum)
         c         = _ad(lexemata, II);
 
         /* inter a et b: [SPATIA] - eadem linea, totum trailing */
-        CREDO_NON_NIHIL (a->spatia_post);
-        CREDO_AEQUALIS_I32 (xar_numerus(a->spatia_post), I);
-        CREDO_NIHIL (b->spatia_ante);
+        CREDO_VERUM (silva_token_post_numerus(a) > ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (silva_token_post_numerus(a), I);
+        CREDO_AEQUALIS_I32 (silva_token_ante_numerus(b), ZEPHYRUM);
 
         /* inter b et c: [NOVA_LINEA, SPATIA] - trailing per novam
          * lineam inclusive, indentatio ad leading */
-        CREDO_NON_NIHIL (b->spatia_post);
-        CREDO_AEQUALIS_I32 (xar_numerus(b->spatia_post), I);
-        CREDO_AEQUALIS_I32 ((i32)(*(SilvaToken**)xar_obtinere(b->spatia_post,
-            0))->genus,
+        CREDO_VERUM (silva_token_post_numerus(b) > ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (silva_token_post_numerus(b), I);
+        CREDO_AEQUALIS_I32 ((i32)(silva_token_post(b, 0))->genus,
             (i32)SILVA_LEX_NOVA_LINEA);
-        CREDO_NON_NIHIL (c->spatia_ante);
-        CREDO_AEQUALIS_I32 (xar_numerus(c->spatia_ante), I);
-        CREDO_AEQUALIS_I32 ((i32)(*(SilvaToken**)xar_obtinere(c->spatia_ante,
-            0))->genus,
+        CREDO_VERUM (silva_token_ante_numerus(c) > ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (silva_token_ante_numerus(c), I);
+        CREDO_AEQUALIS_I32 ((i32)(silva_token_ante(c, 0))->genus,
             (i32)SILVA_LEX_SPATIA);
-        CREDO_VERUM (c->initium_lineae);
+        CREDO_VERUM (silva_token_initium_lineae(c));
     }
 
 
@@ -165,12 +163,11 @@ s32 principale (vacuum)
         y         = _ad(lexemata, I);
 
         /* x.post = [SPATIA, COMMENTUM, NOVA_LINEA]; y.ante = NIHIL */
-        CREDO_NON_NIHIL (x->spatia_post);
-        CREDO_AEQUALIS_I32 (xar_numerus(x->spatia_post), III);
-        CREDO_AEQUALIS_I32 ((i32)(*(SilvaToken**)xar_obtinere(x->spatia_post,
-            I))->genus,
+        CREDO_VERUM (silva_token_post_numerus(x) > ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (silva_token_post_numerus(x), III);
+        CREDO_AEQUALIS_I32 ((i32)(silva_token_post(x, I))->genus,
             (i32)SILVA_LEX_COMMENTUM_CLAUSUM);
-        CREDO_NIHIL (y->spatia_ante);
+        CREDO_AEQUALIS_I32 (silva_token_ante_numerus(y), ZEPHYRUM);
     }
 
 
@@ -187,12 +184,12 @@ s32 principale (vacuum)
 
         lexemata  = _lexare(piscina, "a\r\nb");
         a         = _ad(lexemata, 0);
-        CREDO_NON_NIHIL (a->spatia_post);
-        nl = *(SilvaToken**)xar_obtinere(a->spatia_post, 0);
+        CREDO_VERUM (silva_token_post_numerus(a) > ZEPHYRUM);
+        nl = silva_token_post(a, 0);
         CREDO_AEQUALIS_I32 ((i32)nl->genus, (i32)SILVA_LEX_NOVA_LINEA);
         CREDO_AEQUALIS_I32 (nl->valor.mensura, II);
         CREDO_CHORDA_AEQUALIS_LITERIS (nl->valor, "\r\n");
-        CREDO_VERUM (_ad(lexemata, I)->initium_lineae);
+        CREDO_VERUM (silva_token_initium_lineae(_ad(lexemata, I)));
     }
 
 
@@ -209,19 +206,19 @@ s32 principale (vacuum)
         lexemata = _lexare(piscina, "x = 1\n# d");
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, III)->genus,
             (i32)SILVA_LEX_CANCELLUM);
-        CREDO_VERUM (_ad(lexemata, III)->initium_lineae);
+        CREDO_VERUM (silva_token_initium_lineae(_ad(lexemata, III)));
 
         /* '#' post continuationem: NON initium (linea logica continuat) */
         lexemata = _lexare(piscina, "x \\\n# y");
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus,
             (i32)SILVA_LEX_CANCELLUM);
-        CREDO_FALSUM (_ad(lexemata, I)->initium_lineae);
+        CREDO_FALSUM (silva_token_initium_lineae(_ad(lexemata, I)));
 
         /* continuatio ante lexema primum: adhuc initium lineae logicae I */
         lexemata = _lexare(piscina, "\\\n#x");
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus,
             (i32)SILVA_LEX_CANCELLUM);
-        CREDO_VERUM (_ad(lexemata, 0)->initium_lineae);
+        CREDO_VERUM (silva_token_initium_lineae(_ad(lexemata, 0)));
     }
 
 
@@ -243,9 +240,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)token->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "abcd");
-        CREDO_NON_NIHIL (token->scissurae);
-        CREDO_AEQUALIS_I32 (xar_numerus(token->scissurae), I);
-        sc = (SilvaScissura*)xar_obtinere(token->scissurae, 0);
+        CREDO_NON_NIHIL (silva_token_scissurae(token));
+        CREDO_AEQUALIS_I32 (xar_numerus(silva_token_scissurae(token)),
+            I);
+        sc = (SilvaScissura*)xar_obtinere(silva_token_scissurae(token),
+            0);
         CREDO_AEQUALIS_S32 (sc->offset, II);
         CREDO_FALSUM (sc->crlf);
 
@@ -289,7 +288,7 @@ s32 principale (vacuum)
             (i32)SILVA_LEX_STRING_IMPERFECTUM);
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
-        CREDO_VERUM (_ad(lexemata, I)->initium_lineae);
+        CREDO_VERUM (silva_token_initium_lineae(_ad(lexemata, I)));
 
         /* chorda perfecta cum effugio */
         lexemata = _lexare(piscina, "\"a\\\"b\"");

@@ -403,7 +403,7 @@ silva_valor_extensionem (
                     && radix_t->byte_offset >= ZEPHYRUM)
                 {
                     s32 a = (s32)radix_t->byte_offset;
-                    s32 b = a + (s32)radix_t->longitudo;
+                    s32 b = a + (s32)silva_token_longitudo(radix_t);
 
                     si (*minimum < (s32)ZEPHYRUM || a < *minimum)
                     {
@@ -468,7 +468,7 @@ _extensionem_lineis_valoris (
                 {
                     i32 l   = radix_t->linea;
                     i32 c   = radix_t->columna;
-                    i32 cf  = c + radix_t->longitudo;
+                    i32 cf  = c + silva_token_longitudo(radix_t);
 
                     si (   *linea_a == ZEPHYRUM || l < *linea_a
                         || (l == *linea_a && c < *columna_a))
@@ -922,7 +922,7 @@ silva_commentarium_ducens (
         _lexema_primum_valoris(n->loci[k], fons_index, &primum,
             &minimum);
     }
-    si (primum == NIHIL || primum->spatia_ante == NIHIL)
+    si (primum == NIHIL || silva_token_ante_numerus(primum) == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
@@ -937,14 +937,13 @@ silva_commentarium_ducens (
     initium  = (s32)-I;
     finis    = (s32)-I;
     linea    = ZEPHYRUM;
-    k        = xar_numerus(primum->spatia_ante);
+    k        = silva_token_ante_numerus(primum);
     dum (k > ZEPHYRUM)
     {
         SilvaToken* t;
 
         k--;
-        t = *(SilvaToken**)xar_obtinere(primum->spatia_ante,
-            (i32)k);
+        t = silva_token_ante(primum, (i32)k);
         si (t == NIHIL)
         {
             perge;
@@ -970,7 +969,8 @@ silva_commentarium_ducens (
         {
             si (finis < ZEPHYRUM)
             {
-                finis = (s32)t->byte_offset + (s32)t->longitudo;
+                finis = (s32)t->byte_offset
+                    + (s32)silva_token_longitudo(t);
             }
             initium  = (s32)t->byte_offset;
             linea    = t->linea;

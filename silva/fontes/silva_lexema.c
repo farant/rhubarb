@@ -378,8 +378,8 @@ _lexema_finire (
         lex->fons_index);
     si (token != NIHIL)
     {
-        token->longitudo = lex->positus - s->initium; /* longitudo CRUDA */
-        token->scissurae = s->scissurae;
+        silva_token_longitudo_ponere(token, lex->positus - s->initium); /* longitudo CRUDA */
+        silva_token_scissurae_ponere(token, s->scissurae);
     }
     redde token;
 }
@@ -533,7 +533,7 @@ _trivia_proxima (
             initium, linea_i, columna_i);
         si (trivia != NIHIL)
         {
-            trivia->standard = SILVA_STANDARD_C99;
+            silva_token_standard_ponere(trivia, SILVA_STANDARD_C99);
         }
         redde trivia;
     }
@@ -584,8 +584,8 @@ _legere_identificatorem (
         lex->fons_index);
     si (token != NIHIL)
     {
-        token->longitudo = lex->positus - s.initium;
-        token->scissurae = s.scissurae;
+        silva_token_longitudo_ponere(token, lex->positus - s.initium);
+        silva_token_scissurae_ponere(token, s.scissurae);
     }
     redde token;
 }
@@ -1037,9 +1037,9 @@ silva_lexare_cruda (
         {
             frange;  /* allocatio fracta - fluxum partialem reddere */
         }
-        token->initium_lineae  = in_initio_lineae;
-        in_initio_lineae       = FALSUM;
-        locus                  = (SilvaToken**)xar_addere(cruda);
+        silva_token_initium_lineae_ponere(token, in_initio_lineae);
+        in_initio_lineae  = FALSUM;
+        locus             = (SilvaToken**)xar_addere(cruda);
         si (locus != NIHIL)
         {
             *locus = token;
@@ -1123,34 +1123,25 @@ silva_spatia_attachere (
                 }
             }
 
+            /* Trivia per accessores (phasis V T7a): vacare ante addere
+             * - olim Xar NOVUS assignabatur, ergo series priores
+             * substituebantur, non augebantur. */
             si (divisio > ZEPHYRUM && prior != NIHIL)
             {
-                prior->spatia_post = xar_creare(piscina,
-                    magnitudo(SilvaToken*));
+                silva_token_post_vacare(prior);
                 per (j = ZEPHYRUM; j < divisio; j++)
                 {
-                    locus =
-                        (SilvaToken**)xar_addere(prior->spatia_post);
-                    si (locus != NIHIL)
-                    {
-                        *locus = *(SilvaToken**)xar_obtinere(pendentia,
-                            j);
-                    }
+                    silva_token_post_addere(piscina, prior,
+                        *(SilvaToken**)xar_obtinere(pendentia, j));
                 }
             }
             si (divisio < xar_numerus(pendentia))
             {
-                token->spatia_ante = xar_creare(piscina,
-                    magnitudo(SilvaToken*));
+                silva_token_ante_vacare(token);
                 per (j = divisio; j < xar_numerus(pendentia); j++)
                 {
-                    locus =
-                        (SilvaToken**)xar_addere(token->spatia_ante);
-                    si (locus != NIHIL)
-                    {
-                        *locus = *(SilvaToken**)xar_obtinere(pendentia,
-                            j);
-                    }
+                    silva_token_ante_addere(piscina, token,
+                        *(SilvaToken**)xar_obtinere(pendentia, j));
                 }
             }
             pendentia = xar_creare(piscina, magnitudo(SilvaToken*));
@@ -1190,19 +1181,20 @@ silva_lexare (
 
 interior vacuum
 _emittere_trivia (
-    ChordaAedificator* aed,
-                  Xar* spatia)
+      ChordaAedificator* aed,
+    constans SilvaToken* token,
+                    b32  post)
 {
            i32  i;
+           i32  n;
     SilvaToken* t;
 
-    si (spatia == NIHIL)
+    n = post ? silva_token_post_numerus(token)
+             : silva_token_ante_numerus(token);
+    per (i = ZEPHYRUM; i < n; i++)
     {
-        redde;
-    }
-    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
-    {
-        t = *(SilvaToken**)xar_obtinere(spatia, i);
+        t = post ? silva_token_post(token, i) : silva_token_ante(token,
+            i);
         chorda_aedificator_appendere_chorda(aed, t->valor);
     }
 }
@@ -1216,16 +1208,18 @@ _emittere_valorem (
               i32  prius;
     SilvaScissura* sc;
 
-    si (token->scissurae == NIHIL)
+    si (silva_token_scissurae(token) == NIHIL)
     {
         chorda_aedificator_appendere_chorda(aed, token->valor);
         redde;
     }
 
     prius = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < xar_numerus(token->scissurae); i++)
+    per (i = ZEPHYRUM; i
+        < xar_numerus(silva_token_scissurae(token)); i++)
     {
-        sc = (SilvaScissura*)xar_obtinere(token->scissurae, i);
+        sc = (SilvaScissura*)xar_obtinere(silva_token_scissurae(token),
+            i);
         chorda_aedificator_appendere_chorda(aed,
             _subchorda(token->valor, prius, (i32)sc->offset));
         chorda_aedificator_appendere_literis(aed,
@@ -1245,9 +1239,9 @@ silva_lexema_emittere_in (
     {
         redde;
     }
-    _emittere_trivia(aed, token->spatia_ante);
+    _emittere_trivia(aed, token, FALSUM);
     _emittere_valorem(aed, token);
-    _emittere_trivia(aed, token->spatia_post);
+    _emittere_trivia(aed, token, VERUM);
 }
 
 chorda

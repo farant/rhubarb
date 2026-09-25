@@ -136,7 +136,7 @@ _catenam_ambulare (
 
     dum (t != NIHIL && profunditas < SALT_GRADUS_MAXIMI)
     {
-        si (t->origo.genus == SILVA_ORIGO_FONS)
+        si (silva_token_origo(t)->genus == SILVA_ORIGO_FONS)
         {
             constans SilvaChorda* via = silva_fons_via(exp,
                 t->fons_index);
@@ -148,12 +148,13 @@ _catenam_ambulare (
                 t->fons_index, t->linea);
             redde;
         }
-        si (t->origo.genus == SILVA_ORIGO_EXPANSIO)
+        si (silva_token_origo(t)->genus == SILVA_ORIGO_EXPANSIO)
         {
-            SilvaToken* corpus         = t->origo.datum.expansio.corpus;
-            constans SilvaChorda* via  = NIHIL;
-            i32 linea                  = ZEPHYRUM;
-            s32 fons                   = -I;
+            SilvaToken* corpus =
+                silva_token_origo(t)->datum.expansio.corpus;
+            constans SilvaChorda* via    = NIHIL;
+                             i32  linea  = ZEPHYRUM;
+                             s32  fons   = -I;
 
             si (corpus != NIHIL)
             {
@@ -163,30 +164,30 @@ _catenam_ambulare (
             }
             _gradum_addere(origo, SALT_GRADUS_EXPANSIO,
                 _titulum(origo, "<- expansio ",
-                    _ex_silva(t->origo.datum.expansio.nomen_macro),
+                    _ex_silva(silva_token_origo(t)->datum.expansio.nomen_macro),
                     _ex_silva(via), linea),
                 (via != NIHIL) ? VERUM : FALSUM, _ex_silva(via),
                 fons, linea);
-            t = t->origo.datum.expansio.invocatio;
+            t = silva_token_origo(t)->datum.expansio.invocatio;
         }
-        alioquin si (t->origo.genus == SILVA_ORIGO_PASTA)
+        alioquin si (silva_token_origo(t)->genus == SILVA_ORIGO_PASTA)
         {
             _gradum_addere(origo, SALT_GRADUS_ALIUS,
                 _titulum(origo, "<- pasta ##",
-                    _ex_silva(t->origo.datum.pasta.nomen_macro),
+                    _ex_silva(silva_token_origo(t)->datum.pasta.nomen_macro),
                     _ex_silva(NIHIL), ZEPHYRUM),
                 FALSUM, _ex_silva(NIHIL), -I, ZEPHYRUM);
-            t = t->origo.datum.pasta.sinister;
+            t = silva_token_origo(t)->datum.pasta.sinister;
         }
-        alioquin si (t->origo.genus == SILVA_ORIGO_CHORDA)
+        alioquin si (silva_token_origo(t)->genus == SILVA_ORIGO_CHORDA)
         {
             _gradum_addere(origo, SALT_GRADUS_ALIUS,
                 _titulum(origo, "<- chorda #",
-                    _ex_silva(t->origo.datum.stringificatio
+                    _ex_silva(silva_token_origo(t)->datum.stringificatio
                         .nomen_macro),
                     _ex_silva(NIHIL), ZEPHYRUM),
                 FALSUM, _ex_silva(NIHIL), -I, ZEPHYRUM);
-            t = t->origo.datum.stringificatio.primus;
+            t = silva_token_origo(t)->datum.stringificatio.primus;
         }
         alioquin
         {
@@ -211,34 +212,36 @@ _maiorum_tegit (
 
     dum (t != NIHIL && gradus < SALT_GRADUS_MAXIMI)
     {
-        si (t->origo.genus == SILVA_ORIGO_FONS)
+        si (silva_token_origo(t)->genus == SILVA_ORIGO_FONS)
         {
             redde (t->byte_offset >= ZEPHYRUM
                 && offset >= (s32)t->byte_offset
                 && offset < (s32)t->byte_offset
-                    + (s32)t->longitudo) ? VERUM : FALSUM;
+                    + (s32)silva_token_longitudo(t)) ? VERUM : FALSUM;
         }
-        si (t->origo.genus == SILVA_ORIGO_EXPANSIO)
+        si (silva_token_origo(t)->genus == SILVA_ORIGO_EXPANSIO)
         {
-            SilvaToken* inv = t->origo.datum.expansio.invocatio;
+            SilvaToken* inv =
+                silva_token_origo(t)->datum.expansio.invocatio;
 
-            si (   inv != NIHIL && inv->origo.genus == SILVA_ORIGO_FONS
+            si (   inv != NIHIL
+                && silva_token_origo(inv)->genus == SILVA_ORIGO_FONS
                 && inv->byte_offset >= ZEPHYRUM
                 && offset >= (s32)inv->byte_offset
                 && offset < (s32)inv->byte_offset
-                    + (s32)inv->longitudo)
+                    + (s32)silva_token_longitudo(inv))
             {
                 redde VERUM;
             }
             t = inv;
         }
-        alioquin si (t->origo.genus == SILVA_ORIGO_PASTA)
+        alioquin si (silva_token_origo(t)->genus == SILVA_ORIGO_PASTA)
         {
-            t = t->origo.datum.pasta.sinister;
+            t = silva_token_origo(t)->datum.pasta.sinister;
         }
-        alioquin si (t->origo.genus == SILVA_ORIGO_CHORDA)
+        alioquin si (silva_token_origo(t)->genus == SILVA_ORIGO_CHORDA)
         {
-            t = t->origo.datum.stringificatio.primus;
+            t = silva_token_origo(t)->datum.stringificatio.primus;
         }
         alioquin
         {
@@ -289,7 +292,7 @@ saltuarius_origo_aedificare (
                 fluxus, k);
 
             /* solum expansa (FONS directa trivialia sunt) */
-            si (   t->origo.genus != SILVA_ORIGO_FONS
+            si (   silva_token_origo(t)->genus != SILVA_ORIGO_FONS
                 && _maiorum_tegit(t, offset))
             {
                 inventum = t;

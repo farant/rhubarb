@@ -617,7 +617,8 @@ principale (vacuum)
              * ansa supra eum semper invenit - assertio id custodit */
             CREDO_NON_NIHIL (lexema);
 
-            lexema->longitudo += X;
+            silva_token_longitudo_ponere(lexema,
+                silva_token_longitudo(lexema) + X);
 
             /* A CADIT */
             CREDO_FALSUM (silva_arbor_aequalis(origo, lecta,
@@ -635,7 +636,8 @@ principale (vacuum)
             CREDO_VERUM (chorda_aequalis(octeti_a.textus,
                 octeti_b.textus));
 
-            lexema->longitudo -= X;
+            silva_token_longitudo_ponere(lexema,
+                silva_token_longitudo(lexema) - X);
         }
 
         /* DOMINIUM GEMINUM TRIVIORUM - claim plani probandum, non
@@ -655,11 +657,13 @@ principale (vacuum)
                 _lexemata_colligere(lecta, series, (i32)64, &quot);
                 per (i = ZEPHYRUM; i < quot; i++)
                 {
-                    si (   donans                 != NIHIL
-                        || series[i]->spatia_post == NIHIL)
+                    si (   donans != NIHIL
+                        || silva_token_post_numerus(series[i])
+                            == ZEPHYRUM)
                     {
-                        si (   recipiens              == NIHIL
-                            && series[i]->spatia_ante == NIHIL)
+                        si (   recipiens == NIHIL
+                            && silva_token_ante_numerus(series[i])
+                                == ZEPHYRUM)
                         {
                             recipiens = series[i];
                         }
@@ -675,7 +679,18 @@ principale (vacuum)
 
             si (donans != NIHIL && recipiens != NIHIL)
             {
-                recipiens->spatia_ante = donans->spatia_post;
+                {
+                    i32 k;
+
+                    silva_token_ante_vacare(recipiens);
+                    per (k = ZEPHYRUM; k
+                        < silva_token_post_numerus(donans);
+                         k++)
+                    {
+                        silva_token_ante_addere(opus, recipiens,
+                            silva_token_post(donans, k));
+                    }
+                }
 
                 a_cepit = !silva_arbor_aequalis(origo, lecta,
                     SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia);
@@ -698,7 +713,7 @@ principale (vacuum)
                  * refutatum ex spec relegat. */
                 CREDO_VERUM (b_cepit);
                 CREDO_VERUM (a_cepit);
-                recipiens->spatia_ante = NIHIL;
+                silva_token_ante_vacare(recipiens);
             }
         }
 

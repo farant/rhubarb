@@ -291,6 +291,71 @@ int
 silva_token_est_fons (
     SilvaToken* token);
 
+/* Accessores campi C89 (phasis V, T7a - sutura): omnis usus extra
+ * silvam per hos transit; repraesentatio lexematis mutari potest.
+ * Origo MUTABILIS per monstratorem quamquam lexema constans. */
+SilvaOrigo*
+silva_token_origo (
+    const SilvaToken* token);
+unsigned int
+silva_token_longitudo (
+    const SilvaToken* token);
+void
+silva_token_longitudo_ponere (
+      SilvaToken* token,
+    unsigned int  longitudo);
+unsigned char
+silva_token_standard (
+    const SilvaToken* token);
+void
+silva_token_standard_ponere (
+       SilvaToken* token,
+    unsigned char  standard);
+SilvaXar*
+silva_token_scissurae (
+    const SilvaToken* token);
+void
+silva_token_scissurae_ponere (
+    SilvaToken* token,
+      SilvaXar* scissurae);
+int
+silva_token_initium_lineae (
+    const SilvaToken* token);
+void
+silva_token_initium_lineae_ponere (
+    SilvaToken* token,
+            int  valor);
+unsigned int
+silva_token_ante_numerus (
+    const SilvaToken* token);
+SilvaToken*
+silva_token_ante (
+    const SilvaToken* token,
+         unsigned int  index);
+unsigned int
+silva_token_post_numerus (
+    const SilvaToken* token);
+SilvaToken*
+silva_token_post (
+    const SilvaToken* token,
+         unsigned int  index);
+int
+silva_token_ante_addere (
+    SilvaPiscina* piscina,
+      SilvaToken* token,
+      SilvaToken* trivium);
+int
+silva_token_post_addere (
+    SilvaPiscina* piscina,
+      SilvaToken* token,
+      SilvaToken* trivium);
+void
+silva_token_ante_vacare (
+    SilvaToken* token);
+void
+silva_token_post_vacare (
+    SilvaToken* token);
+
 /* Tituli generum (tabellae originis, debugging) */
 const char*
 silva_lexema_genus_nomen (

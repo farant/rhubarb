@@ -350,6 +350,106 @@ silva_token_est_fons (
 
 
 /* ==================================================
+ * Accessores campi C89 (phasis V, T7a - SUTURA)
+ *
+ * Hi campi in MateriaToken NON sunt: origo, longitudo, standard,
+ * scissurae in caudam C89 migrabunt (T7b), initium_lineae in
+ * vexilla materiae, trivia in series materiae. Omnis usus EXTRA
+ * silva_token.c per hos accessores transit, ut repraesentatio
+ * mutari possit sedibus vocantium intactis.
+ * ================================================== */
+
+/* Origo - MUTABILIS per monstratorem (scriptores originem per eum
+ * ponunt), quamquam lexema constans traditur: datum frontis est. */
+SilvaOrigo*
+silva_token_origo (
+    constans SilvaToken* token);
+
+/* Mensura in octetis FONTIS (laminis \<nl> inclusis) - NON
+ * valor.mensura, qui laminas scissas omittit */
+i32
+silva_token_longitudo (
+    constans SilvaToken* token);
+
+vacuum
+silva_token_longitudo_ponere (
+     SilvaToken* token,
+            i32  longitudo);
+
+i8
+silva_token_standard (
+    constans SilvaToken* token);
+
+vacuum
+silva_token_standard_ponere (
+     SilvaToken* token,
+             i8  standard);
+
+/* Xar de SilvaScissura; NIHIL fere semper */
+Xar*
+silva_token_scissurae (
+    constans SilvaToken* token);
+
+vacuum
+silva_token_scissurae_ponere (
+    SilvaToken* token,
+           Xar* scissurae);
+
+b32
+silva_token_initium_lineae (
+    constans SilvaToken* token);
+
+vacuum
+silva_token_initium_lineae_ponere (
+     SilvaToken* token,
+            b32  valor);
+
+/* Trivia ante/post: numerus (ZEPHYRUM si nulla) et lexema ad indicem
+ * (NIHIL extra fines). */
+i32
+silva_token_ante_numerus (
+    constans SilvaToken* token);
+
+SilvaToken*
+silva_token_ante (
+    constans SilvaToken* token,
+                    i32  index);
+
+i32
+silva_token_post_numerus (
+    constans SilvaToken* token);
+
+SilvaToken*
+silva_token_post (
+    constans SilvaToken* token,
+                    i32  index);
+
+/* Trivium appendere (solus aedificator: lexator) */
+b32
+silva_token_ante_addere (
+       Piscina* piscina,
+    SilvaToken* token,
+    SilvaToken* trivium);
+
+b32
+silva_token_post_addere (
+       Piscina* piscina,
+    SilvaToken* token,
+    SilvaToken* trivium);
+
+
+/* Trivia lateris vacare (probationes: plantae quae trivia movent aut
+ * tollunt). Post id numerus ZEPHYRUM. */
+vacuum
+silva_token_ante_vacare (
+    SilvaToken* token);
+
+vacuum
+silva_token_post_vacare (
+    SilvaToken* token);
+
+
+/* ==================================================
  * Caecatio (hideset)
  * ================================================== */
 

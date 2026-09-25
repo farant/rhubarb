@@ -3138,3 +3138,20 @@ comparator stayed green — writer and reader agree with each other, so
 only a comparison against silva (today the shim, after T13 the
 oracle's `stml` column) guards frontend attributes. Replay verdict: no
 substrate module touched (silva_frons is frontend).
+
+## 2026-09-25 — phase 5 T7a: the token accessor seam
+
+INTENTIO (T7 split by its measurement, Fran; decree …1BKY): ~408
+incompatible token-field sites measured; seam first, representation
+second; the amalgam freezes from T7b to T13; the frontend's token tail
+merges with silva's at T9/T10. RELATIO: every use of `origo`,
+`longitudo`, `standard`, `scissurae`, `initium_lineae`, `spatia_*`
+outside silva_token.c now goes through accessors — ~430 sites (the
+count grew: 63 test sites inside `CREDO_*` arguments were invisible to
+the semantic census; a judged text scan found them — so a "zero
+remaining" check needs both angles). Trivia helpers take `(token,
+side)`; the two trivia builders use `_addere`. Oracle clean, M3 6/6,
+shim unchanged, silva 54/54; silva and officina amalgams regenerated
+(last time before the freeze). Replay verdict: substrate modules
+touched (token, arbor, aequalitas, annotationes, nodus, scribere) —
+refactor only, behaviour proven unchanged by the oracle; nothing owed.

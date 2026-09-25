@@ -739,7 +739,7 @@ _inclusiones_ordinem_censere (
 
         lexema = _lexema(cruda, i);
         si (   lexema->genus != SILVA_LEX_CANCELLUM
-            || !lexema->initium_lineae)
+            || !silva_token_initium_lineae(lexema))
         {
             perge;
         }
@@ -1158,7 +1158,7 @@ _corpus_censere (
 
     si (_principalis(ambitus, aperta))
     {
-        si (!aperta->initium_lineae)
+        si (!silva_token_initium_lineae(aperta))
         {
             _addere(ambitus->divergentiae, "bracchia-allman",
                 "brachium apertum in linea sua exspectatum",
@@ -1186,7 +1186,7 @@ _corpus_censere (
     }
     si (_principalis(ambitus, clausa))
     {
-        si (!clausa->initium_lineae)
+        si (!silva_token_initium_lineae(clausa))
         {
             _addere(ambitus->divergentiae, "bracchia-allman",
                 "brachium clausum in linea sua exspectatum",
@@ -1274,14 +1274,14 @@ _functionis_caput_censere (
     si (!_principalis(ambitus, titulus)) redde;
 
     /* R1: titulus in columna prima lineae suae */
-    si (   titulus && (!titulus->initium_lineae
+    si (   titulus && (!silva_token_initium_lineae(titulus)
         || titulus->columna != (i32)I))
     {
         _addere(ambitus->divergentiae, "typus-in-linea-sua",
             "titulus functionis in columna prima lineae suae"
             " exspectatus", titulus->linea, titulus->columna,
             (s32)titulus->columna, I);
-        si (!titulus->initium_lineae)
+        si (!silva_token_initium_lineae(titulus))
         {
             /* titulus post specificatores: linea nova ante */
             _emendare(ambitus->divergentiae, titulus->linea,
@@ -2539,7 +2539,7 @@ _catenam_censere (
 
         op = collectio.ops[i];
         si (   !_principalis(ambitus, op)
-            || !op->initium_lineae)
+            || !silva_token_initium_lineae(op))
         {
             perge;
         }
@@ -3369,7 +3369,7 @@ _lexema_primum_lineae (
         t = _lexema(cruda, i);
         si (t->linea < linea) perge;
         si (t->linea > linea) frange;
-        si (t->initium_lineae) redde t;
+        si (silva_token_initium_lineae(t)) redde t;
     }
     redde NIHIL;
 }
@@ -3399,7 +3399,7 @@ _continuationes_censere (
         lexema = _lexema(cruda, i);
 
         /* indentatio continuationis */
-        si (lexema->initium_lineae)
+        si (silva_token_initium_lineae(lexema))
         {
             spatium = _spatium_invenire(continuationes,
                 lexema->linea, VERUM);

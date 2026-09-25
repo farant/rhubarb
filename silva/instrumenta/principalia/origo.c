@@ -53,22 +53,27 @@ _catenam_imprimere (
         constans chorda* nm       = NIHIL;
              SilvaToken* sequens  = NIHIL;
 
-        commutatio (gradus->origo.genus)
+        commutatio (silva_token_origo(gradus)->genus)
         {
             casus SILVA_ORIGO_EXPANSIO:
-                nm = gradus->origo.datum.expansio.nomen_macro;
-                sequens = gradus->origo.datum.expansio.invocatio;
+                nm =
+                    silva_token_origo(gradus)->datum.expansio.nomen_macro;
+                sequens =
+                    silva_token_origo(gradus)->datum.expansio.invocatio;
                 frange;
             casus SILVA_ORIGO_PASTA:
-                nm = gradus->origo.datum.pasta.nomen_macro;
-                sequens = gradus->origo.datum.pasta.sinister;
+                nm = silva_token_origo(gradus)->datum.pasta.nomen_macro;
+                sequens =
+                    silva_token_origo(gradus)->datum.pasta.sinister;
                 frange;
             casus SILVA_ORIGO_CHORDA:
-                nm = gradus->origo.datum.stringificatio.nomen_macro;
-                sequens = gradus->origo.datum.stringificatio.primus;
+                nm =
+                    silva_token_origo(gradus)->datum.stringificatio.nomen_macro;
+                sequens =
+                    silva_token_origo(gradus)->datum.stringificatio.primus;
                 frange;
             casus SILVA_ORIGO_API:
-                nm = gradus->origo.datum.api.nomen_macro;
+                nm = silva_token_origo(gradus)->datum.api.nomen_macro;
                 sequens = NIHIL;
                 frange;
             ordinarius: /* FONS */
@@ -80,7 +85,7 @@ _catenam_imprimere (
         {
             constans character* species = "?";
 
-            commutatio (gradus->origo.genus)
+            commutatio (silva_token_origo(gradus)->genus)
             {
                 casus SILVA_ORIGO_EXPANSIO: species = ""; frange;
                 casus SILVA_ORIGO_PASTA:
@@ -365,7 +370,7 @@ principale (
             si (   columna != ZEPHYRUM
                 && !(columna >= radix->columna
                      && columna < radix->columna
-                         + radix->longitudo))
+                         + silva_token_longitudo(radix)))
             {
                 perge;
             }

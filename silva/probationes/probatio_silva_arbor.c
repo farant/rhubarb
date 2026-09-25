@@ -1035,15 +1035,15 @@ principale (vacuum)
 
         /* iii. lexema/standard */
         {
-            i8 servatum = lexema->standard;
+            i8 servatum = silva_token_standard(lexema);
 
-            lexema->standard = (i8)SILVA_STANDARD_C99;
+            silva_token_standard_ponere(lexema, (i8)SILVA_STANDARD_C99);
             CREDO_FALSUM (silva_arbor_aequalis(a, b,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
             CREDO_VERUM (differentia.campus != NIHIL
                 && strcmp(differentia.campus, "lexema/standard")
                     == ZEPHYRUM);
-            lexema->standard = servatum;
+            silva_token_standard_ponere(lexema, servatum);
         }
 
         /* iv. lexema/fons */
@@ -1061,15 +1061,16 @@ principale (vacuum)
 
         /* v. lexema/initium-lineae */
         {
-            b32 servatum = lexema->initium_lineae;
+            b32 servatum = silva_token_initium_lineae(lexema);
 
-            lexema->initium_lineae = servatum ? FALSUM : VERUM;
+            silva_token_initium_lineae_ponere(lexema,
+                servatum ? FALSUM : VERUM);
             CREDO_FALSUM (silva_arbor_aequalis(a, b,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
             CREDO_VERUM (differentia.campus != NIHIL
                 && strcmp(differentia.campus, "lexema/initium-lineae")
                     == ZEPHYRUM);
-            lexema->initium_lineae = servatum;
+            silva_token_initium_lineae_ponere(lexema, servatum);
         }
 
         /* vi. MODUS vere aliquid facit: positio mutata FIDELITATE
@@ -1137,17 +1138,29 @@ principale (vacuum)
                 SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
         }
 
-        /* ix. trivia - series et numerus */
+        /* ix. trivia - series et numerus (per accessores: servata
+         * copiantur, latus vacatur, deinde restituuntur) */
         {
-            Xar* servata = lexema->spatia_post;
+            Xar* servata = xar_creare(piscina, magnitudo(SilvaToken*));
+            i32  k;
 
-            lexema->spatia_post = NIHIL;
+            per (k = ZEPHYRUM; k
+                < silva_token_post_numerus(lexema); k++)
+            {
+                *(SilvaToken**)xar_addere(servata) =
+                    silva_token_post(lexema, k);
+            }
+            silva_token_post_vacare(lexema);
             CREDO_FALSUM (silva_arbor_aequalis(a, b,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
             CREDO_VERUM (differentia.campus != NIHIL
                 && strcmp(differentia.campus, "trivia/post")
                     == ZEPHYRUM);
-            lexema->spatia_post = servata;
+            per (k = ZEPHYRUM; k < xar_numerus(servata); k++)
+            {
+                silva_token_post_addere(piscina, lexema,
+                    *(SilvaToken**)xar_obtinere(servata, k));
+            }
             CREDO_VERUM (silva_arbor_aequalis(a, b,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
         }
@@ -1161,12 +1174,11 @@ principale (vacuum)
             SilvaToken* trivium;
                 chorda  servatus;
 
-            CREDO_NON_NIHIL (lexema->spatia_post);
-            CREDO_VERUM (xar_numerus(lexema->spatia_post) > ZEPHYRUM);
+            CREDO_VERUM (silva_token_post_numerus(lexema) > ZEPHYRUM);
+            CREDO_VERUM (silva_token_post_numerus(lexema) > ZEPHYRUM);
 
-            trivium  = *(SilvaToken**)xar_obtinere(
-                lexema->spatia_post, ZEPHYRUM);
-            servatus = trivium->valor;
+            trivium   = silva_token_post(lexema, ZEPHYRUM);
+            servatus  = trivium->valor;
 
             trivium->valor = chorda_ex_literis("      ", piscina);
             CREDO_FALSUM (silva_arbor_aequalis(a, b,
@@ -1350,12 +1362,13 @@ principale (vacuum)
             CREDO_VERUM (chorda_aequalis_literis(lexema_lectum->valor,
                 "int"));
             /* lens triviorum inversa: n="1" -> spatium unum VERUM */
-            CREDO_NON_NIHIL (lexema_lectum->spatia_post);
+            CREDO_VERUM (silva_token_post_numerus(lexema_lectum)
+                > ZEPHYRUM);
             CREDO_AEQUALIS_I32 (
-                xar_numerus(lexema_lectum->spatia_post), (i32)I);
+                silva_token_post_numerus(lexema_lectum), (i32)I);
             {
-                SilvaToken* trivium = *(SilvaToken**)xar_obtinere(
-                    lexema_lectum->spatia_post, ZEPHYRUM);
+                SilvaToken* trivium = silva_token_post(lexema_lectum,
+                    ZEPHYRUM);
 
                 CREDO_VERUM (trivium->genus == SILVA_LEX_SPATIA);
                 CREDO_VERUM (chorda_aequalis_literis(trivium->valor,
@@ -1423,8 +1436,8 @@ principale (vacuum)
             CREDO_VERUM (lexema_nudum->byte_offset < ZEPHYRUM);
             /* structura LINEARUM tamen derivata est: ancora
              * ORDINATAS solas regit */
-            CREDO_VERUM (lexema_nudum->initium_lineae);
-            CREDO_AEQUALIS_I32 (lexema_nudum->longitudo,
+            CREDO_VERUM (silva_token_initium_lineae(lexema_nudum));
+            CREDO_AEQUALIS_I32 (silva_token_longitudo(lexema_nudum),
                 lexema_nudum->valor.mensura);
 
             CREDO_FALSUM (silva_arbor_aequalis(origo, nuda,

@@ -70,9 +70,9 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "42");
 
         /* provenientia: EXPANSIO, nomen X, radix = invocatio in fonte */
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_EXPANSIO);
-        CREDO_CHORDA_AEQUALIS_LITERIS (*token->origo.datum.expansio.nomen_macro,
+        CREDO_CHORDA_AEQUALIS_LITERIS (*silva_token_origo(token)->datum.expansio.nomen_macro,
             "X");
         CREDO_AEQUALIS_I32 (silva_token_profunditas(token), I);
         CREDO_VERUM (silva_token_est_fons(silva_token_radix(token)));
@@ -219,9 +219,9 @@ s32 principale (vacuum)
         token = _ad(exitus, 0);
         CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_IF);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "if");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_EXPANSIO);
-        CREDO_CHORDA_AEQUALIS_LITERIS (*token->origo.datum.expansio.nomen_macro,
+        CREDO_CHORDA_AEQUALIS_LITERIS (*silva_token_origo(token)->datum.expansio.nomen_macro,
             "si");
         CREDO_CHORDA_AEQUALIS_LITERIS (silva_token_radix(token)->valor,
             "si");
@@ -249,7 +249,7 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "2");
         /* provenientia: origo CHORDA, radix = identificator fontis,
          * profunditas I - stratum expansum VERUM dicit */
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+        CREDO_AEQUALIS_I32 ((i32)silva_token_origo(token)->genus,
             (i32)SILVA_ORIGO_CHORDA);
         CREDO_CHORDA_AEQUALIS_LITERIS (
             silva_token_radix(token)->valor, "__LINE__");
