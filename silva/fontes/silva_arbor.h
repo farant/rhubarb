@@ -288,9 +288,14 @@ nomen structura {
  * (<<#lexN>>). Duo passus: primus usus numerat, secundus emittit -
  * aliter usus primus scire non posset an fragmentum opus esset.
  *
- * REFUTAT CLARE: lexema non-FONS (limes expansionis, sicut scribere),
- * genus ignotum, forma corrupta, elementum listae mixtae illicitum,
- * valor textui non tutus. */
+ * REFUTAT CLARE: genus ignotum, forma corrupta, elementum listae
+ * mixtae illicitum, catena originis non recuperabilis. Lexema
+ * EXPANSUM origine nestata scribitur (<expansio>, <extentum>).
+ *
+ * SUPER MATERIAM (silva-migratio T10b): materia_arbor_scribere_nodum
+ * cum uncis C89 super caudam silvae (silva_frons). Valor sequentiam
+ * claudentem ferens FUGATUR (scala fugae), CR et NUL per attributa
+ * 'cr'/'nul' portantur - silva vetus illam recusabat, has amittebat. */
 SilvaArborScriptura
 silva_arbor_scribere_nodum (
                           Piscina* piscina,
@@ -423,16 +428,15 @@ nomen MateriaArborVitium SilvaArborVitium;
  * VALOR VERBATIM per stml_textus_internus - NUMQUAM
  * stml_textus_normalizatus, quod transformat.
  *
- * QUOD T5a NONDUM FACIT (T5b): positiones/pater/longitudinem
- * derivare, et transclusiones resolvere. Ergo lexemata SYNTHETICA
- * redeunt (byte_offset -I) et documentum transclusionem ferens
- * CLARE RECUSATUR. Arbor sine sedibus hoc modo legitima est - id
- * est prorsus casus arboris AUCTORATAE, quae fontem non habet.
+ * POSITIONES ex ancora involucri derivantur (sine ancora: arbor
+ * AUCTORATA, sedes -I); transclusiones solvuntur; longitudo = valor
+ * (lexemata lecta); patres omnes figuntur (politica materiae,
+ * decretum ...MQF), deinde commissio.
  *
- * NB comparator talem arborem contra parsatam AEQUALEM NON dicet,
- * ne modo structurali quidem, quia PROVENIENTIA utroque modo
- * confertur. Hoc rectum est: T5a circuitum plenum simulare NON
- * potest, et custodia id DICIT potius quam celet.
+ * SUPER MATERIAM (silva-migratio T10b): materia_arbor_legere cum
+ * uncis C89; extenta lecta in contextu frontis vivunt, ergo
+ * subarbor <extentum> ferens SINE expansione legitur (lector vetus
+ * 'extentum sine expansione' recusabat - CI nodi corporis).
  *
  * Reddit NIHIL + vitium nominatum in recusatione. */
 SilvaNodus*
@@ -496,7 +500,12 @@ silva_arbor_legere (
  * zephyrum omni vocamine reponeret - ergo duo nodi supremi ambo
  * '<#lex1>' emitterent et documentum identitates GEMINAS ferret.
  *
- * REFUTAT CLARE, ut scriptor nodorum. */
+ * REFUTAT CLARE, ut scriptor nodorum.
+ *
+ * SUPER SESSIONEM MATERIAE (T10c): passus I/II, lexemata, templa,
+ * sedes valorum materiae sunt; fontes, reinserenda, ancorae per
+ * liberum supremum et compressio (folia, parametra - post-passus
+ * C89, decretum ...MQF) silvae. */
 SilvaArborScriptura
 silva_arbor_scribere_parsuram (
                           Piscina* piscina,

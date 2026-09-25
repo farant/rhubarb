@@ -779,6 +779,15 @@ learned. *Owed from T7b:* `tools/amalgama_excludenda_generare.sh` and
 — they only run inside silva's frozen `amalgamare.sh`; fix them when
 the amalgam regenerates here.
 
+*Owed from T10 (2026-09-25):* the amalgam that thaws here must now
+carry `silva_frons.c` (silva_arbor.c and silva_scribere's callers
+depend on it; `fontes_politica.sh radices()` still EXCLUDES it since
+T6b) and the materia substrate silva links (token, nodus, scribere,
+arbor, arbor_aequalitas, lexicon — `silva/materia_substratum.sh`).
+Amalgam consumers (briar, saltuarius, aedilis — consumer inventory
+…WW34 rows still ignotum on 'per facadem transit') meet all of T7–T10
+at once here.
+
 ---
 
 ## Step 5 (5.x) — the payoff (SKETCH, re-issued after T13)
