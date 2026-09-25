@@ -31,28 +31,21 @@
 #define SILVA_REGISTRUM_H
 
 #include "latina.h"
+#include "materia_registrum.h"
 
 
 /* ==================================================
  * Registrum generum coctum (layouts nodorum, S21/S20)
+ *
+ * FACIES MATERIAE (silva-migratio T9, 2026-09-25): typi registri
+ * silvae SUNT typi materiae - campi idem nominibus, ordine, typis
+ * (materia ex hoc capite portata est). Scriptor materiae registrum
+ * silvae sine conversione accipit. materia_registrum.h quoque
+ * latina.h SOLUM includit - pauperies supra servata.
  * ================================================== */
 
-nomen structura {
-    constans character* titulus;     /* nomen loci */
-                   s32  species;     /* SilvaLocusSpecies */
-} SilvaTabLocus;
-
-nomen structura {
-    constans character* titulus;     /* nomen generis */
-                   i32  loci_offset; /* in seriem planam locorum */
-                   i32  loci_numerus;
-} SilvaTabGenus;
-
-nomen structura {
-    constans SilvaTabGenus* genera;
-                       i32  numerus_generum;
-    constans SilvaTabLocus* loci;
-                       i32  numerus_locorum;
-} SilvaRegistrumCoctum;
+nomen MateriaTabLocus         SilvaTabLocus;
+nomen MateriaTabGenus         SilvaTabGenus;
+nomen MateriaRegistrumCoctum  SilvaRegistrumCoctum;
 
 #endif /* SILVA_REGISTRUM_H */

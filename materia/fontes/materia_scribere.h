@@ -96,6 +96,13 @@ nomen structura {
      * correctionem II supra. */
     Xar* reinserenda;
 
+    /* VERUM = post ambulationem reinserenda RELIQUA funduntur (offset
+     * post lexema ultimum arboris - C89: '#endif' custodiae capitis).
+     * Scripturae plagulae TOTIUS; pro subarbore FALSUM manet, quia
+     * reinserenda ultra eam ei non pertinent. Additum silva-migratio
+     * T9: silva_scribere_fontem id semper fecit, materia non poterat. */
+    b32 reinserenda_finire;
+
     /* Cuius plagulae octeti petuntur; -I = quaelibet */
     s32 fons_index;
 } MateriaScripturaConsilium;

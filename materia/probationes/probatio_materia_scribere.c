@@ -117,7 +117,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        MateriaScripturaConsilium  c;
+        MateriaScripturaConsilium c;
                      MateriaNodus* n;
                  MateriaScriptura  s;
 
@@ -158,7 +158,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        MateriaScripturaConsilium  c;
+        MateriaScripturaConsilium c;
                      MateriaNodus* n;
                      MateriaToken* a;
                      MateriaToken* b;
@@ -201,7 +201,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        MateriaScripturaConsilium  c;
+        MateriaScripturaConsilium c;
                      MateriaNodus* n;
                      MateriaToken* t_int;
                      MateriaToken* t_f;
@@ -257,6 +257,48 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)strlen(FONS_VERUS));
         CREDO_VERUM (memcmp(s.textus.datum, FONS_VERUS,
             strlen(FONS_VERUS)) == ZEPHYRUM);
+
+        /* CAUDA (silva-migratio T9): reinserendum POST lexema ultimum
+         * arboris ('#endif' custodiae capitis) nullum lexema sequens
+         * habet quod id fundat. Sine reinserenda_finire tacite perit
+         * - consulto pro subarbore (reinserenda ultra eam non sua
+         * sunt); cum eo, scriptura plagulae TOTIUS id reddit. */
+        {
+            MateriaToken* d2;
+                     Xar* lamina_finis;
+            constans character* FONS_CAUDA =
+                "#define X 1\nint f;\n#endif\n";
+
+            d2 = materia_token_creare(piscina, &FORMA, ZEPHYRUM,
+                chorda_ex_literis("#endif\n", piscina), (s32)19, (i32)3,
+                (i32)I, ZEPHYRUM);
+            lamina_finis = xar_creare(piscina,
+                magnitudo(MateriaToken*));
+            *(MateriaToken**)xar_addere(lamina_finis) = d2;
+            r = (MateriaReinserendum*)xar_addere(reins);
+            r->offset = (s32)19;
+            r->lamina = lamina_finis;
+            xar_ordinare(reins, materia_reinserenda_comparare);
+
+            s = materia_scribere_nodum(piscina, n, &c);
+            CREDO_VERUM (s.successus);
+            CREDO_AEQUALIS_I32 (s.textus.mensura,
+                (i32)strlen(FONS_VERUS));
+
+            c.reinserenda_finire = VERUM;
+            s = materia_scribere_nodum(piscina, n, &c);
+            CREDO_VERUM (s.successus);
+            CREDO_AEQUALIS_I32 (s.textus.mensura,
+                (i32)strlen(FONS_CAUDA));
+            CREDO_VERUM (memcmp(s.textus.datum, FONS_CAUDA,
+                strlen(FONS_CAUDA)) == ZEPHYRUM);
+
+            s = materia_scribere_valorem(piscina,
+                materia_valor_nodus(n),
+                &c);
+            CREDO_AEQUALIS_I32 (s.textus.mensura,
+                (i32)strlen(FONS_CAUDA));
+        }
     }
 
 
@@ -265,8 +307,8 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        MateriaScripturaConsilium  c;
-                MateriaOrigoUncus  uncus;
+        MateriaScripturaConsilium c;
+                MateriaOrigoUncus uncus;
                      MateriaNodus* n;
                      MateriaToken* derivatum;
                      MateriaToken* derivatum2;
@@ -360,7 +402,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        MateriaScripturaConsilium  c;
+        MateriaScripturaConsilium c;
                      MateriaNodus* n;
                  MateriaScriptura  s;
 
@@ -404,7 +446,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        MateriaScripturaConsilium  c;
+        MateriaScripturaConsilium c;
                      MateriaNodus* n;
                      MateriaToken* t;
                      MateriaToken* tr[1];

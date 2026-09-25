@@ -508,6 +508,12 @@ _scriptura_finire (
 {
     MateriaScriptura s;
 
+    /* Cauda reinserendorum (consilium->reinserenda_finire): quae
+     * nullum lexema sequens fudit. */
+    si (st->successus && st->consilium->reinserenda_finire)
+    {
+        _reinserenda_fundere(st, (s32)0x7FFFFFFF);
+    }
     s.successus  = st->successus;
     s.causa      = st->causa;
     s.sedes      = st->sedes;

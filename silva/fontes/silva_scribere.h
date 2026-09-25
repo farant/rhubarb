@@ -33,6 +33,16 @@
  * egent (locus unicus lista-token ambulatione generica emittitur).
  * Genus ignotum aut forma corrupta = fractura clara (successus
  * FALSUM + causa + sedes), numquam praetermissio tacita.
+ *
+ * SUPER MATERIAM (silva-migratio T9, 2026-09-25): ambulatio et
+ * emissio sunt materia_scribere; hic manent API silvae et quod C89
+ * PROPRIUM est - unci (radix per catenam originis, extentum
+ * invocationis per identitatem et continentiam, valor cum
+ * scissuris) et collectio reinserendorum plagulae totius (lineae
+ * directivae, rami non sumpti, invocationes vacuae, EOF). Una
+ * differentia nota: registrum SINE genere 'ambiguus' iam non
+ * recusatur (materia: lingua sine ambiguitate); registra silvae
+ * id semper ferunt.
  */
 
 #ifndef SILVA_SCRIBERE_H
@@ -46,18 +56,16 @@
 #include "silva_registrum.h"
 #include "silva_expandere.h"
 #include "silva_parsare.h"
+#include "materia_scribere.h"
 
 
 /* ==================================================
  * Fructus scripturae
  * ================================================== */
 
-nomen structura {
-                    b32  successus;
-                 chorda  textus;   /* octeti emissi; vacua in fractura */
-     constans character* causa;    /* diagnostica statica; NIHIL si bene */
-    constans SilvaNodus* sedes;    /* nodus fracturae; NIHIL licet */
-} SilvaScriptura;
+/* successus, textus (octeti; vacua in fractura), causa (NIHIL si
+ * bene), sedes (nodus fracturae; NIHIL licet) - campi idem */
+nomen MateriaScriptura SilvaScriptura;
 
 
 /* ==================================================

@@ -66,4 +66,12 @@ silva_lexema_emittere_in (
     ChordaAedificator* aed,
            SilvaToken* token);
 
+/* VALOR solus (scissurae reinsertae), sine triviis - uncus
+ * 'valorem_emittere' scriptoris materiae (silva-migratio T9):
+ * materia trivia ipsa emittit, frons C89 octetos valoris. */
+vacuum
+silva_lexema_valorem_emittere_in (
+       ChordaAedificator* aed,
+     constans SilvaToken* token);
+
 #endif /* SILVA_LEXEMA_H */

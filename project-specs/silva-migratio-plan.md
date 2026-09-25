@@ -42,6 +42,11 @@
 > ("no parent at construction") fell harmlessly — commissio re-parents
 > everything; the five origin query families stay in silva, unifying
 > them with materia's uncus is desideratum 01M3BHHJQA (step 5).
+> T9 DONE 2026-09-25: silva's writer delegates to `materia_scribere`
+> with C89 hooks over silva's own tokens (no conversion); registry and
+> `SilvaScriptura` are typedefs; materia gained `reinserenda_finire`
+> (trailing reinserts — a header guard's `#endif` — were unreachable on
+> materia's whole-file path, which the shim had never exercised).
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -563,6 +568,21 @@ emission only. *(T4 moved the CR fix to T10: the bug is in the STML
 projection — `_octetum_exuere`/`cr` has 10 sites in `materia_arbor.c`
 and 0 in `materia_scribere.c`.)*
 
+*As built (2026-09-25).* Measure: 72 call sites of the three entry
+points (48 `fontem`), all kept by signature; consumers outside silva
+are the shim, the oracle and saltuarius (frozen amalgam). The two
+walkers were the same algorithm; the differences were all hooks
+(origin chain, extent lookup — silva also searches by CONTAINMENT for
+stringified arguments, the frons hook does not — and continuation
+emission) plus fontem's C89 reinsert collection and EOF. Found: the
+shim compared only `silva_scribere_valorem`, so materia had never
+written a whole file; a reinsert after the last tree token had no way
+out → `MateriaScripturaConsilium.reinserenda_finire` (additive, default
+off). Registry types became typedefs (identical layout), so the writer
+takes silva's registry without conversion. "Frontend hooks" live in
+`silva_scribere.c`, reading silva's tail by accessors; the frons keeps
+its own hooks for CONVERTED tokens until T10 retires conversion.
+
 ### Task 10: arbor + aequalitas
 
 The big one: `silva_arbor` 7,063 → `materia_arbor` 3,965 + frontend
@@ -580,6 +600,13 @@ commits, arbor first, aequalitas second; both green.
   ladder (silva_arbor.c:985 still refuses; closes wish 01M32TA81Z; a
   C comment holding `</lex-commentarium>`), and crusta's P7
   mixed-edge-newline guard (whether C89 reaches it: MEASURE).
+- **Retire the frons conversion (from T9).** silva's writer now
+  reads silva's own tokens; the frons still converts to materia tokens
+  with its own tail (`SilvaFronsCauda`) for the STML path, with a
+  second set of hooks — one of which (`_extentum_quaerere`) lacks
+  silva's containment fallback for stringified arguments. When the
+  STML writer/reader consume silva's tokens directly, the tails merge
+  and the duplicate hooks go.
 - **Parent policy for non-canonical AMBIGUUS arms — DECISION
   (named in silva_frons.c, re-confirmed at T8):** silva's commissio
   leaves arm roots with `pater` NIHIL; materia's reader parents the

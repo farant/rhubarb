@@ -3197,3 +3197,23 @@ materia's uncus/tractus (their extents differ — `longitudo` vs value
 bytes, one-line approximation vs walked lines — and legatus/briar
 ranges would move): desideratum 01M3BHHJQA, a step-5 candidate.
 Replay verdict: substrate module `nodus` switched; nothing owed.
+
+## 2026-09-25 — phase 5 T9: silva writes bytes through materia
+
+RELATIO: `silva_scribere_{valorem,nodum,fontem}` keep their signatures
+but delegate to `materia_scribere` with C89 hooks that read silva's own
+token tail (origin chain, invocation extent by identity then
+containment, value with continuations) — no conversion, since tokens
+and nodes already are materia's. `SilvaScriptura` and the registry types
+(`SilvaRegistrumCoctum`/`TabGenus`/`TabLocus`) are typedefs to materia's
+(identical layouts). silva_scribere.c 856 → 538 lines. The measurement
+found that the shim had only ever proven materia on the SUBTREE path;
+the whole-file path (`fontem`) needed one thing materia lacked:
+reinserts after the last tree token (a header guard's `#endif`) had
+nothing to merge them and were dropped. materia_scribere gained
+`reinserenda_finire` (default off; test pins both sides). EOF is
+appended after that tail, in silva's exact order. Oracle clean over 470
+(the first time materia's writer is judged on whole files), M3 6/6, shim
+402 + 401/401/401, silva 54/54, officina 15/15, amalgam byte-identical.
+Replay verdict: substrate modules `scribere` (switched; one additive
+option) and registry (facade); materia clients owe their suites.

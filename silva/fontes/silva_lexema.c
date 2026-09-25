@@ -1234,8 +1234,8 @@ _emittere_trivia (
 
 interior vacuum
 _emittere_valorem (
-    ChordaAedificator* aed,
-           SilvaToken* token)
+      ChordaAedificator* aed,
+    constans SilvaToken* token)
 {
               i32  i;
               i32  prius;
@@ -1275,6 +1275,18 @@ silva_lexema_emittere_in (
     _emittere_trivia(aed, token, FALSUM);
     _emittere_valorem(aed, token);
     _emittere_trivia(aed, token, VERUM);
+}
+
+vacuum
+silva_lexema_valorem_emittere_in (
+      ChordaAedificator* aed,
+    constans SilvaToken* token)
+{
+    si (aed == NIHIL || token == NIHIL)
+    {
+        redde;
+    }
+    _emittere_valorem(aed, token);
 }
 
 chorda
