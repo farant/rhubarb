@@ -5,7 +5,7 @@
 # usus: ./crusta/computus.sh <plagula.sh> [-machina] [-iter N]
 #
 # Obiecta crusta/build/*.o poscit (./crusta/compile_probationes.sh primum) -
-# ut materia/shim_probare.sh; binaria probationum (sine .o) non nectit.
+# ut materia/oraculum_silvae_struere.sh; binaria probationum (sine .o) non nectit.
 set -u
 CRUSTA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$CRUSTA_DIR/.." && pwd)"

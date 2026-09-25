@@ -33,7 +33,7 @@
 #
 # HOSPES ex amalgamate COMMISSO struitur, in build/m3/ - NUMQUAM per
 # amalgamare.sh, quod silva/amalgama/silva.c REGENERAT (artefactum
-# commissum). Obiecta hic non in silva/build: glob shim_probare.sh
+# commissum). Obiecta hic non in silva/build: glob oraculi (struere)
 # obiectum alienum ibi nectere conaretur.
 
 set -u

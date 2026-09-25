@@ -1556,11 +1556,10 @@ PORTAE = {
                 r'PORTA AEDILIS: \d+ probationes'),
     'briar-fumus': (['./tools/briar_fumus.sh'],
                     r'fumus briar: (sanum|FRACTUM)'),
-    # '-stml' (2026-09-24, silva-migratio T3): sine eo porta oraculum
-    # OCTETORUM solum currebat - STML, circuitus bis et comparator
-    # (duo ex tribus oraculis) numquam in porta cucurrerant
-    'materia-shim': (['./materia/shim_probare.sh', '-stml'],
-                     r'probatae \d+, fractae \d+'),
+    # 'materia-shim' RECESSIT (silva-migratio T10c, 2026-09-25): silva
+    # ipsa super materiam scribit et legit, ergo shim silvam contra se
+    # ipsam conferret. Munus eius oraculum-silvae capit (silva viva
+    # contra silvam ad pignus, octeti + STML + lectio + comparator).
     # silva viva contra silvam ad pignus (silva-migratio T3); dispares
     # nominati in materia/oraculum_silvae.dispares, stali rubent
     'oraculum-silvae': (['./materia/oraculum_probare.sh'],

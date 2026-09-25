@@ -60,6 +60,10 @@
 > compression a C89 post-pass; silva_arbor.c 7,078 → 3,832; oracle stml
 > identical over 470 on the first run; wish 01M32TA81Z closes. Step 2
 > (retire frons conversion + shim) next.
+> T10c DONE 2026-09-25: step 2 retired the frons CONVERSION (silva_frons
+> is now only the C89 hooks over silva's own tail) and the shim + gate
+> `materia-shim` (it would compare silva with itself; the oracle covers
+> bytes, STML, reading and comparison against pinned silva).
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -77,7 +81,7 @@ worklog first, gates last; formator `-scribere` then `-vitia`; words via
 new gate registered in pythonica's gate table AND as a row of the
 'suitae probationum' inventory (lenses `currit binaria` / `tegit
 viae`), or `portae_debitae` cannot owe it. **Every commit from T6 on
-is green**: silva suite, shim, oracle gate (T3), M3 runner (T1),
+is green**: silva suite, shim (until T10c), oracle gate (T3), M3 runner (T1),
 consumer suites (officina, briar, saltuarius) and — when a materia
 file moves — every materia client suite (css, md, oratio, html,
 crusta). After a lib/ touch: rebake briar, briar-spectator, silex.

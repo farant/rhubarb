@@ -5,7 +5,7 @@
 # usus: ./html/computus.sh <plagula.html> [-machina] [-iter N]
 #
 # Obiecta html/build/*.o poscit (./html/compile_probationes.sh primum) -
-# ut materia/shim_probare.sh; binaria probationum (sine .o) non nectit.
+# ut materia/oraculum_silvae_struere.sh; binaria probationum (sine .o) non nectit.
 set -u
 HTML_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$HTML_DIR/.." && pwd)"

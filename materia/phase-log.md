@@ -3278,3 +3278,13 @@ ladder and CR with tests; wish 01M32TA81Z closes. Replay verdict:
 substrate module `arbor` switched for silva (writer + reader);
 comparator (T10d) and the retirement of the frons conversion + shim
 remain.
+
+## 2026-09-25 — phase 5 T10c (step 2): frons conversion and shim retired
+
+RELATIO: silva_frons keeps only the C89 hooks over silva's own tail
+(1,205 → 991 lines); the conversion (SilvaFronsCauda and its hook set)
+is gone. The shim (materia/instrumenta/shim_c89.c + shim_probare.sh),
+gate `materia-shim` and its inventory row are retired: born in phase
+I to judge materia's emitter against silva, it served until silva
+itself became materia's client, and its last run (the per-node sweep,
+T10b) found a real bug. The oracle gate carries the proof from here.

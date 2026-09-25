@@ -16,7 +16,7 @@
 # substratum materiae ferre debet. Tabula UNA hic, ne XXIII copiae
 # divergant.
 #
-# Moduli = substratum quod silva consumit (idem ac shim_probare.sh):
+# Moduli = substratum quod silva consumit (shim olim idem):
 # ceteri materiae moduli (coctor, sedes, diagnostica...) clientium
 # sunt, non silvae - addantur cum consumptor eos poscit.
 #

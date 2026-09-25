@@ -5,7 +5,7 @@
 # usus: ./oratio/computus.sh <plagula.txt> [-machina] [-iter N]
 #
 # Obiecta oratio/build/*.o poscit (./oratio/compile_probationes.sh primum) -
-# ut materia/shim_probare.sh; binaria probationum (sine .o) non nectit.
+# ut materia/oraculum_silvae_struere.sh; binaria probationum (sine .o) non nectit.
 set -u
 ORATIO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$ORATIO_DIR/.." && pwd)"

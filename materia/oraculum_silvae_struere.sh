@@ -23,7 +23,7 @@
 # amalgamate definiuntur aut in indice libc infra stant; aliud
 # quodlibet = functio domus per errorem vocata -> exitus I.
 #
-# Binarium VIVUM obiecta silva/build nectit (ut shim_probare.sh) -
+# Binarium VIVUM obiecta silva/build nectit (shim olim idem) -
 # ea ./silva/compile_probationes.sh struit; hic non struuntur.
 
 set -u
@@ -79,7 +79,7 @@ clang "${VEXILLA_C89[@]}" "$SEDES/oraculum.o" "$SEDES/amalgama.o" \
     || { echo "FRACTA: nexus oraculi ad pignus" >&2; exit 1; }
 
 # ---- 3. instrumentum vivum ----
-# eadem exclusio ac shim_probare.sh (amalgama, instrumenta, probationes)
+# exclusio (olim shim eadem) (amalgama, instrumenta, probationes)
 OBIECTA=$(ls "$RADIX"/silva/build/*.o 2>/dev/null \
           | grep -v -E "/(fons_|nexus_|instr_|probatio_|silva_amalgama\.o|amalgama_verificatio\.o|apparatus\.o)")
 if [ -z "$OBIECTA" ]; then

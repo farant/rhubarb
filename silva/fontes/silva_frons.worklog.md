@@ -85,3 +85,23 @@ invisible while the shim checked only each file's FIRST node. Fix: the
 reader also records the extent on the invocation's own tail, and the hook
 checks the radix first. Pinned by the shim's inline case "invocatio ante
 lineam" (red without the fix).
+
+## 2026-09-25 — T10c step 2: conversion retired, shim retired
+
+With silva's node writer/reader (T10b) and parsura writer/reader (T10c
+step 1) on materia through the hooks over silva's OWN tail, nothing used
+the conversion any more except the shim, which would now compare silva
+with itself. Removed: SilvaFronsCauda and the whole converted-tail hook
+set (FRONS_C89, `_token_convertere`, `silva_frons_valorem/nodum_
+convertere`, `_scripturam_parare`, `_arborem_parare`, `_lexemata_numerus`,
+`_nodus_radicis`, the old origin hooks). Kept: the context, the hooks
+over silva's tail, and `_extentum_ornare` (which they reuse).
+1,205 lines at T6b → 991, all of it now production code.
+
+Also retired: `materia/instrumenta/shim_c89.c`, `materia/shim_probare.sh`,
+gate `materia-shim` (pythonica PORTAE) and its 'suitae probationum' row.
+Its job passes to the oracle gate (pinned silva vs live: bytes, STML,
+read-back, comparator), whose coverage was already a superset for silva.
+The shim's last useful act was the per-node sweep in T10b (found the
+read-side extent bug). Script comments that cited its object glob now
+cite oraculum_silvae_struere.sh, which uses the same exclusion list.
