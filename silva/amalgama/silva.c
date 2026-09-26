@@ -917,6 +917,31 @@ silva_lexemata_parsare (
            SilvaResolutor  resolutor,
                      void* datum_resolutoris);
 
+/* Mortes syntaxis in TEXTUM - UNA SEDES FORMAE (silva-migratio
+ * T19b-1): examen, legati, briar hanc vocant. Humanus: 'via:linea:
+ * columna: [violatio] causa' + excerptum ('hic coepit' / 'hic
+ * exspectatur'); machina (non-zephyrum): TSV examinis. Mors sine
+ * loco -> summarium 'nodi erroris (syntaxis) N'. fons/mensura =
+ * textus fontis principalis (excerpta). mappatio NULL = identitas;
+ * lineae ordinum ET excerpti mappantur (briar: textus silvae ->
+ * linea .thistle). *linea_prima (NULL licet) = linea mappata
+ * mortis locatae primae (0 si nulla). Plagula sine errore ->
+ * chorda vacua. */
+typedef unsigned int (*SilvaLineaMappatio)(void* datum,
+                                           unsigned int linea);
+SilvaChorda
+silva_mortes_scribere (
+               SilvaPiscina* piscina,
+                 const char* via,
+          const SilvaParsura* parsura,
+    const SilvaRegistrumCoctum* tabularium,
+                 const char* fons,
+                unsigned int  mensura,
+                         int  machina,
+          SilvaLineaMappatio  mappatio,
+                       void* datum,
+                unsigned int* linea_prima);
+
 
 /* ==================================================
  * Expansio: reading windows (additiones II) - SilvaExpansio stays
@@ -6100,6 +6125,77 @@ nomen structura {
 
 #endif /* MATERIA_DIAGNOSTICUM_H */
 
+/* ================= ex include/excerptum.h ================= */
+/* excerptum.h - Excerptum fontis cum signo sub tractu (forma
+ * diagnosticorum compilatorum): margo numeri lineae, linea fontis
+ * (CR sublato, moderatores praeter tabulam ut spatium), deinde
+ * '^' ad initium et '~' per characterem UTF-8 usque ad finem
+ * tractus aut lineae. Tabula in margine sub linea servatur, ergo
+ * signum columnam veram tenet.
+ *
+ * PICTURA sola: sedem materia dat (MateriaTractus), formam haec.
+ * Ergo nihil de arboribus scit et a quolibet fonte vocari potest.
+ */
+#ifndef EXCERPTUM_H
+#define EXCERPTUM_H
+
+/* Sedes una in serie sedium multiplicium. */
+nomen structura {
+                    s32  initium;
+                    s32  finis;
+                    i32  linea;
+     constans character* nota;      /* NIHIL licet */
+} ExcerptumSedes;
+
+/* Sedes plures in saepto UNO: ordine fontis, margo semel mensuratus
+ * ex linea maxima, linea fontis quaeque SEMEL impressa cum signo uno
+ * per sedem infra eam. Sine elisione: linea quaeque numerum suum
+ * fert, ergo hiatus numquam ambiguus est.
+ *
+ * Sedes ORDINATAE esse debent (initium non decrescens); aliter
+ * FALSUM. Recusatio clara, non ordinatio tacita: series CONSTANS
+ * est, ergo eam hic ordinare sine memoria non possumus, et exitus
+ * tacite permutatus peior est quam refutatio nominata.
+ *
+ * FALSUM etiam si numerus ZEPHYRUM, aut sedes ulla lineam ZEPHYRUM
+ * aut initium extra [0, mensura] fert.
+ *
+ * Cum numero I et nota NIHIL exitus OCTETIM idem est ac
+ * excerptum_scribere super eandem sedem. */
+static b32
+excerptum_scribere_multa (
+          SilvaChordaAedificator* exitus,
+         constans character* fons,
+                        i32  mensura,
+    constans ExcerptumSedes* sedes,
+                        i32  numerus);
+
+#endif /* EXCERPTUM_H */
+
+/* ================= ex include/utf8.h ================= */
+/*
+ * utf8.h - Bibliotheca UTF-8 decodendi
+ *
+ * Functiones purae pro decodendo UTF-8 ad codepoints.
+ * Nulla allocatio, nulla dependentia praeter latina.h
+ */
+
+#ifndef UTF8_H
+#define UTF8_H
+
+/*
+ * utf8_est_continuatio - An hic byte est continuatio? (10xxxxxx)
+ *
+ * @byte: Byte examinandus
+ *
+ * Redde: VERUM si continuatio, FALSUM aliter
+ */
+static b32
+utf8_est_continuatio (
+    i8 byte);
+
+#endif /* UTF8_H */
+
 /* assertio derivae: silva.h SilvaXar.segmenta[64] ==
  * XAR_MAXIMUS_SEGMENTORUM internum */
 typedef char silva_assertio_xar_segmentorum[
@@ -9620,6 +9716,33 @@ silva_mortes_diagnostica (
                        SilvaPiscina* piscina,
          constans SilvaParsura* parsura,
     constans MateriaOrigoUncus* uncus);
+
+/* Mortes syntaxis in TEXTUM scribere - UNA SEDES FORMAE (silva-
+ * migratio T19b-1; desideratum ...W87Q): examen, legati, briar hanc
+ * vocant, nemo formam copiat.
+ *   humanus: 'via:linea:columna: [violatio] causa' + excerptum
+ *            (relata 'hic coepit' + primaria 'hic exspectatur');
+ *   machina: 'via<TAB>linea<TAB>columna<TAB>violatio<TAB>-1<TAB>0
+ *            <TAB>causa' (forma examinis -machina).
+ * Mors sine loco, in capite inclusa, aut apparatus -> summarium
+ * 'nodi erroris (syntaxis) N' post ordines locatos. 'fons'/'mensura'
+ * = textus fontis principalis (pro excerpto). 'mappatio' NIHIL =
+ * identitas; lineae ordinum ET excerpti mappantur. *linea_prima
+ * (NIHIL licet) = linea MAPPATA mortis locatae primae (0 si nulla -
+ * briar eam pro linea erroris regionis ponit). Plagula sine errore
+ * -> chorda vacua. Textus in piscina. */
+SilvaChorda
+silva_mortes_scribere (
+                          SilvaPiscina* piscina,
+               constans character* via,
+            constans SilvaParsura* parsura,
+    constans SilvaRegistrumCoctum* tabularium,
+               constans character* fons,
+                              i32  mensura,
+                              b32  machina,
+               SilvaLineaMappatio  mappatio,
+                           vacuum* datum,
+                              i32* linea_prima);
 
 /* Causa fracturae ultimae (NIHIL si nulla) - additum ad API
  * probatum: shim nomen vitii lexici nuntiabat. */
@@ -35330,6 +35453,388 @@ silva_materia_arbor_lexemata_aequalia_fronte (
         differentia);
     redde _arbor_lexemata_aequalia(&comparator, a, b, NIHIL, NIHIL,
         -I, -I);
+}
+
+/* ================= ex lib/excerptum.c ================= */
+
+/* FENESTRA lineae longissimae. Excerptum plenum terminale INUNDAT
+ * potius quam illustret ubi linea milia octetorum fert: html minutum
+ * et css unius lineae ita scribuntur. Mensuratum 2026-09-19: inventa
+ * html domus XIII omnia in lineis CDLIII ad XX_XXX octetorum sedent,
+ * ergo forma plena ibi inutilis est, non modo inelegans.
+ *
+ * Supra LATITUDO_MAXIMA fenestra circa tractum servatur (MARGO
+ * utrimque pro contextu) et puncta tria '...' notantur. SIGNUM eandem
+ * fenestram accipit - ambo scriptores ab eodem 'principium' ambulant
+ * - ergo columna vera manet sine calculo altero.
+ *
+ * SUB limite nihil mutatur: lineae C89, bash et css ordinariae
+ * OCTETIM eaedem manent. Ergo clientes priores immoti. */
+#define LATITUDO_MAXIMA  ((s32)160)
+#define MARGO_FENESTRAE  ((s32)40)
+#define LATITUDO_PUNCTORUM  ((s32)3)
+
+/* figurae lineae, ordine INVERSO (unitates primae); reddit numerum */
+interior i32
+_figurae (
+                  i32  linea,
+            character* figurae)
+{
+    i32 n      = ZEPHYRUM;
+    i32 valor  = linea;
+
+    fac
+    {
+        figurae[n]  = (character)('0' + (valor % X));
+        valor       = valor / X;
+        n++;
+    } dum (valor > ZEPHYRUM && n < XV);
+    redde n;
+}
+
+/* latitudo marginis unius lineae: figurae, minimum IV */
+interior i32
+_latitudo (
+    i32 linea)
+{
+    character figurae[XVI];
+          i32 n = _figurae(linea, figurae);
+
+    redde n < IV ? (i32)IV : n;
+}
+
+/* margo: figurae (aut spatia) ad latitudinem DATAM, deinde " | ".
+ * Latitudo ab extra venit ut saeptum sedium multiplicium unam pro
+ * omnibus lineis habeat. */
+interior vacuum
+_marginem (
+    SilvaChordaAedificator* exitus,
+                  i32  linea,
+                  b32  numerus,
+                  i32  latitudo)
+{
+    character figurae[XVI];
+          i32 n = _figurae(linea, figurae);
+          i32 k;
+
+    /* i32 INSIGNATUS est: latitudo minor quam n hic sine custode
+     * subtractionem circumvolveret */
+    si (latitudo < n)
+    {
+        latitudo = n;
+    }
+    per (k = ZEPHYRUM; k < latitudo - (numerus ? n : ZEPHYRUM); k++)
+    {
+        silva_chorda_aedificator_appendere_character(exitus, ' ');
+    }
+    si (numerus)
+    {
+        per (k = n; k > ZEPHYRUM; k--)
+        {
+            silva_chorda_aedificator_appendere_character(exitus,
+                figurae[k - I]);
+        }
+    }
+    silva_chorda_aedificator_appendere_literis(exitus, " | ");
+}
+
+/* fines lineae quae octetum 'initium' continet; CR ultimo sublato */
+interior vacuum
+_lineae_fines (
+    constans character* fons,
+                   i32  mensura,
+                   s32  initium,
+                   s32* principium,
+                   s32* terminus)
+{
+    s32 p = initium;
+    s32 t = initium;
+
+    dum (p > ZEPHYRUM && fons[p - I] != '\n')
+    {
+        p--;
+    }
+    dum (t < (s32)mensura && fons[t] != '\n')
+    {
+        t++;
+    }
+    si (t > p && fons[t - I] == '\r')
+    {
+        t--;
+    }
+    *principium  = p;
+    *terminus    = t;
+}
+
+/* Fenestram circa tractum angustare cum linea limitem excedit.
+ * 'principium' et 'terminus' IN LOCO mutantur; puncta utrimque
+ * reddita. Sub limite nihil mutatur. */
+interior vacuum
+_fenestra (
+    constans character* fons,
+                   s32  initium,
+                   s32  finis,
+                   s32* principium,
+                   s32* terminus,
+                   b32* elisa_ante,
+                   b32* elisa_post)
+{
+    s32 p = *principium;
+    s32 t = *terminus;
+
+    *elisa_ante = FALSUM;
+    *elisa_post = FALSUM;
+    si (t - p <= LATITUDO_MAXIMA)
+    {
+        redde;
+    }
+    si (initium - p > MARGO_FENESTRAE)
+    {
+        p            = initium - MARGO_FENESTRAE;
+        *elisa_ante  = VERUM;
+    }
+    si (t - p > LATITUDO_MAXIMA)
+    {
+        s32 terminus_novus = finis + MARGO_FENESTRAE;
+
+        si (terminus_novus < p + LATITUDO_MAXIMA)
+        {
+            terminus_novus = p + LATITUDO_MAXIMA;
+        }
+        si (terminus_novus < t)
+        {
+            t            = terminus_novus;
+            *elisa_post  = VERUM;
+        }
+    }
+    /* octetus continuationis UTF-8 numquam fenestram incipiat */
+    dum (p > *principium && utf8_est_continuatio((i8)fons[p]))
+    {
+        p--;
+    }
+    *principium  = p;
+    *terminus    = t;
+}
+
+/* linea fontis ipsa: moderatores praeter tabulam ut spatium */
+interior vacuum
+_lineam_scribere (
+     SilvaChordaAedificator* exitus,
+    constans character* fons,
+                   s32  principium,
+                   s32  terminus,
+                   i32  linea,
+                   i32  latitudo,
+                   b32  elisa_ante,
+                   b32  elisa_post)
+{
+    s32 i;
+
+    _marginem(exitus, linea, VERUM, latitudo);
+    si (elisa_ante)
+    {
+        silva_chorda_aedificator_appendere_literis(exitus, "...");
+    }
+    per (i = principium; i < terminus; i++)
+    {
+        character c = fons[i];
+
+        si (c != '\t' && (i32)(insignatus character)c < 0x20)
+        {
+            c = ' ';
+        }
+        silva_chorda_aedificator_appendere_character(exitus, c);
+    }
+    si (elisa_post)
+    {
+        silva_chorda_aedificator_appendere_literis(exitus, "...");
+    }
+    silva_chorda_aedificator_appendere_character(exitus, '\n');
+}
+
+/* signum sub linea: '^' ad initium, '~' per CHARACTEREM UTF-8 usque
+ * ad finem tractus aut lineae; tabula in margine servatur, ergo
+ * columna vera manet. Nota (si adest) post signum. */
+interior vacuum
+_signum_scribere (
+     SilvaChordaAedificator* exitus,
+    constans character* fons,
+                   s32  principium,
+                   s32  terminus,
+                   s32  initium,
+                   s32  finis,
+                   i32  linea,
+                   i32  latitudo,
+                   b32  elisa_ante,
+    constans character* nota)
+{
+    s32 finis_lineae;
+    s32 i;
+
+    _marginem(exitus, linea, FALSUM, latitudo);
+    /* '...' spatium columnae occupat: signum idem accipiat, aliter
+     * caret tribus columnis aberrat */
+    si (elisa_ante)
+    {
+        per (i = ZEPHYRUM; i < LATITUDO_PUNCTORUM; i++)
+        {
+            silva_chorda_aedificator_appendere_character(exitus, ' ');
+        }
+    }
+    per (i = principium; i < initium && i < terminus; i++)
+    {
+        si (fons[i] == '\t')
+        {
+            silva_chorda_aedificator_appendere_character(exitus, '\t');
+        }
+        alioquin si (!utf8_est_continuatio((i8)fons[i]))
+        {
+            silva_chorda_aedificator_appendere_character(exitus, ' ');
+        }
+    }
+    silva_chorda_aedificator_appendere_character(exitus, '^');
+    finis_lineae  = finis < terminus ? finis : terminus;
+    i             = initium;
+    si (i < finis_lineae)
+    {
+        i++;
+        dum (i < finis_lineae && utf8_est_continuatio((i8)fons[i]))
+        {
+            i++;
+        }
+    }
+    per (; i < finis_lineae; i++)
+    {
+        si (!utf8_est_continuatio((i8)fons[i]))
+        {
+            silva_chorda_aedificator_appendere_character(exitus, '~');
+        }
+    }
+    si (nota != NIHIL)
+    {
+        silva_chorda_aedificator_appendere_character(exitus, ' ');
+        silva_chorda_aedificator_appendere_literis(exitus, nota);
+    }
+    silva_chorda_aedificator_appendere_character(exitus, '\n');
+}
+
+static b32
+excerptum_scribere_multa (
+          SilvaChordaAedificator* exitus,
+         constans character* fons,
+                        i32  mensura,
+    constans ExcerptumSedes* sedes,
+                        i32  numerus)
+{
+    i32 latitudo = (i32)IV;
+    i32 k;
+
+    si (   exitus  == NIHIL || fons == NIHIL || sedes == NIHIL
+        || numerus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        i32 l;
+
+        si (   sedes[k].linea == ZEPHYRUM
+            || sedes[k].initium < ZEPHYRUM
+            || sedes[k].initium > (s32)mensura)
+        {
+            redde FALSUM;
+        }
+        si (   k > ZEPHYRUM
+            && sedes[k].initium < sedes[k - I].initium)
+        {
+            redde FALSUM;
+        }
+        l = _latitudo(sedes[k].linea);
+        si (l > latitudo)
+        {
+            latitudo = l;
+        }
+    }
+    k = ZEPHYRUM;
+    dum (k < numerus)
+    {
+        s32 principium;
+        s32 terminus;
+        s32 tractus_initium;
+        s32 tractus_finis;
+        b32 elisa_ante;
+        b32 elisa_post;
+        i32 j;
+
+        _lineae_fines(fons, mensura, sedes[k].initium, &principium,
+            &terminus);
+        /* FENESTRA UNA PRO OMNIBUS sedibus lineae huius: sedes
+         * plures lineam participant, ergo fenestra tractum ab prima
+         * ad ultimam capere debet, aliter signum extra eam caderet.
+         * Sedes ORDINATAE sunt (supra probatum), ergo prima initium
+         * minimum dat; finem maximum quaerimus, quia tractus
+         * longitudine differunt. */
+        tractus_initium  = sedes[k].initium;
+        tractus_finis    = sedes[k].finis < sedes[k].initium
+            ? sedes[k].initium : sedes[k].finis;
+        j = k;
+        dum (j < numerus && sedes[j].linea == sedes[k].linea)
+        {
+            s32 finis_huius = sedes[j].finis < sedes[j].initium
+                ? sedes[j].initium : sedes[j].finis;
+
+            si (finis_huius > tractus_finis)
+            {
+                tractus_finis = finis_huius;
+            }
+            j++;
+        }
+        _fenestra(fons, tractus_initium, tractus_finis, &principium,
+            &terminus, &elisa_ante, &elisa_post);
+        _lineam_scribere(exitus, fons, principium, terminus,
+            sedes[k].linea, latitudo, elisa_ante, elisa_post);
+        j = k;
+        dum (j < numerus && sedes[j].linea == sedes[k].linea)
+        {
+            s32 finis = sedes[j].finis < sedes[j].initium
+                ? sedes[j].initium : sedes[j].finis;
+
+            _signum_scribere(exitus, fons, principium, terminus,
+                sedes[j].initium, finis, sedes[j].linea, latitudo,
+                elisa_ante, sedes[j].nota);
+            j++;
+        }
+        k = j;
+    }
+    redde VERUM;
+}
+
+/* ================= ex lib/utf8.c ================= */
+
+/* Mascherae pro decodendo */
+#define MASCA_ASCII       0x80u  /* 10000000 */
+#define MASCA_CONT        0xC0u  /* 11000000 */
+#define MASCA_2BYTE       0xE0u  /* 11100000 */
+#define MASCA_3BYTE       0xF0u  /* 11110000 */
+#define MASCA_4BYTE       0xF8u  /* 11111000 */
+
+#define VALOR_CONT        0x80u  /* 10xxxxxx */
+#define VALOR_2BYTE       0xC0u  /* 110xxxxx */
+#define VALOR_3BYTE       0xE0u  /* 1110xxxx */
+#define VALOR_4BYTE       0xF0u  /* 11110xxx */
+
+/* Codepoint maximus validus */
+#define CODEPOINT_MAXIMUS 0x10FFFF
+
+/* Surrogates (invalidi in UTF-8) */
+#define SURROGATUM_INITIUM 0xD800
+#define SURROGATUM_FINIS   0xDFFF
+
+static b32
+utf8_est_continuatio (
+    i8 byte)
+{
+    redde ((byte & MASCA_CONT) == VALOR_CONT);
 }
 
 /* ================= ex silva/fontes/silva_token.c ================= */
@@ -96859,6 +97364,154 @@ silva_frons_uncus (
     constans SilvaFrons* frons)
 {
     redde (frons != NIHIL) ? &frons->uncus_silvae : NIHIL;
+}
+
+
+/* ==================================================
+ * Forma mortium - UNA SEDES (silva-migratio T19b-1, ...W87Q)
+ *
+ * Ex examen.c (T15b) huc migrata: examen, legatus (MCP legati + LSP)
+ * et briar formam eandem per hanc functionem accipiunt. Antea legatus
+ * formam VETEREM copiabat ('nodi erroris (syntaxis) N' sine loco),
+ * briar initium nodi ERROR (initium UNITATIS - lapide bugs/001:
+ * semper linea prima regionis) nuntiabat.
+ * ================================================== */
+
+interior i32
+_lineam_mappare (
+    SilvaLineaMappatio  mappatio,
+                vacuum* datum,
+                   i32  linea)
+{
+    redde (mappatio != NIHIL) ? mappatio(datum, linea) : linea;
+}
+
+SilvaChorda
+silva_mortes_scribere (
+                          SilvaPiscina* piscina,
+               constans character* via,
+            constans SilvaParsura* parsura,
+    constans SilvaRegistrumCoctum* tabularium,
+               constans character* fons,
+                              i32  mensura,
+                              b32  machina,
+               SilvaLineaMappatio  mappatio,
+                           vacuum* datum,
+                              i32* linea_prima)
+{
+        SilvaChordaAedificator* aed;
+               SilvaFrons* frons;
+    MateriaArborConsilium  consilium;
+                      SilvaXar* mortes   = NIHIL;
+                      s32  residua;
+                      i32  k;
+                character  linea_b[CCLVI];
+                   SilvaChorda  vacua;
+
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    si (linea_prima != NIHIL)
+    {
+        *linea_prima = ZEPHYRUM;
+    }
+    si (   piscina == NIHIL || parsura == NIHIL || via == NIHIL
+        || parsura->numerus_errorum == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    aed = silva_chorda_aedificator_creare(piscina, CCLVI);
+    si (aed == NIHIL)
+    {
+        redde vacua;
+    }
+    residua = (s32)parsura->numerus_errorum;
+
+    frons = silva_frons_creare(piscina, parsura->expansio);
+    si (   frons != NIHIL
+        && silva_frons_arborem_silvae_parare(frons, tabularium,
+               "c89", NIHIL, &consilium))
+    {
+        mortes = silva_mortes_diagnostica(piscina, parsura,
+            silva_frons_uncus(frons));
+    }
+    per (k = ZEPHYRUM; mortes != NIHIL && k < silva_xar_numerus(mortes); k++)
+    {
+        constans MateriaDiagnosticum* d =
+            (constans MateriaDiagnosticum*)silva_xar_obtinere(mortes, k);
+        i32 linea;
+
+        si (   d                     == NIHIL || d->lexema == NIHIL
+            || d->gravitas           != (s32)MATERIA_GRAVITAS_ERRATUM
+            || d->tractus.fons_index != parsura->fons_princeps
+            || d->tractus.linea      == ZEPHYRUM)
+        {
+            perge;
+        }
+        residua--;
+        linea = _lineam_mappare(mappatio, datum, d->tractus.linea);
+        si (linea_prima != NIHIL && *linea_prima == ZEPHYRUM)
+        {
+            *linea_prima = linea;
+        }
+        si (strlen(via) + strlen(d->causa) + LXIV >= magnitudo(linea_b))
+        {
+            perge;
+        }
+        si (machina)
+        {
+            sprintf(linea_b, "%s\t%d\t%d\tviolatio\t-1\t0\t%s\n", via,
+                (int)linea, (int)d->tractus.columna, d->causa);
+            silva_chorda_aedificator_appendere_literis(aed, linea_b);
+        }
+        alioquin
+        {
+            ExcerptumSedes sedes[II];
+                       i32 n = ZEPHYRUM;
+
+            sprintf(linea_b, "%s:%d:%d: [violatio] %s\n", via,
+                (int)linea, (int)d->tractus.columna, d->causa);
+            silva_chorda_aedificator_appendere_literis(aed, linea_b);
+            si (fons == NIHIL)
+            {
+                perge;
+            }
+            si (   d->numerus_relatorum > ZEPHYRUM
+                && d->relata->tractus.initium >= ZEPHYRUM
+                && d->relata->tractus.fons_index
+                    == parsura->fons_princeps
+                && d->relata->tractus.initium < d->tractus.initium)
+            {
+                sedes[n].initium  = d->relata->tractus.initium;
+                sedes[n].finis    = d->relata->tractus.finis;
+                sedes[n].linea    = _lineam_mappare(mappatio, datum,
+                    d->relata->tractus.linea);
+                sedes[n].nota     = d->relata->nota;
+                n++;
+            }
+            sedes[n].initium  = d->tractus.initium;
+            sedes[n].finis    = d->tractus.finis;
+            sedes[n].linea    = linea;
+            sedes[n].nota     = d->nota;
+            n++;
+            (vacuum)excerptum_scribere_multa(aed, fons, mensura, sedes,
+                n);
+        }
+    }
+    si (residua > ZEPHYRUM && strlen(via) + LXIV < magnitudo(linea_b))
+    {
+        si (machina)
+        {
+            sprintf(linea_b, "%s\t0\t0\tviolatio\t-1\t0\t"
+                "nodi erroris (syntaxis) %d\n", via, (int)residua);
+        }
+        alioquin
+        {
+            sprintf(linea_b, "%s: [violatio] nodi erroris (syntaxis)"
+                " %d\n", via, (int)residua);
+        }
+        silva_chorda_aedificator_appendere_literis(aed, linea_b);
+    }
+    redde silva_chorda_aedificator_finire(aed);
 }
 
 constans character*

@@ -64,6 +64,9 @@ nomen structura {
                                             * formula linearis */
                       b32 est_fragmentum;  /* <c! id=...>: numquam
                                             * radix */
+      constans character* via_documenti;   /* .thistle (nuntii mortium
+                                            * silvae, T19b-1); NIHIL
+                                            * = "regio" */
 } BriarNexusRes;
 
 /* Xar de BriarNexusRes, ordine partium; NIHIL = memoria */

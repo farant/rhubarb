@@ -80,6 +80,10 @@ declare -a RADIX_FONTES=(
     # schematum schema generatum iudicans (arbor M2.3 / T5)
     "canon"
     "similitudo"
+    # excerptum: silva_mortes_scribere (silva_frons) - forma mortium
+    # una sedes, excerpta 'hic coepit'/'hic exspectatur' (T19b-1)
+    "excerptum"
+    "utf8"
 )
 
 FILTER="${1:-}"

@@ -3960,10 +3960,13 @@ _legati_severitatis_verbum (
  * + verdictum cum numeris). Vocatur intra _recensere dum sem vivit. */
 interior vacuum
 _diagnostica_effundere (
-         constans character* via_c,
-      constans SilvaParsura* parsura,
-    constans SilvaSemantica* sem,
-          ChordaAedificator* effusor)
+          constans character* via_c,
+       constans SilvaParsura* parsura,
+     constans SilvaSemantica* sem,
+          constans character* textus,
+          insignatus integer  mensura,
+                SilvaPiscina* piscina,
+           ChordaAedificator* effusor)
 {
              character linea_b[1024];
     insignatus integer n = silva_c89_diagnostica_numerus(sem);
@@ -3975,12 +3978,23 @@ _diagnostica_effundere (
                    int provisionalia  = ZEPHYRUM;
                    b32 reice          = FALSUM;
 
+    /* mortes syntaxis: forma UNA in silva (silva_mortes_scribere,
+     * silva-migratio T19b-1) - antea hic copia formae examinis
+     * VETERIS ('nodi erroris (syntaxis) N' sine loco, ...W87Q) */
     si (parsura->numerus_errorum > ZEPHYRUM)
     {
-        sprintf(linea_b, "%s: [violatio] nodi erroris (syntaxis)"
-            " %d\n", via_c, (int)parsura->numerus_errorum);
-        (vacuum)chorda_aedificator_appendere_literis(effusor,
-            linea_b);
+        SilvaChorda mortes = silva_mortes_scribere(piscina, via_c,
+            parsura, &SILVA_C89_REGISTRUM, textus, mensura, FALSUM,
+            NIHIL, NIHIL, NIHIL);
+
+        si (mortes.mensura > ZEPHYRUM)
+        {
+            chorda c;
+
+            c.mensura  = (i32)mortes.mensura;
+            c.datum    = (i8*)mortes.datum;
+            (vacuum)chorda_aedificator_appendere_chorda(effusor, c);
+        }
         reice = VERUM;
     }
     per (i = ZEPHYRUM; i < n; i++)
@@ -4116,7 +4130,8 @@ _recensere (
             l->piscina_indicis);
         si (effusor != NIHIL)
         {
-            _diagnostica_effundere(via_cum, parsura, sem, effusor);
+            _diagnostica_effundere(via_cum, parsura, sem, textus,
+                mensura, effimera, effusor);
         }
     }
     silva_piscina_destruere(effimera);

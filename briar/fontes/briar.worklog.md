@@ -888,3 +888,25 @@ the original text and enforces sentinel/format/unused itself. Fixture
 attributa.thistle + probatio_briar_silva section, planted red against
 HEAD's amalgam (2 errors). `briar attributa.thistle` runs (rc 0). Both
 briar binaries rebaked.
+
+## 2026-09-25 — located syntax errors (silva-migratio T19b-1; lapide bugs/001)
+
+Cause of bugs/001: `_errorem_quaerere` reported the first ERROR node's
+start — the GLR recovery unit's start, i.e. the region's first line,
+always. Now `_parsare` calls silva's shared printer
+(`silva_mortes_scribere`) with `_lineam_thistle` (→
+briar_nexus_linea_silvae) as the mapping: `linea_erroris` = the GLR
+death line in the .thistle; `causa` = the summary line ("regio C:
+parsura fracta (1 error)" — singular now, lapide noticed "1 errores")
+followed by `x.thistle:9:5: [violatio] …` rows with excerpts labelled in
+.thistle lines. CLI prints it verbatim; the spectator puts everything
+after the first line in `<pre class="fr-loca">` so carets stay aligned.
+The .thistle path reaches `_parsare` through a new region field
+`via_documenti`, set by `briar_silvam_texere(…, via_documenti)` (eight
+callers: CLI, spectator, six tests; NIHIL → "regio").
+NB briar_struere links objects built by briar/compile_probationes.sh —
+a source edit is invisible to struere until the runner compiles it.
+Fixture adversa/syntaxis_locus.thistle (lapide's repro), planted red
+(linea_prima withheld → fallback to region start). Not addressed here:
+lapide's ask 2 (expected token), 3 (latina.h hint) → T19b-2; 4 (every
+error) parked — one GLR death per recovery unit.

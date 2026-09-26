@@ -916,7 +916,25 @@ _vitium_emittere (
         chorda_aedificator_appendere_i32(a, (i32)linea);
         chorda_aedificator_appendere_literis(a, "</a>: ");
     }
-    _evadere(a, causa);
+    /* causa multilinearis (silva-migratio T19b-1: summarium + ordines
+     * locati cum excerptis): linea prima ut antea, reliquum in <pre> -
+     * signa '^' sub columnis manent */
+    {
+        i32 k = ZEPHYRUM;
+
+        dum (k < causa.mensura && causa.datum[k] != '\n')
+        {
+            k++;
+        }
+        _evadere(a, chorda_sectio(causa, ZEPHYRUM, k));
+        si (k < causa.mensura)
+        {
+            chorda_aedificator_appendere_literis(a,
+                "<pre class=\"fr-loca\">");
+            _evadere(a, chorda_sectio(causa, k + I, causa.mensura));
+            chorda_aedificator_appendere_literis(a, "</pre>");
+        }
+    }
     chorda_aedificator_appendere_literis(a, "</aside>\n");
 }
 

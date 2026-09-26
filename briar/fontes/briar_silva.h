@@ -51,13 +51,17 @@ nomen structura BriarSilva {
 
 /* Regiones 'c' (quocumque munere) parsare. Reddit numerum regionum
  * parsatarum; -I = memoria aut argumenta (s32: sentinela signata).
- * Regio cum erroribus parsurae: linea_erroris (linea .thistle erroris
- * primi) + causa in BriarNexusRes; arbor tamen manet. */
+ * Regio cum erroribus parsurae: linea_erroris (linea .thistle mortis
+ * GLR primae - lapide bugs/001) + causa (summarium + ordines locati
+ * cum excerptis, forma silvae una: silva_mortes_scribere) in
+ * BriarNexusRes; arbor tamen manet. via_documenti = via .thistle pro
+ * ordinibus (NIHIL = "regio"). */
 s32
 briar_silvam_texere (
                 Piscina* piscina,
                     Xar* nexus,
-     constans SilexFons* fons);
+     constans SilexFons* fons,
+     constans character* via_documenti);
 
 /* Parsura C per silvam cum lexico SYSTEMATIS (silva-migratio T16b):
  * capita clausurae (Xar de SilexRes, '.h' sola, praeter 'excludere' -

@@ -86,6 +86,13 @@
 > gates 'generata' (amalgam pairs, lexicon, 37 snippets, amalgamator
 > manifests — aedilis.stml covered at last) and 'examen-corpus'
 > (re-pinned; bitsyfont's real C99-ism fixed). T19b next.
+> T19b RE-SLICED (Fran, 2026-09-25): T19b-1 one printer · T19b-2
+> message quality (found token, latina.h hint, missing-';' heuristic if
+> cheap) · lapide's "every error" PARKED (one GLR death per recovery
+> unit). T19b-1 DONE: `silva_mortes_scribere` (silva_frons, public in
+> silva.h) is the one home of the syntax-death format; examen (bytes
+> unchanged), legati (…W87Q) and briar (bugs/001: death line in .thistle
+> + excerpts, was the region start) call it. T19b-2 next.
 
 ## What steps 1–4 taught (the inputs to this plan)
 

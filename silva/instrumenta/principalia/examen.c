@@ -254,9 +254,9 @@ constans ExcerptumSedes* sedes,
     }
 }
 
-/* Mortes syntaxis in ordines: una per mortem LOCATAM in plagula
- * iudicata; residuum (mors sine loco, in capite inclusa, apparatus)
- * linea summaria priore ('nodi erroris (syntaxis) N'). */
+/* Mortes syntaxis in ordines: forma in silva_mortes_scribere
+ * (silva_frons) - UNA SEDES quam legatus et briar quoque vocant
+ * (silva-migratio T19b-1; antea hic, et legatus eam copiabat). */
 interior vacuum
 _mortes_syntaxis_effundere (
                   Piscina* piscina,
@@ -266,80 +266,13 @@ _mortes_syntaxis_effundere (
     constans SilvaParsura* parsura,
                       b32  machina)
 {
-                SilvaFrons* frons;
-     MateriaArborConsilium  consilium;
-                       Xar* mortes   = NIHIL;
-                       i32  residua  = parsura->numerus_errorum;
-                       i32  k;
+    chorda textus = silva_mortes_scribere(piscina, via, parsura,
+        &SILVA_C89_REGISTRUM, fons, mensura, machina, NIHIL, NIHIL,
+        NIHIL);
 
-    frons = silva_frons_creare(piscina, parsura->expansio);
-    si (   frons != NIHIL
-        && silva_frons_arborem_silvae_parare(frons,
-        &SILVA_C89_REGISTRUM,
-               "c89", NIHIL, &consilium))
+    si (textus.mensura > ZEPHYRUM)
     {
-        mortes = silva_mortes_diagnostica(piscina, parsura,
-            silva_frons_uncus(frons));
-    }
-    per (k = ZEPHYRUM; mortes != NIHIL && k < xar_numerus(mortes); k++)
-    {
-        constans MateriaDiagnosticum* d =
-            (constans MateriaDiagnosticum*)xar_obtinere(mortes, k);
-
-        si (   d                     == NIHIL || d->lexema == NIHIL
-            || d->gravitas           != (s32)MATERIA_GRAVITAS_ERRATUM
-            || d->tractus.fons_index != parsura->fons_princeps
-            || d->tractus.linea      == ZEPHYRUM)
-        {
-            perge;
-        }
-        residua--;
-        si (machina)
-        {
-            imprimere("%s\t%d\t%d\tviolatio\t-1\t0\t%s\n", via,
-                (int)d->tractus.linea, (int)d->tractus.columna,
-                d->causa);
-        }
-        alioquin
-        {
-            ExcerptumSedes sedes[II];
-                       i32 n = ZEPHYRUM;
-
-            imprimere("%s:%d:%d: [violatio] %s\n", via,
-                (int)d->tractus.linea, (int)d->tractus.columna,
-                d->causa);
-            si (   d->numerus_relatorum > ZEPHYRUM
-                && d->relata->tractus.initium >= ZEPHYRUM
-                && d->relata->tractus.fons_index
-                    == parsura->fons_princeps
-                && d->relata->tractus.initium < d->tractus.initium)
-            {
-                sedes[n].initium  = d->relata->tractus.initium;
-                sedes[n].finis    = d->relata->tractus.finis;
-                sedes[n].linea    = d->relata->tractus.linea;
-                sedes[n].nota     = d->relata->nota;
-                n++;
-            }
-            sedes[n].initium  = d->tractus.initium;
-            sedes[n].finis    = d->tractus.finis;
-            sedes[n].linea    = d->tractus.linea;
-            sedes[n].nota     = d->nota;
-            n++;
-            _excerptum_pingere(piscina, fons, mensura, sedes, n);
-        }
-    }
-    si (residua > ZEPHYRUM)
-    {
-        si (machina)
-        {
-            imprimere("%s\t0\t0\tviolatio\t-1\t0\t"
-                "nodi erroris (syntaxis) %d\n", via, (int)residua);
-        }
-        alioquin
-        {
-            imprimere("%s: [violatio] nodi erroris (syntaxis)"
-                " %d\n", via, (int)residua);
-        }
+        fwrite(textus.datum, I, (size_t)textus.mensura, stdout);
     }
 }
 

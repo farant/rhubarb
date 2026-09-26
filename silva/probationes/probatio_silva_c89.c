@@ -32,6 +32,7 @@
 #include "silva_parsare.h"
 #include "silva_scribere.h"
 #include "silva_c89_oraculum.h"
+#include "silva_frons.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,6 +48,16 @@ hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
     silva_c89_ambiguum_fabricare,
     NIHIL
 };
+
+/* mappatio probationis: linea + C (silva_mortes_scribere, T19b-1) */
+interior i32
+_lineam_centum_addere (
+    vacuum* datum,
+       i32  linea)
+{
+    (vacuum)datum;
+    redde linea + C;
+}
 
 interior SilvaParsura*
 _parsare (
@@ -3452,6 +3463,82 @@ s32 principale (vacuum)
                 CREDO_VERUM (memcmp(scriptura.textus.datum, fixa[i],
                     strlen(fixa[i])) == ZEPHYRUM);
             }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: silva_mortes_scribere - UNA SEDES FORMAE mortium
+     * syntaxis (silva-migratio T19b-1): examen, legati, briar eam
+     * vocant. Humanus (ordo + excerptum), machina (TSV examinis),
+     * mappatio linearum (briar: regio -> .thistle; lineae excerpti
+     * quoque), plagula sana -> textus vacuus.
+     * ======================================================== */
+
+    {
+        constans character* mala =
+            "int\nf (void)\n{\n    g()\n    return 0;\n}\n";
+        constans character* sana = "int a;\n";
+              SilvaParsura* parsura;
+                    chorda  textus;
+                       i32  linea_prima = ZEPHYRUM;
+
+        imprimere("\n--- Probans silva_mortes_scribere ---\n");
+
+        parsura = _parsare(piscina, mala);
+        CREDO_NON_NIHIL (parsura);
+        si (parsura != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 ((i32)parsura->numerus_errorum, I);
+
+            /* humanus: ordo primus + excerptum duarum sedium */
+            textus = silva_mortes_scribere(piscina, "p.c", parsura,
+                &SILVA_C89_REGISTRUM, mala, (i32)strlen(mala), FALSUM,
+                NIHIL, NIHIL, NIHIL);
+            CREDO_VERUM (textus.mensura > ZEPHYRUM);
+            CREDO_VERUM (chorda_incipit(textus, chorda_ex_literis(
+                "p.c:5:5: [violatio] lexema quod grammatica hic non"
+                " accipit\n", piscina)));
+            CREDO_VERUM (chorda_continet(textus,
+                chorda_ex_literis("   1 | int\n", piscina)));
+            CREDO_VERUM (chorda_continet(textus,
+                chorda_ex_literis("hic coepit", piscina)));
+            CREDO_VERUM (chorda_continet(textus,
+                chorda_ex_literis("   5 |     return 0;\n", piscina)));
+            CREDO_VERUM (chorda_continet(textus,
+                chorda_ex_literis("hic exspectatur", piscina)));
+
+            /* machina: TSV examinis, sine excerpto */
+            textus = silva_mortes_scribere(piscina, "p.c", parsura,
+                &SILVA_C89_REGISTRUM, mala, (i32)strlen(mala), VERUM,
+                NIHIL, NIHIL, NIHIL);
+            CREDO_CHORDA_AEQUALIS_LITERIS (textus,
+                "p.c\t5\t5\tviolatio\t-1\t0\t"
+                "lexema quod grammatica hic non accipit\n");
+
+            /* mappatio: lineae ordinis ET excerpti */
+            textus = silva_mortes_scribere(piscina, "x.thistle",
+                parsura, &SILVA_C89_REGISTRUM, mala,
+                (i32)strlen(mala), FALSUM, _lineam_centum_addere,
+                NIHIL, &linea_prima);
+            CREDO_AEQUALIS_I32 (linea_prima, CV);
+            CREDO_VERUM (chorda_incipit(textus, chorda_ex_literis(
+                "x.thistle:105:5: [violatio]", piscina)));
+            CREDO_VERUM (chorda_continet(textus,
+                chorda_ex_literis(" 101 | int\n", piscina)));
+            CREDO_VERUM (chorda_continet(textus,
+                chorda_ex_literis(" 105 |     return 0;\n", piscina)));
+        }
+
+        parsura = _parsare(piscina, sana);
+        CREDO_NON_NIHIL (parsura);
+        si (parsura != NIHIL)
+        {
+            textus = silva_mortes_scribere(piscina, "s.c", parsura,
+                &SILVA_C89_REGISTRUM, sana, (i32)strlen(sana), FALSUM,
+                NIHIL, NIHIL, &linea_prima);
+            CREDO_AEQUALIS_I32 (linea_prima, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (textus.mensura, ZEPHYRUM);
         }
     }
 

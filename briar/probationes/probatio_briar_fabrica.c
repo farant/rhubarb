@@ -113,7 +113,7 @@ _fabricare (
         doc  = briar_arbor_parsare(piscina, textus, mensura);
     nexus    = briar_nexus_texere(piscina, doc, intern);
     (vacuum)briar_contexere(piscina, nexus, NIHIL);
-    (vacuum)briar_silvam_texere(piscina, nexus, fons);
+    (vacuum)briar_silvam_texere(piscina, nexus, fons, NIHIL);
     optiones.via_thistle   = via;
     optiones.stampa        = "probatio";
     optiones.fons_titulus  = "probatio";

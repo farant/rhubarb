@@ -84,6 +84,8 @@ excludenda_pro() {
         materia_arbor_aequalitas) echo "EXCLUDENDA_MATERIA_ARBOR" ;;  # socium
         materia_lexicon)    echo "EXCLUDENDA_MATERIA_LEXICON" ;;
         materia_annotationes) echo "EXCLUDENDA_MATERIA_ANNOTATIONES" ;;
+        excerptum)          echo "EXCLUDENDA_EXCERPTI" ;;
+        utf8)               echo "EXCLUDENDA_UTF8" ;;
         *)                  echo "NIHIL" ;;
     esac
 }
@@ -98,6 +100,10 @@ bases_excludendae() {
     echo "piscina chorda chorda_aedificator tabula_dispersa xar internamentum selectio stml"
     echo "materia_token materia_nodus materia_scribere materia_arbor"
     echo "materia_lexicon materia_annotationes"
+    # excerptum + utf8: silva_mortes_scribere (silva_frons) forma
+    # mortium publica (silva-migratio T19b-1) - excerptum_scribere
+    # simplex et utf8 plura amalgamati inusitata
+    echo "excerptum utf8"
 }
 
 # corpora SOCIA: basis cuius caput functiones corporum plurium

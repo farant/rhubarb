@@ -827,7 +827,8 @@ principale (
      * C non est */
     si (   nexus == NIHIL
         || briar_contexere(piscina, nexus, &fragmenta) < ZEPHYRUM
-        || briar_silvam_texere(piscina, nexus, fons) < ZEPHYRUM)
+        || briar_silvam_texere(piscina, nexus, fons, imp.via)
+            < ZEPHYRUM)
     {
         fprintf(stderr, "briar: nexus fractus\n");
         redde I;

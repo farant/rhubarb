@@ -108,6 +108,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "MateriaArborSedes", "MateriaArborComparatioModus",
     "MateriaArborDifferentia", "MateriaArborVitium", "MateriaTabLocus",
     "MateriaTabGenus", "MateriaRegistrumCoctum",
+    /* forma mortium publica (silva-migratio T19b-1) */
+    "SilvaLineaMappatio",
     NIHIL
 };
 

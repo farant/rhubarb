@@ -98,6 +98,7 @@ _res_incipere (
     r->contentum              = _vacua();
     r->linea_initium          = ZEPHYRUM;
     r->linea_erroris          = ZEPHYRUM;
+    r->via_documenti          = NIHIL;
     r->causa                  = _vacua();
     r->silva                  = NIHIL;
     r->textus_silvae          = _vacua();

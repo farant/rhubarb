@@ -903,6 +903,31 @@ silva_lexemata_parsare (
            SilvaResolutor  resolutor,
                      void* datum_resolutoris);
 
+/* Mortes syntaxis in TEXTUM - UNA SEDES FORMAE (silva-migratio
+ * T19b-1): examen, legati, briar hanc vocant. Humanus: 'via:linea:
+ * columna: [violatio] causa' + excerptum ('hic coepit' / 'hic
+ * exspectatur'); machina (non-zephyrum): TSV examinis. Mors sine
+ * loco -> summarium 'nodi erroris (syntaxis) N'. fons/mensura =
+ * textus fontis principalis (excerpta). mappatio NULL = identitas;
+ * lineae ordinum ET excerpti mappantur (briar: textus silvae ->
+ * linea .thistle). *linea_prima (NULL licet) = linea mappata
+ * mortis locatae primae (0 si nulla). Plagula sine errore ->
+ * chorda vacua. */
+typedef unsigned int (*SilvaLineaMappatio)(void* datum,
+                                           unsigned int linea);
+SilvaChorda
+silva_mortes_scribere (
+               SilvaPiscina* piscina,
+                 const char* via,
+          const SilvaParsura* parsura,
+    const SilvaRegistrumCoctum* tabularium,
+                 const char* fons,
+                unsigned int  mensura,
+                         int  machina,
+          SilvaLineaMappatio  mappatio,
+                       void* datum,
+                unsigned int* linea_prima);
+
 
 /* ==================================================
  * Expansio: reading windows (additiones II) - SilvaExpansio stays

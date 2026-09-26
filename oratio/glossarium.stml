@@ -310,6 +310,11 @@
     <forma textus="evaluatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
     <forma textus="evaluatio" nota="nomen actionis"/>
   </vocabulum>
+  <vocabulum lemma="mappo" lingua="latina" classis="verbum" nota="vox domus: map (ex mappa) - antea ignotum-permissum in copia; mappatio nova (SilvaLineaMappatio, silva-migratio T19b-1)">
+    <forma textus="mappare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="mappatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="mappatio" nota="nomen actionis"/>
+  </vocabulum>
   <vocabulum lemma="summo" lingua="latina" classis="verbum" nota="Latina media (summare): summam computare - fixturae briar (fragmenta), indexatae ex quo #line consumitur (silva-migratio T19a)">
     <forma textus="summare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
     <forma textus="summat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>

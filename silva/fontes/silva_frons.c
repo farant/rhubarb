@@ -22,6 +22,8 @@
 #include "materia_token.h"
 #include "materia_lexicon.h"
 #include "silva_lexicon_c89.h"
+#include "excerptum.h"
+#include <stdio.h>
 #include <string.h>
 
 /* Contextus per plagulam (opacus in capite). Unci eum per 'datum'
@@ -1141,6 +1143,154 @@ silva_frons_uncus (
     constans SilvaFrons* frons)
 {
     redde (frons != NIHIL) ? &frons->uncus_silvae : NIHIL;
+}
+
+
+/* ==================================================
+ * Forma mortium - UNA SEDES (silva-migratio T19b-1, ...W87Q)
+ *
+ * Ex examen.c (T15b) huc migrata: examen, legatus (MCP legati + LSP)
+ * et briar formam eandem per hanc functionem accipiunt. Antea legatus
+ * formam VETEREM copiabat ('nodi erroris (syntaxis) N' sine loco),
+ * briar initium nodi ERROR (initium UNITATIS - lapide bugs/001:
+ * semper linea prima regionis) nuntiabat.
+ * ================================================== */
+
+interior i32
+_lineam_mappare (
+    SilvaLineaMappatio  mappatio,
+                vacuum* datum,
+                   i32  linea)
+{
+    redde (mappatio != NIHIL) ? mappatio(datum, linea) : linea;
+}
+
+chorda
+silva_mortes_scribere (
+                          Piscina* piscina,
+               constans character* via,
+            constans SilvaParsura* parsura,
+    constans SilvaRegistrumCoctum* tabularium,
+               constans character* fons,
+                              i32  mensura,
+                              b32  machina,
+               SilvaLineaMappatio  mappatio,
+                           vacuum* datum,
+                              i32* linea_prima)
+{
+        ChordaAedificator* aed;
+               SilvaFrons* frons;
+    MateriaArborConsilium  consilium;
+                      Xar* mortes   = NIHIL;
+                      s32  residua;
+                      i32  k;
+                character  linea_b[CCLVI];
+                   chorda  vacua;
+
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    si (linea_prima != NIHIL)
+    {
+        *linea_prima = ZEPHYRUM;
+    }
+    si (   piscina == NIHIL || parsura == NIHIL || via == NIHIL
+        || parsura->numerus_errorum == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    aed = chorda_aedificator_creare(piscina, CCLVI);
+    si (aed == NIHIL)
+    {
+        redde vacua;
+    }
+    residua = (s32)parsura->numerus_errorum;
+
+    frons = silva_frons_creare(piscina, parsura->expansio);
+    si (   frons != NIHIL
+        && silva_frons_arborem_silvae_parare(frons, tabularium,
+               "c89", NIHIL, &consilium))
+    {
+        mortes = silva_mortes_diagnostica(piscina, parsura,
+            silva_frons_uncus(frons));
+    }
+    per (k = ZEPHYRUM; mortes != NIHIL && k < xar_numerus(mortes); k++)
+    {
+        constans MateriaDiagnosticum* d =
+            (constans MateriaDiagnosticum*)xar_obtinere(mortes, k);
+        i32 linea;
+
+        si (   d                     == NIHIL || d->lexema == NIHIL
+            || d->gravitas           != (s32)MATERIA_GRAVITAS_ERRATUM
+            || d->tractus.fons_index != parsura->fons_princeps
+            || d->tractus.linea      == ZEPHYRUM)
+        {
+            perge;
+        }
+        residua--;
+        linea = _lineam_mappare(mappatio, datum, d->tractus.linea);
+        si (linea_prima != NIHIL && *linea_prima == ZEPHYRUM)
+        {
+            *linea_prima = linea;
+        }
+        si (strlen(via) + strlen(d->causa) + LXIV >= magnitudo(linea_b))
+        {
+            perge;
+        }
+        si (machina)
+        {
+            sprintf(linea_b, "%s\t%d\t%d\tviolatio\t-1\t0\t%s\n", via,
+                (int)linea, (int)d->tractus.columna, d->causa);
+            chorda_aedificator_appendere_literis(aed, linea_b);
+        }
+        alioquin
+        {
+            ExcerptumSedes sedes[II];
+                       i32 n = ZEPHYRUM;
+
+            sprintf(linea_b, "%s:%d:%d: [violatio] %s\n", via,
+                (int)linea, (int)d->tractus.columna, d->causa);
+            chorda_aedificator_appendere_literis(aed, linea_b);
+            si (fons == NIHIL)
+            {
+                perge;
+            }
+            si (   d->numerus_relatorum > ZEPHYRUM
+                && d->relata->tractus.initium >= ZEPHYRUM
+                && d->relata->tractus.fons_index
+                    == parsura->fons_princeps
+                && d->relata->tractus.initium < d->tractus.initium)
+            {
+                sedes[n].initium  = d->relata->tractus.initium;
+                sedes[n].finis    = d->relata->tractus.finis;
+                sedes[n].linea    = _lineam_mappare(mappatio, datum,
+                    d->relata->tractus.linea);
+                sedes[n].nota     = d->relata->nota;
+                n++;
+            }
+            sedes[n].initium  = d->tractus.initium;
+            sedes[n].finis    = d->tractus.finis;
+            sedes[n].linea    = linea;
+            sedes[n].nota     = d->nota;
+            n++;
+            (vacuum)excerptum_scribere_multa(aed, fons, mensura, sedes,
+                n);
+        }
+    }
+    si (residua > ZEPHYRUM && strlen(via) + LXIV < magnitudo(linea_b))
+    {
+        si (machina)
+        {
+            sprintf(linea_b, "%s\t0\t0\tviolatio\t-1\t0\t"
+                "nodi erroris (syntaxis) %d\n", via, (int)residua);
+        }
+        alioquin
+        {
+            sprintf(linea_b, "%s: [violatio] nodi erroris (syntaxis)"
+                " %d\n", via, (int)residua);
+        }
+        chorda_aedificator_appendere_literis(aed, linea_b);
+    }
+    redde chorda_aedificator_finire(aed);
 }
 
 constans character*

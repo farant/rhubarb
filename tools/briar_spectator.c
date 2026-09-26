@@ -133,7 +133,7 @@ _paginam_parare (
     doc    = briar_arbor_parsare(piscina, textus, mensura);
     nexus  = briar_nexus_texere(piscina, doc, intern);
     (vacuum)briar_contexere(piscina, nexus, &fragmenta);
-    (vacuum)briar_silvam_texere(piscina, nexus, fons);
+    (vacuum)briar_silvam_texere(piscina, nexus, fons, via_thistle);
     briar_optiones_plagulae(piscina, fons, via_thistle, &optiones);
     octeti.datum    = (i8*)textus;
     octeti.mensura  = mensura;

@@ -135,3 +135,32 @@ hook to materia consumers other than the tree writer. Planted: sedes
 back to def-site → the diagnostica gate's line assertion goes red (the
 error node's extent then lands in latina's file and the
 principal-file filter drops it: a real error VANISHES).
+
+## 2026-09-25 — one printer for syntax deaths (silva-migratio T19b-1; …W87Q)
+
+`silva_mortes_scribere(piscina, via, parsura, tabularium, fons, mensura,
+machina, mappatio, datum, &linea_prima)` moved here from examen.c
+(T15b): rows `via:line:col: [violatio] causa` + excerpt (hic coepit /
+hic exspectatur), TSV in machine mode, summary for unlocated deaths.
+examen, legatus (MCP legati + LSP) and briar call it; nobody copies
+the format. The mapping callback relabels EVERY printed line (rows and
+excerpt labels — lib/excerptum prints the caller's `linea`, it does not
+recompute), which is what briar needs (silva line → .thistle line).
+`linea_prima` hands back the first located death's mapped line so
+briar can stop reporting the ERROR node's start (= unit start = region
+start: the real cause of lapide bugs/001).
+
+Public in the hand-written silva.h (SilvaChorda/SilvaPiscina/unsigned
+int spelling); `SilvaLineaMappatio` added to the amalgamator's CADENDA
+(silva.h owns the typedef). excerptum + utf8 became amalgam bodies:
+fontes_politica.sh harvest bases (EXCLUDENDA_EXCERPTI/_UTF8 — unused
+functions of a vendored lib become unused statics), manifest + harvest
+regenerated; silva's test runner has a HAND list of lib deps
+(compile_probationes.sh RADIX_FONTES) — excerptum, utf8 added there.
+
+Live demonstration of …XHAW3H mid-task: I added `linea_prima` to
+silva.h AFTER regenerating; briar compiled against the 9-arg header and
+linked the 8-arg silva.c — the out-param was silently never written
+(briar kept reporting the region start). `tools/amalgama_caput.sh
+-comparare` said rc 3 "amalgama dimidiata"; the generata gate would have
+refused the commit.

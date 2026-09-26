@@ -4,6 +4,7 @@
 declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
+    "excerptum"
     "friatio"
     "internamentum"
     "piscina"
@@ -12,5 +13,6 @@ declare -a RADIX_FONTES=(
     "stml"
     "stml_macros"
     "tabula_dispersa"
+    "utf8"
     "xar"
 )

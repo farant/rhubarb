@@ -510,6 +510,17 @@ _capita_derivare (
     redde VERUM;
 }
 
+/* SilvaLineaMappatio: linea textus silvae -> linea .thistle
+ * (silva_mortes_scribere, T19b-1) */
+interior i32
+_lineam_thistle (
+    vacuum* datum,
+       i32  linea)
+{
+    redde briar_nexus_linea_silvae((constans BriarNexusRes*)datum,
+        linea);
+}
+
 /* parsura una: praeludium (latina + trias + capita derivata + exemplar
  * si methodus) + contentum; r->silva ponitur; FALSUM = memoria */
 interior b32
@@ -606,13 +617,51 @@ _parsare (
         i32 linea =
             _errorem_quaerere(arbor_silvae->parsura->commissio->radix,
             arbor_silvae->parsura->fons_princeps);
-        character b[96];
+                      i32  linea_mortis = ZEPHYRUM;
+                character  b[96];
+              SilvaChorda  loca;
+        ChordaAedificator* causa;
 
-        r->linea_erroris = (linea > ZEPHYRUM)
-            ? briar_nexus_linea_silvae(r, linea) : r->linea_initium;
-        sprintf(b, "regio C: parsura fracta (%u errores)",
-            arbor_silvae->parsura->numerus_errorum);
-        r->causa = chorda_ex_literis(b, piscina);
+        /* lapide bugs/001: nodus ERROR initium UNITATIS fert (linea
+         * prima regionis semper) - mors GLR locum verum dat. Forma
+         * UNA silvae (silva_mortes_scribere, T19b-1): ordines
+         * 'via:linea:columna' + excerpta, lineae .thistle per
+         * briar_nexus_linea_silvae. */
+        loca = silva_mortes_scribere(arbor_silvae->piscina,
+            r->via_documenti != NIHIL ? r->via_documenti : "regio",
+            arbor_silvae->parsura, &SILVA_C89_REGISTRUM,
+            (constans character*)r->textus_silvae.datum,
+            (i32)r->textus_silvae.mensura, FALSUM, _lineam_thistle,
+            (vacuum*)r, &linea_mortis);
+        r->linea_erroris = (linea_mortis > ZEPHYRUM) ? linea_mortis
+            : (linea > ZEPHYRUM) ? briar_nexus_linea_silvae(r, linea)
+            : r->linea_initium;
+        sprintf(b, "regio C: parsura fracta (%u %s)",
+            arbor_silvae->parsura->numerus_errorum,
+            arbor_silvae->parsura->numerus_errorum == I
+                ? "error" : "errores");
+        causa = chorda_aedificator_creare(piscina, CCLVI);
+        si (causa == NIHIL)
+        {
+            redde FALSUM;
+        }
+        chorda_aedificator_appendere_literis(causa, b);
+        /* ordines locati sub summario (sine linea nova ultima -
+         * vocans lineam suam addit) */
+        si (loca.mensura > ZEPHYRUM)
+        {
+            chorda sectio;
+
+            sectio.datum    = (i8*)loca.datum;
+            sectio.mensura  = (i32)loca.mensura;
+            si (sectio.datum[sectio.mensura - I] == '\n')
+            {
+                sectio.mensura = sectio.mensura - I;
+            }
+            chorda_aedificator_appendere_character(causa, '\n');
+            chorda_aedificator_appendere_chorda(causa, sectio);
+        }
+        r->causa = chorda_aedificator_finire(causa);
     }
     arbor_silvae->semantica =
         silva_c89_semantica_analysare(arbor_silvae->piscina,
@@ -722,7 +771,8 @@ s32
 briar_silvam_texere (
                 Piscina* piscina,
                     Xar* nexus,
-     constans SilexFons* fons)
+     constans SilexFons* fons,
+     constans character* via_documenti)
 {
                           i32  i;
                           s32  numerus = ZEPHYRUM;
@@ -748,6 +798,7 @@ briar_silvam_texere (
             perge;   /* fragmenta numquam parsantur (in radicibus);
                       * radix a contextu recusata recusata manet */
                         }
+        r->via_documenti = via_documenti;
         si (!_parsare(piscina, r, fons, NIHIL))
         {
             redde -I;

@@ -234,7 +234,7 @@ _fructum_fingere (
     doc         = briar_arbor_parsare(piscina, textus, mensura);
     *nexus_out  = briar_nexus_texere(piscina, doc, intern);
     (vacuum)briar_contexere(piscina, *nexus_out, fragmenta_out);
-    (vacuum)briar_silvam_texere(piscina, *nexus_out, fons);
+    (vacuum)briar_silvam_texere(piscina, *nexus_out, fons, NIHIL);
     optiones.via_thistle   = via;
     optiones.stampa        = "probatio";
     optiones.fons_titulus  = "probatio";

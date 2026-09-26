@@ -26,7 +26,9 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "materia/fontes/materia_scribere.h", NIHIL, EXCLUDENDA_MATERIA_SCRIBERE, FALSUM, VERUM },
     { "materia/fontes/materia_annotationes.h", NIHIL, EXCLUDENDA_MATERIA_ANNOTATIONES, FALSUM, VERUM },
     { "materia/fontes/materia_arbor.h", NIHIL, EXCLUDENDA_MATERIA_ARBOR, FALSUM, VERUM },
-    { "materia/fontes/materia_diagnosticum.h", NIHIL, NIHIL, FALSUM, VERUM }
+    { "materia/fontes/materia_diagnosticum.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "include/excerptum.h", NIHIL, EXCLUDENDA_EXCERPTI, FALSUM, VERUM },
+    { "include/utf8.h", NIHIL, EXCLUDENDA_UTF8, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -45,7 +47,9 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "materia/fontes/materia_nodus.c", NIHIL, EXCLUDENDA_MATERIA_NODUS, VERUM, VERUM },
     { "materia/fontes/materia_scribere.c", NIHIL, EXCLUDENDA_MATERIA_SCRIBERE, VERUM, VERUM },
     { "materia/fontes/materia_token.c", NIHIL, EXCLUDENDA_MATERIA_TOKEN, VERUM, VERUM },
-    { "materia/fontes/materia_arbor_aequalitas.c", NIHIL, EXCLUDENDA_MATERIA_ARBOR, VERUM, VERUM }
+    { "materia/fontes/materia_arbor_aequalitas.c", NIHIL, EXCLUDENDA_MATERIA_ARBOR, VERUM, VERUM },
+    { "lib/excerptum.c", NIHIL, EXCLUDENDA_EXCERPTI, VERUM, VERUM },
+    { "lib/utf8.c", NIHIL, EXCLUDENDA_UTF8, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {

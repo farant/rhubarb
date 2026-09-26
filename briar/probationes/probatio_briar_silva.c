@@ -25,6 +25,8 @@ hic_manens constans character* SALVE =
     "briar/probationes/fixa/thistle/salve.thistle";
 hic_manens constans character* VITREUM =
     "briar/probationes/fixa/thistle/salve_vitreum.thistle";
+hic_manens constans character* LOCUS =
+    "briar/probationes/fixa/thistle/adversa/syntaxis_locus.thistle";
 hic_manens constans character* FRACTUM =
     "briar/probationes/fixa/thistle/adversa/c_fractum.thistle";
 hic_manens constans character* VARIADICA =
@@ -174,7 +176,7 @@ _texere_omnia (
     {
         redde NIHIL;
     }
-    si (briar_silvam_texere(piscina, nexus, fons) < ZEPHYRUM)
+    si (briar_silvam_texere(piscina, nexus, fons, via) < ZEPHYRUM)
     {
         redde NIHIL;
     }
@@ -314,6 +316,43 @@ principale (vacuum)
         CREDO_VERUM (linea > ZEPHYRUM);
         CREDO_AEQUALIS_I32 (r->linea_erroris, linea);
         CREDO_VERUM (r->causa.mensura > ZEPHYRUM);
+        briar_silvam_solvere(nexus);
+    }
+
+    /* T19b-1 (lapide bugs/001): linea erroris = mors GLR (linea
+     * .thistle), non initium unitatis/regionis; causa ordines locatos
+     * cum excerpto fert (forma silvae una, silva_mortes_scribere) */
+    imprimere("\n--- Probans syntaxis_locus: mors .thistle ---\n");
+    {
+            character* textus;
+                  i32  mensura;
+                  Xar* nexus;
+        BriarNexusRes* r;
+                  i32  linea;
+             character  exspectatum[CCLVI];
+
+        nexus = _texere_omnia(piscina, intern, fons, LOCUS, &textus,
+            &mensura);
+        CREDO_NON_NIHIL (nexus);
+        r = _regio_c(nexus, ZEPHYRUM);
+        CREDO_NON_NIHIL (r);
+        linea = _linea_ubi(textus, mensura, "    redde ZEPHYRUM");
+        CREDO_VERUM (linea > ZEPHYRUM);
+        si (r != NIHIL)
+        {
+            CREDO_VERUM (r->linea_erroris > r->linea_initium);
+            CREDO_AEQUALIS_I32 (r->linea_erroris, linea);
+            sprintf(exspectatum, "%s:%u:5: [violatio]", LOCUS,
+                (insignatus integer)linea);
+            CREDO_VERUM (chorda_continet(r->causa,
+                chorda_ex_literis(exspectatum, piscina)));
+            CREDO_VERUM (chorda_continet(r->causa,
+                chorda_ex_literis("hic exspectatur", piscina)));
+            CREDO_VERUM (chorda_continet(r->causa,
+                chorda_ex_literis("hic coepit", piscina)));
+            CREDO_VERUM (chorda_continet(r->causa,
+                chorda_ex_literis("(1 error)", piscina)));
+        }
         briar_silvam_solvere(nexus);
     }
 

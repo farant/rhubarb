@@ -3503,3 +3503,13 @@ cannot bite aedilis (header extracted from silva.c); new gates
 'generata' (amalgam pairs, lexicon, 37 snippets, amalgamator manifests —
 aedilis.stml finally covered) and 'examen-corpus' (re-pinned, one real
 violation fixed). Each planted red. Next: T19b.
+
+## 2026-09-25 — phase 5 plan B T19b-1: one printer, three callers
+
+RELATIO: the syntax-death format lives once, in silva
+(`silva_mortes_scribere`, public in silva.h): examen (unchanged bytes —
+vectis ④ holds), legati (was the old unlocated copy — …W87Q), briar
+(reported the region start: lapide bugs/001's real cause — now the GLR
+death in .thistle lines, with excerpts). A mapping callback relabels
+every printed line. Planted red in silva and briar. Next: T19b-2
+(messages: found token, latina.h hint, maybe the missing-';' heuristic).

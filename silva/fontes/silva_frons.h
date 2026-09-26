@@ -12,6 +12,7 @@
 
 #include "latina.h"
 #include "piscina.h"
+#include "chorda.h"
 #include "silva_nodus.h"
 #include "silva_expandere.h"
 #include "silva_registrum.h"
@@ -84,6 +85,37 @@ silva_mortes_diagnostica (
                        Piscina* piscina,
          constans SilvaParsura* parsura,
     constans MateriaOrigoUncus* uncus);
+
+/* Linea fontis principalis -> linea NUNTIATA (briar: linea textus
+ * silvae -> linea .thistle). datum = vocantis. */
+nomen i32 (*SilvaLineaMappatio)(vacuum* datum, i32 linea);
+
+/* Mortes syntaxis in TEXTUM scribere - UNA SEDES FORMAE (silva-
+ * migratio T19b-1; desideratum ...W87Q): examen, legati, briar hanc
+ * vocant, nemo formam copiat.
+ *   humanus: 'via:linea:columna: [violatio] causa' + excerptum
+ *            (relata 'hic coepit' + primaria 'hic exspectatur');
+ *   machina: 'via<TAB>linea<TAB>columna<TAB>violatio<TAB>-1<TAB>0
+ *            <TAB>causa' (forma examinis -machina).
+ * Mors sine loco, in capite inclusa, aut apparatus -> summarium
+ * 'nodi erroris (syntaxis) N' post ordines locatos. 'fons'/'mensura'
+ * = textus fontis principalis (pro excerpto). 'mappatio' NIHIL =
+ * identitas; lineae ordinum ET excerpti mappantur. *linea_prima
+ * (NIHIL licet) = linea MAPPATA mortis locatae primae (0 si nulla -
+ * briar eam pro linea erroris regionis ponit). Plagula sine errore
+ * -> chorda vacua. Textus in piscina. */
+chorda
+silva_mortes_scribere (
+                          Piscina* piscina,
+               constans character* via,
+            constans SilvaParsura* parsura,
+    constans SilvaRegistrumCoctum* tabularium,
+               constans character* fons,
+                              i32  mensura,
+                              b32  machina,
+               SilvaLineaMappatio  mappatio,
+                           vacuum* datum,
+                              i32* linea_prima);
 
 /* Causa fracturae ultimae (NIHIL si nulla) - additum ad API
  * probatum: shim nomen vitii lexici nuntiabat. */

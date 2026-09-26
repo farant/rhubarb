@@ -131,7 +131,7 @@ principale (
     nexus    = briar_nexus_texere(piscina, doc, intern);
     si (   nexus == NIHIL
         || briar_contexere(piscina, nexus, NIHIL) < ZEPHYRUM
-        || briar_silvam_texere(piscina, nexus, fons) < ZEPHYRUM)
+        || briar_silvam_texere(piscina, nexus, fons, via) < ZEPHYRUM)
     {
         fprintf(stderr, "fabrica: nexus fractus\n");
         redde I;

@@ -1027,3 +1027,13 @@ function and the ratio without a single hypothesis.
 parenthesis spacing — details in compendium.worklog.md. (This note
 was held back from 49f49fc9 because this file was then in commissio's
 VETITAE; Fran released it the same day.)
+
+## 2026-09-25 — syntax deaths through silva's one printer (silva-migratio T19b-1; …W87Q)
+
+`_diagnostica_effundere` printed its own copy of examen's OLD syntax
+line (`nodi erroris (syntaxis) N`, no location). It now calls
+`silva_mortes_scribere` (public in silva.h) with the file text it
+already reads in `_recensere` and the short-lived arena `effimera`:
+MCP `legati diagnostica` shows `via:line:col: [violatio] …` + excerpts,
+identical to examen. Semantic rows are still formatted here (one
+sprintf) — merging those into silva is a larger, separate unification.
