@@ -331,11 +331,17 @@ credo $? "XXI. regula ABSENS: excusatio NON mortua nominatur"
 grep -q 'lint:alia-regula' "$T/aliena.out"
 credo $? "XXI. regula aliena revera cucurrit (fixtura non muta)"
 
-# XXII. C89 (silva-migratio T14). Plantata: functio bona, deinde mala
-# a lexemate DERIVATO incipiens ('interior' -> static). Sedes erroris
-# ad radicem strati 0 solvitur - linea IX huius plagulae. Ante T14
-# sedes DEF-SITE (corpus macro in latina.h) lineam latinae nominabat.
-cat > "$T/c89_plantata.c" <<'C89'
+# XXII. C89 (silva-migratio T14/T15). Plantata INTRA repositorium
+# (aedilis viam radici relativam poscit - extra eam clausura nulla,
+# infra probatur): functio bona, deinde mala a lexemate DERIVATO
+# incipiens ('interior' -> static). T15: GLR ubi periit nominat -
+# primaria ad ';' ubi operandum exspectabatur (XII:14), relata ad
+# initium unitatis (IX:1, radix strati 0 lexematis derivati - ante
+# T14 linea latinae). Emissum declaratum 'error' SUPERAT: unum.
+C89D="build/fumus_diagnostica"
+mkdir -p "$C89D"
+trap 'rm -rf "$T" "$RADIX/$C89D"' EXIT
+cat > "$C89D/c89_plantata.c" <<'C89'
 #include "latina.h"
 
 interior integer
@@ -350,13 +356,29 @@ mala (vacuum)
     redde I +;
 }
 C89
-./tools/diagnostica.sh "$T/c89_plantata.c" > "$T/c89.out" 2> "$T/c89.err"
+./tools/diagnostica.sh "$C89D/c89_plantata.c" > "$T/c89.out" 2> "$T/c89.err"
 rc=$?
 [ "$rc" -eq 1 ]; credo $? "XXII. c89 plantata exitus 1 (rc $rc)"
-[ "$(head -1 "$T/c89.out")" = "$T/c89_plantata.c:9:1: [erratum] c89:error" ]
-credo $? "XXII. c89 linea prima: $(head -1 "$T/c89.out")"
+[ "$(head -1 "$T/c89.out")" = "$C89D/c89_plantata.c:12:14: [erratum] c89:error" ]
+credo $? "XXII. c89 primaria ad mortem: $(head -1 "$T/c89.out")"
+[ "$(sed -n '2p' "$T/c89.out")" = "  lexema quod grammatica hic non accipit" ]
+credo $? "XXII. c89 causa mortis (non declaratio generis)"
+[ "$(sed -n '3p' "$T/c89.out")" = "   9 | interior integer" ] \
+  && [ "$(sed -n '4p' "$T/c89.out")" = "     | ^ hic coepit" ]
+credo $? "XXII. c89 relata 'hic coepit' ad initium unitatis (IX:1)"
+[ "$(sed -n '6p' "$T/c89.out")" = "     |              ^ hic exspectatur" ]
+credo $? "XXII. c89 primaria 'hic exspectatur' sub columna XIV"
 grep -q 'diagnostica (erratum 1, monitum 0) in 1 plagulis' "$T/c89.err"
-credo $? "XXII. c89 diagnosticum unum (functio bona tacet)"
+credo $? "XXII. c89 diagnosticum unum (declaratum superatum; bona tacet)"
+! grep -q 'MONITUM' "$T/c89.err"
+credo $? "XXII. c89 plantata cum clausura (nullum MONITUM)"
+# extra repositorium: clausura nulla, MONITUM causam nominat, iudicium
+# tamen per latinam ut lexicon (subsidium) - non silentium
+cp "$C89D/c89_plantata.c" "$T/c89_extra.c"
+./tools/diagnostica.sh "$T/c89_extra.c" > /dev/null 2> "$T/c89x.err"
+rc=$?
+[ "$rc" -eq 1 ] && grep -q 'MONITUM plagula extra repositorium' "$T/c89x.err"
+credo $? "XXII. c89 extra repositorium: MONITUM nominatum, iudicium tamen (rc $rc)"
 # Domus: plagulae quae T14 falsa errata dederunt, singulae causa sua.
 # vendor/sqlite3.h IPSUM discernit ordinem inclusionis: clausura eius
 # latina.h caret, ergo latina ut LEXICON ('char C' -> 'char 100')

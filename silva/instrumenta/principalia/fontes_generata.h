@@ -25,7 +25,8 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "materia/fontes/materia_nodus.h", NIHIL, EXCLUDENDA_MATERIA_NODUS, FALSUM, VERUM },
     { "materia/fontes/materia_scribere.h", NIHIL, EXCLUDENDA_MATERIA_SCRIBERE, FALSUM, VERUM },
     { "materia/fontes/materia_annotationes.h", NIHIL, EXCLUDENDA_MATERIA_ANNOTATIONES, FALSUM, VERUM },
-    { "materia/fontes/materia_arbor.h", NIHIL, EXCLUDENDA_MATERIA_ARBOR, FALSUM, VERUM }
+    { "materia/fontes/materia_arbor.h", NIHIL, EXCLUDENDA_MATERIA_ARBOR, FALSUM, VERUM },
+    { "materia/fontes/materia_diagnosticum.h", NIHIL, NIHIL, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {

@@ -1028,6 +1028,114 @@ silva_frons_creare (
     redde frons;
 }
 
+/* ---------- mortes parsurae (T15) ---------- */
+
+/* Lexema primum nodi ERROR (locus lexematum unus, lista) */
+interior constans SilvaToken*
+_lexema_primum_erroris (
+    constans SilvaNodus* nodus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; nodus != NIHIL && k < nodus->numerus_locorum;
+         k++)
+    {
+        constans SilvaValor* locus = &nodus->loci[k];
+
+        si (   locus->genus == SILVA_VALOR_LISTA
+            && silva_valor_lista_numerus(*locus) > ZEPHYRUM)
+        {
+            SilvaValor* primum = silva_valor_lista_obtinere(*locus,
+                ZEPHYRUM);
+
+            si (primum != NIHIL && primum->genus == SILVA_VALOR_TOKEN)
+            {
+                redde primum->datum.token;
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+Xar*
+silva_mortes_diagnostica (
+                       Piscina* piscina,
+         constans SilvaParsura* parsura,
+    constans MateriaOrigoUncus* uncus)
+{
+    Xar* exitus;
+    i32  k;
+
+    si (piscina == NIHIL || parsura == NIHIL)
+    {
+        redde NIHIL;
+    }
+    exitus = xar_creare(piscina, (i32)magnitudo(MateriaDiagnosticum));
+    si (exitus == NIHIL || parsura->mortes == NIHIL)
+    {
+        redde exitus;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(parsura->mortes); k++)
+    {
+        constans SilvaMors* mors =
+            (constans SilvaMors*)xar_obtinere(parsura->mortes, k);
+        MateriaDiagnosticum* d;
+
+        si (   mors == NIHIL
+            || (mors->genus == (s32)SILVA_MORS_SYNTAXIS
+                && mors->lexema == NIHIL))
+        {
+            perge;
+        }
+        d = (MateriaDiagnosticum*)xar_addere(exitus);
+        si (d == NIHIL)
+        {
+            redde NIHIL;
+        }
+        memset(d, ZEPHYRUM, magnitudo(*d));
+        d->codex = "error";
+        d->nodus = mors->nodus;
+        si (mors->genus == (s32)SILVA_MORS_SYNTAXIS)
+        {
+            constans SilvaToken* primum =
+                _lexema_primum_erroris(mors->nodus);
+
+            d->gravitas  = (s32)MATERIA_GRAVITAS_ERRATUM;
+            d->causa     = "lexema quod grammatica hic non accipit";
+            d->lexema    = mors->lexema;
+            d->nota      = MATERIA_NOTA_EXSPECTATUR;
+            materia_tractus_lexematis(uncus, mors->lexema, &d->tractus);
+            si (primum != NIHIL && primum != mors->lexema)
+            {
+                MateriaSedesRelata* sedes = (MateriaSedesRelata*)
+                    piscina_allocare(piscina,
+                    magnitudo(MateriaSedesRelata));
+
+                si (sedes == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                materia_tractus_lexematis(uncus, primum,
+                    &sedes->tractus);
+                sedes->nota           = MATERIA_NOTA_COEPIT;
+                d->relata             = sedes;
+                d->numerus_relatorum  = (i32)I;
+            }
+        }
+        alioquin
+        {
+            d->gravitas  = (s32)MATERIA_GRAVITAS_MONITUM;
+            d->causa     = (mors->genus == (s32)SILVA_MORS_LIMEN)
+                ? "limen frontis GLR tactum: segmentum non parsatum"
+                  " (apparatus, non vitium fontis)"
+                : "parsura intermissa: cauda non parsata";
+            (vacuum)materia_tractus_nodi(uncus, mors->nodus,
+                &d->tractus);
+        }
+    }
+    redde exitus;
+}
+
 constans MateriaOrigoUncus*
 silva_frons_uncus (
     constans SilvaFrons* frons)

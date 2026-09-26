@@ -566,6 +566,8 @@ materia_diagnostica_derivare (
      MateriaDiagnosticum* series;
                      Xar* ordinata;
                      i32  numerus;
+                     i32  numerus_declaratorum;
+                     i32  numerus_servatorum;
                      i32  k;
 
     si (piscina == NIHIL || genera == NIHIL || diagnostica == NIHIL)
@@ -585,16 +587,37 @@ materia_diagnostica_derivare (
         redde NIHIL;
     }
     _ambulare(&d, radix);
+    numerus_declaratorum = xar_numerus(d.exitus);
     per (k = ZEPHYRUM; emissa != NIHIL && k < xar_numerus(emissa); k++)
     {
         constans MateriaDiagnosticum* e =
             (constans MateriaDiagnosticum*)xar_obtinere(emissa, k);
                        MateriaTractus  t;
                   MateriaDiagnosticum* cella;
+                                  i32  j;
 
         si (e == NIHIL)
         {
             perge;
+        }
+        /* EMISSUM SUPERAT DECLARATUM eiusdem nodi et codicis (silva-
+         * migratio T15): declaratio est mos ordinarius generis ('omnis
+         * nodus ERROR erratum est', sedes una), parsator eundem
+         * defectum ACCURATIUS novit (ubi periit, cur) - bis pingere
+         * idem vitium strepitus esset. Codex diversus = diagnosticum
+         * aliud, manet. */
+        per (j = ZEPHYRUM; e->nodus != NIHIL && e->codex != NIHIL
+                 && j < numerus_declaratorum; j++)
+        {
+            MateriaDiagnosticum* r =
+                (MateriaDiagnosticum*)xar_obtinere(d.exitus, j);
+
+            si (   r != NIHIL && r->nodus == e->nodus
+                && r->codex != NIHIL
+                && strcmp(r->codex, e->codex) == ZEPHYRUM)
+            {
+                r->codex = NIHIL;   /* superatum - infra omittitur */
+            }
         }
         t = e->tractus;
         si (t.initium < ZEPHYRUM && e->nodus != NIHIL)
@@ -628,20 +651,26 @@ materia_diagnostica_derivare (
     {
         redde NIHIL;
     }
+    numerus_servatorum = ZEPHYRUM;
     per (k = ZEPHYRUM; k < numerus; k++)
     {
         MateriaDiagnosticum clavis =
             *(MateriaDiagnosticum*)xar_obtinere(d.exitus, k);
-        s32 j = (s32)k - (s32)I;
+        s32 j = (s32)numerus_servatorum - (s32)I;
 
+        si (clavis.codex == NIHIL)
+        {
+            perge;   /* superatum ab emisso */
+        }
         dum (j >= ZEPHYRUM && _prius(&clavis, &series[j]))
         {
             series[j + I] = series[j];
             j--;
         }
         series[j + I] = clavis;
+        numerus_servatorum++;
     }
-    per (k = ZEPHYRUM; k < numerus; k++)
+    per (k = ZEPHYRUM; k < numerus_servatorum; k++)
     {
         MateriaDiagnosticum* cella = (MateriaDiagnosticum*)xar_addere(
             ordinata);

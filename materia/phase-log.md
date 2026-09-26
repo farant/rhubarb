@@ -3403,3 +3403,16 @@ exposed silva_frons's sedes hook reporting definition sites (latina.h
 bytes) — fixed to the origin root, STML unchanged. 430 house C files
 clean. Replay verdict: materia unchanged; silva frontend hook semantics
 corrected. Next: T15, the GLR's death point through `emissa`.
+
+## 2026-09-25 — phase 5 plan B T15: the GLR names where it died
+
+RELATIO: C89 syntax errors now print clang's two-location shape — "hic
+exspectatur" at the lexeme where every GLR head died, "hic coepit" at the
+unit's start — through the T14 pipeline. The data had always existed
+(the GLR returned it; the driver dropped it). materia gained one rule
+(an emitted diagnostic supersedes the declared one for the same node and
+code) and one split (the diagnostic record in a header without a body,
+so an emitter need not link the lint engine). Replay verdict: materia
+substrate changed (diagnostica rule + header split) — all client gates
+owed; silva frontend gained death records. Next: T16 (lapide bugs/009,
+va_arg with a pointer type).

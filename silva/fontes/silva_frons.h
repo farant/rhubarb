@@ -18,6 +18,8 @@
 #include "materia_nodus.h"
 #include "materia_scribere.h"
 #include "materia_arbor.h"
+#include "materia_diagnosticum.h"   /* forma sola, non machina (T15) */
+#include "silva_parsare.h"
 
 nomen structura SilvaFrons SilvaFrons;
 
@@ -68,6 +70,20 @@ silva_frons_longitudines_figere (
 constans MateriaOrigoUncus*
 silva_frons_uncus (
     constans SilvaFrons* frons);
+
+/* Mortes parsurae (T15) in diagnostica materiae, ad 'emissa'
+ * materia_diagnostica_derivare: codex "error" (ut declaratio generis
+ * - emissum declaratum eiusdem nodi SUPERAT), sedes per uncum.
+ *   SYNTAXIS: primaria ad lexema mortis ('hic exspectatur'), relata
+ *             ad lexema primum nodi ('hic coepit');
+ *   LIMEN, INTERMISSIO: MONITUM ad nodum - apparatus, non fons.
+ * Mors SYNTAXIS sine lexemate omittitur (declaratio supererit).
+ * Xar de MateriaDiagnosticum (vacuum si nullae); NIHIL = memoria. */
+Xar*
+silva_mortes_diagnostica (
+                       Piscina* piscina,
+         constans SilvaParsura* parsura,
+    constans MateriaOrigoUncus* uncus);
 
 /* Causa fracturae ultimae (NIHIL si nulla) - additum ad API
  * probatum: shim nomen vitii lexici nuntiabat. */

@@ -143,6 +143,44 @@ _nodum_erroris_facere (
     redde silva_valor_nodus(nodus);
 }
 
+/* Mortem nodi ERROR notare (T15). Fractura memoriae hic arborem non
+ * frangit: nodus manet, causa sola amittitur (diagnosticum tunc
+ * declaratum ordinarium supererit). */
+interior vacuum
+_mortem_notare (
+          Piscina* piscina,
+     SilvaParsura* parsura,
+       SilvaValor  nodus,
+              s32  genus,
+       SilvaToken* lexema,
+              s32  terminalis)
+{
+    SilvaMors* mors;
+
+    si (nodus.genus != SILVA_VALOR_NODUS)
+    {
+        redde;
+    }
+    si (parsura->mortes == NIHIL)
+    {
+        parsura->mortes = xar_creare(piscina,
+            (i32)magnitudo(SilvaMors));
+        si (parsura->mortes == NIHIL)
+        {
+            redde;
+        }
+    }
+    mors = (SilvaMors*)xar_addere(parsura->mortes);
+    si (mors == NIHIL)
+    {
+        redde;
+    }
+    mors->nodus       = nodus.datum.nodus;
+    mors->lexema      = lexema;
+    mors->genus       = genus;
+    mors->terminalis  = terminalis;
+}
+
 /* Textura conditionalium (infra definita - ante commissionem) */
 interior SilvaValor
 _texere (
@@ -238,6 +276,7 @@ _lexemata_parsare_interna (
     parsura->expansio_decisa          = FALSUM;
     parsura->fines_tactae             = FALSUM;
     parsura->segmenta_ultra_limen     = ZEPHYRUM;
+    parsura->mortes                   = NIHIL;
     parsura->regiones_textae          = ZEPHYRUM;
     parsura->regiones_omissae         = ZEPHYRUM;
     parsura->strata                   = NIHIL;
@@ -485,6 +524,9 @@ _lexemata_parsare_interna (
                         radix = silva_valor_lista_appendere(piscina,
                             radix, nodus_caudae);
                         parsura->numerus_errorum++;
+                        _mortem_notare(piscina, parsura, nodus_caudae,
+                            (s32)SILVA_MORS_INTERMISSIO, NIHIL,
+                            (s32)-I);
                     }
                 }
                 frange;
@@ -573,9 +615,33 @@ _lexemata_parsare_interna (
 
                 si (nodus_erroris.genus == SILVA_VALOR_NODUS)
                 {
+                    SilvaToken* lexema_mortis = NIHIL;
+                           s32  genus_mortis;
+
                     radix = silva_valor_lista_appendere(piscina,
                         radix, nodus_erroris);
                     parsura->numerus_errorum++;
+                    /* causa: limen / intermissio / syntaxis; lexema
+                     * mortis = segmentum[positio] (GLR id iam
+                     * reddebat - gubernator abiciebat) */
+                    genus_mortis = fructus.est_ultra_limen
+                        ? (s32)SILVA_MORS_LIMEN
+                        : fructus.est_intermissus
+                            ? (s32)SILVA_MORS_INTERMISSIO
+                            : (s32)SILVA_MORS_SYNTAXIS;
+                    si (   fructus.est_error
+                        && fructus.positio >= ZEPHYRUM
+                        && fructus.positio
+                            < (s32)xar_numerus(segmentum))
+                    {
+                        SilvaToken** ref = (SilvaToken**)xar_obtinere(
+                            segmentum, (i32)fructus.positio);
+
+                        lexema_mortis = (ref != NIHIL) ? *ref : NIHIL;
+                    }
+                    _mortem_notare(piscina, parsura, nodus_erroris,
+                        genus_mortis, lexema_mortis,
+                        fructus.est_error ? fructus.terminalis : (s32)-I);
                 }
             }
             initium = est_eof ? i : (i + I);

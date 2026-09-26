@@ -21,6 +21,15 @@
 > filter, list root); silva_frons's sedes hook now reports the origin
 > ROOT. 430 house C files clean; gate `diagnostica` XXII planted red
 > twice. lexicon_c89's generator moves to T19.
+> T15 DONE 2026-09-25: the GLR's death point (already returned, then
+> dropped by the driver) kept as `SilvaParsura.mortes` (last field) and
+> emitted by `silva_mortes_diagnostica`: primary "hic exspectatur" at
+> the death lexeme, related "hic coepit" at the unit start; limit and
+> interruption become MONITUM. materia: emitted supersedes declared for
+> the same node + code; the diagnostic record split into
+> `materia_diagnosticum.h` (header without body) so emitters don't drag
+> the lint engine into silva's amalgam. aedilis refuses absolute paths
+> — the tool relativizes; T14's plant had silently used the fallback.
 
 ## What steps 1–4 taught (the inputs to this plan)
 

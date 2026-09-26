@@ -50,6 +50,32 @@ nomen structura {
 
 
 /* ==================================================
+ * Mors parsurae (silva-migratio T15)
+ *
+ * Quisque nodus ERROR causam suam habet; gubernator eam hic servat,
+ * ne diagnostica 'lexemata non posita' solum dicere possint. GLR
+ * lexema ubi frons tota periit iam reddebat (SilvaGLRFructus.positio)
+ * et gubernator id abiciebat. Conversio in diagnostica (sedes per
+ * uncum frontis) in silva_frons (silva_mortes_diagnostica).
+ * ================================================== */
+
+nomen enumeratio {
+    SILVA_MORS_SYNTAXIS = 0,   /* frons vacua: lexema grammaticae non convenit */
+    SILVA_MORS_LIMEN,          /* limen frontis tactum: fractura munda
+                                * apparatus, non vitium fontis */
+    SILVA_MORS_INTERMISSIO     /* pergere FALSUM: cauda non parsata */
+} SilvaMorsGenus;
+
+nomen structura {
+    SilvaNodus* nodus;        /* nodus ERROR causam hanc ferens */
+    SilvaToken* lexema;       /* lexema mortis; NIHIL si nullum
+                               * (intermissio, apparatus) */
+           s32 genus;        /* SilvaMorsGenus */
+           s32 terminalis;   /* terminale quod periit; -1 ignotum */
+} SilvaMors;
+
+
+/* ==================================================
  * Fructus gubernatoris
  * ================================================== */
 
@@ -110,6 +136,12 @@ nomen structura {
     duplex ms_expandendi;
     duplex ms_glr;
     duplex ms_committendi;
+
+    /* Mortes (T15): Xar de SilvaMors, una per nodum ERROR, ordine
+     * fontis; NIHIL si nullus. ULTIMUS campus consulto: silva.h
+     * structuram manu speculatur, et consumptores contra silva.c
+     * commissum nectunt dum regeneratur - offsets priores manent. */
+    Xar* mortes;
 } SilvaParsura;
 
 

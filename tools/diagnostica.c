@@ -114,6 +114,10 @@ nomen structura {
      * moveret). Xar de MateriaNodus* supremis; radix = primus (NIHIL
      * si plagula vacua - tunc radices vacuae, arbor tamen adest). */
                              Xar* radices;
+    /* C89: tractus radicum (parallela 'radices') et parsura - mortes
+     * GLR (T15) inde in 'emissa' per radicem continentem */
+                             Xar* tractus_radicum;
+                    SilvaParsura* parsura;
              MateriaLexiconRatum  ratum;
               MateriaLexIudicium  iudicium;
            MateriaArborConsilium  consilium;
@@ -429,6 +433,23 @@ _c89_capita_praebere (
     {
         strcpy(binarium, "./bin/aedilis");
     }
+    /* aedilis viam RADICI relativam poscit (radicem ei praeponit):
+     * via absoluta intra radicem relativa fit; extra radicem nulla
+     * clausura - MONITUM causam nominat */
+    si (via[ZEPHYRUM] == '/')
+    {
+        size_t m = (radix != NIHIL) ? strlen(radix) : ZEPHYRUM;
+
+        si (   m      == ZEPHYRUM || strncmp(via, radix, m) != ZEPHYRUM
+            || via[m] != '/')
+        {
+            fprintf(stderr, "diagnostica: MONITUM plagula extra "
+                "repositorium - C89 sine clausura capitum (latina ut "
+                "lexicon): %s\n", via);
+            redde FALSUM;
+        }
+        via = via + m + I;
+    }
     argumenta[ZEPHYRUM] = binarium;
     argumenta[I] = via;
     argumenta[II] = "--partes";
@@ -521,9 +542,13 @@ constans character* via,
     {
         redde NIHIL;
     }
-    cliens->uncus  = silva_frons_uncus(frons);
-    radices        = xar_creare(piscina, (i32)magnitudo(MateriaNodus*));
-    si (radices == NIHIL)
+    cliens->uncus    = silva_frons_uncus(frons);
+    cliens->parsura  = parsura;
+    radices = xar_creare(piscina,
+        (i32)magnitudo(MateriaNodus*));
+    cliens->tractus_radicum = xar_creare(piscina,
+        (i32)magnitudo(MateriaTractus));
+    si (radices == NIHIL || cliens->tractus_radicum == NIHIL)
     {
         redde NIHIL;
     }
@@ -554,23 +579,41 @@ constans character* via,
             redde NIHIL;
         }
         *locus = v->datum.nodus;
+        {
+            MateriaTractus* tl = (MateriaTractus*)xar_addere(
+                cliens->tractus_radicum);
+
+            si (tl == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *tl = t;
+        }
     }
     redde radices;
 }
 
 /* Diagnostica C89: per nodum supremum derivata, concatenata. Ordo
  * (tractus.initium) servatur quia nodi supremi ordine fontis stant et
- * derivatio quaeque intra nodum suum ordinat. */
+ * derivatio quaeque intra nodum suum ordinat.
+ *
+ * MORTES (T15): silva_mortes_diagnostica 'emissa' dat; quodque radici
+ * CONTINENTI traditur (initium nodi sui intra tractum radicis) - nodus
+ * ERROR in conditionali textus intra radicem alienam iacere potest, et
+ * emissum declaratum eiusdem nodi solum in eadem derivatione superat. */
 interior Xar*
 _c89_derivare (
     Piscina* piscina,
      Cliens* cliens)
 {
     Xar* omnia;
+    Xar* mortes;
     i32  k;
 
     omnia = xar_creare(piscina, (i32)magnitudo(MateriaDiagnosticum));
-    si (omnia == NIHIL)
+    mortes = silva_mortes_diagnostica(piscina, cliens->parsura,
+        cliens->uncus);
+    si (omnia == NIHIL || mortes == NIHIL)
     {
         redde NIHIL;
     }
@@ -578,12 +621,42 @@ _c89_derivare (
     {
         constans MateriaNodus* nodus = *(MateriaNodus**)xar_obtinere(
             cliens->radices, k);
+        constans MateriaTractus* tr = (constans MateriaTractus*)
+            xar_obtinere(cliens->tractus_radicum, k);
                           Xar* d;
+                          Xar* emissa;
                           i32  j;
 
+        emissa = xar_creare(piscina,
+            (i32)magnitudo(MateriaDiagnosticum));
+        si (emissa == NIHIL)
+        {
+            redde NIHIL;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(mortes); j++)
+        {
+            constans MateriaDiagnosticum* m =
+                (constans MateriaDiagnosticum*)xar_obtinere(mortes, j);
+                        MateriaTractus tn;
+                   MateriaDiagnosticum* locus;
+
+            si (   m             == NIHIL
+                || !materia_tractus_nodi(cliens->uncus, m->nodus, &tn)
+                || tn.fons_index != tr->fons_index
+                || tn.initium < tr->initium || tn.initium >= tr->finis)
+            {
+                perge;
+            }
+            locus = (MateriaDiagnosticum*)xar_addere(emissa);
+            si (locus == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *locus = *m;
+        }
         d = materia_diagnostica_derivare(piscina, nodus,
             &SILVA_C89_REGISTRUM, &SILVA_C89_DIAGNOSTICA, cliens->uncus,
-            NIHIL);
+            emissa);
         si (d == NIHIL)
         {
             redde NIHIL;

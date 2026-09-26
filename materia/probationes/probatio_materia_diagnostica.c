@@ -620,6 +620,67 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(exitus), (i32)50001);
     }
 
+    {
+        MateriaNodus* radix;
+        MateriaNodus* malum;
+        MateriaNodus* alterum;
+                 Xar* emissa_malum;
+                 Xar* exitus;
+  MateriaDiagnosticum* e;
+  constans MateriaDiagnosticum* r;
+
+        imprimere("\n--- XII. Emissum superat declaratum (T15) ---\n");
+        /* Genus 'malum' diagnosticum DECLARAT (V supra: monitum, sedes
+         * una). Parsator eundem nodum accuratius novit: emissum cum
+         * nodo et codice EISDEM declaratum superat - ordo UNUS, causa
+         * et gravitas emissi. Codex alius in eodem nodo = diagnosticum
+         * aliud (duo). Nodus alius eodem codice nihil superat. */
+        radix    = _radix_creare(piscina);
+        malum    = materia_nodus_creare(piscina, (s32)GR_MALUM, (i32)I);
+        alterum  = materia_nodus_creare(piscina, (s32)GR_MALUM, (i32)I);
+        CREDO_VERUM (materia_nodus_appendere(piscina, malum, ZEPHYRUM,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, ")",
+                ZEPHYRUM, (i32)I)), MATERIA_LOCUS_LISTA_TOKEN));
+        CREDO_VERUM (materia_nodus_appendere(piscina, alterum, ZEPHYRUM,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, "]",
+                (s32)II, (i32)III)), MATERIA_LOCUS_LISTA_TOKEN));
+        CREDO_VERUM (_radici_addere(piscina, radix, malum));
+        CREDO_VERUM (_radici_addere(piscina, radix, alterum));
+        emissa_malum = xar_creare(piscina,
+            (i32)magnitudo(MateriaDiagnosticum));
+        CREDO_NON_NIHIL (emissa_malum);
+        e = (MateriaDiagnosticum*)xar_addere(emissa_malum);
+        CREDO_NON_NIHIL (e);
+        memset(e, ZEPHYRUM, magnitudo(*e));
+        e->gravitas         = (s32)MATERIA_GRAVITAS_ERRATUM;
+        e->codex            = "malum";
+        e->causa            = "mors accurata";
+        e->nodus            = malum;
+        e->tractus.initium  = (s32)-I;
+        exitus = materia_diagnostica_derivare(piscina, radix, &REG,
+            &DIAGNOSTICA, NIHIL, emissa_malum);
+        CREDO_NON_NIHIL (exitus);
+        /* malum: emissum solum (declaratum superatum); alterum:
+         * declaratum manet - duo ordines, non tres */
+        CREDO_AEQUALIS_I32 (xar_numerus(exitus), (i32)II);
+        r = (constans MateriaDiagnosticum*)xar_obtinere(exitus,
+            ZEPHYRUM);
+        CREDO_VERUM (r->nodus == malum);
+        CREDO_AEQUALIS_I32 ((i32)r->gravitas,
+            (i32)MATERIA_GRAVITAS_ERRATUM);
+        CREDO_VERUM (strcmp(r->causa, "mors accurata") == ZEPHYRUM);
+        r = (constans MateriaDiagnosticum*)xar_obtinere(exitus, (i32)I);
+        CREDO_VERUM (r->nodus == alterum);
+        CREDO_AEQUALIS_I32 ((i32)r->gravitas,
+            (i32)MATERIA_GRAVITAS_MONITUM);
+
+        /* codex alius in eodem nodo: nihil superatur - tres */
+        e->codex = "malum/alius";
+        exitus = materia_diagnostica_derivare(piscina, radix, &REG,
+            &DIAGNOSTICA, NIHIL, emissa_malum);
+        CREDO_AEQUALIS_I32 (xar_numerus(exitus), (i32)III);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
