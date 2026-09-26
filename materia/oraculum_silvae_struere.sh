@@ -37,12 +37,70 @@ source "$RADIX/tools/sera.sh"
 mkdir -p "$SEDES"
 sera_capere "$BASIS/cursor.sera" || exit 2
 
-# ---- 1. amalgama ad pignus (semel per pignus) ----
-if [ ! -f "$SEDES/silva.c" ] || [ ! -f "$SEDES/silva.h" ]; then
-    git -C "$RADIX" show "$PIGNUS:silva/amalgama/silva.c" > "$SEDES/silva.c.tmp" \
+# ---- 1. amalgama ad pignus (semel per pignus) - PURUM ----
+if [ ! -f "$SEDES/silva.pignus.c" ] || [ ! -f "$SEDES/silva.h" ]; then
+    git -C "$RADIX" show "$PIGNUS:silva/amalgama/silva.c" > "$SEDES/silva.pignus.c.tmp" \
       && git -C "$RADIX" show "$PIGNUS:silva/amalgama/silva.h" > "$SEDES/silva.h" \
-      && mv "$SEDES/silva.c.tmp" "$SEDES/silva.c" \
+      && mv "$SEDES/silva.pignus.c.tmp" "$SEDES/silva.pignus.c" \
       || { echo "DEEST: git show $PIGNUS:silva/amalgama/silva.{c,h}" >&2; exit 2; }
+fi
+
+# ---- 1b. LEXICON LATINUM HODIERNUM (silva-migratio T18) ----
+# CODEX ex pignore, INITIA ex hodie. Silva latina.h non e disco legit
+# sed copiam in binario COMPILATAM fert (silva_latina_datum.c, fons 0
+# ante plagulam) - ergo binarium pignoris latina.h commissi 7a4847b0
+# secum portabat, et quaelibet mutatio latina.h quae definitionem
+# macri movet (linea descriptionis T18: +I linea, +LXV octeti) omnem
+# plagulam domus 'dividebat' (DCCCX innominati: sedes lexematum ex
+# macris latinis - linea/octetus intra latina.h - in columna stml et
+# comparatore; arbor, emissio, errores, semantica AEQUALES). Latina
+# INITIUM est, non codex iudicatus (ut stand-ins systematis, quos
+# ambo latera e disco legunt): datum hodiernum in amalgama pignoris
+# transplantatur. Mensuratum in arbore scalpta: transplantatione
+# facta oraculum purum (0/0/0). Pignus NON movetur.
+# CUSTODIAE: signa initii et finis semel in utroque (ancora ad
+# initium lineae), mensura transplantata == mensura dati; aliter
+# FRACTA clamans (numquam tacite pignus crudum). Sigillum dati
+# memoratur - amalgama pignoris recompilatur solum latina mutata.
+DATUM="$RADIX/silva/fontes/silva_latina_datum.c"
+INITIUM='constans character silva_latina_textus[] = {'
+FINIS='constans i32 silva_latina_mensura ='
+SIGILLUM_DATI=$(shasum "$DATUM" 2>/dev/null | cut -d' ' -f1)
+[ -n "$SIGILLUM_DATI" ] || { echo "DEEST: $DATUM" >&2; exit 2; }
+_signa () {  # $1 = plagula -> "initia fines" (ancora ad initium lineae)
+    awk -v I="$INITIUM" -v F="$FINIS" \
+        'index($0, I) == 1 {i++} index($0, F) == 1 {f++}
+         END {print i+0, f+0}' "$1"
+}
+if [ ! -f "$SEDES/silva.c" ] \
+   || [ "$(cat "$SEDES/latina.sigillum" 2>/dev/null)" != "$SIGILLUM_DATI" ]; then
+    for f in "$DATUM" "$SEDES/silva.pignus.c"; do
+        if [ "$(_signa "$f")" != "1 1" ]; then
+            echo "FRACTA: transplantatio latinae - $f: signa (initia fines) $(_signa "$f"), exspectata 1 1" >&2
+            exit 1
+        fi
+    done
+    awk -v I="$INITIUM" -v F="$FINIS" -v D="$DATUM" '
+        BEGIN {
+            while ((getline l < D) > 0) {
+                if (index(l, I) == 1) intus = 1
+                if (intus) truncus = truncus l "\n"
+                if (intus && index(l, F) == 1) intus = 0
+            }
+        }
+        index($0, I) == 1 { printf "%s", truncus; salta = 1; next }
+        salta && index($0, F) == 1 { salta = 0; next }
+        salta { next }
+        { print }' "$SEDES/silva.pignus.c" > "$SEDES/silva.c.tmp" \
+        || { echo "FRACTA: transplantatio latinae (awk)" >&2; exit 1; }
+    if [ "$(grep "^$FINIS" "$DATUM")" != "$(grep "^$FINIS" "$SEDES/silva.c.tmp")" ]; then
+        echo "FRACTA: transplantatio latinae - mensura in amalgamate pignoris != mensura dati" >&2
+        exit 1
+    fi
+    mv "$SEDES/silva.c.tmp" "$SEDES/silva.c"
+    echo "$SIGILLUM_DATI" > "$SEDES/latina.sigillum"
+    rm -f "$SEDES/amalgama.o"
+    echo "  [pignus $PIGNUS] latina hodierna transplantata ($(grep "^$FINIS" "$DATUM"))"
 fi
 if [ ! -f "$SEDES/amalgama.o" ]; then
     echo "  [pignus $PIGNUS] silva.c (semel)"

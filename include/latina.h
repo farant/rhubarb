@@ -1,3 +1,4 @@
+/* latina.h - Verba clavis C89 Latine reddita (lexicon domus) */
 #ifndef LATINA_H
 #define LATINA_H
 

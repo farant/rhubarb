@@ -71,6 +71,11 @@
 > exempted). examen_vectis ⑥ planted red twice. Found for T19:
 > `examen_vectis.sh -corpus` exclusions stale since ~09-14 (no gate runs
 > it). T18 next.
+> T18 DONE 2026-09-25: the line cost only the oracle (its pinned binary
+> carried the old latina.h compiled in: 810 position-only divergences).
+> Fran: code from the pin, inputs from today — the builder transplants
+> today's embedded latina into the pristine pinned amalgam (guarded,
+> cached); pin unmoved. T19/T19b remain.
 
 ## What steps 1–4 taught (the inputs to this plan)
 

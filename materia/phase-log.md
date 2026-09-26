@@ -3481,3 +3481,14 @@ examen_vectis ⑥ planted red twice. House code: zero uses, 184
 annotation-bearing files unchanged. Found: examen_vectis -corpus
 exclusions are stale (unrelated drift since 09-14, nothing runs it) —
 T19's audit. Next: T18 (latina.h line), then T19/T19b.
+
+## 2026-09-25 — phase 5 plan B T18: the latina.h description line
+
+RELATIO: include/latina.h opens with a description line (briar's
+library listing shows it). Measured in a scratch snapshot first: the
+only cost was the oracle — its pinned binary carried the old latina.h
+compiled in, so every latina-macro token's recorded home moved by one
+line (810 unnamed divergences, positions only). Fran chose "code from
+the pin, inputs from today": the builder transplants today's embedded
+latina into the pristine pinned amalgam, guarded and cached; the pin
+stays at 7a4847b0. Planted red twice. Next: T19 (cleanup) and T19b.

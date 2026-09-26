@@ -311,6 +311,7 @@ TesseraEventumGenus tessera_eventum_expectare(TesseraLector* lector,
 #endif /* TESSERA_H */
 
 /* ================= ex include/latina.h ================= */
+/* latina.h - Verba clavis C89 Latine reddita (lexicon domus) */
 #ifndef LATINA_H
 #define LATINA_H
 

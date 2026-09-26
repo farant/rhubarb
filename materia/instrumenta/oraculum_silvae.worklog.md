@@ -108,3 +108,38 @@ memory) said "three oracles". Fixed in the gate table (`-stml`, 17 s
 vs 15 s). Lesson for the house doctrine "silent gate ≡ dead gate": a
 gate can be partly dead — read the COMMAND the gate table runs, not
 the runner's header.
+
+## 2026-09-25 — the pinned side reads today's latina.h (silva-migratio T18)
+
+T18 added a one-line description at byte 0 of include/latina.h (briar's
+`-bibliothecae` reads `/* latina.h - … */` there). Dry run in a scratch
+snapshot: 810 unnamed divergences, every house file. Cause, shown on a
+six-line file: only the `stml` column (and the comparator reading it)
+differs — tree, emission, errors and semantics are equal. silva does
+not read latina.h from disk: it carries a compiled-in copy
+(silva_latina_datum.c, loaded as source 0), so the pinned binary
+carried 7a4847b0's latina.h. Every token expanded from a latina macro
+records its home inside latina.h (`<lex-static f="0" b="12300"
+linea="399">`, `def-l="399"`); the new line moves each by +1 line and
++65 bytes on the live side only. Columns stay (a whole line inserted);
+an append at the END would not diverge at all — positions, not size.
+
+Decision (Fran, option 1): code from the pin, INPUTS from today.
+latina.h is input (the house lexicon), like the system stand-ins that
+both sides already read from disk; it was the only input baked into the
+binary. `oraculum_silvae_struere.sh` now keeps the pinned amalgam
+pristine as `silva.pignus.c` and builds `silva.c` by transplanting
+today's `silva_latina_textus`/`silva_latina_mensura` block (markers
+anchored at line start, exactly one each on both sides, transplanted
+length == datum length — else FRACTA, never a silent fallback to the
+stale copy); the datum's sha is cached in `latina.sigillum`, so the
+pinned amalgam recompiles only when latina.h changes. The pin does NOT
+move.
+
+Evidence: with unchanged latina the transplanted amalgam is
+byte-identical to the pristine one; plant A (end marker broken) →
+builder exit 1 with the counts named; plant B (pristine amalgam forced,
+hash kept) → 810 innominati; restored → clean. Other owed gates (25)
+run in the snapshot: 19 green; the 6 red fail identically WITHOUT the
+latina change (snapshot artefacts: one-commit history for probatio_git,
+no Mach-O build products, frigida/briar-fumus/silex-semen environment).

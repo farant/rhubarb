@@ -134,3 +134,12 @@ dropped from the commit — silva embeds a generated copy of latina.h,
 `silva/fontes/silva_latina_datum.c`, pinned byte-equal to the disk by
 probatio_silva_contextus, so any latina.h edit means regenerating that
 copy inside frozen silva. The oracle fix above stands on its own.)
+
+## 2026-09-25 — the latina.h description line landed (silva-migratio T18)
+
+The line dropped on 09-24 is in: `/* latina.h - Verba clavis C89 Latine
+reddita (lexicon domus) */`. silva's embedded copy and the silva,
+officina and tessera amalgams regenerated together; the oracle's pinned
+side now transplants today's latina (materia/instrumenta/
+oraculum_silvae.worklog.md). probatio_git's `git show HEAD:` oracle
+from 09-24 is what let the commit through its own gate.
