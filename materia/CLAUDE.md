@@ -9,9 +9,13 @@ Silva is a forest; forests are made of *materia* — and scholastically
 exact: materia is what receives *forma*, which is what a general
 syntax substrate is, the matter a grammar informs.
 
-**Silva is FROZEN to bug fixes while this fork lives** (see the GELATIO
-notice atop `silva/CLAUDE.md`). Design: `project-specs/materia-spec.md`,
-decree `01M12FJR`.
+**The fork is SEALED (2026-09-25, phase 5 T13):** silva consumes
+materia's substrate and its gates run green through it (the M3 law
+below, met). The freeze on silva is lifted; generic substrate work
+lands HERE and owes every client suite (css, md, oratio, html, crusta)
+plus silva's (silva, oracle, M3 — `./tools/portae_debitae.sh` knows).
+Design: `project-specs/materia-spec.md`, decree `01M12FJR`; migration
+plan `project-specs/silva-migratio-plan.md`.
 
 ## Re-orientation (session start / post-compaction)
 
@@ -27,7 +31,8 @@ decree `01M12FJR`.
 done when CSS works; it is done when silva's own gates run green
 *through* materia (281/281 · 78/78 · 154/154 · hospes 39/39 ·
 adversarial 24/24 · haruspex 243 TUs). A substrate proven only on CSS
-proves almost nothing.
+proves almost nothing. **MET 2026-09-25** on the re-measured bars
+(492 · 78 · 182 · 40 · 24 · 281 — `./silva/m3_probare.sh`, 6/6).
 
 **materia stays THIN (M8).** The landscape's cautionary tale: rowan
 stayed small and thrived; IntelliJ PSI tried to be general *and* rich

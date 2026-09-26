@@ -3362,3 +3362,30 @@ build the live silva.h against the committed silva.c (desideratum
 …XHAW3H). Replay verdict: no module behaviour changes; the amalgam is
 now the migrated silva. Next: T13c — officina's amalgam, M3 acceptance
 at T1's pins, oracle, the freeze lifted.
+
+## 2026-09-25 — phase 5 T13c: the seal — RELATIO for steps 1–4
+
+RELATIO: officina's and tessera's amalgams regenerate byte-identical on
+the thawed silva (hospes 78/78, 7/7). Acceptance, the law this fork was
+built under ("done when silva's own gates run green THROUGH materia"):
+M3 6/6 — subtrees 492/492, plain 78/78, latinized 182/182, hospes
+40/40, adversarial 24/24, haruspex 281/281 — and the oracle clean over
+470 files against silva pinned at 7a4847b0, zero named divergences.
+Freeze lifted (silva/CLAUDE.md: PHASIS V SIGILLATA; materia/CLAUDE.md;
+materia-spec §7/§10 as-built). The fork lived 2026-08-27 → 09-25.
+
+What the migration was, in one paragraph: not a rewrite but an
+extraction behind a facade — silva's types became typedefs and macros
+of materia's (T7b token + C89 tail, T8 nodus, T9 registry/scribere),
+silva's module bodies became materia's walks plus C89 hooks (T9 writer,
+T10 arbor + comparator, T11 annotation kernel), quaestio needed nothing
+(T12), and the amalgam carries materia as a renamed vendicata library
+(T13). Consumers never changed a line after T7a moved them onto
+accessors. Every task opened with a measurement; four of them were
+re-sliced by it, one closed by it.
+
+Carried forward (plan B, `project-specs/silva-migratio-plan-B.md`):
+T14 C89 registry declared, T15 GLR death point through emissa, T16/T17
+lapide bugs/009-010, T18 latina.h line, T19 cleanup incl. the true
+copies T13 found by collision; ledger items …XHAW3H (half-amalgam guard),
+…SFJ3T (renominare typedef scope), 01M3BHHJQA, …63GNNR.

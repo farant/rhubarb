@@ -471,6 +471,15 @@ mitigation, and it is a gate rather than an intention.
 replayed into materia in the same commit. If that becomes onerous, the
 fork is taking too long and should be cut down, not extended.
 
+**As built (2026-09-25).** Met at the seal of phase 5 (silva-migratio
+T13), on bars re-measured at T1 — the corpora grew, so the numbers rose,
+none fell: subtree round trip 492/492 (all subtrees since T10d, both
+oracles), plain 78/78, latinized 182/182, hospes 40/40, adversarial
+24/24, haruspex 281/281 — `./silva/m3_probare.sh`, M3 6/6 in 68 s; plus
+the oracle gate (live silva vs silva pinned at 7a4847b0) clean over 470
+files with zero named divergences. The fork lived four weeks
+(2026-08-27 → 09-25); the freeze is lifted.
+
 ---
 
 ## 8. Landscape
@@ -828,6 +837,14 @@ substrate, not about HTML.
 
 **Gate — M3, the acceptance test:** 281/281 · 78/78 · 154/154 ·
 hospes 39/39 · adversarial 24/24 · haruspex 243 TUs.
+
+*As built (2026-09-25):* planned as ~8 tasks, executed as T1–T13 of
+`project-specs/silva-migratio-plan.md` (T6, T7, T10, T13 split by their
+measurements). 5.1: silva's module copies became facades over materia +
+C89 hooks (the C89 remainder stays in silva by decision; quaestio needed
+no port). 5.2: origin chains ride silva's token tail through hooks. 5.3:
+the amalgam carries materia as a vendicata library (renamed Silva*);
+silva.h mirrors materia's layouts. Gate met — see §7 as-built.
 
 ### Phase 6 — cleanup *(~4 tasks)*
 

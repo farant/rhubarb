@@ -96,6 +96,12 @@
 > companion-body excludenda, two more collisions renamed; amalgamare
 > VERIFICATUM and every consumer gate green (briar, saltuarius,
 > aedilis, officina, amalgamata) — T13c's consumer half is done.
+> T13c DONE 2026-09-25 — **PLAN A CLOSED, FREEZE LIFTED.** officina and
+> tessera amalgams regenerate byte-identical (hospes 78/78, 7/7); M3
+> 6/6 (492 · 78 · 182 · 40 · 24 · 281, 68 s); oracle 470 clean, 0 named
+> divergences; freeze notices replaced in silva/ and materia/CLAUDE.md;
+> materia-spec §7/§10 as-built; consumer + build-site inventories
+> filled. Steps 5–6 re-issued as `silva-migratio-plan-B.md`.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -946,7 +952,7 @@ plan B.
 
 ---
 
-## Step 5 (5.x) — the payoff (SKETCH, re-issued after T13)
+## Step 5 (5.x) — the payoff (SKETCH — SUPERSEDED 2026-09-25 by `silva-migratio-plan-B.md`)
 
 - **T14** C89 registry DECLARATION (`silva/grammatica/c89.registrum.stml`
   like crusta's) → `coquere`; declared diagnostics and seals apply to

@@ -7,49 +7,37 @@ sessions is the project's biggest process risk — technical decisions made on
 smoothed-over assumptions quietly shave the maximalist scope. That shaving is
 how the three previous parsers died.*
 
-## ⚠ GELATIO — furca materiae in cursu (2026-08-27)
+## PHASIS V SIGILLATA (2026-09-25) — silva super materiam
 
-**Silva ad EMENDATIONES SOLAS gelata est** dum substratum generale
-(`materia`) ex ea furcatur. Consilium: `project-specs/materia-spec.md`;
-decretum `01M12FJR` in tabulario.
+Furca materiae (decretum `01M12FJR`, gelatio 2026-08-27) et migratio
+(planum `project-specs/silva-migratio-plan.md`, T1–T13) PERACTAE:
+silva substratum materiae consumit, portae omnes virides (M3 6/6 ad
+pignora T1 — subarbores 492, planae 78, latinae 182, hospes 40,
+adversarii 24, haruspex 281; oraculum 470 purum). **Gelatio finita.**
 
 Quid hoc significat si silvam nunc tangis:
 
-- **Emendatio vitii**: fac, sed nota quod in materiam REPLICANDA est
-  cum furca vivat. Si replicatio onerosa fit, furca nimis diu currit —
-  scopum SECA, noli extendere.
-- **Opus novum in nucleo** (nodus, token, arbor, scribere,
-  arbor_aequalitas, quaestio, quaestiones, commissio): **noli**, nisi
-  Fran aliter dicat. Hi moduli in materiam migrant; opus hic factum bis
-  fiet.
-- **Frons C89** (lexema, expandere, conditio, semantica, formator,
-  fluxus, tabulae_c89) **et instrumentarium LR** (glr, generare,
-  coquere): manent, opus licet.
-
-Quid IAM factum est: `silva_tabulae.h` scissum (M4, `6b5ca0a3` et
-`4f1584e2`) — typi registri in `silva_registrum.h`, quod NIHIL includit
-praeter `latina.h`. Phasis 0 peracta: chirurgia classificata.
-
-Gelatio finit cum phasis V peracta sit (silva materiam consumens,
-portis omnibus viridibus).
-
-**PHASIS V IN CURSU (2026-09-24):** planum
-`project-specs/silva-migratio-plan.md`; judex = `./materia/oraculum_probare.sh`
-(silva viva contra silvam ad pignus) + `./silva/m3_probare.sh`. Ab T6a
-silva substratum materiae NECTIT: cursor et instrumenta omnia
-`silva/materia_substratum.sh` fontant (tabula una modulorum) - mutatio
-materia/fontes cursorem silvae debet.
-
-**AMALGAMA GELATA ab T7b usque ad T13 (decretum …1BKY, Fran
-2026-09-25): NOLI `./silva/amalgamare.sh` currere.** SilvaToken nunc
-MateriaToken est (+ cauda C89 in silva_token.c); amalgama commissa
-silvam ante migrationem fert (repraesentatio vetus) et consumptores
-eius (briar, saltuarius, aedilis, officina) per accessores silva_token_*
-solos lexemata tangunt, quos amalgama gelata super structuram veterem
-implet. Regula infra "amalgamare post OMNEM editionem fontium" interim
-SUSPENSA; hospes (porta M3) amalgama commissum iudicat. Sigillum (T13)
-amalgama cum materia regenerat. Si hoc caput adhuc gelationem dicit et
-mensis abiit, ROGA — furca superstes esse debet, non pendere.
+- **Substratum** (token, nodus, scribere, arbor, arbor_aequalitas,
+  annotationum nucleus) MATERIAE est: `silva/fontes/silva_<m>.{h,c}`
+  sunt FACIES (typedef/macra) + uncus C89. Opus in substrato generali
+  → `materia/fontes/` (clientes css, md, oratio, html, crusta portas
+  debent). Cursor silvae materiam per `silva/materia_substratum.sh`
+  nectit (tabula una).
+- **Frons C89** (lexema, expandere, conditio, glr, semantica, fluxus,
+  tabulae, frons, quaestio) silvae manet; opus licet.
+- **Amalgama iterum regeneratur** post editionem fontium (regula infra
+  restituta). materia in amalgamate = bibliotheca vendicata (Materia*
+  → Silva*, materia_ → silva_materia_; tabulae in
+  `instrumenta/principalia/amalgamator.c`). **CAVE silva.h manu mutatum:**
+  consumptores (aedilis!) silva.h vivum contra silva.c commissum
+  nectunt — structura publica mutata = aedilis falsus usque ad
+  regenerationem (bootstrap in `tools/amalgamatio.worklog.md`
+  2026-09-25 T13b; desideratum …XHAW3H).
+- Iudices manent: `./materia/oraculum_probare.sh` (silva viva contra
+  pignus 7a4847b0) + `./silva/m3_probare.sh`. Divergentia intenta =
+  NOMINATA in dispares, numquam numerata.
+- Gradus 5–6 (registrum C89 declaratum, GLR mortis lexema, bugs/009-010,
+  latina.h, purgatio): planum B, `project-specs/silva-migratio-plan-B.md`.
 
 ## Quid sit
 

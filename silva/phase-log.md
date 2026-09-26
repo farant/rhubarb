@@ -14640,3 +14640,12 @@ top + an as-built note per task). State at this addendum:
   substrate (`silva/materia_substratum.sh`), `-I materia/fontes` in the
   two amalgama tools, substrate copies deleted, M3 acceptance, freeze
   notices lifted.
+
+## 2026-09-25 — addendum: phase 5 SEALED (pointer)
+
+T13 done (T13a de9e5586 derivation, T13b b4abedbd amalgam on materia,
+T13c acceptance): M3 6/6, oracle 470 clean, freeze lifted — see the
+PHASIS V SIGILLATA notice atop silva/CLAUDE.md. Narrative:
+materia/phase-log.md. Next for silva: plan B,
+project-specs/silva-migratio-plan-B.md (T14 C89 registry declared, T15
+GLR death point, T16/T17 bugs, T18 latina.h, T19 cleanup).
