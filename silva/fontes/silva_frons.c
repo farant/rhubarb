@@ -1059,6 +1059,214 @@ _lexema_primum_erroris (
     redde NIHIL;
 }
 
+
+/* ==================================================
+ * Nuntius mortis (silva-migratio T19b-2; lapide bugs/001 rogata 2-3)
+ *
+ * Lexema INVENTUM nominatur in orthographia auctoris (radix catenae
+ * originis: 'nomen', non 'typedef' in quem expanditur). Si lexema ex
+ * macro latina.h venit (corpus definitionis in fonte cuius basis
+ * 'latina.h' - copia infixa aut include/latina.h), admonitio: 'nomen'
+ * macrum latina.h est ('typedef') - lapide rotunda VII: VIII errores,
+ * omnes 'nomen' ut identificator, per circuitum inventi. Lexema sine
+ * textu (EOF) -> causa antiqua sine nomine.
+ * ================================================== */
+
+#define SILVA_MORS_TEXTUS_MAXIMUS XXXII
+
+interior b32
+_fons_latinae_est (
+    constans SilvaExpansio* exp,
+                       s32  fons_index)
+{
+    constans chorda* via;
+                i32  n = (i32)strlen("latina.h");
+
+    si (exp == NIHIL || fons_index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    via = silva_fons_via(exp, fons_index);
+    si (via == NIHIL || via->mensura < n)
+    {
+        redde FALSUM;
+    }
+    si (memcmp(via->datum + via->mensura - n, "latina.h",
+            (memoriae_index)n) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde (via->mensura == n || via->datum[via->mensura - n - I] == '/')
+        ? VERUM : FALSUM;
+}
+
+/* Accipiebatne status frontis genus lexematis 'genus'? (mors->
+ * exspectata: GENERA lexematum, T19b-2; NIHIL = ignotum -> FALSUM) */
+interior b32
+_exspectatur (
+    constans SilvaMors* mors,
+                   s32  genus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM;
+         mors->exspectata != NIHIL && i < xar_numerus(mors->exspectata);
+         i++)
+    {
+        si (*(s32*)xar_obtinere(mors->exspectata, i) == genus)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ';' fortasse deest (T19b-2; lapide rogatum 2): status frontis
+ * ';' actione normali accipiebat ET lexema mortis primum lineae suae
+ * est (radix) ET lexema prius in linea priore stat -> clang eandem
+ * formam 'expected ;' ad finem lineae prioris monstrat. Reddit lexema
+ * prius (sedes admonitionis) aut NIHIL. */
+interior SilvaToken*
+_semicolon_deest (
+    constans SilvaParsura* parsura,
+       constans SilvaMors* mors)
+{
+    SilvaToken* radix_mortis;
+    SilvaToken* prius = NIHIL;
+    SilvaToken* radix_prioris;
+           i32  i;
+
+    si (   parsura->lexemata == NIHIL
+        || !_exspectatur(mors, (s32)SILVA_LEX_SEMICOLON))
+    {
+        redde NIHIL;
+    }
+    radix_mortis = silva_token_radix(mors->lexema);
+    si (   radix_mortis == NIHIL
+        || !silva_token_initium_lineae(radix_mortis))
+    {
+        redde NIHIL;
+    }
+    per (i = I; i < xar_numerus(parsura->lexemata); i++)
+    {
+        si (*(SilvaToken**)xar_obtinere(parsura->lexemata, i)
+            == mors->lexema)
+        {
+            prius = *(SilvaToken**)xar_obtinere(parsura->lexemata,
+                i - I);
+            frange;
+        }
+    }
+    si (prius == NIHIL)
+    {
+        redde NIHIL;
+    }
+    radix_prioris = silva_token_radix(prius);
+    si (   radix_prioris             == NIHIL
+        || radix_prioris->fons_index != radix_mortis->fons_index
+        || radix_prioris->linea      >= radix_mortis->linea)
+    {
+        redde NIHIL;
+    }
+    /* limes sententiae IAM adest: "';' deest post ';'" nugae esset
+     * (mensuratum in fixturis examinis); post '}' manet - 'structura
+     * s { ... }' sine ';' casus verus */
+    si (   silva_token_genus(prius) == (s32)SILVA_LEX_SEMICOLON
+        || silva_token_genus(prius) == (s32)SILVA_LEX_BRACE_APERTA)
+    {
+        redde NIHIL;
+    }
+    redde prius;
+}
+
+interior constans character*
+_causa_mortis (
+                   Piscina* piscina,
+    constans SilvaExpansio* exp,
+        constans SilvaMors* mors,
+                SilvaToken* prius)
+{
+             SilvaToken* lexema  = mors->lexema;
+     constans character* basis   = "quod grammatica hic non accipit";
+             SilvaToken* radix;
+             SilvaOrigo* origo;
+                 chorda  inventum;
+                    i32  longitudo;
+                    b32  truncatum;
+              character* nuntius;
+         memoriae_index  capacitas;
+
+    radix = silva_token_radix(lexema);
+    si (radix == NIHIL)
+    {
+        radix = lexema;
+    }
+    inventum   = radix->valor;
+    longitudo  = inventum.mensura;
+    truncatum  = FALSUM;
+    si (longitudo > SILVA_MORS_TEXTUS_MAXIMUS)
+    {
+        longitudo = SILVA_MORS_TEXTUS_MAXIMUS;
+        truncatum = VERUM;
+    }
+    si (longitudo == ZEPHYRUM)
+    {
+        redde "lexema quod grammatica hic non accipit";
+    }
+    /* basis + nomen truncatum + admonitio latinae (macrum + expansio,
+     * utrumque <= XXXII) + admonitio ';' (prius <= XXXII) */
+    capacitas = (memoriae_index)(D + II * longitudo
+        + (memoriae_index)lexema->valor.mensura);
+    nuntius = (character*)piscina_allocare(piscina, capacitas);
+    si (nuntius == NIHIL)
+    {
+        redde "lexema quod grammatica hic non accipit";
+    }
+    sprintf(nuntius, "lexema '%.*s%s' %s", (int)longitudo,
+        (constans character*)inventum.datum, truncatum ? "..." : "",
+        basis);
+
+    /* admonitio latina.h: expansio cuius corpus in latina.h stat -
+     * SOLUM si parsator NOMEN exspectabat ('integer' recte ut typus
+     * usum ante ';' absentem admonitionem falsam dabat: status tunc
+     * operatores et ';' exspectat, non identificatorem) */
+    origo = silva_token_origo(lexema);
+    si (   _exspectatur(mors, (s32)SILVA_LEX_IDENTIFICATOR)
+        && origo != NIHIL && origo->genus == SILVA_ORIGO_EXPANSIO
+        && origo->datum.expansio.corpus != NIHIL
+        && origo->datum.expansio.nomen_macro != NIHIL
+        && lexema->valor.mensura <= SILVA_MORS_TEXTUS_MAXIMUS
+        && _fons_latinae_est(exp,
+               origo->datum.expansio.corpus->fons_index))
+    {
+        constans chorda* macrum = origo->datum.expansio.nomen_macro;
+
+        si (macrum->mensura <= SILVA_MORS_TEXTUS_MAXIMUS)
+        {
+            sprintf(nuntius + strlen(nuntius),
+                " - '%.*s' macrum latina.h est ('%.*s'): nomen aliud"
+                " elige", (int)macrum->mensura,
+                (constans character*)macrum->datum,
+                (int)lexema->valor.mensura,
+                (constans character*)lexema->valor.datum);
+        }
+    }
+    si (prius != NIHIL)
+    {
+         SilvaToken* r = silva_token_radix(prius);
+             chorda  t = (r != NIHIL) ? r->valor : prius->valor;
+
+        si (   t.mensura > ZEPHYRUM
+            && t.mensura <= SILVA_MORS_TEXTUS_MAXIMUS)
+        {
+            sprintf(nuntius + strlen(nuntius),
+                " - ';' fortasse deest post '%.*s'", (int)t.mensura,
+                (constans character*)t.datum);
+        }
+    }
+    redde nuntius;
+}
+
 Xar*
 silva_mortes_diagnostica (
                        Piscina* piscina,
@@ -1101,27 +1309,45 @@ silva_mortes_diagnostica (
         {
             constans SilvaToken* primum =
                 _lexema_primum_erroris(mors->nodus);
+                     SilvaToken* prius =
+                         _semicolon_deest(parsura, mors);
 
             d->gravitas  = (s32)MATERIA_GRAVITAS_ERRATUM;
-            d->causa     = "lexema quod grammatica hic non accipit";
-            d->lexema    = mors->lexema;
-            d->nota      = MATERIA_NOTA_EXSPECTATUR;
+            d->causa     = _causa_mortis(piscina, parsura->expansio,
+                mors, prius);
+            d->lexema  = mors->lexema;
+            d->nota    = MATERIA_NOTA_EXSPECTATUR;
             materia_tractus_lexematis(uncus, mors->lexema, &d->tractus);
-            si (primum != NIHIL && primum != mors->lexema)
+            /* relata: 'hic coepit' (initium unitatis) et, si ';'
+             * fortasse deest, sedes sub lexemate priore (T19b-2) */
+            si (   (primum != NIHIL && primum != mors->lexema)
+                || prius != NIHIL)
             {
                 MateriaSedesRelata* sedes = (MateriaSedesRelata*)
                     piscina_allocare(piscina,
-                    magnitudo(MateriaSedesRelata));
+                    II * magnitudo(MateriaSedesRelata));
+                               i32 n = ZEPHYRUM;
 
                 si (sedes == NIHIL)
                 {
                     redde NIHIL;
                 }
-                materia_tractus_lexematis(uncus, primum,
-                    &sedes->tractus);
-                sedes->nota           = MATERIA_NOTA_COEPIT;
+                si (primum != NIHIL && primum != mors->lexema)
+                {
+                    materia_tractus_lexematis(uncus, primum,
+                        &sedes[n].tractus);
+                    sedes[n].nota = MATERIA_NOTA_COEPIT;
+                    n++;
+                }
+                si (prius != NIHIL)
+                {
+                    materia_tractus_lexematis(uncus, prius,
+                        &sedes[n].tractus);
+                    sedes[n].nota = "hic ';' fortasse deest";
+                    n++;
+                }
                 d->relata             = sedes;
-                d->numerus_relatorum  = (i32)I;
+                d->numerus_relatorum  = (i32)n;
             }
         }
         alioquin
@@ -1165,6 +1391,41 @@ _lineam_mappare (
     redde (mappatio != NIHIL) ? mappatio(datum, linea) : linea;
 }
 
+/* sedes per initium ordinare (insertio; n <= IV), duplicata eiusdem
+ * initii omissa - excerptum ordinem non decrescentem poscit */
+interior vacuum
+_sedes_ordinare (
+    ExcerptumSedes* sedes,
+               i32* n)
+{
+    i32 i;
+    i32 j;
+    i32 m = ZEPHYRUM;
+
+    per (i = I; i < *n; i++)
+    {
+        ExcerptumSedes clavis = sedes[i];
+
+        j = i;
+        dum (j > ZEPHYRUM && sedes[j - I].initium > clavis.initium)
+        {
+            sedes[j] = sedes[j - I];
+            j--;
+        }
+        sedes[j] = clavis;
+    }
+    per (i = ZEPHYRUM; i < *n; i++)
+    {
+        si (m > ZEPHYRUM && sedes[m - I].initium == sedes[i].initium)
+        {
+            perge;
+        }
+        sedes[m] = sedes[i];
+        m++;
+    }
+    *n = m;
+}
+
 chorda
 silva_mortes_scribere (
                           Piscina* piscina,
@@ -1184,8 +1445,9 @@ silva_mortes_scribere (
                       Xar* mortes   = NIHIL;
                       s32  residua;
                       i32  k;
-                character  linea_b[CCLVI];
-                   chorda  vacua;
+                /* causa cum admonitionibus T19b-2 CCLVI excedit */
+                character linea_b[M];
+                   chorda vacua;
 
     vacua.mensura  = ZEPHYRUM;
     vacua.datum    = NIHIL;
@@ -1244,8 +1506,9 @@ silva_mortes_scribere (
         }
         alioquin
         {
-            ExcerptumSedes sedes[II];
+            ExcerptumSedes sedes[IV];
                        i32 n = ZEPHYRUM;
+                       i32 j;
 
             sprintf(linea_b, "%s:%d:%d: [violatio] %s\n", via,
                 (int)linea, (int)d->tractus.columna, d->causa);
@@ -1254,17 +1517,26 @@ silva_mortes_scribere (
             {
                 perge;
             }
-            si (   d->numerus_relatorum > ZEPHYRUM
-                && d->relata->tractus.initium >= ZEPHYRUM
-                && d->relata->tractus.fons_index
-                    == parsura->fons_princeps
-                && d->relata->tractus.initium < d->tractus.initium)
+            /* relata ante primariam in plagula iudicata ('hic coepit',
+             * 'hic ';' fortasse deest' - T19b-2), deinde primaria;
+             * ordo per initium (excerptum ordinem poscit), duplicata
+             * eiusdem initii omissa */
+            per (j = ZEPHYRUM;
+                 j < d->numerus_relatorum && n < III; j++)
             {
-                sedes[n].initium  = d->relata->tractus.initium;
-                sedes[n].finis    = d->relata->tractus.finis;
+                constans MateriaSedesRelata* r = &d->relata[j];
+
+                si (   r->tractus.initium < ZEPHYRUM
+                    || r->tractus.fons_index != parsura->fons_princeps
+                    || r->tractus.initium    >= d->tractus.initium)
+                {
+                    perge;
+                }
+                sedes[n].initium  = r->tractus.initium;
+                sedes[n].finis    = r->tractus.finis;
                 sedes[n].linea    = _lineam_mappare(mappatio, datum,
-                    d->relata->tractus.linea);
-                sedes[n].nota     = d->relata->nota;
+                    r->tractus.linea);
+                sedes[n].nota     = r->nota;
                 n++;
             }
             sedes[n].initium  = d->tractus.initium;
@@ -1272,6 +1544,7 @@ silva_mortes_scribere (
             sedes[n].linea    = linea;
             sedes[n].nota     = d->nota;
             n++;
+            _sedes_ordinare(sedes, &n);
             (vacuum)excerptum_scribere_multa(aed, fons, mensura, sedes,
                 n);
         }

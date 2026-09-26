@@ -148,12 +148,14 @@ _nodum_erroris_facere (
  * declaratum ordinarium supererit). */
 interior vacuum
 _mortem_notare (
-          Piscina* piscina,
-     SilvaParsura* parsura,
-       SilvaValor  nodus,
-              s32  genus,
-       SilvaToken* lexema,
-              s32  terminalis)
+                      Piscina* piscina,
+                 SilvaParsura* parsura,
+                   SilvaValor  nodus,
+                          s32  genus,
+                   SilvaToken* lexema,
+                          s32  terminalis,
+    constans SilvaTabulaCocta* tabula,
+                          s32  status)
 {
     SilvaMors* mors;
 
@@ -179,6 +181,44 @@ _mortem_notare (
     mors->lexema      = lexema;
     mors->genus       = genus;
     mors->terminalis  = terminalis;
+    mors->exspectata  = NIHIL;
+
+    /* exspectata (T19b-2): terminalia quae status frontis primus
+     * actione NORMALI accipiebat, ut GENERA lexematum (grammatica-
+     * neutra: frons C89 SILVA_LEX_SEMICOLON quaerit, tabulam non
+     * novit). Status unus (GLR primum frontis reddit) - approximatio
+     * nominata; actiones recuperationis (pretium > 0) exclusae. */
+    si (   tabula != NIHIL && status >= ZEPHYRUM
+        && status < (s32)tabula->numerus_statuum)
+    {
+         constans SilvaTabStatus* st = &tabula->status[status];
+                             i32  a;
+
+        mors->exspectata = xar_creare(piscina, (i32)magnitudo(s32));
+        per (a = ZEPHYRUM;
+             mors->exspectata != NIHIL && a < st->actiones_numerus;
+             a++)
+        {
+            constans SilvaTabActio* actio =
+                &tabula->actiones[st->actiones_offset + a];
+            s32* locus;
+            s32  genus_lex;
+
+            si (   actio->pretium    != ZEPHYRUM
+                || actio->terminalis < ZEPHYRUM
+                || actio->terminalis >= (s32)tabula->numerus_symbolorum)
+            {
+                perge;
+            }
+            genus_lex = (s32)tabula->symbola[actio->terminalis]
+                .genus_lexematis;
+            locus = (s32*)xar_addere(mors->exspectata);
+            si (locus != NIHIL)
+            {
+                *locus = genus_lex;
+            }
+        }
+    }
 }
 
 /* Textura conditionalium (infra definita - ante commissionem) */
@@ -526,7 +566,7 @@ _lexemata_parsare_interna (
                         parsura->numerus_errorum++;
                         _mortem_notare(piscina, parsura, nodus_caudae,
                             (s32)SILVA_MORS_INTERMISSIO, NIHIL,
-                            (s32)-I);
+                            (s32)-I, NIHIL, (s32)-I);
                     }
                 }
                 frange;
@@ -641,7 +681,12 @@ _lexemata_parsare_interna (
                     }
                     _mortem_notare(piscina, parsura, nodus_erroris,
                         genus_mortis, lexema_mortis,
-                        fructus.est_error ? fructus.terminalis : (s32)-I);
+                        fructus.est_error
+                            ? fructus.terminalis : (s32)-I,
+                        grammatica->tabula,
+                        (genus_mortis == (s32)SILVA_MORS_SYNTAXIS
+                            && fructus.est_error)
+                            ? fructus.status : (s32)-I);
                 }
             }
             initium = est_eof ? i : (i + I);

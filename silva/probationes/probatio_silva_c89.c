@@ -33,6 +33,7 @@
 #include "silva_scribere.h"
 #include "silva_c89_oraculum.h"
 #include "silva_frons.h"
+#include "silva_contextus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -3497,8 +3498,9 @@ s32 principale (vacuum)
                 NIHIL, NIHIL, NIHIL);
             CREDO_VERUM (textus.mensura > ZEPHYRUM);
             CREDO_VERUM (chorda_incipit(textus, chorda_ex_literis(
-                "p.c:5:5: [violatio] lexema quod grammatica hic non"
-                " accipit\n", piscina)));
+                "p.c:5:5: [violatio] lexema 'return' quod grammatica"
+                " hic non accipit - ';' fortasse deest post ')'\n",
+                piscina)));
             CREDO_VERUM (chorda_continet(textus,
                 chorda_ex_literis("   1 | int\n", piscina)));
             CREDO_VERUM (chorda_continet(textus,
@@ -3507,6 +3509,12 @@ s32 principale (vacuum)
                 chorda_ex_literis("   5 |     return 0;\n", piscina)));
             CREDO_VERUM (chorda_continet(textus,
                 chorda_ex_literis("hic exspectatur", piscina)));
+            /* T19b-2: ';' exspectatum + lexema primum lineae ->
+             * sedes tertia sub lexemate priore (ubi clang monstrat) */
+            CREDO_VERUM (chorda_continet(textus, chorda_ex_literis(
+                "   4 |     g()\n", piscina)));
+            CREDO_VERUM (chorda_continet(textus, chorda_ex_literis(
+                "hic ';' fortasse deest", piscina)));
 
             /* machina: TSV examinis, sine excerpto */
             textus = silva_mortes_scribere(piscina, "p.c", parsura,
@@ -3514,7 +3522,8 @@ s32 principale (vacuum)
                 NIHIL, NIHIL, NIHIL);
             CREDO_CHORDA_AEQUALIS_LITERIS (textus,
                 "p.c\t5\t5\tviolatio\t-1\t0\t"
-                "lexema quod grammatica hic non accipit\n");
+                "lexema 'return' quod grammatica hic non accipit"
+                " - ';' fortasse deest post ')'\n");
 
             /* mappatio: lineae ordinis ET excerpti */
             textus = silva_mortes_scribere(piscina, "x.thistle",
@@ -3539,6 +3548,121 @@ s32 principale (vacuum)
                 NIHIL, NIHIL, &linea_prima);
             CREDO_AEQUALIS_I32 (linea_prima, ZEPHYRUM);
             CREDO_AEQUALIS_I32 (textus.mensura, ZEPHYRUM);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: nuntius mortis (silva-migratio T19b-2; lapide bugs/001
+     * rogata 2 et 3) - lexema INVENTUM nominatur (orthographia
+     * auctoris: invocatio, non expansio); lexema ex macro latina.h
+     * admonitionem fert ('casus' est 'case', 'nomen' est 'typedef',
+     * 'C' est numerus) - lapide rotunda VII: VIII errores, omnes
+     * 'nomen' ut identificator.
+     * ======================================================== */
+
+    {
+            SilvaContextus* ctx;
+                       i32  i;
+        constans character* fixa[III];
+        constans character* acus[III];
+
+        imprimere("\n--- Probans nuntium mortis (latina.h) ---\n");
+
+        fixa[ZEPHYRUM] = "integer\nf (vacuum)\n{\n"
+                         "    integer casus = I;\n    redde casus;\n}\n";
+        acus[ZEPHYRUM] =
+            "lexema 'casus' quod grammatica hic non accipit"
+                         " - 'casus' macrum latina.h est ('case'): nomen"
+                         " aliud elige";
+        fixa[I]        = "nomen structura { integer nomen; } Res;\n";
+        acus[I]        =
+            "lexema 'nomen' quod grammatica hic non accipit"
+                         " - 'nomen' macrum latina.h est ('typedef'):"
+                         " nomen aliud elige";
+        fixa[II] = "integer C = I;\n";
+        acus[II] = "- 'C' macrum latina.h est ('100')";
+
+        ctx = silva_contextus_creare(piscina);
+        CREDO_NON_NIHIL (ctx);
+        si (ctx != NIHIL)
+        {
+            CREDO_VERUM (silva_contextus_latinam_addere(ctx));
+        }
+        per (i = ZEPHYRUM; ctx != NIHIL && i < III; i++)
+        {
+             SilvaParsura* parsura;
+                   chorda  textus;
+
+            parsura = silva_parsare_cum_contextu(piscina, ctx,
+                "latina_probatio.c", fixa[i], (i32)strlen(fixa[i]),
+                &GRAMMATICA_C89, NIHIL, NIHIL, NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            si (parsura == NIHIL)
+            {
+                perge;
+            }
+            CREDO_VERUM (parsura->numerus_errorum > ZEPHYRUM);
+            textus = silva_mortes_scribere(piscina, "l.c", parsura,
+                &SILVA_C89_REGISTRUM, fixa[i], (i32)strlen(fixa[i]),
+                VERUM, NIHIL, NIHIL, NIHIL);
+            CREDO_VERUM (chorda_continet(textus,
+                chorda_ex_literis(acus[i], piscina)));
+            /* 'integer C = I;': mors in linea eadem - nulla
+             * admonitio ';' */
+            si (i == II)
+            {
+                CREDO_VERUM (!chorda_continet(textus,
+                    chorda_ex_literis("fortasse deest", piscina)));
+            }
+        }
+
+        /* macrum latinae RECTE ut typus usum, ';' deest ante eum:
+         * admonitio latinae FALSA esset (identificator non
+         * exspectabatur) - ';' sola */
+        si (ctx != NIHIL)
+        {
+            constans character* duo = "integer\nf (vacuum)\n{\n"
+                "    integer a = I\n    integer b = II\n"
+                "    redde a + b;\n}\n";
+                   SilvaParsura* parsura;
+                         chorda  textus;
+
+            parsura = silva_parsare_cum_contextu(piscina, ctx,
+                "duo.c", duo, (i32)strlen(duo), &GRAMMATICA_C89, NIHIL,
+                NIHIL, NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            si (parsura != NIHIL)
+            {
+                textus = silva_mortes_scribere(piscina, "d.c", parsura,
+                    &SILVA_C89_REGISTRUM, duo, (i32)strlen(duo), VERUM,
+                    NIHIL, NIHIL, NIHIL);
+                CREDO_VERUM (chorda_continet(textus, chorda_ex_literis(
+                    "- ';' fortasse deest post 'I'", piscina)));
+                CREDO_VERUM (!chorda_continet(textus,
+                    chorda_ex_literis("macrum latina.h", piscina)));
+            }
+        }
+
+        /* identificator ordinarius: nulla admonitio latinae */
+        {
+             constans character* mala     = "int a = ;\n";
+                   SilvaParsura* parsura  = _parsare(piscina, mala);
+                         chorda  textus;
+
+            CREDO_NON_NIHIL (parsura);
+            si (parsura != NIHIL)
+            {
+                textus = silva_mortes_scribere(piscina, "m.c", parsura,
+                    &SILVA_C89_REGISTRUM, mala, (i32)strlen(mala),
+                    VERUM,
+                    NIHIL, NIHIL, NIHIL);
+                CREDO_VERUM (chorda_continet(textus, chorda_ex_literis(
+                    "lexema ';' quod grammatica hic non accipit\n",
+                    piscina)));
+                CREDO_VERUM (!chorda_continet(textus,
+                    chorda_ex_literis("latina.h", piscina)));
+            }
         }
     }
 

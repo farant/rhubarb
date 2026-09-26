@@ -3513,3 +3513,14 @@ vectis ④ holds), legati (was the old unlocated copy — …W87Q), briar
 death in .thistle lines, with excerpts). A mapping callback relabels
 every printed line. Planted red in silva and briar. Next: T19b-2
 (messages: found token, latina.h hint, maybe the missing-';' heuristic).
+
+## 2026-09-25 — phase 5 plan B T19b-2: death messages say what and why
+
+RELATIO: every syntax death now names the token found (author's
+spelling), warns when it is a latina.h macro where a name was expected
+(`'nomen' macrum latina.h est ('typedef')` — lapide's round-7 case), and
+suggests a missing ';' at the end of the previous line when the dead
+state expected one (the parser now keeps the expected token kinds). All
+four printers gain at once. One false positive found and gated during
+the task (latina hint on a correctly used type). Plan B's remaining
+item: T19c (MAP/census/MEMORY, close the phase).

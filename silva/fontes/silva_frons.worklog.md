@@ -164,3 +164,34 @@ linked the 8-arg silva.c — the out-param was silently never written
 (briar kept reporting the region start). `tools/amalgama_caput.sh
 -comparare` said rc 3 "amalgama dimidiata"; the generata gate would have
 refused the commit.
+
+## 2026-09-25 — death messages say what, and why (silva-migratio T19b-2; lapide bugs/001 asks 2–3)
+
+Built in `silva_mortes_diagnostica`, so examen, tools/diagnostica, legati
+and briar all gain at once:
+- **found token** in the author's spelling (radix of the origin chain):
+  `lexema 'nomen' quod grammatica hic non accipit` — not 'typedef'.
+- **latina.h hint**: the dead token is a macro expansion whose def-site
+  lives in a source named `latina.h` (embedded copy or include/latina.h)
+  → `- 'nomen' macrum latina.h est ('typedef'): nomen aliud elige`
+  (numerals too: 'C' → '100'). GATED on the parser having EXPECTED AN
+  IDENTIFIER: the first version flagged `integer` in `integer b = II`
+  after a missing ';' — a correctly used type; there the state wants
+  operators/';', not a name. Regression test pins the gate.
+- **missing ';'**: the driver now stores, on each SYNTAXIS death, the
+  token KINDS the first frontier state accepted with a normal action
+  (`SilvaMors.exspectata`; grammar-neutral — the frontend checks
+  SILVA_LEX_SEMICOLON without knowing the table). If ';' was expected,
+  the dead token is first on its line and the previous token sits on an
+  earlier line → `- ';' fortasse deest post ')'` + a third excerpt mark
+  under the previous token ("hic ';' fortasse deest", where clang points).
+  Not after ';' or '{' (found in the examen fixtures: "deest post ';'").
+  One frontier state only (GLR reports the first) — a named approximation.
+- No line numbers in message text (briar remaps lines; the excerpt
+  carries them). Row buffer grew to M (messages can exceed CCLVI, and an
+  overlong row was SKIPPED silently before). Excerpt marks now sorted
+  (`_sedes_ordinare`), up to three.
+Named costs: computus gold — base64/color only (the corpus files with
+deaths): allocations +24/+25, usus +~2 KB (the exspectata lists);
+lexemes and errors unchanged. Pins updated deliberately (examen_vectis
+④ ×2, diagnostica_fumus XXII) — now also assert the found token.

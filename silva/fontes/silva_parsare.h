@@ -70,8 +70,12 @@ nomen structura {
     SilvaNodus* nodus;        /* nodus ERROR causam hanc ferens */
     SilvaToken* lexema;       /* lexema mortis; NIHIL si nullum
                                * (intermissio, apparatus) */
-           s32 genus;        /* SilvaMorsGenus */
-           s32 terminalis;   /* terminale quod periit; -1 ignotum */
+           s32  genus;        /* SilvaMorsGenus */
+           s32  terminalis;   /* terminale quod periit; -1 ignotum */
+           Xar* exspectata;  /* s32 SilvaLexemaGenus terminalium quae
+                             * status frontis primus accipiebat (actio
+                             * normalis, pretium 0) - T19b-2; NIHIL si
+                             * ignota (limen, intermissio) */
 } SilvaMors;
 
 

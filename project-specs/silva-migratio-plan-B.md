@@ -93,6 +93,10 @@
 > silva.h) is the one home of the syntax-death format; examen (bytes
 > unchanged), legati (…W87Q) and briar (bugs/001: death line in .thistle
 > + excerpts, was the region start) call it. T19b-2 next.
+> T19b-2 DONE 2026-09-25: deaths name the found token, add a latina.h
+> hint when a name was expected (lapide's `nomen` case), and suggest a
+> missing ';' (expected token kinds now kept on the death record). T19c
+> (MAP/census/MEMORY, close park and decree) is the last task.
 
 ## What steps 1–4 taught (the inputs to this plan)
 

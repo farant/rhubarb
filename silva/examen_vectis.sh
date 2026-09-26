@@ -332,7 +332,7 @@ _loca () {  # $1 = descriptio, $2 = exspectatum, $3 = factum
 ( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/sem.c" ) \
     > "$SILVA_DIR/$LOCA/sem.out" 2>/dev/null
 _loca "syntaxis: linea prima ad mortem" \
-    "silva/$LOCA/mala.c:12:14: [violatio] lexema quod grammatica hic non accipit" \
+    "silva/$LOCA/mala.c:12:14: [violatio] lexema ';' quod grammatica hic non accipit" \
     "$(sed -n 1p "$SILVA_DIR/$LOCA/mala.out")"
 _loca "syntaxis: relata 'hic coepit' ad IX:1" \
     "     | ^ hic coepit" "$(sed -n 3p "$SILVA_DIR/$LOCA/mala.out")"
@@ -340,7 +340,7 @@ _loca "syntaxis: primaria 'hic exspectatur' sub columna XIV" \
     "     |              ^ hic exspectatur" \
     "$(sed -n 5p "$SILVA_DIR/$LOCA/mala.out")"
 _loca "syntaxis -machina: linea/columna/causa (uncus eas legit)" \
-    "12:14:lexema quod grammatica hic non accipit" \
+    "12:14:lexema ';' quod grammatica hic non accipit" \
     "$(awk -F'\t' '$4=="violatio"{print $2":"$3":"$7}' "$SILVA_DIR/$LOCA/mala.tsv")"
 _loca "semantica: excerptum sub diagnostico" \
     "   7 |     redde y;" "$(sed -n 2p "$SILVA_DIR/$LOCA/sem.out")"

@@ -361,7 +361,7 @@ rc=$?
 [ "$rc" -eq 1 ]; credo $? "XXII. c89 plantata exitus 1 (rc $rc)"
 [ "$(head -1 "$T/c89.out")" = "$C89D/c89_plantata.c:12:14: [erratum] c89:error" ]
 credo $? "XXII. c89 primaria ad mortem: $(head -1 "$T/c89.out")"
-[ "$(sed -n '2p' "$T/c89.out")" = "  lexema quod grammatica hic non accipit" ]
+[ "$(sed -n '2p' "$T/c89.out")" = "  lexema ';' quod grammatica hic non accipit" ]
 credo $? "XXII. c89 causa mortis (non declaratio generis)"
 [ "$(sed -n '3p' "$T/c89.out")" = "   9 | interior integer" ] \
   && [ "$(sed -n '4p' "$T/c89.out")" = "     | ^ hic coepit" ]
