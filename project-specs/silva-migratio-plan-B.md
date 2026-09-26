@@ -45,6 +45,12 @@
 > adopts silva_lexicon (the common composer examen uses). T16b next:
 > briar's pass 2 adopts silva_lexicon (stand-ins riding the embedded
 > corpus) — fixes bugs/009 on the reporter's own path.
+> T16b DONE 2026-09-25: briar's three silva parse sites share
+> `briar_silva_parsare` — context + composed system lexicon (stand-ins
+> in the embedded corpus) + closure headers, public API only;
+> silva_lexicon compiles into briar (its one silva-internal dependency
+> moved to silva/fontes/silva_limes_posix.h). variadica.thistle parses
+> and runs; planted red. lapide bugs/009 fixed on every path.
 
 ## What steps 1–4 taught (the inputs to this plan)
 

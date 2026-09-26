@@ -3,6 +3,7 @@
 #include "briar_silva.h"
 #include "chorda_aedificator.h"
 #include "tabula_dispersa.h"
+#include "silva_lexicon.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -16,6 +17,88 @@ _suffixum_est (
     redde (b32)(c.mensura >= m
         && memcmp(c.datum + (c.mensura - m), suffixum, (size_t)m)
             == ZEPHYRUM);
+}
+
+SilvaParsura*
+briar_silva_parsare (
+            SilvaPiscina*  arboris,
+                 Piscina*  piscina,
+      constans SilexFons*  fons,
+            constans Xar*  clausura,
+      constans character*  excludere,
+      constans character*  via,
+      constans character*  textus,
+                     i32   mensura,
+      constans character** causa)
+{
+    SilvaContextus* contextus;
+             chorda  iso;
+             chorda  px;
+                b32  inventum_iso = FALSUM;
+                b32  inventum_px  = FALSUM;
+                i32  k;
+
+    si (causa != NIHIL)
+    {
+        *causa = NIHIL;
+    }
+    contextus = silva_contextus_creare(arboris);
+    si (contextus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* lexicon systematis: stand-ins e fonte silicis (T16b) */
+    iso = silex_fons_legere(fons, "silva/fontes/systema_c89.h", piscina,
+        &inventum_iso);
+    px  = silex_fons_legere(fons, "silva/fontes/systema_posix.h",
+        piscina,
+        &inventum_px);
+    si (inventum_iso && inventum_px)
+    {
+        character* sys;
+              i32  m_sys    = ZEPHYRUM;
+              b32  fractum  = FALSUM;
+
+        sys = silva_lexicon_componere((constans character*)iso.datum,
+            iso.mensura, (constans character*)px.datum, px.mensura,
+            textus, mensura, FALSUM, piscina, &m_sys, via, &fractum);
+        si (fractum)
+        {
+            si (causa != NIHIL)
+            {
+                *causa = "annotatio externa prava (lexicon systematis)";
+            }
+            redde NIHIL;
+        }
+        si (   sys != NIHIL
+            && !silva_contextus_lexicon_addere(contextus,
+            "systema_c89.h",
+                   sys, (insignatus integer)m_sys))
+        {
+            redde NIHIL;
+        }
+    }
+    per (k = ZEPHYRUM; clausura != NIHIL
+        && k < xar_numerus(clausura); k++)
+    {
+        constans SilexRes* res = (constans SilexRes*)xar_obtinere(
+            clausura, k);
+
+        si (   !_suffixum_est(res->via, ".h")
+            || (excludere != NIHIL
+                && chorda_aequalis_literis(res->via, excludere)))
+        {
+            perge;
+        }
+        (vacuum)silva_contextus_praebere(contextus,
+            chorda_ut_cstr(res->via, piscina),
+            (constans character*)res->contentum.datum,
+            (insignatus integer)res->contentum.mensura);
+    }
+    redde silva_parsare_cum_contextu(arboris, contextus, via, textus,
+        (insignatus integer)mensura, &SILVA_C89_GRAMMATICA, NIHIL,
+        NIHIL,
+        NIHIL);
 }
 
 /* nodus ERROR primus (profunditate prima) in valore: linea silvae aut
@@ -436,11 +519,11 @@ _parsare (
     constans SilexFons* fons,
                    Xar* capita)
 {
-    ChordaAedificator* aed;
-                  Xar* clausura;
-        SilvaExpansio* exp;
-           BriarSilva* arbor_silvae;
-                  i32  k;
+     ChordaAedificator* aed;
+                   Xar* clausura;
+    constans character* causa_lexici = NIHIL;
+            BriarSilva* arbor_silvae;
+                   i32  k;
 
         aed = chorda_aedificator_creare(piscina,
             (memoriae_index)(r->contextus.mensura + 256));
@@ -505,32 +588,16 @@ _parsare (
         redde FALSUM;
     }
     r->silva  = arbor_silvae;
-    exp       = silva_expansio_creare(arbor_silvae->piscina);
-    per (k = ZEPHYRUM; k < xar_numerus(clausura); k++)
-    {
-        constans SilexRes* res = (constans SilexRes*)xar_obtinere(
-            clausura, k);
-
-        si (!_suffixum_est(res->via, ".h"))
-        {
-            perge;
-        }
-        silva_includendum_praebere(exp, chorda_ut_cstr(res->via,
-            piscina),
-            (constans character*)res->contentum.datum,
-            (insignatus integer)res->contentum.mensura);
-    }
-    arbor_silvae->parsura =
-        silva_parsare_cum_expansione(arbor_silvae->piscina, exp,
-        "regio.c", (constans character*)r->textus_silvae.datum,
-        (insignatus integer)r->textus_silvae.mensura,
-        &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
+    arbor_silvae->parsura = briar_silva_parsare(arbor_silvae->piscina,
+        piscina, fons, clausura, NIHIL, "regio.c",
+        (constans character*)r->textus_silvae.datum,
+        (i32)r->textus_silvae.mensura, &causa_lexici);
     si (   arbor_silvae->parsura            == NIHIL
         || arbor_silvae->parsura->commissio == NIHIL)
     {
         arbor_silvae->parsura = NIHIL;
-        r->causa = chorda_ex_literis("silva: parsura fracta",
-            piscina);
+        r->causa = chorda_ex_literis(causa_lexici != NIHIL
+            ? causa_lexici : "silva: parsura fracta", piscina);
         r->linea_erroris = r->linea_initium;
         redde VERUM;
     }
@@ -739,9 +806,7 @@ briar_silvam_capitis_texere (
               b32  inventum = FALSUM;
            chorda  contentum;
               Xar* clausura;
-    SilvaExpansio* exp;
        BriarSilva* silva;
-              i32  k;
 
     textus->datum    = NIHIL;
     textus->mensura  = ZEPHYRUM;
@@ -774,27 +839,10 @@ briar_silvam_capitis_texere (
     {
         redde NIHIL;
     }
-    exp = silva_expansio_creare(silva->piscina);
-    per (k = ZEPHYRUM; k < xar_numerus(clausura); k++)
-    {
-        constans SilexRes* res = (constans SilexRes*)xar_obtinere(
-            clausura, k);
-
-        /* caput ipsum PRINCIPALE est, non includendum */
-        si (   !_suffixum_est(res->via, ".h")
-            || chorda_aequalis_literis(res->via, via))
-        {
-            perge;
-        }
-        silva_includendum_praebere(exp, chorda_ut_cstr(res->via,
-            piscina),
-            (constans character*)res->contentum.datum,
-            (insignatus integer)res->contentum.mensura);
-    }
-    silva->parsura = silva_parsare_cum_expansione(silva->piscina, exp,
-        via, (constans character*)contentum.datum,
-        (insignatus integer)contentum.mensura, &SILVA_C89_GRAMMATICA,
-        NIHIL, NIHIL, NIHIL);
+    /* caput ipsum PRINCIPALE est, non includendum ('excludere') */
+    silva->parsura = briar_silva_parsare(silva->piscina, piscina, fons,
+        clausura, via, via, (constans character*)contentum.datum,
+        (i32)contentum.mensura, NIHIL);
     si (silva->parsura == NIHIL || silva->parsura->commissio == NIHIL)
     {
         briar_silvam_capitis_solvere(silva);

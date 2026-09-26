@@ -3437,3 +3437,14 @@ like examen. Measured: the oracle never loads the stand-in (no divergence
 to name); machinula never handled va_* (the stand-in's note was an
 unbuilt intention). Split: T16b brings briar's silva pass onto the same
 composer. Next: T16b.
+
+## 2026-09-25 — phase 5 plan B T16b: briar's silva pass gets the system layer
+
+RELATIO: briar's three silva parse sites (C regions, principal header,
+symbols) now share one entry that composes the system stand-in through
+silva_lexicon — the same composer examen and tools/diagnostica use — so
+`va_arg`/`offsetof` parse on the reporter's own path and briar knows the
+ISO/POSIX types. No amalgam surface needed: the context API was already
+public; silva_lexicon's single internal dependency became a one-line
+header. lapide bugs/009 closed on every path. Next: T17 (a design
+question for Fran first: does the house accept `__attribute__`?).

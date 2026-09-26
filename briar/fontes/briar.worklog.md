@@ -851,3 +851,29 @@ ever), coverage = briar's own behaviour + corpus libraries added/removed
 - Fumus XX: line 1 == source file (+inedita(n) computed by awk), line 2
   format, `--version` == `-versio`. Plant: a third inedita entry with no
   rebuild → red.
+
+## 2026-09-25 — the silva pass gets the system layer (silva-migratio T16b; lapide bugs/009)
+
+bugs/009 (`va_arg(va, character*)` "parsura fracta" while clang builds
+it fine) was a CONTEXT gap: briar's silva pass (regions, principal
+header, symbols — three parse sites) offered silva only the house
+headers from silex's closure; `<stdarg.h>` lives in the compiler's
+system directory, so `va_arg` was never a macro and the grammar saw a
+function call with a type argument. examen avoids this with silva's
+system stand-in (silva/fontes/systema_c89.h + systema_posix.h, composed
+per file by silva/instrumenta/silva_lexicon); T16a completed the
+stand-in's syntax-bearing macros (va_*, offsetof, assert).
+
+Now `briar_silva_parsare` (briar_silva.c) is the ONE parse entry for all
+three sites: a silva context with the composed system lexicon (stand-ins
+read through SilexFons — embedded corpus or disk; tools/corpus_infixum.sh
+now carries both) plus the closure's headers, parsed with
+`silva_parsare_cum_contextu` (public silva.h API — no amalgam change).
+silva_lexicon.c compiles into briar directly: it is text-level and
+needed only one constant from silva internals, now in the dependency-
+free silva/fontes/silva_limes_posix.h. Beyond va_arg, the pass now knows
+FILE/size_t/etc. as types (formerly silent ambiguity). Fixture
+variadica.thistle + probatio_briar_silva section, planted red (lexicon
+skipped → 1 error). A static (interior) variadic in a thistle fails the
+BUILD for an unrelated reason (briar's prototype header gives it
+internal linkage across units) — thistle convention, not this bug.

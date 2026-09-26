@@ -39,7 +39,7 @@
  * = POSIX praebita (codices 85-87). Constans HIC vivit (fontes) ne
  * emissor et scrutator divergant; instrumenta capita fontium iam
  * includunt. */
-#define SILVA_LIMES_POSIX_TITULUS "SILVA-LIMES-POSIX"
+#include "silva_limes_posix.h"   /* SILVA_LIMES_POSIX_TITULUS (T16b) */
 
 #include "latina.h"
 #include "piscina.h"

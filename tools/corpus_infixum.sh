@@ -56,6 +56,7 @@ corpus_infixum_regenerare () {
             natura/cocta canones.registrum natura/natura.canon \
             aedilis.canon canon.canon silva/grammatica/grammatica.canon \
             silva/quaestiones.canon corpus.symbola.tsv \
+            silva/fontes/systema_c89.h silva/fontes/systema_posix.h \
             -newer "$CORPUS_C" -print -quit 2>/dev/null)" ]; then
         regen=1
     fi
@@ -76,7 +77,7 @@ corpus_infixum_regenerare () {
         printf '%s\n' "$STAMPA" > corpus.versio
         cat > corpus_silicis.toml <<'TOML'
 # GENERATUM a tools/corpus_infixum.sh - NE MANU EDITES (gitignoratum)
-corpus_silicis_files = ["lib/*.c", "lib/*.m", "include/*.h", "vendor/*", "tools/capsula_generare.c", "corpus.versio", "corpus.symbola.tsv", "natura/cocta/*.canon", "natura/cocta/semina.census", "canones.registrum", "natura/natura.canon", "aedilis.canon", "canon.canon", "silva/grammatica/*.canon", "silva/quaestiones.canon"]
+corpus_silicis_files = ["lib/*.c", "lib/*.m", "include/*.h", "vendor/*", "tools/capsula_generare.c", "corpus.versio", "corpus.symbola.tsv", "natura/cocta/*.canon", "natura/cocta/semina.census", "canones.registrum", "natura/natura.canon", "aedilis.canon", "canon.canon", "silva/grammatica/*.canon", "silva/quaestiones.canon", "silva/fontes/systema_c89.h", "silva/fontes/systema_posix.h"]
 corpus_silicis_compress = true
 TOML
         if [ ! -x bin/capsula_generare ]; then

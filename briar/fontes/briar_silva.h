@@ -59,6 +59,28 @@ briar_silvam_texere (
                     Xar* nexus,
      constans SilexFons* fons);
 
+/* Parsura C per silvam cum lexico SYSTEMATIS (silva-migratio T16b):
+ * capita clausurae (Xar de SilexRes, '.h' sola, praeter 'excludere' -
+ * caput principale ipsum; NIHIL licet) contextui praebentur, et
+ * lexicon systematis (silva/fontes/systema_c89.h + systema_posix.h e
+ * fonte silicis - corpus infixum aut discus) per silva_lexicon
+ * componitur, ut examen. Sine eo 'va_arg(va, T)' et 'offsetof(T, m)'
+ * ERROR syntaxis erant (lapide bugs/009), FILE/size_t ignoti. Loca
+ * TRIA parsurae briar (regiones, caput principale, symbola) hinc
+ * pendent - contextus unus, numquam divergens. NIHIL = parsura
+ * fracta; *causa (NIHIL licet) annotationem externa pravam nominat. */
+SilvaParsura*
+briar_silva_parsare (
+            SilvaPiscina*  arboris,
+                 Piscina*  piscina,
+      constans SilexFons*  fons,
+            constans Xar*  clausura,
+      constans character*  excludere,
+      constans character*  via,
+      constans character*  textus,
+                     i32   mensura,
+      constans character** causa);
+
 /* Caput corporis (via e.g. "include/sors.h") ut plagulam
  * PRINCIPALEM parsare: capita clausurae e fonte silicis praebita
  * (numquam discus directe), expansio obligatoria. *textus = textus

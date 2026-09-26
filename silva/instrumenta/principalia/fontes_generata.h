@@ -66,13 +66,14 @@ interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
     { "silva/fontes/silva_parsare.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_scribere.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_oraculum.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "silva/fontes/silva_c89_semantica.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_quaestio.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_annotationes.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_quaestiones.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_arbor.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_frons.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "silva/fontes/silva_lexicon_c89.h", NIHIL, NIHIL, FALSUM, FALSUM }
+    { "silva/fontes/silva_lexicon_c89.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_limes_posix.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_c89_semantica.h", NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {

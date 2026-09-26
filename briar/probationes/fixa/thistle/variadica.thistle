@@ -1,0 +1,36 @@
+#!/usr/bin/env briar
+# Variadica
+
+Functio variadica cum `va_arg(va, T)` et `offsetof(T, m)`: macra
+systematis quae TYPUM accipiunt (lapide bugs/009; silva-migratio T16b).
+
+<c!>
+#include <stdarg.h>
+#include <stddef.h>
+
+nomen structura { s32 a; s32 b; } Par;
+
+s32
+summa (s32 numerus, ...)
+{
+    va_list va;
+    s32 s = (s32)offsetof(Par, b);
+    s32 i;
+    character* nomen_primum;
+
+    va_start(va, numerus);
+    nomen_primum = va_arg(va, character*);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        s = s + va_arg(va, s32);
+    }
+    va_end(va);
+    redde s + (nomen_primum != NIHIL ? I : ZEPHYRUM);
+}
+
+s32
+principale (vacuum)
+{
+    redde summa(II, "a", I, II) > ZEPHYRUM ? ZEPHYRUM : I;
+}
+</c>

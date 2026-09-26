@@ -4,6 +4,7 @@
  */
 
 #include "briar_symbolum.h"
+#include "briar_silva.h"   /* briar_silva_parsare (T16b) */
 
 #include "chorda_aedificator.h"
 #include "silva.h"
@@ -103,8 +104,6 @@ _plagulam_sumere (
                   chorda  textus;
                      b32  inventum = FALSUM;
                      Xar* clausura;
-           SilvaExpansio* exp;
-                     i32 k;
 
     si (tabula_dispersa_invenire(cursor->plagulae, via, &prior))
     {
@@ -138,28 +137,10 @@ _plagulam_sumere (
 
     clausura = silex_clausuram_e_contentis(cursor->piscina,
         cursor->fons, &textus, I);
-    exp      = silva_expansio_creare(p->piscina);
-    per (k = ZEPHYRUM;
-        clausura != NIHIL && k < xar_numerus(clausura); k++)
-    {
-        constans SilexRes* res = (constans SilexRes*)xar_obtinere(
-            clausura, k);
-
-        si (   res->via.mensura                     <= II
-            || res->via.datum[res->via.mensura - I] != (i8)'h')
-        {
-            perge;
-        }
-        silva_includendum_praebere(exp,
-            chorda_ut_cstr(res->via, cursor->piscina),
-            (constans character*)res->contentum.datum,
-            (insignatus integer)res->contentum.mensura);
-    }
-    p->parsura = silva_parsare_cum_expansione(p->piscina, exp,
-        chorda_ut_cstr(via, cursor->piscina),
-        (constans character*)textus.datum,
-        (insignatus integer)textus.mensura,
-        &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
+    p->parsura = briar_silva_parsare(p->piscina, cursor->piscina,
+        cursor->fons, clausura, NIHIL, chorda_ut_cstr(via,
+        cursor->piscina),
+        (constans character*)textus.datum, (i32)textus.mensura, NIHIL);
     si (p->parsura == NIHIL || p->parsura->commissio == NIHIL)
     {
         p->parsura = NIHIL;

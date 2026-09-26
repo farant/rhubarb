@@ -57,6 +57,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/silva/amalgama"
     # compendium capitis (communis cum legato; -functiones)
     "-I$RADIX_DIR/officina/instrumenta"
+    "-I$RADIX_DIR/silva/instrumenta"
 )
 
 # Fontes radicis quibus materia in evolutione nititur.
@@ -191,6 +192,20 @@ obj_files="$obj_files $obj"
 
 # silva: amalgama ut obiectum UNUM (officina exemplar) - fontes silvae
 # absunt de industria; regiones C thistle per silvam parsantur
+# compositio lexici systematis (silva-migratio T16b): modulus textualis
+# silvae (latina + piscina + silva_limes_posix.h solum) - transitus
+# silvae briar lexicon systematis ut examen accipit
+src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
+obj="$BUILD_DIR/silva_lexicon.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [silva] silva_lexicon.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -I"$RADIX_DIR/silva/fontes" \
+            -c "$src" -o "$obj"; then
+        echo "FRACTA: silva_lexicon.c" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
 src="$RADIX_DIR/silva/amalgama/silva.c"
 obj="$BUILD_DIR/amalgama_silva.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then

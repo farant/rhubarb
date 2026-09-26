@@ -39,6 +39,7 @@ briar_mutationes_capsula_regenerare || exit 1
 # Stampa corporis (corpus_infixum.sh) corpus solum nominat; binaria
 # diversa eandem ferebant. Generatur OMNI aedificatione (tempus).
 FONTES_BRIAR=(tools/briar.c briar/fontes/*.c briar/fontes/*.h
+    silva/instrumenta/silva_lexicon.c silva/instrumenta/silva_lexicon.h
     briar/MUTATIONES.md officina/instrumenta/compendium.c
     officina/instrumenta/compendium.h)
 AED_TEMPUS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"

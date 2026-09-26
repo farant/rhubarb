@@ -15,7 +15,8 @@
 #include "latina.h"
 #include "piscina.h"
 #include "silva_lexicon.h"
-#include "silva_c89_semantica.h"   /* SILVA_LIMES_POSIX_TITULUS */
+#include "silva_limes_posix.h"     /* SILVA_LIMES_POSIX_TITULUS - caput
+                                     * sine dependentia (T16b: briar) */
 #include <stdio.h>
 #include <string.h>
 

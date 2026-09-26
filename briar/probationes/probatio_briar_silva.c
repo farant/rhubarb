@@ -27,6 +27,8 @@ hic_manens constans character* VITREUM =
     "briar/probationes/fixa/thistle/salve_vitreum.thistle";
 hic_manens constans character* FRACTUM =
     "briar/probationes/fixa/thistle/adversa/c_fractum.thistle";
+hic_manens constans character* VARIADICA =
+    "briar/probationes/fixa/thistle/variadica.thistle";
 hic_manens constans character* DERIVATUM =
     "briar/probationes/fixa/thistle/derivatum.thistle";
 hic_manens constans character* PUNCTUM =
@@ -310,6 +312,33 @@ principale (vacuum)
         CREDO_VERUM (linea > ZEPHYRUM);
         CREDO_AEQUALIS_I32 (r->linea_erroris, linea);
         CREDO_VERUM (r->causa.mensura > ZEPHYRUM);
+        briar_silvam_solvere(nexus);
+    }
+
+    /* T16b (lapide bugs/009): transitus silvae lexicon systematis
+     * (silva_lexicon, stand-ins e fonte silicis) accipit - va_arg et
+     * offsetof TYPUM accipiunt, sine macris ERROR syntaxis erant */
+    imprimere("\n--- Probans variadica: va_arg/offsetof sine errore ---\n");
+    {
+            character* textus;
+                  i32  mensura;
+                  Xar* nexus;
+        BriarNexusRes* r;
+
+        nexus = _texere_omnia(piscina, intern, fons, VARIADICA, &textus,
+            &mensura);
+        CREDO_NON_NIHIL (nexus);
+        r = _regio_c(nexus, ZEPHYRUM);
+        CREDO_NON_NIHIL (r);
+        CREDO_NON_NIHIL (r->silva);
+        CREDO_NON_NIHIL (r->silva->parsura);
+        si (   r                 != NIHIL && r->silva != NIHIL
+            && r->silva->parsura != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
+                ZEPHYRUM);
+        }
+        CREDO_AEQUALIS_I32 (r->linea_erroris, ZEPHYRUM);
         briar_silvam_solvere(nexus);
     }
 
