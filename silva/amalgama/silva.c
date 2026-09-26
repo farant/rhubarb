@@ -6680,6 +6680,9 @@ structura SilvaExpansio {
                s32  fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
     SilvaTabulaDispersa* tabula_activa; /* tabula temporalis expansionis
                                     * positionalis; NIHIL = tabula viva */
+     SilvaMacroDef* def_attributi; /* __attribute__ internum (T17a):
+                                    * pigre creatum, EXTRA tabulam -
+                                    * defined() id non videt */
 
     /* ==== Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. ====
      * Fines expansionem DEGRADANT, numquam totalitatem: limine tacto
@@ -37362,6 +37365,7 @@ silva_expansio_creare (
     exp->profunditas_includendi  = ZEPHYRUM;
     exp->fons_api                = -I;
     exp->tabula_activa           = NIHIL;
+    exp->def_attributi           = NIHIL;
     exp->limen_lexematum         = SILVA_LIMEN_LEXEMATUM_DEFALTUM;
     exp->limen_generationum      = SILVA_LIMEN_GENERATIONUM_DEFALTUM;
     exp->limen_includendi        = SILVA_LIMEN_INCLUDENDI_DEFALTUM;
@@ -39675,6 +39679,85 @@ _titulum_figere (
     redde c;
 }
 
+
+/* ==================================================
+ * Macrum internum __attribute__ (silva-migratio T17a, lapide
+ * bugs/010; DECISUM Fran 2026-09-25)
+ *
+ * Extensio compilatoris (gcc/clang), non norma: silva eam ACCIPIT
+ * ne parsura in codice alieno frangatur, et ut macrum functio-
+ * simile VACUUM tractat - '__attribute__((unused))' nihil parit.
+ * Invocatio extentum vacuum relinquit: octeti in reinserenda
+ * eunt, <invocatio-vacua> in arbore quaeribilis manet, examen
+ * (T17b) usum in codice domus ex extentis nominat. Clang textum
+ * originalem accipit et semanticam attributorum ipse tenet.
+ *
+ * EXTRA tabulam macrorum: 'defined(__attribute__)' FALSUM manet
+ * (in clang verbum clavis est, non macrum), nullum eventum
+ * definitionis scribitur, fons syntheticus nullus nascitur (arbor
+ * plagularum sine attributo octetim eadem). Definitio usoris
+ * (tabula) vincit - quaeritur solum cum tabula nihil habet.
+ *
+ * Forma grammaticae (nodus attributi cum argumentis parsatis)
+ * CONSULTO abest: utilis fit solum si silva semanticam attributorum
+ * alienorum aliquando modulari debet (parcum nominatum).
+ * ================================================== */
+
+#define SILVA_TITULUS_ATTRIBUTI "__attribute__"
+
+interior SilvaMacroDef*
+_def_internum_quaerere (
+    SilvaExpansio* exp,
+           SilvaChorda  titulus)
+{
+    SilvaMacroDef*  def;
+           SilvaChorda** locus;
+
+    si (   titulus.mensura
+               != (i32)strlen(SILVA_TITULUS_ATTRIBUTI)
+        || memcmp(titulus.datum, SILVA_TITULUS_ATTRIBUTI,
+               (memoriae_index)titulus.mensura) != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    si (exp->def_attributi != NIHIL)
+    {
+        redde exp->def_attributi;
+    }
+
+    def = (SilvaMacroDef*)silva_piscina_allocare(exp->piscina,
+        (memoriae_index)magnitudo(SilvaMacroDef));
+    si (def == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(def, ZEPHYRUM, magnitudo(SilvaMacroDef));
+    def->titulus = _titulum_figere(exp, SILVA_TITULUS_ATTRIBUTI);
+    def->est_functio = VERUM;
+    def->parametra = silva_xar_creare(exp->piscina, magnitudo(SilvaChorda*));
+    def->corpus = silva_xar_creare(exp->piscina, magnitudo(SilvaToken*));
+    def->fons_index = -I;
+    def->linea_def = ZEPHYRUM;
+    def->ex_api = VERUM;
+    si (   def->titulus == NIHIL || def->parametra == NIHIL
+        || def->corpus  == NIHIL)
+    {
+        redde NIHIL;
+    }
+    locus = (SilvaChorda**)silva_xar_addere(def->parametra);
+    si (locus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    *locus = _titulum_figere(exp, "attributa");
+    si (*locus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    exp->def_attributi = def;
+    redde def;
+}
+
 /* Substituere praedefinitum si token id est; VERUM = emissum */
 interior b32
 _praedefinitum_substituere (
@@ -39813,6 +39896,10 @@ _generatio_interna (
         si (_est_nomen_potentiale(token))
         {
             def = silva_expansio_quaerere(exp, token->valor);
+            si (def == NIHIL)
+            {
+                def = _def_internum_quaerere(exp, token->valor);
+            }
             si (   def != NIHIL
                 && !silva_caecatio_continet(_caecatio_lexematis(token),
                        *def->titulus))

@@ -1301,7 +1301,7 @@ s32 principale (vacuum)
             {
                 SilvaNodus* membrum = _nodus_valoris(
                     *silva_valor_lista_obtinere(interps, k));
-                SilvaValor  decll;
+                SilvaValor decll;
                 SilvaNodus* campus_nodus;
 
                 si (   membrum        == NIHIL
@@ -2758,12 +2758,17 @@ s32 principale (vacuum)
          * multi-literae truncabantur - artefactum, non
          * comprehensio]; virgula caudalis enumeratorum = 1
          * [C99-ismus, norma robustitatis]).
-         * RELIQUUM II = "__attribute__((packed)) int x;" et
-         * "__extension__ __attribute__((unused)) int y;" -
-         * extensiones gcc, NOMINATAE, porta evidentiae = si
-         * corpus verum eas umquam poscit (fontes rhubarb eas
-         * non habent). Mutatio deliberata, numquam tacita. */
-        CREDO_AEQUALIS_I32 (sine_erroribus, CXXIII);
+         * RELIQUUM II ("__attribute__((packed)) int x;" et
+         * "__extension__ __attribute__((unused)) int y;") porta
+         * evidentiae aperuit: lapide bugs/010 corpus verum quod
+         * attributa poscit. silva-migratio T17a (2026-09-25):
+         * __attribute__ = macrum internum vacuum expansoris ->
+         * 125. CAVE: linea secunda syntaxim solum transit -
+         * '__extension__' ut typus-nominatus IGNOTUS legitur
+         * (grammatica lenis); semantica eam reicit ('specificatores
+         * primitivi et nominati mixti'). __extension__ NON
+         * acceptum - mutatio deliberata, numquam tacita. */
+        CREDO_AEQUALIS_I32 (sine_erroribus, CXXV);
     }
 
 
@@ -3263,6 +3268,135 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)vista.initium, 24);
         CREDO_AEQUALIS_I32 ((i32)vista.finis, 40);
         CREDO_AEQUALIS_I32 ((i32)vista.linea, II);
+    }
+
+
+    /* ========================================================
+     * PROBARE: __attribute__ macrum internum expansoris (silva-
+     * migratio T17a, lapide bugs/010). Extensio compilatoris,
+     * non norma: expansor eam ut macrum functio-simile VACUUM
+     * novit, EXTRA tabulam (defined() FALSUM manet, ut in clang;
+     * definitio usoris vincit). Invocatio extentum vacuum relinquit
+     * -> octeti servantur, <invocatio-vacua> quaeribilis. Antea:
+     * post prototypum et ante declarationem ERROR; post '}'
+     * structurae TACITE 'functio __attribute__' parsabatur.
+     * ======================================================== */
+
+    {
+        constans character* fixa[IV];
+                       i32  i;
+
+        imprimere("\n--- Probans __attribute__ (internum) ---\n");
+
+        fixa[ZEPHYRUM] =
+            "int f (int a) __attribute__((unused));\n"
+            "int f (int a) { return a; }\n";
+        fixa[I] =
+            "__attribute__((sentinel)) int g (const char* a, ...);\n";
+        fixa[II] =
+            "struct s { int x; } __attribute__((packed));\n";
+        fixa[III] =
+            "int y __attribute__((aligned(8)))"
+            " __attribute__((format(printf, 1, 2)));\n";
+
+        per (i = ZEPHYRUM; i < IV; i++)
+        {
+              SilvaParsura* parsura;
+            SilvaScriptura  scriptura;
+                       i32  vacua = ZEPHYRUM;
+                       i32  e;
+
+            parsura = _parsare(piscina, fixa[i]);
+            CREDO_NON_NIHIL (parsura);
+            si (parsura == NIHIL)
+            {
+                perge;
+            }
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 ((i32)parsura->numerus_errorum,
+                ZEPHYRUM);
+
+            /* omnis invocatio extentum VACUUM reliquit */
+            per (e = ZEPHYRUM;
+                 parsura->expansio != NIHIL
+                     && parsura->expansio->extenta != NIHIL
+                     && e < xar_numerus(parsura->expansio->extenta);
+                 e++)
+            {
+                SilvaExtentumInvocationis* ext =
+                    (SilvaExtentumInvocationis*)xar_obtinere(
+                        parsura->expansio->extenta, e);
+
+                si (ext != NIHIL && ext->vacua)
+                {
+                    vacua++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (vacua, (i == III) ? II : I);
+
+            /* octeti fideles */
+            scriptura = silva_scribere_fontem(piscina, parsura,
+                GRAMMATICA_C89.tabularium, parsura->fons_princeps);
+            CREDO_VERUM (scriptura.successus);
+            CREDO_AEQUALIS_I32 (scriptura.textus.mensura,
+                (i32)strlen(fixa[i]));
+            si (   scriptura.successus
+                && scriptura.textus.mensura == (i32)strlen(fixa[i]))
+            {
+                CREDO_VERUM (memcmp(scriptura.textus.datum, fixa[i],
+                    strlen(fixa[i])) == ZEPHYRUM);
+            }
+        }
+
+        /* defined() FALSUM (ut clang - verbum clavis, non macrum):
+         * ramus sumptus errorem syntaxis ferret */
+        {
+            SilvaParsura* parsura;
+
+            parsura = _parsare(piscina,
+                "#ifdef __attribute__\nint mala = ;\n#endif\n"
+                "#if defined(__attribute__)\nint peior = ;\n#endif\n"
+                "int bona;\n");
+            CREDO_NON_NIHIL (parsura);
+            si (parsura != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 ((i32)parsura->numerus_errorum,
+                    ZEPHYRUM);
+            }
+        }
+
+        /* definitio usoris vincit: expansio non vacua */
+        {
+            SilvaParsura* parsura;
+                     i32  e;
+                     i32  vacua = ZEPHYRUM;
+
+            parsura = _parsare(piscina,
+                "#define __attribute__(x) int\n"
+                "__attribute__((q)) y;\n");
+            CREDO_NON_NIHIL (parsura);
+            si (parsura != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 ((i32)parsura->numerus_errorum,
+                    ZEPHYRUM);
+                per (e = ZEPHYRUM;
+                     parsura->expansio != NIHIL
+                         && parsura->expansio->extenta != NIHIL
+                         && e < xar_numerus(parsura->expansio->extenta);
+                     e++)
+                {
+                    SilvaExtentumInvocationis* ext =
+                        (SilvaExtentumInvocationis*)xar_obtinere(
+                            parsura->expansio->extenta, e);
+
+                    si (ext != NIHIL && ext->vacua)
+                    {
+                        vacua++;
+                    }
+                }
+                CREDO_AEQUALIS_I32 (vacua, ZEPHYRUM);
+            }
+        }
     }
 
 

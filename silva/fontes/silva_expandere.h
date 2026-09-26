@@ -195,6 +195,9 @@ structura SilvaExpansio {
                s32  fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
     TabulaDispersa* tabula_activa; /* tabula temporalis expansionis
                                     * positionalis; NIHIL = tabula viva */
+     SilvaMacroDef* def_attributi; /* __attribute__ internum (T17a):
+                                    * pigre creatum, EXTRA tabulam -
+                                    * defined() id non videt */
 
     /* ==== Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. ====
      * Fines expansionem DEGRADANT, numquam totalitatem: limine tacto

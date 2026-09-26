@@ -1,0 +1,22 @@
+#!/usr/bin/env briar
+# Attributa
+
+`__attribute__((...))` in omnibus sedibus quas lapide tentavit (bugs/010;
+silva-migratio T17a): post prototypum, ante declarationem, post '}'
+structurae. Silva ea ut macrum internum vacuum accipit; clang textum
+originalem et semanticam attributorum tenet.
+
+<c!>
+s32 f (s32 a) __attribute__((unused));
+s32 f (s32 a) { redde a; }
+
+__attribute__((sentinel)) s32 g (constans character* a, ...);
+
+structura Stipatum { character c; s32 n; } __attribute__((packed));
+
+s32
+principale (vacuum)
+{
+    redde f(ZEPHYRUM);
+}
+</c>

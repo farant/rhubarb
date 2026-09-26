@@ -29,6 +29,8 @@ hic_manens constans character* FRACTUM =
     "briar/probationes/fixa/thistle/adversa/c_fractum.thistle";
 hic_manens constans character* VARIADICA =
     "briar/probationes/fixa/thistle/variadica.thistle";
+hic_manens constans character* ATTRIBUTA =
+    "briar/probationes/fixa/thistle/attributa.thistle";
 hic_manens constans character* DERIVATUM =
     "briar/probationes/fixa/thistle/derivatum.thistle";
 hic_manens constans character* PUNCTUM =
@@ -326,6 +328,33 @@ principale (vacuum)
         BriarNexusRes* r;
 
         nexus = _texere_omnia(piscina, intern, fons, VARIADICA, &textus,
+            &mensura);
+        CREDO_NON_NIHIL (nexus);
+        r = _regio_c(nexus, ZEPHYRUM);
+        CREDO_NON_NIHIL (r);
+        CREDO_NON_NIHIL (r->silva);
+        CREDO_NON_NIHIL (r->silva->parsura);
+        si (   r                 != NIHIL && r->silva != NIHIL
+            && r->silva->parsura != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (r->silva->parsura->numerus_errorum,
+                ZEPHYRUM);
+        }
+        CREDO_AEQUALIS_I32 (r->linea_erroris, ZEPHYRUM);
+        briar_silvam_solvere(nexus);
+    }
+
+    /* T17a (lapide bugs/010): __attribute__ = macrum internum
+     * vacuum expansoris silvae - post prototypum, ante
+     * declarationem, post '}' structurae sine ERROR */
+    imprimere("\n--- Probans attributa: __attribute__ sine errore ---\n");
+    {
+            character* textus;
+                  i32  mensura;
+                  Xar* nexus;
+        BriarNexusRes* r;
+
+        nexus = _texere_omnia(piscina, intern, fons, ATTRIBUTA, &textus,
             &mensura);
         CREDO_NON_NIHIL (nexus);
         r = _regio_c(nexus, ZEPHYRUM);

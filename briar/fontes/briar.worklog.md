@@ -877,3 +877,14 @@ variadica.thistle + probatio_briar_silva section, planted red (lexicon
 skipped → 1 error). A static (interior) variadic in a thistle fails the
 BUILD for an unrelated reason (briar's prototype header gives it
 internal linkage across units) — thistle convention, not this bug.
+
+## 2026-09-25 — `__attribute__` accepted (silva-migratio T17a; lapide bugs/010)
+
+No briar code changed: silva's expander now treats `__attribute__((…))`
+as a built-in empty macro (silva/fontes/silva_expandere.worklog.md), so
+all three of briar's silva parse sites accept lapide's positions
+(prototype suffix, leading, after a struct's `}`); clang still receives
+the original text and enforces sentinel/format/unused itself. Fixture
+attributa.thistle + probatio_briar_silva section, planted red against
+HEAD's amalgam (2 errors). `briar attributa.thistle` runs (rc 0). Both
+briar binaries rebaked.

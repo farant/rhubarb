@@ -3448,3 +3448,20 @@ ISO/POSIX types. No amalgam surface needed: the context API was already
 public; silva_lexicon's single internal dependency became a one-line
 header. lapide bugs/009 closed on every path. Next: T17 (a design
 question for Fran first: does the house accept `__attribute__`?).
+
+## 2026-09-25 — phase 5 plan B T17a: `__attribute__` accepted
+
+INTENTIO: Fran decided silva accepts `__attribute__` and examen names its
+use in house code. Measured: grammar node vs erasing macro. An empty
+macro already leaves a queryable `<invocatio-vacua>` and examen's tolera
+matches by line, so the macro suffices for both needs; the grammar form
+is parked (only needed to MODEL attribute semantics).
+
+RELATIO: the expander knows `__attribute__` as a built-in empty
+function-like macro, outside the macro table (defined() stays false, as
+in clang; a user definition wins; no synthetic source). Fixed the silent
+misparse after a struct's `}` too. Every path (raw silva, examen,
+tools/diagnostica, briar) accepts lapide's positions; briar fixture
+planted red. Named costs: computus +8 bytes, corpus 123→125 (the
+`__extension__` line passes syntax only). Oracle and M3 unchanged. Next:
+T17b (examen rule + per-line tolera; severity is Fran's call).
