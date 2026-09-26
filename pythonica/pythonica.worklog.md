@@ -823,3 +823,25 @@ reported each unresolved variable instead of guessing, which is how it showed.
 Also patched by hand earlier: diagnostica's tegit viae (it globs crusta/css/
 html/materia fontes). Tests: the fake inventory gains a crusta row; crusta
 fontes and a materia header must owe crusta (born red, 2).
+
+## 2026-09-25 — Latin lint before the gates (fail-fast; Fran's idea)
+
+Two commits the same day (T19a `summare`, T19b-1 `mappatio`) were
+refused by the vocabulary lint AFTER ~10 minutes of green gates: the lint
+lives inside the oratio suite (an owed gate, run after the requested
+ones) and in the pre-commit hook (after everything). The lint itself
+takes ~1 s. `lint_latinus_praevium(viae)` now runs it in commissio's
+instant pre-check phase (after VETITAE/opus/sine_debitis), and at the
+START of commissio_umbra (before any shadow gate) — only when
+`verificare` (so `--no-verify` semantics match the hook). It calls the
+hook's OWN function (`tools/unci-git/lint_latinus.sh`, lint_latinus)
+with `UNCUS_LINT_VIAE` = the commit's .c/.h/.m paths minus the hook's
+excluded dirs — one source of truth, same report, same exits.
+Test: real function (no C path → "nihil iudicatum"; clean C file → the
+lint really ran, "nihil novi"; excluded dirs skipped) + wiring with the
+lint faked red: both commissio and commissio_umbra refuse with the
+report and NO gate runs. The lint's own red path is the hook smoke's
+(steps IX–XI) — a real plant needs a git-TRACKED file (the symbol index
+reads tracked files only) and a test must not touch the git index.
+Plant: pre-check call removed → a gate runs and git (not the pre-check)
+refuses; restored.

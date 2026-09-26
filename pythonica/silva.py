@@ -2135,6 +2135,44 @@ def _portae_debitas_addere(viae, portae):
     return fructus
 
 
+# LINT LATINUS PRAEVIUS (fail-fast, Fran 2026-09-25): verba identificatorum
+# ignota NOVA commissionem ad FINEM obstabant (uncus pre-commit, post
+# portas omnes) aut per portam 'oratio' (debita, post petitas) - bis
+# eodem die commissio post ~X minuta portarum viridium refutata est
+# ('summare', 'mappatio'), dum lint ipse ~I s currit. Nunc ANTE portas,
+# eadem functio quam uncus currit (tools/unci-git/lint_latinus.sh,
+# UNCUS_LINT_VIAE = viae commissionis) - sedes veritatis una.
+_EXCLUSA_LINTRI = re.compile(
+    r'(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor)/')
+
+
+def lint_latinus_praevium(viae):
+    """lint latinus uncI ante portas: (sana, relatio). Viae .c/.h/.m
+    commissionis (exclusis eisdem directoriis ac uncus) -> sanatio
+    indicis symbolorum + vocabula.sh -nova (arborem TOTAM iudicat).
+    Nulla plagula C = (True, 'nihil iudicatum'). Apparatus fractus =
+    (False, relatio) - clamat, ut uncus."""
+    c = [v for v in viae
+         if v.endswith(_SUFFIXA_C) and not _EXCLUSA_LINTRI.search(v)]
+    if not c:
+        return True, ('lint latinus praevius: nulla plagula .c/.h/.m'
+                      ' - nihil iudicatum')
+    env = dict(os.environ, UNCUS_LINT_VIAE=' '.join(c))
+    r = _curre(['bash', '-c',
+                '. tools/unci-git/lint_latinus.sh && lint_latinus'],
+               env=env)
+    return r.returncode == 0, (r.stderr + r.stdout).strip()
+
+
+def _lint_praevium_exigere(viae):
+    sana, relatio = lint_latinus_praevium(viae)
+    if not sana:
+        raise SilvaError(
+            'LINT LATINUS PRAEVIUS (ante portas - uncus idem ad'
+            ' commissionem obstaret) - nihil cursum, nihil commissum:\n'
+            + relatio)
+
+
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
               opus=None, actor='claude', sine_debitis=None,
               _debitae_additae=False):
@@ -2182,6 +2220,8 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
             'commissio RECUSATA (%d causae) - nihil cursum, nihil'
             ' commissum:\n  %s' % (len(causae), '\n  '.join(
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
+    if verificare:
+        _lint_praevium_exigere(viae)
     if sine_debitis is not None:
         print('portae debitae OMISSAE: %s' % sine_debitis)
     elif not _debitae_additae:
@@ -2837,7 +2877,10 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     receptum_delere; umbrae_purgare orphanos). siccum: portae solae,
     nihil commissum. Reddit (hash | None, [(nomen, compendium,
     totum_secunda)]). Portae DEBITAE (vide commissio) hic ante umbras
-    adduntur, ut in umbra quoque currant; sine_debitis ut in commissio."""
+    adduntur, ut in umbra quoque currant; sine_debitis ut in commissio.
+    Lint latinus praevius ANTE umbras (ut in commissio)."""
+    if verificare:
+        _lint_praevium_exigere(viae)
     if sine_debitis is not None:
         if not str(sine_debitis).strip():
             raise SilvaError('sine_debitis causam poscit (ut --no-verify):'

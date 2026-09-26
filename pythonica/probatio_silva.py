@@ -470,6 +470,35 @@ except silva.SilvaError as ex:
     credo('VETITA' in str(ex) and 'Frani' in str(ex) and 'remove' in str(ex), 'commissio: refusio vetitae causam nominat')
 os.unlink(via_f)
 
+print('--- lint latinus praevius (fail-fast ante portas) ---')
+# functio vera: sine plagula C nihil iudicatum; plagula C sana -> lint
+# VERE cucurrit (relatio unci 'nihil novi'); lintrum rubrum ipsum a
+# fumo unci (gradus IX-XI) probatur - planta vera plagulam TRACTATAM
+# poscit (index git-tractatas solas legit), probatio indicem git non
+# tangit.
+s_v, rel_v = silva.lint_latinus_praevium(['pythonica/README.md'])
+credo(s_v and 'nihil iudicatum' in rel_v, 'lint praevius: sine plagula C nihil iudicatum')
+s_c, rel_c = silva.lint_latinus_praevium(['lib/chorda.c', 'vendor/sqlite3.c'])
+credo(s_c and 'nihil novi' in rel_c, 'lint praevius: plagula C sana -> lint vere cucurrit (nihil novi)')
+s_x, rel_x = silva.lint_latinus_praevium(['vendor/sqlite3.c', 'silva/amalgama/silva.c'])
+credo(s_x and 'nihil iudicatum' in rel_x, 'lint praevius: directoria exclusa ut uncus (vendor, amalgama)')
+# wiring: lint rubrum -> commissio ANTE portas refutat, NULLA porta currit
+_lint_verus, _porta_vera = silva.lint_latinus_praevium, silva.porta
+_cursae = []
+silva.lint_latinus_praevium = lambda viae: (False, 'LINT LATINUS (uncus): NOVUM verbumfictum')
+silva.porta = lambda *a, **k: _cursae.append(a) or _porta_vera(*a, **k)
+try:
+    for _nomen, _voca in (('commissio', lambda: silva.commissio('nihil', ['lib/chorda.c'], portae=['formator-intra'])),
+                          ('commissio_umbra', lambda: silva.commissio_umbra('nihil', ['lib/chorda.c'], ['formator-intra'], siccum=True))):
+        try:
+            _voca()
+            credo(False, '%s: lint praevius rubrum obstat' % _nomen)
+        except silva.SilvaError as ex:
+            credo('PRAEVIUS' in str(ex) and 'verbumfictum' in str(ex), '%s: refusio relationem lintris fert' % _nomen)
+    credo(_cursae == [], 'lint praevius: NULLA porta cucurrit (fail-fast)')
+finally:
+    silva.lint_latinus_praevium, silva.porta = _lint_verus, _porta_vera
+
 print('--- Textus: textus planus ---')
 via_t2 = os.path.join(T, 'planus.md')
 open(via_t2, 'w').write('# titulus\n\nalpha beta\nalpha gamma\n')
