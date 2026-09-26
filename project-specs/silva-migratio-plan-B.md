@@ -129,9 +129,18 @@ repro and which layer rejects it (expander vs GLR).
 
 ### Task 17: `__attribute__((…))` (lapide bugs/010)
 
-As T16. Decide with Fran first whether the house accepts the extension
-at all (C89 purity vs parsing third-party headers) — a design question,
-not a fix.
+**DECIDED (Fran, 2026-09-25; decree in the ledger, T17 tag):** silva
+ACCEPTS the extension — parsing never breaks on vendor or foreign
+code — and examen gains a rule that NAMES its use in house C89 code,
+UNLESS the author exempts it with a declared comment annotation (the
+house's excusatio pattern: STML in a comment, attached structurally —
+cf. crusta's excusatio, materia_excusatio, the T11 annotation kernel).
+The measurement decides: (1) accept via a stand-in macro vs a grammar
+form — the use must stay QUERYABLE ("all `__attribute__`" is a
+code-as-database question; an erasing macro keeps it only through the
+origin chain, a grammar node moves the registry seal); (2) the C89
+exemption annotation's form and where examen reads annotations (it
+does not today, T15b); (3) the rule's severity.
 
 ### Task 18: latina.h description line
 
