@@ -141,7 +141,7 @@ hic_manens constans structura {
     { SILVA_LEX_COMMENTUM_LINEA,       NIHIL }
 };
 
-hic_manens constans character* HEX_CIFRAE = "0123456789abcdef";
+hic_manens constans character* HEX_CIFRAE_SILVAE = "0123456789abcdef";
 
 
 /* ==================================================
@@ -230,7 +230,7 @@ silva_arbor_sigillum (
         gradus = (SILVA_ARBOR_SIGILLI_LONGITUDO - I - i) * IV;
         nibble = (friatum >> gradus) & (i32)0xF;
         chorda_aedificator_appendere_character(exitus,
-            HEX_CIFRAE[nibble]);
+            HEX_CIFRAE_SILVAE[nibble]);
     }
 
     redde chorda_aedificator_finire(exitus);

@@ -3345,3 +3345,20 @@ revived (dead since fed3e78, found by running it); 7 silva statics that
 share names with materia's renamed. The amalgam stays frozen. Replay
 verdict: no substrate module changes behaviour (renames of file-local
 statics). Next: T13b, the public header.
+
+## 2026-09-25 — phase 5 T13b: the amalgam thaws onto materia
+
+RELATIO: silva's committed amalgam regenerated for the first time since
+the T7b freeze, now carrying materia's substrate as a vendicata library
+(renamed Materia* → Silva*, materia_ → silva_materia_, static except the
+three public list/children functions). silva.h's SilvaToken takes
+materia's layout; consumers already read the C89 fields through
+accessors and all passed unchanged (briar 19/19, saltuarius 13/13,
+aedilis 187, officina 15/15). The compile found two more same-named
+file-scope items (data, typedef), one facade macro silva.h could not
+share, a header declaring two bodies' functions, and an unprefixed
+export; each fixed at its seam. The bootstrap exposed that consumers
+build the live silva.h against the committed silva.c (desideratum
+…XHAW3H). Replay verdict: no module behaviour changes; the amalgam is
+now the migrated silva. Next: T13c — officina's amalgam, M3 acceptance
+at T1's pins, oracle, the freeze lifted.

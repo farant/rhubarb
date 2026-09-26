@@ -245,7 +245,8 @@ int main(void)
         /* tituli generum */
         summa++;
         if (primum != NULL
-            && silva_lexema_genus_nomen(primum->genus) != NULL
+            && silva_lexema_genus_nomen(silva_token_genus(primum))
+                != NULL
             && silva_token_origo(primum)->genus == SILVA_ORIGO_FONS
             && silva_origo_genus_nomen(silva_token_origo(primum)->genus)
                 != NULL)

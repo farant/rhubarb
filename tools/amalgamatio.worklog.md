@@ -154,3 +154,66 @@ sources the table; green on lib/xar.c and on materia/fontes/materia_nodus.c.
 renominare refuses dirty files (git = its undo), so after the first
 write per file the remaining statics went by word-boundary replace,
 each gated on renominare's own plan count == occurrence count.
+
+## 2026-09-25 — silva-migratio T13b: the amalgam thaws onto materia
+
+First regeneration since the T7b freeze. How materia got in, and what the
+compile found on the way:
+
+- **Materia is vendicata, exactly like lib/.** Every identifier token of
+  every file passes the rename tables, macro bodies included, so the
+  facade needed no special case: `Materia*` types → the `Silva*` names
+  silva.h already publishes (14, TYPI_EXACTI), enumerators likewise
+  (MATERIA_VALOR_*/LOCUS_*/ARBOR_COMPARATIO_* → SILVA_*), `materia_` →
+  `silva_materia_` (PRAEFIXA). `#define SilvaNodus MateriaNodus` comes
+  out as `#define SilvaNodus SilvaNodus` — legal, inert. CADENDA lists
+  the ORIGINAL materia names (the unit scanner reads pre-rename tokens,
+  as with "Piscina").
+- **silva.h rewritten where materia's layout differs:** SilvaToken (valor,
+  exact trivia arrays + counts, genus int, …, vexilla; the C89 tail is
+  internal, accessors only), REFERENTIA added to both enums (materia
+  appended them last, so ordinals match). Three public functions became
+  facade macros → `#define silva_nodus_liberi silva_materia_nodus_liberi`
+  in silva.h + NON_STATICA (the internal facade macro, after renaming, is
+  a token-identical redefinition). `silva_token_genus` published: with
+  `genus` an int, hospes' `silva_lexema_genus_nomen(primum->genus)` tripped
+  -Wsign-conversion.
+- **One macro could not stay a facade:** `SILVA_ARBOR_VIA_CAPACITAS` is a
+  macro in silva.h (256); the facade's `MATERIA_ARBOR_VIA_CAPACITAS` body
+  would be an incompatible redefinition in the one TU. Back to the literal
+  in silva_arbor.h + a typedef-array assertion tying it to materia's.
+- **Collisions S41 cannot see:** S41 checks duplicate static FUNCTIONS
+  only. Data (`HEX_CIFRAE`, identical copy) and a file-local typedef
+  (`ArborComparator`) collided too; a one-off awk sweep of file-scope names
+  (macro/typedef/tag/static data) over materia vs silva bodies found only
+  these. Silva's side renamed (`HEX_CIFRAE_SILVAE`, `ComparatorParsurarum`).
+- **Companion bodies.** `materia_arbor.h` declares the comparator whose
+  body is `materia_arbor_aequalitas.c` (the aedilis corpus annotation).
+  Per-base excludenda put `materia_arbor_aequalis` in the aequalitas list
+  while its prototype sat under the arbor header's list → a static
+  prototype with no definition, -Wunused-function. Policy now has
+  `corpora_socia_pro` (one header, several bodies, ONE list); the
+  harvest's classifier searches `lib/`, `materia/fontes/` and companions.
+  Harvest: 165 names, 6 rounds.
+- **S43 held by a rename:** `LEXICON_C89` (silva_lexicon_c89.c, entered
+  with the frons) was an unprefixed external → `SILVA_LEXICON_C89` in the
+  amalgam only. Exports 390 before and after; all `silva_*` now; the only
+  materia externals are the three `silva_materia_*`.
+
+**The bootstrap, and a hazard.** aedilis is built from the COMMITTED amalgam:
+`aedilis.c` against the live `silva.h`, linked with `silva.o` from
+`silva.c` — which embeds the OLD header verbatim. After the SilvaToken edit,
+aedilis read token fields at wrong offsets, missed the `<aedilis corpus>`
+comment, and the silva manifest silently lost a body (39 → 38). And
+amalgamare's gate 0 needs aedilis. Bootstrap used: HEAD's silva.h+silva.c
+for aedilis → derive the manifest → restore the new silva.h → harvest →
+amalgamator once by hand → full `amalgamare.sh` (byte-identical to the
+bootstrap output). Desideratum …XHAW3H names a guard.
+
+**renominare on a type name** renamed the homonymous, unrelated file-local
+typedef in materia and in the committed silva.c — reverted by git; question
+…SFJ3T. (Static data was correctly scoped the same day.)
+
+Gates on the thawed amalgam: amalgamare VERIFICATUM (standalone, hospes
+40/40, nm 0, censor); amalgamata 3/3; aedilis 187; saltuarius 13/13; briar
+19/19; officina 15/15 — consumer objects verified newer than silva.c.

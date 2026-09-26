@@ -235,20 +235,23 @@ typedef struct SilvaOrigo {
     } datum;
 } SilvaOrigo;
 
+/* SilvaToken EST MateriaToken (phasis V, T7b/T13b): forma communis
+ * substrati materiae. Campi C89 (origo, longitudo, standard,
+ * scissurae, initium_lineae) in CAUDA post lexema vivunt - per
+ * accessores silva_token_* SOLOS leguntur (infra); trivia quoque
+ * (silva_token_ante/_post). genus = SilvaLexemaGenus ut int. */
 struct SilvaToken {
-    SilvaLexemaGenus  genus;
          SilvaChorda  valor;          /* visus in textum fontis */
+         SilvaToken** spatia_ante;    /* series exacta; NULL si nulla */
+         SilvaToken** spatia_post;
+        unsigned int  numerus_ante;
+        unsigned int  numerus_post;
+                 int  genus;          /* SilvaLexemaGenus */
                  int  byte_offset;    /* -1 si syntheticum */
-        unsigned int  longitudo;
         unsigned int  linea;          /* 1-basata */
         unsigned int  columna;        /* 1-basata */
                  int  fons_index;
-       unsigned char  standard;       /* SILVA_STANDARD_* */
-                 int  initium_lineae;
-            SilvaXar* spatia_ante;    /* SilvaToken* (trivia); NULL */
-            SilvaXar* spatia_post;    /* SilvaToken* (trivia); NULL */
-            SilvaXar* scissurae;      /* laminae intra lexema; NULL */
-          SilvaOrigo  origo;          /* inserta - numquam absens */
+        unsigned int  vexilla;        /* interna substrati */
 };
 
 
@@ -294,6 +297,9 @@ silva_token_est_fons (
 /* Accessores campi C89 (phasis V, T7a - sutura): omnis usus extra
  * silvam per hos transit; repraesentatio lexematis mutari potest.
  * Origo MUTABILIS per monstratorem quamquam lexema constans. */
+SilvaLexemaGenus
+silva_token_genus (
+    const SilvaToken* token);   /* genus ut enumeratio (campus int) */
 SilvaOrigo*
 silva_token_origo (
     const SilvaToken* token);
@@ -375,7 +381,9 @@ typedef enum {
     SILVA_LOCUS_LISTA_NODUS,
     SILVA_LOCUS_LISTA_TOKEN,
     SILVA_LOCUS_LISTA_MIXTA,
-    SILVA_LOCUS_INDEX
+    SILVA_LOCUS_INDEX,
+    SILVA_LOCUS_REFERENTIA,          /* nodus alius, non possessus */
+    SILVA_LOCUS_NUMERUS_SPECIERUM
 } SilvaLocusSpecies;
 
 typedef enum {
@@ -383,7 +391,8 @@ typedef enum {
     SILVA_VALOR_NODUS,
     SILVA_VALOR_TOKEN,
     SILVA_VALOR_LISTA,
-    SILVA_VALOR_INDEX
+    SILVA_VALOR_INDEX,
+    SILVA_VALOR_REFERENTIA           /* scopus REFERENTIA (nodus) */
 } SilvaValorGenus;
 
 typedef struct SilvaNodus SilvaNodus;
@@ -413,18 +422,24 @@ struct SilvaNodus {
       SilvaNodus* pater;            /* post commissionem */
 };
 
+/* Functiones substrati (phasis V, T13b): corpora in materia vivunt,
+ * symbola silva_materia_*; nomina silva_* per macra manent. */
+#define silva_valor_lista_numerus silva_materia_valor_lista_numerus
+#define silva_valor_lista_obtinere silva_materia_valor_lista_obtinere
+#define silva_nodus_liberi silva_materia_nodus_liberi
+
 unsigned int
-silva_valor_lista_numerus (
+silva_materia_valor_lista_numerus (
     SilvaValor lista);
 SilvaValor*
-silva_valor_lista_obtinere (
+silva_materia_valor_lista_obtinere (
       SilvaValor lista,
     unsigned int index);
 
 /* Liberi nodales (NODUS loci + elementa NODUS listarum, ordine
  * locorum): SilvaXar de SilvaNodus* (additiones I) */
 SilvaXar*
-silva_nodus_liberi (
+silva_materia_nodus_liberi (
         SilvaPiscina* piscina,
     const SilvaNodus* nodus);
 

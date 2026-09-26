@@ -149,10 +149,22 @@ _amalgama_compilare_admonens() {
 # demittebat, punctum fixum numquam attingebatur - lectio silvae
 # 2026-07-21); praefixum longissimum = reservum.
 # ------------------------------------------------------------------
+# corpora socia basis (politica optionalis - tessera/officina eam non
+# habent): caput unum, corpora plura, lista una
+_corpora_socia() {
+    if command -v corpora_socia_pro >/dev/null 2>&1; then
+        corpora_socia_pro "$1"
+    fi
+}
+
 _classificare() {
     local nomen="$1" b optimum="" optimum_mensura=0
+    # sedes basium: lib/ (bibliothecae domus) aut materia/fontes/
+    # (substratum materiae vendicatum, silva-migratio T13b)
     for b in $BASES; do
-        if grep -q "^${nomen}[ ]*(" "lib/$b.c" 2>/dev/null; then
+        # shellcheck disable=SC2046
+        if grep -q "^${nomen}[ ]*(" "lib/$b.c" "materia/fontes/$b.c" \
+                $(_corpora_socia "$b") 2>/dev/null; then
             echo "$b"; return 0
         fi
     done

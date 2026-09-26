@@ -77,6 +77,13 @@ excludenda_pro() {
         internamentum)      echo "EXCLUDENDA_INTERNAMENTI" ;;
         selectio)           echo "EXCLUDENDA_SELECTIONIS" ;;
         stml)               echo "EXCLUDENDA_STML" ;;
+        materia_token)      echo "EXCLUDENDA_MATERIA_TOKEN" ;;
+        materia_nodus)      echo "EXCLUDENDA_MATERIA_NODUS" ;;
+        materia_scribere)   echo "EXCLUDENDA_MATERIA_SCRIBERE" ;;
+        materia_arbor)      echo "EXCLUDENDA_MATERIA_ARBOR" ;;
+        materia_arbor_aequalitas) echo "EXCLUDENDA_MATERIA_ARBOR" ;;  # socium
+        materia_lexicon)    echo "EXCLUDENDA_MATERIA_LEXICON" ;;
+        materia_annotationes) echo "EXCLUDENDA_MATERIA_ANNOTATIONES" ;;
         *)                  echo "NIHIL" ;;
     esac
 }
@@ -84,7 +91,24 @@ excludenda_pro() {
 # bases quarum excludenda COMPILATORE metuntur (messis: tools/
 # amalgama_excludenda_generare.sh); friatio = servanda (politica
 # manualis, numquam messa). stml + internamentum + selectio ab
-# silva_annotationes vendicata (2026-07-21).
+# silva_annotationes vendicata (2026-07-21). Substratum materiae
+# (silva-migratio T13b) vendicatum ut lib/: bases in materia/fontes
+# (classificator messis utramque sedem quaerit).
 bases_excludendae() {
     echo "piscina chorda chorda_aedificator tabula_dispersa xar internamentum selectio stml"
+    echo "materia_token materia_nodus materia_scribere materia_arbor"
+    echo "materia_lexicon materia_annotationes"
+}
+
+# corpora SOCIA: basis cuius caput functiones corporum plurium
+# declarat (aedilis: <aedilis corpus=...> in capite). Lista
+# excludendorum UNA pro basi - caput unum, prototypa omnia; corpus
+# socium sub eadem lista stat (excludenda_pro supra) et classificator
+# messis in eo quoque definitiones quaerit. Mensuratum T13b: sine hoc
+# prototypum statica materia_arbor_aequalis in materia_arbor.h sine
+# definitione manebat (-Wunused-function).
+corpora_socia_pro() {
+    case "$1" in
+        materia_arbor) echo "materia/fontes/materia_arbor_aequalitas.c" ;;
+    esac
 }

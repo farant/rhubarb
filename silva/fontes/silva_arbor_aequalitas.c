@@ -134,7 +134,7 @@ silva_arbor_aequalis (
 nomen structura {
      SilvaArborComparatioModus  modus;
          SilvaArborDifferentia* differentia;
-} ArborComparator;
+} ComparatorParsurarum;
 
 /* Divergentiam nominare. Semper FALSUM reddit, ut vocantes
  * 'redde _parsurae_divergere(...)' scribere possint. Nodi et lexemata
@@ -142,10 +142,10 @@ nomen structura {
  * arborem aut lexema cadunt a materia nominantur. */
 interior b32
 _parsurae_divergere (
-        ArborComparator* comparator,
-     constans character* campus,
-                    s32  locus,
-                    s32  index)
+        ComparatorParsurarum* comparator,
+          constans character* campus,
+                         s32  locus,
+                         s32  index)
 {
     SilvaArborDifferentia* differentia = comparator->differentia;
 
@@ -168,11 +168,11 @@ _parsurae_divergere (
  * servatur ubi trivium divergit. */
 interior b32
 _parsurae_lexemata_aequalia (
-        ArborComparator* comparator,
-    constans SilvaToken* a,
-    constans SilvaToken* b,
-                    s32  locus,
-                    s32  index)
+        ComparatorParsurarum* comparator,
+         constans SilvaToken* a,
+         constans SilvaToken* b,
+                         s32  locus,
+                         s32  index)
 {
     SilvaArborDifferentia* differentia = comparator->differentia;
 
@@ -203,11 +203,11 @@ _parsurae_lexemata_aequalia (
  * Nodi NIHIL sunt: haec lexemata ARBORI non pertinent. */
 interior b32
 _arbor_lamina_aequalis (
-         ArborComparator* comparator,
-                     Xar* a,
-                     Xar* b,
-      constans character* campus,
-                     s32  index)
+         ComparatorParsurarum* comparator,
+                          Xar* a,
+                          Xar* b,
+           constans character* campus,
+                          s32  index)
 {
     i32 numerus_a;
     i32 numerus_b;
@@ -234,16 +234,16 @@ _arbor_lamina_aequalis (
 
 interior b32
 _arbor_regiones_aequales (
-    ArborComparator*,
+    ComparatorParsurarum*,
                 Xar*,
                 Xar*);
 
 interior b32
 _arbor_regio_aequalis (
-          ArborComparator* comparator,
-      constans SilvaRegio* a,
-      constans SilvaRegio* b,
-                      s32  index)
+          ComparatorParsurarum* comparator,
+           constans SilvaRegio* a,
+           constans SilvaRegio* b,
+                           s32  index)
 {
     i32 numerus_a;
     i32 numerus_b;
@@ -368,9 +368,9 @@ _arbor_regiones_planare (
 
 interior b32
 _arbor_regiones_aequales (
-    ArborComparator* comparator,
-                Xar* a,
-                Xar* b)
+    ComparatorParsurarum* comparator,
+                     Xar* a,
+                     Xar* b)
 {
      Piscina* piscina;
          Xar* plana_a;
@@ -500,10 +500,10 @@ silva_arbor_parsurae_aequales (
     SilvaArborComparatioModus  modus,
         SilvaArborDifferentia* differentia)
 {
-    ArborComparator comparator;
-                i32 numerus_a;
-                i32 numerus_b;
-                i32 i;
+    ComparatorParsurarum comparator;
+                     i32 numerus_a;
+                     i32 numerus_b;
+                     i32 i;
 
     si (differentia != NIHIL)
     {

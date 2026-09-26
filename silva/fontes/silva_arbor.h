@@ -320,8 +320,14 @@ silva_arbor_scribere_nodum (
  * lexematis). Typi facies sunt typorum materiae.
  * ================================================== */
 
-/* Capacitas semitae diagnosticae (tags '>' iunctis) */
-#define SILVA_ARBOR_VIA_CAPACITAS MATERIA_ARBOR_VIA_CAPACITAS
+/* Capacitas semitae diagnosticae (tags '>' iunctis). LITTERA, non
+ * facies: silva.h (amalgama) eam ut 256 definit, et macro idem bis
+ * in TU una corpore diverso (MATERIA_...) error est (T13b). Assertio
+ * infra aequalitatem cum materia custodit. */
+#define SILVA_ARBOR_VIA_CAPACITAS 256
+nomen character silva_arbor_via_capacitas_congruit[
+    (SILVA_ARBOR_VIA_CAPACITAS
+        == MATERIA_ARBOR_VIA_CAPACITAS) ? I : -I];
 
 /* MODUS: quid POSITIO significet pendet ab eo unde arbor venerit.
  *

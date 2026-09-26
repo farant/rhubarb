@@ -100,6 +100,14 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaArborCensusCompressionis",
     /* distributio (2026-08-27): silva.h typos publicos possidet */
     "StmlDistributioVitium", "StmlDistributioResultus",
+    /* substratum materiae (silva-migratio T13b): typi quorum faciem
+     * silva gerit - silva.h eos sub nominibus Silva* possidet (vide
+     * TYPI_EXACTI); tituli hic ORIGINALES, ut "Piscina" supra */
+    "MateriaToken", "MateriaNodus", "MateriaValor", "MateriaValorGenus",
+    "MateriaLocusSpecies", "MateriaListaProspectus", "MateriaScriptura",
+    "MateriaArborSedes", "MateriaArborComparatioModus",
+    "MateriaArborDifferentia", "MateriaArborVitium", "MateriaTabLocus",
+    "MateriaTabGenus", "MateriaRegistrumCoctum",
     NIHIL
 };
 
@@ -109,7 +117,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
  * dereferunt). */
 interior constans character* constans CADENDA_DEFINITIO[] = {
     "SilvaToken", "SilvaValor", "SilvaNodus", "SilvaCaecatio",
-    "SilvaContextus", "TypusC89", "StmlNodus", NIHIL
+    "SilvaContextus", "TypusC89", "StmlNodus",
+    "MateriaToken", "MateriaNodus", NIHIL
 };
 
 /* Functiones vendicatae quae PUBLICAE manent (extern, in silva.h) */
@@ -124,7 +133,11 @@ interior constans character* constans NON_STATICA[] = {
     "stml_textus_internus", "stml_numerus_liberorum",
     "stml_liberum_ad_indicem", "internamentum_creare",
     /* distributio (2026-08-27) */
-    "stml_distribuere", NIHIL
+    "stml_distribuere",
+    /* facies materiae (T13b): silva.h has per macra in nomina
+     * silva_materia_* vertit - symbola externa manere debent */
+    "materia_valor_lista_numerus", "materia_valor_lista_obtinere",
+    "materia_nodus_liberi", NIHIL
 };
 
 /* Renominationes typorum (exactae). Typi symbola nexus non creant,
@@ -152,7 +165,48 @@ interior constans Renominatio TYPI_EXACTI[] = {
     { "StmlResultus",          "SilvaStmlResultus" },
     { "StmlDistributioVitium",   "SilvaStmlDistributioVitium" },
     { "StmlDistributioResultus", "SilvaStmlDistributioResultus" },
-    { "InternamentumChorda",   "SilvaInternamentumChorda" }
+    { "InternamentumChorda",   "SilvaInternamentumChorda" },
+    /* substratum materiae (silva-migratio T13b): typi publici sub
+     * nominibus Silva* quae consumptores iam gerunt; enumeratores
+     * quoque, quia enumeratio materiae cadit (CADENDA) et silva.h
+     * eos possidet. MATERIA_ARBOR_VIA_CAPACITAS NON: macro internum
+     * manet (silva_arbor.h littera + assertio). */
+    { "MateriaToken",                 "SilvaToken" },
+    { "MateriaNodus",                 "SilvaNodus" },
+    { "MateriaValor",                 "SilvaValor" },
+    { "MateriaValorGenus",            "SilvaValorGenus" },
+    { "MateriaLocusSpecies",          "SilvaLocusSpecies" },
+    { "MateriaListaProspectus",       "SilvaListaProspectus" },
+    { "MateriaScriptura",             "SilvaScriptura" },
+    { "MateriaArborSedes",            "SilvaArborSedes" },
+    { "MateriaArborComparatioModus",  "SilvaArborComparatioModus" },
+    { "MateriaArborDifferentia",      "SilvaArborDifferentia" },
+    { "MateriaArborVitium",           "SilvaArborVitium" },
+    { "MateriaTabLocus",              "SilvaTabLocus" },
+    { "MateriaTabGenus",              "SilvaTabGenus" },
+    { "MateriaRegistrumCoctum",       "SilvaRegistrumCoctum" },
+    { "MATERIA_VALOR_NIHIL",          "SILVA_VALOR_NIHIL" },
+    { "MATERIA_VALOR_NODUS",          "SILVA_VALOR_NODUS" },
+    { "MATERIA_VALOR_TOKEN",          "SILVA_VALOR_TOKEN" },
+    { "MATERIA_VALOR_LISTA",          "SILVA_VALOR_LISTA" },
+    { "MATERIA_VALOR_INDEX",          "SILVA_VALOR_INDEX" },
+    { "MATERIA_VALOR_REFERENTIA",     "SILVA_VALOR_REFERENTIA" },
+    { "MATERIA_LOCUS_NODUS",          "SILVA_LOCUS_NODUS" },
+    { "MATERIA_LOCUS_TOKEN",          "SILVA_LOCUS_TOKEN" },
+    { "MATERIA_LOCUS_LISTA_NODUS",    "SILVA_LOCUS_LISTA_NODUS" },
+    { "MATERIA_LOCUS_LISTA_TOKEN",    "SILVA_LOCUS_LISTA_TOKEN" },
+    { "MATERIA_LOCUS_LISTA_MIXTA",    "SILVA_LOCUS_LISTA_MIXTA" },
+    { "MATERIA_LOCUS_INDEX",          "SILVA_LOCUS_INDEX" },
+    { "MATERIA_LOCUS_REFERENTIA",     "SILVA_LOCUS_REFERENTIA" },
+    { "MATERIA_LOCUS_NUMERUS_SPECIERUM",
+        "SILVA_LOCUS_NUMERUS_SPECIERUM" },
+    { "MATERIA_ARBOR_COMPARATIO_STRUCTURALIS",
+      "SILVA_ARBOR_COMPARATIO_STRUCTURALIS" },
+    { "MATERIA_ARBOR_COMPARATIO_FIDELITAS",
+      "SILVA_ARBOR_COMPARATIO_FIDELITAS" },
+    /* lexicon frontis (silva_lexicon_c89.c, T13b): datum externum
+     * sine praefixo - S43 (nulla collisio hospitis) praefixum poscit */
+    { "LEXICON_C89",                  "SILVA_LEXICON_C89" }
 };
 
 /* Praefixa functionum - longissimum primum (chorda_aedificator_
@@ -166,6 +220,7 @@ interior constans Renominatio PRAEFIXA_FUNCTIONUM[] = {
     { "piscina_",            "silva_piscina_" },
     { "chorda_",             "silva_chorda_" },
     { "stml_",               "silva_stml_" },
+    { "materia_",            "silva_materia_" },
     { "xar_",                "silva_xar_" }
 };
 

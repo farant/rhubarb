@@ -184,3 +184,45 @@ interior constans character* constans EXCLUDENDA_STML[] = {
     "stml_vacare_liberos",
     NIHIL
 };
+
+interior constans character* constans EXCLUDENDA_MATERIA_TOKEN[] = {
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_MATERIA_NODUS[] = {
+    "materia_nodus_lista_permutare",
+    "materia_nodus_reponere",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_MATERIA_SCRIBERE[] = {
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_MATERIA_ARBOR[] = {
+    "materia_arbor_aequalis",
+    "materia_arbor_fragmentum_aperire",
+    "materia_arbor_lector_piscina",
+    "materia_arbor_patres_figere",
+    "materia_arbor_proicere_nodum",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_MATERIA_LEXICON[] = {
+    "materia_lexicon_munera_habet",
+    "materia_lexicon_munus_habet",
+    "materia_lexicon_trivium_est",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_MATERIA_ANNOTATIONES[] = {
+    "_ambitus_ponere",
+    "_commentarium_tractare",
+    "_lexema_tractare",
+    "_locos_premere",
+    "_pendentes_solvere",
+    "_premere",
+    "materia_annotationes_colligere",
+    "materia_annotationes_decoratione_colligere",
+    NIHIL
+};

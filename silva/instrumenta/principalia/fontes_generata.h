@@ -19,13 +19,13 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/selectio.h", NIHIL, EXCLUDENDA_SELECTIONIS, FALSUM, VERUM },
     { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM },
     { "include/stml_macros.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "materia/fontes/materia_lexicon.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "materia/fontes/materia_lexicon.h", NIHIL, EXCLUDENDA_MATERIA_LEXICON, FALSUM, VERUM },
     { "materia/fontes/materia_registrum.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "materia/fontes/materia_token.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "materia/fontes/materia_nodus.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "materia/fontes/materia_scribere.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "materia/fontes/materia_annotationes.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "materia/fontes/materia_arbor.h", NIHIL, NIHIL, FALSUM, VERUM }
+    { "materia/fontes/materia_token.h", NIHIL, EXCLUDENDA_MATERIA_TOKEN, FALSUM, VERUM },
+    { "materia/fontes/materia_nodus.h", NIHIL, EXCLUDENDA_MATERIA_NODUS, FALSUM, VERUM },
+    { "materia/fontes/materia_scribere.h", NIHIL, EXCLUDENDA_MATERIA_SCRIBERE, FALSUM, VERUM },
+    { "materia/fontes/materia_annotationes.h", NIHIL, EXCLUDENDA_MATERIA_ANNOTATIONES, FALSUM, VERUM },
+    { "materia/fontes/materia_arbor.h", NIHIL, EXCLUDENDA_MATERIA_ARBOR, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -38,13 +38,13 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/internamentum.c", NIHIL, EXCLUDENDA_INTERNAMENTI, VERUM, VERUM },
     { "lib/stml.c", NIHIL, EXCLUDENDA_STML, VERUM, VERUM },
     { "lib/stml_macros.c", NIHIL, NIHIL, VERUM, VERUM },
-    { "materia/fontes/materia_annotationes.c", NIHIL, NIHIL, VERUM, VERUM },
-    { "materia/fontes/materia_arbor.c", NIHIL, NIHIL, VERUM, VERUM },
-    { "materia/fontes/materia_arbor_aequalitas.c", NIHIL, NIHIL, VERUM, VERUM },
-    { "materia/fontes/materia_lexicon.c", NIHIL, NIHIL, VERUM, VERUM },
-    { "materia/fontes/materia_nodus.c", NIHIL, NIHIL, VERUM, VERUM },
-    { "materia/fontes/materia_scribere.c", NIHIL, NIHIL, VERUM, VERUM },
-    { "materia/fontes/materia_token.c", NIHIL, NIHIL, VERUM, VERUM }
+    { "materia/fontes/materia_annotationes.c", NIHIL, EXCLUDENDA_MATERIA_ANNOTATIONES, VERUM, VERUM },
+    { "materia/fontes/materia_arbor.c", NIHIL, EXCLUDENDA_MATERIA_ARBOR, VERUM, VERUM },
+    { "materia/fontes/materia_lexicon.c", NIHIL, EXCLUDENDA_MATERIA_LEXICON, VERUM, VERUM },
+    { "materia/fontes/materia_nodus.c", NIHIL, EXCLUDENDA_MATERIA_NODUS, VERUM, VERUM },
+    { "materia/fontes/materia_scribere.c", NIHIL, EXCLUDENDA_MATERIA_SCRIBERE, VERUM, VERUM },
+    { "materia/fontes/materia_token.c", NIHIL, EXCLUDENDA_MATERIA_TOKEN, VERUM, VERUM },
+    { "materia/fontes/materia_arbor_aequalitas.c", NIHIL, EXCLUDENDA_MATERIA_ARBOR, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {

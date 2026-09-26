@@ -90,6 +90,12 @@
 > corpora; 39 other manifests byte-identical), materia_token.o in the
 > three amalgam link lines, ligare revived (dead since fed3e78), 7
 > silva statics renamed. Amalgam still frozen.
+> T13b DONE 2026-09-25: the amalgam regenerated onto materia (first
+> since T7b) — rename tables carry the facade (Materia* → Silva*,
+> materia_ → silva_materia_), silva.h's SilvaToken in materia's layout,
+> companion-body excludenda, two more collisions renamed; amalgamare
+> VERIFICATUM and every consumer gate green (briar, saltuarius,
+> aedilis, officina, amalgamata) — T13c's consumer half is done.
 
 > **Shape.** Step 0 (T1–T5) is written in full: it changes no silva
 > code. Steps 1–4 (T6–T13) are written at task level, each with its
@@ -916,6 +922,27 @@ The 7 renames: `_parsurae_divergere`, `_parsurae_lexemata_aequalia`
 `_silvae_spatium_solum` (arbor), `_silvae_scriptura_fracta`
 (scribere). Of the house's 40 aedilis manifests only silva's amalgam
 manifest moved. True-copy deduplication stays T19.
+
+*T13b as built (2026-09-25).* Measure: 13 typedef aliases + 1 type
+macro + 12 constants + 14 function macros; layouts identical except
+SilvaToken and the two enums (REFERENTIA). The amalgamator's renames
+apply to every identifier token of every file, so materia enters as a
+vendicata library with no special case (details:
+tools/amalgamatio.worklog.md). Fixes the compile found: silva.h
+SilvaToken → materia layout (C89 tail internal); `silva_token_genus`
+published (genus is int); `SILVA_ARBOR_VIA_CAPACITAS` back to a literal
++ assertion (a facade macro would redefine silva.h's); `HEX_CIFRAE` and
+`ArborComparator` collisions (static data/typedef — S41 checks only
+functions) renamed on silva's side; `corpora_socia_pro` in the policy
+(materia_arbor.h declares the aequalitas body's functions: one list);
+`LEXICON_C89` → `SILVA_LEXICON_C89` in the amalgam (S43). Exports 390 →
+390, all `silva_*`. Bootstrap needed because aedilis links the committed
+silva.c against the live silva.h (desideratum …XHAW3H); renominare
+renamed a homonymous file-local typedef across files (question …SFJ3T).
+Consumers green on the new amalgam, objects verified rebuilt. **T13c
+shrinks to:** officina's own amalgam (porta vetustatis; it links silva's
+lexer objects), M3 at T1's pins, oracle, freeze notices lifted, RELATIO,
+plan B.
 
 ---
 
