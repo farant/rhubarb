@@ -1876,6 +1876,9 @@ typedef enum {
     /* 89/90 (2026-09-01): standarda aliena, declaratio post sententiam */
     EXAMEN_CODEX_STANDARDUM_ALIENUM,
     EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM,
+    /* 91 (2026-09-25, silva-migratio T17b): extensio compilatoris
+     * (__attribute__) in codice domus - violatio suppressibilis */
+    EXAMEN_CODEX_EXTENSIO_COMPILATORIS,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

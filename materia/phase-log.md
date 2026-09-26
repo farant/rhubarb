@@ -3465,3 +3465,19 @@ tools/diagnostica, briar) accepts lapide's positions; briar fixture
 planted red. Named costs: computus +8 bytes, corpus 123→125 (the
 `__extension__` line passes syntax only). Oracle and M3 unchanged. Next:
 T17b (examen rule + per-line tolera; severity is Fran's call).
+
+## 2026-09-25 — phase 5 plan B T17b: examen names `__attribute__`
+
+RELATIO: code 91 EXTENSIO_COMPILATORIS (VIOLATIO, Fran's choice) names
+every `__attribute__` written in a house file — in code, in a `#define`,
+in an untaken `#ifdef __GNUC__` branch (`#if 0` skipped) — naming the
+attribute and, for layout/flow ones, that silva's model is blind to it.
+Exempt with `<tolera codex="EXTENSIO_COMPILATORIS" (>causa>` on the same
+or preceding line; tolera matching is by line (it always was), now
+callable without a node. The annotation collector learned to see
+comments in untaken branches, region lines and empty invocations —
+without that the most common portability pattern could not be exempted.
+examen_vectis ⑥ planted red twice. House code: zero uses, 184
+annotation-bearing files unchanged. Found: examen_vectis -corpus
+exclusions are stale (unrelated drift since 09-14, nothing runs it) —
+T19's audit. Next: T18 (latina.h line), then T19/T19b.

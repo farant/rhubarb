@@ -857,3 +857,38 @@ stays deliberately un-included. Known coarseness (named in
 phase-log): the site re-walk uses one snapshot per triggering USUS
 event; an embedded assignment between two flow-branded leaves of
 the same expression could see off-by-one-event sibling state.
+
+## 2026-09-25 — code 91 EXTENSIO_COMPILATORIS (silva-migratio T17b; lapide bugs/010)
+
+Fran's decree: silva accepts `__attribute__` (T17a: built-in empty
+macro), examen names its use in house code as a VIOLATIO, suppressible
+by a declared `<tolera codex="EXTENSIO_COMPILATORIS" (>causa>`.
+
+- NOT a parity code: clang -pedantic-errors accepts `__attribute__`, so
+  this is a house violation (hence tolerable, unlike 89/90), and it can
+  NOT live in examen_vectis's ② corpus (oracle-agreement) — gate ⑥ is
+  examen-only, like ④/⑤.
+- `_extensiones_examinare` walks three homes, because the expander
+  erases the attribute and the expanded stream never carries it:
+  extent laminae (code), consumed directive lines (`#define X
+  __attribute__(…)` — an invocation inside a macro body leaves no
+  extent), untaken branches (`#ifdef __GNUC__`: silva doesn't define
+  it, so the classic portability branch is raw). `#if 0` skipped.
+  Dedup by (line, column).
+- Tolera matching was ALWAYS by line — the node only supplied a
+  position. Split into `_tolera_absorbere_sedem(fons, linea, codex)`
+  + the node wrapper; node-less findings use the former. (My T15b note
+  "examen does not read annotations" was wrong; plan B corrected.)
+- The pass runs BEFORE `_toleras_irritas_examinare`, so absorption
+  marks the tolera used. Plant 1 showed the coupling: rule off → the
+  four tolerae in the fixture become four IRRITUM rows.
+- Message names the attribute (`__format__` → `format`); the layout /
+  flow ones (packed, aligned, vector_size, mode, transparent_union,
+  cleanup, noreturn, constructor, destructor, section, weak, alias,
+  overloadable) add that silva erases them and its model is blind.
+- A first plant (call removed) did not compile: -Werror on the unused
+  static — the gate died before its section. Compiling plant: the
+  matched name changed.
+- The hand-written amalgam silva.h carries its own ExamenCodex enum
+  (like 89/90): 91 added there, or the amalgam's excludenda harvest
+  fails ('undeclared identifier').

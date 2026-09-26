@@ -137,6 +137,29 @@ _ex_lexemate (
     }
 }
 
+/* series lexematum fontis (Xar de SilvaToken*; NIHIL licet) */
+interior vacuum
+_ex_serie (
+                    Xar* fructus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+           constans Xar* series)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; series != NIHIL && i < xar_numerus(series);
+         i++)
+    {
+        constans SilvaToken* tok =
+            *(SilvaToken* constans*)xar_obtinere(series, i);
+
+        si (tok != NIHIL)
+        {
+            _ex_lexemate(fructus, piscina, intern, tok);
+        }
+    }
+}
+
 
 /* ==================================================
  * Affixio (spec par 2.3, octetis per fontem)
@@ -352,6 +375,62 @@ silva_annotationes_colligere (
                 {
                     _ex_lexemate(fructus, piscina, intern, radix);
                 }
+            }
+        }
+    }
+    /* OCTETI EXTRA FLUXUM (silva-migratio T17b, 2026-09-25): tres
+     * domus lexematum fontis quae nec fluxum expansum nec lineas
+     * directivae consumptas intrant - commenta eorum annotationi
+     * INVISIBILIA erant:
+     *   - laminae invocationum (extenta; vacuae praesertim - octeti
+     *     in reinserenda solum: '__attribute__((x)) /+ <tolera> +/');
+     *   - lineae structurales regionum (#if/#elif/#else, #endif) -
+     *     regio eas possidet, directivae numquam;
+     *   - rami NON sumpti (laminae crudae) - idioma '#ifdef
+     *     __GNUC__' + tolera supra '#define' intra ramum; '#if 0'
+     *     excepto.
+     * Duplicata per (fons, byte_offset) omissa (_annotationem_
+     * addere); ordo post directivas, ante caudam. */
+    si (parsura->expansio != NIHIL)
+    {
+        constans SilvaExpansio* exp = parsura->expansio;
+
+        per (i = ZEPHYRUM;
+             exp->extenta != NIHIL && i < xar_numerus(exp->extenta);
+             i++)
+        {
+            constans SilvaExtentumInvocationis* ext =
+                (constans SilvaExtentumInvocationis*)xar_obtinere(
+                    exp->extenta, i);
+
+            si (ext != NIHIL)
+            {
+                _ex_serie(fructus, piscina, intern, ext->lamina);
+            }
+        }
+        per (i = ZEPHYRUM;
+             exp->rami != NIHIL && i < xar_numerus(exp->rami); i++)
+        {
+            constans SilvaRamus* ramus =
+                *(SilvaRamus* constans*)xar_obtinere(exp->rami, i);
+
+            si (ramus == NIHIL)
+            {
+                perge;
+            }
+            _ex_serie(fructus, piscina, intern, ramus->directiva);
+            /* '#if 0' = codex commentatus: annotationes eius mortuae
+             * (ut examen 91 eum praeterit) - tolera ibi IRRITA
+             * falso nuntiaretur */
+            si (!ramus->est_numquam)
+            {
+                _ex_serie(fructus, piscina, intern,
+                    ramus->lexemata_cruda);
+            }
+            si (ramus->regio != NIHIL)
+            {
+                _ex_serie(fructus, piscina, intern,
+                    ramus->regio->directiva_finis);
             }
         }
     }

@@ -259,3 +259,21 @@ attachment and nid identities stay here as C89.
   offsets) over a HEAD snapshot of 1,545 C files — 162 annotations
   (109 SUPRA, 53 INTERIOR, 16 malformed), identical before and after.
   The comparison was planted: continuation off → 28 rows differ.
+
+## 2026-09-25 — the collector walks bytes outside the stream (silva-migratio T17b)
+
+Found by T17b's gate: a `<tolera>` above `#define NON_REDIT
+__attribute__((noreturn))` inside `#ifdef __GNUC__` was invisible — the
+collector walked only the expanded stream (+ origin roots), consumed
+directive lines and EOF. Three homes of source tokens never enter
+those: extent laminae (an empty invocation's bytes live only in
+reinserenda), region structural lines (#if/#elif/#else/#endif — the
+region owns them, never directivae), and untaken branches' raw
+laminae. All three are now walked through `_ex_serie`; duplicates are
+skipped by (fons, byte_offset) as before. `#if 0` bodies are NOT
+walked (commented-out code: a tolera there would falsely be IRRITUM;
+examen 91 skips them too).
+
+Measured against a HEAD snapshot (git archive): examen -machina over
+the 184 house files containing annotations — 209 rows, identical
+before and after. No house annotation lived in those homes.

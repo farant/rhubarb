@@ -532,6 +532,18 @@ nomen enumeratio {
      *      01KZBYEHJP, ictus 01KZE66N8X). */
     EXAMEN_CODEX_STANDARDUM_ALIENUM,          /* VIOLATIO */
     EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM,  /* VIOLATIO */
+
+    /* Extensio compilatoris (silva-migratio T17b, lapide bugs/010;
+     * DECISUM Fran 2026-09-25): 91 = '__attribute__' in codice
+     * domus SCRIPTUM (codex, linea directivae, ramus non sumptus;
+     * '#if 0' excepto). Silva id accipit (T17a: macrum internum
+     * vacuum) - clang -pedantic-errors quoque, ergo NON paritas:
+     * violatio DOMUS, per <tolera codex="EXTENSIO_COMPILATORIS"
+     * (>causa> suppressibilis (absorptio per LINEAM - sedes sine
+     * nodo). Nuntius attributum nominat; attributa formae/fluxus
+     * (packed, aligned, cleanup, noreturn...) addunt modulum silvae
+     * ea non videre (erasio). */
+    EXAMEN_CODEX_EXTENSIO_COMPILATORIS,       /* VIOLATIO */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

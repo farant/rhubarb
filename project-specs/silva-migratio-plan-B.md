@@ -64,6 +64,13 @@
 > T19b ADDED (Fran, 2026-09-25): step 5 promised located errors in
 > "examen, legati and briar" — legati (…W87Q) and briar (…SQ9) still
 > print only the first line.
+> T17b DONE 2026-09-25 (VIOLATIO, Fran): code 91 EXTENSIO_COMPILATORIS
+> over three homes (extent laminae, directive lines, untaken branches;
+> `#if 0` skipped), per-line tolera; the annotation collector now sees
+> comments in those homes too (else `#ifdef __GNUC__` could not be
+> exempted). examen_vectis ⑥ planted red twice. Found for T19:
+> `examen_vectis.sh -corpus` exclusions stale since ~09-14 (no gate runs
+> it). T18 next.
 
 ## What steps 1–4 taught (the inputs to this plan)
 
@@ -186,6 +193,9 @@ Small; measure the pin sites first.
 - LR toolkit's home decided (glr/generare/coquere).
 - `lexicon_c89`'s generator (`silva/instrumenta/lexicon_c89_generare.sh`)
   folded into silva's table generator, or kept — moved here from T14.
+- `examen_vectis.sh -corpus`: exclusions stale (stb_image.h, bitsyfont,
+  briar fabrica fixtures with `#line`) — re-pin with causes or register
+  the mode as a gate; today nothing runs it (found T17b).
 - MAP.txt, `rhubarb.census`, MEMORY updated; lapifex landmine (MG4)
   re-checked.
 - Park …FE9E and decree …XX0BZ closed with pointers.

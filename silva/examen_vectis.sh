@@ -360,6 +360,73 @@ _loca "systema: nullus ordo (nec suspectum falsum)" \
     "0" "$(awk -F'\t' '$1!="VERDICTUM" && $1!~/^#/' "$SILVA_DIR/$LOCA/va.tsv" | wc -l | tr -d ' ')"
 rm -rf "$SILVA_DIR/$LOCA"
 
+# ⑥ EXTENSIO COMPILATORIS (silva-migratio T17b; lapide bugs/010):
+#    silva __attribute__ accipit (T17a), examen usum in codice domus
+#    VIOLATIONE nominat (91) - in codice, in '#define', in ramo non
+#    sumpto ('#ifdef __GNUC__'); '#if 0' praeteritur. Excusatio
+#    declarata (<tolera codex="EXTENSIO_COMPILATORIS" (>causa>) per
+#    lineam absorbet - etiam intra ramum non sumptum (collector
+#    annotationum laminas crudas nunc ambulat); tolera quae nihil
+#    absorbet TOLERA_IRRITUM manet.
+echo "--- extensio compilatoris (T17b) ---"
+mkdir -p "$SILVA_DIR/$LOCA"
+cat > "$SILVA_DIR/$LOCA/attr.c" <<'FIXA'
+struct s { int x; } __attribute__((packed));
+int f (int a) __attribute__((unused));
+#ifdef __GNUC__
+#define NON_REDIT __attribute__((noreturn))
+#else
+#define NON_REDIT
+#endif
+#define FORMA(a, b) __attribute__((__format__(printf, a, b)))
+#if 0
+int g (void) __attribute__((cold));
+#endif
+int f (int a) { return a; }
+FIXA
+cat > "$SILVA_DIR/$LOCA/tolerata.c" <<'FIXA'
+/* <tolera codex="EXTENSIO_COMPILATORIS" (>forma protocolli retis */
+struct s { int x; } __attribute__((packed));
+int f (int a) __attribute__((unused)); /* <tolera codex="EXTENSIO_COMPILATORIS" (>probatio */
+#ifdef __GNUC__
+/* <tolera codex="EXTENSIO_COMPILATORIS" (>clang fluxum noscit */
+#define NON_REDIT __attribute__((noreturn))
+#else
+#define NON_REDIT
+#endif
+/* <tolera codex="EXTENSIO_COMPILATORIS" (>clang formam custodit */
+#define FORMA(a, b) __attribute__((__format__(printf, a, b)))
+int f (int a) { return a; }
+FIXA
+cat > "$SILVA_DIR/$LOCA/irrita.c" <<'FIXA'
+/* <tolera codex="EXTENSIO_COMPILATORIS" (>nihil hic absorbetur */
+int x;
+FIXA
+for f in attr tolerata irrita; do
+    ( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/$f.c" -machina ) \
+        > "$SILVA_DIR/$LOCA/$f.tsv" 2>/dev/null
+done
+CODEX_EXT="$(awk -F'\t' '$2=="EXAMEN_CODEX_EXTENSIO_COMPILATORIS"{print $1}' "$MAPPA")"
+CODEX_IRR="$(awk -F'\t' '$2=="EXAMEN_CODEX_TOLERA_IRRITUM"{print $1}' "$MAPPA")"
+_loca "extensio: verdictum REICE" \
+    "REICE" "$(awk -F'\t' '$1=="VERDICTUM"{print $2}' "$SILVA_DIR/$LOCA/attr.tsv")"
+_loca "extensio: sedes (codex, #define, ramus non sumptus; #if 0 non)" \
+    "1:21 2:15 4:19 8:21" \
+    "$(awk -F'\t' -v c="$CODEX_EXT" '$5==c && $4=="violatio"{print $2":"$3}' "$SILVA_DIR/$LOCA/attr.tsv" | sort -n | tr '\n' ' ' | sed 's/ $//')"
+_loca "extensio: attributum nominatum (__format__ -> format)" \
+    "1" "$(awk -F'\t' -v c="$CODEX_EXT" '$5==c && $2=="8" && $7 ~ /__attribute__\(\(format\)\)/' "$SILVA_DIR/$LOCA/attr.tsv" | wc -l | tr -d ' ')"
+_loca "extensio: formae/fluxus modulum caecum nominat (packed, noreturn; unused non)" \
+    "1 4" \
+    "$(awk -F'\t' -v c="$CODEX_EXT" '$5==c && $7 ~ /caecus/{print $2}' "$SILVA_DIR/$LOCA/attr.tsv" | sort -n | tr '\n' ' ' | sed 's/ $//')"
+_loca "extensio: tolera per lineam (etiam in ramo non sumpto) - ACCIPE" \
+    "ACCIPE" "$(awk -F'\t' '$1=="VERDICTUM"{print $2}' "$SILVA_DIR/$LOCA/tolerata.tsv")"
+_loca "extensio: tolerata - ordo nullus (nec irritum)" \
+    "0" "$(awk -F'\t' '$1!="VERDICTUM" && $1!~/^#/' "$SILVA_DIR/$LOCA/tolerata.tsv" | wc -l | tr -d ' ')"
+_loca "extensio: tolera sine invento -> TOLERA_IRRITUM" \
+    "1:$CODEX_IRR" \
+    "$(awk -F'\t' '$1!="VERDICTUM" && $1!~/^#/{print $2":"$5}' "$SILVA_DIR/$LOCA/irrita.tsv")"
+rm -rf "$SILVA_DIR/$LOCA"
+
 # ③ -corpus: columna verdicti percursus contra exclusiones pinnatas
 #    + plagulae INFRA (annotatio/compositio/praeparatio fracta):
 #    praefixo FRACTA in tabulam intrant - annotatio fracta oraculo

@@ -1890,6 +1890,9 @@ typedef enum {
     /* 89/90 (2026-09-01): standarda aliena, declaratio post sententiam */
     EXAMEN_CODEX_STANDARDUM_ALIENUM,
     EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM,
+    /* 91 (2026-09-25, silva-migratio T17b): extensio compilatoris
+     * (__attribute__) in codice domus - violatio suppressibilis */
+    EXAMEN_CODEX_EXTENSIO_COMPILATORIS,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -70401,7 +70404,9 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "plagula portabilis vernaculum includit", EXAMEN_DOMESTICUM },
     { "standardum alienum (C99/GNU) - C89 solum", EXAMEN_VIOLATIO },
     { "declaratio post sententiam in corpore (C99) - declarationes"
-      " initio corporis",                       EXAMEN_VIOLATIO }
+      " initio corporis",                       EXAMEN_VIOLATIO },
+    { "extensio compilatoris (__attribute__) - non C89; tolera cum"
+      " causa si consulto",                     EXAMEN_VIOLATIO }
 };
 
 /* prototypa: sedes 89 (typus alienus, acies flexibilis) ante
@@ -71109,7 +71114,11 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "IDENTIFICATOR_RESERVATUS",
       (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS },
     { "IDENTIFICATOR_ALIENUS",
-      (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS }
+      (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS },
+    /* VIOLATIO domus, non paritas (clang eam accipit) - excusatio
+     * declarata ergo licet; absorptio per lineam (sine nodo) */
+    { "EXTENSIO_COMPILATORIS",
+      (s32)EXAMEN_CODEX_EXTENSIO_COMPILATORIS }
     /* familia portabilitatis (85-88) CONSULTO abest: emissio eius
      * positione manuali sine nodo fit - _tolera_absorbere nodum
      * petit, ergo tolera numquam absorberet et IRRITUM putresceret.
@@ -71298,8 +71307,42 @@ _toleras_colligere (
     }
 }
 
-/* suppressio: TOLERA cum causa, codice congruente, in fonte eodem,
- * linea firing aut praecedente. Absorbens usum notat. */
+/* suppressio per SEDEM: TOLERA cum causa, codice congruente, in
+ * fonte eodem, linea firing aut praecedente. Absorbens usum notat.
+ * Congruentia semper per lineam fuit - nodus sedem solum dabat;
+ * inventa sine nodo (EXTENSIO_COMPILATORIS, T17b) hic directe
+ * intrant (porta quam familia portabilitatis nominat). */
+interior b32
+_tolera_absorbere_sedem (
+    SilvaSemantica* sem,
+               s32  fons_index,
+               i32  linea,
+               s32  codex)
+{
+    i32 i;
+
+    _toleras_colligere(sem);
+    si (sem->tolerae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(sem->tolerae); i++)
+    {
+        ExamenTolera* e = (ExamenTolera*)silva_xar_obtinere(
+            sem->tolerae, i);
+
+        si (   e != NIHIL && e->codex == codex && e->habet_causam
+            && e->fons_index == fons_index
+            && (e->linea == linea || e->linea + I == linea))
+        {
+            e->usus = VERUM;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* suppressio per NODUM: sedes = radix lexematis primi */
 interior b32
 _tolera_absorbere (
          SilvaSemantica* sem,
@@ -71308,13 +71351,7 @@ _tolera_absorbere (
 {
     SilvaToken* lexema;
     SilvaToken* radix;
-           i32  i;
 
-    _toleras_colligere(sem);
-    si (sem->tolerae == NIHIL)
-    {
-        redde FALSUM;
-    }
     lexema = _lexema_primum(nodus);
     si (lexema == NIHIL)
     {
@@ -71325,21 +71362,8 @@ _tolera_absorbere (
     {
         redde FALSUM;
     }
-    per (i = ZEPHYRUM; i < silva_xar_numerus(sem->tolerae); i++)
-    {
-        ExamenTolera* e = (ExamenTolera*)silva_xar_obtinere(
-            sem->tolerae, i);
-
-        si (   e != NIHIL && e->codex == codex && e->habet_causam
-            && e->fons_index == radix->fons_index
-            && (e->linea == radix->linea
-                || e->linea + I == radix->linea))
-        {
-            e->usus = VERUM;
-            redde VERUM;
-        }
-    }
-    redde FALSUM;
+    redde _tolera_absorbere_sedem(sem, radix->fons_index,
+        radix->linea, codex);
 }
 
 
@@ -76657,6 +76681,236 @@ _standarda_examinare (
     }
 }
 
+
+/* ==================================================
+ * EXTENSIO COMPILATORIS (91; silva-migratio T17b, lapide bugs/010)
+ *
+ * '__attribute__' ubicumque in plagula principali SCRIPTUM: expansor
+ * id ut macrum internum vacuum delet (T17a), ergo fluxus expansus
+ * eum numquam fert - fontes tres ambulantur:
+ *   - extenta invocationum (codex: invocatio vacua, lamina fons);
+ *   - lineae directivae consumptae ('#define NON_REDIT
+ *     __attribute__((noreturn))' - invocatio in corpore macri
+ *     extentum nullum relinquit);
+ *   - rami NON sumpti (idioma '#ifdef __GNUC__': silva __GNUC__
+ *     non definit, ergo ramus crudus manet) - '#if 0' excepto
+ *     (codex commentatus).
+ * Sedes = lexema '__attribute__'; duplicata per (linea, columna)
+ * omissa. Absorptio TOLERA per lineam (sine nodo). Nuntius
+ * attributum nominat; attributa formae/fluxus modulum silvae
+ * caecum esse addunt (erasio - parcum ...WFM6).
+ * ================================================== */
+
+/* attributa quorum erasio modulum silvae FALSUM reddit: forma
+ * (sizeof, offsets, typus), fluxus (cleanup, noreturn), nexus */
+hic_manens constans character* constans _attributa_caeca[] = {
+    "packed", "aligned", "vector_size", "mode", "transparent_union",
+    "cleanup", "noreturn", "constructor", "destructor", "section",
+    "weak", "alias", "overloadable"
+};
+
+/* titulus attributi primi post '__attribute__' '(' '(' - lineolae
+ * duplices circumdantes exutae ('__packed__' -> 'packed') */
+interior SilvaChorda
+_attributi_titulus (
+     constans SilvaXar* lexemata,
+              i32  index)
+{
+                 SilvaChorda  titulus;
+    constans SilvaToken* t;
+
+    titulus.mensura  = ZEPHYRUM;
+    titulus.datum    = NIHIL;
+    si (lexemata == NIHIL || index + III >= silva_xar_numerus(lexemata))
+    {
+        redde titulus;
+    }
+    t = *(SilvaToken* constans*)silva_xar_obtinere(lexemata, index + I);
+    si (t == NIHIL || t->genus != SILVA_LEX_PAREN_APERTA)
+    {
+        redde titulus;
+    }
+    t = *(SilvaToken* constans*)silva_xar_obtinere(lexemata, index + II);
+    si (t == NIHIL || t->genus != SILVA_LEX_PAREN_APERTA)
+    {
+        redde titulus;
+    }
+    t = *(SilvaToken* constans*)silva_xar_obtinere(lexemata, index + III);
+    si (t == NIHIL || t->genus != SILVA_LEX_IDENTIFICATOR)
+    {
+        redde titulus;
+    }
+    titulus = t->valor;
+    si (   titulus.mensura > IV
+        && titulus.datum[ZEPHYRUM] == '_' && titulus.datum[I] == '_'
+        && titulus.datum[titulus.mensura - I] == '_'
+        && titulus.datum[titulus.mensura - II] == '_')
+    {
+        titulus.datum    = titulus.datum + II;
+        titulus.mensura  = titulus.mensura - IV;
+    }
+    redde titulus;
+}
+
+interior b32
+_attributum_caecum_est (
+    SilvaChorda titulus)
+{
+    memoriae_index i;
+
+    per (i = ZEPHYRUM;
+         i < magnitudo(_attributa_caeca)
+             / magnitudo(_attributa_caeca[0]);
+         i++)
+    {
+        si (_chorda_par_literis(titulus, _attributa_caeca[i]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* lexema 'index' in 'lexemata' examinare: si '__attribute__' in
+ * fonte principali, inventum (aut absorptio TOLERA) */
+interior vacuum
+_extensionem_lexematis (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura,
+             constans SilvaXar* lexemata,
+                      i32  index,
+                      SilvaXar* visa)
+{
+    constans SilvaToken* t;
+                 SilvaChorda  titulus;
+              character* nuntius;
+                    i32  k;
+                    i32* locus;
+
+    t = *(SilvaToken* constans*)silva_xar_obtinere(lexemata, index);
+    si (   t             == NIHIL
+        || t->genus      != SILVA_LEX_IDENTIFICATOR
+        || t->fons_index != parsura->fons_princeps
+        || !_chorda_par_literis(t->valor, "__attribute__"))
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k + I < silva_xar_numerus(visa); k += II)
+    {
+        si (   *(i32*)silva_xar_obtinere(visa, k)     == t->linea
+            && *(i32*)silva_xar_obtinere(visa, k + I) == t->columna)
+        {
+            redde;
+        }
+    }
+    locus = (i32*)silva_xar_addere(visa);
+    si (locus != NIHIL)
+    {
+        *locus = t->linea;
+    }
+    locus = (i32*)silva_xar_addere(visa);
+    si (locus != NIHIL)
+    {
+        *locus = t->columna;
+    }
+    si (_tolera_absorbere_sedem(sem, t->fons_index, t->linea,
+            (s32)EXAMEN_CODEX_EXTENSIO_COMPILATORIS))
+    {
+        redde;
+    }
+
+    titulus = _attributi_titulus(lexemata, index);
+    nuntius = (character*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)titulus.mensura + (memoriae_index)CCLVI);
+    si (nuntius == NIHIL)
+    {
+        redde;
+    }
+    sprintf(nuntius, "extensio compilatoris __attribute__((%.*s)) -"
+        " non C89; tolera cum causa si consulto%s",
+        (int)titulus.mensura,
+        titulus.datum != NIHIL
+            ? (constans character*)titulus.datum : "",
+        _attributum_caecum_est(titulus)
+            ? " (attributum formae/fluxus: silva id delet, modulus"
+              " typorum et fluxus eius caecus)"
+            : "");
+    _portabilitatis_diagnosticum(sem, parsura, t,
+        (s32)EXAMEN_CODEX_EXTENSIO_COMPILATORIS, nuntius);
+}
+
+interior vacuum
+_extensiones_examinare (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    constans SilvaExpansio* exp;
+                       SilvaXar* visa;
+                       i32  i;
+                       i32  j;
+
+    si (   parsura == NIHIL || parsura->expansio == NIHIL
+        || parsura->fons_princeps < ZEPHYRUM)
+    {
+        redde;
+    }
+    exp   = parsura->expansio;
+    visa  = silva_xar_creare(sem->piscina, magnitudo(i32));
+    si (visa == NIHIL)
+    {
+        redde;
+    }
+
+    /* codex: invocationes (lamina = [nomen .. ')']) */
+    per (i = ZEPHYRUM;
+         exp->extenta != NIHIL && i < silva_xar_numerus(exp->extenta); i++)
+    {
+        constans SilvaExtentumInvocationis* ext =
+            (constans SilvaExtentumInvocationis*)silva_xar_obtinere(
+                exp->extenta, i);
+
+        si (ext != NIHIL && ext->lamina != NIHIL)
+        {
+            _extensionem_lexematis(sem, parsura, ext->lamina,
+                ZEPHYRUM, visa);
+        }
+    }
+
+    /* lineae directivae consumptae */
+    per (i = ZEPHYRUM;
+         parsura->directivae != NIHIL
+             && i < silva_xar_numerus(parsura->directivae);
+         i++)
+    {
+        SilvaXar* linea = *(SilvaXar**)silva_xar_obtinere(parsura->directivae, i);
+
+        per (j = ZEPHYRUM; linea != NIHIL && j < silva_xar_numerus(linea);
+             j++)
+        {
+            _extensionem_lexematis(sem, parsura, linea, j, visa);
+        }
+    }
+
+    /* rami non sumpti (laminae crudae), '#if 0' excepto */
+    per (i = ZEPHYRUM;
+         exp->rami != NIHIL && i < silva_xar_numerus(exp->rami); i++)
+    {
+        constans SilvaRamus* ramus =
+            *(SilvaRamus* constans*)silva_xar_obtinere(exp->rami, i);
+
+        si (   ramus == NIHIL || ramus->lexemata_cruda == NIHIL
+            || ramus->est_numquam)
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < silva_xar_numerus(ramus->lexemata_cruda); j++)
+        {
+            _extensionem_lexematis(sem, parsura,
+                ramus->lexemata_cruda, j, visa);
+        }
+    }
+}
+
 interior vacuum
 _portabilitatem_examinare (
            SilvaSemantica* sem,
@@ -77220,6 +77474,9 @@ silva_c89_semantica_analysare_cum_systemate (
     /* candidati SEVERAE sine functione: emissio verbatim ANTE
      * iudicium tolerarum irritarum (absorptio hic adhuc licet) */
     _intervalla_candidata_relicta_emittere(sem);
+    /* extensio compilatoris (91): ANTE toleras irritas - absorptio
+     * per lineam usum notat */
+    _extensiones_examinare(sem, parsura);
     /* TOLERA irrita (gradus severi): suppressiones quae nihil
      * absorbuerunt aut sine causa - post ambulationem totam */
     _toleras_irritas_examinare(sem, parsura);
@@ -89459,6 +89716,29 @@ _ex_lexemate (
     }
 }
 
+/* series lexematum fontis (Xar de SilvaToken*; NIHIL licet) */
+interior vacuum
+_ex_serie (
+                    SilvaXar* fructus,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern,
+           constans SilvaXar* series)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; series != NIHIL && i < silva_xar_numerus(series);
+         i++)
+    {
+        constans SilvaToken* tok =
+            *(SilvaToken* constans*)silva_xar_obtinere(series, i);
+
+        si (tok != NIHIL)
+        {
+            _ex_lexemate(fructus, piscina, intern, tok);
+        }
+    }
+}
+
 
 /* ==================================================
  * Affixio (spec par 2.3, octetis per fontem)
@@ -89674,6 +89954,62 @@ silva_annotationes_colligere (
                 {
                     _ex_lexemate(fructus, piscina, intern, radix);
                 }
+            }
+        }
+    }
+    /* OCTETI EXTRA FLUXUM (silva-migratio T17b, 2026-09-25): tres
+     * domus lexematum fontis quae nec fluxum expansum nec lineas
+     * directivae consumptas intrant - commenta eorum annotationi
+     * INVISIBILIA erant:
+     *   - laminae invocationum (extenta; vacuae praesertim - octeti
+     *     in reinserenda solum: '__attribute__((x)) /+ <tolera> +/');
+     *   - lineae structurales regionum (#if/#elif/#else, #endif) -
+     *     regio eas possidet, directivae numquam;
+     *   - rami NON sumpti (laminae crudae) - idioma '#ifdef
+     *     __GNUC__' + tolera supra '#define' intra ramum; '#if 0'
+     *     excepto.
+     * Duplicata per (fons, byte_offset) omissa (_annotationem_
+     * addere); ordo post directivas, ante caudam. */
+    si (parsura->expansio != NIHIL)
+    {
+        constans SilvaExpansio* exp = parsura->expansio;
+
+        per (i = ZEPHYRUM;
+             exp->extenta != NIHIL && i < silva_xar_numerus(exp->extenta);
+             i++)
+        {
+            constans SilvaExtentumInvocationis* ext =
+                (constans SilvaExtentumInvocationis*)silva_xar_obtinere(
+                    exp->extenta, i);
+
+            si (ext != NIHIL)
+            {
+                _ex_serie(fructus, piscina, intern, ext->lamina);
+            }
+        }
+        per (i = ZEPHYRUM;
+             exp->rami != NIHIL && i < silva_xar_numerus(exp->rami); i++)
+        {
+            constans SilvaRamus* ramus =
+                *(SilvaRamus* constans*)silva_xar_obtinere(exp->rami, i);
+
+            si (ramus == NIHIL)
+            {
+                perge;
+            }
+            _ex_serie(fructus, piscina, intern, ramus->directiva);
+            /* '#if 0' = codex commentatus: annotationes eius mortuae
+             * (ut examen 91 eum praeterit) - tolera ibi IRRITA
+             * falso nuntiaretur */
+            si (!ramus->est_numquam)
+            {
+                _ex_serie(fructus, piscina, intern,
+                    ramus->lexemata_cruda);
+            }
+            si (ramus->regio != NIHIL)
+            {
+                _ex_serie(fructus, piscina, intern,
+                    ramus->regio->directiva_finis);
             }
         }
     }
