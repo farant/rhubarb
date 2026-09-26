@@ -346,6 +346,18 @@ _loca "semantica: excerptum sub diagnostico" \
     "   7 |     redde y;" "$(sed -n 2p "$SILVA_DIR/$LOCA/sem.out")"
 _loca "semantica: signum sub columna XI" \
     "     |           ^" "$(sed -n 3p "$SILVA_DIR/$LOCA/sem.out")"
+# ⑤ MACRA SYNTACTICA SYSTEMATIS (silva-migratio T16a; lapide bugs/009):
+#    va_arg/offsetof TYPUM accipiunt - sine macro in systema_c89.h
+#    ERROR syntaxis erant; va_start/va_end/assert 'vocatio implicita'
+#    et 'variabilis ininitiata' falsa dabant. Plagula omnia quinque
+#    utens: ACCIPE, ordo nullus ullius gradus.
+printf "#include <stdarg.h>\n#include <stddef.h>\n#include <assert.h>\n\nstruct par { int a; int b; };\n\nint\nf (int n, ...)\n{\n    va_list va;\n    char* s;\n    size_t o = offsetof(struct par, b);\n    va_start(va, n);\n    s = va_arg(va, char*);\n    va_end(va);\n    assert(s != 0);\n    return (int)o + (s != 0);\n}\n" > "$SILVA_DIR/$LOCA/va.c"
+( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/va.c" -machina ) \
+    > "$SILVA_DIR/$LOCA/va.tsv" 2>/dev/null
+_loca "systema: va_arg/offsetof/va_start/va_end/assert ACCIPE" \
+    "ACCIPE" "$(awk -F'\t' '$1=="VERDICTUM"{print $2}' "$SILVA_DIR/$LOCA/va.tsv")"
+_loca "systema: nullus ordo (nec suspectum falsum)" \
+    "0" "$(awk -F'\t' '$1!="VERDICTUM" && $1!~/^#/' "$SILVA_DIR/$LOCA/va.tsv" | wc -l | tr -d ' ')"
 rm -rf "$SILVA_DIR/$LOCA"
 
 # ③ -corpus: columna verdicti percursus contra exclusiones pinnatas

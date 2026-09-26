@@ -37,6 +37,14 @@
 > semantic findings). examen_vectis.sh was not a registered gate at
 > all — now 'examen-vectis' in PORTAE + inventory. legati's own copy of
 > the format is desideratum …W87Q (needs a public silva.h surface).
+> T16 SPLIT by its measurement (Fran, 2026-09-25): (a) chosen — the
+> fix belongs in the system stand-in, not the grammar; but the stand-in
+> is loaded only by examen and the officina tools. T16a DONE: va_arg,
+> offsetof, va_start, va_end, assert defined in systema_c89.h (the class,
+> not the case; lib/silex.c lost 5 false suspects); tools/diagnostica
+> adopts silva_lexicon (the common composer examen uses). T16b next:
+> briar's pass 2 adopts silva_lexicon (stand-ins riding the embedded
+> corpus) — fixes bugs/009 on the reporter's own path.
 
 ## What steps 1–4 taught (the inputs to this plan)
 

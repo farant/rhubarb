@@ -11,7 +11,7 @@ BUILD_DIR="$RADIX_DIR/build/diagnostica"
 BIN="$BUILD_DIR/diagnostica"
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
-declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$RADIX_DIR/crusta/fontes" "-I$RADIX_DIR/css/fontes" "-I$RADIX_DIR/html/fontes" "-I$RADIX_DIR/silva/fontes")
+declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$RADIX_DIR/crusta/fontes" "-I$RADIX_DIR/css/fontes" "-I$RADIX_DIR/html/fontes" "-I$RADIX_DIR/silva/fontes" "-I$RADIX_DIR/silva/instrumenta")
 mkdir -p "$BUILD_DIR" || exit 2
 CAPITA_NOVA=""
 if [ -f "$BIN" ]; then
@@ -53,6 +53,8 @@ for src in "$RADIX_DIR"/silva/fontes/*.c; do
     esac
     compilare "$src" "$BUILD_DIR/$(basename "$src" .c).o"
 done
+# compositio lexici systematis (T16a) - modulus communis instrumentorum
+compilare "$RADIX_DIR/silva/instrumenta/silva_lexicon.c" "$BUILD_DIR/silva_lexicon.o"
 if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$RADIX_DIR/tools/diagnostica.c" ] \
    || [ -n "$(find "$BUILD_DIR" -name '*.o' -newer "$BIN" 2>/dev/null | head -1)" ]; then
     rm -f "$BIN"

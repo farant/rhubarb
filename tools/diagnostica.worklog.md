@@ -96,3 +96,16 @@ base64.c +336 bytes / +2 allocations and color.c +432 / +3 = the death
 records of their 4 and 5 ERROR nodes (the fixtures parse -nudum, without
 the header closure). lexemata/errores columns identical. Gold regenerated
 with COMPUTUS_SCRIBERE=1 under this cause.
+
+## 2026-09-25 — the system lexicon (silva-migratio T16a)
+
+tools/diagnostica now composes the system lexicon with
+`silva_lexicon_componere` — the common module examen already uses
+(ISO whole + POSIX sections derived from the file's own `#include <…>`
++ its `externa` blocks) — so the house's two C judges agree on context.
+Before, it had only house headers via aedilis (`<stdarg.h>` is `S`,
+nothing supplied), so `va_arg`/`offsetof` were syntax errors here even
+after the stand-in fix. A malformed `externa` annotation stops judgment
+by name (never a clean result); an unreadable stand-in is a MONITUM.
+Sweep: 431 files (incl. vendor/sqlite3.h) — 0 diagnostics: unlike latina
+at T14, the ISO stand-in does not clash with vendor headers.

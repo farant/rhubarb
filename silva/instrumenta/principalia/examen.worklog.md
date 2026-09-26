@@ -38,3 +38,24 @@ Not done here (desideratum …W87Q): legati's `diagnostica` (officina/
 instrumenta/legatus.c) keeps its OWN copy of examen's output format and
 is built against the amalgam, where materia's position functions are
 internal — it needs a public silva.h surface for death points.
+
+## 2026-09-25 — the system stand-in completes its syntax-bearing macros (silva-migratio T16a)
+
+lapide bugs/009 (`va_arg(va, char*)` a syntax error) was a stand-in gap,
+not a grammar gap: `silva/fontes/systema_c89.h` defined `va_list` but no
+`va_*` macros (its note deferred them to machinula, which never grew any
+`va_*` handling). Audit of the class (macros that take a TYPE or change
+data flow): `va_arg`, `offsetof` (syntax errors); `va_start`, `va_end`,
+`assert` (implicit calls). All five now defined with valid C89
+expansions. Measured side effect: lib/silex.c lost FIVE false suspects —
+2 "vocatio implicita" (va_start/va_end) and 3 "variabilis ininitiata
+legitur" on `argumenta` (dataflow never saw va_start assign it).
+
+**My own gate bug, caught by the plant.** The first version of the
+new sections wrote the fixture with `printf '%s' "...\n..."` — `%s`
+does not interpret escapes, so the "file" was ONE line beginning
+`#include` (a directive swallowing everything) and passed with or
+without the fix. The plant (stand-in at HEAD) stayed green, which is
+what exposed it. Fixed to pass the fixture as the format string; the
+plant now reds 2/2 (examen-vectis) and 2/3 (diagnostica — the third
+assertion, "lexicon read", correctly stays green).

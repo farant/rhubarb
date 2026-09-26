@@ -379,6 +379,18 @@ cp "$C89D/c89_plantata.c" "$T/c89_extra.c"
 rc=$?
 [ "$rc" -eq 1 ] && grep -q 'MONITUM plagula extra repositorium' "$T/c89x.err"
 credo $? "XXII. c89 extra repositorium: MONITUM nominatum, iudicium tamen (rc $rc)"
+# XXIII. Lexicon SYSTEMATIS (silva-migratio T16a): silva_lexicon
+# compositio (eadem ac examen) - va_arg/offsetof typum accipiunt,
+# sine macris stand-in ERROR syntaxis erant (lapide bugs/009).
+printf "#include <stdarg.h>\n#include <stddef.h>\n#include <assert.h>\n\nstruct par { int a; int b; };\n\nint\nf (int n, ...)\n{\n    va_list va;\n    char* s;\n    size_t o = offsetof(struct par, b);\n    va_start(va, n);\n    s = va_arg(va, char*);\n    va_end(va);\n    assert(s != 0);\n    return (int)o + (s != 0);\n}\n" > "$C89D/va.c"
+./tools/diagnostica.sh -machina "$C89D/va.c" > "$T/va.tsv" 2> "$T/va.err"
+rc=$?
+[ "$rc" -eq 0 ]; credo $? "XXIII. va_arg/offsetof/va_start/assert: exitus 0 (rc $rc)"
+! grep -q $'\terratum\t' "$T/va.tsv"
+credo $? "XXIII. lexicon systematis: nullum erratum"
+! grep -q 'MONITUM' "$T/va.err"
+credo $? "XXIII. lexicon systematis lectum (nullum MONITUM)"
+
 # Domus: plagulae quae T14 falsa errata dederunt, singulae causa sua.
 # vendor/sqlite3.h IPSUM discernit ordinem inclusionis: clausura eius
 # latina.h caret, ergo latina ut LEXICON ('char C' -> 'char 100')

@@ -3426,3 +3426,14 @@ points and lib/excerptum. Its differential gate (examen_vectis.sh) had
 never been registered; it is now 'examen-vectis'. legati's parallel
 printer waits on a public silva.h surface (desideratum …W87Q). Next:
 T16.
+
+## 2026-09-25 — phase 5 plan B T16a: the system stand-in, completed and shared
+
+RELATIO: lapide bugs/009 traced to the system stand-in (systema_c89.h),
+not the grammar: syntax-bearing ISO macros (va_arg, offsetof) and
+flow-bearing ones (va_start, va_end, assert) were missing. All five now
+defined; tools/diagnostica composes the stand-in through silva_lexicon
+like examen. Measured: the oracle never loads the stand-in (no divergence
+to name); machinula never handled va_* (the stand-in's note was an
+unbuilt intention). Split: T16b brings briar's silva pass onto the same
+composer. Next: T16b.

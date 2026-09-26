@@ -84,6 +84,7 @@
 #include "silva_contextus.h"
 #include "silva_c89_oraculum.h"
 #include "silva_frons.h"
+#include "silva_lexicon.h"
 #include "silva_tabulae_c89.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -491,6 +492,68 @@ _c89_capita_praebere (
     redde VERUM;
 }
 
+/* Lexicon SYSTEMATIS (silva-migratio T16a): compositio communis
+ * silva_lexicon (eadem quam examen vocat - iudices domus de C
+ * consentire debent): ISO integrum + sectiones POSIX ex inclusionibus
+ * plagulae + bloci externa. Sine eo 'va_arg(va, char*)' et
+ * 'offsetof(T, m)' ERROR syntaxis erant (typus in sede argumenti),
+ * va_start 'vocatio implicita'. Stand-ins ex $RHUBARB_RADIX/silva/
+ * fontes/. FALSUM = annotatio externa prava (iudicium sistitur,
+ * numquam mundum) aut stand-in illegibilis (MONITUM, pergit). */
+interior b32
+_c89_systema_addere (
+            Piscina* piscina,
+     SilvaContextus* contextus,
+ constans character* via,
+ constans character* fons,
+                i32  mensura)
+{
+     constans character* radix = getenv("RHUBARB_RADIX");
+              character  via_iso[1024];
+              character  via_px[1024];
+              character* fons_iso;
+              character* fons_px;
+              character* fons_sys;
+                    i32  m_iso    = ZEPHYRUM;
+                    i32  m_px     = ZEPHYRUM;
+                    i32  m_sys    = ZEPHYRUM;
+                    b32  fractum  = FALSUM;
+
+    si (radix == NIHIL)
+    {
+        radix = ".";
+    }
+    si (strlen(radix) + LXIV >= magnitudo(via_iso))
+    {
+        redde VERUM;
+    }
+    sprintf(via_iso, "%s/silva/fontes/systema_c89.h", radix);
+    sprintf(via_px, "%s/silva/fontes/systema_posix.h", radix);
+    fons_iso  = _plagulam_legere(piscina, via_iso, &m_iso);
+    fons_px   = _plagulam_legere(piscina, via_px, &m_px);
+    si (fons_iso == NIHIL || fons_px == NIHIL)
+    {
+        fprintf(stderr, "diagnostica: MONITUM lexicon systematis "
+            "illegibile (%s) - C89 sine systemate: %s\n", via_iso, via);
+        redde VERUM;
+    }
+    fons_sys = silva_lexicon_componere(fons_iso, m_iso, fons_px, m_px,
+        fons, mensura, FALSUM, piscina, &m_sys, via, &fractum);
+    si (fractum)
+    {
+        fprintf(stderr, "diagnostica: annotatio externa prava - "
+            "iudicium sistitur: %s\n", via);
+        redde FALSUM;
+    }
+    si (   fons_sys != NIHIL
+        && !silva_contextus_lexicon_addere(contextus, "systema_c89.h",
+               fons_sys, m_sys))
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* C89 per silvam (T14): contextus = clausura capitum plagulae
  * (aedilis, supra) ORDINE INCLUSIONIS VERO - latina.h inter capita
  * venit ubi plagula eam includit. latina.h ut LEXICON (ante omnia)
@@ -518,7 +581,8 @@ constans character* via,
                i32  k;
 
     contextus = silva_contextus_creare(piscina);
-    si (contextus == NIHIL)
+    si (   contextus == NIHIL
+        || !_c89_systema_addere(piscina, contextus, via, fons, mensura))
     {
         redde NIHIL;
     }

@@ -26,13 +26,31 @@ typedef int           wchar_t;
 
 #define NULL ((void*)0)
 
+/* offsetof TYPUM accipit - vocatio functionis esse nequit, ergo sine
+ * macro 'offsetof(T, m)' error syntaxis erat (silva-migratio T16a).
+ * Definitio C89 classica. */
+#define offsetof(typus, membrum) ((size_t)&(((typus*)0)->membrum))
+
 
 /* ==================================================
- * stdarg.h (va_* magicae - machinula eas specialiter tractabit;
- * corpus variadica non definit - audit 2026-07-08)
+ * stdarg.h - macra, ut in capite compilatoris
+ *
+ * va_arg TYPUM accipit: sine macro 'va_arg(va, char*)' vocatio
+ * functionis cum typo in sede argumenti erat - ERROR syntaxis
+ * (lapide bugs/009; silva-migratio T16a). Expansio C89 valida quae
+ * sedes vocationis servat: ISO typum postulat 'cuius monstrator per
+ * * postfixum fit', ergo (typus*) semper valet. va_start/va_end
+ * antea 'vocatio implicita' suspecta falsa dabant (lib/silex.c).
+ * Nota prior 'machinula eas specialiter tractabit' (audit
+ * 2026-07-08) numquam aedificata est - machinula va_* non tangit.
  * ================================================== */
 
 typedef char* va_list;
+
+#define va_start(argumenta, ultimus) \
+    ((void)((argumenta) = (va_list)&(ultimus)))
+#define va_arg(argumenta, typus) (*(typus*)(argumenta))
+#define va_end(argumenta) ((void)(argumenta))
 
 
 /* ==================================================
@@ -737,3 +755,9 @@ _systema_assertio_fracta (
     const char* expressio,
     const char* via,
            int  linea);
+
+/* assert ut macrum (T16a): antea solum auxilium declaratum, et
+ * 'assert(x)' vocatio implicita erat */
+#define assert(expressio) \
+    ((expressio) ? (void)0 \
+        : _systema_assertio_fracta(#expressio, __FILE__, __LINE__))
