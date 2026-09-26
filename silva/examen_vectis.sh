@@ -309,6 +309,45 @@ for f in "$FIXA"/*.severum; do
     fi
 done
 
+# ④ LOCA ET EXCERPTA (silva-migratio T15b): syntaxis fracta ordinem
+#    cum linea/columna VERA fert (mors GLR, non 'nodi erroris N' linea
+#    0 - uncus post-editionem locum agentibus nunc dat), modus humanus
+#    excerptum sub diagnostico (relata 'hic coepit' + primaria 'hic
+#    exspectatur'); diagnosticum semanticum excerptum suum quoque.
+echo "--- loca syntaxis et excerpta (T15b) ---"
+LOCA="build/vectis_loca"
+mkdir -p "$SILVA_DIR/$LOCA"
+printf '#include "latina.h"\n\ninterior integer\nbona (vacuum)\n{\n    redde I;\n}\n\ninterior integer\nmala (vacuum)\n{\n    redde I +;\n}\n' \
+    > "$SILVA_DIR/$LOCA/mala.c"
+printf '#include "latina.h"\n\ninterior integer\nf (vacuum)\n{\n    integer x;\n    redde y;\n}\n' \
+    > "$SILVA_DIR/$LOCA/sem.c"
+_loca () {  # $1 = descriptio, $2 = exspectatum, $3 = factum
+    if [ "$2" = "$3" ]; then echo "  ok   $1"
+    else echo "  FRACTUM $1: exspectatum [$2] factum [$3]"; fracta=1; fi
+}
+( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/mala.c" ) \
+    > "$SILVA_DIR/$LOCA/mala.out" 2>/dev/null
+( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/mala.c" -machina ) \
+    > "$SILVA_DIR/$LOCA/mala.tsv" 2>/dev/null
+( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/sem.c" ) \
+    > "$SILVA_DIR/$LOCA/sem.out" 2>/dev/null
+_loca "syntaxis: linea prima ad mortem" \
+    "silva/$LOCA/mala.c:12:14: [violatio] lexema quod grammatica hic non accipit" \
+    "$(sed -n 1p "$SILVA_DIR/$LOCA/mala.out")"
+_loca "syntaxis: relata 'hic coepit' ad IX:1" \
+    "     | ^ hic coepit" "$(sed -n 3p "$SILVA_DIR/$LOCA/mala.out")"
+_loca "syntaxis: primaria 'hic exspectatur' sub columna XIV" \
+    "     |              ^ hic exspectatur" \
+    "$(sed -n 5p "$SILVA_DIR/$LOCA/mala.out")"
+_loca "syntaxis -machina: linea/columna/causa (uncus eas legit)" \
+    "12:14:lexema quod grammatica hic non accipit" \
+    "$(awk -F'\t' '$4=="violatio"{print $2":"$3":"$7}' "$SILVA_DIR/$LOCA/mala.tsv")"
+_loca "semantica: excerptum sub diagnostico" \
+    "   7 |     redde y;" "$(sed -n 2p "$SILVA_DIR/$LOCA/sem.out")"
+_loca "semantica: signum sub columna XI" \
+    "     |           ^" "$(sed -n 3p "$SILVA_DIR/$LOCA/sem.out")"
+rm -rf "$SILVA_DIR/$LOCA"
+
 # ③ -corpus: columna verdicti percursus contra exclusiones pinnatas
 #    + plagulae INFRA (annotatio/compositio/praeparatio fracta):
 #    praefixo FRACTA in tabulam intrant - annotatio fracta oraculo

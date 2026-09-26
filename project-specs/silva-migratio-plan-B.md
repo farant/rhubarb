@@ -30,6 +30,13 @@
 > `materia_diagnosticum.h` (header without body) so emitters don't drag
 > the lint engine into silva's amalgam. aedilis refuses absolute paths
 > — the tool relativizes; T14's plant had silently used the fallback.
+> T15b DONE 2026-09-25 (Fran asked after T15; T15's own text named
+> examen): examen locates syntax errors (one row per GLR death point,
+> real line/column — the post-edit hook now tells agents WHERE) and
+> prints excerpts in human mode (two-location for syntax, caret for
+> semantic findings). examen_vectis.sh was not a registered gate at
+> all — now 'examen-vectis' in PORTAE + inventory. legati's own copy of
+> the format is desideratum …W87Q (needs a public silva.h surface).
 
 ## What steps 1–4 taught (the inputs to this plan)
 

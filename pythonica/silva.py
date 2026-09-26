@@ -1542,6 +1542,11 @@ PORTAE = {
     'differre': (['./silva/differre_fumus.sh'],
                  r'fumus differre: (sanum|FRACTUM)'),
     'unci': (['./tools/unci-git/fumus.sh'], r'fumus unci: (sanum|FRACTUM)'),
+    # vectis differentialis examinis (M4a) + loca syntaxis et excerpta
+    # (silva-migratio T15b): ante 2026-09-25 in PORTAE ABERAT - manu
+    # solum currebat, ergo nulla commissio eam debebat
+    'examen-vectis': (['./silva/examen_vectis.sh'],
+                      r'VECTIS (TENET|FRACTUS)'),
     'diagnostica': (['./tools/diagnostica_fumus.sh'],
                     r'fumus diagnostica: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],

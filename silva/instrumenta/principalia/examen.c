@@ -29,6 +29,9 @@
 #include "silva_parsare.h"
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
+#include "silva_frons.h"      /* mortes GLR -> diagnostica (T15b) */
+#include "chorda_aedificator.h"
+#include "excerptum.h"        /* linea fontis + signum (T15b) */
 #include "silva_c89_semantica.h"
 #include "silva_lexicon.h"   /* derivatio + bloci externa (modulus
                               * communis - percursus/legatus inde
@@ -183,6 +186,161 @@ _capita_praeparare (
         }
     }
     closedir(dir);
+}
+
+
+/* ==================================================
+ * Excerpta et loca syntaxis (silva-migratio T15b)
+ *
+ * Syntaxis fracta antea NUMERUS solus erat ('nodi erroris 1', linea
+ * 0) - uncus post-editionem agentibus locum numquam dabat. Nunc mors
+ * GLR (T15: lexema ubi frons tota periit) ordinem suum cum linea et
+ * columna VERA fert; modus humanus excerptum fontis (lib/excerptum)
+ * sub quoque diagnostico plagulae iudicatae pingit. -machina formam
+ * ordinum servat (uncus campos $1-$4,$7 legit).
+ * ================================================== */
+
+/* Offset lineae (1-basatae) in fonte; -1 si extra */
+interior s32
+_initium_lineae (
+    constans character* fons,
+                   i32  mensura,
+                   i32  linea)
+{
+    i32 l = I;
+    i32 i;
+
+    si (linea == I)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < mensura; i++)
+    {
+        si (fons[i] == '\n')
+        {
+            l++;
+            si (l == linea)
+            {
+                redde (s32)(i + I);
+            }
+        }
+    }
+    redde (s32)-I;
+}
+
+/* Excerptum pingere (chorda aedificata in stdout); FALSUM = sedes
+ * extra fontem, nihil pictum */
+interior vacuum
+_excerptum_pingere (
+                Piscina* piscina,
+     constans character* fons,
+                    i32  mensura,
+constans ExcerptumSedes* sedes,
+                    i32  numerus)
+{
+     ChordaAedificator* aed = chorda_aedificator_creare(piscina, CCLVI);
+                chorda  textus;
+
+    si (   aed == NIHIL
+        || !excerptum_scribere_multa(aed, fons, mensura, sedes,
+        numerus))
+    {
+        redde;
+    }
+    textus = chorda_aedificator_finire(aed);
+    si (textus.mensura > ZEPHYRUM)
+    {
+        fwrite(textus.datum, I, (size_t)textus.mensura, stdout);
+    }
+}
+
+/* Mortes syntaxis in ordines: una per mortem LOCATAM in plagula
+ * iudicata; residuum (mors sine loco, in capite inclusa, apparatus)
+ * linea summaria priore ('nodi erroris (syntaxis) N'). */
+interior vacuum
+_mortes_syntaxis_effundere (
+                  Piscina* piscina,
+       constans character* via,
+       constans character* fons,
+                      i32  mensura,
+    constans SilvaParsura* parsura,
+                      b32  machina)
+{
+                SilvaFrons* frons;
+     MateriaArborConsilium  consilium;
+                       Xar* mortes   = NIHIL;
+                       i32  residua  = parsura->numerus_errorum;
+                       i32  k;
+
+    frons = silva_frons_creare(piscina, parsura->expansio);
+    si (   frons != NIHIL
+        && silva_frons_arborem_silvae_parare(frons,
+        &SILVA_C89_REGISTRUM,
+               "c89", NIHIL, &consilium))
+    {
+        mortes = silva_mortes_diagnostica(piscina, parsura,
+            silva_frons_uncus(frons));
+    }
+    per (k = ZEPHYRUM; mortes != NIHIL && k < xar_numerus(mortes); k++)
+    {
+        constans MateriaDiagnosticum* d =
+            (constans MateriaDiagnosticum*)xar_obtinere(mortes, k);
+
+        si (   d                     == NIHIL || d->lexema == NIHIL
+            || d->gravitas           != (s32)MATERIA_GRAVITAS_ERRATUM
+            || d->tractus.fons_index != parsura->fons_princeps
+            || d->tractus.linea      == ZEPHYRUM)
+        {
+            perge;
+        }
+        residua--;
+        si (machina)
+        {
+            imprimere("%s\t%d\t%d\tviolatio\t-1\t0\t%s\n", via,
+                (int)d->tractus.linea, (int)d->tractus.columna,
+                d->causa);
+        }
+        alioquin
+        {
+            ExcerptumSedes sedes[II];
+                       i32 n = ZEPHYRUM;
+
+            imprimere("%s:%d:%d: [violatio] %s\n", via,
+                (int)d->tractus.linea, (int)d->tractus.columna,
+                d->causa);
+            si (   d->numerus_relatorum > ZEPHYRUM
+                && d->relata->tractus.initium >= ZEPHYRUM
+                && d->relata->tractus.fons_index
+                    == parsura->fons_princeps
+                && d->relata->tractus.initium < d->tractus.initium)
+            {
+                sedes[n].initium  = d->relata->tractus.initium;
+                sedes[n].finis    = d->relata->tractus.finis;
+                sedes[n].linea    = d->relata->tractus.linea;
+                sedes[n].nota     = d->relata->nota;
+                n++;
+            }
+            sedes[n].initium  = d->tractus.initium;
+            sedes[n].finis    = d->tractus.finis;
+            sedes[n].linea    = d->tractus.linea;
+            sedes[n].nota     = d->nota;
+            n++;
+            _excerptum_pingere(piscina, fons, mensura, sedes, n);
+        }
+    }
+    si (residua > ZEPHYRUM)
+    {
+        si (machina)
+        {
+            imprimere("%s\t0\t0\tviolatio\t-1\t0\t"
+                "nodi erroris (syntaxis) %d\n", via, (int)residua);
+        }
+        alioquin
+        {
+            imprimere("%s: [violatio] nodi erroris (syntaxis)"
+                " %d\n", via, (int)residua);
+        }
+    }
 }
 
 s32
@@ -450,17 +608,9 @@ principale (
         si (parsura->numerus_errorum > ZEPHYRUM)
         {
             reice = VERUM;   /* syntaxis fracta = reiectio C89 */
-            si (machina)
-            {
-                imprimere("%s\t0\t0\tviolatio\t-1\t0\t"
-                    "nodi erroris (syntaxis) %d\n", via,
-                    (int)parsura->numerus_errorum);
-            }
-            alioquin
-            {
-                imprimere("%s: [violatio] nodi erroris (syntaxis)"
-                    " %d\n", via, (int)parsura->numerus_errorum);
-            }
+            _mortes_syntaxis_effundere(piscina, via, fons, mensura,
+                parsura,
+                machina);
         }
 
         {
@@ -543,6 +693,29 @@ principale (
                         catena_b[ZEPHYRUM] != '\0' ? " (per: " : "",
                         catena_b,
                         catena_b[ZEPHYRUM] != '\0' ? ")" : "");
+                    /* excerptum (T15b): diagnosticum in plagula
+                     * IUDICATA solum - textus capitis inclusi hic non
+                     * adest; offset ex linea + columna (octetis) */
+                    si (   d->fons_index == parsura->fons_princeps
+                        && d->linea > ZEPHYRUM && d->columna > ZEPHYRUM)
+                    {
+                        s32 initium = _initium_lineae(fons, mensura,
+                            d->linea);
+
+                        si (initium >= ZEPHYRUM)
+                        {
+                            ExcerptumSedes sedes;
+
+                            sedes.initium  = initium
+                                + (s32)d->columna - (s32)I;
+                            sedes.finis    = sedes.initium
+                                + (s32)d->longitudo;
+                            sedes.linea  = d->linea;
+                            sedes.nota   = NIHIL;
+                            _excerptum_pingere(piscina, fons, mensura,
+                                &sedes, (i32)I);
+                        }
+                    }
                 }
             }
         }

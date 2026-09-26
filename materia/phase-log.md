@@ -3416,3 +3416,13 @@ so an emitter need not link the lint engine). Replay verdict: materia
 substrate changed (diagnostica rule + header split) — all client gates
 owed; silva frontend gained death records. Next: T16 (lapide bugs/009,
 va_arg with a pointer type).
+
+## 2026-09-25 — phase 5 plan B T15b: examen locates and excerpts
+
+RELATIO: examen — the judge behind the post-edit hook — now reports
+each syntax failure at the lexeme where the GLR died (was: a count at
+line 0) and prints source excerpts in human mode, reusing T15's death
+points and lib/excerptum. Its differential gate (examen_vectis.sh) had
+never been registered; it is now 'examen-vectis'. legati's parallel
+printer waits on a public silva.h surface (desideratum …W87Q). Next:
+T16.
