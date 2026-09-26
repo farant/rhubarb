@@ -3400,6 +3400,62 @@ s32 principale (vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: #line (C89 6.8.4) consumpta ut #pragma - directiva
+     * vera, capta, numquam in fluxum parsurae (silva-migratio
+     * T19a). Antea IGNOTA: lexemata eius grammaticam intrabant ->
+     * ERROR in omni plagula a briar genita. Sedes physicae manent
+     * (silva octetis fidelis) - mappatio per #line res alia.
+     * ======================================================== */
+
+    {
+        constans character* fixa[II];
+                       i32  i;
+
+        imprimere("\n--- Probans #line (consumpta) ---\n");
+
+        fixa[ZEPHYRUM] =
+            "#line 24 \"x.thistle\"\n"
+            "int f (void)\n{\n    return 0;\n}\n";
+        fixa[I] =
+            "int a;\n#line 1\nint b;\n";
+
+        per (i = ZEPHYRUM; i < II; i++)
+        {
+              SilvaParsura* parsura;
+            SilvaScriptura  scriptura;
+
+            parsura = _parsare(piscina, fixa[i]);
+            CREDO_NON_NIHIL (parsura);
+            si (parsura == NIHIL)
+            {
+                perge;
+            }
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 ((i32)parsura->numerus_errorum,
+                ZEPHYRUM);
+            /* linea directivae capta */
+            CREDO_NON_NIHIL (parsura->directivae);
+            si (parsura->directivae != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (
+                    xar_numerus(parsura->directivae), I);
+            }
+            scriptura = silva_scribere_fontem(piscina, parsura,
+                GRAMMATICA_C89.tabularium, parsura->fons_princeps);
+            CREDO_VERUM (scriptura.successus);
+            CREDO_AEQUALIS_I32 (scriptura.textus.mensura,
+                (i32)strlen(fixa[i]));
+            si (   scriptura.successus
+                && scriptura.textus.mensura == (i32)strlen(fixa[i]))
+            {
+                CREDO_VERUM (memcmp(scriptura.textus.datum, fixa[i],
+                    strlen(fixa[i])) == ZEPHYRUM);
+            }
+        }
+    }
+
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 

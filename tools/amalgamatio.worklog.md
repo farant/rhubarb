@@ -217,3 +217,30 @@ typedef in materia and in the committed silva.c — reverted by git; question
 Gates on the thawed amalgam: amalgamare VERIFICATUM (standalone, hospes
 40/40, nm 0, censor); amalgamata 3/3; aedilis 187; saltuarius 13/13; briar
 19/19; officina 15/15 — consumer objects verified newer than silva.c.
+
+## 2026-09-25 — half-amalgam closed, derived artefacts gated (silva-migratio T19a; …XHAW3H)
+
+aedilis now compiles against the header EXTRACTED from silva.c
+(`tools/amalgama_caput.sh` → build/aedilis/caput/silva.h): the pair is
+consistent by construction, so amalgamare's circle (it needs aedilis,
+aedilis links the committed silva.c) no longer needs the hand bootstrap.
+It warns when the live silva.h differs, and does not refuse (refusing
+would block the ordinary "edit silva.h, then amalgamare" flow T17b used).
+Plant: a field added to SilvaToken in the live silva.h → new path:
+monitum, same aedilis output (26 lines); old path (-I silva/amalgama)
+segfaults (rc 139) — the T13b failure mode, reproduced.
+
+Commit-time teeth for every other consumer: new gate `generata`
+(tools/generata_probare.sh), sections:
+ I   amalgam pairs silva/officina/tessera: live .h == header inside .c;
+ II  silva_lexicon_c89.{c,h} == generator (whitespace-normalized — the
+     committed file is formatted after generation);
+ III 37 aedilis snippets regenerated IN PLACE by each one's
+     '# regeneratio:' command, compared to copies, always restored (trap);
+ IV  amalgamator manifests via tools/porta_vetustatis.sh — which existed
+     since 08-20 (planted then) but ran only inside amalgamare.sh, so no
+     commit ever owed it.
+The aedilis.stml plant (materia root deleted) is invisible to the
+aedilis gate (187 green) and to III (snippets list lib/*.c only); IV
+catches it (silva manifest loses every materia header). Three plants at
+once → three named STALA; ~2m20s. macOS bash 3.2 has no mapfile.

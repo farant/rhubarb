@@ -3492,3 +3492,14 @@ line (810 unnamed divergences, positions only). Fran chose "code from
 the pin, inputs from today": the builder transplants today's embedded
 latina into the pristine pinned amalgam, guarded and cached; the pin
 stays at 7a4847b0. Planted red twice. Next: T19 (cleanup) and T19b.
+
+## 2026-09-25 — phase 5 plan B T19a: dead tools get teeth
+
+RELATIO: T19 re-sliced by its measurement (a: tools, b: printers, c:
+MAP/census/close); Fran decided the duplicate helpers stay (…PE7W) and
+the LR toolkit stays in silva (…1GHY). T19a: silva consumes `#line`
+(C89 6.8.4 — every briar product was a syntax error); the half amalgam
+cannot bite aedilis (header extracted from silva.c); new gates
+'generata' (amalgam pairs, lexicon, 37 snippets, amalgamator manifests —
+aedilis.stml finally covered) and 'examen-corpus' (re-pinned, one real
+violation fixed). Each planted red. Next: T19b.

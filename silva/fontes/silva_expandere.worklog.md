@@ -39,3 +39,24 @@ syntaxis_v1 corpus 123 → 125: line 2's `__extension__` passes the
 SYNTAX layer only (read as an unknown type name; semantics rejects it
 — `__extension__` is NOT accepted). Oracle 470 unchanged (no house file
 uses an attribute), M3 6/6.
+
+## 2026-09-25 — `#line` consumed like `#pragma` (silva-migratio T19a)
+
+Found while re-pinning the stale `examen_vectis -corpus` exclusions: 21
+of the 22 new rejections were briar-generated files, all failing at
+`#line N "x.thistle"`. `#line` is standard C89 (§6.8.4), but the
+directive classifier only knew define/undef/include/conditionals/pragma
+— everything else was IGNOTA and its tokens flowed into the grammar.
+Now SILVA_DIR_LINEA, captured as a directive line and consumed exactly
+like `#pragma` (never in the parse stream; `scribere` re-emits it —
+byte round-trip pinned). Positions stay PHYSICAL (silva is byte-faithful);
+mapping diagnostics through `#line` would be a separate feature. No
+oracle-corpus file uses `#line` → no divergence. `#error` (zero house
+uses) left as IGNOTA.
+
+Ripple (same day): the first commit was refused by the oratio gate —
+the briar fixtures now PARSE, so the identifier index saw their words
+for the first time: `summare` (briar fragmenta fixtures, many pinned
+sites) → glossary entry `summo` (Medieval Latin, "to sum up") rather
+than a rename through pinned fixtures. A fix that makes more files
+readable enlarges every census that reads them.

@@ -250,7 +250,12 @@ nomen enumeratio {
     SILVA_DIR_PRAGMA,      /* #pragma - vera directiva C89 (6.8.6),
                             * semantice iners: capta, consumpta,
                             * numquam in fluxum parsurae (M2d A) */
-    SILVA_DIR_IGNOTA       /* alia (line/error/...) */
+    SILVA_DIR_LINEA,       /* #line - vera directiva C89 (6.8.4):
+                            * capta, consumpta ut #pragma
+                            * (silva-migratio T19a). Sedes
+                            * PHYSICAE manent - silva octetis
+                            * fidelis; mappatio res alia */
+    SILVA_DIR_IGNOTA       /* alia (error/...) */
 } SilvaDirectivaGenus;
 
 /* Estne lexema verum initium directivae? (# ad initium lineae LOGICAE) */
@@ -435,6 +440,10 @@ _directivae_genus (
     si (_chorda_est_literis(verbum->valor, "pragma"))
     {
         redde SILVA_DIR_PRAGMA;
+    }
+    si (_chorda_est_literis(verbum->valor, "line"))
+    {
+        redde SILVA_DIR_LINEA;
     }
     redde SILVA_DIR_IGNOTA;
 }
@@ -1508,11 +1517,14 @@ _fluxum_processare (
                     pater, reliqua, directivae);
                 perge;
             }
-            alioquin si (genus_dir == SILVA_DIR_PRAGMA)
+            alioquin si (   genus_dir == SILVA_DIR_PRAGMA
+                         || genus_dir == SILVA_DIR_LINEA)
             {
                 /* #pragma: capta ut linea directivae (scribere
                  * eam reficit), numquam in fluxum parsurae -
-                 * "#pragma once" segmenta non iam frangit */
+                 * "#pragma once" segmenta non iam frangit.
+                 * #line eodem modo (T19a): omnis plagula a briar
+                 * genita eam fert, antea ERROR syntaxis */
                 _directivam_capere(exp, directivae, lexemata, i,
                     i_linea_finis);
                 i = i_linea_finis;

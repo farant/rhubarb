@@ -3,8 +3,16 @@
 # NOMINATA per lineam - decisio recordata, non lista quae tacite
 # senescit. Consumptores columnam primam solam legunt (vectis diff,
 # uncus examen-custos, legatus _exclusiones_onerare); causa oculis.
+# Re-pinnatio 2026-09-25 (silva-migratio T19a): audit -corpus a ~09-14 staluerat
+# (nulla porta id currebat). #line consumpta (XXI plagulae a briar genitae
+# sanatae), tools/bitsyfont_ad_fons.c emendatum (declaratio post sententiam);
+# quattuor infra cum causa pinnatae.
+./briar/probationes/fixa/amalgama/fabrica/lib/alpha.c	fixtura: fabrica amalgamae cum capitibus localibus (alpha.h, postulata_posix.h gemellus) quae examen sine radicibus fabricae non resolvit - b32 ignotus
+./briar/probationes/fixa/amalgama/fabrica/lib/beta.c	fixtura: ut alpha.c (Cella ex beta.h locali) - collisio staticorum probanda consulto
+./briar/probationes/fixa/fabrica/salve_vitreum/fontes/salve_vitreum.c	generatum a briar: capsula_salve_vitreum symbolum est gradus infigendi (capsula) - in fonte non exsistit
 ./lib/imago.c	venditum: stb_image.h extra normam domus (acies non-constans c8, vocationes implicitae intra caput venditum)
 ./officina/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis (AmalgamaPlagula/EXCLUDENDA_* apud includentem definita)
 ./silva/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis
 ./silva/probationes/fixa/censoris/flagrationes.c	probatio: fixtura censoris consulto fracta (syntaxis + redeclarationes)
 ./tessera/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis
+./vendor/stb_image.h	venditum: codex alienus - // (C99) et __attribute__ (91), extra normam domus

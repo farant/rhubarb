@@ -1547,6 +1547,22 @@ PORTAE = {
     # solum currebat, ergo nulla commissio eam debebat
     'examen-vectis': (['./silva/examen_vectis.sh'],
                       r'VECTIS (TENET|FRACTUS)'),
+    # latus examinis super CORPUS verum (percursus REICE contra
+    # exclusiones pinnatas, ~CLX s): ante 2026-09-25 manu solum -
+    # exclusiones a ~09-14 staluerant (codex 90 novus plagulas domus
+    # REICE fecit, #line ignota plagulas a briar genitas). Debita cum
+    # IUDEX mutatur (inventarium: tegit viae), non per editionem
+    # quamque - examen plagulas mutatas ad commissionem iam iudicat
+    # (silva-migratio T19a)
+    'examen-corpus': (['./silva/examen_vectis.sh', '-corpus'],
+                      r'VECTIS (TENET|FRACTUS)'),
+    # artificia derivata commissa == regeneratio hodierna: amalgamata
+    # (caput vivum == caput intra .c), lexicon C89, snippets aedilis,
+    # manifesta amalgamatoris (porta_vetustatis, olim intra
+    # amalgamare.sh solum) - aedilis.stml sic primum tegitur
+    # (silva-migratio T19a)
+    'generata': (['./tools/generata_probare.sh'],
+                 r'generata: (sana|FRACTA)'),
     'diagnostica': (['./tools/diagnostica_fumus.sh'],
                     r'fumus diagnostica: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],

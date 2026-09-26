@@ -76,6 +76,16 @@
 > Fran: code from the pin, inputs from today — the builder transplants
 > today's embedded latina into the pristine pinned amalgam (guarded,
 > cached); pin unmoved. T19/T19b remain.
+> T19 RE-SLICED by its measurement (Fran, 2026-09-25): T19a dead tools
+> get teeth · T19b printers · T19c MAP/census/MEMORY + close. Decided:
+> silva's duplicate helpers STAY (…PE7W — exporting four utilities would
+> widen materia's API; the real duplication is silva's own STML reader);
+> the LR toolkit STAYS in silva (…1GHY — no other consumer).
+> T19a DONE: `#line` consumed (C89 6.8.4; every briar product failed);
+> aedilis builds against the header extracted from silva.c (…XHAW3H);
+> gates 'generata' (amalgam pairs, lexicon, 37 snippets, amalgamator
+> manifests — aedilis.stml covered at last) and 'examen-corpus'
+> (re-pinned; bitsyfont's real C99-ism fixed). T19b next.
 
 ## What steps 1–4 taught (the inputs to this plan)
 

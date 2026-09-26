@@ -18,9 +18,22 @@ mkdir -p "$BUILD_DIR" "$RADIX_DIR/bin"
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
+# caput silvae EX AMALGAMATE IPSO (silva-migratio T19a, ...XHAW3H):
+# aedilis silva.o ex silva.c COMMISSO nectit - caput vivum manu
+# mutatum ante regenerationem ABI falsam dabat (T13b: offsetus
+# lexematum falsi, corpus manifesti TACITE amissum). amalgamare.sh
+# aedilem ipsum poscit (circulus), ergo hic NON recusatur: par
+# congruens per constructionem, monitum si caput vivum differt.
+CAPUT_DIR="$BUILD_DIR/caput"
+"$SCRIPT_DIR/amalgama_caput.sh" "$RADIX_DIR/silva/amalgama/silva.c" \
+    "$RADIX_DIR/silva/amalgama/silva.h" "$CAPUT_DIR"
+case $? in
+    0|3) ;;
+    *)   exit 1 ;;
+esac
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
-    "-I$RADIX_DIR/silva/amalgama"
+    "-I$CAPUT_DIR"
 )
 # SE-HOSPITANS: dependentiae propriae ab aedile ipso derivatae
 # (snippet commissum - ovum bootstrap fractum; regeneratio:

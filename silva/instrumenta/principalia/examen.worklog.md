@@ -59,3 +59,18 @@ without the fix. The plant (stand-in at HEAD) stayed green, which is
 what exposed it. Fixed to pass the fixture as the format string; the
 plant now reds 2/2 (examen-vectis) and 2/3 (diagnostica — the third
 assertion, "lexicon read", correctly stays green).
+
+## 2026-09-25 — `-corpus` becomes a gate (silva-migratio T19a)
+
+`examen_vectis.sh -corpus` (percursus REICE vs pinned exclusions) ran
+only by hand; its exclusions had drifted since ~09-14 (found at T17b):
+code 90 made tools/bitsyfont_ad_fons.c REICE (a real C99-ism — fixed,
+not excluded), silva rejected `#line` (fixed in the expander — 21 briar-
+generated files), and four remain pinned with named causes (stb_image.h
+vendor; two briar amalgama fixtures with fixture-local headers; a briar
+product referencing its capsula symbol). Registered as gate
+'examen-corpus' (~160 s), owed when the JUDGE changes (inventory: tegit
+viae = semantics/annotations/expander/stand-ins/grammar/exclusions;
+currit binaria = examen.c, so its lib closure owes it too) — ordinary
+edits are already examined at commit. Planted red through the
+registered gate (an exclusion removed → VECTIS FRACTUS).

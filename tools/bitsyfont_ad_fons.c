@@ -215,13 +215,15 @@ scribere_differentias (void)
 
     for (i = 0; i < NUM_GLYPHAE; i++)
     {
+        int non_vacua;
+
         if (!glyphae_praesens[i])
         {
             continue;
         }
 
         /* Verificare si glypha non vacua */
-        int non_vacua = 0;
+        non_vacua = 0;
         for (j = 0; j < ALTITUDO_MAXIMA; j++)
         {
             if (glyphae[i][j] != 0)
