@@ -14649,3 +14649,16 @@ PHASIS V SIGILLATA notice atop silva/CLAUDE.md. Narrative:
 materia/phase-log.md. Next for silva: plan B,
 project-specs/silva-migratio-plan-B.md (T14 C89 registry declared, T15
 GLR death point, T16/T17 bugs, T18 latina.h, T19 cleanup).
+
+## 2026-09-25 — addendum: plan B progress (pointer)
+
+Plan B (project-specs/silva-migratio-plan-B.md) T14–T16b DONE: C89 in
+tools/diagnostica (declared `error` diagnostic generated from c89.stml;
+silva_frons sedes = origin root), GLR death points (SilvaParsura.mortes,
+"hic exspectatur"/"hic coepit"), examen locates syntax errors + prints
+excerpts (post-edit hook now shows WHERE), examen_vectis registered as
+gate 'examen-vectis', system stand-in completed (va_arg, offsetof,
+va_start/va_end, assert) and shared by examen, tools/diagnostica and
+briar through silva_lexicon. Next: T17 `__attribute__` (decided by Fran:
+accept + examen rule + comment exemption; measure first), T18, T19.
+Narrative: materia/phase-log.md.
