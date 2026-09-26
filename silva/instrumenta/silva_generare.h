@@ -73,6 +73,8 @@ nomen structura {
 nomen structura {
     chorda* titulus;          /* nomen generis */
     chorda* loci_descriptio;  /* "tokens:lista-token ..." (cruda; layouts Chunk D) */
+    chorda* diagnosticum;     /* causa diagnostici generis; NIHIL = nullum (T14) */
+    chorda* gravitas;         /* "erratum"|"monitum"; NIHIL = erratum */
 } SilvaGenGenusExtra;
 
 
@@ -91,6 +93,8 @@ nomen structura {
     chorda* titulus;          /* nomen generis */
        Xar* loci;             /* Xar de SilvaGenLocusDef (per valorem) */
        b32  ex_extra;         /* ex <genera-extra> */
+    chorda* diagnosticum;     /* ex extra: causa diagnostici; NIHIL = nullum */
+       b32  monitum;          /* gravitas MONITUM (alioquin ERRATUM) */
 } SilvaGenGenusDef;
 
 

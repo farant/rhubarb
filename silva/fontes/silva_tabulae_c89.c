@@ -12538,6 +12538,24 @@ constans SilvaRegistrumCoctum SILVA_C89_REGISTRUM = {
 };
 
 /* ==================================================
+ * Diagnostica declarata (materia-sedes B1)
+ * ================================================== */
+
+hic_manens constans MateriaTabDiagnosticum SILVA_C89_DIAGNOSTICA_TABULA[] = {
+    /* genus, locus, species, gravitas, codex, causa */
+    { (s32)SILVA_C89_GENUS_ERROR, (s32)-1,
+      (s32)MATERIA_DIAGNOSTICUM_GENUS,
+      (s32)MATERIA_GRAVITAS_ERRATUM,
+      "error",
+      "lexemata quae grammatica ponere non potuit" }
+};
+
+constans MateriaDiagnosticaCocta SILVA_C89_DIAGNOSTICA = {
+    SILVA_C89_DIAGNOSTICA_TABULA, 1,
+    NIHIL, 0
+};
+
+/* ==================================================
  * Accessores (probati: genus + fines)
  * ================================================== */
 

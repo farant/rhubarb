@@ -23,6 +23,31 @@ _ch (
     }
 }
 
+/* Chorda ut interior litterae C: '"' et '\\' effugiuntur (causa
+ * diagnostici ex grammatica textus liber est - T14) */
+interior vacuum
+_ch_litteralis (
+      FILE* pl,
+    chorda* c)
+{
+    i32 i;
+
+    si (c == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < c->mensura; i++)
+    {
+        character x = (character)c->datum[i];
+
+        si (x == '"' || x == '\\')
+        {
+            fputc('\\', pl);
+        }
+        fputc(x, pl);
+    }
+}
+
 /* Basename viae (post ultimum '/') */
 interior constans character*
 _basis_tituli (
@@ -271,6 +296,7 @@ silva_gen_coquere (
     i32  num_terminalium;
     i32  num_nt;
     i32  lat_act;
+    i32  numerus_diagnosticorum;
 
     si (grammatica == NIHIL || tabula == NIHIL)
     {
@@ -282,6 +308,21 @@ silva_gen_coquere (
     si (genera == NIHIL)
     {
         redde FALSUM;
+    }
+
+    /* Diagnostica declarata (T14): tabula solum si genus aliquod
+     * 'diagnosticum' declarat - grammaticae sine eo plagulas
+     * octetim easdem retinent (sceletum, imparilis) */
+    numerus_diagnosticorum = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
+    {
+        SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(genera,
+            i);
+
+        si (def != NIHIL && def->diagnosticum != NIHIL)
+        {
+            numerus_diagnosticorum++;
+        }
     }
 
     basis                 = _basis_tituli(basis_via);
@@ -375,6 +416,14 @@ silva_gen_coquere (
         "externus constans SilvaTabulaCocta %s_TABULA;\n"
         "externus constans SilvaRegistrumCoctum %s_REGISTRUM;\n\n",
         basis, via_grammaticae, custos, custos, praefixum, praefixum);
+    si (numerus_diagnosticorum > ZEPHYRUM)
+    {
+        fprintf(pl,
+            "/* Diagnostica declarata (<genus diagnosticum=...>) -\n"
+            " * materia_diagnostica_derivare */\n"
+            "externus constans MateriaDiagnosticaCocta %s_DIAGNOSTICA;\n\n",
+            praefixum);
+    }
 
     /* Cellae praelatae (solum si adsunt - grammaticae sine
      * praelationibus plagulas identicas retinent) */
@@ -856,6 +905,53 @@ silva_gen_coquere (
             praefixum,
             praefixum, (int)xar_numerus(genera),
             praefixum, (int)offset_locorum);
+    }
+
+    /* --- Diagnostica declarata (T14; forma materia_coctor) --- */
+    si (numerus_diagnosticorum > ZEPHYRUM)
+    {
+        i32 g_i;
+        i32 emissa = ZEPHYRUM;
+
+        fprintf(pl,
+            "\n/* ==================================================\n"
+            " * Diagnostica declarata (materia-sedes B1)\n"
+            " * ================================================== */\n\n"
+            "hic_manens constans MateriaTabDiagnosticum "
+            "%s_DIAGNOSTICA_TABULA[] = {\n"
+            "    /* genus, locus, species, gravitas, codex, causa */\n",
+            praefixum);
+        per (g_i = ZEPHYRUM; g_i < xar_numerus(genera); g_i++)
+        {
+            SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(
+                genera, g_i);
+
+            si (def == NIHIL || def->diagnosticum == NIHIL)
+            {
+                perge;
+            }
+            emissa++;
+            fprintf(pl, "    { (s32)%s_GENUS_", praefixum);
+            _maiusculas(pl, def->titulus);
+            fprintf(pl, ", (s32)-1,\n"
+                "      (s32)MATERIA_DIAGNOSTICUM_GENUS,\n"
+                "      (s32)%s,\n"
+                "      \"",
+                def->monitum ? "MATERIA_GRAVITAS_MONITUM"
+                             : "MATERIA_GRAVITAS_ERRATUM");
+            _ch(pl, def->titulus);
+            fprintf(pl, "\",\n      \"");
+            _ch_litteralis(pl, def->diagnosticum);
+            fprintf(pl, "\" }%s\n",
+                (emissa < numerus_diagnosticorum) ? "," : "");
+        }
+        fprintf(pl,
+            "};\n\n"
+            "constans MateriaDiagnosticaCocta %s_DIAGNOSTICA = {\n"
+            "    %s_DIAGNOSTICA_TABULA, %d,\n"
+            "    NIHIL, 0\n"
+            "};\n",
+            praefixum, praefixum, (int)numerus_diagnosticorum);
     }
 
     /* --- Accessores generati --- */

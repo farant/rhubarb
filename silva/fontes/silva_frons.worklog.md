@@ -105,3 +105,33 @@ read-back, comparator), whose coverage was already a superset for silva.
 The shim's last useful act was the per-node sweep in T10b (found the
 read-side extent bug). Script comments that cited its object glob now
 cite oraculum_silvae_struere.sh, which uses the same exclusion list.
+
+## 2026-09-25 — sedes efficax = root of the origin chain (silva-migratio T14)
+
+`_silvae_sedes_quaerere` returned an expanded token's OWN fields — its
+definition site, i.e. bytes of a macro body in latina.h. materia's
+contract for `sedes_quaerere` says "effective position for node
+queries (extent, purity, geometry, comment)", and silva's own
+`silva_nodus_extensionem` has always used the ROOT (stratum-0
+invocation). The consequence surfaced the first time materia's
+diagnostics walked a C89 tree: `materia_tractus_conferre` adopts the
+file of the FIRST token it sees, so a node beginning with `interior`
+(→ static) got an extent inside latina.h and every C89 diagnostic was
+printed at a latina line (malum.c "8:25" in a 5-line file).
+
+Now: FONS tokens report themselves; derived tokens report their root's
+position with `est_fons = FALSUM` (purity and materia's byte-order
+check still skip them); unrecoverable roots (paste, stringification,
+API) report `byte_offset -1` and drop out of extents — "synthetica
+omissa", never invented. The arbor writer only reads `est_fons` from
+the sedes (coordinates come from the token itself), so STML is
+unchanged — the oracle confirms.
+
+The root walk became a const core `_silvae_radix_derivati` (starts at
+an expanded token's origin, so every pointer it follows is non-const
+and no cast-qual cast is needed); `_silvae_radix_quaerere` and the
+sedes hook both call it. New accessor `silva_frons_uncus()` exposes the
+hook to materia consumers other than the tree writer. Planted: sedes
+back to def-site → the diagnostica gate's line assertion goes red (the
+error node's extent then lands in latina's file and the
+principal-file filter drops it: a real error VANISHES).

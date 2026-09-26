@@ -12,6 +12,15 @@
 > **STATUS.** Nothing started. Plan A closed at T13 (b4abedbd +
 > T13c): silva consumes materia, M3 6/6, oracle 470 clean, amalgam
 > regenerated, freeze lifted.
+> T14 RE-SCOPED by its measurement (Fran, 2026-09-25) and DONE: no
+> `c89.registrum.stml` (the grammar already derives the registry —
+> a declaration would be a second source); instead the declared-
+> diagnostics half (`<genus diagnosticum=…>` in c89.stml →
+> `SILVA_C89_DIAGNOSTICA`) and a C89 route in `tools/diagnostica`
+> (header closure via aedilis, true include order, principal-file
+> filter, list root); silva_frons's sedes hook now reports the origin
+> ROOT. 430 house C files clean; gate `diagnostica` XXII planted red
+> twice. lexicon_c89's generator moves to T19.
 
 ## What steps 1–4 taught (the inputs to this plan)
 
@@ -61,6 +70,14 @@ can be emitted from the declaration byte-identically (the oracle's STML
 path reads them). Gate: oracle byte-identical (registry is not output),
 M3, `coquere` seal stable.
 
+*T14 as built (2026-09-25).* See the STATUS line; details in
+`tools/diagnostica.worklog.md` and `silva/fontes/silva_frons.worklog.md`.
+Also found: `silva/generare.sh` lacked `-I materia/fontes` and
+`materia_token.o` — not run since T8; fixed, regenerates byte-identical
+(sceletum, imparilis, silva.h splice, hospes splice, c89.canon).
+Grammar canon gained `diagnosticum`/`gravitas` on `<genus>` (names as
+materia/grammatica/registrum.canon).
+
 ### Task 15: the GLR names where it died
 
 The GLR records the token where all heads died (+ expected kinds if
@@ -104,6 +121,8 @@ Small; measure the pin sites first.
   is natural; leave homonyms that are different functions. Measure
   with a clone census over the six substrate files first.
 - LR toolkit's home decided (glr/generare/coquere).
+- `lexicon_c89`'s generator (`silva/instrumenta/lexicon_c89_generare.sh`)
+  folded into silva's table generator, or kept — moved here from T14.
 - MAP.txt, `rhubarb.census`, MEMORY updated; lapifex landmine (MG4)
   re-checked.
 - Park …FE9E and decree …XX0BZ closed with pointers.

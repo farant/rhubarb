@@ -11,6 +11,10 @@
 externus constans SilvaTabulaCocta SILVA_C89_TABULA;
 externus constans SilvaRegistrumCoctum SILVA_C89_REGISTRUM;
 
+/* Diagnostica declarata (<genus diagnosticum=...>) -
+ * materia_diagnostica_derivare */
+externus constans MateriaDiagnosticaCocta SILVA_C89_DIAGNOSTICA;
+
 /* Cellae praelatae (<praelatio>) - categoria census */
 #define SILVA_C89_NUMERUS_PRAELATARUM 1
 externus constans SilvaTabPraelata SILVA_C89_PRAELATAE[1];

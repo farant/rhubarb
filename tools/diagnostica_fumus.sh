@@ -25,6 +25,11 @@
 # XX.  crusta/facies.sh ambitum CRUSTA_LINTRUM honorat, ut
 #      tools/diagnostica (instrumenta duo, mos unus);
 # XXI. excusatio cuius regula NON cucurrit mortua NON est (par cum XIX).
+# XXII. C89 per silvam (silva-migratio T14): plantata = c89:error in
+#      linea FUNCTIONIS suae (lexema derivatum 'interior' ad radicem,
+#      non ad corpus macro in latina.h), diagnosticum unum; domus
+#      (silex: macrum capitis in sede syntactica; scrinium/imago:
+#      capita venditorum ANTE latina.h inclusa) sine erratis.
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -325,6 +330,46 @@ STML
 credo $? "XXI. regula ABSENS: excusatio NON mortua nominatur"
 grep -q 'lint:alia-regula' "$T/aliena.out"
 credo $? "XXI. regula aliena revera cucurrit (fixtura non muta)"
+
+# XXII. C89 (silva-migratio T14). Plantata: functio bona, deinde mala
+# a lexemate DERIVATO incipiens ('interior' -> static). Sedes erroris
+# ad radicem strati 0 solvitur - linea IX huius plagulae. Ante T14
+# sedes DEF-SITE (corpus macro in latina.h) lineam latinae nominabat.
+cat > "$T/c89_plantata.c" <<'C89'
+#include "latina.h"
+
+interior integer
+bona (vacuum)
+{
+    redde I;
+}
+
+interior integer
+mala (vacuum)
+{
+    redde I +;
+}
+C89
+./tools/diagnostica.sh "$T/c89_plantata.c" > "$T/c89.out" 2> "$T/c89.err"
+rc=$?
+[ "$rc" -eq 1 ]; credo $? "XXII. c89 plantata exitus 1 (rc $rc)"
+[ "$(head -1 "$T/c89.out")" = "$T/c89_plantata.c:9:1: [erratum] c89:error" ]
+credo $? "XXII. c89 linea prima: $(head -1 "$T/c89.out")"
+grep -q 'diagnostica (erratum 1, monitum 0) in 1 plagulis' "$T/c89.err"
+credo $? "XXII. c89 diagnosticum unum (functio bona tacet)"
+# Domus: plagulae quae T14 falsa errata dederunt, singulae causa sua.
+# vendor/sqlite3.h IPSUM discernit ordinem inclusionis: clausura eius
+# latina.h caret, ergo latina ut LEXICON ('char C' -> 'char 100')
+# erratum in plagula iudicata facit - plagulae .c idem non ostendunt,
+# quia errata capitum ad plagulam iudicatam non pertinent (filtrum).
+./tools/diagnostica.sh -machina lib/silex.c lib/scrinium.c lib/imago.c \
+    lib/xar.c vendor/sqlite3.h > "$T/c89_domus.tsv" 2> "$T/c89_domus.err"
+rc=$?
+[ "$rc" -eq 0 ]; credo $? "XXII. c89 domus exitus 0 (rc $rc)"
+! grep -q $'\terratum\t' "$T/c89_domus.tsv"
+credo $? "XXII. c89 domus sine erratis (clausura capitum, ordo inclusionis)"
+! grep -q 'MONITUM' "$T/c89_domus.err"
+credo $? "XXII. c89 clausura per aedilem praebita (nullum MONITUM)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus diagnostica: sanum"; exit 0; fi

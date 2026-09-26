@@ -80,6 +80,11 @@
 #include "html_arbor.h"
 #include "html_lexicon.h"
 #include "html_registrum.h"
+#include "processus.h"
+#include "silva_contextus.h"
+#include "silva_c89_oraculum.h"
+#include "silva_frons.h"
+#include "silva_tabulae_c89.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -104,10 +109,18 @@ nomen structura {
  * Crusta '#' fert, ergo praefixum solum sufficit. */
 nomen structura {
                     MateriaNodus* radix;
+    /* C89: radix grammaticae LISTA est ('elementa' - genus unitatis
+     * nullum; genus novum sigillum registri et documenta oraculi
+     * moveret). Xar de MateriaNodus* supremis; radix = primus (NIHIL
+     * si plagula vacua - tunc radices vacuae, arbor tamen adest). */
+                             Xar* radices;
              MateriaLexiconRatum  ratum;
               MateriaLexIudicium  iudicium;
            MateriaArborConsilium  consilium;
                    CrustaParsura  relatio;
+    /* C89 (silva-migratio T14): uncus originis frontis - sedes
+     * lexematum expansorum ad radicem strati 0 (invocationem) solvit */
+      constans MateriaOrigoUncus* uncus;
 constans MateriaDiagnosticaCocta* declarata;
               constans character* grammatica;
               constans character* praefixum;
@@ -188,6 +201,10 @@ _grammatica_ex_suffixo (
     si (_suffixum(via, ".html") || _suffixum(via, ".htm"))
     {
         redde "html";
+    }
+    si (_suffixum(via, ".c") || _suffixum(via, ".h"))
+    {
+        redde "c89";
     }
     redde NIHIL;
 }
@@ -374,6 +391,218 @@ constans MateriaDiagnosticum* d,
     }
 }
 
+/* Arbor adest? Clientes radicis unius per 'radix'; C89 per
+ * 'radices' (plagula vacua = radices vacuae, arbor tamen). */
+interior b32
+_arbor_adest (
+    constans Cliens* cliens)
+{
+    redde (b32)(cliens->radix != NIHIL || cliens->radices != NIHIL);
+}
+
+/* Clausura capitum plagulae per aedilem ('bin/aedilis <via>
+ * --partes', lineae 'C<TAB>via'), ut ./silva/arbor.sh: capita
+ * contextui praebentur. Sine ea macra capitum in sede syntactica
+ * (SILEX_VEXILLA_... inter litteras chordarum) ERROR FALSUM facerent -
+ * mensuratum T14: lib/silex.c V errores, arbor.sh cum clausura 0.
+ * FALSUM = aedilis absens aut fractus (MONITUM nominatum, numquam
+ * tacite). Via aedilis: $RHUBARB_RADIX/bin/aedilis (diagnostica.sh
+ * eam exportat), aliter ./bin/aedilis. */
+interior b32
+_c89_capita_praebere (
+            Piscina* piscina,
+     SilvaContextus* contextus,
+ constans character* via)
+{
+         constans character* argumenta[IV];
+          ProcessusResultus  r;
+                  character  binarium[1024];
+         constans character* radix = getenv("RHUBARB_RADIX");
+                        i32  i;
+                        i32  initium;
+
+    si (radix != NIHIL && strlen(radix) + XX < magnitudo(binarium))
+    {
+        sprintf(binarium, "%s/bin/aedilis", radix);
+    }
+    alioquin
+    {
+        strcpy(binarium, "./bin/aedilis");
+    }
+    argumenta[ZEPHYRUM] = binarium;
+    argumenta[I] = via;
+    argumenta[II] = "--partes";
+    argumenta[III] = NIHIL;
+    r = processus_exsequi(argumenta, (i32)60000, piscina);
+    si (!r.successus || r.codex_exitus != ZEPHYRUM)
+    {
+        fprintf(stderr, "diagnostica: MONITUM aedilis clausuram non "
+            "dedit (%s) - C89 sine capitibus: %s\n", binarium, via);
+        redde FALSUM;
+    }
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= r.effusio.mensura; i++)
+    {
+        si (i == r.effusio.mensura || r.effusio.datum[i] == (i8)'\n')
+        {
+            i32 longitudo = i - initium;
+
+            si (   longitudo > II && r.effusio.datum[initium] == (i8)'C'
+                && r.effusio.datum[initium + I] == (i8)'\t'
+                && longitudo - II < (i32)magnitudo(binarium))
+            {
+                character* textus;
+                      i32  mensura = ZEPHYRUM;
+
+                memcpy(binarium, r.effusio.datum + initium + II,
+                    (size_t)(longitudo - II));
+                binarium[longitudo - II] = '\0';
+                textus = _plagulam_legere(piscina, binarium, &mensura);
+                si (textus != NIHIL)
+                {
+                    (vacuum)silva_contextus_praebere(contextus,
+                        binarium, textus, mensura);
+                }
+            }
+            initium = i + I;
+        }
+    }
+    redde VERUM;
+}
+
+/* C89 per silvam (T14): contextus = clausura capitum plagulae
+ * (aedilis, supra) ORDINE INCLUSIONIS VERO - latina.h inter capita
+ * venit ubi plagula eam includit. latina.h ut LEXICON (ante omnia)
+ * SOLUM si clausura deest: lexicon macra eius (C = C, ...) etiam in
+ * capita venditorum ANTE eam inclusa inicit - mensuratum T14:
+ * 'char C' in vendor/sqlite3.h ERROR falsum fiebat. Lexicon systematis
+ * (ISO/POSIX, examen) NON: typedef ignotus AMBIGUUM facit, non ERROR,
+ * et ERROR solum hic declaratur. Consilium arboris per frontem C89 (unci super
+ * caudam silvae), ut proiectio portae 'scriptura' C89 quoque tegat.
+ * Reddit nodos supremos (Xar de MateriaNodus*); NIHIL = parsura
+ * fracta. */
+interior Xar*
+_c89_parsare (
+           Piscina* piscina,
+constans character* via,
+         character* fons,
+               i32  mensura,
+            Cliens* cliens)
+{
+    SilvaContextus* contextus;
+      SilvaParsura* parsura;
+        SilvaFrons* frons;
+               Xar* radices;
+               i32  n;
+               i32  k;
+
+    contextus = silva_contextus_creare(piscina);
+    si (contextus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (   !_c89_capita_praebere(piscina, contextus, via)
+        && !silva_contextus_latinam_addere(contextus))
+    {
+        redde NIHIL;
+    }
+    parsura = silva_c89_parsare_cum_contextu(piscina, contextus, via,
+        fons, mensura, NIHIL);
+    si (   parsura == NIHIL || parsura->commissio == NIHIL
+        || parsura->commissio->radix.genus != SILVA_VALOR_LISTA)
+    {
+        redde NIHIL;
+    }
+    frons = silva_frons_creare(piscina, parsura->expansio);
+    si (   frons == NIHIL
+        || !silva_frons_arborem_silvae_parare(frons,
+               &SILVA_C89_REGISTRUM, cliens->grammatica, NIHIL,
+               &cliens->consilium))
+    {
+        redde NIHIL;
+    }
+    cliens->uncus  = silva_frons_uncus(frons);
+    radices        = xar_creare(piscina, (i32)magnitudo(MateriaNodus*));
+    si (radices == NIHIL)
+    {
+        redde NIHIL;
+    }
+    n = silva_valor_lista_numerus(parsura->commissio->radix);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        SilvaValor* v = silva_valor_lista_obtinere(
+            parsura->commissio->radix, k);
+        MateriaNodus** locus;
+        MateriaTractus t;
+
+        si (v == NIHIL || v->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        /* nodi PLAGULAE IUDICATAE soli: capita inclusa in arbore
+         * unitatis iacent (declarationes eorum nodi supremi sunt),
+         * sed diagnostica eorum ad iudicium ipsorum pertinent et
+         * contra textum HUIUS plagulae pingi nequeunt */
+        si (   !materia_tractus_nodi(cliens->uncus, v->datum.nodus, &t)
+            || t.fons_index != (s32)parsura->fons_princeps)
+        {
+            perge;
+        }
+        locus = (MateriaNodus**)xar_addere(radices);
+        si (locus == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *locus = v->datum.nodus;
+    }
+    redde radices;
+}
+
+/* Diagnostica C89: per nodum supremum derivata, concatenata. Ordo
+ * (tractus.initium) servatur quia nodi supremi ordine fontis stant et
+ * derivatio quaeque intra nodum suum ordinat. */
+interior Xar*
+_c89_derivare (
+    Piscina* piscina,
+     Cliens* cliens)
+{
+    Xar* omnia;
+    i32  k;
+
+    omnia = xar_creare(piscina, (i32)magnitudo(MateriaDiagnosticum));
+    si (omnia == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(cliens->radices); k++)
+    {
+        constans MateriaNodus* nodus = *(MateriaNodus**)xar_obtinere(
+            cliens->radices, k);
+                          Xar* d;
+                          i32  j;
+
+        d = materia_diagnostica_derivare(piscina, nodus,
+            &SILVA_C89_REGISTRUM, &SILVA_C89_DIAGNOSTICA, cliens->uncus,
+            NIHIL);
+        si (d == NIHIL)
+        {
+            redde NIHIL;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(d); j++)
+        {
+            MateriaDiagnosticum* locus =
+                (MateriaDiagnosticum*)xar_addere(omnia);
+
+            si (locus == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *locus = *(MateriaDiagnosticum*)xar_obtinere(d, j);
+        }
+    }
+    redde omnia;
+}
+
 /* Suffixum clientem eligit; parsura et diagnostica derivata in
  * 'cliens' reponuntur. FALSUM = suffixum sine cliente (causa iam
  * nominata) aut parsura fracta.
@@ -441,13 +670,35 @@ constans character* via,
                 : NIHIL;
         }
     }
+    alioquin si (_suffixum(via, ".c") || _suffixum(via, ".h"))
+    {
+        /* annotationes C89 per silva_annotationes (decorationes
+         * binae) - nondum hic: praefixum NIHIL, diagnostica omnia
+         * supersunt */
+        cliens->praefixum = NIHIL;
+        cliens->declarata = &SILVA_C89_DIAGNOSTICA;
+        cliens->radices = _c89_parsare(piscina, via, fons, mensura,
+            cliens);
+        si (cliens->radices != NIHIL)
+        {
+            cliens->radix = xar_numerus(cliens->radices) > ZEPHYRUM
+                ? *(MateriaNodus**)xar_obtinere(cliens->radices,
+                ZEPHYRUM)
+                : NIHIL;
+            cliens->diagnostica = _c89_derivare(piscina, cliens);
+        }
+    }
     alioquin
     {
         fprintf(stderr, "diagnostica: suffixum sine cliente: %s\n",
             via);
         redde FALSUM;
     }
-    redde (b32)(cliens->radix != NIHIL);
+    si (!_arbor_adest(cliens))
+    {
+        fprintf(stderr, "diagnostica: parsura fracta: %s\n", via);
+    }
+    redde _arbor_adest(cliens);
 }
 
 /* Annotationes clientis, si eas fert. NIHIL = nullae (cliens sine
@@ -618,6 +869,7 @@ _plagulam_iudicare (
                     Cliens  cliens;
                        Xar* diagnostica;
                        i32  k;
+                       i32  numerus_radicum;
 
     piscina = piscina_generare_dynamicum("diagnostica", 4194304);
     si (piscina == NIHIL)
@@ -649,7 +901,7 @@ _plagulam_iudicare (
         piscina_destruere(piscina);
         redde FALSUM;
     }
-    si (cliens.radix == NIHIL || cliens.diagnostica == NIHIL)
+    si (!_arbor_adest(&cliens) || cliens.diagnostica == NIHIL)
     {
         fprintf(stderr,
             "diagnostica: parsura aut derivatio fracta: %s\n", via);
@@ -673,20 +925,32 @@ _plagulam_iudicare (
             (constans MateriaDiagnosticum*)xar_obtinere(diagnostica,
                 k), machina, excerptum, summa);
     }
-    scriptura = materia_arbor_proicere_nodum(piscina, cliens.radix,
-        &cliens.consilium);
-    si (!scriptura.successus)
+    /* proiectio (porta 'scriptura'): radix una, aut C89 per nodos
+     * supremos - refutatio prima sola, ut radice una */
+    numerus_radicum = cliens.radices != NIHIL
+        ? xar_numerus(cliens.radices) : I;
+    per (k = ZEPHYRUM; k < numerus_radicum; k++)
     {
-        MateriaDiagnosticum refutatio;
+        MateriaNodus* nodus = cliens.radices != NIHIL
+            ? *(MateriaNodus**)xar_obtinere(cliens.radices, k)
+            : cliens.radix;
 
-        memset(&refutatio, ZEPHYRUM, magnitudo(refutatio));
-        refutatio.gravitas  = (s32)MATERIA_GRAVITAS_ERRATUM;
-        refutatio.codex     = MATERIA_CODEX_SCRIPTURA;
-        refutatio.causa     = scriptura.causa != NIHIL
-            ? scriptura.causa : "scriptura fracta";
-        refutatio.tractus   = scriptura.tractus;
-        _diagnosticum_imprimere(piscina, via, cliens.grammatica, fons,
-            mensura, &refutatio, machina, excerptum, summa);
+        scriptura = materia_arbor_proicere_nodum(piscina, nodus,
+            &cliens.consilium);
+        si (!scriptura.successus)
+        {
+            MateriaDiagnosticum refutatio;
+
+            memset(&refutatio, ZEPHYRUM, magnitudo(refutatio));
+            refutatio.gravitas  = (s32)MATERIA_GRAVITAS_ERRATUM;
+            refutatio.codex     = MATERIA_CODEX_SCRIPTURA;
+            refutatio.causa     = scriptura.causa != NIHIL
+                ? scriptura.causa : "scriptura fracta";
+            refutatio.tractus   = scriptura.tractus;
+            _diagnosticum_imprimere(piscina, via, cliens.grammatica,
+                fons, mensura, &refutatio, machina, excerptum, summa);
+            frange;
+        }
     }
     summa->plagulae++;
     piscina_destruere(piscina);

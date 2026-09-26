@@ -26,6 +26,7 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"
+    "-I$RADIX_DIR/materia/fontes"
     "-I$SILVA_DIR/instrumenta"
 )
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
@@ -77,6 +78,17 @@ done
 # nomina generum lexematum tenet - eadem quae canon in tags vertit.
 # Sola plagula fontium quam generator nectit; directio non invertitur
 # quia folium est, non motor.
+# SilvaToken = MateriaToken + cauda C89 (silva-migratio T7b): generator
+# silva_token nectit, ergo materia_token quoque. Capita materiae
+# nondum inspiciebat - T14 invenit scriptum ab T8 non cursum
+# (materia_nodus.h non inventum).
+src="$RADIX_DIR/materia/fontes/materia_token.c"
+obj="$BUILD_DIR/fons_materia_token.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
+    echo "  [materia] materia_token.c"
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
 for base in "silva_token"; do
     src="$SILVA_DIR/fontes/$base.c"
     obj="$BUILD_DIR/fons_$base.o"

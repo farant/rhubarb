@@ -3,8 +3,8 @@
  * standard, scissurae in cauda silvae), sine conversione.
  *
  * Phasis V: T6b ex shim promotus (conversio), T10b unci super caudam
- * silvae, T10c conversio et shim recesserunt. Extra amalgama usque ad
- * sigillum (T13; fontes_politica.sh).
+ * silvae, T10c conversio et shim recesserunt, T13a in amalgamate;
+ * T14 sedes efficax = radix strati 0 (diagnostica C89).
  */
 
 #ifndef SILVA_FRONS_H
@@ -60,6 +60,14 @@ silva_frons_longitudines_figere (
     SilvaFrons* frons,
     SilvaValor  valor);
 
+
+/* Uncus originis C89 frontis (post silva_frons_arborem_silvae_parare):
+ * sedes efficax (radix strati 0), radix emissionis, extentum. Pro
+ * consumptoribus materiae praeter arborem - materia_diagnostica_
+ * derivare (T14). Vita = frontis. */
+constans MateriaOrigoUncus*
+silva_frons_uncus (
+    constans SilvaFrons* frons);
 
 /* Causa fracturae ultimae (NIHIL si nulla) - additum ad API
  * probatum: shim nomen vitii lexici nuntiabat. */

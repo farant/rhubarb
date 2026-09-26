@@ -1206,7 +1206,8 @@
        NECESSARIA generatoris = haec quinque; superset-regula
        M2.0 verificata) -->
   <genera-extra>
-    <genus titulus="error"         slots="tokens:lista-token"/>
+    <genus titulus="error"         slots="tokens:lista-token"
+      diagnosticum="lexemata quae grammatica ponere non potuit"/>
     <genus titulus="ambiguus"      slots="interpretationes:lista-nodus canonica:index"/>
     <genus titulus="conditionalis" slots="rami:lista-nodus finis:lista-token"/>
     <genus titulus="ramus-sumptus" slots="directiva:lista-token contentum:lista-nodus conditio_id:index"/>

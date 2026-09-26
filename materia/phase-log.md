@@ -3389,3 +3389,17 @@ T14 C89 registry declared, T15 GLR death point through emissa, T16/T17
 lapide bugs/009-010, T18 latina.h line, T19 cleanup incl. the true
 copies T13 found by collision; ledger items …XHAW3H (half-amalgam guard),
 …SFJ3T (renominare typedef scope), 01M3BHHJQA, …63GNNR.
+
+## 2026-09-25 — phase 5 plan B T14: C89 enters the diagnostics pipeline
+
+INTENTIO → re-scoped by measurement (Fran): not a C89 registry
+declaration (the grammar derives it) but the declared-diagnostics half
+plus a C89 route in `tools/diagnostica`. RELATIO: `SILVA_C89_DIAGNOSTICA`
+(one honest declaration: `error`) generated from c89.stml; the tool
+parses C89 with the file's aedilis header closure in true include order,
+walks only the judged file's top-level nodes, and prints through the
+same pictor as crusta/css/html. The first materia walk over a C89 tree
+exposed silva_frons's sedes hook reporting definition sites (latina.h
+bytes) — fixed to the origin root, STML unchanged. 430 house C files
+clean. Replay verdict: materia unchanged; silva frontend hook semantics
+corrected. Next: T15, the GLR's death point through `emissa`.

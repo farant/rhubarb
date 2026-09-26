@@ -140,6 +140,16 @@
     <attributum nomen="slots" genus="textus"
       nota="paria titulus:genus spatiis separata - forma interior
             supra canonem"/>
+    <attributum nomen="diagnosticum" genus="textus"
+      nota="causa diagnostici: omnis nodus huius generis (error);
+            tabula <PRAEFIXUM>_DIAGNOSTICA, materia_diagnostica_derivare
+            (silva-migratio T14; nomina ut materia/grammatica/
+            registrum.canon)"/>
+    <attributum nomen="gravitas" genus="electio"
+      nota="gravitas diagnostici generis (absens = erratum)">
+      <optio>erratum</optio>
+      <optio>monitum</optio>
+    </attributum>
   </elementum>
 
   <!-- ================= INITIUM ================= -->

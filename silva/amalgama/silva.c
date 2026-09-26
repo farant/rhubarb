@@ -7665,6 +7665,10 @@ silva_c89_fluxus_datorum_aedificare (
 externus constans SilvaTabulaCocta SILVA_C89_TABULA;
 externus constans SilvaRegistrumCoctum SILVA_C89_REGISTRUM;
 
+/* Diagnostica declarata (<genus diagnosticum=...>) -
+ * materia_diagnostica_derivare */
+externus constans MateriaDiagnosticaCocta SILVA_C89_DIAGNOSTICA;
+
 /* Cellae praelatae (<praelatio>) - categoria census */
 #define SILVA_C89_NUMERUS_PRAELATARUM 1
 externus constans SilvaTabPraelata SILVA_C89_PRAELATAE[1];
@@ -9803,7 +9807,8 @@ silva_arbor_scribere_nodum (
  * infra aequalitatem cum materia custodit. */
 #define SILVA_ARBOR_VIA_CAPACITAS 256
 nomen character silva_arbor_via_capacitas_congruit[
-    (SILVA_ARBOR_VIA_CAPACITAS == MATERIA_ARBOR_VIA_CAPACITAS) ? I : -I];
+    (SILVA_ARBOR_VIA_CAPACITAS
+        == MATERIA_ARBOR_VIA_CAPACITAS) ? I : -I];
 #define SILVA_ARBOR_COMPARATIO_STRUCTURALIS \
     SILVA_ARBOR_COMPARATIO_STRUCTURALIS
 #define SILVA_ARBOR_COMPARATIO_FIDELITAS \
@@ -10018,8 +10023,8 @@ silva_arbor_legere_parsuram (
  * standard, scissurae in cauda silvae), sine conversione.
  *
  * Phasis V: T6b ex shim promotus (conversio), T10b unci super caudam
- * silvae, T10c conversio et shim recesserunt. Extra amalgama usque ad
- * sigillum (T13; fontes_politica.sh).
+ * silvae, T10c conversio et shim recesserunt, T13a in amalgamate;
+ * T14 sedes efficax = radix strati 0 (diagnostica C89).
  */
 
 #ifndef SILVA_FRONS_H
@@ -10066,6 +10071,14 @@ silva_frons_longitudines_figere (
     SilvaFrons* frons,
     SilvaValor  valor);
 
+
+/* Uncus originis C89 frontis (post silva_frons_arborem_silvae_parare):
+ * sedes efficax (radix strati 0), radix emissionis, extentum. Pro
+ * consumptoribus materiae praeter arborem - materia_diagnostica_
+ * derivare (T14). Vita = frontis. */
+constans MateriaOrigoUncus*
+silva_frons_uncus (
+    constans SilvaFrons* frons);
 
 /* Causa fracturae ultimae (NIHIL si nulla) - additum ad API
  * probatum: shim nomen vitii lexici nuntiabat. */
@@ -54410,6 +54423,24 @@ constans SilvaRegistrumCoctum SILVA_C89_REGISTRUM = {
 };
 
 /* ==================================================
+ * Diagnostica declarata (materia-sedes B1)
+ * ================================================== */
+
+hic_manens constans MateriaTabDiagnosticum SILVA_C89_DIAGNOSTICA_TABULA[] = {
+    /* genus, locus, species, gravitas, codex, causa */
+    { (s32)SILVA_C89_GENUS_ERROR, (s32)-1,
+      (s32)MATERIA_DIAGNOSTICUM_GENUS,
+      (s32)MATERIA_GRAVITAS_ERRATUM,
+      "error",
+      "lexemata quae grammatica ponere non potuit" }
+};
+
+constans MateriaDiagnosticaCocta SILVA_C89_DIAGNOSTICA = {
+    SILVA_C89_DIAGNOSTICA_TABULA, 1,
+    NIHIL, 0
+};
+
+/* ==================================================
  * Accessores (probati: genus + fines)
  * ================================================== */
 
@@ -94603,9 +94634,9 @@ nomen structura {
 interior b32
 _parsurae_divergere (
         ComparatorParsurarum* comparator,
-     constans character* campus,
-                    s32  locus,
-                    s32  index)
+          constans character* campus,
+                         s32  locus,
+                         s32  index)
 {
     SilvaArborDifferentia* differentia = comparator->differentia;
 
@@ -94629,10 +94660,10 @@ _parsurae_divergere (
 interior b32
 _parsurae_lexemata_aequalia (
         ComparatorParsurarum* comparator,
-    constans SilvaToken* a,
-    constans SilvaToken* b,
-                    s32  locus,
-                    s32  index)
+         constans SilvaToken* a,
+         constans SilvaToken* b,
+                         s32  locus,
+                         s32  index)
 {
     SilvaArborDifferentia* differentia = comparator->differentia;
 
@@ -94664,10 +94695,10 @@ _parsurae_lexemata_aequalia (
 interior b32
 _arbor_lamina_aequalis (
          ComparatorParsurarum* comparator,
-                     SilvaXar* a,
-                     SilvaXar* b,
-      constans character* campus,
-                     s32  index)
+                          SilvaXar* a,
+                          SilvaXar* b,
+           constans character* campus,
+                          s32  index)
 {
     i32 numerus_a;
     i32 numerus_b;
@@ -94701,9 +94732,9 @@ _arbor_regiones_aequales (
 interior b32
 _arbor_regio_aequalis (
           ComparatorParsurarum* comparator,
-      constans SilvaRegio* a,
-      constans SilvaRegio* b,
-                      s32  index)
+           constans SilvaRegio* a,
+           constans SilvaRegio* b,
+                           s32  index)
 {
     i32 numerus_a;
     i32 numerus_b;
@@ -94829,8 +94860,8 @@ _arbor_regiones_planare (
 interior b32
 _arbor_regiones_aequales (
     ComparatorParsurarum* comparator,
-                SilvaXar* a,
-                SilvaXar* b)
+                     SilvaXar* a,
+                     SilvaXar* b)
 {
      SilvaPiscina* piscina;
          SilvaXar* plana_a;
@@ -94961,9 +94992,9 @@ silva_arbor_parsurae_aequales (
         SilvaArborDifferentia* differentia)
 {
     ComparatorParsurarum comparator;
-                i32 numerus_a;
-                i32 numerus_b;
-                i32 i;
+                     i32 numerus_a;
+                     i32 numerus_b;
+                     i32 i;
 
     si (differentia != NIHIL)
     {
@@ -95208,25 +95239,25 @@ _silvae_extentum (
     redde NIHIL;
 }
 
+/* Radix strati 0 lexematis DERIVATI per catenam originis (primus
+ * gradus ab origine eius - lexema FONS vocans ipse tractat); NIHIL +
+ * causa si irrecuperabilis. Nucleus communis uncorum radicis
+ * (emissio) et sedis (T14): monstratores catenae non-constantes sunt,
+ * ergo lexema constans accipitur sine cast. */
 hic_manens SilvaToken*
-_silvae_radix_quaerere (
-                vacuum*  datum,
-          SilvaToken*  token,
-    constans character** causa)
+_silvae_radix_derivati (
+     constans SilvaToken*  token,
+    constans character**  causa)
 {
-    SilvaToken* t = token;
+    SilvaOrigo* o = silva_token_origo(token);
            i32  custodia;
 
-    (vacuum)datum;
     per (custodia = ZEPHYRUM; custodia < (i32)CCLVI; custodia++)
     {
-        SilvaOrigo* o = silva_token_origo(t);
         SilvaToken* proximum;
 
         commutatio (o->genus)
         {
-        casus SILVA_ORIGO_FONS:
-            redde t;
         casus SILVA_ORIGO_EXPANSIO:
             proximum = o->datum.expansio.invocatio; frange;
         casus SILVA_ORIGO_CHORDA:
@@ -95242,25 +95273,69 @@ _silvae_radix_quaerere (
                      "recuperabile (deferral nominatum)";
             redde NIHIL;
         }
-        t = proximum;
+        o = silva_token_origo(proximum);
+        si (o->genus == SILVA_ORIGO_FONS)
+        {
+            redde proximum;
+        }
     }
     *causa = "catena originis nimis longa";
     redde NIHIL;
 }
 
+hic_manens SilvaToken*
+_silvae_radix_quaerere (
+                vacuum*  datum,
+          SilvaToken*  token,
+    constans character** causa)
+{
+    (vacuum)datum;
+    si (silva_token_origo(token)->genus == SILVA_ORIGO_FONS)
+    {
+        redde token;
+    }
+    redde _silvae_radix_derivati(token, causa);
+}
+
+/* Sedes EFFICAX (contractus materia_nodus.h: extensio, puritas,
+ * geometria, commentarium): lexema fontis = sedes sua; lexema
+ * DERIVATUM = sedes RADICIS eius (invocatio in strato 0 - ubi in
+ * plagula apparet), est_fons tamen FALSUM (puritas, ordo octetorum
+ * id praetereunt). Radix irrecuperabilis (pasta, chorda, api) =
+ * sine sede (-I): ab extensionibus omittitur, non fingitur - ut
+ * silva_nodus_extensionem 'synthetica omissa'.
+ *
+ * Ante T14 sedes DEF-SITE reddebatur (octeti corporis macro in
+ * latina.h): extensio nodi a lexemate derivato incipientis in
+ * plagulam ALIAM cadebat (materia_tractus_conferre fontem primi
+ * sequitur) - diagnostica C89 in lineis latinae nominabantur. */
 hic_manens vacuum
 _silvae_sedes_quaerere (
                    vacuum* datum,
     constans SilvaToken* token,
              MateriaSedes* sedes)
 {
+    constans SilvaToken* radix;
+       constans character* causa = NIHIL;
+
     (vacuum)datum;
-    sedes->byte_offset  = token->byte_offset;
-    sedes->linea        = token->linea;
-    sedes->columna      = token->columna;
-    sedes->fons_index   = token->fons_index;
-    sedes->est_fons     = (b32)(silva_token_origo(token)->genus
+    sedes->est_fons = (b32)(silva_token_origo(token)->genus
         == SILVA_ORIGO_FONS);
+    radix = sedes->est_fons
+        ? token
+        : _silvae_radix_derivati(token, &causa);
+    si (radix == NIHIL)
+    {
+        sedes->byte_offset  = (s32)-I;
+        sedes->linea        = ZEPHYRUM;
+        sedes->columna      = ZEPHYRUM;
+        sedes->fons_index   = token->fons_index;
+        redde;
+    }
+    sedes->byte_offset  = radix->byte_offset;
+    sedes->linea        = radix->linea;
+    sedes->columna      = radix->columna;
+    sedes->fons_index   = radix->fons_index;
 }
 
 hic_manens SilvaXar*
@@ -96056,6 +96131,13 @@ silva_frons_creare (
     frons->piscina   = piscina;
     frons->expansio  = expansio;
     redde frons;
+}
+
+constans MateriaOrigoUncus*
+silva_frons_uncus (
+    constans SilvaFrons* frons)
+{
+    redde (frons != NIHIL) ? &frons->uncus_silvae : NIHIL;
 }
 
 constans character*

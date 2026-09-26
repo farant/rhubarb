@@ -11,11 +11,11 @@ BUILD_DIR="$RADIX_DIR/build/diagnostica"
 BIN="$BUILD_DIR/diagnostica"
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
-declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$RADIX_DIR/crusta/fontes" "-I$RADIX_DIR/css/fontes" "-I$RADIX_DIR/html/fontes")
+declare -a INCLUDE_FLAGS=("-I$RADIX_DIR/include" "-I$RADIX_DIR/materia/fontes" "-I$RADIX_DIR/crusta/fontes" "-I$RADIX_DIR/css/fontes" "-I$RADIX_DIR/html/fontes" "-I$RADIX_DIR/silva/fontes")
 mkdir -p "$BUILD_DIR" || exit 2
 CAPITA_NOVA=""
 if [ -f "$BIN" ]; then
-    CAPITA_NOVA="$(find "$RADIX_DIR/include" "$RADIX_DIR/materia/fontes" "$RADIX_DIR/crusta/fontes" "$RADIX_DIR/css/fontes" "$RADIX_DIR/html/fontes" -name '*.h' -newer "$BIN" 2>/dev/null | head -1)"
+    CAPITA_NOVA="$(find "$RADIX_DIR/include" "$RADIX_DIR/materia/fontes" "$RADIX_DIR/crusta/fontes" "$RADIX_DIR/css/fontes" "$RADIX_DIR/html/fontes" "$RADIX_DIR/silva/fontes" -name '*.h' -newer "$BIN" 2>/dev/null | head -1)"
 fi
 OBJ=""
 compilare () {
@@ -44,6 +44,15 @@ for src in "$RADIX_DIR"/crusta/fontes/*.c "$RADIX_DIR"/css/fontes/*.c \
            "$RADIX_DIR"/html/fontes/*.c; do
     compilare "$src" "$BUILD_DIR/$(basename "$src" .c).o"
 done
+# C89 (silva-migratio T14): frons silvae tota, ut cursor silvae eam
+# nectit (glob - modulus novus non tacite omittitur); tabulae
+# grammaticarum probationis (sceletum, imparilis) numquam
+for src in "$RADIX_DIR"/silva/fontes/*.c; do
+    case "$src" in
+        */silva_tabulae_sceleti.c|*/silva_tabulae_imparilis.c) continue ;;
+    esac
+    compilare "$src" "$BUILD_DIR/$(basename "$src" .c).o"
+done
 if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$RADIX_DIR/tools/diagnostica.c" ] \
    || [ -n "$(find "$BUILD_DIR" -name '*.o' -newer "$BIN" 2>/dev/null | head -1)" ]; then
     rm -f "$BIN"
@@ -54,4 +63,9 @@ fi
 # ergo instrumentum ex alio cwd curritur eas invenire non posset - exitus 2
 # pro plagula quaque .sh. Involucrum radicem novit; instrumentum non.
 export CRUSTA_LINTRUM="${CRUSTA_LINTRUM:-$RADIX_DIR/crusta/lintrum}"
+# C89 (T14): clausura capitum per bin/aedilis (via absoluta)
+export RHUBARB_RADIX="${RHUBARB_RADIX:-$RADIX_DIR}"
+if [ ! -x "$RADIX_DIR/bin/aedilis" ]; then
+    "$RADIX_DIR/tools/aedilis_struere.sh" >&2 || exit 2
+fi
 exec "$BIN" "$@"

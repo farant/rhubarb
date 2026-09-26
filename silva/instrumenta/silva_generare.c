@@ -589,6 +589,13 @@ silva_gen_grammaticam_legere (
                         extra->titulus = g_tit;
                         extra->loci_descriptio =
                             stml_attributum_capere(*g_ptr, "slots");
+                        /* diagnosticum declaratum (T14): nomina ut
+                         * materia/grammatica/registrum.canon */
+                        extra->diagnosticum =
+                            stml_attributum_capere(*g_ptr,
+                                "diagnosticum");
+                        extra->gravitas =
+                            stml_attributum_capere(*g_ptr, "gravitas");
                     }
                 }
             }
@@ -905,7 +912,9 @@ _genus_capere (
     def->titulus = titulus;
     def->loci = xar_creare(g->piscina,
         (i32)magnitudo(SilvaGenLocusDef));
-    def->ex_extra = FALSUM;
+    def->ex_extra      = FALSUM;
+    def->diagnosticum  = NIHIL;
+    def->monitum       = FALSUM;
     redde def;
 }
 
@@ -1308,7 +1317,27 @@ silva_gen_registrum_computare (
 
         def = _genus_capere(grammatica, genera, extra->titulus);
         si (def == NIHIL) redde NIHIL;
-        def->ex_extra = VERUM;
+        def->ex_extra      = VERUM;
+        def->diagnosticum  = extra->diagnosticum;
+        si (extra->gravitas != NIHIL)
+        {
+            si (chorda_aequalis_literis(*extra->gravitas, "monitum"))
+            {
+                def->monitum = VERUM;
+            }
+            alioquin si (!chorda_aequalis_literis(*extra->gravitas,
+                         "erratum"))
+            {
+                fprintf(stderr,
+                    "silva_gen: genus '%.*s': gravitas ignota '%.*s'"
+                    " (erratum|monitum)\n",
+                    (int)extra->titulus->mensura,
+                    (constans character*)extra->titulus->datum,
+                    (int)extra->gravitas->mensura,
+                    (constans character*)extra->gravitas->datum);
+                redde NIHIL;
+            }
+        }
 
         /* Parsare loci_descriptio: "nomen:species nomen:species ..." */
         si (extra->loci_descriptio != NIHIL)

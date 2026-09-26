@@ -134,25 +134,25 @@ _silvae_extentum (
     redde NIHIL;
 }
 
-hic_manens MateriaToken*
-_silvae_radix_quaerere (
-                vacuum*  datum,
-          MateriaToken*  token,
-    constans character** causa)
+/* Radix strati 0 lexematis DERIVATI per catenam originis (primus
+ * gradus ab origine eius - lexema FONS vocans ipse tractat); NIHIL +
+ * causa si irrecuperabilis. Nucleus communis uncorum radicis
+ * (emissio) et sedis (T14): monstratores catenae non-constantes sunt,
+ * ergo lexema constans accipitur sine cast. */
+hic_manens SilvaToken*
+_silvae_radix_derivati (
+     constans SilvaToken*  token,
+      constans character** causa)
 {
-    SilvaToken* t = token;
+    SilvaOrigo* o = silva_token_origo(token);
            i32  custodia;
 
-    (vacuum)datum;
     per (custodia = ZEPHYRUM; custodia < (i32)CCLVI; custodia++)
     {
-        SilvaOrigo* o = silva_token_origo(t);
         SilvaToken* proximum;
 
         commutatio (o->genus)
         {
-        casus SILVA_ORIGO_FONS:
-            redde t;
         casus SILVA_ORIGO_EXPANSIO:
             proximum = o->datum.expansio.invocatio; frange;
         casus SILVA_ORIGO_CHORDA:
@@ -168,25 +168,69 @@ _silvae_radix_quaerere (
                      "recuperabile (deferral nominatum)";
             redde NIHIL;
         }
-        t = proximum;
+        o = silva_token_origo(proximum);
+        si (o->genus == SILVA_ORIGO_FONS)
+        {
+            redde proximum;
+        }
     }
     *causa = "catena originis nimis longa";
     redde NIHIL;
 }
 
+hic_manens MateriaToken*
+_silvae_radix_quaerere (
+                vacuum*  datum,
+          MateriaToken*  token,
+    constans character** causa)
+{
+    (vacuum)datum;
+    si (silva_token_origo(token)->genus == SILVA_ORIGO_FONS)
+    {
+        redde token;
+    }
+    redde _silvae_radix_derivati(token, causa);
+}
+
+/* Sedes EFFICAX (contractus materia_nodus.h: extensio, puritas,
+ * geometria, commentarium): lexema fontis = sedes sua; lexema
+ * DERIVATUM = sedes RADICIS eius (invocatio in strato 0 - ubi in
+ * plagula apparet), est_fons tamen FALSUM (puritas, ordo octetorum
+ * id praetereunt). Radix irrecuperabilis (pasta, chorda, api) =
+ * sine sede (-I): ab extensionibus omittitur, non fingitur - ut
+ * silva_nodus_extensionem 'synthetica omissa'.
+ *
+ * Ante T14 sedes DEF-SITE reddebatur (octeti corporis macro in
+ * latina.h): extensio nodi a lexemate derivato incipientis in
+ * plagulam ALIAM cadebat (materia_tractus_conferre fontem primi
+ * sequitur) - diagnostica C89 in lineis latinae nominabantur. */
 hic_manens vacuum
 _silvae_sedes_quaerere (
                    vacuum* datum,
     constans MateriaToken* token,
              MateriaSedes* sedes)
 {
+    constans MateriaToken* radix;
+       constans character* causa = NIHIL;
+
     (vacuum)datum;
-    sedes->byte_offset  = token->byte_offset;
-    sedes->linea        = token->linea;
-    sedes->columna      = token->columna;
-    sedes->fons_index   = token->fons_index;
-    sedes->est_fons     = (b32)(silva_token_origo(token)->genus
+    sedes->est_fons = (b32)(silva_token_origo(token)->genus
         == SILVA_ORIGO_FONS);
+    radix = sedes->est_fons
+        ? token
+        : _silvae_radix_derivati(token, &causa);
+    si (radix == NIHIL)
+    {
+        sedes->byte_offset  = (s32)-I;
+        sedes->linea        = ZEPHYRUM;
+        sedes->columna      = ZEPHYRUM;
+        sedes->fons_index   = token->fons_index;
+        redde;
+    }
+    sedes->byte_offset  = radix->byte_offset;
+    sedes->linea        = radix->linea;
+    sedes->columna      = radix->columna;
+    sedes->fons_index   = radix->fons_index;
 }
 
 hic_manens Xar*
@@ -982,6 +1026,13 @@ silva_frons_creare (
     frons->piscina   = piscina;
     frons->expansio  = expansio;
     redde frons;
+}
+
+constans MateriaOrigoUncus*
+silva_frons_uncus (
+    constans SilvaFrons* frons)
+{
+    redde (frons != NIHIL) ? &frons->uncus_silvae : NIHIL;
 }
 
 constans character*
