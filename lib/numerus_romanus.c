@@ -1,4 +1,5 @@
 #include "numerus_romanus.h"
+#include "chorda_aedificator.h"
 
 
 /* ====================================================================
@@ -125,4 +126,180 @@ numerus_romanus_legere (
 
     si (valor != NIHIL) *valor = summa;
     redde VERUM;
+}
+
+
+/* ==================================================
+ * SCRIBERE ET EXPRIMERE
+ * ================================================== */
+
+#define ROMANUS_MAXIMUS      (MMM + CM + XC + IX)   /* MMMCMXCIX */
+#define INT_MAXIMUS_VALOR    ((i64)0x7FFFFFFF)
+
+interior constans i32 VALORES_GREGUM[XIII] = {
+    M, CM, D, CD, C, XC, L, XL, X, IX, V, IV, I
+};
+interior constans character* LITTERAE_GREGUM[XIII] = {
+    "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV",
+    "I"
+};
+
+chorda
+numerus_romanus_scribere (
+         i32  n,
+    Piscina* piscina)
+{
+    ChordaAedificator* aed;
+                  i32  k;
+
+    si (n == ZEPHYRUM || n > ROMANUS_MAXIMUS || piscina == NIHIL)
+    {
+        chorda vacua;
+
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        redde vacua;
+    }
+    aed = chorda_aedificator_creare(piscina, XVI);
+    per (k = ZEPHYRUM; k < XIII; k++)
+    {
+        dum (n >= VALORES_GREGUM[k])
+        {
+            chorda_aedificator_appendere_literis(aed,
+                LITTERAE_GREGUM[k]);
+            n -= VALORES_GREGUM[k];
+        }
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+/* Terminum 'r * M * M ...' (potentia milium) appendere */
+interior vacuum
+_terminum_appendere (
+    ChordaAedificator* aed,
+                  i32  r,
+                  i32  potentia,
+              Piscina* piscina)
+{
+    i64 valor = (i64)r;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < potentia; k++)
+    {
+        valor *= (i64)M;
+    }
+    si (valor > INT_MAXIMUS_VALOR)
+    {
+        chorda_aedificator_appendere_literis(aed, "(i64)");
+    }
+    chorda_aedificator_appendere_chorda(aed,
+        numerus_romanus_scribere(r, piscina));
+    per (k = ZEPHYRUM; k < potentia; k++)
+    {
+        chorda_aedificator_appendere_literis(aed, " * M");
+    }
+}
+
+chorda
+numerus_romanus_exprimere (
+         i64  n,
+         b32* compositum,
+    Piscina* piscina)
+{
+    ChordaAedificator* aed;
+
+    si (compositum != NIHIL)
+    {
+        *compositum = FALSUM;
+    }
+    si (piscina == NIHIL)
+    {
+        chorda vacua;
+
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        redde vacua;
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde chorda_ex_literis("ZEPHYRUM", piscina);
+    }
+    si (n <= (i64)ROMANUS_MAXIMUS)
+    {
+        redde numerus_romanus_scribere((i32)n, piscina);
+    }
+    si (compositum != NIHIL)
+    {
+        *compositum = VERUM;
+    }
+    aed = chorda_aedificator_creare(piscina, LXIV);
+
+    /* familia binaria: multiplum MXXIV, non milium rotundum */
+    si (n % (i64)MXXIV == ZEPHYRUM && n % (i64)M != ZEPHYRUM)
+    {
+           b32 summa;
+        chorda factor = numerus_romanus_exprimere(n / (i64)MXXIV,
+                                                         NIHIL,
+                                                         piscina);
+
+        /* 'IV * M + D' ut factor parentheses poscit; productum non */
+        summa = chorda_continet(factor,
+                                chorda_ex_literis("+", piscina));
+        si (   n > INT_MAXIMUS_VALOR
+            && !chorda_incipit(factor,
+                               chorda_ex_literis("(i64)", piscina)))
+        {
+            chorda_aedificator_appendere_literis(aed, "(i64)");
+        }
+        si (summa)
+        {
+            chorda_aedificator_appendere_literis(aed, "(");
+        }
+        chorda_aedificator_appendere_chorda(aed, factor);
+        si (summa)
+        {
+            chorda_aedificator_appendere_literis(aed, ")");
+        }
+        chorda_aedificator_appendere_literis(aed, " * MXXIV");
+        redde chorda_aedificator_finire(aed);
+    }
+
+    /* familia milium (vinculum): greges ab imo colliguntur, ab alto
+     * scribuntur. Grex supremus < MMMM totus stat ('MD * M', non
+     * 'M * M + D * M'). */
+    {
+        i32 residua[XXIV];
+        i32 potentiae[XXIV];
+        i32 numerus   = ZEPHYRUM;
+        i32 potentia  = ZEPHYRUM;
+        s32 k;   /* s32: ad -1 descendit (i32 involveretur) */
+
+        dum (n > ZEPHYRUM && numerus < XXIV)
+        {
+            si (n <= (i64)ROMANUS_MAXIMUS)
+            {
+                residua[numerus]    = (i32)n;
+                potentiae[numerus]  = potentia;
+                numerus++;
+                frange;
+            }
+            si (n % (i64)M != ZEPHYRUM)
+            {
+                residua[numerus]    = (i32)(n % (i64)M);
+                potentiae[numerus]  = potentia;
+                numerus++;
+            }
+            n /= (i64)M;
+            potentia++;
+        }
+        per (k = (s32)numerus - I; k >= ZEPHYRUM; k--)
+        {
+            _terminum_appendere(aed, residua[k], potentiae[k], piscina);
+            si (k > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(aed, " + ");
+            }
+        }
+    }
+    redde chorda_aedificator_finire(aed);
 }

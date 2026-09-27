@@ -36,4 +36,37 @@ numerus_romanus_legere (
     chorda  s,
        i32* valor);
 
+/* Forma canonica subtractiva, maiuscula: 106 -> "CVI", 3999 ->
+ * "MMMCMXCIX". Numerus Romanus classicus ad MMMCMXCIX finit (ultra
+ * Romani vinculo - linea super numerum = mille - utebantur); ergo
+ * 0 (numerum Romanum non habet) et n > 3999 -> chorda vacua. Vide
+ * numerus_romanus_exprimere pro omni n. Par: legere(scribere(n)) == n. */
+chorda
+numerus_romanus_scribere (
+         i32  n,
+     Piscina* piscina);
+
+/* Expressio C89 canonica valoris n in vocabulario latina.h - quam
+ * formator pro digitis scribit (desideratum ...QCHQ):
+ *
+ *   n == 0              -> "ZEPHYRUM"
+ *   n <= 3999           -> numerus ipse: "CVI"
+ *   multiplum MXXIV     -> "IV * MXXIV" (4096), "MXXIV * MXXIV" -
+ *     (non milium)         intentio binaria servatur
+ *   ceteri              -> vinculum ut '* M', gregibus milium:
+ *                          "IV * M" (4000), "V * M + CCLXXX" (5280),
+ *                          "IV * M * M + D * M" (4500000)
+ *
+ * Milia rotunda milia manent: 128000 -> "CXXVIII * M", non
+ * "CXXV * MXXIV". Terminus cuius valor int excedit '(i64)' ante
+ * factorem primum fert (productum int involveretur - UB).
+ * *compositum (si non NIHIL) = VERUM si expressio operatorem habet:
+ * vocator parentheses ponit ubi praecedentia poscit (x / 4096 ->
+ * x / (IV * MXXIV)). */
+chorda
+numerus_romanus_exprimere (
+         i64  n,
+         b32* compositum,
+     Piscina* piscina);
+
 #endif /* NUMERUS_ROMANUS_H */
