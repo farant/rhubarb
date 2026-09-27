@@ -195,3 +195,21 @@ Named costs: computus gold — base64/color only (the corpus files with
 deaths): allocations +24/+25, usus +~2 KB (the exspectata lists);
 lexemes and errors unchanged. Pins updated deliberately (examen_vectis
 ④ ×2, diagnostica_fumus XXII) — now also assert the found token.
+
+## 2026-09-26 — closer hints, and a false ';' removed (T19b-2 follow-up)
+
+Checked against lapide's own bugs/001 round-6 list (seven cases rebuilt
+as scratch .thistle, run through the installed briar). Six were right;
+**unclosed '{'** was wrong: the parser dies at EOF, EOF counts as "first
+on its line", the previous token is '}' (allowed on purpose for
+`struct s {…}`), and the dead state happens to accept ';' → "';'
+fortasse deest" under the '}'. Misleading, worse than no hint.
+Now: the ';' heuristic never fires at EOF; `_clausura_deest` says what
+is true — EOF + '}' accepted → "'}' fortasse deest" (else ')'); dead
+';' + ')' accepted → "')' fortasse deest" (clang's "expected ')'").
+EOF deaths read "finis textus quem grammatica hic non accipit" (finis is
+masculine — 'quem', not 'quod'; the first draft had it wrong). Tests:
+both closer hints, and neither may carry the ';' hint.
+Lapide's list now: missing ';' ✓, reserved C ✓, unclosed '{' ✓, nomen/
+casus ✓, junk '@' ✓ (located, no hint), missing ')' ✓, two missing ';'
+→ first reported, second parked (…M4X).

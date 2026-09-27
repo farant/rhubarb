@@ -97406,7 +97406,11 @@ _semicolon_deest (
     SilvaToken* radix_prioris;
            i32  i;
 
-    si (   parsura->lexemata == NIHIL
+    /* EOF numquam: '{' non clausa in EOF moritur et status ';'
+     * forte accipit - "';' deest sub '}'" falsum erat (lapide rotunda
+     * VI, probatum); _clausura_deest id casum tenet */
+    si (   parsura->lexemata               == NIHIL
+        || silva_token_genus(mors->lexema) == (s32)SILVA_LEX_EOF
         || !_exspectatur(mors, (s32)SILVA_LEX_SEMICOLON))
     {
         redde NIHIL;
@@ -97449,6 +97453,38 @@ _semicolon_deest (
     redde prius;
 }
 
+/* Clausura fortasse absens (T19b-2 sequela; lapide rotunda VI):
+ *   mors in EOF + status '}' accipiebat -> '}' fortasse deest
+ *   (aut ')' si '}' non exspectabatur);
+ *   mors in ';' + status ')' accipiebat -> ')' fortasse deest
+ *   ('g(1;' - clang: "expected ')'").
+ * NIHIL si nulla. */
+interior constans character*
+_clausura_deest (
+    constans SilvaMors* mors)
+{
+    s32 genus = (s32)silva_token_genus(mors->lexema);
+
+    si (genus == (s32)SILVA_LEX_EOF)
+    {
+        si (_exspectatur(mors, (s32)SILVA_LEX_BRACE_CLAUSA))
+        {
+            redde "'}' fortasse deest";
+        }
+        si (_exspectatur(mors, (s32)SILVA_LEX_PAREN_CLAUSA))
+        {
+            redde "')' fortasse deest";
+        }
+        redde NIHIL;
+    }
+    si (   genus == (s32)SILVA_LEX_SEMICOLON
+        && _exspectatur(mors, (s32)SILVA_LEX_PAREN_CLAUSA))
+    {
+        redde "')' fortasse deest";
+    }
+    redde NIHIL;
+}
+
 interior constans character*
 _causa_mortis (
                    SilvaPiscina* piscina,
@@ -97479,12 +97515,9 @@ _causa_mortis (
         longitudo = SILVA_MORS_TEXTUS_MAXIMUS;
         truncatum = VERUM;
     }
-    si (longitudo == ZEPHYRUM)
-    {
-        redde "lexema quod grammatica hic non accipit";
-    }
     /* basis + nomen truncatum + admonitio latinae (macrum + expansio,
-     * utrumque <= XXXII) + admonitio ';' (prius <= XXXII) */
+     * utrumque <= XXXII) + admonitio ';' (prius <= XXXII) +
+     * clausura */
     capacitas = (memoriae_index)(D + II * longitudo
         + (memoriae_index)lexema->valor.mensura);
     nuntius = (character*)silva_piscina_allocare(piscina, capacitas);
@@ -97492,9 +97525,31 @@ _causa_mortis (
     {
         redde "lexema quod grammatica hic non accipit";
     }
-    sprintf(nuntius, "lexema '%.*s%s' %s", (int)longitudo,
-        (constans character*)inventum.datum, truncatum ? "..." : "",
-        basis);
+    si (silva_token_genus(lexema) == (s32)SILVA_LEX_EOF)
+    {
+        /* finis textus ante unitatem clausam (clang: "expected '}'
+         * at end of input") */
+        sprintf(nuntius, "finis textus quem grammatica hic non"
+            " accipit");   /* finis masculinum: 'quem', non 'quod' */
+    }
+    alioquin si (longitudo == ZEPHYRUM)
+    {
+        sprintf(nuntius, "lexema %s", basis);
+    }
+    alioquin
+    {
+        sprintf(nuntius, "lexema '%.*s%s' %s", (int)longitudo,
+            (constans character*)inventum.datum, truncatum ? "..." : "",
+            basis);
+    }
+    {
+        constans character* clausura = _clausura_deest(mors);
+
+        si (clausura != NIHIL)
+        {
+            sprintf(nuntius + strlen(nuntius), " - %s", clausura);
+        }
+    }
 
     /* admonitio latina.h: expansio cuius corpus in latina.h stat -
      * SOLUM si parsator NOMEN exspectabat ('integer' recte ut typus

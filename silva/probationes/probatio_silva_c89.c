@@ -3644,6 +3644,43 @@ s32 principale (vacuum)
             }
         }
 
+        /* clausurae absentes (T19b-2 sequela; lapide rotunda VI):
+         * '{' non clausa -> mors in EOF: '}' fortasse deest (NON ';'
+         * sub '}' - versio prima id falso suadebat); ')' absens ->
+         * mors in ';': ')' fortasse deest */
+        {
+            constans character* fixa_c[II];
+            constans character* acus_c[II];
+                           i32  c;
+
+            fixa_c[ZEPHYRUM] = "int\nf (void)\n{\n    if (1)\n    {\n"
+                "        return 0;\n}\n";
+            acus_c[ZEPHYRUM] = "'}' fortasse deest";
+            fixa_c[I] =
+                "int\nf (void)\n{\n    g(1;\n    return 0;\n}\n";
+            acus_c[I] = "lexema ';' quod grammatica hic non accipit"
+                " - ')' fortasse deest";
+            per (c = ZEPHYRUM; c < II; c++)
+            {
+                 SilvaParsura* parsura = _parsare(piscina, fixa_c[c]);
+                       chorda  textus;
+
+                CREDO_NON_NIHIL (parsura);
+                si (parsura == NIHIL)
+                {
+                    perge;
+                }
+                textus = silva_mortes_scribere(piscina, "c.c", parsura,
+                    &SILVA_C89_REGISTRUM, fixa_c[c],
+                    (i32)strlen(fixa_c[c]), FALSUM, NIHIL, NIHIL,
+                    NIHIL);
+                CREDO_VERUM (chorda_continet(textus,
+                    chorda_ex_literis(acus_c[c], piscina)));
+                CREDO_VERUM (!chorda_continet(textus,
+                    chorda_ex_literis("';' fortasse deest", piscina)));
+            }
+        }
+
         /* identificator ordinarius: nulla admonitio latinae */
         {
              constans character* mala     = "int a = ;\n";
