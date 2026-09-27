@@ -19,6 +19,11 @@ Leges chartae:
 
 ## inedita
 
+## v2 — 2026-09-26
+
+Regiones C per silvam novam (silva in materiam migrata, phasis V): quae
+lapide invenit (bugs/001, 009, 010) sanata.
+
 - `--help` et `--version` synonyma sunt `-h` et `-versio` (ante
   plagulam solum; post eam argumenta programmatis manent); nota
   vexilli ignoti `-h` nominat.
@@ -26,6 +31,24 @@ Leges chartae:
   commissum; SORDIDUM si fontes mutationes non commissas ferunt) - duo
   binaria eiusdem versionis nunc discernuntur. Mutationes ineditae in
   charta: linea prima `briar vN+inedita(n) — dies`.
+- Regiones C: `va_arg(va, T)`, `offsetof(T, m)`, `va_start`, `va_end`,
+  `assert` parsantur (antea `regio C: parsura fracta` - bugs/009);
+  typi systematis (`FILE`, `size_t`...) noti. Transitus silvae
+  lexicon systematis habet, ut examen.
+- `__attribute__((...))` accipitur in omni sede (post prototypum, ante
+  declarationem, post `}` structurae) et ad clang transit, qui eam
+  tractat (`sentinel`, `format`, `unused`...) - bugs/010.
+- Errores syntaxis in regione C: linea et columna VERAE in plagula
+  `.thistle` (antea linea prima regionis semper), ordo
+  `plagula:linea:columna` sub summario cum excerpto ('hic coepit' ubi
+  unitas incipit, 'hic exspectatur' ubi parsura periit); `(1 error)`
+  singulare; `-visio` excerptum in `<pre>` servat - bugs/001.
+- Nuntii errorum causam dicunt: lexema inventum nominatur (`lexema
+  'redde' quod grammatica hic non accipit`); verba `latina.h` ut nomina
+  usa admonentur (`'nomen' macrum latina.h est ('typedef'): nomen aliud
+  elige`, etiam `casus`, `C`...); `';'`, `'}'`, `')'` fortasse deest
+  suggeritur ubi status parsurae id exspectabat. Errores plures in
+  unitate una: primus solus (limes notus).
 
 ## v1 — 2026-09-24
 

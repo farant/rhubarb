@@ -910,3 +910,15 @@ Fixture adversa/syntaxis_locus.thistle (lapide's repro), planted red
 (linea_prima withheld → fallback to region start). Not addressed here:
 lapide's ask 2 (expected token), 3 (latina.h hint) → T19b-2; 4 (every
 error) parked — one GLR death per recovery unit.
+
+## 2026-09-26 — v2 released (Fran)
+
+MUTATIONES.md: `## inedita` → `## v2 — 2026-09-26`, fresh empty
+`## inedita` above (parser test covers the empty section; briar-fumus XX
+derives the expected version from the chart). v2 = the two entries
+already there + four written now that should have been logged AT THE
+TIME (the chart's own rule): system macros in C regions (bugs/009,
+T16b), `__attribute__` (bugs/010, T17a), located syntax errors with
+excerpts (bugs/001, T19b-1), explained messages (T19b-2 + closer
+fix). Lesson: a silva change that alters briar's user-visible behavior
+owes a `## inedita` line in the same commit.
