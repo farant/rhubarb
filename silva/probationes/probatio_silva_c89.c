@@ -3564,8 +3564,8 @@ s32 principale (vacuum)
     {
             SilvaContextus* ctx;
                        i32  i;
-        constans character* fixa[III];
-        constans character* acus[III];
+        constans character* fixa[IV];
+        constans character* acus[IV];
 
         imprimere("\n--- Probans nuntium mortis (latina.h) ---\n");
 
@@ -3582,6 +3582,13 @@ s32 principale (vacuum)
                          " nomen aliud elige";
         fixa[II] = "integer C = I;\n";
         acus[II] = "- 'C' macrum latina.h est ('100')";
+        /* verbum latinae ANTE lexema mortis (lapide bugs/018):
+         * 'integer typedef' legitimum, mors in '=' */
+        fixa[III] = "integer\nf (vacuum)\n{\n"
+                    "    integer nomen = I;\n    redde nomen;\n}\n";
+        acus[III] = "lexema '=' quod grammatica hic non accipit"
+                    " - 'nomen' macrum latina.h est ('typedef'):"
+                    " nomen aliud elige";
 
         ctx = silva_contextus_creare(piscina);
         CREDO_NON_NIHIL (ctx);
@@ -3589,7 +3596,7 @@ s32 principale (vacuum)
         {
             CREDO_VERUM (silva_contextus_latinam_addere(ctx));
         }
-        per (i = ZEPHYRUM; ctx != NIHIL && i < III; i++)
+        per (i = ZEPHYRUM; ctx != NIHIL && i < IV; i++)
         {
              SilvaParsura* parsura;
                    chorda  textus;
@@ -3614,6 +3621,33 @@ s32 principale (vacuum)
             {
                 CREDO_VERUM (!chorda_continet(textus,
                     chorda_ex_literis("fortasse deest", piscina)));
+            }
+        }
+
+        /* verbum latinae ante mortem, sed mors in '}' (non lexema
+         * quod nomen sequitur): 'redde }' = valor aut ';' deest -
+         * admonitio 'nomen aliud elige' FALSA esset */
+        si (ctx != NIHIL)
+        {
+            constans character* rv = "integer\nf (vacuum)\n{\n"
+                "    redde }\n";
+                   SilvaParsura* parsura;
+                         chorda  textus;
+
+            parsura = silva_parsare_cum_contextu(piscina, ctx,
+                "rv.c", rv, (i32)strlen(rv), &GRAMMATICA_C89, NIHIL,
+                NIHIL, NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            si (parsura != NIHIL)
+            {
+                CREDO_VERUM (parsura->numerus_errorum > ZEPHYRUM);
+                textus = silva_mortes_scribere(piscina, "r.c", parsura,
+                    &SILVA_C89_REGISTRUM, rv, (i32)strlen(rv), VERUM,
+                    NIHIL, NIHIL, NIHIL);
+                CREDO_VERUM (chorda_continet(textus, chorda_ex_literis(
+                    "lexema '}'", piscina)));
+                CREDO_VERUM (!chorda_continet(textus, chorda_ex_literis(
+                    "macrum latina.h", piscina)));
             }
         }
 

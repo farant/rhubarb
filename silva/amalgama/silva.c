@@ -97370,6 +97370,69 @@ _fons_latinae_est (
         ? VERUM : FALSUM;
 }
 
+/* Si lexema ex macro latina.h venit (corpus definitionis in fonte
+ * latinae), nomen macri ('nomen'); aliter NIHIL. */
+interior constans SilvaChorda*
+_macrum_latinae (
+    constans SilvaExpansio* exp,
+                SilvaToken* lexema)
+{
+    SilvaOrigo* origo = silva_token_origo(lexema);
+
+    si (   origo != NIHIL && origo->genus == SILVA_ORIGO_EXPANSIO
+        && origo->datum.expansio.corpus != NIHIL
+        && origo->datum.expansio.nomen_macro != NIHIL
+        && lexema->valor.mensura <= SILVA_MORS_TEXTUS_MAXIMUS
+        && origo->datum.expansio.nomen_macro->mensura
+               <= SILVA_MORS_TEXTUS_MAXIMUS
+        && _fons_latinae_est(exp,
+               origo->datum.expansio.corpus->fons_index))
+    {
+        redde origo->datum.expansio.nomen_macro;
+    }
+    redde NIHIL;
+}
+
+/* Lexema ante 'lexema' in serie parsurae, aut NIHIL. */
+interior SilvaToken*
+_lexema_ante (
+    constans SilvaParsura* parsura,
+               SilvaToken* lexema)
+{
+    i32 i;
+
+    per (i = I;
+         parsura->lexemata != NIHIL
+             && i < silva_xar_numerus(parsura->lexemata);
+         i++)
+    {
+        si (*(SilvaToken**)silva_xar_obtinere(parsura->lexemata, i) == lexema)
+        {
+            redde *(SilvaToken**)silva_xar_obtinere(parsura->lexemata, i - I);
+        }
+    }
+    redde NIHIL;
+}
+
+/* Lexema quod NOMEN sequi solet ('x =', 'x;', 'x,', 'x[', 'x.',
+ * 'x->', 'x +='): mors in eo post verbum clavis latinae = nomen
+ * latinae ut identificator usum (lapide bugs/018: 's32 nomen = 1'
+ * -> 's32 typedef = 1', legitimum usque ad '='). '}' et EOF non:
+ * 'redde }' = valor aut ';' deest, non nomen. */
+interior b32
+_nomen_sequi_solet (
+    s32 genus)
+{
+    redde (   genus == (s32)SILVA_LEX_ASSIGNATIO
+           || (   genus >= (s32)SILVA_LEX_STAR_ASSIGNATIO
+               && genus <= (s32)SILVA_LEX_BARRA_ASSIGNATIO)
+           || genus == (s32)SILVA_LEX_SEMICOLON
+           || genus == (s32)SILVA_LEX_COMMA
+           || genus == (s32)SILVA_LEX_QUADRA_APERTA
+           || genus == (s32)SILVA_LEX_PUNCTUM
+           || genus == (s32)SILVA_LEX_SAGITTA) ? VERUM : FALSUM;
+}
+
 /* Accipiebatne status frontis genus lexematis 'genus'? (mors->
  * exspectata: GENERA lexematum, T19b-2; NIHIL = ignotum -> FALSUM) */
 interior b32
@@ -97404,7 +97467,6 @@ _semicolon_deest (
     SilvaToken* radix_mortis;
     SilvaToken* prius = NIHIL;
     SilvaToken* radix_prioris;
-           i32  i;
 
     /* EOF numquam: '{' non clausa in EOF moritur et status ';'
      * forte accipit - "';' deest sub '}'" falsum erat (lapide rotunda
@@ -97421,16 +97483,7 @@ _semicolon_deest (
     {
         redde NIHIL;
     }
-    per (i = I; i < silva_xar_numerus(parsura->lexemata); i++)
-    {
-        si (*(SilvaToken**)silva_xar_obtinere(parsura->lexemata, i)
-            == mors->lexema)
-        {
-            prius = *(SilvaToken**)silva_xar_obtinere(parsura->lexemata,
-                i - I);
-            frange;
-        }
-    }
+    prius = _lexema_ante(parsura, mors->lexema);
     si (prius == NIHIL)
     {
         redde NIHIL;
@@ -97490,12 +97543,12 @@ _causa_mortis (
                    SilvaPiscina* piscina,
     constans SilvaExpansio* exp,
         constans SilvaMors* mors,
-                SilvaToken* prius)
+                SilvaToken* prius,
+                SilvaToken* ante)
 {
              SilvaToken* lexema  = mors->lexema;
      constans character* basis   = "quod grammatica hic non accipit";
              SilvaToken* radix;
-             SilvaOrigo* origo;
                  SilvaChorda  inventum;
                     i32  longitudo;
                     b32  truncatum;
@@ -97554,26 +97607,40 @@ _causa_mortis (
     /* admonitio latina.h: expansio cuius corpus in latina.h stat -
      * SOLUM si parsator NOMEN exspectabat ('integer' recte ut typus
      * usum ante ';' absentem admonitionem falsam dabat: status tunc
-     * operatores et ';' exspectat, non identificatorem) */
-    origo = silva_token_origo(lexema);
-    si (   _exspectatur(mors, (s32)SILVA_LEX_IDENTIFICATOR)
-        && origo != NIHIL && origo->genus == SILVA_ORIGO_EXPANSIO
-        && origo->datum.expansio.corpus != NIHIL
-        && origo->datum.expansio.nomen_macro != NIHIL
-        && lexema->valor.mensura <= SILVA_MORS_TEXTUS_MAXIMUS
-        && _fons_latinae_est(exp,
-               origo->datum.expansio.corpus->fons_index))
+     * operatores et ';' exspectat, non identificatorem).
+     * Lexema mortis ipsum ('s32 C = 1', 'chorda nomen;') aut, si non,
+     * VERBUM CLAVIS latinae proxime ante in eadem linea cum mors in
+     * lexemate stat quod nomen sequi solet ('s32 nomen = 1' -> mors
+     * in '=' post 'typedef' - lapide bugs/018). */
+    si (_exspectatur(mors, (s32)SILVA_LEX_IDENTIFICATOR))
     {
-        constans SilvaChorda* macrum = origo->datum.expansio.nomen_macro;
+        constans SilvaChorda* macrum  = _macrum_latinae(exp, lexema);
+             SilvaToken* culpa   = lexema;
 
-        si (macrum->mensura <= SILVA_MORS_TEXTUS_MAXIMUS)
+        si (   macrum                  == NIHIL && ante != NIHIL
+            && silva_token_genus(ante) >= (s32)SILVA_LEX_AUTO
+            && silva_token_genus(ante) <= (s32)SILVA_LEX_WHILE
+            && _nomen_sequi_solet((s32)silva_token_genus(lexema)))
+        {
+            SilvaToken* ra = silva_token_radix(ante);
+            SilvaToken* rl = silva_token_radix(lexema);
+
+            si (   ra             != NIHIL && rl != NIHIL
+                && ra->fons_index == rl->fons_index
+                && ra->linea      == rl->linea)
+            {
+                macrum  = _macrum_latinae(exp, ante);
+                culpa   = ante;
+            }
+        }
+        si (macrum != NIHIL)
         {
             sprintf(nuntius + strlen(nuntius),
                 " - '%.*s' macrum latina.h est ('%.*s'): nomen aliud"
                 " elige", (int)macrum->mensura,
                 (constans character*)macrum->datum,
-                (int)lexema->valor.mensura,
-                (constans character*)lexema->valor.datum);
+                (int)culpa->valor.mensura,
+                (constans character*)culpa->valor.datum);
         }
     }
     si (prius != NIHIL)
@@ -97639,7 +97706,7 @@ silva_mortes_diagnostica (
 
             d->gravitas  = (s32)MATERIA_GRAVITAS_ERRATUM;
             d->causa     = _causa_mortis(piscina, parsura->expansio,
-                mors, prius);
+                mors, prius, _lexema_ante(parsura, mors->lexema));
             d->lexema  = mors->lexema;
             d->nota    = MATERIA_NOTA_EXSPECTATUR;
             silva_materia_tractus_lexematis(uncus, mors->lexema, &d->tractus);

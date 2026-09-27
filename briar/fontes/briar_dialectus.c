@@ -410,6 +410,37 @@ _titulus_gregis (
     redde NIHIL;
 }
 
+/* Numerus maximus N ut omnes valores 0..N in grege [a, b) definiti
+ * sint; -1 si 0 abest. latina.h numeros SELECTOS habet (0-214 omnes,
+ * supra CCCXX sed non CCCXIX) - charta regulam dicit, non seriem
+ * integram simulat (lapide briar-feedback documentation-ideas/014). */
+interior s32
+_continui_usque (
+    Xar* paria,
+    i32  a,
+    i32  b)
+{
+    s32 n         = -I;
+    b32 inventum  = VERUM;
+
+    dum (inventum)
+    {
+        i32 i;
+
+        inventum = FALSUM;
+        per (i = a; i < b && !inventum; i++)
+        {
+            inventum = _numerus(((BriarDialectiPar*)xar_obtinere(paria,
+                i))->valor) == (i32)(n + I);
+        }
+        si (inventum)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
 /* grex [a, b) paria; numeri contracti si omnes digiti et >= X */
 interior vacuum
 _gregem_scribere (
@@ -457,6 +488,33 @@ _gregem_scribere (
         sprintf(numerus, "(%u)", (insignatus integer)(b - a));
         _verbum(s, chorda_ex_literis(numerus, s->piscina), "",
             vacua);
+        {
+            s32 continui = _continui_usque(paria, a, b);
+
+            /* regula in linea propria sub numeris, si series non
+             * integra est: 'numerus N definitus?' scriptor quaerit */
+            si ((i32)(continui + I) < (b - a))
+            {
+                _scribere(s, "\n");
+                _titulum(s, "");
+                si (continui >= ZEPHYRUM)
+                {
+                    sprintf(numerus, "0-%d;", (integer)continui);
+                    _verbum(s, chorda_ex_literis("omnes", s->piscina),
+                        "", vacua);
+                    _verbum(s, chorda_ex_literis(numerus, s->piscina),
+                        "", vacua);
+                }
+                _verbum(s, chorda_ex_literis("supra", s->piscina), "",
+                    vacua);
+                _verbum(s, chorda_ex_literis("selecti", s->piscina), "",
+                    vacua);
+                _verbum(s, chorda_ex_literis("tantum", s->piscina), "",
+                    vacua);
+                _verbum(s, chorda_ex_literis("(ceteri decimales)",
+                    s->piscina), "", vacua);
+            }
+        }
     }
     alioquin
     {

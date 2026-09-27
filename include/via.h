@@ -100,6 +100,9 @@ via_absoluta (
 
 /* Extrahere directorium parentem (dirname)
  *
+ * Separatores terminales non numerantur (POSIX): par cum via_nomen,
+ * "/foo/bar/" -> "/foo" + "bar".
+ *
  * EXEMPLA:
  *   "/foo/bar/baz.txt" -> "/foo/bar"
  *   "/foo"							-> "/"
@@ -114,9 +117,12 @@ via_directorium (
 
 /* Extrahere nomen fili (basename)
  *
+ * Separatores terminales praetermittuntur (POSIX). Radix nomen non
+ * habet: "/" -> "" (POSIX "/" reddit - differentia consulta).
+ *
  * EXEMPLA:
  *   "/foo/bar/baz.txt" -> "baz.txt"
- *   "/foo/bar/"				-> "foo"
+ *   "/foo/bar/"				-> "bar"
  *   "/" 								-> ""
  */
 chorda

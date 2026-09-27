@@ -46,6 +46,21 @@ _invenire_ultimum_separatorem (
     redde -I;
 }
 
+/* Viam sine separatoribus terminalibus: "/foo/bar//" -> "/foo/bar".
+ * Via ex separatoribus solis ("/", "//") -> "" (vocator radicem
+ * tractat). Sectio, non copia. */
+interior chorda
+_sine_separatoribus_terminalibus (
+    chorda s)
+{
+    dum (   s.mensura > ZEPHYRUM
+         && _est_separator((character)s.datum[s.mensura - I]))
+    {
+        s.mensura--;
+    }
+    redde s;
+}
+
 /* Invenire ultimum punctum in chorda (pro extensione) */
 interior s32
 _invenire_ultimum_punctum (
@@ -108,15 +123,19 @@ via_iungere (
 		 * aedificator non terminat cum separator et
 		 * pars non incipit cum separator,
 		 * addere separator */
-        si (i > ZEPHYRUM && chorda_aedificator_longitudo(aedificator) > ZEPHYRUM)
+        si (   i > ZEPHYRUM
+            && chorda_aedificator_longitudo(aedificator) > ZEPHYRUM)
         {
-               chorda spectatio = chorda_aedificator_spectare(aedificator);
-            character ultimus = (character)spectatio.datum[spectatio.mensura - I];
+               chorda spectatio =
+                   chorda_aedificator_spectare(aedificator);
+            character ultimus =
+                (character)spectatio.datum[spectatio.mensura - I];
 
             si (   !_est_separator(ultimus)
                 && !_est_separator((character)pars.datum[ZEPHYRUM]))
             {
-                chorda_aedificator_appendere_character(aedificator, VIA_SEPARATOR);
+                chorda_aedificator_appendere_character(aedificator,
+                    VIA_SEPARATOR);
             }
         }
 
@@ -156,7 +175,8 @@ via_normalizare (
     fissio = chorda_fissio(via, VIA_SEPARATOR, piscina);
 
     /* Allocare stack pro partes (maximus magnitudo = numerus partium) */
-    stack = (chorda*)piscina_allocare(piscina, (memoriae_index)fissio.numerus * magnitudo(chorda));
+    stack = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)fissio.numerus * magnitudo(chorda));
     si (!stack)
     {
         chorda vacua;
@@ -173,7 +193,8 @@ via_normalizare (
 
         /* Omittere partes vacuas et "." */
         si (pars.mensura == ZEPHYRUM) perge;
-        si (chorda_aequalis(pars, chorda_ex_literis(".", piscina))) perge;
+        si (chorda_aequalis(pars, chorda_ex_literis(".",
+            piscina))) perge;
 
         /* Tractare ".." */
         si (chorda_aequalis(pars, chorda_ex_literis("..", piscina)))
@@ -220,7 +241,8 @@ via_normalizare (
         || !_est_separator((character)fructus.datum[ZEPHYRUM])))
     {
         chorda partes_cum_radice[II];
-        partes_cum_radice[ZEPHYRUM] = chorda_ex_literis(VIA_SEPARATOR_CHORDA, piscina);
+        partes_cum_radice[ZEPHYRUM] =
+            chorda_ex_literis(VIA_SEPARATOR_CHORDA, piscina);
         partes_cum_radice[I] = fructus;
         fructus = via_iungere(partes_cum_radice, II, piscina);
     }
@@ -285,6 +307,15 @@ via_directorium (
         redde chorda_ex_literis(VIA_DIRECTORIUM_CURRENS, piscina);
     }
 
+    /* Separatores terminales non nomen claudunt (POSIX dirname):
+     * "/foo/bar/" -> "/foo", par cum via_nomen -> "bar" (lapide
+     * briar-feedback bugs/012). Via ex separatoribus solis = radix. */
+    via = _sine_separatoribus_terminalibus(via);
+    si (via.mensura == ZEPHYRUM)
+    {
+        redde chorda_ex_literis(VIA_SEPARATOR_CHORDA, piscina);
+    }
+
     /* Invenire ultimum separatorem */
     positus = _invenire_ultimum_separatorem(via);
 
@@ -294,14 +325,18 @@ via_directorium (
         redde chorda_ex_literis(VIA_DIRECTORIUM_CURRENS, piscina);
     }
 
-    /* Si separator ad initium (radix), redde "/" */
-    si (positus == ZEPHYRUM)
+    /* Separatores ante nomen iterati: "/foo//bar" -> "/foo" */
+    via = _sine_separatoribus_terminalibus(
+        chorda_sectio(via, ZEPHYRUM, (i32)positus));
+
+    /* Si nihil ante separatorem (radix), redde "/" */
+    si (via.mensura == ZEPHYRUM)
     {
         redde chorda_ex_literis(VIA_SEPARATOR_CHORDA, piscina);
     }
 
     /* Redde partem ante separatorem */
-    redde chorda_sectio(via, ZEPHYRUM, (i32)positus);
+    redde via;
 }
 
 chorda
@@ -320,6 +355,12 @@ via_nomen (
         vacua.mensura  = ZEPHYRUM;
         redde vacua;
     }
+
+    /* Separatores terminales praetermittere (POSIX basename):
+     * "/foo/bar/" -> "bar" (olim "" - lapide briar-feedback
+     * bugs/012). Via ex separatoribus solis ("/") -> "" consulto:
+     * radix nomen non habet (POSIX "/" reddit). */
+    via = _sine_separatoribus_terminalibus(via);
 
     /* Invenire ultimum separatorem */
     positus = _invenire_ultimum_separatorem(via);

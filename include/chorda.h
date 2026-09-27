@@ -134,6 +134,13 @@ chorda_terminatur (
         chorda s,
         chorda suffixum);
 
+/* chorda_invenire - Invenire primam occurrentiam acus in fenum
+ * Redde: sectionem CONGRUENTEM solam (mensura = acus.mensura, datum
+ *        intra fenum), NON reliquum fenum ut strstr; chorda vacua
+ *        {0, NIHIL} si non inventus. Acus vacua -> fenum totum.
+ *        Pro reliquo: chorda_invenire_index + chorda_sectio; pro
+ *        inventum/non: chorda_continet.
+ */
 chorda
 chorda_invenire (
         chorda fenum,
@@ -148,7 +155,8 @@ chorda_invenire_index (
         chorda acus);
 
 /* chorda_invenire_ultimum - Invenire ultimam occurrentiam acus in fenum
- * Redde: Vista ad ultimam occurrentiam, vel chorda vacua si non inventus
+ * Redde: sectionem congruentem ultimam (ut chorda_invenire, non
+ *        reliquum), vel chorda vacua si non inventus
  */
 chorda
 chorda_invenire_ultimum (

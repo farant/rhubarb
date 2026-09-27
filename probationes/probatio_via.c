@@ -409,10 +409,46 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans via_nomen (separator terminalis) ---\n");
 
+        /* POSIX basename - olim "" (lapide briar-feedback bugs/012) */
         via      = chorda_ex_literis("/foo/bar/", piscina);
         fructus  = via_nomen(via, piscina);
 
-        CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("", piscina));
+        CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("bar",
+            piscina));
+    }
+
+
+    /* ========================================================
+	 * PROBARE: par nomen/directorium - casus limitum (POSIX)
+	 * ======================================================== */
+
+    {
+        /* via, directorium, nomen - POSIX dirname/basename praeter
+         * "/" cuius nomen "" est consulto (radix nomen non habet) */
+        constans character* casus_limitum[][III] = {
+            { "/foo/bar/",  "/foo", "bar" },
+            { "/foo/bar//", "/foo", "bar" },
+            { "/foo//bar",  "/foo", "bar" },
+            { "foo/",       ".",    "foo" },
+            { "/foo",       "/",    "foo" },
+            { "/",          "/",    ""    },
+            { "//",         "/",    ""    }
+        };
+        i32 k;
+
+        imprimere("\n--- Probans par nomen/directorium (limites) ---\n");
+
+        per (k = 0; k < (i32)(magnitudo(casus_limitum)
+                              / magnitudo(casus_limitum[0])); k++)
+        {
+            chorda via = chorda_ex_literis(casus_limitum[k][0],
+                piscina);
+
+            CREDO_CHORDA_AEQUALIS(via_directorium(via, piscina),
+                chorda_ex_literis(casus_limitum[k][I], piscina));
+            CREDO_CHORDA_AEQUALIS(via_nomen(via, piscina),
+                chorda_ex_literis(casus_limitum[k][II], piscina));
+        }
     }
 
 

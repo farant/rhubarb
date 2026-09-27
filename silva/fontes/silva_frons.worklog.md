@@ -213,3 +213,28 @@ both closer hints, and neither may carry the ';' hint.
 Lapide's list now: missing ';' ✓, reserved C ✓, unclosed '{' ✓, nomen/
 casus ✓, junk '@' ✓ (located, no hint), missing ')' ✓, two missing ';'
 → first reported, second parked (…M4X).
+
+## 2026-09-26 — latina.h hint for the token BEFORE the death (lapide bugs/018)
+
+`s32 nomen = 1;` expands to `s32 typedef = 1;` — and `int typedef` is
+legal C (storage class may trail the type), so the parse survives
+`nomen` and dies at `=`. The T19b-2 hint only inspected the dead token
+itself, so the one name that caused the error went unnamed.
+
+Extension: when an identifier was expected and the dead token carries
+no latina macro, look at the token just before it. Hint on it only if
+(a) it is a C keyword (SILVA_LEX_AUTO..WHILE, one contiguous range)
+from a latina.h expansion, (b) it sits on the same line, and (c) the
+dead token is one that naturally FOLLOWS a name (`=`, op=, `;`, `,`,
+`[`, `.`, `->`). (c) is the load-bearing guard: `redde }` also has a
+latina keyword before an identifier-expecting death, but the mistake
+there is a missing value/`;`, and "choose another name" would be false
+advice — pinned by a negative test; plant (guard forced true) red.
+
+Refactors riding along: `_macrum_latinae` (the old inline condition,
+now shared by both paths) and `_lexema_ante` (lifted out of
+`_semicolon_deest`, now also feeds `_causa_mortis`).
+
+Formatter note: `formator.sh -intra a b c` formats ONLY `a` — the rest
+are read as file paths ("plagula illegibilis: b"). Repeat the flag:
+`-intra a -intra b`.

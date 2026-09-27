@@ -87,7 +87,7 @@
 #   XX.  versio EX briar/MUTATIONES.md: -versio == 'briar ' + caput
 #        supremum '## vN ...' (+inedita(n) si '## inedita' lineas '- '
 #        fert), linea 'aedificatum:' (tempus, fontes, commissum),
-#        --version == -versio, -h 'briar vN - ', -mutationes == charta
+#        --version == -versio, -h linea I == -versio, -mutationes == charta
 #        octetis; capita vN stricte descendentia
 #
 # Usus:
@@ -518,8 +518,10 @@ V_LINEA="$( cd "$AREA" && "$BRIAR" -versio | head -1 )"
     || deficere "-versio: linea 'aedificatum:' prava: $( cd "$AREA" && "$BRIAR" -versio | sed -n 2p )"
 [ "$( cd "$AREA" && "$BRIAR" --version | head -1 )" = "$V_LINEA" ] \
     || deficere "--version != -versio"
-( cd "$AREA" && "$BRIAR" -h | head -1 ) | grep -q "^briar v$N_FONS - " \
-    || deficere "-h versionem v$N_FONS non dicit"
+# -h linea prima == -versio linea prima (eadem fons; olim 'vN' sine
+# '+inedita(n)' - lapide bugs/013)
+[ "$( cd "$AREA" && "$BRIAR" -h | head -1 )" = "$V_LINEA" ] \
+    || deficere "-h [$( cd "$AREA" && "$BRIAR" -h | head -1 )] != -versio [$V_LINEA]"
 ( cd "$AREA" && "$BRIAR" -mutationes ) > "$AREA/mutationes.log" 2>&1 \
     && cmp -s "$AREA/mutationes.log" "$CHARTA_FONS" \
     || deficere "-mutationes != briar/MUTATIONES.md (octeti)" "$AREA/mutationes.log"

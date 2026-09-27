@@ -25,6 +25,17 @@ Leges chartae:
   `Content-Length` promisit, aut chunked sine fragmento terminali,
   nunc ERROR est (`HTTP_ERROR_IO`, "Corpus truncatum: Content-Length
   N, recepti M"), numquam successus cum corpore partiali.
+- `-h` linea prima = linea prima `-versio` (cum `+inedita(n)`;
+  olim `vN` solum) - bugs/013.
+- `-dialectus`: numeri regulam dicunt - `omnes 0-214; supra selecti
+  tantum` (olim `(344)` seriem integram simulabat: `CCCXIX` deest) -
+  documentation-ideas/014.
+- Nuntius mortis: admonitio latina.h etiam cum verbum latinae ante
+  lexema mortis stat (`s32 nomen = 1` moritur in `=`: "'nomen'
+  macrum latina.h est") - bugs/018.
+- `via_nomen` / `via_directorium` (corpus): separatores terminales ut
+  POSIX - `"/foo/bar/"` -> `"bar"` + `"/foo"` (olim `""` +
+  `"/foo/bar"`); `"/"` -> nomen `""` consulto - bugs/012.
 
 ## v2 — 2026-09-26
 

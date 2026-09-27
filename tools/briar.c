@@ -203,10 +203,13 @@ interior vacuum
 _auxilium (
     Piscina* piscina)
 {
-    i32 versio = briar_mutationes_versio(_mutationes_legere(piscina));
+    /* linea prima = linea prima -versio, ex eodem fonte (_versio):
+     * olim 'v%u' solum, sine '+inedita(n)' (lapide bugs/013) */
+    chorda versio = _versio(piscina);
 
     imprimere(
-        "briar v%u - plagulas .thistle currere\n"
+        "briar %.*s\n"
+        "plagulas .thistle currere\n"
         "usus: briar [-vexillum] [-f <radix>] <x.thistle>"
         " [argumenta...]\n"
         "      ./x.thistle [-vexillum] [argumenta...]\n"
@@ -236,7 +239,7 @@ _auxilium (
         "  -f <radix>  arbor rhubarb (alioquin ascensus, alioquin"
         " corpus infixum)\n"
         "  --          post plagulam: vexilla programmati relinquere\n",
-        versio);
+        (integer)versio.mensura, (constans character*)versio.datum);
 }
 
 

@@ -136,6 +136,16 @@
     <forma textus="subordinantem" casus="accusativus" numerus="singularis"/>
   </vocabulum>
 
+  <vocabulum lemma="separator" lingua="latina" classis="substantivum"
+    nota="Latina sera (separare -> separator m.): vox domus lib/via.c ('/' separator viae; _invenire_ultimum_separatorem) - WORDS caret; separatoribus nova in _sine_separatoribus_terminalibus (lapide bugs/012)">
+    <sensus>separator (path separator)</sensus>
+    <forma textus="separatoris" casus="genitivus" numerus="singularis"/>
+    <forma textus="separatorem" casus="accusativus" numerus="singularis"/>
+    <forma textus="separatore" casus="ablativus" numerus="singularis"/>
+    <forma textus="separatores" casus="nominativus" numerus="pluralis"/>
+    <forma textus="separatoribus" casus="ablativus" numerus="pluralis"/>
+  </vocabulum>
+
   <vocabulum lemma="recordum" lingua="latina" classis="substantivum"
     nota="vox domus (T7 census.recorda, T15a oratio_vocabularium_en_recordum): recordum n. = 'record'; WORDS 'recorda' ut formam verbi recordor solum novit - pinna identificatorum ideo rubra 2026-09-04">
     <sensus>record (of a table); entry, row</sensus>
