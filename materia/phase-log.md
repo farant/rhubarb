@@ -3524,3 +3524,22 @@ state expected one (the parser now keeps the expected token kinds). All
 four printers gain at once. One false positive found and gated during
 the task (latina hint on a correctly used type). Plan B's remaining
 item: T19c (MAP/census/MEMORY, close the phase).
+
+## 2026-09-26 — PHASE 5 COMPLETE (plan B T19c-1)
+
+RELATIO: silva is the C89 frontend over materia. Plan A (T1–T13) moved
+the substrate behind facades under an oracle and M3; plan B (T14–T19)
+paid the dividend: C89 in the diagnostics pipeline, located syntax
+errors that explain themselves (found token, latina.h hint, missing
+';'/'}'/')'), system macros and `__attribute__` in every judge and in
+briar (lapide bugs/001, 009, 010 — ask 4 "every error" parked), one
+printer for three callers, and dead tools given gates (`generata`,
+`examen-corpus`, the half-amalgam closed). Close-out: census gained
+materia (substrate + oracle doctrine) and three counters refreshed;
+the lapifex landmine (MG4) re-checked — still alive (lib/nuntium_schema
+builds on it, its test is green, lib/silex and the schema generator
+use it), standing proof that superseded generations do not die on
+schedule. Ledger: park …FE9E closed, its four open items moved to the
+'c89 parser' region; decree …XX0BZ executed — by its own order, JS is
+next. Not done here: MAP.txt (stale since 08-17, mostly for reasons
+outside this phase) — its own task.

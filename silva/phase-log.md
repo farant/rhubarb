@@ -14662,3 +14662,10 @@ va_start/va_end, assert) and shared by examen, tools/diagnostica and
 briar through silva_lexicon. Next: T17 `__attribute__` (decided by Fran:
 accept + examen rule + comment exemption; measure first), T18, T19.
 Narrative: materia/phase-log.md.
+
+## 2026-09-26 — pointer: PHASE 5 COMPLETE
+
+Plan B finished (T14–T19c-1): silva is materia's C89 frontend; see the
+closing RELATIO in `materia/phase-log.md` (2026-09-26) and
+`silva/CLAUDE.md` (PHASIS V PERFECTA). Open C89-parser follow-ups live in
+tabularium region 'c89 parser'. Next by decree …XX0BZ: JS.

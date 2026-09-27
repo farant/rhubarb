@@ -251,12 +251,45 @@
       language server and the house tools.</glossa>
     <dependet-ex ad="&piscina;"/>
     <dependet-ex ad="&chorda;"/>
+    <dependet-ex ad="&materia;"/>
     <nota>Analysta C89 robustus: emissio byte-fidelis, codices
-      54-88, fundamentum legati et instrumentorum.</nota>
+      54-91, fundamentum legati et instrumentorum. Ab phasi V
+      (2026-09-25) FRONS C89 super materiam: token, nodus,
+      scriptura, arbor STML materiae sunt, silva facies (Silva* =
+      Materia* per typedef) et partes C89 sola fert (expansor,
+      GLR, semantica, examen). Amalgama silvae materiam sub
+      nominibus Silva*/silva_materia_ portat - silva.h manu
+      scriptum est et cum silva.c SEMPER una regenerandum (porta
+      'generata': caput vivum == caput intra .c).</nota>
     <realizat ad="&parsatio-c89;"/>
     <realizat ad="&codices-diagnostici;"/>
     <realizat ad="&expansio-macrorum;"/>
     <realizat ad="&selectores-silvae;"/>
+  </bibliotheca>
+
+  <bibliotheca nomen="&materia;" scripta-in="&c;" gradus="2">
+    <glossa lingua="en">The syntactic substrate every house parser
+      stands on: tokens with byte-faithful trivia, the node tree,
+      byte emission, the STML projection, the declared registry,
+      annotations and the diagnostics pipeline. A new language is a
+      CLIENT (css, md, html, crusta, oratio - and silva, as the C89
+      frontend since phase 5), never a fork.</glossa>
+    <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda;"/>
+    <dependet-ex ad="&xar;"/>
+    <nota>Substratum syntacticum generale (fork ex silva, sigillatum
+      2026-09-25). Lex octetorum: omnis cliens fontem octetim
+      reddit. Clientes sua tantum ferunt (lexicon, grammatica aut
+      parsator manu scriptus, registrum declaratum); cetera hic.
+      MIGRATIO SILVAE (phasis V) per ORACULUM: silva ad commissum
+      pignoratum (7a4847b0, ante migrationem) binarium separatum
+      est et vivam octetim iudicat - CODEX ex pignore, INITIA ex
+      hodie (latina.h in pignus transplantatur, ne linea nova
+      omnem plagulam 'dividat'); divergentia consulta NOMINATUR in
+      materia/oraculum_silvae.dispares, numquam numeratur. Portae
+      nascuntur rubrae per plantam quae COMPILAT.</nota>
+    <realizat ad="&substratum-syntacticum;"/>
+    <realizat ad="&oraculum-pignoris;"/>
   </bibliotheca>
 
   <bibliotheca nomen="&credo;" scripta-in="&c;" gradus="2">
@@ -517,6 +550,17 @@
     contentum="Expansio macrorum vestigata: quid linea facta sit, unde venerit.">
     <glossa lingua="en">Macro expansion tracked: what a line
       became and where it came from.</glossa>  </facultas>
+  <facultas nomen="&substratum-syntacticum;"
+    contentum="Arbor, emissio octetorum, proiectio STML, registrum, annotationes, diagnostica - semel scripta, a quoque cliente linguae communicata.">
+    <glossa lingua="en">Tree, byte emission, STML projection,
+      registry, annotations, diagnostics - written once, shared by
+      every language client.</glossa>  </facultas>
+  <facultas nomen="&oraculum-pignoris;"
+    contentum="Iudex migrationis: versio pignorata binarium alterum est et vivam octetim confert; divergentia consulta nominatur, numquam numeratur.">
+    <glossa lingua="en">The migration judge: a pinned build is a
+      second binary compared byte for byte with the live one;
+      intended divergences are named, never counted
+      away.</glossa>  </facultas>
   <facultas nomen="&selectores-silvae;"
     contentum="Selectores structurae: quaesitus figura codicis, non textu.">
     <glossa lingua="en">Structural selectors: searching code by
@@ -1458,7 +1502,7 @@
        scripti non mensurati. -->
 
   <signum nomen="&mensura-exemplarium;" de="&natura;"
-    contentum="exemplaria 35" facta="2026-08-11"
+    contentum="exemplaria 36" facta="2026-09-26"
     via="ls natura/*.genera | wc -l">
     <glossa lingua="en">Counts natura's models (the .genera
       files). Like every signum here, the number carries its own
@@ -1466,7 +1510,7 @@
   </signum>
 
   <signum nomen="&mensura-generum;" de="&natura;"
-    contentum="genera 464" facta="2026-08-12"
+    contentum="genera 468" facta="2026-09-26"
     via="bin/natura_examen | tail -1">
     <glossa lingua="en">Counts the kinds in the dictionary. The
       jump 188 to 463 was REDEFINITION, not growth - the path
@@ -1495,7 +1539,7 @@
   </signum>
 
   <signum nomen="&mensura-canonum;" de="&natura;"
-    contentum="canones in cocta/ 35" facta="2026-08-11"
+    contentum="canones in cocta/ 36" facta="2026-09-26"
     via="ls natura/cocta/*.canon | wc -l">
     <glossa lingua="en">Counts the baked canons on disk. The
       tool's own report claims one more than the disk holds; this

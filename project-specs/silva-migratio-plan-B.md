@@ -9,7 +9,8 @@
 > "phase 5" (decree …XX0BZ); one `opus` per task, closed by
 > `silva.commissio(opus=ID)`. Narrative: `materia/phase-log.md`.
 
-> **STATUS.** Nothing started. Plan A closed at T13 (b4abedbd +
+> **STATUS.** PHASE 5 COMPLETE 2026-09-26 (T19c-1: park …FE9E closed,
+> decree …XX0BZ executed - JS next by its order). Log below. Plan A closed at T13 (b4abedbd +
 > T13c): silva consumes materia, M3 6/6, oracle 470 clean, amalgam
 > regenerated, freeze lifted.
 > T14 RE-SCOPED by its measurement (Fran, 2026-09-25) and DONE: no
@@ -97,6 +98,13 @@
 > hint when a name was expected (lapide's `nomen` case), and suggest a
 > missing ';' (expected token kinds now kept on the death record). T19c
 > (MAP/census/MEMORY, close park and decree) is the last task.
+> T19c RE-SLICED: T19c-1 DONE 2026-09-26 - census (3 drifted counters
+> refreshed; materia entry + silva as its C89 frontend + oracle
+> doctrine), lapifex landmine re-checked (alive: nuntium_schema builds
+> on it, test green, silex + schema generator use it), ledger closed
+> (4 open items moved to region 'c89 parser'), MEMORY/CLAUDE.md final.
+> MAP.txt refresh = SEPARATE task (stale since 08-17; mostly unrelated
+> to phase 5: briar, crusta, css, oratio, pythonica absent).
 
 ## What steps 1–4 taught (the inputs to this plan)
 

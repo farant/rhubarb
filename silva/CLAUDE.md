@@ -7,7 +7,7 @@ sessions is the project's biggest process risk — technical decisions made on
 smoothed-over assumptions quietly shave the maximalist scope. That shaving is
 how the three previous parsers died.*
 
-## PHASIS V SIGILLATA (2026-09-25) — silva super materiam
+## PHASIS V PERFECTA (2026-09-26; sigillata 2026-09-25) — silva super materiam
 
 Furca materiae (decretum `01M12FJR`, gelatio 2026-08-27) et migratio
 (planum `project-specs/silva-migratio-plan.md`, T1–T13) PERACTAE:
@@ -28,16 +28,24 @@ Quid hoc significat si silvam nunc tangis:
 - **Amalgama iterum regeneratur** post editionem fontium (regula infra
   restituta). materia in amalgamate = bibliotheca vendicata (Materia*
   → Silva*, materia_ → silva_materia_; tabulae in
-  `instrumenta/principalia/amalgamator.c`). **CAVE silva.h manu mutatum:**
-  consumptores (aedilis!) silva.h vivum contra silva.c commissum
-  nectunt — structura publica mutata = aedilis falsus usque ad
-  regenerationem (bootstrap in `tools/amalgamatio.worklog.md`
-  2026-09-25 T13b; desideratum …XHAW3H).
+  `instrumenta/principalia/amalgamator.c`). **silva.h MANU scriptum:**
+  cum silva.c SEMPER una regenerandum. aedilis caput ex silva.c ipso
+  extrahit (`tools/amalgama_caput.sh`, T19a — bootstrap manu non iam
+  necessarium); consumptores ceteri (briar, legatus, saltuarius) silva.h
+  VIVUM contra silva.c commissum nectunt — porta `generata` commissionem
+  dimidiatam obstat, sed IN LOCO `amalgama_caput.sh … -comparare`
+  (rc 3) post quamque editionem silva.h curre, ante consumptores
+  aedificandos (T19b-1: argumentum novum tacite numquam scriptum).
 - Iudices manent: `./materia/oraculum_probare.sh` (silva viva contra
   pignus 7a4847b0) + `./silva/m3_probare.sh`. Divergentia intenta =
   NOMINATA in dispares, numquam numerata.
-- Gradus 5–6 (registrum C89 declaratum, GLR mortis lexema, bugs/009-010,
-  latina.h, purgatio): planum B, `project-specs/silva-migratio-plan-B.md`.
+- Gradus 5–6 PERFECTI (planum B, `project-specs/silva-migratio-plan-B.md`):
+  diagnostica C89 (T14), mors GLR locata + excerpta (T15), macra
+  systematis (T16), `__attribute__` = macrum internum + examen 91
+  (T17), latina.h linea (T18: oraculum 'codex ex pignore, initia ex
+  hodie'), portae generata/examen-corpus + `#line` (T19a), forma
+  mortium UNA `silva_mortes_scribere` (T19b). Res apertae: regio
+  tabularii 'c89 parser'.
 
 ## Quid sit
 
