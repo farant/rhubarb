@@ -186,6 +186,13 @@ _url_fixturae (
 #define FIXTURA_PRAVA_TRUNCATUM    II  /* capita + X ex C octetis, claudere */
 #define FIXTURA_PRAVA_DORMIENS    III  /* capita + X octeti, dormire II s */
 #define FIXTURA_PRAVA_CAPUT_INGENS IV  /* Content-Length involutivum */
+#define FIXTURA_CHUNKED_INTEGRUM    V  /* chunked cum fragmento '0' */
+#define FIXTURA_CHUNKED_TRUNCATUM  VI  /* chunked sine fine, claudere */
+#define FIXTURA_CHUNKED_INGENS    VII  /* magnitudo involutiva */
+#define FIXTURA_CAPUT_SOLUM      VIII  /* capita sine corpore (HEAD) */
+#define FIXTURA_CORPUS_MAGNUM      IX  /* CC milia octetorum */
+
+#define CORPUS_MAGNUM_MENSURA  (CC * M)
 
 interior i32
 _fixturam_pravam_incipere (
@@ -278,6 +285,57 @@ _fixturam_pravam_incipere (
         {
             (vacuum)tcp_mittere_omnia(conn.connexio,
                 (constans i8*)"ok", II);
+        }
+        alioquin si (   modus == FIXTURA_CHUNKED_INTEGRUM
+                     || modus == FIXTURA_CHUNKED_TRUNCATUM
+                     || modus == FIXTURA_CHUNKED_INGENS
+                     || modus == FIXTURA_CAPUT_SOLUM)
+        {
+            constans character* r;
+
+            si (modus == FIXTURA_CHUNKED_INTEGRUM)
+            {
+                r = "HTTP/1.1 200 OK\r\n"
+                    "Transfer-Encoding: chunked\r\n\r\n"
+                    "5\r\nsalve\r\n7\r\n munde!\r\n0\r\n\r\n";
+            }
+            alioquin si (modus == FIXTURA_CHUNKED_TRUNCATUM)
+            {
+                r = "HTTP/1.1 200 OK\r\n"
+                    "Transfer-Encoding: chunked\r\n\r\n"
+                    "5\r\nsalve\r\n7\r\n mu";
+            }
+            alioquin si (modus == FIXTURA_CHUNKED_INGENS)
+            {
+                r = "HTTP/1.1 200 OK\r\n"
+                    "Transfer-Encoding: chunked\r\n\r\n"
+                    "100000005\r\nsalve\r\n0\r\n\r\n";
+            }
+            alioquin
+            {
+                r = "HTTP/1.1 200 OK\r\n"
+                    "Content-Length: 5000\r\n\r\n";
+            }
+            (vacuum)tcp_mittere_omnia(conn.connexio,
+                (constans i8*)r, (i32)strlen(r));
+        }
+        alioquin si (modus == FIXTURA_CORPUS_MAGNUM)
+        {
+            constans character* capita =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Length: 200000\r\n\r\n";
+            i8* corpus = (i8*)piscina_allocare(p,
+                (i64)CORPUS_MAGNUM_MENSURA);
+            i32 k;
+
+            per (k = 0; k < CORPUS_MAGNUM_MENSURA; k++)
+            {
+                corpus[k] = (i8)('a' + (character)(k % XXVI));
+            }
+            (vacuum)tcp_mittere_omnia(conn.connexio,
+                (constans i8*)capita, (i32)strlen(capita));
+            (vacuum)tcp_mittere_omnia(conn.connexio, corpus,
+                CORPUS_MAGNUM_MENSURA);
         }
         alioquin si (modus == FIXTURA_PRAVA_CAPUT_INGENS)
         {
@@ -628,8 +686,11 @@ probatio_responsum_minusculum(Piscina* piscina)
     printf("\n");
 }
 
-/* truncatio cum EOF MUNDO: hospes claudit post X ex C octetis -
- * successus manet (EOF = terminus legitimus), corpus X octetorum */
+/* truncatio cum EOF MUNDO: hospes claudit post X ex C octetis.
+ * OLIM successus cum corpore X octetorum (EOF ut terminus legitimus
+ * habebatur); sed Content-Length C promisit - RFC 9112 6.3: nuntius
+ * incompletus. Corpus mendax peius quam error honestus (lapide
+ * briar-feedback bugs/016: README 7351 octetorum ut 0 redibat). */
 interior vacuum
 probatio_truncatum_eof(Piscina* piscina)
 {
@@ -649,18 +710,14 @@ probatio_truncatum_eof(Piscina* piscina)
     CREDO_NON_NIHIL(pet);
     res = http_exsequi(pet, piscina);
 
-    CREDO_VERUM(res.successus);
-    si (res.successus && res.responsum != NIHIL)
-    {
-        CREDO_AEQUALIS_I32(res.responsum->corpus.mensura, X);
-    }
-    alioquin si (res.error_descriptio.mensura > 0)
-    {
-        printf("  [descriptio] %.*s (error %d)\n",
-               (int)res.error_descriptio.mensura,
-               (constans character*)res.error_descriptio.datum,
-               (int)res.error);
-    }
+    CREDO_FALSUM(res.successus);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_IO);
+    /* error NOMINAT: promissum et receptum */
+    CREDO_VERUM(chorda_aequalis_literis(res.error_descriptio,
+        "Corpus truncatum: Content-Length 100, recepti 10"
+        " (corpus partiale abiectum)"));
+    printf("  [descriptio] %.*s\n", (int)res.error_descriptio.mensura,
+           (constans character*)res.error_descriptio.datum);
 
     _fixturam_terminare(pid);
     printf("\n");
@@ -697,7 +754,9 @@ probatio_tempus_receptionis(Piscina* piscina)
 }
 
 /* Content-Length involutivum (XX digiti): saturatio pro involutione
- * (01KY05Q8AH) - expected_len ingens > body_len -> corpus reale */
+ * (01KY05Q8AH) - expected_len saturatum > body_len -> error
+ * truncati (involutio numerum parvum daret et corpus mendax
+ * transiret; olim successus cum corpore reali VI octetorum) */
 interior vacuum
 probatio_caput_ingens(Piscina* piscina)
 {
@@ -718,20 +777,125 @@ probatio_caput_ingens(Piscina* piscina)
     CREDO_NON_NIHIL(pet);
     res = http_exsequi(pet, piscina);
 
-    CREDO_VERUM(res.successus);
-    si (res.successus && res.responsum != NIHIL)
-    {
-        CREDO_AEQUALIS_I32(res.responsum->corpus.mensura, VI);
-    }
-    alioquin si (res.error_descriptio.mensura > 0)
-    {
-        printf("  [descriptio] %.*s (error %d)\n",
-               (int)res.error_descriptio.mensura,
-               (constans character*)res.error_descriptio.datum,
-               (int)res.error);
-    }
+    CREDO_FALSUM(res.successus);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_IO);
+    printf("  [descriptio] %.*s\n", (int)res.error_descriptio.mensura,
+           (constans character*)res.error_descriptio.datum);
 
     _fixturam_terminare(pid);
+    printf("\n");
+}
+
+/* Fixtura una, petitio una: modus, methodus -> resultatus */
+interior HttpResultus
+_petere_a_fixtura (
+         Piscina* piscina,
+         integer  modus,
+    HttpMethodus  methodus)
+{
+           pid_t  pid = 0;
+             i32  portus;
+       character  url[CXXVIII];
+     HttpPetitio* pet;
+    HttpResultus  res;
+
+    portus = _fixturam_pravam_incipere(&pid, modus);
+    CREDO_VERUM(portus > 0);
+    pet = http_petitio_creare(piscina, methodus,
+                              _url_fixturae(url, portus, "/"));
+    CREDO_NON_NIHIL(pet);
+    res = http_exsequi(pet, piscina);
+    si (!res.successus)
+    {
+        printf("  [descriptio] %.*s\n",
+            (int)res.error_descriptio.mensura,
+               (constans character*)res.error_descriptio.datum);
+    }
+    _fixturam_terminare(pid);
+    redde res;
+}
+
+/* chunked: integrum decodificatur; sine fragmento '0' = error
+ * (olim 'copiare quod possumus' cum successu); magnitudo '100000005'
+ * (0x100000005) in i32 ad V involvebatur - 'salve' ut corpus validum
+ * transibat (et 'FFFFFFFF' custodiam 'i + chunk_size <= len' ipsam
+ * involvebat: memcpy IV GB) */
+interior vacuum
+probatio_chunked(Piscina* piscina)
+{
+    HttpResultus res;
+
+    printf("--- Probans chunked (integrum, truncatum, ingens) ---\n");
+
+    res = _petere_a_fixtura(piscina, FIXTURA_CHUNKED_INTEGRUM,
+        HTTP_GET);
+    CREDO_VERUM(res.successus);
+    si (res.successus)
+    {
+        CREDO_VERUM(chorda_aequalis_literis(res.responsum->corpus,
+                                            "salve munde!"));
+    }
+
+    res = _petere_a_fixtura(piscina, FIXTURA_CHUNKED_TRUNCATUM,
+        HTTP_GET);
+    CREDO_FALSUM(res.successus);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_IO);
+
+    res = _petere_a_fixtura(piscina, FIXTURA_CHUNKED_INGENS, HTTP_GET);
+    CREDO_FALSUM(res.successus);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_IO);
+
+    printf("\n");
+}
+
+/* HEAD: Content-Length nuntiat magnitudinem, corpus nullum per legem -
+ * successus, non error truncati */
+interior vacuum
+probatio_head_sine_corpore(Piscina* piscina)
+{
+    HttpResultus res;
+
+    printf("--- Probans HEAD (Content-Length sine corpore) ---\n");
+
+    res = _petere_a_fixtura(piscina, FIXTURA_CAPUT_SOLUM, HTTP_HEAD);
+    CREDO_VERUM(res.successus);
+    si (res.successus)
+    {
+        CREDO_AEQUALIS_I32(res.responsum->corpus.mensura, 0);
+    }
+
+    printf("\n");
+}
+
+/* corpus CC milia octetorum: multae lectiones, octeti omnes, ordine */
+interior vacuum
+probatio_corpus_magnum(Piscina* piscina)
+{
+    HttpResultus res;
+
+    printf("--- Probans corpus magnum (CC milia octetorum) ---\n");
+
+    res = _petere_a_fixtura(piscina, FIXTURA_CORPUS_MAGNUM, HTTP_GET);
+    CREDO_VERUM(res.successus);
+    si (res.successus)
+    {
+        i32 k;
+        b32 ordo = VERUM;
+
+        CREDO_AEQUALIS_I32(res.responsum->corpus.mensura,
+                           CORPUS_MAGNUM_MENSURA);
+        per (k = 0; k < res.responsum->corpus.mensura; k++)
+        {
+            si (res.responsum->corpus.datum[k]
+                != (i8)('a' + (character)(k % XXVI)))
+            {
+                ordo = FALSUM;
+                frange;
+            }
+        }
+        CREDO_VERUM(ordo);
+    }
+
     printf("\n");
 }
 
@@ -780,6 +944,9 @@ principale(vacuum)
     probatio_truncatum_eof(piscina);
     probatio_tempus_receptionis(piscina);
     probatio_caput_ingens(piscina);
+    probatio_chunked(piscina);
+    probatio_head_sine_corpore(piscina);
+    probatio_corpus_magnum(piscina);
 
     credo_imprimere_compendium();
 

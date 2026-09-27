@@ -24,6 +24,7 @@ structura TlsConnexio {
     TcpConnexio*   tcp;           /* Connexio TCP subiacens */
     SSLContextRef  ssl_context;   /* Security.framework context */
     b32            clausa;
+    b32            tempus_excessum; /* callback lectionis TCP_ITERUM vidit */
 };
 
 
@@ -57,6 +58,7 @@ _tls_read_callback(
     /* TCP_ITERUM ante n < 0 - sentinella ipsa negativa est */
     si (n == TCP_ITERUM)
     {
+        conn->tempus_excessum = VERUM;
         *dataLength = 0;
         redde errSSLWouldBlock;
     }
@@ -248,6 +250,7 @@ tls_connectere_cum_optionibus(
     conn->piscina = piscina;
     conn->tcp = tcp_res.connexio;
     conn->clausa = FALSUM;
+    conn->tempus_excessum = FALSUM;
     conn->ssl_context = NIHIL;
 
     /* Creare SSL context */
@@ -312,13 +315,15 @@ tls_connectere_cum_optionibus(
 #pragma clang diagnostic pop
     }
 
-    /* Facere handshake */
+    /* Facere handshake. errSSLWouldBlock sine tempore excesso =
+     * recordum partiale, iterare; cum tempore excesso = hospes
+     * tacet - olim ansa in aeternum iterabat. */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     fac
     {
         status = SSLHandshake(ssl_context);
-    } dum (status == errSSLWouldBlock);
+    } dum (status == errSSLWouldBlock && !conn->tempus_excessum);
 #pragma clang diagnostic pop
 
     /* Tractare kSSLSessionOptionBreakOnServerAuth */
@@ -330,8 +335,16 @@ tls_connectere_cum_optionibus(
         fac
         {
             status = SSLHandshake(ssl_context);
-        } dum (status == errSSLWouldBlock);
+        } dum (status == errSSLWouldBlock && !conn->tempus_excessum);
 #pragma clang diagnostic pop
+    }
+
+    si (status == errSSLWouldBlock)
+    {
+        CFRelease(ssl_context);
+        tcp_claudere(conn->tcp);
+        redde _creare_error(TLS_ERROR_TCP, "Tempus handshake excessum",
+                            piscina);
     }
 
     si (status != noErr)
@@ -458,13 +471,31 @@ tls_recipere(
         redde 0;
     }
 
+    /* SSLRead errSSLWouldBlock cum 0 octetis reddit quotiens callback
+     * lectionem TCP partialem nuntiat (recordum TLS nondum totum) -
+     * id NON est finis. Olim 0 hinc reddebatur, quod contractus
+     * 'connexio clausa' vocat: http EOF credebat et corpus in medio
+     * truncabat cum successu (lapide briar-feedback bugs/015, 016).
+     * Nunc iteramus; socket blocans est, ergo callback exspectat -
+     * nulla rotatio. Solum tempus excessum ansam frangit. */
+    connexio->tempus_excessum = FALSUM;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    status = SSLRead(connexio->ssl_context, buffer, (size_t)capacitas, &processed);
+    fac
+    {
+        processed = 0;
+        status = SSLRead(connexio->ssl_context, buffer, (size_t)capacitas, &processed);
+    } dum (   status == errSSLWouldBlock
+           && processed == 0
+           && !connexio->tempus_excessum);
 #pragma clang diagnostic pop
 
     si (status == errSSLWouldBlock)
     {
+        si (processed == 0)
+        {
+            redde TCP_ITERUM;   /* tempus receptionis excessum */
+        }
         redde (s32)processed;
     }
 

@@ -121,7 +121,10 @@ tls_mittere_omnia (
 
 /* Recipere data (decrypted)
  *
- * Redde: Numerus bytes recepti, 0 si connexio clausa, -1 si error
+ * Redde: >0          numerus bytes recepti
+ *        0           connexio clausa ab hospite (EOF) - SOLUM tunc
+ *        TCP_ITERUM  tempus receptionis excessum (vide tcp.h)
+ *        -1          error
  */
 s32
 tls_recipere (

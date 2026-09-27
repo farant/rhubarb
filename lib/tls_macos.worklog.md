@@ -77,3 +77,38 @@ Gate: extended `probatio_tls.c` (already inside the `-reticularis`
 exclusion, so no runner edit was needed — a live handshake was
 already the file's contract). Verified live against httpbin.org:
 subject `httpbin.org`, ~162 days remaining. Suite 103/103.
+
+## 2026-09-26 — tls_recipere returned 0 ("closed") on WouldBlock: silent truncation
+
+Reported from lapide (briar-feedback bugs/015, bugs/016): HTTPS bodies
+over ~4 KB came back as `successus` with 0 / 1371 / 5484 of 7351 bytes;
+GitHub's 5 KB redirect headers failed as "Capita non inventa" or
+"Responsum vacuum". Timing-dependent — the same URL gave different
+lengths run to run.
+
+**Root cause (instrumented, not guessed):** the 07-17 fix above made
+the read callback honour SecureTransport's contract (partial TCP read
+→ `errSSLWouldBlock`). SSLRead then returns `errSSLWouldBlock` with
+`processed == 0` whenever a TLS record straddles TCP reads — and
+`tls_recipere` passed that 0 straight up. Its own contract says 0 =
+"connexio clausa", so http's drain loop took it as EOF mid-body. A
+probe printing every SSLRead showed `-9803/0` in every truncated run
+and never in a whole one. The 07-20 caveat ("manual re-smoke still
+owed") was exactly this path; the live gate only asserted
+`totalis > 0`, so it could not see it.
+
+**Fix:** `tls_recipere` loops while WouldBlock with 0 bytes. The socket
+is blocking (SO_RCVTIMEO), so the callback waits in `tcp_recipere` —
+no spin. The loop ends only on data, closure, error, or a real
+timeout, which the callback now records (`tempus_excessum`, set on
+TCP_ITERUM) and `tls_recipere` returns as `TCP_ITERUM` — tls.h's
+contract gains that value, and http's existing timeout branch now
+covers TLS too (it used to say TLS timeouts surface as IO errors).
+Same flag ends the handshake loops, which spun forever on a silent
+peer (each spin one full timeout).
+
+Gate: `probatio_tls` mittere/recipere now pulls 64 KB and asserts
+body == Content-Length and loop exit == clean EOF. Plant (old
+single-SSLRead behaviour) red 3/3 (0 or 235 bytes received); fixed
+65536/65536. Live probe: README 7351, png 338806, llama.cpp release
+11755622 through two redirects — all exact, 10/10 runs.

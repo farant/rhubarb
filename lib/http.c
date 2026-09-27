@@ -181,11 +181,16 @@ _hex_ad_valor (
  *   <data>\r\n
  *   0\r\n
  *   \r\n
+ *
+ * *completa = VERUM solum si fragmentum terminale '0' visum est;
+ * aliter corpus truncatum est et vocator errorem reddit (numquam
+ * successum cum corpore partiali - lapide briar-feedback bugs/016).
  */
 interior chorda
 _decodificare_chunked (
     constans i8* data,
             i32  len,
+            b32* completa,
         Piscina* piscina)
 {
      chorda  resultatus;
@@ -199,6 +204,7 @@ _decodificare_chunked (
     output      = piscina_allocare(piscina, len);
     output_pos  = 0;
     i           = 0;
+    *completa   = FALSUM;
 
     dum (i < len)
     {
@@ -209,6 +215,15 @@ _decodificare_chunked (
             hex_val = _hex_ad_valor(data[i]);
             si (hex_val >= 0)
             {
+                /* Magnitudo maior quam data tota impleri nequit:
+                 * truncatum. Custos ANTE multiplicationem - olim
+                 * 'FFFFFFFF' involvebatur et 'i + chunk_size <= len'
+                 * falso transibat (memcpy extra fines). */
+                si (chunk_size > len / XVI)
+                {
+                    redde _chorda_ex_partibus((constans character*)output,
+                                              output_pos, piscina);
+                }
                 chunk_size = chunk_size * XVI + (i32)hex_val;
                 i++;
             }
@@ -222,14 +237,15 @@ _decodificare_chunked (
         si (i < len && data[i] == '\r') i++;
         si (i < len && data[i] == '\n') i++;
 
-        /* Si chunk_size == 0, finis */
+        /* Si chunk_size == 0, finis legitimus */
         si (chunk_size == 0)
         {
+            *completa = VERUM;
             frange;
         }
 
-        /* Copiare chunk data */
-        si (i + chunk_size <= len)
+        /* Copiare chunk data (forma subtractiva: i <= len hic semper) */
+        si (chunk_size <= len - i)
         {
             memcpy(output + output_pos, data + i, (size_t)chunk_size);
             output_pos  += chunk_size;
@@ -237,10 +253,7 @@ _decodificare_chunked (
         }
         alioquin
         {
-            /* Truncatus - copiare quod possumus */
-            i32 available = len - i;
-            memcpy(output + output_pos, data + i, (size_t)available);
-            output_pos += available;
+            /* Truncatum - *completa FALSUM manet */
             frange;
         }
 
@@ -391,7 +404,8 @@ _construere_petitio (
     aed = chorda_aedificator_creare(pet->piscina, DXII);
 
     /* Request line: METHOD /path HTTP/1.1\r\n */
-    chorda_aedificator_appendere_literis(aed, http_methodus_nomen(pet->methodus));
+    chorda_aedificator_appendere_literis(aed,
+        http_methodus_nomen(pet->methodus));
     chorda_aedificator_appendere_character(aed, ' ');
     chorda_aedificator_appendere_chorda(aed, pet->via);
     chorda_aedificator_appendere_literis(aed, " HTTP/1.1\r\n");
@@ -399,11 +413,13 @@ _construere_petitio (
     /* Verificare si Host iam in capita */
     per (i = 0; i < pet->capita_numerus; i++)
     {
-        si (_chorda_aequalis_literis_ignora_casus(pet->capita[i].titulus, "Host"))
+        si (_chorda_aequalis_literis_ignora_casus(pet->capita[i].titulus,
+            "Host"))
         {
             habet_host = VERUM;
         }
-        si (_chorda_aequalis_literis_ignora_casus(pet->capita[i].titulus, "Content-Length"))
+        si (_chorda_aequalis_literis_ignora_casus(pet->capita[i].titulus,
+            "Content-Length"))
         {
             habet_content_length = VERUM;
         }
@@ -420,7 +436,8 @@ _construere_petitio (
     /* User capita */
     per (i = 0; i < pet->capita_numerus; i++)
     {
-        chorda_aedificator_appendere_chorda(aed, pet->capita[i].titulus);
+        chorda_aedificator_appendere_chorda(aed,
+            pet->capita[i].titulus);
         chorda_aedificator_appendere_literis(aed, ": ");
         chorda_aedificator_appendere_chorda(aed, pet->capita[i].valor);
         chorda_aedificator_appendere_literis(aed, "\r\n");
@@ -528,7 +545,8 @@ _parse_status_line (
         p++;
     }
 
-    resp->status_descriptio = _chorda_ex_partibus(desc_start, (i32)(p - desc_start), piscina);
+    resp->status_descriptio = _chorda_ex_partibus(desc_start, (i32)(p
+        - desc_start), piscina);
 
     redde VERUM;
 }
@@ -563,11 +581,13 @@ _parse_header (
     }
 
     /* Titulus */
-    caput->titulus = _chorda_ex_partibus(line, (i32)(colon - line), piscina);
+    caput->titulus = _chorda_ex_partibus(line, (i32)(colon - line),
+        piscina);
 
     /* Valor (saltare spatia) */
     valor_start = colon + I;
-    dum (valor_start < end && (*valor_start == ' ' || *valor_start == '\t'))
+    dum (   valor_start < end
+         && (*valor_start == ' ' || *valor_start == '\t'))
     {
         valor_start++;
     }
@@ -579,7 +599,8 @@ _parse_header (
         p--;
     }
 
-    caput->valor = _chorda_ex_partibus(valor_start, (i32)(p - valor_start), piscina);
+    caput->valor = _chorda_ex_partibus(valor_start, (i32)(p
+        - valor_start), piscina);
 
     redde VERUM;
 }
@@ -602,7 +623,8 @@ http_petitio_creare (
         redde NIHIL;
     }
 
-    pet = (HttpPetitio*)piscina_allocare(piscina, (i64)magnitudo(HttpPetitio));
+    pet = (HttpPetitio*)piscina_allocare(piscina,
+        (i64)magnitudo(HttpPetitio));
     si (!pet)
     {
         redde NIHIL;
@@ -669,7 +691,8 @@ http_petitio_corpus_ponere (
         redde;
     }
 
-    petitio->corpus = _chorda_ex_partibus(corpus, mensura, petitio->piscina);
+    petitio->corpus = _chorda_ex_partibus(corpus, mensura,
+        petitio->piscina);
 }
 
 vacuum
@@ -689,6 +712,42 @@ http_petitio_corpus_ponere_chorda (
 /* ========================================================================
  * FUNCTIONES PUBLICAE - EXSEQUI
  * ======================================================================== */
+
+/* Status quibus HTTP corpus (et Content-Length) vetat: 1xx/204/304 */
+interior b32
+_http_corpus_prohibitum (
+    i32 status)
+{
+    redde (status >= C && status < CC) || status == CCIV
+        || status == CCCIV;
+}
+
+/* Corpus brevius quam Content-Length promisit: error nominatus cum
+ * numeris (RFC 9112 6.3 - nuntius incompletus est). */
+interior HttpResultus
+_error_truncati (
+         i32  expectatum,
+         i32  receptum,
+     Piscina* piscina)
+{
+         HttpResultus  res;
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+        CXXVIII);
+
+    chorda_aedificator_appendere_literis(aed,
+        "Corpus truncatum: Content-Length ");
+    chorda_aedificator_appendere_i32(aed, expectatum);
+    chorda_aedificator_appendere_literis(aed, ", recepti ");
+    chorda_aedificator_appendere_i32(aed, receptum);
+    chorda_aedificator_appendere_literis(aed,
+        " (corpus partiale abiectum)");
+
+    res.successus         = FALSUM;
+    res.responsum         = NIHIL;
+    res.error             = HTTP_ERROR_IO;
+    res.error_descriptio  = chorda_aedificator_finire(aed);
+    redde res;
+}
 
 HttpResultus
 http_exsequi (
@@ -712,14 +771,17 @@ http_exsequi (
 
     si (!petitio || !piscina)
     {
-        redde _creare_error(HTTP_ERROR_URL, "Argumenta invalida", piscina);
+        redde _creare_error(HTTP_ERROR_URL, "Argumenta invalida",
+            piscina);
     }
 
     /* Allocare responsum */
-    resp = (HttpResponsum*)piscina_allocare(piscina, (i64)magnitudo(HttpResponsum));
+    resp = (HttpResponsum*)piscina_allocare(piscina,
+        (i64)magnitudo(HttpResponsum));
     si (!resp)
     {
-        redde _creare_error(HTTP_ERROR_CONNEXIO, "Allocatio fallita", piscina);
+        redde _creare_error(HTTP_ERROR_CONNEXIO, "Allocatio fallita",
+            piscina);
     }
 
     resp->capita = (HttpCaput*)piscina_allocare(piscina,
@@ -735,7 +797,8 @@ http_exsequi (
     /* Connectere */
     si (est_https)
     {
-        TlsResultus tls_res = tls_connectere((constans character*)petitio->hospes.datum,
+        TlsResultus tls_res =
+            tls_connectere((constans character*)petitio->hospes.datum,
                                               petitio->portus,
                                               piscina);
         si (!tls_res.successus)
@@ -775,18 +838,22 @@ http_exsequi (
     /* Mittere petitio */
     si (est_https)
     {
-        si (!tls_mittere_omnia(tls_conn, (constans i8*)petitio_str.datum, petitio_str.mensura))
+        si (!tls_mittere_omnia(tls_conn,
+            (constans i8*)petitio_str.datum, petitio_str.mensura))
         {
             tls_claudere(tls_conn);
-            redde _creare_error(HTTP_ERROR_IO, "Mittere fallita", piscina);
+            redde _creare_error(HTTP_ERROR_IO, "Mittere fallita",
+                piscina);
         }
     }
     alioquin
     {
-        si (!tcp_mittere_omnia(tcp_conn, (constans i8*)petitio_str.datum, petitio_str.mensura))
+        si (!tcp_mittere_omnia(tcp_conn,
+            (constans i8*)petitio_str.datum, petitio_str.mensura))
         {
             tcp_claudere(tcp_conn);
-            redde _creare_error(HTTP_ERROR_IO, "Mittere fallita", piscina);
+            redde _creare_error(HTTP_ERROR_IO, "Mittere fallita",
+                piscina);
         }
     }
 
@@ -818,7 +885,8 @@ http_exsequi (
                 {
                     nova_capacitas *= II;
                 }
-                nova_data = (i8*)piscina_allocare(piscina, (i64)nova_capacitas);
+                nova_data = (i8*)piscina_allocare(piscina,
+                    (i64)nova_capacitas);
                 memcpy(nova_data, total_data, (size_t)total_size);
                 total_data      = nova_data;
                 total_capacity  = nova_capacitas;
@@ -843,8 +911,8 @@ http_exsequi (
      * est. TCP_ITERUM = SO_RCVTIMEO ictum (hospes lentus/semiapertus
      * - condicio quam villa deprehendere VULT); negativum aliud =
      * error durus medio corpore. Corpus partiale consulto abicitur:
-     * corpus mendax peius quam error honestus. NB tls_recipere -1
-     * solum reddit - tempus TLS ut HTTP_ERROR_IO apparet (v1). */
+     * corpus mendax peius quam error honestus. tls_recipere quoque
+     * TCP_ITERUM pro tempore reddit (bugs/015-016 lapidis). */
     si (n == TCP_ITERUM)
     {
         redde _creare_error(HTTP_ERROR_TIMEOUT,
@@ -875,8 +943,10 @@ http_exsequi (
         i32 i;
         per (i = 0; i + III < total_size; i++)
         {
-            si (   total_data[i]      == '\r' && total_data[i + I] == '\n'
-                && total_data[i + II] == '\r' && total_data[i + III] == '\n')
+            si (   total_data[i]       == '\r'
+                && total_data[i + I]   == '\n'
+                && total_data[i + II]  == '\r'
+                && total_data[i + III] == '\n')
             {
                 headers_end = (constans character*)(total_data + i);
                 frange;
@@ -886,7 +956,8 @@ http_exsequi (
 
     si (!headers_end)
     {
-        redde _creare_error(HTTP_ERROR_PARSE, "Capita non inventa", piscina);
+        redde _creare_error(HTTP_ERROR_PARSE, "Capita non inventa",
+            piscina);
     }
 
     /* Parse status line */
@@ -894,12 +965,15 @@ http_exsequi (
     line_end    = strstr(line_start, "\r\n");
     si (!line_end || line_end > headers_end)
     {
-        redde _creare_error(HTTP_ERROR_PARSE, "Status line invalida", piscina);
+        redde _creare_error(HTTP_ERROR_PARSE, "Status line invalida",
+            piscina);
     }
 
-    si (!_parse_status_line(line_start, (i32)(line_end - line_start), resp, piscina))
+    si (!_parse_status_line(line_start, (i32)(line_end - line_start),
+        resp, piscina))
     {
-        redde _creare_error(HTTP_ERROR_PARSE, "Status line parse fallita", piscina);
+        redde _creare_error(HTTP_ERROR_PARSE,
+            "Status line parse fallita", piscina);
     }
 
     /* Parse headers */
@@ -912,7 +986,8 @@ http_exsequi (
             frange;
         }
 
-        si (line_end > line_start && resp->capita_numerus < HTTP_CAPITA_MAXIMA)
+        si (   line_end > line_start
+            && resp->capita_numerus < HTTP_CAPITA_MAXIMA)
         {
             _parse_header(line_start, (i32)(line_end - line_start),
                          &resp->capita[resp->capita_numerus], piscina);
@@ -922,56 +997,63 @@ http_exsequi (
         line_start = line_end + II;
     }
 
-    /* Corpus - cum Transfer-Encoding et Content-Length supporto */
+    /* Corpus - cum Transfer-Encoding et Content-Length supporto.
+     * Corpus brevius quam promissum = ERROR, numquam successus cum
+     * corpore partiali (lapide briar-feedback bugs/016: olim README
+     * 7351 octetorum ut 0 aut 1371 cum successu redibat). */
     {
         constans character* body_start = headers_end + IV;  /* Post \r\n\r\n */
-                       i32  body_len = total_size - (i32)(body_start - (constans character*)total_data);
-                    chorda  transfer_encoding;
-                    chorda  content_length_hdr;
+                       i32  body_len = total_size - (i32)(body_start
+                           - (constans character*)total_data);
+                    chorda transfer_encoding;
+                    chorda content_length_hdr;
 
-        /* <tolera codex="SUBTRACTIO_COMPARATA" (>scansio capitum supra body_start intra total_size praestat (forma i plus III minor total_size) */
-        si (body_len > 0)
+        resp->corpus.datum    = NIHIL;
+        resp->corpus.mensura  = 0;
+        transfer_encoding = http_responsum_caput(resp,
+            "Transfer-Encoding");
+        content_length_hdr = http_responsum_caput(resp,
+            "Content-Length");
+
+        si (   petitio->methodus == HTTP_HEAD
+            || _http_corpus_prohibitum(resp->status))
         {
-            /* Verificare Transfer-Encoding: chunked */
-            transfer_encoding = http_responsum_caput(resp, "Transfer-Encoding");
-            si (   transfer_encoding.mensura > 0
-                && _chorda_aequalis_literis_ignora_casus(transfer_encoding, "chunked"))
+            /* Nullum corpus per legem - Content-Length solum nuntiat */
+        }
+        alioquin si (   transfer_encoding.mensura > 0
+                     && _chorda_aequalis_literis_ignora_casus(
+                            transfer_encoding, "chunked"))
+        {
+            b32 completa;
+
+            resp->corpus =
+                _decodificare_chunked((constans i8*)body_start,
+                                                  body_len, &completa,
+                                                  piscina);
+            si (!completa)
             {
-                /* Decodificare chunked encoding */
-                resp->corpus = _decodificare_chunked((constans i8*)body_start,
-                                                      body_len, piscina);
+                redde _creare_error(HTTP_ERROR_IO,
+                    "Corpus truncatum: chunked sine fragmento "
+                    "terminali (corpus partiale abiectum)", piscina);
             }
-            alioquin
+        }
+        alioquin si (content_length_hdr.mensura > 0)
+        {
+            i32 expected_len = _chorda_ad_i32(content_length_hdr);
+
+            /* <tolera codex="SUBTRACTIO_COMPARATA" (>scansio capitum supra body_start intra total_size praestat (forma i plus III minor total_size) */
+            si (expected_len > body_len)
             {
-                /* Verificare Content-Length */
-                content_length_hdr = http_responsum_caput(resp, "Content-Length");
-                si (content_length_hdr.mensura > 0)
-                {
-                    i32 expected_len = _chorda_ad_i32(content_length_hdr);
-                    si (expected_len > 0 && expected_len <= body_len)
-                    {
-                        /* Usare exacte Content-Length bytes */
-                        resp->corpus = _chorda_ex_partibus(body_start,
-                                                           expected_len, piscina);
-                    }
-                    alioquin
-                    {
-                        /* Content-Length maior quam data disponibilia */
-                        resp->corpus = _chorda_ex_partibus(body_start,
-                                                           body_len, piscina);
-                    }
-                }
-                alioquin
-                {
-                    /* Nullum Content-Length - usare omnia */
-                    resp->corpus = _chorda_ex_partibus(body_start, body_len, piscina);
-                }
+                redde _error_truncati(expected_len, body_len, piscina);
             }
+            resp->corpus = _chorda_ex_partibus(body_start, expected_len,
+                                               piscina);
         }
         alioquin
         {
-            resp->corpus.datum    = NIHIL;
-            resp->corpus.mensura  = 0;
+            /* Nullum Content-Length - usque ad EOF, omnia */
+            resp->corpus = _chorda_ex_partibus(body_start, body_len,
+                piscina);
         }
     }
 
@@ -1008,7 +1090,8 @@ http_responsum_caput (
 
     per (i = 0; i < responsum->capita_numerus; i++)
     {
-        si (_chorda_aequalis_literis_ignora_casus(responsum->capita[i].titulus, titulus))
+        si (_chorda_aequalis_literis_ignora_casus(responsum->capita[i].titulus,
+            titulus))
         {
             redde responsum->capita[i].valor;
         }
@@ -1066,14 +1149,6 @@ http_status_descriptio (
     }
 }
 
-/* Status quibus HTTP corpus (et Content-Length) vetat: 1xx/204/304 */
-interior b32
-_http_corpus_prohibitum (
-    i32 status)
-{
-    redde (status >= C && status < CC) || status == CCIV || status == CCCIV;
-}
-
 interior chorda
 _serialize_impl (
     HttpResponsum* responsum,
@@ -1119,9 +1194,11 @@ _serialize_impl (
         {
             perge;
         }
-        chorda_aedificator_appendere_chorda(aed, responsum->capita[i].titulus);
+        chorda_aedificator_appendere_chorda(aed,
+            responsum->capita[i].titulus);
         chorda_aedificator_appendere_literis(aed, ": ");
-        chorda_aedificator_appendere_chorda(aed, responsum->capita[i].valor);
+        chorda_aedificator_appendere_chorda(aed,
+            responsum->capita[i].valor);
         chorda_aedificator_appendere_literis(aed, "\r\n");
     }
 
@@ -1129,7 +1206,8 @@ _serialize_impl (
     si (!_http_corpus_prohibitum(responsum->status))
     {
         chorda_aedificator_appendere_literis(aed, "Content-Length: ");
-        chorda_aedificator_appendere_i32(aed, responsum->corpus.mensura);
+        chorda_aedificator_appendere_i32(aed,
+            responsum->corpus.mensura);
         chorda_aedificator_appendere_literis(aed, "\r\n");
     }
 
@@ -1241,7 +1319,8 @@ _resolvere_url_relativum (
         {
             /* Est URL absolutum - copiare ut est */
             character* buffer = (character*)piscina_allocare(piscina,
-                                                              (i64)(location.mensura + I));
+                                                              (i64)(location.mensura
+                                                                  + I));
             per (i = 0; i < location.mensura; i++)
             {
                 buffer[i] = (character)location.datum[i];
@@ -1262,7 +1341,8 @@ _resolvere_url_relativum (
         chorda_aedificator_appendere_character(aed, ':');
         per (i = 0; i < location.mensura; i++)
         {
-            chorda_aedificator_appendere_character(aed, (character)location.datum[i]);
+            chorda_aedificator_appendere_character(aed,
+                (character)location.datum[i]);
         }
         resultatus = chorda_aedificator_finire(aed);
         redde (constans character*)resultatus.datum;
@@ -1274,8 +1354,10 @@ _resolvere_url_relativum (
     chorda_aedificator_appendere_chorda(aed, base->hospes);
 
     /* Addere portus si non standard */
-    si (   (chorda_aequalis_literis(base->schema, "https") && base->portus != 443)
-        || (chorda_aequalis_literis(base->schema, "http") && base->portus != 80))
+    si (   (chorda_aequalis_literis(base->schema, "https")
+        && base->portus != 443)
+        || (chorda_aequalis_literis(base->schema, "http")
+            && base->portus != 80))
     {
         chorda_aedificator_appendere_character(aed, ':');
         chorda_aedificator_appendere_i32(aed, base->portus);
@@ -1364,7 +1446,8 @@ http_exsequi_cum_redirectionibus (
 
     si (!petitio || !piscina)
     {
-        redde _creare_error(HTTP_ERROR_URL, "Argumenta invalida", piscina);
+        redde _creare_error(HTTP_ERROR_URL, "Argumenta invalida",
+            piscina);
     }
 
     /* Prima petitio */
@@ -1393,31 +1476,38 @@ http_exsequi_cum_redirectionibus (
         }
 
         /* Resolvere URL (absolutum vel relativum) */
-        nova_url = _resolvere_url_relativum(current_petitio, location, piscina);
+        nova_url = _resolvere_url_relativum(current_petitio, location,
+            piscina);
         si (!nova_url)
         {
-            redde _creare_error(HTTP_ERROR_URL, "Redirectio URL invalida", piscina);
+            redde _creare_error(HTTP_ERROR_URL,
+                "Redirectio URL invalida", piscina);
         }
 
         /* Creare nova petitio */
-        nova_petitio = http_petitio_creare(piscina, petitio->methodus, nova_url);
+        nova_petitio = http_petitio_creare(piscina, petitio->methodus,
+            nova_url);
         si (!nova_petitio)
         {
-            redde _creare_error(HTTP_ERROR_URL, "Redirectio URL invalida", piscina);
+            redde _creare_error(HTTP_ERROR_URL,
+                "Redirectio URL invalida", piscina);
         }
 
         /* Copiare capita originales (excepto Host) */
         per (i = 0; i < petitio->capita_numerus; i++)
         {
-            si (!_chorda_aequalis_literis_ignora_casus(petitio->capita[i].titulus, "Host"))
+            si (!_chorda_aequalis_literis_ignora_casus(petitio->capita[i].titulus,
+                "Host"))
             {
-                nova_petitio->capita[nova_petitio->capita_numerus] = petitio->capita[i];
+                nova_petitio->capita[nova_petitio->capita_numerus] =
+                    petitio->capita[i];
                 nova_petitio->capita_numerus++;
             }
         }
 
         /* Pro 307/308, preservare corpus */
-        si (res.responsum->status == 307 || res.responsum->status == 308)
+        si (   res.responsum->status == 307
+            || res.responsum->status == 308)
         {
             nova_petitio->corpus = petitio->corpus;
         }
@@ -1438,7 +1528,8 @@ http_exsequi_cum_redirectionibus (
             || res.responsum->status == 307
             || res.responsum->status == 308)
         {
-            redde _creare_error(HTTP_ERROR_REDIRECTIO, "Nimis redirectiones", piscina);
+            redde _creare_error(HTTP_ERROR_REDIRECTIO,
+                "Nimis redirectiones", piscina);
         }
     }
 
@@ -1501,7 +1592,8 @@ _parser_expandere_buffer (
         nova_capacitas *= II;
     }
 
-    nova_buffer = (i8*)piscina_allocare(parser->piscina, (i64)nova_capacitas);
+    nova_buffer = (i8*)piscina_allocare(parser->piscina,
+        (i64)nova_capacitas);
     si (!nova_buffer)
     {
         redde FALSUM;
@@ -1509,7 +1601,8 @@ _parser_expandere_buffer (
 
     si (parser->buffer_mensura > 0)
     {
-        memcpy(nova_buffer, parser->buffer, (size_t)parser->buffer_mensura);
+        memcpy(nova_buffer, parser->buffer,
+            (size_t)parser->buffer_mensura);
     }
 
     parser->buffer            = nova_buffer;
@@ -1559,7 +1652,8 @@ _parser_parse_linea_petitionis (
           i32 j;
 
     /* Saltare leading whitespace */
-    dum (i < linea_finis && (parser->buffer[i] == ' ' || parser->buffer[i] == '\t'))
+    dum (   i < linea_finis
+         && (parser->buffer[i] == ' ' || parser->buffer[i] == '\t'))
     {
         i++;
     }
@@ -1582,7 +1676,8 @@ _parser_parse_linea_petitionis (
 
     per (j = 0; j < methodus_len; j++)
     {
-        methodus_str[j] = (character)parser->buffer[methodus_initium + j];
+        methodus_str[j] = (character)parser->buffer[methodus_initium
+            + j];
     }
     methodus_str[methodus_len] = '\0';
 
@@ -1648,7 +1743,8 @@ _parser_parse_linea_petitionis (
                 (constans character*)&parser->buffer[uri_initium],
                 q, parser->piscina);
             parser->petitio->quaestio = _chorda_ex_partibus(
-                (constans character*)&parser->buffer[uri_initium + q + I],
+                (constans character*)&parser->buffer[uri_initium + q
+                    + I],
                 uri_len - q - I, parser->piscina);
         }
         alioquin
@@ -1760,9 +1856,11 @@ _parser_parse_caput (
     parser->petitio->capita_numerus++;
 
     /* Verificare special headers - custodes smuggling (ambo ordines) */
-    si (_chorda_aequalis_literis_ignora_casus(caput->titulus, "Content-Length"))
+    si (_chorda_aequalis_literis_ignora_casus(caput->titulus,
+        "Content-Length"))
     {
-        si (parser->vidit_content_length || parser->vidit_transfer_encoding)
+        si (   parser->vidit_content_length
+            || parser->vidit_transfer_encoding)
         {
             parser->status_suggestus = CD;  /* CL duplex aut TE+CL */
             redde FALSUM;
@@ -1770,7 +1868,8 @@ _parser_parse_caput (
         parser->vidit_content_length = VERUM;
 
         parser->petitio->content_length = _chorda_ad_i32(caput->valor);
-        parser->petitio->corpus_longitudo = parser->petitio->content_length;
+        parser->petitio->corpus_longitudo =
+            parser->petitio->content_length;
 
         /* 413 statim - CL nuntiatum super limitem, ante buffering */
         si (parser->petitio->content_length > parser->petitio_maxima)
@@ -1779,7 +1878,8 @@ _parser_parse_caput (
             redde FALSUM;
         }
     }
-    alioquin si (_chorda_aequalis_literis_ignora_casus(caput->titulus, "Transfer-Encoding"))
+    alioquin si (_chorda_aequalis_literis_ignora_casus(caput->titulus,
+                 "Transfer-Encoding"))
     {
         si (parser->vidit_content_length)
         {
@@ -1788,18 +1888,22 @@ _parser_parse_caput (
         }
         parser->vidit_transfer_encoding = VERUM;
 
-        si (_chorda_aequalis_literis_ignora_casus(caput->valor, "chunked"))
+        si (_chorda_aequalis_literis_ignora_casus(caput->valor,
+            "chunked"))
         {
             parser->petitio->chunked = VERUM;
         }
     }
-    alioquin si (_chorda_aequalis_literis_ignora_casus(caput->titulus, "Connection"))
+    alioquin si (_chorda_aequalis_literis_ignora_casus(caput->titulus,
+                 "Connection"))
     {
-        si (_chorda_aequalis_literis_ignora_casus(caput->valor, "close"))
+        si (_chorda_aequalis_literis_ignora_casus(caput->valor,
+            "close"))
         {
             parser->petitio->keep_alive = FALSUM;
         }
-        alioquin si (_chorda_aequalis_literis_ignora_casus(caput->valor, "keep-alive"))
+        alioquin si (_chorda_aequalis_literis_ignora_casus(caput->valor,
+                     "keep-alive"))
         {
             parser->petitio->keep_alive = VERUM;
         }
@@ -1847,7 +1951,8 @@ http_parser_creare_cum_limitibus (
         redde NIHIL;
     }
 
-    parser = (HttpParser*)piscina_allocare(piscina, (i64)magnitudo(HttpParser));
+    parser = (HttpParser*)piscina_allocare(piscina,
+        (i64)magnitudo(HttpParser));
     si (!parser)
     {
         redde NIHIL;
@@ -1874,7 +1979,8 @@ http_parser_creare_cum_limitibus (
     parser->petitio  = petitio;
 
     /* Allocare buffer initiale */
-    parser->buffer = (i8*)piscina_allocare(piscina, (i64)HTTP_PARSER_BUFFER_INITIALE);
+    parser->buffer = (i8*)piscina_allocare(piscina,
+        (i64)HTTP_PARSER_BUFFER_INITIALE);
     si (!parser->buffer)
     {
         redde NIHIL;
@@ -1889,7 +1995,8 @@ http_parser_creare_cum_limitibus (
     parser->vidit_transfer_encoding  = FALSUM;
     parser->petitio_maxima = petitio_maxima ? petitio_maxima
                                             : HTTP_PETITIO_MAXIMA_DEFALTA;
-    parser->uri_maxima = uri_maxima ? uri_maxima : HTTP_URI_MAXIMA_DEFALTA;
+    parser->uri_maxima =
+        uri_maxima ? uri_maxima : HTTP_URI_MAXIMA_DEFALTA;
 
     /* Initiare petitio */
     petitio->methodus          = HTTP_GET;
@@ -1969,14 +2076,16 @@ http_parser_adicere (
     /* Expandere buffer et adicere data */
     si (!_parser_expandere_buffer(parser, longitudo))
     {
-        parser->status = HTTP_PARSE_ERROR;
-        res.successus = FALSUM;
-        res.error = HTTP_ERROR_PARSE;
-        res.error_descriptio = chorda_ex_literis("Buffer overflow", parser->piscina);
+        parser->status  = HTTP_PARSE_ERROR;
+        res.successus   = FALSUM;
+        res.error       = HTTP_ERROR_PARSE;
+        res.error_descriptio = chorda_ex_literis("Buffer overflow",
+            parser->piscina);
         redde res;
     }
 
-    memcpy(parser->buffer + parser->buffer_mensura, datum, (size_t)longitudo);
+    memcpy(parser->buffer + parser->buffer_mensura, datum,
+        (size_t)longitudo);
     parser->buffer_mensura += longitudo;
 
     /* State machine parsing */
@@ -2002,14 +2111,16 @@ http_parser_adicere (
                     linea_finis--;
                 }
 
-                si (!_parser_parse_linea_petitionis(parser, linea_finis))
+                si (!_parser_parse_linea_petitionis(parser,
+                    linea_finis))
                 {
                     parser->status  = HTTP_PARSE_ERROR;
                     res.successus   = FALSUM;
                     res.error       = HTTP_ERROR_PARSE;
                     res.status_suggestus = parser->status_suggestus
                                              ? parser->status_suggestus : CD;
-                    res.error_descriptio = chorda_ex_literis("Request line invalida",
+                    res.error_descriptio =
+                        chorda_ex_literis("Request line invalida",
                                                               parser->piscina);
                     redde res;
                 }
@@ -2072,7 +2183,8 @@ http_parser_adicere (
                     res.error       = HTTP_ERROR_PARSE;
                     res.status_suggestus = parser->status_suggestus
                                              ? parser->status_suggestus : CD;
-                    res.error_descriptio = chorda_ex_literis("Header invalida",
+                    res.error_descriptio =
+                        chorda_ex_literis("Header invalida",
                                                               parser->piscina);
                     redde res;
                 }
@@ -2085,16 +2197,19 @@ http_parser_adicere (
             {
                 i32 corpus_disponibile;
 
-                corpus_disponibile = parser->buffer_mensura - parser->cursor;
+                corpus_disponibile = parser->buffer_mensura
+                    - parser->cursor;
 
-                si (corpus_disponibile >= parser->petitio->content_length)
+                si (corpus_disponibile
+                    >= parser->petitio->content_length)
                 {
                     /* Habemus totum corpus */
                     parser->petitio->corpus = _chorda_ex_partibus(
                         (constans character*)&parser->buffer[parser->cursor],
                         parser->petitio->content_length,
                         parser->piscina);
-                    parser->petitio->corpus_longitudo = parser->petitio->content_length;
+                    parser->petitio->corpus_longitudo =
+                        parser->petitio->content_length;
                     /* Cursor post corpus - reliquiae = bytes pipelinati */
                     parser->cursor += parser->petitio->content_length;
                     parser->status = HTTP_PARSE_COMPLETA;
@@ -2219,11 +2334,12 @@ http_petitio_parse (
     parser = http_parser_creare(piscina);
     si (!parser)
     {
-        res.successus = FALSUM;
-        res.completa = FALSUM;
-        res.petitio = NIHIL;
-        res.error = HTTP_ERROR_PARSE;
-        res.error_descriptio = chorda_ex_literis("Parser creatio fallita", piscina);
+        res.successus  = FALSUM;
+        res.completa   = FALSUM;
+        res.petitio    = NIHIL;
+        res.error      = HTTP_ERROR_PARSE;
+        res.error_descriptio =
+            chorda_ex_literis("Parser creatio fallita", piscina);
         res.status_suggestus = 0;
         redde res;
     }

@@ -204,10 +204,11 @@ probatio_mittere_recipere(Piscina* piscina)
            TlsResultus  res;
     constans character* petitio;
                     i8  buffer[MMMMXCVI];
-                   s32  totalis;
+                    i8* totum;
+                   i32  totalis;
                    s32  n;
 
-    printf("--- Probans mittere/recipere ---\n");
+    printf("--- Probans mittere/recipere (LXIV KB integri) ---\n");
 
     res = tls_connectere("httpbin.org", CDXL + III, piscina);
     si (!res.successus)
@@ -217,8 +218,12 @@ probatio_mittere_recipere(Piscina* piscina)
         redde;
     }
 
-    /* Mittere petitio */
-    petitio = "GET /bytes/1024 HTTP/1.1\r\n"
+    /* Corpus multo maius quam recordum TLS unum (XVI KB) et buffer
+     * (IV KB): olim tls_recipere 0 ('clausa') reddebat cum SSLRead
+     * errSSLWouldBlock sine octetis dabat - ansa ut haec in medio
+     * exibat (lapide briar-feedback bugs/015-016). 'totalis > 0'
+     * solum asserere id numquam vidit. */
+    petitio = "GET /bytes/65536 HTTP/1.1\r\n"
               "Host: httpbin.org\r\n"
               "Connection: close\r\n"
               "\r\n";
@@ -228,18 +233,59 @@ probatio_mittere_recipere(Piscina* piscina)
     CREDO_MAIOR_S32(n, 0);
 
     /* Recipere in loop usque connexio clausa */
+    totum = (i8*)piscina_allocare(piscina, (i64)(CXXVIII * M * VIII));
     totalis = 0;
     fac
     {
         n = tls_recipere(res.connexio, buffer, MMMMXCVI);
-        si (n > 0)
+        si (n > 0 && totalis + (i32)n <= CXXVIII * M * VIII)
         {
-            totalis += n;
+            memcpy(totum + totalis, buffer, (size_t)n);
+            totalis += (i32)n;
         }
     } dum (n > 0);
 
-    printf("  Totalis receptum: %d bytes\n", totalis);
-    CREDO_MAIOR_S32(totalis, 0);
+    printf("  Totalis receptum: %u bytes (exitus ansae %d)\n", totalis,
+           (integer)n);
+    CREDO_AEQUALIS_S32(n, 0);   /* EOF mundus, non tempus neque error */
+
+    /* corpus == Content-Length (in eodem responso - contentum ipsum
+     * mutari potest, consensus non) */
+    {
+                       i32  i;
+                       i32  finis_capitum  = 0;
+                       i32  promissum      = 0;
+        constans character* cl;
+
+        per (i = 0; i + III < totalis; i++)
+        {
+            si (   totum[i]      == '\r' && totum[i + I] == '\n'
+                && totum[i + II] == '\r' && totum[i + III] == '\n')
+            {
+                finis_capitum = i + IV;
+                frange;
+            }
+        }
+        CREDO_MAIOR_I32(finis_capitum, 0);
+        totum[finis_capitum > 0 ? finis_capitum - I : 0] = '\0';
+        cl = strstr((constans character*)totum, "Content-Length: ");
+        si (cl == NIHIL)
+        {
+            cl = strstr((constans character*)totum, "content-length: ");
+        }
+        CREDO_NON_NIHIL(cl);
+        si (cl != NIHIL)
+        {
+            per (cl += XVI; *cl >= '0' && *cl <= '9'; cl++)
+            {
+                promissum = promissum * X + (i32)(*cl - '0');
+            }
+        }
+        printf("  Content-Length %u, corpus receptum %u\n", promissum,
+               totalis - finis_capitum);
+        CREDO_AEQUALIS_I32(promissum, (i32)(XVI * MMMMXCVI));
+        CREDO_AEQUALIS_I32(totalis - finis_capitum, promissum);
+    }
 
     tls_claudere(res.connexio);
 

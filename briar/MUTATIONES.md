@@ -19,6 +19,13 @@ Leges chartae:
 
 ## inedita
 
+- `http` (cliens, HTTPS): corpora supra ~IV KB integra redeunt (olim
+  truncata cum `successus`: tls_recipere lectionem partialem ut
+  finem reddebat) - lapide bugs/015, bugs/016. Corpus brevius quam
+  `Content-Length` promisit, aut chunked sine fragmento terminali,
+  nunc ERROR est (`HTTP_ERROR_IO`, "Corpus truncatum: Content-Length
+  N, recepti M"), numquam successus cum corpore partiali.
+
 ## v2 — 2026-09-26
 
 Regiones C per silvam novam (silva in materiam migrata, phasis V): quae

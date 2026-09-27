@@ -84,3 +84,29 @@ Arcus http/tcp (commissum 30190d6, res 01KYANH7AN/01KY05Q8AH/
   'nullae connexiones' videt, exit, et cliens RST accipit; (2)
   petitionem TOTAM haurire ante clausuram - octeti illecti RST pro
   FIN gignunt.
+
+## 2026-09-26 - corpus brevius quam promissum = ERROR (lapide bugs/015-016)
+
+Causa radicalis in tls_macos.m (vide eius worklog): tls_recipere 0
+reddebat pro WouldBlock. Hic defensio in profundo, ut quaecumque
+causa truncationis futura numquam successum mendacem gignat:
+
+- Content-Length > octeti recepti -> HTTP_ERROR_IO, "Corpus
+  truncatum: Content-Length N, recepti M (corpus partiale
+  abiectum)". DECISIO 07-28 INVERSA: probatio_truncatum_eof EOF
+  mundum post X ex C octetis ut successum asserebat ("EOF = terminus
+  legitimus"). RFC 9112 6.3 aliter: nuntius incompletus. Et doctrina
+  eiusdem arcus ("corpus mendax peius quam error honestus") ipsa id
+  vetat. Content-Length saturatum (probatio_caput_ingens) nunc
+  quoque error est.
+- chunked sine fragmento '0' -> error (olim "copiare quod possumus").
+- chunked: magnitudo hex ante multiplicationem custoditur. '100000005'
+  in i32 ad V involvebatur -> 'salve' ut corpus validum; 'FFFFFFFF'
+  custodiam 'i + chunk_size <= len' ipsam involvebat (memcpy extra
+  fines, hospite maligno). Nunc forma subtractiva + custos.
+- HEAD et 1xx/204/304: nullum corpus per legem, Content-Length non
+  iudicatur (_http_corpus_prohibitum ante http_exsequi motum).
+
+Plantae omnes rubrae (Content-Length, completa, custos involutionis).
+Nondum factum, notatum: HTTPS tempus petitionis (petitio->tempus_ms)
+ignorat - tls_connectere optiones defaltas (XXX s) semper accipit.
