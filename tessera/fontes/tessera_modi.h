@@ -18,8 +18,10 @@
 #define TESSERA_MODI_H
 
 /* Scrinium alternum + mus (pressus/solutus) + tractus (motus botton
- * tento solum, ?1002) + mus SGR */
-#define INTRANDI "\033[?1049h\033[?1000h\033[?1002h\033[?1006h"
+ * tento solum, ?1002) + mus SGR + glutinum uncis inclusum (?2004:
+ * textus insertus ut eventum unum, numquam claves) */
+#define INTRANDI "\033[?1049h\033[?1000h\033[?1002h\033[?1006h" \
+                 "\033[?2004h"
 
 /* Modus PER QUADRUM (non in INTRANDI): tessera_praesentare quadrum
  * non vacuum his includit - terminal quadrum integrum ostendit (nulla
@@ -31,6 +33,7 @@
  * terminalem sustinentem non congelet), deinde modi ordine inverso;
  * deinde stilus nativus + cursor visibilis */
 #define EXEUNDI  QUADRUM_FINIS \
+                 "\033[?2004l" \
                  "\033[?1006l\033[?1002l\033[?1000l\033[?1049l" \
                  "\033[0m\033[?25h"
 

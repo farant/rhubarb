@@ -211,6 +211,11 @@ principale (vacuum)
                     cur_y = ev.mus_y;
                 }
                 frange;
+            casus TESSERA_EVENTUM_GLUTINUM:
+                sprintf(status, "glutinum: %u octeti%s",
+                    (insignatus integer)ev.glutinum.mensura,
+                    ev.glutinum_truncatum ? " (truncatum)" : "");
+                frange;
             casus TESSERA_EVENTUM_AMPLITUDO:
                 tessera_magnitudinem_renovare(opus);
                 sprintf(status, "amplitudo: %dx%d",

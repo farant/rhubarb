@@ -311,6 +311,7 @@ typedef struct TesseraLector {
     unsigned int  mensura;
     unsigned int  latitudo_nota;
     unsigned int  altitudo_nota;
+    unsigned char* glutinum;      /* collector glutini */
 } TesseraLector;
 
 TesseraLector* tessera_lector_creare(TesseraPiscina* piscina,
@@ -4874,7 +4875,9 @@ tessera_lector_creare (
     TesseraPons* pons);
 
 /* Eventum proximum intra moram (ms); mora < 0 = sine fine.
- * NIHIL genus = mora exacta. */
+ * NIHIL genus = mora exacta. Glutino incepto mora vocantis cedit:
+ * glutinum ad terminum (aut silentium TESSERA_MORA_GLUTINI_MS) legitur
+ * et UNUM eventum redditur. */
 TesseraEventumGenus
 tessera_eventum_expectare (
      TesseraLector* lector,
@@ -5045,8 +5048,10 @@ tessera_magnitudinem_renovare (
 #define TESSERA_MODI_H
 
 /* Scrinium alternum + mus (pressus/solutus) + tractus (motus botton
- * tento solum, ?1002) + mus SGR */
-#define INTRANDI "\033[?1049h\033[?1000h\033[?1002h\033[?1006h"
+ * tento solum, ?1002) + mus SGR + glutinum uncis inclusum (?2004:
+ * textus insertus ut eventum unum, numquam claves) */
+#define INTRANDI "\033[?1049h\033[?1000h\033[?1002h\033[?1006h" \
+                 "\033[?2004h"
 
 /* Modus PER QUADRUM (non in INTRANDI): tessera_praesentare quadrum
  * non vacuum his includit - terminal quadrum integrum ostendit (nulla
@@ -5058,6 +5063,7 @@ tessera_magnitudinem_renovare (
  * terminalem sustinentem non congelet), deinde modi ordine inverso;
  * deinde stilus nativus + cursor visibilis */
 #define EXEUNDI  QUADRUM_FINIS \
+                 "\033[?2004l" \
                  "\033[?1006l\033[?1002l\033[?1000l\033[?1049l" \
                  "\033[0m\033[?25h"
 
@@ -6412,31 +6418,37 @@ tessera_pons_posix_creare (
  * exundat); valor maior = ingens = invalidus */
 #define PARAMETRUM_MAXIMUM (X * M)
 
+/* Glutinum: CSI 200 ~ incipit, CSI 201 ~ finit */
+#define CODEX_INITII_GLUTINI CC
+#define TERMINUS_GLUTINI "\033[201~"
+#define TERMINI_LONGITUDO ((i32)(magnitudo(TERMINUS_GLUTINI) - I))
+
 nomen enumeratio {
     PARS_COMPLETUM = 0,
     PARS_INCOMPLETUM,
     PARS_VACUUM,
-    PARS_PRAETERITUM
+    PARS_PRAETERITUM,
+    PARS_GLUTINUM      /* CSI 200 ~ consumptum: collector sequitur */
 } ParsFructus;
 
 interior vacuum
 _eventum_vacare (
     TesseraEventum* ev)
 {
-    ev->genus          = TESSERA_EVENTUM_NIHIL;
-    ev->runa           = ZEPHYRUM;
-    ev->clavis         = TESSERA_CLAVIS_NULLA;
-    ev->modificatores  = ZEPHYRUM;
-    ev->numerus        = ZEPHYRUM;
-    ev->mus_genus      = TESSERA_MUS_PRESSUS;
-    ev->mus_x          = ZEPHYRUM;
-    ev->mus_y          = ZEPHYRUM;
-    ev->mus_pulsus     = ZEPHYRUM;
-    ev->latitudo       = ZEPHYRUM;
-    ev->altitudo       = ZEPHYRUM;
-    ev->glutinum.mensura     = ZEPHYRUM;
-    ev->glutinum.datum       = NIHIL;
-    ev->glutinum_truncatum   = FALSUM;
+    ev->genus               = TESSERA_EVENTUM_NIHIL;
+    ev->runa                = ZEPHYRUM;
+    ev->clavis              = TESSERA_CLAVIS_NULLA;
+    ev->modificatores       = ZEPHYRUM;
+    ev->numerus             = ZEPHYRUM;
+    ev->mus_genus           = TESSERA_MUS_PRESSUS;
+    ev->mus_x               = ZEPHYRUM;
+    ev->mus_y               = ZEPHYRUM;
+    ev->mus_pulsus          = ZEPHYRUM;
+    ev->latitudo            = ZEPHYRUM;
+    ev->altitudo            = ZEPHYRUM;
+    ev->glutinum.mensura    = ZEPHYRUM;
+    ev->glutinum.datum      = NIHIL;
+    ev->glutinum_truncatum  = FALSUM;
 }
 
 interior vacuum
@@ -6776,6 +6788,11 @@ _csi_parsare (
         i32 modificatores = (numerus_parametrorum >= II)
             ? _modificatores_csi(parametra[I]) : ZEPHYRUM;
 
+        si (   finalis == '~' && numerus_parametrorum == I
+            && parametra[ZEPHYRUM] == CODEX_INITII_GLUTINI)
+        {
+            redde PARS_GLUTINUM;
+        }
         si (finalis == '~' && numerus_parametrorum >= I)
         {
             si (_clavem_tildae(parametra[ZEPHYRUM], ev,
@@ -6891,7 +6908,8 @@ _parsare (
         {
             fructus = _csi_parsare(lector, ev, &consumendum);
             si (   fructus == PARS_COMPLETUM
-                || fructus == PARS_PRAETERITUM)
+                || fructus == PARS_PRAETERITUM
+                || fructus == PARS_GLUTINUM)
             {
                 _consumere(lector, consumendum);
             }
@@ -6984,8 +7002,99 @@ _parsare (
     }
 }
 
+/* Octetum corpori glutini addere; ultra capacitatem abicitur et
+ * truncatum notatur (hauritur tamen usque ad terminum) */
+interior vacuum
+_glutino_addere (
+     TesseraLector* lector,
+    TesseraEventum* ev,
+                i8  octetus)
+{
+    si (ev->glutinum.mensura < (i32)TESSERA_GLUTINUM_CAPACITAS)
+    {
+        lector->glutinum[ev->glutinum.mensura] = octetus;
+        ev->glutinum.mensura++;
+    }
+    alioquin
+    {
+        ev->glutinum_truncatum = VERUM;
+    }
+}
+
+/* Glutinum colligere post CSI 200 ~ usque ad CSI 201 ~: SEMPER eventum
+ * unum GLUTINUM ponit. Buffer lectoris octetum per octetum hauritur;
+ * congruentes = octeti termini iam congruentes (trans lectiones
+ * servatur). Discordia: praefixum congruens corpus est, octetus ut ESC
+ * novum iterum temptatur (terminus ESC solum in capite habet). Post
+ * terminum octeti in buffere manent (parsatio ordinaria). Lectiones
+ * intra glutinum moram TESSERA_MORA_GLUTINI_MS habent, non vocantis;
+ * lectio vacua = silentium (D4) aut terminal abiit: truncatum, et
+ * praefixum pendens corpus fit. */
+interior vacuum
+_glutinum_colligere (
+     TesseraLector* lector,
+    TesseraEventum* ev)
+{
+    i32 congruentes = ZEPHYRUM;
+    i32 k;
+    i32 j;
+    s32 n;
+
+    ev->genus               = TESSERA_EVENTUM_GLUTINUM;
+    ev->glutinum.datum      = lector->glutinum;
+    ev->glutinum.mensura    = ZEPHYRUM;
+    ev->glutinum_truncatum  = FALSUM;
+
+    dum (VERUM)
+    {
+        per (k = ZEPHYRUM; k < lector->mensura; k++)
+        {
+            i8 b = lector->buffer[k];
+
+            si (b == (i8)TERMINUS_GLUTINI[congruentes])
+            {
+                congruentes++;
+                si (congruentes == TERMINI_LONGITUDO)
+                {
+                    _consumere(lector, k + I);
+                    redde;
+                }
+                perge;
+            }
+            per (j = ZEPHYRUM; j < congruentes; j++)
+            {
+                _glutino_addere(lector, ev, (i8)TERMINUS_GLUTINI[j]);
+            }
+            si (b == 0x1B)
+            {
+                congruentes = I;
+            }
+            alioquin
+            {
+                congruentes = ZEPHYRUM;
+                _glutino_addere(lector, ev, b);
+            }
+        }
+        lector->mensura = ZEPHYRUM;
+
+        n = lector->pons->legere(lector->pons->datum, lector->buffer,
+            (i32)TESSERA_LECTOR_BUFFER, TESSERA_MORA_GLUTINI_MS);
+        si (n <= ZEPHYRUM)
+        {
+            per (j = ZEPHYRUM; j < congruentes; j++)
+            {
+                _glutino_addere(lector, ev, (i8)TERMINUS_GLUTINI[j]);
+            }
+            ev->glutinum_truncatum = VERUM;
+            redde;
+        }
+        lector->mensura = (i32)n;
+    }
+}
+
 /* Parsare usque ad fructum non-PRAETERITUM (strepitus consumptus
- * iteratur): COMPLETUM, VACUUM aut INCOMPLETUM */
+ * iteratur): COMPLETUM, VACUUM aut INCOMPLETUM. Initium glutini
+ * collectorem statim currit, qui eventum semper ponit: COMPLETUM. */
 interior ParsFructus
 _parsare_plene (
      TesseraLector* lector,
@@ -6996,6 +7105,11 @@ _parsare_plene (
     dum (VERUM)
     {
         fructus = _parsare(lector, ev);
+        si (fructus == PARS_GLUTINUM)
+        {
+            _glutinum_colligere(lector, ev);
+            redde PARS_COMPLETUM;
+        }
         si (fructus != PARS_PRAETERITUM)
         {
             redde fructus;
@@ -7017,6 +7131,12 @@ tessera_lector_creare (
     lector = (TesseraLector*)tessera_piscina_allocare_ordinatum(piscina,
         (memoriae_index)magnitudo(TesseraLector), IV);
     si (lector == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lector->glutinum = (i8*)tessera_piscina_allocare(piscina,
+        (memoriae_index)TESSERA_GLUTINUM_CAPACITAS);
+    si (lector->glutinum == NIHIL)
     {
         redde NIHIL;
     }

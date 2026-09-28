@@ -289,6 +289,7 @@ typedef struct TesseraLector {
     unsigned int  mensura;
     unsigned int  latitudo_nota;
     unsigned int  altitudo_nota;
+    unsigned char* glutinum;      /* collector glutini */
 } TesseraLector;
 
 TesseraLector* tessera_lector_creare(TesseraPiscina* piscina,

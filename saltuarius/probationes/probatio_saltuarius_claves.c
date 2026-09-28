@@ -294,6 +294,58 @@ principale (vacuum)
             SALT_MODUS_COLUMNAE, &ev,
             &iussum));
 
+        /* GLUTINUM (textus insertus) per tesseram veram: corpus
+         * mandata continens NIHIL agit; eadem sine uncis agunt (hiatus
+         * quem ?2004 claudit) */
+        {
+            TesseraPiscina* tp;
+            TesseraPonsMemoriae* pm;
+            TesseraLector* lector;
+            constans character* mandata = "jjG\rq";
+            constans character* glutinum =
+                "\033[200~" "jjG\rq" "\033[201~";
+            i32 acta = ZEPHYRUM;
+            b32 finire_visum = FALSUM;
+
+            tp      =
+                tessera_piscina_generare_dynamicum("claves_tessera",
+                1048576);
+            pm      = tessera_pons_memoriae_creare(tp, LXXX, XXIV);
+            lector  = tessera_lector_creare(tp, &pm->pons);
+            CREDO_NON_NIHIL (lector);
+
+            CREDO_VERUM (tessera_pons_memoriae_initum(pm,
+                (constans i8*)glutinum, (i32)strlen(glutinum)));
+            CREDO_AEQUALIS_I32 ((i32)tessera_eventum_expectare(lector,
+                &ev, X), (i32)TESSERA_EVENTUM_GLUTINUM);
+            CREDO_AEQUALIS_I32 (ev.glutinum.mensura, V);
+            CREDO_FALSUM (saltuarius_claves_tradere(&claves,
+                SALT_MODUS_COLUMNAE, &ev, &iussum));
+            CREDO_AEQUALIS_I32 ((i32)tessera_eventum_expectare(lector,
+                &ev, X), (i32)TESSERA_EVENTUM_NIHIL);
+
+            /* contrarium: eadem octeti sine uncis = mandata */
+            CREDO_VERUM (tessera_pons_memoriae_initum(pm,
+                (constans i8*)mandata, (i32)strlen(mandata)));
+            dum (tessera_eventum_expectare(lector, &ev, X)
+                    != TESSERA_EVENTUM_NIHIL)
+            {
+                si (saltuarius_claves_tradere(&claves,
+                        SALT_MODUS_COLUMNAE, &ev, &iussum))
+                {
+                    acta++;
+                    si (iussum.genus == SALT_ACTIO_FINIRE)
+                    {
+                        finire_visum = VERUM;
+                    }
+                }
+            }
+            CREDO_AEQUALIS_I32 (acta, V);
+            CREDO_VERUM (finire_visum);
+
+            tessera_piscina_destruere(tp);
+        }
+
         /* AMPLITUDO: principale tractat, non nos */
         memset(&ev, ZEPHYRUM, magnitudo(ev));
         ev.genus = TESSERA_EVENTUM_AMPLITUDO;

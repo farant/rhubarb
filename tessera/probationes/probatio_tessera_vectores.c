@@ -513,7 +513,11 @@ _cursum_probare (
                   b32 ruptum;
                   b32 congruit;
                   i32 k;
+       PiscinaNotatio nota;
 
+    /* piscina ad notam refecta post cursum: quisque lector collectorem
+     * glutini (LXIV KiB) allocat; corpora copiata hic moriuntur */
+    nota = piscina_notare(piscina);
     _pontem_parare(&pf, v, forma,
         (scissio >= ZEPHYRUM) ? (i32)scissio : ZEPHYRUM);
     numerus_observatorum = _currere(&pf, piscina, observata, &ruptum);
@@ -530,6 +534,7 @@ _cursum_probare (
             exspectata, numerus_exspectatorum, observata,
             numerus_observatorum, ruptum);
     }
+    piscina_reficere(piscina, nota);
     redde congruit;
 }
 

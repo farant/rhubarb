@@ -128,6 +128,8 @@ nomen structura {
             i32  mensura;        /* octeti validi */
             i32  latitudo_nota;  /* amplitudo novissime visa */
             i32  altitudo_nota;
+             i8* glutinum;       /* collector: TESSERA_GLUTINUM_CAPACITAS,
+                                  * in creatione allocatus */
 } TesseraLector;
 
 TesseraLector*
@@ -136,7 +138,9 @@ tessera_lector_creare (
     TesseraPons* pons);
 
 /* Eventum proximum intra moram (ms); mora < 0 = sine fine.
- * NIHIL genus = mora exacta. */
+ * NIHIL genus = mora exacta. Glutino incepto mora vocantis cedit:
+ * glutinum ad terminum (aut silentium TESSERA_MORA_GLUTINI_MS) legitur
+ * et UNUM eventum redditur. */
 TesseraEventumGenus
 tessera_eventum_expectare (
      TesseraLector* lector,

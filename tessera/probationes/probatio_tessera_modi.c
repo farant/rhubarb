@@ -6,7 +6,7 @@
  *   II  nullus modus relinquitur qui intratus non est
  *   III EXEUNDI ordine INVERSO relinquit (acervus: mus ante scrinium)
  *   IV  modi fundamentales adsunt (1049 scrinium alternum, 1000 mus,
- *       1002 tractus, 1006 mus SGR)
+ *       1002 tractus, 1006 mus SGR, 2004 glutinum)
  *   V   modi PER QUADRUM (QUADRUM_INITIUM, 2026) numquam in
  *       INTRANDI, semper in EXEUNDI et PRIMI (ruina quadrum apertum
  *       non relinquit); lex II eos excipit
@@ -223,6 +223,7 @@ principale (vacuum)
     CREDO_VERUM (_continet(intrati, n_intrati, M));
     CREDO_VERUM (_continet(intrati, n_intrati, MII));
     CREDO_VERUM (_continet(intrati, n_intrati, MVI));
+    CREDO_VERUM (_continet(intrati, n_intrati, MMIV));
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

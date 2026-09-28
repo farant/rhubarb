@@ -824,3 +824,56 @@ an out-of-bounds read in the failure print for any TRACTUS event.
 It was visible and missed: T3's red run printed the expected drags as
 `MUS(nulla 12,5 p0)` (the read landed in the adjacent CLAVIUM_TITULI). Suite 7/7, saltuarius 13/13, amalgam
 VERIFICATUM + idempotent.
+
+### INTENTIO (T5: paste implementation)
+
+- Mode strings: `?2004h` last in INTRANDI, `?2004l` right after the
+  frame-close in EXEUNDI (stack order); modi rule IV requires 2004.
+- Lector: a 64 KiB collector (`TESSERA_GLUTINUM_CAPACITAS`) allocated at
+  creation (both headers; the amalgam header mirrors the struct);
+  steady state allocates nothing.
+- Reader: `CSI 200 ~` (exactly one parameter) → the CSI parser reports
+  a paste start. `_parsare_plene` then runs the collector, which ALWAYS
+  yields one GLUTINUM event, so no call site in `expectare` changes.
+- The collector drains the 64-byte buffer byte by byte, matching the end
+  marker `ESC [ 2 0 1 ~` with a prefix counter carried across reads.
+  On a mismatch the matched prefix is body, and the byte is re-tried as
+  a new ESC. Bytes after the marker stay in the lector buffer for
+  normal parsing.
+- Reads inside a paste use `TESSERA_MORA_GLUTINI_MS` (3 s), NOT the
+  caller's timeout. An empty read = silence (D4) or a dead terminal:
+  the paste ends truncated, and a dangling marker prefix becomes body.
+- Past the cap, bytes are dropped (flag set) but the reader keeps
+  draining to the marker. Reads stay 64-byte staged (the body never
+  lives in that buffer); the throughput cost is measured, not assumed.
+- Red first: a new `probatio_tessera_glutinum.c` covers 100k (cap,
+  truncation, the key after), exact-cap and cap+1 boundaries, 1000 × 6
+  bytes in 6-byte reads (the reader's paste timeout value recorded), a
+  1 MB timing, and zero steady-state allocation. Plus saltuarius end to
+  end: `ESC[200~ jjG\rq ESC[201~` through the amalgam's memoria pons →
+  one GLUTINUM, tradere FALSE; the same bytes unbracketed DO issue
+  commands (the gap, shown). Then the 68 paste debt shapes get promoted.
+- Terminal step: paste multi-line text containing commands into
+  saltuarius (nothing runs) and into spectaculum (status shows the
+  paste length).
+
+**T5 FACTUM (bracketed paste).** `?2004` in the mode strings (enter
+1049 1000 1002 1006 2004; leave 2026 2004 1006 1002 1000 1049; modi rule
+IV requires 2004). Each lector gets a 64 KiB collector at creation.
+`CSI 200 ~` starts the collector, which always yields ONE GLUTINUM
+event: the end marker is matched across reads, a false prefix becomes
+body, reads inside a paste wait 3 s (D4), silence truncates, and past
+the cap the reader drains but keeps nothing.
+- Red first: the new `probatio_tessera_glutinum.c` (100k, cap and cap+1,
+  1000 × 6-byte reads with the timeout counted, 1 MB timed at ~2.7 ms,
+  zero steady-state allocation) and saltuarius end to end (bracketed
+  `jjG\rq` → one event, tradere FALSE; unbracketed → 5 commands incl.
+  quit).
+- The 17 paste debts (68 shapes) promoted and `CAUSA_GLUTINUM` retired
+  (debts back to 108, all tokenizer territory). 2 new pins (a dangling
+  prefix on silence; `200;5~` is not a paste).
+- The vector harness rolls its piscina back per run (64 KiB per lector).
+- Six compiling plants caught by name.
+- Suite 8/8, saltuarius 13/13, amalgam VERIFICATUM + idempotent.
+**Fran's terminal look (2026-09-28): all good** (saltuarius runs nothing
+on paste, spectaculum shows the paste, the shell is clean after exit).

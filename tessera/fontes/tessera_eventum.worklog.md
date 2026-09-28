@@ -337,3 +337,40 @@ quit).
 - T3 slip: `MURIUM_TITULI` in the harness lacked "tractus" (index 6),
   so the failure print read out of bounds for TRACTUS. Fixed here. An
   enum-indexed name table should be checked whenever the enum grows.
+
+## 2026-09-28: tessera 1.2 T5, bracketed paste implemented
+
+- Shape: `_csi_parsare` reports `PARS_GLUTINUM` for `CSI 200 ~` (exactly
+  one parameter; `200;5~` stays swallowed noise). `_parsare_plene` runs
+  `_glutinum_colligere` at once, and it ALWAYS sets one GLUTINUM event, so
+  none of `expectare`'s three parse sites changed. A paste can't span two
+  `expectare` calls, so the lector carries no paste-mode flag, only the
+  collector pointer.
+- End-marker match: a prefix counter over `ESC [ 2 0 1 ~`. On a mismatch
+  the matched prefix goes to the body and the byte is retried only if
+  it's ESC (the marker has ESC only at its head, so no fuller KMP is
+  needed). The counter lives across reads. On silence, a dangling prefix
+  becomes body (`ab ESC[20` → body "ab\033[20", truncated).
+- Reads stay staged through the 64-byte lector buffer; the body is
+  copied to the collector. Bytes after the marker are simply still in
+  the lector buffer, so normal parsing resumes with no hand-off. The
+  cost: 1 MB through the memoria pons takes ~2.7 ms (16k `legere` calls).
+  The posix pons adds a select+read per 64 bytes; if a real 1 MB paste
+  ever feels slow, read straight into the collector and move the tail
+  back.
+- Inside a paste the reader ignores the caller's timeout and reads with
+  `TESSERA_MORA_GLUTINI_MS`. A caller polling with a short timeout can
+  therefore block up to 3 s per silent gap mid-paste. That's deliberate
+  (D4) and documented in the header.
+- Every lector now allocates 64 KiB at creation. The vector harness
+  creates a lector per shape run (thousands), so it now rolls its piscina
+  back per run (`piscina_notare`/`piscina_reficere`); the binary peaks
+  at 1.8 MB.
+- Test trap: the zero-allocation assertion first compared
+  `piscina_summa_usus` across several CREDOs, but credo writes failure
+  records into the same piscina. Measure around the ONE call, assert
+  after.
+- Plants (six, all compiling): start ignored / no ESC retry / truncation
+  flag never set / caller's timeout inside a paste / dangling prefix
+  dropped / `?2004l` missing. Each caught exactly by its own vectors or
+  assertions.
