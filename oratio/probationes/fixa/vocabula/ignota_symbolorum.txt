@@ -1991,9 +1991,6 @@ sc
 sca
 scaffold
 scaffoldare
-scalare
-scalarem
-scalaris
 scalata
 scalatam
 scalatum

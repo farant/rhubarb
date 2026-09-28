@@ -1,7 +1,7 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q7a done;
-Q7 re-sliced: Q7a scalars, Q7b tables).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q7 done;
+Q7 was re-sliced: Q7a scalars, Q7b tables).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -85,7 +85,21 @@ diagnostics (every token incl. trivia, source order, each at the bad
 byte); cooking elsewhere passes diagnostica NIHIL. Verdicts: CRLF inside
 a multiline string decodes to `\n` (tomllib normalizes CRLF
 everywhere); a lone CR is a control byte; second 60 is allowed (tomllib
-refuses it).
+refuses it). Unterminated strings are reported here (`chorda/aperta`).
+`toml_lexemata_ambulare` is the shared in-order token walk.
+
+## Cooked view (Q7b)
+
+`fontes/toml_coctum.{h,c}`: `toml_coquere(piscina, radix, &parsura)` →
+`TomlCoctum {radix, diagnostica, sanum}`. Diagnostics = syntax (derived
+from the declaration) + scalar + structural, sorted by offset (stable).
+Table rules follow tomllib, carried on the table objects: `modus`
+IMPLICITA/EXPLICITA/PUNCTATA/INLINEA + `sectio` for dotted tables;
+INLINEA tables and static arrays are closed; every structural error
+names the key segment and relates the first definition
+(`TomlValor.definitio`). The empty key `""` is kept outside the hash
+index (`tabula_dispersa` refuses length 0). Wild validity equals
+tomllib's on every file.
 
 ## Currere
 

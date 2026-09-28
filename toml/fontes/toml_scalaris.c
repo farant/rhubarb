@@ -420,6 +420,7 @@ _chorda (
          s32 j;
          s32 q;
          s32 i;
+         b32 clausa = FALSUM;
 
     exitus->datum    = NIHIL;
     exitus->mensura  = ZEPHYRUM;
@@ -491,7 +492,8 @@ _chorda (
                     plus++;
                 }
             }
-            dc.ad = j + plus;
+            dc.ad   = j + plus;
+            clausa  = VERUM;
             frange;
         }
         j++;
@@ -565,6 +567,14 @@ _chorda (
         }
         dc.exitus[dc.m++] = (character)c;
         i++;
+    }
+    si (!clausa)
+    {
+        _culpa(&dc, n, n, TOML_CODEX_CHORDA_APERTA, dc.multa
+            ? (gemina ? "chorda non clausa: '\"\"\"' exspectatur"
+                      : "chorda non clausa: \"'''\" exspectatur")
+            : (gemina ? "chorda non clausa: '\"' exspectatur"
+                      : "chorda non clausa: \"'\" exspectatur"));
     }
     dc.exitus[dc.m]  = '\0';
     exitus->datum    = (i8*)dc.exitus;
@@ -1364,24 +1374,6 @@ _pellere (
     redde VERUM;
 }
 
-interior vacuum
-_trivia (
-             MateriaToken** trivia,
-                      i32   numerus,
-    constans MateriaNodus*  nodus,
-                      Xar*  diagnostica)
-{
-    i32 k;
-
-    per (k = ZEPHYRUM; k < numerus; k++)
-    {
-        si (trivia[k]->genus == (s32)TOML_LEX_COMMENTUM)
-        {
-            _commentum(trivia[k], nodus, diagnostica);
-        }
-    }
-}
-
 /* loci nodi in acervum, ordine inverso (ordine fontis exeunt) */
 interior b32
 _liberos_pellere (
@@ -1426,26 +1418,25 @@ _liberos_pellere (
     redde VERUM;
 }
 
-Xar*
-toml_scalaria_iudicare (
-                  Piscina* piscina,
-    constans MateriaNodus* radix)
+b32
+toml_lexemata_ambulare (
+                   Piscina* piscina,
+     constans MateriaNodus* radix,
+           TomlLexemaVisor  visor,
+                    vacuum* datum)
 {
-    Xar* diagnostica;
     Xar* acervus;
     s32  cacumen = ZEPHYRUM;
 
-    si (piscina == NIHIL || radix == NIHIL)
+    si (piscina == NIHIL || radix == NIHIL || visor == NIHIL)
     {
-        redde NIHIL;
+        redde FALSUM;
     }
-    diagnostica = xar_creare(piscina,
-        (i32)magnitudo(MateriaDiagnosticum));
     acervus = xar_creare(piscina, (i32)magnitudo(Gradus));
-    si (   diagnostica == NIHIL || acervus == NIHIL
+    si (   acervus == NIHIL
         || !_liberos_pellere(acervus, &cacumen, radix, FALSUM))
     {
-        redde NIHIL;
+        redde FALSUM;
     }
     dum (cacumen > ZEPHYRUM)
     {
@@ -1456,36 +1447,91 @@ toml_scalaria_iudicare (
         si (g.valor.genus == MATERIA_VALOR_TOKEN)
         {
             MateriaToken* t = g.valor.datum.token;
+                     i32  k;
 
-            _trivia(t->spatia_ante, t->numerus_ante, g.pater,
-                diagnostica);
-            si (!g.in_malo)
+            per (k = ZEPHYRUM; k < t->numerus_ante; k++)
             {
-                si (   t->genus == (s32)TOML_LEX_CLAVIS_GEMINA
-                    || t->genus == (s32)TOML_LEX_CLAVIS_SIMPLEX)
-                {
-                    chorda c;
-
-                    _chorda(piscina, t, g.pater, &c, diagnostica);
-                }
-                alioquin
-                {
-                    TomlValor v;
-
-                    memset(&v, ZEPHYRUM, magnitudo(v));
-                    _lexema_coquere(piscina, t, g.pater, &v,
-                        diagnostica);
-                }
+                visor(datum, t->spatia_ante[k], g.pater, g.in_malo,
+                    VERUM);
             }
-            _trivia(t->spatia_post, t->numerus_post, g.pater,
-                diagnostica);
+            visor(datum, t, g.pater, g.in_malo, FALSUM);
+            per (k = ZEPHYRUM; k < t->numerus_post; k++)
+            {
+                visor(datum, t->spatia_post[k], g.pater, g.in_malo,
+                    VERUM);
+            }
         }
         alioquin si (   g.valor.genus == MATERIA_VALOR_NODUS
                      && !_liberos_pellere(acervus, &cacumen,
                          g.valor.datum.nodus, g.in_malo))
         {
-            redde NIHIL;
+            redde FALSUM;
         }
     }
-    redde diagnostica;
+    redde VERUM;
+}
+
+nomen structura {
+    Piscina* piscina;
+        Xar* diagnostica;
+} Iudicium;
+
+interior vacuum
+_iudicare (
+                    vacuum* datum,
+     constans MateriaToken* t,
+     constans MateriaNodus* pater,
+                       b32  in_malo,
+                       b32  trivium)
+{
+    Iudicium* iu = (Iudicium*)datum;
+
+    si (trivium)
+    {
+        si (t->genus == (s32)TOML_LEX_COMMENTUM)
+        {
+            _commentum(t, pater, iu->diagnostica);
+        }
+        redde;
+    }
+    si (in_malo)
+    {
+        redde;
+    }
+    si (   t->genus == (s32)TOML_LEX_CLAVIS_GEMINA
+        || t->genus == (s32)TOML_LEX_CLAVIS_SIMPLEX)
+    {
+        chorda c;
+
+        _chorda(iu->piscina, t, pater, &c, iu->diagnostica);
+    }
+    alioquin
+    {
+        TomlValor v;
+
+        memset(&v, ZEPHYRUM, magnitudo(v));
+        _lexema_coquere(iu->piscina, t, pater, &v, iu->diagnostica);
+    }
+}
+
+Xar*
+toml_scalaria_iudicare (
+                  Piscina* piscina,
+    constans MateriaNodus* radix)
+{
+    Iudicium iu;
+
+    si (piscina == NIHIL || radix == NIHIL)
+    {
+        redde NIHIL;
+    }
+    iu.piscina     = piscina;
+    iu.diagnostica = xar_creare(piscina,
+        (i32)magnitudo(MateriaDiagnosticum));
+    si (   iu.diagnostica == NIHIL
+        || !toml_lexemata_ambulare(piscina, radix, _iudicare, &iu))
+    {
+        redde NIHIL;
+    }
+    redde iu.diagnostica;
 }

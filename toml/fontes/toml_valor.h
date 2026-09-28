@@ -66,6 +66,9 @@ nomen structura TomlValor TomlValor;
 structura TomlValor {
           TomlGenusValoris  genus;
      constans MateriaNodus* nodus;       /* T8: sedes in arbore */
+     /* clavis (paris aut capitis) quae valorem PRIMUM definivit -
+      * sedes relata diagnosticorum 'iam definita' */
+     constans MateriaNodus* definitio;
     unio {
                   chorda chorda_valor;  /* decodita */
                      s64 integer_valor;
@@ -77,6 +80,7 @@ structura TomlValor {
                        Xar* valores;     /* TomlValor* */
             TabulaDispersa* index;       /* clavis -> TomlValor* */
           TomlModusTabulae  modus;
+                       s32  sectio;      /* PUNCTATA: sectio natalis */
         } tabula;
                      Xar* series;        /* TomlValor* */
     } datum;

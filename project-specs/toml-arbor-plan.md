@@ -819,6 +819,41 @@ local `basica` — a tree grep had found both, but only in comments and
 strings; the local became `gemina`);
 `effugium-unicodex` renamed `-mancum` rather than coin a word.
 
+**Q7b executed 2026-09-28.** Measured first: the 65 cases re-read one
+by one; correction to the table above — `key/dotted-redefine-table-*`
+are KIND conflicts (`a.b = 1` then `a.b.c = 2`), not dotted-key
+redefinition. The model is tomllib's (the Q9 oracle, total agreement
+with toml-test) moved from its key-path flag tree onto the table
+objects: a table's `modus` (IMPLICITA / EXPLICITA / PUNCTATA / INLINEA)
+plus `sectio` (header count at birth) for PUNCTATA stands in for
+tomllib's EXPLICIT_NEST + pending flags, and FROZEN is "the path runs
+through an INLINEA table or a static array" (a fresh `[[x]]` element
+is a fresh table, which is tomllib's `unset_all`). Eight codes:
+`clavis/iterata`, `clavis/segmentum-vacuum`, `clavis/genus-alienum`,
+`tabula/iterata`, `tabula/punctata`, `tabula/extra-sectionem`,
+`tabula/clausa`, `tabula-compacta/toml-1.1`; each points at the
+offending key SEGMENT, with the first definition as a related location
+(`TomlValor.definitio`, new; `tabula.sectio`, new). A refused header
+yields an orphan table so its section's pairs are still judged without
+cascades. The 1.1 newline check rides the new shared token walker
+(`toml_lexemata_ambulare`, now also under `toml_scalaria_iudicare`) with
+a stack of CLOSED brackets (an unclosed one is the syntax layer's).
+Found during the measurement: **an unterminated string had NO
+diagnostic** — the builder counted it, the declaration derives nothing;
+now `chorda/aperta` (scalar layer, zero-width at the token's end; Q7a
+gate +4 cases). Found in the run: `tabula_dispersa` refuses a
+zero-length key (length 0 marks an empty slot), so TOML's `""` key
+lives outside the index and is found by scanning `claves`. Gate
+`probatio_toml_coctum.c`: 22 valid lookups, table modes and
+definitions, key order, 32 structural errors (code + offset + related
+offset), every-error (duplicate + overflow + malum → three, sorted),
+corpora: toml-test valid 205/205 sanum, invalid **474/474** with a
+diagnostic, house 12/12; wild validity equals tomllib on all 1,794
+files (1,675 valid, 119 invalid, zero disagreements; probe). Plant:
+the duplicate check skipped for dotted keys → inline case + 2 corpus
+files red; restored green. Known for Q11: nested values are cooked
+recursively (C stack depth = bracket depth).
+
 ---
 
 ## Task Q8: The toml-test oracle — tagged-JSON comparator, valid AND invalid, pinned rising

@@ -343,6 +343,11 @@ hic_manens constans CasusVitii VITIA[] = {
     { "a = \"\\uD800\"",            TOML_CODEX_PUNCTUM_CODICIS, V, I },
     { "a = \"\\uDFFF\"",            TOML_CODEX_PUNCTUM_CODICIS, V, I },
     { "a = \"\\U00110000\"",        TOML_CODEX_PUNCTUM_CODICIS, V, I },
+    /* chorda non clausa: punctum in fine lexematis (Q7b lacuna) */
+    { "a = \"abc",                  TOML_CODEX_CHORDA_APERTA, VIII, I },
+    { "a = '''abc",                TOML_CODEX_CHORDA_APERTA, X,  I },
+    { "a = \"\"\"abc\n",            TOML_CODEX_CHORDA_APERTA, XI, I },
+    { "\"abc = 1",                  TOML_CODEX_CHORDA_APERTA, VIII, I },
     { "\"\\q\" = 1",                TOML_CODEX_EFFUGIUM,    I,    I },
     /* octeti moderantes et UTF-8 */
     { "a = \"x\001y\"",             TOML_CODEX_OCTETUS_MODERANS, VI,

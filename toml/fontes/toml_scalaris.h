@@ -14,7 +14,9 @@
  *
  * Lexemata intra 'malum' non iudicantur (syntaxis ea iam nominavit);
  * trivia eorum iudicantur. Chorda non clausa usque ad finem lexematis
- * decoditur sine diagnostico novo (aedificator eam numeravit).
+ * decoditur ET nominatur (chorda/aperta, punctum in fine): aedificator
+ * eam numerat, sed declaratio nihil derivat - mensuratum Q7b, nullum
+ * diagnosticum antea, lacuna quam numerus solus celabat.
  *
  * Verdicta pinnata (Q1, tomllib): CRLF in chorda multa -> '\n'
  * (tomllib CRLF ubique normat); CR solus = octetus moderans; BOM =
@@ -40,6 +42,7 @@
 #define TOML_CODEX_EFFUGIUM          "chorda/effugium"
 #define TOML_CODEX_EFFUGIUM_MANCUM   "chorda/effugium-mancum"
 #define TOML_CODEX_PUNCTUM_CODICIS   "chorda/punctum-codicis"
+#define TOML_CODEX_CHORDA_APERTA     "chorda/aperta"
 #define TOML_CODEX_INTEGER           "numerus/integer"
 #define TOML_CODEX_EXTRA_FINES       "numerus/extra-fines"
 #define TOML_CODEX_FLUITANS          "numerus/fluitans"
@@ -83,6 +86,21 @@ toml_tempus_legere (
                 chorda  textus,
             TomlTempus* exitus,
      TomlVitiumScalare* vitium);
+
+/* Visor lexematum: lexema, nodus cuius locus id tenet (trivia: nodus
+ * lexematis cui adhaerent), intra 'malum', trivium an substantivum */
+nomen vacuum (*TomlLexemaVisor)(vacuum* datum,
+    constans MateriaToken* lexema, constans MateriaNodus* pater,
+    b32 in_malo, b32 trivium);
+
+/* Ambulatio ITERATIVA omnium lexematum arboris ordine octetorum
+ * (trivia ante, lexema, trivia post). FALSUM = memoria defecit. */
+b32
+toml_lexemata_ambulare (
+                   Piscina* piscina,
+     constans MateriaNodus* radix,
+           TomlLexemaVisor  visor,
+                    vacuum* datum);
 
 /* Omnia lexemata arboris (trivia comprehensa), ordine octetorum:
  * diagnostica scalaria in Xar NOVUM de MateriaDiagnosticum. Xar vacuum

@@ -76,3 +76,36 @@ fixtures). Q9 makes this a gate.
 **Second 60.** RFC 3339 allows a leap second; tomllib (Python datetime)
 refuses 60. The plan said allow; kept, named here and in the header for
 Q9's differential.
+
+---
+
+## 2026-09-28 — Q7b the cooked view (toml_coctum)
+
+**A count hid a missing diagnostic.** `TomlParsura.clausurae_absentes`
+counts unterminated strings, and every gate so far read counts; the
+declaration derives nothing for a string without its closer (its
+absentia hooks sit on bracket loci only). Found by probing the derived
+diagnostics before writing Q7b; fixed in the scalar layer
+(`chorda/aperta`). Lesson in the house's words: a gate that counts
+misses what a gate that names would catch — the corpus gate now asserts
+every invalid file carries a diagnostic, not that the parse is "not
+sana".
+
+**tomllib's flags, carried on the objects.** tomllib keeps a flag tree
+keyed by key path WITHOUT array indices and resets a subtree when
+`[[x]]` appends. On objects the reset is free: the appended element is
+a new table. Its "pending EXPLICIT_NEST" for dotted containers becomes
+PUNCTATA + the section number; "finalize at the next header" is simply
+"sectio differs". Verified against tomllib on the whole wild corpus
+(zero disagreements in validity).
+
+**`tabula_dispersa` and the empty key.** Length 0 is its empty-slot
+marker, so `tabula_dispersa_inserere(t, "", v)` refuses silently and
+`""` could never be found — `"" = 1` / `"" = 2` passed as valid. The
+empty key now bypasses the index (scan of `claves`, one entry at most).
+A general library limit worth knowing: never key `tabula_dispersa` by a
+possibly-empty chorda.
+
+**Refused headers get an orphan table.** Otherwise the pairs after a
+bad header would land in the previous table and produce a cascade of
+false duplicate-key errors.
