@@ -577,3 +577,10 @@ vectors.
 assertions, 21 owed shapes (all SINGULA, all H1, measured before
 marking). Suite 6/6. Both planted-fault directions caught by name.
 Detail: `fontes/tessera_eventum.worklog.md`.
+
+**T1b FACTUM (H1 fix, inserted before T2 with Fran's approval).** The
+reader loops reads while bytes arrive within the ESC timeout; only an
+empty read times out. 21 debts promoted (186 assertions, 0 debts);
+eventum suite unchanged; amalgam VERIFICATUM + idempotent; saltuarius
+13/13; compiling plant → exactly the 21 SINGULA red. Detail:
+`fontes/tessera_eventum.worklog.md`.

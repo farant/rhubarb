@@ -20,8 +20,9 @@
  * nomina diversa confusionem vetant.
  *
  * LECTOR: buffer gestationis 64 octetorum (series trans lectiones
- * scissae accumulantur); ESC solum per moram sequentem ~25ms
- * disambiguatur; amplitudo pontis quaque exspectatione rogatur
+ * QUOTLIBET scissae accumulantur - legitur dum octeti intra moram
+ * ~25ms adveniunt; sola lectio vacua moram exactam facit); ESC solum
+ * per eam moram disambiguatur; amplitudo pontis quaque exspectatione rogatur
  * (AMPLITUDO eventum - SIGWINCH select solum interrumpit);
  * resumptum pontis rogatur (RESUMPTUM eventum) - tractator
  * utriusque = tessera_magnitudinem_renovare + pictura.

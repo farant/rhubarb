@@ -60,8 +60,8 @@ nomen structura {
     EventumExspectatum  eventa[VECTOR_EVENTA_MAXIMA]; /* genus NIHIL = finis */
 } VectorInitus;
 
-/* Causae debitorum (nominatae - forma debita sine causa frangit) */
-#define CAUSA_H1 "H1: lector post INCOMPLETUM semel tantum iterum legit (tessera_eventum.c:597) - series in III+ lectiones scissa: ESC -> fuga + runae phantasma, runa UTF-8 -> tacite amissa"
+/* Causae debitorum: macro nominata per causam (CAUSA_*), ut forma
+ * debita sine causa frangat. Nulla hodie. */
 
 /* Octeti cum mensura explicita (NUL licet intra) */
 #define OCT(s) (s), (i32)(magnitudo(s) - I)
@@ -89,10 +89,9 @@ nomen structura {
 
 /* ================================================================
  * SEMEN - casus probatio_tessera_eventum.c iterum expressi (tesserae
- * proprii, noti boni: harnesium probant). Formae SINGULA debitae
- * (H1) mensurae sunt, non praesumptae: cursus primus 2026-09-28
- * omnes XXI fracturas in forma sola SINGULA ostendit, seriebus III+
- * octetorum solis.
+ * proprii, noti boni: harnesium probant). Historia: XXI formae SINGULA
+ * debitae (H1, 938c0df4) - emendatione lectoris solutae et promotae
+ * (tessera_eventum.worklog.md, 2026-09-28).
  * ================================================================ */
 
 hic_manens constans VectorInitus VECTORES_SEMEN[] = {
@@ -104,7 +103,7 @@ hic_manens constans VectorInitus VECTORES_SEMEN[] = {
         NIHIL,
       { EX_RUNA(0xE9, ZEPHYRUM) } },
     { "linea horizontalis (III octeti)", OCT("\xE2\x94\x80"), FALSUM,
-      FORMA_SINGULA, CAUSA_H1,
+      VECTOR_VALET, NIHIL,
       { EX_RUNA(0x2500, ZEPHYRUM) } },
     { "octetus invalidus abicitur", OCT("\xFF" "b"), FALSUM,
       VECTOR_VALET, NIHIL,
@@ -128,40 +127,40 @@ hic_manens constans VectorInitus VECTORES_SEMEN[] = {
       { EX_RUNA(' ', IMP) } },
 
     /* CSI */
-    { "CSI A sursum", OCT("\033[A"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "CSI A sursum", OCT("\033[A"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM) } },
-    { "CSI D sinistra", OCT("\033[D"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "CSI D sinistra", OCT("\033[D"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_SINISTRA, ZEPHYRUM) } },
-    { "CSI H domus", OCT("\033[H"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "CSI H domus", OCT("\033[H"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_DOMUS, ZEPHYRUM) } },
-    { "CSI 3~ deletio", OCT("\033[3~"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "CSI 3~ deletio", OCT("\033[3~"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_DELETIO, ZEPHYRUM) } },
     { "CSI 5~ pagina sursum", OCT("\033[5~"), FALSUM,
-      FORMA_SINGULA, CAUSA_H1,
+      VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_PAGINA_SURSUM, ZEPHYRUM) } },
-    { "CSI 2~ insertio", OCT("\033[2~"), FALSUM, FORMA_SINGULA,
-        CAUSA_H1,
+    { "CSI 2~ insertio", OCT("\033[2~"), FALSUM, VECTOR_VALET,
+        NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_INSERTIO, ZEPHYRUM) } },
-    { "CSI 15~ F5", OCT("\033[15~"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "CSI 15~ F5", OCT("\033[15~"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_FUNCTIO(V, ZEPHYRUM) } },
-    { "CSI 17~ F6", OCT("\033[17~"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "CSI 17~ F6", OCT("\033[17~"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_FUNCTIO(VI, ZEPHYRUM) } },
-    { "CSI 24~ F12", OCT("\033[24~"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "CSI 24~ F12", OCT("\033[24~"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_FUNCTIO(XII, ZEPHYRUM) } },
     { "CSI 1;5C imperium+dextra", OCT("\033[1;5C"), FALSUM,
-      FORMA_SINGULA, CAUSA_H1,
+      VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_DEXTRA, IMP) } },
     { "CSI 3;2~ maiuscula+deletio", OCT("\033[3;2~"), FALSUM,
-      FORMA_SINGULA, CAUSA_H1,
+      VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_DELETIO, MAI) } },
-    { "CSI Z tabula retro", OCT("\033[Z"), FALSUM, FORMA_SINGULA,
-        CAUSA_H1,
+    { "CSI Z tabula retro", OCT("\033[Z"), FALSUM, VECTOR_VALET,
+        NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_TABULA, MAI) } },
 
     /* SS3 + ALTERUM */
-    { "SS3 B deorsum", OCT("\033OB"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "SS3 B deorsum", OCT("\033OB"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_DEORSUM, ZEPHYRUM) } },
-    { "SS3 P F1", OCT("\033OP"), FALSUM, FORMA_SINGULA, CAUSA_H1,
+    { "SS3 P F1", OCT("\033OP"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_FUNCTIO(I, ZEPHYRUM) } },
     { "alt+b", OCT("\033b"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_RUNA('b', ALT) } },
@@ -169,25 +168,25 @@ hic_manens constans VectorInitus VECTORES_SEMEN[] = {
       { EX_CLAVIS(TESSERA_CLAVIS_REDITUS, ALT) } },
 
     /* mus SGR (1-basata -> 0-basata) */
-    { "mus pressus", OCT("\033[<0;5;3M"), FALSUM, FORMA_SINGULA,
-        CAUSA_H1,
+    { "mus pressus", OCT("\033[<0;5;3M"), FALSUM, VECTOR_VALET,
+        NIHIL,
       { EX_MUS(TESSERA_MUS_PRESSUS, IV, II, ZEPHYRUM) } },
     { "mus solutus dexter", OCT("\033[<2;1;1m"), FALSUM,
-      FORMA_SINGULA, CAUSA_H1,
+      VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_SOLUTUS, ZEPHYRUM, ZEPHYRUM, II) } },
-    { "rota sursum", OCT("\033[<64;2;2M"), FALSUM, FORMA_SINGULA,
-        CAUSA_H1,
+    { "rota sursum", OCT("\033[<64;2;2M"), FALSUM, VECTOR_VALET,
+        NIHIL,
       { EX_MUS(TESSERA_MUS_ROTA_SURSUM, I, I, ZEPHYRUM) } },
     { "rota deorsum", OCT("\033[<65;2;2M"), FALSUM,
-      FORMA_SINGULA, CAUSA_H1,
+      VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_ROTA_DEORSUM, I, I, ZEPHYRUM) } },
 
     /* robustitas */
     { "CSI privata tacite consumpta", OCT("\033[?1049h" "x"), FALSUM,
-      FORMA_SINGULA, CAUSA_H1,
+      VECTOR_VALET, NIHIL,
       { EX_RUNA('x', ZEPHYRUM) } },
     { "tria eventa uno scripto", OCT("ab\033[A"), FALSUM,
-      FORMA_SINGULA, CAUSA_H1,
+      VECTOR_VALET, NIHIL,
       { EX_RUNA('a', ZEPHYRUM), EX_RUNA('b', ZEPHYRUM),
         EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM) } },
     { "ESC solum per moram = fuga", OCT("\033"), VERUM,

@@ -485,6 +485,25 @@ _parsare (
     }
 }
 
+/* Parsare usque ad fructum non-PRAETERITUM (strepitus consumptus
+ * iteratur): COMPLETUM, VACUUM aut INCOMPLETUM */
+interior ParsFructus
+_parsare_plene (
+     TesseraLector* lector,
+    TesseraEventum* ev)
+{
+    ParsFructus fructus;
+
+    dum (VERUM)
+    {
+        fructus = _parsare(lector, ev);
+        si (fructus != PARS_PRAETERITUM)
+        {
+            redde fructus;
+        }
+    }
+}
+
 TesseraLector*
 tessera_lector_creare (
         Piscina* piscina,
@@ -555,18 +574,10 @@ tessera_eventum_expectare (
     }
 
     /* Octeti gestati primum */
-    dum (VERUM)
+    fructus = _parsare_plene(lector, eventum);
+    si (fructus == PARS_COMPLETUM)
     {
-        fructus = _parsare(lector, eventum);
-        si (fructus == PARS_COMPLETUM)
-        {
-            redde eventum->genus;
-        }
-        si (fructus == PARS_PRAETERITUM)
-        {
-            perge;  /* strepitus consumptus; iterum */
-        }
-        frange;  /* VACUUM aut INCOMPLETUM: legendum */
+        redde eventum->genus;
     }
 
     /* Legere (mora vocantis), deinde parsare iterum */
@@ -580,57 +591,50 @@ tessera_eventum_expectare (
             lector->mensura += (i32)n;
         }
     }
-    dum (VERUM)
+    fructus = _parsare_plene(lector, eventum);
+    si (fructus == PARS_COMPLETUM)
     {
-        fructus = _parsare(lector, eventum);
+        redde eventum->genus;
+    }
+
+    /* INCOMPLETUM: legere DUM octeti intra moram fugae (~25ms)
+     * adveniunt - series in lectiones quotlibet scissa (ssh, nexus
+     * lenti) integra redit; lectio VACUA sola moram exactam
+     * significat. Finitum: quaeque lectio octetos addit, buffer
+     * finitus est (plenus = mora exacta tractatur). */
+    dum (fructus == PARS_INCOMPLETUM)
+    {
+        s32 n;
+
+        si (lector->mensura >= (i32)TESSERA_LECTOR_BUFFER)
+        {
+            frange;  /* plenus: nihil plus capi potest */
+        }
+        n = lector->pons->legere(lector->pons->datum,
+            lector->buffer + lector->mensura,
+            (i32)TESSERA_LECTOR_BUFFER - lector->mensura,
+            TESSERA_MORA_FUGAE_MS);
+        si (n <= ZEPHYRUM)
+        {
+            frange;  /* mora exacta (aut error) */
+        }
+        lector->mensura  += (i32)n;
+        fructus          = _parsare_plene(lector, eventum);
         si (fructus == PARS_COMPLETUM)
         {
             redde eventum->genus;
         }
-        si (fructus == PARS_PRAETERITUM)
-        {
-            perge;
-        }
-        frange;
     }
-
-    /* INCOMPLETUM: mora fugae (~25ms) pro reliquo seriei */
     si (fructus == PARS_INCOMPLETUM)
     {
-        s32 n = lector->pons->legere(lector->pons->datum,
-            lector->buffer + lector->mensura,
-            (i32)TESSERA_LECTOR_BUFFER - lector->mensura,
-            TESSERA_MORA_FUGAE_MS);
-
-        si (n > ZEPHYRUM)
+        /* mora exacta: ESC solum = FUGA; runa dimidia abicitur */
+        si (lector->buffer[ZEPHYRUM] == 0x1B)
         {
-            lector->mensura += (i32)n;
-            dum (VERUM)
-            {
-                fructus = _parsare(lector, eventum);
-                si (fructus == PARS_COMPLETUM)
-                {
-                    redde eventum->genus;
-                }
-                si (fructus == PARS_PRAETERITUM)
-                {
-                    perge;
-                }
-                frange;
-            }
-        }
-        si (fructus == PARS_INCOMPLETUM)
-        {
-            /* mora exacta: ESC solum = FUGA; runa dimidia abicitur */
-            si (lector->buffer[ZEPHYRUM] == 0x1B)
-            {
-                _clavem_ponere(eventum, TESSERA_CLAVIS_FUGA,
-                    ZEPHYRUM);
-                _consumere(lector, I);
-                redde eventum->genus;
-            }
+            _clavem_ponere(eventum, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
             _consumere(lector, I);
+            redde eventum->genus;
         }
+        _consumere(lector, I);
     }
     redde TESSERA_EVENTUM_NIHIL;
 }

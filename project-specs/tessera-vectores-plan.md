@@ -118,6 +118,12 @@ shapes 2–4 immediately test H1. INTENTIO in `tessera/phase-log.md`
 before the first line. Planted fault: flip one expectation; the harness
 names it.
 
+**T1b: the H1 fix (inserted 2026-09-28, Fran).** T1 measured H1 (21
+owed SINGULA shapes), so the fix came before T2: otherwise every ported
+vector would carry the same SINGULA debt and hide new findings. The
+reader loops while bytes arrive within the timeout. This is the plan's
+one library change (`tessera_eventum.c` + amalgam).
+
 **T2: parse.keypress (legacy).** Sections: basic letters, numbers,
 special keys, ctrl+letter, raw ctrl control bytes (± meta), ctrl/alt
 + space, meta+character, function keys, arrows, navigation, modifier
