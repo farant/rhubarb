@@ -63,8 +63,7 @@ nomen structura {
 /* Causae debitorum: macro nominata per causam (CAUSA_*), ut forma
  * debita sine causa frangat. */
 #define CAUSA_H2 "H2 ad 002 lexemator: ESC ] (OSC) non comprehenditur - alt+']' + corpus ut runae phantasma (+ alt+'\\\\' aut ctrl+g ad terminum)"
-#define CAUSA_FUGA_PENDENS "H6: ESC pendens (ultimus octetus lectionis) primo moram VOCANTIS (mora_ms) exspectat, deinde moram fugae - clavis intra mora_ms + ~25ms adveniens in alt+clavem confunditur (saltuarius: CCL ms)"
-#define CAUSA_FUGAE_PRAEFIXUM "ad 002 lexemator: ESC ante seriem (ESC ESC [ A) fuga spuria + clavis sine alterum emittit; exspectatum (consilium Frani confirmandum) = clavis + ALTERUM, ut ESC + clavis simplex"
+#define CAUSA_FUGAE_PRAEFIXUM "ad 002 lexemator: ESC ante seriem (ESC ESC [ A) fuga spuria + clavis sine alterum emittit; exspectatum (DECISUM Frani 2026-09-28) = clavis + ALTERUM, ut ESC + clavis simplex"
 
 /* Octeti cum mensura explicita (NUL licet intra) */
 #define OCT(s) (s), (i32)(magnitudo(s) - I)
@@ -294,7 +293,7 @@ hic_manens constans VectorInitus VECTORES_CLAVIUM[] = {
       { EX_RUNA('f', ALT) } },
     { "ESC ESC = fuga bis (OpenTUI: meta+escape)", OCT("\033\033"),
         VERUM,
-      FORMA_SEQUENS, CAUSA_FUGA_PENDENS,
+      VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM),
         EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM) } },
 
@@ -431,7 +430,7 @@ hic_manens constans VectorInitus VECTORES_CLAVIUM[] = {
 
     /* debita */
     { "x + ESC in fine lectionis, mora, clavis", OCT("x\033"), VERUM,
-      FORMA_SEQUENS, CAUSA_FUGA_PENDENS,
+      VECTOR_VALET, NIHIL,
       { EX_RUNA('x', ZEPHYRUM), EX_CLAVIS(TESSERA_CLAVIS_FUGA,
           ZEPHYRUM) } },
     { "OSC 11 responsum ST", OCT("\033]11;rgb:0000/0000/0000\033\\"),

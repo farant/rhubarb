@@ -111,3 +111,23 @@ gives FUGA, alt+j. The fix is in the same function: when the buffer
 already holds INCOMPLETUM data on entry, skip the caller-timeout read and
 go straight to the escape-timeout loop. Two vectors own it (SEQUENS
 debt): the ESC ESC loss vector and a direct `x`+ESC one. Proposed as T2b.
+
+## 2026-09-28: T2b, the H6 fix (a pending ESC gets only the escape timeout)
+
+The caller-timeout read (`mora_ms`) now happens ONLY when the buffer is
+VACUUM after the first parse. Bytes already pending (INCOMPLETUM, e.g.
+a lone ESC that was the last byte of the previous read) go straight to
+the escape-timeout loop. Semantics: `mora_ms` means "how long to wait
+for NEW input"; a partial sequence already in hand gets ~25 ms to
+complete.
+
+Proof: exactly the two owed SEQUENS shapes went to `DEBITUM SOLUTUM`
+and nothing else moved; promoted (16 debts remain: H2 ×8, the ESC
+prefix ×8). Suite 6/6. Amalgam VERIFICATUM + idempotent (only
+`tessera.c`), saltuarius 13/13. A compiling plant (`fructus ==
+PARS_VACUUM` → `!= PARS_COMPLETUM`, the old unconditional read) failed
+exactly the two H6 shapes; rc checked this time, not a build error.
+
+Also recorded: Fran DECIDED (2026-09-28) that an ESC-prefixed sequence
+(`ESC ESC [A`) means key + ALTERUM, consistent with ESC + key = alt.
+The causa now says so. The fix still belongs to the tokenizer (002).

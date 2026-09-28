@@ -6913,7 +6913,11 @@ tessera_eventum_expectare (
         redde eventum->genus;
     }
 
-    /* Legere (mora vocantis), deinde parsare iterum */
+    /* Legere (mora vocantis) SOLUM si nihil pendet: octeti pendentes
+     * (INCOMPLETUM, e.g. ESC ultimus lectionis prioris) moram fugae
+     * SOLAM habent - aliter clavis intra mora_ms adveniens cum ESC
+     * pendenti in alt+clavem confunderetur (H6) */
+    si (fructus == PARS_VACUUM)
     {
         s32 n = lector->pons->legere(lector->pons->datum,
             lector->buffer + lector->mensura,
@@ -6923,11 +6927,11 @@ tessera_eventum_expectare (
         {
             lector->mensura += (i32)n;
         }
-    }
-    fructus = _parsare_plene(lector, eventum);
-    si (fructus == PARS_COMPLETUM)
-    {
-        redde eventum->genus;
+        fructus = _parsare_plene(lector, eventum);
+        si (fructus == PARS_COMPLETUM)
+        {
+            redde eventum->genus;
+        }
     }
 
     /* INCOMPLETUM: legere DUM octeti intra moram fugae (~25ms)
@@ -6951,8 +6955,8 @@ tessera_eventum_expectare (
         {
             frange;  /* mora exacta (aut error) */
         }
-        lector->mensura += (i32)n;
-        fructus = _parsare_plene(lector, eventum);
+        lector->mensura  += (i32)n;
+        fructus          = _parsare_plene(lector, eventum);
         si (fructus == PARS_COMPLETUM)
         {
             redde eventum->genus;

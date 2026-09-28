@@ -591,3 +591,9 @@ OSC, the ESC-prefix design call, H6). **H6 found:** a pending lone ESC
 waits the caller's timeout before the escape timeout, so a quick next
 key merges into alt+key (saltuarius: 250 ms). Fix proposed as T2b.
 Planted data fault caught in all four shapes. Suite 6/6.
+
+**T2b FACTUM (H6 fix).** A pending partial sequence skips the caller's
+timeout and gets only the escape timeout. 2 debts promoted (16 remain:
+H2, ESC prefix; the latter's desired semantics DECIDED by Fran, alt+key).
+Amalgam VERIFICATUM + idempotent; saltuarius 13/13; compiling plant →
+exactly the 2 H6 shapes red.
