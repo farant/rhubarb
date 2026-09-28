@@ -11,9 +11,12 @@
  * (sequentia UTF-8 una, aut octetus unus si invalida). Concatenatio
  * omnium lexematum = fons (porta lectoris id asserit).
  *
- * LINEA NOVA: LINEA_FINIS si profunditas uncorum ([ et { apertorum,
- * ab aedificatore posita) nulla, aliter LINEA (trivium). CRLF unum
- * lexema (duo octeti); CR solus IGNOTUM.
+ * LINEA NOVA: LINEA_FINIS si profunditas uncorum ([ et { apertorum)
+ * nulla ET sententia_aperta (par aut caput), aliter LINEA
+ * (trivium) - lineae vacuae et commentariorum solorum trivia sunt
+ * (lex 'linea nova per modum', ut crusta C6). Ambo ab aedificatore
+ * ponuntur; sententia_aperta ordinarie VERUM. CRLF unum lexema (duo
+ * octeti); CR solus IGNOTUM.
  *
  * LEXEMA NUMERO SIMILE: cursus avidus octetorum [A-Za-z0-9_+-.:];
  * cursus 'true'/'false' exacte = VERUM/FALSUM; ':' aut forma diei
@@ -56,6 +59,7 @@ nomen structura {
                     s32  mensura;
               TomlSitus  situs;
                     i32  profunditas;   /* [ et { aperti */
+                    b32  sententia_aperta; /* linea nova terminat */
       MateriaTokenForma  forma;
 } TomlLector;
 
@@ -87,5 +91,12 @@ vacuum
 toml_lector_profunditatem_ponere (
     TomlLector* lector,
            i32  profunditas);
+
+/* VERUM: linea nova (profunditate nulla) sententiam terminat
+ * (LINEA_FINIS); FALSUM: trivium (LINEA) */
+vacuum
+toml_lector_sententiam_ponere (
+    TomlLector* lector,
+           b32  sententia_aperta);
 
 #endif /* TOML_LECTOR_H */

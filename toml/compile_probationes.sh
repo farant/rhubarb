@@ -62,6 +62,7 @@ declare -a RADIX_FONTES=(
     "via"
     "filum"
     "json"
+    "sigillum"
     "selectio"
     "similitudo"
     "canon"
@@ -199,6 +200,13 @@ elif [ "$excubitor_exitus" -ne 0 ]; then
     echo "$excubitor_relatio" >&2
     echo "CAUTIO: excubitor exitus $excubitor_exitus - custodia post constructionem NON iudicavit" >&2
 fi
+
+# corpus domus: omnis .toml tracta extra fixa clientis (viae relativae
+# radici) pro porta corporis (probatio_toml_corpus legit
+# build/toml_corpus.lst; lista absens = CREDO_CULPA)
+mkdir -p "$RADIX_DIR/build"
+(cd "$RADIX_DIR" && git ls-files '*.toml' | grep -v '^toml/probationes/fixa/') \
+    > "$RADIX_DIR/build/toml_corpus.lst"
 
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "toml." - silva.mensurae('toml.', n) eas legit); numquam suitam frangit

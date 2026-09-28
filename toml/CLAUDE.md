@@ -1,6 +1,6 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q3 done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q4 done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -45,6 +45,17 @@ the depth). One greedy number-like token classified NUMERUS / TEMPUS /
 VERUM / FALSUM / IGNOTUM; a single space joins a full date and a time.
 Bytes inside comments and strings are never judged here (cooking does);
 outside them anything unrecognized is one IGNOTUM token.
+
+## The builder (Q4)
+
+`fontes/toml_arbor.{h,c}` — iterative (frame stack), total: every byte
+emits back exactly (corpus gate: toml-test 679/679, house 12/12, wild
+1,794/1,794). Laws: newline terminates only an open statement; trivia
+after a terminating newline bind FORWARD, otherwise POST through the
+first newline; a bad token becomes a `malum` that recovers at the next
+newline (outside brackets) or ',' / closer (inside); `TomlParsura` counts
+mala, missing closers (incl. unterminated strings) and absentiae. Finds
+at find-time: `fontes/toml_arbor.worklog.md`.
 
 ## Currere
 

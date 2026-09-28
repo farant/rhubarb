@@ -435,6 +435,12 @@ toml_lector_incipere (
      constans character* fons,
                     s32  mensura)
 {
+    /* fons vacuus licet NIHIL esse (filum_legere_totum plagulae
+     * vacuae datum NIHIL reddit; toml-test valid/empty-nothing) */
+    si (fons == NIHIL && mensura == ZEPHYRUM)
+    {
+        fons = "";
+    }
     si (   lector == NIHIL || piscina == NIHIL || fons == NIHIL
         || mensura < ZEPHYRUM)
     {
@@ -447,6 +453,7 @@ toml_lector_incipere (
     lector->situs.linea           = I;
     lector->situs.linea_initium   = ZEPHYRUM;
     lector->profunditas           = ZEPHYRUM;
+    lector->sententia_aperta      = VERUM;
     lector->forma.mensura_caudae  = ZEPHYRUM;
     redde VERUM;
 }
@@ -487,7 +494,8 @@ toml_lector_proximum (
     }
     si (c == '\n' || (c == '\r' && _octetus(l, i + I) == '\n'))
     {
-        redde _facere(l, l->profunditas == ZEPHYRUM
+        redde _facere(l, (l->profunditas == ZEPHYRUM
+            && l->sententia_aperta)
             ? (s32)TOML_LEX_LINEA_FINIS : (s32)TOML_LEX_LINEA,
             i + (c == '\r' ? II : I));
     }
@@ -524,4 +532,12 @@ toml_lector_profunditatem_ponere (
            i32  profunditas)
 {
     lector->profunditas = profunditas;
+}
+
+vacuum
+toml_lector_sententiam_ponere (
+    TomlLector* lector,
+           b32  sententia_aperta)
+{
+    lector->sententia_aperta = sententia_aperta;
 }

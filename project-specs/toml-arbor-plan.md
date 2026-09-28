@@ -521,7 +521,7 @@ MateriaNodus* toml_arbor_parsare (Piscina*, constans character* fons, i32 mensur
                                   TomlParsura* relatio);   /* relatio NIHIL licet */
 ```
 
-- [ ] **Step 1: Write the failing arbor gate** — sources from the
+- [x] **Step 1: Write the failing arbor gate** — sources from the
   piscina, parsed, emitted, `memcmp` against the source, plus structural
   asserts (`_liberi`, `_genus`, `_tok` helpers as in crusta):
   - `a = 1\n` → documentum.liberi = [par(clavis[a], signum, numerus),
@@ -541,9 +541,9 @@ MateriaNodus* toml_arbor_parsare (Piscina*, constans character* fons, i32 mensur
   - CRLF: every case above with `\n` → `\r\n` emits byte-exact.
   - BOM case per Q1's verdict: byte-exact.
 
-- [ ] **Step 2: Run and verify it fails** — `./toml/compile_probationes.sh arbor`.
+- [x] **Step 2: Run and verify it fails** — `./toml/compile_probationes.sh arbor`.
 
-- [ ] **Step 3: Implement** — crusta's loop (frame stack + ligator): the
+- [x] **Step 3: Implement** — crusta's loop (frame stack + ligator): the
   top frame's genus and slot choose the lector MODE (documentum/header/
   inline-table-before-`=` → CLAVIS; after `=` and inside `series` →
   VALOR); `profunditas` = open `[`/`{` count, pushed to the lector;
@@ -553,19 +553,39 @@ MateriaNodus* toml_arbor_parsare (Piscina*, constans character* fons, i32 mensur
   or the newline, whichever comes first, and the bracket frame closes
   absent). At EOF every open frame closes with absent tokens.
 
-- [ ] **Step 4: Run and verify** — green.
+- [x] **Step 4: Run and verify** — green.
 
-- [ ] **Step 5: The corpus gate (`probatio_toml_corpus.c`)** — byte law
+- [x] **Step 5: The corpus gate (`probatio_toml_corpus.c`)** — byte law
   and `CREDO_NON_RUIT` over EVERY file: toml-test valid AND invalid (the
   1.0.0 list), the wild corpus, the house `.toml` files (`git ls-files`
   at run time). Counts printed per source; valid-list files with
   `sana == FALSUM` printed by name (expected: 0 — each one is a builder
   bug to fix with an arbor case first).
 
-- [ ] **Step 6: Plant** — recovery absorbs THROUGH the newline → the
+- [x] **Step 6: Plant** — recovery absorbs THROUGH the newline → the
   three-bad-lines case red (the following pair is lost); revert.
 
-- [ ] **Step 7: Commit** — `["toml/fontes/toml_arbor.h", "toml/fontes/toml_arbor.c", "toml/probationes/probatio_toml_arbor.c", "toml/probationes/probatio_toml_corpus.c"]`, `["toml"]`, message naming the corpus counts.
+- [x] **Step 7: Commit** — `["toml/fontes/toml_arbor.h", "toml/fontes/toml_arbor.c", "toml/probationes/probatio_toml_arbor.c", "toml/probationes/probatio_toml_corpus.c"]`, `["toml"]`, message naming the corpus counts.
+
+**Executed 2026-09-28.** Deviations: (1) newline by mode needed a second
+lector switch — `toml_lector_sententiam_ponere`: a newline terminates
+only when a statement is open, so blank and comment-only lines are trivia
+(no `linea` node per blank line); (2) the trivia rule is TOML's own, not
+crusta's C7 — after a terminating newline or at the document start all
+pending trivia go ANTE the next token, otherwise up to the FIRST newline
+POST the previous one (worklog `toml/fontes/toml_arbor.worklog.md`);
+(3) `TomlParsura` gained `absentiae` (missing key, '=' or value) and `sana`
+requires it zero; a bad value becomes the pair's `valor` (a malum) so the
+key survives; key segments must alternate with dots. The corpus gate's
+first run found one real bug — a 0-byte file reaches the lector as a NULL
+pointer (`valid/empty-nothing.toml`), now accepted and pinned. Numbers:
+arbor gate 46 cases / 253 assertions; corpus gate — toml-test 679/679
+byte-exact (valid insane 0; 208/474 invalid already rejected by syntax,
+the rest are Q7's), house 12/12 sane, wild 1,794/1,794 byte-exact
+(3.27 MB; 1,733 sane; 1 skipped: changed on disk). Plants: malum through
+the newline (three-bad-lines case red), forward-binding rule removed
+(ante count red), trailing trivia dropped (corpus gate red on 2,364
+files); all reverted green.
 
 ---
 
