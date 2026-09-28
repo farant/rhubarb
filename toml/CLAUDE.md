@@ -1,6 +1,6 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q2 done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q3 done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -35,6 +35,16 @@ the slot enum, add its row to `LOCI_NOMINATI` in
 Names: `"…"` strings and keys are GEMINA, `'…'` SIMPLEX (crusta's
 words); an inline table is `tabula-compacta` (`brevis` and `interior`
 are latina.h macros).
+
+## The lector (Q3)
+
+`fontes/toml_lector.{h,c}` — a function of (mode, position): CLAVIS or
+VALOR, chosen by the builder; every byte a token; newline is
+`LINEA_FINIS` at depth 0 and `LINEA` inside brackets (the builder sets
+the depth). One greedy number-like token classified NUMERUS / TEMPUS /
+VERUM / FALSUM / IGNOTUM; a single space joins a full date and a time.
+Bytes inside comments and strings are never judged here (cooking does);
+outside them anything unrecognized is one IGNOTUM token.
 
 ## Currere
 

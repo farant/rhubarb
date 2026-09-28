@@ -421,7 +421,7 @@ vacuum        toml_lector_situm_reponere (TomlLector*, TomlSitus);
 vacuum        toml_lector_profunditatem_ponere (TomlLector*, i32 profunditas);
 ```
 
-- [ ] **Step 1: Write the failing lector gate** — cases `{fons, modi[],
+- [x] **Step 1: Write the failing lector gate** — cases `{fons, modi[],
   exspectata[]}`; each token's genus and bytes; BYTE COVERAGE (the
   concatenation of every token equals the source, FINIS last). Cases, at
   least:
@@ -459,9 +459,9 @@ vacuum        toml_lector_profunditatem_ponere (TomlLector*, i32 profunditas);
     `situs`/`situm_reponere` round trip re-lexes the same tokens.
   Self-measure: cases ≥ 40, bytes covered printed.
 
-- [ ] **Step 2: Run and verify it fails** — `./toml/compile_probationes.sh lector`.
+- [x] **Step 2: Run and verify it fails** — `./toml/compile_probationes.sh lector`.
 
-- [ ] **Step 3: Implement** — one `commutatio` on the mode: `_trivium`
+- [x] **Step 3: Implement** — one `commutatio` on the mode: `_trivium`
   (blanks, comment, newline as LINEA or LINEA_FINIS by `profunditas`),
   `_clavis` (bare run of `A-Za-z0-9_-`, quoted keys, `.`, `=`, `[`/`[[`,
   `]`/`]]`), `_valor` (strings: basic scans escapes only to find the
@@ -472,12 +472,27 @@ vacuum        toml_lector_profunditatem_ponere (TomlLector*, i32 profunditas);
   only when the run equals the word exactly, `[ ] { } ,`. Everything
   else → IGNOTUM one UTF-8 sequence long.
 
-- [ ] **Step 4: Run and verify** — green, coverage printed.
+- [x] **Step 4: Run and verify** — green, coverage printed.
 
-- [ ] **Step 5: Plant** — the datetime space rule without the full-date
+- [x] **Step 5: Plant** — the datetime space rule without the full-date
   check → `1979-05-27 # c` red; revert.
 
-- [ ] **Step 6: Words, format, commit** — `silva.commissio("toml: lector - modi II (clavis/valor), lexema numero simile unum (dies-spatium-hora iunguntur), chordae IV, linea nova per profunditatem, utf8 validata; porta lectoris (tegumentum octetorum; rubra nata: spatium temporis sine die)\n\nCo-Authored-By: ...", ["toml/fontes/toml_lector.h", "toml/fontes/toml_lector.c", "toml/probationes/probatio_toml_lector.c"], ["toml"])`
+- [x] **Step 6: Words, format, commit** — `silva.commissio("toml: lector - modi II (clavis/valor), lexema numero simile unum (dies-spatium-hora iunguntur), chordae IV, linea nova per profunditatem, utf8 validata; porta lectoris (tegumentum octetorum; rubra nata: spatium temporis sine die)\n\nCo-Authored-By: ...", ["toml/fontes/toml_lector.h", "toml/fontes/toml_lector.c", "toml/probationes/probatio_toml_lector.c"], ["toml"])`
+
+**Executed 2026-09-28.** Measured first: `utf8_decodere` already rejects
+overlongs, surrogates, > U+10FFFF, truncated and lone continuation bytes
+(returning the bytes consumed), so the lector relies on it — no check of
+its own. Deviation: invalid UTF-8 and control bytes INSIDE comments and
+strings stay in the token (cutting a comment at a bad byte would lex its
+rest as keys); cooking (Q7) judges them. Outside them a bad sequence, the
+BOM, a lone CR, or a bare word in value position (`a = hello`) is
+IGNOTUM. `{` in CLAVIS mode is IGNOTUM (never needed there); `}` and `,`
+are recognized in both modes. Gate: 59 cases + positions + situs,
+240 assertions, 473 bytes covered. First run green; the plan's plant
+did not discriminate (`1979-05-27 # c` never joins — `#` is not a
+digit), so a case was ADDED that does (`1234567890 12:00:00`: ten
+characters, not a date, must not join) and the plant (full-date check
+removed) fired red on it; reverted green.
 
 ---
 
