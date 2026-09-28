@@ -7,6 +7,7 @@
 
 #include "postulata_posix.h"
 #include "tessera_pons_posix.h"
+#include "tessera_modi.h"
 
 #include <termios.h>
 #include <sys/ioctl.h>
@@ -18,9 +19,8 @@
 #include <string.h>
 #include <errno.h>
 
-/* Effugia intrandi/exeundi: scrinium alternum + mus SGR */
-#define INTRANDI "\033[?1049h\033[?1000h\033[?1006h"
-#define EXEUNDI  "\033[?1006l\033[?1000l\033[?1049l\033[0m\033[?25h"
+/* Effugia intrandi/exeundi (INTRANDI, EXEUNDI): tessera_modi.h -
+ * sedes una, lex parium probata (probatio_tessera_modi.c) */
 
 
 /* ==================================================

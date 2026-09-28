@@ -26,7 +26,8 @@ interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
     { "tessera/fontes/tessera_pons_memoriae.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "tessera/fontes/tessera_pons_posix.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "tessera/fontes/tessera_eventum.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "tessera/fontes/tessera_opus.h", NIHIL, NIHIL, FALSUM, FALSUM }
+    { "tessera/fontes/tessera_opus.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "tessera/fontes/tessera_modi.h", NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {

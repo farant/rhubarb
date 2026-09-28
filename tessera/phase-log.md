@@ -689,3 +689,39 @@ parser-object API, button-tracking drag state.
 shapes waiting), or the remaining tessera 1.2 features (bracketed
 paste 001, sync output 002, `?1002` drags), or unicode width
 (modules/001 = desideratum …XBWP).
+
+## TESSERA 1.2 — PASTE, SYNC, DRAG (2026-09-28)
+
+Plan: `project-specs/tessera-1-2-plan.md` (terminal-planning features/
+001, 002 + `?1002` for modules/013). Decisions D1–D5 approved by Fran
+2026-09-28 as proposed (one paste event, 64 KiB cap + truncated flag;
+mode strings in one internal header + structural probatio; drag genus
+`TESSERA_MUS_TRACTUS`, `?1002` only; 3 s silence timeout ends an
+unterminated paste; sync unconditional, `?2026l` in the restore string).
+
+### INTENTIO (T1: mode strings in one place + structural probatio)
+
+Move `INTRANDI`/`EXEUNDI` from `tessera_pons_posix.c:22–23` into
+`fontes/tessera_modi.h` (internal; the posix pons still uses them as
+static strings for the signal path). New `probatio_tessera_modi.c`:
+every `?Nh` in INTRANDI has its `?Nl` in EXEUNDI (and no stray `?Nl`),
+plus the expected mode set. NO behavior change: the posix pons writes
+identical bytes. The aedilis-derived manifest list
+(`fontes_generata.h`) must be regenerated for the new header; the
+amalgam's porta 0 (manifest staleness) proves it. Planted fault: an
+EXEUNDI missing one `l`.
+
+**T1 FACTUM (mode strings in one place).** `fontes/tessera_modi.h` now
+holds INTRANDI/EXEUNDI (internal; the posix pons still uses them as
+static strings for the signal path). `probatio_tessera_modi.c` (15
+assertions) parses both strings and asserts the law of pairs: every mode
+entered is left; nothing is left that wasn't entered; EXEUNDI leaves in
+REVERSE order (a stack: mouse modes off before the alternate screen);
+the base modes 1049/1000/1006 present; cursor ?25 exempt. Two compiling
+plants caught (EXEUNDI without ?1000l → named "intratus, numquam
+relictus"; reversed order → the order assertions). The aedilis-derived
+manifest (`fontes_generata.h`) regenerated: +tessera_modi.h exactly;
+porta 0 green. Amalgam VERIFICATUM + idempotent; escape bytes in the
+amalgam identical to before and defined once. Suite 7/7, saltuarius
+13/13. T2–T5 add their modes to this header, and the probatio guards
+each addition.
