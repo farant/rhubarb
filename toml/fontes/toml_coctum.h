@@ -59,6 +59,14 @@ nomen structura {
           b32  sanum;         /* nullum diagnosticum et parsura sana */
 } TomlCoctum;
 
+/* Filius tabulae per clavem decoditam; NIHIL si abest aut 'tabula' non
+ * tabula est. Clavis vacua ('""') extra indicem quaeritur
+ * (tabula_dispersa mensuram 0 recusat). */
+TomlValor*
+toml_tabulae_filius (
+     constans TomlValor* tabula,
+                 chorda  clavis);
+
 /* documentum = radix toml_arbor_parsare; parsura NIHIL licet. */
 TomlCoctum
 toml_coquere (

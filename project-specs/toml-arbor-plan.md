@@ -948,6 +948,29 @@ and skips-with-count files whose sha256 no longer matches.*
   diagnostics → red; revert.
 - [ ] **Step 4: Commit** — `["toml/probationes/probatio_toml_differentia.c"]`, `["toml"]`.
 
+**Executed 2026-09-28.** Measured first: the goldens (toml-test 679
+blocks: 205 VALIDUM, 474 INVALIDUM; wild 1,795 blocks: 1,676 / 119,
+newer than the manifest; JSON lines up to 210 KB, so the gate splits the
+whole file itself) and the walker's naming (absolute wild paths; the
+golden writes `~` — the gate maps `$HOME` → `~`). Pins: toml-test
+agreement exactly **679** (frozen corpus); wild: **zero disagreements**
+in verdict and in value (a rising count would go falsely red whenever a
+Homebrew/cargo file disappears from Fran's disk). At birth: toml-test
+679/679; wild 1,793/1,794 with ONE value disagreement —
+`test_tomllib/.../localtime.toml`, `t=00:00:00.99999999999999`: tomllib
+keeps microseconds (`.999999`, Python datetime), we keep nanoseconds;
+TOML 1.0 requires truncation to the implementation's precision, so both
+are right. Named BY CAUSE, not by path (the path carries the Python
+version): after a value mismatch the gate truncates our datetimes to
+microseconds and compares again; equal → counted as the named divergence
+"microsecunda". The comparator itself forgives nothing. Runner: the wild
+golden is regenerated when absent or older than the manifest (tested by
+moving it aside: regenerated identical in ~1 s); a failed regeneration
+is a loud CAUTIO and a red gate. Plant (the plan's): `sanum` inverted →
+toml-test 208/679, wild 61/1,794, red; restored green. The second-60
+question stays theoretical: no file in either corpus has one. Suite
+10/10.
+
 ---
 
 ## Task Q10: The public API and diagnostics rendering — `toml.h`
@@ -1003,6 +1026,38 @@ non-table → NIHIL / FALSUM.
 - [ ] **Step 3: Run, green. Plant** — the path lexer treating a quoted
   segment as bare → `a."b.c"` red; revert.
 - [ ] **Step 4: Commit** — `["toml/fontes/toml.h", "toml/fontes/toml.c", "toml/probationes/probatio_toml_api.c"]`, `["toml"]`, citing lapide feature-requests/013.
+
+**Executed 2026-09-28.** Measured first: the tester's request read
+verbatim (lapide feature-requests/013: dotted access, list tables,
+refuse duplicate keys); `materia_pictor_scribere`'s contract (one
+block per diagnostic, related locations in the same block); and a
+**name collision**: `include/toml.h` (old `lib/toml.c`) declares
+`toml_legere`, `TomlValor`, `TomlDocumentum` and is first on the include
+path. Decision (the approved plan's names stand; Q12 deletes the old):
+`toml/fontes/toml.h`, the toml runner puts `toml/fontes` BEFORE
+`include`, and the two are never linked into one binary. Found while
+checking: the derived include graph (`silva/nexus.sh`) resolves
+`toml/fontes/toml.c`'s `"toml.h"` to `include/toml.h` — it ignores the
+includer's directory, against C's quote-include rule; filed (ledger
+…VF3). The runner's own header guard scans `toml/fontes`, so builds are
+not stale; the gap closes when Q12 deletes the old header. Built as
+specified; `toml_tabulae_filius` (lookup incl. the `""` key outside
+the hash index) moved into `toml_coctum` as ONE public function (the
+cooker, the oracle and the API each had a copy). Paths are lexed by
+`toml_lector` in CLAVIS mode, segments decoded by `toml_chordam_coquere`
+— quoted segments with dots and escapes work, anything else is NIHIL.
+Gate 86 assertions: 013 verbatim (two sections, dotted lookups, root
+enumeration in order; `versio` twice in one section → not successful,
+"clavis 'versio' iam definita" at `config.toml:3:1` with two carets —
+first definition labelled — and the first value still queryable);
+typed getters (right/wrong/absent type, output untouched on FALSUM,
+`s64` extremes); 15 bad paths (empty, blanks, `a..b`, through an array,
+into a string, trailing/leading dot, junk, unterminated quote, bad
+escape, `tab = 1`, NIHIL doc/path) and 4 good ones (`tab."b.c"`,
+`tab.'b.c'`, `tab."k\u0041"`, ` tab . kA `); enumeration bounds;
+rendering of three errors in offset order with `via:line:col` and
+carets (and none without excerpts); the empty file. Plant: quoted
+segment taken raw → the four quoted lookups red; restored. Suite 11/11.
 
 ---
 
