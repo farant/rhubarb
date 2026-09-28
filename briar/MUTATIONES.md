@@ -19,6 +19,13 @@ Leges chartae:
 
 ## inedita
 
+## v3 — 2026-09-28
+
+FRANGIT: `MMMM` et `MMMMXCVI` remota - plagulae eis utentes `IV * M`
+et `IV * MXXIV` scribant (lapide `loca.thistle` ter). Cetera: http
+sine truncatione tacita, nuntii mortis latina.h plenius, et quae
+lapide invenit (bugs/012, 013, 015, 016, 018; documentation-ideas/014).
+
 - `http` (cliens, HTTPS): corpora supra ~IV KB integra redeunt (olim
   truncata cum `successus`: tls_recipere lectionem partialem ut
   finem reddebat) - lapide bugs/015, bugs/016. Corpus brevius quam
