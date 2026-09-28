@@ -67,7 +67,7 @@ s32 principale(vacuum)
                     b32  praeteritus;
 
     /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_stml", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_stml", IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -4729,7 +4729,7 @@ s32 principale(vacuum)
              StmlResultus  res;
                       i32  j;
 
-        aed = chorda_aedificator_creare(piscina, MMMMXCVI);
+        aed = chorda_aedificator_creare(piscina, IV * MXXIV);
         chorda_aedificator_appendere_literis(aed, "<longus>");
         per (j = ZEPHYRUM; j < (XXX + X); j++)
         {

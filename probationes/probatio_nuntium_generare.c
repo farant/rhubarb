@@ -37,7 +37,7 @@ s32 principale(vacuum)
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_nuntium_generare",
-        MMMMXCVI);
+        IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

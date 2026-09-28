@@ -10,7 +10,7 @@ s32 principale(vacuum)
     Piscina* piscina;
         b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("test_utf8", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("test_utf8", IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

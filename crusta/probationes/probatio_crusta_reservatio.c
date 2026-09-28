@@ -205,7 +205,7 @@ _documentum_struere (
      constans character* liberum_alienum)
 {
     character* buffer = (character*)piscina_allocare(piscina,
-        (memoriae_index)MMMM);
+        (memoriae_index)IV * M);
         chorda c;
 
     sprintf(buffer,

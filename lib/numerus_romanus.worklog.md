@@ -38,3 +38,37 @@ values below 2^40. Plants (tie-break, cast, parens) each red.
 output: stdout buffered). s32. Found via `lldb --batch -o run -o bt`.
 Also: the test first used `casus` as a variable (latina `case`) — the
 new bugs/018 hint named it on the spot.
+
+## 2026-09-27 — latina.h numerals generated: ZEPHYRUM..MMMCMXCIX, MMMM/MMMMXCVI retired (step 2)
+
+`tools/latina_numeri.{c,sh}` rewrites the section between
+`/* NUMERI ROMANI - GENERATUM` and `/* finis numerorum generatorum */`
+from `numerus_romanus_scribere` (default = compare, rc 1 stale;
+`-scribere` = write). Gate: `generata` section V (plant: one wrong
+value -> red, byte offset named).
+
+**Bootstrap loop:** the generator and numerus_romanus.c are themselves
+written in latina numerals, so emptying the block first made the
+generator uncompilable. Bootstrapped by wrapping the OLD hand block in
+the markers and letting the tool replace it. If the block is ever
+hand-broken: `git checkout include/latina.h`, then `-scribere`.
+
+**Measured before committing to it:** 3753 new names vs the tree with
+comments/strings stripped = zero code collisions (flatura.h's CCLVIII
+was already an undefined-but-unexpanded macro); vs 3643 macOS SDK
+headers = only dns_util.h (union members MD, MX), never included —
+hence "system headers before latina.h" in the section comment. Cost:
+clang +0.6 ms/TU; examen over 60 lib files unchanged (8.9 s, 1.6 GB
+peak). Real cost is source size: latina.h 13 KB -> 121 KB, baked
+silva_latina_datum.c 59 KB -> 567 KB, silva amalgam +0.6 MB; officina
+and tessera amalgams carry latina.h inline too (all regenerated).
+
+**Migration** (scratch tokenizer, code tokens only): 179 sites / 81
+files; `MMMMXCVI` -> `IV * MXXIV`, `MMMM` -> `IV * M`; parenthesized
+when the value is a #define body (8: HTTP_*, CATENA_OPTIMA, ...) or
+follows / % ~ ! sizeof (none did). `tools/mensor.c` MORA_AMPLA was
+ALREADY an unparenthesized product (`MMMMXCVI * M`) — now
+`(IV * MXXIV * M)`. Frozen fixtures (probationes/fixa/roundtrip/
+latina.h) untouched; archived lapifex tests migrated so they still
+compile. Breaks lapide's loca.thistle (3 uses) — MUTATIONES line
+marked FRANGIT.

@@ -16,7 +16,7 @@ s32 principale(vacuum)
     imprimere("=== PROBATIO ARBOR CONVENIENCE API ===\n");
 
     /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_arbor", MMMMXCVI * IV);
+    piscina = piscina_generare_dynamicum("probatio_arbor", IV * MXXIV * IV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

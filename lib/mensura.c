@@ -23,7 +23,7 @@
 /* Linea maxima diarii. Constans INTEGRA manet ut fgets eam sine
  * conversione accipiat - magnitudo() insignatum longum reddit et
  * conversio ad integrum monitum meret */
-#define MENSURA_LINEA_MAXIMA MMMMXCVI
+#define MENSURA_LINEA_MAXIMA (IV * MXXIV)
 
 /* Numerator intra processum: duae mensurae eodem millisecundo in
  * eodem processu aliter claves easdem haberent */
@@ -59,7 +59,8 @@ mensura_sessionem_novam (
     }
 
     /* Tempore praefixa => ordo lexicalis = ordo temporis */
-    sprintf(tabula, "%012lx", (insignatus longus)mensura_momentum_nunc());
+    sprintf(tabula, "%012lx",
+        (insignatus longus)mensura_momentum_nunc());
 
     redde chorda_ex_literis(tabula, piscina);
 }
@@ -127,14 +128,17 @@ mensura_ad_lineam (
 
     /* Campus qui separatorem continet formam frangeret, et lector
      * eam TACITE male legeret - ergo recusamus */
-    si (   !_campus_purus(mensura->sessio) || !_campus_purus(mensura->id)
-        || !_campus_purus(mensura->parens) || !_campus_purus(mensura->titulus)
+    si (   !_campus_purus(mensura->sessio)
+        || !_campus_purus(mensura->id)
+        || !_campus_purus(mensura->parens)
+        || !_campus_purus(mensura->titulus)
         || !_campus_purus(mensura->unitas))
     {
         redde vacua;
     }
 
-    aedificator = chorda_aedificator_creare(piscina, (memoriae_index)CC);
+    aedificator = chorda_aedificator_creare(piscina,
+        (memoriae_index)CC);
     si (aedificator == NIHIL)
     {
         redde vacua;
@@ -280,7 +284,8 @@ mensura_annotare (
         redde FALSUM;
     }
 
-    scripta = fwrite(linea.datum, (size_t)I, (size_t)linea.mensura, plagula);
+    scripta = fwrite(linea.datum, (size_t)I, (size_t)linea.mensura,
+        plagula);
     fclose(plagula);
 
     redde (scripta == (size_t)linea.mensura) ? VERUM : FALSUM;

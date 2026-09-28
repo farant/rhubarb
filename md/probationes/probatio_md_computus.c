@@ -107,7 +107,7 @@ principale (vacuum)
                    b32  metita[NUMERUS_CORPORIS];
 
     piscina = piscina_generare_dynamicum("probatio_md_computus",
-        MMMMXCVI * XVI);
+        IV * MXXIV * XVI);
     si (!piscina)
     {
         imprimere("FRACTA: piscina\n");

@@ -296,6 +296,11 @@ principale (vacuum)
             "utf8_legere\tsedes\tfunctio\tlib/utf8.c\t30\t1\t0\n"
             "s32\tsedes\ttypedef\tinclude/latina.h\t3\t1\t0\n"
             "x\tsedes\tvariabile\tlib/piscina.c\t99\t1\t0\n"
+            /* numeralia latina.h tota maiuscula: nulla verba;
+             * 'MIX' ut segmentum verbum manet */
+            "CCLXIX\tsedes\tconstans\tinclude/latina.h\t300\t9\t0\n"
+            "MIX\tsedes\tconstans\tinclude/latina.h\t1060\t9\t0\n"
+            "COLOR_MIX\tsedes\tconstans\tlib/pictor.c\t7\t9\t0\n"
             "piscina\tvocatio\tfunctio\tlib/alia.c\t1\t1\t0\n"
                                 "piscina_destruere\tsedes\tfunctio\tlib/piscina.c\t80\t1\t0\n"),
             ORATIO_VOCABULA_EXCLUSA, _l("")));
@@ -306,10 +311,11 @@ principale (vacuum)
 
         imprimere("  verba %d sedes %d\n", (integer)xar_numerus(verba),
             (integer)oratio_vocabula_sedes(vc));
-        CREDO_AEQUALIS_I32 (xar_numerus(verba), (i32)XIII);
+        CREDO_AEQUALIS_I32 (xar_numerus(verba), (i32)XV);
         /* piscina allocare materia nodus stml oratio pars capsula forum
          * data utf8 legere destruere */
-                CREDO_AEQUALIS_I32 (oratio_vocabula_sedes(vc), (i32)XV);
+                CREDO_AEQUALIS_I32 (oratio_vocabula_sedes(vc),
+                    (i32)XVII);
 
         v = _verbum(vc, "piscina");
         CREDO_NON_NIHIL (v);
@@ -328,6 +334,10 @@ principale (vacuum)
         CREDO_NON_NIHIL (_verbum(vc, "capsula"));
         CREDO_NON_NIHIL (_verbum(vc, "utf8"));
         CREDO_NIHIL (_verbum(vc, "s32"));
+        /* numeralia tota: nihil; segmentum 'MIX' verbum */
+        CREDO_NIHIL (_verbum(vc, "cclxix"));
+        CREDO_NON_NIHIL (_verbum(vc, "color"));
+        CREDO_NON_NIHIL (_verbum(vc, "mix"));
         CREDO_NIHIL (_verbum(vc, "x"));
                 CREDO_NIHIL (_verbum(vc, "vocatio"));
         CREDO_NIHIL (_verbum(vc, "knotapel"));   /* via exclusa */

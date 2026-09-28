@@ -3089,7 +3089,7 @@ oratio_reticulum_currere (
     {
         redde _recusatio(a);
     }
-    a = chorda_aedificator_creare(piscina, (memoriae_index)MMMMXCVI);
+    a = chorda_aedificator_creare(piscina, (memoriae_index)IV * MXXIV);
     si (a == NIHIL)
     {
         redde _recusatio(_causa(piscina, "memoria deficit"));

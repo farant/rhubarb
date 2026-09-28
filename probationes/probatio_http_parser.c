@@ -692,7 +692,7 @@ interior vacuum
 probatio_parse_uri_longa (
     Piscina* piscina)
 {
-            character petitio[MMMMXCVI];
+            character petitio[IV * MXXIV];
                   i32 uri_len;
     HttpParseResultus res;
 

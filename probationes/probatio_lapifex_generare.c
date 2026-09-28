@@ -91,7 +91,7 @@ s32 principale(vacuum)
     Piscina*              piscina;
     InternamentumChorda*  intern;
 
-    piscina = piscina_generare_dynamicum("probatio_lapifex", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_lapifex", IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

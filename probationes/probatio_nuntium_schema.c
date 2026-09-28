@@ -47,7 +47,7 @@ s32 principale(vacuum)
     NuntiumSchemaNodus* radix;
 
     piscina = piscina_generare_dynamicum("probatio_nuntium_schema",
-        MMMMXCVI);
+        IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

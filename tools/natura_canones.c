@@ -87,7 +87,7 @@
 /* receptaculum praefationis - forma ipsa ~1600 octetos fert,
  * numeri sex ~40 addunt. RECUSATIO potius quam truncatio: canon
  * cuius praefatio dimidia est de se ipso mentitur. */
-#define NC_PRAEFATIO_MAXIMA MMMM
+#define NC_PRAEFATIO_MAXIMA (IV * M)
 
 /* genus valoris quod canon non habet - ad textum cadit, sed
  * NUMERATUM: degradatio tacita vitium domus est */

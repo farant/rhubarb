@@ -26,7 +26,7 @@
 #define HOSPITIUM_CONNEXIONES_TECTUM  CXXVIII
 #define HOSPITIUM_DIRECTORIA_MAXIMA   VIII
 #define HOSPITIUM_CAPITA_MAXIMA       XVI
-#define HOSPITIUM_BUFFER_LECTIONIS    MMMMXCVI
+#define HOSPITIUM_BUFFER_LECTIONIS    (IV * MXXIV)
 #define HOSPITIUM_PISCINA_CONNEXIONIS (LXIV * M)
 
 /* Responsum plenitudinis - sine piscina, ante admissionem missum */
@@ -198,7 +198,8 @@ _literis (
      chorda  s,
     Piscina* piscina)
 {
-    character* l = (character*)piscina_allocare(piscina, (i64)(s.mensura + I));
+    character* l = (character*)piscina_allocare(piscina, (i64)(s.mensura
+        + I));
     si (s.mensura > 0)
     {
         memcpy(l, s.datum, (size_t)s.mensura);
@@ -291,7 +292,8 @@ _scribere_tentare (
             /* socket plenus - caudam servare, SCRIBERE armare */
             conn->status         = CONNEXIO_SCRIBENS;
             conn->terminus_otii  = tempus_nunc() + h->otium_maximum;
-            reactor_modificare(h->reactor, conn->fd, (i32)REACTOR_SCRIBERE);
+            reactor_modificare(h->reactor, conn->fd,
+                (i32)REACTOR_SCRIBERE);
             redde;
         }
         conn->offset += (i32)n;
@@ -342,7 +344,8 @@ _responsum_mittere (
         }
         nova[responsum->capita_numerus].titulus =
             chorda_ex_literis("Access-Control-Allow-Origin", p);
-        nova[responsum->capita_numerus].valor = chorda_ex_literis("*", p);
+        nova[responsum->capita_numerus].valor = chorda_ex_literis("*",
+            p);
         responsum->capita = nova;
         responsum->capita_numerus++;
     }
@@ -350,7 +353,8 @@ _responsum_mittere (
     /* acta accessus - ante missionem (via ex parsere adhuc vivit) */
     si (h->acta_accessus)
     {
-        HttpPetitioServeri* petitio = http_parser_obtinere_petitio(conn->parser);
+        HttpPetitioServeri* petitio =
+            http_parser_obtinere_petitio(conn->parser);
         si (petitio)
         {
             fprintf(stderr, "[hospitium] %s %.*s %u %uB\n",
@@ -411,7 +415,8 @@ _respondere_plene (
     si (mimen_typus)
     {
         capita_localia[numerus].titulus =
-            chorda_ex_literis("Content-Type", conn->piscina_connexionis);
+            chorda_ex_literis("Content-Type",
+            conn->piscina_connexionis);
         capita_localia[numerus].valor =
             chorda_ex_literis(mimen_typus, conn->piscina_connexionis);
         numerus++;
@@ -502,7 +507,8 @@ _filum_regulare_servire (
                                           conn->piscina_connexionis);
 
     _respondere_plene(h, conn, CC, NIHIL, _chorda_vacua(),
-                      mimen_pro_via_chorda(via_typi), contentum, est_caput);
+                      mimen_pro_via_chorda(via_typi), contentum,
+                      est_caput);
 }
 
 interior vacuum
@@ -575,7 +581,8 @@ _filum_servire (
 
     si (status_fili.est_filum)
     {
-        _filum_regulare_servire(h, conn, via_disci, normalizata, est_caput);
+        _filum_regulare_servire(h, conn, via_disci, normalizata,
+            est_caput);
         redde;
     }
 
@@ -598,7 +605,8 @@ _directorium_tentare (
     }
 
     /* decodificatio PRIMA - %2e%2e traversalem celare non potest */
-    decodificata = url_decodificare(petitio->via, conn->piscina_connexionis);
+    decodificata = url_decodificare(petitio->via,
+        conn->piscina_connexionis);
 
     per (d = 0; d < h->directoria_numerus; d++)
     {
@@ -705,11 +713,12 @@ _petitionem_expedire (
            Hospitium* h,
     ConnexioHospitii* conn)
 {
-    HttpPetitioServeri* petitio = http_parser_obtinere_petitio(conn->parser);
-          HttpMethodus  methodus_efficax;
-                   b32  est_caput;
-         RoutaResultus  routa;
-                   i32  reliquiae;
+    HttpPetitioServeri* petitio =
+        http_parser_obtinere_petitio(conn->parser);
+          HttpMethodus methodus_efficax;
+                   b32 est_caput;
+         RoutaResultus routa;
+                   i32 reliquiae;
 
     conn->capita_legens = FALSUM;
 
@@ -739,7 +748,8 @@ _petitionem_expedire (
 
     si (routa.via_inventa)
     {
-        _mittere_non_permissum(h, conn, routa.methodi_permissae, est_caput);
+        _mittere_non_permissum(h, conn, routa.methodi_permissae,
+            est_caput);
         redde;
     }
 
@@ -767,7 +777,8 @@ _legere (
     per (;;)
     {
         HttpParseResultus res;
-                      s32 n = tcp_recipere(conn->tcp, buffer, HOSPITIUM_BUFFER_LECTIONIS);
+                      s32 n = tcp_recipere(conn->tcp, buffer,
+                          HOSPITIUM_BUFFER_LECTIONIS);
 
         si (n == TCP_ITERUM)
         {
@@ -990,7 +1001,8 @@ hospitium_creare (
         memset(&cfg, 0, magnitudo(cfg));
     }
 
-    h = (Hospitium*)piscina_allocare(piscina, (i64)magnitudo(Hospitium));
+    h = (Hospitium*)piscina_allocare(piscina,
+        (i64)magnitudo(Hospitium));
     si (!h)
     {
         redde NIHIL;
@@ -1060,7 +1072,8 @@ hospitium_destruere (
     {
         si (hospitium->connexiones[i].activa)
         {
-            _connexionem_claudere(hospitium, &hospitium->connexiones[i]);
+            _connexionem_claudere(hospitium,
+                &hospitium->connexiones[i]);
         }
     }
 
@@ -1110,7 +1123,8 @@ hospitium_directorium_servire (
 
     ds = &hospitium->directoria[hospitium->directoria_numerus];
     ds->praefixum = chorda_ex_literis(praefixum, hospitium->piscina);
-    ds->directorium = chorda_ex_literis(directorium, hospitium->piscina);
+    ds->directorium = chorda_ex_literis(directorium,
+        hospitium->piscina);
     hospitium->directoria_numerus++;
 
     redde VERUM;
@@ -1279,7 +1293,8 @@ colloquium_respondere (
     conn  = colloquium->connexio;
     p     = conn->piscina_connexionis;
 
-    si (mimen_typus && colloquium->capita_numerus < HOSPITIUM_CAPITA_MAXIMA)
+    si (   mimen_typus
+        && colloquium->capita_numerus < HOSPITIUM_CAPITA_MAXIMA)
     {
         colloquium->capita[colloquium->capita_numerus].titulus =
             chorda_ex_literis("Content-Type", p);

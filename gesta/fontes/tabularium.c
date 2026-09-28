@@ -12345,7 +12345,7 @@ _inventarii_machinam_reddere (
             JsonValor* lentes = json_objectum_capere(status, "lentes");
             JsonValor* cellae = json_objectum_capere(status, "cellae");
     ChordaAedificator* aed = chorda_aedificator_creare(pn,
-        MMMMXCVI);
+        IV * MXXIV);
                   i32 i;
                   i32 j;
 
@@ -13159,7 +13159,7 @@ _expeditionis_tabulam_reddere (
         Piscina* pn)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(pn,
-        MMMMXCVI);
+        IV * MXXIV);
             JsonValor* ordines = json_objectum_capere(status,
                 "ordines");
             JsonValor* gradus = json_objectum_capere(status, "gradus");

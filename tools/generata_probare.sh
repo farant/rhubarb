@@ -21,7 +21,9 @@
 #        restituuntur; comparatio contra copias;
 #   IV.  manifesta amalgamatoris (fontes_generata.h silvae, officinae,
 #        tesserae) per tools/porta_vetustatis.sh - hic aedilis.stml
-#        VERE tegitur.
+#        VERE tegitur;
+#   V.   sectio numerorum latina.h (ZEPHYRUM-MMMCMXCIX) == generator
+#        (tools/latina_numeri.sh; fons numerus_romanus_scribere).
 # Stala per nomen; nihil tacite.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -110,6 +112,14 @@ for p in silva officina tessera; do
         fracta=1
     fi
 done
+
+# ---- V. numeri latina.h ----
+if ./tools/latina_numeri.sh >"$TMP/numeri.log" 2>&1; then
+    echo "  ok   numeri latina.h: sectio recens"
+else
+    echo "  STALUM numeri latina.h: $(tail -1 "$TMP/numeri.log")"
+    fracta=1
+fi
 
 stala=0
 for s in "${SNIPPETS[@]}"; do

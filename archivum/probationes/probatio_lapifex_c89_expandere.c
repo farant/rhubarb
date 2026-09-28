@@ -37,7 +37,7 @@ s32 principale(vacuum)
     Arbor2Nodus*         nodus;
 
     piscina = piscina_generare_dynamicum(
-        "probatio_lapifex_c89_expandere", MMMMXCVI * XVI);
+        "probatio_lapifex_c89_expandere", IV * MXXIV * XVI);
     si (!piscina)
     {
         imprimere("FRACTA: piscina non creata\n");

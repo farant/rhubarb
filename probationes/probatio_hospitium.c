@@ -153,7 +153,7 @@ probatio_gyrus_simplex(Piscina* piscina)
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
          HospitiumFructus  fr;
 
@@ -171,7 +171,7 @@ probatio_gyrus_simplex(Piscina* piscina)
 
     n = _commercium(h, cliens,
         "GET /salve HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 200 OK") != NIHIL);
     CREDO_VERUM(strstr(buffer, "Content-Type: text/plain") != NIHIL);
@@ -201,7 +201,7 @@ probatio_keep_alive(Piscina* piscina)
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
          HospitiumFructus  fr;
 
@@ -221,14 +221,14 @@ probatio_keep_alive(Piscina* piscina)
     /* petitio prima */
     n = _commercium(h, cliens,
         "GET /salve HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "salve munde") != NIHIL);
 
     /* petitio secunda in EADEM connexione - refectio + parser novus */
     n = _commercium(h, cliens,
         "GET /res/42 HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 200 OK") != NIHIL);
     CREDO_VERUM(strstr(buffer, "Content-Length: 2") != NIHIL);
@@ -255,7 +255,7 @@ probatio_ignotum_et_non_permissum(Piscina* piscina)
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
 
     printf("--- Probans CDIV et CDV + Allow ---\n");
@@ -271,7 +271,7 @@ probatio_ignotum_et_non_permissum(Piscina* piscina)
     _pumpare(h, V);
     n = _commercium(h, cliens,
         "GET /nusquam HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 404 Not Found") != NIHIL);
     CREDO_VERUM(strstr(buffer, "Content-Length: 0") != NIHIL);
@@ -283,7 +283,7 @@ probatio_ignotum_et_non_permissum(Piscina* piscina)
     _pumpare(h, V);
     n = _commercium(h, cliens,
         "POST /salve HTTP/1.1\r\nHost: probatio\r\nContent-Length: 0\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 405 Method Not Allowed")
         != NIHIL);
@@ -306,7 +306,7 @@ probatio_custos_trans_filum(Piscina* piscina)
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
          HospitiumFructus  fr;
 
@@ -321,14 +321,14 @@ probatio_custos_trans_filum(Piscina* piscina)
     _pumpare(h, V);
 
     n = _commercium(h, cliens, "GET / HTTP/9.9\r\n\r\n",
-                    buffer, MMMMXCVI);
+                    buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 400 Bad Request") != NIHIL);
     CREDO_VERUM(strstr(buffer, "Connection: close") != NIHIL);
 
     /* post responsum custodis: clausura honesta -> EOF */
     _pumpare(h, V);
-    n = tcp_recipere(cliens, (i8*)buffer, MMMMXCVI - I);
+    n = tcp_recipere(cliens, (i8*)buffer, IV * MXXIV - I);
     CREDO_VERUM(n == 0);
 
     fr = hospitium_fructus(h);
@@ -351,7 +351,7 @@ probatio_caput_sine_corpore(Piscina* piscina)
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
 
     printf("--- Probans HEAD = GET sine corpore ---\n");
@@ -367,7 +367,7 @@ probatio_caput_sine_corpore(Piscina* piscina)
 
     n = _commercium(h, cliens,
         "HEAD /salve HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 200 OK") != NIHIL);
     /* Content-Length verum corporis GET... */
@@ -394,7 +394,7 @@ probatio_reliquiae_clausura(Piscina* piscina)
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
          HospitiumFructus  fr;
 
@@ -413,14 +413,14 @@ probatio_reliquiae_clausura(Piscina* piscina)
     n = _commercium(h, cliens,
         "GET /salve HTTP/1.1\r\nHost: a\r\n\r\n"
         "GET /salve HTTP/1.1\r\nHost: b\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 200 OK") != NIHIL);
     CREDO_VERUM(strstr(buffer, "Connection: close") != NIHIL);
 
     /* petitio secunda NON servitur - clausura honesta */
     _pumpare(h, V);
-    n = tcp_recipere(cliens, (i8*)buffer, MMMMXCVI - I);
+    n = tcp_recipere(cliens, (i8*)buffer, IV * MXXIV - I);
     CREDO_VERUM(n == 0);
 
     fr = hospitium_fructus(h);
@@ -444,7 +444,7 @@ probatio_datum_et_caput(Piscina* piscina)
             HospitiumConfiguratio  cfg;
                         Hospitium* h;
                       TcpConnexio* cliens;
-                        character  buffer[MMMMXCVI];
+                        character  buffer[IV * MXXIV];
                               s32  n;
     hic_manens constans character* datum_probationis = "datum-arcanum";
 
@@ -462,7 +462,7 @@ probatio_datum_et_caput(Piscina* piscina)
 
     n = _commercium(h, cliens,
         "GET /datum HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "X-Probatio: verum") != NIHIL);
     CREDO_VERUM(strstr(buffer, "datum-arcanum") != NIHIL);
@@ -484,7 +484,7 @@ probatio_directorium(Piscina* piscina)
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
 
     printf("--- Probans directorium staticum ---\n");
@@ -512,7 +512,7 @@ probatio_directorium(Piscina* piscina)
     /* filum cum typo MIME recto */
     n = _commercium(h, cliens,
         "GET /static/stilus.css HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 200 OK") != NIHIL);
     CREDO_VERUM(strstr(buffer, "Content-Type: text/css") != NIHIL);
@@ -521,7 +521,7 @@ probatio_directorium(Piscina* piscina)
     /* radix directorii -> index.html */
     n = _commercium(h, cliens,
         "GET /static HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "Content-Type: text/html") != NIHIL);
     CREDO_VERUM(strstr(buffer, "salve statica") != NIHIL);
@@ -529,7 +529,7 @@ probatio_directorium(Piscina* piscina)
     /* subdirectorium sine index -> pagina indicis generata */
     n = _commercium(h, cliens,
         "GET /static/sub HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 200 OK") != NIHIL);
     CREDO_VERUM(strstr(buffer, "res.txt") != NIHIL);
@@ -537,21 +537,21 @@ probatio_directorium(Piscina* piscina)
     /* traversalis -> CDIII */
     n = _commercium(h, cliens,
         "GET /static/../../etc/passwd HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 403 Forbidden") != NIHIL);
 
     /* traversalis codificata -> CDIII (decodificatio prima) */
     n = _commercium(h, cliens,
         "GET /static/%2e%2e/%2e%2e/etc/passwd HTTP/1.1\r\nHost: p\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 403 Forbidden") != NIHIL);
 
     /* filum absens -> CDIV */
     n = _commercium(h, cliens,
         "GET /static/nusquam.txt HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 404 Not Found") != NIHIL);
 
@@ -572,7 +572,7 @@ probatio_acao(Piscina* piscina)
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
 
     printf("--- Probans ACAO in omni responso ---\n");
@@ -590,7 +590,7 @@ probatio_acao(Piscina* piscina)
     /* responsum tractatoris */
     n = _commercium(h, cliens,
         "GET /salve HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "Access-Control-Allow-Origin: *")
         != NIHIL);
@@ -598,7 +598,7 @@ probatio_acao(Piscina* piscina)
     /* etiam CDIV - uniformis in OMNI responso */
     n = _commercium(h, cliens,
         "GET /nusquam HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 404 Not Found") != NIHIL);
     CREDO_VERUM(strstr(buffer, "Access-Control-Allow-Origin: *")
@@ -622,7 +622,7 @@ probatio_plenitudo(Piscina* piscina)
                 Hospitium* h;
               TcpConnexio* cliens_a;
               TcpConnexio* cliens_b;
-                character  buffer[MMMMXCVI];
+                character  buffer[IV * MXXIV];
                       s32  n;
          HospitiumFructus  fr;
 
@@ -644,7 +644,7 @@ probatio_plenitudo(Piscina* piscina)
     CREDO_NON_NIHIL(cliens_b);
     _pumpare(h, V);
 
-    n = tcp_recipere(cliens_b, (i8*)buffer, MMMMXCVI - I);
+    n = tcp_recipere(cliens_b, (i8*)buffer, IV * MXXIV - I);
     CREDO_VERUM(n > 0);
     buffer[n] = '\0';
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 503 Service Unavailable")
@@ -657,7 +657,7 @@ probatio_plenitudo(Piscina* piscina)
     /* sedes A adhuc laborat */
     n = _commercium(h, cliens_a,
         "GET /salve HTTP/1.1\r\nHost: probatio\r\n\r\n",
-        buffer, MMMMXCVI);
+        buffer, IV * MXXIV);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "salve munde") != NIHIL);
 

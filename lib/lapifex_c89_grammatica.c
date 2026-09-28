@@ -3561,7 +3561,7 @@ _tabulam_parare(vacuum)
     si (s_tabula) redde; /* Iam parata */
 
     s_grammatica_piscina = piscina_generare_dynamicum(
-        "lapifex_c89_grammatica", (memoriae_index)(MMMMXCVI * XXXII));
+        "lapifex_c89_grammatica", (memoriae_index)(IV * MXXIV * XXXII));
     s_grammatica_intern = internamentum_creare(s_grammatica_piscina);
 
     s_grammatica = lapifex_grammaticam_legere(s_grammatica_piscina,
@@ -3879,7 +3879,7 @@ lapifex_c89_typedef_praescandere(
 
     /* Creare piscinam temporariam pro tabula dispersa */
     piscina_loc = piscina_generare_dynamicum(
-        "typedef_praescandere", (memoriae_index)(MMMMXCVI * IV));
+        "typedef_praescandere", (memoriae_index)(IV * MXXIV * IV));
     nomina_typorum = tabula_dispersa_creare_chorda(piscina_loc, LXIV);
 
     /* Addere externa nomina (si provisa) */

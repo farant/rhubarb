@@ -191,9 +191,11 @@ principale (vacuum)
     CREDO_VERUM (_linea_habet(charta, "nomen=typedef", ""));
     CREDO_VERUM (_linea_habet(charta, "casus=case", ""));
     CREDO_VERUM (_linea_habet(charta, "numeri:", "ZEPHYRUM=0"));
-    /* latina.h viva: 0-214 omnes (CCXV primus absens) */
-    CREDO_VERUM (_linea_habet(charta, "omnes 0-214;",
-        "selecti tantum"));
+    /* latina.h viva: series integra ZEPHYRUM-MMMCMXCIX (sectio
+     * generata) - nulla linea regulae */
+    CREDO_VERUM (_linea_habet(charta, "numeri:",
+        "MMMCMXCIX=3999 (4000)"));
+    CREDO_FALSUM (_linea_habet(charta, "selecti tantum", ""));
     CREDO_VERUM (_linea_longissima(charta) <= (i32)LXXII);
 
     credo_imprimere_compendium();

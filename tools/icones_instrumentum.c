@@ -135,7 +135,7 @@ _latera_legere (
         {
             numerus    = (numerus * X) + (i32)(*p - '0');
             in_numero  = VERUM;
-            si (numerus > MMMMXCVI)
+            si (numerus > IV * MXXIV)
             {
                 imprimere("latus nimis magnum in -latera\n");
                 redde FALSUM;

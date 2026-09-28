@@ -131,7 +131,7 @@ s32 principale(vacuum)
     s32 RPAREN_IDX;
     s32 EOF_IDX;
 
-    piscina = piscina_generare_dynamicum("probatio_lapifex_parsere", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_lapifex_parsere", IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

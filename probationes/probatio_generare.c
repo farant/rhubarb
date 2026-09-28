@@ -195,7 +195,8 @@ s32 principale(vacuum)
     Piscina* piscina;
         b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_generare", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_generare",
+        IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

@@ -38,7 +38,7 @@
 #include <unistd.h>   /* execvp pro -ui */
 
 /* Mandatum metiendum horas capere potest (aedificatio plena) */
-#define MORA_AMPLA MMMMXCVI * M
+#define MORA_AMPLA (IV * MXXIV * M)
 
 interior constans character*
 _arg (
@@ -354,7 +354,7 @@ _addere_tabulam (
                  constans character*  unitas)
 {
     FILE*              plagula;
-    character          linea[MMMMXCVI];
+    character          linea[IV * MXXIV];
     i32                numerus;
     ChordaAedificator* aedificator;
 
@@ -368,7 +368,7 @@ _addere_tabulam (
 
     numerus = ZEPHYRUM;
 
-    dum (fgets(linea, MMMMXCVI, plagula) != NIHIL)
+    dum (fgets(linea, IV * MXXIV, plagula) != NIHIL)
     {
            duplex  valor;
         character* finis;

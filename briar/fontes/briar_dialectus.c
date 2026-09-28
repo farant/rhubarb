@@ -58,8 +58,8 @@ interior constans character* LAQUEI[] = {
     "  - conversio signi tacita = error (-Wsign-conversion): i32, s32,",
     "    memoriae_index inter se solum cum iactu explicito",
     "  - verba supra VETITA ut identificatores (nomen=typedef,",
-    "    casus=case, per=for, duplex=double); litterae singulae",
-    "    I V X L C D M sunt numeri",
+    "    casus=case, per=for, duplex=double); omne numerale",
+    "    Romanum 0-3999 macrum est (DI, MIX, CIV...); ultra: IV * M",
     "  - chorda {i32 mensura; i8* datum} sine NUL finali: imprime per",
     "    \"%.*s\", (integer)c.mensura, (constans character*)c.datum",
     NIHIL

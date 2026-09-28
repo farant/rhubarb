@@ -751,7 +751,7 @@ _caput_reddere (
         constans character* via_declarationis)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
-        (memoriae_index)MMMM);
+        (memoriae_index)IV * M);
     i32 k;
 
     si (a == NIHIL)
@@ -1042,7 +1042,7 @@ _fontem_reddere (
         constans character* via_declarationis)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
-        (memoriae_index)MMMM * (memoriae_index)IV);
+        (memoriae_index)IV * M * (memoriae_index)IV);
     i32 k;
     i32 j;
 

@@ -1,6 +1,7 @@
 /* oratio_vocabula.c - Vide oratio_vocabula.h. */
 
 #include "oratio_vocabula.h"
+#include "numerus_romanus.h"
 #include "oratio_glossarium.h"
 #include "oratio_arbor.h"
 #include "oratio_registrum.h"
@@ -324,6 +325,17 @@ oratio_vocabula_identificatorem_addere (
 {
     i32 i = ZEPHYRUM;
     i32 n = identificator.mensura;
+
+    /* Numerale Romanum TOTUM et MAIUSCULUM (CCLXIX, MIX) vocabulum
+     * latina.h est (sectio generata ZEPHYRUM-MMMCMXCIX), non verbum:
+     * nihil additur. TOTUM solum: segmentum 'MIX' in 'COLOR_MIX' et
+     * 'mix' minusculum verba Anglica manent (lector strictus 'mix'
+     * minusculum ut 1009 acciperet). */
+    si (   n > ZEPHYRUM && _capitalis_est(identificator.datum[ZEPHYRUM])
+        && numerus_romanus_legere(identificator, NIHIL))
+    {
+        redde VERUM;
+    }
 
     dum (i < n)
     {

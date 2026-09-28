@@ -26,7 +26,7 @@ structura FilumLector {
            i32  numerus_versus;
            b32  est_finis;
        Piscina* piscina;
-     character  buffer[MMMMXCVI]; /* 4096 byte buffer pro legere */
+     character  buffer[IV * MXXIV]; /* 4096 byte buffer pro legere */
 };
 
 structura FilumScriptor {
@@ -243,7 +243,7 @@ filum_lector_lineam_proximam (
     }
 
     /* Prima lectio */
-    result = fgets(lector->buffer, MMMMXCVI, lector->descriptum);
+    result = fgets(lector->buffer, IV * MXXIV, lector->descriptum);
     si (!result)
     {
         /* EOF vel error */
@@ -270,7 +270,7 @@ filum_lector_lineam_proximam (
 
     /* Si linea completa (habet newline VEL non implevit buffer),
 	 * processare directe */
-    si (habet_newline || longitudo < (MMMMXCVI - I))
+    si (habet_newline || longitudo < (IV * MXXIV - I))
     {
         /* Removere newline characteres */
         dum (   longitudo > ZEPHYRUM
@@ -311,7 +311,7 @@ filum_lector_lineam_proximam (
 
     /* Linea continuat - usare ChordaAedificator pro crescentia dynamica */
     aedificator = chorda_aedificator_creare(lector->piscina,
-        MMMMXCVI * II);
+        IV * MXXIV * II);
     si (!aedificator)
     {
         _filum_error_ponere("chorda_aedificator_creare fracta");
@@ -336,7 +336,7 @@ filum_lector_lineam_proximam (
     /* Legere fragmenta reliqua usque ad newline vel EOF */
     dum (VERUM)
     {
-        result = fgets(lector->buffer, MMMMXCVI, lector->descriptum);
+        result = fgets(lector->buffer, IV * MXXIV, lector->descriptum);
         si (!result)
         {
             /* EOF - finire lineam */
@@ -382,7 +382,7 @@ filum_lector_lineam_proximam (
             }
         }
 
-        si (habet_newline || longitudo < (MMMMXCVI - I))
+        si (habet_newline || longitudo < (IV * MXXIV - I))
         {
             /* Linea completa */
             *linea_out = chorda_aedificator_finire(aedificator);
@@ -857,7 +857,7 @@ filum_arborem_delere (
     {
                    DIR* d;
         structura dirent* e;
-              character  filius[MMMMXCVI];
+              character  filius[IV * MXXIV];
 
         deleta  = FALSUM;
         d       = opendir(via);
@@ -931,7 +931,7 @@ filum_copiare (
 {
              FILUM* fons;
              FILUM* dest;
-         character  buffer[MMMMXCVI];
+         character  buffer[IV * MXXIV];
     memoriae_index  legere_bytes;
     memoriae_index  scriptus_bytes;
 
@@ -959,7 +959,7 @@ filum_copiare (
     }
 
     /* Copiare per buffer */
-    dum ((legere_bytes = fread(buffer, I, MMMMXCVI, fons)) > ZEPHYRUM)
+    dum ((legere_bytes = fread(buffer, I, IV * MXXIV, fons)) > ZEPHYRUM)
     {
         scriptus_bytes = fwrite(buffer, I, legere_bytes, dest);
         si (scriptus_bytes != legere_bytes)
@@ -1125,7 +1125,7 @@ b32
 filum_directorium_creare_cum_parentibus (
     constans character* via)
 {
-         character semita[MMMMXCVI];
+         character semita[IV * MXXIV];
     memoriae_index longitudo;
     memoriae_index i;
 

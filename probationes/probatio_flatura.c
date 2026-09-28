@@ -132,7 +132,7 @@ probatio_round_trip_magnus(Piscina* piscina)
     printf("--- Probans round-trip magnus ---\n");
 
     /* Generare datum repetitivum (bonus pro compressione) */
-    mensura = MMMMXCVI;  /* 4096 */
+    mensura = IV * MXXIV;  /* 4096 */
     originalis = (i8*)piscina_allocare(piscina,
         (memoriae_index)mensura);
 
@@ -397,7 +397,7 @@ probatio_compressio_repetitiva(Piscina* piscina)
     printf("--- Probans compressio repetitiva ---\n");
 
     /* Datum valde repetitivum - debet esse valde compressibile */
-    mensura = MMMMXCVI;
+    mensura = IV * MXXIV;
     originalis = (i8*)piscina_allocare(piscina,
         (memoriae_index)mensura);
 

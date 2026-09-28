@@ -24,7 +24,7 @@
 #include "latina.h"
 #include "piscina.h"
 
-#define SILVA_COMPUTUS_ALVEUS_INITIUM ((memoriae_index)(MMMMXCVI * CCLVI))
+#define SILVA_COMPUTUS_ALVEUS_INITIUM ((memoriae_index)(IV * MXXIV * CCLVI))
 
 nomen structura {
     constans character* via;

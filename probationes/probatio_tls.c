@@ -104,7 +104,7 @@ probatio_connexio_https(Piscina* piscina)
 {
            TlsResultus  res;
     constans character* petitio;
-                    i8  buffer[MMMMXCVI];
+                    i8  buffer[IV * MXXIV];
                    s32  n;
                    b32  misit;
 
@@ -145,7 +145,7 @@ probatio_connexio_https(Piscina* piscina)
     printf("  Petitio missa, expectans responsum...\n");
 
     /* Recipere responsum */
-    n = tls_recipere(res.connexio, buffer, MMMMXCVI - I);
+    n = tls_recipere(res.connexio, buffer, IV * MXXIV - I);
     CREDO_MAIOR_S32(n, 0);
 
     si (n > 0)
@@ -203,7 +203,7 @@ probatio_mittere_recipere(Piscina* piscina)
 {
            TlsResultus  res;
     constans character* petitio;
-                    i8  buffer[MMMMXCVI];
+                    i8  buffer[IV * MXXIV];
                     i8* totum;
                    i32  totalis;
                    s32  n;
@@ -237,7 +237,7 @@ probatio_mittere_recipere(Piscina* piscina)
     totalis = 0;
     fac
     {
-        n = tls_recipere(res.connexio, buffer, MMMMXCVI);
+        n = tls_recipere(res.connexio, buffer, IV * MXXIV);
         si (n > 0 && totalis + (i32)n <= CXXVIII * M * VIII)
         {
             memcpy(totum + totalis, buffer, (size_t)n);
@@ -283,7 +283,7 @@ probatio_mittere_recipere(Piscina* piscina)
         }
         printf("  Content-Length %u, corpus receptum %u\n", promissum,
                totalis - finis_capitum);
-        CREDO_AEQUALIS_I32(promissum, (i32)(XVI * MMMMXCVI));
+        CREDO_AEQUALIS_I32(promissum, (i32)(XVI * IV * MXXIV));
         CREDO_AEQUALIS_I32(totalis - finis_capitum, promissum);
     }
 
@@ -344,7 +344,7 @@ probatio_connectere_cum_optionibus(Piscina* piscina)
            TlsOptiones  opt;
            TlsResultus  res;
     constans character* petitio;
-                    i8  buffer[MMMMXCVI];
+                    i8  buffer[IV * MXXIV];
                    s32  n;
 
     printf("--- Probans connectere cum optionibus ---\n");
@@ -376,7 +376,7 @@ probatio_connectere_cum_optionibus(Piscina* piscina)
         (i32)strlen(petitio));
     CREDO_MAIOR_S32(n, 0);
 
-    n = tls_recipere(res.connexio, buffer, MMMMXCVI - I);
+    n = tls_recipere(res.connexio, buffer, IV * MXXIV - I);
     CREDO_MAIOR_S32(n, 0);
     buffer[n] = '\0';
 

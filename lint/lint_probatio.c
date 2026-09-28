@@ -237,7 +237,7 @@ principale (
         redde I;
     }
 
-    piscina  = piscina_generare_dynamicum("lint", MMMMXCVI * XVI);
+    piscina  = piscina_generare_dynamicum("lint", IV * MXXIV * XVI);
     intern   = internamentum_creare(piscina);
 
     per (i = I; i < argc; i++)

@@ -1153,7 +1153,7 @@ s32 principale(vacuum)
 
         imprimere("\n--- Probans segmenta ordinaria / magna ---\n");
         p_seg = piscina_generare_dynamicum("probatio_segmenta",
-            MMMMXCVI * CCLVI);
+            IV * MXXIV * CCLVI);
         CREDO_NON_NIHIL (p_seg);
 
         capacitas_ordinaria = (i32)(1u << (XAR_SEGMENTA_ORDINARIA - I));
@@ -1212,7 +1212,7 @@ s32 principale(vacuum)
                                                                                         XVI;
         imprimere("\n--- Probans fines segmentorum (forma clausa) ---\n");
         p_fin = piscina_generare_dynamicum("probatio_fines",
-            MMMMXCVI * XVI);
+            IV * MXXIV * XVI);
         CREDO_NON_NIHIL (p_fin);
         per (pi = ZEPHYRUM; pi < VI; pi++)
         {
@@ -1229,7 +1229,7 @@ s32 principale(vacuum)
                 primum);
             CREDO_NON_NIHIL (x);
             circuitus_sanus = VERUM;
-            per (n = ZEPHYRUM; n < MMMMXCVI + CCLVI; n++)
+            per (n = ZEPHYRUM; n < IV * MXXIV + CCLVI; n++)
             {
                 e = (i32*)xar_addere(x);
                 si (e == NIHIL)

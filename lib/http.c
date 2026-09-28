@@ -17,8 +17,8 @@
  * ======================================================================== */
 
 #define HTTP_CAPITA_MAXIMA      LXIV        /* 64 headers maxime */
-#define HTTP_BUFFER_MAGNITUDO   MMMMXCVI    /* 4096 bytes */
-#define HTTP_CORPUS_INITIALE    MMMMXCVI    /* 4096 bytes initiale */
+#define HTTP_BUFFER_MAGNITUDO   (IV * MXXIV)    /* 4096 bytes */
+#define HTTP_CORPUS_INITIALE    (IV * MXXIV)    /* 4096 bytes initiale */
 
 
 /* ========================================================================
@@ -1541,7 +1541,7 @@ http_exsequi_cum_redirectionibus (
  * STRUCTURA INTERNA - SERVER PARSER
  * ======================================================================== */
 
-#define HTTP_PARSER_BUFFER_INITIALE  MMMMXCVI    /* 4096 bytes */
+#define HTTP_PARSER_BUFFER_INITIALE  (IV * MXXIV)    /* 4096 bytes */
 
 structura HttpParser {
                Piscina* piscina;

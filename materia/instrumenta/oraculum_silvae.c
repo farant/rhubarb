@@ -368,7 +368,7 @@ _plagulam_iudicare (
     }
     si (directorium_stml != NIHIL && documentum.successus)
     {
-        character via_documenti[MMMM];
+        character via_documenti[IV * M];
         FILE* f;
 
         _viam_documenti(directorium_stml, via, via_documenti,
@@ -393,7 +393,7 @@ _plagulam_iudicare (
 #ifndef ORACULUM_PIGNUS
     si (directorium_legendi != NIHIL)
     {
-        character via_documenti[MMMM];
+        character via_documenti[IV * M];
 
         _viam_documenti(directorium_legendi, via, via_documenti,
             magnitudo(via_documenti));

@@ -139,7 +139,7 @@ s32 principale(vacuum)
     s32 NUMBER_IDX;
     s32 EOF_IDX;
 
-    piscina = piscina_generare_dynamicum("probatio_lapifex_lexere", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_lapifex_lexere", IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

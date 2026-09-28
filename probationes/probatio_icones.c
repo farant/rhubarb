@@ -255,8 +255,8 @@ _interior_conferre (
     si (   !a->pixela || !b->pixela
         || a->latitudo != b->latitudo || a->altitudo != b->altitudo)
     {
-        *diversa  = MMMMXCVI;
-        *media    = MMMMXCVI;
+        *diversa  = IV * MXXIV;
+        *media    = IV * MXXIV;
         redde;
     }
     n   = a->latitudo * a->altitudo;
@@ -268,8 +268,8 @@ _interior_conferre (
         (memoriae_index)(n * IV));
     si (!la.pixela || !lb.pixela)
     {
-        *diversa  = MMMMXCVI;
-        *media    = MMMMXCVI;
+        *diversa  = IV * MXXIV;
+        *media    = IV * MXXIV;
         redde;
     }
     per (i = ZEPHYRUM; i < n; i++)

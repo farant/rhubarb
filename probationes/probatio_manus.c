@@ -485,7 +485,7 @@ nomen structura {
          character causa[DXII];
     /* JS huius capturae, statim lectus: capturae sequentes plagulam
      * SUPERSCRIBUNT, ergo qui eam postea legit alienum inspicit. */
-    character js[MMMMXCVI];
+    character js[IV * MXXIV];
 } Captura;
 
 interior vacuum
@@ -588,7 +588,7 @@ nomen structura {
           i32 numerus;      /* pro OP_ERRORES */
     character causa[DXII];
     character primus[CCLVI];
-    character js[MMMMXCVI];
+    character js[IV * MXXIV];
 } Actio;
 
 interior vacuum

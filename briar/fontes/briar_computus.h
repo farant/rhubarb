@@ -19,7 +19,7 @@
 #include "latina.h"
 #include "piscina.h"
 
-#define BRIAR_COMPUTUS_ALVEUS_INITIUM ((memoriae_index)(MMMMXCVI * CCLVI))
+#define BRIAR_COMPUTUS_ALVEUS_INITIUM ((memoriae_index)(IV * MXXIV * CCLVI))
 
 nomen structura {
                i32 octeti_fontis;

@@ -1060,7 +1060,7 @@ principale (
     imprimere("=== LIBRARIUM MERGE ===\n\n");
 
     /* Creare piscina et internamentum */
-    piscina  = piscina_generare_dynamicum("merge", MMMMXCVI * LXIV);
+    piscina  = piscina_generare_dynamicum("merge", IV * MXXIV * LXIV);
     intern   = internamentum_creare(piscina);
 
     /* Initialisare contextum */
@@ -1068,7 +1068,7 @@ principale (
     ctx.intern   = intern;
     ctx.radix    = stml_elementum_creare(piscina, intern, "librarium");
     ctx.viae_canonicae = tabula_dispersa_creare_chorda(piscina,
-        MMMMXCVI);
+        IV * MXXIV);
     ctx.libri_processati  = 0;
     ctx.libri_errores     = 0;
 
@@ -1143,7 +1143,7 @@ principale (
     /* Scribere output */
     imprimere("Scribendo %s...\n", VIA_OUTPUT);
 
-    aedificator = chorda_aedificator_creare(piscina, MMMMXCVI * XVI);
+    aedificator = chorda_aedificator_creare(piscina, IV * MXXIV * XVI);
     stml_scribere_ad_aedificator(ctx.radix, aedificator, VERUM, 0);
     output = chorda_aedificator_finire(aedificator);
 

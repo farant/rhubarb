@@ -39,7 +39,7 @@ s32 principale(vacuum)
     InternamentumChorda* intern;
     Arbor2Nodus*         nodus;
 
-    piscina = piscina_generare_dynamicum("probatio_lapifex_c89_sent", MMMMXCVI * IV);
+    piscina = piscina_generare_dynamicum("probatio_lapifex_c89_sent", IV * MXXIV * IV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina non creata\n");

@@ -495,7 +495,7 @@ principale (vacuum)
                     b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_sputnik_lexema",
-        MMMMXCVI * IV);
+        IV * MXXIV * IV);
     intern = internamentum_creare(piscina);
 
     credo_aperire(piscina);

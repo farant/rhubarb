@@ -946,7 +946,7 @@ arbor_formator_emittere_fidelis (
     }
 
     status.piscina     = piscina;
-    status.aedificator = chorda_aedificator_creare(piscina, MMMMXCVI);
+    status.aedificator = chorda_aedificator_creare(piscina, IV * MXXIV);
     status.optiones    = NIHIL;
     status.fidelis     = VERUM;
     status.indentatio  = ZEPHYRUM;
@@ -1100,7 +1100,7 @@ arbor_formator_numerus_ad_romanum (
     }
 
     /* Si maior quam MMMMXCVI, redde decimalis */
-    si (abs_valor > MMMMXCVI)
+    si (abs_valor > IV * MXXIV)
     {
         snprintf(buffer, XXXII, "%lld", (longus longus)abs_valor);
         chorda_aedificator_appendere_literis(aed, buffer);

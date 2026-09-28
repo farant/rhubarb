@@ -27,15 +27,20 @@ Leges chartae:
   N, recepti M"), numquam successus cum corpore partiali.
 - `-h` linea prima = linea prima `-versio` (cum `+inedita(n)`;
   olim `vN` solum) - bugs/013.
-- `-dialectus`: numeri regulam dicunt - `omnes 0-214; supra selecti
-  tantum` (olim `(344)` seriem integram simulabat: `CCCXIX` deest) -
-  documentation-ideas/014.
+- `-dialectus`: series numerorum non integra regulam dicit (`omnes
+  0-N; supra selecti tantum`) pro `(344)` qui integram simulabat -
+  documentation-ideas/014 (latina.h ipsa nunc integra, infra).
 - Nuntius mortis: admonitio latina.h etiam cum verbum latinae ante
   lexema mortis stat (`s32 nomen = 1` moritur in `=`: "'nomen'
   macrum latina.h est") - bugs/018.
 - `via_nomen` / `via_directorium` (corpus): separatores terminales ut
   POSIX - `"/foo/bar/"` -> `"bar"` + `"/foo"` (olim `""` +
   `"/foo/bar"`); `"/"` -> nomen `""` consulto - bugs/012.
+- **FRANGIT** latina.h (corpus): numeri Romani OMNES `ZEPHYRUM`-
+  `MMMCMXCIX` definiti (olim 344 selecti; `CCCXIX` nunc exstat), sectio
+  generata et ordinata. `MMMM` et `MMMMXCVI` REMOTA (numerus classicus
+  ad 3999 finit): scribe `IV * M` et `IV * MXXIV` - in corpore macro
+  `(IV * MXXIV)` parenthesibus. `-dialectus`: `(4000)`, sine regula.
 
 ## v2 — 2026-09-26
 

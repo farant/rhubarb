@@ -747,7 +747,7 @@ _romanum_scribere (
     s32 reliquum = numerus;
     s32 i;
 
-    si (numerus < I || numerus > MMMM - I)
+    si (numerus < I || numerus > IV * M - I)
     {
         chorda_aedificator_appendere_s32(aedificator, numerus);
         redde;

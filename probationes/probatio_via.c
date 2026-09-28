@@ -12,7 +12,7 @@ s32 principale (vacuum)
     Piscina* piscina;
 
     /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_via", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_via", IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

@@ -170,7 +170,7 @@ s32 principale (vacuum)
      Piscina* p;
 
     piscina = piscina_generare_dynamicum("probatio_numerus_romanus",
-                                         MMMMXCVI);
+                                         IV * MXXIV);
     p = piscina_generare_dynamicum("probatio_numerus_romanus_ansa",
                                    LXIV * MXXIV);
     si (!piscina || !p)
@@ -202,7 +202,7 @@ s32 principale (vacuum)
                                       "MIX");
         /* nullus numerus Romanus: 0, ultra MMMCMXCIX */
         CREDO_CHORDA_VACUA(numerus_romanus_scribere(ZEPHYRUM, p));
-        CREDO_CHORDA_VACUA(numerus_romanus_scribere(MMMM, p));
+        CREDO_CHORDA_VACUA(numerus_romanus_scribere(IV * M, p));
 
         per (n = I; n <= MMM + CM + XC + IX; n++)
         {
@@ -272,8 +272,8 @@ s32 principale (vacuum)
         EXEMPLUM((i64)ZEPHYRUM, "ZEPHYRUM", FALSUM);
         EXEMPLUM((i64)CVI, "CVI", FALSUM);
         EXEMPLUM((i64)(MMM + CM + XC + IX), "MMMCMXCIX", FALSUM);
-        EXEMPLUM((i64)MMMM, "IV * M", VERUM);
-        EXEMPLUM((i64)MMMMXCVI, "IV * MXXIV", VERUM);
+        EXEMPLUM((i64)IV * M, "IV * M", VERUM);
+        EXEMPLUM((i64)IV * MXXIV, "IV * MXXIV", VERUM);
         EXEMPLUM((i64)(V * M + CCLXXX), "V * M + CCLXXX", VERUM);
         EXEMPLUM((i64)LXIV * MXXIV, "LXIV * MXXIV", VERUM);
         /* milia rotunda milia manent (128000 = CXXV * MXXIV quoque) */
@@ -284,7 +284,7 @@ s32 principale (vacuum)
         EXEMPLUM((i64)IV * M * M + (i64)D * M, "IV * M * M + D * M",
             VERUM);
         /* int excessum: (i64) ante factorem primum */
-        EXEMPLUM((i64)MMMMXCVI * MXXIV * MXXIV,
+        EXEMPLUM((i64)IV * MXXIV * MXXIV * MXXIV,
               "(i64)IV * MXXIV * MXXIV * MXXIV", VERUM);
         EXEMPLUM((i64)V * M * M * M, "(i64)V * M * M * M", VERUM);
         /* summa binaria intra factorem: parentheses */
@@ -341,7 +341,7 @@ s32 principale (vacuum)
                 piscina_vacare(p);
             }
         }
-        per (k = I; k <= (i64)MMMMXCVI && omnes; k++)
+        per (k = I; k <= (i64)IV * MXXIV && omnes; k++)
         {
             i64 duo[II];
 
@@ -363,7 +363,7 @@ s32 principale (vacuum)
             }
         }
         /* series pseudo-fortuita (sors, semen fixum) intra 2^40 */
-        sors_seminare(&sors, (i64)MMMMXCVI, (i64)ZEPHYRUM);
+        sors_seminare(&sors, (i64)IV * MXXIV, (i64)ZEPHYRUM);
         per (j = ZEPHYRUM; j < X * M && omnes; j++)
         {
             n = (((i64)sors_proximum(&sors) << XXXII)

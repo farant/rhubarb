@@ -21,7 +21,8 @@ s32 principale(vacuum)
         b32  praeteritus;
 
     /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_nuntium", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_nuntium",
+        IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");

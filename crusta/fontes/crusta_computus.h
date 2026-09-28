@@ -25,7 +25,7 @@
 #include "piscina.h"
 
 #define CRUSTA_COMPUTUS_ALVEUS_INITIUM \
-    ((memoriae_index)(MMMMXCVI * CCLVI))
+    ((memoriae_index)(IV * MXXIV * CCLVI))
 
 nomen structura {
                i32 octeti_fontis;

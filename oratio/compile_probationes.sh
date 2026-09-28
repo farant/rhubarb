@@ -54,6 +54,7 @@ declare -a RADIX_FONTES=(
     "entitates_html_tabula"
     "chorda"
     "chorda_aedificator"
+    "numerus_romanus"
     "xar"
     "friatio"
     "tabula_dispersa"

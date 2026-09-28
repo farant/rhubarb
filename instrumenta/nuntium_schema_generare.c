@@ -31,7 +31,7 @@ principale (
         redde I;
     }
 
-    piscina = piscina_generare_dynamicum("nuntium_gen", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("nuntium_gen", IV * MXXIV);
     si (!piscina)
     {
         fprintf(stderr, "Error: non potuit creare piscinam\n");

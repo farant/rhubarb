@@ -1039,7 +1039,7 @@ interior chorda
 _legere_filum(Arbor2Expansion* exp, chorda* via)
 {
     FILE* filum;
-    character buffer_via[MMMMXCVI];
+    character buffer_via[IV * MXXIV];
     longus mensura;
     i8* contentum;
     chorda resultus;
@@ -1053,7 +1053,7 @@ _legere_filum(Arbor2Expansion* exp, chorda* via)
     }
 
     /* Create null-terminated path */
-    si (via->mensura >= MMMMXCVI)
+    si (via->mensura >= IV * MXXIV)
     {
         redde resultus;
     }

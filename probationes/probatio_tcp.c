@@ -103,7 +103,7 @@ probatio_connexio_http(Piscina* piscina)
 {
            TcpResultus  res;
     constans character* petitio;
-                    i8  buffer[MMMMXCVI];
+                    i8  buffer[IV * MXXIV];
                    s32  n;
                    b32  misit;
 
@@ -145,7 +145,7 @@ probatio_connexio_http(Piscina* piscina)
     printf("  Petitio missa, expectans responsum...\n");
 
     /* Recipere responsum */
-    n = tcp_recipere(res.connexio, buffer, MMMMXCVI - I);
+    n = tcp_recipere(res.connexio, buffer, IV * MXXIV - I);
     CREDO_MAIOR_S32(n, 0);
 
     si (n > 0)
@@ -176,7 +176,7 @@ probatio_mittere_recipere(Piscina* piscina)
 {
            TcpResultus  res;
     constans character* petitio;
-                    i8  buffer[MMMMXCVI];
+                    i8  buffer[IV * MXXIV];
                    s32  totalis;
                    s32  n;
 
@@ -204,7 +204,7 @@ probatio_mittere_recipere(Piscina* piscina)
     totalis = 0;
     fac
     {
-        n = tcp_recipere(res.connexio, buffer, MMMMXCVI);
+        n = tcp_recipere(res.connexio, buffer, IV * MXXIV);
         si (n > 0)
         {
             totalis += n;

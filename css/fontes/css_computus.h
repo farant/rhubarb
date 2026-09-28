@@ -24,7 +24,7 @@
 #include "latina.h"
 #include "piscina.h"
 
-#define CSS_COMPUTUS_ALVEUS_INITIUM ((memoriae_index)(MMMMXCVI * CCLVI))
+#define CSS_COMPUTUS_ALVEUS_INITIUM ((memoriae_index)(IV * MXXIV * CCLVI))
 
 nomen structura {
                i32 octeti_fontis;

@@ -481,7 +481,7 @@ b32
 via_existit (
     chorda via)
 {
-         character buffer[MMMMXCVI]; /* 4096 bytes pro via */
+         character buffer[IV * MXXIV]; /* 4096 bytes pro via */
     structura stat info;
 
     si (via.mensura == ZEPHYRUM || via.datum == NIHIL)
@@ -490,7 +490,7 @@ via_existit (
     }
 
     /* Copiare via ad buffer cum terminatore nullo */
-    si (via.mensura >= MMMMXCVI)
+    si (via.mensura >= IV * MXXIV)
     {
         redde FALSUM; /* Via nimis longa */
     }
@@ -516,7 +516,7 @@ chorda
 via_directorium_currens (
     Piscina* piscina)
 {
-    character  buffer[MMMMXCVI]; /* 4096 bytes pro via */
+    character  buffer[IV * MXXIV]; /* 4096 bytes pro via */
     character* fructus;
 
     si (!piscina)
@@ -527,7 +527,7 @@ via_directorium_currens (
         redde vacua;
     }
 
-    fructus = getcwd(buffer, MMMMXCVI);
+    fructus = getcwd(buffer, IV * MXXIV);
     si (!fructus)
     {
         /* Errore */

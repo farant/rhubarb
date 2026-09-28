@@ -185,7 +185,8 @@ principale (
         redde II;
     }
 
-    piscina = piscina_generare_dynamicum("computus", MMMMXCVI * CCLVI);
+    piscina = piscina_generare_dynamicum("computus",
+        IV * MXXIV * CCLVI);
     si (piscina == NIHIL)
     {
         fprintf(stderr, "computus: piscina non creata\n");

@@ -11,7 +11,7 @@ s32 principale (vacuum)
         b32  praeteritus;
 
     /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_fasti", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("test_fasti", IV * MXXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -546,19 +546,19 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(s,
             chorda_ex_literis("XXXI Decembris MCMXCIX", piscina));
 
-        s = fasti_formare_diem(fasti_dies(MMMM - I, VIII, XXIV),
+        s = fasti_formare_diem(fasti_dies(IV * M - I, VIII, XXIV),
             FASTI_FORMA_LATINA_LONGA, piscina);
         CREDO_CHORDA_AEQUALIS(s,
             chorda_ex_literis("XXIV Augusti MMMCMXCIX", piscina));
 
         /* longissimus sub IV milibus: 3888 */
-        s = fasti_formare_diem(fasti_dies(MMMM - C - XII, VII, XIX),
+        s = fasti_formare_diem(fasti_dies(IV * M - C - XII, VII, XIX),
             FASTI_FORMA_LATINA_LONGA, piscina);
         CREDO_CHORDA_AEQUALIS(s,
             chorda_ex_literis("XIX Iulii MMMDCCCLXXXVIII", piscina));
 
         /* extra limites: cifrae, non numerus Romanus falsus */
-        s = fasti_formare_diem(fasti_dies(MMMM, I, IX),
+        s = fasti_formare_diem(fasti_dies(IV * M, I, IX),
             FASTI_FORMA_LATINA_LONGA, piscina);
         CREDO_CHORDA_AEQUALIS(s,
             chorda_ex_literis("IX Ianuarii 4000", piscina));
