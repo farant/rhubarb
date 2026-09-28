@@ -595,16 +595,30 @@ files); all reverted green.
 
 **Interfaces:** `materia_lexicon_ratum_facere`, `materia_arbor_consilium_nudum(&c, &TOML_REGISTRUM, &ratum, "toml")`, `materia_arbor_scribere_nodum`, `materia_arbor_legere`, `materia_arbor_aequalis` (as crusta P7).
 
-- [ ] **Step 1: Write the failing gate** — every Q4 inline case AND the
+- [x] **Step 1: Write the failing gate** — every Q4 inline case AND the
   whole corpus of Q4 Step 5: `s1 = scribere(radix)`, `r1 = legere(s1)`,
   `s2 = scribere(r1)`, `s1 == s2`, `aequalis(radix, r1, STRUCTURALIS)`,
   emission of `r1` equals the source; FIDELITAS tried and, if accepted,
   asserted everywhere (crusta found it holds). Refusals printed with
   `s.causa`; a refusal for any cause but a named raw-form limit is red.
-- [ ] **Step 2: Run, fix causes (never assertions), run the suite.**
-- [ ] **Step 3: Plant** — remove the re-read document's `cauda` before
+- [x] **Step 2: Run, fix causes (never assertions), run the suite.**
+- [x] **Step 3: Plant** — remove the re-read document's `cauda` before
   the comparator → tree oracle red while `s1`/`s2` stay equal; revert.
-- [ ] **Step 4: Commit** — `["toml/probationes/probatio_toml_stml.c"]`, `["toml"]`.
+- [x] **Step 4: Commit** — `["toml/probationes/probatio_toml_stml.c"]`, `["toml"]`.
+
+**Executed 2026-09-28.** Green on the first run: 41 inline cases (every Q4
+source plus five STML stressors — a string and a comment carrying their own
+closing sequence, a `\u` escape, a space-joined datetime, a multiline
+string) and the whole corpus through both cycles, STRUCTURALIS, FIDELITAS
+(measured and ASSERTED on every document, as crusta found) and
+`materia_sedes_verificare`: toml-test 679/679, house 12/12, wild
+1,794/1,794 (3.27 MB → 51.6 MB STML, ~16×). The corpus walk was factored
+into a shared test helper (`probationes/toml_corpus_ambulare.{h,c}`,
+compiled as an adiumentum) and the Q4 corpus gate rewritten on it (same
+numbers). The oracle-separation mutation is a permanent pin, so the plant
+was a different fault: the builder's initium_lineae rule disabled → red,
+the comparator naming `lexema/initium-lineae` and the node path. Reverted
+green. No substrate change.
 
 ---
 

@@ -1,6 +1,6 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q4 done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q5 done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -56,6 +56,14 @@ first newline; a bad token becomes a `malum` that recovers at the next
 newline (outside brackets) or ',' / closer (inside); `TomlParsura` counts
 mala, missing closers (incl. unterminated strings) and absentiae. Finds
 at find-time: `fontes/toml_arbor.worklog.md`.
+
+## STML (Q5)
+
+Every document round-trips through STML twice with byte-equal text, the
+comparator STRUCTURALIS and FIDELITAS, the position map verified, and the
+re-read tree emitting the source — 41 inline cases and all 2,485 corpus
+files. STML ≈ 16× the source. The corpus walk (toml-test, house, wild
+with sha256 check) is shared by the gates: `probationes/toml_corpus_ambulare`.
 
 ## Currere
 
