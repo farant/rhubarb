@@ -1,5 +1,8 @@
 # tessera 1.2 — plan (bracketed paste, synchronized output, drag events)
 
+**PERFECTUM 2026-09-28** (T1 9a8d51ab, T2 cbc10f3b, T3 59fa1121, T4
+f436b629, T5 44c05466; RELATIO in tessera/phase-log.md).
+
 *2026-09-28. terminal-planning features/001 (bracketed paste), 002
 (synchronized output), and the `?1002` drag events that ludus-on-tessera
 (modules/013) needs. Worktree `../rhubarb-secunda`. Executed INLINE, one

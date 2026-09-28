@@ -877,3 +877,76 @@ the cap the reader drains but keeps nothing.
 - Suite 8/8, saltuarius 13/13, amalgam VERIFICATUM + idempotent.
 **Fran's terminal look (2026-09-28): all good** (saltuarius runs nothing
 on paste, spectaculum shows the paste, the shell is clean after exit).
+
+### RELATIO (tessera 1.2, T1–T6, 2026-09-28)
+
+**Landed.** Three terminal modes, each one tessera SETS and never
+queries (so the thesis holds: a terminal that doesn't know a mode
+ignores it):
+- `?2026` synchronized output: every non-empty frame wrapped, empty
+  frames still zero bytes.
+- `?1002` drags: `TESSERA_MUS_TRACTUS`, stateless.
+- `?2004` bracketed paste: one `TESSERA_EVENTUM_GLUTINUM` per paste,
+  64 KiB cap + truncated flag, 3 s silence ends an unterminated paste.
+The mode strings live in one internal header (`tessera_modi.h`), guarded
+by a structural law-of-pairs probatio (rules I–V: pairing, no strays,
+stack order, required modes, per-frame modes first in the crash string).
+The safety gap that motivated features/001 is closed and pinned end to
+end: saltuarius no longer executes pasted text.
+5 work commits on rhubarb-secunda (9a8d51ab, cbc10f3b, 59fa1121,
+f436b629, 44c05466) + this RELATIO. Suites: tessera 7 → 8 probationes
+(+ `probatio_tessera_glutinum`), vectors 238 → 264 (+7 drag, +19
+paste); debts back to exactly 108 (all tokenizer). saltuarius 13/13
+throughout. Fran looked in the terminal after T2, T3 and T5: all good.
+Ledger: nota …6BSG7G (sequitur the vectors nota); desiderata
+…K14Y34 (paste into saltuarius search) and …ETHAJYNGYXF
+(spectaculum.sh ignores headers); a note on the tokenizer desideratum
+…E4Q (its acceptance bar now includes the paste vectors).
+
+**Complexities (four-part schema):**
+1. *Discovered-while:* T2's saltuarius run (12/13). *Consists-in:* the
+   plan listed tessera's byte goldens but missed saltuarius's pledge
+   golden, which pins tessera's first-frame bytes from outside.
+   *Consequences:* a plan's "goldens to update" list is a guess until a
+   sweep proves it. *Handled-by:* updated explicitly; a
+   `grep -F '\033[?25l'` sweep confirmed nothing else pins frame bytes.
+2. *Discovered-while:* T2's commit. *Consists-in:* the Latin lint
+   rejected "synchronia". *Handled-by:* renamed to
+   `QUADRUM_INITIUM`/`QUADRUM_FINIS` (tessera's own word for a frame),
+   suites rerun after the rename.
+3. *Discovered-while:* preparing T3's terminal look. *Consists-in:*
+   `spectaculum.sh` rebuilds an object only when its `.c` is newer; it
+   ignores headers, and plants leave planted objects in the shared
+   build dir. *Consequences:* a look could run stale mode strings.
+   *Handled-by:* a rebuild after every plant plus a `strings` check of
+   the posix object before each look; the fix is filed as a desideratum
+   (…ETHAJYNGYXF).
+4. *Discovered-while:* T4 (reading T3's red log). *Consists-in:* the
+   harness's enum-indexed `MURIUM_TITULI` wasn't grown with the enum;
+   the failure print read out of bounds and printed "nulla", visible and
+   missed. *Handled-by:* fixed; worklog rule: when an enum grows, check
+   every table indexed by it.
+5. *Discovered-while:* T5 red run. *Consists-in:* credo writes its
+   failure records into the test's piscina, so a zero-allocation check
+   spanning several CREDOs measured credo, not tessera. *Handled-by:*
+   measure around the one call, assert afterwards.
+6. *Discovered-while:* T4 design. *Consists-in:* the frustorum pons
+   ignores the requested timeout, so a harness `MORA` inside a paste
+   means D4 silence, never a short gap. *Consequences:* the 3 s timeout
+   value can't be checked by vectors. *Handled-by:* a counting pons in
+   `probatio_tessera_glutinum` asserts every read inside a paste uses
+   `TESSERA_MORA_GLUTINI_MS` (a plant proved it).
+7. *Discovered-while:* T5. *Consists-in:* every lector now allocates
+   64 KiB, and the vector harness creates one per shape run (thousands).
+   *Handled-by:* per-run `piscina_notare`/`piscina_reficere`; the binary
+   peaks at 1.8 MB.
+
+**Design choices worth remembering:** paste reads stay staged through the
+64-byte buffer (bytes after the end marker need no hand-off), measured
+at ~2.7 ms per MB through the memoria pons; inside a paste the caller's
+timeout yields to the 3 s paste timeout (documented in the header).
+
+**Next** (Fran chooses): unicode width (modules/001, desideratum
+…XBWP), the terminal as a ludus render target (modules/012/013, now
+unblocked by `?1002`), or the tokenizer (modules/002, 108 shapes
+waiting).

@@ -263,8 +263,14 @@ resize torture) — human-run via spectaculum.sh.
 wcwidth/wide/combining (v2+; packed signum doesn't foreclose);
 DECSTBM scroll regions (evidence-gated on fructus); exposed-fd
 event loop (when saltuarius needs async); kitty protocol / curly
-underlines / 256-quantizing emit; drag/motion mouse; widgets =
-second library, permanently.
+underlines / 256-quantizing emit; hover motion (`?1003`, no
+consumer yet); widgets = second library, permanently.
+
+*Undeferred 2026-09-28 (tessera 1.2, `project-specs/tessera-1-2-plan.md`):
+drag events (`?1002`, `TESSERA_MUS_TRACTUS`), synchronized output
+(`?2026`), bracketed paste (`?2004`, `TESSERA_EVENTUM_GLUTINUM`). The
+mode strings live in `fontes/tessera_modi.h` under a structural
+law-of-pairs probatio.*
 
 ## 7. Risks & notes register
 
