@@ -208,6 +208,19 @@ mkdir -p "$RADIX_DIR/build"
 (cd "$RADIX_DIR" && git ls-files '*.toml' | grep -v '^toml/probationes/fixa/') \
     > "$RADIX_DIR/build/toml_corpus.lst"
 
+# aurum silvestre tomllib (Q9): numquam commissum (contentum alienum);
+# regeneratur si abest aut manifesto vetustius. Python absens = CAUTIO
+# clamata, et porta differentiae tunc rubet (numquam tacite viridis).
+AURUM_SILVESTRE="$BUILD_DIR/aurum_silvestre.txt"
+MANIFESTUM="$TOML_DIR/probationes/fixa/silvestria.manifestum"
+# <tolera codex="lint:nt-aequalitas" (manifestum in aequalitate non mutatum: aurum eodem secundo scriptum recens est)
+if [ ! -f "$AURUM_SILVESTRE" ] || [ "$MANIFESTUM" -nt "$AURUM_SILVESTRE" ]; then
+    echo "  [aurum] tomllib silvestre regeneratur"
+    if ! "$TOML_DIR/tomllib_aurum.sh" -silvestre > /dev/null; then
+        echo "CAUTIO: toml/tomllib_aurum.sh -silvestre fractum - porta differentiae rubebit" >&2
+    fi
+fi
+
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "toml." - silva.mensurae('toml.', n) eas legit); numquam suitam frangit
 source "$RADIX_DIR/tools/mensor_suitae.sh"

@@ -1,7 +1,7 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q8 done;
-Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q9 done;
+Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -109,6 +109,15 @@ toml-test's tagged JSON (the same shape the tomllib golden uses).
 `probatio_toml_oraculum`: valid 205/205 equal, invalid 474/474 rejected,
 pinned. `ORACULUM_OMNIA=1` prints every failure, `ORACULUM_EXEMPLUM=
 valid/…toml` one case with its diagnostics.
+
+## The tomllib differential (Q9)
+
+`probatio_toml_differentia`: our verdict and cooked values against the
+tomllib goldens — toml-test 679/679 (pinned exactly), wild corpus zero
+disagreements (1,793 agree + 1 named divergence). Divergences are named
+by CAUSE: "microsecunda" (tomllib truncates fractions to 6 digits, we
+to 9; both follow TOML 1.0). The runner regenerates
+`build/aurum_silvestre.txt` when absent or older than the manifest.
 
 ## Currere
 

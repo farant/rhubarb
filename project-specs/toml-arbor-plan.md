@@ -948,6 +948,29 @@ and skips-with-count files whose sha256 no longer matches.*
   diagnostics → red; revert.
 - [ ] **Step 4: Commit** — `["toml/probationes/probatio_toml_differentia.c"]`, `["toml"]`.
 
+**Executed 2026-09-28.** Measured first: the goldens (toml-test 679
+blocks: 205 VALIDUM, 474 INVALIDUM; wild 1,795 blocks: 1,676 / 119,
+newer than the manifest; JSON lines up to 210 KB, so the gate splits the
+whole file itself) and the walker's naming (absolute wild paths; the
+golden writes `~` — the gate maps `$HOME` → `~`). Pins: toml-test
+agreement exactly **679** (frozen corpus); wild: **zero disagreements**
+in verdict and in value (a rising count would go falsely red whenever a
+Homebrew/cargo file disappears from Fran's disk). At birth: toml-test
+679/679; wild 1,793/1,794 with ONE value disagreement —
+`test_tomllib/.../localtime.toml`, `t=00:00:00.99999999999999`: tomllib
+keeps microseconds (`.999999`, Python datetime), we keep nanoseconds;
+TOML 1.0 requires truncation to the implementation's precision, so both
+are right. Named BY CAUSE, not by path (the path carries the Python
+version): after a value mismatch the gate truncates our datetimes to
+microseconds and compares again; equal → counted as the named divergence
+"microsecunda". The comparator itself forgives nothing. Runner: the wild
+golden is regenerated when absent or older than the manifest (tested by
+moving it aside: regenerated identical in ~1 s); a failed regeneration
+is a loud CAUTIO and a red gate. Plant (the plan's): `sanum` inverted →
+toml-test 208/679, wild 61/1,794, red; restored green. The second-60
+question stays theoretical: no file in either corpus has one. Suite
+10/10.
+
 ---
 
 ## Task Q10: The public API and diagnostics rendering — `toml.h`
