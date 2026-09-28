@@ -597,6 +597,8 @@ mm = silva.metiri('lib/piscina.c', n=1)
 credo(mm.parsare_ms > 0 and mm.allocationes > 0 and 'glr' in mm.phases and mm.campi and mm.campi['via'].endswith('piscina.c'), 'metiri: mensura cum phasibus (%.1f ms)' % mm.parsare_ms)
 mc = silva.metiri('probationes/fixa/css/adversarius.css', n=1)
 credo(mc.parsare_ms >= 0 and 'arbor_legendi' in mc.phases and int(mc.campi['nodi']) > 0 and mc.campi['sana'] == '1', 'metiri css: semita materiae per titulos (%s nodi)' % mc.campi['nodi'])
+mt = silva.metiri('toml/probationes/fixa/toml-test/tests/valid/spec-example-1.toml', n=1)
+credo(mt.parsare_ms >= 0 and 'arbor_legendi' in mt.phases and mt.campi['nodi'] == '88' and mt.campi['diagnostica'] == '0' and mt.campi['sana'] == '1', 'metiri toml: semita materiae per titulos (%s nodi, coquere %s ms)' % (mt.campi['nodi'], mt.campi['ms_coquendi']))
 
 print('--- portae + commissio + planta ---')
 pp = silva.porta('formator-intra')
@@ -1519,6 +1521,13 @@ arb_sedes = silva.arbor(via_sh, sedes=True)
 credo('visio="sedes"' in arb_sedes and 'octeti="0-16"' in arb_sedes
       and 'sedes="1:1-1:3"' in arb_sedes,
       'arbor .sh sedes: visio, tractus conditionis et lexematis if')
+via_toml = os.path.join(T, 'proba_toml.toml')
+open(via_toml, 'w').write('a = 1 # c\n')
+arb_toml = silva.arbor(via_toml)
+credo('grammatica="toml"' in arb_toml and '<par' in arb_toml,
+      'arbor .toml: proiectio toml per suffixum')
+credo('visio="sedes"' in silva.arbor(via_toml, sedes=True),
+      'arbor .toml sedes: visio sedium')
 try:
     silva.arbor(via, sedes=True)
     credo(False, 'arbor .c sedes refutatur')

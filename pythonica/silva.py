@@ -2903,7 +2903,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
             praef = {'radix': '', 'silva': 'silva.', 'css': 'css.',
                      'materia': 'materia.', 'md': 'md.', 'html': 'html.',
                      'briar': 'briar.', 'crusta': 'crusta.',
-                     'oratio': 'oratio.'}.get(nomen)
+                     'oratio': 'oratio.', 'toml': 'toml.'}.get(nomen)
             if praef is not None:
                 ss = mensurae(praef, 1, plenae=False)
                 if ss and (time.time() - float(ss[0].mensurae.get('suita.tempus.totum', 0)) > 0):
@@ -3616,7 +3616,7 @@ def metiri(via, n=7, nudum=False):
     allocationes, usus - pro A/B optimizationum. Instrumentum ex
     suffixo: .css -> css/computus.sh, .md -> md/computus.sh, .html ->
     html/computus.sh, .sh -> crusta/computus.sh, .txt ->
-    oratio/computus.sh (semita
+    oratio/computus.sh, .toml -> toml/computus.sh (semita
     materiae; phases emittendi/arbor_scribendi/arbor_legendi/comparandi),
     aliter silva/computus.sh (lex/expansio/glr/commissio). Columnae per
     TITULOS capitis '#' lectae (campi = dict cursus optimi), ordo =
@@ -3625,7 +3625,8 @@ def metiri(via, n=7, nudum=False):
               else 'md' if via.endswith('.md')
               else 'html' if via.endswith('.html')
               else 'crusta' if via.endswith('.sh')
-              else 'oratio' if via.endswith('.txt') else None)
+              else 'oratio' if via.endswith('.txt')
+              else 'toml' if via.endswith('.toml') else None)
     best = None
     for _ in range(n):
         if cliens:
@@ -3707,7 +3708,8 @@ def _cliens_materiae(via):
     """cliens materiae ex suffixo (instrumenta <cliens>/arbor.sh); None =
     C per silvam"""
     for suffixum, cliens in (('.sh', 'crusta'), ('.html', 'html'),
-                             ('.md', 'md'), ('.txt', 'oratio')):
+                             ('.md', 'md'), ('.txt', 'oratio'),
+                             ('.toml', 'toml')):
         if via.endswith(suffixum):
             return cliens
     return None
@@ -3716,7 +3718,7 @@ def _cliens_materiae(via):
 def arbor(via, nudum=False, sedes=False):
     """documentum STML canonicum plagulae - textus. Instrumentum ex
     suffixo (ut metiri): .sh -> crusta/arbor.sh, .html -> html, .md -> md,
-    .txt -> oratio (clientes materiae; proiectio tota, '-tacitus' eorum
+    .txt -> oratio, .toml -> toml (clientes materiae; proiectio tota, '-tacitus' eorum
     solum numerum octetorum imprimeret), aliter silva/arbor.sh (C;
     'nudum' solius silvae). sedes: VISIO sedium clientis materiae
     (attributa sedes="L:C-L:C" octeti="B-B" in omni elemento nodi et

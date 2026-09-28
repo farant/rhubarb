@@ -1146,6 +1146,26 @@ optimization, one gate:
    parse + 3 cook timeouts red; both restored green. Measurements added
    to park …FAD8. Suite 12/12.
 
+**Q11b executed 2026-09-28.** crusta P10 transcribed: `toml_computus`
+(parse in its own arena; emission, STML write/read, comparator AND
+cooking in a second arena — two toml columns beyond crusta's:
+`diagnostica` pinned, `ms_coquendi` printed; the node count is
+iterative so the tool survives deep files), `toml/instrumenta/
+{computus,arbor}.c`, `toml/{computus,arbor}.sh` (include order
+`toml/fontes` first, the Q10 transition), `basis.tsv` born by
+`COMPUTUS_SCRIBERE=1` (cause: birth) and identical over two further
+runs. **Deviation:** the plan's third fixture was "the largest wild
+file" — third-party content may not enter the repo (Fran) and a golden
+needs frozen input, so all three fixtures are committed toml-test files:
+`valid/spec-example-1` (spec example), `valid/multibyte` (largest valid),
+`invalid/spec-1.0.0/string-4-0` (syntax error; byte law and STML round
+trip hold there too, 2 diagnostics). pythonica: suite prefix `toml.`,
+`metiri`/`arbor` dispatch `.toml` → toml, three new assertions
+(metiri 88 nodes/0 diagnostics/sana; arbor projection; arbor sedes);
+PYTHONICA sana. Plant: `multibyte` `nodi` 46 → 47 in the golden →
+"DIVERGIT …multibyte.toml.nodi: 46 pro 47", red; restored green. Suite
+13/13.
+
 ---
 
 ## Task Q12: Migration — the three tools, aedilis, retire `lib/toml.c`

@@ -1,7 +1,7 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q10 + Q11a done;
-Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib, Q10 API, Q11a totality done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q11 done;
+Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib, Q10 API, Q11 totality + computus done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -147,12 +147,28 @@ count; an iterative work stack). materia's limits are PINNED as
 materia's quadratic derivation when the parse is clean. A failing input
 is written to `build/totalitas_fractum.toml`.
 
+## Computus and tools (Q11b)
+
+`fontes/toml_computus.{h,c}` measures one file: parse in its own arena
+(memory numbers), then emission, STML write/read, comparator and
+COOKING in a second arena; nodes, tokens, STML bytes, diagnostics,
+memory, allocations, and ms per phase. `./toml/computus.sh <f.toml>
+[-machina] [-iter N]`; `./toml/arbor.sh <f.toml> [-tacitus] [-sedes]`
+prints the STML. pythonica: `silva.metiri('x.toml')`,
+`silva.arbor('x.toml')`, suite prefix `toml.`. Gate
+`probatio_toml_computus`: three frozen toml-test fixtures against
+`probationes/fixa/computus/basis.tsv` (deterministic columns pinned,
+times printed only); `COMPUTUS_SCRIBERE=1` regenerates — name the cause
+in the commit.
+
 ## Currere
 
 ```
 ./toml/compile_probationes.sh              # omnes
 ./toml/compile_probationes.sh registrum    # filtrum substringae
 ./toml/tomllib_aurum.sh [-silvestre]       # aurea tomllib (Q1)
+./toml/computus.sh <f.toml> [-machina]     # mensura (Q11b)
+./toml/arbor.sh <f.toml> [-sedes]          # STML (Q11b)
 ```
 
 0 sanum / 1 fractae / **2 = NULLA CURSA**. Log: `build/test_logs/toml.log`.
