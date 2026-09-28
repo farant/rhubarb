@@ -109,3 +109,38 @@ possibly-empty chorda.
 **Refused headers get an orphan table.** Otherwise the pairs after a
 bad header would land in the previous table and produce a cascade of
 false duplicate-key errors.
+
+---
+
+## 2026-09-28 — Q11a totality: the builder was quadratic in depth
+
+**Iterative is not the same as linear.** The builder never recursed, so
+a 100 000-deep `[` never crashed — but it took 27.7 s. `sample` on a
+40 000-deep parse: 89 % in `xar_obtinere` under `toml_arbor_parsare`
+line 873, i.e. `_unci_aperti`, which walked the WHOLE frame stack on
+every token to tell the lector how many brackets were open. Now a
+running count (`Aedificatio.unci`) updated where frames are pushed
+(`_impellere`) and popped (`_depellere`, now the ONE way the stack
+shrinks). 100 000 deep: 0.01–0.19 s across shapes. The totality gate
+parses every shape at 100 000 under `CREDO_NON_PENDET(…, 5 s)`, and a
+plant that restores the full-stack count turns it red.
+
+**Cooking made iterative (toml_coctum).** Containers are created empty,
+inserted into their parent at once, and filled from a work stack
+(`Opus` frames) in source order — insertion order unchanged, so key
+order and duplicate detection behave as before. 100 000 deep: 0.12–0.33
+s (was SIGSEGV). Plant: the work loop calling itself per array element
+→ the 100 000 cook red.
+
+**Derivation skipped when the parse is clean.** materia's
+`materia_diagnostica_derivare` is quadratic in depth (40 000: 4.4 s).
+A clean parse (no mala, closers, absentiae) has nothing to derive, so
+`toml_coquere` skips it when handed a sana `TomlParsura`. The totality
+gate asserts on EVERY generated case that cooking with and without the
+parsura yields the same number of diagnostics — the skip is invisible
+by test, not by argument.
+
+**What stays materia's (pinned, not fixed here — Fran):** emission
+SIGSEGV at 100 000 (lives at 40 000), STML projection SIGSEGV at
+100 000 (lives at 500; > 60 s at 10 000), derivation quadratic.
+Recorded on park …FAD8.
