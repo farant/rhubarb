@@ -336,7 +336,8 @@ principale (vacuum)
         CREDO_FALSUM (pi->intratum);
         CREDO_AEQUALIS_I32 (pi->numerus_exitum, I);
         captum = tessera_pons_memoriae_captum(pi);
-        CREDO_CHORDA_AEQUALIS_LITERIS (captum, "\033[0m\033[?25h");
+        CREDO_CHORDA_AEQUALIS_LITERIS (captum,
+            "\033[?2026l" "\033[0m\033[?25h");
 
         tessera_resumere(opus);
         CREDO_VERUM (pi->intratum);
@@ -348,7 +349,7 @@ principale (vacuum)
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pi);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum,
-            "\033[?25l\033[2J\033[1;1H\033[0mst");
+            "\033[?2026h" "\033[?25l\033[2J\033[1;1H\033[0mst" "\033[?2026l");
     }
 
     credo_imprimere_compendium();

@@ -5026,8 +5026,17 @@ tessera_magnitudinem_renovare (
 /* Scrinium alternum + mus (pressus/solutus) + mus SGR */
 #define INTRANDI "\033[?1049h\033[?1000h\033[?1006h"
 
-/* Ordine inverso relicti; deinde stilus nativus + cursor visibilis */
-#define EXEUNDI  "\033[?1006l\033[?1000l\033[?1049l\033[0m\033[?25h"
+/* Modus PER QUADRUM (non in INTRANDI): tessera_praesentare quadrum
+ * non vacuum his includit - terminal quadrum integrum ostendit (nulla
+ * laceratio). Terminal ignarus modum tacite neglegit. */
+#define QUADRUM_INITIUM "\033[?2026h"
+#define QUADRUM_FINIS   "\033[?2026l"
+
+/* Quadrum apertum PRIMUM clauditur (ruina inter initium et finem
+ * terminalem sustinentem non congelet), deinde modi ordine inverso;
+ * deinde stilus nativus + cursor visibilis */
+#define EXEUNDI  QUADRUM_FINIS \
+                 "\033[?1006l\033[?1000l\033[?1049l\033[0m\033[?25h"
 
 #endif /* TESSERA_MODI_H */
 
@@ -7321,8 +7330,9 @@ tessera_intermittere (
         redde;
     }
     tessera_chorda_aedificator_reset(opus->aed);
+    /* quadrum synchronum (si apertum) claudere ante $EDITOR - cautela */
     tessera_chorda_aedificator_appendere_literis(opus->aed,
-        "\033[0m\033[?25h");
+        QUADRUM_FINIS "\033[0m\033[?25h");
     {
         TesseraChorda visus = tessera_chorda_aedificator_spectare(opus->aed);
 
@@ -7668,6 +7678,9 @@ tessera_praesentare (
     }
     t0 = clock();
     tessera_chorda_aedificator_reset(opus->aed);
+    /* Quadrum synchronum (?2026): initium semper praemittitur; si
+     * nihil sequitur, quadrum vacuum manet (nulli octeti, ut prius) */
+    tessera_chorda_aedificator_appendere_literis(opus->aed, QUADRUM_INITIUM);
     stilus_currens = tessera_stilus_nativus();
 
     si (opus->primum)
@@ -7766,8 +7779,13 @@ tessera_praesentare (
     {
         TesseraChorda visus = tessera_chorda_aedificator_spectare(opus->aed);
 
-        si (visus.mensura > ZEPHYRUM)
+        /* plus quam initium synchroniae = quadrum non vacuum: claudere
+         * et scribere; aliter NIHIL scribitur (quadrum vacuum) */
+        si (visus.mensura > (i32)(magnitudo(QUADRUM_INITIUM) - I))
         {
+            tessera_chorda_aedificator_appendere_literis(opus->aed,
+                QUADRUM_FINIS);
+            visus = tessera_chorda_aedificator_spectare(opus->aed);
             successus = opus->pons->scribere(opus->pons->datum,
                 visus.datum, (i32)visus.mensura);
             opus->fructus.octeti_emissi += visus.mensura;

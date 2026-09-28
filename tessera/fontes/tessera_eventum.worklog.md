@@ -266,3 +266,21 @@ remain, all tokenizer territory: H2, H7, H8, foreign forms, ESC prefix).
 Amalgam VERIFICATUM + idempotent; saltuarius 13/13. Compiling plants:
 SS3 abort disabled → exactly the 2 SS3 vectors; huge-modifier check
 disabled → exactly the overflow vector.
+
+## 2026-09-28: tessera 1.2 T2, synchronized output (?2026) (opus, not eventum, but the log lives here)
+
+`tessera_praesentare` prepends `QUADRUM_INITIUM` and, only if
+anything followed, appends `QUADRUM_FINIS` and writes; a no-op frame
+still writes ZERO bytes. `?2026l` is FIRST in EXEUNDI (crash safety) and
+in `tessera_intermittere`. `probatio_tessera_modi` gained rule V
+(per-frame modes: never in INTRANDI, always first in EXEUNDI). Goldens
+updated by hand as explicit `"\033[?2026h" "<old>" "\033[?2026l"`: opus
+×6, eventum ×2, hospes ×1, AND saltuarius's pledge golden
+(`probatio_saltuarius_salve.c:88`), which the plan's list MISSED. It
+surfaced as saltuarius 12/13; a `grep -F '\033[?25l'` sweep then
+confirmed nothing else pins tessera's frame bytes. Three compiling
+plants caught (EXEUNDI without ?2026l → rule V by name; empty frame
+written → the zero-byte assertions; close marker dropped → all 8
+goldens). **Fran's terminal look (2026-09-28): everything works**
+(spectaculum; no escape garbage, redraws, intermittere, Ctrl-Z/fg,
+quit).

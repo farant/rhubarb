@@ -81,7 +81,7 @@ principale (vacuum)
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum,
-            "\033[?25l\033[2J\033[1;1H\033[0mab");
+            "\033[?2026h" "\033[?25l\033[2J\033[1;1H\033[0mab" "\033[?2026l");
     }
 
 
@@ -101,7 +101,7 @@ principale (vacuum)
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum,
-            "\033[2;4H\033[0;38;2;255;0;0mz");
+            "\033[?2026h" "\033[2;4H\033[0;38;2;255;0;0mz" "\033[?2026l");
     }
 
 
@@ -121,7 +121,8 @@ principale (vacuum)
         tessera_cellulam_ponere(opus, I, II, (i32)'y', _nativus());
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
-        CREDO_CHORDA_AEQUALIS_LITERIS (captum, "\033[3;1H\033[0mxy");
+        CREDO_CHORDA_AEQUALIS_LITERIS (captum,
+            "\033[?2026h" "\033[3;1H\033[0mxy" "\033[?2026l");
     }
 
 
@@ -155,7 +156,8 @@ principale (vacuum)
         tessera_cursorem_ponere(opus, II, I);
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
-        CREDO_CHORDA_AEQUALIS_LITERIS (captum, "\033[2;3H\033[?25h");
+        CREDO_CHORDA_AEQUALIS_LITERIS (captum,
+            "\033[?2026h" "\033[2;3H\033[?25h" "\033[?2026l");
 
         tessera_pons_memoriae_purgare(pm);
         CREDO_VERUM (tessera_praesentare(opus));
@@ -166,7 +168,8 @@ principale (vacuum)
         tessera_cursorem_ponere(opus, -I, -I);
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
-        CREDO_CHORDA_AEQUALIS_LITERIS (captum, "\033[?25l");
+        CREDO_CHORDA_AEQUALIS_LITERIS (captum,
+            "\033[?2026h" "\033[?25l" "\033[?2026l");
     }
 
 
@@ -322,7 +325,7 @@ principale (vacuum)
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum,
-            "\033[?25l\033[2J\033[1;1H\033[0mr");
+            "\033[?2026h" "\033[?25l\033[2J\033[1;1H\033[0mr" "\033[?2026l");
     }
 
 

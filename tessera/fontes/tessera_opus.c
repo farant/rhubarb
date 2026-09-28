@@ -1,6 +1,7 @@
 /* tessera_opus.c - Implementatio operis (Phase A) */
 
 #include "tessera_opus.h"
+#include "tessera_modi.h"
 #include "utf8.h"
 #include <string.h>
 #include <time.h>
@@ -223,8 +224,9 @@ tessera_intermittere (
         redde;
     }
     chorda_aedificator_reset(opus->aed);
+    /* quadrum synchronum (si apertum) claudere ante $EDITOR - cautela */
     chorda_aedificator_appendere_literis(opus->aed,
-        "\033[0m\033[?25h");
+        QUADRUM_FINIS "\033[0m\033[?25h");
     {
         chorda visus = chorda_aedificator_spectare(opus->aed);
 
@@ -570,6 +572,9 @@ tessera_praesentare (
     }
     t0 = clock();
     chorda_aedificator_reset(opus->aed);
+    /* Quadrum synchronum (?2026): initium semper praemittitur; si
+     * nihil sequitur, quadrum vacuum manet (nulli octeti, ut prius) */
+    chorda_aedificator_appendere_literis(opus->aed, QUADRUM_INITIUM);
     stilus_currens = tessera_stilus_nativus();
 
     si (opus->primum)
@@ -668,8 +673,13 @@ tessera_praesentare (
     {
         chorda visus = chorda_aedificator_spectare(opus->aed);
 
-        si (visus.mensura > ZEPHYRUM)
+        /* plus quam initium synchroniae = quadrum non vacuum: claudere
+         * et scribere; aliter NIHIL scribitur (quadrum vacuum) */
+        si (visus.mensura > (i32)(magnitudo(QUADRUM_INITIUM) - I))
         {
+            chorda_aedificator_appendere_literis(opus->aed,
+                QUADRUM_FINIS);
+            visus = chorda_aedificator_spectare(opus->aed);
             successus = opus->pons->scribere(opus->pons->datum,
                 visus.datum, (i32)visus.mensura);
             opus->fructus.octeti_emissi += visus.mensura;

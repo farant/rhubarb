@@ -85,7 +85,8 @@ principale (vacuum)
         visus.mensura  = captum.mensura;
         visus.datum    = captum.datum;
         CREDO_CHORDA_AEQUALIS_LITERIS (visus,
-            "\033[?25l\033[2J\033[1;1H\033[0msaltuarius");
+            "\033[?2026h" "\033[?25l\033[2J\033[1;1H\033[0msaltuarius"
+            "\033[?2026l");
 
         /* clavis scripta per pontem memoriae (mechanismus aureorum
          * sessionum A2) */

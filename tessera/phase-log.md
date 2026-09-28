@@ -725,3 +725,25 @@ porta 0 green. Amalgam VERIFICATUM + idempotent; escape bytes in the
 amalgam identical to before and defined once. Suite 7/7, saltuarius
 13/13. T2–T5 add their modes to this header, and the probatio guards
 each addition.
+
+### INTENTIO (T2: synchronized output ?2026)
+
+`tessera_praesentare` wraps every NON-empty frame in `?2026h … ?2026l`;
+a no-op frame stays ZERO bytes (existing golden). The markers get named
+constants in `tessera_modi.h` (`SYNCHRONIA_INITIUM`/`_FINIS`, unsealed):
+they're PER-FRAME, never in INTRANDI, so the law-of-pairs probatio gains
+rule V (every per-frame mode is left in EXEUNDI, the crash-safety
+guarantee) and rule II exempts them. `?2026l` goes FIRST in EXEUNDI (end
+any open frame before leaving modes), and `tessera_intermittere` emits it
+before handing the screen to `$EDITOR`. Byte goldens change by exactly
+the wrapper: each checked by hand (opus, eventum, salve, pons, hospes),
+never bulk-replaced. Terminal step: spectaculum in Terminal.app (the
+likeliest non-supporter) + a supporting terminal; Fran looks before the
+commit.
+
+**T2 FACTUM (synchronized output).** Non-empty frames wrapped in
+?2026h…?2026l, no-op frames still 0 bytes; ?2026l first in EXEUNDI and
+in intermittere; modi rule V. 9 goldens + saltuarius's pledge updated
+explicitly (the pledge was missing from the plan's list; saltuarius
+caught it). Three compiling plants caught. Fran's terminal look: all
+good. Suite 7/7, saltuarius 13/13, amalgam VERIFICATUM + idempotent.

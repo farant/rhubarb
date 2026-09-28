@@ -20,7 +20,16 @@
 /* Scrinium alternum + mus (pressus/solutus) + mus SGR */
 #define INTRANDI "\033[?1049h\033[?1000h\033[?1006h"
 
-/* Ordine inverso relicti; deinde stilus nativus + cursor visibilis */
-#define EXEUNDI  "\033[?1006l\033[?1000l\033[?1049l\033[0m\033[?25h"
+/* Modus PER QUADRUM (non in INTRANDI): tessera_praesentare quadrum
+ * non vacuum his includit - terminal quadrum integrum ostendit (nulla
+ * laceratio). Terminal ignarus modum tacite neglegit. */
+#define QUADRUM_INITIUM "\033[?2026h"
+#define QUADRUM_FINIS   "\033[?2026l"
+
+/* Quadrum apertum PRIMUM clauditur (ruina inter initium et finem
+ * terminalem sustinentem non congelet), deinde modi ordine inverso;
+ * deinde stilus nativus + cursor visibilis */
+#define EXEUNDI  QUADRUM_FINIS \
+                 "\033[?1006l\033[?1000l\033[?1049l\033[0m\033[?25h"
 
 #endif /* TESSERA_MODI_H */
