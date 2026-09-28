@@ -53,7 +53,7 @@ corpus_infixum_regenerare () {
     if [ ! -f "$CORPUS_C" ]; then
         regen=1
     elif [ -n "$(find lib include vendor tools/capsula_generare.c \
-            natura/cocta canones.registrum natura/natura.canon \
+            materia/fontes toml/fontes natura/cocta canones.registrum natura/natura.canon \
             aedilis.canon canon.canon silva/grammatica/grammatica.canon \
             silva/quaestiones.canon corpus.symbola.tsv \
             silva/fontes/systema_c89.h silva/fontes/systema_posix.h \
@@ -67,6 +67,7 @@ corpus_infixum_regenerare () {
         # sorditia SCOPATA ad contenta corporis - plagulae aliae (FAQ,
         # gesta) semper mutatae sunt nec in capsulam eunt
         if [ -n "$(git status --porcelain -- lib include vendor \
+                materia/fontes toml/fontes \
                 tools/capsula_generare.c natura/cocta canones.registrum \
                 natura/natura.canon aedilis.canon canon.canon \
                 silva/grammatica/grammatica.canon \
@@ -77,7 +78,10 @@ corpus_infixum_regenerare () {
         printf '%s\n' "$STAMPA" > corpus.versio
         cat > corpus_silicis.toml <<'TOML'
 # GENERATUM a tools/corpus_infixum.sh - NE MANU EDITES (gitignoratum)
-corpus_silicis_files = ["lib/*.c", "lib/*.m", "include/*.h", "vendor/*", "tools/capsula_generare.c", "corpus.versio", "corpus.symbola.tsv", "natura/cocta/*.canon", "natura/cocta/semina.census", "canones.registrum", "natura/natura.canon", "aedilis.canon", "canon.canon", "silva/grammatica/*.canon", "silva/quaestiones.canon", "silva/fontes/systema_c89.h", "silva/fontes/systema_posix.h"]
+# radices clientium (materia/fontes, toml/fontes): instrumentum capsulae
+# clientem toml trahit (toml Q12, 2026-09-28) - vide lib/silex.c
+# SILEX_RADICES_CLIENTIUM
+corpus_silicis_files = ["lib/*.c", "lib/*.m", "include/*.h", "materia/fontes/*.c", "materia/fontes/*.h", "toml/fontes/*.c", "toml/fontes/*.h", "vendor/*", "tools/capsula_generare.c", "corpus.versio", "corpus.symbola.tsv", "natura/cocta/*.canon", "natura/cocta/semina.census", "canones.registrum", "natura/natura.canon", "aedilis.canon", "canon.canon", "silva/grammatica/*.canon", "silva/quaestiones.canon", "silva/fontes/systema_c89.h", "silva/fontes/systema_posix.h"]
 corpus_silicis_compress = true
 TOML
         if [ ! -x bin/capsula_generare ]; then

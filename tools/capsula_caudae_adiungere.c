@@ -46,7 +46,7 @@ nomen structura {
     chorda via;              /* Relative path */
     chorda datum;            /* File contents (original) */
     chorda compressa;        /* Compressed data (or original if no compression) */
-    b32    est_compressa;    /* Was compression applied? */
+       b32 est_compressa;    /* Was compression applied? */
 } CaudaeFileEntry;
 
 
@@ -55,7 +55,9 @@ nomen structura {
  * ======================================================================== */
 
 interior b32
-_glob_congruit(constans character* pattern, constans character* str)
+_glob_congruit (
+    constans character* pattern,
+    constans character* str)
 {
     dum (*pattern && *str)
     {
@@ -102,11 +104,11 @@ _glob_congruit(constans character* pattern, constans character* str)
  * ======================================================================== */
 
 interior vacuum
-_expand_glob(
+_expand_glob (
     constans character* pattern,
     constans character* base_dir,
-    Xar*                files_out,
-    Piscina*            piscina)
+                   Xar* files_out,
+               Piscina* piscina)
 {
     DIR*                dir;
     structura dirent*   entry;
@@ -122,8 +124,8 @@ _expand_glob(
         dir_len = (i32)(slash - pattern);
         si (dir_len >= 512) dir_len = 511;
         memcpy(dir_part, pattern, (size_t)dir_len);
-        dir_part[dir_len] = '\0';
-        file_pattern = slash + 1;
+        dir_part[dir_len]  = '\0';
+        file_pattern       = slash + 1;
     }
     alioquin
     {
@@ -133,7 +135,8 @@ _expand_glob(
 
     si (base_dir != NIHIL && strlen(base_dir) > 0)
     {
-        snprintf(path_buffer, sizeof(path_buffer), "%s/%s", base_dir, dir_part);
+        snprintf(path_buffer, sizeof(path_buffer), "%s/%s", base_dir,
+            dir_part);
     }
     alioquin
     {
@@ -144,7 +147,8 @@ _expand_glob(
     dir = opendir(path_buffer);
     si (dir == NIHIL)
     {
-        fprintf(stderr, "Error: non possum aperire directorium '%s'\n", path_buffer);
+        fprintf(stderr, "Error: non possum aperire directorium '%s'\n",
+            path_buffer);
         redde;
     }
 
@@ -157,16 +161,18 @@ _expand_glob(
 
         si (_glob_congruit(file_pattern, entry->d_name))
         {
-            character full_path[1024];
-            chorda*   path_chorda;
+            character  full_path[1024];
+               chorda* path_chorda;
 
             si (strcmp(dir_part, ".") == 0)
             {
-                snprintf(full_path, sizeof(full_path), "%s", entry->d_name);
+                snprintf(full_path, sizeof(full_path), "%s",
+                    entry->d_name);
             }
             alioquin
             {
-                snprintf(full_path, sizeof(full_path), "%s/%s", dir_part, entry->d_name);
+                snprintf(full_path, sizeof(full_path), "%s/%s",
+                    dir_part, entry->d_name);
             }
 
             path_chorda = (chorda*)xar_addere(files_out);
@@ -186,7 +192,9 @@ _expand_glob(
  * ======================================================================== */
 
 interior vacuum
-_write_i32_le(i8* buf, i32 value)
+_write_i32_le (
+     i8* buf,
+    i32  value)
 {
     buf[0] = (i8)(value & 0xFF);
     buf[1] = (i8)((value >> VIII) & 0xFF);
@@ -194,9 +202,10 @@ _write_i32_le(i8* buf, i32 value)
     buf[3] = (i8)((value >> XXIV) & 0xFF);
 }
 
-
 interior vacuum
-_write_i64_le(i8* buf, i64 value)
+_write_i64_le (
+     i8* buf,
+    i64  value)
 {
     buf[0] = (i8)(value & 0xFF);
     buf[1] = (i8)((value >> VIII) & 0xFF);
@@ -214,16 +223,16 @@ _write_i64_le(i8* buf, i64 value)
  * ======================================================================== */
 
 interior b32
-_append_assets(
+_append_assets (
     constans character* section_name,
-    Xar*                file_patterns,
-    b32                 compress,
+                   Xar* file_patterns,
+                   b32  compress,
     constans character* config_dir,
     constans character* target_path,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
-    Xar*        file_paths;
-    Xar*        entries;
+    Xar* file_paths;
+    Xar* entries;
     FILE*       target_file;
     i64         asset_offset;
     i32         i;
@@ -246,7 +255,7 @@ _append_assets(
         si (pattern != NIHIL)
         {
             character pattern_cstr[512];
-            i32       len;
+                  i32 len;
 
             len = (i32)pattern->mensura;
             si (len > 511) len = 511;
@@ -271,10 +280,10 @@ _append_assets(
 
     per (i = 0; i < num_files; i++)
     {
-        chorda*          path;
+                 chorda* path;
         CaudaeFileEntry* entry;
-        character        full_path[1024];
-        i32              path_len;
+              character  full_path[1024];
+                    i32  path_len;
 
         path = (chorda*)xar_obtinere(file_paths, i);
         si (path == NIHIL)
@@ -303,12 +312,13 @@ _append_assets(
             redde FALSUM;
         }
 
-        entry->via = *path;
-        entry->datum = filum_legere_totum(full_path, piscina);
+        entry->via    = *path;
+        entry->datum  = filum_legere_totum(full_path, piscina);
 
         si (entry->datum.mensura == 0)
         {
-            fprintf(stderr, "Warning: non possum legere '%s'\n", full_path);
+            fprintf(stderr, "Warning: non possum legere '%s'\n",
+                full_path);
         }
 
         /* Compress if requested */
@@ -323,44 +333,44 @@ _append_assets(
 
             si (res.status == FLATURA_STATUS_OK)
             {
-                entry->compressa.datum = res.datum;
-                entry->compressa.mensura = res.mensura;
-                entry->est_compressa = VERUM;
+                entry->compressa.datum    = res.datum;
+                entry->compressa.mensura  = res.mensura;
+                entry->est_compressa      = VERUM;
             }
             alioquin
             {
-                entry->compressa = entry->datum;
-                entry->est_compressa = FALSUM;
+                entry->compressa      = entry->datum;
+                entry->est_compressa  = FALSUM;
             }
         }
         alioquin
         {
-            entry->compressa = entry->datum;
-            entry->est_compressa = FALSUM;
+            entry->compressa      = entry->datum;
+            entry->est_compressa  = FALSUM;
         }
     }
 
     /* Calculate offsets and total sizes */
-    toc_size = num_files * XX;
-    string_table_offset = XII + toc_size;
+    toc_size             = num_files * XX;
+    string_table_offset  = XII + toc_size;
 
     string_table_size = 0;
     per (i = 0; i < xar_numerus(entries); i++)
     {
         CaudaeFileEntry* entry;
 
-        entry = (CaudaeFileEntry*)xar_obtinere(entries, i);
-        string_table_size += (i32)entry->via.mensura;
+        entry              = (CaudaeFileEntry*)xar_obtinere(entries, i);
+        string_table_size  += (i32)entry->via.mensura;
     }
 
     data_offset = string_table_offset + string_table_size;
 
     /* Calculate total compressed data size */
     {
-        i64 total_data_size;
-        i64 total_blob_size;
-        i8* blob;
-        i8* cursor;
+        i64  total_data_size;
+        i64  total_blob_size;
+         i8* blob;
+         i8* cursor;
 
         total_data_size = 0;
         per (i = 0; i < xar_numerus(entries); i++)
@@ -372,11 +382,13 @@ _append_assets(
         }
 
         /* Total blob = header + TOC + strings + data + footer */
-        total_blob_size = (i64)XII + (i64)toc_size + (i64)string_table_size +
-                          total_data_size + (i64)XVI;
+        total_blob_size = (i64)XII + (i64)toc_size
+            + (i64)string_table_size
+            + total_data_size + (i64)XVI;
 
         /* Allocate single buffer pro toto blob */
-        blob = (i8*)piscina_allocare(piscina, (memoriae_index)total_blob_size);
+        blob = (i8*)piscina_allocare(piscina,
+            (memoriae_index)total_blob_size);
         si (blob == NIHIL)
         {
             fprintf(stderr, "Error: allocatio blob fallita\n");
@@ -389,7 +401,8 @@ _append_assets(
         target_file = fopen(target_path, "rb");
         si (target_file == NIHIL)
         {
-            fprintf(stderr, "Error: non possum aperire '%s'\n", target_path);
+            fprintf(stderr, "Error: non possum aperire '%s'\n",
+                target_path);
             redde FALSUM;
         }
 
@@ -403,7 +416,8 @@ _append_assets(
         asset_offset = (i64)ftell(target_file);
         fclose(target_file);
 
-        printf("    Asset offset: %lld bytes\n", (longus longus)asset_offset);
+        printf("    Asset offset: %lld bytes\n",
+            (longus longus)asset_offset);
 
         /* Build blob in memory: CAPS header */
         _write_i32_le(cursor, (i32)CAPSULA_MAGICA);
@@ -412,19 +426,19 @@ _append_assets(
         cursor += XII;
 
         /* Build TOC entries */
-        current_string_offset = string_table_offset;
-        current_data_offset = data_offset;
+        current_string_offset  = string_table_offset;
+        current_data_offset    = data_offset;
 
         per (i = 0; i < xar_numerus(entries); i++)
         {
             CaudaeFileEntry* entry;
-            i32              comp_size;
-            i32              raw_size;
+                        i32  comp_size;
+                        i32  raw_size;
 
             entry = (CaudaeFileEntry*)xar_obtinere(entries, i);
 
-            comp_size = (i32)entry->compressa.mensura;
-            raw_size = (i32)entry->datum.mensura;
+            comp_size  = (i32)entry->compressa.mensura;
+            raw_size   = (i32)entry->datum.mensura;
 
             si (!entry->est_compressa)
             {
@@ -438,8 +452,8 @@ _append_assets(
             _write_i32_le(cursor + XVI, raw_size);
             cursor += XX;
 
-            current_string_offset += (i32)entry->via.mensura;
-            current_data_offset += comp_size;
+            current_string_offset  += (i32)entry->via.mensura;
+            current_data_offset    += comp_size;
         }
 
         /* Build string table */
@@ -448,7 +462,8 @@ _append_assets(
             CaudaeFileEntry* entry;
 
             entry = (CaudaeFileEntry*)xar_obtinere(entries, i);
-            memcpy(cursor, entry->via.datum, (size_t)entry->via.mensura);
+            memcpy(cursor, entry->via.datum,
+                (size_t)entry->via.mensura);
             cursor += entry->via.mensura;
         }
 
@@ -461,7 +476,8 @@ _append_assets(
 
             si (entry->compressa.mensura > 0)
             {
-                memcpy(cursor, entry->compressa.datum, (size_t)entry->compressa.mensura);
+                memcpy(cursor, entry->compressa.datum,
+                    (size_t)entry->compressa.mensura);
                 cursor += entry->compressa.mensura;
             }
         }
@@ -476,11 +492,14 @@ _append_assets(
         target_file = fopen(target_path, "ab");
         si (target_file == NIHIL)
         {
-            fprintf(stderr, "Error: non possum aperire '%s' pro appendere\n", target_path);
+            fprintf(stderr,
+                "Error: non possum aperire '%s' pro appendere\n",
+                target_path);
             redde FALSUM;
         }
 
-        si (fwrite(blob, I, (size_t)total_blob_size, target_file) != (size_t)total_blob_size)
+        si (fwrite(blob, I, (size_t)total_blob_size, target_file)
+            != (size_t)total_blob_size)
         {
             fprintf(stderr, "Error: fwrite blob fallita\n");
             fclose(target_file);
@@ -495,8 +514,8 @@ _append_assets(
         i64 total_raw;
         i64 total_compressed;
 
-        total_raw = 0;
-        total_compressed = 0;
+        total_raw         = 0;
+        total_compressed  = 0;
 
         per (i = 0; i < xar_numerus(entries); i++)
         {
@@ -507,10 +526,13 @@ _append_assets(
             total_compressed += (i64)entry->compressa.mensura;
         }
 
-        printf("    Raw data:        %lld bytes\n", (longus longus)total_raw);
-        printf("    Compressed data: %lld bytes\n", (longus longus)total_compressed);
+        printf("    Raw data:        %lld bytes\n",
+            (longus longus)total_raw);
+        printf("    Compressed data: %lld bytes\n",
+            (longus longus)total_compressed);
         printf("    Ratio:           %.1f%%\n",
-               total_raw > 0 ? (duplex)total_compressed / (duplex)total_raw * 100.0 : 0.0);
+               total_raw > 0 ? (duplex)total_compressed
+                   / (duplex)total_raw * 100.0 : 0.0);
     }
 
     redde VERUM;
@@ -522,10 +544,12 @@ _append_assets(
  * ======================================================================== */
 
 integer
-principale(integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina*            piscina;
-    chorda              config_content;
+    Piscina* piscina;
+     chorda  config_content;
     TomlDocumentum*     doc;
     constans character* config_path;
     constans character* target_path;
@@ -536,10 +560,12 @@ principale(integer argc, character** argv)
 
     si (argc < III)
     {
-        fprintf(stderr, "Usus: %s <config.toml> <target_binary>\n", argv[0]);
+        fprintf(stderr, "Usus: %s <config.toml> <target_binary>\n",
+            argv[0]);
         fprintf(stderr, "\nAdiungit assets ad caudam binarii.\n");
         fprintf(stderr, "\nConfig format:\n");
-        fprintf(stderr, "  section_files = [\"*.txt\", \"data/*.dat\"]\n");
+        fprintf(stderr,
+            "  section_files = [\"*.txt\", \"data/*.dat\"]\n");
         fprintf(stderr, "  section_compress = true\n");
         redde I;
     }
@@ -563,7 +589,8 @@ principale(integer argc, character** argv)
         config_dir[0] = '\0';
     }
 
-    piscina = piscina_generare_dynamicum("capsula_caudae_adiungere", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("capsula_caudae_adiungere",
+        CXXVIII * M);
 
     /* Read config */
     config_content = filum_legere_totum(config_path, piscina);
@@ -575,11 +602,13 @@ principale(integer argc, character** argv)
     }
 
     /* Parse TOML */
-    doc = toml_legere(config_content, piscina);
+    doc = toml_legere(config_content, config_path, piscina);
     si (!toml_successus(doc))
     {
-        fprintf(stderr, "Error: TOML parsing fallita: %.*s\n",
-                (i32)toml_error(doc).mensura, toml_error(doc).datum);
+        chorda d = toml_diagnostica_scribere(piscina, doc, VERUM);
+
+        fprintf(stderr, "Error: TOML parsing fallita:\n%.*s",
+                (integer)d.mensura, (constans character*)d.datum);
         piscina_destruere(piscina);
         redde I;
     }
@@ -601,19 +630,27 @@ principale(integer argc, character** argv)
 
         per (i = 0; sections[i] != NIHIL; i++)
         {
-            character key_files[128];
-            character key_compress[128];
-            Xar*      files;
-            b32       compress;
+            character  key_files[128];
+            character  key_compress[128];
+                  Xar* files;
+                  b32  compress;
 
-            snprintf(key_files, sizeof(key_files), "%s_files", sections[i]);
-            snprintf(key_compress, sizeof(key_compress), "%s_compress", sections[i]);
+            snprintf(key_files, sizeof(key_files), "%s_files",
+                sections[i]);
+            snprintf(key_compress, sizeof(key_compress), "%s_compress",
+                sections[i]);
 
-            files = toml_capere_tabulatum(doc, key_files);
+            /* abest aut non series chordarum -> sectio praeteritur */
+            files = NIHIL;
+            si (!toml_chordae(doc, key_files, piscina, &files))
+            {
+                files = NIHIL;
+            }
 
             si (files != NIHIL && xar_numerus(files) > 0)
             {
-                compress = toml_capere_boolean(doc, key_compress);
+                compress = FALSUM;   /* ordinarium si abest */
+                (vacuum)toml_boolean(doc, key_compress, &compress);
                 found_section = VERUM;
 
                 si (!_append_assets(sections[i], files, compress,

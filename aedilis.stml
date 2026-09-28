@@ -2,6 +2,7 @@
   <inclusa>
     <via (>include
     <via (>materia/fontes
+    <via (>toml/fontes
     <via (>probationes
     <via (>book_assets
     <via (>probationes/vitrea_assets

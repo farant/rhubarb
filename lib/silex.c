@@ -25,6 +25,150 @@
  * (instrumentum scripti) eas tacet - silex_monitiones_tacere */
 hic_manens b32 _monitiones_tacitae = FALSUM;
 
+/* RADICES CLIENTIUM MATERIAE (2026-09-28, planum toml-arbor Q12): caput
+ * et implementatio in EODEM directorio (toml/fontes/toml.h +
+ * toml/fontes/toml.c), non include/ + lib/. Caput 'x.h' in include/
+ * primum quaeritur, deinde in his radicibus ORDINE - idem ordo ac
+ * aedilis.stml <inclusa>. Instrumentum capsulae (tools/capsula_
+ * generare.c) clientem toml trahit, ergo omne proiectum a silice
+ * genitum eas vendit, compilat (fontes .c) et includit (-I). */
+hic_manens constans character* constans SILEX_RADICES_CLIENTIUM[] = {
+    "materia/fontes/",
+    "toml/fontes/",
+    NIHIL
+};
+
+/* index radicis clientis cui via praefixa est, aut -I */
+interior s32
+_radix_clientis (
+    chorda via);
+
+interior s32
+_radix_clientis (
+    chorda via)
+{
+    s32 r;
+
+    per (r = 0; SILEX_RADICES_CLIENTIUM[r] != NIHIL; r = r + 1)
+    {
+        i32 n = (i32)strlen(SILEX_RADICES_CLIENTIUM[r]);
+
+        si (   via.mensura > n
+            && memcmp(via.datum, SILEX_RADICES_CLIENTIUM[r],
+                   (size_t)n) == 0)
+        {
+            redde r;
+        }
+    }
+    redde -I;
+}
+
+/* via vendicata (a fonte venditur, non ab auctore scripta)? */
+interior b32
+_via_vendicata (
+    chorda via);
+
+interior b32
+_via_vendicata (
+    chorda via)
+{
+    constans character* constans partes[] = {
+        "lib/", "include/", "vendor/"
+    };
+    i32 k;
+
+    per (k = 0; k < III; k = k + 1)
+    {
+        i32 n = (i32)strlen(partes[k]);
+
+        si (   via.mensura > n
+            && memcmp(via.datum, partes[k], (size_t)n) == 0)
+        {
+            redde VERUM;
+        }
+    }
+    redde _radix_clientis(via) >= 0;
+}
+
+/* caput vendicatum -> nomen quo citatur ('include/x.h' aut radix
+ * clientis + 'x.h' -> 'x.h'); FALSUM si non caput vendicatum */
+interior b32
+_nomen_capitis_vendicati (
+     chorda  via,
+     chorda* titulus_capitis);
+
+interior b32
+_nomen_capitis_vendicati (
+     chorda  via,
+     chorda* titulus_capitis)
+{
+    s32 r;
+    i32 n = 0;
+
+    si (   via.mensura < 2 || via.datum[via.mensura - 2] != '.'
+        || via.datum[via.mensura - 1] != 'h')
+    {
+        redde FALSUM;
+    }
+    si (via.mensura > 8 && memcmp(via.datum, "include/", 8) == 0)
+    {
+        n = 8;
+    }
+    alioquin
+    {
+        r = _radix_clientis(via);
+        si (r < 0)
+        {
+            redde FALSUM;
+        }
+        n = (i32)strlen(SILEX_RADICES_CLIENTIUM[r]);
+    }
+    *titulus_capitis = chorda_ex_buffer(via.datum + n, via.mensura - n);
+    redde VERUM;
+}
+
+/* ' -I<radix>' pro quaque radice clientis quam clausura tangit (NIHIL
+ * = globus bibliothecarum: nulla) - post '-Iinclude' ordinis */
+interior vacuum
+_radices_inclusas_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura);
+
+interior vacuum
+_radices_inclusas_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura)
+{
+    s32 r;
+    i32 k;
+
+    si (clausura == NIHIL)
+    {
+        redde;
+    }
+    per (r = 0; SILEX_RADICES_CLIENTIUM[r] != NIHIL; r = r + 1)
+    {
+        per (k = 0; k < xar_numerus(clausura); k = k + 1)
+        {
+            SilexRes* e = (SilexRes*)xar_obtinere(clausura, k);
+
+            si (e != NIHIL && _radix_clientis(e->via) == r)
+            {
+                character radix[LXIV];
+                      i32 n = (i32)strlen(SILEX_RADICES_CLIENTIUM[r]);
+
+                /* sine '/' caudali */
+                memcpy(radix, SILEX_RADICES_CLIENTIUM[r], (size_t)n
+                    - 1);
+                radix[n - 1] = '\0';
+                chorda_aedificator_appendere_literis(a, " -I");
+                chorda_aedificator_appendere_literis(a, radix);
+                frange;
+            }
+        }
+    }
+}
+
 vacuum
 silex_monitiones_tacere (
     b32 tacere)
@@ -666,13 +810,62 @@ silex_clausuram_colligere (
         si (!_plagulam_e_fonte_colligere(piscina, fons,
             "include/", caput, fructus, opus))
         {
-            /* citata sine fonte: monitio, non mors (commentaria
-             * falso positiva possunt; dependentiae verae in
-             * fabrica semper exsistunt) */
-            _monere(
-                "silex: monitio - caput citatum in fabrica deest:"
-                " %.*s\n", (integer)caput.mensura,
-                (constans character*)caput.datum);
+            /* radices clientium: caput et implementatio in eodem
+             * directorio (vide SILEX_RADICES_CLIENTIUM) */
+            s32 r;
+            b32 in_radice = FALSUM;
+
+            per (r = 0; !in_radice
+                && SILEX_RADICES_CLIENTIUM[r] != NIHIL;
+                 r = r + 1)
+            {
+                in_radice = _plagulam_e_fonte_colligere(piscina, fons,
+                    SILEX_RADICES_CLIENTIUM[r], caput, fructus, opus);
+                si (in_radice && caput.mensura >= 2)
+                {
+                    SilexRes* caput_res = (SilexRes*)xar_obtinere(
+                        fructus, xar_numerus(fructus) - 1);
+                    chorda textus = caput_res != NIHIL
+                        ? caput_res->contentum : caput;
+                    ChordaAedificator* aed_r =
+                        chorda_aedificator_creare(
+                        piscina, (memoriae_index)64);
+                    b32 impl;
+
+                    chorda_aedificator_appendere_chorda(aed_r,
+                        chorda_ex_buffer(caput.datum, caput.mensura
+                            - 2));
+                    chorda_aedificator_appendere_literis(aed_r, ".c");
+                    impl = _plagulam_e_fonte_colligere(piscina, fons,
+                        SILEX_RADICES_CLIENTIUM[r],
+                        chorda_aedificator_finire(aed_r), fructus,
+                        opus);
+                    si (_corpora_annotata_colligere(piscina, fons,
+                            textus, fructus, opus) > 0)
+                    {
+                        impl = VERUM;
+                    }
+                    si (!impl)
+                    {
+                        _monere(
+                            "silex: monitio - nulla implementatio pro"
+                            " %s%.*s (caput solum?)\n",
+                            SILEX_RADICES_CLIENTIUM[r],
+                            (integer)caput.mensura,
+                            (constans character*)caput.datum);
+                    }
+                }
+            }
+            si (!in_radice)
+            {
+                /* citata sine fonte: monitio, non mors (commentaria
+                 * falso positiva possunt; dependentiae verae in
+                 * fabrica semper exsistunt) */
+                _monere(
+                    "silex: monitio - caput citatum in fabrica deest:"
+                    " %.*s\n", (integer)caput.mensura,
+                    (constans character*)caput.datum);
+            }
             perge;
         }
 
@@ -1006,6 +1199,7 @@ silex_ordinem_fingere (
         "mkdir -p bin\n"
         "clang " SILEX_VEXILLA_COMPILATIONIS
         " -Iinclude");
+    _radices_inclusas_appendere(a, clausura);
     per (i = ZEPHYRUM; i < numerus_fontium; i++)
     {
         chorda_aedificator_appendere_literis(a, " \"");
@@ -1046,6 +1240,7 @@ silex_ordinem_probandi_fingere (
         "mkdir -p bin\n"
         "clang " SILEX_VEXILLA_COMPILATIONIS
         " -Iinclude");
+    _radices_inclusas_appendere(a, clausura);
     per (i = ZEPHYRUM; i < numerus_fontium; i++)
     {
         chorda_aedificator_appendere_literis(a, " \"");
@@ -2032,7 +2227,9 @@ _ordinem_fontium_appendere (
     {
         SilexRes* e = (SilexRes*)xar_obtinere(clausura, k);
 
-        si (e == NIHIL || !_praefixum_habet(e->via, "lib/"))
+        si (   e == NIHIL
+            || (!_praefixum_habet(e->via, "lib/")
+                && _radix_clientis(e->via) < 0))
         {
             perge;
         }
@@ -2167,7 +2364,9 @@ silex_ordinem_vitreum_fingere (
         "if [ ! -x build/capsula_generare ] \\\n"
         "   || [ instrumenta/capsula_generare.c -nt"
         " build/capsula_generare ]; then\n"
-        "    clang $VEXILLA -Iinclude"
+        "    clang $VEXILLA -Iinclude");
+    _radices_inclusas_appendere(a, clausura_instrumenti);
+    chorda_aedificator_appendere_literis(a,
         " instrumenta/capsula_generare.c");
     _ordinem_fontium_appendere(a, clausura_instrumenti, FALSUM);
     chorda_aedificator_appendere_literis(a,
@@ -2182,8 +2381,9 @@ silex_ordinem_vitreum_fingere (
     chorda_aedificator_appendere_literis(a,
         "\n"
         "# III+IV. app (fontes explicati - numquam globus)\n"
-        "clang $VEXILLA -Iinclude -Iassets \\\n"
-        "    ");
+        "clang $VEXILLA -Iinclude -Iassets");
+    _radices_inclusas_appendere(a, clausura_app);
+    chorda_aedificator_appendere_literis(a, " \\\n    ");
     per (i = ZEPHYRUM; i < numerus_fontium; i++)
     {
         si (i > ZEPHYRUM)
@@ -2248,9 +2448,9 @@ silex_ordinem_probandi_vitreum_fingere (
         "VEXILLA=\"" SILEX_VEXILLA_VITREA "\"\n"
         "VEXILLA_VENDITORIA=\"" SILEX_VEXILLA_VENDITORIA "\"\n");
     _regulas_venditorias_appendere(a, clausura_probationis);
-    chorda_aedificator_appendere_literis(a,
-        "clang $VEXILLA -Iinclude \\\n"
-        "    ");
+    chorda_aedificator_appendere_literis(a, "clang $VEXILLA -Iinclude");
+    _radices_inclusas_appendere(a, clausura_probationis);
+    chorda_aedificator_appendere_literis(a, " \\\n    ");
     per (i = ZEPHYRUM; i < numerus_fontium; i++)
     {
         si (i > ZEPHYRUM)
@@ -2314,9 +2514,10 @@ _fumus_sh_fingere (
         "./aedificare.sh\n"
         "\n");
     _regulas_venditorias_appendere(a, clausura_fumi);
+    chorda_aedificator_appendere_literis(a, "clang $VEXILLA -Iinclude");
+    _radices_inclusas_appendere(a, clausura_fumi);
     chorda_aedificator_appendere_literis(a,
-        "clang $VEXILLA -Iinclude \\\n"
-        "    probationes/fumus_manus.c");
+        " \\\n    probationes/fumus_manus.c");
     _ordinem_fontium_appendere(a, clausura_fumi, VERUM);
     _obiecta_venditoria_appendere(a, clausura_fumi);
     /* Security: manus http trahit, quod tls_macos.m ligat. Foundation:
@@ -2751,7 +2952,8 @@ silex_novum (
                 chorda_ut_cstr(p->via, piscina));
             parens = via_directorium(
                 chorda_ex_literis(via_plena, piscina), piscina);
-            filum_directorium_creare_si_necesse(
+            /* cum parentibus: radices clientium nidificatae */
+            filum_directorium_creare_cum_parentibus(
                 chorda_ut_cstr(parens, piscina));
             si (!filum_scribere(via_plena, contentum))
             {
@@ -4164,7 +4366,8 @@ silex_proicere (
             chorda_ut_cstr(r->via, piscina));
         parens = via_directorium(
             chorda_ex_literis(via_plena, piscina), piscina);
-        filum_directorium_creare_si_necesse(
+        /* cum parentibus: radices clientium nidificatae */
+        filum_directorium_creare_cum_parentibus(
             chorda_ut_cstr(parens, piscina));
         si (!filum_scribere(via_plena, contentum))
         {
@@ -4280,10 +4483,7 @@ _semina_ambulator (
     via_rel = chorda_ex_buffer(
         via_plena.datum + ctx->radix_mensura,
         via_plena.mensura - ctx->radix_mensura);
-    si (   _praetermittenda(via_rel)
-        || _praefixum_habet(via_rel, "lib/")
-        || _praefixum_habet(via_rel, "include/")
-        || _praefixum_habet(via_rel, "vendor/"))
+    si (_praetermittenda(via_rel) || _via_vendicata(via_rel))
     {
         redde 0;
     }
@@ -4475,14 +4675,15 @@ silex_renovare (
         dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
             &valor))
         {
-            si (_praefixum_habet(clavis, "include/"))
+            chorda nomen_v;
+
+            si (_nomen_capitis_vendicati(clavis, &nomen_v))
             {
                 chorda* cella = (chorda*)xar_addere(nomina);
 
                 si (cella != NIHIL)
                 {
-                    *cella = chorda_ex_buffer(clavis.datum + 8,
-                        clavis.mensura - 8);
+                    *cella = nomen_v;
                 }
             }
         }
@@ -4716,7 +4917,8 @@ silex_renovare (
             chorda_ut_cstr(r->via, piscina));
         parens = via_directorium(
             chorda_ex_literis(via_plena, piscina), piscina);
-        filum_directorium_creare_si_necesse(
+        /* cum parentibus: radices clientium nidificatae */
+        filum_directorium_creare_cum_parentibus(
             chorda_ut_cstr(parens, piscina));
         si (   !filum_scribere(via_plena, e->contentum)
             || !volumen_plagulam_condere(vol, r->via, e->contentum,
@@ -4849,9 +5051,11 @@ silex_partes (
                         VolumenPlagula* pl = (VolumenPlagula*)
                             xar_obtinere(plica, p);
 
+                        chorda nomen_v;
+
                         si (   pl == NIHIL
-                            || !_praefixum_habet(pl->via,
-                                "include/")
+                            || !_nomen_capitis_vendicati(pl->via,
+                                &nomen_v)
                             || !_praefixum_habet(pl->origo,
                                 "vendicata:"))
                         {
@@ -4863,9 +5067,7 @@ silex_partes (
 
                             si (cella != NIHIL)
                             {
-                                *cella = chorda_ex_buffer(
-                                    pl->via.datum + 8,
-                                    pl->via.mensura - 8);
+                                *cella = nomen_v;
                             }
                         }
                     }

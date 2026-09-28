@@ -626,3 +626,39 @@ The gate runs both modes over the same fixture and asserts the same
 text (include `.h`, lib `.c`, a vendor dir, a missing dir → empty).
 Plant: sorting removed → red. An empty/missing directory returns an
 empty Xar, not NIHIL; NIHIL only on allocation failure.
+
+---
+
+## 2026-09-28 — client roots (toml Q12): the corpus is no longer only include/lib/vendor
+
+`tools/capsula_generare.c` is in every project silex (and briar's
+embedded corpus) creates, and toml Q12 moved it onto the toml client,
+which lives with materia in `toml/fontes` and `materia/fontes` — header
+and implementation side by side, not `include/` + `lib/`. Measured
+before the change: silex resolved `#include "toml.h"` as `include/
+toml.h` only ("caput citatum in fabrica deest: toml.h"), and every
+generated build line compiled `lib/*.c` with `-Iinclude` — a new project
+would have failed to build its capsule tool.
+
+Now `SILEX_RADICES_CLIENTIUM` (`materia/fontes/`, `toml/fontes/` — the
+same order as `aedilis.stml` <inclusa>): a header missing from
+`include/` is looked up in each root, its implementation is `R/x.c`
+beside it (plus annotated corpora); build lines list closure `.c` from
+`lib/` OR a root and emit `-I<root>` for each root the closure touches
+(`_radices_inclusas_appendere`, all six build-line sites); one
+predicate `_via_vendicata` says "sold by the corpus, not authored" (the
+authored-seed walk used three hard-coded prefixes); refresh paths
+collect header names through `_nomen_capitis_vendicati` (was
+`include/`-only, so client-root copies would never be refreshed).
+
+Found on the way: the projection writer created only the file's
+immediate parent (`filum_directorium_creare_si_necesse`) — enough for
+`lib/`, not for `materia/fontes/` two levels down ("proiectio fracta").
+Now `filum_directorium_creare_cum_parentibus` at all three write sites.
+Open question, NOT explained: before the resolver change the gate's
+"vitreum/toml/fontes/toml.c exists" assertion already passed (the area
+is wiped at start) while silex reported toml.h missing and the build
+script lacked the files — some other path copied them; not chased.
+What settles the change is building the generated project: `sh vitreum/aedificare.sh` →
+capsula_generare compiled with the toml client under the house flags,
+ran on the project's config, app built.

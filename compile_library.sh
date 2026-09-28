@@ -50,7 +50,6 @@ declare -a SOURCE_FILES=(
     "lib/sputnik_syntaxis.c"
     "lib/iter_directoria.c"
     "lib/exemplar.c"
-    "lib/toml.c"
     "lib/paginarium.c"
     "lib/librarium_lector.c"
     "lib/elementa.c"

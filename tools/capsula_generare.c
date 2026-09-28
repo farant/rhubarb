@@ -47,7 +47,7 @@ nomen structura {
     chorda via;              /* Relative path */
     chorda datum;            /* File contents (original) */
     chorda compressa;        /* Compressed data (or empty if no compression) */
-    b32    est_compressa;    /* Was compression applied? */
+       b32 est_compressa;    /* Was compression applied? */
 } FileEntry;
 
 
@@ -57,7 +57,9 @@ nomen structura {
 
 /* Simple glob match - supports * for any characters */
 interior b32
-_glob_congruit(constans character* pattern, constans character* str)
+_glob_congruit (
+    constans character* pattern,
+    constans character* str)
 {
     dum (*pattern && *str)
     {
@@ -121,18 +123,18 @@ _glob_congruit(constans character* pattern, constans character* str)
  * maneant ac prius; directoria in segmento ULTIMO omittuntur (plica
  * inserenda non est plagula). */
 interior vacuum
-_expand_glob_gradus(
+_expand_glob_gradus (
     constans character* base_dir,
     constans character* praefixum,   /* via relativa constructa ('' initio) */
     constans character* reliquum,    /* exemplar reliquum */
-    Xar*                files_out,
-    Piscina*            piscina)
+                   Xar* files_out,
+               Piscina* piscina)
 {
     constans character* slash;
-    character           segmentum[512];
-    character           plenum[1024];
-    character           filius[1024];
-    i32                 seg_len;
+             character  segmentum[512];
+             character  plenum[1024];
+             character  filius[1024];
+                   i32  seg_len;
     DIR*                dir;
     structura dirent*   entry;
     structura stat      st;
@@ -192,8 +194,12 @@ _expand_glob_gradus(
         }
         dum ((entry = readdir(dir)) != NIHIL)
         {
-            si (entry->d_name[0] == '.') { perge; }
-            si (!_glob_congruit(segmentum, entry->d_name)) { perge; }
+            si (entry->d_name[0] == '.')
+            { perge;
+            }
+            si (!_glob_congruit(segmentum, entry->d_name))
+            { perge;
+            }
             snprintf(filius, sizeof(filius), "%s/%s",
                      plenum, entry->d_name);
             si (stat(filius, &st) != 0 || !S_ISDIR(st.st_mode))
@@ -243,16 +249,21 @@ _expand_glob_gradus(
     }
     dum ((entry = readdir(dir)) != NIHIL)
     {
-        si (entry->d_name[0] == '.') { perge; }
-        si (!_glob_congruit(reliquum, entry->d_name)) { perge; }
-        snprintf(filius, sizeof(filius), "%s/%s", plenum, entry->d_name);
+        si (entry->d_name[0] == '.')
+        { perge;
+        }
+        si (!_glob_congruit(reliquum, entry->d_name))
+        { perge;
+        }
+        snprintf(filius, sizeof(filius), "%s/%s", plenum,
+            entry->d_name);
         si (stat(filius, &st) == 0 && S_ISDIR(st.st_mode))
         {
             perge;   /* directorium non est plagula */
         }
         {
-            character full_path[1024];
-            chorda*   path_chorda;
+            character  full_path[1024];
+               chorda* path_chorda;
 
             si (praefixum[0] != '\0')
             {
@@ -276,11 +287,11 @@ _expand_glob_gradus(
 
 /* Expand a glob pattern to list of file paths */
 interior vacuum
-_expand_glob(
+_expand_glob (
     constans character* pattern,
     constans character* base_dir,
-    Xar*                files_out,
-    Piscina*            piscina)
+                   Xar* files_out,
+               Piscina* piscina)
 {
     _expand_glob_gradus(base_dir, "", pattern, files_out, piscina);
 }
@@ -291,7 +302,11 @@ _expand_glob(
  * ======================================================================== */
 
 interior vacuum
-_write_bytes(FILE* out, constans i8* data, i32 size, b32 est_ultimus)
+_write_bytes (
+           FILE* out,
+    constans i8* data,
+            i32  size,
+            b32  est_ultimus)
 {
     i32 i;
 
@@ -336,7 +351,9 @@ _write_bytes(FILE* out, constans i8* data, i32 size, b32 est_ultimus)
  * ======================================================================== */
 
 interior vacuum
-_write_i32_le(i8* buf, i32 value)
+_write_i32_le (
+     i8* buf,
+    i32  value)
 {
     buf[0] = (i8)(value & 0xFF);
     buf[1] = (i8)((value >> VIII) & 0xFF);
@@ -350,25 +367,25 @@ _write_i32_le(i8* buf, i32 value)
  * ======================================================================== */
 
 interior b32
-_process_section(
+_process_section (
     constans character* section_name,
-    Xar*                file_patterns,
-    b32                 compress,
+                   Xar* file_patterns,
+                   b32  compress,
     constans character* config_dir,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
-    Xar*        file_paths;
-    Xar*        entries;
-    i32         i;
-    i32         num_files;
-    i32         toc_size;
-    i32         string_table_offset;
-    i32         string_table_size;
-    i32         data_offset;
-    i32         current_string_offset;
-    i32         current_data_offset;
-    character   header_path[1024];
-    character   source_path[1024];
+          Xar* file_paths;
+          Xar* entries;
+          i32  i;
+          i32  num_files;
+          i32  toc_size;
+          i32  string_table_offset;
+          i32  string_table_size;
+          i32  data_offset;
+          i32  current_string_offset;
+          i32  current_data_offset;
+    character  header_path[1024];
+    character  source_path[1024];
     FILE*       header_file;
     FILE*       source_file;
     i8          header_buf[XII];
@@ -385,7 +402,7 @@ _process_section(
         si (pattern != NIHIL)
         {
             character pattern_cstr[512];
-            i32       len;
+                  i32 len;
 
             len = (i32)pattern->mensura;
             si (len > 511) len = 511;
@@ -399,7 +416,9 @@ _process_section(
     num_files = xar_numerus(file_paths);
     si (num_files == 0)
     {
-        fprintf(stderr, "Warning: nullum filum inventum pro sectione '%s'\n", section_name);
+        fprintf(stderr,
+            "Warning: nullum filum inventum pro sectione '%s'\n",
+            section_name);
         redde VERUM;  /* Not an error, just no files */
     }
 
@@ -410,10 +429,10 @@ _process_section(
 
     per (i = 0; i < num_files; i++)
     {
-        chorda*    path;
+           chorda* path;
         FileEntry* entry;
         character  full_path[1024];
-        i32        path_len;
+              i32  path_len;
 
         path = (chorda*)xar_obtinere(file_paths, i);
         si (path == NIHIL)
@@ -443,12 +462,13 @@ _process_section(
             redde FALSUM;
         }
 
-        entry->via = *path;
-        entry->datum = filum_legere_totum(full_path, piscina);
+        entry->via    = *path;
+        entry->datum  = filum_legere_totum(full_path, piscina);
 
         si (entry->datum.mensura == 0)
         {
-            fprintf(stderr, "Warning: non possum legere '%s'\n", full_path);
+            fprintf(stderr, "Warning: non possum legere '%s'\n",
+                full_path);
             /* Continue anyway - might be empty file */
         }
 
@@ -464,21 +484,21 @@ _process_section(
 
             si (res.status == FLATURA_STATUS_OK)
             {
-                entry->compressa.datum = res.datum;
-                entry->compressa.mensura = res.mensura;
-                entry->est_compressa = VERUM;
+                entry->compressa.datum    = res.datum;
+                entry->compressa.mensura  = res.mensura;
+                entry->est_compressa      = VERUM;
             }
             alioquin
             {
                 /* Compression failed - use uncompressed */
-                entry->compressa = entry->datum;
-                entry->est_compressa = FALSUM;
+                entry->compressa      = entry->datum;
+                entry->est_compressa  = FALSUM;
             }
         }
         alioquin
         {
-            entry->compressa = entry->datum;
-            entry->est_compressa = FALSUM;
+            entry->compressa      = entry->datum;
+            entry->est_compressa  = FALSUM;
         }
     }
 
@@ -490,8 +510,8 @@ _process_section(
      *   String table: all paths concatenated (NOT null-terminated in our format)
      *   Data: all file data concatenated
      */
-    toc_size = num_files * XX;
-    string_table_offset = XII + toc_size;
+    toc_size             = num_files * XX;
+    string_table_offset  = XII + toc_size;
 
     /* Calculate string table size */
     string_table_size = 0;
@@ -499,8 +519,8 @@ _process_section(
     {
         FileEntry* entry;
 
-        entry = (FileEntry*)xar_obtinere(entries, i);
-        string_table_size += (i32)entry->via.mensura;
+        entry              = (FileEntry*)xar_obtinere(entries, i);
+        string_table_size  += (i32)entry->via.mensura;
     }
 
     data_offset = string_table_offset + string_table_size;
@@ -515,8 +535,10 @@ _process_section(
     }
     alioquin
     {
-        snprintf(header_path, sizeof(header_path), "capsula_%s.h", section_name);
-        snprintf(source_path, sizeof(source_path), "capsula_%s.c", section_name);
+        snprintf(header_path, sizeof(header_path), "capsula_%s.h",
+            section_name);
+        snprintf(source_path, sizeof(source_path), "capsula_%s.c",
+            section_name);
     }
 
     /* Write header file */
@@ -527,12 +549,14 @@ _process_section(
         redde FALSUM;
     }
 
-    fprintf(header_file, "/* capsula_%s.h - Generated by capsula_generare */\n\n",
+    fprintf(header_file,
+        "/* capsula_%s.h - Generated by capsula_generare */\n\n",
             section_name);
     fprintf(header_file, "#ifndef CAPSULA_%s_H\n", section_name);
     fprintf(header_file, "#define CAPSULA_%s_H\n\n", section_name);
     fprintf(header_file, "#include \"capsula.h\"\n\n");
-    fprintf(header_file, "externus constans CapsulaEmbed capsula_%s;\n\n", section_name);
+    fprintf(header_file,
+        "externus constans CapsulaEmbed capsula_%s;\n\n", section_name);
     fprintf(header_file, "#endif /* CAPSULA_%s_H */\n", section_name);
 
     fclose(header_file);
@@ -546,10 +570,13 @@ _process_section(
         redde FALSUM;
     }
 
-    fprintf(source_file, "/* capsula_%s.c - Generated by capsula_generare */\n\n",
+    fprintf(source_file,
+        "/* capsula_%s.c - Generated by capsula_generare */\n\n",
             section_name);
     fprintf(source_file, "#include \"capsula_%s.h\"\n\n", section_name);
-    fprintf(source_file, "hic_manens constans i8 _capsula_%s_data[] = {\n", section_name);
+    fprintf(source_file,
+        "hic_manens constans i8 _capsula_%s_data[] = {\n",
+        section_name);
 
     /* Write header: magic, version, count */
     _write_i32_le(header_buf, (i32)CAPSULA_MAGICA);
@@ -558,19 +585,19 @@ _process_section(
     _write_bytes(source_file, header_buf, XII, FALSUM);
 
     /* Write TOC entries */
-    current_string_offset = string_table_offset;
-    current_data_offset = data_offset;
+    current_string_offset  = string_table_offset;
+    current_data_offset    = data_offset;
 
     per (i = 0; i < xar_numerus(entries); i++)
     {
         FileEntry* entry;
-        i32        comp_size;
-        i32        raw_size;
+              i32  comp_size;
+              i32  raw_size;
 
         entry = (FileEntry*)xar_obtinere(entries, i);
 
-        comp_size = (i32)entry->compressa.mensura;
-        raw_size = (i32)entry->datum.mensura;
+        comp_size  = (i32)entry->compressa.mensura;
+        raw_size   = (i32)entry->datum.mensura;
 
         /* If not compressed, sizes are equal */
         si (!entry->est_compressa)
@@ -588,8 +615,8 @@ _process_section(
                 (i32)entry->via.mensura, entry->via.datum);
         _write_bytes(source_file, toc_entry, XX, FALSUM);
 
-        current_string_offset += (i32)entry->via.mensura;
-        current_data_offset += comp_size;
+        current_string_offset  += (i32)entry->via.mensura;
+        current_data_offset    += comp_size;
     }
 
     /* Write string table */
@@ -599,7 +626,8 @@ _process_section(
         FileEntry* entry;
 
         entry = (FileEntry*)xar_obtinere(entries, i);
-        _write_bytes(source_file, entry->via.datum, (i32)entry->via.mensura, FALSUM);
+        _write_bytes(source_file, entry->via.datum,
+            (i32)entry->via.mensura, FALSUM);
     }
 
     /* Write file data */
@@ -607,10 +635,10 @@ _process_section(
     per (i = 0; i < xar_numerus(entries); i++)
     {
         FileEntry* entry;
-        b32        est_ultimus;
+              b32  est_ultimus;
 
-        entry = (FileEntry*)xar_obtinere(entries, i);
-        est_ultimus = (i == xar_numerus(entries) - I);
+        entry        = (FileEntry*)xar_obtinere(entries, i);
+        est_ultimus  = (i == xar_numerus(entries) - I);
 
         fprintf(source_file, "    /* [%d] %.*s (%d bytes%s) */\n", i,
                 (i32)entry->via.mensura, entry->via.datum,
@@ -624,9 +652,11 @@ _process_section(
     fprintf(source_file, "};\n\n");
 
     /* Write CapsulaEmbed struct */
-    fprintf(source_file, "constans CapsulaEmbed capsula_%s = {\n", section_name);
+    fprintf(source_file, "constans CapsulaEmbed capsula_%s = {\n",
+        section_name);
     fprintf(source_file, "    _capsula_%s_data,\n", section_name);
-    fprintf(source_file, "    (i32)magnitudo(_capsula_%s_data)\n", section_name);
+    fprintf(source_file, "    (i32)magnitudo(_capsula_%s_data)\n",
+        section_name);
     fprintf(source_file, "};\n");
 
     fclose(source_file);
@@ -641,10 +671,12 @@ _process_section(
  * ======================================================================== */
 
 integer
-principale(integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina*        piscina;
-    chorda          config_content;
+    Piscina* piscina;
+     chorda  config_content;
     TomlDocumentum* doc;
     constans character* config_path;
     character       config_dir[1024];
@@ -656,7 +688,8 @@ principale(integer argc, character** argv)
         fprintf(stderr, "Usus: %s <config.toml>\n", argv[0]);
         fprintf(stderr, "\nConfig format:\n");
         fprintf(stderr, "  [section_name]\n");
-        fprintf(stderr, "  files = [\"path/*.txt\", \"other/*.dat\"]\n");
+        fprintf(stderr,
+            "  files = [\"path/*.txt\", \"other/*.dat\"]\n");
         fprintf(stderr, "  compress = true\n");
         redde I;
     }
@@ -678,7 +711,8 @@ principale(integer argc, character** argv)
         config_dir[0] = '\0';
     }
 
-    piscina = piscina_generare_dynamicum("capsula_generare", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("capsula_generare",
+        CXXVIII * M);
 
     /* Read config file */
     config_content = filum_legere_totum(config_path, piscina);
@@ -690,11 +724,13 @@ principale(integer argc, character** argv)
     }
 
     /* Parse TOML */
-    doc = toml_legere(config_content, piscina);
+    doc = toml_legere(config_content, config_path, piscina);
     si (!toml_successus(doc))
     {
-        fprintf(stderr, "Error: TOML parsing fallita: %.*s\n",
-                (i32)toml_error(doc).mensura, toml_error(doc).datum);
+        chorda d = toml_diagnostica_scribere(piscina, doc, VERUM);
+
+        fprintf(stderr, "Error: TOML parsing fallita:\n%.*s",
+                (integer)d.mensura, (constans character*)d.datum);
         piscina_destruere(piscina);
         redde I;
     }
@@ -711,44 +747,56 @@ principale(integer argc, character** argv)
      * ignota TACITE nihil generabat).
      */
     {
-        per (i = 0; i < xar_numerus(doc->introitus); i++)
-        {
-            TomlIntroitus* intro;
-            character      section_name[96];
-            character      key_compress[128];
-            Xar*           files;
-            b32            compress;
-            i32            praefixum;
+        constans TomlValor* radix = toml_radix(doc);
 
-            intro = (TomlIntroitus*)xar_obtinere(doc->introitus, i);
-            si (intro == NIHIL
-                || intro->valor.genus != TOML_TABULATUM
-                || intro->clavis.mensura <= VI)
+        per (i = 0; i < toml_tabulae_numerus(radix); i++)
+        {
+               chorda  clavis;
+            character  section_name[96];
+            character  key_files[128];
+            character  key_compress[128];
+                  Xar* files;
+                  b32  compress;
+                  i32  praefixum;
+
+            clavis = toml_tabulae_clavis(radix, i);
+            si (toml_tabulae_valor(radix, i)->genus != TOML_VALOR_SERIES
+                || clavis.mensura <= VI)
             {
                 perge;
             }
-            praefixum = intro->clavis.mensura - VI;
-            si (memcmp(intro->clavis.datum + praefixum, "_files",
-                       VI) != 0
+            praefixum = clavis.mensura - VI;
+            si (   memcmp(clavis.datum + praefixum, "_files", VI) != 0
                 || praefixum >= (i32)magnitudo(section_name))
             {
                 perge;
             }
-            memcpy(section_name, intro->clavis.datum,
-                   (size_t)praefixum);
+            memcpy(section_name, clavis.datum, (size_t)praefixum);
             section_name[praefixum] = '\0';
 
-            files = intro->valor.datum.tabulatum_valor;
-            si (files == NIHIL || xar_numerus(files) == 0)
+            snprintf(key_files, sizeof(key_files), "%s_files",
+                     section_name);
+            files = NIHIL;
+            si (!toml_chordae(doc, key_files, piscina, &files))
+            {
+                fprintf(stderr,
+                    "Error: '%s' series chordarum non est\n",
+                        key_files);
+                piscina_destruere(piscina);
+                redde I;
+            }
+            si (xar_numerus(files) == 0)
             {
                 perge;
             }
             snprintf(key_compress, sizeof(key_compress),
                      "%s_compress", section_name);
-            compress = toml_capere_boolean(doc, key_compress);
+            compress = FALSUM;   /* ordinarium si abest */
+            (vacuum)toml_boolean(doc, key_compress, &compress);
 
             si (!_process_section(section_name, files, compress,
-                                  config_dir[0] ? config_dir : NIHIL, piscina))
+                                  config_dir[0] ? config_dir : NIHIL,
+                                  piscina))
             {
                 piscina_destruere(piscina);
                 redde I;

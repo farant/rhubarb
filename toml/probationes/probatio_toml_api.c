@@ -305,11 +305,131 @@ principale (vacuum)
 
 
     /* ==================================================
+     * toml_chordae: series chordarum
+     * ================================================== */
+
+    {
+        TomlDocumentum* doc = _legere(piscina,
+            "a = [\"x\", \"yz\"]\nm = [\"x\", 1]\ne = []\ns = \"x\"\n",
+            "chordae.toml");
+                   Xar* x = NIHIL;
+
+        imprimere("\n--- Probans toml_chordae ---\n");
+        CREDO_VERUM (toml_chordae(doc, "a", piscina, &x));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), II);
+        CREDO_VERUM (_aequat(*(chorda*)xar_obtinere(x, I), "yz"));
+        x = NIHIL;
+        /* mixta; exitus intactus */
+        CREDO_FALSUM (toml_chordae(doc, "m", piscina, &x));
+        CREDO_NIHIL (x);
+        /* non series; absens; vacua licet */
+        CREDO_FALSUM (toml_chordae(doc, "s", piscina, &x));
+        CREDO_FALSUM (toml_chordae(doc, "nope", piscina,
+            &x));
+        CREDO_VERUM (toml_chordae(doc, "e", piscina, &x));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+    }
+
+
+    /* ==================================================
+     * Casus probationes/probatio_toml.c (lib/toml.c, Q12 deleta)
+     * re-collocati: significatio NOVA (sectiones non planae)
+     * ================================================== */
+
+    {
+        TomlDocumentum* doc;
+                 chorda c;
+                    s64 n;
+                    b32 b;
+                   Xar* x;
+
+        imprimere("\n--- Probans casus bibliothecae veteris ---\n");
+        doc = _legere(piscina, "Title = \"Hello World\"", "v.toml");
+        CREDO_VERUM (toml_chorda(doc, "Title", &c));
+        CREDO_VERUM (_aequat(c, "Hello World"));
+        doc = _legere(piscina, "Empty = \"\"", "v.toml");
+        CREDO_VERUM (toml_chorda(doc, "Empty", &c));
+        CREDO_AEQUALIS_I32 (c.mensura, ZEPHYRUM);
+        doc = _legere(piscina, "Year = 1920", "v.toml");
+        CREDO_VERUM (toml_integer(doc, "Year", &n));
+        CREDO_AEQUALIS_S64 (n, (s64)MCMXX);
+        doc = _legere(piscina, "Offset = -100", "v.toml");
+        CREDO_VERUM (toml_integer(doc, "Offset", &n));
+        CREDO_AEQUALIS_S64 (n, -(s64)C);
+        doc = _legere(piscina, "Year = -371", "v.toml");
+        CREDO_VERUM (toml_integer(doc, "Year", &n));
+        CREDO_AEQUALIS_S64 (n, -(s64)CCCLXXI);
+        doc = _legere(piscina, "Tags = [\"fiction\", \"drama\"]",
+            "v.toml");
+        CREDO_VERUM (toml_chordae(doc, "Tags", piscina, &x));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), II);
+        doc = _legere(piscina,
+            "Tags = [\n    \"fiction\",\n    \"drama\",\n"
+            "    \"classic\"\n]", "v.toml");
+        CREDO_VERUM (toml_chordae(doc, "Tags", piscina, &x));
+        CREDO_AEQUALIS_I32 (xar_numerus(x), III);
+        CREDO_VERUM (_aequat(*(chorda*)xar_obtinere(x, II), "classic"));
+        doc = _legere(piscina,
+            "Summary = \"\"\"\nThis is a multi-line\n"
+            "string value.\n\"\"\"", "v.toml");
+        CREDO_VERUM (toml_chorda(doc, "Summary", &c));
+        CREDO_VERUM (_aequat(c,
+            "This is a multi-line\nstring value.\n"));
+        doc = _legere(piscina, "Title = \"The Great Gatsby\"\n"
+            "Author = \"F. Scott Fitzgerald\"\nYear = 1925\n\n"
+            "Tags = [\"fiction\", \"classic\", \"american\"]\n",
+            "v.toml");
+        CREDO_VERUM (toml_successus(doc));
+        CREDO_VERUM (toml_chorda(doc, "Author", &c));
+        CREDO_VERUM (_aequat(c, "F. Scott Fitzgerald"));
+        CREDO_VERUM (toml_integer(doc, "Year", &n));
+        CREDO_AEQUALIS_S64 (n, (s64)MCMXXV);
+        doc = _legere(piscina,
+            "# This is a comment\nTitle = \"Hello\"\n"
+            "# Another comment\nYear = 2020", "v.toml");
+        CREDO_VERUM (toml_successus(doc));
+        CREDO_VERUM (toml_integer(doc, "Year", &n));
+        CREDO_AEQUALIS_S64 (n, (s64)MMXX);
+        doc = _legere(piscina, "  Title   =   \"Hello\"  \nYear=1920",
+            "v.toml");
+        CREDO_VERUM (toml_chorda(doc, "Title", &c));
+        CREDO_VERUM (toml_integer(doc, "Year", &n));
+        doc = _legere(piscina, "Title \"Hello\"", "v.toml");
+        CREDO_FALSUM (toml_successus(doc));
+        doc = _legere(piscina, "Summary = \"\"\"\nUnclosed multiline",
+            "v.toml");
+        CREDO_FALSUM (toml_successus(doc));
+        doc = _legere(piscina, "Active = true\nDisabled = false",
+            "v.toml");
+        CREDO_VERUM (toml_boolean(doc, "Active", &b));
+        CREDO_VERUM (b);
+        CREDO_VERUM (toml_boolean(doc, "Disabled", &b));
+        CREDO_FALSUM (b);
+        /* vetus sectionem planabat ('categories' in summo); nunc
+         * tabula */
+        doc = _legere(piscina, "Title = \"Test\"\n[Tags]\n"
+            "categories = [\"fiction\"]\nactive = true", "v.toml");
+        CREDO_VERUM (toml_successus(doc));
+        CREDO_VERUM (toml_chorda(doc, "Title", &c));
+        CREDO_NIHIL (toml_quaerere(doc, "categories"));
+        CREDO_VERUM (toml_chordae(doc, "Tags.categories", piscina, &x));
+        CREDO_VERUM (toml_boolean(doc, "Tags.active", &b));
+        CREDO_VERUM (b);
+        doc = _legere(piscina, "Title = \"Fruitfulness\"\n"
+            "Author = \"Emile Zola\"\nYear = 1899\n\nTags = [\n"
+            "    \"fiction\",\n    \"french\"\n]\n", "v.toml");
+        CREDO_VERUM (toml_successus(doc));
+        CREDO_VERUM (toml_integer(doc, "Year", &n));
+        CREDO_AEQUALIS_S64 (n, (s64)MDCCCXCIX);
+    }
+
+
+    /* ==================================================
      * Textus vacuus (plagula vacua: datum NIHIL)
      * ================================================== */
 
     {
-                chorda  vacua;
+                chorda vacua;
         TomlDocumentum* doc;
 
         imprimere("\n--- Probans textum vacuum ---\n");

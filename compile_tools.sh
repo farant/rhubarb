@@ -6,8 +6,12 @@ source "$(dirname "$0")/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
 # Include paths
+# materia/fontes et toml/fontes: instrumenta capsulae et librarii
+# clientem toml trahunt (toml Q12, 2026-09-28); idem ac compile_tests.sh
 declare -a INCLUDE_FLAGS=(
     "-Iinclude"
+    "-Imateria/fontes"
+    "-Itoml/fontes"
 )
 
 # Build directory for object files

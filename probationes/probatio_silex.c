@@ -732,8 +732,9 @@ s32 principale (vacuum)
             AREA "/vitreum/lib/tls_macos.m"));
         CREDO_VERUM(filum_existit(
             AREA "/vitreum/vendor/sqlite3.c"));
-        /* clausura instrumenti: toml quod app non trahit */
-        CREDO_VERUM(filum_existit(AREA "/vitreum/lib/toml.c"));
+        /* clausura instrumenti: toml quod app non trahit (cliens
+         * materiae ex 2026-09-28, toml Q12 - lib/toml.c deleta) */
+        CREDO_VERUM(filum_existit(AREA "/vitreum/toml/fontes/toml.c"));
         /* clausura probationis: credo quem app non trahit
          * (ambulatio acceptionis hoc cepit) */
         CREDO_VERUM(filum_existit(AREA "/vitreum/lib/credo.c"));
@@ -797,7 +798,7 @@ s32 principale (vacuum)
             CREDO_FALSUM(chorda_continet(aed,
                 chorda_ex_literis("lib/*.c", piscina)));
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
-                "lib/toml.c", piscina));
+                "toml/fontes/toml.c", piscina));
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
                 "lib/vitrea_macos.m", piscina));
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
