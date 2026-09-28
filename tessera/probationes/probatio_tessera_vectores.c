@@ -137,7 +137,29 @@ _frustum_addere (
     pf->numerus_frustorum++;
 }
 
-/* Pontem pro vectore et forma parare; scissio solum pro BIPARTITA */
+/* Octeti vectoris sine signis morae (MORA_SIGNUM numquam traditur) */
+interior i32
+_mensura_nuda (
+    constans VectorInitus* v)
+{
+    i32 k;
+    i32 n = ZEPHYRUM;
+
+    per (k = ZEPHYRUM; k < v->mensura; k++)
+    {
+        si ((i8)v->octeti[k] != (i8)MORA_SIGNUM)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* Pontem pro vectore et forma parare; scissio solum pro BIPARTITA.
+ * Frusta ex punctis sectionis: forma sectiones dat (INTEGRA nullas,
+ * BIPARTITA unam, SINGULA omnes), signa morae in vectore moras (et
+ * scissiones) dant, SEQUENS 'a' addit post moram si mora_terminalis.
+ * moratum[j] = mora ANTE octetum nudum j. */
 interior vacuum
 _pontem_parare (
             PonsFrustorum* pf,
@@ -145,9 +167,17 @@ _pontem_parare (
                       i32  forma,
                       i32  scissio)
 {
+    b32 moratum[OCTETI_MAXIMI + I];
+    b32 scissum[OCTETI_MAXIMI + I];
+    i32 totum;
+    i32 initium;
+    i32 j;
     i32 k;
+    i32 n = ZEPHYRUM;
 
     memset(pf, ZEPHYRUM, magnitudo(PonsFrustorum));
+    memset(moratum, ZEPHYRUM, magnitudo(moratum));
+    memset(scissum, ZEPHYRUM, magnitudo(scissum));
     pf->pons.datum      = pf;
     pf->pons.legere     = _frusta_legere;
     pf->pons.scribere   = _frusta_scribere;
@@ -156,38 +186,52 @@ _pontem_parare (
     pf->pons.egredi     = _frusta_status;
     pf->pons.resumptum  = NIHIL;
 
-    memcpy(pf->octeti, v->octeti, (memoriae_index)v->mensura);
-    pf->mensura = v->mensura;
-
-    si (forma == FORMA_INTEGRA)
+    per (k = ZEPHYRUM; k < v->mensura; k++)
     {
-        _frustum_addere(pf, ZEPHYRUM, v->mensura);
+        si ((i8)v->octeti[k] == (i8)MORA_SIGNUM)
+        {
+            moratum[n] = VERUM;
+            perge;
+        }
+        pf->octeti[n++] = (i8)v->octeti[k];
+    }
+    totum = n;
+    si (forma == FORMA_SEQUENS)
+    {
+        si (v->mora_terminalis)
+        {
+            moratum[n] = VERUM;
+        }
+        pf->octeti[n]  = (i8)'a';
+        totum          = n + I;
     }
     alioquin si (forma == FORMA_BIPARTITA)
     {
-        _frustum_addere(pf, ZEPHYRUM, scissio);
-        _frustum_addere(pf, scissio, v->mensura - scissio);
+        scissum[scissio] = VERUM;
     }
     alioquin si (forma == FORMA_SINGULA)
     {
-        per (k = ZEPHYRUM; k < v->mensura; k++)
+        per (j = I; j < n; j++)
         {
-            _frustum_addere(pf, k, I);
+            scissum[j] = VERUM;
         }
     }
-    alioquin  /* SEQUENS */
+    pf->mensura = totum;
+
+    initium = ZEPHYRUM;
+    per (j = ZEPHYRUM; j <= totum; j++)
     {
-        pf->octeti[v->mensura]  = (i8)'a';
-        pf->mensura             = v->mensura + I;
-        si (v->mora_terminalis)
+        si (j == totum || scissum[j] || moratum[j])
         {
-            _frustum_addere(pf, ZEPHYRUM, v->mensura);
-            _frustum_addere(pf, ZEPHYRUM, ZEPHYRUM);   /* mora */
-            _frustum_addere(pf, v->mensura, I);
-        }
-        alioquin
-        {
-            _frustum_addere(pf, ZEPHYRUM, v->mensura + I);
+            si (j > initium)
+            {
+                _frustum_addere(pf, initium, j - initium);
+                initium = j;
+            }
+            si (moratum[j])
+            {
+                _frustum_addere(pf, ZEPHYRUM, ZEPHYRUM);   /* mora */
+            }
         }
     }
 }
@@ -382,6 +426,19 @@ _fracturam_imprimere (
     }
     imprimere("]%s\n    octeti:     ", ruptum ? " (RUPTUM)" : "");
     _octetos_imprimere(pf->octeti, pf->mensura);
+    imprimere("\n    frusta:     ");
+    per (k = ZEPHYRUM; k < pf->numerus_frustorum; k++)
+    {
+        si (pf->frusta[k].longitudo == ZEPHYRUM)
+        {
+            imprimere("[mora]");
+        }
+        alioquin
+        {
+            imprimere("[%u]",
+                (insignatus integer)pf->frusta[k].longitudo);
+        }
+    }
     imprimere("\n    exspectata: ");
     per (k = ZEPHYRUM; k < numerus_exspectatorum; k++)
     {
@@ -462,7 +519,7 @@ _formam_probare (
         redde _cursum_probare(piscina, v, forma, forma_titulus, -I,
             loquax);
     }
-    per (k = I; k < v->mensura; k++)
+    per (k = I; k < _mensura_nuda(v); k++)
     {
         si (!_cursum_probare(piscina, v, forma, forma_titulus, (s32)k,
                 loquax))
@@ -520,7 +577,7 @@ _tabulam_currere (
 
             /* scissio nulla in vectore unius octeti */
             si (   (forma == FORMA_BIPARTITA || forma == FORMA_SINGULA)
-                && v->mensura < II)
+                && _mensura_nuda(v) < II)
             {
                 perge;
             }
@@ -577,6 +634,10 @@ principale (vacuum)
         VECTORES_MURIUM,
         (i32)(magnitudo(VECTORES_MURIUM)
             / magnitudo(VECTORES_MURIUM[0])));
+    _tabulam_currere(piscina, "frusta (OpenTUI stdin-parser)",
+        VECTORES_FRUSTORUM,
+        (i32)(magnitudo(VECTORES_FRUSTORUM)
+            / magnitudo(VECTORES_FRUSTORUM[0])));
 
     imprimere("\nvectores %u, formae probatae %u, debita manentia %u\n",
         (insignatus integer)numerus_vectorum,

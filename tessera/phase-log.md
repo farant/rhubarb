@@ -611,3 +611,12 @@ unrequested motion swallowed, X10 parsed (Fran). 100 shapes promoted
 (868 assertions; 16 debts remain). Public header gained two enum values
 (appended). Amalgam VERIFICATUM + idempotent; saltuarius 13/13; three
 compiling plants, each caught exactly.
+
+**T4 FACTUM (framing vectors).** 83 vectors from stdin-parser.test.ts;
+harness gained MORA (mid-stream timeout marker; builder refactor proven
+868/868 first, guarded by a discriminating vector + plant). All VALET
+held; 26 debt vectors verified: H2 widened (DCS, APC), H7 partial
+sequences replayed as phantoms on timeout, H8 mouse split across a
+timeout, SS3 swallowing an embedded ESC, foreign forms with phantom
+tails, CSI parameter overflow (UB; wraps into a false ctrl). Suite 6/6,
+1,258 assertions, 120 named debts.

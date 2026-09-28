@@ -62,8 +62,19 @@ nomen structura {
 
 /* Causae debitorum: macro nominata per causam (CAUSA_*), ut forma
  * debita sine causa frangat. */
-#define CAUSA_H2 "H2 ad 002 lexemator: ESC ] (OSC) non comprehenditur - alt+']' + corpus ut runae phantasma (+ alt+'\\\\' aut ctrl+g ad terminum)"
+#define CAUSA_H2 "H2 ad 002 lexemator: ESC ] / ESC P / ESC _ (OSC, DCS, APC) non comprehenduntur - alt+']' (aut P, _) + corpus ut runae phantasma (+ alt+'\\\\' aut ctrl+g ad terminum)"
 #define CAUSA_FUGAE_PRAEFIXUM "ad 002 lexemator: ESC ante seriem (ESC ESC [ A) fuga spuria + clavis sine alterum emittit; exspectatum (DECISUM Frani 2026-09-28) = clavis + ALTERUM, ut ESC + clavis simplex"
+#define CAUSA_H7 "H7 ad 002: series PARTIALIS post moram ut fuga + runae phantasma redditur; exspectatum (consilium Frani): abicitur tacite, praeter ESC O / ESC [ = alt+O / alt+[ (xterm alt+O ipsum mittit)"
+#define CAUSA_H8 "H8 ad 002: series muris trans moram scissa (ssh lentus) - pars prior fuga + phantasmata, continuatio phantasmata; exspectatum (OpenTUI): mus integer (pars servatur; continuatio sine ESC post fugam recuperatur)"
+#define CAUSA_FUGA_INTRA_SS3 "SS3 ESC sequentem ut finalem devorat (CSI abortum recte tractat, SS3 non) - ESC O ESC O A -> O, A phantasma; exspectatum: pars abicitur, series nova integra"
+#define CAUSA_ALIENA "forma terminalis alieni (Linux console CSI [ A, putty [[5~, rxvt 2$) finalem falsum habet -> reliqua clavis phantasma; exspectatum: tacite consumpta, ut ceterae formae alienae (rxvt ^, SS3 minusculae)"
+#define CAUSA_PARAMETRUM_INGENS "parametrum CSI in s32 sine limite accumulatur - UNDEFINED BEHAVIOR (overflow signatum) in initu hostili; 1;4294967301A -> 5 -> imperium falsum; exspectatum: parametrum ingens ut invalidum (modificatores nulli)"
+
+/* MORA in octetis vectoris: mora exacta HIC (pons frustorum signum
+ * tollit et frustum vacuum inserit). 0xFE in UTF-8 numquam occurrit;
+ * ut octetus probandus ergo NON adhibendum. */
+#define MORA_SIGNUM 0xFE
+#define MORA "\xFE"
 
 /* Octeti cum mensura explicita (NUL licet intra) */
 #define OCT(s) (s), (i32)(magnitudo(s) - I)
@@ -585,6 +596,345 @@ hic_manens constans VectorInitus VECTORES_MURIUM[] = {
       VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_PRESSUS, X, V, ZEPHYRUM),
         EX_MUS(TESSERA_MUS_SOLUTUS, X, V, III) } }
+};
+
+
+/* ================================================================
+ * FRUSTA - ex OpenTUI packages/core/src/lib/stdin-parser.test.ts (MIT,
+ * (c) 2025 opentui, @ 7581976f): compago fluminis - morae, series
+ * partiales, UTF-8, ESC intra seriem, responsa, fluxus mixti. Formae
+ * quattuor "chunk-shape invariance" iam systematice probant; MORA =
+ * mora in medio (formae scissuras circa eam faciunt).
+ *
+ * PRAETERMISSA (causa nominata):
+ *   - glutinum (bracketed paste): exspectata genus GLUTINUM poscunt
+ *     quod nondum est - cum features/001 portanda.
+ *   - "protocol context" totum (explicitWidthCpr, pixelResolution,
+ *     privateCapabilityReplies, startupCursorCpr): tessera numquam
+ *     quaerit, ergo responsa talia non exspectat.
+ *   - status obiecti OpenTUI (reset, destroy, read/drain, bufferCapacity,
+ *     onTimeoutFlush, horologium dissentiens): API propria.
+ *   - kitty/modifyOtherKeys ut CLAVES: tessera ea non petit (ut
+ *     strepitus infra).
+ * ================================================================ */
+
+hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
+
+    /* regimen et signa - tabula plena */
+    { "ctrl+b d e f g k l n", OCT("\x02\x04\x05\x06\x07\x0b\x0c\x0e"),
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('b', IMP), EX_RUNA('d', IMP), EX_RUNA('e', IMP),
+        EX_RUNA('f', IMP), EX_RUNA('g', IMP), EX_RUNA('k', IMP),
+        EX_RUNA('l', IMP), EX_RUNA('n', IMP) } },
+    { "ctrl+o p q r s t v w", OCT("\x0f\x10\x11\x12\x13\x14\x16\x17"),
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('o', IMP), EX_RUNA('p', IMP), EX_RUNA('q', IMP),
+        EX_RUNA('r', IMP), EX_RUNA('s', IMP), EX_RUNA('t', IMP),
+        EX_RUNA('v', IMP), EX_RUNA('w', IMP) } },
+    { "ctrl+u x y", OCT("\x15\x18\x19"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('u', IMP), EX_RUNA('x', IMP), EX_RUNA('y', IMP) } },
+    { "litterae", OCT("abcdefgh"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('a', ZEPHYRUM), EX_RUNA('b', ZEPHYRUM),
+        EX_RUNA('c', ZEPHYRUM), EX_RUNA('d', ZEPHYRUM),
+        EX_RUNA('e', ZEPHYRUM), EX_RUNA('f', ZEPHYRUM),
+        EX_RUNA('g', ZEPHYRUM), EX_RUNA('h', ZEPHYRUM) } },
+    { "signa I", OCT("!@#$%^&*"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('!', ZEPHYRUM), EX_RUNA('@', ZEPHYRUM),
+        EX_RUNA('#', ZEPHYRUM), EX_RUNA('$', ZEPHYRUM),
+        EX_RUNA('%', ZEPHYRUM), EX_RUNA('^', ZEPHYRUM),
+        EX_RUNA('&', ZEPHYRUM), EX_RUNA('*', ZEPHYRUM) } },
+    { "signa II", OCT("()-_=+[]"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('(', ZEPHYRUM), EX_RUNA(')', ZEPHYRUM),
+        EX_RUNA('-', ZEPHYRUM), EX_RUNA('_', ZEPHYRUM),
+        EX_RUNA('=', ZEPHYRUM), EX_RUNA('+', ZEPHYRUM),
+        EX_RUNA('[', ZEPHYRUM), EX_RUNA(']', ZEPHYRUM) } },
+    { "signa III", OCT("{}|;':,."), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('{', ZEPHYRUM), EX_RUNA('}', ZEPHYRUM),
+        EX_RUNA('|', ZEPHYRUM), EX_RUNA(';', ZEPHYRUM),
+        EX_RUNA('\'', ZEPHYRUM), EX_RUNA(':', ZEPHYRUM),
+        EX_RUNA(',', ZEPHYRUM), EX_RUNA('.', ZEPHYRUM) } },
+    { "signa IV", OCT("/<>?`~"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('/', ZEPHYRUM), EX_RUNA('<', ZEPHYRUM),
+        EX_RUNA('>', ZEPHYRUM), EX_RUNA('?', ZEPHYRUM),
+        EX_RUNA('`', ZEPHYRUM), EX_RUNA('~', ZEPHYRUM) } },
+    { "tres runae UTF-8", OCT("\xE6\x97\xA5\xE6\x9C\xAC\xE8\xAA\x9E"),
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA(0x65E5, ZEPHYRUM), EX_RUNA(0x672C, ZEPHYRUM),
+        EX_RUNA(0x8A9E, ZEPHYRUM) } },
+    { "alt+DEL", OCT("\033\x7f"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_RETRORSUM, ALT) } },
+    { "alt+BS", OCT("\033\b"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_RETRORSUM, ALT) } },
+    { "alt+5", OCT("\0335"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('5', ALT) } },
+    { "alt+! (OpenTUI: clavis sine nomine)", OCT("\033!"), FALSUM,
+      VECTOR_VALET, NIHIL, { EX_RUNA('!', ALT) } },
+
+    /* navigatio et functiones */
+    { "CSI 1~ domus, 4~ finis", OCT("\033[1~\033[4~"), FALSUM,
+      VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_DOMUS, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_FINIS, ZEPHYRUM) } },
+    { "SS3 F2 F3 F4", OCT("\033OQ\033OR\033OS"), FALSUM, VECTOR_VALET,
+      NIHIL,
+      { EX_FUNCTIO(II, ZEPHYRUM), EX_FUNCTIO(III, ZEPHYRUM),
+        EX_FUNCTIO(IV, ZEPHYRUM) } },
+    { "SS3 C D H F", OCT("\033OC\033OD\033OH\033OF"), FALSUM,
+      VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_DEXTRA, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_SINISTRA, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_DOMUS, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_FINIS, ZEPHYRUM) } },
+    { "F2-F4 F7-F11 (~)",
+      OCT("\033[12~\033[13~\033[14~\033[18~\033[19~\033[20~\033[21~\033[23~"),
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_FUNCTIO(II, ZEPHYRUM), EX_FUNCTIO(III, ZEPHYRUM),
+        EX_FUNCTIO(IV, ZEPHYRUM), EX_FUNCTIO(VII, ZEPHYRUM),
+        EX_FUNCTIO(VIII, ZEPHYRUM), EX_FUNCTIO(IX, ZEPHYRUM),
+        EX_FUNCTIO(X, ZEPHYRUM), EX_FUNCTIO(XI, ZEPHYRUM) } },
+    { "shift+ctrl frecce 1;6",
+        OCT("\033[1;6A\033[1;6B\033[1;6C\033[1;6D"),
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, MAI | IMP),
+        EX_CLAVIS(TESSERA_CLAVIS_DEORSUM, MAI | IMP),
+        EX_CLAVIS(TESSERA_CLAVIS_DEXTRA, MAI | IMP),
+        EX_CLAVIS(TESSERA_CLAVIS_SINISTRA, MAI | IMP) } },
+    { "frecce modificatae mixtae",
+        OCT("\033[1;2B\033[1;3C\033[1;4D\033[1;5B"),
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_DEORSUM, MAI),
+        EX_CLAVIS(TESSERA_CLAVIS_DEXTRA, ALT),
+        EX_CLAVIS(TESSERA_CLAVIS_SINISTRA, MAI | ALT),
+        EX_CLAVIS(TESSERA_CLAVIS_DEORSUM, IMP) } },
+
+    /* damna: formae alienae iam tacite consumptae */
+    { "CSI E (OpenTUI: clear)", OCT("\033[E"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_NIHIL } },
+    { "SS3 E (OpenTUI: clear)", OCT("\033OE"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_NIHIL } },
+    { "rxvt 7~ 8~ (OpenTUI: domus, finis)", OCT("\033[7~\033[8~"),
+        FALSUM,
+      VECTOR_VALET, NIHIL, { EX_NIHIL } },
+    { "rxvt shift b c d", OCT("\033[b\033[c\033[d"), FALSUM,
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
+    { "rxvt ctrl SS3 b c d", OCT("\033Ob\033Oc\033Od"), FALSUM,
+      VECTOR_VALET, NIHIL, { EX_NIHIL } },
+    { "rxvt ^ 3 5 6", OCT("\033[3^\033[5^\033[6^"), FALSUM,
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
+
+    /* strepitus tacitus */
+    { "kitty formae ':' et u",
+        OCT("\033[97;1:3u\033[1;1:1A\033[5;1:1~\033[27u"),
+      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
+    { "modifyOtherKeys 27;3;9 27;2;53",
+        OCT("\033[27;3;9~\033[27;2;53~"),
+      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
+    { "CSI h ignota", OCT("\033[h"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_NIHIL } },
+    { "sgr malformatum <0M", OCT("\033[<0M"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_NIHIL } },
+    { "DA1 longa", OCT("\033[?62;1;2;6;7;8;9;15;22c"), FALSUM,
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
+    { "DECRPM ?2004;1$y", OCT("\033[?2004;1$y"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
+    { "focus inter claves", OCT("a\033[Ib\033[Oc"), FALSUM,
+        VECTOR_VALET,
+      NIHIL,
+      { EX_RUNA('a', ZEPHYRUM), EX_RUNA('b', ZEPHYRUM),
+        EX_RUNA('c', ZEPHYRUM) } },
+
+    /* mus in fluxu */
+    { "sgr tres in frusto", OCT("\033[<0;1;1M\033[<0;2;1M\033[<0;2;1m"),
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM),
+        EX_MUS(TESSERA_MUS_PRESSUS, I, ZEPHYRUM, ZEPHYRUM),
+        EX_MUS(TESSERA_MUS_SOLUTUS, I, ZEPHYRUM, ZEPHYRUM) } },
+    { "sgr pressus + tractus (tractus tacitus)",
+      OCT("\033[<0;5;5M\033[<32;6;5M"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_MUS(TESSERA_MUS_PRESSUS, IV, IV, ZEPHYRUM) } },
+    { "x10 + clavis", OCT("\033[M !!x"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM),
+        EX_RUNA('x', ZEPHYRUM) } },
+    { "x10 motus 35 (tacitus)", OCT("\033[MC%&"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
+    { "x10 rota sursum 2,3", OCT("\033[M`#$"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_MUS(TESSERA_MUS_ROTA_SURSUM, II, III, ZEPHYRUM) } },
+    { "x10 shift+sinister", OCT("\033[M$!!"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_MUS_MOD(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+                   MAI) } },
+    { "x10 ctrl+rota 7,8", OCT("\033[Mp()"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_MUS_MOD(TESSERA_MUS_ROTA_SURSUM, VII, VIII, ZEPHYRUM,
+          IMP) } },
+    { "x10 10,20", OCT("\033[M +5"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_MUS(TESSERA_MUS_PRESSUS, X, XX, ZEPHYRUM) } },
+
+    /* ESC intra seriem (CSI recte abortit) et morae */
+    { "CSI abrupta ESC, deinde sgr integra",
+        OCT("\033[<0;\033[<0;21;6M"),
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_MUS(TESSERA_MUS_PRESSUS, XX, V, ZEPHYRUM) } },
+    { "CSI 123 + ESC, mora = fuga", OCT("\033[123\033"), VERUM,
+      VECTOR_VALET, NIHIL, { EX_CLAVIS(TESSERA_CLAVIS_FUGA,
+          ZEPHYRUM) } },
+    { "fuga, mora, b (sine mora: alt+b)", OCT("\033" MORA "b"), FALSUM,
+      VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM), EX_RUNA('b',
+          ZEPHYRUM) } },
+    { "tres fugae per moras", OCT("\033" MORA "\033" MORA "\033"),
+        VERUM,
+      VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM) } },
+
+    /* fluxus mixti - formae omnes scissiones probant */
+    { "x + rota + focus + pollex",
+      OCT("x\033[<64;10;5M\033[I\xF0\x9F\x91\x8D"), FALSUM,
+          VECTOR_VALET,
+      NIHIL,
+      { EX_RUNA('x', ZEPHYRUM),
+        EX_MUS(TESSERA_MUS_ROTA_SURSUM, IX, IV, ZEPHYRUM),
+        EX_RUNA(0x1F44D, ZEPHYRUM) } },
+    { "ascii + utf8", OCT("xy\xF0\x9F\x91\x8D"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_RUNA('x', ZEPHYRUM), EX_RUNA('y', ZEPHYRUM),
+        EX_RUNA(0x1F44D, ZEPHYRUM) } },
+    { "utf8 + arcus", OCT("\xF0\x9F\x91\x8D\033[A"), FALSUM,
+        VECTOR_VALET,
+      NIHIL,
+      { EX_RUNA(0x1F44D, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM) } },
+    { "arcus + sgr", OCT("\033[A\033[<64;10;5M"), FALSUM, VECTOR_VALET,
+      NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM),
+        EX_MUS(TESSERA_MUS_ROTA_SURSUM, IX, IV, ZEPHYRUM) } },
+    { "sgr + x10", OCT("\033[<64;10;5M\033[M !!"), FALSUM, VECTOR_VALET,
+      NIHIL,
+      { EX_MUS(TESSERA_MUS_ROTA_SURSUM, IX, IV, ZEPHYRUM),
+        EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
+    { "x10 + kitty", OCT("\033[M !!\033[97u"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
+    { "kitty + ascii", OCT("\033[97uxy"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('x', ZEPHYRUM), EX_RUNA('y', ZEPHYRUM) } },
+    { "arcus + textus + mus", OCT("\033[Ax\033[<0;1;1M"), FALSUM,
+      VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM), EX_RUNA('x',
+          ZEPHYRUM),
+        EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
+    { "[< sine ESC = litterae", OCT("[<35;5m"), FALSUM, VECTOR_VALET,
+        NIHIL,
+      { EX_RUNA('[', ZEPHYRUM), EX_RUNA('<', ZEPHYRUM),
+        EX_RUNA('3', ZEPHYRUM), EX_RUNA('5', ZEPHYRUM),
+        EX_RUNA(';', ZEPHYRUM), EX_RUNA('5', ZEPHYRUM),
+        EX_RUNA('m', ZEPHYRUM) } },
+
+    /* UTF-8 invalidum (OpenTUI: meta 8-bit; tessera abicit) */
+    { "0xC0 + A", OCT("\xC0" "A"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('A', ZEPHYRUM) } },
+    { "0xE9 (III) + x", OCT("\xE9" "x"), FALSUM, VECTOR_VALET, NIHIL,
+      { EX_RUNA('x', ZEPHYRUM) } },
+    { "0xE9 solus + mora", OCT("\xE9"), VERUM, VECTOR_VALET, NIHIL,
+      { EX_NIHIL } },
+    { "0xFF solus + mora", OCT("\xFF"), VERUM, VECTOR_VALET, NIHIL,
+      { EX_NIHIL } },
+
+    /* debita - H2 (OSC, DCS, APC) */
+    { "OSC BEL", OCT("\033]4;0;#ffffff\x07"), FALSUM, VECTOR_DEBITUM,
+      CAUSA_H2, { EX_NIHIL } },
+    { "OSC ST", OCT("\033]4;0;rgb:ff/ff/ff\033\\"), FALSUM,
+        VECTOR_DEBITUM,
+      CAUSA_H2, { EX_NIHIL } },
+    { "DCS XTVERSION", OCT("\033P>|kitty(0.40.1)\033\\"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_H2, { EX_NIHIL } },
+    { "APC kitty", OCT("\033_Gi=1;OK\033\\"), FALSUM, VECTOR_DEBITUM,
+      CAUSA_H2, { EX_NIHIL } },
+    { "OSC + DCS + APC",
+        OCT("\033]4;0;#fff\x07\033P>|test\033\\\033_OK\033\\"),
+      FALSUM, VECTOR_DEBITUM, CAUSA_H2, { EX_NIHIL } },
+    { "x + OSC + y", OCT("x\033]4;0;#fff\x07y"), FALSUM, VECTOR_DEBITUM,
+      CAUSA_H2, { EX_RUNA('x', ZEPHYRUM), EX_RUNA('y', ZEPHYRUM) } },
+
+    /* debita - H7 (series partialis post moram) */
+    { "ESC O + mora = alt+O", OCT("\033O"), VERUM, VECTOR_DEBITUM,
+        CAUSA_H7,
+      { EX_RUNA('O', ALT) } },
+    { "ESC [ + mora = alt+[", OCT("\033["), VERUM, VECTOR_DEBITUM,
+        CAUSA_H7,
+      { EX_RUNA('[', ALT) } },
+    { "CSI 123 + mora", OCT("\033[123"), VERUM, VECTOR_DEBITUM,
+        CAUSA_H7,
+      { EX_NIHIL } },
+    { "CSI 1;5 + mora + A", OCT("\033[1;5" MORA "A"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_H7, { EX_RUNA('A', ZEPHYRUM) } },
+    { "CSI 24;80 + mora + R", OCT("\033[24;80" MORA "R"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_H7, { EX_RUNA('R', ZEPHYRUM) } },
+    { "OSC partialis + mora", OCT("\033]incomplete"), VERUM,
+        VECTOR_DEBITUM,
+      CAUSA_H7, { EX_NIHIL } },
+    { "DCS partialis + mora", OCT("\033Ppartial"), VERUM,
+        VECTOR_DEBITUM,
+      CAUSA_H7, { EX_NIHIL } },
+    { "APC partialis + mora", OCT("\033_partial"), VERUM,
+        VECTOR_DEBITUM,
+      CAUSA_H7, { EX_NIHIL } },
+    { "OSC 52 partialis + mora", OCT("\033]52;c;"), VERUM,
+        VECTOR_DEBITUM,
+      CAUSA_H7, { EX_NIHIL } },
+    { "x10 partialis + mora", OCT("\033[M !"), VERUM, VECTOR_DEBITUM,
+      CAUSA_H7, { EX_NIHIL } },
+    { "CSI XL digitorum + mora",
+        OCT("\033[1111111111111111111111111111111111111111"), VERUM,
+      VECTOR_DEBITUM, CAUSA_H7, { EX_NIHIL } },
+
+    /* debita - H8 (mus trans moram) */
+    { "sgr scissa per moram", OCT("\033[<0;20" MORA ";5M"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_H8,
+      { EX_MUS(TESSERA_MUS_PRESSUS, XIX, IV, ZEPHYRUM) } },
+    { "fuga, mora, continuatio sgr", OCT("\033" MORA "[<64;38;15M"),
+        FALSUM,
+      VECTOR_DEBITUM, CAUSA_H8,
+      { EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM),
+        EX_MUS(TESSERA_MUS_ROTA_SURSUM, XXXVII, XIV, ZEPHYRUM) } },
+    { "fuga, mora, continuatio x10", OCT("\033" MORA "[M !!"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_H8,
+      { EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM),
+        EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
+
+    /* debita - ESC intra SS3 */
+    { "SS3 abruptum ESC, SS3 A", OCT("\033O\033OA"), FALSUM,
+        VECTOR_DEBITUM,
+      CAUSA_FUGA_INTRA_SS3, { EX_CLAVIS(TESSERA_CLAVIS_SURSUM,
+          ZEPHYRUM) } },
+    { "SS3 abruptum ESC, CSI A", OCT("\033O\033[A"), FALSUM,
+        VECTOR_DEBITUM,
+      CAUSA_FUGA_INTRA_SS3, { EX_CLAVIS(TESSERA_CLAVIS_SURSUM,
+          ZEPHYRUM) } },
+
+    /* debita - formae alienae */
+    { "Linux console [[A (F1)", OCT("\033[[A"), FALSUM, VECTOR_DEBITUM,
+      CAUSA_ALIENA, { EX_NIHIL } },
+    { "putty [[5~", OCT("\033[[5~"), FALSUM, VECTOR_DEBITUM,
+        CAUSA_ALIENA,
+      { EX_NIHIL } },
+    { "rxvt 2$ + mora", OCT("\033[2$"), VERUM, VECTOR_DEBITUM,
+        CAUSA_ALIENA,
+      { EX_NIHIL } },
+
+    /* debita - parametrum ingens */
+    { "1;4294967301A (overflow -> 5)", OCT("\033[1;4294967301A"),
+        FALSUM,
+      VECTOR_DEBITUM, CAUSA_PARAMETRUM_INGENS,
+      { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM) } }
 };
 
 #endif /* VECTORES_INITUS_H */

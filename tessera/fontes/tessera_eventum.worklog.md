@@ -193,3 +193,53 @@ prefix). Amalgam VERIFICATUM (hospes 7/7 against the CHANGED public
 header) + idempotent; saltuarius 13/13. Three compiling plants, one per
 mechanism, each failing exactly its own vectors: motion (7), X10 (9),
 mouse ctrl (3).
+
+## 2026-09-28: T4, framing vectors (OpenTUI stdin-parser.test.ts)
+
+83 vectors in `VECTORES_FRUSTORUM` (file read in full, 2,579 lines).
+Suite: 238 vectors, 902 shape runs, 1,258 assertions, 120 named debts.
+
+**Harness extension: `MORA`** (`"\xFE"`, never valid UTF-8) inside a
+vector = a timeout at that point. The test pons strips it and inserts
+an empty chunk, and the shapes cut around it. `_pontem_parare` became a
+general chunk builder (cut points per shape + mora points). The
+refactor reproduced 868/868 with 16 debts BEFORE any new vector used it.
+A discriminating VALET vector (ESC, mora, b → FUGA, b; without the mora
+it's alt+b) guards the builder; a plant that ignores markers failed it
+in all four shapes (and falsely "solved" the SGR-split debt, which the
+DEBITUM SOLUTUM check also caught).
+
+**VALET (all predictions held):** full ctrl-letter table, symbol runs,
+multi-rune UTF-8, alt+DEL/BS/digit/`!`, F2–F11 in both forms,
+modifier-arrow grids, foreign forms already consumed (CSI E, SS3 E, rxvt
+7~/8~/b-d/^), kitty `:`/u and modifyOtherKeys noise, long DA1, DECRPM,
+focus between keys, SGR/X10 chunks (drag and motion silent), CSI aborted
+by an embedded ESC (tessera does this right), ESC chains across
+timeouts, every mixed-stream pair across every split, `[<35;5m` without
+ESC = literal keys, invalid UTF-8 leads dropped (OpenTUI's 8-bit meta
+is a loss).
+
+**Debts, each verified by a diagnostic run (debts temporarily VALET):**
+- **H2 widened:** DCS (`ESC P`) and APC (`ESC _`) as well as OSC →
+  alt+`]`/`P`/`_` + payload as keys (long replies overflow the 16-event
+  capture).
+- **H7 (new):** a PARTIAL sequence that times out is replayed as FUGA +
+  phantom keys (`\033[123` → fuga `[ 1 2 3`; x10 partial; OSC/DCS/APC
+  partials as alt+X + keys). Proposed policy (Fran to confirm): discard
+  silently, except the 2-byte `ESC O` / `ESC [` → alt+O / alt+[ (xterm
+  sends ESC O for Alt+O).
+- **H8 (new):** a mouse report split across a timeout (slow ssh) →
+  FUGA + phantoms, and the continuation phantoms too. OpenTUI holds
+  mouse partials and recovers ESC-less continuations after a flushed ESC.
+- **SS3 swallows an embedded ESC** as its "final": `ESC O ESC O A` →
+  `O A` phantoms. CSI aborts correctly on ESC; SS3 doesn't.
+- **Foreign forms with a phantom tail:** Linux console `\033[[A` → `A`,
+  putty `\033[[5~` → `5~`, rxvt `\033[2$` + timeout → fuga `[2$`.
+  Proposed: consume silently like the other foreign forms.
+- **CSI parameter overflow = undefined behavior:** parameters accumulate
+  in an unbounded `s32`. Hostile input overflows (UB), and in practice
+  `1;4294967301A` wraps to 5 → **ctrl+up**. Fix: cap each parameter.
+
+Skipped with reasons in the header: bracketed paste (needs a GLUTINUM
+genus, feature 001), OpenTUI's protocol-context probes (tessera never
+queries), parser-object lifecycle API.
