@@ -3,7 +3,10 @@
 *2026-09-28. Plan for terminal-planning features/003 ("Input test
 vectors"), the first tessera 1.2 step. Worktree `../rhubarb-secunda`,
 branch `rhubarb-secunda`. Executed INLINE, one task per turn, Fran
-approving each. Names marked (unsealed) are working names; Fran names.*
+approving each. **STATUS: PERFECTUM 2026-09-28** (T1, T1b, T2, T2b, T3,
+T3b, T4, T4b, T5; commits 938c0df4 … 7a25a0bd): 238 vectors, 1,270
+assertions, nine reader bugs fixed, 108 debt shapes handed to the
+tokenizer (tabularium desideratum …E4Q). RELATIO: tessera/phase-log.md. Names marked (unsealed) are working names; Fran names.*
 
 ## 1. Goal
 

@@ -626,3 +626,66 @@ input; a huge parameter is invalid) and SS3 aborts on an embedded ESC.
 12 shapes promoted; 108 debts remain, all for the tokenizer (002).
 Amalgam VERIFICATUM + idempotent; saltuarius 13/13; two compiling
 plants, each exact.
+
+### RELATIO (T1–T5, 2026-09-28)
+
+**Landed.** OpenTUI's three input-test files (MIT, 7581976f, read in
+full: 5,144 lines) ported as C89 data: 238 vectors in four tables
+(SEMEN 34, CLAVIUM 86, MURIUM 35, FRUSTORUM 83), each run in four
+shapes (integra, bipartita = every split, singula = byte at a time,
+sequens = + 'a'), plus MORA timeouts mid-stream. Input suites: 68 →
+1,338 assertions (eventum 68 unchanged + vectores 1,270). 10 commits
+on rhubarb-secunda (938c0df4 … 7a25a0bd). Every library change:
+failing vectors first, amalgam VERIFICATUM + idempotent, saltuarius
+13/13, a planted fault that COMPILES, caught exactly.
+
+**Nine reader bugs found and fixed** (tessera 1.2 input):
+H1 split sequences (T1b), H6 pending-ESC merge (T2b), mouse modifiers,
+wheel release, horizontal wheel (new genera), unrequested motion,
+X10 phantoms (T3b), SS3 embedded ESC, CSI parameter overflow UB (T4b).
+
+**Remaining: 27 debt vectors = 108 shapes, all tokenizer (modules/002)
+territory:** H2 OSC/DCS/APC (8), H7 partial-on-timeout (11), H8 mouse
+across timeout (3), foreign forms (3), ESC prefix (2). Fran's decided
+semantics are in each causa and in the tabularium (decretum …QRYT);
+the tokenizer's acceptance bar is desideratum …E4Q.
+
+**Skipped with named reasons** (vector-file headers): kitty and
+modifyOtherKeys as KEYS (tessera never requests them; asserted as
+silent noise), bracketed paste (needs the GLUTINUM genus of features/
+001), OpenTUI protocol-context probes (tessera never queries), OpenTUI
+parser-object API, button-tracking drag state.
+
+**Complexities (four-part schema):**
+1. *Discovered-while:* T1's first run, all seed vectors VALET. *Consists-
+   in:* debt per VECTOR would hide the passing shapes of a vector that
+   fails only byte-at-a-time. *Consequences:* 60+ real assertions would
+   have been silent. *Handled-by:* debt per SHAPE (`formae_debitae`
+   bitmask), decided before marking anything.
+2. *Discovered-while:* T1 debt marking. *Consists-in:* a transform of
+   a file piped into `scribe` of the same file truncated it; scribe
+   wrote 0 bytes and examen said ACCIPE. *Consequences:* an untracked
+   file silently emptied. *Handled-by:* rebuilt from the conversation;
+   rule "transform to scratch, then scribe"; quaestio …FBRPJ.
+3. *Discovered-while:* T1b and T3b plants. *Consists-in:* a plant that
+   does NOT compile hid its build error behind the next (restored)
+   green run. *Consequences:* a false "gate born red" twice in one day.
+   *Handled-by:* every plant run captured to its own log, rc and
+   `error:` count checked before reading a verdict.
+4. *Discovered-while:* T2's SEQUENS shape. *Consists-in:* H6, a real bug
+   no hypothesis predicted; the four-shape design caught it for free.
+   *Consequences:* the shapes are worth more than their cost. *Handled-
+   by:* T2b fix; kept as a general argument for shape-sweeps.
+5. *Discovered-while:* T4 debt verification. *Consists-in:* no VALET
+   vector depended on a mid-stream MORA, so the new chunk builder was
+   unguarded. *Consequences:* a harness bug in MORA would pass silently.
+   *Handled-by:* a discriminating vector (ESC, mora, b) + a plant.
+6. *Discovered-while:* every debt table. *Consists-in:* a debt that
+   fails proves only "not the desired output", not "fails for the named
+   reason". *Handled-by:* a diagnostic run per table (debts temporarily
+   VALET) printed tessera's ACTUAL output; every causa matched.
+
+**Next** (Fran chooses): the tokenizer interview (modules/002; 108
+shapes waiting), or the remaining tessera 1.2 features (bracketed
+paste 001, sync output 002, `?1002` drags), or unicode width
+(modules/001 = desideratum …XBWP).
