@@ -14,8 +14,10 @@
  * ALTERUM, mus SGR (ESC [ < btn;x;y M/m; coordinatae 1-basatae ->
  * 0-basatae) et X10 (ESC [ M + tres octeti crudi; solutio = pulsus
  * III, botton ignotus): rota = btn&64 (sursum/deorsum/sinistrorsum/
- * dextrorsum), modificatores ex bits 4/8/16, motus (bit 32 - non
- * petitus) et rota soluta TACITE consumuntur. CSI ignota TACITE consumuntur (strepitus
+ * dextrorsum), modificatores ex bits 4/8/16, motus (bit 32) cum
+ * bottone 0-2 = TRACTUS (?1002; finalis M/m neglecta); motus sine
+ * bottone (35, ?1003 non petitus), motus + rota (96/97) et rota soluta
+ * TACITE consumuntur. CSI ignota TACITE consumuntur (strepitus
  * regiminis clavem phantasma fieri non debet).
  *
  * RUNA = codepoint DECODITUS (non compactus!): initus comparationes
@@ -78,7 +80,9 @@ nomen enumeratio {
     TESSERA_MUS_ROTA_SURSUM,
     TESSERA_MUS_ROTA_DEORSUM,
     TESSERA_MUS_ROTA_SINISTRORSUM,  /* 66: rota lateralis (trackpad) */
-    TESSERA_MUS_ROTA_DEXTRORSUM     /* 67 */
+    TESSERA_MUS_ROTA_DEXTRORSUM,    /* 67 */
+    TESSERA_MUS_TRACTUS             /* motus botton tento (?1002):
+                                     * mus_pulsus = botton 0/1/2 */
 } TesseraMusGenus;
 
 nomen structura {

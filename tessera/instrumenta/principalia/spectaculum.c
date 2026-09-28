@@ -204,7 +204,8 @@ principale (vacuum)
                 sprintf(status, "mus: genus %d pulsus %d ad %d,%d",
                     (int)ev.mus_genus, (int)ev.mus_pulsus,
                     (int)ev.mus_x, (int)ev.mus_y);
-                si (ev.mus_genus == TESSERA_MUS_PRESSUS)
+                si (   ev.mus_genus == TESSERA_MUS_PRESSUS
+                    || ev.mus_genus == TESSERA_MUS_TRACTUS)
                 {
                     cur_x = ev.mus_x;
                     cur_y = ev.mus_y;

@@ -179,10 +179,12 @@ _clavem_finalem (
 /* Mus (SGR aut X10) classificare ex codice bottonis crudo: bits 0-1
  * botton, 4 maiuscula, 8 alterum, 16 imperium, 32 motus, 64 rota.
  * solutio = SGR 'm', aut X10 botton III (solutio sine bottone noto).
- * COMPLETUM = eventum positum; PRAETERITUM = tacite consumptum (motus
- * non petitus - H4, tessera ?1002/1003 non mittit; rota soluta). Campi
- * eventus SOLUM in COMPLETUM scribuntur (nihil sordidum relinquitur
- * eventui proximo). */
+ * Motus cum bottone 0-2 = TRACTUS (tessera ?1002 petit: terminal motum
+ * SOLUM botton tento refert; finalis M/m in motu neglegitur, sine
+ * statu - bits bottonis creduntur). COMPLETUM = eventum positum;
+ * PRAETERITUM = tacite consumptum (motus sine bottone 35 = ?1003, non
+ * petitus; motus + rota 96/97; rota soluta). Campi eventus SOLUM in
+ * COMPLETUM scribuntur (nihil sordidum relinquitur eventui proximo). */
 interior ParsFructus
 _murem_classificare (
     TesseraEventum* ev,
@@ -197,9 +199,13 @@ _murem_classificare (
 
     si (pulsus & XXXII)
     {
-        redde PARS_PRAETERITUM;   /* motus (etiam cum rota: 96/97) */
+        si ((pulsus & LXIV) || botton == III)
+        {
+            redde PARS_PRAETERITUM;   /* motus + rota, aut sine bottone */
+        }
+        genus = TESSERA_MUS_TRACTUS;
     }
-    si (pulsus & LXIV)
+    alioquin si (pulsus & LXIV)
     {
         si (solutio)
         {

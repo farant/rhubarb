@@ -258,7 +258,9 @@ typedef enum {
     TESSERA_MUS_ROTA_SURSUM,
     TESSERA_MUS_ROTA_DEORSUM,
     TESSERA_MUS_ROTA_SINISTRORSUM,  /* 66: rota lateralis (trackpad) */
-    TESSERA_MUS_ROTA_DEXTRORSUM     /* 67 */
+    TESSERA_MUS_ROTA_DEXTRORSUM,    /* 67 */
+    TESSERA_MUS_TRACTUS             /* motus botton tento (?1002):
+                                     * mus_pulsus = botton 0/1/2 */
 } TesseraMusGenus;
 
 typedef struct TesseraEventum {

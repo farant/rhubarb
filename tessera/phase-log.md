@@ -747,3 +747,41 @@ in intermittere; modi rule V. 9 goldens + saltuarius's pledge updated
 explicitly (the pledge was missing from the plan's list; saltuarius
 caught it). Three compiling plants caught. Fran's terminal look: all
 good. Suite 7/7, saltuarius 13/13, amalgam VERIFICATUM + idempotent.
+
+### INTENTIO (T3: drag events ?1002)
+
+`INTRANDI` gains `?1002h` after `?1000h` (button-event tracking: motion
+reported only while a button is held); `EXEUNDI` gains `?1002l` in
+reverse position, and the law-of-pairs probatio guards both.
+`TESSERA_MUS_TRACTUS` is APPENDED to `TesseraMusGenus` (source header and
+the hand-written amalgam header; existing values unchanged).
+`_murem_classificare`: bit 32 with button 0–2 → TRACTUS, `mus_pulsus` =
+held button, modifiers kept, the M/m final IGNORED for motion (xterm
+always sends M; OpenTUI's vectors use m and still call it motion).
+Stateless: tessera trusts the button bits and keeps no pressed-set
+(OpenTUI keeps one to tell drag from move; under ?1002 the terminal
+only reports motion with a button held, so the bits suffice). Still
+swallowed: 35 (motion, no button = ?1003 hover, never requested) and
+96/97 (motion + wheel bits, URxvt noise). The X10 path gets the same
+rule for free (it calls the same classifier).
+
+Red first: the H4 vectors that announced this change flip their
+expectations (32 alone, two drags in one chunk, press+drag+release, the
+"tractus tacitus" stream vector), plus new drag vectors (middle, right,
+ctrl+drag, X10 drag, a full press / drag ×2 / release stroke); the
+harness runs each in all four shapes. saltuarius: TRACTUS falls to
+`ordinarius` (nothing happens), pinned by one assertion. spectaculum:
+a drag moves the cursor like a press does, so the look shows it.
+Terminal step: drag in spectaculum; Fran looks before the commit.
+
+**T3 FACTUM (drag events).** `?1002` in the mode strings (enter 1049
+1000 1002 1006, leave in stack order; modi rule IV requires 1002).
+`TESSERA_MUS_TRACTUS` appended in both headers. Classifier: bit 32 +
+button 0–2 → TRACTUS (button + modifiers kept, M/m final ignored), 35/39
+and 96/97 still swallowed; X10 drags ride the same rule. 4 H4 vectors
+flipped, 7 added; red first = exactly the 10 drag vectors × 4 shapes +
+modi. Three compiling plants caught by name. saltuarius pins "a drag does
+nothing"; spectaculum's cursor follows drags. Suite 7/7, saltuarius
+13/13, amalgam VERIFICATUM + idempotent. **Fran's terminal look
+(2026-09-28): all working.** Hazard logged in the eventum worklog:
+spectaculum.sh ignores header changes (not fixed here).

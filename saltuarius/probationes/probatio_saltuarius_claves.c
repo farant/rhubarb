@@ -284,6 +284,16 @@ principale (vacuum)
             SALT_MODUS_COLUMNAE, &ev,
             &iussum));
 
+        /* tractus (tessera ?1002): nihil - clicus non repetitur */
+        memset(&ev, ZEPHYRUM, magnitudo(ev));
+        ev.genus      = TESSERA_EVENTUM_MUS;
+        ev.mus_genus  = TESSERA_MUS_TRACTUS;
+        ev.mus_x      = VI;
+        ev.mus_y      = III;
+        CREDO_FALSUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_COLUMNAE, &ev,
+            &iussum));
+
         /* AMPLITUDO: principale tractat, non nos */
         memset(&ev, ZEPHYRUM, magnitudo(ev));
         ev.genus = TESSERA_EVENTUM_AMPLITUDO;

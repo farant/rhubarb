@@ -280,7 +280,9 @@ typedef enum {
     TESSERA_MUS_ROTA_SURSUM,
     TESSERA_MUS_ROTA_DEORSUM,
     TESSERA_MUS_ROTA_SINISTRORSUM,  /* 66: rota lateralis (trackpad) */
-    TESSERA_MUS_ROTA_DEXTRORSUM     /* 67 */
+    TESSERA_MUS_ROTA_DEXTRORSUM,    /* 67 */
+    TESSERA_MUS_TRACTUS             /* motus botton tento (?1002):
+                                     * mus_pulsus = botton 0/1/2 */
 } TesseraMusGenus;
 
 typedef struct TesseraEventum {
@@ -4820,8 +4822,10 @@ tessera_pons_posix_creare (
  * ALTERUM, mus SGR (ESC [ < btn;x;y M/m; coordinatae 1-basatae ->
  * 0-basatae) et X10 (ESC [ M + tres octeti crudi; solutio = pulsus
  * III, botton ignotus): rota = btn&64 (sursum/deorsum/sinistrorsum/
- * dextrorsum), modificatores ex bits 4/8/16, motus (bit 32 - non
- * petitus) et rota soluta TACITE consumuntur. CSI ignota TACITE consumuntur (strepitus
+ * dextrorsum), modificatores ex bits 4/8/16, motus (bit 32) cum
+ * bottone 0-2 = TRACTUS (?1002; finalis M/m neglecta); motus sine
+ * bottone (35, ?1003 non petitus), motus + rota (96/97) et rota soluta
+ * TACITE consumuntur. CSI ignota TACITE consumuntur (strepitus
  * regiminis clavem phantasma fieri non debet).
  *
  * RUNA = codepoint DECODITUS (non compactus!): initus comparationes
@@ -5023,8 +5027,9 @@ tessera_magnitudinem_renovare (
 #ifndef TESSERA_MODI_H
 #define TESSERA_MODI_H
 
-/* Scrinium alternum + mus (pressus/solutus) + mus SGR */
-#define INTRANDI "\033[?1049h\033[?1000h\033[?1006h"
+/* Scrinium alternum + mus (pressus/solutus) + tractus (motus botton
+ * tento solum, ?1002) + mus SGR */
+#define INTRANDI "\033[?1049h\033[?1000h\033[?1002h\033[?1006h"
 
 /* Modus PER QUADRUM (non in INTRANDI): tessera_praesentare quadrum
  * non vacuum his includit - terminal quadrum integrum ostendit (nulla
@@ -5036,7 +5041,8 @@ tessera_magnitudinem_renovare (
  * terminalem sustinentem non congelet), deinde modi ordine inverso;
  * deinde stilus nativus + cursor visibilis */
 #define EXEUNDI  QUADRUM_FINIS \
-                 "\033[?1006l\033[?1000l\033[?1049l\033[0m\033[?25h"
+                 "\033[?1006l\033[?1002l\033[?1000l\033[?1049l" \
+                 "\033[0m\033[?25h"
 
 #endif /* TESSERA_MODI_H */
 
@@ -6553,10 +6559,12 @@ _clavem_finalem (
 /* Mus (SGR aut X10) classificare ex codice bottonis crudo: bits 0-1
  * botton, 4 maiuscula, 8 alterum, 16 imperium, 32 motus, 64 rota.
  * solutio = SGR 'm', aut X10 botton III (solutio sine bottone noto).
- * COMPLETUM = eventum positum; PRAETERITUM = tacite consumptum (motus
- * non petitus - H4, tessera ?1002/1003 non mittit; rota soluta). Campi
- * eventus SOLUM in COMPLETUM scribuntur (nihil sordidum relinquitur
- * eventui proximo). */
+ * Motus cum bottone 0-2 = TRACTUS (tessera ?1002 petit: terminal motum
+ * SOLUM botton tento refert; finalis M/m in motu neglegitur, sine
+ * statu - bits bottonis creduntur). COMPLETUM = eventum positum;
+ * PRAETERITUM = tacite consumptum (motus sine bottone 35 = ?1003, non
+ * petitus; motus + rota 96/97; rota soluta). Campi eventus SOLUM in
+ * COMPLETUM scribuntur (nihil sordidum relinquitur eventui proximo). */
 interior ParsFructus
 _murem_classificare (
     TesseraEventum* ev,
@@ -6571,9 +6579,13 @@ _murem_classificare (
 
     si (pulsus & XXXII)
     {
-        redde PARS_PRAETERITUM;   /* motus (etiam cum rota: 96/97) */
+        si ((pulsus & LXIV) || botton == III)
+        {
+            redde PARS_PRAETERITUM;   /* motus + rota, aut sine bottone */
+        }
+        genus = TESSERA_MUS_TRACTUS;
     }
-    si (pulsus & LXIV)
+    alioquin si (pulsus & LXIV)
     {
         si (solutio)
         {

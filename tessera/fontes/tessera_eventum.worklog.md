@@ -284,3 +284,36 @@ written → the zero-byte assertions; close marker dropped → all 8
 goldens). **Fran's terminal look (2026-09-28): everything works**
 (spectaculum; no escape garbage, redraws, intermittere, Ctrl-Z/fg,
 quit).
+
+## 2026-09-28: tessera 1.2 T3, drag events (?1002)
+
+- `INTRANDI` = 1049 1000 **1002** 1006; `EXEUNDI` leaves 2026 1006
+  **1002** 1000 1049 (stack order, law-of-pairs probatio green; rule IV
+  now requires 1002).
+- `TESSERA_MUS_TRACTUS` APPENDED to `TesseraMusGenus` (both headers), so
+  no existing value moved.
+- Classifier rule, stateless: bit 32 + button 0–2 → TRACTUS,
+  `mus_pulsus` = the held button, modifiers kept, and the M/m final
+  IGNORED for motion. OpenTUI's own vectors encode drags with `m`
+  (their encoder's `press=false`) and still call them motion; xterm
+  always sends `M`. OpenTUI keeps a pressed-button set to tell "drag"
+  from "move"; tessera doesn't need one, because under ?1002 the
+  terminal reports motion ONLY while a button is held. Swallowed: button 3 +
+  motion (35/39, what ?1003 hover would send, never requested) and
+  motion + wheel bits (96/97, URxvt). X10 drags (`ESC [ M @ ..`) come
+  through the same classifier and work for free.
+- Vectors: 4 H4 expectations flipped (announced in the HISTORIA note
+  since T3b), 7 added (middle/right/ctrl drags, shift+motion 39 swallowed,
+  a full press / drag ×2 / release stroke, 2 X10 drags). Red first was
+  exactly the 10 drag vectors × 4 shapes + modi's 1002.
+- Plants (all compiling, each caught by name): TRACTUS branch → swallow
+  = exactly the 10 drag vectors; `botton == III` guard dropped =
+  exactly 35/39/x10-35; `?1002h` dropped from INTRANDI = modi rules II,
+  III, IV by name ("?1002 relictus, numquam intratus").
+- HAZARD found: `tessera/spectaculum.sh` rebuilds an object only when
+  its `.c` is newer. It ignores headers (compile_probationes.sh has
+  `newest_header`, spectaculum.sh doesn't). A change to `tessera_modi.h`
+  alone would leave spectaculum running the OLD mode strings; it's
+  only fresh here because the test runner shares `tessera/build/`. A
+  planted run also leaves planted objects behind, so rebuild after
+  plants (done here). Not fixed in T3.
