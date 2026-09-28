@@ -163,3 +163,33 @@ output, then restored):
 Skipped with reasons in the header: OpenTUI's button-tracking state
 (drag vs move needs state tessera doesn't keep), incomplete-SGR framing
 (T4), the JS utf8 `toString` limit (not a protocol matter).
+
+## 2026-09-28: T3b, mouse fixes (modifiers, wheel release, horizontal wheel, motion, X10)
+
+One classifier, `_murem_classificare(ev, pulsus, x, y, solutio)`, serves
+SGR and X10. It writes event fields ONLY on COMPLETUM, so a swallowed
+motion event leaves nothing stale for the next key event.
+- **modifiers:** bits 4/8/16 → MAIUSCULA/ALTERUM/IMPERIUM on MUS events.
+- **wheel release** (`64…m`): swallowed (a wheel has no release).
+- **horizontal wheel, DECIDED by Fran 2026-09-28:** new genera
+  `TESSERA_MUS_ROTA_SINISTRORSUM` (66) / `DEXTRORSUM` (67), APPENDED to
+  `TesseraMusGenus` (existing values unchanged), in both
+  `fontes/tessera_eventum.h` and the hand-written `amalgama/tessera.h`.
+  saltuarius's switch has an `ordinarius` (horizontal ignored there,
+  correctly); spectaculum compares with PRESSUS only.
+- **motion (bit 32, incl. 96/97):** swallowed. Tessera doesn't request
+  motion; a MOTUS genus arrives with `?1002` (terminal-planning 013), and
+  the H4 vectors' expectations will change then (noted in the table).
+- **X10, DECIDED by Fran 2026-09-28 (parse):** `ESC [ M` + three raw
+  bytes (+32/+33/+33) straight after `M`; INCOMPLETUM until 6 bytes
+  (works with byte-at-a-time since T1b); a payload below the offsets is
+  consumed as malformed; release = button 3 → SOLUTUS, `mus_pulsus` III
+  (unknown button). No more phantom keys, including the two phantom
+  Backspaces a click at coordinate 94 used to produce.
+
+Proof: 25 debt vectors × 4 shapes = exactly 100 `DEBITUM SOLUTUM`,
+nothing else moved; promoted (868 assertions; 16 debts remain, H2 + ESC
+prefix). Amalgam VERIFICATUM (hospes 7/7 against the CHANGED public
+header) + idempotent; saltuarius 13/13. Three compiling plants, one per
+mechanism, each failing exactly its own vectors: motion (7), X10 (9),
+mouse ctrl (3).

@@ -604,3 +604,10 @@ reason: mouse modifiers dropped, wheel release = second scroll,
 horizontal wheel reported vertical, H4 motion as press/scroll, H3 X10 →
 phantom keys (incl. two phantom Backspace at coordinate 94). Two design
 calls for Fran: horizontal wheel genera; X10 parse vs swallow. Suite 6/6.
+
+**T3b FACTUM (mouse fixes).** One classifier for SGR + X10: modifiers,
+wheel release swallowed, horizontal wheel as new genera (Fran),
+unrequested motion swallowed, X10 parsed (Fran). 100 shapes promoted
+(868 assertions; 16 debts remain). Public header gained two enum values
+(appended). Amalgam VERIFICATUM + idempotent; saltuarius 13/13; three
+compiling plants, each caught exactly.

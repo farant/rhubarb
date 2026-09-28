@@ -11,8 +11,11 @@
  * Series agnitae: CSI (frecce A-D, H/F, Z = tabula retro, ~-codices:
  * 2 insertio, 3 deletio, 5/6 paginae, 11-15/17-21/23/24 = F1-F12,
  * modificatores 1;m), SS3 (ESC O: frecce + F1-F4), ESC+clavis =
- * ALTERUM, mus SGR (ESC [ < btn;x;y M/m; rota = btn&64; coordinatae
- * 1-basatae -> 0-basatae). CSI ignota TACITE consumuntur (strepitus
+ * ALTERUM, mus SGR (ESC [ < btn;x;y M/m; coordinatae 1-basatae ->
+ * 0-basatae) et X10 (ESC [ M + tres octeti crudi; solutio = pulsus
+ * III, botton ignotus): rota = btn&64 (sursum/deorsum/sinistrorsum/
+ * dextrorsum), modificatores ex bits 4/8/16, motus (bit 32 - non
+ * petitus) et rota soluta TACITE consumuntur. CSI ignota TACITE consumuntur (strepitus
  * regiminis clavem phantasma fieri non debet).
  *
  * RUNA = codepoint DECODITUS (non compactus!): initus comparationes
@@ -73,7 +76,9 @@ nomen enumeratio {
     TESSERA_MUS_PRESSUS = 0,
     TESSERA_MUS_SOLUTUS,
     TESSERA_MUS_ROTA_SURSUM,
-    TESSERA_MUS_ROTA_DEORSUM
+    TESSERA_MUS_ROTA_DEORSUM,
+    TESSERA_MUS_ROTA_SINISTRORSUM,  /* 66: rota lateralis (trackpad) */
+    TESSERA_MUS_ROTA_DEXTRORSUM     /* 67 */
 } TesseraMusGenus;
 
 nomen structura {

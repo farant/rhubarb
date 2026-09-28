@@ -64,11 +64,6 @@ nomen structura {
  * debita sine causa frangat. */
 #define CAUSA_H2 "H2 ad 002 lexemator: ESC ] (OSC) non comprehenditur - alt+']' + corpus ut runae phantasma (+ alt+'\\\\' aut ctrl+g ad terminum)"
 #define CAUSA_FUGAE_PRAEFIXUM "ad 002 lexemator: ESC ante seriem (ESC ESC [ A) fuga spuria + clavis sine alterum emittit; exspectatum (DECISUM Frani 2026-09-28) = clavis + ALTERUM, ut ESC + clavis simplex"
-#define CAUSA_H3 "H3: mus X10 (ESC [ M cb cx cy) non comprehenditur - CSI M tacite consumitur, tres octeti oneris claves phantasma fiunt; exspectatum PROVISORIUM (consilium Frani): X10 ut SGR parsare (solutus: pulsus III = ignotus)"
-#define CAUSA_H4 "H4: motus (bit 32; tessera eum non petit - ?1002/1003 nondum) ut pressus/solutus/rota fallaciter nuntiatur; exspectatum: tacite consumptum; genus MOTUS cum ?1002 (terminal-planning 013)"
-#define CAUSA_MUS_MODIFICATORES "mus: bits modificatorum (4 maiuscula, 8 alterum, 16 imperium) abiciuntur - modificatores eventus MUS numquam impletur (shift+pulsus = pulsus)"
-#define CAUSA_ROTA_SOLUTA "rota cum 'm' (solutio) iterum ut rota nuntiatur (bit 64 ante M/m probatur) - rota solutionem non habet; exspectatum: nihil"
-#define CAUSA_ROTA_LATERALIS "rota lateralis (66/67, trackpad) ut sursum/deorsum fallaciter (pulsus & 1); exspectatum PROVISORIUM: nihil - consilium Frani: genera ROTA_SINISTRORSUM/DEXTRORSUM addere?"
 
 /* Octeti cum mensura explicita (NUL licet intra) */
 #define OCT(s) (s), (i32)(magnitudo(s) - I)
@@ -460,6 +455,12 @@ hic_manens constans VectorInitus VECTORES_CLAVIUM[] = {
  * (c) 2025 opentui, @ 7581976f). encodeSGR(b,x,y) = ESC [ < b ; x+1 ;
  * y+1 M/m; encodeBasic(b,x,y) = ESC [ M (b+32) (x+33) (y+33).
  *
+ * HISTORIA: XXV debita (H3 X10, H4 motus, modificatores, rota soluta,
+ * rota lateralis) emendatione T3b soluta et promota (2026-09-28).
+ * NB motus (bit 32) hodie TACITE consumitur quia tessera eum non
+ * petit; cum ?1002 (terminal-planning 013) genus MOTUS accedet et hi
+ * vectores exspectata mutabunt.
+ *
  * PRAETERMISSA: status bottonum (mouseButtonsPressed, 'drag' vs
  * 'move' - OpenTUI propria, tessera statum non tenet); framing
  * "incomplete SGR" (T4, formae morae); "coordinates >= 95 under utf8
@@ -504,82 +505,84 @@ hic_manens constans VectorInitus VECTORES_MURIUM[] = {
 
     /* debita - modificatores muris */
     { "sgr shift+sinister", OCT("\033[<4;11;6M"), FALSUM,
-        VECTOR_DEBITUM,
-      CAUSA_MUS_MODIFICATORES,
+        VECTOR_VALET,
+      NIHIL,
       { EX_MUS_MOD(TESSERA_MUS_PRESSUS, X, V, ZEPHYRUM, MAI) } },
-    { "sgr alt+sinister", OCT("\033[<8;11;6M"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_MUS_MODIFICATORES,
+    { "sgr alt+sinister", OCT("\033[<8;11;6M"), FALSUM, VECTOR_VALET,
+      NIHIL,
       { EX_MUS_MOD(TESSERA_MUS_PRESSUS, X, V, ZEPHYRUM, ALT) } },
     { "sgr ctrl+sinister", OCT("\033[<16;11;6M"), FALSUM,
-        VECTOR_DEBITUM,
-      CAUSA_MUS_MODIFICATORES,
+        VECTOR_VALET,
+      NIHIL,
       { EX_MUS_MOD(TESSERA_MUS_PRESSUS, X, V, ZEPHYRUM, IMP) } },
     { "sgr omnes modificatores", OCT("\033[<28;11;6M"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_MUS_MODIFICATORES,
+      VECTOR_VALET, NIHIL,
       { EX_MUS_MOD(TESSERA_MUS_PRESSUS, X, V, ZEPHYRUM, MAI | ALT
           | IMP) } },
     { "sgr ctrl+dexter (bottone servato)", OCT("\033[<18;11;6M"),
         FALSUM,
-      VECTOR_DEBITUM, CAUSA_MUS_MODIFICATORES,
+      VECTOR_VALET, NIHIL,
       { EX_MUS_MOD(TESSERA_MUS_PRESSUS, X, V, II, IMP) } },
-    { "sgr shift+rota", OCT("\033[<68;11;6M"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_MUS_MODIFICATORES,
+    { "sgr shift+rota", OCT("\033[<68;11;6M"), FALSUM, VECTOR_VALET,
+      NIHIL,
       { EX_MUS_MOD(TESSERA_MUS_ROTA_SURSUM, X, V, ZEPHYRUM, MAI) } },
 
     /* debita - rota soluta, rota lateralis */
     { "sgr rota soluta (m)", OCT("\033[<64;11;6m"), FALSUM,
-        VECTOR_DEBITUM,
-      CAUSA_ROTA_SOLUTA, { EX_NIHIL } },
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "sgr rota sinistrorsum 66", OCT("\033[<66;11;6M"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_ROTA_LATERALIS, { EX_NIHIL } },
+      VECTOR_VALET, NIHIL, { EX_MUS(TESSERA_MUS_ROTA_SINISTRORSUM, X, V,
+          ZEPHYRUM) } },
     { "sgr rota dextrorsum 67", OCT("\033[<67;11;6M"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_ROTA_LATERALIS, { EX_NIHIL } },
+      VECTOR_VALET, NIHIL, { EX_MUS(TESSERA_MUS_ROTA_DEXTRORSUM, X, V,
+          ZEPHYRUM) } },
 
     /* debita - motus (H4) */
     { "sgr motus sine bottone 35", OCT("\033[<35;11;6m"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H4, { EX_NIHIL } },
+      VECTOR_VALET, NIHIL, { EX_NIHIL } },
     { "sgr tractus sinister 32", OCT("\033[<32;13;6m"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H4, { EX_NIHIL } },
+      VECTOR_VALET, NIHIL, { EX_NIHIL } },
     { "sgr motus+rota 96", OCT("\033[<96;81;67M"), FALSUM,
-        VECTOR_DEBITUM,
-      CAUSA_H4, { EX_NIHIL } },
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "sgr motus+rota 97", OCT("\033[<97;81;67M"), FALSUM,
-        VECTOR_DEBITUM,
-      CAUSA_H4, { EX_NIHIL } },
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "sgr duo motus in frusto", OCT("\033[<32;70;50M\033[<32;69;50M"),
-      FALSUM, VECTOR_DEBITUM, CAUSA_H4, { EX_NIHIL } },
+      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
     { "sgr pressus + tractus + solutus",
       OCT("\033[<0;11;11M\033[<32;13;11M\033[<0;13;11m"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H4,
+      VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_PRESSUS, X, X, ZEPHYRUM),
         EX_MUS(TESSERA_MUS_SOLUTUS, XII, X, ZEPHYRUM) } },
     { "sgr rota + motus 96/97 in frusto",
       OCT("\033[<64;83;68M\033[<96;82;68M\033[<97;81;68M"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H4,
+      VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_ROTA_SURSUM, LXXXII, LXVII, ZEPHYRUM) } },
 
     /* debita - X10 (H3); exspectatum provisorium: ut SGR parsatum */
-    { "x10 sinister pressus", OCT("\033[M +&"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_H3, { EX_MUS(TESSERA_MUS_PRESSUS, X, V, ZEPHYRUM) } },
-    { "x10 medius pressus", OCT("\033[M!+&"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_H3, { EX_MUS(TESSERA_MUS_PRESSUS, X, V, I) } },
-    { "x10 dexter pressus", OCT("\033[M\"+&"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_H3, { EX_MUS(TESSERA_MUS_PRESSUS, X, V, II) } },
+    { "x10 sinister pressus", OCT("\033[M +&"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_MUS(TESSERA_MUS_PRESSUS, X, V, ZEPHYRUM) } },
+    { "x10 medius pressus", OCT("\033[M!+&"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_MUS(TESSERA_MUS_PRESSUS, X, V, I) } },
+    { "x10 dexter pressus", OCT("\033[M\"+&"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_MUS(TESSERA_MUS_PRESSUS, X, V, II) } },
     { "x10 solutus (bottone ignoto)", OCT("\033[M#+&"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H3,
+      VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_SOLUTUS, X, V, III) } },
-    { "x10 rota sursum", OCT("\033[M`+&"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_H3, { EX_MUS(TESSERA_MUS_ROTA_SURSUM, X, V, ZEPHYRUM) } },
-    { "x10 rota deorsum", OCT("\033[Ma+&"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_H3, { EX_MUS(TESSERA_MUS_ROTA_DEORSUM, X, V, ZEPHYRUM) } },
-    { "x10 origo", OCT("\033[M !!"), FALSUM, VECTOR_DEBITUM, CAUSA_H3,
+    { "x10 rota sursum", OCT("\033[M`+&"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_MUS(TESSERA_MUS_ROTA_SURSUM, X, V, ZEPHYRUM) } },
+    { "x10 rota deorsum", OCT("\033[Ma+&"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_MUS(TESSERA_MUS_ROTA_DEORSUM, X, V, ZEPHYRUM) } },
+    { "x10 origo", OCT("\033[M !!"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
     { "x10 coordinata 94 (octetus 0x7F)", OCT("\033[M \x7F\x7F"),
         FALSUM,
-      VECTOR_DEBITUM, CAUSA_H3,
+      VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_PRESSUS, XCIV, XCIV, ZEPHYRUM) } },
     { "x10 duo in frusto", OCT("\033[M +&\033[M#+&"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H3,
+      VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_PRESSUS, X, V, ZEPHYRUM),
         EX_MUS(TESSERA_MUS_SOLUTUS, X, V, III) } }
 };

@@ -294,7 +294,8 @@ interior constans character* CLAVIUM_TITULI[] = {
 };
 
 interior constans character* MURIUM_TITULI[] = {
-    "pressus", "solutus", "rota_sursum", "rota_deorsum"
+    "pressus", "solutus", "rota_sursum", "rota_deorsum",
+    "rota_sinistrorsum", "rota_dextrorsum"
 };
 
 interior vacuum

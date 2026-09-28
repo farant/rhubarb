@@ -172,6 +172,73 @@ _clavem_finalem (
     }
 }
 
+/* Mus (SGR aut X10) classificare ex codice bottonis crudo: bits 0-1
+ * botton, 4 maiuscula, 8 alterum, 16 imperium, 32 motus, 64 rota.
+ * solutio = SGR 'm', aut X10 botton III (solutio sine bottone noto).
+ * COMPLETUM = eventum positum; PRAETERITUM = tacite consumptum (motus
+ * non petitus - H4, tessera ?1002/1003 non mittit; rota soluta). Campi
+ * eventus SOLUM in COMPLETUM scribuntur (nihil sordidum relinquitur
+ * eventui proximo). */
+interior ParsFructus
+_murem_classificare (
+    TesseraEventum* ev,
+               s32  pulsus,
+               s32  x,
+               s32  y,
+               b32  solutio)
+{
+    TesseraMusGenus genus          = TESSERA_MUS_PRESSUS;
+                i32 botton         = (i32)(pulsus & III);
+                i32 modificatores  = ZEPHYRUM;
+
+    si (pulsus & XXXII)
+    {
+        redde PARS_PRAETERITUM;   /* motus (etiam cum rota: 96/97) */
+    }
+    si (pulsus & LXIV)
+    {
+        si (solutio)
+        {
+            redde PARS_PRAETERITUM;   /* rota solutionem non habet */
+        }
+        commutatio (botton)
+        {
+            casus ZEPHYRUM: genus =
+                                TESSERA_MUS_ROTA_SURSUM;       frange;
+            casus I:        genus =
+                                TESSERA_MUS_ROTA_DEORSUM;      frange;
+            casus II:       genus =
+                                TESSERA_MUS_ROTA_SINISTRORSUM; frange;
+            ordinarius:     genus =
+                                TESSERA_MUS_ROTA_DEXTRORSUM;   frange;
+        }
+        botton = ZEPHYRUM;
+    }
+    alioquin
+    {
+        genus = solutio ? TESSERA_MUS_SOLUTUS : TESSERA_MUS_PRESSUS;
+    }
+    si (pulsus & IV)
+    {
+        modificatores |= TESSERA_MODIFICATOR_MAIUSCULA;
+    }
+    si (pulsus & VIII)
+    {
+        modificatores |= TESSERA_MODIFICATOR_ALTERUM;
+    }
+    si (pulsus & XVI)
+    {
+        modificatores |= TESSERA_MODIFICATOR_IMPERIUM;
+    }
+    ev->genus          = TESSERA_EVENTUM_MUS;
+    ev->mus_genus      = genus;
+    ev->mus_x          = x;
+    ev->mus_y          = y;
+    ev->mus_pulsus     = botton;
+    ev->modificatores  = modificatores;
+    redde PARS_COMPLETUM;
+}
+
 /* CSI: buffer[0]=ESC buffer[1]='['. Parametra numerica leguntur,
  * octetus finalis 0x40-0x7E. Mus SGR: '<' post CSI. */
 interior ParsFructus
@@ -189,6 +256,30 @@ _csi_parsare (
           b32 valor_visus           = FALSUM;
     character finalis               = '\0';
 
+    /* Mus X10 (ESC [ M cb cx cy): onus TRES octeti CRUDI (+32, +33,
+     * +33) statim post 'M', sine parametris - terminalia quae 1006
+     * (SGR) ignorant eum mittunt. Sine hoc CSI M tacite consumeretur
+     * et onus claves phantasma fieret (H3; 0x7F = retrorsum!). */
+    si (i < lector->mensura && lector->buffer[i] == 'M')
+    {
+        s32 cb;
+
+        si (lector->mensura < VI)
+        {
+            redde PARS_INCOMPLETUM;
+        }
+        *consumendum  = VI;
+        cb            = (s32)lector->buffer[III] - XXXII;
+        si (   cb < ZEPHYRUM || lector->buffer[IV] < XXXIII
+            || lector->buffer[V] < XXXIII)
+        {
+            redde PARS_PRAETERITUM;   /* onus malum: consumptum */
+        }
+        redde _murem_classificare(ev, cb,
+            (s32)lector->buffer[IV] - XXXIII,
+            (s32)lector->buffer[V] - XXXIII,
+            (cb & III) == III && !(cb & LXIV) && !(cb & XXXII));
+    }
     si (i < lector->mensura && lector->buffer[i] == '<')
     {
         est_mus = VERUM;
@@ -260,24 +351,9 @@ _csi_parsare (
     si (   est_mus && (finalis == 'M' || finalis == 'm')
         && numerus_parametrorum >= III)
     {
-        s32 pulsus = parametra[ZEPHYRUM];
-
-        ev->genus = TESSERA_EVENTUM_MUS;
-        ev->mus_x = parametra[I] - I;    /* 1-basata -> 0 */
-        ev->mus_y = parametra[II] - I;
-        si (pulsus & LXIV)
-        {
-            ev->mus_genus = (pulsus & I) ? TESSERA_MUS_ROTA_DEORSUM
-                                         : TESSERA_MUS_ROTA_SURSUM;
-            ev->mus_pulsus = ZEPHYRUM;
-        }
-        alioquin
-        {
-            ev->mus_genus = (finalis == 'M') ? TESSERA_MUS_PRESSUS
-                                             : TESSERA_MUS_SOLUTUS;
-            ev->mus_pulsus = (i32)(pulsus & III);
-        }
-        redde PARS_COMPLETUM;
+        /* coordinatae 1-basatae -> 0 */
+        redde _murem_classificare(ev, parametra[ZEPHYRUM],
+            parametra[I] - I, parametra[II] - I, finalis == 'm');
     }
 
     {

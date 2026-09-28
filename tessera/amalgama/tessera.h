@@ -256,7 +256,9 @@ typedef enum {
     TESSERA_MUS_PRESSUS = 0,
     TESSERA_MUS_SOLUTUS,
     TESSERA_MUS_ROTA_SURSUM,
-    TESSERA_MUS_ROTA_DEORSUM
+    TESSERA_MUS_ROTA_DEORSUM,
+    TESSERA_MUS_ROTA_SINISTRORSUM,  /* 66: rota lateralis (trackpad) */
+    TESSERA_MUS_ROTA_DEXTRORSUM     /* 67 */
 } TesseraMusGenus;
 
 typedef struct TesseraEventum {
