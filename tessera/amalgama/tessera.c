@@ -6788,7 +6788,7 @@ _csi_parsare (
         i32 modificatores = (numerus_parametrorum >= II)
             ? _modificatores_csi(parametra[I]) : ZEPHYRUM;
 
-        si (   finalis == '~' && numerus_parametrorum == I
+        si (   finalis             == '~' && numerus_parametrorum == I
             && parametra[ZEPHYRUM] == CODEX_INITII_GLUTINI)
         {
             redde PARS_GLUTINUM;
