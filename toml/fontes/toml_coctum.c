@@ -30,6 +30,7 @@ nomen structura {
           Xar* diagnostica;   /* structurae */
           s32  sectio;
     TomlValor* radix;
+          Xar* opera;         /* Opus: continentes implendi */
 } Coctor;
 
 hic_manens constans character* NOMINA_GENERUM[] = {
@@ -386,7 +387,14 @@ _genus_nomen (
 
 
 /* ==================================================
- * Valores
+ * Valores - ITERATIVE (Q11: recursio per profunditatem uncorum C
+ * acervum consumebat; C milia '[' SIGSEGV)
+ *
+ * Continens (series, tabula inlinea) VACUUM nascitur et statim in
+ * parentem inseritur; OPUS eius in acervum pellitur et liberi deinde
+ * ordine fontis coquuntur - continens interior opus suum supra pellit,
+ * ergo ordo profundus-primus sine recursione C. Ordo insertionis non
+ * mutatur: clavis parentis ante liberos eius, ut antea.
  * ================================================== */
 
 interior vacuum
@@ -395,13 +403,23 @@ _par (
                 TomlValor* tabula,
     constans MateriaNodus* par);
 
+nomen structura {
+    constans MateriaNodus* nodus;       /* series aut tabula-compacta */
+                TomlValor* valor;       /* continens implendum */
+    constans MateriaNodus* definitio;
+                      i32  index;       /* liber proximus */
+    constans MateriaNodus* ultimus;     /* liber nodalis ultimus */
+} Opus;
+
+/* valorem incipere: scalare TOTUM; continens vacuum + opus pulsum */
 interior TomlValor*
-_valorem_coquere (
+_valorem_incipere (
                    Coctor* c,
     constans MateriaNodus* nodus,
     constans MateriaNodus* definitio)
 {
     TomlValor* v;
+         Opus* o;
 
     commutatio (nodus->genus)
     {
@@ -409,7 +427,6 @@ _valorem_coquere (
         casus TOML_GENUS_NUMERUS:
         casus TOML_GENUS_BOOLEAN:
         casus TOML_GENUS_TEMPUS:
-        {
             v = _valor_novus(c, TOML_VALOR_CHORDA, nodus, definitio);
             si (v == NIHIL)
             {
@@ -428,76 +445,97 @@ _valorem_coquere (
             }
             v->definitio = definitio;
             redde v;
-        }
         casus TOML_GENUS_SERIES:
-        {
-            MateriaValor l = nodus->loci[TOML_INCLUSA_LIBERI];
-                     i32 k;
-
             v = _series_nova(c, nodus, definitio);
-            si (v == NIHIL || l.genus != MATERIA_VALOR_LISTA)
-            {
-                redde v;
-            }
-            per (k = ZEPHYRUM; k < materia_valor_lista_numerus(l); k++)
-            {
-                MateriaValor* e = materia_valor_lista_obtinere(l, k);
-                   TomlValor* elementum;
-
-                si (   e->genus              != MATERIA_VALOR_NODUS
-                    || e->datum.nodus->genus == (s32)TOML_GENUS_COMMA
-                    || e->datum.nodus->genus == (s32)TOML_GENUS_MALUM)
-                {
-                    perge;
-                }
-                elementum = _valorem_coquere(c, e->datum.nodus,
-                    definitio);
-                si (elementum != NIHIL)
-                {
-                    _series_appendere(v, elementum);
-                }
-            }
-            redde v;
-        }
+            frange;
         casus TOML_GENUS_TABULA_COMPACTA:
-        {
-                MateriaValor  l = nodus->loci[TOML_INCLUSA_LIBERI];
-       constans MateriaNodus* ultimus = NIHIL;
-                         i32  k;
-
             v = _tabula_nova(c, TOML_TABULA_INLINEA, nodus, definitio);
-            si (v == NIHIL || l.genus != MATERIA_VALOR_LISTA)
-            {
-                redde v;
-            }
-            per (k = ZEPHYRUM; k < materia_valor_lista_numerus(l); k++)
-            {
-                MateriaValor* e = materia_valor_lista_obtinere(l, k);
+            frange;
+        ordinarius:
+            redde NIHIL;
+    }
+    si (v == NIHIL)
+    {
+        redde NIHIL;
+    }
+    o = (Opus*)xar_addere(c->opera);
+    si (o == NIHIL)
+    {
+        redde NIHIL;
+    }
+    o->nodus      = nodus;
+    o->valor      = v;
+    o->definitio  = definitio;
+    o->index      = ZEPHYRUM;
+    o->ultimus    = NIHIL;
+    redde v;
+}
 
-                si (e->genus != MATERIA_VALOR_NODUS)
-                {
-                    perge;
-                }
-                ultimus = e->datum.nodus;
-                si (e->datum.nodus->genus == (s32)TOML_GENUS_PAR)
-                {
-                    _par(c, v, e->datum.nodus);
-                }
-            }
-            si (   ultimus        != NIHIL
-                && ultimus->genus == (s32)TOML_GENUS_COMMA
-                && ultimus->loci[TOML_LEXEMA_TOK].genus
+/* opera omnia implere (acervus vacuus in fine) */
+interior vacuum
+_opera_exhaurire (
+    Coctor* c)
+{
+    dum (xar_numerus(c->opera) > ZEPHYRUM)
+    {
+                 i32  summum  = xar_numerus(c->opera) - I;
+                Opus* o       = (Opus*)xar_obtinere(c->opera, summum);
+                Opus  copia;
+        MateriaValor  l = o->nodus->loci[TOML_INCLUSA_LIBERI];
+        MateriaValor* e;
+
+        si (   l.genus  != MATERIA_VALOR_LISTA
+            || o->index >= materia_valor_lista_numerus(l))
+        {
+            copia = *o;
+            xar_removere_ultimum(c->opera);
+            si (   copia.nodus->genus == (s32)TOML_GENUS_TABULA_COMPACTA
+                && copia.ultimus != NIHIL
+                && copia.ultimus->genus == (s32)TOML_GENUS_COMMA
+                && copia.ultimus->loci[TOML_LEXEMA_TOK].genus
                     == MATERIA_VALOR_TOKEN)
             {
-                _culpa(c, ultimus->loci[TOML_LEXEMA_TOK].datum.token,
-                    nodus, NIHIL, TOML_CODEX_VERSIO_NOVIOR,
+                _culpa(c,
+                    copia.ultimus->loci[TOML_LEXEMA_TOK].datum.token,
+                    copia.nodus, NIHIL, TOML_CODEX_VERSIO_NOVIOR,
                     "comma caudale in tabula inlinea: TOML 1.1, "
                     "non 1.0");
             }
-            redde v;
+            perge;
         }
-        ordinarius:
-            redde NIHIL;
+        e = materia_valor_lista_obtinere(l, o->index);
+        o->index++;
+        si (e->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        /* o post vocationem invalidum esse potest (acervus crescit):
+         * copia ante vocationem */
+        copia = *o;
+        si (copia.nodus->genus == (s32)TOML_GENUS_SERIES)
+        {
+            TomlValor* elementum;
+
+            si (   e->datum.nodus->genus == (s32)TOML_GENUS_COMMA
+                || e->datum.nodus->genus == (s32)TOML_GENUS_MALUM)
+            {
+                perge;
+            }
+            elementum = _valorem_incipere(c, e->datum.nodus,
+                copia.definitio);
+            si (elementum != NIHIL)
+            {
+                _series_appendere(copia.valor, elementum);
+            }
+        }
+        alioquin
+        {
+            o->ultimus = e->datum.nodus;
+            si (e->datum.nodus->genus == (s32)TOML_GENUS_PAR)
+            {
+                _par(c, copia.valor, e->datum.nodus);
+            }
+        }
     }
 }
 
@@ -625,7 +663,7 @@ _par (
                 _genus_nomen(prior)));
             redde;
         }
-        v = _valorem_coquere(c, par->loci[TOML_PAR_VALOR].datum.nodus,
+        v = _valorem_incipere(c, par->loci[TOML_PAR_VALOR].datum.nodus,
             clavis);
         si (v != NIHIL)
         {
@@ -1025,9 +1063,10 @@ toml_coquere (
         (i32)magnitudo(MateriaDiagnosticum));
     c.radix       = _tabula_nova(&c, TOML_TABULA_EXPLICITA, documentum,
         NIHIL);
+    c.opera       = xar_creare(piscina, (i32)magnitudo(Opus));
     exitus.radix  = c.radix;
     si (   documentum == NIHIL || c.diagnostica == NIHIL
-        || c.radix    == NIHIL)
+        || c.radix    == NIHIL || c.opera == NIHIL)
     {
         redde exitus;
     }
@@ -1052,6 +1091,7 @@ toml_coquere (
             si (s->genus == (s32)TOML_GENUS_PAR)
             {
                 _par(&c, currens, s);
+                _opera_exhaurire(&c);
             }
             alioquin si (   s->genus == (s32)TOML_GENUS_CAPUT_TABULAE
                          || s->genus == (s32)TOML_GENUS_CAPUT_SERIEI)
@@ -1086,8 +1126,14 @@ toml_coquere (
         }
     }
 
-    fontes[ZEPHYRUM] = materia_diagnostica_derivare(piscina, documentum,
-        &TOML_REGISTRUM, &TOML_DIAGNOSTICA, NIHIL, NIHIL);
+    /* syntaxis: declaratio derivat quod aedificator numeravit. Parsura
+     * SANA (mala, clausurae, absentiae nulla) nihil derivandum habet -
+     * et derivatio in profunditate quadratica est (materia, Q11: XL
+     * milia uncorum IV s). Aequivalentia in porta totalitatis per omnem
+     * casum fortuitum asseritur. Parsura NIHIL = derivatur semper. */
+    fontes[ZEPHYRUM] = (parsura != NIHIL && parsura->sana) ? NIHIL
+        : materia_diagnostica_derivare(piscina, documentum,
+            &TOML_REGISTRUM, &TOML_DIAGNOSTICA, NIHIL, NIHIL);
     fontes[I]           = toml_scalaria_iudicare(piscina, documentum);
     fontes[II]          = c.diagnostica;
     exitus.diagnostica  = _ordinare(piscina, fontes);

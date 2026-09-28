@@ -1063,6 +1063,28 @@ segment taken raw → the four quoted lookups red; restored. Suite 11/11.
 
 ## Task Q11: Totality and the computus twin
 
+**Re-sliced 2026-09-28 by the opening measurement (Fran approved).**
+Depth probe (`a = ` + `[`×N, closed/open, and `{a=`×N), one process per
+stage:
+
+| stage | 10 000 | 40 000 | 100 000 | owner |
+|---|---|---|---|---|
+| parse | 0.3 s | 4.5 s | 27.7 s, lives | toml — QUADRATIC: `_unci_aperti` walks the whole frame stack per token |
+| scalar walk | ok | ok | ok | toml (iterative) |
+| cooking | ok | ok | SIGSEGV | toml — recursive |
+| `materia_diagnostica_derivare` | 0.3 s | 4.4 s | ~28 s | materia — quadratic |
+| `materia_scribere_nodum` | ok | ok | SIGSEGV | materia (park …FAD8) |
+| STML projection | >60 s | SIGSEGV | SIGSEGV | materia |
+
+- **Q11a — totality**: fix the builder's quadratic (running bracket
+  count); cooking made iterative; materia limits NAMED and pinned
+  (crusta P9: `RUIT_CUM` / measured), measurements added to …FAD8 —
+  materia is not changed inside this plan (Fran); fuzzing (random, 1/40
+  mutation, truncation over the corpora), NUL bytes; Step 4's first
+  plant.
+- **Q11b — the computus twin**: Step 2, the instruments, pythonica
+  registration, the `basis.tsv` plant.
+
 **Files:**
 - Create: `toml/probationes/probatio_toml_totalitas.c`,
   `toml/fontes/toml_computus.{h,c}`, `toml/instrumenta/computus.c`,
@@ -1091,6 +1113,38 @@ segment taken raw → the four quoted lookups red; restored. Suite 11/11.
 - [ ] **Step 4: Plants** — cooking made recursive for arrays → depth pin
   red; one `nodi` in `basis.tsv` edited → red; revert both.
 - [ ] **Step 5: Commit** — the files above, `["toml", "pythonica"]`.
+
+**Q11a executed 2026-09-28.** Two fixes the measurement named, one
+optimization, one gate:
+1. **Builder quadratic → linear.** `sample` on a 40 000-deep parse:
+   89 % in `xar_obtinere` under `_unci_aperti`, which counted open
+   brackets by walking the whole frame stack on every token. Now
+   `Aedificatio.unci`, maintained at push (`_impellere`) and at the one
+   pop path (`_depellere`). 100 000 deep: 27.7 s → 0.01–0.19 s.
+2. **Cooking recursive → iterative.** Containers are created empty,
+   inserted at once, filled from a work stack (`Opus`) in source order.
+   100 000 deep: SIGSEGV → 0.12–0.33 s.
+3. **Derivation skipped on a clean parse** (materia's derivation is
+   quadratic in depth; a clean parse has nothing to derive). Proven
+   invisible per case: the gate cooks every generated input with and
+   without the parse report and requires equal diagnostic counts.
+4. **`probatio_toml_totalitas`** (crusta P9 transcribed): 32 random
+   seeds; 217 files (toml-test valid + house) × 4 mutations + 23
+   truncations; 205 CRLF conversions (byte-exact AND still valid); 5
+   nest shapes (array, inline table, mixed, dotted key, header path) ×
+   open/closed × 1..1000; NUL in basic/literal string and comment
+   (byte-exact, full STML circuit, ONE named diagnostic at the NUL);
+   every case forked (`CREDO_NON_RUIT`), emission == source, unclean
+   parse ⇒ ≥ 1 diagnostic. Depth: parse of all 10 shapes and cooking of
+   the 5 closed ones at 100 000 under `CREDO_NON_PENDET(5 s)`; open
+   cooking at 10 000 (derivation runs). materia pinned: emission lives
+   at 40 000, `RUIT_CUM(SIGSEGV)` at 100 000; STML lives at 500,
+   `RUIT_CUM(SIGSEGV)` at 100 000 (> 60 s at 10 000: time, not pinned).
+   6,136 cases, 12,358 assertions, 13 s. Green on the first run.
+   Plants: (i) the work loop calling itself per array element → the
+   100 000 cook red; (ii) the full-stack bracket count restored → 6
+   parse + 3 cook timeouts red; both restored green. Measurements added
+   to park …FAD8. Suite 12/12.
 
 ---
 

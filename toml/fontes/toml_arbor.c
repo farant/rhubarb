@@ -53,6 +53,11 @@ nomen structura {
                     b32  post_lineam;
             TomlParsura* relatio;
                     b32  memoria_defecit;
+                    /* series et tabulae compactae apertae in acervo:
+                     * numerus CURRENS (Q11: numeratio per lexema totum
+                     * acervum ambulabat - parsura quadratica in
+                     * profunditate, C milia uncorum XXVIII s) */
+                    i32 unci;
 } Aedificatio;
 
 interior Gradus*
@@ -166,6 +171,10 @@ _impellere (
     g->nodus   = nodus;
     g->status  = status;
     n          = xar_numerus(p->gradus);
+    si (genus == GRADUS_SERIES || genus == GRADUS_COMPACTA)
+    {
+        p->unci++;
+    }
     si (p->relatio != NIHIL && n > p->relatio->profunditas_maxima)
     {
         p->relatio->profunditas_maxima = n;
@@ -411,6 +420,23 @@ _tradere (
     }
 }
 
+/* gradum summum removere; numerus uncorum sequitur (via UNA qua
+ * acervus decrescit) */
+interior vacuum
+_depellere (
+    Aedificatio* p)
+{
+    Gradus* g = _vertex(p);
+
+    si (   g != NIHIL
+        && (g->genus == GRADUS_SERIES || g->genus == GRADUS_COMPACTA)
+        && p->unci > ZEPHYRUM)
+    {
+        p->unci--;
+    }
+    xar_removere_ultimum(p->gradus);
+}
+
 /* gradum summum claudere et nodum eius tradere; absentiae ad finem
  * (EOF aut abruptio) numerantur */
 interior vacuum
@@ -419,7 +445,7 @@ _claudere (
 {
     Gradus g = *_vertex(p);
 
-    xar_removere_ultimum(p->gradus);
+    _depellere(p);
     commutatio (g.genus)
     {
         casus GRADUS_CAPUT:
@@ -697,7 +723,7 @@ _tractare (
                 {
                     Gradus s = *g;
 
-                    xar_removere_ultimum(p->gradus);
+                    _depellere(p);
                     _tradere(p, s.nodus);
                 }
                 redde VERUM;
@@ -728,7 +754,7 @@ _tractare (
                 {
                     Gradus s = *g;
 
-                    xar_removere_ultimum(p->gradus);
+                    _depellere(p);
                     _tradere(p, s.nodus);
                 }
                 redde VERUM;
@@ -804,20 +830,7 @@ interior i32
 _unci_aperti (
     Aedificatio* p)
 {
-    i32 n = xar_numerus(p->gradus);
-    i32 k;
-    i32 unci = ZEPHYRUM;
-
-    per (k = ZEPHYRUM; k < n; k++)
-    {
-        Gradus* g = (Gradus*)xar_obtinere(p->gradus, k);
-
-        si (g->genus == GRADUS_SERIES || g->genus == GRADUS_COMPACTA)
-        {
-            unci++;
-        }
-    }
-    redde unci;
+    redde p->unci;
 }
 
 
@@ -852,6 +865,7 @@ toml_arbor_parsare (
     p.prior            = NIHIL;
     p.post_lineam      = VERUM;
     p.memoria_defecit  = FALSUM;
+    p.unci             = ZEPHYRUM;
     p.gradus           = xar_creare(piscina, (i32)magnitudo(Gradus));
     p.pendentia = xar_creare(piscina,
         (i32)magnitudo(MateriaToken*));

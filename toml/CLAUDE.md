@@ -1,7 +1,7 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q10 done;
-Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib, Q10 API done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q10 + Q11a done;
+Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib, Q10 API, Q11a totality done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -132,6 +132,20 @@ excerpt, carets, first definition labelled), `toml_quaerere(doc,
 escapes and spaces work; empty, malformed, through an array or into a
 scalar → NIHIL. TRANSITION until Q12: `include/toml.h` (old lib) has
 the same name — the runner puts `toml/fontes` first; never link both.
+
+## Totality (Q11a)
+
+`probatio_toml_totalitas`: every generated input (random bytes, 1/40
+mutation, truncation over toml-test valid + house, CRLF conversions,
+nests of five shapes × open/closed × 1..1000) never crashes, always
+emits back byte for byte, an unclean parse always carries a diagnostic,
+and cooking with/without the parse report yields the same diagnostics.
+Depth 100 000: parse and cooking are linear and live (a running bracket
+count; an iterative work stack). materia's limits are PINNED as
+`RUIT_CUM(SIGSEGV)` — emission and STML projection at 100 000 (park
+…FAD8); promote to NON_RUIT when materia is fixed. `toml_coquere` skips
+materia's quadratic derivation when the parse is clean. A failing input
+is written to `build/totalitas_fractum.toml`.
 
 ## Currere
 
