@@ -216,12 +216,12 @@ accepted (multiline CRLF → `\n`), lone CR rejected, BOM REJECTED (as
   `TOML_GENUS_NUMERUS_GENERUM`), `TOML_LEXICON`, `TomlLexGenus`, the slot
   enums.
 
-- [ ] **Step 1: Measure the vocabulary against spec §IV** — list every
+- [x] **Step 1: Measure the vocabulary against spec §IV** — list every
   construct in the toml-test 1.0.0 valid cases' categories and confirm
   each has a home in the genera below; add a genus only with a cause in
   the commit message.
 
-- [ ] **Step 2: The declaration** — `toml.registrum.stml`, header comment
+- [x] **Step 2: The declaration** — `toml.registrum.stml`, header comment
   in crusta's shape (spec path; "genera APPENDUNTUR"; T4 totality; the
   newline rule of spec §III). Genera in this order, loci in BYTE order:
 
@@ -282,11 +282,11 @@ accepted (multiline CRLF → `\n`), lone CR rejected, BOM REJECTED (as
   and `gravitas` values are checked against crusta's declaration before
   writing; if the registrum canon names them differently, follow it.
 
-- [ ] **Step 3: Generate** — `./materia/coquere.sh
+- [x] **Step 3: Generate** — `./materia/coquere.sh
   toml/grammatica/toml.registrum.stml -scribere`, then without
   `-scribere` (exit 0 = recens). Read the generated header once.
 
-- [ ] **Step 4: Slot enums (`toml_registrum.h`)** — one enum per genus,
+- [x] **Step 4: Slot enums (`toml_registrum.h`)** — one enum per genus,
   members in locus order, e.g.:
 
 ```c
@@ -302,7 +302,7 @@ nomen enumeratio { TOML_INCLUSA_TOK_APERTURA = 0, TOML_INCLUSA_LIBERI,
 nomen enumeratio { TOML_MALUM_TOKENS = 0 } TomlMalumLocus;
 ```
 
-- [ ] **Step 5: The lexicon (`toml_lexicon.{h,c}`)** — `TomlLexGenus` in
+- [x] **Step 5: The lexicon (`toml_lexicon.{h,c}`)** — `TomlLexGenus` in
   this order, rows in `GENERA_TOML[]`, `TOML_LEXICON = { GENERA_TOML,
   count, "toml-", (s32)-I }`:
 
@@ -334,14 +334,14 @@ nomen enumeratio {
   VERBATIM for the rest; `SPATIUM` munus SPATIUM, `COMMENTUM` COMMENTUM.
   `IGNOTUM` = a byte no rule accepts (becomes a malum).
 
-- [ ] **Step 6: The runner** — copy `crusta/compile_probationes.sh`,
+- [x] **Step 6: The runner** — copy `crusta/compile_probationes.sh`,
   rename `crusta`→`toml` (dir, log `build/test_logs/toml.log`, banner
   `TOML PROBATIONES: N/M praeteritae`, env names, mensor prefix
   `toml.`); `RADIX_FONTES` = `piscina chorda chorda_aedificator xar
   friatio tabula_dispersa internamentum stml stml_macros selectio
   similitudo canon credo utf8 json`.
 
-- [ ] **Step 7: Write the failing registrum probatio** — transcribe
+- [x] **Step 7: Write the failing registrum probatio** — transcribe
   `crusta/probationes/probatio_crusta_registrum.c`: lexicon order by
   title, genus order, recens gate over the declaration, `loci_offset`
   contiguity, every slot enum member against the table's titles (count
@@ -350,18 +350,18 @@ nomen enumeratio {
   `par` `a = 1`) through writer → reader → writer byte-equal, with
   `grammatica="toml"` and `<toml-clavis-nuda` present.
 
-- [ ] **Step 8: Register in pythonica NOW** — `PORTAE['toml'] =
+- [x] **Step 8: Register in pythonica NOW** — `PORTAE['toml'] =
   (['./toml/compile_probationes.sh'], r'TOML PROBATIONES: \d+/\d+')`,
   `FORMAE['toml'] = 'suita'`, `SUITAE['toml'] = ('toml/probationes',
   'toml/build/%s')`.
 
-- [ ] **Step 9: Run: red, then green** — `./toml/compile_probationes.sh registrum`.
+- [x] **Step 9: Run: red, then green** — `./toml/compile_probationes.sh registrum`.
 
-- [ ] **Step 10: Plant** — swap the `SPATIUM` and `COMMENTUM` rows →
+- [x] **Step 10: Plant** — swap the `SPATIUM` and `COMMENTUM` rows →
   red on order-by-title; revert. By hand: one byte of the generated `.c`
   → the recens gate names the line; revert.
 
-- [ ] **Step 11: Words, format, commit**
+- [x] **Step 11: Words, format, commit**
 
 ```python
 silva.commissio("toml: cliens materiae septimus natus - declaratio registri (XIV genera), tabulae coctae, lexicon (XXVIII genera lexematum; linea nova bis: terminator et trivium), cursor, porta registri (rubra nata: ordo lexici)\n\nCo-Authored-By: ...",
@@ -371,6 +371,20 @@ silva.commissio("toml: cliens materiae septimus natus - declaratio registri (XIV
      "toml/compile_probationes.sh", "toml/probationes/probatio_toml_registrum.c",
      "toml/CLAUDE.md", "pythonica/silva.py"], ["toml", "pythonica"])
 ```
+
+**Executed 2026-09-28.** Vocabulary check: toml-test's ten valid
+categories each have a home; no genus added. Deviations from the text:
+`gravitas` values are `erratum`/`monitum` (absent = erratum), so the
+declaration omits them; three words unknown to the lint were replaced
+by house words — basic/literal strings and keys are GEMINA/SIMPLEX
+(crusta's names for the two quote styles), the inline table is
+`tabula-compacta` (`brevis`/`interior` are latina.h macros), the
+single-token slot enum is `TomlLexemaLocus`. The generator also emits
+`TOML_DIAGNOSTICA` from `diagnosticum=`/`absentia=`. Runner adds
+`filum` and `json` to RADIX_FONTES, drops `processus_posix` and
+crusta's corpus/differentia tail. Gate: 228 assertions; plants — two
+lexicon rows swapped (red on order-by-title), one generated byte
+(`RANCIDUM …coctum.c:79`); both reverted green.
 
 ---
 

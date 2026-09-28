@@ -1,0 +1,105 @@
+<!--
+  toml.registrum.stml - DECLARATIO registri generum (toml)
+
+  FONS UNUS tabularum coctarum toml_registrum_coctum.{h,c}
+  (materia/coquere.sh; canon materia/grammatica/registrum.canon).
+  Genera APPENDUNTUR, numquam interponuntur: ordo = enumeratio =
+  offsets; permutatio sigillum canonis movet (pinna, manu mota cum
+  causa). Ordo LOCORUM intra genus = ordo EMISSIONIS: loci ordine
+  octetorum fontis.
+
+  Vocabularium: project-specs/toml-arbor-spec.md par. IV. TOML 1.0.0.
+
+  TOTALITAS (T4): omnis octetus in arbore; quod grammatica ponere non
+  potest 'malum' fit, aedificator ad lineam novam proximam extra
+  uncos recuperat - ergo OMNIA errata relata, non primum solum.
+
+  LINEA NOVA BIS (spec par. III): linea quae sententiam (par, caput)
+  terminat nodus 'linea' est (lexema LINEA_FINIS, substantivum); intra
+  seriem eadem octeta trivium sunt (lexema LINEA). Profunditas
+  lectoris decernit, numquam relabellatio.
+
+  VALORES: 'chorda', 'numerus', 'tempus' formam lexematis ferunt
+  (quattuor chordae, integer aut fluitans, quattuor tempora) - coctio
+  (toml_coctum) genus valoris et regulas semanticas iudicat, non
+  grammatica (T5).
+-->
+<registrum grammatica="toml" praefixum="TOML" typus="TomlGenus"
+  sedes="toml/fontes">
+
+  <genus titulus="documentum"
+    nota="Radix: sententiae (par, caput-tabulae, caput-seriei, linea, malum) ordine octetorum + lexema FINIS (trivia caudalia fert)">
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="cauda"  species="token"/>
+  </genus>
+
+  <genus titulus="caput-tabulae" nota="[clavis]: tabula currens mutatur">
+    <locus titulus="tok_apertura" species="token"/>
+    <locus titulus="clavis"       species="nodus" absentia="clavis tabulae deest"/>
+    <locus titulus="tok_clausura" species="token" absentia="']' deest"/>
+  </genus>
+
+  <genus titulus="caput-seriei" nota="[[clavis]]: elementum novum seriei tabularum">
+    <locus titulus="tok_apertura" species="token"/>
+    <locus titulus="clavis"       species="nodus" absentia="clavis seriei tabularum deest"/>
+    <locus titulus="tok_clausura" species="token" absentia="']]' deest"/>
+  </genus>
+
+  <genus titulus="par" nota="clavis = valor">
+    <locus titulus="clavis"     species="nodus"/>
+    <locus titulus="tok_signum" species="token" absentia="'=' deest"/>
+    <locus titulus="valor"      species="nodus" absentia="valor deest"/>
+  </genus>
+
+  <genus titulus="clavis"
+    nota="Clavis punctata: segmenta (nuda, gemina, simplex) et puncta ordine octetorum; spatia circa puncta trivia sunt">
+    <locus titulus="partes" species="lista-token"/>
+  </genus>
+
+  <genus titulus="chorda" nota="Quattuor formae (gemina, simplex, utraque multa): genus lexematis dicit">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="numerus" nota="Integer (decimalis, hex, octalis, binarius) aut fluitans (inf, nan): coctio classem dicit">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="boolean" nota="true aut false">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="tempus" nota="Quattuor genera (cum zona, locale, dies, hora): coctio dicit">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="series"
+    nota="[v, v]: valores, commata, lineae et commentaria intus (trivia); comma caudale licitum">
+    <locus titulus="tok_apertura" species="token"/>
+    <locus titulus="liberi"       species="lista-nodus"/>
+    <locus titulus="tok_clausura" species="token" absentia="']' deest"/>
+  </genus>
+
+  <genus titulus="tabula-compacta"
+    nota="{k = v, ...}: una linea (TOML 1.0), clausa post scriptionem (coctio iudicat)">
+    <locus titulus="tok_apertura" species="token"/>
+    <locus titulus="liberi"       species="lista-nodus"/>
+    <locus titulus="tok_clausura" species="token" absentia="'}' deest"/>
+  </genus>
+
+  <genus titulus="comma" inanis="verum" nota="',' inter valores seriei aut paria tabulae compactae">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="linea" inanis="verum"
+    nota="Linea nova quae sententiam terminat (alibi trivium est)">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="malum"
+    nota="Totalitas (T4): lexemata quae grammatica ponere non potuit - octeti manent, sanitas negatur"
+    diagnosticum="lexemata quae grammatica ponere non potuit"
+    inanis="verum">
+    <locus titulus="tokens" species="lista-token"/>
+  </genus>
+
+</registrum>
