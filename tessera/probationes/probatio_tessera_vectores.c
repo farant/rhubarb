@@ -572,6 +572,10 @@ principale (vacuum)
         VECTORES_CLAVIUM,
         (i32)(magnitudo(VECTORES_CLAVIUM)
             / magnitudo(VECTORES_CLAVIUM[0])));
+    _tabulam_currere(piscina, "mures (OpenTUI parse.mouse)",
+        VECTORES_MURIUM,
+        (i32)(magnitudo(VECTORES_MURIUM)
+            / magnitudo(VECTORES_MURIUM[0])));
 
     imprimere("\nvectores %u, formae probatae %u, debita manentia %u\n",
         (insignatus integer)numerus_vectorum,

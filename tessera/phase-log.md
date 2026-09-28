@@ -597,3 +597,10 @@ timeout and gets only the escape timeout. 2 debts promoted (16 remain:
 H2, ESC prefix; the latter's desired semantics DECIDED by Fran, alt+key).
 Amalgam VERIFICATUM + idempotent; saltuarius 13/13; compiling plant →
 exactly the 2 H6 shapes red.
+
+**T3 FACTUM (mouse vectors).** 35 vectors from parse.mouse.test.ts; 10
+VALET held; 25 debt vectors, each verified to fail for its predicted
+reason: mouse modifiers dropped, wheel release = second scroll,
+horizontal wheel reported vertical, H4 motion as press/scroll, H3 X10 →
+phantom keys (incl. two phantom Backspace at coordinate 94). Two design
+calls for Fran: horizontal wheel genera; X10 parse vs swallow. Suite 6/6.

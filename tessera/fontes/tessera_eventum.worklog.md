@@ -131,3 +131,35 @@ exactly the two H6 shapes; rc checked this time, not a build error.
 Also recorded: Fran DECIDED (2026-09-28) that an ESC-prefixed sequence
 (`ESC ESC [A`) means key + ALTERUM, consistent with ESC + key = alt.
 The causa now says so. The fix still belongs to the tokenizer (002).
+
+## 2026-09-28: T3, mouse vectors (OpenTUI parse.mouse.test.ts)
+
+35 vectors in `VECTORES_MURIUM` (file read in full, 545 lines). Suite:
+155 vectors, 574 shape runs, 768 assertions, 116 named debts (29 debt
+vectors). All 10 VALET held: SGR press/release of three buttons, wheel
+up/down, 1→0 coordinates incl. 500,300, three-wheel chunk.
+
+**Debts, each VERIFIED to fail for the predicted reason** (a diagnostic
+run with the mouse debts temporarily VALET printed tessera's actual
+output, then restored):
+- **modifiers dropped** (`CAUSA_MUS_MODIFICATORES`): SGR bits 4/8/16
+  are never copied into `modificatores`; shift/alt/ctrl+click = a plain
+  click. Obvious mapping (4→MAI, 8→ALT, 16→IMP), small fix.
+- **wheel release** (`CAUSA_ROTA_SOLUTA`): `64…m` reported as a second
+  wheel-up (bit 64 tested before M/m).
+- **horizontal wheel** (`CAUSA_ROTA_LATERALIS`): 66 → wheel-UP, 67 →
+  wheel-DOWN (`pulsus & 1`). A sideways trackpad swipe scrolls
+  vertically. Desired is PROVISIONAL (nothing): a design call for Fran
+  (new genera `ROTA_SINISTRORSUM`/`DEXTRORSUM`, or ignore).
+- **H4 motion** (bit 32): drag → press/release events, motion+wheel
+  (96/97) → wheel events. Desired: consumed (tessera doesn't request
+  motion); genus MOTUS arrives with `?1002` (terminal-planning 013).
+- **H3 X10:** `ESC [ M` consumed as an unknown CSI, three payload bytes
+  → phantom keys. Worse than predicted: at column/row 94 the payload
+  byte is 0x7F → **two phantom Backspace** events. A click can delete
+  text. Desired is PROVISIONAL (parse like SGR; release = pulsus III,
+  unknown button): a design call for Fran (parse vs swallow).
+
+Skipped with reasons in the header: OpenTUI's button-tracking state
+(drag vs move needs state tessera doesn't keep), incomplete-SGR framing
+(T4), the JS utf8 `toString` limit (not a protocol matter).
