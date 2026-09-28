@@ -876,27 +876,37 @@ non-table → NIHIL / FALSUM.
 
 ---
 
-## Task Q13: briar exposure — the mechanism (ASK), the changelog
+## Task Q13: briar exposure — widen the corpus to client roots, the changelog
 
-**Files:** decided in Step 1; always `briar/MUTATIONES.md`.
+**Decided 2026-09-28 (Fran, before execution): widen briar's corpus**,
+not an amalgam. Fran: briar "at some point will want access to all the
+materia clients". The deciding argument: amalgams do not COMPOSE — each
+client amalgam carries its own copy of materia, so a `.thistle` using
+two amalgamated clients links `materia_*` twice; a shared corpus holds
+materia once. The mechanism is general (a list of client roots); THIS
+plan registers only `materia/fontes` + `toml/fontes`; every other
+client is a one-line addition, after its own ambiguity check, when a
+`.thistle` needs it. The amalgam returns only if Step 1 measures a
+blocker, shown to Fran.
 
-- [ ] **Step 1: Measure and ASK** — briar's corpus is `lib/*.c`,
+**Files:** `tools/corpus_infixum.sh` (corpus list + symbol table
+sources), the briar derivation/compile path that maps a symbol to its
+implementation file (found in Step 1), `briar/MUTATIONES.md`.
+
+- [ ] **Step 1: Measure** — briar's corpus today is `lib/*.c`,
   `include/*.h` and `vendor/*` (`tools/corpus_infixum.sh:80`); header
-  derivation uses symbols whose definition sits in `include/*.h`. The new
-  library lives in `toml/fontes` and needs `materia/fontes`. Measure,
-  then show Fran the options with numbers:
-  (a) **an amalgam** `toml/amalgama/toml.{c,h}` made by the amalgamator
-  (silva/officina/tessera precedent: verification, `amalgama_caput
-  -comparare`, nm-intersection 0), listed in `corpus_infixum.sh`'s
-  corpus and its header exposed to derivation — measure the amalgam's
-  size and whether its `materia_*` symbols collide with anything briar
-  links;
-  (b) **widen briar's corpus** to `toml/fontes` + `materia/fontes` —
-  measure the corpus growth and the derivation ambiguity (two headers
-  defining the same symbol is the round-12 `Liber` error class).
-  Recommendation at measurement time. Fran decides; the rest of this
-  task follows the choice.
-- [ ] **Step 2: Implement the chosen mechanism**; `briar -bibliothecae`
+  derivation maps a used symbol to the `include/*.h` that defines it,
+  and the implementation lookup assumes `lib/*.c`. Measure: (1)
+  **derivation ambiguity** — every symbol defined in a header under
+  `materia/fontes` or `toml/fontes` that is ALSO defined in another
+  corpus header (the round-12 `Liber` class) — expected zero, each hit
+  named; (2) **binary growth** — briar's size before/after with the two
+  roots embedded; (3) **the implementation lookup** — where briar turns
+  a symbol into the `.c` it compiles, and what it needs to learn client
+  roots (the real code change); (4) the include paths briar passes to
+  clang for a client header.
+- [ ] **Step 2: Implement** — client roots as ONE list (materia first,
+  then toml) read by `corpus_infixum.sh` and the lookup; `briar -bibliothecae`
   lists `toml`; `briar -bibliotheca toml -functiones` prints the Q10
   signatures; a `.thistle` fixture using `toml_chorda(doc,
   "a.b", &c)` builds and runs (briar fixture test).
@@ -949,9 +959,10 @@ migration → Q12/Q13 incl. the librarium risk. AUDIENDA → Q1 Steps 1/3/4
 (tag, corpus size, oracle agreement), Q7 (strtod via the oracle), Q12
 Step 1 (librarium), Q14 (substrate changes).
 
-**Placeholder scan.** No TBD/TODO. Two decisions are explicitly Fran's at
-measurement time (Q1 corpus storage if > 20 MB; Q13 mechanism), each with
-both options and the numbers to gather. Commit messages in Q4–Q13 are
+**Placeholder scan.** No TBD/TODO. One decision is explicitly Fran's at
+measurement time (Q1 corpus storage if > 20 MB), with both options and the
+numbers to gather; Q13's mechanism was decided before execution (widen the
+corpus), with the amalgam kept only as a measured-blocker fallback. Commit messages in Q4–Q13 are
 named by content; the exact Latin is written at commit time from what was
 measured (counts change the text).
 
