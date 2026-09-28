@@ -66,9 +66,7 @@ nomen structura {
 #define CAUSA_FUGAE_PRAEFIXUM "ad 002 lexemator: ESC ante seriem (ESC ESC [ A) fuga spuria + clavis sine alterum emittit; exspectatum (DECISUM Frani 2026-09-28) = clavis + ALTERUM, ut ESC + clavis simplex"
 #define CAUSA_H7 "H7 ad 002: series PARTIALIS post moram ut fuga + runae phantasma redditur; exspectatum (consilium Frani): abicitur tacite, praeter ESC O / ESC [ = alt+O / alt+[ (xterm alt+O ipsum mittit)"
 #define CAUSA_H8 "H8 ad 002: series muris trans moram scissa (ssh lentus) - pars prior fuga + phantasmata, continuatio phantasmata; exspectatum (OpenTUI): mus integer (pars servatur; continuatio sine ESC post fugam recuperatur)"
-#define CAUSA_FUGA_INTRA_SS3 "SS3 ESC sequentem ut finalem devorat (CSI abortum recte tractat, SS3 non) - ESC O ESC O A -> O, A phantasma; exspectatum: pars abicitur, series nova integra"
 #define CAUSA_ALIENA "forma terminalis alieni (Linux console CSI [ A, putty [[5~, rxvt 2$) finalem falsum habet -> reliqua clavis phantasma; exspectatum: tacite consumpta, ut ceterae formae alienae (rxvt ^, SS3 minusculae)"
-#define CAUSA_PARAMETRUM_INGENS "parametrum CSI in s32 sine limite accumulatur - UNDEFINED BEHAVIOR (overflow signatum) in initu hostili; 1;4294967301A -> 5 -> imperium falsum; exspectatum: parametrum ingens ut invalidum (modificatores nulli)"
 
 /* MORA in octetis vectoris: mora exacta HIC (pons frustorum signum
  * tollit et frustum vacuum inserit). 0xFE in UTF-8 numquam occurrit;
@@ -910,14 +908,14 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
       { EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM),
         EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
 
-    /* debita - ESC intra SS3 */
+    /* ESC intra SS3 (T4b: series abrupta, olim debitum) */
     { "SS3 abruptum ESC, SS3 A", OCT("\033O\033OA"), FALSUM,
-        VECTOR_DEBITUM,
-      CAUSA_FUGA_INTRA_SS3, { EX_CLAVIS(TESSERA_CLAVIS_SURSUM,
+        VECTOR_VALET,
+      NIHIL, { EX_CLAVIS(TESSERA_CLAVIS_SURSUM,
           ZEPHYRUM) } },
     { "SS3 abruptum ESC, CSI A", OCT("\033O\033[A"), FALSUM,
-        VECTOR_DEBITUM,
-      CAUSA_FUGA_INTRA_SS3, { EX_CLAVIS(TESSERA_CLAVIS_SURSUM,
+        VECTOR_VALET,
+      NIHIL, { EX_CLAVIS(TESSERA_CLAVIS_SURSUM,
           ZEPHYRUM) } },
 
     /* debita - formae alienae */
@@ -930,10 +928,11 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
         CAUSA_ALIENA,
       { EX_NIHIL } },
 
-    /* debita - parametrum ingens */
-    { "1;4294967301A (overflow -> 5)", OCT("\033[1;4294967301A"),
+    /* parametrum ingens (T4b: limes, olim overflow = UB) */
+    { "1;4294967301A ingens = invalidum (olim overflow -> ctrl)",
+        OCT("\033[1;4294967301A"),
         FALSUM,
-      VECTOR_DEBITUM, CAUSA_PARAMETRUM_INGENS,
+      VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM) } }
 };
 

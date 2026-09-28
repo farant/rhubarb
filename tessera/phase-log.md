@@ -620,3 +620,9 @@ sequences replayed as phantoms on timeout, H8 mouse split across a
 timeout, SS3 swallowing an embedded ESC, foreign forms with phantom
 tails, CSI parameter overflow (UB; wraps into a false ctrl). Suite 6/6,
 1,258 assertions, 120 named debts.
+
+**T4b FACTUM.** CSI parameters capped (no signed overflow on hostile
+input; a huge parameter is invalid) and SS3 aborts on an embedded ESC.
+12 shapes promoted; 108 debts remain, all for the tokenizer (002).
+Amalgam VERIFICATUM + idempotent; saltuarius 13/13; two compiling
+plants, each exact.

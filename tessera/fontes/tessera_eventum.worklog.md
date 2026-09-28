@@ -243,3 +243,26 @@ is a loss).
 Skipped with reasons in the header: bracketed paste (needs a GLUTINUM
 genus, feature 001), OpenTUI's protocol-context probes (tessera never
 queries), parser-object lifecycle API.
+
+## 2026-09-28: T4b, CSI parameter cap (UB) + SS3 aborts on an embedded ESC
+
+- **Parameter cap:** `PARAMETRUM_MAXIMUM` = X * M (10,000). The digit
+  accumulator stops multiplying once past the cap, so a parameter can
+  never exceed 100,009 and the signed-overflow UB on hostile input is
+  gone BY CONSTRUCTION. A value above the cap = "huge" = invalid:
+  `_modificatores_csi` returns no modifiers for it, so
+  `1;4294967301A` is a plain up-arrow, not ctrl+up. Tilde codes and
+  mouse coordinates degrade naturally (no match, or a clamped
+  coordinate). The no-UB property itself isn't observable by a test; a
+  sanitizer build (-fsanitize=undefined) would be the oracle for it,
+  not done here.
+- **SS3 + embedded ESC:** a third byte of 0x1B aborts SS3. `ESC O` is
+  dropped silently and the ESC starts a fresh sequence, as CSI already
+  did (`ESC O ESC O A` and `ESC O ESC [ A` → up).
+
+Proof: exactly 12 `DEBITUM SOLUTUM` (3 vectors × 4 shapes), nothing
+else moved; promoted, 2 causes retired (1,270 assertions; 108 debts
+remain, all tokenizer territory: H2, H7, H8, foreign forms, ESC prefix).
+Amalgam VERIFICATUM + idempotent; saltuarius 13/13. Compiling plants:
+SS3 abort disabled → exactly the 2 SS3 vectors; huge-modifier check
+disabled → exactly the overflow vector.

@@ -6349,6 +6349,10 @@ tessera_pons_posix_creare (
 
 /* ================= ex tessera/fontes/tessera_eventum.c ================= */
 
+/* Limes parametri CSI: accumulatio ultra hunc cessat (s32 numquam
+ * exundat); valor maior = ingens = invalidus */
+#define PARAMETRUM_MAXIMUM (X * M)
+
 nomen enumeratio {
     PARS_COMPLETUM = 0,
     PARS_INCOMPLETUM,
@@ -6419,9 +6423,9 @@ _modificatores_csi (
     i32 fructus = ZEPHYRUM;
     s32 bits;
 
-    si (m <= I)
+    si (m <= I || m > PARAMETRUM_MAXIMUM)
     {
-        redde ZEPHYRUM;
+        redde ZEPHYRUM;   /* nullus aut ingens (invalidus) */
     }
     bits = m - I;
     si (bits & I)
@@ -6525,9 +6529,9 @@ _murem_classificare (
                s32  y,
                b32  solutio)
 {
-    TesseraMusGenus genus         = TESSERA_MUS_PRESSUS;
-                i32 botton        = (i32)(pulsus & III);
-                i32 modificatores = ZEPHYRUM;
+    TesseraMusGenus genus          = TESSERA_MUS_PRESSUS;
+                i32 botton         = (i32)(pulsus & III);
+                i32 modificatores  = ZEPHYRUM;
 
     si (pulsus & XXXII)
     {
@@ -6541,10 +6545,14 @@ _murem_classificare (
         }
         commutatio (botton)
         {
-            casus ZEPHYRUM: genus = TESSERA_MUS_ROTA_SURSUM;       frange;
-            casus I:        genus = TESSERA_MUS_ROTA_DEORSUM;      frange;
-            casus II:       genus = TESSERA_MUS_ROTA_SINISTRORSUM; frange;
-            ordinarius:     genus = TESSERA_MUS_ROTA_DEXTRORSUM;   frange;
+            casus ZEPHYRUM: genus =
+                                TESSERA_MUS_ROTA_SURSUM;       frange;
+            casus I:        genus =
+                                TESSERA_MUS_ROTA_DEORSUM;      frange;
+            casus II:       genus =
+                                TESSERA_MUS_ROTA_SINISTRORSUM; frange;
+            ordinarius:     genus =
+                                TESSERA_MUS_ROTA_DEXTRORSUM;   frange;
         }
         botton = ZEPHYRUM;
     }
@@ -6602,8 +6610,8 @@ _csi_parsare (
         {
             redde PARS_INCOMPLETUM;
         }
-        *consumendum = VI;
-        cb = (s32)lector->buffer[III] - XXXII;
+        *consumendum  = VI;
+        cb            = (s32)lector->buffer[III] - XXXII;
         si (   cb < ZEPHYRUM || lector->buffer[IV] < XXXIII
             || lector->buffer[V] < XXXIII)
         {
@@ -6629,7 +6637,13 @@ _csi_parsare (
 
         si (b >= '0' && b <= '9')
         {
-            valor_currens  = valor_currens * X + (s32)(b - '0');
+            /* limes: parametrum ultra PARAMETRUM_MAXIMUM crescere
+             * desinit (nullum overflow signatum - initus hostilis);
+             * valor > limite = "ingens", ubique invalidus */
+            si (valor_currens <= PARAMETRUM_MAXIMUM)
+            {
+                valor_currens = valor_currens * X + (s32)(b - '0');
+            }
             valor_visus    = VERUM;
             i++;
         }
@@ -6725,6 +6739,13 @@ _ss3_parsare (
         redde PARS_INCOMPLETUM;
     }
     finalis       = (character)lector->buffer[II];
+    si (finalis == 0x1B)
+    {
+        /* ESC intra SS3: series abrupta - "ESC O" tacite abicitur,
+         * ESC novam seriem incipit (ut in CSI) */
+        *consumendum = II;
+        redde PARS_PRAETERITUM;
+    }
     *consumendum  = III;
     si (_clavem_finalem(finalis, ev, ZEPHYRUM))
     {
