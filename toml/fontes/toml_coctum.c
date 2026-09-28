@@ -125,20 +125,21 @@ _series_appendere (
     redde VERUM;
 }
 
-/* clavis vacua ('""' licita in TOML) in indicem non intrat -
- * tabula_dispersa mensuram 0 ut sedem vacuam recusat; quaeritur per
- * ordinem clavium (una in tabula ad summum) */
-interior TomlValor*
-_invenire (
-     TomlValor* tabula,
-        chorda  clavis)
+TomlValor*
+toml_tabulae_filius (
+     constans TomlValor* tabula,
+                 chorda  clavis)
 {
     vacuum* inventum = NIHIL;
+       i32  k;
 
+    si (tabula == NIHIL || tabula->genus != TOML_VALOR_TABULA)
+    {
+        redde NIHIL;
+    }
+    /* clavis vacua in indicem non intrat - vide _inserere */
     si (clavis.mensura == ZEPHYRUM)
     {
-        i32 k;
-
         per (k = ZEPHYRUM; k < xar_numerus(tabula->datum.tabula.claves);
              k++)
         {
@@ -157,6 +158,14 @@ _invenire (
         redde (TomlValor*)inventum;
     }
     redde NIHIL;
+}
+
+interior TomlValor*
+_invenire (
+     TomlValor* tabula,
+        chorda  clavis)
+{
+    redde toml_tabulae_filius(tabula, clavis);
 }
 
 interior b32

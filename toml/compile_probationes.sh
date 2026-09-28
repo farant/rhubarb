@@ -37,10 +37,13 @@ mkdir -p "$BUILD_DIR"
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
+# toml/fontes ANTE include: "toml.h" novum (Q10) nomen commune habet cum
+# include/toml.h vetere (lib/toml.c) usque ad Q12, quae vetus delet.
+# Numquam in binario uno: cursor hic lib/toml.c non compilat.
 declare -a INCLUDE_FLAGS=(
+    "-I$TOML_DIR/fontes"
     "-I$RADIX_DIR/include"
     "-I$MATERIA_DIR/fontes"
-    "-I$TOML_DIR/fontes"
     "-I$TOML_DIR/probationes"
 )
 

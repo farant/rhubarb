@@ -1027,6 +1027,38 @@ non-table → NIHIL / FALSUM.
   segment as bare → `a."b.c"` red; revert.
 - [ ] **Step 4: Commit** — `["toml/fontes/toml.h", "toml/fontes/toml.c", "toml/probationes/probatio_toml_api.c"]`, `["toml"]`, citing lapide feature-requests/013.
 
+**Executed 2026-09-28.** Measured first: the tester's request read
+verbatim (lapide feature-requests/013: dotted access, list tables,
+refuse duplicate keys); `materia_pictor_scribere`'s contract (one
+block per diagnostic, related locations in the same block); and a
+**name collision**: `include/toml.h` (old `lib/toml.c`) declares
+`toml_legere`, `TomlValor`, `TomlDocumentum` and is first on the include
+path. Decision (the approved plan's names stand; Q12 deletes the old):
+`toml/fontes/toml.h`, the toml runner puts `toml/fontes` BEFORE
+`include`, and the two are never linked into one binary. Found while
+checking: the derived include graph (`silva/nexus.sh`) resolves
+`toml/fontes/toml.c`'s `"toml.h"` to `include/toml.h` — it ignores the
+includer's directory, against C's quote-include rule; filed (ledger
+…VF3). The runner's own header guard scans `toml/fontes`, so builds are
+not stale; the gap closes when Q12 deletes the old header. Built as
+specified; `toml_tabulae_filius` (lookup incl. the `""` key outside
+the hash index) moved into `toml_coctum` as ONE public function (the
+cooker, the oracle and the API each had a copy). Paths are lexed by
+`toml_lector` in CLAVIS mode, segments decoded by `toml_chordam_coquere`
+— quoted segments with dots and escapes work, anything else is NIHIL.
+Gate 86 assertions: 013 verbatim (two sections, dotted lookups, root
+enumeration in order; `versio` twice in one section → not successful,
+"clavis 'versio' iam definita" at `config.toml:3:1` with two carets —
+first definition labelled — and the first value still queryable);
+typed getters (right/wrong/absent type, output untouched on FALSUM,
+`s64` extremes); 15 bad paths (empty, blanks, `a..b`, through an array,
+into a string, trailing/leading dot, junk, unterminated quote, bad
+escape, `tab = 1`, NIHIL doc/path) and 4 good ones (`tab."b.c"`,
+`tab.'b.c'`, `tab."k\u0041"`, ` tab . kA `); enumeration bounds;
+rendering of three errors in offset order with `via:line:col` and
+carets (and none without excerpts); the empty file. Plant: quoted
+segment taken raw → the four quoted lookups red; restored. Suite 11/11.
+
 ---
 
 ## Task Q11: Totality and the computus twin

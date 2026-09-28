@@ -7,7 +7,7 @@
 
 #include "toml_oraculum.h"
 #include "toml_scalaris.h"
-#include "tabula_dispersa.h"
+#include "toml_coctum.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -375,37 +375,6 @@ _notatum (
     redde VERUM;
 }
 
-/* filius tabulae per clavem (clavis vacua extra indicem, ut coctio) */
-interior constans TomlValor*
-_filius (
-     constans TomlValor* tabula,
-                 chorda  clavis)
-{
-    vacuum* inventum = NIHIL;
-       i32  k;
-
-    si (clavis.mensura == ZEPHYRUM)
-    {
-        per (k = ZEPHYRUM; k < xar_numerus(tabula->datum.tabula.claves);
-             k++)
-        {
-            si (((chorda*)xar_obtinere(tabula->datum.tabula.claves,
-                     k))->mensura == ZEPHYRUM)
-            {
-                redde *(TomlValor**)xar_obtinere(
-                    tabula->datum.tabula.valores, k);
-            }
-        }
-        redde NIHIL;
-    }
-    si (tabula_dispersa_invenire(tabula->datum.tabula.index, clavis,
-            &inventum))
-    {
-        redde (constans TomlValor*)inventum;
-    }
-    redde NIHIL;
-}
-
 interior b32
 _comparare (
              Comparator* c,
@@ -437,7 +406,7 @@ _comparare (
         {
                   JsonPar* p       = json_objectum_par_obtinere(j,
                       k);
-       constans TomlValor* filius  = _filius(v, *p->clavis);
+       constans TomlValor* filius  = toml_tabulae_filius(v, *p->clavis);
                       i32  prior;
 
             si (filius == NIHIL)

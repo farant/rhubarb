@@ -1,7 +1,7 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q9 done;
-Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q10 done;
+Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib, Q10 API done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -118,6 +118,20 @@ disagreements (1,793 agree + 1 named divergence). Divergences are named
 by CAUSE: "microsecunda" (tomllib truncates fractions to 6 digits, we
 to 9; both follow TOML 1.0). The runner regenerates
 `build/aurum_silvestre.txt` when absent or older than the manifest.
+
+## The public API (Q10)
+
+`fontes/toml.h` / `toml.c` — **use this, not the layers below**:
+`toml_legere(textus, via, piscina)` (never NIHIL; the text must outlive
+the document), `toml_successus`, `toml_diagnostica`,
+`toml_diagnostica_scribere` (materia_pictor blocks: `via:line:col`,
+excerpt, carets, first definition labelled), `toml_quaerere(doc,
+"a.b")` and typed getters `toml_chorda/integer/fluitans/boolean/tempus`
+(FALSUM leaves the output untouched), enumeration `toml_tabulae_*`,
+`toml_seriei_*`. Paths are TOML keys lexed by the lector: `a."b.c"`,
+escapes and spaces work; empty, malformed, through an array or into a
+scalar → NIHIL. TRANSITION until Q12: `include/toml.h` (old lib) has
+the same name — the runner puts `toml/fontes` first; never link both.
 
 ## Currere
 
