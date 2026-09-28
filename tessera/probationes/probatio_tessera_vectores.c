@@ -280,6 +280,19 @@ _currere (
             *ruptum = VERUM;
             redde n;
         }
+        /* glutinum = VISUS usque ad exspectationem proximam: STATIM
+         * copiare (contractus; glutina contigua aliter corpus commune
+         * monstrarent) */
+        si (   ev.genus == TESSERA_EVENTUM_GLUTINUM
+            && ev.glutinum.mensura > ZEPHYRUM)
+        {
+            i8* copia = (i8*)piscina_allocare(piscina,
+                (memoriae_index)ev.glutinum.mensura);
+
+            memcpy(copia, ev.glutinum.datum,
+                (memoriae_index)ev.glutinum.mensura);
+            ev.glutinum.datum = copia;
+        }
         observata[n++] = ev;
     }
     *ruptum = VERUM;
@@ -323,7 +336,12 @@ _eventum_congruit (
         && o->mus_genus == e->mus_genus
         && o->mus_x == e->mus_x
         && o->mus_y == e->mus_y
-        && o->mus_pulsus == e->mus_pulsus;
+        && o->mus_pulsus == e->mus_pulsus
+        && o->glutinum.mensura == e->glutinum_mensura
+        && (   e->glutinum_mensura == ZEPHYRUM
+            || memcmp(o->glutinum.datum, e->glutinum,
+                   (memoriae_index)e->glutinum_mensura) == ZEPHYRUM)
+        && o->glutinum_truncatum == e->glutinum_truncatum;
 }
 
 
@@ -339,7 +357,7 @@ interior constans character* CLAVIUM_TITULI[] = {
 
 interior constans character* MURIUM_TITULI[] = {
     "pressus", "solutus", "rota_sursum", "rota_deorsum",
-    "rota_sinistrorsum", "rota_dextrorsum"
+    "rota_sinistrorsum", "rota_dextrorsum", "tractus"
 };
 
 interior vacuum
@@ -368,17 +386,27 @@ _octetos_imprimere (
 
 interior vacuum
 _campos_imprimere (
-    TesseraEventumGenus genus,
-          TesseraClavis clavis,
-                    s32 runa,
-                    i32 modificatores,
-                    i32 numerus,
-        TesseraMusGenus mus_genus,
-                    s32 mus_x,
-                    s32 mus_y,
-                    i32 mus_pulsus)
+    TesseraEventumGenus  genus,
+          TesseraClavis  clavis,
+                    s32  runa,
+                    i32  modificatores,
+                    i32  numerus,
+        TesseraMusGenus  mus_genus,
+                    s32  mus_x,
+                    s32  mus_y,
+                    i32  mus_pulsus,
+            constans i8* glutinum,
+                    i32  glutinum_mensura,
+                    b32  glutinum_truncatum)
 {
-    si (genus == TESSERA_EVENTUM_MUS)
+    si (genus == TESSERA_EVENTUM_GLUTINUM)
+    {
+        imprimere("GLUTINUM(%u \"",
+            (insignatus integer)glutinum_mensura);
+        _octetos_imprimere(glutinum, glutinum_mensura);
+        imprimere("\"%s)", glutinum_truncatum ? " truncatum" : "");
+    }
+    alioquin si (genus == TESSERA_EVENTUM_MUS)
     {
         imprimere("MUS(%s %d,%d p%u)", MURIUM_TITULI[mus_genus],
             (integer)mus_x, (integer)mus_y,
@@ -447,7 +475,9 @@ _fracturam_imprimere (
         _campos_imprimere(e->genus, e->clavis, e->runa,
             e->modificatores,
             e->numerus, e->mus_genus, e->mus_x, e->mus_y,
-            e->mus_pulsus);
+            e->mus_pulsus, (constans i8*)e->glutinum,
+            e->glutinum_mensura,
+            e->glutinum_truncatum);
         imprimere(" ");
     }
     imprimere("\n    observata:  ");
@@ -458,7 +488,8 @@ _fracturam_imprimere (
         _campos_imprimere(o->genus, o->clavis, o->runa,
             o->modificatores,
             o->numerus, o->mus_genus, o->mus_x, o->mus_y,
-            o->mus_pulsus);
+            o->mus_pulsus, o->glutinum.datum, o->glutinum.mensura,
+            o->glutinum_truncatum);
         imprimere(" ");
     }
     imprimere("\n");
@@ -638,6 +669,11 @@ principale (vacuum)
         VECTORES_FRUSTORUM,
         (i32)(magnitudo(VECTORES_FRUSTORUM)
             / magnitudo(VECTORES_FRUSTORUM[0])));
+    _tabulam_currere(piscina,
+        "glutina (OpenTUI stdin-parser + propria)",
+        VECTORES_GLUTINORUM,
+        (i32)(magnitudo(VECTORES_GLUTINORUM)
+            / magnitudo(VECTORES_GLUTINORUM[0])));
 
     imprimere("\nvectores %u, formae probatae %u, debita manentia %u\n",
         (insignatus integer)numerus_vectorum,

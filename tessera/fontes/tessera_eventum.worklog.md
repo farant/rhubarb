@@ -317,3 +317,23 @@ quit).
   only fresh here because the test runner shares `tessera/build/`. A
   planted run also leaves planted objects behind, so rebuild after
   plants (done here). Not fixed in T3.
+
+## 2026-09-28: tessera 1.2 T4, paste API + debts
+
+- The paste body is a VIEW (`chorda glutinum`) into the lector's
+  collector: valid until the next `tessera_eventum_expectare`. The
+  vector harness honors this by copying the body into its piscina at
+  observation time. Without the copy, back-to-back pastes would both
+  point at the collector and show the second body twice. Any consumer
+  that queues events must do the same.
+- The harness's pons ignores the timeout the reader asks for, so a
+  `MORA` inside a paste means silence (D4's 3 s), NOT a 25 ms gap. The
+  D4 vectors are written that way. A short mid-paste gap can't be
+  expressed in the table; a T5 probatio can check the timeout value
+  the reader passes.
+- Public macro values must be literal (`65536`, not `LXIV * MXXIV`):
+  the hand-written amalgam header redefines them, and redefinition has
+  to be token-identical (that's the drift guard; plant II proved it).
+- T3 slip: `MURIUM_TITULI` in the harness lacked "tractus" (index 6),
+  so the failure print read out of bounds for TRACTUS. Fixed here. An
+  enum-indexed name table should be checked whenever the enum grows.

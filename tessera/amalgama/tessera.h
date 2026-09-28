@@ -220,13 +220,16 @@ int tessera_magnitudinem_renovare(TesseraOpus* opus);
 
 #define TESSERA_LECTOR_BUFFER 64
 #define TESSERA_MORA_FUGAE_MS 25
+#define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
+#define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
 
 typedef enum {
     TESSERA_EVENTUM_NIHIL = 0,
     TESSERA_EVENTUM_CLAVIS,
     TESSERA_EVENTUM_MUS,
     TESSERA_EVENTUM_AMPLITUDO,
-    TESSERA_EVENTUM_RESUMPTUM
+    TESSERA_EVENTUM_RESUMPTUM,
+    TESSERA_EVENTUM_GLUTINUM    /* ?2004: textus insertus, unum */
 } TesseraEventumGenus;
 
 typedef enum {
@@ -275,6 +278,9 @@ typedef struct TesseraEventum {
     unsigned int        mus_pulsus;
     unsigned int        latitudo;  /* AMPLITUDO */
     unsigned int        altitudo;
+    TesseraChorda       glutinum;  /* GLUTINUM: visus usque ad
+                                    * exspectationem proximam */
+    int                 glutinum_truncatum;
 } TesseraEventum;
 
 typedef struct TesseraLector {

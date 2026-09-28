@@ -31,6 +31,15 @@
  * (AMPLITUDO eventum - SIGWINCH select solum interrumpit);
  * resumptum pontis rogatur (RESUMPTUM eventum) - tractator
  * utriusque = tessera_magnitudinem_renovare + pictura.
+ *
+ * GLUTINUM (?2004, textus insertus): corpus inter CSI 200~ et CSI 201~
+ * UNUM eventum fit, octeti verbatim (nullae claves, nullus mus inde
+ * parsatus - textus insertus mandata numquam exsequitur). glutinum =
+ * VISUS in collectorem lectoris: validus usque ad
+ * tessera_eventum_expectare proximum - tracta statim aut copia,
+ * numquam serva. Ultra TESSERA_GLUTINUM_CAPACITAS octeti abiciuntur
+ * (usque ad terminum hauriuntur); silentium TESSERA_MORA_GLUTINI_MS
+ * sine termino glutinum finit. Utroque casu glutinum_truncatum.
  */
 
 #ifndef TESSERA_EVENTUM_H
@@ -38,17 +47,21 @@
 
 #include "latina.h"
 #include "piscina.h"
+#include "chorda.h"
 #include "tessera_pons.h"
 
 #define TESSERA_LECTOR_BUFFER 64
 #define TESSERA_MORA_FUGAE_MS 25
+#define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
+#define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
 
 nomen enumeratio {
     TESSERA_EVENTUM_NIHIL = 0,   /* mora exacta */
     TESSERA_EVENTUM_CLAVIS,
     TESSERA_EVENTUM_MUS,
     TESSERA_EVENTUM_AMPLITUDO,   /* magnitudo scrinii mutata */
-    TESSERA_EVENTUM_RESUMPTUM    /* post SIGCONT - pictura plena! */
+    TESSERA_EVENTUM_RESUMPTUM,   /* post SIGCONT - pictura plena! */
+    TESSERA_EVENTUM_GLUTINUM     /* textus insertus (?2004), unum */
 } TesseraEventumGenus;
 
 nomen enumeratio {
@@ -103,6 +116,10 @@ nomen structura {
     /* AMPLITUDO */
     i32 latitudo;
     i32 altitudo;
+
+    /* GLUTINUM: visus usque ad exspectationem proximam */
+    chorda glutinum;
+       b32 glutinum_truncatum;  /* capacitas excessa aut silentium */
 } TesseraEventum;
 
 nomen structura {

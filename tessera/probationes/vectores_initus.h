@@ -26,17 +26,21 @@
 #include "tessera_eventum.h"
 
 /* Eventum exspectatum - campi idem ac TesseraEventum (genera
- * AMPLITUDO/RESUMPTUM hic non adveniunt) */
+ * AMPLITUDO/RESUMPTUM hic non adveniunt); glutinum ut octeti cum
+ * mensura (NUL licet) */
 nomen structura {
-    TesseraEventumGenus genus;
-          TesseraClavis clavis;
-                    s32 runa;
-                    i32 modificatores;
-                    i32 numerus;
-        TesseraMusGenus mus_genus;
-                    s32 mus_x;
-                    s32 mus_y;
-                    i32 mus_pulsus;
+    TesseraEventumGenus  genus;
+          TesseraClavis  clavis;
+                    s32  runa;
+                    i32  modificatores;
+                    i32  numerus;
+        TesseraMusGenus  mus_genus;
+                    s32  mus_x;
+                    s32  mus_y;
+                    i32  mus_pulsus;
+     constans character* glutinum;
+                    i32  glutinum_mensura;
+                    b32  glutinum_truncatum;
 } EventumExspectatum;
 
 #define VECTOR_EVENTA_MAXIMA VIII
@@ -66,6 +70,7 @@ nomen structura {
 #define CAUSA_FUGAE_PRAEFIXUM "ad 002 lexemator: ESC ante seriem (ESC ESC [ A) fuga spuria + clavis sine alterum emittit; exspectatum (DECISUM Frani 2026-09-28) = clavis + ALTERUM, ut ESC + clavis simplex"
 #define CAUSA_H7 "H7 ad 002: series PARTIALIS post moram ut fuga + runae phantasma redditur; exspectatum (consilium Frani): abicitur tacite, praeter ESC O / ESC [ = alt+O / alt+[ (xterm alt+O ipsum mittit)"
 #define CAUSA_H8 "H8 ad 002: series muris trans moram scissa (ssh lentus) - pars prior fuga + phantasmata, continuatio phantasmata; exspectatum (OpenTUI): mus integer (pars servatur; continuatio sine ESC post fugam recuperatur)"
+#define CAUSA_GLUTINUM "T5 (tessera 1.2): modus glutini ?2004 nondum - CSI 200~ tacite consumitur et corpus in claves (et mandata!) solvitur; exspectatum = GLUTINUM unum, corpus verbatim"
 #define CAUSA_ALIENA "forma terminalis alieni (Linux console CSI [ A, putty [[5~, rxvt 2$) finalem falsum habet -> reliqua clavis phantasma; exspectatum: tacite consumpta, ut ceterae formae alienae (rxvt ^, SS3 minusculae)"
 
 /* MORA in octetis vectoris: mora exacta HIC (pons frustorum signum
@@ -83,27 +88,38 @@ nomen structura {
 #define MAI TESSERA_MODIFICATOR_MAIUSCULA
 
 /* Eventa exspectata (ordo campi: genus, clavis, runa, modificatores,
- * numerus, mus_genus, mus_x, mus_y, mus_pulsus) */
+ * numerus, mus_genus, mus_x, mus_y, mus_pulsus, glutinum,
+ * glutinum_mensura, glutinum_truncatum) */
+#define SINE_GLUTINO NIHIL, ZEPHYRUM, FALSUM
 #define EX_CLAVIS(c, mod) \
     { TESSERA_EVENTUM_CLAVIS, (c), ZEPHYRUM, (mod), ZEPHYRUM, \
-      TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM }
+      TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, SINE_GLUTINO }
 #define EX_RUNA(r, mod) \
     { TESSERA_EVENTUM_CLAVIS, TESSERA_CLAVIS_NULLA, (r), (mod), ZEPHYRUM, \
-      TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM }
+      TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, SINE_GLUTINO }
 #define EX_FUNCTIO(n, mod) \
     { TESSERA_EVENTUM_CLAVIS, TESSERA_CLAVIS_FUNCTIO, ZEPHYRUM, (mod), (n), \
-      TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM }
+      TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, SINE_GLUTINO }
 #define EX_MUS(g, px, py, pulsus) \
     { TESSERA_EVENTUM_MUS, TESSERA_CLAVIS_NULLA, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, \
-      (g), (px), (py), (pulsus) }
+      (g), (px), (py), (pulsus), SINE_GLUTINO }
 /* Mus cum modificatoribus */
 #define EX_MUS_MOD(g, px, py, pulsus, mod) \
     { TESSERA_EVENTUM_MUS, TESSERA_CLAVIS_NULLA, ZEPHYRUM, (mod), ZEPHYRUM, \
-      (g), (px), (py), (pulsus) }
+      (g), (px), (py), (pulsus), SINE_GLUTINO }
 /* Nullum eventum exspectatum (series tacite consumpta) */
 #define EX_NIHIL \
     { TESSERA_EVENTUM_NIHIL, TESSERA_CLAVIS_NULLA, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, \
-      TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM }
+      TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, SINE_GLUTINO }
+/* Glutinum: corpus = litterale (mensura ex magnitudo, NUL licet) */
+#define EX_GLUTINUM(s) \
+    { TESSERA_EVENTUM_GLUTINUM, TESSERA_CLAVIS_NULLA, ZEPHYRUM, ZEPHYRUM, \
+      ZEPHYRUM, TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, \
+      (s), (i32)(magnitudo(s) - I), FALSUM }
+#define EX_GLUTINUM_TRUNCATUM(s) \
+    { TESSERA_EVENTUM_GLUTINUM, TESSERA_CLAVIS_NULLA, ZEPHYRUM, ZEPHYRUM, \
+      ZEPHYRUM, TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, \
+      (s), (i32)(magnitudo(s) - I), VERUM }
 
 
 /* ================================================================
@@ -428,8 +444,9 @@ hic_manens constans VectorInitus VECTORES_CLAVIUM[] = {
       { EX_NIHIL } },
     { "focus extra CSI O", OCT("\033[O"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_NIHIL } },
-    { "glutinum initium 200~", OCT("\033[200~"), FALSUM, VECTOR_VALET,
-      NIHIL, { EX_NIHIL } },
+    { "glutinum initium 200~ solum (silentium)", OCT("\033[200~"),
+        VERUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM, { EX_GLUTINUM_TRUNCATUM("") } },
     { "glutinum finis 201~", OCT("\033[201~"), FALSUM, VECTOR_VALET,
         NIHIL,
       { EX_NIHIL } },
@@ -629,8 +646,8 @@ hic_manens constans VectorInitus VECTORES_MURIUM[] = {
  * mora in medio (formae scissuras circa eam faciunt).
  *
  * PRAETERMISSA (causa nominata):
- *   - glutinum (bracketed paste): exspectata genus GLUTINUM poscunt
- *     quod nondum est - cum features/001 portanda.
+ *   - glutinum (bracketed paste): tabula propria GLUTINA infra
+ *     (tessera 1.2 T4).
  *   - "protocol context" totum (explicitWidthCpr, pixelResolution,
  *     privateCapabilityReplies, startupCursorCpr): tessera numquam
  *     quaerit, ergo responsa talia non exspectat.
@@ -966,6 +983,90 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
         FALSUM,
       VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM) } }
+};
+
+
+/* ================================================================
+ * GLUTINA - ex OpenTUI packages/core/src/lib/stdin-parser.test.ts
+ * :1699-1847 "bracketed paste" (MIT, (c) 2025 opentui, @ 7581976f),
+ * deinde tesserae propria (D4 silentium, mandata in corpore).
+ *
+ * Formae quattuor OpenTUI "split start/end marker at every boundary"
+ * et "UTF-8 split across chunks" iam tegunt (BIPARTITA omnes
+ * scissiones, SINGULA octetum quemque). MORA hic = silentium (pons
+ * frustorum moram petitam neglegit): intra glutinum = D4, glutinum
+ * truncatum finitur.
+ *
+ * PRAETERMISSA: "large paste" (C milia octetorum) et "many small
+ * chunks" (VI milia) tabulam (CCLVI octeti) excedunt - probatio
+ * propria in T5 (capacitas, truncatio, tempus). "do not alias caller
+ * buffers": harnesium corpus STATIM copiat (contractus visus).
+ * ================================================================ */
+
+hic_manens constans VectorInitus VECTORES_GLUTINORUM[] = {
+
+    /* OpenTUI */
+    { "glutinum simplex", OCT("\033[200~hello\033[201~"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM, { EX_GLUTINUM("hello") } },
+    { "glutinum vacuum", OCT("\033[200~\033[201~"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM, { EX_GLUTINUM("") } },
+    { "glutinum cum lineis", OCT("\033[200~line1\nline2\033[201~"),
+      FALSUM, VECTOR_DEBITUM, CAUSA_GLUTINUM,
+      { EX_GLUTINUM("line1\nline2") } },
+    { "glutinum cum tabulis", OCT("\033[200~a\tb\033[201~"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM, { EX_GLUTINUM("a\tb") } },
+    { "ESC in corpore", OCT("\033[200~abc\033def\033[201~"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM, { EX_GLUTINUM("abc\033def") } },
+    { "terminus fere congruens 202~ in corpore",
+      OCT("\033[200~abc\033[202~def\033[201~"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM,
+      { EX_GLUTINUM("abc\033[202~def") } },
+    { "ESC duplex ante terminum", OCT("\033[200~abc\033\033[201~"),
+      FALSUM, VECTOR_DEBITUM, CAUSA_GLUTINUM,
+      { EX_GLUTINUM("abc\033") } },
+    { "clavis post glutinum", OCT("\033[200~hello\033[201~\033[A"),
+      FALSUM, VECTOR_DEBITUM, CAUSA_GLUTINUM,
+      { EX_GLUTINUM("hello"),
+        EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM) } },
+    { "glutina contigua",
+      OCT("\033[200~first\033[201~\033[200~second\033[201~"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM,
+      { EX_GLUTINUM("first"), EX_GLUTINUM("second") } },
+    { "glutinum UTF-8",
+      OCT("\033[200~\xE6\x97\xA5\xE6\x9C\xAC\xE8\xAA\x9E"
+          "\xF0\x9F\x91\x8D\033[201~"), FALSUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM,
+      { EX_GLUTINUM("\xE6\x97\xA5\xE6\x9C\xAC\xE8\xAA\x9E"
+          "\xF0\x9F\x91\x8D") } },
+
+    /* tesserae propria: corpus numquam in claves solvitur */
+    { "reditus in corpore manet octetus",
+      OCT("\033[200~dd\rx\033[201~"), FALSUM, VECTOR_DEBITUM,
+      CAUSA_GLUTINUM, { EX_GLUTINUM("dd\rx") } },
+    { "ctrl-c in corpore manet octetus",
+      OCT("\033[200~a\x03" "b\033[201~"), FALSUM, VECTOR_DEBITUM,
+      CAUSA_GLUTINUM, { EX_GLUTINUM("a\x03" "b") } },
+    { "series muris in corpore",
+      OCT("\033[200~x\033[<0;1;1My\033[201~"), FALSUM, VECTOR_DEBITUM,
+      CAUSA_GLUTINUM, { EX_GLUTINUM("x\033[<0;1;1My") } },
+    { "claves ante et post glutinum", OCT("a\033[200~b\033[201~c"),
+      FALSUM, VECTOR_DEBITUM, CAUSA_GLUTINUM,
+      { EX_RUNA('a', ZEPHYRUM), EX_GLUTINUM("b"),
+        EX_RUNA('c', ZEPHYRUM) } },
+
+    /* D4: silentium sine termino glutinum truncatum finit */
+    { "glutinum sine termino (silentium)", OCT("\033[200~ab"), VERUM,
+      VECTOR_DEBITUM, CAUSA_GLUTINUM, { EX_GLUTINUM_TRUNCATUM("ab") } },
+    { "silentium in medio: reliqua claves, terminus tacitus",
+      OCT("\033[200~ab" MORA "cd\033[201~"), FALSUM, VECTOR_DEBITUM,
+      CAUSA_GLUTINUM,
+      { EX_GLUTINUM_TRUNCATUM("ab"), EX_RUNA('c', ZEPHYRUM),
+        EX_RUNA('d', ZEPHYRUM) } },
+
+    /* terminus solus (sine initio) tacitus - hodie iam verum */
+    { "terminus 201~ sine initio", OCT("x\033[201~y"), FALSUM,
+      VECTOR_VALET, NIHIL,
+      { EX_RUNA('x', ZEPHYRUM), EX_RUNA('y', ZEPHYRUM) } }
 };
 
 #endif /* VECTORES_INITUS_H */

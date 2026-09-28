@@ -26,17 +26,20 @@ interior vacuum
 _eventum_vacare (
     TesseraEventum* ev)
 {
-    ev->genus          = TESSERA_EVENTUM_NIHIL;
-    ev->runa           = ZEPHYRUM;
-    ev->clavis         = TESSERA_CLAVIS_NULLA;
-    ev->modificatores  = ZEPHYRUM;
-    ev->numerus        = ZEPHYRUM;
-    ev->mus_genus      = TESSERA_MUS_PRESSUS;
-    ev->mus_x          = ZEPHYRUM;
-    ev->mus_y          = ZEPHYRUM;
-    ev->mus_pulsus     = ZEPHYRUM;
-    ev->latitudo       = ZEPHYRUM;
-    ev->altitudo       = ZEPHYRUM;
+    ev->genus               = TESSERA_EVENTUM_NIHIL;
+    ev->runa                = ZEPHYRUM;
+    ev->clavis              = TESSERA_CLAVIS_NULLA;
+    ev->modificatores       = ZEPHYRUM;
+    ev->numerus             = ZEPHYRUM;
+    ev->mus_genus           = TESSERA_MUS_PRESSUS;
+    ev->mus_x               = ZEPHYRUM;
+    ev->mus_y               = ZEPHYRUM;
+    ev->mus_pulsus          = ZEPHYRUM;
+    ev->latitudo            = ZEPHYRUM;
+    ev->altitudo            = ZEPHYRUM;
+    ev->glutinum.mensura    = ZEPHYRUM;
+    ev->glutinum.datum      = NIHIL;
+    ev->glutinum_truncatum  = FALSUM;
 }
 
 interior vacuum

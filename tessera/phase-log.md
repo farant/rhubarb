@@ -785,3 +785,42 @@ nothing"; spectaculum's cursor follows drags. Suite 7/7, saltuarius
 13/13, amalgam VERIFICATUM + idempotent. **Fran's terminal look
 (2026-09-28): all working.** Hazard logged in the eventum worklog:
 spectaculum.sh ignores header changes (not fixed here).
+
+### INTENTIO (T4: paste API + failing vectors)
+
+(Written after the work, in the same turn; the ritual puts it first.)
+API only, no reader change: `TESSERA_EVENTUM_GLUTINUM` appended to the
+genus enum; `TesseraEventum` gains `chorda glutinum` (a view into the
+lector's collector, valid until the next `tessera_eventum_expectare`)
+and `b32 glutinum_truncatum`; public constants
+`TESSERA_GLUTINUM_CAPACITAS` 65536 and `TESSERA_MORA_GLUTINI_MS` 3000
+(D1, D4). Both headers, plus `_eventum_vacare` zeroes the new fields.
+The harness's `EventumExspectatum` gains the body (bytes + length +
+truncated flag), and it COPIES an observed body the moment it arrives,
+honoring the view contract. OpenTUI's paste vectors plus tessera's own
+become a new table as debts (`CAUSA_GLUTINUM`).
+
+**T4 FACTUM (paste API + debts).** New table GLUTINA, 17 vectors:
+- 10 from OpenTUI: simple, empty, newlines, tabs, ESC in body, near-match
+  202~, doubled ESC before the end marker, a key after, back-to-back,
+  UTF-8. The split-marker and split-UTF-8 tests are covered by the
+  BIPARTITA and SINGULA shapes.
+- 4 of tessera's own: CR, ctrl-c and a mouse sequence stay body bytes,
+  and keys before and after a paste.
+- 2 for D4 silence: an unterminated paste becomes a truncated event, and
+  silence mid-paste truncates, with the rest arriving as keys.
+- 1 already true (a stray 201~ is swallowed).
+The old FRUSTA vector "200~ alone" now expects a truncated empty paste.
+Debts 108 → 176 (+17 × 4). Skipped with a reason: OpenTUI's 100k and
+6000-byte pastes don't fit the 256-byte table and go to a dedicated T5
+probatio (cap, truncation, time).
+Two debts were flipped to VALET temporarily to prove they fail for the
+right reason: `hello` arrives today as five keystrokes. Two
+header-drift plants in the hand-written amalgam header were caught by
+the amalgam gate by name (a missing field → compile error; a wrong
+capacity → macro redefinition).
+Harness fix riding along: T3 left `MURIUM_TITULI` without "tractus",
+an out-of-bounds read in the failure print for any TRACTUS event.
+It was visible and missed: T3's red run printed the expected drags as
+`MUS(nulla 12,5 p0)` (the read landed in the adjacent CLAVIUM_TITULI). Suite 7/7, saltuarius 13/13, amalgam
+VERIFICATUM + idempotent.
