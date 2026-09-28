@@ -1,7 +1,7 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q7 done;
-Q7 was re-sliced: Q7a scalars, Q7b tables).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q8 done;
+Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -100,6 +100,15 @@ names the key segment and relates the first definition
 (`TomlValor.definitio`). The empty key `""` is kept outside the hash
 index (`tabula_dispersa` refuses length 0). Wild validity equals
 tomllib's on every file.
+
+## The toml-test oracle (Q8)
+
+`fontes/toml_oraculum.{h,c}`: `toml_oraculum_comparare(piscina, coctum,
+json)` → `{aequalis, via_differentiae "a.b[2]", causa}` against
+toml-test's tagged JSON (the same shape the tomllib golden uses).
+`probatio_toml_oraculum`: valid 205/205 equal, invalid 474/474 rejected,
+pinned. `ORACULUM_OMNIA=1` prints every failure, `ORACULUM_EXEMPLUM=
+valid/…toml` one case with its diagnostics.
 
 ## Currere
 

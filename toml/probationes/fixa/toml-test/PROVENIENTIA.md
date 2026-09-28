@@ -41,3 +41,14 @@ case for either):
 - UTF-8 BOM at offset 0: `tomllib` REJECTS ("Invalid statement", line
   1 col 1). The client follows (named diagnostic, byte law kept) so the
   differential stays clean; relaxing it later is one rule.
+
+## Our client against this suite (Q8, 2026-09-28)
+
+`probatio_toml_oraculum`: every valid case parsed, cooked and compared
+with its `.json` (tagged JSON; datetimes through the cooking step's own
+parser, `Z` ≡ `+00:00`; floats by value, `-0.0` by the expected sign,
+any `nan` equals `nan`); every invalid case must carry a diagnostic.
+**At birth: valid 205/205 equal, invalid 474/474 rejected. No
+exclusions.** Pins `PINNA_VALIDA 205`, `PINNA_INVALIDA 474` (rising
+only; they cannot rise further on 1.0.0). The 1.1.0 list is not run:
+the client is TOML 1.0 and names 1.1 features as errors.

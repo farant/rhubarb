@@ -903,6 +903,25 @@ comparing fields (`Z` ≡ `+00:00`); string by bytes; bool by value.
 here (Q8a comparator + gate at birth numbers; Q8b the failure-class
 loop) and tell Fran — crusta's P11 precedent.
 
+**Executed 2026-09-28.** Measured first: `json.h` (JsonValor, objects
+as ordered pairs with interned keys, "" keys canonical), toml-test's
+tagged shape (8 type names; a tagged value is an object with EXACTLY
+two string keys `type`/`value` — a TOML table with those keys carries
+objects, so no ambiguity; `valid/key/special-word` pins `inf`/`nan`/
+`true` as plain keys). `toml_oraculum.{h,c}` as specified, with one
+deviation: `JsonValor*` is non-const (the house json accessors take
+non-const). Missing expected key → via = the table, causa names the
+key; extra cooked keys → via = the table. **At birth: valid 205/205
+equal, invalid 474/474 rejected — no exclusions, Step 2's loop had
+nothing to do** (Q7 had already driven the invalid half; the valid half
+held). Pins 205/474. A perfect birth is a reason to ask what the oracle
+forgives: 26 inline comparator cases (each difference kind with its via:
+value, type, `-0.0` sign, `inf` sign, array length, element, missing key,
+extra key; `Z` ≡ `+00:00`; `type`/`value` keys as a table; `""` key) and
+TWO plants — the pin raised to 206 (red), and cooking `\t` as `t`
+(inline case AND corpus 202/205, red) — restored green.
+PROVENIENTIA.md records the result. Toml suite 9/9.
+
 ---
 
 ## Task Q9: The `tomllib` differential — the golden, both corpora
