@@ -1062,4 +1062,19 @@
     <forma textus="rancoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
 
+  <!-- toml Q7a (2026-09-28) -->
+  <vocabulum lemma="nanosecunda" lingua="latina" classis="substantivum" nota="vox technica (nano + secunda, pars 10^-9 secundi): fractio secundi temporis TOML ad IX digitos (RFC 3339); sedes TomlTempus.nanosecunda in toml/fontes/toml_valor.h">
+    <forma textus="nanosecunda" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="nanosecundae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="nanosecundas" casus="accusativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="scalaris" lingua="latina" classis="adiectivum" nota="scalaris, -e (classice: scalarum, gradibus pertinens; WORDS caret): sensu mathematico valor SIMPLEX, non compositus (chorda, numerus, boolean, tempus - non tabula, non series); sedes toml/fontes/toml_scalaris.{h,c} (toml_scalaria_iudicare, toml_scalarem_coquere)">
+    <forma textus="scalaris" casus="nominativus" numerus="singularis"/>
+    <forma textus="scalare" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="scalarem" casus="accusativus" numerus="singularis"/>
+    <forma textus="scalari" casus="ablativus" numerus="singularis"/>
+    <forma textus="scalaria" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="scalarium" casus="genitivus" numerus="pluralis"/>
+  </vocabulum>
+
 </glossarium>

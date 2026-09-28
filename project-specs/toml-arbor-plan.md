@@ -664,6 +664,34 @@ a false seal (pin red, every document vitiosum); restored green.
 
 ## Task Q7: The cooked view — values, tables, the semantic rules, semantic diagnostics
 
+**Re-sliced 2026-09-28 by the opening measurement (Fran approved).**
+Of toml-test 1.0.0's 474 invalid cases, 208 are rejected by syntax
+(Q4); the 266 that parse clean map onto 19 named rules, none left over:
+
+| directories | cases | rule(s) |
+|---|---|---|
+| control/ + encoding/ | 25 + 6 | control byte (not TAB) in a string or comment; ill-formed UTF-8 (incl. an encoded surrogate) |
+| string/ | 37 | unknown escape (`\x`, `\/`, `\ ` before a non-newline); short `\u`/`\U`; code point a surrogate or > 10FFFF |
+| integer/ | 33 | bad integer, cause named (capital prefix, sign before prefix, leading zero, `_` not between digits, digit outside base, prefix without digits, double sign) |
+| float/ | 35 | bad float, cause named (dot without digits both sides, double dot, bad exponent, `_`, leading zero, incomplete inf/nan) |
+| datetime/ local-datetime/ local-date/ local-time/ | 65 | bad shape (leads, seconds, separator, 4-digit year, trailing bytes); field out of range (named field; Feb 29 in a common year) |
+| key/ table/ inline-table/ array/ spec-1.0.0/ | 65 | key already defined (23, related location); table already defined; table already defined by dotted keys; header-defined table not extendable by dotted keys (8); inline table closed (12); key holds another kind (8); empty key segment `[a.]`; newline / trailing comma inside an inline table (5; TOML 1.1 features — the builder accepts them, cooking rejects them naming 1.1) |
+
+Integer overflow has no 1.0 invalid case; the coctum gate pins it.
+
+- **Q7a — scalar cooking** (201 cases): `toml/fontes/toml_valor.h`
+  (the value model, types only), `toml/fontes/toml_scalaris.{h,c}`
+  (strings incl. quoted keys, integers, floats, booleans, datetimes;
+  comments' bytes; one pass over every token incl. trivia), gate
+  `probatio_toml_scalaris.c` (inline cases with value AND diagnostic
+  code + offset; corpus: every valid file clean, every scalar-category
+  invalid file ≥ 1 diagnostic). Step 2's strings/integers/floats/
+  datetimes/BOM bullets move here.
+- **Q7b — tables and structure** (65 cases): `toml_coctum.{h,c}` as
+  below — the walk, table modes, related locations, `TomlCoctum`,
+  every-error sorted by offset; Step 2's tables/key-order/every-error
+  bullets and Step 6's plant.
+
 **Files:**
 - Create: `toml/fontes/toml_coctum.{h,c}`, `toml/probationes/probatio_toml_coctum.c`
 
@@ -762,6 +790,34 @@ TomlCoctum toml_coquere (Piscina*, constans MateriaNodus* documentum,
   keys → the `a.b = 1` / `a.b = 2` case red; revert.
 
 - [ ] **Step 7: Commit** — `["toml/fontes/toml_coctum.h", "toml/fontes/toml_coctum.c", "toml/probationes/probatio_toml_coctum.c"]`, `["toml"]`.
+
+**Q7a executed 2026-09-28.** `toml_valor.h` (the value model, types
+only: `TOML_VALOR_*` kinds, prefixed so they don't read like
+`TOML_GENUS_*`), `toml_scalaris.{h,c}`, gate `probatio_toml_scalaris.c`.
+One owner for scalar diagnostics: `toml_scalaria_iudicare` walks every
+token (trivia too, iteratively, skipping `malum` substance) and reports
+each error at the offending byte (an escape, a field, a stray `_`), not
+the whole lexeme; Q7b cooks values through `toml_scalarem_coquere` with
+diagnostica NIHIL, so nothing is reported twice. Location rules: "after
+X, missing" sits on X; "missing at end" is a zero-width point at the
+end. Strings report EVERY error; a number or datetime reports its first.
+Ten codes: `textus/octetus-moderans`, `textus/utf8`, `chorda/effugium`,
+`chorda/effugium-mancum`, `chorda/punctum-codicis`, `numerus/integer`,
+`numerus/extra-fines`, `numerus/fluitans`, `tempus/forma`,
+`tempus/extra-limites`. Green on the first run: 15 integers, 17 floats,
+20 strings, 4 quoted keys, 10 datetimes, 88 error cases (code + offset +
+count), line/column inside a multiline string, malum skipped with its
+trivia judged, BOM verdict pinned; corpus: 205/205 valid clean, 274
+scalar-category invalid all rejected (73 syntax + 201 cooking — exactly
+the measured count), house 12 clean, wild: 35 flagged, all 35 rejected
+by tomllib too; the 1,676 wild files tomllib accepts are all clean.
+Second 60 allowed (RFC 3339, the plan) — tomllib refuses it; named for
+Q9. Plant: the leading-zero rule skipped → 4 inline + 9 corpus red;
+restored green. New words: `nanosecunda` and `scalaris` (glossary
+lines; the first commit was refused by the hook for `scalaria` and a
+local `basica` — a tree grep had found both, but only in comments and
+strings; the local became `gemina`);
+`effugium-unicodex` renamed `-mancum` rather than coin a word.
 
 ---
 

@@ -1,6 +1,7 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q6 done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q7a done;
+Q7 re-sliced: Q7a scalars, Q7b tables).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -72,6 +73,19 @@ document; 70 rules; seal `b7568363` pinned (move it by hand, with a
 cause, when the declaration changes — the gate prints the live seal).
 Drift guard both ways in `probatio_toml_canon`. Manual judgment:
 `bin/canon_examen -canon toml/grammatica/toml.canon <doc.stml>`.
+
+## Scalars (Q7a)
+
+`fontes/toml_valor.h` is the value model (types only). `fontes/
+toml_scalaris.{h,c}` decodes strings (and quoted keys), integers
+(`s64`, overflow named), floats, booleans, datetimes (`toml_tempus_legere`
+is pure — the oracle reuses it), and judges comment bytes.
+`toml_scalaria_iudicare(piscina, radix)` is the ONE emitter of scalar
+diagnostics (every token incl. trivia, source order, each at the bad
+byte); cooking elsewhere passes diagnostica NIHIL. Verdicts: CRLF inside
+a multiline string decodes to `\n` (tomllib normalizes CRLF
+everywhere); a lone CR is a control byte; second 60 is allowed (tomllib
+refuses it).
 
 ## Currere
 
