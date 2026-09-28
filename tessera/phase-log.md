@@ -634,8 +634,8 @@ full: 5,144 lines) ported as C89 data: 238 vectors in four tables
 (SEMEN 34, CLAVIUM 86, MURIUM 35, FRUSTORUM 83), each run in four
 shapes (integra, bipartita = every split, singula = byte at a time,
 sequens = + 'a'), plus MORA timeouts mid-stream. Input suites: 68 →
-1,338 assertions (eventum 68 unchanged + vectores 1,270). 10 commits
-on rhubarb-secunda (938c0df4 … 7a25a0bd). Every library change:
+1,338 assertions (eventum 68 unchanged + vectores 1,270). 8 work
+commits on rhubarb-secunda (938c0df4 … 7a25a0bd), + this RELATIO. Every library change:
 failing vectors first, amalgam VERIFICATUM + idempotent, saltuarius
 13/13, a planted fault that COMPILES, caught exactly.
 
