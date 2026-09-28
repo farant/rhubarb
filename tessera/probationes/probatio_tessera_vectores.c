@@ -568,6 +568,10 @@ principale (vacuum)
         VECTORES_SEMEN,
         (i32)(magnitudo(VECTORES_SEMEN)
             / magnitudo(VECTORES_SEMEN[0])));
+    _tabulam_currere(piscina, "claves (OpenTUI parse.keypress)",
+        VECTORES_CLAVIUM,
+        (i32)(magnitudo(VECTORES_CLAVIUM)
+            / magnitudo(VECTORES_CLAVIUM[0])));
 
     imprimere("\nvectores %u, formae probatae %u, debita manentia %u\n",
         (insignatus integer)numerus_vectorum,

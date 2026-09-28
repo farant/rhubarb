@@ -75,3 +75,39 @@ Unchanged and still named for later: an overlong sequence that fills the
 64-byte buffer is still flushed as a timeout (FUGA + the rest as phantom
 keys). That's the tokenizer's job (bounded CSI with `csi_ignore`,
 terminal-planning modules/002).
+
+## 2026-09-28: T2, keypress vectors (OpenTUI parse.keypress.test.ts)
+
+86 vectors in `VECTORES_CLAVIUM` (the file read in full, 2,020 lines).
+Suite: 120 vectors, 434 shape runs, 656 assertions, 18 named debts.
+Every prediction from reading `tessera_eventum.c` held except one (H6
+below).
+- **Same answer as OpenTUI:** letters/digits/symbols, `\x1c`–`\x1f` →
+  ctrl+`\ ] ^ _`, NUL → ctrl+space, alt prefixes including alt+ctrl,
+  F-keys with modifiers, every `1;m` combination, delete with modifiers,
+  BEL = ctrl+g, 3- and 4-byte UTF-8 (U+4E2D, U+1F44D).
+- **Documented losses, asserted:** shift invisible on letters; LF =
+  Enter; the super bit (8) dropped; old-style `ESC F`/`ESC B` = alt+letter
+  (not arrows); ESC ESC = two FUGA (not meta+escape); rxvt `CSI a`,
+  `CSI 2^`, `SS3 a`, keypad `SS3 p`/`SS3 M` and a lone 8-bit meta byte
+  (0xA0) consumed silently.
+- **Noise consumed silently (no phantom keys):** CSI t size replies,
+  CPR, DA, DECRPM (`$` intermediate), focus I/O, paste markers
+  200~/201~, kitty `u`, modifyOtherKeys `27;m;c~`.
+- **Debts:** OSC replies (H2, ×2 vectors, all shapes); ESC-prefixed
+  sequences (`ESC ESC [A` → spurious FUGA + unmodified key; desired
+  alt+key is a DESIGN CALL for Fran, recorded in the causa).
+- **Skipped with a reason in the header:** rxvt `\033[2$` (`$` is an
+  intermediate per Williams, so the sequence swallows the NEXT key;
+  expected behavior depends on the tokenizer → T4); mouse (T3); partial
+  and ESC-less continuations (T4).
+
+**H6, found by the SEQUENS shape (new):** a lone ESC left pending as the
+LAST byte of a read (after `ESC ESC`, or `x` + ESC in one read) waits the
+CALLER's timeout (`mora_ms`) in the next call's first read, and only then
+the escape timeout. A key arriving within `mora_ms` + ~25 ms is merged
+into alt+key. saltuarius passes 250 ms, so Esc, Esc, `j` typed quickly
+gives FUGA, alt+j. The fix is in the same function: when the buffer
+already holds INCOMPLETUM data on entry, skip the caller-timeout read and
+go straight to the escape-timeout loop. Two vectors own it (SEQUENS
+debt): the ESC ESC loss vector and a direct `x`+ESC one. Proposed as T2b.

@@ -584,3 +584,10 @@ empty read times out. 21 debts promoted (186 assertions, 0 debts);
 eventum suite unchanged; amalgam VERIFICATUM + idempotent; saltuarius
 13/13; compiling plant → exactly the 21 SINGULA red. Detail:
 `fontes/tessera_eventum.worklog.md`.
+
+**T2 FACTUM (keypress vectors).** 86 vectors from parse.keypress.test.ts:
+same-as-OpenTUI, documented losses, silent noise, 18 named debts (H2
+OSC, the ESC-prefix design call, H6). **H6 found:** a pending lone ESC
+waits the caller's timeout before the escape timeout, so a quick next
+key merges into alt+key (saltuarius: 250 ms). Fix proposed as T2b.
+Planted data fault caught in all four shapes. Suite 6/6.
