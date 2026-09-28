@@ -1,7 +1,7 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q10 + Q11a done;
-Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib, Q10 API, Q11a totality done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q12 done;
+Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib, Q10 API, Q11 totality + computus, Q12 migration done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -130,22 +130,20 @@ excerpt, carets, first definition labelled), `toml_quaerere(doc,
 (FALSUM leaves the output untouched), enumeration `toml_tabulae_*`,
 `toml_seriei_*`. Paths are TOML keys lexed by the lector: `a."b.c"`,
 escapes and spaces work; empty, malformed, through an array or into a
-scalar → NIHIL. TRANSITION until Q12: `include/toml.h` (old lib) has
-the same name — the runner puts `toml/fontes` first; never link both.
+scalar → NIHIL. The old `lib/toml.c` / `include/toml.h` were retired in Q12.
 
-## Totality (Q11a)
+## Consumers (Q12)
 
-`probatio_toml_totalitas`: every generated input (random bytes, 1/40
-mutation, truncation over toml-test valid + house, CRLF conversions,
-nests of five shapes × open/closed × 1..1000) never crashes, always
-emits back byte for byte, an unclean parse always carries a diagnostic,
-and cooking with/without the parse report yields the same diagnostics.
-Depth 100 000: parse and cooking are linear and live (a running bracket
-count; an iterative work stack). materia's limits are PINNED as
-`RUIT_CUM(SIGSEGV)` — emission and STML projection at 100 000 (park
-…FAD8); promote to NON_RUIT when materia is fixed. `toml_coquere` skips
-materia's quadratic derivation when the parse is clean. A failing input
-is written to `build/totalitas_fractum.toml`.
+`tools/capsula_generare.c`, `tools/capsula_caudae_adiungere.c` (strict:
+explicit defaults, errors printed with location) and
+`tools/librarium_merge.c` (LLM output: a named lenient lookup,
+`_capere_planum`, reproduces the old flattening — the library itself is
+strict). Because `capsula_generare` is part of every silex/briar
+project, silex resolves headers in client roots
+(`SILEX_RADICES_CLIENTIUM` in `lib/silex.c`: `materia/fontes`,
+`toml/fontes`) and briar's corpus embeds them
+(`tools/corpus_infixum.sh`). Adding a file to `toml/fontes` changes
+what every generated project vendors.
 
 ## Currere
 
@@ -153,6 +151,8 @@ is written to `build/totalitas_fractum.toml`.
 ./toml/compile_probationes.sh              # omnes
 ./toml/compile_probationes.sh registrum    # filtrum substringae
 ./toml/tomllib_aurum.sh [-silvestre]       # aurea tomllib (Q1)
+./toml/computus.sh <f.toml> [-machina]     # mensura (Q11b)
+./toml/arbor.sh <f.toml> [-sedes]          # STML (Q11b)
 ```
 
 0 sanum / 1 fractae / **2 = NULLA CURSA**. Log: `build/test_logs/toml.log`.

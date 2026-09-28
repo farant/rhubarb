@@ -1146,6 +1146,26 @@ optimization, one gate:
    parse + 3 cook timeouts red; both restored green. Measurements added
    to park …FAD8. Suite 12/12.
 
+**Q11b executed 2026-09-28.** crusta P10 transcribed: `toml_computus`
+(parse in its own arena; emission, STML write/read, comparator AND
+cooking in a second arena — two toml columns beyond crusta's:
+`diagnostica` pinned, `ms_coquendi` printed; the node count is
+iterative so the tool survives deep files), `toml/instrumenta/
+{computus,arbor}.c`, `toml/{computus,arbor}.sh` (include order
+`toml/fontes` first, the Q10 transition), `basis.tsv` born by
+`COMPUTUS_SCRIBERE=1` (cause: birth) and identical over two further
+runs. **Deviation:** the plan's third fixture was "the largest wild
+file" — third-party content may not enter the repo (Fran) and a golden
+needs frozen input, so all three fixtures are committed toml-test files:
+`valid/spec-example-1` (spec example), `valid/multibyte` (largest valid),
+`invalid/spec-1.0.0/string-4-0` (syntax error; byte law and STML round
+trip hold there too, 2 diagnostics). pythonica: suite prefix `toml.`,
+`metiri`/`arbor` dispatch `.toml` → toml, three new assertions
+(metiri 88 nodes/0 diagnostics/sana; arbor projection; arbor sedes);
+PYTHONICA sana. Plant: `multibyte` `nodi` 46 → 47 in the golden →
+"DIVERGIT …multibyte.toml.nodi: 46 pro 47", red; restored green. Suite
+13/13.
+
 ---
 
 ## Task Q12: Migration — the three tools, aedilis, retire `lib/toml.c`
@@ -1191,9 +1211,81 @@ optimization, one gate:
 - [ ] **Step 7: Commit** — explicit paths incl. the deletions,
   `["radix", "aedilis", "generata", "toml"]`.
 
+**Executed 2026-09-28 — with Q13's corpus widening pulled forward (Fran:
+option A).** Measured first:
+- Old API use: `capsula_generare` 3 calls (+ it walked the old
+  document's internals), `capsula_caudae_adiungere` 4, `librarium_merge`
+  20 sites over 5 functions. Old semantics: getters return a zero value
+  when absent/wrong type; the old library FLATTENED sections (keys under
+  `[x]` served as top-level), did not decode `\"`, and did not
+  implement the line-ending backslash of multiline strings.
+- House configs (12 files): no headers — flat `X_files`/`X_compress`.
+- §VIII: `librarium_merge`'s real inputs (3,311 LLM replies in
+  `gutenberg-data/raw`), extracted with the tool's own functions: 3,300
+  valid under both libraries, 10 without `<result>`, 1 (`10715`)
+  rejected by the new one (`[Summary]` + a bare string). 21 blocks use
+  headers (`[Tags]` with Summary/Notes after it, `[[Tags]]`, `[book]`).
+- Found: `capsula_generare` is part of briar's embedded corpus and of
+  every silex-made project; silex resolved includes only as `include/` +
+  `lib/`, so retiring `lib/toml.c` as planned would have broken every
+  generated project (the silex gate went red on it). Fran chose to widen
+  the corpus to client roots NOW (Q13's decision, moved earlier).
+
+Done:
+- `librarium_merge`: Fran's (B) — the library stays strict; the TOOL
+  reads leniently through a named local family (`_capere_planum`: top
+  level, then top-level tables, then elements of top-level arrays of
+  tables, first match = the old flattening order), and on a file with
+  errors prints the located diagnostics as a warning and reads what
+  cooked. Proof: old and migrated tool run on the same 3,311 replies,
+  `librarium.stml` compared per element value (house STML reader):
+  3,300 books / 10 errors both, 29,116 values, 19 differences — every
+  one an old-library bug fixed (18 line-ending backslashes kept in text,
+  4 of them before the closing `"""`; 1 undecoded `\"`). The diff
+  caught `[[Tags]]` (book 11068) before the helper covered arrays of
+  tables.
+- Capsula tools: strict, every default explicit, errors printed in full
+  with location; `toml_chordae` (array-of-strings getter) added to
+  `toml.h` with gate cases. Regenerated villa capsule byte-identical to
+  the committed one.
+- Old `probatio_toml.c`'s 16 cases re-homed in the API gate (new
+  semantics: `[Tags]` → `Tags.categories`); `lib/toml.c`,
+  `include/toml.h`, `probationes/probatio_toml.c` deleted;
+  `compile_library.sh` entry removed.
+- aedilis: `<via (>toml/fontes` after `materia/fontes`; the suite list
+  regenerated (`lib/toml.c` → the toml client + the materia files it
+  needs). `compile_tests.sh` and `compile_tools.sh` include lists gain
+  `materia/fontes`, `toml/fontes` (the root suite never pulled materia
+  before).
+- silex (`lib/silex.c`, worklog): `SILEX_RADICES_CLIENTIUM` resolution,
+  `-I<root>` on every generated build line, one `_via_vendicata`
+  predicate, refresh by header name from any root, and `mkdir -p` at the
+  three projection writers (the writer created one level only). A
+  generated vitrea project was BUILT: capsula tool with the toml client
+  compiled under house flags, ran, app built. `probatio_silex`'s two
+  assertions name `toml/fontes/toml.c`.
+- briar: `tools/corpus_infixum.sh` embeds `materia/fontes/*.[ch]`,
+  `toml/fontes/*.[ch]`; rebaked.
+- Ledger: the `toml` suite had NO row in the 'suitae probationum'
+  inventory (every toml commit named its gate by hand) — added, so
+  `portae_debitae` now owes `toml` for `toml/fontes` changes.
+- Plant (Step 6): `toml/fontes` removed from `aedilis.stml` → the
+  `aedilis` gate stayed GREEN ("porta muta": it resolves only
+  `probationes/probatio_*.c` closures, none of which pulls toml) — the
+  guard is `generata`: RED, "STALUM snippet: compile_tests_fontes_
+  generata.sh"; restored, regenerated, green. Gates run: root suite
+  172/172, toml, silex (a generated vitrea project BUILT), briar suite +
+  rebake + `briar_fumus` (sample project built/tested through the new
+  corpus), `silex_semen_fumus`.
+
 ---
 
 ## Task Q13: briar exposure — widen the corpus to client roots, the changelog
+
+*Q12 note (2026-09-28): the corpus widening (silex client roots, briar's
+embedded corpus) was done in Q12 — it was a precondition of retiring
+`lib/toml.c`. What remains here: the `.thistle`-facing exposure and the
+changelog.*
 
 **Decided 2026-09-28 (Fran, before execution): widen briar's corpus**,
 not an amalgam. Fran: briar "at some point will want access to all the

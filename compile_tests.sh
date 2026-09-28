@@ -22,8 +22,13 @@ source "$(dirname "$0")/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
 # Include paths
+# materia/fontes et toml/fontes: instrumenta capsulae et librarii
+# clientem toml (materiae) trahunt ex 2026-09-28 (toml Q12; lib/toml.c
+# deleta). Indices idem ac aedilis.stml <inclusa>.
 declare -a INCLUDE_FLAGS=(
     "-Iinclude"
+    "-Imateria/fontes"
+    "-Itoml/fontes"
     "-Iprobationes"
     "-Ibook_assets"
     "-Iprobationes/vitrea_assets"
@@ -665,7 +670,7 @@ probatio_una() {
     local obj_files t0 t1 tc tr rc
     local -a INC
     source "$(dirname "$0")/tools/vexilla.sh" 2>/dev/null || source tools/vexilla.sh
-    INC=("-Iinclude" "-Iprobationes" "-Ibook_assets" "-Iprobationes/vitrea_assets" "-Iprobationes/tabella_assets")
+    INC=("-Iinclude" "-Imateria/fontes" "-Itoml/fontes" "-Iprobationes" "-Ibook_assets" "-Iprobationes/vitrea_assets" "-Iprobationes/tabella_assets")
     obj_files="$(cat "$OBIECTA")"
     case "$name" in
         probatio_speculum_fontium|probatio_speculum)

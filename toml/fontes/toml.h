@@ -104,6 +104,16 @@ toml_tempus (
          constans character* via_clavium,
                  TomlTempus* exitus);
 
+/* series chordarum -> Xar NOVUM de chorda in piscina (ordo fontis).
+ * FALSUM si abest, non series, aut elementum aliquod non chorda (series
+ * mixta non 'fere' legitur - vocans id videat). */
+b32
+toml_chordae (
+    constans TomlDocumentum*  doc,
+         constans character*  via_clavium,
+                    Piscina*  piscina,
+                        Xar** exitus);
+
 /* Enumeratio (ordo fontis). Genus alienum aut index extra -> 0 /
  * chorda vacua / NIHIL. */
 i32

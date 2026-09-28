@@ -1,0 +1,4 @@
+# via	octeti	lexemata	nodi	octeti_stml	diagnostica	usus	commissa	otiosa	apex	alvei	allocationes	allocationes_arboris
+toml/probationes/fixa/toml-test/tests/valid/spec-example-1.toml	559	103	88	11343	0	27608	1048576	1020968	27608	1	506	7047
+toml/probationes/fixa/toml-test/tests/valid/multibyte.toml	1156	58	46	8004	0	17000	1048576	1031576	17000	1	309	4454
+toml/probationes/fixa/toml-test/tests/invalid/spec-1.0.0/string-4-0.toml	361	24	22	2942	2	7144	1048576	1041432	7144	1	123	1877

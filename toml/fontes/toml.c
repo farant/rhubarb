@@ -305,6 +305,48 @@ toml_tempus (
     redde VERUM;
 }
 
+b32
+toml_chordae (
+    constans TomlDocumentum*  doc,
+         constans character*  via_clavium,
+                    Piscina*  piscina,
+                        Xar** exitus)
+{
+    constans TomlValor* v = _generis(doc, via_clavium,
+        TOML_VALOR_SERIES);
+                   Xar* x;
+                   i32  k;
+
+    si (v == NIHIL || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < toml_seriei_numerus(v); k++)
+    {
+        si (toml_seriei_elementum(v, k)->genus != TOML_VALOR_CHORDA)
+        {
+            redde FALSUM;
+        }
+    }
+    x = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (x == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < toml_seriei_numerus(v); k++)
+    {
+        chorda* c = (chorda*)xar_addere(x);
+
+        si (c == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *c = toml_seriei_elementum(v, k)->datum.chorda_valor;
+    }
+    *exitus = x;
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Enumeratio

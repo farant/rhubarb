@@ -13,6 +13,7 @@
 #include "tabula_dispersa.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 /* ==================================================
@@ -718,6 +719,146 @@ _addere_chorda_si_non_praesens (
     *nova  = ch;
 }
 
+
+/* ==================================================
+ * Lectio PLANA - lenientia HUIUS instrumenti, non bibliothecae
+ *
+ * Responsa LLM sectiones interdum inserunt ('[Tags]' deinde 'Summary =
+ * ...', quae sic Tags.Summary fit). lib/toml.c vetus sectiones
+ * planabat (claves omnes in summo); toml.h TOML STRICTE legit. Ne libri
+ * hi metadata amittant, claves hic quaeruntur ut vetus eas inveniebat:
+ * in summo primum, deinde in quaque tabula summa ordine fontis - prima
+ * inventa vincit (ordo documenti veteris idem: in TOML claves summae
+ * ante caput primum stant). Series: chordae solae (ut vetus).
+ * Mensuratum 2026-09-28 (toml Q12): MMMCCCI responsa, XVIII cum
+ * sectionibus, I invalidum; librarium.stml octetim idem ac instrumenti
+ * veteris.
+ * ================================================== */
+
+hic_manens b32
+_clavis_aequat (
+                 chorda  clavis,
+     constans character* litterae)
+{
+    i32 n = (i32)strlen(litterae);
+
+    redde clavis.mensura == n
+        && (n == 0 || memcmp(clavis.datum, litterae, (size_t)n) == 0);
+}
+
+/* clavis in tabula (claves directae), aut NIHIL */
+hic_manens constans TomlValor*
+_in_tabula (
+    constans TomlValor* tabula,
+    constans character* clavis)
+{
+    i32 j;
+
+    per (j = 0; j < toml_tabulae_numerus(tabula); j++)
+    {
+        si (_clavis_aequat(toml_tabulae_clavis(tabula, j), clavis))
+        {
+            redde toml_tabulae_valor(tabula, j);
+        }
+    }
+    redde NIHIL;
+}
+
+/* summum primum; deinde tabulae summae et elementa serierum tabularum
+ * summarum ('[[Tags]]' - mensuratum: responsum 11068), ordine fontis */
+hic_manens constans TomlValor*
+_capere_planum (
+        TomlDocumentum* doc,
+    constans character* clavis)
+{
+    constans TomlValor* radix  = toml_radix(doc);
+    constans TomlValor* v      = _in_tabula(radix, clavis);
+                   i32  k;
+                   i32  j;
+
+    per (k = 0; v == NIHIL && k < toml_tabulae_numerus(radix); k++)
+    {
+        constans TomlValor* w = toml_tabulae_valor(radix, k);
+
+        v = _in_tabula(w, clavis);
+        per (j = 0; v == NIHIL && j < toml_seriei_numerus(w); j++)
+        {
+            v = _in_tabula(toml_seriei_elementum(w, j), clavis);
+        }
+    }
+    redde v;
+}
+
+hic_manens chorda
+_chorda_plana (
+        TomlDocumentum* doc,
+    constans character* clavis)
+{
+     constans TomlValor* v = _capere_planum(doc, clavis);
+                 chorda  vacua;
+
+    si (v != NIHIL && v->genus == TOML_VALOR_CHORDA)
+    {
+        redde v->datum.chorda_valor;
+    }
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
+    redde vacua;
+}
+
+hic_manens s32
+_integer_planum (
+        TomlDocumentum* doc,
+    constans character* clavis)
+{
+    constans TomlValor* v = _capere_planum(doc, clavis);
+
+    redde (v != NIHIL && v->genus == TOML_VALOR_INTEGER)
+        ? (s32)v->datum.integer_valor : 0;
+}
+
+hic_manens b32
+_boolean_planum (
+        TomlDocumentum* doc,
+    constans character* clavis)
+{
+    constans TomlValor* v = _capere_planum(doc, clavis);
+
+    redde v != NIHIL && v->genus == TOML_VALOR_BOOLEAN
+        && v->datum.boolean_valor;
+}
+
+/* series -> Xar de chorda (elementa chordae sola, ut vetus); NIHIL si
+ * abest aut non series */
+hic_manens Xar*
+_series_plana (
+        TomlDocumentum* doc,
+    constans character* clavis,
+               Piscina* piscina)
+{
+    constans TomlValor* v = _capere_planum(doc, clavis);
+                   Xar* x;
+                   i32  k;
+
+    si (v == NIHIL || v->genus != TOML_VALOR_SERIES)
+    {
+        redde NIHIL;
+    }
+    x = xar_creare(piscina, magnitudo(chorda));
+    per (k = 0; k < toml_seriei_numerus(v); k++)
+    {
+        constans TomlValor* e = toml_seriei_elementum(v, k);
+
+        si (e->genus == TOML_VALOR_CHORDA)
+        {
+            chorda* c = (chorda*)xar_addere(x);
+
+            *c = e->datum.chorda_valor;
+        }
+    }
+    redde x;
+}
+
 /* Colligere tags ex omnibus fontibus TOML */
 hic_manens Xar*
 _colligere_tags (
@@ -732,7 +873,7 @@ _colligere_tags (
     tags = xar_creare(piscina, magnitudo(chorda));
 
     /* 1. Primum tentare "Tags" directe */
-    temp = toml_capere_tabulatum(doc, "Tags");
+    temp = _series_plana(doc, "Tags", piscina);
     si (temp != NIHIL)
     {
         num = xar_numerus(temp);
@@ -746,7 +887,7 @@ _colligere_tags (
     /* 2. Si vacua, tentare "categories" */
     si (xar_numerus(tags) == 0)
     {
-        temp = toml_capere_tabulatum(doc, "categories");
+        temp = _series_plana(doc, "categories", piscina);
         si (temp != NIHIL)
         {
             num = xar_numerus(temp);
@@ -761,7 +902,7 @@ _colligere_tags (
     /* 2b. Tentare singulares claves: "category", "Type", "Category" */
     si (xar_numerus(tags) == 0)
     {
-        chorda val = toml_capere_chorda(doc, "category");
+        chorda val = _chorda_plana(doc, "category");
         si (val.datum != NIHIL && val.mensura > 0)
         {
             _addere_chorda_si_non_praesens(tags, val);
@@ -769,7 +910,7 @@ _colligere_tags (
     }
     si (xar_numerus(tags) == 0)
     {
-        chorda val = toml_capere_chorda(doc, "Type");
+        chorda val = _chorda_plana(doc, "Type");
         si (val.datum != NIHIL && val.mensura > 0)
         {
             _addere_chorda_si_non_praesens(tags, val);
@@ -777,7 +918,7 @@ _colligere_tags (
     }
     si (xar_numerus(tags) == 0)
     {
-        chorda val = toml_capere_chorda(doc, "Category");
+        chorda val = _chorda_plana(doc, "Category");
         si (val.datum != NIHIL && val.mensura > 0)
         {
             _addere_chorda_si_non_praesens(tags, val);
@@ -785,7 +926,7 @@ _colligere_tags (
     }
 
     /* 3. Mergere "audience" tabulatum vel chorda */
-    temp = toml_capere_tabulatum(doc, "audience");
+    temp = _series_plana(doc, "audience", piscina);
     si (temp != NIHIL)
     {
         num = xar_numerus(temp);
@@ -797,7 +938,7 @@ _colligere_tags (
     } alioquin
     {
         /* Tentare ut chorda singularis */
-        chorda val = toml_capere_chorda(doc, "audience");
+        chorda val = _chorda_plana(doc, "audience");
         si (val.datum != NIHIL && val.mensura > 0)
         {
             _addere_chorda_si_non_praesens(tags, val);
@@ -805,7 +946,7 @@ _colligere_tags (
     }
 
     /* 4. Mergere "religious" tabulatum */
-    temp = toml_capere_tabulatum(doc, "religious");
+    temp = _series_plana(doc, "religious", piscina);
     si (temp != NIHIL)
     {
         num = xar_numerus(temp);
@@ -817,8 +958,8 @@ _colligere_tags (
     }
 
     /* 5. Verificare "appropriate_for_children" boolean (et variationes) */
-    si (   toml_capere_boolean(doc, "appropriate_for_children")
-        || toml_capere_boolean(doc, "Appropriate_for_children"))
+    si (   _boolean_planum(doc, "appropriate_for_children")
+        || _boolean_planum(doc, "Appropriate_for_children"))
     {
                     chorda  tag;
         constans character* lit = "appropriate-for-children";
@@ -834,8 +975,8 @@ _colligere_tags (
     }
 
     /* 6. Verificare "catholic" boolean (et variationes) */
-    si (   toml_capere_boolean(doc, "catholic")
-        || toml_capere_boolean(doc, "Catholic"))
+    si (   _boolean_planum(doc, "catholic")
+        || _boolean_planum(doc, "Catholic"))
     {
                     chorda  tag;
         constans character* lit = "catholic";
@@ -971,12 +1112,23 @@ _processare_filum (
     }
 
     /* Parsare TOML */
-    doc = toml_legere(toml_text, ctx->piscina);
-    si (!toml_successus(doc))
+    doc = toml_legere(toml_text, via_cstr, ctx->piscina);
+    si (doc == NIHIL)
     {
-        imprimere("  Error: TOML parsatio fallavit\n");
+        imprimere("  Error: memoria (TOML)\n");
         ctx->libri_errores++;
         redde 0;
+    }
+    si (!toml_successus(doc))
+    {
+        /* lenientia (vide 'Lectio PLANA'): vitia NOMINANTUR cum sede
+         * (lineae intra blocum TOML), valores legibiles tamen leguntur
+         * - ut lib/toml.c vetus lineas pravas tacite praeteribat */
+        chorda d = toml_diagnostica_scribere(ctx->piscina, doc, FALSUM);
+
+        imprimere("  Monitum: TOML cum vitiis - valores legibiles "
+            "leguntur\n%.*s", (integer)d.mensura,
+            (constans character*)d.datum);
     }
 
     /* Invenire vel creare liber */
@@ -994,12 +1146,12 @@ _processare_filum (
     }
 
     /* Extrahere valores */
-    valor_titulus    = toml_capere_chorda(doc, "Title");
-    valor_auctor     = toml_capere_chorda(doc, "Author");
-    valor_annus      = toml_capere_numerum(doc, "Year");
+    valor_titulus    = _chorda_plana(doc, "Title");
+    valor_auctor     = _chorda_plana(doc, "Author");
+    valor_annus      = _integer_planum(doc, "Year");
     valor_tags       = _colligere_tags(doc, ctx->piscina);
-    valor_summarium  = toml_capere_chorda(doc, "Summary");
-    valor_notae      = toml_capere_chorda(doc, "Notes");
+    valor_summarium  = _chorda_plana(doc, "Summary");
+    valor_notae      = _chorda_plana(doc, "Notes");
 
     /* Addere metadata */
     _addere_elementum_textus(ctx, liber, "titulus", valor_titulus);
