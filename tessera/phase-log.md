@@ -541,3 +541,39 @@ amalgama/tessera.h. Amalgam regenerated; ALL GATES green
 (standalone full-severity, hospes 7/7, nm-intersectio 0); suite
 5/5; saltuarius adopted it, suite 6/6. The eskil loop: caller
 designs, library gains, both prove.
+
+## TESSERA 1.2 — VECTORES INITUS (2026-09-28)
+
+### INTENTIO (T1: harness + test pons + seed vectors)
+
+Plan: `project-specs/tessera-vectores-plan.md` (terminal-planning
+features/003). Port OpenTUI's input-parsing test DATA into a C89 table,
+replayed through a pons, with NO library change. T1 builds the harness
+and proves it on tessera's OWN known-good eventum cases, re-expressed as
+vectors.
+
+- `probationes/vectores_initus.h`: the record (`VectorInitus`,
+  `EventumExspectatum`), shorthand macros, the seed table, and the
+  provenance header (MIT, © 2025 opentui, 7581976f; the seed section is
+  tessera's own).
+- `probationes/probatio_tessera_vectores.c`: `PonsFrustorum`, a
+  test-local `TesseraPons` delivering scripted chunks (an empty chunk =
+  timeout, `legere` returns 0 once). The memoria pons stays untouched,
+  since it's in the hand-written amalgam header. Runs every vector in
+  four shapes: INTEGRA (one read), BIPARTITA (every two-way split),
+  SINGULA (byte at a time), SEQUENS (+ 'a').
+- Refinement of plan D5, decided while writing: debt is per SHAPE, not
+  per vector (`formae_debitae` bitmask). A vector that parses whole but
+  breaks byte-at-a-time keeps its INTEGRA assertion as a real test
+  instead of hiding it behind vector-level debt. Owed shapes print
+  `debitum manet`; an owed shape that starts passing FAILS with
+  `debitum solutum - promove`.
+- Expectation: SINGULA fails on every sequence of three or more bytes
+  (H1: the reader retries exactly once, tessera_eventum.c:597–633).
+  Measure first, then mark exactly the observed failures as owed, each
+  checked against H1's mechanism.
+
+**T1 FACTUM.** Harness green: 34 seed vectors, 118 shape runs, 165
+assertions, 21 owed shapes (all SINGULA, all H1, measured before
+marking). Suite 6/6. Both planted-fault directions caught by name.
+Detail: `fontes/tessera_eventum.worklog.md`.
