@@ -1,0 +1,2719 @@
+# aurum.txt - GENERATUM a toml/tomllib_aurum.sh - NE MANU EDITES
+# Python 3.12.6 tomllib; 2026-09-28
+# toml-test: fixa/toml-test (PROVENIENTIA.md), index files-toml-1.0.0
+#### invalid/array/double-comma-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 22)
+## FINIS
+#### invalid/array/double-comma-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 24)
+## FINIS
+#### invalid/array/extend-defined-aot.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot redefine namespace ('tab', 'arr') (at line 3, column 11)
+## FINIS
+#### invalid/array/extending-table.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('a', 'c') twice (at line 5, column 5)
+## FINIS
+#### invalid/array/missing-separator-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at line 1, column 14)
+## FINIS
+#### invalid/array/missing-separator-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at line 1, column 13)
+## FINIS
+#### invalid/array/no-close-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at end of document)
+## FINIS
+#### invalid/array/no-close-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at end of document)
+## FINIS
+#### invalid/array/no-close-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at end of document)
+## FINIS
+#### invalid/array/no-close-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 1, column 26)
+## FINIS
+#### invalid/array/no-close-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at end of document)
+## FINIS
+#### invalid/array/no-close-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 1, column 27)
+## FINIS
+#### invalid/array/no-close-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at end of document)
+## FINIS
+#### invalid/array/no-close-08.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at end of document)
+## FINIS
+#### invalid/array/no-close-table-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 1, column 16)
+## FINIS
+#### invalid/array/no-close-table-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 1, column 17)
+## FINIS
+#### invalid/array/no-comma-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at line 1, column 21)
+## FINIS
+#### invalid/array/no-comma-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at line 1, column 19)
+## FINIS
+#### invalid/array/no-comma-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at end of document)
+## FINIS
+#### invalid/array/only-comma-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 18)
+## FINIS
+#### invalid/array/only-comma-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 18)
+## FINIS
+#### invalid/array/tables-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot mutate immutable namespace ('fruit',) (at line 4, column 8)
+## FINIS
+#### invalid/array/tables-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('fruit', 'variety') twice (at line 9, column 17)
+## FINIS
+#### invalid/array/text-after-array-entries.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 2, column 46)
+## FINIS
+#### invalid/array/text-before-array-separator.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed array (at line 2, column 46)
+## FINIS
+#### invalid/array/text-in-array.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 3, column 3)
+## FINIS
+#### invalid/bool/almost-false.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/almost-false-with-extra.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/almost-true.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/almost-true-with-extra.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/capitalized-false.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 28)
+## FINIS
+#### invalid/bool/capitalized-true.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 28)
+## FINIS
+#### invalid/bool/just-f.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/just-t.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/mixed-case.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/mixed-case-false.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/mixed-case-true.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/starting-same-false.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 32)
+## FINIS
+#### invalid/bool/starting-same-true.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 31)
+## FINIS
+#### invalid/bool/wrong-case-false.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/bool/wrong-case-true.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 27)
+## FINIS
+#### invalid/control/bare-cr.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 2, column 1)
+## FINIS
+#### invalid/control/bare-formfeed.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 21)
+## FINIS
+#### invalid/control/bare-null.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 34)
+## FINIS
+#### invalid/control/bare-vertical-tab.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 21)
+## FINIS
+#### invalid/control/comment-cr.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\r' (at line 1, column 47)
+## FINIS
+#### invalid/control/comment-del.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x7f' (at line 1, column 27)
+## FINIS
+#### invalid/control/comment-ff.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x0c' (at line 1, column 27)
+## FINIS
+#### invalid/control/comment-lf.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x10' (at line 1, column 27)
+## FINIS
+#### invalid/control/comment-null.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x00' (at line 1, column 27)
+## FINIS
+#### invalid/control/comment-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x1f' (at line 1, column 27)
+## FINIS
+#### invalid/control/multi-del.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x7f' (at line 1, column 21)
+## FINIS
+#### invalid/control/multi-lf.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x10' (at line 1, column 21)
+## FINIS
+#### invalid/control/multi-null.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x00' (at line 1, column 21)
+## FINIS
+#### invalid/control/multi-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x1f' (at line 1, column 21)
+## FINIS
+#### invalid/control/only-ff.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/control/only-null.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/control/only-vt.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/control/rawmulti-del.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x7f' (at line 1, column 24)
+## FINIS
+#### invalid/control/rawmulti-lf.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x10' (at line 1, column 24)
+## FINIS
+#### invalid/control/rawmulti-null.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x00' (at line 1, column 24)
+## FINIS
+#### invalid/control/rawmulti-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x1f' (at line 1, column 24)
+## FINIS
+#### invalid/control/rawstring-cr.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\r' (at line 1, column 23)
+## FINIS
+#### invalid/control/rawstring-del.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x7f' (at line 1, column 23)
+## FINIS
+#### invalid/control/rawstring-lf.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x10' (at line 1, column 23)
+## FINIS
+#### invalid/control/rawstring-null.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x00' (at line 1, column 23)
+## FINIS
+#### invalid/control/rawstring-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\x1f' (at line 1, column 23)
+## FINIS
+#### invalid/control/string-bs.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x08' (at line 1, column 25)
+## FINIS
+#### invalid/control/string-cr.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\r' (at line 1, column 20)
+## FINIS
+#### invalid/control/string-del.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x7f' (at line 1, column 20)
+## FINIS
+#### invalid/control/string-lf.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x10' (at line 1, column 20)
+## FINIS
+#### invalid/control/string-null.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x00' (at line 1, column 20)
+## FINIS
+#### invalid/control/string-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\x1f' (at line 1, column 20)
+## FINIS
+#### invalid/datetime/day-zero.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 11)
+## FINIS
+#### invalid/datetime/feb-29.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid date or datetime (at line 1, column 21)
+## FINIS
+#### invalid/datetime/feb-30.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid date or datetime (at line 1, column 36)
+## FINIS
+#### invalid/datetime/hour-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 15)
+## FINIS
+#### invalid/datetime/mday-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 9)
+## FINIS
+#### invalid/datetime/mday-under.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 9)
+## FINIS
+#### invalid/datetime/minute-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 15)
+## FINIS
+#### invalid/datetime/month-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 9)
+## FINIS
+#### invalid/datetime/month-under.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 9)
+## FINIS
+#### invalid/datetime/no-date-time-sep.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 17)
+## FINIS
+#### invalid/datetime/no-leads.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 16)
+## FINIS
+#### invalid/datetime/no-leads-month.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 16)
+## FINIS
+#### invalid/datetime/no-leads-with-milli.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 18)
+## FINIS
+#### invalid/datetime/no-secs.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 21)
+## FINIS
+#### invalid/datetime/no-t.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 18)
+## FINIS
+#### invalid/datetime/no-year-month-sep.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 13)
+## FINIS
+#### invalid/datetime/offset-minus-minute-1digit.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/datetime/offset-minus-no-hour-minute.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/datetime/offset-minus-no-hour-minute-sep.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/datetime/offset-minus-no-minute.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/datetime/offset-overflow-hour.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 24)
+## FINIS
+#### invalid/datetime/offset-overflow-minute.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 24)
+## FINIS
+#### invalid/datetime/offset-plus-minute-1digit.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/datetime/offset-plus-no-hour-minute.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/datetime/offset-plus-no-hour-minute-sep.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/datetime/offset-plus-no-minute.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/datetime/only-T.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 7)
+## FINIS
+#### invalid/datetime/only-TZ.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 7)
+## FINIS
+#### invalid/datetime/only-Tdot.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 7)
+## FINIS
+#### invalid/datetime/second-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 15)
+## FINIS
+#### invalid/datetime/second-trailing-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 26)
+## FINIS
+#### invalid/datetime/second-trailing-dotz.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 26)
+## FINIS
+#### invalid/datetime/time-no-leads.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 15)
+## FINIS
+#### invalid/datetime/trailing-x.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 16)
+## FINIS
+#### invalid/datetime/y10k.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 10)
+## FINIS
+#### invalid/encoding/bad-codepoint.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xed in position 29: invalid continuation byte
+## FINIS
+#### invalid/encoding/bad-utf8-at-end.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xda in position 241: unexpected end of data
+## FINIS
+#### invalid/encoding/bad-utf8-in-array.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0x80 in position 74: invalid start byte
+## FINIS
+#### invalid/encoding/bad-utf8-in-comment.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xc3 in position 2: invalid continuation byte
+## FINIS
+#### invalid/encoding/bad-utf8-in-multiline.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xc3 in position 66: invalid continuation byte
+## FINIS
+#### invalid/encoding/bad-utf8-in-multiline-literal.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xc3 in position 66: invalid continuation byte
+## FINIS
+#### invalid/encoding/bad-utf8-in-string.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xc3 in position 64: invalid continuation byte
+## FINIS
+#### invalid/encoding/bad-utf8-in-string-literal.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xc3 in position 64: invalid continuation byte
+## FINIS
+#### invalid/encoding/bom-not-at-start-01.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xff in position 17: invalid start byte
+## FINIS
+#### invalid/encoding/bom-not-at-start-02.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xff in position 18: invalid start byte
+## FINIS
+#### invalid/encoding/ideographic-space.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 2, column 1)
+## FINIS
+#### invalid/encoding/utf16-bom.toml
+## STATUS: INVALIDUM
+## CAUSA: 'utf-8' codec can't decode byte 0xfe in position 0: invalid start byte
+## FINIS
+#### invalid/encoding/utf16-comment.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/encoding/utf16-key.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/float/double-dot-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/float/double-dot-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 20)
+## FINIS
+#### invalid/float/exp-dot-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 17)
+## FINIS
+#### invalid/float/exp-dot-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 15)
+## FINIS
+#### invalid/float/exp-dot-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 15)
+## FINIS
+#### invalid/float/exp-double-e-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 20)
+## FINIS
+#### invalid/float/exp-double-e-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 22)
+## FINIS
+#### invalid/float/exp-double-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/float/exp-leading-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 19)
+## FINIS
+#### invalid/float/exp-trailing-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 23)
+## FINIS
+#### invalid/float/exp-trailing-us-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 23)
+## FINIS
+#### invalid/float/exp-trailing-us-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 25)
+## FINIS
+#### invalid/float/inf-capital.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 5)
+## FINIS
+#### invalid/float/inf-incomplete-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 21)
+## FINIS
+#### invalid/float/inf-incomplete-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 21)
+## FINIS
+#### invalid/float/inf-incomplete-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 21)
+## FINIS
+#### invalid/float/inf_underscore.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 18)
+## FINIS
+#### invalid/float/leading-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 15)
+## FINIS
+#### invalid/float/leading-dot-neg.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 19)
+## FINIS
+#### invalid/float/leading-dot-plus.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 20)
+## FINIS
+#### invalid/float/leading-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 14)
+## FINIS
+#### invalid/float/leading-zero.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 17)
+## FINIS
+#### invalid/float/leading-zero-neg.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 22)
+## FINIS
+#### invalid/float/leading-zero-plus.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 23)
+## FINIS
+#### invalid/float/nan-capital.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 5)
+## FINIS
+#### invalid/float/nan-incomplete-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 21)
+## FINIS
+#### invalid/float/nan-incomplete-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 21)
+## FINIS
+#### invalid/float/nan-incomplete-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 21)
+## FINIS
+#### invalid/float/nan_underscore.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 18)
+## FINIS
+#### invalid/float/trailing-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 17)
+## FINIS
+#### invalid/float/trailing-dot-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 19)
+## FINIS
+#### invalid/float/trailing-dot-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 6)
+## FINIS
+#### invalid/float/trailing-dot-min.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 22)
+## FINIS
+#### invalid/float/trailing-dot-plus.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 23)
+## FINIS
+#### invalid/float/trailing-exp.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 19)
+## FINIS
+#### invalid/float/trailing-exp-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 22)
+## FINIS
+#### invalid/float/trailing-exp-minus.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 25)
+## FINIS
+#### invalid/float/trailing-exp-plus.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 24)
+## FINIS
+#### invalid/float/trailing-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/float/trailing-us-exp-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 22)
+## FINIS
+#### invalid/float/trailing-us-exp-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 24)
+## FINIS
+#### invalid/float/us-after-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 17)
+## FINIS
+#### invalid/float/us-before-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/inline-table/bad-key-syntax.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 16)
+## FINIS
+#### invalid/inline-table/double-comma.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 10)
+## FINIS
+#### invalid/inline-table/duplicate-key-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Duplicate inline table key 'b' (at line 2, column 12)
+## FINIS
+#### invalid/inline-table/duplicate-key-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Duplicate inline table key 'dupe' (at line 1, column 44)
+## FINIS
+#### invalid/inline-table/duplicate-key-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot mutate immutable namespace ('fruit', 'apple', 'texture') (at line 1, column 81)
+## FINIS
+#### invalid/inline-table/duplicate-key-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 1, column 37)
+## FINIS
+#### invalid/inline-table/empty-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 6)
+## FINIS
+#### invalid/inline-table/empty-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 6)
+## FINIS
+#### invalid/inline-table/empty-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 6)
+## FINIS
+#### invalid/inline-table/linebreak-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 3, column 18)
+## FINIS
+#### invalid/inline-table/linebreak-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 10)
+## FINIS
+#### invalid/inline-table/linebreak-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 1, column 9)
+## FINIS
+#### invalid/inline-table/linebreak-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 14)
+## FINIS
+#### invalid/inline-table/no-close-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 4)
+## FINIS
+#### invalid/inline-table/no-close-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 1, column 7)
+## FINIS
+#### invalid/inline-table/no-comma-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 1, column 12)
+## FINIS
+#### invalid/inline-table/no-comma-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unclosed inline table (at line 1, column 31)
+## FINIS
+#### invalid/inline-table/overwrite-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 3, column 5)
+## FINIS
+#### invalid/inline-table/overwrite-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('a', 'b') twice (at line 3, column 5)
+## FINIS
+#### invalid/inline-table/overwrite-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot mutate immutable namespace ('a',) (at line 2, column 8)
+## FINIS
+#### invalid/inline-table/overwrite-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot mutate immutable namespace ('inline-t', 'nest') (at line 3, column 16)
+## FINIS
+#### invalid/inline-table/overwrite-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('inline-t', 'nest') twice (at line 3, column 15)
+## FINIS
+#### invalid/inline-table/overwrite-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 1, column 21)
+## FINIS
+#### invalid/inline-table/overwrite-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot mutate immutable namespace ('inner', 'table', 'val') (at line 1, column 52)
+## FINIS
+#### invalid/inline-table/overwrite-08.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot mutate immutable namespace ('inner', 'cat') (at line 1, column 54)
+## FINIS
+#### invalid/inline-table/overwrite-09.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot redefine namespace ('tab', 'nested') (at line 5, column 25)
+## FINIS
+#### invalid/inline-table/overwrite-10.toml
+## STATUS: INVALIDUM
+## CAUSA: Duplicate inline table key 'b' (at line 4, column 20)
+## FINIS
+#### invalid/inline-table/trailing-comma.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 3, column 20)
+## FINIS
+#### invalid/integer/capital-bin.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 16)
+## FINIS
+#### invalid/integer/capital-hex.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 16)
+## FINIS
+#### invalid/integer/capital-oct.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 16)
+## FINIS
+#### invalid/integer/double-sign-nex.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 19)
+## FINIS
+#### invalid/integer/double-sign-plus.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 20)
+## FINIS
+#### invalid/integer/double-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 14)
+## FINIS
+#### invalid/integer/incomplete-bin.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 19)
+## FINIS
+#### invalid/integer/incomplete-hex.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 19)
+## FINIS
+#### invalid/integer/incomplete-oct.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 19)
+## FINIS
+#### invalid/integer/invalid-bin.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 20)
+## FINIS
+#### invalid/integer/invalid-hex-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 23)
+## FINIS
+#### invalid/integer/invalid-hex-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 19)
+## FINIS
+#### invalid/integer/invalid-hex-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 6)
+## FINIS
+#### invalid/integer/invalid-oct.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 19)
+## FINIS
+#### invalid/integer/leading-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 14)
+## FINIS
+#### invalid/integer/leading-us-bin.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 18)
+## FINIS
+#### invalid/integer/leading-us-hex.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 18)
+## FINIS
+#### invalid/integer/leading-us-oct.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 18)
+## FINIS
+#### invalid/integer/leading-zero-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 20)
+## FINIS
+#### invalid/integer/leading-zero-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 20)
+## FINIS
+#### invalid/integer/leading-zero-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 20)
+## FINIS
+#### invalid/integer/leading-zero-sign-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 26)
+## FINIS
+#### invalid/integer/leading-zero-sign-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 26)
+## FINIS
+#### invalid/integer/leading-zero-sign-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 26)
+## FINIS
+#### invalid/integer/negative-bin.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/integer/negative-hex.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/integer/negative-oct.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/integer/positive-bin.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/integer/positive-hex.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/integer/positive-oct.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/integer/text-after-integer.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 13)
+## FINIS
+#### invalid/integer/trailing-us.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 18)
+## FINIS
+#### invalid/integer/trailing-us-bin.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 22)
+## FINIS
+#### invalid/integer/trailing-us-hex.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 22)
+## FINIS
+#### invalid/integer/trailing-us-oct.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 22)
+## FINIS
+#### invalid/integer/us-after-bin.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 17)
+## FINIS
+#### invalid/integer/us-after-hex.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 17)
+## FINIS
+#### invalid/integer/us-after-oct.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 17)
+## FINIS
+#### invalid/key/after-array.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 14)
+## FINIS
+#### invalid/key/after-table.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 9)
+## FINIS
+#### invalid/key/after-value.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 15)
+## FINIS
+#### invalid/key/bare-invalid-character-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/key/bare-invalid-character-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 5)
+## FINIS
+#### invalid/key/dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/key/dotdot.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/key/dotted-redefine-table-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 11)
+## FINIS
+#### invalid/key/dotted-redefine-table-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 4, column 10)
+## FINIS
+#### invalid/key/duplicate-keys-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 17)
+## FINIS
+#### invalid/key/duplicate-keys-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 12)
+## FINIS
+#### invalid/key/duplicate-keys-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 25)
+## FINIS
+#### invalid/key/duplicate-keys-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 25)
+## FINIS
+#### invalid/key/duplicate-keys-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 13)
+## FINIS
+#### invalid/key/duplicate-keys-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 15)
+## FINIS
+#### invalid/key/duplicate-keys-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 7)
+## FINIS
+#### invalid/key/duplicate-keys-08.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 10)
+## FINIS
+#### invalid/key/duplicate-keys-09.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 13)
+## FINIS
+#### invalid/key/empty.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 2)
+## FINIS
+#### invalid/key/end-in-escape.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at end of document)
+## FINIS
+#### invalid/key/escape.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/key/hash.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 2)
+## FINIS
+#### invalid/key/multiline-key-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 3)
+## FINIS
+#### invalid/key/multiline-key-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 3)
+## FINIS
+#### invalid/key/multiline-key-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 3)
+## FINIS
+#### invalid/key/multiline-key-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 3)
+## FINIS
+#### invalid/key/newline-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 8)
+## FINIS
+#### invalid/key/newline-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 8)
+## FINIS
+#### invalid/key/newline-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\n' (at line 1, column 8)
+## FINIS
+#### invalid/key/newline-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 3)
+## FINIS
+#### invalid/key/newline-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 3)
+## FINIS
+#### invalid/key/newline-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 6)
+## FINIS
+#### invalid/key/no-eol-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 7)
+## FINIS
+#### invalid/key/no-eol-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 4)
+## FINIS
+#### invalid/key/no-eol-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 5)
+## FINIS
+#### invalid/key/no-eol-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 6)
+## FINIS
+#### invalid/key/no-eol-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 6)
+## FINIS
+#### invalid/key/no-eol-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 4)
+## FINIS
+#### invalid/key/no-eol-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 4)
+## FINIS
+#### invalid/key/only-float.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 4)
+## FINIS
+#### invalid/key/only-int.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 2)
+## FINIS
+#### invalid/key/only-str.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 3)
+## FINIS
+#### invalid/key/open-bracket.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 6)
+## FINIS
+#### invalid/key/partial-quoted.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 8)
+## FINIS
+#### invalid/key/quoted-unclosed-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 9)
+## FINIS
+#### invalid/key/quoted-unclosed-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 5)
+## FINIS
+#### invalid/key/single-open-bracket.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 2)
+## FINIS
+#### invalid/key/space.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 3)
+## FINIS
+#### invalid/key/special-character.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/key/start-bracket.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 2, column 6)
+## FINIS
+#### invalid/key/start-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/key/two-equals-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 6)
+## FINIS
+#### invalid/key/two-equals-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 3)
+## FINIS
+#### invalid/key/two-equals-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 3)
+## FINIS
+#### invalid/key/without-value-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 4)
+## FINIS
+#### invalid/key/without-value-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 7)
+## FINIS
+#### invalid/key/without-value-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 6)
+## FINIS
+#### invalid/key/without-value-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 9)
+## FINIS
+#### invalid/key/without-value-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected '=' after a key in a key/value pair (at line 1, column 6)
+## FINIS
+#### invalid/key/without-value-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 8)
+## FINIS
+#### invalid/key/without-value-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 4)
+## FINIS
+#### invalid/local-date/day-1digit.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 11)
+## FINIS
+#### invalid/local-date/feb-29.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid date or datetime (at line 1, column 21)
+## FINIS
+#### invalid/local-date/feb-30.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid date or datetime (at line 1, column 36)
+## FINIS
+#### invalid/local-date/mday-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 9)
+## FINIS
+#### invalid/local-date/mday-under.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 9)
+## FINIS
+#### invalid/local-date/month-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 9)
+## FINIS
+#### invalid/local-date/month-under.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 9)
+## FINIS
+#### invalid/local-date/no-leads.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 16)
+## FINIS
+#### invalid/local-date/no-leads-with-milli.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 18)
+## FINIS
+#### invalid/local-date/trailing-t.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 15)
+## FINIS
+#### invalid/local-date/y10k.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 10)
+## FINIS
+#### invalid/local-date/year-3digits.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 10)
+## FINIS
+#### invalid/local-datetime/feb-29.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid date or datetime (at line 1, column 21)
+## FINIS
+#### invalid/local-datetime/feb-30.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid date or datetime (at line 1, column 36)
+## FINIS
+#### invalid/local-datetime/hour-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 15)
+## FINIS
+#### invalid/local-datetime/mday-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 9)
+## FINIS
+#### invalid/local-datetime/mday-under.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 9)
+## FINIS
+#### invalid/local-datetime/minute-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 15)
+## FINIS
+#### invalid/local-datetime/month-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 9)
+## FINIS
+#### invalid/local-datetime/month-under.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 9)
+## FINIS
+#### invalid/local-datetime/no-leads.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 16)
+## FINIS
+#### invalid/local-datetime/no-leads-with-milli.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 18)
+## FINIS
+#### invalid/local-datetime/no-secs.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 21)
+## FINIS
+#### invalid/local-datetime/no-t.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 18)
+## FINIS
+#### invalid/local-datetime/second-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 15)
+## FINIS
+#### invalid/local-datetime/time-no-leads.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 15)
+## FINIS
+#### invalid/local-datetime/y10k.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 10)
+## FINIS
+#### invalid/local-time/hour-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 7)
+## FINIS
+#### invalid/local-time/minute-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 6)
+## FINIS
+#### invalid/local-time/no-secs.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 13)
+## FINIS
+#### invalid/local-time/second-over.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 6)
+## FINIS
+#### invalid/local-time/time-no-leads-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 6)
+## FINIS
+#### invalid/local-time/time-no-leads-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 6)
+## FINIS
+#### invalid/local-time/trailing-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 13)
+## FINIS
+#### invalid/local-time/trailing-dotdot.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 13)
+## FINIS
+#### invalid/spec-1.0.0/inline-table-2-0.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot mutate immutable namespace ('product', 'type') (at line 3, column 20)
+## FINIS
+#### invalid/spec-1.0.0/inline-table-3-0.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 3, column 26)
+## FINIS
+#### invalid/spec-1.0.0/key-value-pair-1.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 7)
+## FINIS
+#### invalid/spec-1.0.0/keys-2.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid statement (at line 1, column 1)
+## FINIS
+#### invalid/spec-1.0.0/string-4-0.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 2, column 46)
+## FINIS
+#### invalid/spec-1.0.0/string-7-0.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 3, column 48)
+## FINIS
+#### invalid/spec-1.0.0/table-9-0.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('fruit', 'apple') twice (at line 5, column 13)
+## FINIS
+#### invalid/spec-1.0.0/table-9-1.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('fruit', 'apple', 'taste') twice (at line 6, column 19)
+## FINIS
+#### invalid/string/bad-byte-escape.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 14)
+## FINIS
+#### invalid/string/bad-concat.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 21)
+## FINIS
+#### invalid/string/bad-escape-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 43)
+## FINIS
+#### invalid/string/bad-escape-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 43)
+## FINIS
+#### invalid/string/bad-escape-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 16)
+## FINIS
+#### invalid/string/bad-escape-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 12)
+## FINIS
+#### invalid/string/bad-escape-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 14)
+## FINIS
+#### invalid/string/bad-hex-esc-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 21)
+## FINIS
+#### invalid/string/bad-hex-esc-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 21)
+## FINIS
+#### invalid/string/bad-hex-esc-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 21)
+## FINIS
+#### invalid/string/bad-hex-esc-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 21)
+## FINIS
+#### invalid/string/bad-hex-esc-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 20)
+## FINIS
+#### invalid/string/bad-multiline.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 20)
+## FINIS
+#### invalid/string/bad-slash-escape.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 43)
+## FINIS
+#### invalid/string/bad-uni-esc-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 24)
+## FINIS
+#### invalid/string/bad-uni-esc-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 24)
+## FINIS
+#### invalid/string/bad-uni-esc-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 24)
+## FINIS
+#### invalid/string/bad-uni-esc-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 24)
+## FINIS
+#### invalid/string/bad-uni-esc-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 24)
+## FINIS
+#### invalid/string/bad-uni-esc-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Escaped character is not a Unicode scalar value (at line 1, column 77)
+## FINIS
+#### invalid/string/bad-uni-esc-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 21)
+## FINIS
+#### invalid/string/bad-uni-esc-ml-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 29)
+## FINIS
+#### invalid/string/bad-uni-esc-ml-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 29)
+## FINIS
+#### invalid/string/bad-uni-esc-ml-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 29)
+## FINIS
+#### invalid/string/bad-uni-esc-ml-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 29)
+## FINIS
+#### invalid/string/bad-uni-esc-ml-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 29)
+## FINIS
+#### invalid/string/bad-uni-esc-ml-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Escaped character is not a Unicode scalar value (at line 1, column 82)
+## FINIS
+#### invalid/string/bad-uni-esc-ml-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid hex value (at line 1, column 26)
+## FINIS
+#### invalid/string/basic-byte-escapes.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 13)
+## FINIS
+#### invalid/string/basic-multiline-out-of-range-unicode-escape-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Escaped character is not a Unicode scalar value (at line 1, column 18)
+## FINIS
+#### invalid/string/basic-multiline-out-of-range-unicode-escape-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Escaped character is not a Unicode scalar value (at line 1, column 18)
+## FINIS
+#### invalid/string/basic-multiline-quotes.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 46)
+## FINIS
+#### invalid/string/basic-multiline-unknown-escape.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 10)
+## FINIS
+#### invalid/string/basic-out-of-range-unicode-escape-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Escaped character is not a Unicode scalar value (at line 1, column 16)
+## FINIS
+#### invalid/string/basic-out-of-range-unicode-escape-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Escaped character is not a Unicode scalar value (at line 1, column 16)
+## FINIS
+#### invalid/string/basic-unknown-escape.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 8)
+## FINIS
+#### invalid/string/literal-multiline-quotes-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 28)
+## FINIS
+#### invalid/string/literal-multiline-quotes-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 29)
+## FINIS
+#### invalid/string/missing-quotes.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 8)
+## FINIS
+#### invalid/string/missing-quotes-array.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 9)
+## FINIS
+#### invalid/string/missing-quotes-inline-table.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 16)
+## FINIS
+#### invalid/string/multiline-bad-escape-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 1, column 11)
+## FINIS
+#### invalid/string/multiline-bad-escape-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 2, column 11)
+## FINIS
+#### invalid/string/multiline-bad-escape-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 2, column 11)
+## FINIS
+#### invalid/string/multiline-bad-escape-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Unterminated string (at end of document)
+## FINIS
+#### invalid/string/multiline-escape-space-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 2, column 9)
+## FINIS
+#### invalid/string/multiline-escape-space-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unescaped '\' in a string (at line 4, column 9)
+## FINIS
+#### invalid/string/multiline-lit-no-close-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'''" (at end of document)
+## FINIS
+#### invalid/string/multiline-lit-no-close-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'''" (at end of document)
+## FINIS
+#### invalid/string/multiline-lit-no-close-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'''" (at end of document)
+## FINIS
+#### invalid/string/multiline-lit-no-close-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'''" (at end of document)
+## FINIS
+#### invalid/string/multiline-no-close-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Unterminated string (at end of document)
+## FINIS
+#### invalid/string/multiline-no-close-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Unterminated string (at end of document)
+## FINIS
+#### invalid/string/multiline-no-close-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Unterminated string (at end of document)
+## FINIS
+#### invalid/string/multiline-no-close-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Unterminated string (at end of document)
+## FINIS
+#### invalid/string/multiline-no-close-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Unterminated string (at end of document)
+## FINIS
+#### invalid/string/multiline-quotes-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 23)
+## FINIS
+#### invalid/string/no-close-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 42)
+## FINIS
+#### invalid/string/no-close-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 29)
+## FINIS
+#### invalid/string/no-close-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'" (at end of document)
+## FINIS
+#### invalid/string/no-close-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'" (at end of document)
+## FINIS
+#### invalid/string/no-close-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Unterminated string (at end of document)
+## FINIS
+#### invalid/string/no-close-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Unterminated string (at end of document)
+## FINIS
+#### invalid/string/no-close-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'" (at end of document)
+## FINIS
+#### invalid/string/no-close-08.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'" (at end of document)
+## FINIS
+#### invalid/string/no-close-09.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 2, column 6)
+## FINIS
+#### invalid/string/no-close-10.toml
+## STATUS: INVALIDUM
+## CAUSA: Found invalid character '\n' (at line 2, column 6)
+## FINIS
+#### invalid/string/no-open-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 5)
+## FINIS
+#### invalid/string/no-open-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 6)
+## FINIS
+#### invalid/string/no-open-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 5)
+## FINIS
+#### invalid/string/no-open-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 6)
+## FINIS
+#### invalid/string/no-open-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 5)
+## FINIS
+#### invalid/string/no-open-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 6)
+## FINIS
+#### invalid/string/no-open-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 5)
+## FINIS
+#### invalid/string/no-open-08.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid value (at line 1, column 6)
+## FINIS
+#### invalid/string/text-after-string.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 41)
+## FINIS
+#### invalid/string/wrong-close.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 39)
+## FINIS
+#### invalid/table/append-with-dotted-keys-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot redefine namespace ('a', 'b', 'c') (at line 17, column 98)
+## FINIS
+#### invalid/table/append-with-dotted-keys-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot redefine namespace ('a', 'b', 'c', 'd') (at line 8, column 104)
+## FINIS
+#### invalid/table/append-with-dotted-keys-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot redefine namespace ('a', 'b') (at line 4, column 8)
+## FINIS
+#### invalid/table/append-with-dotted-keys-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('dependencies',) twice (at line 7, column 14)
+## FINIS
+#### invalid/table/append-with-dotted-keys-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 8)
+## FINIS
+#### invalid/table/append-with-dotted-keys-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 8)
+## FINIS
+#### invalid/table/append-with-dotted-keys-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 1, column 29)
+## FINIS
+#### invalid/table/append-with-dotted-keys-08.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot redefine namespace ('a', 'b', 'c') (at line 8, column 37)
+## FINIS
+#### invalid/table/array-empty.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 3)
+## FINIS
+#### invalid/table/array-implicit.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 13, column 9)
+## FINIS
+#### invalid/table/array-no-close-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']]' at the end of an array declaration (at line 1, column 9)
+## FINIS
+#### invalid/table/array-no-close-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']]' at the end of an array declaration (at line 1, column 26)
+## FINIS
+#### invalid/table/array-no-close-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']]' at the end of an array declaration (at line 1, column 4)
+## FINIS
+#### invalid/table/array-no-close-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']]' at the end of an array declaration (at line 1, column 4)
+## FINIS
+#### invalid/table/bare-invalid-character-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 2)
+## FINIS
+#### invalid/table/bare-invalid-character-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 6)
+## FINIS
+#### invalid/table/dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 2)
+## FINIS
+#### invalid/table/dotdot.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 2)
+## FINIS
+#### invalid/table/duplicate-key-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('a',) twice (at line 4, column 3)
+## FINIS
+#### invalid/table/duplicate-key-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 4, column 12)
+## FINIS
+#### invalid/table/duplicate-key-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 4, column 14)
+## FINIS
+#### invalid/table/duplicate-key-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('fruit', 'apple') twice (at line 4, column 13)
+## FINIS
+#### invalid/table/duplicate-key-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('fruit', 'apple', 'taste') twice (at line 4, column 19)
+## FINIS
+#### invalid/table/duplicate-key-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 6)
+## FINIS
+#### invalid/table/duplicate-key-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('tbl',) twice (at line 2, column 5)
+## FINIS
+#### invalid/table/duplicate-key-08.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('a', 'b') twice (at line 3, column 5)
+## FINIS
+#### invalid/table/duplicate-key-09.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('a',) twice (at line 5, column 3)
+## FINIS
+#### invalid/table/duplicate-key-10.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot mutate immutable namespace ('a', 'b') (at line 2, column 6)
+## FINIS
+#### invalid/table/empty.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 2)
+## FINIS
+#### invalid/table/empty-implicit-table.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 10)
+## FINIS
+#### invalid/table/equals-sign.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 6)
+## FINIS
+#### invalid/table/llbrace.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 3)
+## FINIS
+#### invalid/table/multiline-key-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 4)
+## FINIS
+#### invalid/table/multiline-key-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 4)
+## FINIS
+#### invalid/table/nested-brackets-close.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 4)
+## FINIS
+#### invalid/table/nested-brackets-open.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 3)
+## FINIS
+#### invalid/table/newline-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 5)
+## FINIS
+#### invalid/table/newline-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 6)
+## FINIS
+#### invalid/table/newline-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 7)
+## FINIS
+#### invalid/table/newline-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 6)
+## FINIS
+#### invalid/table/newline-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 5)
+## FINIS
+#### invalid/table/no-close-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 8)
+## FINIS
+#### invalid/table/no-close-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 25)
+## FINIS
+#### invalid/table/no-close-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Illegal character '\n' (at line 1, column 21)
+## FINIS
+#### invalid/table/no-close-04.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 2)
+## FINIS
+#### invalid/table/no-close-05.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 11)
+## FINIS
+#### invalid/table/no-close-06.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 3)
+## FINIS
+#### invalid/table/no-close-07.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected "'" (at end of document)
+## FINIS
+#### invalid/table/no-close-08.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 4)
+## FINIS
+#### invalid/table/no-close-09.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 21)
+## FINIS
+#### invalid/table/overwrite-array-in-parent.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 4, column 8)
+## FINIS
+#### invalid/table/overwrite-bool-with-array.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 4)
+## FINIS
+#### invalid/table/overwrite-with-deep-table.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 2, column 9)
+## FINIS
+#### invalid/table/redefine-01.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot overwrite a value (at line 5, column 5)
+## FINIS
+#### invalid/table/redefine-02.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('t1', 't2') twice (at line 3, column 7)
+## FINIS
+#### invalid/table/redefine-03.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('t1', 't2', 't3') twice (at line 3, column 10)
+## FINIS
+#### invalid/table/rrbrace.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']]' at the end of an array declaration (at line 1, column 8)
+## FINIS
+#### invalid/table/super-twice.toml
+## STATUS: INVALIDUM
+## CAUSA: Cannot declare ('a',) twice (at line 3, column 3)
+## FINIS
+#### invalid/table/text-after-table.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected newline or end of document after a statement (at line 1, column 9)
+## FINIS
+#### invalid/table/trailing-dot.toml
+## STATUS: INVALIDUM
+## CAUSA: Invalid initial character for a key part (at line 1, column 4)
+## FINIS
+#### invalid/table/whitespace.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 10)
+## FINIS
+#### invalid/table/with-pound.toml
+## STATUS: INVALIDUM
+## CAUSA: Expected ']' at the end of a table declaration (at line 1, column 5)
+## FINIS
+#### valid/array/array.toml
+## STATUS: VALIDUM
+{"comments": [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}], "dates": [{"type": "datetime", "value": "1987-07-05T17:45:00+00:00"}, {"type": "datetime-local", "value": "1979-05-27T07:32:00"}, {"type": "date-local", "value": "2006-06-01"}, {"type": "time-local", "value": "11:00:00"}], "floats": [{"type": "float", "value": "1.1"}, {"type": "float", "value": "2.1"}, {"type": "float", "value": "3.1"}], "ints": [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}, {"type": "integer", "value": "3"}], "strings": [{"type": "string", "value": "a"}, {"type": "string", "value": "b"}, {"type": "string", "value": "c"}]}
+## FINIS
+#### valid/array/array-subtables.toml
+## STATUS: VALIDUM
+{"arr": [{"subtab": {"val": {"type": "integer", "value": "1"}}}, {"subtab": {"val": {"type": "integer", "value": "2"}}}]}
+## FINIS
+#### valid/array/bool.toml
+## STATUS: VALIDUM
+{"a": [{"type": "bool", "value": "true"}, {"type": "bool", "value": "false"}]}
+## FINIS
+#### valid/array/empty.toml
+## STATUS: VALIDUM
+{"thevoid": [[[[[]]]]]}
+## FINIS
+#### valid/array/hetergeneous.toml
+## STATUS: VALIDUM
+{"mixed": [[{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}], [{"type": "string", "value": "a"}, {"type": "string", "value": "b"}], [{"type": "float", "value": "1.1"}, {"type": "float", "value": "2.1"}]]}
+## FINIS
+#### valid/array/mixed-int-array.toml
+## STATUS: VALIDUM
+{"arrays-and-ints": [{"type": "integer", "value": "1"}, [{"type": "string", "value": "Arrays are not integers."}]]}
+## FINIS
+#### valid/array/mixed-int-float.toml
+## STATUS: VALIDUM
+{"ints-and-floats": [{"type": "integer", "value": "1"}, {"type": "float", "value": "1.1"}]}
+## FINIS
+#### valid/array/mixed-int-string.toml
+## STATUS: VALIDUM
+{"strings-and-ints": [{"type": "string", "value": "hi"}, {"type": "integer", "value": "42"}]}
+## FINIS
+#### valid/array/mixed-string-table.toml
+## STATUS: VALIDUM
+{"contributors": [{"type": "string", "value": "Foo Bar <foo@example.com>"}, {"email": {"type": "string", "value": "bazqux@example.com"}, "name": {"type": "string", "value": "Baz Qux"}, "url": {"type": "string", "value": "https://example.com/bazqux"}}], "mixed": [{"k": {"type": "string", "value": "a"}}, {"type": "string", "value": "b"}, {"type": "integer", "value": "1"}]}
+## FINIS
+#### valid/array/nested.toml
+## STATUS: VALIDUM
+{"nest": [[{"type": "string", "value": "a"}], [{"type": "string", "value": "b"}]]}
+## FINIS
+#### valid/array/nested-double.toml
+## STATUS: VALIDUM
+{"nest": [[[{"type": "string", "value": "a"}], [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}, [{"type": "integer", "value": "3"}]]]]}
+## FINIS
+#### valid/array/nested-inline-table.toml
+## STATUS: VALIDUM
+{"a": [{"b": {}}]}
+## FINIS
+#### valid/array/nospaces.toml
+## STATUS: VALIDUM
+{"ints": [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}, {"type": "integer", "value": "3"}]}
+## FINIS
+#### valid/array/open-parent-table.toml
+## STATUS: VALIDUM
+{"parent-table": {"arr": [{}, {}], "not-arr": {"type": "integer", "value": "1"}}}
+## FINIS
+#### valid/array/string-quote-comma-01.toml
+## STATUS: VALIDUM
+{"title": [{"type": "string", "value": "Client: \"XXXX\", Job: XXXX"}, {"type": "string", "value": "Code: XXXX"}]}
+## FINIS
+#### valid/array/string-quote-comma-02.toml
+## STATUS: VALIDUM
+{"title": [{"type": "string", "value": " \", "}]}
+## FINIS
+#### valid/array/string-with-comma-01.toml
+## STATUS: VALIDUM
+{"title": [{"type": "string", "value": "Client: XXXX, Job: XXXX"}, {"type": "string", "value": "Code: XXXX"}]}
+## FINIS
+#### valid/array/string-with-comma-02.toml
+## STATUS: VALIDUM
+{"title": [{"type": "string", "value": "Client: XXXX,\nJob: XXXX"}, {"type": "string", "value": "Code: XXXX"}]}
+## FINIS
+#### valid/array/strings.toml
+## STATUS: VALIDUM
+{"string_array": [{"type": "string", "value": "all"}, {"type": "string", "value": "strings"}, {"type": "string", "value": "are the same"}, {"type": "string", "value": "type"}]}
+## FINIS
+#### valid/array/table-array-string-backslash.toml
+## STATUS: VALIDUM
+{"foo": [{"bar": {"type": "string", "value": "\"{{baz}}\""}}]}
+## FINIS
+#### valid/array/trailing-comma.toml
+## STATUS: VALIDUM
+{"arr-1": [{"type": "integer", "value": "1"}], "arr-2": [{"type": "integer", "value": "2"}, {"type": "integer", "value": "3"}], "arr-3": [{"type": "integer", "value": "4"}], "arr-4": [{"type": "integer", "value": "5"}, {"type": "integer", "value": "6"}]}
+## FINIS
+#### valid/bool/bool.toml
+## STATUS: VALIDUM
+{"f": {"type": "bool", "value": "false"}, "t": {"type": "bool", "value": "true"}}
+## FINIS
+#### valid/comment/after-literal-no-ws.toml
+## STATUS: VALIDUM
+{"false": {"type": "bool", "value": "false"}, "inf": {"type": "float", "value": "inf"}, "nan": {"type": "float", "value": "nan"}, "true": {"type": "bool", "value": "true"}}
+## FINIS
+#### valid/comment/at-eof.toml
+## STATUS: VALIDUM
+{"key": {"type": "string", "value": "value"}}
+## FINIS
+#### valid/comment/at-eof2.toml
+## STATUS: VALIDUM
+{"key": {"type": "string", "value": "value"}}
+## FINIS
+#### valid/comment/everywhere.toml
+## STATUS: VALIDUM
+{"aot": [{"k": {"type": "integer", "value": "98"}}, {"k": {"type": "integer", "value": "99"}}], "group": {"answer": {"type": "integer", "value": "42"}, "d": {"type": "date-local", "value": "1979-05-27"}, "dt": {"type": "datetime", "value": "1979-05-27T07:32:12-07:00"}, "more": [{"type": "integer", "value": "42"}, {"type": "integer", "value": "42"}]}}
+## FINIS
+#### valid/comment/noeol.toml
+## STATUS: VALIDUM
+{}
+## FINIS
+#### valid/comment/nonascii.toml
+## STATUS: VALIDUM
+{}
+## FINIS
+#### valid/comment/tricky.toml
+## STATUS: VALIDUM
+{"hash#tag": {"#!": {"type": "string", "value": "hash bang"}, "arr3": [{"type": "string", "value": "#"}, {"type": "string", "value": "#"}, {"type": "string", "value": "###"}], "arr4": [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}, {"type": "integer", "value": "3"}, {"type": "integer", "value": "4"}], "arr5": [[[[[{"type": "string", "value": "#"}]]]]], "tbl1": {"#": {"type": "string", "value": "}#"}}}, "section": {"8": {"type": "string", "value": "eight"}, "eleven": {"type": "float", "value": "11.1"}, "five": {"type": "float", "value": "5.5"}, "four": {"type": "string", "value": "# no comment\n# nor this\n#also not comment"}, "one": {"type": "string", "value": "11"}, "six": {"type": "integer", "value": "6"}, "ten": {"type": "float", "value": "1000.0"}, "three": {"type": "string", "value": "#"}, "two": {"type": "string", "value": "22#"}}}
+## FINIS
+#### valid/datetime/datetime.toml
+## STATUS: VALIDUM
+{"lower": {"type": "datetime", "value": "1987-07-05T17:45:00+00:00"}, "space": {"type": "datetime", "value": "1987-07-05T17:45:00+00:00"}}
+## FINIS
+#### valid/datetime/edge.toml
+## STATUS: VALIDUM
+{"first-date": {"type": "date-local", "value": "0001-01-01"}, "first-local": {"type": "datetime-local", "value": "0001-01-01T00:00:00"}, "first-offset": {"type": "datetime", "value": "0001-01-01T00:00:00+00:00"}, "last-date": {"type": "date-local", "value": "9999-12-31"}, "last-local": {"type": "datetime-local", "value": "9999-12-31T23:59:59"}, "last-offset": {"type": "datetime", "value": "9999-12-31T23:59:59+00:00"}}
+## FINIS
+#### valid/datetime/invalid-date-in-string.toml
+## STATUS: VALIDUM
+{"s": {"type": "string", "value": "2020-01-01x"}}
+## FINIS
+#### valid/datetime/leap-year.toml
+## STATUS: VALIDUM
+{"2000-date": {"type": "date-local", "value": "2000-02-29"}, "2000-datetime": {"type": "datetime", "value": "2000-02-29T15:15:15+00:00"}, "2000-datetime-local": {"type": "datetime-local", "value": "2000-02-29T15:15:15"}, "2024-date": {"type": "date-local", "value": "2024-02-29"}, "2024-datetime": {"type": "datetime", "value": "2024-02-29T15:15:15+00:00"}, "2024-datetime-local": {"type": "datetime-local", "value": "2024-02-29T15:15:15"}}
+## FINIS
+#### valid/datetime/local.toml
+## STATUS: VALIDUM
+{"local": {"type": "datetime-local", "value": "1987-07-05T17:45:00"}, "milli": {"type": "datetime-local", "value": "1977-12-21T10:32:00.555000"}, "space": {"type": "datetime-local", "value": "1987-07-05T17:45:00"}}
+## FINIS
+#### valid/datetime/local-date.toml
+## STATUS: VALIDUM
+{"bestdayever": {"type": "date-local", "value": "1987-07-05"}}
+## FINIS
+#### valid/datetime/local-time.toml
+## STATUS: VALIDUM
+{"besttimeever": {"type": "time-local", "value": "17:45:00"}, "milliseconds": {"type": "time-local", "value": "10:32:00.555000"}}
+## FINIS
+#### valid/datetime/milliseconds.toml
+## STATUS: VALIDUM
+{"utc1": {"type": "datetime", "value": "1987-07-05T17:45:56.123000+00:00"}, "utc2": {"type": "datetime", "value": "1987-07-05T17:45:56.600000+00:00"}, "wita1": {"type": "datetime", "value": "1987-07-05T17:45:56.123000+08:00"}, "wita2": {"type": "datetime", "value": "1987-07-05T17:45:56.600000+08:00"}}
+## FINIS
+#### valid/datetime/timezone.toml
+## STATUS: VALIDUM
+{"nzdt": {"type": "datetime", "value": "1987-07-05T17:45:56+13:00"}, "nzst": {"type": "datetime", "value": "1987-07-05T17:45:56+12:00"}, "pdt": {"type": "datetime", "value": "1987-07-05T17:45:56-05:00"}, "utc": {"type": "datetime", "value": "1987-07-05T17:45:56+00:00"}}
+## FINIS
+#### valid/empty-crlf.toml
+## STATUS: VALIDUM
+{}
+## FINIS
+#### valid/empty-lf.toml
+## STATUS: VALIDUM
+{}
+## FINIS
+#### valid/empty-nothing.toml
+## STATUS: VALIDUM
+{}
+## FINIS
+#### valid/empty-space.toml
+## STATUS: VALIDUM
+{}
+## FINIS
+#### valid/empty-tab.toml
+## STATUS: VALIDUM
+{}
+## FINIS
+#### valid/example.toml
+## STATUS: VALIDUM
+{"best-day-ever": {"type": "datetime", "value": "1987-07-05T17:45:00+00:00"}, "numtheory": {"boring": {"type": "bool", "value": "false"}, "perfection": [{"type": "integer", "value": "6"}, {"type": "integer", "value": "28"}, {"type": "integer", "value": "496"}]}}
+## FINIS
+#### valid/float/exponent.toml
+## STATUS: VALIDUM
+{"lower": {"type": "float", "value": "300.0"}, "minustenth": {"type": "float", "value": "-0.1"}, "neg": {"type": "float", "value": "0.03"}, "pointlower": {"type": "float", "value": "310.0"}, "pointupper": {"type": "float", "value": "310.0"}, "pos": {"type": "float", "value": "300.0"}, "upper": {"type": "float", "value": "300.0"}, "zero": {"type": "float", "value": "3.0"}}
+## FINIS
+#### valid/float/float.toml
+## STATUS: VALIDUM
+{"leading-zero-fractional": {"type": "float", "value": "0.0123"}, "negpi": {"type": "float", "value": "-3.14"}, "pi": {"type": "float", "value": "3.14"}, "pospi": {"type": "float", "value": "3.14"}, "zero-intpart": {"type": "float", "value": "0.123"}}
+## FINIS
+#### valid/float/inf-and-nan.toml
+## STATUS: VALIDUM
+{"infinity": {"type": "float", "value": "inf"}, "infinity_neg": {"type": "float", "value": "-inf"}, "infinity_plus": {"type": "float", "value": "inf"}, "nan": {"type": "float", "value": "nan"}, "nan_neg": {"type": "float", "value": "nan"}, "nan_plus": {"type": "float", "value": "nan"}}
+## FINIS
+#### valid/float/long.toml
+## STATUS: VALIDUM
+{"longpi": {"type": "float", "value": "3.141592653589793"}, "neglongpi": {"type": "float", "value": "-3.141592653589793"}}
+## FINIS
+#### valid/float/max-int.toml
+## STATUS: VALIDUM
+{"max_float": {"type": "float", "value": "9007199254740991.0"}, "min_float": {"type": "float", "value": "-9007199254740991.0"}}
+## FINIS
+#### valid/float/underscore.toml
+## STATUS: VALIDUM
+{"after": {"type": "float", "value": "3141.5927"}, "before": {"type": "float", "value": "3141.5927"}, "exponent": {"type": "float", "value": "300000000000000.0"}}
+## FINIS
+#### valid/float/zero.toml
+## STATUS: VALIDUM
+{"exponent": {"type": "float", "value": "0.0"}, "exponent-signed-neg": {"type": "float", "value": "-0.0"}, "exponent-signed-pos": {"type": "float", "value": "0.0"}, "exponent-two-0": {"type": "float", "value": "0.0"}, "signed-neg": {"type": "float", "value": "-0.0"}, "signed-pos": {"type": "float", "value": "0.0"}, "zero": {"type": "float", "value": "0.0"}}
+## FINIS
+#### valid/implicit-and-explicit-after.toml
+## STATUS: VALIDUM
+{"a": {"b": {"c": {"answer": {"type": "integer", "value": "42"}}}, "better": {"type": "integer", "value": "43"}}}
+## FINIS
+#### valid/implicit-and-explicit-before.toml
+## STATUS: VALIDUM
+{"a": {"b": {"c": {"answer": {"type": "integer", "value": "42"}}}, "better": {"type": "integer", "value": "43"}}}
+## FINIS
+#### valid/implicit-groups.toml
+## STATUS: VALIDUM
+{"a": {"b": {"c": {"answer": {"type": "integer", "value": "42"}}}}}
+## FINIS
+#### valid/inline-table/array-01.toml
+## STATUS: VALIDUM
+{"arr": [{"a": {"type": "integer", "value": "1"}}, {"a": {"type": "integer", "value": "2"}}], "people": [{"first_name": {"type": "string", "value": "Bruce"}, "last_name": {"type": "string", "value": "Springsteen"}}, {"first_name": {"type": "string", "value": "Eric"}, "last_name": {"type": "string", "value": "Clapton"}}, {"first_name": {"type": "string", "value": "Bob"}, "last_name": {"type": "string", "value": "Seger"}}]}
+## FINIS
+#### valid/inline-table/array-02.toml
+## STATUS: VALIDUM
+{"a": {"a": []}}
+## FINIS
+#### valid/inline-table/array-03.toml
+## STATUS: VALIDUM
+{"b": {"a": [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}], "b": [{"type": "integer", "value": "3"}, {"type": "integer", "value": "4"}]}}
+## FINIS
+#### valid/inline-table/bool.toml
+## STATUS: VALIDUM
+{"a": {"a": {"type": "bool", "value": "true"}, "b": {"type": "bool", "value": "false"}}}
+## FINIS
+#### valid/inline-table/empty.toml
+## STATUS: VALIDUM
+{"empty1": {}, "empty2": {}, "empty_in_array": [{"not_empty": {"type": "integer", "value": "1"}}, {}], "empty_in_array2": [{}, {"not_empty": {"type": "integer", "value": "1"}}], "many_empty": [{}, {}, {}], "nested_empty": {"empty": {}}, "with_cmt": {}}
+## FINIS
+#### valid/inline-table/end-in-bool.toml
+## STATUS: VALIDUM
+{"black": {"allow_prereleases": {"type": "bool", "value": "true"}, "python": {"type": "string", "value": ">3.6"}, "version": {"type": "string", "value": ">=18.9b0"}}}
+## FINIS
+#### valid/inline-table/inline-table.toml
+## STATUS: VALIDUM
+{"name": {"first": {"type": "string", "value": "Tom"}, "last": {"type": "string", "value": "Preston-Werner"}}, "point": {"x": {"type": "integer", "value": "1"}, "y": {"type": "integer", "value": "2"}}, "simple": {"a": {"type": "integer", "value": "1"}}, "str-key": {"a": {"type": "integer", "value": "1"}}, "table-array": [{"a": {"type": "integer", "value": "1"}}, {"b": {"type": "integer", "value": "2"}}]}
+## FINIS
+#### valid/inline-table/key-dotted-01.toml
+## STATUS: VALIDUM
+{"a": {"a": {"b": {"type": "integer", "value": "1"}}}, "b": {"a": {"b": {"type": "integer", "value": "1"}}}, "c": {"a": {"b": {"type": "integer", "value": "1"}}}, "d": {"a": {"b": {"type": "integer", "value": "1"}}}, "e": {"a": {"b": {"type": "integer", "value": "1"}}}}
+## FINIS
+#### valid/inline-table/key-dotted-02.toml
+## STATUS: VALIDUM
+{"many": {"dots": {"here": {"dot": {"dot": {"dot": {"a": {"b": {"c": {"type": "integer", "value": "1"}, "d": {"type": "integer", "value": "2"}}}}}}}}}}
+## FINIS
+#### valid/inline-table/key-dotted-03.toml
+## STATUS: VALIDUM
+{"tbl": {"a": {"b": {"c": {"d": {"e": {"type": "integer", "value": "1"}}}}}, "x": {"a": {"b": {"c": {"d": {"e": {"type": "integer", "value": "1"}}}}}}}}
+## FINIS
+#### valid/inline-table/key-dotted-04.toml
+## STATUS: VALIDUM
+{"arr": [{"T": {"a": {"b": {"type": "integer", "value": "1"}}}, "t": {"a": {"b": {"type": "integer", "value": "1"}}}}, {"T": {"a": {"b": {"type": "integer", "value": "2"}}}, "t": {"a": {"b": {"type": "integer", "value": "2"}}}}]}
+## FINIS
+#### valid/inline-table/key-dotted-05.toml
+## STATUS: VALIDUM
+{"arr-1": [{"a": {"b": {"type": "integer", "value": "1"}}}], "arr-2": [{"type": "string", "value": "str"}, {"a": {"b": {"type": "integer", "value": "1"}}}], "arr-3": [{"a": {"b": {"type": "integer", "value": "1"}}}, {"a": {"b": {"type": "integer", "value": "2"}}}], "arr-4": [{"type": "string", "value": "str"}, {"a": {"b": {"type": "integer", "value": "1"}}}, {"a": {"b": {"type": "integer", "value": "2"}}}]}
+## FINIS
+#### valid/inline-table/key-dotted-06.toml
+## STATUS: VALIDUM
+{"top": {"dot": {"dot": [{"dot": {"dot": {"dot": {"type": "integer", "value": "1"}}}}, {"dot": {"dot": {"dot": {"type": "integer", "value": "2"}}}}]}}}
+## FINIS
+#### valid/inline-table/key-dotted-07.toml
+## STATUS: VALIDUM
+{"arr": [{"a": {"b": [{"c": {"d": {"type": "integer", "value": "1"}}}]}}]}
+## FINIS
+#### valid/inline-table/multiline.toml
+## STATUS: VALIDUM
+{"tbl_multiline": {"a": {"type": "integer", "value": "1"}, "b": {"type": "string", "value": "multiline\n"}, "c": {"type": "string", "value": "and yet\nanother line"}, "d": {"type": "integer", "value": "4"}}}
+## FINIS
+#### valid/inline-table/nest.toml
+## STATUS: VALIDUM
+{"arr_arr_tbl_empty": [[{}]], "arr_arr_tbl_val": [[{"one": {"type": "integer", "value": "1"}}]], "arr_arr_tbls": [[{"one": {"type": "integer", "value": "1"}}, {"two": {"type": "integer", "value": "2"}}]], "arr_tbl_tbl": [{"tbl": {"one": {"type": "integer", "value": "1"}}}], "tbl_arr_tbl": {"arr_tbl": [{"one": {"type": "integer", "value": "1"}}]}, "tbl_tbl_empty": {"tbl_0": {}}, "tbl_tbl_val": {"tbl_1": {"one": {"type": "integer", "value": "1"}}}}
+## FINIS
+#### valid/inline-table/spaces.toml
+## STATUS: VALIDUM
+{"clap-1": {"features": [{"type": "string", "value": "derive"}, {"type": "string", "value": "cargo"}], "version": {"type": "string", "value": "4"}}, "clap-2": {"features": [{"type": "string", "value": "derive"}, {"type": "string", "value": "cargo"}], "nest": {"a": {"type": "string", "value": "x"}, "b": [{"type": "float", "value": "1.5"}, {"type": "float", "value": "9.0"}]}, "version": {"type": "string", "value": "4"}}}
+## FINIS
+#### valid/integer/float64-max.toml
+## STATUS: VALIDUM
+{"max_int": {"type": "integer", "value": "9007199254740991"}, "min_int": {"type": "integer", "value": "-9007199254740991"}}
+## FINIS
+#### valid/integer/integer.toml
+## STATUS: VALIDUM
+{"answer": {"type": "integer", "value": "42"}, "neganswer": {"type": "integer", "value": "-42"}, "posanswer": {"type": "integer", "value": "42"}, "zero": {"type": "integer", "value": "0"}}
+## FINIS
+#### valid/integer/literals.toml
+## STATUS: VALIDUM
+{"bin1": {"type": "integer", "value": "214"}, "bin2": {"type": "integer", "value": "5"}, "hex1": {"type": "integer", "value": "3735928559"}, "hex2": {"type": "integer", "value": "3735928559"}, "hex3": {"type": "integer", "value": "3735928559"}, "hex4": {"type": "integer", "value": "2439"}, "oct1": {"type": "integer", "value": "342391"}, "oct2": {"type": "integer", "value": "493"}, "oct3": {"type": "integer", "value": "501"}}
+## FINIS
+#### valid/integer/long.toml
+## STATUS: VALIDUM
+{"int64-max": {"type": "integer", "value": "9223372036854775807"}, "int64-max-neg": {"type": "integer", "value": "-9223372036854775808"}}
+## FINIS
+#### valid/integer/underscore.toml
+## STATUS: VALIDUM
+{"kilo": {"type": "integer", "value": "1000"}, "x": {"type": "integer", "value": "1111"}}
+## FINIS
+#### valid/integer/zero.toml
+## STATUS: VALIDUM
+{"a2": {"type": "integer", "value": "0"}, "a3": {"type": "integer", "value": "0"}, "b1": {"type": "integer", "value": "0"}, "b2": {"type": "integer", "value": "0"}, "b3": {"type": "integer", "value": "0"}, "d1": {"type": "integer", "value": "0"}, "d2": {"type": "integer", "value": "0"}, "d3": {"type": "integer", "value": "0"}, "h1": {"type": "integer", "value": "0"}, "h2": {"type": "integer", "value": "0"}, "h3": {"type": "integer", "value": "0"}, "o1": {"type": "integer", "value": "0"}}
+## FINIS
+#### valid/key/alphanum.toml
+## STATUS: VALIDUM
+{"000111": {"type": "string", "value": "leading"}, "10e3": {"type": "string", "value": "false float"}, "123": {"type": "string", "value": "num"}, "2018_10": {"001": {"type": "integer", "value": "1"}}, "34-11": {"type": "integer", "value": "23"}, "a-a-a": {"_": {"type": "bool", "value": "false"}}, "alpha": {"type": "string", "value": "a"}, "one1two2": {"type": "string", "value": "mixed"}, "under_score": {"type": "string", "value": "___"}, "with-dash": {"type": "string", "value": "dashed"}}
+## FINIS
+#### valid/key/case-sensitive.toml
+## STATUS: VALIDUM
+{"Section": {"M": {"type": "string", "value": "latin letter M"}, "name": {"type": "string", "value": "different section!!"}, "Μ": {"type": "string", "value": "greek capital letter MU"}, "μ": {"type": "string", "value": "greek small letter mu"}}, "sectioN": {"type": "string", "value": "NN"}, "section": {"NAME": {"type": "string", "value": "upper"}, "Name": {"type": "string", "value": "capitalized"}, "name": {"type": "string", "value": "lower"}}}
+## FINIS
+#### valid/key/dotted-01.toml
+## STATUS: VALIDUM
+{"many": {"dots": {"dot": {"dot": {"dot": {"type": "integer", "value": "42"}}}}}, "name": {"first": {"type": "string", "value": "Arthur"}, "last": {"type": "string", "value": "Dent"}}}
+## FINIS
+#### valid/key/dotted-02.toml
+## STATUS: VALIDUM
+{"count": {"a": {"type": "integer", "value": "1"}, "b": {"type": "integer", "value": "2"}, "c": {"type": "integer", "value": "3"}, "d": {"type": "integer", "value": "4"}, "e": {"type": "integer", "value": "5"}, "f": {"type": "integer", "value": "6"}, "g": {"type": "integer", "value": "7"}, "h": {"type": "integer", "value": "8"}, "i": {"type": "integer", "value": "9"}, "j": {"type": "integer", "value": "10"}, "k": {"type": "integer", "value": "11"}, "l": {"type": "integer", "value": "12"}}}
+## FINIS
+#### valid/key/dotted-03.toml
+## STATUS: VALIDUM
+{"a": {"few": {"dots": {"polka": {"dance-with": {"type": "string", "value": "Dot"}, "dot": {"type": "string", "value": "again?"}}}}}, "tbl": {"a": {"b": {"c": {"type": "float", "value": "42.666"}}}}, "top": {"key": {"type": "integer", "value": "1"}}}
+## FINIS
+#### valid/key/dotted-04.toml
+## STATUS: VALIDUM
+{"arr": [{"a": {"b": {"c": {"type": "integer", "value": "1"}, "d": {"type": "integer", "value": "2"}}}}, {"a": {"b": {"c": {"type": "integer", "value": "3"}, "d": {"type": "integer", "value": "4"}}}}], "top": {"key": {"type": "integer", "value": "1"}}}
+## FINIS
+#### valid/key/dotted-empty.toml
+## STATUS: VALIDUM
+{"": {"x": {"type": "string", "value": "empty.x"}}, "a": {"": {"": {"type": "string", "value": "empty.empty"}}}, "x": {"": {"type": "string", "value": "x.empty"}}}
+## FINIS
+#### valid/key/empty-01.toml
+## STATUS: VALIDUM
+{"": {"type": "string", "value": "blank"}}
+## FINIS
+#### valid/key/empty-02.toml
+## STATUS: VALIDUM
+{"": {"type": "string", "value": "blank"}}
+## FINIS
+#### valid/key/empty-03.toml
+## STATUS: VALIDUM
+{"": {"type": "integer", "value": "0"}}
+## FINIS
+#### valid/key/equals-nospace.toml
+## STATUS: VALIDUM
+{"answer": {"type": "integer", "value": "42"}}
+## FINIS
+#### valid/key/escapes.toml
+## STATUS: VALIDUM
+{"\b": {"type": "string", "value": "bell"}, "\n": {"type": "string", "value": "newline"}, "\"": {"type": "string", "value": "just a quote"}, "\"quoted\"": {"quote": {"type": "bool", "value": "true"}}, "a.b": {"À": {}}, "backsp\b\b": {}, "À": {"type": "string", "value": "latin capital letter A with grave"}}
+## FINIS
+#### valid/key/like-date.toml
+## STATUS: VALIDUM
+{"15:16:17": {"type": "integer", "value": "6"}, "2001-02-03": {"type": "integer", "value": "1"}, "2001-02-04": {"type": "integer", "value": "2"}, "2001-02-05": {"type": "integer", "value": "3"}, "2001-02-06T15:16:17+01:00": {"type": "integer", "value": "4"}, "2001-02-07T15:16:17": {"type": "integer", "value": "5"}, "2001-02-11": {"a": {"2001-02-12": {"type": "integer", "value": "9"}}}, "2002-01-02": {"2024-01-03": {"k": {"type": "integer", "value": "11"}}, "k": {"type": "integer", "value": "10"}}, "2002-01-04": [{"k": {"type": "integer", "value": "12"}}], "a": {"2001-02-08": {"type": "integer", "value": "7"}, "2001-02-09": {"2001-02-10": {"type": "integer", "value": "8"}}}}
+## FINIS
+#### valid/key/numeric-01.toml
+## STATUS: VALIDUM
+{"1": {"type": "bool", "value": "true"}}
+## FINIS
+#### valid/key/numeric-02.toml
+## STATUS: VALIDUM
+{"1": {"2": {"type": "bool", "value": "true"}}}
+## FINIS
+#### valid/key/numeric-03.toml
+## STATUS: VALIDUM
+{"0123": {"type": "bool", "value": "true"}}
+## FINIS
+#### valid/key/numeric-04.toml
+## STATUS: VALIDUM
+{"01": {"23": {"type": "bool", "value": "true"}}}
+## FINIS
+#### valid/key/numeric-05.toml
+## STATUS: VALIDUM
+{"23": {"01": {"type": "bool", "value": "true"}}}
+## FINIS
+#### valid/key/numeric-06.toml
+## STATUS: VALIDUM
+{"-1": {"type": "bool", "value": "true"}}
+## FINIS
+#### valid/key/numeric-07.toml
+## STATUS: VALIDUM
+{"-01": {"type": "bool", "value": "true"}}
+## FINIS
+#### valid/key/numeric-08.toml
+## STATUS: VALIDUM
+{"01": {"type": "string", "value": "zero one"}, "1": {"type": "string", "value": "one"}}
+## FINIS
+#### valid/key/quoted-dots.toml
+## STATUS: VALIDUM
+{"plain": {"type": "integer", "value": "1"}, "plain_table": {"plain": {"type": "integer", "value": "3"}, "with.dot": {"type": "integer", "value": "4"}}, "table": {"withdot": {"escaped.dot": {"type": "integer", "value": "7"}, "key.with.dots": {"type": "integer", "value": "6"}, "plain": {"type": "integer", "value": "5"}}}, "with.dot": {"type": "integer", "value": "2"}}
+## FINIS
+#### valid/key/quoted-unicode.toml
+## STATUS: VALIDUM
+{"\u0000": {"type": "string", "value": "null"}, "\b \f A   ÿ ퟿  ￿ 𐀀 􏿿": {"type": "string", "value": "escaped key"}, "\\u0000": {"type": "string", "value": "different key"}, "l ~  ÿ ퟿  ￿ 𐀀 􏿿": {"type": "string", "value": "literal key"}, "~  ÿ ퟿  ￿ 𐀀 􏿿": {"type": "string", "value": "basic key"}}
+## FINIS
+#### valid/key/space.toml
+## STATUS: VALIDUM
+{"  much \t\t  whitespace  \t\n  \r\n  ": {"type": "integer", "value": "3"}, " c d ": {"type": "integer", "value": "2"}, " tbl ": {"\ttab\ttab\t": {"type": "string", "value": "tab"}}, "a b": {"type": "integer", "value": "1"}}
+## FINIS
+#### valid/key/special-chars.toml
+## STATUS: VALIDUM
+{"=~!@$^&*()_+-`1234567890[]|/?><.,;:'=": {"type": "integer", "value": "1"}}
+## FINIS
+#### valid/key/special-word.toml
+## STATUS: VALIDUM
+{"false": {"type": "bool", "value": "false"}, "inf": {"type": "integer", "value": "100000000"}, "nan": {"type": "string", "value": "ceci n'est pas un nombre"}, "true": {"type": "integer", "value": "1"}}
+## FINIS
+#### valid/key/start.toml
+## STATUS: VALIDUM
+{"-": {"-": {"type": "integer", "value": "4"}}, "---": {"---": {"type": "integer", "value": "7"}}, "-key": {"-key": {"type": "integer", "value": "1"}}, "1": {"1": {"type": "integer", "value": "6"}}, "111": {"111": {"type": "integer", "value": "9"}}, "1key": {"1key": {"type": "integer", "value": "3"}}, "_": {"_": {"type": "integer", "value": "5"}}, "___": {"___": {"type": "integer", "value": "8"}}, "_key": {"_key": {"type": "integer", "value": "2"}}, "inline": {"---": {"---": {"type": "integer", "value": "10"}, "111": {"type": "integer", "value": "12"}, "___": {"type": "integer", "value": "11"}}}}
+## FINIS
+#### valid/key/zero.toml
+## STATUS: VALIDUM
+{"0": {"type": "integer", "value": "0"}}
+## FINIS
+#### valid/multibyte.toml
+## STATUS: VALIDUM
+{"𝐭𝐛𝐥": {"string": {"type": "string", "value": "𝓼𝓽𝓻𝓲𝓷𝓰 - #"}, "sub": {"another_test_string": {"type": "string", "value": "§á₥è ƭλïñϱ, βúƭ ωïƭλ á ƨƭřïñϱ #"}, "escapes": {"type": "string", "value": " Âñδ ωλèñ \"'ƨ ářè ïñ ƭλè ƨƭřïñϱ, áℓôñϱ ωïƭλ # \""}, "βïƭ#": {"multi_line_array": [{"type": "string", "value": "]"}], "ωλáƭ?": {"type": "string", "value": "Ýôú δôñ'ƭ ƭλïñƙ ƨô₥è úƨèř ωôñ'ƭ δô ƭλáƭ?"}}, "𝕒𝕣𝕣𝕒𝕪": [{"type": "string", "value": "] "}, {"type": "string", "value": " # "}], "𝕒𝕣𝕣𝕒𝕪𝟚": [{"type": "string", "value": "Tèƨƭ #11 ]ƥřôƲèδ ƭλáƭ"}, {"type": "string", "value": "Éжƥèřï₥èñƭ #9 ωáƨ á ƨúççèƨƨ"}]}}}
+## FINIS
+#### valid/newline-crlf.toml
+## STATUS: VALIDUM
+{"newline": {"type": "string", "value": "crlf"}, "os": {"type": "string", "value": "DOS"}}
+## FINIS
+#### valid/newline-lf.toml
+## STATUS: VALIDUM
+{"newline": {"type": "string", "value": "lf"}, "os": {"type": "string", "value": "unix"}}
+## FINIS
+#### valid/spec-1.0.0/array-0.toml
+## STATUS: VALIDUM
+{"colors": [{"type": "string", "value": "red"}, {"type": "string", "value": "yellow"}, {"type": "string", "value": "green"}], "contributors": [{"type": "string", "value": "Foo Bar <foo@example.com>"}, {"email": {"type": "string", "value": "bazqux@example.com"}, "name": {"type": "string", "value": "Baz Qux"}, "url": {"type": "string", "value": "https://example.com/bazqux"}}], "integers": [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}, {"type": "integer", "value": "3"}], "nested_arrays_of_ints": [[{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}], [{"type": "integer", "value": "3"}, {"type": "integer", "value": "4"}, {"type": "integer", "value": "5"}]], "nested_mixed_array": [[{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}], [{"type": "string", "value": "a"}, {"type": "string", "value": "b"}, {"type": "string", "value": "c"}]], "numbers": [{"type": "float", "value": "0.1"}, {"type": "float", "value": "0.2"}, {"type": "float", "value": "0.5"}, {"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}, {"type": "integer", "value": "5"}], "string_array": [{"type": "string", "value": "all"}, {"type": "string", "value": "strings"}, {"type": "string", "value": "are the same"}, {"type": "string", "value": "type"}]}
+## FINIS
+#### valid/spec-1.0.0/array-1.toml
+## STATUS: VALIDUM
+{"integers2": [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}, {"type": "integer", "value": "3"}], "integers3": [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}]}
+## FINIS
+#### valid/spec-1.0.0/array-of-tables-0.toml
+## STATUS: VALIDUM
+{"products": [{"name": {"type": "string", "value": "Hammer"}, "sku": {"type": "integer", "value": "738594937"}}, {}, {"color": {"type": "string", "value": "gray"}, "name": {"type": "string", "value": "Nail"}, "sku": {"type": "integer", "value": "284758393"}}]}
+## FINIS
+#### valid/spec-1.0.0/array-of-tables-1.toml
+## STATUS: VALIDUM
+{"fruits": [{"name": {"type": "string", "value": "apple"}, "physical": {"color": {"type": "string", "value": "red"}, "shape": {"type": "string", "value": "round"}}, "varieties": [{"name": {"type": "string", "value": "red delicious"}}, {"name": {"type": "string", "value": "granny smith"}}]}, {"name": {"type": "string", "value": "banana"}, "varieties": [{"name": {"type": "string", "value": "plantain"}}]}]}
+## FINIS
+#### valid/spec-1.0.0/array-of-tables-2.toml
+## STATUS: VALIDUM
+{"points": [{"x": {"type": "integer", "value": "1"}, "y": {"type": "integer", "value": "2"}, "z": {"type": "integer", "value": "3"}}, {"x": {"type": "integer", "value": "7"}, "y": {"type": "integer", "value": "8"}, "z": {"type": "integer", "value": "9"}}, {"x": {"type": "integer", "value": "2"}, "y": {"type": "integer", "value": "4"}, "z": {"type": "integer", "value": "8"}}]}
+## FINIS
+#### valid/spec-1.0.0/boolean-0.toml
+## STATUS: VALIDUM
+{"bool1": {"type": "bool", "value": "true"}, "bool2": {"type": "bool", "value": "false"}}
+## FINIS
+#### valid/spec-1.0.0/comment-0.toml
+## STATUS: VALIDUM
+{"another": {"type": "string", "value": "# This is not a comment"}, "key": {"type": "string", "value": "value"}}
+## FINIS
+#### valid/spec-1.0.0/float-0.toml
+## STATUS: VALIDUM
+{"flt1": {"type": "float", "value": "1.0"}, "flt2": {"type": "float", "value": "3.1415"}, "flt3": {"type": "float", "value": "-0.01"}, "flt4": {"type": "float", "value": "5e+22"}, "flt5": {"type": "float", "value": "1000000.0"}, "flt6": {"type": "float", "value": "-0.02"}, "flt7": {"type": "float", "value": "6.626e-34"}}
+## FINIS
+#### valid/spec-1.0.0/float-1.toml
+## STATUS: VALIDUM
+{"flt8": {"type": "float", "value": "224617.445991228"}}
+## FINIS
+#### valid/spec-1.0.0/float-2.toml
+## STATUS: VALIDUM
+{"sf1": {"type": "float", "value": "inf"}, "sf2": {"type": "float", "value": "inf"}, "sf3": {"type": "float", "value": "-inf"}, "sf4": {"type": "float", "value": "nan"}, "sf5": {"type": "float", "value": "nan"}, "sf6": {"type": "float", "value": "nan"}}
+## FINIS
+#### valid/spec-1.0.0/inline-table-0.toml
+## STATUS: VALIDUM
+{"animal": {"type": {"name": {"type": "string", "value": "pug"}}}, "name": {"first": {"type": "string", "value": "Tom"}, "last": {"type": "string", "value": "Preston-Werner"}}, "point": {"x": {"type": "integer", "value": "1"}, "y": {"type": "integer", "value": "2"}}}
+## FINIS
+#### valid/spec-1.0.0/inline-table-1.toml
+## STATUS: VALIDUM
+{"animal": {"type": {"name": {"type": "string", "value": "pug"}}}, "name": {"first": {"type": "string", "value": "Tom"}, "last": {"type": "string", "value": "Preston-Werner"}}, "point": {"x": {"type": "integer", "value": "1"}, "y": {"type": "integer", "value": "2"}}}
+## FINIS
+#### valid/spec-1.0.0/inline-table-2.toml
+## STATUS: VALIDUM
+{"product": {"type": {"name": {"type": "string", "value": "Nail"}}}}
+## FINIS
+#### valid/spec-1.0.0/inline-table-3.toml
+## STATUS: VALIDUM
+{"product": {"type": {"name": {"type": "string", "value": "Nail"}}}}
+## FINIS
+#### valid/spec-1.0.0/integer-0.toml
+## STATUS: VALIDUM
+{"int1": {"type": "integer", "value": "99"}, "int2": {"type": "integer", "value": "42"}, "int3": {"type": "integer", "value": "0"}, "int4": {"type": "integer", "value": "-17"}}
+## FINIS
+#### valid/spec-1.0.0/integer-1.toml
+## STATUS: VALIDUM
+{"int5": {"type": "integer", "value": "1000"}, "int6": {"type": "integer", "value": "5349221"}, "int7": {"type": "integer", "value": "5349221"}, "int8": {"type": "integer", "value": "12345"}}
+## FINIS
+#### valid/spec-1.0.0/integer-2.toml
+## STATUS: VALIDUM
+{"bin1": {"type": "integer", "value": "214"}, "hex1": {"type": "integer", "value": "3735928559"}, "hex2": {"type": "integer", "value": "3735928559"}, "hex3": {"type": "integer", "value": "3735928559"}, "oct1": {"type": "integer", "value": "342391"}, "oct2": {"type": "integer", "value": "493"}}
+## FINIS
+#### valid/spec-1.0.0/key-value-pair-0.toml
+## STATUS: VALIDUM
+{"key": {"type": "string", "value": "value"}}
+## FINIS
+#### valid/spec-1.0.0/keys-0.toml
+## STATUS: VALIDUM
+{"1234": {"type": "string", "value": "value"}, "bare-key": {"type": "string", "value": "value"}, "bare_key": {"type": "string", "value": "value"}, "key": {"type": "string", "value": "value"}}
+## FINIS
+#### valid/spec-1.0.0/keys-1.toml
+## STATUS: VALIDUM
+{"127.0.0.1": {"type": "string", "value": "value"}, "character encoding": {"type": "string", "value": "value"}, "key2": {"type": "string", "value": "value"}, "quoted \"value\"": {"type": "string", "value": "value"}, "ʎǝʞ": {"type": "string", "value": "value"}}
+## FINIS
+#### valid/spec-1.0.0/keys-3.toml
+## STATUS: VALIDUM
+{"name": {"type": "string", "value": "Orange"}, "physical": {"color": {"type": "string", "value": "orange"}, "shape": {"type": "string", "value": "round"}}, "site": {"google.com": {"type": "bool", "value": "true"}}}
+## FINIS
+#### valid/spec-1.0.0/keys-4.toml
+## STATUS: VALIDUM
+{"fruit": {"color": {"type": "string", "value": "yellow"}, "flavor": {"type": "string", "value": "banana"}, "name": {"type": "string", "value": "banana"}}}
+## FINIS
+#### valid/spec-1.0.0/keys-5.toml
+## STATUS: VALIDUM
+{"apple": {"color": {"type": "string", "value": "red"}, "skin": {"type": "string", "value": "thin"}, "type": {"type": "string", "value": "fruit"}}, "orange": {"color": {"type": "string", "value": "orange"}, "skin": {"type": "string", "value": "thick"}, "type": {"type": "string", "value": "fruit"}}}
+## FINIS
+#### valid/spec-1.0.0/keys-6.toml
+## STATUS: VALIDUM
+{"apple": {"color": {"type": "string", "value": "red"}, "skin": {"type": "string", "value": "thin"}, "type": {"type": "string", "value": "fruit"}}, "orange": {"color": {"type": "string", "value": "orange"}, "skin": {"type": "string", "value": "thick"}, "type": {"type": "string", "value": "fruit"}}}
+## FINIS
+#### valid/spec-1.0.0/keys-7.toml
+## STATUS: VALIDUM
+{"3": {"14159": {"type": "string", "value": "pi"}}}
+## FINIS
+#### valid/spec-1.0.0/local-date-0.toml
+## STATUS: VALIDUM
+{"ld1": {"type": "date-local", "value": "1979-05-27"}}
+## FINIS
+#### valid/spec-1.0.0/local-date-time-0.toml
+## STATUS: VALIDUM
+{"ldt1": {"type": "datetime-local", "value": "1979-05-27T07:32:00"}, "ldt2": {"type": "datetime-local", "value": "1979-05-27T00:32:00.999000"}}
+## FINIS
+#### valid/spec-1.0.0/local-time-0.toml
+## STATUS: VALIDUM
+{"lt1": {"type": "time-local", "value": "07:32:00"}, "lt2": {"type": "time-local", "value": "00:32:00.999000"}}
+## FINIS
+#### valid/spec-1.0.0/offset-date-time-0.toml
+## STATUS: VALIDUM
+{"odt1": {"type": "datetime", "value": "1979-05-27T07:32:00+00:00"}, "odt2": {"type": "datetime", "value": "1979-05-27T00:32:00-07:00"}, "odt3": {"type": "datetime", "value": "1979-05-27T00:32:00.999000-07:00"}}
+## FINIS
+#### valid/spec-1.0.0/offset-date-time-1.toml
+## STATUS: VALIDUM
+{"odt4": {"type": "datetime", "value": "1979-05-27T07:32:00+00:00"}}
+## FINIS
+#### valid/spec-1.0.0/string-0.toml
+## STATUS: VALIDUM
+{"str": {"type": "string", "value": "I'm a string. \"You can quote me\". Name\tJosé\nLocation\tSF."}}
+## FINIS
+#### valid/spec-1.0.0/string-1.toml
+## STATUS: VALIDUM
+{"str1": {"type": "string", "value": "Roses are red\nViolets are blue"}}
+## FINIS
+#### valid/spec-1.0.0/string-2.toml
+## STATUS: VALIDUM
+{"str2": {"type": "string", "value": "Roses are red\nViolets are blue"}, "str3": {"type": "string", "value": "Roses are red\r\nViolets are blue"}}
+## FINIS
+#### valid/spec-1.0.0/string-3.toml
+## STATUS: VALIDUM
+{"str1": {"type": "string", "value": "The quick brown fox jumps over the lazy dog."}, "str2": {"type": "string", "value": "The quick brown fox jumps over the lazy dog."}, "str3": {"type": "string", "value": "The quick brown fox jumps over the lazy dog."}}
+## FINIS
+#### valid/spec-1.0.0/string-4.toml
+## STATUS: VALIDUM
+{"str4": {"type": "string", "value": "Here are two quotation marks: \"\". Simple enough."}, "str5": {"type": "string", "value": "Here are three quotation marks: \"\"\"."}, "str6": {"type": "string", "value": "Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\"."}, "str7": {"type": "string", "value": "\"This,\" she said, \"is just a pointless statement.\""}}
+## FINIS
+#### valid/spec-1.0.0/string-5.toml
+## STATUS: VALIDUM
+{"quoted": {"type": "string", "value": "Tom \"Dubs\" Preston-Werner"}, "regex": {"type": "string", "value": "<\\i\\c*\\s*>"}, "winpath": {"type": "string", "value": "C:\\Users\\nodejs\\templates"}, "winpath2": {"type": "string", "value": "\\\\ServerX\\admin$\\system32\\"}}
+## FINIS
+#### valid/spec-1.0.0/string-6.toml
+## STATUS: VALIDUM
+{"lines": {"type": "string", "value": "The first newline is\ntrimmed in raw strings.\n   All other whitespace\n   is preserved.\n"}, "regex2": {"type": "string", "value": "I [dw]on't need \\d{2} apples"}}
+## FINIS
+#### valid/spec-1.0.0/string-7.toml
+## STATUS: VALIDUM
+{"apos15": {"type": "string", "value": "Here are fifteen apostrophes: '''''''''''''''"}, "quot15": {"type": "string", "value": "Here are fifteen quotation marks: \"\"\"\"\"\"\"\"\"\"\"\"\"\"\""}, "str": {"type": "string", "value": "'That,' she said, 'is still pointless.'"}}
+## FINIS
+#### valid/spec-1.0.0/table-0.toml
+## STATUS: VALIDUM
+{"table": {}}
+## FINIS
+#### valid/spec-1.0.0/table-1.toml
+## STATUS: VALIDUM
+{"table-1": {"key1": {"type": "string", "value": "some string"}, "key2": {"type": "integer", "value": "123"}}, "table-2": {"key1": {"type": "string", "value": "another string"}, "key2": {"type": "integer", "value": "456"}}}
+## FINIS
+#### valid/spec-1.0.0/table-2.toml
+## STATUS: VALIDUM
+{"dog": {"tater.man": {"type": {"name": {"type": "string", "value": "pug"}}}}}
+## FINIS
+#### valid/spec-1.0.0/table-3.toml
+## STATUS: VALIDUM
+{"a": {"b": {"c": {}}}, "d": {"e": {"f": {}}}, "g": {"h": {"i": {}}}, "j": {"ʞ": {"l": {}}}}
+## FINIS
+#### valid/spec-1.0.0/table-4.toml
+## STATUS: VALIDUM
+{"x": {"y": {"z": {"w": {}}}}}
+## FINIS
+#### valid/spec-1.0.0/table-5.toml
+## STATUS: VALIDUM
+{"animal": {}, "fruit": {"apple": {}, "orange": {}}}
+## FINIS
+#### valid/spec-1.0.0/table-6.toml
+## STATUS: VALIDUM
+{"animal": {}, "fruit": {"apple": {}, "orange": {}}}
+## FINIS
+#### valid/spec-1.0.0/table-7.toml
+## STATUS: VALIDUM
+{"breed": {"type": "string", "value": "pug"}, "name": {"type": "string", "value": "Fido"}, "owner": {"member_since": {"type": "date-local", "value": "1999-08-04"}, "name": {"type": "string", "value": "Regina Dogman"}}}
+## FINIS
+#### valid/spec-1.0.0/table-8.toml
+## STATUS: VALIDUM
+{"fruit": {"apple": {"color": {"type": "string", "value": "red"}, "taste": {"sweet": {"type": "bool", "value": "true"}}}}}
+## FINIS
+#### valid/spec-1.0.0/table-9.toml
+## STATUS: VALIDUM
+{"fruit": {"apple": {"color": {"type": "string", "value": "red"}, "taste": {"sweet": {"type": "bool", "value": "true"}}, "texture": {"smooth": {"type": "bool", "value": "true"}}}}}
+## FINIS
+#### valid/spec-example-1.toml
+## STATUS: VALIDUM
+{"clients": {"data": [[{"type": "string", "value": "gamma"}, {"type": "string", "value": "delta"}], [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}]], "hosts": [{"type": "string", "value": "alpha"}, {"type": "string", "value": "omega"}]}, "database": {"connection_max": {"type": "integer", "value": "5000"}, "enabled": {"type": "bool", "value": "true"}, "ports": [{"type": "integer", "value": "8001"}, {"type": "integer", "value": "8001"}, {"type": "integer", "value": "8002"}], "server": {"type": "string", "value": "192.168.1.1"}}, "owner": {"dob": {"type": "datetime", "value": "1979-05-27T07:32:00-08:00"}, "name": {"type": "string", "value": "Lance Uppercut"}}, "servers": {"alpha": {"dc": {"type": "string", "value": "eqdc10"}, "ip": {"type": "string", "value": "10.0.0.1"}}, "beta": {"dc": {"type": "string", "value": "eqdc10"}, "ip": {"type": "string", "value": "10.0.0.2"}}}, "title": {"type": "string", "value": "TOML Example"}}
+## FINIS
+#### valid/spec-example-1-compact.toml
+## STATUS: VALIDUM
+{"clients": {"data": [[{"type": "string", "value": "gamma"}, {"type": "string", "value": "delta"}], [{"type": "integer", "value": "1"}, {"type": "integer", "value": "2"}]], "hosts": [{"type": "string", "value": "alpha"}, {"type": "string", "value": "omega"}]}, "database": {"connection_max": {"type": "integer", "value": "5000"}, "enabled": {"type": "bool", "value": "true"}, "ports": [{"type": "integer", "value": "8001"}, {"type": "integer", "value": "8001"}, {"type": "integer", "value": "8002"}], "server": {"type": "string", "value": "192.168.1.1"}}, "owner": {"dob": {"type": "datetime", "value": "1979-05-27T07:32:00-08:00"}, "name": {"type": "string", "value": "Lance Uppercut"}}, "servers": {"alpha": {"dc": {"type": "string", "value": "eqdc10"}, "ip": {"type": "string", "value": "10.0.0.1"}}, "beta": {"dc": {"type": "string", "value": "eqdc10"}, "ip": {"type": "string", "value": "10.0.0.2"}}}, "title": {"type": "string", "value": "TOML Example"}}
+## FINIS
+#### valid/string/basic-escape-01.toml
+## STATUS: VALIDUM
+{"test": {"type": "string", "value": "\"one\""}}
+## FINIS
+#### valid/string/basic-escape-02.toml
+## STATUS: VALIDUM
+{"test": {"type": "string", "value": "\\\"one"}}
+## FINIS
+#### valid/string/basic-escape-03.toml
+## STATUS: VALIDUM
+{"test": {"type": "string", "value": "\\\\\\\\\"one"}}
+## FINIS
+#### valid/string/empty.toml
+## STATUS: VALIDUM
+{"answer": {"type": "string", "value": ""}}
+## FINIS
+#### valid/string/ends-in-whitespace-escape.toml
+## STATUS: VALIDUM
+{"beee": {"type": "string", "value": "heeee\ngeeee"}}
+## FINIS
+#### valid/string/escape-tricky.toml
+## STATUS: VALIDUM
+{"end_esc": {"type": "string", "value": "String does not end here\" but ends here\\"}, "lit_end_esc": {"type": "string", "value": "String ends here\\"}, "lit_multiline_end": {"type": "string", "value": "There is no escape\\"}, "lit_multiline_not_unicode": {"type": "string", "value": "\\u007f"}, "multiline_end_esc": {"type": "string", "value": "When will it end? \"\"\"...\"\"\" should be here\""}, "multiline_not_unicode": {"type": "string", "value": "\\u0041"}, "multiline_unicode": {"type": "string", "value": " "}}
+## FINIS
+#### valid/string/escaped-escape.toml
+## STATUS: VALIDUM
+{"answer": {"type": "string", "value": "\\x64"}}
+## FINIS
+#### valid/string/escapes.toml
+## STATUS: VALIDUM
+{"backslash": {"type": "string", "value": "|\\."}, "backspace": {"type": "string", "value": "|\b."}, "carriage": {"type": "string", "value": "|\r."}, "delete": {"type": "string", "value": "|."}, "formfeed": {"type": "string", "value": "|\f."}, "newline": {"type": "string", "value": "|\n."}, "notunicode1": {"type": "string", "value": "|\\u."}, "notunicode2": {"type": "string", "value": "|\\u."}, "notunicode3": {"type": "string", "value": "|\\u0075."}, "notunicode4": {"type": "string", "value": "|\\u."}, "quote": {"type": "string", "value": "|\"."}, "tab": {"type": "string", "value": "|\t."}, "unitseparator": {"type": "string", "value": "|\u001f."}}
+## FINIS
+#### valid/string/multibyte.toml
+## STATUS: VALIDUM
+{"basic": {"type": "string", "value": "ɑ € 𐫱 ɑ€𐫱"}, "ml-basic": {"type": "string", "value": "ɑ € 𐫱 ɑ€𐫱"}, "ml-raw": {"type": "string", "value": "ɑ € 𐫱 ɑ€𐫱"}, "raw": {"type": "string", "value": "ɑ € 𐫱 ɑ€𐫱"}}
+## FINIS
+#### valid/string/multibyte-escape.toml
+## STATUS: VALIDUM
+{"basic-1": {"type": "string", "value": "ɑ € 𐫱 ɑ€𐫱"}, "basic-2": {"type": "string", "value": "ɑ € 𐫱 ɑ€𐫱"}, "ml-basic-1": {"type": "string", "value": "ɑ € 𐫱 ɑ€𐫱"}, "ml-basic-2": {"type": "string", "value": "ɑ € 𐫱 ɑ€𐫱"}}
+## FINIS
+#### valid/string/multiline.toml
+## STATUS: VALIDUM
+{"equivalent_one": {"type": "string", "value": "The quick brown fox jumps over the lazy dog."}, "equivalent_three": {"type": "string", "value": "The quick brown fox jumps over the lazy dog."}, "equivalent_two": {"type": "string", "value": "The quick brown fox jumps over the lazy dog."}, "escape-bs-1": {"type": "string", "value": "a \\\nb"}, "escape-bs-2": {"type": "string", "value": "a \\b"}, "escape-bs-3": {"type": "string", "value": "a \\\\\n  b"}, "keep-ws-before": {"type": "string", "value": "a   \tb"}, "no-space": {"type": "string", "value": "ab"}, "whitespace-after-bs": {"type": "string", "value": "The quick brown fox jumps over the lazy dog."}}
+## FINIS
+#### valid/string/multiline-empty.toml
+## STATUS: VALIDUM
+{"empty-1": {"type": "string", "value": ""}, "empty-2": {"type": "string", "value": ""}, "empty-3": {"type": "string", "value": ""}, "empty-4": {"type": "string", "value": ""}}
+## FINIS
+#### valid/string/multiline-escaped-crlf.toml
+## STATUS: VALIDUM
+{"0": {"type": "string", "value": ""}}
+## FINIS
+#### valid/string/multiline-quotes.toml
+## STATUS: VALIDUM
+{"escaped": {"type": "string", "value": "lol\"\"\""}, "five-quotes": {"type": "string", "value": "Closing with five quotes\n\"\""}, "four-quotes": {"type": "string", "value": "Closing with four quotes\n\""}, "lit_one": {"type": "string", "value": "'one quote'"}, "lit_one_space": {"type": "string", "value": " 'one quote' "}, "lit_two": {"type": "string", "value": "''two quotes''"}, "lit_two_space": {"type": "string", "value": " ''two quotes'' "}, "mismatch1": {"type": "string", "value": "aaa'''bbb"}, "mismatch2": {"type": "string", "value": "aaa\"\"\"bbb"}, "one": {"type": "string", "value": "\"one quote\""}, "one_space": {"type": "string", "value": " \"one quote\" "}, "two": {"type": "string", "value": "\"\"two quotes\"\""}, "two_space": {"type": "string", "value": " \"\"two quotes\"\" "}}
+## FINIS
+#### valid/string/nl.toml
+## STATUS: VALIDUM
+{"lit_nl_end": {"type": "string", "value": "value\\n"}, "lit_nl_mid": {"type": "string", "value": "val\\nue"}, "lit_nl_uni": {"type": "string", "value": "val\\ue"}, "nl_end": {"type": "string", "value": "value\n"}, "nl_mid": {"type": "string", "value": "val\nue"}}
+## FINIS
+#### valid/string/quoted-unicode.toml
+## STATUS: VALIDUM
+{"basic_string": {"type": "string", "value": "~  ÿ ퟿  ￿ 𐀀 􏿿"}, "escaped_string": {"type": "string", "value": "\u0000 \b \f A   ÿ ퟿  ￿ 𐀀 􏿿"}, "literal_string": {"type": "string", "value": "~  ÿ ퟿  ￿ 𐀀 􏿿"}, "not_escaped_string": {"type": "string", "value": "\\u0000 \\u0008 \\u000c \\U00000041 \\u007f \\u0080 \\u00ff \\ud7ff \\ue000 \\uffff \\U00010000 \\U0010ffff"}}
+## FINIS
+#### valid/string/raw.toml
+## STATUS: VALIDUM
+{"backslash": {"type": "string", "value": "This string has a \\\\ backslash character."}, "backspace": {"type": "string", "value": "This string has a \\b backspace character."}, "carriage": {"type": "string", "value": "This string has a \\r carriage return character."}, "formfeed": {"type": "string", "value": "This string has a \\f form feed character."}, "newline": {"type": "string", "value": "This string has a \\n new line character."}, "slash": {"type": "string", "value": "This string has a \\/ slash character."}, "tab": {"type": "string", "value": "This string has a \\t tab character."}, "unescaped_tab": {"type": "string", "value": "This string has an \t unescaped tab character."}}
+## FINIS
+#### valid/string/raw-empty.toml
+## STATUS: VALIDUM
+{"empty": {"type": "string", "value": ""}}
+## FINIS
+#### valid/string/raw-multiline.toml
+## STATUS: VALIDUM
+{"firstnl": {"type": "string", "value": "This string has a ' quote character."}, "multiline": {"type": "string", "value": "This string\nhas ' a quote character\nand more than\none newline\nin it."}, "multiline_with_tab": {"type": "string", "value": "First line\n\t Followed by a tab"}, "oneline": {"type": "string", "value": "This string has a ' quote character."}, "this-str-has-apostrophes": {"type": "string", "value": "' there's one already\n'' two more\n''"}}
+## FINIS
+#### valid/string/simple.toml
+## STATUS: VALIDUM
+{"answer": {"type": "string", "value": "You are not drinking enough whisky."}}
+## FINIS
+#### valid/string/start-mb.toml
+## STATUS: VALIDUM
+{"s1": {"type": "string", "value": "§"}, "s2": {"type": "string", "value": "§"}, "s3": {"type": "string", "value": "§"}, "s4": {"type": "string", "value": "§"}, "s5": {"type": "string", "value": "§"}, "s6": {"type": "string", "value": "§"}, "s7": {"type": "string", "value": "§"}}
+## FINIS
+#### valid/string/unicode-escape.toml
+## STATUS: VALIDUM
+{"a": {"type": "string", "value": "a"}, "b": {"type": "string", "value": "b"}, "c": {"type": "string", "value": "c"}, "delta-1": {"type": "string", "value": "δ"}, "delta-2": {"type": "string", "value": "δ"}, "ml-a": {"type": "string", "value": "a"}, "ml-b": {"type": "string", "value": "b"}, "ml-c": {"type": "string", "value": "c"}, "ml-delta-1": {"type": "string", "value": "δ"}, "ml-delta-2": {"type": "string", "value": "δ"}, "ml-null-1": {"type": "string", "value": "\u0000"}, "ml-null-2": {"type": "string", "value": "\u0000"}, "null-1": {"type": "string", "value": "\u0000"}, "null-2": {"type": "string", "value": "\u0000"}}
+## FINIS
+#### valid/string/with-pound.toml
+## STATUS: VALIDUM
+{"pound": {"type": "string", "value": "We see no # comments here."}, "poundcomment": {"type": "string", "value": "But there are # some comments here."}}
+## FINIS
+#### valid/table/array-empty.toml
+## STATUS: VALIDUM
+{"a": [{}]}
+## FINIS
+#### valid/table/array-empty-name.toml
+## STATUS: VALIDUM
+{"": [{"a": {"type": "integer", "value": "1"}}, {"a": {"type": "integer", "value": "2"}}]}
+## FINIS
+#### valid/table/array-implicit.toml
+## STATUS: VALIDUM
+{"albums": {"songs": [{"name": {"type": "string", "value": "Glory Days"}}]}}
+## FINIS
+#### valid/table/array-implicit-and-explicit-after.toml
+## STATUS: VALIDUM
+{"a": {"b": [{"x": {"type": "integer", "value": "1"}}], "y": {"type": "integer", "value": "2"}}}
+## FINIS
+#### valid/table/array-many.toml
+## STATUS: VALIDUM
+{"people": [{"first_name": {"type": "string", "value": "Bruce"}, "last_name": {"type": "string", "value": "Springsteen"}}, {"first_name": {"type": "string", "value": "Eric"}, "last_name": {"type": "string", "value": "Clapton"}}, {"first_name": {"type": "string", "value": "Bob"}, "last_name": {"type": "string", "value": "Seger"}}]}
+## FINIS
+#### valid/table/array-nest.toml
+## STATUS: VALIDUM
+{"albums": [{"name": {"type": "string", "value": "Born to Run"}, "songs": [{"name": {"type": "string", "value": "Jungleland"}}, {"name": {"type": "string", "value": "Meeting Across the River"}}]}, {"name": {"type": "string", "value": "Born in the USA"}, "songs": [{"name": {"type": "string", "value": "Glory Days"}}, {"name": {"type": "string", "value": "Dancing in the Dark"}}]}]}
+## FINIS
+#### valid/table/array-one.toml
+## STATUS: VALIDUM
+{"people": [{"first_name": {"type": "string", "value": "Bruce"}, "last_name": {"type": "string", "value": "Springsteen"}}]}
+## FINIS
+#### valid/table/array-table-array.toml
+## STATUS: VALIDUM
+{"a": [{"b": [{"c": {"d": {"type": "string", "value": "val0"}}}, {"c": {"d": {"type": "string", "value": "val1"}}}]}]}
+## FINIS
+#### valid/table/array-within-dotted.toml
+## STATUS: VALIDUM
+{"fruit": {"apple": {"color": {"type": "string", "value": "red"}, "seeds": [{"size": {"type": "integer", "value": "2"}}]}}}
+## FINIS
+#### valid/table/empty.toml
+## STATUS: VALIDUM
+{"a": {}}
+## FINIS
+#### valid/table/empty-name.toml
+## STATUS: VALIDUM
+{"": {"a": {"x": {"type": "integer", "value": "2"}}, "x": {"type": "integer", "value": "1"}}, "a": {"": {"x": {"type": "integer", "value": "3"}}}}
+## FINIS
+#### valid/table/keyword.toml
+## STATUS: VALIDUM
+{"false": {}, "inf": {}, "nan": {}, "true": {}}
+## FINIS
+#### valid/table/keyword-with-values.toml
+## STATUS: VALIDUM
+{"false": {"k": {"type": "integer", "value": "2"}}, "inf": {"k": {"type": "integer", "value": "3"}}, "nan": {"k": {"type": "integer", "value": "4"}}, "true": {"k": {"type": "integer", "value": "1"}}}
+## FINIS
+#### valid/table/names.toml
+## STATUS: VALIDUM
+{"a": {" x ": {}, "b": {"c": {}}, "b.c": {}, "d.e": {}}, "d": {"e": {"f": {}}}, "g": {"h": {"i": {}}}, "j": {"ʞ": {"l": {}}}, "x": {"1": {"2": {}}}}
+## FINIS
+#### valid/table/names-with-values.toml
+## STATUS: VALIDUM
+{"a": {" x ": {"key": {"type": "integer", "value": "4"}}, "b": {"c": {"key": {"type": "integer", "value": "1"}}}, "b.c": {"key": {"type": "integer", "value": "2"}}, "d.e": {"key": {"type": "integer", "value": "3"}}}, "d": {"e": {"f": {"key": {"type": "integer", "value": "5"}}}}, "g": {"h": {"i": {"key": {"type": "integer", "value": "6"}}}}, "j": {"ʞ": {"l": {"key": {"type": "integer", "value": "7"}}}}, "x": {"1": {"2": {"key": {"type": "integer", "value": "8"}}}}}
+## FINIS
+#### valid/table/no-eol.toml
+## STATUS: VALIDUM
+{"table": {}}
+## FINIS
+#### valid/table/sub.toml
+## STATUS: VALIDUM
+{"a": {"extend": {"key": {"type": "integer", "value": "2"}, "more": {"key": {"type": "integer", "value": "3"}}}, "key": {"type": "integer", "value": "1"}}}
+## FINIS
+#### valid/table/sub-empty.toml
+## STATUS: VALIDUM
+{"a": {"b": {}}}
+## FINIS
+#### valid/table/whitespace.toml
+## STATUS: VALIDUM
+{"valid key": {}}
+## FINIS
+#### valid/table/with-literal-string.toml
+## STATUS: VALIDUM
+{"a": {"\"b\"": {"c": {"answer": {"type": "integer", "value": "42"}}}}}
+## FINIS
+#### valid/table/with-pound.toml
+## STATUS: VALIDUM
+{"key#group": {"answer": {"type": "integer", "value": "42"}}}
+## FINIS
+#### valid/table/with-single-quotes.toml
+## STATUS: VALIDUM
+{"a": {"b": {"c": {"answer": {"type": "integer", "value": "42"}}}}}
+## FINIS
+#### valid/table/without-super.toml
+## STATUS: VALIDUM
+{"x": {"y": {"z": {"w": {}}}}}
+## FINIS
+#### valid/table/without-super-with-values.toml
+## STATUS: VALIDUM
+{"x": {"c": {"type": "integer", "value": "3"}, "d": {"type": "integer", "value": "4"}, "y": {"z": {"w": {"a": {"type": "integer", "value": "1"}, "b": {"type": "integer", "value": "2"}}}}}}
+## FINIS

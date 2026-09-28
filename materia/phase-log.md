@@ -3543,3 +3543,26 @@ schedule. Ledger: park …FE9E closed, its four open items moved to the
 'c89 parser' region; decree …XX0BZ executed — by its own order, JS is
 next. Not done here: MAP.txt (stale since 08-17, mostly for reasons
 outside this phase) — its own task.
+
+## 2026-09-28 — the toml client, Q1: oracle material (INTENTIO + Q1 RELATIO)
+
+INTENTIO: TOML 1.0.0 as materia's seventh client (spec
+`project-specs/toml-arbor-spec.md`, plan `…-plan.md`, Q1–Q14): a total,
+byte-exact tree; a cooked view of typed values with every semantic rule
+named; every error in a file reported; proven by toml-test, `tomllib`
+and a wild corpus; `lib/toml.c` retired; briar's corpus widened to
+client roots (materia + toml first — amalgams do not compose). Expected
+substrate changes: none. Note on order: materia decree …XX0BZ put JS
+next after phase 5; Fran chose TOML first (2026-09-26/28, lapide's
+feature-requests/013 and a library that "isn't feature complete").
+
+RELATIO Q1: toml-test v2.2.0 (MIT, commit ce08da1d) fetched after
+asking and frozen — 1.0.0 list 205 valid / 474 invalid (a web summary
+said 256/512; counted after the fetch, it was wrong). `tomllib` agrees
+with it TOTALLY (205/205 by value, 474/474 rejected), so either is a
+credible judge. Wild corpus: 1,795 unique files, MANIFEST ONLY (Fran:
+no third-party files in the repo) — and the golden split to match
+(the wild half, 6.25 MB of JSON, would have smuggled the content back
+in). Bonus: the wild corpus carries toml_edit's own invalid fixtures.
+Verdicts pinned for later tasks: CRLF accepted (multiline CRLF → `\n`),
+lone CR rejected, BOM rejected (as `tomllib`).
