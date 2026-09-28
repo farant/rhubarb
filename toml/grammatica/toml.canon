@@ -1,0 +1,555 @@
+<!--
+  toml.canon
+  MANU SCRIPTUM (exemplar crusta.canon; planum toml-arbor Q6).
+
+  Registrum ex toml.registrum.stml GENERATUR (toml_registrum_coctum.c),
+  canon manu: custos derivae (probatio_toml_canon) regulas huius
+  plagulae contra registrum generum (XIV), locorum (XXV), lexicon
+  (XXVIII) et involucrum UTRIMQUE retiret (regula absens ET regula
+  rancida rubent); sigillum registri infra PINNATUM contra vivum
+  conferitur.
+
+  SPECIES LOCORUM MENSURATAE (2026-09-28: sonda super documenta omnia
+  portae Q5 - casus XLI communes, toml-test 1.0.0 valida et invalida,
+  domus, silvestria MDCCXCIV - et casus angulares), non ex fonte
+  aedificatoris lectae; aedificator mutatus canonem mutare debet -
+  porta canonis id falsificat. Valor paris aut elementum seriei:
+  septem genera valoris aut malum (valor pravus malum fit, clavis
+  manet). Malum lexemata quaelibet fert.
+
+  ATTRIBUTA LEXEMATUM mensurata: 'cr' et 'nul' in lexematibus
+  VERBATIM (valor CR aut NUL ferens); 'crlf' in terminatoribus
+  (linea-finis, linea) - CRLF; lexemata FIXA nullum. Involucrum
+  positiones et 'linea-initium' fert (vexillum per regulam lectoris
+  STML, planum Q4).
+
+  INVOLUCRUM: <arbor>. Consulto NON in canones.registrum. Iudicium
+  manuale:
+    bin/canon_examen -canon toml/grammatica/toml.canon <doc.stml>
+
+  TRIVIA (#trivia): spatium, commentum, linea (trivium intra uncos et
+  lineae vacuae) - in <ante> et <post> cuiusque lexematis.
+
+  Sigillum b7568363: XIV genera, XXV loci (Q2).
+-->
+<canon dialectus="toml" versio="1">
+
+  <!-- =============== FRAGMENTA =============== -->
+
+  <!-- lexema unum quodlibet (locus TOKEN) -->
+  <#lexema-unum>
+    <liberum nomen="toml-finis" maximum="1"/>
+    <liberum nomen="toml-clavis-nuda" maximum="1"/>
+    <liberum nomen="toml-clavis-gemina" maximum="1"/>
+    <liberum nomen="toml-clavis-simplex" maximum="1"/>
+    <liberum nomen="toml-punctum" maximum="1"/>
+    <liberum nomen="toml-signum" maximum="1"/>
+    <liberum nomen="toml-tabula-apertura" maximum="1"/>
+    <liberum nomen="toml-tabula-clausura" maximum="1"/>
+    <liberum nomen="toml-series-tabularum-apertura" maximum="1"/>
+    <liberum nomen="toml-series-tabularum-clausura" maximum="1"/>
+    <liberum nomen="toml-chorda-gemina" maximum="1"/>
+    <liberum nomen="toml-chorda-gemina-multa" maximum="1"/>
+    <liberum nomen="toml-chorda-simplex" maximum="1"/>
+    <liberum nomen="toml-chorda-simplex-multa" maximum="1"/>
+    <liberum nomen="toml-numerus" maximum="1"/>
+    <liberum nomen="toml-tempus" maximum="1"/>
+    <liberum nomen="toml-verum" maximum="1"/>
+    <liberum nomen="toml-falsum" maximum="1"/>
+    <liberum nomen="toml-series-apertura" maximum="1"/>
+    <liberum nomen="toml-series-clausura" maximum="1"/>
+    <liberum nomen="toml-compacta-apertura" maximum="1"/>
+    <liberum nomen="toml-compacta-clausura" maximum="1"/>
+    <liberum nomen="toml-comma" maximum="1"/>
+    <liberum nomen="toml-linea-finis" maximum="1"/>
+    <liberum nomen="toml-spatium" maximum="1"/>
+    <liberum nomen="toml-commentum" maximum="1"/>
+    <liberum nomen="toml-linea" maximum="1"/>
+    <liberum nomen="toml-ignotum" maximum="1"/>
+  </#>
+
+  <!-- lexemata quotlibet (locus LISTA_TOKEN: malum.tokens) -->
+  <#lexemata-multa>
+    <liberum nomen="toml-finis"/>
+    <liberum nomen="toml-clavis-nuda"/>
+    <liberum nomen="toml-clavis-gemina"/>
+    <liberum nomen="toml-clavis-simplex"/>
+    <liberum nomen="toml-punctum"/>
+    <liberum nomen="toml-signum"/>
+    <liberum nomen="toml-tabula-apertura"/>
+    <liberum nomen="toml-tabula-clausura"/>
+    <liberum nomen="toml-series-tabularum-apertura"/>
+    <liberum nomen="toml-series-tabularum-clausura"/>
+    <liberum nomen="toml-chorda-gemina"/>
+    <liberum nomen="toml-chorda-gemina-multa"/>
+    <liberum nomen="toml-chorda-simplex"/>
+    <liberum nomen="toml-chorda-simplex-multa"/>
+    <liberum nomen="toml-numerus"/>
+    <liberum nomen="toml-tempus"/>
+    <liberum nomen="toml-verum"/>
+    <liberum nomen="toml-falsum"/>
+    <liberum nomen="toml-series-apertura"/>
+    <liberum nomen="toml-series-clausura"/>
+    <liberum nomen="toml-compacta-apertura"/>
+    <liberum nomen="toml-compacta-clausura"/>
+    <liberum nomen="toml-comma"/>
+    <liberum nomen="toml-linea-finis"/>
+    <liberum nomen="toml-spatium"/>
+    <liberum nomen="toml-commentum"/>
+    <liberum nomen="toml-linea"/>
+    <liberum nomen="toml-ignotum"/>
+  </#>
+
+  <!-- valor paris: locus NODUS unus (septem genera aut malum) -->
+  <#valor-unus>
+    <liberum nomen="chorda" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="boolean" maximum="1"/>
+    <liberum nomen="tempus" maximum="1"/>
+    <liberum nomen="series" maximum="1"/>
+    <liberum nomen="tabula-compacta" maximum="1"/>
+    <liberum nomen="malum" maximum="1"/>
+  </#>
+
+  <!-- elementa seriei: valores, commata, mala -->
+  <#valores-seriei>
+    <liberum nomen="chorda"/>
+    <liberum nomen="numerus"/>
+    <liberum nomen="boolean"/>
+    <liberum nomen="tempus"/>
+    <liberum nomen="series"/>
+    <liberum nomen="tabula-compacta"/>
+    <liberum nomen="malum"/>
+    <liberum nomen="comma"/>
+  </#>
+
+  <!-- trivia: ante/post lexematis cuiusque -->
+  <#trivia>
+    <liberum nomen="toml-spatium"/>
+    <liberum nomen="toml-commentum"/>
+    <liberum nomen="toml-linea"/>
+  </#>
+
+  <!-- =============== INVOLUCRUM =============== -->
+
+  <elementum nomen="arbor" radix="verum"
+    nota="documentum subarboris (arbor M1): liberum unum, genus
+          quodlibet - documentum ex aedificatore, aliud ex proiectione
+          subarboris">
+    <attributum nomen="grammatica" genus="electio" necessarium="verum">
+      <optio>toml</optio>
+    </attributum>
+    <attributum nomen="registrum-sigillum" genus="electio"
+      necessarium="verum"
+      nota="PINNA: sigillum FNV-1a tabularum toml_registrum_coctum.c (ex
+            toml.registrum.stml; Q2: XIV genera, XXV loci). Declaratio
+            mutata sine hac optione mutata rubet in iudicio ET in
+            custode derivae (probatio_toml_canon optionem contra
+            materia_arbor_sigillum vivum confert). Manu movenda cum
+            causa.">
+      <optio>b7568363</optio>
+    </attributum>
+    <attributum nomen="fons"    genus="numerus"/>
+    <attributum nomen="b"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+    <attributum nomen="linea-initium" genus="electio"
+      nota="attributum NUDUM - stml praesentiam ut 'true' internat;
+            lexema primum lineam incipit">
+      <optio>true</optio>
+    </attributum>
+    <liberum nomen="documentum" maximum="1"/>
+    <liberum nomen="caput-tabulae" maximum="1"/>
+    <liberum nomen="caput-seriei" maximum="1"/>
+    <liberum nomen="par" maximum="1"/>
+    <liberum nomen="clavis" maximum="1"/>
+    <liberum nomen="chorda" maximum="1"/>
+    <liberum nomen="numerus" maximum="1"/>
+    <liberum nomen="boolean" maximum="1"/>
+    <liberum nomen="tempus" maximum="1"/>
+    <liberum nomen="series" maximum="1"/>
+    <liberum nomen="tabula-compacta" maximum="1"/>
+    <liberum nomen="comma" maximum="1"/>
+    <liberum nomen="linea" maximum="1"/>
+    <liberum nomen="malum" maximum="1"/>
+  </elementum>
+
+  <!-- TRIVIA: unius domini semper (invariatum circuitus) -->
+
+  <elementum nomen="ante">
+    <<#trivia>>
+  </elementum>
+
+  <elementum nomen="post">
+    <<#trivia>>
+  </elementum>
+
+  <!-- =============== GENERA ET LOCI ===============
+       Ordo registri (toml.registrum.stml). Locus quisque SEMEL aut
+       nusquam: absentia canonica (locus NIHIL non scribitur; lista in
+       primo appendendo nascitur).
+       -->
+
+  <elementum nomen="documentum"
+    nota="radix: sententiae ordine octetorum + lexema FINIS">
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="cauda" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="documentum">
+    <liberum nomen="par"/>
+    <liberum nomen="caput-tabulae"/>
+    <liberum nomen="caput-seriei"/>
+    <liberum nomen="linea"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="cauda" intra="documentum">
+    <liberum nomen="toml-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="caput-tabulae"
+    nota="[clavis]: tabula currens mutatur">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="clavis" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="caput-tabulae">
+    <liberum nomen="toml-tabula-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="clavis" intra="caput-tabulae">
+    <liberum nomen="clavis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="caput-tabulae">
+    <liberum nomen="toml-tabula-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="caput-seriei"
+    nota="[[clavis]]: elementum novum seriei tabularum">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="clavis" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="caput-seriei">
+    <liberum nomen="toml-series-tabularum-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="clavis" intra="caput-seriei">
+    <liberum nomen="clavis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="caput-seriei">
+    <liberum nomen="toml-series-tabularum-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="par"
+    nota="clavis = valor; valor pravus malum est (clavis manet)">
+    <liberum nomen="clavis" maximum="1"/>
+    <liberum nomen="tok_signum" maximum="1"/>
+    <liberum nomen="valor" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="clavis" intra="par">
+    <liberum nomen="clavis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_signum" intra="par">
+    <liberum nomen="toml-signum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="valor" intra="par">
+    <<#valor-unus>>
+  </elementum>
+
+  <elementum nomen="clavis"
+    nota="segmenta (nuda, gemina, simplex) et puncta ordine octetorum">
+    <liberum nomen="partes" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="partes" intra="clavis">
+    <liberum nomen="toml-clavis-nuda"/>
+    <liberum nomen="toml-clavis-gemina"/>
+    <liberum nomen="toml-clavis-simplex"/>
+    <liberum nomen="toml-punctum"/>
+  </elementum>
+
+  <elementum nomen="chorda"
+    nota="quattuor formae: genus lexematis dicit">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="chorda">
+    <liberum nomen="toml-chorda-gemina" maximum="1"/>
+    <liberum nomen="toml-chorda-gemina-multa" maximum="1"/>
+    <liberum nomen="toml-chorda-simplex" maximum="1"/>
+    <liberum nomen="toml-chorda-simplex-multa" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="numerus"
+    nota="integer aut fluitans: coctio classem dicit">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="numerus">
+    <liberum nomen="toml-numerus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="boolean"
+    nota="true aut false">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="boolean">
+    <liberum nomen="toml-verum" maximum="1"/>
+    <liberum nomen="toml-falsum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tempus"
+    nota="quattuor genera: coctio dicit">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="tempus">
+    <liberum nomen="toml-tempus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="series"
+    nota="[v, v]: valores, commata, mala; comma caudale licitum">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="series">
+    <liberum nomen="toml-series-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="series">
+    <<#valores-seriei>>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="series">
+    <liberum nomen="toml-series-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tabula-compacta"
+    nota="{k = v, ...}: paria, commata, mala">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="tabula-compacta">
+    <liberum nomen="toml-compacta-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="tabula-compacta">
+    <liberum nomen="par"/>
+    <liberum nomen="comma"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="tabula-compacta">
+    <liberum nomen="toml-compacta-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="comma"
+    nota="',' inter valores seriei aut paria tabulae compactae">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="comma">
+    <liberum nomen="toml-comma" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="linea"
+    nota="linea nova quae sententiam terminat">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="linea">
+    <liberum nomen="toml-linea-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="malum"
+    nota="totalitas (T4): lexemata quae grammatica ponere non potuit">
+    <liberum nomen="tokens" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tokens" intra="malum">
+    <<#lexemata-multa>>
+  </elementum>
+
+  <!-- =============== LEXEMATA =============== -->
+
+  <elementum nomen="toml-finis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-clavis-nuda" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-clavis-gemina" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-clavis-simplex" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-punctum">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-signum">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-tabula-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-tabula-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-series-tabularum-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-series-tabularum-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-chorda-gemina" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-chorda-gemina-multa" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-chorda-simplex" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-chorda-simplex-multa" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-numerus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-tempus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-verum">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-falsum">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-series-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-series-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-compacta-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-compacta-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-comma">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-linea-finis">
+    <attributum nomen="crlf" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-spatium" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-commentum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-linea">
+    <attributum nomen="crlf" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="toml-ignotum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+</canon>

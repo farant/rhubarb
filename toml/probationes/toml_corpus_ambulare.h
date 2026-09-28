@@ -45,4 +45,10 @@ toml_corpus_ambulare (
                   vacuum* datum,
         TomlCorpusNumeri* numeri);
 
+/* Casus inlinei communes (portae stml et canonis) */
+externus constans character* constans TOML_CASUS[];
+
+i32
+toml_casus_numerus (vacuum);
+
 #endif /* TOML_CORPUS_AMBULARE_H */

@@ -31,30 +31,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* fontes portae arboris (Q4), verbatim */
-hic_manens constans character* CASUS[] = {
-    "a = 1\n", "", "[a.b]\nc = 1\n", "[[p]]\nx = 1\n[[p]]\nx = 2\n",
-    "[ a . \"b\" ]",
-    "s = \"x\"\ni = 1\nf = 1.5\nb = true\nt = 1979-05-27\nl = 'x'\n"
-        "m = '''x'''\n",
-    "a = [1, [2, 3], {x = 1}]\n", "a = [\n  1, # c\n  2,\n]\n",
-    "t = { a = 1, b.c = 2 }\n", "t = {}\ns = []\n",
-    "t = {a = 1,\n b = 2}\n", "# c\na = 1\n", "a = 1 # c\n",
-    "a = 1\n\n# c\nb = 2\n", "a = [1, # c\n 2]\n", "a = 1\nb = 2\n",
-    "a = \nb = 2\n", "a 1\nb = 2\n", "a..b = 1\n", "= 1\n", "]]\n",
-        "}\n",
-    "a = 1\n= x\nb = 2\n]]\nc = 3\n}\nd = 4\n", "a = hello\nb = 2\n",
-    "a = 1 2\n", "a = [1 2]\n", "a = [1, 2", "a = \"abc",
-        "a = \"abc\\\"",
-    "a = '''x", "[a", "t = {a = 1", "a = [[[[",
-    "a = 1\r\n", "a = [\r\n  1, # c\r\n  2,\r\n]\r\n",
-    "\xef\xbb\xbf" "a = 1\n",
-    /* chordae et tempora quae STML fugare debet */
-    "s = \"</toml-chorda-gemina>\"\n", "s = \"a\\u00e9\"\n",
-    "c = 'x' # </toml-commentum>\n", "d = 1979-05-27 07:32:00Z\n",
-    "m = \"\"\"\nline\n  indent\n\"\"\"\n"
-};
-
 enumeratio {
     CIRCUITUS_IDEM = 0,
     CIRCUITUS_PARSATOR_NIHIL,
@@ -281,20 +257,20 @@ principale (vacuum)
 
     {
         i32 k;
-        i32 n = (i32)(magnitudo(CASUS) / magnitudo(CASUS[0]));
+        i32 n = toml_casus_numerus();
 
         imprimere("\n--- PORTA: circuitus STML, casus (%d) ---\n",
             (integer)n);
         per (k = ZEPHYRUM; k < n; k++)
         {
-                  i32  l = (i32)strlen(CASUS[k]);
+                  i32  l = (i32)strlen(TOML_CASUS[k]);
             character* f = (character*)piscina_allocare(opus,
                 (i64)(l + I));
             Circuitus c;
 
-            memcpy(f, CASUS[k], (size_t)(l + I));
+            memcpy(f, TOML_CASUS[k], (size_t)(l + I));
             c = _circuitum_probare(opus, f, (s32)l, FALSUM);
-            _causam_imprimere(CASUS[k], &c);
+            _causam_imprimere(TOML_CASUS[k], &c);
             CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
             piscina_vacare(opus);
         }

@@ -626,22 +626,39 @@ green. No substrate change.
 
 **Files:** Create `toml/grammatica/toml.canon`, `toml/probationes/probatio_toml_canon.c`.
 
-- [ ] **Step 1: Measure the species tables** — a scratch probe over every
+- [x] **Step 1: Measure the species tables** — a scratch probe over every
   Q5 document prints, per genus and slot, the child genera seen (crusta
   P8's method: measured, not read from the builder).
-- [ ] **Step 2: Write the failing gate** — `canon_legere`, then for every
+- [x] **Step 2: Write the failing gate** — `canon_legere`, then for every
   Q5 document `stml_legere` + `canon_iudicare` → zero vitia; the drift
   guard (one rule per `TomlGenus`, count = `TOML_GENUS_NUMERUS_GENERUM`;
   every locus title under its rule; every lexicon title's `toml-*` tag in
   the lexeme fragments; every rule names a live genus); pinned
   `registrum-sigillum` equals `materia_arbor_sigillum(piscina,
   &TOML_REGISTRUM)` live.
-- [ ] **Step 3: Write the canon** from html's/crusta's header shape, the
+- [x] **Step 3: Write the canon** from html's/crusta's header shape, the
   measured species; `<ante>`/`<post>` allow `toml-spatium`,
   `toml-commentum`, `toml-linea` only.
-- [ ] **Step 4: Plant** — delete the `par` rule → guard AND judgment red;
+- [x] **Step 4: Plant** — delete the `par` rule → guard AND judgment red;
   a false sigillum → guard red; revert both.
-- [ ] **Step 5: Commit** — `["toml/grammatica/toml.canon", "toml/probationes/probatio_toml_canon.c"]`, `["toml"]`.
+- [x] **Step 5: Commit** — `["toml/grammatica/toml.canon", "toml/probationes/probatio_toml_canon.c"]`, `["toml"]`.
+
+**Executed 2026-09-28.** Species MEASURED by a temporary probe (not
+committed) over every Q5 document and ~25 corner cases: per
+grandparent/parent the child elements and every attribute. Findings the
+canon encodes: a pair's value (and an array element) is one of the seven
+value kinds or a `malum`; inline tables hold pairs, commas, mala; a
+`malum` holds any lexeme; text-bearing lexemes carry `cr`/`nul`; TOML's
+two newline lexemes carry `crlf` (crusta's canon has no such attribute —
+its newlines were declared differently); `ante`/`post` hold spatium,
+commentum, linea only. The inline cases moved into the shared helper
+(`TOML_CASUS`, read by the stml and canon gates). The canon text was
+typed through a small script from the measured tables; `toml.canon` is
+the source, never regenerated. Gate: 70 rules, drift guard both ways
+(14 genera, 25 loci, 28 lexemes, envelope), seal `b7568363` pinned, 41
+cases + 2,485 corpus documents judged with zero violations. Plants: the
+`par` rule deleted (guard AND judgments red: 620/679 toml-test vitiosa),
+a false seal (pin red, every document vitiosum); restored green.
 
 ---
 

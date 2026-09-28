@@ -137,3 +137,42 @@ toml_corpus_ambulare (
         piscina_vacare(opus);
     }
 }
+
+
+/* Casus inlinei communes (portae stml et canonis): fontes portae
+ * arboris (Q4) verbatim + stressores STML */
+constans character* constans TOML_CASUS[] = {
+    "a = 1\n", "", "[a.b]\nc = 1\n", "[[p]]\nx = 1\n[[p]]\nx = 2\n",
+    "[ a . \"b\" ]",
+    "s = \"x\"\ni = 1\nf = 1.5\nb = true\nt = 1979-05-27\nl = 'x'\n"
+        "m = '''x'''\n",
+    "a = [1, [2, 3], {x = 1}]\n", "a = [\n  1, # c\n  2,\n]\n",
+    "t = { a = 1, b.c = 2 }\n", "t = {}\ns = []\n",
+    "t = {a = 1,\n b = 2}\n", "# c\na = 1\n", "a = 1 # c\n",
+    "a = 1\n\n# c\nb = 2\n", "a = [1, # c\n 2]\n", "a = 1\nb = 2\n",
+    "a = \nb = 2\n", "a 1\nb = 2\n", "a..b = 1\n", "= 1\n", "]]\n",
+        "}\n",
+    "a = 1\n= x\nb = 2\n]]\nc = 3\n}\nd = 4\n", "a = hello\nb = 2\n",
+    "a = 1 2\n", "a = [1 2]\n", "a = [1, 2", "a = \"abc",
+        "a = \"abc\\\"",
+    "a = '''x", "[a", "t = {a = 1", "a = [[[[",
+    "a = 1\r\n", "a = [\r\n  1, # c\r\n  2,\r\n]\r\n",
+    "\xef\xbb\xbf" "a = 1\n",
+    /* chordae et tempora quae STML fugare debet */
+    "s = \"</toml-chorda-gemina>\"\n", "s = \"a\\u00e9\"\n",
+    "c = 'x' # </toml-commentum>\n", "d = 1979-05-27 07:32:00Z\n",
+    "m = \"\"\"\nline\n  indent\n\"\"\"\n",
+    NIHIL
+};
+
+i32
+toml_casus_numerus (vacuum)
+{
+    i32 n = ZEPHYRUM;
+
+    dum (TOML_CASUS[n] != NIHIL)
+    {
+        n++;
+    }
+    redde n;
+}

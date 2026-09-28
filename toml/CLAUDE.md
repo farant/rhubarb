@@ -1,6 +1,6 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q5 done).
+**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q6 done).
 Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
@@ -64,6 +64,14 @@ comparator STRUCTURALIS and FIDELITAS, the position map verified, and the
 re-read tree emitting the source — 41 inline cases and all 2,485 corpus
 files. STML ≈ 16× the source. The corpus walk (toml-test, house, wild
 with sha256 check) is shared by the gates: `probationes/toml_corpus_ambulare`.
+
+## Canon (Q6)
+
+`grammatica/toml.canon` — hand-written, species MEASURED over every
+document; 70 rules; seal `b7568363` pinned (move it by hand, with a
+cause, when the declaration changes — the gate prints the live seal).
+Drift guard both ways in `probatio_toml_canon`. Manual judgment:
+`bin/canon_examen -canon toml/grammatica/toml.canon <doc.stml>`.
 
 ## Currere
 
