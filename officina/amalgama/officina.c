@@ -4768,6 +4768,7 @@ nomen size_t                                 memoriae_index;
 #endif /* LATINA_H */
 
 /* ================= ex include/piscina.h ================= */
+/* piscina.h - arena memoriae: liberatio tota semel (arena, pool) */
 #ifndef PISCINA_H
 #define PISCINA_H
 
@@ -4812,6 +4813,7 @@ officina_piscina_allocare_ordinatum (
 #endif
 
 /* ================= ex include/chorda.h ================= */
+/* chorda.h - chorda: mensura + datum, SINE NUL (string slice) */
 #ifndef CHORDA_H
 #define CHORDA_H
 
@@ -4853,6 +4855,7 @@ officina_chorda_comparare (
 #endif /* CHORDA_H */
 
 /* ================= ex include/chorda_aedificator.h ================= */
+/* chorda_aedificator.h - chordas accumulare (string builder) */
 #ifndef CHORDA_AEDIFICATOR_H
 #define CHORDA_AEDIFICATOR_H
 
@@ -4958,6 +4961,7 @@ officina_chorda_aedificator_finire (
 #endif /* CHORDA_AEDIFICATOR_H */
 
 /* ================= ex include/friatio.h ================= */
+/* friatio.h - functiones friationis (hash functions) */
 #ifndef FRIATIO_H
 #define FRIATIO_H
 
@@ -5017,6 +5021,7 @@ officina_friatio_fnv1a (
 #endif /* FRIATIO_H */
 
 /* ================= ex include/tabula_dispersa.h ================= */
+/* tabula_dispersa.h - tabula friationis (hash table, map) */
 #ifndef TABULA_DISPERSA_H
 #define TABULA_DISPERSA_H
 
@@ -5141,7 +5146,9 @@ officina_tabula_friare_fnv1a (
 #endif /* TABULA_DISPERSA_H */
 
 /* ================= ex include/xar.h ================= */
-/* xar.h - "Codex Tabulae Exponentialis"
+/* xar.h - tabula crescens segmentata (growable array, vector)
+ * "Codex Tabulae Exponentialis" - segmenta NON contigua: numquam
+ * xar_obtinere(x, 0) ut tabulam planam lege
  *
  * Tabula crescens sine reallocatio
  *

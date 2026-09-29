@@ -4412,6 +4412,7 @@ nomen size_t                                 memoriae_index;
 #endif /* LATINA_H */
 
 /* ================= ex include/piscina.h ================= */
+/* piscina.h - arena memoriae: liberatio tota semel (arena, pool) */
 #ifndef PISCINA_H
 #define PISCINA_H
 
@@ -4456,6 +4457,7 @@ tessera_piscina_allocare_ordinatum (
 #endif
 
 /* ================= ex include/chorda_aedificator.h ================= */
+/* chorda_aedificator.h - chordas accumulare (string builder) */
 #ifndef CHORDA_AEDIFICATOR_H
 #define CHORDA_AEDIFICATOR_H
 
@@ -4525,8 +4527,7 @@ tessera_chorda_aedificator_reset (
 #endif /* CHORDA_AEDIFICATOR_H */
 
 /* ================= ex include/utf8.h ================= */
-/*
- * utf8.h - Bibliotheca UTF-8 decodendi
+/* utf8.h - UTF-8 decodere et encodere (unicode, codepoints)
  *
  * Functiones purae pro decodendo UTF-8 ad codepoints.
  * Nulla allocatio, nulla dependentia praeter latina.h

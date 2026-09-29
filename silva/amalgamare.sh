@@ -100,7 +100,11 @@ done
 # compilatio standalone, hospes, nm, censura omnia sequuntur.
 # Ratio plena: tools/porta_vetustatis.sh
 echo "  [porta 0] vetustas manifestorum"
-"$RADIX_DIR/tools/porta_vetustatis.sh" silva "$BUILD_DIR/vetustas" || exit 1
+# AMALGAMA_COMPARARE: porta generata IV manifesta IAM iudicavit (bis
+# currere ~XXX s silvae constabat) - hic omittitur
+if [ "${AMALGAMA_COMPARARE:-0}" != 1 ]; then
+    "$RADIX_DIR/tools/porta_vetustatis.sh" silva "$BUILD_DIR/vetustas" || exit 1
+fi
 
 # ---- 2. build + run the amalgamator (manifest + shared mechanism) ----
 # Fontes ex POLITICA, non hic enumerati: haec lista et ea scriptoris
@@ -118,6 +122,23 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -I"$SILVA_DIR/instrumenta" \
     $FONTES_AMALGAMATORIS $obj_files \
     -o "$BUILD_DIR/amalgamator" || exit 1
 
+# AMALGAMA_COMPARARE=1: generare in build/, conferre cum COMMISSO, exire
+# ANTE verificationes (porta generata VI; generatio ~0,2 s): amalgama
+# commissa == regeneratio hodierna. Olim nulla porta id videbat -
+# amalgamata_probare compilat tantum, generata I caput solum confert
+# (quaestio ...G73P, quater icta). Exitus 0 recens, 1 rancida, 2 fracta.
+if [ "${AMALGAMA_COMPARARE:-0}" = 1 ]; then
+    "$BUILD_DIR/amalgamator" "$RADIX_DIR" "$BUILD_DIR/comparatio_silva.c" \
+        > "$BUILD_DIR/comparatio_silva.log" 2>&1 || exit 2
+    if cmp -s "$BUILD_DIR/comparatio_silva.c" "$AMALGAMA_DIR/silva.c"; then
+        echo "amalgama silva: recens"
+        exit 0
+    fi
+    echo "amalgama silva: RANCIDA ($(diff "$AMALGAMA_DIR/silva.c" \
+        "$BUILD_DIR/comparatio_silva.c" | grep -c '^[<>]') lineae) -" \
+        "./silva/amalgamare.sh regenerat"
+    exit 1
+fi
 "$BUILD_DIR/amalgamator" "$RADIX_DIR" "$AMALGAMA_DIR/silva.c" || exit 1
 
 # ---- 3. VERIFICATIO: standalone compile under the FULL flag set ----
