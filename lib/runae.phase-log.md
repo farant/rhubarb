@@ -226,3 +226,21 @@ check dropped.
 ## U5 — tessera wide cells (2026-09-28)
 
 Narrative in `tessera/phase-log.md` ("WIDE CELLS (runae U5)").
+
+## U5b — tessera grapheme cells (2026-09-28)
+
+Narrative in `tessera/phase-log.md` ("GRAPHEME CELLS (runae U5b)"); D7 = (a)
+per-opus cluster table (Fran). Commit 5ed13286.
+
+## U5c — width policy from the environment (2026-09-28)
+
+Narrative in `tessera/phase-log.md` ("WIDTH POLICY FROM THE ENVIRONMENT").
+`RunaePolitica` / `runae_graphema_ex_politica` live here: SIMPLEX = the
+ZWJ rule only (the spacing-mark rule was refuted by Fran's second
+Terminal.app look). Commit e4b08570.
+
+**State before compaction (2026-09-28):** U1–U5c done on rhubarb-secunda
+(9 commits ahead of main, none merged). NEXT U6: saltuarius column math
+and `lib/excerptum`'s caret move from rune counts to `runae` widths (the
+ledger's measured cases 広 / e+U+0301 become tests), then U7 (the Lapide
+viewer), U8 (RELATIO, ledger …VRTHANR → impletum, merge to main).
