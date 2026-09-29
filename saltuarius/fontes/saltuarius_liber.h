@@ -8,7 +8,9 @@
  * relinquit - stillicidium acceptum, notatum).
  *
  * Textus INICITUR (limes/principale discum legit; probationes
- * octetos tradunt). Cursor in RUNIS (columna = index runae).
+ * octetos tradunt). Cursor in COLUMNIS PINGENDIS (runae U6d):
+ * columna = columna in scrinio, gradus per unitatem pingendam
+ * (runae_columnam_quaerere), politica latitudinis ab app data.
  */
 
 #ifndef SALTUARIUS_LIBER_H
@@ -18,6 +20,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "silva.h"
+#include "runae.h"
 #include "saltuarius_nexus.h"
 
 nomen structura {
@@ -56,14 +59,17 @@ nomen structura {
                  i8* classis;        /* per octetum; NIHIL si merus */
                 b32  est_colorata;
                 s32  cursor_linea;   /* 0-basata */
-                s32  cursor_columna; /* index runae in linea */
+                s32  cursor_columna; /* columna pingenda in linea */
                 s32  volumen_y;      /* prima linea visibilis */
-                s32  volumen_x;      /* prima runa visibilis */
+                s32  volumen_x;      /* prima columna visibilis */
     /* Phase C: parse + strata */
          SilvaParsura* parsura;        /* NIHIL si non parsata */
     SaltuariusStratum* strata_visus; /* [numerus_stratorum] */
                   i32  numerus_stratorum; /* >= 1 (stratum 0 semper) */
                   s32  stratum_currens;   /* 0-basatum */
+    /* runae U6d: politica latitudinis (GRAPHEMATUM ordinaria; app
+     * eam ex tessera ponit, ut mensura picturae congruat) */
+        RunaePolitica politica;
 } SaltuariusLiber;
 
 /* Aperire librum ex octetis iniectis: textus transcribitur in
@@ -129,7 +135,7 @@ saltuarius_liber_linea (
 
 /* Runae lineae (ambulatu utf8) */
 i32
-saltuarius_liber_linea_runae (
+saltuarius_liber_linea_latitudo (
     constans SaltuariusLiber* liber,
                          s32  index);
 

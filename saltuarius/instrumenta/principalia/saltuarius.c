@@ -18,6 +18,7 @@
 #include "saltuarius_limes.h"
 #include "saltuarius_nexus.h"
 #include "saltuarius_visum.h"
+#include "saltuarius_penicillus.h"
 #include "saltuarius_bibliotheca.h"
 #include "saltuarius_origo.h"
 #include "saltuarius_structura.h"
@@ -179,6 +180,8 @@ _ad_locum_ire (
                     NUNTIUS_QUADRA);
                 redde;
             }
+            /* mensura libri = pictura operis (runae U6d) */
+            liber->politica = saltuarius_pen_politica(app->opus);
             saltuarius_bibliotheca_condere(&app->bibliotheca,
                 liber);
         }
@@ -293,6 +296,8 @@ _intrare (
                         NUNTIUS_QUADRA);
                     redde;
                 }
+                /* mensura libri = pictura operis (runae U6d) */
+                liber->politica = saltuarius_pen_politica(app->opus);
                 saltuarius_bibliotheca_condere(&app->bibliotheca,
                     liber);
             }

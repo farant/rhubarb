@@ -326,3 +326,13 @@ Narrative in `tessera/phase-log.md` ("PLACE ONE UNIT"):
 `tessera_graphema_ponere`, `_octetos_scribere` rebuilt on it, and a
 cross-check of tessera's unit rule against `runae_latitudo_textus` over
 the whole corpus.
+
+## U6d — saltuarius measures and paints by columns (2026-09-29)
+
+Narrative in `saltuarius/phase-log.md` ("WIDE AND COMBINED
+CHARACTERS"). The model's cursor is a screen column (runae's text-level
+functions); painting goes one unit at a time through
+`tessera_graphema_ponere`. Fran's look in Ghostty: right; one Ghostty
+artefact (pre-base vowel sign under a block cursor) recorded as the
+terminal's. The ledger item …VRTHANR is now satisfied in all three named
+consumers (excerptum, tessera, saltuarius); it closes in U8.

@@ -12,6 +12,7 @@
 #include "credo.h"
 #include "saltuarius_visum.h"
 #include "saltuarius_origo.h"
+#include "saltuarius_penicillus.h"
 #include "saltuarius_proba.h"
 #include <stdio.h>
 #include <string.h>
@@ -159,6 +160,78 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (liber->volumen_x, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, II,
             ZEPHYRUM).signum, (i32)'a');
+
+        saltuarius_liber_destruere(liber);
+    }
+
+
+    /* ========================================================
+     * PROBARE: graphemata lata et composita (runae U6d) - unitas
+     * per tessera_graphema_ponere, x per latitudinem promotum
+     * ======================================================== */
+
+    {
+        SaltuariusLiber* liber;
+                     i8  octeti[XVI];
+
+        imprimere("\n--- Probans graphemata lata ---\n");
+
+        /* "a広b" et "e+acutum x y"; textus ad x=II */
+        liber = saltuarius_liber_aperire(piscina, nexus,
+            chorda_ex_literis("latae.md", piscina),
+            chorda_ex_literis("a\xE5\xBA\x83" "b\n"
+                              "e\xCC\x81" "xy\n", piscina));
+        CREDO_NON_NIHIL (liber);
+        saltuarius_visum_pingere(liber, res, opus);
+
+        /* 広 cellulas II tenet, b SEQUITUR (non super
+         * continuationem scriptum - id 広 deleret) */
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, II, ZEPHYRUM).signum,
+            (i32)'a');
+        CREDO_VERUM ((PROBA_CELLA(opus, III, ZEPHYRUM).ornamenta
+            & TESSERA_ORNAMENTUM_LATUM) != ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)tessera_cellulae_octeti(opus, III,
+            ZEPHYRUM, octeti, XVI), III);
+        CREDO_VERUM ((PROBA_CELLA(opus, IV, ZEPHYRUM).ornamenta
+            & TESSERA_ORNAMENTUM_CONTINUATIO) != ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, V, ZEPHYRUM).signum,
+            (i32)'b');
+
+        /* e + acutum: graphema UNUM in cellula una, x sequitur */
+        CREDO_AEQUALIS_I32 ((i32)tessera_cellulae_octeti(opus, II, I,
+            octeti, XVI), III);
+        CREDO_VERUM (memcmp(octeti, "e\xCC\x81", III) == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, III, I).signum,
+            (i32)'x');
+
+        /* cursor in b (columna III): x = II + III */
+        saltuarius_liber_movere_col(liber, II);
+        saltuarius_visum_pingere(liber, res, opus);
+        CREDO_AEQUALIS_S32 (opus->cursor_x, V);
+        CREDO_VERUM (
+            saltuarius_proba_quaerere(opus, VII, "1:4") > ZEPHYRUM);
+
+        /* volumen in dimidio altero 広: pars visibilis spatium,
+         * b ad columnam primam post eam */
+        liber->volumen_x = II;
+        saltuarius_visum_pingere(liber, res, opus);
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, II, ZEPHYRUM).signum,
+            (i32)' ');
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, III, ZEPHYRUM).signum,
+            (i32)'b');
+        CREDO_AEQUALIS_S32 (opus->cursor_x, III);
+
+        /* penicillus: unitas lata quae non capit NON ponitur;
+         * tabula ut spatium (disciplina penicilli) */
+        CREDO_AEQUALIS_I32 ((i32)saltuarius_pen_textum(opus, ZEPHYRUM,
+            V, (constans i8*)"ab\xE5\xBA\x83", V, III,
+            tessera_stilus_nativus()), II);
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, II, V).signum,
+            ZEPHYRUM);
+        (vacuum)saltuarius_pen_textum(opus, ZEPHYRUM, VI,
+            (constans i8*)"a\tb", III, X, tessera_stilus_nativus());
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, I, VI).signum,
+            (i32)' ');
 
         saltuarius_liber_destruere(liber);
     }

@@ -64,6 +64,8 @@ declare -a RADIX_FONTES=(
     "via"
     "iter_directoria"
     "utf8"
+    "runae"
+    "runae_tabulae"
     "credo"
 )
 

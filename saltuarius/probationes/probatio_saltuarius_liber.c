@@ -116,9 +116,9 @@ principale (vacuum)
                 piscina));
         CREDO_NON_NIHIL (liber);
         CREDO_AEQUALIS_I32 (
-            saltuarius_liber_linea_runae(liber, ZEPHYRUM), X);
+            saltuarius_liber_linea_latitudo(liber, ZEPHYRUM), X);
         CREDO_AEQUALIS_I32 (
-            saltuarius_liber_linea_runae(liber, II), III);
+            saltuarius_liber_linea_latitudo(liber, II), III);
 
         /* columna ad lineam breviorem clausa */
         saltuarius_liber_movere_col(liber, VIII);
@@ -154,6 +154,105 @@ principale (vacuum)
         saltuarius_liber_aptare(liber, II, V);
         CREDO_AEQUALIS_S32 (liber->volumen_x, ZEPHYRUM);
 
+        saltuarius_liber_destruere(liber);
+    }
+
+
+    /* ========================================================
+     * PROBARE: columnae pingendae (runae U6d) - cursor in
+     * COLUMNIS, gradus per unitatem, adstrictio ad initium
+     * ======================================================== */
+
+    {
+        SaltuariusLiber* liber;
+                    i32  primae;
+                    i32  secundae;
+                    i32  tertiae;
+
+        imprimere("\n--- Probans columnas pingendas ---\n");
+
+        /* "a広b" (IV columnae), "e+acutum x y" (III), "広広" (IV) */
+        liber = saltuarius_liber_aperire(piscina, nexus,
+            chorda_ex_literis("latae.md", piscina),
+            chorda_ex_literis("a\xE5\xBA\x83" "b\n"
+                              "e\xCC\x81" "xy\n"
+                              "\xE5\xBA\x83\xE5\xBA\x83\n", piscina));
+        CREDO_NON_NIHIL (liber);
+        primae    = liber->lineae[ZEPHYRUM].offset;
+        secundae  = liber->lineae[I].offset;
+        tertiae   = liber->lineae[II].offset;
+        CREDO_AEQUALIS_I32 (
+            saltuarius_liber_linea_latitudo(liber, ZEPHYRUM), IV);
+        CREDO_AEQUALIS_I32 (
+            saltuarius_liber_linea_latitudo(liber, I), III);
+        CREDO_AEQUALIS_I32 (
+            saltuarius_liber_linea_latitudo(liber, II), IV);
+
+        /* dextrorsum per unitates: 0 -> 1 (広) -> 3 (b) -> 4 */
+        saltuarius_liber_movere_col(liber, I);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, I);
+        CREDO_AEQUALIS_S32 (saltuarius_liber_cursor_offset(liber),
+            (s32)primae + I);
+        saltuarius_liber_movere_col(liber, I);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, III);
+        CREDO_AEQUALIS_S32 (saltuarius_liber_cursor_offset(liber),
+            (s32)primae + IV);
+        saltuarius_liber_movere_col(liber, II);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, IV);
+        /* sinistrorsum: 4 -> 3 -> 1 (initium 広, non 2) */
+        saltuarius_liber_movere_col(liber, -II);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, I);
+
+        /* columna data in dimidio altero (ut clic muris) ->
+         * movere_col(0) ad initium adstringit */
+        liber->cursor_columna = II;
+        saltuarius_liber_movere_col(liber, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, I);
+
+        /* verticaliter: b (col III) -> "広広": col III in 広 altero
+         * -> initium eius, col II */
+        saltuarius_liber_movere_col(liber, I);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, III);
+        saltuarius_liber_movere(liber, II);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, II);
+        CREDO_AEQUALIS_S32 (saltuarius_liber_cursor_offset(liber),
+            (s32)tertiae + III);
+
+        /* "e+acutum x y": col II = y; sinistrorsum -> x (col I),
+         * offset post graphema (III octeti) */
+        saltuarius_liber_movere(liber, -I);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, II);
+        saltuarius_liber_movere_col(liber, -I);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, I);
+        CREDO_AEQUALIS_S32 (saltuarius_liber_cursor_offset(liber),
+            (s32)secundae + III);
+
+        /* offset -> columna: 広 alterum lineae II = col II */
+        saltuarius_liber_cursor_ad_offset(liber, (s32)tertiae + III);
+        CREDO_AEQUALIS_S32 (liber->cursor_linea, II);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, II);
+        saltuarius_liber_destruere(liber);
+
+        /* politica: familia ZWJ GRAPHEMATUM = unitas una (II);
+         * SIMPLEX = tres (ut Terminal.app pingit) */
+        liber = saltuarius_liber_aperire(piscina, nexus,
+            chorda_ex_literis("familia.md", piscina),
+            chorda_ex_literis("x\xF0\x9F\x91\xA8\xE2\x80\x8D"
+                              "\xF0\x9F\x91\xA9\xE2\x80\x8D"
+                              "\xF0\x9F\x91\xA7" "y", piscina));
+        CREDO_NON_NIHIL (liber);
+        CREDO_AEQUALIS_I32 (
+            saltuarius_liber_linea_latitudo(liber, ZEPHYRUM), IV);
+        saltuarius_liber_movere_col(liber, II);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, III);
+        liber->politica = RUNAE_POLITICA_SIMPLEX;
+        CREDO_AEQUALIS_I32 (
+            saltuarius_liber_linea_latitudo(liber, ZEPHYRUM), VIII);
+        saltuarius_liber_primum(liber);
+        saltuarius_liber_movere_col(liber, II);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, III);
+        saltuarius_liber_movere_col(liber, II);
+        CREDO_AEQUALIS_S32 (liber->cursor_columna, VII);
         saltuarius_liber_destruere(liber);
     }
 

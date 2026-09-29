@@ -1171,3 +1171,57 @@ tessera_replere, utf8_codere, and silva's entire additiones
 I+II exist because this app asked.
 
 **Custos silvae vigilat. Next: silva M2 — the C89 grammar.**
+
+## WIDE AND COMBINED CHARACTERS (runae U6d, 2026-09-29)
+
+**INTENTIO (Fran approved the U6 plan and the re-split: runae measures,
+tessera places, saltuarius keeps only its own choices).** saltuarius
+thought "one rune = one cell" twice: the model (`cursor_columna` was a
+rune index; clamp, scroll and the offset conversions counted runes) and
+the painting (`_lineam_ponere`, `saltuarius_pen_textum` put one rune per
+cell and advanced x by one). Since tessera U5 the second is a live BUG,
+not an imprecision: `広` at x marks x+1 as its continuation, the next
+rune is written at x+1, and tessera's half-overwrite rule erases `広`.
+The first red run confirmed it (cell 3 lost its LATUM flag).
+
+**Model.** `cursor_columna` is now a SCREEN column (its name finally
+true); `volumen_x` too. New field `SaltuariusLiber.politica`
+(RunaePolitica, GRAPHEMATUM by default so tests are terminal-free; the
+app stamps `saltuarius_pen_politica(app->opus)` on each newly opened
+book at both adoption sites in `saltuarius.c`, so measuring and drawing
+use one rule). Through runae's text-level functions (U6b):
+- `saltuarius_liber_linea_runae` → `saltuarius_liber_linea_latitudo`
+  (renamed with `./silva/renominare.sh`; two uses inside CREDO macros
+  by hand) = `runae_latitudo_textus`;
+- up/down keep the column and SNAP to the start of the unit covering
+  it; left = the unit covering column−1; right = the next unit's start
+  (a wide unit is stepped over in one move);
+- `movere_col(0)` snaps, so the mouse click (which computes a screen
+  column) is right for free;
+- `cursor_offset` = `runae_columnam_quaerere`; `cursor_ad_offset` =
+  `runae_latitudo_textus` up to the offset, then snapped.
+
+**Painting.** `saltuarius_pen_unitatem` places ONE unit within the
+remaining columns: a control byte → a space (the penicillus
+discipline, so tabs never become tessera's `?`); otherwise the width is
+measured first (`runae_graphema_ex_politica`) and a unit wider than
+the room is NOT placed; else `tessera_graphema_ponere` (U6c).
+`saltuarius_pen_textum` and `_lineam_ponere` both loop over it and
+count COLUMNS (`runae_max` → `latitudo_max`). A wide unit cut by the
+left scroll edge shows its visible half as a space.
+
+**Red first:** 14 model and 14 painting assertions red by name; **green**
+13/13. **Plants (compiling), caught by name:** no width pre-check, the
+left-edge cut ignored, stepping by column (the first version of this
+plant was mute — it did not actually break the step — and was redone),
+no vertical snap, the book's policy ignored. The real app binary builds
+(silva.o + tessera.o + lib/runae in one link: the SILVA_RUNAE_GRADUS
+rename from U6a is what makes that link possible).
+
+**Fran's look (Ghostty):** `広` intact with the cursor stepping over
+it, Japanese corpus rows solid and aligned through horizontal scroll.
+One artefact, the terminal's: with the block cursor on प in पवित्र the
+next cluster वि (pre-base vowel sign, reordered by the shaper) vanishes —
+Ghostty recolours glyphs by anchor cell, not by covered pixels.
+Recorded in `../terminal-planning/research/width-agreement-problem.md`;
+nothing to change here.

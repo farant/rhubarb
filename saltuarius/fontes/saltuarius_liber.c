@@ -8,7 +8,6 @@
  */
 
 #include "saltuarius_liber.h"
-#include "utf8.h"
 #include <string.h>
 
 /* Index linearum: unus ambulatus (communis strato 0 et
@@ -115,6 +114,7 @@ saltuarius_liber_aperire (
     liber->strata_visus = NIHIL;
     liber->numerus_stratorum = I;
     liber->stratum_currens = ZEPHYRUM;
+    liber->politica = RUNAE_POLITICA_GRAPHEMATUM;
 
     _lineas_aedificare(liber->piscina, liber->textus,
         &liber->lineae, &liber->numerus_linearum);
@@ -524,7 +524,7 @@ saltuarius_liber_linea (
 }
 
 i32
-saltuarius_liber_linea_runae (
+saltuarius_liber_linea_latitudo (
     constans SaltuariusLiber* liber,
                          s32  index)
 {
@@ -534,8 +534,64 @@ saltuarius_liber_linea_runae (
     {
         redde ZEPHYRUM;
     }
-    redde (i32)utf8_numerare_runas(linea.datum,
-        (s32)linea.mensura);
+    redde runae_latitudo_textus(linea.datum,
+        linea.datum + linea.mensura, liber->politica);
+}
+
+/* Columnam ad initium unitatis eam tegentis adstringere (in linea
+ * cursoris); ultra finem -> latitudo lineae (runae U6d) */
+interior s32
+_adstringere (
+    constans SaltuariusLiber* liber,
+                         s32  columna)
+{
+    chorda linea = saltuarius_liber_linea(liber, liber->cursor_linea);
+       i32 initii;
+
+    si (columna <= ZEPHYRUM || linea.mensura == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    (vacuum)runae_columnam_quaerere(linea.datum,
+        linea.datum + linea.mensura, liber->politica, (i32)columna,
+        &initii);
+    redde (s32)initii;
+}
+
+/* Columna unitatis PROXIMAE post eam quae 'columna' tegit (latitudo
+ * lineae ad finem): unitas lata II columnas saltat */
+interior s32
+_columna_proxima (
+    constans SaltuariusLiber* liber,
+                         s32  columna)
+{
+          chorda linea = saltuarius_liber_linea(liber,
+              liber->cursor_linea);
+    constans i8* finis = linea.datum + linea.mensura;
+    constans i8* haec;
+            i32  initii;
+            i32  proxima;
+
+    si (linea.mensura == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    haec = runae_columnam_quaerere(linea.datum, finis, liber->politica,
+        (i32)columna, &initii);
+    proxima = initii + I;
+    dum (   haec < finis
+         && runae_columnam_quaerere(linea.datum, finis,
+                liber->politica, proxima, &initii) == haec)
+    {
+        proxima++;   /* adhuc intra unitatem latam */
+    }
+    si (haec >= finis)
+    {
+        redde (s32)initii;   /* iam in fine */
+    }
+    (vacuum)runae_columnam_quaerere(linea.datum, finis, liber->politica,
+        proxima, &initii);
+    redde (s32)initii;
 }
 
 /* Numerus linearum strati activi (pro claudendo cursoris) */
@@ -553,9 +609,8 @@ saltuarius_liber_movere (
     SaltuariusLiber* liber,
                 s32  delta_linea)
 {
-    s32 nova = liber->cursor_linea + delta_linea;
-    i32 runae;
-    i32 lineae = _lineae_activae(liber);
+    s32 nova    = liber->cursor_linea + delta_linea;
+    i32 lineae  = _lineae_activae(liber);
 
     si (nova < ZEPHYRUM)
     {
@@ -565,12 +620,10 @@ saltuarius_liber_movere (
     {
         nova = (s32)lineae - I;
     }
-    liber->cursor_linea  = nova;
-    runae                = saltuarius_liber_linea_runae(liber, nova);
-    si (liber->cursor_columna > (s32)runae)
-    {
-        liber->cursor_columna = (s32)runae;
-    }
+    liber->cursor_linea = nova;
+    /* columna servata, ad initium unitatis in linea nova adstricta
+     * (ultra finem -> finis) */
+    liber->cursor_columna = _adstringere(liber, liber->cursor_columna);
 }
 
 vacuum
@@ -578,19 +631,20 @@ saltuarius_liber_movere_col (
     SaltuariusLiber* liber,
                 s32  delta)
 {
-    s32 nova = liber->cursor_columna + delta;
-    i32 runae = saltuarius_liber_linea_runae(liber,
-        liber->cursor_linea);
+    s32 columna = _adstringere(liber, liber->cursor_columna);
 
-    si (nova < ZEPHYRUM)
+    /* gradus per UNITATEM pingendam (runae U6d), non per runam */
+    dum (delta > ZEPHYRUM)
     {
-        nova = ZEPHYRUM;
+        columna = _columna_proxima(liber, columna);
+        delta--;
     }
-    si (nova > (s32)runae)
+    dum (delta < ZEPHYRUM && columna > ZEPHYRUM)
     {
-        nova = (s32)runae;
+        columna = _adstringere(liber, columna - I);
+        delta++;
     }
-    liber->cursor_columna = nova;
+    liber->cursor_columna = columna;
 }
 
 vacuum
@@ -667,24 +721,20 @@ saltuarius_liber_cursor_offset (
 {
     constans SaltuariusStratum* visus = _activum(liber);
       constans SaltuariusLinea* linea;
+                   constans i8* initium;
                    constans i8* cursor;
-                   constans i8* finis;
-                           s32  runae;
+                           i32  initii;
 
     si (   !visus->parata || liber->cursor_linea < ZEPHYRUM
         || liber->cursor_linea >= (s32)visus->numerus_linearum)
     {
         redde -I;
     }
-    linea   = &visus->lineae[liber->cursor_linea];
-    cursor  = visus->textus.datum + linea->offset;
-    finis   = cursor + linea->mensura;
-    runae   = liber->cursor_columna;
-    dum (cursor < finis && runae > ZEPHYRUM)
-    {
-        cursor = utf8_proxima_runa(cursor, finis);
-        runae--;
-    }
+    linea    = &visus->lineae[liber->cursor_linea];
+    initium  = visus->textus.datum + linea->offset;
+    cursor   = runae_columnam_quaerere(initium, initium
+        + linea->mensura,
+        liber->politica, (i32)liber->cursor_columna, &initii);
     redde (s32)(i32)(memoriae_index)(cursor - visus->textus.datum);
 }
 
@@ -720,19 +770,13 @@ saltuarius_liber_cursor_ad_offset (
         constans i8* initium         = visus->textus.datum + l->offset;
         constans i8* meta            = visus->textus.datum + offset;
         constans i8* finis           = initium + l->mensura;
-        s32 columna                  = ZEPHYRUM;
-        constans i8* cursor          = initium;
-
-        si (meta > finis)
-        {
+                si (meta > finis)
+                {
             meta = finis;
-        }
-        dum (cursor < meta)
-        {
-            cursor = utf8_proxima_runa(cursor, finis);
-            columna++;
-        }
-        liber->cursor_columna = columna;
+                }
+        /* columnae ante offset; movere_col(0) infra adstringit */
+        liber->cursor_columna = (s32)runae_latitudo_textus(initium,
+            meta, liber->politica);
     }
     saltuarius_liber_movere(liber, ZEPHYRUM);
     saltuarius_liber_movere_col(liber, ZEPHYRUM);

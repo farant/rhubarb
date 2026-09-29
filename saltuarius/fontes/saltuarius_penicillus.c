@@ -1,7 +1,49 @@
 /* saltuarius_penicillus.c - Implementatio primitivorum pingendi */
 
 #include "saltuarius_penicillus.h"
-#include "utf8.h"
+#include "runae.h"
+
+RunaePolitica
+saltuarius_pen_politica (
+    constans TesseraOpus* opus)
+{
+    redde (opus != NIHIL && opus->politica == TESSERA_POLITICA_SIMPLEX)
+        ? RUNAE_POLITICA_SIMPLEX : RUNAE_POLITICA_GRAPHEMATUM;
+}
+
+constans i8*
+saltuarius_pen_unitatem (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+      constans i8* cursor,
+      constans i8* finis,
+              i32  reliqua,
+    TesseraStilus  stilus,
+              i32* latitudo)
+{
+    si (*cursor < 0x20 || *cursor == 0x7F)
+    {
+        /* imperium purgatum: spatium, columna una */
+        si (reliqua < I)
+        {
+            redde NIHIL;
+        }
+        tessera_cellulam_ponere(opus, x, y, (i32)' ', stilus);
+        *latitudo = I;
+        redde cursor + I;
+    }
+    /* latitudo PRIUS mensurata (graphema; invalidus = I, ut tessera
+     * pingit): unitas lata extra pannum non ponitur */
+    (vacuum)runae_graphema_ex_politica(cursor, finis,
+        saltuarius_pen_politica(opus), latitudo);
+    si (*latitudo > reliqua)
+    {
+        redde NIHIL;
+    }
+    redde tessera_graphema_ponere(opus, x, y, cursor, finis, stilus,
+        latitudo);
+}
 
 i32
 saltuarius_pen_textum (
@@ -10,33 +52,26 @@ saltuarius_pen_textum (
               s32  y,
       constans i8* datum,
               i32  mensura,
-              i32  runae_max,
+              i32  latitudo_max,
     TesseraStilus  stilus)
 {
     constans i8* cursor   = datum;
     constans i8* finis    = datum + mensura;
             i32  positae  = ZEPHYRUM;
 
-    dum (cursor < finis && positae < runae_max)
+    dum (cursor < finis && positae < latitudo_max)
     {
-        constans i8* proxima  = utf8_proxima_runa(cursor, finis);
-                i32  octeti    = (i32)(memoriae_index)(proxima
-                    - cursor);
-                i32 signum;
+                i32  latitudo;
+        constans i8* post = saltuarius_pen_unitatem(opus,
+            x + (s32)positae, y, cursor, finis, latitudo_max - positae,
+            stilus, &latitudo);
 
-        si (   octeti == I
-            && (cursor[ZEPHYRUM] < 0x20 || cursor[ZEPHYRUM] == 0x7F))
+        si (post == NIHIL)
         {
-            signum = (i32)' ';   /* imperium purgatum */
+            frange;   /* unitas lata non capit */
         }
-        alioquin
-        {
-            signum = tessera_signum_ex_octetis(cursor, octeti);
-        }
-        tessera_cellulam_ponere(opus, x + (s32)positae, y, signum,
-            stilus);
-        cursor = proxima;
-        positae++;
+        positae  += latitudo;
+        cursor   = post;
     }
     redde positae;
 }
@@ -47,7 +82,7 @@ saltuarius_pen_literis (
                    s32  x,
                    s32  y,
     constans character* literis,
-                   i32  runae_max,
+                   i32  latitudo_max,
          TesseraStilus  stilus)
 {
     i32 mensura = ZEPHYRUM;
@@ -57,7 +92,7 @@ saltuarius_pen_literis (
         mensura++;
     }
     (vacuum)saltuarius_pen_textum(opus, x, y,
-        (constans i8*)literis, mensura, runae_max, stilus);
+        (constans i8*)literis, mensura, latitudo_max, stilus);
 }
 
 i32

@@ -7,6 +7,8 @@ declare -a RADIX_FONTES=(
     "friatio"
     "iter_directoria"
     "piscina"
+    "runae"
+    "runae_tabulae"
     "tabula_dispersa"
     "utf8"
     "via"

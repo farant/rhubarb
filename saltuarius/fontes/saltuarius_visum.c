@@ -3,7 +3,6 @@
 #include "saltuarius_visum.h"
 #include "saltuarius_penicillus.h"
 #include "saltuarius_bibliotheca.h"
-#include "utf8.h"
 
 /* Paleta (INTENTIO Phase B; explicita, temperabilis) */
 #define COLOR_CUNULAE     0x00707070
@@ -36,10 +35,11 @@ _stilus_classis (
     redde tessera_stilus(color, TESSERA_COLOR_NATIVUS, ZEPHYRUM);
 }
 
-/* Lineam coloratam ponere: saltus volumen_x runarum, deinde runae
- * cum stilo ex tabula classium (offset octeti in TEXTU pleno).
- * Octeti imperii purgati (disciplina penicilli - hic locali quia
- * stilus per runam variat). */
+/* Lineam coloratam ponere: saltus volumen_x COLUMNARUM (runae U6d;
+ * unitas lata a margine sinistro scissa: dimidium visibile spatium),
+ * deinde unitates pingendae per saltuarius_pen_unitatem cum stilo ex
+ * tabula classium (offset octeti in TEXTU pleno); x per latitudinem
+ * unitatis promotum, unitas quae non capit non ponitur. */
 interior vacuum
 _lineam_ponere (
     TesseraOpus* opus,
@@ -49,39 +49,43 @@ _lineam_ponere (
             i32  offset_lineae,
     constans i8* classis,
             s32  volumen_x,
-            i32  runae_max)
+            i32  latitudo_max)
 {
-    constans i8* cursor     = linea.datum;
-    constans i8* finis      = linea.datum + linea.mensura;
-            s32  saltandae  = volumen_x;
-            i32  positae    = ZEPHYRUM;
+      constans i8* initium  = linea.datum;
+      constans i8* finis    = linea.datum + linea.mensura;
+      constans i8* cursor;
+              i32  columna;
+              i32  positae   = ZEPHYRUM;
+    RunaePolitica  politica  = saltuarius_pen_politica(opus);
 
-    dum (cursor < finis && saltandae > ZEPHYRUM)
+    si (linea.mensura == ZEPHYRUM || volumen_x < ZEPHYRUM)
     {
-        cursor = utf8_proxima_runa(cursor, finis);
-        saltandae--;
+        redde;
     }
-    dum (cursor < finis && positae < runae_max)
+    cursor = runae_columnam_quaerere(initium, finis, politica,
+        (i32)volumen_x, &columna);
+    si (cursor < finis && columna < (i32)volumen_x)
     {
-          constans i8* proxima = utf8_proxima_runa(cursor, finis);
-                  i32  octeti = (i32)(memoriae_index)(proxima
-                      - cursor);
-                  i32 signum;
-        TesseraStilus stilus;
+        /* unitas lata margine scissa: dimidium visibile spatium */
+        cursor = runae_columnam_quaerere(initium, finis, politica,
+            (i32)volumen_x + I, &columna);
+        si (latitudo_max > ZEPHYRUM)
+        {
+            tessera_cellulam_ponere(opus, x, y, (i32)' ',
+                tessera_stilus_nativus());
+            positae = I;
+        }
+    }
+    dum (cursor < finis && positae < latitudo_max)
+    {
+                  i32  latitudo;
+          constans i8* post;
+        TesseraStilus  stilus;
 
-        si (   octeti == I
-            && (cursor[ZEPHYRUM] < 0x20 || cursor[ZEPHYRUM] == 0x7F))
-        {
-            signum = (i32)' ';
-        }
-        alioquin
-        {
-            signum = tessera_signum_ex_octetis(cursor, octeti);
-        }
         si (classis != NIHIL)
         {
             i32 offset = offset_lineae
-                + (i32)(memoriae_index)(cursor - linea.datum);
+                + (i32)(memoriae_index)(cursor - initium);
 
             stilus = _stilus_classis(classis[offset]);
         }
@@ -89,10 +93,14 @@ _lineam_ponere (
         {
             stilus = tessera_stilus_nativus();
         }
-        tessera_cellulam_ponere(opus, x + (s32)positae, y, signum,
-            stilus);
-        cursor = proxima;
-        positae++;
+        post = saltuarius_pen_unitatem(opus, x + (s32)positae, y,
+            cursor, finis, latitudo_max - positae, stilus, &latitudo);
+        si (post == NIHIL)
+        {
+            frange;   /* unitas lata non capit */
+        }
+        positae  += latitudo;
+        cursor   = post;
     }
 }
 

@@ -1,9 +1,12 @@
 /* saltuarius_penicillus.h - Primitiva pingendi communia (Phase B)
  *
- * UNA via pingendi textum: runae directe in cellas (ambulatu
- * utf8), octeti imperii purgati (\t in cella contractum cratis
- * tesserae frangeret - terminal HT interpretaretur), praecisio ad
- * limitem panni (tessera solum ad marginem CRATIS praecidit).
+ * UNA via pingendi textum: UNITATES PINGENDAE (runae U6d:
+ * graphemata per tessera_graphema_ponere, x per latitudinem
+ * promotum), octeti imperii purgati in spatium (\t in cella
+ * contractum cratis tesserae frangeret - terminal HT
+ * interpretaretur), praecisio ad limitem panni in COLUMNIS: unitas
+ * lata quae non capit non ponitur (tessera solum ad marginem CRATIS
+ * praecidit).
  * Allocat NIHIL - nulla allocatio per quadrum EX CONSTRUCTIONE.
  * Extractum ex columnae (B2): visum eadem primitiva vult.
  */
@@ -14,8 +17,31 @@
 #include "latina.h"
 #include "chorda.h"
 #include "tessera.h"
+#include "runae.h"
 
-/* Textum ponere; reddit runas positas */
+/* Politica runarum operis (TesseraPolitica -> RunaePolitica):
+ * mensura saltuarii eadem ac pictura tesserae */
+RunaePolitica
+saltuarius_pen_politica (
+    constans TesseraOpus* opus);
+
+/* Unitatem pingendam UNAM ad (x, y) ponere intra 'reliqua'
+ * columnas: octetus imperii (C0/DEL) -> ' '; ceterum
+ * tessera_graphema_ponere. Unitas latior quam reliqua NON ponitur:
+ * reddit NIHIL. Aliter finem unitatis, latitudinem in *latitudo. */
+constans i8*
+saltuarius_pen_unitatem (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+      constans i8* cursor,
+      constans i8* finis,
+              i32  reliqua,
+    TesseraStilus  stilus,
+              i32* latitudo);
+
+/* Textum ponere intra latitudo_max columnas; reddit COLUMNAS
+ * positas */
 i32
 saltuarius_pen_textum (
       TesseraOpus* opus,
@@ -23,7 +49,7 @@ saltuarius_pen_textum (
               s32  y,
       constans i8* datum,
               i32  mensura,
-              i32  runae_max,
+              i32  latitudo_max,
     TesseraStilus  stilus);
 
 /* Literis NUL-terminatis */
@@ -33,7 +59,7 @@ saltuarius_pen_literis (
                    s32  x,
                    s32  y,
     constans character* literis,
-                   i32  runae_max,
+                   i32  latitudo_max,
          TesseraStilus  stilus);
 
 /* Numerum decimalem ponere; reddit latitudinem scriptam */
