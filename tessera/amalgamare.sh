@@ -95,7 +95,11 @@ done
 # vere-prima in arbore frigida se ipsam frangeret (mensuratum
 # 2026-08-20). Ratio plena: tools/porta_vetustatis.sh
 echo "  [porta 0] vetustas manifestorum"
-"$RADIX_DIR/tools/porta_vetustatis.sh" tessera "$BUILD_DIR/vetustas" || exit 1
+# AMALGAMA_COMPARARE: porta generata IV manifesta IAM iudicavit (bis
+# currere ~XXX s silvae constabat) - hic omittitur
+if [ "${AMALGAMA_COMPARARE:-0}" != 1 ]; then
+    "$RADIX_DIR/tools/porta_vetustatis.sh" tessera "$BUILD_DIR/vetustas" || exit 1
+fi
 
 # ---- 2. build + run the amalgamator (tessera manifest) ----
 echo "  [tessera] amalgamator.c (manifestum)"
@@ -103,6 +107,23 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$TESSERA_DIR/instrumenta/principalia/amalgamator.c" $obj_files \
     -o "$BUILD_DIR/amalgamator" || exit 1
 
+# AMALGAMA_COMPARARE=1: generare in build/, conferre cum COMMISSO, exire
+# ANTE verificationes (porta generata VI; generatio ~0,2 s): amalgama
+# commissa == regeneratio hodierna. Olim nulla porta id videbat -
+# amalgamata_probare compilat tantum, generata I caput solum confert
+# (quaestio ...G73P, quater icta). Exitus 0 recens, 1 rancida, 2 fracta.
+if [ "${AMALGAMA_COMPARARE:-0}" = 1 ]; then
+    "$BUILD_DIR/amalgamator" "$RADIX_DIR" "$BUILD_DIR/comparatio_tessera.c" \
+        > "$BUILD_DIR/comparatio_tessera.log" 2>&1 || exit 2
+    if cmp -s "$BUILD_DIR/comparatio_tessera.c" "$AMALGAMA_DIR/tessera.c"; then
+        echo "amalgama tessera: recens"
+        exit 0
+    fi
+    echo "amalgama tessera: RANCIDA ($(diff "$AMALGAMA_DIR/tessera.c" \
+        "$BUILD_DIR/comparatio_tessera.c" | grep -c '^[<>]') lineae) -" \
+        "./tessera/amalgamare.sh regenerat"
+    exit 1
+fi
 "$BUILD_DIR/amalgamator" "$RADIX_DIR" "$AMALGAMA_DIR/tessera.c" || exit 1
 
 # ---- 3. VERIFICATIO: standalone compile under the FULL flag set ----

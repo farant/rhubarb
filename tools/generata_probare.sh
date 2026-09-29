@@ -26,7 +26,10 @@
 #        (tools/latina_numeri.sh; fons numerus_romanus_scribere);
 #   VI.  tabulae runarum (lib/runae_tabulae.c) == generator ex datis
 #        Unicode fixis (tools/runae_generare.sh -probare, spatia
-#        neglecta).
+#        neglecta);
+#   VII. amalgamata .c TOTA == regeneratio hodierna (AMALGAMA_COMPARARE=1
+#        ./X/amalgamare.sh: generatio sola, sine verificationibus) -
+#        commenta capitum quoque (quaestio ...G73P, 2026-09-29).
 # Stala per nomen; nihil tacite.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -131,6 +134,25 @@ else
     echo "  STALUM tabulae runarum: $(tail -1 "$TMP/runae.log")"
     fracta=1
 fi
+
+# ---- VII. amalgamata .c == regeneratio hodierna ----
+# I caput solum confert; hic corpus TOTUM (commenta capitum quoque:
+# a3632f55 descriptiones XXV capitum mutavit, amalgamata tria rancida
+# commissa, nemo vidit). Obiecta et amalgamator incrementaliter, deinde
+# generatio sola (~0,2 s) - verificationes amalgamare.sh non currunt.
+for p in silva tessera officina; do
+    AMALGAMA_COMPARARE=1 "./$p/amalgamare.sh" > "$TMP/amalgama_$p.log" 2>&1
+    rc=$?
+    if [ "$rc" -eq 0 ]; then
+        echo "  ok   $(tail -1 "$TMP/amalgama_$p.log")"
+    elif [ "$rc" -eq 1 ]; then
+        echo "  STALUM $(tail -1 "$TMP/amalgama_$p.log")"
+        fracta=1
+    else
+        echo "  FRACTUM amalgama $p (exitus $rc): $(tail -1 "$TMP/amalgama_$p.log")"
+        fracta=1
+    fi
+done
 
 stala=0
 for s in "${SNIPPETS[@]}"; do
