@@ -539,6 +539,18 @@ main and probatio regions follow since documentation-ideas/016.
   - that check must see ALL members' publics).
 - `-partes` lists each bibliotheca (via, members reached, symbols
   exported).
+- **Why cycles are refused (policy, not mechanics — Fran agreed).** A
+  build is ONE clang call over several translation units (`<t>.c`,
+  `<t>_regiones.c`, each member's `_regiones.c`, the corpus `lib/*.c`);
+  only `-amalgama` is a single unit. Function cycles would link fine
+  either way, and the graph walk dedups members anyway. TYPE cycles do
+  not: each member's types live in its `_regiones.h`, derivation would
+  make two headers include each other, and whichever is read first
+  sees the other's types undeclared — clang's error lands inside a
+  GENERATED header, far from the cause (the classic C header cycle,
+  identical in the amalgam). Two files that need each other are one
+  library: the refusal says `partem communem in plagulam tertiam move`.
+  Reserved: cycles allowed when no type crosses both ways.
 
 **Refusals** (located at the element's line): `bibliotheca '<via>'
 (linea N): plagula non exsistit` · `… non est plagula .thistle` ·
