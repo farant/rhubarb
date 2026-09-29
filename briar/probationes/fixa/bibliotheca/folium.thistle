@@ -1,0 +1,24 @@
+#!/usr/bin/env briar
+# Folium
+
+A leaf library: no `principale`, one type, one public function and one
+`interior` (static) helper that stays private. Reached by `radix`
+directly, through `media`, and through `sub/ramus` - linked once.
+
+<c!>
+nomen structura {
+    s32 valor;
+} FoliumRes;
+
+interior s32
+folium_secretum (vacuum)
+{
+    redde I;
+}
+
+s32
+folium_duplicare (s32 x)
+{
+    redde (x + x) * folium_secretum();
+}
+</c>

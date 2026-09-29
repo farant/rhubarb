@@ -21,6 +21,7 @@
 #include "chorda_aedificator.h"
 #include "xar.h"
 #include "filum.h"
+#include "via.h"
 #include "git.h"
 #include "credo.h"
 #include "processus.h"
@@ -54,6 +55,23 @@ _massa_per_git (
         redde vacua;
     }
     redde r.effusio;
+}
+
+/* a + b + c in piscina (viae et contenta arborum synthetica) */
+interior constans character*
+_serere (
+               Piscina* piscina,
+    constans character* a,
+    constans character* b,
+    constans character* c)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+        (memoriae_index)256);
+
+    chorda_aedificator_appendere_literis(aed, a);
+    chorda_aedificator_appendere_literis(aed, b);
+    chorda_aedificator_appendere_literis(aed, c);
+    redde chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
 }
 
 interior b32
@@ -95,6 +113,15 @@ s32 principale (vacuum)
 
     repositorium = git_aperire(piscina, ".");
     CREDO_NON_NIHIL(repositorium);
+    si (repositorium == NIHIL)
+    {
+        /* reliqua sine repositorio ruerent (SIGSEGV in arbore operis
+         * frigida, 2026-09-28, quaestio …QY4) - rubrum clarum */
+        credo_imprimere_compendium();
+        credo_claudere();
+        piscina_destruere(piscina);
+        redde I;
+    }
     CREDO_VERUM(xar_numerus(repositorium->sarcinae) >= (i32)1);
 
     /* non repositorium -> NIHIL */
@@ -112,6 +139,70 @@ s32 principale (vacuum)
         CREDO_VERUM(git_ref_resolvere(repositorium, caput,
             idem_sha));
         CREDO_VERUM(strcmp(caput, idem_sha) == 0);
+    }
+
+    /* ARBOR OPERIS (git worktree add; quaestio …QY4, desideratum
+     * …JF8ZMD): '.git' ibi PLAGULA est ('gitdir: <via>'), gitdir HEAD
+     * proprium tenet et 'commondir' ad directorium commune (objects,
+     * refs, packed-refs) monstrat. Structura synthetica in build/, git
+     * ipso non vocato. git_aperire directoria parentum ascendit: sine
+     * '.git' plagula intellecta repositorium VERUM supra inveniret,
+     * ergo via_git == gitdir syntheticum asseritur, non apertio
+     * sola. */
+    {
+        constans character* radix_arborum = chorda_ut_cstr(
+            via_absoluta(chorda_ex_literis("build/probatio_git_arbores",
+                piscina), piscina), piscina);
+        constans character* communis   = repositorium->via_communis;
+        constans character* gitdir     = _serere(piscina, radix_arborum,
+            "/duo/gitdir", "");
+        constans character* arbor_duo  = _serere(piscina, radix_arborum,
+            "/duo/arbor", "");
+        constans character* arbor_unus = _serere(piscina, radix_arborum,
+            "/unus", "");
+        constans character* arbores[II];
+           GitRepositorium* r;
+                 character  sha[GIT_SHA_HEX_MENSURA];
+                       i32  k;
+
+        imprimere("\n--- Probans arborem operis ('.git' plagula, "
+            "commondir) ---\n");
+        (vacuum)filum_arborem_delere(radix_arborum);
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(gitdir));
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(arbor_duo));
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(
+            arbor_unus));
+        /* gitdir: HEAD idem ac arboris huius, commondir absolutum */
+        CREDO_VERUM(filum_scribere(_serere(piscina, gitdir, "/HEAD",
+            ""),
+            filum_legere_totum(_serere(piscina, repositorium->via_git,
+                "/HEAD", ""), piscina)));
+        CREDO_VERUM(filum_scribere_literis(_serere(piscina, gitdir,
+            "/commondir", ""), _serere(piscina, communis, "\n", "")));
+        /* forma I: gitdir RELATIVUS (ad arborem); forma II:
+         * absolutus */
+        CREDO_VERUM(filum_scribere_literis(_serere(piscina, arbor_unus,
+            "/.git", ""), "gitdir: ../duo/gitdir\n"));
+        CREDO_VERUM(filum_scribere_literis(_serere(piscina, arbor_duo,
+            "/.git", ""), _serere(piscina, "gitdir: ", gitdir, "\n")));
+        arbores[ZEPHYRUM]  = arbor_unus;
+        arbores[I]         = arbor_duo;
+        per (k = ZEPHYRUM; k < II; k++)
+        {
+            r = git_aperire(piscina, arbores[k]);
+            CREDO_NON_NIHIL(r);
+            si (r == NIHIL)
+            {
+                perge;
+            }
+            CREDO_VERUM(strcmp(r->via_git, gitdir) == ZEPHYRUM);
+            CREDO_VERUM(strcmp(r->via_communis, communis) == ZEPHYRUM);
+            CREDO_AEQUALIS_I32(xar_numerus(r->sarcinae),
+                xar_numerus(repositorium->sarcinae));
+            CREDO_VERUM(git_ref_resolvere(r, "HEAD", sha));
+            CREDO_VERUM(strcmp(sha, caput) == ZEPHYRUM);
+        }
+        (vacuum)filum_arborem_delere(radix_arborum);
     }
 
     /* CAPUT ramo alligatum, et ramus ille == CAPUT. Olim 'main' hic

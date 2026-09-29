@@ -1,3 +1,4 @@
+/* internamentum.h - chordae internatae (string interning) */
 #ifndef INTERNAMENTUM_H
 #define INTERNAMENTUM_H
 

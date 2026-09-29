@@ -202,9 +202,12 @@ int WEXITSTATUS(int status);
 int WIFSIGNALED(int status);
 int WTERMSIG(int status);
 
-/* <sectio caput="fcntl.h"/> fcntl.h (valores Darwin) */
+/* <sectio caput="fcntl.h,sys/file.h"/> fcntl.h (valores Darwin;
+ * sys/file.h Darwin sys/fcntl.h includit: LOCK_* et flock ibi) */
 #define O_NONBLOCK 0x0004
+#define O_RDONLY   0x0000
 #define O_WRONLY   0x0001
+#define O_RDWR     0x0002
 #define O_CREAT    0x0200
 #define O_TRUNC    0x0400
 #define F_GETFL    3
@@ -215,6 +218,14 @@ int WTERMSIG(int status);
 
 int fcntl(int fossa, int mandatum, ...);
 int open(const char* via, int vexilla, ...);
+
+/* flock(2) - BSD, non POSIX (filum_seram_capere, 2026-09-29) */
+#define LOCK_SH    0x01
+#define LOCK_EX    0x02
+#define LOCK_NB    0x04
+#define LOCK_UN    0x08
+
+int flock(int fossa, int operatio);
 
 /* <sectio caput="sys/select.h,sys/time.h" poscit="sys/time.h"/>
  * sys/select.h - fd_set opacum (silva membra non tangit; FD_*

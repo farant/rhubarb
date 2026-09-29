@@ -1,0 +1,15 @@
+#!/usr/bin/env briar
+# Ramus
+
+A library one directory down; its `via` climbs with `..`, resolved
+against THIS file's directory, never the current one.
+
+<bibliotheca via="../folium.thistle"/>
+
+<c!>
+s32
+ramus_octuplicare (s32 x)
+{
+    redde folium_duplicare(folium_duplicare(folium_duplicare(x)));
+}
+</c>

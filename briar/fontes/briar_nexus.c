@@ -248,6 +248,19 @@ briar_nexus_titulus_est (
         && _titulus_est(res->titulus, literae));
 }
 
+b32
+briar_nexus_regio_plana (
+    constans BriarNexusRes* res)
+{
+    redde (b32)(   res != NIHIL
+                && res->genus == BRIAR_NEXUS_REGIO
+                && briar_nexus_titulus_est(res, "c")
+                && !res->est_fragmentum
+                && !chorda_aequalis_literis(briar_nexus_attributum(res,
+                       "munus"), "probatio")
+                && !briar_nexus_attributum_habet(res, "methodus"));
+}
+
 i32
 briar_nexus_linea_silvae (
     constans BriarNexusRes* res,

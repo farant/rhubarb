@@ -89,6 +89,31 @@
 #        fert), linea 'aedificatum:' (tempus, fontes, commissum),
 #        --version == -versio, -h linea I == -versio, -mutationes == charta
 #        octetis; capita vN stricte descendentia
+#   XXI. cliens materiae toml (toml Q13): ./toml_config.thistle sine
+#        #include -> 'llama-server b11201' et 'poppler 26.09.0'
+#        (toml.h derivatum, radices clientium in corpore INFIXO);
+#        -probatio viridis (clavis bis nominata); -amalgama clang sola
+#        compilat et currit; -bibliothecae lineam toml fert;
+#        -bibliotheca toml -functiones toml_chorda nominat
+#   XXII. bibliothecae (spec par. 3.5, plan IX): bibliotheca/radix.thistle
+#        (membra folium, media, sub/ramus) -> 28; -probatio viridis;
+#        CLAVIS membra tenet: commentarium in folio SOLO directorium
+#        cache movet, et folio mutato radix valorem NOVUM (72) sine
+#        -iterum imprimit (cache stalum = error usoris verus, mensuratum
+#        T4; folium deinde restitutum); -amalgama radicis et statica_a
+#        (duo membra, 'adiutor' et 'basis' interiora in utroque) clang
+#        SOLA compilat et currit (28, 5), probatio amalgamae viridis;
+#        -partes lineam 'bibliotheca:' per membrum fert
+#   XXIII. directivae condicionales (parcum VF42V): ./condiciones.thistle
+#        (coniunctio '#ifndef' cum typo, coniunctio directivarum sola,
+#        '#ifdef' intra corpus) clang compilat et '11' imprimit - olim
+#        '#define' custodis bis emissus typum celabat
+#   XXIV. clavis ANTE parsuram (corpus infixum): ictus cache silvam et
+#        fabricam praeterit - '-struere' (ictus celer) == '-struere
+#        -iterum' (via plena) directorio pro radix (membra),
+#        salve_vitreum (vestis) et salve; BRIAR_VESTIGIUM=1 ictum
+#        celerem nominat, -iterum numquam (ramus probatus, non tempus;
+#        mensuratum manu: 0,75 s -> 0,00 s pro textu lapidis)
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -136,8 +161,12 @@ done
 [ -f "$RADIX/probationes/fixa/icones/fons_256.png" ] \
     || { echo "FUMUS: fixum abest: probationes/fixa/icones/fons_256.png" >&2; exit 2; }
 FIXA="$RADIX/briar/probationes/fixa/thistle"
-for f in salve punctum derivatum fragmenta salve_vitreum adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
+for f in salve punctum derivatum fragmenta salve_vitreum toml_config condiciones adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
     [ -f "$FIXA/$f.thistle" ] || { echo "FUMUS: fixum abest: $f.thistle" >&2; exit 2; }
+done
+BIBL="$RADIX/briar/probationes/fixa/bibliotheca"
+for f in radix folium media sub/ramus statica_a statica_b statica_c; do
+    [ -f "$BIBL/$f.thistle" ] || { echo "FUMUS: fixum abest: bibliotheca/$f.thistle" >&2; exit 2; }
 done
 [ -f "$RADIX/project-specs/exempla/salutatio.thistle" ] \
     || { echo "FUMUS: exemplum abest: project-specs/exempla/salutatio.thistle" >&2; exit 2; }
@@ -174,6 +203,7 @@ deficere () {
 
 cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
    "$FIXA/fragmenta.thistle" "$FIXA/salve_vitreum.thistle" \
+   "$FIXA/toml_config.thistle" "$FIXA/condiciones.thistle" \
    "$FIXA/adversa/probatio_rubra.thistle" "$FIXA/adversa/duo_principalia.thistle" \
    "$FIXA/adversa/fragmentum_erratum.thistle" \
    "$FIXA/adversa/fragmentum_circulus.thistle" \
@@ -181,7 +211,12 @@ cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
    "$RADIX/project-specs/exempla/salutatio2.thistle" \
    "$RADIX/probationes/fixa/icones/fons_256.png" \
    "$AREA/" || exit 2
-chmod +x "$AREA"/*.thistle
+mkdir -p "$AREA/bibliotheca/sub" || exit 2
+cp "$BIBL"/radix.thistle "$BIBL"/folium.thistle "$BIBL"/media.thistle \
+   "$BIBL"/statica_a.thistle "$BIBL"/statica_b.thistle "$BIBL"/statica_c.thistle \
+   "$AREA/bibliotheca/" || exit 2
+cp "$BIBL/sub/ramus.thistle" "$AREA/bibliotheca/sub/" || exit 2
+chmod +x "$AREA"/*.thistle "$AREA"/bibliotheca/*.thistle
 echo "FUMUS: area $AREA"
 echo "FUMUS: $( cd "$AREA" && "$BRIAR" -versio | tr '\n' ' ' )"
 
@@ -527,8 +562,111 @@ V_LINEA="$( cd "$AREA" && "$BRIAR" -versio | head -1 )"
     || deficere "-mutationes != briar/MUTATIONES.md (octeti)" "$AREA/mutationes.log"
 echo "FUMUS:    versio v$N_FONS ex charta ($V_LINEA), inedita $N_INED, aedificatum, --version, -mutationes == fons"
 
+# ---- XXI. cliens materiae toml (radices clientium, toml Q13) ----
+echo "FUMUS: XXI. ./toml_config.thistle (toml derivatum), -probatio, -amalgama, -bibliothecae"
+( cd "$AREA" && ./toml_config.thistle ) > "$AREA/toml_cursus.log" 2>&1 \
+    || deficere "toml_config.thistle defecit" "$AREA/toml_cursus.log"
+grep -q '^llama-server b11201$' "$AREA/toml_cursus.log" \
+    && grep -q '^poppler 26.09.0$' "$AREA/toml_cursus.log" \
+    || deficere "toml_config: versiones sectionum non impressae" "$AREA/toml_cursus.log"
+( cd "$AREA" && ./toml_config.thistle -probatio ) > "$AREA/toml_probatio.log" 2>&1 \
+    && grep -q 'OMNIA PRAETERIERUNT' "$AREA/toml_probatio.log" \
+    || deficere "toml_config -probatio rubra" "$AREA/toml_probatio.log"
+( cd "$AREA" && ./toml_config.thistle -amalgama ) > "$AREA/toml_amalgama.log" 2>&1 \
+    || deficere "toml_config -amalgama defecit" "$AREA/toml_amalgama.log"
+for p in toml_config probatio_toml_config; do
+    ORDO="$(sed -n '2s/^ \* //p' "$AREA/$p.c")"
+    ( cd "$AREA" && eval "$ORDO" ) > "$AREA/${p}_clang.log" 2>&1 \
+        || deficere "amalgama $p.c clang sola non compilat" "$AREA/${p}_clang.log"
+done
+( cd "$AREA" && ./toml_config ) > "$AREA/toml_amalgama_cursus.log" 2>&1
+grep -q '^poppler 26.09.0$' "$AREA/toml_amalgama_cursus.log" \
+    || deficere "amalgama toml_config: 'poppler 26.09.0' non impressum" "$AREA/toml_amalgama_cursus.log"
+( cd "$AREA" && ./probatio_toml_config ) > "$AREA/toml_amalgama_probatio.log" 2>&1 \
+    || deficere "probatio amalgamae toml_config rubra" "$AREA/toml_amalgama_probatio.log"
+grep -q '^toml  *h c  *TOML 1.0' "$AREA/bibl.log" \
+    || deficere "-bibliothecae: linea toml (h c + descriptio) deest" "$AREA/bibl.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca toml -functiones ) > "$AREA/func_toml.log" 2>&1 \
+    && grep -q '^==== toml/fontes/toml.h (functiones [0-9]*) ====$' "$AREA/func_toml.log" \
+    && grep -q ' toml_chorda (constans TomlDocumentum\* doc, constans character\* via_clavium, chorda\* exitus);$' "$AREA/func_toml.log" \
+    || deficere "-bibliotheca toml -functiones: toml_chorda deest" "$AREA/func_toml.log"
+echo "FUMUS:    toml: cursum, probatum, amalgamatum ($(wc -l < "$AREA/toml_config.c" | tr -d ' ') lineae), bibliotheca, functiones"
+
+# ---- XXII. bibliothecae (spec par. 3.5, plan IX T4) ----
+echo "FUMUS: XXII. bibliotheca/radix.thistle (membra), -probatio, clavis membrorum, -amalgama, -partes"
+BA="$AREA/bibliotheca"
+( cd "$BA" && ./radix.thistle ) > "$AREA/bibl_cursus.log" 2>&1 \
+    && [ "$(cat "$AREA/bibl_cursus.log")" = 28 ] \
+    || deficere "radix.thistle: '28' non impressum" "$AREA/bibl_cursus.log"
+( cd "$BA" && ./radix.thistle -probatio ) > "$AREA/bibl_probatio.log" 2>&1 \
+    && grep -q 'OMNIA PRAETERIERUNT' "$AREA/bibl_probatio.log" \
+    || deficere "radix -probatio rubra" "$AREA/bibl_probatio.log"
+# clavis: commentarium in membro SOLO -> directorium cache aliud
+DIR_ANTE="$( cd "$BA" && "$BRIAR" -struere radix.thistle 2>/dev/null | tail -1 )"
+printf '\nCommentarium additum (fumus XXII).\n' >> "$BA/folium.thistle"
+DIR_POST="$( cd "$BA" && "$BRIAR" -struere radix.thistle 2>/dev/null | tail -1 )"
+[ -n "$DIR_ANTE" ] && [ "$DIR_ANTE" != "$DIR_POST" ] \
+    || deficere "clavis membra non tenet: folio mutato directorium cache idem ($DIR_ANTE)"
+# et valor: folium mutatum -> radix valorem NOVUM reddit, sine -iterum
+sed -i '' 's/redde (x + x) \* folium_secretum();/redde (x + x + x) * folium_secretum();/' "$BA/folium.thistle"
+grep -q 'x + x + x' "$BA/folium.thistle" \
+    || deficere "fixum folium mutari non potuit (textus mutatus?)"
+( cd "$BA" && ./radix.thistle ) > "$AREA/bibl_mutatum.log" 2>&1 \
+    && [ "$(cat "$AREA/bibl_mutatum.log")" = 72 ] \
+    || deficere "folio mutato radix non 72 (cache stalum?)" "$AREA/bibl_mutatum.log"
+# folium restitutum: probatio radicis (et amalgamae) duplicationem exspectat
+cp "$BIBL/folium.thistle" "$BA/folium.thistle" || exit 2
+# amalgama: membra (capita, corpora, statica renominata) in plagula UNA
+for t in radix statica_a; do
+    ( cd "$BA" && "$BRIAR" -amalgama $t.thistle ) > "$AREA/bibl_amal_$t.log" 2>&1 \
+        || deficere "$t -amalgama defecit" "$AREA/bibl_amal_$t.log"
+    ORDO="$(sed -n '2s/^ \* //p' "$BA/$t.c")"
+    ( cd "$BA" && eval "$ORDO" ) > "$AREA/bibl_clang_$t.log" 2>&1 \
+        || deficere "amalgama $t.c clang sola non compilat" "$AREA/bibl_clang_$t.log"
+done
+[ "$( cd "$BA" && ./radix )" = 28 ] \
+    || deficere "amalgama radix: '28' non impressum"
+[ "$( cd "$BA" && ./statica_a )" = 5 ] \
+    || deficere "amalgama statica_a: '5' non impressum (adiutor privatus confusus?)"
+( cd "$BA" && eval "$(sed -n '2s/^ \* //p' "$BA/probatio_radix.c")" && ./probatio_radix ) \
+    > "$AREA/bibl_amal_probatio.log" 2>&1 \
+    || deficere "probatio amalgamae radicis rubra" "$AREA/bibl_amal_probatio.log"
+# -partes: linea per bibliothecam (via relativa, membra attacta, nomina)
+( cd "$BA" && "$BRIAR" -partes radix.thistle ) > "$AREA/bibl_partes.log" 2>&1 \
+    || deficere "radix -partes defecit" "$AREA/bibl_partes.log"
+for l in 'folium.thistle	bibliotheca:membra 0, nomina publica 2' \
+         'media.thistle	bibliotheca:membra 1, nomina publica 2' \
+         'sub/ramus.thistle	bibliotheca:membra 1, nomina publica 1'; do
+    grep -qxF "$l" "$AREA/bibl_partes.log" \
+        || deficere "-partes: linea [$l] deest" "$AREA/bibl_partes.log"
+done
+echo "FUMUS:    bibliothecae: cursum, probatum, clavis membra tenet, amalgamatum (radix, statica_a), partes"
+
+# ---- XXIII. directivae condicionales (parcum VF42V) ----
+echo "FUMUS: XXIII. ./condiciones.thistle (#ifndef cum typo, directivae solae, #ifdef in corpore)"
+( cd "$AREA" && ./condiciones.thistle ) > "$AREA/condiciones.log" 2>&1 \
+    && [ "$(cat "$AREA/condiciones.log")" = 11 ] \
+    || deficere "condiciones.thistle: '11' non impressum (directivae bis emissae?)" "$AREA/condiciones.log"
+
+# ---- XXIV. clavis ante parsuram (ictus celer) ----
+echo "FUMUS: XXIV. ictus celer: clavis eadem ac via plena, silva praeterita"
+for f in bibliotheca/radix.thistle salve_vitreum.thistle salve.thistle; do
+    PLENA="$( cd "$AREA" && "$BRIAR" -struere -iterum "$f" 2>/dev/null | tail -1 )"
+    CELER="$( cd "$AREA" && "$BRIAR" -struere "$f" 2>/dev/null | tail -1 )"
+    [ -n "$PLENA" ] && [ "$PLENA" = "$CELER" ] \
+        || deficere "$f: clavis ictus celeris ($CELER) != viae plenae ($PLENA)"
+done
+# ramus: ictus celer se nominat (BRIAR_VESTIGIUM), via plena non
+( cd "$AREA/bibliotheca" && BRIAR_VESTIGIUM=1 ./radix.thistle ) > "$AREA/celer.log" 2>&1
+grep -q '^briar: ictus celer: ' "$AREA/celer.log" && grep -q '^28$' "$AREA/celer.log" \
+    || deficere "radix: ictus celer non nominatus (silva non praeterita?)" "$AREA/celer.log"
+( cd "$AREA/bibliotheca" && BRIAR_VESTIGIUM=1 "$BRIAR" -struere -iterum radix.thistle ) > "$AREA/plena.log" 2>&1
+grep -q 'ictus celer' "$AREA/plena.log" \
+    && deficere "-iterum ictum celerem nominat (via plena praeterita)" "$AREA/plena.log"
+echo "FUMUS:    claves eaedem (radix, salve_vitreum, salve); ictus celer nominatus, -iterum viam plenam capit"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes, toml, membra, condiciones, ictus celer)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"

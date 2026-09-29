@@ -1,0 +1,22 @@
+#!/usr/bin/env briar
+# Statica b
+
+An `interior` (static) helper and variable with the same names as
+`statica_c`'s: private to each file, so the build (and the amalgam) is
+fine.
+
+<c!>
+interior s32 basis = II;
+
+interior s32
+adiutor (vacuum)
+{
+    redde basis;
+}
+
+s32
+statica_b_valor (vacuum)
+{
+    redde adiutor();
+}
+</c>

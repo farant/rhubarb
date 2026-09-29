@@ -1,3 +1,4 @@
+/* stml.h - STML, XML domus: legere et scribere (markup parser) */
 #ifndef STML_H
 #define STML_H
 

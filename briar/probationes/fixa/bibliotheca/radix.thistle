@@ -1,0 +1,42 @@
+#!/usr/bin/env briar
+# Radix
+
+The importing program. `folium` is reached three ways (directly, via
+`media`, via `sub/ramus`): members in post-order are folium, media,
+ramus - each once.
+
+<bibliotheca via="media.thistle"/>
+<bibliotheca via="folium.thistle"/>
+<bibliotheca via="sub/ramus.thistle"/>
+
+<c!>
+s32
+principale (vacuum)
+{
+    FoliumRes r;
+
+    r.valor = media_quadruplicare(V) + ramus_octuplicare(I);
+    imprimere("%d\n", (integer)r.valor);
+    redde ZEPHYRUM;
+}
+</c>
+
+The test region sees the members too (the lapide case: recensio's tests
+call textus's projection).
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+    Piscina*  piscina = piscina_generare_dynamicum("probatio", 4096);
+    FoliumRes r;
+
+    credo_aperire(piscina);
+    r = media_res(III);
+    CREDO_AEQUALIS_S32(r.valor, XII);
+    CREDO_AEQUALIS_S32(folium_duplicare(VII), XIV);
+    CREDO_AEQUALIS_S32(ramus_octuplicare(II), XVI);
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

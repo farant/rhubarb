@@ -30,6 +30,7 @@
 #include "piscina.h"
 #include "xar.h"
 #include "silex.h"
+#include "tabula_dispersa.h"
 #include "silva.h"
 #include "briar_nexus.h"
 
@@ -62,6 +63,54 @@ briar_silvam_texere (
                     Xar* nexus,
      constans SilexFons* fons,
      constans character* via_documenti);
+
+/* MEMBRA VISIBILIA derivationi (spec par. 3.5, bibliotheca): nomen
+ * publicum membri -> caput eius ("folium_regiones.h", in tabulam
+ * symbolorum corporis mixtum; nomen quod corpus quoque habet
+ * AMBIGUUM fit, ut duo capita corporis); caput -> textus parsurae
+ * PROPRIUS (sine lineis, sine custode) quem parsura secunda in
+ * praeludio pro inclusione ponit - silex caput genitum non invenit -
+ * dependentibus eius primum, quoque SEMEL (rhombus). */
+nomen structura {
+    TabulaDispersa* nomina;   /* chorda nomen -> chorda* caput */
+    TabulaDispersa* textus;   /* chorda caput -> chorda* textus
+                               * PROPRIUS (sine custode, sine
+                               * inclusionibus membrorum) */
+    TabulaDispersa* ordo;     /* chorda caput -> Xar* (chorda capita
+                               * dependentium, post-ordo) */
+} BriarSilvaMembra;
+
+/* ut briar_silvam_texere, membris visibilibus (NIHIL = nulla) */
+s32
+briar_silvam_texere_cum_membris (
+                      Piscina* piscina,
+                          Xar* nexus,
+           constans SilexFons* fons,
+           constans character* via_documenti,
+    constans BriarSilvaMembra* membra);
+
+/* nomen publicum regionis planae et linea .thistle declarationis */
+nomen structura {
+    chorda titulus;
+       i32 linea;
+} BriarNomenPublicum;
+
+/* nomina PUBLICA regionum C planarum (briar_nexus_regio_plana) post
+ * silvam: scopus fili, non statica, non implicita, non 'main', in
+ * textu regionis ipso (praeludium exclusum); quodque semel. Xar de
+ * BriarNomenPublicum. */
+Xar*
+briar_silva_nomina_publica (
+    Piscina* piscina,
+        Xar* nexus);
+
+/* nomina INTERIORA (statica) scopi fili eadem lege (functiones et
+ * variabilia): amalgama ea per membrum renominat. Xar de
+ * BriarNomenPublicum. */
+Xar*
+briar_silva_nomina_statica (
+    Piscina* piscina,
+        Xar* nexus);
 
 /* Parsura C per silvam cum lexico SYSTEMATIS (silva-migratio T16b):
  * capita clausurae (Xar de SilexRes, '.h' sola, praeter 'excludere' -

@@ -5,7 +5,10 @@
  * quaeque clausurae semel per '#line 1', nulla inclusio localis
  * relicta, statica involuta (#define/#undef paria), postulata_posix.h
  * prima, probatio plagula altera; recusationes (vitrea, venditorium);
- * scriptor (superscriptio genitorum solum).
+ * scriptor (superscriptio genitorum solum); membra bibliothecarum
+ * (plan IX T4): capita post corpus, corpora ante regiones, quodque
+ * semel, statica membri cuiusque suffixo tituli renominata, publica
+ * numquam; amalgama sine membris fabricae membrorum refutatur.
  * Regeneratio auri: BRIAR_AMALGAMA_SCRIBERE=1 cum causa nominata.
  * Nativitas: gamma.c manu compilatum (clang vexilla gamma.c) -> '8'.
  */
@@ -18,6 +21,7 @@
 #include "briar_contextus.h"
 #include "briar_fabrica.h"
 #include "briar_nexus.h"
+#include "briar_plagulae.h"
 #include "briar_silva.h"
 #include "filum.h"
 #include "internamentum.h"
@@ -127,6 +131,57 @@ _fabricare (
     octeti.mensura         = mensura;
     fructus = briar_fabricare(piscina, doc, nexus, fons, &optiones,
         octeti);
+    *nexus_out = nexus;
+    redde fructus;
+}
+
+/* ut _fabricare, sed membra bibliothecarum colliguntur (ut
+ * tools/briar.c) et redduntur */
+interior BriarFabricaFructus
+_fabricare_cum_membris (
+               Piscina*  piscina,
+   InternamentumChorda*  intern,
+    constans SilexFons*  fons,
+    constans character*  via,
+                   Xar** nexus_out,
+                   Xar** membra_out)
+{
+     BriarFabricaFructus  fructus;
+    BriarFabricaOptiones  optiones;
+               character* textus;
+                     i32  mensura = ZEPHYRUM;
+           MateriaNodus* doc;
+                    Xar* nexus;
+        BriarMembraCausa  causa;
+                  chorda  octeti;
+
+    memset(&fructus, 0, magnitudo(fructus));
+    *nexus_out   = NIHIL;
+    *membra_out  = NIHIL;
+    textus       = _plagulam_legere(piscina, via, &mensura);
+    si (textus == NIHIL)
+    {
+        fructus.causa = chorda_ex_literis("plagula non lecta", piscina);
+        redde fructus;
+    }
+    doc    = briar_arbor_parsare(piscina, textus, mensura);
+    nexus  = briar_nexus_texere(piscina, doc, intern);
+    (vacuum)briar_contexere(piscina, nexus, NIHIL);
+    si (!briar_membra_colligere(piscina, via, nexus, intern, fons,
+            membra_out, &causa))
+    {
+        fructus.causa = causa.causa;
+        redde fructus;
+    }
+    (vacuum)briar_silvam_texere_cum_membris(piscina, nexus, fons, via,
+        briar_membra_silvae(piscina, *membra_out));
+    optiones.via_thistle   = via;
+    optiones.stampa        = "probatio";
+    optiones.fons_titulus  = "probatio";
+    octeti.datum           = (i8*)textus;
+    octeti.mensura         = mensura;
+    fructus = briar_fabricare_cum_membris(piscina, doc, nexus, fons,
+        &optiones, octeti, *membra_out);
     *nexus_out = nexus;
     redde fructus;
 }
@@ -571,6 +626,149 @@ principale (vacuum)
             }
             briar_silvam_solvere(nexus);
         }
+    }
+
+    imprimere("\n--- Probans membra: statica_a (statica duo nomina"
+        " eadem) ---\n");
+    {
+                         Xar* nexus;
+                         Xar* membra;
+         BriarFabricaFructus  fab = _fabricare_cum_membris(piscina,
+             intern, fons,
+             "briar/probationes/fixa/bibliotheca/statica_a.thistle",
+             &nexus, &membra);
+        BriarAmalgamaFructus  am;
+       constans BriarPlagula* p;
+                         i32  k;
+
+        CREDO_VERUM (fab.successus);
+        am = briar_amalgamare_cum_membris(piscina, &fab, fons,
+            "statica_a", membra);
+        si (!am.successus)
+        {
+            imprimere("  amalgama: %.*s\n", (integer)am.causa.mensura,
+                (constans character*)am.causa.datum);
+        }
+        CREDO_VERUM (am.successus);
+        p = _plagula(&am, "statica_a.c");
+        CREDO_NON_NIHIL (p);
+        si (p != NIHIL)
+        {
+            chorda t = p->contentum;
+
+            /* statica membri cuiusque suffixo tituli sui (functio et
+             * variabile) - omnia, nulla exceptione (classis Gradus:
+             * privatum publico alieno aequale non omittitur) */
+            CREDO_VERUM (_continet(piscina, t,
+                "#define adiutor adiutor_statica_b\n"));
+            CREDO_VERUM (_continet(piscina, t,
+                "#define adiutor adiutor_statica_c\n"));
+            CREDO_VERUM (_continet(piscina, t,
+                "#define basis basis_statica_b\n"));
+            CREDO_VERUM (_continet(piscina, t,
+                "#define basis basis_statica_c\n"));
+            CREDO_AEQUALIS_I32 (_numerare(piscina, t,
+                "#undef adiutor\n"), II);
+            CREDO_AEQUALIS_I32 (_numerare(piscina, t,
+                "#undef basis\n"), II);
+            /* publica numquam renominantur */
+            CREDO_FALSUM (_continet(piscina, t,
+                "#define statica_b_valor "));
+            CREDO_AEQUALIS_I32 (_numerare(piscina, t,
+                "#line 1 \"fontes/statica_b_regiones.c\"\n"), I);
+            CREDO_AEQUALIS_I32 (_numerare(piscina, t,
+                "#line 1 \"include/statica_c_regiones.h\"\n"), I);
+            /* ordo: capita membrorum, caput radicis, corpora
+             * membrorum, regiones radicis, principale */
+            CREDO_VERUM (_index(piscina, t,
+                "#line 1 \"include/statica_b_regiones.h\"")
+                < _index(piscina, t,
+                    "#line 1 \"include/statica_c_regiones.h\""));
+            CREDO_VERUM (_index(piscina, t,
+                "#line 1 \"include/statica_c_regiones.h\"")
+                < _index(piscina, t,
+                    "#line 1 \"include/statica_a_regiones.h\""));
+            CREDO_VERUM (_index(piscina, t,
+                "#line 1 \"include/statica_a_regiones.h\"")
+                < _index(piscina, t,
+                    "#line 1 \"fontes/statica_b_regiones.c\""));
+            CREDO_VERUM (_index(piscina, t,
+                "#line 1 \"fontes/statica_b_regiones.c\"")
+                < _index(piscina, t,
+                    "#line 1 \"fontes/statica_c_regiones.c\""));
+            CREDO_VERUM (_index(piscina, t,
+                "#line 1 \"fontes/statica_c_regiones.c\"")
+                < _index(piscina, t,
+                    "#line 1 \"fontes/statica_a_regiones.c\""));
+            CREDO_FALSUM (_inclusio_relicta(t));
+            /* structura sine postulata_posix (clausura latina.h sola):
+             * quaeque plagula clausurae semel, #define/#undef paria */
+            per (k = ZEPHYRUM; k < xar_numerus(fab.clausura); k++)
+            {
+                _semel_probare(piscina, t, ((constans SilexRes*)
+                    xar_obtinere(fab.clausura, k))->via);
+            }
+            _paria_probare(piscina, t);
+        }
+        briar_silvam_solvere(nexus);
+    }
+
+    imprimere("\n--- Probans membra: radix (rhombus, probatio) ---\n");
+    {
+                         Xar* nexus;
+                         Xar* membra;
+         BriarFabricaFructus  fab = _fabricare_cum_membris(piscina,
+             intern, fons,
+             "briar/probationes/fixa/bibliotheca/radix.thistle",
+             &nexus, &membra);
+        BriarAmalgamaFructus am;
+                         i32 k;
+
+        CREDO_VERUM (fab.successus);
+        /* sine membris: refutatio, non amalgama fracta */
+        am = briar_amalgamare(piscina, &fab, fons, "radix");
+        imprimere("  sine membris: %.*s\n", (integer)am.causa.mensura,
+            (constans character*)am.causa.datum);
+        CREDO_FALSUM (am.successus);
+        CREDO_VERUM (_continet(piscina, am.causa, "folium"));
+        am = briar_amalgamare_cum_membris(piscina, &fab, fons, "radix",
+            membra);
+        CREDO_VERUM (am.successus);
+        CREDO_AEQUALIS_I32 (am.successus ? xar_numerus(am.plagulae)
+            : ZEPHYRUM, II);
+        per (k = ZEPHYRUM; am.successus && k < II; k++)
+        {
+            constans BriarPlagula* p = (constans BriarPlagula*)
+                xar_obtinere(am.plagulae, k);
+                           chorda t = p->contentum;
+
+            imprimere("  %.*s\n", (integer)p->via.mensura,
+                (constans character*)p->via.datum);
+            CREDO_AEQUALIS_I32 (_numerare(piscina, t,
+                "#line 1 \"fontes/folium_regiones.c\"\n"), I);
+            CREDO_AEQUALIS_I32 (_numerare(piscina, t,
+                "#line 1 \"fontes/media_regiones.c\"\n"), I);
+            CREDO_AEQUALIS_I32 (_numerare(piscina, t,
+                "#line 1 \"fontes/ramus_regiones.c\"\n"), I);
+            CREDO_VERUM (_index(piscina, t,
+                "#line 1 \"include/folium_regiones.h\"")
+                < _index(piscina, t,
+                    "#line 1 \"include/media_regiones.h\""));
+            CREDO_VERUM (_index(piscina, t,
+                "#line 1 \"include/media_regiones.h\"")
+                < _index(piscina, t,
+                    "#line 1 \"include/ramus_regiones.h\""));
+            CREDO_VERUM (_index(piscina, t,
+                "#line 1 \"include/ramus_regiones.h\"")
+                < _index(piscina, t,
+                    "#line 1 \"include/radix_regiones.h\""));
+            CREDO_VERUM (_continet(piscina, t,
+                "#define folium_secretum folium_secretum_folium\n"));
+            CREDO_FALSUM (_continet(piscina, t,
+                "#define folium_duplicare "));
+            _structuram_probare(piscina, &fab, t);
+        }
+        briar_silvam_solvere(nexus);
     }
 
     imprimere("\n--- Probans recusationes: vitrea, venditorium ---\n");

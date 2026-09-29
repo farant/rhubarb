@@ -162,7 +162,8 @@ _errorem_quaerere (
 }
 
 /* tabula symbolum -> caput domus (corpus.symbola.tsv e fonte: symbolum,
- * genus, caput 'include/x.h'); ambigua = symbola in capitibus duobus */
+ * genus, caput 'include/x.h' aut radicis clientis); ambigua = symbola in
+ * capitibus duobus */
 nomen structura {
     TabulaDispersa* capita;    /* symbolum -> chorda* caput ('x.h') */
     TabulaDispersa* ambigua;   /* symbolum -> chorda* caput alterum */
@@ -250,15 +251,13 @@ _symbola_legere (
                         {
                 perge;
                         }
-            /* ordines capitum soli: 'include/x.h' -> 'x.h'; ordines
-             * fontium lib (statica, pro -amalgama) hic praetereuntur */
-            si (   caput.mensura <= VIII
-                || memcmp(caput.datum, "include/", (size_t)VIII)
-                    != ZEPHYRUM)
+            /* ordines capitum soli: 'include/x.h' aut radix clientis
+             * + 'x.h' (toml Q13: toml/fontes/toml.h) -> 'x.h'; ordines
+             * fontium (statica, pro -amalgama) hic praetereuntur */
+            si (!silex_titulus_capitis(caput, &caput))
             {
                 perge;
             }
-            caput = chorda_sectio(caput, VIII, caput.mensura);
             si (tabula_dispersa_invenire(t.capita, symbolum, &prior))
             {
                 si (!chorda_aequalis(*(chorda*)prior, caput))
@@ -523,18 +522,44 @@ _lineam_thistle (
 
 /* parsura una: praeludium (latina + trias + capita derivata + exemplar
  * si methodus) + contentum; r->silva ponitur; FALSUM = memoria */
+/* textum in praeludium addere, lineas numerare (linea finalis) */
+interior vacuum
+_praeludium_augere (
+    ChordaAedificator* aed,
+        BriarNexusRes* r,
+               chorda  t)
+{
+    i32 j;
+
+    chorda_aedificator_appendere_chorda(aed, t);
+    per (j = ZEPHYRUM; j < t.mensura; j++)
+    {
+        si (t.datum[j] == '\n')
+        {
+            r->praeludium = r->praeludium + I;
+        }
+    }
+    si (t.mensura > ZEPHYRUM && t.datum[t.mensura - I] != '\n')
+    {
+        chorda_aedificator_appendere_literis(aed, "\n");
+        r->praeludium = r->praeludium + I;
+    }
+}
+
 interior b32
 _parsare (
-               Piscina* piscina,
-         BriarNexusRes* r,
-    constans SilexFons* fons,
-                   Xar* capita)
+                      Piscina* piscina,
+                BriarNexusRes* r,
+           constans SilexFons* fons,
+                          Xar* capita,
+    constans BriarSilvaMembra* membra)
 {
      ChordaAedificator* aed;
                    Xar* clausura;
     constans character* causa_lexici = NIHIL;
             BriarSilva* arbor_silvae;
                    i32  k;
+        TabulaDispersa* inserta;
 
         aed = chorda_aedificator_creare(piscina,
             (memoriae_index)(r->contextus.mensura + 256));
@@ -551,11 +576,49 @@ _parsare (
         "#include <stdlib.h>\n"
         "#include <string.h>\n");
     r->praeludium = IV;
+    inserta = (membra != NIHIL && membra->textus != NIHIL)
+        ? tabula_dispersa_creare_chorda(piscina, 16) : NIHIL;
     per (k = ZEPHYRUM; capita != NIHIL && k < xar_numerus(capita); k++)
     {
+        chorda  caput  = *(chorda*)xar_obtinere(capita, k);
+        vacuum* ordo   = NIHIL;
+
+        /* caput MEMBRI (bibliotheca): textus proprii dependentium
+         * (post-ordo) deinde eius, quisque SEMEL (rhombus sine
+         * custodibus) - non inclusio: silex caput genitum non
+         * invenit; lineae in praeludium numerantur */
+        si (   inserta != NIHIL
+            && tabula_dispersa_continet(membra->textus, caput))
+        {
+            Xar* dependentia = NIHIL;
+            s32  d;
+
+            si (tabula_dispersa_invenire(membra->ordo, caput, &ordo))
+            {
+                dependentia = (Xar*)ordo;
+            }
+            per (d = ZEPHYRUM; d <= (s32)(dependentia != NIHIL
+                ? xar_numerus(dependentia) : ZEPHYRUM); d++)
+            {
+                chorda quod = (dependentia != NIHIL
+                    && d < (s32)xar_numerus(dependentia))
+                    ? *(chorda*)xar_obtinere(dependentia,
+                    (i32)d) : caput;
+                vacuum* t = NIHIL;
+
+                si (   tabula_dispersa_continet(inserta, quod)
+                    || !tabula_dispersa_invenire(membra->textus, quod,
+                           &t))
+                {
+                    perge;
+                }
+                tabula_dispersa_inserere(inserta, quod, t);
+                _praeludium_augere(aed, r, *(chorda*)t);
+            }
+            perge;
+        }
         chorda_aedificator_appendere_literis(aed, "#include \"");
-        chorda_aedificator_appendere_chorda(aed,
-            *(chorda*)xar_obtinere(capita, k));
+        chorda_aedificator_appendere_chorda(aed, caput);
         chorda_aedificator_appendere_literis(aed, "\"\n");
         r->praeludium = r->praeludium + I;
     }
@@ -724,11 +787,12 @@ _definita_colligere (
  * parsura secunda */
 interior b32
 _regionem_derivare (
-               Piscina* piscina,
-         BriarNexusRes* r,
-    constans SilexFons* fons,
-          BriarSymbola* symbola,
-        TabulaDispersa* definita)
+                      Piscina* piscina,
+                BriarNexusRes* r,
+           constans SilexFons* fons,
+                 BriarSymbola* symbola,
+               TabulaDispersa* definita,
+    constans BriarSilvaMembra* membra)
 {
     Xar* capita = xar_creare(piscina, (i32)magnitudo(chorda));
     Xar* pares  = xar_creare(piscina,
@@ -754,7 +818,7 @@ _regionem_derivare (
     si (xar_numerus(capita) > ZEPHYRUM)
     {
         silva_piscina_destruere(r->silva->piscina);
-        si (!_parsare(piscina, r, fons, capita))
+        si (!_parsare(piscina, r, fons, capita, membra))
         {
             redde FALSUM;
         }
@@ -774,6 +838,55 @@ briar_silvam_texere (
      constans SilexFons* fons,
      constans character* via_documenti)
 {
+    redde briar_silvam_texere_cum_membris(piscina, nexus, fons,
+        via_documenti, NIHIL);
+}
+
+/* nomina membrorum in tabulam symbolorum: absens -> capita (caput
+ * membri); iam corporis -> ambigua (derivatio ut duo capita
+ * refutat, linea regionis) */
+interior vacuum
+_membra_miscere (
+                      Piscina* piscina,
+                 BriarSymbola* t,
+    constans BriarSilvaMembra* membra)
+{
+    TabulaIterator  it;
+            chorda  titulus;
+            vacuum* caput;
+
+    si (membra == NIHIL || membra->nomina == NIHIL)
+    {
+        redde;
+    }
+    si (t->capita == NIHIL)
+    {
+        t->capita   = tabula_dispersa_creare_chorda(piscina, 64);
+        t->ambigua  = tabula_dispersa_creare_chorda(piscina, 16);
+    }
+    it = tabula_dispersa_iterator_initium(membra->nomina);
+    dum (tabula_dispersa_iterator_proximum(&it, &titulus, &caput))
+    {
+        si (tabula_dispersa_continet(t->capita, titulus))
+        {
+            tabula_dispersa_inserere(t->ambigua, titulus, caput);
+        }
+        alioquin
+        {
+            tabula_dispersa_inserere(t->capita, titulus, caput);
+        }
+    }
+    t->adest = VERUM;
+}
+
+s32
+briar_silvam_texere_cum_membris (
+                      Piscina* piscina,
+                          Xar* nexus,
+           constans SilexFons* fons,
+           constans character* via_documenti,
+    constans BriarSilvaMembra* membra)
+{
                           i32  i;
                           s32  numerus = ZEPHYRUM;
                  BriarSymbola  symbola;
@@ -784,6 +897,7 @@ briar_silvam_texere (
         redde -I;
     }
     symbola = _symbola_legere(piscina, fons);
+    _membra_miscere(piscina, &symbola, membra);
     /* parsura prima omnium regionum, deinde derivatio: symbola quae
      * regio ulla declarat nulli derivantur */
     per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
@@ -799,7 +913,7 @@ briar_silvam_texere (
                       * radix a contextu recusata recusata manet */
                         }
         r->via_documenti = via_documenti;
-        si (!_parsare(piscina, r, fons, NIHIL))
+        si (!_parsare(piscina, r, fons, NIHIL, NIHIL))
         {
             redde -I;
         }
@@ -817,7 +931,8 @@ briar_silvam_texere (
                         {
             perge;
                         }
-        si (!_regionem_derivare(piscina, r, fons, &symbola, definita))
+        si (!_regionem_derivare(piscina, r, fons, &symbola, definita,
+                membra))
         {
             redde -I;
         }
@@ -914,4 +1029,103 @@ briar_silvam_capitis_solvere (
         silva_piscina_destruere(silva->piscina);
         silva->piscina = NIHIL;
     }
+}
+
+/* nomina scopi fili regionum planarum: statica VERUM = interiora
+ * sola, FALSUM = publica sola (vide briar_silva.h) */
+interior Xar*
+_nomina_scopi_fili (
+    Piscina* piscina,
+        Xar* nexus,
+        b32  statica)
+{
+               Xar* nomina = xar_creare(piscina,
+                   (i32)magnitudo(BriarNomenPublicum));
+    TabulaDispersa* visa   = tabula_dispersa_creare_chorda(piscina, 64);
+               i32  i;
+
+    per (i = ZEPHYRUM; nexus != NIHIL && i < xar_numerus(nexus); i++)
+    {
+        constans BriarNexusRes* r = (constans BriarNexusRes*)
+            xar_obtinere(nexus, i);
+             insignatus integer k;
+                        integer fons_index;
+
+        si (   !briar_nexus_regio_plana(r) || r->silva == NIHIL
+            || r->silva->semantica == NIHIL
+            || r->silva->parsura   == NIHIL)
+        {
+            perge;
+        }
+        fons_index = r->silva->parsura->fons_princeps;
+        per (k = ZEPHYRUM; k
+            < silva_c89_symbola_numerus(r->silva->semantica); k++)
+        {
+            constans SemanticaSymbolum* s =
+                silva_c89_symbolum_per_indicem(r->silva->semantica, k);
+                        integer minimum = -I;
+                        integer maximum = ZEPHYRUM;
+                         chorda titulus;
+                            i32 linea = I;
+                            i32 j;
+                            b32 staticum = (b32)((s->repositio
+                                & REPOSITIO_STATICA) != ZEPHYRUM);
+
+            si (   s->est_implicitum || s->ex_systemate
+                || s->profunditas != (insignatus integer)ZEPHYRUM
+                || staticum       != statica
+                || s->genus       == (s32)SYMBOLUM_PARAMETRUM
+                || s->declarans   == NIHIL)
+            {
+                perge;
+            }
+            /* in textu regionis ipso, non in praeludio (capita) */
+            silva_nodus_extensionem(s->declarans, fons_index, &minimum,
+                &maximum);
+            si (   minimum < ZEPHYRUM
+                || minimum < (integer)r->praeludium_octeti)
+            {
+                perge;
+            }
+            titulus = _silva_chorda_ut_chorda(piscina, s->titulus);
+            si (   chorda_aequalis_literis(titulus, "main")
+                || tabula_dispersa_continet(visa, titulus))
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; j < (i32)minimum
+                && j < r->textus_silvae.mensura; j++)
+            {
+                si (r->textus_silvae.datum[j] == '\n')
+                {
+                    linea = linea + I;
+                }
+            }
+            tabula_dispersa_inserere(visa, titulus, (vacuum*)nomina);
+            {
+                BriarNomenPublicum* n = (BriarNomenPublicum*)
+                    xar_addere(nomina);
+
+                n->titulus  = titulus;
+                n->linea    = briar_nexus_linea_silvae(r, linea);
+            }
+        }
+    }
+    redde nomina;
+}
+
+Xar*
+briar_silva_nomina_publica (
+    Piscina* piscina,
+        Xar* nexus)
+{
+    redde _nomina_scopi_fili(piscina, nexus, FALSUM);
+}
+
+Xar*
+briar_silva_nomina_statica (
+    Piscina* piscina,
+        Xar* nexus)
+{
+    redde _nomina_scopi_fili(piscina, nexus, VERUM);
 }

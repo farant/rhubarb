@@ -3566,3 +3566,32 @@ no third-party files in the repo) — and the golden split to match
 in). Bonus: the wild corpus carries toml_edit's own invalid fixtures.
 Verdicts pinned for later tasks: CRLF accepted (multiline CRLF → `\n`),
 lone CR rejected, BOM rejected (as `tomllib`).
+
+## 2026-09-28 — the toml client closed (Q2–Q14 RELATIO)
+
+RELATIO: materia's seventh client, built in one day on the crusta
+shape (plan Q1–Q14, Q7 and Q11 re-sliced by their own measurements,
+Q13's corpus widening pulled into Q12). Numbers: toml-test 1.0.0
+205/205 valid equal by value, 474/474 invalid rejected, no exclusions;
+`tomllib` 679/679 and 1,794 wild files with zero disagreements (one
+divergence named by cause, "microsecunda"); byte law on every corpus
+file; STML FIDELITAS on 2,485 documents; canon 70 rules; totality 6,136
+generated cases, linear at depth 100 000; 13 suites, 14,267 assertions.
+Consumers: the three tools migrated, `lib/toml.c` retired (19 bugs of
+the old library found by diffing 3,311 real replies); briar exposes
+`toml` to `.thistle` authors (FRANGIT line in MUTATIONES).
+
+Substrate: **no change** — the first client since html to need none.
+What the client found OF materia, pinned rather than fixed (park
+…FAD8): `materia_diagnostica_derivare` is quadratic in depth (the
+client skips it on clean parses, equivalence asserted), emission and
+the STML projection SIGSEGV at 100 000 deep (`RUIT_CUM`). The shim
+count the plan asked for no longer exists — the shim retired on
+2026-09-25 (5f6f7465); its successor `./materia/oraculum_probare.sh`
+is sanum (468 files, pin 7a4847b0), materia suite 14/14.
+
+Lessons worth carrying to the next client (JS per decree …XX0BZ):
+measure time at depth, not survival; assert "carries a diagnostic",
+not "not sana"; retiring a library means finding what VENDORS it
+(silex projects, briar's corpus); private names in a client must not
+equal public house names (the amalgam collision class).

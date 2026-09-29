@@ -8,7 +8,7 @@
 /*
  * EVENTUS INSPECTOR - Instrumentum pro inspicere eventus in log file
  *
- * Usus: ./bin/probatio_eventus_inspector [via_log]
+ * Usus: ./bin/eventus_inspector [via_log]
  * Default: data/combinado.log
  */
 

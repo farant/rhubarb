@@ -4,7 +4,9 @@
  * Forma: briar [-vexillum] [-f <radix>] <x.thistle> [argumenta...]
  * Ante plagulam: -probatio -struere [-iterum] -arbor -partes -amalgama
  * -html -visio -app -versio -auxilium/-h, -f <radix>, -icon <via> (cum
- * -app solo); SINE plagula: -versio, -bibliothecae, -bibliotheca
+ * -app solo); vexilla ATRII -vivum -retro -portus <n> -radix <via>
+ * (programmatis vitrei: programmati praemittuntur, e.g. manus incipere
+ * briar x.thistle); SINE plagula: -versio, -bibliothecae, -bibliotheca
  * <nomen> [-fons] (documentatio corporis - NON reservata post plagulam,
  * ne argumenta programmatis rapiant); aliud '-...' =
  * recusatio

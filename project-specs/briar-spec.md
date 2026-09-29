@@ -1,4 +1,4 @@
-# briar — spec v1.10 (literate C89 programs; `.thistle`)
+# briar — spec v1.11 (literate C89 programs; `.thistle`)
 
 *2026-09-04. v1 consolidated the design conversation of the same day
 (research nota 01M1QC21ZJ in the tabularium). v1.1 folds in the
@@ -8,6 +8,11 @@ else is PROPOSITUM and was agreed in conversation unless marked OPEN.
 Names marked (unsealed) are working names — Fran names. Every
 "exists" claim cites the header it rests on. English prose, Latin
 identifiers, as in pictor-spec.md.*
+
+*v1.11 (2026-09-29) adds §3.5, `<bibliotheca via="x.thistle"/>` -
+sharing plain C between thistles (lapide feature-requests/015;
+element form and plain-C scope decided with Fran). BUILT the same day
+by plan 9 (`briar-plan-9-bibliotheca.md`); "As built" closes §3.5.*
 
 *v1.10 (2026-09-14) adds §4.9, the visio in the app — every vitrea
 program briar builds embeds its own literate page and shows it from a
@@ -476,6 +481,174 @@ its third, "a function used as a VALUE is not derived", stays open
 (silva raises no implicit-symbol mark for a name that is not called;
 §9 with the bare-macro case).
 
+
+### 3.5 Bibliotheca — sharing code between thistles (v1.11, 2026-09-29, DECISUS — built, plan 9)
+
+lapide feature-requests/015: `recensio.thistle` needs the event-log
+projection that `textus.thistle` already computes (types + a dozen
+functions). Today the choices are copying (drift) or running the
+sibling as a subprocess and parsing its JSON, which costs a process
+start and a full log replay per call and forces the "library" to grow
+CLI commands that exist only for its sibling (`proicere -`,
+`status --singula`). Fragments (§3.4) do not answer this: they tangle
+pieces of ONE document for reading order; this is LINK-level sharing of
+symbols between PROGRAMS. The two stay separate mechanisms.
+
+Decided with Fran 2026-09-29 (element form, plain C only; the word was
+left to Claude):
+
+| decision | chosen | reserved |
+|---|---|---|
+| B1 how an import is written | a column-0 document ELEMENT `<bibliotheca via="textus.thistle"/>` — an import is a property of the document, like `<fenestra/>`; elements are nouns | a region attribute `<c! importa="…">` (the tester's proposal; ties a document-level fact to one region) |
+| B2 the word | `bibliotheca`: the imported file serves as a library, and its public symbols become derivable exactly as a corpus library's are; briar's documentation already speaks of bibliothecae | `importa` (a verb, the only one among the format's elements) |
+| B3 what is shared | the importee's PLAIN C regions (no `methodus`, not `munus="probatio"`, not `id=` fragments): its types, directives and non-`staticus` functions, minus `principale` | a vitrea app's `methodus` handlers; fragments across files (`<<textus.thistle#x>>`) |
+| B4 how names reach the importer | DERIVATION, as for `toml.h` today: no `#include` line and no symbol list in the importer | an explicit symbol list on the element (`nomina="a b"`) if collisions ever demand it |
+| B5 where the file is found | `via=` relative to the IMPORTING file's directory; `.thistle` only; no search path | a project root (`-f`-like) or a per-directory index |
+| B6 transitivity | transitive: an importee's own `<bibliotheca/>` elements come along, each file linked ONCE; a cycle is refused | non-transitive (each file names everything it links) |
+
+**Words.** The importing file is the *importator*; each file named by
+`via=` is a *bibliotheca plagulae* (thistle library); the set reached
+transitively is the importator's *bibliothecae*.
+
+**Mechanism (the partition already exists).** The fabrica partitions
+every thistle (§4.2): `include/<t>_regiones.h` holds its directives,
+types and prototypes; `fontes/<t>_regiones.c` its bodies except
+`principale`, which is set apart. Importing `textus` means: partition
+textus's plain C regions the same way (under its own title, so its
+units are `textus_regiones.h/.c`), place those units in the importer's
+project, make the header derivable (its symbol table joins the
+derivation for this build), and link the `.c`. Visibility is C's own:
+non-static is exported, `staticus` stays private — the same rule the
+main and probatio regions follow since documentation-ideas/016.
+
+**Rules.**
+
+- An importee's `principale`, `probatio` region, `methodus` regions and
+  fragments never leave it; its own `-probatio` stays its own.
+- The importer's `-probatio` sees the imported symbols (the tester's
+  case: recensio's tests call textus's projection).
+- A public name defined by two members of one build (importer +
+  bibliothecae) is refused BEFORE clang, with both thistle lines
+  (documentation-ideas/015's class, which today surfaces only as a
+  derivation ambiguity or a link error).
+- **The cache key includes every bibliotheca's bytes, transitively**
+  (the key is stamp + flags + bytes, §4.1; a member outside the key
+  would replay the stale-cache bug found 2026-09-29).
+- `-amalgama` carries the bibliothecae's units; two members' statics
+  with the same name are renamed by the amalgam's private-name pass
+  (the Q13 `Gradus` class: a private equal to a public is not renamed
+  - that check must see ALL members' publics).
+- `-partes` lists each bibliotheca (via, members reached, symbols
+  exported).
+- **Why cycles are refused (policy, not mechanics — Fran agreed).** A
+  build is ONE clang call over several translation units (`<t>.c`,
+  `<t>_regiones.c`, each member's `_regiones.c`, the corpus `lib/*.c`);
+  only `-amalgama` is a single unit. Function cycles would link fine
+  either way, and the graph walk dedups members anyway. TYPE cycles do
+  not: each member's types live in its `_regiones.h`, derivation would
+  make two headers include each other, and whichever is read first
+  sees the other's types undeclared — clang's error lands inside a
+  GENERATED header, far from the cause (the classic C header cycle,
+  identical in the amalgam). Two files that need each other are one
+  library: the refusal says `partem communem in plagulam tertiam move`.
+  Reserved: cycles allowed when no type crosses both ways.
+
+**Refusals** (located at the element's line): `bibliotheca '<via>'
+(linea N): plagula non exsistit` · `… non est plagula .thistle` ·
+`bibliotheca circularis: a.thistle -> b.thistle -> a.thistle` ·
+`nomen 'x' in duabus plagulis: a.thistle:12, b.thistle:40` ·
+`bibliotheca '<via>': regio C plana nulla` (nothing to share).
+
+**AUDIENDA — measured before building (plan task 1):** (1) whether the
+partition runs unchanged on a file that is not the build's root
+(titles, `#line` paths, the derivation exclusion set); (2) how the
+importee's own derived headers reach its `_regiones.c` (they must,
+independent of the importer); (3) whether `inv.app` today mixes
+`methodus` regions into the plain set (it holds "C regions that are
+not probatio"); (4) a vitrea importer + plain importee, and the
+reverse (a plain importer of a vitrea file shares only its plain
+regions); (5) the cost for `recensio` → `textus` (textus is ~3,800
+lines): build time before/after, and the subprocess calls removed.
+
+**As built (plan 9, 2026-09-29; T1 f0159f9d, T2 b5f36b04, T3 890dbf92 +
+5e876bc2, T4 af1fbb8a).** B1–B6 held as decided. What the building
+added or changed:
+
+- **AUDIENDA answered (T1).** (1) Nothing assumes the root: titles and
+  `#line` paths come from `via_thistle` — but `briar_fabricare` refuses
+  a file with neither `principale` nor a window, so members get a
+  PARTITION-ONLY entry (`briar_membrum_partiri`: plain regions →
+  header + body, no main rule). (2) A member's `_regiones.c` carries
+  its own derived includes and compiles alone. (3) `inv.app` held
+  `methodus` regions, so "plain" is its own predicate
+  (`briar_nexus_regio_plana`: `c`, not `id=`, not probatio, no
+  `methodus`). (4) The parse question: pass one tolerates unknown
+  types and derivation already collects unknown TYPES as well as
+  implicit functions, so members only add names to the symbol table;
+  pass two cannot `#include` a generated header (silva resolves
+  through the corpus `SilexFons`), so each member's header TEXT goes
+  into the prelude — no silex change. (5) lapide's `textus.thistle` is
+  7,756 lines (not ~3,800): cold build 1.0 s, and ~0.55 s on EVERY
+  importer run, because briar parses before it computes the key -
+  answered the same day by "key before parse" (§4.1).
+- **Members are finished after their dependencies** (post-order), each
+  with only its OWN transitive members visible — a sibling it does not
+  import is not seen, so a member cannot silently lean on the root's
+  other imports.
+- **Parse text**: each member's own header text, UNGUARDED, inserted
+  once, dependencies first (`BriarSilvaMembra.ordo`) — composition
+  dedups the diamond, no guard needed (a plant disproved the idea that
+  guards blinded silva's semantics; the red was another file's
+  diagnostic).
+- **A member's exported header carries PUBLIC prototypes only**; its
+  static prototypes sit at the top of its own `_regiones.c` (the first
+  end-to-end run found every importing unit declaring an unused static
+  — `-Wunused-function`, bugs/002's class). The ROOT's header is
+  unchanged (its statics stay there).
+- **Public names** (`briar_silva_nomina_publica`): file scope, not
+  static, not implicit, not `main`, declared in the region's own text;
+  the line is the declarator for a typedef and the definition start
+  for a function.
+- **Refusals as worded** (at the element's or the name's line):
+  `bibliotheca sine via (linea N)` · `… non est plagula .thistle` ·
+  `… plagula non exsistit` · `bibliotheca circularis: a.thistle ->
+  b.thistle -> a.thistle - partem communem in plagulam tertiam move` ·
+  `… regio C plana nulla (nihil commune)` · NEW: `bibliotheca: titulus
+  'x' iteratus: <via>, <via>` (two members with one title would write
+  the same generated files) · `nomen 'x' in duabus plagulis: a:12,
+  b:40 - nomen publicum unum per aedificationem; alterum renomina aut
+  'interior' fac` (checked before clang; the root's line when the
+  root is one of the pair).
+- **Cache key** (§4.1): `briar_membra_stampa` appends ` membra <16
+  hex>` = SHA-256 over each member's title, `\n<length>\n` and bytes,
+  in post-order. No members → the stamp is returned UNCHANGED, so no
+  existing cache moved. Measured before the fix: editing folium only,
+  radix printed the stale 28 (true 72).
+- **Amalgam**: member headers after the corpus headers and before the
+  root's header; member bodies after the corpus sources and before the
+  root's regions; each once. EVERY static of a member (functions and
+  file-scope variables, `briar_silva_nomina_statica`) is renamed
+  `s_<member>` around its body — no skip list, so the Gradus class
+  (a private equal to some public, skipped) cannot occur for members.
+  `briar_amalgamare` without members on a fabrica that has them
+  refuses, naming the member, instead of writing a file clang rejects
+  (what `-amalgama` did before T4). The ROOT's own statics are still
+  not renamed (pre-existing: a root static equal to a member's public
+  collides in the amalgam; the normal build usually refuses it too).
+- **`-partes`**: one line per member, `<via relative to the root's
+  directory>\tbibliotheca:membra N, nomina publica M` (N = members it
+  reaches).
+- **Not derived from members**: bare object-like macros and enum
+  constants (§9's bare-macro limitation applies to members too).
+- **The spectator** collects members like a run; on a refusal it
+  renders WITHOUT them (F4: the page is always written).
+- Gates: `probatio_briar_plagulae` (82), fabrica cases (294), amalgama
+  cases (273), fumus stage XXII (run, `-probatio`, key moves with a
+  member, new value without `-iterum`, two amalgams compiled alone,
+  `-partes`). Every one planted red; one first test was MUTE (the
+  length prefix "proved" by `ab|c` vs `a|bc`, which the next member's
+  title already separates) and was replaced.
+
 ## 4. The fabrica — tree to binary
 
 ### 4.1 Build home and cache
@@ -503,6 +676,24 @@ order>` — the key moves exactly when a file that goes into the project
 changes; the house `filum` has no mtime accessor, and a content hash
 is both cheaper and more honest than an mtime walk. `briar -versio`
 marks a disk corpus `(discus)`.
+
+**Stamp additions:** `fontes briar <hash>` (briar's own source hash,
+2026-09-29, c452f4b5 — a generator change under the same corpus commit
+used to replay old generated code) and, when the thistle has
+bibliothecae (§3.5), ` membra <16 hex>` over every member's title,
+length and bytes (plan 9 T4, af1fbb8a).
+
+**Key before parse (2026-09-29).** With the EMBEDDED corpus every key
+input is known from the document tree: the stamp, briar's source hash,
+members' bytes (a LIGHT walk - same order and structural refusals, no
+silva), the flags (the form is VITREA exactly when a window element is
+present; a file with a window AND `principale` is refused, so it never
+has a cached binary), the chrome hash for vitrea. A run, `-probatio`
+or `-struere` without `-iterum` computes the key through the same
+function the full path uses and execs a cached binary at once;
+otherwise it falls through to the full path. Measured on lapide's
+9,668-line `textus.thistle`: 0.75 s → 0.00 s per hit. A disk corpus
+keeps the full path (its stamp needs the closure).
 
 **Flags, direction (Fran, 2026-09-04): DERIVE from the sources.** In
 v1 the base flag set is the string silex's generators carry
@@ -1389,7 +1580,14 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 
 - **P9 visio (§4.9) — DONE (plan 8, 2026-09-14; T1 94aaf5a1 fenestra menu seam, T2 c8a9bbb1 atrium `visio` and the second window, T3 8813c51f page asset + chrome in the key + generated main, T4 fumus IV/XIV + seal). Gates born red and planted: eventus_stml 2/2, atrium 1/1, facies 7/7 (plants 1 and 1), fabrica 2 then 1 (golden regenerated with its cause); fumus IV and XIV each failed on their plant. Fumus headless 12.1 s, `-agere` 39.2 s. As built in §4.9.**
 
+- **P10 bibliotheca (§3.5) — DONE (plan 9, 2026-09-29; T1 f0159f9d measurement, T2 b5f36b04 members, T3 890dbf92 + 5e876bc2 derivation and build, T4 af1fbb8a key + amalgam + `-partes` + fumus XXII, T5 records). Answers lapide feature-requests/015. End to end: radix → media/folium/sub-ramus diamond prints 28 (folium linked once), its `-probatio` sees members, same from /tmp; a vitrea member shares only its plain region (42); two members' private `adiutor` build (5) and amalgamate; a member's type error is reported at `membrum_mendosum.thistle:11`. Whole fumus 17 s. As built in §3.5.**
+
 ## 9. Named deferrals
+
+**Thistle bibliothecae, reserved (§3.5):** sharing a vitrea app's
+`methodus` handlers · fragments across files (`<<x.thistle#y>>`) · an
+explicit symbol list on the element · a project root or directory
+index for `via=` · non-transitive imports.
 
 Interpreted mode (waits on machinula piscina support, desideratum
 01KYB9JMDX, and on Tier-2 `.m` scope) · examen over the regions'

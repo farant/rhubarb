@@ -1,7 +1,10 @@
 # toml_arbor Plan — TOML 1.0 on materia (seventh client)
 
-**STATUS: OPEN 2026-09-28** — written from the approved spec; no task
-executed yet.
+**STATUS: CLOSED 2026-09-28** — Q1–Q14 executed in one day (Q7 → Q7a/Q7b
+and Q11 → Q11a/Q11b re-sliced by their measurements; Q13's corpus
+widening pulled into Q12, Fran option A). Every task's "Executed" note
+is the build history; spec §X is the as-built record; orientation in
+`toml/CLAUDE.md`.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans
 > (inline, per house convention — no subagents) to implement this plan
@@ -1327,6 +1330,38 @@ implementation file (found in Step 1), `briar/MUTATIONES.md`.
   `tools/briar_struere.sh`, `tools/briar_spectator_struere.sh`), gates
   `briar`, `briar-fumus`; commit; rebake again for the stamp.
 
+**Executed 2026-09-28.** Measured first: (1) derivation ambiguity — 0
+public/public collisions between the roots' headers and `include/`;
+but `-amalgama` found ONE private/public collision: `Gradus`, a
+file-local typedef in both `toml_arbor.c` and `toml_scalaris.c` that
+equals a public name, which the amalgam's renaming list skips by rule →
+renamed `GradusAedificationis` / `GradusAmbulationis`. (2) Size: the
+roots are 634 KB of source (materia 453 + toml 181) against 15.1 MB of
+`lib/`+`include/`; already embedded since Q12. (3) The lookup: three
+places assumed `include/` — derivation's header naming
+(`briar_silva._symbola_legere`), `-bibliothecae`/`-functiones`
+(`tools/briar.c`), the amalgam's header visit (`briar_amalgama`). (4)
+include paths: already `-I<root>` from Q12's silex change.
+
+Done:
+- ONE list, two homes, a guard: `RADICES_CLIENTIUM` (corpus_infixum.sh)
+  and `SILEX_RADICES_CLIENTIUM` (now public in `silex.h`); probatio_silex
+  parses the crusta list and asserts equality in order (plant: C order
+  swapped → red). `silex_titulus_capitis` published (was silex-private)
+  and used by briar's derivation.
+- `-bibliothecae` lists the `materia_*` and `toml*` libraries;
+  `-bibliotheca toml -functiones` prints the 17 `toml.h` signatures;
+  `-amalgama` searches include/ then the roots.
+- Fixture `briar/probationes/fixa/thistle/toml_config.thistle` (no
+  `#include`; sections kept, root enumerated, duplicate key refused at
+  `config.toml:3:1`): fabrica test block + `briar_fumus` stage XXI (run,
+  `-probatio`, amalgam compiled ALONE and run, `-bibliothecae`,
+  `-functiones`).
+- MUTATIONES `## inedita`: FRANGIT toml (old call → new, one line
+  each) + the corpus roots line. briar/CLAUDE.md: the client-roots law.
+- Gates run: briar suite + rebake + spectator, `briar_fumus` (XXI
+  green), `silex_semen_fumus`, silex (drift guard + plant).
+
 ---
 
 ## Task Q14: Closure — records, ledger, memory
@@ -1350,6 +1385,19 @@ toml_arbor.worklog.md` (opened at the first find during Q3–Q13),
   oracles and where they live), `MEMORY.md` line, `materia-fork.md`
   gains the seventh client.
 - [ ] **Step 5: Commit** — the files above, `[]`.
+
+**Executed 2026-09-28.** Measured first: the arc's commits touch no
+file in `materia/fontes` or `materia/grammatica` (substrate changes:
+none); `./materia/shim_probare.sh` NO LONGER EXISTS — the shim retired
+2026-09-25 (5f6f7465) and the silva oracle took its role, so the count
+was taken from its successor: `./materia/oraculum_probare.sh` sanum
+(468 files, pin 7a4847b0), materia suite 14/14; toml 13/13 suites,
+14,267 assertions. `toml/CLAUDE.md` already held the per-task sections
+(written as each task closed); added: status, totality/twin, briar,
+the gate table, laws T3–T8, birth lessons. Spec §X "As built" (deltas +
+AUDIENDA answered); phase-log RELATIO; worklog closed; ledger …TXF →
+impletum with ONE tail desideratum (TOML 1.1, writing TOML); memory:
+`toml-client.md` closed, `materia-fork.md` gains the seventh client.
 
 ---
 

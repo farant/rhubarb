@@ -1,3 +1,4 @@
+/* selectio.h - selectores CSS super arborem STML (queries) */
 #ifndef SELECTIO_H
 #define SELECTIO_H
 

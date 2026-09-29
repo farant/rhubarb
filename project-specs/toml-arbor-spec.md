@@ -258,7 +258,63 @@ Gates are born red by a plant that compiles.
 
 ---
 
-## AUDIENDA (not verified yet)
+## X. As built (2026-09-28, plan closed — governs where the body differs)
+
+Built in one day, Q1–Q14 (commits 8a94f763 … 77382abf and the closure).
+Orientation: `toml/CLAUDE.md`. Deltas from the body above:
+
+- **Diagnostic owners are three, not one step.** Scalars
+  (`toml_scalaria_iudicare`, every token incl. trivia, at the bad byte),
+  structure (`toml_coctum`, 8 codes, first definition related), syntax
+  (derived from the declaration — and SKIPPED on a clean parse, since
+  materia's derivation is quadratic in depth; equivalence asserted per
+  fuzz case). §VI named one derivation pass.
+- **Table semantics are tomllib's**, carried on the objects: `modus`
+  IMPLICITA / EXPLICITA / PUNCTATA / INLINEA plus `sectio` for dotted
+  tables. Inline newlines and trailing commas are named as TOML 1.1.
+- **Two verdicts beyond the letter of 1.0**, pinned: second 60 allowed
+  (RFC 3339; tomllib refuses — no real file has one); fractional
+  seconds truncated at 9 digits (tomllib: 6) — the one wild divergence,
+  "microsecunda", named by cause.
+- **The empty key `""`** lives outside the hash index
+  (`tabula_dispersa` refuses length 0).
+- **`librarium_merge` stays lenient through a named tool-local helper**
+  (`_capere_planum`, the old flattening order); the library is strict.
+  Proven on 3,311 real LLM replies: equal per element except 19 bugs of
+  the old library fixed.
+- **The corpus widening came in Q12, not Q13**: retiring `lib/toml.c`
+  would have broken every silex-generated project (they vendor
+  `capsula_generare`). Client roots are one list in two homes
+  (`SILEX_RADICES_CLIENTIUM`, `RADICES_CLIENTIUM`) with a drift guard.
+- **API additions**: `toml_chordae` (array of strings, Q12);
+  `toml_tabulae_filius` shared by cooking, oracle and API.
+- **Twin golden** is three frozen toml-test files, not the largest wild
+  file (the wild corpus is manifest-only).
+
+Numbers: toml-test 1.0.0 205/205 valid equal, 474/474 invalid rejected,
+no exclusions; tomllib 679/679 and wild 1,794 with zero disagreements;
+byte law on toml-test 679, house 12, wild 1,794; totality 6,136 cases,
+linear at depth 100 000; 13 suites, 14,267 assertions.
+
+**AUDIENDA answered:**
+- toml-test tag v2.2.0 (commit ce08da1d); 1.0.0 list 205 valid / 474
+  invalid (a web summary had said 256/512).
+- Wild corpus: 1,795 unique files, 3.27 MB — kept as a sha256 manifest
+  only (Fran: no third-party files in the repo); its golden is
+  regenerated, never committed.
+- `strtod`: exact on every toml-test float (Q8 compares by value;
+  205/205) and on every wild file (Q9).
+- `librarium_merge`: 1 of 3,311 real replies rejected by the strict
+  parser (`[Summary]` + a bare string); 21 use headers — hence the named
+  lenient helper.
+- Substrate changes: **none** (no commit in the arc touches
+  `materia/fontes` or `materia/grammatica`). materia's own depth limits
+  (emission and STML at 100 000, quadratic derivation) are pinned
+  `RUIT_CUM` on park …FAD8, not changed.
+
+---
+
+## AUDIENDA (as written before the build — answered in §X)
 
 - toml-test's current tag and the exact size of its 1.0.0 list —
   read at fetch time and written into the provenance note.

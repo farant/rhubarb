@@ -1343,7 +1343,7 @@ nomen structura {
              MateriaValor  valor;
     constans MateriaNodus* pater;
                       b32  in_malo;
-} Gradus;
+} GradusAmbulationis;
 
 interior b32
 _pellere (
@@ -1353,15 +1353,15 @@ _pellere (
     constans MateriaNodus* pater,
                       b32  in_malo)
 {
-    Gradus* g;
+    GradusAmbulationis* g;
 
     si (*cacumen < (s32)xar_numerus(acervus))
     {
-        g = (Gradus*)xar_obtinere(acervus, (i32)*cacumen);
+        g = (GradusAmbulationis*)xar_obtinere(acervus, (i32)*cacumen);
     }
     alioquin
     {
-        g = (Gradus*)xar_addere(acervus);
+        g = (GradusAmbulationis*)xar_addere(acervus);
     }
     si (g == NIHIL)
     {
@@ -1432,7 +1432,7 @@ toml_lexemata_ambulare (
     {
         redde FALSUM;
     }
-    acervus = xar_creare(piscina, (i32)magnitudo(Gradus));
+    acervus = xar_creare(piscina, (i32)magnitudo(GradusAmbulationis));
     si (   acervus == NIHIL
         || !_liberos_pellere(acervus, &cacumen, radix, FALSUM))
     {
@@ -1440,10 +1440,10 @@ toml_lexemata_ambulare (
     }
     dum (cacumen > ZEPHYRUM)
     {
-        Gradus g;
+        GradusAmbulationis g;
 
         cacumen--;
-        g = *(Gradus*)xar_obtinere(acervus, (i32)cacumen);
+        g = *(GradusAmbulationis*)xar_obtinere(acervus, (i32)cacumen);
         si (g.valor.genus == MATERIA_VALOR_TOKEN)
         {
             MateriaToken* t = g.valor.datum.token;

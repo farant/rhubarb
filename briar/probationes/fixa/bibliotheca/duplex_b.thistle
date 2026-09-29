@@ -1,0 +1,13 @@
+#!/usr/bin/env briar
+# Duplex b
+
+Defines a PUBLIC `commune`, as does `duplex_a` which imports it: one
+public name per build - refused before clang, both lines named.
+
+<c!>
+s32
+commune (vacuum)
+{
+    redde II;
+}
+</c>

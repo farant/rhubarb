@@ -77,8 +77,14 @@ briar_imperium_legere (
 {
     i32 i;
     b32 actio_data = FALSUM;
+    /* vexilla atrii ante plagulam (programmati praemittenda) */
+    constans character** vitrea;
+                   i32   numerus_vitreorum = ZEPHYRUM;
 
     memset(imp, 0, magnitudo(*imp));
+    vitrea = (constans character**)piscina_allocare(piscina,
+        (memoriae_index)((argc + I)
+            * (i32)magnitudo(constans character*)));
     imp->actio = BRIAR_ACTIO_CURRERE;
     /* I. ante plagulam */
     per (i = I; i < argc && imp->via == NIHIL; i++)
@@ -181,6 +187,27 @@ briar_imperium_legere (
             imp->icon  = argv[i + I];
             i          = i + I;
         }
+        /* vexilla ATRII (programmatis vitrei, non briar): manus
+         * incipere ea post binarium inserit, ergo ANTE plagulam
+         * veniunt (lapide feature-requests/023). Intacta programmati
+         * praemittuntur; programma de eis iudicat. */
+        alioquin si (_est(a, "-vivum") || _est(a, "-retro"))
+        {
+            vitrea[numerus_vitreorum]  = a;
+            numerus_vitreorum          = numerus_vitreorum + I;
+        }
+        alioquin si (_est(a, "-portus") || _est(a, "-radix"))
+        {
+            si (i + I >= argc)
+            {
+                _recusare(imp, piscina, "-portus / -radix sine valore");
+                redde FALSUM;
+            }
+            vitrea[numerus_vitreorum]      = a;
+            vitrea[numerus_vitreorum + I]  = argv[i + I];
+            numerus_vitreorum              = numerus_vitreorum + II;
+            i                              = i + I;
+        }
         alioquin si (a[0] == '-' && a[1] != '\0')
         {
             ChordaAedificator* aed = chorda_aedificator_creare(piscina,
@@ -194,7 +221,8 @@ briar_imperium_legere (
                 " -partes -amalgama -html -visio -app -versio"
                 " -bibliothecae -bibliotheca <nomen> [-fons |"
                 " -functiones] -dialectus -mutationes -f <radix>"
-                " -icon <via>)");
+                " -icon <via>; programmati vitreo: -vivum -retro"
+                " -portus <n> -radix <via>)");
             imp->causa = chorda_aedificator_finire(aed);
             redde FALSUM;
         }
@@ -286,17 +314,22 @@ briar_imperium_legere (
         _recusare(imp, piscina, "-icon solum cum -app");
         redde FALSUM;
     }
-    /* III. reliqua (NIHIL-terminata) */
-    imp->numerus_reliquorum = argc - i;
+    /* III. reliqua (NIHIL-terminata): vexilla atrii primum, deinde
+     * argumenta post plagulam */
+    imp->numerus_reliquorum = numerus_vitreorum + (argc - i);
     {
         constans character** r = (constans character**)piscina_allocare(
             piscina, (memoriae_index)((imp->numerus_reliquorum + I)
                 * (i32)magnitudo(constans character*)));
         i32 k;
 
-        per (k = ZEPHYRUM; k < imp->numerus_reliquorum; k++)
+        per (k = ZEPHYRUM; k < numerus_vitreorum; k++)
         {
-            r[k] = argv[i + k];
+            r[k] = vitrea[k];
+        }
+        per (k = numerus_vitreorum; k < imp->numerus_reliquorum; k++)
+        {
+            r[k] = argv[i + k - numerus_vitreorum];
         }
         r[imp->numerus_reliquorum]  = NIHIL;
         imp->reliqua                = (constans character* constans*)r;

@@ -1,4 +1,4 @@
-/* credo.h */
+/* credo.h - probationes: assertiones CREDO_* (unit tests) */
 #ifndef CREDO_H
 #define CREDO_H
 

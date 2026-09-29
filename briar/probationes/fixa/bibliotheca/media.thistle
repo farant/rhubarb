@@ -1,0 +1,24 @@
+#!/usr/bin/env briar
+# Media
+
+A middle library that itself uses `folium`: its functions and, in
+`media_res`, its type (the parse must KNOW `FoliumRes` is a type).
+
+<bibliotheca via="folium.thistle"/>
+
+<c!>
+s32
+media_quadruplicare (s32 x)
+{
+    redde folium_duplicare(folium_duplicare(x));
+}
+
+FoliumRes
+media_res (s32 x)
+{
+    FoliumRes r;
+
+    r.valor = media_quadruplicare(x);
+    redde r;
+}
+</c>

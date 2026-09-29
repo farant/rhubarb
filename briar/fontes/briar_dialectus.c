@@ -62,6 +62,16 @@ interior constans character* LAQUEI[] = {
     "    Romanum 0-3999 macrum est (DI, MIX, CIV...); ultra: IV * M",
     "  - chorda {i32 mensura; i8* datum} sine NUL finali: imprime per",
     "    \"%.*s\", (integer)c.mensura, (constans character*)c.datum",
+    "  - atoi/strtol(c.datum) ULTRA mensuram legunt (sine NUL) et",
+    "    sordes tacent: chorda_ut_s32 / chorda_ut_s64 (FALSUM si",
+    "    vacua, sordes, superfluitas)",
+    "  - adiutores: briar prototypos generat in regione principali ET",
+    "    probationis - 'staticus' non opus. staticus usus a principale",
+    "    solo -probatio frangit (principale abest: non adhibitus)",
+    "  - elementum bibliotheca via=\"x.thistle\" (columna 0): regiones",
+    "    C planae eius praesto (sine #include); via contra plagulam;",
+    "    interior/staticus privata; circulus et nomen publicum bis",
+    "    refutantur",
     NIHIL
 };
 

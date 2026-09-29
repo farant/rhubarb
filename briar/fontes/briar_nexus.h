@@ -87,6 +87,12 @@ briar_nexus_attributum_habet (
     constans BriarNexusRes* res,
         constans character* titulus);
 
+/* regio C PLANA (spec par. 3.5): 'c', non fragmentum, non munus
+ * "probatio", sine methodus - quae sola bibliotheca praebet */
+b32
+briar_nexus_regio_plana (
+    constans BriarNexusRes* res);
+
 b32
 briar_nexus_titulus_est (
     constans BriarNexusRes* res,

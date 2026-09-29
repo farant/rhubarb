@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# Circulus b
+
+The other half of the cycle.
+
+<bibliotheca via="circulus_a.thistle"/>
+
+<c!>
+s32
+circulus_b_functio (vacuum)
+{
+    redde II;
+}
+</c>

@@ -2223,14 +2223,16 @@ _tabulas_purgare (
  * exemplaria pro formantibus intermediis, elementum formans remotum,
  * exemplar eius post bloccum insertum). Gradus superiores per delta
  * moventur, gradus ab k recomputantur, indices listae formantium >= m
- * per delta moventur (indices in [k, m) vocans ipse ponit). */
+ * per delta moventur (indices in [k, m) vocans ipse ponit). 'novi'
+ * Xar est (segmentata - numquam ut tabula plana legenda: segmenta
+ * contigua solum casu piscinae), NIHIL si numerus ZEPHYRUM. */
 interior b32
 _acervum_reponere (
-             HtmlParsura* p,
-                     i32  k,
-                     i32  m,
-    constans GradusNovus* novi,
-                     i32  numerus)
+     HtmlParsura* p,
+             i32  k,
+             i32  m,
+    constans Xar* novi,
+             i32  numerus)
 {
     s32 delta  = (s32)numerus - (s32)(m - k);
     i32 supra  = p->profunditas - m;
@@ -2273,10 +2275,12 @@ _acervum_reponere (
     }
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        *(MateriaNodus**)xar_obtinere(p->acervus, k + i) =
-            novi[i].nodus;
+        constans GradusNovus* g = (constans GradusNovus*)xar_obtinere(
+            novi, i);
+
+        *(MateriaNodus**)xar_obtinere(p->acervus, k + i) = g->nodus;
         ((ScopiGradus*)xar_obtinere(p->scopi, k + i))->octeti =
-            novi[i].octeti;
+            g->octeti;
     }
     p->profunditas = nova;
     _gradus_renovare(p, k);
@@ -3235,8 +3239,7 @@ _adoptionem_agere (
                 g->nodus   = exemplar;
                 g->octeti  = octeti_blocci;
             }
-            si (!_acervum_reponere(p, k, (i32)bloccum + I,
-                    (constans GradusNovus*)xar_obtinere(novi, ZEPHYRUM),
+            si (!_acervum_reponere(p, k, (i32)bloccum + I, novi,
                     xar_numerus(novi)))
             {
                 redde FALSUM;

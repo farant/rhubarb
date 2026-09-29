@@ -1,0 +1,21 @@
+#!/usr/bin/env briar
+# Circulus a
+
+Imports `circulus_b`, which imports this file back: refused, with the
+cycle named and the remedy (move the shared part into a third file).
+
+<bibliotheca via="circulus_b.thistle"/>
+
+<c!>
+s32
+circulus_a_functio (vacuum)
+{
+    redde I;
+}
+
+s32
+principale (vacuum)
+{
+    redde circulus_a_functio() - I;
+}
+</c>

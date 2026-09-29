@@ -1,0 +1,13 @@
+#!/usr/bin/env briar
+# Membrum mendosum
+
+A member with a type error on line 11: clang must name THIS file and
+line, not a generated file.
+
+<c!>
+s32
+mendosum (vacuum)
+{
+    redde "non numerus";
+}
+</c>

@@ -72,6 +72,42 @@ _terminatur (
             == ZEPHYRUM);
 }
 
+/* radix clientis viae (SILEX_RADICES_CLIENTIUM) aut NIHIL - caput et
+ * fons in eodem directorio (toml Q13) */
+interior constans character*
+_radix_clientis (
+    chorda via)
+{
+    i32 r;
+
+    per (r = ZEPHYRUM; SILEX_RADICES_CLIENTIUM[r] != NIHIL; r++)
+    {
+        si (_incipit(via, SILEX_RADICES_CLIENTIUM[r]))
+        {
+            redde SILEX_RADICES_CLIENTIUM[r];
+        }
+    }
+    redde NIHIL;
+}
+
+/* caput vendicatum: include/ aut radix clientis + '.h' */
+interior b32
+_caput_est (
+    chorda via)
+{
+    redde _incipit(via, "include/")
+        || (_radix_clientis(via) != NIHIL && _terminatur(via, ".h"));
+}
+
+/* fons vendicatus: lib/ aut radix clientis + '.c' */
+interior b32
+_fons_est (
+    chorda via)
+{
+    redde _incipit(via, "lib/")
+        || (_radix_clientis(via) != NIHIL && _terminatur(via, ".c"));
+}
+
 interior vacuum
 _recusare (
     BriarAmalgamaFructus* f,
@@ -260,7 +296,7 @@ _statica_legere (
 
             si (   symbolum.mensura == ZEPHYRUM
                 || genus.mensura    == ZEPHYRUM
-                || !_incipit(plagula, "lib/"))
+                || !_fons_est(plagula))
             {
                 perge;
             }
@@ -353,11 +389,24 @@ _caput_visitare (
         i      = f + I;
         si (briar_amalgama_inclusio_localis(linea, &nomen_capitis))
         {
-            chorda via = chorda_concatenare(_literae(o->piscina,
-                "include/"), nomen_capitis, o->piscina);
-            vacuum* v = NIHIL;
+            /* include/ primum, deinde radices (ordo silicis) */
+             vacuum* v = NIHIL;
+                s32  r;   /* -I = include/ */
 
-            si (tabula_dispersa_invenire(o->per_viam, via, &v))
+            per (r = -I; v == NIHIL && (r < ZEPHYRUM
+                 || SILEX_RADICES_CLIENTIUM[r] != NIHIL); r++)
+            {
+                constans character* radix = r < ZEPHYRUM ? "include/"
+                    : SILEX_RADICES_CLIENTIUM[r];
+                chorda via = chorda_concatenare(_literae(o->piscina,
+                    radix), nomen_capitis, o->piscina);
+
+                si (!tabula_dispersa_invenire(o->per_viam, via, &v))
+                {
+                    v = NIHIL;
+                }
+            }
+            si (v != NIHIL)
             {
                 _caput_visitare(o, (constans SilexRes*)v);
             }
@@ -399,7 +448,7 @@ _capita_ordinare (
         constans SilexRes* r = (constans SilexRes*)xar_obtinere(
             clausura, i);
 
-        si (_incipit(r->via, "include/"))
+        si (_caput_est(r->via))
         {
             _caput_visitare(&o, r);
         }
@@ -427,9 +476,13 @@ _fontes_ordinare (
         constans SilexRes* c =
             *(constans SilexRes**)xar_obtinere(capita,
             i);
-        chorda via = chorda_concatenare(chorda_concatenare(
-            _literae(piscina, "lib/"), _stirps(c->via), piscina),
-            _literae(piscina, ".c"), piscina);
+        constans character* radix = _radix_clientis(c->via);
+                    chorda  via = chorda_concatenare(chorda_concatenare(
+                        _literae(piscina, radix
+                            != NIHIL ? radix : "lib/"),
+                        _stirps(c->via), piscina), _literae(piscina,
+                        ".c"),
+                        piscina);
         vacuum* v = NIHIL;
 
         si (   tabula_dispersa_invenire(per_viam, via, &v)
@@ -447,7 +500,7 @@ _fontes_ordinare (
         constans SilexRes* r = (constans SilexRes*)xar_obtinere(
             clausura, i);
 
-        si (_incipit(r->via, "lib/") && !tabula_dispersa_continet(visa,
+        si (   _fons_est(r->via) && !tabula_dispersa_continet(visa,
             r->via))
         {
             constans SilexRes** cella = (constans SilexRes**)xar_addere(
@@ -549,6 +602,58 @@ _genitam_emittere (
     _textum_purgatum_appendere(a, p->contentum);
 }
 
+/* membrum bibliothecae in amalgama: plagulae eius genitae */
+nomen structura {
+    constans BriarMembrum* membrum;
+    constans BriarPlagula* caput;    /* include/<m>_regiones.h */
+    constans BriarPlagula* corpus;   /* fontes/<m>_regiones.c */
+} BriarMembrumAmalgamae;
+
+/* corpus membri: statica OMNIA (functiones, variabilia) suffixo
+ * tituli renominata - nulla exceptione, ergo privatum publico alieno
+ * aequale (classis Gradus) numquam omittitur */
+interior vacuum
+_corpus_membri_emittere (
+                   ChordaAedificator* a,
+      constans BriarMembrumAmalgamae* unitas)
+{
+    Xar* statica = unitas->membrum->statica;
+    i32  k;
+
+    si (statica != NIHIL && xar_numerus(statica) > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a, "/* ");
+        chorda_aedificator_appendere_chorda(a, unitas->corpus->via);
+        chorda_aedificator_appendere_literis(a,
+            ": statica membri renominata */\n");
+        per (k = ZEPHYRUM; k < xar_numerus(statica); k++)
+        {
+            constans BriarNomenPublicum* n =
+                (constans BriarNomenPublicum*)xar_obtinere(statica, k);
+
+            chorda_aedificator_appendere_literis(a, "#define ");
+            chorda_aedificator_appendere_chorda(a, n->titulus);
+            chorda_aedificator_appendere_literis(a, " ");
+            chorda_aedificator_appendere_chorda(a, n->titulus);
+            chorda_aedificator_appendere_literis(a, "_");
+            chorda_aedificator_appendere_literis(a,
+                unitas->membrum->titulus);
+            chorda_aedificator_appendere_literis(a, "\n");
+        }
+    }
+    _genitam_emittere(a, unitas->corpus);
+    per (k = ZEPHYRUM; statica != NIHIL && k < xar_numerus(statica);
+        k++)
+    {
+        constans BriarNomenPublicum* n =
+            (constans BriarNomenPublicum*)xar_obtinere(statica, k);
+
+        chorda_aedificator_appendere_literis(a, "#undef ");
+        chorda_aedificator_appendere_chorda(a, n->titulus);
+        chorda_aedificator_appendere_literis(a, "\n");
+    }
+}
+
 /* plagula una: titulus_plagulae 'salve.c' / 'probatio_salve.c',
  * binarium 'salve' / 'probatio_salve', princeps = unitas principalis */
 interior chorda
@@ -563,7 +668,8 @@ _plagulam_fingere (
            constans BriarStatica* statica,
            constans BriarPlagula* caput_genitum,
            constans BriarPlagula* regiones,
-           constans BriarPlagula* princeps)
+           constans BriarPlagula* princeps,
+                             Xar* membra)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)65536);
@@ -598,11 +704,28 @@ _plagulam_fingere (
         _lineam_appendere(a, r->via);
         _textum_purgatum_appendere(a, r->contentum);
     }
+    si (xar_numerus(membra) > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "/* bibliothecae (membra thistle, post-ordine): capita hic,"
+            " corpora post fontes\n * corporis, statica per membrum"
+            " renominata */\n");
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+    {
+        _genitam_emittere(a, ((constans BriarMembrumAmalgamae*)
+            xar_obtinere(membra, i))->caput);
+    }
         _genitam_emittere(a, caput_genitum);
     per (i = ZEPHYRUM; i < xar_numerus(fontes); i++)
     {
         _fontem_emittere(a, *(constans SilexRes**)xar_obtinere(fontes,
             i), statica);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+    {
+        _corpus_membri_emittere(a, (constans BriarMembrumAmalgamae*)
+            xar_obtinere(membra, i));
     }
     _genitam_emittere(a, regiones);
     _genitam_emittere(a, princeps);
@@ -637,6 +760,91 @@ briar_amalgamare (
               constans SilexFons* fons,
               constans character* via_thistle)
 {
+    redde briar_amalgamare_cum_membris(piscina, fructus, fons,
+        via_thistle, NIHIL);
+}
+
+/* membra -> Xar de BriarMembrumAmalgamae (post-ordine); plagula
+ * genita membri ignoti (fabrica cum membris, amalgama sine eis) aut
+ * membrum sine plagulis suis -> NIHIL cum causa */
+interior Xar*
+_membra_amalgamae (
+                                Piscina*  piscina,
+           constans BriarFabricaFructus*  fructus,
+                                    Xar*  membra,
+                     constans character** causa)
+{
+    Xar* ordo_membrorum = xar_creare(piscina,
+        (i32)magnitudo(BriarMembrumAmalgamae));
+    i32 i;
+
+    *causa = NIHIL;
+    per (i = ZEPHYRUM; membra != NIHIL && i < xar_numerus(membra); i++)
+    {
+        constans BriarMembrum* m = (constans BriarMembrum*)xar_obtinere(
+            membra, i);
+        BriarMembrumAmalgamae* cella = (BriarMembrumAmalgamae*)
+            xar_addere(ordo_membrorum);
+
+        cella->membrum  = m;
+        cella->caput    = _genita(fructus, _texere(piscina, "include/",
+            m->titulus, "_regiones.h"));
+        cella->corpus   = _genita(fructus, _texere(piscina, "fontes/",
+            m->titulus, "_regiones.c"));
+        si (cella->caput == NIHIL || cella->corpus == NIHIL)
+        {
+            *causa = _texere(piscina,
+                "plagulae genitae membri desunt: ",
+                m->titulus, NIHIL);
+            redde NIHIL;
+        }
+    }
+    /* fontes/<x>_regiones.c alienus (non radix, non membrum datum) */
+    per (i = ZEPHYRUM; i < xar_numerus(fructus->genitae); i++)
+    {
+        constans BriarPlagula* p = (constans BriarPlagula*)xar_obtinere(
+            fructus->genitae, i);
+                        chorda titulus;
+                           b32 notum;
+                           i32 k;
+
+        si (   !_incipit(p->via, "fontes/")
+            || !_terminatur(p->via, "_regiones.c"))
+        {
+            perge;
+        }
+        titulus  = chorda_sectio(p->via, VII, p->via.mensura - XI);
+        notum    = chorda_aequalis_literis(titulus, fructus->titulus);
+        per (k = ZEPHYRUM; !notum
+            && k < xar_numerus(ordo_membrorum); k++)
+        {
+            constans BriarMembrumAmalgamae* u =
+                (constans BriarMembrumAmalgamae*)xar_obtinere(
+                ordo_membrorum, k);
+
+            notum = chorda_aequalis_literis(titulus,
+                u->membrum->titulus);
+        }
+        si (!notum)
+        {
+            *causa = _texere(piscina, "membrum '", chorda_ut_cstr(
+                titulus, piscina),
+                "' in fabrica sed amalgamae non datum -"
+                " briar_amalgamare_cum_membris");
+            redde NIHIL;
+        }
+    }
+    redde ordo_membrorum;
+}
+
+BriarAmalgamaFructus
+briar_amalgamare_cum_membris (
+                         Piscina* piscina,
+    constans BriarFabricaFructus* fructus,
+              constans SilexFons* fons,
+              constans character* via_thistle,
+                             Xar* membra)
+{
         BriarAmalgamaFructus  f;
               TabulaDispersa* per_viam;
                          Xar* capita;
@@ -646,6 +854,8 @@ briar_amalgamare (
        constans BriarPlagula* regiones;
        constans BriarPlagula* princeps;
        constans BriarPlagula* probatio;
+                         Xar* ordo_membrorum;
+          constans character* causa_membrorum;
                          i32  i;
 
     memset(&f, 0, magnitudo(f));
@@ -686,7 +896,7 @@ briar_amalgamare (
                 " - amalgama v1 recusat"));
             redde f;
         }
-        si (!_incipit(r->via, "include/") && !_incipit(r->via, "lib/"))
+        si (!_caput_est(r->via) && !_fons_est(r->via))
         {
             _recusare(&f, piscina, _texere(piscina,
                 "plagula clausurae ignota: ", chorda_ut_cstr(r->via,
@@ -717,6 +927,13 @@ briar_amalgamare (
         _recusare(&f, piscina, "plagulae genitae fabricae desunt");
         redde f;
     }
+    ordo_membrorum = _membra_amalgamae(piscina, fructus, membra,
+        &causa_membrorum);
+    si (ordo_membrorum == NIHIL)
+    {
+        _recusare(&f, piscina, causa_membrorum);
+        redde f;
+    }
         capita      = _capita_ordinare(piscina, fructus->clausura,
             per_viam);
     fontes      = _fontes_ordinare(piscina, fructus->clausura, capita,
@@ -727,7 +944,7 @@ briar_amalgamare (
         _plagulam_fingere(piscina, fructus, via_thistle,
             _texere(piscina, fructus->titulus, ".c", NIHIL),
             fructus->titulus, capita, fontes, &statica, caput_genitum,
-            regiones, princeps));
+            regiones, princeps, ordo_membrorum));
     si (fructus->probatio_adest && probatio != NIHIL)
     {
         constans character* titulus_probationis = _texere(piscina,
@@ -739,7 +956,7 @@ briar_amalgamare (
                 _texere(piscina, titulus_probationis, ".c", NIHIL),
                 titulus_probationis, capita, fontes, &statica,
                 caput_genitum,
-                regiones, probatio));
+                regiones, probatio, ordo_membrorum));
     }
     f.successus = VERUM;
     redde f;

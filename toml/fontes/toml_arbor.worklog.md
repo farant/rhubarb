@@ -144,3 +144,10 @@ by test, not by argument.
 SIGSEGV at 100 000 (lives at 40 000), STML projection SIGSEGV at
 100 000 (lives at 500; > 60 s at 10 000), derivation quadratic.
 Recorded on park …FAD8.
+
+## 2026-09-28 — closed (Q14)
+
+Plan closed. What stays open lives elsewhere: materia's depth limits
+(park …FAD8), TOML 1.1 and writing TOML (the tail desideratum), the
+html_arbor flat-Xar twin of briar's Q13 bug (park …11BN). No materia
+substrate change was needed. Later finds for this client go here.

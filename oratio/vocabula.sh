@@ -44,6 +44,14 @@ if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$SRC" ] || [ -n "$(find "$BUILD_DIR" -name
 fi
 git -C "$RADIX_DIR" ls-files "lib/*.c" "silva/fontes/*.c" > "$BUILD_DIR/corpus_c.txt"
 git -C "$RADIX_DIR" ls-files "*.c" "*.h" > "$BUILD_DIR/corpus_tractatae.txt"
+# VOCABULA_VIAE_ADDITAE="a.c b.h": viae COMMISSIONIS ipsius (lint
+# praevium silva.commissio, uncus) tractatae numerantur etiam nondum
+# tractae - verba plagulae NOVAE ante portas iudicantur (desideratum
+# ...HYDS: olim filtrum 'tractatae' eas abiciebat et solus uncus post
+# portas eas videbat). Opus alienae sessionis non nominatum non numeratur.
+for v in ${VOCABULA_VIAE_ADDITAE:-}; do
+    printf '%s\n' "${v#./}" >> "$BUILD_DIR/corpus_tractatae.txt"
+done
 git -C "$RADIX_DIR" ls-files "*.md" > "$BUILD_DIR/corpus_md.txt"
 # non exec: crusta manet ut sera suitae usque ad finem instrumenti
 # teneatur et in exitu dimittatur (exec trap EXIT praeterit -

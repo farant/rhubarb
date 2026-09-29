@@ -1,3 +1,4 @@
+/* piscina.h - arena memoriae: liberatio tota semel (arena, pool) */
 #ifndef PISCINA_H
 #define PISCINA_H
 

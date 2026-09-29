@@ -1,0 +1,79 @@
+#!/usr/bin/env briar
+# Toml config
+
+The lapide tester's feature-requests/013, as a script: sections are kept
+(`llama-server.versio` and `poppler.versio` are two keys, not one), the
+root table can be enumerated, and a duplicate key is refused with a
+named, located error. No `#include`: `toml.h` is derived from what the
+code uses, like any house header.
+
+<c!>
+constans character*
+config_exemplum (vacuum)
+{
+    redde "[llama-server]\nversio = \"b11201\"\n"
+        "[poppler]\nversio = \"26.09.0\"\n";
+}
+
+TomlDocumentum*
+config_legere (constans character* textus, Piscina* piscina)
+{
+    redde toml_legere(chorda_ex_literis(textus, piscina), "config.toml",
+        piscina);
+}
+
+s32
+principale (vacuum)
+{
+           Piscina* piscina = piscina_generare_dynamicum("toml_config",
+                                  65536);
+    TomlDocumentum* doc     = config_legere(config_exemplum(), piscina);
+    constans TomlValor* radix = toml_radix(doc);
+                chorda  c;
+                   i32  k;
+
+    per (k = ZEPHYRUM; k < toml_tabulae_numerus(radix); k++)
+    {
+        chorda sectio = toml_tabulae_clavis(radix, k);
+
+        imprimere("sectio %.*s\n", (integer)sectio.mensura,
+            (character*)sectio.datum);
+    }
+    si (toml_chorda(doc, "llama-server.versio", &c))
+    {
+        imprimere("llama-server %.*s\n", (integer)c.mensura,
+            (character*)c.datum);
+    }
+    si (toml_chorda(doc, "poppler.versio", &c))
+    {
+        imprimere("poppler %.*s\n", (integer)c.mensura,
+            (character*)c.datum);
+    }
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
+}
+</c>
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+           Piscina* piscina = piscina_generare_dynamicum("probatio", 65536);
+    TomlDocumentum* doc;
+                chorda  c;
+
+    credo_aperire(piscina);
+    doc = config_legere(config_exemplum(), piscina);
+    CREDO_VERUM(toml_successus(doc));
+    CREDO_VERUM(toml_chorda(doc, "poppler.versio", &c));
+    CREDO_AEQUALIS_I32(c.mensura, VII);
+    CREDO_AEQUALIS_I32(toml_tabulae_numerus(toml_radix(doc)), II);
+    /* clavis bis in sectione una: refutatur, nominatur */
+    doc = config_legere("[a]\nversio = 1\nversio = 2\n", piscina);
+    CREDO_FALSUM(toml_successus(doc));
+    CREDO_VERUM(chorda_continet(toml_diagnostica_scribere(piscina, doc,
+        FALSUM), chorda_ex_literis("config.toml:3:1", piscina)));
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

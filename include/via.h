@@ -1,3 +1,4 @@
+/* via.h - viae: iungere, normalizare, nomen (path utilities) */
 #ifndef VIA_H
 #define VIA_H
 

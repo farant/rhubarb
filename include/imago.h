@@ -1,5 +1,4 @@
-/*
- * imago.h - Platform-agnostic image loading library
+/* imago.h - imagines e filis legere (image loading, decoding)
  *
  * Abstractio pro caricare imagines ex file vel memoria.
  * Implementatio interna (stb_image) celata est.

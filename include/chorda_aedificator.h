@@ -1,3 +1,4 @@
+/* chorda_aedificator.h - chordas accumulare (string builder) */
 #ifndef CHORDA_AEDIFICATOR_H
 #define CHORDA_AEDIFICATOR_H
 

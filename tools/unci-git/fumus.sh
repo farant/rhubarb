@@ -12,6 +12,11 @@
 #       pre-merge-commit item obstat
 #   XV-XVI gradus II (regulae lintris) ad commissionem (2026-09-18):
 #     '-nt' nudum OBSTAT, idem annotatus TRANSIT;
+#   XVII-XVIII lint Latinus per VIAS EXPLICITAS (lint praevium
+#       silva.commissio, 2026-09-29, desideratum ...HYDS): plagula NON
+#       TRACTA nominata -> verbum eius obstat (olim NOVA 0: filtrum
+#       'tractatae' eam abiciebat); eadem non nominata (opus alienae
+#       sessionis) non numeratur -> 0
 #   XII-XIV diagnostica materiae (.sh .css, 2026-09-18): plagula .sh
 #       malformata OBSTAT; sana transit; FIXTURA PATHOLOGICA
 #       (probationes/fixa/) NON obstat - per INDICEM probata, quia
@@ -163,6 +168,16 @@ if [ "$rc" -eq 1 ] && grep -q 'lint:nt-aequalitas' "$T/lint_mala.out"; then echo
 UNCUS_VIAE="$T/lint_sana.sh" "$UNCUS" > "$T/lint_sana.out" 2>&1; rc=$?
 if [ "$rc" -eq 0 ] && ! grep -q 'lint:nt-aequalitas' "$T/lint_sana.out"; then echo "  XVI  .sh '-nt' excusatum -> 0            OK"; else echo "  XVI  FRACTUM (rc=$rc)"; cat "$T/lint_sana.out"; fracta=1; fi
 
+# XVII-XVIII - LINT PER VIAS EXPLICITAS (plagula non tracta)
+NONTR="tools/unci-git/fumus_non_tracta.c"
+printf '#include "latina.h"\n\ninterior integer\nxyzzyquux_non_tracta (vacuum)\n{\n    redde ZEPHYRUM;\n}\n' > "$NONTR"
+UNCUS_LINT_VIAE="$NONTR" bash -c '. tools/unci-git/lint_latinus.sh && lint_latinus' > "$T/lint_nontr.out" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q 'xyzzyquux' "$T/lint_nontr.out"; then echo "  XVII lint: plagula NON tracta nominata obstat OK"; else echo "  XVII FRACTUM (rc=$rc)"; tail -12 "$T/lint_nontr.out"; fracta=1; fi
+UNCUS_LINT_VIAE="lib/piscina.c" bash -c '. tools/unci-git/lint_latinus.sh && lint_latinus' > "$T/lint_aliena.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -q 'nihil novi' "$T/lint_aliena.out"; then echo "  XVIII lint: non tracta NON nominata -> 0  OK"; else echo "  XVIII FRACTUM (rc=$rc)"; tail -12 "$T/lint_aliena.out"; fracta=1; fi
+rm -f "$NONTR"
+./silva/nexus.sh -renovare > /dev/null 2>&1
+
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (XVI/XVI)"
+echo "fumus unci: sanum (XVIII/XVIII)"
 exit 0

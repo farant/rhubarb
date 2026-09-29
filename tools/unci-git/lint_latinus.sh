@@ -19,13 +19,16 @@
 #   1 verba nova        -> OBSTAT (exit 1), relatio impressa
 #   2 apparatus fractus -> OBSTAT (porta fracta clamat, numquam tacet)
 # Nulla plagula = 'nihil iudicatum' (silentium ambiguum vetitum).
-# Viae git-TRACTATAE solae numerantur (opus alienae sessionis non
-# commissum pinnam non ferit); index nexus ARBOREM legit, ergo arbor
-# iudicatur ut in examine.
+# Viae git-TRACTATAE numerantur (opus alienae sessionis non commissum
+# pinnam non ferit) ET viae commissionis ipsius etiam nondum tractae
+# (lint praevium: plagulae novae ante portas, 2026-09-29); index nexus
+# ARBOREM legit, ergo arbor iudicatur ut in examine.
 #
 # Evasio consulta (causa in nuntio commissionis): git commit --no-verify
 # aut git merge --no-verify. Porta natalis: fumus.sh gradus IX-XI.
-# UNCUS_LINT_VIAE="a.c" = viae explicitae (probationi).
+# UNCUS_LINT_VIAE="a.c" = viae explicitae (lint praevium silva.commissio,
+# probationes): eae tractatae numerantur ETIAM nondum tractae
+# (VOCABULA_VIAE_ADDITAE) - verba plagulae novae ante portas iudicantur.
 
 lint_latinus () {
     local viae out rc
@@ -48,7 +51,9 @@ lint_latinus () {
     if grep -q 'plenus' build/uncus_nexus.log 2>/dev/null; then
         echo "  (percursus PLENUS cucurrit: instrumentum novum aut tabula absens)" >&2
     fi
-    out=$(./oratio/vocabula.sh -nova 2>&1); rc=$?
+    # viae commissionis tractatae numerantur etiam si nondum tractae
+    # (lint praevium silva.commissio: plagulae novae, ...HYDS)
+    out=$(VOCABULA_VIAE_ADDITAE="$viae" ./oratio/vocabula.sh -nova 2>&1); rc=$?
     case "$rc" in
         0)
             echo "lint latinus (uncus): nihil novi - $(printf '%s\n' "$out" | tail -1 | sed 's/^ *//')" >&2

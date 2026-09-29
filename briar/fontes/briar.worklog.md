@@ -922,3 +922,225 @@ T16b), `__attribute__` (bugs/010, T17a), located syntax errors with
 excerpts (bugs/001, T19b-1), explained messages (T19b-2 + closer
 fix). Lesson: a silva change that alters briar's user-visible behavior
 owes a `## inedita` line in the same commit.
+
+## 2026-09-28 — client roots in the .thistle-facing paths (toml Q13)
+
+Q12 had already embedded `materia/fontes` + `toml/fontes` in the corpus
+(corpus_infixum) so generated projects could build the capsula tool; Q13
+taught the `.thistle`-facing paths to SEE them. The list lives in two
+homes: `RADICES_CLIENTIUM` in tools/corpus_infixum.sh (crusta) and
+`SILEX_RADICES_CLIENTIUM` in lib/silex.c (now public in silex.h).
+probatio_silex parses the crusta array and compares it to the C one in
+order (plant: C order swapped → red; restored).
+
+- Derivation (briar_silva `_symbola_legere`): header names now come
+  from `silex_titulus_capitis` (was silex's private
+  `_nomen_capitis_vendicati`), so a symbol in `toml/fontes/toml.h`
+  derives `toml.h` exactly as an include/ symbol derives its header.
+  The symbol table awk reads the roots' headers and `.c` statics.
+- tools/briar.c: `-bibliothecae` walks include/ then each root
+  (`_bibliothecarum_nomina`, `_radix_bibliothecae`, `_fontis_via`);
+  `-bibliotheca toml -functiones` prints the 17 toml.h signatures under
+  `==== toml/fontes/toml.h ====`. The `caput_via` buffer grew `+LXIV`
+  (a root prefix is longer than `include/`).
+- briar_amalgama: `_caput_visitare` searches include/ then the roots
+  (`_radix_clientis`, `_caput_est`, `_fons_est`); the amalgam of the
+  toml fixture compiles alone and runs.
+
+Measured (Step 1): derivation ambiguity — 0 public/public collisions
+between the roots' headers and include/. But ONE private/public
+collision surfaced in `-amalgama`: `Gradus` was a file-local typedef in
+BOTH toml_arbor.c and toml_scalaris.c while also being declared public
+elsewhere, and the amalgam's renaming list skips a private name that
+equals a public one — so the two copies collided. Renamed
+`GradusAedificationis` / `GradusAmbulationis`. Measure private/public
+too, not just public/public. Size: the roots are 634 KB of source
+(materia 453 KB + toml 181 KB) against 15.1 MB of lib/+include/ (~4%);
+bin/briar 13.4 MB.
+
+Twice this change wrote `i32 r = -I` for a countdown (briar.c,
+briar_amalgama.c) — i32 is UNSIGNED here; `s32`. examen caught both.
+Fixture briar/probationes/fixa/thistle/toml_config.thistle (fabrica
+test + fumus stage XXI); MUTATIONES `## inedita`: FRANGIT toml + corpus
+roots.
+
+Found at commit time (briar-fumus XVII red): `-bibliotheca sorss`
+suggested `eventus_stml, filum, arbor2_…` — `_bibliothecam_ostendere`
+handed `(chorda*)xar_obtinere(nomina, 0)` to `similitudo_optima_decurtata`
+as a flat array, but Xar is SEGMENTED (first segment IV elements). It
+worked only while the segments happened to be adjacent in the piscina;
+Q13's name walk allocates between `xar_addere`s (roots list, paths), so
+every name past the first segment was scored from foreign memory. This
+was also the "`tomll` doesn't suggest `toml`" quirk. Fix: copy through
+`xar_copiare_ad_tabulam` into a contiguous table. Same flat cast lives
+in html_arbor.c (`_acervum_reponere` with `novi`) — ledger.
+
+## 2026-09-29 — test-region prototypes; cache key misses briar's own sources
+
+lapide documentation-ideas/016: the main region is partitioned
+(`_regionem_partiri`) and every non-`main` function gets a sliced
+`head;` prototype in `_regiones.h`; the `munus="probatio"` region was
+emitted VERBATIM, so a plain helper there failed `-Wmissing-prototypes`
+(and one defined after use failed implicit declaration). Now the test
+region is partitioned too (its own `BriarPartitio`; its `derivata`
+replaces the separate `_derivata_addere` call) and its `prototypi` are
+written after the includes of `probationes/probatio_<x>.c`, `#line`
+mapped. The slice keeps `staticus`, so a static helper gets a static
+prototype. Fixture `probatio_adiutor.thistle`: red before with the
+tester's exact error, green after; fabrica plant (emission dropped) red.
+The other half is a rule, now on `-dialectus`: a `staticus` helper used
+only by `principale` breaks `-probatio` (unused once `principale` is
+swapped) - don't write `staticus` in the main region.
+
+FOUND ON THE WAY: after rebuilding briar with the fix, the fixture still
+failed - the cache reused the OLD generated unit. The key was corpus
+stamp + flags + thistle bytes; the corpus stamp is `commit=… SORDIDUM`,
+unchanged between two dev builds on the same commit, so a briar
+generator change was invisible to cached scripts until the next commit
+(releases were fine: new commit, new key). `briar_aedificatio_fontes`
+(briar's own source hash, already printed by `-versio`) now enters the
+stamp. Demonstrated: a comment-only change in briar_fabrica.c moves the
+fixture's cache directory (c5dee022… -> 4ca416d6…).
+
+## 2026-09-29 — plan 9 Task 1: measurements for thistle bibliothecae
+
+Recorded in full in project-specs/briar-plan-9-bibliotheca.md (Task 1
+"Executed"). The load-bearing facts: (1) the first silva pass tolerates
+unknown types and derivation already maps BOTH implicit functions and
+unknown type names through `_caput_addere`, so members only add names to
+the symbol table; (2) the second pass cannot `#include` a generated
+header (includes resolve through the corpus SilexFons), so the member
+header's text goes into the prelude, without `#line`; (3) `inv.app`
+includes `methodus` regions - members need their own "plain" predicate;
+(4) `briar_fabricare` refuses a file without `principale`/window, so
+members get a partition-only entry. Side find: a region's `#ifndef`
+block is emitted twice by the partition (parcum …VF42V). Under zsh,
+never `source tools/vexilla.sh` from outside the tree (BASH_SOURCE is
+empty; it roots itself at `.` and writes build/vexilla.sigillum there).
+
+## 2026-09-29 — plan 9 Task 3: thistle bibliothecae build end to end
+
+`<bibliotheca via="x.thistle"/>` works: radix -> media/folium/sub-ramus
+diamond prints 28, its test region calls member functions and a member
+type, runs identically from /tmp by absolute path. Shape as built:
+members are finished AFTER their own dependencies (silva with only
+their transitive members visible - a sibling not imported is not seen),
+partitioned partition-only (`briar_membrum_partiri`), their public
+names (file scope, not static, not implicit, not main, declared in the
+region's own text; typedef line = declarator, function line =
+definition start) join the derivation table; the parse prelude gets
+each member's OWN unguarded text once, dependencies first. The fabrica
+puts member units in the project and on both build lines once each,
+feeds the closure their texts with member-header includes stripped
+(silex only knows corpus headers), and refuses a public name defined
+twice in one build before clang (root's line when the root is in the
+pair).
+
+Two of my hypotheses were WRONG and the plants caught them: (1) "the
+prelude substitution is proven" - the first plant stayed green; silva
+tolerates unknown types, so only an assertion on the FINAL tree's type
+knowledge (no TYPUS_NOMINATUS_IGNOTUS in the main text) discriminates;
+(2) "silva's semantics is blind inside #ifndef, so the guard must go" -
+the red that suggested it was a diagnostic from ANOTHER source file
+(extent -1 in the main text) that my test was counting; restoring the
+guard leaves the type known. Unguarded, once-each composition stays
+because it deduplicates the diamond without relying on guards.
+
+Found by the first end-to-end run: a member's exported header carried
+its STATIC prototypes, so every importing unit declared an unused
+static (-Wunused-function, bugs/002's class). Member headers now carry
+only public prototypes; static ones sit at the top of the member's own
+_regiones.c. The ROOT's header still carries its statics (unchanged;
+the dialect card's rule "no staticus in the main region" covers it).
+
+## 2026-09-29 — plan 9 Task 4: members in the key, the amalgam, -partes
+
+The stale cache was a real user bug, not a hypothetical: after editing
+folium's arithmetic, radix printed 28 from cache (true 72). Members'
+bytes now enter the stamp (`briar_membra_stampa`); with no members the
+stamp is returned unchanged, so no existing thistle's cache moves.
+
+A mute assertion caught by its plant: I "proved" the length prefix with
+`ab|c` vs `a|bc`, but the NEXT member's title sits between the byte runs
+and already separates them - the plant (prefix dropped) stayed green. A
+real collision needs the title inside the bytes: `X|mediaZ` vs
+`Xmedia|Z`. Lesson (again): a separator you didn't write may be doing
+the work you think your code does - plant before believing.
+
+Amalgam: `-amalgama` on a thistle with bibliothecae used to exit 0 and
+write a file clang rejected (member units missing). Now members are
+emitted (headers before the root's header, bodies before the root's
+regions) and every member static - functions and file-scope variables -
+is renamed with the member's title as suffix. No skip list: the Q13
+Gradus bug came from a rename list that skipped privates equal to some
+public name; renaming ALL of a member's statics sidesteps that class.
+The old entry point refuses a fabrica with members rather than emit a
+broken amalgam. The root's own statics are still not renamed
+(pre-existing).
+
+Fumus XXII's first green run was red by MY ordering: the stage mutated
+folium (x3) before building the amalgam, then ran radix's test region,
+which expects doubling. Restore fixtures after a mutation check.
+
+
+## 2026-09-29 — plan 9 closed (Task 5, records)
+
+Spec §3.5 now carries "As built". Two doc truths had rotted without
+anyone noticing: briar/CLAUDE.md said the embedded key is computed
+"before any parse" (not true since the silva/derivation path moved the
+key after the fabrica — plan 9 T1 measured the parse on every run), and
+its gate list named 16 of 20 gate files. A plan's records step is the
+cheap moment to diff docs against what exists.
+
+## 2026-09-29 — parcum VF42V: conditional directives emitted twice
+
+silva makes a whole `#ifndef … #endif` block ONE top-level unit, while
+`_directivas_colligere` scanned the text and took every `#` line on its
+own. A block holding a typedef therefore reached the generated header
+twice: bare directives first (which defined the guard), then the unit -
+whose copy of the type the preprocessor skipped. Fix: classify each
+unit by its directive lines (`_directivae_unitatis`: nullae / solae /
+mixtae). A directives-ONLY unit is left to the directives group (source
+order kept - the naive fix, "skip directives inside any unit", would
+have moved `#ifndef _POSIX_C_SOURCE / #define / #endif` below a later
+`#include <unistd.h>`); a MIXED unit is emitted once, whole, and its
+directive lines are skipped by the collector (byte intervals in the
+woven context = silva offsets minus `praeludium_octeti`). Side effect,
+intended: an `#ifdef` inside a function body no longer leaks an empty
+conditional into the header. A comment line makes a unit "mixed" (safe
+side: whole unit, ordering as before the fix).
+
+Found while measuring, NOT fixed (parked): a conditional wrapping
+FUNCTION DEFINITIONS (`#ifdef __APPLE__ f(){…} #else f(){…} #endif`) is
+classified as a type unit and emitted whole into the header - the
+functions would be defined in every unit including it; today it fails
+`-Wmissing-prototypes`. Needs per-branch partition (prototypes under
+the same conditional in the header, bodies under it in the .c).
+
+## 2026-09-29 — key before parse (the fast cache hit)
+
+Measured on a scratch copy of lapide's textus.thistle (now 9,668 lines):
+a cache hit cost 0.75 s, the document tree alone < 10 ms, `-partes`
+(tree + silva + fabrica) 0.80 s - a hit spent everything re-deriving a
+project it was about to discard. With the embedded corpus every key
+input is known from the tree, so the fast path computes the key through
+the SAME function as the full path (`_directorium_clavis`, extracted
+from main) and execs. Members come from a LIGHT walk (`leve` flag in
+MembraAmbulatio: registered right after their dependencies, before
+silva) - the gate asserts its stamp equals the full walk's. Result:
+0.00 s per hit (0.15 s the first, cold time). Key identity checked by
+`-struere` vs `-struere -iterum` for textus, radix, salve_vitreum,
+salve - all equal, so no one's cache moved.
+
+The gate is NOT timing. My first stage XXIV compared a generated
+5,400-line file's hit time to its `-partes` time - but that file's
+full path took only 0.03 s (0.00 x 4 < 0.03 passes by a hair; noise
+fails it). Every fixture's full path is < 0.1 s; even a thistle
+deriving a dozen house headers is 0.02 s. So textus's 0.8 s comes from
+something particular to it (not line count, not header count) - NOT
+investigated. The gate uses a trace instead: `BRIAR_VESTIGIUM=1` names
+a fast hit. Its plant is instructive: a fast key that diverges from
+the full key does not produce a wrong answer, it silently finds no
+binary and falls back to the slow path - key identity stays green,
+only the trace check goes red. That's the failure mode worth gating.
+

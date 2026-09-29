@@ -443,6 +443,77 @@ _viam_serere (
     redde chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
 }
 
+/* valor viae ex plagula git ('gitdir: X', commondir): spatia
+ * finalia praecisa, relativa contra basim, normalizata; NIHIL si
+ * vacua */
+interior constans character*
+_viam_resolvere (
+                Piscina* piscina,
+     constans character* basis,
+                 chorda  valor);
+
+interior constans character*
+_viam_resolvere (
+                Piscina* piscina,
+     constans character* basis,
+                 chorda  valor)
+{
+    chorda via;
+
+    valor = chorda_praecidere(valor);
+    si (valor.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    si (via_est_absoluta(valor))
+    {
+        via = valor;
+    }
+    alioquin
+    {
+        via = chorda_ex_literis(_viam_serere(piscina,
+            _viam_serere(piscina, basis, "/"),
+            chorda_ut_cstr(valor, piscina)), piscina);
+    }
+    redde chorda_ut_cstr(via_normalizare(via, piscina), piscina);
+}
+
+/* ARBOR OPERIS (git worktree add): '<radix>/.git' PLAGULA est,
+ * 'gitdir: <via>' (relativa contra radicem). Reddit gitdir si HEAD
+ * ibi exsistit, aliter NIHIL. */
+interior constans character*
+_gitdir_ex_plagula (
+               Piscina* piscina,
+    constans character* radix,
+    constans character* via_plagulae);
+
+interior constans character*
+_gitdir_ex_plagula (
+               Piscina* piscina,
+    constans character* radix,
+    constans character* via_plagulae)
+{
+                 chorda contentum = filum_legere_totum(via_plagulae,
+                             piscina);
+                 chorda praefixum = chorda_ex_literis("gitdir: ",
+                             piscina);
+    constans character* gitdir;
+
+    si (   contentum.datum == NIHIL
+        || !chorda_incipit(contentum, praefixum))
+    {
+        redde NIHIL;
+    }
+    gitdir = _viam_resolvere(piscina, radix, chorda_sectio(contentum,
+        praefixum.mensura, contentum.mensura));
+    si (   gitdir == NIHIL
+        || !filum_existit(_viam_serere(piscina, gitdir, "/HEAD")))
+    {
+        redde NIHIL;
+    }
+    redde gitdir;
+}
+
 GitRepositorium*
 git_aperire (
                Piscina* piscina,
@@ -450,18 +521,29 @@ git_aperire (
 {
        GitRepositorium* repositorium;
                 chorda  radix;
-    constans character* via_git = NIHIL;
+    constans character* via_git       = NIHIL;
+    constans character* via_communis  = NIHIL;
 
     radix = via_absoluta(chorda_ex_literis(via, piscina), piscina);
     dum (radix.mensura > 0)
     {
-        constans character* candidata = _viam_serere(piscina,
-            chorda_ut_cstr(radix, piscina), "/.git/HEAD");
+        constans character* radix_c   = chorda_ut_cstr(radix, piscina);
+        constans character* candidata = _viam_serere(piscina, radix_c,
+            "/.git/HEAD");
+        constans character* plagula   = _viam_serere(piscina, radix_c,
+            "/.git");
 
         si (filum_existit(candidata))
         {
-            via_git = _viam_serere(piscina,
-                chorda_ut_cstr(radix, piscina), "/.git");
+            via_git = plagula;
+            frange;
+        }
+        /* '.git' plagula (arbor operis): prava -> NIHIL, non ascendere
+         * (git ipse repositorium superius non quaerit) */
+        si (   filum_existit(plagula)
+            && !filum_directorium_existit(plagula))
+        {
+            via_git = _gitdir_ex_plagula(piscina, radix_c, plagula);
             frange;
         }
         /* ascendere: segmentum ultimum tondere */
@@ -484,10 +566,29 @@ git_aperire (
         redde NIHIL;
     }
 
+    /* directorium commune: 'commondir' in gitdir arboris operis
+     * (relativum contra gitdir, plerumque '../..'), aliter gitdir
+     * ipsum */
+    via_communis = via_git;
+    {
+        constans character* via_cd = _viam_serere(piscina, via_git,
+            "/commondir");
+
+        si (filum_existit(via_cd))
+        {
+            via_communis = _viam_resolvere(piscina, via_git,
+                filum_legere_totum(via_cd, piscina));
+            si (via_communis == NIHIL)
+            {
+                redde NIHIL;
+            }
+        }
+    }
+
     /* recusatio sha256 (extensiones in config) */
     {
         constans character* via_config = _viam_serere(piscina,
-            via_git, "/config");
+            via_communis, "/config");
 
         si (filum_existit(via_config))
         {
@@ -508,8 +609,9 @@ git_aperire (
     {
         redde NIHIL;
     }
-    repositorium->piscina = piscina;
-    repositorium->via_git = via_git;
+    repositorium->piscina       = piscina;
+    repositorium->via_git       = via_git;
+    repositorium->via_communis  = via_communis;
     repositorium->sarcinae = xar_creare(piscina,
         (i32)magnitudo(GitSarcina));
     si (repositorium->sarcinae == NIHIL)
@@ -523,7 +625,7 @@ git_aperire (
          SarcinaeContextus  ctx;
         DirectoriumFiltrum  filtrum;
         constans character* via_pack = _viam_serere(piscina,
-            via_git, "/objects/pack");
+            via_communis, "/objects/pack");
         i32 i;
 
         ctx.piscina   = piscina;
@@ -1115,7 +1217,7 @@ git_obiectum_legere (
         constans character* via_laxa;
 
         chorda_aedificator_appendere_literis(aed,
-            repositorium->via_git);
+            repositorium->via_communis);
         chorda_aedificator_appendere_literis(aed, "/objects/");
         chorda_aedificator_appendere_character(aed, sha[0]);
         chorda_aedificator_appendere_character(aed, sha[1]);
@@ -1230,14 +1332,22 @@ _ref_legere (
     constans character* titulus,
              character* sha_exitus)
 {
-    /* laxa: .git/<titulus> */
+    /* laxa: .git/<titulus>. In arbore operis HEAD et refs/bisect,
+     * refs/worktree, refs/rewritten propria sunt (gitdir); cetera
+     * refs/ communia */
     {
         ChordaAedificator* aed = chorda_aedificator_creare(
             repositorium->piscina, (memoriae_index)128);
         constans character* via_ref;
+                       b32  proprius = strncmp(titulus, "refs/", V) != 0
+                           || strncmp(titulus, "refs/bisect/", XII) == 0
+                           || strncmp(titulus, "refs/worktree/", XIV)
+                               == 0
+                           || strncmp(titulus, "refs/rewritten/", XV)
+                               == 0;
 
-        chorda_aedificator_appendere_literis(aed,
-            repositorium->via_git);
+        chorda_aedificator_appendere_literis(aed, proprius
+            ? repositorium->via_git : repositorium->via_communis);
         chorda_aedificator_appendere_character(aed, '/');
         chorda_aedificator_appendere_literis(aed, titulus);
         via_ref = chorda_ut_cstr(chorda_aedificator_finire(aed),
@@ -1253,7 +1363,7 @@ _ref_legere (
     /* compacta: packed-refs lineatim "sha titulus" */
     {
         constans character* via_compacta = _viam_serere(
-            repositorium->piscina, repositorium->via_git,
+            repositorium->piscina, repositorium->via_communis,
             "/packed-refs");
 
         si (filum_existit(via_compacta))
@@ -1469,7 +1579,7 @@ _sha_breve_resolvere (
         DirectoriumFiltrum filtrum;
 
         chorda_aedificator_appendere_literis(aed,
-            repositorium->via_git);
+            repositorium->via_communis);
         chorda_aedificator_appendere_literis(aed, "/objects/");
         chorda_aedificator_appendere_character(aed, praefixum[0]);
         chorda_aedificator_appendere_character(aed, praefixum[1]);

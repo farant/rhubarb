@@ -81,3 +81,59 @@ amalgama` cum causa nominata in commissione; inspectio manu ante.
   (pagina plagulae fractae). Quinque adversa cetera contra causam +
   lineam BRIAR IPSIUS probantur, non contra aurea: minus fragile, et
   relationem probat non octetos.
+
+## toml (toml Q13, 2026-09-28)
+
+- `thistle/toml_config.thistle` — cliens materiae toml SINE `#include`:
+  exemplum lapide feature-requests/013 (sectiones duae, `versio` in
+  utraque), enumeratio radicis, clavis iterata nominata (`config.toml:
+  3:1`). Porta fabricae (derivatio, clausura, `-I` radicum) et fumus
+  XXI (cursus, -probatio, -amalgama, -bibliothecae, -functiones).
+
+## prototypi probationis (round XIX, 2026-09-29)
+
+- `thistle/probatio_adiutor.thistle` — adiutor `auxilium` in regione
+  `munus="probatio"` SINE `staticus` et POST usum definitus (lapide
+  documentation-ideas/016): ante emendationem `-Wmissing-prototypes` et
+  declaratio implicita. Porta fabricae: prototypus in unitate
+  probationis genita, principale probationis non prototypatum.
+
+## bibliotheca (planum IX, 2026-09-29)
+
+- `bibliotheca/` — membra per elementum bibliothecae (spec par. 3.5;
+  lapide feature-requests/015). `folium` (bibliotheca sine principale),
+  `media` (folium importat), `sub/ramus` (via `../folium.thistle`),
+  `radix` (media, folium, sub/ramus: rhombus - folium SEMEL, post-ordo
+  folium, media, ramus); `circulus_a` <-> `circulus_b` (circulus cum
+  remedio); `radix_absens`, `radix_non` (`folium.md`),
+  `radix_sine_via`, `radix_sine_c` -> `sine_c` (prosa sola):
+  refutationes ad lineam elementi. Porta `probatio_briar_plagulae`.
+- (Task 3) `radix` gains a `munus="probatio"` region calling member
+  functions and `FoliumRes` (tests see members); `media` uses
+  `FoliumRes` as a type (`media_res`: the parse must KNOW it);
+  `folium` keeps an `interior` helper (static prototype in its body,
+  not its exported header). `radix_vitrea` -> `vitrea_membrum` (only
+  the plain region shared; no `internuntius`); `duplex_a` -> `duplex_b`
+  (public `commune` twice: refused at radix line 9); `statica_a` ->
+  `statica_b` + `statica_c` (private `adiutor` in both: builds, prints
+  5); `radix_mendosa` -> `membrum_mendosum` (clang names the member's
+  line 11).
+- (Task 4) `statica_b`/`statica_c` gain a private VARIABLE `basis` of the
+  same name (the amalgam must rename variables as well as functions;
+  output still 5). Porta `probatio_briar_amalgama`: `statica_a` and
+  `radix` amalgamated with members (order, each once, every member
+  static `s_<membrum>`, publics never). Fumus XXII copies `radix`,
+  `folium`, `media`, `sub/ramus`, `statica_a/b/c` out of the tree:
+  run 28, `-probatio`, a comment in `folium` moves the cache dir,
+  `folium` tripled -> radix 72 without `-iterum` (then restored),
+  amalgams of `radix` / `statica_a` compiled alone (28, 5), `-partes`
+  lines (folium 0/2, media 1/2, sub/ramus 1/1).
+
+## directivae condicionales (parcum VF42V, 2026-09-29)
+
+- `thistle/condiciones.thistle` — coniunctio `#ifndef` cum typo
+  (`CustosRes`: SEMEL in capite genito, tota), coniunctio directivarum
+  sola (`CONDICIONES_NUMERUS`: in grege directivarum, ante `Tabula`),
+  `#ifdef CONDICIONES_LOQUAX` intra corpus functionis (in corpore, non
+  in capite). Porta fabricae; fumus XXIII ('11' per clang).
+

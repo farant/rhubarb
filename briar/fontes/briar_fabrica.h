@@ -81,6 +81,46 @@ briar_fabricare (
     constans BriarFabricaOptiones* optiones,
                            chorda  octeti);
 
+/* ut briar_fabricare, cum MEMBRIS (Xar de BriarMembrum, briar_plagulae;
+ * NIHIL = nulla): nomina publica unica per aedificationem (refutatio
+ * cum sedibus ambabus), unitates membrorum in proiecto, fontes eorum
+ * in aedificare.sh et probare.sh, textus in clausura. Nexus radicis
+ * cum membris visibilibus textus esse debet
+ * (briar_silvam_texere_cum_membris). */
+BriarFabricaFructus
+briar_fabricare_cum_membris (
+                          Piscina* piscina,
+            constans MateriaNodus* documentum,
+                              Xar* nexus,
+               constans SilexFons* fons,
+    constans BriarFabricaOptiones* optiones,
+                           chorda  octeti,
+                              Xar* membra);
+
+/* PARTITIO SOLA membri bibliothecae (spec par. 3.5): regiones C
+ * PLANAE (briar_nexus_regio_plana) partitae ut principales, SINE lege
+ * principali (bibliotheca principale non habet; si habet, numquam
+ * praebetur). caput = include/<t>_regiones.h (cum lineis, proiecto);
+ * caput_parsurae = idem SINE lineis (praeludium importantis - silva
+ * '#line' recusat); corpus = fontes/<t>_regiones.c; derivata = capita
+ * derivata (chorda). Nexus silva textus esse debet. */
+nomen structura {
+       b32  successus;
+    chorda  causa;
+       i32  linea_causae;
+    chorda  caput;
+    chorda  caput_parsurae;
+    chorda  corpus;
+       Xar* derivata;
+} BriarMembrumPartitum;
+
+BriarMembrumPartitum
+briar_membrum_partiri (
+                 Piscina* piscina,
+                     Xar* nexus,
+      constans character* via,
+      constans character* titulus);
+
 /* VISIO (par. 4.9): paginam litteratam in proiectum VITREUM addere -
  * plagula genita assets/TITULUS.visio.html et nomen eius in lista
  * _files plagulae assets/TITULUS.toml. Post briar_fabricare, ante

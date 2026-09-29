@@ -2346,3 +2346,145 @@ json_scribere_ad_aedificator_pulchrum (
 
     _scribere_valor(valor, aed, VERUM, indentatio);
 }
+
+
+/* ========================================================================
+ * ACCESSUS CUM ORDINARIO ET PER VIAM (lapide feature-requests/019)
+ * ======================================================================== */
+
+/* valor clavis si genus congruit, aliter NIHIL (objectum non
+ * objectum, clavis abest, null, genus alienum) */
+interior JsonValor*
+_capere_generis (
+               JsonValor* objectum,
+      constans character* clavis,
+               JsonGenus  genus);
+
+interior JsonValor*
+_capere_generis (
+               JsonValor* objectum,
+      constans character* clavis,
+               JsonGenus  genus)
+{
+    JsonValor* v = json_objectum_capere(objectum, clavis);
+
+    redde (v != NIHIL && v->genus == genus) ? v : NIHIL;
+}
+
+chorda
+json_capere_chorda (
+              JsonValor* objectum,
+     constans character* clavis,
+                 chorda  ordinarium)
+{
+    JsonValor* v = _capere_generis(objectum, clavis, JSON_CHORDA);
+
+    redde v != NIHIL ? json_ad_chorda(v) : ordinarium;
+}
+
+s64
+json_capere_integer (
+              JsonValor* objectum,
+     constans character* clavis,
+                    s64  ordinarium)
+{
+    JsonValor* v = _capere_generis(objectum, clavis, JSON_INTEGER);
+
+    redde v != NIHIL ? json_ad_integer(v) : ordinarium;
+}
+
+b32
+json_capere_boolean (
+              JsonValor* objectum,
+     constans character* clavis,
+                    b32  ordinarium)
+{
+    JsonValor* v = _capere_generis(objectum, clavis, JSON_BOOLEAN);
+
+    redde v != NIHIL ? json_ad_boolean(v) : ordinarium;
+}
+
+JsonValor*
+json_via (
+             JsonValor* radix,
+    constans character* via)
+{
+    JsonValor* nunc     = radix;
+          i32  initium  = ZEPHYRUM;
+          i32  mensura;
+          i32  segmentum_initium;
+          i32  segmentum_mensura;
+          i32  k;
+
+    si (radix == NIHIL || via == NIHIL || via[ZEPHYRUM] == '\0')
+    {
+        redde NIHIL;
+    }
+    mensura = (i32)strlen(via);
+    per (k = ZEPHYRUM; k <= mensura; k++)
+    {
+        si (k < mensura && via[k] != '.')
+        {
+            perge;
+        }
+        si (k == initium)
+        {
+            redde NIHIL;    /* segmentum vacuum: "a..b", "a.", ".a" */
+        }
+        segmentum_initium  = initium;
+        segmentum_mensura  = k - initium;
+        initium            = k + I;
+        si (nunc == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (nunc->genus == JSON_TABULATUM)
+        {
+            /* cifrae solae (nec signum nec spatium), intra fines */
+            i32 index = ZEPHYRUM;
+            i32 j;
+
+            per (j = ZEPHYRUM; j < segmentum_mensura; j++)
+            {
+                character c = via[segmentum_initium + j];
+
+                si (   c < '0' || c > '9'
+                    || index > (json_tabulatum_numerus(nunc)
+                                - (i32)(c - '0')) / X)
+                {
+                    redde NIHIL;
+                }
+                index = index * X + (i32)(c - '0');
+            }
+            nunc = json_tabulatum_obtinere(nunc, index);
+        }
+        alioquin si (nunc->genus == JSON_OBJECTUM)
+        {
+            /* clavis per octetos (claves duplicatae refutatae: prima
+             * unica est) */
+            JsonValor* inventus = NIHIL;
+                  i32  i;
+
+            per (i = ZEPHYRUM; i < json_objectum_numerus(nunc); i++)
+            {
+                JsonPar* par = json_objectum_par_obtinere(nunc, i);
+
+                si (   par != NIHIL && par->clavis != NIHIL
+                    && par->clavis->mensura == segmentum_mensura
+                    && memcmp(par->clavis->datum,
+                           via + segmentum_initium,
+                           (size_t)segmentum_mensura) == ZEPHYRUM)
+                {
+                    inventus = par->valor;
+                    frange;
+                }
+            }
+            nunc = inventus;
+        }
+        alioquin
+        {
+            redde NIHIL;    /* per scalare */
+        }
+    }
+    redde nunc;
+}

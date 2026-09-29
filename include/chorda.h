@@ -1,3 +1,4 @@
+/* chorda.h - chorda: mensura + datum, SINE NUL (string slice) */
 #ifndef CHORDA_H
 #define CHORDA_H
 
@@ -246,16 +247,39 @@ chorda_ut_cstr (
          chorda  s,
         Piscina* piscina);
 
+/* chorda_ut_s32 - Convertere chordam ad integrum signatum (basis X)
+ *
+ * TEXTUS -> NUMERUS pro chorda (atoi/strtol in c.datum ULTRA
+ * mensuram legunt: chorda NUL finale non fert). Tota chorda consumi
+ * debet: signum optionale, cifrae, nihil post (spatia ducentia
+ * tolerantur, ut strtol). RECUSAT: vacuam, NULLUM insertum, sordes
+ * post numerum ("12x"), extra fines s32. Pro LXIV bitis:
+ * chorda_ut_s64; praefixum numericum ("p003" -> III): chorda_sectio
+ * prius.
+ *
+ * Redde: VERUM si conversa (fructus solum tunc positus)
+ */
 b32
 chorda_ut_s32 (
         chorda  s,
            s32* fructus);
 
+/* chorda_ut_i32 - Ut chorda_ut_s32, sed insignatum: signum '-'
+ * recusat, fines 0..4294967295.
+ *
+ * Redde: VERUM si conversa
+ */
 b32
 chorda_ut_i32 (
           chorda  s,
              i32* fructus);
 
+/* chorda_ut_f64 - Convertere chordam ad numerum fluitantem (strtod
+ * super copiam terminatam): tota chorda consumi debet; recusat
+ * vacuam, NULLUM insertum, sordes post numerum.
+ *
+ * Redde: VERUM si conversa
+ */
 b32
 chorda_ut_f64 (
         chorda  s,

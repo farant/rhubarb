@@ -177,7 +177,9 @@ json_est_objectum (
  * FUNCTIONES - EXTRACTIO VALORUM
  * ======================================================================== */
 
-/* Extrahere valorem cum default si genus non congruit */
+/* Extrahere valorem cum default si genus non congruit - aut si valor
+ * NIHIL est: json_ad_integer(json_objectum_capere(o, "k")) = 0 si
+ * clavis abest. Ordinarium proprium: json_capere_* infra. */
 
 b32
 json_ad_boolean (
@@ -245,6 +247,45 @@ JsonPar*
 json_objectum_par_obtinere (
     JsonValor* valor,
           i32  index);
+
+/* ACCESSUS CUM ORDINARIO (lapide feature-requests/019): valor clavis
+ * in objecto, aut 'ordinarium' si objectum NIHIL aut non objectum,
+ * clavis abest, valor null aut generis alieni. Numquam deficit.
+ * Integer solum ex JSON integro (1.5 -> ordinarium, ut
+ * json_ad_integer).
+ *
+ *   s64 seq = json_capere_integer(eventum, "seq", -I);
+ *   chorda t = json_capere_chorda(json_via(radix, "a.b"), "c",
+ *       chorda_ex_literis("", piscina));
+ */
+chorda
+json_capere_chorda (
+              JsonValor* objectum,
+     constans character* clavis,
+                 chorda  ordinarium);
+
+s64
+json_capere_integer (
+              JsonValor* objectum,
+     constans character* clavis,
+                    s64  ordinarium);
+
+b32
+json_capere_boolean (
+              JsonValor* objectum,
+     constans character* clavis,
+                    b32  ordinarium);
+
+/* json_via - valor per viam punctatam ("a.b.0.c"): segmentum in
+ * tabulato cifrae solae = index (0-indexed), in objecto clavis.
+ * NIHIL si segmentum quodvis abest, index extra fines, via vacua aut
+ * segmentum vacuum ("a..b"), aut per scalare transit. Clavis quae
+ * punctum ipsa continet per viam inaccessibilis est:
+ * json_objectum_capere adhibe. */
+JsonValor*
+json_via (
+             JsonValor* radix,
+    constans character* via);
 
 /* Iterator pro objectis */
 JsonObjectumIterator

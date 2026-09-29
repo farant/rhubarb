@@ -1,0 +1,20 @@
+#!/usr/bin/env briar
+# Duplex a
+
+Imports `duplex_b` and defines `commune` again.
+
+<bibliotheca via="duplex_b.thistle"/>
+
+<c!>
+s32
+commune (vacuum)
+{
+    redde I;
+}
+
+s32
+principale (vacuum)
+{
+    redde commune() - I;
+}
+</c>

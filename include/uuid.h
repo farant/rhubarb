@@ -1,3 +1,4 @@
+/* uuid.h - UUIDv7 ordine temporis (unique identifiers) */
 #ifndef UUID_H
 #define UUID_H
 

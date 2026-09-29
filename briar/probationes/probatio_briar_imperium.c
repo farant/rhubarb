@@ -345,6 +345,41 @@ principale (vacuum)
         }
     }
 
+    imprimere("\n--- Probans vexilla atrii ante plagulam ---\n");
+    /* manus incipere briar x.thistle: '-vivum -portus N' post binarium
+     * inserit, ANTE plagulam (lapide feature-requests/023) - vexilla
+     * programmatis vitrei, programmati praemittuntur */
+    {
+        constans character* argv[VIII];
+
+        argv[0] = "briar";
+        argv[1] = "-vivum";
+        argv[2] = "-portus";
+        argv[3] = "18765";
+        argv[4] = "-retro";
+        argv[5] = "x.thistle";
+        argv[6] = "a";
+        argv[7] = NIHIL;
+        CREDO_VERUM (briar_imperium_legere(piscina, VII, argv, &imp));
+        CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_CURRERE);
+        CREDO_VERUM (imp.via != NIHIL
+            && strcmp(imp.via, "x.thistle") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, V);
+        CREDO_VERUM (imp.numerus_reliquorum == V
+            && strcmp(imp.reliqua[0], "-vivum") == ZEPHYRUM
+            && strcmp(imp.reliqua[1], "-portus") == ZEPHYRUM
+            && strcmp(imp.reliqua[2], "18765") == ZEPHYRUM
+            && strcmp(imp.reliqua[3], "-retro") == ZEPHYRUM
+            && strcmp(imp.reliqua[4], "a") == ZEPHYRUM
+            && imp.reliqua[5] == NIHIL);
+    }
+    /* -portus sine valore: recusatio */
+    CREDO_FALSUM (_legere(piscina, &imp, I, "-portus", NIHIL, NIHIL));
+    /* post plagulam: argumenta programmatis, ut ante */
+    CREDO_VERUM (_legere(piscina, &imp, II, "x.thistle", "-vivum",
+        NIHIL));
+    CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, I);
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
