@@ -1159,3 +1159,46 @@ environment) with a flag and a skin-tone row added; Ghostty unchanged.
     research note, not modelled.
 - Ghostty (GRAPHEMATUM) looked great with the new rows.
 - Suite 10/10, saltuarius 13/13, amalgam VERIFICATUM + idempotent.
+
+## PLACE ONE UNIT (runae U6c, 2026-09-29)
+
+**INTENTIO (Fran approved the U6 re-split).** saltuarius paints with a
+style per byte offset, so it cannot hand tessera a whole line; it
+needs "place ONE unit here, tell me how wide it was". Multi-rune
+clusters can only be placed by tessera (the intern table is private —
+the amalgam boundary is the API), so the primitive belongs here:
+
+```c
+constans i8*
+tessera_graphema_ponere (opus, x, y, initium, finis, stilus, &latitudo);
+```
+
+It places the first DRAWABLE UNIT of `[initium, finis)` — the unit
+rule written in `runae.h` (U6b): a C0/DEL byte or an invalid byte →
+`?`, one byte, 1 column; otherwise a grapheme under the opus's policy;
+a zero-width grapheme draws nothing — and returns the pointer after it
+with the UNIT's width (the caller advances x by it even when the cell
+is clipped: a wide unit at the last column still returns 2, the cell
+becomes a space). `_octetos_scribere` is now a four-line loop over it,
+so `tessera_scribere` and any consumer share one path. The stale "width
+1 assumed" comment on `tessera_scribere` (the line the width ledger
+item quoted) is gone.
+
+Intern-table overflow (a cluster > 64 bytes, or the table full) still
+falls back to the first rune, but now pads the unit's remaining columns
+with spaces, so the measured width and the drawn cells agree (before, a
+`ka + i + 30 accents` cluster would leave its second column stale).
+
+**Red first:** a stub (returns `initium`, width 0) — every case red by
+name. **Green:** 11/11 suites, including the unchanged wide-cell and
+cluster suites (the refactor is invisible to them). The new
+`probatio_tessera_ponere` also CROSS-CHECKS tessera's own copy of the
+unit rule against runae's: all 35 Lapide samples, both policies, the
+sum of returned widths == `runae_latitudo_textus` and the walk ends
+exactly at the end.
+
+**Plants (compiling), caught by name:** invalid bytes per series
+(ponere), control not `?` (ponere + opus), policy ignored (graphemata +
+ponere), overflow padding off (ponere), the writer advancing by 1
+(graphemata). Amalgam VERIFICATUM + idempotent, header mirrored
+(`tessera_graphema_ponere` exported), saltuarius 13/13 on it.

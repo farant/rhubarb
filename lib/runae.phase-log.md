@@ -319,3 +319,10 @@ trimmed bases in `fontes_politica.sh` (the exclusions generator refused
 BEFORE and AFTER the exclusions (fontes → excludenda → fontes →
 amalgamare). Both amalgam `.c` files are byte-identical to before;
 VERIFICATUM + idempotent.
+
+## U6c — tessera places one unit (2026-09-29)
+
+Narrative in `tessera/phase-log.md` ("PLACE ONE UNIT"):
+`tessera_graphema_ponere`, `_octetos_scribere` rebuilt on it, and a
+cross-check of tessera's unit rule against `runae_latitudo_textus` over
+the whole corpus.

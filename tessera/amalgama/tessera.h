@@ -228,6 +228,16 @@ void tessera_politicam_ponere(TesseraOpus* opus,
 TesseraPolitica tessera_politica_ambitus(void);
 unsigned int tessera_cellulae_octeti(const TesseraOpus* opus, int x, int y,
     unsigned char* exitus, unsigned int capacitas);
+/* Unitatem pingendam PRIMAM [initium, finis) ad (x, y) ponere:
+ * regimen C0/DEL aut octetus invalidus -> '?' (I columna); ceterum
+ * graphema sub politica operis; latitudinis 0 nihil pingitur. Reddit
+ * indicatorem post unitatem, latitudinem unitatis in *latitudo (x per
+ * eam promovetur). initium >= finis: initium, 0; opus NULL: finis. */
+const unsigned char* tessera_graphema_ponere(TesseraOpus* opus, int x,
+    int y, const unsigned char* initium, const unsigned char* finis,
+    TesseraStilus stilus, unsigned int* latitudo);
+/* Textum scribere: unitates per tessera_graphema_ponere, x per
+ * latitudinem cuiusque promotum */
 void tessera_scribere(TesseraOpus* opus, int x, int y,
     TesseraChorda textus, TesseraStilus stilus);
 void tessera_scribere_literis(TesseraOpus* opus, int x, int y,

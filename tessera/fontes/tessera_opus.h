@@ -150,9 +150,26 @@ tessera_cellulae_octeti (
                       i8* exitus,
                      i32  capacitas);
 
-/* Textum scribere: limites runarum UTF-8 ambulantur, quaeque runa
- * cellulam unam (latitudo 1 praesumpta); octeti regiminis et series
- * invalidae -> '?' */
+/* Unitatem pingendam PRIMAM [initium, finis) ad (x, y) ponere (runae
+ * U6c; regula runae_latitudo_textus): octetus C0/DEL aut invalidus ->
+ * '?' (octetus unus, I columna); ceterum graphema sub politica operis
+ * (latum = cellulae II, plurium runarum = internatum); latitudinis 0
+ * nihil pingitur. Reddit indicatorem post unitatem, latitudinem
+ * UNITATIS in *latitudo (vocans x per eam promovet) - etiam cum cellula
+ * praeciditur (columna ultima: spatium; extra fines: nihil).
+ * initium >= finis: initium, latitudo 0; opus NIHIL: finis. */
+constans i8*
+tessera_graphema_ponere (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+      constans i8* initium,
+      constans i8* finis,
+    TesseraStilus  stilus,
+              i32* latitudo);
+
+/* Textum scribere: unitates per tessera_graphema_ponere, x per
+ * latitudinem cuiusque promotum (graphemata lata II cellulas tenent) */
 vacuum
 tessera_scribere (
       TesseraOpus* opus,

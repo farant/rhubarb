@@ -570,6 +570,87 @@ tessera_cellulae_octeti (
     redde n;
 }
 
+constans i8*
+tessera_graphema_ponere (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+      constans i8* initium,
+      constans i8* finis,
+    TesseraStilus  stilus,
+              i32* latitudo)
+{
+    constans i8* post_runae = initium;
+    constans i8* post;
+            s32  runa;
+            s32  id;
+            i32  prima;
+
+    *latitudo = ZEPHYRUM;
+    si (opus == NIHIL)
+    {
+        redde finis;
+    }
+    si (initium == NIHIL || initium >= finis)
+    {
+        redde initium;
+    }
+    si (*initium < 0x20 || *initium == 0x7F)
+    {
+        /* octetus regiminis -> '?' */
+        _cellulam_collocare(opus, x, y, '?', stilus, I, FALSUM);
+        *latitudo = I;
+        redde initium + I;
+    }
+    runa = utf8_decodere(&post_runae, finis);
+    si (runa < ZEPHYRUM)
+    {
+        /* series invalida -> '?' per OCTETUM (non per seriem) */
+        _cellulam_collocare(opus, x, y, '?', stilus, I, FALSUM);
+        *latitudo = I;
+        redde initium + I;
+    }
+    /* graphema (UAX #29) et latitudo eius (Ghostty) */
+    post = runae_graphema_ex_politica(initium, finis,
+        (opus->politica == TESSERA_POLITICA_SIMPLEX)
+            ? RUNAE_POLITICA_SIMPLEX : RUNAE_POLITICA_GRAPHEMATUM,
+        latitudo);
+    si (*latitudo == ZEPHYRUM)
+    {
+        redde post;   /* signum sine basi: nihil pingitur */
+    }
+    si (post == post_runae)
+    {
+        _cellulam_collocare(opus, x, y,
+            tessera_signum_ex_octetis(initium, (i32)(post - initium)),
+            stilus, *latitudo, FALSUM);
+        redde post;
+    }
+    id = _graphema_internare(opus, initium, (i32)(post - initium));
+    si (id >= ZEPHYRUM)
+    {
+        _cellulam_collocare(opus, x, y, (i32)id, stilus, *latitudo,
+            VERUM);
+        redde post;
+    }
+    /* limes tabulae: runa prima sola, columnae reliquae unitatis
+     * spatia (mensura runae servatur) */
+    prima = runae_latitudo(runa);
+    si (prima > ZEPHYRUM)
+    {
+        _cellulam_collocare(opus, x, y,
+            tessera_signum_ex_octetis(initium,
+                (i32)(post_runae - initium)),
+            stilus, prima, FALSUM);
+    }
+    per (; prima < *latitudo; prima++)
+    {
+        _cellulam_collocare(opus, x + (s32)prima, y, (i32)' ', stilus,
+            I, FALSUM);
+    }
+    redde post;
+}
+
 /* Nucleus scriptionis (parametra constantia - scribere_literis
  * qualificatorem numquam abicit) */
 interior vacuum
@@ -584,6 +665,7 @@ _octetos_scribere (
     constans i8* cursor;
     constans i8* finis;
             s32  cx = x;
+            i32  latitudo;
 
     si (opus == NIHIL || datum == NIHIL)
     {
@@ -593,71 +675,9 @@ _octetos_scribere (
     finis   = datum + mensura;
     dum (cursor < finis)
     {
-                  i8  primus      = *cursor;
-         constans i8* post_runae  = cursor;
-         constans i8* post;
-                 s32  runa;
-                 i32  latitudo;
-
-        si (primus < 0x20 || primus == 0x7F)
-        {
-            /* octetus regiminis -> '?' */
-            _cellulam_collocare(opus, cx, y, '?', stilus, I, FALSUM);
-            cursor++;
-            cx++;
-            perge;
-        }
-        runa = utf8_decodere(&post_runae, finis);
-        si (runa < ZEPHYRUM)
-        {
-            /* series invalida -> '?' (octetus unus) */
-            _cellulam_collocare(opus, cx, y, '?', stilus, I, FALSUM);
-            cursor++;
-            cx++;
-            perge;
-        }
-        /* graphema (UAX #29) et latitudo eius (Ghostty) */
-        post = runae_graphema_ex_politica(cursor, finis,
-            (opus->politica == TESSERA_POLITICA_SIMPLEX)
-                ? RUNAE_POLITICA_SIMPLEX : RUNAE_POLITICA_GRAPHEMATUM,
-            &latitudo);
-        si (latitudo == ZEPHYRUM)
-        {
-            cursor = post;   /* signum sine basi: nihil pingitur */
-            perge;
-        }
-        si (post == post_runae)
-        {
-            _cellulam_collocare(opus, cx, y,
-                tessera_signum_ex_octetis(cursor, (i32)(post - cursor)),
-                stilus, latitudo, FALSUM);
-        }
-        alioquin
-        {
-            s32 id = _graphema_internare(opus, cursor, (i32)(post
-                - cursor));
-
-            si (id >= ZEPHYRUM)
-            {
-                _cellulam_collocare(opus, cx, y, (i32)id, stilus,
-                    latitudo,
-                    VERUM);
-            }
-            alioquin
-            {
-                /* limes tabulae: runa prima sola (modus U5) */
-                latitudo = runae_latitudo(runa);
-                si (latitudo > ZEPHYRUM)
-                {
-                    _cellulam_collocare(opus, cx, y,
-                        tessera_signum_ex_octetis(cursor,
-                            (i32)(post_runae - cursor)),
-                        stilus, latitudo, FALSUM);
-                }
-            }
-        }
-        cursor  = post;
-        cx      += (s32)latitudo;
+        cursor  = tessera_graphema_ponere(opus, cx, y, cursor, finis,
+            stilus, &latitudo);
+        cx     += (s32)latitudo;
     }
 }
 

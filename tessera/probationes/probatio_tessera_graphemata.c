@@ -174,7 +174,7 @@ principale (vacuum)
     tessera_cellulam_ponere(opus, ZEPHYRUM, ZEPHYRUM, (i32)'q', nat);
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, ZEPHYRUM, "q", ZEPHYRUM));
 
-        /* Politica SIMPLEX (Terminal.app): hi manet latum (II);
+    /* Politica SIMPLEX (Terminal.app): hi manet latum (II);
      * familia = tria emoji lata (ZWJ non iungit) */
     {
         TesseraPonsMemoriae* pm_s =
