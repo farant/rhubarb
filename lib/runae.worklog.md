@@ -91,3 +91,39 @@
     "Mc = 0" never shows up because its map has no Mc entries.
 - Python's unicodedata (Unicode 15.0) was not run: ICU matched exactly,
   and a 15.0 source would only add version noise.
+- (U3, late) The Latin lint also refused `opentui` and `regionalis`
+  (identifiers); renamed `_mappam_alienam_conferre`, `RUPTURA_REGIONIS`.
+
+## 2026-09-28: U4, grapheme breaks + cluster width
+
+- **Editio (pythonica) is the edit tool** (Fran reminded me mid-task).
+  My raw Python string replaces broke on the commit-time formator's
+  realignment. Editio's `replace` is whitespace-tolerant, all-or-nothing,
+  and judges with examen. Two Editio lessons:
+  - An anchor inside a comment needs `tolerans='verba'` (a comment is ONE
+    token to it). It refused cleanly and wrote nothing.
+  - `inserere_ante(<first function>)` inserts at the top of the FILE:
+    the first definition's extent includes the file's leading comment
+    and `#include` lines. Anchor on a later line instead (I used
+    `replace` on the `#define` after the includes).
+- Slip: I ran `scribe F < F` once (only meant to judge). It survived
+  (`<` reads the whole input before scribe writes; the old disaster was a
+  pipe), but to judge an already-edited file, run `silva/examen.sh F`.
+- Measured before designing: in 15.1 every containment the one-byte
+  layout needs holds (ExtPict ⊂ Other, InCB Consonant ⊂ Other, InCB
+  Extend ⊂ Extend ∪ ZWJ, Linker ⊂ Extend, ZWJ is InCB Extend, modifiers
+  are Extend with InCB None, variation bases ⊂ Other). The generator
+  asserts all of them per codepoint.
+- Break state is updated from PRIOR on each call (prior is consumed
+  exactly once per pair). That's why Ghostty's "restore the state after
+  an ignored VS" can't simply be copied: runae's segmentation stays pure
+  UAX #29, and only the WIDTH follows Ghostty (`ultima` = Ghostty's
+  `prev`).
+- Results: GraphemeBreakTest 15.1, all 1,187 lines, zero failures on the
+  first run; Ghostty's 20 cluster-width cases; ICU's break iterator over
+  all 35 samples, zero boundary differences in ~114k clusters.
+- GB9c's corpus footprint: removing it breaks exactly bn, gu, hi, ml,
+  the scripts whose virama is InCB=Linker in 15.1. Tamil's virama is not
+  a Linker, so ta is untouched. The corpus is sharp enough to see that.
+- The table grew from 104 to 120 unique blocks (~40 KB); widths still
+  match ICU on every codepoint (the aurum_icu check).

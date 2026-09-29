@@ -17,6 +17,7 @@ D2). A version bump is its own task: a new directory beside this one,
 | GraphemeBreakProperty.txt | `auxiliary/` | width (RI, V, T, Prepend), graphemes (U4) |
 | emoji-data.txt | `emoji/` | width (Emoji_Modifier), graphemes (Extended_Pictographic, U4) |
 | GraphemeBreakTest.txt | `auxiliary/` | the U4 conformance oracle |
+| emoji-variation-sequences.txt | `emoji/` | emoji variation bases for cluster width (U4; fetched 2026-09-28, same D3 approval) |
 
 SHA-256:
 
@@ -28,4 +29,5 @@ a7e52eee647e52dc210b8719b4d7037276f4b353810293d69377fc46374cec3f  GraphemeBreakP
 ed9c5e92fd0911ccbeeb63c97cb19c519ea272ff1112ce843abd991582dd848f  GraphemeBreakTest.txt
 e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96  LICENSE.txt
 d7aef489c8fe4c14f09ea5695200277c6b93ac82ac60845cdd2161b0d6835cc1  emoji-data.txt
+8a67d0429a5831d91e744bc5170d43dc66ddccd42c6f532cbe421dc406b571fd  emoji-variation-sequences.txt
 ```

@@ -797,6 +797,8 @@
   <vocabulum lemma="lazy" lingua="anglica" classis="ignotum-permissum" nota="SOLUM in RTLD_LAZY (POSIX dlfcn.h)"/>
   <vocabulum lemma="now" lingua="anglica" classis="ignotum-permissum" nota="SOLUM in RTLD_NOW (POSIX dlfcn.h)"/>
 
+  <vocabulum lemma="incb" lingua="anglica" classis="ignotum-permissum" nota="Unicode Indic_Conjunct_Break (InCB): proprietas DerivedCoreProperties, UAX #29 GB9c (runae U4)"/>
+
   <!-- ================= TERMINI T13/T14 (oraculum UD; nexus renovatus 2026-09-05) =================
        verba plagularum T13 quae tabula symbolorum post commissionem T13
        demum indexavit (excubitor post successum renovat): pinna
@@ -1104,6 +1106,27 @@
     <forma textus="ignorabili" casus="ablativus" numerus="singularis"/>
     <forma textus="ignorabiles" casus="nominativus" numerus="pluralis"/>
     <forma textus="ignorabilia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="coniunctor" lingua="latina" classis="substantivum" nota="coniunctor, -oris m. (qui coniungit): classis rupturae runae pro InCB Linker (virama quae consonantes Indicas coniungit, UAX #29 GB9c); sedes include/runae_tabulae.h">
+    <forma textus="coniunctor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="coniunctoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="iunctor" lingua="latina" classis="substantivum" nota="iunctor, -oris m. (qui iungit): classis rupturae runae pro ZWJ (zero width joiner, U+200D); sedes include/runae_tabulae.h">
+    <forma textus="iunctor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="iunctoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="pictographum" lingua="latina" classis="substantivum" nota="vox domus (Gk.-Lat.): signum pictum, Unicode Extended_Pictographic (emoji et affinia); sedes include/runae_tabulae.h">
+    <forma textus="pictographum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pictographi" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pictographa" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="iterator" lingua="latina" classis="substantivum" nota="iterator, -oris m. (qui iterat): ambulator seriei (DirectoriumIterator; iterator rupturae ICU in tools/runae_oraculum.c)">
+    <forma textus="iterator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="iteratoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="iteratori" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="iteratorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="iteratore" casus="ablativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
 
 </glossarium>

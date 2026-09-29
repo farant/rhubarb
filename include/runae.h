@@ -29,4 +29,45 @@ i32
 runae_latitudo (
     s32 runa);
 
+
+/* ==================================================
+ * Graphemata (UAX #29 15.1, graphemata extensa)
+ * ================================================== */
+
+/* Status rupturae a vocante possessus (nulla allocatio): paritas
+ * indicatorum regionum, series Extended_Pictographic Extend* (ZWJ),
+ * series InCB consonans [extend/linker]* (linker visus). Initiandus
+ * per runae_rupturam_initiare ante primam vocationem. */
+nomen structura {
+    i32 status;
+} RunaeRuptura;
+
+vacuum
+runae_rupturam_initiare (
+    RunaeRuptura* ruptura);
+
+/* VERUM si limes graphematis inter prior et runa. Vocanda SEQUENTER
+ * per omnes paria contigua (status priorem quisque vocatione
+ * accipit). UAX #29 pura (GB3-GB13, GB9c); runa invalida utrimque
+ * rumpit (ut Control). */
+b32
+runae_rumpitur (
+             s32  prior,
+             s32  runa,
+    RunaeRuptura* ruptura);
+
+/* Graphema primum octetorum UTF-8 [initium, finis): reddit
+ * indicatorem post id et latitudinem eius (0-II) in *latitudo.
+ * Segmentatio per runae_rumpitur; latitudo regula Ghostty
+ * (graphemeWidth): runae primae latitudo; VS16/VS15 post basim
+ * variationis emoji = II/I (aliter nihil); runa sequens non nulla in
+ * graphemate = II. Series UTF-8 invalida = graphema suum, latitudo I.
+ * NON fluens: graphema integrum aut finem logicum praebe.
+ * initium >= finis: reddit initium, latitudo 0. */
+constans i8*
+runae_graphema_proximum (
+    constans i8* initium,
+    constans i8* finis,
+            i32* latitudo);
+
 #endif /* RUNAE_H */

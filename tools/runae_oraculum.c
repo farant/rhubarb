@@ -3,7 +3,9 @@
  * Usus:
  *   runae_oraculum                    omnem codicem contra runae_latitudo
  *   runae_oraculum -aurum <via>       aurum intervallorum scribere
- *   runae_oraculum -opentui <via.zon> mappam OpenTUI conferre (politica)
+  *   runae_oraculum -opentui <via.zon> mappam OpenTUI conferre (politica)
+ *   runae_oraculum -graphemata <via>  limites graphematum corporis contra
+ *                                     iteratorem ICU; aurum scribere
  *   optiones: -bibliotheca <via.dylib> -suffixum <_74>
  *
  * ICU4C (Homebrew, 74.2, Unicode 15.1) per dlopen/dlsym TITULIS
@@ -19,6 +21,7 @@
 #include "postulata_posix.h"
 #include "latina.h"
 #include "runae.h"
+#include "utf8.h"
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,6 +62,40 @@ hic_manens FunctioCategoriae  categoria_oraculi;
 hic_manens FunctioBinaria     binaria_oraculi;
 hic_manens FunctioIntegra     integra_oraculi;
 hic_manens FunctioVersionis   versio_oraculi;
+
+/* Iterator rupturae ICU (ubrk_*, utext_*): textus UTF-8 per UText, ergo
+ * limites = offsets OCTETORUM. int64_t = longus (LP64, Darwin). */
+nomen vacuum* (*FunctioIteratoris)(integer genus,
+    constans character* locus,
+    constans vacuum* textus, s32 longitudo, integer* status);
+nomen vacuum  (*FunctioTextusPonendi)(vacuum* iterator, vacuum* textus,
+    integer* status);
+nomen s32     (*FunctioLimitis)(vacuum* iterator);
+nomen vacuum  (*FunctioIteratorisClaudendi)(vacuum* iterator);
+nomen vacuum* (*FunctioTextusOctetorum)(vacuum* textus,
+    constans character* octeti, longus longitudo, integer* status);
+nomen vacuum* (*FunctioTextusClaudendi)(vacuum* textus);
+
+hic_manens FunctioIteratoris           iterator_aperire;
+hic_manens FunctioTextusPonendi        iterator_textum_ponere;
+hic_manens FunctioLimitis              iterator_primus;
+hic_manens FunctioLimitis              iterator_proximus;
+hic_manens FunctioIteratorisClaudendi  iterator_claudere;
+hic_manens FunctioTextusOctetorum      textus_aperire;
+hic_manens FunctioTextusClaudendi      textus_claudere;
+hic_manens vacuum*                     bibliotheca_oraculi;
+hic_manens constans character*         suffixum_oraculi;
+
+#define RUPTURA_CHARACTERIS 0    /* UBRK_CHARACTER */
+#define LIMES_NULLUS        (-1) /* UBRK_DONE */
+
+/* Linguae corporis (probationes/fixa/runae/corpus/) */
+hic_manens constans character* LINGUAE_CORPORIS[] = {
+    "en", "la", "ar", "bn", "ceb", "de", "el", "es", "fa", "fr", "gu",
+    "he", "hi", "hu", "id", "ig", "it", "ja", "ko", "ml", "nl", "pl",
+    "pt", "ro", "ru", "rw", "sv", "sw", "ta", "th", "tl", "tr", "vi",
+    "yo", "zh"
+};
 
 
 /* ==================================================
@@ -104,6 +141,8 @@ _oraculum_aperire (
             via);
         redde FALSUM;
     }
+    bibliotheca_oraculi  = bibliotheca;
+    suffixum_oraculi     = suffixum;
     redde _symbolum(bibliotheca, "u_charType", suffixum,
                &categoria_oraculi, (i32)magnitudo(categoria_oraculi))
         && _symbolum(bibliotheca, "u_hasBinaryProperty", suffixum,
@@ -351,6 +390,202 @@ _mappam_alienam_conferre (
     redde ZEPHYRUM;
 }
 
+/* Iteratorem rupturae ICU aperire (solum pro -graphemata) */
+interior b32
+_iteratorem_parare (vacuum)
+{
+                vacuum* b = bibliotheca_oraculi;
+    constans character* x = suffixum_oraculi;
+
+    redde _symbolum(b, "ubrk_open", x, &iterator_aperire,
+               (i32)magnitudo(iterator_aperire))
+        && _symbolum(b, "ubrk_setUText", x, &iterator_textum_ponere,
+               (i32)magnitudo(iterator_textum_ponere))
+        && _symbolum(b, "ubrk_first", x, &iterator_primus,
+               (i32)magnitudo(iterator_primus))
+        && _symbolum(b, "ubrk_next", x, &iterator_proximus,
+               (i32)magnitudo(iterator_proximus))
+        && _symbolum(b, "ubrk_close", x, &iterator_claudere,
+               (i32)magnitudo(iterator_claudere))
+        && _symbolum(b, "utext_openUTF8", x, &textus_aperire,
+               (i32)magnitudo(textus_aperire))
+        && _symbolum(b, "utext_close", x, &textus_claudere,
+               (i32)magnitudo(textus_claudere));
+}
+
+/* FNV-1a super IV octetos offseti (idem ac probatio_runae_graphemata) */
+interior i32
+_friare (
+    i32 friatio,
+    i32 valor)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        friatio ^= (valor >> (k * VIII)) & 0xFF;
+        friatio *= 16777619;
+    }
+    redde friatio;
+}
+
+/* Limites nostri (runae_rumpitur): 0, initia graphematum, finis */
+interior i32
+_limites_nostri (
+    constans i8* octeti,
+            i32  mensura,
+            s32* limites)
+{
+     constans i8* cursor  = octeti;
+     constans i8* finis   = octeti + mensura;
+             s32  prior   = -I;
+             i32  n       = ZEPHYRUM;
+    RunaeRuptura  ruptura;
+
+    runae_rupturam_initiare(&ruptura);
+    dum (cursor < finis)
+    {
+        s32 offset  = (s32)(cursor - octeti);
+        s32 runa    = utf8_decodere(&cursor, finis);
+
+        si (prior == -I || runae_rumpitur(prior, runa, &ruptura))
+        {
+            limites[n++] = offset;
+        }
+        prior = runa;
+    }
+    limites[n++] = (s32)mensura;
+    redde n;
+}
+
+/* Corpus totum: limites ICU contra nostros; aurum ICU scribere */
+interior integer
+_graphemata (
+    constans character* via_auri)
+{
+    FILE* aurum = fopen(via_auri, "w");
+     i32  j;
+     i32  discordiae_totae = ZEPHYRUM;
+
+    si (aurum == NIHIL || !_iteratorem_parare())
+    {
+        fprintf(stderr, "runae_oraculum: aurum aut iterator deficit\n");
+        redde II;
+    }
+    fprintf(aurum,
+        "# runae aurum graphematum: limites graphematum corporis Lapidis per\n"
+        "# ORACULUM ICU4C (iterator characterum, textus UTF-8), scriptum a\n"
+        "# tools/runae_oraculum.sh -graphemata; iudicatur in\n"
+        "# probatio_runae_graphemata.c. Linea: LINGUA GRAPHEMATA FRIATIO\n"
+        "# (FNV-1a super offsets octetorum limitum, 0 et finis inclusi).\n");
+    per (j = ZEPHYRUM;
+         j < (i32)(magnitudo(LINGUAE_CORPORIS)
+             / magnitudo(LINGUAE_CORPORIS[0]));
+         j++)
+    {
+        character via[LINEA_MAXIMA];
+            FILE* f;
+           longus mensura;
+              i8* octeti;
+             s32* nostri;
+             s32* illorum;
+              i32 numerus_nostri;
+              i32 numerus_illorum = ZEPHYRUM;
+          integer status = ZEPHYRUM;
+          vacuum* textus;
+          vacuum* iterator;
+              s32 limes;
+              i32 k;
+              i32 discordiae = ZEPHYRUM;
+              i32 friatio = 2166136261u;
+
+        sprintf(via, "probationes/fixa/runae/corpus/%s.txt",
+            LINGUAE_CORPORIS[j]);
+        f = fopen(via, "rb");
+        si (f == NIHIL)
+        {
+            fprintf(stderr, "runae_oraculum: legi non potest: %s\n",
+                via);
+            fclose(aurum);
+            redde II;
+        }
+        (vacuum)fseek(f, 0L, SEEK_END);
+        mensura = ftell(f);
+        rewind(f);
+        octeti = (i8*)malloc((size_t)mensura + I);
+        nostri = (s32*)malloc(((size_t)mensura
+            + II) * magnitudo(s32));
+        illorum = (s32*)malloc(((size_t)mensura
+            + II) * magnitudo(s32));
+        si (   octeti == NIHIL || nostri == NIHIL || illorum == NIHIL
+            || fread(octeti, I, (size_t)mensura, f) != (size_t)mensura)
+        {
+            fprintf(stderr,
+                "runae_oraculum: memoria aut lectio deficit\n");
+            fclose(f);
+            fclose(aurum);
+            redde II;
+        }
+        fclose(f);
+
+        textus    = textus_aperire(NIHIL, (constans character*)octeti,
+                        mensura, &status);
+        iterator  = iterator_aperire(RUPTURA_CHARACTERIS, "en", NIHIL,
+                        ZEPHYRUM, &status);
+        iterator_textum_ponere(iterator, textus, &status);
+        si (status > ZEPHYRUM)
+        {
+            fprintf(stderr, "runae_oraculum: ICU status %d\n", status);
+            fclose(aurum);
+            redde II;
+        }
+        per (limes = iterator_primus(iterator); limes != LIMES_NULLUS;
+             limes = iterator_proximus(iterator))
+        {
+            illorum[numerus_illorum++]  = limes;
+            friatio                     = _friare(friatio, (i32)limes);
+        }
+        iterator_claudere(iterator);
+        (vacuum)textus_claudere(textus);
+
+        numerus_nostri = _limites_nostri(octeti, (i32)mensura, nostri);
+        per (k = ZEPHYRUM; k < numerus_nostri
+            || k < numerus_illorum; k++)
+        {
+            s32 a = (k < numerus_nostri) ? nostri[k] : -I;
+            s32 b = (k < numerus_illorum) ? illorum[k] : -I;
+
+            si (a != b)
+            {
+                si (discordiae == ZEPHYRUM)
+                {
+                    printf("  DISCORDIA %s: limes %u: runae ad %d, ICU ad %d\n",
+                        LINGUAE_CORPORIS[j], (insignatus integer)k,
+                        (integer)a, (integer)b);
+                }
+                discordiae++;
+            }
+        }
+        printf("  %-3s graphemata %u (runae %u), discordiae %u\n",
+            LINGUAE_CORPORIS[j], (insignatus integer)(numerus_illorum
+                - I),
+            (insignatus integer)(numerus_nostri - I),
+            (insignatus integer)discordiae);
+        fprintf(aurum, "%s %u %08x\n", LINGUAE_CORPORIS[j],
+            (insignatus integer)(numerus_illorum - I),
+            (insignatus integer)friatio);
+        discordiae_totae += discordiae;
+        free(octeti);
+        free(nostri);
+        free(illorum);
+    }
+    fclose(aurum);
+    printf("runae_oraculum: graphemata, discordiae %u\n",
+        (insignatus integer)discordiae_totae);
+    redde (discordiae_totae == ZEPHYRUM) ? ZEPHYRUM : I;
+}
+
+
 integer
 principale (
       integer   argc,
@@ -361,6 +596,7 @@ principale (
      constans character* suffixum      = "_74";
      constans character* aurum         = NIHIL;
      constans character* mappa_aliena  = NIHIL;
+     constans character* graphemata    = NIHIL;
                      i8  versio[IV];
               character  versio_textus[XXXII];
                 integer  i;
@@ -375,6 +611,11 @@ principale (
                      && i + I < argc)
         {
             mappa_aliena = argv[++i];
+        }
+        alioquin si (   strcmp(argv[i], "-graphemata") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            graphemata = argv[++i];
         }
         alioquin si (   strcmp(argv[i], "-bibliotheca") == ZEPHYRUM
                      && i + I < argc)
@@ -416,6 +657,10 @@ principale (
     si (aurum != NIHIL)
     {
         redde _aurum_scribere(aurum, versio_textus);
+    }
+    si (graphemata != NIHIL)
+    {
+        redde _graphemata(graphemata);
     }
     si (mappa_aliena != NIHIL)
     {

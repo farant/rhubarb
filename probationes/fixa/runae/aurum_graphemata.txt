@@ -1,0 +1,40 @@
+# runae aurum graphematum: limites graphematum corporis Lapidis per
+# ORACULUM ICU4C (iterator characterum, textus UTF-8), scriptum a
+# tools/runae_oraculum.sh -graphemata; iudicatur in
+# probatio_runae_graphemata.c. Linea: LINGUA GRAPHEMATA FRIATIO
+# (FNV-1a super offsets octetorum limitum, 0 et finis inclusi).
+en 4631 0be04531
+la 4559 a527fe26
+ar 1433 f70fe2ec
+bn 1027 e2ee3165
+ceb 4258 9491b356
+de 4038 27864a5c
+el 3436 1f8d06d7
+es 4669 b0494540
+fa 2724 4a792b57
+fr 3963 a18098f3
+gu 1144 aed05813
+he 2276 ffe6c2cf
+hi 1193 f1cc89c6
+hu 3739 2d563e46
+id 4182 d866ada8
+ig 3624 4688b5db
+it 4523 d406700e
+ja 1432 5988b81f
+ko 1703 daf01574
+ml 925 da019bbf
+nl 4095 6b2d9229
+pl 4446 4378e0f7
+pt 4591 163ef030
+ro 3888 754b0714
+ru 3102 816a8392
+rw 4549 7c45762a
+sv 4508 74b1c9c8
+sw 4590 3d28acc8
+ta 1183 6aa91fa6
+th 1234 380a0e6d
+tl 4468 ad279ca2
+tr 4351 6ee9ecca
+vi 3192 2ab96fb1
+yo 3064 2e3a1fbb
+zh 1466 01c2fd7c

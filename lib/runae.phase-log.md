@@ -155,3 +155,70 @@ the gate names the range.
   policy (their hand-widened emoji-capable symbols), none a bug.
 - examen lexicon gained `dlfcn.h` (auspex-certified, planted);
   `examen-corpus` holds.
+
+## U4 — GRAPHEME BREAKS + CLUSTER WIDTH (2026-09-28)
+
+### INTENTIO
+
+**Data (15.1, measured before designing):** every
+Extended_Pictographic codepoint is GCB Other (3,537); InCB Consonant ⊂
+GCB Other (240); InCB Extend ⊂ GCB Extend ∪ {ZWJ} (883 + 1); InCB Linker
+⊂ GCB Extend (6); ZWJ is InCB Extend; the 5 emoji modifiers are GCB
+Extend with InCB None; the 371 emoji-variation bases are GCB Other. So
+ONE class enum carries the whole break alphabet (19 values: Other, CR,
+LF, Control, 4 kinds of Extend (plain, InCB Extend, InCB Linker, emoji
+modifier), ZWJ, RI, Prepend, SpacingMark, the 5 Hangul syllable
+classes, Extended_Pictographic, InCB Consonant), 5 bits. The value byte
+= width (bits 0–1) + class (bits 2–6) + emoji-variation base (bit 7).
+The generator ASSERTS each containment above, so a future Unicode that
+breaks one fails loudly. zero-in-grapheme is derived, not stored: width
+0, or Prepend, or emoji modifier (exactly Ghostty's definition, U2). One
+more pinned file: `emoji-variation-sequences.txt` (same D3 fetch).
+`@missing` becomes per property: a default must precede ITS OWN
+property's data (the InCB default sits mid-file, after DI's data).
+
+**API** (`include/runae.h`, names from modules/001, unsealed):
+`RunaeRuptura` (caller-held state: odd-RI parity, ExtPict Extend*,
+…ZWJ, InCB consonant, …linker), `runae_rupturam_initiare`,
+`runae_rumpitur(prior, runa, &ruptura)` = pure UAX #29 15.1 (GB3–GB13
+incl. GB9c; an invalid rune breaks on both sides, like Control), and
+`runae_graphema_proximum(initium, finis, &latitudo)`, which segments by
+`runae_rumpitur` and applies Ghostty's width effects (`graphemeWidth`,
+read from `../ghostty/src/unicode/grapheme.zig`): start at the first
+rune's width; VS16/VS15 set 2/1 only after a valid variation base (else
+no effect); any following rune that isn't zero-in-grapheme makes it 2.
+One deliberate difference: Ghostty restores the break state after an
+invalid selector (its cells don't store it); runae's segmentation stays
+pure UAX #29 (edge: RI + invalid VS + RI).
+
+**Oracles:** (1) `GraphemeBreakTest.txt` 15.1, every line, every
+boundary, in the new `probatio_runae_graphemata.c`; (2) Ghostty's own
+cluster-width test cases, ported; (3) ICU's character break iterator
+(`ubrk_*` + `utext_openUTF8` via dlopen) over all 35 corpus samples,
+every boundary byte offset compared, and the result committed as
+`probationes/fixa/runae/aurum_graphemata.txt` (per language: cluster
+count + an FNV-1a hash of the boundary offsets), checked permanently.
+
+Red first: API stubs (every rune its own cluster, width = the rune's).
+Plants: GB9c removed, GB11 removed, the RI parity inverted, the VS base
+check dropped.
+
+**U4 FACTUM (graphemes).**
+- `runae_rumpitur` (UAX #29 15.1, GB3–GB13 incl. GB9c; caller-held
+  `RunaeRuptura`) and `runae_graphema_proximum` (Ghostty cluster width).
+- Table byte = width + a 5-bit break class (19 classes) + the
+  variation-base bit; 120 blocks. Containments asserted in the generator;
+  `@missing` guarded per property.
+- A seventh pinned file: emoji-variation-sequences.txt.
+- Red first: stubs → 768 of 1,187 conformance lines, the Ghostty width
+  cases and the empty aurum failed.
+- Green:
+  - GraphemeBreakTest 1,187/1,187.
+  - 20 Ghostty cluster-width cases.
+  - ICU `ubrk` (via dlopen, `utext_openUTF8` byte offsets) = runae on
+    every boundary of all 35 samples (0 differences), committed as
+    `aurum_graphemata.txt` (count + FNV-1a per language) and checked
+    permanently.
+- Plants caught by name: GB9c (7 lines + bn/gu/hi/ml), GB11 (4 lines),
+  RI parity (6 lines), VS base (3 width cases).
+- The scripted edits of this task went through pythonica's Editio.

@@ -8,6 +8,7 @@
 #
 # Usus: ./tools/runae_oraculum.sh                 # omnis codex, discordiae
 #       ./tools/runae_oraculum.sh -aurum          # scribit aurum_icu.txt
+#       ./tools/runae_oraculum.sh -graphemata     # limites corporis, aurum
 #       ./tools/runae_oraculum.sh -opentui [via]  # politica OpenTUI
 #       (ceterae optiones ad instrumentum transeunt)
 
@@ -20,13 +21,16 @@ source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 mkdir -p build
 BIN="build/runae_oraculum"
-clang "${GCC_FLAGS[@]}" -Iinclude tools/runae_oraculum.c lib/runae.c \
+clang "${GCC_FLAGS[@]}" -Iinclude tools/runae_oraculum.c lib/runae.c lib/utf8.c \
     lib/runae_tabulae.c -o "$BIN" || exit 2
 
 case "${1:-}" in
     -aurum)
         shift
         exec "$BIN" -aurum probationes/fixa/runae/aurum_icu.txt "$@" ;;
+    -graphemata)
+        shift
+        exec "$BIN" -graphemata probationes/fixa/runae/aurum_graphemata.txt "$@" ;;
     -opentui)
         shift
         ZON="${1:-$RADIX_DIR/../opentui/packages/native/src/tests/unicode-width-map.zon}"
