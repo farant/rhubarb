@@ -702,6 +702,30 @@ principale (vacuum)
         briar_silvam_solvere(nexus);
     }
 
+    imprimere("\n--- Probans prototypos regionis probationis ---\n");
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/probatio_adiutor.thistle",
+            &nexus);
+        constans BriarPlagula* prob;
+
+        CREDO_VERUM (f.successus);
+        prob = _genita(&f, "probationes/probatio_probatio_adiutor.c");
+        CREDO_NON_NIHIL (prob);
+        si (prob != NIHIL)
+        {
+            /* adiutor sine 'staticus', post usum definitus: prototypus
+             * ante corpus (lapide documentation-ideas/016) */
+            CREDO_VERUM (_continet(piscina, prob->contentum,
+                "s32\nauxilium (s32 x);\n"));
+            /* principale probationis NON prototypatur */
+            CREDO_FALSUM (_continet(piscina, prob->contentum,
+                "principale (vacuum);"));
+        }
+        briar_silvam_solvere(nexus);
+    }
+
         imprimere("\n--- Probans fragmenta: #line per cursum, fragmenta"
             " extra inventarium ---\n");
     {

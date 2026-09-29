@@ -1124,6 +1124,13 @@ principale (
     /* clavis: infixum = stampa corporis; discus = contenta clausurae */
     stampa = e_disco ? briar_stampa_clausurae(piscina, fructus.clausura)
                      : fons->titulus;
+    /* fontes briar IPSIUS clavem intrant: fabrica mutata (e.g.
+     * prototypi regionis probationis) proiectum novum poscit etiam sub
+     * eodem commisso corporis - stampa SORDIDA inter aedificationes
+     * eadem manet, et cache codicem genitum veterem reddebat
+     * (2026-09-29) */
+    stampa = _texere(piscina, stampa, " fontes briar ",
+        briar_aedificatio_fontes);
     /* VISIO (par. 4.9): programma vitreum paginam suam in binario
      * fert, ergo vestis clavem intrat (V5) - briar cum vestibus novis
      * aedificat, paginam veterem e cache non reddit */

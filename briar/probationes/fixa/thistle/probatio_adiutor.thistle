@@ -1,0 +1,41 @@
+#!/usr/bin/env briar
+# Probatio adiutor
+
+A helper in the test region with no `staticus`, as in the main
+region: briar generates its prototype in both (lapide
+documentation-ideas/016). `auxilium` is defined AFTER the test that
+uses it - the prototype makes the order free, too.
+
+<c!>
+s32
+duplicare (s32 x)
+{
+    redde x + x;
+}
+
+s32
+principale (vacuum)
+{
+    imprimere("%d\n", (integer)duplicare(XXI));
+    redde ZEPHYRUM;
+}
+</c>
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("probatio", 4096);
+
+    credo_aperire(piscina);
+    CREDO_AEQUALIS_S32(duplicare(XXI), auxilium(XXI));
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+s32
+auxilium (s32 x)
+{
+    redde x * II;
+}
+</c>

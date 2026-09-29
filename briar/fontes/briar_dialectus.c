@@ -65,6 +65,9 @@ interior constans character* LAQUEI[] = {
     "  - atoi/strtol(c.datum) ULTRA mensuram legunt (sine NUL) et",
     "    sordes tacent: chorda_ut_s32 / chorda_ut_s64 (FALSUM si",
     "    vacua, sordes, superfluitas)",
+    "  - adiutores: briar prototypos generat in regione principali ET",
+    "    probationis - 'staticus' non opus. staticus usus a principale",
+    "    solo -probatio frangit (principale abest: non adhibitus)",
     NIHIL
 };
 

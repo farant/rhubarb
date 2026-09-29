@@ -974,3 +974,30 @@ every name past the first segment was scored from foreign memory. This
 was also the "`tomll` doesn't suggest `toml`" quirk. Fix: copy through
 `xar_copiare_ad_tabulam` into a contiguous table. Same flat cast lives
 in html_arbor.c (`_acervum_reponere` with `novi`) — ledger.
+
+## 2026-09-29 — test-region prototypes; cache key misses briar's own sources
+
+lapide documentation-ideas/016: the main region is partitioned
+(`_regionem_partiri`) and every non-`main` function gets a sliced
+`head;` prototype in `_regiones.h`; the `munus="probatio"` region was
+emitted VERBATIM, so a plain helper there failed `-Wmissing-prototypes`
+(and one defined after use failed implicit declaration). Now the test
+region is partitioned too (its own `BriarPartitio`; its `derivata`
+replaces the separate `_derivata_addere` call) and its `prototypi` are
+written after the includes of `probationes/probatio_<x>.c`, `#line`
+mapped. The slice keeps `staticus`, so a static helper gets a static
+prototype. Fixture `probatio_adiutor.thistle`: red before with the
+tester's exact error, green after; fabrica plant (emission dropped) red.
+The other half is a rule, now on `-dialectus`: a `staticus` helper used
+only by `principale` breaks `-probatio` (unused once `principale` is
+swapped) - don't write `staticus` in the main region.
+
+FOUND ON THE WAY: after rebuilding briar with the fix, the fixture still
+failed - the cache reused the OLD generated unit. The key was corpus
+stamp + flags + thistle bytes; the corpus stamp is `commit=… SORDIDUM`,
+unchanged between two dev builds on the same commit, so a briar
+generator change was invisible to cached scripts until the next commit
+(releases were fine: new commit, new key). `briar_aedificatio_fontes`
+(briar's own source hash, already printed by `-versio`) now enters the
+stamp. Demonstrated: a comment-only change in briar_fabrica.c moves the
+fixture's cache directory (c5dee022… -> 4ca416d6…).

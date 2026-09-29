@@ -89,3 +89,11 @@ amalgama` cum causa nominata in commissione; inspectio manu ante.
   utraque), enumeratio radicis, clavis iterata nominata (`config.toml:
   3:1`). Porta fabricae (derivatio, clausura, `-I` radicum) et fumus
   XXI (cursus, -probatio, -amalgama, -bibliothecae, -functiones).
+
+## prototypi probationis (round XIX, 2026-09-29)
+
+- `thistle/probatio_adiutor.thistle` — adiutor `auxilium` in regione
+  `munus="probatio"` SINE `staticus` et POST usum definitus (lapide
+  documentation-ideas/016): ante emendationem `-Wmissing-prototypes` et
+  declaratio implicita. Porta fabricae: prototypus in unitate
+  probationis genita, principale probationis non prototypatum.

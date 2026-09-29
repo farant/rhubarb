@@ -864,13 +864,18 @@ _principem_fingere (
     redde chorda_aedificator_finire(a);
 }
 
+/* prototypi: 'caput;' functionum regionis probationis (praeter
+ * principale) - ut regio principalis, adiutor sine 'staticus' ibi non
+ * frangit -Wmissing-prototypes et ordo definitionum liber est (lapide
+ * documentation-ideas/016). Caput e fonte sectum 'staticus' servat. */
 interior chorda
 _probationem_fingere (
                    Piscina* piscina,
         constans character* titulus,
         constans character* via,
     constans BriarNexusRes* probatio,
-                       Xar* derivata)
+                       Xar* derivata,
+                       Xar* prototypi)
 {
         ChordaAedificator* a = chorda_aedificator_creare(piscina,
             (memoriae_index)(probatio->contextus.mensura + 256));
@@ -886,6 +891,7 @@ _probationem_fingere (
         chorda_aedificator_appendere_literis(a, "_regiones.h\"\n");
         chorda_aedificator_appendere_chorda(a,
             _inclusiones_derivatae(piscina, derivata));
+    _unitates_appendere(a, prototypi, via);
     /* contextus lineatim: fragmenta in probatione contexta */
     _textum_mappatum_appendere(a, probatio->contextus, probatio,
         ZEPHYRUM, via);
@@ -1278,6 +1284,7 @@ briar_fabricare (
          constans character* fontes_app[2];
          constans character* fontes_prob[2];
                         Xar* derivata_probationis;
+              BriarPartitio  part_prob;
                      chorda  inclusiones_derivatae;
                      chorda  inclusiones_probationis;
 
@@ -1347,11 +1354,22 @@ briar_fabricare (
     f.forma = (part.principalia
         == I) ? BRIAR_FORMA_PLANA : BRIAR_FORMA_VITREA;
 
-        /* capita derivata probationis: unitas sua ea includit */
+        /* regio probationis partita ut principales: capita derivata
+         * (unitas sua ea includit) et prototypi adiutorum eius */
     derivata_probationis = xar_creare(piscina, (i32)magnitudo(chorda));
-    si (inv.probatio != NIHIL)
+    memset(&part_prob, 0, magnitudo(part_prob));
+    part_prob.directivae = xar_creare(piscina,
+        (i32)magnitudo(BriarUnitas));
+    part_prob.typi = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part_prob.prototypi = xar_creare(piscina,
+        (i32)magnitudo(BriarUnitas));
+    part_prob.corpora = xar_creare(piscina,
+        (i32)magnitudo(BriarUnitas));
+    part_prob.derivata = derivata_probationis;
+    si (   inv.probatio != NIHIL
+        && !_regionem_partiri(piscina, inv.probatio, &part_prob, &f))
     {
-        _derivata_addere(derivata_probationis, inv.probatio);
+        redde f;
     }
     inclusiones_derivatae = _inclusiones_derivatae(piscina,
         part.derivata);
@@ -1372,7 +1390,7 @@ briar_fabricare (
             _texere(piscina, "probationes/probatio_", f.titulus, ".c"),
                         _probationem_fingere(piscina, f.titulus, via,
                         inv.probatio,
-                derivata_probationis));
+                derivata_probationis, part_prob.prototypi));
     }
 
     fontes_app[0] = _texere(piscina, "fontes/", f.titulus, ".c");

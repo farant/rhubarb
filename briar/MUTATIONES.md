@@ -43,6 +43,12 @@ Leges chartae:
   CXIII -> LXXXVIII (lapide documentation-ideas/017). `-dialectus`:
   laqueus `atoi(c.datum)` -> `chorda_ut_s32` / `chorda_ut_s64`, quae
   iam exsistunt et nunc documentantur (feature-requests/016).
+- regio `munus="probatio"`: prototypi adiutorum generantur ut in regione
+  principali - adiutor sine `staticus` non iam frangit
+  `-Wmissing-prototypes`, et ordo definitionum liber est (lapide
+  documentation-ideas/016). `-dialectus` regulam `staticus` nominat.
+  Cache: fontes briar ipsius clavem intrant - briar mutatus proiectum
+  novum aedificat etiam sine commisso novo.
 
 ## v3 — 2026-09-28
 
