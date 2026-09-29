@@ -128,3 +128,12 @@ amalgama` cum causa nominata in commissione; inspectio manu ante.
   `folium` tripled -> radix 72 without `-iterum` (then restored),
   amalgams of `radix` / `statica_a` compiled alone (28, 5), `-partes`
   lines (folium 0/2, media 1/2, sub/ramus 1/1).
+
+## directivae condicionales (parcum VF42V, 2026-09-29)
+
+- `thistle/condiciones.thistle` — coniunctio `#ifndef` cum typo
+  (`CustosRes`: SEMEL in capite genito, tota), coniunctio directivarum
+  sola (`CONDICIONES_NUMERUS`: in grege directivarum, ante `Tabula`),
+  `#ifdef CONDICIONES_LOQUAX` intra corpus functionis (in corpore, non
+  in capite). Porta fabricae; fumus XXIII ('11' per clang).
+

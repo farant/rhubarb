@@ -229,6 +229,19 @@ _fabricare_cum_membris (
         &optiones, octeti, membra);
 }
 
+/* positio primae occurrentiae acus in feno, aut -I */
+interior s32
+_index (
+               Piscina* piscina,
+                chorda  fenum,
+    constans character* acus)
+{
+    constans character* f = chorda_ut_cstr(fenum, piscina);
+    constans character* p = strstr(f, acus);
+
+    redde p != NIHIL ? (s32)(p - f) : -I;
+}
+
 /* occurrentiae acus in feno */
 interior i32
 _occurrentia_numerare (
@@ -869,6 +882,52 @@ principale (vacuum)
             /* principale probationis NON prototypatur */
             CREDO_FALSUM (_continet(piscina, prob->contentum,
                 "principale (vacuum);"));
+        }
+        briar_silvam_solvere(nexus);
+    }
+
+    imprimere("\n--- Probans directivas condicionales (parcum"
+        " VF42V) ---\n");
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/condiciones.thistle",
+            &nexus);
+      constans BriarPlagula* caput;
+      constans BriarPlagula* corpus;
+
+        CREDO_VERUM (f.successus);
+        caput   = _genita(&f, "include/condiciones_regiones.h");
+        corpus  = _genita(&f, "fontes/condiciones_regiones.c");
+        CREDO_NON_NIHIL (caput);
+        CREDO_NON_NIHIL (corpus);
+        si (caput != NIHIL && corpus != NIHIL)
+        {
+            chorda h = caput->contentum;
+
+            /* coniunctio cum typo: SEMEL, tota (olim directivae eius
+             * iterum colligebantur et #define primum copiam typi
+             * celabat) */
+            CREDO_AEQUALIS_I32 (_occurrentia_numerare(piscina, h,
+                "#ifndef CONDICIONES_CUSTOS\n"), I);
+            CREDO_AEQUALIS_I32 (_occurrentia_numerare(piscina, h,
+                "#define CONDICIONES_CUSTOS\n"), I);
+            CREDO_VERUM (_continet(piscina, h,
+                "#define CONDICIONES_CUSTOS\nnomen structura {"));
+            CREDO_AEQUALIS_I32 (_occurrentia_numerare(piscina, h,
+                "} CustosRes;\n"), I);
+            /* coniunctio directivarum sola: semel, in grege
+             * directivarum (ordo fontis inter directivas servatus) */
+            CREDO_AEQUALIS_I32 (_occurrentia_numerare(piscina, h,
+                "#define CONDICIONES_NUMERUS 3\n"), I);
+            CREDO_VERUM (_index(piscina, h,
+                "#define CONDICIONES_NUMERUS 3\n")
+                < _index(piscina, h, "} Tabula;"));
+            /* directiva intra corpus functionis in corpore manet,
+             * non in capite */
+            CREDO_FALSUM (_continet(piscina, h, "CONDICIONES_LOQUAX"));
+            CREDO_AEQUALIS_I32 (_occurrentia_numerare(piscina,
+                corpus->contentum, "#ifdef CONDICIONES_LOQUAX\n"), I);
         }
         briar_silvam_solvere(nexus);
     }

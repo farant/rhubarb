@@ -1091,3 +1091,29 @@ anyone noticing: briar/CLAUDE.md said the embedded key is computed
 key after the fabrica — plan 9 T1 measured the parse on every run), and
 its gate list named 16 of 20 gate files. A plan's records step is the
 cheap moment to diff docs against what exists.
+
+## 2026-09-29 — parcum VF42V: conditional directives emitted twice
+
+silva makes a whole `#ifndef … #endif` block ONE top-level unit, while
+`_directivas_colligere` scanned the text and took every `#` line on its
+own. A block holding a typedef therefore reached the generated header
+twice: bare directives first (which defined the guard), then the unit -
+whose copy of the type the preprocessor skipped. Fix: classify each
+unit by its directive lines (`_directivae_unitatis`: nullae / solae /
+mixtae). A directives-ONLY unit is left to the directives group (source
+order kept - the naive fix, "skip directives inside any unit", would
+have moved `#ifndef _POSIX_C_SOURCE / #define / #endif` below a later
+`#include <unistd.h>`); a MIXED unit is emitted once, whole, and its
+directive lines are skipped by the collector (byte intervals in the
+woven context = silva offsets minus `praeludium_octeti`). Side effect,
+intended: an `#ifdef` inside a function body no longer leaks an empty
+conditional into the header. A comment line makes a unit "mixed" (safe
+side: whole unit, ordering as before the fix).
+
+Found while measuring, NOT fixed (parked): a conditional wrapping
+FUNCTION DEFINITIONS (`#ifdef __APPLE__ f(){…} #else f(){…} #endif`) is
+classified as a type unit and emitted whole into the header - the
+functions would be defined in every unit including it; today it fails
+`-Wmissing-prototypes`. Needs per-branch partition (prototypes under
+the same conditional in the header, bodies under it in the .c).
+

@@ -104,6 +104,10 @@
 #        (duo membra, 'adiutor' et 'basis' interiora in utroque) clang
 #        SOLA compilat et currit (28, 5), probatio amalgamae viridis;
 #        -partes lineam 'bibliotheca:' per membrum fert
+#   XXIII. directivae condicionales (parcum VF42V): ./condiciones.thistle
+#        (coniunctio '#ifndef' cum typo, coniunctio directivarum sola,
+#        '#ifdef' intra corpus) clang compilat et '11' imprimit - olim
+#        '#define' custodis bis emissus typum celabat
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -151,7 +155,7 @@ done
 [ -f "$RADIX/probationes/fixa/icones/fons_256.png" ] \
     || { echo "FUMUS: fixum abest: probationes/fixa/icones/fons_256.png" >&2; exit 2; }
 FIXA="$RADIX/briar/probationes/fixa/thistle"
-for f in salve punctum derivatum fragmenta salve_vitreum toml_config adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
+for f in salve punctum derivatum fragmenta salve_vitreum toml_config condiciones adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
     [ -f "$FIXA/$f.thistle" ] || { echo "FUMUS: fixum abest: $f.thistle" >&2; exit 2; }
 done
 BIBL="$RADIX/briar/probationes/fixa/bibliotheca"
@@ -193,7 +197,7 @@ deficere () {
 
 cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
    "$FIXA/fragmenta.thistle" "$FIXA/salve_vitreum.thistle" \
-   "$FIXA/toml_config.thistle" \
+   "$FIXA/toml_config.thistle" "$FIXA/condiciones.thistle" \
    "$FIXA/adversa/probatio_rubra.thistle" "$FIXA/adversa/duo_principalia.thistle" \
    "$FIXA/adversa/fragmentum_erratum.thistle" \
    "$FIXA/adversa/fragmentum_circulus.thistle" \
@@ -632,8 +636,14 @@ for l in 'folium.thistle	bibliotheca:membra 0, nomina publica 2' \
 done
 echo "FUMUS:    bibliothecae: cursum, probatum, clavis membra tenet, amalgamatum (radix, statica_a), partes"
 
+# ---- XXIII. directivae condicionales (parcum VF42V) ----
+echo "FUMUS: XXIII. ./condiciones.thistle (#ifndef cum typo, directivae solae, #ifdef in corpore)"
+( cd "$AREA" && ./condiciones.thistle ) > "$AREA/condiciones.log" 2>&1 \
+    && [ "$(cat "$AREA/condiciones.log")" = 11 ] \
+    || deficere "condiciones.thistle: '11' non impressum (directivae bis emissae?)" "$AREA/condiciones.log"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes, toml, membra)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes, toml, membra, condiciones)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"

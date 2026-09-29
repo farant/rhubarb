@@ -53,6 +53,12 @@ Leges chartae:
   `-radix <via>`) programmati vitreo praemittuntur: `manus incipere
   briar x.thistle` nunc currit (lapide feature-requests/023); olim
   `vexillum ignotum: -vivum`.
+- directivae condicionales in regione C: coniunctio `#ifndef X` /
+  `#define X` / typus / `#endif` iam aedificatur (olim directivae eius
+  bis in caput genitum emittebantur - `#define` primum copiam typi
+  celabat: 'unknown type name'). Coniunctio directivarum sola ordine
+  fontis manet; `#ifdef` intra corpus functionis in corpore manet
+  (parcum VF42V).
 - `<bibliotheca via="textus.thistle"/>` (elementum, columna 0): regiones
   C PLANAE plagulae alterius (functiones, typi) in omni regione C
   praesto - `principale`, regiones ceterae, `-probatio` - sine

@@ -1,0 +1,47 @@
+#!/usr/bin/env briar
+# Condiciones
+
+Conditional compilation inside a region (ledger parcum …VF42V). A
+block that holds a declaration is ONE unit for silva: it must reach the
+generated header once, whole - collected a second time as bare
+directives, its `#define` ran first and the copy holding the type was
+skipped.
+
+<c!>
+#ifndef CONDICIONES_CUSTOS
+#define CONDICIONES_CUSTOS
+nomen structura {
+    s32 valor;
+} CustosRes;
+#endif
+
+#ifndef CONDICIONES_NUMERUS
+#define CONDICIONES_NUMERUS 3
+#endif
+
+nomen structura {
+    s32 a[CONDICIONES_NUMERUS];
+} Tabula;
+
+s32
+custos_valor (CustosRes r)
+{
+#ifdef CONDICIONES_LOQUAX
+    imprimere("custos_valor\n");
+#endif
+    redde r.valor;
+}
+
+s32
+principale (vacuum)
+{
+    CustosRes r;
+    Tabula    t;
+
+    r.valor  = VII;
+    t.a[0]   = I;
+    imprimere("%d\n", (integer)(custos_valor(r) + t.a[0]
+        + CONDICIONES_NUMERUS));
+    redde ZEPHYRUM;
+}
+</c>

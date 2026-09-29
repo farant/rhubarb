@@ -415,12 +415,96 @@ _unitatem_addere (
     }
 }
 
+/* intervallum octetorum contextus [initium, finis) unitatis MIXTAE
+ * (directivae + codex): directivae eius cum unitate emittuntur, non
+ * seorsum (parcum VF42V) */
+nomen structura {
+    i32 initium;
+    i32 finis;
+} BriarIntervallum;
+
+interior b32
+_intra_intervalla (
+    Xar* intervalla,
+    i32  positio)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; intervalla != NIHIL
+        && i < xar_numerus(intervalla); i++)
+    {
+        constans BriarIntervallum* v =
+            (constans BriarIntervallum*)xar_obtinere(intervalla, i);
+
+        si (positio >= v->initium && positio < v->finis)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* quid directivarum unitas silvae fert (coniunctio '#ifndef ...
+ * #endif' unitas UNA est, cum directivis suis) */
+nomen enumeratio {
+    BRIAR_DIRECTIVAE_NULLAE  = 0,   /* codex solus */
+    BRIAR_DIRECTIVAE_SOLAE   = 1,   /* lineae '#' solae (et vacuae) */
+    BRIAR_DIRECTIVAE_MIXTAE  = 2    /* directivae cum codice (etiam
+                                     * commentario) */
+} BriarDirectivaeUnitatis;
+
+interior BriarDirectivaeUnitatis
+_directivae_unitatis (
+    chorda textus)
+{
+    b32 directiva   = FALSUM;
+    b32 alia        = FALSUM;
+    b32 continuata  = FALSUM;
+    i32 i           = ZEPHYRUM;
+
+    dum (i < textus.mensura)
+    {
+        i32 p = i;
+        i32 f;
+
+        dum (   p < textus.mensura && ((character)textus.datum[p] == ' '
+            || (character)textus.datum[p] == '\t'))
+        {
+            p = p + I;
+        }
+        f = p;
+        dum (f < textus.mensura && (character)textus.datum[f] != '\n')
+        {
+            f = f + I;
+        }
+        si (continuata || (p < f && (character)textus.datum[p] == '#'))
+        {
+            directiva   = VERUM;
+            continuata  = (b32)(f > p
+                && (character)textus.datum[f - I] == '\\');
+        }
+        alioquin si (p < f)
+        {
+            alia = VERUM;
+        }
+        i = f + I;
+    }
+    si (!directiva)
+    {
+        redde BRIAR_DIRECTIVAE_NULLAE;
+    }
+    redde alia ? BRIAR_DIRECTIVAE_MIXTAE : BRIAR_DIRECTIVAE_SOLAE;
+}
+
 /* directivae textuales (lineae quarum character primus non albus '#',
- * cum continuationibus '\') - silva eas consumit, textus eas servat */
+ * cum continuationibus '\') - silva eas consumit, textus eas servat.
+ * Directivae intra unitatem MIXTAM (intervalla) omittuntur: unitas eas
+ * ipsa fert. */
 interior vacuum
 _directivas_colligere (
     constans BriarNexusRes* r,
-                       Xar* directivae)
+                       Xar* directivae,
+                       Xar* intervalla)
 {
     chorda c = r->contextus;   /* contextus: fragmenta contexta */
        i32 i = ZEPHYRUM;
@@ -457,8 +541,11 @@ _directivas_colligere (
                 }
                 lineae = lineae + I;
             }
-            _unitatem_addere(directivae, r, k, chorda_sectio(c, initium,
-                f));
+            si (!_intra_intervalla(intervalla, initium))
+            {
+                _unitatem_addere(directivae, r, k, chorda_sectio(c,
+                    initium, f));
+            }
             finis  = f;
             k      = k + lineae - I;
         }
@@ -585,8 +672,9 @@ _regionem_partiri (
       insignatus integer  numerus = ZEPHYRUM;
       insignatus integer  k;
                  integer  fons_index = r->silva->parsura->fons_princeps;
+                     Xar* intervalla = xar_creare(piscina,
+                         (i32)magnitudo(BriarIntervallum));
 
-        _directivas_colligere(r, part->directivae);
     _derivata_addere(part->derivata, r);
 
     /* radix commissionis: LISTA unitatum (parsura sana) aut NODUS -
@@ -642,6 +730,29 @@ _regionem_partiri (
         index  = _linea_octeti(r->textus_silvae, (i32)minimum)
             - r->praeludium - I;
         linea  = _linea_tabulae(r, index);
+        /* coniunctio directivarum SOLARUM: grex directivarum eam fert
+         * ordine fontis; MIXTA: unitas tota semel, directivae eius non
+         * seorsum (parcum VF42V - '#define' custodis bis emissus
+         * copiam typi celabat) */
+        commutatio (_directivae_unitatis(textus))
+        {
+            casus BRIAR_DIRECTIVAE_SOLAE:
+                perge;
+            casus BRIAR_DIRECTIVAE_MIXTAE:
+            {
+                BriarIntervallum* v = (BriarIntervallum*)xar_addere(
+                    intervalla);
+
+                si (v != NIHIL)
+                {
+                    v->initium  = (i32)minimum - r->praeludium_octeti;
+                    v->finis    = (i32)maximum - r->praeludium_octeti;
+                }
+                frange;
+            }
+            ordinarius:
+                frange;
+        }
         si (u->genus == (integer)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
         {
             constans SemanticaSymbolum* s = _symbolum_definitionis(
@@ -698,6 +809,7 @@ _regionem_partiri (
             _unitatem_addere(part->typi, r, index, textus);
         }
     }
+    _directivas_colligere(r, part->directivae, intervalla);
     redde VERUM;
 }
 
