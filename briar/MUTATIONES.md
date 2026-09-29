@@ -19,6 +19,14 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `runae` nova (nucleus Unicode, acervi textus stratum primum;
+  `runae_tabulae` tabulae eius generatae ex Unicode 15.1.0) - latitudo
+  runae in cellulis terminalis (`runae_latitudo`, regula Ghostty),
+  rupturae graphematum UAX #29 (`runae_rumpitur`,
+  `runae_graphema_proximum`), latitudo textus et columna
+  (`runae_latitudo_textus`, `runae_columnam_quaerere`). Pura: nulla
+  allocatio. Sine `#include` derivatur ut quodvis caput domus.
+
 - `manus clavis a` / `manus clavis 7`: littera aut numerus SOLUS (sine
   modificatore) pressio UNA clavis nativa est (keydown + keyup) - olim
   recusatum. Brevitates paginae in `document` ('a', 'n', '1'-'9') nunc
