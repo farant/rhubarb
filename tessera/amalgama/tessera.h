@@ -56,6 +56,12 @@ typedef struct TesseraChordaAedificator TesseraChordaAedificator;
 #define TESSERA_ORNAMENTUM_INVERSUM    0x10
 #define TESSERA_ORNAMENTUM_TRANSFIXUM  0x20
 
+/* Vexilla latitudinis (non SGR; tessera sola ea ponit): cellula prima
+ * runae duarum cellularum et dimidium secundum (signum 0) */
+#define TESSERA_ORNAMENTUM_LATUM        0x40
+#define TESSERA_ORNAMENTUM_CONTINUATIO  0x80
+#define TESSERA_ORNAMENTA_STILI         0x3F
+
 typedef struct TesseraCellula {
     unsigned int signum;          /* UTF-8 compactum; 0 = vacuum */
     unsigned int color_litterae;  /* 0x00RRGGBB aut NATIVUS */

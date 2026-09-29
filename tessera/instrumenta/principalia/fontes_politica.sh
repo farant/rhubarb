@@ -29,6 +29,7 @@ excludenda_pro() {
         piscina)            echo "EXCLUDENDA_PISCINAE" ;;
         chorda_aedificator) echo "EXCLUDENDA_AEDIFICATORIS" ;;
         utf8)               echo "EXCLUDENDA_UTF8" ;;
+        runae)              echo "EXCLUDENDA_RUNAE" ;;
         *)                  echo "NIHIL" ;;
     esac
 }
@@ -36,5 +37,5 @@ excludenda_pro() {
 # bases quarum excludenda COMPILATORE metuntur (messis: tools/
 # amalgama_excludenda_generare.sh)
 bases_excludendae() {
-    echo "piscina chorda_aedificator utf8"
+    echo "piscina chorda_aedificator utf8 runae"
 }

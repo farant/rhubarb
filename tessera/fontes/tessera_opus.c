@@ -3,6 +3,7 @@
 #include "tessera_opus.h"
 #include "tessera_modi.h"
 #include "utf8.h"
+#include "runae.h"
 #include <string.h>
 #include <time.h>
 
@@ -286,8 +287,63 @@ tessera_purgare (
             cella->signum          = ZEPHYRUM;
             cella->color_litterae  = stilus.color_litterae;
             cella->color_fundi     = stilus.color_fundi;
-            cella->ornamenta       = stilus.ornamenta;
+            cella->ornamenta       = stilus.ornamenta
+                & TESSERA_ORNAMENTA_STILI;
         }
+    }
+}
+
+/* Latitudo signi compacti (runae U5): ASCII = I sine decodificatione;
+ * ceterum runae_latitudo. Latitudo 0 hic = I (vocans cellulam
+ * explicite posuit; scriptio signa componentia ante omittit). */
+interior i32
+_latitudo_signi (
+    i32 signum)
+{
+             i8  octeti[IV];
+            i32  k;
+    constans i8* cursor = octeti;
+            s32  runa;
+
+    si (signum < 0x80)
+    {
+        redde I;
+    }
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        octeti[k] = (i8)((signum >> (VIII * k)) & 0xFF);
+    }
+    runa = utf8_decodere(&cursor, octeti
+        + tessera_signum_mensura(signum));
+    redde (runae_latitudo(runa) == II) ? II : I;
+}
+
+/* Runam latam quae per (x, y) scinderetur solvere: si (x, y) est
+ * continuatio, initium eius vacuatur; si initium, continuatio eius.
+ * Cellula ipsa a vocante mox scribitur. */
+interior vacuum
+_dimidium_solvere (
+    TesseraOpus* opus,
+            s32  x,
+            s32  y)
+{
+    TesseraCellula* cella = &opus->tergum[_index(x, y)];
+
+    si (   (cella->ornamenta & TESSERA_ORNAMENTUM_CONTINUATIO)
+        && _in_finibus(opus, x - I, y))
+    {
+        TesseraCellula* initium = &opus->tergum[_index(x - I, y)];
+
+        initium->signum     = ZEPHYRUM;
+        initium->ornamenta  &= ~(i32)TESSERA_ORNAMENTUM_LATUM;
+    }
+    si (   (cella->ornamenta & TESSERA_ORNAMENTUM_LATUM)
+        && _in_finibus(opus, x + I, y))
+    {
+        TesseraCellula* continuatio = &opus->tergum[_index(x + I, y)];
+
+        continuatio->signum     = ZEPHYRUM;
+        continuatio->ornamenta  &= ~(i32)TESSERA_ORNAMENTUM_CONTINUATIO;
     }
 }
 
@@ -300,16 +356,45 @@ tessera_cellulam_ponere (
     TesseraStilus  stilus)
 {
     TesseraCellula* cella;
+               i32  latitudo;
+               i32  ornamenta =
+                   stilus.ornamenta & TESSERA_ORNAMENTA_STILI;
 
     si (opus == NIHIL || !_in_finibus(opus, x, y))
     {
         redde;  /* praecisio taciturna */
     }
+    latitudo = _latitudo_signi(signum);
+    _dimidium_solvere(opus, x, y);
+    si (latitudo == II)
+    {
+        si (_in_finibus(opus, x + I, y))
+        {
+            _dimidium_solvere(opus, x + I, y);
+        }
+        alioquin
+        {
+            signum    = ZEPHYRUM;   /* columna ultima: spatium, numquam
+                                     * scissa neque involuta */
+            latitudo  = I;
+        }
+    }
     cella                  = &opus->tergum[_index(x, y)];
     cella->signum          = signum;
     cella->color_litterae  = stilus.color_litterae;
     cella->color_fundi     = stilus.color_fundi;
-    cella->ornamenta       = stilus.ornamenta;
+    cella->ornamenta       = ornamenta
+        | ((latitudo == II) ? TESSERA_ORNAMENTUM_LATUM : ZEPHYRUM);
+    si (latitudo == II)
+    {
+        TesseraCellula* continuatio = &opus->tergum[_index(x + I, y)];
+
+        continuatio->signum          = ZEPHYRUM;
+        continuatio->color_litterae  = stilus.color_litterae;
+        continuatio->color_fundi     = stilus.color_fundi;
+        continuatio->ornamenta       = ornamenta
+            | TESSERA_ORNAMENTUM_CONTINUATIO;
+    }
 }
 
 TesseraCellula
@@ -369,11 +454,20 @@ _octetos_scribere (
             }
             alioquin
             {
-                i32 n = (i32)(post - cursor);
+                i32 n         = (i32)(post - cursor);
+                i32 latitudo  = runae_latitudo(runa);
 
-                tessera_cellulam_ponere(opus, cx, y,
-                    tessera_signum_ex_octetis(cursor, n), stilus);
                 cursor = post;
+                si (latitudo == ZEPHYRUM)
+                {
+                    /* signum componens / ZWJ / VS: cellula unam runam
+                     * tenet - omittitur (graphemata in tessera: D7) */
+                    perge;
+                }
+                tessera_cellulam_ponere(opus, cx, y,
+                    tessera_signum_ex_octetis(cursor - n, n), stilus);
+                cx += (s32)latitudo;
+                perge;
             }
         }
         cx++;
@@ -596,6 +690,13 @@ tessera_praesentare (
                                 b32  pingenda;
 
             opus->fructus.cellulae_collatae++;
+            si (cella->ornamenta & TESSERA_ORNAMENTUM_CONTINUATIO)
+            {
+                /* dimidium secundum numquam emittitur: initium eius
+                 * (cellula praecedens) pro utroque pingitur */
+                opus->frons[idx] = *cella;
+                perge;
+            }
             si (opus->primum)
             {
                 pingenda = !_cellulae_aequales(cella, &CELLULA_VACUA);
@@ -605,6 +706,15 @@ tessera_praesentare (
             {
                 pingenda = !_cellulae_aequales(cella,
                     &opus->frons[idx]);
+                si (   !pingenda
+                    && (cella->ornamenta & TESSERA_ORNAMENTUM_LATUM)
+                    && x + I < (s32)opus->latitudo)
+                {
+                    /* continuatio mutata, initium non: repingere */
+                    pingenda = !_cellulae_aequales(&opus->tergum[idx
+                        + I],
+                        &opus->frons[idx + I]);
+                }
             }
             si (!pingenda)
             {
@@ -620,7 +730,8 @@ tessera_praesentare (
 
                 stilus_cellae.color_litterae  = cella->color_litterae;
                 stilus_cellae.color_fundi     = cella->color_fundi;
-                stilus_cellae.ornamenta       = cella->ornamenta;
+                stilus_cellae.ornamenta       = cella->ornamenta
+                    & TESSERA_ORNAMENTA_STILI;
                 si (   !stilus_validus
                     || !tessera_stilus_aequalis(stilus_currens,
                            stilus_cellae))
@@ -635,8 +746,17 @@ tessera_praesentare (
             opus->fructus.cellulae_mutatae++;
             mutatae_quadri++;
 
-            pos_x = x + I;
+            /* terminal consentiens cursorem per latitudinem movet */
+            pos_x = x + ((cella->ornamenta & TESSERA_ORNAMENTUM_LATUM)
+                             ? II : I);
             pos_y = y;
+            si (cella->ornamenta & TESSERA_ORNAMENTUM_LATUM)
+            {
+                /* CONTINENTIA: terminal dissentiens de latitudine
+                 * cellulam unam laedit, non ordinem - CUP ante
+                 * proximam (features/004) */
+                pos_x = -I;
+            }
             si (pos_x >= (s32)opus->latitudo)
             {
                 pos_x = -I;  /* involutio numquam creditur */

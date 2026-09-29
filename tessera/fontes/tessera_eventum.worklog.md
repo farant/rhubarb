@@ -374,3 +374,35 @@ quit).
   flag never set / caller's timeout inside a paste / dangling prefix
   dropped / `?2004l` missing. Each caught exactly by its own vectors or
   assertions.
+
+## 2026-09-28: runae U5, wide cells (opus, logged here with the rest of 1.2)
+
+- **A plant found dead code.** My first emission set `pos_x = x + 1`
+  after a wide cell, then skipped its continuation. So the next emitted
+  cell was never contiguous and got a CUP anyway, and the explicit
+  containment line (`pos_x = -1`) did nothing: removing it left the
+  golden green. Fix: model the agreeing terminal honestly (`pos_x = x +
+  2` after a wide cell), so containment is the ONLY thing producing that
+  CUP. Now the plant turns the first-frame golden red.
+- **A plant that didn't compile.** `pos_x = pos_x;` is -Wself-assign →
+  error; its red meant nothing (the house rule caught it: check the
+  `error:` count). A compiling no-op (`(vacuum)ZEPHYRUM;`) did the job.
+- **The amalgam leaked the width tables.** `RUNAE_GRADUS_PRIMUS/SECUNDUS`
+  are DATA; the amalgamator's function prefixes don't touch them, so
+  they were exported under their plain names (nm), and a host linking
+  both tessera and runae would hit duplicate symbols. The verification
+  passed only because hospes doesn't link runae. Fixed with exact
+  renames (`TYPI_EXACTI`) to `TESSERA_RUNAE_GRADUS_*`. Any future
+  vendored library with global data needs the same.
+- **examen and pythonica disagree on the amalgamator** (pre-existing): an
+  ABSOLUTE path makes examen resolve `#include "fontes_generata.h"` to
+  silva's file of the same name. `Editio.applicare` therefore reports
+  REICE for amalgamator.c while `examen.sh` with a relative path says
+  ACCIPE. Filed as quaestio …0VV1K (residue of 01KYJ6740K's fix).
+- **Editio + comments:** a `tolerans='verba'` replace inside a comment
+  REFLOWS it (my two comment lines were joined into one 124-column line,
+  with a stray leading space). Check `formator -vitia` after such an
+  edit.
+- The amalgam grew 230 KB → 372 KB (the width table, ~40 KB of data as
+  decimal source). The unused-function harvest settled at 4 rounds;
+  tessera uses only `runae_latitudo`.

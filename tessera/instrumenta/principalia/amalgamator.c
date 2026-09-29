@@ -7,9 +7,9 @@
  * MANIFESTUM EST CODEX; MECHANISMUS in silva/instrumenta/
  * silva_amalgama.{h,c} vivit (dependentia trans-plicaturarum
  * dev-time solum - bootstrap lexatoris silvae, sicut generator).
- *
  * Vendicata: latina (verbatim) + piscina + chorda_aedificator +
- * utf8. NB chorda.{h,c} NON vendicantur: tessera functionem chordae
+ * utf8 + runae (latitudo runarum, tabulae generatae; runae U5). NB
+ * chorda.{h,c} NON vendicantur: tessera functionem chordae
  * NULLAM vocat (aedificator quoque nullam) - tessera.h typum
  * TesseraChorda solus possidet. Graphum clausum, minimum.
  */
@@ -66,7 +66,12 @@ interior constans Renominatio TYPI_EXACTI[] = {
     { "Piscina",           "TesseraPiscina" },
     { "PiscinaNotatio",    "TesseraPiscinaNotatio" },
     { "chorda",            "TesseraChorda" },
-    { "ChordaAedificator", "TesseraChordaAedificator" }
+    { "ChordaAedificator", "TesseraChordaAedificator" },
+    /* DATA vendicata (tabulae runae): praefixa functionum ea non
+     * tangunt - sine his symbola globalia cum hospite runae
+     * collideret (nm mensuratum, runae U5) */
+    { "RUNAE_GRADUS_PRIMUS",   "TESSERA_RUNAE_GRADUS_PRIMUS" },
+    { "RUNAE_GRADUS_SECUNDUS", "TESSERA_RUNAE_GRADUS_SECUNDUS" }
 };
 
 /* Longissimum primum! */
@@ -74,6 +79,7 @@ interior constans Renominatio PRAEFIXA_FUNCTIONUM[] = {
     { "chorda_aedificator_", "tessera_chorda_aedificator_" },
     { "piscina_",            "tessera_piscina_" },
     { "chorda_",             "tessera_chorda_" },
+    { "runae_",              "tessera_runae_" },
     { "utf8_",               "tessera_utf8_" }
 };
 

@@ -95,6 +95,43 @@ _scaenam_pingere (
         TESSERA_LINEA_ROTUNDATA, nativus);
     tessera_scribere_literis(opus, XXV, VII, "rotunda", nativus);
 
+    /* latitudo runarum (runae U5): textus ab XII, '|' in columna
+     * fixa XLVI - si terminal latitudines nostras sequitur, lineae
+     * aequantur; si dissentit, damnum intra textum manet (CUP post
+     * cellulam latam). Signa componentia (hi, e+U+0301) omittuntur
+     * donec graphemata in tessera (D7). */
+    {
+        hic_manens constans character* constans EXEMPLA[][II] = {
+            { "CJK",    "\xE6\x97\xA5\xE6\x9C\xAC\xE8\xAA\x9E "
+                        "\xE4\xB8\xAD\xE6\x96\x87 "
+                        "\xED\x95\x9C\xEA\xB5\xAD\xEC\x96\xB4" },
+            { "emoji",  "\xF0\x9F\x98\x80 \xF0\x9F\x91\x8D "
+                        "\xF0\x9F\x9A\x80 \xE2\x9D\xA4 "
+                        "\xE2\x9D\xA4\xEF\xB8\x8F" },
+            { "hindi",  "\xE0\xA4\xB9\xE0\xA4\xBF\xE0\xA4\xA8"
+                        "\xE0\xA5\x8D\xE0\xA4\xA6\xE0\xA5\x80" },
+            { "e+acut", "cafe\xCC\x81 (componens omissum)" },
+            { "mixtum", "a\xE4\xB8\xAD" "b\xF0\x9F\x98\x80" "c" }
+        };
+        s32 j;
+
+        per (j = ZEPHYRUM; j < V && XI + j < (s32)alt - IV; j++)
+        {
+            tessera_scribere_literis(opus, II, XI + j,
+                EXEMPLA[j][ZEPHYRUM],
+                tessera_stilus(TESSERA_COLOR_NATIVUS,
+                TESSERA_COLOR_NATIVUS,
+                    TESSERA_ORNAMENTUM_OBSCURUM));
+            tessera_scribere_literis(opus, XII, XI + j, EXEMPLA[j][I],
+                nativus);
+            tessera_cellulam_ponere(opus, XLVI, XI + j, (i32)'|',
+                nativus);
+        }
+        /* fundus coloratus super cellulam latam: utrumque dimidium */
+        tessera_scribere_literis(opus, XLVIII, XI, "\xE4\xB8\xAD",
+            tessera_stilus(TESSERA_COLOR_NATIVUS, 0xAA2222, ZEPHYRUM));
+    }
+
     tessera_scribere_literis(opus, II, (s32)alt - III,
         "q exire | frecce cursorem | i intermittere | "
         "claves + mus infra", tessera_stilus(TESSERA_COLOR_NATIVUS,

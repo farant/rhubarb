@@ -4,5 +4,7 @@ declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
     "piscina"
+    "runae"
+    "runae_tabulae"
     "utf8"
 )

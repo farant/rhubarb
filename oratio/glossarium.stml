@@ -1129,4 +1129,11 @@
     <forma textus="iteratore" casus="ablativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
 
+  <vocabulum lemma="sinicus" lingua="latina" classis="adiectivum" nota="Sinicus, -a, -um (classice: Sinarum, Chinensis): littera Sinica = character CJK (probatio_tessera_latae.c, runae U5)">
+    <forma textus="sinicus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="sinica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sinicum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="sinicae" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+
 </glossarium>

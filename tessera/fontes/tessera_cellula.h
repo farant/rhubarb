@@ -8,9 +8,12 @@
  *
  * COLOR = 0x00RRGGBB; TESSERA_COLOR_NATIVUS = defalta terminalis
  * (SGR reditio nuda eam dat - emissio nihil addit).
- *
- * ORNAMENTA = sex tuta (SGR singuli): crassum 1, obscurum 2,
- * cursivum 3, sublineatum 4, inversum 7, transfixum 9.
+  * ORNAMENTA = sex tuta (SGR singuli): crassum 1, obscurum 2,
+ * cursivum 3, sublineatum 4, inversum 7, transfixum 9. Bits 0x40/0x80
+ * NON SGR: vexilla latitudinis (runae U5) - cellula prima runae II
+ * cellularum (LATUM) et secunda (CONTINUATIO, signum 0, numquam
+ * emissa). Ex stilo vocantis semper auferuntur; in aequalitate
+ * cellularum numerantur.
  */
 
 #ifndef TESSERA_CELLULA_H
@@ -37,6 +40,11 @@
 #define TESSERA_ORNAMENTUM_SUBLINEATUM 0x08
 #define TESSERA_ORNAMENTUM_INVERSUM    0x10
 #define TESSERA_ORNAMENTUM_TRANSFIXUM  0x20
+
+/* Vexilla latitudinis (non SGR; ponuntur SOLUM a tessera) */
+#define TESSERA_ORNAMENTUM_LATUM        0x40  /* runa latitudinis II */
+#define TESSERA_ORNAMENTUM_CONTINUATIO  0x80  /* dimidium secundum */
+#define TESSERA_ORNAMENTA_STILI         0x3F  /* bits SGR soli */
 
 
 /* ==================================================

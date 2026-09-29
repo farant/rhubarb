@@ -54,3 +54,13 @@ interior constans character* constans EXCLUDENDA_UTF8[] = {
     "utf8_proxima_runa",
     NIHIL
 };
+
+interior constans character* constans EXCLUDENDA_RUNAE[] = {
+    "_classis",
+    "_extensio",
+    "_nulla_in_graphemate",
+    "runae_graphema_proximum",
+    "runae_rumpitur",
+    "runae_rupturam_initiare",
+    NIHIL
+};

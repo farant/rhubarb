@@ -54,6 +54,8 @@ declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
     "utf8"
+    "runae"
+    "runae_tabulae"
     "credo"
 )
 

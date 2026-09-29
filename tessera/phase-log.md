@@ -950,3 +950,79 @@ timeout yields to the 3 s paste timeout (documented in the header).
 …XBWP), the terminal as a ludus render target (modules/012/013, now
 unblocked by `?1002`), or the tokenizer (modules/002, 108 shapes
 waiting).
+
+## WIDE CELLS (runae U5, 2026-09-28)
+
+Plan: `project-specs/unicode-width-graphemes-plan.md` U5 (terminal-planning
+features/004). Width comes from `runae_latitudo` (Unicode 15.1, Ghostty's
+rule, ICU-verified); tessera's own "latitudo 1 praesumpta" ends here.
+
+### INTENTIO
+
+- **Markers ride `ornamenta`** (features/004; signum has no spare bits):
+  `TESSERA_ORNAMENTUM_LATUM` 0x40 = first cell of a 2-cell rune,
+  `TESSERA_ORNAMENTUM_CONTINUATIO` 0x80 = its second half (signum 0, never
+  emitted). They are NOT SGR: masked out of every style a caller passes
+  (`TESSERA_ORNAMENTA_STILI` 0x3F) and out of the style comparison in
+  emission; they DO count in cell equality (a marker change repaints).
+- **Drawing rules live in `tessera_cellulam_ponere`** (the one primitive
+  every drawing call uses, so `tessera_replere` and boxes inherit them):
+  writing over a continuation blanks its start; writing over a start
+  blanks its continuation; a width-2 rune whose second half would fall
+  outside the grid becomes a space (never split, never wraps); a width-2
+  rune fully placed writes start + continuation (same style, so a
+  background colour spans both).
+- **`_octetos_scribere` advances by width.** Width-0 runes (combining
+  marks, ZWJ, variation selectors) are DROPPED from the grid for now:
+  a cell holds one codepoint, and giving a mark its own cell is the
+  misalignment this task removes. That's a known loss of fidelity (é
+  written as e + U+0301 shows as e) until D7 (clusters in tessera),
+  which the plan decides after this task with the corpus showing it.
+- **Emission** (`tessera_praesentare`): continuation cells are skipped
+  (their front-buffer copy is still updated); a start cell repaints if
+  its continuation changed; after emitting a wide cell, `pos_x = -1`
+  forces an explicit cursor position before the next cell. That's the
+  containment: a terminal that disagrees about a width damages one cell,
+  never the rest of the row.
+- **Dependency:** tessera now uses `runae` (+ `runae_tabulae`): the
+  test runner's list, spectaculum's generated list, and the amalgam's
+  vendored set (renamed `tessera_runae_*`, like `utf8`). The amalgam's
+  own verification says what else it needs.
+
+Red first: `probatio_tessera_latae.c` (cells of `a中b`; its first-frame
+bytes with a cursor position before `b`; both overwrite cases; the last
+column; `tessera_replere` over half; a wide rune over a wide rune shifted
+by one; a combining mark dropped; an unchanged second frame writes
+nothing). Plants: the containment removed, the start-blanking removed,
+the last-column rule removed. Terminal step: spectaculum with CJK,
+emoji and a Hindi line, in more than one terminal.
+
+**U5 FACTUM (wide cells).**
+- Markers `LATUM`/`CONTINUATIO` (0x40/0x80 in ornamenta, never SGR,
+  masked from every style), the drawing rules in
+  `tessera_cellulam_ponere`, advance-by-width in `_octetos_scribere`
+  (width-0 runes dropped), and emission (continuations skipped; a start
+  repaints if its continuation changed; `pos_x = x + 2` models an
+  agreeing terminal and containment overrides it with a CUP).
+- Red first: `probatio_tessera_latae.c`. Green: tessera 9/9, saltuarius
+  13/13, amalgam VERIFICATUM + idempotent with runae vendored
+  (`tessera_runae_*`, tables renamed `TESSERA_RUNAE_GRADUS_*` after `nm`
+  showed them leaking).
+- Plants: containment (it was dead code until the `x + 2` model; the
+  first plant attempt didn't compile, redone), start-blanking,
+  last-column rule, each caught by name.
+
+**Fran's terminal look (2026-09-28), Terminal.app and Ghostty:**
+- Layout correct in both: the `|` column aligned on all five rows; CJK,
+  emoji and mixed rows spaced right.
+- Terminal.app has NO 24-bit colour: the gradient bar and the red
+  background behind 中 are missing, strikethrough too; it misreads
+  `48;2;R;G;B` (the trailing 34 turns the text blue). Pre-existing
+  tessera behaviour (spec-v2 §6 defers a 256-colour emit), and exactly
+  the thesis's "wrong colours, never broken layout". Ghostty shows the
+  red spanning both halves.
+- The D7 evidence: dropping width-0 runes CHANGES Hindi text (the virama
+  goes, न्द splits: हिन्दी reads hinadī) and é becomes e. Spacing marks
+  (Mc) in their own cells stay aligned, because Ghostty clusters ह+ि into
+  exactly the two cells we gave it. Recommendation recorded in the plan:
+  tessera cells hold grapheme clusters (features/005), as U5b.

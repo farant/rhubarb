@@ -222,3 +222,7 @@ check dropped.
 - Plants caught by name: GB9c (7 lines + bn/gu/hi/ml), GB11 (4 lines),
   RI parity (6 lines), VS base (3 width cases).
 - The scripted edits of this task went through pythonica's Editio.
+
+## U5 — tessera wide cells (2026-09-28)
+
+Narrative in `tessera/phase-log.md` ("WIDE CELLS (runae U5)").
